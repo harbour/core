@@ -8,6 +8,16 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-10-31 01:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/cmdcheck.c
+    * replaced some free by hb_xfree
+
+  * harbour/source/compiler/genc.c
+    * replace non ID characters in name of local symbol table by '_'
+
+  * harbour/bin/hb-func.sh
+   * set proper X11 path for mixed (32/64bit) systems
+
 2004-10-24 20:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/config/bsd/global.cf
     + added suppot for HB_COMMERCE and HB_WITHOUT_GTSLN env vars

@@ -262,6 +262,7 @@ if [ -f "\${HB_LIB_INSTALL}/libgtcrs.a" ]; then
 fi
 if [ "\${HB_WITHOUT_X11}" != "yes" ]; then
     if [ -f "\${HB_LIB_INSTALL}/libgtxvt.a" ] || [ -f "\${HB_LIB_INSTALL}/libgtxwc.a" ]; then
+        [ -d "/usr/X11R6/lib64" ] && SYSTEM_LIBS="\${SYSTEM_LIBS} -L/usr/X11R6/lib64"
         SYSTEM_LIBS="\${SYSTEM_LIBS} -L/usr/X11R6/lib -lX11"
     fi
 fi

@@ -501,7 +501,7 @@ void hb_compChkEnvironVar( char * szSwitch )
                       }
                    }
 
-                   free( szOption );
+                   hb_xfree( szOption );
                 }
                 break;
 
@@ -522,7 +522,7 @@ void hb_compChkEnvironVar( char * szSwitch )
                    else
                       hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, szOption, NULL );
 
-                   free( szOption );
+                   hb_xfree( szOption );
                 }
                 break;
 
@@ -734,14 +734,10 @@ void hb_compChkEnvironVar( char * szSwitch )
              case 'o':
              case 'O':
                 {
-                   unsigned int i = 0;
                    char * szPath = hb_strdup( s + 1 );
-                   while( i < strlen( szPath ) )
-                      i++;
-                   szPath[ i ] = '\0';
 
                    hb_comp_pOutPath = hb_fsFNameSplit( szPath );
-                   free( szPath );
+                   hb_xfree( szPath );
                 }
                 break;
 
@@ -752,14 +748,9 @@ void hb_compChkEnvironVar( char * szSwitch )
                    hb_comp_bPPO = 0;
                 else
                 {
-                   unsigned int i = 0;
                    char * szPath = hb_strdup( s + 1 );
-                   while( i < strlen( szPath ) )
-                      i++;
-                   szPath[ i ] = '\0';
-
                    hb_comp_pPpoPath = hb_fsFNameSplit( szPath );
-                   free( szPath );
+                   hb_xfree( szPath );
 
                    hb_comp_bPPO = 1;
                 }
@@ -833,7 +824,7 @@ void hb_compChkEnvironVar( char * szSwitch )
                    hb_comp_szPrefix[ 16 ] = '\0';
                    strcat( hb_comp_szPrefix, "_" );
 
-                   free( szPrefix );
+                   hb_xfree( szPrefix );
                 }
                 break;
 

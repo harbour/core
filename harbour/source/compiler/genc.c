@@ -47,7 +47,8 @@ typedef HB_GENC_FUNC_ * HB_GENC_FUNC_PTR;
 
 void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language output */
 {
-   char szFileName[ _POSIX_PATH_MAX ];
+   char szFileName[ _POSIX_PATH_MAX + 1 ];
+   char szModulname[ _POSIX_PATH_MAX + 1 ];
    PFUNCTION pFunc = hb_comp_functions.pFirst;
    PCOMSYMBOL pSym = hb_comp_symbols.pFirst;
    PCOMDECLARED pDeclared;
@@ -140,8 +141,25 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       /* writes the symbol table */
       /* Generate the wrapper that will initialize local symbol table
        */
-      hb_strupr( pFileName->szName );
-      fprintf( yyc, "\n\nHB_INIT_SYMBOLS_BEGIN( hb_vm_SymbolInit_%s%s )\n", hb_comp_szPrefix, pFileName->szName );
+      hb_strncpyUpper( szModulname, pFileName->szName, _POSIX_PATH_MAX );
+      /* replace non ID characters in name of local symbol table by '_' */
+      {
+         int iLen = strlen( szModulname ), i;
+
+         for ( i = 0; i < iLen; i++ )
+         {
+            char c = szModulname[ i ];
+
+            if ( ! ( c >= 'A' && c <= 'Z' ) &&
+                 ! ( c >= 'a' && c <= 'z' ) &&
+                 ! ( c >= '0' && c <= '9' ) &&
+                 ! c == '_' )
+            {
+               szModulname[ i ] = '_';
+            }
+         }
+      }
+      fprintf( yyc, "\n\nHB_INIT_SYMBOLS_BEGIN( hb_vm_SymbolInit_%s%s )\n", hb_comp_szPrefix, szModulname );
 
       while( pSym )
       {
@@ -214,10 +232,10 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                     "#elif ! defined(__GNUC__)\n"
                     "   #pragma startup hb_vm_SymbolInit_%s%s\n"
                     "#endif\n\n",
-                    hb_comp_szPrefix, pFileName->szName,
-                    hb_comp_szPrefix, pFileName->szName,
-                    hb_comp_szPrefix, pFileName->szName,
-                    hb_comp_szPrefix, pFileName->szName );
+                    hb_comp_szPrefix, szModulname,
+                    hb_comp_szPrefix, szModulname,
+                    hb_comp_szPrefix, szModulname,
+                    hb_comp_szPrefix, szModulname );
 
       /* Generate functions data
        */
