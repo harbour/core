@@ -8,6 +8,9 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-07-18 13:05 UTC+0300 Chen Kedem <niki@actcom.co.il>
+  * doc/whatsnew.txt
+    + Add information about the upcoming alpha build 44
 
 2004-07-17 21:58 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * contrib/mysql/tmysql.prg
@@ -236,7 +239,7 @@
 2004-05-18 15:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/cdpapi.c
     ! Corrected the function names reported by to HB_TRACE statements,
-      as pointed out by Chen Kedem <niki@synel.co.il>.
+      as pointed out by Chen Kedem <niki@actcom.co.il>.
 
 2004-05-18 16:12 UTC+0300 Chen Kedem <niki@actcom.co.il>
 
