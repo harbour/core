@@ -282,7 +282,7 @@ static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LONG lBlock, LPKEYINFO pKe
       /* pKey <= p */
       {
          if( ( k == 0 && !lSeek && (ULONG)p->Xtra != pPage->TagParent->Owner->Owner->ulRecNo )
-             || ( hb_set.HB_SET_DELETED && ntxIsDeleted( pPage->TagParent->Owner->Owner, p->Xtra ) && lSeek ) )
+             || ( lSeek && hb_set.HB_SET_DELETED && ntxIsDeleted( pPage->TagParent->Owner->Owner, p->Xtra ) ) )
             k = 1;
          if( k <= 0 )
          {
