@@ -60,11 +60,11 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
 {
    HB_CODEBLOCK_PTR pCBlock;
 
-   pCBlock =( HB_CODEBLOCK_PTR ) hb_xgrab( sizeof(HB_CODEBLOCK) );
+   pCBlock = ( HB_CODEBLOCK_PTR ) hb_xgrab( sizeof( HB_CODEBLOCK ) );
 
    /* Store the number of referenced local variables
     */
-   pCBlock->wLocals =wLocals;
+   pCBlock->wLocals = wLocals;
    if( wLocals )
    {
       /* NOTE: if a codeblock will be created by macro compiler then
@@ -79,9 +79,9 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
        * accessed in a codeblock
        * The element 0 is used as the counter of references to this table
        */
-      pCBlock->pLocals =(PHB_ITEM) hb_xgrab( (wLocals +1) * sizeof(HB_ITEM) );
-      pCBlock->pLocals[ 0 ].type =IT_LONG;
-      pCBlock->pLocals[ 0 ].item.asLong.value =1;
+      pCBlock->pLocals = ( PHB_ITEM ) hb_xgrab( ( wLocals + 1 ) * sizeof( HB_ITEM ) );
+      pCBlock->pLocals[ 0 ].type = IT_LONG;
+      pCBlock->pLocals[ 0 ].item.asLong.value = 1;
 
       while( wLocals-- )
       {
@@ -100,15 +100,15 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
              * pool so it can be shared by codeblocks
              */
 
-            hMemvar =hb_memvarValueNew( pLocal, FALSE );
+            hMemvar = hb_memvarValueNew( pLocal, FALSE );
 
-            pLocal->type =IT_BYREF | IT_MEMVAR;
-            pLocal->item.asMemvar.itemsbase =hb_memvarValueBaseAddress();
-            pLocal->item.asMemvar.offset    =0;
-            pLocal->item.asMemvar.value     =hMemvar;
+            pLocal->type = IT_BYREF | IT_MEMVAR;
+            pLocal->item.asMemvar.itemsbase = hb_memvarValueBaseAddress();
+            pLocal->item.asMemvar.offset    = 0;
+            pLocal->item.asMemvar.value     = hMemvar;
 
             hb_memvarValueIncRef( pLocal->item.asMemvar.value );
-            memcpy( pCBlock->pLocals + w, pLocal, sizeof(HB_ITEM) );
+            memcpy( pCBlock->pLocals + w, pLocal, sizeof( HB_ITEM ) );
          }
          else
          {
@@ -119,7 +119,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
              * released if other codeblock will be deleted
              */
             hb_memvarValueIncRef( pLocal->item.asMemvar.value );
-            memcpy( pCBlock->pLocals + w, pLocal, sizeof(HB_ITEM) );
+            memcpy( pCBlock->pLocals + w, pLocal, sizeof( HB_ITEM ) );
          }
          ++w;
       }
@@ -132,15 +132,15 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
        */
       PHB_ITEM pLocal;
 
-      pLocal =stack.pBase +1;
+      pLocal = stack.pBase + 1;
       if( IS_BLOCK( pLocal ) )
       {
-         HB_CODEBLOCK_PTR pOwner =pLocal->item.asBlock.value;
+         HB_CODEBLOCK_PTR pOwner = pLocal->item.asBlock.value;
 
-         pCBlock->pLocals =pOwner->pLocals;
-         pCBlock->wLocals =wLocals =pOwner->wLocals;
-	 if( pOwner->pLocals )
-	 {  /* the outer codeblock have the table with local references - reuse it */
+         pCBlock->pLocals = pOwner->pLocals;
+         pCBlock->wLocals = wLocals = pOwner->wLocals;
+         if( pOwner->pLocals )
+         {  /* the outer codeblock have the table with local references - reuse it */
             while( wLocals )
             {
                hb_memvarValueIncRef( pCBlock->pLocals[ wLocals ].item.asMemvar.value );
@@ -152,7 +152,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
          }
       }
       else
-         pCBlock->pLocals =NULL;
+         pCBlock->pLocals = NULL;
    }
 
    /*
@@ -162,8 +162,8 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
     */
    pCBlock->pCode = pBuffer;
 
-   pCBlock->pSymbols  =pSymbols;
-   pCBlock->lCounter  =1;
+   pCBlock->pSymbols  = pSymbols;
+   pCBlock->lCounter  = 1;
 
 #ifdef CODEBLOCKDEBUG
    printf( "\ncodeblock created (%li) %lx", pCBlock->lCounter, pCBlock );
@@ -237,7 +237,7 @@ PHB_ITEM  hb_codeblockGetRef( PHB_ITEM pItem, PHB_ITEM pRefer )
 {
    HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
 
-  return pCBlock->pLocals - pRefer->item.asRefer.value;
+   return pCBlock->pLocals - pRefer->item.asRefer.value;
 }
 
 /* Copy the codeblock

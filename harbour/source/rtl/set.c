@@ -240,7 +240,7 @@ static void close_text( FHANDLE handle )
    }
 }
 
-static FHANDLE open_handle( char * file_name, BOOL bMode, char * def_ext, HB_set_enum set_specifier )
+static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_set_enum set_specifier )
 {
    FHANDLE handle;
    PHB_FNAME pFilename;
@@ -258,13 +258,13 @@ static FHANDLE open_handle( char * file_name, BOOL bMode, char * def_ext, HB_set
    hb_fsFNameMerge( path, pFilename );
    hb_xfree( pFilename );
 
-   /* Open the file either in append (bMode) or truncate mode (!bMode), but
+   /* Open the file either in append (bAppend) or truncate mode (!bAppend), but
       always use binary mode */
 
    /* QUESTION: What sharing mode does Clipper use ? [vszel] */
 
-   while( ( handle = ( bMode ? hb_fsOpen( (BYTE *)path, FO_WRITE | FO_DENYWRITE ) :
-                               hb_fsCreate( (BYTE *)path, FC_NORMAL ) ) ) == FS_ERROR )
+   while( ( handle = ( bAppend ? hb_fsOpen( (BYTE *)path, FO_WRITE | FO_DENYWRITE ) :
+                                 hb_fsCreate( (BYTE *)path, FC_NORMAL ) ) ) == FS_ERROR )
    {
       WORD wResult;
 

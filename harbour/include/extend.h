@@ -260,7 +260,7 @@ extern void     hb_retnllen( long lNumber, WORD wWidth ); /* returns a long numb
 extern void     hb_reta( ULONG ulLen );  /* returns an array with a specific length */
 
 extern void     hb_storc( char * szText, int iParam, ... ); /* stores a szString on a variable by reference */
-extern void     hb_storclen( char * fixText, ULONG ulLength, int iParam, ... ); /* stores a fixed length string on a variable by reference */
+extern void     hb_storclen( char * szText, ULONG ulLength, int iParam, ... ); /* stores a fixed length string on a variable by reference */
 extern void     hb_stords( char * szDate, int iParam, ... );   /* szDate must have yyyymmdd format */
 extern void     hb_storl( int iLogical, int iParam, ... ); /* stores a logical integer on a variable by reference */
 extern void     hb_storni( int iValue, int iParam, ... ); /* stores an integer on a variable by reference */
@@ -277,21 +277,29 @@ extern ULONG    hb_xsize( void * pMem );                 /* returns the size of 
 
 /* array management */
 extern BOOL     hb_arrayError( PHB_ITEM pArray, ULONG ulIndex, BOOL bAssign ); /* Checks if the passed parameters are valid, launches runtim error if needed */
-extern void     hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ); /* creates a new array */
-extern void     hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* retrieves an item */
+extern BOOL     hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ); /* creates a new array */
 extern ULONG    hb_arrayLen( PHB_ITEM pArray ); /* retrives the array len */
-extern void     hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* sets an array element */
-extern void     hb_arraySize( PHB_ITEM pArray, ULONG ulLen ); /* sets the array total length */
-extern void     hb_arrayRelease( PHB_ITEM pArray ); /* releases an array - don't call it - use ItemRelease() !!! */
-extern int      hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex );
+extern BOOL     hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pItemValue );
+extern BOOL     hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex );
+extern BOOL     hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex );
+extern BOOL     hb_arraySize( PHB_ITEM pArray, ULONG ulLen ); /* sets the array total length */
+extern BOOL     hb_arrayLast( PHB_ITEM pArray, PHB_ITEM pResult );
+extern BOOL     hb_arrayRelease( PHB_ITEM pArray ); /* releases an array - don't call it - use ItemRelease() !!! */
+extern BOOL     hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* sets an array element */
+extern BOOL     hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* retrieves an item */
 extern char *   hb_arrayGetString( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the string contained on an array element */
 extern ULONG    hb_arrayGetStringLen( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the string length contained on an array element */
 extern BOOL     hb_arrayGetBool( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the logical value contained on an array element */
+extern int      hb_arrayGetNI( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the int value contained on an array element */
+extern long     hb_arrayGetNL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the long numeric value contained on an array element */
 extern double   hb_arrayGetDouble( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the double value contained on an array element */
 extern char *   hb_arrayGetDate( PHB_ITEM pArray, ULONG ulIndex, char * szDate ); /* retrieves the date value contained on an array element */
-extern void     hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex );
+extern WORD     hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex );
+extern BOOL     hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCount );
+extern ULONG    hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCount );
+extern BOOL     hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG ulStart, ULONG ulCount );
+extern BOOL     hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG ulStart, ULONG ulCount, ULONG ulTarget );
 extern PHB_ITEM hb_arrayClone( PHB_ITEM pArray );
-extern void     hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pItemValue );
 
 /* string management */
 

@@ -25,6 +25,8 @@
 /* Harbour Project source code
    http://www.Harbour-Project.org/
    The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
+      hb_itemPutNI()
+      hb_itemGetNI()
       hb_itemGetCLen()
       hb_itemGetNLen()
       hb_itemSetNLen()
@@ -177,14 +179,16 @@ PHB_ITEM hb_itemArrayGet( PHB_ITEM pArray, ULONG ulIndex )
 {
    PHB_ITEM pItem = hb_itemNew( NULL );
 
-   hb_arrayGet( pArray, ulIndex, pItem );
+   if( pArray )
+      hb_arrayGet( pArray, ulIndex, pItem );
 
    return pItem;
 }
 
 PHB_ITEM hb_itemArrayPut( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
 {
-   hb_arraySet( pArray, ulIndex, pItem );
+   if( pArray )
+      hb_arraySet( pArray, ulIndex, pItem );
 
    return pArray;
 }
@@ -204,7 +208,7 @@ PHB_ITEM hb_itemPutC( PHB_ITEM pItem, char * szText )
    return pItem;
 }
 
-PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, char * nszText, ULONG ulLen )
+PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, char * szText, ULONG ulLen )
 {
    if( pItem )
       hb_itemClear( pItem );
@@ -214,7 +218,7 @@ PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, char * nszText, ULONG ulLen )
    pItem->type = IT_STRING;
    pItem->item.asString.length = ulLen;
    pItem->item.asString.value = ( char * ) hb_xgrab( ulLen + 1 );
-   memcpy( pItem->item.asString.value, nszText, ulLen );
+   memcpy( pItem->item.asString.value, szText, ulLen );
    pItem->item.asString.value[ ulLen ] = '\0';
 
    return pItem;
@@ -328,6 +332,26 @@ double hb_itemGetND( PHB_ITEM pItem )
    return 0;
 }
 
+int hb_itemGetNI( PHB_ITEM pItem )
+{
+   if( pItem )
+   {
+      switch( pItem->type )
+      {
+         case IT_INTEGER:
+            return pItem->item.asInteger.value;
+
+         case IT_LONG:
+            return ( int ) pItem->item.asLong.value;
+
+         case IT_DOUBLE:
+            return ( int ) pItem->item.asDouble.value;
+      }
+   }
+
+   return 0;
+}
+
 long hb_itemGetNL( PHB_ITEM pItem )
 {
    if( pItem )
@@ -370,7 +394,6 @@ PHB_ITEM hb_itemPutDS( PHB_ITEM pItem, char * szDate )
 
    hb_dateStrGet( szDate, &lDay, &lMonth, &lYear );
 
-   hb_itemClear( pItem );
    pItem->type = IT_DATE;
    pItem->item.asDate.value = hb_dateEncode( lDay, lMonth, lYear );
 
@@ -402,6 +425,20 @@ PHB_ITEM hb_itemPutND( PHB_ITEM pItem, double dNumber )
    else pItem->item.asDouble.length = 10;
    pItem->item.asDouble.decimal = hb_set.HB_SET_DECIMALS;
    pItem->item.asDouble.value = dNumber;
+
+   return pItem;
+}
+
+PHB_ITEM hb_itemPutNI( PHB_ITEM pItem, int iNumber )
+{
+   if( pItem )
+      hb_itemClear( pItem );
+   else
+      pItem = hb_itemNew( NULL );
+
+   pItem->type = IT_INTEGER;
+   pItem->item.asInteger.length = 10;
+   pItem->item.asInteger.value = iNumber;
 
    return pItem;
 }
@@ -514,9 +551,8 @@ void hb_itemClear( PHB_ITEM pItem )
          hb_arrayRelease( pItem );
    }
    else if( IS_BLOCK( pItem ) )
-   {
       hb_codeblockDelete( pItem );
-   }
+
    else if( IS_MEMVAR( pItem ) )
       hb_memvarValueDecRef( pItem->item.asMemvar.value );
 
@@ -531,9 +567,7 @@ void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
       hb_itemClear( pDest );
 
    if( pDest == pSource )
-   {
       hb_errInternal( 9999, "An item was going to be copied to itself from hb_itemCopy()", NULL, NULL );
-   }
 
    memcpy( pDest, pSource, sizeof( HB_ITEM ) );
 
@@ -548,13 +582,10 @@ void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
       ( pSource->item.asArray.value )->wHolders++;
 
    else if( IS_BLOCK( pSource ) )
-   {
       hb_codeblockCopy( pDest, pSource );
-   }
+
    else if( IS_MEMVAR( pSource ) )
-   {
       hb_memvarValueIncRef( pSource->item.asMemvar.value );
-   }
 }
 
 /* Internal API, not standard Clipper */

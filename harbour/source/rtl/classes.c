@@ -631,7 +631,7 @@ static HARBOUR hb___msgGetData( void )
    PHB_ITEM pObject = stack.pBase + 1;
    WORD     wIndex  = s_pMethod->wData;
 
-   if( wIndex > ( WORD ) hb_arrayLen ( pObject ) )
+   if( wIndex > ( WORD ) hb_arrayLen( pObject ) )
                                                 /* Resize needed            */
       hb_arraySize( pObject, wIndex );          /* Make large enough        */
 

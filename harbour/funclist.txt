@@ -216,6 +216,7 @@ SETCURSOR               ;S;
 SETKEY                  ;R;
 SETMODE                 ;N;
 SETPOS                  ;R;
+SETPOSBS                ;R;
 SETPRC                  ;R;
 SOUNDEX                 ;S;
 SPACE                   ;R;

@@ -458,6 +458,8 @@ HARBOUR HB_DIRECTORY( void )
              hb_itemArrayPut( psubarray, 4, ptime );
              hb_itemArrayPut( psubarray, 5, pattr );
 
+             /* NOTE: Simply ignores the situation where the array length
+                      limit is reached. */
              hb_arrayAdd( pdir, psubarray );
 
              hb_itemRelease( pfilename );

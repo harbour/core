@@ -6,9 +6,16 @@
 
 function Main()
 
-   local x := 3     // change this value from 1 to 5 and see the results!
+   local i
 
    QOut( "Testing Harbour If elseif else endif" )
+   for i := 1 to 5
+      TestValue( i )
+   next
+
+return nil
+
+function TestValue( x )
 
    if x = 1
       QOut( "x is 1" )

@@ -41,6 +41,7 @@
 /* Harbour Project source code
    http://www.Harbour-Project.org/
    The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
+      HB_SETPOSBS()
       HB_DISPBOX() GT version.
       HB_DISPBEGIN()
       HB_DISPEND()
@@ -571,6 +572,23 @@ HARBOUR HB_SETPOS( void ) /* Sets the screen position */
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "SETPOS" ); /* NOTE: Clipper catches this at compile time! */
+}
+
+/* Move the screen position to the right by one column */
+HARBOUR HB_SETPOSBS( void )
+{
+   if( hb_pcount() == 0 )
+   {
+      USHORT uiRow;
+      USHORT uiCol;
+
+      /* NOTE: Clipper does no checks about reaching the border or anything */
+
+      hb_gtGetPos( &uiRow, &uiCol );
+      hb_gtSetPos( uiRow, uiCol + 1 );
+   }
+   else
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "SETPOSBS" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 HARBOUR HB_DEVPOS( void ) /* Sets the screen and/or printer position */

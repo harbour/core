@@ -1065,26 +1065,6 @@ void hb_vmDuplTwo( void )
    hb_stackPush();
 }
 
-HARBOUR HB_EVAL( void )
-{
-   PHB_ITEM pBlock = hb_param( 1, IT_BLOCK );
-
-   if( pBlock )
-   {
-      WORD w;
-
-      hb_vmPushSymbol( &symEval );
-      hb_vmPush( pBlock );
-
-      for( w = 2; w <= hb_pcount(); w++ )
-         hb_vmPush( hb_param( w, IT_ANY ) );
-
-      hb_vmDo( hb_pcount() - 1 );
-   }
-   else
-      hb_errInternal( 9999, "Not a valid codeblock on EVAL", NULL, NULL );
-}
-
 void hb_vmEndBlock( void )
 {
    hb_stackDec();                               /* make the last item visible */
@@ -1257,7 +1237,7 @@ void hb_vmGreater( void )
       hb_vmPushLogical( lDate1 > lDate2 );
    }
 
-   else if( IS_LOGICAL( stack.pPos - 1 ) && IS_LOGICAL( stack.pPos -2 ) )
+   else if( IS_LOGICAL( stack.pPos - 1 ) && IS_LOGICAL( stack.pPos - 2 ) )
    {
       BOOL bLogical2 = hb_vmPopLogical();
       BOOL bLogical1 = hb_vmPopLogical();
@@ -1302,7 +1282,7 @@ void hb_vmGreaterEqual( void )
       hb_vmPushLogical( lDate1 >= lDate2 );
    }
 
-   else if( IS_LOGICAL( stack.pPos - 1 ) && IS_LOGICAL( stack.pPos -2 ) )
+   else if( IS_LOGICAL( stack.pPos - 1 ) && IS_LOGICAL( stack.pPos - 2 ) )
    {
       BOOL bLogical2 = hb_vmPopLogical();
       BOOL bLogical1 = hb_vmPopLogical();
@@ -1398,7 +1378,7 @@ void hb_vmLess( void )
       hb_vmPushLogical( lDate1 < lDate2 );
    }
 
-   else if( IS_LOGICAL( stack.pPos - 1 ) && IS_LOGICAL( stack.pPos -2 ) )
+   else if( IS_LOGICAL( stack.pPos - 1 ) && IS_LOGICAL( stack.pPos - 2 ) )
    {
       BOOL bLogical2 = hb_vmPopLogical();
       BOOL bLogical1 = hb_vmPopLogical();
@@ -2576,8 +2556,8 @@ void hb_vmStatics( PHB_SYMB pSym ) /* initializes the global aStatics array or r
  */
 static void hb_vmSwapAlias( void )
 {
-   HB_ITEM_PTR pItem = stack.pPos -1;
-   HB_ITEM_PTR pWorkArea = stack.pPos -2;
+   HB_ITEM_PTR pItem = stack.pPos - 1;
+   HB_ITEM_PTR pWorkArea = stack.pPos - 2;
 
    switch( pWorkArea->type & ~IT_BYREF )
    {
@@ -2811,6 +2791,33 @@ void hb_vmForceLink( void )
 
 /* ----------------------------- */
 /* TODO: Put these to /source/rtl/?.c */
+
+HARBOUR HB_EVAL( void )
+{
+   WORD wPCount = hb_pcount();
+
+   if( wPCount >= 1 )
+   {
+      PHB_ITEM pBlock = hb_param( 1, IT_BLOCK );
+
+      if( pBlock )
+      {
+         WORD wParam;
+
+         hb_vmPushSymbol( &symEval );
+         hb_vmPush( pBlock );
+
+         for( wParam = 2; wParam <= wPCount; wParam++ )
+            hb_vmPush( hb_param( wParam, IT_ANY ) );
+
+         hb_vmDo( wPCount - 1 );
+      }
+      else
+         hb_errInternal( 9999, "Not a valid codeblock on EVAL", NULL, NULL );
+   }
+   else
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "EVAL" ); /* NOTE: Clipper catches this at compile time! */
+}
 
 HARBOUR HB_LEN( void )
 {

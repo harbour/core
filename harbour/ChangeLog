@@ -1,3 +1,74 @@
+19990903-15:30 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/itemapi.c
+    % hb_itemPutDS() contained one more hb_itemClear() then needed.
+    + hb_itemGetNI(), hb_itemPutNI() added for completeness.
+    ! hb_itemArrayGet()/hb_itemArrayPut() checks if the passed array item ptr
+      is not a NULL.
+  * source/rtl/extend.c
+    * hb_parni(), hb_parnl() now uses hb_arrayGetN*() instead of
+      hb_arrayGetDouble().
+    % Array index validation removed from hb_par*() functions, since the
+      called Array API is doing this.
+    + hb_stor*() function group now using Item API instead of duplicating 
+      the same code. These function looks much simpler now.
+    ! hb_stor*() functions were suboptimal in handling the -1 parameter, they
+      were assigning a new value to it, then checking IS_BYREF()/IS_ARRAY().
+      The logic has been optimalized.
+    + Optional parameter type changed to ULONG from long.
+  * source/rtl/array.c
+    include/extend.h
+    + Missing prototypes added to extend.h
+    ! hb_arrayAdd() will not throw a runtime error anymore, instead it 
+      returns a BOOL to signal error. Error launching moved to AADD().
+    ! hb_arrayClone() will not throw error. ACLONE() is more compatible now.
+    ! hb_arrayCopy() will not throw error, but return BOOL. 
+      ACOPY() is more compatible now.
+    ! hb_arrayRelease(), hb_arrayEval() will not throw error. They will return
+      BOOL.
+    ! hb_arrayScan() will return ULONG instead of int. It will now throw an
+      error anymore.
+    ! hb_arrayGetType() will return WORD instead of int.
+    ! hb_arrayIns(), hb_arrayDel() will return BOOL, and not throw an error.
+    ! hb_arrayFill() will not throw an error, but will return BOOL, AFILL() 
+      will check if the second parameter is not NIL. 
+    ! hb_arrayAdd(), hb_arrayLast() checks if the passed item is an array, like
+      the other hb_array*() functions.
+    + hb_arrayNew() now returns BOOL. Actually a constant TRUE right now.
+    + hb_arrayLast() now return BOOL, it will return FALSE if the passed item
+      was not an array.
+    ! hb_arraySize() now return BOOL.
+    ! hb_arrayClone() fixed bug which caused a GPF. (Thanks Paul!)
+      This was introduced around yesterday. 
+    ! hb_arrayLen() will not throw a runtime error anymore.
+    ! hb_arrayGet*()/hb_arraySet() will no longer throw runtime errors.
+    + hb_arrayGet(), hb_arraySet() now return BOOL.
+    + hb_arrayGetNL(), hb_arrayGetNI() added to be in sync with Item API.
+    ! hb_arrayGetDate() now properly clears the date field on error.
+  * source/rtl/dir.c
+    + NOTE: added about the behaviour on reaching array lenght limit.
+  * source/rtl/extend.c
+    + NOTE: added about parameter -1
+  * source/rtl/set.c
+    * bMode name changed to bAppend
+  * source/rtl/console.c
+    funclist.txt
+    + SETPOSBS() undocumented Clipper function added. I don't know why is this
+      function so important to CA, but it's a pcode level function.
+  * source/compiler/harbour.y
+    + Added parameter count check for EVAL()
+    + Added parameter count check for SETPOSBS() which is and undocumented
+      Clipper function. Now the parameter count check list is complete.
+  * source/vm/hvm.c
+    + Added runtime parameter count check for EVAL().
+  * tests/working/ifelse.prg
+    + Changes by Jose Lalin implemented.
+  * source/rtl/classes.c
+    source/rtl/itemapi.c (nszText -> szText)
+    include/rtl/itemapi.h (nszText -> szText)
+    ! Small formatting fix.
+  * source/rtl/codebloc.c
+    ! A few formatting errors corrected.
+
 19990903-14:35 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/codebloc.c
