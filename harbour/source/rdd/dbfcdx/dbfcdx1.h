@@ -80,6 +80,8 @@
 #define SORT_STACK_OF_CHAR              3
 #define SORT_NOT_KEY                    0x10
 
+#define HB_CDXMAXKEY( x )              ((USHORT) ((x) > CDX_MAXKEY ? CDX_MAXKEY : (x)))
+
 #if (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
    #pragma option -a1 /* byte alignment */
 #elif defined(__GNUC__)

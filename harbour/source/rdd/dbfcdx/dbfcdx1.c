@@ -769,9 +769,9 @@ static int hb_cdxKeyValCompare( LPCDXTAG pTag, char * pKeyVal1, BYTE keyLen1,
    int ret;
 
    pKey1.Value   = pKeyVal1;
-   pKey1.length  = (ULONG) keyLen1;
+   pKey1.length  = keyLen1;
    pKey2.Value   = pKeyVal2;
-   pKey2.length  = (ULONG) keyLen2;
+   pKey2.length  = keyLen2;
    pKey1.realLength = pTag->uiLen;
    pKey2.realLength = pTag->uiLen;
    pKey1.fString = (pTag->uiType == 'C');
@@ -883,7 +883,8 @@ static LPCDXKEYINFO hb_cdxKeyPutItem( LPCDXKEYINFO pKey, PHB_ITEM pItem )
       case HB_IT_STRING:
 
          pKey->Value = hb_itemGetC( pItem );
-         pKey->realLength = pKey->length = pItem->item.asString.length;
+         pKey->realLength = pKey->length = (USHORT) (pItem->item.asString.length > CDX_MAXKEY ?
+            CDX_MAXKEY : pItem->item.asString.length);
          pKey->fString = TRUE;
 
          while( pKey->length > 0 &&
@@ -1247,7 +1248,7 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag )
             {
                case HB_IT_STRING:
                   hb_cdxSortInsertWord( pSort, (long) ulRecNo, pItem->item.asString.value,
-                                                        pItem->item.asString.length );
+                     HB_CDXMAXKEY( pItem->item.asString.length ) );
                   break;
 
                case HB_IT_INTEGER:
@@ -1740,6 +1741,9 @@ static USHORT hb_cdxTagFillExternalNode( LPCDXTAG pTag, LPCDXDATA pData,
          hb_cdxKeyCompare( * p,  q, &cd, TRUE );
          if ( cd > ( * p )->length )
             cd = ( * p )->length + 1;
+         /* This is for ADS compatibility, VFP can read if compressed, but don't write compressed spaces */
+         if ( cd > q->length )
+            cd = q->length + 1;
          if( cd > 0 )
             cd--;
       }
@@ -1769,7 +1773,7 @@ static void hb_cdxTagExtNodeBuild( LPCDXTAG pTag, LPCDXDATA pData, LPPAGEINFO PI
 {
    USHORT k, i, v, c, t, d;
    LONG r;
-   LPCDXKEYINFO pKey, pLastKey;
+   LPCDXKEYINFO pKey, pLastKey = NULL;
    static char szBuffer[ CDX_MAXKEY + 1 ];
 
    k = CDX_EXTERNAL_SPACE;
@@ -1797,6 +1801,10 @@ static void hb_cdxTagExtNodeBuild( LPCDXTAG pTag, LPCDXDATA pData, LPPAGEINFO PI
          memcpy( &r, &pData->cdxu.External.ExtData[ v ], 4 );
          r &= PIK->RNMask;
          k -= pTag->uiLen - d - t;
+         if ( pLastKey ) {
+            if ( d > pLastKey->length )
+               memset(&szBuffer[ pLastKey->length ], ( pTag->uiType == 'C' ? ' ' : 0), d - pLastKey->length);
+         }
          if( pTag->uiLen - d - t > 0 )
             memcpy( &szBuffer[ d ], &pData->cdxu.External.ExtData[ k ],
                   pTag->uiLen - d - t );
@@ -1812,13 +1820,19 @@ static void hb_cdxTagExtNodeBuild( LPCDXTAG pTag, LPCDXDATA pData, LPPAGEINFO PI
          pKey->fString = ( pTag->uiType == 'C' ? TRUE : FALSE);
 
          if( PIK->pKeys == NULL )
+         {
             PIK->pKeys = pKey;
+            pLastKey = pKey;
+         }
          else
          {
-            pLastKey = PIK->pKeys;
-            while( pLastKey->pNext )
-               pLastKey = pLastKey->pNext;
+            if ( !pLastKey ) {
+               pLastKey = PIK->pKeys;
+               while( pLastKey->pNext )
+                  pLastKey = pLastKey->pNext;
+            }
             pLastKey->pNext = pKey;
+            pLastKey = pKey;
          }
          PIK->uiKeys++;
          i++;
@@ -1901,11 +1915,10 @@ static void hb_cdxTagTagLoad( LPCDXTAG pTag )
       case HB_IT_STRING:
          pTag->uiType = 'C';
          /*
-         pTag->uiLen = hb_stack.Return.item.asString.length > CDX_MAXKEY ? CDX_MAXKEY :
-                           hb_stack.Return.item.asString.length;
-          */
          pTag->uiLen = ( hb_stackItemFromTop( -1 ) )->item.asString.length > CDX_MAXKEY ? CDX_MAXKEY :
                            ( hb_stackItemFromTop( -1 ) )->item.asString.length;
+         */
+         pTag->uiLen = HB_CDXMAXKEY( ( hb_stackItemFromTop( -1 ) )->item.asString.length );
          break;
    }
    hb_stackPop();    /* pop macro evaluated value */
@@ -3320,7 +3333,7 @@ static BOOL hb_cdxSortSwapGetNextKey( LPSORTINFO pSort, LONG * pKeyRec, BYTE * p
          if ( lRead ) {
             pPage->nBytesLeft += pPage->nBufLeft;
             hb_fsSeek( pSort->hTempFile, pPage->nFileOffset + pPage->pageLen - pPage->nBytesLeft, SEEK_SET );
-            pPage->nBufLeft = ( pPage->nBytesLeft < sizeof(pPage->page) ) ? pPage->nBytesLeft : sizeof(pPage->page);
+            pPage->nBufLeft = (USHORT) ( ( pPage->nBytesLeft < sizeof(pPage->page) ) ? pPage->nBytesLeft : sizeof(pPage->page) );
             if ( hb_fsRead( pSort->hTempFile, (BYTE *) &(pPage->page), pPage->nBufLeft ) != pPage->nBufLeft )
                hb_errInternal( HB_EI_ERRUNRECOV, "hb_cdxTagDoIndex: Read error reading temporary index file", "hb_cdxTagDoIndex", NULL );
             pPage->nBytesLeft -= pPage->nBufLeft;
@@ -3375,7 +3388,7 @@ static int hb_cdxSortSwapBuildIndex( LPSORTINFO pSort )
       pPage->nBytesLeft = pPage->pageLen - pPage->nBufLeft;
       pPage->keysLeft   = pPage->keyCount;
 
-      pPage->nBufLeft = ( pPage->nBytesLeft < sizeof(pPage->page) ) ? pPage->nBytesLeft : sizeof(pPage->page);
+      pPage->nBufLeft = (USHORT) ( ( pPage->nBytesLeft < sizeof(pPage->page) ) ? pPage->nBytesLeft : sizeof(pPage->page) );
       if ( hb_fsRead( pSort->hTempFile, (BYTE *) &(pPage->page), pPage->nBufLeft ) != pPage->nBufLeft )
          hb_errInternal( HB_EI_ERRUNRECOV, "hb_cdxTagDoIndex: Read error reading temporary index file", "hb_cdxTagDoIndex", NULL );
       pPage->nBytesLeft -= pPage->nBufLeft;
@@ -3823,6 +3836,9 @@ static void hb_cdxSortAddExternal( LPSORTINFO pSort, USHORT Lvl, LONG Tag, LONG 
    hb_cdxKeyCompare( Value, pSort->LastKey, &cd, TRUE );
    if ( cd > Value->length )
       cd = Value->length + 1;
+   /* This is for ADS compatibility, VFP can read if compressed, but don't write compressed spaces */
+   if ( cd > pSort->LastKey->length )
+      cd = pSort->LastKey->length + 1;
    if( cd > 0 )
       cd -= ( USHORT ) 1;
    v = ( USHORT ) ( pSort->NodeList[ Lvl ]->Entry_Ct *
@@ -4150,6 +4166,19 @@ static void hb_cdxTagClearScope( LPCDXTAG pTag, USHORT nScope )
    }
 }
 
+static void hb_cdxMacroRun( AREAP pArea, HB_MACRO_PTR pMacro )
+{
+   int iCurrArea;
+   iCurrArea = hb_rddGetCurrentWorkAreaNumber();
+   if ( iCurrArea != pArea->uiArea )
+      hb_rddSelectWorkAreaNumber( pArea->uiArea );
+   else
+      iCurrArea = 0;
+   hb_macroRun( pMacro );
+   if ( iCurrArea )
+      hb_rddSelectWorkAreaNumber( iCurrArea );
+}
+
 
 
 static long hb_cdxDBOIKeyCount( CDXAREAP pArea )
@@ -4404,7 +4433,8 @@ ERRCODE hb_cdxGoTo( CDXAREAP pArea, ULONG ulRecNo )
       else
       {
           pMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pTag->pKeyItem );
-          hb_macroRun( pMacro );
+          // hb_macroRun( pMacro );
+          hb_cdxMacroRun( (AREAP) pArea, pMacro );
           hb_cdxKeyPutItem( pKey, hb_stackItemFromTop( - 1 ) );
           hb_stackPop();
       }
@@ -4848,7 +4878,8 @@ ERRCODE hb_cdxGoCold( CDXAREAP pArea )
                else
                {
                   pMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pTag->pForItem );
-                  hb_macroRun( pMacro );
+                  // hb_macroRun( pMacro );
+                  hb_cdxMacroRun( (AREAP) pArea, pMacro );
                   bForOk = hb_itemGetL( hb_stackItemFromTop( - 1 ) );
                   hb_stackPop();
                }
@@ -4868,7 +4899,8 @@ ERRCODE hb_cdxGoCold( CDXAREAP pArea )
             else
             {
                 pMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pTag->pKeyItem );
-                hb_macroRun( pMacro );
+                // hb_macroRun( pMacro );
+                hb_cdxMacroRun( (AREAP) pArea, pMacro );
                 hb_cdxKeyPutItem( pKey, hb_stackItemFromTop( - 1 ) );
                 hb_stackPop();
             }
@@ -5004,7 +5036,8 @@ ERRCODE hb_cdxGoHot( CDXAREAP pArea )
          else
          {
             pMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pTag->pKeyItem );
-            hb_macroRun( pMacro );
+            // hb_macroRun( pMacro );
+            hb_cdxMacroRun( (AREAP) pArea, pMacro );
             hb_cdxKeyPutItem( pKey, hb_stackItemFromTop( - 1 ) );
             hb_stackPop();
          }
@@ -5756,7 +5789,8 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderInfo )
    else
    {
       pExpMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pExpr );
-      hb_macroRun( pExpMacro );
+      // hb_macroRun( pExpMacro );
+      hb_cdxMacroRun( pArea, pExpMacro );
       pResult = pExpr;
       hb_itemCopy( pResult, hb_stackItemFromTop( - 1 ) );
    }
@@ -5785,8 +5819,9 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderInfo )
 
       case HB_IT_STRING:
          bType = 'C';
-         uiLen = pResult->item.asString.length > CDX_MAXKEY ? CDX_MAXKEY :
-                 pResult->item.asString.length;
+         // uiLen = (USHORT) (pResult->item.asString.length > CDX_MAXKEY ? CDX_MAXKEY :
+         //        pResult->item.asString.length);
+         uiLen = HB_CDXMAXKEY( pResult->item.asString.length );
          break;
 
       default:
@@ -5859,7 +5894,8 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderInfo )
       else
       {
          pForMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pExpr );
-         hb_macroRun( pForMacro );
+         // hb_macroRun( pForMacro );
+         hb_cdxMacroRun( pArea, pForMacro );
          pResult = pExpr;
          hb_itemCopy( pResult, hb_stackItemFromTop( - 1 ) );
       }

@@ -156,4 +156,5 @@ static void hb_cdxIndexDelTag( LPCDXINDEX pIndex, char * szTagName );
 
 static int hb_cdxKeyValCompare( LPCDXTAG pTag, char * pKeyVal1, BYTE keyLen1,
       char * pKeyVal2, BYTE keyLen2, USHORT * pEndPos, BOOL Exact );
+static void hb_cdxMacroRun( AREAP pArea, HB_MACRO_PTR pMacro );
 
