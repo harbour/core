@@ -584,7 +584,9 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_FUNCTION:
-            hb_itemClear( &hb_stack.Return );
+            if( ( &hb_stack.Return )->type )
+               hb_itemClear( &hb_stack.Return );
+
             hb_vmDo( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
             hb_itemCopy( hb_stackTopItem(), &hb_stack.Return );
             hb_stackPush();
