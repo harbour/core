@@ -1,6 +1,10 @@
 19990723-12:07 Antonio Linares <alinares@fivetech.com>
    * terminal.b32
      * Fixed for Win32 console mode Harbour apps
+   * makefile.b32
+     * Support for C debugger
+   * tests/working/bld32exe.bat
+     * Support for C debugger
 
 19990723-12:00 CET Eddie Runia <eddie@runia.com>
   * source/rtl/transfrm.c
