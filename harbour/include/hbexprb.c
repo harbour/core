@@ -441,9 +441,23 @@ static HB_EXPR_FUNC( hb_compExprUseCodeblock )
          hb_compWarnMeaningless( pSelf );
          break;
       case HB_EA_DELETE:
+      {
+         HB_EXPR_PTR pExp = pSelf->value.asList.pExprList;
+         HB_EXPR_PTR pNext;
+
          hb_compExprCBVarDel( ( HB_CBVAR_PTR ) pSelf->value.asList.pIndex );
-         HB_EXPR_PCODE1( hb_compExprDelete, pSelf->value.asList.pExprList );
+
+         /* Delete all expressions of the block.
+         */
+         while( pExp )
+         {
+            pNext = pExp->pNext;
+            HB_EXPR_PCODE1( hb_compExprDelete, pExp );
+            pExp = pNext;
+         }
+
          break;
+      }
    }
    return pSelf;
 }

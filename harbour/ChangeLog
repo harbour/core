@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+2001-12-13 15:09 UTC+0100 Maurilio Longo <maurilio.longo@libero.it>
+   * include/hbexprb.c
+     + changed lastest version with the one posted by Ron
+
 2001-12-13 03:50 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/vm/maindllp.c
      * First VM/RTL functions added
