@@ -1,3 +1,27 @@
+20000217-09:00 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+    *doc/vm.txt
+    doc/harbext.txt
+    doc/tracing.txt
+    doc/statics.txt
+    doc/readme.txt
+    doc/pragma.txt
+    doc/pcode.txt
+    doc/gmake.txt
+    doc/cvshowto.txt
+    doc/compiler.txt
+        *Small formating by Brian Hays
+    *source/rtl/typefile.prg
+        *Fixed a worning reported by Victor
+    *utils/hbdoc/hbdoc.prg
+    *utils/hbdoc/genos2.prg
+    *utils/hbdoc/gentrf.prg
+    *utils/hbdoc/genng.prg
+    *utils/hbdoc/genhtm.prg
+    *utils/hbdoc/genrtf.prg
+    *utils/hbdoc/genhpc.prg
+    *utils/hbdoc/genasc.prg
+        *Small fixes
+
 20000217-10:08 GMT+3 Alexander Kresin
    * source/pp/hbpplib.c
      * added hb_comp_files declaration to fix error while hbrun compiling

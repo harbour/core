@@ -5,4 +5,4 @@ rem
 
 hbdoc -htm categ.lnk hrbtools.rsp
 cd htm
-start harbour.htm
+rem start harbour.htm

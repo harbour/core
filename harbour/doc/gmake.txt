@@ -18,9 +18,9 @@ usually more powerful than any native make.
 
 Each directory in the project contains one makefile, called Makefile,
 which lists the data (file names, directory names, etc.) that is used
-to determine how to bring ever target up to date within that
+to determine how to bring every target up to date within that
 directory. There are no rules in the Makefiles, to keep them
-platform-independent. The rules itself are included from the
+platform-independent. The rules themselves are included from the
 "appropriate" configuration file.
 
 For example, this could be the Makefile for the VM library:
@@ -125,7 +125,7 @@ compiled with gcc). This has two advantages:
 USAGE
 =====
 
-To use the system, you need to install GNU-make 3.75 or later in your
+To use the system, you need to install GNU-make 3.75 or later on your
 system. To check this, type "make -v"; you should see
 
   GNU Make version 3.75, by Richard Stallman and Roland McGrath.

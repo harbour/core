@@ -5,13 +5,14 @@
 INTRODUCTION
 ============
 This file explains what is and how to use the #pragma directive
-with Harbour.
+with Harbour. Primarily, it gives you control over the compiler's
+command-line switches within your source code.
 
 
 WHAT IS
 =======
 The #pragma is a directive used inside the source code in many compilers
-to change the behaviour of the compiler at compile time.
+to change the behavior of the compiler at compile time.
 
 
 USAGE
@@ -53,13 +54,13 @@ This is the list of the supported commands and switches:
   * WARNINGLEVEL        =<nLevel>     /W<nLevel>
   * SHORTCUTTING        =<On/Off>     /Z<+/->
 
-  The switches have the same behaviour as the corresponding compiler ones
-  and the commands are sinonyms for the switches.
-  
+  The switches have the same behavior as the corresponding compiler ones
+  and the commands are synonyms for the switches.
+
   * TRACEPRAGMAS
   This command shows pragma activity at compile time when enabled.
 
-  NOTE: You can use the abbreviated commands mode by typing only the
+  NOTE: You can use the abbreviated command mode by typing only the
         first eight chars.
 
 
@@ -79,8 +80,8 @@ function Test()
 return nil
 
 This is the same as calling Harbour with the -n switch in the command line,
-but with the great benefit that if you forgot to pass the switch if will be
-used anyway because it is included inside the source.
+but with the great benefit that if you forgot to pass the switch, it will
+be used anyway because it is included inside the source.
 
 ===========
 Dec 1, 1999

@@ -27,12 +27,12 @@
  *      The Harbour command line options:
  *      =================================
  *
- *      /a               automatic memvar declaration"
+ *      /a               automatic memvar declaration
  *      -----------------
- *          This causes that all variables declared by PRIVATE or PUBLIC
- *          statements are automatically declared as MEMVAR variables.
+ *          This causes all variables declared by PARAMETER, PRIVATE or PUBLIC
+ *          statements to be automatically declared as MEMVAR variables.
  *
- *      /b               debug info"
+ *      /b               debug info
  *      -----------------
  *          The compiler generates all information required for debugging
  *
@@ -47,7 +47,7 @@
  *                        is equal to 0 if there are no errors in compiled
  *                        source file.
  *          /es1        - all warnings are ignored and exit code returned by
- *                        the compiler is set to non-zero value.
+ *                        the compiler is set to a non-zero value.
  *          /es2        - all warnings are treated as errors and no output
  *                        file is created. The exit code is set to non-zero
  *                        value.
@@ -71,33 +71,33 @@
  *          the output file. The PROCLINE() function will return 0 for
  *          modules compiled using this option.
  *
- *      /m               compile module only
+ *      /m               compile current module only
  *      -----------------
  *
  *      /n               no implicit starting procedure
  *      -----------------
  *          The compiler does not create a procedure with the same name as
- *          the compiled file. This causes that any declarations placed
- *          before the first PROCEDURE or FUNCTION statement have the file
+ *          the compiled file. This means that any declarations placed
+ *          before the first PROCEDURE or FUNCTION statement have file-
  *          wide scope and can be accessed/used in all functions/procedures
  *          defined in the compiled source file. All executable statements
- *          placed on the beginning of the file and before the first
+ *          placed at the beginning of the file and before the first
  *          PROCEDURE/FUNCTION statement are ignored.
  *
- *      /o<path>         object file drive and/or path
+ *      /o<path>         output file drive and/or path
  *      -----------------
  *
  *      /p               generate pre-processed output (.ppo) file
  *      -----------------
- *          The compiler creates the file that contain the result of
- *          pre-processing of the source file.
+ *          The compiler only creates the file that contains the result of
+ *          pre-processing the source file.
  *
  *      /q               quiet
  *      -----------------
  *          The compiler does not print any messages during compiling
  *          (except the copyright info).
  *
- *          /q0     be really quiet and don't display even copyright info
+ *          /q0     be really quiet and don't display even the copyright info
  *
  *      /r[<lib>]        request linker to search <lib> (or none)
  *      -----------------
@@ -109,10 +109,10 @@
  *
  *      /t<path>         path for temp file creation
  *      -----------------
- *          Currently not used in Harbour (the Harbour compile does not
- *          create any temporary files at this moment).
+ *          Currently not used in Harbour (the Harbour compiler does not
+ *          create any temporary files).
  *
- *      /u[<file>]       use command def set in <file> (or none)
+ *      /u[<file>]       use command definition set in <file> (or none)
  *      -----------------
  *          Not supported yet.
  *
@@ -127,7 +127,7 @@
  *
  *          /w0         - no warnings
  *          /w or /w1   - Clipper compatible warnings
- *          /w2         - some usefull warnings missed in Clipper
+ *          /w2         - some useful warnings missed in Clipper
  *          /w3         - warnings generated for Harbour language extensions
  *
  *      /x[<prefix>]     set symbol init function name prefix (for .c only)
@@ -142,9 +142,9 @@
  *      -----------------
  *          The Harbour compiler uses the FLEX and YACC utilities to parse
  *          the source code and to generate the required output file. This
- *          option allows to trace the activity of these utilities.
+ *          option traces the activity of these utilities.
  *
- *      /z               suppress shortcutting (.and. & .or.)
+ *      /z               suppress logical shortcutting (.and. & .or.)
  *      -----------------
  *
  *      /10              restrict symbol length to 10 characters
@@ -165,25 +165,25 @@
  *      =============================================================
  *
  *      NOTE:
- *        If you want 100% compatible compiler and runtime libraries then
- *      you have to define HARBOUR_STRICT_CLIPPER_COMPATIBILITY option. This
- *      option should be defined in include/hbsetup.h file (in fact this
- *      option is placed into comment by default - you need remove /* */
- *      characters only). This change have to be done before invoking
+ *        If you want a 100% compatible compile and runtime libraries then
+ *      you have to define HARBOUR_STRICT_CLIPPER_COMPATIBILITY. This
+ *      option should be defined in the file include/hbsetup.h (in fact this
+ *      option is placed in a comment by default - you need to remove the
+ *      /* */ characters only). This change has to be done before invoking
  *      the make utility.
  *
  *
  *      Handling of undeclared variables
  *      --------------------------------
- *        When a value is assigned to an undeclared variable and '-v'
- *      command line option is not used then the Clipper compiler assumes
+ *        When a value is assigned to an undeclared variable and the '-v'
+ *      command line option is not used, then the Clipper compiler assumes
  *      that the variable is a PRIVATE or a PUBLIC variable and generates
  *      POPM (pop memvar) opcode.
  *
- *        When a value of undeclared variable is accessed and '-v' command
- *      line option is not used the Clipper compiler generates PUSHV (push
- *      variable) opcode that determines the type of variable at runtime.
- *      If the field with requested name exists in a current workarea then
+ *        When the value of an undeclared variable is accessed and the '-v'
+ *      command line option is not used, the Clipper compiler generates PUSHV
+ *      (push variable) opcode that determines the type of variable at runtime.
+ *      If a field with the requested name exists in the current workarea then
  *      its value is used. If there is no field then a PRIVATE or a PUBLIC
  *      variable is used (if exists).
  *
@@ -221,19 +221,19 @@
  *      -----------------------------------------------
  *        The Clipper compiler uses the special opcode PUSHP to pass a
  *      reference to an undeclared variable ( '@' operator ). The type of
- *      passed variable is checked at runtime (field or memvar). However the
- *      field variables cannot be passed by the reference. It causes that
+ *      passed variable is checked at runtime (field or memvar). However,
+ *      field variables cannot be passed by reference. This means that
  *      Clipper checks the memvar variable only and doesn't look for a field.
  *      This is the reason why the Harbour compiler uses the usual
  *      PUSHMEMVARREF opcode in such cases. Notice that the runtime behavior
- *      is the same in Clipper and in Harbour - the generated opcodes are
- *      different only.
+ *      is the same in Clipper and in Harbour - only the generated opcodes
+ *      are different.
  *
  *
  *      Handling of object messages
  *      ---------------------------
  *        The HARBOUR_STRICT_CLIPPER_COMPATIBILITY setting determines
- *      the way the chained send messages are handled.
+ *      the way chained send messages are handled.
  *
  *      For example, the following code:
  *
@@ -249,9 +249,9 @@
  *
  *      in non-strict mode.
  *
- *        In practice in Clipper it will call COUNT() function two times:
- *      the first time before addition and the second one after addition,
- *      in Harbour COUNT() function will be called only once, before addition.
+ *        In practice, Clipper will call the COUNT() function two times:
+ *      the first time before addition and the second one after addition.
+ *      In Harbour, COUNT() will be called only once, before addition.
  *
  *        The Harbour (non-strict) method is:
  *      1) faster
@@ -263,9 +263,9 @@
  *      Initialization of static variables
  *      ----------------------------------
  *
- *      There is a difference in handling of initialization of static
+ *      There is a difference in the initialization of static
  *      variables that are initialized with a codeblock that refers to
- *      a local variarble. For example:
+ *      a local variable. For example:
  *
  *      PROCEDURE TEST()
  *      LOCAL MyLocalVar
@@ -276,22 +276,22 @@
  *
  *      RETURN
  *
- *      The above code compiles fine in Clipper however it generates a
+ *      The above code compiles fine in Clipper, but it generates a
  *      runtime error Error/BASE 1132 Bound error: array access
  *      Called form (b)STATICS$(0)
  *
  *      In Harbour this code generates a compile time error:
  *      Error E0009 Illegal variable (b) initializer: 'MyLocalVar'
  *
- *      Both Clipper and Harbour are handing all local variables used in a
+ *      Both Clipper and Harbour are handling all local variables used in a
  *      codeblock in a special way: they are detached from the local stack
- *      of function/procedure where they are declared. This allows to access
- *      these variables after the exit from a function/procedure. However
+ *      of function/procedure where they are declared. This allows access to
+ *      these variables after the exit from a function/procedure. However,
  *      all static variables are initialized in a separate procedure
  *      ('STATICS$' in Clipper and '(_INITSTATICS)' in Harbour) before the
  *      main procedure and before all INIT procedures. The local variables
- *      don't exist on the eval stack when static variables are initialized
- *      then they cannot be detached.
+ *      don't exist on the eval stack when static variables are initialized,
+ *      so they cannot be detached.
  *
  *  $END$
  */

@@ -3,7 +3,8 @@
  */
 
 
-                         The Harbour project
+
+								 The Harbour Project
 
 ************************************************************************
 *  This file contains information on obtaining, installing, and using  *
@@ -44,10 +45,6 @@ in order to create a functioning program.
 Please test running Harbour against your Clipper source code and report
 any problems that might occur.
 
-Very important: The preprocessor functionality is not built in yet. So
-you may test only Clipper language without preprocessor commands, etc.
-
-
 Installation
 ------------
 
@@ -57,7 +54,7 @@ Installation
    directories.
 
 2. Compile Harbour using your C compiler. Make files for different
-   platforms are included in the <WHERE ARE THEY?> directory.
+   platforms are included in the HARBOUR\HARBOUR directory.
 
 
 --- COPYRIGHT ---
@@ -67,7 +64,7 @@ What copyright information do we have
 --- LICENCE ---
 
 Information about the License for usage of Harbour is available in the
-file LICENCE.TXT (when we have a license)
+file LICENCE.TXT.
 
 --- DISCLAIMER ---
 

@@ -69,19 +69,19 @@ compilation    run-time
 -----------    -----------    ----------------------------------------
 HB_TR_INFO     HB_TR_ERROR    All calls with levels HB_DEBUG are
                               erased from the code, so they have no
-			      performance effect; only calls with
-			      levels HB_TR_ERROR, HB_TR_FATAL and
-			      HB_TR_ALWAYS are printed.
+                              performance effect; only calls with
+                              levels HB_TR_ERROR, HB_TR_FATAL and
+                              HB_TR_ALWAYS are printed.
 
 HB_TR_WARNING  HB_TR_INFO     All calls with levels HB_INFO and
                               HB_DEBUG are erased from the code, so
-			      they have no performance effect; only
-			      calls with levels HB_TR_WARNING,
-			      HB_TR_ERROR, HB_TR_FATAL and
-			      HB_TR_ALWAYS are printed. Notice how
-			      setting HB_TR_INFO at run-time has no
-			      effect, since the code was compiled with
-			      a lower tracing level.
+                              they have no performance effect; only
+                              calls with levels HB_TR_WARNING,
+                              HB_TR_ERROR, HB_TR_FATAL and
+                              HB_TR_ALWAYS are printed. Notice how
+                              setting HB_TR_INFO at run-time has no
+                              effect, since the code was compiled with
+                              a lower tracing level.
 
 For example, I compile Harbour on WinNT with gcc (MINGW32), so I
 usually set the C_USR environment variable like this:
@@ -143,7 +143,7 @@ query and set the trace level. From C code:
 
 * To query the current tracing state, and optionally change the
   current state to a given value (which should be in the range [0,1],
-  otherwise the current state remains unchanged): 
+  otherwise the current state remains unchanged):
 
     hb_tracestate(state);
 
@@ -161,7 +161,7 @@ query and set the trace level. From C code:
 
 * To query the current tracing level, and optionally change the
   current level to a given value (which should be in the range [0,5],
-  otherwise the current level remains unchanged): 
+  otherwise the current level remains unchanged):
 
     hb_tracelevel(level);
 

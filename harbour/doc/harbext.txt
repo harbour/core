@@ -5,13 +5,34 @@
 Language extensions:
 --------------------
 
-* Classes generation and management (Clipper never provided this)
-* @<FunctionName>()  --> returns the pointer (address) to a function
-* Class TGetList  --> object oriented support for GetLists management
-* ProcName() support for methods names.
-* Memory() new returned values.
+* Class generation and management.
+
+		  Clipper only allowed creation of objects from a few standard
+		  classes.
+		  In Harbour, you can create your own classes--complete with
+		  Methods, Instance Variables, Class Variables and Inheritance.
+		  Entire applications can be designed and coded in Object Oriented
+		  style.
+
+* @<FunctionName>()
+		  Returns the pointer (address) to a function.
+
+* Class TGetList
+		  Object oriented support for GetLists management.
+
+* ProcName() support for class Method names.
+		  Class Methods can be retrieved from the call stack.
+
+* Memory() has new return values.
+		  See hbmemory.ch
+
+* Transform()  --> new function in format string
+        @0      Make a zero padded string out of the number.
+
 * Optional Compile Time STRONG TYPE declaration (and compile time TYPE
-  MISMATCH warnings) Ex.: LOCAL/STATIC Var AS ...
+  MISMATCH warnings)
+  Example: LOCAL/STATIC Var AS ...
+
 * The Harbour debugger provides new interesting classes:
   - Class TDbWindow could be the foundation for a generic multiplatform
   - Class TForm

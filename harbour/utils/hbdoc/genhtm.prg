@@ -47,8 +47,8 @@
 #define MODULELINE   12
 #define LINELINE     14
 #define ERRORLINE    20
-#define LONGLINE     78
-#define LONGONELINE  66
+#define LONGLINE     100
+#define LONGONELINE  86
 #define CRLF HB_OSNewLine()
 //  The delimiter
 #define DELIM   "$"                 // keyword delimiter
@@ -238,7 +238,7 @@ FUNCTION ProcessWww()
                FOR j := 1 TO LEN( cTemp )
                   cChar := SUBSTR( cTemp, j, 1 )
                   IF ( cChar >= "0" .AND. cChar <= "9" ) .OR. ;
-                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar = "_"
+                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar = "_" 
                      cFileName += cChar
                   ENDIF
                NEXT
@@ -527,8 +527,9 @@ FUNCTION ProcWwwAlso( nWriteHandle, cSeeAlso )
             xPos := AT( " ", xTemp )
             IF xPos > 0
                nLen -= LEN( xTemp ) + 3
-
                cTemp := xTemp
+               xTemp:=Substr(xTemp,1,xPos-1 ) + Substr(xTemp,xPos+1)
+               
             ELSE
                nLen -= LEN( xTemp ) + 2
 
@@ -549,8 +550,9 @@ FUNCTION ProcWwwAlso( nWriteHandle, cSeeAlso )
             xPos := AT( " ", xTemp )
             IF xPos > 0
                nLen -= LEN( xTemp ) + 3
-
-               cTemp := xTemp
+                cTemp := xTemp
+                xTemp:=Substr(xTemp,1,xPos-1 )+Substr(xTemp,xPos+1)
+               
             ELSE
                nLen -= LEN( xTemp ) + 2
 
@@ -560,7 +562,7 @@ FUNCTION ProcWwwAlso( nWriteHandle, cSeeAlso )
 
       ENDIF
 
-      nWriteHandle:WriteLink( ALLTRIM( cTemp ) )
+      nWriteHandle:WriteLink( ALLTRIM( xTemp ),cTemp )
       cSeeAlso := SUBSTR( cSeeAlso, nPos + 1 )
 
       IF nLen == 0 .OR. nLen < 0

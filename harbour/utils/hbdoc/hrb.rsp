@@ -63,7 +63,6 @@
 ..\..\source\rtl\pvalue.c
 ..\..\source\rtl\readkey.prg
 ..\..\source\rtl\readme.prg
-..\..\source\rtl\readvar.prg
 ..\..\source\rtl\samples.c
 ..\..\source\rtl\set.c
 ..\..\source\rtl\setcolor.c
@@ -90,3 +89,5 @@
 ..\..\source\rtl\word.c
 ..\..\source\rtl\xhelp.c
 ..\..\source\rtl\xsavescr.prg
+..\..\doc\subcodes.txt
+..\..\doc\compiler.txt

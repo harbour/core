@@ -48,7 +48,7 @@
 #define LINELINE     14
 #define ERRORLINE    20
 #define LONGLINE     78
-#define LONGONELINE  78
+#define LONGONELINE  66
 #define CRLF HB_OSNewLine()
 //  The delimiter
 #define DELIM   "$"                 // keyword delimiter

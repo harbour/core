@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * HBDOC document Extractoy
+ * HBDOC document Extractor
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -463,14 +463,15 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    ELSEIF lWWW
       oHtm := THTML():New( "htm\harbour.htm" )
       oHtm:WriteTitle( "Harbour Reference Guide" )
-      oHtm:WriteText('<center><img src="http://www.flexsys-ci.com/harbour-project/images/bannerhrblt.gif" ALIGN="MIDDLE"></IMG></center>')
       oHtm:WritePar( "HARBOUR" )
       oHtm:WriteLink( "overview",UpperLower("Harbour Read me" ))
       oHtm:WriteLink( "license", UpperLower("Harbour License" ))
       oHtm:WriteLink( "http://www.gnu.org/copyleft/gpl.html","GNU License" )
       oHtm:WriteLink( "compileroptions.htm","Compiler Options")
       oHtm:WritePar( "" )
+      oHtm:WritePar("")
       oHtm:WritePar( "Functions A-M" )
+      oHtm:WritePar("")
       ASORT( awww,,,{|x,y| x[1]<y[1] })
 
       FOR nPos := 1 TO LEN( aWww )
@@ -479,24 +480,32 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
             oHtm:WriteLink( Lower(aWww[ nPos ,2]),UpperLower(aWww[nPos,1] ))
          ENDIF
       NEXT
+      oHtm:WritePar("")
       oHtm:WritePar( "Functions N-_" )
+      oHtm:WritePar("")
       FOR nPos := 1 TO LEN( aWww )
          cTemp := aWww[ nPos,1 ]
          IF LEFT( cTemp, 1 ) >= "N" .AND. LEFT( cTemp, 1 ) < "_" .AND. AT( "()", cTemp ) > 0
             oHtm:WriteLink(Lower(aWww[ nPos ,2]),UpperLower(aWww[nPos,1]   )       )
          ENDIF
       NEXT
+      oHtm:WritePar("")
       oHtm:WritePar( "Commands" )
+      oHtm:WritePar("")
       FOR nPos := 1 TO LEN( aWww )
          cTemp := aWww[ nPos,1 ]
-         IF AT( "()", cTemp ) == 0 .AND. ctemp <> "LICENSE" .AND. cTemp <> "OVERVIEW" .and. cTemp<>"Compiler Options"
+         IF AT( "()", cTemp ) == 0 .AND. ctemp <> "LICENSE" .AND. cTemp <> "OVERVIEW" .and. cTemp<>"Compiler Options" ;
+         .AND. UPPER(Left(ctemp,4)) <>"BASE" .AND. UPPER(LEFT(cTemp,4))<>"TERM" .and. UPPER(LEFT(cTemp,5))<>"TOOLS"
+         
             oHtm:WriteLink( Lower(aWww[ nPos ,2]),UpperLower(aWww[nPos,1]))
          ENDIF
       NEXT
+      oHtm:WritePar("")
       oHtm:WritePar( "Run Time Error" )
+      oHtm:WritePar("")
       FOR nPos := 1 TO LEN( aWww )
          cTemp := aWww[ nPos,1 ]
-         IF AT( "()", cTemp ) == 0 .AND. Left(ctemp,4) =="BASE" .AND. left(cTemp,4)=="TERM" .and. left(cTemp,5)=="TOOLS"
+         IF AT( "()", cTemp ) == 0 .OR. UPPER(Left(ctemp,4)) =="BASE" .OR. UPPER(LEFT(cTemp,4))=="TERM" .OR. UPPER(LEFT(cTemp,5))=="TOOLS"
             oHtm:WriteLink( Lower(aWww[ nPos ,2]),UpperLower(aWww[nPos,1]))
          ENDIF
       NEXT

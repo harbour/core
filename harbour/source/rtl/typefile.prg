@@ -67,9 +67,9 @@ IF cFile == NIL
     Eval(ErrorBlock(), err)
 ENDIF
 
-nReadHandle := FT_FUSE(cFile)
+nHandle := FT_FUSE(cFile)
 
-IF  nReadHandle <0
+IF  nHandle <0
     err := ErrorNew()
     err:severity := ES_ERROR
     err:genCode  := EG_OPEN
