@@ -60,6 +60,8 @@ function __MenuTo( bBlock, cVariable )
    local bAction
    local nMouseClik
 
+   local nPointer
+
    // Detect if a memvar was passed
 
    if __mvSCOPE( cVariable ) <= HB_MV_ERROR
@@ -79,8 +81,9 @@ function __MenuTo( bBlock, cVariable )
    else
 
       s_nPointer ++
+      nPointer := s_nPointer
 
-      nArrLen := len( s_aLevel[ s_nPointer - 1 ] )
+      nArrLen := len( s_aLevel[ nPointer - 1 ] )
 
       // put choice in a valid range
 
@@ -112,7 +115,7 @@ function __MenuTo( bBlock, cVariable )
                DispOutAt( nMsgRow, nMsgCol, Space( Len( xMsg ) ) )
             endif
 
-            xMsg := s_aLevel[ s_nPointer - 1, n, 4 ]
+            xMsg := s_aLevel[ nPointer - 1, n, 4 ]
 
             // Code Block messages ( yes, they are documented! )
             if ISBLOCK( xMsg )
@@ -139,9 +142,9 @@ function __MenuTo( bBlock, cVariable )
          endif
 
          // highlight the prompt
-         DispOutAt( s_aLevel[ s_nPointer - 1, n, 1 ],;
-                    s_aLevel[ s_nPointer - 1, n, 2 ],;
-                    s_aLevel[ s_nPointer - 1, n, 3 ] )
+         DispOutAt( s_aLevel[ nPointer - 1, n, 1 ],;
+                    s_aLevel[ nPointer - 1, n, 2 ],;
+                    s_aLevel[ nPointer - 1, n, 3 ] )
 
          if Set( _SET_INTENSITY )
             ColorSelect( CLR_STANDARD )
@@ -178,7 +181,7 @@ function __MenuTo( bBlock, cVariable )
          do case
          case nKey == 1001
          case nKey == 1002 .OR. nKey == 1006
-            if ( ( nMouseClik := hittest(s_aLevel, mrow(), mcol()) ) > 0 )
+            if ( ( nMouseClik := hittest(s_aLevel[ nPointer-1 ], mrow(), mcol()) ) > 0 )
                 n := nMouseClik
             endif
             if ( nKey == 1006 )
@@ -204,7 +207,7 @@ function __MenuTo( bBlock, cVariable )
          otherwise
             // did user hit a hot key?
             for y := 1 to nArrLen
-               if upper( left( ltrim( s_aLevel[ s_nPointer - 1, y, 3 ] ), 1 ) ) == upper( chr( nKey ) )
+               if upper( left( ltrim( s_aLevel[ nPointer - 1, y, 3 ] ), 1 ) ) == upper( chr( nKey ) )
                   n := y
                   lExit := .T.
                   exit
@@ -213,9 +216,9 @@ function __MenuTo( bBlock, cVariable )
          endcase
 
          if n <> 0
-            DispOutAt( s_aLevel[ s_nPointer - 1, q, 1 ],;
-                       s_aLevel[ s_nPointer - 1, q, 2 ],;
-                       s_aLevel[ s_nPointer - 1, q, 3 ] )
+            DispOutAt( s_aLevel[ nPointer - 1, q, 1 ],;
+                       s_aLevel[ nPointer - 1, q, 2 ],;
+                       s_aLevel[ nPointer - 1, q, 3 ] )
          endif
 
       enddo
@@ -223,6 +226,7 @@ function __MenuTo( bBlock, cVariable )
       ReadVar( cSaveReadVar )
       SetCursor( nSaveCursor )
 
+      s_nPointer := nPointer
       s_nPointer --
       asize( s_aLevel, s_nPointer - 1 )
 
