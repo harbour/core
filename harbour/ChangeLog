@@ -1,3 +1,7 @@
+19990512-21:30:00 EDT David G. Holm <dholm@jsd-llc.com>
+  * makefile.b31
+    - Added implicit rule to compile .prg files in source\tools
+
 19990512-18:40 Eddie Runia
   * source/tools/stringp.prg
     #defines added

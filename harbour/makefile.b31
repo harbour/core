@@ -60,6 +60,11 @@ symbols.obj : symbols.asm
 tclass.obj   : tclass.prg extend.h types.h init.h harbour.exe
 transfrm.obj : transfrm.c extend.h types.h
 
+{source\tools}.prg{obj}.obj:
+  bin\harbour $< /n /osource\tools
+  bcc -c -mh -O2 -I.\include -o$@ $*.c
+  tlib .\libs\b16\hbtools.lib -+$@,,
+
 .prg.obj:
   bin\harbour $< /n /osource\rtl
   bcc -c -mh -O2 -I.\include -o$@ $*.c
