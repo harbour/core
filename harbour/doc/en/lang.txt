@@ -66,6 +66,7 @@
  *      Russian               Windows-1251   RUWIN
  *      Serbian               852            SR852
  *      Serbian               ISO-8859-2     SRISO
+ *      Serbian               Windows-1251   SRWIN
  *      Slovenian             852            SL852
  *      Slovenian             ISO-8859-2     SLISO
  *      Slovenian             Windows-1250   SLWIN

@@ -144,7 +144,7 @@ static HB_LANG s_lang =
       "",
       "פעולה זאת אינה נתמכת",
       "Limit exceeded",
-      "אינקס משובש או לא תקין",
+      "אינדקס משובש או לא תקין",
       "Data type error",
       "Data width error",
       "Workarea not in use",

@@ -50,9 +50,9 @@
  *
  */
 
-/* Language name: Serbian */
+/* Language name: Serbian          */
 /* ISO language code (2 chars): SR */
-/* Codepage: Windows-1251 */
+/* Codepage: Windows-1251          */
 
 #include "hbapilng.h"
 
@@ -63,7 +63,7 @@ static HB_LANG s_lang =
 
       "SRWIN",                     /* ID */
       "Serbian",                   /* Name (in English) */
-      "Српски",                   /* Name (in native language) */
+      "Српски",                    /* Name (in native language) */
       "SR",                        /* RFC ID */
       "1251",                      /* Codepage */
       "$Revision$ $Date$",         /* Version */
@@ -81,7 +81,7 @@ static HB_LANG s_lang =
       "Септембар",
       "Октобар",
       "Новембар",
-      "Децембар"
+      "Децембар",
 
       /* Day names */
 
@@ -91,7 +91,7 @@ static HB_LANG s_lang =
       "Среда",
       "Четвртак",
       "Петак",
-      "Субота"
+      "Субота",
 
       /* CA-Cl*pper compatible natmsg items */
 
@@ -161,8 +161,7 @@ static HB_LANG s_lang =
       "приступ низу",
       "величина низа",
       "није у низу",
-      "упорђеoе"
-
+      "упорђеoе",
 
       /* Internal error names */
 
@@ -195,7 +194,7 @@ static HB_LANG s_lang =
 
       /* Texts */
 
-      "ДД.ММ.ГГГГ",
+      "DD.MM.YYYY",
       "Д",
       "Н"
    }

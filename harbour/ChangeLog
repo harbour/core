@@ -8,6 +8,18 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-06-23 10:05 UTC+0300 Chen Kedem <niki@actcom.co.il>
+  * doc/en/lang.txt
+    + Added the following to HB_LANGSELECT() list of supported ID's:
+      Serbian Windows-1251
+
+  * source/lang/msghe862.c
+  * source/lang/msghewin.c
+    ! fix Hebrew typo
+
+  * source/lang/msgsrwin.c
+    ! add missings commas
+
 2003-06-18 02:05 UTC+0200 Przemyslaw Czerpak <druzus@polbox.com>
   * harbour/source/codepage/Makefile
   * harbour/source/codepage/cdpesdos.c

@@ -144,7 +144,7 @@ static HB_LANG s_lang =
       "",
       "š‹š „‰€ š€† „Œ…’”",
       "Limit exceeded",
-      "‰—š €Œ …€ ™…™ ‘—‰€",
+      "‰—š €Œ …€ ™…™ ‘—ƒ‰€",
       "Data type error",
       "Data width error",
       "Workarea not in use",
