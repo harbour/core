@@ -9,7 +9,7 @@
 
 EXTERNAL __case, __begin
 STATIC nExt, bEgin, bReak, cAse, do, wHile, wIth, eXit, eXternal, fIeld
-STATIC for, in, include, init, loop, local
+STATIC for, in, include, init, loop, local, using, static, return, recover
 
 Function Main()
 
@@ -62,7 +62,15 @@ Function Main()
 
    LOOP( loop )
 
-RETURN nil
+   USING( using )
+
+   STATIC( STATIC )
+
+   return :=return( return )
+
+   RECOVER( recover )
+
+RETURN( return )
 
 /*================================================================
 * * * * * ** Checking for NEXT
@@ -529,7 +537,7 @@ FIEL fiel
   FIELD( FIEL(0) )
 
   DO field
-  DO field WITH field
+  DO field WITH field     //field cannot be passed by a reference
   WHILE field
     fiel :=field +1
   ENDDO
@@ -607,7 +615,7 @@ FIELD field IN field
   EVAL( {|in| in}, in )
 
   DO in
-  DO in WITH in
+  DO in WITH in       //field cannot be passed be a reference
 
 RETURN in
 
@@ -748,3 +756,189 @@ FUNCTION loop( loop )
   DO loop WITH loop
 
 RETURN loop
+
+
+/*====================================================================
+* Test for USING
+*/
+FUNCTION using
+LOCAL using
+PRIVATE &using
+
+  EVAL( using )
+
+  FOR using:=1 TO 10
+    ? using
+    BREAK using
+  NEXT
+
+  DO WHILE using > 0
+    ++using
+    using--
+  ENDDO
+
+  BEGIN SEQUENCE
+    ? USIN
+  RECOVER USIN using
+    ? using
+  END
+
+RETURN using
+
+
+/*====================================================================
+* Test for STATIC
+*/
+FUNCTION STATIC
+STAT stat
+STATI stati
+STATIC static
+PRIVATE &STATIC
+
+  EVAL( STATIC )
+
+  FOR static:=1 TO 10
+    ? static
+    static( static )
+    BREAK static
+  NEXT
+
+  IF static
+     BREAK stat
+  ENDIF
+
+  DO WHILE static
+    ++static
+    static -=2
+    break stat
+  ENDDO
+
+  BEGIN SEQUENCE
+    ? static
+  RECOVER USIN static
+    ? static
+  END
+
+RETURN static
+
+
+/*====================================================================
+* Test for RETURN
+*/
+FUNCTION RETURN
+STAT return
+PRIVATE &return
+
+  EVAL( return )
+
+  FOR return:=1 TO 10
+    ? return
+    return ( return )
+    BREAK return
+  NEXT
+
+  IF return
+     RETU return
+  ENDIF
+
+  return := return( return )
+
+  DO WHILE return
+    ++return
+    return -=2
+    break return
+  ENDDO
+
+  BEGIN SEQUENCE
+    ? return
+  RECOVER USIN return
+    ? return
+  END
+
+RETURN( return ) + 2
+
+
+/*====================================================================
+* Test for RECOVER
+*/
+FUNCTION RECOVER
+STAT RECOVER
+PRIVATE &RECOVER
+
+  EVAL( RECOVER )
+
+  FOR RECOVER:=1 TO 10
+    ? RECOVER
+    RECOVER ( RECOVER )
+    BREAK RECOVER
+  NEXT
+
+  IF RECOVER
+     RETU RECOVER
+  ENDIF
+
+  RECOVER := RECOVER( RECOVER )
+
+  DO WHILE RECOVER
+    ++RECOVER
+    RECOVER -=2
+    break RECOVER
+  ENDDO
+
+  BEGIN SEQUENCE
+    ? RECOVER
+  RECOVER
+    ? RECOVER
+  END
+
+  BEGIN SEQUENCE
+    ? RECOVER
+  RECOVER USIN RECOVER
+    ? RECOVER
+  END
+
+RETURN( RECOVER ) +2
+
+
+/*====================================================================
+* Test for OTHERWISE
+*/
+FUNCTION OTHERWISE
+STAT OTHERWISE
+PRIVATE &OTHERWISE
+
+  EVAL( OTHERWISE )
+
+  FOR OTHERWISE:=1 TO 10
+    ? OTHERWISE
+    OTHERWISE ( OTHERWISE )
+    BREAK OTHERWISE
+  NEXT
+
+  IF OTHERWISE
+     RETU OTHERWISE
+  ENDIF
+
+  OTHERWISE := OTHERWISE( OTHERWISE )
+
+  OTHERWISE++
+
+  DO WHILE OTHERWISE
+    ++OTHERWISE
+    OTHERWISE -=2
+    break OTHERWISE
+  ENDDO
+
+  DO CASE
+  CASE OTHERWISE
+    ? OTHERWISE
+  CASE !OTHERWISE
+    ? OTHERWISE
+  OTHE
+    ? OTHERWISE +1
+//  OTHER           //Mayhem in CASE
+//    ? OTHERWISE +2
+  END
+
+
+RETURN( OTHERWISE ) +2

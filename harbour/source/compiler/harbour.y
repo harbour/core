@@ -164,7 +164,8 @@ static char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
 %token INC DEC ALIASOP DOCASE CASE OTHERWISE ENDCASE ENDDO MEMVAR
 %token WHILE EXIT LOOP END FOR NEXT TO STEP LE GE FIELD IN PARAMETERS
 %token PLUSEQ MINUSEQ MULTEQ DIVEQ POWER EXPEQ MODEQ EXITLOOP
-%token PRIVATE BEGINSEQ BREAK RECOVER USING DO WITH SELF LINE MACROVAR MACROTEXT
+%token PRIVATE BEGINSEQ BREAK RECOVER RECOVERUSING DO WITH SELF LINE 
+%token MACROVAR MACROTEXT
 %token AS_NUMERIC AS_CHARACTER AS_LOGICAL AS_DATE AS_ARRAY AS_BLOCK AS_OBJECT DECLARE_FUN
 
 /*the lowest precedence*/
@@ -308,7 +309,7 @@ Statement  : ExecFlow   CrlfStmnt   { }
            | DoProc CrlfStmnt       { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
            | BREAK CrlfStmnt        { hb_compGenBreak(); hb_compGenPCode3( HB_P_DO, 0, 0 );
                                       hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
-           | BREAK { hb_compLinePushIfInside(); } Expression Crlf { hb_compGenBreak(); hb_compExprDelete( hb_compExprGenPush( $3 ) );
+           | BREAK { hb_compLinePushIfInside(); } Expression Crlf  { hb_compGenBreak(); hb_compExprDelete( hb_compExprGenPush( $3 ) );
                                            hb_compGenPCode3( HB_P_DO, 1, 0 );
                                            hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE;
                                          }
@@ -342,11 +343,11 @@ Statement  : ExecFlow   CrlfStmnt   { }
                         hb_comp_bDontGenLineNum = TRUE;
                         hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE;
                      }
-           | PUBLIC { hb_compLinePushIfInside(); hb_comp_iVarScope = VS_PUBLIC; } 
-	            ExtVarList
+           | PUBLIC { hb_compLinePushIfInside(); hb_comp_iVarScope = VS_PUBLIC; }
+                     ExtVarList
                     { hb_compRTVariableGen( "__MVPUBLIC" ); } CrlfStmnt
-           | PRIVATE { hb_compLinePushIfInside(); hb_comp_iVarScope = VS_PRIVATE; } 
-	             ExtVarList
+           | PRIVATE { hb_compLinePushIfInside(); hb_comp_iVarScope = VS_PRIVATE; }
+                     ExtVarList
                     { hb_compRTVariableGen( "__MVPRIVATE" ); } CrlfStmnt
 
            | EXITLOOP  CrlfStmnt            { hb_compLoopExit(); hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
@@ -1240,6 +1241,8 @@ Cases      : CASE Expression Crlf
 
 Otherwise  : OTHERWISE Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; hb_compLinePush(); }
                 EmptyStats
+           | Otherwise OTHERWISE { hb_compGenError( hb_comp_szErrors, 'E', ERR_MAYHEM_IN_CASE, NULL, NULL ); } Crlf 
+                EmptyStats
            ;
 
 DoWhile    : WhileBegin Expression Crlf
@@ -1257,7 +1260,7 @@ DoWhile    : WhileBegin Expression Crlf
                {
                   hb_compGenJumpHere( $<lNumber>4 ); --hb_comp_wWhileCounter;
                   hb_compLoopEnd();
-                  hb_comp_functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
+                  hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
                 }
            ;
 
@@ -1371,13 +1374,13 @@ RecoverEmpty : RECOVER
                }
            ;
 
-RecoverUsing : RECOVER USING IdentName
+RecoverUsing : RECOVERUSING IdentName
                {
                   hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
                   $<lNumber>$ = hb_comp_functions.pLast->lPCodePos;
                   --hb_comp_wSeqCounter;
                   hb_compGenPCode1( HB_P_SEQRECOVER );
-                  hb_compGenPopVar( $3 );
+                  hb_compGenPopVar( $2 );
                }
            ;
 
@@ -1389,7 +1392,7 @@ RecoverUsing : RECOVER USING IdentName
  */
 DoName     : IdentName       { $$ = hb_compExprNewFunName( $1 ); }
            | MacroVar         { $$ = $1; }
-	   | MacroExpr		{ $$ = $1; }
+           | MacroExpr    { $$ = $1; }
            ;
 
 DoProc     : DO DoName
@@ -1840,9 +1843,9 @@ static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue )
      HB_EXPR_PTR pVar = hb_compExprNewVar( szName );
      HB_EXPR_PTR pAssign;
 
+     hb_compStaticDefStart();   /* switch to statics pcode buffer */
      /* create a static variable */
      hb_compVariableAdd( szName, 'A' );
-     hb_compStaticDefStart();   /* switch to statics pcode buffer */
      /* create an array */
      hb_compExprGenPush( pInitValue );
      hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ) );

@@ -234,3 +234,10 @@ void hb_gt_SetBlink( BOOL bBlink )
 
    s_bBlink = bBlink;
 }
+
+#if defined(OS_UNIX_COMPATIBLE)
+int hb_gt_ReadKey( void )
+{
+   return 0;
+}
+#endif

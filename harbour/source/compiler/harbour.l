@@ -111,8 +111,8 @@ Separator     {SpaceTab}
 %x            STRING1 STRING2 STRING3
 %x            NEXT_ BREAK_ CASE_ DO_ WHILE_ WITH_ END_ EXIT_ EXTERNAL_ FIELD_
 %x            FOR_ FUNCTION_ IIF_ IF_ IN_ INIT_ LOCAL_ LOOP_ DECLARE_
-%x            MEMVAR_ PARAM_ PRIVATE_ PUBLIC_
-%x            INVALIDNUM_
+%x            MEMVAR_ PARAM_ PRIVATE_ PUBLIC_ STATIC_ RETURN_ RECOVER_
+%x            INVALIDNUM_ OTHERWISE_ PROCEDURE_
 %s            INDEX
 
 %%
@@ -916,13 +916,40 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "nil"          hb_comp_iState =LITERAL; return NIL;
-"otherwise"    return OTHERWISE;
+%{
+/* ************************************************************************ */
+%}
+"othe"|"other"|"otherw"|"otherwi"|"otherwis"|"otherwise"    {
+                  yylval.string = hb_strupr( hb_strdup( yytext ) );
+                  BEGIN OTHERWISE_;
+               }
+<OTHERWISE_>{Separator}*[\n\;]     { /* end of line */
+                 unput( yytext[ yyleng-1 ] );
+                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                 if( hb_comp_iState == LOOKUP )
+                 { /* it is the first item in the line */
+                   hb_xfree( (void *) yylval.string );
+                   hb_comp_iState = OTHERWISE;
+                   return OTHERWISE;
+                 }
+                 else
+                 { /* there is another item in line already */
+                   hb_comp_iState =IDENTIFIER;
+                   return IDENTIFIER;
+                 }
+               }
+<OTHERWISE_>{Separator}*.     {
+                   unput( yytext[ yyleng-1 ] );
+                   if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                   hb_comp_iState = IDENTIFIER;
+                   return IDENTIFIER;
+               }
 %{
 /* ************************************************************************ */
 %}
 "para"|"param"|"parame"|"paramet"|"paramete"|"parameter"|"parameters"   {
-                  BEGIN PARAM_;
                   yylval.string = hb_strupr( hb_strdup( yytext ) );
+                  BEGIN PARAM_;
                 }
 <PARAM_>{Separator}+[_a-zA-Z]   { /* an identifier after PARAMETERS */
                  unput( yytext[ yyleng-1 ] );
@@ -975,7 +1002,16 @@ Separator     {SpaceTab}
 %{
 /* ************************************************************************ */
 %}
-"proc"|"procedure" return PROCEDURE;
+"proc"|"proce"|"proced"|"procedu"|"procedur"|"procedure"    BEGIN PROCEDURE_;
+<PROCEDURE_>{Separator}+[_a-zA-Z] {
+               BEGIN 0; /* we can don't care about INDEX_STATE here */
+               unput( yytext[ yyleng-1 ] );
+               hb_comp_iState = PROCEDURE;
+               return PROCEDURE;
+             }
+<PROCEDURE_>{Separator}*[^_a-zA-Z] { /* Clipper needs PROCEDURE in one context only */
+               hb_compGenError( hb_comp_szErrors, 'E', ERR_SYNTAX, ((yytext[ yyleng-1 ]=='\n')?"PROCEDURE":yytext), NULL );
+             }
 %{
 /* ************************************************************************ */
 %}
@@ -1007,12 +1043,116 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "qself"{SpaceTab}*[(]{SpaceTab}*[)] return SELF;
-"recover"      hb_comp_iState = RECOVER; return RECOVER;
-"retu"|"retur"|"return"  hb_comp_iState = RETURN; return RETURN;
-"static"       hb_comp_iState = STATIC; return STATIC;
+%{
+/* ************************************************************************ */
+%}
+"reco"|"recov"|"recove"|"recover"   {
+                  yylval.string = hb_strupr( hb_strdup( yytext ) );
+                  BEGIN RECOVER_;
+                }
+<RECOVER_>{Separator}*[\n]    { /* end of line */
+                 unput( yytext[ yyleng-1 ] );
+                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                 if( hb_comp_iState == LOOKUP )
+                 { /* it is first item in the line */
+                   hb_xfree( (void *) yylval.string );
+                   hb_comp_iState = RECOVER;
+                   return RECOVER;
+                 }
+                 else
+                 { /* there is another item in line already */
+                   hb_comp_iState =IDENTIFIER;
+                   return IDENTIFIER;
+                 }
+               }
+<RECOVER_>{Separator}+("using"|"usin")    { /* USING */
+                   if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                   hb_xfree( (void *) yylval.string );
+                   hb_comp_iState = RECOVERUSING;
+                   return RECOVERUSING;
+                 }
+<RECOVER_>{Separator}*.            { /* all other cases */
+                   unput( yytext[ yyleng-1 ] );
+                   if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                   hb_comp_iState =IDENTIFIER;
+                   return IDENTIFIER;
+                 }
+%{
+/* ************************************************************************ */
+%}
+"retu"|"retur"|"return"  {
+                  yylval.string = hb_strupr( hb_strdup( yytext ) );
+                  BEGIN RETURN_;
+                }
+<RETURN_>{Separator}+[\[\"\'\.\!\&\{\;_a-zA-Z0-9]   { /* an identifier after RETURN, macro, or .NOT., or string, or EOL */
+                 unput( yytext[ yyleng-1 ] );
+                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                 if( hb_comp_iState == LOOKUP )
+                 { /* it is the first item in the line */
+                   hb_xfree( (void *) yylval.string );
+                   hb_comp_iState = RETURN;
+                   return RETURN;
+                 }
+                 else
+                 { /* there is another item in line already */
+                   hb_comp_iState =IDENTIFIER;
+                   return IDENTIFIER;
+                 }
+               }
+<RETURN_>{Separator}*[\n\(]   { /* '(' after RETURN or end of line */
+                 unput( yytext[ yyleng-1 ] );
+                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                 if( hb_comp_iState == LOOKUP )
+                 { /* it is the first item in the line */
+                   hb_xfree( (void *) yylval.string );
+                   hb_comp_iState = RETURN;
+                   return RETURN;
+                 }
+                 else
+                 { /* there is another item in line already */
+                   hb_comp_iState =IDENTIFIER;
+                   return IDENTIFIER;
+                 }
+               }
+<RETURN_>{Separator}*. { /* any character after RETURN */
+                 unput( yytext[ yyleng-1 ] );
+                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                 hb_comp_iState =IDENTIFIER;
+                 return IDENTIFIER;
+               }
+%{
+/* ************************************************************************ */
+%}
+"stat"|"stati"|"static"  {
+                  yylval.string = hb_strupr( hb_strdup( yytext ) );
+                  BEGIN STATIC_;
+                }
+<STATIC_>{Separator}+[_a-zA-Z]   { /* an identifier after STATIC */
+                 unput( yytext[ yyleng-1 ] );
+                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                 if( hb_comp_iState == LOOKUP )
+                 { /* it is first item in the line */
+                   hb_xfree( (void *) yylval.string );
+                   hb_comp_iState = STATIC;
+                   return STATIC;
+                 }
+                 else
+                 { /* there is another item in line already */
+                   hb_comp_iState = IDENTIFIER;
+                   return IDENTIFIER;
+                 }
+               }
+<STATIC_>{Separator}*[^a-zA-Z] { /* any character (not identifier) after STATIC */
+                 unput( yytext[ yyleng-1 ] );
+                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                 hb_comp_iState =IDENTIFIER;
+                 return IDENTIFIER;
+               }
+%{
+/* ************************************************************************ */
+%}
 "step"         return STEP;
 "to"           return TO;
-"using"        return USING;
 %{
 /* ************************************************************************ */
 %}

@@ -85,17 +85,16 @@ FUNCTION __Wait( cString )
 
       IF ( bBlock := SetKey( nKey ) ) != NIL
          Eval( bBlock, ProcName( 1 ), ProcLine( 1 ), "" )
-         LOOP
-      ENDIF
-
-      IF nKey >= 32 .and. nKey <= 255
-         ?? Chr( nKey )
       ELSE
-         nKey := 0
+         IF nKey >= 32 .and. nKey <= 255
+            ?? Chr( nKey )
+         ELSE
+            nKey := 0
+         ENDIF
+
+         EXIT
       ENDIF
-
-      EXIT
-
+      
    ENDDO
 
    RETURN Chr( nKey )
