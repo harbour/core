@@ -1,3 +1,10 @@
+2001-11-03 14:00 GMT+7 Andi Jahja <harbour@cbn.net.id>
+   * contrib/rdd_ads/ads1.c
+     ! some clean ups
+
+   * contrib/rdd_ads/adsmgmnt.c
+     ! add type cast to quite MsVC
+
 2001-11-02 22:50 GMT+1 Martin Vogel <vogel@inttec.de>
 
    + contrib/libct/keyset.c

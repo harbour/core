@@ -1035,7 +1035,7 @@ static ERRCODE adsClose( ADSAREAP pArea )
 
    HB_TRACE(HB_TR_DEBUG, ("adsClose(%p)", pArea));
 
-   adsCloseCursor( pArea );
+   uiError = adsCloseCursor( pArea );
 
    if( pArea->szDataFileName )
    {
@@ -1493,7 +1493,6 @@ static ERRCODE adsOrderListFocus( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
       {
          /* ADS can't handle a space-padded string--we have to trim it */
          UNSIGNED8 pucTagName[ADS_MAX_TAG_NAME + 1];
-         ULONG i;
          char * pSrc = hb_itemGetCPtr( pOrderInfo->itmOrder );
          ULONG ulLen = hb_strRTrimLen( pSrc,
                         hb_itemGetCLen( pOrderInfo->itmOrder ), FALSE );

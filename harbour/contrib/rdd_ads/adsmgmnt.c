@@ -364,7 +364,7 @@ HB_FUNC( ADSMGGETUSERNAMES )   /* Return array of connected users */
 // bh:  Enhancement:  Get # of tables from ADS_MGMT_ACTIVITY_INFO.stUsers instead of set size
 
    if ( ISNUM( 2 ) )
-      ulMaxUsers = hb_parnl( 2 );
+      ulMaxUsers = (UNSIGNED16) hb_parnl( 2 );
 
    pastUserInfo = (ADS_MGMT_USER_INFO *) hb_xgrab( sizeof( ADS_MGMT_USER_INFO ) * ulMaxUsers );
       //   AdsMgGetUserNames ( ADSHANDLE hMgmtConnect,
