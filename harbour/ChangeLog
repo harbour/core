@@ -1,3 +1,8 @@
+2000-11-21 13:40 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+   * source/rtl/idle.c
+     + Added Sleep(0) for 32bit Windows mode to forfeit the
+       remainder of the current time slice in hb_releaseCPU().
+
 2000-11-21 08:55 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/ppcomp.c
    * source/compiler/harbour.c

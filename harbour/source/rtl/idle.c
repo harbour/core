@@ -47,6 +47,7 @@
 /* NOTE: For OS/2. Must be ahead of any and all #include statements */
 #define INCL_DOSPROCESS
 #define INCL_NOPMAPI
+#define HB_OS_WIN_32_USED
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -69,7 +70,8 @@ static void hb_releaseCPU( void )
    /* TODO: Add code to release time slices on all platforms */
 
 #if defined(HB_OS_WIN_32)
-   /* according to ms docs, you should not do this in a Win app. dos only */
+   /* Forfeit the remainder of the current time slice. */
+   Sleep( 0 );
 #elif defined(HB_OS_OS2)
    DosSleep( 25 ); /* Duration is in milliseconds */
 #elif defined(HB_OS_DOS)
