@@ -83,6 +83,7 @@
  *    Data initialisation & Autoinit for Bool and Numeric
  *    Scoping : Protected / exported
  *
+ * Copyright 2000 ( 08/2000-> ) JF. Lefebvre <jfl@mafact.com>
  *    hb_clsDictRealloc()   New version
  *    Now support of shared and not shared class data
  *    Multiple datas declaration fully supported
@@ -164,7 +165,7 @@ static PHB_DYNS s_msgClsParent = NULL;
 /* All functions contained in classes.c */
 
 static PHB_ITEM hb_clsInst( USHORT uiClass );
-static void     hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod );
+/*static void     hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod );*/
 static ULONG    hb_cls_MsgToNum( PHB_DYNS pMsg );
 static BOOL     hb_clsIsParent( PCLASS pClass, char * szParentName );
 static void     hb_clsDictRealloc( PCLASS pClass );
@@ -353,6 +354,7 @@ void hb_clsIsClassRef( void )
    }
 }
 
+#ifdef _NotDef
 void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
 {
    PHB_ITEM * pBase = hb_stack.pBase;
@@ -390,7 +392,6 @@ void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
 
       if( iLevel == -1 )
        {
-
         /* Now get the callers ...  */
         pCaller = * (pBase+1 ) ;
         szCallerNameMsg       = ( *pBase )->item.asSymbol.value->szName ;
@@ -489,7 +490,7 @@ void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
         }
     }
 }
-
+#endif
 
 ULONG hb_cls_MsgToNum( PHB_DYNS pMsg )
 {
@@ -720,7 +721,7 @@ PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc 
          {
             pMethod = pClass->pMethods + uiAt;
             pFunction = pMethod->pFunction;
-            hb_clsScope( pObject, pMethod );
+            /*hb_clsScope( pObject, pMethod );*/
             s_pMethod = pMethod ;
             pMethod->ulCalls++; /* Profiler */
             return pFunction;
