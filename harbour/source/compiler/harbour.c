@@ -2756,11 +2756,11 @@ static void hb_compOptimizeFrames( PFUNCTION pFunc )
             {
                /*printf( "\nChecking: %s Used: %i\n", pVar->szName, pVar->iUsed );*/
 
-               if ( ( ! pVar->iUsed & VU_USED ) && pVar->iUsed & VU_INITIALIZED )
+               if ( ! ( pVar->iUsed & VU_USED ) && (pVar->iUsed & VU_INITIALIZED) )
                   hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_VAL_NOT_USED, pVar->szName, NULL );
 
                /* May have been initialized in previous execution of the function.
-               else if ( pVar->iUsed & VU_USED && ! ( pVar->iUsed & VU_INITIALIZED ) )
+               else if ( ( pVar->iUsed & VU_USED ) && ! ( pVar->iUsed & VU_INITIALIZED ) )
                   hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_NOT_INITIALIZED, pVar->szName, NULL );
                */
                pVar = pVar->pNext;
