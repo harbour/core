@@ -152,14 +152,14 @@
 #define HB_HIBYTE( w )          ( ( BYTE ) ( ( ( USHORT ) ( w ) >> 8 ) & 0xFF ) )
 #define HB_MKSHORT( lo, hi )    ( ( SHORT ) ( ( ( SHORT ) ( hi ) ) << 8 ) | ( lo ) )
 #define HB_MKUSHORT( lo, hi )   ( ( USHORT ) ( ( ( USHORT ) ( hi ) ) << 8 ) | ( lo ) )
-#define HB_MKLONG( b1, b2, b3, b4 )  ( ( ( LONG ) ( b4 ) ) << 24 ) | \
-                                     ( ( ( LONG ) ( b3 ) ) << 16 ) | \
-                                     ( ( ( LONG ) ( b2 ) ) <<  8 ) | \
-                                     ( ( ( LONG ) ( b1 ) ) )
-#define HB_MKULONG( b1, b2, b3, b4 ) ( ( ( ULONG ) ( b4 ) ) << 24 ) | \
-                                     ( ( ( ULONG ) ( b3 ) ) << 16 ) | \
-                                     ( ( ( ULONG ) ( b2 ) ) <<  8 ) | \
-                                     ( ( ( ULONG ) ( b1 ) ) )
+#define HB_MKLONG( b1, b2, b3, b4 )  ( ( ( ( LONG ) ( b4 ) ) << 24 ) | \
+                                       ( ( ( LONG ) ( b3 ) ) << 16 ) | \
+                                       ( ( ( LONG ) ( b2 ) ) <<  8 ) | \
+                                       ( ( ( LONG ) ( b1 ) ) ) )
+#define HB_MKULONG( b1, b2, b3, b4 ) ( ( ( ( ULONG ) ( b4 ) ) << 24 ) | \
+                                       ( ( ( ULONG ) ( b3 ) ) << 16 ) | \
+                                       ( ( ( ULONG ) ( b2 ) ) <<  8 ) | \
+                                       ( ( ( ULONG ) ( b1 ) ) ) )
 
 #define HB_SYMBOL_UNUSED( symbol ) ( void ) symbol
 

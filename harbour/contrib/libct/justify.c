@@ -75,7 +75,7 @@ static void do_justify (int iSwitch)
     size_t sStrLen = hb_parclen (1);
     char cJustChar;
     char *pc, *pcRet;
-    size_t sJustOffset, sCnt;
+    size_t sJustOffset;
 
     if (hb_parclen (2) > 0)
       cJustChar = *(hb_parc (2));

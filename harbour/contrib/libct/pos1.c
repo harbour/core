@@ -84,7 +84,7 @@ static void do_pos1 (int iSwitch)
      )
   {
 
-    char *pcString;
+    unsigned char *pcString;
     size_t sStrLen;
     unsigned char *puc, ucChar1, ucChar2;
     int iMode;
@@ -117,7 +117,7 @@ static void do_pos1 (int iSwitch)
       iParamShift += 2;
     }
 
-    pcString = hb_parc (iParamShift+1);
+    pcString = (unsigned char *)hb_parc (iParamShift+1);
     sStrLen = (size_t)hb_parclen (iParamShift+1);
 
     if (ISLOG (iParamShift+2))

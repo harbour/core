@@ -1,3 +1,16 @@
+2001-07-24 11:10 MEST Martin Vogel <vogel@inttec.de>
+   * include/hbdefs.h
+     * added parenthesis around HB_MKLONG and HB_MKULONG definitions to avoid warning
+       in gcc
+   * include/hbvmpub.h
+     * added newline at end of file (my gcc brought a warning)
+
+   * contrib/libct/justify.c
+     * removed unused variable
+
+   * contrib/libct/pos.1
+     * fixed error and warning about mixture of pointers to signed and unsigned char
+	
 2001-07-23 20:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/vm/macro.c
      ! Corrected a compiler warning.
