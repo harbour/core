@@ -1,3 +1,13 @@
+2000-09-21 16:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+   * include/hbver.h
+     % Bumped the revision code to "d" and the date to 2000-09-21
+       for another interim build with the latest ADS RDD fixes.
+
+   * source/rtl/filesys.c
+     ! Corrected the 2000-08-28 22:50 UTC+0100 fix for hb_fsLock()
+       for DJGPP to exclude all other GNUC builds.
+
 2000-09-21 16:30 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * source/pp/pptable.c
      * changed rule for setrelations .... scoped
