@@ -1,3 +1,10 @@
+2001-02-03 08:52 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/debug/debugger.prg
+     + Mouse support added to the popups.
+
+   * source/debug/dbgtmenu.prg
+     + Mouse support added to the popups.
+
 2001-02-03 08:00 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/debug/debugger.prg
      + Mouse support added to the variables window.
