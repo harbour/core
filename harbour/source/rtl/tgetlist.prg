@@ -34,6 +34,7 @@
  */
 
 #include "classes.ch"
+#include "common.ch"
 #include "getexit.ch"
 #include "inkey.ch"
 #include "set.ch"
@@ -56,7 +57,7 @@ function ReadModal( GetList, nPos )
    oGetList:cReadProcName = ProcName( 1 )
    oGetList:nReadProcLine = ProcLine( 1 )
 
-   if ! ( ValType( nPos ) == "N" .and. nPos > 0 )
+   if ! ( ISNUM( nPos ) .and. nPos > 0 )
       oGetList:nPos = oGetList:Settle( 0 )
    endif
 
@@ -64,7 +65,7 @@ function ReadModal( GetList, nPos )
       oGetList:oGet = oGetList:aGetList[ oGetList:nPos ]
       oGetList:PostActiveGet()
 
-      if ValType( oGetList:oGet:Reader ) == "B"
+      if ISBLOCK( oGetList:oGet:Reader )
          Eval( oGet:Reader, oGetList:oGet )
       else
          oGetList:Reader()
@@ -449,7 +450,7 @@ return cName
 
 METHOD SetFormat( bFormat ) CLASS TGetList
 
-   ::bFormat = If( ValType( bFormat ) == "B", bFormat, nil )
+   ::bFormat = If( ISBLOCK( bFormat ), bFormat, nil )
 
 return nil
 
@@ -489,7 +490,7 @@ METHOD ReadVar( cNewVarName ) CLASS TGetList
 
    local cOldName := ::cVarName
 
-   if ValType( cNewVarName ) == "C"
+   if ISCHAR( cNewVarName )
       ::cVarName := cNewVarName
    endif
 

@@ -35,10 +35,8 @@
 
 // Standard Harbour ErrorSys system
 
+#include "common.ch"
 #include "error.ch"
-
-#define ISCHAR( var )   ( ValType(var) == "C" )
-#define ISNUM( var )    ( ValType(var) == "N" )
 
 //----------------------------------------------------------------------------//
 

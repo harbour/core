@@ -3,61 +3,63 @@
  */
 
 /*
-   Harbour Project source code
+ * Harbour Project source code:
+ * The Console API
+ *
+ * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version, with one exception:
+ *
+ * The exception is that if you link the Harbour Runtime Library (HRL)
+ * and/or the Harbour Virtual Machine (HVM) with other files to produce
+ * an executable, this does not by itself cause the resulting executable
+ * to be covered by the GNU General Public License. Your use of that
+ * executable is in no way restricted on account of linking the HRL
+ * and/or HVM code into it.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
+ * their web site at http://www.gnu.org/).
+ *
+ */
 
-   Console management
-
-   Copyright 1999  Antonio Linares <alinares@fivetech.com>
-   www - http://www.harbour-project.org
-
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version, with one exception:
-
-   The exception is that if you link the Harbour Runtime Library (HRL)
-   and/or the Harbour Virtual Machine (HVM) with other files to produce
-   an executable, this does not by itself cause the resulting executable
-   to be covered by the GNU General Public License. Your use of that
-   executable is in no way restricted on account of linking the HRL
-   and/or HVM code into it.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
-   their web site at http://www.gnu.org/).
-*/
-
-/* Harbour Project source code
-   http://www.Harbour-Project.org/
-
-   The following functions are Copyright 1999 Eddie Runia <eddie@runia.com>:
-      __ACCEPT()
-
-   The following functions are Copyright 1999 David G. Holm <dholm@jsd-llc.com>:
-      adjust_pos(), hb_altout(), hb_devout(), HB_DEVOUT(), hb_devpos(),
-      HB_DEVPOS(), hb_dispout(), HB___EJECT(), hb_max_col(), HB_MAXCOL(),
-      hb_max_row(), HB_MAXROW(), hb_out(), hb_outerr(), HB_OUTERR(),
-      hb_outstd(), HB_OUTSTD(), HB_PCOL(), HB_PROW(), hb_setpos(),
-      HB_SETPOS(), HB_SETPRC(), HB_SCROLL(), and hb_consoleInitialize().
-
-   The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
-      HB_SETPOSBS()
-      HB_DISPBOX() GT version.
-      HB_DISPBEGIN()
-      HB_DISPEND()
-      HB_DISPCOUNT()
-      HB_ISCOLOR()
-      HB_NOSNOW()
-      HB___COLORINDEX().
-
-   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
-*/
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Eddie Runia <eddie@runia.com>
+ *    HB___ACCEPT()
+ *
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ *    adjust_pos(), hb_altout(), hb_devout(), HB_DEVOUT(), hb_devpos(),
+ *    HB_DEVPOS(), hb_dispout(), HB___EJECT(), hb_max_col(), HB_MAXCOL(),
+ *    hb_max_row(), HB_MAXROW(), hb_out(), hb_outerr(), HB_OUTERR(),
+ *    hb_outstd(), HB_OUTSTD(), HB_PCOL(), HB_PROW(), hb_setpos(),
+ *    HB_SETPOS(), HB_SETPRC(), HB_SCROLL(), and hb_consoleInitialize()
+ *
+ * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ *    HB_SETPOSBS()
+ *    HB_DISPBOX() (GT version)
+ *    HB_DISPBEGIN()
+ *    HB_DISPEND()
+ *    HB_DISPCOUNT()
+ *    HB_ISCOLOR()
+ *    HB_NOSNOW()
+ *    HB___COLORINDEX()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
 
 #include "extend.h"
 #include "itemapi.h"

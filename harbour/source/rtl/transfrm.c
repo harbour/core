@@ -3,10 +3,11 @@
  */
 
 /*
- * TransForm. Clipper transformation function
+ * Harbour Project source code:
+ * TRANSFORM() function
  *
- * Copyright (C) 1999 Eddie Runia (eddie@runia.com)
- * Part of the Harbour Project www.harbour-project.org
+ * Copyright 1999 Eddie Runia <eddie@runia.com>
+ * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,8 +31,17 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
  * their web site at http://www.gnu.org/).
  *
- * Partial Copyright Matthew Hamilton <mhamilton@bunge.com.au>
- *    partial copyright with regards to string handling
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Matthew Hamilton <mhamilton@bunge.com.au>
+ *    String handling
+ *
+ * See doc/license.txt for licensing terms.
+ *
  */
 
 /* TODO: Getting rid of calling back HARBOUR HB_STR() function */

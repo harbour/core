@@ -3,57 +3,64 @@
  */
 
 /*
-   Harbour Project source code
+ * Harbour Project source code:
+ * The Keyboard API
+ *
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version, with one exception:
+ *
+ * The exception is that if you link the Harbour Runtime Library (HRL)
+ * and/or the Harbour Virtual Machine (HVM) with other files to produce
+ * an executable, this does not by itself cause the resulting executable
+ * to be covered by the GNU General Public License. Your use of that
+ * executable is in no way restricted on account of linking the HRL
+ * and/or HVM code into it.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
+ * their web site at http://www.gnu.org/).
+ *
+ */
 
-   This module contains the Harbour functions for INKEY management.
+/*
+ * ChangeLog:
+ *
+ * V 1.36   David G. Holm               Added __MINGW32__ support
+ * V 1.35   David G. Holm               Changed the __CYGWIN__ build to use
+ *                                      the Unix keyboard input method and
+ *                                      modified it to not block the VM.
+ * V 1.21   David G. Holm               Added OS/2 DosSleep()
+ * V 1.15   David G. Holm               Tested Borland 3.1 hb_releaseCPU()
+ * V 1.5    Paul Tucker                 ReleaseCPU comments
+ * V 1.4    Victor Szel
+ * V 1.3    Victor Szel                 #include <x> changed to #include "x".
+ * V 1.2    Gonzalo Diethelm            ?
+ * V 1.1    David G. Holm               Committed to CVS.
+ * V 1.0    David G. Holm               Initial version.
+ *
+ */
 
-   Copyright 1999 David G. Holm <dholm@jsd-llc.com>
-   www - http://www.harbour-project.org
-
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version, with one exception:
-
-   The exception is that if you link the Harbour Runtime Library (HRL)
-   and/or the Harbour Virtual Machine (HVM) with other files to produce
-   an executable, this does not by itself cause the resulting executable
-   to be covered by the GNU General Public License. Your use of that
-   executable is in no way restricted on account of linking the HRL
-   and/or HVM code into it.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
-   their web site at http://www.gnu.org/).
-
-   V 1.36   David G. Holm               Added __MINGW32__ support
-   V 1.35   David G. Holm               Changed the __CYGWIN__ build to use
-                                        the Unix keyboard input method and
-                                        modified it to not block the VM.
-   V 1.21   David G. Holm               Added OS/2 DosSleep()
-   V 1.15   David G. Holm               Tested Borland 3.1 hb_releaseCPU()
-   V 1.5    Paul Tucker                 ReleaseCPU comments
-   V 1.4    Victor Szel
-   V 1.3    Victor Szel                 #include <x> changed to #include "x".
-   V 1.2    Gonzalo Diethelm            ?
-   V 1.1    David G. Holm               Committed to CVS.
-   V 1.0    David G. Holm               Initial version.
-*/
-
-/* Harbour Project source code
-   http://www.Harbour-Project.org/
-
-   The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
-      HB___KEYPUT()
-
-   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
-*/
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ *    HB___KEYPUT()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
 
 /* Note: The following #ifdef block for __IBMCPP__ must be ahead
          of any and all #include statements and requires that

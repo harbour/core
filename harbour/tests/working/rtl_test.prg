@@ -386,10 +386,7 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( 1 / NIL                         , "E BASE 1084 Argument error / F:S" )
    TEST_LINE( 1 * NIL                         , "E BASE 1083 Argument error * F:S" )
    TEST_LINE( 1 ** NIL                        , "E BASE 1088 Argument error ^ F:S" )
-/* NOTE: Harbour PP fails to process this line, so it's temporarly commented out */
-#ifndef __HARBOUR__
    TEST_LINE( 1 ^ NIL                         , "E BASE 1088 Argument error ^ F:S" )
-#endif
    TEST_LINE( 1 % NIL                         , "E BASE 1085 Argument error % F:S" )
 
    TEST_LINE( -Month(sdDate)                  , -1                                 )
@@ -404,10 +401,7 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( -(-10)                          , 10                                 )
    TEST_LINE( -("1")                          , "E BASE 1080 Argument error - F:S" )
 
-/* NOTE: Harbour PP fails to process this line, so it's temporarly commented out */
-#ifndef __HARBOUR__
    TEST_LINE( "AA" $ 1                        , "E BASE 1109 Argument error $ F:S" )
-#endif
    TEST_LINE( scString $ 1                    , "E BASE 1109 Argument error $ F:S" )
    TEST_LINE( 1 $ "AA"                        , "E BASE 1109 Argument error $ F:S" )
 

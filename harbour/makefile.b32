@@ -24,7 +24,7 @@ harbour.lib : achoice.obj adir.obj alert.obj arrays.obj asort.obj \
               errorapi.obj errorsys.obj harbinit.obj extend.obj fileread.obj filesys.obj fm.obj \
               hardcr.obj hb_f.obj hvm.obj initsymb.obj inkey.obj itemapi.obj \
               langapi.obj math.obj mathx.obj memvars.obj menuto.obj mtran.obj msges.obj \
-              objfunc.obj readvar.obj xsavescr.obj\
+              objfunc.obj readvar.obj xsavescr.obj memvarbl.obj \
               set.obj setcolor.obj setkey.obj strfmt.obj strings.obj symbols.obj stringp.obj \
               stringsx.obj tbcolumn.obj tbrowse.obj tbrwtext.obj tclass.obj tget.obj tgetlist.obj tone.obj transfrm.obj
 
@@ -88,6 +88,7 @@ tone.obj     : tone.c     extend.h init.h inkey.h
 transfrm.obj : transfrm.c extend.h hbdefs.h
 readvar.obj  : readvar.c  extend.h hbdefs.h
 xsavescr.obj : xsavescr.c extend.h hbdefs.h
+memvarbl.obj : memvarbl.c extend.h hbdefs.h
 
 achoice.c    : achoice.prg   harbour.exe
 adir.c       : adir.prg      harbour.exe
@@ -111,6 +112,7 @@ tget.c       : tget.prg      harbour.exe
 tgetlist.c   : tgetlist.prg  harbour.exe
 readvar.c    : readvar.prg   harbour.exe
 xsavescr.c   : xsavescr.prg  harbour.exe
+memvarbl.c   : memvarbl.prg  harbour.exe
 
 .prg.c:
   bin\harbour $< /n /osource\rtl\ /iinclude

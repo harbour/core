@@ -133,15 +133,15 @@ function achoice( nTop, nLft, nBtm, nRyt, acItems, xSelect, xUserFunc, nPos, nHi
 
    nNumCols := nRyt - nLft + 1
    nNumRows := nBtm - nTop + 1
-   aeval( acItems, { | x, n | if( valtype( x ) == "C", aadd( acCopy, padr( x, nNumCols ) ), .F. ) } )
+   aeval( acItems, { | x, n | if( ISCHAR( x ), aadd( acCopy, padr( x, nNumCols ) ), .F. ) } )
    nItems := len( acCopy )
 
    alSelect := array( nItems )
-   IF valtype( xSelect ) == "A"
+   IF ISARRAY( xSelect )
       afill( alSelect, .T. )
       for nCntr := 1 to len( xSelect )
          IF nCntr <= nItems
-            IF valtype( xSelect[ nCntr ] ) == "C"
+            IF ISCHAR( xSelect[ nCntr ] )
                IF empty( xSelect[ nCntr ] )
                   lFinished := .T.
                   nPos      := 0

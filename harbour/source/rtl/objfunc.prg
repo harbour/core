@@ -44,8 +44,9 @@
  *
  */
 
-#include "hboo.ch"
+#include "common.ch"
 #include "error.ch"
+#include "hboo.ch"
 
 //
 // <lRet> := __objHasData( <oObject>, <cSymbol> )
@@ -54,8 +55,8 @@
 //
 function __objHasData( oObject, cSymbol )
 
-   if !( ValType( oObject ) == "O" ) .or. ;
-      !( ValType( cSymbol ) == "C" )
+   if !ISOBJECT( oObject ) .or. ;
+      !ISCHAR( cSymbol )
       __errRT_BASE(EG_ARG, 3101, NIL, "__OBJHASDATA")
    endif
 
@@ -70,8 +71,8 @@ return __objHasMsg( oObject, cSymbol ) .and. ;
 //
 function __objHasMethod( oObject, cSymbol )
 
-   if !( ValType( oObject ) == "O" ) .or. ;
-      !( ValType( cSymbol ) == "C" )
+   if !ISOBJECT( oObject ) .or. ;
+      !ISCHAR( cSymbol )
       __errRT_BASE(EG_ARG, 3101, NIL, "__OBJHASMETHOD")
    endif
 
@@ -94,11 +95,11 @@ function __objGetMsgList( oObject, lDataMethod )
    local nLen
    local lFoundDM                               // Found DATA ?
 
-   if !( ValType( oObject ) == "O" )
+   if !ISOBJECT( oObject )
       __errRT_BASE(EG_ARG, 3101, NIL, "__OBJGETMSGLIST")
    endif
 
-   IF !( ValType( lDataMethod ) == "L" )
+   IF !ISLOG( lDataMethod )
         lDataMethod := .T.
    ENDIF
 
@@ -133,7 +134,7 @@ return aData
 //
 function __objGetMethodList( oObject )
 
-   if !( ValType( oObject ) == "O" )
+   if !ISOBJECT( oObject )
       __errRT_BASE(EG_ARG, 3101, NIL, "__OBJGETMETHODLIST")
    endif
 
@@ -159,11 +160,11 @@ function __objGetValueList( oObject, aExcept )
    local cSymbol
    local n
 
-   if !( ValType( oObject ) == "O" )
+   if !ISOBJECT( oObject )
       __errRT_BASE(EG_ARG, 3101, NIL, "__OBJGETVALUELIST")
    endif
 
-   IF !( ValType( aExcept ) == "A" )
+   IF !ISARRAY( aExcept )
         aExcept := {}
    ENDIF
 
@@ -189,7 +190,7 @@ return aData
 //
 function __objSetValueList( oObject, aData )
 
-   if !( ValType( oObject ) == "O" )
+   if !ISOBJECT( oObject )
       __errRT_BASE(EG_ARG, 3101, NIL, "__OBJSETVALUELIST")
    endif
 
@@ -206,9 +207,9 @@ return oObject
 //
 function __objAddMethod( oObject, cSymbol, nFuncPtr )
 
-   if !( ValType( oObject ) == "O" ) .or. ;
-      !( ValType( cSymbol ) == "C" ) .or. ;
-      !( ValType( nFuncPtr ) == "N" )
+   if !ISOBJECT( oObject ) .or. ;
+      !ISCHAR( cSymbol ) .or. ;
+      !ISNUM( nFuncPtr )
       __errRT_BASE(EG_ARG, 3101, NIL, "__OBJADDMETHOD")
    endif
 
@@ -228,8 +229,8 @@ return oObject
 //
 function __objAddInline( oObject, cSymbol, bInline )
 
-   if !( ValType( oObject ) == "O" ) .or. ;
-      !( ValType( cSymbol ) == "C" )
+   if !ISOBJECT( oObject ) .or. ;
+      !ISCHAR( cSymbol )
       __errRT_BASE(EG_ARG, 3101, NIL, "__OBJADDINLINE")
    endif
 
@@ -251,8 +252,8 @@ function __objAddData( oObject, cSymbol )
 
    local nSeq
 
-   if !( ValType( oObject ) == "O" ) .or. ;
-      !( ValType( cSymbol ) == "C" )
+   if !ISOBJECT( oObject ) .or. ;
+      !ISCHAR( cSymbol )
       __errRT_BASE(EG_ARG, 3101, NIL, "__OBJADDDATA")
    endif
 
@@ -276,9 +277,9 @@ return oObject
 //
 function __objModMethod( oObject, cSymbol, nFuncPtr )
 
-   if !( ValType( oObject ) == "O" ) .or. ;
-      !( ValType( cSymbol ) == "C" ) .or. ;
-      !( ValType( nFuncPtr ) == "N" )
+   if !ISOBJECT( oObject ) .or. ;
+      !ISCHAR( cSymbol ) .or. ;
+      !ISNUM( nFuncPtr )
       __errRT_BASE(EG_ARG, 3101, NIL, "__OBJMODMETHOD")
    endif
 
@@ -298,9 +299,9 @@ return oObject
 //
 function __objModInline( oObject, cSymbol, bInline )
 
-   if !( ValType( oObject ) == "O" ) .or. ;
-      !( ValType( cSymbol ) == "C" ) .or. ;
-      !( ValType( bInline ) == "B" )
+   if !ISOBJECT( oObject ) .or. ;
+      !ISCHAR( cSymbol ) .or. ;
+      !ISBLOCK( bInline )
       __errRT_BASE(EG_ARG, 3101, NIL, "__OBJMODINLINE")
    endif
 
@@ -320,8 +321,8 @@ return oObject
 //
 function __objDelMethod( oObject, cSymbol )
 
-   if !( ValType( oObject ) == "O" ) .or. ;
-      !( ValType( cSymbol ) == "C" )
+   if !ISOBJECT( oObject ) .or. ;
+      !ISCHAR( cSymbol )
       __errRT_BASE(EG_ARG, 3101, NIL, "__OBJDELMETHOD")
    endif
 
@@ -343,8 +344,8 @@ return __objDelMethod( oObject, cSymbol )              // Same story
 //
 function __objDelData( oObject, cSymbol )
 
-   if !( ValType( oObject ) == "O" ) .or. ;
-      !( ValType( cSymbol ) == "C" )
+   if !ISOBJECT( oObject ) .or. ;
+      !ISCHAR( cSymbol )
       __errRT_BASE(EG_ARG, 3101, NIL, "__OBJDELDATA")
    endif
 

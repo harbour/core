@@ -33,6 +33,7 @@
  *
  */
 
+#include "common.ch"
 #include "memvars.ch"
 
 /*  $DOC$
@@ -79,7 +80,7 @@
 
 FUNCTION MEMVARBLOCK( cMemvar )
 
-   IF ( ValType( cMemvar ) == "C" ) .AND. __mvSCOPE( cMemvar ) > MV_ERROR
+   IF ISCHAR( cMemvar ) .AND. __mvSCOPE( cMemvar ) > MV_ERROR
       RETURN {| x | iif( PCount() == 0, __mvGET( cMemvar ), __mvPUT( cMemvar, x ) ) }
    ENDIF
 

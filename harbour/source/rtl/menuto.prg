@@ -24,10 +24,11 @@
 
 /* NOTE: Recursive use is supported */
 
-#include "setcurs.ch"
-#include "inkey.ch"
 #include "color.ch"
+#include "common.ch"
+#include "inkey.ch"
 #include "memvars.ch"
+#include "setcurs.ch"
 
 static aLevel   := {}
 static nPointer := 1
@@ -94,7 +95,7 @@ function __MenuTo( bBlock, cVariable )
 
       // put choice in a valid range
 
-      if !( ValType( n ) == "N" ) .OR. n < 1
+      if !ISNUM( n ) .OR. n < 1
          n := 1
       endif
 
@@ -126,11 +127,11 @@ function __MenuTo( bBlock, cVariable )
             xMsg := aLevel[ nPointer - 1, n, 4 ]
 
             // Code Block messages ( yes, they are documented! )
-            if valtype( xMsg ) == 'B'
+            if ISBLOCK( xMsg )
                xMsg := eval( xMsg )
             endif
 
-            if valtype( xMsg ) <> 'C'
+            if !ISCHAR( xMsg )
                xMsg := ""
             endif
 

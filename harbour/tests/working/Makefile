@@ -127,7 +127,6 @@ PRG_SOURCES=\
         test_all.prg \
         testbrw.prg \
         testcgi.prg \
-        testcopy.prg \
         testdbf.prg \
         testerro.prg \
         testfor.prg \
@@ -179,7 +178,7 @@ include $(TOP)$(ROOT)config/test.cf
 else #PM defined = build specified file
 
 ifneq ($(findstring .prg,$(PM)),)
-  PRG_MAIN :=$(PM)
+  PRG_MAIN := $(PM)
 else
   ifneq ($(findstring .PRG,$(PM)),)
     PRG_MAIN := $(PM)

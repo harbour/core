@@ -33,12 +33,14 @@
  *
  */
 
+#include "common.ch"
+
 FUNCTION ReadVar( cVarName )
    STATIC s_cVarName := ""
 
    LOCAL cOldVarName := s_cVarName
 
-   IF ValType( cVarName ) == "C"
+   IF ISCHAR( cVarName )
       s_cVarName := cVarName
    ENDIF
 

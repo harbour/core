@@ -43,6 +43,8 @@
  *
  */
 
+#include "common.ch"
+
 // macro substitutions to access sub-array elements of aSetKeys[]
 #define KEY        1
 #define BLOCK      2
@@ -99,12 +101,12 @@ static aSetKeys := {}       // holds array of hot-key id, code-block, activation
 Function SetKey( anKey, bBlock, bCondition )
   local nFound, bReturn, aKey
 
-  if valType( anKey ) = "A"
+  if ISARRAY( anKey )
     aEval( anKey, {|x| setKey( x, bBlock, bCondition ) } )
 
-  elseif valType( anKey ) = "N" .and. anKey <> 0
-    if ( nFound := aScan( aSetKeys, {|x| x[ KEY ] = anKey } ) ) = 0
-      if valType( bBlock ) = "B"
+  elseif ISNUM( anKey ) .and. anKey <> 0
+    if ( nFound := aScan( aSetKeys, {|x| x[ KEY ] == anKey } ) ) == 0
+      if ISBLOCK( bBlock )
         aAdd( aSetKeys, { anKey, bBlock, bCondition } )
 
       endif
@@ -112,16 +114,16 @@ Function SetKey( anKey, bBlock, bCondition )
     else
       aKey := aSetKeys[ nFound ]
 
-      if aKey[ CONDITION ] = NIL .or. eval( aKey[ CONDITION ], anKey )
+      if aKey[ CONDITION ] == NIL .or. eval( aKey[ CONDITION ], anKey )
         bReturn := aKey[ BLOCK ]
 
       endif
 
-      if valType( bBlock ) = "B"
+      if ISBLOCK( bBlock )
         aKey[ BLOCK ]     := bBlock
         aKey[ CONDITION ] := bCondition
 
-      elseif pcount() > 1 .and. bBlock = NIL
+      elseif pcount() > 1 .and. bBlock == NIL
         aSize( aDel( aSetKeys, nFound ), len( aSetKeys ) - 1 )
 
       endif
@@ -169,8 +171,8 @@ return bReturn
 Function HB_SetKeyGet( nKey, bCondition )
   local nFound
 
-  if valType( nKey ) = "N" .and. nKey <> 0
-    if ( nFound := aScan( aSetKeys, {|x| x[ KEY ] = nKey } ) ) = 0
+  if ISNUM( nKey ) .and. nKey <> 0
+    if ( nFound := aScan( aSetKeys, {|x| x[ KEY ] == nKey } ) ) == 0
       bCondition := NIL
 
     else
@@ -222,8 +224,8 @@ return NIL //bReturn
 Function HB_SetKeySave( OldKeys )
   local aReturn := aClone( aSetKeys )
 
-  if pcount() != 0 .or. valtype( OldKeys ) = "A"
-    if OldKeys = NIL
+  if pcount() != 0 .or. ISARRAY( OldKeys )
+    if OldKeys == NIL
       aSetKeys := {}
 
     else
@@ -285,20 +287,20 @@ return aReturn
 Function HB_SetKeyCheck( nKey, p1, p2, p3 )
   local nFound, aKey, bBlock
 
-  if ( nFound := aScan( aSetKeys, {|x| x[ KEY ] = nKey } ) ) > 0
+  if ( nFound := aScan( aSetKeys, {|x| x[ KEY ] == nKey } ) ) > 0
     aKey   := aSetKeys[ nFound ]
     bBLock := aKey[ BLOCK ]
 
-    if aKey[ CONDITION ] = NIL .or. eval( aKey[ CONDITION ], nKey )
+    if aKey[ CONDITION ] == NIL .or. eval( aKey[ CONDITION ], nKey )
 
       // is this overkill?  if a code-block checks its own pcount(),
       // passing nil parameters would skew the count!
 
       do case
-      case pcount() = 1  ;  eval( bBlock, nKey )
-      case pcount() = 2  ;  eval( bBlock, p1, nKey )
-      case pcount() = 3  ;  eval( bBlock, p1, p2, nKey )
-      otherwise          ;  eval( bBlock, p1, p2, p3, nKey )
+      case pcount() == 1  ;  eval( bBlock, nKey )
+      case pcount() == 2  ;  eval( bBlock, p1, nKey )
+      case pcount() == 3  ;  eval( bBlock, p1, p2, nKey )
+      otherwise           ;  eval( bBlock, p1, p2, p3, nKey )
       end case
 
       return .t.

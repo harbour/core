@@ -3,58 +3,59 @@
  */
 
 /*
-   Harbour Project source code
+ * Harbour Project source code:
+ * Base-routines for OOPS system
+ *
+ * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version, with one exception:
+ *
+ * The exception is that if you link the Harbour Runtime Library (HRL)
+ * and/or the Harbour Virtual Machine (HVM) with other files to produce
+ * an executable, this does not by itself cause the resulting executable
+ * to be covered by the GNU General Public License. Your use of that
+ * executable is in no way restricted on account of linking the HRL
+ * and/or HVM code into it.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
+ * their web site at http://www.gnu.org/).
+ *
+ */
 
-   Base-routines for OOPS system
-
-   Copyright 1999  Antonio Linares <alinares@fivetech.com>
-   www - http://www.harbour-project.org
-
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version, with one exception:
-
-   The exception is that if you link the Harbour Runtime Library (HRL)
-   and/or the Harbour Virtual Machine (HVM) with other files to produce
-   an executable, this does not by itself cause the resulting executable
-   to be covered by the GNU General Public License. Your use of that
-   executable is in no way restricted on account of linking the HRL
-   and/or HVM code into it.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
-   their web site at http://www.gnu.org/).
-*/
-
-/* Harbour Project source code
-   http://www.Harbour-Project.org/
-
-   The following functions are Copyright 1999 Eddie Runia <eddie@runia.com>:
-   partial copyright regarding the following functions :
-      :CLASSSEL()
-      __clsDelMsg()
-      __clsModMsg()
-      __clsInstSuper()
-      __cls_CntClsData()
-      __cls_CntData()
-      __cls_DecData()
-      __cls_IncData()
-      __objClone()
-      __objHasMsg()
-      __objSendMsg()
-
-   The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
-      hb___msgEval()
-
-   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
-*/
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Eddie Runia <eddie@runia.com>
+ *    :CLASSSEL()
+ *    __clsDelMsg()
+ *    __clsModMsg()
+ *    __clsInstSuper()
+ *    __cls_CntClsData()
+ *    __cls_CntData()
+ *    __cls_DecData()
+ *    __cls_IncData()
+ *    __objClone()
+ *    __objHasMsg()
+ *    __objSendMsg()
+ *
+ * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ *    hb___msgEval()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
 
 #include "extend.h"
 #include "errorapi.h"
@@ -506,7 +507,6 @@ HARBOUR HB___CLSDELMSG( void )
       {
          PCLASS   pClass   = s_pClasses + wClass - 1;
          WORD     wMask    = pClass->wHashKey * BUCKET;
-         PHB_SYMB pMessage = pMsg->pSymbol;
          WORD     wAt      = ( ( ( unsigned ) pMsg ) % pClass->wHashKey ) * BUCKET;
          WORD     wLimit   = wAt ? ( wAt - 1 ) : ( wMask - 1 );
     
@@ -591,7 +591,6 @@ HARBOUR HB___CLSMODMSG( void )
       if( pMsg )
       {
          PCLASS   pClass   = s_pClasses + wClass - 1;
-         PHB_SYMB pMessage = pMsg->pSymbol;
          WORD     wAt      = ( ( ( unsigned ) pMsg ) % pClass->wHashKey ) * BUCKET;
          WORD     wMask    = pClass->wHashKey * BUCKET;
          WORD     wLimit   = wAt ? ( wAt - 1 ) : ( wMask - 1 );

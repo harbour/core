@@ -1,3 +1,41 @@
+19990916-21:00 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rtl/*.c
+    * Copyright text format change.
+    + Missing copyright headers added.
+    ; Now this work is finished.
+  * include/extend.h
+    + hb_tone() prototype added.
+  * source/rtl/gt/gtwin.c
+    - Commented out two unused static variables.
+  * source/rtl/classes.c
+    - Removed two unused variables.
+  * tests/working/rtl_test.prg
+    + Some lines uncommented, since the PP can now process them.
+  * tests/working/testcopy.prg
+    tests/working/Makefile
+    - Removed since it's now in RTL_TEST.
+  * tests/working/hb*.bat
+    ! Updates by Jose Lalin.
+  * makefile.b32
+    ! Added memvarbl.prg
+  * source/rtl/achoice.prg
+    source/rtl/adir.prg
+    source/rtl/alert.prg
+    source/rtl/asort.prg
+    source/rtl/memvarbl.prg
+    source/rtl/menuto.prg
+    source/rtl/objfunc.prg
+    source/rtl/readvar.prg
+    source/rtl/setkey.prg
+    source/rtl/tbcolumn.prg
+    source/rtl/tclass.prg
+    source/rtl/tgetlist.prg
+    source/rtl/errorsys.prg
+    + Using IS*() macros for type checking, common.ch
+      #included to all of these files.
+    * Some = changed to == in setkey.prg
+
 19990916-17:10 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm/dynsym.c

@@ -33,6 +33,7 @@
  *
  */
 
+#include "common.ch"
 #include "directry.ch"
 
 FUNCTION aDir( cFileMask, aName, aSize, aDate, aTime, aAttr )
@@ -47,7 +48,7 @@ FUNCTION aDir( cFileMask, aName, aSize, aDate, aTime, aAttr )
 
    // ; CA-Clipper would fail on this case.
 
-   IF !( ValType( cFileMask ) == "C" )
+   IF !ISCHAR( cFileMask )
       RETURN 0
    ENDIF
 
@@ -59,25 +60,25 @@ FUNCTION aDir( cFileMask, aName, aSize, aDate, aTime, aAttr )
 
    // ;
 
-   IF ValType( aAttr ) == "A"
+   IF ISARRAY( aAttr )
       aDir := Directory( cFileMask, "HSD" )
    ELSE
       aDir := Directory( cFileMask )
    ENDIF
 
-   IF Valtype( aName ) == 'A'
+   IF ISARRAY( aName )
       nNameLen := Len( aName )
    ENDIF
-   IF Valtype( aSize ) == 'A'
+   IF ISARRAY( aSize )
       nSizeLen := Len( aSize )
    ENDIF
-   IF Valtype( aDate ) == 'A'
+   IF ISARRAY( aDate )
       nDateLen := Len( aDate )
    ENDIF
-   IF Valtype( aTime ) == 'A'
+   IF ISARRAY( aTime )
       nTimeLen := Len( aTime )
    ENDIF
-   IF Valtype( aAttr ) == 'A'
+   IF ISARRAY( aAttr )
       nAttrLen := Len( aAttr )
    ENDIF
 

@@ -60,9 +60,9 @@ typedef WORD far * LPWORD;
 
 static BOOL hb_gt_SetScreenBuffer( HANDLE HNew, HANDLE HOld );
 static HANDLE HOsave;
-static HANDLE HSsave;
+/* static HANDLE HSsave; */
 static HANDLE HDOutput  = INVALID_HANDLE_VALUE;
-static HANDLE HDStealth = INVALID_HANDLE_VALUE;
+/* static HANDLE HDStealth = INVALID_HANDLE_VALUE; */
 static HANDLE HInput    = INVALID_HANDLE_VALUE;
 static HANDLE HOutput   = INVALID_HANDLE_VALUE;
 static HANDLE HStealth  = INVALID_HANDLE_VALUE; /* DispBegin buffer */

@@ -47,6 +47,7 @@
 
 // Harbour Class TClass to build classes
 
+#include "common.ch"
 #include "hboo.ch"
 
 //----------------------------------------------------------------------------//
@@ -99,7 +100,7 @@ static function New( cClassName, cSuper )
    ::aClsDatas = {}
    ::aInlines  = {}
    ::aVirtuals = {}
-   if ValType( cSuper ) == "C"
+   if ISCHAR( cSuper )
       ::cSuper = cSuper
    endif
 

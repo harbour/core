@@ -34,6 +34,7 @@
  */
 
 #include "classes.ch"
+#include "common.ch"
 
 CLASS TBColumn
 
@@ -70,7 +71,7 @@ function TBColumnNew( cHeading, bBlock )
 
    oCol:Heading := cHeading
 
-   if ValType( bBlock ) == "B"
+   if ISBLOCK( bBlock )
 
       oCol:block := bBlock
 

@@ -23,6 +23,7 @@
  */
 
 #include "box.ch"
+#include "common.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 
@@ -66,7 +67,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
 
 #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
 
-   IF !( ValType( xMessage ) == "C" )
+   IF !ISCHAR( xMessage )
       RETURN NIL
    ENDIF
 
@@ -82,10 +83,10 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       RETURN NIL
    ENDIF
 
-   IF ValType( xMessage ) == "A"
+   IF ISARRAY( xMessage )
 
       FOR iEval := 1 TO Len( xMessage )
-         IF ValType( xMessage[ iEval ] ) == "C"
+         IF ISCHAR( xMessage[ iEval ] )
             AAdd( aSay, xMessage[ iEval ] )
          ENDIF
       NEXT
@@ -112,11 +113,11 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
 
 #endif
 
-   IF !( ValType( aOptions ) == "A" )
+   IF !ISARRAY( aOptions )
       aOptions := {}
    ENDIF
 
-   IF !( ValType( cColorNorm ) == "C" )
+   IF !ISCHAR( cColorNorm )
       cColorNorm := "W+/R"
       cColorHigh := "W+/B"
    ELSE
@@ -135,7 +136,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
    /* Cleanup the button array */
    aOptionsOK := {}
    FOR iEval := 1 TO Len( aOptions )
-      IF ValType( aOptions[ iEval ] ) == "C" .AND. !Empty( aOptions[ iEval ] )
+      IF ISCHAR( aOptions[ iEval ] ) .AND. !Empty( aOptions[ iEval ] )
          AAdd( aOptionsOK, aOptions[ iEval ] )
       ENDIF
    NEXT

@@ -373,6 +373,7 @@ extern void     hb_consoleInitialize( void );
 extern void     hb_consoleRelease( void );
 extern char *   hb_consoleGetNewLine( void );
 
+extern void     hb_tone( double dFrequency, double dDuration );
 extern char *   hb_setColor( char * );
 
 /* Please leave these at the bottom of this file */

@@ -4,7 +4,7 @@ rem $Id$
 rem 
 
 REM From .PRG to .C = Harbour
-..\..\bin\harbour %1.prg /n /i..\..\include
+..\..\bin\harbour %1 /n /i..\..\include
 if errorlevel 1 goto end
 
 REM From .C to .EXE = Bld+Exe

@@ -33,6 +33,8 @@
  *
  */
 
+#include "common.ch"
+
 /*
  * <aSorted> aSort( <aUnsorted>, [<nStart>], [<nCount>], [<bBlock>] )
  *
@@ -40,13 +42,13 @@
  */
 FUNCTION aSort( aArray, nStart, nCount, bBlock )
 
-   IF !( ValType( aArray ) == "A" )
+   IF !ISARRAY( aArray )
       RETURN NIL
    ENDIF
 
    IF Len( aArray ) >= 1
 
-      IF !( ValType( nStart ) == "N" ) .OR. nStart == 0
+      IF !ISNUM( nStart ) .OR. nStart == 0
          nStart := 1
       ENDIF
 
@@ -56,7 +58,7 @@ FUNCTION aSort( aArray, nStart, nCount, bBlock )
             nStart := Len( aArray )
          ENDIF
 
-         IF !( ValType( nCount ) == "N" ) .OR. nCount < 1 .OR. nCount > ( Len( aArray ) - nStart + 1 )
+         IF !ISNUM( nCount ) .OR. nCount < 1 .OR. nCount > ( Len( aArray ) - nStart + 1 )
             nCount := Len( aArray ) - nStart + 1
          ENDIF
 
@@ -65,7 +67,7 @@ FUNCTION aSort( aArray, nStart, nCount, bBlock )
                   since the codeblock will be called one more time for the
                   first logical element than in Clipper. */
 
-         IF !( ValType( bBlock ) == "B" ) .OR. !( ValType( Eval( bBlock, nStart, nStart ) ) == "L" )
+         IF !ISBLOCK( bBlock ) .OR. !( ISLOG( Eval( bBlock, nStart, nStart ) ) )
             bBlock := {| x, y | x < y }
          ENDIF
 
