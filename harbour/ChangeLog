@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-05-23 14:53 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+  * source/vm/estack.c
+    ! All stack hb_stackxxx API functions are now included, no matter
+      the build options (HB_STACK_MACROS)
+
 2002-05-22 18:26 UTC-0300 Walter Negro <anegro@overnet.com.ar>
  * source/rtl/tget.prg
     ! Fix, it was always written in the position 1 the first number
