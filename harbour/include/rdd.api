@@ -455,7 +455,6 @@ typedef struct
 *
 *  Informaci¢n para administrar el  rea de trabajo
 */
-struct _RDDFUNCS;
 
 typedef struct _AREA
 {
@@ -489,7 +488,7 @@ typedef struct _AREA
 //   HANDLE   heap;
 //   USHORT   heapSize;
 
-   USHORT   rddID;
+//   USHORT   rddID;
 
 } AREA;
 
@@ -507,9 +506,9 @@ typedef USHORT ( * DBENTRYP_L  )( AREAP area, LONG param );
 typedef USHORT ( * DBENTRYP_I  )( AREAP area, PHB_ITEM param );
 typedef USHORT ( * DBENTRYP_SI )( AREAP area, USHORT index, PHB_ITEM param );
 typedef USHORT ( * DBENTRYP_VP )( AREAP area, DBOPENINFOP param );
+typedef USHORT ( * DBENTRYP_SP )( AREAP area, USHORT * param );
 
 //typedef USHORT (far * DBENTRYP_S)(AREAP area, USHORT param);
-//typedef USHORT ( * DBENTRYP_SP )( AREAP area, USHORT * param ); BP
 //typedef USHORT (far * DBENTRYP_LP)(AREAP area, LONGP param);
 //typedef USHORT (far * DBENTRYP_PP)(AREAP area, FARPP param);
 //typedef USHORT (far * DBENTRYP_SVP)(AREAP area, USHORT index, FARP param);
@@ -577,7 +576,7 @@ typedef struct _RDDFUNCS
 //   DBENTRYP_V   newarea;         /* V   */
    DBENTRYP_VP  open;
 //   DBENTRYP_V   release;         /* V   */
-//   DBENTRYP_SP  structSize;      /* SP  */
+   DBENTRYP_SP  structSize;
 //   DBENTRYP_VP  sysName;         /* VP  */
 //   DBENTRYP_VP  dbEval;          /* VP  */
 //   DBENTRYP_V   pack;            /* V   */

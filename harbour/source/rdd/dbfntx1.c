@@ -26,9 +26,11 @@
 #include <init.h>
 #include <rdd.api>
 
+HARBOUR HB_REQUEST_DBFNTX1( void );
 HARBOUR HB_DBFNTX_GETFUNCTABLE( void );
 
 HB_INIT_SYMBOLS_BEGIN( dbfntx1__InitSymbols )
+{ "REQUEST_DBFNTX1",     FS_PUBLIC, HB_REQUEST_DBFNTX1,     0 },
 { "DBFNTX_GETFUNCTABLE", FS_PUBLIC, HB_DBFNTX_GETFUNCTABLE, 0 }
 HB_INIT_SYMBOLS_END( dbfntx1__InitSymbols );
 #if ! defined(__GNUC__)
@@ -95,6 +97,11 @@ ERRCODE dbfntxOpen( AREAP pArea, DBOPENINFOP pOpenInfo )
    return SUCCESS;
 }
 
+ERRCODE dbfntxStructSize( AREAP pArea, USHORT * uiSize )
+{
+   printf( "Calling dbfntxStructSize()\n" );
+   return SUCCESS;
+}
 
 static RDDFUNCS ntxSuper = { 0 };
 
@@ -107,7 +114,8 @@ static RDDFUNCS ntxTable = { dbfntxBof,
 			     dbfntxSkip,
 			     dbfntxClose,
 			     dbfntxCreate,
-			     dbfntxOpen
+			     dbfntxOpen,
+			     dbfntxStructSize
 			   };
 
 HARBOUR HB_REQUEST_DBFNTX1( void )
@@ -123,6 +131,7 @@ HARBOUR HB_DBFNTX_GETFUNCTABLE( void )
    * uiCount = RDDFUNCSCOUNT;
    pTable = ( RDDFUNCS * ) hb_parnl( 2 );
    if( pTable )
-      hb_rddInherit( pTable, &ntxTable, &ntxSuper, 0 );
-   hb_retni( SUCCESS );
+      hb_retni( hb_rddInherit( pTable, &ntxTable, &ntxSuper, 0 ) );
+   else
+      hb_retni( FAILURE );
 }

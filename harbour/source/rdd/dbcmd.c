@@ -33,23 +33,27 @@
 
 #define HARBOUR_MAX_RDD_DRIVERNAME_LENGTH       32
 
-#define RDD_BOF                                  0
-#define RDD_EOF                                  1
-#define RDD_FOUND                                2
-#define RDD_GOBOTTOM                             3
-#define RDD_GO                                   4
-#define RDD_GOTOP                                5
-#define RDD_SKIP                                 6
-#define RDD_CLOSE                                7
-#define RDD_CREATE                               8
-#define RDD_OPEN                                 9
-
-typedef struct
+typedef struct _RDDNODE
 {
-   char   szName[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 ];
-   USHORT uiType;
-   RDDFUNCS pTable;
+   char     szName[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 ];
+   USHORT   uiType;            /* Type of RDD */
+   RDDFUNCS pTable;            /* Table of functions */
+   USHORT   uiFunctions;       /* Number of functions in the table */
+   USHORT   uiAreaSize;        /* Size of the WorkArea */
+   struct _RDDNODE * pNext;    /* Next RDD in the list */
 } RDDNODE, * PRDDNODE;
+
+typedef struct _AREANODE
+{
+   void *             pArea;   /* WorkAreas with different sizes */
+   struct _AREANODE * pPrev;   /* Prev WorkArea in the list */
+   struct _AREANODE * pNext;   /* Next WorkArea in the list */
+} AREANODE, * PAREANODE;
+
+void MyError( char * szError, char * szParam )
+{
+   printf( "\n%s %s\n\7", szError, szParam );
+}
 
 HARBOUR HB_BOF( void );
 HARBOUR HB_DBCLOSEALL( void );
@@ -94,16 +98,14 @@ HB_INIT_SYMBOLS_END( dbCmd__InitSymbols );
 char * hb_strUpper( char * szText, long lLen );
 
 extern STACK stack;
-extern HB_set_struct hb_set;
 
-static char * szDefDriver = 0;  /* Default RDD name */
-static USHORT uiCurrArea = 1;   /* Selectd area */
-static PRDDNODE pRDDList = 0;   /* Registered RDD's */
-static USHORT uiRDDCount = 0;
-static USHORT uiNetError = 0;
+static char * szDefDriver;      /* Default RDD name */
+static USHORT uiCurrArea;       /* Selectd area */
+static PRDDNODE pRDDList;       /* Registered RDD's */
+static USHORT uiNetError;       /* Error on Networked environments */
 
-static AREAP pWorkAreas = 0;
-static USHORT uiWorkAreas = 0;  /* WorkAreas allocated */
+static PAREANODE pWorkAreas;    /* WorkAreas */
+static PAREANODE pCurrArea;     /* Pointer to a selectd and valid area */
 
 static void hb_CloseAll( void );
 
@@ -111,107 +113,113 @@ void hb_rddInitialize( void )
 {
    szDefDriver = ( char * ) hb_xgrab( 1 );
    szDefDriver[ 0 ] = '\0';
-   pWorkAreas = ( AREAP ) hb_xgrab( sizeof( AREA ) );
-//   memset(pWorkAreas, 0, sizeof(AREA));
-   uiWorkAreas = 1;
+   pRDDList = 0;
+   pWorkAreas = 0;
+   pCurrArea = 0;
+   uiCurrArea = 1;
+   uiNetError = 0;
 }
 
 void hb_rddRelease( void )
 {
+   PRDDNODE pRDDNode;
+
    hb_CloseAll();
    hb_xfree( szDefDriver );
-   if( pRDDList )
-      hb_xfree( pRDDList );
-   hb_xfree( pWorkAreas );
+
+   while( pRDDList )
+   {
+      pRDDNode = pRDDList;
+      pRDDList = pRDDList->pNext;
+      hb_xfree( pRDDNode );
+   }
 }
 
 static void hb_CloseAll( void )
 {
-   DBENTRYP_V * pFunction;
-   PHB_ITEM pError;
-   USHORT uiCount;
+   DBENTRYP_V pFunction;
 
-   for( uiCount = 0; uiCount < uiWorkAreas; uiCount++ )
+   pCurrArea = pWorkAreas;
+   while( pWorkAreas )
    {
-      if( pWorkAreas[ uiCount ].rddID != 0 )
+      pCurrArea = pWorkAreas;
+      pWorkAreas = pWorkAreas->pNext;
+      if( !( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+	 MyError( "No table error ", "9xxxx" );
+      else
       {
-	 if( !pWorkAreas[ uiCount ].lprfsHost )
-	 {
-	    pError = hb_errNew();
-	    hb_errPutDescription( pError, "No Table, error 9xxx" );
-	    hb_errLaunch( pError );
-	    hb_errRelease( pError );
-	    return;
-	 }
-	 pFunction = ( ( DBENTRYP_V * ) pWorkAreas[ uiCount ].lprfsHost ) + RDD_CLOSE;
-	 if( ! * pFunction )
-	 {
-	    pError = hb_errNew();
-	    hb_errPutDescription( pError, "Internal error 9xxx" );
-	    hb_errLaunch( pError );
-	    hb_errRelease( pError );
-	    return;
-	 }
-	 ( * pFunction )( &pWorkAreas[ uiCount ] );
-	 pWorkAreas[ uiCount ].rddID = 0;
+	 pFunction = ( ( AREAP ) pCurrArea->pArea )->lprfsHost->close;
+	 if( !pFunction || ( ( * pFunction )( ( AREAP ) pCurrArea->pArea ) != SUCCESS ) )
+	    MyError( "Internal error ", "9xxxx" );
       }
+      hb_xfree( pCurrArea->pArea );
+      hb_xfree( pCurrArea );
    }
+   uiCurrArea = 1;
+   pCurrArea = 0;
+   pWorkAreas = 0;
 }
 
-static USHORT hb_GetRDDId( char * szDriver )
+static PRDDNODE hb_FindRDDNode( char * szDriver )
 {
-   PRDDNODE pList;
-   USHORT uiCount;
+   PRDDNODE pRDDNode;
 
-   for( uiCount = 0; uiCount < uiRDDCount; uiCount++ )
+   pRDDNode = pRDDList;
+   while( pRDDNode )
    {
-      pList = pRDDList + ( sizeof( RDDNODE ) * uiCount );
-      if( strcmp( pList->szName, szDriver ) == 0 )
-	 return uiCount + 1;
+      if( strcmp( pRDDNode->szName, szDriver ) == 0 ) /* Matched RDD */
+	 return pRDDNode;
+      pRDDNode = pRDDNode->pNext;
    }
    return 0;
 }
 
 static BOOL hb_rddRegister( char * szDriver, USHORT uiType )
 {
-   PRDDNODE pList;
-   USHORT uiCount;
+   PRDDNODE pRDDNode, pRDDNewNode;
    PDYNSYM pGetFuncTable;
    char * szGetFuncTable;
 
-   for( uiCount = 0; uiCount < uiRDDCount; uiCount++ )
-   {
-      pList = pRDDList + ( sizeof( RDDNODE ) * uiCount );
-      if( strcmp( pList->szName, szDriver ) == 0 )
-	 return 0;
-   }
+   if( hb_FindRDDNode( szDriver ) )    /* Duplicated RDD */
+      return FALSE;
 
    szGetFuncTable = ( char * ) hb_xgrab( strlen( szDriver ) + 14 );
    strcpy( szGetFuncTable, szDriver );
    strcat( szGetFuncTable, "_GETFUNCTABLE" );
    pGetFuncTable = hb_FindDynSym( szGetFuncTable );
    hb_xfree( szGetFuncTable );
-
    if( !pGetFuncTable )
-      return 0;
+      return FALSE;              /* Not valid RDD */
+
+   /* Create a new RDD node */
+   pRDDNewNode = ( PRDDNODE ) hb_xgrab( sizeof( RDDNODE ) );
+   memset( pRDDNewNode, 0, sizeof( RDDNODE ) );
+
+   /* Fill the new RDD node */
+   strncpy( pRDDNewNode->szName, szDriver, HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
+   pRDDNewNode->uiType = uiType;
+
+   PushSymbol( pGetFuncTable->pSymbol );  /* Call <szDriver>_GETFUNCTABLE() */
+   PushNil();
+   PushLong( ( long ) &pRDDNewNode->uiFunctions );
+   PushLong( ( long ) &pRDDNewNode->pTable );
+   Do( 2 );
+   if ( hb_parni( -1 ) != SUCCESS )
+   {
+      hb_xfree( pRDDNewNode );         /* Delete de new RDD node */
+      return FALSE;
+   }
 
    if( !pRDDList )
-      pRDDList = ( PRDDNODE ) hb_xgrab( sizeof( RDDNODE ) );
+      pRDDList = pRDDNewNode;          /* First RDD node */
    else
-      pRDDList = ( PRDDNODE ) hb_xrealloc( pRDDList, sizeof( RDDNODE ) * ( uiRDDCount + 1 ) );
-
-   pList = pRDDList + ( sizeof( RDDNODE ) * uiRDDCount );
-   strncpy( pList->szName, szDriver, HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
-   pList->uiType = uiType;
-   uiRDDCount++;
-
-   PushSymbol( pGetFuncTable->pSymbol );
-   PushNil();
-   PushLong( ( long ) &uiCount );
-   PushLong( ( long ) &pList->pTable );
-   Do( 2 );
-
-   return 1;
+   {
+      pRDDNode = pRDDList;
+      while( pRDDNode->pNext )
+	 pRDDNode = pRDDNode->pNext;   /* Locate the last RDD node */
+      pRDDNode->pNext = pRDDNewNode;   /* Add the new RDD node */
+   }
+   return TRUE;
 }
 
 static USHORT hb_FindAlias( char * szAlias )
@@ -221,15 +229,19 @@ static USHORT hb_FindAlias( char * szAlias )
 
 static void hb_SelectFirstAvailable( void )
 {
-   USHORT uiCount;
+   PAREANODE pAreaNode;
 
    uiCurrArea = 1;
-   for( uiCount = 0; uiCount < uiWorkAreas; uiCount++ )
+   pAreaNode = pWorkAreas;
+   while( pAreaNode )
    {
-      if( ( pWorkAreas[ uiCount ].rddID == 0 ) &&   /* Free WorkArea */
-	  ( pWorkAreas[ uiCount ].uiArea < uiCurrArea ) )
-	 uiCurrArea = pWorkAreas[ uiCount ].uiArea;
+      if( ( ( AREAP ) pAreaNode->pArea )->uiArea > uiCurrArea )
+	 break;
+      else if( ( ( AREAP ) pAreaNode->pArea )->uiArea == uiCurrArea )
+	 uiCurrArea++;
+      pAreaNode = pAreaNode->pNext;
    }
+   pCurrArea = 0;   /* Selected WorkArea must be created */
 }
 
 ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTable, PBYTE szDrvName )
@@ -241,7 +253,7 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
       return FAILURE;
 
    /* Copy the pSuperTable into pTable */
-   memcpy( ( void * ) pTable, ( void * ) pSuperTable, sizeof( RDDFUNCS ) );
+   memcpy( pTable, pSuperTable, sizeof( RDDFUNCS ) );
 
    /* Copy the non NULL entries from pSubTable into pTable */
    pFunction = ( DBENTRYP_V * ) pTable;
@@ -256,44 +268,16 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
    return SUCCESS;
 }
 
-static void hb_SelectArea( USHORT uiNewArea )
-{
-   USHORT uiCount;
-   BOOL bCreateNewArea = TRUE;
-
-   if( uiNewArea == 0 )
-      hb_SelectFirstAvailable();
-   else
-      uiCurrArea = uiNewArea;
-
-   for( uiCount = 0; uiCount < uiWorkAreas; uiCount++ )
-   {
-      if( pWorkAreas[ uiCount ].uiArea == uiCurrArea )
-      {
-	 bCreateNewArea = FALSE;
-	 break;
-      }
-   }
-
-   if( bCreateNewArea )
-   {
-      pWorkAreas = ( AREAP ) hb_xrealloc( pWorkAreas,
-					  sizeof( AREAP ) * ( uiWorkAreas + 1 ) );
-      pWorkAreas[ uiWorkAreas ].uiArea = uiCurrArea;
-      uiWorkAreas++;
-   }
-}
-
 HARBOUR HB_BOF( void )
 {
    BOOL bBof = TRUE;
-   DBENTRYP_BP * pFunction;
+   DBENTRYP_BP pFunction;
 
-   if( pWorkAreas[ uiCurrArea - 1 ].lprfsHost )
+   if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost )
    {
-      pFunction = ( ( DBENTRYP_BP * ) pWorkAreas[ uiCurrArea - 1 ].lprfsHost ) + RDD_BOF;
-      if( * pFunction )
-	 ( * pFunction )( &pWorkAreas[ uiCurrArea - 1 ], &bBof );
+      pFunction = ( ( AREAP ) pCurrArea->pArea )->lprfsHost->bof;
+      if( pFunction )
+	 ( * pFunction )( ( AREAP ) pCurrArea->pArea, &bBof );
    }
    hb_retl( bBof );
 }
@@ -301,203 +285,204 @@ HARBOUR HB_BOF( void )
 HARBOUR HB_DBCLOSEALL( void )
 {
    hb_CloseAll();
-   uiCurrArea = 1;
 }
 
 HARBOUR HB_DBCLOSEAREA( void )
 {
-   DBENTRYP_V * pFunction;
-   PHB_ITEM pError;
+   DBENTRYP_V pFunction;
 
-   if( pWorkAreas[ uiCurrArea - 1 ].rddID == 0 )
+   if( !pCurrArea )
       return;
 
-   if( !pWorkAreas[ uiCurrArea - 1 ].lprfsHost )
-   {
-      pError = hb_errNew();
-      hb_errPutDescription( pError, "No Table, error 9xxx" );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
-   }
+   if( !( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+      MyError( "No table error ", "9xxxx" );
    else
    {
-      pFunction = ( ( DBENTRYP_V * ) pWorkAreas[ uiCurrArea - 1 ].lprfsHost ) + RDD_CLOSE;
-      if( ! * pFunction )
-      {
-	 pError = hb_errNew();
-	 hb_errPutDescription( pError, "Internal error 9xxx" );
-	 hb_errLaunch( pError );
-	 hb_errRelease( pError );
-      }
-      else
-	 ( * pFunction )( &pWorkAreas[ uiCurrArea - 1 ] );
+      pFunction = ( ( AREAP ) pCurrArea->pArea )->lprfsHost->close;
+      if( !pFunction || ( ( * pFunction )( ( AREAP ) pCurrArea->pArea ) != SUCCESS ) )
+	 MyError( "Internal error ", "9xxxx" );
    }
-   pWorkAreas[ uiCurrArea - 1 ].rddID = 0;
+
+   if( pCurrArea->pPrev )
+      pCurrArea->pPrev->pNext = pCurrArea->pNext;
+   if( pCurrArea->pNext )
+      pCurrArea->pNext->pPrev = pCurrArea->pPrev;
+
+   if( pWorkAreas == pCurrArea )  /* Empty list */
+      pWorkAreas = 0;
+
+   hb_xfree( pCurrArea->pArea );
+   hb_xfree( pCurrArea );
+   pCurrArea = 0;
 }
 
 HARBOUR HB_DBCREATE( void )
 {
    char * szFileName, * szDriver;
-   USHORT uiRDDId;
-   PHB_ITEM pError;
-   PRDDNODE pList;
-   DBENTRYP_VP * pFunction;
+   PHB_ITEM pStruct;
+   WORD wLen;
+   PRDDNODE pRDDNode;
+   DBENTRYP_SP pFunction1;
+   DBENTRYP_VP pFunction2;
+   AREAP pTempArea;
+   USHORT uiSize;
    DBOPENINFO pInfo;
 
-   if( !ISCHAR( 1 ) || !ISARRAY( 2 ) )
+   szFileName = hb_parc( 1 );
+   pStruct = hb_param( 2 , IT_ARRAY );
+   if( ( strlen( szFileName) == 0 ) || !pStruct )
    {
-      hb_errorRT_BASE( EG_ARG, 1068, "Argument error", "DBCREATE" );
+      MyError( "DBCMD/1014 Argument error", "DBCREATE" );
       return;
    }
-   szFileName = hb_parc( 1 );
 
-   if( ISCHAR( 3 ) )
-   {
-      szDriver = hb_parc( 3 );
+   szDriver = hb_parc( 3 );
+   if( ( wLen = strlen( szDriver ) ) > 0 )
       szDriver = hb_strUpper( szDriver, strlen( szDriver ) );
-   }
    else
       szDriver = szDefDriver;
 
-   if( ( uiRDDId = hb_GetRDDId( szDriver ) ) == 0 )
+   if( !( pRDDNode = hb_FindRDDNode( szDriver ) ) )
    {
-      pError = hb_errNew();
-      hb_errPutDescription( pError, "Internal error 9001" );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
-      pWorkAreas[ uiCurrArea - 1 ].rddID = 0;
+      MyError( "DBCMD/1015 Argument error", "DBCREATE" );
       return;
    }
 
-   pList = pRDDList + ( sizeof( RDDNODE ) * ( uiRDDId - 1 ) );
-   pWorkAreas[ uiCurrArea - 1 ].rddID = uiRDDId;
-   pWorkAreas[ uiCurrArea - 1 ].lprfsHost = &pList->pTable;
-
-   if( !pWorkAreas[ uiCurrArea - 1 ].lprfsHost )
+   pFunction1 = pRDDNode->pTable.structSize;
+   pFunction2 = pRDDNode->pTable.create;
+   if( ! pFunction1 || ! pFunction2 )
    {
-      pError = hb_errNew();
-      hb_errPutDescription( pError, "No Table, error 9xxx" );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
-      pWorkAreas[ uiCurrArea - 1 ].rddID = 0;
+      MyError( "Internal error ", "9xxxx" );
       return;
    }
-   pFunction = ( ( DBENTRYP_VP * ) pWorkAreas[ uiCurrArea - 1 ].lprfsHost ) + RDD_CREATE;
+   uiSize = sizeof( AREA );    /* Default Size Area */
+   pTempArea = ( AREAP ) hb_xgrab( uiSize );
 
-   if( ! * pFunction )
+   /* Need more space? */
+   if( ( * pFunction1 )( pTempArea, &uiSize ) != SUCCESS )
    {
-      pError = hb_errNew();
-      hb_errPutDescription( pError, "Internal error 9xxx" );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
+      hb_xfree( pTempArea );
+      MyError( "Internal error ", "9xxxx" );
       return;
    }
+   if( uiSize != sizeof( AREA ) )   /* Size of Area changed */
+      pTempArea = ( AREAP ) hb_xrealloc( pTempArea, uiSize );
 
-   pInfo.abName = (PBYTE)szFileName;
-   ( * pFunction )( &pWorkAreas[ uiCurrArea - 1 ], &pInfo );
-   pWorkAreas[ uiCurrArea - 1 ].rddID = 0;
+   pRDDNode->uiAreaSize = uiSize; /* Update the size of WorkArea */
+
+   pInfo.abName = ( PBYTE ) szFileName;
+   if( ( * pFunction2 )( pTempArea, &pInfo ) != SUCCESS )
+      MyError( "Internal error ", "9xxxx" );
+   hb_xfree( pTempArea );
 }
 
 HARBOUR HB_DBGOBOTTOM( void )
 {
-   DBENTRYP_V * pFunction;
-   PHB_ITEM pError;
+   DBENTRYP_V pFunction;
 
-   if( !pWorkAreas[ uiCurrArea - 1 ].lprfsHost )
+   if( !pCurrArea )
    {
-      pError = hb_errNew();
-      hb_errPutDescription( pError, "No Table, error 9xxx" );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
-      pWorkAreas[ uiCurrArea - 1 ].rddID = 0;
+      MyError( "Alias not in use ", "1xxxx" );
       return;
    }
-   pFunction = ( ( DBENTRYP_V * ) pWorkAreas[ uiCurrArea - 1 ].lprfsHost ) + RDD_GOBOTTOM;
-   if( ! * pFunction )
-   {
-      pError = hb_errNew();
-      hb_errPutDescription( pError, "Internal error 9xxx" );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
-      pWorkAreas[ uiCurrArea - 1 ].rddID = 0;
-   }
+
+   if( !( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+      MyError( "No table error ", "9xxxx" );
    else
-      ( * pFunction )( &pWorkAreas[ uiCurrArea - 1 ] );
+   {
+      pFunction = ( ( AREAP ) pCurrArea->pArea )->lprfsHost->goBottom;
+      if( ! pFunction )
+	 MyError( "Internal error ", "9xxxx" );
+      else
+	 ( * pFunction )( ( AREAP ) pCurrArea->pArea );
+   }
 }
 
 HARBOUR HB_DBGOTO( void )
 {
-   DBENTRYP_L * pFunction;
-   PHB_ITEM pError;
+   DBENTRYP_L pFunction;
 
-   if( !pWorkAreas[ uiCurrArea - 1 ].lprfsHost )
+   if( !pCurrArea )
    {
-      pError = hb_errNew();
-      hb_errPutDescription( pError, "No Table, error 9xxx" );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
-      pWorkAreas[ uiCurrArea - 1 ].rddID = 0;
+      MyError( "Alias not in use ", "1xxxx" );
       return;
    }
-   pFunction = ( ( DBENTRYP_L * ) pWorkAreas[ uiCurrArea - 1 ].lprfsHost ) + RDD_GO;
-   if( ! * pFunction )
-   {
-      pError = hb_errNew();
-      hb_errPutDescription( pError, "Internal error 9xxx" );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
-      pWorkAreas[ uiCurrArea - 1 ].rddID = 0;
-   }
-   else if( ISNUM( 1 ) )
-      ( * pFunction )( &pWorkAreas[ uiCurrArea - 1 ], hb_parnl( 1 ) );
+
+   if( !( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+      MyError( "No table error ", "9xxxx" );
    else
-      hb_errorRT_BASE( EG_ARG, 1068, "Argument error", "DBGOTO" );
+   {
+      pFunction = ( ( AREAP ) pCurrArea->pArea )->lprfsHost->go;
+      if( ! pFunction )
+	 MyError( "Internal error ", "9xxxx" );
+      else if( ISNUM( 1 ) )
+	 ( * pFunction )( ( AREAP ) pCurrArea->pArea, hb_parnl( 1 ) );
+      else
+	 MyError( "DBCMD/1068 Argument error", "DBGOTO" );
+   }
 }
 
 HARBOUR HB_DBGOTOP( void )
 {
-   DBENTRYP_V * pFunction;
-   PHB_ITEM pError;
+   DBENTRYP_V pFunction;
 
-   if( !pWorkAreas[ uiCurrArea - 1 ].lprfsHost )
+   if( !pCurrArea )
    {
-      pError = hb_errNew();
-      hb_errPutDescription( pError, "No Table, error 9xxx" );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
-      pWorkAreas[ uiCurrArea - 1 ].rddID = 0;
+      MyError( "Alias not in use ", "1xxxx" );
       return;
    }
-   pFunction = ( ( DBENTRYP_V * ) pWorkAreas[ uiCurrArea - 1 ].lprfsHost ) + RDD_GOTOP;
-   if( ! * pFunction )
-   {
-      pError = hb_errNew();
-      hb_errPutDescription( pError, "Internal error 9xxx" );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
-      pWorkAreas[ uiCurrArea - 1 ].rddID = 0;
-   }
+
+   if( !( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+      MyError( "No table error ", "9xxxx" );
    else
-      ( * pFunction )( &pWorkAreas[ uiCurrArea - 1 ] );
+   {
+      pFunction = ( ( AREAP ) pCurrArea->pArea )->lprfsHost->goTop;
+      if( ! pFunction )
+	 MyError( "Internal error ", "9xxxx" );
+      else
+	 ( * pFunction )( ( AREAP ) pCurrArea->pArea );
+   }
 }
 
 HARBOUR HB_DBSELECTAREA( void )
 {
    USHORT uiNewArea;
    char * szAlias;
+   PAREANODE pAreaNode;
 
    if( ISCHAR( 1 ) )
    {
       szAlias = hb_parc( 1 );
       if( ( uiNewArea = hb_FindAlias( szAlias ) ) == 0 )
       {
-	 hb_errorRT_BASE( EG_ARG, 1002, "Alias not found", szAlias );
+	 MyError( "DBCMD/1002 Alias not found", szAlias );
 	 return;
       }
-      hb_SelectArea( uiNewArea );
    }
-   else if( ISNUM( 1 ) )
-      hb_SelectArea( hb_parni( 1 ) );
+   else if( !ISNUM( 1 ) )
+   {
+      MyError( "DBCMD/1068 Argument error", "DBSELECTAREA" );
+      return;
+   }
+   else
+      uiNewArea = hb_parni( 1 );
+
+   if( uiNewArea == 0 )
+      hb_SelectFirstAvailable();
+   else
+      uiCurrArea = uiNewArea;
+
+   pAreaNode = pWorkAreas;
+   while( pAreaNode )
+   {
+      if( ( ( AREAP ) pAreaNode->pArea )->uiArea == uiCurrArea )
+      {
+	 pCurrArea = pAreaNode; /* Select a valid WorkArea */
+	 return;
+      }
+      pAreaNode = pAreaNode->pNext;
+   }
+   pCurrArea = 0; /* Selected WorkArea is closed */
 }
 
 HARBOUR HB_DBSETDRIVER( void )
@@ -507,197 +492,235 @@ HARBOUR HB_DBSETDRIVER( void )
 
 HARBOUR HB_DBSKIP( void )
 {
-   PHB_ITEM pError, pItem;
-   DBENTRYP_L * pFunction;
+   DBENTRYP_L pFunction;
+   PHB_ITEM pItem;
    LONG lToSkip = 1;
 
-   if( !pWorkAreas[ uiCurrArea - 1 ].lprfsHost )
+   if( !pCurrArea )
    {
-      pError = hb_errNew();
-      hb_errPutDescription( pError, "No Table, error 9xxx" );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
-      pWorkAreas[ uiCurrArea - 1 ].rddID = 0;
+      MyError( "Alias not in use ", "1xxxx" );
       return;
    }
-   pFunction = ( ( DBENTRYP_L * ) pWorkAreas[ uiCurrArea - 1 ].lprfsHost ) + RDD_SKIP;
-   if( ! * pFunction )
+
+   if( !( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+      MyError( "No table error ", "9xxxx" );
+   else
    {
-      pError = hb_errNew();
-      hb_errPutDescription( pError, "Internal error 9xxx" );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
-      pWorkAreas[ uiCurrArea - 1 ].rddID = 0;
-      return;
+      pFunction = ( ( AREAP ) pCurrArea->pArea )->lprfsHost->skip;
+      if( ! pFunction )
+	 MyError( "Internal error ", "9xxxx" );
+      else
+      {
+	 pItem = hb_param( 1, IT_NUMERIC );
+	 if( pItem )
+	 {
+	    if( pItem->type == IT_INTEGER )
+	       lToSkip = pItem->item.asInteger.value;
+	    else if( pItem->type == IT_LONG )
+	       lToSkip = pItem->item.asLong.value;
+	 }
+	 ( * pFunction )( ( AREAP ) pCurrArea->pArea, lToSkip );
+      }
    }
-   pItem = hb_param( 1 , IT_NUMERIC );
-   if( pItem )
-   {
-      if( pItem->type == IT_INTEGER )
-	 lToSkip = pItem->item.asInteger.value;
-      else if( pItem->type == IT_LONG )
-	 lToSkip = pItem->item.asLong.value;
-   }
-   ( * pFunction )( &pWorkAreas[ uiCurrArea - 1 ], lToSkip );
 }
 
 HARBOUR HB_DBUSEAREA( void )
 {
-   USHORT uiRDDId;
    char * szDriver, * szFileName, * szAlias;
-   PRDDNODE pList;
-   DBENTRYP_V * pFunction1;
-   DBENTRYP_VP * pFunction2;
+   WORD wLen;
+   PRDDNODE pRDDNode;
+   PAREANODE pAreaNode;
+   USHORT uiSize;
+   DBENTRYP_V pFunction1;
+   DBENTRYP_SP pFunction2;
+   DBENTRYP_VP pFunction3;
    DBOPENINFO pInfo;
-   PHB_ITEM pError;
 
    uiNetError = 0;
 
-   if( ISLOG( 1 ) )
-   {
+   if( hb_parl( 1 ) )
       hb_SelectFirstAvailable();
-      hb_SelectArea( uiCurrArea );
-   }
-   else if( pWorkAreas[ uiCurrArea - 1 ].rddID != 0 )
+   else if( pCurrArea )  /* If current WorkArea is in use then close it */
    {
-      pFunction1 = ( ( DBENTRYP_V * ) pWorkAreas[ uiCurrArea - 1 ].lprfsHost ) + RDD_CLOSE;
-      if( ! * pFunction1 )
+      pFunction1 = ( ( AREAP ) pCurrArea->pArea )->lprfsHost->close;
+      if( !pFunction1 || ( ( * pFunction1 )( ( AREAP ) pCurrArea->pArea ) != SUCCESS ) )
       {
-	 pError = hb_errNew();
-	 hb_errPutDescription( pError, "Internal error 9xxx" );
-	 hb_errLaunch( pError );
-	 hb_errRelease( pError );
-	 pWorkAreas[ uiCurrArea - 1 ].rddID = 0;
+	 MyError( "Internal error ", "9xxxx" );
 	 return;
       }
-      else
-	 ( * pFunction1 )( &pWorkAreas[ uiCurrArea - 1 ] );
-      pWorkAreas[ uiCurrArea - 1 ].rddID = 0;
+      if( pCurrArea->pPrev )
+	 pCurrArea->pPrev->pNext = pCurrArea->pNext;
+      if( pCurrArea->pNext )
+	 pCurrArea->pPrev = pCurrArea->pPrev;
+      hb_xfree( pCurrArea->pArea );
+      hb_xfree( pCurrArea );
+      pCurrArea = 0;
    }
 
-   if( ISCHAR( 2 ) )
-   {
-      szDriver = hb_parc( 2 );
+   szDriver = hb_parc( 2 );
+   if( ( wLen = strlen( szDriver ) ) > 0 )
       szDriver = hb_strUpper( szDriver, strlen( szDriver ) );
-   }
    else
       szDriver = szDefDriver;
 
-   if( ( uiRDDId = hb_GetRDDId( szDriver ) ) == 0 )
+   if( !( pRDDNode = hb_FindRDDNode( szDriver ) ) )
    {
-      pError = hb_errNew();
-      hb_errPutDescription( pError, "Internal error 9xxx" );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
-      pWorkAreas[ uiCurrArea - 1 ].rddID = 0;
+      MyError( "DBCMD/1015 Argument error", "DBCREATE" );
       return;
    }
 
-   pList = pRDDList + ( sizeof( RDDNODE ) * ( uiRDDId - 1 ) );
-   pWorkAreas[ uiCurrArea - 1 ].rddID = uiRDDId;
-   pWorkAreas[ uiCurrArea - 1 ].lprfsHost = &pList->pTable;
-
-   if( !pWorkAreas[ uiCurrArea - 1 ].lprfsHost )
-   {
-      pError = hb_errNew();
-      hb_errPutDescription( pError, "No Table, error 9xxx" );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
-      pWorkAreas[ uiCurrArea - 1 ].rddID = 0;
-      return;
-   }
-   pFunction2 = ( ( DBENTRYP_VP * ) pWorkAreas[ uiCurrArea - 1 ].lprfsHost ) + RDD_OPEN;
-   if( ! * pFunction2 )
-   {
-      pError = hb_errNew();
-      hb_errPutDescription( pError, "Internal error 9xxx" );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
-      pWorkAreas[ uiCurrArea - 1 ].rddID = 0;
-      return;
-   }
-
-   if( !ISCHAR( 3 ) )
-   {
-      hb_errorRT_BASE(EG_ARG, 1068, "Argument error", "DBUSEAREA" );
-      pWorkAreas[ uiCurrArea - 1 ].rddID = 0;
-      return;
-   }
    szFileName = hb_parc( 3 );
+   if( strlen( szFileName ) == 0 )
+   {
+      MyError( "DBCMD/1005 Argument error", "DBUSEAREA" );
+      return;
+   }
 
    /* TODO: Implement szAlias from szFilename */
-   szAlias = ISCHAR( 4 ) ? hb_parc( 4 ) : szFileName;
+   szAlias = hb_parc( 4 );
+   if( strlen( szAlias ) == 0 )
+      szAlias = szFileName;
+
+   /* Create a new WorkArea node */
+
+   pCurrArea = ( PAREANODE ) hb_xgrab( sizeof( AREANODE ) );
+
+   if( pRDDNode->uiAreaSize == 0 ) /* Calculate the size of WorkArea */
+   {
+      uiSize = sizeof( AREA );    /* Default Size Area */
+      pCurrArea->pArea = hb_xgrab( uiSize );
+      pFunction2 = pRDDNode->pTable.structSize;
+
+      /* Need more space? */
+      if( !pFunction2 || ( * pFunction2 )( ( AREAP ) pCurrArea->pArea, &uiSize ) != SUCCESS )
+      {
+	 hb_xfree( pCurrArea->pArea );
+	 hb_xfree( pCurrArea );
+	 pCurrArea = 0;
+	 MyError( "Internal error ", "9xxxx" );
+	 return;
+      }
+
+      if( uiSize != sizeof( AREA ) )   /* Size of Area changed */
+	 pCurrArea->pArea = hb_xrealloc( pCurrArea->pArea, uiSize );
+
+      pRDDNode->uiAreaSize = uiSize; /* Update the size of WorkArea */
+   }
+   else
+      pCurrArea->pArea = hb_xgrab( pRDDNode->uiAreaSize );
+
+   ( ( AREAP ) pCurrArea->pArea )->lprfsHost = &pRDDNode->pTable;
+
+   if( !( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+   {
+      hb_xfree( pCurrArea->pArea );
+      hb_xfree( pCurrArea );
+      pCurrArea = 0;
+      MyError( "No table error ", "9xxxx" );
+      return;
+   }
 
    pInfo.uiArea = uiCurrArea;
-   pInfo.abName = (PBYTE)szFileName;
-   pInfo.atomAlias = (PBYTE)szAlias;
+   pInfo.abName = ( PBYTE ) szFileName;
+   pInfo.atomAlias = ( PBYTE ) szAlias;
    pInfo.fShared = ISLOG( 5 ) ? hb_parl( 5 ) : !hb_set.HB_SET_EXCLUSIVE;
    pInfo.fReadonly = ISLOG( 6 ) ? hb_parl( 6 ) : FALSE;
-   ( * pFunction2 )( &pWorkAreas[ uiCurrArea - 1 ], &pInfo );
+
+   pFunction3 = pRDDNode->pTable.open;
+   if( !pFunction3 || ( * pFunction3 )( ( AREAP ) pCurrArea->pArea, &pInfo ) != SUCCESS )
+   {
+      hb_xfree( pCurrArea->pArea );
+      hb_xfree( pCurrArea );
+      pCurrArea = 0;
+      MyError( "No table error ", "9xxxx" );
+      return;
+   }
+
+   /* Insert the new WorkArea node */
+
+   if( !pWorkAreas )
+   {
+      pWorkAreas = pCurrArea;  /* The new WorkArea node is the first */
+      return;
+   }
+
+   pAreaNode = pWorkAreas;
+   while( pAreaNode->pNext )
+   {
+      if( ( ( AREAP ) pAreaNode->pArea )->uiArea > uiCurrArea )
+      {
+	 /* Insert the new WorkArea node */
+	 pCurrArea->pPrev = pAreaNode->pPrev;
+	 pCurrArea->pNext = pAreaNode;
+	 pAreaNode->pPrev = pCurrArea;
+	 if( pCurrArea->pPrev )
+	    pCurrArea->pPrev->pNext = pCurrArea;
+      }
+      pAreaNode = pAreaNode->pNext;
+   }
+   pAreaNode->pNext = pCurrArea; /* Append the new WorkArea node */
+   pCurrArea->pPrev = pAreaNode;
 }
 
 HARBOUR HB_EOF( void )
 {
    BOOL bEof = TRUE;
-   DBENTRYP_BP * pFunction;
-   PHB_ITEM pError;
+   DBENTRYP_BP pFunction;
 
-   if( !pWorkAreas[ uiCurrArea - 1 ].lprfsHost )
+   if( pCurrArea )
    {
-      pError = hb_errNew();
-      hb_errPutDescription( pError, "No Table, error 9xxx" );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
-      pWorkAreas[ uiCurrArea - 1 ].rddID = 0;
-      return;
+      if( !( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+	 MyError( "No table error ", "9xxxx" );
+      else
+      {
+	 pFunction = ( ( AREAP ) pCurrArea->pArea )->lprfsHost->eof;
+	 if( pFunction )
+	    ( * pFunction )( ( AREAP ) pCurrArea->pArea, &bEof );
+      }
    }
-   pFunction = ( ( DBENTRYP_BP * ) pWorkAreas[ uiCurrArea - 1 ].lprfsHost ) + RDD_EOF;
-   if( * pFunction )
-     ( * pFunction )( &pWorkAreas[ uiCurrArea - 1 ], &bEof );
    hb_retl( bEof );
 }
 
 HARBOUR HB_FOUND( void )
 {
    BOOL bFound = FALSE;
-   DBENTRYP_BP * pFunction;
-   PHB_ITEM pError;
+   DBENTRYP_BP pFunction;
 
-   if( !pWorkAreas[ uiCurrArea - 1 ].lprfsHost )
+   if( pCurrArea )
    {
-      pError = hb_errNew();
-      hb_errPutDescription( pError, "No Table, error 9xxx" );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
-      pWorkAreas[ uiCurrArea - 1 ].rddID = 0;
-      return;
+      if( !( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+	 MyError( "No table error ", "9xxxx" );
+      else
+      {
+	 pFunction = ( ( AREAP ) pCurrArea->pArea )->lprfsHost->found;
+	 if( pFunction )
+	    ( * pFunction )( ( AREAP ) pCurrArea->pArea, &bFound );
+      }
    }
-   pFunction = ( ( DBENTRYP_BP * ) pWorkAreas[ uiCurrArea - 1 ].lprfsHost ) + RDD_FOUND;
-   if( * pFunction )
-     ( * pFunction )( &pWorkAreas[ uiCurrArea - 1 ], &bFound );
    hb_retl( bFound );
 }
 
 HARBOUR HB_RDDLIST( void )
 {
-   USHORT   uiCount, uiType;
+   USHORT uiType;
    PHB_ITEM pSubArray, pName, pType;
-   PRDDNODE pList;
+   PRDDNODE pRDDNode;
 
    uiType = hb_parni( 1 );       /* 0 all types of RDD's */
    hb_arrayNew( &stack.Return, 0 );
    pSubArray = hb_itemArrayNew( 2 );
    pName = hb_itemNew( 0 );
    pType = hb_itemNew( 0 );
-   for( uiCount = 0; uiCount < uiRDDCount; uiCount++ )
+   pRDDNode = pRDDList;
+   while( pRDDNode )
    {
-      pList = pRDDList + ( sizeof( RDDNODE ) * uiCount );
-      if( ( uiType == 0 ) || ( uiType == pList->uiType ) )
+      if( ( uiType == 0 ) || ( pRDDNode->uiType == uiType ) )
       {
-	 hb_arraySet( pSubArray, 1, hb_itemPutC( pName, pList->szName ) );
-	 hb_arraySet( pSubArray, 2, hb_itemPutNL( pType, pList->uiType ) );
+	 hb_arraySet( pSubArray, 1, hb_itemPutC( pName, pRDDNode->szName ) );
+	 hb_arraySet( pSubArray, 2, hb_itemPutNL( pType, pRDDNode->uiType ) );
 	 hb_arrayAdd( &stack.Return, pSubArray );
       }
+      pRDDNode = pRDDNode->pNext;
    }
    hb_itemRelease( pName );
    hb_itemRelease( pType );
@@ -708,24 +731,15 @@ HARBOUR HB_RDDREGISTER( void )
 {
    char * szDriver;
    WORD wLen;
-   PHB_ITEM pError;
 
-   if( ISCHAR( 1 ) )
+   szDriver = hb_parc( 1 );
+   if( ( wLen = strlen( szDriver ) ) > 0 )
    {
-      szDriver = hb_parc( 1 );
-      if( ( wLen = strlen( szDriver ) ) > 0 )
-      {
-	 szDriver = hb_strUpper( szDriver, wLen );
-	 if( !hb_rddRegister( szDriver, hb_parni( 2 ) ) )
-	 {
-	    /* TODO: hb_errorRT_INTERNAL() */
-	    pError = hb_errNew();
-	    hb_errPutDescription( pError, "Internal error 9001" );
-	    hb_errLaunch( pError );
-	    hb_errRelease( pError );
-	 }
-      }
+      szDriver = hb_strUpper( szDriver, wLen );
+      if( hb_rddRegister( szDriver, hb_parni( 2 ) ) )
+	 return;
    }
+   MyError( "Internal error", "RDDREGISTER" );
 }
 
 HARBOUR HB_RDDSETDEFAULT( void )
@@ -734,16 +748,13 @@ HARBOUR HB_RDDSETDEFAULT( void )
    WORD wLen;
 
    hb_retc( szDefDriver );
-   if( ISCHAR( 1 ) )
+   szNewDriver = hb_parc( 1 );
+   if( ( wLen = strlen( szNewDriver ) ) > 0 )
    {
-      szNewDriver = hb_parc( 1 );
-      if( ( wLen = strlen( szNewDriver ) ) > 0 )
-      {
-	 szNewDriver = hb_strUpper( szNewDriver, wLen );
-	 szDefDriver = ( char * ) hb_xrealloc( szDefDriver, wLen + 1 );
-	 strcpy( szDefDriver, szNewDriver );
-      }
-      else
-	 hb_errorRT_DBCMD( EG_ARG, 1015, "Argument error", "RDDSETDEFAULT" );
+      szNewDriver = hb_strUpper( szNewDriver, wLen );
+      szDefDriver = ( char * ) hb_xrealloc( szDefDriver, wLen + 1 );
+      strcpy( szDefDriver, szNewDriver );
    }
+   else
+      MyError( "Argument error", "RDDSETDEFAULT" );
 }
