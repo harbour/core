@@ -64,6 +64,14 @@ extern "C" {
 #define NTX_MEMOEXT                               ".dbt"
 #define NTX_INDEXEXT                              ".ntx"
 
+/* DBFNTX constants declarations */
+#define TOP_RECORD                                                      1
+#define BTTM_RECORD                                                     2
+#define PREV_RECORD                                                     3
+#define NEXT_RECORD                                                     4
+#define NTX_MAX_REC_NUM                                       0x7FFFFFFFL
+#define NTX_IGNORE_REC_NUM                                             -1
+
 /* forward declarations
  */
 struct _RDDFUNCS;
@@ -94,14 +102,6 @@ typedef struct HB_PAGEINFO_STRU
    BOOL      ChkBOF;
    BOOL      ChkEOF;
    BYTE      PageType;
-   LONG      RNMask;
-   BYTE      ReqByte;
-   BYTE      RNBits;
-   BYTE      DCBits;
-   BYTE      TCBits;
-   BYTE      DCMask;
-   BYTE      TCMask;
-   USHORT    Space;
    LPKEYINFO pKeys;
    USHORT    uiKeys;
    SHORT     CurKey;
@@ -149,7 +149,6 @@ typedef struct _NTXINDEX
    struct   _NTXAREA * Owner;
    FHANDLE   DiskFile;
    LPTAGINFO CompoundTag;
-   LPTAGINFO TagList;
    struct   _NTXINDEX * pNext;   /* The next index in the list */
 } NTXINDEX;
 
@@ -234,6 +233,7 @@ typedef struct _NTXAREA
    *  example.
    */
 
+   USHORT uiOrder;                /* Number of current order */
    LPNTXINDEX lpNtxIndex;         /* Pointer to indexes array */
 
 
@@ -255,11 +255,11 @@ typedef NTXAREA * LPNTXAREA;
 #define ntxBof                   NULL
 #define ntxEof                   NULL
 #define ntxFound                 NULL
-#define ntxGoBottom              NULL
+static ERRCODE ntxGoBottom( NTXAREAP pArea );
 #define ntxGoTo                  NULL
 #define ntxGoToId                NULL
-#define ntxGoTop                 NULL
-#define ntxSeek                  NULL
+static ERRCODE ntxGoTop( NTXAREAP pArea );
+static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLast );
 #define ntxSkip                  NULL
 #define ntxSkipFilter            NULL
 #define ntxSkipRaw               NULL
@@ -318,7 +318,7 @@ static ERRCODE ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo );
 static ERRCODE ntxOrderListClear( NTXAREAP pArea );
          /* Close all indexes */
 #define ntxOrderListDelete       NULL
-#define ntxOrderListFocus        NULL
+static ERRCODE ntxOrderListFocus( NTXAREAP pArea, LPDBORDERINFO pOrderInfo );
 #define ntxOrderListRebuild      NULL
 #define ntxOrderCondition        NULL
 static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo );
