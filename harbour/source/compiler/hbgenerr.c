@@ -94,7 +94,7 @@ char * hb_comp_szWarnings[] =
    "1Ambiguous reference: \'%s\'",
    "1Ambiguous reference, assuming memvar: \'%s\'",
    "2Variable: \'%s\' declared but not used in function: \'%s\'",
-   "2Codeblock Parameter: \'%s\' declared but not used in function: \'%s\'",
+   "2Codeblock parameter: \'%s\' declared but not used in function: \'%s\'",
    "1RETURN statement with no return value in function",
    "1Procedure returns value",
    "1Function \'%s\' does not end with RETURN statement",
