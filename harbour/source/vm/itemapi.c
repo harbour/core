@@ -54,6 +54,7 @@
  *    hb_itemPutNDLen()
  *    hb_itemPutNILen()
  *    hb_itemPutNLLen()
+ *    hb_itemPutD()
  *    hb_itemSetCMemo()
  *
  * Copyright 1999 Eddie Runia <eddie@runia.com>
@@ -707,6 +708,21 @@ PHB_ITEM hb_itemPutDS( PHB_ITEM pItem, char * szDate )
 
    pItem->type = HB_IT_DATE;
    pItem->item.asDate.value = hb_dateEncStr( szDate );
+
+   return pItem;
+}
+
+PHB_ITEM hb_itemPutD( PHB_ITEM pItem, long lYear, long lMonth, long lDay )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutD(%p, %04i, %02i, %02i)", pItem, lYear, lMonth, lDay));
+
+   if( pItem )
+      hb_itemClear( pItem );
+   else
+      pItem = hb_itemNew( NULL );
+
+   pItem->type = HB_IT_DATE;
+   pItem->item.asDate.value = hb_dateEncode( lYear, lMonth, lDay );
 
    return pItem;
 }

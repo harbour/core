@@ -1,3 +1,10 @@
+20000413-02:14 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbapiitm.h
+   * source/vm/itemapi.c
+   * source/vm/extend.c
+     + hb_itemPutD() added. hb_retd() modified to call this.
+
 20000412-11:01 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbdate.h

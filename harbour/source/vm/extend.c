@@ -495,7 +495,7 @@ void hb_retd( long lYear, long lMonth, long lDay )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retd(%04i, %02i, %02i)", lYear, lMonth, lDay));
 
-   hb_itemPutDL( &hb_stack.Return, hb_dateEncode( lYear, lMonth, lDay ) );
+   hb_itemPutD( &hb_stack.Return, lYear, lMonth, lDay );
 }
 
 void hb_retl( int iLogical )
