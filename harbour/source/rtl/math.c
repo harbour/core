@@ -57,6 +57,7 @@
 
 #if defined(__DJGPP__)
 #include <libm/math.h>
+_LIB_VERSION_TYPE _LIB_VERSION = _XOPEN_;
 #else
 #include <math.h>
 #endif
