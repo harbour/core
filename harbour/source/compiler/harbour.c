@@ -58,7 +58,7 @@ typedef enum
 
 
 extern int harbour_main( char *szName );
-extern int Include( char * szFileName, PATHNAMES * pSearchPath );  /* end #include support */
+extern BOOL Include( char * szFileName, PATHNAMES * pSearchPath );  /* end #include support */
 
   /* Following line added for preprocessor */
 extern void Hbpp_init ( void );
@@ -667,11 +667,12 @@ int main( int argc, char * argv[] )
             hb_comp_pFileName->szPath = NULL;
             hb_comp_pFileName->szExtension = NULL;
 
-            /* we create a the output file */
+            /* we create a the output file name */
             if( s_pOutPath )
             {
                if( s_pOutPath->szPath )
                   hb_comp_pFileName->szPath = s_pOutPath->szPath;
+
                if( s_pOutPath->szName )
                {
                   hb_comp_pFileName->szName = s_pOutPath->szName;

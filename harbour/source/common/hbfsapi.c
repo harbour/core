@@ -45,14 +45,11 @@ PHB_FNAME hb_fsFNameSplit( char * pszFileName )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsFNameSplit(%s)", pszFileName));
 
+   HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit: Filename: |%s|\n", pszFileName));
+
    /* Grab memory, set defaults */
 
    pFileName = ( PHB_FNAME ) hb_xgrab( sizeof( HB_FNAME ) );
-
-   pFileName->szPath =
-   pFileName->szName =
-   pFileName->szExtension =
-   pFileName->szDrive = NULL;
 
    pszPos = pFileName->szBuffer;
 
@@ -60,7 +57,7 @@ PHB_FNAME hb_fsFNameSplit( char * pszFileName )
       name+ext starts */
 
    pszAt = NULL;
-   if( pszFileName[ 0 ] )
+   if( pszFileName[ 0 ] != '\0' )
    {
       int iPos = strlen( pszFileName );
 
@@ -82,6 +79,8 @@ PHB_FNAME hb_fsFNameSplit( char * pszFileName )
       *pszPos++ = '\0';
       pszFileName = pszAt + 1;
    }
+   else
+      pFileName->szPath = NULL;
 
    /* From this point pszFileName will point to the name+ext part of the path */
 
@@ -97,32 +96,36 @@ PHB_FNAME hb_fsFNameSplit( char * pszFileName )
 
       pFileName->szExtension = pszPos;
       strcpy( pszPos, pszAt );
-      pszPos += strlen( pszPos) + 1;
+      pszPos += strlen( pszAt ) + 1;
    }
    else
    {
-      pFileName->szName = pszPos;
-      strcpy( pszPos, pszFileName );
-      pszPos += strlen( pszPos) + 1;
+      if( pszFileName[ 0 ] != '\0' )
+      {
+         pFileName->szName = pszPos;
+         strcpy( pszPos, pszFileName );
+         pszPos += strlen( pszFileName ) + 1;
+      }
+      else
+         pFileName->szName = NULL;
+
+      pFileName->szExtension = NULL;
    }
 
    /* Duplicate the drive letter from the path for easy access on
       platforms where applicable. Note that the drive info is always
       present also in the path itself. */
 
-   if( pFileName->szPath )
+   if( pFileName->szPath && ( pszAt = strchr( pFileName->szPath, ':' ) ) )
    {
-      pszAt = strchr( pFileName->szPath, ':' );
-      if( pszAt )
-      {
-         pFileName->szDrive = pszPos;
-         strncpy( pszPos, pFileName->szPath, pszAt - pFileName->szPath + 1 );
-         pszPos += pszAt - pFileName->szPath + 1;
-         *pszPos = '\0';
-      }
+      pFileName->szDrive = pszPos;
+      strncpy( pszPos, pFileName->szPath, pszAt - pFileName->szPath + 1 );
+      pszPos += pszAt - pFileName->szPath + 1;
+      *pszPos = '\0';
    }
+   else
+      pFileName->szDrive = NULL;
 
-   HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit: Filename: |%s|\n", szFileName));
    HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit:   szPath: |%s|\n", pFileName->szPath));
    HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit:   szName: |%s|\n", pFileName->szName));
    HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit:    szExt: |%s|\n", pFileName->szExtension));
@@ -138,23 +141,23 @@ char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
 {
    char * pszName;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsFNameMerge(%s, %p)", pszFileName, pFileName));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsFNameMerge(%p, %p)", pszFileName, pFileName));
 
    /* Set the result to an empty string */
    pszFileName[ 0 ] = '\0';
 
    /* Strip preceding path separators from the filename */
    pszName = pFileName->szName;
-   if( pszName && pszName[ 0 ] && strchr( OS_PATH_DELIMITER_LIST, pszName[ 0 ] ) )
+   if( pszName && pszName[ 0 ] != '\0' && strchr( OS_PATH_DELIMITER_LIST, pszName[ 0 ] ) )
       pszName++;
 
    /* Add path if specified */
    if( pFileName->szPath )
       strcat( pszFileName, pFileName->szPath );
 
-   /* If we have a filename, append a path separator to the path if there
+   /* If we have a path, append a path separator to the path if there
       was none. */
-   if( pszFileName[ 0 ] && ( pszName || pFileName->szExtension ) )
+   if( pszFileName[ 0 ] != '\0' && ( pszName || pFileName->szExtension ) )
    {
       int iLen = strlen( pszFileName ) - 1;
 
@@ -177,7 +180,8 @@ char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
    if( pFileName->szExtension )
    {
       /* Add a dot if the extension doesn't have it */
-      if( pFileName->szExtension[ 0 ] && pFileName->szExtension[ 0 ] != '.' )
+      if( pFileName->szExtension[ 0 ] != '\0' && 
+          pFileName->szExtension[ 0 ] != '.' )
          strcat( pszFileName, "." );
 
       strcat( pszFileName, pFileName->szExtension );
@@ -187,7 +191,7 @@ char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
    HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:   szName: |%s|\n", pFileName->szName));
    HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:    szExt: |%s|\n", pFileName->szExtension));
    HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:  szDrive: |%s|\n", pFileName->szDrive));
-   HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge: Filename: |%s|\n", szFileName));
+   HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge: Filename: |%s|\n", pszFileName));
 
    return pszFileName;
 }

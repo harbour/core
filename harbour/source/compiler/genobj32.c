@@ -77,7 +77,7 @@ void GenObj32( PHB_FNAME pFileName )
   FILE * hObjFile;  /* file handle for OBJ output */
 
   if( ! pFileName->szExtension )
-    pFileName->szExtension =".obj";
+    pFileName->szExtension = ".obj";
   hb_fsFNameMerge( szFileName, pFileName );
 
   if( ! ( hObjFile = fopen( szFileName, "wb" ) ) )

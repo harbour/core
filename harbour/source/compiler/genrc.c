@@ -43,7 +43,7 @@ void GenRC( PHB_FNAME pFileName )
    char szFileName[ _POSIX_PATH_MAX ];
 
    if( ! pFileName->szExtension )
-      pFileName->szExtension =".rc";
+      pFileName->szExtension = ".rc";
    hb_fsFNameMerge( szFileName, pFileName );
 
    printf( "\nGenerating Windows resource output to \'%s\'... ", szFileName );

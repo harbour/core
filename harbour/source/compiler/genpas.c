@@ -43,7 +43,7 @@ void GenPascal( PHB_FNAME pFileName )
    char szFileName[ _POSIX_PATH_MAX ];
 
    if( ! pFileName->szExtension )
-      pFileName->szExtension =".pas";
+      pFileName->szExtension = ".pas";
    hb_fsFNameMerge( szFileName, pFileName );
 
    printf( "\nGenerating Pascal source output to \'%s\'... ", szFileName );

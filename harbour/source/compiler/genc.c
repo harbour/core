@@ -49,7 +49,7 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
    FILE * yyc;             /* file handle for C output */
 
    if( ! pFileName->szExtension )
-      pFileName->szExtension =".c";
+      pFileName->szExtension = ".c";
    hb_fsFNameMerge( szFileName, pFileName );
 
    yyc = fopen( szFileName, "wb" );

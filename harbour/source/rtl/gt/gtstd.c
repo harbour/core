@@ -208,7 +208,7 @@ BOOL hb_gt_SetMode( USHORT uiMaxRow, USHORT uiMaxCol )
    s_uiMaxRow = uiMaxRow;
    s_uiMaxCol = uiMaxCol;
 
-   return 0;
+   return FALSE;
 }
 
 void hb_gt_Replicate( BYTE byChar, ULONG ulLen )

@@ -1,3 +1,18 @@
+19991119-10:02 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/common/hbfsapi.c
+    ! Fixes (tracing mainly), cleanups.
+  * source/rtl/gt/gtstd.c
+    * Minor change. (0/1 -> FALSE/TRUE)
+  * source/pp/hbpp.c
+    ! Fixed GPF when an #include file was not found.
+    + Added support for #include `hello.ch' (new filename delimiters)
+  * source/compiler/harbour.c
+    source/compiler/harbour.y
+    * Include() return type changed from int to BOOL.
+    * Some cleanups in Include()
+  * source/compiler/gen*.c
+    * Minor formatting.
+
 19991118-19:30 EDT David G. Holm <dholm@jsd-llc.com>
 
    - tests/strings3.prg

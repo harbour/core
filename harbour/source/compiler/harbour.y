@@ -1189,8 +1189,7 @@ void yyerror( char * s )
       hb_compGenError( hb_comp_szCErrors, 'E', ERR_YACC, s, yytext );
 }
 
-
-int Include( char * szFileName, PATHNAMES * pSearch )
+BOOL Include( char * szFileName, PATHNAMES * pSearch )
 {
    PFILE pFile;
 
@@ -1200,12 +1199,11 @@ int Include( char * szFileName, PATHNAMES * pSearch )
       if( pSearch )
       {
          PHB_FNAME pFileName = hb_fsFNameSplit( szFileName );
-         char szFName[ _POSIX_PATH_MAX ];    /* filename to parse */
 
-         pFileName->szName = szFileName;
-         pFileName->szExtension = NULL;
          while( pSearch && !yyin )
          {
+            char szFName[ _POSIX_PATH_MAX ];    /* filename to parse */
+
             pFileName->szPath = pSearch->szPath;
             hb_fsFNameMerge( szFName, pFileName );
             yyin = fopen( szFName, "r" );
@@ -1213,13 +1211,14 @@ int Include( char * szFileName, PATHNAMES * pSearch )
             {
                pSearch = pSearch->pNext;
                if( ! pSearch )
-                  return 0;
+                  return FALSE;
             }
          }
+
          hb_xfree( ( void * ) pFileName );
       }
       else
-         return 0;
+         return FALSE;
    }
 
    if( ! hb_comp_bQuiet )
@@ -1245,7 +1244,8 @@ int Include( char * szFileName, PATHNAMES * pSearch )
    yy_switch_to_buffer( pFile->pBuffer = yy_create_buffer( yyin, 8192 * 2 ) );
 #endif
    hb_comp_files.iFiles++;
-   return 1;
+
+   return TRUE;
 }
 
 int yywrap( void )   /* handles the EOF of the currently processed file */

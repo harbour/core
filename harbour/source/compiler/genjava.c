@@ -63,7 +63,7 @@ void GenJava( PHB_FNAME pFileName )
    FILE * yyc;             /* file handle for C output */
 
    if( ! pFileName->szExtension )
-      pFileName->szExtension =".java";
+      pFileName->szExtension = ".java";
    hb_fsFNameMerge( szFileName, pFileName );
 
    yyc = fopen( szFileName, "wb" );

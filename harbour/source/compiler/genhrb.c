@@ -53,7 +53,7 @@ void GenPortObj( PHB_FNAME pFileName )
    FILE * yyc;             /* file handle for C output */
 
    if( ! pFileName->szExtension )
-      pFileName->szExtension =".hrb";
+      pFileName->szExtension = ".hrb";
    hb_fsFNameMerge( szFileName, pFileName );
 
    yyc = fopen( szFileName, "wb" );

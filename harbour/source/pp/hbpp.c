@@ -208,12 +208,14 @@ int ParseDirective( char* sLine )
         {    /* --- #include --- */
           char cDelimChar;
 
-          if ( *sLine != '\"' && *sLine != '\'' && *sLine != '<' )
+          if ( *sLine != '\"' && *sLine != '\'' && *sLine != '<' && *sLine != '`' )
             hb_compGenError( _szPErrors, 'P', ERR_WRONG_NAME, NULL, NULL );
 
           cDelimChar = *sLine;
-          if (cDelimChar == '<')
+          if( cDelimChar == '<' )
             cDelimChar = '>';
+          else if( cDelimChar == '`' )
+            cDelimChar = '\'';
 
           sLine++; i = 0;
           while ( *(sLine+i) != '\0' && *(sLine+i) != cDelimChar ) i++;
@@ -222,12 +224,15 @@ int ParseDirective( char* sLine )
           *(sLine+i) = '\0';
 
           /*   if ((handl_i = fopen(sLine, "r")) == NULL) */
-          if ( !OpenInclude( sLine, hb_comp_pIncludePath, &handl_i, (cDelimChar == '>'), szInclude ) )
+          if( OpenInclude( sLine, hb_comp_pIncludePath, &handl_i, ( cDelimChar == '>' ), szInclude ) )
+          {
+            lInclude++;
+            Hp_Parse(handl_i, 0, szInclude );
+            lInclude--;
+            fclose(handl_i);
+          }
+          else
             hb_compGenError( _szPErrors, 'P', ERR_CANNOT_OPEN, sLine, NULL );
-          lInclude++;
-          Hp_Parse(handl_i, 0, szInclude );
-          lInclude--;
-          fclose(handl_i);
         }
 
       else if ( i == 6 && memcmp ( sDirective, "DEFINE", 6 ) == 0 )
