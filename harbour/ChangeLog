@@ -1,5 +1,9 @@
+19990514-22:15 CET Eddie Runia
+  * tests/working/set.ch
+    added
+
 19990514-20:30 CET Eddie Runia
-  * include/set.ch
+  * include/set.ch (didn't work)
     added
   * source/rtl/classes.c
     Unreleased memory block in inline resolved
