@@ -1,3 +1,9 @@
+2000-06-04 17:35 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/pp/ppcore.c
+     ! Corrected compiler warning
+     ! Corrected @ after ; missing trailing space.
+
 2000-06-04 11:16 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/pp/ppcomp.c
