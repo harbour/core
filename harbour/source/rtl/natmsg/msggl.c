@@ -73,7 +73,7 @@ char *hb_errorsGeneric[] =
    "L¡mite excedido",
    "Detectouse corrupci¢n",
    "Erro de tipo de datos",
-   "Erro de anchura de datos",
+   "Erro no ancho dos datos",
    "Area de traballo non usada",
    "Area de traballo non indexada",
    "Requ¡rese uso exclusivo",
