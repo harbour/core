@@ -180,7 +180,7 @@ METHOD ClosePopup( nPopup ) CLASS TDbMenu
 
    if nPopup != 0
       oPopup := ::aItems[ nPopup ]:bAction
-      if oPopup:ClassName() == "TDBMENU"
+      if ValType( oPopup ) == "O"
          RestScreen( oPopup:nTop, oPopup:nLeft, oPopup:nBottom + 1, oPopup:nRight + 2,;
                      oPopup:cBackImage )
          oPopup:cBackImage := nil
