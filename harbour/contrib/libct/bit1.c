@@ -329,7 +329,7 @@ HB_FUNC( NUMROL )
 
 HB_FUNC ( NUMMIRR )
 {
-  USHORT  usNum1, usBytes, usFor, usPattern, usNumBak, usMirror = 0;
+  USHORT  usNum1, usBytes, usFor, usPattern = 0, usNumBak, usMirror = 0;
 
   usNum1 = (USHORT) __getparam( 1 );
   
@@ -444,7 +444,7 @@ WORD static __numnot( WORD uiNum1, WORD uiNum2 )
 
 long static __numfun( int iPCount, WORD (*operation)(WORD wNum1, WORD wNum2))
 {
-  WORD uiNumOp;
+  WORD uiNumOp = 0;
   WORD uiNum1, uiNum2;
   int  iFor;
 
