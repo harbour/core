@@ -1,4 +1,16 @@
-19991004-12:52 GMT+1 Victor Szel <info@szelvesz.hu>
+19991004-15:15 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/hbpp -> source/pp
+    source/Makefile
+    source/pp/Makefile
+    source/pp/stdalone/Makefile
+    source/compiler/Makefile
+    source/runner/stdalone/Makefile
+    tests/working/Makefile
+    makefile.*
+    *.b??
+    * source/hbpp changed to source/pp.
+
+19991004-14:48 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/working/*.bat
     *.b??
     makefile.vc

@@ -18,6 +18,6 @@ LIBS=\
 	vm \
 	rdd \
 	rtl \
-	hbpp \
+	pp \
 
 include $(TOP)$(ROOT)config/bin.cf

@@ -9,6 +9,6 @@ C_SOURCES=\
 C_MAIN=hbpp.c
 
 LIBS=\
-	hbpp \
+	pp \
 
 include $(TOP)$(ROOT)config/bin.cf

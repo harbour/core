@@ -32,6 +32,6 @@ C_SOURCES=\
 C_MAIN=harbour.c
 
 LIBS=\
-	hbpp \
+	pp \
 
 include $(TOP)$(ROOT)config/bin.cf

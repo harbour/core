@@ -10,7 +10,7 @@ C_SOURCES=\
         hbpplib.c \
         table.c \
 
-LIB=hbpp
+LIB=pp
 
 DIRS=\
 	stdalone \

@@ -20,7 +20,7 @@
 COMPILER_DIR=source\compiler
 RTL_DIR=source\rtl
 RDD_DIR=source\rdd
-HBPP_DIR=source\hbpp
+PP_DIR=source\pp
 TOOLS_DIR=source\tools
 DEBUG_DIR=source\debug
 VM_DIR=source\vm
@@ -47,16 +47,16 @@ CLIBFLAGSDEBUG=$(CFLAGS) -c -Zi /TP
 HARBOUR_LIB=$(LIB_DIR)\harbour.lib
 TERMINAL_LIB=$(LIB_DIR)\terminal.lib
 TOOLS_LIB=$(LIB_DIR)\hbtools.lib
-HBPP_LIB=$(LIB_DIR)\hbpp.lib
+PP_LIB=$(LIB_DIR)\hbpp.lib
 DEBUG_LIB=$(LIB_DIR)\debug.lib
 DBFNTX_LIB=$(LIB_DIR)\dbfntx.lib
 RUNNER_LIB=$(LIB_DIR)\runner.lib
 HARBOUR_EXE=$(BIN_DIR)\harbour.exe
-HBPP_EXE=$(BIN_DIR)\hbpp.exe
+PP_EXE=$(BIN_DIR)\hbpp.exe
 RUNNER_EXE=$(BIN_DIR)\runner.exe
 HARBOURFLAGS=-iinclude -n -q
 
-LIBS=$(HARBOUR_LIB) $(TERMINAL_LIB) $(TOOLS_LIB) $(DEBUG_LIB) $(HBPP_LIB) $(DBFNTX_LIB) $(RUNNER_LIB)
+LIBS=$(HARBOUR_LIB) $(TERMINAL_LIB) $(TOOLS_LIB) $(DEBUG_LIB) $(PP_LIB) $(DBFNTX_LIB) $(RUNNER_LIB)
 
 #
 # OBJ list for harbour.lib. Add new ones as needed
@@ -196,7 +196,7 @@ RUNNER_LIB_OBJS = \
 # OBJ list for hbpp.lib. Add new ones as needed
 #
 
-HBPP_LIB_OBJS = \
+PP_LIB_OBJS = \
     $(OBJ_DIR)\hbppint.obj \
     $(OBJ_DIR)\hbpp.obj \
     $(OBJ_DIR)\table.obj \
@@ -219,20 +219,20 @@ all: $(OBJ_DIR)\symbols.obj \
      $(HARBOUR_LIB) \
      $(TOOLS_LIB) \
      $(TERMINAL_LIB) \
-     $(HBPP_LIB) \
+     $(PP_LIB) \
      $(DEBUG_LIB) \
      $(DBFNTX_LIB) \
-     $(HBPP_EXE) \
+     $(PP_EXE) \
      $(RUNNER_LIB) \
      $(RUNNER_EXE)
 
 $(OBJ_DIR)\symbols.obj : $(VM_DIR)\symbols.asm
     masm $** $@ obj\symbols.lst obj\symbols.crf
 
-$(HBPP_EXE) : \
-    $(HBPP_DIR)\stdalone\hbpp.c
+$(PP_EXE) : \
+    $(PP_DIR)\stdalone\hbpp.c
     @if exist obj\hbpp.obj del obj\hbpp.obj
-    $(CC) -TP $(CFLAGS) $(HBPP_DIR)\stdalone\hbpp.c -o $(BIN_DIR)\hbpp /link $(HBPP_LIB) 
+    $(CC) -TP $(CFLAGS) $(PP_DIR)\stdalone\hbpp.c -o $(BIN_DIR)\hbpp /link $(PP_LIB) 
     -del hbpp.obj
 
 $(RUNNER_EXE) : \
@@ -254,10 +254,10 @@ $(HARBOUR_EXE) : \
     $(COMPILER_DIR)\genjava.c \
     $(COMPILER_DIR)\genpas.c \
     $(COMPILER_DIR)\harbour.c \
-    $(HBPP_DIR)\hbpp.c \
-    $(HBPP_DIR)\hbppint.c \
-    $(HBPP_DIR)\table.c
-    $(CC) $(CFLAGS) $(COMPILER_DIR)\harboury.c $(COMPILER_DIR)\harbourl.c $(COMPILER_DIR)\harbour.c $(COMPILER_DIR)\genobj32.c $(COMPILER_DIR)\genc.c $(COMPILER_DIR)\genhrb.c $(COMPILER_DIR)\genrc.c $(COMPILER_DIR)\genjava.c $(COMPILER_DIR)\genpas.c $(HBPP_DIR)\hbppint.c $(HBPP_DIR)\hbpp.c $(HBPP_DIR)\table.c -o $(BIN_DIR)\harbour
+    $(PP_DIR)\hbpp.c \
+    $(PP_DIR)\hbppint.c \
+    $(PP_DIR)\table.c
+    $(CC) $(CFLAGS) $(COMPILER_DIR)\harboury.c $(COMPILER_DIR)\harbourl.c $(COMPILER_DIR)\harbour.c $(COMPILER_DIR)\genobj32.c $(COMPILER_DIR)\genc.c $(COMPILER_DIR)\genhrb.c $(COMPILER_DIR)\genrc.c $(COMPILER_DIR)\genjava.c $(COMPILER_DIR)\genpas.c $(PP_DIR)\hbppint.c $(PP_DIR)\hbpp.c $(PP_DIR)\table.c -o $(BIN_DIR)\harbour
     @Echo :	Ignore Lnk4033 warning
     -del harboury.obj
     -del harbourl.obj
@@ -282,8 +282,8 @@ $(HARBOUR_LIB) : $(HARBOUR_LIB_OBJS)
 $(TOOLS_LIB) : $(TOOLS_LIB_OBJS)
     lib /OUT:$(TOOLS_LIB) $(TOOLS_LIB_OBJS)
 
-$(HBPP_LIB) : $(HBPP_LIB_OBJS)
-    lib /OUT:$(HBPP_LIB) $(HBPP_LIB_OBJS)
+$(PP_LIB) : $(PP_LIB_OBJS)
+    lib /OUT:$(PP_LIB) $(PP_LIB_OBJS)
 
 $(DEBUG_LIB) : $(DEBUG_LIB_OBJS)
     lib /OUT:$(DEBUG_LIB) $(DEBUG_LIB_OBJS)
@@ -330,16 +330,16 @@ $(COMPILER_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
 # HBPP source dependencies below. Add as needed
 #
 
-$(OBJ_DIR)\hbpplib.obj : $(HBPP_DIR)\hbpplib.c
+$(OBJ_DIR)\hbpplib.obj : $(PP_DIR)\hbpplib.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\hbpp.obj : $(HBPP_DIR)\hbpp.c
+$(OBJ_DIR)\hbpp.obj : $(PP_DIR)\hbpp.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\hbppint.obj : $(HBPP_DIR)\hbppint.c
+$(OBJ_DIR)\hbppint.obj : $(PP_DIR)\hbppint.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\table.obj : $(HBPP_DIR)\table.c
+$(OBJ_DIR)\table.obj : $(PP_DIR)\table.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 

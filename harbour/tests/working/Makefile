@@ -12,7 +12,7 @@ LIBS=\
         vm \
         rdd \
         rtl \
-        hbpp \
+        pp \
         runner \
 
 ifeq ($(PM),)

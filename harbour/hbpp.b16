@@ -6,6 +6,6 @@
 
 PROJECT: hbpp.exe
 
-hbpp.exe : source\hbpp\stdalone\hbpp.c
-   bcc -ml -Iinclude source\hbpp\stdalone\hbpp.c source\hbpp\hbpp.lib lib\b16\hbpp.lib
-   del source\hbpp\stdalone\hbpp.obj
+hbpp.exe : source\pp\stdalone\hbpp.c
+   bcc -ml -Iinclude source\pp\stdalone\hbpp.c source\pp\hbpp.lib lib\b16\hbpp.lib
+   del source\pp\stdalone\hbpp.obj

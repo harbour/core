@@ -5,7 +5,7 @@
 # makefile for Borland C/C++ 32 bits
 # Preprocessor Library makefile
 
-.path.c   = source\hbpp
+.path.c   = source\pp
 .path.h   = include
 .path.lib = lib\b32
 .path.obj = obj
@@ -18,5 +18,5 @@ table.obj   : table.c
 hbpplib.obj : hbpplib.c
 
 .c.obj :
-  bcc32 -c -O2 -I.\include;.\source\hbpp -o$@ $<
+  bcc32 -c -O2 -I.\include;.\source\pp -o$@ $<
   tlib .\lib\b32\hbpp.lib -+$@,,
