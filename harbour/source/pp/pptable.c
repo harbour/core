@@ -433,8 +433,17 @@ void hb_pp_Table( void )
    static COMMANDS sC___248 = {0,"SET","DIRCASE ( \1A00 )","Set(_SET_DIRCASE, \1A00 )",&sC___247 };
    static COMMANDS sC___249 = {0,"SET","DIRSEPARATOR \1A30","Set(_SET_DIRSEPARATOR, \1A10 )",&sC___248 };
    static COMMANDS sC___250 = {0,"SET","DIRSEPARATOR ( \1A00 )","Set(_SET_DIRSEPARATOR, \1A00 )",&sC___249 };
+   static COMMANDS sC___251 = {0,"SET","MBLOCKSIZE TO \1A00","Set( _SET_MBLOCKSIZE, \1A00 )",&sC___250 };
+   static COMMANDS sC___252 = {0,"SET","MEMOBLOCK TO \1A00","Set( _SET_MBLOCKSIZE, \1A00 )",&sC___251 };
+   static COMMANDS sC___253 = {0,"SET","MFILEEXT TO \1A00","Set( _SET_MFILEEXT, \1A00 )",&sC___252 };
+   static COMMANDS sC___254 = {0,"SET","AUTOSHARE TO \1A00","Set( _SET_AUTOSHARE, \1A00 )",&sC___253 };
+   static COMMANDS sC___255 = {0,"SET","AUTOSHARE TO","Set( _SET_AUTOSHARE, 0 )",&sC___254 };
+   static COMMANDS sC___256 = {0,"SET","AUTORDER TO \1A00","Set( _SET_AUTORDER, \1A00 )",&sC___255 };
+   static COMMANDS sC___257 = {0,"SET","AUTORDER TO","Set( _SET_AUTORDER, 0 )",&sC___256 };
+   static COMMANDS sC___258 = {0,"SET","STRICTREAD \1A20 ON,OFF,&>","Set(_SET_STRICTREAD,\1A30 )",&sC___257 };
+   static COMMANDS sC___259 = {0,"SET","STRICTREAD (\1A00)","Set(_SET_STRICTREAD,\1A00 )",&sC___258 };
 
    hb_pp_topDefine = &sD___56;
-   hb_pp_topCommand = &sC___250;
+   hb_pp_topCommand = &sC___259;
    hb_pp_topTranslate = NULL;
 }

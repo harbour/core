@@ -163,35 +163,13 @@
                                        ( ( ( ULONG ) ( b3 ) ) << 16 ) | \
                                        ( ( ( ULONG ) ( b2 ) ) <<  8 ) | \
                                        ( ( ( ULONG ) ( b1 ) ) ) )
+
 #define HB_SWAP_USHORT( w )     ( ( USHORT ) ( ( ( ( USHORT ) ( w ) & 0xFF00 ) >> 8 ) | \
                                                ( ( ( USHORT ) ( w ) & 0x00FF ) << 8 ) ) )
 #define HB_SWAP_ULONG( w )      ( ( ULONG ) ( ( ( ( ULONG ) ( w ) & 0x000000FFL ) << 24 ) | \
                                               ( ( ( ULONG ) ( w ) & 0x0000FF00L ) <<  8 ) | \
                                               ( ( ( ULONG ) ( w ) & 0x00FF0000L ) >>  8 ) | \
                                               ( ( ( ULONG ) ( w ) & 0xFF000000L ) >> 24 ) ) )
-/* Be careful with double conversion. Some machines can use mixed form
-   (Little/Big) for BYTE ORDER and WORD ORDER or even completely differ
-   internal representation */
-#define HB_SWAP_PDOUBLE( p )    ( { \
-                                    union { \
-                                      double d; \
-                                      BYTE buffer[ 8 ]; \
-                                    } u; \
-                                    u.buffer[ 0 ] = ( ( BYTE * ) ( p ) )[ 7 ]; \
-                                    u.buffer[ 1 ] = ( ( BYTE * ) ( p ) )[ 6 ]; \
-                                    u.buffer[ 2 ] = ( ( BYTE * ) ( p ) )[ 5 ]; \
-                                    u.buffer[ 3 ] = ( ( BYTE * ) ( p ) )[ 4 ]; \
-                                    u.buffer[ 4 ] = ( ( BYTE * ) ( p ) )[ 3 ]; \
-                                    u.buffer[ 5 ] = ( ( BYTE * ) ( p ) )[ 2 ]; \
-                                    u.buffer[ 6 ] = ( ( BYTE * ) ( p ) )[ 1 ]; \
-                                    u.buffer[ 7 ] = ( ( BYTE * ) ( p ) )[ 0 ]; \
-                                    u.d; \
-                                  } )
-#define HB_SWAP_DOUBLE( d )     ( { \
-                                    BYTE double_var[ 8 ]; \
-                                    *( double * )double_var = ( double ) ( d ); \
-                                    HB_SWAP_PDOUBLE( double_var ); \
-                                } )
 
 #if defined(HB_PDP_ENDIAN)
    #error PDP-Endian support unimplemented. If you have such machine do it yourself.
@@ -202,15 +180,14 @@
    #define HB_PUT_LE_USHORT( p, w ) ( *( USHORT * )( p ) = ( USHORT ) ( w ) )
    #define HB_GET_LE_ULONG( p )     ( *( ULONG * )( p ) )
    #define HB_PUT_LE_ULONG( p, l )  ( *( ULONG * )( p ) = ( ULONG ) ( l ) )
-   #define HB_GET_LE_DOUBLE( p )    ( *( double * )( p ) )
-   #define HB_PUT_LE_DOUBLE( p, d ) ( *( double * )( p ) = ( double ) ( d ) )
 
    #define HB_GET_BE_USHORT( p )    HB_SWAP_USHORT( *( USHORT * )( p ) )
    #define HB_PUT_BE_USHORT( p, w ) ( *( USHORT * )( p ) = HB_SWAP_USHORT( w ) )
    #define HB_GET_BE_ULONG( p )     HB_SWAP_ULONG( *( ULONG * )( p ) )
    #define HB_PUT_BE_ULONG( p, l )  ( *( ULONG * )( p ) = HB_SWAP_ULONG( l ) )
-   #define HB_GET_BE_DOUBLE( p )    HB_SWAP_PDOUBLE( p )
-   #define HB_PUT_BE_DOUBLE( p, d ) ( *( double * )( p ) = HB_SWAP_DOUBLE( d ) )
+
+   #define HB_GET_LE_DOUBLE( p )    ( *( double * )( p ) )
+   #define HB_PUT_LE_DOUBLE( p, d ) ( *( double * )( p ) = ( double ) ( d ) )
 
    #define HB_USHORT_FROM_LE( w )   ( ( USHORT )( w ) )
    #define HB_ULONG_FROM_LE( l )    ( ( ULONG )( l ) )
@@ -224,61 +201,48 @@
    #define HB_PCODE_MKULONG( p )    ( *( ULONG * )( p ) )
    #define HB_PCODE_MKDOUBLE( p )   ( *( double * )( p ) )
 
-   /* the conversion for BIG endian can be used here but for speed reasons
-    * I decided to write full version to avoid one bytes conversion */
-   #define HB_GET_SORTDBL( v, p ) { \
-                                    union { \
-                                      double d; \
-                                      BYTE buffer[ 8 ]; \
-                                    } u; \
-                                    if ( ( ( BYTE * ) ( p ) )[ 0 ] & 0x80 ) { \
-                                       u.buffer[ 0 ] = ( ( BYTE * ) ( p ) )[ 7 ]; \
-                                       u.buffer[ 1 ] = ( ( BYTE * ) ( p ) )[ 6 ]; \
-                                       u.buffer[ 2 ] = ( ( BYTE * ) ( p ) )[ 5 ]; \
-                                       u.buffer[ 3 ] = ( ( BYTE * ) ( p ) )[ 4 ]; \
-                                       u.buffer[ 4 ] = ( ( BYTE * ) ( p ) )[ 3 ]; \
-                                       u.buffer[ 5 ] = ( ( BYTE * ) ( p ) )[ 2 ]; \
-                                       u.buffer[ 6 ] = ( ( BYTE * ) ( p ) )[ 1 ]; \
-                                       u.buffer[ 7 ] = ( ( BYTE * ) ( p ) )[ 0 ] ^ 0x80; \
-                                    } else { \
-                                       u.buffer[ 0 ] = ( ( BYTE * ) ( p ) )[ 7 ] ^ 0xFF; \
-                                       u.buffer[ 1 ] = ( ( BYTE * ) ( p ) )[ 6 ] ^ 0xFF; \
-                                       u.buffer[ 2 ] = ( ( BYTE * ) ( p ) )[ 5 ] ^ 0xFF; \
-                                       u.buffer[ 3 ] = ( ( BYTE * ) ( p ) )[ 4 ] ^ 0xFF; \
-                                       u.buffer[ 4 ] = ( ( BYTE * ) ( p ) )[ 3 ] ^ 0xFF; \
-                                       u.buffer[ 5 ] = ( ( BYTE * ) ( p ) )[ 2 ] ^ 0xFF; \
-                                       u.buffer[ 6 ] = ( ( BYTE * ) ( p ) )[ 1 ] ^ 0xFF; \
-                                       u.buffer[ 7 ] = ( ( BYTE * ) ( p ) )[ 0 ] ^ 0xFF; \
-                                    } \
-                                    v = u.d; \
-                                 }
+   #define HB_ORD2DBL( o, d ) { \
+      if ( ( ( BYTE * ) ( o ) )[ 0 ] & 0x80 ) { \
+         ( ( BYTE * ) ( d ) )[ 0 ] = ( ( BYTE * ) ( o ) )[ 7 ]; \
+         ( ( BYTE * ) ( d ) )[ 1 ] = ( ( BYTE * ) ( o ) )[ 6 ]; \
+         ( ( BYTE * ) ( d ) )[ 2 ] = ( ( BYTE * ) ( o ) )[ 5 ]; \
+         ( ( BYTE * ) ( d ) )[ 3 ] = ( ( BYTE * ) ( o ) )[ 4 ]; \
+         ( ( BYTE * ) ( d ) )[ 4 ] = ( ( BYTE * ) ( o ) )[ 3 ]; \
+         ( ( BYTE * ) ( d ) )[ 5 ] = ( ( BYTE * ) ( o ) )[ 2 ]; \
+         ( ( BYTE * ) ( d ) )[ 6 ] = ( ( BYTE * ) ( o ) )[ 1 ]; \
+         ( ( BYTE * ) ( d ) )[ 7 ] = ( ( BYTE * ) ( o ) )[ 0 ] ^ ( BYTE ) 0x80; \
+      } else { \
+         ( ( BYTE * ) ( d ) )[ 0 ] = ( ( BYTE * ) ( o ) )[ 7 ] ^ ( BYTE ) 0xFF; \
+         ( ( BYTE * ) ( d ) )[ 1 ] = ( ( BYTE * ) ( o ) )[ 6 ] ^ ( BYTE ) 0xFF; \
+         ( ( BYTE * ) ( d ) )[ 2 ] = ( ( BYTE * ) ( o ) )[ 5 ] ^ ( BYTE ) 0xFF; \
+         ( ( BYTE * ) ( d ) )[ 3 ] = ( ( BYTE * ) ( o ) )[ 4 ] ^ ( BYTE ) 0xFF; \
+         ( ( BYTE * ) ( d ) )[ 4 ] = ( ( BYTE * ) ( o ) )[ 3 ] ^ ( BYTE ) 0xFF; \
+         ( ( BYTE * ) ( d ) )[ 5 ] = ( ( BYTE * ) ( o ) )[ 2 ] ^ ( BYTE ) 0xFF; \
+         ( ( BYTE * ) ( d ) )[ 6 ] = ( ( BYTE * ) ( o ) )[ 1 ] ^ ( BYTE ) 0xFF; \
+         ( ( BYTE * ) ( d ) )[ 7 ] = ( ( BYTE * ) ( o ) )[ 0 ] ^ ( BYTE ) 0xFF; \
+      } }
 
-   #define HB_PUT_SORTDBL( p, v ) { \
-                                    union { \
-                                      double d; \
-                                      BYTE buffer[ 8 ]; \
-                                    } u; \
-                                    u.d = ( double ) ( v ); \
-                                    if ( u.d >= 0.0 ) { \
-                                       ( ( BYTE * ) ( p ) )[ 0 ] = u.buffer[ 7 ] ^ 0x80; \
-                                       ( ( BYTE * ) ( p ) )[ 1 ] = u.buffer[ 6 ]; \
-                                       ( ( BYTE * ) ( p ) )[ 2 ] = u.buffer[ 5 ]; \
-                                       ( ( BYTE * ) ( p ) )[ 3 ] = u.buffer[ 4 ]; \
-                                       ( ( BYTE * ) ( p ) )[ 4 ] = u.buffer[ 3 ]; \
-                                       ( ( BYTE * ) ( p ) )[ 5 ] = u.buffer[ 2 ]; \
-                                       ( ( BYTE * ) ( p ) )[ 6 ] = u.buffer[ 1 ]; \
-                                       ( ( BYTE * ) ( p ) )[ 7 ] = u.buffer[ 0 ]; \
-                                    } else { \
-                                       ( ( BYTE * ) ( p ) )[ 7 ] = u.buffer[ 0 ] ^ 0xFF; \
-                                       ( ( BYTE * ) ( p ) )[ 6 ] = u.buffer[ 1 ] ^ 0xFF; \
-                                       ( ( BYTE * ) ( p ) )[ 5 ] = u.buffer[ 2 ] ^ 0xFF; \
-                                       ( ( BYTE * ) ( p ) )[ 4 ] = u.buffer[ 3 ] ^ 0xFF; \
-                                       ( ( BYTE * ) ( p ) )[ 3 ] = u.buffer[ 4 ] ^ 0xFF; \
-                                       ( ( BYTE * ) ( p ) )[ 2 ] = u.buffer[ 5 ] ^ 0xFF; \
-                                       ( ( BYTE * ) ( p ) )[ 1 ] = u.buffer[ 6 ] ^ 0xFF; \
-                                       ( ( BYTE * ) ( p ) )[ 0 ] = u.buffer[ 7 ] ^ 0xFF; \
-                                    } \
-                                 }
+   #define HB_DBL2ORD( d, o ) { \
+      if ( *( double * )( d ) >= 0.0 ) { \
+      ( ( BYTE * ) ( o ) )[ 0 ] = ( ( BYTE * ) ( d ) )[ 7 ] ^ ( BYTE ) 0x80; \
+         ( ( BYTE * ) ( o ) )[ 1 ] = ( ( BYTE * ) ( d ) )[ 6 ]; \
+         ( ( BYTE * ) ( o ) )[ 2 ] = ( ( BYTE * ) ( d ) )[ 5 ]; \
+         ( ( BYTE * ) ( o ) )[ 3 ] = ( ( BYTE * ) ( d ) )[ 4 ]; \
+         ( ( BYTE * ) ( o ) )[ 4 ] = ( ( BYTE * ) ( d ) )[ 3 ]; \
+         ( ( BYTE * ) ( o ) )[ 5 ] = ( ( BYTE * ) ( d ) )[ 2 ]; \
+         ( ( BYTE * ) ( o ) )[ 6 ] = ( ( BYTE * ) ( d ) )[ 1 ]; \
+         ( ( BYTE * ) ( o ) )[ 7 ] = ( ( BYTE * ) ( d ) )[ 0 ]; \
+      } else { \
+         ( ( BYTE * ) ( o ) )[ 0 ] = ( ( BYTE * ) ( d ) )[ 7 ] ^ ( BYTE ) 0xFF; \
+         ( ( BYTE * ) ( o ) )[ 1 ] = ( ( BYTE * ) ( d ) )[ 6 ] ^ ( BYTE ) 0xFF; \
+         ( ( BYTE * ) ( o ) )[ 2 ] = ( ( BYTE * ) ( d ) )[ 5 ] ^ ( BYTE ) 0xFF; \
+         ( ( BYTE * ) ( o ) )[ 3 ] = ( ( BYTE * ) ( d ) )[ 4 ] ^ ( BYTE ) 0xFF; \
+         ( ( BYTE * ) ( o ) )[ 4 ] = ( ( BYTE * ) ( d ) )[ 3 ] ^ ( BYTE ) 0xFF; \
+         ( ( BYTE * ) ( o ) )[ 5 ] = ( ( BYTE * ) ( d ) )[ 2 ] ^ ( BYTE ) 0xFF; \
+         ( ( BYTE * ) ( o ) )[ 6 ] = ( ( BYTE * ) ( d ) )[ 1 ] ^ ( BYTE ) 0xFF; \
+         ( ( BYTE * ) ( o ) )[ 7 ] = ( ( BYTE * ) ( d ) )[ 0 ] ^ ( BYTE ) 0xFF; \
+      } }
+
 #else
    /* We use Big-Endian here */
 
@@ -290,8 +254,6 @@
    #define HB_PUT_BE_USHORT( p, w ) ( *( USHORT * )( p ) = ( USHORT ) ( w ) )
    #define HB_GET_BE_ULONG( p )     ( *( ULONG * )( p ) )
    #define HB_PUT_BE_ULONG( p, l )  ( *( ULONG * )( p ) = ( ULONG ) ( l ) )
-   #define HB_GET_BE_DOUBLE( p )    ( *( double * )( p ) )
-   #define HB_PUT_BE_DOUBLE( p, d ) ( *( double * )( p ) = ( double ) ( d ) )
 
    #define HB_USHORT_FROM_LE( w )   HB_MKUSHORT( HB_HIBYTE( w ), HB_LOBYTE( w ) )
    #define HB_ULONG_FROM_LE( l )    HB_MKULONG( HB_HIBYTE( HB_HIWORD( l ) ), HB_LOBYTE( HB_HIWORD( l ) ), HB_HIBYTE( l ), HB_LOBYTE( l ) )
@@ -303,40 +265,32 @@
    #define HB_PCODE_MKLONG( p )     HB_MKLONG( *( BYTE * )( p ), ( ( BYTE * )( p ) )[ 1 ], ( ( BYTE * )( p ) )[ 2 ], ( ( BYTE * )( p ) )[ 3 ] )
    #define HB_PCODE_MKULONG( p )    HB_MKULONG( *( BYTE * )( p ), ( ( BYTE * )( p ) )[ 1 ], ( ( BYTE * )( p ) )[ 2 ], ( ( BYTE * )( p ) )[ 3 ] )
 
+   #define HB_ORD2DBL( o, d ) { \
+         *( double * )( d ) = *( double * )( o ); \
+         if ( ( ( BYTE * ) ( d ) )[ 0 ] & 0x80 ) { \
+            ( ( BYTE * ) ( d ) )[ 0 ] ^= 0x80; \
+         } else { \
+            ( ( LONG * ) ( d ) )[ 0 ] ^= 0xFFFFFFFFL; \
+            ( ( LONG * ) ( d ) )[ 1 ] ^= 0xFFFFFFFFL; \
+         } }
+   #define HB_DBL2ORD( d, o ) { \
+         *( double * )( o ) = *( double * )( d ); \
+         if ( *( double * )( o ) >= 0.0 ) { \
+            ( ( BYTE * ) ( o ) )[ 0 ] ^= 0x80; \
+         } else { \
+            ( ( LONG * ) ( o ) )[ 0 ] ^= 0xFFFFFFFFL; \
+            ( ( LONG * ) ( o ) )[ 1 ] ^= 0xFFFFFFFFL; \
+         } }
+
 #if defined( __GNUC__ )
-   #define HB_GET_LE_DOUBLE( p )    HB_SWAP_PDOUBLE( p )
-   #define HB_PUT_LE_DOUBLE( p, d ) ( *( double * )( p ) = HB_SWAP_DOUBLE( d ) )
+/* Be careful with double conversion. Some machines can use mixed form
+   (Little/Big) for BYTE ORDER and WORD ORDER or even completely differ
+   internal representation */
 
-   #define HB_DOUBLE_FROM_LE( d )   HB_SWAP_DOUBLE( d );
+   #define HB_GET_LE_DOUBLE( p )    HB_PCODE_MKDOUBLE( p )
+   #define HB_PUT_LE_DOUBLE( p, d ) ( *( double * )( p ) = HB_DOUBLE_TO_LE( d ) )
+
    #define HB_DOUBLE_TO_LE( d )     HB_DOUBLE_FROM_LE( d )
-   #define HB_PCODE_MKDOUBLE( p )   HB_SWAP_PDOUBLE( p )
-
-   #define HB_GET_SORTDBL( v, p ) ( { \
-                                    union { \
-                                      double d; \
-                                      BYTE buffer[ 8 ]; \
-                                    } u; \
-                                    u.d = HB_GET_BE_DOUBLE( p ); \
-                                    if ( u.buffer[ 0 ] & 0x80 ) { \
-                                       u.buffer[ 0 ] ^= 0x80; \
-                                    } else { \
-                                       ( ( LONG * ) ( u.buffer ) )[ 0 ] ^= 0xFFFFFFFFL; \
-                                       ( ( LONG * ) ( u.buffer ) )[ 1 ] ^= 0xFFFFFFFFL; \
-                                    } \
-                                    v = u.d; \
-                                 } )
-
-   #define HB_PUT_SORTDBL( p, v ) ( { \
-                                    HB_PUT_BE_DOUBLE( p, v ); \
-                                    if ( ( double ) ( v ) >= 0.0 ) { \
-                                       ( ( BYTE * ) ( p ) )[ 0 ] ^= 0x80; \
-                                    } else { \
-                                       ( ( LONG * ) ( p ) )[ 0 ] ^= 0xFFFFFFFFL; \
-                                       ( ( LONG * ) ( p ) )[ 1 ] ^= 0xFFFFFFFFL; \
-                                    } \
-                                 } )
-
-/*
    #define HB_DOUBLE_FROM_LE( d )	\
 	( { \
 	   BYTE double_var[ 8 ]; \
@@ -359,7 +313,6 @@
 	   u.buffer[ 7 ] = ( p )[ 0 ]; \
 	   u.d; \
 	} )
-*/
 #else
    #error Little-Endian IEEE 754 double type conversion unimplemented with a non-GCC compiler
 #endif

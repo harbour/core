@@ -2606,9 +2606,9 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
                printf( "ntxCreateOrder" );
          }
       }
-      if( pArea->lpdbOrdCondInfo )
+      if( pArea->lpdbOrdCondInfo || pArea->lpdbRelations )
       {
-         if( !pArea->lpdbOrdCondInfo->fAll )
+         if( !pArea->lpdbOrdCondInfo->fAll || pArea->lpdbRelations )
             SELF_SKIP( ( AREAP ) pArea, 1 );
          if( pArea->lpdbOrdCondInfo->lStep )
          {
@@ -2623,8 +2623,8 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
             hb_vmSend( 0 );
          }
       }
-      else if( pArea->lpdbRelations )
-         SELF_SKIP( ( AREAP ) pArea, 1 );
+      // else if( pArea->lpdbRelations )
+      //   SELF_SKIP( ( AREAP ) pArea, 1 );
    }
    hb_ntxSortKeyEnd( pTag, &sortInfo );
    if( ( !pArea->lpdbOrdCondInfo || pArea->lpdbOrdCondInfo->fAll ) && !pArea->lpdbRelations )

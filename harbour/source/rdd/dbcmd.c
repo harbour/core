@@ -2645,13 +2645,9 @@ HB_FUNC( ORDKEYGOTO )
 
    if( s_pCurrArea )
    {
-      pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
-      if( !pOrderInfo.itmOrder )
-         pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
-      pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
-      /* Either or both may be NIL */
-
-      pOrderInfo.itmNewVal = hb_param( 3 , HB_IT_NUMERIC );
+      pOrderInfo.itmOrder = NULL;
+      pOrderInfo.atomBagName = NULL;
+      pOrderInfo.itmNewVal = hb_param( 1 , HB_IT_NUMERIC );
       pOrderInfo.itmResult = hb_itemPutL( NULL, FALSE );
       SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_POSITION, &pOrderInfo );
       hb_retl( hb_itemGetL( pOrderInfo.itmResult ) );

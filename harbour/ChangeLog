@@ -8,6 +8,24 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-11-09 00:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/pp/pptable.c
+    + SET MBLOCKSIZE TO <x>
+      SET MEMOBLOCK TO <x>
+      SET MFILEEXT TO <x>
+      SET AUTOSHARE TO [<x>]
+      SET AUTORDER TO [<x>]
+      SET STRICTREAD <x:ON,OFF,&>
+    New DBFFPT related commands, added by Przemyslaw Czerpak - synced with xHarbour.
+
+  * include/hbdefs.h
+  * source/rdd/dbcmd.c
+  * source/rdd/dbfcdx/dbfcdx1.c
+    ! Some DBFCDX fixes by Przemyslaw Czerpak - synced with xHarbour.
+
+  * source/rdd/dbfntx/dbfntx1.c
+    ! Bug fixed, which appeared while conditional indexing of a parent file in relation.
+
 2003-10-22 13:26 UTC-0800 Luis Krause Mantilla <lkrausem@shaw.ca>
   * xharbour/source/rdd/rddord.prg
     + ORDSETRELATION()
