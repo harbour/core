@@ -7,6 +7,12 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * source/rdd/dbfntx/dbfntx1.c
+    * Bug fixed in tree balancing
+
+2002-04-28 08:50 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
+  * source/rtl/listbox.prg
+    * Fixed some warnings
   * source/rtl/dummy.prg
     *Removed reference to ordkeydel() and ordkeyadd()
 

@@ -98,6 +98,7 @@ FUNCTION dbEdit(;
    LOCAL cHeading
    LOCAL cBlock
    LOCAL bBlock
+   LOCAL aSubArray
 
    IF !Used()
       RETURN .F.
@@ -132,6 +133,21 @@ FUNCTION dbEdit(;
 
    IF ISARRAY( acColumns )
       nColCount := Len( acColumns )
+      aSubArray:=acColumns[nColCount] // See if is an Array of Array
+
+     IF ISARRAY( aSubArray )
+        nColCount := Len( aSubArray )
+      nPos := 1
+      DO WHILE nPos <= nColCount .AND. ISCHARACTER( aSubArray[ nPos ] ) .AND. !Empty( aSubArray[ nPos ] )
+         nPos++
+      ENDDO
+      nColCount := nPos - 1
+
+      IF nColCount == 0
+         RETURN .F.
+      ENDIF
+      acColumns:=aSubArray
+      else
       nPos := 1
       DO WHILE nPos <= nColCount .AND. ISCHARACTER( acColumns[ nPos ] ) .AND. !Empty( acColumns[ nPos ] )
          nPos++
@@ -141,6 +157,8 @@ FUNCTION dbEdit(;
       IF nColCount == 0
          RETURN .F.
       ENDIF
+
+      endif
    ELSE
       nColCount := FCount()
    ENDIF
