@@ -188,8 +188,10 @@ char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
    PushInteger( iDecimals );                    /* Push decimals            */
    Function( 3 );                               /* 3 Parameters             */
    pItem = &stack.Return;
-//   StackPop();
-//   ItemCopy( pItem, &stack.Return );            /* Get return value          */
+#if 0
+   StackPop();
+   ItemCopy( pItem, &stack.Return );            /* Get return value          */
+#endif
    if( pItem->wType == IT_STRING )              /* Is it a string           */
    {
       szStr  = pItem->value.szText;
@@ -298,7 +300,7 @@ char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
    {
       printf( "\nThis should never happen" );   /* TODO: Serious error      */
    }
-//   ItemRelease( pItem );
+   /* ItemRelease( pItem ); */
    return(szRet);
 }
 

@@ -8,9 +8,11 @@
 extern STACK  stack;
 extern SYMBOL symEval;
 
-// -------------
-// Internal
-// -------------
+/*
+ * -------------
+ * Internal
+ * -------------
+ */
 void Array( PITEM pItem, ULONG ulLen ) /* creates a new array */
 {
    PBASEARRAY pBaseArray = ( PBASEARRAY ) _xgrab( sizeof( BASEARRAY ) );
@@ -223,7 +225,9 @@ void ArrayDel( PITEM pArray, ULONG ulIndex )
 				  pBaseArray->pItems + ( ulIndex + 1 ) );
 
 		 ItemRelease( pBaseArray->pItems + ( ulLen - 1 ) );
-//         ( pBaseArray->pItems + ( ulLen - 1 ) )->wType = IT_NIL;
+#if 0
+         ( pBaseArray->pItems + ( ulLen - 1 ) )->wType = IT_NIL;
+#endif
 	  }
    }
    /* QUESTION: Should we raise an error here ? */
@@ -246,7 +250,9 @@ void ArrayIns( PITEM pArray, ULONG ulIndex )
 					  pBaseArray->pItems + ( ulLen - 1 ) );
 
 		 ItemRelease( pBaseArray->pItems + ulLen );
-//         ( pBaseArray->pItems + ulLen )->wType = IT_NIL;    /* set nil value */
+#if 0
+         ( pBaseArray->pItems + ulLen )->wType = IT_NIL;    /* set nil value */
+#endif
 	  }
    }
 }
@@ -371,9 +377,11 @@ void ArrayRelease( PITEM pArray )
    }
 }
 
-// -------------
-// HARBOUR
-// -------------
+/*
+ * -------------
+ * HARBOUR
+ * -------------
+ */
 HARBOUR ARRAY( void )
 {
    Array( &stack.Return, _parnl( 1 ) );

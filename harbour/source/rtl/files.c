@@ -39,14 +39,14 @@
 static int last_error = 0;
 
 #if !defined(PATH_MAX)
-// if PATH_MAX isn't defined, 256 bytes is a good number :)
+/* if PATH_MAX isn't defined, 256 bytes is a good number :) */
 #define PATH_MAX 256
 #endif
 
 #define MKLONG(_1,_2,_3,_4) (((long)_4)<<24)|(((long)_3)<<16)|(((long)_2)<<8)|_1
 #define MKINT(_1,_2)        (((long)_2)<<8)|_1
 
-// FLAGS TO FOPEN
+/* FLAGS TO FOPEN */
 #define FO_READ         0
 #define FO_WRITE        1
 #define FO_READWRITE    2
@@ -57,30 +57,32 @@ static int last_error = 0;
 #define FO_DENYONE      64
 #define FO_SHARE        FO_DENYONE
 
-// FLAGS TO FCREATE
+/* FLAGS TO FCREATE */
 #define FC_NORMAL       0
 #define FC_READONLY     1
 #define FC_HIDDEN       2
 #define FC_SYSTEM       4
 
-// FLAGS TO SEEK
+/* FLAGS TO SEEK */
 #define FS_SET          0
 #define FS_RELATIVE     1
 #define FS_END          2
 
-// NOTE: for avoid include stdio.h,
-// this include define as an 'struct FILE'
-// and we have a HARBOUR function named FILE() this
-// made a name conflict
+/*
+ * NOTE: for avoid include stdio.h,
+ * this include define as an 'struct FILE'
+ * and we have a HARBOUR function named FILE() this
+ * made a name conflict
+ */
 extern int rename( const char *, const char * );
 
-// Convert HARBOUR flags to IO subsystem flags
+/* Convert HARBOUR flags to IO subsystem flags */
 
 #if defined(HAVE_POSIX_IO)
 
 static int convert_open_flags( int flags )
 {
-        // by default FO_READ+FO_COMPAT is set
+        /* by default FO_READ+FO_COMPAT is set */
         int result_flags = 0;
 
         result_flags |= O_BINARY;
@@ -88,14 +90,14 @@ static int convert_open_flags( int flags )
         if( flags == 0 )
                 result_flags |= O_RDONLY|SH_COMPAT;
 
-        // read & write flags
+        /* read & write flags */
         if( flags & FO_WRITE )
                 result_flags |= O_WRONLY;
 
         if( flags & FO_READWRITE )
                 result_flags |= O_RDWR;
 
-        // shared flags
+        /* shared flags */
         if( flags & FO_EXCLUSIVE )
                 result_flags |= SH_DENYRW;
 
@@ -116,7 +118,7 @@ static int convert_open_flags( int flags )
 
 static int convert_seek_flags( int flags )
 {
-        // by default FS_SET is set
+        /* by default FS_SET is set */
         int result_flags=0;
 
         result_flags = SEEK_SET;
@@ -132,7 +134,7 @@ static int convert_seek_flags( int flags )
 
 static int convert_create_flags( int flags )
 {
-        // by default FC_NORMAL is set
+        /* by default FC_NORMAL is set */
         int result_flags=S_IWUSR;
 
         if( flags & FC_READONLY )
@@ -150,8 +152,9 @@ static int convert_create_flags( int flags )
 #endif
 
 
-// FILESYS.API FUNCTIONS --
-// ------------------------
+/*
+ * FILESYS.API FUNCTIONS --
+ */
 
 int _fsOpen( char * name, int flags )
 {
@@ -231,7 +234,7 @@ int _fsLock( int handle, long start, long length, long mode )
         int result=0;
 
 #if defined(HAVE_POSIX_IO)
-// TODO: I'm thinking about this :)
+/* TODO: I'm thinking about this :) */
 #endif
 
         return result;
@@ -240,7 +243,7 @@ int _fsLock( int handle, long start, long length, long mode )
 void _fsCommit( int handle )
 {
 #if defined(HAVE_POSIX_IO)
-// TODO: I'm thinking about this :)
+/* TODO: I'm thinking about this :) */
 #endif
         return;
 }
@@ -312,14 +315,15 @@ long _fsIsDrv( int driver )
 
 #ifdef NOT_IMPLEMENTED_YET
 
-// Unknow that it make :( if anyone can say me !!
+/* Unknow that it make :( if anyone can say me !! */
 int    _fsExtOpen(PBYTE   filename, PBYTE defExt, ULONG flags,
                    PBYTE   paths, ERRORP error );
 
 #endif
 
-// -- HARBOUR FUNCTIONS --
-// -----------------------
+/*
+ * -- HARBOUR FUNCTIONS --
+ */
 
 #ifdef FOPEN
 #define HB_FOPEN FOPEN
@@ -451,7 +455,7 @@ HARBOUR FCLOSE()
         if( arg1_it )
         {
             result=close(_parni(1));
-            //last_error = errno;
+            /* last_error = errno; */
         }
 
         _retl(result>=0?1:0);
@@ -517,7 +521,7 @@ HARBOUR _FILE()
 
         if( arg1_it )
         {
-                // TODO: I'm thinking about this :(
+                /* TODO: I'm thinking about this :( */
         }
         _retl(0);
         return;

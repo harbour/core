@@ -2,7 +2,7 @@
  * $Id$
  */
 
-// Calling Harbour from C code
+/* Calling Harbour from C code */
 
 /* executing Harbour code from C */
 void PushSymbol( PSYMBOL pSym ); /* pushes a function pointer onto the stack */

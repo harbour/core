@@ -1,3 +1,12 @@
+Wed May 05 18:51:06 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* include/ctoharb.h: 
+	* source/rtl/arrays.c: 
+	* source/rtl/files.c: 
+	* source/rtl/transfrm.c: 
+	* source/vm/dynsym.c: 
+	Replaced C++-style comments (//) with C-style commens (/* */).
+
 Wed May 05 18:36:53 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* include/ctoharb.h: 

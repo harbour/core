@@ -156,22 +156,22 @@ PDYNSYM FindDynSym( char * szName )
    }
    else
    {        /* Classic Tree Insert Sort Mechanism
-            //
-            // Insert Sort means the new item is entered alphabetically into
-            // the array. In this case pDynItems !
-            //
-            // 1) We start in the middle of the array.
-            // 2a) If the symbols are equal -> we have found the symbol !!
-            //     Champagne ! We're done.
-            //  b) If the symbol we are looking for ('ge') is greater than the
-            //     middle ('po'), we start looking left.
-            //     Only the first part of the array is going to be searched.
-            //     Go to (1)
-            //  c) If the symbol we are looking for ('ge') is smaller than the
-            //     middle ('ko'), we start looking right
-            //     Only the last part of the array is going to be searched.
-            //     Go to (1)
-            */
+             *
+             * Insert Sort means the new item is entered alphabetically into
+             * the array. In this case pDynItems !
+             *
+             * 1) We start in the middle of the array.
+             * 2a) If the symbols are equal -> we have found the symbol !!
+             *     Champagne ! We're done.
+             *  b) If the symbol we are looking for ('ge') is greater than the
+             *     middle ('po'), we start looking left.
+             *     Only the first part of the array is going to be searched.
+             *     Go to (1)
+             *  c) If the symbol we are looking for ('ge') is smaller than the
+             *     middle ('ko'), we start looking right
+             *     Only the last part of the array is going to be searched.
+             *     Go to (1)
+             */
       wClosestDynSym = wMiddle;                   /* Start in the middle      */
 
       while( wFirst < wLast )
