@@ -7,6 +7,15 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-02-01 12:00 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * include/hbexpra.c
+     * Temporary workaround for the "EVAL" bug
+
+2002-02-01 09:32 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/vm/extend.c
+     * some minor fixes on HB_TRACE() supplied params
+
+   * source/rtl/strings.c
    * source/rtl/strings.c
      ! hb_strnicmp() fixed, now it's compatible with strnicmp().
        This fixes the previous fix in hvm.c which uses hb_strnicmp()
