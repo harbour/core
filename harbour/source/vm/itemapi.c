@@ -86,7 +86,7 @@
 #if !defined(__DJGPP__)
 #include <math.h> /* For log() */
 #endif
-#if defined(__IBMCPP__) || (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
+#if defined(_MSC_VER) || defined(__IBMCPP__) || (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
 #include <float.h>  /* for _finite() and _isnan() */
 #endif
 
@@ -1206,7 +1206,7 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
                hb_mathSetHandler (fOldMathHandler); 
                s_bInfinityInit = TRUE;
             }
-            #elif defined(__DJGPP__) || defined(__MINGW32__) || defined(__RSXNT__) || defined(__EMX__) || (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
+            #elif defined(_MSC_VER) || defined(__DJGPP__) || defined(__MINGW32__) || defined(__RSXNT__) || defined(__EMX__) || (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
             /* Nothing to do here, because these platforms have a function
                that returns 0 if the value is not a finite number */
             #else
@@ -1233,7 +1233,7 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
             #endif
             if( pNumber->item.asDouble.length == 99
             #if defined(__WATCOMC__)
-            #elif (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
+            #elif defined(_MSC_VER) || (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
                || !_finite(dNumber)
             #elif defined(__DJGPP__) || defined(__MINGW32__)
                || !finite( dNumber )
