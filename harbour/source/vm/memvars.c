@@ -1306,14 +1306,11 @@ HB_FUNC( __MVSAVE )
 
          /* Walk through all visible memory variables */
 
-         ULONG ulBase = s_privateStackCnt;
+         ULONG ulBase = 0;
 
-         while( ulBase > s_privateStackBase )
+         while( ulBase < s_privateStackCnt )
          {
-            PHB_DYNS pDynVar;
-
-            --ulBase;
-            pDynVar = s_privateStack[ ulBase ];
+            PHB_DYNS pDynVar = s_privateStack[ ulBase ];
 
             /* NOTE: Harbour name lengths are not limited, but the .MEM file
                      structure is not flexible enough to allow for it.
@@ -1394,6 +1391,7 @@ HB_FUNC( __MVSAVE )
                   }
                }
             }
+            ulBase++;
          }
 
          buffer[ 0 ] = '\x1A';
