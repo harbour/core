@@ -1,3 +1,7 @@
+2001-08-06 20:30 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   *source/rtl/tbrowse.prg
+      * Fixed support to display pictures in TBrwose. Thanks for Manu Exposito <maex14@dipusevilha.es>
+
 2001-08-06 09:15 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/genc.c
      ! Improved sync logic of HB_SETMACRO() level, to only activate once per module with same level used by compiler.

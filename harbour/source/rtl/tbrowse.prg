@@ -59,6 +59,9 @@
  * ::PageUp(), ::PageDown(), ::Down(), ::Up(), ::GoBottom(), ::GoTop(), ::Stabilize()
  * ::GotoXY()
  *
+ * Copyright 2001 Manu Exposito <maex14@dipusevilla.es>
+ * Activate data PICTURE DispCell(nColumn, nColor)
+ *
  */
 
 
@@ -237,10 +240,10 @@ METHOD New(nTop, nLeft, nBottom, nRight) CLASS TBrowse
    ::nColsVisible    := 0
 
 
-   ::nTop := nTop
-   ::nLeft := nLeft
+   ::nTop    := nTop
+   ::nLeft   := nLeft
    ::nBottom := nBottom
-   ::nRight := nRight
+   ::nRight  := nRight
 
 return Self
 
@@ -1026,37 +1029,36 @@ return Self
 
 METHOD DispCell( nColumn, nColor ) CLASS TBrowse
 
-   LOCAL ftmp := Eval(::aColumns[nColumn]:block)
-   LOCAL nCol := Col()
-
-   local cColor   := iif(::aColumns[nColumn]:ColorBlock != NIL,;
-                         hb_ColorIndex(::ColorSpec, Eval(::aColumns[nColumn]:ColorBlock, ftmp)[nColor] - 1),;
-                         hb_ColorIndex(::ColorSpec, nColor - 1))
+   local oCol   := ::aColumns[nColumn]
+   LOCAL ftmp   := Eval(oCol:block)
+   LOCAL nCol   := Col()
+   LOCAL cType  := ValType( ftmp )
+   local cPict  := if( !empty( oCol:Picture ), oCol:Picture, "@" )
+   local cDisp  := ""
+   local cColor := iif(oCol:ColorBlock != NIL,;
+                       hb_ColorIndex(::ColorSpec, Eval(oCol:ColorBlock, ftmp)[nColor] - 1),;
+                       hb_ColorIndex(::ColorSpec, nColor - 1))
 
    do case
-      case valtype( ftmp ) $ "CM"
-         DispOut( Left( ftmp, ::aColumns[ nColumn ]:Width ), cColor )
+      case cType $ "CM"
+         cDisp := transform( Left( ftmp, ::aColumns[ nColumn ]:Width ), cPict )
 
-      case valtype( ftmp ) == "N"
-         DispOut( Right( Str( ftmp ), ::aColumns[ nColumn ]:Width ), cColor )
+      case cType == "N"
+         cDisp := Right( transform(  ftmp, cPict ), ::aColumns[ nColumn ]:Width )
 
-      case valtype( ftmp ) == "D"
-         DispOut( Right( DToC( ftmp ), ::aColumns[ nColumn ]:Width ), cColor )
+      case cType == "D"
+         cPict := if( cPict == "@", "@D", cPict )
+         cDisp := Right( transform(  ftmp, cPict ), ::aColumns[ nColumn ]:Width )
 
-      case valtype( ftmp ) == "L"
-         DispOut( Space( ::aColumns[ nColumn ]:Width / 2 ), cColor)
-         DispOut( iif( ftmp, "T","F" ), cColor )
-
+      case cType == "L"
+         cDisp := Space( ::aColumns[ nColumn ]:Width / 2 ) + iif( ftmp, "T","F" )
    endcase
 
+   DispOut( cDisp, cColor )
    DispOut( Space( nCol + ::aColumns[ nColumn ]:Width - Col() ), cColor)
 
    // Logical fields are centered on column width
-   if ValType(ftmp) == "L"
-      SetPos( Row(), nCol + ::aColumns[::ColPos]:Width / 2)
-   else
-      SetPos( Row(), nCol )
-   endif
+//   SetPos( Row(), nCol + if( cType == "L", ::aColumns[::ColPos]:Width / 2, 0 ) )
 
 return Self
 
