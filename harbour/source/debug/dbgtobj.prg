@@ -121,9 +121,10 @@ Local owndsets
    ocol:ColorBlock := { || { iif( ::Arrayindex == oBrwSets:Cargo, 3, 1 ), 3 } }
 //   ocol:width:=15
    oBrwsets:colpos:=2
-   ::aWindows[::nCurWindow]:bPainted    := { || oBrwSets:ForceStable(), myColors(oBrwsets,{1,2}) }
+   ::aWindows[::nCurWindow]:bPainted    := { || oBrwSets:ForceStable() }
    ::aWindows[::nCurWindow]:bKeyPressed := { | nKey | ::SetsKeyPressed( nKey, oBrwSets, Len( aArray ),;
                             ::aWindows[::nCurWindow],::objname ,Len(::Arrayreference),::pitems) }
+   ::aWindows[::nCurwindow]:cCaption := ::objname +" is of class:" +::TheObj:classname()
 
    SetCursor( SC_NONE )
    ::aWindows[::nCurWindow]:ShowModal()
@@ -136,19 +137,22 @@ method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd ,cName,LenArr,aArray) class t
    local cTemp:=str(nSet,4)
    local cOldname:= ::objname
    Local nPos
+
    do case
-
-
       case nKey == K_UP
            if oBrwSets:Cargo > 1
               oBrwSets:Cargo--
-              SetsUp( oBrwSets )
+              oBrwSets:RefreshCurrent()
+              oBrwSets:Up()
+              oBrwSets:ForceStable()
            endif
 
       case nKey == K_DOWN
            if oBrwSets:Cargo < nSets
               oBrwSets:Cargo++
-              SetsDown( oBrwSets )
+              oBrwSets:RefreshCurrent()
+              oBrwSets:Down()
+              oBrwSets:ForceStable()
            endif
 
       case nKey == K_HOME
@@ -190,60 +194,7 @@ method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd ,cName,LenArr,aArray) class t
 
    endcase
 
-   if nSet != oBrwSets:Cargo
-      ::aWindows[::nCurwindow]:SetCaption(::objname +" is of class:" +::TheObj:classname() )
-   endif
-   myColors(oBrwsets,{1,2})
-
 return
-
-static procedure SetsUp( oBrw )
-
-   local nRow := oBrw:RowPos
-   local nSetPos
-   if oBrw:RowPos == 1
-      nSetPos := oBrw:Cargo
-      oBrw:Cargo := 0
-      oBrw:ForceStable()
-      oBrw:Cargo := nSetPos
-   endif
-   oBrw:colpos:=1
-   oBrw:dehilite()
-   oBrw:colpos:=2
-   oBrw:Up()
-
-   if nRow != oBrw:Cargo
-      oBrw:aReDraw[ nRow ] := .f.
-      oBrw:Up()
-   endif
-   oBrw:ForceStable()
-   myColors(oBrw,{1,2})
-return
-
-static procedure SetsDown( oBrw )
-
-   local nRow := oBrw:RowPos
-   local nSetPos
-
-   if oBrw:RowPos == oBrw:RowCount
-      nSetPos := oBrw:Cargo
-      oBrw:Cargo := 0
-      oBrw:ForceStable()
-      oBrw:Cargo := nSetPos
-   endif
-   oBrw:colpos:=1
-   oBrw:dehilite()
-   oBrw:colpos:=2
-   oBrw:Down()
-
-   if nRow != oBrw:Cargo
-      oBrw:aReDraw[ nRow ] := .f.
-      oBrw:Down()
-   endif
-   oBrw:ForceStable()
-   myColors(oBrw,{1,2})
-return
-
 
 static function ValToStr( uVal )
 
@@ -277,6 +228,7 @@ static function ValToStr( uVal )
    endcase
 
 return cResult
+
 METHOD doGet(oBro,pItem,nSet) class tdbgObject
     LOCAL column,  nKey
     local getlist:={}
@@ -320,22 +272,8 @@ METHOD doGet(oBro,pItem,nSet) class tdbgObject
         KEYBOARD CHR( nKey )
     END
 RETURN
-static function myColors( oBrowse, aColColors )
-   local i
-   local nColPos := oBrowse:colpos
 
-   for i := 1 to len( aColColors )
-      oBrowse:colpos := aColColors[i]
-      oBrowse:hilite()
-if  oBrowse:colPos==1
-     oBrowse:dehilite()
-endif
-
-   next
-
-   oBrowse:colpos := nColPos
-return Nil
-FUNC maxelem( a )
+static FUNC maxelem( a )
 
    LOCAL nSize   := LEN( a )
    LOCAL max     := 0
