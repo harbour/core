@@ -393,11 +393,10 @@ BOOL hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCoun
 
 ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCount )
 {
-   if( IS_ARRAY( pArray ) && ! IS_NIL( pValue ) )
+   if( IS_ARRAY( pArray ) )
    {
       PBASEARRAY pBaseArray = pArray->item.asArray.value;
       ULONG      ulLen = pBaseArray->ulLen;
-      BOOL       bFound = FALSE;
 
       if( ulStart == 0 )                       /* if parameter is missing */
          ulStart = 1;
@@ -408,56 +407,76 @@ ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCou
       if( ulStart + ulCount > ulLen )          /* check range */
          ulCount = ulLen - ulStart + 1;
 
-      for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
-      {
-         PHB_ITEM pItem = pBaseArray->pItems + ulStart;
+      /* Make separate search loops for different types to find, so that
+         the loop can be faster. */
 
-         if( pValue->type == IT_BLOCK )
+      if( IS_BLOCK( pValue ) )
+      {
+         for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
          {
             hb_vmPushSymbol( &symEval );
             hb_vmPush( pValue );
-            hb_vmPush( pItem );
+            hb_vmPush( pBaseArray->pItems + ulStart );
             hb_vmDo( 1 );
 
-            if( IS_LOGICAL( &stack.Return ) &&
-                stack.Return.item.asLogical.value )
-               bFound = TRUE;
+            if( IS_LOGICAL( &stack.Return ) && stack.Return.item.asLogical.value )
+               return ulStart + 1;                  /* arrays start from 1 */
          }
-         else
+      }
+      else if( IS_STRING( pValue ) )
+      {
+         for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
          {
-            if( pValue->type == pItem->type )
-            {
-               switch( pItem->type )
-               {
-                  case IT_INTEGER :
-                     bFound = ( pValue->item.asInteger.value == pItem->item.asInteger.value );
-                     break;
+            PHB_ITEM pItem = pBaseArray->pItems + ulStart;
 
-                  case IT_LONG :
-                     bFound = ( pValue->item.asLong.value == pItem->item.asLong.value );
-                     break;
-
-                  case IT_DOUBLE :
-                     bFound = ( pValue->item.asDouble.value == pItem->item.asDouble.value );
-                     break;
-
-                  case IT_DATE :
-                     bFound = ( pValue->item.asDate.value == pItem->item.asDouble.value );
-                     break;
-
-                  case IT_LOGICAL :
-                     bFound = ( pValue->item.asLogical.value == pItem->item.asLogical.value );
-                     break;
-
-                  case IT_STRING :
-                     bFound = ( hb_itemStrCmp( pValue, pItem, FALSE ) == 0 );
-                     break;
-               }
-            }
+            if( IS_STRING( pItem ) && hb_itemStrCmp( pValue, pItem, FALSE ) == 0 )
+               return ulStart + 1;
          }
+      }
+      else if( IS_NUMERIC( pValue ) )
+      {
+         double dValue = hb_itemGetND( pValue );
 
-         if( bFound )
-            return ulStart + 1;                  /* arrays start from 1 */
+         for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
+         {
+            PHB_ITEM pItem = pBaseArray->pItems + ulStart;
+
+            if( IS_NUMERIC( pItem ) && hb_itemGetND( pItem ) == dValue )
+               return ulStart + 1;
+         }
+      }
+      else if( IS_DATE( pValue ) )
+      {
+         /* NOTE: This is correct: Get the date as a long value. */
+         LONG lValue = hb_itemGetNL( pValue );
+
+         for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
+         {
+            PHB_ITEM pItem = pBaseArray->pItems + ulStart;
+
+            if( IS_DATE( pItem ) && hb_itemGetNL( pItem ) == lValue )
+               return ulStart + 1;
+         }
+      }
+      else if( IS_LOGICAL( pValue ) )
+      {
+         BOOL bValue = hb_itemGetL( pValue ); /* NOTE: This is correct: Get the date as a long value. */
+
+         for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
+         {
+            PHB_ITEM pItem = pBaseArray->pItems + ulStart;
+
+            if( IS_LOGICAL( pItem ) && hb_itemGetL( pItem ) == bValue )
+               return ulStart + 1;
+         }
+      }
+      else if( IS_NIL( pValue ) )
+      {
+         for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
+         {
+            if( IS_NIL( pBaseArray->pItems + ulStart ) )
+               return ulStart + 1;
+         }
       }
    }
 

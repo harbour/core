@@ -59,7 +59,6 @@ extern double   hb_itemGetND    ( PHB_ITEM pItem );
 extern int      hb_itemGetNI    ( PHB_ITEM pItem );
 extern long     hb_itemGetNL    ( PHB_ITEM pItem );
 extern void     hb_itemGetNLen  ( PHB_ITEM pItem, WORD * pwWidth, WORD * pwDecimal );
-extern void     hb_itemSetNLen  ( PHB_ITEM pItem, WORD wWidth, WORD wDecimal );
 extern PHB_ITEM hb_itemNew      ( PHB_ITEM pNull );
 extern PHB_ITEM hb_itemParam    ( WORD wParam );
 extern PHB_ITEM hb_itemPutC     ( PHB_ITEM pItem, char * szText );

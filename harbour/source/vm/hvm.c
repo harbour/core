@@ -1039,14 +1039,14 @@ HARBOUR hb_vmDoBlock( void )
 
    /* set the current line number to a line where the codeblock was defined
     */
-   wLine =stack.pBase->item.asSymbol.lineno;
+   wLine = stack.pBase->item.asSymbol.lineno;
    stack.pBase->item.asSymbol.lineno = pBlock->item.asBlock.lineno;
 
    hb_codeblockEvaluate( pBlock );
 
    /* restore stack pointers */
    stack.pBase = stack.pItems + wStackBase;
-   stack.pBase->item.asSymbol.lineno =wLine;
+   stack.pBase->item.asSymbol.lineno = wLine;
 
    HB_DEBUG( "End of DoBlock\n" );
 }
@@ -2788,33 +2788,6 @@ void hb_vmForceLink( void )
 
 /* ----------------------------- */
 /* TODO: Put these to /source/rtl/?.c */
-
-HARBOUR HB_EVAL( void )
-{
-   WORD wPCount = hb_pcount();
-
-   if( wPCount >= 1 )
-   {
-      PHB_ITEM pBlock = hb_param( 1, IT_BLOCK );
-
-      if( pBlock )
-      {
-         WORD wParam;
-
-         hb_vmPushSymbol( &symEval );
-         hb_vmPush( pBlock );
-
-         for( wParam = 2; wParam <= wPCount; wParam++ )
-            hb_vmPush( hb_param( wParam, IT_ANY ) );
-
-         hb_vmDo( wPCount - 1 );
-      }
-      else
-         hb_errInternal( 9999, "Not a valid codeblock on EVAL", NULL, NULL );
-   }
-   else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "EVAL" ); /* NOTE: Clipper catches this at compile time! */
-}
 
 HARBOUR HB_LEN( void )
 {

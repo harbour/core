@@ -32,7 +32,6 @@
       hb_itemGetCPtr()
       hb_itemGetCLen()
       hb_itemGetNLen()
-      hb_itemSetNLen()
       hb_itemPutNDLen()
       hb_itemPutNILen()
       hb_itemPutNLLen()
@@ -675,30 +674,6 @@ void hb_itemGetNLen( PHB_ITEM pItem, WORD * pwWidth, WORD * pwDecimal )
          default:
             if( pwWidth ) *pwWidth = 0;
             if( pwDecimal ) *pwDecimal = 0;
-            break;
-      }
-   }
-}
-
-void hb_itemSetNLen( PHB_ITEM pItem, WORD wWidth, WORD wDecimal )
-{
-   if( pItem
-    && wWidth > 0 && wWidth <= 99
-    && ( wDecimal == 0 || wDecimal < ( wWidth - 1 ) ) )
-   {
-      switch( pItem->type )
-      {
-         case IT_DOUBLE:
-            pItem->item.asDouble.length = wWidth;
-            pItem->item.asDouble.decimal = wDecimal;
-            break;
-
-         case IT_LONG:
-            pItem->item.asLong.length = wWidth;
-            break;
-
-         case IT_INTEGER:
-            pItem->item.asInteger.length = wWidth;
             break;
       }
    }

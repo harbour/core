@@ -389,6 +389,7 @@ static const char * _szReservedFun[] = {
    "SECONDS"   ,
    "SELECT"    ,
    "SETPOS"    ,
+   "SETPOSBS"  ,
    "SPACE"     ,
    "SQRT"      ,
    "STR"       ,

@@ -84,9 +84,9 @@
  */
 HARBOUR HB_DO( void )
 {
-   int iPCount = hb_pcount();
+   USHORT uiPCount = hb_pcount();
 
-   if( iPCount >= 1 )
+   if( uiPCount >= 1 )
    {
       PHB_ITEM pItem = hb_param( 1, IT_ANY );
 
@@ -96,41 +96,66 @@ HARBOUR HB_DO( void )
 
          if( pDynSym )
          {
-            int i;
+            USHORT uiParam;
 
             hb_vmPushSymbol( pDynSym->pSymbol );
             hb_vmPushNil();
-            for( i = 2; i <= iPCount; i++ )
-               hb_vmPush( hb_param( i, IT_ANY ) );
-            hb_vmDo( iPCount - 1 );
+            for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
+               hb_vmPush( hb_param( uiParam, IT_ANY ) );
+            hb_vmDo( uiPCount - 1 );
          }
          else
             hb_errRT_BASE( EG_NOFUNC, 1001, NULL, pItem->item.asString.value );
       }
       else if( IS_BLOCK( pItem ) )
       {
-         int i;
+         USHORT uiParam;
 
          hb_vmPushSymbol( &symEval );
          hb_vmPush( pItem );
-         for( i = 2; i <= iPCount; i++ )
-            hb_vmPush( hb_param( i, IT_ANY ) );
-         hb_vmDo( iPCount - 1 );
+         for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
+            hb_vmPush( hb_param( uiParam, IT_ANY ) );
+         hb_vmDo( uiPCount - 1 );
       }
       else if( IS_SYMBOL( pItem ) )
       {
-         int i;
+         USHORT uiParam;
 
          hb_vmPushSymbol( pItem->item.asSymbol.value );
          hb_vmPushNil();
-         for( i = 2; i <= iPCount; i++ )
-            hb_vmPush( hb_param( i, IT_ANY ) );
-         hb_vmDo( iPCount - 1 );
+         for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
+            hb_vmPush( hb_param( uiParam, IT_ANY ) );
+         hb_vmDo( uiPCount - 1 );
       }
       else
          hb_errRT_BASE( EG_ARG, 3012, NULL, "DO" );
    }
    else
-      hb_errRT_BASE( EG_ARG, 3012, NULL, "DO" );
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "DO" );
+}
+
+HARBOUR HB_EVAL( void )
+{
+   USHORT uiPCount = hb_pcount();
+
+   if( uiPCount >= 1 )
+   {
+      PHB_ITEM pItem = hb_param( 1, IT_BLOCK );
+
+      if( pItem )
+      {
+         USHORT uiParam;
+
+         hb_vmPushSymbol( &symEval );
+         hb_vmPush( pItem );
+         for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
+            hb_vmPush( hb_param( uiParam, IT_ANY ) );
+         hb_vmDo( uiPCount - 1 );
+      }
+      else
+         hb_errRT_BASE( EG_NOMETHOD, 1004, NULL, "EVAL" );
+   }
+   else
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "EVAL" ); /* NOTE: Clipper catches this at compile time! */
 }
 

@@ -1,3 +1,37 @@
+19990907-01:00 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/arrays.c
+    ! hb_arrayScan() fixed, so that it can also search for a NIL value. Like
+      Clipper.
+    % Optimized the search loop for speed.
+    ! Fixed searching of numeric values. Different numeric sub-types with the
+      same value are also considered equal (of course), so 10 == 10.0 now.
+    * Uses Item API calls where possible.
+  * source/rtl/classes.c
+    ! hb___msgEval() added, so now send an :eval message to a block
+      will work fine, sending it to other types will result in a proper error
+      message.
+    ! hb___msgClsH() will return 0, if the checked type is not an ARRAY/OBJECT.
+      Until now a GPF occured on this code: a := "A" ; a:classH
+    * Functions reordered.
+  * source/rtl/do.c
+    source/vm/hvm.c
+    * EVAL() moved to do.c.
+    ! EVAL() internal message changed to the Clipper compatible one.
+    * DO() parameter count error message changed to EG_ARGCOUNT/3000.
+  * source/compiler/harbour.y
+    + SETPOSBS() added to the reserved function list.
+  * tests/working/rtl_test.prg
+    + Some PAD?() tests added with new types, byref. Some new MIN()/MAX() tests
+      added. ASCAN() tests added.
+    + /SKIP: switch added, to make it possible to temporarly skip specific 
+      tests. (RTL_TEST /SKIP:100,102)
+    + EVAL(), :EVAL() tests added. Some are commented out, due to bugs.
+  * source/rtl/itemapi.c
+    include/itemapi.h
+    - Removed hb_itemSetNLen() since it was superseded by hb_itemPutN?Len()
+      functions, these are more compact, faster, and have default value of the
+      parameters.
+
 19990906-11:25 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/rtl/tbrowse.prg
       * Fixes on Stabilize() method

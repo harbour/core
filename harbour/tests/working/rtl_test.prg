@@ -60,8 +60,9 @@ STATIC s_cNewLine
 STATIC s_nCount
 STATIC s_lShowAll
 STATIC s_lShortcut
+STATIC s_aSkipList
 
-FUNCTION Main( cPar1 )
+FUNCTION Main( cPar1, cPar2 )
 
    /* NOTE: Some basic values we may need for some tests.
             ( passing by reference, avoid preprocessor bugs, etc. ) */
@@ -84,7 +85,30 @@ FUNCTION Main( cPar1 )
    LOCAL loObject  := ErrorNew()
    LOCAL luNIL     := NIL
    LOCAL lbBlock   := {|| NIL }
+   LOCAL lbBlockC  := {|| "(string)" }
    LOCAL laArray   := { 9898 }
+
+   LOCAL laAllTypes := {;
+      lcString  ,;
+      lcStringE ,;
+      lcStringZ ,;
+      lnIntZ    ,;
+      lnDoubleZ ,;
+      lnIntP    ,;
+      lnLongP   ,;
+      lnDoubleP ,;
+      lnIntN    ,;
+      lnLongN   ,;
+      lnDoubleN ,;
+      lnDoubleI ,;
+      ldDateE   ,;
+      llFalse   ,;
+      llTrue    ,;
+      loObject  ,;
+      luNIL     ,;
+      lbBlock   ,;
+      lbBlockC  ,;
+      laArray   }
 
    MEMVAR mxNotHere
    MEMVAR mcString
@@ -105,6 +129,7 @@ FUNCTION Main( cPar1 )
    MEMVAR moObject
    MEMVAR muNIL
    MEMVAR mbBlock
+   MEMVAR mbBlockC
    MEMVAR maArray
 
    /* NOTE: mxNotHere intentionally not declared */
@@ -126,6 +151,7 @@ FUNCTION Main( cPar1 )
    PRIVATE moObject  := ErrorNew()
    PRIVATE muNIL     := NIL
    PRIVATE mbBlock   := {|| NIL }
+   PRIVATE mbBlockC  := {|| "(string)" }
    PRIVATE maArray   := { 9898 }
 
    /* Initialize test */
@@ -134,9 +160,15 @@ FUNCTION Main( cPar1 )
          to make sure all error messages comes in the original English
          language. */
 /* SET LANGID TO EN */
+   SET DATE ANSI
+   SET CENTURY ON
+   SET EXACT OFF
 
    IF cPar1 == NIL
       cPar1 := ""
+   ENDIF
+   IF cPar2 == NIL
+      cPar2 := ""
    ENDIF
 
 /* NOTE: CA-Cl*pper PP fails on these
@@ -145,7 +177,7 @@ FUNCTION Main( cPar1 )
    TEST_LINE( "A" > 1                         , "E BASE 1075 Argument error > F:S"                )
 */
 
-   TEST_BEGIN( cPar1 )
+   TEST_BEGIN( cPar1 + " " + cPar2 )
 
    /* VALTYPE() */
 
@@ -225,6 +257,107 @@ FUNCTION Main( cPar1 )
    TEST_LINE( ValType( @muNIL     )           , "U"   )
    TEST_LINE( ValType( @mbBlock   )           , "U"   )
    TEST_LINE( ValType( @maArray   )           , "U"   )
+
+   /* Special internal messages */
+
+/* Harbour compiler not yet handles these */
+#ifndef __HARBOUR__
+   TEST_LINE( NIL:className                   , "NIL"       )
+   TEST_LINE( "":className                    , "CHARACTER" )
+   TEST_LINE( 0:className                     , "NUMERIC"   )
+   TEST_LINE( ctod( "" ):className            , "DATE"      )
+   TEST_LINE( .F.:className                   , "LOGICAL"   )
+   TEST_LINE( {|| nil }:className             , "BLOCK"     )
+   TEST_LINE( {}:className                    , "ARRAY"     )
+   TEST_LINE( ErrorNew():className            , "ERROR"     )
+   TEST_LINE( NIL:classH                      , 0           )
+   TEST_LINE( "":classH                       , 0           )
+   TEST_LINE( 0:classH                        , 0           )
+   TEST_LINE( ctod( "" ):classH               , 0           )
+   TEST_LINE( .F.:classH                      , 0           )
+   TEST_LINE( {|| nil }:classH                , 0           )
+   TEST_LINE( {}:classH                       , 0           )
+   TEST_LINE( ErrorNew():classH > 0           , .T.         )
+#endif                                                      )
+
+/* Harbour compiler not yet handles these */
+#ifndef __HARBOUR__
+   TEST_LINE( luNIL:className                 , "NIL"       )
+#endif
+   TEST_LINE( lcString:className              , "CHARACTER" )
+   TEST_LINE( lnIntP:className                , "NUMERIC"   )
+   TEST_LINE( ldDateE:className               , "DATE"      )
+   TEST_LINE( llFalse:className               , "LOGICAL"   )
+   TEST_LINE( lbBlock:className               , "BLOCK"     )
+   TEST_LINE( laArray:className               , "ARRAY"     )
+   TEST_LINE( loObject:className              , "ERROR"     )
+/* Harbour compiler not yet handles these */
+#ifndef __HARBOUR__
+   TEST_LINE( luNIL:classH                    , 0           )
+#endif
+   TEST_LINE( lcString:classH                 , 0           )
+   TEST_LINE( lnIntP:classH                   , 0           )
+   TEST_LINE( ldDateE:classH                  , 0           )
+   TEST_LINE( llFalse:classH                  , 0           )
+   TEST_LINE( lbBlock:classH                  , 0           )
+   TEST_LINE( laArray:classH                  , 0           )
+   TEST_LINE( loObject:classH > 0             , .T.         )
+
+   /* ASCAN() */
+
+   TEST_LINE( aScan()                         , 0           )
+   TEST_LINE( aScan( NIL )                    , 0           )
+   TEST_LINE( aScan( "A" )                    , 0           )
+   TEST_LINE( aScan( "A", "A" )               , 0           )
+   TEST_LINE( aScan( "A", {|| .F. } )         , 0           )
+   TEST_LINE( aScan( {1,2,3}, {|x| NIL } )    , 0           )
+   TEST_LINE( aScan( laAllTypes, lcString   ) , 1           )
+   TEST_LINE( aScan( @laAllTypes, lcString )  , 0           )
+   TEST_LINE( aScan( laAllTypes, @lcString )  , 0           )
+   TEST_LINE( aScan( laAllTypes, lcStringE  ) , 1           )
+   TEST_LINE( aScan( laAllTypes, lcStringZ  ) , 3           )
+   TEST_LINE( aScan( laAllTypes, lnIntZ     ) , 4           )
+   TEST_LINE( aScan( laAllTypes, lnDoubleZ  ) , 4           )
+   TEST_LINE( aScan( laAllTypes, lnIntP     ) , 6           )
+   TEST_LINE( aScan( laAllTypes, lnLongP    ) , 7           )
+   TEST_LINE( aScan( laAllTypes, lnDoubleP  ) , 8           )
+   TEST_LINE( aScan( laAllTypes, lnIntN     ) , 9           )
+   TEST_LINE( aScan( laAllTypes, lnLongN    ) , 10          )
+   TEST_LINE( aScan( laAllTypes, lnDoubleN  ) , 11          )
+   TEST_LINE( aScan( laAllTypes, lnDoubleI  ) , 12          )
+   TEST_LINE( aScan( laAllTypes, ldDateE    ) , 13          )
+   TEST_LINE( aScan( laAllTypes, llFalse    ) , 14          )
+   TEST_LINE( aScan( laAllTypes, llTrue     ) , 15          )
+   TEST_LINE( aScan( laAllTypes, loObject   ) , 0           )
+   TEST_LINE( aScan( laAllTypes, luNIL      ) , 17          )
+   TEST_LINE( aScan( laAllTypes, lbBlock    ) , 0           )
+   TEST_LINE( aScan( laAllTypes, lbBlockC   ) , 0           )
+   TEST_LINE( aScan( laAllTypes, laArray    ) , 0           )
+   SET EXACT ON
+   TEST_LINE( aScan( laAllTypes, lcString   ) , 1           )
+   TEST_LINE( aScan( laAllTypes, lcStringE  ) , 2           )
+   TEST_LINE( aScan( laAllTypes, lcStringZ  ) , 3           )
+   SET EXACT OFF
+
+   /* EVAL(), :EVAL */
+
+   TEST_LINE( Eval( NIL )                     , "E BASE 1004 No exported method EVAL F:S" )
+   TEST_LINE( Eval( 1 )                       , "E BASE 1004 No exported method EVAL F:S" )
+   TEST_LINE( Eval( @lbBlock )                , "E BASE 1004 No exported method EVAL F:S" )
+   TEST_LINE( Eval( {|p1| p1 },"A","B")       , "A"                                       )
+   TEST_LINE( Eval( {|p1,p2| p1+p2 },"A","B") , "AB"                                      )
+   TEST_LINE( Eval( {|p1,p2,p3| p1 },"A","B") , "A"                                       )
+/* Harbour compiler not yet handles these */
+#ifndef __HARBOUR__
+   TEST_LINE( luNIL:Eval                      , "E BASE 1004 No exported method EVAL F:S" )
+#endif
+   TEST_LINE( lcString:Eval                   , "E BASE 1004 No exported method EVAL F:S" )
+   TEST_LINE( lnIntP:Eval                     , "E BASE 1004 No exported method EVAL F:S" )
+   TEST_LINE( ldDateE:Eval                    , "E BASE 1004 No exported method EVAL F:S" )
+   TEST_LINE( llFalse:Eval                    , "E BASE 1004 No exported method EVAL F:S" )
+   TEST_LINE( lbBlock:Eval                    , NIL                                       )
+   TEST_LINE( laArray:Eval                    , "E BASE 1004 No exported method EVAL F:S" )
+   TEST_LINE( loObject:Eval                   , "E BASE 1004 No exported method EVAL F:S" )
 
    /* STOD() */
 
@@ -692,11 +825,39 @@ FUNCTION Main( cPar1 )
 
    /* PADR() */
 
+   TEST_LINE( Pad(NIL, 5)                     , ""               )
+   TEST_LINE( Pad(.T., 5)                     , ""               )
+   TEST_LINE( Pad(10, 5)                      , "10   "          )
+   TEST_LINE( Pad(10.2, 5)                    , "10.2 "          )
+   TEST_LINE( Pad(100000, 8)                  , "100000  "       )
+   TEST_LINE( Pad(100000, 8, "-")             , "100000--"       )
+   TEST_LINE( Pad(-100000, 8, "-")            , "-100000-"       )
+   TEST_LINE( Pad(SToD("19800101"), 12)       , "1980.01.01  "   )
+   TEST_LINE( Pad(Year(SToD("19800101")), 5)  , "1980 "          )
+   TEST_LINE( Pad(Day(SToD("19800101")), 5)   , "1    "          )
+   TEST_LINE( Pad(@lcString, 10)              , ""               )
+   TEST_LINE( Pad(lcString, @lnIntP)          , ""               )
+   TEST_LINE( Pad("abcdef", -5)               , ""               )
+   TEST_LINE( Pad("abcdef", 0)                , ""               )
+   TEST_LINE( Pad("abcdef", 5)                , "abcde"          )
+   TEST_LINE( Pad("abcdef", 10)               , "abcdef    "     )
+   TEST_LINE( Pad("abcdef", 10, "1")          , "abcdef1111"     )
+   TEST_LINE( Pad("abcdef", 10, "12")         , "abcdef1111"     )
+
+   /* PADR() */
+
    TEST_LINE( PadR(NIL, 5)                    , ""               )
    TEST_LINE( PadR(.T., 5)                    , ""               )
    TEST_LINE( PadR(10, 5)                     , "10   "          )
+   TEST_LINE( PadR(10.2, 5)                   , "10.2 "          )
+   TEST_LINE( PadR(100000, 8)                 , "100000  "       )
+   TEST_LINE( PadR(100000, 8, "-")            , "100000--"       )
+   TEST_LINE( PadR(-100000, 8, "-")           , "-100000-"       )
+   TEST_LINE( PadR(SToD("19800101"), 12)      , "1980.01.01  "   )
    TEST_LINE( PadR(Year(SToD("19800101")), 5) , "1980 "          )
    TEST_LINE( PadR(Day(SToD("19800101")), 5)  , "1    "          )
+   TEST_LINE( PadR(@lcString, 10)             , ""               )
+   TEST_LINE( PadR(lcString, @lnIntP)         , ""               )
    TEST_LINE( PadR("abcdef", -5)              , ""               )
    TEST_LINE( PadR("abcdef", 0)               , ""               )
    TEST_LINE( PadR("abcdef", 5)               , "abcde"          )
@@ -709,8 +870,15 @@ FUNCTION Main( cPar1 )
    TEST_LINE( PadL(NIL, 5)                    , ""               )
    TEST_LINE( PadL(.T., 5)                    , ""               )
    TEST_LINE( PadL(10, 5)                     , "   10"          )
+   TEST_LINE( PadL(10.2, 5)                   , " 10.2"          )
+   TEST_LINE( PadL(100000, 8)                 , "  100000"       )
+   TEST_LINE( PadL(100000, 8, "-")            , "--100000"       )
+   TEST_LINE( PadL(-100000, 8, "-")           , "--100000"       )
+   TEST_LINE( PadL(SToD("19800101"), 12)      , "  1980.01.01"   )
    TEST_LINE( PadL(Year(SToD("19800101")), 5) , " 1980"          )
    TEST_LINE( PadL(Day(SToD("19800101")), 5)  , "    1"          )
+   TEST_LINE( PadL(@lcString, 10)             , ""               )
+   TEST_LINE( PadL(lcString, @lnIntP)         , ""               )
    TEST_LINE( PadL("abcdef", -5)              , ""               )
    TEST_LINE( PadL("abcdef", 0)               , ""               )
    TEST_LINE( PadL("abcdef", 5)               , "abcde"          ) /* QUESTION: CA-Cl*pper "bug", should return: "bcdef" ? */
@@ -723,8 +891,15 @@ FUNCTION Main( cPar1 )
    TEST_LINE( PadC(NIL, 5)                    , ""               )
    TEST_LINE( PadC(.T., 5)                    , ""               )
    TEST_LINE( PadC(10, 5)                     , " 10  "          )
+   TEST_LINE( PadC(10.2, 5)                   , "10.2 "          )
+   TEST_LINE( PadC(100000, 8)                 , " 100000 "       )
+   TEST_LINE( PadC(100000, 8, "-")            , "-100000-"       )
+   TEST_LINE( PadC(-100000, 8, "-")           , "-100000-"       )
+   TEST_LINE( PadC(SToD("19800101"), 12)      , " 1980.01.01 "   )
    TEST_LINE( PadC(Year(SToD("19800101")), 5) , "1980 "          )
    TEST_LINE( PadC(Day(SToD("19800101")), 5)  , "  1  "          )
+   TEST_LINE( PadC(@lcString, 10)             , ""               )
+   TEST_LINE( PadC(lcString, @lnIntP)         , ""               )
    TEST_LINE( PadC("abcdef", -5)              , ""               )
    TEST_LINE( PadC("abcdef", 0)               , ""               )
    TEST_LINE( PadC("abcdef", 2)               , "ab"             ) /* QUESTION: CA-Cl*pper "bug", should return: "cd" ? */
@@ -855,6 +1030,25 @@ FUNCTION Main( cPar1 )
    TEST_LINE( Str(-100000, 6, -1)             , "******"         )
    TEST_LINE( Str(-100000, 8, -1)             , " -100000"       )
 
+   /* MIN()/MAX() */
+
+   TEST_LINE( Max(NIL, NIL)                           , "E BASE 1093 Argument error MAX F:S" )
+   TEST_LINE( Max(10, NIL)                            , "E BASE 1093 Argument error MAX F:S" )
+   TEST_LINE( Max(SToD("19800101"), 10)               , "E BASE 1093 Argument error MAX F:S" )
+   TEST_LINE( Max(SToD("19800101"), SToD("19800101")) , SToD("19800101")                     )
+   TEST_LINE( Max(SToD("19800102"), SToD("19800101")) , SToD("19800102")                     )
+   TEST_LINE( Max(SToD("19800101"), SToD("19800102")) , SToD("19800102")                     )
+   TEST_LINE( Max(lnIntP, lnLongP)                    , 100000                               )
+   TEST_LINE( Max(@lnIntP, @lnLongP)                  , "E BASE 1093 Argument error MAX F:S" )
+   TEST_LINE( Min(NIL, NIL)                           , "E BASE 1092 Argument error MIN F:S" )
+   TEST_LINE( Min(10, NIL)                            , "E BASE 1092 Argument error MIN F:S" )
+   TEST_LINE( Min(SToD("19800101"), 10)               , "E BASE 1092 Argument error MIN F:S" )
+   TEST_LINE( Min(SToD("19800101"), SToD("19800101")) , SToD("19800101")                     )
+   TEST_LINE( Min(SToD("19800102"), SToD("19800101")) , SToD("19800101")                     )
+   TEST_LINE( Min(SToD("19800101"), SToD("19800102")) , SToD("19800101")                     )
+   TEST_LINE( Min(lnIntP, lnLongP)                    , 10                                   )
+   TEST_LINE( Min(@lnIntP, @lnLongP)                  , "E BASE 1092 Argument error MIN F:S" )
+
    /* Decimals handling */
 
    TEST_LINE( Str(Max(10, 12)             )   , "        12"                   )
@@ -983,9 +1177,6 @@ FUNCTION Main( cPar1 )
    TEST_LINE( Transform( .F.       , "@R Y"     )          , "N"                           )
    TEST_LINE( Transform( .T.       , "@R X!"    )          , "X!T"                         )
 
-   SET DATE ANSI
-   SET CENTURY ON
-
    TEST_LINE( Transform( SToD("19901214") , "99/99/9999" ) , "1990.12.14"                  )
    TEST_LINE( Transform( SToD("19901202") , "99.99.9999" ) , "1990.12.02"                  )
    TEST_LINE( Transform( SToD("")         , "99/99/9999" ) , "    .  .  "                  )
@@ -1019,6 +1210,8 @@ FUNCTION Main( cPar1 )
    TEST_LINE( Transform( SToD("19920102") , "@E"         ) , "02/01/92"                    ) /* Bug in CA-Cl*pper, it returns: "01.92.02" */
    TEST_LINE( Transform( 1234             , "@D 9999"    ) , "**.**.* "                    )
    TEST_LINE( Transform( 1234             , "@BD 9999"   ) , "**.**.* "                    )
+
+   SET CENTURY ON
 
    TEST_LINE( Transform( 15        , "9999"        )       , "  15"                        )
    TEST_LINE( Transform( 1.5       , "99.99"       )       , " 1.50"                       )
@@ -1135,6 +1328,7 @@ STATIC FUNCTION TEST_BEGIN( cParam )
    ENDIF
 
    s_lShowAll := "/ALL" $ Upper( cParam )
+   s_aSkipList := ListToNArray( CMDLGetValue( Upper( cParam ), "/SKIP:", "" ) )
 
    /* Detect presence of shortcutting optimalization */
 
@@ -1181,10 +1375,22 @@ STATIC FUNCTION TEST_CALL( cBlock, bBlock, xResultExpected )
    LOCAL oError
    LOCAL bOldError
    LOCAL lFailed
+   LOCAL lSkipped
 
    s_nCount++
 
-   IF ValType( cBlock ) == "C"
+   IF !( ValType( cBlock ) == "C" )
+      cBlock := "!! Preprocessor error !!"
+   ENDIF
+
+   lSkipped := aScan( s_aSkipList, s_nCount ) > 0
+
+   IF lSkipped
+
+      lFailed := .F.
+      xResult := "!! Skipped !!"
+
+   ELSE
 
       bOldError := ErrorBlock( {|oError| Break( oError ) } )
 
@@ -1206,23 +1412,18 @@ STATIC FUNCTION TEST_CALL( cBlock, bBlock, xResultExpected )
          lFailed := !( xResult == xResultExpected )
       ENDIF
 
-   ELSE
-
-      lFailed := .T.
-      cBlock := "!! Preprocessor error. Test skipped !!"
-      xResult := NIL
-
    ENDIF
 
-   IF s_lShowAll .OR. lFailed
+   IF s_lShowAll .OR. lFailed .OR. lSkipped
 
-      fWrite( s_nFhnd, PadR( iif( lFailed, "!", " " ), TEST_RESULT_COL1_WIDTH ) + " " +;
+      fWrite( s_nFhnd, PadR( iif( lFailed, "!", iif( lSkipped, "S", " " ) ), TEST_RESULT_COL1_WIDTH ) + " " +;
                        Str( s_nCount, TEST_RESULT_COL2_WIDTH ) + ". " +;
                        PadR( cBlock, TEST_RESULT_COL3_WIDTH ) + " -> " +;
                        PadR( XToStr( xResult ), TEST_RESULT_COL4_WIDTH ) + " | " +;
                        PadR( XToStr( xResultExpected ), TEST_RESULT_COL5_WIDTH ) )
 
       fWrite( s_nFhnd, s_cNewLine )
+
    ENDIF
 
    IF lFailed
@@ -1319,6 +1520,33 @@ STATIC FUNCTION ErrorMessage( oError )
    ENDIF
 
    RETURN cMessage
+
+STATIC FUNCTION ListToNArray( cString )
+   LOCAL aArray := {}
+   LOCAL nPos
+
+   IF !Empty( cString )
+      DO WHILE ( nPos := At( ",", cString ) ) > 0
+         aAdd( aArray, Val( AllTrim( Left( cString, nPos - 1 ) ) ) )
+         cString := SubStr( cString, nPos + 1 )
+      ENDDO
+
+      aAdd( aArray, Val( AllTrim( cString ) ) )
+   ENDIF
+
+   RETURN aArray
+
+STATIC FUNCTION CMDLGetValue( cCommandLine, cName, cRetVal )
+   LOCAL tmp, tmp1
+
+   IF ( tmp := At( cName, cCommandLine ) ) > 0
+      IF ( tmp1 := At( " ", tmp := SubStr( cCommandLine, tmp + Len( cName ) ) ) ) > 0
+           tmp := Left( tmp, tmp1 - 1 )
+      ENDIF
+      cRetVal := tmp
+   ENDIF
+
+   RETURN cRetVal
 
 #ifndef __HARBOUR__
 #ifndef __XPP__
