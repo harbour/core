@@ -1,3 +1,21 @@
+20000202-22:00 GMT+1 Antonio Linares <alinares@fivetech.com>
+  * source/rtl/inkey.c
+    + Added MCol() and MRow() mouse support functions
+      (they are actually working just for Win32 console mode)
+    + Added static variables s_xRowPos and s_yRowPos
+    * Enhanced InKey() to return K_MOUSEMOVE, K_LBUTTONDOWN, K_RBUTTONDOWN values
+    * _Windows globally changed into _WINDOWS_
+
+  * source/rtl/gt/gtwin.c
+    * SetConsoleMode() changed to support console mouse events
+
+  * source/rtl/alert.prg
+    * Mouse support
+
+  * source/debug/debugger.prg
+    * A very early test for InKey() mouse events and MRow() and MCol()
+      values test. It is properly working.
+
 20000202-20:33 GMT+3 Alexander Kresin
   + contrib/rdd_ads/readme.txt
   * contrib/rdd_ads/ads.ch
@@ -58,8 +76,7 @@
      - Removed debug information from OS/2 builds of Harbour
 
    * doc/whatsnew.txt
-     % Synchronized with updates that were made to the build31 branch
-   * source/pp/pragma.c
+     % Synchronized with updates that were made to the build31 branch   * source/pp/pragma.c
    * contrib/dot/pp_harb.ch
    * tests/inline_c.prg
      * STOPDUMP renamed as ENDDUMP (with Ron permission)
