@@ -1,3 +1,9 @@
+19990807-18:51 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/tbrowse.prg
+     * improved
+   * tests/working/TestBrw.prg
+     * improved
+
 19990807-18:40 GMT+1 Bruno Cantero <bruno@issnet.net>
    * include/rddapi.h
      source/rdd/dbcmd.c
