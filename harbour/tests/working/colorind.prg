@@ -10,7 +10,9 @@ STATIC snFail := 0
 FUNCTION Main()
 
      TEST_LINE( __ColorIndex()                  , ""               )
+     TEST_LINE( __ColorIndex("", -1)            , ""               )
      TEST_LINE( __ColorIndex("", 0)             , ""               )
+     TEST_LINE( __ColorIndex("W/R", -1)         , ""               )
      TEST_LINE( __ColorIndex("W/R", 0)          , "W/R"            )
      TEST_LINE( __ColorIndex("W/R", 1)          , ""               )
      TEST_LINE( __ColorIndex("W/R", 2)          , ""               )

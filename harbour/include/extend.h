@@ -42,24 +42,24 @@
 #endif
 
 /* items types */
-#define IT_NIL          0x0000
-#define IT_INTEGER      0x0002
-#define IT_LONG         0x0008
-#define IT_DOUBLE       0x0010
-#define IT_DATE         0x0020
-#define IT_LOGICAL      0x0080
-#define IT_SYMBOL       0x0100
-#define IT_ALIAS        0x0200
-#define IT_STRING       0x0400
-#define IT_MEMOFLAG     0x0800
+#define IT_NIL          ((WORD) 0x0000)
+#define IT_INTEGER      ((WORD) 0x0002)
+#define IT_LONG         ((WORD) 0x0008)
+#define IT_DOUBLE       ((WORD) 0x0010)
+#define IT_DATE         ((WORD) 0x0020)
+#define IT_LOGICAL      ((WORD) 0x0080)
+#define IT_SYMBOL       ((WORD) 0x0100)
+#define IT_ALIAS        ((WORD) 0x0200)
+#define IT_STRING       ((WORD) 0x0400)
+#define IT_MEMOFLAG     ((WORD) 0x0800)
 #define IT_MEMO         ( IT_MEMOFLAG & IT_STRING )
-#define IT_BLOCK        0x1000
-#define IT_BYREF        0x2000
-#define IT_MEMVAR       0x4000
-#define IT_ARRAY        0x8000
+#define IT_BLOCK        ((WORD) 0x1000)
+#define IT_BYREF        ((WORD) 0x2000)
+#define IT_MEMVAR       ((WORD) 0x4000)
+#define IT_ARRAY        ((WORD) 0x8000)
 #define IT_OBJECT       IT_ARRAY
 #define IT_NUMERIC      ( IT_INTEGER | IT_LONG | IT_DOUBLE )
-#define IT_ANY          0xFFFF
+#define IT_ANY          ((WORD) 0xFFFF)
 
 /* forward declarations */
 struct _HB_CODEBLOCK;

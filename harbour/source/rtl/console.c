@@ -1123,12 +1123,42 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
 }
 
 /* ------------------------------------------------- */
-/* Copyright 1999 Victor Szel <info@szelvesz.hu>     */
+/* Copyright (C) 1999 Victor Szel <info@szelvesz.hu> */
 /* ------------------------------------------------- */
-/* __COLORINDEX(cColorStr, nColorIndex) -> cColor    */
-/*                                                   */
-/* ? __ColorIndex("W/N, N/W", CLR_ENHANCED) -> "N/W" */
-/* ------------------------------------------------- */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __ColorIndex
+ *  $CATEGORY$
+ *      GT
+ *  $ONELINER$
+ *      Extract one color from a full Clipper colorspec string.
+ *  $SYNTAX$
+ *      __ColorIndex( <cColorSpec>, <nIndex> )
+ *  $ARGUMENTS$
+ *      <cColorSpec> is a Clipper color list
+ *      <nIndex> is the position of the color item to be extracted, the first
+ *               position is the zero.
+ *  $RETURNS$
+ *      The selected color string, or if anything goes wrong, and empty
+ *      string
+ *  $DESCRIPTION$
+ *      Clipper has color spec string, which have more than one single
+ *      colors in it, separated with commas. This function is able to extract
+ *      a given item from this list. You may use the manifest constants
+ *      defined in color.ch to extract common Clipper colors.
+ *  $EXAMPLES$
+ *      ? __ColorIndex( "W/N, N/W", CLR_ENHANCED ) // "N/W"
+ *  $TESTS$
+ *      see in coloring.prg for a comprehensive regression test suit.
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Was not part of CA-Clipper.
+ *  $SEEALSO$
+ *      ColorSelect()
+ *  $END$
+ */
 
 HARBOUR HB___COLORINDEX( void )
 {
@@ -1137,11 +1167,11 @@ HARBOUR HB___COLORINDEX( void )
       char * szColor = hb_parc( 1 );
       ULONG  ulColorPos;
       ULONG  ulColorLen;
-      USHORT uiColorIndex = hb_parni( 2 );
+      USHORT uiColorIndex = (USHORT) hb_parni( 2 );
 
       /* Skip the given number of commas */
 
-      for ( ulColorPos = 0 ; szColor[ ulColorPos ] && uiColorIndex > 0 ; ulColorPos++ )
+      for ( ulColorPos = 0 ; szColor[ ulColorPos ] != '\0' && uiColorIndex > 0 ; ulColorPos++ )
       {
          if ( szColor[ ulColorPos ] == ',' )
             uiColorIndex--;
@@ -1159,12 +1189,12 @@ HARBOUR HB___COLORINDEX( void )
 
          ulColorLen = 0;
 
-         while ( szColor[ ulColorPos + ulColorLen ] &&
+         while ( szColor[ ulColorPos + ulColorLen ] != '\0' &&
                  szColor[ ulColorPos + ulColorLen ] != ',' ) ulColorLen++;
 
          /* Skip the trailing spaces */
 
-         while ( ulColorLen &&
+         while ( ulColorLen > 0 &&
                  szColor[ ulColorPos + ulColorLen - 1 ] == ' ' ) ulColorLen--;
 
          /* Return the string */

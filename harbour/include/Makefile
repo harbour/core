@@ -44,6 +44,7 @@ PRG_HEADERS=\
         error.ch     \
         fileio.ch    \
         getexit.ch   \
+        hboo.ch      \
         inkey.ch     \
         memoedit.ch  \
         rddsys.ch    \

@@ -1,3 +1,15 @@
+19990816-21:57 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/console.c
+    tests/working/colorind.prg
+    + Added standard header to __ColorIndex()
+    ! Some Lint warnings fixed.
+    + Some tests added.
+  * include/hbdefs.h
+    include/extend.h
+    ! Some Lint warnings fixed.
+  * include/Makefile
+    + Added hboo.ch
+
 19990816-22:15 GMT+3 Alexander Kresin
   * source/rtl/tbrowse.prg
   * tests/working/testbrw.prg
@@ -15,6 +27,7 @@
     + browdb
     + tone
 
+>>>>>>> 1.792
 19990816-15:30 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/errorapi.c
     ! Fixed hb_errLaunch() so that it will handle error handler return

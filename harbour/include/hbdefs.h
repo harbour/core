@@ -120,15 +120,15 @@ typedef char SYMBOLSCOPE;   /* stores symbol's scope */
 #define IS_SYMBOL( p )     IS_OF_TYPE( p, IT_SYMBOL )
 #define IS_MEMVAR( p )     IS_OF_TYPE( p, IT_MEMVAR )
 
-#define PCOUNT             hb_parinfo( 0 )
+#define ISCHAR( n )        ( hb_param( n, IT_STRING ) != NULL )
+#define ISNUM( n )         ( hb_param( n, IT_NUMERIC ) != NULL )
+#define ISLOG( n )         ( hb_param( n, IT_LOGICAL ) != NULL )
+#define ISDATE( n )        ( hb_param( n, IT_DATE ) != NULL )
+#define ISMEMO( n )        ( hb_param( n, IT_MEMO ) != NULL )
+#define ISBYREF( n )       ( hb_param( n, IT_BYREF ) != NULL )
+#define ISARRAY( n )       ( hb_param( n, IT_ARRAY ) != NULL )
 
-#define ISCHAR( n )        hb_param( n, IT_STRING )
-#define ISNUM( n )         hb_param( n, IT_NUMERIC )
-#define ISLOG( n )         hb_param( n, IT_LOGICAL )
-#define ISDATE( n )        hb_param( n, IT_DATE )
-#define ISMEMO( n )        hb_param( n, IT_MEMO )
-#define ISBYREF( n )       hb_param( n, IT_BYREF )
-#define ISARRAY( n )       hb_param( n, IT_ARRAY )
+#define PCOUNT             hb_parinfo( 0 )
 #define ALENGTH( n )       hb_parinfa( n, 0 )
 
 #endif /* HB_DEFS_H_ */
