@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-18 06:44 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/vm/maindll.c
+   * source/vm/maindllh.c
+     changed the definition of those files
+
 2001-12-18 06:36 UTC+0100 Antonio Linares <alinares@fivetech.com>
    + source/vm/maindllh.c
      Harbour DLL entry point
