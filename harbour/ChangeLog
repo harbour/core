@@ -1,3 +1,86 @@
+2001-04-12 15:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * source/compiler/genc.c
+  * source/compiler/genhrb.c
+  * source/compiler/genjava.c
+  * source/compiler/genobj.c
+  * source/compiler/harbour.c
+  * source/compiler/harbour.l
+  * source/compiler/harbour.sly
+  * source/compiler/harbour.y
+    * Replaced spurious ", with one exception:" text in source code
+      that does not include the Harbour Exception with ".".
+
+  * contrib/odbc/odbc.c
+  * include/hbapi.h
+  * include/hbapierr.h
+  * include/hbapiitm.h
+  * include/hbclass.ch
+  * include/hbcomp.h
+  * include/hbinit.h
+  * include/hbpcode.h
+  * include/hbstack.h
+  * include/hbvm.h
+  * source/debug/dbgmenu.prg
+  * source/debug/dbgtmenu.prg
+  * source/debug/dbgtmitm.prg
+  * source/debug/dbgtwin.prg
+  * source/debug/debugger.prg
+  * source/macro/macro.l
+  * source/macro/macro.y
+  * source/rtl/at.c
+  * source/rtl/browse.prg
+  * source/rtl/chrasc.c
+  * source/rtl/console.c
+  * source/rtl/dates.c
+  * source/rtl/dateshb.c
+  * source/rtl/empty.c
+  * source/rtl/errorapi.c
+  * source/rtl/errorsys.prg
+  * source/rtl/getsys.prg
+  * source/rtl/is.c
+  * source/rtl/left.c
+  * source/rtl/len.c
+  * source/rtl/rat.c
+  * source/rtl/replic.c
+  * source/rtl/right.c
+  * source/rtl/saverest.c
+  * source/rtl/setcurs.c
+  * source/rtl/shadow.c
+  * source/rtl/space.c
+  * source/rtl/str.c
+  * source/rtl/strcase.c
+  * source/rtl/strings.c
+  * source/rtl/strtran.c
+  * source/rtl/stuff.c
+  * source/rtl/substr.c
+  * source/rtl/tbcolumn.prg
+  * source/rtl/tbrowse.prg
+  * source/rtl/tclass.prg
+  * source/rtl/terror.prg
+  * source/rtl/tgetlist.prg
+  * source/rtl/trim.c
+  * source/rtl/valtype.c
+  * source/vm/arrays.c
+  * source/vm/arrayshb.c
+  * source/vm/borinit.c
+  * source/vm/classes.c
+  * source/vm/dynsym.c
+  * source/vm/estack.c
+  * source/vm/extend.c
+  * source/vm/fm.c
+  * source/vm/hvm.c
+  * source/vm/initexit.c
+  * source/vm/itemapi.c
+  * source/vm/maindll.c
+  * source/vm/mainstd.c
+  * source/vm/mainwin.c
+  * source/vm/pcount.c
+  * source/vm/proc.c
+  * tests/testop.prg
+    * Replaced the old license with the new license with permission
+      from Antonio Linares <alinares@fivetech.com>
+
 2001-04-12 14:20 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * doc/hdr_tpl.txt
