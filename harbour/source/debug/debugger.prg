@@ -1434,7 +1434,7 @@ return nil
 function __DbgColors()
 
 return If( ! s_oDebugger:lMonoDisplay, s_oDebugger:aColors,;
-           { "W+/N", "W+/N", "N/W", "N/W", "W/N", "N/W", "W+/N",;
+           { "W+/N", "W+/N", "N/W", "N/W", "N/W", "N/W", "W+/N",;
              "N/W", "W+/W", "W/N", "W+/N" } )
 
 function __Dbg()
