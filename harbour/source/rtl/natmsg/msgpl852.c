@@ -1,8 +1,11 @@
 /*
  * $Id$
  */
+
 /* Polish language module - Polskoj©zyczny moduˆ dla Harbour  */
 /* Codepage: Latin II - 852 */
+
+#include <hbdefs.h>
 
 char *hb_monthsname[ 12 ] = {
    "Styczeä", "Luty", "Marzec",

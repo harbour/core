@@ -1,3 +1,7 @@
+19990727-19:08 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * source/rtl/natmsg/*.c
+     Added #include <hbdefs.h> to these files
+
 19990727-12:35 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/dir.c
     ! Corrected two errors that the MSC changes introduced for non-MSC

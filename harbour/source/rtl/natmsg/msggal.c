@@ -7,6 +7,8 @@
  *
  */
 
+#include <hbdefs.h>
+
 char *hb_monthsname[ 12 ] = {
    "Xaneiro", "Febreiro", "Marzal",
    "Abril", "Maio", "Xunio", "Xullo",

@@ -34,6 +34,8 @@
 /* TODO: Decide which codepage to use, and how to implement the whole
          codepage issue */
 
+#include <hbdefs.h>
+
 char *hb_monthsname[ 12 ] =
 {
    "janu r",

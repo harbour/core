@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#include <hbdefs.h>
+
 char *hb_monthsname[ 12 ] = {
    "Enero", "Febrero", "Marzo",
    "Abril", "Mayo", "Junio", "Julio",

@@ -5,6 +5,8 @@
 /* Serbian language module (2 char. ISO language code: YU) */
 /* Codepage: Latin II -  852 */
 
+#include <hbdefs.h>
+
 char *hb_monthsname[ 12 ] =
 {
    "januar",

@@ -5,6 +5,8 @@
 /* Czech language module (2 char. ISO language code: CZ) */
 /* Codepage: Czech - Kamenickych (CS2)  */
 
+#include <hbdefs.h>
+
 char *hb_monthsname[ 12 ] =
 {
    "leden",

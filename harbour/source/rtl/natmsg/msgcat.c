@@ -7,6 +7,8 @@
  *
  */
 
+#include <hbdefs.h>
+
 char *hb_monthsname[ 12 ] = {
    "Xaner", "Febrer", "Mars",
    "April", "Mallol", "Xuniol", "Xuliol",
