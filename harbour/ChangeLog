@@ -1,3 +1,15 @@
+2000-08-07 09:05 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.l
+     + Added rule to allow DECLARE Var AS ... (like PRIVATE Var AS ...)
+
+   * source/compiler/harbour.slx
+     + Added rule to allow DECLARE Var AS ... (like PRIVATE Var AS ...)
+     ! Corrected typo with DECLARE IDENTIFIER := rule.
+     ! Corrcted compiler warnings reported by Maurilio
+
+   * tests/testdecl.prg
+     + Added DECLARE Var9 AS STRING to test this syntax too.
+
 2000-08-07 16:20 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/tbrowse.prg
      ! lines 671..680: if tbrowse was stable current cell was not hilited again, this breaks dbu.exe which

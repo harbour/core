@@ -415,6 +415,14 @@ Separator     {SpaceTab}
     hb_comp_iState = PRIVATE;
     return PRIVATE;
 }
+
+<DECLARE_ID_>({Identifier}|{MacroTxt}){Separator}*"as"{Separator}+ { /* variable declaration */
+    BEGIN 0;
+    yyless(0);
+    hb_comp_iState = PRIVATE;
+    return PRIVATE;
+}
+
 <DECLARE_ID_>.|\n          {
     BEGIN 0;
     unput( yytext[ yyleng-1 ] );

@@ -303,16 +303,17 @@ LANGUAGE_WORDS_ARE {
 #define _ID_COMMA         3003
 #define _ID_CR            3004
 #define _ID_SEMI          3005
-#define _ID_COLON         3006
-#define _CASE_WITH        3007
-#define _WHL_ID_CR        3008
-#define _WHL_ID_SEMI      3009
-#define _INC_CR           3010
-#define _INC_SEMI         3011
-#define _DEC_CR           3012
-#define _DEC_SEMI         3013
-#define _VAR_ARRAY        3014
-#define _TEXT_ARRAY       3015
+#define _ID_ASSIGN        3006
+#define _ID_AS            3007
+#define _CASE_WITH        3008
+#define _WHL_ID_CR        3009
+#define _WHL_ID_SEMI      3010
+#define _INC_CR           3011
+#define _INC_SEMI         3012
+#define _DEC_CR           3013
+#define _DEC_SEMI         3014
+#define _VAR_ARRAY        3015
+#define _TEXT_ARRAY       3016
 
 LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( '^'         , 0           , 0      , 0          ) REDUCE_TO( POWER             , 0             ),
@@ -383,14 +384,16 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( DECLARE     , IDENTIFIER  , ','    , 0          ) REDUCE_TO( PRIVATE           , _ID_COMMA     ),
                     IF_SEQUENCE_IS( DECLARE     , IDENTIFIER  , '\n'   , 0          ) REDUCE_TO( PRIVATE           , _ID_CR        ),
                     IF_SEQUENCE_IS( DECLARE     , IDENTIFIER  , ';'    , 0          ) REDUCE_TO( PRIVATE           , _ID_SEMI      ),
-                    IF_SEQUENCE_IS( DECLARE     , IDENTIFIER  , ':'    , 0          ) REDUCE_TO( PRIVATE           , _ID_COLON     ),
+                    IF_SEQUENCE_IS( DECLARE     , IDENTIFIER  ,INASSIGN, 0          ) REDUCE_TO( PRIVATE           , _ID_ASSIGN    ),
+                    IF_SEQUENCE_IS( DECLARE     , IDENTIFIER  ,_AS_    , 0          ) REDUCE_TO( PRIVATE           , _ID_AS        ),
                     IF_SEQUENCE_IS( DECLARE     , MACROVAR    , 0      , 0          ) REDUCE_TO( PRIVATE           , MACROVAR      ),
                     IF_SEQUENCE_IS( DECLARE     , MACROTEXT   , 0      , 0          ) REDUCE_TO( PRIVATE           , MACROTEXT     ),
                     IF_SEQUENCE_IS( _ID_ARRAY   , 0           , 0      , 0          ) REDUCE_TO( IDENTIFIER        , '['           ),
                     IF_SEQUENCE_IS( _ID_COMMA   , 0           , 0      , 0          ) REDUCE_TO( IDENTIFIER        , ','           ),
                     IF_SEQUENCE_IS( _ID_CR      , 0           , 0      , 0          ) REDUCE_TO( IDENTIFIER        , '\n'          ),
                     IF_SEQUENCE_IS( _ID_SEMI    , 0           , 0      , 0          ) REDUCE_TO( IDENTIFIER        , ';'           ),
-                    IF_SEQUENCE_IS( _ID_COLON   , 0           , 0      , 0          ) REDUCE_TO( IDENTIFIER        , ':'           ),
+                    IF_SEQUENCE_IS( _ID_ASSIGN  , 0           , 0      , 0          ) REDUCE_TO( IDENTIFIER        , INASSIGN      ),
+                    IF_SEQUENCE_IS( _ID_AS      , 0           , 0      , 0          ) REDUCE_TO( IDENTIFIER        , _AS_          ),
 
 		    /* Anything DECLARE IDENTIFIER, must be Strong Type DECLARE. */
                     IF_SEQUENCE_IS( DECLARE     , IDENTIFIER  , 0      , 0          ) PASS_THROUGH(),
@@ -1045,7 +1048,7 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
 
          /* Equivalent of PUSH_TOKEN(x). */
          aiHold[ (*ptr_iHold)++ ] = EXTERN;
-         asHold[ (*ptr_iHold) - 1 ][0] = NULL;
+         asHold[ (*ptr_iHold) - 1 ][0] = '\0';
 
          x = 0;
          break;
@@ -1055,7 +1058,7 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
 
          /* Equivalent of PUSH_TOKEN(x). */
          aiHold[ (*ptr_iHold)++ ] = DECLARE;
-         asHold[ (*ptr_iHold) - 1 ][0] = NULL;
+         asHold[ (*ptr_iHold) - 1 ][0] = '\0';
 
          x = 0;
          break;
@@ -1065,7 +1068,7 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
 
          /* Equivalent of PUSH_TOKEN(x). */
          aiHold[ (*ptr_iHold)++ ] = PUBLIC;
-         asHold[ (*ptr_iHold) - 1 ][0] = NULL;
+         asHold[ (*ptr_iHold) - 1 ][0] = '\0';
 
          x = 0;
          break;
@@ -1075,7 +1078,7 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
 
          /* Equivalent of PUSH_TOKEN(x). */
          aiHold[ (*ptr_iHold)++ ] = PRIVATE_;
-         asHold[ (*ptr_iHold) - 1 ][0] = NULL;
+         asHold[ (*ptr_iHold) - 1 ][0] = '\0';
 
          x = 0;
          break;
@@ -1085,7 +1088,7 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
 
          /* Equivalent of PUSH_TOKEN(x). */
          aiHold[ (*ptr_iHold)++ ] = LOCAL;
-         asHold[ (*ptr_iHold) - 1 ][0] = NULL;
+         asHold[ (*ptr_iHold) - 1 ][0] = '\0';
 
          x = 0;
          break;
@@ -1095,7 +1098,7 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
 
          /* Equivalent of PUSH_TOKEN(x). */
          aiHold[ (*ptr_iHold)++ ] = MEMVAR;
-         asHold[ (*ptr_iHold) - 1 ][0] = NULL;
+         asHold[ (*ptr_iHold) - 1 ][0] = '\0';
 
          x = 0;
          break;
@@ -1105,7 +1108,7 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
 
          /* Equivalent of PUSH_TOKEN(x). */
          aiHold[ (*ptr_iHold)++ ] = FIELD_;
-         asHold[ (*ptr_iHold) - 1 ][0] = NULL;
+         asHold[ (*ptr_iHold) - 1 ][0] = '\0';
 
          x = 0;
          break;
@@ -1115,7 +1118,7 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
 
          /* Equivalent of PUSH_TOKEN(x). */
          aiHold[ (*ptr_iHold)++ ] = PARAMETERS;
-         asHold[ (*ptr_iHold) - 1 ][0] = NULL;
+         asHold[ (*ptr_iHold) - 1 ][0] = '\0';
 
          x = 0;
          break;
@@ -1125,7 +1128,7 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
 
          /* Equivalent of PUSH_TOKEN(x). */
          aiHold[ (*ptr_iHold)++ ] = FOR;
-         asHold[ (*ptr_iHold) - 1 ][0] = NULL;
+         asHold[ (*ptr_iHold) - 1 ][0] = '\0';
 
          x = 0;
          break;
@@ -1454,8 +1457,8 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
       iIdentifier++;
 */
       /* Equivalent of PUSH_TOKEN(x). */
-      aiHold[ (*ptr_iHold)++ ] = x;
-      strcpy( asHold[ (*ptr_iHold) - 1 ], yylval.string );
+      aiHold[ (int)(*ptr_iHold)++ ] = x;
+      strcpy( asHold[ (int)(*ptr_iHold) - 1 ], yylval.string );
 
       x = 0;
    }
