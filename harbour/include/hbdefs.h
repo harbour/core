@@ -43,8 +43,7 @@ typedef int BOOL;
 #undef PVOID
 typedef void * PVOID;
 
-#undef HANDLE
-typedef USHORT HANDLE;
+typedef USHORT HB_HANDLE;
 
 #define LOBYTE(w)           ((BYTE)(w))
 #define HIBYTE(w)           ((BYTE)(((WORD)(w) >> 8) & 0xFF))

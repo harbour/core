@@ -80,10 +80,10 @@ HB_VALUE_PTR *hb_GlobalValueBaseAddress( void )
  *  handle to variable memory or fails
  *
 */
-HANDLE hb_GlobalValueNew( HB_ITEM_PTR pSource )
+HB_HANDLE hb_GlobalValueNew( HB_ITEM_PTR pSource )
 {
    HB_VALUE_PTR pValue;
-   HANDLE hValue;
+   HB_HANDLE hValue;
 
    if( ! _globalTable )
    {
@@ -154,7 +154,7 @@ HANDLE hb_GlobalValueNew( HB_ITEM_PTR pSource )
  * This function increases the number of references to passed global value
  *
  */
-void hb_GlobalValueIncRef( HANDLE hValue )
+void hb_GlobalValueIncRef( HB_HANDLE hValue )
 {
    #ifdef MEMVARDEBUG
    if( hValue < 0 || hValue > _globalTableSize )
@@ -176,7 +176,7 @@ void hb_GlobalValueIncRef( HANDLE hValue )
  * If it is the last reference then this value is deleted.
  *
  */
-void hb_GlobalValueDecRef( HANDLE hValue )
+void hb_GlobalValueDecRef( HB_HANDLE hValue )
 {
    HB_VALUE_PTR pValue;
 

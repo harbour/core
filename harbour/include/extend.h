@@ -292,9 +292,9 @@ PDYNSYM  NewDynSym( PSYMBOL pSymbol ); /* creates a new dynamic symbol based on 
 PDYNSYM  FindDynSym( char * szName );  /* finds a dynamic symbol */
 
 /* functions for memvar variables */
-HANDLE hb_GlobalValueNew( PHB_ITEM );
-void hb_GlobalValueIncRef( HANDLE );
-void hb_GlobalValueDecRef( HANDLE );
+HB_HANDLE hb_GlobalValueNew( PHB_ITEM );
+void hb_GlobalValueIncRef( HB_HANDLE );
+void hb_GlobalValueDecRef( HB_HANDLE );
 HB_VALUE_PTR * hb_GlobalValueBaseAddress( void );
 
 #endif /* HB_EXTEND_H_ */

@@ -76,7 +76,7 @@ HB_CODEBLOCK_PTR hb_CodeblockNew( BYTE * pBuffer,
      */
     WORD w = 0;
     PHB_ITEM pLocal;
-    HANDLE hGlobal;
+    HB_HANDLE hGlobal;
 
     /* Create a table that will store the values of local variables
      * accessed in a codeblock
