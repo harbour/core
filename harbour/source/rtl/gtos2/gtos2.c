@@ -107,7 +107,7 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
    }
 
    hb_mouse_Init();
-   
+
    /* TODO: Is anything else required to initialize the video subsystem?
             I (Maurilio Longo) think that we should set correct codepage
 
@@ -156,11 +156,11 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
       keyboard buffer.
    */
    ch = _read_kbd(0, 0, 0);   /* readkey without echoing, waiting or breaking */
-   if(ch == 0) {
-         ch = _read_kbd(0, 0, 0);
-         if(ch != EOF) {
-            ch += 256;
-         }
+   if ((ch == 0) || (ch == 224)) {
+      ch = _read_kbd(0, 0, 0);
+      if (ch != EOF) {
+         ch += 256;
+      }
    }
 
    /* TODO: Use KBDxxx subsystem to fetch keys */

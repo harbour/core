@@ -1,3 +1,12 @@
+2000-10-21 23:02 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * source/vm/hvm.c
+      + Added an exception handler to be able to print a full harbour level stack trace upon
+        abnormal program termination. This is OS/2 only.
+   * source/rtl/gtos2/gtos2.c
+      ! Little change on extended chars handling. Should make no difference.
+   * include/hbdefs.h
+      * changed to have OS/2 exception management defines included.
+
 2000-10-20 00:30 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      * Forced uppercase and trim of restricted words.

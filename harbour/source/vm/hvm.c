@@ -56,6 +56,7 @@
 #ifndef __MPW__
    #include <malloc.h>
 #endif
+
 #include <math.h>
 
 #include "hbapi.h"
@@ -236,14 +237,29 @@ static LONG     s_lRecoverBase;
  */
 static USHORT   s_uiActionRequest;
 
+/* 21/10/00 - maurilio.longo@libero.it
+   This Exception Handler gets called in case of an abnormal termination of an harbour program and
+   displays a full stack trace at the harbour language level */
+#if defined(HB_OS_OS2)
+ULONG _System OS2TermHandler(PEXCEPTIONREPORTRECORD       p1,
+                             PEXCEPTIONREGISTRATIONRECORD p2,
+                             PCONTEXTRECORD               p3,
+                             PVOID                        pv);
+#endif
+
 /* application entry point */
 
 void hb_vmInit( BOOL bStartMainProc )
 {
+
+#if defined(HB_OS_OS2)
+   EXCEPTIONREGISTRATIONRECORD RegRec = {0};       /* Exception Registration Record */
+   APIRET rc = NO_ERROR;                           /* Return code                   */
+#endif
+
    HB_TRACE(HB_TR_DEBUG, ("hb_vmInit()"));
 
    /* initialize internal data structures */
-
    s_aStatics.type = HB_IT_NIL;
    s_byErrorLevel = 0;
    s_bDebugging = FALSE;
@@ -310,6 +326,15 @@ void hb_vmInit( BOOL bStartMainProc )
 #endif
    }
 
+#if defined(HB_OS_OS2) /* Add OS2TermHandler to this thread's chain of exception handlers */
+
+   RegRec.ExceptionHandler = (ERR)OS2TermHandler;
+   rc = DosSetExceptionHandler( &RegRec );
+   if (rc != NO_ERROR) {
+      hb_errInternal( HB_EI_ERRUNRECOV, "Unable to setup exception handler (DosSetExceptionHandler())", NULL, NULL );
+   }
+#endif
+
    if( bStartMainProc && s_pSymStart )
    {
       int i;
@@ -333,6 +358,11 @@ void hb_vmInit( BOOL bStartMainProc )
 
       hb_vmDo( iArgCount ); /* invoke it with number of supplied parameters */
    }
+
+#if defined(HB_OS_OS2)
+   /* I don't do any check on return code since harbour is exiting in any case */
+   rc = DosUnsetExceptionHandler( &RegRec );
+#endif
 }
 
 void hb_vmQuit( void )
@@ -361,7 +391,7 @@ void hb_vmQuit( void )
 
    /* release all known garbage */
    hb_gcCollectAll();
-   
+
    hb_memvarsFree();    /* free memory allocated for memvars table */
    hb_stackFree();
 /* hb_dynsymLog(); */
@@ -4371,6 +4401,46 @@ WINBASEAPI LONG WINAPI UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * Ex
 
 #endif
 
+#if defined(HB_OS_OS2)
+
+ULONG _System OS2TermHandler(PEXCEPTIONREPORTRECORD       p1,
+                             PEXCEPTIONREGISTRATIONRECORD p2,
+                             PCONTEXTRECORD               p3,
+                             PVOID                        pv) {
+
+   PHB_ITEM pBase = hb_stack.pBase;
+
+   HB_SYMBOL_UNUSED(p1);
+   HB_SYMBOL_UNUSED(p2);
+   HB_SYMBOL_UNUSED(p3);
+   HB_SYMBOL_UNUSED(pv);
+
+   /* Don't print stack trace if inside unwind, normal process termination or process killed or
+      during debugging */
+   if (p1->ExceptionNum != XCPT_UNWIND && p1->ExceptionNum < XCPT_BREAKPOINT) {
+
+      fprintf(stderr, "\nException %lx at address %lx \n", p1->ExceptionNum, (ULONG)p1->ExceptionAddress);
+
+      while( pBase != hb_stack.pItems )
+      {
+         pBase = hb_stack.pItems + pBase->item.asSymbol.stackbase;
+
+         if( ( pBase + 1 )->type == HB_IT_ARRAY )
+            fprintf( stderr, "Called from %s:%s(%i)\n", hb_objGetClsName( pBase + 1 ),
+                     pBase->item.asSymbol.value->szName,
+                     pBase->item.asSymbol.lineno );
+         else
+            fprintf( stderr, "Called from %s(%i)\n",
+                     pBase->item.asSymbol.value->szName,
+                     pBase->item.asSymbol.lineno );
+
+      }
+   }
+
+   return XCPT_CONTINUE_SEARCH;          /* Exception not resolved... */
+}
+#endif
+
 /* ------------------------------------------------------------------------ */
 /* The garbage collector interface */
 /* ------------------------------------------------------------------------ */
@@ -4403,6 +4473,6 @@ void hb_vmIsStaticRef( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_vmIsStaticRef()"));
 
    /* statics are stored as an item of array type */
-   hb_gcItemRef( &s_aStatics ); 
+   hb_gcItemRef( &s_aStatics );
 }
 

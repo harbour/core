@@ -73,6 +73,9 @@
       The same holds true when using GCC under OS/2
    */
    #define INCL_TYPES
+   #define INCL_DOSEXCEPTIONS    /* DOS exception values */
+   #define INCL_ERRORS           /* DOS error values     */
+
    #include <os2.h>
    #undef INT
    #undef UINT
