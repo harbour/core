@@ -525,13 +525,16 @@ void hb_compStrongType( int iSize )
         if( pFunc->iStackIndex < ( wVar + 1 ) )
           break;
 
-        if( pFunc->pStack[ pFunc->iStackIndex - ( wVar + 1 ) ] == 'S' &&
-             pFunc->iStackFunctions > 0 && pFunc->pStackFunctions[ --pFunc->iStackFunctions ] )
+        cType = pFunc->pStack[ pFunc->iStackIndex - ( wVar + 1 ) ];
+        if( cType  >= ( 'A' + VT_OFFSET_VARIANT ) )
+           cType -= VT_OFFSET_VARIANT;
+
+        if( cType == 'S' &&  pFunc->iStackFunctions > 0 && pFunc->pStackFunctions[ pFunc->iStackFunctions - 1 ] )
         {
            int hb_comp_iParamCount, iParamCount, iOptionals = 0;
            BYTE * hb_comp_cParamTypes;
 
-           hb_comp_cParamTypes = pFunc->pStackFunctions[ pFunc->iStackFunctions ]->cParamTypes;
+           hb_comp_cParamTypes = pFunc->pStackFunctions[ --pFunc->iStackFunctions ]->cParamTypes;
            hb_comp_iParamCount = pFunc->pStackFunctions[ pFunc->iStackFunctions ]->iParamCount;
 
            iParamCount = hb_comp_iParamCount;
@@ -635,11 +638,15 @@ void hb_compStrongType( int iSize )
               hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_COUNT, ( char * ) szType1, ( char * ) szType2 );
            }
         }
+        else if( pFunc->iStackFunctions )
+        {
+           pFunc->pStackFunctions[ --pFunc->iStackFunctions ] = NULL;
+        }
 
         /* Removing all the parameters.*/
         pFunc->iStackIndex -= wVar;
 
-        if( pFunc->pStack[ pFunc->iStackIndex - 1 ] == 'S' && pFunc->pStackFunctions[ pFunc->iStackFunctions ] )
+        if( cType == 'S' && pFunc->pStackFunctions[ pFunc->iStackFunctions ] )
         {
            pFunc->pStack[ pFunc->iStackIndex - 1 ] = pFunc->pStackFunctions[ pFunc->iStackFunctions ]->cType;
 
@@ -652,7 +659,9 @@ void hb_compStrongType( int iSize )
            }
         }
         else
-          pFunc->pStack[ pFunc->iStackIndex - 1 ] = ' ';
+        {
+           pFunc->pStack[ pFunc->iStackIndex - 1 ] = ' ';
+        }
 
         break;
 

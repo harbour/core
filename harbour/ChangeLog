@@ -1,3 +1,10 @@
+2000-08-28 17:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.y
+     - Removed 1 un-needed hb_comp_szDeclaredFun = NULL
+
+   * source/compiler/hbpcode.c
+     ! Completed declared parameter checking, for method applied to Adapted Type Variable.
+
 2000-08-28 15:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * include/hbcomp.h
      + Added: extern void hb_compDeclaredParameterAdd( char * szVarName, BYTE cValueType );

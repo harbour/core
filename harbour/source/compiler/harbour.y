@@ -1190,7 +1190,7 @@ Declaration: DECLARE IdentName '(' { hb_compDeclaredAdd( $2 ); hb_comp_szDeclare
                hb_comp_cVarType = ' ';
                hb_comp_iVarScope = VS_NONE;
              }
-           | DECLARE IdentName { hb_comp_pLastClass = hb_compClassAdd( $2 ); } ClassInfo Crlf { hb_comp_iVarScope = VS_NONE; hb_comp_szDeclaredFun == NULL }
+           | DECLARE IdentName { hb_comp_pLastClass = hb_compClassAdd( $2 ); } ClassInfo Crlf { hb_comp_iVarScope = VS_NONE; }
            ;
 
 ClassInfo  : DecMethod
