@@ -1,3 +1,11 @@
+19991218-18:25 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbexpr.c
+	* static variables can be initialised with arrays that
+	contains parenthesized epressions e.g. STATIC a:={ (1) }
+	* fixed code that handles aliased macro expressions
+	e.g. FIELD->&var1 := var2
+	
 19991218-10:35 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/objfunc.prg
     source/rtl/readkey.prg

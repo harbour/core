@@ -1331,30 +1331,50 @@ HB_EXPR_PTR hb_compExprAssign( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightExpr )
 /* It initializes static variable.
  *    It is called in the following context:
  * STATIC sVar := expression
+ * 
+ * pLeftExpr - is a variable name
+ * pRightExpr - can be an expression of any type
  */
 #ifndef HB_MACRO_SUPPORT
 HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightExpr )
 {
    HB_EXPR_PTR pExpr = hb_compExprNew( HB_EO_ASSIGN );
+
    pExpr->value.asOperator.pLeft  = pLeftExpr;
-   pExpr->value.asOperator.pRight = HB_EXPR_USE( pRightExpr, HB_EA_REDUCE );
+   /* Try to reduce the assigned value */
+   pRightExpr = hb_compExprListStrip( HB_EXPR_USE( pRightExpr, HB_EA_REDUCE ) );
+   pExpr->value.asOperator.pRight = pRightExpr;
 
    if( pRightExpr->ExprType > HB_ET_FUNREF )
    {
-      /* Illegal initializer for static variable
+      /* Illegal initializer for static variable (not a constant value)
        */
       hb_compErrorStatic( pLeftExpr->value.asSymbol, pRightExpr );
    }
    else if( pRightExpr->ExprType == HB_ET_ARRAY )
    {
-      /* Scan an array for illegal initializers */
+      /* Scan an array for illegal initializers.
+       * An array item have to be a const value too.
+       */
       HB_EXPR_PTR pElem = pRightExpr->value.asList.pExprList;
+      HB_EXPR_PTR pNext;
+      HB_EXPR_PTR * pPrev;
 
+      pPrev = &pRightExpr->value.asList.pExprList;
       while( pElem )
       {
+         /* NOTE: During reduction the expression can be replaced by the
+          *    new one - this will break the linked list of expressions.
+          * (classical case of replacing an item in a linked list)
+          */
+         pNext = pElem->pNext; /* store next expression in case the current  will be reduced */
+         pElem = hb_compExprListStrip( HB_EXPR_USE( pElem, HB_EA_REDUCE ) );
          if( pElem->ExprType > HB_ET_FUNREF )
             hb_compErrorStatic( pLeftExpr->value.asSymbol, pElem );
-         pElem = pElem->pNext;
+         *pPrev = pElem;   /* store a new expression into the previous one */
+         pElem->pNext = pNext;  /* restore the link to next expression */
+         pPrev  = &pElem->pNext;
+         pElem  = pNext;
       }
    }
 
@@ -2487,6 +2507,8 @@ static HB_EXPR_FUNC( hb_compExprUseAliasVar )
 
             if( pAlias->ExprType == HB_ET_LIST )
             {
+               /* ( expr1, expr2, ... )->variable
+                */
                pSelf->value.asAlias.pAlias = HB_EXPR_USE( pSelf->value.asAlias.pAlias, HB_EA_REDUCE );
                bReduced = TRUE;
             }
@@ -2551,10 +2573,11 @@ static HB_EXPR_FUNC( hb_compExprUseAliasVar )
             {
                /* Macro operator is used on the left or right side of an alias
                 * operator - handle it with a special care
+                * (we need convert to a string the whole expression)
                 */
-               hb_compExprUseAliasMacro( pAlias, HB_EA_POP_PCODE );
+               hb_compExprUseAliasMacro( pSelf, HB_EA_POP_PCODE );
             }
-            if( pAlias->ExprType == HB_ET_ALIAS )
+            else if( pAlias->ExprType == HB_ET_ALIAS )
             {
                /*
                 * myalias->var
@@ -5373,6 +5396,10 @@ static ULONG hb_compExprListReduce( HB_EXPR_PTR pExpr )
    return ulCnt;
 }
 
+/* replace the list containing a single expression with a simple expression
+ * - strips parenthesis
+ *  ( EXPR ) -> EXPR
+ */
 #ifdef HB_MACRO_SUPPORT
 static HB_EXPR_PTR hb_compExprListStripMC( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
 #else
@@ -5662,6 +5689,8 @@ static void hb_compExprUseAliasMacro( HB_EXPR_PTR pAliasedVar, BYTE bAction )
 {
    HB_EXPR_PTR pAlias, pVar;
 
+   /* Alias->Var
+    */
    pAlias = pAliasedVar->value.asAlias.pAlias;
    pVar   = pAliasedVar->value.asAlias.pVar;
    if( pAlias->ExprType == HB_ET_ALIAS )
