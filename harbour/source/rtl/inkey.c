@@ -191,6 +191,7 @@ static int * s_inkeyBuffer = 0; /* Harbour keyboard buffer (empty if head == tai
 static int   s_inkeyHead;       /* Harbour keyboard buffer head pointer (next insert)  */
 static int   s_inkeyTail;       /* Harbour keyboard buffer tail pointer (next extract) */
 static int   s_inkeyLast;       /* Last key extracted from Harbour keyboard buffer     */
+static int   s_mouseLast;       /* Last mouse button to be pressed                     */
 static BOOL  s_inkeyPoll;       /* Flag to override no polling when TYPEAHEAD is 0     */
 static int   s_inkeyForce;      /* Variable to hold keyboard input when TYPEAHEAD is 0 */
 static HB_inkey_enum s_eventmask;
@@ -649,27 +650,44 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
 #endif
             }
          }
-         else if( s_irInBuf[ s_cNumIndex ].EventType == MOUSE_EVENT )
+         else if( s_eventmask & ~( INKEY_KEYBOARD | INKEY_EXTENDED )
+                              && s_irInBuf[ s_cNumIndex ].EventType == MOUSE_EVENT )
          {
+
             hb_mouse_iCol = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.X;
             hb_mouse_iRow = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.Y;
 
-            if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == MOUSE_MOVED )
+            if( s_eventmask & INKEY_MOVE && s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == MOUSE_MOVED )
                ch = K_MOUSEMOVE;
 
-            else if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState &
+            else if( s_eventmask & INKEY_LDOWN && s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState &
                      FROM_LEFT_1ST_BUTTON_PRESSED )
+            {
                if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == DOUBLE_CLICK )
                   ch = K_LDBLCLK;
                else
                   ch = K_LBUTTONDOWN;
 
-            else if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState &
+               s_mouseLast = K_LBUTTONDOWN;
+            }
+            else if( s_eventmask & INKEY_RDOWN && s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState &
                      RIGHTMOST_BUTTON_PRESSED )
+            {
                if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == DOUBLE_CLICK )
                   ch = K_RDBLCLK;
                else
                   ch = K_RBUTTONDOWN;
+
+               s_mouseLast = K_RBUTTONDOWN;
+            }
+            else if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == 0 &&
+                     s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState == 0 )
+            {
+               if( s_eventmask & INKEY_LUP && s_mouseLast == K_LBUTTONDOWN )
+                  ch = K_LBUTTONUP;
+               else if( s_eventmask & INKEY_RUP && s_mouseLast == K_RBUTTONDOWN )
+                  ch = K_RBUTTONUP;
+            }
          }
          /* Set up to process the next input event (if any) */
          s_cNumIndex++;
