@@ -62,7 +62,6 @@
  *  $END$
  */
 
-#include <ctype.h>
 #include "extend.h"
 #include "itemapi.h"
 #include "init.h"

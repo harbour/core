@@ -1,3 +1,10 @@
+19990801-21:58 GMT+1 Victor Szel <info@szelvesz.hu>
+   % source/rtl/descend.c
+     #include <ctype.h> removed
+   ! source/compiler/harbour.y - 
+     hb_INITSTATICS() -> HB_INITSTATICS() (case adjusted)
+     Change undone. Comment added to make this clear.
+
 19990801-21:58 GMT+1 Bruno Cantero <bruno@issnet.net>
    * source/rdd/dbcmd.c
      Fixed a GPF with MSVC, thaks Paul
