@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2002-01-24 10:03 UTC+0000 Dave Pearson <davep@davep.org>
+   * source/rtl/profiler.prg
+     + Added class HBProfileOPCode.
+     + Added class HBProfileLowLevel. It inherits from HBProfile and adds
        OPCODE usage entries.
 
 2002-01-19 06:11 UTC-0800 Ron Pinkas <ron@ronpinkas.com>
