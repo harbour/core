@@ -327,8 +327,13 @@ ERRCODE adsCloseCursor( ADSAREAP pArea )
 
       pArea->hTable = 0;
    }
+   if( pArea->hStatement )
+   {
+      AdsCloseSQLStatement( pArea->hStatement );
+      pArea->hStatement = 0;
+   }
 
-   uiError = SUPER_CLOSE( (AREAP)pArea );  // dbCreate needs this even if
+   uiError = SUPER_CLOSE( (AREAP)pArea );
 
    /* Free field offset array */
    if( pArea->pFieldOffset )
@@ -1011,8 +1016,6 @@ static ERRCODE adsClose( ADSAREAP pArea )
    HB_TRACE(HB_TR_DEBUG, ("adsClose(%p)", pArea));
 
    adsCloseCursor( pArea );
-   if( pArea->hStatement )
-      AdsCloseSQLStatement( pArea->hStatement );
 
    if( pArea->szDataFileName )
    {
@@ -1254,15 +1257,21 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
       dbFieldInfo.uiDec = 0;
       if( pulLength > pArea->maxFieldLen ) pArea->maxFieldLen = pulLength;
 
+      dbFieldInfo.uiTypeExtended = pusType;
       switch( pusType )
       {
          case ADS_STRING:
+         case ADS_VARCHAR:
             dbFieldInfo.uiType = HB_IT_STRING;
             break;
 
          case ADS_NUMERIC:
          case ADS_DOUBLE:
          case ADS_INTEGER:
+         case ADS_SHORTINT:
+         case ADS_TIME:
+         case ADS_TIMESTAMP:
+         case ADS_CURDOUBLE:
             dbFieldInfo.uiType = HB_IT_LONG;
             AdsGetFieldDecimals( pArea->hTable, szName, ( UNSIGNED16 * ) &pulLength );
             dbFieldInfo.uiDec = ( USHORT ) pulLength;
@@ -1273,10 +1282,13 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
             break;
 
          case ADS_DATE:
+         case ADS_COMPACTDATE:
             dbFieldInfo.uiType = HB_IT_DATE;
             break;
 
          case ADS_MEMO:
+         case ADS_BINARY:
+         case ADS_IMAGE:
             dbFieldInfo.uiType = HB_IT_MEMO;
             break;
       }
@@ -1284,6 +1296,8 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
    }
 
    /* Alloc buffer */
+   if( pArea->maxFieldLen < 18 )
+      pArea->maxFieldLen = 18;
    pArea->pRecord = ( BYTE * ) hb_xgrab( pArea->maxFieldLen + 1 );
    pArea->fValidBuffer = FALSE;
    if( adsRecCount( pArea, &ulRecCount ) == FAILURE )
@@ -1609,18 +1623,19 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
    switch( uiIndex )
    {
       case DBOI_CONDITION:
-         AdsGetIndexCondition( phIndex, aucBuffer, &pusLen);
+         if ( phIndex )
+            AdsGetIndexCondition( phIndex, aucBuffer, &pusLen);
          hb_itemPutCL( pOrderInfo->itmResult, (char*)aucBuffer, pusLen );
          break;
 
       case DBOI_EXPRESSION:
-         if ( pArea->hOrdCurrent )
+         if ( phIndex )
             AdsGetIndexExpr( phIndex, aucBuffer, &pusLen);
          hb_itemPutCL( pOrderInfo->itmResult, (char*)aucBuffer, pusLen );
          break;
 
       case DBOI_ISCOND:
-         if ( pArea->hOrdCurrent )
+         if ( phIndex )
             AdsGetIndexCondition( phIndex, aucBuffer, &pusLen);
          else
             pusLen = 0;
@@ -1628,7 +1643,7 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
          break;
 
       case DBOI_ISDESC:
-         if ( pArea->hOrdCurrent )
+         if ( phIndex )
             AdsIsIndexDescending (phIndex, &pus16);
          else
             pus16 = 0;
@@ -1636,7 +1651,7 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
          break;
 
       case DBOI_UNIQUE:
-         if ( pArea->hOrdCurrent )
+         if ( phIndex )
             AdsIsIndexUnique (phIndex, &pus16);
          else
             pus16 = 0;
@@ -1644,7 +1659,7 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
          break;
 
       case DBOI_KEYTYPE:
-         if ( pArea->hOrdCurrent )
+         if ( phIndex )
          {
             AdsGetKeyType(phIndex, &pus16);
             switch( pus16 )
@@ -1671,7 +1686,7 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
          break;
 
       case DBOI_KEYSIZE:
-         if ( pArea->hOrdCurrent )
+         if ( phIndex )
             AdsGetKeyLength(phIndex, &pus16);
          else
             pus16 = 0;
@@ -1679,7 +1694,7 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
          break;
 
       case DBOI_KEYVAL:
-         if ( !pArea->fEof && pArea->hOrdCurrent )
+         if ( !pArea->fEof && phIndex )
          {
             AdsExtractKey( phIndex, aucBuffer, &pusLen);
             AdsGetKeyType( phIndex, &pus16);
@@ -1749,13 +1764,13 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
       }
 
       case DBOI_BAGNAME:
-         if ( pArea->hOrdCurrent )
+         if ( phIndex )
             AdsGetIndexFilename  ( phIndex, ADS_BASENAME, aucBuffer, &pusLen);
          hb_itemPutCL( pOrderInfo->itmResult, (char*)aucBuffer, pusLen );
          break;
 
       case DBOI_FULLPATH :
-         if ( pArea->hOrdCurrent )
+         if ( phIndex )
             AdsGetIndexFilename (phIndex, ADS_FULLPATHNAME, aucBuffer, &pusLen);
          hb_itemPutCL( pOrderInfo->itmResult, (char*)aucBuffer, pusLen );
          break;
@@ -1848,7 +1863,7 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
          break;
 
       case DBOI_CUSTOM :
-         if ( pArea->hOrdCurrent )
+         if ( phIndex )
             AdsIsIndexCustom  (phIndex, &pus16);
          hb_itemPutL(pOrderInfo->itmResult, pus16);
          break;
@@ -2318,7 +2333,7 @@ HB_FUNC( ADSCUSTOMIZEAOF )
    UNSIGNED32 ulRecord;
    UNSIGNED32 *pulRecords;
    UNSIGNED16 usOption = ADS_AOF_ADD_RECORD;
-   UNSIGNED32 ulRetVal = AE_SUCCESS + 1;  /* initialize to something other than success */
+   UNSIGNED32 ulRetVal = AE_SUCCESS + 1;   /* initialize to something other than success */
 
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
    if( pArea )
@@ -2345,7 +2360,8 @@ HB_FUNC( ADSCUSTOMIZEAOF )
          {
             for ( ulRecord = 0; ulRecord < ulNumRecs; ulRecord++)
                pulRecords[ulRecord] = hb_parnl( 1, ulRecord + 1);
-         }else
+         }
+         else
             pulRecords[0] = ulRecord;
 
          ulRetVal = AdsCustomizeAOF( pArea->hTable, ulNumRecs, pulRecords, usOption);

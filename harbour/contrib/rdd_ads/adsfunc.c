@@ -806,7 +806,6 @@ HB_FUNC( ADSEXECUTESQLDIRECT )
    if( adsConnectHandle && ( pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer() ) != 0
                         && pArea->hStatement && ISCHAR( 1 ) )
    {
-      adsCloseCursor( pArea );
       ulRetVal = AdsExecuteSQLDirect( pArea->hStatement, (UNSIGNED8 *) hb_parc( 1 ),  &hCursor );
       if( ulRetVal == AE_SUCCESS )
       {
@@ -836,7 +835,6 @@ HB_FUNC( ADSPREPARESQL )
    if( adsConnectHandle && ( pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer() ) != 0
                         && pArea->hStatement && ISCHAR( 1 ) )
    {
-      adsCloseCursor( pArea );
       ulRetVal = AdsPrepareSQL( pArea->hStatement, (UNSIGNED8 *) hb_parc( 1 ) );
       if( ulRetVal == AE_SUCCESS )
          hb_retl( 1 );
@@ -860,7 +858,6 @@ HB_FUNC( ADSEXECUTESQL )
    if( adsConnectHandle && ( pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer() ) != 0
                         && pArea->hStatement )
    {
-      adsCloseCursor( pArea );
       ulRetVal = AdsExecuteSQL( pArea->hStatement, &hCursor );
       if( ulRetVal == AE_SUCCESS )
       {
@@ -1032,7 +1029,7 @@ HB_FUNC( ADSISEXPRVALID )               /* cExpr */
    hb_retl(bValidExpr);
 }
 
-HB_FUNC( ADSGETNUMINDEXES )               /* cExpr */
+HB_FUNC( ADSGETNUMINDEXES )              /* cExpr */
 {
    ADSAREAP pArea;
    UNSIGNED16 pusCnt = 0;
@@ -1044,4 +1041,7 @@ HB_FUNC( ADSGETNUMINDEXES )               /* cExpr */
    hb_retni(pusCnt);
 }
 
-
+HB_FUNC( ADSGETCONNECTIONHANDLE )
+{
+   hb_retni( adsConnectHandle );
+}

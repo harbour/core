@@ -1,3 +1,11 @@
+2001-07-09 12:58 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * contrib/rdd_ads/ads1.c
+     * adsOrderInfo() fixed - before it returned info for current order only in
+       many cases.
+     * Few fixes, related to adt support
+   * contrib/rdd_ads/adsfunc.c
+     * some fixes, related to SQL support
+
 2001-07-06 11:40 GMT +1 Ignacio Ortiz <ignacio@ozs.com>
    * source/rtl/mlcount.c
       * fix for tab character expansion buglet
