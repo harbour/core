@@ -1501,7 +1501,7 @@ static ERRCODE adsOrderListFocus( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
          if( ulLen > ADS_MAX_TAG_NAME )
             ulLen = ADS_MAX_TAG_NAME;
 
-         strncpy( pucTagName, pSrc, ulLen);
+         strncpy( ( char * ) pucTagName, pSrc, ulLen);
          pucTagName[ulLen] = '\0';
 
          ulRetVal = AdsGetIndexHandle( pArea->hTable,
