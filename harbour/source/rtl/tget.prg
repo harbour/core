@@ -439,6 +439,9 @@ METHOD VarPut( xValue ) CLASS Get
 
    if ::block != nil
       Eval( ::block, xValue )
+      ::Type     := ValType( xValue )
+      ::nDispLen := NIL
+      ::Picture( ::cPicture )
    endif
 
 return xValue
