@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-07 11:05 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * harbour/source/debug/debugger.prg
+     * Changed constructor sequence
+     * Alt-X support
+     * Colors editing fix
+
 2002-07-07 10:35 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * harbour/source/debug/debugger.prg
      * Changes implemented by Davor Siklic
