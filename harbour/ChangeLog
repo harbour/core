@@ -1,3 +1,20 @@
+2001-06-26 20:45 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
+   * /contrib/libct/atadjust.c
+                    atrepl.c
+                    charevod.c
+                    charlist.c
+                    charmirr.c
+                    charmix.c
+                    charone.c
+                    charonly.c
+                    charop.c
+                    charrepl.c
+                    charsort.c
+                    charswap.c
+                    token1.c
+                    wordrepl.c
+     * Added a number of casts to quiet down msvc.
+
 2001-06-26 20:45 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * /include/hbver.h
      * Changed build number to 0.37, build month and day
