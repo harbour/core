@@ -1,3 +1,7 @@
+19990721-18:39 GMT+1 Paul Tucker / Bruno Cantero <bruno@issnet.net>
+  * source/compiler/harbour.y
+    Added support for empty arguments in functions.
+
 19990721-15:50 CET Eddie Runia <eddie@runia.com>
   * source/rtl/classes.c; source/rtl/transfrm.c
     Clean-up of source

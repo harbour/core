@@ -621,6 +621,7 @@ ArgList    : ','                               { PushNil(); PushNil(); $$ = 2; }
            | Argument                          { $$ = 1; }
            | ArgList ','                       { PushNil(); $$++; }
            | ArgList ',' Argument              { $$++; }
+           | ','                               { PushNil(); } Argument { $$ = 2; }
            ;
 
 Argument   : Expression                        {}
