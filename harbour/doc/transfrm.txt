@@ -12,6 +12,7 @@ The following functions mean something :
 
 @X      DB after negative numbers
 @(      Quotes around negative numbers
+@)      Quotes around negative numbers without leading spaces
 @B      Left justified
 @C      CR after positive numbers
 @E      Exchange . and , (Not in US/UK manual, does work !)
@@ -19,6 +20,7 @@ The following functions mean something :
 
 New addition :
 @0      Make a zero padded string out of the number.
+@L      Same of previous.
 
 The following templates mean something to numbers :
 9       Digit
