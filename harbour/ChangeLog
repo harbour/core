@@ -1,3 +1,9 @@
+2000-03-02 15:10 GMT-5 David G. Holm <dholm@ sd-llc.com>
+   * compiler/Makefile
+   * macro/Makefile
+     ! Several include files were still using the old names
+       (i.e., they didn't have an "hb" prefix).
+
 20000302-20:44 GMT+1 Victor Szakats <info@szelvesz.hu>
    * contrib/rdd_ads/ads1.c
      ! All direct item accesses changed to Item API calls.

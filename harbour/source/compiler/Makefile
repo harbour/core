@@ -7,9 +7,9 @@ ROOT = ../../
 YACC_SOURCE=harbour.y
 
 YACC_HEADERS=\
-	compiler.h \
+	hbcomp.h \
 	hbsetup.h \
-	pcode.h \
+	hbpcode.h \
 	hbdefs.h \
 	hberrors.h \
 	hbpp.h
