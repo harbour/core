@@ -83,6 +83,8 @@ static void    hb_vmDoInitFunctions( int argc, char * argv[] ); /* executes all 
 static void    hb_vmDoExitFunctions( void ); /* executes all defined PRGs EXIT functions */
 static void    hb_vmReleaseLocalSymbols( void );  /* releases the memory of the local symbols linked list */
 
+static void    hb_vmDebuggerShowLine( WORD wLine ); /* makes the debugger shows a specific source code line */
+
 #ifdef HARBOUR_OBJ_GENERATION
 static void    hb_vmProcessObjSymbols ( void ); /* process Harbour generated OBJ symbols */
 
@@ -104,6 +106,8 @@ static void hb_vmForceLink( void );
 /* virtual machine state */
 
 BOOL     bHB_DEBUG = FALSE;  /* if TRUE traces the virtual machine activity */
+BOOL     bDebugging = FALSE; /* TRUE if we are running a /b compiled module */
+BOOL     bDebugShowLines = FALSE; /* update source code line on the debugger display */
 STACK    stack;
 HB_SYMB  symEval = { "__EVAL", FS_PUBLIC, hb_vmDoBlock, 0 }; /* symbol to evaluate codeblocks */
 PHB_SYMB pSymStart;        /* start symbol of the application. MAIN() is not required */
@@ -374,6 +378,8 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_LINE:
               stack.pBase->item.asSymbol.lineno = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+              if( bDebugShowLines )
+                 hb_vmDebuggerShowLine( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
               w += 3;
               break;
 
@@ -757,6 +763,16 @@ void hb_vmArrayPut( void )
    hb_itemCopy( pArray, pValue );  /* places pValue at pArray position */
    hb_stackPop();
    hb_stackPop();
+}
+
+static void hb_vmDebuggerShowLine( WORD wLine ) /* makes the debugger shows a specific source code line */
+{
+   bDebugShowLines = FALSE;
+   hb_vmPushSymbol( hb_dynsymFind( "DEBUGGER" )->pSymbol );
+   hb_vmPushNil();
+   hb_vmPushInteger( wLine );
+   hb_vmDo( 1 );
+   bDebugShowLines = TRUE;
 }
 
 void hb_vmDec( void )
@@ -1448,10 +1464,13 @@ void hb_vmMinus( void )
 
 void hb_vmModuleName( char * szModuleName ) /* PRG and function name information for the debugger */
 {
+   bDebugging = TRUE;
+   bDebugShowLines = FALSE;
    hb_vmPushSymbol( hb_dynsymFind( "DEBUGGER" )->pSymbol );
    hb_vmPushNil();
    hb_vmPushString( szModuleName, strlen( szModuleName ) );
    hb_vmDo( 1 );
+   bDebugShowLines = TRUE;
 }
 
 void hb_vmModulus( void )
