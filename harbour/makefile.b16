@@ -12,7 +12,7 @@
 PROJECT: harbour.lib libs\b16\terminal.lib libs\win16\terminal.lib harbour.exe
 
 harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj dates.obj datesx.obj \
-              debug.obj descend.obj dynsym.obj environ.obj error.obj \
+              debug.obj descend.obj devoutp.obj dynsym.obj environ.obj error.obj \
               errorapi.obj errorsys.obj extend.obj files.obj \
               hardcr.obj initsymb.obj itemapi.obj math.obj \
               mathx.obj mtran.obj objfunc.obj set.obj stringp.obj strings.obj \
@@ -36,6 +36,7 @@ dates.obj    : dates.c    extend.h hbdefs.h
 datesx.obj   : datesx.c   extend.h hbdefs.h
 debug.obj    : debug.c    extend.h hbdefs.h
 descend.obj  : descend.c  extend.h hbdefs.h
+devoutp.obj  : devoutp.c  extend.h hbdefs.h
 dynsym.obj   : dynsym.c   extend.h hbdefs.h
 environ.obj  : environ.c  extend.h hbdefs.h
 error.obj    : error.c    extend.h hbdefs.h
@@ -59,6 +60,7 @@ tclass.obj   : tclass.c   extend.h hbdefs.h
 transfrm.obj : transfrm.c extend.h hbdefs.h
 
 asort.c      : asort.prg     harbour.exe
+devout.c     : devout.prg    harbour.exe
 error.c      : error.prg     harbour.exe
 errorsys.c   : errorsys.prg  harbour.exe
 objfunc.c    : objfunc.prg   harbour.exe

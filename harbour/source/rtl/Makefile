@@ -12,6 +12,7 @@ C_SOURCES=\
 	copyfile.c \
 	dates.c \
 	descend.c \
+	devoutp.c \
 	dir.c \
 	environ.c \
 	errorapi.c \
@@ -31,6 +32,7 @@ C_SOURCES=\
 
 PRG_SOURCES=\
 	asort.prg \
+	devoutp.prg \
 	error.prg \
 	errorsys.prg \
 	objfunc.prg \

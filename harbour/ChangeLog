@@ -1,3 +1,40 @@
+19990704-23:45 EDT David G. Holm <dholm@jsd-llc.com>
+  * makefile.b16
+    + Added devoutp
+  * makefile.b31
+    + Added devoutp
+  * makefile.b32
+    + Added devoutp
+  * makefile.icc
+    + Added devoutp
+  * makefile.vc
+    + Added devoutp
+    + Added commands to compile .prg to .c
+  * include/dates.h
+    + Added date format parameter to hb_dtoc()
+  * source/rtl/Makefile
+    + Added devoutp
+  * source/rtl/console.c
+    ! Corrected non-GT API version of DISPBOX() to also draw lines
+    + Added date format parameter to call to hb_dtoc()
+  * source/rtl/dates.c
+    + Added date format parameter to hb_dtoc() instead of always
+      using hb_set.HB_SET_DATEFORMAT, so that TRANSFORM() can use it
+    + Added hb_set.HB_SET_DATEFORMAT as parameter in call to hb_dtoc()
+  + source/rtl/devoutp.prg
+    + New module for HARBOUR DEVOUTPICT(<xExp>,<cPict>,[<cColor>])
+  * source/rtl/gtapi.c
+    ! Corrected hb_gtBox to also draw lines
+  * source/rtl/strings.c
+    + Added hb_set.HB_SET_DATEFORMAT as parameter in call to hb_dtoc()
+  * source/rtl/transfrm.c
+    ! Corrected date transformation to call hb_dtoc() with either
+    hb_set.HB_SET_DATEFORMAT, the 2-digit year british date format,
+    or the 4-digit year british date format (depending upon the use
+    of the format function "@E" and the setting for SET CENTURY
+  + tests/working/say.prg
+    + Demonstrates DEVPICT() by use of @ ... SAY ... PICTURE ...
+
 19990704-18:50 EDT David G. Holm <dholm@jsd-llc.com>
   * include/ctoharb.h
     * Converted length parameter in PushString to ULONG

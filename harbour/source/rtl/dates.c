@@ -208,26 +208,27 @@ HARBOUR HB_CTOD( void )
    hb_retds( szDateFormat );
 }
 
-char * hb_dtoc (char * szDate, char * szDateFormat)
+char * hb_dtoc (const char * szDate, char * szFormattedDate, const char * szDateFormat)
 {
    /*
-    * NOTE: szDateFormat must point to a buffer of at least 11 bytes
-     */
+    * NOTE: szFormattedDate must point to a buffer of at least 11 bytes.
+    *       szDateFormat must point to a buffer holding the date format to use.
+    */
    int digit, digit_count, format_count, size;
    BOOL used_d, used_m, used_y;
-   char *szPtr;
+   const char *szPtr;
 
    /*
-     * Determine the maximum size of the formatted date string
-     */
-   size = strlen (hb_set.HB_SET_DATEFORMAT);
+    * Determine the maximum size of the formatted date string
+    */
+   size = strlen (szDateFormat);
    if (size > 10) size = 10;
 
-   if( szDate && szDateFormat && strlen( szDate ) == 8 ) /* A valid date is always 8 characters */
+   if( szDate && szFormattedDate && strlen( szDate ) == 8 ) /* A valid date is always 8 characters */
    {
       format_count = 0;
       used_d = used_m = used_y = FALSE;
-      szPtr = hb_set.HB_SET_DATEFORMAT;
+      szPtr = szDateFormat;
       while (format_count < size)
       {
          digit = toupper (*szPtr);
@@ -246,28 +247,28 @@ char * hb_dtoc (char * szDate, char * szDateFormat)
                   case 4:
                      if (!used_d && format_count < size)
                      {
-                        szDateFormat [format_count++] = '0';
+                        szFormattedDate [format_count++] = '0';
                         digit_count--;
                      }
                   case 3:
                      if (!used_d && format_count < size)
                      {
-                        szDateFormat [format_count++] = '0';
+                        szFormattedDate [format_count++] = '0';
                         digit_count--;
                      }
                   case 2:
                      if (!used_d && format_count < size)
                      {
-                        szDateFormat [format_count++] = szDate [6];
+                        szFormattedDate [format_count++] = szDate [6];
                         digit_count--;
                      }
                   default:
                      if (!used_d && format_count < size)
                      {
-                        szDateFormat [format_count++] = szDate [7];
+                        szFormattedDate [format_count++] = szDate [7];
                         digit_count--;
                      }
-                     while (digit_count-- > 0 && format_count < size) szDateFormat [format_count++] = digit;
+                     while (digit_count-- > 0 && format_count < size) szFormattedDate [format_count++] = digit;
                }
                used_d = TRUE;
                break;
@@ -277,28 +278,28 @@ char * hb_dtoc (char * szDate, char * szDateFormat)
                   case 4:
                      if (!used_m && format_count < size)
                      {
-                        szDateFormat [format_count++] = '0';
+                        szFormattedDate [format_count++] = '0';
                         digit_count--;
                      }
                   case 3:
                      if (!used_m && format_count < size)
                      {
-                        szDateFormat [format_count++] = '0';
+                        szFormattedDate [format_count++] = '0';
                         digit_count--;
                      }
                   case 2:
                      if (!used_m && format_count < size)
                      {
-                        szDateFormat [format_count++] = szDate [4];
+                        szFormattedDate [format_count++] = szDate [4];
                         digit_count--;
                      }
                   default:
                      if (!used_m && format_count < size)
                      {
-                        szDateFormat [format_count++] = szDate [5];
+                        szFormattedDate [format_count++] = szDate [5];
                         digit_count--;
                      }
-                     while (digit_count-- > 0 && format_count < size) szDateFormat [format_count++] = digit;
+                     while (digit_count-- > 0 && format_count < size) szFormattedDate [format_count++] = digit;
                }
                used_m = TRUE;
                break;
@@ -308,33 +309,33 @@ char * hb_dtoc (char * szDate, char * szDateFormat)
                   case 4:
                      if (!used_y && format_count < size)
                      {
-                        szDateFormat [format_count++] = szDate [0];
+                        szFormattedDate [format_count++] = szDate [0];
                         digit_count--;
                      }
                   case 3:
                      if (!used_y && format_count < size)
                      {
-                        szDateFormat [format_count++] = szDate [1];
+                        szFormattedDate [format_count++] = szDate [1];
                         digit_count--;
                      }
                   case 2:
                      if (!used_y && format_count < size)
                      {
-                        szDateFormat [format_count++] = szDate [2];
+                        szFormattedDate [format_count++] = szDate [2];
                         digit_count--;
                      }
                   default:
                      if (!used_y && format_count < size)
                      {
-                        szDateFormat [format_count++] = szDate [3];
+                        szFormattedDate [format_count++] = szDate [3];
                         digit_count--;
                      }
-                     while (digit_count-- > 0 && format_count < size) szDateFormat [format_count++] = digit;
+                     while (digit_count-- > 0 && format_count < size) szFormattedDate [format_count++] = digit;
                }
                used_y = TRUE;
                break;
             default:
-               while (digit_count-- > 0 && format_count < size) szDateFormat [format_count++] = digit;
+               while (digit_count-- > 0 && format_count < size) szFormattedDate [format_count++] = digit;
          }
       }
    }
@@ -342,9 +343,9 @@ char * hb_dtoc (char * szDate, char * szDateFormat)
    {
       /* Not a valid date string, so return a blank date with separators */
       format_count = size; /* size is either 8 or 10 */
-      strncpy( szDateFormat, hb_set.HB_SET_DATEFORMAT, size );
+      strncpy( szFormattedDate, szDateFormat, size );
       for (digit_count = 0; digit_count < size; digit_count++)
-         switch (szDateFormat [digit_count])
+         switch (szFormattedDate [digit_count])
          {
             case 'D':
             case 'd':
@@ -352,18 +353,18 @@ char * hb_dtoc (char * szDate, char * szDateFormat)
             case 'm':
             case 'Y':
             case 'y':
-               szDateFormat [digit_count] = ' ';
+               szFormattedDate [digit_count] = ' ';
          }
    }
-   szDateFormat [format_count] = 0;
-   return (szDateFormat);
+   szFormattedDate [format_count] = 0;
+   return (szFormattedDate);
 }
 
 HARBOUR HB_DTOC( void )
 {
    char * szDate = hb_pards( 1 );
-   char szDateFormat[ 11 ];
-   hb_retc( hb_dtoc (szDate, szDateFormat) );
+   char szFormatted[ 11 ];
+   hb_retc( hb_dtoc( szDate, szFormatted, hb_set.HB_SET_DATEFORMAT ) );
 }
 
 /* QUESTION: Should we drop error checkings to make it faster ? */

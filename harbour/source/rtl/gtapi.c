@@ -35,7 +35,7 @@ int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
 
     USHORT uiRow = uiTop;
     USHORT uiCol = uiLeft;
-    USHORT tmp;
+    USHORT height, width, tmp;
 
     if (uiTop > hb_gtMaxRow() || uiBottom > hb_gtMaxRow() ||
        uiLeft > hb_gtMaxCol() || uiRight > hb_gtMaxCol() ||
@@ -50,42 +50,62 @@ int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
     for (tmp = 0; *pbyFrame && tmp < 9; tmp++) cPadChar = pszBox[tmp] = *pbyFrame++;
     while (tmp < 8) pszBox[tmp++] = cPadChar;
     pszBox[tmp] = '\0';
-
-    hb_gtDispBegin();
-
-    hb_gtWriteAt(uiRow, uiCol, pszBox + 0, sizeof(BYTE));
-    hb_gtWriteAt(uiRow, uiRight, pszBox + 2, sizeof(BYTE));
-    hb_gtWriteAt(uiBottom, uiCol, pszBox + 6, sizeof(BYTE));
-    hb_gtWriteAt(uiBottom, uiRight, pszBox + 4, sizeof(BYTE));
-
-    for (tmp = uiCol + 1; tmp < uiRight; tmp++)
+    
+    /* Ensure that box is drawn from top left to bottom right. */
+    if( uiTop > uiBottom )
     {
-        hb_gtWriteAt(uiRow, tmp, pszBox + 1, sizeof(BYTE));
-        hb_gtWriteAt(uiBottom, tmp, pszBox + 5, sizeof(BYTE));
+       tmp = uiTop;
+       uiTop = uiBottom;
+       uiBottom = tmp;
+    }
+    if( uiLeft > uiRight )
+    {
+       tmp = uiLeft;
+       uiLeft = uiRight;
+       uiRight = tmp;
     }
 
-    if (pszBox[8])
+    /* Draw the box or line as specified */
+    height = uiBottom - uiTop + 1;
+    width  = uiRight - uiLeft + 1;
+    hb_gtDispBegin();
+
+    if( height > 1 && width > 1 )
     {
-        for (++uiRow; uiRow < uiBottom; uiRow++)
+       hb_gtWriteAt(uiRow, uiCol, pszBox + 0, sizeof(BYTE));
+       hb_gtWriteAt(uiRow, uiRight, pszBox + 2, sizeof(BYTE));
+       hb_gtWriteAt(uiBottom, uiCol, pszBox + 6, sizeof(BYTE));
+       hb_gtWriteAt(uiBottom, uiRight, pszBox + 4, sizeof(BYTE));
+    }
+
+    for (uiCol = (height > 1 ? uiLeft + 1 : uiLeft); uiCol < (height > 1 ? uiRight : uiRight + 1 ); uiCol++)
+    {
+        hb_gtWriteAt(uiRow, uiCol, pszBox + 1, sizeof(BYTE));
+        if( height > 1 ) hb_gtWriteAt(uiBottom, uiCol, pszBox + 5, sizeof(BYTE));
+    }
+
+    if( pszBox[8] && height > 2 && width > 2 )
+    {
+        for (uiRow = uiTop + 1; uiRow < uiBottom; uiRow++)
         {
-            tmp = uiCol;
-            hb_gtWriteAt(uiRow, tmp++, pszBox + 7, sizeof(BYTE));
-            while (tmp < uiRight) hb_gtWriteAt(uiRow, tmp++, pszBox + 8, sizeof(BYTE));
-            hb_gtWriteAt(uiRow, tmp, pszBox + 3, sizeof(BYTE));
+            uiCol = uiLeft;
+            hb_gtWriteAt(uiRow, uiCol++, pszBox + 7, sizeof(BYTE));
+            while (uiCol < uiRight) hb_gtWriteAt(uiRow, uiCol++, pszBox + 8, sizeof(BYTE));
+            hb_gtWriteAt(uiRow, uiCol, pszBox + 3, sizeof(BYTE));
         }
     }
     else
     {
-        for (++uiRow; uiRow < uiBottom; uiRow++)
+        for( uiRow = (width > 1 ? uiTop + 1 : uiTop); uiRow < (width > 1 ? uiBottom : uiBottom + 1); uiRow++ )
         {
-            hb_gtWriteAt(uiRow, uiCol, pszBox + 7, sizeof(BYTE));
-            hb_gtWriteAt(uiRow, uiRight, pszBox + 3, sizeof(BYTE));
+            hb_gtWriteAt(uiRow, uiLeft, pszBox + 7, sizeof(BYTE));
+            if( width > 1 ) hb_gtWriteAt(uiRow, uiRight, pszBox + 3, sizeof(BYTE));
         }
     }
 
     hb_gtDispEnd();
 
-    hb_gtSetPos(uiTop + 1, uiLeft + 1);
+    hb_gtSetPos(uiBottom + 1, uiRight + 1);
 
     return 0;
 }

@@ -32,7 +32,7 @@ void StackPop( void );                          /* TOFIX: Should go away    */
 
 #define PF_LEFT    0x0001   /* @B */
 #define PF_CREDIT  0x0002   /* @C */
-#define PF_DEBIT   0x0004   /* @D */
+#define PF_DEBIT   0x0004   /* @X */
 #define PF_ZERO    0x0008   /* @0 */
 #define PF_PARNEG  0x0010   /* @( */
 #define PF_REMAIN  0x0020   /* @R */
@@ -53,15 +53,12 @@ void StackPop( void );                          /* TOFIX: Should go away    */
 #define DF_YMD 2
 #define DF_EOT 3                                /* End of table for Century */
 
-BYTE bCentury     = DF_CENTURY;                 /* Century on               */
-
 /* Multiplication factors for different formats. */
 
 long lFactDay  [] = { 10000,   100,     1, 1000000,   10000,       1 };
 long lFactMonth[] = {   100, 10000,   100,   10000, 1000000,     100 };
 long lFactYear [] = {     1,     1, 10000,       1,       1,   10000 };
 
-char *szDatePict   =   "DD/MM/YYYY";               /* TODO:Drop SET DATE    */
 char *szBritish[]  = { "DD/MM/YY", "DD/MM/YYYY" }; /* For @E                */
 
 /*
@@ -125,8 +122,6 @@ int PictFunc( char **szPict, long *lPicLen )
 
 /*
     NumPicture -> Handle a numeric picture.
-
-    This function is ALSO called by DatePicture.
 
     szPic       : Picture
     lPic        : Length of picture
@@ -339,97 +334,20 @@ PHB_ITEM NumDefault( double dValue )
 /*
     DatePicture -> Handle dates.
 
-    lDate       : Date to handle
+    szDate      : Date to handle
     iPicFlags   : Function flags
+    szResult    : Buffer of at least size 11 to hold formatted date
     lRetSize    : The size of the returned string is passed here !
 */
-char *DatePicture( long lDate, int iPicFlags, long *lRetSize )
+char *DatePicture( char * szDate, int iPicFlags, char * szResult, long *lRetSize )
 {
-   BYTE  bFormat;
-
-   int   n;
-   int   iLenPic;                               /* Length picture           */
-
-   char *szDateFormat;                          /* Date format to be used   */
-   char *szIntPicture;                          /* Internal picture used    */
-   char *szResult;
-   char  c;
-
-   long  lDay;
-   long  lMonth;
-   long  lYear;
-
-   double dIn;
-
+   char * szDateFormat;
    if( iPicFlags & PF_BRITISH )
    {
-      bFormat      = DF_DMY;                    /* Just use british         */
-      szDateFormat = szBritish[ bCentury ];
+      szDateFormat = szBritish[ ( hb_set_century ? 1 : 0 ) ];
    }
-   else
-   {
-      szDateFormat = szDatePict;                /* Analyze date format      */
-      c = toupper( *szDateFormat );
-      if( c == 'D' )
-         bFormat = DF_DMY;
-      else if ( c == 'M' )
-         bFormat = DF_MDY;
-      else if ( c == 'Y' )
-         bFormat = DF_YMD;
-      else                                      /* QUESTION: Error ?        */
-         bFormat = DF_DMY;
-   }
-
-   if( lDate <= 0 )                             /* Missing date             */
-   {
-      lDay   = 0;
-      lMonth = 0;
-      lYear  = 0;
-      iPicFlags |= PF_EMPTY;                    /* Suppress empty           */
-   }
-   else
-   {
-      iPicFlags |= PF_ZERO;                     /* Pad with zeros           */
-      hb_dateDecode( lDate, &lDay, &lMonth, &lYear );
-                                                /* Calculate d/m/y          */
-   }
-   iLenPic = strlen( szDateFormat );
-   szIntPicture = (char *) hb_xgrab( iLenPic+1 );
-   for( n = 0; n < iLenPic; n++ )               /* Create internal picture  */
-   {
-      c = toupper(szDateFormat[n]);
-      if( c == 'D' || c == 'M' || c == 'Y' )    /* Change format markers    */
-      {
-         szIntPicture[n] = lDay ? '9' : ' ';    /* Empty date -> No picture */
-      }
-      else
-         szIntPicture[n] = szDateFormat[n];     /* Copy the pattern         */
-   }
-   szIntPicture[n] = 0;                         /* Close the string         */
-
-   iPicFlags |= PF_NUMDATE;                     /* Internal date flag       */
-
-   if( bCentury )
-      bFormat += DF_EOT;                        /* Use the second part      */
-
-/*                                                                          */
-/* Transfer the date to a number. Example :                                 */
-/*                                                                          */
-/*   bFormat == DMY    12/05/1925 => 12051925   d*1M + m*10K + y            */
-/*   bFormat == YMD    1998.05.25 => 19980525   d    + m*100 + y*10K        */
-/*                                                                          */
-
-   dIn  = ( (double) lDay   ) * lFactDay  [ bFormat ];
-   dIn += ( (double) lMonth ) * lFactMonth[ bFormat ];
-   if( iLenPic == 8 )                           /* 2 digit year. Y2K?       */
-      dIn += ( (double) (lYear % 100) ) * lFactYear [ bFormat ];
-   else                                         /* 4 digit year             */
-      dIn += ( (double) lYear ) * lFactYear [ bFormat ];
-
-   szResult = NumPicture( szIntPicture, iLenPic, iPicFlags, dIn, lRetSize );
-                                                /* And give to NumPicture   */
-   hb_xfree( szIntPicture );
-
+   else szDateFormat = hb_set.HB_SET_DATEFORMAT;
+   * lRetSize = strlen( hb_dtoc( szDate, szResult, szDateFormat ) );
    return( szResult );
 }
 
@@ -615,10 +533,10 @@ HARBOUR HB_TRANSFORM( void )
                break;
             }
             case IT_DATE:
-            {                   /* Date is currently British; Century is on */
-               szResult = DatePicture( pExp->item.asDate.value, iPicFlags, &lResultPos );
+            {
+               char szResult[ 11 ];
+               DatePicture( hb_pards( 1 ), iPicFlags, szResult, &lResultPos );
                hb_retclen( szResult, lResultPos );
-               hb_xfree( szResult );
                break;
             }
             default:
@@ -669,9 +587,9 @@ HARBOUR HB_TRANSFORM( void )
          }
          case IT_DATE:
          {
-            szResult = DatePicture( pExp->item.asDate.value, iPicFlags, &lResultPos );
+            char szResult[ 11 ];
+            DatePicture( hb_pards( 1 ), iPicFlags, szResult, &lResultPos );
             hb_retclen( szResult, lResultPos );
-            hb_xfree( szResult );
             break;
          }
          default:

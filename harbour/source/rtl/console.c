@@ -200,7 +200,7 @@ static void hb_out( WORD wParam, hb_out_func_typedef * hb_out_func )
    switch( hb_parinfo( wParam ) )
    {
       case IT_DATE:
-           szText = hb_dtoc( hb_pards( wParam ), szBuffer );
+           szText = hb_dtoc( hb_pards( wParam ), szBuffer, hb_set.HB_SET_DATEFORMAT );
            if( szText )
                  hb_out_func( szText, strlen( szText ) );
            break;
@@ -424,7 +424,7 @@ void hb_setpos( WORD row, WORD col )
    #else
       WORD count;
 
-      if( row < dev_row && col < dev_col )
+      if( row < dev_row || col < dev_col )
       {
          printf("\n");
          dev_col = 0;
@@ -764,7 +764,8 @@ HARBOUR HB_DISPBOX (void)
       char * szBorderStyle = B_SINGLE;
       int i_top = hb_parni( 1 ), i_left = hb_parni( 2 );
       int i_bottom = hb_parni( 3 ), i_right = hb_parni( 4 );
-      WORD top, left, bottom, right, count, size = strlen( B_SINGLE );
+      WORD top, left, bottom, right, size = strlen( B_SINGLE );
+      WORD row, col, width, height;
       char Borders[ 9 ];
 
       /* Set limits on the box coordinates to (0,0) and (max_row(),max_col()) */
@@ -792,6 +793,8 @@ HARBOUR HB_DISPBOX (void)
          right = left;
          left = temp;
       }
+      width = right - left + 1;
+      height = bottom - top + 1;
 
       /* Determine the box style */
       if( ISCHAR( 5 ) )
@@ -839,24 +842,32 @@ HARBOUR HB_DISPBOX (void)
 
       /* Draw the box */
       hb_setpos( top, left );
-      printf( "%c", Borders[ 0 ] );       /* Upper left corner */
-      for( size = left + 1; size < right; size++ )
+      if( height > 1 && width > 1 )
+         printf( "%c", Borders[ 0 ] );    /* Upper left corner */
+      for( col = (height > 1 ? left + 1 : left ); col < (height > 1 ? right : right + 1); col++ )
          printf( "%c", Borders[ 1 ] );    /* Top line */
-      printf( "%c", Borders[ 2 ] );       /* Upper right corner */
-      hb_setpos( top + 1, left );
-      for( count = top + 1; count < bottom; count++ )
+      if( height > 1 && width > 1 )
+         printf( "%c", Borders[ 2 ] );    /* Upper right corner */
+      for( row = (height > 1 ? top + 1 : top); row < (width > 1 ? bottom : bottom + 1); row++ )
       {
-         printf( "%c", Borders[ 3 ] );    /* Left side */
-         for( size = left + 1; size < right; size++ )
+         hb_setpos( row, left );
+         if( height > 1 )
+            printf( "%c", Borders[ 3 ] ); /* Left side */
+         if( height > 1 && width > 1) for( col = left + 1; col < right; col++ )
             printf( "%c", Borders[ 8 ] ); /* Fill */
-         printf( "%c", Borders[ 7 ] );    /* Right side */
-         hb_setpos( count + 1, left );
+         if( height > 1 && width > 1 )
+            printf( "%c", Borders[ 7 ] ); /* Right side */
       }
-      printf( "%c", Borders[ 6 ] );       /* Bottom left corner */
-      for( size = left + 1; size < right; size++ )
-         printf( "%c", Borders[ 5 ] );    /* Bottom line */
-      printf( "%c", Borders[ 4 ] );       /* Bottom right corner */
-      dev_col += (right - left);
+      if( height > 1 && width > 1)
+      {
+         hb_setpos( bottom, left );
+         col = left;
+         printf( "%c", Borders[ 6 ] );    /* Bottom left corner */
+         for( col = left + 1; col < right; col++ )
+            printf( "%c", Borders[ 5 ] ); /* Bottom line */
+         printf( "%c", Borders[ 4 ] );    /* Bottom right corner */
+      }
+      hb_setpos( bottom + 1, right + 1);
    }
 #endif
 }
@@ -902,4 +913,3 @@ HARBOUR HB_NOSNOW (void)
    }
 #endif
 }
-

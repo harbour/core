@@ -52,6 +52,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\codebloc.obj \
     $(OBJ_DIR)\console.obj \
     $(OBJ_DIR)\descend.obj \
+    $(OBJ_DIR)\devoutp.obj \
     $(OBJ_DIR)\dates.obj \
     $(OBJ_DIR)\dir.obj \
     $(OBJ_DIR)\dynsym.obj \
@@ -164,11 +165,23 @@ $(COMPILER_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
 # RTL source depencies below. Add as needed
 #
 
+$(RTL_DIR)\achoice.c : $(RTL_DIR)\achoice.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$@ $**
+
+$(OBJ_DIR)\achoice.obj : $(RTL_DIR)\achoice.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(OBJ_DIR)\arrays.obj : $(RTL_DIR)\arrays.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(RTL_DIR)\asort.c : $(RTL_DIR)\asort.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$@ $**
+
 $(OBJ_DIR)\asort.obj : $(RTL_DIR)\asort.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(RTL_DIR)\classes.c : $(RTL_DIR)\classes.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$@ $**
 
 $(OBJ_DIR)\classes.obj : $(RTL_DIR)\classes.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
@@ -185,6 +198,12 @@ $(OBJ_DIR)\dates.obj : $(RTL_DIR)\dates.c
 $(OBJ_DIR)\descend.obj : $(RTL_DIR)\descend.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(RTL_DIR)\devoutp.c : $(RTL_DIR)\devoutp.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$@ $**
+
+$(OBJ_DIR)\devoutp.obj : $(RTL_DIR)\devoutp.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(OBJ_DIR)\dir.obj : $(RTL_DIR)\dir.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
@@ -194,8 +213,14 @@ $(OBJ_DIR)\environ.obj : $(RTL_DIR)\environ.c
 $(OBJ_DIR)\errorapi.obj : $(RTL_DIR)\errorapi.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(RTL_DIR)\errorsys.c : $(RTL_DIR)\errorsys.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$@ $**
+
 $(OBJ_DIR)\errorsys.obj : $(RTL_DIR)\errorsys.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(RTL_DIR)\error.c : $(RTL_DIR)\error.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$@ $**
 
 $(OBJ_DIR)\error.obj : $(RTL_DIR)\error.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
@@ -224,6 +249,9 @@ $(OBJ_DIR)\msguk.obj : $(RTL_DIR)\natmsg\msguk.c
 $(OBJ_DIR)\mtran.obj : $(RTL_DIR)\mtran.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(RTL_DIR)\objfunc.c : $(RTL_DIR)\objfunc.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$@ $**
+
 $(OBJ_DIR)\objfunc.obj : $(RTL_DIR)\objfunc.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
@@ -236,8 +264,8 @@ $(OBJ_DIR)\strcmp.obj : $(RTL_DIR)\strcmp.c
 $(OBJ_DIR)\strings.obj : $(RTL_DIR)\strings.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\stringp.obj : $(RTL_DIR)\stringp.c
-    $(CC) $(CLIBFLAGS) -Fo$@ $**
+$(RTL_DIR)\tclass.c : $(RTL_DIR)\tclass.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$@ $**
 
 $(OBJ_DIR)\tclass.obj : $(RTL_DIR)\tclass.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
@@ -323,6 +351,12 @@ $(OBJ_DIR)\strdiff.obj : $(TOOLS_DIR)\strdiff.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\strexpan.obj : $(TOOLS_DIR)\strexpan.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(RTL_DIR)\stringp.c : $(RTL_DIR)\stringp.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$@ $**
+
+$(OBJ_DIR)\stringp.obj : $(RTL_DIR)\stringp.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\stringsx.obj : $(TOOLS_DIR)\stringsx.c

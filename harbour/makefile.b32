@@ -13,8 +13,8 @@
 PROJECT: harbour.exe harbour.lib libs\b32\terminal.lib libs\win32\terminal.lib
 
 harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj \
-              dates.obj datesx.obj  \
-              debug.obj descend.obj dir.obj dynsym.obj environ.obj error.obj \
+              dates.obj datesx.obj debug.obj descend.obj devoutp.obj \
+              dir.obj dynsym.obj environ.obj error.obj \
               errorapi.obj errorsys.obj extend.obj files.obj \
               hardcr.obj hb_f.obj initsymb.obj itemapi.obj \
               math.obj mathx.obj msguk.obj mtran.obj objfunc.obj set.obj \
@@ -32,6 +32,7 @@ dates.obj    : dates.c    extend.h hbdefs.h
 datesx.obj   : datesx.c   extend.h hbdefs.h
 debug.obj    : debug.c    extend.h hbdefs.h
 descend.obj  : descend.c  extend.h hbdefs.h
+devout.obj   : devout.c   extend.h hbdefs.h
 dir.obj      : dir.c      extend.h hbdefs.h
 dynsym.obj   : dynsym.c   extend.h hbdefs.h
 environ.obj  : environ.c  extend.h hbdefs.h
@@ -58,6 +59,7 @@ tclass.obj   : tclass.c   extend.h hbdefs.h
 transfrm.obj : transfrm.c extend.h hbdefs.h
 
 asort.c      : asort.prg     harbour.exe
+devoutp.c    : devoutp.prg   harbour.exe
 error.c      : error.prg     harbour.exe
 errorsys.c   : errorsys.prg  harbour.exe
 objfunc.c    : objfunc.prg   harbour.exe

@@ -265,7 +265,7 @@ static char * hb_pad_prep( PHB_ITEM pItem, char * buffer, WORD * pwSize )
    if( pItem ) switch( pItem->type )
    {
       case IT_DATE:
-         szText = hb_dtoc( hb_pards( 1 ), buffer );
+         szText = hb_dtoc( hb_pards( 1 ), buffer, hb_set.HB_SET_DATEFORMAT );
          *pwSize = strlen( szText );
          break;
       case IT_INTEGER:
