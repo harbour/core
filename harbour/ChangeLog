@@ -1,3 +1,8 @@
+20000503-19:25 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/harbour.c
+     * Corrcetd pVars->iUsed = 1 to pVars->iUsed |= 1 in hb_compVariableGetPos() so it won't override -1 value from StrongType()
+
 20000503-22:43 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/filesys.c

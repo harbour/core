@@ -1099,10 +1099,8 @@ USHORT hb_compVariableGetPos( PVAR pVars, char * szVarName ) /* returns the orde
    {
       if( pVars->szName && ! strcmp( pVars->szName, szVarName ) )
       {
-         /* TODO: This is not the best place to push the variable type
-          * in some cases it will be called two times for the same variable
-          */
-         pVars->iUsed = 1;
+         /* Might be set to -1 by StrongType if so leave without change, otherwise set to 1. */
+         pVars->iUsed |= 1;
          return wVar;
       }
       else
