@@ -12,6 +12,7 @@
 function main()
 
    DEVPOS(MAXROW(),0)
+   DispBegin()
    ? "If you have the GT API linked in, the screen will be blanked, a text block"
    ? "will be drawn in the upper-left hand corner of the screen, and then the inside"
    ? "of the text block will be scrolled around. Otherwise, you will see the screen"
@@ -19,6 +20,7 @@ function main()
    ? "up, but there will be no scrolling inside the text block."
    ?
    ?
+   DispEnd()
    Pause()
    CLS
    @ 0,0  SAY "01234567890123456789012345678901"

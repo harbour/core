@@ -1,3 +1,7 @@
+19990802-05:30 EDT Paul Tucker <ptucker@sympatico.ca>
+  * test/working/scroll.prg
+    * added calls to dispbegin/dispend - nice & snappy now!
+
 199908.02-12:15 GMT+3 Alexander Kresin
   * source/hbpp/hbpp.c
     * Bug fixed ( mentioned by Victor Szel )
