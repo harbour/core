@@ -66,12 +66,12 @@ Local owndsets
    local oCol
    if (nsize<maxrow()-2)
       if nRow <> nil
-         owndsets:=TDbWindow():New( GetTopPos(nRow), 11, getBottomPos(nRow+nsize+1), maxcol()-5, ::arrayName+"[1.."+alltrim(str(nsize,4))+"]" ,"N/W" )
+         owndsets:=TDbWindow():New( GetTopPos(nRow), 5, getBottomPos(nRow+nsize+1), maxcol()-5, ::arrayName+"[1.."+alltrim(str(nsize,4))+"]" ,"N/W" )
       else
-         owndsets:=TDbWindow():New( 1, 11, 2+nsize, maxcol()-5, ::arrayName+"[1.."+alltrim(str(nsize,4))+"]"  ,"N/W")
+         owndsets:=TDbWindow():New( 1, 5, 2+nsize, maxcol()-5, ::arrayName+"[1.."+alltrim(str(nsize,4))+"]"  ,"N/W")
       endif
    else
-      owndsets:=TDbWindow():New( 1, 11, maxrow()-2, maxcol()-5, ::arrayName+"[1.."+alltrim(str(nsize,4))+"]"  ,"N/W")
+      owndsets:=TDbWindow():New( 1, 5, maxrow()-2, maxcol()-5, ::arrayName+"[1.."+alltrim(str(nsize,4))+"]"  ,"N/W")
    endif
                   ::nCurWindow++
    oWndSets:lFocused:=.t.
@@ -91,7 +91,7 @@ oBrwSets:=TbrowseNew(owndsets:nTop+1, owndsets:nLeft+1, owndsets:nBottom-1, ownd
    ocol:width:=len(::arrayName+"["+alltrim(str(len(aarray),4))+"]" )
    ocol:ColorBlock :=    { || { iif( n == oBrwSets:Cargo, 2, 1 ), 2 } }
    oBrwSets:Freeze:=1
-   oBrwSets:AddColumn( ocol:=TBColumnNew( "" ,{ || PadR( ValToStr( aArray[ n ] ), nWidth  - 12 ) } ) )
+   oBrwSets:AddColumn( ocol:=TBColumnNew( "" ,{ || PadR( ValToStr( aArray[ n ] ), nWidth - oCol:Width - 1 ) } ) )
    oBrwSets:Cargo := 1 // Actual highligthed row
    ocol:ColorBlock := { || { iif( n == oBrwSets:Cargo, 3, 1 ), 3 } }
    oBrwsets:colpos:=2
