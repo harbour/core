@@ -9,6 +9,7 @@ C_SOURCES=\
 	cdpelwin.c    \
 	cdpesdos.c    \
 	cdpeswin.c    \
+	cdpesmwi.c    \
 	cdpgedos.c    \
 	cdpgewin.c    \
 	cdphu852.c    \

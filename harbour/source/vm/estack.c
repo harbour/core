@@ -274,6 +274,14 @@ HB_ITEM_PTR hb_stackSelfItem( void )
    return * ( hb_stack.pBase + 1 );
 }
 
+#undef hb_stackReturnItem
+HB_ITEM_PTR hb_stackReturnItem( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_stackReturnItem()"));
+
+   return &hb_stack.Return;
+}
+
 #undef hb_stackTopOffset
 LONG hb_stackTopOffset( void )
 {

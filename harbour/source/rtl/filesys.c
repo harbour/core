@@ -398,7 +398,7 @@ static int convert_open_flags( USHORT uiFlags )
 
 static unsigned convert_pmode_flags( USHORT uiFlags )
 {
-   unsigned result_pmode = 0;
+   unsigned result_pmode;
 
    HB_TRACE(HB_TR_DEBUG, ("convert_pmode_flags(%hu)", uiFlags));
 

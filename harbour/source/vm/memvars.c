@@ -289,6 +289,9 @@ static void hb_memvarAddPrivate( PHB_DYNS pDynSym )
 ULONG hb_memvarGetPrivatesBase( void )
 {
    ULONG ulBase = s_privateStackBase;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarGetPrivatesBase()"));
+
    s_privateStackBase = s_privateStackCnt;
    return ulBase;
 }
@@ -349,6 +352,7 @@ static void hb_memvarRecycle( HB_HANDLE hValue )
       s_globalTable[ hValue ].hPrevMemvar = 0;
    }      
 }
+
 /*
  * This function decreases the number of references to passed global value.
  * If it is the last reference then this value is deleted.
@@ -396,6 +400,14 @@ void hb_memvarValueDecGarbageRef( HB_HANDLE hValue )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarValueDecRef(%lu)", hValue));
 
+   /* Might be called from hb_gcAll() after hb_memvarsRelease()
+    * if HB_FM_STATISTICS defined.
+    */
+   if( s_globalTable == NULL )
+   {
+      return;
+   }
+
    pValue = s_globalTable + hValue;
 
    HB_TRACE(HB_TR_INFO, ("Memvar item (%i) decrement refCounter=%li", hValue, pValue->counter-1));
@@ -412,7 +424,7 @@ void hb_memvarValueDecGarbageRef( HB_HANDLE hValue )
       if( --pValue->counter == 0 )
       {
          if( HB_IS_STRING( pValue->pVarItem ) )
-             hb_itemClear( pValue->pVarItem );
+            hb_itemClear( pValue->pVarItem );
          hb_xfree( pValue->pVarItem );
          hb_memvarRecycle( hValue );
 
@@ -455,6 +467,8 @@ void hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem )
           */
          hb_memvarCreateFromDynSymbol( pDyn, VS_PRIVATE, pItem );
       }
+
+      /* Remove MEMOFLAG if exists (assignment from field). */
       s_globalTable[ pDyn->hMemvar ].pVarItem->type &= ~HB_IT_MEMOFLAG;
    }
    else

@@ -78,9 +78,6 @@
 #endif
 
 #define __PRG_SOURCE__ __FILE__
-#ifndef __XHARBOUR__
-   #define HB_VM_STACK hb_stack
-#endif
 #ifdef HB_PCODE_VER
    #undef HB_PRG_PCODE_VER
    #define HB_PRG_PCODE_VER HB_PCODE_VER
@@ -742,7 +739,7 @@ static LPCDXKEY hb_cdxKeyEval( LPCDXKEY pKey, LPCDXTAG pTag, BOOL fSetWA )
       hb_vmPushSymbol( &hb_symEval );
       hb_vmPush( pTag->pKeyItem );
       hb_vmSend( 0 );
-      pKey = hb_cdxKeyPutItem( pKey, &(HB_VM_STACK.Return), pArea->ulRecNo, pTag, FALSE, TRUE );
+      pKey = hb_cdxKeyPutItem( pKey, hb_stackReturnItem(), pArea->ulRecNo, pTag, FALSE, TRUE );
    }
    else
    {
@@ -806,7 +803,7 @@ static BOOL hb_cdxEvalCond( CDXAREAP pArea, PHB_ITEM pCondItem, BOOL fSetWA )
       hb_vmPushSymbol( &hb_symEval );
       hb_vmPush( pCondItem );
       hb_vmSend( 0 );
-      fRet = hb_itemGetL( &(HB_VM_STACK.Return) );
+      fRet = hb_itemGetL( hb_stackReturnItem() );
    }
    else
    {
@@ -841,7 +838,7 @@ static BOOL hb_cdxEvalSeekCond( LPCDXTAG pTag, PHB_ITEM pCondItem )
    hb_vmPush( &ItemKey );
    hb_vmPushLong( ( LONG ) pTag->CurKey->rec );
    hb_vmDo( 2 );
-   fRet = hb_itemGetL( &(HB_VM_STACK.Return) );
+   fRet = hb_itemGetL( hb_stackReturnItem() );
 
    hb_itemClear( &ItemKey );
 
@@ -7589,7 +7586,7 @@ static ERRCODE hb_cdxSetScope( CDXAREAP pArea, LPDBORDSCOPEINFO sInfo )
             hb_vmPushSymbol( &hb_symEval );
             hb_vmPush( sInfo->scopeValue );
             hb_vmSend( 0 );
-            type = HB_VM_STACK.Return.type;
+            type = hb_stackReturnItem()->type;
             fCB = TRUE;
          }
 
@@ -7629,7 +7626,7 @@ static ERRCODE hb_cdxSetScope( CDXAREAP pArea, LPDBORDSCOPEINFO sInfo )
                *pScope = hb_itemNew( NULL );
             hb_itemCopy( *pScope, sInfo->scopeValue );
             *pScopeKey = hb_cdxKeyPutItem( *pScopeKey,
-                           fCB ? &(HB_VM_STACK.Return) : sInfo->scopeValue,
+                           fCB ? hb_stackReturnItem() : sInfo->scopeValue,
                            ulRec, pTag, TRUE, FALSE );
             pTag->curKeyState &= ~( CDX_CURKEY_RAWCNT | CDX_CURKEY_LOGCNT );
             if ( sInfo->nScope == 0 )
@@ -8308,7 +8305,7 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag )
                hb_vmPushSymbol( &hb_symEval );
                hb_vmPush( pTag->pKeyItem );
                hb_vmSend( 0 );
-               hb_itemCopy( pItem, &(HB_VM_STACK.Return) );
+               hb_itemCopy( pItem, hb_stackReturnItem() );
             }
             else
             {

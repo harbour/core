@@ -97,7 +97,7 @@ static USHORT uniCodes[NUMBER_OF_CHARS] = {
 
 HB_UNITABLE hb_uniTbl_437 = { CPID_437, NUMBER_OF_CHARS, FALSE, uniCodes };
 
-static HB_CODEPAGE  s_en_codepage = { "EN",CPID_437,UNITB_437,0,NULL,NULL,0,0,0,0,NULL,NULL,NULL,NULL,0,NULL };
+static HB_CODEPAGE  s_en_codepage = { "EN",CPID_437,UNITB_437,0,NULL,NULL,0,0,0,0,0,NULL,NULL,NULL,NULL,0,NULL };
 static PHB_CODEPAGE s_cdpList[ HB_CDP_MAX_ ];
 PHB_CODEPAGE hb_cdp_page = &s_en_codepage;
 
@@ -266,6 +266,7 @@ BOOL HB_EXPORT hb_cdpRegister( PHB_CODEPAGE cdpage )
                s_cdpList[ iPos ] = cdpage;
 
                cdpage->lSort = FALSE;
+               cdpage->lChClone = FALSE;
                if( cdpage->nChars )
                {
                   int nAddLower = cdpage->nChars + ( (cdpage->lLatin)? 6:0 );
@@ -290,6 +291,7 @@ BOOL HB_EXPORT hb_cdpRegister( PHB_CODEPAGE cdpage )
                   {
                      ptrUpper = cdpage->CharsUpper = hb_strdup(cdpage->CharsUpper);
                      ptrLower = cdpage->CharsLower = hb_strdup(cdpage->CharsLower);
+                     cdpage->lChClone = TRUE;
                   }
                   for( i=1; *ptrUpper; i++,ptrUpper++,ptrLower++ )
                   {
@@ -706,6 +708,11 @@ void HB_EXPORT hb_cdpReleaseAll( void )
          hb_xfree( s_cdpList[ iPos ]->s_accent );
       if( s_cdpList[ iPos ]->multi )
          hb_xfree( s_cdpList[ iPos ]->multi );
+      if( s_cdpList[ iPos ]->lChClone )
+      {
+         hb_xfree( s_cdpList[ iPos ]->CharsUpper );
+         hb_xfree( s_cdpList[ iPos ]->CharsLower );
+      }
       iPos ++;
    }
 }

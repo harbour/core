@@ -4,11 +4,11 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( PLMAZ )
+ * National Collation Support Module ( Spanish Modern WIN )
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
- * Polish collating sequence (PLMAZ) Mazovia done by Jacek Kubica <kubica@wssk.wroc.pl>
+ * Spanish Windows support by Antonio Linares <alinares@fivetechsoft.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,26 +51,26 @@
  *
  */
 
-/* Language name: Polish */
-/* ISO language code (2 chars): PL */
-/* Codepage: Mazovia */
+/* Language name: Spanish (Modern)*/
+/* ISO language code (2 chars): ES */
+/* Codepage: ISO-8859-1 */
 
 #include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-#define NUMBER_OF_CHARACTERS  35    /* The number of single characters in the
+#define NUMBER_OF_CHARACTERS  43    /* The number of single characters in the
                                        alphabet, two-as-one aren't considered
                                        here, accented - are considered. */
 #define IS_LATIN               1    /* Should be 1, if the national alphabet
                                        is based on Latin */
-#define ACCENTED_EQUAL         0    /* Should be 1, if accented character 
+#define ACCENTED_EQUAL         0    /* Should be 1, if accented character
                                        has the same weight as appropriate
                                        unaccented. */
 #define ACCENTED_INTERLEAVED   0    /* Should be 1, if accented characters
                                        sort after their unaccented counterparts
-                                       only if the unaccented versions of all 
-                                       characters being compared are the same 
+                                       only if the unaccented versions of all
+                                       characters being compared are the same
                                        ( interleaving ) */
 
 /* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the
@@ -84,14 +84,15 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "PLMAZ",
-    CPID_MAZ, UNITB_MAZ, NUMBER_OF_CHARACTERS,
-    "AèBCïDEêFGHIJKLúMN•O£PQRSòTUVWXYZ†°",
-    "aÜbcçdeëfghijklímn§o¢pqrsûtuvwxyz¶ß",
+static HB_CODEPAGE s_codepage = { "ESMWIN",
+    CPID_8859_1, UNITB_8859_1, NUMBER_OF_CHARACTERS,
+    "A¡¿ƒBC«DE…»ÀFGHIÕÃœJKLMN—O”“÷PQRSTU⁄Ÿ‹VWXYZ",
+    "a·‡‰bcÁdeÈËÎfghiÌÏÔjklmnÒoÛÚˆpqrstu˙˘¸vwxyz",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( PLMAZ );
+
+HB_CODEPAGE_INIT( ESWIN );
 
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup hb_codepage_Init_PLMAZ
+   #pragma startup hb_codepage_Init_ESWIN
 #endif

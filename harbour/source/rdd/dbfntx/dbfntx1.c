@@ -137,9 +137,6 @@
 
 #define __PRG_SOURCE__ __FILE__
 
-#ifndef __XHARBOUR__
-   #define HB_VM_STACK hb_stack
-#endif
 #ifdef HB_PCODE_VER
    #undef HB_PRG_PCODE_VER
    #define HB_PRG_PCODE_VER HB_PCODE_VER
@@ -381,7 +378,7 @@ static BOOL checkLogicalExpr( PHB_ITEM pForItem, PHB_ITEM pItem )
       hb_vmPushSymbol( &hb_symEval );
       hb_vmPush( pForItem );
       hb_vmSend( 0 );
-      hb_itemCopy( pItem, &(HB_VM_STACK.Return) );
+      hb_itemCopy( pItem, hb_stackReturnItem() );
    }
    else
    {
@@ -638,7 +635,7 @@ static USHORT hb_ntxGetKeyType( LPTAGINFO pTag )
       hb_vmPushSymbol( &hb_symEval );
       hb_vmPush( pTag->pKeyItem );
       hb_vmSend( 0 );
-      return hb_itemType( &(HB_VM_STACK.Return) );
+      return hb_itemType( hb_stackReturnItem() );
    }
    else
    {
@@ -853,7 +850,7 @@ static void hb_ntxGetCurrentKey( LPTAGINFO pTag, LPKEYINFO pKey )
       hb_vmPushSymbol( &hb_symEval );
       hb_vmPush( pTag->pKeyItem );
       hb_vmSend( 0 );
-      pItem = &(HB_VM_STACK.Return);
+      pItem = hb_stackReturnItem();
    }
    else
    {
@@ -2654,7 +2651,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
             hb_vmPushSymbol( &hb_symEval );
             hb_vmPush( pTag->pKeyItem );
             hb_vmSend( 0 );
-            hb_itemCopy( pItem, &(HB_VM_STACK.Return) );
+            hb_itemCopy( pItem, hb_stackReturnItem() );
          }
          else
          {
@@ -2708,7 +2705,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
             hb_vmPushSymbol( &hb_symEval );
             hb_vmPush( pArea->lpdbOrdCondInfo->itmCobEval );
             hb_vmSend( 0 );
-            if( ! hb_itemGetL( &(HB_VM_STACK.Return) ) )
+            if( ! hb_itemGetL( hb_stackReturnItem() ) )
                break;
          }
       }

@@ -8,15 +8,62 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
-2004-12-29 18:24 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
-  * hrbdll.bc
-  * hrbdll.vc
-  * makefile.bc
-  * makefile.nt
-  * makefile.vc
-    ! Added missing/new files from source/codepage/*.c & source/lang/*.c
-  + source/codepage/cdpesmwi.c
-    + Added Spanish Modern codepage
+2004-12-31 12:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapicdp.h
+  * harbour/source/codepage/cdp_tpl.c
+  * harbour/source/codepage/cdpeldos.c
+  * harbour/source/codepage/cdpelwin.c
+  * harbour/source/codepage/cdpesdos.c
+  * harbour/source/codepage/cdpeswin.c
+  * harbour/source/codepage/cdpgedos.c
+  * harbour/source/codepage/cdpgewin.c
+  * harbour/source/codepage/cdphu852.c
+  * harbour/source/codepage/cdphuwin.c
+  * harbour/source/codepage/cdppl852.c
+  * harbour/source/codepage/cdppliso.c
+  * harbour/source/codepage/cdpplmaz.c
+  * harbour/source/codepage/cdpplwin.c
+  * harbour/source/codepage/cdppt850.c
+  * harbour/source/codepage/cdpptiso.c
+  * harbour/source/codepage/cdpru866.c
+  * harbour/source/codepage/cdprukoi.c
+  * harbour/source/codepage/cdpruwin.c
+  * harbour/source/codepage/cdpsl437.c
+  * harbour/source/codepage/cdpsl852.c
+  * harbour/source/codepage/cdpsliso.c
+  * harbour/source/codepage/cdpslwin.c
+  * harbour/source/codepage/cdpsrwin.c
+  * harbour/source/rtl/cdpapi.c
+    * fix memory leak reported for accented and multi byte CPs
+
+  + harbour/source/codepage/cdpesmwi.c
+    * added missing Spanish modern CP
+
+  * harbour/include/hbstack.h
+  * harbour/include/hbapiitm.h
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/itemapi.c
+    + added hb_stackReturnItem()
+    - removed hb_itemReturnPtr()
+
+  * harbour/source/rdd/workarea.c
+    ! fixed possible restoring of scopes in scoped relations after
+      'SET RELATION TO'
+
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/dbfdbt/dbfdbt1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+    * use hb_stackReturnItem() instead of direct stack accessing
+
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+    ! Fixed opening NTX file in ReadOnly mode
+    * use hb_stackReturnItem() instead of direct stack accessing
+
+  * harbour/source/rtl/filesys.c
+    * cleaned unnecessary initialization
+
+  * harbour/source/vm/memvars.c
+    * formatting and small fix for calling GC after hb_memvarsRelease()
 
 2004-12-28 11:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/samples/dbf.c

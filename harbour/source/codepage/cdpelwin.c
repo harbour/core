@@ -86,8 +86,9 @@
 
 static HB_CODEPAGE s_codepage = { "ELWIN",
     CPID_1253, UNITB_1253, NUMBER_OF_CHARACTERS,
-    "ֱ~¢ֲֳִֵ¸ֶַ~¹ָֹ~÷Êֻּֽ־ֿ~¼׀ׁ׃׃װױ~¾ײ׳״Ù~¿","ב~Üגדהו~Ýזח~Þטי~ßךכלםמן~üנסףעפץ~‎צקרש~‏",
-    IS_LATIN,ACCENTED_EQUAL,ACCENTED_INTERLEAVED,0,NULL,NULL,NULL,NULL,0,NULL };
+    "ֱ~¢ֲֳִֵ¸ֶַ~¹ָֹ~÷Êֻּֽ־ֿ~¼׀ׁ׃׃װױ~¾ײ׳״Ù~¿",
+    "ב~Üגדהו~Ýזח~Þטי~ßךכלםמן~üנסףעפץ~‎צקרש~‏",
+    IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
 HB_CODEPAGE_INIT( ELWIN );
 

@@ -127,7 +127,6 @@ extern PHB_ITEM   hb_itemPutNLLLen( PHB_ITEM pItem, LONGLONG lNumber, int iWidth
 /* Non Clipper compliant internal API */
 
 extern PHB_ITEM hb_itemParamPtr ( USHORT uiParam, int iMask );
-extern PHB_ITEM hb_itemReturnPtr( void );
 extern int      hb_itemStrCmp   ( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact ); /* our string compare */
 extern void     hb_itemCopy     ( PHB_ITEM pDest, PHB_ITEM pSource ); /* copies an item to one place to another respecting its containts */
 extern void     hb_itemMove     ( PHB_ITEM pDest, PHB_ITEM pSource );

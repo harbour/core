@@ -85,8 +85,9 @@
 
 static HB_CODEPAGE s_codepage = { "EL",
     CPID_737, UNITB_737, NUMBER_OF_CHARACTERS,
-    "А~ъБВГДыЕЖ~ьЗИ~эЙКЛМНО~юПРССТУ~яФХЦЧ~Ё","Ш~сЩЪЫЬ~тЭЮ~уЯа~хбвгдеж~цзийклм~чнопр~щ",
-    IS_LATIN,ACCENTED_EQUAL,ACCENTED_INTERLEAVED,0,NULL,NULL,NULL,NULL,0,NULL };
+    "А~ъБВГДыЕЖ~ьЗИ~эЙКЛМНО~юПРССТУ~яФХЦЧ~Ё",
+    "Ш~сЩЪЫЬ~тЭЮ~уЯа~хбвгдеж~цзийклм~чнопр~щ",
+    IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
 HB_CODEPAGE_INIT( EL );
 

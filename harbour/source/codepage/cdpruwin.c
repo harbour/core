@@ -60,8 +60,9 @@
 
 static HB_CODEPAGE s_codepage = { "RU1251",
     CPID_1251, UNITB_1251, 32,
-    "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞ‗","אבגדהוזחטיךכלםמןנסעףפץצקרשתûü‎‏ÿ",
-    0,0,0,0,NULL,NULL,NULL,NULL,0,NULL };
+    "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞ‗",
+    "אבגדהוזחטיךכלםמןנסעףפץצקרשתûü‎‏ÿ",
+    0,0,0,0,0,NULL,NULL,NULL,NULL,0,NULL };
 
 HB_CODEPAGE_INIT( RU1251 );
 

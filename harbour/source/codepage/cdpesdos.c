@@ -88,16 +88,7 @@ static HB_CODEPAGE s_codepage = { "ES",
    CPID_850, UNITB_850, NUMBER_OF_CHARACTERS,
    "AµBCDEêFGHI÷JKLMN•O‡PQRSTUÈöVWXYZ", 
    "a†bcdeÇfghi°jklmn§o¢pqrstu£Åvwxyz",
-   IS_LATIN, 
-   ACCENTED_EQUAL, 
-   ACCENTED_INTERLEAVED, 
-   0,
-   NULL, 
-   NULL,
-   NULL,
-   NULL,
-   0,
-   NULL };
+   IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
 
 HB_CODEPAGE_INIT( ES );

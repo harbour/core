@@ -820,9 +820,11 @@ ERRCODE hb_waTransRec( AREAP pArea, LPDBTRANSINFO pTransInfo )
 ERRCODE hb_waChildEnd( AREAP pArea, LPDBRELINFO pRelInfo )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_waChildEnd(%p, %p)", pArea, pRelInfo));
-   HB_SYMBOL_UNUSED( pRelInfo );
 
-   pArea->uiParents --;
+   if ( pRelInfo->isScoped )
+      SELF_CLEARSCOPE( pArea );
+
+   pArea->uiParents--;
    return SUCCESS;
 }
 
@@ -874,8 +876,6 @@ ERRCODE hb_waClearRel( AREAP pArea )
    while( lpdbRelation )
    {
       hb_rddSelectWorkAreaNumber( lpdbRelation->lpaChild->uiArea );
-      if ( lpdbRelation->isScoped )
-         SELF_CLEARSCOPE( lpdbRelation->lpaChild );
       SELF_CHILDEND( lpdbRelation->lpaChild, lpdbRelation );
       hb_rddSelectWorkAreaNumber( iCurrArea );
 

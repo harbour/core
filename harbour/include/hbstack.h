@@ -99,6 +99,7 @@ typedef struct
 #define hb_stackBaseItem( )         ( * hb_stack.pBase )
 #define hb_stackSelfItem( )         ( * ( hb_stack.pBase + 1 ) )
 #define hb_stackItem( iItemPos )    ( * ( hb_stack.pItems + iItemPos ) )
+#define hb_stackReturnItem( )       ( &hb_stack.Return )
 
 
 #define hb_stackDec( )              do { \
@@ -131,7 +132,7 @@ extern HB_ITEM_PTR hb_stackTopItem( void );
 extern HB_ITEM_PTR hb_stackBaseItem( void );
 extern HB_ITEM_PTR hb_stackSelfItem( void );
 extern HB_ITEM_PTR hb_stackItem( LONG iItemPos );
-
+extern HB_ITEM_PTR hb_stackReturnItem( void );
 
 extern void        hb_stackDec( void );        /* pops an item from the stack without clearing it's contents */
 extern void        hb_stackPop( void );        /* pops an item from the stack */

@@ -102,6 +102,7 @@ typedef struct _HB_CODEPAGE
    BOOL           lAccEqual;
    BOOL           lAccInterleave;
    BOOL           lSort;
+   BOOL           lChClone;
    BYTE *         s_chars;
    BYTE *         s_upper;
    BYTE *         s_lower;

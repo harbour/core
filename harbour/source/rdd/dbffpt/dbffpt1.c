@@ -75,9 +75,6 @@
 #endif
 
 #define __PRG_SOURCE__ __FILE__
-#ifndef __XHARBOUR__
-#  define HB_VM_STACK hb_stack
-#endif
 #ifdef HB_PCODE_VER
 #  undef HB_PRG_PCODE_VER
 #  define HB_PRG_PCODE_VER HB_PCODE_VER

@@ -617,15 +617,6 @@ PHB_ITEM HB_EXPORT hb_itemReturn( PHB_ITEM pItem )
    return pItem;
 }
 
-/* Internal Item API. Use this with care. */
-
-PHB_ITEM HB_EXPORT hb_itemReturnPtr( void )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemReturnPtr()"));
-
-   return &hb_stack.Return;
-}
-
 PHB_ITEM HB_EXPORT hb_itemPutDS( PHB_ITEM pItem, char * szDate )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutDS(%p, %s)", pItem, szDate));
