@@ -1,3 +1,11 @@
+19990606-15:20 CET Eddie Runia
+  * source/compiler/harbour.y
+    - <object>:<data> <assignment> <value> is now functioning !
+      where <assignment> is +=, -=, *=, /=, %=, ^=
+      and increment / decrement for <object>:<data>
+  + tests/working/objasign.prg
+    test program used
+
 19990606-13:50 CET Eddie Runia
   * source/rtl/errorapi.c
     _ErrNew()     stack.Return itself was returned instead of a copy.

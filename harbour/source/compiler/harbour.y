@@ -3,11 +3,11 @@
  * $Id$
  *
  * Harbour compiler (yacc rules and actions)
- * Build 25
+ * Build 21 proposal: spring 1999
  * Usage: bison -d -v harbour.y  You may find Bison at www.harbour.project.org
  */
 
-#define BUILD         25    /* current harbour.y build */
+#define BUILD         21    /* current harbour.y build */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -180,6 +180,7 @@ void Line( void );                      /* generates the pcode with the currentl
 void LineBody( void );                  /* generates the pcode with the currently compiled source code line */
 void Message( char * szMsgName );       /* sends a message to an object */
 void MessageFix( char * szMsgName );    /* fix a generated message to an object */
+void MessageDupl( char * szMsgName );   /* fix a one generated message to an object and duplicate */
 void PopId( char * szVarName );         /* generates the pcode to pop a value from the virtual machine stack onto a variable */
 void PushDouble( double fNumber, BYTE bDec ); /* Pushes a number on the virtual machine stack */
 void PushId( char * szVarName );        /* generates the pcode to push a variable value to the virtual machine stack */
@@ -436,10 +437,10 @@ PATHNAMES *_pIncludePath = NULL;
 /*the highest precedence*/
 
 %type <string>  IDENTIFIER LITERAL FunStart MethStart IdSend ObjectData
-%type <dNum>    DOUBLE
+%type <dNum>    DOUBLE 
 %type <iNumber> ArgList ElemList ExpList FunCall FunScope IncDec Logical Params ParamList
 %type <iNumber> INTEGER BlockExpList Argument IfBegin VarId VarList MethParams ObjFunCall
-%type <iNumber> MethCall BlockList FieldList
+%type <iNumber> MethCall BlockList FieldList 
 %type <lNumber> INTLONG WhileBegin BlockBegin
 %type <pVoid>   IfElseIf Cases
 
@@ -512,7 +513,7 @@ Statement  : ExecFlow Crlf                             {}
            | IDENTIFIER '=' Expression Crlf            { PopId( $1 ); }
            | VarId ArrayIndex '=' Expression Crlf      { GenPCode1( _ARRAYPUT ); GenPCode1( _POP ); }
            | FunArrayCall '=' Expression Crlf          { GenPCode1( _ARRAYPUT ); GenPCode1( _POP ); }
-           | IdSend IDENTIFIER '=' { Message( SetData( $2 ) ); } Expression Crlf  { Function( 1 ); }
+           | IdSend IDENTIFIER '='      { Message( SetData( $2 ) ); } Expression Crlf  { Function( 1 ); }
            | ObjectData ArrayIndex '=' Expression Crlf    { GenPCode1( _ARRAYPUT ); GenPCode1( _POP ); }
            | ObjectMethod ArrayIndex '=' Expression Crlf  { GenPCode1( _ARRAYPUT ); GenPCode1( _POP ); }
 
@@ -640,8 +641,8 @@ VarUnary   : IDENTIFIER IncDec %prec POST    { PushId( $1 ); Duplicate(); $2 ? I
            | IncDec VarId ArrayIndex %prec PRE  { DupPCode( $2 ); GenPCode1( _ARRAYAT ); $1 ? Inc(): Dec(); GenPCode1( _ARRAYPUT ); }
            | FunArrayCall IncDec %prec POST { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); $2 ? Inc(): Dec(); GenPCode1( _ARRAYPUT ); $2 ? Dec(): Inc(); }
            | IncDec FunArrayCall %prec PRE  { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); $1 ? Inc(): Dec(); GenPCode1( _ARRAYPUT ); }
-           | ObjectData IncDec %prec POST         {}
-           | IncDec ObjectData %prec PRE          {}
+           | ObjectData IncDec %prec POST   { MessageDupl( SetData( $1 ) ); Function( 0 ); $2 ? Inc(): Dec(); Function( 1 ); $2 ? Dec(): Inc(); }
+           | IncDec ObjectData %prec PRE    { MessageDupl( SetData( $2 ) ); Function( 0 ); $1 ? Inc(): Dec(); Function( 1 ); }
            | ObjectData ArrayIndex IncDec %prec POST { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); $3 ? Inc(): Dec(); GenPCode1( _ARRAYPUT ); $3 ? Dec(): Inc(); }
            | IncDec ObjectData ArrayIndex %prec PRE  { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); $1 ? Inc(): Dec(); GenPCode1( _ARRAYPUT ); }
            | ObjectMethod ArrayIndex IncDec %prec POST { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); $3 ? Inc(): Dec(); GenPCode1( _ARRAYPUT ); $3 ? Dec(): Inc(); }
@@ -692,13 +693,13 @@ VarAssign  : IDENTIFIER INASSIGN Expression { PopId( $1 ); PushId( $1 ); }
            | FunArrayCall DIVEQ    { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); }  Expression { GenPCode1( _DIVIDE  ); GenPCode1( _ARRAYPUT ); }
            | FunArrayCall EXPEQ    { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); }  Expression { GenPCode1( _POWER   ); GenPCode1( _ARRAYPUT ); }
            | FunArrayCall MODEQ    { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); }  Expression { GenPCode1( _MODULUS ); GenPCode1( _ARRAYPUT ); }
-           | ObjectData INASSIGN { MessageFix( SetData( $1 ) ); } Expression { Function( 1 ); }
-           | ObjectData PLUSEQ   Expression                 {}
-           | ObjectData MINUSEQ  Expression                 {}
-           | ObjectData MULTEQ   Expression                 {}
-           | ObjectData DIVEQ    Expression                 {}
-           | ObjectData EXPEQ    Expression                 {}
-           | ObjectData MODEQ    Expression                 {}
+           | ObjectData INASSIGN { MessageFix ( SetData( $1 ) ); } Expression { Function( 1 ); }
+           | ObjectData PLUSEQ   { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPCode1( _PLUS );    Function( 1 ); }
+           | ObjectData MINUSEQ  { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPCode1( _MINUS );   Function( 1 ); }
+           | ObjectData MULTEQ   { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPCode1( _MULT );    Function( 1 ); }
+           | ObjectData DIVEQ    { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPCode1( _DIVIDE );  Function( 1 ); }
+           | ObjectData EXPEQ    { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPCode1( _POWER );   Function( 1 ); }
+           | ObjectData MODEQ    { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPCode1( _MODULUS ); Function( 1 ); }
            | ObjectData ArrayIndex INASSIGN Expression      { GenPCode1( _ARRAYPUT ); }
            | ObjectData ArrayIndex PLUSEQ   { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); } Expression { GenPCode1( _PLUS    ); GenPCode1( _ARRAYPUT ); }
            | ObjectData ArrayIndex MINUSEQ  { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); } Expression { GenPCode1( _MINUS   ); GenPCode1( _ARRAYPUT ); }
@@ -2853,6 +2854,32 @@ void Message( char * szMsgName )       /* sends a message to an object */
    GetSymbolOrd( wSym - 1 )->cScope |= FS_MESSAGE;
    wSym -= _iStartProc ? 1: 2;
    GenPCode3( _MESSAGE, LOBYTE( wSym ), HIBYTE( wSym ) );
+}
+
+void MessageDupl( char * szMsgName )  /* fix a generated message and duplicate to an object */
+{
+   WORD wSetSym = GetSymbolPos( szMsgName );
+   BYTE bLoGetSym, bHiGetSym;           /* get symbol */
+   PFUNCTION pFunc = functions.pLast;   /* get the currently defined Clipper function */
+
+   if( ! wSetSym )  /* the symbol was not found on the symbol table */
+   {
+      AddSymbol( szMsgName );
+      wSetSym = symbols.iCount;
+   }
+   GetSymbolOrd( wSetSym - 1 )->cScope |= FS_MESSAGE;
+   wSetSym -= _iStartProc ? 1: 2;
+                                        /* Get previously generated message */
+   bLoGetSym = pFunc->pCode[ _lMessageFix + 1];
+   bHiGetSym = pFunc->pCode[ _lMessageFix + 2];
+
+   pFunc->pCode[ _lMessageFix + 1 ] = LOBYTE( wSetSym );
+   pFunc->pCode[ _lMessageFix + 2 ] = HIBYTE( wSetSym );
+
+   pFunc->lPCodePos -= 3;               /* Remove unnecessary function call  */
+   Duplicate();                         /* Duplicate object                  */
+   GenPCode3( _MESSAGE, bLoGetSym, bHiGetSym );
+                                        /* Generate new message              */
 }
 
 void MessageFix( char * szMsgName )  /* fix a generated message to an object */
