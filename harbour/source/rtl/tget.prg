@@ -58,7 +58,7 @@
 #include "setcurs.ch"
 #include "getexit.ch"
 #include "inkey.ch"
-
+#include "button.ch"
 /* TODO: :posInBuffer( <nRow>, <nCol> ) --> nPos
          Determines a position within the edit buffer based on screen
          coordinates.
@@ -110,7 +110,7 @@ CLASS Get
 #ifdef HB_COMPAT_XPP
    MESSAGE _Assign METHOD Assign()
 #endif
-
+   METHOD HitTest(mrow,mcol)
    METHOD Block( bBlock )         SETGET  // Replace to DATA Block
    METHOD ColorSpec( cColorSpec ) SETGET  // Replace to DATA ColorSpec
    METHOD Picture( cPicture )     SETGET  // Replace to DATA Picture
@@ -320,7 +320,7 @@ METHOD Display( lForced ) CLASS Get
       endif
    endif
 
-   if lForced .or. ( ::nDispPos != ::nOldPos )
+   if ::buffer != NIL .and. ( lForced .or. ( ::nDispPos != ::nOldPos ) )
       DispOutAt( ::Row, ::Col,;
                  Substr( ::buffer, ::nDispPos, ::nDispLen ), ;
                  hb_ColorIndex( ::ColorSpec, iif( ::HasFocus, GET_CLR_ENHANCED, GET_CLR_UNSELECTED ) ) )
@@ -394,15 +394,18 @@ return Self
 
 METHOD SetFocus() CLASS Get
 
+   local lWasNil := ::buffer == NIL
+
    ::hasfocus   := .t.
    ::rejected   := .f.
    ::typeout    := .f.
 
    ::Original   := ::VarGet()
+   ::type       := ValType( ::Original )
    ::buffer     := ::PutMask( ::VarGet(), .f. )
    ::changed    := .f.
    ::clear      := ( "K" $ ::cPicFunc .or. ::type == "N")
-   ::nMaxLen    := Len( ::buffer )
+   ::nMaxLen    := IIF( ::buffer == NIL, 0, Len( ::buffer ) )
    ::pos        := 1
    ::lEdit      := .f.
 
@@ -420,7 +423,15 @@ METHOD SetFocus() CLASS Get
       ::BadDate := .f.
    endif
 
-   ::Display()
+   IF lWasNil .and. ::buffer != NIL
+      IF ::nDispLen == 0
+         ::nDispLen := ::nMaxLen
+      ENDIF
+
+      ::Display( .T. )
+   ELSE
+      ::Display()
+   ENDIF
 
 return Self
 
@@ -625,7 +636,7 @@ METHOD Insert( cChar ) CLASS Get
    else
       ::buffer := Left( Substr( ::buffer, 1, ::Pos-1 ) + cChar + Substr( ::buffer, ::Pos ), ::nMaxLen )
    endif
-    
+
    ::Changed := !( ::unTransform() == ::Original )
    ::Assign()
    ::Right( .f. )
@@ -939,8 +950,8 @@ METHOD PutMask( xValue, lEdit ) CLASS Get
    DEFAULT xValue TO ::VarGet()
    DEFAULT lEdit  TO ::HasFocus
 
-   if xValue == NIL
-      return ""
+   if xValue == NIL .OR. ValType( xValue ) $ "AB"
+      return NIL
    endif
 
    cBuffer := Transform( xValue, AllTrim( ::cPicFunc + " " + ::cPicMask ) )
@@ -1190,18 +1201,13 @@ METHOD Picture( cPicture ) CLASS Get
 
    if cPicture != NIL
 
-      ::nDispLen := NIL
-
       ::cPicture := cPicture
       ::ParsePict( cPicture )
 
       ::buffer  := ::PutMask( )
-      ::nMaxLen := Len( ::buffer )
+      ::nMaxLen := IIF( ::buffer == NIL, 0, Len( ::buffer ) )
 
-      if ::nDispLen == NIL
-         ::nDispLen := ::nMaxLen
-      endif
-
+      ::nDispLen := ::nMaxLen
    endif
 
 return ::cPicture
@@ -1230,4 +1236,13 @@ METHOD Block( bBlock ) CLASS Get
    endif
 
 return ::bBlock
+
+METHOD HitTest(mrow,mcol) CLASS GET
+        if ::row != mrow
+		return HTNOWHERE
+        endif
+        if mcol >= ::col .and. mrow <= ::col+::ndispLen
+		return HTCLIENT
+        endif
+return HTNOWHERE
 

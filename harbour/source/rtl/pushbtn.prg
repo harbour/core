@@ -286,6 +286,7 @@ return Nil
 function _PUSHBUTT_( cCaption, cMessage, cColor, bFBlock, bSBlock, cStyle)
 
    local oPushButton
+   default cCaption to ""
    oPushButton := pushbutton(Row(), Col(), cCaption)
    if ( !( ISNIL( oPushButton ) ) )
       oPushButton:caption := if(cCaption !=Nil,cCaption,)

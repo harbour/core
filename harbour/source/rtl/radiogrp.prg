@@ -83,7 +83,7 @@ CLASS HBRadioGroup
 
    DATA CapRow
 
-   DATA Caption init ""
+   DATA Caption 
 
    DATA Cargo  init  Nil
 
@@ -466,6 +466,7 @@ function _RADIOGRP_( nTop, nLeft, nBottom, nRight, xValue, aItems, cCaption, cMe
    cColor, bFblock )
 
    local oRadioGroup, nPos, nLen
+   default ccaption to ""
    oRadioGroup := radiogroup(nTop, nLeft, nBottom, nRight)
    if ( !( ISNIL( oRadioGroup ) ) )
       oRadioGroup:caption:= if(cCaption!=NIL,cCaption,)

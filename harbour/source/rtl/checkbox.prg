@@ -77,7 +77,7 @@ METHOD SetFocus()
 MESSAGE Select()    METHOD _Select()
 METHOD KillFocus()
 METHOD DisPlay()
-
+METHOD HitTest(nRow,nCol)
 endclass
 
 METHOD  New(nRow,nCol,cCaption)
@@ -145,6 +145,25 @@ Method KillFocus() CLASS HBCHECKBOX
    endif
    RETURN Self
 
+method HITTESt( Arg1, Arg2 )  CLASS HBCHECKBOX
+
+   local Local1, Local2
+   if ( Arg1 != ::Row )
+   elseif ( Arg2 < ::Col )
+   elseif ( Arg2 < ::Col + 3 )
+      return -2049
+   endif
+   Local2 := Len(::Caption)
+   if ( ( Local1 := At("&", ::Caption) ) == 0 )
+   elseif ( Local1 < Local2 )
+      Local2--
+   endif
+   if ( Arg1 != ::Caprow )
+   elseif ( Arg2 < ::CapCol )
+   elseif ( Arg2 < ::CapCol + Local2 )
+      return -1025
+   endif
+   return 0
 
 Method Display()   CLASS HBCHECKBOX
 
@@ -223,6 +242,7 @@ function IsDefColor()
    local cColor:=SETCOLOR()
    Return ( ccolor== "W/N,N/W,N/N,N/N,N/W")
 function Checkbox(nr,ncol,cCaption)
+default cCaption to ''
 return HBCHECKBOX():new(nr, nCol, cCaption)
 
 #endif

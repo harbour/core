@@ -82,7 +82,7 @@
 #include "color.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
-
+#include "button.ch"
 CLASS TBrowse
 
    DATA aColumns              // Array to hold all browse columns
@@ -110,6 +110,7 @@ CLASS TBrowse
 
 #ifdef HB_COMPAT_C53
    DATA aKeys
+   DATA mColpos,mrowPos,message
 #endif
 
    ACCESS freeze INLINE ::nFrozenCols                       // Number of columns to freeze/frozen
@@ -155,6 +156,7 @@ CLASS TBrowse
    METHOD ApplyKey(nKey)
    METHOD InitKeys(Self)
    METHOD TApplyKey(nKey, o)
+   METHOD HitTest(nMouseRow,nMouseCol)
 #endif
 
    PROTECTED:     /* P R O T E C T E D */
@@ -199,7 +201,10 @@ CLASS TBrowse
    DATA nFrozenCols                       // Number of frozen columns on left side of TBrowse
    DATA nColumns                          // Number of columns added to TBrowse
    DATA lNeverDisplayed                   // .T. if TBrowse has never been stabilize()d
-
+#ifdef HB_COMPAT_C53
+   DATA rect
+   DATA aVisibleCols
+#endif
 ENDCLASS
 
 
@@ -247,7 +252,14 @@ METHOD New(nTop, nLeft, nBottom, nRight) CLASS TBrowse
    ::nLeft   := nLeft
    ::nBottom := nBottom
    ::nRight  := nRight
+   #ifdef HB_COMPAT_C53
+   ::mColPos  := 0
+   ::mRowPos  := 0
+   ::rect:={nTop,nLeft,nBottom,nRight}
+   ::aVisibleCols:={}
+   ::message:=''
 
+   #endif
 return Self
 
 
@@ -271,6 +283,7 @@ return Self
 METHOD Configure(nMode) CLASS TBrowse
 
    local n, nHeight
+   local nLeft,nRight
 
    ::lHeaders := .F.
    ::lFooters := .F.
@@ -335,7 +348,14 @@ METHOD Configure(nMode) CLASS TBrowse
    if ::freeze > 0
       ::SetFrozenCols(::freeze)
    endif
-
+   #ifdef HB_COMPAT_C53
+   nleft:=::nLeft
+   nRight:=::nRight
+    ::rect:={::ntop+::nHeaderHeight,::nleft,::nbottom-::nHeaderHeight,::nright}
+    for n:= nleft to nright
+        aadd(::aVisibleCols,n)
+    next
+   #endif
 return Self
 
 
@@ -1303,7 +1323,8 @@ METHOD InitKeys(o) CLASS TBROWSE
               {K_CTRL_RIGHT,{|Ob,nKey| Ob:PanRight(),0}},;
               {K_RIGHT,{|Ob,nKey| Ob:Right(),0}},;
               {K_UP,{|Ob,nKey| Ob:Up(),0}},;
-              {K_ESC,{|Ob,nKey| -1 }}}
+              {K_ESC,{|Ob,nKey| -1 }},;
+              {K_LBUTTONDOWN,{|Ob,nKey| tbmouse(ob,mrow(),mcol())}}}
 return o
 
 
@@ -1338,7 +1359,7 @@ return bReturn
 
 METHOD TApplyKey( nKey, oBrowse ) CLASS tBrowse
 
-   local bBlock := oBrowse:setkey(nKey), nReturn
+   local bBlock := oBrowse:setkey(nKey), nReturn:=0
 
    default bBlock to oBrowse:setkey(0)
 
@@ -1462,3 +1483,57 @@ function TBrowseNew(nTop, nLeft, nBottom, nRight)
 return TBrowse():New(nTop, nLeft, nBottom, nRight)
 
 
+#ifdef HB_COMPAT_C53
+function TBMOUSE( oBrowse, nMouseRow, nMouseCol )
+
+   local Local1
+   if ( oBrowse:hittest(nMouseRow, nMouseCol) == -5121 )
+   tracelog('mouse row ',oBrowse:mrowpos)
+   tracelog('mouse col ',oBrowse:mcolpos)
+
+      Local1 := oBrowse:mrowpos - oBrowse:rowpos
+      tracelog('local1 ',local1)
+      do while ( Local1 < 0 )
+         Local1++
+         oBrowse:up()
+      enddo
+      do while ( Local1 > 0 )
+         Local1--
+         oBrowse:down()
+      enddo
+      Local1 := oBrowse:mcolpos - oBrowse:colpos
+      do while ( Local1 < 0 )
+         Local1++
+         oBrowse:left()
+      enddo
+      do while ( Local1 > 0 )
+         Local1--
+         oBrowse:right()
+      enddo
+      return 0
+   endif
+   return 1
+
+
+Method hitTest(mrow,mcol) CLASS TBROWSE
+	local i
+        tracelog('mrow',mrow)
+        tracelog('mcol',mrow)
+        ::mRowPos := ::rowPos
+        ::mColPos := ::colPos
+        tracelog(::mrowPos)
+        if mRow< ::rect[1] .or. mRow > ::rect[3]
+		return HTNOWHERE
+        endif
+        if mCol < ::rect[2] .or. mCol > ::rect[4]
+		return HTNOWHERE
+        endif
+        ::mRowPos := mRow - ::rect[1]+1
+        for i = 1 to len(::aVisibleCols)
+            if ::aVisibleCols[i] > mcol
+                        exit
+                endif
+        next
+        ::mColpos := ::aVisibleCols[i]
+return HTCELL
+#endif
