@@ -52,9 +52,7 @@
  * Please test running Harbour against your Clipper source code and report
  * any problems that might occur.    </par>
  *
- * Very important: The preprocessor functionality is not built in yet. So
- * you may test only Clipper language without preprocessor commands, etc.   </par>
- *
+ * Very important: The preprocessor functionality is now working.
  *
  * <b>Installation</b>   </par>
  * ------------   </par>

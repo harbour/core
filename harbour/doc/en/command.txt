@@ -15,7 +15,7 @@
 
 /*  $DOC$
  *  $COMMANDNAME$
- *      [CREATE] CLASS
+ *      CLASS
  *  $CATEGORY$
  *      OOP Command
  *  $ONELINER$
@@ -39,13 +39,13 @@
  *      elements (also known as instance variables) and METHODS of the
  *      class are named. The following scoping commands may also appear.
  *      They control the default scope of DATA and METHOD commands that follow them.
-        <fixed>
-           EXPORTED:
-           VISIBLE:
-           HIDDEN:
-           PROTECTED:
-        </fixed>
  *
+ *      <fixed>
+ *         EXPORTED: 
+ *         VISIBLE: 
+ *         HIDDEN: 
+ *         PROTECTED: 
+ *      </fixed>
  *      The class specification ends with the END CLASS command.
  *
  *      Classes can inherit from multiple <SuperClasses>, and the chain of
@@ -59,7 +59,6 @@
  *      Harbour's OOP syntax and implementation supports Scoping (Protect, Hidden and Readonly)
  *      and Delegating, and is largely compatible with Class(y)(tm), TopClass(tm)
  *      and Visual Objects(tm).
- *
  *  $EXAMPLES$
     <fixed>
  *      CLASS TBColumn

@@ -44,6 +44,7 @@
  *      HUCWI        Hungarian    CWI-2
  *      HUWIN        Hungarian    Windows-1
  *      IS85         Icelandic    850
+ *      IT           Italian      437 
  *      PT           Portuguese   850
  *      RO           Romanian     852
  *      SRISO        Serbian      ISO-8859-2

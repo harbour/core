@@ -21,13 +21,50 @@
  *  $ONELINER$
  *      Get the amount of space available on a disk
  *  $SYNTAX$
- *      DISKSPACE( [<nDrive>] [, <nType>] ) --> nDiskbytes
+ *      DISKSPACE( [<nDrive>] ) --> nDiskbytes
  *  $ARGUMENTS$
  *      <nDrive> The number of the drive you are requesting info on where 1 = A,
  *      2 = B, etc. For 0 or no parameter, DiskSpace will operate on the current
  *      drive.  The default is 0   
+ *  $RETURNS$
+ *      <nDiskBytes> The number of bytes on the requested disk that match the
+ *      requested type.   
+ *  $DESCRIPTION$
+ *      By default, this function will return the number of bytes of
+ *      free space on the current drive that is available to the user
+ *      requesting the information.
+ *
+ *      If information is requested on a disk that is not available, a runtime
+ *      error 2018 will be raised.   
+ *  $EXAMPLES$
+ *      ? "You can use : " +Str( DiskSpace() ) + " bytes " +;
+ *      Note: See tests\tstdspac.prg for another example
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is Ca-Clipper compliant
+ *  $PLATFORMS$
+ *      Dos,Win32,OS/2
+ *  $FILES$
+ *      Library is rtl
+ *      Header is fileio.ch
+ *  $END$
+ */
 
- *      <nType> The type of space being requested.  The default is HB_DISK_AVAIL.   
+/*  $DOC$
+ *  $FUNCNAME$
+ *      HB_DISKSPACE()
+ *  $CATEGORY$
+ *      Low level
+ *  $ONELINER$
+ *      Get the amount of space available on a disk
+ *  $SYNTAX$
+ *      HB_DISKSPACE( [<cDrive>] [, <nType>] ) --> nDiskbytes
+ *  $ARGUMENTS$
+ *      <cDrive> The drive letter you are requesting info on. The default
+ *      is A:
+
+ *      <nType> The type of space being requested.The default is HB_DISK_AVAIL.   
  *  $RETURNS$
  *      <nDiskBytes> The number of bytes on the requested disk that match the
  *      requested type.   
@@ -55,12 +92,12 @@
  *      If information is requested on a disk that is not available, a runtime
  *      error 2018 will be raised.   
  *  $EXAMPLES$
- *      ? "You can use : " +Str( DiskSpace() ) + " bytes " +;
- *        "Out of a total of " + Str( DiskSpace(0,HB_FS_TOTAL) )
+ *      ? "You can use : " +Str( HB_DiskSpace() ) + " bytes " +;
+ *        "Out of a total of " + Str( HB_DiskSpace('C:',HB_FS_TOTAL) )
  *
  *      Note: See tests\tstdspac.prg for another example
  *  $STATUS$
- *      S
+ *      R
  *  $COMPLIANCE$
  *      CA-Clipper will return an integer value which limits it's usefulness to
  *      drives less than 2 gigabytes.  The Harbour version will return a

@@ -1,3 +1,13 @@
+2000-07-12-06:50 Luiz Rafael Culik <culik@sl.conex.net>
+ +doc/en/stontype.txt
+    *information of Harbour strong type feature
+ +doc/en/sayget.txt
+    *documentation for @say and @get commands
+ +doc/en/memver.txt
+     *documentation for local,memvar and Field command
+ *doc/en/readme.txt
+     *small fixes
+
 2000-07-12-06:30 Luiz Rafael Culik <culik@sl.conex.net>
   *contrib/hbzlib/hbzip.h
      *Added an missing ";" to a function declaration
