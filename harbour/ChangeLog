@@ -1,3 +1,7 @@
+19991013-22:37 GMT+1 Victor Szel <info@szelvesz.hu>
+   * tests/rtl_test.prg
+     * Column width adjusted.
+
 19991013-22:26 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/oldbox.c
      source/rtl/Makefile
