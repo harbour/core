@@ -1,0 +1,83 @@
+# makefile for Borland C/C++ 16 bits
+
+.path.c   = source\rtl
+.path.h   = include
+.path.l   = source\compiler
+.path.y   = source\compiler
+.path.exe = bin
+.path.lib = libs\b16
+.path.obj = obj
+.path.prg = source\rtl
+
+PROJECT: harbour.lib libs\b16\terminal.lib libs\win16\terminal.lib harbour.exe
+
+harbour.lib : arrays.obj classes.obj codebloc.obj dates.obj datesx.obj dynsym.obj \
+              environ.obj error.obj \
+              errorapi.obj errorsys.obj extend.obj files.obj itemapi.obj math.obj \
+              mathx.obj set.obj strings.obj stringsx.obj strcmp.obj tclass.obj transfrm.obj
+
+libs\b16\terminal.lib : console.obj
+
+libs\win16\terminal.lib : console.obj
+
+console.obj  : console.c  extend.h types.h
+  bcc -c -mh -O2 -I.\include -o$@ source\rtl\console.c
+  tlib .\libs\b16\terminal.lib -+$@,,
+#  bcc -c -mh -O2 -DWINDOWS -I.\include -o$@ source\rtl\console.c
+#  tlib .\libs\win16\terminal.lib -+$@,,
+   
+arrays.obj   : arrays.c   extend.h types.h
+classes.obj  : classes.c  extend.h types.h
+codebloc.obj : codebloc.c extend.h types.h
+dates.obj    : dates.c    extend.h types.h dates.h set.h
+datesx.obj   : source\tools\datesx.c   extend.h types.h
+dynsym.obj   : source\vm\dynsym.c   extend.h types.h
+environ.obj  : environ.c  extend.h types.h
+error.obj    : error.prg  extend.h types.h init.h harbour.exe
+errorapi.obj : errorapi.c extend.h types.h
+errorsys.obj : errorsys.prg extend.h types.h init.h harbour.exe
+extend.obj   : extend.c   extend.h types.h
+files.obj    : extend.c   extend.h types.h
+itemapi.obj  : itemapi.c  extend.h types.h
+math.obj     : math.c     extend.h types.h
+mathx.obj    : source\tools\mathx.c    extend.h types.h
+set.obj      : set.c      extend.h types.h set.h
+strcmp.obj   : strcmp.c   extend.h types.h
+strings.obj  : strings.c  extend.h types.h
+stringsx.obj : source\tools\stringsx.c extend.h types.h
+tclass.obj   : tclass.prg extend.h types.h init.h harbour.exe
+transfrm.obj : transfrm.c extend.h types.h
+
+.prg.obj:
+  bin\harbour $< /n /osource\rtl
+  bcc -c -mh -O2 -I.\include -o$@ $*.c
+  tlib .\libs\b16\harbour.lib -+$@,,
+
+{source\vm}.c{obj}.obj:
+  bcc -c -mh -O2 -I.\include -o$@ $<
+  tlib .\libs\b16\harbour.lib -+$@,,
+
+{source\tools}.c{obj}.obj:
+  bcc -c -mh -O2 -I.\include -o$@ $<
+  tlib .\libs\b16\harbour.lib -+$@,,
+
+.c.obj:
+  bcc -c -mh -O2 -I.\include -o$@ $<
+  tlib .\libs\b16\harbour.lib -+$@,,
+
+harbour.exe : source\compiler\y_tab.c source\compiler\lexyy.c source\compiler\harbour.obj
+   echo -mh -O2 -ebin\harbour.exe  -Iinclude;source\compiler source\compiler\y_tab.c > b31.bc
+   echo source\compiler\lexyy.c source\compiler\harbour.obj >> b31.bc
+   bcc @b31.bc
+   del b31.bc
+   del y_tab.obj
+   del lexyy.obj
+
+source\compiler\harbour.obj : source\compiler\harbour.c
+  bcc -c -mh -O2 -I.\include -o$@ $*.c   
+
+source\compiler\y_tab.c : harbour.y
+   bison -d -v -y -osource\compiler\y_tab.c source\compiler\harbour.y
+
+source\compiler\lexyy.c : harbour.l
+   flex -i -8 -osource\compiler\lexyy.c source\compiler\harbour.l
