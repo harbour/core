@@ -210,6 +210,7 @@ void     hb_storl( int iLogical, WORD wParam, ... ); /* stores a logical integer
 void     hb_storni( int iValue, WORD wParam, ... ); /* stores an integer on a variable by reference */
 void     hb_stornd( double dValue, WORD wParam, ... ); /* stores a double on a variable by reference */
 void     hb_stornl( long lValue, WORD wParam, ... ); /* stores a long on a variable by reference */
+void     hb_reta( ULONG ulLen );  /* returns an array with a specific length */
 
 void *   hb_xgrab( ULONG lSize );   /* allocates memory */
 void *   hb_xrealloc( void * pMem, ULONG lSize );   /* reallocates memory */

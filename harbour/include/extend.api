@@ -28,11 +28,12 @@
 #define _retnl    hb_retnl
 
 #define _storc    hb_storc
-#define _storlen  hb_storlen
 #define _stords   hb_stords
 #define _storl    hb_storl
 #define _stornd   hb_stornd
 #define _storni   hb_storni
 #define _stornl   hb_stornl
+#define _reta     hb_reta
+#define _storclen hb_storclen
 
 #endif /* HB_EXTEND_API_ */

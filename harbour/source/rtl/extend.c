@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <extend.h>
 #include <dates.h>
+#include <item.api>
 
 extern STACK stack;
 
@@ -444,12 +445,20 @@ void hb_storc( char * szText, WORD wParam, ... )
    if( wParam <= hb_pcount() )
    {
       pItem = ( stack.pBase + 1 + wParam );
-
+      
       if( IS_ARRAY( pItem ) && wArrayIndex )
-      /* TODO: implement wArrayIndex use when storing to an array element */
-         return;
+      {
+         ulLen = strlen( szText );
+         pItemRef = hb_itemNew( NULL );
+         pItemRef->type = IT_STRING;
+         pItemRef->item.asString.length = ulLen;
+         pItemRef->item.asString.value = ( char * ) hb_xgrab( ulLen + 1 );
+         strcpy( pItemRef->item.asString.value, szText );
+         hb_arraySet( pItem, wArrayIndex, pItemRef );
+         hb_itemRelease( pItemRef );
+      }
 
-      if( IS_BYREF( pItem ) )
+      else if( IS_BYREF( pItem ) )
       {
          ulLen = strlen( szText );
          pItemRef = stack.pItems + pItem->item.asRefer.value;
@@ -477,10 +486,19 @@ void hb_storclen( char * fixText, WORD wLength, WORD wParam, ... )
       pItem = ( stack.pBase + 1 + wParam );
 
       if( IS_ARRAY( pItem ) && wArrayIndex )
-      /* TODO: implement wArrayIndex use when storing to an array element */
-         return;
-
-      if( IS_BYREF( pItem ) )
+      {
+         pItemRef = hb_itemNew( NULL );
+         pItemRef->type = IT_STRING;
+         pItemRef->item.asString.length = wLength;
+         pItemRef->item.asString.value = ( char * ) hb_xgrab( wLength + 1 );
+         memcpy( pItemRef->item.asString.value, fixText, wLength );
+         pItemRef->item.asString.value[ wLength ] = '\0';
+         hb_arraySet( pItem, wArrayIndex, pItemRef );
+         hb_itemRelease( pItemRef );
+      }
+      
+      else if( IS_BYREF( pItem ) )
+      
       {
          pItemRef = stack.pItems + pItem->item.asRefer.value;
          ItemRelease( pItemRef );
@@ -520,10 +538,17 @@ void hb_stords( char * szDate, WORD wParam, ... ) /* szDate must have yyyymmdd f
       pItem = ( stack.pBase + 1 + wParam );
 
       if( IS_ARRAY( pItem ) && wArrayIndex )
-      /* TODO: implement wArrayIndex use when storing to an array element */
-         return;
-
-      if( IS_BYREF( pItem ) )
+      {
+         pItemRef = hb_itemNew( NULL );
+         pItemRef->type = IT_DATE;
+         pItemRef->item.asDate.length = 8;
+         pItemRef->item.asDate.value = hb_dateEncode( lDay, lMonth, lYear );
+         hb_arraySet( pItem, wArrayIndex, pItemRef );
+         hb_itemRelease( pItemRef );
+      }
+      
+      else if( IS_BYREF( pItem ) )
+      
       {
          pItemRef = stack.pItems + pItem->item.asRefer.value;
          ItemRelease( pItemRef );
@@ -549,10 +574,18 @@ void hb_storl( int iLogical, WORD wParam, ... )
       pItem = ( stack.pBase + 1 + wParam );
 
       if( IS_ARRAY( pItem ) && wArrayIndex )
-      /* TODO: implement wArrayIndex use when storing to an array element */
-         return;
+      {
+         pItemRef = hb_itemNew( NULL );
+         pItemRef->type = IT_LOGICAL;
+         pItemRef->item.asLogical.length = 3;
+         pItemRef->item.asLogical.value  = iLogical;
+         hb_arraySet( pItem, wArrayIndex, pItemRef );
+         hb_itemRelease( pItemRef );
+      }
+      
+      else if( IS_BYREF( pItem ) )
 
-      if( IS_BYREF( pItem ) )
+      
       {
          pItemRef = stack.pItems + pItem->item.asRefer.value;
          ItemRelease( pItemRef );
@@ -578,11 +611,19 @@ void hb_storni( int iValue, WORD wParam, ... )
       pItem = ( stack.pBase + 1 + wParam );
 
       if( IS_ARRAY( pItem ) && wArrayIndex )
-      /* TODO: implement wArrayIndex use when storing to an array element */
-         return;
-
-      if( IS_BYREF( pItem ) )
       {
+         pItemRef = hb_itemNew( NULL );
+         pItemRef->type                   = IT_INTEGER;
+         pItemRef->item.asInteger.length  = 10;
+         pItemRef->item.asInteger.decimal = 0;
+         pItemRef->item.asInteger.value   = iValue;
+         hb_arraySet( pItem, wArrayIndex, pItemRef );
+         hb_itemRelease( pItemRef );
+      }
+      
+      else if( IS_BYREF( pItem ) )
+
+      if( IS_BYREF( pItem ) ) {
          pItemRef = stack.pItems + pItem->item.asRefer.value;
          ItemRelease( pItemRef );
          pItemRef->type                   = IT_INTEGER;
@@ -608,10 +649,19 @@ void hb_stornl( long lValue, WORD wParam, ... )
       pItem = ( stack.pBase + 1 + wParam );
 
       if( IS_ARRAY( pItem ) && wArrayIndex )
-      /* TODO: implement wArrayIndex use when storing to an array element */
-         return;
+      {
+         pItemRef = hb_itemNew( NULL );
+         pItemRef->type                = IT_LONG;
+         pItemRef->item.asLong.length  = 10;
+         pItemRef->item.asLong.decimal = 0;
+         pItemRef->item.asLong.value   = lValue;
+         hb_arraySet( pItem, wArrayIndex, pItemRef );
+         hb_itemRelease( pItemRef );
+      }
+      
+      else if( IS_BYREF( pItem ) )
 
-      if( IS_BYREF( pItem ) )
+    
       {
          pItemRef = stack.pItems + pItem->item.asRefer.value;
          ItemRelease( pItemRef );
@@ -638,10 +688,21 @@ void hb_stornd( double dValue, WORD wParam, ... )
       pItem = ( stack.pBase + 1 + wParam );
 
       if( IS_ARRAY( pItem ) && wArrayIndex )
-      /* TODO: implement wArrayIndex use when storing to an array element */
-         return;
+      {
+	 pItemRef = hb_itemNew( NULL );
+	 pItemRef->type   = IT_DOUBLE;
+	 if( dValue > 10000000000.0 )
+	    pItemRef->item.asDouble.length = 20;
+	 else
+	    pItemRef->item.asDouble.length = 10;
+	 pItemRef->item.asDouble.decimal   = hb_set.HB_SET_DECIMALS;
+	 pItemRef->item.asDouble.value     = dValue;
+	 hb_arraySet( pItem, wArrayIndex, pItemRef );
+	 hb_itemRelease( pItemRef );
+      }
+      
+      else if( IS_BYREF( pItem ) )
 
-      if( IS_BYREF( pItem ) )
       {
          pItemRef = stack.pItems + pItem->item.asRefer.value;
          ItemRelease( pItemRef );
