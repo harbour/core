@@ -1,3 +1,11 @@
+20000414-17:57 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/harbour.c
+     * Corrected few Compiler warnings about type format
+
+   * source/compiler/genc.c
+     * Corrected few Compiler warnings about possible unitilized iBytes.
+
 20000415-00:57 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbapilng.h
@@ -56,15 +64,15 @@
    * utils/hbtest/makefile
      ! runner lib removed from the GNU-make system
      + New dynamic Language API added. Runtime selection of language, compile
-       time selection of the default language, multiple language support in 
+       time selection of the default language, multiple language support in
        the same executable.
      + NATMSG API now uses the Language API.
      + HBTEST is now setting the language to EN before doing the tests.
      * English and Hungarian 852 message modules converted to the new format,
        and added to the makefiles.
 
-     ; ! WARNING ! Please convert your language to the new format. Follow 
-       MSG_TPL.C as a template. There are also some new items which should 
+     ; ! WARNING ! Please convert your language to the new format. Follow
+       MSG_TPL.C as a template. There are also some new items which should
        be translated or adapted to your language.
        (Don't forget to add a comma after each string item)
 

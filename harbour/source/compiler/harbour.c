@@ -1244,14 +1244,13 @@ USHORT hb_compFunctionGetPos( char * szFunctionName ) /* return 0 if not found o
 
 ULONG hb_compGenJump( LONG lOffset )
 {
-   int iBytes;
+   int iBytes = 3;
 
    /* Just a place holder, it might be a far jump...*/
    if ( lOffset == 0 )
    {
       hb_compGenPCode3( HB_P_JUMPFAR, 0, 0 );
       hb_compGenPCode1( 0 );
-      iBytes = 3;
    }
    else if ( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
    {
@@ -1262,7 +1261,6 @@ ULONG hb_compGenJump( LONG lOffset )
    {
       hb_compGenPCode3( HB_P_JUMPFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
       hb_compGenPCode1( ( BYTE ) ( ( ( USHORT ) ( lOffset ) >> 16 ) & 0xFF ) );
-      iBytes = 3;
    }
    else
    {
@@ -1274,14 +1272,13 @@ ULONG hb_compGenJump( LONG lOffset )
 
 ULONG hb_compGenJumpFalse( LONG lOffset )
 {
-   int iBytes;
+   int iBytes = 3;
 
    /* Just a place holder, it might be a far jump...*/
    if ( lOffset == 0 )
    {
       hb_compGenPCode3( HB_P_JUMPFARFALSE, 0, 0 );
       hb_compGenPCode1( 0 );
-      iBytes = 3;
    }
    else if ( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
    {
@@ -1292,7 +1289,6 @@ ULONG hb_compGenJumpFalse( LONG lOffset )
    {
       hb_compGenPCode3( HB_P_JUMPFARFALSE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
       hb_compGenPCode1( ( BYTE ) ( ( ( USHORT ) ( lOffset ) >> 16 ) & 0xFF ) );
-      iBytes = 3;
    }
    else
    {
@@ -1383,14 +1379,13 @@ void hb_compGenJumpHere( ULONG ulOffset )
 
 ULONG hb_compGenJumpTrue( LONG lOffset )
 {
-   int iBytes;
+   int iBytes = 3;
 
    /* Just a place holder, it might be a far jump...*/
    if ( lOffset == 0 )
    {
       hb_compGenPCode3( HB_P_JUMPFARTRUE, 0, 0 );
       hb_compGenPCode1( 0 );
-      iBytes = 3;
    }
    if ( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
    {
@@ -1401,7 +1396,6 @@ ULONG hb_compGenJumpTrue( LONG lOffset )
    {
       hb_compGenPCode3( HB_P_JUMPFARTRUE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
       hb_compGenPCode1( ( BYTE ) ( ( ( USHORT ) ( lOffset ) >> 16 ) & 0xFF ) );
-      iBytes = 3;
    }
    else
    {

@@ -363,7 +363,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                   fprintf( yyc, "\tHB_P_JUMP, %i, %i,",
                             pFunc->pCode[ lPCodePos + 1 ],
                             pFunc->pCode[ lPCodePos + 2 ] );
-                  if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %i (abs: %05li) */", sPos, lPCodePos + ( sPos ? sPos : 3 ) );
+                  if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %li (abs: %05li) */", sPos, lPCodePos + ( sPos ? sPos : 3 ) );
                   fprintf( yyc, "\n" );
                }
                lPCodePos += 3;
@@ -374,7 +374,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                fprintf( yyc, "\tHB_P_JUMPFALSE, %i, %i,",
                         pFunc->pCode[ lPCodePos + 1 ],
                         pFunc->pCode[ lPCodePos + 2 ] );
-               if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %i (abs: %05li) */", w, lPCodePos + ( w ? w : 3 ) );
+               if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %li (abs: %05li) */", w, lPCodePos + ( w ? w : 3 ) );
                fprintf( yyc, "\n" );
                lPCodePos += 3;
                break;
@@ -384,7 +384,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                fprintf( yyc, "\tHB_P_JUMPTRUE, %i, %i,",
                         pFunc->pCode[ lPCodePos + 1 ],
                         pFunc->pCode[ lPCodePos + 2 ] );
-               if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %i (abs: %05li) */", w, lPCodePos + ( w ? w : 3 ) );
+               if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %li (abs: %05li) */", w, lPCodePos + ( w ? w : 3 ) );
                fprintf( yyc, "\n" );
                lPCodePos += 3;
                break;
@@ -397,7 +397,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                             pFunc->pCode[ lPCodePos + 1 ],
                             pFunc->pCode[ lPCodePos + 2 ],
                             pFunc->pCode[ lPCodePos + 3 ] );
-                  if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %i (abs: %05li) */", lPos, lPCodePos + ( lPos ? lPos : 4 ) );
+                  if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %li (abs: %05li) */", lPos, lPCodePos + ( lPos ? lPos : 4 ) );
                   fprintf( yyc, "\n" );
                }
                lPCodePos += 4;
@@ -410,7 +410,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                            pFunc->pCode[ lPCodePos + 1 ],
                            pFunc->pCode[ lPCodePos + 2 ],
                            pFunc->pCode[ lPCodePos + 3 ] );
-                  if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %i (abs: %05li) */", lPos, lPCodePos + ( lPos ? lPos : 4 ) );
+                  if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %li (abs: %05li) */", lPos, lPCodePos + ( lPos ? lPos : 4 ) );
                   fprintf( yyc, "\n" );
                }
                lPCodePos += 4;
@@ -423,7 +423,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                            pFunc->pCode[ lPCodePos + 1 ],
                            pFunc->pCode[ lPCodePos + 2 ],
                            pFunc->pCode[ lPCodePos + 3 ] );
-                  if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %i (abs: %05li) */", lPos, lPCodePos + ( lPos ? lPos : 4 ) );
+                  if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %li (abs: %05li) */", lPos, lPCodePos + ( lPos ? lPos : 4 ) );
                   fprintf( yyc, "\n" );
                }
                lPCodePos += 4;
