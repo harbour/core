@@ -59,7 +59,7 @@ int WorkCommand ( char*, char*, char*, int);
 int CommandStuff ( char *, char *, char *, int*, int );
 int WorkTranslate ( char*, char**, char*, int);
 int WorkMarkers( char**, char**, char*, int*, int );
-int getExpReal ( char *, char **, int );
+int getExpReal ( char *, char **, int, int );
 int isExpres ( char* );
 void SkipOptional( char**, char*, int*, int*);
 
@@ -833,7 +833,7 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
 int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, int nbr )
 {
  char expreal[MAX_NAME], exppatt[MAX_NAME];
- int lenreal = 0, lenpatt;
+ int lenreal = 0, maxlenreal = STR_SIZE, lenpatt;
  int rezrestr, ipos;
  char *ptr, *ptrtemp;
 
@@ -849,21 +849,46 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, int nbr )
       return 0;
     }
   }
-  if ( *(exppatt+2) != '2' && **ptrmp != '\1' && **ptrmp != ',' &&
-        **ptrmp != '[' && **ptrmp != ']' && **ptrmp != '\0' )
+  ptrtemp = *ptrmp;
+  if ( *(exppatt+2) != '2' && *ptrtemp == ']' )
   {
-   lenreal = strincpy ( expreal, *ptrmp );
+    ptrtemp++;
+    SKIPTABSPACES ( ptrtemp );
+  }
+  if ( *(exppatt+2) != '2' && *ptrtemp != '\1' && *ptrtemp != ',' &&
+        *ptrtemp != '[' && *ptrtemp != ']' && *ptrtemp != '\0' )
+  {
+   lenreal = strincpy ( expreal, ptrtemp );
    if ( (ipos = md_strAt( expreal, lenreal, *ptri )) > 0 )
    {
-    lenreal = stroncpy( expreal, *ptri, ipos-1 );
-    if ( isExpres ( expreal ) )
-       *ptri += lenreal;
+    if ( ptrtemp > *ptrmp )
+    {
+      if ( ipos == 1 )
+      {
+        if ( nbr )
+        {
+          SearnRep( exppatt,"",0,ptro,lenres);
+          return 0;
+        }
+      }
+      else
+      {
+        maxlenreal = ipos - 1;
+        lenreal = 0;
+      }
+    }
     else
     {
-      if ( nbr )
+      lenreal = stroncpy( expreal, *ptri, ipos-1 );
+      if ( isExpres ( expreal ) )
+         *ptri += lenreal;
+      else
       {
-        SearnRep( exppatt,"",0,ptro,lenres);
-        return 0;
+        if ( nbr )
+        {
+          SearnRep( exppatt,"",0,ptro,lenres);
+          return 0;
+        }
       }
     }
    }
@@ -879,7 +904,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, int nbr )
 
   if ( *(exppatt+2) == '4' )       /*  ----  extended match marker  */
   {
-    if ( !lenreal ) lenreal = getExpReal ( expreal, ptri, FALSE );
+    if ( !lenreal ) lenreal = getExpReal ( expreal, ptri, FALSE, maxlenreal );
     SearnRep( exppatt,expreal,lenreal,ptro,lenres);
   }
   else if ( *(exppatt+2) == '3' )  /*  ----  wild match marker  */
@@ -904,7 +929,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, int nbr )
        {
          rezrestr = 1;
          (*ptri)++;
-         lenreal = getExpReal ( expreal, ptri, FALSE );
+         lenreal = getExpReal ( expreal, ptri, FALSE, maxlenreal );
          SearnRep( exppatt,expreal,lenreal,ptro,lenres);
          break;
        }
@@ -941,19 +966,19 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, int nbr )
   }
   else if ( *(exppatt+2) == '1' )  /*  ---- list match marker  */
   {
-     if ( !lenreal ) lenreal = getExpReal ( expreal, ptri, TRUE );
+     if ( !lenreal ) lenreal = getExpReal ( expreal, ptri, TRUE, maxlenreal );
      SearnRep( exppatt,expreal,lenreal,ptro,lenres);
   }
   else                             /*  ---- regular match marker  */
   {
                /* Copying a real expression to 'expreal' */
-     if ( !lenreal ) lenreal = getExpReal ( expreal, ptri, FALSE );
+     if ( !lenreal ) lenreal = getExpReal ( expreal, ptri, FALSE, maxlenreal );
      SearnRep( exppatt,expreal,lenreal,ptro,lenres);
   }
   return 1;
 }
 
-int getExpReal ( char *expreal, char **ptri, int prlist )
+int getExpReal ( char *expreal, char **ptri, int prlist, int maxrez )
 {
  int lens = 0;
  char *sZnaki = "+-=><*/$.&:";
@@ -963,7 +988,7 @@ int getExpReal ( char *expreal, char **ptri, int prlist )
 
  SKIPTABSPACES ( *ptri );
  State = (**ptri=='\'' || **ptri=='\"')? STATE_EXPRES:STATE_ID;
- while ( **ptri != '\0' && !rez )
+ while ( **ptri != '\0' && !rez && lens < maxrez )
  {
   switch ( State ) {
     case STATE_QUOTE1:
@@ -1050,7 +1075,7 @@ int getExpReal ( char *expreal, char **ptri, int prlist )
 
 int isExpres ( char* stroka )
 {
- if ( strolen ( stroka ) > getExpReal ( NULL, &stroka, FALSE ) )
+ if ( strolen ( stroka ) > getExpReal ( NULL, &stroka, FALSE, STR_SIZE ) )
   return 0;
  else
   return 1;
@@ -1133,6 +1158,7 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
            lennew = ptr2-ptr-1;
 
            memcpy ( expnew, ptr+1, lennew );
+           *(expnew + lennew++) = ' ';
            *(expnew + lennew) = '\0';
            while ( (i = hb_strAt( exppatt, 2, expnew, lennew )) > 0 )
              lennew += ReplacePattern ( exppatt[2], expreal, lenreal, expnew+i-1, lennew );
