@@ -79,8 +79,6 @@ FUNCTION __dbTrans()       ; RETURN NIL
 FUNCTION __dbTransRec()    ; RETURN NIL
 
 FUNCTION __TypeFile()      ; RETURN NIL
-FUNCTION __LabelForm()     ; RETURN NIL
-FUNCTION __ReportForm()    ; RETURN NIL
 
 FUNCTION GetApplyKey()     ; RETURN NIL
 FUNCTION GetReader()       ; RETURN NIL

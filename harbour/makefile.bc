@@ -4,28 +4,13 @@
 
 # makefile for Borland C/C++ compilers
 
-!if $d(B16)
-# Borland C/C++ (DOS 16 bits)
-# Don't indent these.
-BCC_OPT = -mh -DHARBOUR_USE_DOS_GTAPI
-BCC_EXE = bcc
-TASM_EXE = tasm
-OBJ_DIR = obj\b16
-LIB_DIR = lib\b16
-!else
    # Borland C/C++ (Windows 32 bits)
    BCC_EXE = bcc32
    TASM_EXE = tasm32
    OBJ_DIR = obj\b32
    LIB_DIR = lib\b32
-   !if $d(B40)
-      # Borland C/C++ 4.x (Avoid optimizer bug)
-      BCC_OPT = -DHARBOUR_USE_WIN_GTAPI
-   !else
       # Borland C/C++ 5.x
       BCC_OPT = -O2 -DHARBOUR_USE_WIN_GTAPI
-   !endif
-!endif
 
 HARBOUR_OPT = -q
 
