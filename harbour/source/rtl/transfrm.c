@@ -187,10 +187,6 @@ char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
    PushInteger( iDecimals );                    /* Push decimals            */
    Function( 3 );                               /* 3 Parameters             */
    pItem = &stack.Return;
-#if 0
-   StackPop();
-   ItemCopy( pItem, &stack.Return );            /* Get return value          */
-#endif
    if( pItem->wType == IT_STRING )              /* Is it a string           */
    {
       szStr  = pItem->value.szText;
@@ -299,7 +295,6 @@ char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
    {
       printf( "\nThis should never happen" );   /* TODO: Serious error      */
    }
-   /* ItemRelease( pItem ); */
    return(szRet);
 }
 
@@ -615,12 +610,24 @@ HARBOUR TRANSFORM( void )
             }
             default:
             {
-               _retc( "Crash !" );              /* TODO: Crash              */
+               PITEM pError = _errNew();
+
+               _errPutDescription(pError, "Argument error: TRANSFORM");
+               _errLaunch(pError);
+               _errRelease(pError);
+               _retc("");
             }
          }
       }
       else
-         _retc( "Crash !" );                    /* TODO: Crash              */
+      {
+         PITEM pError = _errNew();
+
+         _errPutDescription(pError, "Argument error: TRANSFORM");
+         _errLaunch(pError);
+         _errRelease(pError);
+         _retc("");
+      }
    }
    else                                         /* No picture supplied      */
    {
@@ -666,7 +673,12 @@ HARBOUR TRANSFORM( void )
          }
          default:
          {
-            _retc("Crash !");
+           PITEM pError = _errNew();
+
+           _errPutDescription(pError, "Argument error: TRANSFORM");
+           _errLaunch(pError);
+           _errRelease(pError);
+           _retc("");
          }
       }
    }
