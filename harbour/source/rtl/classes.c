@@ -269,8 +269,7 @@ HARBOUR HB___CLSADDMSG(void)
               break;
 
          default:
-              printf( "Invalid method type from __clsAddMsg\n" );
-              exit( 1 );
+              hb_errInternal( 9999, "Invalid method type from __clsAddMsg", NULL, NULL );
               break;
       }
    }
@@ -485,7 +484,7 @@ HARBOUR HB___CLSMODMSG(void)
          else if( ( pFunc == __msgSetData ) || ( pFunc == __msgGetData ) )
          {                                      /* Not allowed for DATA     */
             /*hb_errPutDescription(pError, "__clsModMsg: Cannot modify a DATA item");*/
-            hb_errorRT_BASE(EG_ARG, 3004, NULL, "__CLSMODMSG");
+            hb_errRT_BASE(EG_ARG, 3004, NULL, "__CLSMODMSG");
          }
          else                                   /* Modify METHOD            */
             pClass->pMethods[ wAt ].pFunction = ( PHB_FUNC ) hb_parnl( 3 );
@@ -598,8 +597,7 @@ static void hb_clsDictRealloc( PCLASS pClass )
    /* TODO: Implement it for very large classes */
    if( pClass )
    {
-      printf( "classes.c hb_clsDictRealloc() not implemented yet\n" );
-      exit( 1 );
+      hb_errInternal( 9999, "classes.c hb_clsDictRealloc() not implemented yet", NULL, NULL );
    }
 }
 
@@ -811,7 +809,7 @@ HARBOUR HB___OBJHASMSG(void)
       hb_retl( hb_objHasMsg( pObject, pString->item.asString.value ) != 0 );
    else
    {
-      hb_errorRT_BASE(EG_ARG, 3000, NULL, "__OBJHASMSG");
+      hb_errRT_BASE(EG_ARG, 3000, NULL, "__OBJHASMSG");
    }
 }
 
@@ -834,7 +832,7 @@ HARBOUR HB___OBJCLONE( void )
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 3001, NULL, "__OBJCLONE");
+      hb_errRT_BASE(EG_ARG, 3001, NULL, "__OBJCLONE");
    }
 }
 
@@ -861,7 +859,7 @@ HARBOUR HB___OBJSENDMSG(void)
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 3000, NULL, "__OBJSENDMSG");
+      hb_errRT_BASE(EG_ARG, 3000, NULL, "__OBJSENDMSG");
    }
 }
 
@@ -1004,7 +1002,7 @@ HARBOUR HB___CLSINSTSUPER( void )
          if( !IS_OBJECT( &stack.Return ) )
          {
             /* hb_errPutDescription(pError, "INSTSUPER : Super class does not return an object"); */
-            hb_errorRT_BASE(EG_ARG, 3002, NULL, "__CLSINSTSUPER");
+            hb_errRT_BASE(EG_ARG, 3002, NULL, "__CLSINSTSUPER");
          }
 
          for( w = 0; !bFound && w < wClasses; w++ )
@@ -1019,7 +1017,7 @@ HARBOUR HB___CLSINSTSUPER( void )
       else
       {
          /* hb_errPutDescription(pError, "INSTSUPER : Cannot find super class"); */
-         hb_errorRT_BASE(EG_ARG, 3003, NULL, "__CLSINSTSUPER");
+         hb_errRT_BASE(EG_ARG, 3003, NULL, "__CLSINSTSUPER");
       }
    }
    if( !bFound )

@@ -46,6 +46,7 @@
 #endif
 #include <stdio.h>
 #include "hbpp.h"
+#include "hberrors.h"
 
 void Hbpp_init ( void );
 int PreProcess( FILE*, FILE*, char *);
@@ -158,7 +159,7 @@ int Hp_Parse( FILE* handl_i, FILE* handl_o )
       *sLine = '\0';
      }
      else
-      printf ( "\nWarning, non directive in include file\n");
+      GenWarning( _szPWarnings, 'W', WARN_NONDIRECTIVE, NULL, NULL );
    }
   }
  }

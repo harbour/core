@@ -70,6 +70,9 @@ extern int lInclude;
 extern int *aCondCompile, nCondCompile;
 extern int nline;
 
+extern char * _szPErrors[];
+extern char * _szPWarnings[];
+
 /* Needed support modules, but not contained in HBPP.C */
 
 extern FILENAME *SplitFilename( char * );  /* splits filename into a path, a name and an extension */

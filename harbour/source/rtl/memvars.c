@@ -363,7 +363,7 @@ void hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem )
       }
    }
    else
-      hb_errorRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
+      hb_errRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
 }
 
 void hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
@@ -388,10 +388,10 @@ void hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
             hb_itemCopy( pItem, pGetItem );
       }
       else /* variable is not initialized */
-         hb_errorRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
+         hb_errRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
    }
    else
-      hb_errorRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
+      hb_errRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
 }
 
 void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
@@ -415,10 +415,10 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
          ++_globalTable[ pDyn->hMemvar ].counter;
       }
       else
-         hb_errorRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
+         hb_errRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
    }
    else
-      hb_errorRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
+      hb_errRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
 }
 
 /*
@@ -444,7 +444,7 @@ static void hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pVa
    else if( IS_STRING( pMemvar ) )
       pDynVar =hb_dynsymGet( pMemvar->item.asString.value );
    else
-      hb_errorRT_BASE( EG_ARG, 3008, NULL, "&" );
+      hb_errRT_BASE( EG_ARG, 3008, NULL, "&" );
 
    if( pDynVar )
       hb_memvarCreateFromDynSymbol( pDynVar, bScope, pValue );
@@ -518,7 +518,7 @@ static void hb_memvarRelease( HB_ITEM_PTR pMemvar )
       }
    }
    else
-      hb_errorRT_BASE( EG_ARG, 3008, NULL, "RELEASE" );
+      hb_errRT_BASE( EG_ARG, 3008, NULL, "RELEASE" );
 }
 
 

@@ -27,6 +27,16 @@
 #include "itemapi.h"
 #include "errorapi.h"
 #include "langapi.h"
+#include "init.h"
+
+HARBOUR HB___ERRRT_BASE(void);
+
+HB_INIT_SYMBOLS_BEGIN( Errorapi__InitSymbols )
+{ "__ERRRT_BASE"  , FS_PUBLIC, HB___ERRRT_BASE , 0 }
+HB_INIT_SYMBOLS_END( Errorapi__InitSymbols )
+#if ! defined(__GNUC__)
+#pragma startup Errorapi__InitSymbols
+#endif
 
 PHB_ITEM hb_errNew( void )
 {
@@ -54,9 +64,7 @@ WORD hb_errLaunch( PHB_ITEM pError )
 
       if ( ! IS_BLOCK( &errorBlock ) )
       {
-         /* TODO: Change to internal error: */
-         printf( "No ERRORBLOCK() for error at: ???? (0)" );
-         exit( 1 ); /* TODO: quit correctly */
+         hb_errInternal( 9999, "No ERRORBLOCK() for error", NULL, NULL );
       }
 
       /* NOTE: This must be called before the hb_vm*() calls */
@@ -112,9 +120,7 @@ WORD hb_errLaunch( PHB_ITEM pError )
 
          if ( bFailure )
          {
-            /* TODO: Change to internal error: */
-            printf("Error recovery failure, ???? (0)");
-            exit( 1 ); /* TODO: quit correctly */
+            hb_errInternal( 9999, "Error recovery failure", NULL, NULL );
          }
       }
    }
@@ -357,7 +363,7 @@ PHB_ITEM hb_errPutFlags( PHB_ITEM pError, USHORT uiFlags )
 
 /* Wrappers for hb_errLaunch() */
 
-static WORD hb_errorRT_New
+static WORD hb_errRT_New
 (
    USHORT uiSeverity,
    char * szSubSystem,
@@ -388,44 +394,50 @@ static WORD hb_errorRT_New
    return wRetVal;
 }
 
-void hb_errorRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
+HARBOUR HB___ERRRT_BASE( void )
 {
-   hb_errorRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+   hb_errRT_BASE( (ULONG) hb_parnl( 1 ),
+                  (ULONG) hb_parnl( 2 ),
+                  ISCHAR( 3 ) ? hb_parc( 3 ) : NULL,
+                  hb_parc( 4 ) );
 }
 
-WORD hb_errorRT_BASE_Ext1( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags )
+void hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
 {
-   return hb_errorRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, uiOsCode, uiFlags );
+   hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
 }
 
-void hb_errorRT_TERMINAL( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
+WORD hb_errRT_BASE_Ext1( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags )
 {
-   hb_errorRT_New( ES_ERROR, HB_ERR_SS_TERMINAL, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+   return hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, uiOsCode, uiFlags );
 }
 
-void hb_errorRT_DBCMD( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
+void hb_errRT_TERMINAL( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
 {
-   hb_errorRT_New( ES_ERROR, HB_ERR_SS_DBCMD, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+   hb_errRT_New( ES_ERROR, HB_ERR_SS_TERMINAL, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
 }
 
-void hb_errorRT_TOOLS( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
+void hb_errRT_DBCMD( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
 {
-   hb_errorRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+   hb_errRT_New( ES_ERROR, HB_ERR_SS_DBCMD, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
 }
 
-/* NOTES: Use as minimal calls from here, as possible. */
-/*        Don't allocate memory from this function. */
+void hb_errRT_TOOLS( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
+{
+   hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+}
 
-void hb_errorInternal ( ULONG ulIntCode, char * szText, char * szModule, WORD wLine, char * szPar1, char * szPar2, char * szPar3 )
+/* NOTE: Use as minimal calls from here, as possible. */
+/*       Don't allocate memory from this function. */
+
+void hb_errInternal ( ULONG ulIntCode, char * szText, char * szPar1, char * szPar2 )
 {
    char szError [ 256 ];
 
-   if ( szModule )
-      printf( "\n%s (%i)  ", szModule, wLine );
+   sprintf( szError, szText ? szText : hb_langDGetErrorIntr( ulIntCode ), szPar1, szPar2 );
+   printf( "\nInternal error %lu: %s\n", ulIntCode, szError );
 
-   sprintf( szError, szText ? szText : hb_langDGetErrorIntr( ulIntCode ), szPar1, szPar2, szPar3 );
-   printf( "Internal error %lu: %s\n\n", ulIntCode, szError );
+   hb_callStackShow();
 
-   exit( 1 );
+   exit( EXIT_FAILURE );
 }
-

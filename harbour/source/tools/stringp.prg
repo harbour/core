@@ -126,7 +126,7 @@ function ToChar( xTxt, cSeparator, lDebug )
             nLen  := Len( aData )
             for n := 1 to nLen                     // For each item : Recurse !
                cOut += aData[n][DATA_SYMBOL] + ":" + ;
-                       ToChar( aData[n][DATA_VAL], cSeparator, lDebug )
+                       ToChar( aData[n][DATA_VALUE], cSeparator, lDebug )
                if n != nLen
                   cOut += cSeparator
                endif

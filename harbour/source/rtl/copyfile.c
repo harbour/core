@@ -65,7 +65,7 @@ HARBOUR HB___COPYFILE( void )
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 2010, NULL, "__COPYFILE");
+      hb_errRT_BASE(EG_ARG, 2010, NULL, "__COPYFILE");
    }
 }
 
@@ -79,7 +79,7 @@ static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* ulWrittenTotal)
 
    while ((fhndSource = hb_fsOpen(( BYTE * ) szSource, FO_READ)) == FS_ERROR)
    {
-      if (hb_errorRT_BASE_Ext1(EG_OPEN, 2012, NULL, szSource, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT)
+      if (hb_errRT_BASE_Ext1(EG_OPEN, 2012, NULL, szSource, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT)
       {
          *ulWrittenTotal = (ULONG)-1L;
          break;
@@ -90,7 +90,7 @@ static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* ulWrittenTotal)
    {
       while ((fhndDest = hb_fsCreate(( BYTE * ) szDest, FC_NORMAL)) == FS_ERROR)
       {
-         if (hb_errorRT_BASE_Ext1(EG_CREATE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT)
+         if (hb_errRT_BASE_Ext1(EG_CREATE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT)
          {
             *ulWrittenTotal = (ULONG)-2L;
             break;
@@ -118,7 +118,7 @@ static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* ulWrittenTotal)
          {
             while ((usWritten = hb_fsWrite(fhndDest, buffer, usRead)) != usRead)
             {
-               if (hb_errorRT_BASE_Ext1(EG_WRITE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT)
+               if (hb_errRT_BASE_Ext1(EG_WRITE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT)
                {
                   bRetVal = FALSE;
                   break;

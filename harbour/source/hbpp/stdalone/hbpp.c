@@ -42,6 +42,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include "hbpp.h"
+#include "hberrors.h"
 
 extern int pp_strAt(char *, int, char*, int);
 extern void pp_Stuff (char*, char*, int, int, int);
@@ -54,17 +55,20 @@ char sLine[STR_SIZE], sOutLine[STR_SIZE];
 
 PATHNAMES *_pIncludePath = NULL;
 FILENAME *_pFileName = NULL;
+BOOL _bWarnings = FALSE;
 
 int main (int argc,char* argv[])
 {
    FILE *handl_i,*handl_o;
    char szFileName[ _POSIX_PATH_MAX ];
    char * szDefText;
-   int iArg = 1, i, lOutTable = 0, lOutNew = 0;
+   int iArg = 1, i;
+   BOOL bOutTable = FALSE;
+   BOOL bOutNew = FALSE;
    DEFINES *stdef = topDefine;
    COMMANDS *stcmd = topCommand;
 
-   printf( "\nHarbour preprocessor" );
+   printf( "Harbour preprocessor\n" );
    while( iArg < argc )
    {
      if( IS_OPT_SEP(argv[ iArg ][ 0 ]))
@@ -94,11 +98,15 @@ int main (int argc,char* argv[])
            break;
          case 'o':
          case 'O':
-            lOutTable = 1;
+            bOutTable = TRUE;
             break;
          case 'n':
          case 'N':
-            lOutNew = 1;
+            bOutNew = TRUE;
+            break;
+         case 'w':
+         case 'W':
+            _bWarnings = TRUE;
             break;
          default:
             printf( "\nInvalid command line option: %s\n", &argv[ iArg ][ 1 ] );
@@ -115,14 +123,19 @@ int main (int argc,char* argv[])
 
       if ((handl_i = fopen(szFileName, "r")) == NULL)
          { printf("\nCan't open %s\n",szFileName); return 1; }
-     printf( "\n\nParsing file %s\n", szFileName );
+     printf( "\nParsing file %s\n", szFileName );
    }
    else
    {
-     printf( "\nSyntax: Hbpp.exe <filename> [options]" );
-     printf( "\nOptions:" );
-     printf( "\n\t/d<id>[=<val>]\t#define <id>" );
-     if( lOutTable )
+     printf( "Syntax: hbpp <file.prg> [options]\n"
+             "\nOptions: \n"
+             "\t/d<id>[=<val>]\t#define <id>\n"
+             "\t/i<path>\tadd #include file search path\n"
+             "\t/o\t\tcreates hbpp.out with all tables\n"
+             "\t/n\t\twith those only, which defined in your file\n"
+             "\t/w\t\tenable warnings\n");
+
+     if( bOutTable )
         OutTable( NULL, NULL );
      return 1;
    }
@@ -157,9 +170,9 @@ int main (int argc,char* argv[])
    Hp_Parse(handl_i,handl_o );
    fclose(handl_i); fclose(handl_o);
 
-   if( lOutTable )
+   if( bOutTable )
       OutTable( NULL, NULL );
-   else if( lOutNew )
+   else if( bOutNew )
       OutTable( stdef, stcmd );
 
    printf( "\nOk" );
@@ -554,4 +567,16 @@ void GenError( char* _szErrors[], char cPrefix, int iError, char * szError1, cha
   sprintf( szLine, _szErrors[ iError - 1 ], szError1, szError2 );
   printf( "%s\n\n", szLine );
   exit( 1 );
+}
+
+void GenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2)
+{
+    if( _bWarnings && iWarning < WARN_ASSIGN_SUSPECT ) /* TODO: add switch to set level */
+    {
+        char * szLine = ( char * ) OurMalloc( 160 );      /*2 lines of text */
+        /* printf( "\r%s(%i) ", files.pLast->szFileName, iLine ); */
+        printf( "Warning %c%i  ", cPrefix, iWarning );
+        sprintf( szLine, _szWarnings[ iWarning - 1 ], szWarning1, szWarning2 );
+        printf( "%s\n", szLine );
+    }
 }

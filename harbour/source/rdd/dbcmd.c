@@ -56,7 +56,7 @@ typedef struct _AREANODE
 
 typedef AREANODE * LPAREANODE;
 
-/* TODO: must be changed to a hb_errorRT... */
+/* TODO: must be changed to a hb_errRT... */
 static void MyError( char * szError, char * szParam )
 {
    printf( "\n%s %s\n", szError, szParam );

@@ -27,6 +27,7 @@
 #endif
 #include <stdlib.h>
 #include "extend.h"
+#include "errorapi.h"
 
 ULONG ulMemoryBlocks = 0;
 ULONG ulMemoryMaxBlocks = 0;
@@ -58,8 +59,7 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
 
    if( ! pMem )
    {
-      printf( "\n_xgrab error: can't allocate memory!\n" );
-      exit( 1 );
+      hb_errInternal( 9999, "hb_xgrab can't allocate memory", NULL, NULL );
    }
 
    * ( ( ULONG * ) pMem ) = ulSize;  /* we store the block size into it */
@@ -79,8 +79,7 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
 
    if( ! pResult )
    {
-      printf( "\n_xrealloc error: can't reallocate memory!\n" );
-      exit( 1 );
+      hb_errInternal( 9999, "hb_xrealloc can't reallocate memory", NULL, NULL );
    }
 
    * ( ( ULONG * ) pResult ) = ulSize;  /* we store the block size into it */
@@ -102,7 +101,7 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
    if( pMem )
       free( ( char * ) pMem - sizeof( ULONG ) );
    else
-      printf( "\nCalling hb_xfree() with a null pointer!\n" );
+      hb_errInternal( 9999, "hb_xfree called with a null pointer", NULL, NULL );
 
    ulMemoryConsumed -= ulMemSize;
    ulMemoryBlocks--;

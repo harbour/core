@@ -434,7 +434,7 @@ BOOL    hb_fsLock   ( FHANDLE handle, ULONG start,
         position = hb_fsSeek( handle, start, 0 );
         result = locking( handle, mode?_LK_UNLCK:_LK_LOCK,length );
         hb_fsSeek( handle, position, 0 );
-#else        
+#else
         result = 1;
         last_error = FS_ERROR;
 #endif
@@ -602,7 +602,7 @@ HARBOUR HB_FOPEN( void )
         }
         else
         {
-            hb_errorRT_BASE(EG_ARG, 3006, NULL, "FOPEN");
+            hb_errRT_BASE(EG_ARG, 3006, NULL, "FOPEN");
         }
 
         hb_retni(file_handle);

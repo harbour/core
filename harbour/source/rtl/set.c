@@ -49,7 +49,7 @@
                                         from "cvs log source/rtl/set.c".
    V 1.39   David G. Holm               Made various changes after running
                                         through Gimpel Lint.
-                                        Added call hb_errorRT_TERMINAL()
+                                        Added call hb_errRT_TERMINAL()
                                         wrapper function upon failure to
                                         create an alternate file and/or a
                                         printer file (and/or an extra file,
@@ -316,7 +316,7 @@ static int open_handle (char * file_name, BOOL bMode, char * def_ext)
       char * error_message = strerror( error );
       char * message = ( char * )hb_xgrab( strlen( error_message ) + 64 );
       sprintf( message, "Create error %d (%s)", error, error_message );
-      hb_errorRT_TERMINAL( EG_CREATE, 2013, message, path );
+      hb_errRT_TERMINAL( EG_CREATE, 2013, message, path );
       hb_xfree( message );
    }
    return handle;
@@ -710,7 +710,7 @@ HARBOUR HB_SET (void)
          {
             if (set_number (pArg2, hb_set.HB_SET_DECIMALS) < 0)
             {
-               hb_errorRT_BASE(EG_ARG, 2020, NULL, "SET");
+               hb_errRT_BASE(EG_ARG, 2020, NULL, "SET");
             }
             else
             {
@@ -754,7 +754,7 @@ HARBOUR HB_SET (void)
          {
             if (set_number (pArg2, hb_set.HB_SET_EPOCH) < 0)
             {
-               hb_errorRT_BASE(EG_ARG, 2020, NULL, "SET");
+               hb_errRT_BASE(EG_ARG, 2020, NULL, "SET");
             }
             else
             {
@@ -817,7 +817,7 @@ HARBOUR HB_SET (void)
          {
             if (set_number (pArg2, hb_set.HB_SET_MARGIN) < 0)
             {
-               hb_errorRT_BASE(EG_ARG, 2020, NULL, "SET");
+               hb_errRT_BASE(EG_ARG, 2020, NULL, "SET");
             }
             else
             {
@@ -835,7 +835,7 @@ HARBOUR HB_SET (void)
          {
             if (set_number (pArg2, hb_set.HB_SET_MESSAGE) < 0)
             {
-               hb_errorRT_BASE(EG_ARG, 2020, NULL, "SET");
+               hb_errRT_BASE(EG_ARG, 2020, NULL, "SET");
             }
             else
             {

@@ -221,7 +221,7 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
    {
       int ch = 0;
 #if defined(OS_DOS_COMPATIBLE) || defined(HARBOUR_GCC_OS2) || defined(__IBMCPP__) || defined(_Windows)
-   /* The reason for including _Windows here is that kbhit() and getch() appear 
+   /* The reason for including _Windows here is that kbhit() and getch() appear
      to work properly in console mode. For true Windows mode, changes are needed. */
    #if defined(HARBOUR_GCC_OS2)
       /* Read from the keyboard with no echo, no wait, and no SIGSEV on Ctrl-C */
@@ -524,7 +524,7 @@ HARBOUR HB_INKEY( void )
    if( wait && forever && ( event_mask & ( INKEY_ALL + INKEY_EXTENDED ) ) == 0 )
    {
       /* There is no point in waiting forever for no input events! */
-      hb_errorRT_BASE(EG_ARG, 3007, NULL, "INKEY");
+      hb_errRT_BASE(EG_ARG, 3007, NULL, "INKEY");
    }
    else
    {

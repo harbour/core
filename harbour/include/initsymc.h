@@ -16,6 +16,7 @@
   Descend__InitSymbols();
   Dir__InitSymbols();
   Environ__InitSymbols();
+  Errorapi__InitSymbols();
   Files__InitSymbols();
   HardCR__InitSymbols();
   Math__InitSymbols();

@@ -152,3 +152,4 @@ STATIC FUNCTION ErrorMessage(oError)
    RETURN cMessage
 
 //----------------------------------------------------------------------------//
+

@@ -160,9 +160,8 @@ int main( int argc, char * argv[] )
        pSymStart =pDynSym->pSymbol;
      else
      {
-       printf( "Can\'t locate the starting procedure: \'%s\'", HARBOUR_START_PROCEDURE );
-       exit(1);
-    }
+       hb_errInternal( 9999, "Can\'t locate the starting procedure: \'%s\'", HARBOUR_START_PROCEDURE, NULL );
+     }
    }
 #endif
 
@@ -602,9 +601,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
               break;
 
          default:
-              printf( "The Harbour virtual machine can't run yet this PRG\n(unsuported pcode opcode: %i)\n", bCode );
-              printf( "Line number %i in %s", stack.pBase->item.asSymbol.lineno, stack.pBase->item.asSymbol.value->szName );
-              exit( 1 );
+              hb_errInternal( 9999, "Unsupported VM opcode", NULL, NULL );
               break;
       }
    }
@@ -654,7 +651,7 @@ static void hb_vmAliasPop( void )
 
       default:
          hb_itemClear( pItem );
-         hb_errorRT_BASE( EG_BADALIAS, 1000, NULL, NULL );
+         hb_errRT_BASE( EG_BADALIAS, 1000, NULL, NULL );
          break;
    }
 
@@ -710,7 +707,7 @@ void hb_vmAnd( void )
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 1078, NULL, ".AND.");
+      hb_errRT_BASE(EG_ARG, 1078, NULL, ".AND.");
    }
 }
 
@@ -782,8 +779,7 @@ void hb_vmDimArray( WORD wDimensions ) /* generates a wDimensions Array and init
 
    if( wDimensions > 1 )
    {
-      printf( "HVM.c DimArray() does not supports multiple dimensions yet!" );
-      exit( 1 );
+      hb_errInternal( 9999, "HVM.C hb_vmDimArray() does not supports multiple dimensions yet", NULL, NULL );
    }
 
 /*
@@ -823,17 +819,18 @@ void hb_vmDo( WORD wParams )
 
    if( ! IS_SYMBOL( pItem ) )
    {
+      /* QUESTION: Is this call needed ? [vszel] */
       hb_stackShow();
-      printf( "symbol item expected as a base from Do() in line %i\n", stack.pBase->item.asSymbol.lineno );
-      exit( 1 );
+      hb_errInternal( 9999, "Symbol item expected as a base from hb_vmDo()", NULL, NULL );
    }
 
-/*   if( ! IS_NIL( pSelf ) )
+/*
+   if( ! IS_NIL( pSelf ) )
    {
       hb_stackShow();
-      printf( "invalid symbol type for self from Do()\n" );
-      exit( 1 );
-   } */
+      hb_errInternal( 9999, "Invalid symbol type for self from hb_vmDo()", NULL, NULL );
+   }
+*/
 
    pItem->item.asSymbol.lineno   = 0;
    pItem->item.asSymbol.paramcnt = wParams;
@@ -851,10 +848,7 @@ void hb_vmDo( WORD wParams )
 
       if( ! pFunc )
       {
-         printf( "internal error: message %s not implemented for class %s\n",
-         pSym->szName, hb_objGetClsName( pSelf ) );
-         hb_callStackShow();
-         exit( 1 );
+         hb_errInternal( 9999, "Message %s not implemented for class %s", pSym->szName, hb_objGetClsName( pSelf ) );
       }
       pFunc();
    }
@@ -863,9 +857,7 @@ void hb_vmDo( WORD wParams )
       pFunc = pSym->pFunPtr;
       if( ! pFunc )
       {
-         printf( "internal error: invalid function pointer (%s) from Do()\n", pSym->szName );
-         hb_callStackShow();
-         exit( 1 );
+         hb_errInternal( 9999, "Invalid function pointer (%s) from hb_vmDo()", pSym->szName, NULL );
       }
       pFunc();
    }
@@ -885,9 +877,7 @@ HARBOUR hb_vmDoBlock( void )
 
    if( ! IS_BLOCK( pBlock ) )
    {
-      printf( "internal error: codeblock expected from DoBlock()\n" );
-      hb_callStackShow();
-      exit( 1 );
+      hb_errInternal( 9999, "Codeblock expected from hb_vmDoBlock()", NULL, NULL );
    }
 
    /* Check for valid count of parameters */
@@ -941,8 +931,7 @@ HARBOUR HB_EVAL( void )
    }
    else
    {
-      printf( "Not a valid codeblock on eval in line %i\n", stack.pBase->item.asSymbol.lineno );
-      exit( 1 );
+      hb_errInternal( 9999, "Not a valid codeblock on EVAL", NULL, NULL );
    }
 }
 
@@ -994,7 +983,7 @@ void hb_vmEqual( BOOL bExact )
 
    else if( pItem1->type != pItem2->type )
    {
-      hb_errorRT_BASE(EG_ARG, 1070, NULL, "==");
+      hb_errRT_BASE(EG_ARG, 1070, NULL, "==");
    }
 
    else
@@ -1025,7 +1014,7 @@ void hb_vmForTest( void )        /* Test to check the end point of the FOR */
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 1073, NULL, "<");
+      hb_errRT_BASE(EG_ARG, 1073, NULL, "<");
    }
 }
 
@@ -1050,8 +1039,7 @@ void hb_vmFuncPtr( void )  /* pushes a function address pointer. Removes the sym
    }
    else
    {
-      printf( "symbol item expected from FuncPtr()\n" );
-      exit( 1 );
+      hb_errInternal( 9999, "Symbol item expected from hb_vmFuncPtr()", NULL, NULL );
    }
 }
 
@@ -1122,7 +1110,7 @@ void hb_vmGreater( void )
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
    {
-      hb_errorRT_BASE(EG_ARG, 1075, NULL, ">");
+      hb_errRT_BASE(EG_ARG, 1075, NULL, ">");
    }
 }
 
@@ -1167,7 +1155,7 @@ void hb_vmGreaterEqual( void )
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
    {
-      hb_errorRT_BASE(EG_ARG, 1076, NULL, ">=");
+      hb_errRT_BASE(EG_ARG, 1076, NULL, ">=");
    }
 }
 
@@ -1189,7 +1177,7 @@ void hb_vmInc( void )
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 1086, NULL, "++");
+      hb_errRT_BASE(EG_ARG, 1086, NULL, "++");
    }
 }
 
@@ -1209,7 +1197,7 @@ void hb_vmInstring( void )
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 1109, NULL, "$");
+      hb_errRT_BASE(EG_ARG, 1109, NULL, "$");
    }
 }
 
@@ -1254,7 +1242,7 @@ void hb_vmLess( void )
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
    {
-      hb_errorRT_BASE(EG_ARG, 1073, NULL, "<");
+      hb_errRT_BASE(EG_ARG, 1073, NULL, "<");
    }
 }
 
@@ -1299,7 +1287,7 @@ void hb_vmLessEqual( void )
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
    {
-      hb_errorRT_BASE(EG_ARG, 1074, NULL, "<=");
+      hb_errRT_BASE(EG_ARG, 1074, NULL, "<=");
    }
 }
 
@@ -1337,7 +1325,7 @@ void hb_vmNot( void )
    if( IS_LOGICAL( pItem ) )
       pItem->item.asLogical.value = ! pItem->item.asLogical.value;
    else
-      hb_errorRT_BASE(EG_ARG, 1077, NULL, ".NOT.");
+      hb_errRT_BASE(EG_ARG, 1077, NULL, ".NOT.");
 }
 
 void hb_vmNotEqual( void )
@@ -1380,7 +1368,7 @@ void hb_vmNotEqual( void )
 
    else if( pItem1->type != pItem2->type )
    {
-      hb_errorRT_BASE(EG_ARG, 1072, NULL, "<>");
+      hb_errRT_BASE(EG_ARG, 1072, NULL, "<>");
    }
 
    else
@@ -1442,7 +1430,7 @@ void hb_vmMinus( void )
    else if( IS_OBJECT( stack.pPos - 2 ) && hb_objHasMsg( stack.pPos - 2, "-" ) )
       hb_vmOperatorCall( stack.pPos - 2, stack.pPos - 1, "-" );
    else
-      hb_errorRT_BASE(EG_ARG, 1082, NULL, "-");
+      hb_errRT_BASE(EG_ARG, 1082, NULL, "-");
 
 }
 
@@ -1496,7 +1484,7 @@ void hb_vmOr( void )
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 1079, NULL, ".OR.");
+      hb_errRT_BASE(EG_ARG, 1079, NULL, ".OR.");
    }
 }
 
@@ -1551,7 +1539,7 @@ void hb_vmPlus( void )
       hb_vmOperatorCall( pItem1, pItem2, "+" );
 
    else
-      hb_errorRT_BASE( EG_ARG, 1081, NULL, "+" );
+      hb_errRT_BASE( EG_ARG, 1081, NULL, "+" );
 
    HB_DEBUG( "Plus\n" );
 }
@@ -1567,8 +1555,7 @@ long hb_vmPopDate( void )
    }
    else
    {
-      printf( "incorrect item value trying to Pop a date value in line %i\n", stack.pBase->item.asSymbol.lineno );
-      exit( 1 );
+      hb_errInternal( 9999, "Incorrect item value trying to Pop a date value", NULL, NULL );
       return 0;
    }
 }
@@ -1605,9 +1592,8 @@ double hb_vmPopDouble( WORD *pwDec )
            break;
 
       default:
-           printf( "Incorrect item type trying to Pop a double in line %i\n", stack.pBase->item.asSymbol.lineno );
-           exit( 1 );
-           d = 0;
+           hb_errInternal( 9999, "Incorrect item type trying to Pop a double", NULL, NULL );
+           break;
    }
    stack.pPos->type = IT_NIL;
    HB_DEBUG( "hb_vmPopDouble\n" );
@@ -1658,7 +1644,7 @@ BOOL hb_vmPopLogical( void )
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 1066, NULL, hb_langDGetErrorDesc(EG_CONDITION));
+      hb_errRT_BASE(EG_ARG, 1066, NULL, hb_langDGetErrorDesc(EG_CONDITION));
       return 0;
    }
 }
@@ -1693,9 +1679,8 @@ double hb_vmPopNumber( void )
            break;
 
       default:
-           printf( "Incorrect item on the stack trying to pop a number in line %i\n", stack.pBase->item.asSymbol.lineno );
            hb_stackShow();
-           exit( 1 );
+           hb_errInternal( 9999, "Incorrect item on the stack trying to pop a number", NULL, NULL );
            break;
    }
    stack.pPos->type = IT_NIL;
@@ -1976,9 +1961,7 @@ void hb_stackPop( void )
 {
    if( --stack.pPos < stack.pItems )
    {
-      printf( "internal error: stack underflow\n" );
-      hb_callStackShow();
-      exit( 1 );
+      hb_errInternal( 9999, "Stack underflow", NULL, NULL );
    }
    if( stack.pPos->type != IT_NIL )
       hb_itemClear( stack.pPos );
@@ -1988,9 +1971,7 @@ void hb_stackDec( void )
 {
    if( --stack.pPos < stack.pItems )
    {
-      printf( "internal error: stack underflow\n" );
-      hb_callStackShow();
-      exit( 1 );
+      hb_errInternal( 9999, "Stack underflow", NULL, NULL );
    }
 }
 
@@ -2318,7 +2299,7 @@ HARBOUR HB_LEN( void )
               break;
 
          default:
-              hb_errorRT_BASE(EG_ARG, 1111, NULL, "LEN");
+              hb_errRT_BASE(EG_ARG, 1111, NULL, "LEN");
               break;
       }
    }
@@ -2423,7 +2404,7 @@ HARBOUR HB_VALTYPE( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      hb_errorRT_BASE(EG_ARGCOUNT, 3000, NULL, "VALTYPE");
+      hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "VALTYPE");
    }
 }
 
@@ -2450,11 +2431,11 @@ void hb_callStackShow( void )
    {
       pBase = stack.pItems + pBase->item.asSymbol.stackbase;
       if( ( pBase + 1 )->type == IT_ARRAY )
-         printf( "%s:%s (%i)\n", hb_objGetClsName( pBase + 1 ),
+         printf( "Called from %s:%s(%i)\n", hb_objGetClsName( pBase + 1 ),
                  pBase->item.asSymbol.value->szName,
                  pBase->item.asSymbol.lineno  );
       else
-         printf( "%s (%i)\n", pBase->item.asSymbol.value->szName,
+         printf( "Called from %s(%i)\n", pBase->item.asSymbol.value->szName,
                  pBase->item.asSymbol.lineno  );
    }
 }
@@ -2534,6 +2515,6 @@ HARBOUR HB_PVALUE(void)                                /* PValue( <nArg> )      
       hb_itemReturn( pBase + 1 + wParam );
    else
    {
-      hb_errorRT_BASE(EG_ARG, 3011, NULL, "PVALUE");
+      hb_errRT_BASE(EG_ARG, 3011, NULL, "PVALUE");
    }
 }

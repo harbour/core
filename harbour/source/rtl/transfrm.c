@@ -345,8 +345,7 @@ static char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
    }
    else
    {
-      printf( "\nNUMPICTURE: STR does not return string" );
-      exit(1);
+      hb_errInternal( 9999, "NumPicture(): STR does not return string", NULL, NULL );
    }
    return(szRet);
 }
@@ -567,7 +566,7 @@ HARBOUR HB_TRANSFORM( void )
          }
          default:
          {
-            hb_errorRT_BASE(EG_ARG, 1122, NULL, "TRANSFORM");
+            hb_errRT_BASE(EG_ARG, 1122, NULL, "TRANSFORM");
          }
       }
    }
@@ -610,7 +609,7 @@ HARBOUR HB_TRANSFORM( void )
          }
          default:
          {
-           hb_errorRT_BASE(EG_ARG, 1122, NULL, "TRANSFORM");
+           hb_errRT_BASE(EG_ARG, 1122, NULL, "TRANSFORM");
          }
       }
    }

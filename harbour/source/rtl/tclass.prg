@@ -121,7 +121,7 @@ static function Create()
 
    for n = 1 to nLenDatas
       __clsAddMsg( hClass, ::aDatas[ n ][ DATA_SYMBOL ], n + nDataBegin, MET_DATA, ;
-                           ::aDatas[ n ][ DATA_VAL ] )
+                           ::aDatas[ n ][ DATA_VALUE ] )
       __clsAddMsg( hClass, "_" + ::aDatas[ n ][ DATA_SYMBOL ], n + nDataBegin, MET_DATA )
    next
 

@@ -15,6 +15,6 @@
 #define MET_SUPER       5
 
 #define DATA_SYMBOL     1
-#define DATA_VAL        2
+#define DATA_VALUE      2
 
 #endif /* _HBOO_CH */

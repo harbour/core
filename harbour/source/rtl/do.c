@@ -102,7 +102,7 @@ HARBOUR HB_DO( void )
          hb_vmDo( hb_pcount() - 1 );
       }
       else
-         hb_errorRT_BASE( EG_NOFUNC, 1001, NULL, pItem->item.asString.value );
+         hb_errRT_BASE( EG_NOFUNC, 1001, NULL, pItem->item.asString.value );
    }
    else if( IS_BLOCK(pItem) )
    {
@@ -125,5 +125,5 @@ HARBOUR HB_DO( void )
       hb_vmDo( hb_pcount() - 1 );
    }
    else
-      hb_errorRT_BASE( EG_ARG, 3012, NULL, "DO" );
+      hb_errRT_BASE( EG_ARG, 3012, NULL, "DO" );
 }

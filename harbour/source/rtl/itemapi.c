@@ -25,6 +25,7 @@
 #include "extend.h"
 #include "itemapi.h"
 #include "ctoharb.h"
+#include "errorapi.h"
 #include "dates.h"
 #include "set.h"
 
@@ -425,8 +426,7 @@ void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
 
    if( pDest == pSource )
    {
-      printf( "an item was going to be copied to itself from hb_itemCopy()\n" );
-      exit( 1 );
+      hb_errInternal( 9999, "An item was going to be copied to itself from hb_itemCopy()", NULL, NULL );
    }
 
    memcpy( pDest, pSource, sizeof( HB_ITEM ) );

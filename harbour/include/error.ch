@@ -60,4 +60,8 @@
 #define EG_NOTARRAY     49      /* Harbour special */
 #define EG_CONDITION    50      /* Harbour special */
 
+/* Internal errors */
+#define EI_NOERRORBLOCK 1
+#define EI_RECOVERY     2
+
 #endif /* _ERROR_CH */

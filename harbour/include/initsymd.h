@@ -16,6 +16,7 @@ extern void Dates2__InitSymbols( void );
 extern void Descend__InitSymbols( void );
 extern void Dir__InitSymbols( void );
 extern void Environ__InitSymbols( void );
+extern void Errorapi__InitSymbols( void );
 extern void Files__InitSymbols( void );
 extern void HardCR__InitSymbols( void );
 extern void Math__InitSymbols( void );

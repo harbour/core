@@ -1296,6 +1296,62 @@ start from 3000
  *  $END$
  */
 
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3101
+ *  $CATEGORY$
+ *      arguments
+ *  $ONELINER$
+ *      Invalid argument passed to an object/class function
+ *  $DESCRIPTION$
+ *      One passed argument is not of the required type.
+ *  $FUNCTION$
+ *      __OBJ*()
+ *  $STATUS$
+ *      Harbour specific
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3102
+ *  $CATEGORY$
+ *      arguments
+ *  $ONELINER$
+ *      A symbol should be modified or deleted from a class, but the symbol
+ *      doesn't exist.
+ *  $DESCRIPTION$
+ *      A symbol should be modified or deleted from a class, but the symbol
+ *      doesn't exist.
+ *  $FUNCTION$
+ *      __OBJ*()
+ *  $STATUS$
+ *      Harbour specific
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3103
+ *  $CATEGORY$
+ *      arguments
+ *  $ONELINER$
+ *      A symbol should be added to a class, but the symbol already exists.
+ *  $DESCRIPTION$
+ *      A symbol should be added to a class, but the symbol already exists.
+ *  $FUNCTION$
+ *      __OBJ*()
+ *  $STATUS$
+ *      Harbour specific
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
  /* ************************************************************************** */
 
 /*  $DOC$

@@ -137,6 +137,12 @@ char * _szPErrors[] = { "Can\'t open include file \"%s\"",
                        "#error: \'%s\'"
                      };
 
+/* Table with parse warnings */
+char * _szPWarnings[] =
+{ 
+   "Non directive in include file"
+};
+
 int ParseDirective( char* sLine )
 {
    char sDirective[MAX_NAME];
