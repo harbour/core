@@ -1,3 +1,11 @@
+19990522-17:25 CET Eddie Runia
+  * source/vm/hvm.c
+    'Array' bug possibly resolved.
+  * source/rtl/arrays.c
+    aClone does not loose memory anymore
+  * tests/working/ainstest.prg
+    test for aClone added.
+
 19990522-15:55 CET Eddie Runia
   * docs/hrb.faq
     Clean up

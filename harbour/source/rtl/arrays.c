@@ -6,6 +6,7 @@
 #include <ctoharb.h>
 
 PITEM hb_itemNew( PITEM );
+PITEM hb_itemArrayPut( PITEM , ULONG , PITEM );
 
 extern STACK  stack;
 extern SYMBOL symEval;
@@ -540,14 +541,13 @@ PITEM hb_arrayClone( PITEM pSrcArray )
 
       for ( ulCount = 0; ulCount < ulSrcLen; ulCount ++ )
 	{
-	  PITEM pSrcItem = pSrcBaseArray->pItems + ulCount;
-	  PITEM pDstItem = pDstBaseArray->pItems + ulCount;
+      PITEM pSrcItem = pSrcBaseArray->pItems + ulCount;
 
 	  if ( pSrcItem->wType == IT_ARRAY )
-	    ItemCopy( pDstItem, hb_arrayClone( pSrcItem ) );
+            hb_itemArrayPut( pDstArray, ulCount, hb_arrayClone( pSrcItem ) );
 	  else
-	    ItemCopy( pDstItem, pSrcItem );
-	}
+            hb_itemArrayPut( pDstArray, ulCount, pSrcItem );
+    }
       return pDstArray;
     }
   else

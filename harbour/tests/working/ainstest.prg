@@ -10,7 +10,7 @@ function Main()
     local aSecond
     local aMore
 
-    aFirst := { 1,2,4 }
+    aFirst := aClone( { 1,2,4 } )
     aIns( aFirst, 3 )
     aFirst[3] = "3"
     QQOut( "Testing aIns .. " )
