@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Harbour common hash table implementation
+ * Harbour simple hash table implementation
  *
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
  * www - http://www.harbour-project.org
@@ -35,6 +35,10 @@
 
 #include "hbhash.h"
 
+/* TODO:
+ * 1) add resize function
+ * 2) add better method of conflicts resolving
+*/
 static HB_HASH_ITEM_PTR hb_hashItemNew( ULONG ulKey, void * pValue )
 {
    HB_HASH_ITEM_PTR pItem = (HB_HASH_ITEM_PTR) hb_xgrab( sizeof( HB_HASH_ITEM ) );
@@ -44,6 +48,11 @@ static HB_HASH_ITEM_PTR hb_hashItemNew( ULONG ulKey, void * pValue )
    pItem->next = NULL;
 
    return pItem;
+}
+
+static void hb_hashItemDelete( HB_HASH_ITEM_PTR pItem )
+{
+   hb_xfree( (void *) pItem );
 }
 
 /* create a new  hash table 
@@ -142,6 +151,41 @@ void * hb_hashTableFind( HB_HASH_TABLE_PTR pTable, void *pValue )
    }
 
    return pFound;
+}
+
+/* Delete an item from the table 
+* Returns TRUE if item was found and returns FALSE when passed item
+* is not stored in the table
+*/
+BOOL hb_hashTableDel( HB_HASH_TABLE_PTR pTable, void *pValue )
+{
+   ULONG ulKey;
+   HB_HASH_ITEM_PTR pItem;
+   HB_HASH_ITEM_PTR pPrev = NULL;
+   BOOL bFound = FALSE;
+   
+   ulKey = ( pTable->pKeyFunc )( pValue, NULL );
+   pItem = pTable->pItems[ ulKey ];
+   while( pItem && !bFound )
+   {
+      if( ( pTable->pCompFunc )( pItem->cargo, pValue ) == 0 )
+      {
+         if( pPrev )
+            pPrev->next = pItem->next;
+         else
+            pTable->pItems[ ulKey ] = pItem->next;
+
+         hb_hashItemDelete( pItem );         
+         bFound = TRUE;
+      }
+      else
+      {
+         pPrev = pItem;
+         pItem = pItem->next;
+      }
+   }
+
+   return bFound;
 }
 
 /* return the hash table size */

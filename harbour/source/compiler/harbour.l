@@ -1527,6 +1527,13 @@ Separator     {SpaceTab}
                   return WITH;
                 }
               }
+<WITH_>{Separator}*[\)\(] { /* ( with ) or with() */
+                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                unput( yytext[ yyleng-1 ] );
+                hb_comp_iState =IDENTIFIER;
+                yylval.string = hb_compIdentifierNew( "WITH", TRUE );
+                return IDENTIFIER;
+              }
 <WITH_>{Separator}*[\[] { /* array */
                /* Clipper does not like with[] at all */
                hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX, yytext, NULL );

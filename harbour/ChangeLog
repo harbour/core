@@ -1,3 +1,15 @@
+2000-07-12 10:25 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/common/hash.c
+        * items can be removed from the hash table
+        
+    *source/compiler/harbour.l
+        * fixed handling of 'with()' and '( with )' syntax
+        
+    *tests/keywords.prg
+        * updated with few additional tests
+
+
 2000-07-12 08:46 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * doc/whatsnew.txt
