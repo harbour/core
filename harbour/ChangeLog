@@ -8,6 +8,17 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
      + Added function sx_Close()
+     + Added function sx_Commit()
+     + Added function sx_CreateField()
+     + Added function sx_Eof()
+     + Added function sx_GetString()
+       #ifndef HB_OS_WIN_32 to 
+     + Added function sx_IndexTag()
+     + Added function sx_RecNo()
+       IMPORTANT: For those who get duplicate defines when compiling 
+       Win32 code, the #define HB_OS_WIN_32_USED should be defined 
+     + Added function sx_Use()
+      
    * contrib/apollo/test
      * Added functions in a test application.
 
