@@ -55,10 +55,9 @@ extern void hb_compGenPortObj( PHB_FNAME );    /* generates the portable objects
 extern void hb_compGenObj32( PHB_FNAME );      /* generates OBJ 32 bits */
 #endif
 
-void hb_compInitVars( void );
-void hb_compGenOutput( int );
-void hb_compOutputFile( void );
-void EXTERNAL_LINKAGE close_on_exit( void );
+static void hb_compInitVars( void );
+static void hb_compGenOutput( int );
+static void hb_compOutputFile( void );
 
 static char * RESERVED_FUNC( char * );
 static void hb_compCheckDuplVars( PVAR pVars, char * szVarName, int iVarScope ); /*checks for duplicate variables definitions */
@@ -71,6 +70,8 @@ static int hb_compMemvarGetPos( char *, PFUNCTION );   /* return if passed name 
 static void hb_compMemvarGenPCode( BYTE , char * );      /* generates the pcode for memvar variable */
 static USHORT hb_compVariableGetPos( PVAR pVars, char * szVarName ); /* returns the order + 1 of a variable if defined or zero */
 static void hb_compVariableGenPCode( BYTE , char * );    /* generates the pcode for undeclared variable */
+
+void EXTERNAL_LINKAGE close_on_exit( void );
 
 /* global variables */
 FILES       hb_comp_files;
@@ -2038,7 +2039,7 @@ void hb_compCodeBlockEnd( void )
 /* ************************************************************************* */
 
 /* initialize support variables */
-void hb_compInitVars( void )
+static void hb_compInitVars( void )
 {
    hb_comp_files.iFiles     = 0;
    hb_comp_files.pLast      = NULL;
@@ -2056,7 +2057,7 @@ void hb_compInitVars( void )
    hb_comp_bAnyWarning = FALSE;
 }
 
-void hb_compGenOutput( int iLanguage )
+static void hb_compGenOutput( int iLanguage )
 {
    switch( iLanguage )
    {
@@ -2088,7 +2089,7 @@ void hb_compGenOutput( int iLanguage )
    }
 }
 
-void hb_compOutputFile( void )
+static void hb_compOutputFile( void )
 {
    hb_comp_pFileName->szPath = NULL;
    hb_comp_pFileName->szExtension = NULL;
