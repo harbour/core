@@ -113,10 +113,25 @@ PHB_ITEM hb_paramError( int iParam )
    return pParam;
 }
 
+/* function to be called from pcode DLLs to detect if the extend system
+ * is going to use an array item */
+
+BOOL HB_EXPORT hb_extIsArray( int iParam )
+{
+   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? &hb_stack.Return : hb_stackItemFromBase( iParam );
+
+      return HB_IS_ARRAY( pItem );
+   }
+   else
+      return FALSE;
+}
+
 /* NOTE: Caller should not modify the buffer returned by this function.
          [vszakats] */
 
-char * hb_parc( int iParam, ... )
+char * HB_EXPORT hb_parc( int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_parc(%d, ...)", iParam));
 
