@@ -224,7 +224,19 @@ void hb_compStrongType( int iSize )
 
      case HB_P_SWAPALIAS :
      case HB_P_RETVALUE :
-       /* TODO Check effect on stack. */
+       pFunc->iStackIndex--;
+
+       if ( ! pFunc->pOwner )
+          pSym = hb_compSymbolFind( pFunc->szName, NULL );
+
+       /* The function was declared, but return value doesn't mateche the declaration */
+       if ( pSym && pSym->cType != ' ' && pSym->cType != pFunc->pStack[ pFunc->iStackIndex ] )
+       {
+          sprintf( szType1, "%c", pSym->cType );
+          sprintf( szType2, "%c", pFunc->pStack[ pFunc->iStackIndex ] );
+
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_RETURN_TYPE, szType2, szType1 );
+       }
        break;
 
      case HB_P_DO :
@@ -308,6 +320,44 @@ void hb_compStrongType( int iSize )
      case HB_P_NEGATE :
      case HB_P_MULT :
      case HB_P_POWER :
+       pFunc->iStackIndex--;
+
+       if ( pFunc->iStackIndex < 1 )
+          /* TODO Error Message after finalizing all possible pcodes. */
+          break;
+
+       sprintf( szType1, "%c", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+       sprintf( szType2, "%c", pFunc->pStack[ pFunc->iStackIndex ] );
+
+       if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' &&  pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' )
+          /* Override the last item with the new result type which is already there */
+          ;
+       else if ( pFunc->pStack[ pFunc->iStackIndex ] == 'N' && pFunc->pStack[ pFunc->iStackIndex - 1 ] == 'N' )
+          /* Override the last item with the new result type wich is already there */
+          ;
+       else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' )
+       {
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, szType2, NULL );
+
+          /* Override the last item with the new result type */
+          pFunc->pStack[ pFunc->iStackIndex - 1 ] = ' ';
+       }
+       else if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+       {
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, szType1, NULL );
+
+          /* Override the last item with the new result type wich is already there */
+       }
+       else
+       {
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERANDS_INCOMPATBLE, szType1, szType2 );
+
+          /* Override the last item with the new result type */
+          pFunc->pStack[ pFunc->iStackIndex - 1 ] = 'U';
+       }
+
+       break;
+
      case HB_P_EQUAL :
      case HB_P_EXACTLYEQUAL :
      case HB_P_NOTEQUAL :
@@ -348,7 +398,7 @@ void hb_compStrongType( int iSize )
           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERANDS_INCOMPATBLE, szType1, szType2 );
 
           /* Override the last item with the new result type */
-          pFunc->pStack[ pFunc->iStackIndex - 1 ] = ' ';
+          pFunc->pStack[ pFunc->iStackIndex - 1 ] = 'U';
        }
 
        break;
@@ -401,9 +451,9 @@ void hb_compStrongType( int iSize )
        break;
 
      /* Blcks */
-     case HB_P_MPUSHBLOCK :
-     case HB_P_PUSHBLOCK :
-       pFunc->pStack[ pFunc->iStackIndex++ ] = 'B';
+     case HB_P_ENDBLOCK :
+       /* Override the last value of the block left on the stack. */
+       pFunc->pStack[ pFunc->iStackIndex ] = 'B';
        break;
 
      /* Undefined */
@@ -451,11 +501,12 @@ void hb_compStrongType( int iSize )
 
        if ( pSym )
        {
-          /* TODO: Check this!!! */
+          /* TODO: Check this!!!
           if ( ( pSym->cScope & HB_FS_PUBLIC ) == HB_FS_PUBLIC ||
                ( pSym->cScope & HB_FS_STATIC ) == HB_FS_STATIC ||
                ( pSym->cScope & HB_FS_INIT   ) == HB_FS_INIT   ||
                ( pSym->cScope & HB_FS_EXIT   ) == HB_FS_EXIT      )
+          */
              /* Storing a Book Mark of the last pushed symbol so we know how many bytes to pop when encountering function call. */
              pFunc->pFunctionCalls[ pFunc->iFunctionIndex++ ] = pFunc->iStackIndex;
 
@@ -553,13 +604,7 @@ void hb_compStrongType( int iSize )
      case HB_P_PUSHMEMVAR :
        pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256 );
        if ( pSym )
-       {
-          /* Review with Ryszard. */
-          if ( pVar->cType == 'U' )
-             pVar->cType = ' ';
-
          pFunc->pStack[ pFunc->iStackIndex++ ] = pSym->cType;
-       }
        else
          pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
 
@@ -567,6 +612,24 @@ void hb_compStrongType( int iSize )
        pFunc->pStack[ pFunc->iStackIndex++ ] = 'R';
 
      /* Arrays. */
+
+     case HB_P_ARRAYDIM :
+       wVar = pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256;
+
+       pFunc->iStackIndex -= wVar;
+
+       pFunc->pStack[ pFunc->iStackIndex++ ] = 'A';
+
+       break;
+
+     case HB_P_ARRAYGEN :
+       wVar = pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256;
+
+       pFunc->iStackIndex -= wVar;
+
+       pFunc->pStack[ pFunc->iStackIndex++ ] = 'A';
+
+       break;
 
      case HB_P_ARRAYPUSH :
        /* TODO: Deal with Array Elements. */
@@ -582,13 +645,21 @@ void hb_compStrongType( int iSize )
      case HB_P_MPUSHVARIABLE :
      case HB_P_MACROPUSHALIASED :
      case HB_P_MACROPUSH :
-       pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
+       /* Replace the value of the macro expression with unknown result of expanded macro. */
+       pFunc->pStack[ pFunc->iStackIndex ] = ' ';
        break;
 
      case HB_P_MACROSYMBOL :
-       /* TODO: check affect on stack. */
+       /* Replace Macro Variable Symbol Name type with unknown type of expanded macro Function Call */
+       pFunc->pStack[ pFunc->iStackIndex ] = ' ';
+
+       /* Storing a Book Mark of the last pushed symbol so we know how many bytes to pop when encountering function call. */
+       pFunc->pFunctionCalls[ pFunc->iFunctionIndex++ ] = pFunc->iStackIndex;
+       break;
+
      case HB_P_MACROTEXT :
-       /* TODO: check affect on stack. */
+       /* Stack already has type C. */
+       /*pFunc->pStack[ pFunc->iStackIndex ] = 'C';*/
        break;
 
      /*-----------------4/26/00 0:15AM-------------------
@@ -597,13 +668,12 @@ void hb_compStrongType( int iSize )
 
      case HB_P_POP :
      case HB_P_POPALIAS :
-     case HB_P_POPFIELD :
-       /* TODO: Add support for FIELD declarations. */
-     case HB_P_POPALIASEDFIELD :
-       /* TODO: Add support for FIELD declarations. */
        pFunc->iStackIndex--;
        break;
 
+     case HB_P_POPFIELD :
+     case HB_P_POPALIASEDFIELD :
+       /* TODO: Add support for FIELD declarations. */
      case HB_P_POPMEMVAR :
      case HB_P_POPVARIABLE :
      case HB_P_POPALIASEDVAR :
@@ -639,10 +709,18 @@ void hb_compStrongType( int iSize )
 
        /* we are accesing variables within a codeblock */
        if( wVar < 0 )
-          /* TODO: Deal with Codeblock Refernced locals. */
-          ;
+       {
+         /* Finding the Function owning the block. */
+         pTmp = pFunc->pOwner;
+
+         /* Might be a nested block. */
+         while ( pTmp->pOwner )
+            pTmp = pTmp->pOwner;
+
+         pVar = hb_compVariableFind( pTmp->pLocals, -iVar );
+       }
        else
-          pVar = hb_compVariableFind( pFunc->pLocals, wVar );
+         pVar = hb_compVariableFind( pFunc->pLocals, iVar );
 
        if ( pVar->cType != ' ' )
        {
@@ -664,14 +742,22 @@ void hb_compStrongType( int iSize )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
 
-       iVar = pFunc->pCode[ ulPos + 1 ];
+       iVar = ( char ) pFunc->pCode[ ulPos + 1 ];
 
-       /* we are accesing variables within a codeblock */
+       /* we are accesing local variable refernced within a codeblock */
        if( iVar < 0 )
-          /* TODO: Deal with Codeblock Refernced locals. */
-         ;
+       {
+         /* Finding the Function owning the block. */
+         pTmp = pFunc->pOwner;
+
+         /* Might be a nested block. */
+         while ( pTmp->pOwner )
+            pTmp = pTmp->pOwner;
+
+         pVar = hb_compVariableFind( pTmp->pLocals, -iVar );
+       }
        else
-          pVar = hb_compVariableFind( pFunc->pLocals, iVar );
+         pVar = hb_compVariableFind( pFunc->pLocals, iVar );
 
        if ( pVar->cType != ' ' )
        {
@@ -726,6 +812,7 @@ void hb_compStrongType( int iSize )
         break;
 
      case HB_P_ARRAYPOP :
+       /* Poping the Array Index. */
        pFunc->iStackIndex--;
 
        if ( pFunc->iStackIndex < 0 )
@@ -733,22 +820,14 @@ void hb_compStrongType( int iSize )
           break;
 
        /* TODO: Deal with Array Elements. */
-       if ( pFunc->pStack[ pFunc->iStackIndex ] != ' ' )
-       {
-       }
+       if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' )
+          ;
+       else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] != 'A' )
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_NOT_ARRAY, NULL, NULL );
 
-       break;
+       /* Poping the Assigned Value. */
+       pFunc->iStackIndex--;
 
-     case HB_P_ARRAYDIM :
-       pFunc->iStackIndex -= 2;
-       /* TODO: Deal with Array Elements. */
-       /* Pop the values used to generate the array. */
-       break;
-
-     case HB_P_ARRAYGEN :
-       pFunc->iStackIndex -= 2;
-       /* TODO: Deal with Array Elements. */
-       /* Pop the values used to generate the array. */
        break;
    }
 

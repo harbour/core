@@ -11,13 +11,33 @@ DECLARE FUNCTION nMyFunc( ) AS NUMERIC
 
 FUNCTION Main()
 
-   LOCAL n AS NUMERIC
+   LOCAL n AS NUMERIC, cVar AS CHARACTER, a[5,5,5] AS ARRAY
+
+   n := &SomeFun( 2, 3 )
+
+   n := &(cVar)
+
+   n := "&SomeVar"
+
+   n := &Var.1
+
+   n := V&SomeVar.1
+
+   n[2] := 4
+
+   cVar := {|nb AS NUMERIC , cb AS CHARACTER, db AS DATE| n := .F., nb := 'A', cb := 1, db := 0, n := 'wrong type', 0 }
 
    ? "This is a compiler test."
 
+   n := 'C is Wrong Type for n'
+
+   n := {1,2,3}
+
+   n := a
+
    n := nMyFunc()
 
-   cVar := {|n AS NUMERIC , c AS CHARACTER, d AS DATE| n := 'A', c := 1, d := 0, .T. }
+   IIF( n, 2, 3 )
 
    RETURN NIL
 

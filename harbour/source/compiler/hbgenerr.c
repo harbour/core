@@ -103,6 +103,8 @@ char * hb_comp_szWarnings[] =
    "3Incompatible operand types: \'%s\' and: \'%s\'",
    "3Suspicious type in assignment to: \'%s\' expected: \'%s\'",
    "3Suspicious operand type: \'UnKnown\' expected: \'%s\'",
+   "3Can\'t use array index with NON Array",
+   "3Incompatible return value: \'%s\' expected: \'%s\'",
    "0Meaningless use of expression: \'%s\'",
    "2Unreachable code",
    "1Redundant \'ANNOUNCE %s\' statement ignored"

@@ -1,3 +1,24 @@
+20000430-22:15 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+    * harbour/source/compiler/harbour.y
+      ! Fixed { hb_compVariableDim( $1, $2 ); } to { hb_comp_cVarType = 'A'; hb_compVariableDim( $1, $2 ); }
+	so that correct type is saved.
+
+    * harbour/source/compiler/hbpcode.c
+      * Enhancements to hb_compStrongType()
+
+    * harbour/source/compiler/hbgenerr.c
+      + added :
+        "3Can\'t use array index with NON Array"
+        "3Incompatible return value: \'%s\' expected: \'%s\'"
+
+    * harbour/include/hberrors.h
+      + added :
+        #define HB_COMP_WARN_NOT_ARRAY                  13
+        #define HB_COMP_RETURN_TYPE                     14
+
+    * harbour/tests/testwarn.prg
+      + Added code to demonstrate more warnings.
+
 20000430-23:00 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * source/rtl/teditor.prg
@@ -27,6 +48,8 @@
 20000430-13:50 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.c
+	*fixed possible memory reallocation error in hb_compNOOPadd()
+
    *fixed possible memory reallocation error in hb_compNOOPadd()
 
     *source/compiler/hbpcode.c

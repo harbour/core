@@ -1085,7 +1085,7 @@ VarDef     : IdentName AsType { hb_compVariableAdd( $1, $2 ); }
                }
 
            | IdentName DimList        { hb_compVariableDim( $1, $2 ); }
-           | IdentName DimList AS_ARRAY   { hb_compVariableDim( $1, $2 ); }
+           | IdentName DimList AS_ARRAY   { hb_comp_cVarType = 'A'; hb_compVariableDim( $1, $2 ); }
            ;
 
 /* NOTE: DimList and DimIndex is the same as ArrayIndex and IndexList
