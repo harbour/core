@@ -27,8 +27,6 @@ extern void Set__InitSymbols( void );
 extern void Strings__InitSymbols( void );
 extern void Transfrm__InitSymbols( void );
 
-void ProcessSymbols( SYMBOL *, WORD );
-
 HARBOUR HB_AADD( void );
 HARBOUR HB_ABS( void );
 HARBOUR HB_ASC( void );

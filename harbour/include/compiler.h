@@ -84,11 +84,11 @@ typedef struct _STACK_VAL_TYPE        /* locals, static, public variables suppor
    struct _STACK_VAL_TYPE * pPrev;    /* pointer to previous stack value's type */
 } STACK_VAL_TYPE, * PSTACK_VAL_TYPE;
 
-PFUNCTION GetFunction( char * szFunName ); /* locates a previously defined function */
-WORD GetFunctionPos( char * szSymbolName ); /* returns the index + 1 of a function on the functions defined list */
+extern PFUNCTION GetFunction( char * szFunName ); /* locates a previously defined function */
+extern WORD GetFunctionPos( char * szSymbolName ); /* returns the index + 1 of a function on the functions defined list */
 
-void * OurMalloc( LONG lSize ); /* our malloc with error control */
-void * OurRealloc( void * p, LONG lSize ); /* our malloc with error control */
-void OurFree( void * p ); /* releases allocated memory */
+extern void * OurMalloc( LONG lSize ); /* our malloc with error control */
+extern void * OurRealloc( void * p, LONG lSize ); /* our malloc with error control */
+extern void OurFree( void * p ); /* releases allocated memory */
 
 #endif /* HB_COMPILER_H_ */

@@ -1359,3 +1359,32 @@ HARBOUR HB_STR( void )
       hb_errorRT_BASE(EG_ARGCOUNT, 3000, NULL, "STR");
    }
 }
+
+/* Values returned : HB_STRGREATER_EQUAL, HB_STRGREATER_LEFT, HB_STRGREATER_RIGHT */
+
+WORD hb_strgreater( char * sz1, char * sz2 )
+{
+
+   while( *( sz1 ) && *( sz2 ) && *( sz1 ) == *( sz2 ) )
+   {
+     sz1++;
+     sz2++;
+   }
+   if ( ( *( sz1 ) == 0 && *( sz2 ) != 0 ) ||
+        ( *( sz2 ) > *( sz1 ) )               )
+      return HB_STRGREATER_RIGHT;
+
+   if ( ( *( sz1 ) != 0 && *( sz2 ) == 0 ) ||
+        ( *( sz1 ) > *( sz2 ) )               )
+      return HB_STRGREATER_LEFT;
+
+   return HB_STRGREATER_EQUAL;
+}
+
+void hb_strupr( char * szText )
+{
+   char *p;
+
+   for( p = szText; *p; p++ )
+      *p = toupper( *p );
+}

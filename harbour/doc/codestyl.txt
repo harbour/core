@@ -1,0 +1,8 @@
+
+/* Please note the following comments we may use everywhere
+   TODO: something should be added here
+   TOFIX: something needs to be fixed
+   OBSOLETE: something could be removed from here
+   QUESTION: I had some questions at this point but I could not get an answer
+   OPT: something is commented out to improve performance
+   As an example: */

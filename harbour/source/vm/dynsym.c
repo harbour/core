@@ -27,62 +27,22 @@
  */
 
 #include "extend.h"
-#include <ctype.h>
 
-typedef struct
-{
-   PDYNSYM pDynSym;             /* Pointer to dynamic symbol */
-} DYNHB_ITEM, * PDYNHB_ITEM;
-
-#define SYM_ALLOCATED   -1
-
-PSYMBOL  hb_NewSymbol( char * szName );
-PDYNSYM  hb_FindDynSym( char * szName );
+#define SYM_ALLOCATED   (-1)
 
 static PDYNHB_ITEM pDynItems = 0;              /* Pointer to dynamic items */
-static WORD     wDynSymbols = 0;     /* Number of symbols present */
-static WORD     wClosestDynSym = 0;
+static WORD        wDynSymbols = 0;     /* Number of symbols present */
+static WORD        wClosestDynSym = 0;
               /* Closest symbol for match. hb_FindDynSym will search for the name. */
               /* If it cannot find the name, it positions itself to the */
               /* closest symbol.  */
 
-void LogSymbols( void )
+void hb_LogDynSym( void )
 {
    WORD w;
 
    for( w = 0; w < wDynSymbols; w++ )   /* For all dynamic symbols */
       printf( "%i %s\n", w + 1, pDynItems[ w ].pDynSym->pSymbol->szName );
-}
-
-#define RIGHT_GREATER 2
-#define LEFT_GREATER  1
-#define SYM_EQUAL     0
-
-static WORD hb_strgreater( char * sz1, char * sz2 )
-{
-   /* Values returned : SYM_EQUAL, LEFT_GREATER, RIGHT_GREATER */
-
-   while( *( sz1 ) && *( sz2 ) && *( sz1 ) == *( sz2 ) )
-   {
-     sz1++;
-     sz2++;
-   }
-   if ( ( *( sz1 ) == 0 && *( sz2 ) != 0 ) ||
-        ( *( sz2 ) > *( sz1 ) )               )
-      return RIGHT_GREATER;
-
-   if ( ( *( sz1 ) != 0 && *( sz2 ) == 0 ) ||
-        ( *( sz1 ) > *( sz2 ) )               )
-      return LEFT_GREATER;
-   return SYM_EQUAL;
-}
-
-static void hb_strupr( char * szText )
-{
-   char *p;
-
-   for( p = szText; *p; p++ )
-      *p = toupper( *p );
 }
 
 PSYMBOL hb_NewSymbol( char * szName )      /* Create a new symbol */
@@ -204,15 +164,15 @@ PDYNSYM hb_FindDynSym( char * szName )
       {
          switch( hb_strgreater( pDynItems[ wMiddle ].pDynSym->pSymbol->szName, szName ) )
          {
-            case SYM_EQUAL:  /* they are equals */
+            case HB_STRGREATER_EQUAL:  /* they are equals */
                  return pDynItems[ wMiddle ].pDynSym;
 
-            case LEFT_GREATER:  /* pMiddle is greater */
+            case HB_STRGREATER_LEFT:  /* pMiddle is greater */
                  wLast = wMiddle;
                  wClosestDynSym = wMiddle;
                  break;
 
-            case RIGHT_GREATER:  /* szName is greater */
+            case HB_STRGREATER_RIGHT:  /* szName is greater */
                  wFirst = wMiddle + 1;
                  wClosestDynSym = wFirst;
                  break;
@@ -223,7 +183,7 @@ PDYNSYM hb_FindDynSym( char * szName )
    return 0;
 }
 
-void hb_ReleaseDynamicSymbols( void )
+void hb_ReleaseDynSym( void )
 {
    WORD w;
 

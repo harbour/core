@@ -36,7 +36,6 @@
 
 /* TODO: Move this to source/tools */
 
-#include <ctype.h>
 #include <stdio.h>
 #include "hbpp.h"
 #include "extend.h"

@@ -30,20 +30,20 @@
 /* Calling Harbour from C code */
 
 /* executing Harbour code from C */
-void Message( PSYMBOL );
-void PushSymbol( PSYMBOL pSym ); /* pushes a function pointer onto the stack */
-void Push( PHB_ITEM pItem );        /* pushes any item to the stack */
-void PushNil( void );            /* in this case it places nil at self */
+extern void Message( PSYMBOL );
+extern void PushSymbol( PSYMBOL pSym ); /* pushes a function pointer onto the stack */
+extern void Push( PHB_ITEM pItem );        /* pushes any item to the stack */
+extern void PushNil( void );            /* in this case it places nil at self */
 /* parameters should come here using Push...() */
-void PushNumber( double dNumber, WORD wDec ); /* pushes a number on to the stack and decides if it is integer, long or double */
-void PushInteger( int iNumber );
-void PushLong( long lNumber );
-void PushDouble( double dNumber, WORD wDec );
-void PushString( char * szText, ULONG length );  /* pushes a string on to the stack */
-void PushLogical( int iTrueFalse ); /* pushes a logical value onto the stack */
-void PushSymbol( PSYMBOL );
-void Do( WORD wParams );         /* invokes the virtual machine */
-void Function( WORD wParams );         /* invokes the virtual machine */
-void StackShow( void );
+extern void PushNumber( double dNumber, WORD wDec ); /* pushes a number on to the stack and decides if it is integer, long or double */
+extern void PushInteger( int iNumber );
+extern void PushLong( long lNumber );
+extern void PushDouble( double dNumber, WORD wDec );
+extern void PushString( char * szText, ULONG length );  /* pushes a string on to the stack */
+extern void PushLogical( int iTrueFalse ); /* pushes a logical value onto the stack */
+extern void PushSymbol( PSYMBOL );
+extern void Do( WORD wParams );         /* invokes the virtual machine */
+extern void Function( WORD wParams );         /* invokes the virtual machine */
+extern void StackShow( void );
 
 #endif /* HB_CTOHARB_H_ */

@@ -51,8 +51,8 @@ static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00,
 
 typedef union
 {
-   PBYTE       pAsmData;                        /* The assembler bytes      */
-   HARBOURFUNC pFunPtr;                         /* The (dynamic) harbour
+   PBYTE    pAsmData;                           /* The assembler bytes      */
+   PHB_FUNC pFunPtr;                            /* The (dynamic) harbour
                                                    function                 */
 } ASM_CALL, *PASM_CALL;
 
@@ -161,7 +161,7 @@ HARBOUR HB_HB_RUN( void )
          {
             pSymRead[ ul ].szName  = ReadId( file );
             pSymRead[ ul ].cScope  = ReadByte( file );
-            pSymRead[ ul ].pFunPtr = ( HARBOURFUNC ) ReadByte( file );
+            pSymRead[ ul ].pFunPtr = ( PHB_FUNC ) ReadByte( file );
             pSymRead[ ul ].pDynSym = NULL;
          }
 
@@ -200,7 +200,7 @@ HARBOUR HB_HB_RUN( void )
                   pSymRead[ ul ].pFunPtr = pDynFunc[ ulPos ].pAsmCall->pFunPtr;
                }
                else
-                  pSymRead[ ul ].pFunPtr = ( HARBOURFUNC ) SYM_EXTERN;
+                  pSymRead[ ul ].pFunPtr = ( PHB_FUNC ) SYM_EXTERN;
             }
             if( ( (ULONG) pSymRead[ ul ].pFunPtr ) == SYM_EXTERN )
             {                                   /* External function        */

@@ -57,11 +57,11 @@
 
 typedef struct
 {
-   void      * pMessage;   /* pointer to dynamic symbol when they get ready */
-   HARBOURFUNC pFunction;
-   WORD        wData;
-   WORD        wScope;
-   PHB_ITEM    pInitValue;
+   void *   pMessage;   /* pointer to dynamic symbol when they get ready */
+   PHB_FUNC pFunction;
+   WORD     wData;
+   WORD     wScope;
+   PHB_ITEM pInitValue;
 } METHOD, * PMETHOD;
 
 typedef struct
@@ -78,46 +78,46 @@ typedef struct
 
 #define BASE_METHODS  200
 #define BUCKET        4
-#define HASH_KEY      BASE_METHODS/BUCKET
+#define HASH_KEY      (BASE_METHODS / BUCKET)
 
 PCLASS  pClasses     = 0;
 WORD    wClasses     = 0;
 PMETHOD pMethod      = 0;
-PDYNSYM msgClassName = 0,
-        msgClassH    = 0,
-        msgEval      = 0,
-        msgClassSel  = 0;
+PDYNSYM msgClassName = 0;
+PDYNSYM msgClassH    = 0;
+PDYNSYM msgEval      = 0;
+PDYNSYM msgClassSel  = 0;
 
 /* All functions contained in classes.c */
 
-       HARBOUR     HB_CLASSADD( void );
-       HARBOUR     HB_CLASSCREATE( void );
-       HARBOUR     HB_CLASSDEL( void );
-static HARBOUR     ClassH( void );
-       HARBOUR     HB_CLASSINSTANCE( void );
-       HARBOUR     HB_CLASSMOD( void );
-static HARBOUR     ClassName( void );
-       HARBOUR     HB_CLASSNAME( void );
-static HARBOUR     ClassSel( void );
-static void        DictRealloc( PCLASS );
-static HARBOUR     EvalInline( void );
-static HARBOUR     GetClassData( void );
-static HARBOUR     GetData( void );
-       HARBOURFUNC hb_GetMethod( PHB_ITEM, PSYMBOL );
-       ULONG       hb_isMessage( PHB_ITEM, char *);
-       HARBOUR     HB_ISMESSAGE( void );
-       HARBOUR     HB_OCLONE( void );
-       HARBOUR     HB_OSEND( void );
-       void        ReleaseClass( PCLASS );
-       void        ReleaseClasses( void );
-static HARBOUR     SelectSuper( void );
-static HARBOUR     SetClassData( void );
-static HARBOUR     SetData( void );
-static HARBOUR     Virtual( void );
-       HARBOUR     HB___INSTSUPER( void );
-       HARBOUR     HB___WDATAS( void );
-       HARBOUR     HB___WDATADEC( void );
-       HARBOUR     HB___WDATAINC( void );
+       HARBOUR  HB_CLASSADD( void );
+       HARBOUR  HB_CLASSCREATE( void );
+       HARBOUR  HB_CLASSDEL( void );
+static HARBOUR  ClassH( void );
+       HARBOUR  HB_CLASSINSTANCE( void );
+       HARBOUR  HB_CLASSMOD( void );
+static HARBOUR  ClassName( void );
+       HARBOUR  HB_CLASSNAME( void );
+static HARBOUR  ClassSel( void );
+static void     DictRealloc( PCLASS );
+static HARBOUR  EvalInline( void );
+static HARBOUR  GetClassData( void );
+static HARBOUR  GetData( void );
+       PHB_FUNC hb_GetMethod( PHB_ITEM, PSYMBOL );
+       ULONG    hb_isMessage( PHB_ITEM, char *);
+       HARBOUR  HB_ISMESSAGE( void );
+       HARBOUR  HB_OCLONE( void );
+       HARBOUR  HB_OSEND( void );
+       void     ReleaseClass( PCLASS );
+       void     ReleaseClasses( void );
+static HARBOUR  SelectSuper( void );
+static HARBOUR  SetClassData( void );
+static HARBOUR  SetData( void );
+static HARBOUR  Virtual( void );
+       HARBOUR  HB___INSTSUPER( void );
+       HARBOUR  HB___WDATAS( void );
+       HARBOUR  HB___WDATADEC( void );
+       HARBOUR  HB___WDATAINC( void );
 
 /* All function contained in matching objfunc.prg */
 
@@ -219,7 +219,7 @@ HARBOUR HB_CLASSADD(void)
       switch( wType )
       {
          case MET_METHOD:
-              pNewMeth->pFunction = ( HARBOURFUNC ) hb_parnl( 3 );
+              pNewMeth->pFunction = ( PHB_FUNC ) hb_parnl( 3 );
               break;
 
          case MET_DATA:
@@ -354,7 +354,7 @@ HARBOUR HB_CLASSDEL(void)
    WORD     wLimit;
    WORD     wMask;
 
-   HARBOURFUNC pFunc;
+   PHB_FUNC pFunc;
 
    if( wClass && wClass <= wClasses )
    {
@@ -445,17 +445,17 @@ HARBOUR HB_CLASSINSTANCE(void)
  */
 HARBOUR HB_CLASSMOD(void)
 {
-   PHB_ITEM    pString  = hb_param( 2, IT_STRING );
-   PSYMBOL     pMessage = hb_GetDynSym( pString->item.asString.value )->pSymbol;
-   PDYNSYM     pMsg     = ( PDYNSYM ) pMessage->pDynSym;
-   PCLASS      pClass;
+   PHB_ITEM pString  = hb_param( 2, IT_STRING );
+   PSYMBOL  pMessage = hb_GetDynSym( pString->item.asString.value )->pSymbol;
+   PDYNSYM  pMsg     = ( PDYNSYM ) pMessage->pDynSym;
+   PCLASS   pClass;
 
-   WORD        wClass   = hb_parni( 1 );
-   WORD        wAt;
-   WORD        wLimit;
-   WORD        wMask;
+   WORD     wClass   = hb_parni( 1 );
+   WORD     wAt;
+   WORD     wLimit;
+   WORD     wMask;
 
-   HARBOURFUNC pFunc;
+   PHB_FUNC pFunc;
 
    if( wClass && wClass <= wClasses )
    {
@@ -485,7 +485,7 @@ HARBOUR HB_CLASSMOD(void)
             hb_errorRT_BASE(EG_ARG, 3004, NULL, "CLASSMOD");
          }
          else                                   /* Modify METHOD            */
-            pClass->pMethods[ wAt ].pFunction = ( HARBOURFUNC ) hb_parnl( 3 );
+            pClass->pMethods[ wAt ].pFunction = ( PHB_FUNC ) hb_parnl( 3 );
       }
    }
 }
@@ -723,7 +723,7 @@ static HARBOUR GetData( void )
  *
  * Internal function to the function pointer of a message of an object
  */
-HARBOURFUNC hb_GetMethod( PHB_ITEM pObject, PSYMBOL pMessage )
+PHB_FUNC hb_GetMethod( PHB_ITEM pObject, PSYMBOL pMessage )
 {
    WORD    wAt, wLimit, wMask;
    WORD    wClass;

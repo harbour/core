@@ -43,10 +43,10 @@
 #include "hbdefs.h"
 
 /* Harbour keyboard support functions */
-int hb_inkeyGet( void );      /* Extract the next key from the Harbour keyboard buffer */
-int hb_inkeyLast( void );     /* Return the value of the last key that was extracted */
-int hb_inkeyNext( void );     /* Return the next key without extracting it */
-void hb_inkeyPoll( void );    /* Poll the console keyboard to stuff the Harbour buffer */
-void hb_inkeyReset( BOOL allocate );    /* Reset the Harbour keyboard buffer */
+extern int hb_inkeyGet( void );      /* Extract the next key from the Harbour keyboard buffer */
+extern int hb_inkeyLast( void );     /* Return the value of the last key that was extracted */
+extern int hb_inkeyNext( void );     /* Return the next key without extracting it */
+extern void hb_inkeyPoll( void );    /* Poll the console keyboard to stuff the Harbour buffer */
+extern void hb_inkeyReset( BOOL allocate );    /* Reset the Harbour keyboard buffer */
 
 #endif

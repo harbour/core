@@ -71,42 +71,41 @@
 
 /* Standard API */
 
-PHB_ITEM hb_errNew( void );
-WORD     hb_errLaunch( PHB_ITEM pError );
-void     hb_errRelease( PHB_ITEM pError );
-
-USHORT   hb_errGetSeverity( PHB_ITEM pError );
-PHB_ITEM hb_errPutSeverity( PHB_ITEM pError, USHORT uiSeverity );
-USHORT   hb_errGetGenCode( PHB_ITEM pError );
-PHB_ITEM hb_errPutGenCode( PHB_ITEM pError, USHORT uiGenCode );
-USHORT   hb_errGetOsCode( PHB_ITEM pError );
-PHB_ITEM hb_errPutOsCode( PHB_ITEM pError, USHORT uiOsCode );
-USHORT   hb_errGetFlags( PHB_ITEM pError );
-PHB_ITEM hb_errPutFlags( PHB_ITEM pError, USHORT uiFlags );
-USHORT   hb_errGetTries( PHB_ITEM pError );
-PHB_ITEM hb_errPutTries( PHB_ITEM pError, USHORT uiTries );
-USHORT   hb_errGetSubCode( PHB_ITEM pError );
-PHB_ITEM hb_errPutSubCode( PHB_ITEM pError, USHORT uiSubCode );
-char *   hb_errGetSubSystem( PHB_ITEM pError );
-PHB_ITEM hb_errPutSubSystem( PHB_ITEM pError, char * szSubSystem );
-char *   hb_errGetDescription( PHB_ITEM pError );
-PHB_ITEM hb_errPutDescription( PHB_ITEM pError, char * szDescription );
-char *   hb_errGetOperation( PHB_ITEM pError );
-PHB_ITEM hb_errPutOperation( PHB_ITEM pError, char * szOperation );
-char *   hb_errGetFileName( PHB_ITEM pError );
-PHB_ITEM hb_errPutFileName( PHB_ITEM pError, char * szFileName );
+extern char *   hb_errGetDescription( PHB_ITEM pError );
+extern char *   hb_errGetFileName( PHB_ITEM pError );
+extern USHORT   hb_errGetFlags( PHB_ITEM pError );
+extern USHORT   hb_errGetGenCode( PHB_ITEM pError );
+extern char *   hb_errGetOperation( PHB_ITEM pError );
+extern USHORT   hb_errGetOsCode( PHB_ITEM pError );
+extern USHORT   hb_errGetSeverity( PHB_ITEM pError );
+extern USHORT   hb_errGetSubCode( PHB_ITEM pError );
+extern char *   hb_errGetSubSystem( PHB_ITEM pError );
+extern USHORT   hb_errGetTries( PHB_ITEM pError );
+extern WORD     hb_errLaunch( PHB_ITEM pError );
+extern PHB_ITEM hb_errNew( void );
+extern PHB_ITEM hb_errPutDescription( PHB_ITEM pError, char * szDescription );
+extern PHB_ITEM hb_errPutFileName( PHB_ITEM pError, char * szFileName );
+extern PHB_ITEM hb_errPutFlags( PHB_ITEM pError, USHORT uiFlags );
+extern PHB_ITEM hb_errPutGenCode( PHB_ITEM pError, USHORT uiGenCode );
+extern PHB_ITEM hb_errPutOperation( PHB_ITEM pError, char * szOperation );
+extern PHB_ITEM hb_errPutOsCode( PHB_ITEM pError, USHORT uiOsCode );
+extern PHB_ITEM hb_errPutSeverity( PHB_ITEM pError, USHORT uiSeverity );
+extern PHB_ITEM hb_errPutSubCode( PHB_ITEM pError, USHORT uiSubCode );
+extern PHB_ITEM hb_errPutSubSystem( PHB_ITEM pError, char * szSubSystem );
+extern PHB_ITEM hb_errPutTries( PHB_ITEM pError, USHORT uiTries );
+extern void     hb_errRelease( PHB_ITEM pError );
 
 /* Error launchers */
 
-WORD hb_errorRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
-WORD hb_errorRT_TERMINAL( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
-WORD hb_errorRT_DBCMD( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
-WORD hb_errorRT_TOOLS( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
+extern WORD hb_errorRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
+extern WORD hb_errorRT_TERMINAL( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
+extern WORD hb_errorRT_DBCMD( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
+extern WORD hb_errorRT_TOOLS( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
 /* TODO: Enable this:
-void     hb_errorInternal( ULONG ulCode );
+extern void     hb_errorInternal( ULONG ulCode );
 */
 /* Reads error description in national language */
-char *hb_errorNatDescription( ULONG ulGenCode );
+extern char *hb_errorNatDescription( ULONG ulGenCode );
 
 #endif /* HB_ERRORAPI_H_ */
 

@@ -29,7 +29,7 @@
 #ifndef HB_INIT_H_
 #define HB_INIT_H_
 
-void ProcessSymbols( SYMBOL * pSymbols, WORD wSymbols );
+extern void ProcessSymbols( SYMBOL * pSymbols, WORD wSymbols );
 
 #ifdef HARBOUR_STRICT_ANSI_C
 

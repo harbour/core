@@ -25,16 +25,6 @@
  * You can contact me at: alinares@fivetech.com
  */
 
-/* Please note the following comments we may use everywhere
-   TODO: something should be added here
-   TOFIX: something needs to be fixed
-   OBSOLETE: something could be removed from here
-   QUESTION: I had some questions at this point but I could not get an answer
-   OPT: something is commented out to improve performance
-   As an example: */
-
-/* TODO: Add all the TODO comments. */
-
 #include <limits.h>
 #ifndef __MPW__
  #include <malloc.h>
@@ -52,77 +42,15 @@
 #include "set.h"
 #include "inkey.h"
 
-HARBOUR HB_ERRORSYS( void );
-HARBOUR HB_ERRORNEW( void );
-HARBOUR HB_EVAL( void );         /* Evaluates a codeblock from Harbour */
-HARBOUR HB_MAIN( void );         /* fixed entry point by now */
-HARBOUR HB_VALTYPE( void );      /* returns a string description of a value */
+extern void hb_consoleInitialize( void );
+extern void hb_consoleRelease( void );
+extern void ReleaseClasses( void );    /* releases all defined classes */
+extern void InitSymbolTable( void );   /* initialization of runtime support symbols */
 
-extern void InitSymbolTable(void);   /* This prototype is needed by C++ compilers */
-
-/* currently supported virtual machine actions */
-void And( void );             /* performs the logical AND on the latest two values, removes them and leaves result on the stack */
-void ArrayAt( void );         /* pushes an array element to the stack, removing the array and the index from the stack */
-void ArrayPut( void );        /* sets an array value and pushes the value on to the stack */
-void Dec( void );             /* decrements the latest numeric value on the stack */
-void Div( void );             /* divides the latest two values on the stack, removes them and leaves the result */
-void Do( WORD WParams );      /* invoke the virtual machine */
-HARBOUR DoBlock( void );      /* executes a codeblock */
-void Duplicate( void );       /* duplicates the latest value on the stack */
-void DuplTwo( void );         /* duplicates the latest two value on the stack */
-void EndBlock( void );        /* copies the last codeblock pushed value into the return value */
-void Equal( BOOL bExact );    /* checks if the two latest values on the stack are equal, removes both and leaves result */
-void ForTest( void );         /* test for end condition of for */
-void Frame( BYTE bLocals, BYTE bParams );  /* increases the stack pointer for the amount of locals and params suplied */
-void FuncPtr( void );         /* pushes a function address pointer. Removes the symbol from the satck */
-void Function( WORD wParams ); /* executes a function saving its result */
-void GenArray( WORD wElements ); /* generates a wElements Array and fills it from the stack values */
-void Greater( void );         /* checks if the latest - 1 value is greater than the latest, removes both and leaves result */
-void GreaterEqual( void );    /* checks if the latest - 1 value is greater than or equal the latest, removes both and leaves result */
-void Inc( void );             /* increment the latest numeric value on the stack */
-void Instring( void );        /* check whether string 1 is contained in string 2 */
-void Less( void );            /* checks if the latest - 1 value is less than the latest, removes both and leaves result */
-void LessEqual( void );       /* checks if the latest - 1 value is less than or equal the latest, removes both and leaves result */
-void Message( PSYMBOL pSymMsg ); /* sends a message to an object */
-void Minus( void );           /* substracts the latest two values on the stack, removes them and leaves the result */
-void Modulus( void );         /* calculates the modulus of latest two values on the stack, removes them and leaves the result */
-void Mult( void );            /* multiplies the latest two values on the stack, removes them and leaves the result */
-void Negate( void );          /* negates (-) the latest value on the stack */
-void Not( void );             /* changes the latest logical value on the stack */
-void NotEqual( void );        /* checks if the two latest values on the stack are not equal, removes both and leaves result */
-void OperatorCall( PHB_ITEM, PHB_ITEM, char *); /* call an overloaded operator */
-void Or( void );              /* performs the logical OR on the latest two values, removes them and leaves result on the stack */
-void Plus( void );            /* sums the latest two values on the stack, removes them and leaves the result */
-long PopDate( void );         /* pops the stack latest value and returns its date value as a LONG */
-void PopDefStat( WORD wStatic ); /* pops the stack latest value onto a static as default init */
-double PopDouble( WORD * );   /* pops the stack latest value and returns its double numeric format value */
-void PopLocal( SHORT wLocal );      /* pops the stack latest value onto a local */
-int  PopLogical( void );           /* pops the stack latest value and returns its logical value */
-void PopMemvar( PSYMBOL );     /* pops a value of memvar variable */
-double PopNumber( void );          /* pops the stack latest value and returns its numeric value */
-void PopParameter( PSYMBOL, BYTE );  /* creates a PRIVATE variable and sets it with parameter's value */
-void PopStatic( WORD wStatic );    /* pops the stack latest value onto a static */
-void Power( void );            /* power the latest two values on the stack, removes them and leaves the result */
-void Push( PHB_ITEM pItem );     /* pushes a generic item onto the stack */
-void PushBlock( BYTE * pCode, PSYMBOL pSymbols ); /* creates a codeblock */
-void PushDate( LONG lDate );   /* pushes a long date onto the stack */
-void PushDouble( double lNumber, WORD wDec ); /* pushes a double number onto the stack */
-void PushLocal( SHORT iLocal );     /* pushes the containts of a local onto the stack */
-void PushLocalByRef( SHORT iLocal ); /* pushes a local by refrence onto the stack */
-void PushLogical( int iTrueFalse ); /* pushes a logical value onto the stack */
-void PushLong( long lNumber ); /* pushes a long number onto the stack */
-void PushMemvar( PSYMBOL );     /* pushes a value of memvar variable */
-void PushMemvarByRef( PSYMBOL ); /* pushes a reference to a memvar variable */
-void PushNil( void );            /* in this case it places nil at self */
-void PushNumber( double dNumber, WORD wDec ); /* pushes a number on to the stack and decides if it is integer, long or double */
-void PushStatic( WORD wStatic );   /* pushes the containts of a static onto the stack */
-void PushStaticByRef( WORD iLocal ); /* pushes a static by refrence onto the stack */
-void PushString( char * szText, ULONG length );  /* pushes a string on to the stack */
-void PushSymbol( PSYMBOL pSym ); /* pushes a function pointer onto the stack */
-void PushInteger( int iNumber ); /* pushes a integer number onto the stack */
-void RetValue( void );           /* pops the latest stack value into stack.Return */
-void SFrame( PSYMBOL pSym );     /* sets the statics frame for a function */
-void Statics( PSYMBOL pSym );    /* increases the the global statics array to hold a PRG statics */
+extern ULONG ulMemoryBlocks;      /* memory blocks used */
+extern ULONG ulMemoryMaxBlocks;   /* maximum number of used memory blocks */
+extern ULONG ulMemoryConsumed;    /* memory size consumed */
+extern ULONG ulMemoryMaxConsumed; /* memory max size consumed */
 
 typedef struct _SYMBOLS
 {
@@ -132,34 +60,81 @@ typedef struct _SYMBOLS
    SYMBOLSCOPE hScope;     /* scope collected from all symbols in module used to speed initialization code */
 } SYMBOLS, * PSYMBOLS;     /* structure to keep track of all modules symbol tables */
 
+HARBOUR HB_ERRORSYS( void );
+HARBOUR HB_ERRORNEW( void );
+HARBOUR HB_EVAL( void );         /* Evaluates a codeblock from Harbour */
+HARBOUR HB_MAIN( void );         /* fixed entry point by now */
+HARBOUR HB_VALTYPE( void );      /* returns a string description of a value */
+
+/* currently supported virtual machine actions */
+void    And( void );             /* performs the logical AND on the latest two values, removes them and leaves result on the stack */
+void    ArrayAt( void );         /* pushes an array element to the stack, removing the array and the index from the stack */
+void    ArrayPut( void );        /* sets an array value and pushes the value on to the stack */
+void    Dec( void );             /* decrements the latest numeric value on the stack */
+void    Div( void );             /* divides the latest two values on the stack, removes them and leaves the result */
+void    Do( WORD WParams );      /* invoke the virtual machine */
+HARBOUR DoBlock( void );         /* executes a codeblock */
+void    Duplicate( void );       /* duplicates the latest value on the stack */
+void    DuplTwo( void );         /* duplicates the latest two value on the stack */
+void    EndBlock( void );        /* copies the last codeblock pushed value into the return value */
+void    Equal( BOOL bExact );    /* checks if the two latest values on the stack are equal, removes both and leaves result */
+void    ForTest( void );         /* test for end condition of for */
+void    Frame( BYTE bLocals, BYTE bParams );  /* increases the stack pointer for the amount of locals and params suplied */
+void    FuncPtr( void );         /* pushes a function address pointer. Removes the symbol from the satck */
+void    Function( WORD wParams ); /* executes a function saving its result */
+void    GenArray( WORD wElements ); /* generates a wElements Array and fills it from the stack values */
+void    Greater( void );         /* checks if the latest - 1 value is greater than the latest, removes both and leaves result */
+void    GreaterEqual( void );    /* checks if the latest - 1 value is greater than or equal the latest, removes both and leaves result */
+void    Inc( void );             /* increment the latest numeric value on the stack */
+void    Instring( void );        /* check whether string 1 is contained in string 2 */
+void    Less( void );            /* checks if the latest - 1 value is less than the latest, removes both and leaves result */
+void    LessEqual( void );       /* checks if the latest - 1 value is less than or equal the latest, removes both and leaves result */
+void    Message( PSYMBOL pSymMsg ); /* sends a message to an object */
+void    Minus( void );           /* substracts the latest two values on the stack, removes them and leaves the result */
+void    Modulus( void );         /* calculates the modulus of latest two values on the stack, removes them and leaves the result */
+void    Mult( void );            /* multiplies the latest two values on the stack, removes them and leaves the result */
+void    Negate( void );          /* negates (-) the latest value on the stack */
+void    Not( void );             /* changes the latest logical value on the stack */
+void    NotEqual( void );        /* checks if the two latest values on the stack are not equal, removes both and leaves result */
+void    OperatorCall( PHB_ITEM, PHB_ITEM, char *); /* call an overloaded operator */
+void    Or( void );              /* performs the logical OR on the latest two values, removes them and leaves result on the stack */
+void    Plus( void );            /* sums the latest two values on the stack, removes them and leaves the result */
+long    PopDate( void );         /* pops the stack latest value and returns its date value as a LONG */
+void    PopDefStat( WORD wStatic ); /* pops the stack latest value onto a static as default init */
+double  PopDouble( WORD * );   /* pops the stack latest value and returns its double numeric format value */
+void    PopLocal( SHORT wLocal );      /* pops the stack latest value onto a local */
+int     PopLogical( void );           /* pops the stack latest value and returns its logical value */
+void    PopMemvar( PSYMBOL );     /* pops a value of memvar variable */
+double  PopNumber( void );          /* pops the stack latest value and returns its numeric value */
+void    PopParameter( PSYMBOL, BYTE );  /* creates a PRIVATE variable and sets it with parameter's value */
+void    PopStatic( WORD wStatic );    /* pops the stack latest value onto a static */
+void    Power( void );            /* power the latest two values on the stack, removes them and leaves the result */
+void    Push( PHB_ITEM pItem );     /* pushes a generic item onto the stack */
+void    PushBlock( BYTE * pCode, PSYMBOL pSymbols ); /* creates a codeblock */
+void    PushDate( LONG lDate );   /* pushes a long date onto the stack */
+void    PushDouble( double lNumber, WORD wDec ); /* pushes a double number onto the stack */
+void    PushLocal( SHORT iLocal );     /* pushes the containts of a local onto the stack */
+void    PushLocalByRef( SHORT iLocal ); /* pushes a local by refrence onto the stack */
+void    PushLogical( int iTrueFalse ); /* pushes a logical value onto the stack */
+void    PushLong( long lNumber ); /* pushes a long number onto the stack */
+void    PushMemvar( PSYMBOL );     /* pushes a value of memvar variable */
+void    PushMemvarByRef( PSYMBOL ); /* pushes a reference to a memvar variable */
+void    PushNil( void );            /* in this case it places nil at self */
+void    PushNumber( double dNumber, WORD wDec ); /* pushes a number on to the stack and decides if it is integer, long or double */
+void    PushStatic( WORD wStatic );   /* pushes the containts of a static onto the stack */
+void    PushStaticByRef( WORD iLocal ); /* pushes a static by refrence onto the stack */
+void    PushString( char * szText, ULONG length );  /* pushes a string on to the stack */
+void    PushSymbol( PSYMBOL pSym ); /* pushes a function pointer onto the stack */
+void    PushInteger( int iNumber ); /* pushes a integer number onto the stack */
+void    RetValue( void );           /* pops the latest stack value into stack.Return */
+void    SFrame( PSYMBOL pSym );     /* sets the statics frame for a function */
+void    Statics( PSYMBOL pSym );    /* increases the the global statics array to hold a PRG statics */
+
 void ProcessSymbols( PSYMBOL pSymbols, WORD wSymbols ); /* statics symbols initialization */
 void DoInitStatics( void ); /* executes all _INITSTATICS functions */
 void DoInitFunctions( int argc, char * argv[] ); /* executes all defined PRGs INIT functions */
 void DoExitFunctions( void ); /* executes all defined PRGs EXIT functions */
-void LogSymbols( void );         /* displays all dynamic symbols */
-void ReleaseClasses( void );       /* releases all defined classes */
 void ReleaseLocalSymbols( void );  /* releases the memory of the local symbols linked list */
-void hb_ReleaseDynamicSymbols( void ); /* releases the memory of the dynamic symbol table */
-
-/* stack management functions */
-void StackDec( void );        /* pops an item from the stack without clearing it's contents */
-void StackPop( void );        /* pops an item from the stack */
-void StackFree( void );       /* releases all memory used by the stack */
-void StackPush( void );       /* pushes an item on to the stack */
-void StackInit( void );       /* initializes the stack */
-void StackShow( void );       /* show the types of the items on the stack for debugging purposes */
-
-void InitSymbolTable( void );   /* initialization of runtime support symbols */
-
-static void ForceLink( void );
-
-#define STACK_INITHB_ITEMS   100
-#define STACK_EXPANDHB_ITEMS  20
-
-extern ULONG ulMemoryBlocks;      /* memory blocks used */
-extern ULONG ulMemoryMaxBlocks;   /* maximum number of used memory blocks */
-extern ULONG ulMemoryConsumed;    /* memory size consumed */
-extern ULONG ulMemoryMaxConsumed; /* memory max size consumed */
 
 #ifdef HARBOUR_OBJ_GENERATION
 void ProcessObjSymbols ( void ); /* process Harbour generated OBJ symbols */
@@ -177,16 +152,28 @@ extern POBJSYMBOLS HB_FIRSTSYMBOL, HB_LASTSYMBOL;
 #endif
 #endif
 
-int iHB_DEBUG = 0;      /* if 1 traces the virtual machine activity */
+/* stack management functions */
+void StackDec( void );        /* pops an item from the stack without clearing it's contents */
+void StackPop( void );        /* pops an item from the stack */
+void StackFree( void );       /* releases all memory used by the stack */
+void StackPush( void );       /* pushes an item on to the stack */
+void StackInit( void );       /* initializes the stack */
+void StackShow( void );       /* show the types of the items on the stack for debugging purposes */
 
-STACK stack;
-SYMBOL symEval = { "__EVAL", FS_PUBLIC, DoBlock, 0 }; /* symbol to evaluate codeblocks */
-PSYMBOL pSymStart;        /* start symbol of the application. MAIN() is not required */
-HB_ITEM aStatics;         /* Harbour array to hold all application statics variables */
-HB_ITEM errorBlock;       /* errorblock */
-PSYMBOLS pSymbols = 0;    /* to hold a linked list of all different modules symbol tables */
-BOOL bQuit = FALSE;       /* inmediately exit the application */
-BYTE bErrorLevel = 0;     /* application exit errorlevel */
+static void ForceLink( void );
+
+#define STACK_INITHB_ITEMS   100
+#define STACK_EXPANDHB_ITEMS  20
+
+int      iHB_DEBUG = 0;    /* if 1 traces the virtual machine activity */
+STACK    stack;
+SYMBOL   symEval = { "__EVAL", FS_PUBLIC, DoBlock, 0 }; /* symbol to evaluate codeblocks */
+PSYMBOL  pSymStart;        /* start symbol of the application. MAIN() is not required */
+HB_ITEM  aStatics;         /* Harbour array to hold all application statics variables */
+HB_ITEM  errorBlock;       /* errorblock */
+PSYMBOLS pSymbols = 0;     /* to hold a linked list of all different modules symbol tables */
+BOOL     bQuit = FALSE;    /* inmediately exit the application */
+BYTE     bErrorLevel = 0;  /* application exit errorlevel */
 
 #define HB_DEBUG( x )     if( iHB_DEBUG ) printf( x )
 #define HB_DEBUG2( x, y ) if( iHB_DEBUG ) printf( x, y )
@@ -263,12 +250,12 @@ BYTE bErrorLevel = 0;     /* application exit errorlevel */
    hb_itemClear( &errorBlock );
    ReleaseClasses();
    ReleaseLocalSymbols();       /* releases the local modules linked list */
-   hb_ReleaseDynamicSymbols();  /* releases the dynamic symbol table */
+   hb_ReleaseDynSym();          /* releases the dynamic symbol table */
    hb_consoleRelease();         /* releases Console */
    hb_setRelease();             /* releases Sets */
    hb_MemvarsRelease();
    StackFree();
-   /* LogSymbols(); */
+   /* hb_LogDynSym(); */
    HB_DEBUG( "Done!\n" );
 
    if( ulMemoryBlocks )
@@ -732,7 +719,7 @@ void Do( WORD wParams )
    LONG wStackBase = stack.pBase - stack.pItems; /* as the stack memory block could change */
    LONG wItemIndex = pItem - stack.pItems;
    PHB_ITEM pSelf = stack.pPos - wParams - 1;   /* NIL, OBJECT or BLOCK */
-   HARBOURFUNC pFunc;
+   PHB_FUNC pFunc;
    int iStatics = stack.iStatics;              /* Return iStatics position */
 
    if( ! IS_SYMBOL( pItem ) )
@@ -1862,8 +1849,8 @@ void StackFree( void )
 
 void StackPush( void )
 {
-   LONG CurrIndex,   /* index of current top item */
-        TopIndex;    /* index of the topmost possible item */
+   LONG CurrIndex;   /* index of current top item */
+   LONG TopIndex;    /* index of the topmost possible item */
 
    CurrIndex = stack.pPos - stack.pItems;
    TopIndex  = stack.wItems - 1;
@@ -1979,7 +1966,7 @@ void Statics( PSYMBOL pSym ) /* initializes the global aStatics array or redimen
    }
    else
    {
-      pSym->pFunPtr = ( HARBOURFUNC )hb_arrayLen( &aStatics );
+      pSym->pFunPtr = ( PHB_FUNC )hb_arrayLen( &aStatics );
       hb_arraySize( &aStatics, hb_arrayLen( &aStatics ) + wStatics );
    }
 
@@ -2209,7 +2196,7 @@ HARBOUR HB_EMPTY(void)
               break;
 
          case IT_DATE:
-             hb_retl( atol( hb_pards( 1 ) ) == 0 );  /* Convert to long */
+              hb_retl( atol( hb_pards( 1 ) ) == 0 );  /* Convert to long */
               break;
 
          case IT_LOGICAL:

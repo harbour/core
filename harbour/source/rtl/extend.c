@@ -138,12 +138,52 @@ ULONG hb_parclen( int iParam, ... )
    return 0;
 }
 
+/* Same as _parclen() but return the length including the */
+/* terminating zero byte */
+
+ULONG hb_parcsiz( int iParam, ... )
+{
+   PHB_ITEM pItem;
+   va_list va;
+   WORD wArrayIndex;
+
+   va_start( va, iParam );
+   wArrayIndex = va_arg( va, int );
+   va_end( va );
+
+   if( ( iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   {
+      if( iParam == -1 )
+         pItem = &stack.Return;
+      else if( iParam < -1 )
+         return 0;
+      else
+         pItem = stack.pBase + 1 + iParam;
+
+      if( IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( IS_ARRAY( pItem ) )
+      {
+         if( wArrayIndex )
+            return hb_arrayGetStringLen( pItem, wArrayIndex ) + 1;
+         else
+            return 0;
+      }
+      else if( IS_STRING( pItem ) )
+         return pItem->item.asString.length + 1;
+
+      else
+         return 0;
+   }
+   return 0;
+}
+
 char * hb_pards( int iParam, ... )
 {
    PHB_ITEM pItem;
    va_list va;
    WORD wArrayIndex;
-   long lDay, lMonth, lYear;
 
    va_start( va, iParam );
    wArrayIndex = va_arg( va, int );
@@ -164,25 +204,21 @@ char * hb_pards( int iParam, ... )
       if( IS_ARRAY( pItem ) )
       {
          if( wArrayIndex )
-            return strcpy( stack.szDate, hb_arrayGetDate( pItem, wArrayIndex ) );
+         {
+            hb_arrayGetDate( pItem, wArrayIndex, stack.szDate );
+            stack.szDate[ 8 ] = 0;
+
+            return stack.szDate;
+         }
          else
             return "        ";
       }
-
-        else if( IS_DATE( pItem ) && pItem->item.asDate.value > 0 )
+      else if( IS_DATE( pItem ) && pItem->item.asDate.value > 0 )
       {
+         long lDay, lMonth, lYear;
+
          hb_dateDecode( pItem->item.asDate.value, &lDay, &lMonth, &lYear );
-
-         stack.szDate[ 0 ] = ( lYear / 1000 ) + '0';
-         stack.szDate[ 1 ] = ( ( lYear % 1000 ) / 100 ) + '0';
-         stack.szDate[ 2 ] = ( ( lYear % 100 ) / 10 ) + '0';
-         stack.szDate[ 3 ] = ( lYear % 10 ) + '0';
-
-         stack.szDate[ 4 ] = ( lMonth / 10 ) + '0';
-         stack.szDate[ 5 ] = ( lMonth % 10 ) + '0';
-
-         stack.szDate[ 6 ] = ( lDay / 10 ) + '0';
-         stack.szDate[ 7 ] = ( lDay % 10 ) + '0';
+         hb_dateStrPut( stack.szDate, lDay, lMonth, lYear );
          stack.szDate[ 8 ] = 0;
 
          return stack.szDate; /* this guaranties good behavior when multithreading */
@@ -444,16 +480,7 @@ void hb_retds( char * szDate ) /* szDate must have yyyymmdd format */
 {
    long lDay, lMonth, lYear;
 
-   if( szDate && strlen( szDate ) == 8 )
-   {
-      /* Date string has correct length, so attempt to convert */
-      lDay   = ( ( szDate[ 6 ] - '0' ) * 10 ) + ( szDate[ 7 ] - '0' );
-      lMonth = ( ( szDate[ 4 ] - '0' ) * 10 ) + ( szDate[ 5 ] - '0' );
-      lYear  = ( ( szDate[ 0 ] - '0' ) * 1000 ) + ( ( szDate[ 1 ] - '0' ) * 100 ) +
-               ( ( szDate[ 2 ] - '0' ) * 10 ) + ( szDate[ 3 ] - '0' );
-   }
-   else lDay = lMonth = lYear = 0; /* Date string missing or bad length,
-                                      so force an empty date */
+   hb_dateStrGet( szDate, &lDay, &lMonth, &lYear );
 
    hb_itemClear( &stack.Return );
 
@@ -608,21 +635,8 @@ void hb_storclen( char * fixText, WORD wLength, int iParam, ... )
 
 void hb_stords( char * szDate, int iParam, ... ) /* szDate must have yyyymmdd format */
 {
-   PHB_ITEM pItem, pItemRef;
    va_list va;
    WORD wArrayIndex;
-   long lDay, lMonth, lYear;
-
-   if( szDate && strlen( szDate ) == 8 )
-   {
-      /* Date string is valid length, so attempt conversion */
-      lDay   = ( ( szDate[ 6 ] - '0' ) * 10 ) + ( szDate[ 7 ] - '0' );
-      lMonth = ( ( szDate[ 4 ] - '0' ) * 10 ) + ( szDate[ 5 ] - '0' );
-      lYear  = ( ( szDate[ 0 ] - '0' ) * 1000 ) + ( ( szDate[ 1 ] - '0' ) * 100 ) +
-               ( ( szDate[ 2 ] - '0' ) * 10 ) + ( szDate[ 3 ] - '0' );
-   }
-   else lDay = lMonth = lYear = 0; /* Date string missing or bad length,
-                                      so force an empty date */
 
    va_start( va, iParam );
    wArrayIndex = va_arg( va, int );
@@ -630,6 +644,11 @@ void hb_stords( char * szDate, int iParam, ... ) /* szDate must have yyyymmdd fo
 
    if( ( iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
+      PHB_ITEM pItem, pItemRef;
+      long lDay, lMonth, lYear;
+
+      hb_dateStrGet( szDate, &lDay, &lMonth, &lYear );
+
       if( iParam == -1 )
       {
          pItem = &stack.Return;

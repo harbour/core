@@ -6,19 +6,18 @@ ROOT = ../
 
 C_HEADERS=\
 	box.h \
-	compat.h \
 	compiler.h \
 	ctoharb.h \
 	dates.h \
 	errorapi.h \
 	extend.h \
-	extra.h \
 	filesys.h \
 	gtapi.h \
 	hbdefs.h \
 	hberrors.h \
 	hbpp.h \
 	hbsetup.h \
+	hbver.h \
 	init.h \
 	initsymb.h \
 	inkey.h \
@@ -26,8 +25,6 @@ C_HEADERS=\
 	pcode.h \
 	run_exp.h \
 	set.h \
-	super.h \
-	hbver.h \
 
 PRG_HEADERS=\
 	box.ch \

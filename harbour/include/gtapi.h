@@ -47,38 +47,38 @@
 
 /* Public interface. These should never change, only be added to. */
 
-void   hb_gtInit(void);
-void   hb_gtExit(void);
-int    hb_gtBox(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * fpBoxString);
-int    hb_gtBoxD(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight);
-int    hb_gtBoxS(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight);
-int    hb_gtColorSelect(USHORT uiColorIndex);
-int    hb_gtDispBegin(void);
-USHORT hb_gtDispCount(void);
-int    hb_gtDispEnd(void);
-int    hb_gtGetColorStr(char * fpColorString);
-int    hb_gtGetCursor(USHORT * uipCursorShape);
-int    hb_gtGetPos(USHORT * uipRow, USHORT * uipCol);
-BOOL   hb_gtIsColor(void);
-USHORT hb_gtMaxCol(void);
-USHORT hb_gtMaxRow(void);
-int    hb_gtPostExt(void);
-int    hb_gtPreExt(void);
-int    hb_gtRectSize(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, USHORT * uipBuffSize);
-int    hb_gtRepChar(USHORT uiRow, USHORT uiCol, USHORT uiChar, USHORT uiCount);
-int    hb_gtRest(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * vlpScrBuff);
-int    hb_gtSave(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * vlpScrBuff);
-int    hb_gtScrDim(USHORT * uipHeight, USHORT * uipWidth);
-int    hb_gtScroll(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SHORT iRows, SHORT iCols);
-int    hb_gtSetBlink(BOOL bBlink);
-int    hb_gtSetColorStr(char * fpColorString);
-int    hb_gtSetCursor(USHORT uiCursorShape);
-int    hb_gtSetMode(USHORT uiRows, USHORT uiCols);
-int    hb_gtSetPos(USHORT uiRow, USHORT uiCol);
-int    hb_gtSetSnowFlag(BOOL bNoSnow);
-int    hb_gtWrite(char * fpStr, ULONG length);
-int    hb_gtWriteAt(USHORT uiRow, USHORT uiCol, char * fpStr, ULONG length);
-int    hb_gtWriteCon(char * fpStr, ULONG length);
+extern void   hb_gtInit(void);
+extern void   hb_gtExit(void);
+extern int    hb_gtBox(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * fpBoxString);
+extern int    hb_gtBoxD(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight);
+extern int    hb_gtBoxS(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight);
+extern int    hb_gtColorSelect(USHORT uiColorIndex);
+extern int    hb_gtDispBegin(void);
+extern USHORT hb_gtDispCount(void);
+extern int    hb_gtDispEnd(void);
+extern int    hb_gtGetColorStr(char * fpColorString);
+extern int    hb_gtGetCursor(USHORT * uipCursorShape);
+extern int    hb_gtGetPos(USHORT * uipRow, USHORT * uipCol);
+extern BOOL   hb_gtIsColor(void);
+extern USHORT hb_gtMaxCol(void);
+extern USHORT hb_gtMaxRow(void);
+extern int    hb_gtPostExt(void);
+extern int    hb_gtPreExt(void);
+extern int    hb_gtRectSize(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, USHORT * uipBuffSize);
+extern int    hb_gtRepChar(USHORT uiRow, USHORT uiCol, USHORT uiChar, USHORT uiCount);
+extern int    hb_gtRest(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * vlpScrBuff);
+extern int    hb_gtSave(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * vlpScrBuff);
+extern int    hb_gtScrDim(USHORT * uipHeight, USHORT * uipWidth);
+extern int    hb_gtScroll(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SHORT iRows, SHORT iCols);
+extern int    hb_gtSetBlink(BOOL bBlink);
+extern int    hb_gtSetColorStr(char * fpColorString);
+extern int    hb_gtSetCursor(USHORT uiCursorShape);
+extern int    hb_gtSetMode(USHORT uiRows, USHORT uiCols);
+extern int    hb_gtSetPos(USHORT uiRow, USHORT uiCol);
+extern int    hb_gtSetSnowFlag(BOOL bNoSnow);
+extern int    hb_gtWrite(char * fpStr, ULONG length);
+extern int    hb_gtWriteAt(USHORT uiRow, USHORT uiCol, char * fpStr, ULONG length);
+extern int    hb_gtWriteCon(char * fpStr, ULONG length);
 
 #ifndef DOS
 #if defined(_QC) || defined(__DOS__) || defined(MSDOS) || defined(__MSDOS__)
@@ -105,26 +105,27 @@ int    hb_gtWriteCon(char * fpStr, ULONG length);
 #endif
 
 /* private interface listed below. these are common to all platforms */
+/* TODO: Rename these to hb_gt_*() */
 
-void gtInit(void);
-int  gtIsColor(void);
-void gtDone(void);
-char gtGetScreenWidth(void);
-char gtGetScreenHeight(void);
-void gtSetPos(char cRow, char cCol);
-char gtCol(void);
-char gtRow(void);
-void gtScroll(char cTop, char cLeft, char cBottom, char cRight, char attribute, char vert, char horiz);
-void gtSetCursorStyle(int style);
-int  gtGetCursorStyle(void);
-void gtPuts(char cRow, char cCol, char attr, char *str, int len);
-void gtGetText(char cTop, char cLeft, char cBottom, char cRight, char *dest);
-void gtPutText(char cTop, char cLeft, char cBottom, char cRight, char *srce);
-void gtSetAttribute( char cTop, char cLeft, char cBottom, char cRight, char attribute );
-void gtDrawShadow( char cTop, char cLeft, char cBottom, char cRight, char attribute );
-void hb_gt_DispBegin(char color);
-void hb_gt_DispEnd(void);
-ULONG hb_gt_ScreenBuffer( ULONG buffer );
-void hb_gt_SetMode( USHORT uiRows, USHORT uiCols );
+extern void  gtInit(void);
+extern int   gtIsColor(void);
+extern void  gtDone(void);
+extern char  gtGetScreenWidth(void);
+extern char  gtGetScreenHeight(void);
+extern void  gtSetPos(char cRow, char cCol);
+extern char  gtCol(void);
+extern char  gtRow(void);
+extern void  gtScroll(char cTop, char cLeft, char cBottom, char cRight, char attribute, char vert, char horiz);
+extern void  gtSetCursorStyle(int style);
+extern int   gtGetCursorStyle(void);
+extern void  gtPuts(char cRow, char cCol, char attr, char *str, int len);
+extern void  gtGetText(char cTop, char cLeft, char cBottom, char cRight, char *dest);
+extern void  gtPutText(char cTop, char cLeft, char cBottom, char cRight, char *srce);
+extern void  gtSetAttribute( char cTop, char cLeft, char cBottom, char cRight, char attribute );
+extern void  gtDrawShadow( char cTop, char cLeft, char cBottom, char cRight, char attribute );
+extern void  hb_gt_DispBegin(char color);
+extern void  hb_gt_DispEnd(void);
+extern ULONG hb_gt_ScreenBuffer( ULONG buffer );
+extern void  hb_gt_SetMode( USHORT uiRows, USHORT uiCols );
 
 #endif /* HB_GTAPI_H_ */

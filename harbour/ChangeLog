@@ -1,3 +1,69 @@
+19990802-15:20 GMT+1 Victor Szel <info@szelvesz.hu>
+   % source/hbpp/hbpplib.c
+     source/tools/debug.c
+     source/tools/stringsx.c - Unused #includes removed
+^  + doc/codestyl.txt - Added. Moved here from source/vm/hvm.c
+   * source/rtl/strings.c
+     include/extend.h
+     source/vm/dynsym.c - hb_strgreater() and hb_strupr() moved.
+   * source/vm/dynsym.c
+     source/vm/hvm.c
+     LogSymbols() -> hb_LogDynSym()
+     hb_ReleaseDynamicSymbols() -> hb_ReleaseDynSym()
+   * source/rtl/classes.c
+     source/runner/runner.c
+     source/vm/hvm.c
+     include/extend.h
+     include/hbdefs.h - HARBOURFUNC -> PHB_FUNC
+   + include/item.api
+     include/itemapi.h - Moved #define ITEM PHB_ITEM to item.api, guard added.
+   ! source/rtl/itemapi.c
+     hb_itemGetDS() handling of the case when item is not a date
+     fixed and made Clipper compatible.
+     It will no longer place a \0 after the date. Clipper does the
+     same, the NG is obviously wrong here, since it requires to pass
+     an 8 byte buffer which is then supposed to hold an 8 chars date plus the
+     terminating zero. Testing showed that Clipper doesn't place a \0.
+   + include/extend.h
+     source/rtl/arrays.c
+     source/rtl/extend.c
+     Change hb_arrayGetDate() to be thread safe by design,
+     got rid of static buffer.
+   + source/rtl/files.c/hb_fsCurDir() - Added TODO: Make it thread safe.
+   % source/rtl/dates.c/STOD() - Some checkings removed, which had been
+     moved to hb_retds() previously.
+   + source/rtl/dates.c
+     source/rtl/arrays.c
+     source/rtl/extend.c
+     source/rtl/itemapi.c
+     include/dates.h
+     hb_dateStrPut(), hb_dateStrGet() added. Redundant code converted
+     to calls for these.
+   * include/set.h 
+     source/vm/hvm.c- Extern decls moved to source/rtl/set.c and to
+   * source/rtl/codebloc.c - Extern decls moved to include/extend.h
+   * source/vm/initsymb.c - Extern decl moved to include/extend.h
+   + include/*.h - extern keyword added to all extern declarations.
+   ! include/item.api - _array* removed since not in Clipper.
+   ! include/extend.api - _pcount, _reta removed since not in Clipper.
+   ! include/gt.api - _gtInit removed since not in Clipper.
+   ! include/vm.api - #include "extend.h" added.
+^  - include/compat.h
+     include/super.h
+     include/extra.h
+     include/Makefile - Unused header files removed.
+     They supposed to be used by Ad's RDD implementation.
+   + include/itemapi.h
+     source/rtl/itemapi.c
+     The maximum number of parameters that could be addd with
+     hb_EvalPutParam() can be set with a #define. Also 10 instead on 9
+     parameters can be used now.
+   % include/itemapi.h - Two unused variables removed from the EVALINFO
+     structure.
+   + include/extend.api
+     include/extend.h
+     source/rtl/extend.c - hb_parcsiz() added for Clipper compatibility.
+
 19990802-05:30 EDT Paul Tucker <ptucker@sympatico.ca>
   * test/working/scroll.prg
     * added calls to dispbegin/dispend - nice & snappy now!
@@ -81,7 +147,7 @@
 19990801-21:58 GMT+1 Victor Szel <info@szelvesz.hu>
    % source/rtl/descend.c
      #include <ctype.h> removed
-   ! source/compiler/harbour.y - 
+   ! source/compiler/harbour.y -
      hb_INITSTATICS() -> HB_INITSTATICS() (case adjusted)
      Change undone. Comment added to make this clear.
 
@@ -115,16 +181,16 @@
      Added a include path to harbour
 
 19990801-18:14 CET Victor Szel <info@szelvesz.hu>
-   ! source/compiler/harbour.y - 
+   ! source/compiler/harbour.y -
      hb_INITSTATICS() -> HB_INITSTATICS() (case adjusted)
    + source/rdd/nulsys/nulsys.prg - Using ANNOUNCE
    ! source/rtl/mtran.c - Fixed, now 100% Clipper compatible.
      - HARD and SOFT characters swapped.
      - HARD and SOFT characters pairs are changed to only one
        character, like in Clipper.
-     - unnecessary include ctype.h removed. 
-   ! source/rtl/hardcr.c 
-     - unnecessary include ctype.h removed. 
+     - unnecessary include ctype.h removed.
+   ! source/rtl/hardcr.c
+     - unnecessary include ctype.h removed.
      - "HARD_" -> "SOFT_" #define names corrected.
    + tests/working/mtran.prg - More extensive tests added.
    ! source/rtl/msgxxx.c - Previous changes undone, to make it work in GCC.
@@ -136,7 +202,7 @@
 199908.01-16:30 GMT+3 Alexander Kresin
   * source/hbpp/hbppint.c
     * Bug fixed ( related to line continuation )
-    
+
 199908.01-20:30 WIB Andi Jahja
   * msgxxx.c
     correct directives, it now works

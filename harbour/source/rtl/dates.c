@@ -1,6 +1,7 @@
 /*
  * $Id$
  */
+
 /* Harbour Project source code
  * http://www.Harbour-Project.org/
  *
@@ -164,6 +165,34 @@ void hb_dateDecode( long julian, long * plDay, long * plMonth, long * plYear )
       * plMonth = 0;
       * plYear = 0;
    }
+}
+
+void hb_dateStrPut( char * szDate, long lDay, long lMonth, long lYear )
+{
+   szDate[ 0 ] = ( lYear / 1000 ) + '0';
+   szDate[ 1 ] = ( ( lYear % 1000 ) / 100 ) + '0';
+   szDate[ 2 ] = ( ( lYear % 100 ) / 10 ) + '0';
+   szDate[ 3 ] = ( lYear % 10 ) + '0';
+
+   szDate[ 4 ] = ( lMonth / 10 ) + '0';
+   szDate[ 5 ] = ( lMonth % 10 ) + '0';
+
+   szDate[ 6 ] = ( lDay / 10 ) + '0';
+   szDate[ 7 ] = ( lDay % 10 ) + '0';
+}
+
+void hb_dateStrGet( char * szDate, long * plDay, long * plMonth, long * plYear )
+{
+   if( szDate && strlen( szDate ) == 8 )
+   {
+      /* Date string has correct length, so attempt to convert */
+      *plDay   = ( ( szDate[ 6 ] - '0' ) * 10 ) + ( szDate[ 7 ] - '0' );
+      *plMonth = ( ( szDate[ 4 ] - '0' ) * 10 ) + ( szDate[ 5 ] - '0' );
+      *plYear  = ( ( szDate[ 0 ] - '0' ) * 1000 ) + ( ( szDate[ 1 ] - '0' ) * 100 ) +
+                 ( ( szDate[ 2 ] - '0' ) * 10 ) + ( szDate[ 3 ] - '0' );
+   }
+   else *plDay = *plMonth = *plYear = 0; /* Date string missing or bad length,
+                                            so force an empty date */
 }
 
 HARBOUR HB_CTOD( void )
@@ -435,7 +464,7 @@ HARBOUR HB_DTOS( void )
 
 HARBOUR HB_STOD( void )
 {
-   hb_retds((ISCHAR(1) && hb_parclen(1) == 8) ? hb_parc(1) : "        ");
+   hb_retds( hb_parc(1) );
 }
 
 HARBOUR HB_DAY( void )
@@ -456,7 +485,7 @@ HARBOUR HB_DAY( void )
       hb_itemRelease( pReturn );
 /*
       hb_retni( lDay );
- * It is dengerous to manipulate the stack return value directly!
+ * It is dangerous to manipulate the stack return value directly!
       stack.Return.item.asInteger.length = 3;
  */
    }
@@ -484,7 +513,7 @@ HARBOUR HB_MONTH( void )
       hb_itemRelease( pReturn );
 /*
       hb_retni( lMonth );
- * It is dengerous to manipulate the stack return value directly!
+ * It is dangerous to manipulate the stack return value directly!
       stack.Return.item.asInteger.length = 3;
  */
    }
@@ -512,7 +541,7 @@ HARBOUR HB_YEAR( void )
       hb_itemRelease( pReturn );
 /*
       hb_retni( lYear );
- * It is dengerous to manipulate the stack return value directly!
+ * It is dangerous to manipulate the stack return value directly!
       stack.Return.item.asInteger.length = 5;
  */
    }
@@ -589,13 +618,13 @@ HARBOUR HB_DOW( void )
       {
          hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
          pReturn->item.asLong.value =hb_dow( lDay, lMonth, lYear );
-	 /* hb_retni( hb_dow( lDay, lMonth, lYear ) );
-	 */
+         /* hb_retni( hb_dow( lDay, lMonth, lYear ) );
+         */
       }
       else
          pReturn->item.asLong.value =0;
-	 /* hb_retni( 0 );
-	 */
+         /* hb_retni( 0 );
+         */
 
       pReturn->item.asLong.length =3;
       hb_itemReturn( pReturn );

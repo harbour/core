@@ -49,7 +49,7 @@ BOOL hb_evalPutParam( PEVALINFO pEvalInfo, PHB_ITEM pItem )
 
    if( pEvalInfo )
    {
-      for( w = 1; w < 10; w++ ) /* note that 0 position is used by the codeblock or function name item */
+      for( w = 1; w < HB_EVAL_PARAM_MAX_ + 1; w++ ) /* note that 0 position is used by the codeblock or function name item */
       {
          if( ! pEvalInfo->pItems[ w ] )
          {
@@ -70,7 +70,7 @@ BOOL hb_evalRelease( PEVALINFO pEvalInfo )
 
    if( pEvalInfo )
    {
-      for( w = 0; w < 10; w++ )
+      for( w = 0; w < HB_EVAL_PARAM_MAX_ + 1; w++ )
          hb_itemRelease( pEvalInfo->pItems[ w ] );
       bResult = TRUE;
    }
@@ -88,7 +88,7 @@ PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo )
       {
          PushSymbol( hb_GetDynSym( hb_itemGetC( pEvalInfo->pItems[ 0 ] ) )->pSymbol );
          PushNil();
-         while( w < 10 && pEvalInfo->pItems[ w ] )
+         while( w < (HB_EVAL_PARAM_MAX_ + 1) && pEvalInfo->pItems[ w ] )
             Push( pEvalInfo->pItems[ w++ ] );
          Do( w - 1 );
          pResult = hb_itemNew( 0 );
@@ -98,7 +98,7 @@ PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo )
       {
          PushSymbol( &symEval );
          Push( pEvalInfo->pItems[ 0 ] );
-         while( w < 10 && pEvalInfo->pItems[ w ] )
+         while( w < (HB_EVAL_PARAM_MAX_ + 1) && pEvalInfo->pItems[ w ] )
             Push( pEvalInfo->pItems[ w++ ] );
          Do( w - 1 );
          pResult = hb_itemNew( 0 );
@@ -243,24 +243,16 @@ char *hb_itemGetDS( PHB_ITEM pItem, char *szDate )
    if( pItem && IS_DATE(pItem) )
    {
       long lDay, lMonth, lYear;
-      hb_dateDecode(pItem->item.asDate.value, &lDay, &lMonth, &lYear);
 
-      szDate[ 0 ] = ( lYear / 1000 ) + '0';
-      szDate[ 1 ] = ( ( lYear % 1000 ) / 100 ) + '0';
-      szDate[ 2 ] = ( ( lYear % 100 ) / 10 ) + '0';
-      szDate[ 3 ] = ( lYear % 10 ) + '0';
-
-      szDate[ 4 ] = ( lMonth / 10 ) + '0';
-      szDate[ 5 ] = ( lMonth % 10 ) + '0';
-
-      szDate[ 6 ] = ( lDay / 10 ) + '0';
-      szDate[ 7 ] = ( lDay % 10 ) + '0';
-      szDate[ 8 ] = 0;
-
-      return szDate;
+      hb_dateDecode( pItem->item.asDate.value, &lDay, &lMonth, &lYear );
+      hb_dateStrPut( szDate, lDay, lMonth, lYear );
    }
    else
-      return "00000000";
+   {
+      memset( szDate, ' ', 8 );
+   }
+
+   return szDate;
 }
 
 BOOL hb_itemGetL( PHB_ITEM pItem )
@@ -322,10 +314,7 @@ PHB_ITEM hb_itemPutDS( PHB_ITEM pItem, char *szDate )
    else
       pItem = hb_itemNew(0);
 
-   lDay   = ((szDate[ 6 ] - '0') * 10) + (szDate[ 7 ] - '0');
-   lMonth = ((szDate[ 4 ] - '0') * 10) + (szDate[ 5 ] - '0');
-   lYear  = ((szDate[ 0 ] - '0') * 1000) + ((szDate[ 1 ] - '0') * 100)
-      + ((szDate[ 2 ] - '0') * 10) + (szDate[ 3 ] - '0');
+   hb_dateStrGet( szDate, &lDay, &lMonth, &lYear );
 
    hb_itemClear( pItem );
    pItem->type   = IT_DATE;
@@ -513,7 +502,7 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
    int  iRet = 0;                       /* Current status               */
 
    if (hb_set.HB_SET_EXACT && !bForceExact)
-   {					/* SET EXACT ON and not using == */
+   {                                    /* SET EXACT ON and not using == */
                                         /* Don't include trailing spaces */
       while( lLenFirst > 0 && szFirst[ lLenFirst - 1 ] == ' ') lLenFirst--;
       while( lLenSecond > 0 && szSecond[ lLenSecond - 1 ] == ' ') lLenSecond--;

@@ -64,11 +64,8 @@ HB_INIT_SYMBOLS_END( Arrays__InitSymbols );
  */
 
 
-char * hb_arrayGetDate( PHB_ITEM pArray, ULONG ulIndex )
+char * hb_arrayGetDate( PHB_ITEM pArray, ULONG ulIndex, char * szDate )
 {
-  static char szDate[ 9 ];
-  long lDay, lMonth, lYear;
-
   if( IS_ARRAY( pArray ) )
     {
       if( ulIndex <= ( unsigned )hb_arrayLen( pArray ) )
@@ -77,24 +74,15 @@ char * hb_arrayGetDate( PHB_ITEM pArray, ULONG ulIndex )
 
           if( IS_DATE( pItem ) && pItem->item.asDate.value > 0 )
             {
+              long lDay, lMonth, lYear;
+
               hb_dateDecode( pItem->item.asDate.value, &lDay, &lMonth, &lYear );
-
-              szDate[ 0 ] = ( lYear / 1000 ) + '0';
-              szDate[ 1 ] = ( ( lYear % 1000 ) / 100 ) + '0';
-              szDate[ 2 ] = ( ( lYear % 100 ) / 10 ) + '0';
-              szDate[ 3 ] = ( lYear % 10 ) + '0';
-
-              szDate[ 4 ] = ( lMonth / 10 ) + '0';
-              szDate[ 5 ] = ( lMonth % 10 ) + '0';
-
-              szDate[ 6 ] = ( lDay / 10 ) + '0';
-              szDate[ 7 ] = ( lDay % 10 ) + '0';
-              szDate[ 8 ] = 0;
-
-              return szDate;
-           }
+              hb_dateStrPut( szDate, lDay, lMonth, lYear );
+            }
           else
-            return "        ";
+            {
+              memset( szDate, ' ', 8 );
+            }
         }
       else
         {
@@ -105,7 +93,8 @@ char * hb_arrayGetDate( PHB_ITEM pArray, ULONG ulIndex )
     {
       hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_errorNatDescription(EG_ARRACCESS));
     }
-  return "        ";
+
+  return szDate;
 }
 
 

@@ -10,13 +10,9 @@
 
 #include "itemapi.h"
 
-#define _arrayNew       hb_arrayNew
-#define _arrayLen       hb_arrayLen
-#define _arrayGet       hb_arrayGet
-#define _arrayPut       hb_arraySet
-#define _arrayResize    hb_arraySize
-#define _arrayGetC      hb_arrayGetString
-#define _arrayGetCL     hb_arrayGetStringLen
+#ifndef ITEM
+#define ITEM            PHB_ITEM
+#endif
 
 #define _evalLaunch     hb_evalLaunch
 #define _evalNew        hb_evalNew

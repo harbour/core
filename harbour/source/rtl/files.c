@@ -492,6 +492,8 @@ BOOL    hb_fsRmDir  ( BYTEP name )
         return (result ? FALSE : TRUE );
 }
 
+/* TODO: Make it thread safe */
+
 BYTEP   hb_fsCurDir ( USHORT uiDrive )
 {
         static char cwd_buff[PATH_MAX+1];

@@ -35,15 +35,8 @@
 
 /* The Harbour implementation of codeblocks */
 
-#include "extend.h"
 #include <string.h>
-
-/* functions for memvar variables
- */
-HB_HANDLE hb_MemvarValueNew( PHB_ITEM, int );
-void hb_MemvarValueIncRef( HB_HANDLE );
-void hb_MemvarValueDecRef( HB_HANDLE );
-HB_VALUE_PTR * hb_MemvarValueBaseAddress( void );
+#include "extend.h"
 
 /* Uncomment this to trace codeblocks activity
 #define CODEBLOCKDEBUG

@@ -76,16 +76,6 @@
 
 #include "hbdefs.h"
 
-HARBOUR HB_SET( void );
-HARBOUR HB_SETCENTURY( void );
-char * hb_setColor( char * );
-void hb_setInitialize(void );
-void hb_consoleInitialize( void );
-void hb_rddInitialize( void );
-void hb_setRelease( void );
-void hb_consoleRelease( void );
-void hb_rddRelease( void );
-
 typedef enum
 {
    SC_NONE     = 0,        /* None */
@@ -199,5 +189,10 @@ extern BOOL hb_set_century;
 extern int hb_set_althan;
 extern int hb_set_extrahan;
 extern int hb_set_printhan;
+
+extern HARBOUR HB_SET( void );
+extern HARBOUR HB_SETCENTURY( void );
+extern void hb_setInitialize( void );
+extern void hb_setRelease( void );
 
 #endif /* HB_SET_H_ */

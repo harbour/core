@@ -37,7 +37,6 @@
  * $Date$         1999/05/06
  * $End$ */
 
-#include <ctype.h>
 #include "extend.h"
 #include "ctoharb.h"
 #include "itemapi.h"

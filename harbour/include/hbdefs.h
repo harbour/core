@@ -94,7 +94,7 @@ typedef int BOOL;
    #define EXTERNAL_LINKAGE
 #endif
 #endif
-typedef HARBOUR ( * HARBOURFUNC )( void );
+typedef HARBOUR ( * PHB_FUNC )( void );
 
 #ifndef _POSIX_PATH_MAX
    #define _POSIX_PATH_MAX    255

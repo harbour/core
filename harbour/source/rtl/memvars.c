@@ -62,8 +62,6 @@ static HB_VALUE_PTR _globalTable = NULL;
 static void hb_MemvarCreateFromItem( PHB_ITEM, BYTE, PHB_ITEM );
 static void hb_MemvarCreateFromDynSymbol( PDYNSYM, BYTE, PHB_ITEM );
 static void hb_MemvarAddPrivate( PDYNSYM );
-void hb_MemvarValueIncRef( HB_HANDLE );
-void hb_MemvarValueDecRef( HB_HANDLE );
 
 void hb_MemvarsInit( void )
 {

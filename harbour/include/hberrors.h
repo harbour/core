@@ -88,7 +88,7 @@
 #define ERR_RECURSE                8
 #define ERR_WRONG_DIRECTIVE        9
 
-void GenError( char* _szErrors[], char, int, char*, char * );      /* generic parsing error management function */
-void GenWarning( int, char*, char * );      /* generic parsing warning management function */
+extern void GenError( char* _szErrors[], char, int, char*, char * );      /* generic parsing error management function */
+extern void GenWarning( int, char*, char * );      /* generic parsing warning management function */
 
 #endif /* HB_ERROR_H_ */
