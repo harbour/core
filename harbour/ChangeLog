@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-01-26 19:30 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * include/hbextern.ch
+   * tests/debugtst.prg
+   * tests/funcarr.prg
+   * tests/inherit.prg
+   * tests/objarr.prg
+   * tests/objasign.prg
+      *replaced '__vm*' functions with 'hb_dbg_vm*' names
+
 2004-01-26 8:30 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
   * source/rtl/tget.prg
     ! Fixed bug in get class when using "@9" picture with strings

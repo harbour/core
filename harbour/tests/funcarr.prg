@@ -50,9 +50,9 @@ Function Main
    QOut( "To the power 3   : ", aFunc()[1] )
 
    QOut( "Global stack" )
-   Debug( __vmStkGList() )        // Please note a is a reference to aArray !
+   Debug( hb_dbg_vmStkGList() )        // Please note a is a reference to aArray !
    QOut( "Statics")
-   Debug( __vmVarSList() )
+   Debug( hb_dbg_vmVarSList() )
 return NIL
 
 Function aFunc()
