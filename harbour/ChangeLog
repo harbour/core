@@ -1,3 +1,18 @@
+20000210-13:20 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.l
+	* fixed syntax for RETURN statement
+	
+    *source/compiler/hbgenerr.c
+	* changed warning level for 'unreachable code' - it will be generated
+	if /w2 option is used
+	
+    *source/genc.c
+	* fixed 'unused "wSym" variable' warning
+	
+    *tests/keywords.prg
+	* added some more code related to RETURN statement
+	
 20000209-22:37 EST Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/tone.c
      * change _Windows to _WINDOWS_

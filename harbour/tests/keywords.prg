@@ -842,6 +842,23 @@ PRIVATE &return
   ENDIF
 
   return := return( return )
+  return += return
+  return-=return
+  return->return ^= 3
+  return:return()
+  
+  return::return
+  return ::return
+  return-1
+  return -1
+  return+2
+  return +2
+  return++
+  return--
+  ++return
+  --return
+  return!return
+  return &return
 
   DO WHILE return
     ++return

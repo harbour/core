@@ -106,7 +106,7 @@ char * hb_comp_szWarnings[] =
    "3Suspicious operand type: \'UnKnown\' expected: \'Logical\'",
    "3Suspicious operand type: \'UnKnown\' expected: \'Numeric\'",
    "0Meaningless use of expression: \'%s\'",
-   "1Unreachable code",
+   "2Unreachable code",
    "1Redundant \'ANNOUNCE %s\' statement ignored"
 };
 

@@ -106,7 +106,6 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    if( ! hb_comp_bStartProc )
       pSym = pSym->pNext; /* starting procedure is always the first symbol */
 
-   wSym = 0; /* symbols counter */
    while( pSym )
    {
       if( pSym->szName[ 0 ] == '(' )
@@ -148,7 +147,6 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
          else
             fprintf( yyc, ", 0, 0 }" );   /* memvar */
       }
-      ++wSym;
 
       if( pSym != hb_comp_symbols.pLast )
          fprintf( yyc, ",\n" );

@@ -1084,7 +1084,7 @@ Separator     {SpaceTab}
                   yylval.string = hb_strupr( hb_strdup( yytext ) );
                   BEGIN RETURN_;
                 }
-<RETURN_>{Separator}+[\[\"\'\.\!\&\{\;\:_a-zA-Z0-9]   { /* an identifier after RETURN, macro, or .NOT., or string, or EOL */
+<RETURN_>{Separator}+[\&_a-zA-Z0-9]   { /* an identifier, numbers or macro */
                  unput( yytext[ yyleng-1 ] );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  if( hb_comp_iState == LOOKUP )
@@ -1099,7 +1099,23 @@ Separator     {SpaceTab}
                    return IDENTIFIER;
                  }
                }
-<RETURN_>{Separator}*[\n\(]   { /* '(' after RETURN or end of line */
+<RETURN_>{Separator}*("+="|"-="|"->"|"++"|"--") { /* operators */
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+               hb_comp_iState =IDENTIFIER;
+               unput( yytext[ yyleng-1 ] );
+               unput( yytext[ yyleng-2 ] );
+               return IDENTIFIER;
+             }
+<RETURN_>{Separator}*("::") { /* SELF operator */
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+               hb_xfree( (void *) yylval.string );
+               hb_comp_iState = RETURN;
+               unput( yytext[ yyleng-1 ] );
+               unput( yytext[ yyleng-2 ] );
+               return RETURN;
+             }
+<RETURN_>{Separator}*[\n\;\(\[\{\"\'\.\-\+\!]   { 
+                 /* EOL or '()', '[]', '{}', '""', "''" , '.T.', '-', '+', '!' */
                  unput( yytext[ yyleng-1 ] );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  if( hb_comp_iState == LOOKUP )
@@ -1114,7 +1130,7 @@ Separator     {SpaceTab}
                    return IDENTIFIER;
                  }
                }
-<RETURN_>{Separator}*. { /* any character after RETURN */
+<RETURN_>{Separator}*. { /* any other character after RETURN */
                  unput( yytext[ yyleng-1 ] );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  hb_comp_iState =IDENTIFIER;
