@@ -1,6 +1,8 @@
 20000322-00:05 EST Paul Tucker <ptucker@sympatico.ca>
    + doc/en/diskspac.txt
      * doc for DiskSpace(), DiskFree(), DiskUsed() and DiskFull()
+   * doc/harbext.txt
+     + added DiskSpace() to show Harbour extension (second param)
 
 20000321-06:57 GMT-8 Brian Hays <bhays@abacuslaw.com>
    * doc/harbext.txt
