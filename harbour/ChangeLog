@@ -1,3 +1,18 @@
+19991211-09:17 GMT+1 Antonio Linares <alinares@fivetech.com>
+   + new source/vm/maindll.c (entry point for Windows DLLs)
+      * hb_vmInit() call uses a FALSE parameter.
+   * source/vm/hvm.c
+      * hb_vmInit( BOOL bStartMainProc ) modification
+   * source/vm/mainstd.c
+      * hb_vmInit() call uses a TRUE parameter.
+   * source/vm/mainwin.c
+      * hb_vmInit() call uses a TRUE parameter.
+   * updated makefile.b32 for maindll.c file.
+   * include/ctoharb.h
+      * modified hb_vmInit() prototype.
+
+   Tested. Seems to work fine.
+
 19991209-23:04 GMT+1 Antonio Linares <alinares@fivetech.com>
    * updated makefile.b32
    * updated hbclass.ch
