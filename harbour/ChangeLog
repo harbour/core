@@ -1,3 +1,10 @@
+19990728-12:30 CET Eddie Runia <eddie@runia.com>
+  * source/runner/runner.c
+     Symbols with both INIT and EXIT raised are not EXIT symbols.
+  * include/extend.h
+     FS_INITEXIT added as a mask to check the above
+
+
 19990728-11:31 Alexander Kresin
   * source\hbpp\hbpp.c
     * Yet another problem fixed with rtl_test and C++ Builder

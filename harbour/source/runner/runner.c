@@ -238,7 +238,7 @@ HARBOUR HB_HB_RUN( void )
 
          for( ul = 0; ul < ulSymbols; ul++ )    /* Check EXIT functions     */
          {
-            if( pSymRead[ ul ].cScope & FS_EXIT )
+            if( ( pSymRead[ ul ].cScope & FS_INITEXIT ) == FS_EXIT )
             {
                 PushSymbol( pSymRead + ul );
                 PushNil();

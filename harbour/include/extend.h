@@ -47,6 +47,7 @@ typedef struct          /* symbol support structure */
 #define FS_STATIC       2
 #define FS_INIT         8
 #define FS_EXIT        16
+#define FS_INITEXIT    24
 #define FS_MESSAGE     32
 #define FS_MEMVAR     128
 
