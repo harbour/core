@@ -8,7 +8,7 @@
     ! Display() changed back to hide cursor while displaying
     ! Display() fixed to use ::ColorSpec instead of SetColor()
     ! Display() is now selecting the proper colors from the ::ColorSpec
-    ! Displat() color now depends on ::HasFocus
+    ! Display() color now depends on ::HasFocus
     ! SetFocus(), KillFocus() fixed to call ::Display(), like in Clipper.
     + Dummy methods added for not yet implemented ones, TODOs added.
     - "Message" DATA removed
