@@ -33,19 +33,20 @@ typedef struct _DEFINES
   struct _DEFINES *last;
 } DEFINES;
 
-typedef struct
+struct _COMMANDS;
+typedef struct _COMMANDS
 {
   int com_or_xcom;
   char *name;
   char *mpatt;
   char *value;
-} COMMANDS, TRANSLATES;
+  struct _COMMANDS *last;
+} COMMANDS;
 
 #define STR_SIZE 8192
 #define BUFF_SIZE 2048
-#define INITIAL_ACOM_SIZE 200
 
-#define SKIPTABSPACES( sptr ) while ( *sptr == ' ' || *sptr == '\t' ) (sptr)++
+#define SKIPTABSPACES(sptr) while ( *sptr == ' ' || *sptr == '\t' ) (sptr)++
 
 #define PATH_DELIMITER  "/\\"
 #define IS_PATH_SEP( c ) (strchr(PATH_DELIMITER, (c))!=NULL)
@@ -56,10 +57,10 @@ typedef struct
 
 extern int ParseDirective( char* );
 extern int ParseExpression( char*, char* );
-extern int pp_RdStr( FILE*,char *,int,int,char*,int*,int* );
-extern int pp_WrStr( FILE*,char * );
+extern int pp_RdStr(FILE*,char *,int,int,char*,int*,int*);
+extern int pp_WrStr(FILE*,char *);
 extern int strolen ( char* );
-extern int strocpy ( char*, char* );
+extern int strocpy (char*, char* );
 extern char* strodup ( char * );
 extern DEFINES *AddDefine( char * szDefine, char * szValue ); /* add a new Lex define from the command line */
 
@@ -68,9 +69,6 @@ extern DEFINES *AddDefine( char * szDefine, char * szValue ); /* add a new Lex d
 extern int lInclude;
 extern int *aCondCompile, nCondCompile;
 extern int nline;
-
-extern COMMANDS *aCommnew ;
-extern TRANSLATES *aTranslates ;
 
 /* Needed support modules, but not contained in HBPP.C */
 
@@ -86,5 +84,7 @@ extern void _xfree( void * );            /* frees fixed memory */
 extern PATHNAMES *_pIncludePath;
 extern FILENAME *_pFileName;
 extern DEFINES *topDefine;
+extern COMMANDS *topCommand;
+extern COMMANDS *topTranslate;
 
 #endif /* HB_PP_H_ */

@@ -54,16 +54,15 @@ int ParseDefine( char* );                       /* Process #define directive */
 DEFINES* AddDefine ( char*, char* );            /* Add new #define to a linked list */
 int ParseUndef( char* );                        /* Process #undef directive */
 int ParseIfdef( char*, int);                    /* Process #ifdef directive */
-int ParseCommand( char*, int, int );            /* Process #command or #translate directive */
-int ConvertPatterns ( char*, int, char*, int ); /* Converting result pattern in #command and #translate */
-void AddCommand ( char * );                     /* Add new #command to an array  */
-void AddTranslate ( char * );                   /* Add new #translate to an array  */
-COMMANDS* getCommand ( int );
+void ParseCommand( char*, int, int );           /* Process #command or #translate directive */
+void ConvertPatterns ( char*, int, char*, int ); /* Converting result pattern in #command and #translate */
+COMMANDS* AddCommand ( char * );                /* Add new #command to an array  */
+COMMANDS* AddTranslate ( char * );              /* Add new #translate to an array  */
 int ParseExpression( char*, char* );            /* Parsing a line ( without preprocessor directive ) */
 int WorkDefine ( char**, char*, DEFINES * );    /* Replace fragment of code with a #defined result text */
 int WorkPseudoF ( char**, char*, DEFINES*);     /* Replace pseudofunction with a #defined result text */
-int WorkCommand ( char*, char*, char*, int);
-int WorkTranslate ( char*, char*, char*, int, int* );
+int WorkCommand ( char*, char*, char*, COMMANDS* );
+int WorkTranslate ( char*, char*, char*, COMMANDS*, int* );
 int CommandStuff ( char *, char *, char *, int*, int );
 int RemoveSlash( char * );
 int WorkMarkers( char**, char**, char*, int*, int );
@@ -72,8 +71,8 @@ int isExpres ( char* );
 void SkipOptional( char**, char*, int*, int*);
 
 DEFINES* DefSearch(char *);
-int ComSearch(char *,int);
-int TraSearch(char *,int);
+COMMANDS* ComSearch( char *, COMMANDS* );
+COMMANDS* TraSearch( char *, COMMANDS* );
 void SearnRep( char*,char*,int,char*,int*);
 int ReplacePattern ( char, char*, int, char*, int );
 void pp_rQuotes( char *, char * );
@@ -123,14 +122,6 @@ int *aCondCompile, nCondCompile = 0, maxCondCompile = 5;
 int nline=0;
 int Repeate;
 char groupchar;
-
-extern COMMANDS aCommands[] ;
-extern int kolcomm;
-COMMANDS *aCommnew ;
-int kolcommands = 0, maxcommands = INITIAL_ACOM_SIZE;
-
-TRANSLATES *aTranslates ;
-int koltranslates = 0, maxtranslates = 50;
 
 /* Table with parse errors */
 char * _szPErrors[] = { "Can\'t open include file \"%s\"",
@@ -340,97 +331,85 @@ DEFINES* DefSearch(char *defname)
    return NULL;
 }
 
-int ComSearch(char *cmdname, int ncmd)
+COMMANDS* ComSearch(char *cmdname, COMMANDS *stcmdStart)
 {
- int i,j;
- if ( !ncmd || ncmd > kolcomm )
-  for ( i=(ncmd)? ncmd-kolcomm-1:kolcommands-1; i >= 0; i-- )
-  {
-   for ( j=0; (*(aCommnew[i].name+j)==toupper(*(cmdname+j))) &&
-             (*(aCommnew[i].name+j)!='\0') &&
-             ((aCommnew[i].com_or_xcom)? 1:(j<4 || ISNAME(*(cmdname+j+1)))); j++ );
-   if ( (*(aCommnew[i].name+j)==toupper(*(cmdname+j))) ||
-       ( !aCommnew[i].com_or_xcom && j >= 4 && *(aCommnew[i].name+j)!='\0') )
-   return kolcomm+i;
-  }
+   int j;
+   COMMANDS *stcmd = ( stcmdStart )? stcmdStart:topCommand;
 
- for ( i=(ncmd && ncmd<=kolcomm)? ncmd-1:kolcomm-1; i >= 0; i-- )
- {
-  for ( j=0; (*(aCommands[i].name+j)==toupper(*(cmdname+j))) &&
-             (*(aCommands[i].name+j)!='\0') &&
-             ((aCommands[i].com_or_xcom)? 1:(j<4 || ISNAME(*(cmdname+j+1)))); j++ );
-  if ( (*(aCommands[i].name+j)==toupper(*(cmdname+j))) ||
-       ( !aCommands[i].com_or_xcom && j >= 4 && *(aCommands[i].name+j)!='\0'
-                                             && *(cmdname+j) == '\0' ) )
-  break;
- }
- return i;
+   while( stcmd != NULL )
+   {
+      for ( j=0; (*(stcmd->name+j)==toupper(*(cmdname+j))) &&
+          (*(stcmd->name+j)!='\0') &&
+          ((stcmd->com_or_xcom)? 1:(j<4 || ISNAME(*(cmdname+j+1)))); j++ );
+      if ( (*(stcmd->name+j)==toupper(*(cmdname+j))) ||
+           ( !stcmd->com_or_xcom && j >= 4 && *(stcmd->name+j)!='\0'
+           && *(cmdname+j) == '\0' ) )
+         break;
+      stcmd = stcmd->last;
+   }
+
+   return stcmd;
 }
 
-int TraSearch(char *cmdname, int ncmd)
+COMMANDS* TraSearch(char *cmdname, COMMANDS *sttraStart)
 {
- int i,j;
+   int j;
+   COMMANDS *sttra = ( sttraStart )? sttraStart:topTranslate;
 
- for ( i=(ncmd>=0)? ncmd:koltranslates-1; i >= 0; i-- )
- {
-  for ( j=0; *(aTranslates[i].name+j)==toupper(*(cmdname+j)) &&
-             *(aTranslates[i].name+j)!='\0' &&
-             ((aTranslates[i].com_or_xcom)? 1:(j<4 || ISNAME(*(cmdname+j+1)))); j++ );
-  if ( *(aTranslates[i].name+j)==toupper(*(cmdname+j)) ||
-       ( !aTranslates[i].com_or_xcom && j >= 4 &&
-          *(aTranslates[i].name+j)!='\0' && *(cmdname+j) == '\0' ) )
-  break;
- }
- return i;
+   while( sttra != NULL )
+   {
+      for ( j=0; *(sttra->name+j)==toupper(*(cmdname+j)) &&
+          *(sttra->name+j)!='\0' &&
+          ((sttra->com_or_xcom)? 1:(j<4 || ISNAME(*(cmdname+j+1)))); j++ );
+      if ( *(sttra->name+j)==toupper(*(cmdname+j)) ||
+            ( !sttra->com_or_xcom && j >= 4 &&
+            *(sttra->name+j)!='\0' && *(cmdname+j) == '\0' ) )
+         break;
+      sttra = sttra->last;
+   }
+   return sttra;
 }
 
-int ParseCommand( char* sLine, int com_or_xcom, int com_or_tra )
+void ParseCommand( char* sLine, int com_or_xcom, int com_or_tra )
 {
- static char mpatt[PATTERN_SIZE], rpatt[PATTERN_SIZE];
- char cmdname[MAX_NAME];
- int mlen,rlen;
- int ipos, rez;
+   static char mpatt[PATTERN_SIZE], rpatt[PATTERN_SIZE];
+   char cmdname[MAX_NAME];
+   COMMANDS *stcmd;
+   int mlen,rlen;
+   int ipos, rez;
 
- NextWord( &sLine, cmdname, FALSE );
- /*  NextName( &sLine, cmdname, NULL ); */
- SKIPTABSPACES(sLine);
- stroupper( cmdname );
+   NextWord( &sLine, cmdname, FALSE );
+   stroupper( cmdname );
+   SKIPTABSPACES(sLine);
 
- if ( (ipos = pp_strAt( "=>", 2, sLine, strolen(sLine) )) > 0 )
-   stroncpy( mpatt, sLine, ipos-1 );
- else GenError( _szPErrors, 'P', ERR_COMMAND_DEFINITION, NULL, NULL );
- mlen = strotrim( mpatt );
+   if ( (ipos = pp_strAt( "=>", 2, sLine, strolen(sLine) )) > 0 )
+      stroncpy( mpatt, sLine, ipos-1 );
+   else
+      GenError( _szPErrors, 'P', ERR_COMMAND_DEFINITION, NULL, NULL );
+   mlen = strotrim( mpatt );
 
- sLine += ipos + 1;
- SKIPTABSPACES(sLine);
- strocpy( rpatt, sLine );
- rlen = strotrim( rpatt );
+   sLine += ipos + 1;
+   SKIPTABSPACES(sLine);
+   strocpy( rpatt, sLine );
+   rlen = strotrim( rpatt );
 
- if ( (rez = ConvertPatterns ( mpatt, mlen, rpatt, rlen )) > 0 ) return rez;
+   ConvertPatterns ( mpatt, mlen, rpatt, rlen );
 
- if ( com_or_tra )
- {
-  AddCommand ( cmdname );
-  aCommnew[kolcommands-1].com_or_xcom = com_or_xcom;
-  aCommnew[kolcommands-1].mpatt = strodup ( mpatt );
-  aCommnew[kolcommands-1].value = ( rlen > 0 )? strodup ( rpatt ) : NULL;
- }
- else
- {
-  AddTranslate ( cmdname );
-  aTranslates[koltranslates-1].com_or_xcom = com_or_xcom;
-  aTranslates[koltranslates-1].mpatt = strodup ( mpatt );
-  aTranslates[koltranslates-1].value = ( rlen > 0 )? strodup ( rpatt ) : NULL;
- }
+   if ( com_or_tra )
+      stcmd = AddCommand ( cmdname );
+   else
+      stcmd = AddTranslate ( cmdname );
 
- return 0;
+   stcmd->com_or_xcom = com_or_xcom;
+   stcmd->mpatt = strodup ( mpatt );
+   stcmd->value = ( rlen > 0 )? strodup ( rpatt ) : NULL;
 }
 
 /* ConvertPatterns()
  * Converts result pattern in #command and #translate to inner format
  */
 
-int ConvertPatterns ( char *mpatt, int mlen, char *rpatt, int rlen )
+void ConvertPatterns ( char *mpatt, int mlen, char *rpatt, int rlen )
 {
    int i = 0, ipos, ifou;
    int explen,rmlen;
@@ -512,43 +491,38 @@ int ConvertPatterns ( char *mpatt, int mlen, char *rpatt, int rlen )
      }
      i++;
    }
-   return 0;
 }
 
-void AddCommand ( char *cmdname )
+COMMANDS* AddCommand ( char *cmdname )
 {
- if ( kolcommands == maxcommands )
- {
-  maxcommands += 50;
-  aCommnew = (COMMANDS *)_xrealloc( aCommnew, sizeof( COMMANDS ) * maxcommands );
- }
- aCommnew[kolcommands].name = strodup ( cmdname );
- kolcommands++;
+   COMMANDS *stcmd;
+
+   stcmd = ( COMMANDS * ) _xgrab( sizeof( COMMANDS ) );
+   stcmd->last = topCommand;
+   topCommand = stcmd;
+   stcmd->name = strodup ( cmdname );
+   return stcmd;
 }
 
-void AddTranslate ( char *cmdname )
+COMMANDS* AddTranslate ( char *traname )
 {
- if ( koltranslates == maxtranslates )
- {
-  maxtranslates += 50;
-  aTranslates = (TRANSLATES *)_xrealloc( aTranslates, sizeof( TRANSLATES ) * maxtranslates );
- }
- aTranslates[koltranslates].name = strodup ( cmdname );
- koltranslates++;
-}
+   COMMANDS *sttra;
 
-COMMANDS* getCommand ( int ndef )
-{
- return (ndef>=kolcomm)? &(aCommnew[ndef-kolcomm]):&(aCommands[ndef]);
+   sttra = ( COMMANDS * ) _xgrab( sizeof( COMMANDS ) );
+   sttra->last = topTranslate;
+   topTranslate = sttra;
+   sttra->name = strodup ( traname );
+   return sttra;
 }
 
 int ParseExpression( char* sLine, char* sOutLine )
 {
   char sToken[MAX_NAME];
   char *ptri, *ptro, *ptrb;
-  int lenToken, i, ndef, ipos, isdvig, lens;
+  int lenToken, i, ipos, isdvig, lens;
   int rezDef, rezTra, rezCom, kolpass = 0;
   DEFINES *stdef;
+  COMMANDS *stcmd;
 
   do
   {
@@ -597,9 +571,9 @@ int ParseExpression( char* sLine, char* sOutLine )
           /* Look for definitions from #translate    */
         ptri = sLine + isdvig;
         while ( ( lenToken = NextName(&ptri, sToken, NULL) ) > 0 )
-          if ( (ndef=TraSearch(sToken,-1)) >= 0 )
+          if ( (stcmd = TraSearch(sToken,NULL)) != NULL )
           {
-            if( (i = WorkTranslate( sToken, ptri, ptro, ndef, &lens )) >= 0 )
+            if( (i = WorkTranslate( sToken, ptri, ptro, stcmd, &lens )) >= 0 )
             {
               while ( lens > 0 && (*(ptri+lens-1)==' ' || *(ptri+lens-1)=='\t') )
                 lens--;
@@ -636,11 +610,11 @@ int ParseExpression( char* sLine, char* sOutLine )
           }
           SKIPTABSPACES( ptri );
 
-          if ( *ptri != '=' && (ISNAME(*ptri) || *(ptri+1) != '=')
-              && (ndef=ComSearch(sToken,0)) >= 0 )
+          if ( ( *ptri == '\0' || ( *ptri != '=' && (ISNAME(*ptri) || *(ptri+1) != '=') ) )
+              && ( stcmd = ComSearch(sToken,NULL) ) != NULL )
           {
             ptro = sOutLine;
-            i = WorkCommand( sToken, ptri, ptro, ndef );
+            i = WorkCommand( sToken, ptri, ptro, stcmd );
             ptri = sLine + isdvig;
             if ( ipos > 0 ) *(ptri+ipos-1) = ';';
             if ( i >= 0 )
@@ -750,54 +724,56 @@ int WorkPseudoF ( char** ptri, char* ptro, DEFINES *stdef )
    return lenres;
 }
 
-int WorkCommand ( char* sToken, char* ptri, char* ptro, int ndef )
+int WorkCommand ( char* sToken, char* ptri, char* ptro, COMMANDS *stcmd )
 {
- int rez;
- int lenres;
- char *ptrmp;
+   int rez;
+   int lenres;
+   char *ptrmp;
 
- do
- {
-  lenres = strocpy ( ptro, getCommand(ndef)->value ); /* Copying result pattern */
-  ptrmp = getCommand(ndef)->mpatt;                    /* Pointer to a match pattern */
-  Repeate = 0;
-  groupchar = '@';
-  rez = CommandStuff ( ptrmp, ptri, ptro, &lenres, TRUE );
+   do
+   {
+      lenres = strocpy ( ptro, stcmd->value );   /* Copying result pattern */
+      ptrmp = stcmd->mpatt;                      /* Pointer to a match pattern */
+      Repeate = 0;
+      groupchar = '@';
+      rez = CommandStuff ( ptrmp, ptri, ptro, &lenres, TRUE );
 
-  if ( rez < 0 ) ndef = ComSearch(sToken,ndef);
- }
- while ( rez < 0 && ndef >= 0 );
+      stcmd = stcmd->last;
+      if ( rez < 0 && stcmd != NULL ) stcmd = ComSearch(sToken, stcmd);
+   }
+   while ( rez < 0 && stcmd != NULL );
 
- *(ptro+lenres) = '\0';
- if ( rez >= 0 ) return lenres;
- return -1;
+   *(ptro+lenres) = '\0';
+   if ( rez >= 0 ) return lenres;
+   return -1;
 }
 
-int WorkTranslate ( char* sToken, char* ptri, char* ptro, int ndef, int *lens )
+int WorkTranslate ( char* sToken, char* ptri, char* ptro, COMMANDS *sttra, int *lens )
 {
- int rez;
- int lenres;
- char *ptrmp;
+   int rez;
+   int lenres;
+   char *ptrmp;
 
- do
- {
-  lenres = strocpy ( ptro, aTranslates[ndef].value );
-  ptrmp = aTranslates[ndef].mpatt;
-  Repeate = 0;
-  groupchar = '@';
-  rez = CommandStuff ( ptrmp, ptri, ptro, &lenres, FALSE );
+   do
+   {
+      lenres = strocpy ( ptro, sttra->value );
+      ptrmp = sttra->mpatt;
+      Repeate = 0;
+      groupchar = '@';
+      rez = CommandStuff ( ptrmp, ptri, ptro, &lenres, FALSE );
 
-  if ( rez < 0 && ndef > 0 ) ndef = TraSearch(sToken,ndef-1);
- }
- while ( rez < 0 && ndef > 0 );
+      sttra = sttra->last;
+      if ( rez < 0 && sttra != NULL ) sttra = TraSearch(sToken, sttra);
+   }
+   while ( rez < 0 && sttra != NULL );
 
- *(ptro+lenres) = '\0';
- if ( rez >= 0 )
- {
-   *lens = rez;
-   return lenres;
- }
- return -1;
+   *(ptro+lenres) = '\0';
+   if ( rez >= 0 )
+   {
+      *lens = rez;
+      return lenres;
+   }
+   return -1;
 }
 
 int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int com_or_tra )
@@ -1607,11 +1583,14 @@ int stroncpy (char* ptro, char* ptri, int lens )
 
 int strincmp (char* ptro, char** ptri )
 {
- for ( ; **ptri != ' ' && **ptri != ',' && **ptri != '[' && **ptri != ']' &&
+ for ( ; **ptri != ' ' && **ptri != '\t' && **ptri != ',' && **ptri != '[' && **ptri != ']' &&
    **ptri != '\1' && **ptri != '\0' && toupper(**ptri)==toupper(*ptro);
      ptro++, (*ptri)++ );
- if ( **ptri == ' ' || **ptri == ',' || **ptri == '[' ||
-              **ptri == ']' || **ptri == '\1' || **ptri == '\0' ) return 0;
+ if ( ( **ptri == ' ' || **ptri == ',' || **ptri == '[' ||
+      **ptri == ']' || **ptri == '\1' || **ptri == '\0' ) &&
+      ( ( !ISNAME(*ptro) && ISNAME(*(ptro-1)) ) ||
+      ( !ISNAME(*(ptro-1)) ) ) )
+    return 0;
  return 1;
 }
 

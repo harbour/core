@@ -1,3 +1,14 @@
+199908.06-22:12 GMT+3 Alexander Kresin
+  * include/hbpp.h
+  * source/hbpp/hbpp.c
+  * source/hbpp/hbppint.c
+  * source/hbpp/table.c
+    * fixed some bugs
+    * linked list for #commands and #translates storage instead or array
+  * source/hbpp/stdalone/hbpp.c
+    * added run-time messages
+    * creation of table.c contens
+
 19990806-19:55 GMT+1 Antonio Linares <alinares@fivetech.com>
    * include/classes.ch
      * Added support for SETGET methods

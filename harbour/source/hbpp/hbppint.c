@@ -60,8 +60,6 @@ void Hbpp_init ( void )
 {
   lenBuffer = 10; iBuffer = 10;
   aCondCompile = (int*) _xgrab( sizeof(int) * 5 );
-  aCommnew = ( COMMANDS * ) _xgrab( sizeof(COMMANDS) * INITIAL_ACOM_SIZE );
-  aTranslates = ( TRANSLATES * ) _xgrab( sizeof(TRANSLATES) * 50 );
 }
 
 int PreProcess( FILE* handl_i, FILE* handl_o, char *sOut )
