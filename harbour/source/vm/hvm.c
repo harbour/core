@@ -69,6 +69,8 @@
 #include "hbpcode.h"
 #include "hbset.h"
 
+#include <windows.h>
+
 typedef struct _SYMBOLS
 {
    PHB_SYMB pModuleSymbols;  /* pointer to a one module own symbol table */
@@ -193,6 +195,8 @@ static void    hb_vmReleaseLocalSymbols( void );  /* releases the memory of the 
 #endif
 
 static void    hb_vmProcessObjSymbols ( void ); /* process Harbour generated OBJ symbols */
+void hb_vmProcessBorlandInitSegment( void ); /* process Borland _INIT_ segment functions
+                                                when not using Borland startup */
 
 typedef struct
 {
@@ -262,6 +266,7 @@ void hb_vmInit( BOOL bStartMainProc )
    hb_memvarsInit();
 #ifdef HARBOUR_OBJ_GENERATION
    hb_vmProcessObjSymbols();  /* initialize Harbour generated OBJs symbols */
+   hb_vmProcessBorlandInitSegment(); /* initialize Borland _INIT_ segment if Borland OBJs linked */
 #endif
    hb_vmSymbolInit_RT();      /* initialize symbol table with runtime support functions */
 
