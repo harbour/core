@@ -1,3 +1,7 @@
+20000307-03:45 EST Paul Tucker <ptucker@sympatico.ca>
+   * doc/gmake.txt
+     - removed note about unistd.h for msvc
+
 20000307-03:30 EST Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      * reorganised
