@@ -85,8 +85,8 @@
       => AdsSetFileType( if( upper( <(x)> ) == "NTX", 1,              ;
                          if( upper( <(x)> ) == "CDX", 2, 3 ) ) )
 
-#command SET SERVER LOCAL   => AdsSetServerType ( 1 )
-#command SET SERVER REMOTE  => AdsSetServerType ( 2 )
+#command SET SERVER LOCAL   => AdsSetServerType( 1 )
+#command SET SERVER REMOTE  => AdsSetServerType( 2 )
 
 /* Server type constants for ORing with AdsSetServerType() */
 #define ADS_LOCAL_SERVER         1
@@ -109,7 +109,6 @@
 
 */
 
-
 #command SET AXS LOCKING <x:ON,OFF>                                   ;
       => AdsLocking( if( upper( <(x)> ) == "ON", .t., .f. )  )
 
@@ -122,4 +121,5 @@
 
 #command COMMIT TRANSACTION     => AdsCommitTransaction()
 
-#command ROLLBACK TRANSACTION   => AdsRollbackTransaction()
+#command ROLLBACK TRANSACTION   => AdsRollback()
+
