@@ -307,7 +307,7 @@ static ERRCODE NewArea( AREAP pArea )
 {
    pArea->lpFileInfo = ( LPFILEINFO ) hb_xgrab( sizeof( FILEINFO ) );
    memset( pArea->lpFileInfo, 0, sizeof( FILEINFO ) );
-   pArea->lpFileInfo->hFile = FS_ERROR;
+   pArea->lpFileInfo->hFile = F_ERROR;
    pArea->lpExtendInfo = ( LPDBEXTENDINFO ) hb_xgrab( sizeof( DBEXTENDINFO ) );
    memset( pArea->lpExtendInfo, 0, sizeof( DBEXTENDINFO ) );
    return SUCCESS;

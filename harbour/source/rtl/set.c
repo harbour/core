@@ -238,7 +238,7 @@ static char * set_string( PHB_ITEM pItem, char * old_str )
 
 static void close_binary( FHANDLE handle )
 {
-   if( handle != FS_ERROR )
+   if( handle != F_ERROR )
    {
       /* Close the file handle without disrupting the current
          user file error value */
@@ -250,7 +250,7 @@ static void close_binary( FHANDLE handle )
 
 static void close_text( FHANDLE handle )
 {
-   if( handle != FS_ERROR )
+   if( handle != F_ERROR )
    {
       /* Close the file handle without disrupting the current
          user file error value */
@@ -287,8 +287,8 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
 
    /* QUESTION: What sharing mode does Clipper use ? [vszel] */
 
-   handle = FS_ERROR;
-   while( handle == FS_ERROR )
+   handle = F_ERROR;
+   while( handle == F_ERROR )
    {
       BOOL bCreate = FALSE;
       WORD wResult;
@@ -299,7 +299,7 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
 	 {  /* If the file already exists, open it (in read-write mode, in
 	       case of non-Unix and text modes). */
             handle = hb_fsOpen( ( BYTE * ) path, FO_READWRITE | FO_DENYWRITE );
-            if( handle != FS_ERROR )
+            if( handle != F_ERROR )
             {  /* Position to EOF */
             #if ! defined(HB_OS_UNIX_COMPATIBLE)
                /* Non-Unix needs special binary vs. text file handling */
@@ -328,7 +328,7 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
       if( bCreate )
          handle = hb_fsCreate( ( BYTE * ) path, FC_NORMAL );
 
-      if( handle == FS_ERROR )
+      if( handle == F_ERROR )
       {
          /* NOTE: using switch() here will result in a compiler warning */
          if( set_specifier == HB_SET_ALTFILE )
@@ -929,9 +929,9 @@ HARBOUR HB_SET( void )
 void hb_setInitialize( void )
 {
    hb_set_century = FALSE;
-   hb_set_althan = FS_ERROR;
-   hb_set_extrahan = FS_ERROR;
-   hb_set_printhan = FS_ERROR;
+   hb_set_althan = F_ERROR;
+   hb_set_extrahan = F_ERROR;
+   hb_set_printhan = F_ERROR;
    hb_set.HB_SET_ALTERNATE = FALSE;
    hb_set.HB_SET_ALTFILE = NULL;
    hb_set.HB_SET_BELL = FALSE;

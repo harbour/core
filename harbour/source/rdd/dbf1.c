@@ -669,12 +669,12 @@ static ERRCODE Append( AREAP pArea, BOOL bUnLockAll )
 
 static ERRCODE Close( AREAP pArea )
 {
-   if( pArea->lpFileInfo->hFile != FS_ERROR )
+   if( pArea->lpFileInfo->hFile != F_ERROR )
    {
       SELF_RAWLOCK( pArea, FILE_UNLOCK, 0 );
       SELF_FLUSH( pArea );
       hb_fsClose( pArea->lpFileInfo->hFile );
-      pArea->lpFileInfo->hFile = FS_ERROR;
+      pArea->lpFileInfo->hFile = F_ERROR;
    }
    if( pArea->lpExtendInfo->fHasMemo )
       SELF_CLOSEMEMFILE( pArea );
@@ -684,11 +684,11 @@ static ERRCODE Close( AREAP pArea )
 
 static ERRCODE CloseMemFile( AREAP pArea )
 {
-   if( pArea->lpFileInfo->pNext->hFile != FS_ERROR )
+   if( pArea->lpFileInfo->pNext->hFile != F_ERROR )
    {
       SELF_FLUSH( pArea );
       hb_fsClose( pArea->lpFileInfo->pNext->hFile );
-      pArea->lpFileInfo->pNext->hFile = FS_ERROR;
+      pArea->lpFileInfo->pNext->hFile = F_ERROR;
    }
 
    return SUCCESS;
@@ -697,18 +697,18 @@ static ERRCODE CloseMemFile( AREAP pArea )
 static ERRCODE Create( AREAP pArea, LPDBOPENINFO pCreateInfo )
 {
    pArea->lpFileInfo->hFile = hb_fsCreate( pCreateInfo->abName, FC_NORMAL );
-   if( pArea->lpFileInfo->hFile == FS_ERROR )
+   if( pArea->lpFileInfo->hFile == F_ERROR )
       return FAILURE;
 
    if( SELF_WRITEDBHEADER( pArea ) == FAILURE )
    {
       hb_fsClose( pArea->lpFileInfo->hFile );
-      pArea->lpFileInfo->hFile = FS_ERROR;
+      pArea->lpFileInfo->hFile = F_ERROR;
       return FAILURE;
    }
 
    hb_fsClose( pArea->lpFileInfo->hFile );
-   pArea->lpFileInfo->hFile = FS_ERROR;
+   pArea->lpFileInfo->hFile = F_ERROR;
    return SUCCESS;
 }
 
@@ -720,10 +720,10 @@ static ERRCODE CreateMemFile( AREAP pArea, LPDBOPENINFO pCreateInfo )
 
    lpMemInfo = ( LPFILEINFO ) hb_xgrab( sizeof( FILEINFO ) );
    memset( lpMemInfo, 0, sizeof( FILEINFO ) );
-   lpMemInfo->hFile = FS_ERROR;
+   lpMemInfo->hFile = F_ERROR;
    pArea->lpFileInfo->pNext = lpMemInfo;
    lpMemInfo->hFile = hb_fsCreate( pCreateInfo->abName, FC_NORMAL );
-   if( lpMemInfo->hFile == FS_ERROR )
+   if( lpMemInfo->hFile == F_ERROR )
       return FAILURE;
 
    pMemoHeader = ( LPMEMOHEADER ) hb_xgrab( MEMO_BLOCK + 1 );
@@ -733,7 +733,7 @@ static ERRCODE CreateMemFile( AREAP pArea, LPDBOPENINFO pCreateInfo )
                    MEMO_BLOCK + 1 ) != MEMO_BLOCK + 1 );
    hb_xfree( pMemoHeader );
    hb_fsClose( lpMemInfo->hFile );
-   lpMemInfo->hFile = FS_ERROR;
+   lpMemInfo->hFile = F_ERROR;
    if( bError )
       return FAILURE;
    else
@@ -776,9 +776,9 @@ static ERRCODE DeleteRec( AREAP pArea )
 
 static ERRCODE Flush( AREAP pArea )
 {
-   if( pArea->lpFileInfo->hFile != FS_ERROR )
+   if( pArea->lpFileInfo->hFile != F_ERROR )
       hb_fsCommit( pArea->lpFileInfo->hFile );
-   if( pArea->lpExtendInfo->fHasMemo && pArea->lpFileInfo->pNext->hFile != FS_ERROR )
+   if( pArea->lpExtendInfo->fHasMemo && pArea->lpFileInfo->pNext->hFile != F_ERROR )
       hb_fsCommit( pArea->lpFileInfo->pNext->hFile );
    return FAILURE;
 }
@@ -1008,7 +1008,7 @@ static ERRCODE Open( AREAP pArea, LPDBOPENINFO pOpenInfo )
    uiFlags |= pOpenInfo->fShared ? FO_DENYNONE : FO_EXCLUSIVE;
    pArea->lpFileInfo->hFile = hb_fsOpen( pOpenInfo->abName, uiFlags );
 
-   if( pArea->lpFileInfo->hFile == FS_ERROR )
+   if( pArea->lpFileInfo->hFile == F_ERROR )
    {
       SELF_CLOSE( pArea );
       return FAILURE;
@@ -1032,14 +1032,14 @@ static ERRCODE OpenMemFile( AREAP pArea, LPDBOPENINFO pOpenInfo )
 
    lpMemInfo = ( LPFILEINFO ) hb_xgrab( sizeof( FILEINFO ) );
    memset( lpMemInfo, 0, sizeof( FILEINFO ) );
-   lpMemInfo->hFile = FS_ERROR;
+   lpMemInfo->hFile = F_ERROR;
    pArea->lpFileInfo->pNext = lpMemInfo;
 
    uiFlags = pOpenInfo->fReadonly ? FO_READ : FO_READWRITE;
    uiFlags |= pOpenInfo->fShared ? FO_DENYNONE : FO_EXCLUSIVE;
    lpMemInfo->hFile = hb_fsOpen( pOpenInfo->abName, uiFlags );
 
-   if( lpMemInfo->hFile == FS_ERROR )
+   if( lpMemInfo->hFile == F_ERROR )
       return FAILURE;
 
    pMemoHeader = ( LPMEMOHEADER ) hb_xgrab( MEMO_BLOCK + 1 );

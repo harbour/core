@@ -1,3 +1,13 @@
+19990909-20:00 EDT David G. Holm <dholm@jsd-llc.com>
+  * include/fileio.ch
+  * source/rdd/dbcmd.c
+  * source/rdd/dbf1.c
+  * source/rtl/copyfile.c
+  * source/rtl/filesys.c
+  * source/rtl/set.c
+    ! Changed all FS_ERROR to F_ERROR for Clipper compatibility.
+      Thanks to Matteo Baccan for reporting this.
+
 19990910-01:10 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/arrays.c
     % One memset() call replaced with a call to the Item API. It's a bit 

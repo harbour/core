@@ -84,7 +84,7 @@
 #define FM_TEXT            2   /* Test mode (cooked) */
 
 /* File system error codes */
-#define FS_ERROR      ( -1 )   /* Unspecified error */
+#define F_ERROR      ( -1 )   /* Unspecified error */
 
 /* Extended file open mode flags */
 #define FXO_TRUNCATE  0x0100   /* Create (truncate if exists) */
