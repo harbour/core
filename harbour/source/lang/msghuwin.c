@@ -139,6 +139,7 @@ static HB_LANG s_lang =
       "",
       "",
       "",
+      "",
       "tömbelem hozzáférés",
       "tömbelem értékadás",
       "tömbelem dimenzió",

@@ -1,3 +1,11 @@
+20000415-00:57 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbapilng.h
+   * source/lang/msg_tpl.c
+   * source/lang/msgen.c
+   * source/lang/msghu*.c
+     ! One missing error string fixed.
+
 20000414-22:10 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    + tests/langapi.prg
