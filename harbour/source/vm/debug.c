@@ -97,13 +97,17 @@ static USHORT hb_stackLenGlobal( void )
    return uiCount;
 }
 
+/* $Doc$
+ * $FuncName$     <nVars> hb_dbg_vmStkGCount()
+ * $Description$  Returns the length of the global stack
+ * $End$ */
 HB_FUNC( HB_DBG_VMSTKGCOUNT )
 {
    hb_retni( hb_stackLenGlobal() );
 }
 
 /* $Doc$
- * $FuncName$     <aStack> __vmStkGList()
+ * $FuncName$     <aStack> hb_dbg_vmStkGList()
  * $Description$  Returns the global stack
  * $End$ */
 HB_FUNC( HB_DBG_VMSTKGLIST )
@@ -142,6 +146,10 @@ static USHORT hb_stackLen( int iLevel )
    return uiCount;
 }
 
+/* $Doc$
+ * $FuncName$     <nVars> hb_dbg_vmStkLCount( <nProcLevel> )
+ * $Description$  Returns params plus locals amount of the nProcLevel function
+ * $End$ */
 HB_FUNC( HB_DBG_VMSTKLCOUNT )
 {
    int iLevel = hb_parni( 1 ) + 1;
@@ -150,7 +158,7 @@ HB_FUNC( HB_DBG_VMSTKLCOUNT )
 }
 
 /* $Doc$
- * $FuncName$     <aStack> __vmStkLList()
+ * $FuncName$     <aStack> hb_dbg_vmStkLList()
  * $Description$  Returns the stack of the calling function
  *                "[<symbol>]"  Means symbol.
  *
@@ -178,7 +186,7 @@ HB_FUNC( HB_DBG_VMSTKLLIST )
 }
 
 /* $Doc$
- * $FuncName$     <aParam> __vmParLGet()
+ * $FuncName$     <aParam> hb_dbg_vmParLGet()
  * $Description$  Returns the passed parameters of the calling function
  * $End$ */
                /* TODO : put bLocals / bParams      */
@@ -275,4 +283,14 @@ HB_FUNC( __VMVARLGET )
 HB_FUNC( __VMVARLSET )
 {
    HB_FUNCNAME(HB_DBG_VMVARLSET)();
+}
+
+HB_FUNC( __VMSTKGLIST )
+{
+   HB_FUNCNAME(HB_DBG_VMSTKGLIST)();
+}
+
+HB_FUNC( __VMSTKGCOUNT )
+{
+   HB_FUNCNAME(HB_DBG_VMSTKGCOUNT)();
 }
