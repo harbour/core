@@ -1,3 +1,11 @@
+2000-08-15 22:00 UTC+0700 Andi Jahja <andij@aonlippo.co.id>
+
+   * source/lang/msgid.c
+   * source/lang/Makefile
+   * makefile.bc
+   * makefile.vc
+     + Indonesian language module updated.
+
 2000-08-14 18:45 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * doc/whatsnew.txt
      + Added simplex.

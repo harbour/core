@@ -24,11 +24,9 @@ C_SOURCES=\
 	msghucwi.c   \
 	msghuwin.c   \
 	msgis850.c   \
+	msgid.c      \
 	msgit.c      \
 	msgko.c      \
-	msgpl852.c   \
-	msgpliso.c   \
-	msgplmaz.c   \
 	msgpt.c      \
 	msgro.c      \
 	msgsr852.c   \
