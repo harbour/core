@@ -1,8 +1,11 @@
 19990730-13:00 EDT Paul Tucker <ptucker@sympatico.ca>
-   * as submitted by Matteo Baccan
    * makefile.vc
+     + added inkey to harbour.lib
+     * as submitted by Matteo Baccan
      + added missing dates2 to tools.lib
      * corrected output of dbfntx?.obj
+   * source/rtl/dbfntx/dbfntx1.c
+     * added typecast in getfunctable
 
 19990730-15:33 CET Victor Szel <info@szelvesz.hu>
    + source/rtl/descend.c

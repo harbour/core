@@ -71,6 +71,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\hardcr.obj \
     $(OBJ_DIR)\hvm.obj \
     $(OBJ_DIR)\initsymb.obj \
+    $(OBJ_DIR)\inkey.obj \
     $(OBJ_DIR)\itemapi.obj \
     $(OBJ_DIR)\math.obj \
     $(OBJ_DIR)\memvars.obj \
@@ -268,6 +269,9 @@ $(OBJ_DIR)\gtapi.obj : $(RTL_DIR)\gtapi.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\hardcr.obj : $(RTL_DIR)\hardcr.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\inkey.obj : $(RTL_DIR)\inkey.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\itemapi.obj : $(RTL_DIR)\itemapi.c

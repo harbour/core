@@ -132,7 +132,7 @@ HARBOUR HB_DBFNTX_GETFUNCTABLE( void )
    * uiCount = RDDFUNCSCOUNT;
    pTable = ( RDDFUNCS * ) hb_parnl( 2 );
    if( pTable )
-      hb_retni( hb_rddInherit( pTable, &ntxTable, &ntxSuper, "DBF" ) );
+      hb_retni( hb_rddInherit( pTable, &ntxTable, &ntxSuper, (PBYTE)"DBF" ) );
    else
       hb_retni( FAILURE );
 }
