@@ -1,3 +1,7 @@
+19991019-10:24 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/gt/gtwin.c
+     * Windows apps only create a console when the debugger is linked.
+
 19991019-01:50 EDT Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      + source/rtl/natmsg.c
