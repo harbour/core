@@ -1,3 +1,8 @@
+2000-10-10 10:58 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/rdd/dbfcdx/dbfcdx1.h
+     * added #pragma pack(1) and #pragma pack() for structure alignment
+       with GNU C compiler
+
 2000-10-09 22:53 UTC+0200 JFL (mafact) <jfl@mafact.com>
    * TGET.PRG Small improvement within :Undo() method
      to allow update of the var (As John Skelton remark)
@@ -33,7 +38,6 @@
    *update some function status
  *contrib/rdd_ads/doc/en/adsfuncs.txt
    *small formating
-
 
 
 2000-10-07 22:16 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
