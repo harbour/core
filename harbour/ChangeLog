@@ -1,4 +1,14 @@
 19990715-09:50 CET Patrick Mast <harbour@PatrickMast.com>
+   *makefile.vc
+    * Changed output for PRG's that needed to be compiled with Harbour
+    * Deleted 'Classes.Prg' lines. (No need for them)
+    * Added parameter -n for compiling asort.prg
+    * Added parameter -n for compiling errorsys.prg
+    * Deleted 'GenObj.c' lines (No need for them)
+    * Changed 'Stringp.c' line $(RTL_DIR) should be $(TOOLS_DIR)
+    = Works fine with MSVC++ 6.01 now
+
+19990715-09:50 CET Patrick Mast <harbour@PatrickMast.com>
    *source/rtl/environ.c
     changed all 'defined(__MSC__)' to 'defined(__MSC__) || defined(_MSC_VER)'
     It compiles with MSVC++ 6.01 now
