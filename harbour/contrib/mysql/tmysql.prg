@@ -1,6 +1,6 @@
  /*
  * $Id$
- */ 
+ */
 
 /*
  * Harbour Project source code:
@@ -72,6 +72,8 @@ CLASS TMySQLRow
    DATA  aRow              // a single row of answer
    DATA  aDirty            // array of booleans set to .T. if corresponding field of aRow has been changed
    DATA  aOldValue         // If aDirty[n] is .T. aOldValue[n] keeps a copy of changed value if aRow[n] is part of a primary key
+   //DAVID:
+   DATA  aOriValue         // Original values ( same as TMySQLtable:aOldValue )
 
    DATA  aFieldStruct      // type of each field
    DATA  cTable            // Name of table containing this row, empty if TMySQLQuery returned this row
@@ -98,6 +100,9 @@ METHOD New(aRow, aFStruct, cTableName) CLASS TMySQLRow
    default aFStruct to {}
 
    ::aRow := aRow
+   //DAVID:
+   ::aOriValue := ACLONE( aRow )    // Original values ( same as TMySQLtable:aOldValue )
+
    ::aFieldStruct := aFStruct
    ::cTable := cTableName
 
@@ -145,7 +150,8 @@ METHOD FieldPut(cnField, Value) CLASS TMySQLRow
 
    if nNum > 0 .AND. nNum <= Len(::aRow)
 
-      if Valtype(Value) == Valtype(::aRow[nNum]) .OR. Empty(::aRow[nNum])
+//DAVID:      if Valtype(Value) == Valtype(::aRow[nNum]) .OR. Empty(::aRow[nNum])
+      if Valtype(Value) == Valtype(::aRow[nNum]) .OR. ::aRow[nNum]==NIL
 
          // if it is a char field remove trailing spaces
          if ValType(Value) == "C"
@@ -174,7 +180,8 @@ METHOD FieldPos(cFieldName) CLASS TMySQLRow
 
    cUpperName := Upper(cFieldName)
 
-   nPos := AScan(::aFieldStruct, {|aItem| iif(Upper(aItem[MYSQL_FS_NAME]) == cUpperName, .T., .F.)})
+//DAVID:   nPos := AScan(::aFieldStruct, {|aItem| iif(Upper(aItem[MYSQL_FS_NAME]) == cUpperName, .T., .F.)})
+   nPos := AScan(::aFieldStruct, {|aItem| (Upper(aItem[MYSQL_FS_NAME]) == cUpperName)})
 
    /*while ++nPos <= Len(::aFieldStruct)
       if Upper(::aFieldStruct[nPos][MYSQL_FS_NAME]) == cUpperName
@@ -206,7 +213,8 @@ METHOD FieldLen(nNum) CLASS TMySQLRow
       return ::aFieldStruct[nNum][MYSQL_FS_LENGTH]
    endif
 
-return ""
+//DAVID: return ""
+return 0
 
 
 METHOD FieldDec(nNum) CLASS TMySQLRow
@@ -215,7 +223,8 @@ METHOD FieldDec(nNum) CLASS TMySQLRow
       return ::aFieldStruct[nNum][MYSQL_FS_DECIMALS]
    endif
 
-return ""
+//DAVID: return ""
+return 0
 
 
 METHOD FieldType(nNum) CLASS TMySQLRow
@@ -303,9 +312,19 @@ CLASS TMySQLQuery
    DATA  nNumRows          // number of rows available on answer NOTE MySQL is 0 based
    DATA  nCurRow           // I'm currently over row number
 
+   //DAVID:
+   DATA  lBof
+   DATA  lEof
+
+   //DAVID:
+   DATA  lFieldAsData      //Use fields as object DATA. For compatibility
+                           //Names of fields can match name of TMySQLQuery/Table DATAs,
+                           //and it is dangerous. ::lFieldAsData:=.F. can fix it
+   DATA  aRow              //Values of fields of current row
+
    DATA  nNumFields        // how many fields per row
    DATA  aFieldStruct      // type of each field, a copy is here a copy inside each row
-      
+
    DATA  lError            // .T. if last operation failed
 
    METHOD   New(nSocket, cQuery)       // New query object
@@ -317,23 +336,23 @@ CLASS TMySQLQuery
 
    METHOD   Skip(nRows)                // Same as clipper ones
 
-   METHOD   Bof() INLINE ::nCurRow == 1
-   METHOD   Eof() INLINE ::nCurRow == ::nNumRows
+   METHOD   Bof() INLINE ::lBof    //DAVID:  ::nCurRow == 1
+   METHOD   Eof() INLINE ::lEof    //DAVID:  ::nCurRow == ::nNumRows
    METHOD   RecNo() INLINE ::nCurRow
    METHOD   LastRec() INLINE ::nNumRows
-   METHOD   GoTop() INLINE ::getRow(1)
-   METHOD   GoBottom() INLINE ::getRow(::nNumRows)
+   METHOD   GoTop() INLINE ::GetRow(1)
+   METHOD   GoBottom() INLINE ::GetRow(::nNumRows)
    METHOD   GoTO(nRow) INLINE ::GetRow(nRow)
 
    METHOD   FCount()
 
    METHOD   NetErr() INLINE ::lError         // Returns .T. if something went wrong
    METHOD   Error()                           // Returns textual description of last error and clears ::lError
-   
+
    METHOD   FieldName(nNum)
    METHOD   FieldPos(cFieldName)
    METHOD   FieldGet(cnField)
-   
+
    METHOD   FieldLen(nNum)             // Length of field N
    METHOD   FieldDec(nNum)             // How many decimals in field N
    METHOD   FieldType(nNum)            // Clipper type of field N
@@ -354,7 +373,12 @@ METHOD New(nSocket, cQuery) CLASS TMySQLQuery
    ::nResultHandle := nil
    ::nNumFields := 0
    ::nNumRows := 0
-   
+   //DAVID:
+   ::lBof := .T.
+   ::lEof := .T.
+
+   ::lFieldAsData := .T.     //Use fields as object DATA. For compatibility
+   ::aRow := {}              //Values of fields of current row
 
    if (rc := sqlQuery(nSocket, cQuery)) == 0
 
@@ -363,16 +387,22 @@ METHOD New(nSocket, cQuery) CLASS TMySQLQuery
 
          ::nNumRows := sqlNRows(::nResultHandle)
          ::nNumFields := sqlNumFi(::nResultHandle)
+         //DAVID:
+         ::aRow       := Array( ::nNumFields )
 
          for nI := 1 to ::nNumFields
 
             aField := sqlFetchF(::nResultHandle)
             AAdd(::aFieldStruct, aField)
-            __ObjAddData(Self,::aFieldStruct[nI][MYSQL_FS_NAME])
-         
+            //DAVID:
+            if ::lFieldAsData
+               __ObjAddData(Self,::aFieldStruct[nI][MYSQL_FS_NAME])
+            endif
+
          next
+
          ::getRow(::nCurRow)
-     
+
       else
          // Should query have returned rows? (Was it a SELECT like query?)
 
@@ -386,7 +416,7 @@ METHOD New(nSocket, cQuery) CLASS TMySQLQuery
 
          endif
       endif
-      
+
    else
       ::lError := .T.
    endif
@@ -416,7 +446,7 @@ METHOD Refresh() CLASS TMySQLQuery
       if ::nCurRow > ::nNumRows
          ::nCurRow := ::nNumRows
       endif
-      
+
       ::getRow(::nCurRow)
 
    else
@@ -426,34 +456,59 @@ METHOD Refresh() CLASS TMySQLQuery
       ::nNumRows := 0
       */
       ::lError := .T.
-    
+
    endif
 
 return !::lError
 
 
 METHOD Skip(nRows) CLASS TMySQLQuery
+//DAVID:
+   local lbof
 
    // NOTE: MySQL row count starts from 0
    default nRows to 1
+
+   //DAVID:
+   ::lBof := ( EMPTY( ::LastRec() ) )
 
    if nRows == 0
       // No move
 
    elseif nRows < 0
       // Negative movement
-      ::nCurRow := Max(::nCurRow + nRows, 1)
-       
+      //DAVID: ::nCurRow := Max(::nCurRow + nRows, 1)
+      if ( ( ::recno() + nRows ) + 0 ) < 1
+         nRows := - ::recno() + 1
+         //Clipper: only SKIP movement can set BOF() to .T.
+         ::lBof := .T.  //Try to skip before first record
+      endif
+
    else
       // positive movement
-      ::nCurRow := Min(::nCurRow + nRows, ::nNumRows)
+      //DAVID: ::nCurRow := Min(::nCurRow + nRows, ::nNumRows)
+      if ( ( ::recno() + nRows ) + 0 ) > ::lastrec()
+         nRows := ::lastrec() - ::recno() + 1
+      endif
 
    endif
+
+   //DAVID:
+   ::nCurRow := ::nCurRow + nRows
+
+   //DAVID: maintain ::bof() true until next movement
+   //Clipper: only SKIP movement can set BOF() to .T.
+   lbof := ::bof()
 
 //   sqlDataS(::nResultHandle, ::nCurRow - 1)
    ::getRow(::nCurrow)
 
-return ::nCurRow
+   if lbof
+      ::lBof := .T.
+   endif
+
+//DAVID: DBSKIP() return NIL  return ::nCurRow
+return nil
 
 
 /* Given a three letter month name gives back month number as two char string (ie. Apr -> 04) */
@@ -470,79 +525,110 @@ return PadL(nMonth, 2, "0")
 // Get row n of a query and return it as a TMySQLRow object
 METHOD GetRow(nRow) CLASS TMySQLQuery
 
-   local aRow := NIL
+   //DAVID: replaced by ::aRow   local aRow := NIL
    local oRow := NIL
    local cFormatoDaData := set(4)  //ACRESCENTEI
    local i
 
-   default nRow to 0
+   //DAVID: use current row  default nRow to 0
+   default nRow to ::nCurRow
 
    if ::nResultHandle <> NIL
+
+      //DAVID:
+      ::lBof := ( EMPTY( ::LastRec() ) )
+
+      if nRow < 1 .or. nRow > ::lastrec()  //Out of range
+         // Equal to Clipper behaviour
+         nRow := ::lastrec() + 1  //LASTREC()+1
+         ::nCurRow := ::lastrec() + 1
+         // ::lEof := .t.
+      endif
+
       if nRow >= 1 .AND. nRow <= ::nNumRows
 
          // NOTE: row count starts from 0
          sqlDataS(::nResultHandle, nRow - 1)
          ::nCurRow := nRow
-      else
-         ::nCurRow++
+//DAVID:      else
+         //DAVID: use current row  ::nCurRow++
       endif
 
-      aRow := sqlFetchR(::nResultHandle)
-      
-      if aRow <> NIL
-        
+      //DAVID:
+      ::lEof := ( ::Recno() > ::LastRec() )
+      ::aRow := NIL
+
+      if ::eof()
+         // Phantom record with empty fields
+         ::aRow := Array( Len( ::aFieldStruct ) )
+         Afill( ::aRow, "" )
+
+      else
+         ::aRow := sqlFetchR(::nResultHandle)
+      endif
+
+      if ::aRow <> NIL
 
          // Convert answer from text field to correct clipper types
          for i := 1 to ::nNumFields
-
-          if aRow[i] != NIL
-
             do case
                case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_TINY_TYPE
-                  aRow[i] := iif(Val(aRow[i]) == 0, .F., .T.)
+                  //DAVID:
+                  if ::aRow[i]==NIL
+                     ::aRow[i] := "0"
+                  endif
+                  ::aRow[i] := iif(Val(::aRow[i]) == 0, .F., .T.)
 
                case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_SHORT_TYPE .OR.;
                     ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_LONG_TYPE .OR.;
                     ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_LONGLONG_TYPE .OR.;
                     ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_INT24_TYPE .OR. ;
                     ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DECIMAL_TYPE
-                  aRow[i] := Val(aRow[i])
-                  
+                  //DAVID:
+                  if ::aRow[i]==NIL
+                     ::aRow[i] := "0"
+                  endif
+                  ::aRow[i] := Val(::aRow[i])
+
                case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DOUBLE_TYPE .OR.;
                     ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_FLOAT_TYPE
-                  aRow[i] := Val(aRow[i])
+                  //DAVID:
+                  if ::aRow[i]==NIL
+                     ::aRow[i] := "0"
+                  endif
+                  ::aRow[i] := Val(::aRow[i])
 
                case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DATE_TYPE
-                  if Empty(aRow[i])
-                     aRow[i] := CToD("")
+                  if Empty(::aRow[i])
+                     ::aRow[i] := CToD("")
                   *else
                      // Date format YYYY-MM-DD
 
                   * abaixo presume que o se utiliza (set date USA)
-                  *   aRow[i] := CToD(SubStr(aRow[i], 6, 2) + "/" + Right(aRow[i], 2) + "/" + Left(aRow[i], 4))
+                  *   ::aRow[i] := CToD(SubStr(::aRow[i], 6, 2) + "/" + Right(::aRow[i], 2) + "/" + Left(::aRow[i], 4))
 
                    elseif cFormatoDaData = 'mm-dd-yyyy' // USA
-                    aRow[i] := ctod(substr(aRow[i],6,2)+"-"+right(aRow[i],2,0)+ "-" + Left(aRow[i], 4))
+                    ::aRow[i] := ctod(substr(::aRow[i],6,2)+"-"+right(::aRow[i],2,0)+ "-" + Left(::aRow[i], 4))
 
                     elseif  cFormatoDaData = 'dd/mm/yyyy' // BRITISH ou FRENCH
-                    aRow[i] :=  ctod(right(aRow[i],2,0)+ "/"+ substr(aRow[i],6,2)+"/"+ Left(aRow[i], 4))
+                    ::aRow[i] :=  ctod(right(::aRow[i],2,0)+ "/"+ substr(::aRow[i],6,2)+"/"+ Left(::aRow[i], 4))
 
                     elseif cFormatoDaData = 'yyyy.mm.dd' // ANSI
-                    aRow[i] := ctod(Left(aRow[i], 4)+ "."+substr(aRow[i],6,2)+"."+right(aRow[i],2,0)) 
+                    ::aRow[i] := ctod(Left(::aRow[i], 4)+ "."+substr(::aRow[i],6,2)+"."+right(::aRow[i],2,0))
 
                     elseif cFormatoDaData = 'dd.mm.yyyy' //GERMAN
-                    aRow[i] :=ctod(right(aRow[i],2,0)+ "."+ substr(aRow[i],6,2)+"."+ Left(aRow[i], 4 ))
+                    ::aRow[i] :=ctod(right(::aRow[i],2,0)+ "."+ substr(::aRow[i],6,2)+"."+ Left(::aRow[i], 4 ))
 
                     elseif cFormatoDaData = 'dd-mm-yyyy'  //ITALIAN
-                    aRow[i] :=ctod(right(aRow[i],2,0)+ "-"+ substr(aRow[i],6,2)+"-"+ Left(aRow[i], 4))
+                    ::aRow[i] :=ctod(right(::aRow[i],2,0)+ "-"+ substr(::aRow[i],6,2)+"-"+ Left(::aRow[i], 4))
 
                     elseif cFormatoDaData = 'yyyy/mm/dd' //JAPAN
-                    aRow[i] :=  ctod(Left(aRow[i], 4)+ "/"+substr(aRow[i],6,2)+"/"+right(aRow[i],2,0)) 
+                    ::aRow[i] :=  ctod(Left(::aRow[i], 4)+ "/"+substr(::aRow[i],6,2)+"/"+right(::aRow[i],2,0))
 
                     elseif cFormatoDaData = 'mm/dd/yyyy' // AMERICAN
-                    aRow[i] :=  ctod(substr(aRow[i],6,2)+"/"+right(aRow[i],2,0)+ "/" + Left(aRow[i], 4))
+                    ::aRow[i] :=  ctod(substr(::aRow[i],6,2)+"/"+right(::aRow[i],2,0)+ "/" + Left(::aRow[i], 4))
                     else
-                      aRow[i] := "''"
+                      ::aRow[i] := "''"
                     endif
 
 
@@ -558,23 +644,26 @@ METHOD GetRow(nRow) CLASS TMySQLQuery
 
                otherwise
 
-                  Alert("Unknown type from SQL Server Field: " + LTrim(Str(i))+" is type "+LTrim(Str(::aFieldStruct[i][MYSQL_FS_TYPE])))
+                  //DAVID: Alert("Unknown type from SQL Server Field: " + LTrim(Str(i))+" is type "+LTrim(Str(::aFieldStruct[i][MYSQL_FS_TYPE])))
+                  // QOUT("Unknown type from SQL Server Field: " + LTrim(Str(i))+" is type "+LTrim(Str(::aFieldStruct[i][MYSQL_FS_TYPE])))
 
             endcase
-            __objsetValuelist(Self,{{::aFieldStruct[i][MYSQL_FS_NAME],aRow[i]}})
-           
-           endif
+
+            //DAVID:
+            if ::lFieldAsData
+               __objsetValuelist(Self,{{::aFieldStruct[i][MYSQL_FS_NAME],::aRow[i]}})
+            endif
 
          next
-            
-         oRow := TMySQLRow():New(aRow, ::aFieldStruct)
-       
-      endif
-      
-   endif
-  if arow==nil; msginfo("arow nil"); end
 
-return iif(aRow == NIL, NIL, oRow)
+         oRow := TMySQLRow():New(::aRow, ::aFieldStruct)
+
+      endif
+
+   endif
+  //DAVID: if ::arow==nil; msginfo("::arow nil"); end
+
+return iif(::aRow == NIL, NIL, oRow)
 
 
 // Free result handle and associated resources
@@ -603,7 +692,8 @@ METHOD FieldPos(cFieldName) CLASS TMySQLQuery
 
    cUpperName := Upper(cFieldName)
 
-   nPos := AScan(::aFieldStruct, {|aItem| iif(Upper(aItem[MYSQL_FS_NAME]) == cUpperName, .T., .F.)})
+   //DAVID: nPos := AScan(::aFieldStruct, {|aItem| iif(Upper(aItem[MYSQL_FS_NAME]) == cUpperName, .T., .F.)})
+   nPos := AScan(::aFieldStruct, {|aItem| (Upper(aItem[MYSQL_FS_NAME]) == cUpperName)})
 
    /*while ++nPos <= Len(::aFieldStruct)
       if Upper(::aFieldStruct[nPos][MYSQL_FS_NAME]) == cUpperName
@@ -637,9 +727,11 @@ METHOD FieldGet(cnField) CLASS TMySQLQuery
    else
       nNum := cnField
    endif
-   
+
    if nNum > 0 .AND. nNum <= ::nNumfields
-       Value :=  __objsendmsg(Self,::aFieldStruct[nNum][MYSQL_FS_NAME])
+      //DAVID: Value :=  __objsendmsg(Self,::aFieldStruct[nNum][MYSQL_FS_NAME])
+      Value := ::aRow[ nNum ]
+
       // Char fields are padded with spaces since a real .dbf field would be
       if ::FieldType(nNum) == "C"
          return PadR(Value,::aFieldStruct[nNum][MYSQL_FS_LENGTH])
@@ -658,7 +750,7 @@ METHOD FieldLen(nNum) CLASS TMySQLQuery
       return ::aFieldStruct[nNum][MYSQL_FS_LENGTH]
    endif
 
-return ""
+return 0
 
 
 METHOD FieldDec(nNum) CLASS TMySQLQuery
@@ -667,7 +759,7 @@ METHOD FieldDec(nNum) CLASS TMySQLQuery
       return ::aFieldStruct[nNum][MYSQL_FS_DECIMALS]
    endif
 
-return ""
+return 0
 
 
 METHOD FieldType(nNum) CLASS TMySQLQuery
@@ -722,7 +814,7 @@ return cType
 CLASS TMySQLTable FROM TMySQLQuery
 
    DATA  cTable               // name of table
-   DATA  aOldValue         //  keeps a copy of old value 
+   DATA  aOldValue         //  keeps a copy of old value
 
    METHOD   New(nSocket, cQuery, cTableName)
    METHOD   GetRow(nRow)
@@ -731,11 +823,20 @@ CLASS TMySQLTable FROM TMySQLQuery
    METHOD   GoBottom() INLINE ::GetRow(::nNumRows)
    METHOD   GoTo(nRow) INLINE ::GetRow(nRow)
 
-   METHOD   Update(oRow)      // Gets an oRow and updates changed fields
+   //DAVID: lOldRecord, lrefresh added
+   METHOD   Update(oRow, lOldRecord, lRefresh)      // Gets an oRow and updates changed fields
+
    METHOD   Save() INLINE ::Update()
-   METHOD   Delete(oRow)      // Deletes passed row from table
-   METHOD   Append(oRow)      // Inserts passed row into table
-   METHOD   GetBlankRow()     // Returns an empty row with all available fields empty
+
+   //DAVID: lOldRecord, lRefresh added
+   METHOD   Delete(oRow, lOldRecord, lRefresh)      // Deletes passed row from table
+   //DAVID: lRefresh added
+   METHOD   Append(oRow, lRefresh)      // Inserts passed row into table
+   //DAVID: lSetValues added
+   METHOD   GetBlankRow( lSetValues )     // Returns an empty row with all available fields empty
+   //DAVID:
+   METHOD   SetBlankRow() INLINE ::GetBlankRow( .T. )    //Compatibility
+
    METHOD   Blank() INLINE ::GetBlankRow()
    METHOD   FieldPut(cnField, Value)   // field identifier, not only a number
    METHOD   Refresh()
@@ -751,11 +852,11 @@ Local i := 0
 
    ::cTable := Lower(cTableName)
    ::aOldValue:={}
-   
+
    for i := 1 to ::nNumFields
       aadd(::aOldValue, ::fieldget(i))
    next
-   
+
 
 return Self
 
@@ -763,77 +864,107 @@ return Self
 METHOD GetRow(nRow) CLASS TMySQLTable
 
    local oRow := super:GetRow(nRow),i := 0
-  
+
    if oRow <> NIL
       oRow:cTable := ::cTable
    endif
-    
+
    ::aOldvalue:={}
-   for i := 1 to ::nNumFields        
-     
+   for i := 1 to ::nNumFields
+
        // ::aOldValue[i] := ::FieldGet(i)
        aadd(::aOldvalue,::fieldget(i))
    next
-   
+
 return oRow
 
 
 METHOD Skip(nRow) CLASS TMySQLTable
    Local i
      super:skip(nRow)
-     
+
      for i := 1 to ::nNumFields
          ::aOldValue[i] := ::FieldGet(i)
      next
-              
-return Self
+
+//DAVID: DBSKIP() return NIL  return Self
+return nil
 
 
 /* Creates an update query for changed fields and submits it to server */
-METHOD Update(oRow) CLASS TMySQLTable
+//DAVID: lOldRecord, lRefresh added
+METHOD Update(oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
 
    local cUpdateQuery := "UPDATE " + ::cTable + " SET "
    local i, cField
+   //DAVID:
+   local ni, cWhere := " WHERE "
+   default lOldRecord to .F.
+   //DAVID: too many ::refresh() can slow some processes, so we can desactivate it by parameter
+   default lRefresh to .T.
 
    ::lError := .F.
 
-  
    Do case
-   
-          // default Current row 
-      case oRow==nil
-            
+
+          // default Current row
+       case oRow==nil
+
          for i := 1 to  ::nNumFields
-            
+
             if ::aOldValue[i]<>::FieldGet(i)
                cUpdateQuery += ::aFieldStruct[i][MYSQL_FS_NAME] + "=" + ClipValue2SQL(::FieldGet(i)) + ","
             endif
          next
-         
+
          // no Change
-         if right(cUpdateQuery,4)=="SET "; return !::lError; end   
-         
+         if right(cUpdateQuery,4)=="SET "; return !::lError; end
+
          // remove last comma
          cUpdateQuery := Left(cUpdateQuery, Len(cUpdateQuery) -1)
-         
 
-         cUpdateQuery += ::MakePrimaryKeyWhere()
+         //DAVID:
+         if lOldRecord
+            // based in matching of ALL fields of old record
+            // WARNING: if there are more than one record of ALL fields matching, all of those records will be changed
+
+            for nI := 1 to Len(::aFieldStruct)
+                  cWhere += ::aFieldStruct[nI][MYSQL_FS_NAME] + "="
+                  // use original value
+                  cWhere += ClipValue2SQL(::aOldValue[nI])
+                  cWhere += " AND "
+            next
+            // remove last " AND "
+            cWhere := Left(cWhere, Len(cWhere) - 5)
+            cUpdateQuery += cWhere
+
+         else
+            //MakePrimaryKeyWhere is based in fields part of a primary key
+            cUpdateQuery += ::MakePrimaryKeyWhere()
+         endif
 
          if sqlQuery(::nSocket, cUpdateQuery) == 0
-         
-            for i := 1 to ::nNumFields
-               ::aOldValue[i] := ::fieldget(i)
-            next             
+            //DAVID: Clipper maintain same record pointer
+
+            //DAVID: after refresh(), position of current record is often unpredictable
+            if lRefresh
+               ::refresh()
+            else
+               //DAVID: just reset values (?)
+               for i := 1 to ::nNumFields
+                   ::aOldValue[i] := ::FieldGet(i)
+               next
+            endif
 
          else
             ::lError := .T.
 
          endif
-   
+
       Case oRow<>nil
-      
+
          if oRow:cTable == ::cTable
-      
+
             for i := 1 to Len(oRow:aRow)
                if oRow:aDirty[i]
                   cUpdateQuery += oRow:aFieldStruct[i][MYSQL_FS_NAME] + "=" + ClipValue2SQL(oRow:aRow[i]) + ","
@@ -843,13 +974,41 @@ METHOD Update(oRow) CLASS TMySQLTable
             // remove last comma
             cUpdateQuery := Left(cUpdateQuery, Len(cUpdateQuery) -1)
 
-            cUpdateQuery += oRow:MakePrimaryKeyWhere()
+            //DAVID:
+            if lOldRecord
+               // based in matching of ALL fields of old record
+               // WARNING: if there are more than one record of ALL fields matching, all of those records will be changed
+
+               for nI := 1 to Len(oRow:aFieldStruct)
+                     cWhere += oRow:aFieldStruct[nI][MYSQL_FS_NAME] + "="
+                     // use original value
+                     cWhere += ClipValue2SQL(oRow:aOriValue[nI])
+                     cWhere += " AND "
+               next
+               // remove last " AND "
+               cWhere := Left(cWhere, Len(cWhere) - 5)
+               cUpdateQuery += cWhere
+
+            else
+               //MakePrimaryKeyWhere is based in fields part of a primary key
+               cUpdateQuery += oRow:MakePrimaryKeyWhere()
+            endif
 
             if sqlQuery(::nSocket, cUpdateQuery) == 0
 
                // All values are commited
                Afill(oRow:aDirty, .F.)
                Afill(oRow:aOldValue, nil)
+
+               //DAVID:
+               oRow:aOriValue := ACLONE( oRow:aRow )
+
+               //DAVID: Clipper maintain same record pointer
+
+               //DAVID: after refresh(), position of current record is often unpredictable
+               if lRefresh
+                  ::refresh()
+               endif
 
             else
                ::lError := .T.
@@ -862,24 +1021,55 @@ METHOD Update(oRow) CLASS TMySQLTable
 return !::lError
 
 
-METHOD Delete(oRow) CLASS TMySQLTable
+//DAVID: lOldRecord, lRefresh added
+METHOD Delete(oRow, lOldRecord, lRefresh) CLASS TMySQLTable
 
    local cDeleteQuery := "DELETE FROM " + ::cTable , i
 
+   //DAVID:
+   local ni, cWhere := " WHERE "
+   default lOldRecord to .F.
+   //DAVID: too many ::refresh() can slow some processes, so we can desactivate it by parameter
+   default lRefresh to .T.
+
    // is this a row of this table ?
    Do Case
-      Case orow==nil         
+      Case orow==nil
 
-         cDeleteQuery += ::MakePrimaryKeyWhere()
+         //DAVID:
+         if lOldRecord
+            // based in matching of ALL fields of old record
+            // WARNING: if there are more than one record of ALL fields matching, all of those records will be changed
+
+            for nI := 1 to Len(::aFieldStruct)
+                  cWhere += ::aFieldStruct[nI][MYSQL_FS_NAME] + "="
+                  // use original value
+                  cWhere += ClipValue2SQL(::aOldValue[nI])
+                  cWhere += " AND "
+            next
+            // remove last " AND "
+            cWhere := Left(cWhere, Len(cWhere) - 5)
+            cDeleteQuery += cWhere
+
+         else
+            //MakePrimaryKeyWhere is based in fields part of a primary key
+            cDeleteQuery += ::MakePrimaryKeyWhere()
+         endif
 
          if sqlQuery(::nSocket, cDeleteQuery) == 0
             ::lError := .F.
-            ::nCurRow--
-            ::getRow(::nCurRow)
-            
-             for i := 1 to ::nNumFields
-                ::aOldValue[i] := ::FieldGet(i)
-             next
+            //DAVID: Clipper maintain same record pointer
+            //DAVID: ::nCurRow--
+
+            //DAVID: after refresh(), position of current record is often unpredictable
+            if lRefresh
+               ::refresh()
+            else
+               //DAVID: just reset values (?)
+               for i := 1 to ::nNumFields
+                   ::aOldValue[i] := ::FieldGet(i)
+               next
+            endif
 
          else
             ::lError := .T.
@@ -889,37 +1079,63 @@ METHOD Delete(oRow) CLASS TMySQLTable
       Case oRow<>nil
          if oRow:cTable == ::cTable
 
-            cDeleteQuery += oRow:MakePrimaryKeyWhere()
+            //DAVID:
+            if lOldRecord
+               // based in matching of ALL fields of old record
+               // WARNING: if there are more than one record of ALL fields matching, all of those records will be changed
+
+               for nI := 1 to Len(oRow:aFieldStruct)
+                     cWhere += oRow:aFieldStruct[nI][MYSQL_FS_NAME] + "="
+                     // use original value
+                     cWhere += ClipValue2SQL(oRow:aOriValue[nI])
+                     cWhere += " AND "
+               next
+               // remove last " AND "
+               cWhere := Left(cWhere, Len(cWhere) - 5)
+               cDeleteQuery += cWhere
+
+            else
+               //MakePrimaryKeyWhere is based in fields part of a primary key
+               cDeleteQuery += oRow:MakePrimaryKeyWhere()
+            endif
 
             if sqlQuery(::nSocket, cDeleteQuery) == 0
                ::lError := .F.
 
-            else 
+               //DAVID: after refresh(), position of current record is often unpredictable
+               if lRefresh
+                  ::refresh()
+               endif
+
+            else
                ::lError := .T.
 
             endif
 
           endif
-  EndCase   
+  EndCase
 
 return !::lError
 
 
 // Adds a row with values passed into oRow
-METHOD Append(oRow) CLASS TMySQLTable
+//DAVID: lRefresh added
+METHOD Append(oRow, lRefresh) CLASS TMySQLTable
 
    local cInsertQuery := "INSERT INTO " + ::cTable + " ("
    local i, cField
+   //DAVID: too many ::refresh() can slow some processes, so we can desactivate it by parameter
+   default lRefresh to .T.
 
-   Do Case 
-           // default Current row    
+   Do Case
+           // default Current row
       Case oRow==nil
 
             // field names
             for i := 1 to ::nNumFields
                if ::aFieldStruct[i][MYSQL_FS_FLAGS]<>AUTO_INCREMENT_FLAG
                   cInsertQuery += ::aFieldStruct[i][MYSQL_FS_NAME] + ","
-               endif  
+               endif
             next
             // remove last comma from list
             cInsertQuery := Left(cInsertQuery, Len(cInsertQuery) -1) + ") VALUES ("
@@ -928,32 +1144,43 @@ METHOD Append(oRow) CLASS TMySQLTable
             for i := 1 to ::nNumFields
                if ::aFieldStruct[i][MYSQL_FS_FLAGS]<>AUTO_INCREMENT_FLAG
                   cInsertQuery += ClipValue2SQL(::FieldGet(i)) + ","
-               endif   
+               endif
             next
 
             // remove last comma from list of values and add closing parenthesis
             cInsertQuery := Left(cInsertQuery, Len(cInsertQuery) -1) + ")"
 
             if sqlQuery(::nSocket, cInsertQuery) == 0
-               
-               for i := 1 to ::nNumFields
-                   ::aOldValue[i] := ::FieldGet(i)
-               next
+               ::lError := .F.
+               //DAVID: Clipper add record at end
+               ::nCurRow := ::lastrec() + 1
+
+               //DAVID: after refresh(), position of current record is often unpredictable
+               if lRefresh
+                  ::refresh()
+               else
+                  //DAVID: just reset values in memory (?)
+                  /* was same values from fieldget(i) !
+                  for i := 1 to ::nNumFields
+                      ::aOldValue[i] := ::FieldGet(i)
+                  next
+                  */
+               endif
+
                return .T.
             else
                ::lError := .T.
             endif
 
-         
-      Case oRow<>nil   
-      
+    Case oRow<>nil
+
          if oRow:cTable == ::cTable
 
             // field names
             for i := 1 to Len(oRow:aRow)
                if oRow:aFieldStruct[i][MYSQL_FS_FLAGS]<>AUTO_INCREMENT_FLAG
                   cInsertQuery += oRow:aFieldStruct[i][MYSQL_FS_NAME] + ","
-               endif  
+               endif
             next
             // remove last comma from list
             cInsertQuery := Left(cInsertQuery, Len(cInsertQuery) -1) + ") VALUES ("
@@ -962,27 +1189,51 @@ METHOD Append(oRow) CLASS TMySQLTable
             for i := 1 to Len(oRow:aRow)
                if oRow:aFieldStruct[i][MYSQL_FS_FLAGS]<>AUTO_INCREMENT_FLAG
                   cInsertQuery += ClipValue2SQL(oRow:aRow[i]) + ","
-               endif   
+               endif
             next
 
             // remove last comma from list of values and add closing parenthesis
             cInsertQuery := Left(cInsertQuery, Len(cInsertQuery) -1) + ")"
 
             if sqlQuery(::nSocket, cInsertQuery) == 0
+               //DAVID:
+               ::lError := .F.
+
+               //DAVID:
+               // All values are commited
+               Afill(oRow:aDirty, .F.)
+               Afill(oRow:aOldValue, nil)
+
+               //DAVID:
+               oRow:aOriValue := ACLONE( oRow:aRow )
+
+               //DAVID: Clipper add record at end
+               ::nCurRow := ::lastrec() + 1
+
+               //DAVID: after refresh(), position of current record is often unpredictable
+               if lRefresh
+                  ::refresh()
+               endif
+
                return .T.
             else
                ::lError := .T.
             endif
 
          endif
-      Endcase     
+
+    Endcase
 return .F.
 
 
-METHOD GetBlankRow() CLASS TMySQLTable
+//DAVID: lSetValues added  METHOD GetBlankRow() CLASS TMySQLTable
+METHOD GetBlankRow( lSetValues ) CLASS TMySQLTable
 
    local i
    local aRow := Array(::nNumFields)
+
+   //DAVID: It is not current row, so do not change it
+   default lSetValues to .F.
 
    // crate an array of empty fields
    for i := 1 to ::nNumFields
@@ -1017,13 +1268,14 @@ METHOD GetBlankRow() CLASS TMySQLTable
 
       endcase
    next
-   
-   for i := 1 to ::nNumFields
-    
-         ::FieldPut(i, aRow[i])
-         ::aOldValue[i] := aRow[i]
-   next
-  
+
+   //DAVID:
+   if lSetValues   //Assign values as current row values
+      for i := 1 to ::nNumFields
+            ::FieldPut(i, aRow[i])
+            ::aOldValue[i] := aRow[i]
+      next
+   endif
 
    return TMySQLRow():New(aRow, ::aFieldStruct, ::cTable, .F.)
 
@@ -1042,20 +1294,26 @@ METHOD FieldPut(cnField, Value) CLASS TMySQLTable
 
    if nNum > 0 .AND. nNum <= ::nNumFields
 
-      if Valtype(Value) == Valtype(::FieldGet(nNum)) .OR. Empty(::Fieldget(nNum))
+//DAVID:      if Valtype(Value) == Valtype(::FieldGet(nNum)) .OR. Empty(::Fieldget(nNum))
+      if Valtype(Value) == Valtype(::aRow[nNum]) .OR. ::aRow[nNum]==NIL
 
          // if it is a char field remove trailing spaces
          if ValType(Value) == "C"
             Value := RTrim(Value)
          endif
-               
-         __objsetValueList(Self,{{::aFieldStruct[nNum][MYSQL_FS_NAME],Value}})
+
+         //DAVID:
+         ::aRow[ nNum ] := Value
+         if ::lFieldAsData
+            __objsetValueList(Self,{{::aFieldStruct[nNum][MYSQL_FS_NAME],Value}})
+         endif
 
          return Value
       endif
    endif
 
 return nil
+
 
 METHOD Refresh() CLASS TMySQLTABLE
 
@@ -1079,18 +1337,18 @@ METHOD Refresh() CLASS TMySQLTABLE
       if ::nCurRow > ::nNumRows
          ::nCurRow := ::nNumRows
       endif
-      
+
       ::getRow(::nCurRow)
-                  
+
    else
 /*      ::aFieldStruct := {}
       ::nResultHandle := nil
       ::nNumFields := 0
       ::nNumRows := 0
-     
+
       ::aOldValue:={}
       */
-      ::lError := .T.             
+      ::lError := .T.
    endif
 
 return !::lError
@@ -1100,9 +1358,9 @@ return !::lError
 METHOD MakePrimaryKeyWhere() CLASS TMySQLTable
 
    local ni, cWhere := " WHERE "
- 
+
    for nI := 1 to Len(::aFieldStruct)
-     
+
       // search for fields part of a primary key
       if (sqlAND(::aFieldStruct[nI][MYSQL_FS_FLAGS], PRI_KEY_FLAG) == PRI_KEY_FLAG) .OR.;
          (sqlAND(::aFieldStruct[nI][MYSQL_FS_FLAGS], MULTIPLE_KEY_FLAG) == MULTIPLE_KEY_FLAG)
@@ -1110,9 +1368,9 @@ METHOD MakePrimaryKeyWhere() CLASS TMySQLTable
          cWhere += ::aFieldStruct[nI][MYSQL_FS_NAME] + "="
 
          // if a part of a primary key has been changed, use original value
-      
+
             cWhere += ClipValue2SQL(::aOldValue[nI])
-       
+
 
          cWhere += " AND "
       endif
@@ -1199,10 +1457,10 @@ METHOD SelectDB(cDBName) CLASS TMySQLServer
    ::lError := .F.
 
    if sqlSelectD(::nSocket, cDBName) != 0     && tabela nao existe
-      ::cDBName :="" 
+      ::cDBName :=""
       ::lError := .T.
    else                                       && tabela existe
-      ::cDBName :=cDBName 
+      ::cDBName :=cDBName
       ::lError := .F.
       return .T.
    endif
@@ -1539,4 +1797,3 @@ static function ClipValue2SQL(Value)
    endcase
 
 return cValue
-

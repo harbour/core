@@ -213,10 +213,10 @@ static function Skipper(nSkip, oQuery)
    case (nSkip > 0)
       while ( i < nSkip )           // Skip Foward
 
-         if oQuery:eof()
+         //DAVID: change in TMySQLquery:eof() definition  if oQuery:eof()
+         if oQuery:recno() == oQuery:lastrec()
             exit
          endif
-
          oQuery:Skip(1)
          i++
 
@@ -225,7 +225,8 @@ static function Skipper(nSkip, oQuery)
    case ( nSkip < 0 )
       while ( i > nSkip )           // Skip backward
 
-         if oQuery:bof()
+         //DAVID: change in TMySQLquery:bof() definition  if oQuery:bof()
+         if oQuery:recno() == 1
             exit
          endif
 

@@ -8,6 +8,21 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-10-05 05:39 UTC-0500 David Arturo Macias Corona <dmacias@mail.udg.mx>
+  * harbour/contrib/mysql/tmysql.prg
+  * harbour/contrib/mysql/tsqlbrw.prg
+    * Changes to approach Clipper behaviour
+      NOTE: My changes are marked in source code with label "DAVID:", to 
+            help in quick review of changes, and these changes are 
+            described widely in files difer.txt, diffeng.txt
+            These labels will be removed in a reasonable time
+
+  + harbour/contrib/mysql/difer.txt
+    Describe modifications to programs of harbour\contrib\mysql, in Spanish
+  + harbour/contrib/mysql/diffeng.txt
+    Describe modifications to programs of harbour\contrib\mysql, in English
+
+
 2004-09-08 16:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbapi.h
    * source/vm/dynsym.c
