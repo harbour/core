@@ -44,7 +44,7 @@ sayitem(nrow, ncol, citem, setcolor())
 return nil
 
 ********************************************************************************
-function __menuto(bvarblock, cvarname, anexits)
+function __menuto(bvarblock, cvarname)
 ********************************************************************************
 local athismenu := amenu
 local nselect, ncurrent, nprevious := 0
@@ -83,9 +83,6 @@ do while ncurrent > 0
     nkey := inkey(0)
 
     do case
-    case anexits != nil .and. ascan(anexits, nkey) > 0
-        nselect  := ncurrent
-        ncurrent := 0
     case nkey == K_ENTER .or. nKey == K_PGUP .or. nKey == K_PGDN
         nselect  := ncurrent
         ncurrent := 0
