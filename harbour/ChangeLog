@@ -8,6 +8,28 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-06-27 16:07 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * source/compiler/gencli.c
+    ! .NET IL implementation for HB_P_PLUS
+    ! New .NET function AddObjects() for adding "object" type variables
+
+  Notice: As Harbour.NET uses IL "object" type for storing variables, the
+  new implemented AddObjects() functions is used for adding variables. This
+  code already works ok:
+
+  function Main()
+
+     local n := 10, c := "Hello World"
+
+     ? n + 20
+     ? c + " from Harbour.NET"
+     ? "done!"
+
+  return nil
+
+  Warning: Date variables type have not been implemented in AddObjects() yet, and
+  also it is not generating an error when adding different types values.
+
 2003-06-27 12:13 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/compiler/gencli.c
     ! .NET IL implementation for HB_P_PUSHBYTE
