@@ -1,3 +1,14 @@
+2001-07-19 20:30 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbapi.h
+     + Added #define HB_MAX_MACRO_ARGS 16
+
+   * source/vm/hvm.c
+   * source/vm/macro.c
+     + Added support for nested HB_P_MACROPUSHARG
+
+   * contrib/dot/pp.prg
+     - Removed bSplit in PP_PreProLine(). Instead added logic to split the line unless line is a directive.
+
 2001-07-19 21:30 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    *utils/hbmake/hbmake.prg
       *Small changes needed to be more compatible with Gcc under OS/2

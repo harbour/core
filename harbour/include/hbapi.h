@@ -64,6 +64,8 @@
 extern "C" {
 #endif
 
+#define HB_MAX_MACRO_ARGS 16
+
 /* items types and type checking macros */
 #define HB_IT_NIL       ( ( USHORT ) 0x0000 )
 #define HB_IT_POINTER   ( ( USHORT ) 0x0001 )

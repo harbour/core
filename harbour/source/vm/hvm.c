@@ -253,8 +253,8 @@ static LONG     s_lRecoverBase;
 #define  HB_RECOVER_ADDRESS   -3
 #define  HB_RECOVER_VALUE     -4
 
-int hb_vm_iExtraParams = 0;
-PHB_SYMB hb_vm_pExtraParamsSymbol = NULL;
+int hb_vm_aiExtraParams[HB_MAX_MACRO_ARGS], hb_vm_iExtraParamsIndex = 0;
+PHB_SYMB hb_vm_apExtraParamsSymbol[HB_MAX_MACRO_ARGS];
 
 /* Request for some action - stop processing of opcodes
  */
@@ -1236,24 +1236,44 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             /* the topmost element on the stack contains a macro
              * string for compilation
              */
-            if( pCode[ w + 1 ] == HB_P_PUSHSYMNEAR )
-            {
-               hb_vm_pExtraParamsSymbol = pSymbols + ( USHORT ) ( pCode[ w + 2 ] );
-               w += 3;
-            }
-            else if( pCode[ w + 1 ] == HB_P_MPUSHSYM )
-            {
-               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 2 );
+            hb_macroGetValue( hb_stackItemFromTop( -1 ), TRUE );
+            w++;
 
-               hb_vm_pExtraParamsSymbol = ( *pDynSym )->pSymbol;
-               w += sizeof( HB_DYNS_PTR ) + 2;
+            if( hb_vm_iExtraParamsIndex && hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] == NULL )
+            {
+               if( pCode[w] == HB_P_PUSHSYMNEAR )
+               {
+                  hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] = pSymbols + ( USHORT ) ( pCode[w + 1] );
+                  w += 2;
+               }
+               else if( pCode[w] == HB_P_MPUSHSYM )
+               {
+                  HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
+
+                  hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] = ( *pDynSym )->pSymbol;
+                  w += sizeof( HB_DYNS_PTR ) + 1;
+               }
+               else
+               {
+                  hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] = pSymbols + ( USHORT ) ( pCode[w + 1] + ( pCode[w + 2] * 256 ) );
+                  w += 3;
+               }
             }
             else
             {
-               hb_vm_pExtraParamsSymbol = pSymbols + ( USHORT ) ( pCode[ w + 2 ] + ( pCode[ w + 3 ] * 256 ) );
-               w += 4;
+               if( pCode[w] == HB_P_PUSHSYMNEAR )
+               {
+                  w += 2;
+               }
+               else if( pCode[w] == HB_P_MPUSHSYM )
+               {
+                  w += sizeof( HB_DYNS_PTR ) + 1;
+               }
+               else
+               {
+                  w += 3;
+               }
             }
-            hb_macroGetValue( hb_stackItemFromTop( -1 ), TRUE );
             break;
 
          case HB_P_MACROPUSHALIASED:
@@ -2875,13 +2895,11 @@ void hb_vmDo( USHORT uiParams )
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDo(%hu)", uiParams));
 
    /*
-   printf( "\nItems: %i Params: %i Extra %i\n", hb_stack.pPos - hb_stack.pBase, uiParams, hb_vm_iExtraParams );
+   printf( "\nItems: %i Params: %i Extra %i\n", hb_stack.pPos - hb_stack.pBase, uiParams, hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex - 1] );
    */
-   if( hb_vm_iExtraParams && ( ( hb_stack.pPos - hb_stack.pBase ) >= ( uiParams + hb_vm_iExtraParams + 2 ) ) && HB_IS_SYMBOL( pItem = hb_stackItemFromTop( -( uiParams + hb_vm_iExtraParams + 2 ) ) ) && pItem->item.asSymbol.value == hb_vm_pExtraParamsSymbol )
+   if( hb_vm_iExtraParamsIndex && HB_IS_SYMBOL( pItem = hb_stackItemFromTop( -( uiParams + hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex - 1] + 2 ) ) ) && pItem->item.asSymbol.value == hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] )
    {
-      uiParams += hb_vm_iExtraParams;
-      hb_vm_iExtraParams = 0;
-      hb_vm_pExtraParamsSymbol = NULL;
+      uiParams += hb_vm_aiExtraParams[--hb_vm_iExtraParamsIndex];
    }
 
    if( bProfiler )
@@ -3007,11 +3025,9 @@ void hb_vmSend( USHORT uiParams )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmSend(%hu)", uiParams));
 
-   if( hb_vm_iExtraParams && ( hb_stack.pPos - hb_stack.pBase >= ( uiParams + hb_vm_iExtraParams + 2 ) ) && HB_IS_SYMBOL( pItem = hb_stackItemFromTop( -( uiParams + hb_vm_iExtraParams + 2 ) ) ) && pItem->item.asSymbol.value == hb_vm_pExtraParamsSymbol )
+   if( hb_vm_iExtraParamsIndex && HB_IS_SYMBOL( pItem = hb_stackItemFromTop( -( uiParams + hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex - 1] + 2 ) ) ) && pItem->item.asSymbol.value == hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] )
    {
-      uiParams += hb_vm_iExtraParams;
-      hb_vm_iExtraParams = 0;
-      hb_vm_pExtraParamsSymbol = NULL;
+      uiParams += hb_vm_aiExtraParams[--hb_vm_iExtraParamsIndex];
    }
 
    if( bProfiler )

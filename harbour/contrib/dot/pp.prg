@@ -2228,7 +2228,7 @@ FUNCTION PP_PreProFile( sSource, sPPOExt, bBlanks )
                                FWrite( hPP, CRLF )
                             ENDIF
                          ELSE
-                            sLine := PP_PreProLine( sLine, nLine, sPath + sSource, .F. )
+                            sLine := PP_PreProLine( sLine, nLine, sPath + sSource )
                             IF bBlanks .OR. ! ( sLine == '' )
                                FWrite( hPP, sLine + CRLF )
                             ENDIF
@@ -2266,7 +2266,7 @@ FUNCTION PP_PreProFile( sSource, sPPOExt, bBlanks )
                             FWrite( hPP, CRLF )
                          ENDIF
                       ELSE
-                         sLine := PP_PreProLine( sLine, nLine, sPath + sSource, .F. )
+                         sLine := PP_PreProLine( sLine, nLine, sPath + sSource )
                          IF bBlanks .OR. ! ( sLine == '' )
                             FWrite( hPP, sLine + CRLF )
                          ENDIF
@@ -2429,7 +2429,7 @@ FUNCTION PP_PreProFile( sSource, sPPOExt, bBlanks )
                       ENDIF
                    ELSE
                       //sLine += sRight
-                      sLine := PP_PreProLine( sLine, nLine, sPath + sSource, .F. )
+                      sLine := PP_PreProLine( sLine, nLine, sPath + sSource )
                       IF bBlanks .OR. ! ( sLine == '' )
                          FWrite( hPP, sLine + CRLF )
                       ENDIF
@@ -2452,7 +2452,7 @@ FUNCTION PP_PreProFile( sSource, sPPOExt, bBlanks )
                       FWrite( hPP, CRLF )
                    ENDIF
                 ELSE
-                   sLine := PP_PreProLine( sLine, nLine, sPath + sSource, .F. )
+                   sLine := PP_PreProLine( sLine, nLine, sPath + sSource )
                    IF bBlanks .OR. ! ( sLine == '' )
                       FWrite( hPP, sLine + CRLF )
                    ENDIF
@@ -2514,7 +2514,7 @@ FUNCTION PP_PreProFile( sSource, sPPOExt, bBlanks )
          FWrite( hPP, sLine )
       ENDIF
    ELSE
-      sLine := PP_PreProLine( sLine, nLine, sPath + sSource, .F. )
+      sLine := PP_PreProLine( sLine, nLine, sPath + sSource )
       IF bBlanks .OR. ! ( sLine == '' )
          FWrite( hPP, sLine )
       ENDIF
@@ -2537,7 +2537,7 @@ RETURN .T.
 
 //--------------------------------------------------------------//
 
-FUNCTION PP_PreProLine( sLine, nLine, sSource, bSplit )
+FUNCTION PP_PreProLine( sLine, nLine, sSource )
 
    LOCAL nPendingLines := 0, aPendingLines  := {}
 
@@ -2551,11 +2551,7 @@ FUNCTION PP_PreProLine( sLine, nLine, sSource, bSplit )
    LOCAL sBackupLine
    LOCAL sSkipped
 
-   IF bSplit == NIL
-      bSplit := .T.
-   ENDIF
-
-   IF bSplit
+   IF Left( LTrim( sLine ), 1 ) != '#'
        nPosition := 0
        WHILE ( nNewLineAt := nAtSkipStr( ';', sLine ) ) > 0
           nPendingLines++

@@ -427,7 +427,8 @@ char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
  */
 void hb_macroGetValue( HB_ITEM_PTR pItem, BOOL bArg )
 {
-   extern int hb_vm_iExtraParams;
+   extern int hb_vm_aiExtraParams[HB_MAX_MACRO_ARGS], hb_vm_iExtraParamsIndex;
+   extern PHB_SYMB hb_vm_apExtraParamsSymbol[HB_MAX_MACRO_ARGS];
 
    HB_TRACE(HB_TR_DEBUG, ("hb_macroGetValue(%p)", pItem));
 
@@ -469,6 +470,11 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BOOL bArg )
 
       iStatus = hb_macroParse( &struMacro, szString );
 
+      if( bArg && hb_vm_iExtraParamsIndex == HB_MAX_MACRO_ARGS )
+      {
+         hb_macroSyntaxError( &struMacro );
+      }
+
       #ifdef HB_MACRO_STATEMENTS
         hb_xfree( pText );
         hb_xfree( pOut );
@@ -481,7 +487,8 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BOOL bArg )
 
          if( bArg && struMacro.iListElements > 0 )
          {
-            hb_vm_iExtraParams += struMacro.iListElements;
+            hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex] = struMacro.iListElements;
+            hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex++] = NULL;
          }
       }
       else
