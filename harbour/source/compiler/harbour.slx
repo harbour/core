@@ -44,6 +44,9 @@
    int yy_lex_input( char *, int );
 #define YY_INPUT( buf, result, max_size ) result = yy_lex_input( buf, max_size );
 
+static int iTexts = 0;
+char * aTexts[256];
+
 /* -----------------------------------------------------  Language Definitions. ---------------------------------------------------- */
 
 /* Delimiters. */
@@ -829,6 +832,13 @@ LANGUAGE_RULES_ARE {
 
 #undef NEW_LINE_ACTION(x)
    #define NEW_LINE_ACTION() \
+		while( iTexts ) \
+                { \
+                   /* printf( "Releasing Text: %i = %s At: %i\n", iTexts, aTexts[iTexts - 1], aTexts[iTexts - 1] ); */ \
+                   iTexts--; \
+                   hb_xfree( aTexts[iTexts] ); \
+                }\
+		\
                 if( ! hb_comp_bQuiet && ( hb_comp_iLine % 100 ) == 0 ) \
                 { \
                    printf( "\r%i", hb_comp_iLine ); \
@@ -874,13 +884,8 @@ LANGUAGE_RULES_ARE {
    }\
    else\
    {\
-      /* yytext = (char*) (  static_yytext + ( iTexts++ * TOKEN_SIZE ) ); */ \
-      /* strcpy( yytext, x ); */ \
-      /* yytext[ ( yyleng = strlen(x) ) ] = '\0'; */ \
       yytext = x;\
       yyleng = strlen( yytext );\
-\
-      DEBUG_INFO( printf( "Text: %s Texts: %i Pointer: %i\n", yytext, iTexts, yytext ) );\
 \
       if( *yytext == '_' || *yytext == '&' || isalpha( *yytext ) )\
       {\
@@ -901,9 +906,11 @@ LANGUAGE_RULES_ARE {
 	          /* Remove the '&'. */ \
 	       	  yytext++;\
 	      	  yyleng--;\
-                  yytext = hb_strdup( yytext );\
 \
-		  iTexts++;\
+                  yytext = hb_strdup( yytext );\
+		  /* aTexts[iTexts++] = yytext; */\
+		  /* printf( "Text %i At: %i for %s\n", iTexts, aTexts[iTexts - 1], aTexts[iTexts - 1] ); */\
+\
                   yylval.string = yytext;\
 	       	  iRet = MACROVAR;\
                }\
@@ -916,17 +923,20 @@ LANGUAGE_RULES_ARE {
                   yylval.string = yytext;\
 	       	  yyleng -= 2;\
 	       	  yytext[yyleng] = '\0';\
-                  yytext = hb_strdup( yytext );\
 \
-		  iTexts++;\
+                  yytext = hb_strdup( yytext );\
+		  /* aTexts[iTexts++] = yytext; */\
+		  /* printf( "Text %i At: %i for %s\n", iTexts, aTexts[iTexts - 1], aTexts[iTexts - 1] ); */\
+\
                   yylval.string = yytext;\
 	       	  iRet = MACROVAR;\
 	       }\
 	       else\
 	       {\
                   yytext = hb_strdup( yytext );\
+		  /* aTexts[iTexts++] = yytext; */\
+		  /* printf( "Text %i At: %i for %s\n", iTexts, aTexts[iTexts - 1], aTexts[iTexts - 1] ); */\
 \
-		  iTexts++;\
                   yylval.string = yytext;\
 	       	  iRet = MACROTEXT;\
 	       }\
@@ -934,8 +944,9 @@ LANGUAGE_RULES_ARE {
 	    else\
 	    {\
                yytext = hb_strdup( yytext );\
+	       aTexts[iTexts++] = yytext;\
+	       /* printf( "Text %i At: %i for %s\n", iTexts, aTexts[iTexts - 1], aTexts[iTexts - 1] ); */\
 \
-	       iTexts++;\
                yylval.string = yytext;\
 	       iRet = MACROTEXT;\
 	    }\
@@ -946,19 +957,23 @@ LANGUAGE_RULES_ARE {
 \
        	    /* Plain Var. */\
             yytext = hb_strdup( yytext );\
+	    /* aTexts[iTexts++] = yytext; */\
+	    /* printf( "Text %i At: %i for %s\n", iTexts, aTexts[iTexts - 1], aTexts[iTexts - 1] ); */\
 \
-	    iTexts++;\
             yylval.string = yytext;\
       	    iRet = IDENTIFIER;\
          }\
       }\
       else\
       {\
-         DEBUG_INFO( printf(  "Passing Element \"%s\" to CONVERT_NUMBER()\n", sToken, yylval.string ) );\
+         DEBUG_INFO( printf(  "Passing Element \"%s\" to CONVERT_NUMBER()\n", sToken ) );\
 \
          /* "Returns" Token in iRet. (yylval.string already allocated). */\
 	 yylval.string = hb_xgrab( TOKEN_SIZE );\
-	 iTexts++;\
+	 yylval.string[0] = 0;\
+	 aTexts[iTexts++] = yylval.string;\
+	 /* printf( "Text %i At: %i for Converted %s\n", iTexts, aTexts[iTexts - 1], sToken ); */\
+\
          CONVERT_NUMBER();\
 \
          DEBUG_INFO( printf(  "Element \"%s\" is %i\n", sToken, iRet ) );\
@@ -1018,10 +1033,12 @@ LANGUAGE_RULES_ARE {
    DEBUG_INFO( printf( "Custom Action for %i\n", x ) );\
 \
    /* Resetting (prepairing). */\
-   /*yytext = (char*) ( (char*) static_yytext + ( iTexts++ * TOKEN_SIZE ) );*/\
-   yytext = hb_xgrab(11);\
+   yytext = hb_xgrab( iWordLen + 1 );\
+   /* aTexts[iTexts++] = yytext; */\
+\
    yytext[0] = '\0';\
    yylval.string = yytext;\
+   /* printf( "Text %i At: %i for Var As Id\n", iTexts, aTexts[iTexts - 1] ); */\
 \
    DEBUG_INFO( printf( "Prepared Text: %i Pointer: %i\n", iTexts, yytext ) );\
 \

@@ -59,15 +59,13 @@
 /* Pairs. */
 static char sPair[ 2048 ];
 static int  iPairLen;
-static char cTerm = 0;
-static char chrPair;
-static int  iPair;
+static char cTerm;
+static BOOL bExclusive;
+static char * sExclude;
+static int iPairToken;
 
 /* Self Contained Words. */
 static char sSelf[ TOKEN_SIZE ];
-static int  iSelfLen;
-static char chrSelf;
-static int  iSelf;
 
 typedef struct _LEX_WORD
 {
@@ -174,10 +172,9 @@ static char * tmpPtr;
 static char sToken[TOKEN_SIZE];
 static int  iLen = 0;
 static char chr, cPrev = 0;
-static int  iKey, iWord, iMatch, iRemove, iScan, iWordLen, iPush, iTexts = 0;
+static int  iKey, iWord, iMatch, iRemove, iWordLen, iPush;
 static char szLexBuffer[ YY_BUF_SIZE ];
-static char static_yytext[ YY_BUF_SIZE ];
-static char * szBuffer;
+static char * s_szBuffer;
 static int  iSize = 0;
 static int  iRet;
 static BOOL bTmp;
@@ -255,23 +252,35 @@ int Reduce( int iToken, BOOL bReal );
             if( *tmpPtr )
 
 #define IF_BEGIN_PAIR(chr) \
-            iPair = 0; \
+         {  register int iPair = 0;\
+            \
             while( iPair < iPairs ) \
             { \
                if( chr == aPairs[iPair].cStart ) \
                { \
+                  /* Terminator to look for. */ \
+                  cTerm      =          aPairs[iPair].cTerm; \
+                  bExclusive =          aPairs[iPair].bExclusive; \
+                  sExclude   = (char *) aPairs[iPair].sExclude; \
+                  iPairToken =          aPairs[iPair].iToken; \
                   break; \
                } \
                iPair++; \
             } \
-            /* Begin New Pair. */ \
-            if( iPair < iPairs )
+            bTmp = ( iPair < iPairs ); \
+            \
+         } \
+         /* Begin New Pair. */ \
+         if( bTmp )
 
 #define CHECK_SELF_CONTAINED(chr) \
             \
             DEBUG_INFO( printf( "Checking %i Selfs for %c At: >%s<\n", iSelfs, chr, szBuffer - 1 ) ); \
             \
-            iSelf = 0; \
+         {\
+            register int iSelf = 0, iSelfLen; \
+            register char chrSelf; \
+            \
             while( iSelf < iSelfs ) \
             { \
                chrSelf = LEX_CASE(chr);\
@@ -327,7 +336,11 @@ int Reduce( int iToken, BOOL bReal );
                      { \
                         DEBUG_INFO( printf( "Reducing Self >%s<\n", sSelf ) ); \
                         \
-                        bNewLine = FALSE;\
+                        if( bNewLine )\
+                        {\
+                           bNewLine = FALSE;\
+                           NEW_LINE_ACTION();\
+                        }\
                         \
                         RETURN_TOKEN( REDUCE( aSelfs[iSelf].iToken ), sSelf ); \
                      } \
@@ -335,10 +348,11 @@ int Reduce( int iToken, BOOL bReal );
                } \
                \
                iSelf++; \
-            }
+            } \
+         }
 
 #define IF_ABORT_PAIR(chrPair) \
-                        tmpPtr = (char*) aPairs[iPair].sExclude; \
+                        tmpPtr = sExclude; \
                         while ( *tmpPtr && chrPair != *tmpPtr ) \
                         { \
                             tmpPtr++; \
@@ -455,6 +469,9 @@ int Reduce( int iToken, BOOL bReal );
             if( x ) \
             { \
                INTERCEPT_ACTION(x)\
+               \
+               s_szBuffer = szBuffer;\
+               \
                return x; \
             } \
             else \
@@ -467,6 +484,8 @@ int Reduce( int iToken, BOOL bReal );
             DEBUG_INFO( printf(  "Returning: %i\n", x ) ); \
             \
             INTERCEPT_ACTION(x)\
+            \
+            s_szBuffer = szBuffer;\
             \
             return x; \
         }
@@ -501,10 +520,11 @@ int Reduce( int iToken, BOOL bReal );
 
 #define SCAN_PROSPECTS()\
 {\
+   register int iScan = 0;\
+   \
    DEBUG_INFO( printf(  "Scaning %i Prospects for %i at Pos: %i\n", iProspects, iToken, iMatched ) ); \
    \
    iFound = 0;\
-   iScan  = 0;\
    while( iScan < iProspects )\
    {\
       if( aiRules[ aiProspects[iScan] ][ iMatched ] == iToken )\
@@ -524,7 +544,7 @@ int Reduce( int iToken, BOOL bReal );
       else\
       {\
          /* No longer a prospect. */\
-         REMOVE_PROSPECT();\
+         REMOVE_PROSPECT(iScan);\
 \
          /* Has to continue without increasing the counter, because of side effect of REMOVE_PROSPECT(). */\
          continue;\
@@ -545,9 +565,10 @@ int Reduce( int iToken, BOOL bReal );
 
 #define SCAN_RULES()\
 {\
+   register int iScan = 0;\
+   \
    DEBUG_INFO( printf(  "Scaning %i Rules for %i at Pos: %i\n", iRules, iToken, iMatched ) ); \
    \
-   iScan  = 0;\
    iFound = 0;\
    iProspects = 0;\
    while( iScan < iRules )\
@@ -565,7 +586,7 @@ int Reduce( int iToken, BOOL bReal );
          else\
          {\
             /* Adding this Rule to the Prospects List. */\
-            ADD_PROSPECT();\
+            ADD_PROSPECT(iScan);\
          }\
       }\
 \
@@ -573,12 +594,12 @@ int Reduce( int iToken, BOOL bReal );
    }\
 }
 
-#define ADD_PROSPECT()\
+#define ADD_PROSPECT(iScan)\
 {\
    aiProspects[ iProspects++ ] = iScan;\
 }
 
-#define REMOVE_PROSPECT()\
+#define REMOVE_PROSPECT(iScan)\
 {\
    DEBUG_INFO( printf(  "Removing Prospect: %i Of: %i\n", iScan, iProspects ) );\
 \
@@ -784,6 +805,8 @@ int Reduce( int iToken, BOOL bReal );
 
 int yylex( void /*YYSTYPE * yylval*/ )
 {
+ register char * szBuffer = s_szBuffer;
+
  Start:
     IF_TOKEN_READY()
     {
@@ -916,68 +939,72 @@ int yylex( void /*YYSTYPE * yylval*/ )
                 IF_BELONG_LEFT( chr )
                 {
                     DEBUG_INFO( printf(  "Reducing Left '%c'\n", chr ) );
-
+                    cTerm = 0;
                     RETURN_TOKEN( REDUCE( (int) chr ), NULL );
                 }
 
-                /* Terminator to look for. */
-                cTerm = aPairs[iPair].cTerm;
-
                 /* Soft ? */
-                if ( aPairs[iPair].bExclusive )
+                if ( bExclusive )
                 {
-                    iPairLen = 0;
-
-                    /* Look for the terminator. */
-                    while ( *szBuffer )
                     {
-                        /* Next Character. */
-                        chrPair = *szBuffer++ ;
+                        register int iPairLen = 0;
+                        register char chrPair;
 
-                        //DEBUG_INFO( printf(  "Checking: '%c' in Exclusive Pair\n", chrPair ) );
-
-                        /* Check if exception. */
-                        IF_ABORT_PAIR( chrPair )
+                        /* Look for the terminator. */
+                        while ( *szBuffer )
                         {
-                            sPair[ iPairLen ] = '\0';
+                            /* Next Character. */
+                            chrPair = *szBuffer++ ;
 
-                            printf(  "Exception: %c for Pair: at \"%s\"\n", chrPair, sPair );
+                            //DEBUG_INFO( printf(  "Checking: '%c' in Exclusive Pair\n", chrPair ) );
 
-                            /* Resetting. */
-                            cTerm = 0;
+                            /* Check if exception. */
+                            IF_ABORT_PAIR( chrPair )
+                            {
+                               sPair[ iPairLen ] = '\0';
 
-                            /* Last charcter read. */
-                            chr = chrPair;
+                               printf(  "Exception: %c for Pair: at \"%s\"\n", chrPair, sPair );
 
-                            goto on_error;
-                        }
-                        /* Terminator found. */
-                        else if( chrPair == cTerm )
-                        {
-                            sPair[ iPairLen ] = '\0';
+                               /* Resetting. */
+                               cTerm = 0;
 
-                            DEBUG_INFO( printf(  "Returning Pair = >%s<\n", sPair ) );
+                               /* Last charcter read. */
+                               chr = chrPair;
 
-                            /* Resetting. */
-                            cTerm = 0;
+                               goto on_error;
+                            }
+                            /* Terminator found. */
+                            else if( chrPair == cTerm )
+                            {
+                               sPair[ iPairLen ] = '\0';
 
-                            /* TODO: Move Action to Pair Definition! */
-                            yylval.string = hb_strdup( sPair );
+                               DEBUG_INFO( printf(  "Returning Pair = >%s<\n", sPair ) );
 
-                            /* Last charcter read. */
-                            chr = chrPair;
+                               /* Resetting. */
+                               cTerm = 0;
 
-                            bNewLine = FALSE;
+                               /* TODO: Move Action to Pair Definition! */
+                               yylval.string = hb_strdup( sPair );
 
-                            /* LITERAL */
-                            RETURN_TOKEN( REDUCE( aPairs[ iPair ].iToken ), NULL );
-                        }
-                        else
-                        {
-                            //DEBUG_INFO( printf(  "Adding %c to Pair Pos: %i\n", chrPair, iPairLen ) );
+                               /* Last charcter read. */
+                               chr = chrPair;
 
-                            /* Accumulating. */
-                            sPair[ iPairLen++ ] = chrPair;
+                               if( bNewLine )
+                               {
+                                  bNewLine = FALSE;
+                                  NEW_LINE_ACTION();
+                               }
+
+                               /* LITERAL */
+                               RETURN_TOKEN( REDUCE( iPairToken ), NULL );
+                            }
+                            else
+                            {
+                               //DEBUG_INFO( printf(  "Adding %c to Pair Pos: %i\n", chrPair, iPairLen ) );
+
+                               /* Accumulating. */
+                               sPair[ iPairLen++ ] = chrPair;
+                            }
                         }
                     }
 
@@ -991,7 +1018,7 @@ int yylex( void /*YYSTYPE * yylval*/ )
                 }
                 else
                 {
-                    DEBUG_INFO( printf(  "Opened Pair: %c%c\n", aPairs[iPair].cStart, aPairs[iPair].cTerm ) );
+                    DEBUG_INFO( printf(  "Opened Pair, looking for: %c\n", cTerm ) );
 
                     sToken[iLen++] = chr;
 
@@ -1019,11 +1046,7 @@ int yylex( void /*YYSTYPE * yylval*/ )
                 else
                 {
                     DEBUG_INFO( printf(  "Reducing NewLine '%c'\n", chr ) );
-
                     bNewLine = TRUE;
-                    iTexts = 0;
-                    NEW_LINE_ACTION();
-
                     RETURN_TOKEN( REDUCE( (int) chr ), NULL );
                 }
             }
@@ -1057,7 +1080,11 @@ int yylex( void /*YYSTYPE * yylval*/ )
                 {
                     DEBUG_INFO( printf(  "Reducing Delimiter: '%c'\n", chr ) );
 
-                    bNewLine = FALSE;
+                    if( bNewLine )
+                    {
+                       bNewLine = FALSE;
+                       NEW_LINE_ACTION();
+                    }
 
                     RETURN_TOKEN( REDUCE( (int) chr ), NULL );
                 }
@@ -1121,12 +1148,17 @@ int yylex( void /*YYSTYPE * yylval*/ )
                     DEBUG_INFO( printf(  "Reducing Key Word: %s\n", sToken ) );
 
                     bNewLine = FALSE;
+                    NEW_LINE_ACTION();
 
                     RETURN_TOKEN( REDUCE( aKeys[ iKey - 1 ].iToken ), sToken );
                 }
             }
 
-            bNewLine = FALSE;
+            if( bNewLine )
+            {
+               bNewLine = FALSE;
+               NEW_LINE_ACTION();
+            }
 
             #ifdef LEX_ABBREVIATE_WORDS
                iWordLen = strlen( sToken );
