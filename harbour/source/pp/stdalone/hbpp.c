@@ -243,7 +243,7 @@ int hb_pp_Parse( FILE * handl_o )
      pFile = hb_comp_files.pLast;
      lens = lContinue = 0;
      while( ( rdlen = hb_pp_RdStr( pFile->handle, s_szLine + lens, HB_PP_STR_SIZE -
-                  lens, lContinue, pFile->pBuffer, &(pFile->lenBuffer),
+                  lens, lContinue, (char*)pFile->pBuffer, &(pFile->lenBuffer),
                   &(pFile->iBuffer) ) ) >= 0 )
        {
          lens += rdlen;

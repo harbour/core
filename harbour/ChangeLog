@@ -1,3 +1,8 @@
+20000221-14:58 GMT+3 Alexander Kresin
+   * source/pp/stdalone/hbpp.c
+   * source/pp/hbppint.c
+     * added cast
+
 20000221-08:50 GMT+2 Chen Kedem <niki@actcom.co.il>
    * source/rtl/objfunc.prg
      * Update docs to reflect changes made by Victor (20000220-14:30 GMT+1)
