@@ -43,6 +43,8 @@
 
 char * hb_setColor( char * sColor )
 {
+   HB_TRACE(("hb_setColor(%s)", sColor));
+
 #ifdef HARBOUR_USE_GTAPI
    hb_gtGetColorStr( hb_set.HB_SET_COLOR );
 #else

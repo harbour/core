@@ -56,6 +56,8 @@ static int internal_math_error = 0;
  */
 int matherr( struct exception *err )
 {
+   HB_TRACE(("matherr(%p)", err));
+
    switch( err->type )
    {
       case DOMAIN:
@@ -421,6 +423,8 @@ FUNCTION MOD(cl_num, cl_base)
 
 double hb_numRound( double dResult, int iDec )
 {
+   HB_TRACE(("hb_numRound(%lf, %d)", dResult, iDec));
+
    if( dResult != 0.0 )
    {
       double dAdjust;

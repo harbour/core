@@ -204,6 +204,8 @@ static BOOL set_logical( PHB_ITEM pItem )
 {
    BOOL bLogical = FALSE;
 
+   HB_TRACE(("set_logical(%p)", pItem));
+
    if( IS_LOGICAL( pItem ) )
       bLogical = hb_itemGetL( pItem );
    else if( IS_STRING( pItem ) )
@@ -227,6 +229,8 @@ static BOOL set_logical( PHB_ITEM pItem )
 
 static int set_number( PHB_ITEM pItem, int iOldValue )
 {
+   HB_TRACE(("set_number(%p, %d)", pItem, iOldValue));
+
    if( IS_NUMERIC( pItem ) )
       return hb_itemGetNI( pItem );
    else
@@ -236,6 +240,8 @@ static int set_number( PHB_ITEM pItem, int iOldValue )
 static char * set_string( PHB_ITEM pItem, char * szOldString )
 {
    char * szString;
+
+   HB_TRACE(("set_string(%p, %s)", pItem, szOldString));
 
    if( IS_STRING( pItem ) )
    {
@@ -258,6 +264,8 @@ static char * set_string( PHB_ITEM pItem, char * szOldString )
 
 static void close_binary( FHANDLE handle )
 {
+   HB_TRACE(("close_binary(%p)", handle));
+
    if( handle != FS_ERROR )
    {
       /* Close the file handle without disrupting the current
@@ -270,6 +278,8 @@ static void close_binary( FHANDLE handle )
 
 static void close_text( FHANDLE handle )
 {
+   HB_TRACE(("close_text(%p)", handle));
+
    if( handle != FS_ERROR )
    {
       /* Close the file handle without disrupting the current
@@ -285,11 +295,14 @@ static void close_text( FHANDLE handle )
 
 static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_set_enum set_specifier )
 {
-   USHORT user_ferror = hb_fsError(); /* Save the current user file error code */
+   USHORT user_ferror;
    FHANDLE handle;
    PHB_FNAME pFilename;
    char path[ _POSIX_PATH_MAX + 1 ];
 
+   HB_TRACE(("open_handle(%s, %d, %s, %d)", file_name, (int) bAppend, def_ext, (int) set_specifier));
+
+   user_ferror = hb_fsError(); /* Save the current user file error code */
    /* Create full filename */
 
    pFilename = hb_fsFNameSplit( file_name );
@@ -1013,6 +1026,8 @@ HARBOUR HB_SET( void )
 
 void hb_setInitialize( void )
 {
+   HB_TRACE(("hb_setInitialize()"));
+
    hb_set.HB_SET_ALTERNATE = FALSE;
    hb_set.HB_SET_ALTFILE = NULL;
    hb_set.hb_set_althan = FS_ERROR;
@@ -1076,6 +1091,8 @@ void hb_setInitialize( void )
 
 void hb_setRelease( void )
 {
+   HB_TRACE(("hb_setRelease()"));
+
    close_text( hb_set.hb_set_althan );
    close_text( hb_set.hb_set_extrahan );
    close_binary( hb_set.hb_set_printhan );

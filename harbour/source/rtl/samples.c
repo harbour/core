@@ -42,6 +42,8 @@ static char * hb_SecToTimeStr( char * pszTime, ULONG ulTime )
 {
    USHORT uiValue;
 
+   HB_TRACE(("hb_SecToTimeStr(%s, %lu)", pszTime, ulTime));
+
    uiValue = ( ulTime / 3600 ) % 24;
    pszTime[ 0 ] = ( char ) ( uiValue / 10 ) + '0';
    pszTime[ 1 ] = ( char ) ( uiValue % 10 ) + '0';
@@ -60,9 +62,12 @@ static char * hb_SecToTimeStr( char * pszTime, ULONG ulTime )
 
 static ULONG hb_TimeStrToSec( char * pszTime )
 {
-   ULONG ulLen = strlen( pszTime );
+   ULONG ulLen;
    ULONG ulTime = 0;
 
+   HB_TRACE(("hb_TimeStrToSec(%s)", pszTime));
+
+   ulLen = strlen( pszTime );
    if( ulLen >= 0 )
       ulTime += ( ULONG ) hb_strVal( pszTime ) * 3600;
 

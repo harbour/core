@@ -221,6 +221,8 @@ static USHORT osToHarbourMask( USHORT usMask )
 {
    USHORT usRetMask;
 
+   HB_TRACE(("osToHarbourMask(%hu)", usMask));
+
    usRetMask = usMask;
 
 #if defined(OS_UNIX_COMPATIBLE)
@@ -263,6 +265,8 @@ static USHORT osToHarbourMask( USHORT usMask )
 static USHORT HarbourToOsMask( USHORT usMask )
 {
    USHORT usRetMask = usMask;
+
+   HB_TRACE(("HarbourToOsMask(%hu)", usMask));
 
 #if defined(OS_UNIX_COMPATIBLE)
 /* TODO: Need to look into this one */
@@ -313,6 +317,8 @@ static USHORT osAttributesToMask( BYTE * byAttrib )
 {
    USHORT usRetMask = 0;
 
+   HB_TRACE(("osAttributes(%p)", byAttrib));
+
 #if defined(OS_UNIX_COMPATIBLE)
 #else
    #if defined(__IBMCPP__)
@@ -332,6 +338,8 @@ static USHORT osAttributesToMask( BYTE * byAttrib )
 static BYTE * osMaskToAttributes( USHORT usMask, BYTE * byAttrib )
 {
    char * cAttrib = ( char * ) byAttrib;
+
+   HB_TRACE(("osMaskToAttributes(%hu, %p)", usMask, byAttrib));
 
 #if defined(OS_UNIX_COMPATIBLE)
 #else
@@ -355,6 +363,8 @@ static USHORT HarbourAttributesToMask( BYTE * byAttrib )
    BYTE * pos = byAttrib;
    BYTE c;
    USHORT usMask = 0;
+
+   HB_TRACE(("HarbourAttributesToMask(%p)", byAttrib));
 
    while( ( c = toupper( *pos++ ) ) != '\0' )
    {
@@ -385,6 +395,8 @@ static USHORT HarbourAttributesToMask( BYTE * byAttrib )
 static BYTE * HarbourMaskToAttributes( USHORT usMask, BYTE * byAttrib )
 {
    char * cAttrib = ( char * ) byAttrib;
+
+   HB_TRACE(("HarbourMaskToAttributes(%hu, %p)", usMask, byAttrib));
 
    *cAttrib = '\0';
    if( usMask & FA_RDONLY )

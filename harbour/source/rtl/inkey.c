@@ -150,6 +150,8 @@ static struct termios startup_attributes;
 
 static void restore_input_mode( void )
 {
+   HB_TRACE(("restore_input_mode()"));
+
    tcsetattr( STDIN_FILENO, TCSANOW, &startup_attributes );
 }
 
@@ -178,6 +180,8 @@ static HB_inkey_enum s_eventmask;
 
 void hb_releaseCPU( void )
 {
+   HB_TRACE(("releaseCPU()"));
+
 /* TODO: Add code to release time slices on all platforms */
 #if defined(_Windows) || defined(__MINGW32__)
    /* according to ms docs, you should not do this in a Win app. dos only */
@@ -220,6 +224,9 @@ int hb_inkey( double seconds, HB_inkey_enum event_mask, BOOL wait, BOOL forever 
 {
    int key;
    clock_t end_clock;
+
+   HB_TRACE(("hb_inkey(%lf, %d, %d, %d)", seconds, (int) event_mask, (int) wait, (int) forever));
+
    s_eventmask = event_mask;                   /* Set current input event mask */
    /* Check or wait for input events */
    if( wait ) end_clock = clock() + seconds * CLOCKS_PER_SEC;
@@ -243,6 +250,9 @@ int hb_inkey( double seconds, HB_inkey_enum event_mask, BOOL wait, BOOL forever 
 int hb_inkeyGet( void )       /* Extract the next key from the keyboard buffer */
 {
    int key;
+
+   HB_TRACE(("hb_inkeyGet()"));
+
    hb_inkeyPoll();
    if( hb_set.HB_SET_TYPEAHEAD )
    {
@@ -265,6 +275,8 @@ int hb_inkeyGet( void )       /* Extract the next key from the keyboard buffer *
 
 int hb_inkeyLast( void )      /* Return the value of the last key that was extracted */
 {
+   HB_TRACE(("hb_inkeyLast()"));
+
    hb_inkeyPoll();
    return s_inkeyLast;
 }
@@ -272,6 +284,9 @@ int hb_inkeyLast( void )      /* Return the value of the last key that was extra
 int hb_inkeyNext( void )      /* Return the next key without extracting it */
 {
    int key;
+
+   HB_TRACE(("hb_inkeyNext()"));
+
    hb_inkeyPoll();
    if( hb_set.HB_SET_TYPEAHEAD )
    {
@@ -285,6 +300,8 @@ int hb_inkeyNext( void )      /* Return the next key without extracting it */
 
 void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour buffer */
 {
+   HB_TRACE(("hb_inkeyPoll()"));
+
    /* TODO: Add mouse support */
    if( hb_set.HB_SET_TYPEAHEAD || s_inkeyPoll )
    {
@@ -776,6 +793,8 @@ printf("\nhb_inkeyPoll: wKey is %d", wKey);
 
 void hb_inkeyReset( BOOL allocate )     /* Reset the keyboard buffer */
 {
+   HB_TRACE(("hb_inkeyReset(%d)", (int) allocate));
+
    /* Reset the buffer head and tail pointers, the last key value,
       and the polling override flag */
    s_inkeyHead = 0;
@@ -979,6 +998,8 @@ HARBOUR HB___KEYBOARD( void )
 
 void hb_inkeyPut( int ch )
 {
+   HB_TRACE(("hb_inkeyPut(%d)", ch));
+
    if( ch )
    {
       if( hb_set.HB_SET_TYPEAHEAD )

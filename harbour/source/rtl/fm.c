@@ -67,7 +67,11 @@ static ULONG s_ulMemoryConsumed = 0;    /* memory max size consumed */
 
 void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL on failure */
 {
-   void * pMem = malloc( ulSize + sizeof( ULONG ) );
+   void * pMem;
+
+   HB_TRACE(("hb_xalloc(%lu)", ulSize));
+
+   pMem = malloc( ulSize + sizeof( ULONG ) );
 
    if( ! pMem )
    {
@@ -88,7 +92,11 @@ void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL
 
 void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on failure */
 {
-   void * pMem = malloc( ulSize + sizeof( ULONG ) );
+   void * pMem;
+
+   HB_TRACE(("hb_xgrab(%lu)", ulSize));
+
+   pMem = malloc( ulSize + sizeof( ULONG ) );
 
    if( ! pMem )
    {
@@ -109,8 +117,13 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
 
 void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
 {
-   ULONG ulMemSize = * ( ULONG * ) ( ( char * ) pMem - sizeof( ULONG ) );
-   void * pResult = realloc( ( char * ) pMem - sizeof( ULONG ), ulSize + sizeof( ULONG ) );
+   ULONG ulMemSize;
+   void * pResult;
+
+   HB_TRACE(("hb_xrealloc(%p, %lu)", pMem, ulSize));
+
+   ulMemSize = * ( ULONG * ) ( ( char * ) pMem - sizeof( ULONG ) );
+   pResult = realloc( ( char * ) pMem - sizeof( ULONG ), ulSize + sizeof( ULONG ) );
 
    if( ! pResult )
    {
@@ -133,7 +146,11 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
 
 void hb_xfree( void * pMem )            /* frees fixed memory */
 {
-   ULONG ulMemSize = * ( ULONG * ) ( ( char * ) pMem - sizeof( ULONG ) );
+   ULONG ulMemSize;
+
+   HB_TRACE(("hb_xfree(%p)", pMem));
+
+   ulMemSize = * ( ULONG * ) ( ( char * ) pMem - sizeof( ULONG ) );
 
    if( pMem )
       free( ( char * ) pMem - sizeof( ULONG ) );
@@ -148,16 +165,20 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
 
 ULONG hb_xsize( void * pMem ) /* returns the size of an allocated memory block */
 {
+   HB_TRACE(("hb_xsize(%p)", pMem));
+
    return * ( ULONG * ) ( ( char * ) pMem - sizeof( ULONG ) );
 }
 
 void hb_xinit( void ) /* Initialize fixed memory subsystem */
 {
-   ;
+   HB_TRACE(("hb_xinit()"));
 }
 
 void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 {
+   HB_TRACE(("hb_xexit()"));
+
 #ifdef HB_FM_STATISTICS
    if( s_ulMemoryBlocks || hb_cmdargCheck( "INFO" ) )
    {
@@ -166,13 +187,13 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       hb_outerr( hb_consoleGetNewLine(), 0 );
       hb_outerr( "----------------------------------------", 0 );
       hb_outerr( hb_consoleGetNewLine(), 0 );
-      sprintf( buffer, "Total memory allocated: %ld bytes (%lu blocks)", s_ulMemoryMaxConsumed, s_ulMemoryMaxBlocks );
+      sprintf( buffer, "Total memory allocated: %lu bytes (%lu blocks)", s_ulMemoryMaxConsumed, s_ulMemoryMaxBlocks );
       hb_outerr( buffer, 0 );
 
       if( s_ulMemoryBlocks )
       {
          hb_outerr( hb_consoleGetNewLine(), 0 );
-         sprintf( buffer, "WARNING! Memory allocated but not released: %ld bytes (%ld blocks)", s_ulMemoryConsumed, s_ulMemoryBlocks );
+         sprintf( buffer, "WARNING! Memory allocated but not released: %lu bytes (%lu blocks)", s_ulMemoryConsumed, s_ulMemoryBlocks );
          hb_outerr( buffer, 0 );
       }
    }
@@ -186,10 +207,16 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 
 void * hb_xmemcpy( void * pDestArg, void * pSourceArg, ULONG ulLen )
 {
-   BYTE * pDest = ( BYTE * ) pDestArg;
-   BYTE * pSource = ( BYTE * ) pSourceArg;
-   ULONG  ulRemaining = ulLen;
+   BYTE * pDest;
+   BYTE * pSource;
+   ULONG  ulRemaining;
    int    iCopySize;
+
+   HB_TRACE(("hb_xmemcpy(%p, %p, %lu)", pDestArg, pSourceArg, ulLen));
+
+   pDest = ( BYTE * ) pDestArg;
+   pSource = ( BYTE * ) pSourceArg;
+   ulRemaining = ulLen;
 
    while( ulRemaining )
    {
@@ -213,9 +240,14 @@ void * hb_xmemcpy( void * pDestArg, void * pSourceArg, ULONG ulLen )
 
 void * hb_xmemset( void * pDestArg, int iFill, ULONG ulLen )
 {
-   BYTE * pDest = ( BYTE * ) pDestArg;
-   ULONG  ulRemaining = ulLen;
+   BYTE * pDest;
+   ULONG  ulRemaining;
    int    iSetSize;
+
+   HB_TRACE(("hb_xmemset(%p, %d, %lu)", pDestArg, iFill, ulLen));
+
+   pDest = ( BYTE * ) pDestArg;
+   ulRemaining = ulLen;
 
    while( ulRemaining )
    {

@@ -60,6 +60,8 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
 {
    HB_CODEBLOCK_PTR pCBlock;
 
+   HB_TRACE(("hb_codeblockNew(%p, %hu, %p, %p)", pBuffer, uiLocals, pLocalPosTable, pSymbols));
+
    pCBlock = ( HB_CODEBLOCK_PTR ) hb_xgrab( sizeof( HB_CODEBLOCK ) );
 
    /* Store the number of referenced local variables
@@ -176,6 +178,9 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
 void  hb_codeblockDelete( HB_ITEM_PTR pItem )
 {
    HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
+
+   HB_TRACE(("hb_codeblockDelete(%p)", pItem));
+
 #ifdef CODEBLOCKDEBUG
    printf( "\ndelete a codeblock (%li) %lx", pCBlock->ulCounter, pCBlock );
 #endif
@@ -217,6 +222,8 @@ void hb_codeblockEvaluate( HB_ITEM_PTR pItem )
 {
    int iStatics = hb_stack.iStatics;
 
+   HB_TRACE(("hb_codeblockEvaluate(%p)", pItem));
+
    hb_stack.iStatics = pItem->item.asBlock.statics;
    hb_vmExecute( pItem->item.asBlock.value->pCode, pItem->item.asBlock.value->pSymbols );
    hb_stack.iStatics = iStatics;
@@ -227,6 +234,9 @@ void hb_codeblockEvaluate( HB_ITEM_PTR pItem )
 PHB_ITEM  hb_codeblockGetVar( PHB_ITEM pItem, LONG iItemPos )
 {
    HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
+
+   HB_TRACE(("hb_codeblockGetVar(%p, %ld)", pItem, iItemPos));
+
    /* local variables accessed in a codeblock are always stored as reference */
    return hb_itemUnRef( pCBlock->pLocals - iItemPos );
 }
@@ -237,6 +247,8 @@ PHB_ITEM  hb_codeblockGetRef( PHB_ITEM pItem, PHB_ITEM pRefer )
 {
    HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
 
+   HB_TRACE(("hb_codeblockGetRef(%p, %p)", pItem, pRefer));
+
    return pCBlock->pLocals - pRefer->item.asRefer.value;
 }
 
@@ -246,6 +258,8 @@ PHB_ITEM  hb_codeblockGetRef( PHB_ITEM pItem, PHB_ITEM pRefer )
  */
 void  hb_codeblockCopy( PHB_ITEM pDest, PHB_ITEM pSource )
 {
+   HB_TRACE(("hb_codeblockCopy(%p, %p)", pDest, pSource));
+
    pDest->item.asBlock.value = pSource->item.asBlock.value;
    pDest->item.asBlock.value->ulCounter++;
    #ifdef CODEBLOCKDEBUG

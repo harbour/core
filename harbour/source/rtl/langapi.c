@@ -151,47 +151,64 @@ static PHB_LANG s_langDef = &langEN;
 
 void     hb_langDSet             ( PHB_LANG lang )
 {
+   HB_TRACE(("hb_langDSet(%p)", lang));
+
    if( lang )
       s_langDef = lang;
 }
 
 PHB_LANG hb_langDGet             ( void )
 {
+   HB_TRACE(("hb_langDGet()"));
+
    return s_langDef;
 }
 
 char *   hb_langDGetName         ( void )
 {
+   HB_TRACE(("hb_langDGetName()"));
+
    return s_langDef->szName;
 }
 
 char *   hb_langDGetID           ( void )
 {
+   HB_TRACE(("hb_langDGetID()"));
+
    return s_langDef->szID;
 }
 
 char *   hb_langDGetText         ( ULONG ulIndex )
 {
+   HB_TRACE(("hb_langDGetText(%lu)", ulIndex));
+
    return s_langDef->szTextList[ ( ulIndex < sizeof( s_langDef->szTextList ) / sizeof( s_langDef->szTextList[ 0 ] ) ) ? ulIndex : 0 ];
 }
 
 char *   hb_langDGetDayName      ( ULONG ulIndex )
 {
+   HB_TRACE(("hb_langDGetDayName(%lu)", ulIndex));
+
    return s_langDef->szDayNameList[ ( ulIndex < sizeof( s_langDef->szDayNameList ) / sizeof( s_langDef->szDayNameList[ 0 ] ) ) ? ulIndex : 0 ];
 }
 
 char *   hb_langDGetMonthName    ( ULONG ulIndex )
 {
+   HB_TRACE(("hb_langDGetMonthName(%lu)", ulIndex));
+
    return s_langDef->szMonthNameList[ ( ulIndex < sizeof( s_langDef->szMonthNameList ) / sizeof( s_langDef->szMonthNameList[ 0 ] ) ) ? ulIndex : 0 ];
 }
 
 char *   hb_langDGetErrorDesc    ( ULONG ulIndex )
 {
+   HB_TRACE(("hb_langDGetErrorDesc(%lu)", ulIndex));
+
    return s_langDef->szErrorDescList[ ( ulIndex < sizeof( s_langDef->szErrorDescList ) / sizeof( s_langDef->szErrorDescList[ 0 ] ) ) ? ulIndex : 0 ];
 }
 
 char *   hb_langDGetErrorIntr    ( ULONG ulIndex )
 {
+   HB_TRACE(("hb_langDGetErrorIntr(%lu)", ulIndex));
+
    return s_langDef->szErrorIntrList[ ( ulIndex < sizeof( s_langDef->szErrorIntrList ) / sizeof( s_langDef->szErrorIntrList[ 0 ] ) ) ? ulIndex : 0 ];
 }
-

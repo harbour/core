@@ -44,32 +44,53 @@ int    hb_tr_line_ = 0;
 
 void hb_tr_trace( char * fmt, ... )
 {
-   char buf[ 1024 ];
-   char file[ 256 ];
-   int i, j;
-   va_list ap;
+  char file[256];
+  int i, j;
+  va_list ap;
 
-   va_start( ap, fmt );
-   vsprintf( buf, fmt, ap );
-   va_end( ap );
+  /*
+   * Clean up the file, so that instead of showing
+   *
+   *   ../../../foo/bar/baz.c
+   *
+   * we just show
+   *
+   *   baz.c
+   */
+  for (i = 0; hb_tr_file_[i] != '\0'; ++i) {
+    if (hb_tr_file_[i] != '.' &&
+        hb_tr_file_[i] != '/' &&
+        hb_tr_file_[i] != '\\')
+      break;
+  }
+  for (j = 0; hb_tr_file_[i] != '\0'; ++i, ++j) {
+    file[j] = hb_tr_file_[i];
+  }
+  file[j] = '\0';
 
-   for( i = 0; hb_tr_file_[ i ] != '\0'; ++i )
-   {
-      if( hb_tr_file_[ i ] != '.' &&
-          hb_tr_file_[ i ] != '/' &&
-          hb_tr_file_[ i ] != '\\' )
-         break;
-   }
+  /*
+   * Print file and line.
+   */
+  fprintf(stderr, "%s:%d: ",
+	  file, hb_tr_line_);
 
-   for( j = 0; hb_tr_file_[ i ] != '\0'; ++i, ++j )
-      file[ j ] = hb_tr_file_[ i ];
+  /*
+   * Print the name and arguments for the function.
+   */
+  va_start(ap, fmt);
+  vfprintf(stderr, fmt, ap);
+  va_end(ap);
 
-   file[ j ] = '\0';
+  /*
+   * Print a new-line.
+   */
+  fprintf(stderr, "\n");
 
-   fprintf( stderr, "%s:%d: %s\n", file, hb_tr_line_, buf );
-
-   hb_tr_file_ = "";
-   hb_tr_line_ = 0;
+  /*
+   * Reset file and line.
+   */
+  hb_tr_file_ = "";
+  hb_tr_line_ = 0;
 }
 
 #endif /* #if defined(HB_DO_TRACE) */

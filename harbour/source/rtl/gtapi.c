@@ -124,6 +124,8 @@ static int    s_ColorCount;
 
 void hb_gtInit( void )
 {
+   HB_TRACE(("hb_gtInit()")); 
+
 /* ptucker */
 
    s_Color = ( int * ) hb_xgrab( 5 * sizeof( int ) );
@@ -135,6 +137,8 @@ void hb_gtInit( void )
 
 void hb_gtExit( void )
 {
+   HB_TRACE(("hb_gtExit()")); 
+
 /* ptucker */
 
    while( s_uiDispCount )
@@ -153,11 +157,19 @@ USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, B
    USHORT uiCol;
    USHORT height, width, tmp;
 
-   USHORT uiTopBak = uiTop;
-   USHORT uiLeftBak = uiLeft;
+   USHORT uiTopBak;
+   USHORT uiLeftBak;
 
-   USHORT uiMaxRow = hb_gtMaxRow();
-   USHORT uiMaxCol = hb_gtMaxCol();
+   USHORT uiMaxRow;
+   USHORT uiMaxCol;
+
+   HB_TRACE(("hb_gtBox(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, pbyFrame)); 
+
+   uiTopBak = uiTop;
+   uiLeftBak = uiLeft;
+
+   uiMaxRow = hb_gtMaxRow();
+   uiMaxCol = hb_gtMaxCol();
 
    /* TODO: Would be better to support these cases, Clipper implementation */
    /*       was quite messy for these cases, which can be considered as */
@@ -256,6 +268,8 @@ USHORT hb_gtBoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight )
 
 USHORT hb_gtColorSelect( USHORT uiColorIndex )
 {
+   HB_TRACE(("hb_gtColorSelect(%hu)", uiColorIndex));
+
    if( uiColorIndex > s_ColorCount )
       return 1;
    else
@@ -266,6 +280,8 @@ USHORT hb_gtColorSelect( USHORT uiColorIndex )
 
 USHORT hb_gtDispBegin( void )
 {
+   HB_TRACE(("hb_gtDispBegin()"));
+
 /* ptucker */
 
    if( s_uiPreCount == 0 )
@@ -281,11 +297,15 @@ USHORT hb_gtDispBegin( void )
 
 USHORT hb_gtDispCount( void )
 {
+   HB_TRACE(("hb_gtDispCount()"));
+
    return s_uiDispCount;
 }
 
 USHORT hb_gtDispEnd( void )
 {
+   HB_TRACE(("hb_gtDispEnd()"));
+
 /* ptucker */
 
    if( s_uiPreCount == 0 )
@@ -301,6 +321,8 @@ USHORT hb_gtDispEnd( void )
 
 USHORT hb_gtPreExt( void )
 {
+   HB_TRACE(("hb_gtPreExt()"));
+
 /* ptucker */
 
    /* an external (printf...) write is about to take place */
@@ -330,6 +352,8 @@ USHORT hb_gtPreExt( void )
 
 USHORT hb_gtPostExt( void )
 {
+   HB_TRACE(("hb_gtPostExt()"));
+
 /* ptucker */
 
    if( s_uiPreCNest == 1 )
@@ -352,10 +376,12 @@ USHORT hb_gtPostExt( void )
 
 USHORT hb_gtGetColorStr( char * fpColorString )
 {
-/* ptucker */
    char * sColors;
    int i, k = 0;
 
+   HB_TRACE(("hb_gtGetColorStr(%s)", fpColorString));
+
+/* ptucker */
    sColors = ( char * ) hb_xgrab( s_ColorCount * 8 + 1 ); /* max possible */
 
    for( i = 0; i < s_ColorCount; i++ )
@@ -415,7 +441,6 @@ USHORT hb_gtGetColorStr( char * fpColorString )
 
 USHORT hb_gtSetColorStr( char * fpColorString )
 {
-/* ptucker */
    char c, buff[ 6 ];
    BOOL bHasI = FALSE;
    BOOL bHasU = FALSE;
@@ -425,6 +450,10 @@ USHORT hb_gtSetColorStr( char * fpColorString )
    int nFore = 0;
    int nColor = 0;
    int nCount = -1, i = 0, y;
+
+   HB_TRACE(("hb_gtSetColorStr(%s)", fpColorString));
+
+/* ptucker */
 
    if( !fpColorString )
       return 1;
@@ -573,8 +602,12 @@ USHORT hb_gtSetColorStr( char * fpColorString )
 
 USHORT hb_gtGetCursor( USHORT * uipCursorShape )
 {
-   int i = s_uiCursorShape = hb_gt_GetCursorStyle();
+   int i;
    int rc = 0;
+
+   HB_TRACE(("hb_gtGetCursor(%p)", uipCursorShape));
+
+   i = s_uiCursorShape = hb_gt_GetCursorStyle();
 
    if( i <= SC_SPECIAL2 )
    {
@@ -590,6 +623,8 @@ USHORT hb_gtGetCursor( USHORT * uipCursorShape )
 
 USHORT hb_gtSetCursor( USHORT uiCursorShape )
 {
+   HB_TRACE(("hb_gtSetCursor(%hu)", uiCursorShape));
+
    hb_gt_SetCursorStyle( uiCursorShape );
    s_uiCursorShape = uiCursorShape;
 
@@ -598,6 +633,8 @@ USHORT hb_gtSetCursor( USHORT uiCursorShape )
 
 USHORT hb_gtGetPos( SHORT * piRow, SHORT * piCol )
 {
+   HB_TRACE(("hb_gtGetPos(%p, %p)", piRow, piCol));
+
    if( s_iCurrentRow >= 0 && s_iCurrentRow <=  hb_gtMaxRow()
       && s_iCurrentCol >= 0 && s_iCurrentCol <= hb_gtMaxCol() )
    {
@@ -615,6 +652,8 @@ USHORT hb_gtGetPos( SHORT * piRow, SHORT * piCol )
 USHORT hb_gtSetPos( SHORT iRow, SHORT iCol )
 {
    BOOL set_cursor = TRUE;
+
+   HB_TRACE(("hb_gtSetPos(%hd, %hd)", iRow, iCol));
 
    /* Validate the new cursor position */
    if( iRow < 0 || iCol < 0 || iRow > hb_gtMaxRow() || iCol > hb_gtMaxCol() )
@@ -642,21 +681,29 @@ USHORT hb_gtSetPos( SHORT iRow, SHORT iCol )
 
 BOOL hb_gtIsColor( void )
 {
+   HB_TRACE(("hb_gtIsColor()")); 
+
    return hb_gt_IsColor();
 }
 
 USHORT hb_gtMaxCol( void )
 {
+   HB_TRACE(("hb_gtMaxCol()")); 
+
    return hb_gt_GetScreenWidth() - 1;
 }
 
 USHORT hb_gtMaxRow( void )
 {
+   HB_TRACE(("hb_gtMaxRow()")); 
+
    return hb_gt_GetScreenHeight() - 1;
 }
 
 USHORT hb_gtRectSize( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, USHORT * uipBuffSize )
 {
+   HB_TRACE(("hb_gtRectSize(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, uipBuffSize)); 
+
    *uipBuffSize = ( uiBottom - uiTop + 1 ) * ( uiRight - uiLeft + 1 ) * 2;
 
    return 0;
@@ -666,6 +713,8 @@ USHORT hb_gtRepChar( USHORT uiRow, USHORT uiCol, BYTE byChar, USHORT uiCount )
 {
    int rc;
    BYTE buff[ 255 ];
+
+   HB_TRACE(("hb_gtRepChar(%hu, %hu, %d, %hu)", uiRow, uiCol, (int) byChar, uiCount));
 
    if( uiCount > sizeof( buff ) )
       return 1;
@@ -696,6 +745,8 @@ USHORT hb_gtSave( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, 
 
 USHORT hb_gtScrDim( USHORT * uipHeight, USHORT * uipWidth )
 {
+   HB_TRACE(("hb_gtScrDim(%p, %p)", uipHeight, uipWidth));
+
    *uipHeight = hb_gtMaxRow();
    *uipWidth = hb_gtMaxCol();
 
@@ -704,6 +755,8 @@ USHORT hb_gtScrDim( USHORT * uipHeight, USHORT * uipWidth )
 
 USHORT hb_gtGetBlink( BOOL * bBlink )
 {
+   HB_TRACE(("hb_gtGetBlink(%p)", bBlink));
+
    *bBlink = hb_gt_GetBlink();
 
    return 0;
@@ -711,6 +764,8 @@ USHORT hb_gtGetBlink( BOOL * bBlink )
 
 USHORT hb_gtSetBlink( BOOL bBlink )
 {
+   HB_TRACE(("hb_gtSetBlink(%d)", (int) bBlink));
+
    hb_gt_SetBlink( bBlink );
 
    return 0;
@@ -718,12 +773,16 @@ USHORT hb_gtSetBlink( BOOL bBlink )
 
 USHORT hb_gtSetMode( USHORT uiRows, USHORT uiCols )
 {
+   HB_TRACE(("hb_gtSetMode(%hu, %hu)", uiRows, uiCols));
+
 /* ptucker */
    return hb_gt_SetMode( uiRows, uiCols ) ? 0 : 1;
 }
 
 USHORT hb_gtSetSnowFlag( BOOL bNoSnow )
 {
+   HB_TRACE(("hb_gtSetSnowFlag(%d)", (int) bNoSnow));
+
    /* COMMENT: This is a compatibility function.
       If you're running on a CGA and snow is a problem
       speak up!
@@ -738,6 +797,8 @@ USHORT hb_gtWrite( BYTE * fpStr, ULONG length )
    SHORT iMaxCol, iMaxRow;
    ULONG size = length;
    BYTE attr = s_Color[ s_uiColorIndex ] & 0xFF;
+
+   HB_TRACE(("hb_gtWrite(%p, %lu)", fpStr, length));
 
    /* Optimize access to max row and col positions */
    iMaxRow = hb_gtMaxRow();
@@ -759,6 +820,8 @@ USHORT hb_gtWrite( BYTE * fpStr, ULONG length )
 
 USHORT hb_gtWriteAt( USHORT uiRow, USHORT uiCol, BYTE * fpStr, ULONG length )
 {
+   HB_TRACE(("hb_gtWriteAt(%hu, %hu, %p, %lu)", uiRow, uiCol, fpStr, length));
+
    hb_gtSetPos( uiRow, uiCol );
    return hb_gtWrite( fpStr, length );
 }
@@ -768,13 +831,19 @@ USHORT hb_gtWriteCon( BYTE * fpStr, ULONG length )
    int rc = 0, nLen = 0;
    BOOL ldisp = FALSE;
    BOOL lnewline = FALSE;
-   SHORT iRow = s_iCurrentRow, iCol = s_iCurrentCol;
-   SHORT iMaxRow = hb_gtMaxRow();
-   SHORT iMaxCol = hb_gtMaxCol();
+   SHORT iRow, iCol;
+   SHORT iMaxRow, iMaxCol;
    BYTE ch;
    BYTE * fpPtr = fpStr;
    #define STRNG_SIZE 500
    BYTE strng[ STRNG_SIZE ];
+
+   HB_TRACE(("hb_gtWriteCon(%p, %lu)", fpStr, length));
+
+   iRow = s_iCurrentRow;
+   iCol = s_iCurrentCol;
+   iMaxRow = hb_gtMaxRow();
+   iMaxCol = hb_gtMaxCol();
 
    /* Limit the starting cursor position to maxrow(),maxcol()
       on the high end, but don't limit it on the low end. */
@@ -869,6 +938,8 @@ USHORT hb_gtWriteCon( BYTE * fpStr, ULONG length )
 
 USHORT hb_gtScroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SHORT iRows, SHORT iCols )
 {
+   HB_TRACE(("hb_gtScroll(%hu, %hu, %hu, %hu, %hd, %hd)", uiTop, uiLeft, uiBottom, uiRight, iRows, iCols));
+
    hb_gt_Scroll( uiTop, uiLeft, uiBottom, uiRight, s_Color[ s_uiColorIndex ], iRows, iCols );
    return 0;
 }

@@ -33,6 +33,15 @@
  *
  */
 
+/*
+ * Avoid tracing in preprocessor/compiler.
+ */
+#if ! defined(HB_REALLY_DO_TRACE)
+#if defined(HB_DO_TRACE)
+#undef HB_DO_TRACE
+#endif
+#endif
+
 #if ( defined(_MSC_VER) || defined(__IBMCPP__) || defined(__MINW32__) )
 #include <memory.h>
 #include <stdlib.h>
@@ -73,8 +82,7 @@ int PreProcess( FILE * handl_i, FILE * handl_o, char * sOut )
   int lens = 0, rdlen;
   int rezParse;
 
-  HB_TRACE(("PreProcess(%p, %p, %s)",
-            handl_i, handl_o, sOut));
+  HB_TRACE(("PreProcess(%p, %p, %s)", handl_i, handl_o, sOut));
 
   HB_SYMBOL_UNUSED( handl_o );
 

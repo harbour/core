@@ -18,6 +18,7 @@ LIBS=\
         rtl \
         pp \
         runner \
+	common \
 
 ifeq ($(PM),)
   PM := $(pm)

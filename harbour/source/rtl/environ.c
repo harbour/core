@@ -282,7 +282,11 @@ HARBOUR HB_OS( void )
 
 char * hb_version( USHORT uiMode )
 {
-   char * pszVersion = ( char * ) hb_xgrab( HB_VERSION_BUFFER_LEN );
+   char * pszVersion;
+
+   HB_TRACE(("hb_version(%hu)", uiMode));
+
+   pszVersion = ( char * ) hb_xgrab( HB_VERSION_BUFFER_LEN );
 
    sprintf( pszVersion, "Harbour %d.%d Intl. (Build %d%s)  (%04d.%02d.%02d)",
       hb_major, hb_minor, hb_build, hb_revision, hb_year, hb_month, hb_day );

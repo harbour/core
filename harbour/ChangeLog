@@ -1,3 +1,55 @@
+Thu Oct 21 11:56:55 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* source/common/hbtrace.c: 
+	Modified the TRACE function so that it does no superfluous copying
+	anymore.
+	
+	* source/compiler/Makefile: 
+	* source/runner/stdalone/Makefile: 
+	* tests/Makefile: 
+	Added the common library to the list of dependencies.
+	
+	* source/pp/hbpp.c: 
+	* source/pp/hbppint.c: 
+	* source/pp/hbpplib.c: 
+	* source/pp/table.c: 
+	* source/pp/stdalone/hbpp.c: 
+	Made sure tracing is enabled only when both HB_DO_TRACE and
+	HB_REALLY_DO_TRACE are defined; this way, the user can just set
+	HB_DO_TRACE to enable tracing in harbour, but not see all the
+	tracing output while compiling harbour itself.
+	
+	* source/rtl/arrays.c: 
+	* source/rtl/classes.c: 
+	* source/rtl/codebloc.c: 
+	* source/rtl/console.c: 
+	* source/rtl/copyfile.c: 
+	* source/rtl/dates.c: 
+	* source/rtl/descend.c: 
+	* source/rtl/dir.c: 
+	* source/rtl/environ.c: 
+	* source/rtl/errorapi.c: 
+	* source/rtl/extend.c: 
+	* source/rtl/filesys.c: 
+	* source/rtl/fm.c: 
+	* source/rtl/gtapi.c: 
+	* source/rtl/hardcr.c: 
+	* source/rtl/inkey.c: 
+	* source/rtl/itemapi.c: 
+	* source/rtl/langapi.c: 
+	* source/rtl/math.c: 
+	* source/rtl/memvars.c: 
+	* source/rtl/mouseapi.c: 
+	* source/rtl/mtran.c: 
+	* source/rtl/natmsg.c: 
+	* source/rtl/samples.c: 
+	* source/rtl/set.c: 
+	* source/rtl/setcolor.c: 
+	* source/rtl/strings.c: 
+	* source/rtl/tone.c: 
+	* source/rtl/transfrm.c: 
+	Added tracing to all functions.
+
 19991021-15:35 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *include/extend.h

@@ -87,6 +87,8 @@ static char * s_szMessages[] =
 
 char * hb_nationGetMsg( USHORT uiMsg )
 {
+   HB_TRACE(("hb_nationGetMsg(%hu)", uiMsg));
+
    return ( uiMsg >= 1 && uiMsg <= ( sizeof( s_szMessages ) / sizeof( char * ) ) ) ? s_szMessages[ uiMsg - 1 ] : "";
 }
 

@@ -154,6 +154,9 @@ void hb_tone( double dFrequency, double dDuration )
    ULONG temp;    /* Avoid unreferenced temp */
    dDuration = -1.0; /* Exit without delay */
 #endif
+
+   HB_TRACE(("hb_tone(%lf, %lf)", dFrequency, dDuration));
+
 #if defined(HARBOUR_GCC_OS2) || defined(OS2) || defined(WINNT) || defined(_Windows) || defined(__MINGW32__)
    dFrequency = HB_MIN_( HB_MAX_( 0.0, dFrequency ), 32767.0 );
    dDuration = dDuration * 1000.0 / 18.2; /* milliseconds */

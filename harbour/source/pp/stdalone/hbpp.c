@@ -33,6 +33,15 @@
  *
  */
 
+/*
+ * Avoid tracing in preprocessor/compiler.
+ */
+#if ! defined(HB_REALLY_DO_TRACE)
+#if defined(HB_DO_TRACE)
+#undef HB_DO_TRACE
+#endif
+#endif
+
 #include <stdlib.h>
 #if ( defined(_MSC_VER) || defined(__IBMCPP__) || defined(__MINGW32__) )
 #include <memory.h>
@@ -453,8 +462,7 @@ void AddSearchPath( char * szPath, PATHNAMES * * pSearchList )
 
 void GenError( char * _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
 {
-  HB_TRACE(("GenError(%p, %c, %d, %s, %s)",
-            _szErrors, cPrefix, iError, szError1, szError2));
+  HB_TRACE(("GenError(%p, %c, %d, %s, %s)", _szErrors, cPrefix, iError, szError1, szError2));
 
   printf( "\r(%i) ", nline );
   printf( "Error %c%04i  ", cPrefix, iError );
@@ -466,8 +474,7 @@ void GenError( char * _szErrors[], char cPrefix, int iError, char * szError1, ch
 
 void GenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2)
 {
-  HB_TRACE(("GenWarning(%p, %c, %d, %s, %s)",
-            _szWarnings, cPrefix, iWarning, szWarning1, szWarning2));
+  HB_TRACE(("GenWarning(%p, %c, %d, %s, %s)", _szWarnings, cPrefix, iWarning, szWarning1, szWarning2));
 
   if( _iWarnings )
     {

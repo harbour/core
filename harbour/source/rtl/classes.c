@@ -137,6 +137,8 @@ static HARBOUR  hb___msgSetData( void );
 
 static void hb_clsDictRealloc( PCLASS pClass )
 {
+   HB_TRACE(("hb_clsDictRealloc(%p)", pClass));
+
    if( pClass )
    {
       PMETHOD pNewMethods;
@@ -181,6 +183,8 @@ static void hb_clsRelease( PCLASS pClass )
    USHORT uiLimit = pClass->uiHashKey * BUCKET;
    PMETHOD pMeth = pClass->pMethods;
 
+   HB_TRACE(("hb_clsRelease(%p)", pClass));
+
    for( uiAt = 0; uiAt < uiLimit; uiAt++, pMeth++ ) /* Release initializers     */
       if( pMeth->pInitValue && pMeth->uiData > pClass->uiDataFirst )
          hb_itemRelease( pMeth->pInitValue );
@@ -202,6 +206,8 @@ void hb_clsReleaseAll( void )
 {
    USHORT uiClass;
 
+   HB_TRACE(("hb_clsReleaseAll()"));
+
    for( uiClass = 0; uiClass < s_uiClasses; uiClass++ )
       hb_clsRelease( s_pClasses + uiClass );
 
@@ -221,6 +227,8 @@ void hb_clsReleaseAll( void )
 char * hb_objGetClsName( PHB_ITEM pObject )
 {
    char * szClassName;
+
+   HB_TRACE(("hb_objGetClsName(%p)", pObject));
 
    if( IS_ARRAY( pObject ) )
    {
@@ -284,6 +292,8 @@ PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
    USHORT uiClass;
    PHB_DYNS pMsg = pMessage->pDynSym;
 
+   HB_TRACE(("hb_objGetMethod(%p, %p)", pObject, pMessage));
+
    if( pObject->type == IT_ARRAY )
       uiClass = pObject->item.asArray.value->uiClass;
    else
@@ -345,6 +355,9 @@ PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
 ULONG hb_objHasMsg( PHB_ITEM pObject, char *szString )
 {
    PHB_DYNS pDynSym = hb_dynsymFindName( szString );
+
+   HB_TRACE(("hb_objHasMsg(%p, %s)", pObject, szString));
+
    if( pDynSym )
       return ( ULONG ) hb_objGetMethod( pObject, pDynSym->pSymbol );
    else

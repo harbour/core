@@ -7,7 +7,7 @@ ROOT = ../../../
 PRG_SOURCES=\
 	hbrun.prg \
         external.prg \
-	
+
 PRG_MAIN=hbrun.prg
 
 LIBS=\
@@ -19,5 +19,6 @@ LIBS=\
 	rdd \
 	rtl \
 	pp \
+	common \
 
 include $(TOP)$(ROOT)config/bin.cf

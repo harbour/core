@@ -33,6 +33,15 @@
  *
  */
 
+/*
+ * Avoid tracing in preprocessor/compiler.
+ */
+#if ! defined(HB_REALLY_DO_TRACE)
+#if defined(HB_DO_TRACE)
+#undef HB_DO_TRACE
+#endif
+#endif
+
 #include <stdio.h>
 #include <setjmp.h>
 
@@ -96,8 +105,7 @@ HARBOUR HB___PREPROCESS( void )
 
 void GenError( char * _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
 {
-  HB_TRACE(("GenError(%p, %c, %d, %s, %s)",
-            _szErrors, cPrefix, iError, szError1, szError2));
+  HB_TRACE(("GenError(%p, %c, %d, %s, %s)", _szErrors, cPrefix, iError, szError1, szError2));
 
   /* TODO: The internal buffers allocated by the preprocessor should be
    * deallocated here
@@ -112,8 +120,7 @@ void GenError( char * _szErrors[], char cPrefix, int iError, char * szError1, ch
 
 void GenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2)
 {
-  HB_TRACE(("GenWarning(%p, %c, %d, %s, %s)",
-            _szWarnings, cPrefix, iWarning, szWarning1, szWarning2));
+  HB_TRACE(("GenWarning(%p, %c, %d, %s, %s)", _szWarnings, cPrefix, iWarning, szWarning1, szWarning2));
 
   /* NOTE:
    *    All warnings are simply ignored

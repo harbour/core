@@ -83,6 +83,8 @@ BOOL hb_strEmpty( char * szText, ULONG ulLen )
 {
    BOOL bRetVal = TRUE;
 
+   HB_TRACE(("hb_strEmpty(%s, %lu)", szText, ulLen));
+
    while( ulLen-- )
    {
       char c = szText[ ulLen ];
@@ -100,10 +102,14 @@ BOOL hb_strEmpty( char * szText, ULONG ulLen )
 int hb_stricmp( const char * s1, const char * s2 )
 {
    int rc = 0;
-   ULONG l1 = strlen( s1 );
-   ULONG l2 = strlen( s2 );
+   ULONG l1;
+   ULONG l2;
    ULONG count;
 
+   HB_TRACE(("hb_stricmp(%s, %s)", s1, s2));
+
+   l1 = strlen( s1 );
+   l2 = strlen( s2 );
    if( l1 < l2 )
       count = l1;
    else
@@ -134,9 +140,13 @@ int hb_stricmp( const char * s1, const char * s2 )
 int hb_strnicmp( const char * s1, const char * s2, ULONG count )
 {
    int rc = 0;
-   ULONG l1 = strlen( s1 );
-   ULONG l2 = strlen( s2 );
+   ULONG l1;
+   ULONG l2;
 
+   HB_TRACE(("hb_strnicmp(%s, %s, %lu)", s1, s2, count));
+
+   l1 = strlen( s1 );
+   l2 = strlen( s2 );
    if( l1 > count )
       l1 = count;
 
@@ -169,6 +179,8 @@ int hb_strnicmp( const char * s1, const char * s2, ULONG count )
 
 static BOOL  hb_strMatchDOS( char *pszString, char *pszMask )
 {
+   HB_TRACE(("hb_strMatchDOS(%s, %s)", pszString, pszMask));
+
    while( *pszMask && *pszString )
    {
       if( *pszMask == '*' )
@@ -215,6 +227,8 @@ static BOOL  hb_strMatchDOS( char *pszString, char *pszMask )
  */
 BOOL hb_strMatchRegExp( char *szString, char *szMask )
 {
+   HB_TRACE(("hb_strMatchRegExp(%s, %s)", szString, szMask));
+
    return hb_strMatchDOS( szString, szMask );
 }
 
@@ -255,6 +269,8 @@ HARBOUR HB_ISLOWER( void )
 /* also returns the new length in lLen */
 char *hb_strLTrim( char *szText, ULONG *lLen )
 {
+   HB_TRACE(("hb_strLTrim(%s, %p)", szText, lLen));
+
    while( *lLen && HB_ISSPACE( *szText ) )
    {
       szText++;
@@ -289,6 +305,8 @@ HARBOUR HB_LTRIM( void )
 /* returns szText and the new length in lLen */
 ULONG hb_strRTrimLen( char *szText, ULONG lLen, BOOL bAnySpace )
 {
+   HB_TRACE(("hb_strRTrimLen(%s, %lu. %d)", szText, lLen, (int) bAnySpace));
+
    if( bAnySpace )
    {
       while( lLen && HB_ISSPACE( szText[ lLen - 1 ] ) )
@@ -383,6 +401,8 @@ HARBOUR HB_ALLTRIM( void )
 static char * hb_itemPadConv( PHB_ITEM pItem, char * buffer, ULONG * pulSize )
 {
    char * szText;
+
+   HB_TRACE(("hb_itemPadCond(%p, %s, %p)", pItem, buffer, pulSize));
 
    if( pItem )
    {
@@ -558,6 +578,8 @@ HARBOUR HB_PADC( void )
 
 ULONG hb_strAt( char * szSub, ULONG ulSubLen, char * szText, ULONG ulLen )
 {
+   HB_TRACE(("hb_strAt(%s, %lu, %s, %lu)", szSub, ulSubLen, szText, ulLen));
+
    if( ulSubLen )
    {
       if( ulLen >= ulSubLen )
@@ -815,6 +837,8 @@ char *hb_strLower( char *szText, ULONG ulLen )
 {
    ULONG i;
 
+   HB_TRACE(("hb_strLower(%s, %lu)", szText, ulLen));
+
    for( i = 0; i < ulLen; i++ )
       szText[ i ] = tolower( szText[ i ] );
 
@@ -845,6 +869,8 @@ void hb_strupr( char * szText )
 {
    char *p;
 
+   HB_TRACE(("hb_strupr(%s)", szText));
+
    for( p = szText; *p; p++ )
       *p = toupper( *p );
 }
@@ -853,6 +879,8 @@ void hb_strupr( char * szText )
 char *hb_strUpper( char *szText, ULONG ulLen )
 {
    ULONG i;
+
+   HB_TRACE(("hb_strUpper(%s, %lu)", szText, ulLen));
 
    for( i = 0; i < ulLen; i++ )
       szText[ i ] = toupper( szText[ i ] );
@@ -865,6 +893,8 @@ char *hb_strUpper( char *szText, ULONG ulLen )
 char *hb_strncpyUpper( char * pDest, char *pSource, ULONG ulLen )
 {
    char *pStart = pDest;
+
+   HB_TRACE(("hb_strncpyUpper(%s, %s, %lu)", pDest, pSource, ulLen));
 
    pDest[ ulLen ] ='\0';
    while( ulLen-- )
@@ -1162,6 +1192,8 @@ HARBOUR HB_STRTRAN( void )
 /* returns the numeric value of a character string representation of a number  */
 double hb_strVal( char *szText )
 {
+   HB_TRACE(("hb_strVal(%s)", szText));
+
    return atof( szText );
 }
 
@@ -1480,6 +1512,8 @@ HARBOUR HB_STRZERO( void )
 
 int hb_strgreater( char * szText1, char * szText2 )
 {
+   HB_TRACE(("hb_strgreater(%s, %s)", szText1, szText2));
+
    while( *( szText1 ) && *( szText2 ) && *( szText1 ) == *( szText2 ) )
    {
      szText1++;

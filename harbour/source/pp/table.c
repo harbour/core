@@ -33,6 +33,15 @@
  *
  */
 
+/*
+ * Avoid tracing in preprocessor/compiler.
+ */
+#if ! defined(HB_REALLY_DO_TRACE)
+#if defined(HB_DO_TRACE)
+#undef HB_DO_TRACE
+#endif
+#endif
+
 #include <stdio.h>
 #include "hbpp.h"
 
