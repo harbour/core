@@ -177,7 +177,7 @@ CLASS TDebugger
    DATA   cAppImage, nAppRow, nAppCol, cAppColors, nAppCursor
    DATA   aBreakPoints, aCallStack, aColors
    DATA   aLastCommands, nCommand, oGetListCommand
-   DATA   lEnd, lGo, lCaseSensitive, lMonoDisplay, lSortVars
+   DATA   lAnimate, lEnd, lGo, lCaseSensitive, lMonoDisplay, lSortVars
    DATA   cSearchString, cPathForFiles, cSettingsFileName
    DATA   nTabWidth, nSpeed
    DATA   lShowPublics, lShowPrivates, lShowStatics, lShowLocals, lAll
@@ -187,6 +187,8 @@ CLASS TDebugger
 
    METHOD All() INLINE ::lShowPublics := ::lShowPrivates := ::lShowStatics := ;
                 ::lShowLocals := ::lAll := ! ::lAll, If( ::lAll, ::ShowVars(), ::HideVars() )
+
+   METHOD Animate() INLINE ::lAnimate := .t., ::Step()
 
    METHOD BarDisplay()
    METHOD BuildCommandWindow()
@@ -293,6 +295,7 @@ METHOD New() CLASS TDebugger
 
    ::BuildCommandWindow()
 
+   ::lAnimate          := .f.
    ::lEnd              := .f.
    ::aBreakPoints      := {}
    ::aCallStack        := {}
@@ -657,6 +660,16 @@ METHOD HandleEvent() CLASS TDebugger
    local nPopup, oWnd
    local nKey, nMRow, nMCol, n
 
+   if ::lAnimate
+      if ::nSpeed != 0
+         Inkey( ::nSpeed / 10 )
+      endif
+      if NextKey() == K_ALT_D
+         ::lAnimate = .f.
+      endif
+      KEYBOARD Chr( 255 ) // Forces a Step(). Only 0-255 range is supported
+   endif
+
    ::lEnd := .f.
 
    while ! ::lEnd
@@ -737,7 +750,7 @@ METHOD HandleEvent() CLASS TDebugger
               ::Go()
 
 
-         case nKey == K_F8
+         case nKey == K_F8 .or. nKey == 255
               ::Step()
 
          case nKey == K_F9
@@ -1174,6 +1187,7 @@ METHOD InputBox( cMsg, uValue, bValid ) CLASS TDebugger
    local nLeft   := ( MaxCol() / 2 ) - 25
    local nBottom := ( MaxRow() / 2 ) - 3
    local nRight  := ( MaxCol() / 2 ) + 25
+   local cType   := ValType( uValue )
    local uTemp   := PadR( uValue, nRight - nLeft - 1 )
    local GetList := {}
    local nOldCursor
@@ -1196,7 +1210,19 @@ METHOD InputBox( cMsg, uValue, bValid ) CLASS TDebugger
    oWndInput:Hide()
    Set( _SET_SCOREBOARD, lScoreBoard )
 
-return iif( LastKey() != K_ESC, AllTrim( uTemp ), uValue )
+   do case
+      case cType == "C"
+           uTemp = AllTrim( uTemp )
+
+      case cType == "D"
+           uTemp = CToD( uTemp )
+
+      case cType == "N"
+           uTemp = Val( uTemp )
+
+   endcase
+
+return iif( LastKey() != K_ESC, uTemp, uValue )
 
 
 METHOD IsBreakPoint( nLine ) CLASS TDebugger
