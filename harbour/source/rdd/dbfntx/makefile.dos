@@ -1,7 +1,7 @@
 # $Id$
 # Make file for DOS DJGPP
 #
-include ../../makedos.env
+include ../../../makedos.env
 
 SRCPRG:= $(wildcard *.prg)
 CPRG=$(SRCPRG:.prg=.c)
@@ -10,10 +10,10 @@ OBJPRG=$(CPRG:.c=.o)
 SRCC:= $(wildcard *.c)
 OBJC=$(SRCC:.c=.o)
 
-all:	$(HARBOURLIB) 
+all:	$(DBFNTXLIB) 
 
-$(HARBOURLIB): ${OBJPRG} $(OBJC)
-	ar r $(HARBOURLIB) ${OBJPRG} $(OBJC)
+$(DBFNTXLIB): ${OBJPRG} $(OBJC)
+	ar r $(DBFNTXLIB) ${OBJPRG} $(OBJC)
 
 clean:
 	-del *.o

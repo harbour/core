@@ -22,6 +22,7 @@ tools:
 
 rdd:
 	make -w --directory=source/rdd -f makefile.dos
+	make -w --directory=source/rdd/dbfntx -f makefile.dos
 
 # remarked out it created a make error and is now supercede by hbdos.bat
 # tests:
@@ -34,4 +35,5 @@ clean:
 	make -w --directory=source/rtl/natmsg -f makefile.dos clean
 	make -w --directory=source/tools -f makefile.dos clean
 	make -w --directory=source/rdd -f makefile.dos clean
+	make -w --directory=source/rdd/dbfntx -f makefile.dos clean
 #  make -w --directory=tests -f makefile.dos clean

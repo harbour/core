@@ -19,9 +19,11 @@ tools:
 
 rdd:
 	make --directory=./rdd -f makefile.dos
+	make --directory=./rdd/dbfntx -f makefile.dos
 
 clean:
 	make --directory=./compiler -f makefile.dos clean
 	make --directory=./vm -f makefile.dos clean
 	make --directory=./rtl -f makefile.dos clean
 	make --directory=./rdd -f makefile.dos clean
+	make --directory=./rdd/dbfntx -f makefile.dos clean
