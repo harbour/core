@@ -2,6 +2,7 @@
  * $Id$
  */
 
+#include <ctype.h>
 #include <extend.h>
 #include <set.h>
 
@@ -13,22 +14,22 @@ int hb_stricmp( const char *s1, const char *s2 )
 #ifdef strcasecmp
    return( strcasecmp( s1, s2 ) );
 #else
-   int rc = 0;
-   USHORT c1, c2, count;
-   c1 = strlen( s1 );
-   c2 = strlen( s2 );
-   if( c1 < c2 ) count = c1;
-   else count = c2;
+   int rc = 0, c1, c2;
+   USHORT l1, l2, count;
+   l1 = strlen( s1 );
+   l2 = strlen( s2 );
+   if( l1 < l2 ) count = l1;
+   else count = l2;
    while( rc == 0 && count > 0 )
    {
-      if( *s1 != *s2 ) rc = ( *s1 < *s2 ? -1 : 1 );
-      s1++;
-      s2++;
       count--;
+      c1 = toupper( *s1++ );
+      c2 = toupper( *s2++ );
+      if( c1 != c2 ) rc = ( c1 < c2 ? -1 : 1 );
    }
-   if( rc == 0 && c1 != c2 )
+   if( rc == 0 && l1 != l2 )
    {
-      if( c1 < c2 ) rc = -1;
+      if( l1 < l2 ) rc = -1;
       else rc = 1;
    }
    return rc;

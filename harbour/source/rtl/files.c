@@ -213,7 +213,7 @@ static int convert_seek_flags( int flags )
         return result_flags;
 }
 
-static convert_create_flags( int flags, int *result_flags, int *result_pmode )
+static void convert_create_flags( int flags, int *result_flags, int *result_pmode )
 {
         /* by default FC_NORMAL is set */
 
@@ -228,7 +228,6 @@ static convert_create_flags( int flags, int *result_flags, int *result_pmode )
 
         if( flags & FC_SYSTEM )
                 *result_flags |= 0;
-
 }
 
 #endif

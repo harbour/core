@@ -535,6 +535,7 @@ int ParseExpression( char* sLine, char* sOutLine )
        i = WorkCommand( sToken, ptri, ptro, ndef );
        if ( ipos > 0 ) *(sLine+isdvig+ipos-1) = ';';
        if ( i >= 0 )
+       {
         if ( isdvig + ipos > 0 )
         {
           lens = strolen( sLine+isdvig );
@@ -543,6 +544,7 @@ int ParseExpression( char* sLine, char* sOutLine )
         }
         else
           memcpy ( sLine, sOutLine, i+1);
+       }
        rezCom = 1;
      }
      else if ( ipos > 0 ) *(sLine+isdvig+ipos-1) = ';';

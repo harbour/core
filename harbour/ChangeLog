@@ -1,3 +1,22 @@
+19990615-12:30 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/compiler/makefile.dos
+    - Integrated preprocessor into compiler
+  * source\hbpp\hbpp.c
+    - Added braces to avoid implicit else in ParseExpression()
+  * source/rtl/console.c
+    - Added HARBOUR HB_SETPOS()
+    - Improved printer position tracking
+    - Improved screen position tracking when not using GT API
+  * source/rtl/files.c
+    - convert_create_flags no longer returns a value, so declare as void
+  * source/rtl/set.c
+    - Logical SET values can now use "ON" for .T. and "OFF" for .F.
+  * source/rtl/strcmp.c
+    - hb_stricmp does a case-insensitive compare even when not using a
+      library function.
+  * tests/working/output.prg
+    - Converted to use the preprocessor
+
 19990615-10:38 Alexander Kresin
  removed:
  - source\hbpp\harb.c

@@ -21,7 +21,7 @@
 HARBOUR HB___ACCEPT(void);
 HARBOUR HB_DEVOUT( void );
 HARBOUR HB_DEVPOS( void );
-HARBOUR HB_EJECT( void );
+HARBOUR HB___EJECT( void );
 HARBOUR HB_MAXCOL( void );
 HARBOUR HB_MAXROW( void );
 HARBOUR HB_OUTSTD( void );
@@ -29,6 +29,7 @@ HARBOUR HB_OUTERR( void );
 HARBOUR HB_PCOL( void );
 HARBOUR HB_PROW( void );
 HARBOUR HB_SCROLL( void );
+HARBOUR HB_SETPOS( void );
 HARBOUR HB_SETPRC( void );
 HARBOUR HB_QOUT( void );
 HARBOUR HB_QQOUT( void );
@@ -37,7 +38,7 @@ static SYMBOL symbols[] = {
 { "__ACCEPT", FS_PUBLIC, HB___ACCEPT, 0 },
 { "DEVOUT"  , FS_PUBLIC, HB_DEVOUT  , 0 },
 { "DEVPOS"  , FS_PUBLIC, HB_DEVPOS  , 0 },
-{ "EJECT"   , FS_PUBLIC, HB_EJECT   , 0 },
+{ "EJECT"   , FS_PUBLIC, HB___EJECT , 0 },
 { "MAXCOL"  , FS_PUBLIC, HB_MAXCOL  , 0 },
 { "MAXROW"  , FS_PUBLIC, HB_MAXROW  , 0 },
 { "OUTERR"  , FS_PUBLIC, HB_OUTERR  , 0 },
@@ -45,6 +46,7 @@ static SYMBOL symbols[] = {
 { "PCOL"    , FS_PUBLIC, HB_PCOL    , 0 },
 { "PROW"    , FS_PUBLIC, HB_PROW    , 0 },
 { "SCROLL"  , FS_PUBLIC, HB_SCROLL  , 0 },
+{ "SETPOS"  , FS_PUBLIC, HB_SETPOS  , 0 },
 { "SETPRC"  , FS_PUBLIC, HB_SETPRC  , 0 },
 { "QOUT"    , FS_PUBLIC, HB_QOUT    , 0 },
 { "QQOUT"   , FS_PUBLIC, HB_QQOUT   , 0 }
@@ -74,7 +76,7 @@ void InitializeConsole( void )
    p_row = p_col = 0;
 }
 
-USHORT hb_maxrow( void )
+USHORT hb_max_row( void )
 {
 #ifdef USE_GTAPI
    return _gtMaxRow ();
@@ -83,7 +85,7 @@ USHORT hb_maxrow( void )
 #endif
 }
 
-USHORT hb_maxcol( void )
+USHORT hb_max_col( void )
 {
 #ifdef USE_GTAPI
    return _gtMaxCol ();
@@ -91,6 +93,42 @@ USHORT hb_maxcol( void )
    return 79;
 #endif
 }
+
+#ifndef USE_GTAPI
+void adjust_pos( char * fpStr, WORD uiLen, USHORT * row, USHORT * col, USHORT max_row, USHORT max_col )
+{
+   WORD uiCount;
+   for( uiCount = 0; uiCount < uiLen; uiCount++ )
+   {
+      switch( fpStr[ uiCount ]  )
+      {
+         case 7:
+            break;
+         case 8:
+            if( *col ) (*col)--;
+            else
+            {
+               *col = max_col;
+               if( *row ) (*row)--;
+            }
+            break;
+         case 10:
+            if( *row < max_row ) (*row)++;
+            break;
+         case 13:
+            *col = 0;
+            break;
+         default:
+            if( *col < max_col ) (*col)++;
+            else
+            {
+               *col = 0;
+               if( *row < max_row ) (*row)++;
+            }
+      }
+   }
+}
+#endif
 
 HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command  */
                          /* Basically the simplest Clipper function to        */
@@ -176,6 +214,8 @@ static void hb_outstd( char * fpStr, WORD uiLen )
       dev_col = gtWhereX();
       _gtSetPos( dev_row, dev_col );
    }
+#else
+   adjust_pos( fpStr, uiLen, &dev_row, &dev_col, hb_max_row(), hb_max_col() );
 #endif
 }
 
@@ -194,6 +234,8 @@ static void hb_outerr( char * fpStr, WORD uiLen )
       dev_col = gtWhereX();
       _gtSetPos( dev_row, dev_col );
    }
+#else
+   adjust_pos( fpStr, uiLen, &dev_row, &dev_col, hb_max_row(), hb_max_col() );
 #endif
 }
 
@@ -210,20 +252,20 @@ static void hb_altout( char * fpStr, WORD uiLen )
       WORD uiCount;
       for( uiCount = 0; uiCount < uiLen; uiCount++ )
          printf( "%c", fpStr[ uiCount ] );
-      dev_col += uiLen;
-      if( dev_col > hb_maxcol() )
-      {
-         dev_row += (uiLen / (hb_maxcol() + 1));
-         dev_col -= (uiLen % (hb_maxcol() + 1));
-      }
+      adjust_pos( fpStr, uiLen, &dev_row, &dev_col, hb_max_row(), hb_max_col() );
    #endif
    }
    if( hb_set.HB_SET_ALTERNATE && hb_set_althan >= 0 )
+   {
       /* Print to alternate file if SET ALTERNATE ON and valid alternate file */
       write( hb_set_althan, fpStr, uiLen );
+   }
    if( hb_set.HB_SET_PRINTER && hb_set_printhan >= 0 )
+   {
       /* Print to printer if SET PRINTER ON and valid printer file */
       write( hb_set_printhan, fpStr, uiLen );
+      adjust_pos( fpStr, uiLen, &p_row, &p_col, -1, -1 );
+   }
 }
 
 /* Output an item to the screen and/or printer */
@@ -233,7 +275,7 @@ static void hb_devout( char * fpStr, WORD uiLen )
    {
       /* Display to printer if SET DEVICE TO PRINTER and valid printer file */
       write( hb_set_printhan, fpStr, uiLen );
-      p_col += uiLen;
+      adjust_pos( fpStr, uiLen, &p_row, &p_col, -1, -1 );
    }
    else
    {
@@ -245,19 +287,28 @@ static void hb_devout( char * fpStr, WORD uiLen )
       WORD uiCount;
       for( uiCount = 0; uiCount < uiLen; uiCount++ )
          printf( "%c", fpStr[ uiCount ] );
-      dev_col += uiLen;
-      if( dev_col > hb_maxcol() )
-      {
-         dev_row += (uiLen / (hb_maxcol() + 1));
-         dev_col -= (uiLen % (hb_maxcol() + 1));
-      }
+      adjust_pos( fpStr, uiLen, &dev_row, &dev_col, hb_max_row(), hb_max_col() );
    #endif
    }
 }
 
+void hb_setpos( USHORT row, USHORT col )
+{
+   USHORT count;
+   #ifdef USE_GTAPI
+      _gtSetPos( row, col );
+   #else
+      for( count = dev_row; count < row; count++ ) printf("\n");
+      if( row > dev_row ) dev_col = 0;
+      for( count = dev_col; count < col; count++ ) printf(" ");
+   #endif
+      dev_row = row;
+      dev_col = col;
+}
+
 void hb_devpos( USHORT row, USHORT col )
 {
-   int count;
+   USHORT count;
    /* Position printer if SET DEVICE TO PRINTER and valid printer file
       otherwise position console */
    if( hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set_printhan >= 0 )
@@ -273,18 +324,7 @@ void hb_devpos( USHORT row, USHORT col )
       p_row = row;
       p_col = col;
    }
-   else
-   {
-   #ifdef USE_GTAPI
-      _gtSetPos( row, col );
-   #else
-      for( count = dev_row; count < row; count++ ) printf("\n");
-      if( row > dev_row ) dev_col = 0;
-      for( count = dev_col; count < col; count++ ) printf(" ");
-   #endif
-      dev_row = row;
-      dev_col = col;
-   }
+   else hb_setpos( row, col );
 }
 
 HARBOUR HB_OUTSTD( void ) /* writes a list of values to the standard output device */
@@ -330,6 +370,18 @@ HARBOUR HB_QOUT( void )
    #endif
 }
 
+HARBOUR HB_SETPOS( void ) /* Sets the screen position */
+{
+   PHB_ITEM pRow, pCol;
+   if( _pcount() > 1 )
+   {
+      pRow = _param( 1, IT_NUMERIC );
+      pCol = _param( 2, IT_NUMERIC );
+      if( pRow && pCol )
+         hb_setpos( _parni( 1 ), _parni( 2 ) );
+   }
+}
+
 HARBOUR HB_DEVPOS( void ) /* Sets the screen and/or printer position */
 {
    PHB_ITEM pRow, pCol;
@@ -366,11 +418,11 @@ HARBOUR HB_DEVOUT( void ) /* writes a single values to the current device (scree
    }
 }
 
-HARBOUR HB_EJECT( void ) /* Ejects the current page from the printer */
+HARBOUR HB___EJECT( void ) /* Ejects the current page from the printer */
 {
    if( hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set_printhan >= 0 )
    {
-      write( hb_set_printhan, "\x0C", 1 );
+      write( hb_set_printhan, "\x0C\x0D", 2 );
       p_row = p_col = 0;
    }
 }
@@ -401,7 +453,7 @@ HARBOUR HB_SETPRC( void ) /* Sets the current printer row and column positions *
 
 HARBOUR HB_SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
 {
-   int top = 0, left = 0, bottom = hb_maxrow(), right = hb_maxcol(),
+   int top = 0, left = 0, bottom = hb_max_row(), right = hb_max_col(),
        v_scroll = 0, h_scroll = 0;
 
    if( _pcount() > 0 && _param( 1, IT_NUMERIC ) )
@@ -420,12 +472,12 @@ HARBOUR HB_SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
 #ifdef USE_GTAPI
    _gtScroll( top, left, bottom, right, v_scroll, h_scroll );
 #else
-   if( top == 0 && bottom == hb_maxrow()
-   && left == 0 && right == hb_maxcol()
+   if( top == 0 && bottom == hb_max_row()
+   && left == 0 && right == hb_max_col()
    && v_scroll == 0 && h_scroll == 0 )
    {
       int count;
-      dev_row = hb_maxrow();
+      dev_row = hb_max_row();
       for( count = 0; count < dev_row ; count++ ) printf( "\n" );
       dev_row = dev_col = 0;
    }
@@ -434,12 +486,12 @@ HARBOUR HB_SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
 
 HARBOUR HB_MAXROW( void ) /* Return the maximum screen row number (zero origin) */
 {
-   _retni( hb_maxrow () );
+   _retni( hb_max_row () );
 }
 
 HARBOUR HB_MAXCOL( void ) /* Return the maximum screen column number (zero origin) */
 {
-   _retni( hb_maxcol () );
+   _retni( hb_max_col () );
 }
 
 HARBOUR HB_ROW( void ) /* Return the current screen row position (zero origin) */

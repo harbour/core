@@ -2,7 +2,7 @@
  * $Id$
  */
 
-#if defined(__GNUC__) || defined(__DJGPP__)
+#if defined(__GNUC__)
  #include <unistd.h>
 #endif
 
@@ -42,9 +42,24 @@ void Set__InitSymbols( void )
 
 static BOOL set_logical (PHB_ITEM pItem)
 {
-   BOOL logical;
+   BOOL logical = FALSE;
    if (IS_LOGICAL (pItem)) logical = pItem->value.iLogical;
-   else logical = FALSE;
+   else if (IS_STRING (pItem))
+   {
+      if (pItem->wLength == 2)
+      {
+         if (toupper (pItem->value.szText [0]) == 'O'
+         && toupper (pItem->value.szText [1]) == 'N')
+            logical = TRUE;
+      }
+      else if (pItem->wLength == 3)
+      {
+         if (toupper (pItem->value.szText [0]) == 'O'
+         && toupper (pItem->value.szText [1]) == 'F'
+         && toupper (pItem->value.szText [2]) == 'F')
+            logical = FALSE;
+      }
+   }
    return (logical);
 }
 
@@ -228,12 +243,19 @@ HARBOUR HB_SETFIXED (void)
    if ( pItem && IS_LOGICAL (pItem)) hb_set_fixed = pItem->value.iLogical;
    else if ( pItem && IS_STRING (pItem))
    {
-      if (pItem->wLength == 2 && toupper (pItem->value.szText [0]) == 'O'
-      && toupper (pItem->value.szText [1]) == 'N')
-         hb_set_fixed = TRUE;
-      else if (pItem->wLength == 3 && toupper (pItem->value.szText [0]) == 'O'
-      && toupper (pItem->value.szText [1]) == 'F' && toupper (pItem->value.szText [2]) == 'F')
-         hb_set_fixed = FALSE;
+      if (pItem->wLength == 2)
+      {
+         if (toupper (pItem->value.szText [0]) == 'O'
+          && toupper (pItem->value.szText [1]) == 'N')
+            hb_set_fixed = TRUE;
+      }
+      else if (pItem->wLength == 3)
+      {
+         if (toupper (pItem->value.szText [0]) == 'O'
+          && toupper (pItem->value.szText [1]) == 'F'
+          && toupper (pItem->value.szText [2]) == 'F')
+            hb_set_fixed = FALSE;
+      }
    }
 }
 

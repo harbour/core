@@ -9,8 +9,8 @@ TARGET=$(HARBOURDIR)/bin/harbour.exe
 
 all: $(TARGET)
 
-$(TARGET): harboury.c harbour.c harbourl.c
-	$(CC) $(CFLAGS) harboury.c harbour.c harbourl.c -o $(TARGET)
+$(TARGET): harboury.c harbour.c harbourl.c $(HARBOURDIR)/include/compiler.h  $(HARBOURDIR)/source/hbpp/hbppint.c $(HARBOURDIR)/source/hbpp/hbpp.c $(HARBOURDIR)/source/hbpp/table.c
+	$(CC) $(CFLAGS) harboury.c harbour.c harbourl.c $(HARBOURDIR)/source/hbpp/hbppint.c $(HARBOURDIR)/source/hbpp/hbpp.c $(HARBOURDIR)/source/hbpp/table.c -o $(TARGET)
 
 harboury.c : harbour.y
 	bison -d -v -y harbour.y -o harboury.c
