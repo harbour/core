@@ -28,6 +28,7 @@ INCLUDE_DIR=include
 BIN_DIR=bin
 LIB_DIR=libs\vc
 OBJ_DIR=obj
+RUNNER_DIR=source\runner
 #MACOMP_DIR=source\macro
 
 #
@@ -35,7 +36,7 @@ OBJ_DIR=obj
 #
 
 CC=cl
-CFLAGS=-w -nologo -I$(INCLUDE_DIR) -DHARBOUR_USE_WIN_GTAPI
+CFLAGS=-w -nologo -I$(INCLUDE_DIR) -DHARBOUR_USE_WIN_GTAPI -DHARBOUR_OBJ_GENERATION
 CLIBFLAGS=$(CFLAGS) -c /TP
 CLIBFLAGSDEBUG=$(CFLAGS) -c -Zi /TP
 
@@ -49,8 +50,13 @@ TOOLS_LIB=$(LIB_DIR)\hbtools.lib
 HBPP_LIB=$(LIB_DIR)\hbpp.lib
 DEBUG_LIB=$(LIB_DIR)\debug.lib
 DBFNTX_LIB=$(LIB_DIR)\dbfntx.lib
+RUNNER_LIB=$(LIB_DIR)\runner.lib
 HARBOUR_EXE=$(BIN_DIR)\harbour.exe
+HBPP_EXE=$(BIN_DIR)\hbpp.exe
+RUNNER_EXE=$(BIN_DIR)\runner.exe
 HARBOURFLAGS=-iinclude -n -q
+
+LIBS=$(HARBOUR_LIB) $(TERMINAL_LIB) $(TOOLS_LIB) $(DEBUG_LIB) $(HBPP_LIB) $(DBFNTX_LIB) $(RUNNER_LIB)
 
 #
 # OBJ list for harbour.lib. Add new ones as needed
@@ -133,11 +139,15 @@ TOOLS_LIB_OBJS = \
     $(OBJ_DIR)\hb_f.obj \
     $(OBJ_DIR)\io.obj \
     $(OBJ_DIR)\mathx.obj \
+    $(OBJ_DIR)\nconvert.obj \
+    $(OBJ_DIR)\numtxten.obj \
+    $(OBJ_DIR)\numtxthu.obj \
     $(OBJ_DIR)\strasint.obj \
     $(OBJ_DIR)\strcount.obj \
     $(OBJ_DIR)\strcspn.obj \
     $(OBJ_DIR)\strdiff.obj \
     $(OBJ_DIR)\strexpan.obj \
+    $(OBJ_DIR)\strfmt.obj \
     $(OBJ_DIR)\stringp.obj \
     $(OBJ_DIR)\stringsx.obj \
     $(OBJ_DIR)\strleft.obj \
@@ -171,6 +181,13 @@ DBFNTX_LIB_OBJS = \
     $(OBJ_DIR)\dbfntx1.obj
 
 #
+# OBJ list for runner.lib. Add new ones as needed
+#
+
+RUNNER_LIB_OBJS = \
+    $(OBJ_DIR)\runlib.obj
+
+#
 # OBJ list for hbpp.lib. Add new ones as needed
 #
 
@@ -198,7 +215,25 @@ all: $(HARBOUR_EXE) \
      $(TERMINAL_LIB) \
      $(HBPP_LIB) \
      $(DEBUG_LIB) \
-     $(DBFNTX_LIB)
+     $(DBFNTX_LIB) \
+     $(HBPP_EXE) \
+     $(RUNNER_LIB) \
+     $(RUNNER_EXE)
+
+$(HBPP_EXE) : \
+    $(HBPP_DIR)\stdalone\hbpp.c
+    @if exist obj\hbpp.obj del obj\hbpp.obj
+    $(CC) -TP $(CFLAGS) $(HBPP_DIR)\stdalone\hbpp.c -o $(BIN_DIR)\hbpp /link $(HBPP_LIB) 
+    -del hbpp.obj
+
+$(RUNNER_EXE) : \
+    $(RUNNER_DIR)\stdalone\external.prg \
+    $(RUNNER_DIR)\stdalone\runner.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(RUNNER_DIR)\stdalone\ $(RUNNER_DIR)\stdalone\external.prg 
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(RUNNER_DIR)\stdalone\ -i$(RUNNER_DIR)\stdalone\ $(RUNNER_DIR)\stdalone\runner.prg 
+    $(CC) -TP $(CFLAGS) $(RUNNER_DIR)\stdalone\runner.c $(RUNNER_DIR)\stdalone\external.c -o $(BIN_DIR)\runner /link  $(OBJ_DIR)\symbols.obj $(LIBS)
+    -del external.obj
+    -del runner.obj
 
 $(HARBOUR_EXE) : \
     $(COMPILER_DIR)\harboury.c \
@@ -213,7 +248,8 @@ $(HARBOUR_EXE) : \
     $(HBPP_DIR)\hbpp.c \
     $(HBPP_DIR)\hbppint.c \
     $(HBPP_DIR)\table.c
-    $(CC) $(CFLAGS) $(COMPILER_DIR)\harboury.c $(COMPILER_DIR)\harbourl.c $(COMPILER_DIR)\harbour.c $(COMPILER_DIR)\genc.c $(COMPILER_DIR)\genhrb.c $(COMPILER_DIR)\genrc.c $(COMPILER_DIR)\genjava.c $(COMPILER_DIR)\genpas.c $(HBPP_DIR)\hbppint.c $(HBPP_DIR)\hbpp.c $(HBPP_DIR)\table.c -o $(BIN_DIR)\harbour
+    $(CC) $(CFLAGS) $(COMPILER_DIR)\harboury.c $(COMPILER_DIR)\harbourl.c $(COMPILER_DIR)\harbour.c $(COMPILER_DIR)\genobj32.c $(COMPILER_DIR)\genc.c $(COMPILER_DIR)\genhrb.c $(COMPILER_DIR)\genrc.c $(COMPILER_DIR)\genjava.c $(COMPILER_DIR)\genpas.c $(HBPP_DIR)\hbppint.c $(HBPP_DIR)\hbpp.c $(HBPP_DIR)\table.c -o $(BIN_DIR)\harbour /link $(OBJ_DIR)\symbols.obj 
+    @Echo :	Ignore Lnk4033 warning
     -del harboury.obj
     -del harbourl.obj
     -del harbour.obj
@@ -249,6 +285,9 @@ $(TERMINAL_LIB) : $(TERMINAL_LIB_OBJS)
 $(DBFNTX_LIB) : $(DBFNTX_LIB_OBJS)
     lib /OUT:$(DBFNTX_LIB) $(DBFNTX_LIB_OBJS)
 
+$(RUNNER_LIB) : $(RUNNER_LIB_OBJS)
+    lib /OUT:$(RUNNER_LIB) $(RUNNER_LIB_OBJS)
+
 #
 # Compiler source dependencies and build rules
 #
@@ -263,17 +302,17 @@ $(COMPILER_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
 # Macro compiler source dependencies and build rules
 #
 
-#$(MACOMP_DIR)\macroy.c : $(MACOMP_DIR)\macro.y
-#    bison --debug --verbose -d -v --name-prefix=mc -o$(MACOMP_DIR)\macroy.c $(MACOMP_DIR)\macro.y
+#$(MACOMP_DIR)\macroy.c : $(COMPILER_DIR)\harbour.y
+#    bison --debug --verbose -d -v --name-prefix=mc -o$(MACOMP_DIR)\macroy.c $(COMPILER_DIR)\harbour.y
 #
-#$(MACOMP_DIR)\macrol.c : $(MACOMP_DIR)\macro.l $(MACOMP_DIR)\macroy.c
-#    flex -bdviB8 -Pmc -o$(MACOMP_DIR)\macrol.c $(MACOMP_DIR)\macro.l
+#$(MACOMP_DIR)\macrol.c : $(MACOMP_DIR)\macroy.c $(COMPILER_DIR)\harbour.l
+#    flex -bdviB8 -Pmc -o$(MACOMP_DIR)\macrol.c $(COMPILER_DIR)\harbour.l
 #
 #$(OBJ_DIR)\macroy.obj : $(MACOMP_DIR)\macroy.c
-#    $(CC) $(CLIBFLAGS) -DYY_NEVER_INTERACTIVE -Fo$@ $**
+#    $(CC) $(CLIBFLAGS) -DYY_NEVER_INTERACTIVE -DHB_MACRO_ENGINE -Fo$@ $**
 #
 #$(OBJ_DIR)\macrol.obj : $(MACOMP_DIR)\macrol.c
-#    $(CC) $(CLIBFLAGS) -DYY_NEVER_INTERACTIVE -Fo$@ $**
+#    $(CC) $(CLIBFLAGS) -DYY_NEVER_INTERACTIVE -DHB_MACRO_ENGINE -Fo$@ $**
 #
 #$(OBJ_DIR)\macro.obj : $(MACOMP_DIR)\macro.c
 #    $(CC) $(CLIBFLAGS) -Fo$@ $**
@@ -529,6 +568,13 @@ $(OBJ_DIR)\tbrwtext.obj : $(DEBUG_DIR)\tbrwtext.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 #
+# runner lib
+#
+
+$(OBJ_DIR)\runlib.obj : $(RUNNER_DIR)\runlib.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+#
 # VM source dependencies below. Add as needed
 #
 
@@ -599,6 +645,24 @@ $(OBJ_DIR)\io.obj : $(TOOLS_DIR)\io.c
 $(OBJ_DIR)\mathx.obj : $(TOOLS_DIR)\mathx.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(TOOLS_DIR)\nconvert.c : $(TOOLS_DIR)\nconvert.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+
+$(OBJ_DIR)\nconvert.obj : $(TOOLS_DIR)\nconvert.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(TOOLS_DIR)\numtxten.c : $(TOOLS_DIR)\numtxten.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+
+$(OBJ_DIR)\numtxten.obj : $(TOOLS_DIR)\numtxten.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(TOOLS_DIR)\numtxthu.c : $(TOOLS_DIR)\numtxthu.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+
+$(OBJ_DIR)\numtxthu.obj : $(TOOLS_DIR)\numtxthu.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(OBJ_DIR)\strasint.obj : $(TOOLS_DIR)\strasint.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
@@ -612,6 +676,9 @@ $(OBJ_DIR)\strdiff.obj : $(TOOLS_DIR)\strdiff.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\strexpan.obj : $(TOOLS_DIR)\strexpan.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\strfmt.obj : $(TOOLS_DIR)\strfmt.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(TOOLS_DIR)\stringp.c : $(TOOLS_DIR)\stringp.prg

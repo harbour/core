@@ -1,3 +1,9 @@
+19990930-22:10 EDT Paul Tucker <ptucker@sympatico.ca>
+  * makefile.vc
+    updated to add missing files and to create runner.exe and hbpp.exe
+  * buildvc.bat
+    add if exist to remove error message on file not found.
+
 19990807-10:17 CET Patrick Mast <harbour@PatrickMast.com>
   * updated doc/whatsnew.txt
 
