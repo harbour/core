@@ -1,3 +1,17 @@
+19990601-23:50 EDT David G. Holm <dholm@jsd-llc.com>
+  * makefile.b31
+    - Made progress on GT API, so put USE_GTAPI back in as default.
+  * source/rtl/console.c
+    - Cleaned up synchronization between GT API and dev_row, dev_col
+  * source/rtl/gtapi.c
+    - Initialize starting row and column to 0 instead of 1
+    - _gtMaxCol() and _gtMaxRow() are 0-based in Clipper, so subtract 1
+      from the device width and height
+    - Removed call to strlen() in _gtSave(), because Clipper does not appear
+      to require the screen buffer to be initialized, just allocated
+    - Changed _gtWrite() to deal with writing multiple rows of text
+    - Wrote _gtScroll(), which is needed by _gtWritePos() and _gtWrite().
+
 19990601-21:35 CET Eddie Runia
   * tests/working/multinh.prg, source/rtl/classes.c, source/rtl/tclass.prg
     first step to multiple inheritance

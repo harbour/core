@@ -15,11 +15,15 @@
    #include <gtapi.h>
 #endif
 
-static unsigned short dev_row = 0;
-static unsigned short dev_col = 0;
+static unsigned short dev_row;
+static unsigned short dev_col;
+static char CrLf [3];
 
 void InitializeConsole( void )
 {
+   CrLf [0] = 13;
+   CrLf [1] = 10;
+   CrLf [2] = 0;
 #ifdef USE_GTAPI
    dev_row = gtWhereY();
    dev_col = gtWhereX();
@@ -110,8 +114,7 @@ static void hb_outstd( char * fpStr, WORD uiLen )
 #ifdef USE_GTAPI
    if( isatty( fileno( stdout ) ) )
    {
-      dev_col += uiLen;
-      _gtSetPos( dev_row, dev_col );
+      _gtGetPos( &dev_row, &dev_col );
    }
 #endif;
 }
@@ -126,8 +129,7 @@ static void hb_outerr( char * fpStr, WORD uiLen )
 #ifdef USE_GTAPI
    if( isatty( fileno( stdout ) ) )
    {
-      dev_col += uiLen;
-      _gtSetPos( dev_row, dev_col );
+      _gtGetPos( &dev_row, &dev_col );
    }
 #endif;
 }
@@ -140,10 +142,7 @@ static void hb_altout( char * fpStr, WORD uiLen )
    #ifdef USE_GTAPI
       _gtWriteCon( fpStr, uiLen );
       if( stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) || hb_set_printhan < 0 )
-      {
          _gtGetPos( &dev_row, &dev_col );
-         _gtSetPos( dev_row, dev_col );
-      }
    #else
       WORD uiCount;
       for( uiCount = 0; uiCount < uiLen; uiCount++ )
@@ -172,11 +171,7 @@ static void hb_devout( char * fpStr, WORD uiLen )
    #ifdef USE_GTAPI
       /* Otherwise, display to console */
       _gtWrite( fpStr, uiLen );
-      if( stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) || hb_set_printhan < 0 )
-      {
-         _gtGetPos( &dev_row, &dev_col );
-         _gtSetPos( dev_row, dev_col );
-      }
+      _gtGetPos( &dev_row, &dev_col );
    #else
       WORD uiCount;
       for( uiCount = 0; uiCount < uiLen; uiCount++ )
@@ -197,7 +192,7 @@ void hb_devpos( int row, int col )
          write( hb_set_printhan, "\x0C", 1 );
          dev_row = dev_col = 0;
       }
-      for( count = dev_row; count < row; count++ ) write( hb_set_printhan, "\r\n", 2 );
+      for( count = dev_row; count < row; count++ ) write( hb_set_printhan, CrLf, strlen (CrLf) );
       if( row > dev_row ) dev_col = 0;
       for( count = dev_col; count < col; count++ ) write( hb_set_printhan, " ", 1 );
       dev_row = row;
@@ -248,7 +243,7 @@ HARBOUR QOUT( void )
    #ifdef WINDOWS
       MessageBox( 0, _parc( 1 ), "Harbour", 0 );
    #else
-      hb_altout( "\r\n", 2 );
+      hb_altout( CrLf, strlen (CrLf) );
       QQOUT();
    #endif
 }
