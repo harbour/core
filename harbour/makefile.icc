@@ -15,19 +15,22 @@ c_opt = /DUSE_GTAPI /W2 /Se /Sd+ /I.\include /Ti+
 
 all: $(path_exe)\harbour.exe $(path_lib)\harbour.lib $(path_lib)\hbtools.lib $(path_lib)\terminal.lib
 
-$(path_lib)\harbour.lib :       $(path_obj)\arrays.obj \
+$(path_lib)\harbour.lib : \
+                $(path_obj)\arrays.obj \
                 $(path_obj)\asort.obj \
                 $(path_obj)\classes.obj \
                 $(path_obj)\codebloc.obj \
                 $(path_obj)\console.obj \
                 $(path_obj)\descend.obj \
                 $(path_obj)\dates.obj \
+                $(path_obj)\dir.obj \
                 $(path_obj)\dynsym.obj \
                 $(path_obj)\environ.obj \
                 $(path_obj)\error.obj \
                 $(path_obj)\errorapi.obj \
                 $(path_obj)\errorsys.obj \
                 $(path_obj)\extend.obj \
+                $(path_obj)\files.obj \
                 $(path_obj)\gtapi.obj \
                 $(path_obj)\hardcr.obj \
                 $(path_obj)\initsymb.obj \
@@ -37,17 +40,13 @@ $(path_lib)\harbour.lib :       $(path_obj)\arrays.obj \
                 $(path_obj)\mtran.obj \
                 $(path_obj)\objfunc.obj \
                 $(path_obj)\set.obj \
-                $(path_obj)\strings.obj \
                 $(path_obj)\strcmp.obj \
+                $(path_obj)\strings.obj \
                 $(path_obj)\tclass.obj \
                 $(path_obj)\transfrm.obj
         @echo Harbour.lib
 
 $(path_lib)\hbtools.lib: \
-                $(path_obj)\debug.obj \
-                $(path_obj)\genobj.obj \
-                $(path_obj)\mathx.obj \
-                $(path_obj)\stringsx.obj \
                 $(path_obj)\asciisum.obj \
                 $(path_obj)\ascpos.obj \
                 $(path_obj)\atdiff.obj \
@@ -57,12 +56,18 @@ $(path_lib)\hbtools.lib: \
                 $(path_obj)\chrcount.obj \
                 $(path_obj)\chrfirst.obj \
                 $(path_obj)\chrtotal.obj \
+                $(path_obj)\debug.obj \
+                $(path_obj)\genobj.obj \
+                $(path_obj)\hb_f.obj \
+                $(path_obj)\io.obj \
+                $(path_obj)\mathx.obj \
                 $(path_obj)\strasint.obj \
                 $(path_obj)\strcount.obj \
                 $(path_obj)\strcspn.obj \
                 $(path_obj)\strdiff.obj \
                 $(path_obj)\strexpan.obj \
                 $(path_obj)\stringp.obj \
+                $(path_obj)\stringsx.obj \
                 $(path_obj)\strleft.obj \
                 $(path_obj)\strpbrk.obj \
                 $(path_obj)\strright.obj
@@ -86,12 +91,15 @@ $(path_obj)\codebloc.obj : {$(path_c)}codebloc.c $(path_h)\extend.h $(path_h)\ty
 $(path_obj)\dates.obj    : {$(path_c)}dates.c    $(path_h)\extend.h $(path_h)\types.h $(path_h)\dates.h $(path_h)\set.h
 $(path_obj)\debug.obj    : {$(path_c)}debug.c    $(path_h)\extend.h $(path_h)\types.h $(path_h)\ctoharb.h $(path_h)\itemapi.h
 $(path_obj)\descend.obj  : {$(path_c)}descend.c  $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\dir.obj      : {$(path_c)}dir.c      $(path_h)\extend.h $(path_h)\types.h $(path_h)\ctoharb.h $(path_h)\itemapi.h
 $(path_obj)\environ.obj  : {$(path_c)}environ.c  $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\errorapi.obj : {$(path_c)}errorapi.c $(path_h)\extend.h $(path_h)\types.h $(path_h)\ctoharb.h
 $(path_obj)\extend.obj   : {$(path_c)}extend.c   $(path_h)\extend.h $(path_h)\types.h $(path_h)\set.h
 $(path_obj)\files.obj    : {$(path_c)}files.c    $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\gtapi.obj    : {$(path_c)}gtapi.c    $(path_h)\extend.h $(path_h)\types.h $(path_h)\gtapi.h
 $(path_obj)\hardcr.obj   : {$(path_c)}hardcr.c   $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\hb_f.obj     : {$(path_c)}hb_f.c     $(path_h)\extend.h $(path_h)\types.h $(path_h)\filesys.h
+$(path_obj)\io.obj       : {$(path_c)}io.c       $(path_h)\extend.h $(path_h)\types.h $(path_h)\filesys.h
 $(path_obj)\initsymb.obj : {$(path_c)}initsymb.c $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\itemapi.obj  : {$(path_c)}itemapi.c  $(path_h)\extend.h $(path_h)\types.h $(path_h)\ctoharb.h $(path_h)\itemapi.h $(path_h)\set.h
 $(path_obj)\math.obj     : {$(path_c)}math.c     $(path_h)\extend.h $(path_h)\types.h
@@ -143,7 +151,7 @@ $(path_obj)\error.obj    : {$(path_prg)}\error.prg $(path_h)\pcode.h $(path_h)\i
 
 $(path_obj)\errorsys.obj : {$(path_prg)}\errorsys.prg $(path_h)\pcode.h $(path_h)\init.h  $(path_h)\extend.h $(path_h)\types.h {$(path_exe)}harbour.exe
  $(path_exe)\harbour source\rtl\errorsys /n /osource\rtl
- icc /C+ $(c_opt) /Fo$@ /Tp$source\rtl\errorsys.c
+ icc /C+ $(c_opt) /Fo$@ /Tpsource\rtl\errorsys.c
  ilib .\libs\icc\harbour.lib -+$@,,
 
 $(path_obj)\objfunc.obj : {$(path_prg)}\objfunc.prg $(path_h)\pcode.h $(path_h)\init.h  $(path_h)\extend.h $(path_h)\types.h {$(path_exe)}harbour.exe

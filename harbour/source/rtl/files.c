@@ -28,6 +28,7 @@
   #include <share.h>
   #include <fcntl.h>
   #include <io.h>
+  #include <direct.h>
   #include <errno.h>
 
   #if !defined(HAVE_POSIX_IO)
@@ -44,6 +45,9 @@
   #include <share.h>
   #if defined(__IBMCPP__)
     #define SH_COMPAT SH_DENYRW
+    #include <direct.h>
+  #else
+    #include <dir.h>
   #endif
 
   #if !defined(HAVE_POSIX_IO)
@@ -142,7 +146,7 @@ static int convert_create_flags( int flags )
 {
         /* by default FC_NORMAL is set */
         int result_flags=S_IWUSR;
-        
+
         result_flags |= O_BINARY | O_CREAT | O_TRUNC | O_RDWR;
 
         if( flags & FC_READONLY )
@@ -166,30 +170,30 @@ static int convert_create_flags( int flags )
 
 FHANDLE hb_fsOpen   ( BYTEP name, USHORT flags )
 {
-	FHANDLE handle;
+        FHANDLE handle;
 #if defined(HAVE_POSIX_IO)
-	errno = 0;
+        errno = 0;
         handle = open(name,convert_open_flags(flags));
         last_error = errno;
 #else
         handle = FS_ERROR;
         last_error = FS_ERROR;
 #endif
-	return handle;
+        return handle;
 }
 
 FHANDLE hb_fsCreate ( BYTEP name, USHORT flags )
 {
-	FHANDLE handle;
+        FHANDLE handle;
 #if defined(HAVE_POSIX_IO)
-	errno = 0;
+        errno = 0;
         handle = open(name,convert_create_flags(flags));
         last_error = errno;
 #else
         handle = FS_ERROR;
         last_error = FS_ERROR;
 #endif
-	return handle;
+        return handle;
 }
 
 void    hb_fsClose  ( FHANDLE handle )
@@ -202,44 +206,44 @@ void    hb_fsClose  ( FHANDLE handle )
 
 USHORT  hb_fsRead   ( FHANDLE handle, BYTEP buff, USHORT count )
 {
-	USHORT bytes;
+        USHORT bytes;
 #if defined(HAVE_POSIX_IO)
-	errno = 0;
+        errno = 0;
         bytes = read(handle,buff,count);
         last_error = errno;
 #else
         bytes = 0;
         last_error = FS_ERROR;
 #endif
-	return bytes;
+        return bytes;
 }
 
 USHORT  hb_fsWrite  ( FHANDLE handle, BYTEP buff, USHORT count )
 {
-	USHORT bytes;
+        USHORT bytes;
 #if defined(HAVE_POSIX_IO)
-	errno = 0;
+        errno = 0;
         bytes = write(handle,buff,count);
         last_error = errno;
 #else
         bytes = 0;
         last_error = FS_ERROR;
 #endif
-	return bytes;
+        return bytes;
 }
 
 ULONG   hb_fsSeek   ( FHANDLE handle, LONG offset, USHORT flags )
 {
-	ULONG position;
+        ULONG position;
 #if defined(HAVE_POSIX_IO)
-	errno = 0;
+        errno = 0;
         position = lseek(handle,offset,convert_seek_flags(flags));
         last_error = errno;
 #else
         position = 0;
         last_error = FS_ERROR;
 #endif
-	return position;
+        return position;
 }
 
 USHORT  hb_fsError  ( void )
@@ -250,7 +254,7 @@ USHORT  hb_fsError  ( void )
 void    hb_fsDelete ( BYTEP name )
 {
 #if defined(HAVE_POSIX_IO)
-	errno = 0;
+        errno = 0;
         unlink(name);
         last_error = errno;
         return;
@@ -260,7 +264,7 @@ void    hb_fsDelete ( BYTEP name )
 void    hb_fsRename ( BYTEP older, BYTEP newer )
 {
 #if defined(HAVE_POSIX_IO)
-	errno = 0;
+        errno = 0;
         rename(older,newer);
         last_error = errno;
         return;
@@ -273,7 +277,7 @@ BOOL    hb_fsLock   ( FHANDLE handle, ULONG start,
         int result=0;
 
 #if defined(HAVE_POSIX_IO) && !defined(__GNUC__) && !defined(__IBMCPP__)
-	errno = 0;
+        errno = 0;
         switch( mode )
         {
            case FL_LOCK:
@@ -285,7 +289,7 @@ BOOL    hb_fsLock   ( FHANDLE handle, ULONG start,
         }
         last_error = errno;
 #else
-	result = 1;
+        result = 1;
         last_error = FS_ERROR;
 #endif
 
@@ -312,107 +316,107 @@ void    hb_fsCommit ( FHANDLE handle )
 
 BOOL    hb_fsMkDir  ( BYTEP name )
 {
-	int result;
+        int result;
 #if defined(HAVE_POSIX_IO)
-	errno = 0;
+        errno = 0;
   #if !defined(__WATCOMC__) && !defined(__BORLANDC__) && !defined(__IBMCPP__)
         result = mkdir(name,S_IWUSR|S_IRUSR);
   #else
-	result = mkdir( name );
+        result = mkdir( name );
   #endif
-  	last_error = errno;
+        last_error = errno;
 #else
-	result = 1;
-	last_error = FS_ERROR;
+        result = 1;
+        last_error = FS_ERROR;
 #endif
-	return (result ? FALSE : TRUE );
+        return (result ? FALSE : TRUE );
 }
 
 BOOL    hb_fsChDir  ( BYTEP name )
 {
-	int result;
+        int result;
 #if defined(HAVE_POSIX_IO)
-	errno = 0;
+        errno = 0;
         result = chdir(name);
         last_error = errno;
 #else
-	result = 1;
-	last_error = FS_ERROR;
+        result = 1;
+        last_error = FS_ERROR;
 #endif
-	return (result ? FALSE : TRUE );
+        return (result ? FALSE : TRUE );
 }
 
 BOOL    hb_fsRmDir  ( BYTEP name )
 {
-	int result;
+        int result;
 #if defined(HAVE_POSIX_IO)
-	errno = 0;
+        errno = 0;
         result = rmdir(name);
         last_error = errno;
 #else
-	result = 1;
-	last_error = FS_ERROR;
+        result = 1;
+        last_error = FS_ERROR;
 #endif
-	return (result ? FALSE : TRUE );
+        return (result ? FALSE : TRUE );
 }
 
 BYTEP   hb_fsCurDir ( USHORT uiDrive )
 {
         static char cwd_buff[PATH_MAX+1];
 #if defined(HAVE_POSIX_IO)
-	errno = 0;
+        errno = 0;
         getcwd(cwd_buff,PATH_MAX);
         last_error = errno;
 #else
-	cwd_buff[0] = 0;
-	last_error = FS_ERROR;
+        cwd_buff[0] = 0;
+        last_error = FS_ERROR;
 #endif
         return cwd_buff;
 }
 
 USHORT  hb_fsChDrv  ( BYTEP nDrive )
 {
-	USHORT result;
+        USHORT result;
 #if defined(HAVE_POSIX_IO)
-	errno = 0;
+        errno = 0;
         result = 0;
         last_error = errno;
         last_error = FS_ERROR; /* TODO: Remove when function implemented */
 #else
-	result = 0;
-	last_error = FS_ERROR;
+        result = 0;
+        last_error = FS_ERROR;
 #endif
-	return result;
+        return result;
 }
 
 BYTE    hb_fsCurDrv ( void )
 {
-	USHORT result;
+        USHORT result;
 #if defined(HAVE_POSIX_IO)
-	errno = 0;
+        errno = 0;
         result = 0;
         last_error = errno;
         last_error = FS_ERROR; /* TODO: Remove when function implemented */
 #else
-	result = 0;
-	last_error = FS_ERROR;
+        result = 0;
+        last_error = FS_ERROR;
 #endif
-	return result;
+        return result;
 }
 
 USHORT  hb_fsIsDrv  ( BYTE nDrive )
 {
-	USHORT result;
+        USHORT result;
 #if defined(HAVE_POSIX_IO)
-	errno = 0;
+        errno = 0;
         result = 0;
         last_error = errno;
         last_error = FS_ERROR; /* TODO: Remove when function implemented */
 #else
-	result = 0;
-	last_error = FS_ERROR;
+        result = 0;
+        last_error = FS_ERROR;
 #endif
-	return result;
+        return result;
 }
 
 /* TODO: Implement hb_fsExtOpen */
@@ -548,7 +552,7 @@ HARBOUR FCLOSE( void )
 {
         PHB_ITEM arg1_it = _param(1,IT_NUMBER);
 
-	last_error = 0;
+        last_error = 0;
         if( arg1_it )
         {
             hb_fsClose(_parni(1));

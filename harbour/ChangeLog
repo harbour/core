@@ -1,3 +1,16 @@
+19990610-23:35 EDT David G. Holm <dholm@jsd-llc.com>
+  * makefile.icc
+    - Added some missing source files
+  * source/rtl/files.c
+    - Put back '#include <direct.h>' for __WATCOM__, '#include <dir.h>'
+      for __BORLANDC__, and '#include <direct.h>' for __IBMCPP__, after
+      removing them earlier while removing '#include <dirent.h>', which
+      isn't needed, because the DIRECTORY() function is in a separate
+      source file. The reason that I thought it was safe to remove them
+      was that I *thought* that I had recompiled with IBMCPP after I
+      recompiled with DJGPP, but it turned out I hadn't. I'm hoping that
+      I caught it before anybody extracted the bad version from CVS.
+
 19990610-22:35 EDT David G. Holm <dholm@jsd-llc.com>
   + include/fileio.ch
     - File API related flags
