@@ -1,3 +1,20 @@
+19990826-22:00 EDT Paul Tucker <ptucker@sympatico.ca>
+  * include/hbsetup.h
+     + add mouse driver selector defines
+  + source/rtl/mouse.c
+     * harbour level mouse interface
+       code by Jose Lalin dezac@corevia.com
+       and Luiz Rafael Culik (culik@sl.conex.net)
+  + source/rtl/msxxx.c
+     * similar usage to gtxxx.c
+  + source/rtl/mouse directory
+  + source/rtl/mousedos.c
+      code by Jose Lalin dezac@corevia.com
+      and Luiz Rafael Culik (culik@sl.conex.net)
+  + source/rtl/mouseos2.c
+      code by Chen Kedem <niki@actcom.co.il>
+  + source/rtl/mousetpl.c
+
 19990826-20:05 GMT+1 Bruno Cantero <bruno@issnet.net>
    * funclist.txt
      include/rddapi.h

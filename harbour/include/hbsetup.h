@@ -119,6 +119,21 @@
 #endif
 
 /* ***********************************************************************
+ * These symbols defined if we want to use the MOUSE API (and which platform
+ * to build the MOUSE API for, if using the GNU Make System).
+ *
+ * By default they are disabled (symbols are not defined)
+*/
+/*#define HARBOUR_USE_DOS_MSAPI*/
+/*#define HARBOUR_USE_OS2_MSAPI*/
+/*#define HARBOUR_USE_WIN_MSAPI*/
+
+/* Indicate that one of the GTAPIs is defined */
+#if defined(HARBOUR_USE_DOS_MSAPI) || defined(HARBOUR_USE_OS2_MSAPI) || defined(HARBOUR_USE_WIN_MSAPI)
+  #define HARBOUR_USE_MSAPI
+#endif
+
+/* ***********************************************************************
  * Operating system specific definitions
  */
 #ifdef __GNUC__
