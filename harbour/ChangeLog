@@ -1,6 +1,9 @@
 19990607-19:45 EDT David G. Holm <dholm@jsd-llc.com>
   * include/extend.h
     - Moved "#include <limits.h>" to include/types.h
+    - Removed "#define FILE" and "#undef FILE", which are no longer
+      needed, because HARBOUR FILE() was renamed to HARBOUR HB_FILE()
+      some time ago.
   * include/types.h
     - Moved "#include <limits.h>" from include/extend.h in order to
       avoid having to require that extend.h be included before set.h

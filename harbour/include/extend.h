@@ -5,15 +5,11 @@
 #ifndef _EXTEND_H
 #define _EXTEND_H
 
-//#define FILE _FILE     /* to avoid conflicts with Harbour File() */
-
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <types.h>
-
-//#undef FILE
 
 typedef struct          /* symbol support structure */
 {
