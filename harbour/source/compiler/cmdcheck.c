@@ -187,6 +187,9 @@ void hb_compChkEnvironVar( char * szSwitch )
          s++;
          switch( *s )
          {
+             case '?':
+                break;
+
              case 'a':
              case 'A':
                 hb_comp_bAutoMemvarAssume = TRUE;
@@ -314,6 +317,13 @@ void hb_compChkEnvironVar( char * szSwitch )
                       printf( "\nUnsupported output language option\n" );
                       exit( EXIT_FAILURE );
                 }
+                break;
+
+               /* NOTE:
+                  h or H from HELP or help
+               */
+             case 'h':
+             case 'H':
                 break;
 
                /* NOTE:

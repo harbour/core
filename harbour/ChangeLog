@@ -1,3 +1,9 @@
+20000507-23:30 CET Patrick Mast <harbour@PatrickMast.com>
+
+   * source/compiler/cmdcheck.c
+     + Added -? and -h option for the compiler.
+       these options shouw the Harbour usage page.
+
 20000507-13:35 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * include/hberrors.h
