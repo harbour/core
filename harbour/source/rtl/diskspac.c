@@ -103,13 +103,14 @@ HB_FUNC( DISKSPACE )
             dSpace = ( double ) disk.total_clusters *
                      ( double ) disk.sectors_per_cluster *
                      ( double ) disk.bytes_per_sector;
+
+            if( uiType == HB_DISK_USED )
+               dSpace -= ( double ) disk.avail_clusters *
+                         ( double ) disk.sectors_per_cluster *
+                         ( double ) disk.bytes_per_sector;
             break;
       }
 
-      if( uiType == HB_DISK_USED )
-         dSpace -= ( double ) disk.avail_clusters *
-                   ( double ) disk.sectors_per_cluster *
-                   ( double ) disk.bytes_per_sector;
    }
 
 #elif defined(HB_OS_WIN_32)
@@ -242,14 +243,14 @@ HB_FUNC( DISKSPACE )
                   dSpace  = ( double ) dwTotalNumberOfClusters *
                             ( double ) dwSectorsPerCluster *
                             ( double ) dwBytesPerSector;
+
+                  if( uiType == HB_DISK_USED )
+                     dSpace -= ( double ) dwNumberOfFreeClusters *
+                               ( double ) dwSectorsPerCluster *
+                               ( double ) dwBytesPerSector;
                   break;
 
             }
-
-            if( uiType == HB_DISK_USED )
-               dSpace -= ( double ) dwNumberOfFreeClusters *
-                         ( double ) dwSectorsPerCluster *
-                         ( double ) dwBytesPerSector;
          }
       }
 

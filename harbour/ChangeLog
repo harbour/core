@@ -1,3 +1,7 @@
+20000331-06:40 EST Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/diskspac.c
+     * minor code opt.
+
 20000331-04:30 EST Paul Tucker <ptucker@sympatico.ca>
    * include/hbvmpub.h
      * put the #pragma pack in _MSC_VER gaurds which got missed in the
