@@ -1,3 +1,8 @@
+19990526-22:53 Les Griffith
+    * added Bil Simser's gtapi.h to include
+      and the c files to source\rtl
+    * added to doc Bil's documentation re gtapi
+
 19990526-20:45 EST David G. Holm <dholm@jsd-llc.com>
   * ChangeLog
     - Removed excess whitespace from previous ChangeLog entry
