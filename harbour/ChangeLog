@@ -1,3 +1,15 @@
+Fri Jul 16 17:53:35 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* source/rtl/gt/gtwin.c: 
+	Added the possibility to log everything to a file; this made it
+	possible for me to find out what was wrong with GTwin (which is,
+	noone was calling gtInit()).
+	
+	* source/rtl/console.c: 
+	Call gtInit() as the first console initialization. This finally
+	made it possible to have a working GT on Win32 with gcc (it should
+	work with other compilers too).
+
 19990716-20:43 Alexander Kresin
   * source\hbpp\hbpp.c
     * Problem with C++ Builder resolved
