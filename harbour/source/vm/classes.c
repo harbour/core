@@ -191,6 +191,8 @@ typedef struct
    USHORT   uiScope;           /* Scoping value */
    PHB_ITEM pInitValue;        /* Init Value for data */
    BYTE     bClsDataInitiated; /* There is one value assigned at init time */
+   ULONG    ulCalls;           /* profiler support */
+   ULONG    ulTime;            /* profiler support */
 } METHOD, * PMETHOD;
 
 typedef struct
@@ -238,6 +240,9 @@ static void     hb_clsRelease( PCLASS );
        PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc );
        /*PMETHOD  hb_objGetpMethod( PHB_ITEM, PHB_SYMB );*/
        ULONG    hb_objHasMsg( PHB_ITEM pObject, char * szString );
+
+       void *   hb_mthRequested( void );
+       void     hb_mthAddTime( void * pMethod, ULONG ulClockTicks );
 
 static HARBOUR  hb___msgClsH( void );
 static HARBOUR  hb___msgClsName( void );
@@ -639,6 +644,7 @@ PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc 
             pFunction = pMethod->pFunction;
             /*hb_clsScope( pObject, pMethod );*/
             s_pMethod = pMethod ;
+            pMethod->ulCalls++; /* Profiler */
             return pFunction;
          }
          uiAt++;
@@ -646,6 +652,8 @@ PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc 
             uiAt = 0;
       }
    }
+
+   s_pMethod = NULL;
 
    /* Default message here */
 
@@ -789,6 +797,8 @@ HB_FUNC( __CLSADDMSG )
 
       pNewMeth->uiSprClass = uiClass  ; /* now used !! */
       pNewMeth->bClsDataInitiated = 0 ; /* reset state */
+      pNewMeth->ulCalls = 0;
+      pNewMeth->ulTime = 0;
 
       /* in cas eof re-used message */
       if ( pNewMeth->pInitValue )
@@ -2254,3 +2264,54 @@ HB_FUNC( __CLS_PAR00 )
 
 }
 
+static ULONG MsgToNum( char * szName )
+{
+   USHORT i;
+   ULONG nRetVal = 0;
+
+   for( i = 0; szName[ i ] != '\0'; i++)
+      nRetVal = ( nRetVal << 1 ) + szName[ i ];
+
+   return nRetVal;
+}
+
+HB_FUNC( __GETMSGPRF ) /* profiler: returns a method called and consumed times */
+                       /* ( nClass, cMsg ) --> aMethodInfo { nTimes, nTime } */
+{
+   PCLASS pClass  = s_pClasses + ( hb_parnl( 1 ) - 1 );
+   char * cMsg    = hb_parc( 2 );
+   USHORT uiAt    = ( USHORT ) ( ( ( MsgToNum( cMsg ) ) % pClass->uiHashKey ) * BUCKET );
+   USHORT uiMask  = ( USHORT ) ( pClass->uiHashKey * BUCKET );
+   USHORT uiLimit = ( USHORT ) ( uiAt ? ( uiAt - 1 ) : ( uiMask - 1 ) );
+   PMETHOD pMethod;
+
+   hb_reta( 2 );
+   hb_stornl( 0, -1, 1 );
+   hb_stornl( 0, -1, 2 );
+
+   while( uiAt != uiLimit )
+   {
+      if( ! strcmp( pClass->pMethods[ uiAt ].pMessage->pSymbol->szName, cMsg ) )
+      {
+         pMethod = pClass->pMethods + uiAt;
+         hb_stornl( pMethod->ulCalls, -1, 1 );
+         hb_stornl( pMethod->ulTime, -1, 2 );
+         return;
+      }
+      uiAt++;
+      if( uiAt == uiMask )
+         uiAt = 0;
+   }
+}
+
+/* profiler: It provides to the HVM the just requested method pointer */
+void * hb_mthRequested( void )
+{
+   return ( void * ) s_pMethod;
+}
+
+void hb_mthAddTime( void * pMethod, ULONG ulClockTicks )
+{
+   if( pMethod != NULL )
+      ( ( PMETHOD ) pMethod )->ulTime += ulClockTicks;
+}
