@@ -32,7 +32,7 @@
                 [ <uVarN> := If( <uVarN> == nil, <uValN>, <uVarN> ); ]
 
 #xcommand MENU [<oMenu>] => [ <oMenu> := ] TDbMenu():New()
-#xcommand MENUITEM <cPrompt> [ ACTION <uAction> ] => ;
+#xcommand MENUITEM <cPrompt> [ ACTION <uAction,...> ] => ;
    TDbMenu():AddItem( TDbMenuItem():New( <cPrompt> [,{|Self|<uAction>}] ) )
 #xcommand SEPARATOR => TDbMenu():AddItem( TDbMenuItem():New( "-" ) )
 #xcommand ENDMENU => ATail( TDbMenu():aMenus ):Build()
@@ -57,6 +57,7 @@ function __dbgEntry( uParam )  // debugger entry point
               oDebugger:cAppColors = SetColor()
               oDebugger:nAppCursor = SetCursor()
               RestScreen( 0, 0, MaxRow(), MaxCol(), oDebugger:cImage )
+              SetCursor( 0 )
               DispEnd()
               oDebugger:GoToLine( uParam )
               oDebugger:HandleEvent()
@@ -70,7 +71,7 @@ CLASS TDebugger
    DATA   oPullDown
    DATA   oWndCode, oWndCommand
    DATA   oBar, oBrwText
-   DATA   cImage, nOldCursor
+   DATA   cImage
    DATA   lEnd
    DATA   cAppImage, nAppRow, nAppCol, cAppColors, nAppCursor
 
@@ -101,16 +102,14 @@ return Self
 
 METHOD Activate( cModuleName ) CLASS TDebugger
 
-   ::cAppImage  = SaveScreen()
-   ::nAppRow    = Row()
-   ::nAppCol    = Col()
-   ::cAppColors = SetColor()
-   ::nAppCursor = SetCursor()
    ::Show()
    ::ShowCode( cModuleName )
    ::cImage := SaveScreen()
    DispBegin()
    RestScreen( 0, 0, MaxRow(), MaxCol(), ::cAppImage )
+   SetPos( ::nAppRow, ::nAppCol )
+   SetColor( ::cAppColors )
+   SetCursor( ::nAppCursor )
 
 return nil
 
@@ -181,18 +180,19 @@ METHOD Hide() CLASS TDebugger
 
    RestScreen( ,,,, ::cAppImage )
    ::cAppImage = nil
-   SetCursor( ::nOldCursor )
-   SetColor( "N/W" )
+   SetColor( ::cAppColors )
+   SetCursor( ::nAppCursor )
 
 return nil
 
 METHOD Show() CLASS TDebugger
 
-   ::nOldCursor = SetCursor( 0 )
    ::cAppImage  = SaveScreen()
    ::nAppRow    = Row()
    ::nAppCol    = Col()
    ::cAppColors = SetColor()
+   ::nAppCursor = SetCursor( 0 )
+
    ::oPullDown:Display()
    ::oWndCode:Show( .t. )
    ::oWndCommand:Show()
@@ -766,7 +766,7 @@ function BuildMenu( oDebugger )  // Builds the debugger pulldown menu
          MENUITEM " &Resume"         ACTION Alert( "Not implemented yet!" )
          MENUITEM " &Shell"          ACTION Alert( "Not implemented yet!" )
          SEPARATOR
-         MENUITEM " &Exit  Alt-X  "  ACTION oDebugger:Exit()
+         MENUITEM " &Exit  Alt-X  "  ACTION oDebugger:Exit(), oDebugger:Hide()
       ENDMENU
 
       MENUITEM " &Locate "
