@@ -113,6 +113,9 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
                  else
                     ASize( s_oDebugger:aCallStack, Len( s_oDebugger:aCallStack ) + 1 )
                     AIns( s_oDebugger:aCallStack, 1 )
+                    // same as aCallStack[ 1 ] = { cProcName, {} }
+                    s_oDebugger:aCallStack[ 1 ] = { SubStr( cModuleName,;
+                                                  RAt( ":", cModuleName ) + 1 ), {} }
                  endif
                  s_oDebugger:LoadVars()
               endif
