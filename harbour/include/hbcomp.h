@@ -537,6 +537,7 @@ extern ULONG          hb_comp_Supported;
 #define HB_COMPFLAG_XBASE          2    /* -kx */
 #define HB_COMPFLAG_HB_INLINE      4    /* -ki */
 #define HB_COMPFLAG_ARRSTR			  8	 /* -ks strings as array of bytes */
+#define HB_COMPFLAG_OPTJUMP       16    /* -kj turn off jump optimalization */
 #define HB_COMPFLAG_RT_MACRO      64    /* -kr */
 
 #ifdef HB_MACRO_SUPPORT

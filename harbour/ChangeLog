@@ -8,6 +8,19 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-11-10 12:25 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * include/hbcomp.h
+   * source/compiler/cmdcheck.c
+   * source/compiler/genc.c
+   * source/compiler/harbour.c
+   * source/compiler/hbusage.c
+   * source/vm/hvm.c
+   * doc/en/compiler.txt
+      * fixed to correctly generate an address for far jumps
+      * fixed optimalization of far jumps
+      + added a new switch -kJ to disable jump optimalization and
+        NOOP pcode removal (optimalization is enabled by default)
+
 2003-11-09 00:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/pp/pptable.c
     + SET MBLOCKSIZE TO <x>

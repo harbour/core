@@ -121,6 +121,7 @@ void hb_compPrintModes( void )
            "\n          r               runtime settings enabled",
            "\n          c               string as bytes array enabled",
            "\n          x               extended xbase mode",
+           "\n          J               turn off jump optimization in pcode",
            "\n          ?               this info",
            "\n"
    };

@@ -626,7 +626,7 @@ static HB_GENC_FUNC( hb_p_jumpfar )
       if( lOffset > 8388607L )
          lOffset -= 16777216;
 
-      fprintf( cargo->yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
+      fprintf( cargo->yyc, "\t/* %li (abs: %08li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
    }
    fprintf( cargo->yyc, "\n" );
    return 4;

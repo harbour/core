@@ -84,6 +84,8 @@
  *
  *          /kx          other xbase dialects extensions (default)   
  *
+ *          /kJ          disable optimalization of jump and noop pcodes   
+ *
  *          /k?          invoke help information     
  *
  *      /l               suppress line number information      </par>
