@@ -3658,7 +3658,7 @@ void PushId( char * szVarName ) /* generates the pcode to push a variable value 
 {
    int iVar;
 
-   if( iVarScope == VS_STATIC )
+   if( iVarScope == VS_STATIC && functions.pLast->szName )
    {
      /* Reffering to any variable is not allowed during initialization
       * of static variable
@@ -3700,7 +3700,7 @@ void PushIdByRef( char * szVarName ) /* generates the pcode to push a variable b
 {
    WORD iVar;
 
-   if( iVarScope == VS_STATIC )
+   if( iVarScope == VS_STATIC && functions.pLast->szName )
    {
      /* Reffering to any variable is not allowed during initialization
       * of static variable
