@@ -7,6 +7,12 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+  * contrib/libnf/dispc.c
+    + ported to Harbour of FT_DISPFILE().
+      See also FT_DFSETUP() and FT_DFCLOSE().
+      This function permit browse for a file without loading it in memory.
+
   * contrib/libnf/makefile
   * contrib/libnf/nanfor.bc
   * contrib/libnf/makefile.vc
