@@ -140,13 +140,13 @@ For gcc on Win95/WinNT with the Cygwin library:
          wildcard command line arguments (this is checked at run-time!)
   HB_ARCHITECTURE   w32
   HB_COMPILER       gcc
-  C_USR             -DHARBOUR_USE_WIN_GTAPI
+  HB_GT_LIB         gtwin
   CYGWIN            noglob
 
 For gcc on Win95/WinNT with the Mingw32 library:
   HB_ARCHITECTURE   w32
   HB_COMPILER       mingw32
-  C_USR             -DHARBOUR_USE_WIN_GTAPI
+  HB_GT_LIB         gtwin
 
 For MSVC on Win95/WinNT:
   Notes: gnu make is case sensitive!  If your editor converts
@@ -156,47 +156,49 @@ For MSVC on Win95/WinNT:
          not set to unix
 
          For best results, in your copy of make_tpl.bat, also set:
-  C_USR=-DHARBOUR_USE_WIN_GTAPI -TP
+  C_USR=-TP
   HB_ARCHITECTURE   w32
   HB_COMPILER       msvc
+  HB_GT_LIB         gtwin
 
 For GCC on Linux:
   HB_ARCHITECTURE   linux
   HB_COMPILER       gcc
+  HB_GT_LIB         gtstd
   Note: If you have an ncurses library or a slang library, you may
-        want to try one of the following two values for C_USR:
-              -DHARBOUR_USE_CRS_GTAPI
-              -DHARBOUR_USE_SLN_GTAPI
+        want to try one of the following two values for HB_GT_LIB:
+              gtcrs
+              gtsln
+        In which case you'll also need to export HB_SCREEN_LIB with
+        the name of the appropriate screen library.
 
 For GCC on OS/2:
   Note: You must point C_INCLUDE_PATH to the EMX include directory and
         you must also point LIBRARY_PATH to the EMX library directory.
   HB_ARCHITECTURE   os2
   HB_COMPILER       gcc
-  Note: If you have an ncurses library or a slang library, you may
-        want to try one of the following two values for C_USR:
-              -DHARBOUR_USE_CRS_GTAPI
-              -DHARBOUR_USE_SLN_GTAPI
+  HB_GT_LIB         gtpca
 
 For IBM Visual Age C++ on OS/2:
   Note: You must create an empty unistd.h in the IBMCPP\INCLUDE directory.
   HB_ARCHITECTURE   os2
   HB_COMPILER       icc
-  C_USR             -DHARBOUR_USE_OS2_GTAPI
+  HB_GT_LIB         gtos2
 
 For Borland C++ 3.x
   HB_ARCHITECTURE   dos
   HB_COMPILER       bcc16
-  C_USR             -DHARBOUR_USE_DOS_GTAPI
+  HB_GT_LIB         gtdos
 
 For DJGPP (GCC port for DOS)
   HB_ARCHITECTURE   dos
   HB_COMPILER       djgpp
-  C_USR             -DHARBOUR_USE_DOS_GTAPI
+  HB_GT_LIB         gtdos
 
 For Watcom C/C++ 10.x (default Makefile creates DOS4G extender executables)
   HB_ARCHITECTURE   dos
   HB_COMPILER       watcom
+  HB_GT_LIB         gtdos
   Note: It is possible that you will have to increase the space reserved for
         DOS environment variables in order to successfuly run make utility
         (Add for example:

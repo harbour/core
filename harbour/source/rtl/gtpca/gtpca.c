@@ -53,6 +53,7 @@
 
 #include "hbapigt.h"
 #include "hbset.h"
+#include "inkey.ch"
 
 static USHORT s_usRow, s_usCol, s_usMaxRow, s_usMaxCol;
 static int s_iFilenoStdin, s_iFilenoStdout, s_iFilenoStderr;
@@ -177,16 +178,17 @@ BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
    return TRUE;
 }
 
+#ifdef HARBOUR_GCC_OS2
+   #include "..\..\kbdos2.gcc"
+#else
 int hb_gt_ReadKey( HB_inkey_enum eventmask )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) event_mask));
-
    HB_SYMBOL_UNUSED( eventmask );
-
    /* TODO: */
-
    return 0;
 }
+#endif
 
 BOOL hb_gt_IsColor( void )
 {

@@ -39,8 +39,10 @@
 
 #include <errno.h>
 #if defined( OS_UNIX_COMPATIBLE )
+   #include <sys/types.h>
    #include <sys/stat.h>
 #else
+   #include <sys\types.h>
    #include <sys\stat.h>
 #endif
 
