@@ -139,14 +139,17 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
 
          pCBlock->pLocals =pOwner->pLocals;
          pCBlock->wLocals =wLocals =pOwner->wLocals;
-         while( wLocals )
-         {
-            hb_memvarValueIncRef( pCBlock->pLocals[ wLocals ].item.asMemvar.value );
-            --wLocals;
+	 if( pOwner->plocals )
+	 {  /* the outer codeblock have the table with local references - reuse it */
+            while( wLocals )
+            {
+               hb_memvarValueIncRef( pCBlock->pLocals[ wLocals ].item.asMemvar.value );
+               --wLocals;
+            }
+            /* increment a reference counter for the table of local references
+             */
+            pCBlock->pLocals[ 0 ].item.asLong.value++;
          }
-         /* increment a reference counter for the table of local references
-          */
-         pCBlock->pLocals[ 0 ].item.asLong.value++;
       }
       else
          pCBlock->pLocals =NULL;
