@@ -4,18 +4,14 @@
 
 /* gtstd test */
 
-func PosNow()
-  ?? "[" + alltrim(str(row())) + "," + alltrim(str(col())) + "]"
-  return NIL
-
 func Main()
   local n
 
   PosNow()
   ?? "Output test. First line, no newlines."
 
-  ? "Press RETURN to continue."
-  while inkey(0) <> 13 ; enddo
+  ? "Press a key to continue: "
+  ?? inkey(0)
 
   ? "This is row " + alltrim(str(row()))
   
@@ -56,3 +52,8 @@ func Main()
   next
 
   return NIL
+
+func PosNow()
+  ?? "[" + alltrim(str(row())) + "," + alltrim(str(col())) + "]"
+  return NIL
+

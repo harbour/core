@@ -60,6 +60,11 @@
 #if defined( OS_UNIX_COMPATIBLE )
    #include <unistd.h>  /* read() function requires it */
    #include <termios.h>
+#else
+#if defined(_MSC_VER)
+	#include <io.h>
+	#include <conio.h>
+#endif
 #endif
 
 /* Add time function for BEL flood throttling.. */
@@ -87,6 +92,11 @@ static ULONG  s_ulCrLf;
    static struct termios startup_attributes;
 #endif
 
+#if defined(_MSC_VER)
+   static BOOL s_bStdinConsole;
+#endif
+
+
 void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
@@ -110,18 +120,22 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
    }
 #endif
 
+#if defined(_MSC_VER)
+   s_bStdinConsole = _isatty(0);
+#endif
+
    s_uiDispCount = 0;
 
    s_iRow = 0;
    s_iCol = 0;
 
-#if defined(OS_UNIX_COMPATIBLE)
+// #if defined(OS_UNIX_COMPATIBLE)
    s_uiMaxRow = 24;
    s_uiMaxCol = 80;
-#else
-   s_uiMaxRow = 32767;
-   s_uiMaxCol = 32767;
-#endif
+// #else
+//   s_uiMaxRow = 32767;
+//   s_uiMaxCol = 32767;
+// #endif
 
    s_uiCursorStyle = SC_NORMAL;
    s_bBlink = FALSE;
@@ -174,7 +188,18 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
    if( ! read( STDIN_FILENO, &ch, 1 ) )
       ch = 0;
 #else
-   ch = 0;
+
+#if defined(_MSC_VER)
+	if( s_bStdinConsole )
+	{
+		if( _kbhit() ) ch = _getch();
+	}
+	else
+	{
+		if(! _eof(0) ) _read(0, &ch, 1);
+	}
+#endif
+
 #endif
 
    /* TODO: */

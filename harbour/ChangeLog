@@ -1,3 +1,16 @@
+2001-08-17 16:10 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  Update from "Fergus McDonald" <listsub@qvolution.com>:
+
+  * source/rtl/gtstd/gtstd.c
+  * tests/gtstdtst.c
+    + Added conditional functionality for MS C compiler to use io and
+      conio libs to map stdin in the same manner as already implemented
+      for unix version (i.e. no blocking). That is, if stdin is coming
+      from console, inkey() returns 0 if no key waiting, and if stdin is
+      coming from a file, inkey() returns each char of file and then
+      always returns 0 once EOF is reached.
+
 2001-08-17 20:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *doc/en/compiler.txt
