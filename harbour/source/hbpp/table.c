@@ -75,9 +75,10 @@
    static DEFINES sD___38 = {"_SET_TYPEAHEAD",NULL,-1,"14", &sD___37 };
    static DEFINES sD___39 = {"_SET_UNIQUE",NULL,-1,"10", &sD___38 };
    static DEFINES sD___40 = {"_SET_WRAP",NULL,-1,"35", &sD___39 };
-   static DEFINES sD___41 = {"_SET_CH",NULL,-1,NULL, &sD___40 };
-   static DEFINES sD___42 = {"_DFSET","x,y",2,"Set( _SET_DATEFORMAT, if(__SetCentury(), x, y) )", &sD___41 };
-   DEFINES *topDefine = &sD___42;
+   static DEFINES sD___41 = {"_SET_COUNT",NULL,-1,"39", &sD___40 };
+   static DEFINES sD___42 = {"_SET_CH",NULL,-1,NULL, &sD___41 };
+   static DEFINES sD___43 = {"_DFSET","x,y",2,"Set( _SET_DATEFORMAT, if(__SetCentury(), x, y) )", &sD___42 };
+   DEFINES *topDefine = &sD___43;
 
    static COMMANDS sC___1 = {0,"NOTE","\1A30",NULL,NULL };
    static COMMANDS sC___2 = {0,"DO","WHILE \1A00","while \1A00",&sC___1 };

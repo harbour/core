@@ -164,6 +164,7 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( ValType(  suNIL     )           , "U"   )
    TEST_LINE( ValType(  sbBlock   )           , "B"   )
    TEST_LINE( ValType(  saArray   )           , "A"   )
+#ifdef __HARBOUR__
    TEST_LINE( ValType( @scString  )           , "C"   ) /* Bug in CA-Cl*pper, it will return "U" */
    TEST_LINE( ValType( @scStringE )           , "C"   ) /* Bug in CA-Cl*pper, it will return "U" */
    TEST_LINE( ValType( @scStringZ )           , "C"   ) /* Bug in CA-Cl*pper, it will return "U" */
@@ -183,6 +184,7 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( ValType( @suNIL     )           , "U"   ) /* Bug in CA-Cl*pper, it will return "U" */
    TEST_LINE( ValType( @sbBlock   )           , "B"   ) /* Bug in CA-Cl*pper, it will return "U" */
    TEST_LINE( ValType( @saArray   )           , "A"   ) /* Bug in CA-Cl*pper, it will return "U" */
+#endif
    TEST_LINE( ValType(  mcString  )           , "C"   )
    TEST_LINE( ValType(  mcStringE )           , "C"   )
    TEST_LINE( ValType(  mcStringZ )           , "C"   )
@@ -202,6 +204,7 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( ValType(  muNIL     )           , "U"   )
    TEST_LINE( ValType(  mbBlock   )           , "B"   )
    TEST_LINE( ValType(  maArray   )           , "A"   )
+#ifdef __HARBOUR__
    TEST_LINE( ValType( @mcString  )           , "C"   ) /* Bug in CA-Cl*pper, it will return "U" */
    TEST_LINE( ValType( @mcStringE )           , "C"   ) /* Bug in CA-Cl*pper, it will return "U" */
    TEST_LINE( ValType( @mcStringZ )           , "C"   ) /* Bug in CA-Cl*pper, it will return "U" */
@@ -221,6 +224,7 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( ValType( @muNIL     )           , "U"   ) /* Bug in CA-Cl*pper, it will return "U" */
    TEST_LINE( ValType( @mbBlock   )           , "B"   ) /* Bug in CA-Cl*pper, it will return "U" */
    TEST_LINE( ValType( @maArray   )           , "A"   ) /* Bug in CA-Cl*pper, it will return "U" */
+#endif
 
    /* Special internal messages */
 
@@ -556,10 +560,12 @@ STATIC FUNCTION Main_HVM()
 
    /* EMPTY() */
 
+#ifdef __HARBOUR__
    TEST_LINE( Empty( @scString              ) , .F.                                    ) /* Bug in CA-Cl*pper, it will return .T. */
    TEST_LINE( Empty( @scStringE             ) , .T.                                    )
    TEST_LINE( Empty( @snIntP                ) , .F.                                    ) /* Bug in CA-Cl*pper, it will return .T. */
    TEST_LINE( Empty( @snIntZ                ) , .T.                                    )
+#endif
    TEST_LINE( Empty( "Hallo"                ) , .F.                                    )
    TEST_LINE( Empty( ""                     ) , .T.                                    )
    TEST_LINE( Empty( "  "                   ) , .T.                                    )
@@ -599,7 +605,9 @@ STATIC FUNCTION Main_MATH()
 
    TEST_LINE( Log("A")                        , "E BASE 1095 Argument error LOG F:S"   )
    TEST_LINE( Str(Log(snIntP))                , "         2.30"                        )
+#ifdef __HARBOUR__
    TEST_LINE( Str(Log(@snIntP))               , "         2.30"                        ) /* Bug in CA-Cl*pper, it returns: "E BASE 1095 Argument error LOG F:S" */
+#endif
 
    /* SQRT() */
 
@@ -608,7 +616,9 @@ STATIC FUNCTION Main_MATH()
    TEST_LINE( Sqrt(0)                         , 0                                      )
    TEST_LINE( Sqrt(4)                         , 2                                      )
    TEST_LINE( Str(Sqrt(snIntP))               , "         3.16"                        )
+#ifdef __HARBOUR__
    TEST_LINE( Str(Sqrt(@snIntP))              , "         3.16"                        ) /* Bug in CA-Cl*pper, it returns: "E BASE 1097 Argument error SQRT F:S" */
+#endif
    TEST_LINE( Str(Sqrt(4),21,18)              , " 2.000000000000000000"                )
    TEST_LINE( Str(Sqrt(3),21,18)              , " 1.732050807568877000"                )
 
@@ -619,7 +629,9 @@ STATIC FUNCTION Main_MATH()
    TEST_LINE( Abs(10)                         , 10                                     )
    TEST_LINE( Abs(-10)                        , 10                                     )
    TEST_LINE( Str(Abs(snIntN))                , "        10"                           )
+#ifdef __HARBOUR__
    TEST_LINE( Str(Abs(@snIntN))               , "        10"                           ) /* Bug in CA-Cl*pper, it returns: "E BASE 1089 Argument error ABS F:S" */
+#endif
    TEST_LINE( Abs(Month(sdDate))              , 1                                      )
    TEST_LINE( Abs(-Month(sdDate))             , 1                                      )
    TEST_LINE( Str(Abs(Month(sdDate)))         , "  1"                                  )
@@ -643,7 +655,9 @@ STATIC FUNCTION Main_MATH()
    TEST_LINE( Exp("A")                        , "E BASE 1096 Argument error EXP F:S"   )
    TEST_LINE( Exp(0)                          , 1.00                                   )
    TEST_LINE( Str(Exp(snIntZ))                , "         1.00"                        )
+#ifdef __HARBOUR__
    TEST_LINE( Str(Exp(@snIntZ))               , "         1.00"                        ) /* Bug in CA-Cl*pper, it returns: "E BASE 1096 Argument error EXP F:S" */
+#endif
    TEST_LINE( Round(Exp(1),2)                 , 2.72                                   )
    TEST_LINE( Str(Exp(1),20,10)               , "        2.7182818285"                 )
    TEST_LINE( Round(Exp(10),2)                , 22026.47                               )
@@ -652,7 +666,9 @@ STATIC FUNCTION Main_MATH()
    /* ROUND() */
 
    TEST_LINE( Round(snDoubleP, snIntZ)        , 11                                     )
+#ifdef __HARBOUR__
    TEST_LINE( Round(@snDoubleP, @snIntZ)      , 11                                     ) /* Bug in CA-Cl*pper, it returns: "E BASE 1094 Argument error ROUND F:S" */
+#endif
    TEST_LINE( Round(NIL, 0)                   , "E BASE 1094 Argument error ROUND F:S" )
    TEST_LINE( Round(0, NIL)                   , "E BASE 1094 Argument error ROUND F:S" )
    TEST_LINE( Round(0, 0)                     , 0                )
@@ -758,7 +774,9 @@ STATIC FUNCTION Main_MATH()
    TEST_LINE( Int( 0.0 )                      , 0                                    )
    TEST_LINE( Int( 10 )                       , 10                                   )
    TEST_LINE( Int( snIntP )                   , 10                                   )
+#ifdef __HARBOUR__
    TEST_LINE( Int( @snIntP )                  , 10                                   ) /* Bug in CA-Cl*pper, it returns: "E BASE 1090 Argument error INT F:S" */
+#endif
    TEST_LINE( Int( -10 )                      , -10                                  )
    TEST_LINE( Int( 100000 )                   , 100000                               )
    TEST_LINE( Int( -100000 )                  , -100000                              )
@@ -783,7 +801,9 @@ STATIC FUNCTION Main_MATH()
    TEST_LINE( Max(SToD("19800102"), SToD("19800101")) , SToD("19800102")                     )
    TEST_LINE( Max(SToD("19800101"), SToD("19800102")) , SToD("19800102")                     )
    TEST_LINE( Max(snIntP, snLongP)                    , 100000                               )
+#ifdef __HARBOUR__
    TEST_LINE( Max(@snIntP, @snLongP)                  , 100000                               ) /* Bug in CA-Cl*pper, it will return: "E BASE 1093 Argument error MAX F:S" */
+#endif
    TEST_LINE( Min(NIL, NIL)                           , "E BASE 1092 Argument error MIN F:S" )
    TEST_LINE( Min(10, NIL)                            , "E BASE 1092 Argument error MIN F:S" )
    TEST_LINE( Min(SToD("19800101"), 10)               , "E BASE 1092 Argument error MIN F:S" )
@@ -791,7 +811,9 @@ STATIC FUNCTION Main_MATH()
    TEST_LINE( Min(SToD("19800102"), SToD("19800101")) , SToD("19800101")                     )
    TEST_LINE( Min(SToD("19800101"), SToD("19800102")) , SToD("19800101")                     )
    TEST_LINE( Min(snIntP, snLongP)                    , 10                                   )
+#ifdef __HARBOUR__
    TEST_LINE( Min(@snIntP, @snLongP)                  , 10                                   ) /* Bug in CA-Cl*pper, it will return: "E BASE 1092 Argument error MIN F:S" */
+#endif
 
    /* Decimals handling */
 
@@ -973,8 +995,10 @@ STATIC FUNCTION Main_STRINGS()
    TEST_LINE( Pad(SToD("19800101"), 12)       , "1980.01.01  "   )
    TEST_LINE( Pad(Year(SToD("19800101")), 5)  , "1980 "          )
    TEST_LINE( Pad(Day(SToD("19800101")), 5)   , "1    "          )
+#ifdef __HARBOUR__
    TEST_LINE( Pad(@scString, 10)              , "HELLO     "     ) /* Bug in CA-Cl*pper, it will return "" */
    TEST_LINE( Pad(scString, @snIntP)          , "HELLO     "     ) /* Bug in CA-Cl*pper, it will return "" */
+#endif
    TEST_LINE( Pad("abcdef", -5)               , ""               )
    TEST_LINE( Pad("abcdef", 0)                , ""               )
    TEST_LINE( Pad("abcdef", 5)                , "abcde"          )
@@ -994,8 +1018,10 @@ STATIC FUNCTION Main_STRINGS()
    TEST_LINE( PadR(SToD("19800101"), 12)      , "1980.01.01  "   )
    TEST_LINE( PadR(Year(SToD("19800101")), 5) , "1980 "          )
    TEST_LINE( PadR(Day(SToD("19800101")), 5)  , "1    "          )
+#ifdef __HARBOUR__
    TEST_LINE( PadR(@scString, 10)             , "HELLO     "     ) /* Bug in CA-Cl*pper, it will return "" */
    TEST_LINE( PadR(scString, @snIntP)         , "HELLO     "     ) /* Bug in CA-Cl*pper, it will return "" */
+#endif
    TEST_LINE( PadR("abcdef", -5)              , ""               )
    TEST_LINE( PadR("abcdef", 0)               , ""               )
    TEST_LINE( PadR("abcdef", 5)               , "abcde"          )
@@ -1015,8 +1041,10 @@ STATIC FUNCTION Main_STRINGS()
    TEST_LINE( PadL(SToD("19800101"), 12)      , "  1980.01.01"   )
    TEST_LINE( PadL(Year(SToD("19800101")), 5) , " 1980"          )
    TEST_LINE( PadL(Day(SToD("19800101")), 5)  , "    1"          )
-   TEST_LINE( PadL(@scString, 10)             , "     HELLO"     )
-   TEST_LINE( PadL(scString, @snIntP)         , "     HELLO"     )
+#ifdef __HARBOUR__
+   TEST_LINE( PadL(@scString, 10)             , "     HELLO"     ) /* Bug in CA-Cl*pper, it will return "" */
+   TEST_LINE( PadL(scString, @snIntP)         , "     HELLO"     ) /* Bug in CA-Cl*pper, it will return "" */
+#endif
    TEST_LINE( PadL("abcdef", -5)              , ""               )
    TEST_LINE( PadL("abcdef", 0)               , ""               )
    TEST_LINE( PadL("abcdef", 5)               , "abcde"          ) /* QUESTION: CA-Cl*pper "bug", should return: "bcdef" ? */
@@ -1036,8 +1064,10 @@ STATIC FUNCTION Main_STRINGS()
    TEST_LINE( PadC(SToD("19800101"), 12)      , " 1980.01.01 "   )
    TEST_LINE( PadC(Year(SToD("19800101")), 5) , "1980 "          )
    TEST_LINE( PadC(Day(SToD("19800101")), 5)  , "  1  "          )
-   TEST_LINE( PadC(@scString, 10)             , "  HELLO   "     )
-   TEST_LINE( PadC(scString, @snIntP)         , "  HELLO   "     )
+#ifdef __HARBOUR__
+   TEST_LINE( PadC(@scString, 10)             , "  HELLO   "     ) /* Bug in CA-Cl*pper, it will return "" */
+   TEST_LINE( PadC(scString, @snIntP)         , "  HELLO   "     ) /* Bug in CA-Cl*pper, it will return "" */
+#endif
    TEST_LINE( PadC("abcdef", -5)              , ""               )
    TEST_LINE( PadC("abcdef", 0)               , ""               )
    TEST_LINE( PadC("abcdef", 2)               , "ab"             ) /* QUESTION: CA-Cl*pper "bug", should return: "cd" ? */
@@ -1357,8 +1387,10 @@ STATIC FUNCTION Main_MISC()
    TEST_LINE( aScan( "A", {|| .F. } )         , 0           )
    TEST_LINE( aScan( {1,2,3}, {|x| NIL } )    , 0           )
    TEST_LINE( aScan( saAllTypes, scString   ) , 1           )
+#ifdef __HARBOUR__
    TEST_LINE( aScan( @saAllTypes, scString )  , 1           ) /* Bug in CA-Cl*pper, it will return 0 */
    TEST_LINE( aScan( saAllTypes, @scString )  , 1           ) /* Bug in CA-Cl*pper, it will return 0 */
+#endif
    TEST_LINE( aScan( saAllTypes, scStringE  ) , 1           )
    TEST_LINE( aScan( saAllTypes, scStringZ  ) , 3           )
    TEST_LINE( aScan( saAllTypes, snIntZ     ) , 4           )
@@ -1388,7 +1420,9 @@ STATIC FUNCTION Main_MISC()
 
    TEST_LINE( Eval( NIL )                     , "E BASE 1004 No exported method EVAL F:S" )
    TEST_LINE( Eval( 1 )                       , "E BASE 1004 No exported method EVAL F:S" )
+#ifdef __HARBOUR__
    TEST_LINE( Eval( @sbBlock )                , NIL                                       ) /* Bug in CA-Cl*pper, it will return: "E BASE 1004 No exported method EVAL F:S" */
+#endif
    TEST_LINE( Eval( {|p1| p1 },"A","B")       , "A"                                       )
    TEST_LINE( Eval( {|p1,p2| p1+p2 },"A","B") , "AB"                                      )
    TEST_LINE( Eval( {|p1,p2,p3| p1 },"A","B") , "A"                                       )
@@ -1448,7 +1482,9 @@ STATIC FUNCTION Main_MISC()
    TEST_LINE( Descend()                       , NIL                                                 ) /* Bug in CA-Cl*pper, it returns undefined trash */
    TEST_LINE( Descend( NIL )                  , NIL                                                 )
    TEST_LINE( Descend( { "A", "B" } )         , NIL                                                 )
+#ifdef __HARBOUR__
    TEST_LINE( Descend( @scString )            , "¸»´´±"                                             ) /* Bug in CA-Cl*pper, it will return NIL */
+#endif
    TEST_LINE( Descend( scString )             , "¸»´´±"                                             )
    TEST_LINE( Descend( scString )             , "¸»´´±"                                             )
    TEST_LINE( Descend( Descend( scString ) )  , "HELLO"                                             )
@@ -1522,9 +1558,11 @@ STATIC FUNCTION Main_MISC()
 
    TEST_LINE( FKMax()                         , 40               )
    TEST_LINE( FKMax( 1 )                      , 40               )
+#ifdef __HARBOUR__
    TEST_LINE( FKLabel()                       , ""               ) /* Bug in CA-Cl*pper, it returns: "E BASE 1074 Argument error <= F:S" */
    TEST_LINE( FKLabel( NIL )                  , ""               ) /* Bug in CA-Cl*pper, it returns: "E BASE 1074 Argument error <= F:S" */
    TEST_LINE( FKLabel( "A" )                  , ""               ) /* Bug in CA-Cl*pper, it returns: "E BASE 1074 Argument error <= F:S" */
+#endif
    TEST_LINE( FKLabel( -1 )                   , ""               )
    TEST_LINE( FKLabel( 0 )                    , ""               )
    TEST_LINE( FKLabel( 1 )                    , "F1"             )

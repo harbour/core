@@ -1,3 +1,15 @@
+19990908-04:52 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/working/rtl_test.prg
+    + Some tests now are only included when compiled with Harbour, to skip
+      obvious bugs to show up in Clipper.
+  * source/hbpp/table.c
+    + _SET_COUNT added.
+  * include/clipdefs.h
+    include/error.api
+    include/item.api
+    include/extend.api
+    ! Some fixes.
+
 19990908-03:14 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/working/rtl_test.prg
     + Some ==/= tests added for strings.

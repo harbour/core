@@ -10,6 +10,8 @@
 
 #include "itemapi.h"
 
+typedef PEVALINFO EVALINFOP;
+
 #define _evalLaunch     hb_evalLaunch
 #define _evalNew        hb_evalNew
 #define _evalPutParam   hb_evalPutParam

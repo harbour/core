@@ -11,14 +11,7 @@
 #ifndef HB_CLIPDEFS_H_
 #define HB_CLIPDEFS_H_
 
-#include "hbdefs.h"
-
-/* Types moved here from *.api files */
-
-typedef PHB_ITEM  ERRORP;
-typedef double    XDOUBLE;
-typedef PHB_ITEM  ITEM;
-typedef PEVALINFO EVALINFOP;
+#include "extend.h"
 
 /* Old types */
 

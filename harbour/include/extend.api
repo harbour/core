@@ -11,6 +11,9 @@
 #include "clipdefs.h"
 #include "extend.h"
 
+typedef PHB_ITEM  ITEM;
+typedef double    XDOUBLE;
+
 /* Compatible defines */
 
 #define UNDEF           IT_NIL
