@@ -1,3 +1,24 @@
+Thu Jul 29 15:58:44 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* source/rdd/Makefile: 
+	* source/rdd/nulsys/Makefile: 
+	Bruno Cantero pointed out that a user may use all of the DB
+	drivers simultaneously, so I got rid of the environment variable
+	and made sure all of the valid DB drivers are linked against the
+	application. On of the valid drivers is nulsys.
+
+	* config/global.cf: 
+	Now a list of all the valid DB drivers is stored in
+	HB_DB_DRIVERS.
+	
+	* config/dos/djgpp.cf: 
+	* config/linux/gcc.cf: 
+	* config/os2/gcc.cf: 
+	* config/win32/gcc.cf: 
+	* config/win32/msvc.cf: 
+	Deleted support for environment variable HB_DB_DRIVER.
+	Added support for make variable HB_DB_DRIVERS.
+
 Thu Jul 29 14:46:51 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* source/rdd/Makefile: 

@@ -18,20 +18,16 @@ CFLAGS = -W0 -Zi  # -W4 for max warnings
 LD = cl.exe
 LD_OUT = -Fe
 ifeq ($(HB_LIB_COMPILE),)
-LINKPATHS = -link $(foreach lib, $(LIBS), -LIBPATH:$(TOP)$(ROOT)source/$(lib)/$(ARCH))
+LINKPATHS += -link $(foreach lib, $(LIBS), -LIBPATH:$(TOP)$(ROOT)source/$(lib)/$(ARCH))
 else
-LINKPATHS = -link -LIBPATH:$(HB_LIB_COMPILE)
+LINKPATHS += -link -LIBPATH:$(HB_LIB_COMPILE)
 endif
-ifneq ($(HB_DB_DRIVER),)
-LINKPATHS += -LIBPATH:$(TOP)$(ROOT)source/rdd/$(HB_DB_DRIVER)/$(ARCH)
+LINKPATHS += $(foreach drv, $(HB_DB_DRIVERS), -LIBPATH:$(TOP)$(ROOT)source/rdd/$(drv)/$(ARCH))
 LINKPATHS += -LIBPATH:$(TOP)$(ROOT)source/rdd/$(ARCH)
-endif
 
-LINKLIBS = $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
-ifneq ($(HB_DB_DRIVER),)
-LINKLIBS += $(HB_DB_DRIVER)$(LIB_EXT)
+LINKLIBS += $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
+LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), $(drv)$(LIB_EXT))
 LINKLIBS += rdd$(LIB_EXT)
-endif
 
 LDFLAGS = $(LINKPATHS)
 

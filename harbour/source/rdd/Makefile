@@ -14,8 +14,8 @@ PRG_SOURCES=\
 
 LIB=rdd
 
-DIRS=\
-	dbfntx \
+# The list of all valid DB drivers is defined in config/global.cf.
+DIRS=$(HB_DB_DRIVERS)
 
 include $(TOP)$(ROOT)config/lib.cf
 include $(TOP)$(ROOT)config/dir.cf
