@@ -1,0 +1,496 @@
+Page 1
+Library File   : HARBOUR.LIB
+File Size      : 138240
+Time Stamp     : 17 July 1999 07:53:14
+Modules        : 36
+Public Symbols : 374
+Reported By    : LIBman 1.29, 17 July 1999 07:58:35
+
+MODULE      SOURCE                           PUBLIC
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+symbols     source\compiler\symbols.asm      _HB_LASTSYMBOL
+                                             _HB_FIRSTSYMBOL
+
+arrays      source\rtl\arrays.c              _hb_arrayNew
+                                             _hb_arrayGet
+                                             _hb_arrayLen
+                                             _hb_arraySet
+                                             _hb_arraySize
+                                             _hb_arrayRelease
+                                             _hb_arrayGetString
+                                             _hb_arrayGetStringLen
+                                             _hb_arrayGetBool
+                                             _hb_arrayGetDouble
+                                             _hb_arrayGetType
+                                             _hb_arrayDel
+                                             _hb_arrayClone
+                                             _hb_arrayAdd
+                                             _hb_arrayGetDate
+                                             HB_AADD
+                                             HB_ACLONE
+                                             HB_ACOPY
+                                             HB_ADEL
+                                             HB_AEVAL
+                                             HB_AFILL
+                                             HB_AINS
+                                             HB_ARRAY
+                                             HB_ASCAN
+                                             HB_ASIZE
+                                             HB_ATAIL
+                                             _hb_arrayLast
+                                             _hb_arrayFill
+                                             _hb_arrayIns
+                                             _hb_arrayScan
+                                             _hb_arrayEval
+                                             _hb_arrayCopy
+
+codebloc    source\rtl\codebloc.c            _hb_CodeblockNew
+                                             _hb_CodeblockDelete
+                                             _hb_CodeblockEvaluate
+                                             _hb_CodeblockGetVar
+                                             _hb_CodeblockGetRef
+                                             _hb_CodeblockCopy
+
+dates       source\rtl\dates.c               _hb_dtoc
+                                             _hb_dateEncode
+                                             _hb_dateDecode
+                                             HB_CDOW
+                                             HB_CMONTH
+                                             HB_CTOD
+                                             HB_DATE
+                                             HB_DAY
+                                             HB_DOW
+                                             HB_DTOC
+                                             HB_DTOS
+
+Page 2
+Library File   : HARBOUR.LIB
+File Size      : 138240
+Time Stamp     : 17 July 1999 07:53:14
+Modules        : 36
+Public Symbols : 374
+Reported By    : LIBman 1.29, 17 July 1999 07:58:35
+
+MODULE      SOURCE                           PUBLIC
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+                                             HB_MONTH
+                                             HB_SECONDS
+                                             HB_STOD
+                                             HB_TIME
+                                             HB_YEAR
+                                             _hb__seconds
+                                             _hb_cmonth
+                                             _hb_cdow
+                                             _hb_dow
+
+datesx      source\tools\datesx.c            HB_DATETIME
+
+devoutp     source\rtl\devoutp.c             HB_DEVOUTPICT
+
+memvars     source\rtl\memvars.c             _hb_GlobalValueNew
+                                             _hb_GlobalValueIncRef
+                                             _hb_GlobalValueDecRef
+                                             _hb_GlobalValueBaseAddress
+                                             _hb_MemvarInit
+                                             _hb_MemvarRelease
+
+debug       source\tools\debug.c             HB___ASTATIC
+                                             HB___STATIC
+                                             _AddToArray
+                                             _GlobalStackLen
+                                             HB___GLOBALSTACKLEN
+                                             HB___AGLOBALSTACK
+                                             _StackLen
+                                             HB___STACKLEN
+                                             HB___ASTACK
+                                             HB___APARAM
+
+descend     source\rtl\descend.c             HB_DESCEND
+                                             _hb_strdescend
+
+dir         source\rtl\dir.c                 HB_DIRECTORY
+
+dynsym      source\vm\dynsym.c               _GetDynSym
+                                             _NewDynSym
+                                             _FindDynSym
+                                             _NewSymbol
+                                             _LogSymbols
+                                             _ReleaseDynamicSymbols
+                                             HB_DYNSYMNAME
+                                             HB_DYNSYMBOLS
+                                             HB_GETDYNSYM
+
+errorapi    source\rtl\errorapi.c            _hb_errNew
+                                             _hb_errLaunch
+                                             _hb_errRelease
+                                             _hb_errGetSeverity
+                                             _hb_errPutSeverity
+                                             _hb_errGetGenCode
+                                             _hb_errPutGenCode
+
+Page 3
+Library File   : HARBOUR.LIB
+File Size      : 138240
+Time Stamp     : 17 July 1999 07:53:14
+Modules        : 36
+Public Symbols : 374
+Reported By    : LIBman 1.29, 17 July 1999 07:58:35
+
+MODULE      SOURCE                           PUBLIC
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+                                             _hb_errGetOsCode
+                                             _hb_errPutOsCode
+                                             _hb_errGetFlags
+                                             _hb_errPutFlags
+                                             _hb_errGetTries
+                                             _hb_errPutTries
+                                             _hb_errGetSubCode
+                                             _hb_errPutSubCode
+                                             _hb_errGetSubSystem
+                                             _hb_errPutSubSystem
+                                             _hb_errGetDescription
+                                             _hb_errPutDescription
+                                             _hb_errGetOperation
+                                             _hb_errPutOperation
+                                             _hb_errGetFileName
+                                             _hb_errPutFileName
+                                             _hb_errorRT_BASE
+                                             _hb_errorRT_TERMINAL
+
+classes     source\rtl\classes.c             _GetMethod
+                                             _hb_GetClassName
+                                             _pClasses
+                                             _wClasses
+                                             _pMethod
+                                             _msgClassName
+                                             _msgClassH
+                                             _msgEval
+                                             _msgClassSel
+                                             HB_CLASSADD
+                                             HB_CLASSCREATE
+                                             HB_CLASSDEL
+                                             HB_CLASSINSTANCE
+                                             HB_CLASSMOD
+                                             HB_CLASSNAME
+                                             _hb_isMessage
+                                             HB_ISMESSAGE
+                                             HB_OCLONE
+                                             HB_OSEND
+                                             _ReleaseClass
+                                             _ReleaseClasses
+                                             HB___INSTSUPER
+                                             HB___WDATAS
+                                             HB___WDATADEC
+                                             HB___WDATAINC
+                                             _Classes__InitSymbols
+                                             HB___WCLSDATAS
+
+EXTEND      source\rtl\EXTEND.C              _hb_param
+                                             _hb_parc
+                                             _hb_parclen
+                                             _hb_pards
+                                             _hb_parl
+                                             _hb_parnd
+                                             _hb_parni
+
+Page 4
+Library File   : HARBOUR.LIB
+File Size      : 138240
+Time Stamp     : 17 July 1999 07:53:14
+Modules        : 36
+Public Symbols : 374
+Reported By    : LIBman 1.29, 17 July 1999 07:58:35
+
+MODULE      SOURCE                           PUBLIC
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+                                             _hb_parnl
+                                             _hb_parinfo
+                                             _hb_storc
+                                             _hb_storclen
+                                             _hb_stords
+                                             _hb_storl
+                                             _hb_storni
+                                             _hb_stornl
+                                             _hb_stornd
+                                             _hb_pcount
+                                             _hb_ret
+                                             _hb_retc
+                                             _hb_retclen
+                                             _hb_retds
+                                             _hb_retl
+                                             _hb_retni
+                                             _hb_retnl
+                                             _hb_retnd
+                                             _hb_reta
+                                             _hb_xgrab
+                                             _hb_xrealloc
+                                             _hb_xfree
+                                             _hb_parinfa
+                                             _ulMemoryBlocks
+                                             _ulMemoryMaxBlocks
+                                             _ulMemoryMaxConsumed
+                                             _ulMemoryConsumed
+
+FILES       source\rtl\FILES.C               _hb_fsChDir
+                                             _hb_fsChDrv
+                                             _hb_fsClose
+                                             _hb_fsCommit
+                                             _hb_fsCreate
+                                             _hb_fsCurDir
+                                             _hb_fsCurDrv
+                                             _hb_fsDelete
+                                             _hb_fsError
+                                             _hb_fsExtOpen
+                                             _hb_fsIsDrv
+                                             _hb_fsLock
+                                             _hb_fsMkDir
+                                             _hb_fsOpen
+                                             _hb_fsRead
+                                             _hb_fsRmDir
+                                             _hb_fsRename
+                                             _hb_fsSeek
+                                             _hb_fsWrite
+                                             HB_BIN2I
+                                             HB_BIN2L
+                                             HB_BIN2W
+                                             HB_FCLOSE
+                                             HB_FCREATE
+                                             HB_FERASE
+                                             HB_FERROR
+
+Page 5
+Library File   : HARBOUR.LIB
+File Size      : 138240
+Time Stamp     : 17 July 1999 07:53:14
+Modules        : 36
+Public Symbols : 374
+Reported By    : LIBman 1.29, 17 July 1999 07:58:35
+
+MODULE      SOURCE                           PUBLIC
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+                                             HB_FILE
+                                             HB_FOPEN
+                                             HB_FREAD
+                                             HB_FREADSTR
+                                             HB_FRENAME
+                                             HB_FSEEK
+                                             HB_FWRITE
+                                             HB_I2BIN
+                                             HB_L2BIN
+                                             HB_W2BIN
+                                             _Files__InitSymbols
+
+hardcr      source\rtl\hardcr.c              HB_HARDCR
+                                             _HardCR__InitSymbols
+                                             _hb_hardcr
+
+hb_f        source\tools\hb_f.c              HB_HB_FUSE
+                                             HB_HB_FRECNO
+                                             HB_HB_FSKIP
+                                             HB_HB_FREADLN
+                                             HB_HB_FEOF
+                                             HB_HB_FGOTO
+                                             HB_HB_FGOBOTTOM
+                                             HB_HB_FGOTOP
+                                             HB_HB_FLASTREC
+                                             HB_HB_FSELECT
+
+initsymb    source\vm\initsymb.c             _InitSymbolTable
+
+itemapi     source\rtl\itemapi.c             _hb_evalLaunch
+                                             _hb_evalNew
+                                             _hb_evalPutParam
+                                             _hb_evalRelease
+                                             _hb_itemArrayGet
+                                             _hb_itemArrayNew
+                                             _hb_itemArrayPut
+                                             _hb_itemCopyC
+                                             _hb_itemFreeC
+                                             _hb_itemGetC
+                                             _hb_itemGetDS
+                                             _hb_itemGetL
+                                             _hb_itemGetND
+                                             _hb_itemGetNL
+                                             _hb_itemNew
+                                             _hb_itemParam
+                                             _hb_itemPutC
+                                             _hb_itemPutCL
+                                             _hb_itemPutDS
+                                             _hb_itemPutL
+                                             _hb_itemPutND
+                                             _hb_itemPutNL
+                                             _hb_itemRelease
+                                             _hb_itemReturn
+                                             _hb_itemSize
+
+Page 6
+Library File   : HARBOUR.LIB
+File Size      : 138240
+Time Stamp     : 17 July 1999 07:53:14
+Modules        : 36
+Public Symbols : 374
+Reported By    : LIBman 1.29, 17 July 1999 07:58:35
+
+MODULE      SOURCE                           PUBLIC
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+                                             _hb_itemType
+
+math        source\rtl\math.c                HB_ABS
+                                             HB_EXP
+                                             HB_INT
+                                             HB_LOG
+                                             HB_MAX
+                                             HB_MIN
+                                             HB_MOD
+                                             HB_ROUND
+                                             HB_SQRT
+                                             _Math__InitSymbols
+
+mathx       source\tools\mathx.c             HB_ACOS
+                                             HB_ASIN
+                                             HB_ATAN
+                                             HB_COS
+                                             HB_COSH
+                                             HB_LOG10
+                                             HB_SIN
+                                             HB_SINH
+                                             HB_TAN
+                                             HB_TANH
+
+msguk       source\rtl\natmsg\msguk.c        _hb_monthsname
+                                             _hb_daysname
+
+mtran       source\rtl\mtran.c               HB_MEMOTRAN
+                                             _Memotran__InitSymbols
+                                             _hb_memotran
+
+set         source\rtl\set.c                 HB_SET
+                                             _hb_setInitialize
+                                             _hb_setRelease
+                                             _hb_set
+                                             _hb_set_century
+                                             _hb_set_althan
+                                             _hb_set_extrahan
+                                             _hb_set_printhan
+                                             HB___SETCENTURY
+                                             _Set__InitSymbols
+
+strings     source\rtl\strings.c             _hb_str
+                                             _hb_strempty
+                                             HB_ALLTRIM
+                                             HB_ASC
+                                             HB_AT
+                                             HB_CHR
+                                             HB_ISALPHA
+                                             HB_ISDIGIT
+                                             HB_ISUPPER
+                                             HB_ISLOWER
+                                             HB_LEFT
+                                             HB_LOWER
+
+Page 7
+Library File   : HARBOUR.LIB
+File Size      : 138240
+Time Stamp     : 17 July 1999 07:53:14
+Modules        : 36
+Public Symbols : 374
+Reported By    : LIBman 1.29, 17 July 1999 07:58:35
+
+MODULE      SOURCE                           PUBLIC
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+                                             HB_LTRIM
+                                             HB_PAD
+                                             HB_PADC
+                                             HB_PADL
+                                             HB_PADR
+                                             HB_RAT
+                                             HB_REPLICATE
+                                             HB_RIGHT
+                                             HB_RTRIM
+                                             HB_SPACE
+                                             HB_STR
+                                             HB_STRTRAN
+                                             HB_STUFF
+                                             HB_SUBSTR
+                                             HB_TRIM
+                                             HB_UPPER
+                                             HB_VAL
+                                             _Strings__InitSymbols
+                                             _hb_strLTrim
+                                             _hb_strRTrimLen
+                                             _hb_strAt
+                                             _hb_strLower
+                                             _hb_strUpper
+                                             _hb_strVal
+
+stringsx    source\tools\stringsx.c          HB_STRDUMP
+                                             _hb_strtoken
+                                             HB_STRTOKEN
+                                             HB_ROT13
+
+strcmp      source\rtl\strcmp.c              _hb_itemStrCmp
+                                             _hb_stricmp
+
+transfrm    source\rtl\transfrm.c            HB_TRANSFORM
+                                             _Transfrm__InitSymbols
+                                             _lFactDay
+                                             _lFactMonth
+                                             _lFactYear
+                                             _szBritish
+                                             _PictFunc
+                                             _NumPicture
+                                             _NumDefault
+                                             _DatePicture
+
+copyfile    source\rtl\copyfile.c            HB___COPYFILE
+                                             _CopyFile__InitSymbols
+
+asort       source\rtl\asort.c               HB_ASORT
+                                             _ASORT__InitSymbols
+
+environ     source\rtl\environ.c             HB___RUN
+                                             HB_GETENV
+                                             HB_OS
+                                             HB_VERSION
+
+Page 8
+Library File   : HARBOUR.LIB
+File Size      : 138240
+Time Stamp     : 17 July 1999 07:53:14
+Modules        : 36
+Public Symbols : 374
+Reported By    : LIBman 1.29, 17 July 1999 07:58:35
+
+MODULE      SOURCE                           PUBLIC
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+                                             _Environ__InitSymbols
+
+error       source\rtl\error.c               HB_ERRORNEW
+                                             _ERROR__InitSymbols
+
+errorsys    source\rtl\errorsys.c            HB_ERRORSYS
+                                             _ERRORSYS__InitSymbols
+
+objfunc     source\rtl\objfunc.c             HB_ISDATA
+                                             HB_ISMETHOD
+                                             HB_AODATA
+                                             HB_AOMETHOD
+                                             HB_AOGET
+                                             HB_AOSET
+                                             HB_OADDMETHOD
+                                             HB_OADDINLINE
+                                             HB_OADDDATA
+                                             HB_OMODMETHOD
+                                             HB_OMODINLINE
+                                             HB_ODELMETHOD
+                                             HB_ODELINLINE
+                                             HB_ODELDATA
+                                             _OBJFUNC__InitSymbols
+
+stringp     source\rtl\stringp.c             HB_DEFAULT
+                                             HB_TOCHAR
+                                             HB_DEBUG
+                                             _STRINGP__InitSymbols
+
+tclass      source\rtl\tclass.c              HB_TCLASS
+                                             _TCLASS__InitSymbols
