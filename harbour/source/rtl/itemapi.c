@@ -1148,9 +1148,10 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
 
          if( IS_DOUBLE( pNumber ) || iDec != 0 )
          {
-            double dNumber = hb_itemGetND( pNumber );
             static double s_dInfinity = 0;
             static double s_bInfinityInit = FALSE;
+
+            double dNumber = hb_itemGetND( pNumber );
 
             if( ! s_bInfinityInit )
             {
