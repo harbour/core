@@ -24,14 +24,12 @@
 
 #include "rddsys.ch"
 
-procedure Request_DbfNTX0
+//ANNOUNCE DBFNTX
+proc DBFNTX; return
 
-return
+init procedure DBFNTXInit
 
-init procedure InitDbfNtx
-
-// REQUEST DBFNTX1
-   Request_DBFNTX1() // Force link dbfntx1 file
+   REQUEST _DBFNTX
 
    rddRegister( "DBFNTX", RDT_FULL )
 
