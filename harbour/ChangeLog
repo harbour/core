@@ -1,3 +1,15 @@
+19990822-12:49 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * include/rddapi.h
+     source/vm/hvm.c
+     source/rdd/dbcmd.c
+     source/rdd/dbf1.c
+     source/rdd/sdf1.c
+     source/rdd/delim1.c
+     source/rdd/dbfntx/dbfntx1.c
+     * Renamed hb_GetCurrentWorkAreaNumber, hb_SelectWorkAreaNumber and
+       hb_SelectWorkAreaAlias to hb_rddGetCurrentWorkAreaNumber,
+       hb_rddSelectWorkAreaNumber and hb_rddSelectWorkAreaAlias.
+
 19990822-07:40 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/strings.c

@@ -44,8 +44,8 @@
 extern void hb_consoleInitialize( void );
 extern void hb_consoleRelease( void );
 extern void InitSymbolTable( void );   /* initialization of runtime support symbols */
-extern int  hb_GetCurrentWorkAreaNumber( void );
-extern void hb_SelectWorkAreaNumber( int iArea );
+extern int  hb_rddGetCurrentWorkAreaNumber( void );
+extern void hb_rddSelectWorkAreaNumber( int iArea );
 
 typedef struct _SYMBOLS
 {
@@ -625,14 +625,14 @@ static void hb_vmAliasPop( void )
           * or it was saved on the stack using hb_vmAliasPush()
           * or was evaluated from an expression, (nWorkArea)->field
           */
-         hb_SelectWorkAreaNumber( pItem->item.asInteger.value );
+         hb_rddSelectWorkAreaNumber( pItem->item.asInteger.value );
          pItem->type = IT_NIL;
          break;
 
       case IT_SYMBOL:
          /* Alias was specified using alias identifier, for example: al->field
           */
-         hb_SelectWorkAreaNumber( pItem->item.asSymbol.value->pDynSym->hArea );
+         hb_rddSelectWorkAreaNumber( pItem->item.asSymbol.value->pDynSym->hArea );
          pItem->type = IT_NIL;
          break;
 
@@ -659,7 +659,7 @@ static void hb_vmAliasPop( void )
 static void hb_vmAliasPush( void )
 {
    stack.pPos->type = IT_INTEGER;
-   stack.pPos->item.asInteger.value   = hb_GetCurrentWorkAreaNumber();
+   stack.pPos->item.asInteger.value   = hb_rddGetCurrentWorkAreaNumber();
    stack.pPos->item.asInteger.length  = 10;
    hb_stackPush();
    HB_DEBUG( "hb_vmAliasPush\n" );
@@ -673,7 +673,7 @@ static void hb_vmAliasSwap( void )
    HB_ITEM_PTR pItem = stack.pPos -1;
    HB_ITEM_PTR pWorkArea = stack.pPos -2;
 
-   hb_SelectWorkAreaNumber( pWorkArea->item.asInteger.value );
+   hb_rddSelectWorkAreaNumber( pWorkArea->item.asInteger.value );
    memcpy( pWorkArea, pItem, sizeof( HB_ITEM ) );
    pItem->type =IT_NIL;
    hb_stackDec();

@@ -39,51 +39,9 @@ HB_INIT_SYMBOLS_END( dbfntx1__InitSymbols )
 #pragma startup dbfntx1__InitSymbols
 #endif
 
-static ERRCODE Info( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
-{
-   HB_SYMBOL_UNUSED( pArea );
-   switch( uiIndex )
-   {
-      case DBI_TABLEEXT:
-         hb_itemPutC( pItem, ".DBF" );
-         break;
-   }
-   return SUCCESS;
-}
-
 static RDDFUNCS ntxSuper = { 0 };
 
-static RDDFUNCS ntxTable = { 0,                    /* Super Bof */
-                             0,                    /* Super Eof */
-                             0,                    /* Super Found */
-                             0,                    /* Super GoBottom */
-                             0,                    /* Super GoTo */
-                             0,                    /* Super GoToId */
-                             0,                    /* Super GoTop */
-                             0,                    /* Super Skip */
-                             0,                    /* Super AddField */
-                             0,                    /* Super CreateFields */
-                             0,                    /* Super DeleteRec */
-                             0,                    /* Super Deleted */
-                             0,                    /* Super FieldCount */
-                             0,                    /* Super FieldName */
-                             0,                    /* Super Flush */
-                             0,                    /* Super GetValue */
-                             0,                    /* Super PutValue */
-                             0,                    /* Super Recall */
-                             0,                    /* Super RecCount */
-                             0,                    /* Super SetFieldExtent */
-                             0,                    /* Super RecNo */
-                             0,                    /* Super Close */
-                             0,                    /* Super Create */
-                             Info,
-                             0,                    /* Super NewArea */
-                             0,                    /* Super Open */
-                             0,                    /* Super Release */
-                             0,                    /* Super StructSize */
-                             0,                    /* Super SysName */
-                             0                     /* Super WriteDBHeader */
-                           };
+static RDDFUNCS ntxTable = { 0 };
 
 HARBOUR HB__DBFNTX( void )
 {

@@ -74,17 +74,84 @@ HB_INIT_SYMBOLS_END( dbf1__InitSymbols )
 #pragma startup dbf1__InitSymbols
 #endif
 
-static ERRCODE ReadBuffer( AREAP pArea, LONG lRecNo )
+static ERRCODE ReadBuffer( AREAP pArea, LONG lRecNo );
+
+/*
+ * -- DBF METHODS --
+ */
+
+static ERRCODE Deleted( AREAP pArea, BOOL * pDeleted )
 {
-   hb_fsSeek( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->uiHeaderLen +
-              ( lRecNo - 1 ) * pArea->lpExtendInfo->uiRecordLen, FS_SET );
-   if( hb_fsRead( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->bRecord,
-                  pArea->lpExtendInfo->uiRecordLen ) != pArea->lpExtendInfo->uiRecordLen )
-   {
-      memset( pArea->lpExtendInfo->bRecord, ' ', pArea->lpExtendInfo->uiRecordLen );
-      pArea->lpExtendInfo->bRecord[ pArea->lpExtendInfo->uiRecordLen ] = 0;
+   if( pArea->lpExtendInfo->bRecord[ 0 ] ==  '*' )
+      * pDeleted = TRUE;
+   else
+      * pDeleted = FALSE;
+   return SUCCESS;
+}
+
+static ERRCODE DeleteRec( AREAP pArea )
+{
+   HB_SYMBOL_UNUSED( pArea );
+
+   printf( "Calling DBF: DeleteRec()\n" );
+   return SUCCESS;
+}
+
+static ERRCODE GetValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+{
+   LPFIELD pField;
+   USHORT uiCount, uiOffset;
+   BYTE * szText, * szOldChar, szEndChar;
+
+   if( uiIndex > pArea->uiFieldCount )
       return FAILURE;
+
+   pField = pArea->lpFields;
+   uiOffset = 1;
+   for( uiCount = 1; uiCount < uiIndex; uiCount++ )
+   {
+      if( pField->uiType == 'C' )
+         uiOffset += pField->uiLen + ( ( USHORT ) pField->uiDec << 8 );
+      else
+         uiOffset += pField->uiLen;
+      pField = pField->lpfNext;
    }
+
+   szText = pArea->lpExtendInfo->bRecord + uiOffset;
+   switch( pField->uiType )
+   {
+      case 'C':
+         hb_itemPutCL( pItem, ( char * ) szText,
+                       pField->uiLen + ( ( USHORT ) pField->uiDec << 8 ) );
+         break;
+
+      case 'N':
+         szOldChar = szText + pField->uiLen;
+         szEndChar = * szOldChar;
+         * szOldChar = 0;
+         if( pField->uiDec )
+            hb_itemPutND( pItem, atof( ( char * ) szText ) );
+         else
+            hb_itemPutNL( pItem, atof( ( char * ) szText ) );
+         * szOldChar = szEndChar;
+         break;
+
+      case 'D':
+         szOldChar = szText + pField->uiLen;
+         szEndChar = * szOldChar;
+         * szOldChar = 0;
+         hb_itemPutDS( pItem, ( char * ) szText );
+         * szOldChar = szEndChar;
+         break;
+
+      case 'L':
+         if( * szText == 'T' )
+            hb_itemPutL( pItem, 1 );
+         else
+            hb_itemPutL( pItem, 0 );
+         break;
+   }
+   
    return SUCCESS;
 }
 
@@ -144,118 +211,15 @@ static ERRCODE GoTop( AREAP pArea )
    return SELF_GOTO( pArea, 1 );
 }
 
-static ERRCODE Skip( AREAP pArea, LONG lToSkip )
-{
-   return SELF_GOTO( pArea, hb_itemGetNL( pArea->lpExtendInfo->pRecNo ) + lToSkip );
-}
-
-static ERRCODE CreateFields( AREAP pArea, PHB_ITEM pStruct )
-{
-   USHORT uiCount;
-   PHB_ITEM pFieldDesc;
-   DBFIELDINFO pFieldInfo;
-
-   SELF_SETFIELDEXTENT( pArea, pStruct->item.asArray.value->ulLen );
-   pFieldInfo.typeExtended = 0;
-   for( uiCount = 0; uiCount < pStruct->item.asArray.value->ulLen; uiCount++ )
-   {
-      pFieldDesc = pStruct->item.asArray.value->pItems + uiCount;
-      pFieldInfo.atomName = ( BYTE * ) hb_arrayGetString( pFieldDesc, 1 );
-      pFieldInfo.uiLen = 0;
-      pFieldInfo.uiType = toupper( hb_arrayGetString( pFieldDesc, 2 )[ 0 ] );
-      if( pFieldInfo.uiType == 'N' )
-      {
-         pFieldInfo.uiLen = ( USHORT ) hb_arrayGetDouble( pFieldDesc, 3 );
-         pFieldInfo.uiDec = ( USHORT ) hb_arrayGetDouble( pFieldDesc, 4 );
-      }
-      else
-      {
-         if( pFieldInfo.uiType == 'L' || pFieldInfo.uiType == 'D' ||
-             pFieldInfo.uiType == 'M' )
-            pFieldInfo.uiLen = ( USHORT ) hb_arrayGetDouble( pFieldDesc, 3 );
-         else if( pFieldInfo.uiType == 'C' )
-         {
-            pFieldInfo.uiLen = ( USHORT ) hb_arrayGetDouble( pFieldDesc, 3 ) +
-                               ( ( USHORT ) hb_arrayGetDouble( pFieldDesc, 4 ) << 8 );
-         }
-         pFieldInfo.uiDec = 0;
-      }
-      SELF_ADDFIELD( pArea, &pFieldInfo );
-   }
-   return SUCCESS;
-}
-
-static ERRCODE DeleteRec( AREAP pArea )
+static ERRCODE Info( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    HB_SYMBOL_UNUSED( pArea );
-   printf( "Calling DBF: DeleteRec()\n" );
-   return SUCCESS;
-}
-
-static ERRCODE Deleted( AREAP pArea, BOOL * pDeleted )
-{
-   if( pArea->lpExtendInfo->bRecord[ 0 ] ==  '*' )
-      * pDeleted = TRUE;
-   else
-      * pDeleted = FALSE;
-   return SUCCESS;
-}
-
-static ERRCODE GetValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
-{
-   LPFIELD pField;
-   USHORT uiCount, uiOffset;
-   BYTE * szText, * szOldChar, szEndChar;
-
-   if( uiIndex > pArea->uiFieldCount )
-      return FAILURE;
-
-   pField = pArea->lpFields;
-   uiOffset = 1;
-   for( uiCount = 1; uiCount < uiIndex; uiCount++ )
+   switch( uiIndex )
    {
-      if( pField->uiType == 'C' )
-         uiOffset += pField->uiLen + ( ( USHORT ) pField->uiDec << 8 );
-      else
-         uiOffset += pField->uiLen;
-      pField = pField->lpfNext;
-   }
-
-   szText = pArea->lpExtendInfo->bRecord + uiOffset;
-   switch( pField->uiType )
-   {
-      case 'C':
-         hb_itemPutCL( pItem, ( char * ) szText,
-                       pField->uiLen + ( ( USHORT ) pField->uiDec << 8 ) );
-         break;
-
-      case 'N':
-         szOldChar = szText + pField->uiLen;
-         szEndChar = * szOldChar;
-         * szOldChar = 0;
-         if( pField->uiDec )
-            hb_itemPutND( pItem, atof( ( char * ) szText ) );
-         else
-            hb_itemPutNL( pItem, atof( ( char * ) szText ) );
-         * szOldChar = szEndChar;
-         break;
-
-      case 'D':
-         szOldChar = szText + pField->uiLen;
-         szEndChar = * szOldChar;
-         * szOldChar = 0;
-         hb_itemPutDS( pItem, ( char * ) szText );
-         * szOldChar = szEndChar;
-         break;
-
-      case 'L':
-         if( * szText == 'T' )
-            hb_itemPutL( pItem, 1 );
-         else
-            hb_itemPutL( pItem, 0 );
+      case DBI_TABLEEXT:
+         hb_itemPutC( pItem, ".DBF" );
          break;
    }
-   
    return SUCCESS;
 }
 
@@ -337,26 +301,16 @@ static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    return SUCCESS;
 }
 
-static ERRCODE RecCount( AREAP pArea, LONG * pRecCount )
+static ERRCODE ReadBuffer( AREAP pArea, LONG lRecNo )
 {
-   DBFHEADER pHeader;
-
-   hb_fsSeek( pArea->lpFileInfo->hFile, 0, FS_SET );
-   if( hb_fsRead( pArea->lpFileInfo->hFile, ( BYTE * ) &pHeader,
-                  sizeof( DBFHEADER ) ) != sizeof( DBFHEADER ) )
-      return FAILURE;
-   * pRecCount = pHeader.ulRecords;
-   return SUCCESS;
-}
-
-static ERRCODE Info( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
-{
-   HB_SYMBOL_UNUSED( pArea );
-   switch( uiIndex )
+   hb_fsSeek( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->uiHeaderLen +
+              ( lRecNo - 1 ) * pArea->lpExtendInfo->uiRecordLen, FS_SET );
+   if( hb_fsRead( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->bRecord,
+                  pArea->lpExtendInfo->uiRecordLen ) != pArea->lpExtendInfo->uiRecordLen )
    {
-      case DBI_TABLEEXT:
-         hb_itemPutC( pItem, ".DBF" );
-         break;
+      memset( pArea->lpExtendInfo->bRecord, ' ', pArea->lpExtendInfo->uiRecordLen );
+      pArea->lpExtendInfo->bRecord[ pArea->lpExtendInfo->uiRecordLen ] = 0;
+      return FAILURE;
    }
    return SUCCESS;
 }
@@ -438,6 +392,29 @@ static ERRCODE ReadDBHeader( AREAP pArea )
    memset( pArea->lpExtendInfo->bOldRecord, ' ', pArea->lpExtendInfo->uiRecordLen );
    pArea->lpExtendInfo->bOldRecord[ pArea->lpExtendInfo->uiRecordLen ] = 0;
    return SUCCESS;
+}
+
+static ERRCODE RecCount( AREAP pArea, LONG * pRecCount )
+{
+   DBFHEADER pHeader;
+
+   hb_fsSeek( pArea->lpFileInfo->hFile, 0, FS_SET );
+   if( hb_fsRead( pArea->lpFileInfo->hFile, ( BYTE * ) &pHeader,
+                  sizeof( DBFHEADER ) ) != sizeof( DBFHEADER ) )
+      return FAILURE;
+   * pRecCount = pHeader.ulRecords;
+   return SUCCESS;
+}
+
+static ERRCODE RecNo( AREAP pArea, PHB_ITEM pRecNo )
+{
+   hb_itemCopy( pRecNo, pArea->lpExtendInfo->pRecNo );
+   return SUCCESS;
+}
+
+static ERRCODE SkipRaw( AREAP pArea, LONG lToSkip )
+{
+   return SELF_GOTO( pArea, hb_itemGetNL( pArea->lpExtendInfo->pRecNo ) + lToSkip );
 }
 
 static ERRCODE WriteDBHeader( AREAP pArea )
@@ -543,9 +520,11 @@ static RDDFUNCS dbfTable = { 0,               /* Super Bof */
                              GoTo,
                              GoToId,
                              GoTop,
-                             Skip,
+                             0,               /* Super Skip */
+                             0,               /* Super SkipFilter */
+                             SkipRaw,
                              0,               /* Super AddField */
-                             CreateFields,
+                             0,               /* Super CreateFields */
                              DeleteRec,
                              Deleted,
                              0,               /* Super FieldCount */
