@@ -1821,9 +1821,8 @@ HB_FUNC( DBSELECTAREA )
 
                if( uiAction == E_RETRY )
                {
-                  if( ( uiNewArea = hb_rddSelect( szAlias ) ) == 0 )
+                  if( ( uiNewArea = hb_rddSelect( szAlias ) ) != 0 )
                   {
-                     uiNewArea = hb_rddSelect( szAlias );
                      uiAction = E_DEFAULT;
                   }
                }
