@@ -8,6 +8,18 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-06-23 00:50 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * contrib/hbzlib/strcomp.c
+    ! Fixed eliminated warning in declaration of var: const char
+    ! Change of hb_retc() + hb_xfree() for hb_retclen_buffer()
+  * contrib/hbzlib/zipfile2.c
+    ! Reformating of indentation and eliminating of Tabs simbol
+  * contrib/hbzlib/zlibapi1.c
+    ! Reformating of indentation and eliminating of Tabs simbol
+    * Change call to hb_fsSetDevRaw() for hb_fsSetDevMode()
+  * contrib/hbzlib/zip.c
+    ! Reformating of indentation and eliminating of Tabs simbol
+
 2002-06-22 20:25 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c
     ! Bug fixed in skipping, when both Bof and Eof are true.
