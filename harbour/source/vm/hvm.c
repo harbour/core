@@ -127,6 +127,7 @@ static void    hb_vmSwapAlias( void );           /* swaps items on the eval stac
 /* Execution */
 static HARBOUR hb_vmDoBlock( void );             /* executes a codeblock */
 static void    hb_vmLocalName( USHORT uiLocal, char * szLocalName ); /* locals and parameters index and name information for the debugger */
+static void    hb_vmStaticName( USHORT uiStatic, char * szStaticName ); /* statics vars information for the debugger */
 static void    hb_vmModuleName( char * szModuleName ); /* PRG and function name information for the debugger */
 static void    hb_vmFrame( BYTE bLocals, BYTE bParams ); /* increases the stack pointer for the amount of locals and params suplied */
 static void    hb_vmSFrame( PHB_SYMB pSym );     /* sets the statics frame for a function */
@@ -644,6 +645,13 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_LOCALNAME:
             hb_vmLocalName( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ),
+                            ( char * ) pCode + w + 3 );
+            w += 3;
+            while( pCode[ w++ ] );
+            break;
+
+         case HB_P_STATICNAME:
+            hb_vmStaticName( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ),
                             ( char * ) pCode + w + 3 );
             w += 3;
             while( pCode[ w++ ] );
@@ -3064,8 +3072,26 @@ static void hb_vmLocalName( USHORT uiLocal, char * szLocalName ) /* locals and p
    hb_vmPushNil();
    hb_vmPushLongConst( uiLocal );
    hb_vmPushString( szLocalName, strlen( szLocalName ) );
+   hb_vmPushLongConst( 2 ); /* 1 for statics, 2 for locals */
    s_bDebuggerIsWorking = TRUE;
-   hb_vmDo( 2 );
+   hb_vmDo( 3 );
+   s_bDebuggerIsWorking = FALSE;
+   s_bDebugShowLines = TRUE;
+}
+
+static void hb_vmStaticName( USHORT uiStatic, char * szStaticName ) /* statics vars information for the debugger */
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmStaticName(%hu, %s)", uiStatic, szStaticName));
+
+   s_bDebugging = TRUE;
+   s_bDebugShowLines = FALSE;
+   hb_vmPushSymbol( hb_dynsymFind( "__DBGENTRY" )->pSymbol );
+   hb_vmPushNil();
+   hb_vmPushLongConst( uiStatic );
+   hb_vmPushString( szStaticName, strlen( szStaticName ) );
+   hb_vmPushLongConst( 1 ); /* 1 for statics, 2 for locals */
+   s_bDebuggerIsWorking = TRUE;
+   hb_vmDo( 3 );
    s_bDebuggerIsWorking = FALSE;
    s_bDebugShowLines = TRUE;
 }
