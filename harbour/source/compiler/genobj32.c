@@ -618,6 +618,66 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, USHORT wSymLen, USHORT 
         {
            switch( pFunction->pCode[ w ] )
            {
+              case HB_P_ARRAYDIM:
+              case HB_P_ARRAYGEN:
+              case HB_P_DO:
+              case HB_P_FUNCTION:
+              case HB_P_JUMP:
+              case HB_P_JUMPFALSE:
+              case HB_P_JUMPTRUE:
+              case HB_P_LINE:
+              case HB_P_POPLOCAL:
+              case HB_P_POPSTATIC:
+              case HB_P_PUSHINT:
+              case HB_P_PUSHLOCAL:
+              case HB_P_PUSHLOCALREF:
+              case HB_P_PUSHSTATIC:
+              case HB_P_PUSHSTATICREF:
+              {
+                 putbyte( pFunction->pCode[ w ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w ];
+                 putbyte( pFunction->pCode[ w + 1 ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w + 1 ];
+                 putbyte( pFunction->pCode[ w + 2 ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w + 2 ];
+                 w += 2;
+              }
+              break;
+
+              case HB_P_JUMPFAR:
+              case HB_P_JUMPFARFALSE:
+              case HB_P_JUMPFARTRUE:
+              case HB_P_SEQBEGIN:
+              case HB_P_SEQEND:
+              {
+                 putbyte( pFunction->pCode[ w ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w ];
+                 putbyte( pFunction->pCode[ w + 1 ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w + 1 ];
+                 putbyte( pFunction->pCode[ w + 2 ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w + 2 ];
+                 putbyte( pFunction->pCode[ w + 3 ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w + 3 ];
+                 w += 3;
+              }
+              break;
+
+              case HB_P_PUSHLONG:
+              {
+                 putbyte( pFunction->pCode[ w ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w ];
+                 putbyte( pFunction->pCode[ w + 1 ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w + 1 ];
+                 putbyte( pFunction->pCode[ w + 2 ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w + 2 ];
+                 putbyte( pFunction->pCode[ w + 3 ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w + 3 ];
+                 putbyte( pFunction->pCode[ w + 4 ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w + 4 ];
+                 w += 4;
+              }
+              break;
+
               case HB_P_FRAME:
               {
                  BYTE bLocals = GetFunctionLocalsCount( pFunction );
@@ -631,18 +691,6 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, USHORT wSymLen, USHORT 
                     putbyte( pFunction->wParamCount, hObjFile );
                     bCheckSum += pFunction->wParamCount;
                  }
-                 w += 2;
-              }
-              break;
-
-              case HB_P_LINE:
-              {
-                 putbyte( HB_P_LINE, hObjFile );
-                 bCheckSum += HB_P_LINE;
-                 putbyte( pFunction->pCode[ w + 1 ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w + 1 ];
-                 putbyte( pFunction->pCode[ w + 2 ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w + 2 ];
                  w += 2;
               }
               break;
@@ -674,18 +722,49 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, USHORT wSymLen, USHORT 
               }
               break;
 
+              case HB_P_MESSAGE:
+              case HB_P_POPALIASEDFIELD:
+              case HB_P_POPALIASEDVAR:
+              case HB_P_POPFIELD:
+              case HB_P_POPMEMVAR:
+              case HB_P_POPVARIABLE:
+              case HB_P_PUSHALIASEDFIELD:
+              case HB_P_PUSHALIASEDVAR:
+              case HB_P_PUSHFIELD:
+              case HB_P_PUSHMEMVAR:
+              case HB_P_PUSHVARIABLE:
+              case HB_P_PUSHMEMVARREF:
               case HB_P_PUSHSYM:
               {
-                 USHORT wFixPos = pFunction->pCode[ w + 1 ] +
-                                  pFunction->pCode[ w + 2 ] * 256;
-                 wFixPos = hb_compSymbolFixPos( wFixPos );
-                 putbyte( HB_P_PUSHSYM, hObjFile );
-                 bCheckSum += HB_P_PUSHSYM;
-                 putbyte( HB_LOBYTE( wFixPos ), hObjFile );
-                 bCheckSum += HB_LOBYTE( wFixPos );
-                 putbyte( HB_HIBYTE( wFixPos ), hObjFile );
-                 bCheckSum += HB_HIBYTE( wFixPos );
+                 USHORT wPos = pFunction->pCode[ w + 1 ] +
+                               pFunction->pCode[ w + 2 ] * 256;
+                 wPos = hb_compSymbolFixPos( wPos );
+                 putbyte( pFunction->pCode[ w ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w ];
+                 putbyte( HB_LOBYTE( wPos ), hObjFile );
+                 bCheckSum += HB_LOBYTE( wPos );
+                 putbyte( HB_HIBYTE( wPos ), hObjFile );
+                 bCheckSum += HB_HIBYTE( wPos );
                  w += 2;
+              }
+              break;
+
+              case HB_P_STATICS:
+              {
+                 USHORT wPos = pFunction->pCode[ w + 1 ] +
+                               pFunction->pCode[ w + 2 ] * 256;
+                 wPos = hb_compSymbolFixPos( wPos );
+                 putbyte( pFunction->pCode[ w ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w ];
+                 putbyte( HB_LOBYTE( wPos ), hObjFile );
+                 bCheckSum += HB_LOBYTE( wPos );
+                 putbyte( HB_HIBYTE( wPos ), hObjFile );
+                 bCheckSum += HB_HIBYTE( wPos );
+                 putbyte( pFunction->pCode[ w + 3 ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w + 3 ];
+                 putbyte( pFunction->pCode[ w + 4 ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w + 4 ];
+                 w += 4;
               }
               break;
 
@@ -711,6 +790,105 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, USHORT wSymLen, USHORT 
                        putbyte( pFunction->pCode[ w ], hObjFile );
                        bCheckSum += pFunction->pCode[ w ];
                     }
+                 }
+              }
+              break;
+
+              case HB_P_LOCALNAME:
+              {
+                 putbyte( HB_P_LOCALNAME, hObjFile );
+                 bCheckSum += HB_P_LOCALNAME;
+                 putbyte( pFunction->pCode[ w + 1 ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w + 1 ];
+                 putbyte( pFunction->pCode[ w + 2 ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w + 2 ];
+                 w += 2;
+
+                 while( pFunction->pCode[ w + 1 ] )
+                 {
+                    w++;
+                    putbyte( pFunction->pCode[ w ], hObjFile );
+                    bCheckSum += pFunction->pCode[ w ];
+                 }
+                 w++;
+                 putbyte( 0, hObjFile );
+              }
+              break;
+
+              case HB_P_MODULENAME:
+              {
+                 putbyte( HB_P_MODULENAME, hObjFile );
+                 bCheckSum += HB_P_MODULENAME;
+
+                 while( pFunction->pCode[ w + 1 ] )
+                 {
+                    w++;
+                    putbyte( pFunction->pCode[ w ], hObjFile );
+                    bCheckSum += pFunction->pCode[ w ];
+                 }
+                 w++;
+                 putbyte( 0, hObjFile );
+              }
+              break;
+
+              case HB_P_PARAMETER:
+              {
+                 USHORT wPos = pFunction->pCode[ w + 1 ] +
+                               pFunction->pCode[ w + 2 ] * 256;
+                 wPos = hb_compSymbolFixPos( wPos );
+                 putbyte( pFunction->pCode[ w ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w ];
+                 putbyte( HB_LOBYTE( wPos ), hObjFile );
+                 bCheckSum += HB_LOBYTE( wPos );
+                 putbyte( HB_HIBYTE( wPos ), hObjFile );
+                 bCheckSum += HB_HIBYTE( wPos );
+                 putbyte( pFunction->pCode[ w + 3 ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w + 3 ];
+                 w += 3;
+              }
+              break;
+
+              case HB_P_PUSHBLOCK:
+              {
+                 USHORT uVars = pFunction->pCode[ w + 5 ] +
+                                pFunction->pCode[ w + 6 ] * 256;
+                 putbyte( pFunction->pCode[ w ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w ];
+                 putbyte( pFunction->pCode[ w + 1 ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w + 1 ];
+                 putbyte( pFunction->pCode[ w + 2 ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w + 2 ];
+                 putbyte( pFunction->pCode[ w + 3 ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w + 3 ];
+                 putbyte( pFunction->pCode[ w + 4 ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w + 4 ];
+                 putbyte( pFunction->pCode[ w + 5 ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w + 5 ];
+                 putbyte( pFunction->pCode[ w + 6 ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w + 6 ];
+                 w += 6;
+                 while( uVars-- )
+                 {
+                    w++;
+                    putbyte( pFunction->pCode[ w ], hObjFile );
+                    bCheckSum += pFunction->pCode[ w ];
+                    w++;
+                    putbyte( pFunction->pCode[ w ], hObjFile );
+                    bCheckSum += pFunction->pCode[ w ];
+                 }
+              }
+              break;
+
+              case HB_P_PUSHDOUBLE:
+              {
+                 int i = 0;
+                 putbyte( pFunction->pCode[ w ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w ];
+                 while( i++ < sizeof( double ) + sizeof( BYTE ) )
+                 {
+                    w++;
+                    putbyte( pFunction->pCode[ w ], hObjFile );
+                    bCheckSum += pFunction->pCode[ w ];
                  }
               }
               break;
