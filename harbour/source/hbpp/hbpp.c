@@ -2,7 +2,7 @@
  * $Id$
  */
 
-/* Harbour Preprocessor , version 0.9
+/* Harbour Preprocessor , version 0.99
    author - Alexander Kresin             */
 
 #if defined(__GNUC__)
@@ -736,11 +736,13 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
        }
        break;
       case '\1':  /*  Match marker */
-       if ( (rez = WorkMarkers( &ptrmp, &ptri, ptro, lenres, nbr )) ==0 )
-        return 0;
-       else if ( rez == 2 )
+       if ( (rez = WorkMarkers( &ptrmp, &ptri, ptro, lenres, nbr )) == 0 )
        {
-         SkipOptional( &ptrmp, ptro, lenres, &nbr);
+         if ( nbr )
+         {
+           SkipOptional( &ptrmp, ptro, lenres, &nbr);
+         }
+         else return 0;
        }
        break;
       case '\0':
@@ -789,11 +791,18 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, int nbr )
  int rezrestr, ipos;
  char *ptr, *ptrtemp;
 
-  if ( **ptri == ',' )  return 0;
          /* Copying a match pattern to 'exppatt' */
   lenpatt = stroncpy ( exppatt, *ptrmp, 4 );
   *ptrmp += 4;
   SKIPTABSPACES ( *ptrmp );
+  if ( **ptri == ',' )
+  {
+    if ( nbr )
+    {
+      SearnRep( exppatt,"",0,ptro,lenres);
+      return 0;
+    }
+  }
   if ( *(exppatt+2) != '2' && **ptrmp != '\1' && **ptrmp != ',' &&
         **ptrmp != '[' && **ptrmp != ']' && **ptrmp != '\0' )
   {
@@ -803,9 +812,23 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, int nbr )
     lenreal = stroncpy( expreal, *ptri, ipos-1 );
     if ( isExpres ( expreal ) )
        *ptri += lenreal;
-    else return 0;
+    else
+    {
+      if ( nbr )
+      {
+        SearnRep( exppatt,"",0,ptro,lenres);
+        return 0;
+      }
+    }
    }
-   else return 0;
+   else
+   {
+     if ( nbr )
+     {
+       SearnRep( exppatt,"",0,ptro,lenres);
+       return 0;
+     }
+   }
   }
 
   if ( *(exppatt+2) == '4' )       /*  ----  extended match marker  */
@@ -866,9 +889,8 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, int nbr )
       if ( nbr )
       {
         SearnRep( exppatt,"",0,ptro,lenres);
-        return 2;
+        return 0;
       }
-      else return 0;
    }
   }
   else if ( *(exppatt+2) == '1' )  /*  ---- list match marker  */
