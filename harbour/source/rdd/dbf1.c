@@ -910,10 +910,7 @@ static ERRCODE GoTo( AREAP pArea, ULONG lRecNo )
    {
       if( lRecNo > lRecCount + 1 )
          lRecNo = lRecCount + 1;
-      if( lRecNo == 1 )
-         pArea->fBof = 1;
-      else
-         pArea->fBof = 0;
+
       if( lRecNo == lRecCount + 1 )
          pArea->fEof = 1;
       else
@@ -1442,7 +1439,17 @@ static ERRCODE Release( AREAP pArea )
 
 static ERRCODE SkipRaw( AREAP pArea, LONG lToSkip )
 {
-   return SELF_GOTO( pArea, pArea->lpExtendInfo->lRecNo + lToSkip );
+   LONG lRecNo = pArea->lpExtendInfo->lRecNo + lToSkip;
+
+   if( lRecNo < 1 )
+   {
+      lRecNo = 1;
+      pArea->fBof = 1;
+   }
+   else
+      pArea->fBof = 0;
+
+   return SELF_GOTO( pArea, lRecNo );
 }
 
 static ERRCODE UnLock( AREAP pArea, ULONG lRecNo )

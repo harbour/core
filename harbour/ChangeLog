@@ -1,3 +1,12 @@
+19990930-19:40 GMT+3 Alexander Kresin
+  * source/rdd/dbf1.c
+    * some changes in GoTo() and SkipRaw() functions for correct processing
+    * of negative skip's and fBof setting.
+  + tests/working/db_browse.ch
+  + tests/working/db_browse.prg
+    * A sample added, demonstrating dbf file browse
+    * While running db_browse.exe, sign a filename as a parameter
+
 19990929-16:42 GMT+1 Victor Szel <info@szelvesz.hu>
   * include/hbver.h
     + Version info updated.
