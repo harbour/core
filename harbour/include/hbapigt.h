@@ -184,6 +184,8 @@ extern void   hb_gt_SetPos( SHORT iRow, SHORT iCol );
 extern void   hb_gt_Tone( double dFrequency, double dDuration );
 extern char * hb_gt_Version( void );
 extern USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar, BYTE byAttr );
+extern BOOL hb_gt_Suspend();
+extern BOOL hb_gt_Resume();
 
 /* Keyboard related declarations */
 

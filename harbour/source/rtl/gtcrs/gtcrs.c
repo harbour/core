@@ -59,6 +59,7 @@ extern void hb_gt_Exit_Keyboard( void );
 
 static void hb_gt_Initialize_Terminal( void )
 {
+   initscr();
    if( has_colors() )
    {
       int i;
@@ -128,13 +129,19 @@ static void hb_gt_Initialize_Terminal( void )
 
 }
 
+static void hb_gt_Exit_Terminal( void )
+{
+   noraw();
+   refresh();
+   endwin();
+}
+
 void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
 
    s_uiDispCount = 0;
 
-   initscr();
    hb_gt_Initialize_Terminal();
    /* Mouse sub-sytem have to be initialized after ncurses initialization */
    hb_gt_Initialize_Mouse();
@@ -146,10 +153,7 @@ void hb_gt_Exit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Exit()"));
 
-   noraw();
-   refresh();
-   endwin();
-
+   hb_gt_Exit_Terminal();
    hb_gt_Exit_Mouse();
    hb_gt_Exit_Keyboard();
 }
@@ -497,19 +501,22 @@ void hb_gt_DispEnd()
 
 BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
 {
-   BOOL success;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetMode(%hu, %hu)", uiRows, uiCols));
 
    /* NOTE: Not tested!!!
       Use it on your own risk!
    */
-   endwin();
-   success = ( ( resizeterm( uiRows, uiCols) == OK) ? TRUE : FALSE );
-   initscr();
-   hb_gt_Initialize_Terminal();
-
-   return success;
+#if defined(NCURSES_VERSION)
+   {
+      BOOL success;
+      hb_gt_Exit_Terminal();
+      success = ( ( resizeterm( uiRows, uiCols) == OK) ? TRUE : FALSE );
+      hb_gt_Initialize_Terminal();
+      return success;
+   }
+#else
+   return 0;
+#endif
 }
 
 BOOL hb_gt_GetBlink()
@@ -747,10 +754,18 @@ USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar,
 
 BOOL hb_gt_Suspend()
 {
+   hb_gt_Exit_Terminal();
+   hb_gt_Exit_Mouse();
+   hb_gt_Exit_Keyboard();
+
    return 1;
 }
 
 BOOL hb_gt_Resume()
 {
+   hb_gt_Initialize_Terminal();
+   hb_gt_Initialize_Mouse();
+   hb_gt_Initialize_Keyboard();
+   
    return 1;
 }

@@ -317,6 +317,10 @@ USHORT hb_gtPreExt( void )
 
          while( uidc-- )
             hb_gt_DispEnd();
+         /* call platform depend layer to flush all pending outputs and
+         * to prepare screen for direct updating
+         */
+         hb_gt_Suspend(); 
       }
 
       s_uiPreCNest = 1;
@@ -333,6 +337,9 @@ USHORT hb_gtPostExt( void )
 
    if( s_uiPreCNest == 1 )
    {
+      /* call platform depend layer to restore all settings */
+      hb_gt_Resume();
+      
       while( s_uiPreCount-- )
          hb_gt_DispBegin();
 
