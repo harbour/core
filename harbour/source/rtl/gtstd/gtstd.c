@@ -109,7 +109,7 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
       struct termios ta;
       
       tcgetattr( STDIN_FILENO, &startup_attributes );
-//      atexit( restore_input_mode );
+/*      atexit( restore_input_mode ); */
       
       tcgetattr( STDIN_FILENO, &ta );
       ta.c_lflag &= ~( ICANON | ECHO );
@@ -129,13 +129,14 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
    s_iRow = 0;
    s_iCol = 0;
 
-// #if defined(OS_UNIX_COMPATIBLE)
+/* #if defined(OS_UNIX_COMPATIBLE) */
    s_uiMaxRow = 24;
    s_uiMaxCol = 80;
-// #else
-//   s_uiMaxRow = 32767;
-//   s_uiMaxCol = 32767;
-// #endif
+/*
+#else
+   s_uiMaxRow = 32767;
+   s_uiMaxCol = 32767;
+#endif */
 
    s_uiCursorStyle = SC_NORMAL;
    s_bBlink = FALSE;
@@ -637,7 +638,7 @@ USHORT hb_gt_Box( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right,
             {
                Col = Left;
                if( Col < 0 )
-                  Col = 0; // The width was corrected earlier.
+                  Col = 0; /* The width was corrected earlier. */
                else
                   hb_gt_xPutch( Row, Col++, byAttr, szBox[ 7 ] ); /* Left side */
                hb_gt_Replicate( Row, Col, byAttr, szBox[ 8 ], Width - 2 ); /* Fill */
@@ -667,7 +668,7 @@ USHORT hb_gt_Box( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right,
 
          Col = Left + 1;
          if( Col < 0 )
-            Col = 0; // And use the width that was calculated earlier.
+            Col = 0; /* The width was corrected earlier. */
 
          if( Col <= Right && Bottom < hb_gt_GetScreenHeight() )
             hb_gt_Replicate( Bottom, Col, byAttr, szBox[ 5 ], Width - 2 ); /* Bottom line */

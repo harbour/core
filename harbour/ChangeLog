@@ -1,3 +1,18 @@
+2001-08-22 12:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * source/rtl/gtcgi/gtcgi.c
+  * source/rtl/gtcrs/gtcrs.c
+  * source/rtl/gtdos/gtdos.c
+  * source/rtl/gtos2/gtos2.c
+  * source/rtl/gtpca/gtpca.c
+  * source/rtl/gtsln/gtsln.c
+  * source/rtl/gtstd/gtstd.c
+  * source/rtl/gtwin/gtwin.c
+    ! I forgot the comment style rule and had used two // style
+      comments in each GT module. They now use the /* */ style.
+      (I also converted a couple of other // style comments in
+      gtstd to the /* */ style).
+
 2001-08-22 01:42 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/tbrowse.prg
      * now that DispBox() works as expected I can use it even for 1 line headers/

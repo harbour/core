@@ -542,7 +542,7 @@ USHORT hb_gt_Box( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right,
             {
                Col = Left;
                if( Col < 0 )
-                  Col = 0; // The width was corrected earlier.
+                  Col = 0; /* The width was corrected earlier. */
                else
                   hb_gt_xPutch( Row, Col++, byAttr, szBox[ 7 ] ); /* Left side */
                hb_gt_Replicate( Row, Col, byAttr, szBox[ 8 ], Width - 2 ); /* Fill */
@@ -572,7 +572,7 @@ USHORT hb_gt_Box( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right,
 
          Col = Left + 1;
          if( Col < 0 )
-            Col = 0; // And use the width that was calculated earlier.
+            Col = 0; /* The width was corrected earlier. */
 
          if( Col <= Right && Bottom < hb_gt_GetScreenHeight() )
             hb_gt_Replicate( Bottom, Col, byAttr, szBox[ 5 ], Width - 2 ); /* Bottom line */
