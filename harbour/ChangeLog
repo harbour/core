@@ -1,3 +1,9 @@
+19990529-10:04 EST Les Griffith
+  * Files.c defined out scandir on djgpp
+  * Set.c added include errno.h for djgpp
+  * makefile.dos remaked out tests\working makefile.dos logic
+  * created hbdos.bat in tests\working for gcc creation of exes
+
 19990529-15:00 CET Eddie Runia
   * source/rtl/set.c
     small correction in ReleaseSets()
