@@ -55,7 +55,7 @@ extern void yy_delete_buffer( void * ); /* yacc functions to manage multiple fil
 #endif
 
 /* lex & yacc related prototypes */
-#if !defined(__GNUC__)
+#if !defined(__GNUC__) && !defined(__IBMCPP__)
 extern void __yy_memcpy ( char*, char*, unsigned int ); /* to satisfy Borland compiler */
 #endif
 extern int yyparse( void );    /* main yacc parsing function */

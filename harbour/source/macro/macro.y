@@ -78,7 +78,7 @@
 /* This is workaround of yyparse() declaration bug in bison.simple
 */
 
-#if !defined(__GNUC__)
+#if !defined(__GNUC__) && !defined(__IBMCPP__)
    void __yy_memcpy ( char*, char*, unsigned int ); /* to satisfy Borland compiler */
 #endif
 

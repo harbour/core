@@ -1,3 +1,9 @@
+2001-11-20 22:45 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+
+  * source/compiler/harbour.y
+  * source/macro/macro.y
+    ! Exclude IBM C++ from the declaration of __yy_memcpy.
+
 2001-11-20 23:59 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
    * source/debug/debugger.prg
      ! ::ShowCode() was using At( ":", cModuleName ) to divide procedure name from module name,
