@@ -1,0 +1,733 @@
+/* Harbour Class TGet
+ * Copyright(C) 1999 by Ignacio Ortiz de Zúniga
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to:
+ *
+ * The Free Software Foundation, Inc.,
+ * 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
+ * You can contact me at: ignacio@fivetech.com
+*/
+
+#include "classes.ch"
+
+#xcommand DEFAULT <uVar1> := <uVal1> ;
+               [, <uVarN> := <uValN> ] => ;
+                  <uVar1> := If( <uVar1> == nil, <uVal1>, <uVar1> ) ;;
+                [ <uVarN> := If( <uVarN> == nil, <uValN>, <uVarN> ); ]
+
+//----------------------------------------------------------------------------//
+
+CLASS TGet
+
+   DATA badDate, block, buffer, cargo, changed, clear, col, colorspec
+   DATA decpos, exitState, hasfocus, message, minus, name, original
+   DATA picture, pos, postBlock, preBlock, reader, rejected, row
+   DATA subscript, type, typeout
+   DATA cPicMask, cPicFunc, nMaxLen, lEdit, lDecRev, lPicComplex
+
+   METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
+
+   METHOD Assign()  INLINE ::VarPut( ::unTransform() )
+
+   METHOD KillFocus()
+   METHOD Reset()
+   METHOD SetFocus()
+   METHOD Undo()
+   METHOD unTransform()
+   METHOD UpdateBuffer()  INLINE ::Assign()
+   METHOD VarGet()
+   METHOD VarPut()
+
+   METHOD end()        INLINE iif( ::hasFocus, (::pos := ::nMaxLen, ::Clear := .f.),)
+   METHOD home()       INLINE iif( ::hasFocus, (::pos := 1,::Clear := .f.),)
+   MESSAGE left()      METHOD _left()
+   MESSAGE right     METHOD _right()
+   METHOD toDecPos()
+   METHOD WordLeft()
+   METHOD WordRight()
+
+   METHOD backspace()
+   MESSAGE Delete()    METHOD _delete()
+   METHOD DeleteAll()
+
+   METHOD insert(cChar)
+   METHOD overstrike(cChar)
+
+   METHOD IsEditable(nPos)
+   METHOD Input(cChar)
+   METHOD PutMask(cBuffer, lEdit)
+
+   METHOD Display() INLINE DevPos( ::Row, ::Col + If( ::Pos != nil, ::Pos, 0 ) ), DevOut( ::buffer ), Self
+
+//   METHOD ColorDisp(cColorSpec)  VIRTUAL
+//   METHOD hitTest(nRow, nCol)    VIRTUAL
+//   METHOD delEnd()               VIRTUAL
+//   METHOD delLeft()              VIRTUAL
+//   METHOD delRight()             VIRTUAL
+//   METHOD delWordLeft()          VIRTUAL
+//   METHOD delWordRight()         VIRTUAL
+
+ENDCLASS
+
+//---------------------------------------------------------------------------//
+
+METHOD New(nRow, nCol, bVarBlock, cVarName, cPicture, cColor) CLASS tGet
+
+   local cChar
+   local nAt, nFor
+
+   DEFAULT nRow     := Row()     ,;
+           nCol     := Col()     ,;
+           cVarName := ""        ,;
+           cPicture := ""        ,;
+           cColor   := ""
+
+   ::badDate    := .f.
+   ::block      := bVarBlock
+   ::changed    := .f.
+   ::clear      := .f.
+   ::col        := nCol
+   ::colorspec  := cColor
+   ::decpos     := Nil
+   ::exitState  := 0
+   ::hasfocus   := .f.
+   ::message    := ""
+   ::minus      := .f.
+   ::name       := cVarName
+   ::original   := ::VarGet()
+   ::picture    := cPicture
+   ::pos        := Nil
+   ::postBlock  := Nil
+   ::preBlock   := Nil
+   ::reader     := Nil
+   ::rejected   := .f.
+   ::row        := nRow
+   ::subscript  := Nil
+   ::type       := Valtype(::VarGet())
+   ::typeout    := .f.
+
+   // Existe function en picture
+
+   if Left(cPicture, 1) == "@"
+      nAt := At(" ", cPicture)
+      if nAt == 0
+         ::cPicFunc := cPicture
+         ::cPicMask := ""
+      else
+         ::cPicFunc := Substr(cPicture, 1, nAt-1)
+         ::cPicMask := Substr(cPicture, nAt+1)
+      endif
+      if (nAt := At("S", ::cPicFunc)) > 0
+         for nFor := nAt+1 to len(::cPicFunc)
+            if !IsDigit(Substr(::cPicFunc, nFor, 1))
+               exit
+            endif
+         next
+         ::cPicFunc := Substr(::cPicFunc,1,nAt-1)+Substr(::cPicFunc, nFor)
+         if ::cPicFunc == "@"
+            ::cPicFunc := ""
+         endif
+      endif
+   else
+      ::cPicFunc := ""
+      ::cPicMask := cPicture
+   endif
+
+   // Si es fecha y no tiene plantilla ponersela
+
+   if ::type == "D" .and. Empty(::cPicMask)
+      ::cPicMask := Set(_SET_DATEFORMAT)
+      ::cPicMask := StrTran(::cPicmask, "y", "9")
+      ::cPicMask := StrTran(::cPicmask, "m", "9")
+      ::cPicMask := StrTran(::cPicmask, "d", "9")
+   endif
+
+   // Si es numero y no tiene plantilla ponersela
+
+   if ::type == "N" .and. Empty(::cPicMask)
+      ::cPicMask := "9999999999"
+   endif
+
+   // Comprobar si tiene la , y el . cambiado (Solo en Xbase++)
+
+   ::lDecRev := (","$(transform(1.1,"9.9")))
+
+   // Comprobar si tiene caracteres embebidos no modificables en la plantilla
+
+   ::lPicComplex := .f.
+
+   if !empty(::cPicMask)
+      For nFor := 1 to len(::cPicMask)
+         cChar := Substr(::cPicMask, nFor, 1)
+         if !cChar$"!ANX9#"
+            ::lPicComplex := .t.
+            exit
+         endif
+      Next
+   endif
+
+   ::buffer := ::PutMask(::VarGet(), .f. )
+
+return Self
+
+//---------------------------------------------------------------------------//
+
+METHOD Reset() CLASS tGet
+
+   if ::hasfocus
+      ::buffer := ::PutMask(::VarGet())
+      ::pos    := 1
+   endif
+
+return Self
+
+//---------------------------------------------------------------------------//
+
+METHOD Undo() CLASS tGet
+
+   if ::hasfocus
+      ::buffer := ::PutMask(::original)
+      ::pos    := 1
+   endif
+
+return Self
+
+//---------------------------------------------------------------------------//
+
+METHOD SetFocus() CLASS tGet
+
+   ::hasfocus   := .t.
+   ::rejected   := .f.
+   ::typeout    := .f.
+   ::buffer     := ::PutMask(::VarGet(), .f. )
+   ::changed    := .f.
+   ::clear      := ("K"$::cPicFunc .or. ::type == "N")
+   ::nMaxLen    := Len(::buffer)
+   ::pos        := 1
+   ::lEdit      := .f.
+
+   if ::type == "N"
+      ::decpos := At(iif(::lDecRev,",", "."), ::buffer)
+      ::minus  := ("-"$::buffer .or. "("$::buffer)
+   else
+      ::decpos := Nil
+      ::minus  := .f.
+   endif
+
+   if ::type == "D"
+      ::BadDate := (At("  ", DToC(CToD(::buffer))) != 0 )
+   else
+      ::BadDate := .f.
+   endif
+
+return Self
+
+//---------------------------------------------------------------------------//
+
+METHOD KillFocus() CLASS tGet
+
+   ::hasfocus   := .f.
+   ::pos        := Nil
+
+   ::Assign()
+
+   ::buffer := ::PutMask()
+
+return Self
+
+//---------------------------------------------------------------------------//
+
+METHOD VarPut(xValue) CLASS tGet
+
+   Eval(::block, xValue)
+
+return xValue
+
+//---------------------------------------------------------------------------//
+
+METHOD VarGet() CLASS tGet
+
+return Eval(::block)
+
+//---------------------------------------------------------------------------//
+
+METHOD Untransform(cBuffer) CLASS tGet
+
+   local xValue
+   local cChar
+   local nFor
+
+   DEFAULT cBuffer := ::buffer
+
+   do case
+   case ::type == "C"
+
+      if "R"$::cPicFunc
+         for nFor := 1 to len(::cPicMask)
+            cChar := Substr(::cPicMask, nFor, 1)
+            if !cChar$"ANX9#!"
+               cBuffer := Substr(cBuffer, 1, nFor-1)+ Chr(1)+ Substr(cBuffer, nFor+1)
+            endif
+         next
+         cBuffer := StrTran(cBuffer, Chr(1), "")
+      endif
+
+      xValue := cBuffer
+
+   case ::type = "N"
+      if "E"$::cPicFunc .or. ::lDecRev
+         cBuffer := StrTran(cBuffer,".","")
+         cBuffer := StrTran(cBuffer,",",".")
+      else
+         cBuffer := StrTran(cBuffer,",","")
+      endif
+      cBuffer := StrTran(cBuffer,"$","")
+      cBuffer := StrTran(cBuffer,"*","")
+      cBuffer := StrTran(cBuffer,"-","")
+      cBuffer := StrTran(cBuffer,"(","")
+      cBuffer := StrTran(cBuffer,")","")
+      cBuffer := Alltrim(cBuffer)
+      xValue  := Val(cBuffer)
+      if ::minus
+         xValue := -(xValue)
+      endif
+
+   case ::type = "L"
+      cBuffer := Upper(cBuffer)
+      xValue := ("T"$cBuffer .or. "Y"$cBuffer)
+
+   case ::type = "D"
+      if "E"$::cPicFunc
+         cBuffer := Substr(cBuffer, 4, 3)+Substr(cBuffer, 1, 3)+Substr(cBuffer, 8)
+      endif
+      xValue := Ctod(cBuffer)
+
+   endcase
+
+return xValue
+
+//---------------------------------------------------------------------------//
+
+METHOD overstrike(cChar) CLASS tGet
+
+   if ::type == "N" .and. !::lEdit
+      ::pos := 1
+   endif
+
+   if ::Clear .and. ::pos == 1
+      ::DeleteAll()
+      ::Clear := .f.
+      ::lEdit := .f.
+   endif
+
+   if !::lEdit
+
+      ::buffer := ::PutMask(::VarGet(), .t. )
+      ::lEdit := .t.
+
+      do while !::IsEditable(::pos) .and. ::pos <= ::nMaxLen
+         ::pos++
+      enddo
+
+      if ::pos > ::nMaxLen
+         ::pos := 1
+      endif
+
+   endif
+
+   cChar := ::Input(cChar)
+
+   if cChar == ""
+      ::Rejected := .t.
+      return Self
+   endif
+
+   ::buffer := Substr(::buffer, 1, ::Pos-1) + cChar + Substr(::buffer, ::Pos+1)
+   ::Changed := ( ::unTransform() != ::Original )
+   ::Assign()
+   ::Right()
+
+   if ::type == "D"
+      ::BadDate := (At("  ", DToC(CToD(::buffer))) != 0 )
+   else
+      ::BadDate := .f.
+   endif
+
+return Self
+
+//---------------------------------------------------------------------------//
+
+METHOD Insert(cChar) CLASS tGet
+
+   if ::type == "N" .and. !::lEdit
+      ::pos := 1
+   endif
+
+   if ::Clear .and. ::pos == 1
+      ::DeleteAll()
+      ::Clear := .f.
+      ::lEdit := .f.
+   endif
+
+   if !::lEdit
+      ::buffer := ::PutMask(::VarGet(), .t. )
+      ::lEdit := .t.
+   endif
+
+   cChar := ::Input(cChar)
+
+   if cChar == ""
+      ::Rejected := .t.
+      return Self
+   endif
+
+   ::buffer  := Left(Substr(::buffer, 1, ::Pos-1) + cChar + Substr(::buffer, ::Pos), ::nMaxLen)
+   ::Changed := ( ::unTransform() != ::Original )
+   ::Assign()
+   ::Right()
+
+   if ::type == "D"
+      ::BadDate := (At("  ", DToC(CToD(::buffer))) != 0 )
+   else
+      ::BadDate := .f.
+   endif
+
+return Self
+
+//---------------------------------------------------------------------------//
+
+METHOD _Right() CLASS tGet
+
+   local nPos
+
+   if !::hasfocus
+      return self
+   endif
+
+   ::TypeOut := .f.
+   ::Clear   := .f.
+
+   if ::pos == ::nMaxLen
+      ::TypeOut := .t.
+      return Self
+   endif
+
+   nPos := ::Pos + 1
+
+   Do While !::IsEditable(nPos) .and. nPos <= ::nMaxLen
+      nPos++
+   Enddo
+
+   if nPos <= ::nMaxLen
+      ::Pos := nPos
+   else
+      ::TypeOut := .t.
+   endif
+
+return Self
+
+//---------------------------------------------------------------------------//
+
+METHOD _Left() CLASS tGet
+
+   local nPos
+
+   if !::hasfocus
+      return self
+   endif
+
+   ::TypeOut := .f.
+   ::Clear   := .f.
+
+   if ::pos == 1
+      ::TypeOut := .t.
+      return Self
+   endif
+
+   nPos := ::Pos - 1
+
+   Do While !::IsEditable(nPos) .and. nPos > 0
+      nPos--
+   Enddo
+
+   if nPos > 0
+      ::Pos := nPos
+   else
+      ::TypeOut := .t.
+   endif
+
+return Self
+
+//---------------------------------------------------------------------------//
+
+METHOD WordLeft() CLASS tGet
+
+   local nPos
+
+   if !::hasfocus
+      return self
+   endif
+
+   ::TypeOut := .f.
+   ::Clear   := .f.
+
+   if ::pos == 1
+      ::TypeOut := .t.
+      return Self
+   endif
+
+   nPos := ::Pos - 1
+
+   Do While Substr(::buffer, nPos, 1) != " " .and. nPos > 0
+      nPos--
+   Enddo
+
+   if nPos > 0
+      ::Pos := nPos
+   endif
+
+return Self
+
+//---------------------------------------------------------------------------//
+
+METHOD WordRight() CLASS tGet
+
+   local nPos
+
+   if !::hasfocus
+      return self
+   endif
+
+   ::TypeOut := .f.
+   ::Clear   := .f.
+
+   if ::pos == ::nMaxLen
+      ::TypeOut := .t.
+      return Self
+   endif
+
+   nPos := ::Pos + 1
+
+   Do While Substr(::buffer, nPos, 1) != " " .and. nPos <= ::nMaxLen
+      nPos++
+   Enddo
+
+   if nPos <= ::nMaxLen
+      ::Pos := nPos
+   endif
+
+return Self
+
+//---------------------------------------------------------------------------//
+
+ METHOD ToDecPos() CLASS tGet
+
+   if !::hasFocus .or. ::decpos == Nil
+       Return .f.
+   endif
+
+   ::Clear  := .f.
+   ::buffer := ::PutMask(::UnTransform(), .t. )
+   ::pos    := ::decpos+1
+
+return .t.
+
+//---------------------------------------------------------------------------//
+
+METHOD IsEditable(nPos) CLASS tGet
+
+   local cChar
+
+   if empty(::cPicMask)
+      return .t.
+   endif
+
+   if nPos > ::nMaxLen
+      return .f.
+   endif
+
+   cChar := Substr(::cPicMask, nPos, 1)
+
+   do case
+   case ::type == "C"
+      return (cChar$"!ANX9#")
+   case ::type == "N"
+      return (cChar$"9#$*")
+   case ::type == "D"
+      return (cChar == "9")
+   case ::type == "L"
+      return (cChar$"TFYN")
+   endcase
+
+return .f.
+
+//---------------------------------------------------------------------------//
+
+METHOD Input(cChar) CLASS tGet
+
+   do case
+   case ::type == "N"
+      do case
+      case cChar == "-"
+         if ::pos != 1
+            return ""
+         endif
+         ::minus := .t.
+      case cChar == "."
+         ::toDecPos()
+         return ""
+      case !(cChar$"0123456789")
+         return ""
+      endcase
+
+   case ::type == "D"
+      if !(cChar$"0123456789")
+         return ""
+      endif
+
+   case ::type == "L"
+      if !(Upper(cChar)$"YNTF")
+         return ""
+      endif
+
+   endcase
+
+   if !Empty(::cPicFunc)
+      cChar := Transform(cChar, ::cPicFunc)
+   endif
+
+   if !Empty(::cPicMask)
+      cChar := Transform(cChar, Substr(::cPicMask, ::pos, 1))
+   endif
+
+return cChar
+
+//---------------------------------------------------------------------------//
+
+METHOD PutMask(xValue, lEdit) CLASS tGet
+
+   local cChar, cBuffer
+   local nFor, nLen, nAt
+
+   DEFAULT xValue := ::VarGet() ,;
+           lEdit  := ::hasfocus
+
+   cBuffer := Transform(xValue, Alltrim(::cPicFunc+" "+::cPicMask))
+
+   if lEdit .and. ::type == "N" .and. !Empty(::cPicMask)
+      nLen := len(cBuffer)
+      for nFor := 1 to nLen
+         cChar := Substr(::cPicMask, nFor, 1)
+         if cChar$",." .and. Substr(cBuffer, nFor, 1) != cChar
+            cBuffer := Substr(cBuffer, 1, nFor-1) + cChar + Substr(cBuffer, nFor+1)
+         endif
+      next
+      if (nAt := At(" ", cBuffer)) > 0
+         cBuffer := Strtran(cBuffer, "0", " ", nAt)
+      endif
+      if ::lDecRev
+         cBuffer := Strtran(cBuffer, ",", Chr(1))
+         cBuffer := Strtran(cBuffer, ".", ",")
+         cBuffer := Strtran(cBuffer, Chr(1), ".")
+      endif
+   endif
+
+return cBuffer
+
+//---------------------------------------------------------------------------//
+
+METHOD BackSpace() CLASS tGet
+
+   local nPos := ::Pos
+
+   ::Left()
+
+   if ::Pos < nPos
+      ::Delete()
+   endif
+
+return Self
+
+//---------------------------------------------------------------------------//
+
+METHOD _Delete() CLASS tGet
+
+   do case
+   case ::type == "C"
+      if !::lPicComplex
+         ::buffer := Padr(Substr(::buffer, 1, ::Pos-1) + ;
+                     Substr(::buffer, ::Pos+1), ::nMaxLen)
+      else
+         ::buffer := Substr(::buffer, 1, ::Pos-1) +" "+ ;
+                     Substr(::buffer, ::Pos+1)
+      endif
+
+   case ::type == "N"
+      if Substr(::buffer, ::Pos, 1) == "-"
+         ::minus := .f.
+      endif
+      ::buffer := Substr(::buffer, 1, ::Pos-1) +" "+ ;
+                  Substr(::buffer, ::Pos+1)
+
+   case ::type == "D"
+      ::buffer := Substr(::buffer, 1, ::Pos-1) +" "+ ;
+                  Substr(::buffer, ::Pos+1)
+
+   case ::type == "L"
+      ::buffer := " "
+
+   endcase
+
+   ::Assign()
+
+return Self
+
+//---------------------------------------------------------------------------//
+
+METHOD DeleteAll() CLASS tGet
+
+   local xValue
+
+   do case
+   case ::type == "C"
+      xValue := Space(::nMaxlen)
+   case ::type == "N"
+      xValue := 0
+   case ::type == "D"
+      xValue := Dtoc("")
+   case ::type == "L"
+      xValue := .f.
+   endcase
+
+   ::buffer := ::PutMask(xValue,.t.)
+   ::Pos    := 1
+   ::Assign()
+
+return Self
+
+//---------------------------------------------------------------------------//
+
+Function GetNew( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
+
+return tGet():New( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
+
+//---------------------------------------------------------------------------//
+
+function _GET_( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
+
+return TGet():New(,, bSetGet, cVarName, cPicture )
+
+//---------------------------------------------------------------------------//
+
