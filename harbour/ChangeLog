@@ -8,17 +8,21 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-01-31 20:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rdd/dbf1.c
+    * fixed possible GPF I introduced with last update.
+
 2005-01-30 22:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
-  * xharbour/contrib/rdd_ads/ace.h
+  * harbour/contrib/rdd_ads/ace.h
     * small modification for OpenWatcom on Linux
 
-  * xharbour/source/rdd/dbfntx/dbfntx1.c
+  * harbour/source/rdd/dbfntx/dbfntx1.c
     * minor fix: use *_GOTO( pArea, 0 ) instead
       of *_GOTO( pArea, pArea->ulRecCount+1000 )
     + use hb_fsSeekLarge() - for DBFs longer then 2GB
 
-  * xharbour/include/hbrddcdx.h
-  * xharbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/include/hbrddcdx.h
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
     + use hb_fsSeekLarge() - for DBFs longer then 2GB
     * my last xHarbour modifications:
       improved indexing speed of DBFs with very big number of
@@ -99,7 +103,7 @@
     ! Bug fixed, which oocured in some rare situations while record updating.
 
 2005-01-13 09:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
-  * xharbour/source/rtl/mod.c
+  * harbour/source/rtl/mod.c
     ! fixed mod() function to be Clipper/DBASE III compatible
       (not the % operator) for combination of psitive and negative
       numbers

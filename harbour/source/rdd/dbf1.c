@@ -2924,33 +2924,19 @@ static ERRCODE hb_dbfChildSync( DBFAREAP pArea, LPDBRELINFO pRelInfo )
  */
 static ERRCODE hb_dbfForceRel( DBFAREAP pArea )
 {
-   LPDBRELINFO lpdbPendingRel;
-   ERRCODE uiError;
-/*
-   ULONG ulRecNo;
-*/
-
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfForceRel(%p)", pArea));
 
    if( pArea->lpdbPendingRel )
    {
-      /* update buffers */
-      SELF_GOCOLD( ( AREAP ) pArea );
+      LPDBRELINFO lpdbPendingRel;
 
       lpdbPendingRel = pArea->lpdbPendingRel;
       pArea->lpdbPendingRel = NULL;
-      uiError = SELF_RELEVAL( ( AREAP ) pArea, lpdbPendingRel );
-/*
-      if( uiError == SUCCESS && !lpdbPendingRel->lpaParent->fEof &&
-          HB_IS_NUMERIC( pArea->valResult ) )
-         ulRecNo = hb_itemGetNL( pArea->valResult );
-      else
-         ulRecNo = 0;
-      uiError = SELF_GOTO( ( AREAP ) pArea, ulRecNo );
-      pArea->fFound = pArea->fPositioned;
-      pArea->fBof = FALSE;
-*/
-      return uiError;
+
+      /* update buffers */
+      SELF_GOCOLD( ( AREAP ) pArea );
+
+      return SELF_RELEVAL( ( AREAP ) pArea, lpdbPendingRel );
    }
    return SUCCESS;
 }
