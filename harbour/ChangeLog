@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-05-25 21:00 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/rtl/tget.prg
+    ! Fix picture function in lower case. (eg: @s )
+    Reported by Luiz Rafael Culik Guimaraes
+
 2002-05-25 13:15 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
   * contrib/mysql/tmysql.prg
     + CreateDatabase() method in TMYSqlServer
