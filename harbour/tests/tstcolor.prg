@@ -22,10 +22,28 @@
 proc main
    Local cColor := "r+/bg*,rg*/ng+,w/n,b+/w,rg/b,w+/n*"
 
-? "original set ", set(_SET_COLOR )
-? "should match ", setColor( cColor )
-? "input 1      ", cColor
-? "return       ", setColor("1/7,9/15")
-? "input 2      ", "1/7,9/15"
-? "return       ", setColor()
-? "final set    ", set(_SET_COLOR )
+   ? "original set ", set(_SET_COLOR )
+   ? "should match ", setColor( cColor )
+   ? "input 1      ", cColor
+   ? "return       ", setColor("1/7,9/15")
+   ? "input 2      ", "1/7,9/15"
+   ? "return       ", setColor()
+   ? "final set    ", set(_SET_COLOR )
+
+   SetColor("BG/N, N/BG")
+   ? "Hello1"
+   ColorSelect( CLR_ENHANCED )
+   ? "Hello2"
+   ColorSelect( CLR_STANDARD )
+   ? "Hello3"
+   ColorSelect( CLR_ENHANCED )
+   SetColor("GR/N, N/GR")
+   ? "Hello4"
+   ColorSelect( CLR_ENHANCED )
+   ? "Hello5"
+   ColorSelect( CLR_STANDARD )
+   ? "Hello6"
+   SetColor("B/N, N/B")
+   ? "Hello7"
+
+   RETURN

@@ -66,7 +66,6 @@ PRG_SOURCES=\
         dynsym.prg \
         exittest.prg \
         fib.prg \
-        filexist.prg \
         fornext.prg \
         fortest.prg \
         funcarr.prg \
@@ -79,7 +78,6 @@ PRG_SOURCES=\
         initexit.prg \
         inkeytst.prg \
         inline.prg \
-        instr.prg \
         iotest.prg \
         iotest2.prg \
         longdev.prg \
@@ -96,7 +94,6 @@ PRG_SOURCES=\
         objarr.prg \
         objasign.prg \
         objects.prg \
-        operat.prg \
         os.prg \
         output.prg \
         overload.prg \
@@ -120,13 +117,11 @@ PRG_SOURCES=\
         statinit.prg \
         statfun.prg \
         statics.prg \
-        strcmp.prg \
         strdelim.prg \
         strings.prg \
         strings2.prg \
         strings3.prg \
         strip.prg \
-        syserror.prg \
         t1.prg \
         test.prg \
         test_all.prg \
@@ -150,7 +145,6 @@ PRG_SOURCES=\
         testwarn.prg \
         tstalias.prg \
         tstcolor.prg \
-        val.prg \
         version.prg \
         while.prg \
 

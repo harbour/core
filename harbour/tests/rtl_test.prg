@@ -164,6 +164,7 @@ FUNCTION Main( cPar1, cPar2 )
    RETURN NIL
 
 STATIC FUNCTION Main_HVM()
+   LOCAL nA, nB, nC
 
 /* NOTE: CA-Cl*pper PP fails on these
    TEST_LINE( "1" .AND. "2"                   , "E BASE 1066 Argument error conditional " )
@@ -192,6 +193,7 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( ValType(  suNIL     )           , "U"   )
    TEST_LINE( ValType(  sbBlock   )           , "B"   )
    TEST_LINE( ValType(  saArray   )           , "A"   )
+   TEST_LINE( ValType( { 1, 2, 3 } )          , "A"   )
 #ifdef __HARBOUR__
    TEST_LINE( ValType( @scString  )           , "C"   ) /* Bug in CA-Cl*pper, it will return "U" */
    TEST_LINE( ValType( @scStringE )           , "C"   ) /* Bug in CA-Cl*pper, it will return "U" */
@@ -324,6 +326,14 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( "A"              <= "Z"              , .T.                                               )
    TEST_LINE( "Z"              <= " "              , .F.                                               )
    TEST_LINE( Chr(0)           <= " "              , .T.                                               )
+   TEST_LINE( "Hallo"          <= "Hello"          , .T.                                               )
+   TEST_LINE( "Hello"          <= "Hello"          , .T.                                               )
+   TEST_LINE( "Hell"           <= "Hello"          , .T.                                               )
+   TEST_LINE( "Hellow"         <= "Hello"          , .T.                                               )
+   TEST_LINE( "J"              <= "Hello"          , .F.                                               )
+   TEST_LINE( ""               <= "Hello"          , .T.                                               )
+   TEST_LINE( "J"              <= ""               , .T.                                               )
+   TEST_LINE( ""               <= ""               , .T.                                               )
 
    /* < */
 
@@ -348,6 +358,14 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( "A"              <  "Z"              , .T.                                               )
    TEST_LINE( "Z"              <  "A"              , .F.                                               )
    TEST_LINE( Chr(0)           <  " "              , .T.                                               )
+   TEST_LINE( "Hallo"          <  "Hello"          , .T.                                               )
+   TEST_LINE( "Hello"          <  "Hello"          , .F.                                               )
+   TEST_LINE( "Hell"           <  "Hello"          , .T.                                               )
+   TEST_LINE( "Hellow"         <  "Hello"          , .F.                                               )
+   TEST_LINE( "J"              <  "Hello"          , .F.                                               )
+   TEST_LINE( ""               <  "Hello"          , .T.                                               )
+   TEST_LINE( "J"              <  ""               , .F.                                               )
+   TEST_LINE( ""               <  ""               , .F.                                               )
 
    /* >= */
 
@@ -372,6 +390,14 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( "A"              >= "Z"              , .F.                                               )
    TEST_LINE( "Z"              >= "A"              , .T.                                               )
    TEST_LINE( Chr(0)           >= " "              , .F.                                               )
+   TEST_LINE( "Hallo"          >= "Hello"          , .F.                                               )
+   TEST_LINE( "Hello"          >= "Hello"          , .T.                                               )
+   TEST_LINE( "Hell"           >= "Hello"          , .F.                                               )
+   TEST_LINE( "Hellow"         >= "Hello"          , .T.                                               )
+   TEST_LINE( "J"              >= "Hello"          , .T.                                               )
+   TEST_LINE( ""               >= "Hello"          , .F.                                               )
+   TEST_LINE( "J"              >= ""               , .T.                                               )
+   TEST_LINE( ""               >= ""               , .T.                                               )
 
    /* > */
 
@@ -396,6 +422,14 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( "A"              >  "Z"              , .F.                                               )
    TEST_LINE( "Z"              >  "A"              , .T.                                               )
    TEST_LINE( Chr(0)           >  " "              , .F.                                               )
+   TEST_LINE( "Hallo"          >  "Hello"          , .F.                                               )
+   TEST_LINE( "Hello"          >  "Hello"          , .F.                                               )
+   TEST_LINE( "Hell"           >  "Hello"          , .F.                                               )
+   TEST_LINE( "Hellow"         >  "Hello"          , .F.                                               )
+   TEST_LINE( "J"              >  "Hello"          , .T.                                               )
+   TEST_LINE( ""               >  "Hello"          , .F.                                               )
+   TEST_LINE( "J"              >  ""               , .F.                                               )
+   TEST_LINE( ""               >  ""               , .F.                                               )
 
    /* =, == */
 
@@ -421,6 +455,14 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( "Z" == "A"                      , .F.                                               )
    TEST_LINE( "A" == "A "                     , .F.                                               )
    TEST_LINE( "AA" == "A"                     , .F.                                               )
+   TEST_LINE( "Hallo"          == "Hello"     , .F.                                               )
+   TEST_LINE( "Hello"          == "Hello"     , .T.                                               )
+   TEST_LINE( "Hell"           == "Hello"     , .F.                                               )
+   TEST_LINE( "Hellow"         == "Hello"     , .F.                                               )
+   TEST_LINE( "J"              == "Hello"     , .F.                                               )
+   TEST_LINE( ""               == "Hello"     , .F.                                               )
+   TEST_LINE( "J"              == ""          , .F.                                               )
+   TEST_LINE( ""               == ""          , .T.                                               )
 
    TEST_LINE( scString  = scString            , .T.                                               )
    TEST_LINE( scString  = scStringE           , .T.                                               )
@@ -456,6 +498,14 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( "Z" != "A"                      , .T.                                               )
    TEST_LINE( "A" != "A "                     , .T.                                               )
    TEST_LINE( "AA" != "A"                     , .F.                                               )
+   TEST_LINE( "Hallo"          != "Hello"     , .T.                                               )
+   TEST_LINE( "Hello"          != "Hello"     , .F.                                               )
+   TEST_LINE( "Hell"           != "Hello"     , .T.                                               )
+   TEST_LINE( "Hellow"         != "Hello"     , .F.                                               )
+   TEST_LINE( "J"              != "Hello"     , .T.                                               )
+   TEST_LINE( ""               != "Hello"     , .T.                                               )
+   TEST_LINE( "J"              != ""          , .F.                                               )
+   TEST_LINE( ""               != ""          , .F.                                               )
 
    TEST_LINE( scString  != scString           , .F.                                               )
    TEST_LINE( scString  != scStringE          , .F.                                               )
@@ -591,6 +641,50 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( 1 ^ NIL                         , "E BASE 1088 Argument error ^ F:S" )
    TEST_LINE( 1 % NIL                         , "E BASE 1085 Argument error % F:S" )
 
+   /* The order of these tests is relevant, don't change it */
+
+   nA := 1
+   nB := 2
+   nC := 3
+
+   TEST_LINE( nA                              , 1 )
+   TEST_LINE( nB                              , 2 )
+   TEST_LINE( nC                              , 3 )
+
+   TEST_LINE( nA + nB                         , 3 )
+   TEST_LINE( nB - nA                         , 1 )
+   TEST_LINE( nB * nC                         , 6 )
+   TEST_LINE( nB * nC / 2                     , 3 )
+   TEST_LINE( nA += nB                        , 3 )
+   TEST_LINE( nA                              , 3 )
+   TEST_LINE( nA -= nB                        , 1 )
+   TEST_LINE( nA                              , 1 )
+   TEST_LINE( nA < nB                         , .T. )
+   TEST_LINE( nA > nB                         , .F. )
+   TEST_LINE( nA + nB <= nC                   , .T. )
+   TEST_LINE( nA + nB >= nC                   , .T. )
+   TEST_LINE( nA *= nB                        , 2 )
+   TEST_LINE( nA /= nB                        , 1 )
+   TEST_LINE( nA                              , 1 )
+   TEST_LINE( nB ** 3                         , 8 )
+   TEST_LINE( nB ^ 3                          , 8 )
+   TEST_LINE( 8 % 3                           , 2 )
+   TEST_LINE( nA++                            , 1 )
+   TEST_LINE( nA                              , 2 )
+   TEST_LINE( ++nA                            , 3 )
+   TEST_LINE( nA                              , 3 )
+   TEST_LINE( nA--                            , 3 )
+   TEST_LINE( nA                              , 2 )
+   TEST_LINE( --nA                            , 1 )
+   TEST_LINE( nA                              , 1 )
+
+   /* Operator precedence */
+
+   TEST_LINE( 1 + 2 * 3 / 4 - 2 ** 2 ^ 3      , -61.50 )
+   TEST_LINE( 1 + 2 * 3 / 4 - 2 ** 2 ^ 3 == 2 , .F. )
+
+   /* */
+
    TEST_LINE( -Month(sdDate)                  , -1                                 )
    TEST_LINE( Str(-(Month(sdDate)))           , "        -1"                       )
    TEST_LINE( Str(-(Val("10")))               , "       -10"                       )
@@ -606,6 +700,15 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( "AA" $ 1                        , "E BASE 1109 Argument error $ F:S" )
    TEST_LINE( scString $ 1                    , "E BASE 1109 Argument error $ F:S" )
    TEST_LINE( 1 $ "AA"                        , "E BASE 1109 Argument error $ F:S" )
+
+   TEST_LINE( "d" $ "bcde"                    , .T. )
+   TEST_LINE( "D" $ "BCDE"                    , .T. )
+   TEST_LINE( "a" $ "bcde"                    , .F. )
+   TEST_LINE( "d" $ "BCDE"                    , .F. )
+   TEST_LINE( "D" $ "bcde"                    , .F. )
+   TEST_LINE( "de" $ "bcde"                   , .T. )
+   TEST_LINE( "bd" $ "bcde"                   , .F. )
+   TEST_LINE( "BD" $ "bcde"                   , .F. )
 
    IF TEST_OPT_Z()
 
@@ -1679,6 +1782,9 @@ STATIC FUNCTION Long_STRINGS()
 
 #endif
 
+/* NOTE: The order of the tests is relevant here, so don't
+         rearrange them. */
+
 STATIC FUNCTION Main_FILE()
    LOCAL cFileName := "$$FILEIO.TMP"
    LOCAL nFlags
@@ -1744,10 +1850,10 @@ STATIC FUNCTION Main_FILE()
    TEST_LINE( TESTFIER( FClose() )                                     , 'E: 0      R: .F.'                  )
    TEST_LINE( TESTFIER( FClose( fhnd ) )                               , 'E: 0      R: .T.'                  )
    TEST_LINE( TESTFIER( FClose( fhnd ) )                               , 'E: 6      R: .F.'                  )
-   TEST_LINE( TESTFIER( FErase( 'NOT_HERE.$$$' ) )                     , 'E: 2      R: -1'                   )
+   TEST_LINE( TESTFIER( FErase( "NOT_HERE.$$$" ) )                     , 'E: 2      R: -1'                   )
    TEST_LINE( TESTFIER( FErase( 1 ) )                                  , 'E: 3      R: -1'                   )
-   TEST_LINE( TESTFIER( FErase( 'NOT_HERE.$$$' ) )                     , 'E: 2      R: -1'                   )
-   TEST_LINE( TESTFIER( FRename( 'NOT_HERE.$$$', 'A' ) )               , 'E: 2      R: -1'                   )
+   TEST_LINE( TESTFIER( FErase( "NOT_HERE.$$$" ) )                     , 'E: 2      R: -1'                   )
+   TEST_LINE( TESTFIER( FRename( "NOT_HERE.$$$", 'A' ) )               , 'E: 2      R: -1'                   )
 
    nFlags := FO_READWRITE
    fhnd := FOpen( cFileName, nFlags )
@@ -1805,12 +1911,13 @@ STATIC FUNCTION Main_FILE()
    TEST_LINE( TESTFIER( FClose() )                                     , 'E: 0      R: .F.'                )
    TEST_LINE( TESTFIER( FClose( fhnd ) )                               , 'E: 0      R: .T.'                )
    TEST_LINE( TESTFIER( FClose( fhnd ) )                               , 'E: 6      R: .F.'                )
-   TEST_LINE( TESTFIER( FErase( 'NOT_HERE.$$$' ) )                     , 'E: 2      R: -1'                 )
+   TEST_LINE( TESTFIER( FErase( "NOT_HERE.$$$" ) )                     , 'E: 2      R: -1'                 )
    TEST_LINE( TESTFIER( FErase( 1 ) )                                  , 'E: 3      R: -1'                 )
-   TEST_LINE( TESTFIER( FErase( 'NOT_HERE.$$$' ) )                     , 'E: 2      R: -1'                 )
-   TEST_LINE( TESTFIER( FRename( 'NOT_HERE.$$$', 'A' ) )               , 'E: 2      R: -1'                 )
+   TEST_LINE( TESTFIER( FErase( "NOT_HERE.$$$" ) )                     , 'E: 2      R: -1'                 )
+   TEST_LINE( TESTFIER( FRename( "NOT_HERE.$$$", 'A' ) )               , 'E: 2      R: -1'                 )
 
    TEST_LINE( TESTFIER( File( cFileName ) )                            , "E: 2      R: .T."    )
+   TEST_LINE( TESTFIER( File( "NOT_HERE.$$$" ) )                       , "E: 2      R: .F."    )
 
    FErase("$$FILEIO.TMP")
 
@@ -1820,6 +1927,20 @@ STATIC FUNCTION TESTFIER( xRetVal )
    RETURN PadR( "E: " + LTrim( Str( FError() ) ), 9 ) + " R: " + XToStr( xRetVal )
 
 STATIC FUNCTION Main_MISC()
+   LOCAL oError
+
+   /* Some random error object tests taken from the separate test source */
+
+   oError := ErrorNew()
+   TEST_LINE( oError:ClassName()              , "ERROR"                   )
+   oError:Description = "Its description"
+   TEST_LINE( oError:Description              , "Its description"         )
+#ifdef __CLIPPER__
+   TEST_LINE( Len( oError )                   , 7                         )
+#endif
+#ifdef __HARBOUR__
+   TEST_LINE( Len( oError )                   , 14                        )
+#endif
 
    /* "Samples" function tests (AMPM(), DAYS(), ELAPTIME(), ... ) */
 
@@ -2215,7 +2336,7 @@ STATIC FUNCTION Main_MISC()
 
    TEST_LINE( __CopyFile("$$COPYFR.TMP")                 , "E BASE 2010 Argument error __COPYFILE "   )
    TEST_LINE( __CopyFile("$$COPYFR.TMP", "$$COPYTO.TMP") , NIL                                        )
-   TEST_LINE( __CopyFile("_NOTHERE.$$$", "$$COPYTO.TMP") , "E BASE 2012 Open error _NOTHERE.$$$ F:DR" )
+   TEST_LINE( __CopyFile("NOT_HERE.$$$", "$$COPYTO.TMP") , "E BASE 2012 Open error NOT_HERE.$$$ F:DR" )
    TEST_LINE( __CopyFile("$$COPYFR.TMP", "*INVALID*.")   , "E BASE 2012 Create error *INVALID*. F:DR" )
 
    FErase("$$COPYFR.TMP")
@@ -2748,6 +2869,8 @@ STATIC FUNCTION TEST_BEGIN( cParam )
    SET DATE ANSI
    SET CENTURY ON
    SET EXACT OFF
+
+   FErase( "NOT_HERE.$$$" )
 
    /* Feedback */
 

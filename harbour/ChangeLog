@@ -1,3 +1,25 @@
+19991022-15:16 GMT+1 Victor Szel <info@szelvesz.hu>
+   * tests/rtl_test.prg
+   - tests/filexist.prg (removed)
+   - tests/val.prg (removed)
+   - tests/strcmp.prg (removed)
+   - tests/instr.prg (removed)
+   - tests/syserror.prg (removed)
+   - tests/operat.prg (removed)
+     tests/Makefile
+     + Rest of File() tests moved to RTL_TEST, so FILEXITS.PRG could be removed
+     + One ValType() test moved to RTL_TEST, so VAL.PRG could be removed
+     + STRCMP.PRG tests moved to RTL_TEST
+     + INSTR.PRG tests moved to RTL_TEST
+     + SYSERROR.PRG tests moved to RTL_TEST
+     + OPERAT.PRG tests moved to RTL_TEST
+     + Some new operator precedence and inline inc/dec op. tests added.
+     * Small cleanup in RTL_TEST.
+     ; All newly added tests passes.
+   * tests/tstcolor.prg
+     + Some tests added for the SetColor() bug fixed yesterday.
+     ! RETURN added to suppress warning.
+
 19991022-13:56 GMT+1 Victor Szel <info@szelvesz.hu>
    * tests/rtl_test.prg
    - tests/fileio.prg
