@@ -926,6 +926,8 @@ void hb_rddShutDown( void )
    if( s_szDefDriver )
       hb_xfree( s_szDefDriver );
 
+   s_szDefDriver = NULL;
+
    while( s_pRddList )
    {
       pRddNode = s_pRddList;
@@ -2898,7 +2900,7 @@ HB_FUNC( __RDDSETDEFAULT )
    if( uiLen > 0 )
    {
       s_szDefDriver = ( char * ) hb_xrealloc( s_szDefDriver, uiLen + 1 );
-      hb_strncpyUpper( s_szDefDriver, hb_parc( 1 ), uiLen+1 );
+      hb_strncpyUpper( s_szDefDriver, hb_parc( 1 ), uiLen );
    }
 }
 

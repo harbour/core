@@ -1,4 +1,4 @@
-/*
+ 		/*
  * $Id$
  */
 
@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2002-10-22 02:00 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
+  * source/rdd/dbcmd.c
+    ! corrected copy length in rddsetdefault
 
 2002-10-22 18:53 UTC+0100 Antonio Linares <alinares@fivetech.com>
   * source/rtl/filesys.c
