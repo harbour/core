@@ -50,7 +50,9 @@
  *
  */
 
-CLASS Character() FROM ScalarObject
+#include "hbclass.ch"
+
+CLASS Character FROM ScalarObject
 
    METHOD AsString()
    METHOD AsExpStr()
