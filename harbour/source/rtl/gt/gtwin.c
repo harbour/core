@@ -424,6 +424,7 @@ void hb_gt_DispBegin(void)
                  coBuf,                     /* col/row size of source buffer */
                  coDest,        /* upper-left cell to write data from in src */
                  &csbi.srWindow);     /* screen buffer rect to write data to */
+    SetConsoleCursorPosition(HOutput, csbi.dwCursorPosition);
 
     hb_xfree(pCharInfo);
   }

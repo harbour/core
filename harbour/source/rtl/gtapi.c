@@ -751,10 +751,15 @@ int hb_gtWriteCon(char * fpStr, ULONG length)
              ++uiRow;
              ldisp=TRUE;
              break;
+
           case 13:
              uiCol = 0;
+             if( ! (*fpPtr == 0x0a ))
+                nLen = 0 ;
+           
 /*             hb_gtSetPos (uiRow, uiCol); */
              break;
+
           default:
              if( ++uiCol > s_uiMaxCol )
              {

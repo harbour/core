@@ -345,6 +345,7 @@ static void hb_outerr( char * fpStr, ULONG len )
 static void hb_altout( char * fpStr, ULONG len )
 {
    char * fpPtr = fpStr;
+
    if( hb_set.HB_SET_CONSOLE )
    {
    #ifdef HARBOUR_USE_GTAPI
@@ -518,7 +519,7 @@ void hb_devpos( WORD row, WORD col )
    WORD count;
    /* Position printer if SET DEVICE TO PRINTER and valid printer file
       otherwise position console */
-   if( hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set_printhan >= 0 )
+   if( hb_set_printhan >= 0 && hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 )
    {
       if( row < p_row )
       {
@@ -540,34 +541,34 @@ void hb_devpos( WORD row, WORD col )
 
 HARBOUR HB_OUTSTD( void ) /* writes a list of values to the standard output device */
 {
-   WORD w;
+   WORD w, pcount = hb_pcount();
 
-   for( w = 0; w < hb_pcount(); w++ )
+   for( w = 1; w <= pcount; w++ )
    {
-      hb_out( w + 1, hb_outstd );
-      if( w < hb_pcount() - 1) hb_outstd( " ", 1 );
+      hb_out( w, hb_outstd );
+      if( w < pcount) hb_outstd( " ", 1 );
    }
 }
 
 HARBOUR HB_OUTERR( void ) /* writes a list of values to the standard error device */
 {
-   WORD w;
+   WORD w, pcount = hb_pcount();
 
-   for( w = 0; w < hb_pcount(); w++ )
+   for( w = 1; w <= pcount; w++ )
    {
-      hb_out( w + 1, hb_outerr );
-      if( w < hb_pcount() - 1) hb_outerr( " ", 1 );
+      hb_out( w, hb_outerr );
+      if( w < pcount ) hb_outerr( " ", 1 );
    }
 }
 
 HARBOUR HB_QQOUT( void ) /* writes a list of values to the current device (screen or printer) and is affected by SET ALTERNATE */
 {
-   WORD w;
+   WORD w, pcount = hb_pcount();
 
-   for( w = 0; w < hb_pcount(); w++ )
+   for( w = 1; w <= pcount; w++ )
    {
-      hb_out( w + 1, hb_altout );
-      if( w < hb_pcount() - 1) hb_altout( " ", 1 );
+      hb_out( w, hb_altout );
+      if( w < pcount ) hb_altout( " ", 1 );
    }
 }
 

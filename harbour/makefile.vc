@@ -177,7 +177,8 @@ HBPP_LIB_OBJS = \
 #
 
 DEBUG_LIB_OBJS = \
-    $(OBJ_DIR)\debugger.obj
+    $(OBJ_DIR)\debugger.obj \
+    $(OBJ_DIR)\tbrwtext.obj 
 
 #
 # Our default target
@@ -485,6 +486,12 @@ $(DEBUG_DIR)\debugger.c : $(DEBUG_DIR)\debugger.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
 
 $(OBJ_DIR)\debugger.obj : $(DEBUG_DIR)\debugger.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(DEBUG_DIR)\tbrwtext.c : $(DEBUG_DIR)\tbrwtext.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+
+$(OBJ_DIR)\tbrwtext.obj : $(DEBUG_DIR)\tbrwtext.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 #
