@@ -22,7 +22,7 @@
  */
 
 #DEFINE MAX_TOKENS 1024
-#DEFINE PP_BUFFER_SIZE 16384
+#DEFINE PP_BUFFER_SIZE 8192 //16384
 
 #ifdef __HARBOUR__
    #INCLUDE "hbextern.ch"
@@ -177,7 +177,10 @@ STATIC nRow, nCol
 STATIC s_nProcId := 0, s_aProcedures := {}, s_xRet, s_nIfLevel := 0, ;
        s_aProcStack := {}, s_nProcStack := 0
 
-STATIC s_asPrivates := {}, s_asPublics := {}, s_asLocals := {}, s_asStatics := {}
+STATIC s_asPrivates := {}, s_asPublics := {}, s_asLocals := {}, ;
+       s_asStatics := {}, s_aParams := {}
+
+STATIC s_sModule, s_aInitExit := { {}, {} }
 
 //--------------------------------------------------------------//
 
@@ -336,7 +339,7 @@ PROCEDURE ExecuteProcedure( aProc )
    NEXT
 
    /* Releasing Privates created by the Procedure */
-   nVars := Len( s_asPrivatess )
+   nVars := Len( s_asPrivates )
    FOR nVar := 1 TO nVars
       //Alert( "Released private: " + s_asPrivates[nVar] + " in " + s_aProcStack[s_nProcStack][1] )
       __MXRelease( s_asPrivates[nVar] )
@@ -557,6 +560,7 @@ PROCEDURE CompileLine( sPPed, nLine )
    LOCAL nNext, sBlock, sTemp
    LOCAL nLen, sLeft, sSymbol
    LOCAL nIncrease := 0, nOffset := 0
+   LOCAL nAt, nPos, cChr
 
    ExtractLeadingWS( @sPPed )
    DropTrailingWS( @sPPed )
@@ -574,26 +578,53 @@ PROCEDURE CompileLine( sPPed, nLine )
             CompileNestedBlocks( sBlock, @sBlock )
          #endif
 
-         IF sBlock = "__"
-            sSymbol := Upper( SubStr( sBlock, 3, 12 ) )
+         IF sBlock = "PP_PROC"
+            sSymbol := Upper( LTrim( SubStr( sBlock, At( ' ', sBlock ) ) ) )
+            aSize( s_aProcedures, ++s_nProcId )
 
-            IF sSymbol = "SETIF" .OR. sSymbol = "SETDOCASE"
-               nIncrease := 1
-            ELSEIF sSymbol = "SETEND"
-               nOffset := 1
-               nIncrease := -1
-            ELSEIF sSymbol = "SETELSEIF" .OR. sSymbol = "SETCASE"
-               nOffset := 1
-            ELSEIF sSymbol = "SETELSE" .OR. sSymbol = "OTHERWISE"
-               nOffset := 1
+            IF sBlock = "PP_PROC_PRG"
+               sSymbol := s_sModule + sSymbol
+            ELSEIF sBlock = "PP_PROC_INIT"
+               aAdd( s_aInitExit[1], s_nProcId )
+            ELSEIF sBlock = "PP_PROC_EXIT"
+               aAdd( s_aInitExit[2], s_nProcId )
             ENDIF
+
+            s_aProcedures[s_nProcId] := { sSymbol, {} }
          ELSE
-            sSymbol := SubStr( sBlock, 1, 12 )
+            IF sBlock = "__"
+               sSymbol := Upper( SubStr( sBlock, 3, 12 ) )
+
+               IF sSymbol = "SETIF" .OR. sSymbol = "SETDOCASE"
+                  nIncrease := 1
+               ELSEIF sSymbol = "SETEND"
+                  nOffset := 1
+                  nIncrease := -1
+               ELSEIF sSymbol = "SETELSEIF" .OR. sSymbol = "SETCASE"
+                  nOffset := 1
+               ELSEIF sSymbol = "SETELSE" .OR. sSymbol = "OTHERWISE"
+                  nOffset := 1
+               ENDIF
+            ELSE
+               nAt := At( "=", sBlock )
+               IF nAt > 1
+                  nAt--
+                  FOR nPos := 1 TO nAt
+                     cChr := SubStr( sBlock, nPos, 1 )
+                     IF ! ( IsAlpha( cChr ) .OR. IsDigit( cChr ) .OR. cChr == '_' .OR. cChr == ' ' )
+                        EXIT
+                     ENDIF
+                  NEXT
+                  IF nPos > nAt
+                     sBlock := Left( sBlock, nAt ) + ":" + SubStr( sBlock, nPos )
+                  ENDIF
+               ENDIF
+            ENDIF
+
+            aAdd( s_aProcedures[ s_nProcId ][2], { s_nIfLevel - nOffset, &( "{|| " + sBlock + " }" ), nLine } )
+
+            s_nIfLevel += nIncrease
          ENDIF
-
-         aAdd( s_aProcedures[ s_nProcId ][2], { s_nIfLevel - nOffset, &( "{|| " + sBlock + " }" ), nLine } )
-
-         s_nIfLevel += nIncrease
 
          sTemp  := RTrim( SubStr( sTemp, nNext + 1 ) )
          ExtractLeadingWS( @sTemp )
@@ -608,9 +639,18 @@ PROCEDURE CompileLine( sPPed, nLine )
              CompileNestedBlocks( sBlock, @sBlock )
          #endif
 
-         IF sBlock = "PROC"
+         IF sBlock = "PP_PROC"
             sSymbol := Upper( LTrim( SubStr( sBlock, At( ' ', sBlock ) ) ) )
             aSize( s_aProcedures, ++s_nProcId )
+
+            IF sBlock = "PP_PROC_PRG"
+               sSymbol := s_sModule + sSymbol
+            ELSEIF sBlock = "PP_PROC_INIT"
+               aAdd( s_aInitExit[1], s_nProcId )
+            ELSEIF sBlock = "PP_PROC_EXIT"
+               aAdd( s_aInitExit[2], s_nProcId )
+            ENDIF
+
             s_aProcedures[s_nProcId] := { sSymbol, {} }
          ELSE
             IF sBlock = "__"
@@ -626,7 +666,19 @@ PROCEDURE CompileLine( sPPed, nLine )
                   nOffset := 1
                ENDIF
             ELSE
-               sSymbol := SubStr( sBlock, 1, 12 )
+               nAt := At( "=", sBlock )
+               IF nAt > 1
+                  nAt--
+                  FOR nPos := 1 TO nAt
+                     cChr := SubStr( sBlock, nPos, 1 )
+                     IF ! ( IsAlpha( cChr ) .OR. IsDigit( cChr ) .OR. cChr == '_' .OR. cChr == ' ' )
+                        EXIT
+                     ENDIF
+                  NEXT
+                  IF nPos > nAt
+                     sBlock := Left( sBlock, nAt ) + ":" + SubStr( sBlock, nPos )
+                  ENDIF
+               ENDIF
             ENDIF
 
             aAdd( s_aProcedures[ s_nProcId ][2], { s_nIfLevel - nOffset, &( "{|| " + sBlock + " }" ), nLine } )
@@ -669,17 +721,76 @@ RETURN ""
 
 //--------------------------------------------------------------//
 
-PROCEDURE PP_Privates( aVars )
+PROCEDURE PP_LocalParams( aVars )
 
-   LOCAL nVar, nVars := Len( aVars )
+   LOCAL nVar, nVars := Len( aVars ), nAt, xInit, nParams
 
    FOR nVar := 1 TO nVars
+      IF ( nParams := Len( s_aParams ) ) > 0
+         xInit := s_aParams[1]
+         aDel( s_aParams, 1 )
+         aSize( s_aParams, nParams - 1 )
+      ELSE
+         xInit := NIL
+      ENDIF
+
       IF Type( aVars[nVar] ) = 'U'
          __QQPUB( aVars[nVar] )
-         &( aVars[nVar] ) := NIL
+         &( aVars[nVar] ) := xInit
+         aAdd( s_asLocals, aVars[nVar] )
+      ELSE
+         Alert( PP_ProcName() + " (" + LTrim( Str( PP_ProcLine() ) ) +  ") Declared Parameter redeclaration: " + aVars[nVar] )
+      ENDIF
+   NEXT
+
+RETURN
+
+//--------------------------------------------------------------//
+
+PROCEDURE PP_Params( aVars )
+
+   LOCAL nVar, nVars := Len( aVars ), nAt, xInit, nParams
+
+   FOR nVar := 1 TO nVars
+      IF ( nParams := Len( s_aParams ) ) > 0
+         xInit := s_aParams[1]
+         aDel( s_aParams, 1 )
+         aSize( s_aParams, nParams - 1 )
+      ELSE
+         xInit := NIL
+      ENDIF
+
+      IF Type( aVars[nVar] ) = 'U'
+         __QQPUB( aVars[nVar] )
+         &( aVars[nVar] ) := xInit
          aAdd( s_asPrivates, aVars[nVar] )
       ELSE
-         Alert( "Private redeclaration: " + aVars[nVar] )
+         Alert( PP_ProcName() + " (" + LTrim( Str( PP_ProcLine() ) ) +  ") Parameter redeclaration: " + aVars[nVar] )
+      ENDIF
+   NEXT
+
+RETURN
+
+//--------------------------------------------------------------//
+
+PROCEDURE PP_Privates( aVars )
+
+   LOCAL nVar, nVars := Len( aVars ), nAt, cInit
+
+   FOR nVar := 1 TO nVars
+      IF ( nAt := At( ":=", aVars[nVar] ) ) > 0
+         cInit := LTrim( SubStr( aVars[nVar], nAt + 2 ) )
+         aVars[nVar] := RTrim( Left( aVars[nVar], nAt - 1 ) )
+      ELSE
+         cInit := "NIL"
+      ENDIF
+
+      IF aScan( s_asPrivates, aVars[nVar] ) == 0
+         __QQPUB( aVars[nVar] )
+         &( aVars[nVar] ) := &( cInit )
+         aAdd( s_asPrivates, aVars[nVar] )
+      ELSE
+         Alert( PP_ProcName() + " (" + LTrim( Str( PP_ProcLine() ) ) +  ") Private redeclaration: " + aVars[nVar] )
       ENDIF
    NEXT
 
@@ -689,12 +800,19 @@ RETURN
 
 PROCEDURE PP_Locals( aVars )
 
-   LOCAL nVar, nVars := Len( aVars )
+   LOCAL nVar, nVars := Len( aVars ), nAt, cInit
 
    FOR nVar := 1 TO nVars
+      IF ( nAt := At( ":=", aVars[nVar] ) ) > 0
+         cInit := LTrim( SubStr( aVars[nVar], nAt + 2 ) )
+         aVars[nVar] := RTrim( Left( aVars[nVar], nAt - 1 ) )
+      ELSE
+         cInit := "NIL"
+      ENDIF
+
       IF Type( aVars[nVar] ) = 'U'
          __QQPUB( aVars[nVar] )
-         &( aVars[nVar] ) := NIL
+         &( aVars[nVar] ) := &( cInit )
          aAdd( s_asLocals, aVars[nVar] )
       ELSE
          Alert( "Local redeclaration: " + aVars[nVar] )
@@ -706,11 +824,19 @@ RETURN
 
 PROCEDURE PP_Publics( aVars )
 
-   LOCAL nVar, nVars := Len( aVars )
+   LOCAL nVar, nVars := Len( aVars ), nAt, cInit
 
    FOR nVar := 1 TO nVars
-      IF Type( aVars[nVar] ) = 'U'
+      IF ( nAt := At( ":=", aVars[nVar] ) ) > 0
+         cInit := LTrim( SubStr( aVars[nVar], nAt + 2 ) )
+         aVars[nVar] := RTrim( Left( aVars[nVar], nAt - 1 ) )
+      ELSE
+         cInit := ".F."
+      ENDIF
+
+      IF aScan( s_asPublics, aVars[nVar] ) == 0
          __QQPUB( aVars[nVar] )
+         &( aVars[nVar] ) := &( cInit )
          aAdd( s_asPublics, aVars[nVar] )
       ELSE
          Alert( "Public redeclaration: " + aVars[nVar] )
@@ -723,11 +849,19 @@ RETURN
 
 PROCEDURE PP_Statics( aVars )
 
-   LOCAL nVar, nVars := Len( aVars )
+   LOCAL nVar, nVars := Len( aVars ), nAt, cInit
 
    FOR nVar := 1 TO nVars
+      IF ( nAt := At( ":=", aVars[nVar] ) ) > 0
+         cInit := LTrim( SubStr( aVars[nVar], nAt + 2 ) )
+         aVars[nVar] := RTrim( Left( aVars[nVar], nAt - 1 ) )
+      ELSE
+         cInit := "NIL"
+      ENDIF
+
       IF Type( aVars[nVar] ) = 'U'
          __QQPUB( aVars[nVar] )
+         &( aVars[nVar] ) := &( cInit )
          aAdd( s_asStatics, aVars[nVar] )
       ELSE
          Alert( "Static redeclaration: " + aVars[nVar] )
@@ -740,24 +874,41 @@ RETURN
 
 PROCEDURE PP_Run( cFile )
 
+   LOCAL nBaseProc := s_nProcId, sPresetModule := s_sModule, nProc
+
+   s_sModule := cFile
+
    bCompile := .T.
 
    ErrorBlock( {|oErr| RP_Comp_Err( oErr ) } )
    ProcessFile( "rp_run.ch" )
    ProcessFile( cFile )
-
    ErrorBlock( {|oErr| RP_Run_Err( oErr ) } )
-   ExecuteProcedure( s_aProcedures[1] )
+
+   IF nBaseProc == 0
+      FOR nProc := 1 TO Len( s_aInitExit[1] )
+         ExecuteProcedure( s_aProcedures[ s_aInitExit[1][nProc] ] )
+      NEXT
+   ENDIF
+
+   ExecuteProcedure( s_aProcedures[ nBaseProc + 1 ] )
 
    bCompile := .F.
 
-   aSize( s_aProcedures, 0 )
+   IF nBaseProc == 0
+      FOR nProc := 1 TO Len( s_aInitExit[2] )
+         ExecuteProcedure( s_aProcedures[ s_aInitExit[2][nProc] ] )
+      NEXT
+      aSize( s_aProcedures, 0 )
+   ENDIF
 
    #ifdef __CLIPPER__
       Memory(-1)
    #else
 
    #endif
+
+   s_sModule := sPresetModule
 
 RETURN
 
@@ -875,7 +1026,7 @@ PROCEDURE RP_Comp_Err( oErr )
 
 FUNCTION RP_Run_Err( oErr )
 
-   LOCAL Counter, xArg, sArgs := "", nProc
+   LOCAL Counter, xArg, sArgs := "", nProc, sProc
 
    IF ValType( oErr:Args ) == 'A'
       sArgs := " - Arguments: "
@@ -917,15 +1068,27 @@ FUNCTION RP_Run_Err( oErr )
    ENDIF
 
    IF oErr:SubCode == 1001
-      nProc := aScan( s_aProcedures, {|aProc| aProc[1] == ProcName(2 + 2) } )
+      sProc := s_sModule + oErr:Operation //ProcName( 2 + 2 )
+      nProc := aScan( s_aProcedures, {|aProc| aProc[1] == sProc } )
+      IF nProc == 0
+         sProc := oErr:Operation //ProcName( 2 + 2 )
+         nProc := aScan( s_aProcedures, {|aProc| aProc[1] == sProc } )
+      ENDIF
+
       IF nProc > 0
          s_xRet := NIL
+         IF ValType( oErr:Args ) == 'A'
+            s_aParams := oErr:Args
+         ELSE
+            s_aParams := {}
+         ENDIF
+
          ExecuteProcedure( s_aProcedures[nProc] )
          RETURN ( s_xRet )
       ENDIF
    ENDIF
 
-   Alert( "Sorry, R/T Error: '" + oErr:Operation + "' " + oErr:Description + sArgs + " " + PP_ProcName() + '(' + LTrim( Str( PP_ProcLine() ) ) + ')')
+   Alert( "Sorry, R/T Error: '" + oErr:Operation + "' " + oErr:Description + sArgs + " " + PP_ProcName() + '(' + LTrim( Str( PP_ProcLine() ) ) + ") " + ProcName(2)  + "(" + LTrim( Str( ProcLine(2) ) ) + ")" )
 
    BREAK oErr
 
@@ -1832,10 +1995,12 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
             WHILE ( nNewLineAt := At( ';', sLine ) ) > 0
                nPendingLines++
                IF nPendingLines > Len( aPendingLines )
-                  aAdd( aPendingLines, Left( sLine, nNewLineAt - 1 ) )
-               ELSE
-                  aPendingLines[nPendingLines] := Left( sLine, nNewLineAt - 1 )
+                  aSize( aPendingLines, nPendingLines )
                ENDIF
+
+               nPosition++
+               aIns( aPendingLines, nPosition )
+               aPendingLines[ nPosition ] := Left( sLine, nNewLineAt - 1 )
 
                //? "Pending #", nPendingLines,  Left( sLine, nNewLineAt - 1 ), aPendingLines[nPendingLines]
                sLine := LTrim( SubStr( sLine, nNewLineAt + 1 ) )
@@ -1847,10 +2012,12 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
                IF nPendingLines > 0
                   nPendingLines++
                   IF nPendingLines > Len( aPendingLines )
-                     aAdd( aPendingLines, sLine )
-                  ELSE
-                     aPendingLines[nPendingLines] := sLine
-                  ENDI
+                     aSize( aPendingLines, nPendingLines )
+                  ENDIF
+
+                  nPosition++
+                  aIns( aPendingLines, nPosition )
+                  aPendingLines[ nPosition ] := sLine
 
                   //? "Pending #", nPendingLines, sLine, aPendingLines[nPendingLines]
                   sLine := aPendingLines[1]
@@ -1877,10 +2044,12 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
             WHILE ( nNewLineAt := At( ';', sLine ) ) > 0
                nPendingLines++
                IF nPendingLines > Len( aPendingLines )
-                  aAdd( aPendingLines, Left( sLine, nNewLineAt - 1 ) )
-               ELSE
-                  aPendingLines[nPendingLines] := Left( sLine, nNewLineAt - 1 )
+                  aSize( aPendingLines, nPendingLines )
                ENDIF
+
+               nPosition++
+               aIns( aPendingLines, nPosition )
+               aPendingLines[ nPosition ] := Left( sLine, nNewLineAt - 1 )
 
                //? "Pending #", nPendingLines,  Left( sLine, nNewLineAt - 1 ), aPendingLines[nPendingLines]
                sLine := LTrim( SubStr( sLine, nNewLineAt + 1 ) )
@@ -1892,18 +2061,17 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
                IF nPendingLines > 0
                   nPendingLines++
                   IF nPendingLines > Len( aPendingLines )
-                     aAdd( aPendingLines, sLine )
-                  ELSE
-                     aPendingLines[nPendingLines] := sLine
-                  ENDI
+                     aSize( aPendingLines, nPendingLines )
+                  ENDIF
 
-                  aAdd( asOutLines, NIL ) // Reserving place ordinal holder
+                  nPosition++
+                  aIns( aPendingLines, nPosition )
+                  aPendingLines[ nPosition ] := sLine
 
                   //? "Pending #", nPendingLines,  sLine, aPendingLines[nPendingLines]
                   sLine := aPendingLines[1]
                   aDel( aPendingLines, 1 )
                   nPendingLines--
-
                ENDIF
 
                LOOP
@@ -1926,14 +2094,6 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
             nPosition := 0
             WHILE ( nNewLineAt := At( ';', sLine ) ) > 0
                nPendingLines++
-               /*
-               IF nPendingLines > Len( aPendingLines )
-                  aAdd( aPendingLines, Left( sLine, nNewLineAt - 1 ) )
-               ELSE
-                  aPendingLines[nPendingLines] := Left( sLine, nNewLineAt - 1 )
-               ENDIF
-               */
-
                IF nPendingLines > Len( aPendingLines )
                   aSize( aPendingLines, nPendingLines )
                ENDIF
@@ -1951,14 +2111,6 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
             ELSE
                IF nPendingLines > 0
                   nPendingLines++
-
-                  /*
-                  IF nPendingLines > Len( aPendingLines )
-                     aAdd( aPendingLines, sLine )
-                  ELSE
-                     aPendingLines[nPendingLines] := sLine
-                  ENDI
-                  */
 
                   IF nPendingLines > Len( aPendingLines )
                      aSize( aPendingLines, nPendingLines )
@@ -3092,7 +3244,7 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
   ELSEIF Left( sToken, 1 ) == ')'
 
      sLine := sToken + sLine
-     sExp := ''
+     sExp := NIL
 
   ELSEIF Left( sToken, 1 ) == '('
 
@@ -3117,7 +3269,7 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
   ELSEIF Left( sToken, 1 ) == '}'
 
      sLine := sToken + sLine
-     sExp := ''
+     sExp := NIL
 
   ELSEIF Left( sToken, 1 ) == '{'
 
@@ -3192,11 +3344,11 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
   ELSEIF Left( sToken, 1 ) == ',' .AND. ! cType $ ",A"
 
      sLine := sToken + sLine
-     sExp := ''
+     sExp := NIL
 
   ELSE
 
-     sExp  := sToken
+     sExp := sToken
 
   ENDIF
 

@@ -1,14 +1,22 @@
+2001-03-13 03:30 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+   * contrib/dot/rp_run.ch
+      + Added support for initializers for PRVATE, PUBLIC, LOCAL, STATIC
+      + Added support for Declared Parameters and PARAMETRS.
+      + Added support for STATIC Procedures & Functions (will not be seen by modules called by DO <filename>.prg and vice-versa.
+      + Added support for INIT and EXIT procedures.
+
 2001-03-13 14:30 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * source/rdd/dbfntx/dbfntx1.c
    * include/hbrddntx.h
      + creating of indexes with numeric and date type expression
-     ! fixed some problems with movement when key have characters with 
+     ! fixed some problems with movement when key have characters with
        codes > 128
 
 2001-03-13 11:50 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
   * source/lang/msgeo.c
     ! Updated
-    + Added harbour license 
+    + Added harbour license
     ( provided by Jos© Lal­n <dezac@corevia.com> )
 
 2001-03-11 21:43 UTC+0500 April <awhite@user.rose.com>
