@@ -106,7 +106,7 @@ HB_FUNC( MLCOUNT )
       {
          if( bWordWrap )
          {
-            if( ulLastSpace == 0 )
+            if( ulLastSpace == 0 || ulLastSpace == ulCurLength )
                ulCurLength = 1;
             else
                ulCurLength = ulCurLength - ulLastSpace;
