@@ -68,6 +68,8 @@ static void    hb_vmReleaseLocalSymbols( void );  /* releases the memory of the 
 static void    hb_vmDebuggerShowLine( WORD wLine ); /* makes the debugger shows a specific source code line */
 static void    hb_vmDebuggerEndProc( void ); /* notifies the debugger for an endproc */
 
+static void hb_vmArrayNew( HB_ITEM_PTR, WORD ); /* creates array */
+
 #ifdef HARBOUR_OBJ_GENERATION
 static void    hb_vmProcessObjSymbols ( void ); /* process Harbour generated OBJ symbols */
 
@@ -896,24 +898,58 @@ void hb_vmDec( void )
    }
 }
 
+/* This function creates an array item using 'wDimension' as an index
+ * to retrieve the number of elements from the stack
+ */ 
+static void hb_vmArrayNew( HB_ITEM_PTR pArray, WORD wDimension )
+{
+   ULONG ulElements;
+   HB_ITEM_PTR pDim = stack.pPos - wDimension;
+
+   /* use the proper type of number of elements */
+   switch( pDim->type & ~IT_BYREF )
+   {
+      case IT_INTEGER:
+         ulElements = (ULONG) pDim->item.asInteger.value;
+         break;
+
+      case IT_LONG:
+         ulElements = pDim->item.asLong.value;
+         break;
+
+      case IT_DOUBLE:
+         ulElements = (ULONG) pDim->item.asDouble.value;
+         break;
+
+      default:
+         /* NOTE: Clipper creates empty array if non-numeric value is 
+          * specified as dimension and stops further processing.
+          * There is no runtime error generated.
+          */
+         ulElements = 0;
+         break;
+   }
+
+   /* create an array */
+   hb_arrayNew( pArray, ulElements );
+
+   if( --wDimension )
+   {
+      /* call self recursively to create next dimensions 
+       */
+      while( ulElements )
+         hb_vmArrayNew( hb_arrayGetItemPointer( pArray, ulElements-- ), wDimension );
+   }
+}
+
 void hb_vmDimArray( WORD wDimensions ) /* generates a wDimensions Array and initialize those dimensions from the stack values */
 {
    HB_ITEM itArray;
-   WORD w; /* , wElements; */
 
    itArray.type = IT_NIL;
-   hb_arrayNew( &itArray, ( stack.pPos - wDimensions )->item.asLong.value );
+   hb_vmArrayNew( &itArray, wDimensions );
 
-   if( wDimensions > 1 )
-      hb_errInternal( 9999, "HVM.C hb_vmDimArray() does not supports multiple dimensions yet", NULL, NULL );
-
-/*
-   for( w = 0; w < wElements; w++ )
-      hb_itemCopy( itArray.item.asArray.value->pItems + w,
-                   stack.pPos - wElements + w );
-*/
-
-   for( w = 0; w < wDimensions; w++ )
+   while( wDimensions-- )
       hb_stackPop();
 
    hb_itemCopy( stack.pPos, &itArray );

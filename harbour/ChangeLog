@@ -1,3 +1,31 @@
+19990908-17:00 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.y
+        * corrected handling of parenthesized expressions
+        * corrected generation of pcodes for declaration of dimensioned
+        array variables ( LOCAL var[ 2, 4 ] ) -  there is no longer POP
+        opcode between array dimensions
+
+    *source/vm/hvm.c
+        + added code that creates multi-dimensioned arrays
+        (arrays declared by LOCAL arr[ 3, 5, getDim() ] - it 
+        supports PRIVATE and PUBLIC declaration too)
+
+    *source/rtl/arrays.c
+        + added functions hb_arrayGetItemPointer() which returns a pointer
+        to an item occcupied by a specified array element
+
+    *include/extend.h
+        + added declaration of hb_arrayGetItemPointer() function
+
+    *tests/broken/parexpr.prg
+        ! moved to tests/working directory
+        + added some code to test IF and IIF expressions (it is really
+        related to parenthesized expressions)
+
+    *tests/working/Makefile
+        + added parexpr.prg
+
 19990908-10:30 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/environ.c
     ! I restored the Windows #ifdef #include block from the 1.43 version,

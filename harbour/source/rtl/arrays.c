@@ -262,6 +262,32 @@ char * hb_arrayGetDS( PHB_ITEM pArray, ULONG ulIndex, char * szDate )
    return szDate;
 }
 
+BOOL hb_arrayGetBool( PHB_ITEM pArray, ULONG ulIndex )
+{
+   if( IS_ARRAY( pArray ) )
+   {
+      if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+         return hb_itemGetL( pArray->item.asArray.value->pItems + ulIndex - 1 );
+   }
+
+   return FALSE;
+}
+
+/*
+ * This function returns a pointer to an item occupied by the specified
+ * array element - it doesn't return an item's value
+ */
+PHB_ITEM hb_arrayGetItemPointer( PHB_ITEM pArray, ULONG ulIndex )
+{
+   if( IS_ARRAY( pArray ) )
+   {
+      if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+         return pArray->item.asArray.value->pItems + ( ulIndex - 1 );
+   }
+
+   return NULL;
+}
+
 BOOL hb_arrayGetL( PHB_ITEM pArray, ULONG ulIndex )
 {
    if( IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )

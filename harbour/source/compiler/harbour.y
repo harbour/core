@@ -139,6 +139,22 @@ void AliasSwap( void );
 void AliasAdd( ALIASID_PTR );
 void AliasRemove( void );
 
+/* Support for parenthesized expressions
+ */
+typedef struct _EXPLIST
+{
+   BYTE * prevPCode;        /* pcode buffer used at the start of expression */
+   LONG prevSize;
+   LONG prevPos;
+   BYTE * exprPCode;        /* pcode buffer for current expression */
+   LONG exprSize;
+   struct _EXPLIST *pPrev;  /* previous expression in the list */
+   struct _EXPLIST *pNext;  /* next expression in the list */
+} EXPLIST, *EXPLIST_PTR;
+
+void ExpListPush( void );  /* pushes the new expression on the stack */
+void ExpListPop( int );    /* pops previous N expressions */
+
 /* lex & yacc related prototypes */
 void yyerror( char * ); /* parsing error management function */
 int yylex( void );      /* main lex token function, called by yyparse() */
@@ -192,6 +208,7 @@ void GenArray( WORD wElements ); /* instructs the virtual machine to build an ar
 void GenBreak( void );  /* generate code for BREAK statement */
 void * GenElseIf( void * pFirstElseIf, WORD wOffset ); /* generates a support structure for elseifs pcode fixups */
 void GenExterns( void ); /* generates the symbols for the EXTERN names */
+void GenIfInline( void ); /* generates pcodes for IIF( expr1, expr2, expr3 ) */
 PFUNCTION GetFuncall( char * szFunName ); /* locates a previously defined called function */
 int GetFieldVarPos( char *, PFUNCTION * );   /* return if passed name is a field variable */
 PVAR GetVar( PVAR pVars, WORD wOrder ); /* returns a variable if defined or zero */
@@ -477,6 +494,8 @@ ALIASID_PTR pAliasId = NULL;
 WORD _wLastLinePos = 0;    /* position of last opcode with line number */
 BOOL _bDontGenLineNum = FALSE;   /* suppress line number generation */
 
+EXPLIST_PTR _pExpList = NULL;    /* stack used for parenthesized expressions */
+
 PSTACK_VAL_TYPE pStackValType = NULL; /* compile time stack values linked list */
 char cVarType = ' ';               /* current declared variable type */
 
@@ -536,7 +555,7 @@ extern int _iState;     /* current parser state (defined in harbour.l */
 %type <string>  IDENTIFIER LITERAL FunStart MethStart IdSend ObjectData AliasVar
 %type <dNum>    DOUBLE
 %type <iNumber> ArgList ElemList PareExpList ExpList FunCall FunScope IncDec
-%type <iNumber> Params ParamList Logical
+%type <iNumber> Params ParamList Logical ArrExpList
 %type <iNumber> INTEGER BlockExpList Argument IfBegin VarId VarList MethParams ObjFunCall
 %type <iNumber> MethCall BlockList FieldList DoArgList VarAt
 %type <lNumber> INTLONG WhileBegin BlockBegin
@@ -709,11 +728,11 @@ NumExpression : DOUBLE                        { PushDouble( $1.dNumber,$1.bDec )
 ConExpression : NIL                           { PushNil(); }
            | LITERAL                          { PushString( $1 ); }
            | CodeBlock                        {}
+           | Logical                          { PushLogical( $1 ); }
            ;
 
 DynExpression : Variable
            | VarUnary
-           | Logical                          { PushLogical( $1 ); }
            | Operators                        {}
            | FunCall                          { Function( $1 ); }
            | IfInline                         {}
@@ -722,59 +741,24 @@ DynExpression : Variable
            | Macro                            {}
            | AliasVar                         { PushId( $1 ); AliasRemove(); }
            | AliasFunc                        {}
-           | PareExpList                      {}
            | SELF                             { GenPCode1( HB_P_PUSHSELF ); }
            ;
 
-Expression : NumExpression
+SimpleExpression : NumExpression
            | ConExpression
            | DynExpression
            ;
 
-IfInline   : IIF '(' Expression ',' { $<iNumber>$ = JumpFalse( 0 ); }
-                IfInlExp ',' { $<iNumber>$ = Jump( 0 ); JumpHere( $<iNumber>5 ); }
-                IfInlExp ')' { JumpHere( $<iNumber>8 );
-                if( _bWarnings )
-                {
-                  PSTACK_VAL_TYPE pFree;
-
-                  if( pStackValType )
-                  {
-                    pFree = pStackValType;
-                    debug_msg( "\n***---IIF()\n", NULL );
-
-                    pStackValType = pStackValType->pPrev;
-                    hb_xfree( ( void * )pFree );
-                  }
-                  else
-                    debug_msg( "\n***IIF() Compile time stack overflow\n", NULL );
-                }
-             }
-
-           | IF '(' Expression ',' { $<iNumber>$ = JumpFalse( 0 ); }
-                IfInlExp ',' { $<iNumber>$ = Jump( 0 ); JumpHere( $<iNumber>5 ); }
-                IfInlExp ')' {  JumpHere( $<iNumber>8 );
-
-                if( _bWarnings )
-                {
-                    PSTACK_VAL_TYPE pFree;
-
-                    if( pStackValType )
-                    {
-                      pFree = pStackValType;
-                      debug_msg( "\n***---IIF()\n", NULL );
-
-                      pStackValType = pStackValType->pPrev;
-                      hb_xfree( ( void * )pFree );
-                    }
-                    else
-                      debug_msg( "\n***IIF() Compile time stack overflow\n", NULL );
-                }
-              }
+Expression : SimpleExpression       {}
+           | PareExpList            {}
            ;
 
-IfInlExp   : /* nothing => nil */            { PushNil(); }
+EmptyExpression: /* nothing => nil */
            | Expression
+           ;
+
+IfInline   : IIF PareExpList3       { GenIfInline(); }
+           | IF  PareExpList3       { GenIfInline(); }
            ;
 
 Macro      : '&' Variable
@@ -983,11 +967,42 @@ BlockList  : IDENTIFIER                            { cVarType = ' '; AddVar( $1 
            | BlockList ',' IDENTIFIER             { AddVar( $3 ); $$++; }
            ;
 
-PareExpList: '(' ExpList ')'        { $$ = $2; }
+/* There is a conflict between the use of IF( Expr1, Expr2, Expr3 )
+ * and parenthesized expression ( Expr1, Expr2, Expr3 )
+ * To solve this conflict we have to split the definitions into more
+ * atomic ones.
+ *   Also the generation of pcodes have to be delayed and moved to the
+ * end of whole parenthesized expression.
+ */
+PareExpList1: ExpList1 ')'        { ExpListPop( 1 ); }
+            ;
+
+PareExpList2: ExpList2 ')'        { ExpListPop( 2 ); }
+            ;
+
+PareExpList3: ExpList3 ')'        { /* this needs the special handling if used in inline IF */ }
+            ;
+
+PareExpListN: ExpList ')'         { ExpListPop( $1 ); }
            ;
 
-ExpList    : Expression %prec POST                    { $$ = 1; }
-           | ExpList { GenPCode1( HB_P_POP ); } ',' Expression %prec POST  { $$++; }
+PareExpList : PareExpList1        { }
+            | PareExpList2        { }
+            | PareExpList3        { ExpListPop( 3 ); }
+            | PareExpListN        { }
+            ;
+
+ExpList1   : '(' { ExpListPush(); } EmptyExpression
+           ;
+
+ExpList2   : ExpList1 ',' { ExpListPush(); } EmptyExpression
+           ;
+
+ExpList3   : ExpList2 ',' { ExpListPush(); } EmptyExpression
+           ;
+
+ExpList    : ExpList3 { ExpListPush(); } ',' EmptyExpression { $$ = 4; }
+           | ExpList  { ExpListPush(); } ',' EmptyExpression { $$++;   }
            ;
 
 VarDefs    : LOCAL { iVarScope = VS_LOCAL; Line(); } VarList Crlf { cVarType = ' '; }
@@ -1019,8 +1034,12 @@ VarDef     : IDENTIFIER                                   { cVarType = ' '; AddV
            | IDENTIFIER AS_ARRAY     INASSIGN Expression  { cVarType = 'A'; AddVar( $1 ); PopId( $1 ); }
            | IDENTIFIER AS_BLOCK     INASSIGN Expression  { cVarType = 'B'; AddVar( $1 ); PopId( $1 ); }
            | IDENTIFIER AS_OBJECT    INASSIGN Expression  { cVarType = 'O'; AddVar( $1 ); PopId( $1 ); }
-           | IDENTIFIER '[' ExpList ']'                   { cVarType = ' '; AddVar( $1 ); DimArray( $3 ); PopId( $1 ); }
-           | IDENTIFIER '[' ExpList ']' AS_ARRAY          { cVarType = 'A'; AddVar( $1 ); DimArray( $3 ); PopId( $1 ); }
+           | IDENTIFIER ArrExpList ']'                { cVarType = ' '; AddVar( $1 ); DimArray( $2 ); PopId( $1 ); }
+           | IDENTIFIER ArrExpList ']' AS_ARRAY       { cVarType = 'A'; AddVar( $1 ); DimArray( $2 ); PopId( $1 ); }
+           ;
+
+ArrExpList : '[' Expression              { $$ = 1; }
+           | ArrExpList ',' Expression   { $$++; }
            ;
 
 FieldsDef  : FIELD { iVarScope =VS_FIELD; } FieldList Crlf
@@ -1058,7 +1077,19 @@ IfEndif    : IfBegin EndIf                    { JumpHere( $1 ); }
            | IfBegin IfElseIf IfElse EndIf    { JumpHere( $1 ); FixElseIfs( $2 ); }
            ;
 
-IfBegin    : IF Expression { ++_wIfCounter; } Crlf { $$ = JumpFalse( 0 ); Line(); }
+IfBegin    : IF SimpleExpression { ++_wIfCounter; } Crlf { $$ = JumpFalse( 0 ); Line(); }
+                IfStats
+                { $$ = Jump( 0 ); JumpHere( $<iNumber>5 ); }
+
+           | IF PareExpList1 { ++_wIfCounter; } Crlf { $$ = JumpFalse( 0 ); Line(); }
+                IfStats
+                { $$ = Jump( 0 ); JumpHere( $<iNumber>5 ); }
+
+           | IF PareExpList2 { ++_wIfCounter; } Crlf { $$ = JumpFalse( 0 ); Line(); }
+                IfStats
+                { $$ = Jump( 0 ); JumpHere( $<iNumber>5 ); }
+
+           | IF PareExpListN { ++_wIfCounter; } Crlf { $$ = JumpFalse( 0 ); Line(); }
                 IfStats
                 { $$ = Jump( 0 ); JumpHere( $<iNumber>5 ); }
            ;
@@ -2200,6 +2231,97 @@ void DupPCode( WORD wStart ) /* duplicates the current generated pcode from an o
 }
 
 /*
+ * Starts a new expression in the parenthesized epressions list
+ */
+void ExpListPush( void )
+{
+   EXPLIST_PTR pExp = (EXPLIST_PTR) hb_xgrab( sizeof(EXPLIST) );
+
+   pExp->pNext = pExp->pPrev =NULL;
+
+   /* Store the previous state on the stack */
+   if( _pExpList )
+   {
+      _pExpList->pNext = pExp;
+      pExp->pPrev = _pExpList;
+      /* save currently used pcode buffer */
+      _pExpList->exprSize =functions.pLast->lPCodePos;
+   }
+   _pExpList   = pExp;
+
+   /* store current pcode buffer */
+   pExp->prevPCode =functions.pLast->pCode;
+   pExp->prevSize  =functions.pLast->lPCodeSize;
+   pExp->prevPos   =functions.pLast->lPCodePos;
+
+   /* and create the new one */
+   functions.pLast->pCode = ( BYTE * ) hb_xgrab( PCODE_CHUNK );
+   functions.pLast->lPCodeSize = PCODE_CHUNK;
+   functions.pLast->lPCodePos  = 0;
+
+   pExp->exprPCode =functions.pLast->pCode;
+}
+
+/*
+ * Pops specified number of expressions from the stack
+ */
+void ExpListPop( int iExpCount )
+{
+   EXPLIST_PTR pExp, pDel;
+
+   /* save currently used pcode buffer */
+   _pExpList->exprSize  =functions.pLast->lPCodePos;
+   _pExpList->exprPCode =functions.pLast->pCode;
+
+   /* find the first expression in the list */
+   while( --iExpCount )
+      _pExpList = _pExpList->pPrev;
+
+   /* return to the original pcode buffer */
+   functions.pLast->pCode      =_pExpList->prevPCode;
+   functions.pLast->lPCodeSize =_pExpList->prevSize;
+   functions.pLast->lPCodePos  =_pExpList->prevPos;
+
+   pExp = _pExpList;
+   if( _pExpList->pPrev )
+   {
+      _pExpList =_pExpList->pPrev;
+      _pExpList->pNext =NULL;
+   }
+   else
+      _pExpList = NULL;
+
+   while( pExp )
+   {
+      if( pExp->exprSize )
+      {
+         GenPCodeN( pExp->exprPCode, pExp->exprSize );
+         if( pExp->pNext )
+            GenPCode1( HB_P_POP );
+      }
+      else
+      {
+         /* exprN, , exprN1
+          * in this context empty expression is not allowed 
+          *
+          * NOTE: 
+          * We don't have to generate this error - it is safe to continue
+          * pcode generation - in this case an empty expression will not
+          * generate any opcode
+          */
+         GenError( _szCErrors, 'E', ERR_SYNTAX, ")", NULL );
+      }
+
+      hb_xfree( pExp->exprPCode );
+
+      pDel =pExp;
+      pExp =pExp->pNext;
+      hb_xfree( pDel );
+   }
+}
+
+
+/*
  * Function generates passed pcode for passed database field
  */
 void FieldPCode( BYTE bPCode, char * szVarName )
@@ -3328,6 +3450,134 @@ void GenExterns( void ) /* generates the symbols for the EXTERN names */
       hb_xfree( ( void * ) pDelete );
    }
 }
+
+/* This function generates pcodes for IIF( expr1, expr2, expr3 )
+ * or IF( expr1, expr2, expr3 )
+ *
+ * NOTE:
+ *   'IF' followed by parenthesized expression containing 3 expressions
+ * is always interpreted as IF inlined - it is not possible to distinguish
+ * it from IF( expr1, expr2, expr3 ); ENDIF syntax
+ * (This behaviour is Clipper compatible)
+ */
+void GenIfInline( void )
+{
+   EXPLIST_PTR pExp, pDel;
+   int iExpCount = 3;   /* We are expecting 3 expressions here */
+   BOOL bGenPCode;
+
+   /* save currently used pcode buffer */
+   _pExpList->exprSize  =functions.pLast->lPCodePos;
+   _pExpList->exprPCode =functions.pLast->pCode;
+
+   /* find the first expression in the list */
+   while( --iExpCount )
+      _pExpList = _pExpList->pPrev;
+
+   /* return to the original pcode buffer */
+   functions.pLast->pCode      =_pExpList->prevPCode;
+   functions.pLast->lPCodeSize =_pExpList->prevSize;
+   functions.pLast->lPCodePos  =_pExpList->prevPos;
+
+   /* Update the pointer for nested or next expressions */
+   pExp = _pExpList;
+   if( _pExpList->pPrev )
+   {
+      _pExpList =_pExpList->pPrev;
+      _pExpList->pNext =NULL;
+   }
+   else
+      _pExpList = NULL;
+
+   bGenPCode =TRUE;
+   pDel =pExp;    /* save it for later use */
+
+   /* pExp points now to pcode buffer for logical condition
+    */
+   if( pExp->exprSize == 0 )
+   {
+      /* The logical condition have to be specified.
+       * If it is empty then generate the syntax error
+       */
+      GenError( _szCErrors, 'E', ERR_SYNTAX, ",", NULL );
+   }
+   else if( pExp->exprSize == 1 )
+   {
+      /* one byte opcode for logical condition - check if it is TRUE or FALSE
+       */
+      if( pExp->exprPCode[ 0 ] == HB_P_TRUE )
+      {
+         /* move to the second expression */
+         pExp =pExp->pNext;
+         if( pExp->exprSize )
+            GenPCodeN( pExp->exprPCode, pExp->exprSize );
+         else
+            PushNil();     /* IIF have to return some value */
+         bGenPCode =FALSE;
+      }
+      else if( pExp->exprPCode[ 0 ] == HB_P_FALSE )
+      {
+         /* move to the third expression */
+         pExp =pExp->pNext;
+         pExp =pExp->pNext;
+         if( pExp->exprSize )
+            GenPCodeN( pExp->exprPCode, pExp->exprSize );
+         else
+            PushNil();     /* IIF have to return some value */
+         bGenPCode =FALSE;
+      }
+   }
+
+   if( bGenPCode )
+   {  
+      /* generate pcodes for all expressions
+       */
+      LONG lPosFalse, lPosEnd;
+
+      GenPCodeN( pExp->exprPCode, pExp->exprSize );
+      lPosFalse =JumpFalse( 0 );
+
+      pExp =pExp->pNext;
+      if( pExp->exprSize )
+         GenPCodeN( pExp->exprPCode, pExp->exprSize );
+      else
+         PushNil();     /* IIF have to return some value */
+      lPosEnd =Jump( 0 );
+      JumpHere( lPosFalse );
+
+      pExp =pExp->pNext;
+      if( pExp->exprSize )
+         GenPCodeN( pExp->exprPCode, pExp->exprSize );
+      else
+         PushNil();     /* IIF have to return some value */
+      JumpHere( lPosEnd );
+   }
+
+   while( pDel )
+   {
+      pExp =pDel;
+      pDel =pDel->pNext;
+      hb_xfree( pExp->exprPCode );
+      hb_xfree( pExp );
+   }
+
+   if( _bWarnings )
+   {
+      PSTACK_VAL_TYPE pFree;
+
+      if( pStackValType )
+      {
+         pFree = pStackValType;
+         debug_msg( "\n***---IIF()\n", NULL );
+
+         pStackValType = pStackValType->pPrev;
+         hb_xfree( ( void * )pFree );
+      }
+      else
+         debug_msg( "\n***IIF() Compile time stack overflow\n", NULL );
+   }
+}
+
 
 PFUNCTION GetFuncall( char * szFunctionName ) /* returns a previously called defined function */
 {
