@@ -10,7 +10,7 @@
 
 2003-08-29 07:03 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
    * source/vm/hvm.c
-     ! Fix implemented fix for -0.0 on hb_vmPushDouble() as proposed by
+     ! Fix implemented for -0.0 on hb_vmPushDouble() as proposed by
        Alejandro de Garate <alex_degarate@hotmail.com>, and on hb_PushDoubleConst()
        (I guess this place may be a source for such bug too).
 
