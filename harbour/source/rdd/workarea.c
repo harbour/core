@@ -469,6 +469,7 @@ ERRCODE hb_waOrderInfo( AREAP pArea, USHORT index, LPDBORDERINFO param )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_waOrderInfo(%p, %hu, %p)", pArea, index, param));
    HB_SYMBOL_UNUSED( pArea );
+   HB_SYMBOL_UNUSED( index );
 
    if ( param->itmResult )
       hb_itemRelease( param->itmResult );
@@ -721,17 +722,29 @@ ERRCODE hb_waClearRel( AREAP pArea )
 }
 
 /*
- * Obtain the logical number of the specified WorkArea.
+ * Obtain the workarea number of the specified relation.
  */
 ERRCODE hb_waRelArea( AREAP pArea, USHORT uiRelNo, void * pRelArea )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_waRelArea(%p, %hu, %p)", pArea, uiRelNo, pRelArea));
-   HB_SYMBOL_UNUSED( pArea );
-   HB_SYMBOL_UNUSED( uiRelNo );
-   HB_SYMBOL_UNUSED( pRelArea );
+   LPDBRELINFO lpdbRelations;
+   USHORT uiIndex = 1;
+   USHORT* pWA = (USHORT *) pRelArea ;
+   /*TODO: Why pRelArea declared as void*? This creates casting hassles.*/
 
-   printf( "\nTODO: hb_waRelArea()\n" );
-   return SUCCESS;
+   HB_TRACE(HB_TR_DEBUG, ("hb_waRelArea(%p, %hu, %p)", pArea, uiRelNo, pRelArea));
+
+   *pWA = 0;
+   lpdbRelations = pArea->lpdbRelations;
+   while( lpdbRelations )
+   {
+      if ( uiIndex++ == uiRelNo )
+      {
+         *pWA = lpdbRelations->lpaChild->uiArea;
+         break;
+      }
+      lpdbRelations = lpdbRelations->lpdbriNext;
+   }
+   return *pWA ? SUCCESS : FAILURE ;
 }
 
 /*
@@ -752,13 +765,26 @@ ERRCODE hb_waRelEval( AREAP pArea, LPDBRELINFO pRelInfo )
  */
 ERRCODE hb_waRelText( AREAP pArea, USHORT uiRelNo, void * pExpr )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_waRelText(%p, %hu, %p)", pArea, uiRelNo, pExpr));
-   HB_SYMBOL_UNUSED( pArea );
-   HB_SYMBOL_UNUSED( uiRelNo );
-   HB_SYMBOL_UNUSED( pExpr );
+   LPDBRELINFO lpdbRelations;
+   USHORT uiIndex = 1;
+   char* pBuf = (char*) pExpr;  /*TODO: Why is the string buffer declared as void*? This creates casting hassles.*/
 
-   printf( "\nTODO: hb_waRelText()\n" );
-   return SUCCESS;
+   HB_TRACE(HB_TR_DEBUG, ("hb_waRelText(%p, %hu, %p)", pArea, uiRelNo, pExpr));
+
+   *pBuf = 0;
+   lpdbRelations = pArea->lpdbRelations;
+
+   while( lpdbRelations )
+   {
+      if ( uiIndex++ == uiRelNo )
+      {
+         strcpy(pBuf, hb_itemGetCPtr( lpdbRelations->abKey) );
+         break;
+         /* TODO: Verify buffer size is big enough ?? */
+      }
+      lpdbRelations = lpdbRelations->lpdbriNext;
+   }
+   return *pBuf ? SUCCESS : FAILURE ;
 }
 
 /*

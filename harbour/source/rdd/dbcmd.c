@@ -30,7 +30,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
  * their web site at http://www.gnu.org/).
- *
+l *
  */
 
 #include <ctype.h>
@@ -2762,6 +2762,26 @@ HB_FUNC( ORDSCOPE )
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "ORDSCOPE" );
+}
+
+HB_FUNC( DBRELATION )  /* (<nRelation>) --> cLinkExp */
+{
+   char cExprBuff[ 256 ];  /*TODO: Correct buffer size initialization ??*/
+
+   cExprBuff[ 0 ] = 0;
+   if( s_pCurrArea )
+      SELF_RELTEXT( ( AREAP ) s_pCurrArea->pArea, hb_parni(1), &cExprBuff ) ;
+
+   hb_retc(cExprBuff);
+}
+
+HB_FUNC( DBRSELECT )  /* (<nRelation>) --> nWorkArea */
+{
+   USHORT uiWorkArea = 0;
+   if( s_pCurrArea )
+      SELF_RELAREA( ( AREAP ) s_pCurrArea->pArea, hb_parni(1), &uiWorkArea );
+
+   hb_retni( uiWorkArea );
 }
 
 HB_FUNC( DBCLEARRELATION )

@@ -764,7 +764,7 @@ HB_FUNC( ADSCOPYTABLE )
    {
       if( ISCHAR( 1 ) )
       {
-         AdsCopyTable( pArea->hTable, ADS_IGNOREFILTERS, hb_parc( 1 ) );
+         AdsCopyTable( pArea->hTable, ADS_RESPECTFILTERS, hb_parc( 1 ) );
       }
       else
       {

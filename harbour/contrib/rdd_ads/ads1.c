@@ -632,15 +632,11 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          *( pBuffer+i ) = ' ';
       *( pBuffer + ( int ) pField->uiLen ) = '\0';
    }
-//   else if( !pArea->fValidBuffer )
-//      adsGetRec( pArea, &pBuffer );
 
    AdsGetFieldName( pArea->hTable, uiIndex, szName, &pusBufLen );
    switch( pField->uiType )
    {
       case HB_IT_STRING:
-//         hb_itemPutCL( pItem, ( char * ) pBuffer + pArea->pFieldOffset[ uiIndex - 1 ],
-//                       pField->uiLen );
          if( !pArea->fEof )
          {
             pulLength = pArea->maxFieldLen;
@@ -667,34 +663,31 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case HB_IT_DATE:
-//         memcpy( szBuffer, pBuffer + pArea->pFieldOffset[ uiIndex - 1 ], 8 );
-//         szBuffer[ 8 ] = 0;
-        {
-         UNSIGNED8 pucFormat[ 11 ];
-         UNSIGNED16 pusLen = 10;
-         AdsGetDateFormat  ( pucFormat, &pusLen );
-         AdsSetDateFormat  ( (UCHAR*)"YYYYMMDD" );
-         if( !pArea->fEof )
          {
-            pulLength = pArea->maxFieldLen;
-            AdsGetField( pArea->hTable, szName, pBuffer, &pulLength, ADS_NONE );
+            UNSIGNED8 pucFormat[ 11 ];
+            UNSIGNED16 pusLen = 10;
+            AdsGetDateFormat  ( pucFormat, &pusLen );
+            AdsSetDateFormat  ( (UCHAR*)"YYYYMMDD" );
+            if( !pArea->fEof )
+            {
+               pulLength = pArea->maxFieldLen;
+               AdsGetField( pArea->hTable, szName, pBuffer, &pulLength, ADS_NONE );
+            }
+            hb_itemPutDS( pItem, pBuffer );
+            AdsSetDateFormat  ( pucFormat );
+            break;
          }
-         hb_itemPutDS( pItem, pBuffer );
-         AdsSetDateFormat  ( pucFormat );
-         break;
-        }
 
       case HB_IT_LOGICAL:
-         if( !pArea->fEof )
          {
-            pulLength = pArea->maxFieldLen;
-            AdsGetField( pArea->hTable, szName, pBuffer, &pulLength, ADS_NONE );
+            UNSIGNED16 pbValue = FALSE;
+            if( !pArea->fEof )
+            {
+               AdsGetLogical( pArea->hTable, szName, &pbValue );
+            }
+            hb_itemPutL( pItem, pbValue);
+            break;
          }
-         hb_itemPutL( pItem, pArea->pRecord[ pArea->pFieldOffset[ uiIndex - 1 ] ] == 'T' ||
-                      pArea->pRecord[ pArea->pFieldOffset[ uiIndex - 1 ] ] == 't' ||
-                      pArea->pRecord[ pArea->pFieldOffset[ uiIndex - 1 ] ] == 'Y' ||
-                      pArea->pRecord[ pArea->pFieldOffset[ uiIndex - 1 ] ] == 'y' );
-         break;
 
       case HB_IT_MEMO:
          {
@@ -1247,7 +1240,7 @@ static ERRCODE adsSetRel( ADSAREAP pArea, LPDBRELINFO  lpdbRelations )
    ADSHANDLE hIndex;
    UNSIGNED32 ulRetVal;
 
-   HB_TRACE(HB_TR_DEBUG, ("adssetRel(%p, %p)", pArea, lpdbRelations));
+   HB_TRACE(HB_TR_DEBUG, ("adsSetRel(%p, %p)", pArea, lpdbRelations));
 
    SUPER_SETREL( ( AREAP ) pArea, lpdbRelations );
    if( !( hIndex = ( (ADSAREAP)lpdbRelations->lpaChild )->hOrdCurrent ) )
@@ -1617,7 +1610,9 @@ DBOI_AUTOSHARE
 
       case DBOI_AUTOOPEN :
          hb_itemPutL( pOrderInfo->itmResult, TRUE );
-         /* TODO: throw some kind of error if caller tries to set to False */
+         /* TODO: Since ADS always opens structural indexes throw some kind of error if caller tries to set to False
+            OR be prepared to close indexes (if ADS will allow it) if autoopen is False
+         */
          break;
 
       default:

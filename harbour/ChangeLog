@@ -1,3 +1,19 @@
+2000-11-28 11:40 UTC+0800 Brian Hays <bhays@abacuslaw.com>
+   * contrib/rdd_ads/ads1.c
+      * fixed retrieval of logical values
+         NOTICE!! All logical fields were coming back as FALSE before!
+   * contrib/rdd_ads/adsfunc.c
+      * adsCopyTable respects filters now
+
+   * source/rdd/dbcmd.c
+      + added dbRelation, dbRSelect
+   * source/rdd/workarea.c
+      + implemented RelText, RelArea
+   * source/rtl\disksphb.c
+      *Changed default "" to NULL to fix "open" error
+   * source/debug/debugger.prg
+      * changed TGet to Get class reference
+
 2000-11-27 18:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
    * include/set.h
      % Changed hb_vm_bIdleRepeat to hb_set.HB_SET_IDLEREPEAT.

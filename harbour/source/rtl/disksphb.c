@@ -53,7 +53,7 @@
 
 HB_FUNC( HB_DISKSPACE )
 {
-   char * szPath = ISCHAR( 1 ) ? hb_parc( 1 ) : "";
+   char * szPath = ISCHAR( 1 ) ? hb_parc( 1 ) : NULL;
    USHORT uiType = ISNUM( 2 ) ? hb_parni( 2 ) : HB_DISK_AVAIL;
    double dSpace = 0.0;
 
@@ -288,24 +288,24 @@ HB_FUNC( HB_DISKSPACE )
 
    {
       struct statfs sf;
-      
+
       statfs( szPath, &sf );
-      
+
       switch( uiType )
       {
          case HB_DISK_AVAIL:
             dSpace = ( double ) sf.f_bavail * ( double ) sf.f_bsize;
             break;
-      
+
          case HB_DISK_FREE:
             dSpace = ( double ) sf.f_bfree * ( double ) sf.f_bsize;
             break;
-      
+
          case HB_DISK_USED:
-             dSpace = ( double ) ( sf.f_blocks - sf.f_bfree ) * 
+             dSpace = ( double ) ( sf.f_blocks - sf.f_bfree ) *
                       ( double ) sf.f_bsize;
              break;
-             
+
          case HB_DISK_TOTAL:
             dSpace = ( double ) sf.f_blocks * ( double ) sf.f_bsize;
             break;

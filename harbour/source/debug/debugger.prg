@@ -210,7 +210,7 @@ METHOD BuildCommandWindow() CLASS TDebugger
 
    cCommand := Space( ::oWndCommand:nRight - ::oWndCommand:nLeft - 3 )
    // We don't use the GET command here to avoid the painting of the GET
-   AAdd( GetList, TGet():New( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3,;
+   AAdd( GetList, Get():New( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3,;
          { | u | iif( PCount() > 0, cCommand := u, cCommand ) }, "cCommand" ) )
    ATail( GetList ):ColorSpec := Replicate( ::oWndCommand:cColor + ",", 5 )
    ::oGetListCommand := TGetList():New( GetList )
