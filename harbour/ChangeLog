@@ -1,3 +1,11 @@
+19990925-03:00 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/runner/stdalone/external.prg
+    include/external.ch
+    + Updated.
+  * source/rtl/gt/gtwin.c
+    * Copyright header formatting.
+
 19990925-00:05 GMT+3 Alexander Kresin
   * source/hbpp/hbpp.c
     * Fixed some bugs ( GPF after #undef and with non-symbolic string )

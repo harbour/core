@@ -36,6 +36,13 @@
 // Files from: vm
 //
 //
+//symbols from file: vm\cmdarg.c
+//
+EXTERNAL __ARGCHECK
+EXTERNAL __ARGSTRING
+EXTERNAL __ARGC
+EXTERNAL __ARGV
+//
 //symbols from file: vm\debug.c
 //
 EXTERNAL __ASTATIC
@@ -69,6 +76,8 @@ EXTERNAL ERRORLEVEL
 EXTERNAL PCOUNT
 EXTERNAL PVALUE
 EXTERNAL BREAK
+EXTERNAL HELP
+EXTERNAL __XHELP
 //
 //symbols from file: vm\hvm_.c
 //
@@ -115,6 +124,7 @@ EXTERNAL __CLS_INCDATA
 //
 //symbols from file: rtl\console.c
 //
+EXTERNAL HB_OSNEWLINE
 EXTERNAL OUTSTD
 EXTERNAL OUTERR
 EXTERNAL QQOUT
@@ -147,6 +157,7 @@ EXTERNAL SETCURSOR
 EXTERNAL SETBLINK
 EXTERNAL SETMODE
 EXTERNAL __ACCEPT
+EXTERNAL __ACCEPTSTR
 EXTERNAL __COLORINDEX
 //
 //symbols from file: rtl\copyfile.c
@@ -224,6 +235,8 @@ EXTERNAL BIN2W
 EXTERNAL I2BIN
 EXTERNAL L2BIN
 EXTERNAL W2BIN
+EXTERNAL HB_FNAMESPLIT
+EXTERNAL HB_FNAMEMERGE
 //
 //symbols from file: rtl\fm.c
 //
@@ -265,6 +278,11 @@ EXTERNAL MIN
 EXTERNAL MOD
 EXTERNAL ROUND
 EXTERNAL SQRT
+//
+//symbols from file: rtl\memofile.c
+//
+EXTERNAL MEMOREAD
+EXTERNAL MEMOWRIT
 //
 //symbols from file: rtl\memvars.c
 //
@@ -359,6 +377,7 @@ EXTERNAL ADIR
 //symbols from file: rtl\alert.prg
 //
 EXTERNAL ALERT
+EXTERNAL __NONOALERT
 //
 //symbols from file: rtl\asort.prg
 //

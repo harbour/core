@@ -6,8 +6,7 @@
  * Harbour Project source code:
  * Video subsystem for Win32 compilers
  *
- * Functions marked ptucker are
- * Copyright 1999 Paul Tucker - <ptucker@sympatico.ca>
+ * Copyright 1999 Paul Tucker <ptucker@sympatico.ca> (functions marked ptucker)
  *
  * www - http://www.harbour-project.org
  *
