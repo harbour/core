@@ -176,6 +176,9 @@
      source/rtl/stuff.c
      source/rtl/word.c
      - Superfluous #includes removed.
+20000320-23:00 GMT-3 Luiz Rafael Culik  <culik@sl.conex.net>
+    samples/cccppc/*.*
+    ! Removed contents from the CCCPPC dir
 
 20000320-22:30 GMT+1 Victor Szakats <info@szelvesz.hu>
 
