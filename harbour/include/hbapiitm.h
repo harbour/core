@@ -96,6 +96,7 @@ extern void     hb_itemInit     ( PHB_ITEM pItem );
 extern USHORT   hb_itemPCount   ( void );
 extern PHB_ITEM hb_itemParam    ( USHORT uiParam );
 extern PHB_ITEM hb_itemPutC     ( PHB_ITEM pItem, char * szText );
+extern PHB_ITEM hb_itemPutCConst( PHB_ITEM pItem, char * szText );
 extern PHB_ITEM hb_itemPutCPtr  ( PHB_ITEM pItem, char * szText, ULONG ulLen );
 extern PHB_ITEM hb_itemPutCL    ( PHB_ITEM pItem, char * szText, ULONG ulLen );
 extern void     hb_itemSetCMemo ( PHB_ITEM pItem );
