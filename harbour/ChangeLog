@@ -1,3 +1,80 @@
+2001-04-12 14:20 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * doc/hdr_tpl.txt
+    * Changed the year in the partial copyright template to 2001.
+
+  * contrib/hbzlib/hbzip.h
+  * contrib/hbzlib/tzipfile.prg
+  * contrib/hbzlib/zipfile.c
+  * contrib/hbzlib/zipfile2.c
+  * contrib/hbzlib/zlibapi1.c
+  * contrib/libmisc/nconvert.prg
+  * contrib/libnf/getver.c
+  * contrib/libnf/getvid.c
+  * contrib/libnf/mouse.c
+  * contrib/pdflib/pdfhbdoc.c
+  * source/debug/dbgtarr.prg
+  * source/debug/dbgtobj.prg
+  * source/lang/msgpt.c
+  * source/rdd/dblist.prg
+  * source/rdd/dbupdat.prg
+  * source/rtl/tlabel.prg
+  * source/rtl/treport.prg
+  * source/rtl/typefile.prg
+    * Replaced the old license with the new license with permission
+      from Luiz Rafael Culik Guimaraes <culik@nh.conex.com.br>
+
+  * source/rtl/abs.c
+  * source/rtl/gete.c
+  * source/rtl/math.c
+  * source/rtl/minmax.c
+  * source/rtl/mod.c
+  * source/rtl/padc.c
+  * source/rtl/padl.c
+  * source/rtl/padr.c
+    * Replaced the old license with the new license with permission
+      from Matthew "Mabster" Hamilton <mhamilton@bunge.com.au>
+
+  * contrib/hb_struc/hbstruc.prg
+  * source/compiler/harbour.slx
+  * source/compiler/simplex.c
+  * source/macro/macro.slx
+  * source/macro/maxroslx.c
+    * Replaced the old license with the new license with permission
+      from Ron Pinkas <Ron@Profit-Master.com>
+
+  * include/hbtrace.c
+  * source/common/hbtrace.c
+  * source/rtl/trace.c
+  * source/rtl/gtcrs/gtcrs.c
+    * Replaced the old license with the new license with permission
+      from Diethelm Guallar, Gonzalo <Gonzalo.Diethelm@sonda.com>
+
+  * contrib/msql/dbf2msql.prg
+  * contrib/msql/msql.c
+  * contrib/msql/msql.ch
+  * contrib/msql/test.prg
+  * contrib/msql/tmsql.prg
+  * contrib/mysql/dbf2mysql.prg
+  * contrib/mysql/mysql.c
+  * contrib/mysql/mysql.ch
+  * contrib/mysql/test.prg
+  * contrib/mysql/tmysql.prg
+  * contrib/mysql/tsqlbrw.prg
+  * source/debug/tbrwtext.prg
+  * source/lang/msgit.c
+  * source/rtl/memoedit.prg
+  * source/rtl/teditor.prg
+  * source/rtl/ttextlin.prg
+  * source/rtl/gtos2/gtos2.c
+    * Replaced the old license with the new license with permission
+      from Maurilio Longo <maurilio.longo@libero.it>
+
+  * source/rtl/teditorl.c
+    * Replaced the old license with the new license with permission
+      from Matthew "Mabster" Hamilton <mhamilton@bunge.com.au>
+      and Antonio Linares <alinares@fivetech.com>
+
 2001-04-12 10:42 UTC+0300 Chen Kedem <niki@actcom.co.il>
    * source/rtl/tone.c
    * source/rtl/gtos2/mouseos2.c

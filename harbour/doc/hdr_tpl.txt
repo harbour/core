@@ -64,7 +64,7 @@ FILE HEADER TEMPLATE (OPTIONAL ADDITION FOR PARTIAL COPYRIGHTS)
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 2000 {name} <{e-mail address}>
+ * Copyright 2001 {name} <{e-mail address}>
  *    {function or subsystem name}
  *
  * See doc/license.txt for licensing terms.
@@ -161,6 +161,7 @@ FUNCTION HEADER EXAMPLE
 /*
  * ChangeLog:
  *
+ * V 1.14   David G. Holm               Second year 2000 chaned to 2001
  * V 1.13   David G. Holm               Year changed to 2001 from 2000.
  *                                      License changed to be compatible with
  *                                      the Guile 1.4 license (the old one
