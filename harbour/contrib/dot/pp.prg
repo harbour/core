@@ -2620,7 +2620,9 @@ FUNCTION PP_PreProLine( sLine, nLine, sSource )
       ENDIF
 
       IF s_sIncludeFile != NIL
-         aAdd( asOutLines, "#line " + LTrim( Str( nLine ) ) + ' "' + Upper( sSource ) + '"' )
+         IF ! Empty( sSource )
+            aAdd( asOutLines, "#line " + LTrim( Str( nLine ) ) + ' "' + Upper( sSource ) + '"' )
+         ENDIF
          s_sIncludeFile := NIL
       ENDIF
 
