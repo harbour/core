@@ -186,6 +186,9 @@ METHOD HandleUserKey(nKey, nUserKey) CLASS TMemoEditor
          if nKey <= 256 .AND. AScan(aUnHandledKeys, nKey) == 0
             super:Edit(nKey)
          endif
+      if nKey == K_ALT_W
+           super:Edit(nKey)
+      endif
 
       // TOFIX: Not clipper compatible, see teditor.prg
       case (nUserKey >= 1 .AND. nUserKey <= 31) .OR. nUserKey == K_ALT_W
