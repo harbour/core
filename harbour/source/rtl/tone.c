@@ -30,6 +30,14 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.4    David G. Holm               Upper limit for frequency for OS/2
+                                        DosBeep() is 32767. The CA-Clipper
+                                        Tone() function does not have an
+                                        upper limit on the duration, so I
+                                        had to add an inner loop to deal
+                                        with very long durations. There are
+                                        actually 18.2 Clipper (PC) timer
+                                        ticks per second.
    V 1.2    David G. Holm               Added OS/2 GCC/EMX support.
    V 1.1    David G. Holm               Split machine dependent code into
                                         hb_tone() function for internal use
@@ -47,6 +55,7 @@
 
 #include "extend.h"
 #include "init.h"
+#include "inkey.h" /* For hb_releaseCPU() */
 
 #if defined(HARBOUR_GCC_OS2)
   ULONG DosBeep (ULONG ulFrequency, ULONG ulDuration);
@@ -62,16 +71,16 @@
  *  $SYNTAX$
  *      TONE( <nFrequency>, <nDuration> ) --> NIL
  *  $ARGUMENTS$
- *      <nFrequency> is a positive numeric value in the range of 37..32767
- *      specifies the frequency of the tone in herts.
- *
+ *      <nFrequency> is a non-negative numeric value that specifies the
+ *      frequency of the tone in hertz.
  *      <nDuration> is a positive numeric value which specifies the duration
  *      of the tone in 1/18 of a second units.
  *  $RETURNS$
  *      TONE() always return NIL.
  *  $DESCRIPTION$
  *      TONE() is a sound function that could be used to irritate the end
- *      user, his or her dog and the surrounding neighborhood.
+ *      user, his or her dog, and the surrounding neighborhood. The frequency
+ *      is clamped to the range 0 to 32767 Hz.
  *  $EXAMPLES$
  *      If lOk   // Good Sound
  *         TONE(  500, 1 )
@@ -86,11 +95,11 @@
  *      TONE( 800, 1 )                         // same as ? CHR(7)
  *      TONE( 32000, 200 )                     // any dogs around yet?
  *      TONE( 130.80, 1 )                      // musical note - C
- *      TONE( 400, 0 )                         // short beep in CA-Clipper
- *      TONE( 700 )                            // short beep in CA-Clipper
- *      TONE( 10, 1 )                          // do nothing in CA-Clipper
- *      TONE( -1 )                             // do nothing in CA-Clipper
- *      TONE( )                                // do nothing in CA-Clipper
+ *      TONE( 400, 0 )                         // short beep
+ *      TONE( 700 )                            // short beep
+ *      TONE( 10, 18.2 )                       // 1 second delay
+ *      TONE( -1 )                             // 1/18.2 second delay
+ *      TONE( )                                // 1/18.2 second delay
  *  $STATUS$
  *
  *  $COMPLIANCE$
@@ -113,38 +122,71 @@ HB_INIT_SYMBOLS_END( Tone__InitSymbols )
 void hb_tone( double frequency, double duration )
 {
    /* platform specific code */
-      /*
-         If duration is in ms, the conversion from
-         Clipper 1/18 sec is * 1000.0 / 18.0
-      */
+   /*
+      The conversion from Clipper timer tick units to
+      milliseconds is * 1000.0 / 18.2.
+   */
    /* TODO: add more platform support */
 #if defined(HARBOUR_GCC_OS2)
-      frequency = MIN( MAX( 0.0, frequency ), ULONG_MAX );
-      duration = duration * 1000.0 / 18.0;
-      duration = MIN( MAX ( 0.0, duration ), ULONG_MAX );
-      DosBeep( ( ULONG ) frequency, ( ULONG ) duration );
-#elif defined(OS2)
-      frequency = MIN( MAX( 0.0, frequency ), 65535.0 );
-      duration = duration * 1000.0 / 18.0;
-      duration = MIN( MAX ( 0.0, duration ), 65535.0 );
-      DosBeep( ( USHORT ) frequency, ( USHORT ) duration );
-#elif defined(__BORLANDC__)
-      frequency = MIN( MAX( 0.0, frequency ), 65535.0 );
-      duration = duration * 1000.0 / 18.0;
-      duration = MIN( MAX ( 0.0, duration ), 65535.0 );
-      sound( ( unsigned ) frequency );
-      delay( ( unsigned ) duration );
-      nosound();
+   ULONG temp;
+#elif defined(OS2) || defined(__BORLANDC__)
+   USHORT temp;
 #elif defined(__DJGPP__)
-      /* Note: delay() in <dos.h> does not work! */
-      clock_t end_clock;
-      frequency = MIN( MAX( 0.0, frequency ), 32767.0 );
-      duration = duration * CLOCKS_PER_SEC / 18.0 ;
-      duration = MIN( MAX ( 0.0, duration ), 65535.0 );
-      sound( ( int ) frequency );
-      end_clock = clock() + ( clock_t ) duration;
-      while( clock() < end_clock );
-      sound( 0 );
+   USHORT temp; /* Use USHORT, because this variable gets added to clock()
+                   to form end_clock and we want to minimize overflow risk */
+   clock_t end_clock;
+#else
+   /* Unsupported platform. */
+   ULONG temp;    /* Avoid unreferenced temp */
+   duration = -1; /* Exit without delay */
+#endif
+#if defined(HARBOUR_GCC_OS2) || defined(OS2) || defined(__BORLANDC__)
+   frequency = MIN( MAX( 0.0, frequency ), 32767.0 );
+   duration = duration * 1000.0 / 18.2; /* milliseconds */
+#endif
+#if defined(__BORLANDC__)
+   sound( ( unsigned ) frequency );
+#elif defined(__DJGPP__)
+   /* Note: delay() in <dos.h> does not work! */
+   frequency = MIN( MAX( 0.0, frequency ), 32767.0 );
+   duration = duration * CLOCKS_PER_SEC / 18.2 ; /* clocks */
+   sound( ( int ) frequency );
+#endif
+   while( duration > 0.0 )
+   {
+#if defined(HARBOUR_GCC_OS2)
+      temp = MIN( MAX ( 0, duration ), ULONG_MAX );
+#elif defined(OS2) || defined(__BORLANDC__) || defined(__DJGPP__)
+      temp = MIN( MAX ( 0, duration ), USHRT_MAX );
+#endif
+      duration -= temp;
+      if( temp <= 0 )
+      {
+         // Ensure that the loop gets terminated when
+         // only a fraction of the delay time remains.
+         duration = -1.0;
+      }
+      else
+      {
+#if defined(HARBOUR_GCC_OS2)
+         DosBeep( ( ULONG ) frequency, ( ULONG ) temp );
+#elif defined(OS2)
+         DosBeep( ( USHORT ) frequency, ( USHORT ) temp );
+#elif defined(__BORLANDC__)
+         delay( temp ); /* Probably not multi-tasking OS friendly!
+                           TODO: Change from delay() to clock() method? */
+#elif defined(__DJGPP__)
+         end_clock = clock() + ( clock_t ) temp;
+         while( clock() < end_clock )
+            hb_releaseCPU();
+#endif
+       }
+       hb_releaseCPU(); /* Try to be somewhat multi-tasking OS friendly */
+   }
+#if defined(__BORLANDC__)
+   nosound();
+#elif defined(__DJGPP__)
+   sound( 0 );
 #endif
 }
 

@@ -89,7 +89,7 @@ HB_INIT_SYMBOLS_END( Dates__InitSymbols )
 
 /* The other functions are pulled in automatically by initsymb.c */
 
-double hb_seconds( void )
+double hb_secondsToday( void )
 {
 #if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__) /* || defined(_MSC_VER) */
    struct time t;
@@ -702,7 +702,7 @@ HARBOUR HB_CDOW( void )
 HARBOUR HB_SECONDS( void )
 {
    if( hb_pcount() == 0 )
-      hb_retnd( hb_seconds() );
+      hb_retnd( hb_secondsToday() );
    else
    {
       /* QUESTION: Clipper catches this at compile time! */

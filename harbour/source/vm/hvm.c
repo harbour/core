@@ -822,8 +822,13 @@ void hb_vmDivide( void )
    double d1 = hb_vmPopDouble( &wDec1 );
 
    /* NOTE: Clipper always returns the result of a division
-            with the SET number of decimal places. */
-   hb_vmPushNumber( d1 / d2, hb_set.HB_SET_DECIMALS );
+            with the SET number of decimal places, unless the
+            divisor is zero, in which case the result is zero
+            with zero decimal places. */
+   if( d2 == 0.0 )
+      hb_vmPushInteger( 0 );
+   else
+      hb_vmPushNumber( d1 / d2, hb_set.HB_SET_DECIMALS );
 }
 
 void hb_vmDo( WORD wParams )

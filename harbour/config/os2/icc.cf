@@ -20,10 +20,16 @@ LD_OUT = /Fe
 LDFLAGS = /C-
 ifeq ($(HB_LIB_COMPILE),)
 LINKLIBS = $(foreach lib, $(LIBS), $(TOP)$(ROOT)source/$(lib)/$(ARCH)/$(lib)$(LIB_EXT))
+# If LIBS specifies the rdd library, add all DB drivers.
+ifeq ($(findstring rdd,$(LIBS)),rdd)
 LINKLIBS += $(foreach lib, $(HB_DB_DRIVERS), $(TOP)$(ROOT)source/rdd/$(lib)/$(ARCH)/$(lib)$(LIB_EXT))
+endif
 else
 LINKLIBS = $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
+# If LIBS specifies the rdd library, add all DB drivers.
+ifeq ($(findstring rdd,$(LIBS)),rdd)
 LINKELIBS += $(foreach lib, $(HB_DB_DRIVERS), $(lib)$(LIB_EXT))
+endif
 endif
 
 AR = ilib

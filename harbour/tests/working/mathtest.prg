@@ -3,8 +3,8 @@
 //
 
 func main()
-qout( 1 / 0 )
-qout( 1 % 0 )
+   qout( 1 % 0 )
+   qout( 1 / 0 )
    qout( sin( 33 ) )
    qout( cos( 43 ) )
    qout( tan( 54 ) )
@@ -24,6 +24,7 @@ qout( 1 % 0 )
    qout( max( 1.0, 1 ) )
    qout( max( 1, 10 ) )
    qout( min( stod( "19990101" ), stod( "20000101" ) ) )
-   qout( max( stod( "19990101" ), stod( "20000101" ) ), "An argument error will appear on the next line.")
+   qout( max( stod( "19990101" ), stod( "20000101" ) ) )
+   qout("An argument error will be generated.")
    qout( min( stod( "19990101" ), 20000101 ) )
 return nil

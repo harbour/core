@@ -29,6 +29,7 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.15   David G. Holm               Tested Borland 3.1 hb_releaseCPU()
    V 1.5    Paul Tucker                 ReleaseCPU comments
    V 1.4    Victor Szel
    V 1.3    Victor Szel                 #include <x> changed to #include "x".
@@ -77,7 +78,6 @@
 #include "errorapi.h"
 #include "extend.h"
 #include "init.h"
-#include "set.h"
 #include "inkey.h"
 
 HARBOUR HB___KEYBOARD( void );
@@ -126,26 +126,25 @@ void hb_releaseCPU( void )
 
    returns zero on failure. (means not supported)
  */
-/*
-
-#if defined(__TURBOC__)
+#if defined(DOS)
+  #if defined(__TURBOC__)
    _AX = 0x1680;
     geninterrupt(0x2f);
    _AH = 0;
    _AL ^= 0x80;
-#else
+  #else
     union REGS regs;
     regs.h.ah = 0x16;
     regs.h.al = 0x80;
-#if defined(__WATCOMC__) && defined(__386__)
+  #if defined(__WATCOMC__) && defined(__386__)
     int386(0x2f, &regs, &regs);
-#else
+  #else
     int86(0x2f, &regs, &regs);
-#endif
+  #endif
     regs.h.ah  = 0;
     regs.h.al ^= 0x80;
+  #endif
 #endif
-*/
 }
 
 int hb_inkey ( double seconds, HB_inkey_enum event_mask, int wait, int forever )

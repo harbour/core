@@ -210,8 +210,8 @@ HARBOUR HB_OS(void)
 HARBOUR HB_VERSION(void)
 {
    char hb_ver[ 80 ];
-   sprintf( hb_ver, "Harbour %d.%d%s Intl. (Build %d)  (%04d.%02d.%02d)",
-      hb_major, hb_minor, hb_revision, hb_build, hb_year, hb_month, hb_day );
+   sprintf( hb_ver, "Harbour %d.%d Intl. (Build %d%s)  (%04d.%02d.%02d)",
+      hb_major, hb_minor, hb_build, hb_revision, hb_year, hb_month, hb_day );
    hb_retc( hb_ver );
 }
 

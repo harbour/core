@@ -704,18 +704,16 @@ int hb_gtWriteCon(char * fpStr, ULONG length)
     int rc = 0, ldisp=FALSE, nLen = 0;
     USHORT uiRow = s_uiCurrentRow, uiCol = s_uiCurrentCol;
     USHORT tmpRow = s_uiCurrentRow, tmpCol = s_uiCurrentCol;
-    ULONG count;
-    char ch[2];
+    int ch;
     char * fpPtr = fpStr;
-    char strng[500];
+    #define STRNG_SIZE 500
+    char strng[ STRNG_SIZE ];
 
-    hb_gtDispBegin();
-
-    ch[1] = 0;
-    for(count = 0; count < length; count++)
+/*    hb_gtDispBegin(); */
+    while( length )
     {
-       ch [0] = *fpPtr++;
-       switch(ch [0])
+       ch = *fpPtr++;
+       switch( ch )
        {
           case 7:
              break;
@@ -754,8 +752,7 @@ int hb_gtWriteCon(char * fpStr, ULONG length)
 
           case 13:
              uiCol = 0;
-             if( ! (*fpPtr == 0x0a ))
-                nLen = 0 ;
+             if( *fpPtr != '\n') ldisp=TRUE;
            
 /*             hb_gtSetPos (uiRow, uiCol); */
              break;
@@ -767,51 +764,32 @@ int hb_gtWriteCon(char * fpStr, ULONG length)
                 ++uiRow;
                 ldisp = TRUE;
              }
-             if( ldisp )
-             {
-                hb_gtSetPos (tmpRow, tmpCol);
-                if( nLen )
-                   rc = hb_gtWrite(strng, nLen );
-                hb_gtDispEnd();
-                hb_gtDispBegin();
-                nLen=0;
-             }
-             if( uiRow > s_uiMaxRow )
-             {
-                hb_gtScroll(0, 0, s_uiMaxRow, s_uiMaxCol, uiRow - s_uiMaxRow, 0);
-                uiRow = s_uiMaxRow;
-                uiCol = 0;
-             }
-
-             if( ldisp )
-             {
-                tmpRow=uiRow; tmpCol=uiCol;
-                hb_gtSetPos( uiRow, uiCol);
-                ldisp = FALSE;
-             }
-             strng[nLen++] = ch[0];
+             strng[ nLen++ ] = ch;
+             if( nLen >= STRNG_SIZE ) ldisp = TRUE;
        }
-       if(rc)
+       length--;
+       if( ldisp || ! length )
+       {
+          hb_gtSetPos( tmpRow, tmpCol );
+          if( nLen )
+             rc = hb_gtWrite( strng, nLen );
+/*          hb_gtDispEnd(); */
+/*          hb_gtDispBegin(); */
+          nLen=0;
+          if( uiRow > s_uiMaxRow )
+          {
+             hb_gtScroll( 0, 0, s_uiMaxRow, s_uiMaxCol, uiRow - s_uiMaxRow, 0 );
+             uiRow = s_uiMaxRow;
+             uiCol = 0;
+          }
+          tmpRow=uiRow; tmpCol=uiCol;
+          hb_gtSetPos( uiRow, uiCol);
+          ldisp = FALSE;
+       }
+       if( rc )
           break;
     }
-
-    if( !rc )
-    {
-       hb_gtSetPos (tmpRow, tmpCol);
-       if( nLen )
-          rc = hb_gtWrite(strng, nLen );
-       if( uiRow > s_uiMaxRow )
-       {
-          hb_gtScroll(0, 0, s_uiMaxRow, s_uiMaxCol, uiRow - s_uiMaxRow, 0);
-          uiRow = s_uiMaxRow;
-          uiCol = 0;
-       }
-
-       hb_gtSetPos (uiRow, uiCol);
-    }
-
-    hb_gtDispEnd();
-
+/*    hb_gtDispEnd(); */
     return rc;
 }
 

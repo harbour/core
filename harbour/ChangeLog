@@ -1,3 +1,43 @@
+19990818-18:45 EDT David G. Holm <dholm@jsd-llc.com>
+  * config/os2/icc.cf
+    ! Fix to only use RDD libraries when RDD library is specified.
+  * include/inkey.h
+    + Added '#include "set.h"' to get HB_set_enum.
+  * source/rtl/dates.c
+    * Renamed hb_seconds() to hb_secondsToday() to avoid a duplicate
+      symbol warning when using a C++ compiler.
+  * source/rtl/environ.c
+    * Moved hb_revision to after hb_build to match Harbour build
+      number (e.g., "(Build 29a)").
+  * source/rtl/gtapi.c
+    ! Moved speed enhancement display code in hb_gtWriteCon() to be
+      outside the switch() statement, so that forced display updates
+      take place immediately instead of when the next character is
+      processed. (This bug caused QOUT to act like QQOUT.)
+    ! Added a check to force the display of whatever is in 'strng' when
+      the buffer is full, because it's possible to write more than 500
+      characters without hitting any other forced display conditions
+      when starting more than 500 characters away from the bottom right
+      corner of the screen (a 25 x 80 screen is 2000 characters).
+    - Commented out the calls to hb_gtDispBegin() and hb_gtDispEnd() in
+      hb_gtWriteCon() in anticipation of removing them, because their use
+      subverts the use of DISPBEGIN() and DISPEND() in Harbour code.
+  * source/rtl/inkey.c
+    - Removed '#include "set.h"', because inkey.h includes it.
+    + Uncommented DOS release CPU code and added '#if defined(DOS)'.
+  * source/rtl/tone.c
+    * Added support for long delays, like in Clipper.
+    ! OS/2 upper frequency limit is 32767.
+    * Limited all platforms to an upper frequency of 32767.
+  * source/vm/hvm.c
+    ! When dividing by 0, always return 0, just like Clipper.
+  * tests/working/mathtest.prg
+    * Moved modulo 0 test ahead of divide by 0 test.
+    * Put "error" text on a separate line.
+  * tests/working/sound.prg
+    + Calculate elapsed time, which should be close to 1.5 seconds
+      (except on platforms where SECONDS() only returns whole seconds).
+
 19990819-02:23 GMT+1 Bruno Cantero <bruno@issnet.net>
    * funclist.txt
      source/rdd/rddsys.prg
