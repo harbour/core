@@ -8,6 +8,22 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-12-31 06:16 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
+  * harbour/source/codepage/cdpesmwi.c
+    ! the init values were set to ESWIN instead of ESMWIN
+    Somehow my original entry was obliterated from the changelog as well as
+    my original commit of cdpesmwi.c:
+
+   2004-12-29 18:24 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
+     * hrbdll.bc
+     * hrbdll.vc
+     * makefile.bc
+     * makefile.nt
+     * makefile.vc
+       ! Added missing/new files from source/codepage/*.c & source/lang/*.c
+     + source/codepage/cdpesmwi.c
+       + Added Spanish Modern codepage
+
 2004-12-31 12:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapicdp.h
   * harbour/source/codepage/cdp_tpl.c
