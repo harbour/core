@@ -1,3 +1,7 @@
+19990718-14:13 CET Patrick Mast <harbour@PatrickMast.com>
+  * /source/hbpp
+    latest files from Alexander. With these files Build32.bat works ok.
+
 19990718-14:22 CET Eddie Runia <eddie@runia.com>
   * tests/working/run_all.bat
     Harbour compile added

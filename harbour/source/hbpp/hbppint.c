@@ -25,12 +25,13 @@
    their web site at http://www.gnu.org/).
  */
 
-#include <stdlib.h>
 #if defined(__GNUC__)
  #include <string.h>
+ #include <stdlib.h>
 #else
  #if (defined(_MSC_VER) || defined(__IBMCPP__) || defined(__WATCOMC__))
   #include <memory.h>
+  #include <stdlib.h>
  #else
   #include <alloc.h>
   #include <mem.h>
@@ -65,6 +66,7 @@ extern TRANSLATES *aTranslates ;
 
 int iBuffer, lenBuffer;
 int lPpo = 0;
+char sLine[STR_SIZE], sOutLine[STR_SIZE];
 FILE *yyppo;
 
 void Hbpp_init ( void )
@@ -79,7 +81,7 @@ void Hbpp_init ( void )
 int PreProcess( FILE* handl_i, FILE* handl_o, char *sOut )
 {
  static char sBuffer[BUFF_SIZE];           /* File read buffer */
- char sLine[STR_SIZE], sOutLine[STR_SIZE], *ptr, *ptrOut = sOut;
+ char *ptr, *ptrOut = sOut;
  int lContinue = 0;
  int lens=0, rdlen;
  int rezParse;
@@ -141,7 +143,7 @@ int PreProcess( FILE* handl_i, FILE* handl_o, char *sOut )
 int Hp_Parse( FILE* handl_i, FILE* handl_o )
 {
  char sBuffer[BUFF_SIZE];           /* File read buffer */
- char sLine[STR_SIZE], *ptr;
+ char *ptr;
  int lContinue = 0;
  int iBuffer = 10, lenBuffer = 10;
  int lens=0, rdlen;
