@@ -7,6 +7,14 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2002-09-30 16:46 UTC+0300 Chen Kedem <niki@actcom.co.il>
+  * doc/en/input.txt
+  * doc/en/lang.txt
+  * doc/en/menu.txt
+  * doc/en/objfunc.txt
+    ! columns in <table></table> need to be at least 3 spaces apart
+
 2002-09-29 12:00 UTC+0700 Andi Jahja <andijahja@harbour-id.net>
   * source/rtl/tget.prg
     ! fixed get (value and display) involving negative (with decimal)

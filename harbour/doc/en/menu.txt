@@ -66,14 +66,14 @@
  *                         displayed.  1 origin.  Default 1.
  *
  *      <nWindowRow>     - the number of the window row on which the initial
- *                         item is to be displayed. 0 origin.  Default 0.   
+ *                         item is to be displayed. 0 origin.  Default 0.
  *  $RETURNS$
- *      <nPosition>  - the number of the item to be selected, or 0 if the 
- *                   selection was aborted.   
+ *      <nPosition>  - the number of the item to be selected, or 0 if the
+ *                   selection was aborted.
  *  $DESCRIPTION$
- *      Allows selection of an element from an array.   
+ *      Allows selection of an element from an array.
  *      Please see standard Clipper documentation for ACHOICE for
- *      additional detail.   
+ *      additional detail.
  *  $EXAMPLES$
  *      aItems := { "One", "Two", "Three" }
  *      nChoice := ACHOICE( 10, 10, 20, 20, aItems )
@@ -102,19 +102,19 @@
  *      __AtPrompt( <nRow>, <nCol>, <cPrompt>, [<xMsg>] ) --> .F.
  *  $ARGUMENTS$
  *      <nRow> is the row number to display the menu <cPrompt>. Value could
- *      range from zero to MAXROW().   
+ *      range from zero to MAXROW().
  *
  *      <nCol> is the column number to display the menu <cPrompt>. Value
- *      could range from zero to MAXCOL().   
+ *      could range from zero to MAXCOL().
  *
- *      <cPrompt> is the menu item character string to display.   
+ *      <cPrompt> is the menu item character string to display.
  *
  *      <xMsg> define a message to display each time this menu item is
  *      highlighted. <xMsg> could be a character string or code block that
  *      is evaluated to a character string. If <xMsg> is not specified or
- *      got the wrong type, an empty string ("") would be used.   
+ *      got the wrong type, an empty string ("") would be used.
  *  $RETURNS$
- *      __AtPrompt() always return .F.   
+ *      __AtPrompt() always return .F.
  *  $DESCRIPTION$
  *      With __AtPrompt() you define and display a menu item, each call to
  *      __AtPrompt() add another item to the menu, to start the menu itself
@@ -122,10 +122,10 @@
  *      define any row and column combination and they will be displayed at
  *      the order of definition. After each call to __AtPrompt(), the cursor
  *      is placed one column to the right of the last text displayed, and
- *      ROW() and COL() are updated.   
+ *      ROW() and COL() are updated.
  *
  *      @...PROMPT command is preprocessed into __AtPrompt() function during
- *      compile time.   
+ *      compile time.
  *  $EXAMPLES$
  *      // display a two line menu with status line at the bottom
  *      // let the user select favorite day
@@ -147,7 +147,7 @@
  *  $COMPLIANCE$
  *      CA-Clipper array is limited to 4096 items, and therefor 4096 menu
  *      items are the maximum that could be defined per one menu, Harbour
- *      does not have this limit (not that you'll ever need that).   
+ *      does not have this limit (not that you'll ever need that).
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -166,19 +166,19 @@
  *      @ <nRow>, <nCol> PROMPT <cPrompt> [MESSAGE <xMsg>]
  *  $ARGUMENTS$
  *      <nRow> is the row number to display the menu <cPrompt>. Value could
- *      range from zero to MAXROW().   
+ *      range from zero to MAXROW().
  *
  *      <nCol> is the column number to display the menu <cPrompt>. Value
- *      could range from zero to MAXCOL().   
+ *      could range from zero to MAXCOL().
  *
- *      <cPrompt> is the menu item character string to display.   
+ *      <cPrompt> is the menu item character string to display.
  *
  *      <xMsg> define a message to display each time this menu item is
  *      highlighted. <xMsg> could be a character string or code block that
  *      is evaluated to a character string. If <xMsg> is not specified or
- *      got the wrong type, an empty string ("") would be used.   
+ *      got the wrong type, an empty string ("") would be used.
  *  $RETURNS$
- *      @...Prompt always return .F.   
+ *      @...Prompt always return .F.
  *  $DESCRIPTION$
  *      With @...Prompt you define and display a menu item, each call to
  *      @...Prompt add another item to the menu, to start the menu itself
@@ -186,10 +186,10 @@
  *      define any row and column combination and they will be displayed at
  *      the order of definition. After each call to @...Prompt, the cursor
  *      is placed one column to the right of the last text displayed, and
- *      ROW() and COL() are updated.   
+ *      ROW() and COL() are updated.
  *
  *      @...PROMPT command is preprocessed into __AtPrompt() function during
- *      compile time.   
+ *      compile time.
  *  $EXAMPLES$
  *      // display a two line menu with status line at the bottom
  *      // let the user select favorite day
@@ -211,7 +211,7 @@
  *  $COMPLIANCE$
  *      CA-Clipper array is limited to 4096 items, and therefor 4096 menu
  *      items are the maximum that could be defined per one menu, Harbour
- *      does not have this limit (not that you'll ever need that).   
+ *      does not have this limit (not that you'll ever need that).
  *  $SEEALSO$
  *      ACHOICE(),MENU TO,SET MESSAGE,SET INTENSITY,SET WRAP,__MENUTO()
  *  $END$
@@ -227,35 +227,35 @@
  *  $SYNTAX$
  *      __MenuTo( <bBlock>, <cVariable> ) --> nChoice
  *  $ARGUMENTS$
- *      <bBlock> is a set/get code block for variable named <cVariable>.   
+ *      <bBlock> is a set/get code block for variable named <cVariable>.
  *
  *      <cVariable> is a character string that contain the name of the
  *      variable to hold the menu choices, if this variable does not exist
  *      a PRIVATE variable with the name <cVariable> would be created to
- *      hold the result.   
+ *      hold the result.
  *  $RETURNS$
  *      __MenuTo() return the number of select menu item, or 0 if there was
- *      no item to select from or if the user pressed the Esc key.   
+ *      no item to select from or if the user pressed the Esc key.
  *  $DESCRIPTION$
  *      __MenuTo() invoked the menu define by previous __AtPrompt() call
  *      and display a highlight bar that the user can move to select an
  *      option from the menu. If <cVariable> does not exist or not visible,
  *      a PRIVATE variable named <cVariable> is created and hold the current
  *      menu selection. If there is a variable named <cVariable>, its value
- *      is used to select the first highlighted item.                
+ *      is used to select the first highlighted item.
  *
  *      Menu prompts and messages are displayed in current Standard color,
- *      highlighted bar is displayed using current Enhanced color.   
+ *      highlighted bar is displayed using current Enhanced color.
  *
  *      Pressing the arrow keys move the highlighted bar. When a menu item
  *      is highlighted the message associated with it is displayed on the
  *      line specified with SET MESSAGE. If SET WRAP is ON and the user
  *      press UP arrow while on the first selection the last menu item is
  *      highlighted, if the user press Down arrow while on the last item,
- *      the first item is highlighted.     
+ *      the first item is highlighted.
  *
- *      Following are active keys that handled by __MenuTo():   
- *      -----------------------------------------------------
+ *      Following are active keys that handled by __MenuTo():
+ *
  *
  *      <table>
  *       key            Meaning
@@ -274,10 +274,10 @@
  *       |              return this item position.
  *  </table>
  *      upon exit the cursor is placed at MAXROW()-1, 0
- *      __MenuTo() can be nested without loosing the previous prompts.   
+ *      __MenuTo() can be nested without loosing the previous prompts.
  *
  *      MENU TO command is preprocessed into __MenuTo() function during
- *      compile time.   
+ *      compile time.
  *  $EXAMPLES$
  *      // display menu item on each screen corner and let user select one
  *      CLS
@@ -298,7 +298,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Clipper compliant   
+ *      This command is CA-Clipper compliant
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -319,30 +319,30 @@
  *      <cVariable> is a character string that contain the name of the
  *      variable to hold the menu choices, if this variable does not exist
  *      a PRIVATE variable with the name <cVariable> would be created to
- *      hold the result.   
+ *      hold the result.
  *  $RETURNS$
  *      Menu To return the number of select menu item, or 0 if there was
- *      no item to select from or if the user pressed the Esc key.   
+ *      no item to select from or if the user pressed the Esc key.
  *  $DESCRIPTION$
  *      Menu To() invoked the menu define by previous __AtPrompt() call
  *      and display a highlight bar that the user can move to select an
  *      option from the menu. If <cVariable> does not exist or not visible,
  *      a PRIVATE variable named <cVariable> is created and hold the current
  *      menu selection. If there is a variable named <cVariable>, its value
- *      is used to select the first highlighted item.   
+ *      is used to select the first highlighted item.
  *
  *      Menu prompts and messages are displayed in current Standard color,
- *      highlighted bar is displayed using current Enhanced color.   
+ *      highlighted bar is displayed using current Enhanced color.
  *
  *      Pressing the arrow keys move the highlighted bar. When a menu item
  *      is highlighted the message associated with it is displayed on the
  *      line specified with SET MESSAGE. If SET WRAP is ON and the user
  *      press UP arrow while on the first selection the last menu item is
  *      highlighted, if the user press Down arrow while on the last item,
- *      the first item is highlighted.   
+ *      the first item is highlighted.
  *
- *      Following are active keys that handled by Menu To:   
- *      -----------------------------------------------------
+ *      Following are active keys that handled by Menu To:
+ *
  *
  *  <table>
  *       key              Meaning
@@ -361,10 +361,10 @@
  *       |              return this item position.
  *  </table>
  *      upon exit the cursor is placed at MAXROW()-1, 0
- *      Menu To can be nested without loosing the previous prompts.   
+ *      Menu To can be nested without loosing the previous prompts.
  *
  *      MENU TO command is preprocessed into __MenuTo() function during
- *      compile time.   
+ *      compile time.
  *  $EXAMPLES$
  *      // display menu item on each screen corner and let user select one
  *      CLS
@@ -385,7 +385,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA Clipper compliant   
+ *      This command is CA Clipper compliant
  *  $SEEALSO$
  *   @...PROMPT,ACHOICE(),SET MESSAGE,SET INTENSITY,SET WRAP,__ATPROMPT()
  *  $END$

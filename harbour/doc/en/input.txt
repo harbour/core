@@ -40,16 +40,16 @@
  *      type of input event, simply add the various mask names together.
  *
  *        <table>
- *        inkey.ch           Meaning
+ *        inkey.ch            Meaning
  *
- *        INKEY_MOVE         Mouse motion events are allowed
- *        INKEY_LDOWN        The mouse left click down event is allowed
- *        INKEY_LUP          The mouse left click up event is allowed
- *        INKEY_RDOWN        The mouse right click down event is allowed
- *        INKEY_RUP          The mouse right click up event is allowed
- *        INKEY_KEYBOARD     All keyboard events are allowed
- *        INKEY_ALL          All mouse and keyboard events are allowed
- *        HB_INKEY_EXTENDED  Extended keyboard codes are used.
+ *        INKEY_MOVE          Mouse motion events are allowed
+ *        INKEY_LDOWN         The mouse left click down event is allowed
+ *        INKEY_LUP           The mouse left click up event is allowed
+ *        INKEY_RDOWN         The mouse right click down event is allowed
+ *        INKEY_RUP           The mouse right click up event is allowed
+ *        INKEY_KEYBOARD      All keyboard events are allowed
+ *        INKEY_ALL           All mouse and keyboard events are allowed
+ *        HB_INKEY_EXTENDED   Extended keyboard codes are used.
  *        </table>
  *      If the parameter is not numeric, it will be treated as if it were set
  *      to hb_set.HB_SET_EVENTMASK.

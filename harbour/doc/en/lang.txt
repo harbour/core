@@ -28,41 +28,42 @@
  *      Lang library,sorted by language.
  *
  *      <table>
- *      Language            Codepage     <cNewLang>
- *      Basque              850          EU
- *      Catalan             850          CA
- *      Chinese Simplified  936          ZHGB
- *      Chinese Traditional 950          ZHB5
- *      Croatian            852          HR852
- *      Croatian            ISO-8859-2   HRISO
- *      Czech               852          CS852
- *      Czech               ISO-8859-2   CSISO
- *      Czech               KAM          CSKAM
- *      Czech               Windows-1250 CSWIN
- *      English             437          EN
- *      Esperanto           850          EO
- *      French              850          FR
- *      Galician            850          GL
- *      German              850          DE
- *      Hebrew              862          HE862
- *      Hebrew              Windows-1255 HEWIN
- *      Hungarian           852          HU852
- *      Hungarian           CWI-2        HUCWI
- *      Hungarian           Windows-1    HUWIN
- *      Icelandic           850          IS85
- *      Indonesian          437          ID
- *      Italian             437          IT
- *      Korean              949          KO
- *      Polish              852          PL852
- *      Polish              ISO-8859-1   PLISO
- *      Polish              Mozowia      PLMAZ
- *      Portuguese          850          PT
- *      Romanian            852          RO
- *      Russian             866          RU866
- *      Russian             Windows-1251 RUWIN
- *      Serbian             852          SR852
- *      Serbian             ISO-8859-2   SRISO
- *      Spanish             850          ES
+ *      Language              Codepage       <cNewLang>
+ *
+ *      Basque                850            EU
+ *      Catalan               850            CA
+ *      Chinese Simplified    936            ZHGB
+ *      Chinese Traditional   950            ZHB5
+ *      Croatian              852            HR852
+ *      Croatian              ISO-8859-2     HRISO
+ *      Czech                 852            CS852
+ *      Czech                 ISO-8859-2     CSISO
+ *      Czech                 KAM            CSKAM
+ *      Czech                 Windows-1250   CSWIN
+ *      English               437            EN
+ *      Esperanto             850            EO
+ *      French                850            FR
+ *      Galician              850            GL
+ *      German                850            DE
+ *      Hebrew                862            HE862
+ *      Hebrew                Windows-1255   HEWIN
+ *      Hungarian             852            HU852
+ *      Hungarian             CWI-2          HUCWI
+ *      Hungarian             Windows-1      HUWIN
+ *      Icelandic             850            IS85
+ *      Indonesian            437            ID
+ *      Italian               437            IT
+ *      Korean                949            KO
+ *      Polish                852            PL852
+ *      Polish                ISO-8859-1     PLISO
+ *      Polish                Mozowia        PLMAZ
+ *      Portuguese            850            PT
+ *      Romanian              852            RO
+ *      Russian               866            RU866
+ *      Russian               Windows-1251   RUWIN
+ *      Serbian               852            SR852
+ *      Serbian               ISO-8859-2     SRISO
+ *      Spanish               850            ES
  *      </table>
  *  $RETURNS$
  *      <cOldLang>   The old language indentifier

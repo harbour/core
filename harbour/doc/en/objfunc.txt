@@ -123,11 +123,11 @@
  *      that allow you to distinguish between DATA and CLASSDATA:
  *
  *     <table>
- *      hboo.ch          Value  Meaning
+ *      hboo.ch           Value   Meaning
  *
- *      HB_MSGLISTALL    0      All types
- *      HB_MSGLISTCLASS  1      CLASSDATA only
- *      HB_MSGLISTPURE   2      DATA only
+ *      HB_MSGLISTALL     0       All types
+ *      HB_MSGLISTCLASS   1       CLASSDATA only
+ *      HB_MSGLISTPURE    2       DATA only
  *     </table>
  *
  *      DATA are instance variable usable within each object from a class,
