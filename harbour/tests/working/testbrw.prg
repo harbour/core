@@ -34,8 +34,6 @@ function Main()
    oBrowse:GetColumn(3):Footing = 'Third'
    oBrowse:GetColumn(4):Footing = 'Forth'
    oBrowse:GetColumn(5):Footing = 'Fifth'
-   oBrowse:GetColumn(2):ColSep = 'º'
-   oBrowse:GetColumn(3):ColSep = 'º'
 
    Alert( oBrowse:ClassName() )
    Alert( oBrowse:GetColumn( 1 ):ClassName() )

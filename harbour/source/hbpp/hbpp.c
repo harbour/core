@@ -541,8 +541,10 @@ int ParseExpression( char* sLine, char* sOutLine )
          if ( *ptri == '#' )
          {
             ParseDirective( ptri+1 );
+            if ( ipos > 0 ) *( sLine + isdvig + ipos - 1 ) = ';';
             lens = strolen( sLine+isdvig );
-            pp_Stuff ( "", sLine+isdvig, 0, (ipos)? ipos-1:lens, lens );
+            pp_Stuff ( " ", sLine+isdvig, 0, (ipos)? ipos:lens, lens );
+            if( ipos > 0 ) ipos = 1;
          }
          else
          {   /* Look for macros from #define      */

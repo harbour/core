@@ -1,3 +1,12 @@
+19990816-22:15 GMT+3 Alexander Kresin
+  * source/rtl/tbrowse.prg
+  * tests/working/testbrw.prg
+    * added functionality - methods PanLeft().PanRight(),Hilite(),DeHilite()
+    * Up() and Down() now uses Scroll() and Hilite()/DeHilite() instead of
+      RefreshAll() and RefreshCurrent()
+  * source/hbpp/hbpp.c
+    * Bug fixed for new CLASS implementation ( with 'extern' )
+
 19990816-12:26 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/browdb.prg
     + copyright info.
