@@ -1,3 +1,8 @@
+19990910-15:25 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/gt/gtos2.c
+    ! I forgot to remove a debug printf() call when I committed the
+      hb_gt_Scroll() fixes in ChangeLog entry 19990908-21:35 EDT.
+
 19990910-14:55 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rdd/dbcmd.c
   * source/rdd/dbf1.c
