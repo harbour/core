@@ -244,9 +244,9 @@ $(RUNNER_EXE) : \
     $(RUNNER_DIR)\stdalone\hbrun.prg
     $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(RUNNER_DIR)\stdalone\ $(RUNNER_DIR)\stdalone\external.prg 
     $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(RUNNER_DIR)\stdalone\ -i$(RUNNER_DIR)\stdalone\ $(RUNNER_DIR)\stdalone\hbrun.prg 
-    $(CC) -TP $(CFLAGS) $(RUNNER_DIR)\stdalone\hbrun.c $(RUNNER_DIR)\stdalone\external.c -o $(BIN_DIR)\runner /link  $(LIBS)
+    $(CC) -TP $(CFLAGS) $(RUNNER_DIR)\stdalone\hbrun.c $(RUNNER_DIR)\stdalone\external.c -o $(BIN_DIR)\hbrun /link  $(LIBS)
     -del external.obj
-    -del runner.obj
+    -del hbrun.obj
 
 $(HARBOUR_EXE) : \
     $(COMPILER_DIR)\harboury.c \
