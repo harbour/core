@@ -30,15 +30,6 @@ HARBOUR ERRORNEW();
 HARBOUR EVAL();
 HARBOUR VALTYPE();
 HARBOUR ASORT();
-HARBOUR CLASSCREATE();
-HARBOUR CLASSADD();
-HARBOUR CLASSNAME();
-HARBOUR CLASSINSTANCE();
-HARBOUR ISMESSAGE();
-HARBOUR OSEND();
-HARBOUR CLASSMOD();
-HARBOUR CLASSDEL();
-HARBOUR OCLONE();
 HARBOUR STOD();
 HARBOUR HB_SETCENTURY();
 HARBOUR SET();
@@ -183,15 +174,6 @@ static SYMBOL symbols[] = {
 { "EVAL",           FS_PUBLIC, EVAL          , 0 },
 { "VALTYPE",        FS_PUBLIC, VALTYPE       , 0 },
 { "ASORT",          FS_PUBLIC, ASORT         , 0 },
-{ "CLASSCREATE",    FS_PUBLIC, CLASSCREATE   , 0 },
-{ "CLASSADD",       FS_PUBLIC, CLASSADD      , 0 },
-{ "CLASSNAME",      FS_PUBLIC, CLASSNAME     , 0 },
-{ "CLASSINSTANCE",  FS_PUBLIC, CLASSINSTANCE , 0 },
-{ "ISMESSAGE",      FS_PUBLIC, ISMESSAGE     , 0 },
-{ "OSEND",          FS_PUBLIC, OSEND         , 0 },
-{ "CLASSMOD",       FS_PUBLIC, CLASSMOD      , 0 },
-{ "CLASSDEL",       FS_PUBLIC, CLASSDEL      , 0 },
-{ "OCLONE",         FS_PUBLIC, OCLONE        , 0 },
 { "STOD",           FS_PUBLIC, STOD          , 0 },
 { "HB_SETCENTURY",  FS_PUBLIC, HB_SETCENTURY , 0 },
 { "SET",            FS_PUBLIC, SET           , 0 },
@@ -249,7 +231,6 @@ static SYMBOL symbols[] = {
 { "SPACE",          FS_PUBLIC, SPACE         , 0 },
 { "STUFF",          FS_PUBLIC, STUFF         , 0 },
 { "STRTRAN",        FS_PUBLIC, STRTRAN       , 0 },
-/* { "TCLASS",         FS_PUBLIC, TCLASS        , 0 }, */
 { "TRANSFORM",      FS_PUBLIC, TRANSFORM     , 0 },
 { "DATETIME",       FS_PUBLIC, DATETIME      , 0 },
 { "DOW",            FS_PUBLIC, DOW           , 0 },

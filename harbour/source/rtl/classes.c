@@ -6,6 +6,8 @@
 #include <itemapi.h>
 #include <ctoharb.h>
 
+void ProcessSymbols( SYMBOL *, WORD );
+
 #define MET_METHOD    0
 #define MET_DATA      1
 #define MET_CLASSDATA 2
@@ -72,6 +74,23 @@ static HARBOUR     Virtual();
        HARBOUR     __WDATAS();
        HARBOUR     __WDATADEC();
        HARBOUR     __WDATAINC();
+
+static SYMBOL symbols[] = {
+{ "CLASSADD"      , FS_PUBLIC, CLASSADD       , 0 },
+{ "CLASSCREATE"   , FS_PUBLIC, CLASSCREATE    , 0 },
+{ "CLASSDEL"      , FS_PUBLIC, CLASSDEL       , 0 },
+{ "CLASSINSTANCE" , FS_PUBLIC, CLASSINSTANCE  , 0 },
+{ "CLASSMOD"      , FS_PUBLIC, CLASSMOD       , 0 },
+{ "CLASSNAME"     , FS_PUBLIC, CLASSNAME      , 0 },
+{ "ISMESSAGE"     , FS_PUBLIC, ISMESSAGE      , 0 },
+{ "OCLONE"        , FS_PUBLIC, OCLONE         , 0 },
+{ "OSEND"         , FS_PUBLIC, OSEND          , 0 }
+};
+
+void Classes__InitSymbols( void )
+{
+   ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
+}
 
 /*
  * ClassAdd( <hClass>, <cMessage>, <pFunction>, <nType>, [xInit] )

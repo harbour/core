@@ -1,3 +1,7 @@
+19990603-20:20 CET Eddie Runia
+  * source/rtl/classes.c; source/vm/initsymb.c; tests/working/run_exp.h
+    First implementation of init symbols scheme.
+
 19990603-14:00 EDT David G. Holm <dholm@jsd-llc.com>
   * makefile.dos
     - Even with the -y in the source/compiler/makefile.dos, when I
