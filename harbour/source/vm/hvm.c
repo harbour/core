@@ -863,6 +863,7 @@ void ForTest( void )        /* Test to check the end point of the FOR */
 
    if( IS_NUMERIC( stack.pPos - 1 ) )
    {
+       WORD wDec = stack.pPos->wDec;
        dStep = PopNumber();
        if( dStep > 0 )           /* Positive loop. Use LESS */
            Less();
@@ -872,7 +873,7 @@ void ForTest( void )        /* Test to check the end point of the FOR */
            printf( "step of zero will cause endless loop" );
                                  /* Add some break code or so... */
        iEqual = PopLogical();    /* Logical should be on top of stack */
-       PushNumber( dStep, stack.pPos->wDec );   /* Push the step expression back on the stack */
+       PushNumber( dStep, wDec );   /* Push the step expression back on the stack */
        PushLogical( iEqual );
    }
    else

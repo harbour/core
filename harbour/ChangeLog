@@ -1,3 +1,7 @@
+19990604-13:05 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/vm/hvm.c
+    - Corrected ForTest() to use the correct decimal count
+
 19990604-12:35 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/dates.c
     - Corrected HARBOUR DOW() to use _retni() instead of _retnl()
