@@ -1283,9 +1283,10 @@ HB_FUNC( DBCREATE )
    }
 
    hb_rddCheck();
-   if( ISCHAR(3) )
+   if( ISCHAR(3) && hb_parclen( 3 ) )
    {
-      hb_strncpyUpper( cDriverBuffer, hb_parc( 3 ), HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
+      hb_strncpyUpper( cDriverBuffer, hb_parc( 3 ),
+                       min( hb_parclen( 3 ), HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ) );
       szDriver = cDriverBuffer;
    }
    else
@@ -2843,7 +2844,8 @@ HB_FUNC( RDDREGISTER )
    uiLen = ( USHORT ) hb_parclen( 1 );
    if( uiLen > 0 )
    {
-      hb_strncpyUpper( szDriver, hb_parc( 1 ), HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
+      hb_strncpyUpper( szDriver, hb_parc( 1 ),
+                       min( uiLen, HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ) );
       /*
        * hb_rddRegister returns:
        *
@@ -2962,7 +2964,8 @@ HB_FUNC( RDDSETDEFAULT )
    uiLen = ( USHORT ) hb_parclen( 1 );
    if( uiLen > 0 )
    {
-      hb_strncpyUpper( szNewDriver, hb_parc( 1 ), HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
+      hb_strncpyUpper( szNewDriver, hb_parc( 1 ),
+                       min( uiLen, HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ) );
 
       if( !hb_rddFindNode( szNewDriver, NULL ) )
       {
@@ -2986,7 +2989,8 @@ HB_FUNC( DBSETDRIVER )
    uiLen = ( USHORT ) hb_parclen( 1 );
    if( uiLen > 0 )
    {
-      hb_strncpyUpper( szNewDriver, hb_parc( 1 ), HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
+      hb_strncpyUpper( szNewDriver, hb_parc( 1 ),
+                       min( uiLen, HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ) );
 
       if( !hb_rddFindNode( szNewDriver, NULL ) )
       {
