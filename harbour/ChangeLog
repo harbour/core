@@ -1,3 +1,52 @@
+19990704-18:50 EDT David G. Holm <dholm@jsd-llc.com>
+  * include/ctoharb.h
+    * Converted length parameter in PushString to ULONG
+      in order to support strings longer than 64 KB
+  * include/errorapi.h
+    + Added hb_errorRT_TERMINAL() wrapper function
+  * include/gtapi.h
+    + Added support for strings longer than 64 KB
+  * include/hbsetup.h
+    + Added optional HARBOUR_LANGUAGE_<nl> manifest constant to
+      select which national language will be in the RTL library
+      created by the GNU Make System
+  * include/set.h
+    + Added extern int hb_set_extrahan;
+    + Limited size of SET strings to 64 KB or less
+  * source/rtl/console.c
+    * Made various changes after running through Gimpel Lint
+    + Added support for HB_SET_EXTRAFILE
+  * source/rtl/environ.c
+    + Added OS() support for DJGPP
+    - Removed OS/2 check from non-OS/2 section of OS()
+  * source/rtl/errorapi.c
+    + Added hb_errorRT_TERMINAL() wrapper function
+  * source/rtl/gtapi.c
+    + Added support for strings longer than 64 KB
+  * source/rtl/msgxxx.c
+    ! Changed from using #if (HB_LANGUAGE == <nl> to using
+      #if defined(HB_LANGUAGE_<nl>) with a default of UK
+  * source/rtl/set.c
+    * Made various changes after running through Gimpel Lint
+    + Added call hb_errorRT_TERMINAL() wrapper function upon
+      failure to create an alternate file and/or a printer file
+      (and/or an extra file, even though I still don't know have
+      any idea as to what it is used for)
+    + Added support for HB_SET_EXTRAFILE
+    + Added support for strings longer than 64 KB
+  * source/vm/hvm.c
+    * Converted length parameter in PushString to ULONG to allow
+      for strings longer than 64 KB (Note: 16-bit programs and
+      constant strings in source files are still limited to 64 kB)
+    ! Corrected Instring() to call hb_strat() with the entire first
+      string as the first parameter instead of looping to check if
+      each character in the first string is in the second string
+  + tests/working/longstr2.prg
+    + Demonstrates the creation and output of short, long, and very
+      very long strings (10 bytes, 40960 bytes, and 1310720 bytes)
+  * tests/working/output.prg
+    + Added demonstration of _SET_EXTRAFILE
+
 19990704-16:20 Ryszard Glab <rglab@imid.med.pl>
 
 * include/init.h

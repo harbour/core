@@ -273,3 +273,22 @@ WORD hb_errorRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char* szDescription, cha
    return wRetVal;
 }
 
+WORD hb_errorRT_TERMINAL( ULONG ulGenCode, ULONG ulSubCode, char* szDescription, char* szOperation )
+{
+   PHB_ITEM pError = hb_errNew();
+   WORD wRetVal;
+
+   hb_errPutSeverity( pError, ES_ERROR );
+   hb_errPutSubSystem( pError, HB_ERR_SS_TERMINAL );
+   hb_errPutGenCode( pError, ulGenCode );
+   hb_errPutSubCode( pError, ulSubCode );
+   hb_errPutDescription( pError, szDescription );
+   hb_errPutOperation( pError, szOperation );
+
+   wRetVal = hb_errLaunch( pError );
+
+   hb_errRelease( pError );
+
+   return wRetVal;
+}
+

@@ -92,7 +92,7 @@ void PushLong( long lNumber ); /* pushes a long number onto the stack */
 void PushNil( void );            /* in this case it places nil at self */
 void PushNumber( double dNumber, WORD wDec ); /* pushes a number on to the stack and decides if it is integer, long or double */
 void PushStatic( WORD wStatic );   /* pushes the containts of a static onto the stack */
-void PushString( char * szText, WORD wLength );  /* pushes a string on to the stack */
+void PushString( char * szText, ULONG length );  /* pushes a string on to the stack */
 void PushSymbol( PSYMBOL pSym ); /* pushes a function pointer onto the stack */
 void PushInteger( int iNumber ); /* pushes a integer number onto the stack */
 void RetValue( void );           /* pops the latest stack value into stack.Return */
@@ -1092,13 +1092,11 @@ void Instring( void )
    PHB_ITEM pItem1 = stack.pPos - 2;
    PHB_ITEM pItem2 = stack.pPos - 1;
    int   iResult;
-   ULONG ul;
 
    if( IS_STRING( pItem1 ) && IS_STRING( pItem2 ) )
    {
-      for( iResult = 0, ul = 0; !iResult && ul < pItem1->item.asString.length; ul++ )
-         iResult = hb_strAt( pItem1->item.asString.value + ul, 1,
-                             pItem2->item.asString.value, pItem2->item.asString.length );
+      iResult = hb_strAt( pItem1->item.asString.value, pItem1->item.asString.length,
+                          pItem2->item.asString.value, pItem2->item.asString.length );
       StackPop();
       StackPop();
       PushLogical( iResult == 0 ? 0 : 1 );
@@ -1711,16 +1709,16 @@ void PushStatic( WORD wStatic )
    HB_DEBUG2( "PushStatic %i\n", wStatic );
 }
 
-void PushString( char * szText, WORD wLength )
+void PushString( char * szText, ULONG length )
 {
-   char * szTemp = ( char * ) hb_xgrab( wLength + 1 );
+   char * szTemp = ( char * ) hb_xgrab( length + 1 );
 
-   memcpy (szTemp, szText, wLength);
-   szTemp[ wLength ] = 0;
+   memcpy (szTemp, szText, length);
+   szTemp[ length ] = 0;
 
    ItemRelease( stack.pPos );
    stack.pPos->type                 = IT_STRING;
-   stack.pPos->item.asString.length = wLength;
+   stack.pPos->item.asString.length = length;
    stack.pPos->item.asString.value  = szTemp;
    StackPush();
    HB_DEBUG( "PushString\n" );

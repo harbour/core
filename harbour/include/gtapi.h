@@ -76,9 +76,9 @@ int    hb_gtSetCursor(USHORT uiCursorShape);
 int    hb_gtSetMode(USHORT uiRows, USHORT uiCols);
 int    hb_gtSetPos(USHORT uiRow, USHORT uiCol);
 int    hb_gtSetSnowFlag(BOOL bNoSnow);
-int    hb_gtWrite(char * fpStr, USHORT uiLen);
-int    hb_gtWriteAt(USHORT uiRow, USHORT uiCol, char * fpStr, USHORT uiLen);
-int    hb_gtWriteCon(char * fpStr, USHORT uiLen);
+int    hb_gtWrite(char * fpStr, ULONG length);
+int    hb_gtWriteAt(USHORT uiRow, USHORT uiCol, char * fpStr, ULONG length);
+int    hb_gtWriteCon(char * fpStr, ULONG length);
 
 #ifndef DOS
 #if defined(_QC) || defined(__DOS__) || defined(MSDOS) || defined(__MSDOS__)

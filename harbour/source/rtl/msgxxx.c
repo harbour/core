@@ -2,44 +2,40 @@
  * $Id$
  */
 
-#if !defined(HB_LANGUAGE)
-#define HB_LANGUAGE UK
-#endif
-
-#if (HB_LANGUAGE == BAS)
+#if defined(HARBOUR_LANGUAGE_BAS)
 #include "natmsg/msgbas.c"
-#elif (HB_LANGUAGE == DUT)
+#elif defined(HARBOUR_LANGUAGE_DUT)
 #include "natmsg/msgdut.c"
-#elif (HB_LANGUAGE == GAL)
+#elif defined(HARBOUR_LANGUAGE_GAL)
 #include "natmsg/msggal.c"
-#elif (HB_LANGUAGE == GER)
+#elif defined(HARBOUR_LANGUAGE_GER)
 #include "natmsg/msgger.c"
-#elif (HB_LANGUAGE == INA)
+#elif defined(HARBOUR_LANGUAGE_INA)
 #include "natmsg/msgia.c"
-#elif (HB_LANGUAGE == HU)
+#elif defined(HARBOUR_LANGUAGE_HU)
 #include "natmsg/msghu.c"
-#elif (HB_LANGUAGE == KOR)
+#elif defined(HARBOUR_LANGUAGE_KOR)
 #include "natmsg/msgkor.c"
-#elif (HB_LANGUAGE == POR)
+#elif defined(HARBOUR_LANGUAGE_POR)
 #include "natmsg/msgpor.c"
-#elif (HB_LANGUAGE == R1251)
+#elif defined(HARBOUR_LANGUAGE_R1251)
 #include "natmsg/msgr1251.c"
-#elif (HB_LANGUAGE == RU886)
+#elif defined(HARBOUR_LANGUAGE_RU886)
 #include "natmsg/msgru886.c"
-#elif (HB_LANGUAGE == SPA)
+#elif defined(HARBOUR_LANGUAGE_SPA)
 #include "natmsg/msgspa.c"
-#elif (HB_LANGUAGE == UK)
-#include "natmsg/msguk.c"
-#elif (HB_LANGUAGE == CAT)
+#elif defined(HARBOUR_LANGUAGE_CAT)
 #include "natmsg/msgcat.c"
-#elif (HB_LANGUAGE == ITA)
+#elif defined(HARBOUR_LANGUAGE_ITA)
 #include "natmsg/msgita.c"
-#elif (HB_LANGUAGE == FRE)
+#elif defined(HARBOUR_LANGUAGE_FRE)
 #include "natmsg/msgfre.c"
-#elif (HB_LANGUAGE == CZ852)
+#elif defined(HARBOUR_LANGUAGE_CZ852)
 #include "natmsg/msgcz852.c"
-#elif (HB_LANGUAGE == CZKAM)
+#elif defined(HARBOUR_LANGUAGE_CZKAM)
 #include "natmsg/msgczkam.c"
-#elif (HB_LANGUAGE == YU852)
+#elif defined(HARBOUR_LANGUAGE_YU852)
 #include "natmsg/msgyu852.c"
+#else
+#include "natmsg/msguk.c"
 #endif

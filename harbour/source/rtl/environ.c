@@ -95,24 +95,6 @@ HARBOUR HB_OS(void)
    /* TODO: Determine the Windows type (32s/95/98/NT) and version */
    hb_os = "Windows";
 #else
-   /* detect OS/2 */
-   if(_osmajor >= 10)
-   {
-      hb_os = "OS/2";
-      if (_osmajor == 20 && _osminor > 20)
-      {
-         hb_osmajor = _osminor / 10;
-         hb_osminor = _osminor % 10;
-      }
-      else
-      {
-         hb_osmajor  = _osmajor / 10;
-         hb_osminor  = _osminor;
-      }
-      hb_osletter = 0;
-   }
-   else
-   {
 #if defined(__MSC__)
       if (_osmode == _WIN_MODE)
       {
@@ -140,7 +122,6 @@ HARBOUR HB_OS(void)
          hb_osminor  = _osminor;
          hb_osletter = 0;
       }
-   }
 
 #endif /* defined(_Windows) */
 
@@ -189,7 +170,14 @@ HARBOUR HB_OS(void)
          hb_osletter = 0;
       }
    }
-#endif /* __TURBOC__ or __BORLANDC__ or __MSC__ */
+#endif /* __TURBOC__ or __BORLANDC__ or __MSC__ 0r __DJGPP__ */
+#ifdef __DJGPP__
+   hb_os = hb_xgrab (strlen (_os_flavor) + 1);
+   strcpy (hb_os, _os_flavor);
+   hb_osmajor = _osmajor;
+   hb_osminor = _osminor;
+   hb_osletter = 0;
+#endif
 
    /* TODO: detect other OSes */
 
@@ -201,6 +189,9 @@ HARBOUR HB_OS(void)
    else if (hb_osmajor == -2 ) { /* NOP */ }
    else sprintf (version, "%s %d.%02d%c", hb_os, hb_osmajor, hb_osminor, hb_osletter);
    hb_retc (version);
+#ifdef __DJGPP__
+   hb_xfree (hb_os);
+#endif
 }
 
 HARBOUR HB_VERSION(void)

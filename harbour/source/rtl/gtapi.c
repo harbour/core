@@ -309,12 +309,13 @@ int hb_gtSetSnowFlag(BOOL bNoSnow)
     return(0);
 }
 
-int hb_gtWrite(char * fpStr, USHORT uiLen)
+int hb_gtWrite(char * fpStr, ULONG length)
 {
     /* TODO: need to get current color setting from s_szColorString and
              s_uiColorIndex
     */
-    int iRow, iCol, iMaxCol, iMaxRow, iSize, iTemp;
+    int iRow, iCol, iMaxCol, iMaxRow, iTemp;
+    ULONG size;
     char attr=7, *fpPointer = fpStr;
 
     /* Determine where the cursor is going to end up */
@@ -322,14 +323,14 @@ int hb_gtWrite(char * fpStr, USHORT uiLen)
     iCol = s_uiCurrentCol;
     iMaxCol = hb_gtMaxCol();
     iMaxRow = hb_gtMaxRow();
-    iSize = uiLen;
-    if (iCol + iSize > iMaxCol)
+    size = length;
+    if (iCol + size > iMaxCol)
     {
        /* Calculate eventual row position and the remainder size for the column adjust */
-       iRow += (iSize / (iMaxCol + 1));
-       iSize = iSize % (iMaxCol + 1);
+       iRow += (size / (iMaxCol + 1));
+       size = size % (iMaxCol + 1);
     }
-    iCol += iSize;
+    iCol += size;
     if (iCol > iMaxCol)
     {
        /* Column movement overflows onto next row */
@@ -354,16 +355,16 @@ int hb_gtWrite(char * fpStr, USHORT uiLen)
              s_uiCurrentCol = 0;
           }
        }
-       else iSize = uiLen;
+       else size = length;
 
        /* Save the new starting row and the new ending row */
        s_uiCurrentRow = iTemp;
        iRow = iMaxRow;
     }
-    else iSize = uiLen;
+    else size = length;
 
     /* Now the text string can be displayed */
-    gtPuts(s_uiCurrentCol, s_uiCurrentRow, attr, fpPointer, iSize);
+    gtPuts(s_uiCurrentCol, s_uiCurrentRow, attr, fpPointer, size);
 
     /* Finally, save the new cursor position */
     hb_gtSetPos (iRow, iCol);
@@ -371,26 +372,28 @@ int hb_gtWrite(char * fpStr, USHORT uiLen)
     return(0);
 }
 
-int hb_gtWriteAt(USHORT uiRow, USHORT uiCol, char * fpStr, USHORT uiLen)
+int hb_gtWriteAt(USHORT uiRow, USHORT uiCol, char * fpStr, ULONG length)
 {
     int rc;
 
     if((rc=hb_gtSetPos(uiRow, uiCol)) != 0)
         return(rc);
 
-    return(hb_gtWrite(fpStr, uiLen));
+    return(hb_gtWrite(fpStr, length));
 }
 
-int hb_gtWriteCon(char * fpStr, USHORT uiLen)
+int hb_gtWriteCon(char * fpStr, ULONG length)
 {
     int rc = 0;
-    USHORT uiCount, uiRow = s_uiCurrentRow, uiCol = s_uiCurrentCol;
+    USHORT uiRow = s_uiCurrentRow, uiCol = s_uiCurrentCol;
+    ULONG count;
     char ch[2];
+    char * fpPtr = fpStr;
 
     ch[1] = 0;
-    for(uiCount = 0; uiCount < uiLen; uiCount++)
+    for(count = 0; count < length; count++)
     {
-       ch [0] = fpStr[uiCount];
+       ch [0] = *fpPtr++;
        switch(ch [0])
        {
           case 7:

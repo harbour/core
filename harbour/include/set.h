@@ -100,8 +100,8 @@ typedef struct
    BOOL HB_SET_EXACT;       /* Logical */
    BOOL HB_SET_EXCLUSIVE;   /* Logical */
    BOOL HB_SET_EXIT;        /* Logical */
-   BOOL HB_SET_EXTRA;       /* Logical */   /* QUESTION: What does this do? */
-   char *HB_SET_EXTRAFILE;  /* Character */ /* QUESTION: What does this do? */
+   BOOL HB_SET_EXTRA;       /* Logical */
+   char *HB_SET_EXTRAFILE;  /* Character */
    BOOL HB_SET_FIXED;       /* Logical */
    BOOL HB_SET_INSERT;      /* Logical */
    BOOL HB_SET_INTENSITY;   /* Logical */
@@ -123,6 +123,7 @@ extern HB_set_struct hb_set;
 extern BOOL hb_set_century;
 extern BOOL hb_set_fixed;
 extern int hb_set_althan;
+extern int hb_set_extrahan;
 extern int hb_set_printhan;
 
 #endif /* HB_SET_H_ */

@@ -29,6 +29,7 @@ HB_set_struct hb_set;
 BOOL hb_set_century;
 BOOL hb_set_fixed;
 int hb_set_althan;
+int hb_set_extrahan;
 int hb_set_printhan;
 
 HARBOUR HB_SET( void );
@@ -78,7 +79,9 @@ static char * set_string (PHB_ITEM pItem, char * old_str)
    char * string;
    if (IS_STRING (pItem))
    {
-      int size = pItem->item.asString.length;
+      /* Limit size of SET strings to 64K, truncating if source is longer */
+      ULONG size = pItem->item.asString.length;
+      if (size > USHRT_MAX) size = USHRT_MAX;
       if (old_str) string = (char*)hb_xrealloc (old_str, size + 1);
       else string = (char*)hb_xgrab (size + 1);
       memcpy (string, pItem->item.asString.value, size);
@@ -110,7 +113,7 @@ static int open_handle (char * file_name, BOOL bMode, char * def_ext)
 {
    int handle;
    BOOL bExt = FALSE, bSep = FALSE;
-   long index;
+   ULONG index;
    char path [_POSIX_PATH_MAX + 1];
 
    /* Check to see if the file name has an extension? */
@@ -127,26 +130,23 @@ static int open_handle (char * file_name, BOOL bMode, char * def_ext)
             bSep = TRUE;            /* Path or drive separator found */
       }
    }
-   if (bSep) *path = 0;             /* File name includes a drive letter or path */
+   /* Note: strlen (path) is guaranteed to be <= _POSIX_PATH_MAX from this point */
+   if (bSep) path [0] = 0;          /* File name includes a drive letter or path */
    else if (hb_set.HB_SET_DEFAULT)
    {
       /* If no path in file name, use default path */
       strncpy (path, hb_set.HB_SET_DEFAULT, _POSIX_PATH_MAX);
       path [_POSIX_PATH_MAX] = 0;
    }
-   /* Save or add the file name */
-   index = strlen (file_name) + strlen (path);
-   if (index > _POSIX_PATH_MAX) index = _POSIX_PATH_MAX;
-   index -= strlen (path);
-   if (index > 0) strncat (path, file_name, index);
+   /* Add the file name */
+   strncat (path, file_name, _POSIX_PATH_MAX - strlen (path));
+   path [_POSIX_PATH_MAX] = 0;
    if (def_ext && !bExt)
    {
       /* If the file name does not have an extension (no period following the last
          path or drive separator), add the default file extension */
-      index = strlen (path) + strlen (def_ext);
-      if (index > _POSIX_PATH_MAX) index = _POSIX_PATH_MAX;
-      index -= strlen (path);
-      if (index > 0) strncat (path, def_ext, index);
+      strncat (path, def_ext, _POSIX_PATH_MAX - strlen (path));
+      path [_POSIX_PATH_MAX] = 0;
    }
    /* Open the file either in append (bMode) or truncate mode (!bMode), but
       always use binary mode */
@@ -155,13 +155,7 @@ static int open_handle (char * file_name, BOOL bMode, char * def_ext)
                   S_IWRITE );
    if (handle < 0)
    {
-      /* TOFIX: Make this error message Clipper compatible */
-      char error_message [32];
-      PHB_ITEM pError = hb_errNew();
-      sprintf( error_message, "create error %d: SET", errno );
-      hb_errPutDescription(pError, error_message);
-      hb_errLaunch(pError);
-      hb_errRelease(pError);
+      hb_errorRT_TERMINAL( EG_CREATE, 2013, "Create error", path );
    }
    return handle;
 }
@@ -176,7 +170,7 @@ static int open_handle (char * file_name, BOOL bMode, char * def_ext)
  */
 HARBOUR HB___SETCENTURY (void)
 {
-   int digit, count, size, y_size, y_start, y_stop;
+   int count, digit, size, y_size, y_start, y_stop;
    int old_century_setting = hb_set_century;
    PHB_ITEM pItem = hb_param (1, IT_ANY);
    char *szDateFormat, *szNewFormat;
@@ -261,7 +255,7 @@ HARBOUR HB___SETCENTURY (void)
  *                   a file, provided that a file has been opened or created
  *                   with _SET_ALTFILE. If disabled, which is the default,
  *                   QOUT() and QQOUT() only write to the screen (and/or to
- *                   the PRINTFILE).
+ *                   the PRINTFILE). Defaults to disabled.
  *              _SET_ALTFILE     <cFileName>             <lAdditive>
  *                   When set, creates or opens file to write QOUT() and
  *                   QQOUT() output to. If <lAdditive> is TRUE and the file
@@ -270,7 +264,7 @@ HARBOUR HB___SETCENTURY (void)
  *                   already opened, it is closed before the new file is
  *                   opened or created (even if it is the same file). The
  *                   default file extension is ".txt". There is no default
- *                   file name.
+ *                   file name. Call with an empty string to close the file.
  *              _SET_BELL        <lFlag> | <cOnOff>
  *                   When enabled, the bell sounds when the last position of
  *                   a GET is reached and/or when a GET validation fails.
@@ -393,16 +387,17 @@ HARBOUR HB___SETCENTURY (void)
  *                   QUESTION: What is this for? Controlling the exit keys
  *                   during a READ?
  *              _SET_EXTRA       <lFlag> | <cOnOff>
- *                   QUESTION: If enabled, what happens, provided that a file
- *                   has been opened or created with _SET_EXTRAFILE? If
- *                   disabled, which is the default, what doesn't happen?
+ *                   QUESTION: What is this for?
+ *                   It does not affect _SET_EXTRAFILE in Clipper!
  *              _SET_EXTRAFILE   <cFileName>             <lAdditive>
- *                   QUUESTION: When set, creates or opens file for what
- *                   purpose? If <lAdditive> is TRUE and the file already
- *                   exists, the file is opened and positioned at end of
- *                   file. Otherwise, the file is created. If a file is
+ *                   When set, creates or opens file to write QOUT() and
+ *                   QQOUT() output to. If <lAdditive> is TRUE and the file
+ *                   already exists, the file is opened and positioned at end
+ *                   of file. Otherwise, the file is created. If a file is
  *                   already opened, it is closed before the new file is
- *                    opened or created (even if it is the same file).
+ *                   opened or created (even if it is the same file). The
+ *                   default file extension is ".prn". There is no default
+ *                   file name. Call with an empty string to close the file.
  *              _SET_FIXED       <lFlag> | <cOnOff>
  *                   When enabled, all numeric values will be displayed
  *                   and printed with the number of decimal digits set
@@ -455,7 +450,8 @@ HARBOUR HB___SETCENTURY (void)
  *                   file is already opened, it is closed before the new file
  *                   is opened or created (even if it is the same file). The
  *                   default file extension is ".prn". The default file name
- *                   is "PRN", which maps to the default printer device.
+ *                   is "PRN", which maps to the default printer device. Call
+ *                   with an empty string to close the file.
  *              _SET_SCOREBOARD  <lFlag> | <cOnOff>
  *                   When enabled, which is the default, READ and MEMOEDIT
  *                   display status messages on screen row 0. When disabled,
@@ -631,6 +627,14 @@ HARBOUR HB_SET (void)
          if (hb_set.HB_SET_EXTRAFILE) hb_retc (hb_set.HB_SET_EXTRAFILE);
          else hb_retc ("");
          if (args > 1) hb_set.HB_SET_EXTRAFILE = set_string (pArg2, hb_set.HB_SET_EXTRAFILE);
+         if (args > 2) bFlag = set_logical (pArg3);
+         else bFlag = FALSE;
+         if (args > 1)
+         {
+            if (hb_set_extrahan >= 0) close_text (hb_set_extrahan);
+            if (hb_set.HB_SET_EXTRAFILE && strlen (hb_set.HB_SET_EXTRAFILE) > 0)
+               hb_set_extrahan = open_handle (hb_set.HB_SET_EXTRAFILE, bFlag, ".prn");
+         }
          break;
       case HB_SET_FIXED      :
          hb_retl (hb_set.HB_SET_FIXED);
@@ -736,27 +740,28 @@ void hb_setInitialize (void)
    hb_set_century  = FALSE;
    hb_set_fixed    = FALSE;
    hb_set_althan   = -1;
+   hb_set_extrahan = -1;
    hb_set_printhan = -1;
    hb_set.HB_SET_ALTERNATE = FALSE;
    hb_set.HB_SET_ALTFILE = 0;      /* NULL pointer */
    hb_set.HB_SET_BELL = FALSE;
    hb_set.HB_SET_CANCEL = TRUE;
-   hb_set.HB_SET_COLOR = (char*)hb_xgrab (20);
+   hb_set.HB_SET_COLOR = (char*)hb_xgrab (20UL);
    memcpy (hb_set.HB_SET_COLOR, "W/N,N/W,N/N,N/N,N/W", 20);
    hb_set.HB_SET_CONFIRM = FALSE;
    hb_set.HB_SET_CONSOLE = TRUE;
    hb_set.HB_SET_CURSOR = SC_NORMAL;
-   hb_set.HB_SET_DATEFORMAT = (char*)hb_xgrab (9);
+   hb_set.HB_SET_DATEFORMAT = (char*)hb_xgrab (9UL);
    memcpy (hb_set.HB_SET_DATEFORMAT, "mm/dd/yy", 9);
    hb_set.HB_SET_DEBUG = 0;
    hb_set.HB_SET_DECIMALS = 2;
-   hb_set.HB_SET_DEFAULT = (char*)hb_xgrab (1);
+   hb_set.HB_SET_DEFAULT = (char*)hb_xgrab (1UL);
    *hb_set.HB_SET_DEFAULT = 0;
    hb_set.HB_SET_DELETED = FALSE;
-   hb_set.HB_SET_DELIMCHARS = (char*)hb_xgrab (3);
+   hb_set.HB_SET_DELIMCHARS = (char*)hb_xgrab (3UL);
    memcpy (hb_set.HB_SET_DELIMCHARS, "::", 3);
    hb_set.HB_SET_DELIMITERS = FALSE;
-   hb_set.HB_SET_DEVICE = (char*)hb_xgrab (7);
+   hb_set.HB_SET_DEVICE = (char*)hb_xgrab (7UL);
    memcpy (hb_set.HB_SET_DEVICE, "SCREEN", 7);
    hb_set.HB_SET_EPOCH = 1900;
    hb_set.HB_SET_ESCAPE = 1;
@@ -765,17 +770,17 @@ void hb_setInitialize (void)
    hb_set.HB_SET_EXCLUSIVE = TRUE;
    hb_set.HB_SET_EXIT = FALSE;
    hb_set.HB_SET_EXTRA = FALSE;    /* TODO: What is this for? */
-   hb_set.HB_SET_EXTRAFILE = 0;    /* TODO: What is this for? */
+   hb_set.HB_SET_EXTRAFILE = 0;    /* NULL pointer */
    hb_set.HB_SET_FIXED = FALSE;
    hb_set.HB_SET_INSERT = FALSE;
    hb_set.HB_SET_INTENSITY = TRUE;
    hb_set.HB_SET_MARGIN = 0;
    hb_set.HB_SET_MCENTER = FALSE;
    hb_set.HB_SET_MESSAGE = 0;
-   hb_set.HB_SET_PATH = (char*)hb_xgrab (1);
+   hb_set.HB_SET_PATH = (char*)hb_xgrab (1UL);
    *hb_set.HB_SET_PATH = 0;
    hb_set.HB_SET_PRINTER = FALSE;
-   hb_set.HB_SET_PRINTFILE = (char*)hb_xgrab (4);
+   hb_set.HB_SET_PRINTFILE = (char*)hb_xgrab (4UL);
    memcpy (hb_set.HB_SET_PRINTFILE, "PRN", 4);  /* Default printer device */
    hb_set.HB_SET_SCOREBOARD = TRUE;
    hb_set.HB_SET_SCROLLBREAK = TRUE;
@@ -788,6 +793,7 @@ void hb_setInitialize (void)
 void hb_setRelease (void)
 {
    if (hb_set_althan != -1) close_text (hb_set_althan);
+   if (hb_set_extrahan != -1) close_binary (hb_set_extrahan);
    if (hb_set_printhan != -1) close_binary (hb_set_printhan);
 
    if (hb_set.HB_SET_ALTFILE)
@@ -802,6 +808,8 @@ void hb_setRelease (void)
       hb_xfree (hb_set.HB_SET_DELIMCHARS);
    if (hb_set.HB_SET_DEVICE)
       hb_xfree (hb_set.HB_SET_DEVICE);
+   if (hb_set.HB_SET_EXTRAFILE)
+      hb_xfree (hb_set.HB_SET_EXTRAFILE);
    if (hb_set.HB_SET_PATH)
       hb_xfree (hb_set.HB_SET_PATH);
    if (hb_set.HB_SET_PRINTFILE)
