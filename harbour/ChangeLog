@@ -1,3 +1,7 @@
+2001-10-24 20:08 GMT+7 Andi Jahja <harnour@cbn.net.id>
+   * source/rdd/dbcmd.c
+     ! Add casts to quite MsVC
+
 2001-10-24 09:50 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
   ! source/rdd/dbfntx1.c
      ! bug fixed in ntxZap
