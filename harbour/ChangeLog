@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+2002-07-17 12:30 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/debug/debugger.prg
+    ! Bugs fixed with codeblocks processing
+
 2002-07-17 11:10 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/debug/debugger.prg
     ! A bug fixed in commands evaluation

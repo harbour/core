@@ -137,6 +137,14 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
 
            if s_oDebugger != nil
               if PCount() == 3 // called from hvm.c hb_vmLocalName() and hb_vmStaticName()
+                 if cProcName == "__EVAL" .OR. cProcName == "EVAL"
+                    if !s_oDebugger:lCodeblock
+                       ASize( s_oDebugger:aCallStack, Len( s_oDebugger:aCallStack ) + 1 )
+                       AIns( s_oDebugger:aCallStack, 1 )
+                       s_oDebugger:aCallStack[ 1 ] := { cProcName, {} }
+                       s_oDebugger:lCodeblock := .T.
+                    endif
+                 endif
                  if uParam3 == 1 // in-function static variable
                     cStaticName  := uParam2
                     nStaticIndex := uParam1
@@ -193,6 +201,9 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
             return
          endif
          if s_oDebugger != nil
+            if s_oDebugger:lCodeblock
+               s_oDebugger:lCodeblock := .F.
+            endif
             s_oDebugger:EndProc()
             s_oDebugger:LoadVars()
          endif
@@ -216,6 +227,7 @@ CLASS TDebugger
    DATA   lShowPublics, lShowPrivates, lShowStatics, lShowLocals, lAll
    DATA   lShowCallStack
    DATA   nTraceLevel
+   DATA   lCodeblock INIT .F.
 
    METHOD New()
    METHOD Activate( cModuleName )
@@ -2100,9 +2112,7 @@ static function DoCommand( o,cCommand )
    for i := 1 to nLocals
       vtmp := __mvGet( o:aCallStack[1][2][i][1] )
       if !(Valtype( vtmp ) $ "AO")
-         if vtmp != __vmVarLGet( nProcLevel, o:aCallStack[1][2][i][2] )
-            __vmVarLSet( nProcLevel, o:aCallStack[1][2][i][2], vtmp )
-         endif
+         __vmVarLSet( nProcLevel, o:aCallStack[1][2][i][2], vtmp )
       endif
    next
 
