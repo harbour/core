@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     * All functions marked as exported
+
+2001-12-28 20:39 UTC+0100 Patrick Mast <email@patrickmast.com>
+   * contrib/apollo
+     + Added function sx_AppendBlank()
      + Added function sx_Close()
      + Added function sx_Commit()
      + Added function sx_CreateField()
