@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-07-08 00:20 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
+   * contrib/rdd_ads/ads1.c
+      * Fixed bug on adsPutValue() function when numeric data to be putted are more the 10 number
+       long and no decimals(ie: 123456789124) Fix By Luiz Rafael Culik and Charles Kwon
 
 2002-07-07 22:40 UTC+0100 Martin Vogel <vogel@inttec.de>
    * source/rtl/math.c
