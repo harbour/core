@@ -352,6 +352,12 @@ static ERRCODE hb_dbfLockRecord( DBFAREAP pArea, ULONG ulRecNo, BOOL * pResult,
    if( pArea->lpdbPendingRel )
       SELF_FORCEREL( ( AREAP ) pArea );
 
+   if( pArea->fFLocked )
+   {
+      * pResult = TRUE;
+      return SUCCESS;
+   }
+
    if( bExclusive )
       hb_dbfUnlockAllRecords( pArea );
 
@@ -405,6 +411,8 @@ static ERRCODE hb_dbfLockFile( DBFAREAP pArea, BOOL * pResult )
    {
       if( pArea->lpdbPendingRel )
          SELF_FORCEREL( ( AREAP ) pArea );
+
+      hb_dbfUnlockAllRecords( pArea );
 
       pArea->fFLocked = hb_fsLock( pArea->hDataFile, DBF_LOCKPOS + 1,
                                    DBF_LOCKPOS, FL_LOCK );
