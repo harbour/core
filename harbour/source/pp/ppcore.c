@@ -3824,6 +3824,14 @@ static int NextParm( char ** sSource, char * sDest )
         StBr--;
      }
      /* END - Ron Pinkas added 2000-11-26 */
+     else if( **sSource == '{' )
+     {
+        StBr++;
+     }
+     else if( **sSource == '}' )
+     {
+        StBr--;
+     }
      else if( **sSource == '(' )
      {
         StBr++;

@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * source\common\hbffind.c
+      *  fixed the "Directory() can't see files with cleared
+                     archive bits" problem.
+
 2002-03-03 16:20 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
   * include/hbapifs.h
    + prototype for hb_fsPOpen() api
