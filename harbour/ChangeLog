@@ -1,3 +1,9 @@
+19990522-15:55 CET Eddie Runia
+  * docs/hrb.faq
+    Clean up
+  * tests/working/stub.dat, tests/working/hbrun.bat
+    Renamed stub.bat to hbrun.bat (Better name)
+
 19990522-15:35 CET Eddie Runia
   * tests/working/instr.prg, source/vm/hvm.c
     Les Griffiths patch inserted

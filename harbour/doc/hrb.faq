@@ -12,7 +12,7 @@ To create a runner :
 Once the runner is created,
 To create a .HRB and run it :
 
-        c:..> stub <filename>
+        c:..> hbrun <filename>
 
 
 If you just want to run a .HRB file :
@@ -36,25 +36,6 @@ To run a .HRB file within a .PRG (only possible if the .PRG is compiled as a
 .HRB file) :
 
         HB_Run( <cFileName> )
-
-Adding new RTL/Tools commands to Harbour.
-
-        Since the runner needs to known all symbols recognized by Harbour
-        up-front an include file "run_exp.h" is available.
-
-        If a new function is added to the RTL/Tools an entry must be made
-        into this file for the runner to recognize the symbol.
-
-        ...
-        HARBOUR <new_func>();
-        ...
-        { "<new_func>", FS_PUBLIC, <new_func>(), 0 },
-        ...
-
-        Unless a new system for 'Static initializers' is implemented.
-
-        run_exp.h currently contains all functions except :
-        IO.C and some internal functions (ie __wDataInc)
 
 -------------------------------------------------------------------------------
 HRB structure (also known as Harbour Portable Objects) and
