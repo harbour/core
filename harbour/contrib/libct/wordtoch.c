@@ -128,7 +128,7 @@ HB_FUNC (WORDTOCHAR)
           ((pc = ct_at_exact_forward (pcSearch, sSearchLen,
                                       pcRet+sRetIndex, 2,
                                       &sMatchStrLen)) != NULL) &&
-          ((sReplIndex=(pc-pcSearch)) & 1 != 1))
+          (((sReplIndex=(pc-pcSearch)) & 1) != 1))
       {
         sReplIndex /= 2;
         if (sReplIndex >= sReplaceLen)

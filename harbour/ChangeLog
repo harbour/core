@@ -1,3 +1,9 @@
+2001-08-18 17:00 MEST Martin Vogel <vogel@inttec.de>
+
+   * contrib/libct/range.c
+   * contrib/libct/wordtoch.c
+     * small changes to remove warnings on linux/gcc.
+
 2001-08-18 16:45 MEST Martin Vogel <vogel@inttec.de>
 
    + contrib/libct/numat.c

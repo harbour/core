@@ -95,7 +95,7 @@ HB_FUNC (RANGEREM)
     char *pcString = (char *)hb_parc (3);
     size_t sStrLen = (size_t)hb_parclen (3);
     char *pcRet, *pc;
-    unsigned char ucChar1, ucChar2, ucReplace;
+    unsigned char ucChar1, ucChar2;
     size_t sRetIndex;
     int iMode, iBool;
 
