@@ -1,3 +1,8 @@
+2001-11-07 16:10 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/lang/msgru866.c
+  * source/lang/msgruwin.c
+    * format changed
+
 2001-11-07 03:55 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
    * bin\bld.bat
      * corrected typo
