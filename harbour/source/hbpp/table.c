@@ -181,7 +181,7 @@ COMMANDS aCommands[] =
  {0,"SET","FORMAT TO \1A20&>","if ( Empty(\1A30) ) ;   SET FORMAT TO ; else ;   __SetFormat( &('{||' + \1A30 + '()}') ) ; end"},
  {0,"SET","FORMAT TO","__SetFormat()"},
  {0,"@","\1A00, \1B00 GET \1C00 [PICTURE \1D00] [VALID \1E00] [WHEN \1F00] [SEND \1G00]",
-   "SetPos( \1A00, \1B00 ) ; AAdd( GetList, _GET_( \1C00, \1C20, \1D00, \1E40, \1F40 ):display() ) [; ATail(GetList):\1G00]"},
+   "SetPos( \1A00, \1B00 ) ; AAdd( GetList, _GET_( \1C00, \1C20, \1D00, \1E40, \1F40,{|u| If( PCount()==0,\1C00,\1C00:=u )} ):display() ) [; ATail(GetList):\1G00]"},
  {0,"@","\1A00, \1B00 SAY \1C00 [\1D10] GET \1E00 [\1F10]","@ \1A00, \1B00 SAY \1C00 [\1D00] ; @ Row(), Col()+1 GET \1E00 [\1F00]"},
  {0,"@","\1A00, \1B00 GET \1C00 [\1D10] RANGE \1E00, \1F00 [\1G10]",
    "@ \1A00, \1B00 GET \1C00 [\1D00] VALID {|_1| RangeCheck(_1,, \1E00, \1F00)} [\1G00]"},

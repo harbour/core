@@ -1,3 +1,7 @@
+199908.04-16:32 GMT+3 Alexander Kresin
+  * source/hbpp/table.c
+    * change in @ y,x GET ...
+
 19990804 GMT+1 Antonio Linares <alinares@fivetech.com>
   + source/rtl/TGet.prg added
     Harbour Class TGet (developed by Ignacio Ortiz)
