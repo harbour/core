@@ -395,50 +395,56 @@ HB_FUNC( TRANSFORM )
                   szStr[ i ] = byParamL;
             }
 
-            for( i = 0; i < ulPicLen; i++ )
-            {
-               cPic = szPic[ i ];
-               if( cPic == '9' || cPic == '#' )
-                  szResult[ i ] = szStr[ iCount++ ];  /* Just copy                */
-               else if( cPic == '.' )
+            if( ulPicLen )
+               for( i = 0; i < ulPicLen; i++ )
                {
-                  if( uiPicFlags & PF_NUMDATE )    /* Dot in date              */
-                     szResult[ i ] = cPic;
-                  else                             /* Dot in number            */
+                  cPic = szPic[ i ];
+                  if( cPic == '9' || cPic == '#' )
+                     szResult[ i ] = szStr[ iCount++ ];  /* Just copy                */
+                  else if( cPic == '.' )
                   {
-                     if( uiPicFlags & PF_EXCHANG ) /* Exchange . and ,         */
+                     if( uiPicFlags & PF_NUMDATE )    /* Dot in date              */
+                        szResult[ i ] = cPic;
+                     else                             /* Dot in number            */
                      {
-                        szResult[ i ] = ',';
+                        if( uiPicFlags & PF_EXCHANG ) /* Exchange . and ,         */
+                        {
+                           szResult[ i ] = ',';
+                           iCount++;
+                        }
+                        else
+                           szResult[ i ] = szStr[ iCount++ ];
+                     }
+                  }
+                  else if( cPic == '$' || cPic == '*' )
+                  {
+                     if( szStr[ iCount ] == ' ' )
+                     {
+                        szResult[ i ] = cPic;
                         iCount++;
                      }
                      else
                         szResult[ i ] = szStr[ iCount++ ];
                   }
-               }
-               else if( cPic == '$' || cPic == '*' )
-               {
-                  if( szStr[ iCount ] == ' ' )
+                  else if( cPic == ',' )              /* Comma                    */
                   {
-                     szResult[ i ] = cPic;
-                     iCount++;
-                  }
-                  else
-                     szResult[ i ] = szStr[ iCount++ ];
-               }
-               else if( cPic == ',' )              /* Comma                    */
-               {
-                  if( iCount && isdigit( ( int ) szStr[ iCount - 1 ] ) )
-                  {                                /* May we place it     */
-                     if( uiPicFlags & PF_EXCHANG )
-                        szResult[ i ] = '.';
+                     if( iCount && isdigit( ( int ) szStr[ iCount - 1 ] ) )
+                     {                                /* May we place it     */
+                        if( uiPicFlags & PF_EXCHANG )
+                           szResult[ i ] = '.';
+                        else
+                           szResult[ i ] = ',';
+                     }
                      else
-                        szResult[ i ] = ',';
+                        szResult[ i ] = ' ';
                   }
                   else
-                     szResult[ i ] = ' ';
+                     szResult[ i ] = cPic;
                }
-               else
-                  szResult[ i ] = cPic;
+            else
+            {
+               strcpy( szResult, szStr );
+               i = strlen( szStr );
             }
 
             if( ( uiPicFlags & PF_PARNEG ) && dValue < 0 )
@@ -475,7 +481,9 @@ HB_FUNC( TRANSFORM )
             hb_xfree( szStr );
          }
          else
+         {
             ulResultPos = 0;
+         }
       }
 
       /* ======================================================= */

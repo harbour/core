@@ -1,3 +1,7 @@
+2001-07-19 12:40 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rtl/transfrm.c
+    * added some code for proper handling of numeric parameters
+
 2001-07-18 16:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/vm/macro.c
    * source/vm/hvm.c
