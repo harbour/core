@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2002-01-08 09:52 UTC+0100 Patrick Mast <email@patrickmast.com>
+   * source/compiler/genc.c
+   * source/compiler/genjava.c
+   * source/compiler/genobj32.c
    * source/compiler/hbusage.c
    * source/common/hbver.c
      * changed decimal build nr in "Alpha build .."

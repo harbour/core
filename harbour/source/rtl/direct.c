@@ -117,7 +117,7 @@ HB_FUNC( DIRECTORY )
 
    /* Get the passed attributes and convert them to Harbour Flags */
 
-   uiMask = HB_FA_ARCHIVE | HB_FA_READONLY;
+   uiMask = HB_FA_ARCHIVE | HB_FA_NORMAL;
    if( pAttributes && hb_itemGetCLen( pAttributes ) > 0 )
       uiMask |= hb_fsAttrEncode( hb_itemGetCPtr( pAttributes ) );
 
