@@ -106,7 +106,7 @@ char * hb_verPlatform( void )
       /* Host OS detection: Windows 2.x, 3.x, 95/98 */
 
       {
-         regs.x.ax = 0x1600;
+         regs.HB_XREGS.ax = 0x1600;
          HB_DOS_INT86( 0x2F, &regs, &regs );
 
          if( regs.h.al != 0x00 && regs.h.al != 0x80 )
@@ -125,10 +125,10 @@ char * hb_verPlatform( void )
       /* Host OS detection: Windows NT/2000 */
 
       {
-         regs.x.ax = 0x3306;
+         regs.HB_XREGS.ax = 0x3306;
          HB_DOS_INT86( 0x21, &regs, &regs );
 
-         if( regs.x.bx == 0x3205 )
+         if( regs.HB_XREGS.bx == 0x3205 )
             strcat( pszPlatform, " (Windows NT/2000)" );
       }
 

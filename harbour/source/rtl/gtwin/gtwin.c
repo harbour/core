@@ -798,6 +798,26 @@ void hb_gt_SetCursorStyle( USHORT style )
    SetConsoleCursorInfo( s_HActive, &cci );
 }
 
+void hb_gt_xPutch( USHORT uiRow, USHORT uiCol, BYTE attr, BYTE byChar )
+{
+   DWORD dwWritten;
+   COORD coord;
+   char tmp[ 2 ];
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xPutch(%hu, %hu, %d, %i)", uiRow, uiCol, (int) attr, byChar));
+
+   /* TOFIX: add correct support for a single byte instead of a string
+    */
+   tmp[ 0 ] = byChar;
+   tmp[ 1 ] = '\0';
+
+   coord.X = ( SHORT ) uiCol;
+   coord.Y = ( SHORT ) uiRow;
+
+   FillConsoleOutputAttribute( s_HOutput, ( WORD )( attr & 0xFF ), ( DWORD ) 1, coord, &dwWritten );
+   WriteConsoleOutputCharacterA( s_HOutput, tmp, 1, coord, &dwWritten );
+}
+
 void hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE attr, BYTE * str, ULONG len )
 {
    DWORD dwWritten;
@@ -1105,19 +1125,22 @@ BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
    return bRetVal;
 }
 
-void hb_gt_Replicate( BYTE c, ULONG ulLength )
+void hb_gt_Replicate( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar, ULONG ulLength )
 {
 
 /* ptucker */
-   COORD coBuf = { 0, 0 };
+   COORD coBuf;
    DWORD dwWritten;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%d, %lu)", (int) c, ulLength));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%hu, %hu, %i, %i, %lu)", uiRow, uiCol, byAttr, byChar, ulLength));
 
-/* TODO: This is not used and may be eliminated after further review */
+   coBuf.Y = uiRow;
+   coBuf.X = uiCol;
+
+   FillConsoleOutputAttribute( s_HOutput, ( WORD )( byAttr & 0xFF ), ( DWORD )ulLength, coord, &dwWritten );
    FillConsoleOutputCharacter(
            s_HOutput,                    /* handle to screen buffer        */
-           c,                            /* character to write             */
+           byChar,                       /* character to write             */
            ( DWORD ) ulLength,           /* number of cells to write       */
            coBuf,                        /* coordinates of first cell      */
            &dwWritten                    /* receives actual number written */
@@ -1214,4 +1237,119 @@ char * hb_gt_Version( void )
 USHORT hb_gt_DispCount()
 {
    return s_uiDispCount;
+}
+
+
+USHORT hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
+                  BYTE *szBox, BYTE byAttr )
+{
+   USHORT uiRow;
+   USHORT uiCol;
+   USHORT uiHeight;
+   USHORT uiWidth;
+
+   /* Ensure that box is drawn from top left to bottom right. */
+   if( uiTop > uiBottom )
+   {
+      USHORT tmp = uiTop;
+      uiTop = uiBottom;
+      uiBottom = tmp;
+   }
+   if( uiLeft > uiRight )
+   {
+      USHORT tmp = uiLeft;
+      uiLeft = uiRight;
+      uiRight = tmp;
+   }
+
+   uiRow = uiTop;
+   uiCol = uiLeft;
+
+   /* Draw the box or line as specified */
+   uiHeight = uiBottom - uiTop + 1;
+   uiWidth  = uiRight - uiLeft + 1;
+
+   hb_gt_DispBegin();
+
+   if( uiHeight > 1 && uiWidth > 1 )
+      hb_gt_xPutch( uiRow, uiCol, byAttr, szBox[ 0 ] ); /* Upper left corner */
+
+   uiCol = ( uiHeight > 1 ? uiLeft + 1 : uiLeft );
+
+   if( uiCol <= uiRight )
+      hb_gt_Replicate( uiRow, uiCol, byAttr, szBox[ 1 ], uiRight - uiLeft + ( uiHeight > 1 ? -1 : 1 ) ); /* Top line */
+
+   if( uiHeight > 1 && uiWidth > 1 )
+      hb_gt_xPutch( uiRow, uiRight, byAttr, szBox[ 2 ] ); /* Upper right corner */
+
+   if( szBox[ 8 ] && uiHeight > 2 && uiWidth > 2 )
+   {
+      for( uiRow = uiTop + 1; uiRow < uiBottom; uiRow++ )
+      {
+         uiCol = uiLeft;
+         hb_gt_xPutch( uiRow, uiCol++, byAttr, szBox[ 7 ] ); /* Left side */
+         hb_gt_Replicate( uiRow, uiCol, byAttr, szBox[ 8 ], uiRight - uiLeft - 1 ); /* Fill */
+         hb_gt_xPutch( uiRow, uiRight, byAttr, szBox[ 3 ] ); /* Right side */
+      }
+   }
+   else
+   {
+      for( uiRow = ( uiWidth > 1 ? uiTop + 1 : uiTop ); uiRow < ( uiWidth > 1 ? uiBottom : uiBottom + 1 ); uiRow++ )
+      {
+         hb_gt_xPutch( uiRow, uiLeft, byAttr, szBox[ 7 ] ); /* Left side */
+         if( uiWidth > 1 )
+            hb_gt_xPutch( uiRow, uiRight, byAttr, szBox[ 3 ] ); /* Right side */
+      }
+   }
+
+   if( uiHeight > 1 && uiWidth > 1 )
+   {
+      hb_gt_xPutch( uiBottom, uiLeft, byAttr, szBox[ 6 ] ); /* Bottom left corner */
+
+      uiCol = ( uiHeight > 1 ? uiLeft + 1 : uiLeft );
+
+      if( uiCol <= uiRight && uiHeight > 1 )
+         hb_gt_Replicate( uiBottom, uiCol, byAttr, szBox[ 5 ], uiRight - uiLeft + ( uiHeight > 1 ? -1 : 1 ) ); /* Bottom line */
+
+      hb_gt_xPutch( uiBottom, uiRight, byAttr, szBox[ 4 ] ); /* Bottom right corner */
+   }
+
+   hb_gt_DispEnd();
+
+   return 0;
+}
+
+USHORT hb_gt_BoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr )
+{
+   return hb_gt_Box( uiTop, uiLeft, uiBottom, uiRight, pbyFrame, byAttr );
+}
+
+USHORT hb_gt_BoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr )
+{
+   return hb_gt_Box( uiTop, uiLeft, uiBottom, uiRight, pbyFrame, byAttr );
+}
+
+USHORT hb_gt_HorizLine( USHORT uiRow, USHORT uiLeft, USHORT uiRight, BYTE byChar, BYTE byAttr )
+{
+   if( uiLeft < uiRight )
+      hb_gt_Replicate( uiRow, uiLeft, byAttr, byChar, uiRight - uiLeft + 1 );
+   else
+      hb_gt_Replicate( uiRow, uiRight, byAttr, byChar, uiLeft - uiRight + 1 );
+   return 0;
+}
+
+USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar, BYTE byAttr )
+{
+   USHORT uRow;
+
+   if( uiTop <= uiBottom )
+      uRow = uiTop;
+   else
+   {
+      uRow = uiBottom;
+      uiBottom = uiTop;
+   }
+   while( uRow <= uiBottom )
+      hb_gt_xPutch( uRow++, uiCol, byAttr, byChar );
+   return 0;
 }

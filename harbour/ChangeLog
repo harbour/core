@@ -1,3 +1,43 @@
+20000418-13:30 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbapigt.h
+    *source/rtl/gtapi.c
+    *source/rtl/gtdos/gtdos.c
+    *source/rtl/gtcrs/gtcrs.c
+    *source/rtl/gtos2/gtos2.c
+    *source/rtl/gtpca/gtpca.c
+    *source/rtl/gtsln/gtsln.c
+    *source/rtl/gtstd/gtstd.c
+    *source/rtl/gtwin/gtwin.c
+    *source/rtl/gt_tpl/gt_tpl.c
+        *box drawing procedures moved from gtapi.c to low level
+         modules - this will allow to use native (optimized) method
+         of box drawing (xterm!)
+        *full implementation of low level hb_gt_Replicate()
+        *added hb_gt_HorizLine() and hb_gt_VertLine() - this can be 
+         extended by definition of HB_LINE() or 
+         @ row,left,right LINE command (this will get line drawing
+         support on platforms where @ ... BOX command is not suitable)
+
+    *source/common/hbver.c
+        *fixed REGS union access
+
+    *source/rtl/gtcrs/gtcrs.c
+        *support for box drawing added for xterm
+        NOTE: Only 
+        @ y1,x1 TO y2,x2
+        and
+        @ y1,x1 TO y2,x2 DOUBLE
+        are reliable although both are drawing a single-line box
+        The usual @ y1,x1,y2,x2 BOX ... depends on character mapping
+        used in current font
+        (Well I am not so familiar with it then this needs some
+        more work - I can be wrong here :)
+   
+   If you want a single method of box drawing for all platforms use
+   @ y1,x1 TO y2,x2
+   
+
 20000418-00:42 DST Paul Tucker <ptucker@sympatico.ca>
   * makefile.vc
     + source/lang/msghe862.c

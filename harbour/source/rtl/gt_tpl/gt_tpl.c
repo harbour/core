@@ -225,6 +225,17 @@ void hb_gt_SetCursorStyle( USHORT uiStyle )
    }
 }
 
+void hb_gt_xPutch( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xPutch(%hu, %hu, %d, %i)", uiRow, uiCol, (int) byAttr, byChar));
+
+   HB_SYMBOL_UNUSED( uiRow );
+   HB_SYMBOL_UNUSED( uiCol );
+   HB_SYMBOL_UNUSED( byAttr );
+   HB_SYMBOL_UNUSED( pbyStr );
+   HB_SYMBOL_UNUSED( ulLen );
+}
+
 void hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE * pbyStr, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Puts(%hu, %hu, %d, %p, %lu)", uiRow, uiCol, (int) byAttr, pbyStr, ulLen));
@@ -323,20 +334,6 @@ BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
    HB_SYMBOL_UNUSED( uiCols );
 }
 
-void hb_gt_Replicate( BYTE byChar, ULONG ulLen )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%d, %lu)", (int) byChar, ulLen));
-
-   /* TODO: this will write character c nlength times to the screen.
-            Note that it is not used yet
-            If there is no native function that supports this, it is
-            already handled in a generic way by higher level functions.
-   */
-
-   HB_SYMBOL_UNUSED( byChar );
-   HB_SYMBOL_UNUSED( ulLen );
-}
-
 BOOL hb_gt_GetBlink()
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetBlink()"));
@@ -375,4 +372,63 @@ char * hb_gt_Version( void )
 USHORT hb_gt_DispCount()
 {
    return s_uiDispCount;
+}
+
+
+void hb_gt_Replicate( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar, ULONG nLength )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%hu, %hu, %i, %i, %lu)", uiRow, uiCol, byAttr, byChar, nLength));
+   {
+      /* TODO: replace it with native (optimized) version */
+      while( nLength-- )
+         hb_gt_xPutch( uiRow, uiCol++, byAttr, byChar );
+   }
+}
+
+USHORT hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
+                  BYTE *szBox, BYTE byAttr )
+{
+
+   HB_SYMBOL_UNUSED( uiTop );
+   HB_SYMBOL_UNUSED( uiLeft );
+   HB_SYMBOL_UNUSED( uiBottom );
+   HB_SYMBOL_UNUSED( uiRight );
+   HB_SYMBOL_UNUSED( szBox );
+   HB_SYMBOL_UNUSED( byAttr );
+   return 0;
+}
+
+USHORT hb_gt_BoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr )
+{
+   return hb_gt_Box( uiTop, uiLeft, uiBottom, uiRight, pbyFrame, byAttr );
+}
+
+USHORT hb_gt_BoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr )
+{
+   return hb_gt_Box( uiTop, uiLeft, uiBottom, uiRight, pbyFrame, byAttr );
+}
+
+USHORT hb_gt_HorizLine( USHORT uiRow, USHORT uiLeft, USHORT uiRight, BYTE byChar, BYTE byAttr )
+{
+   if( uiLeft < uiRight )
+      hb_gt_Replicate( uiRow, uiLeft, byAttr, byChar, uiRight - uiLeft + 1 );
+   else
+      hb_gt_Replicate( uiRow, uiRight, byAttr, byChar, uiLeft - uiRight + 1 );
+   return 0;
+}
+
+USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar, BYTE byAttr )
+{
+   USHORT uRow;
+
+   if( uiTop <= uiBottom )
+      uRow = uiTop;
+   else
+   {
+      uRow = uiBottom;
+      uiBottom = uiTop;
+   }
+   while( uRow <= uiBottom )
+      hb_gt_xPutch( uRow++, uiCol, byAttr, byChar );
+   return 0;
 }

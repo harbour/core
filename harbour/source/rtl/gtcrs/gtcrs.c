@@ -63,8 +63,9 @@ struct key_map_struc
 
 static struct key_map_struc *s_keymap_table = NULL;
 static unsigned s_attribmap_table[ 256 ]; /* mapping from DOS style attributes */
-static BOOL s_under_buggy_xterm;
+static BOOL s_under_xterm;
 static int s_alternate_char_set;
+static  char s_xTermBox[ 10 ] = "lqkxjqmx ";
 
 static void hb_gt_Initialize_Terminal( void )
 {
@@ -93,21 +94,21 @@ static void hb_gt_Initialize_Terminal( void )
 	 15 white         7-> BOLD WHITE
       */
       static char color_map[] = { 0, 4, 2, 6, 1, 5, 3, 7 };
-      
+
       start_color();
       for( backg=0; backg<COLORS; backg++ )
          for( foreg=0; foreg<COLORS; foreg++ )
 	       init_pair( backg*COLORS+foreg, color_map[foreg], color_map[backg] );
-	    
+
       for( i=0; i<256; i++  )
       {
          backg = ( i >> 4 ) & 0x07;    /* bits 4-6, bit 7 is blinking attribute */
-	 foreg = ( i & 0x07 );  
-	 s_attribmap_table[ i ] = COLOR_PAIR( backg*COLORS + foreg );
-	 if( i & 0x08 )
-	     s_attribmap_table[ i ] |= A_BOLD;  /* 4-th bit is an intensity bit */
-	 if( i & 0x80 )
-	     s_attribmap_table[ i ] |= A_BLINK;  /* 7-th bit is blinking bit */
+	       foreg = ( i & 0x07 );
+	       s_attribmap_table[ i ] = COLOR_PAIR( backg*COLORS + foreg );
+	       if( i & 0x08 )
+	           s_attribmap_table[ i ] |= A_BOLD;  /* 4-th bit is an intensity bit */
+	       if( i & 0x80 )
+	           s_attribmap_table[ i ] |= A_BLINK;  /* 7-th bit is blinking bit */
       }
    }
 
@@ -117,33 +118,23 @@ static void hb_gt_Initialize_Terminal( void )
    scrollok( stdscr, TRUE );
    raw();
    keypad( stdscr, FALSE );
-   
-   s_under_buggy_xterm = !strncmp( getenv("TERM"), "xterm", 5 );
+
+   s_under_xterm = !strncmp( getenv("TERM"), "xterm", 5 );
    /* NOTE: using A_ALTCHARSET attribute is causing that small letters
-     a-z are not printed under xterm (at least xterm from Linux 
+     a-z are not printed under xterm (at least xterm from Linux
      RedHat 6.1 distribution)
    */
-   if( s_under_buggy_xterm )
+   if( s_under_xterm )
    {
-/*
-      char * str;
-      
-      str = tigetstr( "enacs" );   / * enable alt character set * /
-      if( (str != NULL) && (str != (char *)-1) )
-         write( fileno(stdout), str, strlen(str) );
-
-      str = tigetstr( "smacs" );   / * start alt characters set * /
-      if( (str != NULL) && (str != (char *)-1) )
-         write( fileno(stdout), str, strlen(str) );
-*/
       s_alternate_char_set = 0;
    }
    else
+   {
       s_alternate_char_set = A_ALTCHARSET;
-   
+   }
    bkgdset( ' ' );
    ripoffline( 0, NULL );
-   
+
 }
 
 void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
@@ -208,43 +199,43 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
     hb_gt_Add_keymap( K_ALT_C, "\033c" );
     hb_gt_Add_keymap( K_ALT_C, "\033C" );
     hb_gt_Add_keymap( K_ALT_D, "\033d" );
-    hb_gt_Add_keymap( K_ALT_D, "\033D" );    
+    hb_gt_Add_keymap( K_ALT_D, "\033D" );
     hb_gt_Add_keymap( K_ALT_E, "\033e" );
-    hb_gt_Add_keymap( K_ALT_E, "\033E" );    
+    hb_gt_Add_keymap( K_ALT_E, "\033E" );
     hb_gt_Add_keymap( K_ALT_F, "\033f" );
-    hb_gt_Add_keymap( K_ALT_F, "\033F" );    
+    hb_gt_Add_keymap( K_ALT_F, "\033F" );
     hb_gt_Add_keymap( K_ALT_G, "\033g" );
     hb_gt_Add_keymap( K_ALT_G, "\033G" );
     hb_gt_Add_keymap( K_ALT_H, "\033h" );
-    hb_gt_Add_keymap( K_ALT_H, "\033H" );    
+    hb_gt_Add_keymap( K_ALT_H, "\033H" );
     hb_gt_Add_keymap( K_ALT_I, "\033i" );
-    hb_gt_Add_keymap( K_ALT_I, "\033I" );    
+    hb_gt_Add_keymap( K_ALT_I, "\033I" );
     hb_gt_Add_keymap( K_ALT_J, "\033j" );
-    hb_gt_Add_keymap( K_ALT_J, "\033J" );    
+    hb_gt_Add_keymap( K_ALT_J, "\033J" );
     hb_gt_Add_keymap( K_ALT_K, "\033k" );
     hb_gt_Add_keymap( K_ALT_K, "\033K" );
     hb_gt_Add_keymap( K_ALT_L, "\033l" );
-    hb_gt_Add_keymap( K_ALT_L, "\033L" );    
+    hb_gt_Add_keymap( K_ALT_L, "\033L" );
     hb_gt_Add_keymap( K_ALT_M, "\033m" );
     hb_gt_Add_keymap( K_ALT_M, "\033M" );
     hb_gt_Add_keymap( K_ALT_N, "\033n" );
-    hb_gt_Add_keymap( K_ALT_N, "\033N" );    
+    hb_gt_Add_keymap( K_ALT_N, "\033N" );
     hb_gt_Add_keymap( K_ALT_O, "\033o" );
     hb_gt_Add_keymap( K_ALT_O, "\033O" );
     hb_gt_Add_keymap( K_ALT_P, "\033p" );
-    hb_gt_Add_keymap( K_ALT_P, "\033P" );    
+    hb_gt_Add_keymap( K_ALT_P, "\033P" );
     hb_gt_Add_keymap( K_ALT_Q, "\033q" );
-    hb_gt_Add_keymap( K_ALT_Q, "\033Q" );    
+    hb_gt_Add_keymap( K_ALT_Q, "\033Q" );
     hb_gt_Add_keymap( K_ALT_R, "\033r" );
-    hb_gt_Add_keymap( K_ALT_R, "\033R" );    
+    hb_gt_Add_keymap( K_ALT_R, "\033R" );
     hb_gt_Add_keymap( K_ALT_S, "\033s" );
-    hb_gt_Add_keymap( K_ALT_S, "\033S" );    
+    hb_gt_Add_keymap( K_ALT_S, "\033S" );
     hb_gt_Add_keymap( K_ALT_T, "\033t" );
-    hb_gt_Add_keymap( K_ALT_T, "\033T" );    
+    hb_gt_Add_keymap( K_ALT_T, "\033T" );
     hb_gt_Add_keymap( K_ALT_U, "\033u" );
-    hb_gt_Add_keymap( K_ALT_U, "\033U" );    
+    hb_gt_Add_keymap( K_ALT_U, "\033U" );
     hb_gt_Add_keymap( K_ALT_V, "\033v" );
-    hb_gt_Add_keymap( K_ALT_V, "\033V" );    
+    hb_gt_Add_keymap( K_ALT_V, "\033V" );
     hb_gt_Add_keymap( K_ALT_W, "\033w" );
     hb_gt_Add_keymap( K_ALT_W, "\033W" );
     hb_gt_Add_keymap( K_ALT_X, "\033x" );
@@ -265,7 +256,7 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
     hb_gt_Add_keymap( K_ALT_0, "\0330" );
     hb_gt_Add_keymap( K_ALT_ENTER, "\033\n" );
     hb_gt_Add_keymap( K_ALT_EQUALS, "\033=" );
-    
+
 }
 
 void hb_gt_Exit( void )
@@ -275,7 +266,7 @@ void hb_gt_Exit( void )
    noraw();
    refresh();
    endwin();
-   
+
    if( s_keymap_table )
    {
       struct key_map_struc *tmp = s_keymap_table;
@@ -306,7 +297,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
            key_waiting = -1; /* the last character was retrieved */
        return ch;
    }
-       
+
    ch = getch();
    if( ch == ERR )
       ch = 0;
@@ -321,7 +312,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
       {
          struct key_map_struc *tmp = s_keymap_table;
 	 int i = 0;
-	 
+
 	 key_codes[ 0 ] = ch;
 	 while( ( ch = getch() ) != ERR && i <= HB_MAX_KEYMAP_CHARS )
 	     key_codes[ ++i ] = ch;
@@ -336,9 +327,9 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
 		 tmp = NULL;
 	    }
 	    else
-		tmp = tmp->Next;		         
+		tmp = tmp->Next;
          }
-	 
+
 	 if( ch == 0 )
 	 {
 	     /* keymap not found */
@@ -483,6 +474,16 @@ void hb_gt_SetCursorStyle( USHORT uiStyle )
       curs_set( 1 );
 }
 
+void hb_gt_xPutch( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xPutch(%hu, %hu, %d, %i)", uiRow, uiCol, (int) byAttr, byChar));
+
+   move( uiRow, uiCol );
+   addch( byChar | s_alternate_char_set | s_attribmap_table[ byAttr ] );
+   if( s_uiDispCount == 0 )
+      refresh();
+}
+
 void hb_gt_Puts( USHORT uiRow,
                  USHORT uiCol,
                  BYTE byAttr,
@@ -495,7 +496,7 @@ void hb_gt_Puts( USHORT uiRow,
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Puts(%hu, %hu, %d, %p, %lu)", uiRow, uiCol, (int) byAttr, pbyStr, ulLen));
 
    attr = s_alternate_char_set | s_attribmap_table[ byAttr ];
-   move( uiRow, uiCol ); 
+   move( uiRow, uiCol );
    for( i = 0; i < ulLen; ++i )
       addch( pbyStr[ i ] | attr );
    if( s_uiDispCount == 0 )
@@ -515,7 +516,7 @@ void hb_gt_GetText( USHORT uiTop,
 {
    int i;
    chtype *pBuffer = (chtype *)pbyDst;
-      
+
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, pbyDst));
 
    if( s_uiDispCount == 0 )
@@ -537,7 +538,7 @@ void hb_gt_PutText( USHORT uiTop,
 {
    int Cols;
    chtype *pBuffer = (chtype *)pbySrc;
-   
+
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, pbySrc));
 
    Cols = uiRight - uiLeft + 1;
@@ -560,7 +561,7 @@ void hb_gt_SetAttribute( USHORT uiTop,
    int Count = uiRight - uiLeft + 1;
    int newAttr = s_attribmap_table[ byAttr ];
    short newColor;
-   
+
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d)", uiTop, uiLeft, uiBottom, uiRight, (int) byAttr));
 
    newColor = PAIR_NUMBER( newAttr );
@@ -591,21 +592,21 @@ void hb_gt_Scroll( USHORT uiTop,
       wclear( subw );
       touchwin( stdscr );
       wrefresh( subw );
-      delwin( subw );        
+      delwin( subw );
    }
    else
    {
       if( iRows != 0 )
       {
          WINDOW *subw;
-      
+
          subw = subwin( stdscr, uiBottom-uiTop+1, uiRight-uiLeft+1, uiTop, uiLeft );
          wbkgdset( subw, ' ' | s_attribmap_table[ byAttr ] );
          scrollok( subw, TRUE );
          wscrl( subw, iRows );
          delwin( subw );
       }
-   
+
       if( iCols != 0 )
       {
          chtype *pScreen, *pTmp;
@@ -615,11 +616,11 @@ void hb_gt_Scroll( USHORT uiTop,
          int newAttr;
 
          refresh();
-         
+
          RowCount = uiBottom - uiTop + 1;
          ColCount = uiRight - uiLeft + 1;
          newAttr  = ' ' | s_attribmap_table[ byAttr ];
-      
+
          memsize = hb_gt_RectSize( RowCount, ColCount );
          pScreen = (chtype *) hb_xgrab( memsize );
          hb_gt_GetText( uiTop, uiLeft, uiBottom, uiRight, (BYTE *)pScreen );
@@ -627,7 +628,7 @@ void hb_gt_Scroll( USHORT uiTop,
          if( iCols > 0 )
          {
             pTmp = pScreen;
-            for( i=0; i<RowCount; i++ )      
+            for( i=0; i<RowCount; i++ )
             {
                for( j=ColCount - 1; j>=iCols; j-- )
                   pTmp[ j ] = pTmp[ j-1 ];
@@ -639,9 +640,9 @@ void hb_gt_Scroll( USHORT uiTop,
          else
          {
             int ColMove  = ColCount + iCols;
-         
+
             pTmp = pScreen;
-            for( i=0; i<RowCount; i++ )      
+            for( i=0; i<RowCount; i++ )
             {
                for( j=0; j<ColMove; j++ )
                   pTmp[ j ] = pTmp[ j-iCols ];
@@ -676,7 +677,7 @@ void hb_gt_DispEnd()
 BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
 {
    BOOL success;
-   
+
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetMode(%hu, %hu)", uiRows, uiCols));
 
    /* NOTE: Not tested!!!
@@ -686,20 +687,8 @@ BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
    success = ( ( resizeterm( uiRows, uiCols) == OK) ? TRUE : FALSE );
    initscr();
    hb_gt_Initialize_Terminal();
-   
+
    return success;
-}
-
-void hb_gt_Replicate( BYTE byChar, ULONG ulLen )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%d, %lu)", (int) byChar, ulLen));
-
-   /* TODO: this will write character c nlength times to the screen.
-      Note that it is not used yet
-      If there is no native function that supports this, it is
-      already handled in a generic way by higher level functions.
-   */
-
 }
 
 BOOL hb_gt_GetBlink()
@@ -771,7 +760,7 @@ static void hb_gt_Add_keymap( int InkeyCode, char *key_string )
 {
    struct key_map_struc *keymap;
    int iLength = strlen( key_string );
-   
+
       if( iLength && iLength <= HB_MAX_KEYMAP_CHARS )
       {
          keymap = hb_xgrab( sizeof( struct key_map_struc ) );
@@ -779,7 +768,7 @@ static void hb_gt_Add_keymap( int InkeyCode, char *key_string )
          keymap->key_string = key_string;
          keymap->length = iLength;
          keymap->Next = NULL;
-      
+
          if( s_keymap_table )
          {
              struct key_map_struc *tmp = s_keymap_table;
@@ -789,13 +778,13 @@ static void hb_gt_Add_keymap( int InkeyCode, char *key_string )
          }
          else
             s_keymap_table = keymap;
-     }    
+     }
 }
 
 static void hb_gt_Add_terminfo_keymap( int InkeyCode, char *capname )
 {
    char * code;
-   
+
    code = tigetstr( capname );
    if( (code != NULL) && (code != (char *)-1) )
    {
@@ -803,3 +792,170 @@ static void hb_gt_Add_terminfo_keymap( int InkeyCode, char *capname )
    }
 }
 
+void hb_gt_Replicate( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar, ULONG nLength )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%hu, %hu, %i, %i, %lu)", uiRow, uiCol, byAttr, byChar, nLength));
+
+   {
+      while( nLength-- )
+         hb_gt_xPutch( uiRow, uiCol++, byAttr, byChar );
+   }
+}
+
+USHORT hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
+                  BYTE *szBox, BYTE byAttr )
+{
+   USHORT uiRow;
+   USHORT uiCol;
+   USHORT uiHeight;
+   USHORT uiWidth;
+
+   /* Ensure that box is drawn from top left to bottom right. */
+   if( uiTop > uiBottom )
+   {
+      USHORT tmp = uiTop;
+      uiTop = uiBottom;
+      uiBottom = tmp;
+   }
+   if( uiLeft > uiRight )
+   {
+      USHORT tmp = uiLeft;
+      uiLeft = uiRight;
+      uiRight = tmp;
+   }
+
+   if( s_under_xterm )
+   {
+      /* enable temporarily for box drawing 
+        NOTE: under xterm characcters with ASCII code 96 - 124 are
+        used for special characters 
+      */
+      s_alternate_char_set = A_ALTCHARSET;
+   }
+       
+   uiRow = uiTop;
+   uiCol = uiLeft;
+
+   /* Draw the box or line as specified */
+   uiHeight = uiBottom - uiTop + 1;
+   uiWidth  = uiRight - uiLeft + 1;
+
+   hb_gt_DispBegin();
+
+   if( uiHeight > 1 && uiWidth > 1 )
+      hb_gt_xPutch( uiRow, uiCol, byAttr, szBox[ 0 ] ); /* Upper left corner */
+
+   uiCol = ( uiHeight > 1 ? uiLeft + 1 : uiLeft );
+
+   if( uiCol <= uiRight )
+      hb_gt_Replicate( uiRow, uiCol, byAttr, szBox[ 1 ], uiRight - uiLeft + ( uiHeight > 1 ? -1 : 1 ) ); /* Top line */
+
+   if( uiHeight > 1 && uiWidth > 1 )
+      hb_gt_xPutch( uiRow, uiRight, byAttr, szBox[ 2 ] ); /* Upper right corner */
+
+   if( szBox[ 8 ] && uiHeight > 2 && uiWidth > 2 )
+   {
+      for( uiRow = uiTop + 1; uiRow < uiBottom; uiRow++ )
+      {
+         uiCol = uiLeft;
+         hb_gt_xPutch( uiRow, uiCol++, byAttr, szBox[ 7 ] ); /* Left side */
+         hb_gt_Replicate( uiRow, uiCol, byAttr, szBox[ 8  ], uiRight - uiLeft - 1 ); /* Fill */
+         hb_gt_xPutch( uiRow, uiRight, byAttr, szBox[ 3 ] ); /* Right side */
+      }
+   }
+   else
+   {
+      for( uiRow = ( uiWidth > 1 ? uiTop + 1 : uiTop ); uiRow < ( uiWidth > 1 ? uiBottom : uiBottom + 1 ); uiRow++ )
+      {
+         hb_gt_xPutch( uiRow, uiLeft, byAttr, szBox[ 7 ] ); /* Left side */
+         if( uiWidth > 1 )
+            hb_gt_xPutch( uiRow, uiRight, byAttr, szBox[ 3 ] ); /* Right side */
+      }
+   }
+
+   if( uiHeight > 1 && uiWidth > 1 )
+   {
+      hb_gt_xPutch( uiBottom, uiLeft, byAttr, szBox[ 6 ] ); /* Bottom left corner */
+
+      uiCol = ( uiHeight > 1 ? uiLeft + 1 : uiLeft );
+
+      if( uiCol <= uiRight && uiHeight > 1 )
+         hb_gt_Replicate( uiBottom, uiCol, byAttr, szBox[ 5 ], uiRight - uiLeft + ( uiHeight > 1 ? -1 : 1 ) ); /* Bottom line */
+
+      hb_gt_xPutch( uiBottom, uiRight, byAttr, szBox[ 4 ] ); /* Bottom right corner */
+   }
+
+   hb_gt_DispEnd();
+
+   if( s_under_xterm )
+   {
+      s_alternate_char_set = 0;   /* restore default setting */
+   }
+   return 0;
+}
+
+USHORT hb_gt_BoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr )
+{
+   if( s_under_xterm )
+   {
+      /* Under xterm use hard-coded box drawing characters */
+      pbyFrame = s_xTermBox; 
+      s_alternate_char_set = A_ALTCHARSET;
+   }
+   hb_gt_Box( uiTop, uiLeft, uiBottom, uiRight, pbyFrame, byAttr );
+   if( s_under_xterm )
+   {
+      s_alternate_char_set = 0;   /* restore default setting */
+   }
+   return 0;
+}
+
+USHORT hb_gt_BoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr )
+{
+   if( s_under_xterm )
+   {
+      /* Under xterm use hard-coded box drawing characters */
+      pbyFrame = s_xTermBox; 
+      s_alternate_char_set = A_ALTCHARSET;
+   }
+   hb_gt_Box( uiTop, uiLeft, uiBottom, uiRight, pbyFrame, byAttr );
+   if( s_under_xterm )
+   {
+      s_alternate_char_set = 0;   /* restore default setting */
+   }
+   return 0;
+}
+
+USHORT hb_gt_HorizLine( USHORT uiRow, USHORT uiLeft, USHORT uiRight, BYTE byChar, BYTE byAttr )
+{
+   if( s_under_xterm )
+      byChar = ACS_HLINE;
+      
+   if( uiLeft < uiRight )
+      mvhline( uiRow, uiLeft, byChar | A_ALTCHARSET | s_attribmap_table[ byAttr ],
+               uiRight - uiLeft + 1 );
+   else
+      mvhline( uiRow, uiRight, byChar | A_ALTCHARSET | s_attribmap_table[ byAttr ], 
+               uiLeft - uiRight + 1 );
+   return 0;
+}
+
+USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar, BYTE byAttr )
+{
+   USHORT uRow;
+
+   if( uiTop <= uiBottom )
+      uRow = uiTop;
+   else
+   {
+      uRow = uiBottom;
+      uiBottom = uiTop;
+   }
+   
+   if( s_under_xterm )
+      byChar = ACS_VLINE;
+   mvvline( uRow, uiCol, byChar | A_ALTCHARSET | s_attribmap_table[ byAttr ],
+            uiBottom - uRow + 1 );
+   
+   return 0;
+}

@@ -74,11 +74,15 @@ extern "C" {
 #define HB_CLR_MAX_             HB_CLR_UNSELECTED
 
 /* strings for borders (same as box.ch, but defined for use by C) */
-                               /*01234567*/
+                              /*01234567*/
 #define _B_SINGLE              "ÚÄ¿³ÙÄÀ³"
 #define _B_DOUBLE              "ÉÍ»º¼ÍÈº"
 #define _B_SINGLE_DOUBLE       "ÖÄ·º½ÄÓº"
 #define _B_DOUBLE_SINGLE       "ÕÍ¸³¾ÍÔ³"
+#define _B_SINGLE_V           '³'
+#define _B_SINGLE_H           'Ä'
+#define _B_DOUBLE_V           'º'
+#define _B_DOUBLE_H           'Í'
 
 /* Keyboard filters */
 
@@ -151,6 +155,9 @@ extern char * hb_gtVersion( void );
 extern void   hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr );
 extern void   hb_gt_Exit( void );
 extern BOOL   hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen );
+extern USHORT hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyBox, BYTE attrib );
+extern USHORT hb_gt_BoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyBox, BYTE attrib );
+extern USHORT hb_gt_BoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyBox, BYTE attrib );
 extern SHORT  hb_gt_Col( void );
 extern void   hb_gt_DispBegin( void );
 extern USHORT hb_gt_DispCount( void );
@@ -160,12 +167,13 @@ extern USHORT hb_gt_GetCursorStyle( void );
 extern USHORT hb_gt_GetScreenHeight( void );
 extern USHORT hb_gt_GetScreenWidth( void );
 extern void   hb_gt_GetText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyDst );
+extern USHORT hb_gt_HorizLine( USHORT uiRow, USHORT uiLeft, USHORT uiRight, BYTE byChar, BYTE byAttr );
 extern BOOL   hb_gt_IsColor( void );
 extern void   hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE * pbyStr, ULONG ulLen );
 extern void   hb_gt_PutText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbySrc );
 extern int    hb_gt_ReadKey( HB_inkey_enum eventmask );
 extern int    hb_gt_RectSize( USHORT rows, USHORT cols );
-extern void   hb_gt_Replicate( BYTE byChar, ULONG ulLen );
+extern void   hb_gt_Replicate( USHORT uiTop, USHORT uiLeft, BYTE byAttr, BYTE byChar, ULONG ulLen );
 extern SHORT  hb_gt_Row( void );
 extern void   hb_gt_Scroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr, SHORT iRows, SHORT iCols );
 extern void   hb_gt_SetAttribute( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr );
@@ -175,6 +183,7 @@ extern BOOL   hb_gt_SetMode( USHORT uiRows, USHORT uiCols );
 extern void   hb_gt_SetPos( SHORT iRow, SHORT iCol );
 extern void   hb_gt_Tone( double dFrequency, double dDuration );
 extern char * hb_gt_Version( void );
+extern USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar, BYTE byAttr );
 
 /* Keyboard related declarations */
 

@@ -585,12 +585,16 @@ static void hb_gt_xGetXY( USHORT cRow, USHORT cCol, BYTE * attr, BYTE * ch )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_xGetXY(%hu, %hu, %p, %p", cRow, cCol, ch, attr));
 
-#if defined(__DJGPP__)
+#if defined(__DJGPP__TEXT)
    {
      short ch_attr;
      gettext( cCol + 1, cRow + 1, cCol + 1, cRow + 1, &ch_attr );
      *ch = ch_attr >> 8;
      *attr = ch_attr & 0xFF;
+   }
+#elif defined(__DJGPP__)
+   {
+      ScreenGetChar( (int *)ch, (int *)attr, cCol, cRow );
    }
 #else
    {
@@ -606,18 +610,20 @@ void hb_gt_xPutch( USHORT cRow, USHORT cCol, BYTE attr, BYTE ch )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_xPutch(%hu, %hu, %d, %d", cRow, cCol, (int) attr, (int) ch));
 
-#if defined(__DJGPP__)
+#if defined(__DJGPP__TEXT)
    {
      long ch_attr;
      ch_attr = ( ch << 8 ) | attr;
      puttext( cCol + 1, cRow + 1, cCol + 1, cRow + 1, &ch_attr );
    }
+#elif defined(__DJGPP)
+   {
+      ScreenPutChar( ch, attr, cCol, cRow );
+   }
 #else
    {
-     char FAR * p;
-     p = hb_gt_ScreenPtr( cRow, cCol );
-     *p = ch;
-     *( p + 1 ) = attr;
+     USHORT FAR * p = (USHORT FAR *) hb_gt_ScreenPtr( cRow, cCol );
+     *p = (attr << 8) + ch;
    }
 #endif
 }
@@ -626,7 +632,7 @@ void hb_gt_Puts( USHORT cRow, USHORT cCol, BYTE attr, BYTE *str, ULONG len )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Puts(%hu, %hu, %d, %p, %lu", cRow, cCol, (int) attr, str, len));
 
-#if defined(__DJGPP__)
+#if defined(__DJGPP__TEXT)
    {
      int i;
      int bottom, left, right, top;
@@ -666,17 +672,22 @@ void hb_gt_Puts( USHORT cRow, USHORT cCol, BYTE attr, BYTE *str, ULONG len )
      puttext( left + 1, top + 1, right + 1, bottom + 1, ch_attr );
      hb_xfree( ch_attr );
    }
+#elif defined(__DJGPP__)
+   {
+      int i;
+      for( i=0; i<len; i++ )
+         ScreenPutChar( str[ i ], attr, cCol++, cRow );
+   }
 #else
    {
-     char FAR *p;
-     int i;
+      USHORT FAR *p;
+      register USHORT byAttr = attr << 8;
 
-     p = hb_gt_ScreenPtr( cRow, cCol );
-     for( i = 0; i < len; i++ )
-       {
-         *p++ = *str++;
-         *p++ = attr;
-       }
+      p = (USHORT FAR *) hb_gt_ScreenPtr( cRow, cCol );
+      while( len-- )
+      {
+         *p++ = byAttr + (*str++);
+      }
    }
 #endif
 }
@@ -690,7 +701,7 @@ void hb_gt_GetText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetText(%hu, %hu, %hu, %hu, %p", usTop, usLeft, usBottom, usRight, dest));
 
-#if defined(__DJGPP__)
+#if defined(__DJGPP__TEXT) || defined(__DJGPP__)
    {
      gettext( usLeft + 1, usTop + 1, usRight + 1, usBottom + 1, dest );
    }
@@ -714,7 +725,7 @@ void hb_gt_PutText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutText(%hu, %hu, %hu, %hu, %p", usTop, usLeft, usBottom, usRight, srce));
 
-#if defined(__DJGPP__)
+#if defined(__DJGPP__TEXT)
    {
      puttext( usLeft + 1, usTop + 1, usRight + 1, usBottom + 1, srce );
    }
@@ -900,14 +911,6 @@ BOOL hb_gt_SetMode( USHORT usRows, USHORT usCols )
    return 0;
 }
 
-void hb_gt_Replicate( BYTE c, ULONG nLength )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%d, %lu)", (int) c, nLength));
-
-   HB_SYMBOL_UNUSED( c );
-   HB_SYMBOL_UNUSED( nLength );
-}
-
 BOOL hb_gt_GetBlink()
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetBlink()"));
@@ -990,4 +993,181 @@ char * hb_gt_Version( void )
 USHORT hb_gt_DispCount()
 {
    return s_uiDispCount;
+}
+
+void hb_gt_Replicate( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar, ULONG nLength )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%hu, %hu, %i, %i, %lu)", uiRow, uiCol, byAttr, byChar, nLength));
+
+#if defined(__DJGPP__TEXT)
+   {
+     int i;
+     int bottom, left, right, top;
+     int width;
+     BYTE * ch_attr;
+     BYTE * ptr;
+
+     i = ( int ) nLength;
+     left = cCol;
+     top = cRow;
+     width = hb_gt_GetScreenWidth();
+     ptr = ch_attr = hb_xgrab( i * 2 );
+     while( i-- )
+       {
+         *ptr++ = byChar;
+         *ptr++ = byAttr;
+       }
+     i = nLength - 1; /* We want end position, not next cursor position */
+     right = left;
+     bottom = top;
+     if( right + i > width - 1 )
+       {
+         /*
+          * Calculate end row position and the remainder size for the
+          * end column adjust.
+          */
+         bottom += ( i / width );
+         i = i % width;
+       }
+     right += i;
+     if( right > width - 1 )
+       {
+         /* Column movement overflows into next row */
+         bottom++;
+         right -= width;
+       }
+     puttext( left + 1, top + 1, right + 1, bottom + 1, ch_attr );
+     hb_xfree( ch_attr );
+   }
+#elif defined(__DJGPP__)
+   {
+      while( nLength-- )
+         ScreenPutChar( byChar, byAttr, uiCol++, uiRow );
+   }
+#else
+   {
+      USHORT FAR *p;
+      USHORT byte = (byAttr << 8) + byChar;
+
+      p = (USHORT FAR *) hb_gt_ScreenPtr( uiRow, uiCol );
+      while( nLength-- )
+      {
+         *p++ = byte;
+      }
+   }
+#endif
+}
+
+USHORT hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
+                  BYTE *szBox, BYTE byAttr )
+{
+   USHORT uiRow;
+   USHORT uiCol;
+   USHORT uiHeight;
+   USHORT uiWidth;
+
+   /* Ensure that box is drawn from top left to bottom right. */
+   if( uiTop > uiBottom )
+   {
+      USHORT tmp = uiTop;
+      uiTop = uiBottom;
+      uiBottom = tmp;
+   }
+   if( uiLeft > uiRight )
+   {
+      USHORT tmp = uiLeft;
+      uiLeft = uiRight;
+      uiRight = tmp;
+   }
+
+   uiRow = uiTop;
+   uiCol = uiLeft;
+
+   /* Draw the box or line as specified */
+   uiHeight = uiBottom - uiTop + 1;
+   uiWidth  = uiRight - uiLeft + 1;
+
+   hb_gt_DispBegin();
+
+   if( uiHeight > 1 && uiWidth > 1 )
+      hb_gt_xPutch( uiRow, uiCol, byAttr, szBox[ 0 ] ); /* Upper left corner */
+
+   uiCol = ( uiHeight > 1 ? uiLeft + 1 : uiLeft );
+
+   if( uiCol <= uiRight )
+      hb_gt_Replicate( uiRow, uiCol, byAttr, szBox[ 1 ], uiRight - uiLeft + ( uiHeight > 1 ? -1 : 1 ) ); /* Top line */
+
+   if( uiHeight > 1 && uiWidth > 1 )
+      hb_gt_xPutch( uiRow, uiRight, byAttr, szBox[ 2 ] ); /* Upper right corner */
+
+   if( szBox[ 8 ] && uiHeight > 2 && uiWidth > 2 )
+   {
+      for( uiRow = uiTop + 1; uiRow < uiBottom; uiRow++ )
+      {
+         uiCol = uiLeft;
+         hb_gt_xPutch( uiRow, uiCol++, byAttr, szBox[ 7 ] ); /* Left side */
+         hb_gt_Replicate( uiRow, uiCol, byAttr, szBox[ 8 ], uiRight - uiLeft - 1 ); /* Fill */
+         hb_gt_xPutch( uiRow, uiRight, byAttr, szBox[ 3 ] ); /* Right side */
+      }
+   }
+   else
+   {
+      for( uiRow = ( uiWidth > 1 ? uiTop + 1 : uiTop ); uiRow < ( uiWidth > 1 ? uiBottom : uiBottom + 1 ); uiRow++ )
+      {
+         hb_gt_xPutch( uiRow, uiLeft, byAttr, szBox[ 7 ] ); /* Left side */
+         if( uiWidth > 1 )
+            hb_gt_xPutch( uiRow, uiRight, byAttr, szBox[ 3 ] ); /* Right side */
+      }
+   }
+
+   if( uiHeight > 1 && uiWidth > 1 )
+   {
+      hb_gt_xPutch( uiBottom, uiLeft, byAttr, szBox[ 6 ] ); /* Bottom left corner */
+
+      uiCol = ( uiHeight > 1 ? uiLeft + 1 : uiLeft );
+
+      if( uiCol <= uiRight && uiHeight > 1 )
+         hb_gt_Replicate( uiBottom, uiCol, byAttr, szBox[ 5 ], uiRight - uiLeft + ( uiHeight > 1 ? -1 : 1 ) ); /* Bottom line */
+
+      hb_gt_xPutch( uiBottom, uiRight, byAttr, szBox[ 4 ] ); /* Bottom right corner */
+   }
+
+   hb_gt_DispEnd();
+
+   return 0;
+}
+
+USHORT hb_gt_BoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr )
+{
+   return hb_gt_Box( uiTop, uiLeft, uiBottom, uiRight, pbyFrame, byAttr );
+}
+
+USHORT hb_gt_BoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr )
+{
+   return hb_gt_Box( uiTop, uiLeft, uiBottom, uiRight, pbyFrame, byAttr );
+}
+
+USHORT hb_gt_HorizLine( USHORT uiRow, USHORT uiLeft, USHORT uiRight, BYTE byChar, BYTE byAttr )
+{
+   if( uiLeft < uiRight )
+      hb_gt_Replicate( uiRow, uiLeft, byAttr, byChar, uiRight - uiLeft + 1 );
+   else
+      hb_gt_Replicate( uiRow, uiRight, byAttr, byChar, uiLeft - uiRight + 1 );
+   return 0;
+}
+
+USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar, BYTE byAttr )
+{
+   USHORT uRow;
+
+   if( uiTop <= uiBottom )
+      uRow = uiTop;
+   else
+   {
+      uRow = uiBottom;
+      uiBottom = uiTop;
+   }
+   while( uRow <= uiBottom )
+      hb_gt_xPutch( uRow++, uiCol, byAttr, byChar );
+   return 0;
 }

@@ -195,21 +195,21 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
 
 BOOL hb_gt_IsColor( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_IsColor()")); 
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_IsColor()"));
    /* TODO: */
    return s_bColor;
 }
 
 USHORT hb_gt_GetScreenWidth( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenWidth()")); 
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenWidth()"));
    /* TODO: */
    return s_usMaxCol + 1;
 }
 
 USHORT hb_gt_GetScreenHeight( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenHeight()")); 
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenHeight()"));
    /* TODO: */
    return s_usMaxRow + 1;
 }
@@ -295,6 +295,28 @@ void hb_gt_SetCursorStyle( USHORT style )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetCursorStyle(%hu)", style));
    HB_SYMBOL_UNUSED( style );
+}
+
+void hb_gt_xPutch( USHORT usRow, USHORT usCol, BYTE attr, BYTE byChar )
+{
+   char tmp[ 2 ];
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xPutch(%hu, %hu, %d, %i)", usRow, usCol, (int) attr, byChar));
+
+   /* TOFIX: add correct support for a single byte instead of a string 
+    */
+   tmp[ 0 ] = byChar;
+   tmp[ 1 ] = '\0';
+
+   /* Disable line wrap, set the new cursor position, send the string, then
+      enable line wrap (for OUTSTD() and OUTERR() ) */
+   hb_gt_AnsiSetAttributes( attr );
+   fprintf( stdout, "\x1B[=7l\x1B[%d;%dH%s\x1B[=7h", usRow + 1, usCol + 1, tmp );
+
+   /* Restore whatever used to be at the termination position */
+   /* Update the cursor position */
+   s_usRow = usRow;
+   s_usCol = usCol + 1;
+   if( s_usCol > s_usMaxCol ) s_usCol = s_usMaxCol;
 }
 
 void hb_gt_Puts( USHORT usRow, USHORT usCol, BYTE attr, BYTE * str, ULONG len )
@@ -383,18 +405,6 @@ BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
    return 0;   /* 0 = Ok, other = Fail */
 }
 
-void hb_gt_Replicate( BYTE c, ULONG ulLen )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%d, %lu)", (int) c, ulLen) );
-   HB_SYMBOL_UNUSED( c );
-   HB_SYMBOL_UNUSED( ulLen );
-  /* TODO: this will write character c nlength times to the screen.
-           Note that it is not used yet
-           If there is no native function that supports this, it is
-           already handled in a generic way by higher level functions.
-  */
-}
-
 BOOL hb_gt_GetBlink()
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetBlink()"));
@@ -427,4 +437,129 @@ char * hb_gt_Version( void )
 USHORT hb_gt_DispCount()
 {
    return s_uiDispCount;
+}
+
+
+void hb_gt_Replicate( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar, ULONG nLength )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%hu, %hu, %i, %i, %lu)", uiRow, uiCol, byAttr, byChar, nLength));
+
+   {
+      while( nLength-- )
+         hb_gt_xPutch( uiRow, uiCol++, byAttr, byChar );
+   }
+}
+
+USHORT hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
+                  BYTE *szBox, BYTE byAttr )
+{
+   USHORT uiRow;
+   USHORT uiCol;
+   USHORT uiHeight;
+   USHORT uiWidth;
+
+   /* Ensure that box is drawn from top left to bottom right. */
+   if( uiTop > uiBottom )
+   {
+      USHORT tmp = uiTop;
+      uiTop = uiBottom;
+      uiBottom = tmp;
+   }
+   if( uiLeft > uiRight )
+   {
+      USHORT tmp = uiLeft;
+      uiLeft = uiRight;
+      uiRight = tmp;
+   }
+
+   uiRow = uiTop;
+   uiCol = uiLeft;
+
+   /* Draw the box or line as specified */
+   uiHeight = uiBottom - uiTop + 1;
+   uiWidth  = uiRight - uiLeft + 1;
+
+   hb_gt_DispBegin();
+
+   if( uiHeight > 1 && uiWidth > 1 )
+      hb_gt_xPutch( uiRow, uiCol, byAttr, szBox[ 0 ] ); /* Upper left corner */
+
+   uiCol = ( uiHeight > 1 ? uiLeft + 1 : uiLeft );
+
+   if( uiCol <= uiRight )
+      hb_gt_Replicate( uiRow, uiCol, byAttr, szBox[ 1 ], uiRight - uiLeft + ( uiHeight > 1 ? -1 : 1 ) ); /* Top line */
+
+   if( uiHeight > 1 && uiWidth > 1 )
+      hb_gt_xPutch( uiRow, uiRight, byAttr, szBox[ 2 ] ); /* Upper right corner */
+
+   if( szBox[ 8 ] && uiHeight > 2 && uiWidth > 2 )
+   {
+      for( uiRow = uiTop + 1; uiRow < uiBottom; uiRow++ )
+      {
+         uiCol = uiLeft;
+         hb_gt_xPutch( uiRow, uiCol++, byAttr, szBox[ 7 ] ); /* Left side */
+         hb_gt_Replicate( uiRow, uiCol, byAttr, szBox[ 8 ], uiRight - uiLeft - 1 ); /* Fill */
+         hb_gt_xPutch( uiRow, uiRight, byAttr, szBox[ 3 ] ); /* Right side */
+      }
+   }
+   else
+   {
+      for( uiRow = ( uiWidth > 1 ? uiTop + 1 : uiTop ); uiRow < ( uiWidth > 1 ? uiBottom : uiBottom + 1 ); uiRow++ )
+      {
+         hb_gt_xPutch( uiRow, uiLeft, byAttr, szBox[ 7 ] ); /* Left side */
+         if( uiWidth > 1 )
+            hb_gt_xPutch( uiRow, uiRight, byAttr, szBox[ 3 ] ); /* Right side */
+      }
+   }
+
+   if( uiHeight > 1 && uiWidth > 1 )
+   {
+      hb_gt_xPutch( uiBottom, uiLeft, byAttr, szBox[ 6 ] ); /* Bottom left corner */
+
+      uiCol = ( uiHeight > 1 ? uiLeft + 1 : uiLeft );
+
+      if( uiCol <= uiRight && uiHeight > 1 )
+         hb_gt_Replicate( uiBottom, uiCol, byAttr, szBox[ 5 ], uiRight - uiLeft + ( uiHeight > 1 ? -1 : 1 ) ); /* Bottom line */
+
+      hb_gt_xPutch( uiBottom, uiRight, byAttr, szBox[ 4 ] ); /* Bottom right corner */
+   }
+
+   hb_gt_DispEnd();
+
+   return 0;
+}
+
+USHORT hb_gt_BoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr )
+{
+   return hb_gt_Box( uiTop, uiLeft, uiBottom, uiRight, pbyFrame, byAttr );
+}
+
+USHORT hb_gt_BoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr )
+{
+   return hb_gt_Box( uiTop, uiLeft, uiBottom, uiRight, pbyFrame, byAttr );
+}
+
+USHORT hb_gt_HorizLine( USHORT uiRow, USHORT uiLeft, USHORT uiRight, BYTE byChar, BYTE byAttr )
+{
+   if( uiLeft < uiRight )
+      hb_gt_Replicate( uiRow, uiLeft, byAttr, byChar, uiRight - uiLeft + 1 );
+   else
+      hb_gt_Replicate( uiRow, uiRight, byAttr, byChar, uiLeft - uiRight + 1 );
+   return 0;
+}
+
+USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar, BYTE byAttr )
+{
+   USHORT uRow;
+
+   if( uiTop <= uiBottom )
+      uRow = uiTop;
+   else
+   {
+      uRow = uiBottom;
+      uiBottom = uiTop;
+   }
+   while( uRow <= uiBottom )
+      hb_gt_xPutch( uRow++, uiCol, byAttr, byChar );
+   return 0;
 }
