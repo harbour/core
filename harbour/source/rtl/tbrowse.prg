@@ -83,6 +83,8 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 #include "button.ch"
+#include "tbrowse.ch"
+
 CLASS TBrowse
 
    DATA aColumns              // Array to hold all browse columns
@@ -159,6 +161,7 @@ CLASS TBrowse
    METHOD InitKeys(Self)
    METHOD TApplyKey(nKey, o)
    METHOD HitTest(nMouseRow,nMouseCol)
+   METHOD SetStyle(nMode,lSetting)
 #endif
 
    PROTECTED:     /* P R O T E C T E D */
@@ -206,6 +209,7 @@ CLASS TBrowse
 #ifdef HB_COMPAT_C53
    DATA rect
    DATA aVisibleCols
+   DATA aSetStyle
 #endif
 ENDCLASS
 
@@ -263,6 +267,14 @@ METHOD New(nTop, nLeft, nBottom, nRight) CLASS TBrowse
    ::message         :=''
    ::nRow            := 0
    ::nCol            := 0
+   ::aSetStyle       := ARRAY( 4096 )
+   
+   ::aSetStyle[ TBR_APPEND ]    := .f.
+   ::aSetStyle[ TBR_APPENDING ] := .f.
+   ::aSetStyle[ TBR_MODIFY ]    := .f.
+   ::aSetStyle[ TBR_MOVE ]      := .f.
+   ::aSetStyle[ TBR_SIZE ]      := .f.
+
  #endif
 
 return Self
@@ -1380,12 +1392,12 @@ return bReturn
 
 METHOD TApplyKey( nKey, oBrowse ) CLASS tBrowse
 
-   local bBlock := oBrowse:setkey(nKey), nReturn:=0
+   local bBlock := oBrowse:setkey(nKey), nReturn := TBR_CONTINUE  // 0
 
    default bBlock to oBrowse:setkey(0)
 
    if ( ISNIL( bBlock ) )
-      nReturn := 1
+      nReturn := TBR_EXCEPTION  // 1
    else
       nReturn := eval(bBlock, oBrowse, nKey)
    endif
@@ -1541,7 +1553,7 @@ function TBMOUSE( oBrowse, nMouseRow, nMouseCol )
    return 1
 
 Method hitTest(mrow,mcol) CLASS TBROWSE
-	local i
+  local i
   ::mRowPos := ::rowPos
   ::mColPos := ::colPos
 
@@ -1564,4 +1576,19 @@ Method hitTest(mrow,mcol) CLASS TBROWSE
   ::mColpos := ::aVisibleCols[i]
 
 return HTCELL
+
+METHOD SetStyle( nMode, lSetting ) CLASS TBROWSE
+  LOCAL lRet := .F.
+
+  IF nMode > LEN( ::aSetStyle )
+     RETURN .F.
+  ENDIF
+
+  lRet := ::aSetStyle[ nMode ]
+
+  IF ISLOGICAL( lSetting )
+     ::aSetStyle[ nMode ] := lSetting
+  ENDIF
+ 
+RETURN lRet
 #endif
