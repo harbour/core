@@ -1,3 +1,12 @@
+20000515-18:00 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+  * source/compiler/harbour.c
+    - Removed: warning of unitialized static variable.
+
+  * source/compiler/hbpcode.c
+    - Removed: warning of unitialized static variable.
+    ! Minor correction to hb_compStrongType()
+
 20000515-23:11 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * source/rtl/teditor.prg
@@ -21,7 +30,7 @@
 
   * source/compiler/harbour.l
     + Added states DECLARE & OPTIONAL_
-    * Modified rules for "declare" and "optiona" to use states, and support abbreviations.
+    * Modified rules for "declare" and "optional" to use states, and support abbreviations.
     * Modified rules for "declare" to support backdated syntax DECLARE aVar[...]
 
 20000515-17:15 GMT+1 Ryszard Glab <rglab@imid.med.pl>

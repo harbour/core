@@ -383,7 +383,15 @@ void hb_compStrongType( int iSize )
        break;
 
      case HB_P_MESSAGE :
-       sprintf( ( char * ) szType1, "%c", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+       if ( pFunc->iStackIndex < 1 )
+          break;
+
+       cSubType1 = pFunc->pStack[ pFunc->iStackIndex - 1 ];
+
+       if ( cSubType1 >= ( 'A' + VT_OFFSET_VARIANT ) )
+          cSubType1 -= VT_OFFSET_VARIANT;
+
+       sprintf( ( char * ) szType1, "%c", cSubType1 );
 
        if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == 'O' )
           ;
@@ -394,7 +402,7 @@ void hb_compStrongType( int iSize )
        else
           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_TYPE, ( char * ) szType1, "O" );
 
-       /* Allow declaration of Methods */
+       /* TODO: Allow declaration of Methods */
 
        /* Unknown result of method */
        pFunc->pStack[ pFunc->iStackIndex - 1 ] = ' ';
@@ -407,6 +415,9 @@ void hb_compStrongType( int iSize )
         /* Fall Through - don't add break !!! */
 
      case HB_P_SEND :
+        /* Remove the 'C' resulted from the Method Name just pushed. */
+        pFunc->iStackIndex--;
+
         if ( wVar == 0 )
           wVar = * ( ( SHORT * ) &( pFunc->pCode )[ ulPos + 1 ] );
 
@@ -1061,9 +1072,11 @@ void hb_compStrongType( int iSize )
           //printf( "\nStatic: %s Function: %s Found in: %s\n", pVar->szName, pFunc->szName, pTmp->szName );
 
           /* Only if "private" static, since global static may be intialized elsewhere. */
+          /* May have been initialized in previous execution of the function.
           if ( pTmp == pFunc )
             if ( ! ( pVar->iUsed & VU_INITIALIZED ) )
                 hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_NOT_INITIALIZED, pVar->szName, NULL );
+          */
 
           /* Mark as used */
           pVar->iUsed |= VU_USED;
@@ -1646,6 +1659,10 @@ void hb_compStrongType( int iSize )
                pVar->cType = pFunc->pStack[ pFunc->iStackIndex ];
             else
                pVar->cType = pFunc->pStack[ pFunc->iStackIndex ] + VT_OFFSET_VARIANT;
+
+            /*
+            printf( "\nStack: %c Asc: %i, Var: %c Asc: %i\n", pFunc->pStack[ pFunc->iStackIndex ], pFunc->pStack[ pFunc->iStackIndex ], pVar->cType, pVar->cType );
+            */
          }
          else
          {
