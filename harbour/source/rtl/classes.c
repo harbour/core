@@ -10,6 +10,7 @@ void PushNil( void );
 void PushSymbol( PSYMBOL );
 void Message( PSYMBOL );
 void Do( WORD wParams );
+void Function( WORD wParams );
 
 #define MET_METHOD    0
 #define MET_DATA      1
@@ -534,15 +535,16 @@ HARBOUR ISMESSAGE()     /* Is the message valid for the class               */
 
 void ReleaseClass( PCLASS pClass )
 {
-   WORD wAt;
-   WORD wLimit;
+   WORD    wAt;
+   WORD    wLimit;
 
    wLimit   = pClass->wHashKey * BUCKET;
    for( wAt = 0; wAt < wLimit; wAt++ )          /* Release initializers     */
       if( pClass->pMethods[ wAt ].pInitValue &&
-          pClass->pMethods[ wAt ].wData > pClass->wDataFirst )
+          pClass->pMethods[ wAt ].wData      >  pClass->wDataFirst )
+      {
          hb_itemRelease( pClass->pMethods[ wAt ].pInitValue );
-
+      }
    _xfree( pClass->szName );
    _xfree( pClass->pMethods );
 
@@ -558,17 +560,18 @@ void ReleaseClasses( void )
    WORD w;
 
    for( w = 0; w < wClasses; w++ )
+   {
       ReleaseClass( pClasses + w );
+   }
 
    if( pClasses )
       _xfree( pClasses );
 }
 
 
-/* oSend send a message to an object */
 
 HARBOUR OSEND()             /* <xRet> = oSend( <oObj>, <cSymbol>, <xArg,..> */
-{
+{                           /* Send a message to an object                  */
    PITEM pObject  = _param( 1, IT_OBJECT );
    PITEM pMessage = _param( 2, IT_STRING );
    WORD  w;
@@ -609,6 +612,7 @@ HARBOUR __WDATAINC()         /* <nSeq> = __wDataInc( <hClass> )*/
       _retni( ++pClasses[ wClass - 1 ].wDatas ); /* Return and increase     */
 }                                                /* number of DATAs         */
 
+
 HARBOUR __WDATADEC()         /* <nSeq> = __wDataDec( <hClass> )*/
 {
    WORD  wClass   = _parnl( 1 );
@@ -616,6 +620,7 @@ HARBOUR __WDATADEC()         /* <nSeq> = __wDataDec( <hClass> )*/
    if( wClass )
       _retni( pClasses[ wClass - 1 ].wDatas-- ); /* Return and decrease     */
 }                                                /* number of DATAs         */
+
 
 HARBOUR CLASSMOD()      /* Modify message (only for INLINE and METHOD)      */
                         /* <xOld> := ClassMod( <oObj>, <cSymbol>, <pFunc> ) */
@@ -711,6 +716,7 @@ HARBOUR CLASSDEL()      /* Delete message (only for INLINE and METHOD)      */
    }
 }
 
+
 HARBOUR OCLONE( void )
 {
   PITEM pSrcObject  = _param( 1, IT_OBJECT );
@@ -725,4 +731,54 @@ HARBOUR OCLONE( void )
   else
     _ret();
 }
+
+
+HARBOUR __INSTSUPER( void )             /* ClassH := __InstSuper( <cName> ) */
+{                                       /* Instance super class and return  */
+                                        /* class handle                     */
+   PITEM   pString = _param( 1, IT_STRING );
+   PDYNSYM pDynSym;
+   PITEM   pSuperCls;
+   BYTE    bFound  = FALSE;
+   WORD    w;
+
+   if( pString )
+   {
+      pDynSym = FindDynSym( pString->value.szText );
+      if( pDynSym )                             /* Find function            */
+      {
+         PushSymbol( pDynSym->pSymbol );        /* Push function name       */
+         PushNil();
+         Do( 0 );                               /* Execute super class      */
+
+         if( !IS_OBJECT( &stack.Return ) )
+         {
+            PITEM pError = _errNew();
+            _errPutDescription(pError, "INSTSUPER : Super class does not return an object");
+            _errLaunch(pError);
+            _errRelease(pError);
+         }
+
+         for( w = 0; !bFound && w < wClasses; w++ )
+         {                                      /* Locate the entry         */
+            if( !stricmp( pString->value.szText, (pClasses + w)->szName ) )
+            {
+               _retni( w + 1 );                 /* Entry + 1 = ClassH       */
+               bFound = TRUE;
+            }
+         }
+      }
+      else
+      {
+         PITEM pError = _errNew();
+         _errPutDescription(pError, "INSTSUPER : Cannot find super class");
+         _errLaunch(pError);
+         _errRelease(pError);
+      }
+   }
+   if( !bFound )
+      _retni( 0 );
+}
+
+
 

@@ -49,17 +49,22 @@ return ClassInstance( hClass )
 
 //----------------------------------------------------------------------------//
 
-static function New( cClassName, hSuper )
+static function New( cClassName, cSuperClass )
 
    local Self := QSelf()
 
-   ::cName     = cClassName
+   ::cName     = Upper( cClassName )
    ::aDatas    = {}
    ::aMethods  = {}
    ::aClsDatas = {}
    ::aInlines  = {}
    ::aVirtuals = {}
-   ::hSuper    = Default( hSuper, 0 )
+   if ValType( cSuperClass ) != "C"
+      ::hSuper = 0
+   else
+      ::hSuper = __InstSuper( Upper ( cSuperClass ) )
+          // Instance super class and return class handle
+   endif
 
 return Self
 

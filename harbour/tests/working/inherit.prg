@@ -7,8 +7,6 @@
 //
 // Date : 30/05/1999
 //
-// Antonio : Please Help ! Super / Multiple inheritage etc.
-//
 
 function Main( cFrom, cTo )
 
@@ -20,14 +18,12 @@ function Main( cFrom, cTo )
    cFrom := Default( cFrom, "strip.prg" )
    cTo   := Default( cTo,   "strip.out" )
 
-   oFrom := TTextFile()
+   oFrom := TTextFile():New( cFrom, "R" )
    HBDebug( { oFrom, aoMethod( oFrom ) } )
 //   oFrom:Super:Run()
    oFrom:Set( "DoIt !" )
    QOut( oFrom:Out )
-   oFrom:New( cFrom, "R" )
    oTo   := TTextFile():New( cTo, "W" )
-   HBDebug( { oTo, aoMethod( oTo ) } )
 
    do while !oFrom:lEoF
       cOut := oFrom:Run()
@@ -48,9 +44,13 @@ function TEmpty()
    static oEmpty
 
    if oEmpty == NIL
-      oEmpty := TClass():New( "TEMPTY" )             // Create a new class def
+      QOut( "I am being called indirectly" )
 
-      oEmpty:AddInline( "New", {|self|self} )        // Constructor
+      oEmpty := TClass():New( "TEmpty" )             // Create a new class def
+
+//      oEmpty:AddInline( "New", {|self|self} )      // Can cause crash ?
+
+      oEmpty:AddMethod( "New", @New() )              // Constructor
       oEmpty:AddInline( "Run", {||QOut( "Run!" ) } ) // Test command
 //      oEmpty:AddInline( "Set", {|self,xParam|::Out := xParam } )
       oEmpty:AddInline( "Set", {|self,xParam| oSend(self,"_Out",xParam) } )
@@ -72,8 +72,9 @@ function TTextFile()
    static oFile
 
    if oFile == NIL
-      oFile := TClass():New( "TTEXTFILE", TEmpty():ClassH() )
+      oFile := TClass():New( "TTextFile", "TEmpty" )
                                                 // Create a new class def
+                                                // from TEmpty class
 
       oFile:AddData( "cFileName"  )             // Filename spec. by user
       oFile:AddData( "hFile"      )             // File handle
@@ -96,7 +97,7 @@ function TTextFile()
 
       oFile:Create()
    endif
-return  oFile:Instance()
+return oFile:Instance()
 
 
 //
@@ -106,7 +107,7 @@ return  oFile:Instance()
 // <cMode>      mode for opening. Default "R"
 // <nBlockSize> Optional maximum blocksize
 //
-function New( cFileName, cMode, nBlock )
+static function New( cFileName, cMode, nBlock )
 
    local self := QSelf()                        // Get self
 
@@ -134,7 +135,7 @@ function New( cFileName, cMode, nBlock )
 return self
 
 
-function Run( xTxt, lCRLF )
+static function Run( xTxt, lCRLF )
 
    local self := QSelf()
    local xRet
@@ -150,7 +151,7 @@ return xRet
 //
 // Dispose -> Close the file handle
 //
-function Dispose()
+static function Dispose()
 
    local self := QSelf()
 
@@ -170,7 +171,7 @@ return self
 //
 // Read a single line
 //
-function Read()
+static function Read()
 
    local self := QSelf()
    local cRet  := ""
@@ -227,7 +228,7 @@ return cRet
 //         one or more strings
 // <lCRLF> End with Carriage Return/Line Feed (Default == TRUE)
 //
-function WriteLn( xTxt, lCRLF )
+static function WriteLn( xTxt, lCRLF )
 
    local self := QSelf()
    local cBlock
@@ -250,7 +251,7 @@ function WriteLn( xTxt, lCRLF )
 return self
 
 
-function Write( xTxt )
+static function Write( xTxt )
 
    local self := QSelf()
 
@@ -266,7 +267,7 @@ return ::WriteLn( xTxt, .F. )
 //
 // Go to a specified line number
 //
-function Goto( nLine )
+static function Goto( nLine )
 
    local self   := QSelf()
    local nWhere := 1

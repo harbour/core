@@ -1,3 +1,9 @@
+19990531-13:20 CET Eddie Runia
+   * source/rtl/classes.c; source/rtl/tclass.prg
+     better version of inheritance
+   * tests/working/inherit.prg
+     some minor changes
+
 19990531-10:15 CET Felipe G. Coury (upload Eddie Runia)
    * tests/working/testhtml.prg
      beautiful !!
