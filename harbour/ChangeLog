@@ -1,3 +1,10 @@
+2001-02-23 08:25 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     + Added support for DO <>.prg
+
+   * contrib/dot/rp_dot.ch
+      + Added #command DO <>.prg (no support for WITH yet)
+
 2001-02-22 22:25 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      + Started support for interpreting prg files.

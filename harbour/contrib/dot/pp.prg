@@ -378,6 +378,14 @@ RETURN
 
 //--------------------------------------------------------------//
 
+PROCEDURE PP_SetRun( bOn )
+
+   bRun := bOn
+
+RETURN
+
+//--------------------------------------------------------------//
+
 PROCEDURE RP_Dot_Err()
 
    Alert( "Sorry, could not execute last request." )
@@ -2255,20 +2263,29 @@ FUNCTION NextToken( sLine, bCheckRules )
            sReturn := Left( sLine, Counter - 1 )
            EXIT
 
-        ELSEIF cChar == '.' .AND. Upper( SubStr( sLine, Counter + 1, 4 ) ) == 'AND.'
+        ELSEIF cChar == '.'
 
-           sReturn := Left( sLine, Counter - 1 )
-           EXIT
+           IF Upper( SubStr( sLine, Counter + 1, 4 ) ) == 'AND.'
 
-        ELSEIF cChar == '.' .AND. Upper( SubStr( sLine, Counter + 1, 3 ) ) == 'OR.'
+              sReturn := Left( sLine, Counter - 1 )
+              EXIT
 
-           sReturn := Left( sLine, Counter - 1 )
-           EXIT
+           ELSEIF Upper( SubStr( sLine, Counter + 1, 3 ) ) == 'OR.'
 
-        ELSEIF cChar == '.' .AND. Upper( SubStr( sLine, Counter + 1, 4 ) ) == 'NOT.'
+              sReturn := Left( sLine, Counter - 1 )
+              EXIT
 
-           sReturn := Left( sLine, Counter - 1 )
-           EXIT
+           ELSEIF Upper( SubStr( sLine, Counter + 1, 4 ) ) == 'NOT.'
+
+              sReturn := Left( sLine, Counter - 1 )
+              EXIT
+
+           ELSEIF IsAlpha( Left( sLine, 1 ) ) .AND. ! ( '&' $ Left( sLine, Counter ) )
+
+              sReturn := Left( sLine, Counter - 1 )
+              EXIT
+
+           ENDIF
 
         ELSEIF cChar == ' '// .OR. cChar == Chr(9) // Tabs converted to spaces
 

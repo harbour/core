@@ -22,3 +22,5 @@
 #COMMAND CASE <caseExp> => __SetCase( <caseExp> )
 #COMMAND OTHERWISE => __SetOtherwise()
 #COMMAND ENDCASE [<*x*>] => __SetEndCase()
+
+#COMMAND DO <file>.prg => PP_SetRun(.T.); ProcessFile( #<file> + ".prg" ); PP_SetRun( .F. )
