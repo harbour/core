@@ -1,3 +1,16 @@
+2000-05-09 19:20 GMT-4 David G. Holm <dholm@jsd-llc.com>
+
+  * contrib/rdd_ads/ads1.c
+    % Modified ADS_GETFUNCTABLE to use pointers.
+
+  * doc/cvs_ssh.txt
+    + Added explanation about your SourceForge CVS ID is all lower
+      case, regardless of the case of your SourceForge login ID.
+
+  * include/hbver.h
+    + I bumped the revision to "a" and the date to 2000-05-05, because I
+      released a test binary at http://www.jsd-llc.com/Harbour-Project/
+
 20000509-22:27 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * source/rtl/teditor.prg

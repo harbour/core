@@ -6,6 +6,11 @@ This is how I got SSH and CVS to work together!
 The trick was in how to set up the CVSROOT variable.
 I did this on NT4, but it should be similar for 95/98 and OS/2.
 
+Note: Your CVS ID is the same as your SourceForge login ID, with one
+      very important difference: Any and all upper case letters are
+      converted to lower case. So if your SourceForge login ID is
+      MyFullName, then your CVS ID will be myfullname.
+
 First I set up SSH, using the following steps:
 
 1) I pointed my web browser to ftp://ftp.cs.hut.fi/pub/ssh/contrib/
