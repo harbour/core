@@ -649,18 +649,8 @@ USHORT hb_gtSetColorStr( char * szColorString )
    }
    while( c );
 
-   /* NOTE: Commented out because no test could reveal that 
-            CA-Clipper is actually doing such assignment.
-            Moreover this feature sometimes caused 
-            incompatibilies in color usage (discovered when 
-            using incompletely specified color strings with 
-            GETs. [vszakats]
-            Originally added by ptucker at version 1.31 */
-
-   /*
    if( nPos >= 1 && nPos <= 3 )
       s_pColor[ HB_CLR_UNSELECTED ] = s_pColor[ HB_CLR_ENHANCED ];
-   */
 
    s_uiColorIndex = HB_CLR_STANDARD; /* hb_gtColorSelect( HB_CLR_STANDARD ); */
 

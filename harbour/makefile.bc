@@ -2631,6 +2631,7 @@ $(HBRUN_EXE) : $(HBRUN_EXE_OBJS)
    $(ECHO) $(CODEPAGE_LIB) >> make.tmp
    $(ECHO) $(RDD_LIB) >> make.tmp
    $(ECHO) $(MACRO_LIB) >> make.tmp
+   $(ECHO) $(DEBUG_LIB) >> make.tmp
    $(ECHO) $(DBFNTX_LIB) >> make.tmp
    $(ECHO) $(DBFCDX_LIB) >> make.tmp
    $(ECHO) $(DBFDBT_LIB) >> make.tmp
@@ -2676,6 +2677,7 @@ $(HBTEST_EXE) : $(HBTEST_EXE_OBJS)
    $(ECHO) $(LANG_LIB) >> make.tmp
    $(ECHO) $(RDD_LIB) >> make.tmp
    $(ECHO) $(MACRO_LIB) >> make.tmp
+   $(ECHO) $(DEBUG_LIB) >> make.tmp
    $(ECHO) $(DBFNTX_LIB) >> make.tmp
    $(ECHO) $(DBFCDX_LIB) >> make.tmp
    $(ECHO) $(DBFDBT_LIB) >> make.tmp
@@ -2781,6 +2783,7 @@ $(HBDOC_EXE) : $(HBDOC_EXE_OBJS)
    $(ECHO) $(LANG_LIB) >> make.tmp
    $(ECHO) $(RDD_LIB) >> make.tmp
    $(ECHO) $(MACRO_LIB) >> make.tmp
+   $(ECHO) $(DEBUG_LIB) >> make.tmp
    $(ECHO) $(DBFNTX_LIB) >> make.tmp
    $(ECHO) $(DBFCDX_LIB) >> make.tmp
    $(ECHO) $(DBFDBT_LIB) >> make.tmp
@@ -2929,6 +2932,7 @@ $(HBMAKE_EXE) : $(HBMAKE_EXE_OBJS)
    $(ECHO) $(LANG_LIB) >> make.tmp
    $(ECHO) $(RDD_LIB) >> make.tmp
    $(ECHO) $(MACRO_LIB) >> make.tmp
+   $(ECHO) $(DEBUG_LIB) >> make.tmp
    $(ECHO) $(DBFNTX_LIB) >> make.tmp
    $(ECHO) $(DBFCDX_LIB) >> make.tmp
    $(ECHO) $(DBFDBT_LIB) >> make.tmp

@@ -355,7 +355,7 @@ METHOD Configure(nMode) CLASS TBrowse
    next
 
 
-   IF( nMode == NIL ) 
+   IF nMode == NIL
       for n := 1 to ::nColumns
          ::aColsWidth[n] := ::SetColumnWidth( ::aColumns[n] )
       next
@@ -365,8 +365,8 @@ METHOD Configure(nMode) CLASS TBrowse
    // If I add (or remove) header or footer (separator) I have to change number
    // of available rows
    ::RowCount := ::nBottom - ::nTop + 1 - iif( ::lHeaders, ::nHeaderHeight, 0 ) - ;
-                  iif( ::lFooters, ::nFooterHeight, 0 ) - iif( Empty( ::HeadSep ), 0, 1 ) - ;
-                  iif( Empty( ::FootSep ), 0, 1 )
+                  iif( ::lFooters, ::nFooterHeight, 0 ) - iif( Empty( ::HeadSep ) .OR. !::lHeaders, 0, 1 ) - ;
+                  iif( Empty( ::FootSep ) .OR. !::lFooters, 0, 1 )
 
    if Len(::aRedraw) <> ::RowCount
       ::aRedraw := Array(::RowCount)
@@ -378,14 +378,18 @@ METHOD Configure(nMode) CLASS TBrowse
    if ::freeze > 0
       ::SetFrozenCols(::freeze)
    endif
+
    #ifdef HB_COMPAT_C53
-   nleft:=::nLeft
-   nRight:=::nRight
-    ::rect:={::ntop+::nHeaderHeight,::nleft,::nbottom-::nHeaderHeight,::nright}
-    for n:= nleft to nright
-        aadd(::aVisibleCols,n)
-    next
+
+      nleft := ::nLeft
+      nRight := ::nRight
+      ::rect := { ::ntop + ::nHeaderHeight, ::nleft, ::nbottom - ::nHeaderHeight, ::nright }
+      FOR n := nleft TO nright
+         AAdd( ::aVisibleCols, n )
+      NEXT
+
    #endif
+
 return Self
 
 
@@ -578,7 +582,6 @@ return Self
 METHOD GoBottom() CLASS TBrowse
 
    local nToTop
-
 
    ::Moved()
 
@@ -779,7 +782,7 @@ return Self
 
 METHOD DeHilite() CLASS TBrowse
 
-   local nRow := ::nTop + ::RowPos + iif(::lHeaders, ::nHeaderHeight, 0 ) + iif(Empty(::HeadSep), 0, 1) - 1
+   local nRow := ::nTop + ::RowPos + iif(::lHeaders, ::nHeaderHeight, 0 ) + iif(Empty( ::HeadSep ) .OR. !::lHeaders, 0, 1) - 1
    local cType
 
    SetPos( nRow, ::aColumns[ ::ColPos ]:ColPos )
@@ -804,7 +807,7 @@ METHOD Hilite() CLASS TBrowse
    local nRow, nCol
    local cType
 
-   nRow := ::nTop + ::RowPos + iif(::lHeaders, ::nHeaderHeight, 0) + iif(Empty(::HeadSep), 0, 1) - 1
+   nRow := ::nTop + ::RowPos + iif(::lHeaders, ::nHeaderHeight, 0) + iif(Empty( ::HeadSep ) .OR. !::lHeaders, 0, 1) - 1
    nCol := ::aColumns[ ::ColPos ]:ColPos
 
    // Start of cell
@@ -826,7 +829,7 @@ return Self
 
 METHOD PosCursor() CLASS TBrowse
 
-   local nRow := ::nTop + ::RowPos + iif(::lHeaders, ::nHeaderHeight, 0) + iif(Empty(::HeadSep), 0, 1) - 1
+   local nRow := ::nTop + ::RowPos + iif(::lHeaders, ::nHeaderHeight, 0) + iif(Empty( ::HeadSep ) .OR. !::lHeaders, 0, 1) - 1
    local nCol
    local cType := ValType( Eval( ::aColumns[ ::ColPos ]:block ) )
 
@@ -914,7 +917,8 @@ METHOD RedrawHeaders(nWidth) CLASS TBrowse
 
    local n, nTPos, nBPos
    local cBlankBox := Space(9)
-   local nScreenRowT, nScreenRowB
+   local nScreenRowT
+   local nScreenRowB
    local nLCS             // Len(ColSep)
 
    if ::lHeaders          // Drawing headers
@@ -939,14 +943,18 @@ METHOD RedrawHeaders(nWidth) CLASS TBrowse
       next
    endif
 
-   if ! Empty( ::HeadSep )  //Draw horizontal heading separator line
-      DispOutAt((nScreenRowT := ::nTop + iif(::lHeaders, ::nHeaderHeight , 0 )), ::nLeft,;
+   if ! Empty( ::HeadSep ) .AND. ::lHeaders //Draw horizontal heading separator line
+      DispOutAt((nScreenRowT := ::nTop + ::nHeaderHeight ), ::nLeft,;
                 Replicate( Right( ::HeadSep, 1 ), nWidth), ::ColorSpec)
+   else
+      nScreenRowT := NIL
    endif
 
-   if ! Empty( ::FootSep )  //Draw horizontal footing separator line
-      DispOutAt((nScreenRowB := ::nBottom - iif(::lFooters, ::nFooterHeight, 0)), ::nLeft,;
+   if ! Empty( ::FootSep ) .AND. ::lFooters //Draw horizontal footing separator line
+      DispOutAt((nScreenRowB := ::nBottom - ::nFooterHeight ), ::nLeft,;
                 Replicate(Right(::FootSep, 1), nWidth), ::ColorSpec)
+   else
+      nScreenRowB := NIL
    endif
 
    nTPos := nBPos := ::nLeft + (( nWidth - ::nColsWidth ) / 2 )
@@ -958,16 +966,17 @@ METHOD RedrawHeaders(nWidth) CLASS TBrowse
       endif
 
       if n < ::rightVisible
+
          nLCS := iif(::aColumns[n + 1]:ColSep != NIL, Len(::aColumns[n + 1]:ColSep), Len(::ColSep))
 
-         if ! Empty( ::HeadSep )
-            DispOutAT(nScreenRowT, (nTPos += ::aColsWidth[ n ]), ::HeadSep, ::ColorSpec )
-            nTPos += Len(::HeadSep) + (nLCS - Len(::HeadSep))
+         if nScreenRowT != NIL
+            DispOutAt(nScreenRowT, (nTPos += ::aColsWidth[ n ]), Left(::HeadSep, nLCS), ::ColorSpec )
+            nTPos += nLCS
          endif
 
-         if ! Empty( ::FootSep )
-            DispOutAT(nScreenRowB, (nBPos += ::aColsWidth[ n ]), ::FootSep, ::ColorSpec )
-            nBPos += Len(::FootSep) + (nLCS - Len(::FootSep))
+         if nScreenRowB != NIL
+            DispOutAt(nScreenRowB, (nBPos += ::aColsWidth[ n ]), Left(::FootSep, nLCS), ::ColorSpec )
+            nBPos += nLCS
          endif
 
       endif
@@ -1106,7 +1115,7 @@ METHOD Stabilize() CLASS TBrowse
                else // K_DN or K_UP
 
                   // Where does really start first TBrowse row?
-                  nFirstRow := ::nTop + iif( ::lHeaders, ::nHeaderHeight, 0 ) + iif( Empty( ::HeadSep ), 0, 1 )
+                  nFirstRow := ::nTop + iif( ::lHeaders, ::nHeaderHeight, 0 ) + iif( Empty( ::HeadSep ) .OR. !::lHeaders, 0, 1 )
 
                   // I'm at top or bottom of TBrowse so I can scroll
                   if ::nNewRowPos == ::RowCount
@@ -1170,7 +1179,7 @@ METHOD Stabilize() CLASS TBrowse
          // if there is a row to repaint
          if ::aRedraw[nRow]
 
-            DispOutAt(::nTop + nRow + iif(::lHeaders, ::nHeaderHeight, 0) + iif(Empty(::HeadSep), 0, 1) - 1, ::nLeft,;
+            DispOutAt(::nTop + nRow + iif(::lHeaders, ::nHeaderHeight, 0) + iif(Empty( ::HeadSep ) .OR. !::lHeaders, 0, 1) - 1, ::nLeft,;
                       Space( ( nWidth - ::nColsWidth ) / 2 ), ::ColorSpec )
 
             for n := iif( ::nFrozenCols > 0, 1, ::leftVisible ) to ::rightVisible
@@ -1427,7 +1436,7 @@ METHOD MGotoYX(nRow, nCol) CLASS TBrowse
       endif
 
       // Set new row position
-      nNewRow := nRow - ::nTop + iif(::lHeaders, ::nHeaderHeight, 0) + iif(Empty(::HeadSep), 0, 1) - 1
+      nNewRow := nRow - ::nTop + iif(::lHeaders, ::nHeaderHeight, 0) + iif(Empty( ::HeadSep ) .OR. !::lHeaders, 0, 1) - 1
       ::nRecsToSkip := nNewRow - ::nNewRowPos
 
       // move data source accordingly

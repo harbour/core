@@ -8,6 +8,22 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-02-15 16:35 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * src/rtl/tbrowse.prg
+     ! Fixed to not display headsep/footsep when there's no 
+       header/footer.
+     ! Fixed to display headsep/footsep with the width of 
+       colsep.
+
+   * makefile.bc
+     ! Added DEBUG_LIB for Harbour exes to make them compile 
+       in debug mode.
+
+   * souce/rtl/gtapi.c
+     ! hb_gtSetColorStr() previous change reverted. The mistake 
+       was on my side most probably.
+
 2004-02-15 05:25 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/tbrowse.prg
