@@ -212,10 +212,10 @@ USHORT hb_gtBoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight )
          if( uiLeft != uiRight )
             hb_gt_BoxD( uiTop, uiLeft, uiBottom, uiRight, ( BYTE * ) _B_DOUBLE, ( BYTE ) s_pColor[ s_uiColorIndex ] );
          else
-            hb_gt_VertLine( uiLeft, uiTop, uiBottom, HB_B_DOUBLE_H, ( BYTE ) s_pColor[ s_uiColorIndex ] );
+            hb_gt_VertLine( uiLeft, uiTop, uiBottom, HB_B_DOUBLE_V, ( BYTE ) s_pColor[ s_uiColorIndex ] );
       }
       else
-         hb_gt_HorizLine( uiTop, uiLeft, uiRight, HB_B_DOUBLE_V, ( BYTE ) s_pColor[ s_uiColorIndex ] );
+         hb_gt_HorizLine( uiTop, uiLeft, uiRight, HB_B_DOUBLE_H, ( BYTE ) s_pColor[ s_uiColorIndex ] );
 
       hb_gtSetPosContext( uiTop + 1, uiLeft + 1, HB_GT_SET_POS_AFTER );
 
