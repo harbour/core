@@ -111,6 +111,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\setfunc.obj \
     $(OBJ_DIR)\setkey.obj \
     $(OBJ_DIR)\strings.obj \
+    $(OBJ_DIR)\symbols.obj \
     $(OBJ_DIR)\tbcolumn.obj \
     $(OBJ_DIR)\tbrowse.obj \
     $(OBJ_DIR)\tclass.obj \
@@ -213,7 +214,8 @@ DEBUG_LIB_OBJS = \
 # Our default target
 #
 
-all: $(HARBOUR_EXE) \
+all: $(OBJ_DIR)\symbols.obj \
+     $(HARBOUR_EXE) \
      $(HARBOUR_LIB) \
      $(TOOLS_LIB) \
      $(TERMINAL_LIB) \
@@ -223,6 +225,9 @@ all: $(HARBOUR_EXE) \
      $(HBPP_EXE) \
      $(RUNNER_LIB) \
      $(RUNNER_EXE)
+
+$(OBJ_DIR)\symbols.obj : $(VM_DIR)\symbols.asm
+    masm $** $@ obj\symbols.lst obj\symbols.crf
 
 $(HBPP_EXE) : \
     $(HBPP_DIR)\stdalone\hbpp.c
@@ -235,7 +240,7 @@ $(RUNNER_EXE) : \
     $(RUNNER_DIR)\stdalone\runner.prg
     $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(RUNNER_DIR)\stdalone\ $(RUNNER_DIR)\stdalone\external.prg 
     $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(RUNNER_DIR)\stdalone\ -i$(RUNNER_DIR)\stdalone\ $(RUNNER_DIR)\stdalone\runner.prg 
-    $(CC) -TP $(CFLAGS) $(RUNNER_DIR)\stdalone\runner.c $(RUNNER_DIR)\stdalone\external.c -o $(BIN_DIR)\runner /link  $(OBJ_DIR)\symbols.obj $(LIBS)
+    $(CC) -TP $(CFLAGS) $(RUNNER_DIR)\stdalone\runner.c $(RUNNER_DIR)\stdalone\external.c -o $(BIN_DIR)\runner /link  $(LIBS)
     -del external.obj
     -del runner.obj
 
@@ -252,7 +257,7 @@ $(HARBOUR_EXE) : \
     $(HBPP_DIR)\hbpp.c \
     $(HBPP_DIR)\hbppint.c \
     $(HBPP_DIR)\table.c
-    $(CC) $(CFLAGS) $(COMPILER_DIR)\harboury.c $(COMPILER_DIR)\harbourl.c $(COMPILER_DIR)\harbour.c $(COMPILER_DIR)\genobj32.c $(COMPILER_DIR)\genc.c $(COMPILER_DIR)\genhrb.c $(COMPILER_DIR)\genrc.c $(COMPILER_DIR)\genjava.c $(COMPILER_DIR)\genpas.c $(HBPP_DIR)\hbppint.c $(HBPP_DIR)\hbpp.c $(HBPP_DIR)\table.c -o $(BIN_DIR)\harbour /link $(OBJ_DIR)\symbols.obj 
+    $(CC) $(CFLAGS) $(COMPILER_DIR)\harboury.c $(COMPILER_DIR)\harbourl.c $(COMPILER_DIR)\harbour.c $(COMPILER_DIR)\genobj32.c $(COMPILER_DIR)\genc.c $(COMPILER_DIR)\genhrb.c $(COMPILER_DIR)\genrc.c $(COMPILER_DIR)\genjava.c $(COMPILER_DIR)\genpas.c $(HBPP_DIR)\hbppint.c $(HBPP_DIR)\hbpp.c $(HBPP_DIR)\table.c -o $(BIN_DIR)\harbour
     @Echo :	Ignore Lnk4033 warning
     -del harboury.obj
     -del harbourl.obj

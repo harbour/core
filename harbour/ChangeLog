@@ -1,3 +1,10 @@
+19991002-03:20 EDT Paul Tucker <ptucker@sympatico.ca>
+  * buildvc.bat
+    makefile.vc
+    tests\working\buildvc.bat
+    * symbols.asm/obj is now a normal part of the make process and is added
+      to harbour.lib so additional references to this have been removed.
+
 19991001-17:10 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm/hvm.c
