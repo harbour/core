@@ -434,33 +434,10 @@ static const char * _szReservedFun[] = {
    "YEAR"
 };
 #define RESERVED_FUNCTIONS  sizeof( _szReservedFun ) / sizeof( char * )
-/* function compares strings upto maximum 4 characters (used in bsearch) */
-/* Borland C 3.1 reports error when this forward declaration is used
- * int sz_compare4( const void *, const void * );
- *
- */
-/* Compare first 4 characters
- * If they are the same then compare the whole name
- * SECO() is not allowed because of Clipper function SECONDS()
- * however SECO32() is a valid name.
- */
-int EXTERNAL_LINKAGE sz_compare4( const void * pLookup, const void * pReserved )
-{
-   int iCmp, iSlen;
 
-   iSlen = strlen( ( const char * ) pLookup );
+static char * reserved_name( char * );
 
-   iCmp = strncmp( ( const char * ) pLookup, * ( ( const char * * ) pReserved ),
-                   ( iSlen && iSlen < 4 ) ? iSlen : 4 );
-   if( iCmp == 0 )
-      iCmp = strncmp( ( const char * ) pLookup, * ( ( const char * * ) pReserved ),
-                      iSlen + 1);
-   return iCmp;
-}
-
-#define RESERVED_FUNC( szName ) \
-   bsearch( ( szName ), _szReservedFun, RESERVED_FUNCTIONS, sizeof( char * ), sz_compare4 )
-
+#define RESERVED_FUNC(szName) reserved_name( (szName) )
 
 FILES files;
 FUNCTIONS functions, funcalls;
@@ -2507,7 +2484,7 @@ void FunDef( char * szFunName, SYMBOLSCOPE cScope, int iType )
 {
    PCOMSYMBOL   pSym;
    PFUNCTION pFunc;
-   char * * pFunction;
+   char * szFunction;
 
    pFunc = GetFunction( szFunName );
    if( pFunc )
@@ -2518,13 +2495,13 @@ void FunDef( char * szFunName, SYMBOLSCOPE cScope, int iType )
          GenError( _szCErrors, 'E', ERR_FUNC_DUPL, szFunName, NULL );
    }
 
-   pFunction = ( char * * ) RESERVED_FUNC( szFunName );
-   if( pFunction && !( functions.iCount==0 && !_bStartProc ) )
+   szFunction = RESERVED_FUNC( szFunName );
+   if( szFunction && !( functions.iCount==0 && !_bStartProc ) )
    {
       /* We are ignoring it when it is the name of PRG file and we are
        * not creating implicit starting procedure
        */
-      GenError( _szCErrors, 'E', ERR_FUNC_RESERVED, *pFunction, szFunName );
+      GenError( _szCErrors, 'E', ERR_FUNC_RESERVED, szFunction, szFunName );
    }
 
    FixReturns();    /* fix all previous function returns offsets */
@@ -4681,14 +4658,14 @@ void PushDouble( double dNumber, BYTE bDec )
 
 void PushFunCall( char * szFunName )
 {
-   char * * pFunction;
+   char * szFunction;
 
-   pFunction = ( char * * ) RESERVED_FUNC( szFunName );
-   if( pFunction )
+   szFunction = RESERVED_FUNC( szFunName );
+   if( szFunction )
    {
       /* Abbreviated function name was used - change it for whole name
        */
-      PushSymbol( yy_strdup( *pFunction ), 1 );
+      PushSymbol( yy_strdup( szFunction ), 1 );
    }
    else
       PushSymbol( szFunName, 1 );
@@ -4772,14 +4749,14 @@ void PushSymbol( char * szSymbolName, int iIsFunction )
 
    if( iIsFunction )
    {
-      char * * pName = ( char * * ) RESERVED_FUNC( szSymbolName );
+      char * pName = RESERVED_FUNC( szSymbolName );
       /* If it is reserved function name then we should truncate
        * the requested name.
        * We have to use passed szSymbolName so we can latter deallocate it
        * (pName points to static data)
        */
       if( pName )
-         szSymbolName[ strlen( *pName ) ] ='\0';
+         szSymbolName[ strlen( pName ) ] ='\0';
    }
 
    pSym = GetSymbol( szSymbolName, &wSym );
@@ -5952,6 +5929,31 @@ char * yy_strdup( char * p )
    memcpy( pDup, p, iLen );
 
    return pDup;
+}
+
+/* checks if passed string is a reserved function name
+ */
+static char * reserved_name( char * szName )
+{
+   WORD wNum = 0;
+   int iFound = 1;
+
+   while( wNum < RESERVED_FUNCTIONS && iFound )
+   {
+      /* Compare first 4 characters
+      * If they are the same then compare the whole name
+      * SECO() is not allowed because of Clipper function SECONDS()
+      * however SECO32() is a valid name.
+      */
+      iFound = strncmp( szName, _szReservedFun[ wNum ], 4 );
+      if( iFound == 0 )
+         iFound = strncmp( szName, _szReservedFun[ wNum ], strlen( szName ) );
+      ++wNum;
+   }
+   if( iFound )
+      return NULL;
+   else
+      return (char *) _szReservedFun[ wNum - 1 ];
 }
 
 

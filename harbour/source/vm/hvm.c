@@ -1972,6 +1972,7 @@ static void hb_vmPopAliasedField( PHB_SYMB pSym )
 {
    PHB_ITEM pAlias = stack.pPos - 1;
    int iCurrArea = hb_rddGetCurrentWorkAreaNumber();
+   BOOL bSuccess;
 
    switch( pAlias->type & ~IT_BYREF )
    {
@@ -1980,21 +1981,21 @@ static void hb_vmPopAliasedField( PHB_SYMB pSym )
           * or it was saved on the stack using hb_vmPushAlias()
           * or was evaluated from an expression, (nWorkArea)->field
           */
-         hb_rddSelectWorkAreaNumber( pAlias->item.asInteger.value );
+         bSuccess = hb_rddSelectWorkAreaNumber( pAlias->item.asInteger.value );
          pAlias->type = IT_NIL;
          break;
 
       case IT_SYMBOL:
          /* Alias was specified using alias identifier, for example: al->field
           */
-         hb_rddSelectWorkAreaSymbol( pAlias->item.asSymbol.value );
+         bSuccess = hb_rddSelectWorkAreaSymbol( pAlias->item.asSymbol.value );
          pAlias->type = IT_NIL;
          break;
 
       case IT_STRING:
          /* Alias was evaluated from an expression, for example: (cVar)->field
           */
-         hb_rddSelectWorkAreaAlias( pAlias->item.asString.value );
+         bSuccess = hb_rddSelectWorkAreaAlias( pAlias->item.asString.value );
          hb_itemClear( pAlias );
          break;
 
@@ -2004,7 +2005,8 @@ static void hb_vmPopAliasedField( PHB_SYMB pSym )
          return;
    }
 
-   hb_rddPutFieldValue( stack.pPos - 2, pSym );
+   if( bSuccess == SUCCESS )
+      hb_rddPutFieldValue( stack.pPos - 2, pSym );
    hb_rddSelectWorkAreaNumber( iCurrArea );
    hb_stackPop();    /* field */
    hb_stackPop();    /* alias */
@@ -2204,6 +2206,7 @@ static void hb_vmPushAliasedField( PHB_SYMB pSym )
 {
    PHB_ITEM pAlias = stack.pPos - 1;
    int iCurrArea = hb_rddGetCurrentWorkAreaNumber();
+   BOOL bSuccess;
 
    switch( pAlias->type & ~IT_BYREF )
    {
@@ -2212,33 +2215,35 @@ static void hb_vmPushAliasedField( PHB_SYMB pSym )
           * or it was saved on the stack using hb_vmPushAlias()
           * or was evaluated from an expression, (nWorkArea)->field
           */
-         hb_rddSelectWorkAreaNumber( pAlias->item.asInteger.value );
+         bSuccess = hb_rddSelectWorkAreaNumber( pAlias->item.asInteger.value );
          pAlias->type = IT_NIL;
          break;
 
       case IT_SYMBOL:
          /* Alias was specified using alias identifier, for example: al->field
           */
-         hb_rddSelectWorkAreaSymbol( pAlias->item.asSymbol.value );
+         bSuccess = hb_rddSelectWorkAreaSymbol( pAlias->item.asSymbol.value );
          pAlias->type = IT_NIL;
          break;
 
       case IT_STRING:
          /* Alias was evaluated from an expression, for example: (cVar)->field
           */
-         hb_rddSelectWorkAreaAlias( pAlias->item.asString.value );
+         bSuccess = hb_rddSelectWorkAreaAlias( pAlias->item.asString.value );
          hb_itemClear( pAlias );
          break;
 
       default:
-/* Clipper doesn't error in this case, just pass the failed value.
          hb_itemClear( pAlias );
+/* Clipper doesn't error in this case, just pass the failed value.
          hb_errRT_BASE( EG_BADALIAS, 9992, NULL, NULL );
 */
          return;
    }
 
-   hb_rddGetFieldValue( pAlias, pSym );
+   if( bSuccess == SUCCESS )
+      hb_rddGetFieldValue( pAlias, pSym );
+
    hb_rddSelectWorkAreaNumber( iCurrArea );
 
    HB_DEBUG( "hb_vmPushAliasedField\n" );

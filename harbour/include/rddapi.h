@@ -12,11 +12,11 @@ typedef USHORT ERRCODE;
 /* RDD virtual machine integration functions */
 
 extern int  hb_rddGetCurrentWorkAreaNumber( void );
-extern void hb_rddSelectWorkAreaAlias( char * szAlias );
-extern void hb_rddSelectWorkAreaNumber( int iArea );
-extern void hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias );
-extern void hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
-extern void hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
+extern BOOL hb_rddSelectWorkAreaAlias( char * szAlias );
+extern BOOL hb_rddSelectWorkAreaNumber( int iArea );
+extern BOOL hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias );
+extern BOOL hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
+extern BOOL hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
 extern void hb_rddShutDown( void );
 
 
@@ -125,9 +125,9 @@ extern void hb_rddShutDown( void );
 #define APPEND_LOCK        7
 #define APPEND_UNLOCK      8
 
-/* forward declarations  
+/* forward declarations
  */
-struct _RDDFUNCS;       
+struct _RDDFUNCS;
 struct _AREA;
 
 

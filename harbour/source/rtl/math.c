@@ -16,6 +16,48 @@
 #include "itemapi.h"
 #include "errorapi.h"
 
+static int internal_math_error = 0;
+
+#if defined( __WATCOMC__ )
+/* define harbour specific error handler for math errors
+ */
+int matherr( struct exception *err )
+{
+   switch( err->type )
+   {
+      case DOMAIN:
+         /* a domain error has occured, such as sqrt( -1 ) */
+         internal_math_error = EG_ARG;
+         break;
+      case SING:
+         /* a singularity will result, such as pow( 0, -2 ) */
+         internal_math_error = EG_ARG;
+         break;
+      case OVERFLOW:
+         /* an overflow will result, such as pow( 10, 100 ) */
+         internal_math_error = EG_NUMOVERFLOW;
+         break;
+      case UNDERFLOW:
+         /* an underflow will result, such as pow( 10, -100 ) */
+         internal_math_error = EG_NUMOVERFLOW;
+         break;
+      case TLOSS:
+         /* total loss of significance will result, such as exp( 1000 ) */
+         internal_math_error = EG_NUMERR;
+         break;
+      case PLOSS:
+         /* partial loss of significance will result, such as sin( 10e70 ) */
+         internal_math_error = EG_NUMERR;
+         break;
+      default:
+         internal_math_error = EG_NUMERR;
+         break;
+   }
+   err->retval = 0.0;
+   return 1;   /* don't print any message and don't ser errno */
+}
+#endif
+
 HARBOUR HB_ABS( void )
 {
    if( hb_pcount() == 1 )
@@ -74,7 +116,23 @@ HARBOUR HB_EXP( void )
    if( hb_pcount() == 1 )
    {
       if( ISNUM( 1 ) )
-         hb_retnd( exp( hb_parnd( 1 ) ) );
+      {
+         double dResult = exp( hb_parnd( 1 ) );
+
+         if( internal_math_error )
+         {
+            PHB_ITEM pResult = hb_errRT_BASE_Subst( internal_math_error, 1096, NULL, "EXP" );
+
+            internal_math_error = 0;
+            if( pResult )
+            {
+               hb_itemReturn( pResult );
+               hb_itemRelease( pResult );
+            }
+         }
+         else
+            hb_retnd( dResult );
+      }
       else
       {
          PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1096, NULL, "EXP" );
@@ -126,13 +184,29 @@ HARBOUR HB_LOG( void )
    {
       if( ISNUM( 1 ) )
       {
-         double dNumber = hb_parnd( 1 );
+#if defined( __WATCOMC__ )
+         double dResult = log( hb_parnd( 1 ) );
+         if( internal_math_error )
+         {
+            PHB_ITEM pResult = hb_errRT_BASE_Subst( internal_math_error, 1095, NULL, "LOG" );
 
+            internal_math_error = 0;
+            if( pResult )
+            {
+               hb_itemReturn( pResult );
+               hb_itemRelease( pResult );
+            }
+         }
+         else
+            hb_retnd( dResult );
+#else
+         double dNumber = hb_parnd( 1 );
          if( dNumber <= 0.0 )
             /* Indicate overflow if called with an invalid argument */
             hb_retndlen( log( dNumber ), 99, -1 );
          else
             hb_retnd( log( dNumber ) );
+#endif
       }
       else
       {
@@ -379,12 +453,29 @@ HARBOUR HB_SQRT( void )
    {
       if( ISNUM( 1 ) )
       {
+#if defined( __WATCOMC__ )
+         double dResult = sqrt( hb_parnd( 1 ) );
+         if( internal_math_error )
+         {
+            PHB_ITEM pResult = hb_errRT_BASE_Subst( internal_math_error, 1097, NULL, "SQRT" );
+
+            internal_math_error = 0;
+            if( pResult )
+            {
+               hb_itemReturn( pResult );
+               hb_itemRelease( pResult );
+            }
+         }
+         else
+            hb_retnd( dResult );
+#else
          double dNumber = hb_parnd( 1 );
 
          if( dNumber > 0 )
             hb_retnd( sqrt( dNumber ) );
          else
             hb_retnd( 0 ); /* Clipper doesn't error! */
+#endif
       }
       else
       {
