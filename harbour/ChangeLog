@@ -1,3 +1,8 @@
+19990513-11:05 Eddie Runia
+  * obj/symbols.obj added
+  * makefile.b32
+    changed according to Andi/Patrick fix.
+
 19990512-21:30:00 EDT David G. Holm <dholm@jsd-llc.com>
   * makefile.b31
     - Added implicit rule to compile .prg files in source\tools
