@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     ! fixed autopen bug on Linux
+     ! fixed recno() while indexing
+
+2002-04-24 00:42 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * source/rdd/workarea.c
      ! fixed bug with set relation to, found by Walter Negro.
 

@@ -212,20 +212,28 @@ static ULONG* hb_ntxKeysInPage( ULONG ulRecCount, USHORT maxkeys )
   for( i=1; i<=iLevel; i++ )
      lpArray[i] = 0;
 
-  for( i=iLevel; i; i-- )
+  if( recCount > 0 )
   {
-     koeff = dSum / recCount;
-     lpArray[i] = (ULONG) ceil( _maxkeys/koeff );
-     dMul = 1;
-     for( j=iLevel,dSum=0; j; j-- )
+     for( i=iLevel; i; i-- )
      {
-        dSum += ( (lpArray[j])? lpArray[j]:maxkeys ) * dMul;
-        if( j > 1 )
-           dMul *= (double)(( (lpArray[j])? lpArray[j]:maxkeys )+1);
+        koeff = dSum / recCount;
+        lpArray[i] = (ULONG) ceil( _maxkeys/koeff );
+        dMul = 1;
+        for( j=iLevel,dSum=0; j; j-- )
+        {
+           dSum += ( (lpArray[j])? lpArray[j]:maxkeys ) * dMul;
+           if( j > 1 )
+              dMul *= (double)(( (lpArray[j])? lpArray[j]:maxkeys )+1);
+        }
      }
+     dSum -= recCount;
+     lpArray[iLevel+1] = (dMul > dSum)? (ULONG)(dMul - dSum):(ULONG)dMul;
   }
-  dSum -= recCount;
-  lpArray[iLevel+1] = (dMul > dSum)? (ULONG)(dMul - dSum):(ULONG)dMul;
+  else
+  {
+     lpArray[1] = maxkeys;
+     lpArray[2] = 0;
+  }
 
   return lpArray;
 }
