@@ -1011,11 +1011,15 @@ static ERRCODE dbfGoTo( AREAP pArea, ULONG lRecNo )
       if( lRecNo > lRecCount + 1 )
          lRecNo = lRecCount + 1;
 
-      if( lRecNo == lRecCount + 1 )
-         pArea->fEof = 1;
+      if( lRecNo <= 0 )
+      {
+         pArea->fBof = 1;
+         lRecNo = 1;
+      }
       else
-         pArea->fEof = 0;
-      pArea->fBof = ( lRecNo == 1 );
+         pArea->fBof = ( lRecNo == 1 && pArea->fBof );
+
+      pArea->fEof = ( lRecNo == lRecCount + 1 );
    }
 
    pArea->lpExtendInfo->lRecNo = lRecNo;
@@ -1051,6 +1055,7 @@ static ERRCODE dbfGoToId( AREAP pArea, PHB_ITEM pItem )
 
 static ERRCODE dbfGoTop( AREAP pArea )
 {
+   pArea->fBof = 0;
    SELF_GOTO( pArea, 1 );
    return SELF_SKIPFILTER( pArea, 1 );
 }

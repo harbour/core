@@ -1777,14 +1777,15 @@ HARBOUR HB_DBUNLOCKALL( void )
 
 HARBOUR HB_DBUSEAREA( void )
 {
-   char * szDriver, * szFileName, * szAlias;
+   char * szDriver, * szFileName;
    LPRDDNODE pRddNode;
    LPAREANODE pAreaNode;
    USHORT uiSize, uiRddID, uiLen;
    DBOPENINFO pInfo;
    PHB_FNAME pFileName;
    PHB_ITEM pFileExt;
-   char cDriverBuffer[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ];
+   char szDriverBuffer[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 ];
+   char szAlias[ HARBOUR_MAX_RDD_ALIAS_LENGTH + 1];
 
    bNetError = FALSE;
 
@@ -1814,8 +1815,10 @@ HARBOUR HB_DBUSEAREA( void )
    uiLen = hb_parclen( 2 );
    if( uiLen > 0 )
    {
-      hb_strncpyUpper( cDriverBuffer, hb_parc( 2 ), uiLen ); 
-      szDriver = cDriverBuffer;
+      if( uiLen > HARBOUR_MAX_RDD_DRIVERNAME_LENGTH )
+         uiLen = HARBOUR_MAX_RDD_DRIVERNAME_LENGTH;
+      hb_strncpyUpper( szDriverBuffer, hb_parc( 2 ), uiLen ); 
+      szDriver = szDriverBuffer;
    }
    else
       szDriver = szDefDriver;
@@ -1836,9 +1839,9 @@ HARBOUR HB_DBUSEAREA( void )
    }
 
    pFileName = hb_fsFNameSplit( szFileName );
-   szAlias = hb_parc( 4 );
+   strncpy( szAlias, hb_parc( 4 ), HARBOUR_MAX_RDD_ALIAS_LENGTH );
    if( strlen( szAlias ) == 0 )
-      szAlias = pFileName->szName;
+      strncpy( szAlias, pFileName->szName, HARBOUR_MAX_RDD_ALIAS_LENGTH );
 
    /* Create a new WorkArea node */
 

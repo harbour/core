@@ -1,3 +1,10 @@
+19991015-18:45 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * source/rdd/dbcmd.c
+    * Bug removed, default alias work if not alias and extension is specified.
+
+  * source/rdd/dbf1.c
+    * Bug removed, Bof() now work properly.
+
 19991015-09:53 GMT+3 Alexander Kresin
   * source/pp/hbpp.c
     * Fixed little bug, reported by Antonio Linares
