@@ -911,6 +911,21 @@ void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
       hb_memvarValueIncRef( pSource->item.asMemvar.value );
 }
 
+void hb_itemMove( PHB_ITEM pDest, PHB_ITEM pSource )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemCopy(%p, %p)", pDest, pSource));
+
+   if( pDest == pSource )
+      hb_errInternal( HB_EI_ITEMBADCOPY, NULL, "hb_itemMove()", NULL );
+
+   if( pDest->type )
+      hb_itemClear( pDest );
+
+   memcpy( pDest, pSource, sizeof( HB_ITEM ) );
+   pSource->type = HB_IT_NIL;
+
+}
+
 void hb_itemSwap( PHB_ITEM pItem1, PHB_ITEM pItem2 )
 {
    HB_ITEM temp;

@@ -639,7 +639,7 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                hb_itemClear( &hb_stack.Return );
 
             hb_vmDo( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
-            hb_itemCopy( hb_stackTopItem(), &hb_stack.Return );
+            hb_itemMove( hb_stackTopItem(), &hb_stack.Return );
             hb_stackPush();
             w += 3;
             break;
@@ -649,7 +649,7 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                hb_itemClear( &hb_stack.Return );
 
             hb_vmDo( pCode[ w + 1 ] );
-            hb_itemCopy( hb_stackTopItem(), &hb_stack.Return );
+            hb_itemMove( hb_stackTopItem(), &hb_stack.Return );
             hb_stackPush();
             w += 2;
             break;
@@ -665,7 +665,7 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                w++;
             else
             {
-               hb_itemCopy( hb_stackTopItem(), &hb_stack.Return );
+               hb_itemMove( hb_stackTopItem(), &hb_stack.Return );
                hb_stackPush();
             }
             break;
@@ -681,7 +681,7 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                w++;
             else
             {
-               hb_itemCopy( hb_stackTopItem(), &hb_stack.Return );
+               hb_itemMove( hb_stackTopItem(), &hb_stack.Return );
                hb_stackPush();
             }
             break;
@@ -2741,8 +2741,7 @@ static void hb_vmArrayPush( void )
             hb_arrayGet( pArray, ulIndex, &item );
             hb_stackPop();
 
-            hb_itemCopy( hb_stackItemFromTop( -1 ), &item );
-            hb_itemClear( &item );
+            hb_itemMove( hb_stackItemFromTop( -1 ), &item );
          }
       }
       else
@@ -2834,8 +2833,7 @@ static void hb_vmArrayDim( USHORT uiDimensions ) /* generates an uiDimensions Ar
    while( uiDimensions-- )
       hb_stackPop();
 
-   hb_itemCopy( ( hb_stackTopItem() ), &itArray );
-   hb_itemClear( &itArray );
+   hb_itemMove( ( hb_stackTopItem() ), &itArray );
    hb_stackPush();
 }
 
@@ -2854,8 +2852,7 @@ static void hb_vmArrayGen( ULONG ulElements ) /* generates an ulElements Array a
    for( ulPos = 0; ulPos < ulElements; ulPos++ )
       hb_stackPop();
 
-   hb_itemCopy( ( hb_stackTopItem() ), &itArray );
-   hb_itemClear( &itArray );
+   hb_itemMove( ( hb_stackTopItem() ), &itArray );
    hb_stackPush();
 }
 
@@ -3663,8 +3660,7 @@ static void hb_vmEndBlock( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_vmEndBlock()"));
 
    hb_stackDec();                               /* make the last item visible */
-   hb_itemCopy( &hb_stack.Return, hb_stackTopItem() ); /* copy it */
-   hb_itemClear( hb_stackTopItem() );               /* and now clear it */
+   hb_itemMove( &hb_stack.Return, hb_stackTopItem() ); /* copy it */
 }
 
 static void hb_vmRetValue( void )
@@ -3672,8 +3668,7 @@ static void hb_vmRetValue( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_vmRetValue()"));
 
    hb_stackDec();                               /* make the last item visible */
-   hb_itemCopy( &hb_stack.Return, hb_stackTopItem() ); /* copy it */
-   hb_itemClear( hb_stackTopItem() );               /* now clear it */
+   hb_itemMove( &hb_stack.Return, hb_stackTopItem() ); /* copy it */
 }
 
 static void hb_vmDebuggerEndProc( void )
@@ -3693,8 +3688,7 @@ static void hb_vmDebuggerEndProc( void )
    s_bDebuggerIsWorking = FALSE;
    s_bDebugShowLines = TRUE;
 
-   hb_itemCopy( &hb_stack.Return, &item ); /* restores the previous returned value */
-   hb_itemClear( &item );
+   hb_itemMove( &hb_stack.Return, &item ); /* restores the previous returned value */
 }
 
 static void hb_vmDebuggerShowLine( USHORT uiLine ) /* makes the debugger shows a specific source code line */
@@ -4485,17 +4479,16 @@ static void hb_vmPopLocal( SHORT iLocal )
       }
 
       if( HB_IS_BYREF( pLocal ) )
-         hb_itemCopy( hb_itemUnRef( pLocal ), hb_stackTopItem() );
+         hb_itemMove( hb_itemUnRef( pLocal ), hb_stackTopItem() );
       else
-         hb_itemCopy( pLocal, hb_stackTopItem() );
+         hb_itemMove( pLocal, hb_stackTopItem() );
    }
    else
       /* local variable referenced in a codeblock
        * hb_stackSelfItem() points to a codeblock that is currently evaluated
        */
-      hb_itemCopy( hb_codeblockGetVar( hb_stackSelfItem(), iLocal ), hb_stackTopItem() );
+      hb_itemMove( hb_codeblockGetVar( hb_stackSelfItem(), iLocal ), hb_stackTopItem() );
 
-   hb_itemClear( hb_stackTopItem() );
 }
 
 static void hb_vmPopStatic( USHORT uiStatic )
@@ -4521,11 +4514,10 @@ static void hb_vmPopStatic( USHORT uiStatic )
    }
 
    if( HB_IS_BYREF( pStatic ) )
-      hb_itemCopy( hb_itemUnRef( pStatic ), ( hb_stackTopItem() ) );
+      hb_itemMove( hb_itemUnRef( pStatic ), ( hb_stackTopItem() ) );
    else
-      hb_itemCopy( pStatic, ( hb_stackTopItem() ) );
+      hb_itemMove( pStatic, ( hb_stackTopItem() ) );
 
-   hb_itemClear( ( hb_stackTopItem() ) );
 }
 
 
