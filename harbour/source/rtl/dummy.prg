@@ -70,11 +70,9 @@ FUNCTION __dbApp()         ; RETURN NIL
 FUNCTION __dbCopy()        ; RETURN NIL
 FUNCTION __dbDelim()       ; RETURN NIL
 FUNCTION __dbJoin()        ; RETURN NIL
-FUNCTION __dbList()        ; RETURN NIL
 FUNCTION __dbSDF()         ; RETURN NIL
 FUNCTION __dbSort()        ; RETURN NIL
 FUNCTION __dbTotal()       ; RETURN NIL
-FUNCTION __dbUpdate()      ; RETURN NIL
 
 /* NOTE: Internal functions */
 FUNCTION __dbArrange()     ; RETURN NIL
