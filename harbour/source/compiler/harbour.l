@@ -596,7 +596,7 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "for"          { BEGIN FOR_; }
-<FOR_>{Separator}+[_a-zA-Z] { /* an identifier after the FOR */
+<FOR_>{Separator}+[&_a-zA-Z] { /* an identifier or a macro after the FOR */
                  unput( yytext[ yyleng-1 ] );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  if( hb_comp_iState == LOOKUP )

@@ -343,7 +343,14 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmExecute(%p, %p)", pCode, pSymbols));
 
-   ulPrivateBase = hb_memvarGetPrivatesBase();
+   /* NOTE: if pSymbols == NULL then hb_vmExecute is called from macro 
+    * evaluation. In this case all PRIVATE variables created during
+    * macro evaluation belong to a function/procedure where macro
+    * compiler was called.
+    */
+   if( pSymbols )
+       ulPrivateBase = hb_memvarGetPrivatesBase();
+       
    while( ( bCode = pCode[ w ] ) != HB_P_ENDPROC )
    {
       switch( bCode )
@@ -1150,7 +1157,8 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 	 }
       }
    }
-   hb_memvarSetPrivatesBase( ulPrivateBase );
+   if( pSymbols )
+       hb_memvarSetPrivatesBase( ulPrivateBase );
 }
 
 /* ------------------------------- */
