@@ -1237,6 +1237,9 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag )
    PHB_ITEM pItem;
    HB_MACRO_PTR pMacro;
    BYTE cTemp[8];
+   LPCDXAREA pArea = pTag->pIndex->pArea;
+   LONG lStep = 0;
+
    if( pTag->OptFlags & 0x80 )
       hb_cdxTagEmptyIndex( pTag );
    else
@@ -1320,7 +1323,22 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag )
                   break;
 
                default:
-                  printf( "hb_cdxTagDoIndex( LPCDXTAG pTag )" );
+                  printf( "hb_cdxTagDoIndex( LPCDXTAG pTag ): hb_itemType( pItem ) = %i", hb_itemType( pItem ) );
+            }
+         }
+         if( pArea->lpdbOrdCondInfo )
+         {
+            if( pArea->lpdbOrdCondInfo->lStep )
+            {
+               lStep ++;
+               if( lStep == pArea->lpdbOrdCondInfo->lStep )
+                  lStep = 0;
+            }
+            if( pArea->lpdbOrdCondInfo->itmCobEval && !lStep )
+            {
+               hb_vmPushSymbol( &hb_symEval );
+               hb_vmPush( pArea->lpdbOrdCondInfo->itmCobEval );
+               hb_vmSend( 0 );
             }
          }
       }
@@ -4629,13 +4647,18 @@ ERRCODE hb_cdxGoBottom( CDXAREAP pArea )
       hb_cdxIndexLockRead( pTag->pIndex, pTag );
       hb_cdxTagTagOpen( pTag, 0 );
       if( pTag->bottomScope )
+      {
          hb_cdxSeek( pArea, 1, pTag->bottomScope, 1 );
+         if (! pArea->fEof )
+            SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Tag );
+      }
       else
+      {
          hb_cdxTagKeyRead( pTag, BTTM_RECORD );
-      SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Tag );
+         SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Tag );
+      }
       hb_cdxIndexUnLockRead( pTag->pIndex, pTag );
    }
-
    return SELF_SKIPFILTER( ( AREAP ) pArea, -1 );
 }
 
@@ -4886,7 +4909,10 @@ ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLas
             {
                USHORT endPos;
                int k;
-               retvalue = SELF_SKIPFILTER( ( AREAP ) pArea, 1 );
+               if( bFindLast )
+                  retvalue = SELF_SKIPFILTER( ( AREAP ) pArea, -1 );
+               else
+                  retvalue = SELF_SKIPFILTER( ( AREAP ) pArea, 1 );
                if ( pArea->fEof ) {
                   pArea->fFound = FALSE;
                }
@@ -4902,8 +4928,6 @@ ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLas
                      pArea->fFound = FALSE;
                      if( !bSoftSeek )
                      {
-                        //SELF_GOBOTTOM( ( AREAP ) pArea );
-                        //retvalue = SELF_SKIP( ( AREAP ) pArea, 1 );
                         retvalue = hb_cdxGoEof( pArea );
                      }
                   }
@@ -4924,14 +4948,15 @@ ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLas
             if( retvalue != FAILURE )
                if ( hb_set.HB_SET_DELETED || pArea->dbfi.itmCobExpr != NULL )
                {
-                  retvalue = SELF_SKIPFILTER( ( AREAP ) pArea, 1 );
+                  if( bFindLast )
+                     retvalue = SELF_SKIPFILTER( ( AREAP ) pArea, -1 );
+                  else
+                     retvalue = SELF_SKIPFILTER( ( AREAP ) pArea, 1 );
                }
             /* return retvalue; */
          }
          else
          {
-            /* SELF_GOBOTTOM( ( AREAP ) pArea );
-            retvalue = SELF_SKIP( ( AREAP ) pArea, 1 ); */
             retvalue = hb_cdxGoEof( pArea );
          }
       }
@@ -5999,7 +6024,7 @@ static ERRCODE hb_cdxOrderListRebuild( CDXAREAP pArea )
 
    pArea->uiTag = uiPrevTag;
    /* Clear pArea->lpdbOrdCondInfo */
-   // SELF_ORDSETCOND( ( AREAP ) pArea, NULL );
+   SELF_ORDSETCOND( ( AREAP ) pArea, NULL );
 
    return SELF_GOTOP( ( AREAP ) pArea );
 }
