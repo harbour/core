@@ -13,6 +13,8 @@ rem
 rem The above might be needed on Windows 2000 and XP.
 rem The macros are referenced in makefile.bc
 
+SET HB_LEX=FLEX
+
 if "%ECHO%"=="" SET ECHO=echo.
 if "%DEL%"=="" SET DEL=del
 
@@ -53,5 +55,6 @@ if "%1" == "CLEAN" goto CLEAN
    goto EXIT
 
 :EXIT
+
 
 

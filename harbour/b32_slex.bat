@@ -11,7 +11,9 @@ rem    SET ECHO=cmd /c echo
 rem    SET DEL=cmd /c del
 rem
 rem The above might be needed on Windows 2000 and XP.
-rem The macros are referenced in hb_slex.bc
+rem The macros are referenced in makefile.bc
+
+SET HB_LEX=SIMPLEX
 
 if "%ECHO%"=="" SET ECHO=echo.
 if "%DEL%"=="" SET DEL=del
@@ -21,7 +23,7 @@ if "%1" == "CLEAN" goto CLEAN
 
 :BUILD
 
-   make -fhb_slex.bc %1 %2 %3 > make_b32.log
+   make -fmakefile.bc %1 %2 %3 > make_b32.log
    if errorlevel 1 goto BUILD_ERR
    cd contrib\libmisc
    make -fmakefile.bc %1 %2 %3 >> make_b32.log
@@ -53,5 +55,4 @@ if "%1" == "CLEAN" goto CLEAN
    goto EXIT
 
 :EXIT
-
 

@@ -79,7 +79,12 @@ CFLAGS = -O2 $(CFLAGS)
 # Directory macros. These should never have to change.
 #
 
-INCLUDE_DIR  = include
+!if $(HB_LEX)==SIMPLEX
+   INCLUDE_DIR  = include;source\compiler;source\macro
+!else
+   INCLUDE_DIR  = include
+!endif
+
 COMMON_DIR   = source\common
 COMPILER_DIR = source\compiler
 DEBUG_DIR    = source\debug
@@ -104,6 +109,9 @@ HBPDF_DIR   = contrib\pdflib
 
 CFLAGS         = -I$(INCLUDE_DIR) -d $(C_USR) $(CFLAGS)
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
+!if $(HB_LEX)==SIMPLEX
+   CLIBFLAGS   = $(CLIBFLAGS) -DSIMPLEX
+!endif
 CLIBFLAGSDEBUG = -v $(CLIBFLAGS)
 !if $d(PDF)
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS) -dPDF
@@ -383,12 +391,21 @@ LANG_LIB_OBJS = \
 # MACRO.LIB rules
 #
 
-MACRO_LIB_OBJS = \
-   $(OBJ_DIR)\macroy.obj \
-   $(OBJ_DIR)\macrol.obj \
-   $(OBJ_DIR)\macroa.obj \
-   $(OBJ_DIR)\macrob.obj \
-   $(OBJ_DIR)\macroc.obj
+!if $(HB_LEX)==SIMPLEX
+    MACRO_LIB_OBJS = \
+       $(OBJ_DIR)\macroy.obj \
+       $(OBJ_DIR)\macroslx.obj \
+       $(OBJ_DIR)\macroa.obj \
+       $(OBJ_DIR)\macrob.obj \
+       $(OBJ_DIR)\macroc.obj
+!else
+    MACRO_LIB_OBJS = \
+       $(OBJ_DIR)\macroy.obj \
+       $(OBJ_DIR)\macrol.obj \
+       $(OBJ_DIR)\macroa.obj \
+       $(OBJ_DIR)\macrob.obj \
+       $(OBJ_DIR)\macroc.obj
+!endif
 
 #
 # RDD.LIB rules
@@ -557,26 +574,49 @@ GTWIN_LIB_OBJS = \
 # HARBOUR.EXE rules
 #
 
-HARBOUR_EXE_OBJS = \
-   $(OBJ_DIR)\harbour.obj \
-   $(OBJ_DIR)\harboury.obj \
-   $(OBJ_DIR)\harbourl.obj \
-   $(OBJ_DIR)\cmdcheck.obj \
-   $(OBJ_DIR)\hbusage.obj \
-   $(OBJ_DIR)\hbident.obj \
-   $(OBJ_DIR)\hbgenerr.obj \
-   $(OBJ_DIR)\hbpcode.obj \
-   $(OBJ_DIR)\hbfix.obj \
-   $(OBJ_DIR)\genc.obj \
-   $(OBJ_DIR)\gencobj.obj \
-   $(OBJ_DIR)\genobj32.obj \
-   $(OBJ_DIR)\genjava.obj \
-   $(OBJ_DIR)\genhrb.obj \
-   $(OBJ_DIR)\expropta.obj \
-   $(OBJ_DIR)\exproptb.obj \
-   $(OBJ_DIR)\exproptc.obj \
-   $(OBJ_DIR)\hbfunchk.obj \
-   $(PP_LIB)
+!if $(HB_LEX)==SIMPLEX
+   HARBOUR_EXE_OBJS = \
+      $(OBJ_DIR)\harbour.obj \
+      $(OBJ_DIR)\harboury.obj \
+      $(OBJ_DIR)\hbslex.obj \
+      $(OBJ_DIR)\cmdcheck.obj \
+      $(OBJ_DIR)\hbusage.obj \
+      $(OBJ_DIR)\hbident.obj \
+      $(OBJ_DIR)\hbgenerr.obj \
+      $(OBJ_DIR)\hbpcode.obj \
+      $(OBJ_DIR)\hbfix.obj \
+      $(OBJ_DIR)\genc.obj \
+      $(OBJ_DIR)\gencobj.obj \
+      $(OBJ_DIR)\genobj32.obj \
+      $(OBJ_DIR)\genjava.obj \
+      $(OBJ_DIR)\genhrb.obj \
+      $(OBJ_DIR)\expropta.obj \
+      $(OBJ_DIR)\exproptb.obj \
+      $(OBJ_DIR)\exproptc.obj \
+      $(OBJ_DIR)\hbfunchk.obj \
+      $(PP_LIB)
+!else
+   HARBOUR_EXE_OBJS = \
+      $(OBJ_DIR)\harbour.obj \
+      $(OBJ_DIR)\harboury.obj \
+      $(OBJ_DIR)\harbourl.obj \
+      $(OBJ_DIR)\cmdcheck.obj \
+      $(OBJ_DIR)\hbusage.obj \
+      $(OBJ_DIR)\hbident.obj \
+      $(OBJ_DIR)\hbgenerr.obj \
+      $(OBJ_DIR)\hbpcode.obj \
+      $(OBJ_DIR)\hbfix.obj \
+      $(OBJ_DIR)\genc.obj \
+      $(OBJ_DIR)\gencobj.obj \
+      $(OBJ_DIR)\genobj32.obj \
+      $(OBJ_DIR)\genjava.obj \
+      $(OBJ_DIR)\genhrb.obj \
+      $(OBJ_DIR)\expropta.obj \
+      $(OBJ_DIR)\exproptb.obj \
+      $(OBJ_DIR)\exproptc.obj \
+      $(OBJ_DIR)\hbfunchk.obj \
+      $(PP_LIB)
+!endif
 
 #
 # HBRUN.EXE rules
@@ -752,7 +792,11 @@ $(HARBOUR_EXE) : $(HARBOUR_EXE_OBJS)
    $(ECHO) -e$(HARBOUR_EXE) >> make.tmp
    $(ECHO) $(OBJ_DIR)\harbour.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\harboury.obj >> make.tmp
+!if $(HB_LEX)==SIMPLEX
+   $(ECHO) $(OBJ_DIR)\hbslex.obj >> make.tmp
+!else
    $(ECHO) $(OBJ_DIR)\harbourl.obj >> make.tmp
+!endif
    $(ECHO) $(OBJ_DIR)\cmdcheck.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\hbusage.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\hbident.obj >> make.tmp
@@ -775,19 +819,33 @@ $(HARBOUR_EXE) : $(HARBOUR_EXE_OBJS)
 $(OBJ_DIR)\harbour.obj : $(COMPILER_DIR)\harbour.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
+!if $(HB_LEX)==SIMPLEX
+$(OBJ_DIR)\harboury.c : $(COMPILER_DIR)\harbour.sly
+   bison -d $** -o$@
+!else
 $(OBJ_DIR)\harboury.c : $(COMPILER_DIR)\harbour.y
    bison -d $** -o$@
+!endif
 
+!if $(HB_LEX)==SIMPLEX
+   # Flex not needed in SimpLex build.
+!else
 $(OBJ_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
    flex  -i -8 -o$@ $**
+!endif
 
 $(OBJ_DIR)\harboury.obj : $(OBJ_DIR)\harboury.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
+!if $(HB_LEX)==SIMPLEX
+$(OBJ_DIR)\hbslex.obj : $(COMPILER_DIR)\hbslex.c
+   $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -o$@ $**
+!else
 $(OBJ_DIR)\harbourl.obj : $(OBJ_DIR)\harbourl.c
-   -$(ECHO) > $(OBJ_DIR)\unistd.h
+   -$(ECHO)  > $(OBJ_DIR)\unistd.h
    $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -o$@ $**
    -$(DEL) $(OBJ_DIR)\unistd.h
+!endif
 
 $(OBJ_DIR)\cmdcheck.obj : $(COMPILER_DIR)\cmdcheck.c
    $(CC) $(CLIBFLAGS) -o$@ $**
@@ -1991,18 +2049,28 @@ $(OBJ_DIR)\msgsriso.obj : $(LANG_DIR)\msgsriso.c
 $(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
    bison -p hb_comp -d $** -o$@
 
+!if $(HB_LEX)==SIMPLEX
+   # Flex not needed in SimpLex build.
+!else
 $(OBJ_DIR)\macrol.c : $(MACRO_DIR)\macro.l
-   flex -Phb_comp -C -i -8 -o$@ $**
+   flex -Phb_comp -i -8 -o$@ $**
+!endif
 
 $(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(MACRO_LIB) $(ARFLAGS) -+$@,,
 
+!if $(HB_LEX)==SIMPLEX
+$(OBJ_DIR)\macroslx.obj : $(MACRO_DIR)\macroslx.c
+   $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -o$@ $**
+   tlib $(MACRO_LIB) $(ARFLAGS) -+$@,,
+!else
 $(OBJ_DIR)\macrol.obj : $(OBJ_DIR)\macrol.c
-   -$(ECHO) > $(OBJ_DIR)\unistd.h
+   -$(ECHO)  > $(OBJ_DIR)\unistd.h
    $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -o$@ $**
    -$(DEL) $(OBJ_DIR)\unistd.h
    tlib $(MACRO_LIB) $(ARFLAGS) -+$@,,
+!endif
 
 $(OBJ_DIR)\macroa.obj : $(MACRO_DIR)\macroa.c
    $(CC) $(CLIBFLAGS) -o$@ $**
@@ -2549,4 +2617,6 @@ $(OBJ_DIR)\prb_stak.c : $(HBMAKE_DIR)\prb_stak.prg
 
 $(OBJ_DIR)\prb_stak.obj : $(OBJ_DIR)\prb_stak.c
    $(CC) $(CLIBFLAGS) -o$@ $**
+
+
 
