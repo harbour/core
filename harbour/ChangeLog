@@ -1,6 +1,7 @@
 19990612-11:22 CET Patrick Mast
   * Release of Build #26
-  * version.h, updated buld version
+  * version.h, updated build version
+  + Included WhatsNew.txt
 
 19990612-08:30 CET Jose Lalin / Eddie Runia
    * tests/working/testcgi.prg
