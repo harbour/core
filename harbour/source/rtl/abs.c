@@ -74,6 +74,6 @@ HB_FUNC( ABS )
       }
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1089, NULL, "ABS" );
+      hb_errRT_BASE_SubstR( EG_ARG, 1089, NULL, "ABS", 1, hb_paramError( 1 ) );
 }
 

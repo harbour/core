@@ -67,7 +67,7 @@ HB_FUNC( MOD )
       }
       else
       {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ZERODIV, 1341, NULL, "%" );
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ZERODIV, 1341, NULL, "%", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
 
          if( pResult )
          {
@@ -76,13 +76,13 @@ HB_FUNC( MOD )
             hb_itemRelease( pResult );
 
             hb_itemGetNLen( pNumber, NULL, &iDec );
-  
+
             hb_retndlen( dNumber, 0, iDec );
          }
       }
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1085, NULL, "%" );
+      hb_errRT_BASE_SubstR( EG_ARG, 1085, NULL, "%", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
 }
 
 /*

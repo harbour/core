@@ -1647,7 +1647,7 @@ HB_FUNC( DBSELECTAREA )
       {
          if( ( uiNewArea = hb_rddSelect( szAlias ) ) == 0 )
          {
-            hb_errRT_BASE( EG_NOALIAS, EDBCMD_NOALIAS, NULL, szAlias );
+            hb_errRT_BASE( EG_NOALIAS, EDBCMD_NOALIAS, NULL, szAlias, 0 );
             return;
          }
       }
@@ -2809,7 +2809,7 @@ HB_FUNC( DBSETRELATION )
          szAlias = hb_parc( 1 );
          if( ( uiChildArea = hb_rddSelect( szAlias ) ) == 0 )
          {
-            hb_errRT_BASE( EG_NOALIAS, EDBCMD_NOALIAS, NULL, szAlias );
+            hb_errRT_BASE( EG_NOALIAS, EDBCMD_NOALIAS, NULL, szAlias, 0 );
             return;
          }
       }
@@ -2826,7 +2826,7 @@ HB_FUNC( DBSETRELATION )
       }
       if( !s_pArea )
       {
-         hb_errRT_BASE( EG_NOALIAS, EDBCMD_NOALIAS, NULL, szAlias );
+         hb_errRT_BASE( EG_NOALIAS, EDBCMD_NOALIAS, NULL, szAlias, 0 );
          return;
       }
 

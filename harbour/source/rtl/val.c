@@ -109,12 +109,12 @@ HB_FUNC( VAL )
       else
       {
          /* NOTE: Kludge Warning! This condition:
-                  "|| ( iDec == 1 && szText[ 0 ] == '-' && dValue != 0.0 )" 
-                  may not be the generic way to handle the width of this "-.1" 
+                  "|| ( iDec == 1 && szText[ 0 ] == '-' && dValue != 0.0 )"
+                  may not be the generic way to handle the width of this "-.1"
                   string. I could not find a matching case which
                   fails for the same reason, nor a better way to handle it.
-                  The problem is that in this case only, the width is 
-                  calculated upon conditions which can only be discovered by 
+                  The problem is that in this case only, the width is
+                  calculated upon conditions which can only be discovered by
                   parsing the string, but the parsing is made by a lower level
                   generic function. [vszakats] */
 
@@ -122,5 +122,5 @@ HB_FUNC( VAL )
       }
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1098, NULL, "VAL" );
+      hb_errRT_BASE_SubstR( EG_ARG, 1098, NULL, "VAL", 1, hb_paramError( 1 ) );
 }

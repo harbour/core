@@ -45,7 +45,7 @@
 #elif defined(__BORLANDC__)
    #if (__BORLANDC__ == 1328) && defined(__cplusplus)
       /* NOTE: There seem to be a bug in Borland C++ 5.3 C++ mode which prevents
-               the redefinition of matherr, because nor "_exception" neither 
+               the redefinition of matherr, because nor "_exception" neither
                "exception" will work. [vszakats] */
    #else
       #define HB_MATH_HANDLER
@@ -117,7 +117,7 @@ HB_FUNC( EXP )
 
       if( s_internal_math_error )
       {
-         hb_errRT_BASE_SubstR( s_internal_math_error, 1096, NULL, "EXP" );
+         hb_errRT_BASE_SubstR( s_internal_math_error, 1096, NULL, "EXP", 1, hb_paramError( 1 ) );
          s_internal_math_error = 0;
       }
       else
@@ -127,7 +127,7 @@ HB_FUNC( EXP )
 #endif
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1096, NULL, "EXP" );
+      hb_errRT_BASE_SubstR( EG_ARG, 1096, NULL, "EXP", 1, hb_paramError( 1 ) );
 }
 
 HB_FUNC( LOG )
@@ -139,7 +139,7 @@ HB_FUNC( LOG )
 
       if( s_internal_math_error )
       {
-         hb_errRT_BASE_SubstR( s_internal_math_error, 1095, NULL, "LOG" );
+         hb_errRT_BASE_SubstR( s_internal_math_error, 1095, NULL, "LOG", 1, hb_paramError( 1 ) );
          s_internal_math_error = 0;
       }
       else
@@ -155,7 +155,7 @@ HB_FUNC( LOG )
 #endif
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1095, NULL, "LOG" );
+      hb_errRT_BASE_SubstR( EG_ARG, 1095, NULL, "LOG", 1, hb_paramError( 1 ) );
 }
 
 HB_FUNC( SQRT )
@@ -167,7 +167,7 @@ HB_FUNC( SQRT )
 
       if( s_internal_math_error )
       {
-         hb_errRT_BASE_SubstR( s_internal_math_error, 1097, NULL, "SQRT" );
+         hb_errRT_BASE_SubstR( s_internal_math_error, 1097, NULL, "SQRT", 1, hb_paramError( 1 ) );
          s_internal_math_error = 0;
       }
       else
@@ -179,6 +179,6 @@ HB_FUNC( SQRT )
 #endif
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1097, NULL, "SQRT" );
+      hb_errRT_BASE_SubstR( EG_ARG, 1097, NULL, "SQRT", 1, hb_paramError( 1 ) );
 }
 

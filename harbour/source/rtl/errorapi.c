@@ -78,7 +78,7 @@ static USHORT  s_uiErrorDOS = 0; /* The value of DOSERROR() */
 extern HB_FUNC( ERRORNEW );
 
 /* NOTE: This is called via its symbol name, so we should make sure
-         that it gets linked. WARNING ! DON'T make this function static. 
+         that it gets linked. WARNING ! DON'T make this function static.
          [vszakats] */
 void hb_errForceLink()
 {
@@ -100,8 +100,8 @@ HB_FUNC( ERRORBLOCK )
    HB_ITEM oldError;
    PHB_ITEM pNewErrorBlock = hb_param( 1, HB_IT_BLOCK );
 
-   /* initialize an item 
-    * NOTE: hb_itemClear() cannot be used to initialize an item because 
+   /* initialize an item
+    * NOTE: hb_itemClear() cannot be used to initialize an item because
     * memory occupied by the item can contain garbage bits
    */
    hb_itemInit( &oldError );
@@ -144,8 +144,8 @@ void hb_errInit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errInit()"));
 
-   /* initialize an item 
-    * NOTE: hb_itemClear() cannot be used to initialize an item because 
+   /* initialize an item
+    * NOTE: hb_itemClear() cannot be used to initialize an item because
     * memory occupied by the item can contain garbage bits
    */
    s_errorBlock = hb_itemNew( NULL );
@@ -714,7 +714,9 @@ HB_FUNC( __ERRRT_BASE )
    hb_errRT_BASE( ( ULONG ) hb_parnl( 1 ),
                   ( ULONG ) hb_parnl( 2 ),
                   ISCHAR( 3 ) ? hb_parc( 3 ) : NULL,
-                  hb_parc( 4 ) );
+                  hb_parc( 4 ),
+                  ( USHORT ) hb_parni( 5 ),
+                  hb_param( 6, HB_IT_ANY ) );
 }
 
 HB_FUNC( __ERRRT_SBASE )
@@ -722,15 +724,101 @@ HB_FUNC( __ERRRT_SBASE )
    hb_errRT_BASE_SubstR( ( ULONG ) hb_parnl( 1 ),
                          ( ULONG ) hb_parnl( 2 ),
                          ISCHAR( 3 ) ? hb_parc( 3 ) : NULL,
-                         hb_parc( 4 ) );
+                         hb_parc( 4 ),
+                         ( USHORT ) hb_parni( 5 ),
+                         hb_param( 6, HB_IT_ANY ) );
 }
 
-USHORT hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
+USHORT hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiArgCount, ... )
 {
    USHORT uiAction;
-   PHB_ITEM pError =
-      hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+   PHB_ITEM pError;
 
+   PHB_ITEM pArray, pArg;
+   va_list va;
+   USHORT uiArgPos;
+   BOOL bRelease = TRUE;
+
+   /* Build the array from the passed arguments. */
+   va_start( va, uiArgCount );
+   if( ( ulSubCode == 1001 || ulSubCode == 1004 || ulSubCode == 1005 ) && uiArgCount == 1 )
+   {
+      pArray = va_arg( va, PHB_ITEM );
+
+      if( HB_IS_ARRAY( pArray ) )
+      {
+         bRelease = FALSE;
+      }
+      else
+      {
+         pArg = pArray;
+         pArray = hb_itemArrayNew( 1 );
+         hb_itemArrayPut( pArray, 1, pArg );
+      }
+   }
+   else
+   {
+      pArray = hb_itemArrayNew( uiArgCount );
+
+      for( uiArgPos = 1; uiArgPos <= uiArgCount; uiArgPos++ )
+      {
+         hb_itemArrayPut( pArray, uiArgPos, va_arg( va, PHB_ITEM ) );
+      }
+   }
+   va_end( va );
+
+   pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+
+   /* Assign the new array to the object data item. */
+   hb_vmPushSymbol( hb_dynsymGet( "_ARGS" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmPush( pArray );
+   hb_vmDo( 1 );
+
+   /* Release the Array. */
+   if( bRelease )
+   {
+      hb_itemRelease( pArray );
+   }
+
+   /* Ok, launch... */
+   uiAction = hb_errLaunch( pError );
+
+   /* Release. */
+   hb_errRelease( pError );
+
+   return uiAction;
+}
+
+USHORT hb_errRT_BASE_Ext1( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags, USHORT uiArgCount, ... )
+{
+   USHORT uiAction;
+   PHB_ITEM pError;
+
+   PHB_ITEM pArray, pArg;
+   va_list va;
+   USHORT uiArgPos;
+
+   pArray = hb_itemArrayNew( uiArgCount );
+
+   /* Build the array from the passed arguments. */
+   va_start( va, uiArgCount );
+   for( uiArgPos = 1; uiArgPos <= uiArgCount; uiArgPos++ )
+      hb_itemArrayPut( pArray, uiArgPos, va_arg( va, PHB_ITEM ) );
+   va_end( va );
+
+   pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, uiOsCode, uiFlags );
+
+   /* Assign the new array to the object data item. */
+   hb_vmPushSymbol( hb_dynsymGet( "_ARGS" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmPush( pArray );
+   hb_vmDo( 1 );
+
+   /* Release the Array. */
+   hb_itemRelease( pArray );
+
+   /* Ok, launch... */
    uiAction = hb_errLaunch( pError );
 
    hb_errRelease( pError );
@@ -738,25 +826,35 @@ USHORT hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, ch
    return uiAction;
 }
 
-USHORT hb_errRT_BASE_Ext1( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags )
-{
-   USHORT uiAction;
-   PHB_ITEM pError =
-      hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, uiOsCode, uiFlags );
-
-   uiAction = hb_errLaunch( pError );
-
-   hb_errRelease( pError );
-
-   return uiAction;
-}
-
-PHB_ITEM hb_errRT_BASE_Subst( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
+PHB_ITEM hb_errRT_BASE_Subst( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiArgCount, ... )
 {
    PHB_ITEM pRetVal;
-   PHB_ITEM pError =
-      hb_errRT_New_Subst( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+   PHB_ITEM pError;
 
+   PHB_ITEM pArray;
+   va_list va;
+   USHORT uiArgPos;
+
+   pArray = hb_itemArrayNew( uiArgCount );
+
+   /* Build the array from the passed arguments. */
+   va_start( va, uiArgCount );
+   for( uiArgPos = 1; uiArgPos <= uiArgCount; uiArgPos++ )
+      hb_itemArrayPut( pArray, uiArgPos, va_arg( va, PHB_ITEM ) );
+   va_end( va );
+
+   pError = hb_errRT_New_Subst( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+
+   /* Assign the new array to the object data item. */
+   hb_vmPushSymbol( hb_dynsymGet( "_ARGS" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmPush( pArray );
+   hb_vmDo( 1 );
+
+   /* Release the Array. */
+   hb_itemRelease( pArray );
+
+   /* Ok, launch... */
    pRetVal = hb_errLaunchSubst( pError );
 
    hb_errRelease( pError );
@@ -764,9 +862,58 @@ PHB_ITEM hb_errRT_BASE_Subst( ULONG ulGenCode, ULONG ulSubCode, char * szDescrip
    return pRetVal;
 }
 
-void hb_errRT_BASE_SubstR( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
+void hb_errRT_BASE_SubstR( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiArgCount, ... )
 {
-   PHB_ITEM pError = hb_errRT_New_Subst( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+   PHB_ITEM pError;
+
+   PHB_ITEM pArray, pArg;
+   va_list va;
+   USHORT uiArgPos;
+   BOOL bRelease = TRUE;
+
+   /* Build the array from the passed arguments. */
+   va_start( va, uiArgCount );
+   if( ( ulSubCode == 1001 || ulSubCode == 1004 || ulSubCode == 1005 ) && uiArgCount == 1 )
+   {
+      pArray = va_arg( va, PHB_ITEM );
+
+      if( HB_IS_ARRAY( pArray ) )
+      {
+         bRelease = FALSE;
+      }
+      else
+      {
+         pArg = pArray;
+         pArray = hb_itemArrayNew( 1 );
+         hb_itemArrayPut( pArray, 1, pArg );
+      }
+   }
+   else
+   {
+      pArray = hb_itemArrayNew( uiArgCount );
+
+      for( uiArgPos = 1; uiArgPos <= uiArgCount; uiArgPos++ )
+      {
+         hb_itemArrayPut( pArray, uiArgPos, va_arg( va, PHB_ITEM ) );
+      }
+   }
+   va_end( va );
+
+   pError = hb_errRT_New_Subst( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+
+   /* Assign the new array to the object data item. */
+   hb_vmPushSymbol( hb_dynsymGet( "_ARGS" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmPush( pArray );
+   hb_vmDo( 1 );
+
+   /* Release the Array. */
+   if( bRelease )
+   {
+      hb_itemRelease( pArray );
+   }
+
+   /* Ok, launch... */
    hb_itemRelease( hb_itemReturn( hb_errLaunchSubst( pError ) ) );
    hb_errRelease( pError );
 }

@@ -1,3 +1,89 @@
+2001-03-22 11:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
+
+   * hb_slex.vc
+     * Minor corrections.
+
+   * include/hbapi.h
+     + extern PHB_ITEM hb_paramError( int iParam ); /* Returns either the generic parameter or a NIL item if param not provided */
+     + extern PHB_ITEM hb_arrayFromStack( USHORT uiLen ); /* Creates and returns an Array of n Elements from the Eval Stack - Does NOT pop the items. */
+     + extern PHB_ITEM hb_arrayFromParams( void ); /* Creates and returns an Array of current Generic Parameters. */
+
+   * include/hbapierr.h
+     * extern USHORT   hb_errRT_BASE           ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiArgCount, ... );
+     * extern USHORT   hb_errRT_BASE_Ext1      ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags, USHORT uiArgCount, ... );
+     * extern PHB_ITEM hb_errRT_BASE_Subst     ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiArgCount, ... );
+     * extern void     hb_errRT_BASE_SubstR    ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiArgCount, ... );
+       + Added support for variable number of Error Arguments.
+
+   * source/rtl/errorapi.c
+     * hb_errRT_BASE           ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiArgCount, ... );
+     * hb_errRT_BASE_Ext1      ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags, USHORT uiArgCount, ... );
+     * hb_errRT_BASE_Subst     ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiArgCount, ... );
+     * hb_errRT_BASE_SubstR    ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiArgCount, ... );
+       + Added support for variable number of Error Arguments.
+
+   * source/vm/arrays.c
+     + PHB_ITEM hb_arrayFromStack( USHORT uiLen )
+     + PHB_ITEM hb_arrayFromParams( void )
+
+   * source/vm/extend.c
+      + PHB_ITEM hb_paramError( int iParam )
+
+   * source/rdd/dbcmd.c
+     * Added the Error Arguments as parameters to hb_errRT_BASE*().
+
+   * source/rtl/abs.c
+   * source/rtl/at.c
+   * source/rtl/chrasc.c
+   * source/rtl/copyfile.c
+   * source/rtl/datec.c
+   * source/rtl/dateshb.c
+   * source/rtl/diskspac.c
+   * source/rtl/disksphb.c
+   * source/rtl/do.c
+   * source/rtl/left.c
+   * source/rtl/len.c
+   * source/rtl/math.c
+   * source/rtl/minmax.c
+   * source/rtl/mod.c
+   * source/rtl/philes.c
+   * source/rtl/philesx.c
+   * source/rtl/replic.c
+   * source/rtl/round.c
+   * source/rtl/set.c
+   * source/rtl/space.c
+   * source/rtl/str.c
+   * source/rtl/strcase.c
+   * source/rtl/strtran.c
+   * source/rtl/strzero.c
+   * source/rtl/substr.c
+   * source/rtl/transfrm.c
+   * source/rtl/trim.c
+   * source/rtl/type.c
+   * source/rtl/val.c
+   * source/rtl/word.c
+     * Added the Error Arguments as parameters to hb_errRT_BASE*().
+
+   * source/vm/arrayshb.c
+   * source/vm/eval.c
+   * source/vm/hvm.c
+   * source/vm/macro.c
+   * source/vm/memvars.c
+   * source/vm/runner.c
+     * Added the Error Arguments as parameters to hb_errRT_BASE*().
+
+   * source/vm/classes.c
+     + Added 0 arguments (J.F. can you please decide what should be the arguments! )
+
+   /* HBTEST now reports 173 failures ( down from 376 ) many of the failures are justified.
+
+      I have tested this as much as I could, but since it invloved lots of "Cust & Pasets" more testing should be done.
+
+      It would be great if someone could review each of HBTEST Reported Failures on a one-by-one basis.
+
+     BTW, HBTEST reports 1 UN-RELEASED Memory Block (from before my changes)!
+   */
+
 2001-21-03 23:10 GMT+1 JFL (Mafact) <jfl@mafact.com>
     *source/rdd/dbcmd.c
     *source/rdd/dbf1.c

@@ -78,6 +78,6 @@ HB_FUNC( STR )
          hb_retc( "" );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "STR" );
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "STR", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
 }
 

@@ -64,7 +64,7 @@ HB_FUNC( INT )
       hb_retndlen( dNumber >= 0 ? floor( dNumber ) : ceil( dNumber ), iWidth, 0 );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1090, NULL, "INT" );
+      hb_errRT_BASE_SubstR( EG_ARG, 1090, NULL, "INT", 1, hb_paramError( 1 ) );
 }
 
 double hb_numRound( double dResult, int iDec )
@@ -116,5 +116,5 @@ HB_FUNC( ROUND )
       hb_retndlen( hb_numRound( hb_parnd( 1 ), iDec ), 0, HB_MAX( iDec, 0 ) );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1094, NULL, "ROUND" );
+      hb_errRT_BASE_SubstR( EG_ARG, 1094, NULL, "ROUND", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
 }

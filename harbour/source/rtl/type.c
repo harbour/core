@@ -43,6 +43,6 @@ HB_FUNC( TYPE )
    if( pItem )
       hb_retc( hb_macroGetType( pItem ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1121, NULL, "TYPE" );
+      hb_errRT_BASE_SubstR( EG_ARG, 1121, NULL, "TYPE", 1, hb_paramError( 1 ) );
 }
 

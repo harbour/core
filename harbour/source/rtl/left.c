@@ -55,6 +55,6 @@ HB_FUNC( LEFT )
       hb_retclen( hb_itemGetCPtr( pText ), lLen );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1124, NULL, "LEFT" );
+      hb_errRT_BASE_SubstR( EG_ARG, 1124, NULL, "LEFT", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
 }
 

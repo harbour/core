@@ -259,6 +259,7 @@ extern double   hb_parnd( int iParam, ... ); /* retrieve a numeric parameter as 
 extern int      hb_parni( int iParam, ... ); /* retrieve a numeric parameter as a integer */
 extern long     hb_parnl( int iParam, ... ); /* retrieve a numeric parameter as a long */
 extern PHB_ITEM hb_param( int iParam, int iMask ); /* retrieve a generic parameter */
+extern PHB_ITEM hb_paramError( int iParam ); /* Returns either the generic parameter or a NIL item if param not provided */
 
 #ifdef HB_API_MACROS
 
@@ -362,6 +363,8 @@ extern BOOL     hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG * pulStart
 extern BOOL     hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart, ULONG * pulCount, ULONG * pulTarget ); /* copy items from one array to another */
 extern PHB_ITEM hb_arrayClone( PHB_ITEM pArray ); /* returns a duplicate of an existing array, including all nested items */
 extern BOOL     hb_arraySort( PHB_ITEM pArray, ULONG * pulStart, ULONG * pulCount, PHB_ITEM pBlock ); /* sorts an array item */
+extern PHB_ITEM hb_arrayFromStack( USHORT uiLen ); /* Creates and returns an Array of n Elements from the Eval Stack - Does NOT pop the items. */
+extern PHB_ITEM hb_arrayFromParams( void ); /* Creates and returns an Array of current Generic Parameters. */
 
 /* string management */
 

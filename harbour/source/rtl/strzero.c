@@ -110,9 +110,9 @@ HB_FUNC( STRZERO )
          /* NOTE: In CA-Cl*pper STRZERO() is written in Clipper, and will call
                   STR() to do the job, the error (if any) will also be thrown
                   by STR().  [vszakats] */
-         hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "STR" );
+         hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "STR", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
 #else
-         hb_errRT_BASE_SubstR( EG_ARG, 9999, NULL, "STRZERO" );
+         hb_errRT_BASE_SubstR( EG_ARG, 9999, NULL, "STRZERO", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
 #endif
    }
 }

@@ -45,5 +45,5 @@ HB_FUNC( WORD )
    if( ISNUM( 1 ) )
       hb_retni( hb_parni( 1 ) );
    else
-      hb_errRT_BASE( EG_ARG, 1091, NULL, "WORD" );
+      hb_errRT_BASE( EG_ARG, 1091, NULL, "WORD", 1, hb_paramError( 1 ) );
 }

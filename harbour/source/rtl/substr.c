@@ -73,7 +73,7 @@ HB_FUNC( SUBSTR )
             }
             else
             {
-               hb_errRT_BASE_SubstR( EG_ARG, 1110, NULL, "SUBSTR" );
+               hb_errRT_BASE_SubstR( EG_ARG, 1110, NULL, "SUBSTR", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
                /* NOTE: Exit from inside [vszakats] */
                return;
             }
@@ -90,5 +90,5 @@ HB_FUNC( SUBSTR )
          hb_retc( "" );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1110, NULL, "SUBSTR" );
+      hb_errRT_BASE_SubstR( EG_ARG, 1110, NULL, "SUBSTR", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
 }

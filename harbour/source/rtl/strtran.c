@@ -173,9 +173,9 @@ HB_FUNC( STRTRAN )
             hb_retclen( szText, ulText );
       }
       else
-         hb_errRT_BASE_SubstR( EG_ARG, 1126, NULL, "STRTRAN" ); /* NOTE: Undocumented but existing Clipper Run-time error [vszakats] */
+         hb_errRT_BASE_SubstR( EG_ARG, 1126, NULL, "STRTRAN", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) ); /* NOTE: Undocumented but existing Clipper Run-time error [vszakats] */
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1126, NULL, "STRTRAN" ); /* NOTE: Undocumented but existing Clipper Run-time error [vszakats] */
+      hb_errRT_BASE_SubstR( EG_ARG, 1126, NULL, "STRTRAN", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) ); /* NOTE: Undocumented but existing Clipper Run-time error [vszakats] */
 }
 

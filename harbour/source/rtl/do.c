@@ -60,7 +60,11 @@ HB_FUNC( DO )
          hb_vmDo( uiPCount - 1 );
       }
       else
-         hb_errRT_BASE( EG_NOFUNC, 1001, NULL, hb_itemGetCPtr( pItem ) );
+      {
+         PHB_ITEM pArgsArray = hb_arrayFromParams();
+         hb_errRT_BASE( EG_NOFUNC, 1001, NULL, hb_itemGetCPtr( pItem ), 1, pArgsArray );
+         hb_itemRelease( pArgsArray );
+      }
    }
    else if( HB_IS_BLOCK( pItem ) )
    {
@@ -85,6 +89,10 @@ HB_FUNC( DO )
       hb_vmDo( uiPCount - 1 );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, "DO" );
+   {
+      PHB_ITEM pArgsArray = hb_arrayFromParams();
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, "DO", 1, pArgsArray );
+      hb_itemRelease( pArgsArray );
+   }
 }
 

@@ -89,7 +89,7 @@ HB_FUNC( TRANSFORM )
       /* ======================================================= */
       /* Analyze picture functions                               */
       /* ======================================================= */
-     
+
       uiPicFlags = 0;
 
       /* If an "@" char is at the first pos, we have picture function */
@@ -97,15 +97,15 @@ HB_FUNC( TRANSFORM )
       if( *szPic == '@' )
       {
          BOOL bDone = FALSE;
-      
+
          /* Skip the "@" char */
 
          szPic++;
          ulPicLen--;
-      
+
          /* Go through all function chars, until the end of the picture string
             or any whitespace found. */
-      
+
          while( ulPicLen && ! bDone )
          {
             switch( toupper( *szPic ) )
@@ -141,16 +141,16 @@ HB_FUNC( TRANSFORM )
                   break;
                case 'S':
                   uiPicFlags |= PF_WIDTH;
-      
+
                   ulParamS = 0;
                   while( ulPicLen > 1 && *( szPic + 1 ) >= '0' && *( szPic + 1 ) <= '9' )
                   {
                      szPic++;
                      ulPicLen--;
-      
+
                      ulParamS = ( ulParamS * 10 ) + ( ( ULONG ) ( *szPic - '0' ) );
                   }
-      
+
                   break;
                case 'X':
                   uiPicFlags |= PF_DEBIT;
@@ -159,7 +159,7 @@ HB_FUNC( TRANSFORM )
                   uiPicFlags |= PF_EMPTY;
                   break;
             }
-      
+
             szPic++;
             ulPicLen--;
          }
@@ -297,19 +297,19 @@ HB_FUNC( TRANSFORM )
          int      iDec;                               /* Number of decimals       */
          ULONG    i;
          int      iCount = 0;
-      
+
          char *   szStr;
          char     cPic;
-      
+
          PHB_ITEM pNumber;
          PHB_ITEM pWidth;
          PHB_ITEM pDec;
-      
+
          BOOL     bFound = FALSE;
 
          hb_itemGetNLen( pValue, &iOrigWidth, &iOrigDec );
 
-         /* TODO: maybe replace this 16 with something else */      
+         /* TODO: maybe replace this 16 with something else */
          szResult = ( char * ) hb_xgrab( ulPicLen + 16 );   /* Grab enough */
          *szResult = '\0';
 
@@ -322,7 +322,7 @@ HB_FUNC( TRANSFORM )
                iCount++;
          }
          iWidth = iCount;
-      
+
          if( bFound )                                 /* Did we find a dot        */
          {
             iDec = 0;
@@ -341,43 +341,43 @@ HB_FUNC( TRANSFORM )
          }
          else
             iDec = 0;
-      
+
          if( ( uiPicFlags & ( PF_DEBIT + PF_PARNEG ) ) && dValue < 0 )
             dPush = -dValue;                           /* Always push absolute val */
          else
             dPush = dValue;
-      
+
          /* Don't empty the result if the number is not zero */
          if( dPush != 0 && ( uiPicFlags & PF_EMPTY ) )
             uiPicFlags &= ~uiPicFlags;
-      
+
          if( iWidth == 0 )                             /* Width calculated ??      */
          {
             iWidth = iOrigWidth;                       /* Push original width      */
             iDec = iOrigDec;                           /* Push original decimals   */
          }
-      
+
          pNumber = hb_itemPutNDLen( NULL, dPush, -1, iDec );
          pWidth = hb_itemPutNI( NULL, iWidth );
          pDec = hb_itemPutNI( NULL, iDec );
-      
+
          szStr = hb_itemStr( pNumber, pWidth, pDec );
-      
+
          hb_itemRelease( pNumber );
          hb_itemRelease( pWidth );
          hb_itemRelease( pDec );
-      
+
          if( szStr )
          {
             iCount = 0;
-      
+
             /* Pad with Zero's */
             if( uiPicFlags & PF_PADL )
             {
                for( i = 0; szStr[ i ] == ' ' && i < ( ULONG ) iWidth; i++ )
                   szStr[ i ] = byParamL;
             }
-      
+
             for( i = 0; i < ulPicLen; i++ )
             {
                cPic = szPic[ i ];
@@ -423,7 +423,7 @@ HB_FUNC( TRANSFORM )
                else
                   szResult[ i ] = cPic;
             }
-      
+
             if( ( uiPicFlags & PF_PARNEG ) && dValue < 0 )
             {
                if( isdigit( ( int ) *szResult ) )          /* Overflow */
@@ -437,24 +437,24 @@ HB_FUNC( TRANSFORM )
                *szResult       = '(';
                szResult[ i++ ] = ')';
             }
-      
+
             if( ( uiPicFlags & PF_CREDIT ) && dValue >= 0 )
             {
                szResult[ i++ ] = ' ';
                szResult[ i++ ] = 'C';
                szResult[ i++ ] = 'R';
             }
-      
+
             if( ( uiPicFlags & PF_DEBIT ) && dValue < 0 )
             {
                szResult[ i++ ] = ' ';
                szResult[ i++ ] = 'D';
                szResult[ i++ ] = 'B';
             }
-      
+
             ulResultPos = i;
             szResult[ i ] = '\0';
-      
+
             hb_xfree( szStr );
          }
          else
@@ -606,6 +606,6 @@ HB_FUNC( TRANSFORM )
    /* If there was any parameter error, launch a runtime error */
 
    if( bError )
-      hb_errRT_BASE_SubstR( EG_ARG, 1122, NULL, "TRANSFORM" );
+      hb_errRT_BASE_SubstR( EG_ARG, 1122, NULL, "TRANSFORM", 2, pValue, hb_paramError( 2 ) );
 }
 

@@ -53,7 +53,7 @@ static BOOL hb_fsCopy( char * szSource, char * szDest )
 
    while( ( fhndSource = hb_fsOpen( ( BYTE * ) szSource, FO_READ | FO_SHARED | FO_PRIVATE ) ) == FS_ERROR )
    {
-      USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 2012, NULL, szSource, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
+      USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 2012, NULL, szSource, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY, 0 );
 
       if( uiAction == E_DEFAULT || uiAction == E_BREAK )
          break;
@@ -65,7 +65,7 @@ static BOOL hb_fsCopy( char * szSource, char * szDest )
 
       while( ( fhndDest = hb_fsCreate( ( BYTE * ) szDest, FC_NORMAL ) ) == FS_ERROR )
       {
-         USHORT uiAction = hb_errRT_BASE_Ext1( EG_CREATE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
+         USHORT uiAction = hb_errRT_BASE_Ext1( EG_CREATE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY, 0 );
 
          if( uiAction == E_DEFAULT || uiAction == E_BREAK )
             break;
@@ -88,7 +88,7 @@ static BOOL hb_fsCopy( char * szSource, char * szDest )
          {
             while( hb_fsWrite( fhndDest, buffer, usRead ) != usRead )
             {
-               USHORT uiAction = hb_errRT_BASE_Ext1( EG_WRITE, 2016, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
+               USHORT uiAction = hb_errRT_BASE_Ext1( EG_WRITE, 2016, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY, 0 );
 
                if( uiAction == E_DEFAULT || uiAction == E_BREAK )
                {
@@ -124,5 +124,5 @@ HB_FUNC( __COPYFILE )
          hb_retl( FALSE );
    }
    else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, "__COPYFILE" ); /* NOTE: Undocumented but existing Clipper Run-time error */
+      hb_errRT_BASE( EG_ARG, 2010, NULL, "__COPYFILE", 2, hb_paramError( 1 ), hb_paramError( 2 ) ); /* NOTE: Undocumented but existing Clipper Run-time error */
 }

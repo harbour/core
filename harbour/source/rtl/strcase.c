@@ -97,7 +97,7 @@ HB_FUNC( LOWER )
       hb_itemFreeC( pszBuffer );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1103, NULL, "LOWER" );
+      hb_errRT_BASE_SubstR( EG_ARG, 1103, NULL, "LOWER", 1, hb_paramError( 1 ) );
 }
 
 /* converts string to upper case */
@@ -115,5 +115,5 @@ HB_FUNC( UPPER )
       hb_itemFreeC( pszBuffer );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1102, NULL, "UPPER" );
+      hb_errRT_BASE_SubstR( EG_ARG, 1102, NULL, "UPPER", 1, hb_paramError( 1 ) );
 }

@@ -66,12 +66,12 @@ HB_FUNC( REPLICATE )
             hb_xfree( szResult );
          }
          else
-            hb_errRT_BASE_SubstR( EG_STROVERFLOW, 1234, NULL, "REPLICATE" );
+            hb_errRT_BASE_SubstR( EG_STROVERFLOW, 1234, NULL, "REPLICATE", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
       }
       else
          hb_retc( "" );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1106, NULL, "REPLICATE" );
+      hb_errRT_BASE_SubstR( EG_ARG, 1106, NULL, "REPLICATE", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
 }
 
