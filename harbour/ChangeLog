@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2002-03-21 20:47 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbfntx/dbfntx1.c
+    ! Minor fix.
+
 2002-03-21 19:22 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * include/hbrddntx.h
   * source/rdd/dbfntx/dbfntx1.c
@@ -20,6 +25,15 @@
   * source/rdd/dbfntx/dbfntx1.c
     * Some cleanup
   * source/vm/runner.c
+    ! Bug fixed, related to execution of separate functions with __hrbDoFu()
+
+2002-03-20 18:57 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/rtl/checkbox.prg
+    * Revert static function to NO static
+
+2002-03-19 12:45 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/set.c
+    + Implemented Dave Pearson's idea for having SET PRINTER
       default to "|lpr" when HB_OS_UNIX is defined.
 
 2002-03-19 12:30 UTC-0500 David G. Holm <dholm@jsd-llc.com>
