@@ -498,7 +498,6 @@ LPAREANODE hb_rddNewAreaNode( LPRDDNODE pRddNode, USHORT uiRddID )
    pCurrArea->pNext = NULL;
 
    SELF_NEW( ( AREAP ) pCurrArea->pArea );
-
    return pCurrArea;
 }
 
@@ -1087,15 +1086,16 @@ HB_FUNC( __DBCONTINUE )
 HB_FUNC( DBCREATE )
 {
    char * szDriver, * szFileName;
+   char cDriverBuffer[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ];
+   char szAlias[ HARBOUR_MAX_RDD_ALIAS_LENGTH + 1 ];
+   char szSavedFileName[ _POSIX_PATH_MAX + 1 ];
    USHORT uiSize, uiLen, uiRddID, uiPrevArea;
    LPRDDNODE pRddNode;
    LPAREANODE pAreaNode;
    DBOPENINFO pInfo;
    PHB_FNAME pFileName;
    PHB_ITEM pStruct, pFieldDesc, pFileExt;
-   char cDriverBuffer[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ];
    BOOL bOpen;
-   char szAlias[ HARBOUR_MAX_RDD_ALIAS_LENGTH + 1 ];
 
    hb_retl( FALSE );
    szFileName = hb_parc( 1 );
@@ -1195,6 +1195,9 @@ HB_FUNC( DBCREATE )
    }
    hb_xfree( pFileName );
 
+   /* Save filename for later use */
+   strcpy( szSavedFileName, szFileName );
+
    /* Fill pInfo structure */
    pInfo.uiArea = s_uiCurrArea;
    pInfo.abName = ( BYTE * ) szFileName;
@@ -1260,10 +1263,6 @@ HB_FUNC( DBCREATE )
    }
    else
    {
-      /* Save filename for later use */
-      szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
-      strncpy( szFileName, ( const char * ) pInfo.abName, _POSIX_PATH_MAX );
-
       /* Close and release WorkArea */
       SELF_CLOSE( ( AREAP ) s_pCurrArea->pArea );
       SELF_RELEASE( ( AREAP ) s_pCurrArea->pArea );
@@ -1274,7 +1273,8 @@ HB_FUNC( DBCREATE )
       ( ( AREAP ) s_pCurrArea->pArea )->lprfsHost = &pRddNode->pTable;
       ( ( AREAP ) s_pCurrArea->pArea )->rddID = uiRddID;
       SELF_NEW( ( AREAP ) s_pCurrArea->pArea );
-      pInfo.abName = ( BYTE * ) szFileName;
+      pInfo.abName = ( BYTE * )  hb_xgrab( _POSIX_PATH_MAX + 1 );
+      strcpy( ( char * ) pInfo.abName, szSavedFileName );
       pInfo.fShared = !hb_set.HB_SET_EXCLUSIVE;
       ( ( AREAP ) s_pCurrArea->pArea )->uiArea = s_uiCurrArea;
       if( SELF_OPEN( ( AREAP ) s_pCurrArea->pArea, &pInfo ) == FAILURE )

@@ -208,12 +208,15 @@ function Main()
    ? 'dbCreate( "NewRdd", { { "First_Name", "C", 20, 0 }, ;'
    ? '                      { "Age",        "N",  3, 0 }, ;'
    ? '                      { "Date",       "D",  8, 0 }, ;'
+   ? '                      { "Rate",       "N",  6, 2 }, ;'
+   ? '                      { "Memo",       "M", 10, 0 }, ;'
    ? '                      { "Student",    "L",  1, 0 } },, .T., "NEWRDD" )'
    ? 'SET CENTURY ON'
    dbCreate( "NewRdd", { { "First_Name", "C", 20, 0 }, ;
                          { "Age",        "N",  3, 0 }, ;
                          { "Date",       "D",  8, 0 }, ;
                          { "Rate",       "N",  6, 2 }, ;
+                         { "Memo",       "M", 10, 0 }, ;
                          { "Student",    "L",  1, 0 } },, .T., "NEWRDD" )
    SET CENTURY ON
    ? "lUpdate:", NEWRDD->( lUpdate() )
@@ -231,6 +234,9 @@ function Main()
    ? "   NEWRDD->AGE := TESTDBF->AGE"
    ? "   NEWRDD->DATE := TESTDBF->HIREDATE"
    ? "   NEWRDD->RATE := Val( Right( LTrim( Str( Seconds() ) ), 5 ) )"
+   ? "   NEWRDD->MEMO := TESTDBF->FIRST + Chr( 13 ) + Chr( 10 ) + ;"
+   ? "                   TESTDBF->LAST + Chr( 13 ) + Chr( 10 ) + ;"
+   ? "                   TESTDBF->STREET"
    ? "   NEWRDD->STUDENT := TESTDBF->MARRIED"
    ? "   TESTDBF->( dbSkip() )"
    ? "end"
@@ -254,6 +260,9 @@ function Main()
       NEWRDD->AGE := TESTDBF->AGE
       NEWRDD->DATE := TESTDBF->HIREDATE
       NEWRDD->RATE := Val( Right( LTrim( Str( Seconds() ) ), 5 ) )
+      NEWRDD->MEMO := TESTDBF->FIRST + Chr( 13 ) + Chr( 10 ) + ;
+                      TESTDBF->LAST + Chr( 13 ) + Chr( 10 ) + ;
+                      TESTDBF->STREET
       NEWRDD->STUDENT := TESTDBF->MARRIED
       TESTDBF->( dbSkip() )
    end

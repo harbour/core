@@ -105,6 +105,11 @@ typedef DBFFIELD * LPDBFFIELD;
 #define DBF_LOCKPOS                          1000000000L
 
 
+/* DBT's */
+
+#define DBT_BLOCKSIZE                                512
+
+
 /*
  *  DBF WORKAREA
  *  ------------
@@ -272,7 +277,7 @@ extern ERRCODE hb_dbfSetFilter( DBFAREAP pArea, LPDBFILTERINFO pFilterInfo );
 extern ERRCODE hb_dbfLock( DBFAREAP pArea, LPDBLOCKINFO pLockInfo );
 extern ERRCODE hb_dbfUnLock( DBFAREAP pArea, ULONG ulRecNo );
 #define hb_dbfCloseMemFile                         NULL
-#define hb_dbfCreateMemFile                        NULL
+extern ERRCODE hb_dbfCreateMemFile( DBFAREAP pArea, LPDBOPENINFO pCreateInfo );
 #define hb_dbfGetValueFile                         NULL
 extern ERRCODE hb_dbfOpenMemFile( DBFAREAP pArea, LPDBOPENINFO pOpenInfo );
 #define hb_dbfPutValueFile                         NULL

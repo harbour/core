@@ -429,6 +429,160 @@ static void hb_dbfGetLockArray( DBFAREAP pArea, PHB_ITEM pItem )
 }
 
 /*
+ * Converts memo block offset into ASCII.
+ */
+static ULONG hb_dbfGetMemoBlock( DBFAREAP pArea, USHORT uiIndex )
+{
+   USHORT uiCount;
+   BYTE bByte;
+   ULONG ulBlock;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dbfGetMemoBlock(%p, %hu)", pArea, uiIndex));
+
+   ulBlock = 0;
+   for( uiCount = 0; uiCount < 10; uiCount++ )
+   {
+      bByte = pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] + uiCount ];
+      if( bByte >= '0' && bByte <= '9' )
+         ulBlock = ulBlock * 10 + ( bByte - '0' );
+   }
+   return ulBlock;
+}
+
+/*
+ * Converts ASCII data into memo block offset.
+ */
+static void hb_dbfPutMemoBlock( DBFAREAP pArea, USHORT uiIndex, ULONG ulBlock )
+{
+   SHORT iCount;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dbfPutMemoBlock(%p, %hu, %lu)", pArea, uiIndex, ulBlock));
+
+   for( iCount = 9; iCount >= 0; iCount-- )
+   {
+      if( ulBlock > 0 )
+      {
+         pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] + iCount ] = ( BYTE )( ulBlock % 10 ) + '0';
+         ulBlock /= 10;
+      }
+      else
+         pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] + iCount ] = ' ';
+   }
+}
+
+/*
+ * Return the size of memo.
+ */
+static ULONG hb_dbfGetMemoLen( DBFAREAP pArea, USHORT uiIndex )
+{
+   ULONG ulBlock;
+   BYTE pBlock[ DBT_BLOCKSIZE ];
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dbfGetMemoLen(%p, %hu)", pArea, uiIndex));
+
+   ulBlock = hb_dbfGetMemoBlock( pArea, uiIndex );
+   if( ulBlock == 0 )
+      return 0;
+   hb_fsSeek( pArea->hMemoFile, ulBlock * DBT_BLOCKSIZE, FS_SET );
+   ulBlock = 0;
+   do
+   {
+      hb_fsRead( pArea->hMemoFile, pBlock, DBT_BLOCKSIZE );
+      uiIndex = 0;
+      while( uiIndex < DBT_BLOCKSIZE && pBlock[ uiIndex ] != 0x1A )
+         uiIndex++;
+      ulBlock += uiIndex;      
+   } while( uiIndex == DBT_BLOCKSIZE );
+   return ulBlock;
+}
+
+/*
+ * Read memo data.
+ */
+static void hb_dbfGetMemo( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+{
+   ULONG ulSize, ulBlock;
+   BYTE * pBuffer;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dbfGetMemo(%p, %hu, %p)", pArea, uiIndex, pItem));
+
+   ulSize = hb_dbfGetMemoLen( pArea, uiIndex );
+   if( ulSize > 0 )
+   {
+      pBuffer = ( BYTE * ) hb_xgrab( ulSize + 1 );
+      ulBlock = hb_dbfGetMemoBlock( pArea, uiIndex );
+      hb_fsSeek( pArea->hMemoFile, ulBlock * DBT_BLOCKSIZE, FS_SET );
+      hb_fsRead( pArea->hMemoFile, pBuffer, ulSize );
+      hb_itemPutCPtr( pItem, ( char * ) pBuffer, ulSize );
+      hb_itemSetCMemo( pItem );
+   }
+}
+
+/*
+ * Write memo data.
+ */
+static void hb_dbfWriteMemo( DBFAREAP pArea, ULONG ulBlock, PHB_ITEM pItem, USHORT uiLen,
+                             ULONG * ulStoredBlock )
+{
+   BYTE pBlock[ DBT_BLOCKSIZE ];
+   BOOL bNewBlock;
+   ULONG ulNewBlock, ulNextBlock;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dbfWriteMemo(%p, %lu, %p, %hu, %p)", pArea, ulBlock, pItem,
+                           ulLen, ulNewBlock));
+
+   memset( pBlock, 0x1A, DBT_BLOCKSIZE );
+   bNewBlock = !( ulBlock && uiLen < DBT_BLOCKSIZE - 1 );
+   if( bNewBlock )
+   {
+      /* Get next block from header */
+      hb_fsSeek( pArea->hMemoFile, 0, FS_SET );
+      hb_fsRead( pArea->hMemoFile, ( BYTE * ) &ulNewBlock, sizeof( ulNewBlock ) );
+      ulNextBlock = ulNewBlock * DBT_BLOCKSIZE;
+      hb_fsSeek( pArea->hMemoFile, ulNextBlock, FS_SET );
+   }
+   else
+   {
+      hb_fsSeek( pArea->hMemoFile, ulBlock * DBT_BLOCKSIZE, FS_SET );
+      ulNewBlock = ulBlock;
+   }
+   * ulStoredBlock = ulNewBlock;
+
+   /* Write memo data and eof mark */
+   hb_fsWrite( pArea->hMemoFile, ( BYTE * ) hb_itemGetCPtr( pItem ), uiLen );
+   hb_fsWrite( pArea->hMemoFile, pBlock, ( DBT_BLOCKSIZE - uiLen % DBT_BLOCKSIZE) );
+
+   if( bNewBlock )
+   {
+      ulNextBlock += uiLen + 1;
+      ulNextBlock += ( DBT_BLOCKSIZE - ulNextBlock % DBT_BLOCKSIZE );
+      ulNextBlock /= DBT_BLOCKSIZE;
+      hb_fsSeek( pArea->hMemoFile, 0, FS_SET );
+      hb_fsWrite( pArea->hMemoFile, ( BYTE * ) &ulNextBlock, sizeof( ulNextBlock ) );
+   }
+}
+
+/*
+ * Assign a value to the specified memo field.
+ */
+static BOOL hb_dbfPutMemo( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+{
+   ULONG ulLen, ulBlock;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dbfPutMemo(%p, %hu, %p)", pArea, uiIndex, pItem));
+   ulLen = hb_itemGetCLen( pItem );
+   if( ulLen > 0 )
+   {
+      ulBlock = hb_dbfGetMemoBlock( pArea, uiIndex );
+      hb_dbfWriteMemo( pArea, ulBlock, pItem, ulLen, &ulBlock );
+   }
+   else
+      ulBlock = 0;
+   hb_dbfPutMemoBlock( pArea, uiIndex, ulBlock );
+   return TRUE;
+}
+
+/*
  * -- DBF METHODS --
  */
 
@@ -832,7 +986,7 @@ ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case HB_IT_MEMO:
-         printf( "\nTODO: hb_dbfReadMemo()\n" );
+         hb_dbfGetMemo( pArea, uiIndex, pItem );
          break;
 
       case HB_IT_DATE:
@@ -893,8 +1047,7 @@ ERRCODE hb_dbfGetVarLen( DBFAREAP pArea, USHORT uiIndex, ULONG * pLength )
       return FAILURE;
 
    if( pArea->fHasMemo )
-      printf( "\nTODO: hb_dbfReadMemoLen()\n" );
-/*      * pLength = hb_dbfReadMemoLen( pArea );*/
+      * pLength = hb_dbfGetMemoLen( pArea, uiIndex );
    else
       * pLength = 0;
 
@@ -1010,8 +1163,12 @@ ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    uiIndex --;
    pField = pArea->lpFields + uiIndex;
    if( pField->uiType == HB_IT_MEMO )
-//      uiError = hb_dbfWriteMemo() ? SUCCESS : EDBF_DATAWIDTH;
-      printf( "\nTODO: hb_dbfWriteMemo()\n" );
+   {
+      if( HB_IS_MEMO( pItem ) || HB_IS_STRING( pItem ) )
+         uiError = hb_dbfPutMemo( pArea, uiIndex, pItem ) ? SUCCESS : EDBF_DATAWIDTH;
+      else
+         uiError = EDBF_DATATYPE;
+   }
    else
    {
       if( HB_IS_MEMO( pItem ) || HB_IS_STRING( pItem ) )
@@ -1260,7 +1417,8 @@ ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    USHORT uiSize, uiCount;
    BOOL bHasMemo, bRetry;
    DBFFIELD * pBuffer, dbField;
-   PHB_ITEM pError;
+   PHB_FNAME pFileName;
+   PHB_ITEM pFileExt, pError;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfCreate(%p, %p)", pArea, pCreateInfo));
 
@@ -1352,6 +1510,7 @@ ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    pArea->fShared = pCreateInfo->fShared;
    pArea->ulRecCount = 0;
    pArea->uiHeaderLen = sizeof( DBFHEADER ) + uiSize + 2;
+   pArea->fHasMemo = bHasMemo;
 
    /* Write header */
    if( hb_dbfWriteDBHeader( pArea ) == FAILURE )
@@ -1375,8 +1534,27 @@ ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
 
    /* Create memo file */
    if( bHasMemo )
-      printf( "\nTODO: hb_dbfReadMemo()\n" );
-   return SUCCESS;
+   {
+      pArea->szMemoFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
+      pFileName = hb_fsFNameSplit( ( char * ) pCreateInfo->abName );
+      if( pFileName->szDrive )
+         strcpy( pArea->szMemoFileName, pFileName->szDrive );
+      else
+         pArea->szMemoFileName[ 0 ] = 0;
+      if( pFileName->szPath )
+         strcat( pArea->szMemoFileName, pFileName->szPath );
+      strcat( pArea->szMemoFileName, pFileName->szName );
+      hb_xfree( pFileName );
+      pFileExt = hb_itemPutC( NULL, "" );
+      hb_dbfInfo( pArea, DBI_MEMOEXT, pFileExt );
+      strncat( pArea->szMemoFileName, hb_itemGetCPtr( pFileExt ),
+               _POSIX_PATH_MAX - strlen( pArea->szMemoFileName ) );
+      hb_itemRelease( pFileExt );
+      pCreateInfo->abName = ( BYTE * ) pArea->szMemoFileName;
+      return hb_dbfCreateMemFile( pArea, pCreateInfo );
+   }
+   else
+      return SUCCESS;
 }
 
 /*
@@ -1517,10 +1695,13 @@ ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
       pFileExt = hb_itemPutC( NULL, "" );
       SELF_INFO( ( AREAP ) pArea, DBI_MEMOEXT, pFileExt );
       szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
-      szFileName[ 0 ] = 0;
+      if( pFileName->szDrive )
+         strcpy( szFileName, pFileName->szDrive );
+      else
+         szFileName[ 0 ] = 0;
       if( pFileName->szPath )
-         strncat( szFileName, pFileName->szPath, _POSIX_PATH_MAX );
-      strncat( szFileName, pFileName->szName, _POSIX_PATH_MAX - strlen( szFileName ) );
+         strcat( szFileName, pFileName->szPath );
+      strcat( szFileName, pFileName->szName );
       strncat( szFileName, hb_itemGetCPtr( pFileExt ), _POSIX_PATH_MAX -
                strlen( szFileName ) );
       hb_itemRelease( pFileExt );
@@ -1529,7 +1710,7 @@ ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
       pArea->szMemoFileName = szFileName;
 
       /* Open memo file and exit if error */
-      if( SELF_OPENMEMFILE( ( AREAP ) pArea, pOpenInfo ) == FAILURE )
+      if( hb_dbfOpenMemFile( pArea, pOpenInfo ) == FAILURE )
       {
          SELF_CLOSE( ( AREAP ) pArea );
          return FAILURE;
@@ -1921,6 +2102,7 @@ ERRCODE hb_dbfTransRec( DBFAREAP pArea, LPDBTRANSINFO pTransInfo )
  */
 ERRCODE hb_dbfZap( DBFAREAP pArea )
 {
+   BYTE pBlock[ DBT_BLOCKSIZE ];
    PHB_ITEM pError;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfZap(%p)", pArea));
@@ -1945,7 +2127,14 @@ ERRCODE hb_dbfZap( DBFAREAP pArea )
 
    /* Create memo file */
    if( pArea->fHasMemo )
-      printf( "\nTODO: hb_dbfZapMemo()\n" );
+   {
+      memset( pBlock, 0, DBT_BLOCKSIZE );
+      * ( ( LONG * ) pBlock ) = 1;
+      hb_fsSeek( pArea->hMemoFile, 0, FS_SET );
+      if( hb_fsWrite( pArea->hMemoFile, pBlock, DBT_BLOCKSIZE ) != DBT_BLOCKSIZE )
+         return FAILURE;
+      hb_fsWrite( pArea->hMemoFile, NULL, 0 );
+   }
    return SUCCESS;
 }
 
@@ -2096,16 +2285,92 @@ ERRCODE hb_dbfUnLock( DBFAREAP pArea, ULONG ulRecNo )
 }
 
 /*
+ * Create a memo file in the WorkArea.
+ */
+ERRCODE hb_dbfCreateMemFile( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
+{
+   BYTE pBlock[ DBT_BLOCKSIZE ];
+   BOOL bRetry;
+   PHB_ITEM pError;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dbfCreateMemFile(%p, %p)", pArea, pCreateInfo));
+
+   memset( pBlock, 0, DBT_BLOCKSIZE );
+   pError = NULL;
+   /* Try create */
+   do
+   {
+      pArea->hMemoFile = hb_fsCreate( pCreateInfo->abName, FC_NORMAL );
+      if( pArea->hMemoFile == FS_ERROR )
+      {
+         if( !pError )
+         {
+            pError = hb_errNew();
+            hb_errPutGenCode( pError, EG_CREATE );
+            hb_errPutSubCode( pError, EDBF_CREATE_DBF );
+            hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_CREATE ) );
+            hb_errPutFileName( pError, ( char * ) pCreateInfo->abName );
+            hb_errPutFlags( pError, EF_CANRETRY );
+         }
+         bRetry = ( SELF_ERROR( ( AREAP ) pArea, pError ) == E_RETRY );
+      }
+      else
+         bRetry = FALSE;
+   } while( bRetry );
+   if( pError )
+      hb_errRelease( pError );
+
+   if( pArea->hMemoFile == FS_ERROR )
+      return FAILURE;
+
+   * ( ( LONG * ) pBlock ) = 1;
+   if( hb_fsWrite( pArea->hMemoFile, pBlock, DBT_BLOCKSIZE ) != DBT_BLOCKSIZE )
+      return FAILURE;
+   hb_fsWrite( pArea->hMemoFile, NULL, 0 );
+   return SUCCESS;
+}
+
+/*
  * Open a memo file in the specified WorkArea.
  */
 ERRCODE hb_dbfOpenMemFile( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_dbfOpenMemFile(%p, %p)", pArea, pOpenInfo));
-   HB_SYMBOL_UNUSED( pArea );
-   HB_SYMBOL_UNUSED( pOpenInfo );
+   USHORT uiFlags;
+   BOOL bRetry;
+   PHB_ITEM pError;
 
-   printf( "\nTODO: hb_dbfOpenMemFile()\n" );
-   return SUCCESS;
+   HB_TRACE(HB_TR_DEBUG, ("hb_dbfOpenMemFile(%p, %p)", pArea, pOpenInfo));
+
+   uiFlags = pOpenInfo->fReadonly ? FO_READ : FO_READWRITE;
+   uiFlags |= pOpenInfo->fShared ? FO_DENYNONE : FO_EXCLUSIVE;
+   pError = NULL;
+
+   /* Try open */
+   do
+   {
+      pArea->hMemoFile = hb_fsOpen( pOpenInfo->abName, uiFlags );
+      if( pArea->hMemoFile == FS_ERROR )
+      {
+         if( !pError )
+         {
+            pError = hb_errNew();
+            hb_errPutGenCode( pError, EG_OPEN );
+            hb_errPutSubCode( pError, EDBF_OPEN_DBF );
+            hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_OPEN ) );
+            hb_errPutFileName( pError, ( char * ) pOpenInfo->abName );
+            hb_errPutFlags( pError, EF_CANRETRY | EF_CANDEFAULT );
+         }
+         bRetry = ( SELF_ERROR( ( AREAP ) pArea, pError ) == E_RETRY );
+      }
+      else
+         bRetry = FALSE;
+   } while( bRetry );
+   if( pError )
+   {
+      hb_errRelease( pError );
+      pError = NULL;
+   }
+   return ( pArea->hMemoFile == FS_ERROR ? FAILURE : SUCCESS );
 }
 
 /*
@@ -2170,11 +2435,8 @@ ERRCODE hb_dbfWriteDBHeader( DBFAREAP pArea )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfWriteDBHeader(%p)", pArea));
 
-   if( pArea->fHasMemo )
-      printf( "\nTODO: hb_dbfWriteMemoHeader()\n" );
-
    memset( &dbfHeader, 0, sizeof( DBFHEADER ) );
-   dbfHeader.bVersion = 0x03;
+   dbfHeader.bVersion = pArea->fHasMemo ? 0x83 : 0x03;
    hb_dateToday( &lYear, &lMonth, &lDay );
    dbfHeader.bYear = ( BYTE ) ( lYear - 1900 );
    dbfHeader.bMonth = ( BYTE ) lMonth;
