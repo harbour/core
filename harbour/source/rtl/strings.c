@@ -22,15 +22,15 @@
    You can contact me at: alinares@fivetech.com
  */
 
-#include "hbsetup.h"
-#include "dates.h"
-#include "extend.h"
-#include "init.h"
-#include "itemapi.h"
-#include "errorapi.h"
 #include <ctype.h>
 #include <math.h>
+
+#include "extend.h"
+#include "dates.h"
+#include "itemapi.h"
+#include "errorapi.h"
 #include "set.h"
+#include "init.h"
 
 #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
 static double infinity = 0;
@@ -70,33 +70,35 @@ HARBOUR HB_UPPER( void );
 HARBOUR HB_VAL( void );
 
 HB_INIT_SYMBOLS_BEGIN( Strings__InitSymbols )
-{ "ALLTRIM"      , FS_PUBLIC, HB_ALLTRIM    , 0 },
+#if 0
 { "ASC"          , FS_PUBLIC, HB_ASC        , 0 },
 { "AT"           , FS_PUBLIC, HB_AT         , 0 },
 { "CHR"          , FS_PUBLIC, HB_CHR        , 0 },
+{ "LEFT"         , FS_PUBLIC, HB_LEFT       , 0 },
+{ "LOWER"        , FS_PUBLIC, HB_LOWER      , 0 },
+{ "LTRIM"        , FS_PUBLIC, HB_LTRIM      , 0 },
+{ "REPLICATE"    , FS_PUBLIC, HB_REPLICATE  , 0 },
+{ "RTRIM"        , FS_PUBLIC, HB_RTRIM      , 0 },
+{ "SPACE"        , FS_PUBLIC, HB_SPACE      , 0 },
+{ "STR"          , FS_PUBLIC, HB_STR        , 0 },
+{ "SUBSTR"       , FS_PUBLIC, HB_SUBSTR     , 0 },
+{ "TRIM"         , FS_PUBLIC, HB_TRIM       , 0 },
+{ "UPPER"        , FS_PUBLIC, HB_UPPER      , 0 },
+{ "VAL"          , FS_PUBLIC, HB_VAL        , 0 },
+#endif
+{ "ALLTRIM"      , FS_PUBLIC, HB_ALLTRIM    , 0 },
 { "ISALPHA"      , FS_PUBLIC, HB_ISALPHA    , 0 },
 { "ISDIGIT"      , FS_PUBLIC, HB_ISDIGIT    , 0 },
 { "ISUPPER"      , FS_PUBLIC, HB_ISUPPER    , 0 },
 { "ISLOWER"      , FS_PUBLIC, HB_ISLOWER    , 0 },
-{ "LEFT"         , FS_PUBLIC, HB_LEFT       , 0 },
-{ "LOWER"        , FS_PUBLIC, HB_LOWER      , 0 },
-{ "LTRIM"        , FS_PUBLIC, HB_LTRIM      , 0 },
 { "PAD"          , FS_PUBLIC, HB_PAD        , 0 },
 { "PADC"         , FS_PUBLIC, HB_PADC       , 0 },
 { "PADL"         , FS_PUBLIC, HB_PADL       , 0 },
 { "PADR"         , FS_PUBLIC, HB_PADR       , 0 },
 { "RAT"          , FS_PUBLIC, HB_RAT        , 0 },
-{ "REPLICATE"    , FS_PUBLIC, HB_REPLICATE  , 0 },
 { "RIGHT"        , FS_PUBLIC, HB_RIGHT      , 0 },
-{ "RTRIM"        , FS_PUBLIC, HB_RTRIM      , 0 },
-{ "SPACE"        , FS_PUBLIC, HB_SPACE      , 0 },
-{ "STR"          , FS_PUBLIC, HB_STR        , 0 },
 { "STRTRAN"      , FS_PUBLIC, HB_STRTRAN    , 0 },
-{ "STUFF"        , FS_PUBLIC, HB_STUFF      , 0 },
-{ "SUBSTR"       , FS_PUBLIC, HB_SUBSTR     , 0 },
-{ "TRIM"         , FS_PUBLIC, HB_TRIM       , 0 },
-{ "UPPER"        , FS_PUBLIC, HB_UPPER      , 0 },
-{ "VAL"          , FS_PUBLIC, HB_VAL        , 0 }
+{ "STUFF"        , FS_PUBLIC, HB_STUFF      , 0 }
 HB_INIT_SYMBOLS_END( Strings__InitSymbols )
 #if ! defined(__GNUC__)
 #pragma startup Strings__InitSymbols

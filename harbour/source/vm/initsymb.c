@@ -6,58 +6,59 @@
  * Initialization of runtime support symbols
  */
 
-#include "hbsetup.h"
 #include "extend.h"
-#include "hbdefs.h"
-#include "init.h"
 #include "ctoharb.h"
-#include "initsymd.h"
 
-HARBOUR HB_AADD( void );
-HARBOUR HB_ABS( void );
-HARBOUR HB_ASC( void );
-HARBOUR HB_AT( void );
-HARBOUR HB_CDOW( void );
-HARBOUR HB_CHR( void );
-HARBOUR HB_CMONTH( void );
-HARBOUR HB_COL( void );
-HARBOUR HB_CTOD( void );
-HARBOUR HB_DATE( void );
-HARBOUR HB_DAY( void );
-HARBOUR HB_DEVPOS( void );
-HARBOUR HB_DO( void );
-HARBOUR HB_DOW( void );
-HARBOUR HB_DTOC( void );
-HARBOUR HB_DTOS( void );
-HARBOUR HB_EMPTY( void );
-HARBOUR HB_EXP( void );
-HARBOUR HB_INT( void );
-HARBOUR HB_LEFT( void );
-HARBOUR HB_LEN( void );
-HARBOUR HB_LOG( void );
-HARBOUR HB_LOWER( void );
-HARBOUR HB_LTRIM( void );
-HARBOUR HB_MAX( void );
-HARBOUR HB_MIN( void );
-HARBOUR HB_MONTH( void );
-HARBOUR HB_PCOUNT( void );
-HARBOUR HB_REPLICATE( void );
-HARBOUR HB_ROW( void );
-HARBOUR HB_ROUND( void );
-HARBOUR HB_RTRIM( void );
-HARBOUR HB_SECONDS( void );
-HARBOUR HB_SETPOS( void );
-HARBOUR HB_SPACE( void );
-HARBOUR HB_SQRT( void );
-HARBOUR HB_STOD( void );
-HARBOUR HB_STR( void );
-HARBOUR HB_SUBSTR( void );
-HARBOUR HB_TIME( void );
-HARBOUR HB_TRANSFORM( void );
-HARBOUR HB_TRIM( void );
-HARBOUR HB_UPPER( void );
-HARBOUR HB_VAL( void );
-HARBOUR HB_YEAR( void );
+#ifdef HARBOUR_STRICT_ANSI_C
+   #include "initsymd.h"
+#endif
+
+extern HARBOUR HB_AADD( void );
+extern HARBOUR HB_ABS( void );
+extern HARBOUR HB_ASC( void );
+extern HARBOUR HB_AT( void );
+extern HARBOUR HB_CDOW( void );
+extern HARBOUR HB_CHR( void );
+extern HARBOUR HB_CMONTH( void );
+extern HARBOUR HB_COL( void );
+extern HARBOUR HB_CTOD( void );
+extern HARBOUR HB_DATE( void );
+extern HARBOUR HB_DAY( void );
+extern HARBOUR HB_DEVPOS( void );
+extern HARBOUR HB_DOW( void );
+extern HARBOUR HB_DTOC( void );
+extern HARBOUR HB_DTOS( void );
+extern HARBOUR HB_EMPTY( void );
+extern HARBOUR HB_EXP( void );
+extern HARBOUR HB_INKEY( void );
+extern HARBOUR HB_INT( void );
+extern HARBOUR HB_LEFT( void );
+extern HARBOUR HB_LEN( void );
+extern HARBOUR HB_LOG( void );
+extern HARBOUR HB_LOWER( void );
+extern HARBOUR HB_LTRIM( void );
+extern HARBOUR HB_MAX( void );
+extern HARBOUR HB_MIN( void );
+extern HARBOUR HB_MONTH( void );
+extern HARBOUR HB_PCOL( void );
+extern HARBOUR HB_PCOUNT( void );
+extern HARBOUR HB_PROW( void );
+extern HARBOUR HB_REPLICATE( void );
+extern HARBOUR HB_ROW( void );
+extern HARBOUR HB_ROUND( void );
+extern HARBOUR HB_RTRIM( void );
+extern HARBOUR HB_SECONDS( void );
+extern HARBOUR HB_SETPOS( void );
+extern HARBOUR HB_SPACE( void );
+extern HARBOUR HB_SQRT( void );
+extern HARBOUR HB_STR( void );
+extern HARBOUR HB_SUBSTR( void );
+extern HARBOUR HB_TIME( void );
+extern HARBOUR HB_TRANSFORM( void );
+extern HARBOUR HB_TRIM( void );
+extern HARBOUR HB_UPPER( void );
+extern HARBOUR HB_VAL( void );
+extern HARBOUR HB_YEAR( void );
 
 static HB_SYMB symbols[] = {
     { "AADD"      , FS_PUBLIC, HB_AADD         , 0 },
@@ -75,7 +76,6 @@ static HB_SYMB symbols[] = {
     { "DAY"       , FS_PUBLIC, HB_DAY          , 0 },
     { "DELETED"   , FS_PUBLIC, NULL            , 0 },
     { "DEVPOS"    , FS_PUBLIC, HB_DEVPOS       , 0 },
-    { "DO"        , FS_PUBLIC, HB_DO           , 0 },
     { "DOW"       , FS_PUBLIC, HB_DOW          , 0 },
     { "DTOC"      , FS_PUBLIC, HB_DTOC         , 0 },
     { "DTOS"      , FS_PUBLIC, HB_DTOS         , 0 },
@@ -86,7 +86,7 @@ static HB_SYMB symbols[] = {
     { "FIELDNAME" , FS_PUBLIC, NULL            , 0 },
     { "FLOCK"     , FS_PUBLIC, NULL            , 0 },
     { "FOUND"     , FS_PUBLIC, NULL            , 0 },
-    { "INKEY"     , FS_PUBLIC, NULL            , 0 },
+    { "INKEY"     , FS_PUBLIC, HB_INKEY        , 0 },
     { "INT"       , FS_PUBLIC, HB_INT          , 0 },
     { "LASTREC"   , FS_PUBLIC, NULL            , 0 },
     { "LEFT"      , FS_PUBLIC, HB_LEFT         , 0 },
@@ -98,9 +98,9 @@ static HB_SYMB symbols[] = {
     { "MAX"       , FS_PUBLIC, HB_MAX          , 0 },
     { "MIN"       , FS_PUBLIC, HB_MIN          , 0 },
     { "MONTH"     , FS_PUBLIC, HB_MONTH        , 0 },
-    { "PCOL"      , FS_PUBLIC, NULL            , 0 },
+    { "PCOL"      , FS_PUBLIC, HB_PCOL         , 0 },
     { "PCOUNT"    , FS_PUBLIC, HB_PCOUNT       , 0 },
-    { "PROW"      , FS_PUBLIC, NULL            , 0 },
+    { "PROW"      , FS_PUBLIC, HB_PROW         , 0 },
     { "QSELF"     , FS_PUBLIC, NULL            , 0 },
     { "RECCOUNT"  , FS_PUBLIC, NULL            , 0 },
     { "RECNO"     , FS_PUBLIC, NULL            , 0 },
@@ -114,7 +114,6 @@ static HB_SYMB symbols[] = {
     { "SETPOS"    , FS_PUBLIC, HB_SETPOS       , 0 },
     { "SPACE"     , FS_PUBLIC, HB_SPACE        , 0 },
     { "SQRT"      , FS_PUBLIC, HB_SQRT         , 0 },
-    { "STOD"      , FS_PUBLIC, HB_STOD         , 0 },
     { "STR"       , FS_PUBLIC, HB_STR          , 0 },
     { "SUBSTR"    , FS_PUBLIC, HB_SUBSTR       , 0 },
     { "TIME"      , FS_PUBLIC, HB_TIME         , 0 },

@@ -22,11 +22,10 @@
    You can contact me at: alinares@fivetech.com
  */
 
-#include <stdlib.h>
-#include "set.h"
 #include "extend.h"
-#include "dates.h"
 #include "itemapi.h"
+#include "set.h"
+#include "dates.h"
 
 PHB_ITEM hb_param( int iParam, WORD wMask )
 {
@@ -38,7 +37,7 @@ PHB_ITEM hb_param( int iParam, WORD wMask )
       if( iParam == -1 )
          wType = stack.Return.type;
       else if( iParam < -1 )
-         return 0;
+         return NULL;
       else
          wType = ( stack.pBase + 1 + iParam )->type;
 
@@ -47,7 +46,7 @@ PHB_ITEM hb_param( int iParam, WORD wMask )
          if( iParam == -1 )
             pLocal = &stack.Return;
          else if( iParam < -1 )
-            return 0;
+            return NULL;
          else
             pLocal = stack.pBase + 1 + iParam;
 
@@ -57,9 +56,9 @@ PHB_ITEM hb_param( int iParam, WORD wMask )
             return pLocal;
       }
       else
-         return 0;
+         return NULL;
    }
-   return 0;
+   return NULL;
 }
 
 char * hb_parc( int iParam, ... )
@@ -206,7 +205,7 @@ char * hb_pards( int iParam, ... )
          if( wArrayIndex )
          {
             hb_arrayGetDate( pItem, wArrayIndex, stack.szDate );
-            stack.szDate[ 8 ] = 0;
+            stack.szDate[ 8 ] = '\0';
 
             return stack.szDate;
          }
@@ -219,7 +218,7 @@ char * hb_pards( int iParam, ... )
 
          hb_dateDecode( pItem->item.asDate.value, &lDay, &lMonth, &lYear );
          hb_dateStrPut( stack.szDate, lDay, lMonth, lYear );
-         stack.szDate[ 8 ] = 0;
+         stack.szDate[ 8 ] = '\0';
 
          return stack.szDate; /* this guaranties good behavior when multithreading */
       }
@@ -473,7 +472,7 @@ void hb_retclen( char * szText, ULONG ulLen )
    stack.Return.item.asString.length = ulLen;
    stack.Return.item.asString.value = ( char * ) hb_xgrab( ulLen + 1 );
    memcpy( stack.Return.item.asString.value, szText, ulLen );
-   stack.Return.item.asString.value[ ulLen ] = 0;
+   stack.Return.item.asString.value[ ulLen ] = '\0';
 }
 
 void hb_retds( char * szDate ) /* szDate must have yyyymmdd format */

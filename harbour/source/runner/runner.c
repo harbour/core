@@ -23,9 +23,7 @@
  * 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <stdio.h>
-
-#include "hbsetup.h"
+#include "extend.h"
 #include "pcode.h"
 #include "errorapi.h"
 #include "ctoharb.h"

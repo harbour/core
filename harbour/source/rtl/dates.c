@@ -35,13 +35,13 @@
  *     hb_dow(), HB_DOW()
 */
 
-#include "hbsetup.h"
 #include "extend.h"
-#include "init.h"
 #include "errorapi.h"
 #include "itemapi.h"
 #include "set.h"
 #include "dates.h"
+#include "init.h"
+
 #include <ctype.h>
 #include <time.h>
 #if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__)
@@ -69,6 +69,7 @@ HARBOUR HB_TIME( void );
 HARBOUR HB_YEAR( void );
 
 HB_INIT_SYMBOLS_BEGIN( Dates__InitSymbols )
+#if 0
 { "CDOW"     , FS_PUBLIC, HB_CDOW    , 0 },
 { "CMONTH"   , FS_PUBLIC, HB_CMONTH  , 0 },
 { "CTOD"     , FS_PUBLIC, HB_CTOD    , 0 },
@@ -79,9 +80,10 @@ HB_INIT_SYMBOLS_BEGIN( Dates__InitSymbols )
 { "DTOS"     , FS_PUBLIC, HB_DTOS    , 0 },
 { "MONTH"    , FS_PUBLIC, HB_MONTH   , 0 },
 { "SECONDS"  , FS_PUBLIC, HB_SECONDS , 0 },
-{ "STOD"     , FS_PUBLIC, HB_STOD    , 0 },
 { "TIME"     , FS_PUBLIC, HB_TIME    , 0 },
-{ "YEAR"     , FS_PUBLIC, HB_YEAR    , 0 }
+{ "YEAR"     , FS_PUBLIC, HB_YEAR    , 0 },
+#endif
+{ "STOD"     , FS_PUBLIC, HB_STOD    , 0 }
 HB_INIT_SYMBOLS_END( Dates__InitSymbols )
 #if ! defined(__GNUC__)
 #pragma startup Dates__InitSymbols

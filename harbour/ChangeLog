@@ -1,3 +1,74 @@
+19990819-02:15 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/hbpp/hbpplib.c
+    ! OurMalloc -> _xgrab
+  * source/compiler/genobj32.c
+    ! "_VirtualMachine" -> "_hb_vmExecute"
+  * source/rtl/arrays.c
+    source/rtl/console.c
+    source/rtl/dates.c
+    source/rtl/inkey.c
+    source/rtl/math.c
+    source/rtl/strings.c
+    source/rtl/transfrm.c
+    source/vm/hvm.c
+    ! Commented out those symbol registration line, which are already included
+      in source/vm/initsymb.c
+  * source/vm/dynsym.c
+    * Some variable declaration moved to the block where it's used.
+    * Some 0 (zero) changed to NULL and '\0'
+  * source/rdd/dbcmd.c
+    ! extern HARBOUR functions declared as extern.
+  * source/rtl/classes.c
+    ! __msg*() function names changed to hb___msg*(), to avoid the
+      leading underscores.
+    * Many variable declaration moved to the block where it's used.
+    ! Some (5?) potential GPFs fixed when the string/block parameter was
+      omitted.
+    * BYTE changed to BOOL in one place.
+    ! Added proper (commented out) error description to three runtime errors.
+  * source/rtl/extend.c
+    * Some 0 (zero) changed to NULL and '\0'
+  * include/inkey.ch
+    ! Typo fixed.
+  * include/extend.h
+    source/rtl/arrays.c
+    source/rtl/classes.c
+    * BASEARRAY/wSuperCast changed to bSuperCase, type changed to BOOL.
+  * source/vm/hvm.c
+    source/vm/initsymb.c
+    source/tools/io.c
+    source/runner/runner.c
+    source/rtl/codebloc.c
+    source/rtl/console.c
+    source/rtl/dates.c
+    source/rtl/dir.c
+    source/rtl/extend.c
+    source/rtl/filesys.c
+    source/rtl/fm.c
+    source/rtl/inkey.c
+    source/rtl/langapi.c
+    source/rtl/memvars.c
+    source/rtl/msgxxx.c
+    source/rtl/set.c
+    source/rtl/strings.c
+    source/compiler/harbour.y
+    % Removed all #includes which are always included indirectly via
+      extend.h
+  * include/extend.h
+    * changed inclusion order of hbsetup.h and hbdefs.h, so that
+      hbsetup.h is included first.
+  * source/vm/initsymb.c
+    source/compiler/harbour.y
+    - DO removed from here. (since it's non standard Clipper)
+  * source/vm/initsymb.c
+    - STOD removed from here. (since it's non standard Clipper)
+    * made all HARBOUR prototypes extern.
+    - #include "init.h" removed.
+    + #include "initsymd.h" guarded with HARBOUR_STRICT_ANSI_C
+    + INKEY, PCOL, PROW address filled with proper value instead of NULL.
+  * include/memvars.ch
+    * Really small correction.
+
 19990818-19:20 EDT David G. Holm <dholm@jsd-llc.com>
   * source/vm/hvm.c
     * Added TODO: comment to indicate that the divide by zero check
@@ -112,7 +183,7 @@
     source/rtl/filesys.c
     source/rtl/strings.c
     + Standard name registration method added (hvm.c).
-    ! Completed init tables so that all declared Harbour function get 
+    ! Completed init tables so that all declared Harbour function get
       registered.
 
   * include/run_exp.h
@@ -146,19 +217,19 @@
 19990817-20:35 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
-	* corrected code used to generate HB_P_ENDPROC - the declared
-	 length of function/procedure is now equal to the number of bytes
-	 written into HRB file - some comments added
+        * corrected code used to generate HB_P_ENDPROC - the declared
+         length of function/procedure is now equal to the number of bytes
+         written into HRB file - some comments added
 
     *source/runner/runner.c
-	* corrected reading of function/procedure body (it was trying to
-	 read (size+1) bytes)
-	* the MAIN procedure is defined if HARBOUR_START_PROCEDURE is
-	 defined - the runner works with GCC/Linux now
-	* corrected code used to call (_INITSTATIC) function - inside
-	 this function there is no access to passed parameters then
-	 there is no need to pass them - static variables can be
-	 initialized using literal values only
+        * corrected reading of function/procedure body (it was trying to
+         read (size+1) bytes)
+        * the MAIN procedure is defined if HARBOUR_START_PROCEDURE is
+         defined - the runner works with GCC/Linux now
+        * corrected code used to call (_INITSTATIC) function - inside
+         this function there is no access to passed parameters then
+         there is no need to pass them - static variables can be
+         initialized using literal values only
 
 19990817-20:14 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/working/Makefile

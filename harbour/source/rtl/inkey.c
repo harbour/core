@@ -74,11 +74,10 @@
   #define DOS_REGS REGS
 #endif
 
-#include "hbsetup.h"
-#include "errorapi.h"
 #include "extend.h"
-#include "init.h"
+#include "errorapi.h"
 #include "inkey.h"
+#include "init.h"
 
 HARBOUR HB___KEYBOARD( void );
 HARBOUR HB_INKEY( void );
@@ -86,8 +85,10 @@ HARBOUR HB_LASTKEY( void );
 HARBOUR HB_NEXTKEY( void );
 
 HB_INIT_SYMBOLS_BEGIN( INKEY__InitSymbols )
-{ "__KEYBOARD", FS_PUBLIC, HB___KEYBOARD, 0 },
+#if 0
 { "INKEY"     , FS_PUBLIC, HB_INKEY     , 0 },
+#endif
+{ "__KEYBOARD", FS_PUBLIC, HB___KEYBOARD, 0 },
 { "LASTKEY"   , FS_PUBLIC, HB_LASTKEY   , 0 },
 { "NEXTKEY"   , FS_PUBLIC, HB_NEXTKEY   , 0 },
 HB_INIT_SYMBOLS_END( INKEY__InitSymbols )

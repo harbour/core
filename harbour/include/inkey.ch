@@ -2,7 +2,7 @@
  * $Id$
  */
 
-/* NOTE: Keystroke descriptions marked with an asterick (*) are only */
+/* NOTE: Keystroke descriptions marked with an asterisk (*) are only */
 /*       available on enhanced keyboards (those with more than 84 keys) */
 
 #ifndef _INKEY_CH

@@ -33,8 +33,7 @@
    their web site at http://www.gnu.org/).
 */
 
-#include "hbdefs.h"
-#include "hbsetup.h"
+#include "extend.h"
 #include "langapi.h"
 
 static HB_LANG langEN = 

@@ -31,8 +31,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "hbdefs.h"
+
 #include "hbsetup.h"
+#include "hbdefs.h"
 #include "hb_vmpub.h"
 
 #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
@@ -175,7 +176,7 @@ typedef struct _HB_BASEARRAY
    ULONG    ulLen;        /* number of items in the array */
    WORD     wHolders;     /* number of holders of this array */
    WORD     wClass;       /* offset to the classes base if it is an object */
-   WORD     wSuperCast;   /* is it a super cast ? */
+   BOOL     bSuperCast;   /* is it a super cast ? */
 } BASEARRAY, * PBASEARRAY, * BASEARRAY_PTR;
 
 /* stack managed by the virtual machine */

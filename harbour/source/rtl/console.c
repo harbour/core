@@ -40,19 +40,17 @@
 
 /* Harbour Project source code
    http://www.Harbour-Project.org/
-   The following function is Copyright 1999 Victor Szel <info@szelvesz.hu>:
+   The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
       HB___COLORINDEX().
-      HB___COLORINVERT().
    See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
 */
 
-#include "hbsetup.h"
 #include "extend.h"
 #include "itemapi.h"
-#include "init.h"
 #include "dates.h"
 #include "set.h"
 #include "inkey.h"
+#include "init.h"
 
 #if defined(__GNUC__)
   #include <unistd.h>
@@ -108,14 +106,19 @@ HARBOUR HB_QQOUT( void );
 HARBOUR HB___COLORINDEX( void );
 
 HB_INIT_SYMBOLS_BEGIN( Console__InitSymbols )
-{ "__ACCEPT"    , FS_PUBLIC, HB___ACCEPT    , 0 },
-{ "__EJECT"     , FS_PUBLIC, HB___EJECT     , 0 },
+#if 0
 { "COL"         , FS_PUBLIC, HB_COL         , 0 },
 { "ROW"         , FS_PUBLIC, HB_ROW         , 0 },
+{ "DEVPOS"      , FS_PUBLIC, HB_DEVPOS      , 0 },
+{ "PCOL"        , FS_PUBLIC, HB_PCOL        , 0 },
+{ "PROW"        , FS_PUBLIC, HB_PROW        , 0 },
+{ "SETPOS"      , FS_PUBLIC, HB_SETPOS      , 0 },
+#endif
+{ "__ACCEPT"    , FS_PUBLIC, HB___ACCEPT    , 0 },
+{ "__EJECT"     , FS_PUBLIC, HB___EJECT     , 0 },
 { "DBGSHADOW"   , FS_PUBLIC, HB_DBGSHADOW   , 0 },
 { "DEVOUT"      , FS_PUBLIC, HB_DEVOUT      , 0 },
 { "DEVOUTPICT"  , FS_PUBLIC, HB_DEVOUTPICT  , 0 },
-{ "DEVPOS"      , FS_PUBLIC, HB_DEVPOS      , 0 },
 { "DISPBEGIN"   , FS_PUBLIC, HB_DISPBEGIN   , 0 },
 { "DISPBOX"     , FS_PUBLIC, HB_DISPBOX     , 0 },
 { "DISPCOUNT"   , FS_PUBLIC, HB_DISPCOUNT   , 0 },
@@ -127,14 +130,11 @@ HB_INIT_SYMBOLS_BEGIN( Console__InitSymbols )
 { "NOSNOW"      , FS_PUBLIC, HB_NOSNOW      , 0 },
 { "OUTERR"      , FS_PUBLIC, HB_OUTERR      , 0 },
 { "OUTSTD"      , FS_PUBLIC, HB_OUTSTD      , 0 },
-{ "PCOL"        , FS_PUBLIC, HB_PCOL        , 0 },
-{ "PROW"        , FS_PUBLIC, HB_PROW        , 0 },
 { "RESTSCREEN"  , FS_PUBLIC, HB_RESTSCREEN  , 0 },
 { "SCROLL"      , FS_PUBLIC, HB_SCROLL      , 0 },
 { "SAVESCREEN"  , FS_PUBLIC, HB_SAVESCREEN  , 0 },
 { "SETCURSOR"   , FS_PUBLIC, HB_SETCURSOR   , 0 },
 { "SETBLINK"    , FS_PUBLIC, HB_SETBLINK    , 0 },
-{ "SETPOS"      , FS_PUBLIC, HB_SETPOS      , 0 },
 { "SETPRC"      , FS_PUBLIC, HB_SETPRC      , 0 },
 { "SHADOW"      , FS_PUBLIC, HB_SHADOW      , 0 },
 { "QOUT"        , FS_PUBLIC, HB_QOUT        , 0 },

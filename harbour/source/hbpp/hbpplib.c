@@ -104,7 +104,8 @@ void GenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarni
 {
     if( _bWarnings && iWarning < WARN_ASSIGN_SUSPECT ) /* TODO: add switch to set level */
     {
-        char * szLine = ( char * ) OurMalloc( 160 );      /*2 lines of text */
+        /* char * szLine = ( char * ) OurMalloc( 160 ); */      /*2 lines of text */
+        char * szLine = ( char * ) _xgrab( 160 );      /*2 lines of text */
         /* printf( "\r%s(%i) ", files.pLast->szFileName, iLine ); */
         printf( "Warning %c%i  ", cPrefix, iWarning );
         sprintf( szLine, _szWarnings[ iWarning - 1 ], szWarning1, szWarning2 );

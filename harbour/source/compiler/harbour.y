@@ -42,10 +42,8 @@
 #include <limits.h>
 #include <malloc.h>     /* required for allocating and freeing memory */
 #include <ctype.h>
-#include "hbsetup.h"    /* main configuration file */
 #include "extend.h"
 #include "pcode.h"      /* pcode values */
-#include "hbdefs.h"     /* our defined types */
 #include "compiler.h"
 #include "hberrors.h"
 #include "hbpp.h"
@@ -351,7 +349,6 @@ static const char * _szReservedFun[] = {
   "DAY"       ,
   "DELETED"   ,
   "DEVPOS"    ,
-  "DO"        ,
   "DOW"       ,
   "DTOC"      ,
   "DTOS"      ,

@@ -1,6 +1,6 @@
 /*
  * $Id$
-*/
+ */
 
 /* NOTE: This file is also used by C code. */
 

@@ -33,7 +33,6 @@
 
 */
 
-#include <string.h>
 #include "extend.h"
 #include "itemapi.h"
 #include "errorapi.h"

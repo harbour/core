@@ -35,7 +35,6 @@
 
 /* The Harbour implementation of codeblocks */
 
-#include <string.h>
 #include "extend.h"
 #include "ctoharb.h"
 #include "itemapi.h"

@@ -25,7 +25,7 @@
 #ifndef __MPW__
  #include <malloc.h>
 #endif
-#include <stdlib.h>
+
 #include "extend.h"
 #include "errorapi.h"
 

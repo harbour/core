@@ -2,12 +2,11 @@
  * $Id$
  */
 
-#include <string.h>
 #include <ctype.h>
 #include "extend.h"
-#include "init.h"
 #include "filesys.h"
 #include "errorapi.h"
+#include "init.h"
 
 #if defined(__CYGWIN__)
   #include <mingw32/share.h>

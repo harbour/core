@@ -62,7 +62,7 @@ static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00, 0x68, 0x00, 0x00, 0x
                               0x00, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x83, 0xC4, 0x08, 0xC3 };
 
 static char * * externNames = 0;
-WORD wExternals = 1; /* _VirtualMachine is always added */
+WORD wExternals = 1; /* _hb_vmExecute is always added */
 
 void GenObj32( char * szObjFileName, char * szFileName )
 {
@@ -274,7 +274,7 @@ static void GenerateCodeSegment( FILE * hObjFile )
              0x54, 2 ); /* Data pcode location */
 
       Fixup( hObjFile, 0xA4, ( w * sizeof( prgFunction ) ) + 11,
-             0x56, 1 ); /* External: _VirtualMachine */
+             0x56, 1 ); /* External: _hb_vmExecute */
     }
 }
 
@@ -295,7 +295,7 @@ static void GenerateExternals( FILE * hObjFile )
     {
       externNames = ( char * * ) OurMalloc( sizeof( char * ) * ( wExternals + 2 ) );
       w = 1;
-      externNames[ 0 ] = "_VirtualMachine";
+      externNames[ 0 ] = "_hb_vmExecute";
 
       pFunc = funcalls.pFirst;
       while( pFunc )

@@ -35,7 +35,7 @@ typedef struct
    PHB_DYNS pDynSym;             /* Pointer to dynamic symbol */
 } DYNHB_ITEM, * PDYNHB_ITEM, * DYNHB_ITEM_PTR;
 
-static PDYNHB_ITEM pDynItems = 0;              /* Pointer to dynamic items */
+static PDYNHB_ITEM pDynItems = NULL;    /* Pointer to dynamic items */
 static WORD        wDynSymbols = 0;     /* Number of symbols present */
 static WORD        wClosestDynSym = 0;
               /* Closest symbol for match. hb_dynsymFind() will search for the name. */
@@ -66,7 +66,6 @@ PHB_SYMB hb_symbolNew( char * szName )      /* Create a new symbol */
 PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
 {
    PHB_DYNS pDynSym = hb_dynsymFind( pSymbol->szName ); /* Find position */
-   WORD w;
 
    if( pDynSym )            /* If name exists */
    {
@@ -88,6 +87,8 @@ PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
 
       if( wClosestDynSym <= wDynSymbols )   /* Closest < current !! */
       {                                     /* Here it goes :-) */
+         WORD w;
+
          for( w = 0; w < ( wDynSymbols - wClosestDynSym ); w++ )
             memcpy( &pDynItems[ wDynSymbols - w ],
                     &pDynItems[ wDynSymbols - w - 1 ], sizeof( DYNHB_ITEM ) );
@@ -120,7 +121,7 @@ PHB_DYNS hb_dynsymGet( char * szName )  /* finds and creates a symbol if not fou
    hb_strupr( szUprName );      /* turn it uppercase */
 
    /* if( strlen( szUprName ) > 10 )
-      szUprName[ 10 ] = 0; keeps this here for 10 chars /c compatibility mode */
+      szUprName[ 10 ] = '\0'; keeps this here for 10 chars /c compatibility mode */
 
    pDynSym = hb_dynsymFind( szUprName );
    if( ! pDynSym )       /* Does it exists ? */
@@ -133,17 +134,15 @@ PHB_DYNS hb_dynsymGet( char * szName )  /* finds and creates a symbol if not fou
 
 PHB_DYNS hb_dynsymFind( char * szName )
 {
-   WORD wFirst = 0, wLast = wDynSymbols, wMiddle = wLast / 2;
-
    if( ! pDynItems )
    {
       pDynItems = ( PDYNHB_ITEM ) hb_xgrab( sizeof( DYNHB_ITEM ) );     /* Grab array */
       pDynItems->pDynSym = ( PHB_DYNS ) hb_xgrab( sizeof( HB_DYNS ) );
                 /* Always grab a first symbol. Never an empty bucket. *<1>* */
       pDynItems->pDynSym->hMemvar = 0;
-      pDynItems->pDynSym->pSymbol = 0;
-      pDynItems->pDynSym->pFunPtr = 0;
-      return 0;
+      pDynItems->pDynSym->pSymbol = NULL;
+      pDynItems->pDynSym->pFunPtr = NULL;
+      return NULL;
    }
    else
    {        /* Classic Tree Insert Sort Mechanism
@@ -163,6 +162,11 @@ PHB_DYNS hb_dynsymFind( char * szName )
              *     Only the last part of the array is going to be searched.
              *     Go to (1)
              */
+
+      WORD wFirst = 0;
+      WORD wLast = wDynSymbols;
+      WORD wMiddle = wLast / 2;
+
       wClosestDynSym = wMiddle;                   /* Start in the middle      */
 
       while( wFirst < wLast )
@@ -185,7 +189,7 @@ PHB_DYNS hb_dynsymFind( char * szName )
          wMiddle = wFirst + ( ( wLast - wFirst ) / 2 );
       }
    }
-   return 0;
+   return NULL;
 }
 
 void hb_dynsymEval( PHB_DYNS_FUNC pFunction )
@@ -193,8 +197,8 @@ void hb_dynsymEval( PHB_DYNS_FUNC pFunction )
    BOOL bCont = TRUE;
    WORD i;
 
-   for( i=0; i < wDynSymbols && bCont; i++ )
-      bCont =(pFunction)( pDynItems[ i ].pDynSym );
+   for( i = 0; i < wDynSymbols && bCont; i++ )
+      bCont = (pFunction)( pDynItems[ i ].pDynSym );
 }
 
 

@@ -2,7 +2,6 @@
  * $Id$
  */
 
-#include "hbdefs.h"
 #include "hbsetup.h"
 
 #if   defined(HARBOUR_LANGUAGE_EU)

@@ -22,13 +22,13 @@
    You can contact me at: alinares@fivetech.com
 */
 
-#include "itemapi.h"
 #include "extend.h"
+#include "itemapi.h"
 #include "errorapi.h"
 #include "langapi.h"
 #include "ctoharb.h"
-#include "init.h"
 #include "dates.h"
+#include "init.h"
 
 HARBOUR HB_AADD(void);
 HARBOUR HB_ACLONE(void);
@@ -44,7 +44,9 @@ HARBOUR HB_ASORT(void);
 HARBOUR HB_ATAIL(void);
 
 HB_INIT_SYMBOLS_BEGIN( Arrays__InitSymbols )
+#if 0
 { "AADD",           FS_PUBLIC, HB_AADD          , 0 },
+#endif
 { "ACLONE",         FS_PUBLIC, HB_ACLONE        , 0 },
 { "ACOPY",          FS_PUBLIC, HB_ACOPY         , 0 },
 { "ADEL",           FS_PUBLIC, HB_ADEL          , 0 },
@@ -172,10 +174,10 @@ void hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array */
    else
           pBaseArray->pItems = 0;
 
-   pBaseArray->ulLen    = ulLen;
-   pBaseArray->wHolders = 1;
-   pBaseArray->wClass   = 0;
-   pBaseArray->wSuperCast = FALSE;
+   pBaseArray->ulLen      = ulLen;
+   pBaseArray->wHolders   = 1;
+   pBaseArray->wClass     = 0;
+   pBaseArray->bSuperCast = FALSE;
 
    for( ul = 0; ul < ulLen; ul++ )
      ( pBaseArray->pItems + ul )->type = IT_NIL;
@@ -544,7 +546,7 @@ void hb_arrayRelease( PHB_ITEM pArray )
       ULONG      ul, ulLen  = hb_arrayLen( pArray );
       PBASEARRAY pBaseArray = pArray->item.asArray.value;
 
-      if( !pBaseArray->wSuperCast )
+      if( !pBaseArray->bSuperCast )
       {
          for ( ul = 0; ul < ulLen; ul ++ )
             hb_itemClear( pBaseArray->pItems + ul );
@@ -652,13 +654,13 @@ HARBOUR HB_ARRAY( void )
   if ( iParCount > 0 )
   {
     int tmp;
-    BOOL lError = FALSE;
+    BOOL bError = FALSE;
 
     for ( tmp = 1; tmp <= iParCount; tmp++ )
     {
       if ( !ISNUM( tmp ) )
       {
-        lError = TRUE;
+        bError = TRUE;
         break;
       }
 
@@ -668,7 +670,7 @@ HARBOUR HB_ARRAY( void )
       }
     }
 
-    if ( lError )
+    if ( bError )
       hb_ret();
     else
       hb_arrayNew( &stack.Return, hb_parnl( 1 ) );

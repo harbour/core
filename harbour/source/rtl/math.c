@@ -25,15 +25,17 @@ HARBOUR HB_ROUND( void );
 HARBOUR HB_SQRT( void );
 
 HB_INIT_SYMBOLS_BEGIN( Math__InitSymbols )
+#if 0
 { "HB_ABS"   , FS_PUBLIC, HB_ABS   , 0 },
 { "HB_EXP"   , FS_PUBLIC, HB_EXP   , 0 },
 { "HB_INT"   , FS_PUBLIC, HB_INT   , 0 },
 { "HB_LOG"   , FS_PUBLIC, HB_LOG   , 0 },
 { "HB_MAX"   , FS_PUBLIC, HB_MAX   , 0 },
 { "HB_MIN"   , FS_PUBLIC, HB_MIN   , 0 },
-{ "HB_MOD"   , FS_PUBLIC, HB_MOD   , 0 },
 { "HB_ROUND" , FS_PUBLIC, HB_ROUND , 0 },
-{ "HB_SQRT"  , FS_PUBLIC, HB_SQRT  , 0 }
+{ "HB_SQRT"  , FS_PUBLIC, HB_SQRT  , 0 },
+#endif
+{ "HB_MOD"   , FS_PUBLIC, HB_MOD   , 0 }
 HB_INIT_SYMBOLS_END( Math__InitSymbols )
 #if ! defined(__GNUC__)
 #pragma startup Math__InitSymbols

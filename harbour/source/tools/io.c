@@ -3,10 +3,7 @@
  */
 
 #include "extend.h"
-#include  <stdio.h>
-#include  <stdlib.h>
-#include  <string.h>
-#include  <ctype.h>
+#include <ctype.h>
 
 #ifdef __DOS__
 #include <dos.h>

@@ -160,17 +160,18 @@
  #endif
 #endif
 
-#include <ctype.h>
-#include "extend.h"
-#include "init.h"
-#include "errorapi.h"
 #include <fcntl.h>
 #ifndef __MPW__
  #include <sys/stat.h>
 #endif
+#include <errno.h>
+
+#include <ctype.h>
+#include "extend.h"
+#include "errorapi.h"
 #include "set.h"
 #include "inkey.h"
-#include <errno.h>
+#include "init.h"
 
 #ifndef O_BINARY
    #define O_BINARY 0   /* O_BINARY not defined on Linux */

@@ -20,10 +20,8 @@
    #define INCL_DOSERRORS
 #endif
 
-#include "hbsetup.h"
-#include "extend.h"
-#include <string.h>
 #include <ctype.h>
+#include "extend.h"
 #include "itemapi.h"
 #include "init.h"
 
@@ -44,6 +42,10 @@
   #define HAVE_POSIX_IO
   #endif
 
+#endif
+
+#if defined(__CYGWIN__)
+  #include <time.h>
 #endif
 
 #if defined(__WATCOMC__) || defined( _MSC_VER )

@@ -30,11 +30,7 @@
  #include <malloc.h>
 #endif
 #include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
-#include "hbsetup.h"    /* main configuration file */
 #include "extend.h"
 #include "ctoharb.h"
 #include "errorapi.h"
@@ -64,7 +60,6 @@ HARBOUR HB_EVAL( void );         /* Evaluates a codeblock from Harbour */
 HARBOUR HB_LEN( void );          /* Evaluates a codeblock from Harbour */
 HARBOUR HB_EMPTY( void );        /* fixed entry point by now */
 HARBOUR HB_VALTYPE( void );      /* returns a string description of a value */
-
 HARBOUR HB_ERRORBLOCK( void );
 HARBOUR HB_PROCNAME( void );
 HARBOUR HB_PROCLINE( void );
@@ -120,16 +115,18 @@ BYTE     bErrorLevel = 0;  /* application exit errorlevel */
 #define HB_DEBUG2( x, y ) if( bHB_DEBUG ) printf( x, y )
 
 HB_INIT_SYMBOLS_BEGIN( Hvm__InitSymbols )
-{ "EVAL"             , FS_PUBLIC, HB_EVAL               , 0 },
+#if 0
 { "LEN"              , FS_PUBLIC, HB_LEN                , 0 },
 { "EMPTY"            , FS_PUBLIC, HB_EMPTY              , 0 },
+{ "PCOUNT"           , FS_PUBLIC, HB_PCOUNT             , 0 },
+#endif
+{ "EVAL"             , FS_PUBLIC, HB_EVAL               , 0 },
 { "VALTYPE"          , FS_PUBLIC, HB_VALTYPE            , 0 },
 { "ERRORBLOCK"       , FS_PUBLIC, HB_ERRORBLOCK         , 0 },
 { "PROCNAME"         , FS_PUBLIC, HB_PROCNAME           , 0 },
 { "PROCLINE"         , FS_PUBLIC, HB_PROCLINE           , 0 },
 { "__QUIT"           , FS_PUBLIC, HB___QUIT             , 0 },
 { "ERRORLEVEL"       , FS_PUBLIC, HB_ERRORLEVEL         , 0 },
-{ "PCOUNT"           , FS_PUBLIC, HB_PCOUNT             , 0 },
 { "PVALUE"           , FS_PUBLIC, HB_PVALUE             , 0 }
 HB_INIT_SYMBOLS_END( Hvm__InitSymbols )
 #if ! defined(__GNUC__)
@@ -224,7 +221,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
    WORD w = 0, wParams, wSize;
    ULONG ulPrivateBase = hb_memvarGetPrivatesBase();
 
-   HB_DEBUG( "VirtualMachine\n" );
+   HB_DEBUG( "hb_vmExecute\n" );
 
    while( ( bCode = pCode[ w ] ) != HB_P_ENDPROC && ! bQuit )
    {
