@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * The eval stack management functions 
+ * The eval stack management functions
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
@@ -67,7 +67,7 @@ void hb_stackDec( void )
 void hb_stackFree( void )
 {
    LONG i;
-   
+
    HB_TRACE(HB_TR_DEBUG, ("hb_stackFree()"));
 
    i = hb_stack.wItems - 1;
@@ -116,21 +116,21 @@ void hb_stackPush( void )
 void hb_stackInit( void )
 {
    ULONG i;
-   
+
    HB_TRACE(HB_TR_DEBUG, ("hb_stackInit()"));
 
    hb_stack.pItems = ( HB_ITEM_PTR * ) hb_xgrab( sizeof( HB_ITEM_PTR ) * STACK_INITHB_ITEMS );
    hb_stack.pBase  = hb_stack.pItems;
    hb_stack.pPos   = hb_stack.pItems;     /* points to the first stack item */
    hb_stack.wItems = STACK_INITHB_ITEMS;
-   
+
    for( i=0; i < hb_stack.wItems; ++i )
      hb_stack.pItems[ i ] = hb_xgrab( sizeof( HB_ITEM ) );
 }
 
 void hb_stackRemove( LONG lUntilPos )
 {
-   HB_ITEM_PTR * pEnd = hb_stack.pItems + lUntilPos; 
+   HB_ITEM_PTR * pEnd = hb_stack.pItems + lUntilPos;
    while( hb_stack.pPos > pEnd )
       hb_stackPop();
 }
@@ -149,7 +149,7 @@ HB_ITEM_PTR hb_stackNewFrame( HB_STACK_STATE * pStack, USHORT uiParams )
 
    pStack->lBaseItem = hb_stack.pBase - hb_stack.pItems;
    pStack->iStatics = hb_stack.iStatics;
-   
+
    pItem->item.asSymbol.lineno = 0;
    pItem->item.asSymbol.paramcnt = uiParams;
    hb_stack.pBase = hb_stack.pItems + pItem->item.asSymbol.stackbase;
@@ -188,7 +188,7 @@ HB_ITEM_PTR hb_stackItemFromBase( int nFromBase )
 {
    if( nFromBase <= 0 )
       hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL );
-      
+
    return ( * ( hb_stack.pBase + nFromBase + 1 ) );
 }
 
@@ -202,7 +202,7 @@ HB_ITEM_PTR hb_stackBaseItem( void )
    return * hb_stack.pBase;
 }
 
-/* Returns SELF object, an evaluated codeblock or NIL for normal func/proc 
+/* Returns SELF object, an evaluated codeblock or NIL for normal func/proc
 */
 HB_ITEM_PTR hb_stackSelfItem( void )
 {
@@ -368,10 +368,10 @@ WINBASEAPI LONG WINAPI UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * Ex
             ( *pBase )->item.asSymbol.lineno );
 
       strcat( msg, buffer );
-      
+
       pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
    }
-   while( pBase != hb_stack.pItems )
+   while( pBase != hb_stack.pItems );
 
    MessageBox( NULL, msg, "Harbour Exception", MB_ICONSTOP );
 
@@ -413,7 +413,7 @@ ULONG _System OS2TermHandler(PEXCEPTIONREPORTRECORD       p1,
 
          pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
       }
-      while( pBase != hb_stack.pItems )
+      while( pBase != hb_stack.pItems );
    }
 
    return XCPT_CONTINUE_SEARCH;          /* Exception not resolved... */

@@ -1,3 +1,7 @@
+2000-12-13 22:04 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
+   * source/vm/estack.c
+     + added missing semicolons (lines 374 and 416)
+
 2000-12-12 17:35 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/vm/eval.c
      + Corrected support for block passed by reference.
