@@ -1,3 +1,9 @@
+20000502-14:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/vm/hvm.c
+	* fixed bug during accessing a constant arrays caused by
+	the optimization - { 1, 2, 3 }[ n ]
+
 20000502-14:25 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.c

@@ -2390,21 +2390,27 @@ static void hb_vmArrayPush( void )
    {
       if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       {
-         hb_arrayGet( pArray, ulIndex, pArray );
-         hb_stackPop();
+         if( pArray->item.asArray.value->uiHolders > 1 )
+	 {
+	    /* this is a temporary copy of an array - we can overwrite 
+	     * it with no problem
+	    */
+            hb_arrayGet( pArray, ulIndex, pArray );
+            hb_stackPop();
+         }
+	 else
+         {
+	    /* this is a constant array { 1, 2, 3 } - we cannot use
+	     * the optimization here
+	    */
+            HB_ITEM item;
 
-/* Looks like this without optimization:
+            hb_arrayGet( pArray, ulIndex, &item );
+            hb_stackPop();
 
-         HB_ITEM item;
-
-         hb_arrayGet( pArray, ulIndex, &item );
-         hb_stackPop();
-         hb_stackPop();
-
-         hb_itemCopy( hb_stack.pPos, &item );
-         hb_itemClear( &item );
-         hb_stackPush();
-*/
+            hb_itemCopy( hb_stack.pPos - 1, &item );
+            hb_itemClear( &item );
+         }
       }
       else
          hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ) );
