@@ -732,7 +732,7 @@ static ERRCODE adsFieldName( ADSAREAP pArea, USHORT uiIndex, void * szName )
    if( uiIndex > pArea->uiFieldCount )
       return FAILURE;
 
-   AdsGetFieldName( pArea->hTable, uiIndex, (UCHAR*)szName, &pusBufLen );
+   AdsGetFieldName( pArea->hTable, uiIndex, (UNSIGNED8*)szName, &pusBufLen );
    return SUCCESS;
 }
 
@@ -809,7 +809,7 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             UNSIGNED8 pucFormat[ 11 ];
             UNSIGNED16 pusLen = 10;
             AdsGetDateFormat  ( pucFormat, &pusLen );
-            AdsSetDateFormat  ( (UCHAR*)"YYYYMMDD" );
+            AdsSetDateFormat  ( (UNSIGNED8*)"YYYYMMDD" );
                pulLength = pArea->maxFieldLen;
                if (AdsGetField( pArea->hTable, szName, pBuffer, &pulLength, ADS_NONE ) == AE_NO_CURRENT_RECORD  )
                {
@@ -918,7 +918,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             uiCount = ( USHORT ) hb_itemGetCLen( pItem );
             if( uiCount > pField->uiLen )
                uiCount = pField->uiLen;
-            AdsSetString( pArea->hTable, szName, (UCHAR*)hb_itemGetCPtr( pItem ), uiCount );
+            AdsSetString( pArea->hTable, szName, (UNSIGNED8*)hb_itemGetCPtr( pItem ), uiCount );
             bError = FALSE;
          }
          break;
@@ -947,7 +947,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          if( HB_IS_DATE( pItem ) )
          {
             AdsGetDateFormat  ( pucFormat, &pusLen );
-            AdsSetDateFormat  ( (UCHAR*)"YYYYMMDD" );
+            AdsSetDateFormat  ( (UNSIGNED8*)"YYYYMMDD" );
             szEndChar = * ( szText + pField->uiLen );
             hb_dateDecode( hb_itemGetDL( pItem ), &lYear, &lMonth, &lDay );
             hb_dateStrPut( ( char * ) szText, lYear, lMonth, lDay );
@@ -972,7 +972,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          {
             uiCount = ( USHORT ) hb_itemGetCLen( pItem );
             AdsSetString( pArea->hTable, szName,
-               (UCHAR*)hb_itemGetCPtr( pItem ), uiCount );
+               (UNSIGNED8*)hb_itemGetCPtr( pItem ), uiCount );
             bError = FALSE;
          }
          break;
@@ -1612,8 +1612,8 @@ static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
       ulOptions |= ADS_UNIQUE;
 
    ulRetVal = AdsCreateIndex( hTableOrIndex, pOrderInfo->abBagName,
-           pOrderInfo->atomBagName, (UCHAR*)hb_itemGetCPtr( pExprItem ),
-           ( pArea->lpdbOrdCondInfo && pArea->lpdbOrdCondInfo->abFor ) ? (UCHAR*)pArea->lpdbOrdCondInfo->abFor : (UCHAR*)"",
+           pOrderInfo->atomBagName, (UNSIGNED8*)hb_itemGetCPtr( pExprItem ),
+           ( pArea->lpdbOrdCondInfo && pArea->lpdbOrdCondInfo->abFor ) ? (UNSIGNED8*)pArea->lpdbOrdCondInfo->abFor : (UNSIGNED8*)"",
            pucWhile, ulOptions, &phIndex);
 
    if ( ulRetVal != AE_SUCCESS )

@@ -7,6 +7,13 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * contrib/rdd_ads/ace.h
+     * New ace.h from Extended Systems, Inc.
+
+2002-04-02 21:12 UTC+0200 JF Lefebvre (Mafact) <jfl@mafact.com>
+  * include/hbclass.ch
+    + Refined Class(y) compatibility as needed by Horacio.
+  * source/rdd/dbfntx/dbfntx1.c
     * Added two type cast needed by VC++
 
 2002-04-02 21:46 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>

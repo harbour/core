@@ -306,7 +306,7 @@ HB_FUNC( ADSMGGETCONFIGINFO )
    {
       if ( iOption == 0 )
       {
-         hb_reta( 26 );
+         hb_reta( 25 );
          hb_stornl( stConfigValues.ulNumConnections       , -1, 1 );  /* number connections            */
          hb_stornl( stConfigValues.ulNumWorkAreas         , -1, 2 );  /* number work areas             */
          hb_stornl( stConfigValues.ulNumTables            , -1, 3 );  /* number tables                 */
@@ -332,7 +332,7 @@ HB_FUNC( ADSMGGETCONFIGINFO )
          hb_storni( stConfigValues.ucReserved4            , -1, 23);  /* reserved                      */
          hb_stornl( stConfigValues.usSendIPPort           , -1, 24);  /* NT Service IP send port #     */
          hb_stornl( stConfigValues.usReceiveIPPort        , -1, 25);  /* NT Service IP rcv port #      */
-         hb_stornl( stConfigValues.usReserved5            , -1, 26);  /* reserved                      */
+         /* hb_stornl( stConfigValues.usReserved5            , -1, 26);   reserved                     */
 
       }else
       if ( iOption == 1 )

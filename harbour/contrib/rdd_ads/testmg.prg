@@ -169,7 +169,7 @@ function Main()
    ?
 
    aRay := AdsMgGetConfigInfo(0)
-   IF len(aRay) > 25
+   IF len(aRay) > 24
       ? aRay[1] , " number connections            "
       ? aRay[2] , " number work areas             "
       ? aRay[3] , " number tables                 "
@@ -195,7 +195,7 @@ function Main()
       ? aRay[23], " reserved                      "
       ? aRay[24], " NT Service IP send port #     "
       ? aRay[25], " NT Service IP rcv port #      "
-      ? aRay[26], " reserved                      "
+      // ? aRay[26], " reserved                      "
    ENDIF
 
    wait
