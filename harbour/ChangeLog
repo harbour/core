@@ -1,3 +1,13 @@
+19990730-12:24 GMT+1 Bruno Cantero <bruno@issnet.net>
+   + source/rdd/sdf0.prg, source/rdd/sdf1.c, source/rdd/delim0.prg and source/rdd/delim1.c
+     Support for two RDD's (SDF and DELIM)
+   * include/rdd.api, source/rdd/dbcmd.c, source/rdd/dbf0.prg, source/rdd/dbf1.c
+     Changed for support the new RDD's
+   * tests/working/testrdd.prg
+     Test for all RDD's in one PRG
+   - include/rdd_api.old
+     Removed old backup file
+
 19990730-11:05 GMT+1 Antonio Linares <alinares@fivetech.com>
    * include/inkey.ch
      + More defines added

@@ -61,6 +61,7 @@ HARBOUR HB_BOF( void );
 HARBOUR HB_DBCLOSEALL( void );
 HARBOUR HB_DBCLOSEAREA( void );
 HARBOUR HB_DBCREATE( void );
+HARBOUR HB_DBF( void );
 HARBOUR HB_DBGOBOTTOM( void );
 HARBOUR HB_DBGOTO( void );
 HARBOUR HB_DBGOTOP( void );
@@ -68,6 +69,7 @@ HARBOUR HB_DBSELECTAREA( void );
 HARBOUR HB_DBSETDRIVER( void );
 HARBOUR HB_DBSKIP( void );
 HARBOUR HB_DBUSEAREA( void );
+HARBOUR HB_DELIM( void );
 HARBOUR HB_EOF( void );
 HARBOUR HB_FOUND( void );
 HARBOUR HB_RDDLIST( void );
@@ -75,6 +77,7 @@ HARBOUR HB_RDDREGISTER( void );
 HARBOUR HB_RDDSETDEFAULT( void );
 HARBOUR HB_RDDSHUTDOWN( void );
 HARBOUR HB_RDDSYS( void );
+HARBOUR HB_SDF( void );
 
 HB_INIT_SYMBOLS_BEGIN( dbCmd__InitSymbols )
 { "BOF",           FS_PUBLIC, HB_BOF,           0 },
@@ -119,13 +122,16 @@ static void hb_CheckRdd( void )
    {
       szDefDriver = ( char * ) hb_xgrab( 1 );
       szDefDriver[ 0 ] = '\0';
+
+      /* Force link the built-in RDD's */
+      HB_DBF();
+      HB_SDF();
+      HB_DELIM();
    }
 }
 
 static void hb_CloseAll( void )
 {
-   DBENTRYP_V pFunction;
-
    pCurrArea = pWorkAreas;
    while( pWorkAreas )
    {
@@ -134,11 +140,7 @@ static void hb_CloseAll( void )
       if( !( ( AREAP ) pCurrArea->pArea )->lprfsHost )
 	 MyError( "No table error ", "9xxxx" );
       else
-      {
-	 pFunction = ( ( AREAP ) pCurrArea->pArea )->lprfsHost->close;
-	 if( !pFunction || ( ( * pFunction )( ( AREAP ) pCurrArea->pArea ) != SUCCESS ) )
-	    MyError( "Internal error ", "9xxxx" );
-      }
+	 SELF_CLOSE( ( AREAP ) pCurrArea->pArea );
       hb_xfree( pCurrArea->pArea );
       hb_xfree( pCurrArea );
    }
@@ -353,14 +355,9 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
 HARBOUR HB_BOF( void )
 {
    BOOL bBof = TRUE;
-   DBENTRYP_BP pFunction;
 
    if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost )
-   {
-      pFunction = ( ( AREAP ) pCurrArea->pArea )->lprfsHost->bof;
-      if( pFunction )
-	 ( * pFunction )( ( AREAP ) pCurrArea->pArea, &bBof );
-   }
+      SELF_BOF( ( AREAP ) pCurrArea->pArea, &bBof );
    hb_retl( bBof );
 }
 
@@ -371,19 +368,13 @@ HARBOUR HB_DBCLOSEALL( void )
 
 HARBOUR HB_DBCLOSEAREA( void )
 {
-   DBENTRYP_V pFunction;
-
    if( !pCurrArea )
       return;
 
    if( !( ( AREAP ) pCurrArea->pArea )->lprfsHost )
       MyError( "No table error ", "9xxxx" );
    else
-   {
-      pFunction = ( ( AREAP ) pCurrArea->pArea )->lprfsHost->close;
-      if( !pFunction || ( ( * pFunction )( ( AREAP ) pCurrArea->pArea ) != SUCCESS ) )
-	 MyError( "Internal error ", "9xxxx" );
-   }
+      SELF_CLOSE( ( AREAP ) pCurrArea->pArea );
 
    if( pWorkAreas == pCurrArea )  /* Empty list */
       pWorkAreas = 0;
@@ -406,8 +397,6 @@ HARBOUR HB_DBCREATE( void )
    PHB_ITEM pStruct;
    WORD wLen;
    PRDDNODE pRddNode;
-   DBENTRYP_SP pFunction1;
-   DBENTRYP_VP pFunction2;
    AREAP pTempArea;
    USHORT uiSize;
    DBOPENINFO pInfo;
@@ -433,38 +422,24 @@ HARBOUR HB_DBCREATE( void )
       return;
    }
 
-   pFunction1 = pRddNode->pTable.structSize;
-   pFunction2 = pRddNode->pTable.create;
-   if( ! pFunction1 || ! pFunction2 )
-   {
-      MyError( "Internal error ", "9xxxx" );
-      return;
-   }
    uiSize = sizeof( AREA );    /* Default Size Area */
    pTempArea = ( AREAP ) hb_xgrab( uiSize );
+   memcpy( pTempArea->lprfsHost, &pRddNode->pTable, sizeof( RDDFUNCS ) );
 
    /* Need more space? */
-   if( ( * pFunction1 )( pTempArea, &uiSize ) != SUCCESS )
-   {
-      hb_xfree( pTempArea );
-      MyError( "Internal error ", "9xxxx" );
-      return;
-   }
+   SELF_STRUCTSIZE( ( AREAP ) pTempArea, &uiSize );
    if( uiSize != sizeof( AREA ) )   /* Size of Area changed */
       pTempArea = ( AREAP ) hb_xrealloc( pTempArea, uiSize );
 
    pRddNode->uiAreaSize = uiSize; /* Update the size of WorkArea */
 
    pInfo.abName = ( PBYTE ) szFileName;
-   if( ( * pFunction2 )( pTempArea, &pInfo ) != SUCCESS )
-      MyError( "Internal error ", "9xxxx" );
+   SELF_CREATE( ( AREAP ) pTempArea, &pInfo );
    hb_xfree( pTempArea );
 }
 
 HARBOUR HB_DBGOBOTTOM( void )
 {
-   DBENTRYP_V pFunction;
-
    if( !pCurrArea )
    {
       MyError( "Alias not in use ", "1xxxx" );
@@ -474,19 +449,11 @@ HARBOUR HB_DBGOBOTTOM( void )
    if( !( ( AREAP ) pCurrArea->pArea )->lprfsHost )
       MyError( "No table error ", "9xxxx" );
    else
-   {
-      pFunction = ( ( AREAP ) pCurrArea->pArea )->lprfsHost->goBottom;
-      if( ! pFunction )
-	 MyError( "Internal error ", "9xxxx" );
-      else
-	 ( * pFunction )( ( AREAP ) pCurrArea->pArea );
-   }
+      SELF_GOBOTTOM( ( AREAP ) pCurrArea->pArea );
 }
 
 HARBOUR HB_DBGOTO( void )
 {
-   DBENTRYP_L pFunction;
-
    if( !pCurrArea )
    {
       MyError( "Alias not in use ", "1xxxx" );
@@ -495,22 +462,14 @@ HARBOUR HB_DBGOTO( void )
 
    if( !( ( AREAP ) pCurrArea->pArea )->lprfsHost )
       MyError( "No table error ", "9xxxx" );
+   else if( ISNUM( 1 ) )
+      SELF_GOTO( ( AREAP ) pCurrArea->pArea, hb_parnl( 1 ) );
    else
-   {
-      pFunction = ( ( AREAP ) pCurrArea->pArea )->lprfsHost->go;
-      if( ! pFunction )
-	 MyError( "Internal error ", "9xxxx" );
-      else if( ISNUM( 1 ) )
-	 ( * pFunction )( ( AREAP ) pCurrArea->pArea, hb_parnl( 1 ) );
-      else
-	 MyError( "DBCMD/1068 Argument error", "DBGOTO" );
-   }
+      MyError( "DBCMD/1068 Argument error", "DBGOTO" );
 }
 
 HARBOUR HB_DBGOTOP( void )
 {
-   DBENTRYP_V pFunction;
-
    if( !pCurrArea )
    {
       MyError( "Alias not in use ", "1xxxx" );
@@ -520,13 +479,7 @@ HARBOUR HB_DBGOTOP( void )
    if( !( ( AREAP ) pCurrArea->pArea )->lprfsHost )
       MyError( "No table error ", "9xxxx" );
    else
-   {
-      pFunction = ( ( AREAP ) pCurrArea->pArea )->lprfsHost->goTop;
-      if( ! pFunction )
-	 MyError( "Internal error ", "9xxxx" );
-      else
-	 ( * pFunction )( ( AREAP ) pCurrArea->pArea );
-   }
+      SELF_GOTOP( ( AREAP ) pCurrArea->pArea );
 }
 
 HARBOUR HB_DBSELECTAREA( void )
@@ -577,7 +530,6 @@ HARBOUR HB_DBSETDRIVER( void )
 
 HARBOUR HB_DBSKIP( void )
 {
-   DBENTRYP_L pFunction;
    PHB_ITEM pItem;
    LONG lToSkip = 1;
 
@@ -591,21 +543,15 @@ HARBOUR HB_DBSKIP( void )
       MyError( "No table error ", "9xxxx" );
    else
    {
-      pFunction = ( ( AREAP ) pCurrArea->pArea )->lprfsHost->skip;
-      if( ! pFunction )
-	 MyError( "Internal error ", "9xxxx" );
-      else
+      pItem = hb_param( 1, IT_NUMERIC );
+      if( pItem )
       {
-	 pItem = hb_param( 1, IT_NUMERIC );
-	 if( pItem )
-	 {
-	    if( pItem->type == IT_INTEGER )
-	       lToSkip = pItem->item.asInteger.value;
-	    else if( pItem->type == IT_LONG )
-	       lToSkip = pItem->item.asLong.value;
-	 }
-	 ( * pFunction )( ( AREAP ) pCurrArea->pArea, lToSkip );
+	 if( pItem->type == IT_INTEGER )
+	    lToSkip = pItem->item.asInteger.value;
+	 else if( pItem->type == IT_LONG )
+	    lToSkip = pItem->item.asLong.value;
       }
+      SELF_SKIP( ( AREAP ) pCurrArea->pArea, lToSkip );
    }
 }
 
@@ -616,9 +562,6 @@ HARBOUR HB_DBUSEAREA( void )
    PRDDNODE pRddNode;
    PAREANODE pAreaNode;
    USHORT uiSize;
-   DBENTRYP_V pFunction1;
-   DBENTRYP_SP pFunction2;
-   DBENTRYP_VP pFunction3;
    DBOPENINFO pInfo;
 
    uiNetError = 0;
@@ -627,12 +570,7 @@ HARBOUR HB_DBUSEAREA( void )
       hb_SelectFirstAvailable();
    else if( pCurrArea )  /* If current WorkArea is in use then close it */
    {
-      pFunction1 = ( ( AREAP ) pCurrArea->pArea )->lprfsHost->close;
-      if( !pFunction1 || ( ( * pFunction1 )( ( AREAP ) pCurrArea->pArea ) != SUCCESS ) )
-      {
-	 MyError( "Internal error ", "9xxxx" );
-	 return;
-      }
+      SELF_CLOSE( ( AREAP ) pCurrArea->pArea );
 
       if( pWorkAreas == pCurrArea )  /* Empty list */
 	 pWorkAreas = 0;
@@ -680,27 +618,22 @@ HARBOUR HB_DBUSEAREA( void )
    if( pRddNode->uiAreaSize == 0 ) /* Calculate the size of WorkArea */
    {
       uiSize = sizeof( AREA );    /* Default Size Area */
-      pCurrArea->pArea = hb_xgrab( uiSize );
-      pFunction2 = pRddNode->pTable.structSize;
+      pCurrArea->pArea = ( AREAP ) hb_xgrab( uiSize );
+      memcpy( ( ( AREAP ) pCurrArea->pArea )->lprfsHost, &pRddNode->pTable, sizeof( RDDFUNCS ) );
+
 
       /* Need more space? */
-      if( !pFunction2 || ( * pFunction2 )( ( AREAP ) pCurrArea->pArea, &uiSize ) != SUCCESS )
-      {
-	 hb_xfree( pCurrArea->pArea );
-	 hb_xfree( pCurrArea );
-	 pCurrArea = 0;
-	 MyError( "Internal error ", "9xxxx" );
-	 return;
-      }
-
+      SELF_STRUCTSIZE( ( AREAP ) pCurrArea->pArea, &uiSize );
       if( uiSize != sizeof( AREA ) )   /* Size of Area changed */
-	 pCurrArea->pArea = hb_xrealloc( pCurrArea->pArea, uiSize );
+	 pCurrArea->pArea = ( AREAP ) hb_xrealloc( pCurrArea->pArea, uiSize );
 
       pRddNode->uiAreaSize = uiSize; /* Update the size of WorkArea */
    }
    else
-      pCurrArea->pArea = hb_xgrab( pRddNode->uiAreaSize );
+      pCurrArea->pArea = ( AREAP ) hb_xgrab( pRddNode->uiAreaSize );
 
+   pCurrArea->pPrev = 0;
+   pCurrArea->pNext = 0;
    ( ( AREAP ) pCurrArea->pArea )->lprfsHost = &pRddNode->pTable;
 
    if( !( ( AREAP ) pCurrArea->pArea )->lprfsHost )
@@ -718,15 +651,7 @@ HARBOUR HB_DBUSEAREA( void )
    pInfo.fShared = ISLOG( 5 ) ? hb_parl( 5 ) : !hb_set.HB_SET_EXCLUSIVE;
    pInfo.fReadonly = ISLOG( 6 ) ? hb_parl( 6 ) : FALSE;
 
-   pFunction3 = pRddNode->pTable.open;
-   if( !pFunction3 || ( * pFunction3 )( ( AREAP ) pCurrArea->pArea, &pInfo ) != SUCCESS )
-   {
-      hb_xfree( pCurrArea->pArea );
-      hb_xfree( pCurrArea );
-      pCurrArea = 0;
-      MyError( "No table error ", "9xxxx" );
-      return;
-   }
+   SELF_OPEN( ( AREAP ) pCurrArea->pArea, &pInfo );
 
    /* Insert the new WorkArea node */
 
@@ -757,18 +682,13 @@ HARBOUR HB_DBUSEAREA( void )
 HARBOUR HB_EOF( void )
 {
    BOOL bEof = TRUE;
-   DBENTRYP_BP pFunction;
 
    if( pCurrArea )
    {
       if( !( ( AREAP ) pCurrArea->pArea )->lprfsHost )
 	 MyError( "No table error ", "9xxxx" );
       else
-      {
-	 pFunction = ( ( AREAP ) pCurrArea->pArea )->lprfsHost->eof;
-	 if( pFunction )
-	    ( * pFunction )( ( AREAP ) pCurrArea->pArea, &bEof );
-      }
+	 SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
    }
    hb_retl( bEof );
 }
@@ -776,18 +696,13 @@ HARBOUR HB_EOF( void )
 HARBOUR HB_FOUND( void )
 {
    BOOL bFound = FALSE;
-   DBENTRYP_BP pFunction;
 
    if( pCurrArea )
    {
       if( !( ( AREAP ) pCurrArea->pArea )->lprfsHost )
 	 MyError( "No table error ", "9xxxx" );
       else
-      {
-	 pFunction = ( ( AREAP ) pCurrArea->pArea )->lprfsHost->found;
-	 if( pFunction )
-	    ( * pFunction )( ( AREAP ) pCurrArea->pArea, &bFound );
-      }
+	 SELF_FOUND( ( AREAP ) pCurrArea->pArea, &bFound );
    }
    hb_retl( bFound );
 }
@@ -817,10 +732,10 @@ HARBOUR HB_RDDREGISTER( void )
    char * szDriver;
    WORD wLen;
 
+   hb_CheckRdd();
    szDriver = hb_parc( 1 );
    if( ( wLen = strlen( szDriver ) ) > 0 )
    {
-      hb_CheckRdd();
       szDriver = hb_strUpper( szDriver, wLen );
       if( hb_rddRegister( szDriver, hb_parni( 2 ) ) )
 	 return;
