@@ -2,6 +2,7 @@
    * source/rtl/console.c
      ! New C syntax bug fixed in hb_setpos()
    * source/tools/ctchksum.c
+     source/tools/Makefile
      + CA-Tools compatible CHECKSUM() function.
    * source/rtl/natmsg.c
      * Small correction.
