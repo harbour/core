@@ -7,6 +7,15 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * contrib/libct/makefile.bc
+   * contrib/libct/makefile.vc
+   * contrib/libct/ctflist.txt
+   * contrib/libct/readme.txt
+   * contrib/libct/tests/Makefile
+     * changes according to the changes above
+
+2002-05-04 09:08 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
+   * contrib/odbc/todbc.prg
      ! fixed infinite loop
 
 2002-05-01 11:12 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
