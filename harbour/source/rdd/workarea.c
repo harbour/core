@@ -968,6 +968,9 @@ ERRCODE hb_waCompile( AREAP pArea, BYTE * pExpr )
    pMacro = hb_macroCompile( ( char * ) pExpr );
    if( pMacro )
    {
+      if( ! pArea->valResult )
+         pArea->valResult = hb_itemNew( NULL );
+
       pArea->valResult = hb_itemPutPtr( pArea->valResult, ( void * ) pMacro );
       return SUCCESS;
    }
@@ -1001,6 +1004,9 @@ ERRCODE hb_waError( AREAP pArea, PHB_ITEM pError )
 ERRCODE hb_waEvalBlock( AREAP pArea, PHB_ITEM pBlock )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_waEvalBlock(%p, %p)", pArea, pBlock));
+
+   if( ! pArea->valResult )
+      pArea->valResult = hb_itemNew( NULL );
 
    hb_itemCopy( pArea->valResult, hb_vmEvalBlock( pBlock ) );
    return SUCCESS;
