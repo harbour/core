@@ -455,6 +455,7 @@ typedef struct
 *
 *  Informaci¢n para administrar el  rea de trabajo
 */
+struct _RDDFUNCS;
 
 typedef struct _AREA
 {

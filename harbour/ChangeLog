@@ -1,3 +1,55 @@
+19990727-20:15 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.y
+         * static variables can be initialized using the codeblocks
+          that calls functions. However static variables still cannot
+          be initialized with direct function call.
+         * changed the symbol created for function that initialize
+          static variable to: '(_INITSTATICS)' and generated function is
+          named now hb_INITSTATICS - this allows to create an user
+          defined function or memvar named _INITSTATICS
+         * the _INITSTATICS function (used to initialize static variables)
+          have the scope equal to (FS_INIT | FS_EXIT) - to distinguish
+          this function from other INIT functions. All _INITSTATICS
+          functions defined in the application have to be called
+          before normal INIT functions are called.
+
+    *source/vm/hvm.c
+         * All _INITSTATICS functions defined in the application are
+          called before normal INIT procedures - this allows to use
+          static variables in INIT procedures
+
+    *tests/working/initexit.prg
+         * updated code to test cooperation of INIT procedures with
+          static variables
+
+    *include/rdd.api
+         + added forward declaration for struct _RDDFUNCS
+
+    *source/rtl/natmsg/msgbas.c
+    *source/rtl/natmsg/msgcat.c
+    *source/rtl/natmsg/msgcz852.c
+    *source/rtl/natmsg/msgczkam.c
+    *source/rtl/natmsg/msgdut.c
+    *source/rtl/natmsg/msgeo.c
+    *source/rtl/natmsg/msgfre.c
+    *source/rtl/natmsg/msggal.c
+    *source/rtl/natmsg/msgger.c
+    *source/rtl/natmsg/msghu.c
+    *source/rtl/natmsg/msgia.c
+    *source/rtl/natmsg/msgita.c
+    *source/rtl/natmsg/msgkor.c
+    *source/rtl/natmsg/msgpl852.c
+    *source/rtl/natmsg/msgplmaz.c
+    *source/rtl/natmsg/msgpor.c
+    *source/rtl/natmsg/msgr1251.c
+    *source/rtl/natmsg/msgru866.c
+    *source/rtl/natmsg/msgspa.c
+    *source/rtl/natmsg/msguk.c
+    *source/rtl/natmsg/msgyu852.c
+	* corrected bug in hb_ErrorNetDescription 
+	(was "<=" instead of "<" ;-)
+	 
 19990727-19:48 GMT+1 Bruno Cantero <bruno@issnet.net>
    * source/rdd/dbcmd.c
      Fixed a GFP (Paul, test it)

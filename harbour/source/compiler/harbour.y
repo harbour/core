@@ -2148,7 +2148,10 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
       if( pFunc->cScope & FS_STATIC || pFunc->cScope & FS_INIT || pFunc->cScope & FS_EXIT )
          fprintf( yyc, "static " );
 
-      fprintf( yyc, "HARBOUR HB_%s( void );\n", pFunc->szName );
+      if( pFunc == _pInitFunc )
+         fprintf( yyc, "HARBOUR hb_INITSTATICS( void );\n" );
+      else
+         fprintf( yyc, "HARBOUR HB_%s( void );\n", pFunc->szName );
       pFunc = pFunc->pNext;
    }
    /* write functions prototypes for called functions outside this PRG */
@@ -2173,35 +2176,46 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
    wSym = 0; /* symbols counter */
    while( pSym )
    {
-      fprintf( yyc, "{ \"%s\", ", pSym->szName );
+      if( pSym->szName[ 0 ] == '(' )
+      {
+         /* Since the normal function cannot be INIT and EXIT at the same time
+         * we are using these two bits to mark the special function used to
+         * initialize static variables
+         */
+         fprintf( yyc, "{ \"(_INITSTATICS)\", FS_INIT | FS_EXIT, hb_INITSTATICS, 0}" );
+      }
+      else
+      {
+         fprintf( yyc, "{ \"%s\", ", pSym->szName );
+
+         if( pSym->cScope & FS_STATIC )
+            fprintf( yyc, "FS_STATIC" );
+
+         else if( pSym->cScope & FS_INIT )
+            fprintf( yyc, "FS_INIT" );
+
+         else if( pSym->cScope & FS_EXIT )
+            fprintf( yyc, "FS_EXIT" );
+
+         else
+            fprintf( yyc, "FS_PUBLIC" );
+
+         if( pSym->cScope & VS_MEMVAR )
+            fprintf( yyc, " | FS_MEMVAR" );
+
+         if( ( pSym->cScope != FS_MESSAGE ) && ( pSym->cScope & FS_MESSAGE ) ) /* only for non public symbols */
+            fprintf( yyc, " | FS_MESSAGE" );
+
+         /* specify the function address if it is a defined function or an
+            external called function */
+         if( GetFunction( pSym->szName ) ) /* is it a function defined in this module */
+            fprintf( yyc, ", HB_%s, 0 }", pSym->szName );
+         else if( GetFuncall( pSym->szName ) ) /* is it a function called from this module */
+            fprintf( yyc, ", HB_%s, 0 }", pSym->szName );
+         else
+            fprintf( yyc, ", 0, 0 }" );   /* memvar */
+      }
       ++wSym;
-
-      if( pSym->cScope & FS_STATIC )
-         fprintf( yyc, "FS_STATIC" );
-
-      else if( pSym->cScope & FS_INIT )
-         fprintf( yyc, "FS_INIT" );
-
-      else if( pSym->cScope & FS_EXIT )
-         fprintf( yyc, "FS_EXIT" );
-
-      else
-         fprintf( yyc, "FS_PUBLIC" );
-
-      if( pSym->cScope & VS_MEMVAR )
-         fprintf( yyc, " | FS_MEMVAR" );
-
-      if( ( pSym->cScope != FS_MESSAGE ) && ( pSym->cScope & FS_MESSAGE ) ) /* only for non public symbols */
-         fprintf( yyc, " | FS_MESSAGE" );
-
-      /* specify the function address if it is a defined function or an
-         external called function */
-      if( GetFunction( pSym->szName ) ) /* is it a function defined in this module */
-         fprintf( yyc, ", HB_%s, 0 }", pSym->szName );
-      else if( GetFuncall( pSym->szName ) ) /* is it a function called from this module */
-         fprintf( yyc, ", HB_%s, 0 }", pSym->szName );
-      else
-         fprintf( yyc, ", 0, 0 }" );   /* memvar */
 
       if( pSym != symbols.pLast )
          fprintf( yyc, ",\n" );
@@ -2221,7 +2235,10 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
       if( pFunc->cScope != FS_PUBLIC )
          fprintf( yyc, "static " );
 
-      fprintf( yyc, "HARBOUR HB_%s( void )\n{\n  static BYTE pcode[] = { \n", pFunc->szName );
+      if( pFunc == _pInitFunc )        /* Is it (_INITSTATICS) */
+         fprintf( yyc, "HARBOUR hb_INITSTATICS( void )\n{\n  static BYTE pcode[] = { \n" );
+      else
+         fprintf( yyc, "HARBOUR HB_%s( void )\n{\n  static BYTE pcode[] = { \n", pFunc->szName );
 
       lPCodePos = 0;
       while( lPCodePos < pFunc->lPCodePos )
@@ -2779,7 +2796,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  {
                     GetSymbol( _pInitFunc->szName, &w );
                     w = FixSymbolPos( w );
-                    fprintf( yyc, "                HB_P_SFRAME, %i, %i,\t\t/* symbol _INITSTATICS */\n",
+                    fprintf( yyc, "                HB_P_SFRAME, %i, %i,\t\t/* symbol (_INITSTATICS) */\n",
                              LOBYTE( w ), HIBYTE( w ) );
                  }
                  lPCodePos += 3;
@@ -2789,7 +2806,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  {
                     GetSymbol( _pInitFunc->szName, &w );
                     w = FixSymbolPos( w );
-                    fprintf( yyc, "                HB_P_STATICS, %i, %i,\t\t/* symbol _INITSTATICS */\n",
+                    fprintf( yyc, "                HB_P_STATICS, %i, %i,\t\t/* symbol (_INITSTATICS) */\n",
                              LOBYTE( w ), HIBYTE( w ) );
                     lPCodePos += 3;
                  }
@@ -4644,9 +4661,10 @@ void StaticDefStart( void )
   functions.pLast->bFlags |= FUN_USES_STATICS;
   if( ! _pInitFunc )
   {
-      _pInitFunc =FunctionNew( yy_strdup("_INITSTATICS"), FS_INIT );
+      _pInitFunc =FunctionNew( yy_strdup("(_INITSTATICS)"), FS_INIT );
       _pInitFunc->pOwner =functions.pLast;
       _pInitFunc->bFlags =FUN_USES_STATICS | FUN_PROCEDURE;
+      _pInitFunc->cScope =FS_INIT | FS_EXIT;
       functions.pLast =_pInitFunc;
       PushInteger( 1 );   /* the number of static variables is unknown now */
       GenPCode3( HB_P_STATICS, 0, 0 );
@@ -4695,8 +4713,10 @@ void StaticDefEnd( WORD wCount )
  */
 void StaticAssign( void )
 {
-  if( iVarScope == VS_STATIC )
-    _pInitFunc->bFlags |= FUN_ILLEGAL_INIT;
+   if( iVarScope == VS_STATIC && functions.pLast->szName )
+      /* function call is allowed if it is inside a codeblock
+       */
+      _pInitFunc->bFlags |= FUN_ILLEGAL_INIT;
 }
 
 /*

@@ -135,6 +135,7 @@ typedef struct _SYMBOLS
 } SYMBOLS, * PSYMBOLS;     /* structure to keep track of all modules symbol tables */
 
 void ProcessSymbols( PSYMBOL pSymbols, WORD wSymbols ); /* statics symbols initialization */
+void DoInitStatics( void ); /* executes all _INITSTATICS functions */
 void DoInitFunctions( int argc, char * argv[] ); /* executes all defined PRGs INIT functions */
 void DoExitFunctions( void ); /* executes all defined PRGs EXIT functions */
 void LogSymbols( void );         /* displays all dynamic symbols */
@@ -248,6 +249,11 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
    /* Initialize symbol table with runtime support functions */
    InitSymbolTable();
 
+   /* Call functions that initializes static variables
+    * Static variables have to be initialized before any INIT functions
+    * because INIT function can use static variables
+    */
+   DoInitStatics();
    DoInitFunctions( argc, argv ); /* process defined INIT functions */
 
 #ifdef HARBOUR_START_PROCEDURE
@@ -2083,7 +2089,7 @@ void StackInit( void )
 void SFrame( PSYMBOL pSym )      /* sets the statics frame for a function */
 {
    /* _INITSTATICS is now the statics frame. Statics() changed it! */
-   stack.iStatics = ( int ) pSym->pFunPtr; /* pSym is { "_INITSTATICS", FS_INIT, _INITSTATICS } for each PRG */
+   stack.iStatics = ( int ) pSym->pFunPtr; /* pSym is { "$_INITSTATICS", FS_INIT | FS_EXIT, _INITSTATICS } for each PRG */
    HB_DEBUG( "SFrame\n" );
 }
 
@@ -2176,15 +2182,43 @@ void ReleaseLocalSymbols( void )
    }
 }
 
-void DoExitFunctions( void )
+/* This calls all _INITSTATICS functions defined in the application.
+ * We are using a special symbol's scope (FS_INIT | FS_EXIT) to mark
+ * this function. These two bits cannot be marked at the same
+ * time for normal user defined functions.
+ */
+void DoInitStatics( void )
 {
    PSYMBOLS pLastSymbols = pSymbols;
    WORD w;
+   SYMBOLSCOPE scope;
 
    do {
       for( w = 0; w < pLastSymbols->wModuleSymbols; w++ )
       {
-         if( ( pLastSymbols->pModuleSymbols + w )->cScope & FS_EXIT )
+         scope =( pLastSymbols->pModuleSymbols + w )->cScope & (FS_EXIT | FS_INIT);
+         if( scope == (FS_INIT | FS_EXIT) )
+         {
+            PushSymbol( pLastSymbols->pModuleSymbols + w );
+            PushNil();
+            Do( 0 );
+         }
+      }
+      pLastSymbols = pLastSymbols->pNext;
+   } while( pLastSymbols );
+}
+
+void DoExitFunctions( void )
+{
+   PSYMBOLS pLastSymbols = pSymbols;
+   WORD w;
+   SYMBOLSCOPE scope;
+
+   do {
+      for( w = 0; w < pLastSymbols->wModuleSymbols; w++ )
+      {
+         scope =( pLastSymbols->pModuleSymbols + w )->cScope & (FS_EXIT | FS_INIT);
+         if( scope == FS_EXIT )
          {
             PushSymbol( pLastSymbols->pModuleSymbols + w );
             PushNil();
@@ -2199,11 +2233,13 @@ void DoInitFunctions( int argc, char * argv[] )
 {
    PSYMBOLS pLastSymbols = pSymbols;
    WORD w;
+   SYMBOLSCOPE scope;
 
    do {
       for( w = 0; w < pLastSymbols->wModuleSymbols; w++ )
       {
-         if( ( pLastSymbols->pModuleSymbols + w )->cScope & FS_INIT )
+         scope =( pLastSymbols->pModuleSymbols + w )->cScope & (FS_EXIT | FS_INIT);
+         if( scope == FS_INIT )
          {
             int i;
 

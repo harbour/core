@@ -90,7 +90,7 @@ static char *genericErrors[] =
 
 char *hb_ErrorNatDescription( ULONG ulGenError )
 {
-   if( ulGenError <= sizeof(genericErrors)/sizeof(char*) )
+   if( ulGenError < sizeof(genericErrors)/sizeof(char*) )
       return genericErrors[ ulGenError ];
    else
       return genericErrors[ 0 ];
