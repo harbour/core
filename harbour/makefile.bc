@@ -417,6 +417,7 @@ COMMON_LIB_OBJS = \
    $(OBJ_DIR)\hbstr.obj \
    $(OBJ_DIR)\hbtrace.obj \
    $(OBJ_DIR)\hbver.obj \
+   $(OBJ_DIR)\hash.obj \
    $(OBJ_DIR)\expropt1.obj \
    $(OBJ_DIR)\expropt2.obj \
    $(OBJ_DIR)\reserved.obj
@@ -507,6 +508,7 @@ HARBOUR_EXE_OBJS = \
    $(OBJ_DIR)\harbourl.obj \
    $(OBJ_DIR)\cmdcheck.obj \
    $(OBJ_DIR)\hbusage.obj \
+   $(OBJ_DIR)\hbident.obj \
    $(OBJ_DIR)\hbgenerr.obj \
    $(OBJ_DIR)\hbpcode.obj \
    $(OBJ_DIR)\hbfix.obj \
@@ -632,6 +634,10 @@ $(OBJ_DIR)\hbver.obj : $(COMMON_DIR)\hbver.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(COMMON_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\hash.obj : $(COMMON_DIR)\hash.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(COMMON_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\expropt1.obj : $(COMMON_DIR)\expropt1.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(COMMON_LIB) $(ARFLAGS) -+$@,,
@@ -676,6 +682,7 @@ $(HARBOUR_EXE) : $(HARBOUR_EXE_OBJS)
    echo. $(OBJ_DIR)\harbourl.obj >> make.tmp
    echo. $(OBJ_DIR)\cmdcheck.obj >> make.tmp
    echo. $(OBJ_DIR)\hbusage.obj >> make.tmp
+   echo. $(OBJ_DIR)\hbident.obj >> make.tmp
    echo. $(OBJ_DIR)\hbgenerr.obj >> make.tmp
    echo. $(OBJ_DIR)\hbpcode.obj >> make.tmp
    echo. $(OBJ_DIR)\hbfix.obj >> make.tmp
@@ -712,6 +719,9 @@ $(OBJ_DIR)\cmdcheck.obj : $(COMPILER_DIR)\cmdcheck.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\hbusage.obj : $(COMPILER_DIR)\hbusage.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\hbident.obj : $(COMPILER_DIR)\hbident.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\hbgenerr.obj : $(COMPILER_DIR)\hbgenerr.c

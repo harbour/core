@@ -503,6 +503,7 @@ COMMON_LIB_OBJS = \
    $(OBJ_DIR)\hbstr.obj \
    $(OBJ_DIR)\hbtrace.obj \
    $(OBJ_DIR)\hbver.obj \
+   $(OBJ_DIR)\hash.obj \
    $(OBJ_DIR)\expropt1.obj \
    $(OBJ_DIR)\expropt2.obj \
    $(OBJ_DIR)\reserved.obj
@@ -716,6 +717,7 @@ $(HARBOUR_EXE) : \
    $(OBJ_DIR)\harboury.c \
    $(OBJ_DIR)\harbourl.c \
    $(COMPILER_DIR)\hbusage.c \
+   $(COMPILER_DIR)\hbident.c \
    $(COMPILER_DIR)\hbpcode.c \
    $(COMPILER_DIR)\hbfix.c \
    $(COMPILER_DIR)\hbfunchk.c \

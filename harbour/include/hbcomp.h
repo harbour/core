@@ -48,6 +48,7 @@
 #include "hbver.h"
 #include "hbexprop.h"
 #include "hbpcode.h"
+#include "hbhash.h"
 
 #if defined(HB_EXTERN_C)
 extern "C" {
@@ -411,6 +412,11 @@ extern void hb_compGenCCode( PHB_FNAME );      /* generates the C language outpu
 extern void hb_compGenJava( PHB_FNAME );       /* generates the Java language output */
 extern void hb_compGenPortObj( PHB_FNAME );    /* generates the portable objects */
 extern void hb_compGenObj32( PHB_FNAME );      /* generates OBJ 32 bits */
+
+/* hbident.c   */
+extern char * hb_compIdentifierNew( char * szName, BOOL bCopy ); /* create the reusable identifier */
+extern void hb_compIdentifierOpen( void ); /* prepare the table of identifiers */
+extern void hb_compIdentifierClose( void ); /* release the table of identifiers */
 
 /* variable used by compiler
  */

@@ -19,6 +19,7 @@ C_HEADERS=\
 	hbdefs.h     \
 	hberrors.h   \
 	hbexprop.h   \
+	hbhash.h     \
 	hbinit.h     \
 	hbmacro.h    \
 	hbpcode.h    \
