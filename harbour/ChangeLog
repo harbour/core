@@ -1,3 +1,9 @@
+20000325-07:50 EST Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/gtwin/gtwin.c
+     * correct handling of the screen buffers and fix a gpf when
+       calling SetMode() - only noticed under Win98
+     * added a todo. (for me)
+
 20000325-04:58 EST Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/diskspac.c
      * un-opted the small opt. (fixed hang)

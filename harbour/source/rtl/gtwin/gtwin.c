@@ -140,11 +140,6 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
    HB_SYMBOL_UNUSED( iFilenoStderr );
 
    s_HDOutput   = INVALID_HANDLE_VALUE;
-   s_HOriginal  = INVALID_HANDLE_VALUE;
-   s_HOutput    = INVALID_HANDLE_VALUE;
-   s_HActive    = INVALID_HANDLE_VALUE;
-   s_HInactive  = INVALID_HANDLE_VALUE;
-   s_HInput     = INVALID_HANDLE_VALUE;
 
    s_cNumRead = 0;
    s_cNumIndex = 0;
@@ -1000,7 +995,6 @@ void hb_gt_DispEnd( void )
    /* TOFIX: Violation of API calling rules! */
    if( hb_gtDispCount() == 1 )
    {
-      s_HOutput = s_HInactive;
       s_HInactive = s_HActive;
       s_HActive = s_HOutput;
       SetConsoleActiveScreenBuffer( s_HActive );
@@ -1041,12 +1035,22 @@ BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
    /* console window first, then the buffer */
    if( ( DWORD ) csbi.dwSize.X * csbi.dwSize.Y > ( DWORD ) uiCols * uiRows )
    {
+      /* TODO: these calls are a temporary solution */
+      SetConsoleWindowInfo( s_HActive, TRUE, &srWin );
+      SetConsoleScreenBufferSize( s_HActive, coBuf );
+      SetConsoleWindowInfo( s_HInactive, TRUE, &srWin );
+      SetConsoleScreenBufferSize( s_HInactive, coBuf );
       if( !SetConsoleWindowInfo( s_HOutput, TRUE, &srWin ) ||
           !SetConsoleScreenBufferSize( s_HOutput, coBuf ) )
          bRetVal = FALSE;
    }
    else if( ( DWORD ) csbi.dwSize.X * csbi.dwSize.Y < ( DWORD ) uiCols * uiRows )
    {
+      /* TODO: these calls are a temporary solution */
+      SetConsoleScreenBufferSize( s_HActive, coBuf );
+      SetConsoleWindowInfo( s_HActive, TRUE, &srWin );
+      SetConsoleScreenBufferSize( s_HInactive, coBuf );
+      SetConsoleWindowInfo( s_HInactive, TRUE, &srWin );
       if( !SetConsoleScreenBufferSize( s_HOutput, coBuf ) ||
           !SetConsoleWindowInfo( s_HOutput, TRUE, &srWin ) )
          bRetVal = FALSE;
