@@ -63,28 +63,32 @@
 
 HB_FUNC( LIBLOAD )
 {
-
 #if defined(HB_OS_WIN_32)
    {
       hb_retnl( ( long ) LoadLibrary( hb_parc( 1 ) ) );
    }
+#else
+   {
+      hb_retnl( 0 );
+   }
 #endif
-
 }
 
 HB_FUNC( LIBFREE )
 {
-
 #if defined(HB_OS_WIN_32)
    {
       hb_retl( FreeLibrary( ( HMODULE ) hb_parnl( 1 ) ) );
    }
+#else
+   {
+      hb_retl( FALSE );
+   }
 #endif
-
 }
 
 /* Executes a Harbour pcode dynamically loaded DLL function or procedure
- * Syntax: HB_DllDo( <cFuncName> [,<params...>] ) --> [<uResult>]
+ * Syntax: HB_libDo( <cFuncName> [,<params...>] ) --> [<uResult>]
  */
 
 HB_FUNC( HB_LIBDO )
@@ -108,3 +112,4 @@ HB_FUNC( HB_LIBDO )
       hb_vmDo( uiPCount - 1 );
    }
 }
+

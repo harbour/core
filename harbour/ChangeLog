@@ -8,6 +8,21 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-15 12:24 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * include/hbver.h
+     + Jumped the version number and date.
+
+   * doc/whatsnew.doc
+     + Added new version (no items yet)
+
+   * source/vm/dynlibhb.c
+     ! Fixed for non Win32 platform to return 
+       compatible values.
+
+   * doc/howtomak.txt
+     - Removed TASM as a requirement.
+
 2001-12-15 12:11 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * include/hbinkey.ch
