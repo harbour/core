@@ -1,3 +1,9 @@
+19990605-11:12 EST Les. Griffith
+  * removed DIRECTORY() from files.c
+  * added rtl\dir.c
+  * added tests working dirtest.prg
+  * changed makefile.b32 to deal with dir.c dir.obj
+
 19990604-16:20 CET Eddie Runia
   * source/vm/initsymb.c; tests/working/run_exp.h
     CDOW/ CMONTH were missing + Removal duplicate symbols from run_exp
