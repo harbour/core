@@ -226,7 +226,7 @@ BOOL hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex )
 
 BOOL hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayError(%p, %lu, %p)", pArray, ulIndex, pItem));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySet(%p, %lu, %p)", pArray, ulIndex, pItem));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {

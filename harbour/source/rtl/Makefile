@@ -105,6 +105,7 @@ C_SOURCES=\
 	version.c    \
 	word.c       \
 	xhelp.c      \
+	xsavescr.c   \
 
 PRG_SOURCES=\
 	achoice.prg  \
@@ -141,7 +142,6 @@ PRG_SOURCES=\
 	treport.prg  \
 	typefile.prg \
 	wait.prg     \
-	xsavescr.prg \
 
 LIBNAME=rtl
 

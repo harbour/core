@@ -1,3 +1,17 @@
+20000425-04:37 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/vm/arrays.c
+     ! Trace line text fixed.
+
+   * source/rtl/setfunc.prg
+     ! HB_EXTENSION guards added.
+
+   - source/rtl/xsavescr.prg
+   + source/rtl/xsavescr.c
+   * source/rtl/Makefile
+   * makefile.bc
+   * makefile.vc
+
 20000425-03:49 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/gtstd.c

@@ -33,20 +33,55 @@
  *
  */
 
-STATIC s_cScrn
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 Victor Szakats <info@szelvesz.hu>
+ *    Rewritten in C
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
 
-PROCEDURE __XSAVESCREEN()
+#include "hbapigt.h"
 
-   s_cScrn := { Row(), Col(), SaveScreen() }
+/* NOTE: In original CA-Cl*pper 5.x these functions are written in Clipper
+         [vszakats] */
 
-   RETURN
+static SHORT s_iRow;
+static SHORT s_iCol;
+static void * s_pBuffer = NULL;
 
-PROCEDURE __XRESTSCREEN()
+HB_FUNC( __XSAVESCREEN )
+{
+   if( s_pBuffer != NULL )
+      hb_xfree( s_pBuffer );
 
-   IF s_cScrn != NIL
-      RestScreen( , , , , s_cScrn[ 3 ] )
-      SetPos( s_cScrn[ 1 ], s_cScrn[ 2 ] )
-      s_cScrn := NIL
-   ENDIF
+   hb_gtGetPos( &s_iRow, &s_iCol );
 
-   RETURN
+   {
+      USHORT uiSize;
+      hb_gtRectSize( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), &uiSize );
+      s_pBuffer = hb_xgrab( uiSize );
+   }
+
+   hb_gtSave( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), s_pBuffer );
+}
+
+/* NOTE: There's no check about the screen size on restore, so this will
+         fail if the user has changed the screen resolution before calling it.
+         [vszakats] */
+
+HB_FUNC( __XRESTSCREEN )
+{
+   if( s_pBuffer != NULL )
+   {
+      hb_gtRest( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), s_pBuffer );
+      hb_xfree( s_pBuffer );
+      s_pBuffer = NULL;
+
+      hb_gtSetPos( s_iRow, s_iCol );
+   }
+}
+

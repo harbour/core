@@ -35,6 +35,7 @@
 
 #include "inkey.ch"
 #include "common.ch"
+#include "hbsetup.ch"
 
 PROCEDURE __SetFunction( nFunctionKey, cString )
 
@@ -43,8 +44,10 @@ PROCEDURE __SetFunction( nFunctionKey, cString )
 
    DO CASE
    CASE nFunctionKey == 1  ; nFunctionKey := K_F1
+#ifdef HB_EXTENSION
    CASE nFunctionKey == 11 ; nFunctionKey := K_F11
    CASE nFunctionKey == 12 ; nFunctionKey := K_F12
+#endif
    OTHERWISE               ; nFunctionKey := -nFunctionKey + 1
    ENDCASE
 

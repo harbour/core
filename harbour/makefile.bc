@@ -257,6 +257,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\version.obj \
    $(OBJ_DIR)\word.obj \
    $(OBJ_DIR)\xhelp.obj \
+   $(OBJ_DIR)\xsavescr.obj \
    \
    $(OBJ_DIR)\achoice.obj \
    $(OBJ_DIR)\adir.obj \
@@ -291,8 +292,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\tlabel.obj \
    $(OBJ_DIR)\treport.obj \
    $(OBJ_DIR)\typefile.obj \
-   $(OBJ_DIR)\wait.obj \
-   $(OBJ_DIR)\xsavescr.obj
+   $(OBJ_DIR)\wait.obj
 
 #
 # LANG.LIB rules
@@ -1532,10 +1532,7 @@ $(OBJ_DIR)\xhelp.obj : $(RTL_DIR)\xhelp.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\xsavescr.c : $(RTL_DIR)\xsavescr.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\xsavescr.obj : $(OBJ_DIR)\xsavescr.c
+$(OBJ_DIR)\xsavescr.obj : $(RTL_DIR)\xsavescr.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 

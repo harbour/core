@@ -290,6 +290,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\version.obj \
    $(OBJ_DIR)\word.obj \
    $(OBJ_DIR)\xhelp.obj \
+   $(OBJ_DIR)\xsavescr.obj \
    \
    $(OBJ_DIR)\achoice.obj \
    $(OBJ_DIR)\adir.obj \
@@ -324,8 +325,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\tlabel.obj \
    $(OBJ_DIR)\treport.obj \
    $(OBJ_DIR)\typefile.obj \
-   $(OBJ_DIR)\wait.obj \
-   $(OBJ_DIR)\xsavescr.obj
+   $(OBJ_DIR)\wait.obj
 
 #
 # LANG.LIB rules
