@@ -7,6 +7,9 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-02-05 15:13 UTC+0100 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/tbrowse.prg
+     ! fixed columns width handling when there are frozen columns
      + columns' width get evaluated just before first TBrowse ::Stabilize()
      + little changes to optimize speed
    * source/rtl/tbcolumn.prg
