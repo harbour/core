@@ -1,9 +1,18 @@
+2001-08-24 16:03 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   + contrib/os2pm
+   + contrib/os2pm/os2pm.c
+   + contrib/os2pm/tform.prg
+   + contrib/os2pm/os2pm.ch
+   + contrib/os2pm/Makefile
+     + added files of an early implementation of a generic GUI
+       framework for harbour. At present time they work only under OS/2 PM
+
 2001-08-23 23:18 GMT Dave Pearson <davep@davep.org>
    * source/rtl/profiler.prg
      * Minor tidy-up of a couple of comments.
    * tests/testprof.org
      * Updated to test the various reporting classes.
-	
+
 2001-08-23 22:51 GMT Dave Pearson <davep@davep.org>
    * doc/readme.txt
      * Cut down to a bare minimum. Most of the information in there was
@@ -11,7 +20,7 @@
        points the reader at the web site and the FAQ and reminds them that
        they'll find copious documentation in the same place that they
        found the README file.
-	
+
 2001-08-23 23:13 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * source/vm/Makefile
      + if HB_GT_LIB == os2pm then compiles mainpm.c instead of main.c
