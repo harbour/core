@@ -73,6 +73,8 @@
 *                                                                        *
 \************************************************************************/
 
+#define HB_OS_WIN_32_USED
+
 #include <Windows.h>
 #include <Ole2.h>
 
@@ -154,42 +156,78 @@ static void GetParams(DISPPARAMS * dParams)
          switch( uParam->type )
          {
             case '\0':
+#if !defined(__BORLANDC__)
+                 pArgs[ n ].vt   = VT_EMPTY;
+#else
                  pArgs[ n ].n1.n2.vt   = VT_EMPTY;
+#endif
                  break;
 
             case HB_IT_STRING:
             case HB_IT_MEMO:
+#if !defined(__BORLANDC__)
+                 pArgs[ n ].vt   = VT_BSTR;
+#else
                  pArgs[ n ].n1.n2.vt   = VT_BSTR;
+#endif
                  cString = AnsiToWide( hb_parc( nArg ) );
+#if !defined(__BORLANDC__)
+                 pArgs[ n ].bstrVal = SysAllocString( (LPVOID) cString );
+#else
                  pArgs[ n ].n1.n2.n3.bstrVal = SysAllocString( (LPVOID) cString );
+#endif
                     hb_xfree( cString );
                  break;
 
             case HB_IT_LOGICAL:
+#if !defined(__BORLANDC__)
+                 pArgs[ n ].vt   = VT_BOOL;
+                 pArgs[ n ].boolVal = hb_parl( nArg );
+#else
                  pArgs[ n ].n1.n2.vt   = VT_BOOL;
-                    pArgs[ n ].n1.n2.n3.boolVal = hb_parl( nArg );
+                 pArgs[ n ].n1.n2.n3.boolVal = hb_parl( nArg );
+#endif
                  break;
 
             case HB_IT_INTEGER:
             case HB_IT_LONG:
             case HB_IT_NUMERIC:
+#if !defined(__BORLANDC__)
+                 pArgs[ n ].vt   = VT_I4;
+                 pArgs[ n ].lVal = hb_parnl( nArg );
+#else
                  pArgs[ n ].n1.n2.vt   = VT_I4;
                  pArgs[ n ].n1.n2.n3.lVal = hb_parnl( nArg );
+#endif
                  break;
 
             case HB_IT_DOUBLE:
+#if !defined(__BORLANDC__)
+                 pArgs[ n ].vt   = VT_R8;
+                 pArgs[ n ].dblVal = hb_parnd( nArg );
+#else
                  pArgs[ n ].n1.n2.vt   = VT_R8;
                  pArgs[ n ].n1.n2.n3.dblVal = hb_parnd( nArg );
+#endif
                  break;
             case HB_IT_DATE:
+#if !defined(__BORLANDC__)
+                 pArgs[ n ].vt   = VT_DATE;
+                 pArgs[ n ].dblVal = DateToDbl( hb_pards( nArg ) );
+#else
                  pArgs[ n ].n1.n2.vt   = VT_DATE;
                  pArgs[ n ].n1.n2.n3.dblVal = DateToDbl( hb_pards( nArg ) );
+#endif
                  break;
 
             case HB_IT_OBJECT:
             {
                  PHB_DYNS pData;
+#if !defined(__BORLANDC__)
+                 pArgs[ n ].vt = VT_EMPTY;
+#else
                  pArgs[ n ].n1.n2.vt = VT_EMPTY;
+#endif
                  if ( hb_stricmp( hb_objGetClsName( uParam ), "TOleAuto" ) == 0 )
                  {
                     pData = hb_dynsymFindName( "hObj" );
@@ -198,8 +236,13 @@ static void GetParams(DISPPARAMS * dParams)
                        hb_vmPushSymbol( pData->pSymbol );
                        hb_vmPush( uParam );
                        hb_vmDo( 0 );
+#if !defined(__BORLANDC__)
+                       pArgs[ n ].vt = VT_DISPATCH;
+                       pArgs[ n ].pdispVal = ( IDispatch * ) hb_parnl( -1 );
+#else
                        pArgs[ n ].n1.n2.vt = VT_DISPATCH;
                        pArgs[ n ].n1.n2.n3.pdispVal = ( IDispatch * ) hb_parnl( -1 );
+#endif
                     }
                  }
              }
@@ -232,6 +275,49 @@ static void RetValue( void )
 {
    LPSTR cString;
 
+#if !defined(__BORLANDC__)
+   switch( RetVal.vt )
+   {
+      case VT_BSTR:
+           cString = WideToAnsi( ( LPSTR ) RetVal.bstrVal );
+           hb_retc( cString );
+           hb_xfree( cString );
+           break;
+
+      case VT_BOOL:
+              hb_retl( RetVal.boolVal );
+           break;
+
+      case VT_DISPATCH:
+           hb_retnl( ( LONG ) RetVal.pdispVal );
+           break;
+
+      case VT_I4:
+           hb_retnl( ( LONG ) RetVal.iVal );
+           break;
+
+      case VT_R8:
+           hb_retnd( RetVal.dblVal );
+           break;
+
+      case VT_DATE:
+           hb_retds( DblToDate( RetVal.dblVal ) );
+           break;
+
+      case VT_EMPTY:
+           hb_ret();
+           break;
+
+      default:
+           if ( nOleError == S_OK )
+              (LONG) nOleError = -1;
+           hb_ret();
+           break;
+   }
+
+   if( RetVal.vt != VT_DISPATCH )
+      VariantClear( &RetVal );
+#else
    switch( RetVal.n1.n2.vt )
    {
       case VT_BSTR:
@@ -273,6 +359,7 @@ static void RetValue( void )
 
    if( RetVal.n1.n2.vt != VT_DISPATCH )
       VariantClear( &RetVal );
+#endif
 
 }
 
@@ -455,7 +542,11 @@ HB_FUNC( OLEERROR )
 
 HB_FUNC( OLEISOBJECT )
 {
+#if !defined(__BORLANDC__)
+   hb_retl( RetVal.vt == VT_DISPATCH );
+#else
    hb_retl( RetVal.n1.n2.vt == VT_DISPATCH );
+#endif
 }
 
 HB_FUNC( OLEUNINITIALIZE )

@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-10-04 20:18 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * contrib/ole/ole2.c
+    * Some changes needed for Mingw.
+  + contrib/ole/Makefile
+    + Makefile added.
+
 2003-09-29 16:12 UTC-0800 Luis Krause Mantilla <lkrausem@shaw.ca>
   * contrib/rdd_ads/adsfunc.c
   * contrib/rdd_ads/doc/en/adsfuncs.txt
