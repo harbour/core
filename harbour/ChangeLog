@@ -1,3 +1,17 @@
+2001-02-01 22:10 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
++source/debug/dbgtarr.prg
+   *Browse functions for view arrays on debugger
++source/debug/dbgtobj.prg
+   *Browse functions for view objects on debugger
+*source/debug/debugger.prg
+   +Added support to view arrays and objects on the Variable windows
+   *fixed browse colors to viewsets() method
+*makefile.bc
+ hb_slex.bc
+ source/debug/makefile
+   *added dbgtarr.prg and dbgtobj.prg to  dependencies list
+   ****NOTE**** VC++ Users. please update the make files
+
 2001-01-30 10:10 UTC-0500 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/gtwin/gtwin.c
     * Changed code that determines whether or not a key stroke is for
