@@ -13,7 +13,7 @@ controlled by means of HB_SETMACRO()* function, not available in Clipper.
 HB_SETMACRO( HB_SM_HARBOUR, TRUE ) will enable macro compilation and
 evaluation of complex expressions not supported by Clipper like:
 
- - exp++, exp--, exp += exp, (exp), etc..
+ - exp++, exp--, var += exp, (exp), etc..
  - Nested codeblocks.
  - Expressions longer then 254 characters.
 
@@ -37,11 +37,11 @@ LIST Command
 
 LIST &cMacro
 
-LIST in clipper [superficially] supports macros of lists expressions. No
-error will be produced, and all expressions in the list will be
+LIST in clipper [superficially] supports macros of lists expressions.
+No error will be produced, and all expressions in the list will be
 evaluated, but *only* the *last* expression will be displayed. This is
-not a documented in either the LIST or the Macro Operator, but is the
-de-facto behavior in all Clipper 5.x versions.
+not documented in either the LIST Command or the Macro Operator
+descriptions, but is the de-facto behavior in all Clipper 5.x versions.
 
 Harbour instead will not only evaluate all of the expressions in
 such list macro, but will also display all such values. This default
