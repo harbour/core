@@ -342,11 +342,9 @@ Separator     {SpaceTab}
 
 {SpaceTab}     ;
 
-\n.           { /* "." after "\n" is important so we skip empty lines, until begining of non empty next line - don't remove!!! */
+\n           {
                 hb_comp_iState = LOOKUP;
 		iIndexSets = 0;
-
-                yyless( 1 );
 
                 if( ! hb_comp_bQuiet && ( hb_comp_iLine % 100 ) == 0 )
                 {

@@ -1,3 +1,18 @@
+2000-07-28 06:30 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   + doc/simplex.txt
+     + Added 1st draft of SimpLex documentation.
+
+   * source/compiler/simplex.c
+     + Added overidable macro STREAM_EXCEPTION()
+
+   * source/compiler/harbour.l
+     * Modified to return every \n to correct line numbers reporting.
+       /* Note: removed note about . after \n, I beleive it was needed to avoid conflict with $ which is no longer used,
+          and should be avoided, due to few other side effects. */
+
+   source/compiler/harbour.slx
+     * Standadized un-terminated strings messages.
+
 2000-07-28 00:18 UTC+0500 April White <awhite@user.rose.com>
 
    * include/hbapi.h

@@ -1,0 +1,21 @@
+Overview:
+SimpLex uses high-level definitions, which for many programmers might be more readable, than equivalent Flex definitions. SimpLex Language Definitions are divided into 6 main sections:
+
+1. Delimiters. There are 3 kinds of Lexical Delimiters"
+a. Ignorable. Typical example of such delimiters is "white space", i.e. space and tab.
+b. Returnable. Typical examples of such delimiters are commas, parenthesis, and math operators.
+c. Appendables. While I don't have any examples in mind, I suspect there might be a need for such delimiters. This kind of delimiters should be appended to the preceding token, in effect making such delimiter a terminator character.
+
+2. Streams. These are also referred to as "pairs". Stream or Pair, as the name may suggest, is any sequence (or stream) of characters, enclosed within a STARTing character and an ENDing character (the pair). Typical example of such lexical element is a LITERAL string, i.e. "Hello World".
+
+3. Self Contained Words. These are a specific set of reserved words, which do NOT require ANY delimiters. These words might be viewed as a form of Meta Delimiters. These words will be extracted from the input stream, regardless of any preceding, or succeeding characters. Typical example of such tokens are the dBase' .AND. .OR. .NOT. logical operators, the C language inline assignment operators += *= etc., as well as pre and post increment/decrement operators -- and ++. The unique attribute of such elements is the fact that these elements do NOT require preceding or succeeding delimiters.
+	
+4. Keywords. These are specific set of reserved words, which have lexical significance in the defined language, when appearing as the FIRST token in a given source line.
+
+5. Words. These are specific set of reserved words, which have lexical significance in the defined language, when appearing ANYWHERE in a given source line.
+
+6. Rules. There are 2 kinds of rules:
+
+a. Reduction Rules. This kind of rules defines the translation of a 1 or more tokens into 1 or more other tokens (or custom actions). 
+b. Pass Through (Left Associate). This kind of rules directs the Lexer to accept such token[s] as a valid form, and may also be used to eliminate a possible association with the next input. Typical example is a rule that associates the dBase '[' character with a preceding identifier name, to "defuse" its usage as a string delimiter, i.e. MyArray[1] as opposed to [Hello World].
+

@@ -55,6 +55,11 @@
 #define STOP_IF_ONE_OF_THESE(x) x,
 #define AND_IGNORE_DELIMITERS(x) x,
 #define AS_PAIR_TOKEN(x) x }
+#define STREAM_EXCEPTION( sPair, chrPair) \
+        if( chrPair ) \
+           printf(  "Exception: %c for stream at: \"%s\"\n", chrPair, sPair ); \
+        else \
+           printf(  "Exception: <EOF> for stream at: \"%s\"\n", chrPair, sPair ); \
 
 /* Pairs. */
 static char sPair[ 2048 ];
@@ -962,7 +967,7 @@ int yylex( void )
                             {
                                sPair[ iPairLen ] = '\0';
 
-                               printf(  "Exception: %c for Pair: at \"%s\"\n", chrPair, sPair );
+                               STREAM_EXCEPTION( sPair, chrPair);
 
                                /* Resetting. */
                                cTerm = 0;
@@ -1005,7 +1010,7 @@ int yylex( void )
                     }
 
                     /* EOF */
-                    DEBUG_INFO( printf(  "Exception: <EOF> for Pair: at \"%s\"\n", sPair ) );
+                    STREAM_EXCEPTION( sPair, NULL );
 
                     /* Resetting. */
                     cTerm = 0;

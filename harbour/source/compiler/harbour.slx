@@ -50,6 +50,12 @@
 #undef YY_BUF_SIZE
    #define YY_BUF_SIZE HB_PP_STR_SIZE
 
+#undef STREAM_EXCEPTION
+   #define STREAM_EXCEPTION( sPair, cChar ) \
+	   hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, sPair, NULL ); \
+           aiReturn[ iReturn++ ] = '\n'; \
+           aiReturn[ iReturn++ ] = LITERAL;
+
 static int iTexts = 0;
 static char * aTexts[1024];
 static int iIdentifier = 0;
