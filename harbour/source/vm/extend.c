@@ -161,7 +161,7 @@ char HB_EXPORT * hb_parc( int iParam, ... )
       }
    }
 
-   return "";
+   return ( char * ) 0;
 }
 
 ULONG  HB_EXPORT hb_parclen( int iParam, ... )
