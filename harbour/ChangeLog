@@ -1,3 +1,14 @@
+Tue Oct 26 12:15:01 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* source/vm/cmdarg.c: 
+	* source/vm/debug.c: 
+	* source/vm/dynsym.c: 
+	* source/vm/hvm.c: 
+	* source/vm/initsymb.c: 
+	* source/vm/mainstd.c: 
+	* source/vm/mainwin.c: 
+	Added HB_TRACE() calls to the VM.
+
 19991026-14:07 GMT+1 Victor Szel <info@szelvesz.hu>
   * include/itemapi.h
     source/rtl/itemapi.c

@@ -44,6 +44,8 @@ static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, ULONG ulPos )
 {
    PHB_ITEM pTemp;
 
+   HB_TRACE(("AddToArray(%p, %p, %lu)", pItem, pReturn, ulPos));
+
    if( pItem->type == IT_SYMBOL )
    {                                            /* Symbol is pushed as text */
       pTemp = hb_itemNew( NULL );               /* Create temporary string */
@@ -69,6 +71,8 @@ static USHORT hb_stackLenGlobal( void )
 {
    PHB_ITEM pItem;
    USHORT uiCount = 0;
+
+   HB_TRACE(("hb_stackLenGlobal()"));
 
    for( pItem = hb_stack.pItems; pItem++ <= hb_stack.pPos; uiCount++ );
 
@@ -110,10 +114,12 @@ HARBOUR HB___VMSTKGLIST( void )
 static USHORT StackLen( void )
 {
    PHB_ITEM pItem;
-   PHB_ITEM pBase = hb_stack.pItems + hb_stack.pBase->item.asSymbol.stackbase;
-
+   PHB_ITEM pBase;
    USHORT uiCount = 0;
 
+   HB_TRACE(("hb_StackLen()"));
+
+   pBase = hb_stack.pItems + hb_stack.pBase->item.asSymbol.stackbase;
    for( pItem = pBase; pItem < hb_stack.pBase; pItem++, uiCount++ );
 
    return uiCount;

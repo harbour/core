@@ -43,6 +43,8 @@ static char * hb_cmdargGet( const char * pszName, BOOL bRetValue );
 
 void hb_cmdargInit( int argc, char * argv[] )
 {
+   HB_TRACE(("hb_cmdargInit(%d, %p)", argc, argv));
+
    s_argc = argc;
    s_argv = argv;
 }
@@ -59,6 +61,8 @@ char ** hb_cmdargARGV( void )
 
 BOOL hb_cmdargIsInternal( const char * szArg )
 {
+   HB_TRACE(("hb_cmdargIsInternal(%s)", szArg));
+
    return strlen( szArg ) >= 2 &&
           szArg[ 0 ] == '/' &&
           szArg[ 1 ] == '/';
@@ -68,6 +72,8 @@ static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )
 {
    int i;
    char * pszEnvVar;
+
+   HB_TRACE(("hb_cmdargGet(%s, %d)", pszName, (int) bRetValue));
 
    /* Check the command line first */
 
@@ -177,8 +183,11 @@ char * hb_cmdargString( const char * pszName )
 
 int hb_cmdargNum( const char * pszName )
 {
-   char * pszValue = hb_cmdargGet( pszName, TRUE );
+   char * pszValue;
 
+   HB_TRACE(("hb_cmdargNum(%s)", pszName));
+
+   pszValue = hb_cmdargGet( pszName, TRUE );
    if( pszValue )
    {
       int iValue = atoi( pszValue );

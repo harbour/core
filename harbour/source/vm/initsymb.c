@@ -173,6 +173,8 @@ static HB_SYMB symbols[] = {
 
 void hb_vmSymbolInit_RT( void )
 {
+   HB_TRACE(("hb_vmSymbolInit_RT()"));
+
    hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) );
 }
 
