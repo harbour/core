@@ -1,3 +1,8 @@
+2000-06-22 19:16 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+   * source/pp/ppcore.c
+     ! Added bStrict parameter to getExpReal(), all calls to getExpReal() pass FALSE, other than isExpres().
+     So getExpReal() will now return invalid tokens like unterminated strings, unless bStrict is TRUE.
+
 2000-06-23 01:31 UTC+0200 JFL & RAC <jflb@mafact.com>
     *source/vm/classes.c
      ! Fixed CLASSDATA SHARED !

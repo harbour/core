@@ -95,7 +95,7 @@ static int    WorkTranslate( char *, char *, COMMANDS *, int * );
 static int    CommandStuff( char *, char *, char *, int *, BOOL, BOOL );
 static int    RemoveSlash( char * );
 static int    WorkMarkers( char **, char **, char *, int *, BOOL );
-static int    getExpReal( char *, char **, BOOL, int );
+static int    getExpReal( char *, char **, BOOL, int, BOOL );
 static BOOL   isExpres( char * );
 static BOOL   TestOptional( char *, char * );
 static BOOL   CheckOptional( char *, char *, char *, int *, BOOL, BOOL );
@@ -1525,7 +1525,7 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
 
   if( *(exppatt+2) == '4' )       /*  ----  extended match marker  */
     {
-      if( !lenreal ) lenreal = getExpReal( expreal, ptri, FALSE, maxlenreal );
+      if( !lenreal ) lenreal = getExpReal( expreal, ptri, FALSE, maxlenreal, FALSE );
       SearnRep( exppatt,expreal,lenreal,ptro,lenres);
     }
   else if( *(exppatt+2) == '3' )  /*  ----  wild match marker  */
@@ -1550,7 +1550,7 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
                 {
                   rezrestr = 1;
                   /*  (*ptri)++; */
-                  lenreal = getExpReal( expreal, ptri, FALSE, maxlenreal );
+                  lenreal = getExpReal( expreal, ptri, FALSE, maxlenreal, FALSE );
                   SearnRep( exppatt,expreal,lenreal,ptro,lenres);
                   break;
                 }
@@ -1587,13 +1587,13 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
     }
   else if( *(exppatt+2) == '1' )  /*  ---- list match marker  */
     {
-      if( !lenreal ) lenreal = getExpReal( expreal, ptri, TRUE, maxlenreal );
+      if( !lenreal ) lenreal = getExpReal( expreal, ptri, TRUE, maxlenreal, FALSE );
       SearnRep( exppatt,expreal,lenreal,ptro,lenres);
     }
   else                             /*  ---- regular match marker  */
     {
       /* Copying a real expression to 'expreal' */
-      if( !lenreal ) lenreal = getExpReal( expreal, ptri, FALSE, maxlenreal );
+      if( !lenreal ) lenreal = getExpReal( expreal, ptri, FALSE, maxlenreal, FALSE );
 
       /*
       printf("Len: %i Pat: %s Exp: %s\n", lenreal, exppatt, expreal );
@@ -1603,7 +1603,7 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
   return 1;
 }
 
-static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez )
+static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BOOL bStrict )
 {
    int lens = 0;
    char * sZnaki = "+-=><*/$.:#%!^";
@@ -1619,7 +1619,7 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez )
    char cLastChar = '\0';
    /* Ron Pinkas End */
 
-   HB_TRACE(HB_TR_DEBUG, ("getExpReal(%s, %p, %d, %d)", expreal, ptri, prlist, maxrez));
+   HB_TRACE(HB_TR_DEBUG, ("getExpReal(%s, %p, %d, %d, %d)", expreal, ptri, prlist, maxrez, bStrict));
 
    HB_SKIPTABSPACES( *ptri );
 
@@ -1915,13 +1915,16 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez )
    }
 
    /* Ron Pinkas added 2000-06-21 */
-   if( State == STATE_QUOTE1 || State == STATE_QUOTE2 || State == STATE_QUOTE3 ||
-       State == STATE_BRACKET || StBr1 || StBr2 || StBr3  )
+   if( bStrict )
    {
-      /* Alexander should we include this???
-      expreal = NULL;
-      */
-      lens = 0;
+      if( State == STATE_QUOTE1 || State == STATE_QUOTE2 || State == STATE_QUOTE3 ||
+          State == STATE_BRACKET || StBr1 || StBr2 || StBr3  )
+      {
+          /* Alexander should we include this???
+          expreal = NULL;
+          */
+          lens = 0;
+      }
    }
    /* Ron Pinkas added 2000-06-21 */
 
@@ -1939,7 +1942,7 @@ static BOOL isExpres( char * stroka )
   #endif
 
   l1 = strlen( stroka );
-  l2 = getExpReal( NULL, &stroka, FALSE, HB_PP_STR_SIZE );
+  l2 = getExpReal( NULL, &stroka, FALSE, HB_PP_STR_SIZE, TRUE );
 
   #if 0
      printf( "Len1: %i Len2: %i RealExp: >%s< Last: %c\n", l1, l2, stroka - l2, ( stroka - l2 )[l1-1] );
