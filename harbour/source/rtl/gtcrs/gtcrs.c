@@ -102,11 +102,10 @@ static void hb_gt_Initialize_Terminal( void )
       }
    }
 
-   cbreak();
    noecho();
-   nodelay( stdscr, 1 );
    scrollok( stdscr, FALSE );
    raw();
+   nodelay( stdscr, TRUE );
    keypad( stdscr, FALSE );
 
    s_under_xterm = !strncmp( getenv("TERM"), "xterm", 5 );
