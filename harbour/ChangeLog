@@ -1,3 +1,7 @@
+20000307-09:20 EST Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+     * create unistd.h moved to first target
+
 20000307-12:35 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/pp/hbpp.c    -> ppcore.c
      source/pp/hbppint.c -> ppcomp.c

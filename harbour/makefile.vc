@@ -324,13 +324,13 @@ VM_LIB_OBJS = \
 # Our default target
 #
 
-all: $(HARBOUR_EXE) \
+all: $(UNISTD) \
+     $(HARBOUR_EXE) \
      $(LIBLIST) \
      $(PP_EXE) \
      $(RUNNER_EXE) \
      $(REGRESS_EXE) \
-     $(HBDOC_EXE) \
-     $(UNISTD)
+     $(HBDOC_EXE)
 #     $(RUNNER_DLL)
 
 $(UNISTD):
