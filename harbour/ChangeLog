@@ -1,3 +1,7 @@
+19990523-12:50 CET Eddie Runia
+  * source/rtl/transfrm.c
+    Modified for by reference. (Forgot I was Captain of that)
+
 19990523-12:20 CET Eddie Runia
   * include/types.h
     modified the IS_* to work for reference passed variables

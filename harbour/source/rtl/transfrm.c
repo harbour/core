@@ -187,7 +187,7 @@ char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
    PushInteger( iDecimals );                    /* Push decimals            */
    Function( 3 );                               /* 3 Parameters             */
    pItem = &stack.Return;
-   if( pItem->wType == IT_STRING )              /* Is it a string           */
+   if( IS_STRING( pItem ) )                     /* Is it a string           */
    {
       szStr  = pItem->value.szText;
       iCount = 0;
@@ -454,7 +454,7 @@ HARBOUR TRANSFORM( void )
             lPicStart = pPic->wLength - lPic;   /* Get start of template    */
          }
 
-         switch( pExp->wType )
+         switch( pExp->wType & ~IT_BYREF )
          {
             case IT_STRING:
             {
@@ -633,7 +633,7 @@ HARBOUR TRANSFORM( void )
    }
    else                                         /* No picture supplied      */
    {
-      switch( pExp->wType )                     /* Default behaviour        */
+      switch( pExp->wType & ~IT_BYREF )         /* Default behaviour        */
       {
          case IT_STRING:
          {
