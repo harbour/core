@@ -8,22 +8,27 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-01-25 10:11 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+   * makefile.nt
+   * makefile.vc
+     * minor fix for hbverdir module
+
 2004-01-22 18:30 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/debug/dbgmenu.prg
    * source/debug/dbgtwin.prg
    * source/debug/debugger.prg
       *added Watchpoints support
-   
+
    * source/vm/debug.c
       *added item de-referencing to __vmVarLGet
-      
+
 2004-01-21 18:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    +include/hbdebug.ch
-      *added a missing file 
-      
+      *added a missing file
+
 2004-01-21 18:35 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/compiler/harbour.y
-      *fixed generation of line number's pcode related to 
+      *fixed generation of line number's pcode related to
       the debugger
 
    * source/debug/dbgmenu.prg
@@ -35,18 +40,18 @@
 
 2004-01-21 15:30 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/compiler/harbour.y
-      *fixed generation of line number's pcode related to 
+      *fixed generation of line number's pcode related to
       the debugger
-      
+
    * source/debug/dbgmenu.prg
    * source/debug/debugger.prg
       *fixed TRACE command
       *added support for 'Codeblock trace' option
       * other minor fixes to make the debugger usable
-      
+
    Additionally in my previous commit (2004-01-20 19:15)
    * source/vm/hvm.c
-      *added call for hb_inkeyPoll to the main pcode execution 
+      *added call for hb_inkeyPoll to the main pcode execution
       loop to correctly support Alt-D, Alt-C and Ctrl-C
       requests (only if HB_GUI is not defined) - it is
       called every 256 opcodes
@@ -61,14 +66,14 @@
    * source/compiler/harbour.c
    * source/compiler/harbour.y
    * source/compiler/hbfix.c
-      *when debug information is requested then the compiler generates 
+      *when debug information is requested then the compiler generates
       correct pcode with static variable name (it was correct if
       -gc1 or -gc2 options were used previously)
-      *the pcode of a codeblock contains the module name (in debug mode) 
+      *the pcode of a codeblock contains the module name (in debug mode)
 
    + include/hbdebug.ch
       *a new file with a definition of __dbgEntry call modes
-      
+
    * source/debug/debugger.prg
    * source/vm/hvm.c
       *changed parameters passed to __dbgEntry function to make the
@@ -93,7 +98,7 @@
 
    + source/rtl/gtcrs/debug.map
       *an example character mapping
-      
+
 2004-01-08 18:45 UTC-0500 David G. Holm <dholm@jsd-llc.com>
   *  contrib/Makefile
     + Added a section for rsxnt, which is unable to compile Ole and odbc.
@@ -152,10 +157,10 @@
 2003-12-05 16:05 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/rtl/gtcrs/gtcrs.c
       * characters with code > 128 are displayed correctly now
-      
+
    * tests/codebl.prg
       * updated test for detached codeblock parameters
-      (Notice that we are not compatible with Clipper here - there 
+      (Notice that we are not compatible with Clipper here - there
       is no need do duplicate Clipper bug, IMHO)
 
 2003-12-03 17:28 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
@@ -188,7 +193,7 @@
     ! added support of OpenWatcom C
     ! cleaned the verbose option
   * source/rdd/dbfcdx/dbfcdx1.h
-    ! changed to allow OpenWatcom C build 
+    ! changed to allow OpenWatcom C build
     ( suggested by Przemyslaw Czerpak )
   * source/vm/itemapi.c
     ! added support of OpenWatcom C
@@ -196,7 +201,7 @@
 2003-11-14 16:45 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbmath.h
       * fixed to compile under OpenWatcom
-      
+
    * source/vm/memvars.c
       * fixed to release PUBLIC variables correctly
       (when RELEASE command is used)
