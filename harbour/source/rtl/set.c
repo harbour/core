@@ -30,8 +30,8 @@ HARBOUR HB_SET( void );
 HARBOUR HB___SETCENTURY( void );
 
 static SYMBOL symbols[] = {
-{ "SET"       , FS_PUBLIC, HB_SET       , 0 },
-{ "SETCENTURY", FS_PUBLIC, HB___SETCENTURY, 0 },
+{ "__SETCENTURY", FS_PUBLIC, HB___SETCENTURY, 0 },
+{ "SET"         , FS_PUBLIC, HB_SET       , 0   }
 };
 
 void Set__InitSymbols( void )

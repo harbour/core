@@ -113,9 +113,10 @@ FUNCTION Main( cScript )
 
             ELSE                                          // Yes.
                IF at( "%>", cLine ) != 0                  // Is it inline?
-                  aadd( aResult, "qOut( '" +            ; // Yes, translate
-                     substr( cLine, 1, nPos-1 )       + ; // only HTML to
-                     "' ) " +                 NewLine + ; // qOut( <hmtl> )
+                                // Yes, translate only HTML to qOut <hmtl>
+                  aadd( aResult, "qOut( '" +            ;
+                     substr( cLine, 1, nPos-1 )       + ;
+                     "' ) " +                 NewLine + ;
                      substr( cLine,  nPos + 2,          ;
                         at( "%>", cLine ) -             ;
                         (nPos + 2) )                  + ;
@@ -146,6 +147,7 @@ FUNCTION Main( cScript )
       fClose( hFile )
 
       // Creates the temporary HRB, erases the PRG
+      QOut( cHarbourDir + "harbour.exe" )
       __Run( cHarbourDir + "harbour.exe " + cFile + " /q /n /gHRB" )
       fErase( cFile )
 
