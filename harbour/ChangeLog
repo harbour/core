@@ -1,3 +1,17 @@
+19990912-20:45 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rtl/memvars.c
+    ! __MVSAVE() will no longer try to save memvars with longer filename than
+      10 character, the Clipper maximum.
+
+  * tests/working/memfile.prg
+    tests/working/Makefile
+    + .MEM file save/restore test program added, it's a simple test and doesn't
+      yet checks for every aspects of the topic.
+
+  * funclist.txt
+    + __MSAVE()/__MRESTORE() marked Ready.
+
 19990912-20:30 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/memvars.c

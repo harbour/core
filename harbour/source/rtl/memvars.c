@@ -1546,7 +1546,12 @@ HARBOUR HB___MVSAVE( void )
             --ulBase;
             pDynVar = s_privateStack[ ulBase ];
 
-            if( pDynVar->hMemvar )
+            /* Save memvars with a maximum name length of 10 characters */
+            /* NOTE: Harbour name lengths are not limited, but the .MEM file
+                     structure is not flexible enough to allow for it. 
+                     So we are ignoring any variables with more then 10 chars
+                     long name. */
+            if( pDynVar->hMemvar && strlen( pDynVar->pSymbol->szName ) <= 10 )
             {
                BOOL bMatch = ( pszMask[ 0 ] == '*' || hb_strMatchRegExp( pDynVar->pSymbol->szName, pszMask ) );
 

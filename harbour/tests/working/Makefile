@@ -82,6 +82,7 @@ PRG_SOURCES=\
         longstr2.prg \
         mankala.prg \
         mathtest.prg \
+        memfile.prg \
         memvar.prg \
         menutest.prg \
         mtran.prg \
