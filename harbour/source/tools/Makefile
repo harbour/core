@@ -36,6 +36,7 @@ C_SOURCES=\
 
 PRG_SOURCES=\
 	ctmisc.prg \
+	cttoken.prg \
 	fileread.prg \
 	nconvert.prg \
 	numtxthu.prg \

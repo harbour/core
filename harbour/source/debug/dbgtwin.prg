@@ -70,13 +70,13 @@ ENDCLASS
 
 METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor ) CLASS TDbWindow
 
-   ::nTop     = nTop
-   ::nLeft    = nLeft
-   ::nBottom  = nBottom
-   ::nRight   = nRight
-   ::cCaption = cCaption
-   ::cColor   = cColor
-   ::lShadow  = .f.
+   ::nTop     := nTop
+   ::nLeft    := nLeft
+   ::nBottom  := nBottom
+   ::nRight   := nRight
+   ::cCaption := cCaption
+   ::cColor   := cColor
+   ::lShadow  := .f.
 
 return Self
 
@@ -84,7 +84,7 @@ METHOD Hide() CLASS TDbWindow
 
    RestScreen( ::nTop, ::nLeft, ::nBottom + If( ::lShadow, 1, 0 ),;
                ::nRight + If( ::lShadow, 2, 0 ), ::cBackImage )
-   ::cBackImage = nil
+   ::cBackImage := nil
 
 return nil
 
@@ -106,7 +106,7 @@ METHOD SetCaption( cCaption ) CLASS TDbWindow
 
    local nOldLen := If( ::cCaption != nil, Len( ::cCaption ), 0 )
 
-   ::cCaption = cCaption
+   ::cCaption := cCaption
 
    if ! Empty( cCaption )
       DispOutAt( ::nTop, ::nLeft + ( ( ::nRight - ::nLeft ) / 2 ) - ;
@@ -124,7 +124,7 @@ METHOD SetFocus( lOnOff ) CLASS TDbWindow
 
    DispBegin()
 
-   ::lFocused = lOnOff
+   ::lFocused := lOnOff
 
    @ ::nTop, ::nLeft, ::nBottom, ::nRight BOX If( lOnOff, B_DOUBLE, B_SINGLE ) ;
       COLOR ::cColor
@@ -151,7 +151,7 @@ METHOD Show( lFocused ) CLASS TDbWindow
 
    DEFAULT lFocused TO .f.
 
-   ::cBackImage = SaveScreen( ::nTop, ::nLeft, ::nBottom + If( ::lShadow, 1, 0 ),;
+   ::cBackImage := SaveScreen( ::nTop, ::nLeft, ::nBottom + If( ::lShadow, 1, 0 ),;
                               ::nRight + If( ::lShadow, 2, 0 ) )
    SetColor( ::cColor )
    Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight )
@@ -168,11 +168,11 @@ METHOD ShowModal() CLASS TDbWindow
    local lExit := .f.
    local nKey
 
-   ::lShadow = .t.
+   ::lShadow := .t.
    ::Show()
 
    while ! lExit
-      nKey = InKey( 0 )
+      nKey := InKey( 0 )
 
       if ::bKeyPressed != nil
          Eval( ::bKeyPressed, nKey )
@@ -180,7 +180,7 @@ METHOD ShowModal() CLASS TDbWindow
 
       do case
          case nKey == K_ESC
-              lExit = .t.
+              lExit := .t.
       endcase
    end
 

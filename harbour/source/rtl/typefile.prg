@@ -70,7 +70,7 @@ PROCEDURE __TYPEFILE( cFile, lPrint )
          cTmp := substr( cTmp, 1, i - 1 )
       ENDIF
       aPath := aDvd( cTmp )
-      FOR i = 1 TO len( aPath )
+      FOR i := 1 TO len( aPath )
          cTmp := hb_FNameMerge( aPath[ i ], cName, cExt )
          IF file( cTmp )
             cFile := cTmp

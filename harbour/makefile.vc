@@ -365,6 +365,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\strright.obj \
    \
    $(OBJ_DIR)\ctmisc.obj \
+   $(OBJ_DIR)\cttoken.obj \
    $(OBJ_DIR)\fileread.obj \
    $(OBJ_DIR)\nconvert.obj \
    $(OBJ_DIR)\numtxten.obj \

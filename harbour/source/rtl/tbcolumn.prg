@@ -56,9 +56,9 @@ ENDCLASS
 
 METHOD New() CLASS TBColumn
 
-   ::DefColor = { 1, 2 }
-   ::FootSep  = ""
-   ::ColPos   = 1
+   ::DefColor := { 1, 2 }
+   ::FootSep  := ""
+   ::ColPos   := 1
 
 return Self
 

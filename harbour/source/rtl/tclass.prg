@@ -265,7 +265,7 @@ STATIC FUNCTION SetOnError( nFuncPtr )
 
    LOCAL Self := QSelf()
 
-   ::nOnError = nFuncPtr
+   ::nOnError := nFuncPtr
 
    RETURN NIL
 
@@ -278,9 +278,9 @@ STATIC FUNCTION SetType( cType )
    ::cType := cType
 
    if cType != nil .and. Upper( cType ) == "LOGICAL" .and. ::uInit == nil
-      ::uInit = .f.
+      ::uInit := .f.
    else
-      ::uInit = nil
+      ::uInit := nil
    endif
 
    RETURN NIL

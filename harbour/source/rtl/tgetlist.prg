@@ -55,17 +55,17 @@ function ReadModal( GetList, nPos )
       return .f.
    endif
 
-   oGetList = TGetList():New( GetList )
-   oGetList:cReadProcName = ProcName( 1 )
-   oGetList:nReadProcLine = ProcLine( 1 )
-   s_oGetListActive = oGetList
+   oGetList := TGetList():New( GetList )
+   oGetList:cReadProcName := ProcName( 1 )
+   oGetList:nReadProcLine := ProcLine( 1 )
+   s_oGetListActive := oGetList
 
    if ! ( ISNUMBER( nPos ) .and. nPos > 0 )
-      oGetList:nPos = oGetList:Settle( 0 )
+      oGetList:nPos := oGetList:Settle( 0 )
    endif
 
    while oGetList:nPos != 0
-      oGetList:oGet = oGetList:aGetList[ oGetList:nPos ]
+      oGetList:oGet := oGetList:aGetList[ oGetList:nPos ]
       oGetList:PostActiveGet()
 
       if ISBLOCK( oGetList:oGet:Reader )
@@ -74,7 +74,7 @@ function ReadModal( GetList, nPos )
          oGetList:Reader()
       endif
 
-      oGetList:nPos = oGetList:Settle()
+      oGetList:nPos := oGetList:Settle()
    end
    SetPos( MaxRow() - 1, 0 )
 
@@ -121,16 +121,16 @@ ENDCLASS
 
 METHOD New( GetList ) CLASS TGetList
 
-   ::aGetList  = GetList
-   ::lKillRead = .f.
-   ::lBumpTop  = .f.
-   ::lBumpBot  = .f.
-   ::nLastExitState = 0
-   ::nLastPos  = 0
-   ::cReadProcName = ""
-   ::lUpdated  = .f.
-   ::nPos      = 1
-   ::oGet      = GetList[ 1 ]
+   ::aGetList  := GetList
+   ::lKillRead := .f.
+   ::lBumpTop  := .f.
+   ::lBumpBot  := .f.
+   ::nLastExitState := 0
+   ::nLastPos  := 0
+   ::cReadProcName := ""
+   ::lUpdated  := .f.
+   ::nPos      := 1
+   ::oGet      := GetList[ 1 ]
 
 return Self
 
@@ -144,7 +144,7 @@ METHOD Reader() CLASS TGetList
 
       while oGet:ExitState == GE_NOEXIT
          if oGet:typeOut
-            oGet:ExitState = GE_ENTER
+            oGet:ExitState := GE_ENTER
          endif
 
          while oGet:exitState == GE_NOEXIT
@@ -152,7 +152,7 @@ METHOD Reader() CLASS TGetList
          end
 
          if ! ::GetPostValidate()
-            oGet:ExitState = GE_NOEXIT
+            oGet:ExitState := GE_NOEXIT
          endif
       end
 
@@ -160,12 +160,6 @@ METHOD Reader() CLASS TGetList
    endif
 
 return nil
-
-procedure GetReader( oGet )
-
-   oGet:Reader()
-
-return
 
 METHOD GetApplyKey( nKey ) CLASS TGetList
 
@@ -178,41 +172,41 @@ METHOD GetApplyKey( nKey ) CLASS TGetList
 
    do case
       case nKey == K_UP
-         oGet:ExitState = GE_UP
+         oGet:ExitState := GE_UP
 
       case nKey == K_SH_TAB
-         oGet:ExitState = GE_UP
+         oGet:ExitState := GE_UP
 
       case nKey == K_DOWN
-         oGet:ExitState = GE_DOWN
+         oGet:ExitState := GE_DOWN
 
       case nKey == K_TAB
-         oGet:ExitState = GE_DOWN
+         oGet:ExitState := GE_DOWN
 
       case nKey == K_ENTER
-         oGet:ExitState = GE_ENTER
+         oGet:ExitState := GE_ENTER
 
       case nKey == K_ESC
          if Set( _SET_ESCAPE )
             oGet:UnDo()
-            oGet:ExitState = GE_ESCAPE
+            oGet:ExitState := GE_ESCAPE
          endif
 
       case nKey == K_PGUP
-         oGet:ExitState = GE_WRITE
+         oGet:ExitState := GE_WRITE
 
       case nKey == K_PGDN
-         oGet:ExitState = GE_WRITE
+         oGet:ExitState := GE_WRITE
 
       case nKey == K_CTRL_HOME
-         oGet:ExitState = GE_TOP
+         oGet:ExitState := GE_TOP
 
    #ifdef CTRL_END_SPECIAL
       case nKey == K_CTRL_END
-         oGet:ExitState = GE_BOTTOM
+         oGet:ExitState := GE_BOTTOM
    #else
       case nKey == K_CTRL_W
-         oGet:ExitState = GE_WRITE
+         oGet:ExitState := GE_WRITE
    #endif
 
       case nKey == K_INS
@@ -274,7 +268,7 @@ METHOD GetApplyKey( nKey ) CLASS TGetList
                      ?? Chr( 7 )
                   endif
                   if ! Set( _SET_CONFIRM )
-                     oGet:ExitState = GE_ENTER
+                     oGet:ExitState := GE_ENTER
                   endif
                endif
             endif
@@ -289,20 +283,20 @@ METHOD GetPreValidate() CLASS TGetList
    local lUpdated, lWhen := .t.
 
    if oGet:PreBlock != nil
-      lUpdated = ::lUpdated
-      lWhen = Eval( oGet:PreBlock, oGet )
+      lUpdated := ::lUpdated
+      lWhen := Eval( oGet:PreBlock, oGet )
       oGet:Display()
       ::ShowScoreBoard()
       ::lUpdated := lUpdated
    endif
 
    if ::lKillRead
-      lWhen = .f.
-      oGet:ExitState = GE_ESCAPE
+      lWhen := .f.
+      oGet:ExitState := GE_ESCAPE
    elseif ! lWhen
-      oGet:ExitState = GE_WHEN
+      oGet:ExitState := GE_WHEN
    else
-      oGet:ExitState = GE_NOEXIT
+      oGet:ExitState := GE_NOEXIT
    end
 
 return lWhen
@@ -310,7 +304,7 @@ return lWhen
 function GetPreValidate( oGet )
 
    if oGet != nil
-      s_oGetListActive:oGet = oGet
+      s_oGetListActive:oGet := oGet
    endif
 
 return s_oGetListActive:GetPreValidate()
@@ -333,24 +327,24 @@ METHOD GetPostValidate() CLASS TGetList
 
    if oGet:Changed
       oGet:Assign()
-      ::lUpdated = .t.
+      ::lUpdated := .t.
    endif
 
    oGet:Reset()
 
    if oGet:PostBlock != nil
 
-      lUpdated = ::lUpdated
+      lUpdated := ::lUpdated
       SetPos( oGet:Row, oGet:Col + Len( oGet:Buffer ) )
-      lValid = Eval( oGet:PostBlock, oGet )
+      lValid := Eval( oGet:PostBlock, oGet )
       SetPos( oGet:Row, oGet:Col )
       ::ShowScoreBoard()
       oGet:UpdateBuffer()
-      ::lUpdated = lUpdated
+      ::lUpdated := lUpdated
 
       if ::lKillRead
-         oGet:ExitState = GE_ESCAPE
-         lValid = .t.
+         oGet:ExitState := GE_ESCAPE
+         lValid := .t.
       endif
    endif
 
@@ -359,7 +353,7 @@ return lValid
 function GetPostValidate( oGet )
 
    if oGet != nil
-      s_oGetListActive:oGet = oGet
+      s_oGetListActive:oGet := oGet
    endif
 
 return s_oGetListActive:GetPostValidate()
@@ -373,43 +367,31 @@ METHOD GetDoSetKey( bKeyBlock ) CLASS TGetList
       ::lUpdated := .t.
    endif
 
-   lUpdated = ::lUpdated
+   lUpdated := ::lUpdated
 
    Eval( bKeyBlock, ::cReadProcName, ::nReadProcLine, ::ReadVar() )
 
    ::ShowScoreboard()
    oGet:UpdateBuffer()
 
-   ::lUpdated = lUpdated
+   ::lUpdated := lUpdated
 
    if ::lKillRead
-      oGet:ExitState = GE_ESCAPE
+      oGet:ExitState := GE_ESCAPE
    endif
 
 return nil
-
-PROCEDURE GetDoSetKey( keyBlock, oGet )
-
-   if oGet != nil .and. s_oGetListActive != nil
-      s_oGetListActive:oGet = oGet
-   endif
-
-   if s_oGetListActive != nil
-      s_oGetListActive:GetDoSetKey( keyBlock )
-   endif
-
-return
 
 METHOD Settle( nPos ) CLASS TGetList
 
    local nExitState
 
    if nPos == nil
-      nPos = ::nPos
+      nPos := ::nPos
    endif
 
    if nPos == 0
-      nExitState = GE_DOWN
+      nExitState := GE_DOWN
    else
       nExitState := ::aGetList[ nPos ]:ExitState
    endif
@@ -419,9 +401,9 @@ METHOD Settle( nPos ) CLASS TGetList
    endif
 
    if nExitState != GE_WHEN
-      ::nLastPos = nPos
-      ::lBumpTop = .f.
-      ::lBumpBot = .f.
+      ::nLastPos := nPos
+      ::lBumpTop := .f.
+      ::lBumpBot := .f.
    else
       nExitState := ::nLastExitState
    endif
@@ -434,14 +416,14 @@ METHOD Settle( nPos ) CLASS TGetList
          nPos++
 
       case nExitState == GE_TOP
-         nPos = 1
-         ::lBumpTop = .T.
-         nExitState = GE_DOWN
+         nPos := 1
+         ::lBumpTop := .T.
+         nExitState := GE_DOWN
 
       case nExitState == GE_BOTTOM
-         nPos = Len( ::aGetList )
-         ::lBumpBot = .t.
-         nExitState = GE_UP
+         nPos := Len( ::aGetList )
+         ::lBumpBot := .t.
+         nExitState := GE_UP
 
       case nExitState == GE_ENTER
          nPos++
@@ -449,22 +431,22 @@ METHOD Settle( nPos ) CLASS TGetList
 
    if nPos == 0
       if ! ::ReadExit() .and. ! ::lBumpBot
-         ::lBumpTop = .t.
-         nPos       = ::nLastPos
-         nExitState = GE_DOWN
+         ::lBumpTop := .t.
+         nPos       := ::nLastPos
+         nExitState := GE_DOWN
       endif
 
    elseif nPos == Len( ::aGetList ) + 1
       if ! ::ReadExit() .and. nExitState != GE_ENTER .and. ! ::lBumpTop
-         ::lBumpBot = .t.
-         nPos       = ::nLastPos
-         nExitState = GE_UP
+         ::lBumpBot := .t.
+         nPos       := ::nLastPos
+         nExitState := GE_UP
       else
-         nPos = 0
+         nPos := 0
       endif
    endif
 
-   ::nLastExitState = nExitState
+   ::nLastExitState := nExitState
 
    if nPos != 0
       ::aGetList[ nPos ]:ExitState := nExitState
@@ -496,10 +478,12 @@ return cName
 
 function ReadFormat( bFormat )
 
-   if PCount() > 0
-      return s_oGetListActive:SetFormat( bFormat )
-   else
-      return s_oGetListActive:SetFormat()
+   if s_oGetListActive != NIL
+      if PCount() > 0
+         return s_oGetListActive:SetFormat( bFormat )
+      else
+         return s_oGetListActive:SetFormat()
+      endif
    endif
 
 return nil
@@ -508,45 +492,19 @@ METHOD SetFormat( bFormat ) CLASS TGetList
 
    local bSavFormat := ::bFormat
 
-   ::bFormat = bFormat
+   ::bFormat := bFormat
 
 return bSavFormat
-
-procedure __SetFormat( bFormat )
-
-   if s_oGetListActive != nil
-      if ValType( bFormat ) == "B"
-         s_oGetListActive:SetFormat( bFormat )
-      else
-         s_oGetListActive:SetFormat()
-      endif
-   endif
-
-return
 
 METHOD KillRead( lKill ) CLASS TGetList
 
    local lSavKill := ::lKillRead
 
    if PCount() > 0
-      ::lKillRead = lKill
+      ::lKillRead := lKill
    endif
 
 return lSavKill
-
-function ReadKill( lKill )
-
-   if PCount() > 0
-      return s_oGetListActive:KillRead( lKill )
-   endif
-
-return s_oGetListActive:KillRead()
-
-procedure __KillRead()
-
-   s_oGetListActive:KillRead( .T. )
-
-return
 
 METHOD GetActive( oGet ) CLASS TGetList
 
@@ -558,26 +516,14 @@ METHOD GetActive( oGet ) CLASS TGetList
 
 return oOldGet
 
-function GetActive( oGet )
-
-   if s_oGetListActive != nil
-      if PCount() > 0
-         return s_oGetListActive:GetActive( oGet )
-      else
-         return s_oGetListActive:GetActive()
-      endif
-   endif
-
-return nil
-
 METHOD ShowScoreboard() CLASS TGetList
 
    local nRow, nCol, nOldCursor
 
    if Set( _SET_SCOREBOARD )
-      nRow = Row()
-      nCol = Col()
-      nOldCursor = SetCursor( SC_NONE )
+      nRow := Row()
+      nCol := Col()
+      nOldCursor := SetCursor( SC_NONE )
       DispOutAt( SCORE_ROW, SCORE_COL, If( Set( _SET_INSERT ), "Ins", "   " ) )
       SetPos( nRow, nCol )
       SetCursor( nOldCursor )
@@ -618,13 +564,63 @@ METHOD ReadVar( cNewVarName ) CLASS TGetList
 
 return cOldName
 
-FUNCTION ReadVar( cNewVarName )
+METHOD ReadUpdated( lUpdated ) CLASS TGetList
 
-   if s_oGetListActive != nil
-      return s_oGetListActive:ReadVar( cNewVarName )
+   local lSavUpdated := ::lUpdated
+
+   if PCount() > 0
+      ::lUpdated := lUpdated
    endif
 
-return ""
+return lSavUpdated
+
+/* ------------------ Global functions ------------------- */
+
+PROCEDURE GetReader( oGet )
+
+   oGet:Reader()
+
+   RETURN
+
+FUNCTION GetActive( oGet )
+
+   if s_oGetListActive != NIL
+      if PCount() > 0
+         RETURN s_oGetListActive:GetActive( oGet )
+      else
+         RETURN s_oGetListActive:GetActive()
+      endif
+   endif
+
+   RETURN NIL
+
+PROCEDURE GetDoSetKey( keyBlock, oGet )
+
+   if s_oGetListActive != NIL
+      if oGet != NIL
+         s_oGetListActive:oGet := oGet
+      endif
+      s_oGetListActive:GetDoSetKey( keyBlock )
+   endif
+
+   RETURN
+
+PROCEDURE GetApplyKey( oGet, nKey )
+
+   if s_oGetListActive != NIL
+      s_oGetListActive:oGet := oGet
+      s_oGetListActive:GetApplyKey( nKey )
+   endif
+
+   RETURN
+
+FUNCTION ReadVar( cNewVarName )
+
+   if s_oGetListActive != NIL
+      RETURN s_oGetListActive:ReadVar( cNewVarName )
+   endif
+
+   RETURN ""
 
 FUNCTION ReadExit( lExit )
    RETURN Set( _SET_EXIT, lExit )
@@ -632,37 +628,55 @@ FUNCTION ReadExit( lExit )
 FUNCTION ReadInsert( lInsert )
    RETURN Set( _SET_INSERT, lInsert )
 
-METHOD ReadUpdated( lUpdated ) CLASS TGetList
+FUNCTION ReadUpdated( lUpdated )
 
-   local lSavUpdated := ::lUpdated
-
-   if PCount() > 0
-      ::lUpdated = lUpdated
+   if s_oGetListActive != NIL
+      if PCount() > 0
+         RETURN s_oGetListActive:ReadUpdated( lUpdated )
+      else
+         RETURN s_oGetListActive:ReadUpdated()
+      endif
    endif
 
-return lSavUpdated
+   RETURN .F.
 
-function ReadUpdated( lUpdated )
+FUNCTION Updated()
 
-   if PCount() > 0
-      return s_oGetListActive:ReadUpdated( lUpdated )
+   if s_oGetListActive != NIL
+      RETURN s_oGetListActive:lUpdated
    endif
 
-return s_oGetListActive:ReadUpdated()
+   RETURN .F.
 
-function Updated()
+FUNCTION ReadKill( lKill )
 
-   if s_oGetListActive != nil
-      return s_oGetListActive:lUpdated
+   if s_oGetListActive != NIL
+      if PCount() > 0
+         RETURN s_oGetListActive:KillRead( lKill )
+      else
+         RETURN s_oGetListActive:KillRead()
+      endif
    endif
 
-return .f.
+   RETURN .F.
 
-procedure GetApplyKey( oGet, nKey )
+PROCEDURE __KillRead()
 
-  if s_oGetListActive != nil
-     s_oGetListActive:oGet := oGet
-     s_oGetListActive:GetApplyKey( nKey )
-  endif
+   IF s_oGetListActive != NIL
+      s_oGetListActive:KillRead( .T. )
+   ENDIF
 
-return
+   RETURN
+
+PROCEDURE __SetFormat( bFormat )
+
+   if s_oGetListActive != NIL
+      if ValType( bFormat ) == "B"
+         s_oGetListActive:SetFormat( bFormat )
+      else
+         s_oGetListActive:SetFormat()
+      endif
+   endif
+
+   RETURN
+

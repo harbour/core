@@ -319,6 +319,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\strright.obj \
    \
    $(OBJ_DIR)\ctmisc.obj \
+   $(OBJ_DIR)\cttoken.obj \
    $(OBJ_DIR)\fileread.obj \
    $(OBJ_DIR)\nconvert.obj \
    $(OBJ_DIR)\numtxten.obj \
@@ -1608,6 +1609,13 @@ $(OBJ_DIR)\ctmisc.c : $(TOOLS_DIR)\ctmisc.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\ctmisc.obj : $(OBJ_DIR)\ctmisc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) -+$@,,
+
+$(OBJ_DIR)\cttoken.c : $(TOOLS_DIR)\cttoken.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\cttoken.obj : $(OBJ_DIR)\cttoken.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 

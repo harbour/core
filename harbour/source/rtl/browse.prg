@@ -56,18 +56,18 @@ function Browse( nTop, nLeft, nBottom, nRight )
       nRight  := MaxCol()
    endif
 
-   nOldCursor = SetCursor( 0 )
-   cOldScreen = SaveScreen( nTop, nLeft, nBottom, nRight )
+   nOldCursor := SetCursor( 0 )
+   cOldScreen := SaveScreen( nTop, nLeft, nBottom, nRight )
 
    @ nTop, nLeft TO nBottom, nRight
    @ nTop + 3, nLeft SAY Chr( 198 )
    @ nTop + 3, nRight SAY Chr( 181 )
    @ nTop + 1, nLeft + 1 SAY Space( nRight - nLeft - 1 )
 
-   oBrw = TBrowseDB( nTop + 2, nLeft + 1, nBottom - 1, nRight - 1 )
-   oBrw:HeadSep = " " + Chr( 205 )
+   oBrw := TBrowseDB( nTop + 2, nLeft + 1, nBottom - 1, nRight - 1 )
+   oBrw:HeadSep := " " + Chr( 205 )
 
-   for n = 1 to FCount()
+   for n := 1 to FCount()
       oBrw:AddColumn( TBColumnNew( FieldName( n ), FieldBlock( FieldName( n ) ) ) )
    next
 
@@ -97,7 +97,7 @@ function Browse( nTop, nLeft, nBottom, nRight )
 
       do case
          case nKey == K_ESC
-            lExit = .t.
+            lExit := .t.
 
          case nKey == K_UP
             oBrw:Up()

@@ -82,22 +82,22 @@ METHOD New() CLASS TDbMenu
    local nCol := 0
 
    if ::aMenus == nil
-      ::aMenus = {}
-      ::lPopup = .f.
+      ::aMenus := {}
+      ::lPopup := .f.
    else
-      ::lPopup = .t.
+      ::lPopup := .t.
    endif
 
-   ::nTop         = 0
-   ::nLeft        = 0
-   ::nBottom      = 0
-   ::nRight       = 0
-   ::aItems       = {}
-   ::cClrHilite   = "W+/N"
-   ::cClrHotFocus = "GR+/N"
-   ::cClrHotKey   = "GR+/BG"
-   ::cClrPopup    = "N/BG"
-   ::nOpenPopup   = 0
+   ::nTop         := 0
+   ::nLeft        := 0
+   ::nBottom      := 0
+   ::nRight       := 0
+   ::aItems       := {}
+   ::cClrHilite   := "W+/N"
+   ::cClrHotFocus := "GR+/N"
+   ::cClrHotKey   := "GR+/BG"
+   ::cClrPopup    := "N/BG"
+   ::nOpenPopup   := 0
 
    AAdd( ::aMenus, Self )
 
@@ -108,16 +108,16 @@ METHOD AddItem( oMenuItem ) CLASS TDbMenu
    local oLastMenu := ATail( ::aMenus ), oLastMenuItem
 
    if oLastMenu:lPopup
-      oMenuItem:nRow = Len( oLastMenu:aItems )
-      oMenuItem:nCol = oLastMenu:nLeft + 1
+      oMenuItem:nRow := Len( oLastMenu:aItems )
+      oMenuItem:nCol := oLastMenu:nLeft + 1
    else
-      oMenuItem:nRow = 0
+      oMenuItem:nRow := 0
       if Len( oLastMenu:aItems ) > 0
-         oLastMenuItem = ATail( oLastMenu:aItems )
-         oMenuItem:nCol = oLastMenuItem:nCol + ;
+         oLastMenuItem := ATail( oLastMenu:aItems )
+         oMenuItem:nCol := oLastMenuItem:nCol + ;
                           Len( StrTran( oLastMenuItem:cPrompt, "~", "" ) )
       else
-         oMenuItem:nCol = 0
+         oMenuItem:nCol := 0
       endif
    endif
 
@@ -130,30 +130,30 @@ METHOD Build() CLASS TDbMenu
    local n, nPos := 0, oMenuItem
 
    if Len( ::aMenus ) == 1           // pulldown menu
-      for n = 1 to Len( ::aItems )
-         ::aItems[ n ]:nRow = 0
-         ::aItems[ n ]:nCol = nPos
+      for n := 1 to Len( ::aItems )
+         ::aItems[ n ]:nRow := 0
+         ::aItems[ n ]:nCol := nPos
          nPos += Len( StrTran( ::aItems[ n ]:cPrompt, "~", "" ) )
       next
    else
-      oMenuItem = ATail( ::aMenus[ Len( ::aMenus ) - 1 ]:aItems )
-      ::nTop    = oMenuItem:nRow + 1
-      ::nLeft   = oMenuItem:nCol
-      nPos = ::nLeft
-      for n = 1 to Len( ::aItems )
-         ::aItems[ n ]:nRow = ::nTop + n
-         ::aItems[ n ]:nCol = ::nLeft + 1
-         nPos = Max( nPos, ::nLeft + Len( StrTran( ::aItems[ n ]:cPrompt, "~", "" ) ) + 1 )
+      oMenuItem := ATail( ::aMenus[ Len( ::aMenus ) - 1 ]:aItems )
+      ::nTop    := oMenuItem:nRow + 1
+      ::nLeft   := oMenuItem:nCol
+      nPos := ::nLeft
+      for n := 1 to Len( ::aItems )
+         ::aItems[ n ]:nRow := ::nTop + n
+         ::aItems[ n ]:nCol := ::nLeft + 1
+         nPos := Max( nPos, ::nLeft + Len( StrTran( ::aItems[ n ]:cPrompt, "~", "" ) ) + 1 )
       next
-      ::nRight  = nPos
-      ::nBottom = ::nTop + Len( ::aItems ) + 1
-      for n = 1 to Len( ::aItems )
+      ::nRight  := nPos
+      ::nBottom := ::nTop + Len( ::aItems ) + 1
+      for n := 1 to Len( ::aItems )
          if ::aItems[ n ]:cPrompt != "-"
-            ::aItems[ n ]:cPrompt = PadR( ::aItems[ n ]:cPrompt, ::nRight - ::nLeft )
+            ::aItems[ n ]:cPrompt := PadR( ::aItems[ n ]:cPrompt, ::nRight - ::nLeft )
          endif
       next
-      ATail( ::aMenus[ Len( ::aMenus ) - 1 ]:aItems ):bAction = ATail( ::aMenus )
-      ::aMenus = ASize( ::aMenus, Len( ::aMenus ) - 1 )
+      ATail( ::aMenus[ Len( ::aMenus ) - 1 ]:aItems ):bAction := ATail( ::aMenus )
+      ::aMenus := ASize( ::aMenus, Len( ::aMenus ) - 1 )
    endif
 
 return nil
@@ -163,11 +163,11 @@ METHOD ClosePopup( nPopup ) CLASS TDbMenu
    local oPopup
 
    if nPopup != 0
-      oPopup = ::aItems[ nPopup ]:bAction
+      oPopup := ::aItems[ nPopup ]:bAction
       if oPopup:ClassName() == "TDBMENU"
          RestScreen( oPopup:nTop, oPopup:nLeft, oPopup:nBottom + 1, oPopup:nRight + 2,;
                      oPopup:cBackImage )
-         oPopup:cBackImage = nil
+         oPopup:cBackImage := nil
       endif
       ::aItems[ nPopup ]:Display( ::cClrPopup, ::cClrHotKey )
    endif
@@ -192,12 +192,12 @@ METHOD Display() CLASS TDbMenu
       DispOutAt( 0, 0, Space( MaxCol() + 1 ), ::cClrPopup )
       SetPos( 0, 0 )
    else
-      ::cBackImage = SaveScreen( ::nTop, ::nLeft, ::nBottom + 1, ::nRight + 2 )
+      ::cBackImage := SaveScreen( ::nTop, ::nLeft, ::nBottom + 1, ::nRight + 2 )
       @ ::nTop, ::nLeft, ::nBottom, ::nRight BOX B_SINGLE
       hb_Shadow( ::nTop, ::nLeft, ::nBottom, ::nRight )
    endif
 
-   for n = 1 to Len( ::aItems )
+   for n := 1 to Len( ::aItems )
       if ::aItems[ n ]:cPrompt == "-"  // Separator
          DispOutAt( ::aItems[ n ]:nRow, ::nLeft,;
             Chr( 195 ) + Replicate( Chr( 196 ), ::nRight - ::nLeft - 1 ) + Chr( 180 ) )
@@ -212,8 +212,8 @@ METHOD EvalAction() CLASS TDbMenu
 
    local oPopup, oMenuItem
 
-   oPopup = ::aItems[ ::nOpenPopup ]:bAction
-   oMenuItem = oPopup:aItems[ oPopup:nOpenPopup ]
+   oPopup := ::aItems[ ::nOpenPopup ]:bAction
+   oMenuItem := oPopup:aItems[ oPopup:nOpenPopup ]
 
    if oMenuItem:bAction != nil
       ::Close()
@@ -226,7 +226,7 @@ METHOD GetHotKeyPos( cKey ) CLASS TDbMenu
 
    local n
 
-   for n = 1 to Len( ::aItems )
+   for n := 1 to Len( ::aItems )
       if Upper( SubStr( ::aItems[ n ]:cPrompt,;
          At( "~", ::aItems[ n ]:cPrompt ) + 1, 1 ) ) == cKey
          return n
@@ -239,7 +239,7 @@ METHOD GetItemOrdByCoors( nRow, nCol ) CLASS TDbMenu
 
    local n
 
-   for n = 1 to Len( ::aItems )
+   for n := 1 to Len( ::aItems )
       if ::aItems[ n ]:nRow == nRow .and. nCol >= ::aItems[ n ]:nCol .and. ;
          nCol <= ::aItems[ n ]:nCol + Len( ::aItems[ n ]:cPrompt ) - 2
          return n
@@ -253,7 +253,7 @@ METHOD GoBottom() CLASS TDbMenu
    local oPopup
 
    if ::IsOpen()
-      oPopup = ::aItems[ ::nOpenPopup ]:bAction
+      oPopup := ::aItems[ ::nOpenPopup ]:bAction
       oPopup:DeHilite()
       oPopup:ShowPopup( Len( oPopup:aItems ) )
    endif
@@ -313,7 +313,7 @@ METHOD GoTop() CLASS TDbMenu
    local oPopup
 
    if ::IsOpen()
-      oPopup = ::aItems[ ::nOpenPopup ]:bAction
+      oPopup := ::aItems[ ::nOpenPopup ]:bAction
       oPopup:DeHilite()
       oPopup:ShowPopup( 1 )
    endif
@@ -323,7 +323,7 @@ return nil
 METHOD ShowPopup( nPopup ) CLASS TDbMenu
 
    ::aItems[ nPopup ]:Display( ::cClrHilite, ::cClrHotFocus )
-   ::nOpenPopup = nPopup
+   ::nOpenPopup := nPopup
 
    if ValType( ::aItems[ nPopup ]:bAction ) == "O"
       ::aItems[ nPopup ]:bAction:Display()
@@ -395,8 +395,8 @@ ENDCLASS
 
 METHOD New( cPrompt, bAction ) CLASS TDbMenuItem
 
-   ::cPrompt = cPrompt
-   ::bAction = bAction
+   ::cPrompt := cPrompt
+   ::bAction := bAction
 
 return Self
 
@@ -425,7 +425,7 @@ function AltToKey_debugger( nKey )
       if nIndex > 0
          cKey := SubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ", nIndex, 1 )
       else
-         cKey = ""
+         cKey := ""
       endif
 
 return cKey

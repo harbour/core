@@ -1,3 +1,38 @@
+20000403-13:07 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/tgetlist.prg
+     ! READKILL(), READUPDATED(), __KILLREAD(), READFORMAT() fixed.
+     % GetDoSetKey() optimized
+     ; ----------------------------------------------------------
+     ; Ad: Now DBU compiles and runs without *any* modification !
+     ; ----------------------------------------------------------
+       (except for the Dbu() -> Main() renaming for some compilers)
+
+   + source/tools/cttoken.prg
+   * source/tools/Makefile
+   * makefile.bc
+   * makefile.vc
+   * utils/hbrun/exttools.prg
+     + CT_NUMTOKEN()
+     + CT_TOKEN()
+     ; CA-Tools compatible functions added. Thanks to Phil Barnett.
+
+   * source/rtl/tgetlist.prg
+   * source/rtl/tbrowse.prg
+   * source/rtl/browse.prg
+   * source/rtl/tbcolumn.prg
+   * source/rtl/tclass.prg
+   * source/rtl/typefile.prg
+   * source/debug/dbgtmenu.prg
+   * source/debug/dbgtwin.prg
+   * source/debug/debugger.prg
+   * include/hbclass.ch
+     ! Assignment/equality operator (=) changed to assignment only operator (:=)
+       and equality only (==) operator.
+       Please don't use "=" operator, use "==" and ":=" instead.
+     ! ValToStr() made MEMO aware.
+     ! Some constants changed to manifest constants (again and again).
+
 20000403-11:01 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/vm/itemapi.c
