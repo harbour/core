@@ -1,11 +1,10 @@
-
 /*
- * $Id: 
+ * $Id$
  */
 
 /*
  * Harbour Project source code:
- * Header file for typedef  for maindllp.c
+ * Header file for typedef for maindllp.c
  *
  * Copyright 2001-2002 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -51,8 +50,8 @@
  *
  */
 
-#ifndef HB_APITYS_H_
-#define HB_APITYS_H_
+#ifndef HB_TYPES_H_
+#define HB_TYPES_H_
 
 #include "hbvm.h"
 #include "hbapiitm.h"
@@ -135,4 +134,4 @@ typedef void     ( * HB_XFREE)( void * pMem );                  /* frees memory 
 typedef void *   ( * HB_XREALLOC)( void * pMem, ULONG ulSize ); /* reallocates memory */
 typedef ULONG    ( * HB_XSIZE)( void * pMem );                  /* returns the size of an allocated memory block */
 
-#endif
+#endif /* HB_TYPES_H_ */

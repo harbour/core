@@ -7,6 +7,19 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+       to conform with the new startup generation routines
+   * source/compiler/harbour.c
+     + BOOL hb_comp_bNoStartUp = FALSE, initialization for option to create
+       C-source with startup.
+   * source/compiler/hbusage.c
+     + description of /n switch
+     - remove description of /gc3
+     % Optimized a bit of code related to the generation of 
+2002-01-01 12:30 UTC+0700 Andi Jahja <harbour@cbn.net.id>
+   * source/compiler/hbusage.c
+     * bump Copyright year to 2002
+
+2002-01-01 11:15 UTC+0700 Andi Jahja <harbour@cbn.net.id>
    * source/vm/fm.c
      Memory allocation error was transparently noticed when running
      hbtest.exe with -DHB_FM_STATISTICS_OFF, fixed.
