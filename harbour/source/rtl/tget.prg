@@ -115,7 +115,6 @@ CLASS TGet
    METHOD PutMask( cBuffer, lEdit )
 
    METHOD HasScroll() INLINE ( ::nDispLen != ::nMaxLen )
-   METHOD SetPos()    INLINE SetPos( ::Row, ::Col + ::Pos - ::nDispPos  )
 
 ENDCLASS
 
@@ -267,6 +266,10 @@ METHOD Display(lForced) CLASS TGet
 
    ::nOldPos := ::nDispPos
 
+   if ::Pos != Nil
+      SetPos( ::Row, ::Col + ::Pos - ::nDispPos  )
+   endif
+
    SetCursor( nOldCursor )
 
 return Self
@@ -286,7 +289,6 @@ METHOD End() CLASS TGet
       endif
       ::Clear := .f.
       ::Display(.f.)
-      ::SetPos()
    endif
 
 return nil
@@ -298,9 +300,7 @@ METHOD Home() CLASS TGet
    if ::HasFocus
       ::Pos := 1
       ::Clear := .f.
-      //SetPos( ::Row, ::Col + ::Pos - 1 )
       ::Display(.f.)
-      ::SetPos()
    endif
 
 return nil
@@ -356,7 +356,6 @@ METHOD SetFocus() CLASS TGet
    endif
 
    ::Display()
-   ::SetPos()
 
 return Self
 
@@ -364,13 +363,12 @@ return Self
 
 METHOD KillFocus() CLASS TGet
 
-   ::hasfocus   := .f.
-   ::pos        := Nil
-
    ::Assign()
-
    ::Display()
-   ::buffer := ::PutMask()
+
+   ::buffer   := ::PutMask()
+   ::hasfocus := .f.
+   ::pos      := Nil
 
 return Self
 
@@ -450,7 +448,7 @@ return xValue
 METHOD overstrike( cChar ) CLASS TGet
 
    if ::type == "N" .and. !::lEdit
-      ::pos      := 1
+      ::pos := 1
    endif
 
    if ::Clear .and. ::pos == 1
@@ -461,7 +459,7 @@ METHOD overstrike( cChar ) CLASS TGet
 
    if !::lEdit
       ::buffer := ::PutMask( ::VarGet(), .t. )
-      ::lEdit := .t.
+      ::lEdit  := .t.
    endif
 
    do while !::IsEditable( ::pos ) .and. ::pos <= ::nMaxLen
@@ -482,7 +480,7 @@ METHOD overstrike( cChar ) CLASS TGet
    ::buffer := SubStr( ::buffer, 1, ::Pos - 1 ) + cChar + SubStr( ::buffer, ::Pos + 1 )
    ::Changed := ( ::unTransform() != ::Original )
    ::Assign()
-   ::Right()
+   ::Right(.f.)
 
    if ::type == "D"
       ::BadDate := ( Dtoc( Ctod( ::buffer ) ) != ::buffer )
@@ -491,7 +489,6 @@ METHOD overstrike( cChar ) CLASS TGet
    endif
 
    ::Display()
-   ::SetPos()
 
 return Self
 
@@ -515,7 +512,7 @@ METHOD Insert( cChar ) CLASS TGet
 
    if !::lEdit
       ::buffer := ::PutMask( ::VarGet(), .t. )
-      ::lEdit := .t.
+      ::lEdit  := .t.
    endif
 
    do while !::IsEditable( ::pos ) .and. ::pos <= ::nMaxLen
@@ -550,7 +547,7 @@ METHOD Insert( cChar ) CLASS TGet
 
    ::Changed := ( ::unTransform() != ::Original )
    ::Assign()
-   ::Right()
+   ::Right(.f.)
 
    if ::type == "D"
       ::BadDate := ( Dtoc( Ctod( ::buffer ) ) != ::buffer )
@@ -558,16 +555,17 @@ METHOD Insert( cChar ) CLASS TGet
       ::BadDate := .f.
    endif
 
-   ::Display()  // Kwon,Oh-Chul
-   ::SetPos()
+   ::Display()
 
 return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD _Right() CLASS TGet
+METHOD _Right( lDisplay ) CLASS TGet
 
    local nPos
+
+   DEFAULT lDisplay TO .t.
 
    if !::hasfocus
       return Self
@@ -593,16 +591,19 @@ METHOD _Right() CLASS TGet
       ::TypeOut := .t.
    endif
 
-   ::Display(.f.)
-   ::SetPos()
+   if lDisplay
+      ::Display(.f.)
+   endif
 
 return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD _Left() CLASS TGet
+METHOD _Left( lDisplay ) CLASS TGet
 
    local nPos
+
+   DEFAULT lDisplay TO .t.
 
    if !::hasfocus
       return Self
@@ -628,8 +629,10 @@ METHOD _Left() CLASS TGet
       ::TypeOut := .t.
    endif
 
-   ::Display(.f.)
-   ::SetPos()
+   if lDisplay
+      ::Display(.f.)
+   endif
+
 
 return Self
 
@@ -678,7 +681,6 @@ METHOD WordLeft() CLASS TGet
    endif
 
    ::Display(.f.)
-   ::SetPos()
 
 return Self
 
@@ -721,7 +723,6 @@ METHOD WordRight() CLASS TGet
    endif
 
    ::Display(.f.)
-   ::SetPos()
 
 return Self
 
@@ -738,7 +739,6 @@ METHOD ToDecPos() CLASS TGet
    ::pos    := ::DecPos + 1
 
    ::Display(.f.)
-   ::SetPos()
 
 return .t.
 
@@ -933,7 +933,6 @@ METHOD _Delete( lDisplay ) CLASS TGet
 
    if lDisplay
       ::Display()
-      ::SetPos()
    endif
 
 return Self
@@ -978,7 +977,6 @@ METHOD DelEnd() CLASS TGet
    enddo
 
    ::Display()
-   ::SetPos()
 
 return Self
 
@@ -986,8 +984,8 @@ return Self
 
 METHOD DelLeft() CLASS TGet
 
-   ::Left()
-   ::Delete()
+   ::Left(.f.)
+   ::Delete(.f.)
    ::Right()
 
 return Self
@@ -996,8 +994,8 @@ return Self
 
 METHOD DelRight() CLASS TGet
 
-   ::Right()
-   ::Delete()
+   ::Right(.f.)
+   ::Delete(.f.)
    ::Left()
 
 return Self
@@ -1028,7 +1026,6 @@ METHOD DelWordLeft() CLASS TGet
    Enddo
 
    ::Display()
-   ::SetPos()
 
 return Self
 
@@ -1057,7 +1054,6 @@ METHOD DelWordRight() CLASS TGet
    endif
 
    ::Display()
-   ::SetPos()
 
 return Self
 
@@ -1080,4 +1076,4 @@ function _GET_( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
    oGet:PreBlock := bWhen
    oGet:PostBlock := bValid
 
-   return oGet
+return oGet
