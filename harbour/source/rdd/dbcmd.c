@@ -999,7 +999,7 @@ HB_FUNC( ALIAS )
       }
       pAreaNode = pAreaNode->pNext;
    }
-   hb_retc( "" );
+   hb_retc( NULL );
 }
 
 HB_FUNC( DBEVAL )
@@ -1078,7 +1078,7 @@ HB_FUNC( DBF )
       }
       pAreaNode = pAreaNode->pNext;
    }
-   hb_retc( "" );
+   hb_retc( NULL );
 }
 
 HB_FUNC( BOF )
@@ -1370,7 +1370,7 @@ HB_FUNC( DBFILTER )
       hb_itemRelease( pFilter );
    }
    else
-      hb_retc( "" );
+      hb_retc( NULL );
 }
 
 HB_FUNC( DBGOBOTTOM )
@@ -1811,7 +1811,7 @@ HB_FUNC( DBTABLEEXT )
       pRddNode = hb_rddFindNode( s_szDefDriver, &uiRddID );
       if( !pRddNode )
       {
-         hb_retc( "" );
+         hb_retc( NULL );
          return;
       }
       uiSize = sizeof( AREA );    /* Default Size Area */
@@ -1832,7 +1832,7 @@ HB_FUNC( DBTABLEEXT )
       pTempArea->rddID = uiRddID;
 
       if( SELF_NEW( ( AREAP ) pTempArea ) == FAILURE )
-         hb_retc( "" );
+         hb_retc( NULL );
       else
       {
          pItem = hb_itemPutC( NULL, "" );
@@ -2043,7 +2043,7 @@ HB_FUNC( FIELDNAME )
       }
       hb_errRT_DBCMD( EG_ARG, EDBCMD_FIELDNAME_BADPARAMETER, NULL, "FIELDNAME" );
    }
-   hb_retc( "" );
+   hb_retc( NULL );
 }
 
 HB_FUNC( FIELDPOS )
@@ -2184,7 +2184,7 @@ HB_FUNC( ORDBAGEXT )
       pRddNode = hb_rddFindNode( s_szDefDriver, &uiRddID );
       if( !pRddNode )
       {
-         hb_retc( "" );
+         hb_retc( NULL );
          return;
       }
       uiSize = sizeof( AREA );         /* Default Size Area */
@@ -2205,7 +2205,7 @@ HB_FUNC( ORDBAGEXT )
       pTempArea->rddID = uiRddID;
 
       if( SELF_NEW( ( AREAP ) pTempArea ) == FAILURE )
-         hb_retc( "" );
+         hb_retc( NULL );
       else
       {
          pInfo.itmResult = hb_itemPutC( NULL, "" );
@@ -2660,7 +2660,7 @@ HB_FUNC( RDDNAME )
    else
    {
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "RDDNAME" );
-      hb_retc( "" );
+      hb_retc( NULL );
    }
 }
 

@@ -320,16 +320,17 @@ static void hb_clsRelease( PCLASS pClass )
    HB_TRACE(HB_TR_DEBUG, ("hb_clsRelease(%p)", pClass));
 
    for( uiAt = 0; uiAt < uiLimit; uiAt++, pMeth++ )
-   {
+    {
       if( pMeth->pInitValue )
          hb_itemRelease( pMeth->pInitValue );
-   }
+    }
 
    hb_xfree( pClass->szName );
    hb_xfree( pClass->pMethods );
 
    hb_itemRelease( pClass->pClassDatas );
    hb_itemRelease( pClass->pInlines );
+
 }
 
 
@@ -385,10 +386,10 @@ void hb_clsIsClassRef( void )
       uiLimit = ( USHORT ) ( pClass->uiHashKey * BUCKET );
       pMeth = pClass->pMethods;
       for( uiAt = 0; uiAt < uiLimit; uiAt++, pMeth++ )
-      {
+       {
          if( pMeth->pInitValue )
             hb_gcItemRef( pMeth->pInitValue );
-      }
+       }
 
       ++pClass;
    }
@@ -671,7 +672,7 @@ char * hb_objGetRealClsName( PHB_ITEM pObject, char * szName )
       if( ! pObject->item.asArray.value->uiClass )
          szClassName = "ARRAY";
       else
-      {
+       {
          PHB_DYNS pMsg = hb_dynsymFindName( szName );
          USHORT uiClass;
          USHORT uiCurCls;
@@ -680,50 +681,51 @@ char * hb_objGetRealClsName( PHB_ITEM pObject, char * szName )
          uiClass = pObject->item.asArray.value->uiClass;
 
          /* default value to current class object */
-         if( pObject->item.asArray.value->puiClsTree && pObject->item.asArray.value->puiClsTree[0] )
-         {
-            uiClsTree = pObject->item.asArray.value->puiClsTree[0] ;
-            uiCurCls  = pObject->item.asArray.value->puiClsTree[uiClsTree] ;
-         }
+         if (pObject->item.asArray.value->puiClsTree && pObject->item.asArray.value->puiClsTree[0])
+          {
+           uiClsTree = pObject->item.asArray.value->puiClsTree[0] ;
+           uiCurCls  = pObject->item.asArray.value->puiClsTree[uiClsTree] ;
+          }
          else
-         {
+          {
            uiClsTree = 1;          /* Flag value */
            uiCurCls = uiClass;
-         }
-
-         while (uiClsTree)
-         {
-            if( uiCurCls && uiCurCls <= s_uiClasses )
-            {
-               PCLASS pClass  = s_pClasses + ( uiCurCls - 1 );
-               USHORT uiAt    = ( USHORT ) ( ( ( hb_cls_MsgToNum( pMsg ) ) % pClass->uiHashKey ) * BUCKET );
-               USHORT uiMask  = ( USHORT ) ( pClass->uiHashKey * BUCKET );
-               USHORT uiLimit = ( USHORT ) ( uiAt ? ( uiAt - 1 ) : ( uiMask - 1 ) );
-
-               while( uiAt != uiLimit )
-               {
-                  if( pClass->pMethods[ uiAt ].pMessage == pMsg )
-                  {
-                     uiClass = (pClass->pMethods + uiAt)->uiSprClass;
-                     uiClsTree=1; /* Flag Value */
-                     break;
-                  }
-                  uiAt++;
-                  if( uiAt == uiMask )
-                     uiAt = 0;
-               }
-            }
-
-            if( --uiClsTree )
-               uiCurCls = pObject->item.asArray.value->puiClsTree[uiClsTree];
           }
 
-          if( uiClass && uiClass <= s_uiClasses )
-             szClassName = ( s_pClasses + uiClass - 1 )->szName;
-          else
-             szClassName = "UNKNOWN";
+         while (uiClsTree)
+          {
+           if( uiCurCls && uiCurCls <= s_uiClasses )
+            {
+              PCLASS pClass  = s_pClasses + ( uiCurCls - 1 );
+              USHORT uiAt    = ( USHORT ) ( ( ( hb_cls_MsgToNum( pMsg ) ) % pClass->uiHashKey ) * BUCKET );
+              USHORT uiMask  = ( USHORT ) ( pClass->uiHashKey * BUCKET );
+              USHORT uiLimit = ( USHORT ) ( uiAt ? ( uiAt - 1 ) : ( uiMask - 1 ) );
 
-      }
+              while( uiAt != uiLimit )
+              {
+                 if( pClass->pMethods[ uiAt ].pMessage == pMsg )
+                 {
+                    uiClass = (pClass->pMethods + uiAt)->uiSprClass;
+                    uiClsTree=1; /* Flag Value */
+                    break;
+                 }
+                 uiAt++;
+                 if( uiAt == uiMask )
+                    uiAt = 0;
+              }
+            }
+
+           if (-- uiClsTree)
+            uiCurCls = pObject->item.asArray.value->puiClsTree[uiClsTree] ;
+
+          }
+
+         if( uiClass && uiClass <= s_uiClasses )
+          szClassName = ( s_pClasses + uiClass - 1 )->szName;
+         else
+          szClassName = "UNKNOWN";
+
+       }
    }
    else                                         /* built in types */
    {
@@ -1477,8 +1479,8 @@ HB_FUNC( __CLSDELMSG )
             while( pClass->pMethods[ uiAt ].pMessage && uiAt != uiLimit )
             {
                hb_xmemcpy( pClass->pMethods + uiAt,
-                           pClass->pMethods + ( ( uiAt == uiMask ) ? 0 : uiAt + 1 ),
-                           sizeof( METHOD ) );
+                       pClass->pMethods + ( ( uiAt == uiMask ) ? 0 : uiAt + 1 ),
+                       sizeof( METHOD ) );
                uiAt++;
                if( uiAt == uiMask )
                   uiAt = 0;
@@ -1529,7 +1531,8 @@ static PHB_ITEM hb_clsInst( USHORT uiClass )
 
       pSelf->item.asArray.value->uiClass    = uiClass;
       pSelf->item.asArray.value->uiPrevCls  = 0;
-      pSelf->item.asArray.value->puiClsTree = NULL;
+
+      pSelf->item.asArray.value->puiClsTree   = NULL;
 
       /* pSelf->item.asArray.value->puiClsTree   = ( USHORT * ) hb_xgrab( sizeof( USHORT ) ); */
       /* pSelf->item.asArray.value->puiClsTree[0]=0; */
@@ -1698,7 +1701,7 @@ HB_FUNC( __OBJGETCLSNAME )
       if( uiClass <= s_uiClasses )
          hb_retc( s_pClasses[ uiClass - 1 ].szName );
       else
-         hb_retc( "" );
+         hb_retc( NULL );
    }
 }
 
@@ -1731,15 +1734,15 @@ HB_FUNC( __OBJCLONE )
    PHB_ITEM pDstObject ;
 
    if( pSrcObject )
-   {
-      pDstObject = hb_arrayClone( pSrcObject, NULL ) ;
+    {
+      pDstObject= hb_arrayClone( pSrcObject, NULL ) ;
 
       pDstObject->item.asArray.value->puiClsTree = NULL;
       /* pDstObject->item.asArray.value->puiClsTree = ( USHORT * ) hb_xgrab( sizeof( USHORT ) ); */
       /* pDstObject->item.asArray.value->puiClsTree[0]=0; */
 
       hb_itemRelease( hb_itemReturn( pDstObject ) );
-   }
+    }
    else
       hb_errRT_BASE( EG_ARG, 3001, NULL, "__OBJCLONE", 0 );
 }
@@ -1764,8 +1767,9 @@ HB_FUNC( __OBJSENDMSG )
       {
          USHORT uiParam;
 
-         hb_vmPushSymbol( pMsg->pSymbol );   /* Push char symbol as message  */
          hb_vmPush( pObject );               /* Push object */
+
+         hb_vmMessage( pMsg->pSymbol );      /* Push char symbol as message  */
 
          for( uiParam = 3; uiParam <= uiPCount; uiParam++ )   /* Push arguments on stack */
             hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
@@ -1936,7 +1940,7 @@ HB_FUNC( __CLASSSEL )
          {
             PHB_ITEM pItem = hb_itemPutC( NULL, pMessage->pSymbol->szName );
                                                 /* Add to array             */
-            hb_arraySet( pReturn, ++uiPos, pItem );
+            hb_itemArrayPut( pReturn, ++uiPos, pItem );
             hb_itemRelease( pItem );
          }
       }
@@ -2164,7 +2168,7 @@ static HARBOUR hb___msgClsSel( void )
 
                PHB_ITEM pItem = hb_itemPutC( NULL, pMessage->pSymbol->szName );
                                                 /* Add to array             */
-               hb_arraySet( pReturn, ++uiPos, pItem );
+               hb_itemArrayPut( pReturn, ++uiPos, pItem );
                hb_itemRelease( pItem );
              }
          }
@@ -2248,7 +2252,7 @@ static HARBOUR hb___msgSuper( void )
    PHB_ITEM pCopy = hb_itemArrayNew(1);
 
    /* Now save the Self object as the 1st elem. */
-   hb_arraySet( pCopy, 1 , pObject );
+   hb_itemArrayPut( pCopy, 1 , pObject );
 
    /* Or Store original object as 1st elem */
    /* hb_itemCopy( pCopy->item.asArray.value->pItems , pObject) ; */
@@ -2256,9 +2260,11 @@ static HARBOUR hb___msgSuper( void )
    /* And transform it into a fake object */
    pCopy->item.asArray.value->uiPrevCls  = pObject->item.asArray.value->uiClass; /* backup of actual handel */
    pCopy->item.asArray.value->uiClass    = s_pMethod->uiSprClass;                /* superclass handel casting */
-   pCopy->item.asArray.value->puiClsTree = NULL;
 
-   hb_itemRelease( hb_itemReturn( pCopy ) );
+   pCopy->item.asArray.value->puiClsTree = 0 ;
+
+
+   hb_itemRelease(hb_itemReturn( pCopy ));
 }
 
 /*
@@ -2398,7 +2404,7 @@ HB_FUNC( __CLS_PARAM )
       for( n = 1; n <= uiParam; n++ )
       {
          PHB_ITEM iTmp = hb_itemParam( n );
-         hb_arraySet( array, n, iTmp );
+         hb_itemArrayPut( array, n, iTmp );
          hb_itemRelease( iTmp );
       }
    }
@@ -2406,7 +2412,7 @@ HB_FUNC( __CLS_PARAM )
    {
       PHB_ITEM iTmp = hb_itemPutC( NULL, (char *) "HBObject" );
       array = hb_itemArrayNew( 1 );
-      hb_arraySet( array, 1, iTmp );
+      hb_itemArrayPut( array, 1, iTmp );
       hb_itemRelease( iTmp );
    }
 
@@ -2425,7 +2431,7 @@ HB_FUNC( __CLS_PAR00 )
    for( n = 1; n <= uiParam; n++ )
     {
          PHB_ITEM iTmp = hb_itemParam( n );
-         hb_arraySet( array, n, iTmp );
+         hb_itemArrayPut( array, n, iTmp );
          hb_itemRelease( iTmp );
     }
 
@@ -2520,3 +2526,4 @@ HB_FUNC( __CLSGETPROPERTIES )
 
    hb_itemRelease( hb_itemReturn( pReturn ) );
 }
+

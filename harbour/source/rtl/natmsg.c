@@ -117,7 +117,7 @@ HB_FUNC( NATIONMSG )
    else if( ISNUM( 1 ) )
       hb_retc( hb_nationGetMsg( hb_parni( 1 ) ) );
    else
-      hb_retc( "" );
+      hb_retc( NULL );
 }
 
 /* NOTE: Intentionally using one leading underscore, like in Clipper.

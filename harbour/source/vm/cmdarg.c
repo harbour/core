@@ -255,7 +255,7 @@ HB_FUNC( HB_ARGSTRING )
       }
    }
    else
-      hb_retc( "" );
+      hb_retc( NULL );
 }
 
 /* Returns the number of command line arguments passed to the application, this
@@ -279,7 +279,7 @@ HB_FUNC( HB_ARGV )
       hb_retc( ( argc >= 0 && argc < s_argc ) ? s_argv[ argc ] : "" );
    }
    else
-      hb_retc( "" );
+      hb_retc( NULL );
 }
 
 /* Check for command line internal arguments */

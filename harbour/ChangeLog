@@ -7,6 +7,135 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+       Viktor classes.c
+
+2002-01-30 12:30 UTC+0200 Chen Kedem <niki@actcom.co.il>
+
+   * source/vm/arrayshb.c
+     * HB_AEXPRESSIONS() - The reported error code was 1123
+       (which belong to AADD()), since this function is an Harbour extension
+       it should use error code > 3000. Changed into 9999
+
+   * source/vm/extend.c
+   * source/vm/itemapi.c
+     + Add EOL to the last line
+
+   * source/vm/macro.c
+     ! hb_macroCheckParam() - Wrong error code 1080 is used, changed into 1065
+
+   * source/vm/memvars.c
+     + Add comment to __MVSAVE(), __MVRESTORE()  that error code 2008 is
+       undocumented in 5.2e and 5.3
+
+2002-01-30 09:30 UTC+0100 Antonio Linares <alinares@fivetech.com>
+
+  Notice: All these changes have been done by Viktor
+  Implemented here with his permission
+
+   * source/rtl/strzero.c
+   * source/rtl/str.c
+   * source/rtl/valtostr.c
+     % Calling hb_retc*_buffer() to speed up things.
+
+   * source/rtl/gete.c
+     % Calling hb_retc*_buffer() to speed up things.
+     % Calling hb_retc( NULL )
+
+   * source/rtl/oldbox.c
+   * source/rtl/mpostolc.c
+   * source/rtl/mlpos.c
+   * source/rtl/mlctopos.c
+   * source/rtl/mlcount.c
+   * source/rtl/memoline.c
+     % "ISCHAR( 1 ) ? hb_parc( 1 ) : """ optimized to
+       plain hb_parc( 1 ) since in Harbour it automatically
+       returns "" when !ISCHAR(1).
+
+   * source/pp/pplib.c
+   * source/rdd/dbcmd.c
+   * source/rtl/colorind.c
+   * source/rtl/datec.c
+   * source/rtl/descend.c
+   * source/rtl/fkmax.c
+   * source/rtl/gete.c
+   * source/rtl/hardcr.c
+   * source/rtl/memofile.c
+   * source/rtl/memoline.c
+   * source/rtl/mtran.c
+   * source/rtl/natmsg.c
+   * source/rtl/net.c
+   * source/rtl/oemansi.c
+   * source/rtl/padc.c
+   * source/rtl/padl.c
+   * source/rtl/padr.c
+   * source/rtl/philes.c
+   * source/rtl/replic.c
+   * source/rtl/right.c
+   * source/rtl/set.c
+   * source/rtl/space.c
+   * source/rtl/str.c
+   * source/rtl/strtran.c
+   * source/rtl/strzero.c
+   * source/rtl/stuff.c
+   * source/rtl/substr.c
+   * source/rtl/transfrm.c
+   * source/rtl/trim.c
+   * source/vm/classes.c
+   * source/vm/cmdarg.c
+   * source/vm/dynsym.c
+   * source/vm/proc.c
+     % hb_retc( "" ) calls optimized to hb_retc( NULL )
+       which will have the same effect, but it will
+       generate a constant string item, instead allocating a
+       memory buffer for the empty string, thus saving a
+       hb_grab() call, some memory, and lessen the memort
+       fragmentation.
+     ; Note that CA-Cl*pper will also accept NULL as a
+       parameter for _retc(), and it will be also a bit
+       faster. This fact is undocumented though.
+
+   * source/vm/itemapi.c
+   * include/hbapiitm.h
+     % hb_itemPutC*() functions optimized, so that they
+       will assign a constant buffer when receiving a NULL
+       string and thus storing an empty string ("") to the
+       string item. Callers are encouraged to call this
+       function (and hb_retc(), too) with a NULL instead of
+       "" to allow this optimization for Harbour.
+     + hb_itemPutCConst() API function added, which can set a
+       string to a const buffer, which doesn't need to be
+       freed, just like if it would point to a string stored in
+       the pcode. The caller must make sure that the buffer is
+       terminated with zero byte.
+
+   * source/vm/extend.c
+   * include/hbapi.h
+     + hb_retc_buffer()
+     + hb_retc_const()
+     + hb_retclen_buffer()
+       Three new functions, which can optimize out some memory
+       allocations/deallocations in frequently called Harbour RTL
+       functions, in this situation:
+       ---------------------------
+       char * buffer = hb_xgrab();
+       ...
+       hb_retclen( buffer, len );
+       hb_xfree( buffer );
+       ---------------------------
+       the above becomes:
+       ---------------------------
+       char * buffer = hb_xgrab();
+       ...
+       hb_retclen_buffer( buffer, len );
+       ---------------------------
+       and one pair of mem function calls is ruled out.
+
+   * source/rtl/ampm.c
+   * source/rtl/descend.c
+   * source/rtl/langapi.c
+   * source/rtl/memofile.c
+   * source/rtl/memoline.c
+   * source/rtl/mouseapi.c
    * source/rtl/mtran.c
    * source/rtl/oemansi.c
    * source/rtl/padc.c

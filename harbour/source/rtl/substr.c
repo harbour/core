@@ -101,10 +101,10 @@ HB_FUNC( SUBSTR )
          if( lLen > 0 )
             hb_retclen( hb_itemGetCPtr( pText ) + lPos, lLen );
          else
-            hb_retc( "" );
+            hb_retc( NULL );
       }
       else
-         hb_retc( "" );
+         hb_retc( NULL );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1110, NULL, "SUBSTR", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );

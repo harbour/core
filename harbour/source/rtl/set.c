@@ -392,7 +392,7 @@ HB_FUNC( SET )
          break;
       case HB_SET_ALTFILE    :
          if( hb_set.HB_SET_ALTFILE ) hb_retc( hb_set.HB_SET_ALTFILE );
-         else hb_retc( "" );
+         else hb_retc( NULL );
          if( args > 1 && ! HB_IS_NIL( pArg2 ) ) hb_set.HB_SET_ALTFILE = set_string( pArg2, hb_set.HB_SET_ALTFILE );
          if( args > 2 ) bFlag = set_logical( pArg3 );
          else bFlag = FALSE;
@@ -450,7 +450,7 @@ HB_FUNC( SET )
          if( hb_set.HB_SET_DATEFORMAT )
             hb_retc( hb_set.HB_SET_DATEFORMAT );
          else
-            hb_retc( "" );
+            hb_retc( NULL );
 
          if( args > 1 )
          {
@@ -495,7 +495,7 @@ HB_FUNC( SET )
          break;
       case HB_SET_DEFAULT    :
          if( hb_set.HB_SET_DEFAULT ) hb_retc( hb_set.HB_SET_DEFAULT );
-         else hb_retc( "" );
+         else hb_retc( NULL );
          if( args > 1 ) hb_set.HB_SET_DEFAULT = set_string( pArg2, hb_set.HB_SET_DEFAULT );
          break;
       case HB_SET_DELETED    :
@@ -504,7 +504,7 @@ HB_FUNC( SET )
          break;
       case HB_SET_DELIMCHARS :
          if( hb_set.HB_SET_DELIMCHARS ) hb_retc( hb_set.HB_SET_DELIMCHARS );
-         else hb_retc( "" );
+         else hb_retc( NULL );
          if( args > 1 ) hb_set.HB_SET_DELIMCHARS = set_string( pArg2, hb_set.HB_SET_DELIMCHARS );
          break;
       case HB_SET_DELIMITERS :
@@ -513,7 +513,7 @@ HB_FUNC( SET )
          break;
       case HB_SET_DEVICE     :
          if( hb_set.HB_SET_DEVICE ) hb_retc( hb_set.HB_SET_DEVICE );
-         else hb_retc( "" );
+         else hb_retc( NULL );
          if( args > 1 && ! HB_IS_NIL( pArg2 ) )
          {
             /* If the print file is not already open, open it in overwrite mode. */
@@ -559,7 +559,7 @@ HB_FUNC( SET )
          break;
       case HB_SET_EXTRAFILE  :
          if( hb_set.HB_SET_EXTRAFILE ) hb_retc( hb_set.HB_SET_EXTRAFILE );
-         else hb_retc( "" );
+         else hb_retc( NULL );
          if( args > 1 && ! HB_IS_NIL( pArg2 ) ) hb_set.HB_SET_EXTRAFILE = set_string( pArg2, hb_set.HB_SET_EXTRAFILE );
          if( args > 2 ) bFlag = set_logical( pArg3 );
          else bFlag = FALSE;
@@ -618,7 +618,7 @@ HB_FUNC( SET )
          break;
       case HB_SET_MFILEEXT   :
          if( hb_set.HB_SET_MFILEEXT ) hb_retc( hb_set.HB_SET_MFILEEXT );
-         else hb_retc( "" );
+         else hb_retc( NULL );
          if( args > 1 ) hb_set.HB_SET_MFILEEXT = set_string( pArg2, hb_set.HB_SET_MFILEEXT );
          break;
       case HB_SET_OPTIMIZE   :
@@ -631,7 +631,7 @@ HB_FUNC( SET )
          break;
       case HB_SET_PATH       :
          if( hb_set.HB_SET_PATH ) hb_retc( hb_set.HB_SET_PATH );
-         else hb_retc( "" );
+         else hb_retc( NULL );
          if( args > 1 )
          {
             hb_setFreeSetPath();
@@ -645,7 +645,7 @@ HB_FUNC( SET )
          break;
       case HB_SET_PRINTFILE  :
          if( hb_set.HB_SET_PRINTFILE ) hb_retc( hb_set.HB_SET_PRINTFILE );
-         else hb_retc( "" );
+         else hb_retc( NULL );
          if( args > 1 && ! HB_IS_NIL( pArg2 ) ) hb_set.HB_SET_PRINTFILE = set_string( pArg2, hb_set.HB_SET_PRINTFILE );
          if( args > 2 ) bFlag = set_logical( pArg3 );
          else bFlag = FALSE;

@@ -63,7 +63,6 @@
  *    Special treatment in case of Object and __Eval (only for methodname)
  *    skipping block and adding (b) before the method name
  *
- *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -71,12 +70,16 @@
 #include "hbapi.h"
 #include "hbstack.h"
 
-HB_FUNC( METHODNAME )
+#ifdef HB_EXTENSION
+
+HB_FUNC( HB_METHODNAME )
 {
    char szName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 2 ];
 
    hb_retc( hb_procname( hb_parni( 1 ) + 1, szName, TRUE ) );
 }
+
+#endif
 
 HB_FUNC( PROCNAME )
 {
@@ -106,7 +109,7 @@ HB_FUNC( PROCLINE )
 
 HB_FUNC( PROCFILE )
 {
-   hb_retc( "" );
+   hb_retc( NULL );
 }
 
 #endif
@@ -114,49 +117,52 @@ HB_FUNC( PROCFILE )
 /* NOTE: szName size must be an at least:
          HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 2 [vszakats] */
 
-char * hb_procname( int iLevel, char * szName, BOOL bskipBlock  )
+char * hb_procname( int iLevel, char * szName, BOOL bSkipBlock  )
 {
    PHB_ITEM * pBase = hb_stack.pBase;
-   char * szTstName ;
-   BOOL lcb = FALSE ;
+   char * szTstName;
+   BOOL lcb = FALSE;
    int iLev = iLevel;
 
    while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
       pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
 
-      szTstName = ( *pBase )->item.asSymbol.value->szName ;
+   szTstName = ( *pBase )->item.asSymbol.value->szName ;
 
-      if (bskipBlock)
+   if( bSkipBlock )
+   {
+      /* Is it an inline method ? if so back one more ... */
+      if( ( strcmp( szTstName, "__EVAL" ) == 0 ) &&  pBase != hb_stack.pItems )
       {
-       /* Is it an inline method ? if so back one more ... */
-       if ( ( strcmp( szTstName, "__EVAL" ) == 0 ) &&  pBase != hb_stack.pItems)
-        {
          pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
          lcb = TRUE ;
-        }
       }
+   }
 
    if( iLevel < 0 )
    {
       if( ( *( pBase + 1 ) )->type == HB_IT_ARRAY )  /* it is a method name */
       {
          strcpy( szName, hb_objGetRealClsName( *( pBase + 1 ), ( *pBase )->item.asSymbol.value->szName ) );
-         if (lcb)
-          strcat( szName, ":(b)" );
+
+         if( lcb )
+            strcat( szName, ":(b)" );
          else
-          strcat( szName, ":" );
+            strcat( szName, ":" );
+
          strcat( szName, ( *pBase )->item.asSymbol.value->szName );
       }
       else
-       {
-        if (lcb)  /* Back to standart code block */
+      {
+         if( lcb ) /* Back to standart code block */
          {
-          pBase = hb_stack.pBase;
-          while( ( iLev-- > 0 ) && pBase != hb_stack.pItems )
-           pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
+            pBase = hb_stack.pBase;
+            while( ( iLev-- > 0 ) && pBase != hb_stack.pItems )
+               pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
          }
+
          strcpy( szName, ( *pBase )->item.asSymbol.value->szName );
-       }
+      }
    }
    else
       strcpy( szName, "" );

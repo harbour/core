@@ -158,10 +158,10 @@ HB_FUNC( __PP_PATH )
       }
    }
    if( ISCHAR( 1 ) )
-   {     
+   {
       char * cDelim;
       char * cPath = hb_parc( 1 );
-     
+
       while( ( cDelim = strchr( cPath, OS_PATH_LIST_SEPARATOR ) ) != NULL )
         {
           *cDelim = '\0';
@@ -260,14 +260,14 @@ HB_FUNC( __PREPROCESS )
          /* an error occured during parsing.
           * The longjmp was used in GenError()
           */
-         hb_retc( "" );
+         hb_retc( NULL );
       }
 
       hb_xfree( pText );
       hb_xfree( pOut );
    }
    else
-      hb_retc( "" );
+      hb_retc( NULL );
 }
 
 void hb_compGenError( char * szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 )

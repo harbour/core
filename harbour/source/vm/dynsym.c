@@ -353,7 +353,7 @@ HB_FUNC( __DYNSGETNAME ) /* Get name of symbol: cSymbol = __dynsymGetName( dsInd
    if( lIndex >= 1 && lIndex <= s_uiDynSymbols )
       hb_retc( s_pDynItems[ lIndex - 1 ].pDynSym->pSymbol->szName );
    else
-      hb_retc( "" );
+      hb_retc( NULL );
 }
 
 HB_FUNC( __DYNSGETINDEX ) /* Gimme index number of symbol: dsIndex = __dynsymGetIndex( cSymbol ) */

@@ -101,7 +101,7 @@ HB_FUNC( CDOW )
          hb_retc( hb_dateCDOW( hb_dateDOW( lYear, lMonth, lDay ) ) );
       }
       else
-         hb_retc( "" );
+         hb_retc( NULL );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1117, NULL, "CDOW", 1, hb_paramError( 1 ) );

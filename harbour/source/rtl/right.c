@@ -73,6 +73,6 @@ HB_FUNC( RIGHT )
       hb_retclen( hb_itemGetCPtr( pText ) + lTextLen - lLen, lLen );
    }
    else
-      hb_retc( "" ); /* Clipper doesn't error */
+      hb_retc( NULL ); /* Clipper doesn't error */
 }
 

@@ -79,9 +79,9 @@ HB_FUNC( FKLABEL )
          hb_retc( szName );
       }
       else
-         hb_retc( "" );
+         hb_retc( NULL );
    }
    else
-      hb_retc( "" );
+      hb_retc( NULL );
 }
 

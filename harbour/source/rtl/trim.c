@@ -156,7 +156,7 @@ HB_FUNC( ALLTRIM )
 #ifdef HB_COMPAT_C53
       hb_errRT_BASE_SubstR( EG_ARG, 2022, NULL, "ALLTRIM", 1, hb_paramError( 1 ) ); /* NOTE: This appeared in CA-Cl*pper 5.3 [vszakats] */
 #else
-      hb_retc( "" );
+      hb_retc( NULL );
 #endif
 }
 

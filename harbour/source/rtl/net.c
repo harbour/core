@@ -95,43 +95,42 @@ HB_FUNC( NETNAME )
 #if defined(HB_OS_OS2) && defined(__GNUC__)
 
    {
-      char * pszValue = ( char * ) hb_xgrab( MAXGETHOSTNAME + 1 );
-      pszValue[ 0 ] = '\0';
-     
-      gethostname( pszValue, MAXGETHOSTNAME );
-     
-      hb_retc( pszValue );
-      hb_xfree( pszValue );
+      char szValue[ MAXGETHOSTNAME + 1 ];
+      szValue[ 0 ] = '\0';
+
+      gethostname( szValue, MAXGETHOSTNAME );
+
+      hb_retc( szValue );
    }
 
 #elif defined(HB_OS_DOS)
 
    #if defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__)
       {
-         char * pszValue = ( char * ) hb_xgrab( MAXGETHOSTNAME + 1 );
-         pszValue[ 0 ] = '\0';
-        
-         gethostname( pszValue, MAXGETHOSTNAME );
-        
-         hb_retc( pszValue );
-         hb_xfree( pszValue );
+         char szValue[ MAXGETHOSTNAME + 1 ];
+         szValue[ 0 ] = '\0';
+
+         gethostname( szValue, MAXGETHOSTNAME );
+
+         hb_retc( szValue );
       }
    #else
       {
-         char szValue[ 16 ];
          union REGS regs;
-      
+         char szValue[ 16 ];
+         szValue[ 0 ] = '\0';
+
          regs.HB_XREGS.ax = 0x5E00;
-      
+
          {
             struct SREGS sregs;
-      
+
             regs.HB_XREGS.dx = FP_OFF( szValue );
             sregs.ds = FP_SEG( szValue );
-      
+
             HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
          }
-      
+
          hb_retc( regs.h.ch == 0 ? "" : szValue );
       }
    #endif
@@ -140,19 +139,17 @@ HB_FUNC( NETNAME )
 
    {
       DWORD ulLen = MAX_COMPUTERNAME_LENGTH + 1;
-      char * pszValue = ( char * ) hb_xgrab( ulLen );
+      char szValue[ MAX_COMPUTERNAME_LENGTH + 1 ];
+      szValue[ 0 ] = '\0';
 
-      pszValue[ 0 ] = '\0';
+      GetComputerName( szValue, &ulLen );
 
-      GetComputerName( pszValue, &ulLen );
-
-      hb_retc( pszValue );
-      hb_xfree( pszValue );
+      hb_retc( szValue );
    }
 
 #else
 
-   hb_retc( "" );
+   hb_retc( NULL );
 
 #endif
 }

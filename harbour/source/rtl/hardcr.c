@@ -85,6 +85,6 @@ HB_FUNC( HARDCR )
       hb_itemFreeC( pszBuffer );
    }
    else
-      hb_retc( "" );
+      hb_retc( NULL );
 }
 
