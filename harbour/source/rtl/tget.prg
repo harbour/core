@@ -539,6 +539,14 @@ METHOD Untransform( cBuffer ) CLASS Get
 
    case ::type == "N"
 
+      ::minus := .f.
+      for nFor := 1 to ::nMaxLen
+         if ::IsEditable( nFor ) .and. ( Substr( ::buffer, nFor, 1 ) $ "-(" )
+            ::minus := .t.
+            exit
+         endif
+      next
+
       if "E" $ ::cPicFunc .or. ::lDecRev
          cBuffer := StrTran( cBuffer, ".", " " )
          cBuffer := StrTran( cBuffer, ",", "." )
@@ -1103,7 +1111,8 @@ METHOD DeleteAll() CLASS Get
    case ::type == "C"
       xValue := Space( ::nMaxlen )
    case ::type == "N"
-      xValue := 0
+      xValue   := 0
+      ::minus  := .f.
    case ::type == "D"
       xValue := CToD( "" )
    case ::type == "L"
@@ -1324,7 +1333,7 @@ STATIC FUNCTION IsBadDate( cBuffer )
       Endif
    Next
 
- return .f.
+return .f.
 
 
 
