@@ -86,7 +86,8 @@ void pp_Stuff (char*, char*, int, int, int);
 int strocpy (char*, char* );
 int stroncpy (char*, char*, int);
 int strincpy (char*, char*);
-int strincmp (char*, char**, int);
+int truncmp (char*, char**, int);
+int strincmp (char*, char** );
 int strolen ( char* );
 void stroupper ( char* );
 int strotrim ( char* );
@@ -889,7 +890,7 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
          break;
        default:    /*   Key word    */
          ptr = ptrmp;
-         if ( *ptri == ',' || strincmp(ptri, &ptrmp, !com_or_xcom ) )
+         if ( *ptri == ',' || truncmp(ptri, &ptrmp, !com_or_xcom ) )
          {
            if ( numBrackets )
            {
@@ -1083,7 +1084,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres )
        SKIPTABSPACES( ptr );
            /* Comparing real parameter and restriction value */
        ptrtemp = ptr;
-       if ( !strincmp ( *ptri, &ptr, FALSE ) )
+       if ( !strincmp ( *ptri, &ptr ) )
        {
          lenreal = stroncpy( expreal, *ptri, (ptr-ptrtemp) );
          *ptri += lenreal;
@@ -1778,7 +1779,7 @@ int stroncpy (char* ptro, char* ptri, int lens )
  return i;
 }
 
-int strincmp (char* ptro, char** ptri, int lTrunc )
+int truncmp (char* ptro, char** ptri, int lTrunc )
 {
    char *ptrb = ptro, co, ci;
 
@@ -1797,6 +1798,23 @@ int strincmp (char* ptro, char** ptri, int lTrunc )
       while( ISNAME(**ptri) ) (*ptri)++;
       return 0;
    }
+   return 1;
+}
+
+int strincmp (char* ptro, char** ptri )
+{
+   char *ptrb = ptro, co, ci;
+
+   for ( ; **ptri != ',' && **ptri != '[' && **ptri != ']' &&
+       **ptri != '\1' && **ptri != '\0' && toupper(**ptri)==toupper(*ptro);
+       ptro++, (*ptri)++ );
+   co = *(ptro-1);
+   ci = **ptri;
+   if ( ( ( ci == ' ' || ci == ',' || ci == '[' ||
+       ci == ']' || ci == '\1' || ci == '\0' ) &&
+       ( ( !ISNAME(*ptro) && ISNAME(co) ) ||
+       ( !ISNAME(co) ) ) ) )
+      return 0;
    return 1;
 }
 

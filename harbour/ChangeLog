@@ -1,3 +1,8 @@
+19990921-15:33 GMT+3 Alexander Kresin
+  * source/hbpp/hbpp.c
+    * Yet another bug fixed with restrivted match markers consisting of more
+      than one word ( 'FROM USER', for example )
+
 19990921-00:07 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/vm/hvm.c
     source/rtl/fm.c
