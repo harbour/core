@@ -21,15 +21,28 @@ function Main()
 
    local oString := TString():New( "Hello" )
 
+   QOut( "Testing TString with Operator Overloading" )
    QOut( oString:cValue )
-   if oString == "Hello"
-      QOut( "Ok" )
-      if oString != "Hello"
-         QOut( "Not ok" )
-      endif
-   endif
-return nil
+   QOut()
 
+   QOut( "Equal........:", oString = "Hello" )
+   QOut( "Exactly Equal:", oString == "Hello" )
+   QOut( "Not Equal != :", oString != "Hello" )
+   QOut( "Not Equal <> :", oString <> "Hello" )
+   QOut( "Not Equal #  :", oString # "Hello" )
+   QOut( "Substring $  :", oString $ "Hello" )
+   QOut( "Less than    :", oString < "Hello" )
+   QOut( "Less than or Equal:", oString <= "Hello" )
+   QOut( "Greater than :", oString < "Hello" )
+   QOut( "Greater than or Equal:", oString <= "Hello" )
+   QOut( "Concatenation + :", oString + "Hello" )
+   QOut( "Concatenation - :", oString - "Hello" )
+   oString += " World"
+   QOut( "Compound += :", oString )
+   oString -= " World"
+   QOut( "Compound -= :", oString )
+
+return nil
 
 function TString()
 
@@ -41,14 +54,28 @@ function TString()
       oClass:AddData( "cValue" )          // define this class objects datas
 
       oClass:AddMethod( "New", @New() )
+
+      oClass:AddInline( "=",  {| self, cTest | ::cValue = cTest } )
       oClass:AddInline( "==",  {| self, cTest | ::cValue == cTest } )
       oClass:AddInline( "!=",  {| self, cTest | ::cValue != cTest } )
+      oClass:AddInline( "<>",  {| self, cTest | ::cValue <> cTest } )
+      oClass:AddInline( "#",  {| self, cTest | ::cValue # cTest } )
+      oClass:AddInline( "+=",  {| self, cTest | ::cValue += cTest } )
+      oClass:AddInline( "-=",  {| self, cTest | ::cValue -= cTest } )
+      oClass:AddInline( "+",  {| self, cTest | ::cValue := ::cValue + cTest } )
+      oClass:AddInline( "-",  {| self, cTest | ::cValue := ::cValue - cTest } )
+      oClass:AddInline( "$",  {| self, cTest | ::cValue $ cTest } )
+      oClass:AddInline( "<",  {| self, cTest | ::cValue < cTest } )
+      oClass:AddInline( "<=",  {| self, cTest | ::cValue <= cTest } )
+      oClass:AddInline( ">",  {| self, cTest | ::cValue > cTest } )
+      oClass:AddInline( ">=",  {| self, cTest | ::cValue >= cTest } )
+
+      oClass:AddInline( "HasMsg", {| self, cMsg | __ObjHasMsg( QSelf(), cMsg ) } )
 
       oClass:Create()                     // builds this class
    endif
 
 return oClass:Instance()                  // builds an object of this class
-
 
 static function New( cText )
 
@@ -57,6 +84,3 @@ static function New( cText )
    ::cValue := cText
 
 return Self
-
-
-

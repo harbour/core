@@ -502,6 +502,31 @@ PHB_ITEM hb_errPutFlags( PHB_ITEM pError, USHORT uiFlags )
    return pError;
 }
 
+PHB_ITEM hb_errPutArgs( PHB_ITEM pError, USHORT uiArgCount, ... )
+{
+   PHB_ITEM pArray = hb_itemNew( NULL );
+   USHORT uiArgPos;
+   va_list va;
+
+   /* Build the array from the passed arguments. */
+
+   hb_arrayNew( pArray, uiArgCount );
+
+   va_start( va, uiArgCount );
+   for( uiArgPos = 1; uiArgPos <= uiArgCount; uiArgPos++ )
+      hb_arraySet( pArray, uiArgPos, va_arg( va, PHB_ITEM ) );
+   va_end( va );
+
+   /* Assign the new array to the object data item. */
+
+   hb_vmPushSymbol( hb_dynsymGet( "_ARGS" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmPush( pArray );
+   hb_vmDo( 1 );
+
+   return pError;
+}
+
 /* Wrappers for hb_errLaunch() */
 
 PHB_ITEM hb_errRT_New(

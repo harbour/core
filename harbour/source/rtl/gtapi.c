@@ -74,8 +74,6 @@ static USHORT s_uiDispCount  = 0;
 static USHORT s_uiPreCount   = 0;
 static USHORT s_uiPreCNest   = 0;
 static USHORT s_uiColorIndex = 0;
-static USHORT s_uiMaxCol;
-static USHORT s_uiMaxRow;
 
 static int *  s_Color;  /* masks: 0x0007     Foreground
                                   0x0070     Background
@@ -96,8 +94,6 @@ void hb_gtInit( void )
    s_ColorCount = 5;
    hb_gt_Init();
    hb_gtSetColorStr( hb_set.HB_SET_COLOR );
-   hb_gtMaxRow();
-   hb_gtMaxCol();
 }
 
 void hb_gtExit( void )
@@ -123,15 +119,15 @@ int hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
    USHORT uiTopBak = uiTop;
    USHORT uiLeftBak = uiLeft;
 
-   USHORT uiMRow = s_uiMaxRow;
-   USHORT uiMCol = s_uiMaxCol;
+   USHORT uiMaxRow = hb_gtMaxRow();
+   USHORT uiMaxCol = hb_gtMaxCol();
 
    /* TODO: Would be better to support these cases, Clipper implementation */
    /*       was quite messy for these cases, which can be considered as */
    /*       a bug there. */
 
-   if( uiTop  > uiMRow || uiBottom > uiMRow ||
-       uiLeft > uiMCol || uiRight  > uiMCol )
+   if( uiTop  > uiMaxRow || uiBottom > uiMaxRow ||
+       uiLeft > uiMaxCol || uiRight  > uiMaxCol )
    {
       return 1;
    }
@@ -404,7 +400,7 @@ int hb_gtSetColorStr( char * fpColorString )
       s_Color[ 3 ] = 0;
       s_Color[ 4 ] = 0x07;
    }
-        
+
    do
    {
       c = *fpColorString++;
@@ -575,7 +571,7 @@ int hb_gtSetPos( USHORT uiRow, USHORT uiCol )
 {
    /* TODO: in this situation Clipper just turns off the cursor */
    /* any further writes would be accounted for by clipping */
-   if( uiRow > s_uiMaxRow || uiCol > s_uiMaxCol )
+   if( uiRow > hb_gtMaxRow() || uiCol > hb_gtMaxCol() )
       return 1;
 
    s_uiCurrentRow = uiRow;
@@ -593,31 +589,16 @@ BOOL hb_gtIsColor( void )
 
 USHORT hb_gtMaxCol( void )
 {
-   return s_uiMaxCol = hb_gt_GetScreenWidth() - 1;
+   return hb_gt_GetScreenWidth() - 1;
 }
 
 USHORT hb_gtMaxRow( void )
 {
-   return s_uiMaxRow = hb_gt_GetScreenHeight() - 1;
+   return hb_gt_GetScreenHeight() - 1;
 }
 
 int hb_gtRectSize( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, USHORT * uipBuffSize )
 {
-   USHORT uiMRow = s_uiMaxRow;
-   USHORT uiMCol = s_uiMaxCol;
-
-   if( uiBottom > uiMRow )
-      uiBottom = uiMRow;
-   if( uiRight > uiMCol )
-      uiRight = uiMCol;
-
-   if( uiTop  > uiMRow   || uiBottom > uiMRow ||
-       uiLeft > uiMCol   || uiRight  > uiMCol ||
-       uiTop  > uiBottom || uiLeft   > uiRight )
-   {
-      return 1;
-   }
-
    *uipBuffSize = ( uiBottom - uiTop + 1 ) * ( uiRight - uiLeft + 1 ) * 2;
 
    return 0;
@@ -654,8 +635,8 @@ int hb_gtSave( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, cha
 
 int hb_gtScrDim( USHORT * uipHeight, USHORT * uipWidth )
 {
-   *uipHeight = s_uiMaxRow;
-   *uipWidth = s_uiMaxCol;
+   *uipHeight = hb_gtMaxRow();
+   *uipWidth = hb_gtMaxCol();
 
    return 0;
 }
@@ -678,8 +659,6 @@ int hb_gtSetMode( USHORT uiRows, USHORT uiCols )
 {
 /* ptucker */
    hb_gt_SetMode( uiRows, uiCols );
-   s_uiMaxRow = hb_gtMaxRow();
-   s_uiMaxCol = hb_gtMaxCol();
 
    return 0;
 }
@@ -707,8 +686,8 @@ int hb_gtWrite( char * fpStr, ULONG length )
    /* Determine where the cursor is going to end up */
    iRow = s_uiCurrentRow;
    iCol = s_uiCurrentCol;
-   iMaxRow = s_uiMaxRow;
-   iMaxCol = s_uiMaxCol;
+   iMaxRow = hb_gtMaxRow();
+   iMaxCol = hb_gtMaxCol();
 
    length = ( length < iMaxCol-iCol+1 ) ? length : iMaxCol - iCol + 1;
 
@@ -780,6 +759,8 @@ int hb_gtWriteCon( char * fpStr, ULONG length )
    BOOL ldisp = FALSE;
    USHORT uiRow = s_uiCurrentRow, uiCol = s_uiCurrentCol;
    USHORT tmpRow = s_uiCurrentRow, tmpCol = s_uiCurrentCol;
+   USHORT uiMaxRow = hb_gtMaxRow();
+   USHORT uiMaxCol = hb_gtMaxCol();
    int ch;
    char * fpPtr = fpStr;
    #define STRNG_SIZE 500
@@ -799,12 +780,12 @@ int hb_gtWriteCon( char * fpStr, ULONG length )
             else if( uiRow > 0 )
             {
                uiRow--;
-               uiCol = s_uiMaxCol;
+               uiCol = uiMaxCol;
             }
             else
             {
-               hb_gtScroll( 0, 0, s_uiMaxRow, s_uiMaxCol, -1, 0 );
-               uiCol = s_uiMaxCol;
+               hb_gtScroll( 0, 0, uiMaxRow, uiMaxCol, -1, 0 );
+               uiCol = uiMaxCol;
             }
 */
             if( nLen > 0 )
@@ -815,9 +796,9 @@ int hb_gtWriteCon( char * fpStr, ULONG length )
             break;
          case 10:
 /*
-            if( uiRow < s_uiMaxRow ) uiRow++;
+            if( uiRow < uiMaxRow ) uiRow++;
             else
-               hb_gtScroll( 0, 0, s_uiMaxRow, s_uiMaxCol, 1, 0 );
+               hb_gtScroll( 0, 0, uiMaxRow, uiMaxCol, 1, 0 );
 
             hb_gtSetPos( uiRow, uiCol );
 */
@@ -831,7 +812,7 @@ int hb_gtWriteCon( char * fpStr, ULONG length )
             break;
 
          default:
-            if( ++uiCol > s_uiMaxCol )
+            if( ++uiCol > uiMaxCol )
             {
                uiCol = 0;
                ++uiRow;
@@ -845,10 +826,10 @@ int hb_gtWriteCon( char * fpStr, ULONG length )
          if( nLen )
             rc = hb_gtWrite( strng, nLen );
          nLen = 0;
-         if( uiRow > s_uiMaxRow )
+         if( uiRow > uiMaxRow )
          {
-            hb_gtScroll( 0, 0, s_uiMaxRow, s_uiMaxCol, uiRow - s_uiMaxRow, 0 );
-            uiRow = s_uiMaxRow;
+            hb_gtScroll( 0, 0, uiMaxRow, uiMaxCol, uiRow - uiMaxRow, 0 );
+            uiRow = uiMaxRow;
             uiCol = 0;
          }
          tmpRow = uiRow; tmpCol = uiCol;

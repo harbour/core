@@ -1,3 +1,40 @@
+19990913-23:50 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rtl/gtapi.c
+    ! hb_gtRectSize() fixed to always return a valid value, even when 
+      the coordinates are out of range, just like in Clipper.
+      This caused a GPF when running a program with the standard output
+      redirected. The screen size stored in the caching static variables
+      were invalid or uninitialized.
+      The Row()/Col() parameters are also cached in static variables, I'm not
+      sure if this is needed, it would be better IMO to add hb_gtRow() and
+      hb_gtCol() and call these when needed, it could be also cached locally
+      to optimalize where appropriate.
+    ! s_uiMaxCol()/s_uiMaxRow() static variables replaced with hb_gtMax*()
+      calls.
+    % hb_gtWriteCon() now caches the screen size info locally.
+  * source/rtl/console.c
+    ! SAVESCREEN() - Non GTAPI verison now returns an empty string.
+  * source/rtl/alert.prg
+    + Will now return NIL and do nothing if the number of parameters was zero.
+      This better mimics the STRICT Clipper behaviour.
+    ! One explicit value changed to manifest constant. ( 0 -> SC_NONE )
+  * source/rtl/memvars.c
+    ! FO_SHARED flag uncommented for __MVRESTORE().
+      NOTE: Cygwin will now delete the .mem file after a restore.
+      This is a known problem and should be fixed elsewhere.
+  * tests/working/overload.prg
+    + New tests added by Jose Lalin.
+  * source/rtl/natmsg/msggl.c
+    * Updated version by Jose Lalin.
+  * include/errorapi.h
+    source/rtl/errorapi.c
+    + hb_errPutArgs() function to set :Args of an Error object.
+  * tests/working/rtl_test.prg
+    tests/working/memfile.prg
+    + __MVSAVE()/__MVRESTORE() error cases moved here from MEMFILE.PRG
+    + Operator overloading tests added.
+
 19990913-15:35 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rdd/dbcmd.c

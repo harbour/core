@@ -1743,7 +1743,7 @@ HARBOUR HB___MVRESTORE( void )
 
       /* Open .MEM file */
 
-      while( ( fhnd = hb_fsOpen( ( BYTE * ) szFileName, FO_READ /* | FO_SHARED */ ) ) == FS_ERROR )
+      while( ( fhnd = hb_fsOpen( ( BYTE * ) szFileName, FO_READ | FO_SHARED ) ) == FS_ERROR )
       {
          WORD wResult = hb_errRT_BASE_Ext1( EG_OPEN, 2005, NULL, szFileName, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
 

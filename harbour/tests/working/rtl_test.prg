@@ -56,7 +56,7 @@
 #define TEST_RESULT_COL2_WIDTH  20
 #define TEST_RESULT_COL3_WIDTH  40
 #define TEST_RESULT_COL4_WIDTH  55
-#define TEST_RESULT_COL5_WIDTH  40
+#define TEST_RESULT_COL5_WIDTH  55
 
 STATIC s_nPass
 STATIC s_nFail
@@ -94,7 +94,7 @@ STATIC sbBlockC
 STATIC saArray
 STATIC saAllTypes
 
-MEMVAR mxNotHere
+MEMVAR mxNotHere /* Please don't declare this variable, since it's used to test undeclared MEMVAR situations. */
 MEMVAR mcString
 MEMVAR mcStringE
 MEMVAR mcStringZ
@@ -134,6 +134,10 @@ FUNCTION Main( cPar1, cPar2 )
    Main_MATH()
    Main_STRINGS()
    Main_MISC()
+#ifdef __HARBOUR__
+   Main_OPOVERL()
+#endif
+   Main_LAST()
 
    /* Show results, return ERRORLEVEL and exit */
 
@@ -1941,6 +1945,83 @@ STATIC FUNCTION Main_MISC()
    TEST_LINE( MEMVARBLOCK( 100 )              , NIL             )
    TEST_LINE( MEMVARBLOCK( "mxNotHere" )      , NIL             )
    TEST_LINE( MEMVARBLOCK( "mcString" )       , "{||...}"       )
+
+   RETURN NIL
+
+#ifdef __HARBOUR__
+
+STATIC FUNCTION Main_OPOVERL()
+   LOCAL oString := TString()
+
+   oString:cValue := "Hello"
+
+   TEST_LINE( oString =  "Hello"        , .T.                 )
+   TEST_LINE( oString == "Hello"        , .T.                 )
+   TEST_LINE( oString != "Hello"        , .F.                 )
+   TEST_LINE( oString <> "Hello"        , .F.                 )
+   TEST_LINE( oString #  "Hello"        , .F.                 )
+   TEST_LINE( oString $  "Hello"        , .T.                 )
+   TEST_LINE( oString <  "Hello"        , .F.                 )
+   TEST_LINE( oString <= "Hello"        , .T.                 )
+   TEST_LINE( oString <  "Hello"        , .F.                 )
+   TEST_LINE( oString <= "Hello"        , .T.                 )
+   TEST_LINE( oString +  "Hello"        , "HelloHello"        )
+   TEST_LINE( oString -  "Hello"        , "HelloHello"        )
+   oString:cValue := "Hello"
+   TEST_LINE( oString += " World"       , "Hello World"       )
+   oString:cValue := "Hello"
+   TEST_LINE( oString -= " World"       , "Hello World"       )
+
+   RETURN NIL
+
+STATIC FUNCTION TString()
+
+   STATIC oClass
+
+   IF oClass == NIL
+      oClass = TClass():New( "TSTRING" )
+
+      oClass:AddData( "cValue" )
+
+      oClass:AddInline( "=" , {| self, cTest | ::cValue =  cTest } )
+      oClass:AddInline( "==", {| self, cTest | ::cValue == cTest } )
+      oClass:AddInline( "!=", {| self, cTest | ::cValue != cTest } )
+      oClass:AddInline( "<>", {| self, cTest | ::cValue <> cTest } )
+      oClass:AddInline( "#" , {| self, cTest | ::cValue #  cTest } )
+      oClass:AddInline( "+=", {| self, cTest | ::cValue += cTest } )
+      oClass:AddInline( "-=", {| self, cTest | ::cValue -= cTest } )
+      oClass:AddInline( "+" , {| self, cTest | ::cValue := ::cValue + cTest } )
+      oClass:AddInline( "-" , {| self, cTest | ::cValue := ::cValue - cTest } )
+      oClass:AddInline( "$" , {| self, cTest | ::cValue $  cTest } )
+      oClass:AddInline( "<" , {| self, cTest | ::cValue <  cTest } )
+      oClass:AddInline( "<=", {| self, cTest | ::cValue <= cTest } )
+      oClass:AddInline( ">" , {| self, cTest | ::cValue >  cTest } )
+      oClass:AddInline( ">=", {| self, cTest | ::cValue >= cTest } )
+
+      oClass:AddInline( "HasMsg", {| self, cMsg | __ObjHasMsg( QSelf(), cMsg ) } )
+
+      oClass:Create()
+   ENDIF
+
+   RETURN oClass:Instance()
+
+#endif
+
+/* NOTE: These should always be called last, since they can mess up the test
+         environment.
+
+         Right now the failing __MRestore() will clear all memory variables,
+         which is absolutely normal otherwise. */
+
+STATIC FUNCTION Main_LAST()
+
+   TEST_LINE( MEMVARBLOCK( "mcString" )           , "{||...}"                                         )
+   TEST_LINE( __MRestore()                        , "E BASE 2007 Argument error __MRESTORE "          )
+   TEST_LINE( MEMVARBLOCK( "mcString" )           , "{||...}"                                         )
+   TEST_LINE( __MSave()                           , "E BASE 2008 Argument error __MSAVE "             )
+   TEST_LINE( __MRestore( "$NOTHERE.MEM", .F. )   , "E BASE 2005 Open error $NOTHERE.MEM F:DR"        )
+   TEST_LINE( MEMVARBLOCK( "mcString" )           , NIL                                               )
+   TEST_LINE( __MSave( "*BADNAM*.MEM", "*", .T. ) , "E BASE 2006 Create error *BADNAM*.MEM F:DR"      )
 
    RETURN NIL
 

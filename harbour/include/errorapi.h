@@ -88,6 +88,7 @@ extern char *   hb_errGetSubSystem      ( PHB_ITEM pError );
 extern USHORT   hb_errGetTries          ( PHB_ITEM pError );
 extern WORD     hb_errLaunch            ( PHB_ITEM pError );
 extern PHB_ITEM hb_errNew               ( void );
+extern PHB_ITEM hb_errPutArgs           ( PHB_ITEM pError, USHORT uiArgCount, ... );
 extern PHB_ITEM hb_errPutDescription    ( PHB_ITEM pError, char * szDescription );
 extern PHB_ITEM hb_errPutFileName       ( PHB_ITEM pError, char * szFileName );
 extern PHB_ITEM hb_errPutFlags          ( PHB_ITEM pError, USHORT uiFlags );

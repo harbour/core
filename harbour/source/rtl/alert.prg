@@ -1,4 +1,4 @@
-/* 
+/*
  * $Id$
  */
 
@@ -15,6 +15,7 @@
 
 #include "box.ch"
 #include "inkey.ch"
+#include "setcurs.ch"
 
 // ; TOFIX: Clipper defines a clipped window for Alert()
 // ; Clipper will return NIL if the first parameter is not a string, but
@@ -67,6 +68,10 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
    AAdd( aSay, xMessage )
 
 #else
+
+   IF PCount() == 0
+      RETURN NIL
+   ENDIF
 
    IF ValType( xMessage ) == "A"
 
@@ -182,7 +187,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       /* save status */
       nOldRow := Row()
       nOldCol := Col()
-      nOldCursor := SetCursor( 0 )
+      nOldCursor := SetCursor( SC_NONE )
       cOldScreen := SaveScreen( nInitRow, nInitCol, nInitRow + Len( aSay ) + 3, nInitCol + nWidth + 1 )
 
       /* draw box */

@@ -982,9 +982,7 @@ HARBOUR HB_NOSNOW( void )
 {
 #ifdef HARBOUR_USE_GTAPI
    if( ISLOG( 1 ) )
-   {
       hb_gtSetSnowFlag( hb_parl( 1 ) );
-   }
 #endif
 }
 
@@ -1023,7 +1021,7 @@ HARBOUR HB_SAVESCREEN( void )
    uiCoords[ 2 ] = hb_gtMaxRow();
    uiCoords[ 3 ] = hb_gtMaxCol();
 
-   for( uiX = 1; uiX < 5; uiX++ )
+   for( uiX = 1; uiX <= 4; uiX++ )
       if( ISNUM( uiX ) )
          uiCoords[ uiX - 1 ] = hb_parni( uiX );
 
@@ -1032,6 +1030,8 @@ HARBOUR HB_SAVESCREEN( void )
    hb_gtSave( uiCoords[ 0 ], uiCoords[ 1 ], uiCoords[ 2 ], uiCoords[ 3 ], pBuffer );
    hb_retclen( pBuffer, uiX );
    hb_xfree( ( void * ) pBuffer );
+#else
+   hb_retc( "" );
 #endif
 }
 

@@ -50,12 +50,6 @@ FUNCTION Main()
    ? __MRestore( "memfile", .F., "mndouble*", .T. )
    ? mnDouble
    ? mnDoubleH
-   ? mnInt
-
-   // ; Error cases
-
-   ? __MRestore( "mamfula", .F. )
-   ? mxStayHere
-// SAVE TO memempt* ALL
+   ? __mvScope("mnInt")
 
    RETURN NIL
