@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-10-10 10:00 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * source/rtl/round.c
+    ! changes on round() function, proposed by Vicente Aranzana.
+      Based on his tests, the changes are working ok.
+
 2003-10-08 14:24 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * Makefile
   * contrib/Makefile
