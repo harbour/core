@@ -564,7 +564,7 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
 
       if( info->hFindFile != INVALID_HANDLE_VALUE )
       {
-         if( info->dwAttr == 0 || ( info->dwAttr & info->pFindFileData.dwFileAttributes ) || ( info->pFindFileData.dwFileAttributes & HB_FA_NORMAL ))
+         if( info->dwAttr == 0 || ( info->dwAttr & info->pFindFileData.dwFileAttributes ) || ( info->pFindFileData.dwFileAttributes == 0 ))
          {
             bFound = TRUE;
          }
@@ -574,7 +574,7 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
   
             while( FindNextFile( info->hFindFile, &info->pFindFileData ) )
             {
-               if( info->dwAttr == 0 || ( info->dwAttr & info->pFindFileData.dwFileAttributes ) || ( info->pFindFileData.dwFileAttributes & HB_FA_NORMAL ) )
+               if( info->dwAttr == 0 || ( info->dwAttr & info->pFindFileData.dwFileAttributes ) || ( info->pFindFileData.dwFileAttributes == 0 ) )
                {
                   bFound = TRUE;
                   break;
@@ -669,7 +669,7 @@ BOOL hb_fsFindNext( PHB_FFIND ffind )
 
       while( FindNextFile( info->hFindFile, &info->pFindFileData ) )
       {
-         if( info->dwAttr == 0 || ( info->dwAttr & info->pFindFileData.dwFileAttributes ) || ( info->pFindFileData.dwFileAttributes & HB_FA_NORMAL ))
+         if( info->dwAttr == 0 || ( info->dwAttr & info->pFindFileData.dwFileAttributes ) || ( info->pFindFileData.dwFileAttributes == 0 ))
          {
             bFound = TRUE;
             break;
