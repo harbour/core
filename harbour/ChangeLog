@@ -1,3 +1,8 @@
+20000505-10:47 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * source/rtl/teditor.prg
+     ! cvs completely broke source file adding Chr(13) chars allover
+
 20000504-23:00 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/cmdcheck.c
