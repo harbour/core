@@ -305,7 +305,7 @@ StrongType : AS_NUMERIC                    { hb_comp_cVarType = 'N'; }
            | AS_LOGICAL                    { hb_comp_cVarType = 'L'; }
            | AS_BLOCK                      { hb_comp_cVarType = 'B'; }
            | AS_OBJECT                     { hb_comp_cVarType = 'O'; }
-           | AS_CLASS IdentName            { hb_comp_cVarType = 'S'; hb_comp_szFromClass = $2 }
+           | AS_CLASS IdentName            { hb_comp_cVarType = 'S'; hb_comp_szFromClass = $2; }
            | AS_VARIANT                    { hb_comp_cVarType = ' '; }
            | AsArray
            ;
@@ -318,7 +318,7 @@ AsArray    : AS_ARRAY                      { hb_comp_cVarType = 'A'; }
            | AS_ARRAY_ARRAY                { hb_comp_cVarType = 'a'; }
            | AS_BLOCK_ARRAY                { hb_comp_cVarType = 'b'; }
            | AS_OBJECT_ARRAY               { hb_comp_cVarType = 'o'; }
-           | AS_CLASS_ARRAY IdentName      { hb_comp_cVarType = 's'; hb_comp_szFromClass = $2 }
+           | AS_CLASS_ARRAY IdentName      { hb_comp_cVarType = 's'; hb_comp_szFromClass = $2; }
            ;
 
 ParamList  : IdentName AsType                { hb_compVariableAdd( $1, hb_comp_cVarType ); $$ = 1; }
@@ -708,7 +708,7 @@ SimpleExpression :
            | CodeBlock                        { $$ = $1; }
            | Logical                          { $$ = $1; }
            | SelfValue                        { $$ = $1; }
-           | SelfValue    {hb_comp_cVarType = ' '} StrongType { $$ = $1; }
+           | SelfValue    {hb_comp_cVarType = ' ';} StrongType { $$ = $1; }
            | Array                            { $$ = $1; }
            | ArrayAt                          { $$ = $1; }
            | AliasVar                         { $$ = $1; }
@@ -716,12 +716,12 @@ SimpleExpression :
            | MacroExpr                        { $$ = $1; }
            | VariableAt                       { $$ = $1; }
            | FunCall                          { $$ = $1; }
-           | FunCall      {hb_comp_cVarType = ' '} StrongType { $$ = $1; }
+           | FunCall      {hb_comp_cVarType = ' ';} StrongType { $$ = $1; }
            | IfInline                         { $$ = $1; }
            | ObjectData                       { $$ = $1; }
-           | ObjectData   {hb_comp_cVarType = ' '} StrongType { $$ = $1; }
+           | ObjectData   {hb_comp_cVarType = ' ';} StrongType { $$ = $1; }
            | ObjectMethod                     { $$ = $1; }
-           | ObjectMethod {hb_comp_cVarType = ' '} StrongType { $$ = $1; }
+           | ObjectMethod {hb_comp_cVarType = ' ';} StrongType { $$ = $1; }
            | AliasExpr                        { $$ = $1; }
            | ExprAssign                       { $$ = $1; }
            | ExprOperEq                       { $$ = $1; }

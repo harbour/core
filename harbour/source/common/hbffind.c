@@ -102,6 +102,7 @@ HB_FILE_VER( "$Id$" )
 
 #elif defined(HB_OS_WIN_32)
 
+   #include <errno.h>
    typedef struct
    {
       HANDLE          hFindFile;

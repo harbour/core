@@ -6,6 +6,18 @@ ROOT = ../
 
 ifeq ($(HB_ARCHITECTURE),w32)
 
+ifeq ($(HB_COMPILER),msvc)
+
+DIRS=\
+	htmllib \
+	libct \
+	libgt \
+	libmisc \
+	rdd_ads \
+	samples \
+
+else
+
 DIRS=\
 	btree \
 	htmllib \
@@ -16,6 +28,7 @@ DIRS=\
 	rdd_ads \
 	samples \
 
+endif
 
 else
 ifeq ($(HB_COMPILER),icc)
@@ -45,14 +58,12 @@ DIRS=\
 else
 
 DIRS=\
-	btree \
 	htmllib \
 	libct \
 	libgt \
 	libmisc \
-	libnf \
 	samples \
-
+ 
 endif
 endif
 endif
