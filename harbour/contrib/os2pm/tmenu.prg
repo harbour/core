@@ -2,6 +2,7 @@
  * $Id$
  */
 
+
 /*
  * Harbour Project source code:
  * Harbour GUI framework for IBM OS/2 Presentation Manager
@@ -52,75 +53,30 @@
  */
 
 
-
-#include "common.ch"
 #include "hbclass.ch"
-#include "os2pm.ch"   // Needed to store some OS/2 PM constant values
 
-CLASS TForm
+CLASS TMenu
 
-   DATA      hWnd
-   DATA     oMainMenu
+   DATA   nHandle
+   DATA   aItems
 
-   CLASSDATA lRegistered
-
-   METHOD   New()
-   METHOD   ShowModal()
-   METHOD   cCaption() INLINE WinGetText( ::hWnd )
-
-   METHOD   _cCaption( cNewCaption ) INLINE ;
-               WinSetWindowText( ::hWnd, cNewCaption )
-
-   METHOD   oMenu() INLINE ::oMainMenu
-   METHOD   _oMenu( oNewMenu )
+   METHOD New( oForm )
+   METHOD Add( oMenuItem )
 
 ENDCLASS
 
+METHOD New( oForm ) CLASS TMenu
 
-METHOD New() CLASS TForm
-
-   local hWndClient
-
-   DEFAULT ::lRegistered TO .f.
-
-   if ! ::lRegistered
-
-      // Notice that this code may be moved to a method Register()
-      // so we hide again the OS API details
-
-      WinRegisterClass( "HB_TFORM",;
-                        (CS_SIZEREDRAW + 0x2000001), 0 )
-      ::lRegistered = .t.
-   endif
-
-   // Again this code may be moved to a method Create() to hide the
-   // OS API details
-
-   ::hWnd = WinCreateStdWindow( HWND_DESKTOP,;
-                                WS_VISIBLE,;
-                                (FCF_TITLEBAR + FCF_SYSMENU +;
-                                FCF_SIZEBORDER + FCF_TASKLIST +;
-                                FCF_MINMAX + FCF_SHELLPOSITION ),;
-                                "HB_TFORM", "Harbour TForm",;
-                                (WS_SYNCPAINT + WS_VISIBLE ),,,;
-                                @hWndClient ) // Not used yet
+   ::aItems  = {}
+   ::nHandle = WinCreateMenu( oForm:hWnd )
 
 return Self
 
+METHOD Add( oMenuItem ) CLASS TMenu
 
-METHOD ShowModal() CLASS TForm
+   WinAddMenuItem( ::nHandle, oMenuItem:cCaption, Len( ::aItems ),;
+                   nil, oMenuItem:nId, oMenuItem:lActive )
 
-   HB_PM_ShowModal()
-
-return nil
-
-
-METHOD _oMenu( oNewMenu ) CLASS TForm
-
-   ::oMainMenu = oNewMenu
-
-   WinSetParent( oNewMenu:nHandle, ::hWnd, .t. )
-   WinSetOwner( oNewMenu:nHandle, ::hWnd )
-   WinSendMsg( ::hWnd, WM_UPDATEFRAME, FCF_MENU, 0 )
+   AAdd( ::aItems, oMenuItem )
 
 return nil

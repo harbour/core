@@ -8,7 +8,9 @@ C_SOURCES=\
 	os2pm.c \
 
 PRG_SOURCES=\
-	tform.prg  \
+	tform.prg    \
+	tmenu.prg    \
+	tmenuitm.prg \
 	
 
 LIBNAME=os2pm
