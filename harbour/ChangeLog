@@ -1,10 +1,15 @@
+20000415-17:47 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * changelog
+     ! Sorry Bruno, I mistyped your name, fixed.
+
 20000415-17:38 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * source/rdd/dbfcdx/dbfcdx1.c
-     % added Bruno Contero's file (from message on Harblour list), quick and dirty hack to make it
+     % added Bruno Cantero's file (from message on Harblour list), quick and dirty hack to make it
        compile (at least) lots of warnings and no tests made
    * include/hbapirdd.h
-     % added Bruno Contero's changes to make dbfcdx1.c happy.
+     % added Bruno Cantero's changes to make dbfcdx1.c happy.
 
 20000415-15:07 GMT+1 Victor Szakats <info@szelvesz.hu>
 
