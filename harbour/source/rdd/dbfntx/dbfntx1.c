@@ -2202,13 +2202,11 @@ static void hb_ntxBufferSave( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo )
       pTag->ulPagesStart = 1;
       for( ul=lpArray[0];ul>1;ul-- )
          pTag->ulPagesStart += (lpArray[ul]+1) * ( (ul==lpArray[0])? 1:(lpArray[ul+1]+1) );
-      if( pTag->ulPagesStart > NTX_PAGES_PER_TAG )
-      {
-         hb_xfree( pTag->pages );
-         pTag->ulPagesDepth = pTag->ulPagesStart;
-         pTag->pages = (LPPAGEINFO) hb_xgrab( sizeof(HB_PAGEINFO)*pTag->ulPagesStart );
-         memset( pTag->pages , 0 ,sizeof( HB_PAGEINFO )*pTag->ulPagesStart );
-      }
+
+      pTag->ulPagesDepth = pTag->ulPagesStart;
+      pTag->pages = (LPPAGEINFO) hb_xgrab( sizeof(HB_PAGEINFO)*pTag->ulPagesStart );
+      memset( pTag->pages , 0 ,sizeof( HB_PAGEINFO )*pTag->ulPagesStart );
+
       pTag->pages[0].buffer = (char*) hb_xgrab( pTag->ulPagesStart*NTXBLOCKSIZE );
       for( ul=1; ul<pTag->ulPagesStart; ul++ )
          pTag->pages[ul].buffer = pTag->pages[0].buffer + ul*NTXBLOCKSIZE;
@@ -2663,8 +2661,11 @@ static LPTAGINFO hb_ntxTagNew( LPNTXINDEX PIF, char * ITN, char *szKeyExpr,
    pTag->stackDepth = 32;
    pTag->ulPages = 0;
    pTag->ulPagesDepth = NTX_PAGES_PER_TAG;
-   pTag->pages = (LPPAGEINFO) hb_xgrab( sizeof(HB_PAGEINFO)*NTX_PAGES_PER_TAG );
-   memset( pTag->pages , 0 ,sizeof( HB_PAGEINFO )*NTX_PAGES_PER_TAG );
+   if( !fMemory )
+   {
+      pTag->pages = (LPPAGEINFO) hb_xgrab( sizeof(HB_PAGEINFO)*NTX_PAGES_PER_TAG );
+      memset( pTag->pages , 0 ,sizeof( HB_PAGEINFO )*NTX_PAGES_PER_TAG );
+   }
    pTag->Memory = fMemory;
    return pTag;
 }
@@ -3266,9 +3267,21 @@ static ERRCODE ntxZap( NTXAREAP pArea )
             itemlist->item_offset[i] = 2 + 2 * ( pTag->MaxKeys + 1 ) +
                i * ( pTag->KeyLength + 8 );
 
-         hb_fsSeek( lpIndex->DiskFile, NTXBLOCKSIZE, FS_SET );
-         hb_fsWrite( lpIndex->DiskFile, (BYTE *) buffer, NTXBLOCKSIZE );
-         hb_fsWrite( lpIndex->DiskFile, NULL, 0 );
+         if( lpIndex->CompoundTag->Memory )
+         {
+            LPTAGINFO pTag = lpIndex->CompoundTag;
+            pTag->ulPagesDepth = 1;
+            hb_xfree( pTag->pages );
+            pTag->pages = (LPPAGEINFO) hb_xgrab( sizeof(HB_PAGEINFO) );
+            memset( pTag->pages , 0 ,sizeof( HB_PAGEINFO ) );
+            pTag->pages[0].buffer = (char*) hb_xgrab( NTXBLOCKSIZE );
+         }
+         else
+         {
+            hb_fsSeek( lpIndex->DiskFile, NTXBLOCKSIZE, FS_SET );
+            hb_fsWrite( lpIndex->DiskFile, (BYTE *) buffer, NTXBLOCKSIZE );
+            hb_fsWrite( lpIndex->DiskFile, NULL, 0 );
+         }
 
          lpIndex = lpIndex->pNext;
       }
@@ -3823,19 +3836,25 @@ static ERRCODE ntxOrderListRebuild( NTXAREAP pArea )
    while( lpIndex )
    {
       hb_ntxPageFree( lpIndex->CompoundTag,TRUE );
-      hb_fsSeek( lpIndex->DiskFile, NTXBLOCKSIZE, FS_SET );
-      hb_fsWrite( lpIndex->DiskFile, NULL, 0 );
+      if( lpIndex->CompoundTag->Memory )
+      {
+         lpIndex->CompoundTag->ulPagesDepth = 0;
+         hb_xfree( lpIndex->CompoundTag->pages );
+      }
+      else
+      {
+         hb_fsSeek( lpIndex->DiskFile, NTXBLOCKSIZE, FS_SET );
+         hb_fsWrite( lpIndex->DiskFile, NULL, 0 );
+      }
       hb_ntxIndexCreate( lpIndex );
 
-      hb_ntxHeaderSave( lpIndex, FALSE );
+      if( !lpIndex->CompoundTag->Memory )
       {
-         BYTE emptyBuffer[250];
-         memset( emptyBuffer, 0, 250 );
-         hb_fsWrite( lpIndex->DiskFile, emptyBuffer, 250 );
-      }
-      hb_fsSeek( lpIndex->DiskFile , 0 , 0 );
-      lpIndex->CompoundTag->TagBlock =
+         hb_ntxHeaderSave( lpIndex, TRUE );
+         hb_fsSeek( lpIndex->DiskFile , 0 , 0 );
+         lpIndex->CompoundTag->TagBlock =
               hb_fsSeek( lpIndex->DiskFile, 0, SEEK_END ) - 1024;
+      }
 
       lpIndex = lpIndex->pNext;
    }
