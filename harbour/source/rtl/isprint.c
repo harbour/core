@@ -32,7 +32,7 @@
  * their web site at http://www.gnu.org/).
  *
  */
-
+#include "hbwinapi.h"
 #include "extend.h"
 #include "filesys.h"
 
@@ -56,7 +56,7 @@
 #endif
 
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__DJGPP__)
-   #if !defined(_Windows) && !defined(WINNT)
+   #if !defined(_Windows) && !defined(WINNT) && !defined( _WINDOWS_ )
       #define HB_LOCAL_DOS
    #endif
 #endif
@@ -102,7 +102,7 @@ HARBOUR HB_ISPRINTER( void )
    if( ( hb_strnicmp( pszDOSPort, "LPT", 3 ) == 0 ||
          hb_strnicmp( pszDOSPort, "COM", 3 ) == 0 ) && uiPort > 0 )
    {
-      FHANDLE fhnd = hb_fsOpen( pszDOSPort, FO_WRITE | FO_SHARED | FO_PRIVATE );
+      FHANDLE fhnd = hb_fsOpen( (BYTE *)pszDOSPort, FO_WRITE | FO_SHARED | FO_PRIVATE );
       bIsPrinter = ( fhnd != FS_ERROR );
       hb_fsClose( fhnd );
    }

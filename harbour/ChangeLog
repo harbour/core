@@ -1,3 +1,18 @@
+19991025-12:30 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/tools/ctcrypt.c
+     * added some casts
+   * source/rtl/isprint.c
+     + add include "hbwinapi.h"
+     * added defined( _WINDOWS_ ) for non-dos detection.
+     * added a cast
+   * source/rtl/net.c
+     * added missing ;
+   * makefile.vc
+     + source/tools/ctcrypt.c
+     + source/tools/ctchrmix.c
+     + source/rtl/binnum.c
+     + source/rtl/net.c
+
 Mon Oct 25 13:14:42 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* doc/tracing.txt: 

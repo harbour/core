@@ -71,7 +71,7 @@ HARBOUR HB_NETNAME( void )
       hb_xfree( pszValue );
    }
 #else
-   hb_retc( "" )
+   hb_retc( "" );
 #endif
 }
 
