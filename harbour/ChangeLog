@@ -1,3 +1,7 @@
+2001-06-30 09:25 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/vm/dynsym.c
+     + Added profiler initialization for created dynamic symbols
+
 2001-06-30 08:45 GMT+1 Antonio Linares <alinares@fivetech.com>
    * include/hbvmpub.h
      + Added profiler support to the dynamic symbol structure
