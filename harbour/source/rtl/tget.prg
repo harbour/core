@@ -507,12 +507,23 @@ METHOD Untransform( cBuffer ) CLASS Get
       else
          cBuffer := StrTran( cBuffer, ",", "" )
       endif
+
+      for nFor := 1 to ::nMaxLen
+         if !::IsEditable( nFor )
+            cBuffer = Left( cBuffer, nFor-1 ) + " " + SubStr( cBuffer, nFor+1 )
+         endif
+      next
+
       cBuffer := StrTran( cBuffer, "$", "" )
       cBuffer := StrTran( cBuffer, "*", "" )
       cBuffer := StrTran( cBuffer, "-", "" )
       cBuffer := StrTran( cBuffer, "(", "" )
       cBuffer := StrTran( cBuffer, ")", "" )
-      cBuffer := AllTrim( cBuffer )
+
+      cBuffer := StrTran( cBuffer, " ", "" ) // It replace left, right 
+                                             // and medium spaces.
+                                             // Don't replace for Alltrim()
+
       xValue  := 0 + Val( cBuffer )    // 0 + ... avoids setting the
       if ::minus
          xValue := -xValue
