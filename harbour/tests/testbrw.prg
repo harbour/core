@@ -50,10 +50,16 @@ function Main()
    nRow := Row()
    nCol := Col()
    @ 4,4,17,31 BOX "ÚÄ¿³ÙÄÀ³ "
-
-   while ! lEnd
-
+ oBrowse:Setkey(0,{|ob,nkey| Defproc(ob,nKey)})
+while .t.
+    oBrowse:ForceStable()
+ if (oBrowse:applykey(inkey(0))== -1)
+   exit
+endif
+enddo
+/*
       oBrowse:ForceStable()
+
 
       nKey = InKey( 0 )
 
@@ -111,10 +117,21 @@ function Main()
               DevPos( nTmpRow, nTmpCol )
 
       endcase
+      
    end
-
+*/
    DevPos( nRow, nCol )
    SetColor( cColor )
    SetCursor( nCursor )
 
 return nil
+function  defproc(ob,nkey)
+
+        if nKey = K_TAB
+              nTmpRow := ROW()
+              nTmpCol := COL()
+              @ 0, 0 SAY TIME()
+              DevPos( nTmpRow, nTmpCol )
+            ob:Refreshall()
+        endif
+        return 1

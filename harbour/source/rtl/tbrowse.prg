@@ -65,7 +65,7 @@
 #include "common.ch"
 #include "hbclass.ch"
 #include "color.ch"
-
+#include "inkey.ch"
 CLASS TBrowse
 
    DATA aColumns      // Array to hold all browse columns
@@ -98,7 +98,9 @@ CLASS TBrowse
    DATA lFooters      // Internal variable which indicates whether there are column footers to paint
    DATA aRect         // The rectangle specified with ColorRect()
    DATA aRectColor    // The color positions to use in the rectangle specified with ColorRect()
-
+   #ifdef HB_COMPAT_C53
+   DATA aKeys
+   #endif
    METHOD New(nTop, nLeft, nBottom, nRight)  // Constructor
    METHOD Down()      // Moves the cursor down one row
    METHOD End()       // Moves the cursor to the rightmost visible data column
@@ -150,7 +152,12 @@ CLASS TBrowse
    METHOD Stabilize()              // Performs incremental stabilization
 
    METHOD DispCell( nColumn, cColor ) // Displays a single cell
-
+   #ifdef HB_COMPAT_C53
+   method SetKey(nKey,bBlock)
+   method applykey(nKey)
+   method initKeys(Self)
+   method tapplykey(nKey,o)
+   #endif
 ENDCLASS
 
 METHOD New(nTop, nLeft, nBottom, nRight) CLASS TBrowse
@@ -879,8 +886,62 @@ METHOD DispCell( nColumn, cColor ) CLASS TBrowse
    DispOut( Space( nCol + ::aColumns[ nColumn ]:Width - Col() ), ::ColorSpec )
 
 return Self
+#ifdef HB_COMPAT_C53
+method applykey(nKey)  CLASS TBrowse
+return ::tapplykey(nKey, self)
+
+method initKeys(o) CLASS TBROWSE
+
+   Default o:aKeys to {{K_DOWN,{|Ob,nKey| Ob:Down(),0}},;
+              {K_END,{|Ob,nKey| Ob:End(),0}},;
+              {K_CTRL_PGDN,{|Ob,nKey| Ob:GoBottom(),0}},;
+              {K_CTRL_PGUP,{|Ob,nKey| Ob:GoTop(),0}},;
+              {K_HOME,{|Ob,nKey| Ob:Home(),0}},;
+              {K_LEFT,{|Ob,nKey| Ob:Left(),0}},;
+              {K_PGDN,{|Ob,nKey| Ob:PageDown(),0}},;
+              {K_PGUP,{|Ob,nKey| Ob:PageUp(),0}},;
+              {K_CTRL_END,{|Ob,nKey| Ob:PanEnd(),0}},;
+              {K_CTRL_HOME,{|Ob,nKey| Ob:PanHome(),0}},;
+              {K_CTRL_LEFT,{|Ob,nKey| Ob:PanLeft(),0}},;
+              {K_CTRL_RIGHT,{|Ob,nKey| Ob:PanRight(),0}},;
+              {K_RIGHT,{|Ob,nKey| Ob:Right(),0}},;
+              {K_UP,{|Ob,nKey| Ob:Up(),0}},;
+              {K_ESC,{|Ob,nKey| -1 }}}         
+return o
+
+Method SetKey(nKey,bBlock) CLASS TBrowse
+local bReturn,nPos
+::initKeys(self)
+if (nPos:=ascan(::aKeys,{|x| x[1]==nkey}))==0
+      if ( ISBLOCK( bBlock ) )
+         bReturn:= bBlock
+         aadd(::aKeys,{nKey,bBlock})
+   endif
+   bReturn:=bBlock
+elseif (ISBLOCK(bBlock))
+    ::aKeys[npos][2]:=bBlock
+   bReturn:=bBlock
+elseif PCOUNT()==1
+   bReturn:= ::aKeys[npos][2]
+elseif ( bReturn:= ::aKeys[ nPos ][ 2 ], PCount() == 2 .AND. ;
+         ISNIL( bBlock ) .AND. nKey != 0 )
+      adel(::aKeys, nPos)
+      asize(::akeys, Len(::aKeys) - 1)
+endif
+return bReturn
+method TAPPLYKEY( nKey, oBrowse ) CLASS tBrowse
+
+   local bBlock := oBrowse:setkey(nKey), nReturn
+   default bBlock to oBrowse:setkey(0)
+   if ( ISNIL( bBlock ) )
+      nReturn := 1
+   else
+      nReturn := eval(bBlock, oBrowse, nKey)
+   endif
+   return nReturn
 
 
+#endif
 function TBrowseNew(nTop, nLeft, nBottom, nRight)
 
 return TBrowse():New(nTop, nLeft, nBottom, nRight)
