@@ -1,3 +1,7 @@
+2000-09-21 19:00 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   *utils/hdboc/hbdoc.prg
+      *Fixed an small error reported by SID
+
 2000-09-21 16:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
    * include/hbver.h

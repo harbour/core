@@ -332,8 +332,8 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
             ELSEIF lPdf
             #ifdef PDF
 //               ProcessPDF(.t.)
-               ProcessPDF(.f.)
-  //       #endif
+  //             ProcessPDF(.f.)
+         #endif
             ELSEIF lWww
                ProcessWww()
             ELSEIF lChm
@@ -361,10 +361,10 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
          ELSEIF lNorton
             ProcessFiles()
          ELSEIF lPdf
-//         #ifdef PDF
+         #ifdef PDF
             ProcessPDF(.t.)
             ProcessPDF(.f.)
-//         #endif
+         #endif
          ELSEIF lRtf
             ProcessRtf()
          ELSEIF lWww
