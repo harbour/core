@@ -1,3 +1,9 @@
+19991022-08:19 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/fm.c
+     * fixed some bugs regarding the calculations for the largest
+       used memory and the used blocks.
+     + New function HB_MEMUSED() and HB_MEMMAX() added.
+
 19991021-23:33 GMT+1 Victor Szel <info@szelvesz.hu>
    * config/rules.cf
      + /w switch added to the default Harbour switches in the GNU make system.
@@ -19,7 +25,7 @@
      % "&" hotkey marker char changed to "~" to avoid any macro expansion
        in the future.
      * Some formatting (Move() method).
-   * source/debug/tbrwtext.prg 
+   * source/debug/tbrwtext.prg
      * Formatted.
 
 19991021-22:18 GMT+1 Victor Szel <info@szelvesz.hu>
@@ -36,12 +42,12 @@
    * source/rtl/filesys.c
      % Updated, so that the platform dependent variable declarations got moved
        inside the block where they are used, instead of declaring them globally
-       for all platform branches. HB_UNUSED_VARIABLE() lines could be then 
+       for all platform branches. HB_UNUSED_VARIABLE() lines could be then
        removed.
 
 Thu Oct 21 14:09:07 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/rtl/gt/gtlin.c: 
+	* source/rtl/gt/gtlin.c:
 	A first, very basic, implementation of GT for Linux using
 	curses. At this point, all I have tested is that tests/hello.prg
 	works acceptably well when compiled with -DHARBOUR_USE_LIN_GTAPI.
@@ -49,73 +55,73 @@ Thu Oct 21 14:09:07 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Thu Oct 21 14:02:53 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* config/linux/gcc.cf: 
+	* config/linux/gcc.cf:
 	Added linking against ncurses.
-	
-	* include/gtapi.h: 
+
+	* include/gtapi.h:
 	Added hb_gtReadKey() and hb_gt_ReadKey() functions.
-	
-	* include/hbsetup.h: 
-	* source/rtl/gtxxx.c: 
+
+	* include/hbsetup.h:
+	* source/rtl/gtxxx.c:
 	Made sure LIN_GTAPI is taken into account.
-	
-	* source/rtl/console.c: 
-	* source/rtl/filesys.c: 
-	* source/rtl/gtapi.c: 
-	* source/rtl/inkey.c: 
-	* source/rtl/gt/gtwin.c: 
+
+	* source/rtl/console.c:
+	* source/rtl/filesys.c:
+	* source/rtl/gtapi.c:
+	* source/rtl/inkey.c:
+	* source/rtl/gt/gtwin.c:
 	Fixed several warnings.
 
 Thu Oct 21 11:56:55 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/common/hbtrace.c: 
+	* source/common/hbtrace.c:
 	Modified the TRACE function so that it does no superfluous copying
 	anymore.
-	
-	* source/compiler/Makefile: 
-	* source/runner/stdalone/Makefile: 
-	* tests/Makefile: 
+
+	* source/compiler/Makefile:
+	* source/runner/stdalone/Makefile:
+	* tests/Makefile:
 	Added the common library to the list of dependencies.
-	
-	* source/pp/hbpp.c: 
-	* source/pp/hbppint.c: 
-	* source/pp/hbpplib.c: 
-	* source/pp/table.c: 
-	* source/pp/stdalone/hbpp.c: 
+
+	* source/pp/hbpp.c:
+	* source/pp/hbppint.c:
+	* source/pp/hbpplib.c:
+	* source/pp/table.c:
+	* source/pp/stdalone/hbpp.c:
 	Made sure tracing is enabled only when both HB_DO_TRACE and
 	HB_REALLY_DO_TRACE are defined; this way, the user can just set
 	HB_DO_TRACE to enable tracing in harbour, but not see all the
 	tracing output while compiling harbour itself.
-	
-	* source/rtl/arrays.c: 
-	* source/rtl/classes.c: 
-	* source/rtl/codebloc.c: 
-	* source/rtl/console.c: 
-	* source/rtl/copyfile.c: 
-	* source/rtl/dates.c: 
-	* source/rtl/descend.c: 
-	* source/rtl/dir.c: 
-	* source/rtl/environ.c: 
-	* source/rtl/errorapi.c: 
-	* source/rtl/extend.c: 
-	* source/rtl/filesys.c: 
-	* source/rtl/fm.c: 
-	* source/rtl/gtapi.c: 
-	* source/rtl/hardcr.c: 
-	* source/rtl/inkey.c: 
-	* source/rtl/itemapi.c: 
-	* source/rtl/langapi.c: 
-	* source/rtl/math.c: 
-	* source/rtl/memvars.c: 
-	* source/rtl/mouseapi.c: 
-	* source/rtl/mtran.c: 
-	* source/rtl/natmsg.c: 
-	* source/rtl/samples.c: 
-	* source/rtl/set.c: 
-	* source/rtl/setcolor.c: 
-	* source/rtl/strings.c: 
-	* source/rtl/tone.c: 
-	* source/rtl/transfrm.c: 
+
+	* source/rtl/arrays.c:
+	* source/rtl/classes.c:
+	* source/rtl/codebloc.c:
+	* source/rtl/console.c:
+	* source/rtl/copyfile.c:
+	* source/rtl/dates.c:
+	* source/rtl/descend.c:
+	* source/rtl/dir.c:
+	* source/rtl/environ.c:
+	* source/rtl/errorapi.c:
+	* source/rtl/extend.c:
+	* source/rtl/filesys.c:
+	* source/rtl/fm.c:
+	* source/rtl/gtapi.c:
+	* source/rtl/hardcr.c:
+	* source/rtl/inkey.c:
+	* source/rtl/itemapi.c:
+	* source/rtl/langapi.c:
+	* source/rtl/math.c:
+	* source/rtl/memvars.c:
+	* source/rtl/mouseapi.c:
+	* source/rtl/mtran.c:
+	* source/rtl/natmsg.c:
+	* source/rtl/samples.c:
+	* source/rtl/set.c:
+	* source/rtl/setcolor.c:
+	* source/rtl/strings.c:
+	* source/rtl/tone.c:
+	* source/rtl/transfrm.c:
 	Added tracing to all functions.
 
 19991021-15:35 GMT+2 Ryszard Glab <rglab@imid.med.pl>
@@ -126,7 +132,7 @@ Thu Oct 21 11:56:55 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 	* new function hb_memvarNewParameter() used to create a variable
 	listed on PARAMETER statement (corrected bug - private variables
 	are created instead of reusing existing ones)
-	
+
 19991021-16:02 GMT+3 Alexander Kresin
   * contrib/odbc/todbc.prg
     * there was an infinite loop in TOdbc():New(),
@@ -169,9 +175,9 @@ Thu Oct 21 11:56:55 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
    * source/rtl/gtapi.c
      ! hb_gtWrite() it truncated one more character than needed.
    * source/rdd/dbfntx/dbfntx1.prg
-     ! Local error handler extension disabled, since sometimes it doesn't 
+     ! Local error handler extension disabled, since sometimes it doesn't
        work because of the random INIT procedure execution order.
-       
+
 19991020-19:15 EDT David G. Holm <dholm@jsd-llc.com>
 
    + include/hbwinapi.h
@@ -185,10 +191,10 @@ Thu Oct 21 11:56:55 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Wed Oct 20 19:28:51 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/Makefile: 
-	* source/common/Makefile: 
-	* source/common/hbtrace.c: 
-	* include/hbtrace.h: 
+	* source/Makefile:
+	* source/common/Makefile:
+	* source/common/hbtrace.c:
+	* include/hbtrace.h:
 	Added a common/ library where all "common" stuff should be
 	implemented. For starters, I placed here a rudimentary tracing
 	facility. Basically, all functions should be of the form:
@@ -206,24 +212,24 @@ Wed Oct 20 19:28:51 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 	the HB_TRACE() lines are defined out and there is no performance
 	hit.
 
-	* include/hbdefs.h: 
+	* include/hbdefs.h:
 	Included hbtrace.h.
-	
-	* source/pp/hbpp.c: 
-	* source/pp/hbppint.c: 
-	* source/pp/hbpplib.c: 
-	* source/pp/stdalone/Makefile: 
-	* source/pp/stdalone/hbpp.c: 
+
+	* source/pp/hbpp.c:
+	* source/pp/hbppint.c:
+	* source/pp/hbpplib.c:
+	* source/pp/stdalone/Makefile:
+	* source/pp/stdalone/hbpp.c:
 	Added tracing calls as a "proof of concept".
-	
-	* source/rtl/gt/gtwin.c: 
+
+	* source/rtl/gt/gtwin.c:
 	Fixed two minor typos.
 
 19991020-21:30 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/achoice.prg
      % FUNCTION -> PROCEDURE for speed.
      % Two small functions converted to macros for speed.
-     * Formatted. (if() -> iif(), <> -> !=, some variable names standardized, 
+     * Formatted. (if() -> iif(), <> -> !=, some variable names standardized,
        S87 style comments * -> //, indent errors, etc.)
    * source/rtl/asort.prg
      % FUNCTION -> PROCEDURE for speed.
@@ -3626,8 +3632,7 @@ NOTE: You have to recompile all PRG sources!
   * ChangeLog
     ChangeLog.003
     * Old ChangeLog renamed to ChangeLog.003
-    * New ChangeLog created.
-   * source/pp/pragma.c
+    * New ChangeLog created.   * source/pp/pragma.c
    * contrib/dot/pp_harb.ch
    * tests/inline_c.prg
      * STOPDUMP renamed as ENDDUMP (with Ron permission)
