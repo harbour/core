@@ -366,10 +366,10 @@ Statement  : ExecFlow   CrlfStmnt   { }
                      }
            | PUBLIC { hb_compLinePushIfInside(); hb_comp_iVarScope = VS_PUBLIC; }
                      ExtVarList
-                    { hb_compRTVariableGen( "__MVPUBLIC" ); hb_comp_cVarType = ' '; } CrlfStmnt
+                    { hb_compRTVariableGen( "__MVPUBLIC" ); hb_comp_cVarType = ' ';  hb_comp_iVarScope = VS_NONE; } CrlfStmnt
            | PRIVATE { hb_compLinePushIfInside(); hb_comp_iVarScope = VS_PRIVATE; }
                      ExtVarList
-                    { hb_compRTVariableGen( "__MVPRIVATE" ); hb_comp_cVarType = ' '; } CrlfStmnt
+                    { hb_compRTVariableGen( "__MVPRIVATE" ); hb_comp_cVarType = ' '; hb_comp_iVarScope = VS_NONE; } CrlfStmnt
 
            | EXITLOOP  CrlfStmnt            { hb_compLoopExit(); hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
            | LOOP  CrlfStmnt                { hb_compLoopLoop(); hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
@@ -1032,7 +1032,7 @@ VarDefs    : LOCAL { hb_comp_iVarScope = VS_LOCAL; hb_compLinePush(); } VarList 
                              hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_PARAMETERS_NOT_ALLOWED, NULL, NULL );
                           else
                              hb_comp_functions.pLast->wParamNum=0; hb_comp_iVarScope = ( VS_PRIVATE | VS_PARAMETER ); }
-                             MemvarList Crlf
+                             MemvarList Crlf { hb_comp_iVarScope = VS_NONE; }
            ;
 
 VarList    : VarDef                                  { $$ = 1; }

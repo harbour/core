@@ -1,3 +1,19 @@
+20000506-22:45 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * include/hbcomp.h
+     + Added #define VS_NONE 0
+
+   * source/compiler/harbour.c
+     ! Fixed bug in hb_compVariableAdd() was never adding new var to pFunc->pMemvars because
+       hb_comp_iVarScope was tested with == rather & VS_MEMVAR
+
+   * source/compiler/harbour.y
+     + Added hb_comp_iVarScope = VS_NONE to reset it after PRIVATE PUBLIC and PARAMETERS statements.
+
+   * source/compiler/hbpcode.c
+     + Added logic to reset type of privates (need to check publics) after calls to functions or procedures which might affect them.
+     ! Many fixes and consolodiations
+
 20000506-16:35 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/hbpcode.c

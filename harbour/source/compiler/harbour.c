@@ -482,6 +482,7 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
    }
 
    HB_SYMBOL_UNUSED( cValueType );
+
    if( ! hb_comp_bStartProc && hb_comp_functions.iCount <= 1 && hb_comp_iVarScope == VS_LOCAL )
    {
       /* Variable declaration is outside of function/procedure body.
@@ -536,7 +537,7 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
       PCOMSYMBOL pSym;
       USHORT wPos;
 
-      if( hb_comp_bAutoMemvarAssume || hb_comp_iVarScope == VS_MEMVAR )
+      if( hb_comp_bAutoMemvarAssume || hb_comp_iVarScope & VS_MEMVAR )
       {
          /* add this variable to the list of MEMVAR variables
           */

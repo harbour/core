@@ -167,6 +167,7 @@ typedef  HB_PCODE_FUNC_ *HB_PCODE_FUNC_PTR;
 
 void hb_compPCodeEval( PFUNCTION, HB_PCODE_FUNC_PTR *, void * );
 
+#define VS_NONE       0
 #define VS_LOCAL      1
 #define VS_STATIC     2
 #define VS_FIELD      4
