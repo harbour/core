@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-07-26 10:50 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/compiler/cmdcheck.c
+     ! Writing out of bound when using -x compiler switch fixed.
+       (Thanks to Chen Kedem)
+
+   * source/vm/cmdarg.c
+     ! Tabs removed.
+
 2004-07-26 01:21 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   + source/rtl/scalar.prg
     * Harbour implementation of Class(y) Class ScalarObject

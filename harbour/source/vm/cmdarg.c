@@ -316,53 +316,55 @@ ULONG hb_cmdargProcessVM( int *pCancelKey, int *pCancelKeyEx )
 
    if( hb_cmdargCheck( "BUILD" ) )
       hb_verBuildInfo();
-		
-	if( (cFlags=hb_cmdargString( "FLAGS" )) != NULL ) 
-	{
-		int i = 1;
-		while( cFlags[ i ] )
-		{
-			switch( cFlags[ i++ ] )
-			{
-				case 'c':
-					/* clear all flags - minimal set of features */
-					ulFlags = 0;
-					break;
+      
+   if( (cFlags = hb_cmdargString( "FLAGS" )) != NULL ) 
+   {
+      int i = 1;
+      while( cFlags[ i ] )
+      {
+         switch( cFlags[ i++ ] )
+         {
+            case 'c':
+               /* clear all flags - minimal set of features */
+               ulFlags = 0;
+               break;
 
-				case 'h':
-					/* default Harbour mode */
-					ulFlags |= HB_VMFLAG_HARBOUR;
-					break;
+            case 'h':
+               /* default Harbour mode */
+               ulFlags |= HB_VMFLAG_HARBOUR;
+               break;
 /*
-				case 'x':
-					ulFlags |= HB_VMFLAG_XBASE;
-					break;
+            case 'x':
+               ulFlags |= HB_VMFLAG_XBASE;
+               break;
 
-				case 'r':
-					ulFlags |= HB_VMFLAG_RT_MACRO;
-					break;
+            case 'r':
+               ulFlags |= HB_VMFLAG_RT_MACRO;
+               break;
 */
-				case 's':
-					ulFlags |= HB_VMFLAG_ARRSTR;
-					break;
-			}
-		}
-		hb_xfree( cFlags );
-	}
+            case 's':
+               ulFlags |= HB_VMFLAG_ARRSTR;
+               break;
+         }
+      }
+      hb_xfree( cFlags );
+   }
 
-	if( (cFlags=hb_cmdargString( "CANCEL" )) != NULL ) 
-	{
-		int iVal = atoi( cFlags );
-		if( iVal )
-			*pCancelKey = iVal;
-		hb_xfree( cFlags );
-	}
-	if( (cFlags=hb_cmdargString( "CANCELEX" )) != NULL ) 
-	{
-		int iVal = atoi( cFlags );
-		if( iVal )
-			*pCancelKeyEx = iVal;
-		hb_xfree( cFlags );
-	}
-	return ulFlags;
+   if( (cFlags=hb_cmdargString( "CANCEL" )) != NULL ) 
+   {
+      int iVal = atoi( cFlags );
+      if( iVal )
+         *pCancelKey = iVal;
+      hb_xfree( cFlags );
+   }
+
+   if( (cFlags=hb_cmdargString( "CANCELEX" )) != NULL ) 
+   {
+      int iVal = atoi( cFlags );
+      if( iVal )
+         *pCancelKeyEx = iVal;
+      hb_xfree( cFlags );
+   }
+
+   return ulFlags;
 }

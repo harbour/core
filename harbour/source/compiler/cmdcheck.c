@@ -830,7 +830,7 @@ void hb_compChkEnvironVar( char * szSwitch )
                       sprintf( szPrefix, "%08lX_", PackDateTime() );
 
                    strncpy( hb_comp_szPrefix, szPrefix, 16 );
-                   hb_comp_szPrefix[ 20 ] = '\0';
+                   hb_comp_szPrefix[ 16 ] = '\0';
                    strcat( hb_comp_szPrefix, "_" );
 
                    free( szPrefix );
