@@ -6,7 +6,7 @@
 # ODBC Harbor Library and Import Library makefile
 
 .path.c   = source\rdd;source\rdd\dbfntx
-.path.h   = source\rdd;include
+.path.h   = include
 .path.lib = lib\b32
 .path.obj = obj
 .path.prg = source\rdd;source\rdd\dbfntx
