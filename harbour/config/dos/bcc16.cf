@@ -56,6 +56,19 @@ endif
 endif
 LD_RULE = $(link_exe_file)
 
+# Add the specified GT driver library
+ifeq ($(findstring rtl,$(LIBS)),rtl)
+LINKLIBS += $(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(ARCH)/$(HB_GT_LIB)$(LIB_EXT)
+endif
+
+# HB_SCREEN_LIB: empty, or one of ncurses, slang
+# HB_SCREEN_LIB=ncurses
+# HB_SCREEN_LIB=slang
+
+ifneq ($(HB_SCREEN_LIB),)
+LINKLIBS += $(HB_SCREEN_LIB)
+endif
+
 #Note: The empty line below HAVE TO exist!
 define lib_object
 echo -+$(file) &>> __lib__.tmp
@@ -66,12 +79,12 @@ define create_library
 echo $@ &> __lib__.tmp
 $(foreach file, $^, $(lib_object))
 echo ,, >> __lib__.tmp
-$(AR) @__lib__.tmp
+$(AR) $(ARFLAGS) @__lib__.tmp
 del __lib__.tmp
 endef
 
 AR = tlib
-ARFLAGS =
+ARFLAGS = /C
 AR_RULE = $(create_library)
 
 include $(TOP)$(ROOT)config/rules.cf

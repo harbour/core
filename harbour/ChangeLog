@@ -1,3 +1,8 @@
+2000-03-31 18:00 GMT-5 David G. Holm <dholm@jsd-llc.com>
+   * config/dos/bcc16.cf
+     + It helps to use $(ARFLAGS) when running $(AR).
+     + I added support for HB_GT_LIB and HB_SCREEN_LIB.
+
 20000331-23:11 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbver.h
