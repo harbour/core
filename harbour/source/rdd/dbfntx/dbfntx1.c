@@ -1754,6 +1754,7 @@ static LPKEYINFO hb_ntxPageSplit( LPTAGINFO pTag, LPPAGEINFO pPage, LPKEYINFO pK
    }
    pNewPage->uiKeys = iHalf;
    pPage->Changed = pNewPage->Changed = TRUE;
+   hb_ntxPageRelease( pTag,pNewPage );
    return pKeyNew;
 }
 
