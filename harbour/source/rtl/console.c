@@ -456,7 +456,7 @@ HARBOUR HB_DEVOUT( void ) /* writes a single values to the current device (scree
       if( ISCHAR(2) )
       {
          hb_gtGetColorStr( fpOldColor );
-         hb_gtSetColorStr( _parc(2) );
+         hb_gtSetColorStr( hb_parc(2) );
       }
 #endif
 
@@ -566,26 +566,26 @@ HARBOUR HB_DISPBOX (void)
 
       if (ISCHAR(6))
       {
-         _gtGetColorStr(szOldColor);
-         _gtSetColorStr(_parc(6));
+         hb_gtGetColorStr(szOldColor);
+         hb_gtSetColorStr(hb_parc(6));
       }
 
       if (ISCHAR(1))
       {
-         _gtBox(_parni(1), _parni(2), _parni(3), _parni(4), _parc(5));
+         hb_gtBox(hb_parni(1), hb_parni(2), hb_parni(3), hb_parni(4), hb_parc(5));
       }
-      else if (ISNUM(5) && _parni(5) == 2)
+      else if (ISNUM(5) && hb_parni(5) == 2)
       {
-         _gtBoxD(_parni(1), _parni(2), _parni(3), _parni(4));
+         hb_gtBoxD(hb_parni(1), hb_parni(2), hb_parni(3), hb_parni(4));
       }
       else
       {
-         _gtBoxS(_parni(1), _parni(2), _parni(3), _parni(4));
+         hb_gtBoxS(hb_parni(1), hb_parni(2), hb_parni(3), hb_parni(4));
       }
 
       if (ISCHAR(6))
       {
-         _gtSetColorStr(szOldColor);
+         hb_gtSetColorStr(szOldColor);
       }
    }
 #endif
@@ -594,32 +594,32 @@ HARBOUR HB_DISPBOX (void)
 HARBOUR HB_DISPBEGIN (void)
 {
 #ifdef USE_GTAPI
-   _gtDispBegin();
+   hb_gtDispBegin();
 #endif
 }
 
 HARBOUR HB_DISPEND (void)
 {
 #ifdef USE_GTAPI
-   _gtDispBegin();
+   hb_gtDispBegin();
 #endif
 }
 
 HARBOUR HB_DISPCOUNT (void)
 {
 #ifdef USE_GTAPI
-   _retni(_gtDispCount());
+   hb_retni(hb_gtDispCount());
 #else
-   _retni(0);
+   hb_retni(0);
 #endif
 }
 
 HARBOUR HB_ISCOLOR (void)
 {
 #ifdef USE_GTAPI
-   _retl(_gtIsColor());
+   hb_retl(hb_gtIsColor());
 #else
-   _retl(FALSE);
+   hb_retl(FALSE);
 #endif
 }
 
@@ -628,7 +628,7 @@ HARBOUR HB_NOSNOW (void)
 #ifdef USE_GTAPI
    if (ISLOG(1))
    {
-      _gtSetSnowFlag(_parl(1));
+      hb_gtSetSnowFlag(hb_parl(1));
    }
 #endif
 }
