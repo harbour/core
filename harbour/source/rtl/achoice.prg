@@ -396,13 +396,13 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
          // Find next selectable item
          FOR nNewPos := nPos + 1 TO nItems
-            IF Eval( bSelect, alSelect[ nNewPos ] ) .AND. Left( acItems[ nNewPos ], 1 ) == cKey
+            IF Eval( bSelect, alSelect[ nNewPos ] ) .AND. Upper( Left( acItems[ nNewPos ], 1 ) ) == cKey
                EXIT
             ENDIF
          NEXT
          IF nNewPos == nItems + 1
             FOR nNewPos := 1 TO nPos - 1
-               IF Eval( bSelect, alSelect[ nNewPos ] ) .AND. Left( acItems[ nNewPos ], 1 ) == cKey
+               IF Eval( bSelect, alSelect[ nNewPos ] ) .AND. Upper( Left( acItems[ nNewPos ], 1 ) ) == cKey
                   EXIT
                ENDIF
             NEXT
