@@ -101,8 +101,8 @@ static int KeyTranslationTable[][ 2 ] =
    { SL_KEY_BACKSPACE  | ( CTRL_PRESSED << 16 ),     K_CTRL_BS    },
 /*
    { K_TAB             | ( CTRL_PRESSED << 16 ),     K_CTRL_TAB   },
-    ???????????????                                  K_CTRL_PRTSCR,
-    ???????????????                                  K_CTRL_QUESTION,
+    ???                                              K_CTRL_PRTSCR,
+    ???                                              K_CTRL_QUESTION,
 */
 
    { SL_KEY_IC         | ( ALTL_PRESSED << 16 ),     K_ALT_INS    },
@@ -110,7 +110,7 @@ static int KeyTranslationTable[][ 2 ] =
    { SL_KEY_DELETE     | ( ALTL_PRESSED << 16 ),     K_ALT_DEL    },
    { SL_KEY_BACKSPACE  | ( ALTL_PRESSED << 16 ),     K_ALT_BS     },
    { K_TAB             | ( ALTL_PRESSED << 16 ),     K_ALT_TAB    },
-/*  ???????????????                                  K_ALT_EQUALS,   */
+/*  ???                                              K_ALT_EQUALS,   */
 
    { '/'               | ( CTRL_PRESSED << 16 ),     KP_CTRL_SLASH},
    { '*'               | ( CTRL_PRESSED << 16 ),     KP_CTRL_ASTERISK},
@@ -375,6 +375,7 @@ static int KeyTranslationTable[][ 2 ] =
 #define KeyTranslationTableSize \
             ( sizeof( KeyTranslationTable ) / ( 2 * sizeof ( int ) ) )
 
+/* a very simple sort algorithm */
 static void hb_gt_SortKeyTranslationTable( void )
 {
    int i, j, min, KeyTmp[ 2 ];

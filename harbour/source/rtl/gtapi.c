@@ -1117,7 +1117,6 @@ char * hb_gtVersion( void )
 
    return hb_gt_Version();
 }
-
 /* prepare the terminal for system call */
 USHORT hb_gtSuspend( void )
 {
@@ -1135,9 +1134,10 @@ USHORT hb_gtSuspend( void )
    /* call platform depend layer to flush all pending outputs and
     * to prepare screen for outside output
     */
-   hb_gt_Suspend();
+   if( !hb_gt_Suspend() )
+      return( -1 );
 
-   return 0;
+   return( 0 );
 }
 
 USHORT hb_gtResume( void )
@@ -1145,10 +1145,13 @@ USHORT hb_gtResume( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_gtResume()"));
 
    /* call platform depend layer to restore all settings */
-   hb_gt_Resume();
+   if( hb_gt_Resume() )
+   {
+      while( s_uiPreCount-- )
+         hb_gt_DispBegin();
+   }
+   else
+      return( -1 );
 
-   while( s_uiPreCount-- )
-      hb_gt_DispBegin();
-
-   return 0;
+   return( 0 );
 }

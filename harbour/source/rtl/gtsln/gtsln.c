@@ -59,19 +59,35 @@
 #else
    #include <slang.h>
 #endif
+
 /* missing defines in previous versions of Slang - this can not work ! */
 #if SLANG_VERSION < 10400
    typedef unsigned short SLsmg_Char_Type;
    #define SLSMG_EXTRACT_CHAR( x ) ( ( x ) & 0xFF )
    #define SLSMG_EXTRACT_COLOR( x ) ( ( ( x ) >> 8 ) & 0xFF )
    #define SLSMG_BUILD_CHAR( ch, color ) ( ( ( SLsmg_Char_Type ) ( unsigned char )( ch ) ) | ( ( color ) << 8 ) )
-   #define SLSMG_BOARD_CHAR   'h'
-   #define SLSMG_BLOCK_CHAR   '0'
+
+   #define SLSMG_DIAMOND_CHAR	0x04
+   #define SLSMG_DEGREE_CHAR	0xF8
+   #define SLSMG_PLMINUS_CHAR	0xF1
+   #define SLSMG_BULLET_CHAR	0xF9
+   #define SLSMG_LARROW_CHAR	0x1B
+   #define SLSMG_RARROW_CHAR	0x1A
+   #define SLSMG_DARROW_CHAR	0x19
+   #define SLSMG_UARROW_CHAR	0x18
+   #define SLSMG_BOARD_CHAR	0xB2
+   #define SLSMG_BLOCK_CHAR	0xDB
+   /*
+   #define SLSMG_BOARD_CHAR     'h'
+   #define SLSMG_BLOCK_CHAR     '0'
+   */
 #endif
 
 #include <unistd.h>
 #include <signal.h>
+#include <time.h>
 
+#include "hbapi.h"
 #include "hbapigt.h"
 #include "inkey.ch"
 
@@ -80,18 +96,16 @@
 /* if we can not manipulate cursor state */
 #define SC_UNAVAIL -1
 
-/* Slang reserves color 0 and 1 as a normal
-   and reverse color so we can't use them
-*/
-#define SLANG_RESERVED_COLORS 2
-
 /* to convert DeadKey+letter to national character */
 extern unsigned char s_convKDeadKeys[];
 extern int hb_gt_Init_Terminal( int phase );
+
 /* to convert characters desplayed */
 static void hb_gt_build_conv_tabs();
 
-/* the name of an environmet variable containig a definition of Nation chars.*/
+/* extern int _SLsnprintf (char *, unsigned int, char *, ...); */
+
+/* the name of an environmet variable containig a definition of nation chars.*/
 /* A definition is a list of pairs of chars. The first char in each pair is  */
 /* an ASCII key, which should be pressed *after* a "DeadKey" was pressed to  */
 /* get the nation char, a second in that pair is a corresponding nation char */
@@ -103,12 +117,17 @@ static USHORT s_uiDispCount = 0;
 static SHORT s_sCursorStyle = SC_NORMAL;
 static BOOL s_linuxConsole = FALSE;
 static BOOL s_underXTerm = FALSE;
+
 /* indicate if we are currently running a command from system */
 static BOOL s_bSuspended = FALSE;
 
+/* standard output */
+static int s_iFilenoStdout;
+
 /* to convert high characters (mostly graphics, nation and control chars) */
 static SLsmg_Char_Type s_convHighChars[ 256 ];
-/* bit indication if char is a nation char -  assumes char is 8-bit */
+
+/* bit indication if char is a nation char - assumes char is 8-bit */
 static unsigned char s_IsNationChar[ 128 / 8 ];
 
 /* to convert colors to Clipper mode */
@@ -138,6 +157,7 @@ static BOOL s_bUse_Alt_Char_Hack = FALSE;
 /* *********************************************************************** */
 
 volatile BOOL hb_gt_sln_bScreen_Size_Changed = FALSE;
+
 /* window's resize handler */
 static void sigwinch_handler( int sig )
 {
@@ -154,10 +174,12 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
 
+   s_iFilenoStdout = iFilenoStdout;
    s_uiDispCount = 0;
 
    /* read a terminal descripion from a terminfo database */
    SLtt_get_terminfo();
+
    /* initialize higher-level Slang routines */
    if( SLkp_init() != -1 )
    {
@@ -188,13 +210,14 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 
             /* an uncertain way to check if we run under linux console */
             s_linuxConsole = ( strncmp( getenv( "TERM" ), "linux", 5 ) == 0 );
+
             /* an uncertain way to check if we run under xterm */
             s_underXTerm = ( strstr( getenv( "TERM" ), "xterm" ) != NULL );
 
             /* NOTE: this driver is implemented in a way that it is
-               imposible to get intensity/blinking background mode
-               under Slang, due to a way Slang is written. This is
-               incompatible with Clipper. */
+               imposible to get intensity/blinking background mode.
+               The reason is the way Slang is written.
+               This is incompatible with Clipper. */
             SLtt_Blink_Mode = 0;
             SLtt_Use_Blink_For_ACS = 0;
             SLsmg_Display_Eight_Bit = 160;
@@ -205,16 +228,14 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
             /* ensure we are in a normal chars set */
             SLtt_set_alt_char_set( 0 );
 
-#if SLANG_VERSION < 10401
             /* NOTE: due to a work of a Slang library which does not
                prepare its internal screen buffer properly, a screen
                must be cleared before normal work. This is not
                compatible with Clipper */
             SLsmg_cls();
-#endif
-            /* SLsmg_set_color( 7 ); */
             SLsmg_gotorc( 0, 0 );
             SLsmg_refresh();
+
             gt_Inited = TRUE;
          }
       }
@@ -225,8 +246,10 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
    if( ! gt_Inited )
    {
       char *errmsg = '\r'+'\n'+"Internal error : screen driver initialization failure"+'\r'+'\n'+( char )0;
+
       /* something went wrong - restore default settings */
       SLang_reset_tty();
+
       /* TODO: a standard Harbour error should be generated here ! */
       write( iFilenoStderr, errmsg , strlen( errmsg ) );
       exit( 20 );
@@ -237,18 +260,28 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 
 void hb_gt_Exit( void )
 {
+   char *escstr;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Exit()"));
 
    hb_mouse_Exit();
 
-   /* NOTE: This is incompatible with Clipper
-      - on exit leave a cursor visible     */
+   /* NOTE: This is incompatible with Clipper - on exit leave a cursor visible */
    if( s_sCursorStyle != SC_UNAVAIL )
       hb_gt_SetCursorStyle( SC_NORMAL );
 
    SLsmg_refresh();
    SLsmg_reset_smg();
    SLang_reset_tty();
+
+   /* restore a standard bell frequency and duration */
+   if( s_linuxConsole )
+   {
+      escstr = "\033[10]";
+      write( s_iFilenoStdout, escstr, strlen( escstr ) );
+      escstr = "\033[11]";
+      write( s_iFilenoStdout, escstr, strlen( escstr ) );
+   }
 }
 
 /* *********************************************************************** */
@@ -385,8 +418,8 @@ void hb_gt_SetCursorStyle( USHORT uiStyle )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetCursorStyle(%hu)", uiStyle));
 
-   /* TODO: How to set the shape of the cursor ? */
-   /* see ..\..\..\tests\working\cursrtst.prg for an explanation */
+   /* TODO: How to set the shape of the cursor on terminals ? */
+
    if( s_sCursorStyle == SC_UNAVAIL )
       return;
 
@@ -446,20 +479,22 @@ BOOL hb_gt_IsColor( void )
 
 static void hb_gt_xPutch( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar )
 {
-   unsigned char Pos, Mask;
-   SLsmg_Char_Type SLchar;
+   unsigned char Pos, Msk;
+   SLsmg_Char_Type SLchar, SLattr;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_xPutch(%hu, %hu, %d, %i)", uiRow, uiCol, (int) byAttr, byChar));
 
    Pos = ( unsigned char ) ( ( byChar & 0x7F ) >> 3 );
-   Mask = ( unsigned char ) ( 1 << ( byChar & 0x07 ) );
+   Msk = ( unsigned char ) ( 1 << ( byChar & 0x07 ) );
+
+   /* build a Slang converted attribute - note we are clearing a high bit of color */
+   SLattr = ( SLsmg_Char_Type )( ( ( byAttr - 7 ) & 0x7F ) << 8 );
 
    /* this hack turns on Normal Char Set when we should draw a nation char. */
-   /* build a Slang converted char - note we are clearing a high bit of color */
-   if( s_bUse_Alt_Char_Hack || !( s_IsNationChar[ Pos ] & Mask ) )
-      SLchar = s_convHighChars[ byChar ] | ( SLsmg_Char_Type )( ( ( (int)byAttr + SLANG_RESERVED_COLORS ) & 0x7F ) << 8 );
+   if( s_bUse_Alt_Char_Hack || !( s_IsNationChar[ Pos ] & Msk ) )
+      SLchar = s_convHighChars[ byChar ] | SLattr; /* build a Slang char  */
    else
-      SLchar = ( SLsmg_Char_Type )byChar | ( SLsmg_Char_Type )( ( ( (int)byAttr + SLANG_RESERVED_COLORS ) & 0x7F ) << 8 );
+      SLchar = ( SLsmg_Char_Type )byChar | SLattr; /* build a Slang char  */
 
    SLsmg_gotorc( uiRow, uiCol );
    SLsmg_write_raw( &SLchar, 1 );
@@ -471,27 +506,29 @@ void hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE * pbyStr, ULONG u
 {
    ULONG i;
    BYTE byChar;
-   unsigned char Pos, Mask;
-   SLsmg_Char_Type SLchar, * pScr;
+   unsigned char Pos, Msk;
+   SLsmg_Char_Type SLchar, SLattr, *pScr;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Puts(%hu, %hu, %d, %p, %lu)", uiRow, uiCol, (int) byAttr, pbyStr, ulLen));
 
    pScr = ( SLsmg_Char_Type * ) hb_xgrab( ( ulLen + 1 ) * sizeof( SLsmg_Char_Type ) );
 
+   /* build a Slang converted attribute - note we are clearing a high bit of color */
+   SLattr = ( SLsmg_Char_Type )( ( ( byAttr - 7 ) & 0x7F ) << 8 );
+
    for( i = 0; i < ulLen; i++ )
    {
-      /* next char to process */
+      /* a next char to process */
       byChar = *pbyStr++;
 
       Pos = ( unsigned char ) ( ( byChar & 0x7F ) >> 3 );
-      Mask = ( unsigned char ) ( 1 << ( byChar & 0x07 ) );
+      Msk = ( unsigned char ) ( 1 << ( byChar & 0x07 ) );
 
       /* this hack turns on Normal Char Set when we should draw a nation char. */
-      /* build a Slang converted char - note we are clearing a high bit of color */
-      if( s_bUse_Alt_Char_Hack || !( s_IsNationChar[ Pos ] & Mask ) )
-         SLchar = s_convHighChars[ byChar ] | ( SLsmg_Char_Type )( ( ( (int)byAttr + SLANG_RESERVED_COLORS ) & 0x7F ) << 8 );
+      if( s_bUse_Alt_Char_Hack || !( s_IsNationChar[ Pos ] & Msk ) )
+         SLchar = s_convHighChars[ byChar ] | SLattr; /* build a Slang char */
       else
-         SLchar = ( SLsmg_Char_Type )byChar | ( SLsmg_Char_Type )( ( ( (int)byAttr + SLANG_RESERVED_COLORS ) & 0x7F ) << 8 );
+         SLchar = ( SLsmg_Char_Type )byChar | SLattr; /* build a Slang char */
 
       *( pScr + i ) = SLchar;
    }
@@ -570,8 +607,7 @@ void hb_gt_SetAttribute( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT ui
    Cols = uiRight - uiLeft + 1;
 
    /* note: we are clearing a high bit of color */
-   SLsmg_set_color_in_region( ( (int)byAttr + SLANG_RESERVED_COLORS ) & 0x7F,
-      uiTop, uiLeft, Rows, Cols );
+   SLsmg_set_color_in_region( ( byAttr - 7 ) & 0x7F, uiTop, uiLeft, Rows, Cols );
 
    if( s_uiDispCount == 0 )
       SLsmg_refresh();
@@ -579,11 +615,12 @@ void hb_gt_SetAttribute( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT ui
 
 /* *********************************************************************** */
 
+/* NOTE : hb_gt_Scroll is based on gtdos.c, but changed to get scroll
+  worked well when scrolling horizontally. Clipper behaves
+  strange here. */
+
 void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE byAttr, SHORT iRows, SHORT iCols )
 {
-   /* this work is based on gtdos.c, but changed to get scroll
-      worked well when scrolling horizontally. Clipper behaves
-      strange here. */
    SHORT usSaveRow, usSaveCol;
    USHORT uiSize;
 
@@ -704,13 +741,49 @@ void hb_gt_SetBlink( BOOL bBlink )
 
 void hb_gt_Tone( double dFrequency, double dDuration )
 {
+   char escstr[ 64 ];
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Tone(%lf, %lf)", dFrequency, dDuration));
 
-   /* TODO: Implement this */
+   /* TODO: Implement this for other consoles than linux ? */
 
-   HB_SYMBOL_UNUSED( dFrequency );
-   HB_SYMBOL_UNUSED( dDuration );
+   dFrequency = HB_MIN( HB_MAX( 0.0, dFrequency ), 32767.0 );
+   /* dDuration = dDuration * 1000.0 / 18.2; */ /* clocks */
+
+   if( s_linuxConsole )
+   {
+      snprintf( escstr, 63, "\033[10;%hd]", ( int )dFrequency );
+      SLtt_write_string( escstr );
+      snprintf( escstr, 63, "\033[11;%hd]", ( int )( dDuration * 1000.0 / 18.2 ) );
+      SLtt_write_string( escstr );
+      SLtt_flush_output();
+   }
+
    SLtt_beep();
+
+   if( s_linuxConsole )
+   {
+      /* NOTE : the code below is adapted from gtdos.c/hb_gt_Tone() */
+
+      dDuration *= 1800;
+      while( dDuration > 0.0 )
+      {
+         USHORT temp = ( USHORT ) HB_MIN( HB_MAX( 0, dDuration ), 1000 );
+         static struct timespec nanosecs;
+
+         dDuration -= temp;
+         if( temp <= 0 )
+            /* Ensure that the loop gets terminated when
+               only a fraction of the delay time remains. */
+            dDuration = -1.0;
+         else
+         {
+            hb_idleState();
+            nanosecs.tv_sec  = 0;
+            nanosecs.tv_nsec = temp * 10;
+            nanosleep( &nanosecs, NULL );
+         }
+      }
+   }
 }
 
 /* *********************************************************************** */
@@ -732,22 +805,24 @@ USHORT hb_gt_DispCount()
 void hb_gt_Replicate( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar, ULONG ulLen )
 {
    ULONG i;
-   unsigned char Pos, Mask;
-   SLsmg_Char_Type SLchar, * pScr;
+   unsigned char Pos, Msk;
+   SLsmg_Char_Type SLchar, SLattr, * pScr;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%hu, %hu, %i, %i, %lu)", uiRow, uiCol, byAttr, byChar, nLength));
 
    pScr = ( SLsmg_Char_Type * ) hb_xgrab( ( ulLen + 1 ) * sizeof( SLsmg_Char_Type ) );
 
    Pos = ( unsigned char ) ( ( byChar & 0x7F ) >> 3 );
-   Mask = ( unsigned char ) ( 1 << ( byChar & 0x07 ) );
+   Msk = ( unsigned char ) ( 1 << ( byChar & 0x07 ) );
+
+   /* build a Slang converted attribute - note we are clearing a high bit of color */
+   SLattr = ( SLsmg_Char_Type )( ( ( byAttr - 7 ) & 0x7F ) << 8 );
 
    /* this hack turns on Normal Char Set when we should draw a nation char. */
-   /* build a Slang converted char - note we are clearing a high bit of color */
-   if( s_bUse_Alt_Char_Hack || !( s_IsNationChar[ Pos ] & Mask ) )
-      SLchar = s_convHighChars[ byChar ] | ( SLsmg_Char_Type )( ( ( (int)byAttr + SLANG_RESERVED_COLORS ) & 0x7F ) << 8 );
+   if( s_bUse_Alt_Char_Hack || !( s_IsNationChar[ Pos ] & Msk ) )
+      SLchar = s_convHighChars[ byChar ] | SLattr; /* build a Slang char */
    else
-      SLchar = ( SLsmg_Char_Type )byChar | ( SLsmg_Char_Type )( ( ( (int)byAttr + SLANG_RESERVED_COLORS ) & 0x7F ) << 8 );
+      SLchar = ( SLsmg_Char_Type )byChar | SLattr; /* build a Slang char */
 
    for( i = 0; i < ulLen; i++ )
       *( pScr + i ) = SLchar;
@@ -881,7 +956,7 @@ USHORT hb_gt_HorizLine( USHORT uiRow, USHORT uiLeft, USHORT uiRight, BYTE byChar
    else
       hb_gt_Replicate( uiRow, uiRight, byAttr, byChar, uiLeft - uiRight + 1 );
 
-   /* box drawing hack */
+   /* a box drawing hack */
    s_bUse_Alt_Char_Hack = SaveUseAltChar;
 
    return 0;
@@ -919,8 +994,7 @@ USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar,
 /* *********************************************************************** */
 
 /* NOTE: these two are for prepare Slang to temporary
-   finish its work. They should be called from run.c.
-   They are not re-enrant ???. */
+   finish its work. They should be called from run.c. */
 
 /* *********************************************************************** */
 
@@ -945,10 +1019,11 @@ BOOL hb_gt_Resume()
    if( s_bSuspended &&
        SLsmg_resume_smg() != -1 &&
        hb_gt_Init_Terminal( 1 ) != -1
-     ) /* reinitialize a terminal */
-       SLsmg_refresh();
-
-   s_bSuspended = FALSE;
+     )
+   {
+       SLsmg_refresh(); /* reinitialize a terminal */
+       s_bSuspended = FALSE;
+   }
 
    return( !s_bSuspended );
 }
@@ -979,24 +1054,23 @@ static void hb_gt_build_conv_tabs()
    /* COMPATIBILITY: Slang uses bit 0x8000 as an alternate
       char mask so it leaves us only 128 possible fgbg colors.
       (see Notes in Slang sources). This is incompatible with
-      Clipper. Slang also uses color 0 as a normal color and
-      a color 1 as a reverse one, leaving us only 126 fgbg.
-   */
-   /* init colors - color 0 and 1 are normal and
-      reverse color in Slang. We can't use them
-   */
-   for( i = 0; i < 256 - SLANG_RESERVED_COLORS; i++ )
+      Clipper. Slang uses color 0 as a default color so we
+      rotate color table by 7 to set color 0 to be color 7 */
+   for( i = 7; i < 256 + 7; i++ )
    {
       fg = ( i & 0x0F );
       bg = ( i >> 4 ) & 0x07; /* bit 7 is a blinking attribute - not used here */
 
-      /* leave 0 and 1 for Slang library. Shift color number by 2 */
-      SLtt_set_color( i + SLANG_RESERVED_COLORS, ( char * ) NULL, s_colorNames[ fg ], s_colorNames[ bg ] );
-      /* SLsmg_set_color(i + SLANG_RESERVED_COLORS); */
+      /* rotate by 7 : 0->249, 1->250,...6->255, 7->0, ... 255->248 */
+      ch = ( unsigned char ) ( i - 7 );
+
+      SLtt_set_color( ( int )ch, ( char * ) NULL, s_colorNames[ fg ], s_colorNames[ bg ] );
+      /*
+      fprintf( stderr, "%3d %3d %3d %8lx %s %s\n", ch, i+7, i,
+         SLtt_get_color_object( ( int )ch ), s_colorNames[ fg ],
+         s_colorNames[ bg ] );
+      */
    }
-   /* Slang normal and reverse color */
-   SLtt_set_color( 0, ( char * ) NULL, s_colorNames[ 7 ], s_colorNames[ 0 ] );
-   SLtt_set_color( 1, ( char * ) NULL, s_colorNames[ 0 ], s_colorNames[ 7 ] );
 
    /* build a conversion chars table */
    for( i = 0; i < 32; i++ )
@@ -1014,6 +1088,7 @@ static void hb_gt_build_conv_tabs()
    if( ( p = SLtt_Graphics_Char_Pairs ) )
    {
       len = strlen( p );
+
       /* alternate char set should be even */
       if( ( len != ( ( len / 2 ) * 2 ) ) && ( len > 0 ) )
          --len;
@@ -1021,8 +1096,7 @@ static void hb_gt_build_conv_tabs()
       for( i = 0; i < len / 2; i++ )
       {
          ch = *p++;
-         /* is this really nessecary ? */
-         ch &= 0x7F;
+         ch &= 0x7F;   /* is this really nessecary ? */
          SLch = ( ( SLsmg_Char_Type )( *p ) ) | 0x8000;
 
          switch( ch )
@@ -1040,13 +1114,11 @@ static void hb_gt_build_conv_tabs()
             case SLSMG_DTEE_CHAR    :  s_convHighChars[ 193 ] = SLch; break;
             case SLSMG_PLUS_CHAR    :  s_convHighChars[ 197 ] = SLch; break;
 
-            /* TODO: need some smart here */
 /*
             case SLSMG_DEGREE_CHAR; :  s_convHighChars[  ] = SLch; break;
             case SLSMG_PLMINUS_CHAR :  s_convHighChars[  ] = SLch; break;
             case SLSMG_BULLET_CHAR  :  s_convHighChars[  ] = SLch; break;
 */
-#if SLANG_VERSION > 10400
             case SLSMG_DIAMOND_CHAR :  s_convHighChars[ 04 ] = SLch;
                                        break;
             case SLSMG_LARROW_CHAR  :  s_convHighChars[ 17 ] = SLch;
@@ -1061,7 +1133,6 @@ static void hb_gt_build_conv_tabs()
             case SLSMG_UARROW_CHAR  :  s_convHighChars[ 24 ] = SLch;
                                        s_convHighChars[ 30 ] = SLch;
                                        break;
-#endif
             case SLSMG_BOARD_CHAR   :  s_convHighChars[ 178 ] = SLch;
                                        break;
             case SLSMG_BLOCK_CHAR   :  s_convHighChars[ 219 ] = SLch;
@@ -1100,12 +1171,14 @@ static void hb_gt_build_conv_tabs()
    /* init national chars */
    if( ( p = getenv( hb_NationCharsEnvName ) ) )
    {
-      unsigned char Pos, Mask;
+      unsigned char Pos, Msk;
 
       len = strlen( p );
+
       /* a len of definition of National chars should be even */
       if( ( len != ( ( len / 2 ) * 2 ) ) && ( len > 0 ) )
          --len;
+
       /* no more than 128 National chars are allowed */
       if( len > 256 ) len = 256;
 
@@ -1120,8 +1193,8 @@ static void hb_gt_build_conv_tabs()
          s_convKDeadKeys[ 2 * i + 2 ] = *p;
 
          Pos = ( unsigned char ) ( ( *p & 0x7F ) >> 3 );
-         Mask = ( unsigned char ) ( 1 << ( *p & 0x07 ) );
-         s_IsNationChar[ Pos ] |= Mask;
+         Msk = ( unsigned char ) ( 1 << ( *p & 0x07 ) );
+         s_IsNationChar[ Pos ] |= Msk;
          ++p;
       }
 /*

@@ -100,7 +100,7 @@
 
 /* extra keysyms definitions */
 #define SL_KEY_NUM_5      SL_KEY_B2       /* this is checked explicitly */
-#define SL_KEY_MAX        ( ( unsigned int ) 0x1000 )
+#define SL_KEY_MAX        ( ( unsigned int ) 0x2000 )
 #define SL_KEY_ESC        ( SL_KEY_MAX + 1 )
 #define SL_KEY_ALT( ch )  ( SL_KEY_MAX + ( ( unsigned int ) ch ) )
 
@@ -117,7 +117,8 @@ extern BOOL hb_gt_sln_bScreen_Size_Changed;
 /* an ASCII value of a key, which serves as a DeadKey */
 unsigned char *hb_DeadKeyEnvName = "HRBNATIONDEADKEY";
 
-/* a table for DeadKeys. The first element contains a number of defined keys */
+/* a table for Keys work with a Dead key. The first
+   element contains a number of defined keys */
 unsigned char s_convKDeadKeys[ 257 ];  /* it should be allocated by hb_xalloc() */
 
 /* contains an integer value of a DeadKey or -1 */
@@ -126,7 +127,7 @@ int hb_DeadKey = -1;
 static BOOL s_linuxConsole = FALSE;
 static BOOL s_underXTerm = FALSE;
 
-int hb_gt_Kbd_State();
+static int hb_gt_try_get_Kbd_State();
 
 /* key translations tables - notice problems with compilation after changes */
 #include "keytrans.c"
@@ -174,14 +175,14 @@ static void hb_gt_Init_KeyTranslations()
    }
 
    /* We assume Esc key is a Meta key which is treated as an Alt key.
-      Also pressing Alt+Key on linux console and xterm gives the same 
-      key sequences so we are happy */
+      Also pressing Alt+Key on linux console and linux xterm gives the
+      same key sequences as with Meta key so we are happy */
 
    keyname[ 0 ] = 033;
    keyname[ 2 ] = 0;
 
    /* Alt+Letter & Alt+digit definition takes place in three phases :
-      from '0' to '9', from 'A' to 'Z' and from 'a' to 'z'         */
+      from '0' to '9', from 'A' to 'Z' and from 'a' to 'z' */
    for( i = 0; i < 3; i++ )
    {
       for( ch = AltChars[ i ][ 0 ]; ch <= AltChars[ i ][ 1 ]; ch++ )
@@ -214,6 +215,7 @@ int hb_gt_Init_Terminal( int phase )
    {
       /* an uncertain way to check if we run under linux console */
       s_linuxConsole = ( ! strncmp( getenv( "TERM" ), "linux", 5 ) );
+
       /* an uncertain way to check if we run under linux xterm */
       s_underXTerm = ( strstr( getenv( "TERM" ), "xterm" ) != NULL );
 
@@ -244,7 +246,7 @@ int hb_gt_Init_Terminal( int phase )
          newTTY.c_cc[ VSTOP ]  = 255;  /* disable ^S start/stop processing */
          newTTY.c_cc[ VSTART ] = 255;  /* disable ^Q start/stop processing */
          newTTY.c_cc[ VSUSP ]  = 255;  /* disable ^Z suspend processing */
-         /* already done in Slang */
+         /* already done in Slang library */
          /* newTTY.c_cc[ VDSUSP ] = 255; */  /* disable ^Y delayed suspend processing */
 
          if( tcsetattr( SLang_TT_Read_FD, TCSADRAIN, &newTTY ) == 0 )
@@ -259,6 +261,7 @@ int hb_gt_Init_Terminal( int phase )
    {
       /* define keyboard translations */
       hb_gt_Init_KeyTranslations();
+
       /* for binary search of key translations */
       hb_gt_SortKeyTranslationTable();
    }
@@ -268,13 +271,16 @@ int hb_gt_Init_Terminal( int phase )
 
 /* *********************************************************************** */
 
-#undef DO_LOCAL_DEBUG
-/* #define DO_LOCAL_DEBUG */
-
 int hb_gt_ExtendedKeySupport()
 {
    return 0;
 }
+
+/* *********************************************************************** */
+
+#undef DO_LOCAL_DEBUG
+/* #define DO_LOCAL_DEBUG */
+
 int hb_gt_ReadKey( HB_inkey_enum eventmask )
 {
    static int InDeadState = FALSE;
@@ -285,7 +291,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) eventmask));
 
-   HB_SYMBOL_UNUSED( eventmask );
+   /* HB_SYMBOL_UNUSED( eventmask ); */
 
    /* user AbortKey break */
    if( SLKeyBoard_Quit == 1 )
@@ -306,16 +312,14 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
    if( SLang_input_pending( 0 ) > 0 )
    {
 #if HB_GT_KBD_MODIF_MASK
-      kbdflags = hb_gt_Kbd_State();
+      kbdflags = hb_gt_try_get_Kbd_State();
 #else
       kbdflags = 0;
 #endif
 
-#if 1
 /* ------- one key ESC handling ----------------- */
       /* NOTE: This will probably not work on slow terminals
-         or on very busy lines (i.e. modem lines )
-	       I plan to remove it.  */
+         or on very busy lines (i.e. modem lines ) */
       ch = SLang_getkey();
 
 #ifdef DO_LOCAL_DEBUG
@@ -324,17 +328,16 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
          SLsmg_printf( " %8x %d              ", ch, kbdflags );
          SLsmg_gotorc( savy, savx );
 #endif
-      if( ch == 033 )   /* escape */
+      if( ch == 033 )   /* escape pressed - wait 1 sec for another key */
          if( 0 == SLang_input_pending( 10 ) )
             return( 0 );
-	    
+
       /* user AbortKey break */
       if( ch == s_hb_gt_Abort_key )
          return HB_BREAK_FLAG;
 
       SLang_ungetkey( ch );
 /* ------------------------------------------------- */
-#endif
 
       ch = SLkp_getkey();
 
@@ -354,9 +357,12 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
             InDeadState = FALSE;
             if( ch == hb_DeadKey ) /* double press Dead key */
                return ch;
-            for( i=0; i < ( int ) s_convKDeadKeys[ 0 ]; i++ )
-               if( ( int ) s_convKDeadKeys[ 2 * i + 1 ] == ch )
-                  return ( int ) s_convKDeadKeys[ 2 * i + 2 ];
+            if( ch < 256 )  /* is this needed ??? */
+            {
+               for( i=0; i < ( int ) s_convKDeadKeys[ 0 ]; i++ )
+                  if( ( int ) s_convKDeadKeys[ 2 * i + 1 ] == ch )
+                     return ( int ) s_convKDeadKeys[ 2 * i + 2 ];
+            }
             return 0;
          }
          else if( ch == hb_DeadKey )
@@ -369,18 +375,22 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
          /* any special key ? */
          if( ( tmp = ( ch | ( kbdflags << 16 ) ) ) > 256 )
          {
-            tmp = hb_gt_FindKeyTranslation( tmp );
-            if( tmp == 0 )
+            if( ( eventmask & INKEY_RAW ) == 0 )
             {
-               tmp = hb_gt_FindKeyTranslation( ch );
-               /* TOFIX: this can generate problems with values returned */
-               if( tmp == 0 && ch < 256 ) tmp = ch;
+               tmp = hb_gt_FindKeyTranslation( tmp );
+
+               /* TOFIX: this code is broken - needs a diffrent aproach */
+               if( tmp == 0 )
+               {
+                  tmp = hb_gt_FindKeyTranslation( ch );
+                  if( tmp == 0 && ch < 256 ) tmp = ch;
+               }
             }
 
             return tmp;
          }
 
-         /* standard key */
+         /* standard ASCII key */
          return ch;
       }
    }

@@ -10,28 +10,31 @@ by John E. Davis. It was developed using Slang version 1.41, although prior
 versions of Slang up to 1.22 should also work, but they are not recomended
 because of some bugs they have.
 
-The main OS it is developed to be used on is Linux. Although Slang was
-ported to other OSes, my tests on SCO OpenServer 5.0.2 show that a library
-does not work perfectly on such systems. I've also successfully compiled and
-testd gtsln under DOS but I don't think it makes any sense to use it on that
-system instead of gtdos, due to its limitations and incompatibilities with
-Clipper (see below), so I removed DOS support.
+The main OS it is developed to be used on is Linux. Slang was ported to
+other OSes so it should be possible to use it on other systems too. I've
+also successfully compiled and testd gtsln under DOS but I don't think it
+makes any sense to use it on that system instead of gtdos, due to its
+limitations and incompatibilities with Clipper (see below), so I removed DOS
+support.
 
-A gt Slang driver is a second driver which can be used on Linux based OSes.
+A gt Slang driver is a second driver which can be used on Unix based OSes.
 The first one is a gt driver based on a curses library (gtcrs). Due to the
 fact that curses is a standard library on Unix like systems, gtcrs should
 be considerd as a primary gt driver for such OSes.
 
 
-1. Compiling a gt slang driver ...
+
+Compiling a gt slang driver ...
+--------------------------------
 
 
 The driver should be automaticly compiled when you build Harbour from
-source, regardless of what gt driver you've chosen by setting HB_GT_LIB.
+sourcees, regardless of what gt driver you've chosen by setting HB_GT_LIB.
 Succesfull compilation requires Slang library and Slang header files
 properly installed on your system. The driver expects Slang header files
-to be placed in <system_default_inc_dir>/slang/ directory. This usualy
-means /usr/include/slang on most systems.
+to be placed in <system_default_inc_dir>/slang/ directory on Linux based
+systems ( this usualy means /usr/include/slang on most of them ) and
+<system_default_inc_dir> on other systems (which is usually /usr/include).
 
 To build programs (by using a bld.sh script from Harbour sources), which
 will use a gtsln, you need to :
@@ -43,7 +46,9 @@ Generally you always need to add -lgtsln -lslang to your link libraries to
 build programs which are supposed to use a gt slang driver.
 
 
-2. Internationalization
+
+Internationalization
+----------------------
 
 
 I made an attempt to support national characters handling, but I am not
@@ -101,7 +106,7 @@ will draw a nation char when it occupies the same code as
 case. Any ideas are welcome.
 This implementation works better than it would ever work in DOS where
 there is no way to do such tricks (because there is only one glyph's
-character set).
+character set without VGA tricks).
 
 Using environment variables gives a configuration fexibility to Harbour
 programs for different users and different code pages. To change a code
@@ -110,8 +115,10 @@ and this can be done from a script which runs a Harbour program.
 
 Let's see an example.
 
-Suppose one national language has three national characters : ¡ÆÊ
-which corespond to ACE in a lower 128 bytes ASCII table.
+Suppose one national language has three national characters : '¡ÆÊ' which
+correspond to 'ACE' in a lower 128 bytes ASCII table. 'Corresponding' means
+that to get a '¡' nation char one has to press a special keyboard modifier
+(like ALT+R for example) plus an 'A' char.
 
 HRBNATIONCHARS should be defined as :
 
@@ -135,7 +142,9 @@ Now we can enter ¡ by pressing ` and then A, Æ by pressing ` and then C,
 and so on. To get '`' character we need to double press `.
 
 
-3. Limitations, incomatibilities with Clipper, errors ...
+
+Limitations, incomatibilities with Clipper, errors ...
+--------------------------------------------------------
 
 
 The driver is rather limited in comparison to other Harbour gt drivers and
@@ -146,9 +155,8 @@ mention that there are probably some caused by my lack of knowledge.
 
 Here is a (probably not complete) list of them :
 
-    - a driver allows only 126 combinations of FgBg colors. It means you can
-      use 16 colors for Fg, 8 colors for Bg. 16*8 gives 128 but last two (126
-      and 127) are reserved by Slang
+    - a driver allows only 128 combinations of FgBg colors. It means you can
+      use 16 colors for Fg, and only 8 colors for Bg.
 
     - you can't get intensity/blinking background mode working (this is in
       fact the previous problem, just worded differently)
@@ -179,7 +187,7 @@ Here is a (probably not complete) list of them :
     - it is not guaranteed that programs which use DispBegin() and DispEnd()
       will work well in all cases, although generally it should work
 
-    - a screen size change does not work at all. There is a big problem on
+    - a screen size change does not work at all. This is a big problem on
       an xterm where you can change a window's size at your request.  Doing
       this confuses a Harbour program
 
@@ -187,15 +195,15 @@ Here is a (probably not complete) list of them :
       construction (an array of char+attr)  (for example to make quick shadow
       on a screen) can't run properly. There is no hardware emulation at all
 
-    - there is currently no support for Tone() function. This is a TODO item
+    - Tone() support currently works for Linux console only.
 
-    - keyboard handling is VERY VERY LIMITED. Generally you should not expect
+    - keyboard handling is VERY LIMITED. Generally you should not expect
       ALT+key, CTRL+F<n> and CTRL+<specialkeys> combinations to work at all
       although they work on a textmode Linux console. This is a very big
       problem and at least any solution should be developed to emulate this.
       One attempt is a Dead key workaround I've implemented for national
-      characters and a Meta key for simulate Alt key. By default as a Meta
-      key I've chosen ESC key pressed once.
+      characters and a Meta key to simulate Alt key. By default as a Meta
+      key I've chosen ESC key pressed once (like in most Linux programs).
 
     - abort key is CTRL+\ not CTRL+BREAK on Unixes
 
@@ -207,12 +215,16 @@ Here is a (probably not complete) list of them :
     - Out<XXX>() functions do not work well. This is caused by a design of
       a gt layer where writing directly to stdout is done outside Slang,
       so Slang can't maintain screen changes properly.
-      Also redirecting Out<XXX>() to a file results in writing control
-      chars which were supposed to initialize a terminal, to that file
+
+    - redirecting Out<XXX>() to a file results in writing control chars
+      which were supposed to initialize a terminal, to that file
 
     - monochrome displaying support is currently broken
 
-4. Terminfo database ...
+
+
+Terminfo database ...
+-----------------------
 
 
 Slang gt driver is based on a terminfo database so it is very important to
@@ -223,7 +235,9 @@ and F12 function keys set in a terminfo file if you want to use SHFT+F<n>
 and CTRL+F<n> keys (of course they all should be defined there).
 
 
-5. Why use gt slang driver ...
+
+Why use gt slang driver ...
+-----------------------------
 
 
 Well, personaly I find only two reasons. When Clipper compatibility and
@@ -233,14 +247,19 @@ than gtcrs on real terminals (tested on wy60 where gtcrs did not handle
 the keyboard well).
 
 
-6. TODO
+
+TODO
+------
 
    - keyboard emulation on terminals with lack of posibilities
    - support for mouse on Linux text console and on xterm
    - fix a problem with redirecting output to a file or a pipe
    - find a way to inherit screen from a system at startup
+     (is it possible at all ?)
+   - sound support on Linux using native sound system (Alsa ?)
+   - support for sound on other systems than Linux
    - fix working on monochorme terminals
-   - sound support on Linux
+   - add a PC video card hardware emulation
 
 
    Marek Paliwoda
