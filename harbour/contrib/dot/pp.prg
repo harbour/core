@@ -30,6 +30,8 @@
 #else
    #DEFINE  CRLF Chr(13) + Chr(10)
 
+   EXTERNAL BROWSE
+
    EXTERNAL ARRAY,ASIZE,ATAIL,AINS,ADEL,AFILL,ASCAN,AEVAL,ACOPY,ACLONE,ADIR, ASORT
 
    EXTERNAL MEMORY
@@ -157,7 +159,7 @@ STATIC nPendingLines := 0, aPendingLines  := {}
 
 STATIC bDbgMatch := .F., bDbgExp := .F., bDbgPPO := .F., bLoadRules := .T., bCount := .T., bCCH := .F., bPP := .F.
 
-STATIC nIfDef := 0, abIfDef := {}
+STATIC nIfDef := 0, abIfDef := {}, nIf := 0, abIf := {}
 
 STATIC hPP := NIL
 
@@ -221,8 +223,9 @@ RETURN
 
 PROCEDURE RP_Dot()
 
-   LOCAL sLine := Space(256), bBlock, GetList := {}, sPPed, nNext, sBlock, sTemp
+   LOCAL sLine := Space(256), GetList := {}, sPPed, nNext, sBlock, sTemp
    LOCAL sTemp2, nLen, sLeft, sSymbol, nNextAssign
+   LOCAL nRow := 1, nCol := 0
 
    bCount := .F.
 
@@ -244,7 +247,7 @@ PROCEDURE RP_Dot()
 
       sLine := StrTran( sLine,  Chr(9), "  " )
 
-      sPPed := ProcessLine( sLine, 1, '' )
+      sPPed := ProcessLine( RTrim( sLine ), 1, '' )
 
       ExtractLeadingWS( @sPPed )
       DropTrailingWS( @sPPed )
@@ -252,7 +255,7 @@ PROCEDURE RP_Dot()
 
       @ 0,0 SAY "PP: "
       @ 0,4 SAY Pad( sPPed, 76 ) COLOR "N/R"
-      DevPos( 1, 0 )
+      DevPos( nRow, nCol )
 
       BEGIN SEQUENCE
 
@@ -284,17 +287,24 @@ PROCEDURE RP_Dot()
                ENDIF
             ENDDO
 
-            bBlock := &( "{|| " + sBlock + " }" )
-            Eval( bBlock )
+            sSymbol := Upper( Left( sBlock, 14 ) ) // Len( "__SetOtherwise" )
+            IF nIf == 0 .OR. ;
+               sSymbol = "__SETIF" .OR. sSymbol = "__SETELSE" .OR. sSymbol = "__SETELSEIF" .OR. sSymbol = "__SETEND" .OR. ;
+               sSymbol = "__SETDOCASE" .OR. sSymbol = "__SETCASE" .OR. sSymbol = "__SETOTHERWISE" .OR. sSymbol = "__SETENDCASE" .OR. ;
+               abIf[ nIf ]
+
+               Eval( &( "{|| " + sBlock + " }" ) )
+            ENDIF
+
             sTemp  := RTrim( SubStr( sTemp, nNext + 1 ) )
             ExtractLeadingWS( @sTemp )
          ENDDO
 
-         ExtractLeadingWS( @sTemp )
-         DropTrailingWS( @sTemp )
+         sBlock := sTemp
+         DropTrailingWS( @sBlock )
 
-         IF ! ( sTemp == '' )
-            sTemp2 := sTemp
+         IF ! ( sBlock == '' )
+            sTemp2 := sBlock
             WHILE ( nNextAssign := At( ":=", sTemp2 ) ) > 0
                sLeft  := Left( sTemp2, nNextAssign - 1 )
                sTemp2 := SubStr( sTemp2, nNextAssign + 2 )
@@ -317,11 +327,17 @@ PROCEDURE RP_Dot()
                ENDIF
             ENDDO
 
-            sTemp := "{|| " + sTemp + " }"
-
-            bBlock := &sTemp
-            Eval( bBlock )
+            sSymbol := Upper( Left( sBlock, 11 ) ) // Len( "__SetElseIf" )
+            IF nIf == 0 .OR. ;
+               sSymbol = "__SETIF" .OR. sSymbol = "__SETELSE" .OR. sSymbol = "__SETELSEIF" .OR. sSymbol = "__SETEND" .OR. ;
+               sSymbol = "__SETDOCASE" .OR. sSymbol = "__SETCASE" .OR. sSymbol = "__SETOTHERWISE" .OR. sSymbol = "__SETENDCASE" .OR. ;
+               abIf[ nIf ]
+               Eval( &( "{|| " + sTemp + " }" ) )
+            ENDIF
          ENDIF
+
+         nRow := Row()
+         nCol := Col()
 
          @ 0,0 SAY "PP: "
          @ 0,4 SAY Pad( sPPed, 76 ) COLOR "N/R"
@@ -830,6 +846,7 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
    LOCAL nNewLineAt, nLines, Counter
    LOCAL sLeft, sPassed := '', asOutLines := {}, sOut := '', cChar
    LOCAL nLen, iCycles, aDefined := {}, aTranslated := {}, aCommanded := {}
+   LOCAL nPosition
 
    WHILE .T.
 
@@ -837,11 +854,9 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
       //? nPendingLines, nIfDef, IIF( nIfDef > 0, abIfDef[nIfDef] , )
       //WAIT
 
-      IF ! sPassed == ''
+      IF ! ( sPassed == '' )
          aAdd( asOutLines, ( sLeft + RTrim( sPassed ) ) )
          sPassed := ''
-         //? "Pending Out: '" + aTail( asOutLines ) + "'"
-         //WAIT
       ENDIF
 
       IF sLine == NIL
@@ -1054,7 +1069,7 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
                ENDIF
 
                //? "Pending #", nPendingLines,  Left( sLine, nNewLineAt - 1 ), aPendingLines[nPendingLines]
-               sLine := SubStr( sLine, nNewLineAt + 1 )
+               sLine := LTrim( SubStr( sLine, nNewLineAt + 1 ) )
             ENDDO
 
             IF ( sLine == '' )
@@ -1099,7 +1114,7 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
                ENDIF
 
                //? "Pending #", nPendingLines,  Left( sLine, nNewLineAt - 1 ), aPendingLines[nPendingLines]
-               sLine := SubStr( sLine, nNewLineAt + 1 )
+               sLine := LTrim( SubStr( sLine, nNewLineAt + 1 ) )
             ENDDO
 
             IF ( sLine == '' )
@@ -1113,10 +1128,13 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
                      aPendingLines[nPendingLines] := sLine
                   ENDI
 
+                  aAdd( asOutLines, NIL ) // Reserving place ordinal holder
+
                   //? "Pending #", nPendingLines,  sLine, aPendingLines[nPendingLines]
                   sLine := aPendingLines[1]
                   aDel( aPendingLines, 1 )
                   nPendingLines--
+
                ENDIF
 
                LOOP
@@ -1136,16 +1154,27 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
                aAdd( aCommanded, nRule )
             ENDIF
 
+            nPosition := 0
             WHILE ( nNewLineAt := At( ';', sLine ) ) > 0
                nPendingLines++
+               /*
                IF nPendingLines > Len( aPendingLines )
                   aAdd( aPendingLines, Left( sLine, nNewLineAt - 1 ) )
                ELSE
                   aPendingLines[nPendingLines] := Left( sLine, nNewLineAt - 1 )
                ENDIF
+               */
 
-               //? "Pending #", nPendingLines,  Left( sLine, nNewLineAt - 1 ), aPendingLines[nPendingLines]
-               sLine := SubStr( sLine, nNewLineAt + 1 )
+               IF nPendingLines > Len( aPendingLines )
+                  aSize( aPendingLines, nPendingLines )
+               ENDIF
+
+               nPosition++
+               aIns( aPendingLines, nPosition )
+               aPendingLines[ nPosition ] := Left( sLine, nNewLineAt - 1 )
+
+               //? "Pending #", nPendingLines,  Left( sLine, nNewLineAt - 1 ), aPendingLines[nPosition]
+               sLine := LTrim( SubStr( sLine, nNewLineAt + 1 ) )
             ENDDO
 
             IF ( sLine == '' )
@@ -1153,13 +1182,25 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
             ELSE
                IF nPendingLines > 0
                   nPendingLines++
+
+                  /*
                   IF nPendingLines > Len( aPendingLines )
                      aAdd( aPendingLines, sLine )
                   ELSE
                      aPendingLines[nPendingLines] := sLine
                   ENDI
+                  */
 
-                  //? "Pending #", nPendingLines,  sLine, aPendingLines[nPendingLines]
+                  IF nPendingLines > Len( aPendingLines )
+                     aSize( aPendingLines, nPendingLines )
+                  ENDIF
+
+                  nPosition++
+                  aIns( aPendingLines, nPosition )
+                  aPendingLines[ nPosition ] := sLine
+
+                  //? "Pending #", nPendingLines,  sLine, aPendingLines[nPosition]
+
                   sLine := aPendingLines[1]
                   aDel( aPendingLines, 1 )
                   nPendingLines--
@@ -1178,7 +1219,10 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
 
    sOut := ''
    nLines := Len( asOutLines )
-   //@ Row(), 0 SAY nLines
+
+   //? nLines
+   //WAIT
+
    FOR Counter := 1 TO nLines
        sOut += asOutLines[Counter]
        IF Counter < nLines .OR. ! ( sPassed == '' )
@@ -1190,8 +1234,10 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
       sOut += ( sLeft + sPassed )
    ENDIF
 
-   //? "Returning: " + sOut
-   //WAIT
+   IF ! Empty( sOut )
+      //? "Returning: " + sOut
+      //WAIT
+   ENDIF
 
 RETURN sOut
 
@@ -4301,6 +4347,94 @@ FUNCTION SetIfDef( sDefine, bExist )
    //? nIfDef, nId, sDefine, abIfDef[nIfDef]
 
 RETURN nIfDef
+
+FUNCTION __SetIf( bExp )
+
+   IF nIf > 0 .AND. ! abIf[nIf]
+      bExp := .F.
+   ENDIF
+
+   nIf++
+   aSize( abIf, nIf )
+   abIf[nIf] := bExp
+
+RETURN abIf[nIf]
+
+FUNCTION __SetElseIf( bExp )
+
+   IF nIf > 1 .AND.  ! abIf[nIf - 1]
+      RETURN .F.
+   ENDIF
+
+   abIf[nIf] := ! abIf[nIf]
+
+   IF abIf[nIf]
+      abIf[nIf] := bExp
+   ENDIF
+
+RETURN abIf[nIf]
+
+FUNCTION __SetElse()
+
+   IF nIf > 1 .AND.  ! abIf[nIf - 1]
+      RETURN .F.
+   ENDIF
+
+   abIf[nIf] := ! abIf[nIf]
+
+RETURN abIf[nIf]
+
+FUNCTION __SetEnd()
+
+   IF nIf > 0
+      nIf--
+   ELSE
+      Alert( "END with no IF in sight!" )
+   ENDIF
+
+RETURN nIf
+
+FUNCTION __SetDoCase()
+
+   nIf++
+   aSize( abIf, nIf )
+   abIf[nIf] := .F.
+
+RETURN abIf[nIf]
+
+FUNCTION __SetCase( bExp )
+
+   IF nIf > 1 .AND.  ! abIf[nIf - 1]
+      RETURN .F.
+   ENDIF
+
+   abIf[nIf] := ! abIf[nIf]
+
+   IF abIf[nIf]
+      abIf[nIf] := bExp
+   ENDIF
+
+RETURN abIf[nIf]
+
+FUNCTION __SetOtherwise()
+
+   IF nIf > 1 .AND.  ! abIf[nIf - 1]
+      RETURN .F.
+   ENDIF
+
+   abIf[nIf] := ! abIf[nIf]
+
+RETURN abIf[nIf]
+
+FUNCTION __SetEndCase()
+
+   IF nIf > 0
+      nIf--
+   ELSE
+      Alert( "ENDCASE with no DO CASE in sight!" )
+   ENDIF
+
+RETURN nIf
 
 FUNCTION CompileToCCH( sSource )
 

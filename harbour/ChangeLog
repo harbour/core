@@ -1,3 +1,14 @@
+2001-02-22 17:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     ! Fixed order of production in multi line result, where some of the resulting lines are re-processed
+     + Added support for IF, ELSE, ELSEIF, ENDIF, DO CASE, CASE, OTHERWISE, ENDCASE
+     ! Fixed cursor position in Dot prompt to simulate running program cursor position.
+
+   * contrib/dot/rp_dot.ch
+     ! Fixed literal coordinates to use MaxRow() and MaxCol()
+     + Added #command CLS to only clean the work region.
+     + Added #commands to "steal" handling of IF, ELSE, ELSEIF, ENDIF, DO CASE, CASE, OTHERWISE, ENDCASE
+
 2001-02-22 15:45 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * harbour/source/rdd/dbfntx/dbfntx1.c
      * fixed a bug while index opening, before ntxOrderListAdd have tried to
