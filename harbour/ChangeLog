@@ -1,3 +1,7 @@
+20000121-09:40 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/debug/debugger.com
+     * Improved monitored variables containt support
+
 2000-01-20 14:15 GMT-5 David G. Holm <dholm@ sd-llc.com>
 
    * source/rtl/dates.c
