@@ -447,6 +447,8 @@ USHORT hb_gtGetColorStr( char * fpColorString )
    strcpy( fpColorString, sColors );
    hb_xfree( sColors );
 
+   hb_gtColorSelect( CLR_STANDARD );
+
    return 0;
 }
 

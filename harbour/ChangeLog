@@ -1,3 +1,8 @@
+19991021-22:18 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/gtapi.c
+     ! hb_gtSetColorStr() now resets the ColorSelect() value to STANDARD,
+       like in Clipper.
+
 19991021-21:08 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/gt/gtwin.c
      source/rtl/dates.c
