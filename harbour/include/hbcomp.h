@@ -92,6 +92,7 @@ typedef struct _COMDECLARED
    BYTE * cParamTypes;
    USHORT iParamCount;
    struct _COMCLASS { char * szName; struct _COMDECLARED * pMethod; struct _COMCLASS * pNext; struct _COMDECLARED * pLast; } * pClass;
+   struct _COMCLASS * ( * pParamClasses );
    struct _COMDECLARED * pNext;   /* pointer to the next declared function */
 } COMDECLARED, * PCOMDECLARED;
 
@@ -165,9 +166,10 @@ typedef struct
 /* compiler symbol support structure */
 typedef struct _COMSYMBOL
 {
-   char * szName;               /* the name of the symbol */
-   char   cScope;               /* the scope of the symbol */
-   BYTE   cType;
+   char *    szName;               /* the name of the symbol */
+   char      cScope;               /* the scope of the symbol */
+   BYTE      cType;
+   PCOMCLASS pClass;
    struct _COMSYMBOL * pNext;   /* pointer to the next defined symbol */
 } COMSYMBOL, * PCOMSYMBOL;
 
@@ -361,7 +363,7 @@ extern PCOMDECLARED  hb_comp_pFirstDeclared;
 extern PCOMDECLARED  hb_comp_pLastDeclared;
 extern PCOMCLASS     hb_comp_pFirstClass;
 extern PCOMCLASS     hb_comp_pLastClass;
-extern char *        hb_comp_szClass;
+extern char *        hb_comp_szFromClass;
 extern PCOMDECLARED  hb_comp_pLastMethod;
 extern PATHNAMES *   hb_comp_pIncludePath;
 extern PFUNCTION     hb_comp_pInitFunc;

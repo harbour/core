@@ -285,7 +285,7 @@ AsType     : /* not specified */           	 { hb_comp_cVarType = ' '; }
            | AS_ARRAY                      	 { hb_comp_cVarType = 'A'; }
            | AS_BLOCK                      	 { hb_comp_cVarType = 'B'; }
            | AS_OBJECT                     	 { hb_comp_cVarType = 'O'; }
-           | AS_OBJECT FROMCLASS IdentName 	 { hb_comp_cVarType = 'S'; hb_comp_szClass = $3 }
+           | AS_OBJECT FROMCLASS IdentName 	 { hb_comp_cVarType = 'S'; hb_comp_szFromClass = $3 }
            | AS_VARIANT                    	 { hb_comp_cVarType = ' '; }
            | AS_NUMERIC_ARRAY              	 { hb_comp_cVarType = 'n'; }
            | AS_CHARACTER_ARRAY            	 { hb_comp_cVarType = 'c'; }
@@ -294,7 +294,7 @@ AsType     : /* not specified */           	 { hb_comp_cVarType = ' '; }
            | AS_ARRAY_ARRAY                	 { hb_comp_cVarType = 'a'; }
            | AS_BLOCK_ARRAY                	 { hb_comp_cVarType = 'b'; }
            | AS_OBJECT_ARRAY               	 { hb_comp_cVarType = 'o'; }
-           | AS_OBJECT_ARRAY FROMCLASS IdentName { hb_comp_cVarType = 's'; hb_comp_szClass = $3 }
+           | AS_OBJECT_ARRAY FROMCLASS IdentName { hb_comp_cVarType = 's'; hb_comp_szFromClass = $3 }
            ;
 
 AsArray    : AS_ARRAY                      { hb_comp_cVarType = 'A'; }
@@ -1158,12 +1158,15 @@ DecMethod  : IdentName '(' { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLa
                                                                                                                         hb_comp_pLastMethod->cType = hb_comp_cVarType;
 															if ( toupper( hb_comp_cVarType ) == 'S' )
 															{
-      															  hb_comp_pLastMethod->pClass = hb_compClassFind( hb_comp_szClass );
+      															  hb_comp_pLastMethod->pClass = hb_compClassFind( hb_strdup( hb_comp_szFromClass ) );
       															  if( ! hb_comp_pLastMethod->pClass )
       															  {
-         														    hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szClass, hb_comp_pLastMethod->szName );
+         														    hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szFromClass, hb_comp_pLastMethod->szName );
          														    hb_comp_pLastMethod->cType = ( isupper( hb_comp_cVarType ) ? 'O' :'o' );
 															  }
+
+         														  /* Resetting */
+         														  hb_comp_szFromClass = NULL;
       															}
 														      }
                                                                                                                       hb_comp_pLastMethod = NULL;
@@ -1176,12 +1179,15 @@ DecData    : IdentName { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastCl
                                                                                                         hb_comp_pLastMethod->cType = hb_comp_cVarType;
 													if ( toupper( hb_comp_cVarType ) == 'S' )
 													{
-      													  hb_comp_pLastMethod->pClass = hb_compClassFind( hb_comp_szClass );
+      													  hb_comp_pLastMethod->pClass = hb_compClassFind( hb_strdup( hb_comp_szFromClass ) );
       													  if( ! hb_comp_pLastMethod->pClass )
       													  {
-         												    hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szClass, hb_comp_pLastMethod->szName );
+         												    hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szFromClass, hb_comp_pLastMethod->szName );
          												    hb_comp_pLastMethod->cType = ( isupper( hb_comp_cVarType ) ? 'O' :'o' );
 													  }
+
+         												  /* Resetting */
+         												  hb_comp_szFromClass = NULL;
       													}
 												      }
                                                                                                       hb_comp_pLastMethod = NULL;

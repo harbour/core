@@ -1,3 +1,21 @@
+20000519-15:28 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * include/hbcomp.h
+     + Added member pParamClasses to COMDECLARED
+     * Changed hb_comp_szClass to hb_comp_szFromClass
+
+   * source/compiler/harbour.y
+     * Changed hb_comp_szClass to hb_comp_szFromClass
+
+   * source/compiler/harbour.c
+     + Added support for declared parameters of Functions/Methods AS Object FROM CLASS ...
+
+   * source/compiler/hbpcode.c
+     + Added Strong Type checking for declared parameters of Functions/Methods AS Object FROM CLASS ...
+
+   * tests/testwarn.prg
+     + Added code to demonstrate warnings for declared parameters of Functions/Methods AS Object FROM CLASS ...
+
 20000519-10:17 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/harbour.y

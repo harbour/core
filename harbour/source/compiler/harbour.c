@@ -86,7 +86,7 @@ PCOMDECLARED  hb_comp_pLastDeclared;
 
 PCOMCLASS     hb_comp_pFirstClass;
 PCOMCLASS     hb_comp_pLastClass;
-char *        hb_comp_szClass;
+char *        hb_comp_szFromClass;
 PCOMDECLARED  hb_comp_pLastMethod;
 
 int           hb_comp_iLine;                             /* currently processed line number */
@@ -474,11 +474,25 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
             pDeclared->iParamCount++;
 
             if ( pDeclared->cParamTypes )
+            {
                pDeclared->cParamTypes = ( BYTE * ) hb_xrealloc( pDeclared->cParamTypes, pDeclared->iParamCount );
+               pDeclared->pParamClasses = ( PCOMCLASS * ) hb_xrealloc( pDeclared->pParamClasses, pDeclared->iParamCount * sizeof( COMCLASS ) );
+            }
             else
+            {
                pDeclared->cParamTypes = ( BYTE * ) hb_xgrab( 1 );
+               pDeclared->pParamClasses = ( PCOMCLASS * ) hb_xgrab( sizeof( COMCLASS ) );
+            }
 
             pDeclared->cParamTypes[ pDeclared->iParamCount - 1 ] = cValueType;
+
+            if ( toupper( cValueType ) == 'S' )
+            {
+               pDeclared->pParamClasses[ pDeclared->iParamCount - 1 ] = hb_compClassFind( hb_strdup( hb_comp_szFromClass ) );
+
+               /* Resetting */
+               hb_comp_szFromClass = NULL;
+            }
 
             return;
          }
@@ -491,16 +505,36 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
       if ( hb_comp_iWarnings < 3 )
          return;
 
-      /*printf( "\nAdding parameter: %s Type: %c\n", szVarName, cValueType );*/
+      /*
+      printf( "\nAdding parameter: %s Type: %c In Method: %s Class: %s FROM CLASS: %s\n", szVarName, cValueType, hb_comp_pLastMethod->szName, hb_comp_pLastClass->szName, hb_comp_szFromClass );
+      */
 
       hb_comp_pLastMethod->iParamCount++;
 
       if ( hb_comp_pLastMethod->cParamTypes )
+      {
          hb_comp_pLastMethod->cParamTypes = ( BYTE * ) hb_xrealloc( hb_comp_pLastMethod->cParamTypes, hb_comp_pLastMethod->iParamCount );
+         hb_comp_pLastMethod->pParamClasses = ( PCOMCLASS * ) hb_xrealloc( hb_comp_pLastMethod->pParamClasses, hb_comp_pLastMethod->iParamCount * sizeof( COMCLASS ) );
+      }
       else
+      {
          hb_comp_pLastMethod->cParamTypes = ( BYTE * ) hb_xgrab( 1 );
+         hb_comp_pLastMethod->pParamClasses = ( PCOMCLASS * ) hb_xgrab( sizeof( COMCLASS ) );
+      }
 
       hb_comp_pLastMethod->cParamTypes[ hb_comp_pLastMethod->iParamCount - 1 ] = cValueType;
+
+      if ( toupper( cValueType ) == 'S' )
+      {
+         hb_comp_pLastMethod->pParamClasses[ hb_comp_pLastMethod->iParamCount - 1 ] = hb_compClassFind( hb_strdup( hb_comp_szFromClass ) );
+
+         /*
+         printf( "\nParameter: %s FROM CLASS: %s\n", szVarName, hb_comp_pLastMethod->pParamClasses[ hb_comp_pLastMethod->iParamCount - 1 ]->szName );
+         */
+
+         /* Resetting */
+         hb_comp_szFromClass = NULL;
+      }
 
       return;
    }
@@ -552,14 +586,19 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
 
    if ( toupper( cValueType ) == 'S' )
    {
-      /*printf( "\nVariable %s is of Class: %s\n", szVarName, hb_comp_szClass );*/
+      /*
+      printf( "\nVariable %s is of Class: %s\n", szVarName, hb_comp_szFromClass );
+      */
 
-      pVar->pClass = hb_compClassFind( hb_comp_szClass );
+      pVar->pClass = hb_compClassFind( hb_strdup( hb_comp_szFromClass ) );
       if( ! pVar->pClass )
       {
-         hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szClass, szVarName );
+         hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szFromClass, szVarName );
          pVar->cType = 'O';
       }
+
+      /* Resetting */
+      hb_comp_szFromClass = NULL;
    }
 
    if ( hb_comp_iVarScope & VS_PARAMETER )
@@ -872,6 +911,7 @@ PCOMDECLARED hb_compMethodAdd( PCOMCLASS pClass, char * szMethodName )
       /* Last Declaration override previous declarations */
       pMethod->cParamTypes = NULL;
       pMethod->iParamCount = 0;
+      pMethod->pParamClasses = NULL;
 
       return pMethod;
    }
@@ -882,6 +922,7 @@ PCOMDECLARED hb_compMethodAdd( PCOMCLASS pClass, char * szMethodName )
    pMethod->cType = ' '; // Not known yet
    pMethod->cParamTypes = NULL;
    pMethod->iParamCount = 0;
+   pMethod->pParamClasses = NULL;
    pMethod->pNext = NULL;
 
    if ( pClass->pMethod == NULL )
@@ -935,6 +976,7 @@ PCOMDECLARED hb_compDeclaredAdd( char * szDeclaredName )
       pDeclared->cType = ' '; /* Not known yet */
       pDeclared->cParamTypes = NULL;
       pDeclared->iParamCount = 0;
+      pDeclared->pParamClasses = NULL;
 
       return pDeclared;
    }
@@ -945,6 +987,7 @@ PCOMDECLARED hb_compDeclaredAdd( char * szDeclaredName )
    pDeclared->cType = ' '; /* Not known yet */
    pDeclared->cParamTypes = NULL;
    pDeclared->iParamCount = 0;
+   pDeclared->pParamClasses = NULL;
    pDeclared->pNext = NULL;
 
    /* First Declare */

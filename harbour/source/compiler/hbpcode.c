@@ -274,7 +274,11 @@ void hb_compStrongType( int iSize )
              if ( pFunc->pStack[ pFunc->iStackIndex ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
                 cSubType1 = ( pFunc->pStack[ pFunc->iStackIndex ] -= VT_OFFSET_VARIANT );
 
-             if ( cSubType1 && cSubType1 == '-' )
+             if ( cSubType1 == 'S' )
+               sprintf( ( char * ) szType2, "%s", pDeclared->pClass->szName );
+             else if ( cSubType1 == 's' )
+               sprintf( ( char * ) szType2, "ARRAY OF %s", pDeclared->pClass->szName );
+             else if ( cSubType1 && cSubType1 == '-' )
                 strcpy( ( char * ) szType2, "Variant.SubType\[NIL]" );
              else if ( cSubType1 )
                 sprintf( ( char * ) szType2, "Variant.SubType\[%c]", pFunc->pStack[ pFunc->iStackIndex ] );
@@ -303,8 +307,8 @@ void hb_compStrongType( int iSize )
          int hb_comp_iParamCount, iParamCount, iOptionals = 0;
          BYTE * hb_comp_cParamTypes;
 
-         hb_comp_cParamTypes = pFunc->pStackFunctions[ pFunc->iStackFunctions ]->cParamTypes;
-         hb_comp_iParamCount = pFunc->pStackFunctions[ pFunc->iStackFunctions ]->iParamCount;
+         hb_comp_cParamTypes   = pFunc->pStackFunctions[ pFunc->iStackFunctions ]->cParamTypes;
+         hb_comp_iParamCount   = pFunc->pStackFunctions[ pFunc->iStackFunctions ]->iParamCount;
 
          iParamCount = hb_comp_iParamCount;
 
@@ -322,9 +326,10 @@ void hb_compStrongType( int iSize )
          /* Now, check the types. */
          if( wVar >= ( hb_comp_iParamCount - iOptionals ) && wVar <= hb_comp_iParamCount )
          {
-           BYTE iOffset = 0, iParamBase = pFunc->iStackIndex - wVar, cFormalType;
+           BYTE iParamBase = pFunc->iStackIndex - wVar, cFormalType;
+           int iOffset = wVar;
 
-           while ( iOffset < wVar )
+           while ( --iOffset >= 0 )
            {
              cFormalType = hb_comp_cParamTypes[ iOffset ];
 
@@ -340,19 +345,51 @@ void hb_compStrongType( int iSize )
                 ; /* Parameter is NIL, always accepted. */
              else if ( cFormalType == '@' && pFunc->pStack[ iParamBase + iOffset ] >= ( 'A' + VT_OFFSET_BYREF ) )
                 ; /* Prameter is ANY REFERENCE, and Parameter is SOME REFERENCE. */
+             else if ( cFormalType == 'S' && pFunc->pStack[ iParamBase + iOffset ] == 'S' && pFunc->iStackClasses )
+             {
+               PCOMCLASS hb_comp_pFormalClass = pFunc->pStackFunctions[ pFunc->iStackFunctions ]->pParamClasses[ iOffset ];
+               PCOMCLASS hb_comp_pParamClass = pFunc->pStackClasses[ --pFunc->iStackClasses ];
+
+               if ( hb_comp_pFormalClass != hb_comp_pParamClass )
+               {
+                 sprintf( ( char * ) szType1, "%i", iOffset + 1 );
+                 sprintf( ( char * ) szType2, "%s", hb_comp_pFormalClass->szName );
+                 hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_TYPE, ( char * ) szType1, ( char * ) szType2 );
+               }
+             }
+             else if ( cFormalType == 's' && pFunc->pStack[ iParamBase + iOffset ] == 's' && pFunc->iStackClasses )
+             {
+               PCOMCLASS hb_comp_pFormalClass = pFunc->pStackFunctions[ pFunc->iStackFunctions ]->pParamClasses[ iOffset ];
+               PCOMCLASS hb_comp_pParamClass = pFunc->pStackClasses[ --pFunc->iStackClasses ];
+
+               if ( hb_comp_pFormalClass != hb_comp_pParamClass )
+               {
+                 sprintf( ( char * ) szType1, "%i", iOffset + 1 );
+                 sprintf( ( char * ) szType2, "ARRAY OF %s", hb_comp_pFormalClass->szName );
+                 hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_TYPE, ( char * ) szType1, ( char * ) szType2 );
+               }
+             }
              else if ( cFormalType != pFunc->pStack[ iParamBase + iOffset ] )
              {
-                if ( cFormalType > ( 'A' + VT_OFFSET_BYREF ) )
-                   sprintf( ( char * ) szType2, "@%c", cFormalType - VT_OFFSET_BYREF );
+                if ( cFormalType == 'S' )
+                {
+                  PCOMCLASS hb_comp_pParamClass = pFunc->pStackFunctions[ pFunc->iStackFunctions ]->pParamClasses[ iOffset ];
+                  sprintf( ( char * ) szType2, "%s", hb_comp_pParamClass->szName );
+                }
+                else if ( cFormalType == 's' )
+                {
+                  PCOMCLASS hb_comp_pParamClass = pFunc->pStackFunctions[ pFunc->iStackFunctions ]->pParamClasses[ iOffset ];
+                  sprintf( ( char * ) szType2, "ARRAY OF %s", hb_comp_pParamClass->szName );
+                }
+                else if ( cFormalType > ( 'A' + VT_OFFSET_BYREF ) )
+                  sprintf( ( char * ) szType2, "@%c", cFormalType - VT_OFFSET_BYREF );
                 else
-                   sprintf( ( char * ) szType2, "%c", cFormalType );
+                  sprintf( ( char * ) szType2, "%c", cFormalType );
 
                sprintf( ( char * ) szType1, "%i", iOffset + 1 );
 
                hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_TYPE, ( char * ) szType1, ( char * ) szType2 );
              }
-
-             iOffset++;
            }
          }
          else
@@ -465,11 +502,14 @@ void hb_compStrongType( int iSize )
             /* Now, check the types. */
             if( wVar >= ( hb_comp_iParamCount - iOptionals ) && wVar <= hb_comp_iParamCount )
             {
-              BYTE iOffset = 0, iParamBase = pFunc->iStackIndex - wVar, cFormalType;
+              BYTE iParamBase = pFunc->iStackIndex - wVar, cFormalType;
+              int iOffset = wVar;
 
-              while ( iOffset < wVar )
+              while ( --iOffset >= 0 )
               {
                 cFormalType = hb_comp_cParamTypes[ iOffset ];
+
+                /*printf( "\nFormal # %i Type: %c\n", iOffset, cFormalType );*/
 
                 if ( cFormalType == ( ' ' + VT_OFFSET_OPTIONAL ) || cFormalType >= ( 'A' + VT_OFFSET_OPTIONAL ) )
                   cFormalType -= VT_OFFSET_OPTIONAL;
@@ -483,9 +523,43 @@ void hb_compStrongType( int iSize )
                   ; /* Parameter is NIL, always accepted. */
                 else if ( cFormalType == '@' && pFunc->pStack[ iParamBase + iOffset ] >= ( 'A' + VT_OFFSET_BYREF ) )
                   ; /* Prameter is ANY REFERENCE, and Parameter is SOME REFERENCE. */
+                else if ( cFormalType == 'S' && pFunc->pStack[ iParamBase + iOffset ] == 'S' && pFunc->iStackClasses )
+                {
+                  PCOMCLASS hb_comp_pFormalClass = pFunc->pStackFunctions[ pFunc->iStackFunctions ]->pParamClasses[ iOffset ];
+                  PCOMCLASS hb_comp_pParamClass = pFunc->pStackClasses[ --pFunc->iStackClasses ];
+
+                  if ( hb_comp_pFormalClass != hb_comp_pParamClass )
+                  {
+                    sprintf( ( char * ) szType1, "%i", iOffset + 1 );
+                    sprintf( ( char * ) szType2, "%s", hb_comp_pFormalClass->szName );
+                    hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_TYPE, ( char * ) szType1, ( char * ) szType2 );
+                  }
+                }
+                else if ( cFormalType == 's' && pFunc->pStack[ iParamBase + iOffset ] == 's' && pFunc->iStackClasses )
+                {
+                  PCOMCLASS hb_comp_pFormalClass = pFunc->pStackFunctions[ pFunc->iStackFunctions ]->pParamClasses[ iOffset ];
+                  PCOMCLASS hb_comp_pParamClass = pFunc->pStackClasses[ --pFunc->iStackClasses ];
+
+                  if ( hb_comp_pFormalClass != hb_comp_pParamClass )
+                  {
+                    sprintf( ( char * ) szType1, "%i", iOffset + 1 );
+                    sprintf( ( char * ) szType2, "ARRAY OF %s", hb_comp_pFormalClass->szName );
+                    hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_TYPE, ( char * ) szType1, ( char * ) szType2 );
+                  }
+                }
                 else if ( cFormalType != pFunc->pStack[ iParamBase + iOffset ] )
                 {
-                  if ( cFormalType > ( 'A' + VT_OFFSET_BYREF ) )
+                  if ( cFormalType == 'S' )
+                  {
+                    PCOMCLASS hb_comp_pFormalClass = pFunc->pStackFunctions[ pFunc->iStackFunctions ]->pParamClasses[ iOffset ];
+                    sprintf( ( char * ) szType2, "%s", hb_comp_pFormalClass->szName );
+                  }
+                  else if ( cFormalType == 's' )
+                  {
+                    PCOMCLASS hb_comp_pFormalClass = pFunc->pStackFunctions[ pFunc->iStackFunctions ]->pParamClasses[ iOffset ];
+                    sprintf( ( char * ) szType2, "ARRAY OF %s", hb_comp_pFormalClass->szName );
+                  }
+                  else if ( cFormalType > ( 'A' + VT_OFFSET_BYREF ) )
                     sprintf( ( char * ) szType2, "@%c", cFormalType - VT_OFFSET_BYREF );
                   else
                     sprintf( ( char * ) szType2, "%c", cFormalType );
@@ -494,7 +568,6 @@ void hb_compStrongType( int iSize )
 
                   hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_TYPE, ( char * ) szType1, ( char * ) szType2 );
                 }
-                iOffset++;
               }
             }
             else
@@ -1193,6 +1266,7 @@ void hb_compStrongType( int iSize )
             pFunc->pStackClasses[ pFunc->iStackClasses++ ] = pVar->pClass;
             pFunc->pStack[ pFunc->iStackIndex++ ] = 'S';
           }
+
           if ( pFunc->pCode[ ulPos ] == HB_P_PUSHSTATICREF )
              pFunc->pStack[ pFunc->iStackIndex++ ] = pVar->cType + VT_OFFSET_BYREF;
           else
@@ -1476,7 +1550,7 @@ void hb_compStrongType( int iSize )
      case HB_P_POPVARIABLE :
        pFunc->iStackIndex--;
 
-       if ( pFunc->pStack[ pFunc->iStackIndex ] == 'S' && pFunc->iStackClasses > 0 )
+       if ( toupper( pFunc->pStack[ pFunc->iStackIndex ] ) == 'S' && pFunc->iStackClasses > 0 )
        {
          /* Object of declared class */
          pFunc->pStackClasses[ --pFunc->iStackClasses ] = NULL;
@@ -1488,7 +1562,7 @@ void hb_compStrongType( int iSize )
        /* TODO: check what is aliasedvar? */
        pFunc->iStackIndex--;
 
-       if ( pFunc->pStack[ pFunc->iStackIndex ] == 'S' && pFunc->iStackClasses > 0 )
+       if ( toupper( pFunc->pStack[ pFunc->iStackIndex ] ) == 'S' && pFunc->iStackClasses > 0 )
        {
          /* Object of declared class */
          pFunc->pStackClasses[ --pFunc->iStackClasses ] = NULL;
@@ -1538,7 +1612,7 @@ void hb_compStrongType( int iSize )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
 
-       if ( pFunc->pStack[ pFunc->iStackIndex ] == 'S' && pFunc->iStackClasses > 0 )
+       if ( toupper( pFunc->pStack[ pFunc->iStackIndex ] ) == 'S' && pFunc->iStackClasses > 0 )
        {
          /* Object of declared class */
          pFunc->pStackClasses[ --pFunc->iStackClasses ] = NULL;
@@ -1601,7 +1675,11 @@ void hb_compStrongType( int iSize )
              else
              {
                 char szType[2];
-                if ( islower( pVar->cType ) )
+                if ( pVar->cType == 'S' )
+                  sprintf( ( char * ) szType, "%s", pVar->pClass->szName );
+                else if ( pVar->cType == 's' )
+                  sprintf( ( char * ) szType, "ARRAY OF %s", pVar->pClass->szName );
+                else if ( islower( pVar->cType ) )
                   sprintf( ( char * ) szType, "ARRAY OF %c", toupper( pVar->cType ) );
                 else
                   sprintf( ( char * ) szType, "%c", pVar->cType );
@@ -1642,7 +1720,11 @@ void hb_compStrongType( int iSize )
              else
              {
                 char szType[2];
-                if ( islower( pSym->cType ) )
+                if ( pSym->cType == 'S' )
+                  sprintf( ( char * ) szType, "%s", pSym->pClass->szName );
+                else if ( pSym->cType == 's' )
+                  sprintf( ( char * ) szType, "ARRAY OF %s", pSym->pClass->szName );
+                else if ( islower( pSym->cType ) )
                   sprintf( ( char * ) szType, "ARRAY OF %c", toupper( pSym->cType ) );
                 else
                   sprintf( ( char * ) szType, "%c", pSym->cType );
@@ -1677,13 +1759,6 @@ void hb_compStrongType( int iSize )
        if ( pFunc->iStackIndex < 0 )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
-
-       if ( pFunc->pStack[ pFunc->iStackIndex ] == 'S' && pFunc->iStackClasses > 0 )
-       {
-         /* Object of declared class */
-         pFunc->pStackClasses[ --pFunc->iStackClasses ] = NULL;
-         pFunc->pStack[ pFunc->iStackIndex ] = 'O';
-       }
 
        if ( pFunc->pCode[ ulPos ] == HB_P_POPLOCAL )
           wVar = * ( ( SHORT * ) &( pFunc->pCode )[ ulPos + 1 ] );
@@ -1722,7 +1797,12 @@ void hb_compStrongType( int iSize )
          else
          {
             char szType[2];
-            if ( islower( pVar->cType ) )
+
+            if ( pVar->cType == 'S' )
+               sprintf( ( char * ) szType, "%s", pVar->pClass->szName );
+            else if ( pVar->cType == 's' )
+               sprintf( ( char * ) szType, "ARRAY OF %s", pVar->pClass->szName );
+            else if ( islower( pVar->cType ) )
                sprintf( ( char * ) szType, "ARRAY OF %c", toupper( pVar->cType ) );
             else
                sprintf( ( char * ) szType, "%c", pVar->cType );
@@ -1736,6 +1816,11 @@ void hb_compStrongType( int iSize )
                 ; /* Array Of may accept any Array  */
             else if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
                 hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_SUSPECT, pVar->szName, ( char * ) szType );
+            else if ( toupper( pFunc->pStack[ pFunc->iStackIndex ] ) == 'S' && pFunc->iStackClasses )
+            {
+               pFunc->pStackClasses[ --pFunc->iStackClasses ] = NULL;
+               /* TODO **** */
+            }
             else if ( isupper( pVar->cType ) && pVar->cType != pFunc->pStack[ pFunc->iStackIndex ] )
                 hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pVar->szName, ( char * ) szType );
             else if ( toupper( pVar->cType ) != pFunc->pStack[ pFunc->iStackIndex ] )
@@ -1752,7 +1837,7 @@ void hb_compStrongType( int iSize )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
 
-       if ( pFunc->pStack[ pFunc->iStackIndex ] == 'S' && pFunc->iStackClasses > 0 )
+       if ( toupper( pFunc->pStack[ pFunc->iStackIndex ] ) == 'S' && pFunc->iStackClasses > 0 )
        {
          /* Object of declared class */
          pFunc->pStackClasses[ --pFunc->iStackClasses ] = NULL;
@@ -1788,7 +1873,11 @@ void hb_compStrongType( int iSize )
          else
          {
             char szType[2];
-            if ( islower( pVar->cType ) )
+            if ( pVar->cType == 'S' )
+               sprintf( ( char * ) szType, "%s", pVar->pClass->szName );
+            else if ( pVar->cType == 's' )
+               sprintf( ( char * ) szType, "ARRAY OF %s", pVar->pClass->szName );
+            else if ( islower( pVar->cType ) )
                sprintf( ( char * ) szType, "ARRAY OF %c", toupper( pVar->cType ) );
             else
                sprintf( ( char * ) szType, "%c", pVar->cType );
