@@ -125,6 +125,8 @@ USHORT hb_comp_wIfCounter    = 0;
 USHORT hb_comp_wWhileCounter = 0;
 USHORT hb_comp_wCaseCounter  = 0;
 
+char *hb_comp_buffer; /* yacc input buffer */
+
 static PTR_LOOPEXIT hb_comp_pLoops = NULL;
 static HB_RTVAR_PTR hb_comp_rtvars = NULL;
 
@@ -1523,6 +1525,7 @@ BOOL hb_compInclude( char * szFileName, PATHNAMES * pSearch )
    pFile->szFileName = szFileName;
    pFile->pPrev = NULL;
 
+/*
    if( ! hb_comp_files.iFiles )
       hb_comp_files.pLast = pFile;
    else
@@ -1537,6 +1540,14 @@ BOOL hb_compInclude( char * szFileName, PATHNAMES * pSearch )
 #else
    yy_switch_to_buffer( pFile->pBuffer = yy_create_buffer( yyin, 8192 * 2 ) );
 #endif
+*/
+
+   hb_comp_files.pLast = pFile;
+#ifdef __cplusplus
+   yy_switch_to_buffer( ( YY_BUFFER_STATE ) ( hb_comp_buffer = yy_create_buffer( yyin, 8192 * 2 ) ) );
+#else
+   yy_switch_to_buffer( hb_comp_buffer = yy_create_buffer( yyin, 8192 * 2 ) );
+#endif
    hb_comp_files.iFiles++;
 
    return TRUE;
@@ -1548,6 +1559,7 @@ int yywrap( void )   /* handles the EOF of the currently processed file */
 
    if( hb_comp_files.iFiles == 1 )
       return 1;      /* we have reached the main EOF */
+/*
    else
    {
       pLast = hb_comp_files.pLast;
@@ -1567,8 +1579,9 @@ int yywrap( void )   /* handles the EOF of the currently processed file */
 #else
       yy_switch_to_buffer( hb_comp_files.pLast->pBuffer );
 #endif
-      return 0;      /* we close the currently include file and continue */
+      return 0;      
    }
+*/ /* we close the currently include file and continue */
 }
 
 /* ************************************************************************* */

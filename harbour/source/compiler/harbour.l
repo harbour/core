@@ -1539,7 +1539,7 @@ int yy_lex_input( char *buffer, int iBufferSize )
 {
    HB_SYMBOL_UNUSED( iBufferSize );
 
-   return hb_pp_Internal( yyin, hb_comp_bPPO ? hb_comp_yyppo : NULL, buffer );
+   return hb_pp_Internal( hb_comp_bPPO ? hb_comp_yyppo : NULL, buffer );
 }
 
 static int yy_ConvertNumber( char * szBuffer )
