@@ -139,6 +139,7 @@ static void    hb_vmPushAlias( void );            /* pushes the current workarea
 static void    hb_vmPushAliasedField( PHB_SYMB ); /* pushes an aliased field on the eval stack */
 static void    hb_vmPushAliasedVar( PHB_SYMB );   /* pushes an aliased variable on the eval stack */
 static void    hb_vmPushBlock( BYTE * pCode, PHB_SYMB pSymbols ); /* creates a codeblock */
+static void    hb_vmPushBlockShort( BYTE * pCode, PHB_SYMB pSymbols ); /* creates a codeblock */
 static void    hb_vmPushDoubleConst( double dNumber, int iWidth, int iDec ); /* Pushes a double constant (pcode) */
 static void    hb_vmPushMacroBlock( BYTE * pCode, PHB_SYMB pSymbols ); /* creates a macro-compiled codeblock */
 static void    hb_vmPushLocal( SHORT iLocal );    /* pushes the containts of a local onto the stack */
@@ -922,6 +923,14 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
              */
             hb_vmPushBlock( ( BYTE * ) ( pCode + w ), pSymbols );
             w += ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+            break;
+
+         case HB_P_PUSHBLOCKSHORT:
+            /* +0    -> _pushblock
+             * +1    -> size of codeblock
+             */
+            hb_vmPushBlockShort( ( BYTE * ) ( pCode + w ), pSymbols );
+            w += pCode[ w + 1 ];
             break;
 
          case HB_P_PUSHSELF:
@@ -3180,6 +3189,38 @@ static void hb_vmPushBlock( BYTE * pCode, PHB_SYMB pSymbols )
    /* store the number of expected parameters
     */
    hb_stack.pPos->item.asBlock.paramcnt = pCode[ 3 ] + ( pCode[ 4 ] * 256 );
+   /* store the line number where the codeblock was defined
+    */
+   hb_stack.pPos->item.asBlock.lineno = hb_stack.pBase->item.asSymbol.lineno;
+   hb_stackPush();
+}
+
+/* +0    -> HB_P_PUSHBLOCKSHORT
+ * +1    -> size of codeblock
+ * +2    -> start of table with referenced local variables
+ *
+ * NOTE: pCode points to static memory
+ */
+static void hb_vmPushBlockShort( BYTE * pCode, PHB_SYMB pSymbols )
+{
+   USHORT uiLocals;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushBlockShort(%p, %p)", pCode, pSymbols));
+
+   hb_stack.pPos->type = HB_IT_BLOCK;
+
+   hb_stack.pPos->item.asBlock.value =
+         hb_codeblockNew( pCode + 2,                /* pcode buffer         */
+         0,                                         /* number of referenced local variables */
+         NULL,                                      /* table with referenced local variables */
+         pSymbols );
+
+   /* store the statics base of function where the codeblock was defined
+    */
+   hb_stack.pPos->item.asBlock.statics = hb_stack.iStatics;
+   /* store the number of expected parameters
+    */
+   hb_stack.pPos->item.asBlock.paramcnt = 0;
    /* store the line number where the codeblock was defined
     */
    hb_stack.pPos->item.asBlock.lineno = hb_stack.pBase->item.asSymbol.lineno;

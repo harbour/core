@@ -93,6 +93,13 @@ static HB_FIX_FUNC( hb_p_pushblock )
    return lPCodePos - ulStart;
 }
 
+static HB_FIX_FUNC( hb_p_pushblockshort )
+{
+   ++cargo->iNestedCodeblock;
+
+   return 2;
+}
+
 static HB_FIX_FUNC( hb_p_localname )
 {
    ULONG ulStart = lPCodePos;
@@ -302,6 +309,7 @@ static HB_FIX_FUNC_PTR s_fixlocals_table[] =
    NULL,                       /* HB_P_PUSHALIASEDFIELDNEAR, */
    NULL,                       /* HB_P_PUSHALIASEDVAR,       */
    hb_p_pushblock,             /* HB_P_PUSHBLOCK,            */
+   hb_p_pushblockshort,        /* HB_P_PUSHBLOCKSHORT,       */
    NULL,                       /* HB_P_PUSHFIELD,            */
    NULL,                       /* HB_P_PUSHBYTE,             */
    NULL,                       /* HB_P_PUSHINT,              */

@@ -132,6 +132,7 @@ typedef enum
    HB_P_PUSHALIASEDFIELDNEAR,  /* pushes aliased field */
    HB_P_PUSHALIASEDVAR,        /* pushes aliased variable (either a field or a memvar) */
    HB_P_PUSHBLOCK,             /* start of a codeblock definition */
+   HB_P_PUSHBLOCKSHORT,        /* start of a codeblock definition */
    HB_P_PUSHFIELD,             /* pushes unaliased field */
    HB_P_PUSHBYTE,              /* places a 1 byte integer number on the virtual machine stack */
    HB_P_PUSHINT,               /* places an integer number on the virtual machine stack */

@@ -1099,6 +1099,20 @@ static HB_GENC_FUNC( hb_p_pushblock )
    return lPCodePos - ulStart;
 }
 
+static HB_GENC_FUNC( hb_p_pushblockshort )
+{
+   ++cargo->iNestedCodeblock;
+
+   fprintf( cargo->yyc, "\tHB_P_PUSHBLOCKSHORT, %i,",
+            pFunc->pCode[ lPCodePos + 1 ] );
+   if( cargo->bVerbose )
+      fprintf( cargo->yyc, "\t/* %i */",
+               pFunc->pCode[ lPCodePos + 1 ] );
+   fprintf( cargo->yyc, "\n" );
+
+   return 2;
+}
+
 static HB_GENC_FUNC( hb_p_pushdouble )
 {
    int i;
@@ -1645,6 +1659,7 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_pushaliasedfieldnear,
    hb_p_pushaliasedvar,
    hb_p_pushblock,
+   hb_p_pushblockshort,
    hb_p_pushfield,
    hb_p_pushbyte,
    hb_p_pushint,

@@ -2899,12 +2899,24 @@ void hb_compCodeBlockEnd( void )
       ++wLocals;
    }
 
-   /* NOTE: 8 = HB_P_PUSHBLOCK + USHORT( size ) + USHORT( wParams ) + USHORT( wLocals ) + _ENDBLOCK */
-   wSize = ( USHORT ) pCodeblock->lPCodePos + 8 + wLocals * 2;
-
-   hb_compGenPCode3( HB_P_PUSHBLOCK, HB_LOBYTE( wSize ), HB_HIBYTE( wSize ), ( BOOL ) 1 );
-   hb_compGenPCode2( HB_LOBYTE( pCodeblock->wParamCount ), HB_HIBYTE( pCodeblock->wParamCount ), ( BOOL ) 0 );
-   hb_compGenPCode2( HB_LOBYTE( wLocals ), HB_HIBYTE( wLocals ), ( BOOL ) 0 );
+   if( ( pCodeblock->lPCodePos + 3 ) <= 255 && 
+       pCodeblock->wParamCount == 0 &&
+       wLocals == 0 )
+   {
+      /* NOTE: 3 = HB_P_PUSHBLOCKSHORT + BYTE( size ) + _ENDBLOCK */
+      wSize = ( USHORT ) pCodeblock->lPCodePos + 3;
+      
+      hb_compGenPCode2( HB_P_PUSHBLOCKSHORT, ( BYTE ) wSize, ( BOOL ) 1 );
+   }
+   else
+   {
+      /* NOTE: 8 = HB_P_PUSHBLOCK + USHORT( size ) + USHORT( wParams ) + USHORT( wLocals ) + _ENDBLOCK */
+      wSize = ( USHORT ) pCodeblock->lPCodePos + 8 + wLocals * 2;
+      
+      hb_compGenPCode3( HB_P_PUSHBLOCK, HB_LOBYTE( wSize ), HB_HIBYTE( wSize ), ( BOOL ) 1 );
+      hb_compGenPCode2( HB_LOBYTE( pCodeblock->wParamCount ), HB_HIBYTE( pCodeblock->wParamCount ), ( BOOL ) 0 );
+      hb_compGenPCode2( HB_LOBYTE( wLocals ), HB_HIBYTE( wLocals ), ( BOOL ) 0 );
+   }
 
    /* generate the table of referenced local variables */
    pVar = pCodeblock->pStatics;
