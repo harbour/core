@@ -45,6 +45,7 @@
  */
 
 #include "extend.h"
+#include "itemapi.h"
 #include "mouseapi.h"
 #include "gtapi.h"
 
@@ -305,6 +306,38 @@ HARBOUR MSETBOUNDS( void )
    int iRight  = ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol();
 
    hb_mouseSetBounds( iTop, iLeft, iBottom, iRight );
+}
+
+#endif
+
+#ifdef HB_COMPAT_XPP
+
+/* NOTE: XBase++ compatible function */
+
+HARBOUR HB_NUMBUTTONS( void )
+{
+   hb_retni( hb_mouseCountButton() );
+}
+
+/* NOTE: XBase++ compatible function */
+
+HARBOUR HB_SETMOUSE( void )
+{
+   hb_retl( hb_mouseGetCursor() );
+
+   if( ISLOG( 1 ) )
+      hb_mouseSetCursor( hb_parl( 1 ) );
+
+   {
+      PHB_ITEM pRow = hb_param( 2, IT_NUMERIC );
+      PHB_ITEM pCol = hb_param( 3, IT_NUMERIC );
+
+      if( pRow || pCol )
+      {
+         hb_mouseSetPos( pRow ? hb_itemGetNI( pRow ) : hb_mouseRow() ,
+                         pCol ? hb_itemGetNI( pCol ) : hb_mouseCol() );
+      }
+   }
 }
 
 #endif

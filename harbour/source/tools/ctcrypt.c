@@ -41,14 +41,14 @@ HARBOUR HB_CT_CRYPT( void )
 
    if( ulCryptLen >= 2 )
    {
-      BYTE * pbyCrypt = ( BYTE *)hb_parc( 2 );
+      BYTE * pbyCrypt = ( BYTE * ) hb_parc( 2 );
       ULONG ulCryptPos = 0;
 
-      BYTE * pbyString = (BYTE *)hb_parc( 1 );
+      BYTE * pbyString = ( BYTE * ) hb_parc( 1 );
       ULONG ulStringLen = hb_parclen( 1 );
       ULONG ulStringPos;
 
-      BYTE * pbyResult = (BYTE *)hb_xgrab( ulStringLen + 1 );
+      BYTE * pbyResult = ( BYTE * ) hb_xgrab( ulStringLen + 1 );
 
       USHORT uiCount2 = ( ( ( USHORT ) ( pbyCrypt[ ulCryptPos ] + ( USHORT ) ( pbyCrypt[ ulCryptPos + 1 ] * 256 ) ) ) & 0xFFFF ) ^ ( ( USHORT ) ulCryptLen & 0xFFFF );
       USHORT uiCount1 = 0xAAAA;
@@ -102,7 +102,7 @@ HARBOUR HB_CT_CRYPT( void )
             ulCryptPos = 0;
       }
 
-      hb_retclen( (char *)pbyResult, ulStringLen );
+      hb_retclen( ( char * ) pbyResult, ulStringLen );
       hb_xfree( pbyResult );
    }
    else

@@ -35,6 +35,7 @@ C_SOURCES=\
         mtran.c \
         natmsg.c \
         net.c \
+        oemansi.c \
         oldbox.c \
         oldclear.c \
         samples.c \

@@ -1,3 +1,36 @@
+19991025-19:09 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/filesys.c
+     + CURDRIVE() XBase++ compatible function added, between HB_COMPAT_XPP
+       guards, it also has a TODO:
+     ! hb_fsCurDrv() fixed to convert the return value of the OS calls to 
+       the Clipper standard.
+     ! hb_fsChDrv()    / DISKCHANGE(), CURDRIVE()
+       hb_fsIsDrv()    / ISDISK()
+       hb_fsCurDrv()   / DISKNAME()
+       hb_fsMkDir()    / MAKEDIR()
+       hb_fsChDir()    / DIRCHANGE()
+       hb_fsRmDir()    / DIRREMOVE()
+       hb_fsCurDir()   / CURDIR()
+       hb_fsIsDevice()
+       All these fixed, so that now they work with WIN32/MINGW32.
+   * source/rtl/mouseapi.c
+     + SETMOUSE() and NUMBUTTONS() XBase++ compatible functions added,
+       between HB_COMPAT_XPP
+   + source/rtl/oemansi.c
+     source/rtl/Makefile
+     config/w32/mingw32.cf
+     + HB_ANSITOOEM() new Win32 related function added (Harbour extension)
+     + HB_OEMTOANSI() new Win32 related function added (Harbour extension)
+     + CONVTOOEMCP() XBase++ compatible function added (between HB_COMPAT_XPP)
+     + CONVTOANSICP() XBase++ compatible function added (between HB_COMPAT_XPP)
+     ; IMPORTANT NOTE: This may cause problems in other platform, since USER32 
+       should be linked in. (WIN32/MINGW32 platform arranged)
+   * source/rdd/dbf1.c
+     - Some HB_SYMBOL_UNUSED() macros removed, since the variables are used.
+   * source/tools/ctcrypt.c
+     source/rtl/isprint.c
+     * Some formatting.
+
 19991025-12:30 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/tools/ctcrypt.c
      * added some casts
@@ -40,6 +73,7 @@ Mon Oct 25 13:14:42 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 	* source/rtl/inkey.c: 
 	Added/corrected a few calls to HB_TRACE().
 
+>>>>>>> 1.1294
 19991025-15:20 GMT+1 Victor Szel <info@szelvesz.hu>
    * tests/memory.prg
      + Using hbmemory.ch

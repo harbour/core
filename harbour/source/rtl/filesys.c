@@ -43,6 +43,7 @@
  *    hb_fsReadLarge()
  *    hb_fsWriteLarge()
  *    HB_CURDIR()
+ *    HB_CURDRIVE()
  *    HB_DIRCHANGE()
  *    HB_MAKEDIR()
  *    HB_DIRREMOVE()
@@ -889,11 +890,11 @@ BOOL    hb_fsMkDir( BYTE * pDirname )
 
    HB_TRACE(("hb_fsMkDir(%s)", (char*) pDirname));
 
-#if defined(HAVE_POSIX_IO)
+#if defined(HAVE_POSIX_IO) || defined(__MINGW32__)
 
    errno = 0;
 
-   #if !defined(__WATCOMC__) && !defined(__BORLANDC__) && !defined(__IBMCPP__)
+   #if !defined(__WATCOMC__) && !defined(__BORLANDC__) && !defined(__IBMCPP__) && !defined(__MINGW32__)
       iResult = mkdir( ( char * ) pDirname, S_IWUSR | S_IRUSR );
    #else
       iResult = mkdir( ( char * ) pDirname );
@@ -917,7 +918,7 @@ BOOL    hb_fsChDir( BYTE * pDirname )
 
    HB_TRACE(("hb_fsChDir(%s)", (char*) pDirname));
 
-#if defined(HAVE_POSIX_IO)
+#if defined(HAVE_POSIX_IO) || defined(__MINGW32__)
 
    errno = 0;
    iResult = chdir( ( char * ) pDirname );
@@ -939,7 +940,7 @@ BOOL    hb_fsRmDir( BYTE * pDirname )
 
    HB_TRACE(("hb_fsRmDir(%s)", (char*) pDirname));
 
-#if defined(HAVE_POSIX_IO)
+#if defined(HAVE_POSIX_IO) || defined(__MINGW32__)
 
    errno = 0;
    iResult = rmdir( ( char * ) pDirname );
@@ -966,7 +967,7 @@ BYTE *  hb_fsCurDir( USHORT uiDrive )
 
    HB_SYMBOL_UNUSED( uiDrive );
 
-#if defined(HAVE_POSIX_IO)
+#if defined(HAVE_POSIX_IO) || defined(__MINGW32__)
 
    errno = 0;
    getcwd( cwd_buff, PATH_MAX );
@@ -991,7 +992,7 @@ USHORT  hb_fsChDrv( BYTE nDrive )
 
    HB_TRACE(("hb_fsChDrv(%d)", (int) nDrive));
 
-#if defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) || defined(__MINGW32__) ) && ! defined(__CYGWIN__)
+#if ( defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) ) && ! defined(__CYGWIN__) ) || defined(__MINGW32__)
 
    {
       USHORT uiSave = _getdrive();
@@ -1017,7 +1018,7 @@ USHORT  hb_fsChDrv( BYTE nDrive )
       USHORT uiSave = _getdrive();
       USHORT uiTotal;
 
-      /* 1=  A:, 2 = B:, 3 = C:, etc
+      /* 1 = A:, 2 = B:, 3 = C:, etc
        * _dos_*() functions don't set 'errno'
        */
       _dos_getdrive( &uiSave );
@@ -1060,7 +1061,7 @@ USHORT  hb_fsIsDrv( BYTE nDrive )
 
    HB_TRACE(("hb_fsIsDrv(%d)", (int) nDrive));
 
-#if defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) || defined(__MINGW32__) ) && ! defined(__CYGWIN__)
+#if ( defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) ) && ! defined(__CYGWIN__) ) || defined(__MINGW32__)
 
    {
       USHORT uiSave = _getdrive();
@@ -1120,7 +1121,7 @@ BOOL    hb_fsIsDevice( FHANDLE hFileHandle )
 
    HB_TRACE(("hb_fsIsDevice(%p)", hFileHandle));
 
-#if defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) || defined(__MINGW32__) ) && ! defined(__CYGWIN__)
+#if ( defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) ) && ! defined(__CYGWIN__) ) || defined(__MINGW32__)
 
    errno = 0;
    bResult = ( isatty( hFileHandle ) == 0 );
@@ -1145,25 +1146,23 @@ BYTE    hb_fsCurDrv( void )
 
    HB_TRACE(("hb_fsCurDrv()"));
 
-#if defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) || defined(__MINGW32__) ) && ! defined(__CYGWIN__)
+#if ( defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) ) && ! defined(__CYGWIN__) ) || defined(__MINGW32__)
 
    {
       errno = 0;
-      uiResult = _getdrive();
+      uiResult = _getdrive() - 1;
       s_uiErrorLast = errno;
    }
 
 #elif defined( __WATCOMC__ )
 
    {
-      USHORT uiDrive;
-
-      /* 1=  A:, 2 = B:, 3 = C:, etc
+      /* 1 = A:, 2 = B:, 3 = C:, etc
        * _dos_*() functions don't set 'errno'
        */
-      _dos_getdrive( &uiDrive );
+      _dos_getdrive( &uiResult );
       s_uiErrorLast = 0;
-      uiResult = ( USHORT ) uiDrive;
+      uiResult--;
    }
 
 #else
@@ -1173,7 +1172,7 @@ BYTE    hb_fsCurDrv( void )
 
 #endif
 
-   return uiResult;
+   return ( BYTE ) uiResult;
 }
 
 /* TODO: Implement hb_fsExtOpen */
@@ -1560,6 +1559,31 @@ HARBOUR HB_DISKNAME( void )
    szDrive[ 0 ] = ( ( char ) hb_fsCurDrv() ) + 'A';
 
    hb_retclen( szDrive, 1 );
+
+   s_uiErrorLast = uiErrorOld;
+}
+
+#endif
+
+#ifdef HB_COMPAT_XPP
+
+/* NOTE: XBase++ compatible */
+
+HARBOUR HB_CURDRIVE( void )
+{
+   USHORT uiErrorOld = s_uiErrorLast;
+   char szDrive[ 1 ];
+
+   szDrive[ 0 ] = ( ( char ) hb_fsCurDrv() ) + 'A';
+   hb_retclen( szDrive, 1 );
+
+   if( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 )
+   {
+      if( hb_fsChDrv( ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' ) ) != 0 )
+      {
+         /* TODO: Throw some XBase++ like runtime error. */
+      }
+   }
 
    s_uiErrorLast = uiErrorOld;
 }

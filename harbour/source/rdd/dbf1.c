@@ -901,7 +901,6 @@ static ERRCODE dbfGetValueFile( AREAP pArea, USHORT uiIndex, void * pFile )
    BYTE * szText, szEndChar;
    LPFIELD pField;
 
-   HB_SYMBOL_UNUSED( pFile );
    if( uiIndex > pArea->uiFieldCount )
       return FAILURE;
 
@@ -1388,8 +1387,6 @@ static ERRCODE dbfPutValueFile( AREAP pArea, USHORT uiIndex, void * pFile )
    BYTE * szText, szEndChar;
    ULONG lMemoBlock;
 
-   HB_SYMBOL_UNUSED( pFile );
-
    if( uiIndex > pArea->uiFieldCount )
       return FAILURE;
 
@@ -1411,8 +1408,6 @@ static ERRCODE dbfPutValueFile( AREAP pArea, USHORT uiIndex, void * pFile )
 
 static ERRCODE dbfRawLock( AREAP pArea, USHORT uiAction, ULONG lRecNo )
 {
-   HB_SYMBOL_UNUSED( lRecNo );
-
    if( SELF_GOCOLD( pArea ) == FAILURE )
       return FAILURE;
 

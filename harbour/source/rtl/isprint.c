@@ -32,7 +32,11 @@
  * their web site at http://www.gnu.org/).
  *
  */
+
+/* NOTE: The following #include "hbwinapi.h" must
+         be ahead of any other #include statements! */
 #include "hbwinapi.h"
+
 #include "extend.h"
 #include "filesys.h"
 
@@ -102,7 +106,7 @@ HARBOUR HB_ISPRINTER( void )
    if( ( hb_strnicmp( pszDOSPort, "LPT", 3 ) == 0 ||
          hb_strnicmp( pszDOSPort, "COM", 3 ) == 0 ) && uiPort > 0 )
    {
-      FHANDLE fhnd = hb_fsOpen( (BYTE *)pszDOSPort, FO_WRITE | FO_SHARED | FO_PRIVATE );
+      FHANDLE fhnd = hb_fsOpen( ( BYTE * ) pszDOSPort, FO_WRITE | FO_SHARED | FO_PRIVATE );
       bIsPrinter = ( fhnd != FS_ERROR );
       hb_fsClose( fhnd );
    }
