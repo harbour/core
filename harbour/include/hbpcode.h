@@ -186,8 +186,8 @@ typedef enum
    HB_P_TRUE,                  /* 120 pushes true on the virtual machine stack */
    HB_P_ZERO,                  /* 121 places a ZERO on the virtual machine stack */
    HB_P_ONE,                   /* 122 places a ONE on the virtual machine stack */
-   HB_P_MACROLIST,             /* 122 HB_P_MACROPUSHLIST enevelope start. */
-   HB_P_MACROLISTEND,          /* 123 HB_P_MACROPUSHLIST enevelope end. */
+   HB_P_MACROLIST,             /* 122 HB_P_MACROPUSHLIST envelope start. */
+   HB_P_MACROLISTEND,          /* 123 HB_P_MACROPUSHLIST envelope end. */
 /* NOTE: This have to be the last definition */
    HB_P_LAST_PCODE             /* 123 this defines the number of defined pcodes */
 } HB_PCODE;

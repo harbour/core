@@ -1,0 +1,58 @@
+This document attempts to describes the features separating Harbour
+from Clipper.
+
+/* TODO: @FunPointer(), and all other Harbour extensions. */
+
+Harbour Macro Compiler
+----------------------
+The Harbour Macro Compiler offers 2 additional layers of functionality
+controlled by means of HB_SETMACRO()* function, not available in Clipper.
+
+HB_SETMACRO( HB_SM_HARBOUR, TRUE ) will enable macro compilation and
+evaluation of complex expressions not supported by Clipper like:
+
+ - exp++, exp--, exp += exp, (exp), etc..
+ - Nested codeblocks.
+ - Expressions longer then 254 characters.
+
+HB_SETMACRO( HB_SM_XBASE, TRUE ) will enable macro compilation and
+evaluation of comma separated lists in all contexts where lists are
+acceptable by Clipper*, including:
+
+  - { &cMacro } // Literal array elements list.
+  - SomeArray[ &cMacro ] // Array index list.
+  - SomeFun( &cMacro ) // Arguments list.
+  - ( &cMacro ) // parenthesized list expression.
+
+*Clipper only supports list macros within codeblocks context.
+
+Both these extra layers are activated by default.
+
+* See also -k Compiler switch.
+
+LIST Command
+------------
+
+LIST &cMacro
+
+LIST in clipper [superficially] supports macros of lists expressions. No
+error will be produced, and all expressions in the list will be
+evaluated, but *only* the *last* expression will be displayed. This is
+not a documented in either the LIST or the Macro Operator, but is the
+de-facto behavior in all Clipper 5.x versions.
+
+Harbour instead will not only evaluate all of the expressions in
+such list macro, but will also display all such values. This default
+behavior may be disabled with HB_SETMACRO( HB_SM_XBASE, .F. )*
+
+* See also -k Compiler switch.
+
+INIT/EXIT and startup procedures
+--------------------------------
+
+In Clipper the startup procedure is always the first procedure/function
+of the main module, even if such symbol is an INIT or EXIT symbol. In
+such case the program will never execute the "main" symbol. In Harbour
+the first *non* INIT/EXIT symbol, will be executed as the main symbol
+after all INIT procedures have been executed.
+

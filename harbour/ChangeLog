@@ -1,3 +1,10 @@
+2001-08-07 01:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   + doc/en/clipper.txt
+     + New file describing Harbour features that are different from Clipper.
+
+   * include/hbpcode.h
+     * Corrected typo in comment /* Thanks to Dave for info. */
+
 2001-08-06 23:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.c
      ! Corrected assigment of HB_FS_FIRST scope, for proper execution of first non INIT/EXIT procedure in main module.
