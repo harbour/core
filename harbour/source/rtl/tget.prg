@@ -200,7 +200,6 @@ METHOD Display() CLASS TGet
    local nOldCursor  := SetCursor( 0 )
 
    @ ::Row, ::Col SAY ::buffer COLOR cClrInverse
-   SetPos( ::Row, ::Col + If( ::Pos != nil, ::Pos - 1, 0 ) )
    SetCursor( nOldCursor )
 
 return Self
@@ -415,6 +414,7 @@ METHOD overstrike(cChar) CLASS TGet
    endif
 
    ::Display()
+   SetPos( ::Row, ::Col + If( ::Pos != nil, ::Pos - 1, 0 ) )
 
 return Self
 
@@ -456,6 +456,7 @@ METHOD Insert(cChar) CLASS TGet
    endif
 
    ::Display()  // Kwon,Oh-Chul
+   SetPos( ::Row, ::Col + If( ::Pos != nil, ::Pos - 1, 0 ) )
 
 return Self
 
@@ -749,6 +750,7 @@ METHOD _Delete() CLASS TGet
 
    ::Assign()
    ::Display()
+   SetPos( ::Row, ::Col + If( ::Pos != nil, ::Pos - 1, 0 ) )
 
 return Self
 
@@ -791,8 +793,8 @@ function _GET_( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
 
    uVar := uVar // Suppress unused variable warning
 
-   oGet:bPreBlock := bWhen
-   oGet:bPostBlock := bValid
+   oGet:PreBlock := bWhen
+   oGet:PostBlock := bValid
 
    return oGet
 

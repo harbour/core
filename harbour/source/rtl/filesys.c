@@ -196,8 +196,6 @@ static USHORT s_uiErrorLast = 0;
    #define PATH_MAX 256
 #endif
 
-#define LARGE_MAX ( USHRT_MAX - 1L )
-
 extern int rename( const char *, const char * );
 
 /* Convert HARBOUR flags to IO subsystem flags */
@@ -519,7 +517,9 @@ USHORT  hb_fsWrite( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
    return uiWritten;
 }
 
-#if UINT_MAX != ULONG_MAX
+#if USHORT_MAX != ULONG_MAX
+
+#define LARGE_MAX ( USHRT_MAX - 1L )
 
 ULONG   hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 {

@@ -1,3 +1,20 @@
+19991007-02:57 GMT+1 Victor Szel <info@szelvesz.hu>
+   * include/filesys.h
+     source/rtl/filesys.c
+     ! UINT_MAX changed to USHORT_MAX
+   * source/tools/fileread.prg
+     + "s_" prefix added to STATIC variable name.
+   * source/rdd/dbcmd.c
+     ! RDDSETDEFAULT() now throws an error if a non-existing RDD name
+       is passed. Like in Clipper.
+     + TOFIX: added about directly modified hb_parc() buffers.
+   * source/rtl/tget.prg
+     ! Mistyped object variable names corrected.
+     ! :display now leaves to cursor at a Clipper compatible position.
+       Cursor is positioned explicitly after internal :display calls.
+   * source/rtl/tgetlist.prg
+     + missing DateMsg() method added.
+
 19991006-20:20 EDT Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      * changed mainstd.c to main.c

@@ -125,33 +125,33 @@
  */
 
 FUNCTION TFileRead()
-STATIC oClass
+STATIC s_oClass
 
-   IF oClass == NIL
-      oClass := TClass():New( "TFile" )  // New class
-      oClass:AddClassData( "cFile" )     // The filename
-      oClass:AddClassData( "nHan" )      // The open file handle
-      oClass:AddClassData( "lEOF" )      // The end of file reached flag
-      oClass:AddClassData( "nError" )    // The current file error code
-      oClass:AddClassData( "nLastOp" )   // The last operation done (for error messages)
-      oClass:AddClassData( "cBuffer" )   // The readahead buffer
-      oClass:AddClassData( "nReadSize" ) // How much to add to the readahead buffer on
+   IF s_oClass == NIL
+      s_oClass := TClass():New( "TFile" )  // New class
+      s_oClass:AddClassData( "cFile" )     // The filename
+      s_oClass:AddClassData( "nHan" )      // The open file handle
+      s_oClass:AddClassData( "lEOF" )      // The end of file reached flag
+      s_oClass:AddClassData( "nError" )    // The current file error code
+      s_oClass:AddClassData( "nLastOp" )   // The last operation done (for error messages)
+      s_oClass:AddClassData( "cBuffer" )   // The readahead buffer
+      s_oClass:AddClassData( "nReadSize" ) // How much to add to the readahead buffer on
                                          // each read from the file
 
-      oClass:AddMethod( "New",        @f_new() )       // Create a new class instance
-      oClass:AddMethod( "Open",       @f_open() )      // Open the file for reading
-      oClass:AddMethod( "Close",      @f_close() )     // Close the file when done
-      oClass:AddMethod( "ReadLine",   @f_read() )      // Read a line from the file
-      oClass:AddMethod( "Name",       @f_name() )      // Retunrs the file name
-      oClass:AddMethod( "IsOpen",     @f_is_open() )   // Returns .T. if file is open
-      oClass:AddMethod( "MoreToRead", @f_more() )      // Returns .T. if more to be read
-      oClass:AddMethod( "Error",      @f_error() )     // Returns .T. if error occurred
-      oClass:AddMethod( "ErrorNo",    @f_error_no() )  // Returns current error code
-      oClass:AddMethod( "ErrorMsg",   @f_error_msg() ) // Returns formatted error message
-      oClass:Create()
+      s_oClass:AddMethod( "New",        @f_new() )       // Create a new class instance
+      s_oClass:AddMethod( "Open",       @f_open() )      // Open the file for reading
+      s_oClass:AddMethod( "Close",      @f_close() )     // Close the file when done
+      s_oClass:AddMethod( "ReadLine",   @f_read() )      // Read a line from the file
+      s_oClass:AddMethod( "Name",       @f_name() )      // Retunrs the file name
+      s_oClass:AddMethod( "IsOpen",     @f_is_open() )   // Returns .T. if file is open
+      s_oClass:AddMethod( "MoreToRead", @f_more() )      // Returns .T. if more to be read
+      s_oClass:AddMethod( "Error",      @f_error() )     // Returns .T. if error occurred
+      s_oClass:AddMethod( "ErrorNo",    @f_error_no() )  // Returns current error code
+      s_oClass:AddMethod( "ErrorMsg",   @f_error_msg() ) // Returns formatted error message
+      s_oClass:Create()
    END IF
 
-RETURN oClass:Instance()
+RETURN s_oClass:Instance()
 
 STATIC FUNCTION f_new( cFile, nSize )
 LOCAL oSelf := Qself()

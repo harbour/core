@@ -96,7 +96,7 @@ extern void     hb_fsSetDevMode ( FHANDLE hFileHandle, USHORT uiDevMode );
 extern void     hb_fsSetError   ( USHORT uiError );
 extern USHORT   hb_fsWrite      ( FHANDLE hFileHandle, BYTE * pBuff, USHORT ulCount );
 
-#if UINT_MAX == ULONG_MAX
+#if USHORT_MAX == ULONG_MAX
    /* NOTE: hb_fsRead/hb_fsWrite can work with ULONG data blocks */
    #define hb_fsReadLarge   hb_fsRead
    #define hb_fsWriteLarge  hb_fsWrite

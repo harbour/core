@@ -103,6 +103,7 @@ CLASS TGetList
    METHOD SetFormat( bFormat )
    METHOD KillRead()
    METHOD GetActive( oGet )
+   METHOD DateMsg()
    METHOD ShowScoreBoard()
    METHOD ReadVar( cNewVarName )
    METHOD ReadExit( lNew ) INLINE Set( _SET_EXIT, lNew )
@@ -482,6 +483,31 @@ METHOD ShowScoreboard() CLASS TGetList
       DispOut( If( Set( _SET_INSERT ), "Ins", "   " ) )
       SetPos( nRow, nCol )
       SetCursor( nOldCursor )
+   endif
+
+return nil
+
+METHOD DateMsg() CLASS TGetList
+
+   local nRow
+   local nCol
+
+   if Set( _SET_SCOREBOARD )
+
+      nRow := Row()
+      nCol := Col()
+
+      SetPos( SCORE_ROW, SCORE_COL )
+      DispOut( "Invalid date" )
+      SetPos( nRow, nCol )
+
+      do while NextKey() == 0
+      enddo
+
+      SetPos( SCORE_ROW, SCORE_COL )
+      DispOut( Space( Len( "Invalid date" ) ) )
+      SetPos( nRow, nCol )
+
    endif
 
 return nil
