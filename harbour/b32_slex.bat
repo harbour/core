@@ -10,6 +10,10 @@ if "%1" == "CLEAN" goto CLEAN
 
    make -fhb_slex.bc %1 %2 %3 > make_b32.log
    if errorlevel 1 goto BUILD_ERR
+   cd contrib\libmisc
+   make -fmakefile.bc %1 %2 %3 >> make_b32.log
+   if errorlevel 1 goto BUILD_ERR
+    cd..\..
 
 :BUILD_OK
 

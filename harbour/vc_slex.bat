@@ -10,6 +10,10 @@ if "%1" == "CLEAN" goto CLEAN
 
    nmake /f hb_slex.vc C_USR="-D_MSC_VER=1010" %1 %2 %3 > make_vc.log
    if errorlevel 1 goto BUILD_ERR
+   cd contrib\libmisc
+   nmake /f makefile.vc C_USR="-D_MSC_VER=1010" %1 %2 %3 >> make_vc.log
+   if errorlevel 1 goto BUILD_ERR
+    cd..\..
 
 :BUILD_OK
 

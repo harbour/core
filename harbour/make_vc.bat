@@ -10,6 +10,10 @@ if "%1" == "CLEAN" goto CLEAN
 
    nmake /f makefile.vc %1 %2 %3 > make_vc.log
    if errorlevel 1 goto BUILD_ERR
+   cd contrib\libmisc
+   nmake /f makefile.vc %1 %2 %3 >> make_vc.log
+   if errorlevel 1 goto BUILD_ERR
+    cd..\..
 
 :BUILD_OK
 

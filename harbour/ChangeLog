@@ -1,3 +1,12 @@
+2001-05-16 08:00 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   *make_b32.bat
+    b32_slex.bat
+    make_vc.bat
+    vc_slex.bat
+      + Added Contrib\libmisc to default build
+   bin\bld.bat
+      + Added libmisc.lib to command lines of BCC and MSVC to fix undefined
+        simbols , when compiling tests that require this library
 2001-05-16 10:45 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * include/hbrddntx.h
    * source/rddntx/dbfntx1.c
