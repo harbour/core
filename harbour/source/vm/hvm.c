@@ -198,6 +198,8 @@ extern void hb_mthAddTime( void *, ULONG ); /* profiler from classes.c */
 
 BOOL hb_bProfiler = FALSE; /* profiler status is off */
 BOOL hb_bTracePrgCalls = FALSE; /* prg tracing is off */
+ULONG hb_ulOpcodesCalls[ HB_P_LAST_PCODE ]; /* array to profile opcodes calls */
+ULONG hb_ulOpcodesTime[ HB_P_LAST_PCODE ]; /* array to profile opcodes consumed time */
 
 /* virtual machine state */
 
@@ -286,6 +288,17 @@ void HB_EXPORT hb_vmInit( BOOL bStartMainProc )
 
    /* Check for some internal switches */
    hb_cmdargProcessVM();
+
+   /* Initialize opcodes profiler support arrays */
+   {
+      ULONG ul;
+
+      for( ul = 0; ul < HB_P_LAST_PCODE; ul++ )
+      {
+         hb_ulOpcodesCalls[ ul ] = 0;
+         hb_ulOpcodesTime[ ul ] = 0;
+      }
+   }
 
    /* Call functions that initializes static variables
     * Static variables have to be initialized before any INIT functions
@@ -403,6 +416,8 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
    BOOL bCanRecover = FALSE;
    ULONG ulPrivateBase;
    LONG lOffset;
+   ULONG ulLastOpcode = 0; /* opcodes profiler support */
+   ULONG ulPastClock = 0;  /* opcodes profiler support */
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmExecute(%p, %p)", pCode, pSymbols));
 
@@ -414,8 +429,21 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
    /* NOTE: Initialization with 0 is needed to avoid GCC -O2 warning */
    ulPrivateBase = pSymbols ? hb_memvarGetPrivatesBase() : 0;
 
+   if( hb_bProfiler )
+      ulPastClock = ( ULONG ) clock();
+
    while( pCode[ w ] != HB_P_ENDPROC )
    {
+      if( hb_bProfiler )
+      {
+         ULONG ulActualClock = ( ULONG ) clock();
+
+         hb_ulOpcodesTime[ ulLastOpcode ] += ( ulActualClock - ulPastClock );
+         ulPastClock = ulActualClock;
+         ulLastOpcode = pCode[ w ];
+         hb_ulOpcodesCalls[ ulLastOpcode ]++;
+      }
+
       switch( pCode[ w ] )
       {
          /* Operators ( mathematical / character / misc ) */
@@ -4800,5 +4828,27 @@ void HB_EXPORT hb_vmProcessDllSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleS
          else
              hb_dynsymNew( ( pModuleSymbols + ui ) );
       }
+   }
+}
+
+HB_FUNC( __OPCOUNT ) /* it returns the total amount of opcodes */
+{
+   hb_retnl( HB_P_LAST_PCODE - 1 );
+}
+
+HB_FUNC( __OPGETPRF ) /* profiler: It returns an array with an opcode called and
+                         consumed times { nTimes, nTime },
+                         given the opcode index */
+{
+   ULONG ulOpcode = hb_parnl( 1 );
+
+   hb_reta( 2 );
+   hb_stornl( 0, -1, 1 );
+   hb_stornl( 0, -1, 2 );
+
+   if( ulOpcode < HB_P_LAST_PCODE )
+   {
+      hb_stornl( hb_ulOpcodesCalls[ ulOpcode ], -1, 1 );
+      hb_stornl( hb_ulOpcodesTime[ ulOpcode ],  -1, 2 );
    }
 }
