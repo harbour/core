@@ -7,6 +7,9 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-12-07 21:45 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
+  * source/rtl/menuto.prg
+    ! Fixed Color Parameters when only One color is passed
 
 2002-12-02 15:30 UTC-0500 David G. Holm <dholm@jsd-llc.com>
   * config/linux/global.cf

@@ -63,6 +63,8 @@ function __MenuTo( bBlock, cVariable )
 
    local nPointer
    Local aColor
+   local cBackColor
+   local cFrontColor
 
    // Detect if a memvar was passed
 
@@ -142,21 +144,24 @@ function __MenuTo( bBlock, cVariable )
 
          if s_aLevel[ s_nPointer-1,n,5] <> nil
              aColor := COLORARRAY( s_aLevel[ s_nPointer-1,n,5] )
+             cFrontColor := IF( EMPTY( aColor[ 1 ] ) , NIL , aColor[ 1 ] )
+             cBackColor  := IF( LEN( aColor ) > 1 , aColor[2], NIL )
+
          endif
 
          if Set( _SET_INTENSITY )
-            if( aColor <> Nil , aColor[ 2 ] , ColorSelect( CLR_ENHANCED ) )
+            if(cBackColor<> Nil ,cBackColor, ColorSelect( CLR_ENHANCED ))
          endif
 
          // highlight the prompt
          DispOutAt( s_aLevel[ nPointer - 1, n, 1 ],;
                     s_aLevel[ nPointer - 1, n, 2 ],;
                     s_aLevel[ nPointer - 1, n, 3 ],;
-                    if(aColor <> NIL, acolor[ 2 ], NIL ) )
+                    if(cBackColor<> nil,cBackColor,nil))
 
          if Set( _SET_INTENSITY )
             //ColorSelect( CLR_STANDARD )
-            if( aColor<> Nil , aColor[ 1 ] , ColorSelect( CLR_STANDARD ) )
+              if(cFrontColor <> nil ,cFrontColor, ColorSelect( CLR_STANDARD ))
          endif
 
          if lExit
@@ -228,7 +233,7 @@ function __MenuTo( bBlock, cVariable )
             DispOutAt( s_aLevel[ nPointer - 1, q, 1 ],;
                        s_aLevel[ nPointer - 1, q, 2 ],;
                        s_aLevel[ nPointer - 1, q, 3 ],;
-                       if( aColor <> NIL , aColor[ 1 ] , nil ) )
+                       if( cFrontColor <> nil , cFrontColor , nil ) )
          endif
 
       enddo
