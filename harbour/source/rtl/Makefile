@@ -29,6 +29,7 @@ C_SOURCES=\
         set.c \
         setcolor.c \
         strings.c \
+        stringsx.c \
         transfrm.c \
         \
         gtxxx.c \
@@ -42,9 +43,12 @@ PRG_SOURCES=\
         devoutp.prg \
         error.prg \
         errorsys.prg \
+	menu.prg \
         objfunc.prg \
         setkey.prg \
         tclass.prg \
+	tget.prg \
+	tgetlist.prg \
 
 LIB=rtl
 

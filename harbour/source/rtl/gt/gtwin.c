@@ -256,7 +256,7 @@ void hb_gt_PutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
         {
           *(pstr + i) = *srce;
           srce++;
-          *(pwattr + i) = (WORD)((unsigned char)*srce)&0xff | 0x8000;
+          *(pwattr + i) = ((WORD)((unsigned char)*srce)&0xff) | 0x8000;
           *pwattr |= 0x8000;
           srce++;
         }

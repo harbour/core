@@ -780,7 +780,7 @@ void Do( WORD wParams )
 
       if( ! pFunc )
       {
-         printf( "error: message %s not implemented for class %s in line %i\n",
+         printf( "error: message %s not implemented for class %s in line %li\n",
          pSym->szName, hb_GetClassName( pSelf ), lLineNo );
          exit( 1 );
       }

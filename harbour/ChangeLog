@@ -1,3 +1,16 @@
+Wed Aug 04 11:00:07 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* source/tools/stringsx.c: 
+	* source/rtl/Makefile: 
+	* source/rtl/stringsx.c: 
+	Moved STRTOKEN from tools/ to rtl/, even though it is not a 100%
+	Clipper standard function. The reason is because we will probably
+	be using this function a lot (such as Antonio did in TGet.prg).
+	
+	* source/rtl/gt/gtwin.c: 
+	* source/vm/hvm.c: 
+	Fixed two minor warnings.
+
 Wed Aug 04 10:12:24 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* config/win32/gcc.cf: 
