@@ -3569,8 +3569,8 @@ static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName, BOOL creat
   pInfo.abName = (BYTE *) szDbfName;
   strcpy( ( char * ) pInfo.abName, szFileName );
   pInfo.atomAlias = ( BYTE * ) "__TMPAREA";
-  pInfo.fShared = FALSE;
-  pInfo.fReadonly = FALSE;
+  pInfo.fShared = (createIt)? FALSE : !hb_set.HB_SET_EXCLUSIVE;
+  pInfo.fReadonly = (createIt)? FALSE : TRUE;
 
 /* get the new area node */
     pAreaNode =  hb_rddNewAreaNode( pRDDNode, uiRddID );
@@ -3673,7 +3673,10 @@ static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName, BOOL creat
     SELF_RELEASE( ( AREAP ) pAreaNode->pArea );
     hb_xfree( pInfo.abName );
     hb_xfree( pAreaNode );
-    hb_errRT_DBCMD( EG_OPEN, 0, NULL, "DBAPP" ); // Could not open it
+    if( createIt )
+       hb_errRT_DBCMD( EG_OPEN, 0, NULL, "DBAPP" ); // Could not open it
+    else
+       s_bNetError = TRUE;     /* Temp fix! What about other types of errors? */
     return NULL;
   }
   hb_xfree( szDbfName );
@@ -3756,7 +3759,11 @@ static ERRCODE rddMoveRecords( char *cAreaFrom, char *cAreaTo, PHB_ITEM pFields,
 
   if ( cAreaFrom )     /*it's an APPEND FROM*/
   {                    /*make it current*/
-    pAreaRelease = s_pCurrArea = GetTheOtherArea( szDriver, cAreaFrom, FALSE, NULL );
+    pAreaRelease = GetTheOtherArea( szDriver, cAreaFrom, FALSE, NULL );
+    if( pAreaRelease )
+       s_pCurrArea = pAreaRelease;
+    else
+       return FAILURE;
     pAreaFrom =  (AREAP) pAreaRelease->pArea;
   }
   else

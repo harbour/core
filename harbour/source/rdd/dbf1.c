@@ -1739,6 +1739,7 @@ ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    if( ( ( PHB_DYNS ) pArea->atomAlias )->hArea )
    {
       hb_errRT_DBCMD( EG_DUPALIAS, EDBCMD_DUPALIAS, NULL, ( char * ) pOpenInfo->atomAlias );
+      hb_xfree( pArea->szDataFileName );
       return FAILURE;
    }
 
@@ -1793,7 +1794,10 @@ ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    /* Exit if error */
    if( pArea->hDataFile == FS_ERROR )
+   {
+      hb_xfree( pArea->szDataFileName );
       return FAILURE;
+   }
 
    /* Read file header and exit if error */
    if( SELF_READDBHEADER( ( AREAP ) pArea ) == FAILURE )
