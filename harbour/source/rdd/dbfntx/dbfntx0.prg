@@ -24,8 +24,7 @@
 
 #include "rddsys.ch"
 
-//ANNOUNCE DBFNTX
-proc DBFNTX; return
+ANNOUNCE DBFNTX
 
 init procedure DBFNTXInit
 

@@ -24,8 +24,7 @@
 
 #include "rddsys.ch"
 
-//ANNOUNCE SDF
-proc SDF; return
+ANNOUNCE SDF
 
 init procedure SDFInit
 

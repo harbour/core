@@ -24,8 +24,7 @@
 
 #include "rddsys.ch"
 
-//ANNOUNCE DELIM
-proc DELIM; return
+ANNOUNCE DELIM
 
 init procedure DELIMInit
 

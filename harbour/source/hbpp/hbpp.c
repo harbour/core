@@ -63,8 +63,9 @@ int ParseExpression( char*, char* );            /* Parsing a line ( without prep
 int WorkDefine ( char**, char**, DEFINES *, int ); /* Replace fragment of code with a #defined result text */
 void WorkPseudoF ( char**, char**, DEFINES*);   /* Replace pseudofunction with a #defined result text */
 int WorkCommand ( char*, char*, char*, int);
-int CommandStuff ( char *, char *, char *, int*, int );
 int WorkTranslate ( char*, char*, char*, int, int* );
+int CommandStuff ( char *, char *, char *, int*, int );
+int RemoveSlash( char * );
 int WorkMarkers( char**, char**, char*, int*, int );
 int getExpReal ( char *, char **, int, int );
 int isExpres ( char* );
@@ -650,7 +651,7 @@ int ParseExpression( char* sLine, char* sOutLine )
           }
           SKIPTABSPACES( ptri );
 
-          if ( *ptri != ':' && *ptri != '=' && (ISNAME(*ptri) || *(ptri+1) != '=')
+          if ( *ptri != '=' && (ISNAME(*ptri) || *(ptri+1) != '=')
               && (ndef=ComSearch(sToken,0)) >= 0 )
           {
             ptro = sOutLine;
@@ -830,7 +831,6 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
   int nbr = 0, endTranslation = FALSE;
   char *lastopti[2];
   char *ptri = inputLine, *ptr;
-  int State = STATE_INIT, lDirective = FALSE;
 
   SKIPTABSPACES( ptri );
   if ( ptrmp == NULL ) { if ( *ptri != '\0' ) return -1; }
@@ -911,7 +911,17 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
     while ( *ptrmp != '\0' );
   }
 
-  ptr = ptro;    /* Removing '\' from result string */
+  *(ptro + *lenres) = '\0';
+  *lenres = RemoveSlash( ptro );   /* Removing '\' from result string */
+  if ( com_or_tra ) return 1; else return (ptri-inputLine);
+}
+
+int RemoveSlash( char *stroka )
+{
+  char *ptr = stroka;
+  int State = STATE_INIT, lDirective = FALSE;
+  int lenres = strolen( stroka );
+
   while( *ptr != '\0' )
   {
     switch( State ) {
@@ -932,8 +942,8 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
                *(ptr+1) == '{' || *(ptr+1) == '}' || *(ptr+1) == '<' ||
                *(ptr+1) == '>' ) )
           {
-            pp_Stuff ( "", ptr, 0, 1, *lenres - (ptr - ptro) );
-            (*lenres)--;
+            pp_Stuff ( "", ptr, 0, 1, lenres - (ptr - stroka) );
+            lenres--;
           }
         }
         break;
@@ -946,7 +956,7 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
     }
     ptr++;
   }
-  if ( com_or_tra ) return 1; else return (ptri-inputLine);
+  return lenres;
 }
 
 int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, int nbr )

@@ -24,8 +24,7 @@
 
 // Standard Harbour RDDSys system
 
-//ANNOUNCE RDDSYS
-proc RDDSYS; return
+ANNOUNCE RDDSYS
 
 init procedure RddInit
 

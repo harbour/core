@@ -1,3 +1,13 @@
+19990731-17:51 Alexander Kresin
+  * source\hbpp\hbpp.c
+    * Fixed problem with @ ::nTOP,... SAY ...
+  * source\rdd\rddsys.prg
+  * source\rdd\sdf0.prg
+  * source\rdd\dbf0.prg
+  * source\rdd\delim0.prg
+  * source\rdd\dbfntx\dbfntx0.prg
+     * Uncommented 'ANNOUNCE' - now it can be used
+  
 19990731-14:44 CET Victor Szel <info@szelvesz.hu>
    ! source/rtl/alert.prg - Handling of "*" in color string is
      made compatible with Clipper.
@@ -17,7 +27,7 @@
     * added support of letters, prefixed by '\' in rezult patterns
     * some other improvements that I don't remember already :)
     + added 'ANNOUNCE' keyword
-    
+
 19990731-11:40 CET Patrick Mast <harbour@PatrickMast.com>
    * updated build40.bat and makefile.b40
 

@@ -24,8 +24,7 @@
 
 #include "rddsys.ch"
 
-//ANNOUNCE DBF
-proc DBF; return
+ANNOUNCE DBF
 
 init procedure DBFInit
 
