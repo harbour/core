@@ -86,7 +86,7 @@ static void do_pos1 (int iSwitch)
 
     unsigned char *pcString;
     size_t sStrLen;
-    unsigned char *puc, ucChar1, ucChar2;
+    unsigned char *puc, ucChar1 = ' ', ucChar2 = ' ';
     int iMode;
     size_t sIgnore;
     int iParamShift = 0;
@@ -132,7 +132,7 @@ static void do_pos1 (int iSwitch)
 
     for (puc = pcString+sIgnore; puc < pcString+sStrLen; puc++)
     {
-      int iDoRet;
+      int iDoRet = 0;
       switch (iSwitch)
       {
         case DO_POS1_POSALPHA:
