@@ -97,6 +97,7 @@ struct mv_PUBLIC_var_info
 
 static void hb_memvarCreateFromDynSymbol( PHB_DYNS, BYTE, PHB_ITEM );
 static void hb_memvarAddPrivate( PHB_DYNS );
+static void hb_memvarReleasePublic( PHB_ITEM pMemVar );
 static HB_DYNS_PTR hb_memvarFindSymbol( HB_ITEM_PTR );
 
 void hb_memvarsInit( void )
@@ -717,32 +718,25 @@ static void hb_memvarRelease( HB_ITEM_PTR pMemvar )
       /* Find the variable with a requested name that is currently visible
        * Start from the top of the stack.
        */
-      if( ulBase )
+      while( ulBase > 0 )
       {
-         while( ulBase > 0 )
-         {
-            --ulBase;
-            pDynVar = s_privateStack[ ulBase ];
+         pDynVar = s_privateStack[ --ulBase ];
 
-            /* reset current value to NIL - the overriden variables will be
-            * visible after exit from current procedure
-            */
-            if( pDynVar->hMemvar )
+         /* reset current value to NIL - the overriden variables will be
+          * visible after exit from current procedure
+          */
+         if( pDynVar->hMemvar )
+         {
+            if( hb_stricmp( pDynVar->pSymbol->szName, pMemvar->item.asString.value ) == 0 )
             {
-               if( hb_stricmp( pDynVar->pSymbol->szName, pMemvar->item.asString.value ) == 0 )
-               {
-                  hb_itemClear( s_globalTable[ pDynVar->hMemvar ].pVarItem );
-                  ulBase = 0;
-               }
+               hb_itemClear( s_globalTable[ pDynVar->hMemvar ].pVarItem );
+               return;
             }
          }
       }
-      else
-      {
-         pDynVar = hb_dynsymGet( pMemvar->item.asString.value );
-         if( pDynVar && pDynVar->hMemvar )
-            hb_itemClear( s_globalTable[ pDynVar->hMemvar ].pVarItem );
-      }
+      /* No match found for PRIVATEs - try PUBLICs.
+       */
+      hb_memvarReleasePublic( pMemvar );
    }
    else
       hb_errRT_BASE( EG_ARG, 3008, NULL, "RELEASE", 1, hb_paramError( 1 ) );
@@ -861,6 +855,34 @@ static HB_DYNS_FUNC( hb_memvarCountPublics )
       ( * ( ( int * )Cargo ) )++;
 
    return TRUE;
+}
+
+/* Checks passed dynamic symbol if it is a PUBLIC variable and
+ * released it eventually stoping the searching
+ */
+static HB_DYNS_FUNC( hb_memvarClearPublic )
+{
+   if( hb_memvarScopeGet( pDynSymbol ) == HB_MV_PUBLIC &&
+       hb_stricmp( pDynSymbol->pSymbol->szName, (char *) Cargo ) == 0 )
+   {
+      s_globalTable[ pDynSymbol->hMemvar ].counter = 1;
+      hb_memvarValueDecRef( pDynSymbol->hMemvar );
+      pDynSymbol->hMemvar = 0;
+      return FALSE;
+   }
+
+   return TRUE;
+}
+
+/* find and release if exists given public variable
+ */
+static void hb_memvarReleasePublic( PHB_ITEM pMemVar )
+{
+   char *sPublic = pMemVar->item.asString.value;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarReleasePublic(%p)", pMemVar ));
+
+   hb_dynsymEval( hb_memvarClearPublic, ( void * ) sPublic );
 }
 
 /* Count the number of variables with given scope

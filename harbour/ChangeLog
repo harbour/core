@@ -8,6 +8,40 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-02-01 20:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/memvars.c
+    * fixed public releasing - fix borrowed from xHarbour
+      Ryszard please check if it doesn't cause any bad side effects.
+      The following code demonstrate the problem.
+
+      ===========================================
+         memvar x, y, z
+         proc main()
+         local l := { || x }
+         public x := "QWE"
+         private z := "asd"
+         Errorblock( { | oError | errHandler( oError ) } )
+         ? eval( l )
+         test()
+         ? x
+         ? z
+         ? eval( l )
+         return
+
+         proc test()
+         private y := "xyz"
+         release x, y, z
+         ? x
+         ? y
+         ? z
+         return
+
+         func errHandler( oErr )
+         local varName := oErr:operation()
+         public &varName := oErr:description() + ": " + varName
+         return .t.
+      ===========================================
+
 2005-01-31 20:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/dbf1.c
     * fixed possible GPF I introduced with last update.
