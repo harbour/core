@@ -1,3 +1,10 @@
+19990924-23:10 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/vm/dynsym.c
+    * corrected return value of HB___DYNSGETINDEX()
+      it was returning a cast of PHB_DYNS instead of the index.
+      To accomodate this, added s_uiClosestDynSym = uiMiddle before
+      the return in hb_dynsymFind.
+
 19990925-03:00 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/runner/stdalone/external.prg

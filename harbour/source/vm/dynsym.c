@@ -201,6 +201,7 @@ PHB_DYNS hb_dynsymFind( char * szName )
          switch( hb_strgreater( s_pDynItems[ uiMiddle ].pDynSym->pSymbol->szName, szName ) )
          {
             case HB_STRGREATER_EQUAL:  /* they are equals */
+                 s_uiClosestDynSym = uiMiddle;
                  return s_pDynItems[ uiMiddle ].pDynSym;
 
             case HB_STRGREATER_LEFT:  /* pMiddle is greater */
@@ -252,7 +253,7 @@ void hb_dynsymRelease( void )
 
 HARBOUR HB___DYNSCOUNT( void ) /* How much symbols do we have: dsCount = __dynsymCount() */
 {
-   hb_retnl( s_uiDynSymbols );
+   hb_retnl( ( LONG ) s_uiDynSymbols );
 }
 
 HARBOUR HB___DYNSGETNAME( void ) /* Get name of symbol: cSymbol = __dynsymGetName( dsIndex ) */
@@ -262,6 +263,11 @@ HARBOUR HB___DYNSGETNAME( void ) /* Get name of symbol: cSymbol = __dynsymGetNam
 
 HARBOUR HB___DYNSGETINDEX( void ) /* Gimme index number of symbol: dsIndex = __dynsymGetIndex( cSymbol ) */
 {
-   hb_retnl( ( LONG ) hb_dynsymFindName( hb_parc( 1 ) ) );
-}
+   PHB_DYNS pDynSym = hb_dynsymFindName( hb_parc( 1 ) );
 
+   if( pDynSym )
+      hb_retnl( ( LONG ) ( s_uiClosestDynSym + 1 ) );
+   else
+      hb_retnl( 0L );
+
+}
