@@ -191,14 +191,13 @@ STATIC s_acFlowType := {},  s_nFlowId := 0
 #endif
 
 static s_lRunLoaded := .F., s_lClsLoaded := .F., s_lFWLoaded := .F.
-static s_sBlock
 
 //--------------------------------------------------------------//
 
 PROCEDURE PP_Main( sSource, p1, p2, p3, p4, p5, p6, p7, p8, p9 )
 
    LOCAL sIncludePath, nNext, sPath, sSwitch := ""
-   LOCAL nAt, sParams
+   LOCAL nAt, sParams, sPPOExt, aParams
 
    IF p1 != NIL
       sSwitch += p1
@@ -289,6 +288,9 @@ PROCEDURE PP_Main( sSource, p1, p2, p3, p4, p5, p6, p7, p8, p9 )
       IF "-DP" $ sSwitch
          bDbgPPO := .T.
       ENDIF
+      IF "-P" $ sSwitch
+         sPPOExt := ".pp$"
+      ENDIF
    ENDIF
 
    IF bLoadRules
@@ -325,17 +327,17 @@ PROCEDURE PP_Main( sSource, p1, p2, p3, p4, p5, p6, p7, p8, p9 )
             sSource := Left( sSource, nAt - 1 )
 
             WHILE ( nAt := At( " ", sParams ) ) > 0
-               aAdd( s_aParams, Left( sParams, nAt - 1 ) )
+               aAdd( aParams, Left( sParams, nAt - 1 ) )
                sParams := LTrim( SubStr( sParams, nAt + 1 ) )
             ENDDO
             IF ! sParams == ""
-               aAdd( s_aParams, sParams )
+               aAdd( aParams, sParams )
             ENDIF
          ENDIF
 
-         PP_Run( sSource )
+         PP_Run( sSource, aParams, sPPOExt )
       ELSE
-         PP_PreProFile( sSource )
+         PP_PreProFile( sSource, sPPOExt )
       ENDIF
    ELSE
       nRow := 1
@@ -1085,7 +1087,6 @@ FUNCTION PP_CompileLine( sPPed, nLine, aProcedures, aInitExit, nProcId )
                ELSE
                   //? nLine, nProcId, sBlock
                   //TraceLog( sBlock )
-                  s_sBlock := sBlock
                   aAdd( aProcedures[ nProcId ][2], { 0, &( "{||" + sBlock + "}" ), nLine } )
                ENDIF
             ENDIF
@@ -1417,7 +1418,6 @@ FUNCTION PP_CompileLine( sPPed, nLine, aProcedures, aInitExit, nProcId )
             ELSE
                //? nLine, nProcId, sBlock
                //TraceLog( sBlock )
-               s_sBlock := sBlock
                aAdd( aProcedures[ nProcId ][2], { 0, &( "{||" + sBlock + "}" ), nLine } )
             ENDIF
          ENDIF
@@ -1608,15 +1608,14 @@ RETURN
 
 //--------------------------------------------------------------//
 
-PROCEDURE PP_Run( cFile, aParams )
+PROCEDURE PP_Run( cFile, aParams, sPPOExt, bBlanks )
 
    LOCAL nBaseProc := s_nProcId, sPresetModule := s_sModule, nProc
 
-   IF ValType( aParams ) == 'A'
-      s_aParams := aParams
-   ENDIF
-
    //PP_PreProFile( "rp_run.ch" )
+   IF bBlanks == NIL
+      bBlanks := .T.
+   ENDIF
 
    IF ! s_lRunLoaded
       s_lRunLoaded := .T.
@@ -1633,36 +1632,12 @@ PROCEDURE PP_Run( cFile, aParams )
       ENDIF
    ENDIF
 
-   ErrorBlock( {|oErr| RP_Comp_Err( oErr ) } )
-
    s_sModule := cFile
    bCompile  := .T.
-
-   PP_PreProFile( cFile )
-
+   PP_PreProFile( cFile, sPPOExt, bBlanks )
    bCompile  := .F.
 
-   ErrorBlock( {|oErr| RP_Run_Err( oErr, s_aProcedures, s_sModule ) } )
-
-   FOR nProc := 1 TO Len( s_aInitExit[1] )
-      PP_ExecProcedure( s_aProcedures[ s_aInitExit[1][nProc] ] )
-   NEXT
-   aSize( s_aInitExit[1], 0 )
-
-   FOR nProc := ( nBaseProc + 1 ) TO s_nProcId
-      IF aScan( s_aInitExit[1], nProc ) == 0 .AND. aScan( s_aInitExit[2], nProc ) == 0
-         PP_ExecProcedure( s_aProcedures[nProc] )
-         EXIT
-      ENDIF
-   NEXT
-
-   IF nBaseProc == 0
-      FOR nProc := 1 TO Len( s_aInitExit[2] )
-         PP_ExecProcedure( s_aProcedures[ s_aInitExit[2][nProc] ] )
-      NEXT
-      aSize( s_aProcedures, 0 )
-      aSize( s_aInitExit[2], 0 )
-   ENDIF
+   PP_Exec( s_aProcedures, s_aInitExit, s_nProcId, aParams )
 
    #ifdef __CLIPPER__
       Memory(-1)
@@ -1735,7 +1710,7 @@ PROCEDURE RP_Dot_Err( oErr )
 
 //--------------------------------------------------------------//
 
-PROCEDURE RP_Comp_Err( oErr )
+PROCEDURE RP_Comp_Err( oErr, sLine, nLine )
 
    LOCAL Counter, xArg, sArgs := ""
 
@@ -1778,9 +1753,8 @@ PROCEDURE RP_Comp_Err( oErr )
       sArgs := Left( sArgs, Len( sArgs ) -2 )
    ENDIF
 
-   TraceLog( "Sorry, could not compile: '" + s_sBlock +"' Description: " + oErr:Description + sArgs + " " + ProcName(2) + '[' + Str( ProcLine(2) ) + ']')
-
-   Alert( "Sorry, could not compile: " + oErr:Description + sArgs + " " + ProcName(2) + '[' + Str( ProcLine(2) ) + ']')
+   TraceLog( "Line: " + Str( nLine, 4 ) + " could not compile: '" + sLine + ";" + oErr:Description + sArgs + " " + ProcName(2) + '[' + Str( ProcLine(2) ) + ']')
+   Alert( "Line: " + Str( nLine, 4 ) + " could not compile: '" + sLine + ";" + oErr:Description + sArgs + " " + ProcName(2) + '[' + Str( ProcLine(2) ) + ']')
 
    BREAK
 
@@ -2076,11 +2050,11 @@ RETURN nIf
 
 //------------------------------- *** END - RP DOT Functions *** -------------------------------//
 
-FUNCTION PP_PreProFile( sSource )
+FUNCTION PP_PreProFile( sSource, sPPOExt, bBlanks )
 
    LOCAL hSource, sBuffer, sLine, nPosition, sExt, cPrev
    LOCAL nLen, nMaxPos, cChar := '', nClose, nBase, nNext, nLine := 0
-   LOCAL sRight, nPath := 0, nPaths := Len( s_asPaths ), nNewLine, bBlanks := .T.
+   LOCAL sRight, nPath := 0, nPaths := Len( s_asPaths ), nNewLine
    LOCAL sPath := "", cError, sPrevFile := s_sFile
    LOCAL sTmp
 
@@ -2110,16 +2084,24 @@ FUNCTION PP_PreProFile( sSource )
    ENDIF
 
    IF hPP == NIL
-      sExt := SubStr( sSource, RAt( '.', sSource ) )
-      IF ! ( sExt == '' )
-         hPP := FCreate( StrTran( sSource, sExt, ".pp$" ) )
-      ELSE
-         hPP := FCreate( sSource + ".pp$" )
+      IF bBlanks == NIL
+         bBlanks := .T.
       ENDIF
-      IF hPP == -1
-         Alert( "ERROR! creating '.pp$' file, O/S Error: " + Str( FError(), 2 ) )
-         s_sFile := sPrevFile
-         RETURN .F.
+
+      IF sPPOExt == NIL
+         hPP := 0
+      ELSE
+         sExt := SubStr( sSource, RAt( '.', sSource ) )
+         IF ! ( sExt == '' )
+            hPP := FCreate( StrTran( sSource, sExt, sPPOExt ) )
+         ELSE
+            hPP := FCreate( sSource + sPPOExt )
+         ENDIF
+         IF hPP == -1
+            Alert( "ERROR! creating '.pp$' file, O/S Error: " + Str( FError(), 2 ) )
+            s_sFile := sPrevFile
+            RETURN .F.
+         ENDIF
       ENDIF
    ELSE
       FWrite( hPP, '#line 1 "' + sPath + Upper( sSource ) + '"' + CRLF )
@@ -2128,6 +2110,10 @@ FUNCTION PP_PreProFile( sSource )
 
    sBuffer   := Space( PP_BUFFER_SIZE )
    sLine     := ''
+
+   IF bCompile
+      ErrorBlock( {|oErr| RP_Comp_Err( oErr, sLine, nLine ) } )
+   ENDIF
 
    BEGIN SEQUENCE
 
@@ -4233,14 +4219,22 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor, bX )
                  sExp           += sNextToken
                  sLastToken     := sJustNext
                  sLine          := sNextLine
-                 s_bArrayPrefix := .T.
+                 #ifdef __HARBOUR__
+                    SetArrayPrefix( .T. )
+                 #else
+                    s_bArrayPrefix := .T.
+                 #endif
                  sNextToken     := NextToken( @sNextLine, .T. )
                  IF sNextToken != NIL .AND. Left( sNextToken, 1 ) == '.'
                     // Get the macro terminator.
                     sExp           += sNextToken
                     sLastToken     := "."
                     sLine          := sNextLine
-                    s_bArrayPrefix := .T.
+                    #ifdef __HARBOUR__
+                       SetArrayPrefix( .T. )
+                    #else
+                       s_bArrayPrefix := .T.
+                    #endif
                     IF sNextToken == '.' //(Last Token) No space after Macro terminator, so get the suffix.
                        sNextToken := NextToken( @sNextLine, .T. )
                        IF sNextToken != NIL
@@ -4250,7 +4244,11 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor, bX )
                              sExp           += sNextToken
                              sLastToken     := RTrim( sNextToken )
                              sLine          := sNextLine
-                             s_bArrayPrefix := .T.
+                             #ifdef __HARBOUR__
+                                SetArrayPrefix( .T. )
+                             #else
+                                s_bArrayPrefix := .T.
+                             #endif
                           ENDIF
                        ENDIF
                     ENDIF
@@ -4268,7 +4266,11 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor, bX )
            IF Left( sNext1, 1 ) == ')'
               sExp           += sNextToken
               sLine          := sNextLine
-              s_bArrayPrefix := .T.
+              #ifdef __HARBOUR__
+                 SetArrayPrefix( .T. )
+              #else
+                 s_bArrayPrefix := .T.
+              #endif
            ELSE
               //TraceLog( "Content from: " + sLine )
               sTemp := NextExp( @sLine, ',', NIL, NIL, NIL ) // Content - Ignoring sNextAnchor !!!
@@ -4304,12 +4306,20 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor, bX )
               /* Literal block */
               sExp           += sNextToken
               sLine          := sNextLine
-              s_bArrayPrefix := .F.
+              #ifdef __HARBOUR__
+                 SetArrayPrefix( .F. )
+              #else
+                 s_bArrayPrefix := .F.
+              #endif
               sNextToken     := NextToken( @sNextLine, .T. )
               IF sNextToken != NIL .AND. Left( sNextToken, 1 ) == '|'
                  sExp           += sNextToken
                  sLine          := sNextLine
-                 s_bArrayPrefix := .F.
+                 #ifdef __HARBOUR__
+                    SetArrayPrefix( .F. )
+                 #else
+                    s_bArrayPrefix := .F.
+                 #endif
               ELSE
                  sTemp := NextExp( @sLine, ',', NIL, NIL, NIL ) // Content - Ignoring sNextAnchor !!!
                  IF sTemp == NIL
@@ -4326,7 +4336,11 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor, bX )
                  IF sNextToken != NIL .AND. Left( sNextToken, 1 ) == '|'
                     sExp           += sNextToken
                     sLine          := sNextLine
-                    s_bArrayPrefix := .F.
+                    #ifdef __HARBOUR__
+                       SetArrayPrefix( .F. )
+                    #else
+                       s_bArrayPrefix := .F.
+                    #endif
                  ELSE
                     TraceLog( "ERROR! Unbalanced '{|...|' at: " + sExp )
                     Alert( "ERROR! Unbalanced '{|...|' at: " + sExp )
@@ -4361,7 +4375,11 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor, bX )
               IF sNext1 == '}'
                  sExp           += sNextToken
                  sLine          := sNextLine
-                 s_bArrayPrefix := .T.
+                 #ifdef __HARBOUR__
+                    SetArrayPrefix( .T. )
+                 #else
+                    s_bArrayPrefix := .T.
+                 #endif
               ELSE
                  sTemp := NextExp( @sLine, ',', NIL, NIL, NIL ) // Content - Ignoring sNextAnchor !!!
                  IF sTemp == NIL
@@ -4536,12 +4554,16 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor, bX )
 
         IF sNext1 == '(' .AND. ( IsAlpha( cLastChar ) .OR. IsDigit( cLastChar ) .OR. cLastChar $ "_."  )
            LOOP
-        ELSEIF sNext1 == '[' //.AND. s_bArrayPrefix
+        ELSEIF sNext1 == '['
            LOOP
         ELSEIF sNext1 $ "+-*/:=^!><!$%#"
            sExp           += sNextToken
            sLine          := sNextLine
-           s_bArrayPrefix := .F.
+           #ifdef __HARBOUR__
+              SetArrayPrefix( .F. )
+           #else
+              s_bArrayPrefix := .F.
+           #endif
            LOOP
         ENDIF
 
@@ -4551,12 +4573,20 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor, bX )
            IF IsAlpha( cLastChar  ) .OR. IsDigit( cLastChar ) .OR. cLastChar $ "_.]"
               sExp           += sNextToken
               sLine          := sNextLine
-              s_bArrayPrefix := .F.
+              #ifdef __HARBOUR__
+                 SetArrayPrefix( .F. )
+              #else
+                 s_bArrayPrefix := .F.
+              #endif
            ENDIF
         ELSEIF sNext2 $ "->\:=\==\!=\<>\>=\<=\+=\-=\*=\/=\^=\**\%="
            sExp           += sNextToken
            sLine          := sNextLine
-           s_bArrayPrefix := .T.
+           #ifdef __HARBOUR__
+              SetArrayPrefix( .T. )
+           #else
+              s_bArrayPrefix := .T.
+           #endif
            LOOP
         ENDIF
 
@@ -4565,7 +4595,11 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor, bX )
         IF sNext4 == ".OR."
            sExp           += sNextToken
            sLine          := sNextLine
-           s_bArrayPrefix := .F.
+           #ifdef __HARBOUR__
+              SetArrayPrefix( .F. )
+           #else
+              s_bArrayPrefix := .F.
+           #endif
            LOOP
         ENDIF
 
@@ -4575,7 +4609,11 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor, bX )
            sExp           += sNextToken
            sLine          := sNextLine
            s_bArrayPrefix := .F.
-           LOOP
+           #ifdef __HARBOUR__
+              SetArrayPrefix( .F. )
+           #else
+              s_bArrayPrefix := .F.
+           #endif
         ENDIF
 
      ENDIF
@@ -4588,12 +4626,20 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor, bX )
         IF cType == ","
            sList          += ( sExp + sNextToken )
            sLine          := sNextLine
-           s_bArrayPrefix := .F.
+           #ifdef __HARBOUR__
+              SetArrayPrefix( .F. )
+           #else
+              s_bArrayPrefix := .F.
+           #endif
            sExp           := ""
         ELSEIF cType == "A"
            aAdd( aExp, sExp )
            sLine          := sNextLine
-           s_bArrayPrefix := .F.
+           #ifdef __HARBOUR__
+              SetArrayPrefix( .F. )
+           #else
+              s_bArrayPrefix := .F.
+           #endif
            sExp           := ""
         ELSE
            //? "DONT CONTINUE: " + sLine
@@ -7396,7 +7442,7 @@ RETURN ""
 FUNCTION PP_QSelf( o )
 
    STATIC s_oSelf := NIL
-   LOCAL oPreset := s_oSelf
+   LOCAL  oPreset := s_oSelf
 
    IF ValType( o ) == 'O'
       s_oSelf := o
@@ -7633,14 +7679,19 @@ STATIC FUNCTION InitRunResults()
 RETURN .T.
 
 //--------------------------------------------------------------//
-PROCEDURE PP_RunInit( aProcedures )
+PROCEDURE PP_RunInit( aProcedures, aInitExit )
 
-   IF ValType( aProcedures ) != 'A'
-      Alert( "Invalid parameter to: " + ProcName() + " must be Array!" )
+   IF ValType( aProcedures ) != 'A' .OR. ValType( aInitExit ) != 'A'
+      Alert( "Invalid parameters to: " + ProcName() + " must be Arrays!" )
    ELSE
       aSize( aProcedures, 0 )
-      ErrorBlock( {|oErr| RP_Run_Err( oErr, aProcedures ) } )
+
+      aSize( aInitExit, 2 )
+      aInitExit[1] := {}
+      aInitExit[2] := {}
    ENDIF
+
+   ErrorBlock( {|oErr| RP_Run_Err( oErr, aProcedures ) } )
 
    InitRules()
    InitResults()
@@ -7659,18 +7710,22 @@ FUNCTION PP_PreProText( sLines, asLines )
       asLines := {}
    ENDIF
 
+   sLines := StrTran( sLines, Chr(13), "" )
+   sLines := StrTran( sLines, Chr(9), "   " )
+
    WHILE ( nOpen := nAtSkipStr( "/*", sLines ) ) > 0
       sTemp += Left( sLines, nOpen - 1 )
       nClose := nAtSkipStr( "*/", sLines, nOpen + 2 )
-      IF nClose == 0
-      ENDIF
+      WHILE ( nOpen := nAtSkipStr( Chr(10), sLines, nOpen + 1 ) ) > 0 .AND. nOpen < nClose
+         sTemp += Chr(10)
+      ENDDO
       sLines := SubStr( sLines, nClose + 2 )
    ENDDO
-   sLines := ( sTemp += sLines )
+   sLines := ( sTemp + sLines )
 
-   nOpen := 0
+   nOpen  := 0
    nClose := 0
-   WHILE ( nOpen := nAtSkipStr( ";", sLines, nOpen + 1 ) ) > 0
+   WHILE ( nOpen := nAtSkipStr( Chr(10), sLines, nOpen + 1 ) ) > 0
       aAdd( asLines, SubStr( sLines, nClose + 1, nOpen - ( nClose + 1 ) ) )
       nClose := nOpen
    ENDDO
@@ -7712,26 +7767,22 @@ RETURN sLines
 FUNCTION PP_RunText( sLines, bPP, aParams )
 
    LOCAL aProcedures := {}, aInitExit := { {}, {} }, nProcId := 0, ;
-         nLine, nLines, xRet, asLines := {}, nProc, nOpen, nClose
+         nLine, nLines, xRet, asLines := {}, nOpen, nClose
 
    IF bPP == NIL
       bPP := .T.
    ENDIF
 
-   IF ValType( aParams ) == 'A'
-      s_aParams := aParams
-   ENDIF
-
    PP_RunInit( aProcedures, aInitExit )
-
-   ErrorBlock( {|oErr| RP_Comp_Err( oErr ) } )
 
    IF bPP
       PP_PreProText( sLines, asLines )
    ELSE
-      nOpen := 0
+      sLines := StrTran( sLines, Chr(13), "" )
+      sLines := StrTran( sLines, Chr(9), "   " )
+      nOpen  := 0
       nClose := 0
-      WHILE ( nOpen := nAtSkipStr( ";", sLines, nOpen + 1 ) ) > 0
+      WHILE ( nOpen := nAtSkipStr( Chr(10), sLines, nOpen + 1 ) ) > 0
          aAdd( asLines, SubStr( sLines, nClose + 1, nOpen - ( nClose + 1 ) ) )
          nClose := nOpen
       ENDDO
@@ -7740,23 +7791,65 @@ FUNCTION PP_RunText( sLines, bPP, aParams )
       ENDIF
    ENDIF
 
+   ErrorBlock( {|oErr| RP_Comp_Err( oErr, asLines[nLine], nLine ) } )
+
    nLines := Len( asLines )
    FOR nLine := 1 TO nLines
       PP_CompileLine( asLines[nLine], nLine, aProcedures, aInitExit, @nProcId )
    NEXT
 
+RETURN PP_Exec( aProcedures, aInitExit, nProcId, aParams )
+
+//--------------------------------------------------------------//
+FUNCTION PP_RunArray( asLines, aParams )
+
+   LOCAL aProcedures := {}, aInitExit := { {}, {} }, nProcId := 0, ;
+         nLine, nLines, nOpen, nClose
+
+   PP_RunInit( aProcedures, aInitExit )
+
+   ErrorBlock( {|oErr| RP_Comp_Err( oErr, asLines[nLine], nLine ) } )
+
+   nLines := Len( asLines )
+   FOR nLine := 1 TO nLines
+      PP_CompileLine( asLines[nLine], nLine, aProcedures, aInitExit, @nProcId )
+   NEXT
+
+RETURN PP_Exec( aProcedures, aInitExit, nProcId, aParams )
+
+//--------------------------------------------------------------//
+FUNCTION PP_Exec( aProcedures, aInitExit, nProcId, aParams )
+
+   LOCAL nProc, nProcs, xRet
+
+   IF ValType( aParams ) == 'A'
+      s_aParams := aParams
+   ELSE
+      s_aParams := {}
+   ENDIF
+
    ErrorBlock( {|oErr| RP_Run_Err( oErr, aProcedures ) } )
 
-   FOR nProc := 1 TO Len( aInitExit[1] )
+   InitRules()
+   InitResults()
+
+   InitRunRules()
+   InitRunResults()
+
+   nProcs := Len( aInitExit[1] )
+   FOR nProc := 1 TO nProcs
       PP_ExecProcedure( aProcedures[ aInitExit[1][nProc] ] )
    NEXT
+
    FOR nProc := 1 TO nProcId
       IF aScan( aInitExit[1], nProc ) == 0 .AND. aScan( aInitExit[2], nProc ) == 0
          xRet := PP_ExecProcedure( aProcedures[nProc] )
          EXIT
       ENDIF
    NEXT
-   FOR nProc := 1 TO Len( aInitExit[2] )
+
+   nProcs := Len( aInitExit[2] )
+   FOR nProc := 1 TO nProcs
       PP_ExecProcedure( aProcedures[ aInitExit[2][nProc] ] )
    NEXT
 

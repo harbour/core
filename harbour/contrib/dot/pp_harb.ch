@@ -2,6 +2,70 @@
 
 #ifdef __HARBOUR__
 
+#include "hbclass.ch"
+
+CLASS  TInterpreter
+
+   DATA cText
+   DATA acPPed
+   DATA aCompiledProcs
+   DATA aInitExit
+   DATA nProcs
+
+   METHOD New()              INLINE ( ::nProcs := 0, ::cText := "", ::acPPed := {}, ::aCompiledProcs := {}, ::aInitExit := { {}, {} }, Self )
+
+   METHOD AddLine( cLine )   INLINE ( ::nProcs := 0, ::acPPed := {}, ::cText += ( cLine + Chr(10) ) )
+   METHOD SetScript( cText ) INLINE ( ::nProcs := 0, ::acPPed := {}, ::cText := cText )
+
+   METHOD Compile()
+   METHOD Run()
+   METHOD RunFile( cFile, aParams, cPPOExt, bBlanks ) INLINE PP_Run( cFile, aParams, cPPOExt, bBlanks )
+
+   METHOD ClearRules()       INLINE PP_ResetRules()
+   METHOD InitStdRules()     INLINE PP_InitStd()
+   METHOD LoadClass()        INLINE PP_LoadClass()
+   METHOD LoadFiveWin()      INLINE PP_LoadFw()
+ENDCLASS
+
+METHOD Run( p1, p2, p3, p4, p5, p6, p7, p8, p9 )
+
+   LOCAL aParams := HB_aParams(), xRet
+
+   IF ::nProcs == 0
+      ::Compile()
+   ENDIF
+
+   IF ::nProcs > 0
+      xRet := PP_Exec( ::aCompiledProcs, ::aInitExit, ::nProcs, aParams )
+   ENDIF
+
+RETURN xRet
+
+METHOD Compile()
+
+   LOCAL nLine, nLines, nProcId := 0
+
+   IF Len( ::acPPed ) == 0
+      PP_InitStd()
+      PP_LoadRun()
+      PP_PreProText( ::cText, ::acPPed )
+      ::aCompiledProcs := {}
+      ::aInitExit      := { {}, {} }
+   ENDIF
+
+   IF Len( ::aCompiledProcs ) == 0
+      ErrorBlock( {|oErr| RP_Comp_Err( oErr, ::acPPed[nLine], nLine ) } )
+
+      nLines := Len( ::acPPed )
+      FOR nLine := 1 TO nLines
+         PP_CompileLine( ::acPPed[nLine], nLine, ::aCompiledProcs, ::aInitExit, @nProcId )
+      NEXT
+   ENDIF
+
+   ::nProcs := nProcId
+
+RETURN nProcId > 0
+
 #pragma BEGINDUMP
 
 #include <ctype.h>
@@ -14,6 +78,16 @@
 #include "hboo.ch"
 
 static BOOL s_bArrayPrefix = FALSE;
+
+static HB_FUNC( SETARRAYPREFIX )
+{
+   PHB_ITEM pbArrayPrefix = hb_param( 1, HB_IT_LOGICAL );
+
+   if( pbArrayPrefix != NULL )
+   {
+      s_bArrayPrefix = pbArrayPrefix->item.asLogical.value;
+   }
+}
 
 static HB_FUNC( NEXTTOKEN )
 {

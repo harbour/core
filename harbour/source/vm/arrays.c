@@ -859,11 +859,11 @@ PHB_ITEM hb_arrayFromStack( USHORT uiLen )
    return pArray;
 }
 
-PHB_ITEM hb_arrayFromParams( void )
+PHB_ITEM hb_arrayFromParams( PHB_ITEM *pBase )
 {
    PHB_ITEM pArray = hb_itemNew( NULL );
    PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) hb_gcAlloc( sizeof( HB_BASEARRAY ), hb_arrayReleaseGarbage );
-   USHORT uiPos, uiPCount = hb_pcount();
+   USHORT uiPos, uiPCount = (* pBase)->item.asSymbol.paramcnt;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayFromParams()"));
 
@@ -879,9 +879,9 @@ PHB_ITEM hb_arrayFromParams( void )
    pBaseArray->uiClass    = 0;
    pBaseArray->uiPrevCls  = 0;
 
-   for( uiPos = 2; uiPos <= uiPCount; uiPos++ )
+   for( uiPos = 0; uiPos < uiPCount; uiPos++ )
    {
-      hb_itemCopy( pBaseArray->pItems + uiPos - 2, hb_stackItemFromBase( uiPos ) );
+      hb_itemCopy( pBaseArray->pItems + uiPos, *( pBase + uiPos + 2 ) );
    }
 
    pArray->item.asArray.value = pBaseArray;

@@ -1,3 +1,36 @@
+2001-06-01 10:30 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     + PP_RunArray( asLines, aParams )
+     + PP_Exec( aProcedures, aInitExit, nProcId, aParams )
+     * Modified all PP_RunXXXX() to use PP_Exec()
+     * RP_Comp_Err() now repports source line and line number with the sysntax error.
+
+   * contrib/dot/pp_harb.ch
+     + Added Tinterpreter() class
+         METHOD New()
+         METHOD AddLine( cLine )
+         METHOD SetScript( cText )
+         METHOD Compile()
+         METHOD Run()
+         METHOD RunFile( cFile, aParams, cPPOExt, bBlanks ) INLINE PP_Run( cFile, aParams, cPPOExt, bBlanks )
+         METHOD ClearRules()
+         METHOD InitStdRules()
+         METHOD LoadClass()
+         METHOD LoadFiveWin()
+
+   * contrib/dot/prgscrpt.prg
+     * Modified to demonstrate TInterpreter() syntax.
+
+   * include/hbapi.h
+   * source/vm/arrays.c
+     * Fixed bug, in hb_stackArrayFromParams() and modified to accept a frame base parameter.
+
+   * source/vm/arrayshb.c
+     + Added HB_APARAMS() PRG wrapper to hb_stackArrayFromParams() returning array with passed parameter of the function calling HB_APARAMS()
+
+   * source/rtl/do.c
+     * Added required frams base parameter in calls to hb_stackArrayFromParams(). This fix population of oErr:Args if error occurs.
+
 2001-05-30 10:49 UTC-0800 Brian Hays <bhays@abacuslaw.com>
 
    * source/rdd/dbcmd.c

@@ -37,6 +37,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbvm.h"
+#include "hbstack.h"
 
 /* NOTE: DO() as a function is a Harbour extension. [vszakats] */
 
@@ -61,7 +62,8 @@ HB_FUNC( DO )
       }
       else
       {
-         PHB_ITEM pArgsArray = hb_arrayFromParams();
+         PHB_ITEM pArgsArray = hb_arrayFromParams( hb_stack.pBase );
+
          hb_errRT_BASE( EG_NOFUNC, 1001, NULL, hb_itemGetCPtr( pItem ), 1, pArgsArray );
          hb_itemRelease( pArgsArray );
       }
@@ -90,7 +92,8 @@ HB_FUNC( DO )
    }
    else
    {
-      PHB_ITEM pArgsArray = hb_arrayFromParams();
+      PHB_ITEM pArgsArray = hb_arrayFromParams( hb_stack.pBase );
+
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, "DO", 1, pArgsArray );
       hb_itemRelease( pArgsArray );
    }
