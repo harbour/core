@@ -34,6 +34,7 @@
 #include "langapi.h"
 
 #define HARBOUR_MAX_RDD_DRIVERNAME_LENGTH       32
+#define HARBOUR_MAX_RDD_ALIAS_LENGTH            32
 #define HARBOUR_MAX_RDD_FIELDNAME_LENGTH        32
 
 typedef struct _RDDNODE
@@ -64,6 +65,7 @@ extern HARBOUR HB_RDDSYS( void );
 HARBOUR HB_AFIELDS( void );
 HARBOUR HB_ALIAS( void );
 HARBOUR HB_BOF( void );
+HARBOUR HB_DBAPPEND( void );
 HARBOUR HB_DBCLOSEALL( void );
 HARBOUR HB_DBCLOSEAREA( void );
 HARBOUR HB_DBCOMMIT( void );
@@ -136,6 +138,14 @@ static ERRCODE AddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
    pField->uiDec = pFieldInfo->uiDec;
    pField->uiArea = pArea->uiArea;
    pArea->uiFieldCount++;
+   return SUCCESS;
+}
+
+static ERRCODE Alias( AREAP pArea, BYTE * szAlias )
+{
+   strncpy( ( char * ) szAlias,
+            ( ( PHB_DYNS ) pArea->atomAlias )->pSymbol->szName,
+            HARBOUR_MAX_RDD_ALIAS_LENGTH );
    return SUCCESS;
 }
 
@@ -296,8 +306,10 @@ static ERRCODE Open( AREAP pArea, LPDBOPENINFO pOpenInfo )
       hb_errRT_DBCMD( EG_DUPALIAS, 1011, 0, ( char * ) pOpenInfo->atomAlias );
       return FAILURE;
    }
-   else
-      ( ( PHB_DYNS ) pArea->atomAlias )->hArea = pOpenInfo->uiArea;
+
+   ( ( PHB_DYNS ) pArea->atomAlias )->hArea = pOpenInfo->uiArea;
+   pArea->lpExtendInfo->fExclusive = !pOpenInfo->fShared;
+   pArea->lpExtendInfo->fReadOnly = pOpenInfo->fReadonly;
    
    return SUCCESS;
 }
@@ -389,13 +401,14 @@ static RDDFUNCS defTable = { Bof,
                              Eof,
                              Found,
                              UnSupported,
-                             ( DBENTRYP_L ) UnSupported,
+                             ( DBENTRYP_UL ) UnSupported,
                              ( DBENTRYP_I ) UnSupported,
                              UnSupported,
                              Skip,
                              SkipFilter,
                              ( DBENTRYP_L ) UnSupported,
                              AddField,
+                             ( DBENTRYP_B ) UnSupported,
                              CreateFields,
                              UnSupported,
                              ( DBENTRYP_BP ) UnSupported,
@@ -406,9 +419,10 @@ static RDDFUNCS defTable = { Bof,
                              ( DBENTRYP_SI ) UnSupported,
                              ( DBENTRYP_SI ) UnSupported,
                              UnSupported,
-                             ( DBENTRYP_LP ) UnSupported,
+                             ( DBENTRYP_ULP ) UnSupported,
                              ( DBENTRYP_I ) UnSupported,
                              SetFieldExtent,
+                             Alias,
                              Close,
                              ( DBENTRYP_VP ) UnSupported,
                              Info,
@@ -420,7 +434,7 @@ static RDDFUNCS defTable = { Bof,
                              Error,
                              ( DBENTRYP_VSP ) UnSupported,
                              ( DBENTRYP_VL ) UnSupported,
-                             ( DBENTRYP_L ) UnSupported,
+                             ( DBENTRYP_UL ) UnSupported,
                              UnSupported,
                              UnSupported
                            };
@@ -772,6 +786,7 @@ HARBOUR HB_ALIAS( void )
 {
    USHORT uiArea;
    LPAREANODE pAreaNode;
+   char * szAlias;
    
    uiArea = hb_parni( 1 );
    uiArea = uiArea ? uiArea : uiCurrArea;
@@ -783,7 +798,10 @@ HARBOUR HB_ALIAS( void )
          if( ( ( AREAP ) pAreaNode->pArea )->atomAlias &&
              ( ( PHB_DYNS ) ( ( AREAP ) pAreaNode->pArea )->atomAlias )->hArea )
          {
-            hb_retc( ( ( PHB_DYNS ) ( ( AREAP ) pAreaNode->pArea )->atomAlias )->pSymbol->szName );
+            szAlias = ( char * ) hb_xgrab( HARBOUR_MAX_RDD_ALIAS_LENGTH + 1 );
+            SELF_ALIAS( ( AREAP ) pAreaNode->pArea, ( BYTE * ) szAlias );
+            hb_retc( szAlias );
+            hb_xfree( szAlias );
             return;
          }
          break;
@@ -800,6 +818,32 @@ HARBOUR HB_BOF( void )
    if( pCurrArea )
       SELF_BOF( ( AREAP ) pCurrArea->pArea, &bBof );
    hb_retl( bBof );
+}
+
+HARBOUR HB_DBAPPEND( void )
+{
+   BOOL bUnLockAll = TRUE;
+   PHB_ITEM pError;
+
+   if( pCurrArea )
+   {
+      bNetError = FALSE;
+      if( ( ( AREAP ) pCurrArea->pArea )->lpExtendInfo->fReadOnly )
+      {
+         pError = hb_errNew();
+         hb_errPutGenCode( pError, EG_READONLY );
+         hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_READONLY ) );
+         hb_errPutSubCode( pError, 1025 );
+         SELF_ERROR( ( AREAP ) pCurrArea->pArea, pError );
+         hb_errRelease( pError );
+         return;
+      }
+      if( ISLOG( 1 ) )
+         bUnLockAll = hb_parl( 1 );
+      bNetError = ( SELF_APPEND( ( AREAP ) pCurrArea->pArea, bUnLockAll ) == FAILURE );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, 0, "DBAPPEND" );
 }
 
 HARBOUR HB_DBCLOSEALL( void )
@@ -1583,7 +1627,7 @@ HARBOUR HB_RDDSHUTDOWN( void )
 
 HARBOUR HB_RECCOUNT( void )
 {
-   LONG ulRecCount = 0;
+   ULONG ulRecCount = 0;
 
    if( pCurrArea )
       SELF_RECCOUNT( ( AREAP ) pCurrArea->pArea, &ulRecCount );

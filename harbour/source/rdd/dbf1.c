@@ -153,9 +153,79 @@ static BOOL hb_ndtoa( double dValue, char * szBuffer, USHORT uiLen, USHORT uiDec
    return TRUE;
 }
 
-static BOOL hb_rddIsLocked( AREAP pArea, LONG lLockPos )
+static BOOL hb_dbfUpdateHeader( AREAP pArea, ULONG lRecCount )
 {
-   LONG lNumLocksPos;
+   DBFHEADER pHeader;
+   time_t t;
+   struct tm * pTime;
+
+   hb_fsSeek( pArea->lpFileInfo->hFile, 0, FS_SET );
+   if( hb_fsRead( pArea->lpFileInfo->hFile, ( BYTE * ) &pHeader,
+                  sizeof( DBFHEADER ) ) != sizeof( DBFHEADER ) )
+      return FALSE;
+
+   time( &t );
+   pTime =  localtime( &t );
+   pHeader.bYear = ( BYTE ) pTime->tm_year;
+   pHeader.bMonth = ( BYTE ) pTime->tm_mon + 1;
+   pHeader.bDay = ( BYTE ) pTime->tm_mday;
+   pHeader.ulRecords = lRecCount;
+
+   hb_fsSeek( pArea->lpFileInfo->hFile, 0, FS_SET );
+   if( hb_fsWrite( pArea->lpFileInfo->hFile, ( BYTE * ) &pHeader,
+                   sizeof( DBFHEADER ) ) != sizeof( DBFHEADER ) )
+      return FALSE;
+
+   pArea->lpExtendInfo->bYear = pHeader.bYear;
+   pArea->lpExtendInfo->bMonth = pHeader.bMonth;
+   pArea->lpExtendInfo->bDay = pHeader.bDay;
+   return TRUE;
+}
+
+static BOOL hb_dbfUpdateRecord( AREAP pArea, ULONG lRecNo )
+{
+   ULONG lRecCount;
+
+   if( SELF_RECCOUNT( pArea, &lRecCount ) == FAILURE )
+      return FALSE;
+
+   if( lRecNo > 0 && ( lRecNo <= lRecCount || pArea->lpFileInfo->fAppend ) )
+   {
+      hb_fsSeek( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->uiHeaderLen +
+                 ( lRecNo - 1 ) * pArea->lpExtendInfo->uiRecordLen, FS_SET );
+      if( pArea->lpFileInfo->fAppend )
+         lRecCount = lRecNo;
+      if( hb_fsWrite( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->bRecord,
+                      pArea->lpExtendInfo->uiRecordLen ) != pArea->lpExtendInfo->uiRecordLen ||
+         !hb_dbfUpdateHeader( pArea, lRecCount ) )
+         return FALSE;
+   }
+   pArea->lpExtendInfo->fRecordChanged = FALSE;
+   pArea->lpFileInfo->fAppend = FALSE;
+   return TRUE;
+}
+
+static ERRCODE hb_dbfReadBuffer( AREAP pArea, ULONG lRecNo )
+{
+   if( pArea->lpExtendInfo->fRecordChanged &&
+       !hb_dbfUpdateRecord( pArea, pArea->lpExtendInfo->lRecNo ) )
+      return FAILURE;
+
+   hb_fsSeek( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->uiHeaderLen +
+              ( lRecNo - 1 ) * pArea->lpExtendInfo->uiRecordLen, FS_SET );
+   if( hb_fsRead( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->bRecord,
+                  pArea->lpExtendInfo->uiRecordLen ) != pArea->lpExtendInfo->uiRecordLen )
+   {
+      memset( pArea->lpExtendInfo->bRecord, ' ', pArea->lpExtendInfo->uiRecordLen );
+      pArea->lpExtendInfo->bRecord[ pArea->lpExtendInfo->uiRecordLen ] = 0;
+      return FAILURE;
+   }
+   return SUCCESS;
+}
+
+static BOOL hb_dbfIsLocked( AREAP pArea, ULONG lLockPos )
+{
+   ULONG lNumLocksPos;
 
    lNumLocksPos = pArea->lpFileInfo->lNumLocksPos;
    while( lNumLocksPos > 0 )
@@ -168,7 +238,7 @@ static BOOL hb_rddIsLocked( AREAP pArea, LONG lLockPos )
    return FALSE;
 }
 
-static BOOL hb_rddLockRecord( AREAP pArea, LONG lRecNum )
+static BOOL hb_dbfLockRecord( AREAP pArea, ULONG lRecNum )
 {
    LPFILEINFO pFileInfo;
 
@@ -176,7 +246,7 @@ static BOOL hb_rddLockRecord( AREAP pArea, LONG lRecNum )
       return TRUE;
 
    pFileInfo = pArea->lpFileInfo;
-   if( hb_rddIsLocked( pArea, lRecNum ) )
+   if( hb_dbfIsLocked( pArea, lRecNum ) )
       return TRUE;
 
    if( !hb_fsLock( pArea->lpFileInfo->hFile, LOCK_START + lRecNum, 1, FL_LOCK ) )
@@ -184,15 +254,15 @@ static BOOL hb_rddLockRecord( AREAP pArea, LONG lRecNum )
 
    if( pFileInfo->lNumLocksPos == 0 )            /* Create the list */
    {
-      pFileInfo->pLocksPos = ( LONG * ) hb_xgrab( sizeof( LONG ) );
+      pFileInfo->pLocksPos = ( ULONG * ) hb_xgrab( sizeof( ULONG ) );
       pFileInfo->pLocksPos[ 0 ] = lRecNum;
    }
    else                                          /* Resize the list */
    {
-      pFileInfo->pLocksPos = ( LONG * )
+      pFileInfo->pLocksPos = ( ULONG * )
                     hb_xrealloc( pFileInfo->pLocksPos,
                                  ( pFileInfo->lNumLocksPos + 1 ) *
-                                 sizeof( LONG ) );
+                                 sizeof( ULONG ) );
       pFileInfo->pLocksPos[ pFileInfo->lNumLocksPos ] = lRecNum;
    }
    pFileInfo->lNumLocksPos++;
@@ -200,16 +270,20 @@ static BOOL hb_rddLockRecord( AREAP pArea, LONG lRecNum )
    return TRUE;
 }
 
-static BOOL hb_rddUnLockRecord( AREAP pArea, LONG lRecNum )
+static BOOL hb_dbfUnLockRecord( AREAP pArea, ULONG lRecNum )
 {
    LPFILEINFO pFileInfo;
-   LONG lLockPos, * pList;
+   ULONG lLockPos, * pList;
+
+   if( pArea->lpExtendInfo->fRecordChanged &&
+       !hb_dbfUpdateRecord( pArea, lRecNum ) )
+      return FALSE;
 
    if( pArea->lpExtendInfo->fExclusive || pArea->lpFileInfo->fFileLocked )
       return TRUE;
 
    pFileInfo = pArea->lpFileInfo;
-   if( !hb_rddIsLocked( pArea, lRecNum ) )
+   if( !hb_dbfIsLocked( pArea, lRecNum ) )
       return TRUE;
 
    if( !hb_fsLock( pArea->lpFileInfo->hFile, LOCK_START + lRecNum, 1, FL_UNLOCK ) )
@@ -230,11 +304,11 @@ static BOOL hb_rddUnLockRecord( AREAP pArea, LONG lRecNum )
             pList = pFileInfo->pLocksPos + lLockPos;
             memmove( pList, pList + 1,
                      ( pFileInfo->lNumLocksPos - lLockPos - 1 ) *
-                     sizeof( LONG ) );
-            pFileInfo->pLocksPos = ( LONG * )
+                     sizeof( ULONG ) );
+            pFileInfo->pLocksPos = ( ULONG * )
                     hb_xrealloc( pFileInfo->pLocksPos,
                                  ( pFileInfo->lNumLocksPos - 1 ) *
-                                 sizeof( LONG ) );
+                                 sizeof( ULONG ) );
             pFileInfo->lNumLocksPos--;
             return TRUE;
          }
@@ -244,20 +318,27 @@ static BOOL hb_rddUnLockRecord( AREAP pArea, LONG lRecNum )
    return TRUE;
 }
 
-static BOOL hb_rddUnLockAllRecords( AREAP pArea )
+static BOOL hb_dbfUnLockAllRecords( AREAP pArea )
 {
    LPFILEINFO pFileInfo;
-   LONG lPosLocked;
+   ULONG lPosLocked;
    BOOL bUnLocked = TRUE;
+
+   if( pArea->lpExtendInfo->fRecordChanged &&
+       !hb_dbfUpdateRecord( pArea, pArea->lpExtendInfo->lRecNo ) )
+      return FALSE;
 
    if( pArea->lpExtendInfo->fExclusive )
       return TRUE;
 
    pFileInfo = pArea->lpFileInfo;
    for( lPosLocked = 0; lPosLocked < pFileInfo->lNumLocksPos; lPosLocked++ )
+   {
+      printf("UnLock record %ld\n",pFileInfo->pLocksPos[ lPosLocked ]);
       if( !hb_fsLock( pArea->lpFileInfo->hFile, LOCK_START +
                       pFileInfo->pLocksPos[ lPosLocked ], 1, FL_UNLOCK ) )
          bUnLocked = FALSE;
+   }
 
    if( pFileInfo->lNumLocksPos > 1 )
       hb_xfree( pFileInfo->pLocksPos );
@@ -267,7 +348,7 @@ static BOOL hb_rddUnLockAllRecords( AREAP pArea )
    return bUnLocked;
 }
 
-static BOOL hb_rddLockFile( AREAP pArea )
+static BOOL hb_dbfLockFile( AREAP pArea )
 {
    if( pArea->lpExtendInfo->fExclusive || pArea->lpFileInfo->fFileLocked )
       return TRUE;
@@ -278,12 +359,16 @@ static BOOL hb_rddLockFile( AREAP pArea )
    return TRUE;
 }
 
-static BOOL hb_rddUnLockFile( AREAP pArea )
+static BOOL hb_dbfUnLockFile( AREAP pArea )
 {
+   if( pArea->lpExtendInfo->fRecordChanged &&
+       !hb_dbfUpdateRecord( pArea, pArea->lpExtendInfo->lRecNo ) )
+      return FALSE;
+
    if( pArea->lpExtendInfo->fExclusive )
       return TRUE;
 
-   hb_rddUnLockAllRecords( pArea );
+   hb_dbfUnLockAllRecords( pArea );
    if( pArea->lpFileInfo->fFileLocked )
    {
      if( !hb_fsLock( pArea->lpFileInfo->hFile, LOCK_START, LOCK_FILE, FL_UNLOCK ) )
@@ -293,34 +378,65 @@ static BOOL hb_rddUnLockFile( AREAP pArea )
    return TRUE;
 }
 
-static void hb_rddGetLockArray( AREAP pArea, PHB_ITEM pItem )
+static void hb_dbfGetLockArray( AREAP pArea, PHB_ITEM pItem )
 {
-   LONG lLockPos;
+   ULONG lLockPos;
 
    for( lLockPos = 1; lLockPos <= pArea->lpFileInfo->lNumLocksPos; lLockPos++ )
       hb_arrayAdd( pItem,
          hb_itemPutNL( NULL, pArea->lpFileInfo->pLocksPos[ lLockPos - 1 ] ) );
 }
 
-static ERRCODE hb_rddReadBuffer( AREAP pArea, LONG lRecNo )
-{
-   hb_fsSeek( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->uiHeaderLen +
-              ( lRecNo - 1 ) * pArea->lpExtendInfo->uiRecordLen, FS_SET );
-   if( hb_fsRead( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->bRecord,
-                  pArea->lpExtendInfo->uiRecordLen ) != pArea->lpExtendInfo->uiRecordLen )
-   {
-      memset( pArea->lpExtendInfo->bRecord, ' ', pArea->lpExtendInfo->uiRecordLen );
-      pArea->lpExtendInfo->bRecord[ pArea->lpExtendInfo->uiRecordLen ] = 0;
-      return FAILURE;
-   }
-   return SUCCESS;
-}
-
 static RDDFUNCS dbfSuper = { 0 };
+
 
 /*
  * -- DBF METHODS --
  */
+
+static ERRCODE Append( AREAP pArea, BOOL bUnLockAll )
+{
+   ULONG lRecCount, lRecNo;
+   
+   if( SELF_RECCOUNT( pArea, &lRecCount ) == FAILURE )
+      return FAILURE;
+
+   if( !pArea->lpExtendInfo->fExclusive && !pArea->lpFileInfo->fFileLocked )
+   {
+      if( bUnLockAll && !hb_dbfUnLockAllRecords( pArea ) )
+         return FAILURE;
+
+      if( !hb_fsLock( pArea->lpFileInfo->hFile, LOCK_START, 1, FL_LOCK ) )
+         return FAILURE;
+   }
+
+   lRecNo = pArea->lpExtendInfo->lRecNo;
+   SELF_GOTO( pArea, lRecCount + 1 );
+
+   lRecCount++;
+   lRecNo = lRecCount;
+   pArea->fEof = FALSE;
+   memset( pArea->lpExtendInfo->bRecord, ' ', pArea->lpExtendInfo->uiRecordLen );
+   pArea->lpExtendInfo->fRecordChanged = TRUE;
+   pArea->lpFileInfo->fAppend = TRUE;
+   if( !hb_dbfUpdateRecord( pArea, lRecNo ) )
+   {
+      hb_fsLock( pArea->lpFileInfo->hFile, LOCK_START, 1, FL_UNLOCK );
+      return FAILURE;
+   }
+
+   if( !hb_dbfLockRecord( pArea, lRecNo ) )
+   {
+      hb_fsLock( pArea->lpFileInfo->hFile, LOCK_START, 1, FL_UNLOCK );
+      return FAILURE;
+   }
+
+   if( !pArea->lpExtendInfo->fExclusive && !pArea->lpFileInfo->fFileLocked &&
+       !hb_fsLock( pArea->lpFileInfo->hFile, LOCK_START, 1, FL_UNLOCK ) )
+      return FAILURE;
+
+   return SUCCESS;
+}
 
 static ERRCODE Close( AREAP pArea )
 {
@@ -361,9 +477,25 @@ static ERRCODE Deleted( AREAP pArea, BOOL * pDeleted )
 
 static ERRCODE DeleteRec( AREAP pArea )
 {
-   HB_SYMBOL_UNUSED( pArea );
+   PHB_ITEM pError;
 
-   printf( "Calling DBF: DeleteRec()\n" );
+   if( pArea->lpExtendInfo->bRecord[ 0 ] ==  '*' )
+      return SUCCESS;
+
+   if( !pArea->lpExtendInfo->fExclusive && !pArea->lpFileInfo->fFileLocked &&
+       !hb_dbfIsLocked( pArea, pArea->lpExtendInfo->lRecNo ) )
+   {
+      pError = hb_errNew();
+      hb_errPutGenCode( pError, EG_UNLOCKED );
+      hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_UNLOCKED ) );
+      hb_errPutSubCode( pError, 1022 );
+      SELF_ERROR( pArea, pError );
+      hb_errRelease( pError );
+      return FAILURE;
+   }
+
+   pArea->lpExtendInfo->bRecord[ 0 ] =  '*';
+   pArea->lpExtendInfo->fRecordChanged = TRUE;
    return SUCCESS;
 }
 
@@ -425,7 +557,7 @@ static ERRCODE GetValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 
 static ERRCODE GoBottom( AREAP pArea )
 {
-   LONG lRecCount;
+   ULONG lRecCount;
    
    if( SELF_RECCOUNT( pArea, &lRecCount ) == FAILURE )
       return FAILURE;
@@ -433,10 +565,14 @@ static ERRCODE GoBottom( AREAP pArea )
    return SELF_GOTO( pArea, lRecCount );
 }
 
-static ERRCODE GoTo( AREAP pArea, LONG lRecNo )
+static ERRCODE GoTo( AREAP pArea, ULONG lRecNo )
 {
-   LONG lRecCount;
+   ULONG lRecCount;
    
+   if( pArea->lpExtendInfo->fRecordChanged &&
+       !hb_dbfUpdateRecord(pArea, pArea->lpExtendInfo->lRecNo ) )
+      return FAILURE;
+
    if( SELF_RECCOUNT( pArea, &lRecCount ) == FAILURE )
       return FAILURE;
 
@@ -459,9 +595,10 @@ static ERRCODE GoTo( AREAP pArea, LONG lRecNo )
       else
          pArea->fEof = 0;
    }
+
    pArea->lpExtendInfo->lRecNo = lRecNo;
    if( lRecCount > 0 )
-      return hb_rddReadBuffer( pArea, lRecNo );
+      return hb_dbfReadBuffer( pArea, lRecNo );
    else
       return SUCCESS;
 }
@@ -488,7 +625,7 @@ static ERRCODE Info( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case DBI_GETLOCKARRAY:
-         hb_rddGetLockArray( pArea, pItem );
+         hb_dbfGetLockArray( pArea, pItem );
          break;
 
       case DBI_LASTUPDATE:
@@ -514,7 +651,7 @@ static ERRCODE Lock( AREAP pArea, LPDBLOCKINFO pLockInfo )
 {
    if( pLockInfo->itmRecID == 0 )
    {
-      hb_rddUnLockAllRecords( pArea );
+      hb_dbfUnLockAllRecords( pArea );
 
       /* Get current record */
       pLockInfo->itmRecID = pArea->lpExtendInfo->lRecNo;
@@ -566,12 +703,24 @@ static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    if( uiIndex > pArea->uiFieldCount )
       return FAILURE;
 
-   if( !pArea->lpExtendInfo->fExclusive && !pArea->lpFileInfo->fFileLocked )
+   if( !pArea->lpExtendInfo->fExclusive && !pArea->lpFileInfo->fFileLocked &&
+       !hb_dbfIsLocked( pArea, pArea->lpExtendInfo->lRecNo ) )
    {
       pError = hb_errNew();
       hb_errPutGenCode( pError, EG_UNLOCKED );
       hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_UNLOCKED ) );
       hb_errPutSubCode( pError, 1022 );
+      SELF_ERROR( pArea, pError );
+      hb_errRelease( pError );
+      return FAILURE;
+   }
+
+   if( pArea->lpExtendInfo->fReadOnly )
+   {
+      pError = hb_errNew();
+      hb_errPutGenCode( pError, EG_READONLY );
+      hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_READONLY ) );
+      hb_errPutSubCode( pError, 1025 );
       SELF_ERROR( pArea, pError );
       hb_errRelease( pError );
       return FAILURE;
@@ -659,32 +808,33 @@ static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       hb_errRelease( pError );
       return FAILURE;
    }
+   pArea->lpExtendInfo->fRecordChanged = TRUE;
    return SUCCESS;
 }
 
-static ERRCODE RawLock( AREAP pArea, USHORT uiAction, LONG lRecNo )
+static ERRCODE RawLock( AREAP pArea, USHORT uiAction, ULONG lRecNo )
 {
    HB_SYMBOL_UNUSED( lRecNo );
 
    switch( uiAction )
    {
       case REC_LOCK:
-         if( !hb_rddLockRecord( pArea, lRecNo ) )
+         if( !hb_dbfLockRecord( pArea, lRecNo ) )
             return FAILURE;
          break;
 
       case REC_UNLOCK:
-         if( !hb_rddUnLockRecord( pArea, lRecNo ) )
+         if( !hb_dbfUnLockRecord( pArea, lRecNo ) )
             return FAILURE;
          break;
 
       case FILE_LOCK:
-         if( !hb_rddLockFile( pArea ) )
+         if( !hb_dbfLockFile( pArea ) )
             return FAILURE;
          break;
 
       case FILE_UNLOCK:
-         if( !hb_rddUnLockFile( pArea ) )
+         if( !hb_dbfUnLockFile( pArea ) )
             return FAILURE;
          break;
    }
@@ -770,7 +920,31 @@ static ERRCODE ReadDBHeader( AREAP pArea )
    return SUCCESS;
 }
 
-static ERRCODE RecCount( AREAP pArea, LONG * pRecCount )
+static ERRCODE RecAll( AREAP pArea )
+{
+   PHB_ITEM pError;
+
+   if( pArea->lpExtendInfo->bRecord[ 0 ] !=  '*' )
+      return SUCCESS;
+
+   if( !pArea->lpExtendInfo->fExclusive && !pArea->lpFileInfo->fFileLocked &&
+       !hb_dbfIsLocked( pArea, pArea->lpExtendInfo->lRecNo ) )
+   {
+      pError = hb_errNew();
+      hb_errPutGenCode( pError, EG_UNLOCKED );
+      hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_UNLOCKED ) );
+      hb_errPutSubCode( pError, 1022 );
+      SELF_ERROR( pArea, pError );
+      hb_errRelease( pError );
+      return FAILURE;
+   }
+
+   pArea->lpExtendInfo->bRecord[ 0 ] =  ' ';
+   pArea->lpExtendInfo->fRecordChanged = TRUE;
+   return SUCCESS;
+}
+
+static ERRCODE RecCount( AREAP pArea, ULONG * pRecCount )
 {
    DBFHEADER pHeader;
 
@@ -793,10 +967,10 @@ static ERRCODE SkipRaw( AREAP pArea, LONG lToSkip )
    return SELF_GOTO( pArea, pArea->lpExtendInfo->lRecNo + lToSkip );
 }
 
-static ERRCODE UnLock( AREAP pArea, LONG lRecNo )
+static ERRCODE UnLock( AREAP pArea, ULONG lRecNo )
 {
    if( lRecNo == 0 )
-      hb_rddUnLockAllRecords( pArea );
+      hb_dbfUnLockAllRecords( pArea );
    else
       SELF_RAWLOCK( pArea, REC_UNLOCK, lRecNo );
    return SUCCESS;
@@ -907,6 +1081,7 @@ static RDDFUNCS dbfTable = { 0,               /* Super Bof */
                              0,               /* Super SkipFilter */
                              SkipRaw,
                              0,               /* Super AddField */
+                             Append,
                              0,               /* Super CreateFields */
                              DeleteRec,
                              Deleted,
@@ -916,10 +1091,11 @@ static RDDFUNCS dbfTable = { 0,               /* Super Bof */
                              0,               /* Super Flush */
                              GetValue,
                              PutValue,
-                             0,               /* Super Recall */
+                             RecAll,
                              RecCount,
                              RecNo,
                              0,               /* Super SetFieldsExtent */
+                             0,               /* Super Alias */
                              Close,
                              Create,
                              Info,

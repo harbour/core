@@ -124,9 +124,10 @@ struct _AREA;
 typedef struct _FILEINFO
 {
    FHANDLE hFile;
-   LONG *  pLocksPos;          /* List of records locked */
-   LONG    lNumLocksPos;       /* Number of records locked */
+   ULONG * pLocksPos;          /* List of records locked */
+   ULONG   lNumLocksPos;       /* Number of records locked */
    BOOL    fFileLocked;        /* TRUE if entire file is locked */
+   BOOL    fAppend;            /* TRUE if new record is added */
    struct _FILEINFO * pNext;   /* The next file in the list */
 } FILEINFO;
 
@@ -186,10 +187,12 @@ typedef struct
    BYTE *   bRecord;         /* Buffer of the data */
    BOOL     fHasMemo;        /* Work Area with Memo fields */
    ULONG    lRecNo;          /* Current record */
-   BOOL     fExclusive;      /* Share the Work Area */
+   BOOL     fExclusive;      /* Share the file */
+   BOOL     fReadOnly;       /* Read only file */
    BYTE     bYear;           /* Last update */
    BYTE     bMonth;
    BYTE     bDay;
+   BOOL     fRecordChanged;  /* Record changed */
 } DBEXTENDINFO;
 
 typedef DBEXTENDINFO * LPDBEXTENDINFO;
@@ -528,7 +531,9 @@ typedef AREA * LPAREA;
 
 typedef USHORT ( * DBENTRYP_V    )( AREAP area );
 typedef USHORT ( * DBENTRYP_BP   )( AREAP area, BOOL * param );
+typedef USHORT ( * DBENTRYP_B    )( AREAP area, BOOL param );
 typedef USHORT ( * DBENTRYP_L    )( AREAP area, LONG param );
+typedef USHORT ( * DBENTRYP_UL   )( AREAP area, ULONG param );
 typedef USHORT ( * DBENTRYP_I    )( AREAP area, PHB_ITEM param );
 typedef USHORT ( * DBENTRYP_SI   )( AREAP area, USHORT index, PHB_ITEM param );
 typedef USHORT ( * DBENTRYP_VP   )( AREAP area, LPDBOPENINFO param );
@@ -538,8 +543,9 @@ typedef USHORT ( * DBENTRYP_SP   )( AREAP area, USHORT * param );
 typedef USHORT ( * DBENTRYP_P    )( AREAP area, BYTE * param );
 typedef USHORT ( * DBENTRYP_S    )( AREAP area, USHORT param );
 typedef USHORT ( * DBENTRYP_LP   )( AREAP area, LONG * param );
+typedef USHORT ( * DBENTRYP_ULP  )( AREAP area, ULONG * param );
 typedef USHORT ( * DBENTRYP_SVP  )( AREAP area, USHORT index, void * param );
-typedef USHORT ( * DBENTRYP_VSP  )( AREAP area, USHORT action, LONG lRecord );
+typedef USHORT ( * DBENTRYP_VSP  )( AREAP area, USHORT action, ULONG lRecord );
 typedef USHORT ( * DBENTRYP_SSI  )( AREAP area, USHORT p1, USHORT p2, PHB_ITEM p3 );
 
 #if 0
@@ -563,7 +569,7 @@ typedef struct _RDDFUNCS
    DBENTRYP_BP   eof;
    DBENTRYP_BP   found;
    DBENTRYP_V    goBottom;
-   DBENTRYP_L    go;
+   DBENTRYP_UL   go;
    DBENTRYP_I    goToId;
    DBENTRYP_V    goTop;
 #if 0
@@ -577,9 +583,7 @@ typedef struct _RDDFUNCS
    /* Data management */
 
    DBENTRYP_VF   addField;
-#if 0
-   DBENTRYP_S    append;
-#endif
+   DBENTRYP_B    append;
    DBENTRYP_I    createFields;
    DBENTRYP_V    deleterec;
    DBENTRYP_BP   deleted;
@@ -602,7 +606,7 @@ typedef struct _RDDFUNCS
 #endif
    DBENTRYP_SI   putValue;
    DBENTRYP_V    recall;
-   DBENTRYP_LP   reccount;
+   DBENTRYP_ULP  reccount;
 #if 0
    DBENTRYP_ISI  recInfo;
 #endif
@@ -612,9 +616,7 @@ typedef struct _RDDFUNCS
 
    /* WorkArea/Database management */
 
-#if 0
-   DBENTRYP_VP   alias;
-#endif
+   DBENTRYP_P    alias;
    DBENTRYP_V    close;
    DBENTRYP_VP   create;
    DBENTRYP_SI   info;
@@ -689,7 +691,7 @@ typedef struct _RDDFUNCS
 
    DBENTRYP_VSP  rawlock;
    DBENTRYP_VL   lock;
-   DBENTRYP_L    unlock;
+   DBENTRYP_UL   unlock;
 
 
    /* Memofile functions */

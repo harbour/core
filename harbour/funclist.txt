@@ -49,7 +49,7 @@ CTOD                    ;R;
 CURDIR                  ;R;
 DATE                    ;R;
 DAY                     ;R;
-DBAPPEND                ;S;
+DBAPPEND                ;R;
 DBCLEARFILTER           ;S;
 DBCLEARINDEX            ;S;
 DBCLEARRELATION         ;S;
