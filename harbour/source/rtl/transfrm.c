@@ -135,7 +135,7 @@ char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
    char *szStr;
    char  cPic;
 
-   PHB_ITEM pItem  = NULL;                         /* Suppress warning         */
+   PHB_ITEM pItem;
 
    BYTE  bFound = FALSE;
    BYTE  bEmpty;                                /* Suppress empty string    */
@@ -533,7 +533,6 @@ HARBOUR HB_TRANSFORM( void )
 
             case IT_LOGICAL:
             {
-               szExp      =  pExp->value.szText;
                szResult   =  (char *) _xgrab( lPic + 1 );
                                                 /* That's all folks        */
                szPic      += lPicStart;         /* Skip functions           */

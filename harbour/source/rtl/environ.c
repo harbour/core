@@ -28,6 +28,21 @@
   #endif
 #endif
 
+HARBOUR HB_GETENV(void);
+HARBOUR HB_OS(void);
+HARBOUR HB_VERSION(void);
+
+static SYMBOL symbols[] = {
+{ "GETENV" , FS_PUBLIC, HB_GETENV , 0 },
+{ "OS"     , FS_PUBLIC, HB_OS     , 0 },
+{ "VERSION", FS_PUBLIC, HB_VERSION, 0 }
+};
+
+void Environ__InitSymbols( void )
+{
+   ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
+}
+
 HARBOUR HB_OS(void)
 {
    int hb_osmajor = -1, hb_osminor = -1, hb_osletter = -1;

@@ -4,8 +4,6 @@
 #define CHR_HARD1   (char)141
 #define CHR_HARD2   (char)10
 
-void ProcessSymbols( SYMBOL *, WORD );
-
 HARBOUR HB_HARDCR(void);
 
 static SYMBOL symbols[] = {

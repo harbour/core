@@ -9,9 +9,16 @@
 
 extern void Arrays__InitSymbols( void );
 extern void Classes__InitSymbols( void );
+extern void Console__InitSymbols( void );
 extern void Descend__InitSymbols( void );
+extern void Dir__InitSymbols( void );
+extern void Environ__InitSymbols( void );
+extern void Files__InitSymbols( void );
 extern void HardCR__InitSymbols( void );
+extern void Math__InitSymbols( void );
 extern void Memotran__InitSymbols( void );
+extern void Set__InitSymbols( void );
+extern void Strings__InitSymbols( void );
 
 void ProcessSymbols( SYMBOL *, WORD );
 
@@ -22,9 +29,11 @@ HARBOUR HB_AT( void );
 HARBOUR HB_CDOW( void );
 HARBOUR HB_CHR( void );
 HARBOUR HB_CMONTH( void );
+HARBOUR HB_COL( void );
 HARBOUR HB_CTOD( void );
 HARBOUR HB_DATE( void );
 HARBOUR HB_DAY( void );
+HARBOUR HB_DEVPOS( void );
 HARBOUR HB_DOW( void );
 HARBOUR HB_DTOC( void );
 HARBOUR HB_DTOS( void );
@@ -41,10 +50,12 @@ HARBOUR HB_MIN( void );
 HARBOUR HB_MONTH( void );
 HARBOUR HB_PCOUNT( void );
 HARBOUR HB_REPLICATE( void );
+HARBOUR HB_ROW( void );
 HARBOUR HB_RTRIM( void );
 HARBOUR HB_SECONDS( void );
 HARBOUR HB_SPACE( void );
 HARBOUR HB_SQRT( void );
+HARBOUR HB_STOD( void );
 HARBOUR HB_STR( void );
 HARBOUR HB_SUBSTR( void );
 HARBOUR HB_TIME( void );
@@ -64,12 +75,12 @@ static SYMBOL symbols[] = {
     { "CDOW"      , FS_PUBLIC, HB_CDOW         , 0 },
     { "CHR"       , FS_PUBLIC, HB_CHR          , 0 },
     { "CMONTH"    , FS_PUBLIC, HB_CMONTH       , 0 },
-    { "COL"       , FS_PUBLIC, NULL            , 0 },
+    { "COL"       , FS_PUBLIC, HB_COL          , 0 },
     { "CTOD"      , FS_PUBLIC, HB_CTOD         , 0 },
     { "DATE"      , FS_PUBLIC, HB_DATE         , 0 },
     { "DAY"       , FS_PUBLIC, HB_DAY          , 0 },
     { "DELETED"   , FS_PUBLIC, NULL            , 0 },
-    { "DEVPOS"    , FS_PUBLIC, NULL            , 0 },
+    { "DEVPOS"    , FS_PUBLIC, HB_DEVPOS       , 0 },
     { "DO"        , FS_PUBLIC, NULL            , 0 },
     { "DOW"       , FS_PUBLIC, HB_DOW          , 0 },
     { "DTOC"      , FS_PUBLIC, HB_DTOC         , 0 },
@@ -102,13 +113,14 @@ static SYMBOL symbols[] = {
     { "REPLICATE" , FS_PUBLIC, HB_REPLICATE    , 0 },
     { "RLOCK"     , FS_PUBLIC, NULL            , 0 },
     { "ROUND"     , FS_PUBLIC, NULL            , 0 },
-    { "ROW"       , FS_PUBLIC, NULL            , 0 },
+    { "ROW"       , FS_PUBLIC, HB_ROW          , 0 },
     { "RTRIM"     , FS_PUBLIC, HB_RTRIM        , 0 },
     { "SECONDS"   , FS_PUBLIC, HB_SECONDS      , 0 },
     { "SELECT"    , FS_PUBLIC, NULL            , 0 },
     { "SETPOS"    , FS_PUBLIC, NULL            , 0 },
     { "SPACE"     , FS_PUBLIC, HB_SPACE        , 0 },
     { "SQRT"      , FS_PUBLIC, HB_SQRT         , 0 },
+    { "STOD"      , FS_PUBLIC, HB_STOD         , 0 },
     { "STR"       , FS_PUBLIC, HB_STR          , 0 },
     { "SUBSTR"    , FS_PUBLIC, HB_SUBSTR       , 0 },
     { "TIME"      , FS_PUBLIC, HB_TIME         , 0 },
@@ -131,9 +143,16 @@ void InitSymbolTable( void )
    */
   Arrays__InitSymbols();
   Classes__InitSymbols();
+  Console__InitSymbols();
   Descend__InitSymbols();
+  Dir__InitSymbols();
+  Environ__InitSymbols();
+  Files__InitSymbols();
   HardCR__InitSymbols();
+  Math__InitSymbols();
   Memotran__InitSymbols();
+  Set__InitSymbols();
+  Strings__InitSymbols();
 
   /*
    * The system symbol table with runtime functions HAVE TO be called last

@@ -10,6 +10,43 @@ extern STACK stack;
 
 #define HB_ISSPACE(c) ((c) == 9 || (c) == 10 || (c) == 13 || (c) == 32)
 
+HARBOUR HB_ALLTRIM( void );
+HARBOUR HB_ISALPHA( void );
+HARBOUR HB_ISDIGIT( void );
+HARBOUR HB_ISUPPER( void );
+HARBOUR HB_ISLOWER( void );
+HARBOUR HB_PAD( void );
+HARBOUR HB_PADC( void );
+HARBOUR HB_PADL( void );
+HARBOUR HB_PADR( void );
+HARBOUR HB_RAT( void );
+HARBOUR HB_RIGHT( void );
+HARBOUR HB_STRTRAN( void );
+HARBOUR HB_STUFF( void );
+HARBOUR HB_TRIM( void );
+
+static SYMBOL symbols[] = {
+{ "ALLTRIM", FS_PUBLIC, HB_ALLTRIM, 0 },
+{ "ISALPHA", FS_PUBLIC, HB_ISALPHA, 0 },
+{ "ISDIGIT", FS_PUBLIC, HB_ISDIGIT, 0 },
+{ "ISUPPER", FS_PUBLIC, HB_ISUPPER, 0 },
+{ "ISLOWER", FS_PUBLIC, HB_ISLOWER, 0 },
+{ "PAD"    , FS_PUBLIC, HB_PAD    , 0 },
+{ "PADC"   , FS_PUBLIC, HB_PADC   , 0 },
+{ "PADL"   , FS_PUBLIC, HB_PADL   , 0 },
+{ "PADR"   , FS_PUBLIC, HB_PADR   , 0 },
+{ "RAT"    , FS_PUBLIC, HB_RAT    , 0 },
+{ "RIGHT"  , FS_PUBLIC, HB_RIGHT  , 0 },
+{ "STRTRAN", FS_PUBLIC, HB_STRTRAN, 0 },
+{ "STUFF"  , FS_PUBLIC, HB_STUFF  , 0 },
+{ "TRIM"   , FS_PUBLIC, HB_TRIM   , 0 }
+};
+
+void Strings__InitSymbols( void )
+{
+   ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
+}
+
 BOOL hb_strempty( char * szText, ULONG ulLen )
 {
    BOOL bRetVal = TRUE;

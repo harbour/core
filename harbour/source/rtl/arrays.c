@@ -6,8 +6,6 @@
 #include <extend.h>
 #include <ctoharb.h>
 
-void ProcessSymbols( SYMBOL *, WORD );
-
 HARBOUR HB_ACLONE(void);
 HARBOUR HB_ACOPY(void);
 HARBOUR HB_ADEL(void);

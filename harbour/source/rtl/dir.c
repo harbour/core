@@ -81,6 +81,16 @@
   #define PATH_SEPARATOR '\\'
 #endif
 
+HARBOUR HB_DIRECTORY(void);
+
+static SYMBOL symbols[] = {
+{ "DIRECTORY", FS_PUBLIC, HB_DIRECTORY, 0 }
+};
+
+void Dir__InitSymbols( void )
+{
+   ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
+}
 
 static  BOOL  hb_strMatchDOS (char *pszString, char *pszMask);
 
@@ -181,6 +191,7 @@ HARBOUR HB_DIRECTORY( void )
 */
    /* should have drive,directory in dirname and filespec in pattern */
 
+   tzset();
    pdir = hb_itemArrayNew(0);
    dir = opendir( dirname );
    if (NULL == dir)

@@ -6,8 +6,6 @@
 #include <itemapi.h>
 #include <ctoharb.h>
 
-void ProcessSymbols( SYMBOL *, WORD );
-
 #define MET_METHOD    0
 #define MET_DATA      1
 #define MET_CLASSDATA 2

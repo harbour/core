@@ -112,6 +112,48 @@ static USHORT last_error = 0;
 
 extern int rename( const char *, const char * );
 
+HARBOUR HB_BIN2I( void );
+HARBOUR HB_BIN2L( void );
+HARBOUR HB_BIN2W( void );
+HARBOUR HB_FCLOSE( void );
+HARBOUR HB_FCREATE( void );
+HARBOUR HB_FERASE( void );
+HARBOUR HB_FERROR( void );
+HARBOUR HB_FILE( void );
+HARBOUR HB_FOPEN( void );
+HARBOUR HB_FREAD( void );
+HARBOUR HB_FREADSTR( void );
+HARBOUR HB_FRENAME( void );
+HARBOUR HB_FSEEK( void );
+HARBOUR HB_FWRITE( void );
+HARBOUR HB_I2BIN( void );
+HARBOUR HB_L2BIN( void );
+HARBOUR HB_W2BIN( void );
+
+static SYMBOL symbols[] = {
+{ "BIN2I"   , FS_PUBLIC, HB_BIN2I   , 0 },
+{ "BIN2L"   , FS_PUBLIC, HB_BIN2L   , 0 },
+{ "BIN2W"   , FS_PUBLIC, HB_BIN2W   , 0 },
+{ "FCLOSE"  , FS_PUBLIC, HB_FCLOSE  , 0 },
+{ "FCREATE" , FS_PUBLIC, HB_FCREATE , 0 },
+{ "FERASE"  , FS_PUBLIC, HB_FERASE  , 0 },
+{ "FERROR"  , FS_PUBLIC, HB_FERROR  , 0 },
+{ "FILE"    , FS_PUBLIC, HB_FILE    , 0 },
+{ "FOPEN"   , FS_PUBLIC, HB_FOPEN   , 0 },
+{ "FREAD"   , FS_PUBLIC, HB_FREAD   , 0 },
+{ "FREADSTR", FS_PUBLIC, HB_FREADSTR, 0 },
+{ "FSEEK"   , FS_PUBLIC, HB_FSEEK   , 0 },
+{ "FWRITE"  , FS_PUBLIC, HB_FWRITE  , 0 },
+{ "I2BIN"   , FS_PUBLIC, HB_I2BIN   , 0 },
+{ "L2BIN"   , FS_PUBLIC, HB_L2BIN   , 0 },
+{ "W2BIN"   , FS_PUBLIC, HB_W2BIN   , 0 }
+};
+
+void Files__InitSymbols( void )
+{
+   ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
+}
+
 /* Convert HARBOUR flags to IO subsystem flags */
 
 #if defined(HAVE_POSIX_IO)

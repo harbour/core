@@ -1,3 +1,15 @@
+19990613 14:30 CET Eddie Runia
+  * source/rtl/arrays.c; source/rtl/classes.c; source/rtl/files.c;
+    source/rtl/console.c; source/rtl/dir.c; source/rtl/environ.c;
+    source/rtl/math.c; source/rtl/set.c; source/rtl/strings.c
+    InitSymbols added
+  * source/rtl/transfrm.c
+    Warnings eliminated
+  * source/vm/initsymb.c
+    calls to RTL functions added
+  * tests/working/run_exp.h
+    removed unnecessary references and sort alphabetically
+
 19990612 08:30 CET Matthew Hamilton
   * tests/working/inifiles.prg
     with ReadBool and WriteBool

@@ -1,8 +1,6 @@
 #include <extend.h>
 #include <ctype.h>
 
-void ProcessSymbols( SYMBOL *, WORD );
-
 HARBOUR HB_DESCEND(void);
 
 static SYMBOL symbols[] = {

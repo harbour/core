@@ -7,8 +7,6 @@
 #define CHR_SOFT1   (char)13
 #define CHR_SOFT2   (char)10
 
-void ProcessSymbols( SYMBOL *, WORD );
-
 HARBOUR HB_MEMOTRAN(void);
 
 static SYMBOL symbols[] = {

@@ -18,6 +18,43 @@
    #include <gtapi.h>
 #endif
 
+HARBOUR HB___ACCEPT(void);
+HARBOUR HB_DEVOUT( void );
+HARBOUR HB_DEVPOS( void );
+HARBOUR HB_EJECT( void );
+HARBOUR HB_MAXCOL( void );
+HARBOUR HB_MAXROW( void );
+HARBOUR HB_OUTSTD( void );
+HARBOUR HB_OUTERR( void );
+HARBOUR HB_PCOL( void );
+HARBOUR HB_PROW( void );
+HARBOUR HB_SCROLL( void );
+HARBOUR HB_SETPRC( void );
+HARBOUR HB_QOUT( void );
+HARBOUR HB_QQOUT( void );
+
+static SYMBOL symbols[] = {
+{ "__ACCEPT", FS_PUBLIC, HB___ACCEPT, 0 },
+{ "DEVOUT"  , FS_PUBLIC, HB_DEVOUT  , 0 },
+{ "DEVPOS"  , FS_PUBLIC, HB_DEVPOS  , 0 },
+{ "EJECT"   , FS_PUBLIC, HB_EJECT   , 0 },
+{ "MAXCOL"  , FS_PUBLIC, HB_MAXCOL  , 0 },
+{ "MAXROW"  , FS_PUBLIC, HB_MAXROW  , 0 },
+{ "OUTERR"  , FS_PUBLIC, HB_OUTERR  , 0 },
+{ "OUTSTD"  , FS_PUBLIC, HB_OUTSTD  , 0 },
+{ "PCOL"    , FS_PUBLIC, HB_PCOL    , 0 },
+{ "PROW"    , FS_PUBLIC, HB_PROW    , 0 },
+{ "SCROLL"  , FS_PUBLIC, HB_SCROLL  , 0 },
+{ "SETPRC"  , FS_PUBLIC, HB_SETPRC  , 0 },
+{ "QOUT"    , FS_PUBLIC, HB_QOUT    , 0 },
+{ "QQOUT"   , FS_PUBLIC, HB_QQOUT   , 0 }
+};
+
+void Console__InitSymbols( void )
+{
+   ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
+}
+
 static unsigned short dev_row, dev_col, p_row, p_col;
 static char CrLf [3];
 

@@ -21,6 +21,21 @@ BOOL hb_set_fixed;
 int hb_set_althan;
 int hb_set_printhan;
 
+HARBOUR HB_SET( void );
+HARBOUR HB_SETCENTURY( void );
+HARBOUR HB_SETFIXED( void );
+
+static SYMBOL symbols[] = {
+{ "SET"       , FS_PUBLIC, HB_SET       , 0 },
+{ "SETCENTURY", FS_PUBLIC, HB_SETCENTURY, 0 },
+{ "SETFIXED"  , FS_PUBLIC, HB_SETFIXED  , 0 }
+};
+
+void Set__InitSymbols( void )
+{
+   ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
+}
+
 static BOOL set_logical (PHB_ITEM pItem)
 {
    BOOL logical;

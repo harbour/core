@@ -7,6 +7,31 @@
 
 extern STACK stack;
 
+HARBOUR HB_ABS( void );
+HARBOUR HB_EXP( void );
+HARBOUR HB_INT( void );
+HARBOUR HB_LOG( void );
+HARBOUR HB_MAX( void );
+HARBOUR HB_MIN( void );
+HARBOUR HB_MOD( void );
+HARBOUR HB_SQRT( void );
+
+static SYMBOL symbols[] = {
+{ "ABS"  , FS_PUBLIC, HB_ABS  , 0 },
+{ "EXP"  , FS_PUBLIC, HB_EXP  , 0 },
+{ "INT"  , FS_PUBLIC, HB_INT  , 0 },
+{ "LOG"  , FS_PUBLIC, HB_LOG  , 0 },
+{ "MAX"  , FS_PUBLIC, HB_MAX  , 0 },
+{ "MIN"  , FS_PUBLIC, HB_MIN  , 0 },
+{ "MOD"  , FS_PUBLIC, HB_MOD  , 0 },
+{ "SQRT" , FS_PUBLIC, HB_SQRT , 0 }
+};
+
+void Math__InitSymbols( void )
+{
+   ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
+}
+
 HARBOUR HB_ABS( void )
 {
    if( _pcount() == 1 )
