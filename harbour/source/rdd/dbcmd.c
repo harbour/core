@@ -3372,11 +3372,22 @@ HB_FUNC( DBEXISTS )
 // check if the field is on the Fields Array
 static BOOL IsFieldIn( char * fieldName, PHB_ITEM pFields )
 {
-  USHORT i, uiFields = ( USHORT ) hb_arrayLen( pFields );
+  USHORT i, j, uiFields = ( USHORT ) hb_arrayLen( pFields );
+  char *ptr;
+  BOOL lresult;
+
   for ( i=0; i<uiFields; i++ )
   {
     PHB_ITEM pField = pFields->item.asArray.value->pItems + i;
-    if ( strcmp( fieldName, (char *)pField->item.asString.value ) == 0 )
+    ptr = (char *)pField->item.asString.value;
+    lresult = TRUE;
+    for( j=0;*ptr;j++,ptr++ )
+        if( *(fieldName+j) != toupper(*ptr) )
+        {
+           lresult = FALSE;
+           break;
+        }
+    if ( lresult )
       return TRUE;
   }
   return FALSE;
@@ -3455,6 +3466,15 @@ static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName, BOOL creat
     }
     hb_itemRelease( pItem );
     hb_itemRelease( pData );
+    if( !hb_arrayLen( pFieldArray ) )
+    {
+       hb_itemRelease( pFieldArray );
+       SELF_RELEASE( ( AREAP ) pAreaNode->pArea );
+       hb_xfree( pInfo.abName );
+       hb_xfree( pAreaNode );
+       hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, "DBCREATE" );
+       return NULL;
+    }
 
 /* check for table existence and if true, drop it */
     tableItem = hb_itemNew( NULL );

@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-03-16 19:31 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * source/rdd/dbfcdx/dbfcdx1.c
+     ! fixed bug with keys updating
+
+2002-03-15 08:50 UTC-0800 Ron Pinkas <ron@ronpinkas.com>
   * contrib\dot\pp.prg
   * contrib\dot\pp_harb.ch
   * contrib\dot\prgscrpt.prg
