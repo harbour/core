@@ -1,3 +1,6 @@
+2000-12-11 21:45 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+    *utils/hbmake/hbmake.prg
+       *Fixed an small bug
 2000-12-11 21:45 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/tbrowse.prg
      - removed hidden: clause inside class definition (it doesn't work right now)

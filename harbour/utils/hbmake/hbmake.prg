@@ -970,7 +970,7 @@ Endif
 ? 'Setting project name'
 Fwrite( nLinkHandle, "PROJECT = " + Strtran( cTopfile, ".prg", ".exe" ) + CRLF )
 ? 'Setting object files'
-Fwrite( nLinkHandle, "OBJFILES = " +Strtran( cTopfile, ".prg", ".obj" ) )
+Fwrite( nLinkHandle, "OBJFILES = " +Strtran( cTopfile, ".prg", ".obj" ) + CRLF )
 For x := 1 To Len( aobjs )
    If x <> Len( aobjs ) .and. aObjs[x]<>cTopfile
 
@@ -980,7 +980,7 @@ For x := 1 To Len( aobjs )
    Endif
 Next
               ? 'Setting C Files'
-Fwrite( nLinkHandle, "CFILES = " +Strtran( cTopfile, ".prg", ".c" ) )
+Fwrite( nLinkHandle, "CFILES = " +Strtran( cTopfile, ".prg", ".c" ) + CRLF )
 For x := 1 To Len( acs )
    If x <> Len( acs ) .and. aCs[x]<>cTopfile
       Fwrite( nLinkHandle, " " + aCs[ x ] )
