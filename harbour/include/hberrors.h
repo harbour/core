@@ -106,7 +106,7 @@ extern "C" {
 #define HB_COMP_WARN_FUN_WITH_NO_RETURN         7
 #define HB_COMP_WARN_ASSIGN_TYPE                8
 #define HB_COMP_WARN_OPERAND_TYPE               9
-#define HB_COMP_WARN_OPERANDS_INCOMPATBLE       10
+#define HB_COMP_WARN_OPERANDS_INCOMPATIBLE      10
 #define HB_COMP_WARN_ASSIGN_SUSPECT             11
 #define HB_COMP_WARN_OPERAND_SUSPECT            12
 #define HB_COMP_WARN_NOT_ARRAY                  13

@@ -1464,8 +1464,8 @@ DoWhile    : WhileBegin Expression Crlf
 WhileBegin : WHILE    { $$ = hb_comp_functions.pLast->lPCodePos; hb_compLinePushIfInside(); ++hb_comp_wWhileCounter; hb_compLoopStart(); }
            ;
 
-EndWhile   : END
-           | ENDDO
+EndWhile   : END   { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; }
+           | ENDDO { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; }
            ;
 
 ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
@@ -1565,7 +1565,8 @@ RecoverEmpty : RECOVER
                   hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
                   $<lNumber>$ = hb_comp_functions.pLast->lPCodePos;
                   --hb_comp_wSeqCounter;
-                  hb_compGenPCode2( HB_P_SEQRECOVER, HB_P_POP, ( BOOL ) 1 );
+                  hb_compLinePush();
+                  hb_compGenPCode2( HB_P_SEQRECOVER, HB_P_POP, ( BOOL ) 0 );
                }
            ;
 
@@ -1574,8 +1575,8 @@ RecoverUsing : RECOVERUSING IdentName
                   hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
                   $<lNumber>$ = hb_comp_functions.pLast->lPCodePos;
                   --hb_comp_wSeqCounter;
-                  hb_compGenPCode1( HB_P_SEQRECOVER );
                   hb_compLinePush();
+                  hb_compGenPCode1( HB_P_SEQRECOVER );
                   hb_compGenPopVar( $2 );
                }
            ;

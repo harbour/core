@@ -1744,19 +1744,19 @@ ULONG hb_compGenJump( LONG lOffset )
    /* Just a place holder, it might be a far jump...*/
    if( lOffset == 0 )
    {
-      hb_compGenPCode4( HB_P_JUMPFAR, 0, 0, 0, ( BOOL ) 0 );
+      hb_compGenPCode4( HB_P_JUMPFAR, 0, 0, 0, ( BOOL ) 1 );
    }
    else if( lOffset >= -128 && lOffset <= 127 )
    {
-      hb_compGenPCode4( HB_P_JUMPNEAR, HB_LOBYTE( lOffset ), HB_P_NOOP, HB_P_NOOP, ( BOOL ) 0 );
+      hb_compGenPCode4( HB_P_JUMPNEAR, HB_LOBYTE( lOffset ), HB_P_NOOP, HB_P_NOOP, ( BOOL ) 1 );
    }
    else if( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
    {
-      hb_compGenPCode4( HB_P_JUMP, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_P_NOOP, ( BOOL ) 0 );
+      hb_compGenPCode4( HB_P_JUMP, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_P_NOOP, ( BOOL ) 1 );
    }
    else if( lOffset >= (-8388608L) && lOffset <= 8388607L )
    {
-      hb_compGenPCode4( HB_P_JUMPFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( ( USHORT ) ( lOffset ) >> 16 ) & 0xFF ), ( BOOL ) 0 );
+      hb_compGenPCode4( HB_P_JUMPFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( ( USHORT ) ( lOffset ) >> 16 ) & 0xFF ), ( BOOL ) 1 );
    }
    else
    {
@@ -3223,6 +3223,15 @@ void hb_compCodeBlockStart()
 {
    PFUNCTION pBlock;
 
+   #if 0
+      if( hb_comp_iWarnings >= 3 )
+      {
+	     /* Not generating yet - will be generated in hb_compCodeBlockEnd() */
+         hb_compGenPCode1( HB_P_PUSHBLOCK );
+         pBlock->lPCodePos--;
+      }
+   #endif
+
    pBlock               = hb_compFunctionNew( NULL, HB_FS_STATIC );
    pBlock->pOwner       = hb_comp_functions.pLast;
    pBlock->iStaticsBase = hb_comp_functions.pLast->iStaticsBase;
@@ -3273,9 +3282,7 @@ void hb_compCodeBlockEnd( void )
       ++wLocals;
    }
 
-   if( ( pCodeblock->lPCodePos + 3 ) <= 255 &&
-       pCodeblock->wParamCount == 0 &&
-       wLocals == 0 )
+   if( ( pCodeblock->lPCodePos + 3 ) <= 255 &&  pCodeblock->wParamCount == 0 && wLocals == 0 )
    {
       /* NOTE: 3 = HB_P_PUSHBLOCKSHORT + BYTE( size ) + _ENDBLOCK */
       wSize = ( USHORT ) pCodeblock->lPCodePos + 3;

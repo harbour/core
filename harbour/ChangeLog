@@ -1,3 +1,16 @@
+2001-04-08 16:15 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * include/hberrors.h
+     ! Corrected typo.
+
+   * source/compiler/harbour.sly
+   * source/compiler/harbour.y
+     ! Corrected few incorrect "Unreachable code warnings".
+     ! Corrected hb_compPushLine() in RECOVER and RECOVERUSING
+
+   * source/compiler/harbour.c
+   * source/compiler/hbpcode.c
+     ! Improved StrongType logic.
+
 2001-04-07 13:25 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/hbpcode.c
      ! Fixed some StrongType logic.
