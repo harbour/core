@@ -504,7 +504,8 @@ METHOD GetRow(nRow) CLASS TMySQLQuery
                case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_SHORT_TYPE .OR.;
                     ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_LONG_TYPE .OR.;
                     ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_LONGLONG_TYPE .OR.;
-                    ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_INT24_TYPE
+                    ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_INT24_TYPE .OR. ;
+                    ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DECIMAL_TYPE
                   aRow[i] := Val(aRow[i])
                   
                case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DOUBLE_TYPE .OR.;
@@ -996,7 +997,8 @@ METHOD GetBlankRow() CLASS TMySQLTable
       case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_SHORT_TYPE      .OR.;
            ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_LONG_TYPE .OR.;
            ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_LONGLONG_TYPE .OR.;
-           ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_INT24_TYPE
+           ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_INT24_TYPE .OR. ;
+           ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DECIMAL_TYPE
 
          aRow[i] := 0
 
