@@ -117,6 +117,9 @@ Local allParam
 //__traceprgcalls(.t.)
 //Local oProfile := HBProfile():new()
 //   __setProfiler( .T. )
+Set Date Ansi
+Set Score Off
+Set Century On
 Default p1 To ""
 Default p2 To ""
 Default p3 To ""
@@ -150,6 +153,9 @@ if lEditMode
    else
       crtmakfile( cFile )
    endif
+         oProfile:gather()
+         
+         HBProfileReportToFile():new( oProfile:callSort() ):generate( {|o| o:nCalls > 0 } )
 
 Return nil
 endif
@@ -165,6 +171,9 @@ CompUpdatedfiles()
 endif
 outstd(cLinkComm)
 ! ( cLinkcomm )
+         oProfile:gather()
+         
+         HBProfileReportToFile():new( oProfile:callSort() ):generate( {|o| o:nCalls > 0 } )
 
 Return nil
 
@@ -917,17 +926,17 @@ If lFwh
 Elseif lCw
    @  4,  1 Say "C4H path" Get ccwpath
 Endif
-   @  4,40   Say "Obj Files Dir" get cObjDir
+   @  4,40   Say "Obj Files Dir" get cObjDir pict "@s15"
 ATTENTION( "Harbour Options", 5 )
 
 @  6,  1 Get lautomemvar checkbox  caption  "Automatic memvar declaration"
-@  6, 43 Get lvarismemvar checkbox caption  "Variables are assumed M->"
+@  6, 40 Get lvarismemvar checkbox caption  "Variables are assumed M->"
 @  7,  1 Get lDebug checkbox caption  "Debug info"
-@  7, 43 Get lSupressline checkbox  caption "Suppress line number information"
+@  7, 40 Get lSupressline checkbox  caption "Suppress line number information"
 @  8,  1 Get lGenppo checkbox  caption "Generate pre-processed output"
-@  8, 43 Get lCompMod checkbox caption  "compile module only"
-@  9,  1 Say "User Defines " get cUserDef pict "@s20"
-@  9, 43 Say "User include Path" get cUserInclude pict "@s20"
+@  8, 40 Get lCompMod checkbox caption  "compile module only"
+@  9,  1 Say "User Defines " get cUserDef pict "@s15"
+@  9, 40 Say "User include Path" get cUserInclude pict "@s15"
 Read
 if !empty(cUserDef)
       cDefHarOpts+= " -D"+alltrim(cUserDef) +" "
@@ -1029,7 +1038,7 @@ Elseif lVcc
    else
    Aadd( aCommands, { ".prg.c:", "$(BHC)\bin\harbour -n -I$(BHC)\include $(HARBOURFLAGS) -I$(C4W)\include -o$* $**" } )
    endif
-   Aadd( aCommands, { ".rc.res:", "$(BCB)\BIN\rc $(RFLAGS) $<" } )
+   Aadd( aCommands, { ".rc.res:", "$(BCB)\rc $(RFLAGS) $<" } )
 Endif
 
 attention( 'Spacebar to select, Enter to continue process', 22 )
@@ -1256,7 +1265,7 @@ if lBcc
  Fwrite( nLinkHandle, "CFLAG2 =  -I$(BHC)\include;$(BCB)\include" +CRLF)
 
  Fwrite( nLinkHandle, "RFLAGS = "+CRLF)
- Fwrite( nLinkHandle, "LFLAGS = -L$(BCB)\lib\obj;$(BCB)\lib;$(BHC)\lib;$(FWH)\lib -Gn -M -m -s -aa" + if(lFwh," -Tpe","")+CRLF)
+ Fwrite( nLinkHandle, "LFLAGS = -L$(BCB)\lib\obj;$(BCB)\lib;$(BHC)\lib;$(FWH)\lib -Gn -M -m -s -aa" + if(lFwh,"-Tpe","")+CRLF)
  Fwrite( nLinkHandle, "IFLAGS = " +CRLF)
  Fwrite( nLinkHandle, "LINKER = ilink32"+CRLF)
  Fwrite( nLinkHandle, " "+CRLF)
@@ -1612,17 +1621,17 @@ ATTENTION( "Enviroment options", 0 )
 Read
 set cursor on
    @  4,  1 Say "Library name with our extention" Get cfwhpath pict "@s15"
-   @  4,55   Say "Obj Files Dir" get cObjDir
+   @  4,40   Say "Obj Files Dir" get cObjDir pict "@s15"
 ATTENTION( "Harbour Options", 5 )
 
 @  6,  1 Get lautomemvar   checkbox  caption "Automatic memvar declaration"
-@  6, 43 Get lvarismemvar checkbox  caption "Variables are assumed M->"
+@  6, 40 Get lvarismemvar checkbox  caption "Variables are assumed M->"
 @  7,  1 Get lDebug checkbox  caption "Debug info"
-@  7, 43 Get lSupressline checkbox  caption "Suppress line number information"
+@  7, 40 Get lSupressline checkbox  caption "Suppress line number information"
 @  8,  1 Get lGenppo checkbox  caption "Generate pre-processed output"
-@  8, 43 Get lCompMod checkbox  caption "compile module only"
-@  9,  1 Say "User Defines " get cUserDef pict "@s20"
-@  9, 43 Say "User include Path" get cUserInclude pict "@s20"
+@  8, 40 Get lCompMod checkbox  caption "compile module only"
+@  9,  1 Say "User Defines " get cUserDef pict "@s15"
+@  9, 40 Say "User include Path" get cUserInclude pict "@s15"
 Read
 if !empty(cUserDef)
       cDefHarOpts+= " -D"+alltrim(cUserDef) +" "

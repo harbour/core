@@ -97,18 +97,12 @@ Function GetSourceFiles( lSubdir,lgcc ,cOs)
 
 
 
-        If Len( aData := Directory( aStru[ nCounter ] + "*.*" ) ) != 0
-
-
-
+/*        If Len( aData := Directory( aStru[ nCounter ] + "*.prg") ) != 0*/
+          If Len( aData := DIR_MULTI( aStru[ nCounter ] + "*.prg"+'|'+ aStru[ nCounter ] + "*.c" )) !=0
            nDataLen := Len( aData )
-
            For y := 1 To nDataLen
 
-              If At( '.PRG', Upper( adata[ y, 1 ] ) ) > 0 .or. At( '.C', Upper( adata[ y, 1 ] ) ) > 0
-
                  If lSubdir
-
                     Aadd( aRet, Strtran( astru[ nCounter ], cDir, '' ) + Pad( aData[ y, 1 ], 13 ) + ;
                           Str( aData[ y, 2 ], 8 ) + '  ' + ;
                           Dtoc( aData[ y, 3 ] ) + '  ' + ;
@@ -116,28 +110,42 @@ Function GetSourceFiles( lSubdir,lgcc ,cOs)
 
                  Elseif !lsubdir .and. At( If( lGcc, "/", "\" ), Strtran( astru[ nCounter ], cDir, '' ) ) == 0
 
-                    Aadd( aRet, Pad( aData[ y, 1 ], 13 ) + ;
+                   Aadd( aRet, Pad( aData[ y, 1 ], 13 ) + ;
                       Str( aData[ y, 2 ], 8 ) + '  ' + ;
                           Dtoc( aData[ y, 3 ] ) + '  ' + ;
                           aData[ y, 4 ] )
 
                  Endif
 
-              Endif
+           Next
+        Endif
+/*
+        If Len( aData := Directory( aStru[ nCounter ] + "*.c" ) ) != 0
 
+           nDataLen := Len( aData )
+           For y := 1 To nDataLen
+                 If lSubdir
+                    Aadd( aRet, Strtran( astru[ nCounter ], cDir, '' ) + Pad( aData[ y, 1 ], 13 ) + ;
+                          Str( aData[ y, 2 ], 8 ) + '  ' + ;
+                          Dtoc( aData[ y, 3 ] ) + '  ' + ;
+                          aData[ y, 4 ] )
+
+                 Elseif !lsubdir .and. At( If( lGcc, "/", "\" ), Strtran( astru[ nCounter ], cDir, '' ) ) == 0
+
+                   Aadd( aRet, Pad( aData[ y, 1 ], 13 ) + ;
+                      Str( aData[ y, 2 ], 8 ) + '  ' + ;
+                          Dtoc( aData[ y, 3 ] ) + '  ' + ;
+                          aData[ y, 4 ] )
+              Endif
            Next
 
         Endif
-
+  */
      Next
 
      For nCounter := 1 To Len( aret )
 
-
-
         xItem := Substr( aret[ nCounter ], Rat( If( lGcc, "/", '\' ), aret[ nCounter ] ) + 1 )
-
-
 
         nPos := Ascan( astru, { | x | x := Substr( x, Rat( if(lGcc,"/",'\'), x ) + 1 ), Left( x, At( ".", x ) ) == Left( xitem, At( ".", xitem ) ) } )
 
@@ -227,8 +235,8 @@ Static Function GetDirs( cPattern )
      Local lLinux := At( 'linux', Os() ) > 0
      Aeval( Directory( cPattern + "*.", "D" ), ;
             { | xItem | If( xItem[ 5 ] = "D" .and. if(!llinux , xItem[ 1 ] != "." .and. xItem[ 1 ] != ".." ,), ;
-            ( Aadd( aDir, cPattern + xItem[ 1 ] + If( llinux, "\", '/' ) ) ;
-             ), "" ) } )
+            ( Aadd( aDir, cPattern + xItem[ 1 ] ) ;
+             ), "" ) } )                       /* + If( llinux, "\", '/' )*/
 Return ( aDir )
 
 
@@ -422,7 +430,7 @@ Function GetSourceDirMacros(lgcc,cOs)
        If !Empty( adirs := GetDirs( astru[ nCounter ] ) )   // There are elements!
 
           Aeval( aDirs, { | xItem | Aadd( aStru, xItem+if(lGcc,"/","\") ) } )
-
+                                                      /**/
        Endif
 
      Enddo
@@ -662,7 +670,20 @@ Function ReadLN( leof )
 
 Return cBuffer
 
+FUNCTION DIR_MULTI( cFileMaskList, cAttr )
+   LOCAL aList := ListasArray2( cFileMaskList, "|" )
+   AEval( aList, {|tmp, tmp1| aList[ tmp1 ] := DIRECTORY( tmp, cAttr ) })
+   RETURN ArrayAJoin(alist)
 
+function ArrayAJoin(c)
+local aResult:={}
+local aCurArray
+local nPos
+for nPos:=1 to len(c)
+    aCurArray:=c[nPos]
+    aeval(aCurArray,{|a| aadd(aresult,a)})
+next
+return aresult               
 
 *+ EOF: HBMUTILS.PRG
 
