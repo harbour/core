@@ -1,3 +1,13 @@
+19990925-00:20 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/adir.prg
+    + Added an #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY around the
+      directory call.  The Clipper behaviour is strictly a bug and there
+      is no need to duplicate it.
+  * source/rtl/asort.prg
+    * The initial test to determine if the codeblock is going to return
+      a logical was passing a numeric as a test - and the codeblock may
+      not have been expecting it.
+
 19990925-05:57 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/vm/dynsym.c
     ! HB___DYNSGETNAME() now validates the index parameter passed.

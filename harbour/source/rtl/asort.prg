@@ -67,7 +67,7 @@ FUNCTION aSort( aArray, nStart, nCount, bBlock )
                   since the codeblock will be called one more time for the
                   first logical element than in Clipper. */
 
-         IF !ISBLOCK( bBlock ) .OR. !( ISLOG( Eval( bBlock, nStart, nStart ) ) )
+         IF !ISBLOCK( bBlock ) .OR. !( ISLOG( Eval( bBlock, aArray[1], aArray[1] ) ) )
             bBlock := {| x, y | x < y }
          ENDIF
 
