@@ -1,5 +1,10 @@
 20000514-18:57 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
+  * source/compiler/harbour.c
+    * Remmed some debug printf()
+
+20000514-18:57 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
   * source/compiler/harbour.y
     ! Corrected '@' to be accepted on any var in a Function Declaration.
     ! Simplified rules of Function Declaration Parameter list.

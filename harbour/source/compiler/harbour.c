@@ -491,7 +491,7 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
       if ( hb_comp_iWarnings < 3 )
          return;
 
-      printf( "\nAdding parameter: %s Type: %c\n", szVarName, cValueType );
+      //printf( "\nAdding parameter: %s Type: %c\n", szVarName, cValueType );
 
       hb_comp_pLastMethod->iParamCount++;
 
@@ -807,7 +807,7 @@ PCOMCLASS hb_compClassAdd( char * szClassName )
 {
    PCOMCLASS pClass;
 
-   printf( "\nDeclaring Class: %s\n", szClassName );
+   //printf( "\nDeclaring Class: %s\n", szClassName );
 
    if ( hb_comp_iWarnings < 3 )
       return NULL;
@@ -860,7 +860,7 @@ PCOMMETHOD hb_compMethodAdd( PCOMCLASS pClass, char * szMethodName )
 {
    PCOMMETHOD pMethod;
 
-   printf( "\nDeclaring Method: %s of Class: %s\n", szMethodName, pClass->szName );
+   //printf( "\nDeclaring Method: %s of Class: %s\n", szMethodName, pClass->szName );
 
    if ( hb_comp_iWarnings < 3 )
       return NULL;
@@ -915,7 +915,7 @@ PCOMDECLARED hb_compDeclaredAdd( char * szDeclaredName )
    if ( hb_comp_iWarnings < 3 )
       return NULL;
 
-   printf( "\nDeclaring Function: %s\n", szDeclaredName, NULL );
+   //printf( "\nDeclaring Function: %s\n", szDeclaredName, NULL );
 
    if ( ( pDeclared = hb_compDeclaredFind( szDeclaredName ) ) != NULL )
    {
