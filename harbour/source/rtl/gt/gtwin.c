@@ -204,6 +204,10 @@ void hb_gt_Done( void )
    CloseHandle( s_HOutput );
    s_HOutput = INVALID_HANDLE_VALUE;
 */
+   /* detected using NuMega BoundsChecker */
+   CloseHandle( s_HOriginal );
+   s_HOriginal = INVALID_HANDLE_VALUE;
+
    CloseHandle( s_HInactive );
    s_HInactive = INVALID_HANDLE_VALUE;
 
