@@ -1,3 +1,5 @@
+#include "set.ch"
+
 //
 // Strip
 //
@@ -13,61 +15,7 @@
 //
 
 function Main( cFrom, cTo )
-
-   local oFrom
-   local oTo
-   local cOut
-
-   cFrom := Default( cFrom, "strip.prg" )
-   cTo   := Default( cTo,   "strip.out" )
-
-   oFrom := TTextFile():New( cFrom, "R" )
-   oTo   := TTextFile():New( cTo  , "W" )
-
-   do while !oFrom:lEoF
-      cOut := oFrom:Run()
-      if alltrim(cOut) != ""
-         oTo:Run( cOut )
-      endif
-   enddo
-   QOut( "Number of lines", oTo:nLine )
-   oFrom:Dispose()
-   oTo:Dispose()
-return nil
-
-
-//
-// Generic DOS file handler
-//
-function TTextFile()                            // Parameter = dirty
-
-   static oFile
-
-   if oFile == NIL
-      oFile := TClass():New( "TDosFile" )       // Create a new class def
-
-      oFile:AddData( "cFileName"  )             // Filename spec. by user
-      oFile:AddData( "hFile"      )             // File handle
-      oFile:AddData( "nLine"      )             // Current linenumber
-      oFile:AddData( "nError"     )             // Last error
-      oFile:AddData( "lEoF"       )             // End of file
-      oFile:AddData( "cBlock"     )             // Storage block
-      oFile:AddData( "nBlockSize" )             // Size of read-ahead buffer
-      oFile:AddData( "cMode"      )             // Mode of file use
-                                                // R = read, W = write
-
-      oFile:AddMethod( "New"    , @New()     )  // Constructor
-      oFile:AddMethod( "Run"    , @Run()     )  // Get/set data
-      oFile:AddMethod( "Dispose", @Dispose() )  // Clean up code
-      oFile:AddMethod( "Read"   , @Read()    )  // Read line
-      oFile:AddMethod( "WriteLn", @WriteLn() )  // Write line
-      oFile:AddMethod( "Write"  , @Write()   )  // Write without CR
-//    oFile:AddMethod( "EoF"    , @EoF()     )  // End of file as function
-      oFile:AddMethod( "Goto"   , @Goto()    )  // Go to line
-
-      oFile:Create()
-   endif
-return  oFile:Instance()
+return Strip( cFrom, cTo )
 
 
 //
@@ -77,7 +25,7 @@ return  oFile:Instance()
 // <cMode>      mode for opening. Default "R"
 // <nBlockSize> Optional maximum blocksize
 //
-function New( cFileName, cMode, nBlock )
+static function New( cFileName, cMode, nBlock )
 
    local self := QSelf()                        // Get self
 
@@ -92,7 +40,7 @@ function New( cFileName, cMode, nBlock )
    elseif ::cMode == "W"
       ::hFile := fCreate( cFileName )
    else
-      QOut(  "DosFile Init: Unknown file mode:", ::cMode )
+      QOut( "DosFile Init: Unknown file mode:", ::cMode )
    endif
 
    ::nError := fError()
@@ -105,7 +53,7 @@ function New( cFileName, cMode, nBlock )
 return self
 
 
-function Run( xTxt, lCRLF )
+static function Run( xTxt, lCRLF )
 
    local self := QSelf()
    local xRet
@@ -121,7 +69,7 @@ return xRet
 //
 // Dispose -> Close the file handle
 //
-function Dispose()
+static function Dispose()
 
    local self := QSelf()
 
@@ -141,7 +89,7 @@ return self
 //
 // Read a single line
 //
-function Read()
+static function Read()
 
    local self := QSelf()
    local cRet  := ""
@@ -198,7 +146,7 @@ return cRet
 //         one or more strings
 // <lCRLF> End with Carriage Return/Line Feed (Default == TRUE)
 //
-function WriteLn( xTxt, lCRLF )
+static function WriteLn( xTxt, lCRLF )
 
    local self := QSelf()
    local cBlock
@@ -221,23 +169,23 @@ function WriteLn( xTxt, lCRLF )
 return self
 
 
-function Write( xTxt )
+static function Write( xTxt )
 
    local self := QSelf()
 
 return ::WriteLn( xTxt, .F. )
 
 
-&&function EoF()
-&&
-&&   local self := QSelf()
-&&return ::lEoF
+//static function EoF()
+//
+//   local self := QSelf()
+//return ::lEoF
 
 
 //
 // Go to a specified line number
 //
-function Goto( nLine )
+static function Goto( nLine )
 
    local self   := QSelf()
    local nWhere := 1
@@ -259,51 +207,64 @@ function Goto( nLine )
 return !lEoF
 
 
-//
-// Always return a correct value
-//
-function Default( xArg, xDef )
-return if( ValType(xArg) != ValType(xDef), xDef, xArg )
+function Strip( cFrom, cTo )
 
-
-//
-// ToChar -> Convert xTxt to character
-//
-function ToChar( xTxt, cSeparator )
-
-   local cValTxt
+   local oFrom
+   local oTo
    local cOut
 
-   cValTxt := ValType( xTxt )
-   do case
-      case cValTxt=="C" .or. cValTxt=="M"       // Character
-         cOut := xTxt
+   set( _SET_EXACT, .T.)
+   cFrom := Default( cFrom, "strip.prg" )
+   cTo   := Default( cTo,   "strip.out" )
 
-      case cValTxt=="N"                         // Numeric
-         cOut := Alltrim(Str(xTxt))
+   oFrom := TTextFile()
+   oFrom:New( cFrom, "R" )
+   oTo   := TTextFile()
+   oTo:New( cTo  , "W" )
 
-      case cValTxt=="U"                         // Nothing to write
-         cOut := ""
+   do while !oFrom:lEoF
+      cOut := oFrom:Run()
+      if alltrim(cOut) != ""
+         oTo:Run( cOut )
+      endif
+   enddo
+   QOut( "Number of lines", oTo:nLine )
+   oFrom:Dispose()
+   oTo:Dispose()
+return nil
 
-      case cValTxt=="D"                         // Date
-         cOut := TransForm(xTxt, "")
+//
+// Generic DOS file handler
+//
+function TTextFile()                            // Parameter = dirty
 
-      case cValTxt=="L"                         // Logical
-         cOut := if( xTxt, "True", "False" )
+   static oFile := NIL
 
-      case cValTxt=="A"                         // Array
-         cOut := ""
-         aEval( xTxt, {|xItem| cOut += ToChar( xItem, cSeparator )+;
-                               Default( cSeparator, " " ) })
-         cOut := Substr( cOut, 1, Len(cOut) - ;
-                         Len( Default( cSeparator, " " )))
+   if oFile == NIL
+      oFile := TClass():New( "TTEXTFILE" )      // Create a new class def
 
-      case cValTxt=="B"                         // Code block (??)
-         cOut := Eval( xTxt )
+      oFile:AddData( "cFileName"  )             // Filename spec. by user
+      oFile:AddData( "hFile"      )             // File handle
+      oFile:AddData( "nLine"      )             // Current linenumber
+      oFile:AddData( "nError"     )             // Last error
+      oFile:AddData( "lEoF"       )             // End of file
+      oFile:AddData( "cBlock"     )             // Storage block
+      oFile:AddData( "nBlockSize" )             // Size of read-ahead buffer
+      oFile:AddData( "cMode"      )             // Mode of file use
+                                                // R = read, W = write
 
-      case cValTxt=="O"                         // Object (??)
-         cOut := xTxt:Run()
+      oFile:AddMethod( "New"    , @New()     )  // Constructor
+      oFile:AddMethod( "Run"    , @Run()     )  // Get/set data
+      oFile:AddMethod( "Dispose", @Dispose() )  // Clean up code
+      oFile:AddMethod( "Read"   , @Read()    )  // Read line
+      oFile:AddMethod( "WriteLn", @WriteLn() )  // Write line
+      oFile:AddMethod( "Write"  , @Write()   )  // Write without CR
+//      oFile:AddMethod( "EoF"    , @EoF()     )  // End of file as function
+      oFile:AddMethod( "Goto"   , @Goto()    )  // Go to line
 
-   endcase
-return cOut
+      oFile:Create()
+   endif
+return  oFile:Instance()
+
+
 

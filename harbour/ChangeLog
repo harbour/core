@@ -1,3 +1,7 @@
+19990526-17:25 Eddie Runia
+  * tests/working/strip.prg
+    delete broken one and moved working one in
+
 19990526-16:10 Eddie Runia
   * source/rtl/files.c
     Pass reference error removed.
