@@ -57,17 +57,14 @@
 
 HB_FILE_VER( "$Id$" )
 
-#ifdef HB_LINUX
-    #define SkipEOL( handle )   FSEEK( handle, 1, FS_RELATIVE )
-#else
-    #define SkipEOL( handle )   FSEEK( handle, 2, FS_RELATIVE )
-#endif
-
+#define SkipEOL( handle )   FSEEK( handle, nEOLSize, FS_RELATIVE )
 #define AppendEOL( handle ) FWRITE( handle, HB_OSNewLine() )
 #define AppendEOF( handle ) FWRITE( handle, CHR( 26 ) )
 
 PROCEDURE __dbSDF( lExport, cFile, aFields, bFor, bWhile, nNext, nRecord, lRest )
    LOCAL index, handle, cFileName := cFile, nStart, nCount, oErr, nFileLen, aStruct
+   LOCAL cFileEOL:=chr(13)+chr(10)       // EOL defaults to windows
+   LOCAL nEOLSize:=2                     // EOL size default to windows
 
    // Process the file name argument.
    index := RAT( ".", cFileName )
@@ -178,11 +175,14 @@ PROCEDURE __dbSDF( lExport, cFile, aFields, bFor, bWhile, nNext, nRecord, lRest 
          oErr:osCode := FERROR()
          Eval(ErrorBlock(), oErr)
       ELSE
+         cFileEOL:=FindEOL(handle)
+         nEOLSize:=len(cFileEOL)
          IF EMPTY( bWhile )
             // This simplifies the looping logic.
             bWhile := {||.T.}
          END IF
          nFileLen := FSEEK( handle,0,FS_END )
+         
          FSEEK( handle,0 )
          aStruct := DBSTRUCT()
          WHILE FSEEK( handle,0,FS_RELATIVE ) + 1 < nFileLen
@@ -190,20 +190,21 @@ PROCEDURE __dbSDF( lExport, cFile, aFields, bFor, bWhile, nNext, nRecord, lRest 
             IF EMPTY( aFields )
                // Process all fields.
                FOR index := 1 TO FCOUNT()
-                  IF !ImportFixed( handle,index,aStruct )
+                  IF !ImportFixed( handle,index,aStruct, cFileEOL )
                      EXIT
                   ENDIF
                NEXT index
             ELSE
                // Process the specified fields.
                FOR index := 1 TO LEN( aFields )
-                  IF !ImportFixed( handle,FIELDPOS( aFields[ index ] ),aStruct )
+                  IF !ImportFixed( handle,FIELDPOS( aFields[ index ] ),aStruct, cFileEOL )
                      EXIT
                   ENDIF
                NEXT index
             END IF
             // Set up for the start of the next record.
             SkipEOL( handle )
+            
          END WHILE
          FCLOSE( handle )
       END IF
@@ -225,13 +226,12 @@ STATIC FUNCTION ExportFixed( handle, xField )
    END CASE
 RETURN .T.
 
-STATIC FUNCTION ImportFixed( handle, index, aStruct )
+STATIC FUNCTION ImportFixed( handle, index, aStruct, cFileEOL )
    LOCAL cBuffer := Space(aStruct[ index,3 ]), pos, res := .T., nRead
    LOCAL vres
 
    nRead := FREAD( handle, @cBuffer, aStruct[ index,3 ] )
-   #ifndef HB_LINUX
-   IF ( pos := At( CHR(13),cBuffer ) ) > 0 .AND. pos <= nRead
+   IF ( pos := At( cFileEOL,cBuffer ) ) > 0 .AND. pos <= nRead
       res := .F.
       FSEEK( handle, -( nRead - pos + 1 ), FS_RELATIVE )
       IF pos > 1
@@ -240,17 +240,6 @@ STATIC FUNCTION ImportFixed( handle, index, aStruct )
          RETURN res
       ENDIF
    ENDIF
-    #else
-   IF ( pos := At( CHR(10),cBuffer ) ) > 0 .AND. pos <= nRead
-      res := .F.
-      FSEEK( handle, -( nRead - pos + 1 ), FS_RELATIVE )
-      IF pos > 1
-         cBuffer := Left( cBuffer,pos-1 )
-      ELSE
-         RETURN res
-      ENDIF
-   ENDIF
-#endif
 
    DO CASE
       CASE aStruct[ index,2 ] == "D"
@@ -264,4 +253,34 @@ STATIC FUNCTION ImportFixed( handle, index, aStruct )
    END CASE
    FIELDPUT( index, vres )
 RETURN res
+
+STATIC FUNCTION FindEOL(fh)
+  LOCAL nBufSize:=512
+  LOCAL cBuffer:=space(nBufSize)
+  LOCAL nF:=0,c:='',cResult:=''
+  fseek(fh,0,FS_SET)
+  do while fread(fh,@cBuffer,nBufSize) > 0
+    do while nF <= nBufSize
+      c:=substr(cBuffer,nF,1)
+        IF c==chr(10)  // Unix type EOL
+          cResult := chr(10)
+        ELSEIF c==chr(13)  // MSWIN or MAC
+          if substr(cBuffer,nF+1,1)==chr(10)
+            cResult := (chr(13)+chr(10))
+          else
+            cResult := chr(13)
+          endif  
+        ENDIF
+      if len(cResult)>0
+        fseek(fh,0,FS_SET)
+        RETURN cResult
+      endif
+      ++nF
+    enddo
+  enddo
+  fseek(fh,0,FS_SET)
+  if len(cResult)==0
+    // TODO: Report an error - can't find EOL
+  endif  
+RETURN cResult
 

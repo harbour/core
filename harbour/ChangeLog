@@ -7,6 +7,15 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2003-02-15 11:00 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
+  * config/linux/global.cf
+    - removed PRG_USR directive, because it is no longer needed  
+      to compile dbfsdf.prg
+  * source/rtl/dbsdf.prg
+    + Automatic EOL recognition. FindEOL() recognises LF,CR+LF and CR
+      as newline delimiters
+    
 2003-02-14 22:05 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
   * include/hbapi.h
   * include/hbcomp.h
