@@ -2662,8 +2662,12 @@ static BOOL OpenInclude( char * szFileName, PATHNAMES * pSearch, PHB_FNAME pMain
      pFile->iBuffer = pFile->lenBuffer = 10;
      pFile->szFileName = (char*) hb_xgrab( strlen( szFileName ) + 1 );
      hb_pp_strocpy( pFile->szFileName, szFileName );
+
+     /*
      hb_comp_files.pLast->iLine = hb_comp_iLine;
-     hb_comp_iLine = 1;
+     */
+
+     pFile->iLine = 1;
      pFile->pPrev = hb_comp_files.pLast;
      hb_comp_files.pLast  = pFile;
      hb_comp_files.iFiles++;

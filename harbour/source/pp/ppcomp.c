@@ -96,35 +96,54 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
              if( *s_szLine != '\0' )
                {
                  ptr = s_szLine;
+
                  HB_SKIPTABSPACES( ptr );
+
                  if( *ptr == '#' )
                    {
                      hb_pp_ParseDirective( ptr + 1 );
+
                      if( pFile != hb_comp_files.pLast )
                      {
                         pFile = ( PFILE ) ( ( PFILE ) hb_comp_files.pLast )->pPrev;
+
                         if( lLine )
-                           sprintf( s_szLine, "#line %d \"%s\"\n",
-                           pFile->iLine+hb_pp_nEmptyStrings, pFile->szFileName );
+                           sprintf( s_szLine, "#line %d \"%s\"\n", pFile->iLine + hb_pp_nEmptyStrings, pFile->szFileName );
                         else
                            *s_szLine = '\0';
+
                         lLine = 0;
-                        pFile->iLine += 1+hb_pp_nEmptyStrings;
-                        sprintf( s_szLine+strlen(s_szLine), "#line 1 \"%s\"",
-                                  hb_comp_files.pLast->szFileName );
+
+                        pFile->iLine += ( 1 + hb_pp_nEmptyStrings );
+                        sprintf( s_szLine+strlen(s_szLine), "#line 1 \"%s\"\n", hb_comp_files.pLast->szFileName );
                         hb_pp_nEmptyStrings = 0;
                      }
                      else
                      {
                         *s_szLine = '\0';
-                        hb_pp_nEmptyStrings++;
+                        /*hb_pp_nEmptyStrings++;*/
+                        hb_comp_files.pLast->iLine++;
                      }
                    }
                  else
                    {
-                     if( hb_pp_nCondCompile == 0 || hb_pp_aCondCompile[ hb_pp_nCondCompile - 1 ] )
+                     if( *ptr == '\0' )
+                     {
+                        if( hb_comp_files.iFiles == 1 )
+                        {
+                           hb_pp_nEmptyStrings++;
+                           *s_szLine = '\0';
+                        }
+                        else
+                        {
+                           hb_comp_files.pLast->iLine++;
+                           continue;
+                        }
+                     }
+                     else if( hb_pp_nCondCompile == 0 || hb_pp_aCondCompile[ hb_pp_nCondCompile - 1 ] )
                      {
                          hb_pp_ParseExpression( ptr, s_szOutLine );
+                         hb_comp_files.pLast->iLine++;
                      }
                      else
                      {
@@ -138,6 +157,7 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
              break;
            }
        }
+
      if( rdlen < 0 )
        {
         if( hb_comp_files.iFiles == 1 )
@@ -158,18 +178,21 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
        }
      if( *s_szLine ) break;
   }
+
   if( lLine )
   {
-     sprintf( ptrOut, "#line %d \"%s\"\n",hb_comp_iLine+hb_pp_nEmptyStrings,hb_comp_files.pLast->szFileName );
+     sprintf( ptrOut, "#line %d \"%s\"", hb_comp_files.pLast->iLine /*hb_comp_iLine + hb_pp_nEmptyStrings*/, hb_comp_files.pLast->szFileName );
      while( *ptrOut ) ptrOut++;
   }
   else
   {
-     if( hb_pp_nEmptyStrings )
+     if( hb_pp_nEmptyStrings && hb_comp_files.iFiles == 1 )
         for( i=0;i<hb_pp_nEmptyStrings;i++ )
            *ptrOut++ = '\n';
   }
+
   lens = hb_pp_strocpy( ptrOut, s_szLine ) + ( ptrOut - sOut );
+
   *( sOut + lens++ ) = '\n';
   *( sOut + lens ) = '\0';
 
@@ -232,7 +255,7 @@ int hb_pp_ReadRules( void )
                         if( lLine == 0)
                            *s_szLine = '\0';
                         lLine = 0;
-                        pFile->iLine += 1+hb_pp_nEmptyStrings;
+                        pFile->iLine += ( 1 + hb_pp_nEmptyStrings );
                         hb_pp_nEmptyStrings = 0;
                      }
                      else

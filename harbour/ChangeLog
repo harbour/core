@@ -1,3 +1,15 @@
+2000-06-13 03:00 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+
+   * makefile.bc
+     + Added ppcomp.c and ppcore.c to list of harbour.exe dependencies.
+
+   * source/pp/ppcore.c
+   * source/compiler/harbour.y
+     ! Corrected initialization of pFile->iLine to 1
+
+   * source/pp/ppcomp.c
+     ! Fixed redundnant empty lines generation and line numbering.
+
 2000-06-12 20:25 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
    * source/rtl/gtwin/gtwin.c

@@ -1653,6 +1653,7 @@ BOOL hb_compInclude( char * szFileName, PATHNAMES * pSearch )
    pFile->pBuffer = hb_xgrab( HB_PP_BUFF_SIZE );
    pFile->iBuffer = pFile->lenBuffer = 10;
    pFile->szFileName = szFileName;
+   pFile->iLine = 1;
    pFile->pPrev = NULL;
 
 /*
