@@ -90,32 +90,51 @@ BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
             if( !s_cdpList[ iPos ] )
             {
                int i, iu, il, iumax = 0, ilmax = 0;
+               char *ptrUpper = cdpage->CharsUpper;
+               char *ptrLower = cdpage->CharsLower;
+               char *ptr;
 
                s_cdpList[ iPos ] = cdpage;
 
                cdpage->lSort = FALSE;
                if( cdpage->nChars )
                {
+                  cdpage->s_chars = (BYTE*) hb_xgrab(256);
+                  cdpage->s_upper = (BYTE*) hb_xgrab(256);
+                  cdpage->s_lower = (BYTE*) hb_xgrab(256);
                   for( i=0; i<256; i++ )
                   {
                      cdpage->s_chars[i] = 0;
                      cdpage->s_upper[i] = toupper( (BYTE) i&255 );
                      cdpage->s_lower[i] = tolower( (BYTE) i&255 );
                   }
-                  for( i=0; i<cdpage->nChars; i++ )
+                  for( i=1; *ptrUpper; i++,ptrUpper++,ptrLower++ )
                   {
-                     iu = (((int)cdpage->CharsUpper[i])&255);
-                     cdpage->s_chars[ iu ] = i+1;
-                     il = (((int)cdpage->CharsLower[i])&255);
-                     cdpage->s_chars[ il ] = i+1+cdpage->nChars;
+                     if( *ptrUpper == '=' )
+                     {
+                        for( ptr=ptrUpper+1; *ptr; ptr++ )
+                           *(ptr-1) = *ptr;
+                        *(ptr-1) = '\0';
+                        for( ptr=ptrLower+1; *ptr; ptr++ )
+                           *(ptr-1) = *ptr;
+                        *(ptr-1) = '\0';
+                        i--;
+                     }
+                     else if( *ptrUpper == '.' )
+                     {
+                     }
+                     iu = (((int)*ptrUpper)&255);
+                     cdpage->s_chars[ iu ] = i;
+                     il = (((int)*ptrLower)&255);
+                     cdpage->s_chars[ il ] = i+cdpage->nChars;
                      if( iu < iumax || il < ilmax )
                         cdpage->lSort = TRUE;
                      iumax = iu; ilmax = il;
                      
-                     iu = ((int)(cdpage->CharsLower[i]))&255;
-                     cdpage->s_upper[iu] = cdpage->CharsUpper[i];
-                     il = ((int)(cdpage->CharsUpper[i]))&255;
-                     cdpage->s_lower[il] = cdpage->CharsLower[i];
+                     iu = ((int)(*ptrLower))&255;
+                     cdpage->s_upper[iu] = *ptrUpper;
+                     il = ((int)(*ptrUpper))&255;
+                     cdpage->s_lower[il] = *ptrLower;
                   }
                }
                // printf( "\n%s %d",s_cdpage->id,s_cdpage->lSort );
@@ -213,6 +232,22 @@ int hb_cdpcmp( char* szFirst, char* szSecond, int iLen, PHB_CODEPAGE cdpage )
       }
    // printf( " : %d",iRet );
    return iRet;
+}
+
+void hb_cdpReleaseAll( void )
+{
+   int iPos = 0;
+
+   while( iPos < HB_CDP_MAX_ && s_cdpList[iPos] )
+   {
+      if( s_cdpList[ iPos ]->s_chars )
+         hb_xfree( s_cdpList[ iPos ]->s_chars );
+      if( s_cdpList[ iPos ]->s_upper )
+         hb_xfree( s_cdpList[ iPos ]->s_upper );
+      if( s_cdpList[ iPos ]->s_lower )
+         hb_xfree( s_cdpList[ iPos ]->s_lower );
+      iPos ++;
+   }
 }
 
 HB_FUNC( HB_SETCODEPAGE )

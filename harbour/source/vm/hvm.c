@@ -195,6 +195,7 @@ static void    hb_vmReleaseLocalSymbols( void );  /* releases the memory of the 
 
 extern void * hb_mthRequested( void ); /* profiler from classes.c */
 extern void hb_mthAddTime( void *, ULONG ); /* profiler from classes.c */
+extern void hb_cdpReleaseAll( void );
 
 BOOL hb_bProfiler = FALSE; /* profiler status is off */
 BOOL hb_bTracePrgCalls = FALSE; /* prg tracing is off */
@@ -391,6 +392,7 @@ void HB_EXPORT hb_vmQuit( void )
    hb_dynsymRelease();          /* releases the dynamic symbol table */
    hb_conRelease();             /* releases Console */
    hb_setRelease();             /* releases Sets */
+   hb_cdpReleaseAll();          /* releases codepages */
 
    /* release all remaining items */
    hb_stackRemove( 0 );

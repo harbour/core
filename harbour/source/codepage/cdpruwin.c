@@ -58,13 +58,9 @@
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-static BYTE s_chars[256];
-static BYTE s_upper[256];
-static BYTE s_lower[256];
-
 static HB_CODEPAGE s_codepage = { "RU1251",32,
     "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞ‗","אבגדהוזחטיךכלםמןנסעףפץצקרשתûü‎‏ÿ",
-    0,s_chars,s_upper,s_lower };
+    0,NULL,NULL,NULL };
 
 HB_CODEPAGE_ANNOUNCE( RU1251 );
 
