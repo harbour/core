@@ -24,101 +24,102 @@
 
 #include "extend.h"
 #include "init.h"
+#include "rddsys.ch"
 #include "rdd.api"
 
-HARBOUR HB_REQUEST_DBFNTX1( void );
+HARBOUR HB__DBFNTX( void );
 HARBOUR HB_DBFNTX_GETFUNCTABLE( void );
 
 HB_INIT_SYMBOLS_BEGIN( dbfntx1__InitSymbols )
-{ "REQUEST_DBFNTX1",     FS_PUBLIC, HB_REQUEST_DBFNTX1,     0 },
+{ "_DBFNTX",             FS_PUBLIC, HB__DBFNTX,             0 },
 { "DBFNTX_GETFUNCTABLE", FS_PUBLIC, HB_DBFNTX_GETFUNCTABLE, 0 }
 HB_INIT_SYMBOLS_END( dbfntx1__InitSymbols );
 #if ! defined(__GNUC__)
 #pragma startup dbfntx1__InitSymbols
 #endif
 
-ERRCODE dbfntxBof( AREAP pArea, BOOL * pBof )
+static ERRCODE Bof( AREAP pArea, BOOL * pBof )
 {
-   printf( "Calling dbfntxBof()\n" );
+   printf( "Calling DBFNTX: Bof()\n" );
    return SUCCESS;
 }
 
-ERRCODE dbfntxEof( AREAP pArea, BOOL * pEof )
+static ERRCODE Eof( AREAP pArea, BOOL * pEof )
 {
-   printf( "Calling dbfntxEof()\n" );
+   printf( "Calling DBFNTX: Eof()\n" );
    return SUCCESS;
 }
 
-ERRCODE dbfntxFound( AREAP pArea, BOOL * pFound )
+static ERRCODE Found( AREAP pArea, BOOL * pFound )
 {
-   printf( "Calling dbfntxFound()\n" );
+   printf( "Calling DBFNTX: Found()\n" );
    return SUCCESS;
 }
 
-ERRCODE dbfntxGoBottom( AREAP pArea )
+static ERRCODE GoBottom( AREAP pArea )
 {
-   printf( "Calling dbfntxGoBottom()\n" );
+   printf( "Calling DBFNTX: GoBottom()\n" );
    return SUCCESS;
 }
 
-ERRCODE dbfntxGoTo( AREAP pArea, LONG lRecNo )
+static ERRCODE GoTo( AREAP pArea, LONG lRecNo )
 {
-   printf( "Calling dbfntxGoTo()\n" );
+   printf( "Calling DBFNTX: GoTo()\n" );
    return SUCCESS;
 }
 
-ERRCODE dbfntxGoTop( AREAP pArea )
+static ERRCODE GoTop( AREAP pArea )
 {
-   printf( "Calling dbfntxGoTop()\n" );
+   printf( "Calling DBFNTX: GoTop()\n" );
    return SUCCESS;
 }
 
-ERRCODE dbfntxSkip( AREAP pArea, LONG lToSkip )
+static ERRCODE Skip( AREAP pArea, LONG lToSkip )
 {
-   printf( "Calling dbfntxSkip()\n" );
+   printf( "Calling DBFNTX: Skip()\n" );
    return SUCCESS;
 }
 
-ERRCODE dbfntxClose( AREAP pArea )
+static ERRCODE Close( AREAP pArea )
 {
-   printf( "Calling dbfntxClose()\n" );
+   printf( "Calling DBFNTX: Close()\n" );
    return SUCCESS;
 }
 
-ERRCODE dbfntxCreate( AREAP pArea, DBOPENINFOP pCreateInfo )
+static ERRCODE Create( AREAP pArea, DBOPENINFOP pCreateInfo )
 {
-   printf( "Calling dbfntxCreate()\n" );
+   printf( "Calling DBFNTX: Create()\n" );
    return SUCCESS;
 }
 
-ERRCODE dbfntxOpen( AREAP pArea, DBOPENINFOP pOpenInfo )
+static ERRCODE Open( AREAP pArea, DBOPENINFOP pOpenInfo )
 {
-   printf( "Calling dbfntxOpen()\n" );
+   printf( "Calling DBFNTX: Open()\n" );
    return SUCCESS;
 }
 
-ERRCODE dbfntxStructSize( AREAP pArea, USHORT * uiSize )
+static ERRCODE StructSize( AREAP pArea, USHORT * uiSize )
 {
-   printf( "Calling dbfntxStructSize()\n" );
+   printf( "Calling DBFNTX: StructSize()\n" );
    return SUCCESS;
 }
 
 static RDDFUNCS ntxSuper = { 0 };
 
-static RDDFUNCS ntxTable = { dbfntxBof,
-			     dbfntxEof,
-			     dbfntxFound,
-			     dbfntxGoBottom,
-			     dbfntxGoTo,
-			     dbfntxGoTop,
-			     dbfntxSkip,
-			     dbfntxClose,
-			     dbfntxCreate,
-			     dbfntxOpen,
-			     dbfntxStructSize
+static RDDFUNCS ntxTable = { Bof,
+			     Eof,
+			     Found,
+			     GoBottom,
+			     GoTo,
+			     GoTop,
+			     Skip,
+			     Close,
+			     Create,
+			     Open,
+			     StructSize
 			   };
 
-HARBOUR HB_REQUEST_DBFNTX1( void )
+HARBOUR HB__DBFNTX( void )
 {
 }
 
@@ -131,7 +132,7 @@ HARBOUR HB_DBFNTX_GETFUNCTABLE( void )
    * uiCount = RDDFUNCSCOUNT;
    pTable = ( RDDFUNCS * ) hb_parnl( 2 );
    if( pTable )
-      hb_retni( hb_rddInherit( pTable, &ntxTable, &ntxSuper, 0 ) );
+      hb_retni( hb_rddInherit( pTable, &ntxTable, &ntxSuper, "DBF" ) );
    else
       hb_retni( FAILURE );
 }
