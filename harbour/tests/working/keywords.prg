@@ -5,7 +5,8 @@
 //DO NOT RUN THIS PROGRAM - ITS PURPOSE IS THE SYNTAX CHECK ONLY!
 
 EXTERNAL __case, __begin
-STATIC nExt, bEgin, bReak, cAse, do, wHile, wIth, eXit
+STATIC nExt, bEgin, bReak, cAse, do, wHile, wIth, eXit, eXternal, fIeld
+STATIC for
 
 Function Main()
 
@@ -41,6 +42,12 @@ Function Main()
    END_()    //END? surprise :) it works in some cases!
 
    EXIT( eXit )
+
+   EXTERNAL( eXternal )
+
+   _FIELD( fIeld )
+
+   for :=FOR( for )
 
 RETURN nil
 
@@ -457,3 +464,99 @@ EXIT FUNCTION EXIT( exit )
 
 RETURN exit
 
+
+/*====================================================================
+* Test for EXTERNAL
+*/
+FUNCTION EXTERN( extern )
+LOCAL external
+LOCAL exte
+EXTE exte
+EXTER exter
+EXTERN extern
+EXTERNA externa
+EXTERNAL external
+
+  extern++
+  ++extern
+  extern[ 1 ] :=1
+  extern[ 1 ] :=extern
+  external[ external ][ external ] :=external
+  extern()
+  externa()
+  external()
+  external->external :=external->external +1
+  ( external )->external :=(external)->( external( external[ external ] ) )
+
+  DO external
+  DO external WITH external
+  DO exte WITH exte
+  DO WHILE external
+    external :=!external
+  ENDDO
+
+RETURN extern
+
+/*====================================================================
+* Test for FIELD
+*/
+FUNCTION _FIELD( _field )  //FIELD is reserved function name (FIELDNAME)
+FIELD field
+FIEL fiel
+
+  field++
+  ++field
+
+  field[ 1 ] :=field
+  field[ field ] :=field[ field ]
+
+  field->field :=field
+  field->field :=field->field
+
+  FIELD( FIEL(0) )
+
+  DO field
+  DO field WITH field
+  WHILE field
+    fiel :=field +1
+  ENDDO
+
+RETURN field
+
+
+/*====================================================================
+* Test for FOR
+*/
+FUNCTION FOR( for )
+//LOCAL for
+
+  for++
+  --for
+
+  FOR for:=1 TO for+10
+    for +=1
+  NEXT for
+
+  for :=for[ for ]
+  for[ 1 ] :=1
+  for[ for ] :=for
+  for[ for ][ for ] :=for [ for ]
+
+//  for( for( for ) )	//incomplete statement or unbalanced delimiters
+//  for( 0 ) 		//incomplete statement or unbalanced delimiters
+//  for()		//syntax error ')'
+  for :=for()
+  for :=for( for( for ) )
+
+  for->for :=for
+  for :=for->for
+  for->for :=for->for
+  ( for )->for :=( for )->for
+
+  DO for
+  DO for WITH for
+  DO WHILE for
+    for ^=2
+  ENDDO
+
+RETURN for

@@ -1,3 +1,8 @@
+19990527-00:40 Ryszard Glab <rglab@imid.med.pl>
+
+    * the support for following keywords are now 100% compatible with Clipper
+      EXTERNAL, FIELD, FOR, FUNCTION
+  
 19990526-13:30 EST David G. Holm <dholm@jsd-llc.com>
   * source/rtl/dates.c
     - Added hb_dow and HARBOUR DOW() supplied by Jose Lalin <dezac@corevia.com>

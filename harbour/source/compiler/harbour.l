@@ -97,7 +97,8 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 
 %x            COMMENT3 DEFINE DEFINE_PARAMS DEFINE_EXPR
 %x            IFDEF IFNDEF STRING1 STRING2 STRING3
-%x            NEXT_ BREAK_ CASE_ DO_ WHILE_ WITH_ END_ EXIT_
+%x            NEXT_ BREAK_ CASE_ DO_ WHILE_ WITH_ END_ EXIT_ EXTERNAL_ FIELD_
+%x            FOR_ FUNCTION_
 %s            INDEX
 
 %%
@@ -448,7 +449,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                  yy_lex_count_lf();
                  --iLine;
                  unput( yytext[ yyleng-1 ] );
-                 BEGIN 0;
+                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  if( _iState == LOOKUP )
                  { /* it is first item in the line */
                    if( _wForCounter == 0 && _wWhileCounter == 0 )
@@ -466,7 +467,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 <EXIT_>{Separator}+[_a-zA-Z] { /* an identifier after the EXIT */
                  yy_lex_count_lf();
                  unput( yytext[ yyleng-1 ] );
-                 BEGIN 0;
+                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  if( _iState == LOOKUP )
                  { /* it is first item in the line */
                    _iState =EXIT;
@@ -483,17 +484,133 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                  yy_lex_count_lf();
                  unput( yytext[ yyleng-1 ] );
                  yylval.string = strdup( "EXIT" );
-                 BEGIN 0;
+                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  _iState =IDENTIFIER;
                  return IDENTIFIER;
                }
 %{
 /* ************************************************************************ */
 %}
-"extern"|"external" _iState =EXTERN; return EXTERN;
-"field"/[^(]   _iState =FIELD; return FIELD;
-"for"          _iState = FOR; return FOR;
-"func"|"funct"|"functi"|"functio"|"function"/[^(] _iState=FUNCTION; return FUNCTION;
+"exte"|"exter"|"extern"|"externa"|"external" { BEGIN EXTERNAL_;
+                   yylval.string = strupr( strdup( yytext ) );
+                 }
+<EXTERNAL_>{Separator}+[_a-zA-Z] { /* an identifier after the EXTERNAL */
+                 yy_lex_count_lf();
+                 unput( yytext[ yyleng-1 ] );
+                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                 if( _iState == LOOKUP )
+                 {
+                   free( yylval.string );
+                   _iState =EXTERN;
+                   return EXTERN;
+                 }
+                 else
+                 {
+                   _iState =IDENTIFIER;
+                   return IDENTIFIER;
+                 }
+               }
+<EXTERNAL_>{Separator}*[^_a-zA-Z]   {
+                 yy_lex_count_lf();
+                 if( yytext[ yyleng-1 ] == '\n' )
+                   --iLine;
+                 unput( yytext[ yyleng-1 ] );
+                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                 _iState =IDENTIFIER;
+                 return IDENTIFIER;
+               }
+<EXTERNAL_>.    { if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0; unput( yytext[ yyleng-1 ] ); }
+%{
+/* ************************************************************************ */
+%}
+"fiel"|"field"   { BEGIN FIELD_;
+                   yylval.string = strupr( strdup( yytext ) );
+                 }
+<FIELD_>{Separator}+[_a-zA-Z] { /* an identifier after the FIELD */
+                 yy_lex_count_lf();
+                 unput( yytext[ yyleng-1 ] );
+                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                 if( _iState == LOOKUP )
+                 {
+                   free( yylval.string );
+                   _iState =FIELD;
+                   return FIELD;
+                 }
+                 else
+                 {
+                   _iState =IDENTIFIER;
+                   return IDENTIFIER;
+                 }
+               }
+<FIELD_>{Separator}*[^_a-zA-Z]   {
+                 yy_lex_count_lf();
+                 if( yytext[ yyleng-1 ] == '\n' )
+                   --iLine;
+                 unput( yytext[ yyleng-1 ] );
+                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                 _iState =IDENTIFIER;
+                 return IDENTIFIER;
+               }
+<FIELD_>.     { if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0; unput( yytext[ yyleng-1 ] ); }
+%{
+/* ************************************************************************ */
+%}
+"for"          { BEGIN FOR_; }
+<FOR_>{Separator}+[_a-zA-Z] { /* an identifier after the FOR */
+                 yy_lex_count_lf();
+                 unput( yytext[ yyleng-1 ] );
+                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                 if( _iState == LOOKUP )
+                 {
+                   _iState =FOR;
+                   return FOR;
+                 }
+                 else
+                 { /* for example: DO for WITH variable */
+                   yylval.string = strdup( "FOR" );
+                   _iState =IDENTIFIER;
+                   return IDENTIFIER;
+                 }
+               }
+<FOR_>{Separator}*[\(] { /* function call */
+               yy_lex_count_lf();
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+               if( _iState == LOOKUP )
+               { /* Clipper does not like FOR() at the begining of line */
+                 GenError( ERR_SYNTAX, yytext, NULL );
+               }
+               yylval.string = strdup( "FOR" );
+               _iState =IDENTIFIER;
+               unput( yytext[ yyleng-1 ] );
+               return IDENTIFIER;
+             }
+<FOR_>{Separator}*[^_a-zA-Z] { /* there is no identifier after "FOR" */
+               yy_lex_count_lf();
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+               if( yytext[ yyleng-1 ] == '\n' )
+                 --iLine;
+               yylval.string = strdup( "FOR" );
+               unput( yytext[ yyleng-1 ] );
+               _iState =IDENTIFIER;
+               return IDENTIFIER;
+             }
+%{
+/* ************************************************************************ */
+%}
+"func"|"funct"|"functi"|"functio"|"function" { BEGIN FUNCTION_; }
+<FUNCTION_>{Separator}+[_a-zA-Z] {
+               yy_lex_count_lf();
+               BEGIN 0;
+               unput( yytext[ yyleng-1 ] );
+               _iState=FUNCTION;
+               return FUNCTION;
+             }
+<FUNCTION_>{Separator}*[^_a-zA-Z] { /* Clipper needs FUNCTION in one context only */
+               GenError( ERR_SYNTAX, ((yytext[ yyleng-1 ]=='\n')?"FUNCTION":yytext), NULL );
+             }
+%{
+/* ************************************************************************ */
+%}
 ("if"|"iif"){SpaceTab}*/[(]  _iState =IF; return IF;
 "if"           _iState =IF; return IF;
 "in"           return IN;
