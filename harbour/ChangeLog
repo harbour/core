@@ -1,3 +1,14 @@
+2001-03-15 20:40 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   files posted by Juan Agustin Barriga <harrier@topconnect.cl>
+   * source/rdd/dbcmd.c
+   * source/rdd/dbf1.c
+   * include/hbapirdd.h
+   * include/hbrdddbf.h
+   * include/hbrddwrk.h
+     * Implementation of DBAPPEND and DBCOPY is finished.
+     + Added:  DBEXIT (for RDD cleanup), DBDROP (for table
+       deleting) and DBEXISTS (for table/index verification).
+
 2001-03-14 04:55 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/vm/classes.c
      ! Fixed hb_param() to hb_stackItemFromBase() (posted by José F. Giménez)

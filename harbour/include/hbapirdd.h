@@ -231,7 +231,7 @@ extern void    hb_rddShutDown( void );
  */
 struct _RDDFUNCS;
 struct _AREA;
-
+struct _RDDNODE;
 
 
 /*
@@ -616,7 +616,6 @@ typedef AREA * LPAREA;
 #endif
 
 
-
 /*--------------------* Virtual Method Table *----------------------*/
 
 typedef USHORT ( * DBENTRYP_V    )( AREAP area );
@@ -657,6 +656,11 @@ typedef USHORT ( * DBENTRYP_VPL  )( AREAP area, void * p1, LONG p2);
 typedef USHORT ( * DBENTRYP_VPLP )( AREAP area, void * p1, LONG * p2);
 typedef USHORT ( * DBENTRYP_LSP  )( AREAP area, LONG p1, USHORT * p2);
 
+/* this methods DO USE take a Workarea but an RDDNODE */
+
+typedef USHORT ( * DBENTRYP_I0   )( void );
+typedef USHORT ( * DBENTRYP_I1   )( PHB_ITEM p1);
+typedef USHORT ( * DBENTRYP_I2   )( PHB_ITEM p1, PHB_ITEM p2);
 /*--------------------* Virtual Method Table *----------------------*/
 
 typedef struct _RDDFUNCS
@@ -793,6 +797,11 @@ typedef struct _RDDFUNCS
    DBENTRYP_V    writeDBHeader;
 
 
+   /* non WorkArea functions       */
+   DBENTRYP_I0   exit;
+   DBENTRYP_I1   drop;
+   DBENTRYP_I2   exists;
+
    /* Special and reserved methods */
 
    DBENTRYP_SVP  whoCares;
@@ -803,6 +812,17 @@ typedef RDDFUNCS * PRDDFUNCS;
 
 #define RDDFUNCSCOUNT   ( sizeof( RDDFUNCS ) / sizeof( DBENTRYP_V ) )
 
+/* RDD Node structure              */
+typedef struct _RDDNODE
+{
+   char szName[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 ]; /* Name of RDD */
+   USHORT uiType;                                        /* Type of RDD */
+   RDDFUNCS pTable;                                      /* Table of functions */
+   USHORT uiAreaSize;                                    /* Size of the WorkArea */
+   struct _RDDNODE * pNext;                              /* Next RDD in the list */
+} RDDNODE;
+
+typedef RDDNODE * LPRDDNODE;
 
 
 /*--------------------* SELF Methods *------------------------*/
@@ -957,6 +977,12 @@ typedef RDDFUNCS * PRDDFUNCS;
 #define SELF_TABLEEXT(w, fp)            ((*(w)->lprfsHost->info)(w, DBI_TABLEEXT, fp))
 
 
+   /* non WorkArea functions       */
+#define SELF_EXIT(r)                    ((*(r)->pTable.exit)())
+#define SELF_DROP(r, i)                 ((*(r)->pTable.drop)(i))
+#define SELF_EXISTS(r, it, ii)          ((*(r)->pTable.exists)(it,ii))
+
+
 /*--------------------* SUPER Methods *------------------------*/
 
 
@@ -1109,7 +1135,10 @@ typedef RDDFUNCS * PRDDFUNCS;
 #define SUPER_GETDELIM(w, fp)         ((*(SUPERTABLE)->info)(w, DBI_GETDELIMITER, fp))
 #define SUPER_TABLEEXT(w, fp)         ((*(SUPERTABLE)->info)(w, DBI_TABLEEXT, fp))
 
-
+   /* non WorkArea functions       */
+#define SUPER_EXIT()                 ((*(SUPERTABLE)->exit)())
+#define SUPER_DROP(i)                ((*(SUPERTABLE)->drop)(i))
+#define SUPER_EXISTS(it, ii)         ((*(SUPERTABLE)->exists)(it, ii))
 
 /*
  *  PROTOTYPES

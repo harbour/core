@@ -162,6 +162,9 @@ static RDDFUNCS dbfTable = { ( DBENTRYP_BP ) hb_dbfBof,
                              ( DBENTRYP_SVP ) hb_dbfPutValueFile,
                              ( DBENTRYP_V ) hb_dbfReadDBHeader,
                              ( DBENTRYP_V ) hb_dbfWriteDBHeader,
+                             ( DBENTRYP_I0 ) hb_dbfExit,
+                             ( DBENTRYP_I1 ) hb_dbfDrop,
+                             ( DBENTRYP_I2 ) hb_dbfExists,
                              ( DBENTRYP_SVP ) hb_dbfWhoCares
                            };
 
@@ -1419,6 +1422,7 @@ ERRCODE hb_dbfClose( DBFAREAP pArea )
       hb_xfree( pArea->szMemoFileName );
       pArea->szMemoFileName = NULL;
    }
+
    return SUCCESS;
 }
 
@@ -1435,7 +1439,8 @@ ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfCreate(%p, %p)", pArea, pCreateInfo));
 
-   pArea->szDataFileName = ( char * ) pCreateInfo->abName;
+   pArea->szDataFileName = hb_xgrab( strlen(pCreateInfo->abName)+1 );
+   strcpy( pArea->szDataFileName, ( char * ) pCreateInfo->abName );
    uiSize = pArea->uiFieldCount * sizeof( DBFFIELD );
    pBuffer = ( DBFFIELD * ) hb_xgrab( uiSize );
    pArea->uiRecordLen = 1;
@@ -1649,7 +1654,8 @@ ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfOpen(%p, %p)", pArea, pOpenInfo));
 
-   pArea->szDataFileName = ( char * ) pOpenInfo->abName;
+   pArea->szDataFileName = hb_xgrab( strlen(pOpenInfo->abName)+1 );
+   strcpy( pArea->szDataFileName, ( char * ) pOpenInfo->abName );
    pArea->atomAlias = hb_dynsymGet( ( char * ) pOpenInfo->atomAlias );
    if( ( ( PHB_DYNS ) pArea->atomAlias )->hArea )
    {
@@ -2471,6 +2477,32 @@ ERRCODE hb_dbfWriteDBHeader( DBFAREAP pArea )
    pArea->fUpdateHeader = FALSE;
    return SUCCESS;
 }
+
+ERRCODE hb_dbfDrop( PHB_ITEM pItemTable )
+{
+  BYTE   * pBuffer;
+  char szFileName[ _POSIX_PATH_MAX + 1 ];
+
+  pBuffer = hb_itemGetCPtr( pItemTable );
+  strcpy( szFileName, pBuffer );
+  if ( !strchr( szFileName, '.' ))
+    strcat( szFileName, DBF_TABLEEXT );
+  return hb_fsDelete( szFileName );
+}
+
+/* returns 1 if exists, 0 else */
+BOOL hb_dbfExists( PHB_ITEM pItemTable, PHB_ITEM pItemIndex )
+{
+  char szFileName[ _POSIX_PATH_MAX + 1 ];
+  BYTE * pBuffer;
+
+  pBuffer = hb_itemGetCPtr( pItemIndex != NULL ? pItemIndex : pItemTable );
+  strcpy( szFileName, pBuffer );
+  if ( pItemTable && !strchr( szFileName, '.' ))
+    strcat( szFileName, DBF_TABLEEXT );
+  return hb_fsFile( szFileName );
+}
+
 
 HB_FUNC( _DBFC )
 {

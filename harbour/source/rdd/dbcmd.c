@@ -44,19 +44,6 @@ l *
 #include "hbrddwrk.h"
 
 
-typedef struct _RDDNODE
-{
-   char szName[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 ]; /* Name of RDD */
-   USHORT uiType;                                        /* Type of RDD */
-   RDDFUNCS pTable;                                      /* Table of functions */
-   USHORT uiAreaSize;                                    /* Size of the WorkArea */
-   struct _RDDNODE * pNext;                              /* Next RDD in the list */
-} RDDNODE;
-
-typedef RDDNODE * LPRDDNODE;
-
-
-
 typedef struct _AREANODE
 {
    void * pArea;               /* WorkAreas with different sizes */
@@ -208,6 +195,9 @@ static RDDFUNCS waTable = { hb_waBof,
                             hb_waPutValueFile,
                             hb_waReadDBHeader,
                             hb_waWriteDBHeader,
+                            hb_rddExit,
+                            hb_rddDrop,
+                            hb_rddExists,
                             hb_waWhoCares
                            };
 
@@ -880,6 +870,8 @@ void hb_rddShutDown( void )
    {
       pRddNode = s_pRddList;
       s_pRddList = s_pRddList->pNext;
+      if ( pRddNode->pTable.exit != NULL )
+        SELF_EXIT( pRddNode );
       hb_xfree( pRddNode );
    }
 }
@@ -1914,9 +1906,11 @@ HB_FUNC( DBUSEAREA )
    /* Open file */
    if( SELF_OPEN( ( AREAP ) s_pCurrArea->pArea, &pInfo ) == FAILURE )
    {
+      hb_xfree( pInfo.abName );
       hb_rddReleaseCurrentArea();
       return;
    }
+   hb_xfree( szFileName );
 }
 
 HB_FUNC( __DBZAP )
@@ -3202,4 +3196,348 @@ HB_FUNC( DBFILEPUT )
 }
 #endif
 
-#include "rddcpy.c"
+/*******************************************/
+/* here we have the NEW Database level functions DBDROP & DBEXISTS */
+HB_FUNC( DBDROP )
+{
+  PHB_ITEM   pFileName;
+  PHB_ITEM   pDriverName;
+  LPRDDNODE  pRDDNode;
+  USHORT     uiRddID;
+  char      *szDriver;
+
+  if ( ISCHAR( 2 ) ) /* we have a VIA RDD parameter */
+    szDriver = hb_parc( 2 );
+  else
+    szDriver = s_szDefDriver;
+  pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  // find the RDD
+
+  if ( !pRDDNode )
+  {
+    hb_errRT_DBCMD( EG_ARG, EDBCMD_EVAL_BADPARAMETER, NULL, "DBDROP" );
+    return;
+  }
+  if ( SELF_DROP( pRDDNode, hb_param( 1, HB_IT_STRING )) == 0 )
+   hb_retl( TRUE );
+  else
+   hb_retl( FALSE );
+}
+
+HB_FUNC( DBEXISTS )
+{
+  PHB_ITEM   pFileName;
+  PHB_ITEM   pDriverName;
+  LPRDDNODE  pRDDNode;
+  USHORT     uiRddID;
+  char * szDriver, * szFileName, * szIndexName;
+
+  if ( ISCHAR( 3 ) ) /* we have a VIA RDD parameter */
+    szDriver = hb_parc( 3 );
+  else
+    szDriver = s_szDefDriver;
+  pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  // find the RDD
+
+  if ( !pRDDNode )
+  {
+    hb_errRT_DBCMD( EG_ARG, EDBCMD_EVAL_BADPARAMETER, NULL, "DBDROP" );
+    return;
+  }
+
+  if ( SELF_EXISTS( pRDDNode, 
+                    ISCHAR( 1 ) ? hb_param( 1, HB_IT_STRING ) : NULL,
+                    ISCHAR( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL ))
+   hb_retl( TRUE );
+  else
+   hb_retl( FALSE );
+}
+
+/*******************************************/
+// as we are in C, the code is upside down,
+//  find __SBAPP & __DBCOPY at the bottom
+
+// create a new AREANODE and open it's Area
+// If the file exists it will be deteted & a new one created
+static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName, BOOL createIt )
+{
+  LPAREANODE pAreaNode;
+  LPRDDNODE  pRDDNode;
+  PHB_ITEM   tableItem, pFileExt;
+  USHORT     uiRddID;
+  PHB_FNAME  pFileName;
+  DBOPENINFO pInfo;
+
+  pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  // find the RDD
+
+  if ( !pRDDNode )
+  {
+    hb_errRT_DBCMD( EG_ARG, EDBCMD_EVAL_BADPARAMETER, NULL, "DBAPP" );
+    return NULL;
+  }
+
+/* Fill pInfo structure */
+  memset( &pInfo, 0, sizeof(DBOPENINFO) );
+  pInfo.uiArea = uiRddID;
+  pInfo.abName = ( BYTE * )  hb_xgrab( _POSIX_PATH_MAX + 1 );
+  strcpy( ( char * ) pInfo.abName, szFileName );
+  pInfo.atomAlias = ( BYTE * ) "__TMPAREA";
+  pInfo.fShared = !hb_set.HB_SET_EXCLUSIVE;
+  pInfo.fReadonly = FALSE;
+
+/* get the new area node */
+    pAreaNode =  hb_rddNewAreaNode( pRDDNode, uiRddID );
+
+/* check the extension */
+    pFileName = hb_fsFNameSplit( szFileName );
+    if( !pFileName->szExtension )
+    {
+       pFileExt = hb_itemPutC( NULL, "" );
+       SELF_INFO( ( AREAP ) pAreaNode->pArea, DBI_TABLEEXT, pFileExt );
+       strncat( pInfo.abName, hb_itemGetCPtr( pFileExt ), _POSIX_PATH_MAX -
+                strlen( pInfo.abName ) );
+       hb_itemRelease( pFileExt );
+    }
+    hb_xfree( pFileName );
+
+  if ( createIt )
+  {
+    PHB_ITEM pFieldArray, pItem, pData;
+    USHORT uiFields, uiCount;
+
+/* get the table structure */
+    pFieldArray = hb_itemNew( NULL );
+    SELF_FIELDCOUNT( ( AREAP ) s_pCurrArea->pArea, &uiFields );
+    hb_arrayNew( pFieldArray, 0 );
+    pData = hb_itemNew( NULL );
+    pItem = hb_itemNew( NULL );
+    for( uiCount = 1; uiCount <= uiFields; uiCount++ )
+    {
+      hb_arrayNew( pItem, 4 );
+      SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_NAME, pData );
+      hb_arraySet( pItem, 1, pData );
+      SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_TYPE, pData );
+      hb_arraySet( pItem, 2, pData );
+      SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_LEN, pData );
+      hb_arraySet( pItem, 3, pData );
+      SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_DEC, pData );
+      hb_arraySet( pItem, 4, pData );
+      hb_arrayAdd( pFieldArray, pItem );
+    }
+    hb_itemRelease( pItem );
+    hb_itemRelease( pData );
+
+/* check for table existence and if true, drop it */
+    tableItem = hb_itemNew( NULL );
+    hb_itemPutCL( tableItem, szFileName, strlen(szFileName) );
+    if( SELF_EXISTS( pRDDNode, tableItem, NULL ))
+      SELF_DROP( pRDDNode, tableItem );
+    hb_itemRelease( tableItem );
+
+/* now create a new table based on the current Area's record layout */
+    ( ( AREAP ) pAreaNode->pArea )->atomAlias = hb_dynsymGet( ( char * ) pInfo.atomAlias );
+    if( SELF_CREATEFIELDS( ( AREAP ) pAreaNode->pArea, pFieldArray ) == FAILURE )
+    {
+      SELF_RELEASE( ( AREAP ) pAreaNode->pArea );
+      hb_xfree( pInfo.abName );
+      hb_xfree( pAreaNode );
+      hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, "DBAPP" );
+      return NULL;
+    }
+
+    if( SELF_CREATE( ( AREAP ) pAreaNode->pArea, &pInfo ) == FAILURE )
+    {
+      SELF_RELEASE( ( AREAP ) pAreaNode->pArea );
+      hb_xfree( pInfo.abName );
+      hb_xfree( pAreaNode );
+      hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, "DBAPP" );
+      return NULL;
+    }
+    hb_itemRelease( pFieldArray );
+    SELF_CLOSE( ( AREAP ) pAreaNode->pArea );
+    SELF_RELEASE( ( AREAP ) pAreaNode->pArea );
+    hb_xfree( pAreaNode );
+
+/* get a new area node for this AREA */
+    pAreaNode =  hb_rddNewAreaNode( pRDDNode, uiRddID );
+  }
+
+/* open it */
+  if( SELF_OPEN( ( AREAP ) pAreaNode->pArea, &pInfo ) == FAILURE )
+  {
+    SELF_RELEASE( ( AREAP ) pAreaNode->pArea );
+    hb_xfree( pInfo.abName );
+    hb_xfree( pAreaNode );
+    hb_errRT_DBCMD( EG_OPEN, 0, NULL, "DBAPP" ); // Could not open it
+    return NULL;
+  }
+  hb_xfree( pInfo.abName );
+  return pAreaNode;
+}
+
+// check if the field is on the Fields Array
+static BOOL IsFieldIn( char * fieldName, PHB_ITEM pFields )
+{
+  USHORT i, uiFields = ( USHORT ) hb_arrayLen( pFields );
+  for ( i=0; i<uiFields; i++ )
+  {
+    PHB_ITEM pField = pFields->item.asArray.value->pItems + i;
+    if ( strcmp( fieldName, (char *)pField->item.asString.value ) == 0 )
+      return TRUE;
+  }
+  return FALSE;
+}
+
+// move the Field Data between areas by name
+static void rddMoveFields( AREAP pAreaFrom, AREAP pAreaTo, PHB_ITEM pFields )
+{
+  USHORT   i;
+  PHB_ITEM fieldValue;
+
+  fieldValue = hb_itemNew( NULL );
+  for ( i=0 ; i<pAreaFrom->uiFieldCount; i++ )
+  {
+    // list or field in the list?
+    if ( !pFields || IsFieldIn( (( PHB_DYNS )(pAreaFrom->lpFields + i)->sym )->pSymbol->szName,  pFields ))
+    {
+      SELF_GETVALUE( pAreaFrom, i+1, fieldValue );
+      SELF_PUTVALUE( pAreaTo, i+1, fieldValue );
+    }
+  }
+  hb_itemRelease( fieldValue );
+}
+
+// move the records filtering if apropiate
+static ERRCODE rddMoveRecords( char *cAreaFrom, char *cAreaTo, PHB_ITEM pFields,
+                               PHB_ITEM pFor, PHB_ITEM pWhile, LONG lNext,
+                               ULONG lRec, BOOL bRest, char *cDriver )
+{
+  char     * szFileName, * szDriver;
+  LONG       toGo=lNext;
+  BOOL       bFor, bWhile;
+  BOOL       keepGoing=TRUE;
+  AREAP      pAreaFrom;
+  AREAP      pAreaTo;
+  DBEVALINFO pEvalInfo;
+  LPAREANODE pAreaRelease=NULL;
+  LPAREANODE s_pCurrAreaSaved=s_pCurrArea;
+
+  HB_SYMBOL_UNUSED( bRest );
+
+  if ( !s_pCurrArea )  // We need a current Area to APPEND TO or FROM
+  {
+     hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "DBAPP" );
+     return EG_NOTABLE;
+  }
+
+  // get the RDD Driver to use for the "other" Area
+  if( cDriver )
+     szDriver = cDriver;
+  else
+     szDriver = s_szDefDriver;
+
+  if( !cAreaFrom && ! cAreaTo )         // File is needed
+  {
+     hb_errRT_DBCMD( EG_ARG, EDBCMD_EVAL_BADPARAMETER, NULL, "DBAPP" );
+     return EG_ARG;
+  }
+
+  if ( cAreaTo ) // it's a COPY TO
+  {
+    pAreaRelease = GetTheOtherArea( szDriver, cAreaTo, TRUE );
+    pAreaTo = (AREAP) pAreaRelease->pArea;
+  }
+  else
+    pAreaTo = (AREAP) s_pCurrArea->pArea;
+
+
+  if ( cAreaFrom ) // it's an APPEND FROM
+  {                // make it current
+    pAreaRelease = s_pCurrArea = GetTheOtherArea( szDriver, cAreaFrom, FALSE );
+    pAreaFrom =  (AREAP) pAreaRelease->pArea;
+  }
+  else
+    pAreaFrom = (AREAP) s_pCurrArea->pArea;
+
+  // or one or the other but necer none
+  if ( !pAreaRelease )  // We need another Area to APPEND TO
+  {
+     hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "DBAPP" );
+     return EG_NOTABLE;
+  }
+
+  if ( lRec > 0 )                 // only one record
+    SELF_GOTO( pAreaFrom, lRec ); // go there
+
+  // move those records assuming we are positioned on one.
+  while( keepGoing )
+  {
+    keepGoing = FALSE;
+    if( !pAreaFrom->fEof ) // until eof or an evaluation failed
+    {
+       if( pWhile )
+          bWhile = hb_itemGetL( hb_vmEvalBlock( pWhile ) );
+       else
+          bWhile = TRUE;
+
+       if( pFor )
+          bFor = hb_itemGetL( hb_vmEvalBlock( pFor ) );
+       else
+          bFor = TRUE;
+
+      if( bWhile && bFor && (!lNext || toGo > 0 )) // candidate?
+      {
+        PHB_ITEM lpFields = pFields ? pFields->item.asArray.value->ulLen ? pFields : NULL : NULL;
+        SELF_APPEND( ( AREAP ) pAreaTo, FALSE );   // put a new one on TO Area
+        rddMoveFields( pAreaFrom, pAreaTo, lpFields ); // move the data
+        if ( lRec == 0 ) // only one record?
+          keepGoing = TRUE;
+        else
+          continue;
+      }
+      toGo--;                     // one less to go
+      SELF_SKIP( pAreaFrom, 1L ); // get the next one
+    }
+  }
+
+  s_pCurrArea = s_pCurrAreaSaved;  // set current WorkArea to initial state
+
+  // Close the File
+  SELF_CLOSE( ( AREAP ) pAreaRelease->pArea );
+  SELF_RELEASE( ( AREAP ) pAreaRelease->pArea );
+  hb_xfree( pAreaRelease );
+
+  return SUCCESS;
+}
+
+HB_FUNC( __DBAPP )
+{
+  if( ISCHAR( 1 ) )
+  {
+    rddMoveRecords(  hb_parc( 1 ),                /* File From */
+                     NULL,                        /* TO current area */
+                     hb_param( 2, HB_IT_ARRAY ),  /* Fields */
+                     hb_param( 3, HB_IT_BLOCK ),  /* For */
+                     hb_param( 4, HB_IT_BLOCK ),  /* While */
+                     hb_parnl( 5 ),               /* Next */ /* Defaults to zero on bad type */
+                     hb_parnl( 6 ),               /* Record */ /* Defaults to zero on bad type */
+                     hb_parl( 7 ),                /* Rest */ /* Defaults to zero on bad type */
+                     ISCHAR( 8 ) ? hb_parc( 8 ) : NULL ); /* RDD */
+  }
+}
+
+HB_FUNC( __DBCOPY )
+{
+  if( ISCHAR( 1 ) )
+  {
+    rddMoveRecords(  NULL,                        /* fro CURRENT Area */
+                     hb_parc( 1 ),                /* To File */
+                     hb_param( 2, HB_IT_ARRAY ),  /* Fields */
+                     hb_param( 3, HB_IT_BLOCK ),  /* For */
+                     hb_param( 4, HB_IT_BLOCK ),  /* While */
+                     hb_parnl( 5 ),               /* Next */ /* Defaults to zero on bad type */
+                     hb_parnl( 6 ),               /* Record */ /* Defaults to zero on bad type */
+                     hb_parl( 7 ),                /* Rest */ /* Defaults to zero on bad type */
+                     ISCHAR( 8 ) ? hb_parc( 8 ) : NULL ); /* RDD */
+  }
+}
+
+

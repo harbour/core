@@ -250,6 +250,11 @@ extern ERRCODE hb_dbfOpenMemFile( DBFAREAP pArea, LPDBOPENINFO pOpenInfo );
 #define hb_dbfPutValueFile                         NULL
 extern ERRCODE hb_dbfReadDBHeader( DBFAREAP pArea );
 extern ERRCODE hb_dbfWriteDBHeader( DBFAREAP pArea );
+
+#define hb_dbfExit                         NULL
+extern ERRCODE hb_dbfDrop( PHB_ITEM pItemTable );
+extern BOOL    hb_dbfExists( PHB_ITEM pItemTable, PHB_ITEM pItemIndex );
+
 #define hb_dbfWhoCares                             NULL
 
 #if defined(HB_EXTERN_C)

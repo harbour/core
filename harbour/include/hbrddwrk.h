@@ -138,6 +138,11 @@ extern ERRCODE hb_waEvalBlock( AREAP pArea, PHB_ITEM pBlock );
 #define hb_waPutValueFile                  ( DBENTRYP_SVP ) hb_waUnsupported
 #define hb_waReadDBHeader                                   hb_waUnsupported
 #define hb_waWriteDBHeader                                  hb_waUnsupported
+
+#define hb_rddExit                         (DBENTRYP_I0)    NULL
+#define hb_rddDrop                         (DBENTRYP_I1)    hb_waUnsupported
+#define hb_rddExists                       (DBENTRYP_I2)    hb_waUnsupported
+
 #define hb_waWhoCares                      ( DBENTRYP_SVP ) hb_waUnsupported
 
 #if defined(HB_EXTERN_C)
