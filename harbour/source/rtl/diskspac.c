@@ -76,6 +76,7 @@ double hb_DiskSpace( USHORT uiDrive, USHORT uiType )
    }
 
    if( uiResult != 0 )
+   {
       switch( uiType )
       {
          case HB_DISK_FREE:
@@ -96,7 +97,7 @@ double hb_DiskSpace( USHORT uiDrive, USHORT uiType )
          dSpace -= ( double ) disk.avail_clusters *
                    ( double ) disk.sectors_per_cluster *
                    ( double ) disk.bytes_per_sector;
-      }
+   }
 
 #elif defined(HB_OS_WIN_32)
 
