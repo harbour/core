@@ -1,3 +1,17 @@
+20000319-19:11 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * include/hbapigt.h
+     source/rtl/gtapi.c
+     source/rtl/inkey.c
+     source/rtl/gt/*.c
+     + The multiplatform inkeypoll code has been moved to the proper GT
+       drivers. Now the GT driver is completely self containing.
+     !! WARNING !! Please test this on your system with your compiler.
+     Tested with: W32/BCC55, DOS/BCC31
+   * source/rtl/filesys.c
+     % Double #include removed.
+   * source/rtl/diskspac.c
+     ! Fix for DOS.
+
 20000319-17:47 GMT+1 Victor Szakats <info@szelvesz.hu>
    * include/hbsetup.h
      ! __WINDOWS__ -> _WINDOWS_

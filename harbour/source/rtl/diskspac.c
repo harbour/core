@@ -48,12 +48,12 @@
 
 #include <ctype.h>
 
+#include "hbapi.h"
+#include "hbapierr.h"
+
 #if defined(DOS) || defined(__WATCOMC__)
    #include <dos.h>
 #endif
-
-#include "hbapi.h"
-#include "hbapierr.h"
 
 HARBOUR HB_DISKSPACE( void )
 {

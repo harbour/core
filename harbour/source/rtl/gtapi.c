@@ -55,17 +55,19 @@
  *
  */
 
+#if defined(__GNUC__) && ! defined(__MINGW32__)
+   #include <unistd.h>
+   #if defined(__DJGPP__) || defined(__CYGWIN__) || defined(HARBOUR_GCC_OS2)
+      #include <io.h>
+   #endif
+#else
+   #include <io.h>
+#endif
+
 #include <ctype.h>
 
 #include "hbapigt.h"
 #include "hbset.h"
-
-#if defined(__GNUC__) && ! defined(__MINGW32__)
-   #include <unistd.h>
-#endif
-#if !defined(OS_UNIX_COMPATIBLE)
-   #include <io.h>
-#endif
 
 static SHORT  s_iCurrentRow = 0;
 static SHORT  s_iCurrentCol = 0;
@@ -111,11 +113,11 @@ void hb_gtExit( void )
    hb_xfree( s_Color );
 }
 
-int hb_gtReadKey( void )
+int hb_gtReadKey( HB_inkey_enum eventmask )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtReadKey()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtReadKey(%d)", (int) event_mask));
 
-   return hb_gt_ReadKey();
+   return hb_gt_ReadKey( eventmask );
 }
 
 void hb_gtAdjustPos( int iHandle, char * pStr, ULONG ulLen )
@@ -159,7 +161,9 @@ USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, B
 
    if( uiTop  > uiMaxRow || uiBottom > uiMaxRow ||
        uiLeft > uiMaxCol || uiRight  > uiMaxCol )
+   {
       return 1;
+   }
 
    /* For full compatibility, pad box string with last char if too short */
 
@@ -184,6 +188,9 @@ USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, B
       uiRight = tmp;
    }
 
+   uiRow = uiTop;
+   uiCol = uiLeft;
+
    /* Draw the box or line as specified */
    height = uiBottom - uiTop + 1;
    width  = uiRight - uiLeft + 1;
@@ -191,22 +198,17 @@ USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, B
    hb_gtDispBegin();
 
    if( height > 1 && width > 1 )
-      hb_gtWriteAt( uiTop, uiLeft, pszBox + 0, sizeof( BYTE ) ); /* Upper left corner */
+      hb_gtWriteAt( uiRow, uiCol, pszBox + 0, sizeof( BYTE ) ); /* Upper left corner */
 
-   if( height == 1 )
-   {
-      if( width > 1 )
-         hb_gtRepChar( uiTop, uiLeft, pszBox[ 1 ], uiRight - uiLeft + 1 ); /* Top line */
-      else
-         hb_gtRepChar( uiTop, uiLeft, pszBox[ 1 ], 1 ); /* Top line */
-   }
-   else if( width > 2 )
-      hb_gtRepChar( uiTop, uiLeft + 1, pszBox[ 1 ], uiRight - uiLeft - 1 ); /* Top line */
+   uiCol = ( height > 1 ? uiLeft + 1 : uiLeft );
+
+   if( uiCol <= uiRight )
+      hb_gtRepChar( uiRow, uiCol, pszBox[ 1 ], uiRight - uiLeft + ( height > 1 ? -1 : 1 ) ); /* Top line */
    
    if( height > 1 && width > 1 )
-      hb_gtWriteAt( uiTop, uiRight, pszBox + 2, sizeof( BYTE ) ); /* Upper right corner */
+      hb_gtWriteAt( uiRow, uiRight, pszBox + 2, sizeof( BYTE ) ); /* Upper right corner */
 
-   if( pszBox[ 8 ] && width > 2 && height > 2 )
+   if( pszBox[ 8 ] && height > 2 && width > 2 )
    {
       for( uiRow = uiTop + 1; uiRow < uiBottom; uiRow++ )
       {
@@ -216,7 +218,7 @@ USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, B
          hb_gtWriteAt( uiRow, uiRight, pszBox + 3, sizeof( BYTE ) ); /* Right side */
       }
    }
-   else if( height > 1 )
+   else
    {
       for( uiRow = ( width > 1 ? uiTop + 1 : uiTop ); uiRow < ( width > 1 ? uiBottom : uiBottom + 1 ); uiRow++ )
       {
@@ -228,8 +230,13 @@ USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, B
 
    if( height > 1 && width > 1 )
    {
-      hb_gtWriteAt( uiBottom, uiLeft, pszBox + 6, sizeof( BYTE ) ); /* Bottom left corner */
-      hb_gtRepChar( uiBottom, uiLeft + 1, pszBox[ 5 ], uiRight - uiLeft - 1 ); /* Bottom line */
+      hb_gtWriteAt( uiBottom, uiCol  , pszBox + 6, sizeof( BYTE ) ); /* Bottom left corner */
+
+      uiCol = ( height > 1 ? uiLeft + 1 : uiLeft );
+
+      if( uiCol <= uiRight && height > 1 )
+         hb_gtRepChar( uiBottom, uiCol, pszBox[ 5 ], uiRight - uiLeft + ( height > 1 ? -1 : 1 ) ); /* Bottom line */
+
       hb_gtWriteAt( uiBottom, uiRight, pszBox + 4, sizeof( BYTE ) ); /* Bottom right corner */
    }
 

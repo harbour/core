@@ -62,6 +62,7 @@
 #include "hbapigt.h"
 #include "hbset.h" /* For Ctrl+Break handling */
 #include "hbvm.h" /* For Ctrl+Break handling */
+#include "inkey.ch"
 
 #if defined(__IBMCPP__)
    #undef WORD                            /* 2 bytes unsigned */
@@ -90,9 +91,18 @@ static HANDLE s_HOutput    = INVALID_HANDLE_VALUE;
 static HANDLE s_HActive    = INVALID_HANDLE_VALUE;
 static HANDLE s_HInactive  = INVALID_HANDLE_VALUE;
 static BOOL   s_bOldCursor = TRUE;
+static HANDLE s_HInput     = INVALID_HANDLE_VALUE;
+static BOOL   s_bBreak     = FALSE;
 
-HANDLE hb_gtHInput = INVALID_HANDLE_VALUE;
-BOOL   hb_gtBreak  = FALSE; /* Used to signal Ctrl+Break to hb_inkeyPoll() */
+#define INPUT_BUFFER_LEN 128
+
+static DWORD        s_cNumRead = 0;   /* Ok to use DWORD here, because this is specific... */
+static DWORD        s_cNumIndex = 0;  /* ...to the Windows API, which defines DWORD, etc.  */
+static INPUT_RECORD s_irInBuf[ INPUT_BUFFER_LEN ];
+static int          s_mouseLast;      /* Last mouse button to be pressed                     */
+
+extern int hb_mouse_iCol;
+extern int hb_mouse_iRow;
 
 static BOOL WINAPI hb_gt_CtrlHandler( DWORD dwCtrlType )
 {
@@ -107,7 +117,7 @@ static BOOL WINAPI hb_gt_CtrlHandler( DWORD dwCtrlType )
       break;
 
    case CTRL_BREAK_EVENT:
-      hb_gtBreak = TRUE;
+      s_bBreak = TRUE;
       bHandled = TRUE;
       break;
 
@@ -124,6 +134,7 @@ static BOOL WINAPI hb_gt_CtrlHandler( DWORD dwCtrlType )
 void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init(): %d, %d, %d", iFilenoStdin, iFilenoStdout, iFilenoStderr));
+
    HB_SYMBOL_UNUSED( iFilenoStdin );
    HB_SYMBOL_UNUSED( iFilenoStdout );
    HB_SYMBOL_UNUSED( iFilenoStderr );
@@ -131,17 +142,17 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
    /* Add Ctrl+Break handler [vszakats] */
    SetConsoleCtrlHandler( hb_gt_CtrlHandler, TRUE );
 
-   if( ( hb_gtHInput = GetStdHandle( STD_INPUT_HANDLE ) ) == INVALID_HANDLE_VALUE )
+   if( ( s_HInput = GetStdHandle( STD_INPUT_HANDLE ) ) == INVALID_HANDLE_VALUE )
    {
       if( hb_dynsymFindName( "__DBGENTRY" ) ) /* the debugger is linked */
       {
          AllocConsole(); /* It is a Windows app without a console, so we create one */
-         hb_gtHInput = GetStdHandle( STD_INPUT_HANDLE );
+         s_HInput = GetStdHandle( STD_INPUT_HANDLE );
       }
    }
 
-   if( hb_gtHInput != INVALID_HANDLE_VALUE )
-      SetConsoleMode( hb_gtHInput, ENABLE_MOUSE_INPUT );
+   if( s_HInput != INVALID_HANDLE_VALUE )
+      SetConsoleMode( s_HInput, ENABLE_MOUSE_INPUT );
 
    /* ptucker */
    s_HOriginal = CreateFile( "CONOUT$",     /* filename    */
@@ -201,8 +212,8 @@ void hb_gt_Done( void )
    }
 /* NOTE: There's no need to close these explicitly, moreover if we close them
          functions using stdout will not show anything.
-   CloseHandle( hb_gtHInput );
-   hb_gtHInput = INVALID_HANDLE_VALUE;
+   CloseHandle( s_HInput );
+   s_HInput = INVALID_HANDLE_VALUE;
    CloseHandle( s_HOutput );
    s_HOutput = INVALID_HANDLE_VALUE;
 */
@@ -217,13 +228,381 @@ void hb_gt_Done( void )
    SetConsoleCtrlHandler( hb_gt_CtrlHandler, FALSE );
 }
 
-int hb_gt_ReadKey( void )
+int hb_gt_ReadKey( HB_inkey_enum eventmask )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey()")); 
+   int ch = 0;
 
-   /* TODO: */
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) event_mask));
 
-   return 0;
+   /* First check for Ctrl+Break, which is handled by gt/gtwin.c */
+   if( s_bBreak )
+   {
+      /* Reset the global Ctrl+Break flag */
+      s_bBreak = FALSE;
+      ch = HB_BREAK_FLAG; /* Indicate that Ctrl+Break was pressed */
+   }
+   /* Check for events only when the event buffer is exhausted. */
+   else if( s_cNumRead <= s_cNumIndex )
+   {
+      /* Check for keyboard input */
+      s_cNumRead = 0;
+      GetNumberOfConsoleInputEvents( s_HInput, &s_cNumRead );
+      if( s_cNumRead )
+      {
+         /* Read keyboard input */
+         ReadConsoleInput(
+            s_HInput,         /* input buffer handle    */
+            s_irInBuf,        /* buffer to read into    */
+            INPUT_BUFFER_LEN, /* size of read buffer    */
+            &s_cNumRead);     /* number of records read */
+         /* Set up to process the first input event */
+         s_cNumIndex = 0;
+      }
+   }
+   /* Only process one keyboard event at a time. */
+   if( s_cNumRead > s_cNumIndex )
+   {
+      if( s_irInBuf[ s_cNumIndex ].EventType == KEY_EVENT )
+      {
+         /* Only process key down events */
+         if( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.bKeyDown )
+         {
+            /* Save the keyboard state and ASCII key code */
+            DWORD dwState = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState;
+            ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar;
+            if( ch < 0 )
+            {
+               /* Process international key codes */
+               ch += 256;
+            }
+            else if( ch == 0 || ( dwState & ( ENHANCED_KEY | LEFT_ALT_PRESSED | LEFT_CTRL_PRESSED | RIGHT_ALT_PRESSED | RIGHT_CTRL_PRESSED | SHIFT_PRESSED ) ) )
+            {
+               /* Process non-ASCII key codes */
+               WORD wKey;
+               if( eventmask & INKEY_EXTENDED )
+                  wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode;
+               else
+                  wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode;
+               /* Discard standalone state key presses for normal mode only */
+               if( ( eventmask & INKEY_EXTENDED ) == 0 ) switch( wKey )
+               {
+                  /* Virtual scan codes to ignore */
+                  case 29: /* Ctrl */
+                  case 42: /* Left Shift */
+                  case 54: /* Right Shift */
+                  case 56: /* Alt */
+                  case 69: /* Num Lock */
+                  case 70: /* Pause or Scroll Lock */
+                     wKey = 0;
+               }
+               if( wKey == 0 ) ch = 0;
+               else
+               {
+                  if( eventmask & INKEY_EXTENDED )
+                  {
+                     /* Pass along all virtual key codes with all
+                        enhanced and state indicators accounted for */
+                     wKey += 256;
+                     if( dwState & ENHANCED_KEY ) wKey += 512;
+                     if( dwState & SHIFT_PRESSED ) wKey += 1024;
+                     if( dwState & LEFT_CTRL_PRESSED ) wKey += 2048;
+                     if( dwState & RIGHT_CTRL_PRESSED ) wKey += 4096;
+                     if( dwState & LEFT_ALT_PRESSED ) wKey += 8192;
+                     if( dwState & RIGHT_ALT_PRESSED ) wKey += 16384;
+                     ch = wKey;
+                  }
+                  else
+                  {
+                     /* Translate virtual scan codes to Clipper codes */
+                     BOOL bAlt = dwState & ( LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED );
+                     BOOL bCtrl = dwState & ( LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED );
+                     BOOL bShift = dwState & SHIFT_PRESSED;
+                     BOOL bEnhanced = dwState & ENHANCED_KEY;
+
+                        HB_TRACE(HB_TR_INFO, ("hb_inkeyPoll: wKey is %d, dwState is %d, ch is %d", wKey, dwState, ch));
+
+                     if( bAlt )
+                     {
+                        /* Alt key held */
+                        if( wKey == 1 ) ch = K_ALT_ESC; /* Esc */
+                        else if( wKey == 15 ) ch = K_ALT_TAB; /* Tab */
+                        else if( wKey <= 12 ) ch = wKey + 374; /* Numeric row */
+                        else if( wKey == 28 ) ch = KP_ALT_ENTER; /* Num Pad Enter */
+                        else if( wKey <= 52 ) ch = wKey + 256; /* Alpha rows */
+                        else if( wKey == 53 && bEnhanced ) ch = KP_ALT_SLASH; /* Num Pad / */
+                        else if( wKey == 55 ) ch = KP_ALT_ASTERISK; /* Num Pad * */
+                        else if( wKey <= 58 ) ch = wKey + 367; /* ? */
+                        else if( wKey <= 68 ) ch = 29 - wKey; /* F1 - F10 */
+                        else if( wKey == 74 ) ch = KP_ALT_MINUS; /* Num Pad - */
+                        else if( wKey == 76 ) ch = KP_ALT_5; /* Num Pad 5 */
+                        else if( wKey == 78 ) ch = KP_ALT_PLUS; /* Num Pad + */
+                        else if( wKey <= 86 ) ch = wKey + 336; /* Cursor */
+                        else if( wKey <= 88 ) ch = 41 - wKey; /* F11, F12 */
+                        else ch = wKey + 384;
+                     }
+                     else if( bCtrl )
+                     {
+                        /* Ctrl key held */
+                        if( wKey == 53 && bEnhanced ) ch = KP_CTRL_SLASH; /* Num Pad / */
+                        else if( wKey >= 59 && wKey <= 68 ) ch = 39 - wKey; /* F1 - F10 */
+                        else switch( wKey )
+                        {
+                           case 1: /* Esc */
+                              ch = K_ESC;
+                              break;
+                           case 3: /* 2 */
+                              ch = 259;
+                              break;
+                           case 7: /* 6 */
+                              ch = K_CTRL_PGDN;
+                              break;
+                           case 12: /* - */
+                              ch = K_CTRL_PGUP;
+                              break;
+                           case 14: /* Backspace */
+                              ch = K_CTRL_BS;
+                              break;
+                           case 15: /* Tab */
+                              ch = K_CTRL_TAB;
+                              break;
+                           case 26: /* [ */
+                              ch = K_ESC;
+                              break;
+                           case 27: /* ] */
+                              ch = K_CTRL_HOME;
+                              break;
+                           case 28: /* Num Pad Enter */
+                              ch = K_CTRL_ENTER;
+                              break;
+                           case 43: /* \ */
+                              ch = K_F1;
+                              break;
+                           case 55: /* Num Pad * */
+                              ch = KP_CTRL_ASTERISK;
+                              break;
+                           case 71: /* Home */
+                              ch = K_CTRL_HOME;
+                              break;
+                           case 72: /* Up */
+                              ch = K_CTRL_UP;
+                              break;
+                           case 73: /* PgUp */
+                              ch = K_CTRL_PGUP;
+                              break;
+                           case 74: /* Num Pad - */
+                              ch = KP_CTRL_MINUS;
+                              break;
+                           case 75: /* Left */
+                              ch = K_CTRL_LEFT;
+                              break;
+                           case 76: /* Num Pad 5 */
+                              ch = KP_CTRL_5;
+                              break;
+                           case 77: /* Right */
+                              ch = K_CTRL_RIGHT;
+                              break;
+                           case 78: /* Num Pad + */
+                              ch = KP_CTRL_PLUS;
+                              break;
+                           case 79: /* End */
+                              ch = K_CTRL_END;
+                              break;
+                           case 80: /* Down */
+                              ch = K_CTRL_DOWN;
+                              break;
+                           case 81: /* PgDn */
+                              ch = K_CTRL_PGDN;
+                              break;
+                           case 82: /* Ins */
+                              ch = K_CTRL_INS;
+                              break;
+                           case 83: /* Del */
+                              ch = K_CTRL_DEL;
+                              break;
+                           case 87: /* F11 */
+                           case 88: /* F12 */
+                              ch = 43 - wKey;
+                              break;
+                           default:
+                              /* Keep Ctrl+Alpha, but scrap everything
+                                 else that hasn't been translated yet. */
+                              if( ch < 1 || ch > 26 )
+                                 ch = 0;
+                        }
+                     }
+                     else if( bShift )
+                     {
+                        /* Shift key held */
+                        if( wKey == 53 && bEnhanced ) ch = '/'; /* Num Pad / */
+                        else if( wKey >= 59 && wKey <= 68 ) ch = 49 - wKey; /* F1 - F10 */
+                        else switch( wKey )
+                        {
+                           case 1: /* Esc */
+                              ch = K_ESC;
+                              break;
+                           case 15: /* Tab */
+                              ch = K_SH_TAB;
+                              break;
+                           case 28: /* Num Pad Enter */
+                              ch = K_ENTER;
+                              break;
+                           case 76: /* Num Pad 5 */
+                              ch = '5';
+                              break;
+                           case 87: /* F11 */
+                           case 88: /* F12 */
+                              ch = 45 - wKey;
+                              break;
+                           case 82: /* Ins */
+                              ch = K_INS;
+                              break;
+                           case 83: /* Del */
+                              ch = K_DEL;
+                              break;
+                           case 71: /* Home */
+                              ch = K_HOME;
+                              break;
+                           case 79: /* End */
+                              ch = K_END;
+                              break;
+                           case 73: /* Page Up */
+                              ch = K_PGUP;
+                              break;
+                           case 81: /* Page Down */
+                              ch = K_PGDN;
+                              break;
+                           case 72: /* Up */
+                              ch = K_UP;
+                              break;
+                           case 80: /* Down */
+                              ch = K_DOWN;
+                              break;
+                           case 77: /* Right */
+                              ch = K_RIGHT;
+                              break;
+                           case 75: /* Left */
+                              ch = K_LEFT;
+                              break;
+                           default: /* Any thing not explicitly translated */
+                              if( ch == 0 )
+                                 /* Only provide a translation for those key
+                                    codes that don't have a default one. */
+                                 ch = wKey + 128;
+                        }
+                     }
+                     else
+                     {
+                        /* Normal key */
+                        if( wKey == 28 ) ch = K_ENTER; /* Num Pad Enter */
+                        else if( wKey == 53 && bEnhanced ) ch = '/'; /* Num Pad / */
+                        else if( wKey == 59 ) ch = K_F1; /* F1 */
+                        else if( wKey > 59 && wKey <= 68 ) ch = 59 - wKey; /* F2 - F10 */
+                        else if( wKey == 76 ) ch = 332; /* Num Pad 5 */
+                        else if( wKey == 87 || wKey == 88 ) ch = 47 - wKey; /* F11, F12 */
+                        else switch( wKey )
+                        {
+                           case 82: /* Ins */
+                              ch = K_INS;
+                              break;
+                           case 83: /* Del */
+                              ch = K_DEL;
+                              break;
+                           case 71: /* Home */
+                              ch = K_HOME;
+                              break;
+                           case 79: /* End */
+                              ch = K_END;
+                              break;
+                           case 73: /* Page Up */
+                              ch = K_PGUP;
+                              break;
+                           case 81: /* Page Down */
+                              ch = K_PGDN;
+                              break;
+                           case 72: /* Up */
+                              ch = K_UP;
+                              break;
+                           case 80: /* Down */
+                              ch = K_DOWN;
+                              break;
+                           case 77: /* Right */
+                              ch = K_RIGHT;
+                              break;
+                           case 75: /* Left */
+                              ch = K_LEFT;
+                              break;
+                           case 76: /* Num Pad 5 */
+                              ch = 332;
+                              break;
+                           case 28: /* Num pad Enter */
+                              ch = K_ENTER;
+                              break;
+                           default:
+                              ch = wKey + 128;
+                        }
+                     }
+                  }
+               }
+            }
+
+#if 0
+            /* Debug code: */
+            else
+            {
+               WORD wKey;
+               if( eventmask & INKEY_EXTENDED )
+                  wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode;
+               else
+                  wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode;
+               HB_TRACE(HB_TR_INFO, ("hb_inkeyPoll: wKey is %d", wKey));
+            }
+#endif
+         }
+      }
+      else if( eventmask & ~( INKEY_KEYBOARD | INKEY_EXTENDED )
+                           && s_irInBuf[ s_cNumIndex ].EventType == MOUSE_EVENT )
+      {
+
+         hb_mouse_iCol = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.X;
+         hb_mouse_iRow = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.Y;
+
+         if( eventmask & INKEY_MOVE && s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == MOUSE_MOVED )
+            ch = K_MOUSEMOVE;
+
+         else if( eventmask & INKEY_LDOWN && s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState &
+                  FROM_LEFT_1ST_BUTTON_PRESSED )
+         {
+            if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == DOUBLE_CLICK )
+               ch = K_LDBLCLK;
+            else
+               ch = K_LBUTTONDOWN;
+
+            s_mouseLast = K_LBUTTONDOWN;
+         }
+         else if( eventmask & INKEY_RDOWN && s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState &
+                  RIGHTMOST_BUTTON_PRESSED )
+         {
+            if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == DOUBLE_CLICK )
+               ch = K_RDBLCLK;
+            else
+               ch = K_RBUTTONDOWN;
+
+            s_mouseLast = K_RBUTTONDOWN;
+         }
+         else if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == 0 &&
+                  s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState == 0 )
+         {
+            if( eventmask & INKEY_LUP && s_mouseLast == K_LBUTTONDOWN )
+               ch = K_LBUTTONUP;
+            else if( eventmask & INKEY_RUP && s_mouseLast == K_RBUTTONDOWN )
+               ch = K_RBUTTONUP;
+         }
+      }
+      /* Set up to process the next input event (if any) */
+      s_cNumIndex++;
+   }
+
+   return ch;
 }
 
 BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
@@ -238,7 +617,7 @@ BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
    GetConsoleScreenBufferInfo( s_HActive, &csbi );
 
    hb_gtSetPos( csbi.dwCursorPosition.Y, csbi.dwCursorPosition.X );
-   
+
    return TRUE;
 }
 

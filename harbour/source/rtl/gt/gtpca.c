@@ -40,18 +40,19 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
+#if defined(__GNUC__) && ! defined(__MINGW32__)
+   #include <unistd.h>
+   #if defined(__DJGPP__) || defined(__CYGWIN__) || defined(HARBOUR_GCC_OS2)
+      #include <io.h>
+   #endif
+#else
+   #include <io.h>
+#endif
 #include <ctype.h>
 #include <string.h>
 
 #include "hbapigt.h"
 #include "hbset.h"
-
-#if defined(__GNUC__) && ! defined(__MINGW32__)
-   #include <unistd.h>
-#endif
-#if !defined(OS_UNIX_COMPATIBLE)
-   #include <io.h>
-#endif
 
 static USHORT s_usRow, s_usCol, s_usMaxRow, s_usMaxCol;
 static int s_iFilenoStdin, s_iFilenoStdout, s_iFilenoStderr;
@@ -176,10 +177,14 @@ BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
    return TRUE;
 }
 
-int hb_gt_ReadKey( void )
+int hb_gt_ReadKey( HB_inkey_enum eventmask )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey()")); 
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) event_mask));
+
+   HB_SYMBOL_UNUSED( eventmask );
+
    /* TODO: */
+
    return 0;
 }
 

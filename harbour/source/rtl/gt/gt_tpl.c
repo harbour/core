@@ -53,9 +53,11 @@ void hb_gt_Done( void )
    /* TODO: */
 }
 
-int hb_gt_ReadKey( void )
+int hb_gt_ReadKey( HB_inkey_enum eventmask )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey()")); 
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) event_mask));
+
+   HB_SYMBOL_UNUSED( eventmask );
 
    /* TODO: */
 

@@ -68,6 +68,20 @@
 #define _B_SINGLE_DOUBLE       "ÖÄ·º½ÄÓº"
 #define _B_DOUBLE_SINGLE       "ÕÍ¸³¾ÍÔ³"
 
+/* Keyboard filters */
+
+typedef enum
+{
+   INKEY_MOVE           = 1,    /* Mouse Events */
+   INKEY_LDOWN          = 2,    /* Mouse Left Click Down */
+   INKEY_LUP            = 4,    /* Mouse Left Click Up */
+   INKEY_RDOWN          = 8,    /* Mouse Right Click Down */
+   INKEY_RUP            = 16,   /* Mouse Right Click Up */
+   INKEY_KEYBOARD       = 128,  /* Keyboard Events */
+   INKEY_ALL            = 159,  /* All Mouse and Keyboard Events */
+   INKEY_EXTENDED       = 256   /* Extended Keyboard Events */
+} HB_inkey_enum;
+
 /* Cursor style constants */
 
 typedef enum
@@ -83,7 +97,7 @@ typedef enum
 
 extern void   hb_gtInit( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr );
 extern void   hb_gtExit( void );
-extern int    hb_gtReadKey( void );
+extern int    hb_gtReadKey( HB_inkey_enum eventmask );
 extern void   hb_gtAdjustPos( int iHandle, char * pStr, ULONG ulLen );
 extern USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyBoxString );
 extern USHORT hb_gtBoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight );
@@ -125,7 +139,7 @@ extern void   hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr
 extern BOOL   hb_gt_IsColor( void );
 extern void   hb_gt_Done( void );
 extern BOOL   hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen );
-extern int    hb_gt_ReadKey( void );
+extern int    hb_gt_ReadKey( HB_inkey_enum eventmask );
 extern USHORT hb_gt_GetScreenWidth( void );
 extern USHORT hb_gt_GetScreenHeight( void );
 extern void   hb_gt_SetPos( SHORT iRow, SHORT iCol );
@@ -148,17 +162,9 @@ extern void   hb_gt_Tone( double dFrequency, double dDuration );
 
 /* Keyboard related declarations */
 
-typedef enum
-{
-   INKEY_MOVE           = 1,    /* Mouse Events */
-   INKEY_LDOWN          = 2,    /* Mouse Left Click Down */
-   INKEY_LUP            = 4,    /* Mouse Left Click Up */
-   INKEY_RDOWN          = 8,    /* Mouse Right Click Down */
-   INKEY_RUP            = 16,   /* Mouse Right Click Up */
-   INKEY_KEYBOARD       = 128,  /* Keyboard Events */
-   INKEY_ALL            = 159,  /* All Mouse and Keyboard Events */
-   INKEY_EXTENDED       = 256   /* Extended Keyboard Events */
-} HB_inkey_enum;
+#define HB_BREAK_FLAG 256 /* 256, because that's what DJGPP returns Ctrl+Break as.
+                             Clipper has no key code 256, so it may as well be
+                             used for all the Harbour builds that need it */
 
 /* Harbour keyboard support functions */
 extern int    hb_inkey ( double seconds, HB_inkey_enum event_mask, BOOL wait, BOOL forever ); /* Wait for keyboard input */

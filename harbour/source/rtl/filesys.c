@@ -117,11 +117,10 @@
 
 #if defined(__BORLANDC__) || defined(__IBMCPP__) || defined(_MSC_VER) || defined(__MINGW32__)
    #include <sys\stat.h>
-   #include <io.h>
-   #include <fcntl.h>
    #include <share.h>
-   #include <direct.h>
+   #include <fcntl.h>
    #include <io.h>
+   #include <direct.h>
    #if defined(__BORLANDC__)
       #include <dir.h>
       #include <dos.h>

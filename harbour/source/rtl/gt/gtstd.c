@@ -71,9 +71,16 @@ void hb_gt_Done( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Done()"));
 }
 
-int hb_gt_ReadKey( void )
+int hb_gt_ReadKey( HB_inkey_enum eventmask )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) event_mask));
+
+   HB_SYMBOL_UNUSED( eventmask );
+
+#if defined(OS_UNIX_COMPATIBLE)
+   if( ! read( STDIN_FILENO, &ch, 1 ) )
+      ch = 0;
+#endif
 
    /* TODO: */
 
