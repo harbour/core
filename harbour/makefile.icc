@@ -95,7 +95,7 @@ $(path_obj)\datesx.obj   : {$(path_c)}datesx.c   $(path_h)\extend.h $(path_h)\ty
 $(path_obj)\debug.obj    : {$(path_c)}debug.c    $(path_h)\extend.h $(path_h)\types.h $(path_h)\itemapi.h $(path_h)\ctoharb.h
 $(path_obj)\descend.obj  : {$(path_c)}descend.c  $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\dir.obj      : {$(path_c)}dir.c      $(path_h)\extend.h $(path_h)\types.h $(path_h)\itemapi.h
-$(path_obj)\environ.obj  : {$(path_c)}environ.c  $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\environ.obj  : {$(path_c)}environ.c  $(path_h)\extend.h $(path_h)\types.h $(path_h)\version.h
 $(path_obj)\errorapi.obj : {$(path_c)}errorapi.c $(path_h)\extend.h $(path_h)\types.h $(path_h)\errorapi.h $(path_h)\error.ch $(path_h)\ctoharb.h
 $(path_obj)\extend.obj   : {$(path_c)}extend.c   $(path_h)\extend.h $(path_h)\types.h $(path_h)\set.h
 $(path_obj)\files.obj    : {$(path_c)}files.c    $(path_h)\extend.h $(path_h)\types.h

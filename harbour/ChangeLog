@@ -1,3 +1,9 @@
+19990624-19:30 EDT David G. Holm <dholm@jsd-llc.com>
+  * makefile.icc
+    - environ.c needs to be dependent upon version.h
+  * include/version.h
+    - Bumped revision code to "c" (still build 27)
+
 19990624-23:20 CET Kwon, Oh-Chul
   * source/rtl/natmsg.xxx
     Korean added
@@ -50,15 +56,15 @@
 
 Thu Jun 24 12:25:30 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* include/Makefile: 
-	Added the following files: box.h, compat.h, extra.h, super.h,
-	box.ch, color.ch, rdd.api.
-	
-	* source/rtl/Makefile: 
-	Added copyfile.c.
-	
-	* source/rtl/errorsys.prg: 
-	Changed an END to an ENDDO, to avoid Harbour compilation errors.
+        * include/Makefile:
+        Added the following files: box.h, compat.h, extra.h, super.h,
+        box.ch, color.ch, rdd.api.
+
+        * source/rtl/Makefile:
+        Added copyfile.c.
+
+        * source/rtl/errorsys.prg:
+        Changed an END to an ENDDO, to avoid Harbour compilation errors.
 
 19990624-13:00 WIB Andi Jahja <andij@aonlippo.co.id>
   * source/rtl/copyfile.c
