@@ -59,14 +59,13 @@
    #endif
    #define _NFILE_ 600
    
+   #include <stdio.h>
    #include <io.h>
    #include <fcntl.h>
-   #include <stdio.h>
-
    #ifdef __cplusplus
       extern "C" {
    #endif
-   
+   unsigned _RTLENTRY _EXPDATA _nfile = _NFILE_;   
    void hb_files_setup( void );
    extern void _RTLENTRY _init_handles( void );
    extern void _RTLENTRY _init_streams( void );
@@ -90,6 +89,18 @@ void hb_fhnd_ForceLink( void )
 };
 
 #if defined(__BORLANDC__)
+
+#define _F_STDIN        (_F_READ | _F_TERM | _F_LBUF)
+#define _F_STDOUT       (_F_WRIT | _F_TERM | _F_LBUF)
+#define _F_STDERR       (_F_WRIT | _F_TERM)
+
+FILE    _RTLENTRY _EXPDATA _streams [_NFILE_] =
+{
+        { NULL, NULL, 0, 0, 0, _F_STDIN,  0, 0, 0 },
+        { NULL, NULL, 0, 0, 0, _F_STDOUT, 0, 1, 0 },
+        { NULL, NULL, 0, 0, 0, _F_STDERR, 0, 2, 0 }
+};
+
 
 unsigned int _RTLENTRY _openfd[_NFILE_] =
 {
