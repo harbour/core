@@ -46,7 +46,6 @@ HARBOUR HB_SETCENTURY (void)
 {
    int digit, count, size, y_size, y_start, y_stop;
    int old_century_setting = hb_set_century;
-   BOOL year;
    PITEM pItem = _param (1, IT_ANY);
    char *szDateFormat, *szNewFormat;
 

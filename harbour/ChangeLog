@@ -1,3 +1,11 @@
+Thu May 06 12:34:45 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* source/compiler/harbour.l: 
+	* source/compiler/harbour.y: 
+	* source/rtl/set.c: 
+	Again, I renamed _AND and _OR to AND_ and OR_, and cleaned up a
+	few warnings.
+
 Wed May 05 18:51:06 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* include/ctoharb.h: 
