@@ -8,6 +8,21 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-07-02 09:25 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * makefile.nt
+  * makefile.vc
+    + Added gencli.c module
+
+  * include/hbcomp.h
+    + Added hb_compGenILCode() prototype
+
+  * source/compiler/gencli.c
+  * source/rdd/dbf1.c
+    + Added some MSVC required typecasts
+
+  * source/rdd/dbfcdx/dbfcdx1.c
+    + Added most recent Horacio's development
+
 2003-06-30 10:50 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
   * source/contrib/rdd_ads/ads1.c
     ! Fixed problem on adsGoTo() method when using ADT files. Borrow from xHarbour.
