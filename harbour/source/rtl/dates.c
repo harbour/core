@@ -2,6 +2,7 @@
  * $Id$
  */
 
+#include <hbsetup.h>
 #include <extend.h>
 #include <errorapi.h>
 #include <set.h>
@@ -11,8 +12,8 @@
   #include <dos.h>
 #endif
 
-#ifndef _STRICT_CLIPPER_COMPATIBILITY
-   #define _OPTIMIZE_DTOS
+#ifndef HB_STRICT_CLIPPER_COMPATIBILITY
+   #define HB_OPTIMIZE_DTOS
 #endif
 
 extern STACK stack;
@@ -382,14 +383,14 @@ HARBOUR HB_DTOC( void )
 /*           Clipper does these checks, anyway. */
 HARBOUR HB_DTOS( void )
 {
-#ifndef _OPTIMIZE_DTOS
+#ifndef HB_OPTIMIZE_DTOS
    if( hb_pcount() == 1 )
    {
       if( ISDATE( 1 ) )
       {
 #endif
          hb_retc( hb_pards( 1 ) );
-#ifndef _OPTIMIZE_DTOS
+#ifndef HB_OPTIMIZE_DTOS
       }
       else
       {

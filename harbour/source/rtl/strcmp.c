@@ -2,16 +2,17 @@
  * $Id$
  */
 
+#include <hbsetup.h>
 #include <ctype.h>
 #include <extend.h>
 #include <set.h>
 
 int hb_stricmp( const char *s1, const char *s2 )
 {
-#ifdef stricmp
+#ifdef HB_USE_STRICMP
    return( stricmp( s1, s2 ) );
 #else
-#ifdef strcasecmp
+#ifdef HB_USE_STRCASECMP
    return( strcasecmp( s1, s2 ) );
 #else
    int rc = 0, c1, c2;

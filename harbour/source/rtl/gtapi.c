@@ -92,17 +92,17 @@ int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
 
 int hb_gtBoxD(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight)
 {
-    return(hb_gtBox(uiTop, uiLeft, uiBottom, uiRight, _B_DOUBLE));
+    return(hb_gtBox(uiTop, uiLeft, uiBottom, uiRight, B_DOUBLE));
 }
 
 int hb_gtBoxS(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight)
 {
-    return(hb_gtBox(uiTop, uiLeft, uiBottom, uiRight, _B_SINGLE));
+    return(hb_gtBox(uiTop, uiLeft, uiBottom, uiRight, B_SINGLE));
 }
 
 int hb_gtColorSelect(USHORT uiColorIndex)
 {
-    if(uiColorIndex > _CLR_LASTCOLOR)
+    if(uiColorIndex > CLR_LASTCOLOR)
     {
         return(1);
     }
@@ -166,7 +166,7 @@ int hb_gtGetCursor(USHORT * uipCursorShape)
     int i=gtGetCursorStyle();
     int rc=0;
 
-    if(i <= _SC_SPECIAL2)
+    if(i <= SC_SPECIAL2)
     {
         *uipCursorShape = i;
     }

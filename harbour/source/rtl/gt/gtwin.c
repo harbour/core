@@ -73,30 +73,30 @@ void gtSetCursorStyle(int style)
     GetConsoleCursorInfo(HOutput, &cci);
     switch (style)
     {
-    case _SC_NONE:
+    case SC_NONE:
         cci.bVisible = 0;
         SetConsoleCursorInfo(HOutput, &cci);
         break;
 
-    case _SC_NORMAL:
+    case SC_NORMAL:
         cci.bVisible = 1;
         cci.dwSize = 12;
         SetConsoleCursorInfo(HOutput, &cci);
         break;
 
-    case _SC_INSERT:
+    case SC_INSERT:
         cci.bVisible = 1;
         cci.dwSize = 99;
         SetConsoleCursorInfo(HOutput, &cci);
         break;
 
-    case _SC_SPECIAL1:
+    case SC_SPECIAL1:
         cci.bVisible = 1;
         cci.dwSize = 49;
         SetConsoleCursorInfo(HOutput, &cci);
         break;
 
-    case _SC_SPECIAL2:
+    case SC_SPECIAL2:
         /* TODO: Why wasn't this implemented ? */
         break;
 
@@ -115,27 +115,27 @@ int gtGetCursorStyle(void)
     if(cci.bVisible)
     {
         /* QUESTION: Is this really correct ? IF _VISIBLE_ -> NONE */
-        rc=_SC_NONE;
+        rc=SC_NONE;
     }
     else
     {
         switch(cci.dwSize)
         {
         case 12:
-            rc=_SC_NORMAL;
+            rc=SC_NORMAL;
             break;
 
         case 99:
-            rc=_SC_INSERT;
+            rc=SC_INSERT;
             break;
 
         case 49:
-            rc=_SC_SPECIAL1;
+            rc=SC_SPECIAL1;
             break;
 
         /* TODO: cannot tell if the block is upper or lower for cursor */
         default:
-            rc=_SC_SPECIAL2;
+            rc=SC_SPECIAL2;
         }
     }
 
@@ -147,7 +147,7 @@ void gtPuts(char x, char y, char attr, char *str, int len)
     DWORD i, dwlen;
     COORD coord;
     LPWORD pwattr;
-    pwattr = (LPWORD) malloc(strlen(str) * sizeof(*pwattr));
+    pwattr = (LPWORD) hb_xgrab(strlen(str) * sizeof(*pwattr));
     if (!pwattr)
     {
         return;
@@ -170,12 +170,12 @@ void gtGetText(char x1, char y1, char x2, char y2, char *dest)
     LPWORD pwattr;
     char y, *pstr;
     width = (x2 - x1 + 1);
-    pwattr = (LPWORD) malloc(strlen(str) * sizeof(*pwattr));
+    pwattr = (LPWORD) hb_xgrab(strlen(str) * sizeof(*pwattr));
     if (!pwattr)
     {
         return;
     }
-    pstr = (char *)malloc(width);
+    pstr = (char *)hb_xgrab(width);
     if (!pstr)
     {
         free(pwattr);
@@ -206,12 +206,12 @@ void gtPutText(char x1, char y1, char x2, char y2, char *srce)
     LPWORD pwattr;
     char y, *pstr;
     width = (x2 - x1 + 1);
-    pwattr = (LPWORD) malloc(strlen(str) * sizeof(*pwattr));
+    pwattr = (LPWORD) hb_xgrab(strlen(str) * sizeof(*pwattr));
     if (!pwattr)
     {
         return;
     }
-    pstr = (char *)malloc(width);
+    pstr = (char *)hb_xgrab(width);
     if (!pstr)
     {
         free(pwattr);

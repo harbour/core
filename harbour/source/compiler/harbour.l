@@ -68,8 +68,7 @@ int i_INDEX_STATE = 0;
 void yy_lex_count_lf( void )
 {
   char * pTmp = yytext;
-  pTmp = strchr(pTmp, '\n');
-  while( pTmp )
+  while( ( pTmp = strchr(pTmp, '\n') ) )
   {
     ++iLine;
     ++pTmp;

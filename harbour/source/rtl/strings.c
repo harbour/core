@@ -2,14 +2,24 @@
  * $Id$
  */
 
+#include <hbsetup.h>
+#include <dates.h>
 #include <extend.h>
 #include <errorapi.h>
 #include <ctype.h>
+#include <math.h>
 #include <set.h>
 
 extern STACK stack;
 
+#ifdef HB_STRICT_CLIPPER_COMPATIBILITY
+static double infinity = 0;
+#endif
+
 #define HB_ISSPACE(c) ((c) == 9 || (c) == 10 || (c) == 13 || (c) == 32)
+
+/* DJGPP can sprintf a float that is almost 320 digits long */
+#define HB_MAX_DOUBLE_LENGTH 320
 
 HARBOUR HB_ALLTRIM( void );
 HARBOUR HB_ASC( void );
@@ -71,6 +81,9 @@ static SYMBOL symbols[] = {
 void Strings__InitSymbols( void )
 {
    ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
+   #ifdef HB_STRICT_CLIPPER_COMPATIBILITY
+   infinity = -log( 0 );
+   #endif
 }
 
 BOOL hb_strempty( char * szText, ULONG ulLen )
@@ -238,27 +251,69 @@ HARBOUR HB_ALLTRIM( void )
       hb_retc("");
 }
 
-/* right-pads a string with spaces or supplied character */
+/* This function is used by all of the PAD functions to prepare the argument
+   being padded. If date, convert to string using hb_dtoc(). If numeric,
+   convert to unpadded string. Return pointer to string and set string length */
+static char * hb_pad_prep( PHB_ITEM pItem, char * buffer, WORD * pwSize )
+{
+   char * szText = 0;
+
+   if( pItem ) switch( pItem->wType )
+   {
+      case IT_DATE:
+         szText = hb_dtoc( hb_pards( 1 ), buffer );
+         *pwSize = strlen( szText );
+         break;
+      case IT_INTEGER:
+         sprintf( buffer, "%d", hb_parni( 1 ) );
+         szText = buffer;
+         *pwSize = strlen( szText );
+         break;
+      case IT_LONG:
+         sprintf( buffer, "%ld", hb_parnl( 1 ) );
+         szText = buffer;
+         *pwSize = strlen( szText );
+         break;
+      case IT_DOUBLE:
+         if( pItem->wDec )
+            sprintf( buffer, "%.*f", pItem->wDec, hb_parnd( 1 ) );
+         else
+            sprintf( buffer, "%ld", hb_parnl( 1 ) );
+         szText = buffer;
+         *pwSize = strlen( szText );
+         break;
+      case IT_STRING:
+         szText = hb_parc( 1 );
+         *pwSize = hb_parclen( 1 );
+         break;
+   }
+   return szText;
+}
+
+/* right-pads a date, number, or string with spaces or supplied character */
 /* TEST: QOUT( "padr( 'hello', 10 ) = '" + padr( 'hello', 10 ) + "'" ) */
 HARBOUR HB_PADR( void )
 {
-   char *szText = hb_parc(1);
+   WORD wSize;
+   char buffer[ 128 ];
+   PHB_ITEM pItem = hb_param( 1, IT_ANY );
+   char *szText = hb_pad_prep( pItem, buffer, &wSize );
 
-   if( hb_pcount() > 1 )
+   if( szText && hb_pcount() > 1 )
    {
       long lLen = hb_parnl(2);
 
-      if( lLen > (long)hb_parclen(1) )
+      if( lLen > wSize )
       {
          char *szResult = (char *)hb_xgrab(lLen + 1);
          long lPos;
          char cPad;
 
-         memcpy(szResult, szText, hb_parclen(1));
+         memcpy(szResult, szText, wSize);
 
          cPad = ( hb_pcount() > 2? *(hb_parc(3)): ' ' );
 
-         for( lPos = hb_parclen(1); lPos < lLen; lPos++ )
+         for( lPos = wSize; lPos < lLen; lPos++ )
             szResult[lPos] = cPad;
 
          hb_retclen(szResult, lLen);
@@ -282,23 +337,26 @@ HARBOUR HB_PAD( void )
    HB_PADR();
 }
 
-/* left-pads a string with spaces or supplied character */
+/* left-pads a date, number, or string with spaces or supplied character */
 /* TEST: QOUT( "padl( 'hello', 10 ) = '" + padl( 'hello', 10 ) + "'" ) */
 HARBOUR HB_PADL( void )
 {
-   char *szText = hb_parc(1);
+   WORD wSize;
+   char buffer[ 128 ];
+   PHB_ITEM pItem = hb_param( 1, IT_ANY );
+   char *szText = hb_pad_prep( pItem, buffer, &wSize );
 
-   if( hb_pcount() > 1 )
+   if( szText && hb_pcount() > 1 )
    {
       long lLen = hb_parnl(2);
 
-      if( lLen > (long) hb_parclen(1) )
+      if( lLen > wSize )
       {
          char *szResult = (char *)hb_xgrab(lLen + 1);
-         long lPos = lLen - hb_parclen(1);
+         long lPos = lLen - wSize;
          char cPad;
 
-         memcpy(szResult + lPos, szText, hb_parclen(1));
+         memcpy(szResult + lPos, szText, wSize);
 
          cPad = (hb_pcount() > 2? *(hb_parc(3)): ' ');
 
@@ -322,30 +380,33 @@ HARBOUR HB_PADL( void )
       hb_retc("");
 }
 
-/* centre-pads a string with spaces or supplied character */
+/* centre-pads a date, number, or string with spaces or supplied character */
 /* TEST: QOUT( "padc( 'hello', 10 ) = '" + padc( 'hello', 10 ) + "'" ) */
 HARBOUR HB_PADC( void )
 {
-   char *szText = hb_parc(1);
+   WORD wSize;
+   char buffer[ 128 ];
+   PHB_ITEM pItem = hb_param( 1, IT_ANY );
+   char *szText = hb_pad_prep( pItem, buffer, &wSize );
 
-   if( hb_pcount() > 1 )
+   if( szText && hb_pcount() > 1 )
    {
       long lLen = hb_parnl(2);
 
-      if( lLen > (long) hb_parclen(1) )
+      if( lLen > wSize )
       {
          char *szResult = (char *)hb_xgrab(lLen + 1);
          char cPad;
-         long w, lPos = (lLen - hb_parclen(1)) / 2;
+         long w, lPos = (lLen - wSize) / 2;
 
-         memcpy(szResult + lPos, szText, hb_parclen(1) + 1);
+         memcpy(szResult + lPos, szText, wSize + 1);
 
          cPad = ( hb_pcount() > 2? *hb_parc(3): ' ' );
 
          for( w = 0; w < lPos; w++ )
             szResult[w] = cPad;
 
-         for( w = hb_parclen(1) + lPos; w < lLen; w++ )
+         for( w = wSize + lPos; w < lLen; w++ )
             szResult[w] = cPad;
 
          szResult[lLen] = 0;
@@ -1107,10 +1168,11 @@ char * hb_str( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
    if( pNumber )
    {
       /* Default to the width and number of decimals specified by the item,
-         with a limit of 9 decimal places */
+         with a limit of 20 integer places and 9 decimal places */
       int iWidth = pNumber->wLength;
       int iDec   = pNumber->wDec;
-
+      if( iWidth > 20 )
+         iWidth = 20;
       if( iDec > 9 )
          iDec = 9;
       if( hb_set_fixed )
@@ -1157,7 +1219,7 @@ char * hb_str( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
          int iSize = (iDec ? iWidth + 1 + iDec : iWidth);
 
          /* Be paranoid and use a large amount of padding */
-         szResult = (char *)hb_xgrab( iWidth + iDec + 64 );
+         szResult = (char *)hb_xgrab( HB_MAX_DOUBLE_LENGTH );
 
          if( IS_DOUBLE( pNumber ) || iDec != 0 )
          {
@@ -1170,10 +1232,18 @@ char * hb_str( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
             else if( IS_DOUBLE( pNumber ) )
                dNumber = pNumber->value.dNumber;
 
-            if( iDec > 0 )
-               iBytes = sprintf( szResult, "%*.*f", iSize, iDec, dNumber );
+            #ifdef HB_STRICT_CLIPPER_COMPATIBILITY
+            if( pNumber->wLength == 99 || dNumber == infinity || dNumber == -infinity )
+               /* Numeric overflow */
+               iBytes = iSize + 1;
             else
-               iBytes = sprintf( szResult, "%*ld", iWidth, (long)dNumber );
+            #endif
+            {
+               if( iDec > 0 )
+                  iBytes = sprintf( szResult, "%*.*f", iSize, iDec, dNumber );
+               else
+                  iBytes = sprintf( szResult, "%*ld", iWidth, (long)dNumber );
+            }
          }
          else switch( pNumber->wType & ~IT_BYREF )
          {
@@ -1190,7 +1260,7 @@ char * hb_str( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
                  *szResult = 0;
                  break;
          }
-         /* Set to asterisks in case of overflow (same reason for paranoia) */
+         /* Set to asterisks in case of overflow */
          if( iBytes > iSize )
          {
             memset( szResult, '*', iSize );

@@ -1,3 +1,69 @@
+19990623-21:30 EDT David G. Holm <dholm@jsd-llc.com>
+  * makefile.b31
+    - Added support for source/rtl/copyfile.c
+    - source/rtl/genobj.c was moved to source/contrib
+  * makefile.icc
+    - Added support for source/rtl/copyfile.c
+  + include/box.ch
+    - New include file contributed by Phil Barnett
+  + include/box.h
+    - Moved all border type manifest constants from gtapi.h
+    - Removed leading underscores
+  + include/color.ch
+    - Moved all color attribute manifest constants from gtapi.h
+    - Removed leading underscores
+  * include/gtapi.h
+    - Moved all manifest constants for color attributes to color.ch
+    - Added #include <color.ch>
+    - Removed all manifest constants for cursor types
+    - Added #include <setcurs.ch>
+    - Moved all manifest constants for border types to box.h
+    - Added #include <box.h>
+  * include/hbsetup.h
+    - Added HB_STRICT_CLIPPER_COMPATIBILITY
+  * source/compiler/harbour.l
+    - Corrected yy_lex_count_lf per Paul Tucker
+  * source/rtl/console.c
+    - Added minimal DISPBOX() support for those without a working GT API
+      based on code contributed by Phil Barnett
+  * source/rtl/dates.c
+    - Added #include <hbsetup.h>
+    - Added HB to front of _STRICT_CLIPPER_COMPATIBILITY and
+      _OPTIMIZE_DTOS manifest constants
+  * source/rtl.gtapi.c
+    - Removed leading underscores from former gtapi.h manifest constants
+  * source/rtl/math.c
+    - Set the default number of decimal digits after call to
+      EXP(), LOG(), and SQRT()
+    - Always return the value from the C/C++ compiler's log()
+      function. Even when the HARBOUR LOG() argument is less
+      than or equal to zero, in which case set the display
+      width to 99 to indicate overflow.
+  * source/rtl/strcmp.c
+    - Removed ability to use library functions stricmp() or strcasecmp()
+  * source/rtl/strings.c
+    - Added #include <hbsetup.h>
+    - Added #ifdef HB_STRICT_CLIPPER_COMPATIBILITY to determine
+      whether to use Clipper overflow indication (a string of
+      asterisks) or to use the C/C++ compiler's indication
+      (+/-Infinity and/or +/-Not a Number)
+    - Added support for date and numeric arguments for first
+      parameter in all PAD functions (PADC, PADL, PADR)
+  * source/rtl/gt/gtdos.c
+    - Removed leading underscores from former gtapi.h manifest constants
+  * source/rtl/gt/gtwin.c
+    - Removed leading underscores from former gtapi.h manifest constants
+    - Changed all malloc() calls to hb_xgrab()
+  * source/vm/hvm.c
+    - In ForTest(), the number of decimal digits was being
+      accessed before the loop counter was popped off the
+      stack instead of after
+  + tests/broken/cbtest.prg
+    - Illustrates codeblock problem pointed out by Dave Pearson
+  + tests/working/box.prg
+    - New test program to demonstrate the use of DISPBOX()
+      based on code contributed by Phil Barnett
+
 19990624-08:00 WIB Andi Jahja <andij@aonlippo.co.id>
   * source/rtl/copyfile.c
    - function name now upper case

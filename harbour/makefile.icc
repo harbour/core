@@ -21,6 +21,7 @@ $(path_lib)\harbour.lib : \
                 $(path_obj)\classes.obj \
                 $(path_obj)\codebloc.obj \
                 $(path_obj)\console.obj \
+                $(path_obj)\copyfile.obj \
                 $(path_obj)\descend.obj \
                 $(path_obj)\dates.obj \
                 $(path_obj)\dir.obj \
@@ -89,6 +90,7 @@ $(path_obj)\gtos2.obj  : {$(path_c)}gtos2.c  $(path_h)\extend.h $(path_h)\types.
 $(path_obj)\arrays.obj   : {$(path_c)}arrays.c   $(path_h)\extend.h $(path_h)\types.h $(path_h)\itemapi.h $(path_h)\errorapi.h $(path_h)\ctoharb.h $(path_h)\error.ch
 $(path_obj)\classes.obj  : {$(path_c)}classes.c  $(path_h)\extend.h $(path_h)\types.h $(path_h)\errorapi.h $(path_h)\ctoharb.h $(path_h)\error.ch
 $(path_obj)\codebloc.obj : {$(path_c)}codebloc.c $(path_h)\extend.h $(path_h)\types.h $(path_h)\itemapi.h
+$(path_obj)\copyfile.obj : {$(path_c)}copyfile.c $(path_h)\extend.h $(path_h)\types.h $(path_h)\itemapi.h $(path_h)\errorapi.h $(path_h)\error.ch $(path_h)\filesys.h $(path_h)\fileio.ch $(path_h)\filesys.api
 $(path_obj)\dates.obj    : {$(path_c)}dates.c    $(path_h)\extend.h $(path_h)\types.h $(path_h)\dates.h $(path_h)\set.h $(path_h)\errorapi.h $(path_h)\error.ch
 $(path_obj)\datesx.obj   : {$(path_c)}datesx.c   $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\debug.obj    : {$(path_c)}debug.c    $(path_h)\extend.h $(path_h)\types.h $(path_h)\itemapi.h $(path_h)\ctoharb.h

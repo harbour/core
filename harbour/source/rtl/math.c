@@ -2,7 +2,7 @@
  * $Id$
  */
 
-#include <extend.h>
+#include <set.h>
 #include <errorapi.h>
 #include <math.h>
 
@@ -89,7 +89,9 @@ HARBOUR HB_EXP( void )
 
       if( pNumber )
       {
-         hb_retnd( exp(hb_parnd(1)) );
+         hb_retnd( exp( hb_parnd( 1 ) ) );
+         /* Always set default number of decimals after EXP() */
+         stack.Return.wDec = hb_set.HB_SET_DECIMALS;
       }
       else
       {
@@ -141,12 +143,13 @@ HARBOUR HB_LOG( void )
 
       if( pNumber )
       {
-         double dNumber = hb_parnd(1);
-         if( dNumber > 0 )
-            hb_retnd( log(dNumber) );
-         else
-            /* TODO: return OVERFLOW */
-            hb_retnd(0);
+         double dNumber = hb_parnd( 1 );
+         hb_retnd( log( dNumber ) );
+         /* Always set default number of decimals after LOG() */
+         stack.Return.wDec = hb_set.HB_SET_DECIMALS;
+         if( dNumber <= 0.0 )
+            /* Indicate overflow if called with an invalid argument */
+            stack.Return.wLength = 99;
       }
       else
       {
@@ -341,10 +344,14 @@ HARBOUR HB_SQRT( void )
          double dNumber = hb_parnd(1);
 
          if( dNumber > 0 )
+         {
             hb_retnd( sqrt(dNumber) );
+         }
          else
             /* Clipper doesn't error! */
             hb_retnd(0);
+         /* Always set default number of decimals after SQRT() */
+         stack.Return.wDec = hb_set.HB_SET_DECIMALS;
       }
       else
       {

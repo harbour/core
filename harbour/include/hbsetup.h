@@ -32,6 +32,26 @@
 */
 /*#define HARBOUR_OBJ_GENERATION*/
 
+/* This symbol defines if we want to use strict Clipper compatibility
+ *
+ * By default it is disabled (symbol is not defined)
+*/
+/*#define HB_STRICT_CLIPPER_COMPATIBILITY*/
+
+/* This symbol defines if you want to have hb_stricmp() use stricmp()
+ *
+ * By default it is disabled (symbol is not defined)
+*/
+/*#define HB_USE_STRICMP*/
+
+/* This symbol defines if you want to have hb_stricmp() use strcasecmp()
+ *
+ * By default it is disabled (symbol is not defined)
+ *
+ * If you define both HB_USE_STRICMP and HB_USE_STRCASECMP, HB_USE_STRICMP
+ * will take precedence over HB_USE_STRCASECMP
+*/
+/*#define HB_USE_STRCASECMP*/
 
 /* This symbol defines if we want to use the GT API
  *

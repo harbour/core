@@ -868,11 +868,12 @@ void ForTest( void )        /* Test to check the end point of the FOR */
 {
    double dStep;
    int    iEqual;
+   WORD   wDec;
 
    if( IS_NUMERIC( stack.pPos - 1 ) )
    {
-       WORD wDec = stack.pPos->wDec;
        dStep = PopNumber();
+       wDec = stack.pPos->wDec;
        if( dStep > 0 )           /* Positive loop. Use LESS */
            Less();
        else if( dStep < 0 )      /* Negative loop. Use GREATER */

@@ -5,6 +5,13 @@
 #ifndef GTAPI_H_
 #define GTAPI_H_
 
+#include <color.ch>
+#include <setcurs.ch>
+#include <box.h>
+
+/* maximum length of color string */
+#define CLR_STRLEN      64
+
 /*
  *  GTAPI.H; Screen drawing, cursor and keyboard routines for text mode
  *           16-bit and 32-bit MS-DOS, 16-bit and 32-bit OS/2, and 32-bit
@@ -72,32 +79,6 @@ int    hb_gtSetSnowFlag(BOOL bNoSnow);
 int    hb_gtWrite(char * fpStr, USHORT uiLen);
 int    hb_gtWriteAt(USHORT uiRow, USHORT uiCol, char * fpStr, USHORT uiLen);
 int    hb_gtWriteCon(char * fpStr, USHORT uiLen);
-
-/* maximum length of color string */
-#define CLR_STRLEN      64
-
-/* cursor types */
-#define _SC_NONE        0
-#define _SC_NORMAL      1
-#define _SC_INSERT      2
-#define _SC_SPECIAL1    3
-#define _SC_SPECIAL2    4
-
-/* attributes for color strings */
-#define _CLR_STANDARD   0
-#define _CLR_ENHANCED   1
-#define _CLR_BORDER     2
-#define _CLR_BACKGROUND 3
-#define _CLR_UNSELECTED 4
-#define _CLR_LASTCOLOR  _CLR_UNSELECTED
-
-/* strings for borders (same as Clipper/Harbour ones) */
-                               /*01234567*/
-#define _B_NONE                 "        "
-#define _B_SINGLE               "ÚÄ¿³ÙÄÀ³"
-#define _B_DOUBLE               "ÉÍ»º¼ÍÈº"
-#define _B_SINGLE_DOUBLE        "ÖÄ·º½ÄÓº"
-#define _B_DOUBLE_SINGLE        "ÕÍ¸³¾ÍÔ³"
 
 #ifndef DOS
 #if defined(_QC) || defined(__DOS__) || defined(MSDOS) || defined(__MSDOS__)
