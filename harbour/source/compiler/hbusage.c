@@ -119,7 +119,7 @@ void hb_compPrintModes( void )
            "\n          h               Harbour mode (default)",
            "\n          i               enable support for HB_INLINE",
            "\n          r               runtime settings enabled",
-           "\n          c               string as bytes array enabled",
+           "\n          s               string as bytes array enabled",
            "\n          x               extended xbase mode",
            "\n          J               turn off jump optimization in pcode",
            "\n          ?               this info",

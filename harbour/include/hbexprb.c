@@ -84,6 +84,7 @@
 
    #define HB_SUPPORT_XBASE     ( HB_COMP_ISSUPPORTED(HB_SM_XBASE) )
    #define HB_SUPPORT_HARBOUR   ( HB_COMP_ISSUPPORTED(HB_SM_HARBOUR) )
+   #define HB_SUPPORT_ARRSTR    ( HB_COMP_ISSUPPORTED(HB_SM_ARRSTR) )
 #else
    void hb_compExprDelOperator( HB_EXPR_PTR );
    void hb_compExprUseOperEq( HB_EXPR_PTR, BYTE );
@@ -96,6 +97,7 @@
 
    #define HB_SUPPORT_XBASE     ( HB_COMP_ISSUPPORTED(HB_COMPFLAG_XBASE) )
    #define HB_SUPPORT_HARBOUR   ( HB_COMP_ISSUPPORTED(HB_COMPFLAG_HARBOUR) )
+   #define HB_SUPPORT_ARRSTR    ( HB_COMP_ISSUPPORTED(HB_COMPFLAG_ARRSTR) )
 #endif
 
 
@@ -1214,7 +1216,7 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
          {
             BOOL bRemoveRef = FALSE;
 /*         #ifndef HB_C52_STRICT */
-				if( HB_COMP_ISSUPPORTED(HB_COMPFLAG_ARRSTR) )
+				if( HB_SUPPORT_ARRSTR )
             	/* to manage strings as bytes arrays, they must be pushed by reference */
             	/* arrays also are passed by reference */
             	if( pSelf->value.asList.pExprList->ExprType == HB_ET_VARIABLE )
@@ -1229,7 +1231,7 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
             HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_ARRAYPOP );
 
 /*         #ifndef HB_C52_STRICT */
-				if( HB_COMP_ISSUPPORTED(HB_COMPFLAG_ARRSTR) )
+				if( HB_SUPPORT_ARRSTR )
             	if( bRemoveRef )
             	{
                	pSelf->value.asList.pExprList->ExprType = HB_ET_VARIABLE;

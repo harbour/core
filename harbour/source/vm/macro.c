@@ -94,6 +94,7 @@ static int hb_macroParse( HB_MACRO_PTR pMacro, char * szString )
    pMacro->length = strlen( szString );
    pMacro->pos    = 0;
    pMacro->bShortCuts = hb_comp_bShortCuts;
+   pMacro->pError   = NULL;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_macroParse(%p, %s)", pMacro, szString));
 
@@ -176,6 +177,8 @@ static HB_ERROR_HANDLE( hb_macroErrorType )
 {
    HB_MACRO_PTR pMacro = ( HB_MACRO_PTR ) ErrorInfo->Cargo;
 
+   /* copy error object for later diagnostic usage */   
+   pMacro->pError = hb_itemNew( ErrorInfo->Error );
    pMacro->status &= ~HB_MACRO_CONT;
    /* ignore rest of compiled code
     */
@@ -846,14 +849,14 @@ char * hb_macroGetType( HB_ITEM_PTR pItem )
       {
          /* passed string was successfully compiled
           */
-              if( struMacro.exprType == HB_ET_CODEBLOCK )
-              {
-                /* Clipper ignores any undeclared symbols or UDFs if the
-                 * compiled expression is a valid codeblock
-                 */
-                szType ="B";
-              }
-         else if( struMacro.status & ( HB_MACRO_UNKN_SYM | HB_MACRO_UNKN_VAR) )
+         if( struMacro.exprType == HB_ET_CODEBLOCK )
+         {
+            /* Clipper ignores any undeclared symbols or UDFs if the
+             * compiled expression is a valid codeblock
+            */
+            szType ="B";
+         }
+         else if( struMacro.status & HB_MACRO_UNKN_SYM )
          {
             /* request for a symbol that is not in a symbol table or
              * for a variable that is not visible
@@ -894,7 +897,21 @@ char * hb_macroGetType( HB_ITEM_PTR pItem )
             else
             {
                /* something unpleasant happened during macro evaluation */
-               szType = "UE";
+               if( struMacro.pError )
+               {
+                  ULONG ulGenCode;
+                  
+                  ulGenCode = hb_errGetGenCode( struMacro.pError );
+                  if( ulGenCode == EG_NOVAR )
+                  {
+                     /* Undeclared variable returns 'U' in Clipper */
+                     szType = "U";
+                  }
+                  else
+                     szType = "UE";
+               }
+               else
+                  szType = "UE";
             }
          }
          else
@@ -905,6 +922,9 @@ char * hb_macroGetType( HB_ITEM_PTR pItem )
       else
          szType = "UE";  /* syntax error during compilation */
 
+      if( struMacro.pError )
+         hb_itemRelease( struMacro.pError );
+      struMacro.pError = NULL;
       hb_macroDelete( &struMacro );
    }
    else
@@ -965,6 +985,17 @@ HB_FUNC( HB_SETMACRO )
              pValue = hb_param( 2, HB_IT_LOGICAL );
              if( pValue )
                 hb_macroSetMacro( hb_itemGetL( pValue ), ulFlags );
+             break;
+
+          case HB_SM_ARRSTR :
+             /* enable/disable processing of strings as an array of bytes */
+             hb_retl( s_macroFlags & ulFlags );
+             pValue = hb_param( 2, HB_IT_LOGICAL );
+             if( pValue )
+             {
+                BOOL bSet = hb_itemGetL( pValue );
+                hb_macroSetMacro( bSet && hb_vmFlagEnabled(HB_VMFLAG_ARRSTR), ulFlags );
+             }
              break;
 
           case HB_SM_SHORTCUTS:
@@ -1108,21 +1139,12 @@ void hb_compMemvarGenPCode( BYTE bPCode, char * szVarName, HB_MACRO_DECL )
        */
       pSym = hb_dynsymFind( szVarName );
       if( ! pSym )
-      {
-         HB_MACRO_DATA->status |= HB_MACRO_UNKN_SYM;
-         HB_MACRO_DATA->status &= ~HB_MACRO_CONT;  /* don't run this pcode */
-         /*
-          * NOTE: the compiled pcode will be not executed then we can ignore
-          * NULL value for pSym
-          */
-      }
+         HB_MACRO_DATA->status |= HB_MACRO_UNKN_VAR;
    }
-   else
-   {
-      /* Find the address of passed symbol - create the symbol if doesn't exist
-       */
-      pSym = hb_dynsymGet( szVarName );
-   }
+   /* Find the address of passed symbol - 
+    * create the symbol if doesn't exist (Clipper compatibility)
+   */
+   pSym = hb_dynsymGet( szVarName );
    hb_compGenPCode1( bPCode, HB_MACRO_PARAM );
    hb_compGenPCodeN( ( BYTE * )( &pSym ), sizeof( pSym ), HB_MACRO_PARAM );
 }

@@ -8,6 +8,25 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-03-01 11:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * include/hbexprb.c
+   * include/hbmacro.ch
+      * fixed support for strings as array of bytes 
+        (in macro compiler)
+      * added a new #define HB_SM_ARRSTR as a flag
+        for HB_SETMACRO() to disable/enable strings
+        as array of bytes
+       
+   * source/vm/macro.c
+      * added HB_SM_ARRSTR support
+      * fixed TYPE() function to return correct value when an
+        assigment to undeclared variable is checked (Clipper
+        creates the memvar variable) - thanks to Phil Krylov
+      
+   * source/compiler/hbusage.c
+      * fixed typo for -ks switch
+
+
 2004-04-01 09:09 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/common/hbffind.c
