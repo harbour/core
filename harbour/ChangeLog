@@ -7,6 +7,12 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * source/vm/fm.c
+     Memory allocation error was transparently noticed when running
+     hbtest.exe with -DHB_FM_STATISTICS_OFF, fixed.
+     * function hb_xgrab()
+       fix memory allocation on function hb_xgrab() by adding extra bytes
+       to be allocated in line with byte alignment.
 
 2001-12-31 13:22 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 

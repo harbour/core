@@ -62,7 +62,7 @@
 
 #if defined(HB_OS_WIN_32)
 
-BOOL WINAPI HB_EXPORT DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
+BOOL HB_EXPORT WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
 {
    HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %d)", hInstance, fdwReason,
              pvReserved ) );
@@ -383,7 +383,7 @@ char * hb_pardsbuff( char * szDate, int iParam, ... ) /* retrieve a date as a st
 
 int hb_parl( int iParam, ... ) /* retrieve a logical parameter as an int */
 {
-   int iReturn;
+   /* int iReturn; */
    FARPROC pParL=GetProcAddress( GetModuleHandle( NULL ), "_hb_parl" );
    FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
 
@@ -435,7 +435,7 @@ double hb_parnd( int iParam, ... ) /* retrieve a numeric parameter as a double *
 
 int hb_parni( int iParam, ... ) /* retrieve a numeric parameter as a integer */
 {
-   int iReturn;
+   /* int iReturn; */
    FARPROC pParNi=GetProcAddress( GetModuleHandle( NULL ), "_hb_parni" );
    FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
 

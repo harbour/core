@@ -342,10 +342,10 @@ extern void  HB_EXPORT  hb_stornd( double dValue, int iParam, ... ); /* stores a
 
 extern void    HB_EXPORT hb_xinit( void );                         /* Initialize fixed memory subsystem */
 extern void    HB_EXPORT hb_xexit( void );                         /* Deinitialize fixed memory subsystem */
-extern void *  HB_EXPORT hb_xalloc( ULONG ulSize );                /* allocates memory, returns NULL on failure */
-extern void *  HB_EXPORT hb_xgrab( ULONG ulSize );                 /* allocates memory, exits on failure */
-extern void    HB_EXPORT hb_xfree( void * pMem );                  /* frees memory */
-extern void *  HB_EXPORT hb_xrealloc( void * pMem, ULONG ulSize ); /* reallocates memory */
+extern void    HB_EXPORT * hb_xalloc( ULONG ulSize );                /* allocates memory, returns NULL on failure */
+extern void    HB_EXPORT * hb_xgrab( ULONG ulSize );                 /* allocates memory, exits on failure */
+extern void    HB_EXPORT   hb_xfree( void * pMem );                  /* frees memory */
+extern void    HB_EXPORT * hb_xrealloc( void * pMem, ULONG ulSize ); /* reallocates memory */
 extern ULONG   HB_EXPORT hb_xsize( void * pMem );                  /* returns the size of an allocated memory block */
 extern ULONG    hb_xquery( USHORT uiMode );               /* Query different types of memory information */
 
