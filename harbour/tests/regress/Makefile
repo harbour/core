@@ -2,6 +2,10 @@
 # $Id$
 #
 
+ifeq ($(HB_MAIN),)
+ HB_MAIN = std
+endif
+
 ROOT = ../../
 
 PRG_SOURCES=\
@@ -18,16 +22,16 @@ PRG_SOURCES=\
 PRG_MAIN=rt_main.prg
 
 LIBS=\
-	tools \
-	debug \
-	rtl \
+        tools \
+        debug \
+        rtl \
         rdd \
         vm \
         rdd \
         rtl \
 	macro \
         pp \
-	runner \
-	common \
+        runner \
+        common \
 
 include $(TOP)$(ROOT)config/bin.cf

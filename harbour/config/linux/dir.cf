@@ -2,9 +2,13 @@
 # $Id$
 #
 
+ifeq ($(PM),) # Only traverse directories if not compiling a specific module
+
 DIR_RULE =\
 	@for d in $(DIRS); do \
 	  if [ -d $$d ]; then \
 	    $(MAKE) -C $$d $@; \
 	  fi \
 	done
+
+endif # ! compiling a specific program module

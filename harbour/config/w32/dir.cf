@@ -2,6 +2,8 @@
 # $Id$
 #
 
+ifeq ($(PM),) # Only traverse directories if not compiling a specific module
+
 ifeq ($(SHLVL),) # COMMAND.COM
 
 ifeq ($(DIRS),) # Empty directory list
@@ -24,3 +26,5 @@ DIR_RULE =\
 	done
 
 endif # ! Windows     
+
+endif # ! compiling a specific program module

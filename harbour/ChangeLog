@@ -1,3 +1,18 @@
+19991214-14:55 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * config/dos/dir.cf
+   * config/linux/dir.cf
+   * config/os2/dir.cf
+   * config/w32/dir.cf
+     + Don't set up a directory rule if only compiling one module (for
+       (example, when using 'make -r PM=rtfclass' in the tests directory),
+       because that module should be in the current directory and there is
+       no need to compile some module with the same name in a subdirectory.
+
+   * tests/regress/Makefile
+     + Added a default setting for HB_MAIN = std, because the IBM C++
+       linker can't pull the 'main' module out of a library file.
+
 19991212-13:45 EST Paul Tucker <ptucker@sympatico.ca>
   * tests/bld_vc.bat
     + ..\lib\vc\macro.lib

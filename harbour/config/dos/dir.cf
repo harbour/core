@@ -4,6 +4,8 @@
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 
+ifeq ($(PM),) # Only traverse directories if not compiling a specific module
+
 ifeq ($(DIRS),) # Empty directory list
 DIR_RULE =\
 	@echo Done
@@ -13,3 +15,5 @@ DIR_MAKE := $(subst /,\,$(MK))
 DIR_RULE =\
 	$(COMSPEC) /C FOR %d IN ($(DIR_LIST)) DO $(DIR_MAKE) -C %d $@
 endif
+
+endif # ! compiling a specific program module
