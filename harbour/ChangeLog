@@ -1,3 +1,7 @@
+20000422-11:35 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+   * source/compiler/hvm.c
+     * Minor correction of HB_TRACE messages for HB_P_ZERO, HB_P_ONE, HB_P_PUSHNIL, HB_P_PUSHBYTE, and HB_P_PUSHINT
+
 20000422-20:37 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/vm/hvm.c
@@ -20,12 +24,12 @@
    * source/compiler/hvm.c
      + HB_P_PUSHLOCALNEAR and HB_P_POPLOCALNEAR 2 byte pcodes added.
        These are used when the referred local is the range of -128-127.
-       The code is more compact this way, since these pcodes will be used 
+       The code is more compact this way, since these pcodes will be used
        in the wast majority of cases.
 
    * source/compiler/hvm.c
      - Removed hb_vmPushByte(), replaced with hb_vmPushInteger().
-     % Inlined the code for PUSHBYTE, PUSHINT, PUSHZERO, PUSHONE to make it 
+     % Inlined the code for PUSHBYTE, PUSHINT, PUSHZERO, PUSHONE to make it
        faster. hb_vmPushZero()/hb_vmPushOne() removed.
 
    * source/compiler/genc.c

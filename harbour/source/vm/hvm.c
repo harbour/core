@@ -855,7 +855,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             hb_stack.pPos->item.asInteger.value = 1;
             hb_stack.pPos->item.asInteger.length = 10;
             hb_stackPush();
-            HB_TRACE(HB_TR_INFO, ("(hb_vmPushOne)"));
+            HB_TRACE(HB_TR_INFO, ("(HB_P_ONE)"));
             w++;
             break;
 
@@ -864,14 +864,14 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             hb_stack.pPos->item.asInteger.value = 0;
             hb_stack.pPos->item.asInteger.length = 10;
             hb_stackPush();
-            HB_TRACE(HB_TR_INFO, ("(hb_vmPushZero)"));
+            HB_TRACE(HB_TR_INFO, ("(HB_P_ZERO)"));
             w++;
             break;
 
          case HB_P_PUSHNIL:
             hb_stack.pPos->type = HB_IT_NIL;
             hb_stackPush();
-            HB_TRACE(HB_TR_INFO, ("(hb_vmPushNil)"));
+            HB_TRACE(HB_TR_INFO, ("(HB_P_PUSHNIL)"));
             w++;
             break;
 
@@ -880,7 +880,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             hb_stack.pPos->item.asInteger.value = ( int ) pCode[ w + 1 ];
             hb_stack.pPos->item.asInteger.length = 10;
             hb_stackPush();
-            HB_TRACE(HB_TR_INFO, ("(hb_vmPushInteger)"));
+            HB_TRACE(HB_TR_INFO, ("(HB_P_PUSHBYTE)"));
             w += 2;
             break;
 
@@ -889,7 +889,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             hb_stack.pPos->item.asInteger.value = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
             hb_stack.pPos->item.asInteger.length = 10;
             hb_stackPush();
-            HB_TRACE(HB_TR_INFO, ("(hb_vmPushInteger)"));
+            HB_TRACE(HB_TR_INFO, ("(HB_P_PUSHINT)"));
             w += 3;
             break;
 
