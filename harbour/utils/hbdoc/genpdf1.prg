@@ -49,11 +49,11 @@
 MEMVAR aDirlist
 MEMVAR aDocInfo,awww,aResult
 STATIC aAlso
-STATIC aFiTable       := {}
-STATIC aSiTable       := {}
 STATIC lIsTable       := .F.
 STATIC nCommentLen
 STATIC lEof
+STATIC aFiTable       := {}
+STATIC aSiTable       := {}
 STATIC aFoiTable      := {}
 STATIC atiTable       := {}
 STATIC nNumTableItems := 0
@@ -742,194 +742,25 @@ RETURN nil
 *+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
-/*
-FUNCTION GenPdfTable( oPdf )
 
-   LOCAL y
-   LOCAL nLen2
-   LOCAL x
-   LOCAL nMax
-   LOCAL nSpace
-   LOCAL lCar        := .f.
-   LOCAL nMax2
-   LOCAL nSpace2
-   LOCAL nPos1
-   LOCAL nPos2
-   LOCAL LColor
-   LOCAL nPos
-   LOCAL aLensFItem  := {}
-   LOCAL aLensSItem  := {}
-   LOCAL cMaxItem    := ''
-   LOCAL nmax3
-   LOCAL nmax4
-   LOCAL npos3
-   LOCAL npos4
-   LOCAL nSpace3
-   LOCAL nSpace4
-   LOCAL aLensTItem  := {}
-   LOCAL aLensfoItem := {}
-   LOCAL nLen
-   FOR X := 1 TO LEN( afitable )
-      IF !EMPTY( afiTable[ x ] )
-         AADD( aLensFItem, LEN( afiTable[ x ] ) )
-      END
-   NEXT
-   FOR X := 1 TO LEN( asiTable )
-      IF !EMPTY( asiTable[ x ] )
-         AADD( aLensSItem, LEN( asiTable[ x ] ) )
-      END
-   NEXT
-   IF LEN( afoitable ) > 0
+FUNCTION GenPdfTable( oPdf ,nNumTableItems)
 
-      FOR X := 1 TO LEN( afoitable )
-         IF !EMPTY( afoiTable[ x ] )
-            AADD( aLensfoItem, LEN( afoiTable[ x ] ) )
-         END
-      NEXT
-   ENDIF
-   IF LEN( atitable ) > 0
-      FOR X := 1 TO LEN( atitable )
-         IF !EMPTY( atiTable[ x ] )
-            AADD( aLenstItem, LEN( atiTable[ x ] ) )
-         END
-      NEXT
-   ENDIF
+if nNumTableItems <3
+HB_PDFTABLE(aFitable,aSitable)
+elseif nNumTableItems<4
+HB_PDFTABLE(aFitable,aSitable,aTitable)
+else
+HB_PDFTABLE(aFitable,aSitable,aTitable,aFoiTable)
+endif
 
-   ASORT( aLensFItem,,, { | x, y | x > y } )
-   ASORT( aLensSItem,,, { | x, y | x > y } )
-   IF LEN( afoitable ) > 0 .AND. nNumTableItems == 4
-      ASORT( alenstitem,,, { | x, y | x > y } )
-      nmax3 := alenstitem[ 1 ]
-      npos  := MaxElemPdf( atitable )
-      nPos3 := ASCAN( alenstitem, { | x | x == nPos } )
-
-      ASORT( aLensFoItem,,, { | x, y | x > y } )
-      nmax4 := alensfoitem[ 1 ]
-      nPos  := MaxElemPdf( afoitable )
-      nPos4 := ASCAN( alensfoitem, { | x | x == nPos } )
-   ENDIF
-   IF LEN( atitable ) > 0 .AND. nNumTableItems == 3
-      ASORT( alenstitem,,, { | x, y | x > y } )
-      nmax3 := alenstitem[ 1 ]
-      npos  := MaxElemPdf( atitable )
-      nPos3 := ASCAN( alenstitem, { | x | x == nPos } )
-
-   ENDIF
-
-   nMax  := aLenssItem[ 1 ]
-   nPos  := MaxElemPdf( asitable )
-   nPos1 := ASCAN( aLenssItem, { | x | x == nPos } )
-
-
-
-   nMax2 := alensfitem[ 1 ]
-   nPos  := MaxElemPdf( afitable )
-   nPos2 := ASCAN( alensfitem, { | x | x == nPos } )
-   IF nNumTableItems == 2
-      cMaxItem := '      ' + "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "»"
-      IF LEN( cMaxItem ) < 76
-               hb_pdfWriteText( "      É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "»", .F. )          //-4
-      ELSE
-               hb_pdfWriteText( "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "»", .F. )                //-4
-      ENDIF
-   ELSEIF nNumTableItems == 3
-      cMaxItem := '      ' + "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "»"
-      IF LEN( cMaxItem ) < 76
-               hb_pdfWriteText( "      É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "»", .F. )     //-4
-      ELSE
-               hb_pdfWriteText( "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "»", .F. )           //-4
-      ENDIF
-   ELSEIF nNumTableItems == 4
-      cMaxItem := '      ' + "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ë" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "»"
-      IF LEN( cMaxItem ) < 76
-               hb_pdfWriteText( "      É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ë" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "»", .F. )                   //-4
-      ELSE
-               hb_pdfWriteText( "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ë" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "»", .F. )     //-4
-      ENDIF
-   ENDIF
-   FOR x := 1 TO LEN( asitable )
-      IF !EMPTY( asitable[ x ] )
-         nSpace  := nMax - LEN( asitable[ x ] )
-         nSpace2 := nMax2 - LEN( afitable[ x ] )
-
-         IF nNumTableItems == 2
-            IF LEN( cMaxItem ) < 76
-                     hb_pdfWriteTextBox( "      º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º" + HB_OSNEWLINE() )
-            ELSE
-                     hb_pdfWriteTextBox( "º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º" + HB_OSNEWLINE() )
-            ENDIF
-         ELSEIF nNumTableItems == 3
-            nSpace3 := nMax3 - LEN( atitable[ x ] )
-            IF LEN( cMaxItem ) < 76
-                     hb_pdfWriteTextBox( "      º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º " + atiTable[ x ] + SPACE( nspace3 ) + " º" + HB_OSNEWLINE() )
-            ELSE
-                     hb_pdfWriteTextBox( "º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º " + atiTable[ x ] + SPACE( nspace3 ) + " º" + HB_OSNEWLINE() )
-            ENDIF
-         ELSEIF nNumTableItems == 4
-            nSpace3 := nMax3 - LEN( atitable[ x ] )
-            nSpace4 := nMax4 - LEN( afoitable[ x ] )
-            IF LEN( cMaxItem ) < 76
-                     hb_pdfWriteTextBox( "      º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º " + atiTable[ x ] + SPACE( nspace3 ) + " º " + afoiTable[ x ] + SPACE( nspace4 ) + " º" + HB_OSNEWLINE() )
-            ELSE
-                     hb_pdfWriteTextBox( "º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º " + atiTable[ x ] + SPACE( nspace3 ) + " º " + afoiTable[ x ] + SPACE( nspace4 ) + " º" + HB_OSNEWLINE() )
-            ENDIF
-         ENDIF
-      ELSE
-         IF nNumTableItems == 2
-            IF LEN( cMaxItem ) < 76
-                     hb_pdfWriteText( "      Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "¹", .F. )
-            ELSE
-                     hb_pdfWriteText( "Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "¹", .F. )
-            ENDIF
-         ELSEIF nNumTableItems == 3
-            IF LEN( cMaxItem ) < 76
-                     hb_pdfWriteText( "      Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "¹", .F. )                   //-4
-            ELSE
-                     hb_pdfWriteText( "Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "¹", .F. )     //-4
-            ENDIF
-
-         ELSEIF nNumTableItems == 4
-            IF LEN( cMaxItem ) < 76
-                     hb_pdfWriteText( "      Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Î" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "¹", .F. )             //-4
-            ELSE
-                     hb_pdfWriteText( "Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Î" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "¹", .F. )                   //-4
-            ENDIF
-
-         ENDIF
-
-      ENDIF
-   NEXT
-
-   IF nNumTableItems == 2
-      IF LEN( cMaxItem ) < 76
-               hb_pdfWriteText( "      È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "¼", .F. )          //-4
-      ELSE
-               hb_pdfWriteText( "È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "¼", .F. )                //-4
-      ENDIF
-
-   ELSEIF nNumTableItems == 3
-      IF LEN( cMaxItem ) < 76
-
-               hb_pdfWriteText( "      È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "¼", .F. )     //-4
-      ELSE
-               hb_pdfWriteText( "      È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "¼", .F. )     //-4
-      ENDIF
-
-   ELSEIF nNumTableItems == 4
-      IF LEN( cMaxItem ) < 76
-               hb_pdfWriteText( "      È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ê" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "¼", .F. )                   //-4
-      ELSE
-               hb_pdfWriteText( "È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ê" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "¼", .F. )     //-4
-      ENDIF
-   ENDIF
-
+      
    afiTable  := {}
    asitable  := {}
    atitable  := {}
    afoitable := {}
 
 RETURN Nil
-*/
+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
 *+    Function ProcPdfTable()
@@ -939,7 +770,7 @@ RETURN Nil
 *+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
-/*
+
 FUNCTION ProcPdfTable( cBuffer, nNum )
 
    LOCAL nPos
@@ -1004,14 +835,12 @@ FUNCTION ProcPdfTable( cBuffer, nNum )
       ENDIF
 
    ENDIF
-   AADD( afiTable, RTRIM( LTRIM( cItem ) ) )
-   AADD( asiTable, cItem2 )
-   AADD( atiTable, cItem3 )
-   AADD( afoiTable, cItem4 )
-  
+   Formattablestring(cItem ,cItem2 ,cItem3 ,cItem4 ,nNum )
+
+
 
 RETURN Nil
-*/
+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
 *+    Function ProcPdfDesc()
@@ -1297,17 +1126,17 @@ FUNCTION ProcPdfDesc( cBuffer, oPdf, cStyle )
             lendTable := .t.
          ELSE
             IF LFstTableItem
-/*               nNumTableItems := GetNumberofTableItems( cLine )
-               ProcPdfTable( cline, nNumTableItems )*/
+               nNumTableItems := GetNumberofTableItems( cLine )
+               ProcPdfTable( cline, nNumTableItems )
                LFstTableItem := .f.
             ELSE
-/*               ProcPdfTable( cline, nNumTableItems )  */
+               ProcPdfTable( cline, nNumTableItems )  
             ENDIF
 
          ENDIF
       ENDDO
       IF lEndTable
-  /*       GenPdfTable( oPdf ) */
+         GenPdfTable( oPdf ,nNumTableItems) 
          LFstTableItem:=.T.
       ENDIF
    ENDIF
@@ -1537,5 +1366,146 @@ STATIC FUNCTION GetItem( cItem, nCurdoc )
 
    ENDIF
 RETURN lReturn
+
+static Function Formattablestring(cItem,cItem2,cItem3,cItem4,nItem)
+Local aItems:={}
+Local aItems2:={}
+Local aItems3:={}
+      
+Local aItems4:={}
+Local nCount:=0
+Local nPos:=0
+Local nResult:=0
+Local lEndPar:=.f.
+Local cTemp:=''
+Local nLen:=Len(cItem)
+local nLen1:=Len(cItem2)
+local nLen2:=Len(cItem3)
+local nLen3:=Len(cItem4)
+Local nMaxArray:=0
+if nItem <3
+   do While nLen>0
+          cTemp:=substr(cItem,1,47)
+          if nLen>47
+          nPos:=Rat(" ",cTemp)
+         endif
+          if nPos>0 
+            cTemp:=substr(cItem,1,nPos)
+            aadd(aItems,cTemp)
+            else
+            aadd(aItems,cTemp)
+          endif
+            cItem:=strtran(cItem,cTemp,"")
+            nLen:=len(cItem)
+      enddo
+    do While nLen1>0
+          cTemp:=substr(cItem2,1,47)
+          if nLen1>47
+          nPos:=Rat(" ",cTemp)
+         endif
+          if nPos>0
+            cTemp:=substr(cItem2,1,nPos)
+            aadd(aItems2,cTemp)
+          else
+           aadd(aItems2,cTemp)
+          endif
+            cItem2:=strtran(cItem2,cTemp,"")
+            nLen1:=len(cItem2)
+enddo
+elseif nItem <4
+   do While nLen>0
+          cTemp:=substr(cItem,1,32)
+          if nLen>32
+          nPos:=Rat(" ",cTemp)
+          endif
+
+          if nPos>0
+            cTemp:=substr(cItem,1,nPos)
+            aadd(aItems,cTemp)
+            else
+            aadd(aItems,cTemp)
+          endif
+            cItem:=strtran(cItem,cTemp,"")
+            nLen:=len(cItem)
+      enddo
+    do While nLen1>0
+          cTemp:=substr(cItem2,1,32)
+          if nLen1>32
+          nPos:=Rat(" ",cTemp)
+          endif
+          if nPos>0
+            cTemp:=substr(cItem2,13nPos)
+            aadd(aItems2,cTemp)
+          else
+           aadd(aItems2,cTemp)
+          endif
+            cItem2:=strtran(cItem2,cTemp,"")
+            nLen1:=len(cItem2)
+enddo
+
+endif
+if  nItem <4
+    do While nLen2>0 
+          cTemp:=substr(cItem3,1,32)
+          if nLen2>32
+          nPos:=Rat(" ",cTemp)
+          endif
+          if nPos>0
+            cTemp:=substr(cItem3,1,nPos)
+            aadd(aItems3,cTemp)
+else
+        aadd(aItems3,cTemp)
+          endif
+            cItem3:=strtran(cItem3,cTemp,"")
+            nLen2:=len(cItem3)
+enddo
+endif
+    do While nLen3>0
+          cTemp:=substr(cItem4,1,40)
+          nPos:=Rat(" ",cTemp)
+          if nPos>0
+            cTemp:=substr(cItem4,1,nPos)
+                        aadd(aItems4,cTemp)
+            else
+            aadd(aItems4,cTemp)
+          endif
+            cItem4:=strtran(cItem4,cTemp,"")
+            nLen3:=len(cItem4)
+enddo
+nMaxArray:=getArray(aItems,aItems2,Aitems3,aItems4)
+
+do while Len(aItems) <nMaxArray
+   aadd(aitems,"")
+enddo
+do while Len(aItems2) <nMaxArray
+   aadd(aitems2,"")
+enddo
+do while Len(aItems3) <nMaxArray
+   aadd(aitems3,"")
+enddo
+do while Len(aItems4) <nMaxArray
+   aadd(aitems4,"")
+enddo
+
+aadd(aFiTable,aItems)
+aadd(aSiTable,aItems2)
+aadd(aTitable,aItems3)
+aadd(aFoiTable,aItems4)
+
+return nil
+static function getArray(aItems,aItems2,Aitems3,aItems4)
+local nSize := 0
+nSize:=Len(aItems)
+if nSize<Len(aitems2)
+nSize:=Len(aItems2)   
+endif
+if nSize<Len(aitems3)
+nSize:=Len(aItems3)   
+endif
+if nSize<Len(aitems4)
+nSize:=Len(aItems4)   
+endif
+Return nSize
+
 
 *+ EOF: GENNG.PRG

@@ -331,8 +331,8 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
                ProcessRtf()
             ELSEIF lPdf
             #ifdef PDF
-//               ProcessPDF(.t.)
-  //             ProcessPDF(.f.)
+               ProcessPDF(.t.)
+               ProcessPDF(.f.)
          #endif
             ELSEIF lWww
                ProcessWww()
