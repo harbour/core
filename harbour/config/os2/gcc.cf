@@ -63,11 +63,9 @@ echo END >> __lib__.tmp
 $(AR) -M < __lib__.tmp
 endef
 
-# Under OS/2 || isn't a command separator (inside a shell, that is)
-# correct separator is & and del command can delete more than one file
-# on a single run 
+# Under OS/2 || isn't a command separator (inside a shell, that is); correct separator is & 
 AR = ar
 ARFLAGS =
-AR_RULE = $(create_library) & $(RM) $@-tmp __lib__.tmp
+AR_RULE = $(create_library) & $(RM) __lib__.tmp
 
 include $(TOP)$(ROOT)config/rules.cf

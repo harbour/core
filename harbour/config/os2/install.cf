@@ -7,7 +7,7 @@ ifeq ($(SHLVL),) # An OS/2 command shell
 INSTALL_LIST = $(subst /,\,$(INSTALL_OBJS))
 OS2_INSTALL_DIR = $(subst /,\,$(INSTALL_DIR))
 INSTALL_RULE =\
-        CMD.EXE /c FOR %f IN ($(INSTALL_LIST)) DO COPY %f $(OS2_INSTALL_DIR)
+        CMD.EXE /c FOR %f IN ($(INSTALL_LIST)) DO IF EXIST $(OS2_INSTALL_DIR). COPY %f $(OS2_INSTALL_DIR)
 
 else  # bash
 

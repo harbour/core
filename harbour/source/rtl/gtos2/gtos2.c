@@ -107,7 +107,7 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 
    /* TODO: Is anything else required to initialize the video subsystem?
             I (Maurilio Longo) think that we should set correct codepage
-            
+
       COMMENT: The correct behaviour is to inherit the codepage that is
                active when the program is started, which automatically
                happens by not setting the codepage. If somebody wants to
@@ -376,13 +376,13 @@ void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight,
        *  with C++ compilers
        */
       SHORT usRow, usCol;
-      USHORT uiSize;   /* gtRectSize returns int */
+      USHORT usSize;
       int iLength = ( usRight - usLeft ) + 1;
       int iCount, iColOld, iColNew, iColSize;
 
       hb_gtGetPos( &usRow, &usCol );
 
-      if( hb_gtRectSize( usTop, usLeft, usBottom, usRight, &uiSize ) == 0 )
+      if( hb_gtRectSize( usTop, usLeft, usBottom, usRight, &usSize ) == 0 )
       {
          /* NOTE: 'unsigned' is used intentionally to correctly compile
           * with C++ compilers
