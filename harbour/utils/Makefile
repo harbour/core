@@ -7,6 +7,7 @@ ROOT = ../
 DIRS=\
 	hbrun \
 	hbdoc \
+	hbpp \
 	hbtest \
 #	hbextern \
 

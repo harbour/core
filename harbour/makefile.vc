@@ -73,6 +73,7 @@ VM_DIR       = source\vm
 HBRUN_DIR    = utils\hbrun
 HBTEST_DIR   = utils\hbtest
 HBDOC_DIR    = utils\hbdoc
+HBPP_DIR     = utils\hbpp
 
 #
 # C compiler definition and C flags. These should never have to change.
@@ -624,7 +625,7 @@ all: \
 !endif
 
 $(HBPP_EXE) : \
-   $(PP_DIR)\stdalone\hbpp.c
+   $(HBPP_DIR)\hbpp.c
    $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $** -o $(HBPP_EXE) /link $(LDFLAGS) $(PP_LIB) $(COMMON_LIB)
 
 #

@@ -12,8 +12,4 @@ C_SOURCES=\
 
 LIBNAME=pp
 
-DIRS=\
-	stdalone \
-
 include $(TOP)$(ROOT)config/lib.cf
-include $(TOP)$(ROOT)config/dir.cf

@@ -75,6 +75,7 @@ VM_DIR       = source\vm
 HBRUN_DIR    = utils\hbrun
 HBTEST_DIR   = utils\hbtest
 HBDOC_DIR    = utils\hbdoc
+HBPP_DIR     = utils\hbpp
 
 #
 # C compiler definition and C flags. These should never have to change.
@@ -1757,11 +1758,11 @@ $(OBJ_DIR)\mousewin.obj : $(RTL_DIR)\gtwin\mousewin.c
 # HBPP.EXE dependencies
 #
 $(HBPP_EXE) : \
-   $(PP_DIR)\stdalone\hbpp.c \
+   $(HBPP_DIR)\hbpp.c \
    $(PP_LIB_OBJS) \
    $(COMMON_LIB_OBJS)
 
-   $(CC) $(CLIBFLAGS) -o$(OBJ_DIR)\hbpp.obj $(PP_DIR)\stdalone\hbpp.c
+   $(CC) $(CLIBFLAGS) -o$(OBJ_DIR)\hbpp.obj $(HBPP_DIR)\hbpp.c
    echo. $(CFLAGS) > make.tmp
    echo. -e$(HBPP_EXE) >> make.tmp
    echo. -I$(INCLUDE_DIR) >> make.tmp
