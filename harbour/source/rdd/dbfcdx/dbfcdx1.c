@@ -357,20 +357,23 @@ static void hb_cdxAddFreeBlocks( CDXAREAP pArea, ULONG ulBlock, USHORT uiBlocks 
       if( pFreeBlock->ulBlock < ulBlock )
       {
          /* Can grow current free block? */
-         if( pFreeBlock->ulBlock + pFreeBlock->uiBlocks == uiBlocks )
+         if( (pFreeBlock->ulBlock + pFreeBlock->uiBlocks) == ulBlock )
          {
+            /* The new blocks are directly after the current free block */
             pFreeBlock->uiBlocks += uiBlocks;
             ulBlock = pFreeBlock->ulBlock;
             uiBlocks = pFreeBlock->uiBlocks;
          }
          /* Can append to next free block? */
          else if( iCount < pArea->pMemoRoot->uiListLen - 1 &&
-                  ulBlock + uiBlocks == ( pFreeBlock + 1 )->ulBlock )
+                  (ulBlock + uiBlocks) == ( pFreeBlock + 1 )->ulBlock )
          {
+            /* The new blocks are directly before the next free block */
             pFreeBlock++;
             iCount++;
             pFreeBlock->ulBlock = ulBlock;
             pFreeBlock->uiBlocks += uiBlocks;
+            uiBlocks = pFreeBlock->uiBlocks;
          }
          /* Append to next free block */
          else
@@ -390,8 +393,8 @@ static void hb_cdxAddFreeBlocks( CDXAREAP pArea, ULONG ulBlock, USHORT uiBlocks 
       }
    }
 
-   /* If is the last block in memo file truncate it */
-   if( ulBlock + uiBlocks == pArea->pMemoRoot->ulNextBlock )
+   /* If it is the last block in memo file truncate it */
+   if( (ulBlock + uiBlocks) == pArea->pMemoRoot->ulNextBlock )
    {
       pArea->pMemoRoot->ulNextBlock = ulBlock;
       pArea->pMemoRoot->fChanged = TRUE;
@@ -615,7 +618,9 @@ static BOOL hb_cdxPutMemo( CDXAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    hb_cdxPutMemoBlock( pArea, uiIndex, ulBlock );
    return TRUE;
 }
-/*
+
+/* #if 0 is used to suppress 'nested comments' warnings in GCC */
+#if 0
 static void hb_cdxCreateCompoundTag( LPCDXINDEX pIndex )
 {
    CDXTAGHEADER cdxTagHeader;
@@ -628,7 +633,7 @@ static void hb_cdxCreateCompoundTag( LPCDXINDEX pIndex )
    pIndex->pCompound->pKeyItem = pIndex->pCompound->pForItem = NULL;
    pIndex->pCompound->pIndex = pIndex;
 
-   /* Write header * /
+   /* Write header */
    memset( &cdxTagHeader, 0, sizeof( CDXTAGHEADER ) );
    cdxTagHeader.lRoot = CDX_PAGELEN * 2;
    cdxTagHeader.uiKeySize = CDX_MAXTAGNAMELEN;
@@ -636,11 +641,11 @@ static void hb_cdxCreateCompoundTag( LPCDXINDEX pIndex )
    cdxTagHeader.bType = 0xE0;
    hb_fsWrite( pIndex->hFile, ( BYTE * ) &cdxTagHeader, CDX_PAGELEN );
 
-   // Append the empty keypool * /
+   /* Append the empty keypool */
    memset( &cdxTagHeader, 0, sizeof( CDXTAGHEADER ) );
    hb_fsWrite( pIndex->hFile, ( BYTE * ) &cdxTagHeader, CDX_PAGELEN );
 printf("\n%hu  %hu\n",sizeof(LONG),sizeof(CDXLEAFHEADER));
-   // Append the empty root node * /
+   /* Append the empty root node */
 //   memset( &cdxLeafHeader, 0, sizeof( CDXLEAFHEADER ) );
 //   cdxLeafHeader.uiNodeType = CDX_ROOTTYPE | CDX_LEAFTYPE;
 //   cdxLeafHeader.lLeftNode = cdxLeafHeader.lRightNode = -1;
@@ -652,7 +657,8 @@ printf("\n%hu  %hu\n",sizeof(LONG),sizeof(CDXLEAFHEADER));
 //   cdxLeafHeader.bInfo = 3;
 //   hb_fsWrite( pIndex->hFile, ( BYTE * ) &cdxLeafHeader, CDX_PAGELEN );
 }
-*/
+#endif
+
 /*
  * -- DBFCDX METHODS --
  */
@@ -887,7 +893,9 @@ ERRCODE hb_cdxOrderListClear( CDXAREAP pArea )
 /*
  * Create new order.
  */
-/*
+
+/* #if 0 is used to suppress 'nested comments' warnings in GCC */
+#if 0
 ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 {
    USHORT uiType, uiLen;
@@ -905,17 +913,17 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
       return FAILURE;
 
-   /* If we have a codeblock for the expression, use it * /
+   /* If we have a codeblock for the expression, use it */
    if( pOrderInfo->itmCobExpr )
       pKeyExp = hb_itemNew( pOrderInfo->itmCobExpr );
-   else /* Otherwise, try compiling the key expression string * /
+   else /* Otherwise, try compiling the key expression string */
    {
       if( SELF_COMPILE( ( AREAP ) pArea, ( BYTE * ) pOrderInfo->abExpr->item.asString.value ) == FAILURE )
          return FAILURE;
       pKeyExp = hb_itemNew( pArea->valResult );
    }
 
-   /* Get a blank record before testing expression * /
+   /* Get a blank record before testing expression */
    SUPER_GOTO( ( AREAP ) pArea, 0 );
    if( hb_itemType( pKeyExp ) == HB_IT_BLOCK )
    {
@@ -954,7 +962,7 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    }
    hb_itemRelease( pResult );
 
-   /* Make sure uiLen is not 0 * /
+   /* Make sure uiLen is not 0 */
    if( uiLen == 0 )
    {
       hb_itemRelease( pKeyExp );
@@ -969,14 +977,14 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
       return FAILURE;
    }
 
-   /* Check conditional expression * /
+   /* Check conditional expression */
    pForExp = NULL;
    if( pArea->lpdbOrdCondInfo )
    {
-      /* If we have a codeblock for the conditional expression, use it * /
+      /* If we have a codeblock for the conditional expression, use it */
       if( pArea->lpdbOrdCondInfo->itmCobFor )
          pForExp = hb_itemNew( pArea->lpdbOrdCondInfo->itmCobFor );
-      else /* Otherwise, try compiling the conditional expression string * /
+      else /* Otherwise, try compiling the conditional expression string */
       {
          if( SELF_COMPILE( ( AREAP ) pArea, pArea->lpdbOrdCondInfo->abFor ) == FAILURE )
          {
@@ -989,7 +997,7 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
       }
    }
 
-   /* Test conditional expression * /
+   /* Test conditional expression */
    if( pForExp )
    {
       if( hb_itemType( pForExp ) == HB_IT_BLOCK )
@@ -1024,7 +1032,7 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    else
       pForMacro = NULL;
 
-   /* Check file name * /
+   /* Check file name */
    szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
    szTagName = ( char * ) hb_xgrab( CDX_MAXTAGNAMELEN + 1 );
    if( strlen( ( char * ) pOrderInfo->abBagName ) == 0 )
@@ -1067,14 +1075,14 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
       hb_xfree( pFileName );
    }
 
-   /* Close all index * /
+   /* Close all index */
    SELF_ORDLSTCLEAR( ( AREAP ) pArea );
 
    pIndex = ( LPCDXINDEX ) hb_xgrab( sizeof( CDXINDEX ) );
    pIndex->pArea = pArea;
    pIndex->szFileName = szFileName;
 
-   /* New file? * /
+   /* New file? */
    if( !hb_fsFile( ( BYTE * ) szFileName ) )
    {
       pIndex->hFile = hb_fsCreate( ( BYTE * ) szFileName, FC_NORMAL );
@@ -1107,14 +1115,15 @@ hb_xfree( pIndex->pCompound );
 hb_xfree( pIndex );
 
 
-   /* Free all macros * /
+   /* Free all macros */
    if( pExpMacro )
       hb_macroDelete( pExpMacro );
    if( pForMacro )
       hb_macroDelete( pForMacro );
    return SUCCESS;
 }
-*/
+#endif
+
 /*
  * Provides information about order management.
  */
@@ -1511,7 +1520,6 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag )
    LPKEYINFO pKey;
    HB_MACRO_PTR pMacro;
    BYTE cTemp[8], *pTemp;
-   char i;
    if( pTag->OptFlags & 0x80 )
       hb_cdxTagEmptyIndex( pTag );
    else
@@ -1559,11 +1567,13 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag )
                   pTemp = (BYTE*) &pKey->pItem->item.asDouble.value;
                   if (pKey->pItem->item.asDouble.value < 0)
                   {
+                    int i;
                     for ( i = 7 ; i >= 0 ; i--, pTemp++)
                       cTemp[i] = (*pTemp) ^ 0xFF;
                   }
                   else
                   {
+                    int i;
                     for ( i = 7 ; i >= 0 ; i--, pTemp++)
                       cTemp[i] = (*pTemp);
                     cTemp[0] ^= 0x80;
@@ -3455,7 +3465,7 @@ static void hb_cdxSortAddInternal( LPSORTINFO pSort, USHORT Lvl, LONG Tag, LONG 
 }
 /* end hb_cdxSortxxx */
 
-static ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderInfo )
+ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderInfo )
 {
    PHB_ITEM pExpr, pKeyExp, pForExp, pResult, pError;
    HB_MACRO_PTR pExpMacro, pForMacro;
@@ -3772,7 +3782,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderI
    return SELF_GOTOP( ( AREAP ) pArea );
 }
 
-static ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
+ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
 {
    USHORT uiFlags;
    char * szFileName;
@@ -3900,7 +3910,7 @@ extern ERRCODE hb_cdxOrderListClear( CDXAREAP pArea )
    return SUCCESS;
 }
 
-static ERRCODE hb_cdxOrderListFocus( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
+ERRCODE hb_cdxOrderListFocus( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
 {
    HB_TRACE(HB_TR_DEBUG, ("cdxOrderListFocus(%p, %p)", pArea, pOrderInfo));
 
@@ -3910,7 +3920,7 @@ static ERRCODE hb_cdxOrderListFocus( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
    return SUCCESS;
 }
 
-static ERRCODE hb_cdxGoTop( CDXAREAP pArea )
+ERRCODE hb_cdxGoTop( CDXAREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("cdxGoTop(%p)", pArea));
    /*must change to follow ordSetFocus()*/
@@ -3927,7 +3937,7 @@ static ERRCODE hb_cdxGoTop( CDXAREAP pArea )
    return SELF_SKIPFILTER( ( AREAP ) pArea, 1 );
 }
 
-static ERRCODE hb_cdxGoBottom( CDXAREAP pArea )
+ERRCODE hb_cdxGoBottom( CDXAREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("cdxGoBottom(%p)", pArea));
    /*must change to follow ordSetFocus()*/
@@ -3944,7 +3954,7 @@ static ERRCODE hb_cdxGoBottom( CDXAREAP pArea )
    return SELF_SKIPFILTER( ( AREAP ) pArea, -1 );
 }
 
-static ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, LONG lToSkip )
+ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, LONG lToSkip )
 {
    HB_TRACE(HB_TR_DEBUG, ("cdxSkipRaw(%p, %ld)", pArea, lToSkip));
 
@@ -4004,7 +4014,7 @@ static ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, LONG lToSkip )
    return SELF_SKIPFILTER( ( AREAP ) pArea, -1 );
 }
 
-static ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLast )
+ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLast )
 {
    PHB_ITEM pError;
    ERRCODE retvalue;

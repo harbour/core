@@ -1,3 +1,16 @@
+2000-10-15 14:25 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+    
+    *source/compiler/harbour.l
+    *source/macro/macro.l
+        *fixed some minor bugs
+        
+    *source/rdd/rddcpy.c
+        *changed some NULL to 0 to stop warnings in GCC
+    
+    *source/rdd/dbfcdx/dbfcdx1.c
+        *fixed handling of memo free blocks
+        *fixed some warnings when compiled with GCC
+
 2000-10-15 12:45 UTC+0800 Brian Hays <bhays@abacuslaw.com>
    * source/rdd/dbcmd.c
       * fixed ordKey (and therefore IndexKey() ) to accept a NIL parameter

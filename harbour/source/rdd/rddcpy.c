@@ -68,7 +68,7 @@ static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName )
 
   if( SELF_OPEN( ( AREAP ) pAreaNode->pArea, &pInfo ) == FAILURE )
   {
-    hb_errRT_DBCMD( EG_OPEN, NULL, NULL, "DBAPP" ); // Could not open it
+    hb_errRT_DBCMD( EG_OPEN, 0, NULL, "DBAPP" ); // Could not open it
     SELF_RELEASE( ( AREAP ) pAreaNode->pArea );
     hb_xfree( pAreaNode );
     return NULL;
@@ -227,9 +227,9 @@ HB_FUNC( __DBAPP )
                              ISNIL( 2 ) ? NULL : hb_param( 2, HB_IT_ARRAY ), // Fuelds
                              ISNIL( 3 ) ? NULL : hb_param( 3, HB_IT_BLOCK ), // For
                              ISNIL( 4 ) ? NULL : hb_param( 4, HB_IT_BLOCK ), // While
-                             ISNIL( 5 ) ? NULL : hb_parni( 5 ),              // Next
-                             ISNIL( 6 ) ? NULL : hb_parni( 6 ),              // Record
-                             ISNIL( 7 ) ? NULL : hb_parnl( 7 ),              // Rest
+                             ISNIL( 5 ) ? 0 : hb_parni( 5 ),                 // Next
+                             ISNIL( 6 ) ? 0 : hb_parni( 6 ),                 // Record
+                             ISNIL( 7 ) ? 0 : hb_parnl( 7 ),                 // Rest
                              ISNIL( 8 ) ? NULL : hb_parc( 8 ) ));            // RDD 
 
 }
@@ -241,9 +241,9 @@ HB_FUNC( __DBCOPY )
                              ISNIL( 2 ) ? NULL : hb_param( 2, HB_IT_ARRAY ), // Fuelds
                              ISNIL( 3 ) ? NULL : hb_param( 3, HB_IT_BLOCK ), // For
                              ISNIL( 4 ) ? NULL : hb_param( 4, HB_IT_BLOCK ), // While
-                             ISNIL( 5 ) ? NULL : hb_parni( 5 ),              // Next
-                             ISNIL( 6 ) ? NULL : hb_parni( 6 ),              // Record
-                             ISNIL( 7 ) ? NULL : hb_parnl( 7 ),              // Rest
+                             ISNIL( 5 ) ? 0 : hb_parni( 5 ),                 // Next
+                             ISNIL( 6 ) ? 0 : hb_parni( 6 ),                 // Record
+                             ISNIL( 7 ) ? 0 : hb_parnl( 7 ),                 // Rest
                              ISNIL( 8 ) ? NULL : hb_parc( 8 ) ));            // RDD 
 
 }

@@ -216,7 +216,8 @@ MacroTxt      ({MacroVar}|{MacroEnd}|{MacroId})+
 [\]\}\)]       { pMacro->FlexState = LOOKUP; return yytext[ 0 ]; }
 
 [\x00-\x1F]	return yytext[ 0 ]; /* see below */
-[\x80-\xFF]	{
+[\~\`\?\_\\]    return yytext[ 0 ]; /* see below */
+[\x7F-\xFF]	{
 	    /* This have to be the last rule - any nonstandard and unhandled
 	     * characters should go to grammar analyser instead of printing it
 	     * on stdout.

@@ -257,7 +257,7 @@ Separator     {SpaceTab}
        if( iFirstPos > 0 )
        {
            yyless( iFirstPos+1 );
-           yytext[ iFirstPos+1 ] = '\0';
+           yytext[ iFirstPos ] = '\0';
            yylval.string = hb_compIdentifierNew( yytext, TRUE );
            hb_comp_iState = LITERAL;
 
@@ -1310,8 +1310,9 @@ Separator     {SpaceTab}
 [\(]           ++_iOpenBracket; hb_comp_iState =LSEPARATOR; return yytext[ 0 ];
 [\)]           --_iOpenBracket; hb_comp_iState =RSEPARATOR; return yytext[ 0 ];
 
-[\x00-\x1F]	return yytext[ 0 ]; /* see below */
-[\x80-\xFF]	{
+[\x00-\x1F]	    return yytext[ 0 ]; /* see below */
+[\~\`\?\_\\]    return yytext[ 0 ]; /* see below */
+[\x7F-\xFF]	{
             /* This have to be the last rule - any nonstandard and not handled
 	         * characters should go to grammar analyser instead of printing it
 	         * on stdout.
