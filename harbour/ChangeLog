@@ -1,3 +1,11 @@
+20000514-09:45 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+  * source/compiler/harbour.y
+    ! Fixed GPF when using DECLARE CLASS and -w < 3
+
+  * source/compiler/harbour.c
+    ! Fixed GPF when using DECLARE CLASS and -w < 3
+
 20000514-09:10 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
   * source/compiler/harbour.l

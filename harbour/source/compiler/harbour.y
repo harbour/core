@@ -275,12 +275,14 @@ ClassInfo  : DecMethod
 	   | ClassInfo DecData
 	   ;
 
-DecMethod  : CLASS_METHOD IdentName { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastClass, $2 ); } DecParams AsType { hb_comp_pLastMethod->cType = hb_comp_cVarType;
+DecMethod  : CLASS_METHOD IdentName { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastClass, $2 ); } DecParams AsType { if ( hb_comp_pLastMethod )
+                                                                                                                                hb_comp_pLastMethod->cType = hb_comp_cVarType;
                                                                                                                              hb_comp_pLastMethod = NULL;
                                                                                                                              hb_comp_cVarType = ' '; }
 	   ;
 
-DecData    : CLASS_DATA IdentName { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastClass, $2 ); } AsType { hb_comp_pLastMethod->cType = hb_comp_cVarType;
+DecData    : CLASS_DATA IdentName { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastClass, $2 ); } AsType { if ( hb_comp_pLastMethod )
+                                                                                                                    hb_comp_pLastMethod->cType = hb_comp_cVarType;
                                                                                                                  hb_comp_pLastMethod = NULL;
                                                                                                                  hb_comp_cVarType = ' '; }
 	   ;

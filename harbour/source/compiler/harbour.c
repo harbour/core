@@ -835,6 +835,9 @@ PCOMCLASS hb_compClassFind( char * szClassName )
 {
    PCOMCLASS pClass = hb_comp_pFirstClass;
 
+   if ( hb_comp_iWarnings < 3 )
+      return NULL;
+
    while( pClass )
    {
       if( ! strcmp( pClass->szName, szClassName ) )
