@@ -35,6 +35,7 @@ PRG_SOURCES=\
         nconvert.prg \
         numtxthu.prg \
         numtxten.prg \
+        osnewlin.prg \
 	stringp.prg \
 
 LIB=tools

@@ -20,16 +20,7 @@ STATIC FUNCTION TestIt( cSpec )
    LOCAL a4
    LOCAL a5
 
-   LOCAL cNewLine
-
-   cOs := OS()
-
-   IF "OS/2" $ OS() .OR. ;
-      "DOS"  $ OS()
-      cNewLine := Chr( 13 ) + Chr( 10 )
-   ELSE
-      cNewLine := Chr( 10 )
-   ENDIF
+   LOCAL cNewLine := OS_NewLine()
 
    SET DATE ANSI
    SET CENTURY ON

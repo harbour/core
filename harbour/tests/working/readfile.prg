@@ -13,13 +13,7 @@
 
 PROCEDURE Main( cFile )
 LOCAL oFile := TFileRead():New( cFile )
-LOCAL cOs := UPPER( OS() ), cNewLine
-
-   IF "OS/2" $ cOs .OR. "WIN" $ cOS .OR. "DOS" $cOS
-      cNewLine := CHR( 13 ) + CHR( 10 )
-   ELSE
-      cNewLine := CHR( 10 )
-   END IF
+LOCAL cNewLine := OS_NewLine()
 
    oFile:Open()
    IF oFile:Error()

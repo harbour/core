@@ -6,14 +6,10 @@
 
 function Main()
 
-   local short := "1234567890", cOs := OS()
+   local short := "1234567890"
    local i, long, very_long, cNewLine
 
-   IF "OS/2" $ cOs .OR. "WIN" $ cOs .OR. "DOS" $cOs
-      cNewLine := CHR( 13 ) + CHR( 10 )
-   ELSE
-      cNewLine := CHR( 10 )
-   END IF
+   cNewLine := OS_NewLine()
 
    long := short
    for i := 1 TO 12

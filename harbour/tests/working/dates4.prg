@@ -5,10 +5,13 @@
 // Testing Harbour dates management.
 #include "set.ch"
 
-function main()
+STATIC s_cNewLine
 
+function main()
    LOCAL i
    LOCAL dDate := date()
+
+   s_cNewLine := OS_NewLine()
 
    set( _SET_DATEFORMAT, "dd/mm/yyyy" )
 
@@ -20,16 +23,15 @@ function main()
 return nil
 
 function CheckDate( dDate )
-   local cNewLine := chr( 13 ) + chr( 10 )
-   OutStd( "Testing date:", dDate , cNewLine )
-   OutStd( "Days in month..:", daysinmonth( dDate ), cNewLine )
-   OutStd( "Day of year....:", doy( dDate ), cNewLine )
-   OutStd( "Begin of month.:", bom( dDate ), cNewLine )
-   OutStd( "End of month...:", eom( dDate ), cNewLine )
-   OutStd( "Week of month..:", wom( dDate ), cNewLine )
-   OutStd( "Week of year...:", woy( dDate ), cNewLine )
-   OutStd( "Begin of year..:", boy( dDate ), cNewLine )
-   OutStd( "End of year....:", eoy( dDate ), cNewLine )
+   OutStd( "Testing date:", dDate , s_cNewLine )
+   OutStd( "Days in month..:", daysinmonth( dDate ), s_cNewLine )
+   OutStd( "Day of year....:", doy( dDate ), s_cNewLine )
+   OutStd( "Begin of month.:", bom( dDate ), s_cNewLine )
+   OutStd( "End of month...:", eom( dDate ), s_cNewLine )
+   OutStd( "Week of month..:", wom( dDate ), s_cNewLine )
+   OutStd( "Week of year...:", woy( dDate ), s_cNewLine )
+   OutStd( "Begin of year..:", boy( dDate ), s_cNewLine )
+   OutStd( "End of year....:", eoy( dDate ), s_cNewLine )
    __Accept( "Press ENTER to continue..." )
    OutStd( chr( 10 ), chr( 10 ) )
 

@@ -7,7 +7,7 @@
 #include "set.ch"
 
 function Main()
-local cNewLine := CHR( 13 ) + CHR( 10 )
+local cNewLine := OS_NewLine()
 
    local dDate, dDate2, cMask, cDate
 

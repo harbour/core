@@ -10,9 +10,9 @@
 */
 
 #include "set.ch"
-#define cNewLine CHR( 13 ) + CHR( 10 )
 
 function Main()
+local cNewLine := OS_NewLine()
 
    OUTSTD (cNewLine,  "Testing Harbour device management on", DATE())
    SET ALTERNATE TO OUTPUT_A ADDITIVE

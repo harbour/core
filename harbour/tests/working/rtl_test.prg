@@ -135,6 +135,9 @@ FUNCTION Main( cPar1, cPar2 )
    Main_HVM()
    Main_MATH()
    Main_STRINGS()
+#ifdef __HARBOUR__
+   Long_STRINGS()
+#endif
    Main_MISC()
 #ifdef __HARBOUR__
    Main_OPOVERL()
@@ -1507,6 +1510,16 @@ STATIC FUNCTION Main_STRINGS()
 
    RETURN NIL
 
+#ifdef __HARBOUR__
+STATIC FUNCTION Long_STRINGS()
+
+   TEST_LINE( RIGHT( SPACE( 64 * 1024 - 5 ) + "12345 7890", 10                      ), "12345 7890"                                 ) 
+   TEST_LINE( LEN( SPACE( 81910 ) + "1234567890"                                    ), 81920                                        )
+   TEST_LINE( ( "1234567890" + SPACE( 810910 ) ) - ( "1234567890" + SPACE( 810910 ) ), "12345678901234567890" + SPACE( 810910 * 2 ) )
+
+   RETURN NIL
+#endif
+
 STATIC FUNCTION Main_MISC()
 
    /* EVAL(), :EVAL */
@@ -2046,18 +2059,10 @@ STATIC FUNCTION Main_LAST()
    RETURN NIL
 
 STATIC FUNCTION TEST_BEGIN( cParam )
-   LOCAL cOs
 
    s_nStartTime := Seconds()
 
-   cOs := OS()
-
-   IF "OS/2" $ cOs .OR. ;
-      "DOS"  $ cOs
-      s_cNewLine := Chr( 13 ) + Chr( 10 )
-   ELSE
-      s_cNewLine := Chr( 10 )
-   ENDIF
+   s_cNewLine := OS_NewLine()
 
    s_lShowAll := "/ALL" $ Upper( cParam )
    s_aSkipList := ListToNArray( CMDLGetValue( Upper( cParam ), "/SKIP:", "" ) )
@@ -2485,4 +2490,3 @@ STATIC FUNCTION SToD( cDate )
 
 #endif
 #endif
-

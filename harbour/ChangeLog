@@ -1,3 +1,40 @@
+19990917-23:45 EDT David G. Holm <dholm@jsd-llc.com>
+
+  * source/tools/Makefile
+  + source/tools/osnewlin.prg
+    + New module simplifies deciding when to use CR/LF
+      or just LF when using OUTSTD() and/or OUTERR()
+
+  * tests/working/Makefile
+  + tests/working/longdev.prg
+    + I forgot to 'cvs add' this module with my earlier large string
+      changes, so it's a good thing that I left it out of the Makefile
+
+  * tests/working/rtl_test.prg
+    + Added 3 tests for long strings (longer than 64 KB, Harbour only)
+      in a new function, Long_STRINGS()
+
+  * tests/working/adirtest.prg
+  * tests/working/cdow.prg
+  * tests/working/dates.prg
+  * tests/working/dates2.prg
+  * tests/working/dates3.prg
+  * tests/working/dates4.prg
+  * tests/working/dirtest.prg
+  * tests/working/harbour.ini
+  * tests/working/longstr2.prg
+  * tests/working/output.prg
+  * tests/working/readfile.prg
+  * tests/working/round.prg
+  * tests/working/rtl_test.prg
+  * tests/working/seconds.prg
+  * tests/working/set_num.prg
+  * tests/working/set_test.prg
+  * tests/working/testcgi.prg
+  * tests/working/testhtml.prg
+    % These test programs now use OS_NewLine()
+      instead of using 4 different methods.
+
 19990917-04:58 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/vm/hvm.c

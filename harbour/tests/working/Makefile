@@ -78,6 +78,7 @@ PRG_SOURCES=\
         instr.prg \
         iotest.prg \
         iotest2.prg \
+        longdev.prg \
         longstr.prg \
         longstr2.prg \
         mankala.prg \

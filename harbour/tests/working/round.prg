@@ -11,13 +11,7 @@
 
 function main()
 local n, value := -5
-local cOs := OS(), cNewLine
-
-   IF "OS/2" $ cOs .OR. "WIN" $ cOs .OR. "DOS" $cOs
-      cNewLine := CHR( 13 ) + CHR( 10 )
-   ELSE
-      cNewLine := CHR( 10 )
-   END IF
+local cNewLine := OS_NewLine()
 
    for n := 1 to 100
       OUTSTD(cNewLine)

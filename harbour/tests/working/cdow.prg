@@ -3,7 +3,8 @@
 //
 
 function main()
-local cNewLine := chr (13)+chr (10)
+local cNewLine := OS_NewLine()
+
   OutStd( cMonth( date() ) + cNewLine )
   OutStd( cMonth( date() + 31 ) + cNewLine )
   OutStd( cMonth( date() + 60 ) + cNewLine )

@@ -15,11 +15,13 @@
 *
 **/
 
-#define NewLine chr(10)+chr(13)
+STATIC s_cNewLine
 
 FUNCTION Main()
 
    LOCAL oHTML := THTML():New()
+
+   s_cNewLine := OS_NewLine()
 
    oHTML:SetTitle( "Harbour Power Demonstration" )
    oHTML:AddHead( "Harbour Project" )
@@ -119,8 +121,8 @@ STATIC FUNCTION AddPara( cPara, cAlign )
    Default( cAlign, "Left" )
 
    ::cBody := ::cBody + ;
-      "<P ALIGN='" + cAlign + "'>" + NewLine + ;
-      cPara + NewLine + ;
+      "<P ALIGN='" + cAlign + "'>" + s_cNewLine + ;
+      cPara + s_cNewLine + ;
       "</P>"
 
    RETURN( Self )
@@ -130,11 +132,11 @@ STATIC FUNCTION Generate()
    LOCAL Self := QSelf()
 
    ::cContent :=                                                           ;
-      "<HTML><HEAD>"                                           + NewLine + ;
-      "<TITLE>" + ::cTitle + "</TITLE>"                        + NewLine + ;
+      "<HTML><HEAD>"                                           + s_cNewLine + ;
+      "<TITLE>" + ::cTitle + "</TITLE>"                        + s_cNewLine + ;
       "<BODY link='" + ::cLinkColor + "' " +                               ;
-      "vlink='" + ::cvLinkColor + "'>" +                       + NewLine + ;
-      ::cBody                                                  + NewLine + ;
+      "vlink='" + ::cvLinkColor + "'>" +                       + s_cNewLine + ;
+      ::cBody                                                  + s_cNewLine + ;
       "</BODY></HTML>"
 
    RETURN( Self )
@@ -144,8 +146,8 @@ STATIC FUNCTION ShowResult()
    LOCAL Self := QSelf()
 
    qqOut(                                                                  ;
-      "HTTP/1.0 200 OK"                                        + NewLine + ;
-      "CONTENT-TYPE: TEXT/HTML"                      + NewLine + NewLine + ;
+      "HTTP/1.0 200 OK"                                        + s_cNewLine + ;
+      "CONTENT-TYPE: TEXT/HTML"                      + s_cNewLine + s_cNewLine + ;
       ::cContent )
 
    RETURN( Self )

@@ -4,11 +4,16 @@
 
 // Testing SET
 
+STATIC s_cNewLine
+
 #include "set.ch"
 request dbfntx
 function Main()
 // for Clipper, this drags in the terminal driver
 @ Row(), col() say ""
+
+   s_cNewLine := OS_NewLine()
+
    TestLine( "_SET_EXACT",        1)
    TestLine( "_SET_FIXED",        2)
    TestLine( "_SET_DECIMALS",     3)
@@ -60,8 +65,7 @@ function Main()
 return nil
 
 proc testline( c, n )
-local NEWLINE := CHR (13) + CHR (10)
-outstd( NEWLINE )
+outstd( s_cNewLine )
 outstd( str( n, 3 ) )
 outstd( " "+Padr( c, 17 ) )
 outstd( Set( n ) )

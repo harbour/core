@@ -8,7 +8,7 @@
 
 function main()
 
-   LOCAL dDate, i, cNewLine := chr( 13 ) + chr( 10 )
+   LOCAL dDate, i, cNewLine := OS_NewLine()
 
    set( _SET_DATEFORMAT, "dd/mm/yyyy" )
    dDate := cToD( "25/05/1999" )
