@@ -1,6 +1,8 @@
-19990726-01:00 EDT Paul Tucker <ptucker@sympatico.ca>
+19990726-01:06 EDT Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      * changed msguk to msgxxx
+   * source/rdd/dbfntx1.c
+     * corrected assignement of RDDFUNCSCOUNT now that I see what it's doing
 
 19990726-00:20 EDT Paul Tucker (from Felipe Coury) <ptucker@sympatico.ca>
    * rdd.b32
