@@ -1,0 +1,23 @@
+#
+# $Id:
+#
+
+# makefile for Borland C/C++ 32 bits
+
+.path.c   = source\common
+.path.h   = include
+.path.lib = lib\b32
+.path.obj = obj
+
+PROJECT: lib\b32\common.lib
+
+lib\b32\common.lib : hbfsapi.obj hbstr.obj hbtrace.obj reserved.obj
+
+hbfsapi.obj   : hbfsapi.c
+hbstr.obj     : hbstr.c
+hbtrace.obj   : hbtrace.c
+reserver.obj  : reserved.c
+
+.c.obj :
+   bcc32 -c -O2 -Iinclude -o$@ $<
+   tlib lib\b32\common.lib -+$@,,
