@@ -8,9 +8,9 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
-2002-10-22 09:00 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
-  * makefile.vc
-    + source/debug/dbghelp.prg
+2002-10-22 12:00 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
+  * source/rdd/dbcmd.c
+    ! Fix a problem with Select() that I introduced.
 
 2002-10-21 05:11 UTC+0100 Antonio Linares <alinares@fivetech.com>
   * source/rtl/achoice.prg

@@ -2859,7 +2859,7 @@ HB_FUNC( RLOCK )
 
 HB_FUNC( SELECT )
 {
-   int nRet = 0;
+   int nRet = s_uiCurrArea;
 
    if( ISCHAR(1) )
    {
@@ -2871,7 +2871,7 @@ HB_FUNC( SELECT )
       else if( ulLen > 0 )
          nRet = hb_rddSelect( szAlias );
       else
-         nRet = s_uiCurrArea;
+         nRet = 0;
    }
 
    hb_retni( nRet );
