@@ -10,7 +10,7 @@ if NOT EXIST %1.prg GOTO :NOEXIST
 
 ECHO Compiling...
 
-set hdir=..\..\..\..
+set hdir=..\..\..
 set bcdir=c:\bcc55\bin
 
 %hdir%\bin\harbour %1 /n /i..\include;%hdir%\include %2 %3 > comp.log
