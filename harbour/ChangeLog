@@ -1,3 +1,9 @@
+19991012-10:38 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+    *samples/pe
+	* new directory with a sample editor that can be used as a base for 
+  	  MEMOEDIT and TEditor class
+	
 19991012-00:52 EDT Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      + source/rtl/input.prg
