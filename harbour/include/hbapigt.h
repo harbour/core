@@ -75,7 +75,10 @@ extern "C" {
 #define HB_CLR_MAX_             HB_CLR_UNSELECTED
 
 /* strings for borders (same as box.ch, but defined for use by C) */
-#ifdef HB_OS_DOS
+#ifdef 0
+/* Note. This part will never be used, but is being kept in the source,
+         so that if you use code page 437, you can see what the line
+         draw characters are supposed to look like. */
                               /*01234567*/
 #define _B_SINGLE              "ÚÄ¿³ÙÄÀ³"
 #define _B_DOUBLE              "ÉÍ»º¼ÍÈº"
