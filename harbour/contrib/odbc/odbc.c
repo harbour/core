@@ -256,4 +256,18 @@ HB_FUNC( SQLERROR ) //  hEnv, hDbc, hStmt, @ cErrorClass, @ nType, @ cErrorMsg
    hb_storc( szErrorMsg, 6 );
 }
 
+HB_FUNC( SQLROWCOUN )
+{
+    SQLUINTEGER  uiRowCountPtr = hb_parni( 2 );
+    WORD         wResult       = SQLRowCount( ( HSTMT ) hb_parnl( 1 ),
+                                              &uiRowCountPtr );
+					      
+    if( wResult == SQL_SUCCESS || wResult == SQL_SUCCESS_WITH_INFO )
+    {
+       hb_stornl( ( LONG ) uiRowCountPtr, 2 );
+    }
+
+    hb_retni( wResult );
+
+}
 

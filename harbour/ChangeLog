@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-08-03 22:50 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
+  * contrib/odbc/odbc.c
+    contrib/odbc/todbc.prg   
+     *  Added bof(), reccount(), lastrec() and recno() functionality to
+        ODBC library.
+  * contrib/odbc/browodbc.prg
+     *  enabled statusline    
+
 2002-08-02 12:35 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * doc/howtobsd.txt
   	* Changed BSD reference in heading to FreeBSD.

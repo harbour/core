@@ -97,7 +97,7 @@ function BrowseODBC( nTop, nLeft, nBottom, nRight, oDataSource )
    oBrw:GoTopBlock    := { || oDataSource:first() }
    oBrw:GoBottomBlock := { || oDataSource:last() }
 
-   //oBrw:HeadSep := "-"
+   oBrw:HeadSep := "-"
    
    
    // TODO: Find out number of columns in ODBC result set, up to then you have to add columns by hand
@@ -120,7 +120,7 @@ function BrowseODBC( nTop, nLeft, nBottom, nRight, oDataSource )
       if NextKey() == 0
 
          oBrw:forceStable()
-//         Statline( oBrw )
+         Statline( oBrw, oDataSource)
 
          nKey := Inkey( 0 )
 
@@ -186,23 +186,23 @@ function BrowseODBC( nTop, nLeft, nBottom, nRight, oDataSource )
 
 return .t.
 
-static procedure Statline( oBrw )
+static procedure Statline( oBrw, oDataSource )
 
    local nTop   := oBrw:nTop - 1
    local nRight := oBrw:nRight
 
    @ nTop, nRight - 27 SAY "Record "
 
-   if LastRec() == 0
+   if oDataSource:LastRec() == 0
       @ nTop, nRight - 20 SAY "<none>               "
-   elseif RecNo() == LastRec() + 1
+   elseif oDataSource:RecNo() == oDataSource:LastRec() + 1
       @ nTop, nRight - 40 SAY "         "
       @ nTop, nRight - 20 SAY "                <new>"
    else
-      @ nTop, nRight - 40 SAY iif( Deleted(), "<Deleted>", "         " )
-      @ nTop, nRight - 20 SAY PadR( LTrim( Str( RecNo() ) ) + "/" +;
-                                    Ltrim( Str( LastRec() ) ), 16 ) +;
-                              iif( oBrw:hitTop, "<bof>", "     " )
+      @ nTop, nRight - 20 SAY PadR( LTrim( Str( oDataSource:RecNo() ) ) + "/" +;
+                                    Ltrim( Str( oDataSource:LastRec() ) ), 16 ) +;
+                              iif( oBrw:hitTop, "<bof>", "     " )+;
+                              iif( oBrw:hitBottom, "<eof>", "     " )
    endif
 
 return
@@ -225,9 +225,9 @@ STATIC FUNCTION Skipped( nRecs, oDataSource )
       ELSEIF nRecs < 0
          DO WHILE nSkipped > nRecs
             oDataSource:prior( )
-            //IF Bof()
-            //   EXIT
-            //ENDIF
+            IF oDataSource:Bof()
+               EXIT
+            ENDIF
             nSkipped--
          ENDDO
       ENDIF
