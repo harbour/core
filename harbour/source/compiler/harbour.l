@@ -264,7 +264,6 @@ Separator     {SpaceTab}|{Comment}
                yy_lex_count_lf();
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                if( ! _iQuiet ) printf( "\rline: %i", iLine );
-printf( "\nlineCont");
                _iState=LINECONT_;
              }
 <LINECONT_>{Separator}*("("|")") {
@@ -273,7 +272,6 @@ printf( "\nlineCont");
 <LINECONT_>{Separator}*. {
                yy_lex_count_lf();
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-printf( "\nLineCont");
                unput( yytext[ yyleng-1 ] );
                if( _iOpenBracket == 0 && (_iState==SEPARATOR || _iState==IDENTIFIER) && i_INDEX_STATE==0 )
                {

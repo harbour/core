@@ -1,3 +1,11 @@
+19990615-08:30 Ryszard Glab <rglab@imid.med.pl>
+
+* source/compiler/harbour.y
+  * added missing error message
+  
+* source/compiler/harbour.l
+  * removed printf introducced for debugging purpose
+  
 19990615-07:00 Ryszard Glab <rglab@imid.med.pl>
 
 * source/compiler/harbour.y

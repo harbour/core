@@ -262,7 +262,8 @@ char * _szErrors[] = { "Statement not allowed outside of procedure or function",
                        "Syntax error: \'%s\'",
                        "Unclosed control structures at line: %i",
                        "%s statement with no loop in sight",
-                       "Syntax error: \'%s\' in: \'%s\'"
+                       "Syntax error: \'%s\' in: \'%s\'",
+		       "Incomplete statement: %s"
                      };
 
 /* Table with parse warnings */
@@ -3507,6 +3508,7 @@ void CodeBlockEnd()
     GenPCode1( LOBYTE(wPos) );
     GenPCode1( HIBYTE(wPos) );
     pFree =pVar;
+    pFree->szName = NULL;
     pVar =pVar->pNext;
     OurFree( pFree );
   }
@@ -3521,6 +3523,7 @@ void CodeBlockEnd()
   {
     /* free used variables */
     pFree =pVar;
+    pFree->szName = NULL;
     pVar =pVar->pNext;
     OurFree( pFree );
   }
