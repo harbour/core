@@ -357,7 +357,7 @@ METHOD HandleEvent() CLASS TDebugger
 
       do case
          case nKey == K_LBUTTONDOWN
-              Alert( Str( MCol() ) + ", " + Str( MRow() ) )
+              Alert( Str( MRow() ) + ", " + Str( MCol() ) )
 
          case nKey == K_RBUTTONDOWN
               Alert( "K_RBUTTONDOWN" )
