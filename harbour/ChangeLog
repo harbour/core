@@ -1,3 +1,9 @@
+2001-05-21 14:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * source/rtl/tget.prg
+    ! In METHOD KillFocus(), don't call ::Display() until after clearing
+      ::hasFocus. Per bug report from "Robert Haley" <rhaley@cheshire.net>
+
 2001-05-21 08:30 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    * source/rtl/gtapi.c
      * fixed an small bug on hb_gtBoxD() reported by Jacek Kaleta

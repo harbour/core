@@ -401,11 +401,12 @@ return Self
 METHOD KillFocus() CLASS Get
 
    ::Assign()
-   ::Display()
 
    ::buffer   := ::PutMask()
    ::hasfocus := .f.
    ::pos      := NIL
+
+   ::Display()
 
 return Self
 
