@@ -23,7 +23,7 @@ harbour.lib : achoice.obj adir.obj alert.obj arrays.obj asort.obj \
               errorapi.obj errorsys.obj harbinit.obj extend.obj fileread.obj filesys.obj fm.obj \
               hardcr.obj hb_f.obj hvm.obj initsymb.obj inkey.obj itemapi.obj \
               langapi.obj math.obj mathx.obj memofile.obj memvars.obj menuto.obj mtran.obj msgen.obj \
-              objfunc.obj readvar.obj xsavescr.obj memvarbl.obj \
+              objfunc.obj readvar.obj xsavescr.obj memvarbl.obj oldbox.obj \
               set.obj setcolor.obj setkey.obj strfmt.obj strings.obj symbols.obj stringp.obj \
               stringsx.obj tbcolumn.obj tbrowse.obj tbrwtext.obj tclass.obj tget.obj tgetlist.obj tone.obj transfrm.obj
 
@@ -79,6 +79,7 @@ menuto.obj   : menuto.c   extend.h hbdefs.h
 msgen.obj    : msgen.c    extend.h hbdefs.h
 mtran.obj    : mtran.c    extend.h hbdefs.h
 objfunc.obj  : objfunc.c  extend.h hbdefs.h
+oldbox.obj   : oldbox.c   extend.h hbdefs.h
 set.obj      : set.c      extend.h hbdefs.h
 setcolor.obj : setcolor.c extend.h hbdefs.h init.h pcode.h
 setkey.obj   : setkey.c   extend.h hbdefs.h

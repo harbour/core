@@ -11,7 +11,7 @@
 .path.obj = obj;source\runner;source\runner\stdalone
 .path.prg = source\runner\stdalone
 
-PROJECT: runner.lib runner.exe
+PROJECT: runner.lib hbrun.exe
 
 runner.lib : runlib.obj
 

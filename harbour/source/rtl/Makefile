@@ -31,6 +31,7 @@ C_SOURCES=\
         mlcount.c \
         mouseapi.c \
         mtran.c \
+        oldbox.c \
         set.c \
         setcolor.c \
         strings.c \

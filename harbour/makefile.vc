@@ -110,6 +110,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\msgxxx.obj \
     $(OBJ_DIR)\mtran.obj \
     $(OBJ_DIR)\objfunc.obj \
+    $(OBJ_DIR)\oldbox.obj \
     $(OBJ_DIR)\rddord.obj \
     $(OBJ_DIR)\readkey.obj \
     $(OBJ_DIR)\readvar.obj \
@@ -533,6 +534,9 @@ $(RTL_DIR)\objfunc.c : $(RTL_DIR)\objfunc.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\objfunc.obj : $(RTL_DIR)\objfunc.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\oldbox.obj : $(RTL_DIR)\oldbox.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\rddord.c : $(RTL_DIR)\rddord.prg

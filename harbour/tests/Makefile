@@ -36,6 +36,7 @@ PRG_SOURCES=\
         atest.prg \
         begin.prg \
         box.prg \
+        boxtest.prg \
         byref.prg \
         calling.prg \
         cdow.prg \
