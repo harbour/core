@@ -236,6 +236,7 @@ static ERRCODE Error( AREAP pArea, PHB_ITEM pError )
 
    szRddName = ( char * ) hb_xgrab( HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 );
    SELF_SYSNAME( pArea, ( BYTE * ) szRddName );
+   hb_errPutSeverity( pError, ES_ERROR );
    hb_errPutSubSystem( pError, szRddName );
    hb_xfree( szRddName );
    return hb_errLaunch( pError );
@@ -837,6 +838,7 @@ HARBOUR HB_DBCREATE( void )
    SELF_CREATE( ( AREAP ) pTempArea, &pInfo );
    SELF_RELEASE( ( AREAP ) pTempArea );
    hb_xfree( szFileName );
+   hb_xfree( pFileName );
    hb_xfree( pTempArea );
 }
 

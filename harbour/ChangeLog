@@ -1,3 +1,8 @@
+19990822-20:02 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * source/rdd/dbcmd.c
+     source/rdd/dbf1.c
+     * Bug in PutValue removed (again)
+
 19990822-18:20 GMT+1 Bruno Cantero <bruno@issnet.net>
    * include/rddapi.h
      source/rdd/dbcmd.c

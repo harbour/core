@@ -227,15 +227,10 @@ static ERRCODE Info( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 static ERRCODE Lock( AREAP pArea, LPDBLOCKINFO pLockInfo )
 {
    if( SELF_RAWLOCK( pArea, pLockInfo->uiMethod, pLockInfo->itmRecID ) == SUCCESS )
-   {
       pLockInfo->fResult = TRUE;
-      return SUCCESS;
-   }
    else
-   {
       pLockInfo->fResult = FALSE;
-      return FAILURE;
-   }
+   return SUCCESS;
 }
 
 static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
@@ -245,9 +240,21 @@ static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    BYTE * szText, * szOldChar, szEndChar;
    BOOL bError;
    long lDay, lMonth, lYear;
+   PHB_ITEM pError;
 
    if( uiIndex > pArea->uiFieldCount )
       return FAILURE;
+
+   if( !pArea->lpExtendInfo->fExclusive && !pArea->lpExtendInfo->fFileLocked )
+   {
+      pError = hb_errNew();
+      hb_errPutGenCode( pError, EG_UNLOCKED );
+      hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_UNLOCKED ) );
+      hb_errPutSubCode( pError, 1022 );
+      SELF_ERROR( pArea, pError );
+      hb_errRelease( pError );
+      return FAILURE;
+   }
    
    pField = pArea->lpFields;
    uiOffset = 1;
@@ -279,7 +286,7 @@ static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          if( pItem->type & IT_INTEGER )
          {
             if( pField->uiDec )
-               sprintf( ( char * ) szText, "%*.*f", pField->uiLen, pField->uiDec, pItem->item.asInteger.value );
+               sprintf( ( char * ) szText, "%*.*f", pField->uiLen, pField->uiDec, ( double ) pItem->item.asInteger.value );
             else
                sprintf( ( char * ) szText, "%*i", pField->uiLen, pItem->item.asInteger.value );
             bError = FALSE;
@@ -287,9 +294,9 @@ static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          else if( pItem->type & IT_LONG )
          {
             if( pField->uiDec )
-               sprintf( ( char * ) szText, "%*.*f", pField->uiLen, pField->uiDec, pItem->item.asLong.value );
+               sprintf( ( char * ) szText, "%*.*f", pField->uiLen, pField->uiDec, ( double ) pItem->item.asLong.value );
             else
-               sprintf( ( char * ) szText, "%*l", pField->uiLen, pItem->item.asLong.value );
+               sprintf( ( char * ) szText, "%*ld", pField->uiLen, pItem->item.asLong.value );
             bError = FALSE;
          }
          else if( pItem->type & IT_DOUBLE )
@@ -297,7 +304,7 @@ static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             if( pField->uiDec )
                sprintf( ( char * ) szText, "%*.*f", pField->uiLen, pField->uiDec, pItem->item.asDouble.value );
             else
-               sprintf( ( char * ) szText, "%*l", pField->uiLen, pItem->item.asDouble.value );
+               sprintf( ( char * ) szText, "%*ld", pField->uiLen, ( long ) pItem->item.asDouble.value );
             bError = FALSE;
          }
          break;
@@ -326,7 +333,12 @@ static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 
    if( bError )
    {
-      printf( "Error 1020 EG_DATATYPE\n" );
+      pError = hb_errNew();
+      hb_errPutGenCode( pError, EG_DATATYPE );
+      hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_DATATYPE ) );
+      hb_errPutSubCode( pError, 1020 );
+      SELF_ERROR( pArea, pError );
+      hb_errRelease( pError );
       return FAILURE;
    }
    return SUCCESS;
@@ -575,7 +587,7 @@ static RDDFUNCS dbfTable = { 0,               /* Super Bof */
                              PutValue,
                              0,               /* Super Recall */
                              RecCount,
-                             0,               /* Super RecNo */
+                             RecNo,
                              0,               /* Super SetFieldsExtent */
                              0,               /* Super Close */
                              0,               /* Super Create */
