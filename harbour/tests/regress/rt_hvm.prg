@@ -623,6 +623,28 @@ FUNCTION Main_HVM()
    TEST_LINE( 1 % 0                           , "E BASE 1341 Zero divisor % F:S"   )
    TEST_LINE( 1 % NIL                         , "E BASE 1085 Argument error % F:S" )
 
+   TEST_LINE( Str( 1 / 0   )                  , "E BASE 1340 Zero divisor / F:S"   )
+   TEST_LINE( Str( 2 / 4   )                  , "         0.50"                    )
+   TEST_LINE( Str( 4 / 2   )                  , "         2"                       )
+   TEST_LINE( Str( 4 / 2.0 )                  , "         2.00"                    )
+   TEST_LINE( Str( 1 * 0   )                  , "         0"                       )
+   TEST_LINE( Str( 2 * 4   )                  , "         8"                       )
+   TEST_LINE( Str( 4 * 2.0 )                  , "         8.0"                     )
+   TEST_LINE( Str( 2 * 0.5 )                  , "         1.0"                     )
+   TEST_LINE( Str( 1 + 0   )                  , "         1"                       )
+   TEST_LINE( Str( 2 + 4   )                  , "         6"                       )
+   TEST_LINE( Str( 4 + 2.0 )                  , "         6.0"                     )
+   TEST_LINE( Str( 2 + 0.5 )                  , "         2.5"                     )
+   TEST_LINE( Str( 1 - 0   )                  , "         1"                       )
+   TEST_LINE( Str( 2 - 4   )                  , "        -2"                       )
+   TEST_LINE( Str( 4 - 2.0 )                  , "         2.0"                     )
+   TEST_LINE( Str( 2 - 0.5 )                  , "         1.5"                     )
+   TEST_LINE( Str( 1 % 0   )                  , "E BASE 1341 Zero divisor % F:S"   )
+   TEST_LINE( Str( 2 % 4   )                  , "         2"                       )
+   TEST_LINE( Str( 4 % 2   )                  , "         0"                       )
+   TEST_LINE( Str( 4 % 2.0 )                  , "         0.00"                    )
+   TEST_LINE( Str( 2 % 4.0 )                  , "         2.00"                    )
+
    /* The order of these tests is relevant, don't change it */
 
    nA := 1

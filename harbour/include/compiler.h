@@ -336,7 +336,7 @@ extern char * hb_comp_szWarnings[];
 
 HB_EXPR_PTR hb_compExprNewEmpty( void );
 HB_EXPR_PTR hb_compExprNewNil( void );
-HB_EXPR_PTR hb_compExprNewDouble( double, unsigned char );
+HB_EXPR_PTR hb_compExprNewDouble( double, BYTE );
 HB_EXPR_PTR hb_compExprNewLong( LONG );
 HB_EXPR_PTR hb_compExprNewString( char * );
 HB_EXPR_PTR hb_compExprNewLogical( int );

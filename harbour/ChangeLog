@@ -1,3 +1,17 @@
+19991122-12:46 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/compiler/expropt.c
+    include/compiler.h
+    ! Fixed optimizatoin of: ( 1 / 0 )
+    * Some "unsigned char" types changed to BYTE
+  + tests/regress/make_c5x.bat
+    tests/regress/rt_main.prg
+    + Make file for Clipper 5.x added.
+    ! Fixed to compile with Clipper 5.x.
+  * tests/regress/rt_hvm.prg
+    + New optimization tests added.
+  * source/vm/hvm.c
+    ! Minor formatting.
+
 19991122-11:56 GMT+1 Victor Szel <info@szelvesz.hu>
   + tests/regress/*
   + regress.b32

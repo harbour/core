@@ -275,7 +275,7 @@ static HB_EXPR_FUNC_PTR s_ExprTable[] = {
  *    HB_ET_NIL is used for an ordinary values and post- operators
  *    HB_ET_NONE is used for invalid syntax, e.g. var := var1 += 2
  */
-static unsigned char s_PrecedTable[] = {
+static BYTE s_PrecedTable[] = {
    HB_ET_NIL,                 /*   HB_ET_NONE = 0,    */
    HB_ET_NIL,                 /*   HB_ET_NIL,         */
    HB_ET_NIL,                 /*   HB_ET_NUMERIC,     */
@@ -437,7 +437,7 @@ HB_EXPR_PTR hb_compExprNewEmpty( void )
    return hb_compExprNew( HB_ET_NONE );
 }
 
-HB_EXPR_PTR hb_compExprNewDouble( double dValue, unsigned char ucDec )
+HB_EXPR_PTR hb_compExprNewDouble( double dValue, BYTE ucDec )
 {
    HB_EXPR_PTR pExpr =hb_compExprNew( HB_ET_NUMERIC );
 
@@ -1142,7 +1142,7 @@ HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightEx
  */
 HB_EXPR_PTR hb_compExprSetOperand( HB_EXPR_PTR pExpr, HB_EXPR_PTR pItem )
 {
-   unsigned char ucRight;
+   BYTE ucRight;
 
    ucRight = s_PrecedTable[ pItem->ExprType ];
    if( ucRight == HB_ET_NIL )
@@ -1168,7 +1168,7 @@ HB_EXPR_PTR hb_compExprSetOperand( HB_EXPR_PTR pExpr, HB_EXPR_PTR pItem )
        *   We have to set the proper order of evaluation using
        * precedence rules
        */
-      unsigned char ucLeft = s_PrecedTable[ pExpr->ExprType ];
+      BYTE ucLeft = s_PrecedTable[ pExpr->ExprType ];
       if( ucLeft >= ucRight )
       {
          /* Left operator has the same or lower precedence then the right one
@@ -4125,7 +4125,7 @@ static HB_EXPR_FUNC( hb_compExprUsePlus )
 
             if( pLeft->ExprType == HB_ET_NUMERIC && pRight->ExprType == HB_ET_NUMERIC )
             {
-               unsigned char bType = ( pLeft->value.asNum.NumType & pRight->value.asNum.NumType );
+               BYTE bType = ( pLeft->value.asNum.NumType & pRight->value.asNum.NumType );
 
                switch( bType )
                {
@@ -4145,8 +4145,9 @@ static HB_EXPR_FUNC( hb_compExprUsePlus )
                         pSelf->value.asNum.bDec = 0;
                         pSelf->value.asNum.NumType = HB_ET_DOUBLE;
                      }
+
+                     break;
                   }
-                  break;
 
                   case HB_ET_DOUBLE:
                   {
@@ -4156,8 +4157,9 @@ static HB_EXPR_FUNC( hb_compExprUsePlus )
                         pSelf->value.asNum.bDec = pRight->value.asNum.bDec;
                      else
                         pSelf->value.asNum.bDec = pLeft->value.asNum.bDec;
+
+                     break;
                   }
-                  break;
 
                   default:
                   {
@@ -4272,7 +4274,7 @@ static HB_EXPR_FUNC( hb_compExprUseMinus )
 
             if( pLeft->ExprType == HB_ET_NUMERIC && pRight->ExprType == HB_ET_NUMERIC )
             {
-               unsigned char bType = ( pLeft->value.asNum.NumType & pRight->value.asNum.NumType );
+               BYTE bType = ( pLeft->value.asNum.NumType & pRight->value.asNum.NumType );
 
                switch( bType )
                {
@@ -4292,8 +4294,9 @@ static HB_EXPR_FUNC( hb_compExprUseMinus )
                         pSelf->value.asNum.bDec = 0;
                         pSelf->value.asNum.NumType = HB_ET_DOUBLE;
                      }
+
+                     break;
                   }
-                  break;
 
                   case HB_ET_DOUBLE:
                   {
@@ -4303,8 +4306,9 @@ static HB_EXPR_FUNC( hb_compExprUseMinus )
                         pSelf->value.asNum.bDec = pRight->value.asNum.bDec;
                      else
                         pSelf->value.asNum.bDec = pLeft->value.asNum.bDec;
+
+                     break;
                   }
-                  break;
 
                   default:
                   {
@@ -4399,7 +4403,7 @@ static HB_EXPR_FUNC( hb_compExprUseMult )
 
             if( pLeft->ExprType == HB_ET_NUMERIC && pRight->ExprType == HB_ET_NUMERIC )
             {
-               unsigned char bType = ( pLeft->value.asNum.NumType & pRight->value.asNum.NumType );
+               BYTE bType = ( pLeft->value.asNum.NumType & pRight->value.asNum.NumType );
 
                switch( bType )
                {
@@ -4419,16 +4423,18 @@ static HB_EXPR_FUNC( hb_compExprUseMult )
                         pSelf->value.asNum.bDec = 0;
                         pSelf->value.asNum.NumType = HB_ET_DOUBLE;
                      }
+
+                     break;
                   }
-                  break;
 
                   case HB_ET_DOUBLE:
                   {
                      pSelf->value.asNum.dVal = pLeft->value.asNum.dVal * pRight->value.asNum.dVal;
                      pSelf->value.asNum.NumType = HB_ET_DOUBLE;
                      pSelf->value.asNum.bDec = pLeft->value.asNum.bDec + pRight->value.asNum.bDec;
+
+                     break;
                   }
-                  break;
 
                   default:
                   {
@@ -4518,66 +4524,69 @@ static HB_EXPR_FUNC( hb_compExprUseDiv )
 
             if( pLeft->ExprType == HB_ET_NUMERIC && pRight->ExprType == HB_ET_NUMERIC )
             {
-               unsigned char bType = ( pLeft->value.asNum.NumType & pRight->value.asNum.NumType );
-               double dVal = 0.0;
+               BYTE bType = ( pLeft->value.asNum.NumType & pRight->value.asNum.NumType );
 
                switch( bType )
                {
                   case HB_ET_LONG:
-                  {
-                     if( pRight->value.asNum.lVal )
-                        dVal = ( double ) pLeft->value.asNum.lVal / ( double ) pRight->value.asNum.lVal;
 
-                     if( fmod( dVal, 1.0 ) == 0.0 )
+                     if( pRight->value.asNum.lVal )
                      {
-                        /* Return integer results as long */
-                        pSelf->value.asNum.lVal = ( long ) dVal;
-                        pSelf->value.asNum.bDec = 0;
-                        pSelf->value.asNum.NumType = HB_ET_LONG;
+                        double dVal = ( double ) pLeft->value.asNum.lVal / ( double ) pRight->value.asNum.lVal;
+
+                        if( fmod( dVal, 1.0 ) == 0.0 )
+                        {
+                           /* Return integer results as long */
+                           pSelf->value.asNum.lVal = ( long ) dVal;
+                           pSelf->value.asNum.bDec = 0;
+                           pSelf->value.asNum.NumType = HB_ET_LONG;
+                        }
+                        else
+                        {
+                           /* Return non-integer results as double */
+                           pSelf->value.asNum.dVal = dVal;
+                           pSelf->value.asNum.bDec = HB_DEFAULT_DECIMALS;
+                           pSelf->value.asNum.NumType = HB_ET_DOUBLE;
+                        }
+                        pSelf->ExprType = HB_ET_NUMERIC;
                      }
-                     else
-                     {
-                        /* Return non-integer results as double */
-                        pSelf->value.asNum.dVal = dVal;
-                        pSelf->value.asNum.bDec = HB_DEFAULT_DECIMALS;
-                        pSelf->value.asNum.NumType = HB_ET_DOUBLE;
-                     }
-                     pSelf->ExprType = HB_ET_NUMERIC;
-                  }
-                  break;
+                     break;
 
                   case HB_ET_DOUBLE:
-                  {
+
                      if( pRight->value.asNum.dVal != 0.0 )
-                        dVal = pLeft->value.asNum.dVal / pRight->value.asNum.dVal;
-                     pSelf->value.asNum.dVal = dVal;
-                     pSelf->value.asNum.NumType = HB_ET_DOUBLE;
-                     pSelf->value.asNum.bDec = HB_DEFAULT_DECIMALS;
-                     pSelf->ExprType = HB_ET_NUMERIC;
-                  }
-                  break;
+                     {
+                        pSelf->value.asNum.dVal = pLeft->value.asNum.dVal / pRight->value.asNum.dVal;
+                        pSelf->value.asNum.NumType = HB_ET_DOUBLE;
+                        pSelf->value.asNum.bDec = HB_DEFAULT_DECIMALS;
+                        pSelf->ExprType = HB_ET_NUMERIC;
+                     }
+                     break;
 
                   default:
-                  {
+
                      if( pLeft->value.asNum.NumType == HB_ET_DOUBLE )
                      {
                         if( pRight->value.asNum.lVal )
-                           dVal = pLeft->value.asNum.dVal / ( double ) pRight->value.asNum.lVal;
-                        pSelf->value.asNum.dVal = dVal;
-                        pSelf->value.asNum.bDec = HB_DEFAULT_DECIMALS;
+                        {
+                           pSelf->value.asNum.dVal = pLeft->value.asNum.dVal / ( double ) pRight->value.asNum.lVal;
+                           pSelf->value.asNum.bDec = HB_DEFAULT_DECIMALS;
+                        }
                      }
                      else
                      {
                         if( pRight->value.asNum.dVal != 0.0 )
-                           dVal = ( double ) pLeft->value.asNum.lVal / pRight->value.asNum.dVal;
-                        pSelf->value.asNum.dVal = dVal;
-                        pSelf->value.asNum.bDec = HB_DEFAULT_DECIMALS;
-
+                        {
+                           pSelf->value.asNum.dVal = ( double ) pLeft->value.asNum.lVal / pRight->value.asNum.dVal;
+                           pSelf->value.asNum.bDec = HB_DEFAULT_DECIMALS;
+                        }
                      }
+
                      pSelf->value.asNum.NumType = HB_ET_DOUBLE;
                      pSelf->ExprType = HB_ET_NUMERIC;
-                  }
-               } /* switch bType*/
+
+               } /* switch bType */
+
                if( pSelf->ExprType == HB_ET_NUMERIC )
                {
                   /* The expression was reduced - delete old components */
@@ -4656,29 +4665,28 @@ static HB_EXPR_FUNC( hb_compExprUseMod )
             {
                if( pLeft->value.asNum.NumType == HB_ET_LONG && pRight->value.asNum.NumType == HB_ET_LONG )
                {
-                  double dVal;
                   if( pRight->value.asNum.lVal )
-                     dVal = pLeft->value.asNum.lVal % pRight->value.asNum.lVal;
-                  else
-                     break;   /* QUESTION: should we generate a warning or error here */
-
-                  if( ( double ) LONG_MIN <= dVal && dVal <= ( double ) LONG_MAX )
                   {
-                     pSelf->value.asNum.lVal = ( long ) dVal;
-                     pSelf->value.asNum.bDec = 0;
-                     pSelf->value.asNum.NumType = HB_ET_LONG;
-                  }
-                  else
-                  {
-                     pSelf->value.asNum.dVal = dVal;
-                     pSelf->value.asNum.bDec = 0;
-                     pSelf->value.asNum.NumType = HB_ET_DOUBLE;
-                  }
+                     double dVal = pLeft->value.asNum.lVal % pRight->value.asNum.lVal;
 
-                  pSelf->ExprType = HB_ET_NUMERIC;
-                  pSelf->ValType  = HB_EV_NUMERIC;
-                  HB_EXPR_USE( pLeft,  HB_EA_DELETE );
-                  HB_EXPR_USE( pRight, HB_EA_DELETE );
+                     if( ( double ) LONG_MIN <= dVal && dVal <= ( double ) LONG_MAX )
+                     {
+                        pSelf->value.asNum.lVal = ( long ) dVal;
+                        pSelf->value.asNum.bDec = 0;
+                        pSelf->value.asNum.NumType = HB_ET_LONG;
+                     }
+                     else
+                     {
+                        pSelf->value.asNum.dVal = dVal;
+                        pSelf->value.asNum.bDec = 0;
+                        pSelf->value.asNum.NumType = HB_ET_DOUBLE;
+                     }
+
+                     pSelf->ExprType = HB_ET_NUMERIC;
+                     pSelf->ValType  = HB_EV_NUMERIC;
+                     HB_EXPR_USE( pLeft,  HB_EA_DELETE );
+                     HB_EXPR_USE( pRight, HB_EA_DELETE );
+                  }
                }
             }
             else

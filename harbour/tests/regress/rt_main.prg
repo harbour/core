@@ -116,60 +116,6 @@ MEMVAR mbBlock
 MEMVAR mbBlockC
 MEMVAR maArray
 
-INIT PROCEDURE RT_InitStatics()
-
-   /* NOTE: Some basic values we may need for some tests.
-            ( passing by reference, avoid preprocessor bugs, etc. ) */
-
-   scString  := "HELLO"
-   scStringM := "Hello"
-   scStringE := ""
-   scStringZ := "A" + Chr( 0 ) + "B"
-   scStringW := Chr(13)+Chr(10)+Chr(141)+Chr(10)+Chr(9)
-   snIntZ    := 0
-   snDoubleZ := 0.0
-   snIntP    := 10
-   snIntP1   := 65
-   snLongP   := 100000
-   snDoubleP := 10.567 /* Use different number of decimals than the default */
-   snIntN    := -10
-   snLongN   := -100000
-   snDoubleN := -10.567 /* Use different number of decimals than the default */
-   snDoubleI := 0   //Log( 0 )
-   sdDate    := SToD( "19800101" )
-   sdDateE   := SToD( "" )
-   slFalse   := .F.
-   slTrue    := .T.
-   soObject  := ErrorNew()
-   suNIL     := NIL
-   sbBlock   := {|| NIL }
-   sbBlockC  := {|| "(string)" }
-   saArray   := { 9898 }
-
-   saAllTypes := {;
-      scString  ,;
-      scStringE ,;
-      scStringZ ,;
-      snIntZ    ,;
-      snDoubleZ ,;
-      snIntP    ,;
-      snLongP   ,;
-      snDoubleP ,;
-      snIntN    ,;
-      snLongN   ,;
-      snDoubleN ,;
-      snDoubleI ,;
-      sdDateE   ,;
-      slFalse   ,;
-      slTrue    ,;
-      soObject  ,;
-      suNIL     ,;
-      sbBlock   ,;
-      sbBlockC  ,;
-      saArray   }
-
-   RETURN
-
 FUNCTION Main( cPar1, cPar2 )
 
    /* Initialize test */
@@ -531,7 +477,7 @@ STATIC FUNCTION CMDLGetValue( cCommandLine, cName, cRetVal )
 #ifndef __HARBOUR__
 #ifndef __XPP__
 
-STATIC FUNCTION SToD( cDate )
+FUNCTION SToD( cDate )
    LOCAL cOldDateFormat
    LOCAL dDate
 
@@ -551,3 +497,57 @@ STATIC FUNCTION SToD( cDate )
 
 #endif
 #endif
+
+INIT PROCEDURE RT_InitStatics()
+
+   /* NOTE: Some basic values we may need for some tests.
+            ( passing by reference, avoid preprocessor bugs, etc. ) */
+
+   scString  := "HELLO"
+   scStringM := "Hello"
+   scStringE := ""
+   scStringZ := "A" + Chr( 0 ) + "B"
+   scStringW := Chr(13)+Chr(10)+Chr(141)+Chr(10)+Chr(9)
+   snIntZ    := 0
+   snDoubleZ := 0.0
+   snIntP    := 10
+   snIntP1   := 65
+   snLongP   := 100000
+   snDoubleP := 10.567 /* Use different number of decimals than the default */
+   snIntN    := -10
+   snLongN   := -100000
+   snDoubleN := -10.567 /* Use different number of decimals than the default */
+   snDoubleI := 0   //Log( 0 )
+   sdDate    := SToD( "19800101" )
+   sdDateE   := SToD( "" )
+   slFalse   := .F.
+   slTrue    := .T.
+   soObject  := ErrorNew()
+   suNIL     := NIL
+   sbBlock   := {|| NIL }
+   sbBlockC  := {|| "(string)" }
+   saArray   := { 9898 }
+
+   saAllTypes := {;
+      scString  ,;
+      scStringE ,;
+      scStringZ ,;
+      snIntZ    ,;
+      snDoubleZ ,;
+      snIntP    ,;
+      snLongP   ,;
+      snDoubleP ,;
+      snIntN    ,;
+      snLongN   ,;
+      snDoubleN ,;
+      snDoubleI ,;
+      sdDateE   ,;
+      slFalse   ,;
+      slTrue    ,;
+      soObject  ,;
+      suNIL     ,;
+      sbBlock   ,;
+      sbBlockC  ,;
+      saArray   }
+
+   RETURN
