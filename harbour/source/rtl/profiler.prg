@@ -307,7 +307,6 @@ End Class
 Method describe Class HBProfileOPCode
 Return( "OPCode" )
 
-
 ////////////////////////////////////////////////////////////////////////////
 // Class: HBProfile
 
@@ -558,18 +557,32 @@ End Class
 /////
 
 Method gather Class HBProfileLowLevel
-Return( ::super:gather():gatherOPCodes() )
+Local lProfile := __setProfiler( .F. )
+
+   // Gather functions and methods.
+   ::super:gather()
+
+   // Also gather opcodes.   
+   ::gatherOPCodes()
+
+   __setProfiler( lProfile )
+
+Return( self )
 
 /////
 
 Method gatherOPCodes Class HBProfileLowLevel
 Local nMax := __opcount()
+Local cName
 Local nOP
 
    // Loop over all the harbour OP codes. Note that they start at 0.
    For nOP := 0 To ( nMax - 1 )
-      // Add it to the profile.
-      aadd( ::aProfile, HBProfileOPCode():new( "OPCODE( " + alltrim( str( nOP ) ) + " )", __OpGetPrf( nOP ) ) )
+      // If we're not ignoring this opcode.
+      If !::ignoreSymbol( cName := "OPCODE( " + padl( nOP, 3 ) + " )" )
+         // Add it to the profile.
+         aadd( ::aProfile, HBProfileOPCode():new( cName, __OpGetPrf( nOP ) ) )
+      EndIf
    Next
 
 Return( self )
