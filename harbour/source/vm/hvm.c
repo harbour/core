@@ -230,11 +230,9 @@ static USHORT s_uiActionRequest = 0;
 
 /* application entry point */
 
-int main( int argc, char * argv[] )
+void hb_vmInit( void )
 {
-   HB_DEBUG( "main\n" );
-
-   hb_cmdargInit( argc, argv );
+   HB_DEBUG( "hb_vmInit\n" );
 
    /* initialize internal data structures */
    aStatics.type = IT_NIL;
@@ -305,8 +303,9 @@ int main( int argc, char * argv[] )
       hb_vmPushNil();                 /* places NIL at self */
 
       iArgCount = 0;
-      for( i = 1; i < argc; i++ )     /* places application parameters on the stack */
+      for( i = 1; i < hb_cmdargARGC(); i++ )     /* places application parameters on the stack */
       {
+         char ** argv = hb_cmdargARGV();
          /* Filter out any parameters beginning with //, like //INFO */
          if( ! hb_cmdargIsInternal( argv[ i ] ) )
          {
@@ -317,12 +316,6 @@ int main( int argc, char * argv[] )
 
       hb_vmDo( iArgCount ); /* invoke it with number of supplied parameters */
    }
-
-   hb_vmQuit();
-
-   /* This point is never reached */
-
-   return 0;
 }
 
 void hb_vmQuit( void )

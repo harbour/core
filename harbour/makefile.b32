@@ -23,7 +23,7 @@ harbour.lib : achoice.obj adir.obj alert.obj arrays.obj asort.obj \
               dir.obj do.obj dynsym.obj environ.obj terror.obj cmdarg.obj \
               errorapi.obj errorsys.obj harbinit.obj extend.obj fileread.obj filesys.obj fm.obj \
               hardcr.obj hb_f.obj hvm.obj initsymb.obj inkey.obj itemapi.obj \
-              langapi.obj math.obj mathx.obj memofile.obj memvars.obj menuto.obj mtran.obj msges.obj \
+              langapi.obj mainstd.obj mainwin.obj math.obj mathx.obj memofile.obj memvars.obj menuto.obj mtran.obj msges.obj \
               objfunc.obj readvar.obj xsavescr.obj memvarbl.obj \
               set.obj setcolor.obj setkey.obj strfmt.obj strings.obj symbols.obj stringp.obj \
               stringsx.obj tbcolumn.obj tbrowse.obj tbrwtext.obj tclass.obj tget.obj tgetlist.obj tone.obj transfrm.obj
@@ -65,6 +65,8 @@ initsymb.obj : initsymb.c extend.h hbdefs.h
 inkey.obj    : inkey.c    extend.h hbdefs.h
 itemapi.obj  : itemapi.c  extend.h hbdefs.h
 langapi.obj  : langapi.c  extend.h hbdefs.h
+mainstd.obj  : mainstd.c  extend.h hbdefs.h
+mainwin.obj  : mainwin.c  extend.h hbdefs.h
 math.obj     : math.c     extend.h hbdefs.h
 mathx.obj    : mathx.c    extend.h hbdefs.h
 memofile.obj : memofile.c extend.h hbdefs.h
