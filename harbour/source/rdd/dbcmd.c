@@ -513,6 +513,53 @@ LPAREANODE hb_rddNewAreaNode( LPRDDNODE pRddNode, USHORT uiRddID )
 }
 
 /*
+ * Insert the new WorkArea node
+ */
+USHORT hb_rddInsertAreaNode( char *szDriver )
+{
+   USHORT uiRddID;
+   LPRDDNODE pRddNode;
+   LPAREANODE pAreaNode;
+
+   pRddNode = hb_rddFindNode( szDriver, &uiRddID );
+   if( !pRddNode )
+      return FALSE;
+
+   s_pCurrArea = hb_rddNewAreaNode( pRddNode, uiRddID );
+   if( !s_pWorkAreas )
+      s_pWorkAreas = s_pCurrArea;  /* The new WorkArea node is the first */
+   else
+   {
+      pAreaNode = s_pWorkAreas;
+      while( pAreaNode )
+      {
+         if( ( ( AREAP ) pAreaNode->pArea )->uiArea > s_uiCurrArea )
+         {
+            /* Insert the new WorkArea node */
+            s_pCurrArea->pPrev = pAreaNode->pPrev;
+            s_pCurrArea->pNext = pAreaNode;
+            pAreaNode->pPrev = s_pCurrArea;
+            if( s_pCurrArea->pPrev )
+               s_pCurrArea->pPrev->pNext = s_pCurrArea;
+            else
+               s_pWorkAreas = s_pCurrArea;
+            break;
+         }
+         if( pAreaNode->pNext )
+            pAreaNode = pAreaNode->pNext;
+         else
+         {
+            /* Append the new WorkArea node */
+            pAreaNode->pNext = s_pCurrArea;
+            s_pCurrArea->pPrev = pAreaNode;
+            break;
+         }
+      }
+   }
+   return TRUE;
+}
+
+/*
  * Find a field.
  */
 static USHORT hb_rddFieldIndex( AREAP pArea, char * szName )
@@ -1110,9 +1157,7 @@ HB_FUNC( DBCREATE )
    char cDriverBuffer[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ];
    char szAlias[ HARBOUR_MAX_RDD_ALIAS_LENGTH + 1 ];
    char szSavedFileName[ _POSIX_PATH_MAX + 1 ];
-   USHORT uiSize, uiLen, uiRddID, uiPrevArea;
-   LPRDDNODE pRddNode;
-   LPAREANODE pAreaNode;
+   USHORT uiSize, uiLen, uiPrevArea;
    DBOPENINFO pInfo;
    PHB_FNAME pFileName;
    PHB_ITEM pStruct, pFieldDesc, pFileExt;
@@ -1180,13 +1225,6 @@ HB_FUNC( DBCREATE )
    else
       szDriver = s_szDefDriver;
 
-   pRddNode = hb_rddFindNode( szDriver, &uiRddID ) ;
-   if( !pRddNode )
-   {
-      hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, "DBCREATE" );
-      return;
-   }
-
    pFileName = hb_fsFNameSplit( szFileName );
    strncpy( szAlias, hb_parc( 5 ), HARBOUR_MAX_RDD_ALIAS_LENGTH );
    uiLen = strlen( szAlias );
@@ -1204,7 +1242,11 @@ HB_FUNC( DBCREATE )
    }
 
    /* Create a new WorkArea node */
-   s_pCurrArea = hb_rddNewAreaNode( pRddNode, uiRddID );
+   if( !hb_rddInsertAreaNode( szDriver ) )
+   {
+      hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, "DBCREATE" );
+      return;
+   }
 
    szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
    strncpy( szFileName, hb_parc( 1 ), _POSIX_PATH_MAX );
@@ -1232,38 +1274,6 @@ HB_FUNC( DBCREATE )
    ( ( PHB_DYNS ) ( ( AREAP ) s_pCurrArea->pArea )->atomAlias )->hArea = s_uiCurrArea;
    ( ( AREAP ) s_pCurrArea->pArea )->uiArea = s_uiCurrArea;
 
-   /* Insert the new WorkArea node */
-   if( !s_pWorkAreas )
-      s_pWorkAreas = s_pCurrArea;  /* The new WorkArea node is the first */
-   else
-   {
-      pAreaNode = s_pWorkAreas;
-      while( pAreaNode )
-      {
-         if( ( ( AREAP ) pAreaNode->pArea )->uiArea > s_uiCurrArea )
-         {
-            /* Insert the new WorkArea node */
-            s_pCurrArea->pPrev = pAreaNode->pPrev;
-            s_pCurrArea->pNext = pAreaNode;
-            pAreaNode->pPrev = s_pCurrArea;
-            if( s_pCurrArea->pPrev )
-               s_pCurrArea->pPrev->pNext = s_pCurrArea;
-            else
-               s_pWorkAreas = s_pCurrArea;
-            break;
-         }
-         if( pAreaNode->pNext )
-            pAreaNode = pAreaNode->pNext;
-         else
-         {
-            /* Append the new WorkArea node */
-            pAreaNode->pNext = s_pCurrArea;
-            s_pCurrArea->pPrev = pAreaNode;
-            break;
-         }
-      }
-   }
-
    if( SELF_CREATEFIELDS( ( AREAP ) s_pCurrArea->pArea, pStruct ) == FAILURE )
    {
       hb_xfree( szFileName );
@@ -1286,14 +1296,18 @@ HB_FUNC( DBCREATE )
    }
    else
    {
+      USHORT uiAreaSize, uiRddID;
+      struct _RDDFUNCS * lprfsHost = ( ( AREAP ) s_pCurrArea->pArea )->lprfsHost;
+      uiRddID = ( ( AREAP ) s_pCurrArea->pArea )->rddID;
+      SELF_STRUCTSIZE( ( AREAP ) s_pCurrArea->pArea, &uiAreaSize );
       /* Close and release WorkArea */
       SELF_CLOSE( ( AREAP ) s_pCurrArea->pArea );
       SELF_RELEASE( ( AREAP ) s_pCurrArea->pArea );
 
       /* Prepare WorkArea and open it */
-      s_pCurrArea->pArea = ( AREAP ) hb_xgrab( pRddNode->uiAreaSize );
-      memset( s_pCurrArea->pArea, 0, pRddNode->uiAreaSize );
-      ( ( AREAP ) s_pCurrArea->pArea )->lprfsHost = &pRddNode->pTable;
+      s_pCurrArea->pArea = ( AREAP ) hb_xgrab( uiAreaSize );
+      memset( s_pCurrArea->pArea, 0, uiAreaSize );
+      ( ( AREAP ) s_pCurrArea->pArea )->lprfsHost = lprfsHost;
       ( ( AREAP ) s_pCurrArea->pArea )->rddID = uiRddID;
       SELF_NEW( ( AREAP ) s_pCurrArea->pArea );
       pInfo.abName = ( BYTE * )  hb_xgrab( _POSIX_PATH_MAX + 1 );
@@ -1814,9 +1828,7 @@ HB_FUNC( DBUNLOCKALL )
 HB_FUNC( DBUSEAREA )
 {
    char * szDriver, * szFileName;
-   LPRDDNODE pRddNode;
-   LPAREANODE pAreaNode;
-   USHORT uiRddID, uiLen;
+   USHORT uiLen;
    DBOPENINFO pInfo;
    PHB_FNAME pFileName;
    PHB_ITEM pFileExt;
@@ -1844,13 +1856,6 @@ HB_FUNC( DBUSEAREA )
    else
       szDriver = s_szDefDriver;
 
-   pRddNode = hb_rddFindNode( szDriver, &uiRddID );
-   if( !pRddNode )
-   {
-      hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, "DBUSEAREA" );
-      return;
-   }
-
    szFileName = hb_parc( 3 );
    if( strlen( szFileName ) == 0 )
    {
@@ -1875,7 +1880,11 @@ HB_FUNC( DBUSEAREA )
    }
 
    /* Create a new WorkArea node */
-   s_pCurrArea = hb_rddNewAreaNode( pRddNode, uiRddID );
+   if( !hb_rddInsertAreaNode( szDriver ) )
+   {
+      hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, "DBUSEAREA" );
+      return;
+   }
 
    szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
    strncpy( szFileName, hb_parc( 3 ), _POSIX_PATH_MAX );
@@ -1897,38 +1906,6 @@ HB_FUNC( DBUSEAREA )
    pInfo.fReadonly = ISLOG( 6 ) ? hb_parl( 6 ) : FALSE;
 
    ( ( AREAP ) s_pCurrArea->pArea )->uiArea = s_uiCurrArea;
-
-   /* Insert the new WorkArea node */
-   if( !s_pWorkAreas )
-      s_pWorkAreas = s_pCurrArea;  /* The new WorkArea node is the first */
-   else
-   {
-      pAreaNode = s_pWorkAreas;
-      while( pAreaNode )
-      {
-         if( ( ( AREAP ) pAreaNode->pArea )->uiArea > s_uiCurrArea )
-         {
-            /* Insert the new WorkArea node */
-            s_pCurrArea->pPrev = pAreaNode->pPrev;
-            s_pCurrArea->pNext = pAreaNode;
-            pAreaNode->pPrev = s_pCurrArea;
-            if( s_pCurrArea->pPrev )
-               s_pCurrArea->pPrev->pNext = s_pCurrArea;
-            else
-               s_pWorkAreas = s_pCurrArea;
-            break;
-         }
-         if( pAreaNode->pNext )
-            pAreaNode = pAreaNode->pNext;
-         else
-         {
-            /* Append the new WorkArea node */
-            pAreaNode->pNext = s_pCurrArea;
-            s_pCurrArea->pPrev = pAreaNode;
-            break;
-         }
-      }
-   }
 
    /* Open file */
    if( SELF_OPEN( ( AREAP ) s_pCurrArea->pArea, &pInfo ) == FAILURE )
