@@ -1,3 +1,11 @@
+20000307-03:30 EST Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+     * reorganised
+     * change names of libraries
+     * create unistd.h if needed
+   * bin/bld_vc.bat
+     * modified to change names of libraries
+
 20000307-03:36 GMT+1 Victor Szakats <info@szelvesz.hu>
    * include/hbclip.ch
      + All Harbour extensions included. (HB_*())
