@@ -110,6 +110,7 @@ FUNCTION Main( cPar1, cPar2 )
    TEST_BEGIN( cPar1 + " " + cPar2 )
 
    Main_HVM()
+   Main_HVMA()
    Main_MATH()
    Main_DATE()
    Main_STR()

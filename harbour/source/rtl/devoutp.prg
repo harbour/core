@@ -33,21 +33,9 @@
  *
  */
 
-/*
- * ChangeLog:
- *
- * V 1.4    Paul Tucker                 Second param to Devout should be
- *                                      the color.
- * V 1.3    David G. Holm               Added my email address.
- * V 1.2    David G. Holm               Removed "(C)" from Copyright and
- *                                      updated previous version comments.
- * V 1.1    David G. Holm               Submitted to Harbour Project.
- * V 1.0    David G. Holm               Initial version.
- *
- */
-
 PROCEDURE DevOutPict( xValue, cPicture, cColor )
 
    DevOut( Transform( xValue, cPicture ), cColor )
 
    RETURN
+

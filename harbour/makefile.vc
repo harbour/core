@@ -672,13 +672,14 @@ $(HBTEST_EXE) : \
    $(HBTEST_DIR)\rt_date.prg \
    $(HBTEST_DIR)\rt_file.prg \
    $(HBTEST_DIR)\rt_hvm.prg \
+   $(HBTEST_DIR)\rt_hvma.prg \
    $(HBTEST_DIR)\rt_math.prg \
    $(HBTEST_DIR)\rt_misc.prg \
    $(HBTEST_DIR)\rt_str.prg \
    $(HBTEST_DIR)\rt_stra.prg \
    $(HBTEST_DIR)\rt_trans.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
-   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbtest.c $(OBJ_DIR)\rt_array.c $(OBJ_DIR)\rt_date.c $(OBJ_DIR)\rt_file.c $(OBJ_DIR)\rt_hvm.c $(OBJ_DIR)\rt_math.c $(OBJ_DIR)\rt_misc.c $(OBJ_DIR)\rt_str.c $(OBJ_DIR)\rt_stra.c $(OBJ_DIR)\rt_trans.c -o $(HBTEST_EXE) /link $(LIBS)
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbtest.c $(OBJ_DIR)\rt_array.c $(OBJ_DIR)\rt_date.c $(OBJ_DIR)\rt_file.c $(OBJ_DIR)\rt_hvm.c $(OBJ_DIR)\rt_hvma.c $(OBJ_DIR)\rt_math.c $(OBJ_DIR)\rt_misc.c $(OBJ_DIR)\rt_str.c $(OBJ_DIR)\rt_stra.c $(OBJ_DIR)\rt_trans.c -o $(HBTEST_EXE) /link $(LIBS)
 
 #
 # HBDOC.EXE rules

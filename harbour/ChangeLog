@@ -1,3 +1,21 @@
+20000405-15:29 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   + utils/hbtest/rt_hvma.prg
+   * utils/hbtest/*
+   * makefile.*
+     ! rt_hvm.prg split to make it compile with BCC31 under lower memory
+       conditions.
+
+   * source/rtl/devoutp.prg
+   * source/rtl/setkey.prg
+   * include/hbver.h
+   * include/hbapifs.h
+   * include/filesys.api
+   * include/fileio.ch
+   * include/hbset.h
+   * include/set.ch
+     - Removed local ChangeLogs
+
 20000405-14:28 GMT+3 Alexander Kresin
   * source/pp/ppcore.c
     * bugs fixed, reported by Guy Roussin and Chen Kedem

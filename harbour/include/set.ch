@@ -33,19 +33,6 @@
  *
  */
 
-/*
- * ChangeLog:
- *
- * V 1.10   David G. Holm               Added missing Clipper 5.3 SETs.
- * V 1.4    David G. Holm               Added my email address.
- * V 1.3    David G. Holm               Added copyright and license header,
- *                                      along with a complete version history.
- * V 1.2    Victor Szakats              Change not documented.
- * V 1.1    Manuel Ruiz                 Committed to CVS.
- * V 1.0    David G. Holm               Initial version.
- *
- */
-
 /* NOTE: This file is also used by C code. */
 
 #ifndef _SET_CH

@@ -8,6 +8,7 @@ xpp rt_array.prg /w /n
 xpp rt_date.prg  /w /n
 xpp rt_file.prg  /w /n
 xpp rt_hvm.prg   /w /n
+xpp rt_hvma.prg  /w /n
 xpp rt_math.prg  /w /n
 xpp rt_misc.prg  /w /n
 xpp rt_str.prg   /w /n

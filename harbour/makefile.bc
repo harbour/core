@@ -509,6 +509,7 @@ HBRUN_EXE_OBJS = \
 HBTEST_EXE_OBJS = \
    $(OBJ_DIR)\hbtest.obj \
    $(OBJ_DIR)\rt_hvm.obj \
+   $(OBJ_DIR)\rt_hvma.obj \
    $(OBJ_DIR)\rt_math.obj \
    $(OBJ_DIR)\rt_date.obj \
    $(OBJ_DIR)\rt_str.obj \
@@ -1951,6 +1952,7 @@ $(HBTEST_EXE) : $(HBTEST_EXE_OBJS)
    echo. -I$(INCLUDE_DIR) >> make.tmp
    echo. $(OBJ_DIR)\hbtest.obj >> make.tmp
    echo. $(OBJ_DIR)\rt_hvm.obj >> make.tmp
+   echo. $(OBJ_DIR)\rt_hvma.obj >> make.tmp
    echo. $(OBJ_DIR)\rt_math.obj >> make.tmp
    echo. $(OBJ_DIR)\rt_date.obj >> make.tmp
    echo. $(OBJ_DIR)\rt_str.obj >> make.tmp
@@ -1981,6 +1983,12 @@ $(OBJ_DIR)\rt_hvm.c : $(HBTEST_DIR)\rt_hvm.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\rt_hvm.obj : $(OBJ_DIR)\rt_hvm.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\rt_hvma.c : $(HBTEST_DIR)\rt_hvma.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\rt_hvma.obj : $(OBJ_DIR)\rt_hvma.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\rt_math.c : $(HBTEST_DIR)\rt_math.prg

@@ -33,16 +33,6 @@
  *
  */
 
-/*
- * ChangeLog:
- *
- * V 1.1  A White       Fixed wrong parameter aClone() bug in SetKeySave()
- *                      Added SetKeyCheck()
- *                      Added SetKeyGet()
- * V 1.0  A White       Initial version, submitted to Harbour Projects
- *
- */
-
 #include "common.ch"
 
 // macro substitutions to access sub-array elements of aSetKeys[]

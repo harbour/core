@@ -33,52 +33,6 @@
  *
  */
 
-/*
- * ChangeLog:
- *
- * V 1.31   David G. Holm               Added missing Clipper 5.3 SETs.
- * V 1.25   Paul Tucker                 Converted HB_SET_DEBUG back to Logical.
- *                                      Clipper 5.3 docs are incorrect on this.
- * V 1.19   Victor Szakats              #include <x> changed to #include "x".
- * V 1.18   David G. Holm               Added INKEY_EXTENDED to allow some
- *                                      platforms to select between normal
- *                                      and extended key codes.
- * V 1.17   Bruno Cantero               Added prototypes for hb_rddInitialize
- *                                      and hb_rddRelease.
- * V 1.16   David G. Holm               Added prototypes for hb_consoleRelease
- *                                      and hb_consoleInitialize, because set
- *                                      must be initialized before console and
- *                                      released after console.
- * V 1.15   David G. Holm               Changed hb_set.HB_SET_COLOR to be a
- *                                      fixed 64 byte buffer. Added prototype
- *                                      for hb_setColor()
- * V 1.14   David G. Holm               Removed the obsolete hb_set_fixed
- *                                      and HB_SETFIXED(), which I should
- *                                      have done when I took HB_SETFIXED()
- *                                      out of source/rtl/set.c in V 1.27.
- * V 1.13   David G. Holm               Added my email address.
- * V 1.12   David G. Holm               Added copyright and license header,
- *                                      along with a complete version history.
- * V 1.11   David G. Holm               Added hb_set_extrahan.
- * V 1.10   Victor Szakats              Renamed InitializeSets() to
- *                                      hb_setInitialize() and renamed
- * V 1.9    Victor Szakats              ReleaseSets() to hb_setRelease().
- * V 1.8    David G. Holm               Changed HB_SET_DEBUG to numeric.
- * V 1.7    Gonzalo A. Diethelm         Made the #include guard ANSI compliant.
- * V 1.6    Gonzalo A. Diethelm         Ensured that all Harbour functions
- *                                      are declared as HB_FUNCTION( void );
- * V 1.5    David G. Holm               Added hb_set_althan & hb_set_printhan.
- * V 1.4    David G. Holm               Added hb_set_fixed & HB_SET_FIXED().
- * V 1.3    David G. Holm               Changed __SETCENTURY to HB_SETCENTURY.
- *                                      Changed all _SET_name to HB_SET_name
- *                                      Changed the name of the function that
- *                                      initializes sets to InitializeSets().
- * V 1.2    Gonzalo A. Diethelm         Added comment with CVS Id keyword.
- * V 1.1    Antonio Linares             Committed to CVS.
- * V 1.0    David G. Holm               Initial version.
- *
- */
-
 #ifndef HB_SET_H_
 #define HB_SET_H_
 

@@ -33,45 +33,6 @@
  *
  */
 
-/*
- * ChangeLog:
- *
- * V 1.62   Patrick Mast                Bumped build to 31a and updated date
- * V 1.61   Patrick Mast                Changed day on build date to 27
- * V 1.6    Patrick Mast                Bumped build to 31 and updated date
- * V 1.5    David G. Holm               Bumped revision code to "b" and
- *                                      changed date for public release.
- * V 1.4    David G. Holm               Bumped revision code to "a" and
- *                                      set date for public OS/2 build.
- * V 1.3    ?
- * V 1.2    ?
- * V 1.1    ?                           Renamed to hbver.h
- * V 1.11   Patrick Mast                Bumped build to 29 and updated date
- *                                      for new public release.
- * V 1.12   David G. Holm               Bumped build to 29, reset revision
- *                                      code to an empty string, and updated
- *                                      date, anticipating a public release.
- * V 1.11   Patrick Mast                Bumped build to 28 and updated date
- *                                      for new public release.
- * V 1.10   David G. Holm               Added my email address.
- * V 1.9    David G. Holm               Added Copyright and License notice.
- *                                      Added version history.
- *                                      Bumped revision code to "d" and
- *                                      updated date.
- * V 1.8    Victor Szakats              Change not documented.
- * V 1.7    David G. Holm               Bumped revision code to "c".
- * V 1.6    Patrick Mast                Bumped build to 27 and updated date
- *                                      for new public release.
- * V 1.5    Gonzalo A. Diethelm         Added RCS Id keyword.
- * V 1.4    David G. Holm               Bumped revision code to "b".
- * V 1.3    Patrick Mast                Bumped build to 26 and updated date
- *                                      for new public release.
- * V 1.2    Patrick Mast                Change not documented.
- * V 1.1    David G. Holm               Committed to CVS.
- * V 1.0    David G. Holm               Original version.
- *
- */
-
 #ifndef HB_VER_H_
 #define HB_VER_H_
 
