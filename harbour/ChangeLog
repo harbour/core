@@ -7,6 +7,19 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+       yet prototyped in the central headers).
+     + Win32 version reworked so that it checks for the printer
+       name passed to the function. This also made the program
+       simpler.
+
+   * source/rtl/descend.c
+   * source/rtl/transfrm.c
+     * Small changes in last fix.
+     ! Removed the explicit declaration of __yy_memcpy(), since 
+       it made BCC551 fail with Bison 1.30, even even with the 
+     - Old style language removed.
+       Now we again have the usual warning, but at least it 
+2002-01-05 16:20 UTC+0700 Andi Jahja <harbour@cbn.net.id>
    * source/rtl/transform.c
      ! Transform("","@" ) -> memory allocation error, fixed by adding 1 byte
        to hb_xgrab()

@@ -79,7 +79,12 @@
 */
 
 #if !defined(__GNUC__) && !defined(__IBMCPP__)
-   void __yy_memcpy ( char*, const char*, unsigned int ); /* to satisfy Borland compiler */
+   #if 0
+      /* This makes BCC 551 fail with Bison 1.30, even with the 
+         supplied harbour.simple file, which makes Bison 1.30 blow.
+         [vszakats] */
+      void __yy_memcpy ( char*, const char*, unsigned int ); /* to satisfy Borland compiler */
+   #endif
 #endif
 
 #ifdef __GNUC__
