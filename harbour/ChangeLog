@@ -98,7 +98,7 @@
   + source/rtl/natmsg/msgdut.c
     - National language message file for Dutch
   + source/rtl/natmsg/msggal.c
-    - National language message file for ?
+    - National language message file for Galician
   + source/rtl/natmsg/msgpor.c
     - National language message file for Portugese
   + source/rtl/natmsg/msgspa.c

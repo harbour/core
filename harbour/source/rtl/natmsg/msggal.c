@@ -1,5 +1,7 @@
-#include <extend.h>
-#include <ctype.h>
+/*
+ * Language support unit for Galician
+ *
+ */
 
 char *hb_monthsname[ 12 ] = {
    "Xaneiro", "Febreiro", "Marzal",
