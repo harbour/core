@@ -215,8 +215,10 @@ METHOD BuildCommandWindow() CLASS TDebugger
    ::nCommand = 0
 
    cCommand = Space( ::oWndCommand:nRight - ::oWndCommand:nLeft - 3 )
-   @ ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3 GET cCommand ;
-      COLOR Replicate( ::oWndCommand:cColor + ",", 5 )
+   // We don't use the GET command here to avoid the painting of the GET
+   AAdd( GetList, TGet():New( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3,;
+         { | u | If( PCount() > 0, cCommand := u, cCommand ) }, "cCommand" ) )
+   ATail( GetList ):ColorSpec = Replicate( ::oWndCommand:cColor + ",", 5 )
    ::oGetListCommand = TGetList():New( GetList )
 
 return nil
@@ -347,7 +349,7 @@ return nil
 METHOD HandleEvent() CLASS TDebugger
 
    local nPopup, oWnd
-   local nKey
+   local nKey, nMRow, nMCol, n
 
    ::lEnd = .f.
 
@@ -368,6 +370,21 @@ METHOD HandleEvent() CLASS TDebugger
                     SetCursor( SC_NONE )
                     ::oPullDown:ShowPopup( nPopup )
                  endif
+
+              elseif MRow() == MaxRow()
+
+              else
+                 nMRow = MRow()
+                 nMCol = MCol()
+                 for n = 1 to Len( ::aWindows )
+                    if ::aWindows[ n ]:IsOver( nMRow, nMCol ) .and. ;
+                       ! ::aWindows[ n ]:lFocused
+                       ::aWindows[ ::nCurrentWindow ]:SetFocus( .f. )
+                       ::nCurrentWindow = n
+                       ::aWindows[ n ]:SetFocus( .t. )
+                       n = Len( ::aWindows ) + 1
+                    endif
+                 next
               endif
 
          case nKey == K_RBUTTONDOWN
@@ -869,6 +886,7 @@ CLASS TDbWindow  // Debugger windows and dialogs
 
    METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor )
    METHOD Hide()
+   METHOD IsOver( nRow, nCol )
    METHOD nWidth() INLINE ::nRight - ::nLeft + 1
    METHOD ScrollUp( nLines )
    METHOD SetCaption( cCaption )
@@ -899,6 +917,11 @@ METHOD Hide() CLASS TDbWindow
    ::cBackImage = nil
 
 return nil
+
+METHOD IsOver( nRow, nCol ) CLASS TDbWindow
+
+return nRow >= ::nTop .and. nRow <= ::nBottom .and. ;
+       nCol >= ::nLeft .and. nCol <= ::nRight
 
 METHOD ScrollUp( nLines ) CLASS TDbWindow
 
