@@ -1,3 +1,17 @@
+20000528-13:08 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   + contrib/msql/
+     + added subdir msql to contrib tree
+   + contrib/msql/readme.txt
+   + contrib/msql/Makefile
+   + contrib/msql/msql.c
+   + contrib/msql/msql.h
+   + contrib/msql/msql.ch
+   + contrib/msql/tmsql.prg
+   + contrib/msql/test.prg
+     + added files making up mSQL access classes. They're work in progress, but
+       we all believe in "release early, release often", don't we? :-)
+
 2000-05-28 02:15 UTC-500 Paul Tucker <ptucker@sympatico.ca>
    * makefile.bc
      * move eval from rtl.lib to vm.lib
