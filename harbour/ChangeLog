@@ -1,10 +1,11 @@
-19990806-18:00 WIB Andi Jahja
-   * source\rt;\menuto.prg
-     - added error checker
-
-19990806-10:48 GMT+1 Victor Szel <info@szelvesz.hu>
-   * source/rtl/classes.c
-     ! One cast added back.
+19990806-18:43 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * include/pcode.h
+     + Added new HB_P_MODULENAME opcode
+   * source/compiler/harbour.y
+     + Added support for /b compiler flag
+     + Added support for HB_P_MODULENAME opcode
+   * source/vm/hvm.c
+     + Added support for HB_P_MODULENAME opcode
 
 19990806-10:45 GMT+1 Antonio Linares <alinares@fivetech.com>
    * makefile.b32
@@ -205,6 +206,12 @@ Wed Aug 04 12:25:12 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     tests/working/dyssym.prg
     + __DYNSYM*() tests added.
   * include/Makefile
+    include/initsymc.h (renamed from initsymb.h)
+    include/initsymd.h (added)
+    source/vm/initsymb.c
+    source/runner/runner.c
+    Init function extern declarations put into initsymd.h
+ile
     include/initsymc.h (renamed from initsymb.h)
     include/initsymd.h (added)
     source/vm/initsymb.c
