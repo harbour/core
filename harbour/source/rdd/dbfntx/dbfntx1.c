@@ -3681,6 +3681,14 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
          case DBOI_KEYDELETE:
             hb_itemPutL( pInfo->itmResult, hb_ntxOrdKeyDel( pTag ) );
             break;
+         case DBOI_KEYVAL:
+            if( pTag->CurKeyInfo->Tag )
+            {
+            }
+            else
+            {
+            }
+            break;
       }
    }
    else
@@ -3698,6 +3706,7 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
          case DBOI_KEYDELETE:
             hb_itemPutL( pInfo->itmResult, 0 );
             break;
+         case DBOI_KEYVAL:
          case DBOI_SCOPETOP :
          case DBOI_SCOPEBOTTOM :
          case DBOI_SCOPETOPCLEAR :
@@ -3922,6 +3931,7 @@ static ERRCODE ntxOrderListRebuild( NTXAREAP pArea )
          hb_fsSeek( pTag->Owner->DiskFile, NTXBLOCKSIZE, FS_SET );
          hb_fsWrite( pTag->Owner->DiskFile, NULL, 0 );
       }
+      pTag->RootBlock = 0;
       hb_ntxIndexCreate( pTag->Owner );
 
       if( !pTag->Memory )
