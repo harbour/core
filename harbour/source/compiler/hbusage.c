@@ -180,6 +180,6 @@ void hb_compPrintLogo( void )
 {
    printf( "Harbour Compiler %d.%d.%d (%s)\n",
       HB_VER_MAJOR, HB_VER_MINOR, HB_VER_REVISION, HB_VER_LEX );
-   printf( "Copyright 1999-2001, http://www.harbour-project.org/\n" );
+   printf( "Copyright 1999-2002, http://www.harbour-project.org/\n" );
 }
 

@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * source/compiler/cmdcheck.c
+     - remove /gc3 switch
+     ! add additional arguments to switch /n :
+       /n or /n0 = no implicit proc but with startup proc
        /n1 = no implicit proc and no startup proc
        /n- = generates implicit procedure
        Note: Previously, Harbour did not create (implicit )starting procedure
