@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-12 18:49 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   + source/vm/maindllp.c
+     * Windows pcode DLL entry point and VM/RTL routing functions
+
 2001-12-12 15:09 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/common/hbfsapi.c
    * source/common/hbfhnd.c
