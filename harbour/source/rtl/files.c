@@ -10,7 +10,9 @@
   #include <unistd.h>
   #include <fcntl.h>
   #include <errno.h>
+#endif
 
+#if defined(__DJGPP__)
   #if !defined(HAVE_POSIX_IO)
   #define HAVE_POSIX_IO
   #endif
@@ -40,8 +42,6 @@ static int last_error = 0;
 // if PATH_MAX isn't defined, 256 bytes is a good number :)
 #define PATH_MAX 256
 #endif
-
-static char cwd_buff[PATH_MAX+1];
 
 #define MKLONG(_1,_2,_3,_4) (((long)_4)<<24)|(((long)_3)<<16)|(((long)_2)<<8)|_1
 #define MKINT(_1,_2)        (((long)_2)<<8)|_1
@@ -76,12 +76,12 @@ extern int rename( const char *, const char * );
 
 // Convert HARBOUR flags to IO subsystem flags
 
+#if defined(HAVE_POSIX_IO)
+
 static int convert_open_flags( int flags )
 {
         // by default FO_READ+FO_COMPAT is set
         int result_flags = 0;
-
-#if defined(HAVE_POSIX_IO)
 
         result_flags |= O_BINARY;
 
@@ -111,7 +111,6 @@ static int convert_open_flags( int flags )
         if( flags & FO_SHARE )
                 result_flags |= SH_DENYNO;
 
-#endif
         return result_flags;
 }
 
@@ -119,8 +118,6 @@ static int convert_seek_flags( int flags )
 {
         // by default FS_SET is set
         int result_flags=0;
-
-#if defined(HAVE_POSIX_IO)
 
         result_flags = SEEK_SET;
 
@@ -130,8 +127,6 @@ static int convert_seek_flags( int flags )
         if( flags & FS_END )
                 result_flags = SEEK_END;
 
-#endif
-
         return result_flags;
 }
 
@@ -139,8 +134,6 @@ static int convert_create_flags( int flags )
 {
         // by default FC_NORMAL is set
         int result_flags=S_IWUSR;
-
-#if defined(HAVE_POSIX_IO)
 
         if( flags & FC_READONLY )
                 result_flags = result_flags & ~(S_IWUSR);
@@ -151,10 +144,11 @@ static int convert_create_flags( int flags )
         if( flags & FC_SYSTEM )
                 result_flags |= 0;
 
-#endif
-
         return result_flags;
 }
+
+#endif
+
 
 // FILESYS.API FUNCTIONS --
 // ------------------------
@@ -163,6 +157,8 @@ int _fsOpen( char * name, int flags )
 {
 #if defined(HAVE_POSIX_IO)
         return open(name,convert_open_flags(flags));
+#else
+	return 0;
 #endif
 }
 
@@ -170,6 +166,8 @@ int _fsCreate( char * name, int flags )
 {
 #if defined(HAVE_POSIX_IO)
         return creat(name,convert_create_flags(flags));
+#else
+	return 0;
 #endif
 }
 
@@ -185,6 +183,8 @@ long _fsRead( int handle, char * buff, long count )
 {
 #if defined(HAVE_POSIX_IO)
         return read(handle,buff,count);
+#else
+	return 0;
 #endif
 }
 
@@ -192,6 +192,8 @@ long _fsWrite( int handle, char * buff, long count )
 {
 #if defined(HAVE_POSIX_IO)
         return write(handle,buff,count);
+#else
+	return 0;
 #endif
 }
 
@@ -199,6 +201,8 @@ long _fsSeek( int handle, long offset, int flags )
 {
 #if defined(HAVE_POSIX_IO)
         return lseek(handle,offset,convert_seek_flags(flags));
+#else
+	return 0;
 #endif
 }
 
@@ -245,6 +249,8 @@ int _fsMkDir( char * name )
 {
 #if defined(HAVE_POSIX_IO)
         return mkdir(name,S_IWUSR|S_IRUSR);
+#else
+	return 0;
 #endif
 }
 
@@ -252,6 +258,8 @@ int _fsChDir( char * name )
 {
 #if defined(HAVE_POSIX_IO)
         return chdir(name);
+#else
+	return 0;
 #endif
 }
 
@@ -259,14 +267,19 @@ int _fsRmDir( char * name )
 {
 #if defined(HAVE_POSIX_IO)
         return rmdir(name);
+#else
+	return 0;
 #endif
 }
 
 char * _fsCurDir( int driver )
 {
 #if defined(HAVE_POSIX_IO)
+        static char cwd_buff[PATH_MAX+1];
         getcwd(cwd_buff,PATH_MAX);
         return cwd_buff;
+#else
+	return 0;
 #endif
 }
 
@@ -274,6 +287,8 @@ int _fsCurDrv( void  )
 {
 #if defined(HAVE_POSIX_IO)
         return 0;
+#else
+	return 0;
 #endif
 }
 
@@ -281,6 +296,8 @@ long _fsChDrv( int  driver )
 {
 #if defined(HAVE_POSIX_IO)
         return 0;
+#else
+	return 0;
 #endif
 }
 
@@ -288,6 +305,8 @@ long _fsIsDrv( int driver )
 {
 #if defined(HAVE_POSIX_IO)
         return 0;
+#else
+	return 0;
 #endif
 }
 
@@ -302,7 +321,18 @@ int    _fsExtOpen(PBYTE   filename, PBYTE defExt, ULONG flags,
 // -- HARBOUR FUNCTIONS --
 // -----------------------
 
+#ifdef FOPEN
+#define HB_FOPEN FOPEN
+#undef FOPEN
+#endif
+
 HARBOUR FOPEN()
+
+#ifdef HB_FOPEN
+#define FOPEN HB_FOPEN
+#undef HB_FOPEN
+#endif
+
 {
         PITEM arg1_it = _param(1,IT_STRING);
         PITEM arg2_it = _param(2,IT_NUMBER);
@@ -348,7 +378,18 @@ HARBOUR FCREATE()
         return;
 }
 
+#ifdef FREAD
+#define HB_FREAD FREAD
+#undef FREAD
+#endif
+
 HARBOUR FREAD()
+
+#ifdef HB_FREAD
+#define FREAD HB_FREAD
+#undef HB_FREAD
+#endif
+
 {
         PITEM arg1_it = _param(1,IT_NUMBER);
         PITEM arg2_it = _param(2,IT_STRING+IT_BYREF);
@@ -366,7 +407,18 @@ HARBOUR FREAD()
         return;
 }
 
+#ifdef FWRITE
+#define HB_FWRITE FWRITE
+#undef FWRITE
+#endif
+
 HARBOUR FWRITE()
+
+#ifdef HB_FWRITE
+#define FWRITE HB_FWRITE
+#undef HB_FWRITE
+#endif
+
 {
         PITEM arg1_it = _param(1,IT_NUMBER);
         PITEM arg2_it = _param(2,IT_STRING);

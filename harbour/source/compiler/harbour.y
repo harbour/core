@@ -596,9 +596,9 @@ Operators  : Expression '='    Expression   { GenPCode1( _EQUAL ); } /* compare 
            | Expression LE     Expression   { GenPCode1( _LESSEQUAL ); }
            | Expression GE     Expression   { GenPCode1( _GREATEREQUAL ); }
            | Expression AND { if( _iShortCuts ){ Duplicate(); $<iNumber>$ = JumpFalse( 0 ); } }
-                       Expression { GenPCode1( _AND ); if( _iShortCuts ) JumpHere( $<iNumber>3 ); }
+                       Expression { GenPCode1( AND_ ); if( _iShortCuts ) JumpHere( $<iNumber>3 ); }
            | Expression OR { if( _iShortCuts ){ Duplicate(); $<iNumber>$ = JumpTrue( 0 ); } }
-                       Expression { GenPCode1( _OR ); if( _iShortCuts ) JumpHere( $<iNumber>3 ); }
+                       Expression { GenPCode1( OR_ ); if( _iShortCuts ) JumpHere( $<iNumber>3 ); }
            | Expression EQ     Expression   { GenPCode1( _EQUAL ); }
            | Expression NE1    Expression   { GenPCode1( _NOTEQUAL ); }
            | Expression NE2    Expression   { GenPCode1( _NOTEQUAL ); }
@@ -1476,19 +1476,19 @@ void FunDef( char * szFunName, char cScope )  /* stores a Clipper defined functi
 void GenJava( char *szFileName, char *szName )
 {
   printf( "\ngenerating Java language output...\n" );
-  printf( "%s -> not implemented yet!\n", szFileName, szName );
+  printf( "%s -> not implemented yet!\n", szFileName );
 }
 
 void GenPascal( char *szFileName, char *szName )
 {
   printf( "\ngenerating Pascal language output...\n" );
-  printf( "%s -> not implemented yet!\n", szFileName, szName );
+  printf( "%s -> not implemented yet!\n", szFileName );
 }
 
 void GenRC( char *szFileName, char *szName )
 {
   printf( "\ngenerating resources output...\n" );
-  printf( "%s -> not implemented yet!\n", szFileName, szName );
+  printf( "%s -> not implemented yet!\n", szFileName );
 }
 
 void GenCCode( char *szFileName, char *szName )       /* generates the C language output */
@@ -1598,8 +1598,8 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
       {
          switch( pFunc->pCode[ lPCodePos ] )
          {
-            case _AND:
-                 fprintf( yyc, "                _AND,\n" );
+            case AND_:
+                 fprintf( yyc, "                AND_,\n" );
                  lPCodePos++;
                  break;
 
@@ -1795,8 +1795,8 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  lPCodePos++;
                  break;
 
-            case _OR:
-                 fprintf( yyc, "                _OR,\n" );
+            case OR_:
+                 fprintf( yyc, "                OR_,\n" );
                  lPCodePos++;
                  break;
 

@@ -5,7 +5,7 @@
 
 typedef enum
 {
-   _AND,         /* peforms the logical AND of two latest stack values, removes them and places result */
+   AND_,         /* peforms the logical AND of two latest stack values, removes them and places result */
    _ARRAYAT,     /* places on the virtual machine stack an array element */
    _ARRAYPUT,    /* sets array element, the array and the index are both on the stack */
    _EQUAL,       /* check if the latest two values on the stack are equal, removing them and leaving there the result */
@@ -39,7 +39,7 @@ typedef enum
    _NEGATE,      /* numerically negates the latest value on the stack */
    _NOT,         /* logically negates the latest value on the stack */
    _NOTEQUAL,    /* checks if the latest two stack values are equal, leaves just the result */
-   _OR,          /* peforms the logical OR of two latest stack values, removes them and places result */
+   OR_,          /* peforms the logical OR of two latest stack values, removes them and places result */
    _PLUS,        /* adds the latest two values on the stack, removing them and leaving there the result */
    _POP,         /* removes the latest value from the stack */
    _POPDEFSTAT,  /* pops a default value to a static variable */

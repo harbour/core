@@ -206,7 +206,7 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
    {
       switch( bCode )
       {
-         case _AND:
+         case AND_:
               And();
               w++;
               break;
@@ -369,7 +369,7 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
               w++;
               break;
 
-         case _OR:
+         case OR_:
               Or();
               w++;
               break;

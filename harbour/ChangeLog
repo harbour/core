@@ -1,3 +1,19 @@
+Wed May 05 16:29:19 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* include/pcode.h: 
+	* source/vm/hvm.c: 
+	* source/compiler/harbour.y: 
+	Replaced _AND and _OR with AND_ and OR_.
+	Under gcc, these two identifiers are defined out.
+	Also, got rid of a few warnings.
+	
+	* source/rtl/files.c: 
+	Implemented a macro trick to allow compilation of
+	FOPEN, FREAD and FWRITE.
+	Turned off HAVE_POSIX_IO for gcc; it doesn't seem to work.
+	Restructured the code so that when HAVE_POSIX_IO is not defined,
+	there are no warnings.
+	
 Wed May 05 15:30:49 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* source/harbour.y:
