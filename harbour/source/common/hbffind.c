@@ -600,8 +600,8 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
       if( info->hFindFile != INVALID_HANDLE_VALUE )
       {
          if( info->dwAttr == 0 ||
-             ( info->pFindFileData.dwFileAttributes == FILE_ATTRIBUTE_NORMAL ) ||
-             ( info->dwAttr & info->pFindFileData.dwFileAttributes ))
+           ( info->pFindFileData.dwFileAttributes == FILE_ATTRIBUTE_NORMAL ) ||
+           ( info->dwAttr & info->pFindFileData.dwFileAttributes ))
          {
             bFound = TRUE;
          }
