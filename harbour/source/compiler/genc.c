@@ -93,7 +93,7 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
    {
       pFTemp = GetFunction( pFunc->szName );
       if( ! pFTemp || pFTemp == functions.pFirst )
-         fprintf( yyc, "HARBOUR HB_%s( void );\n", pFunc->szName );
+         fprintf( yyc, "extern HARBOUR HB_%s( void );\n", pFunc->szName );
       pFunc = pFunc->pNext;
    }
 

@@ -1,3 +1,9 @@
+19990923-00:30 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/compiler/genc.c
+    + The generated C code now uses the "extern" keyword for functions
+      defined outside the .C file.
+
 19990922-17:05 EDT David G. Holm <dholm@jsd-llc.com>
 
   * source/tools/Makefile
