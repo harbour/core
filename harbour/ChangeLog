@@ -1,3 +1,15 @@
+19991109-17:20 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * source/rtl/filesys.c
+     % Replaced several #if tests of three or more manifest constants with
+       tests for new single manifest constants that are defined using just
+       one instance of the multiple tests. The new manifest constants are:
+       HB_FS_FILE_IO, HB_FS_SOPEN, and HB_FS_DRIVE_LETTER. This will lessen
+       the chances of missing one instance when other compilers are added.
+     % Replaced the use of PATH_MAX with _POSIX_PATH_MAX, which is always
+       defined, even for non-Posix compliant compilers, and eliminated the
+       PATH_MAX definition.
+
 Tue Nov 09 11:56:05 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* include/hbsetup.h: 

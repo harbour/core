@@ -203,9 +203,20 @@
 
 static USHORT s_uiErrorLast = 0;
 
-#if !defined(PATH_MAX)
-/* if PATH_MAX isn't defined, 256 bytes is a good number :) */
-   #define PATH_MAX 256
+#if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
+/* Only compilers with Posix or Posix-like I/O support are supported */
+   #define HB_FS_FILE_IO
+#endif
+
+#if defined( _MSC_VER ) || defined(__MINGW32__) || defined(__IBMCPP__)
+/* These compilers use sopen() rather than open(), because their
+   versions of open() do not support combined O_ and SH_ flags */
+   #define HB_FS_SOPEN
+#endif
+
+#if ( defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) ) && ! defined(__CYGWIN__) ) || defined(__MINGW32__)
+/* These platforms and/or compilers have common drive letter support */
+   #define HB_FS_DRIVE_LETTER
 #endif
 
 #if UINT_MAX == ULONG_MAX
@@ -218,7 +229,7 @@ extern int rename( const char *, const char * );
 
 /* Convert HARBOUR flags to IO subsystem flags */
 
-#if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
+#if defined(HB_FS_FILE_IO)
 
 static int convert_open_flags( USHORT uiFlags )
 {
@@ -230,7 +241,7 @@ static int convert_open_flags( USHORT uiFlags )
    result_flags |= O_BINARY;
    HB_TRACE(HB_TR_INFO, ("convert_open_flags: added O_BINARY\n"));
 
-#if defined( _MSC_VER ) || defined(__MINGW32__) || defined(__IBMCPP__)
+#if defined(HB_FS_SOPEN)
    if( ( uiFlags & ( FO_WRITE | FO_READWRITE ) ) == FO_READ )
    {
       result_flags |= O_RDONLY;
@@ -258,7 +269,7 @@ static int convert_open_flags( USHORT uiFlags )
       HB_TRACE(HB_TR_INFO, ("convert_open_flags: added O_RDWR\n"));
    }
 
-#if ! defined(_MSC_VER) && ! defined(__MINGW32__) && ! defined(__IBMCPP__)
+#if ! defined(HB_FS_SOPEN)
    /* shared flags */
    if( ( uiFlags & FO_DENYREAD ) == FO_DENYREAD )
    {
@@ -419,7 +430,7 @@ FHANDLE hb_fsCreate( BYTE * pFilename, USHORT uiFlags )
 
    s_uiErrorLast = 0;
 
-#if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
+#if defined(HB_FS_FILE_IO)
 
    errno = 0;
    convert_create_flags( uiFlags, &oflag, &pmode );
@@ -446,7 +457,7 @@ void    hb_fsClose( FHANDLE hFileHandle )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsClose(%p)", hFileHandle));
 
-#if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
+#if defined(HB_FS_FILE_IO)
 
    errno = 0;
    close( hFileHandle );
@@ -521,7 +532,7 @@ USHORT  hb_fsRead( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsRead(%p, %p, %hu)", hFileHandle, pBuff, uiCount));
 
-#if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
+#if defined(HB_FS_FILE_IO)
 
    errno = 0;
    uiRead = read( hFileHandle, pBuff, uiCount );
@@ -545,7 +556,7 @@ USHORT  hb_fsWrite( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsWrite(%p, %p, %hu)", hFileHandle, pBuff, uiCount));
 
-#if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
+#if defined(HB_FS_FILE_IO)
 
    errno = 0;
    if( uiCount )
@@ -577,7 +588,7 @@ ULONG   hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsReadLarge(%p, %p, %lu)", hFileHandle, pBuff, ulCount));
 
-#if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
+#if defined(HB_FS_FILE_IO)
 
    errno = 0;
    #if defined(HB_FS_LARGE_OPTIMIZED)
@@ -634,7 +645,7 @@ ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsWriteLarge(%p, %p, %lu)", hFileHandle, pBuff, ulCount));
 
-#if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
+#if defined(HB_FS_FILE_IO)
 
    errno = 0;
    if( ulCount )
@@ -703,7 +714,7 @@ ULONG   hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
    if( lOffset < 0 && Flags == SEEK_SET )
    {
 
-   #if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
+   #if defined(HB_FS_FILE_IO)
 
       /* get current offset */
       errno = 0;
@@ -727,7 +738,7 @@ ULONG   hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
    else
    {
 
-   #if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
+   #if defined(HB_FS_FILE_IO)
 
       errno = 0;
       ulPos = lseek( hFileHandle, lOffset, Flags );
@@ -756,7 +767,7 @@ ULONG   hb_fsTell( FHANDLE hFileHandle )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsTell(%p)", hFileHandle));
 
-#if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
+#if defined(HB_FS_FILE_IO)
 
    errno = 0;
    ulPos = lseek( hFileHandle, 0L, SEEK_CUR );
@@ -820,7 +831,7 @@ int hb_fsRename( BYTE * pOldName, BYTE * pNewName )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsRename(%s, %s)", (char*) pOldName, (char*) pNewName));
 
-#if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
+#if defined(HB_FS_FILE_IO)
 
    errno = 0;
    iResult = rename( ( char * ) pOldName, ( char * ) pNewName );
@@ -923,7 +934,7 @@ void    hb_fsCommit( FHANDLE hFileHandle )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsCommit(%p)", hFileHandle));
 
-#if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
+#if defined(HB_FS_FILE_IO)
 
    {
       int dup_handle;
@@ -1021,11 +1032,11 @@ BOOL    hb_fsRmDir( BYTE * pDirname )
 
 BYTE *  hb_fsCurDir( USHORT uiDrive )
 {
-   static BYTE s_byDirBuffer[ PATH_MAX + 1 ];
+   static BYTE s_byDirBuffer[ _POSIX_PATH_MAX + 1 ];
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsCurDir(%hu)", uiDrive));
 
-   hb_fsCurDirBuff( uiDrive, s_byDirBuffer, PATH_MAX + 1 );
+   hb_fsCurDirBuff( uiDrive, s_byDirBuffer, _POSIX_PATH_MAX + 1 );
 
    return ( BYTE * ) s_byDirBuffer;
 }
@@ -1086,7 +1097,7 @@ USHORT  hb_fsChDrv( BYTE nDrive )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsChDrv(%d)", (int) nDrive));
 
-#if ( defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) ) && ! defined(__CYGWIN__) ) || defined(__MINGW32__)
+#if defined(HB_FS_DRIVE_LETTER)
 
    {
       USHORT uiSave = _getdrive();
@@ -1155,7 +1166,7 @@ USHORT  hb_fsIsDrv( BYTE nDrive )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsIsDrv(%d)", (int) nDrive));
 
-#if ( defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) ) && ! defined(__CYGWIN__) ) || defined(__MINGW32__)
+#if defined(HB_FS_DRIVE_LETTER)
 
    {
       USHORT uiSave = _getdrive();
@@ -1215,7 +1226,7 @@ BOOL    hb_fsIsDevice( FHANDLE hFileHandle )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsIsDevice(%p)", hFileHandle));
 
-#if ( defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) ) && ! defined(__CYGWIN__) ) || defined(__MINGW32__)
+#if defined(HB_FS_DRIVE_LETTER)
 
    errno = 0;
    bResult = ( isatty( hFileHandle ) == 0 );
@@ -1240,7 +1251,7 @@ BYTE    hb_fsCurDrv( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsCurDrv()"));
 
-#if ( defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) ) && ! defined(__CYGWIN__) ) || defined(__MINGW32__)
+#if defined(HB_FS_DRIVE_LETTER)
 
    {
       errno = 0;
@@ -1476,10 +1487,10 @@ HARBOUR HB_FREADSTR( void )
 HARBOUR HB_CURDIR( void )
 {
    USHORT uiErrorOld = s_uiErrorLast;
-   BYTE * pbyBuffer = ( BYTE * ) hb_xgrab( PATH_MAX + 1 );
+   BYTE * pbyBuffer = ( BYTE * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
 
    hb_fsCurDirBuff( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
-      ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0, pbyBuffer, PATH_MAX + 1 );
+      ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0, pbyBuffer, _POSIX_PATH_MAX + 1 );
 
    hb_retc( ( char * ) pbyBuffer );
    hb_xfree( pbyBuffer );
