@@ -138,16 +138,16 @@ typedef struct __FUNC
    ULONG        lPCodeSize;               /* total memory size for pcode */
    ULONG        lPCodePos;                /* actual pcode offset */
    int          iStaticsBase;             /* base for this function statics */
-   ULONG *       pNOOPs;                  /* pointer to the NOOP array */
-   ULONG *       pJumps;                  /* pointer to the Jumps array */
+   ULONG *      pNOOPs;                   /* pointer to the NOOP array */
+   ULONG *      pJumps;                   /* pointer to the Jumps array */
    ULONG        iNOOPs;                   /* NOOPs Counter */
    ULONG        iJumps;                   /* Jumps Counter */
    BYTE *       pStack;                   /* Compile Time Stack */
    USHORT       iStackSize;               /* Compile Time Stack size */
    int          iStackIndex;              /* Compile Time Stack index */
-   PCOMDECLARED pStackFunctions[8];       /* Declared Functions on the Compile Time Stack */
+   PCOMDECLARED pStackFunctions[ 8 ];     /* Declared Functions on the Compile Time Stack */
    int          iStackFunctions;          /* Index into DEclared Functions on Compile Time Stack */
-   PCOMCLASS    pStackClasses[8];         /* Declared Classes on the Compile Time Stack */
+   PCOMCLASS    pStackClasses[ 8 ];       /* Declared Classes on the Compile Time Stack */
    int          iStackClasses;            /* Index into Declared Classes on Compile Time Stack */
    struct __FUNC * pOwner;                /* pointer to the function/procedure that owns the codeblock */
    struct __FUNC * pNext;                 /* pointer to the next defined function */

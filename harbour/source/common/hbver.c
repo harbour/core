@@ -411,16 +411,16 @@ void hb_verBuildInfo( void )
    }
 
    {
-      char * pszVersion = hb_verPlatform();
-      hb_conOutErr( "Platform: ", 0 );
+      char * pszVersion = hb_verCompiler();
+      hb_conOutErr( "Compiler: ", 0 );
       hb_conOutErr( pszVersion, 0 );
       hb_conOutErr( hb_conNewLine(), 0 );
       hb_xfree( pszVersion );
    }
 
    {
-      char * pszVersion = hb_verCompiler();
-      hb_conOutErr( "Compiler: ", 0 );
+      char * pszVersion = hb_verPlatform();
+      hb_conOutErr( "Platform: ", 0 );
       hb_conOutErr( pszVersion, 0 );
       hb_conOutErr( hb_conNewLine(), 0 );
       hb_xfree( pszVersion );

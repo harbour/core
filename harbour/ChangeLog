@@ -1,3 +1,17 @@
+2000-06-03 13:36 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * makefile.bc
+     + Added a kludge to make it work with Borland C++ 5.3
+       You'll have to run make with -DBCC_NOSTARTUP.
+
+   * source/common/hbver.c
+     * hb_verBuildInfo() Changed to display the platform info after the 
+       compiler version, because on some platform/OS/combinations (RSXNT,EMX) 
+       the program crashes on platform detection.
+
+   * include/hbcomp.h
+     * Minor formatting
+
 2000-06-03 10:53 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * source/debug/*
