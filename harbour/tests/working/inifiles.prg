@@ -136,6 +136,11 @@ static procedure WriteString(cSection, cIdent, cString)
       endif
 
    else
-      AAdd( ::Contents, {{cSection, {cIdent, cString}}} )
+      AAdd( ::Contents, {cSection, { {cIdent, cString} }} )
+//      AAdd( ::Contents[Len(::Contents)][2], {cIdent, cString} )
+
+      /* QUESTION: Why didn't this work?
+                    AAdd( ::Contents, {cSection, {cIdent, cString}} )
+      */
    endif
 return 
