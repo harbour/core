@@ -17,17 +17,20 @@ CFLAGS = -Wall -g
 
 LD = gcc
 LD_OUT = -o
+
+# Add all libraries specified in LIBS.
 ifeq ($(HB_LIB_COMPILE),)
 LINKPATHS += $(foreach lib, $(LIBS), -L$(TOP)$(ROOT)source/$(lib)/$(ARCH))
 else
 LINKPATHS += -L$(HB_LIB_COMPILE)
 endif
-LINKPATHS += $(foreach drv, $(HB_DB_DRIVERS), -L$(TOP)$(ROOT)source/rdd/$(drv)/$(ARCH))
-LINKPATHS += -L$(TOP)$(ROOT)source/rdd/$(ARCH)
+LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))
 
-LINKLIBS = $(foreach lib, $(LIBS), -l$(lib))
+# If LIBS specifies the rdd library, add all DB drivers.
+ifeq ($(findstring rdd,$(LIBS)),rdd)
+LINKPATHS += $(foreach drv, $(HB_DB_DRIVERS), -L$(TOP)$(ROOT)source/rdd/$(drv)/$(ARCH))
 LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), -l$(drv))
-LINKLIBS += -lrdd
+endif
 
 LDFLAGS = $(LINKPATHS)
 

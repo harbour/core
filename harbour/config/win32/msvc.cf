@@ -17,17 +17,20 @@ CFLAGS = -W0 -Zi  # -W4 for max warnings
 
 LD = cl.exe
 LD_OUT = -Fe
+
+# Add all libraries specified in LIBS.
 ifeq ($(HB_LIB_COMPILE),)
 LINKPATHS += -link $(foreach lib, $(LIBS), -LIBPATH:$(TOP)$(ROOT)source/$(lib)/$(ARCH))
 else
 LINKPATHS += -link -LIBPATH:$(HB_LIB_COMPILE)
 endif
-LINKPATHS += $(foreach drv, $(HB_DB_DRIVERS), -LIBPATH:$(TOP)$(ROOT)source/rdd/$(drv)/$(ARCH))
-LINKPATHS += -LIBPATH:$(TOP)$(ROOT)source/rdd/$(ARCH)
-
 LINKLIBS += $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
+
+# If LIBS specifies the rdd library, add all DB drivers.
+ifeq ($(findstring rdd,$(LIBS)),rdd)
+LINKPATHS += $(foreach drv, $(HB_DB_DRIVERS), -LIBPATH:$(TOP)$(ROOT)source/rdd/$(drv)/$(ARCH))
 LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), $(drv)$(LIB_EXT))
-LINKLIBS += rdd$(LIB_EXT)
+endif
 
 LDFLAGS = $(LINKPATHS)
 

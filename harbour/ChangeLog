@@ -1,3 +1,15 @@
+Thu Jul 29 16:17:09 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* config/dos/djgpp.cf: 
+	* config/linux/gcc.cf: 
+	* config/os2/gcc.cf: 
+	* config/win32/gcc.cf: 
+	* config/win32/msvc.cf: 
+	One more modification: the DB drivers must be linked against only
+	when the Makefile specifies linking against the rdd
+	library. Otherwise, other binaries such as the Harbour compiler
+	would try to link against the DB drivers.
+
 Thu Jul 29 15:58:44 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* source/rdd/Makefile: 
