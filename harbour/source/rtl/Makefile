@@ -22,6 +22,7 @@ C_SOURCES=\
 	transfrm.c \
 
 PRG_SOURCES=\
+        asort.prg \
 	error.prg \
 	errorsys.prg \
 	tclass.prg \

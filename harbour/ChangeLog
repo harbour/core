@@ -1,3 +1,11 @@
+19990511-09:40 Eddie Runia
+  * source/rtl/asort.prg
+    added a seperate function
+  * tests/working/debugtst.prg
+    asort removed
+  * Makefile.*
+    asort added to list. (Except for makefile.vc; Incomplete ?)
+
 19990511-00:07 MSG Bil Simser <bsimser@home.com>
   * source/rtc/environ.c
     - Added OS function
