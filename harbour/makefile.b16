@@ -11,8 +11,8 @@
 
 PROJECT: harbour.lib libs\b16\terminal.lib libs\win16\terminal.lib harbour.exe
 
-harbour.lib : arrays.obj classes.obj codebloc.obj dates.obj datesx.obj dynsym.obj \
-              environ.obj error.obj \
+harbour.lib : arrays.obj classes.obj codebloc.obj dates.obj datesx.obj \
+              debug.obj dynsym.obj environ.obj error.obj \
               errorapi.obj errorsys.obj extend.obj files.obj itemapi.obj math.obj \
               mathx.obj set.obj strings.obj stringsx.obj strcmp.obj tclass.obj transfrm.obj
 
@@ -31,6 +31,7 @@ classes.obj  : classes.c  extend.h types.h
 codebloc.obj : codebloc.c extend.h types.h
 dates.obj    : dates.c    extend.h types.h
 datesx.obj   : datesx.c   extend.h types.h
+debug.obj    : debug.c    extend.h types.h
 dynsym.obj   : dynsym.c   extend.h types.h
 environ.obj  : environ.c  extend.h types.h
 error.obj    : error.c    extend.h types.h
