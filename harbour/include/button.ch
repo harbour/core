@@ -112,5 +112,8 @@
 #define HTGROWBOX                HTSIZE
 #define HTREDUCE                 HTMINBUTTON
 #define HTZOOM                   HTMAXBUTTON
+#define TBR_EXIT        -1
+#define TBR_CONTINUE     0
+#define TBR_EXCEPTION    1
 
 #endif /* HB_BUTTON_CH_ */
