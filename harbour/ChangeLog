@@ -1,7 +1,7 @@
 19990801-00:15 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/gtapi.c
      * hb_gtScroll() - call gtScroll if WIN_GTAPI
-   * source/rtl/gt/gtapi.c
+   * source/rtl/gt/gtwin.c
      + gtScroll() Much improved scroll speed -not up to Clipper yet though.
    * include/gtapi.h
      + declaration for gtScroll()
