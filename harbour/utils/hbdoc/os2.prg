@@ -74,6 +74,7 @@
 #define CRLF hb_osnewline()
 
 #include 'hbclass.ch'
+#include 'common.ch'
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
@@ -87,16 +88,17 @@ CLASS TOs2
    DATA nHandle
    DATA aLinkRef
    DATA nRef
+   DATA aHeadRef 
    METHOD New( cFile )
    METHOD WritePar( cPar )
    METHOD WriteLink( cLink )
    METHOD ScanLink( cLink )
-
+   METHOD ScanRef( cRef )    
    METHOD WriteJumpLink( cLink, cName, cText )
    METHOD CLOSE()
    METHOD WriteText( cPar )
-   METHOD WriteParBold( cPar )
-   METHOD WriteTitle( cTopic, cTitle )
+   METHOD WriteParBold( cPar ,lMarg)
+   METHOD WriteTitle( cTopic, cTitle ,cCategorie)
    METHOD DostoOs2Text( cText )
    METHOD WriteJumpTitle( cTitle, cTopic )
 ENDCLASS
@@ -105,6 +107,7 @@ METHOD New( cFile ) CLASS TOs2
 
    IF Self:aLinkRef == NIL
       Self:aLinkRef := {}
+      Self:aHeadRef := {}
       Self:nRef     := 1
    ENDIF
 
@@ -126,7 +129,7 @@ RETURN Self
 
 METHOD WritePar( cPar ) CLASS TOs2
 
-   FWRITE( Self:nHandle, Self:DostoOs2Text( cPar ) + CRLF )
+   FWRITE( Self:nHandle,  Self:DostoOs2Text( cPar ) + CRLF)
 
 RETURN Self
 
@@ -136,32 +139,46 @@ METHOD WriteText( cPar ) CLASS TOs2
 
 RETURN Self
 
-METHOD WriteParBold( cPar ) CLASS TOs2
-
-   FWRITE( Self:nHandle, ':p.:hp2.' + ALLTRIM( cPar ) + ':ehp2.' + CRLF )
+METHOD WriteParBold( cPar ,lMarg) CLASS TOs2
+DEFAULT lMarg to .t.
+    IF lMarg
+      FWRITE( Self:nHandle,".br"+CRLF+ ":hp2." + SELF:DosToOs2Text( cPar ) + ':ehp2.'+CRLF +".br" + CRLF +":p."+CRLF+':lm margin=6.' +CRLF )
+    Else
+      FWRITE( Self:nHandle,":hp2." + SELF:DosToOs2Text( cPar ) + ':ehp2.'+CRLF +".br")
+    Endif
 
 RETURN Self
 
-METHOD WriteTitle( cTopic, cTitle ) CLASS TOs2
+METHOD WriteTitle( cTopic, cTitle ,cCategory) CLASS TOs2
 
    LOCAL cTemp
    LOCAL nPos
    LOCAL cWrite
    LOCAL nItem
+   LOCAL nrItem
+   LOCAL cRefCateg
    
    cTopic := ALLTRIM( cTopic )
-
+   cRefCateg:=ALLTRIM(left(cCategory,5 )) 
    IF Self:Scanlink( cTopic ) == 0
       nItem := ASCAN( Self:aLinkRef, { | a | upper(a[ 1 ]) == upper(cTopic )} )
    ELSE             // Just in case that nItem>0 so the Link is already referenced
       nItem := ASCAN( Self:aLinkRef, { | a | upper(a[ 1 ]) == upper(cTopic) } )
    ENDIF
    FWRITE( Self:nHandle, ':h1 res=' + ALLTRIM( STR( nItem ) ) + '.' + cTopic + CRLF )
-   FWRITE( Self:nHandle, ':i1 id=' + UPPER( cTopic ) + "." + UPPER( cTopic ) + CRLF )
+   If Self:ScanRef(cRefCateg)==0
+      nrItem := ASCAN( Self:aHeadRef, { | a | upper(a) == upper(cRefCateg )} )
+      FWRITE( Self:nHandle, ':i1 id=' + ::aHeadRef[nrItem] + " global." + UPPER( cCategory ) + CRLF )
+   ELSE             // Just in case that nItem>0 so the Link is already referenced
+      nrItem := ASCAN( Self:aHeadRef, { | a | upper(a) == upper(cRefCateg) } )
+   ENDIF
+   if nritem>0
+      FWRITE( Self:nHandle, ':i2 refid=' + ::aHeadRef[nrItem] + " global." + UPPER( cTopic ) + CRLF )
+   Endif
    cTopic := ::DosToOs2Text(cTopic)
    cTitle := ::DosToOs2Text(cTitle)
 
-   FWRITE( Self:nHandle, ":p." + cTitle + CRLF )
+   FWRITE( Self:nHandle, ":p." + cTitle + CRLF +".br"+CRLF)
 
 RETURN Self
 
@@ -207,10 +224,23 @@ METHOD ScanLink( cLink ) CLASS TOs2
    ENDIF
 
 RETURN nItem
+METHOD ScanRef( cLink ) CLASS TOs2
+
+   LOCAL nItem
+   LOCAL nReturn
+
+   nItem := ASCAN( Self:aHeadRef, { | a | Upper(a)== upper(cLink) } )
+
+   IF nItem == 0
+      AADD( Self:aHeadRef,  upper(cLink))
+   ENDIF
+
+RETURN nItem
 
 METHOD DosToOs2Text( cText ) CLASS TOs2
 
    LOCAL cReturn
+
    cReturn := STRTRAN( cText, '&', "&amp." )
    cReturn := STRTRAN( cReturn, '"', "&cdq." )
    cReturn := STRTRAN( cReturn, ':', "&colon." )
@@ -228,7 +258,9 @@ METHOD DosToOs2Text( cText ) CLASS TOs2
    cReturn := STRTRAN( cReturn, '{', "&lbrc." )
    cReturn := STRTRAN( cReturn, '=', "&eq." )
    cReturn := STRTRAN( cReturn, '$', "&dollar." )
-
+   cReturn := STRTRAN( cReturn, "<", "&lt." )
+   cReturn := STRTRAN( cReturn, ">", "&gt." )
+   cReturn := STRTRAN( cReturn, "-", "&minus." )
 RETURN cReturn
 
 METHOD WriteJumpTitle( cTitle, cTopic ) CLASS TOs2

@@ -258,7 +258,7 @@ FUNCTION ProcessRtf()
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
                //  Save the function name
-               cFuncName := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
+               cFuncName :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) 
                @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
                @ MODULELINE, 33 SAY cFuncName         
 
@@ -266,9 +266,9 @@ FUNCTION ProcessRtf()
 
                //  Open a new file
                IF AT( "FT_", cFuncName ) > 0
-                  cTemp := SUBSTR( cFuncName, 4 )
+                  cTemp := upper(SUBSTR( cFuncName, 4 ))
                ELSE
-                  cTemp := cFuncName
+                  cTemp := upper(cFuncName)
                ENDIF
 
                IF ( nEnd := AT( "(", cTemp ) ) > 0
@@ -324,7 +324,7 @@ FUNCTION ProcessRtf()
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
                //  Save the function name
-               cFuncName := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
+               cFuncName :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) 
                @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
                @ MODULELINE, 33 SAY cFuncName         
 
@@ -337,7 +337,7 @@ FUNCTION ProcessRtf()
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
                //  get the category
-               cCategory := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
+               cCategory :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) 
 
                //  3) One line description
 

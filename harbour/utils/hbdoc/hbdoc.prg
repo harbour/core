@@ -503,12 +503,12 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
         do  while .t.
           citem:=alltrim(rtrim(ltrim(adocinfo[1,1])))
   //          citem:=strtran(adocinfo[1,1]," ","")
-        ohtm1:WriteLink('hb'+strtran(adocinfo[1,1]," ","")+'.htm',UpperLower(cItem))
+        ohtm1:WriteLink('hb'+strtran(adocinfo[1,1]," ","")+'.htm',cItem)
         for ppp:=1 to len(adocinfo)
 
           if citem<>adocinfo[ppp,1]
                               citem:=alltrim(rtrim(ltrim(adocinfo[ppp,1])))
-                    ohtm1:WriteLink('hb'+strtran(adocinfo[ppp,1]," ","")+'.htm',UpperLower(cItem))
+                    ohtm1:WriteLink('hb'+strtran(adocinfo[ppp,1]," ","")+'.htm',cItem)
 
 //            citem:=strtran(adocinfo[ppp,1]," ","")
           endif
