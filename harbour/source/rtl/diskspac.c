@@ -114,6 +114,7 @@ HB_FUNC( DISKSPACE )
 
       char szPath[ 4 ];
       P_GDFSE pGetDiskFreeSpaceEx;
+      UINT uiErrMode;
 
       /* Get the default drive */
 
@@ -130,6 +131,10 @@ HB_FUNC( DISKSPACE )
       szPath[ 1 ] = ':';
       szPath[ 2 ] = '\\';
       szPath[ 3 ] = '\0';
+
+      uiErrMode = SetErrorMode( SEM_FAILCRITICALERRORS );
+
+      SetLastError(0);
 
       pGetDiskFreeSpaceEx = ( P_GDFSE ) GetProcAddress( GetModuleHandle( "kernel32.dll" ),
                                                         "GetDiskFreeSpaceExA");
@@ -208,6 +213,8 @@ HB_FUNC( DISKSPACE )
          DWORD dwNumberOfFreeClusters;
          DWORD dwTotalNumberOfClusters;
 
+         SetLastError(0);
+
          if( GetDiskFreeSpace( szPath,
                                &dwSectorsPerCluster,
                                &dwBytesPerSector,
@@ -238,6 +245,11 @@ HB_FUNC( DISKSPACE )
                          ( double ) dwBytesPerSector;
          }
       }
+
+      SetErrorMode( uiErrMode );
+
+      if( GetLastError() != 0 )
+         hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, EF_CANDEFAULT );
    }
 
 #else
@@ -249,4 +261,3 @@ HB_FUNC( DISKSPACE )
 
    hb_retnlen( dSpace, -1, 0 );
 }
-
