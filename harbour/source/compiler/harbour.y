@@ -253,6 +253,8 @@ static void GenRelPCode( BYTE );     /* Generates opcode for relational operands
 static void GenNotPCode( void );     /* Generates HB_P_NOT opcode */
 static void GenNegatePCode( void );  /* Generates HB_P_NEGATE opcode */
 static void GenPopPCode( void );     /* Generates HB_P_POP opcode */
+static void RemoveExtraPush( void ); /* Removes redundant push opcode */
+static void SetLastPushPos( void );  /* Resets postion of last possible redundant push opcode */
 
 static void GenPCode1( BYTE );             /* generates 1 byte of pcode */
 static void GenPCode3( BYTE, BYTE, BYTE ); /* generates 3 bytes of pcode */
@@ -505,6 +507,7 @@ PHB_FNAME _pFileName = NULL;
 PHB_FNAME _pOutPath = NULL;
 ALIASID_PTR pAliasId = NULL;
 ULONG _ulLastLinePos = 0;    /* position of last opcode with line number */
+LONG lLastPushPos = -1; /* position of last push pcode */
 BOOL _bDontGenLineNum = FALSE;   /* suppress line number generation */
 
 EXPLIST_PTR _pExpList = NULL;    /* stack used for parenthesized expressions */
@@ -641,7 +644,7 @@ Statement  : ExecFlow Crlf        {}
            | IfInline Crlf        { GenPopPCode(); }
            | ObjectMethod Crlf    { GenPopPCode(); }
            | VarUnary Crlf        { GenPopPCode(); }
-           | VarExpr Crlf       { GenPopPCode(); }
+           | VarExpr Crlf         { RemoveExtraPush(); }
 
            | IDENTIFIER '=' Expression { PopId( $1 ); } Crlf
            | AliasVar '=' { $<pVoid>$=( void * )pAliasId; pAliasId = NULL; } Expression { pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); AliasRemove(); } Crlf
@@ -877,7 +880,7 @@ IndexList  : Expression
            | IndexList { ArrayAt(); } ',' Expression
            ;
 
-VarAssign  : IDENTIFIER             INASSIGN Expression { PopId( $1 ); PushId( $1 ); }
+VarAssign  : IDENTIFIER             INASSIGN Expression { PopId( $1 ); SetLastPushPos(); PushId( $1 ); }
            | VarAt                  INASSIGN Expression { ArrayPut(); }
            | ArrayAt                INASSIGN { GenPopPCode();GenPopPCode(); }  Expression
            | FunCallArray           INASSIGN Expression { ArrayPut(); }
@@ -888,12 +891,12 @@ VarAssign  : IDENTIFIER             INASSIGN Expression { PopId( $1 ); PushId( $
            | AliasFunc              INASSIGN Expression { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
            ;
 
-VarOpEq    : IDENTIFIER PLUSEQ   { PushId( $1 ); } Expression { GenPlusPCode( HB_P_PLUS ); PopId( $1 ); PushId( $1 ); }
-           | IDENTIFIER MINUSEQ  { PushId( $1 ); } Expression { GenPlusPCode( HB_P_MINUS ); PopId( $1 ); PushId( $1 ); }
-           | IDENTIFIER MULTEQ   { PushId( $1 ); } Expression { GenNumPCode( HB_P_MULT    ); PopId( $1 ); PushId( $1 ); }
-           | IDENTIFIER DIVEQ    { PushId( $1 ); } Expression { GenNumPCode( HB_P_DIVIDE  ); PopId( $1 ); PushId( $1 ); }
-           | IDENTIFIER EXPEQ    { PushId( $1 ); } Expression { GenNumPCode( HB_P_POWER   ); PopId( $1 ); PushId( $1 ); }
-           | IDENTIFIER MODEQ    { PushId( $1 ); } Expression { GenNumPCode( HB_P_MODULUS ); PopId( $1 ); PushId( $1 ); }
+VarOpEq    : IDENTIFIER PLUSEQ   { PushId( $1 ); } Expression { GenPlusPCode( HB_P_PLUS ); PopId( $1 ); SetLastPushPos(); PushId( $1 ); }
+           | IDENTIFIER MINUSEQ  { PushId( $1 ); } Expression { GenPlusPCode( HB_P_MINUS ); PopId( $1 ); SetLastPushPos(); PushId( $1 ); }
+           | IDENTIFIER MULTEQ   { PushId( $1 ); } Expression { GenNumPCode( HB_P_MULT    ); PopId( $1 ); SetLastPushPos(); PushId( $1 ); }
+           | IDENTIFIER DIVEQ    { PushId( $1 ); } Expression { GenNumPCode( HB_P_DIVIDE  ); PopId( $1 ); SetLastPushPos(); PushId( $1 ); }
+           | IDENTIFIER EXPEQ    { PushId( $1 ); } Expression { GenNumPCode( HB_P_POWER   ); PopId( $1 ); SetLastPushPos(); PushId( $1 ); }
+           | IDENTIFIER MODEQ    { PushId( $1 ); } Expression { GenNumPCode( HB_P_MODULUS ); PopId( $1 ); SetLastPushPos(); PushId( $1 ); }
            | VarAt PLUSEQ   { DupPCode( $1 ); ArrayAt(); } Expression { GenPlusPCode( HB_P_PLUS ); ArrayPut(); }
            | VarAt MINUSEQ  { DupPCode( $1 ); ArrayAt(); } Expression { GenPlusPCode( HB_P_MINUS ); ArrayPut(); }
            | VarAt MULTEQ   { DupPCode( $1 ); ArrayAt(); } Expression { GenNumPCode( HB_P_MULT    ); ArrayPut(); }
@@ -930,12 +933,12 @@ VarOpEq    : IDENTIFIER PLUSEQ   { PushId( $1 ); } Expression { GenPlusPCode( HB
            | ObjectMethod ArrayIndex DIVEQ    { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenNumPCode( HB_P_DIVIDE  ); ArrayPut(); }
            | ObjectMethod ArrayIndex EXPEQ    { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenNumPCode( HB_P_POWER   ); ArrayPut(); }
            | ObjectMethod ArrayIndex MODEQ    { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenNumPCode( HB_P_MODULUS ); ArrayPut(); }
-           | AliasVar PLUSEQ   { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenPlusPCode( HB_P_PLUS ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
-           | AliasVar MINUSEQ  { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenPlusPCode( HB_P_MINUS ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
-           | AliasVar MULTEQ   { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenNumPCode( HB_P_MULT    ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
-           | AliasVar DIVEQ    { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenNumPCode( HB_P_DIVIDE  ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
-           | AliasVar EXPEQ    { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenNumPCode( HB_P_POWER   ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
-           | AliasVar MODEQ    { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenNumPCode( HB_P_MODULUS ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
+           | AliasVar PLUSEQ   { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenPlusPCode( HB_P_PLUS ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); SetLastPushPos(); PushId( $1 ); AliasRemove(); }
+           | AliasVar MINUSEQ  { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenPlusPCode( HB_P_MINUS ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); SetLastPushPos(); PushId( $1 ); AliasRemove(); }
+           | AliasVar MULTEQ   { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenNumPCode( HB_P_MULT    ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); SetLastPushPos(); PushId( $1 ); AliasRemove(); }
+           | AliasVar DIVEQ    { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenNumPCode( HB_P_DIVIDE  ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); SetLastPushPos(); PushId( $1 ); AliasRemove(); }
+           | AliasVar EXPEQ    { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenNumPCode( HB_P_POWER   ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); SetLastPushPos(); PushId( $1 ); AliasRemove(); }
+           | AliasVar MODEQ    { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenNumPCode( HB_P_MODULUS ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); SetLastPushPos(); PushId( $1 ); AliasRemove(); }
            | AliasFunc PLUSEQ   Expression { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
            | AliasFunc MINUSEQ  Expression { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
            | AliasFunc MULTEQ   Expression { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
@@ -1555,11 +1558,11 @@ int harbour_main( int argc, char * argv[] )
                            case '1':
                               _bGenCVerbose = TRUE;
                               break;
-  
+
                            case '0':
                               _bGenCVerbose = FALSE;
                               break;
- 
+
                            default:
                               GenError( _szCErrors, 'E', ERR_BADOPTION, argv[ iArg ], NULL );
                         }
@@ -2603,6 +2606,8 @@ PFUNCTION FunctionNew( char * szName, SYMBOLSCOPE cScope )
    pFunc->pOwner       = NULL;
    pFunc->bFlags       = 0;
 
+   lLastPushPos = -1;
+
    return pFunc;
 }
 
@@ -3295,6 +3300,7 @@ void Line( void ) /* generates the pcode with the currently compiled source code
    }
    _bDontGenLineNum = FALSE;
    functions.pLast->bFlags &= ~ FUN_WITH_RETURN;   /* clear RETURN flag */
+   lLastPushPos = -1;
 }
 
 /* Generates the pcode with the currently compiled source code line
@@ -3949,6 +3955,28 @@ static void GenNegatePCode( void )
    GenPCode1( HB_P_NEGATE );
    ValTypeCheck( 'N', WARN_NUMERIC_TYPE, WARN_NUMERIC_SUSPECT );
    /* Leave the original type on the stack */
+}
+
+static void SetLastPushPos( void )
+{
+   PFUNCTION pFunc = functions.pLast;   /* get the currently defined Clipper function */
+
+   lLastPushPos = pFunc->lPCodePos;
+}
+
+static void RemoveExtraPush( void )
+{
+   PFUNCTION pFunc = functions.pLast;   /* get the currently defined Clipper function */
+
+   if( lLastPushPos > -1 && pFunc->lPCodePos > lLastPushPos )
+   {
+      pFunc->lPCodePos = lLastPushPos;
+      lLastPushPos = -1;
+   }
+   else
+      GenPCode1( HB_P_POP );
+
+   ValTypePop( 1 );
 }
 
 static void GenPopPCode( void )
