@@ -7,20 +7,19 @@
 #include <extend.h>
 #include <ctoharb.h>
 #include <ctype.h>
+#include <itemapi.h>
 
 extern STACK stack;                             /* External data used       */
 extern ITEM  aStatics;
 
-PITEM _itemReturn( PITEM );                     /* External functions used  */
-PITEM _itemArrayNew( ULONG );
-PITEM _itemArrayPut( PITEM, ULONG, PITEM );
-PITEM _itemNew( PITEM );
 PITEM ArrayClone( PITEM );
 
 
 /* $Doc$
  * $FuncName$     <aStat> __aStatic()
  * $Description$  Return the statics array
+ *
+ *                Please aClone before assignments
  * $End$ */
 HARBOUR __ASTATIC()
 {
@@ -132,6 +131,13 @@ HARBOUR __STACKLEN()
 /* $Doc$
  * $FuncName$     <aStack> __aStack()
  * $Description$  Returns the stack of the calling function
+ *                "[<symbol>]"  Means symbol.
+ *
+ *                [1]        Symbol of current function
+ *                [2]        Self | NIL
+ *                [3 .. x]   Parameters
+ *                [x+1 .. y] Locals
+ *                [y+1 ..]   Pushed data
  * $End$ */
 HARBOUR __ASTACK()
 {
@@ -155,6 +161,9 @@ HARBOUR __ASTACK()
  * $FuncName$     <aParam> __aParam()
  * $Description$  Returns the passed parameters of the calling function
  * $End$ */
+               /* TODO : put bLocals / bParams      */
+               /* somewhere for declared parameters */
+               /* and locals                        */
 HARBOUR __APARAM()
 {
    PITEM pReturn;

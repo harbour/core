@@ -83,7 +83,24 @@ return if( ValType(xArg) != ValType(xDef), xDef, xArg )
  * $Description$  Convert to character
  * $Arguments$    <xTxt>       : Item to write
  *                [cSeparator] : Separator for arrays
- *                [lDebug]     : .T. -> Write debug output {"first",.F.}
+ *                [lDebug]     : .T. -> Write debug output
+ *
+ * In DEBUG mode :
+ *
+ * It will show the xItem according to the following format :
+ *
+ * <num>                        Numerical
+ * dd/mm/yyyy                   Date
+ * "<chr>"                      Character
+ * {<el1>, <el2>, ...}          Array
+ * NIL                          NIL
+ * .T. / .F.                    Boolean
+ * <ClassName>(<ClassH>):{ <val1>, <val2> ... | <DataSymbol1>, ... }
+ *                              Object
+ *
+ *
+ * TODO : <ClassName>(<ClassH>):{<DataSymbol1>:<val1>, ... }
+ * Requirement : oSend( <object>, <Symbol>, <args,..> )
  * $End$ */
 function ToChar( xTxt, cSeparator, lDebug )
 
@@ -214,6 +231,11 @@ static function Show()
 return nil
 
 
+//
+// aData aOData( oObject )
+//
+// Return an array containing the names of all the data items of oObject.
+//
 function aOData( oObject )
 
    local aInfo  := aSort( oObject:ClassSel() )
@@ -231,10 +253,22 @@ function aOData( oObject )
 return aData
 
 
+//
+// <aSorted> aSort( <aUnsorted> )
+//
+// Sort an array
+//
 function aSort( aIn )                           /* Was not implemented yet  */
    QuickSort( 1, Len(aIn), aIn )
 return aIn
 
+//
+// QuickSort( <aSort>, <nLeft>, <nRight> )
+//
+// Perform a QuickSort of <aSort>.
+//
+// Warning : Recursion ahead !
+//
 function QuickSort( nLeft, nRight, aSort )
 
    local nI := nLeft
