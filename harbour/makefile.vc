@@ -927,6 +927,7 @@ $(HARBOUR_EXE) : \
    $(COMPILER_DIR)\hbgenerr.c \
    $(COMPILER_DIR)\genobj32.c \
    $(COMPILER_DIR)\genc.c \
+   $(COMPILER_DIR)\gencli.c \
    $(COMPILER_DIR)\gencobj.c \
    $(COMPILER_DIR)\genhrb.c \
    $(COMPILER_DIR)\genjava.c \
@@ -952,6 +953,7 @@ $(HARBOUR_EXE) : \
    $(COMPILER_DIR)\hbgenerr.c \
    $(COMPILER_DIR)\genobj32.c \
    $(COMPILER_DIR)\genc.c \
+   $(COMPILER_DIR)\gencli.c \
    $(COMPILER_DIR)\gencobj.c \
    $(COMPILER_DIR)\genhrb.c \
    $(COMPILER_DIR)\genjava.c \
