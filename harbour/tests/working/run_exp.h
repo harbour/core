@@ -147,6 +147,10 @@ HARBOUR GT_STREXPAND();
 HARBOUR GT_STRLEFT();
 HARBOUR GT_STRPBRK();
 HARBOUR GT_STRRIGHT();
+HARBOUR MAXROW();
+HARBOUR MAXCOL();
+HARBOUR SETPRC();
+HARBOUR SCROLL();
 
 /* Same story.
 
@@ -296,7 +300,11 @@ static SYMBOL symbols[] = {
 { "GT_STREXPAND",   FS_PUBLIC, GT_STREXPAND  , 0 },
 { "GT_STRLEFT",     FS_PUBLIC, GT_STRLEFT    , 0 },
 { "GT_STRPBRK",     FS_PUBLIC, GT_STRPBRK    , 0 },
-{ "GT_STRRIGHT",    FS_PUBLIC, GT_STRRIGHT   , 0 }
+{ "GT_STRRIGHT",    FS_PUBLIC, GT_STRRIGHT   , 0 },
+{ "MAXROW",         FS_PUBLIC, MAXROW        , 0 },
+{ "MAXCOL",         FS_PUBLIC, MAXCOL        , 0 },
+{ "SETPRC",         FS_PUBLIC, SETPRC        , 0 },
+{ "SCROLL",         FS_PUBLIC, SCROLL        , 0 }
 };
 
 
