@@ -46,6 +46,10 @@ in order to remove empty directories)
 |   |   |
 |   |   +---test       - Test programs.
 |   |
+|   +---delphi         - Integration with Borland Delphi.
+|   |   |
+|   |   +---hbdll      - Accessing Harbour DLL from Delphi.
+|   |
 |   +---directx        - DirectDraw implementation for Windows.
 |   |   |
 |   |   +---lib        -

@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * source/common/hbstr.c
+    ! Fix bug in hb_strAt when the source string matches more than one
+      character (but less than all) in the search string. As reported
+      by Sergej Linnik, "22345" $ "012223456789" was failing, but it
+      now succeeds. Note: This also affects compiler optimizations,
       so be sure to rebuild the compiler before testing.
 
 2002-02-26 15:40 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
