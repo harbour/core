@@ -1,3 +1,7 @@
+19990725-23:12 CET Victor Szel <info@szelvesz.hu>
+   + make_tpl.bat
+     Template batch file to call the GNU make system.
+
 19990724-21:20 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rdd/dbcmd.c
      * added type casts mostly on xgrab calls
