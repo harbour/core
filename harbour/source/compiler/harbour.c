@@ -1080,6 +1080,17 @@ void hb_compFunctionAdd( char * szFunName, HB_SYMBOLSCOPE cScope, int iType )
 PINLINE hb_compInlineAdd( char * szFunName )
 {
    PINLINE pInline;
+   PCOMSYMBOL   pSym;
+
+   pSym = hb_compSymbolFind( szFunName, NULL );
+   if( ! pSym )
+   {
+      pSym = hb_compSymbolAdd( szFunName, NULL );
+   }
+   if( pSym )
+   {
+      pSym->cScope |= HB_FS_STATIC;
+   }
 
    pInline = hb_compInlineNew( szFunName );
 
