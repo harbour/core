@@ -78,6 +78,11 @@ HB_FUNC( DISKSPACE )
    {
       USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, EF_CANDEFAULT );
 
+      /* NOTE: Under 'Standard' behaviour, this error does not allow 'retry'
+               but if you should wish to make it so, then or EF_CANRETRY with
+               EF_CANDEFAULT above)
+      */
+
       if( uiAction == E_DEFAULT || uiAction == E_BREAK )
          break;
    }
@@ -109,6 +114,7 @@ HB_FUNC( DISKSPACE )
 
 #elif defined(HB_OS_WIN_32)
 
+   while( 1 )
    {
 
       typedef BOOL (WINAPI *P_GDFSE)(LPCTSTR, PULARGE_INTEGER, 
@@ -170,17 +176,17 @@ HB_FUNC( DISKSPACE )
 
             #if defined(__GNUC__) || defined(_MSC_VER)
 
-               dSpace  = ( double ) i64RetVal.HighPart +
+               dSpace  = ( double ) i64RetVal.LowPart +
+                         ( double ) i64RetVal.HighPart +
                          ( double ) i64RetVal.HighPart *
                          ( double ) 0xFFFFFFFF;
-               dSpace += ( double ) i64RetVal.LowPart;
-      
+
                if( uiType == HB_DISK_USED )
                {
-                  dSpace -= ( double ) i64FreeBytes.HighPart +
+                  dSpace -= ( double ) i64FreeBytes.LowPart +
+                            ( double ) i64FreeBytes.HighPart +
                             ( double ) i64FreeBytes.HighPart *
                             ( double ) 0xFFFFFFFF;
-                  dSpace -= ( double ) i64FreeBytes.LowPart;
                }
 
             #else
@@ -189,17 +195,17 @@ HB_FUNC( DISKSPACE )
                         struct that is part of ULARGE_INTEGER
                         [pt] */
 
-               dSpace  = ( double ) i64RetVal.u.HighPart +
+               dSpace  = ( double ) i64RetVal.u.LowPart +
+                         ( double ) i64RetVal.u.HighPart +
                          ( double ) i64RetVal.u.HighPart *
                          ( double ) 0xFFFFFFFF;
-               dSpace += ( double ) i64RetVal.u.LowPart;
       
                if( uiType == HB_DISK_USED )
                {
-                  dSpace -= ( double ) i64FreeBytes.u.HighPart +
+                  dSpace -= ( double ) i64FreeBytes.u.LowPart +
+                            ( double ) i64FreeBytes.u.HighPart +
                             ( double ) i64FreeBytes.u.HighPart *
                             ( double ) 0xFFFFFFFF;
-                  dSpace -= ( double ) i64FreeBytes.u.LowPart;
                }
 
             #endif
@@ -248,7 +254,19 @@ HB_FUNC( DISKSPACE )
       SetErrorMode( uiErrMode );
 
       if( GetLastError() != 0 )
-         hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, EF_CANDEFAULT );
+      {
+         USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, EF_CANDEFAULT );
+
+         /* NOTE: Under 'Standard' behaviour, this error does not allow 'retry'
+                  but if you should wish to make it so, then or EF_CANRETRY
+                  with EF_CANDEFAULT above)
+         */
+
+         if( uiAction == E_RETRY )
+            continue;
+      }
+
+      break;
    }
 
 #else
