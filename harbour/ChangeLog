@@ -1,3 +1,64 @@
+20000101-07:18 GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
+* source/rdd/dbcmd.c
+* source/rtl/alert.prg
+* source/rtl/browdb.prg
+* source/rtl/input.prg
+* source/rtl/asort.prg
+* source/rtl/text.prg
+* source/rtl/browse.prg
+* source/rtl/dbedit.prg
+* source/rtl/devoutp.prg
+* source/rtl/dircmd.prg
+* source/rtl/dummy.prg
+* source/rtl/errorsys.prg
+* source/rtl/fieldbl.prg
+* source/rtl/harbinit.prg
+* source/rtl/menuto.prg
+* source/rtl/xsavescr.prg
+* source/rtl/memvarbl.prg
+* source/rtl/objfunc.prg
+* source/rtl/readkey.prg
+* source/rtl/readvar.prg
+* source/rtl/setfunc.prg
+* source/rtl/setkey.prg
+* source/rtl/setta.prg
+* source/rtl/tbcolumn.prg
+* source/rtl/tbrowse.prg
+* source/rtl/tclass.prg
+* source/rtl/terror.prg
+* source/rtl/tget.prg
+* source/rtl/tgetlist.prg
+* source/rtl/wait.prg
+* source/rtl/adir.prg
+* source/rtl/achoice.prg
+* source/rtl/arrays.c
+* source/rtl/break.c
+* source/rtl/codebloc.c
+* source/rtl/console.c
+* source/rtl/descend.c
+* source/rtl/dir.c
+* source/rtl/do.c
+* source/rtl/empty.c
+* source/rtl/hardcr.c
+* source/rtl/initexit.c
+* source/rtl/inkey.c
+* source/rtl/len.c
+* source/rtl/memvars.c
+* source/rtl/mtran.c
+* source/rtl/natmsg.c
+* source/rtl/pcount.c
+* source/rtl/pvalue.c
+* source/rtl/set.c
+* source/rtl/tone.c
+* source/rtl/type.c
+* source/rtl/valtype.c
+* source/rtl/word.c
+* source/rtl/xhelp.c
+* source/tools/nconvert.prg
+* source/tools/io.c
+
+Fixed the documentation to make the ng linker happy and added docs for the arrays.c and dbcmd.c
+
 20000101-00:00 GMT+1 Patrick Mast <Harbour@PatrickMast.com>
   - doc/harbour.ng
     The NG files will be downloadable via the web site.
