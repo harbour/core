@@ -100,6 +100,8 @@
 #include "hbapicdp.h"
 
 extern PHB_CODEPAGE s_cdpage;
+extern char *hb_vm_sNull;
+extern char *hb_vm_acAscii[256];
 
 /* DJGPP can sprintf a float that is almost 320 digits long */
 #define HB_MAX_DOUBLE_LENGTH 320
@@ -204,33 +206,26 @@ PHB_ITEM hb_itemPutC( PHB_ITEM pItem, char * szText )
 
    pItem->type = HB_IT_STRING;
 
-   if( szText == NULL  || szText[0] == '\0' )
+   if( szText == NULL || szText[0] == '\0' )
    {
-      pItem->item.asString.length = 0;
-      pItem->item.asString.value  = pItem->item.asString.u.value;
-      pItem->item.asString.u.value[0] = '\0';
-      pItem->item.asString.bStatic = -1;
+      pItem->item.asString.length  = 0;
+      pItem->item.asString.value   = hb_vm_sNull;
+      pItem->item.asString.bStatic = TRUE;
+   }
+   else if( szText[1] == '\0' )
+   {
+      pItem->item.asString.length  = 1;
+      pItem->item.asString.value   = hb_vm_acAscii[ (unsigned char) ( szText[0] ) ];
+      pItem->item.asString.bStatic = TRUE;
    }
    else
    {
       pItem->item.asString.length = strlen( szText );
-      if( pItem->item.asString.length < sizeof(USHORT*) )
-      {
-         int i = 0;
-         pItem->item.asString.value = pItem->item.asString.u.value;
-         for( ; *szText; szText++, i++ )
-            pItem->item.asString.value[i] = *szText;
-         pItem->item.asString.u.value[i] = '\0';
-         pItem->item.asString.bStatic = -1;
-      }
-      else
-      {
-         pItem->item.asString.value = ( char * ) hb_xgrab( pItem->item.asString.length + 1 );
-         pItem->item.asString.bStatic = 0;
-         pItem->item.asString.u.puiHolders = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
-         * ( pItem->item.asString.u.puiHolders ) = 1;
-         strcpy( pItem->item.asString.value, szText );
-      }
+      pItem->item.asString.value = ( char * ) hb_xgrab( pItem->item.asString.length + 1 );
+      pItem->item.asString.bStatic = 0;
+      pItem->item.asString.u.puiHolders = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
+      * ( pItem->item.asString.u.puiHolders ) = 1;
+      strcpy( pItem->item.asString.value, szText );
    }
 
    return pItem;
@@ -277,32 +272,26 @@ PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, char * szText, ULONG ulLen )
 
    pItem->type = HB_IT_STRING;
 
-   if( szText == NULL || ulLen == 0)
+   if( szText == NULL || ulLen == 0 )
    {
-      pItem->item.asString.length = 0;
-      pItem->item.asString.value  = pItem->item.asString.u.value;
-      pItem->item.asString.u.value[0] = '\0';
-      pItem->item.asString.bStatic = -1;
+      pItem->item.asString.length  = 0;
+      pItem->item.asString.value   = hb_vm_sNull;
+      pItem->item.asString.bStatic = TRUE;
+   }
+   else if( ulLen == 1 )
+   {
+      pItem->item.asString.length  = 1;
+      pItem->item.asString.value   = hb_vm_acAscii[ (unsigned char) ( szText[0] ) ];
+      pItem->item.asString.bStatic = TRUE;
    }
    else
    {
       pItem->item.asString.length = ulLen;
-      if( ulLen < sizeof(USHORT*) )
-      {
-         ULONG i = 0;
-         pItem->item.asString.value  = pItem->item.asString.u.value;
-         for( ; i<ulLen; szText++, i++ )
-            pItem->item.asString.value[i] = *szText;
-         pItem->item.asString.bStatic = -1;
-      }
-      else
-      {
-         pItem->item.asString.value = ( char * ) hb_xgrab( ulLen + 1 );
-         pItem->item.asString.bStatic = 0;
-         pItem->item.asString.u.puiHolders = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
-         * ( pItem->item.asString.u.puiHolders ) = 1;
-         hb_xmemcpy( pItem->item.asString.value, szText, ulLen );
-      }
+      pItem->item.asString.value = ( char * ) hb_xgrab( ulLen + 1 );
+      pItem->item.asString.bStatic = 0;
+      pItem->item.asString.u.puiHolders = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
+      * ( pItem->item.asString.u.puiHolders ) = 1;
+      hb_xmemcpy( pItem->item.asString.value, szText, ulLen );
       pItem->item.asString.value[ ulLen ] = '\0';
    }
 
@@ -922,12 +911,7 @@ void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
 
    if( HB_IS_STRING( pSource ) )
    {
-      if( pSource->item.asString.bStatic )
-      {
-         if( pSource->item.asString.bStatic < 0 )
-            pDest->item.asString.value  = pDest->item.asString.u.value;
-      }
-      else
+      if( !pSource->item.asString.bStatic )
          ++*( pSource->item.asString.u.puiHolders );
    }
    else if( HB_IS_ARRAY( pSource ) )
@@ -953,8 +937,6 @@ void hb_itemMove( PHB_ITEM pDest, PHB_ITEM pSource )
       hb_itemClear( pDest );
 
    memcpy( pDest, pSource, sizeof( HB_ITEM ) );
-   if( HB_IS_STRING( pSource ) && pSource->item.asString.bStatic < 0 )
-      pDest->item.asString.value  = pDest->item.asString.u.value;
    pSource->type = HB_IT_NIL;
 
 }

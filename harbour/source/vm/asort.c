@@ -117,13 +117,9 @@ static LONG hb_arraySortQuickPartition( PHB_ITEM pItems, LONG lb, LONG ub, PHB_I
 
 #ifdef HB_ASORT_OPT_ITEMCOPY
    memcpy( &pivot, pItems + p, sizeof( HB_ITEM ) );
-   if( HB_IS_STRING( &pivot ) && (&pivot)->item.asString.bStatic < 0 )
-      (&pivot)->item.asString.value  = (&pivot)->item.asString.u.value;
    if( p != lb )
    {
       memcpy( pItems + p, pItems + lb, sizeof( HB_ITEM ) );
-      if( HB_IS_STRING( pItems + p ) && (pItems + p)->item.asString.bStatic < 0 )
-         (pItems + p)->item.asString.value  = (pItems + p)->item.asString.u.value;
    }
 #else
    hb_itemInit( &pivot );
@@ -190,10 +186,6 @@ static LONG hb_arraySortQuickPartition( PHB_ITEM pItems, LONG lb, LONG ub, PHB_I
          memcpy( &temp, pItems + j, sizeof( HB_ITEM ) );
          memcpy( pItems + j, pItems + i, sizeof( HB_ITEM ) );
          memcpy( pItems + i, &temp, sizeof( HB_ITEM ) );
-         if( HB_IS_STRING( pItems + i ) && (pItems + i)->item.asString.bStatic < 0 )
-            (pItems + i)->item.asString.value  = (pItems + i)->item.asString.u.value;
-         if( HB_IS_STRING( pItems + j ) && (pItems + j)->item.asString.bStatic < 0 )
-            (pItems + j)->item.asString.value  = (pItems + j)->item.asString.u.value;
 #else
          hb_itemInit( &temp );
          hb_itemCopy( &temp, pItems + j );
@@ -212,12 +204,8 @@ static LONG hb_arraySortQuickPartition( PHB_ITEM pItems, LONG lb, LONG ub, PHB_I
    if( lb != j )
    {
       memcpy( pItems + lb, pItems + j, sizeof( HB_ITEM ) );
-      if( HB_IS_STRING( pItems + lb ) && (pItems + lb)->item.asString.bStatic < 0 )
-         (pItems + lb)->item.asString.value  = (pItems + lb)->item.asString.u.value;
    }
    memcpy( pItems + j, &pivot, sizeof( HB_ITEM ) );
-   if( HB_IS_STRING( pItems + j ) && (pItems + j)->item.asString.bStatic < 0 )
-      (pItems + j)->item.asString.value  = (pItems + j)->item.asString.u.value;
 #else
    if( lb != j )
       hb_itemCopy( pItems + lb, pItems + j );
