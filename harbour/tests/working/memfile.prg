@@ -23,7 +23,7 @@ FUNCTION Main()
 
    PRIVATE mxStayHere := "CONST"
 
-   RESTORE memfile ADDITIVE
+   RESTORE FROM memfile ADDITIVE
 
    ? mxStayHere
    ? mcString
@@ -35,7 +35,7 @@ FUNCTION Main()
    ? mlLogicalF
    ? mlLogicalT
 
-   RESTORE memfile
+   RESTORE FROM memfile
 
 // ? mxStayHere
    ? mcString
