@@ -1,3 +1,20 @@
+20000508-22:50 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+*doc/genhtm.rsp
+    +Added lang.txt to HBDOC response file
+*doc/en/compiler.txt
+    +Added -w4 description
++doc/en/lang.txt
+    *Documentation for HB_LANGSELECT() and HB_LANGNAME()
+
+The follow is mission from previus session
+*doc/en/rddmisc.txt
+    *some docs rewriten
+*doc/en/array.txt
+    *Change Lib name entry in $FILES$ section from ASORT() function to rtl
+     and back to vm
+*source/lang/msgpt.c
+    *small changes
+
 20000509-00:35 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbsetup.h
