@@ -8,6 +8,17 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-08-23 13:20 UTC+0200 Tomaz Zupan <tomaz.zupan@orpo.si>
+   * utils/hbdoc/ffile1.prg
+     ! fixed end of line handling now it works on platforma other than windows 
+   * utils/hbdoc/genhtm.prg
+     ! fixed getitem function (in certain situation it returned NIL instead 
+       of logical value and prevented it to try access array beyond its bounds)
+     * Changed backslashes into slashes (\ -> /)
+   * utils/hbdoc/hbdoc.prg
+   * doc/genhtm.rsp
+     * Changed backslashes into slashes (\ -> /)
+
 2003-08-22 12:10 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
    + source/rtl/color53.prg
    + source/rtl/mssgline.prg

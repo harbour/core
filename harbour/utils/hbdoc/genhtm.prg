@@ -392,11 +392,11 @@ FUNCTION ProcessWww()
 
                cFileName := LEFT( cFileName, 36 ) + ".htm"
                IF lDoc
-                  oHtm := THTML():New( 'htm\' + cFileName )
+                  oHtm := THTML():New( 'htm/' + cFileName )
                ENDIF
                IF lFirstPass .AND. lClassDoc
                   lFirstPass := .F.
-                  oHtm       := THTML():New( 'htm\' + cFileName )
+                  oHtm       := THTML():New( 'htm/' + cFileName )
                ENDIF
                IF ohtm:nHandle < 1
                   ? "Error creating", cFileName, ".htm"
@@ -1433,10 +1433,13 @@ STATIC FUNCTION GetItem( cItem, nCurdoc )
 
    LOCAL nPos
    LOCAL cCuritem
-   LOCAL lReturn
+   LOCAL lReturn:=.F.
    LOCAL x
    LOCAL xPos
-   xPos := aCurdoc[ nCurdoc ]
+   
+   if nCurdoc <= len(aCurdoc)
+     xPos := aCurdoc[ nCurdoc ]
+   endif  
    nPos := ASCAN( xPos, { | x, y | UPPER( ALLTRIM( x ) ) == UPPER( ALLTRIM( cItem ) ) } )
    IF nPos > 0
       cCuritem := xPos[ nPos ]

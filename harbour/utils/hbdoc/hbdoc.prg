@@ -455,11 +455,11 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
             IF i = 1 .OR. .NOT. ( ALLTRIM( aDocInfo[ i - 1, 1 ] ) == ALLTRIM( aDocInfo[ i, 1 ] ) )
                //  Make the first copy
                ? "ECHO Creating", aLinkinfo[ nItem, 2 ]
-               ? "COPY hdf\" + ALLTRIM( aDocInfo[ i, 4 ] ) + " HarDoc.hdf  > NUL"
+               ? "COPY hdf/" + ALLTRIM( aDocInfo[ i, 4 ] ) + " HarDoc.hdf  > NUL"
 
             ELSE
                //  This may be slow but I don't have to worry about line length
-               ? "TYPE hdf\" + ALLTRIM( aDocInfo[ i, 4 ] ) + " >> HarDoc.hdf "
+               ? "TYPE hdf/" + ALLTRIM( aDocInfo[ i, 4 ] ) + " >> HarDoc.hdf "
             ENDIF
             aLinkInfo[ nItem, 3 ] = .T.
          ELSE
@@ -486,9 +486,9 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       FWRITE( nHpj, 'CONTENTS=IDH_OVERVIEW' + CRLF )
       FWRITE( nHpj, 'TITLE='+cTitle + CRLF )
       FWRITE( nHpj, 'COPYRIGHT=Harbour (C) http://www.harbour-project.org' + CRLF )
-      FWRITE( nHpj, 'HLP=.\'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hlp"+ CRLF )
-      FWRITE( nHpj, 'ROOT=\' + CURDIR() + "\RTF" + CRLF )
-      FWRITE( nHpj, 'CNT=.\'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".cnt"+ CRLF )
+      FWRITE( nHpj, 'HLP=./'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hlp"+ CRLF )
+      FWRITE( nHpj, 'ROOT=/' + CURDIR() + "/RTF" + CRLF )
+      FWRITE( nHpj, 'CNT=./'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".cnt"+ CRLF )
       FWRITE( nHpj, '[FILES]' + CRLF )
       FWRITE( nHpj, "harbour.rtf" + CRLF )
       FWRITE( nHpj, '[CONFIG]' + CRLF + 'contents()' + CRLF + 'prev()' + CRLF + 'next()' + CRLF + 'BrowseButtons()' + CRLF )
@@ -560,7 +560,7 @@ set console off
           citem:=adocinfo[1,1]
           AADD(aMetaContents,{"GENERATOR","HBDOC Harbour document Extractor"})
           aadd(aMetaContents,{'Keywords',"Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin,"+cItem})
-          ohtm:=THTML():new('htm\hb'+strtran(citem," ","")+'.htm',aMetaContents)
+          ohtm:=THTML():new('htm/hb'+strtran(citem," ","")+'.htm',aMetaContents)
           ohtm:WriteText('<h2>'+adocinfo[1,1]+'</h2><br>')
           ohtm:WriteText("<table>")
   
@@ -576,7 +576,7 @@ set console off
           AADD(aMetaContents,{"GENERATOR","HBDOC Harbour document Extractor"})
           aadd(aMetaContents,{'Keywords',"Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin,"+cItem})
 
-           ohtm:=THTML():new('htm\hb'+strtran(adocinfo[ppp,1]," ","")+'.htm',aMetaContents)
+           ohtm:=THTML():new('htm/hb'+strtran(adocinfo[ppp,1]," ","")+'.htm',aMetaContents)
 
 //                    oHtm:WriteMetaTag('Keywords',"Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin,"+cItem)
            ohtm:WriteText('<h2>'+adocinfo[ppp,1]+'</h2><br>')
@@ -594,7 +594,7 @@ set console off
           AADD(aMetaContents,{"GENERATOR","HBDOC Harbour document Extractor"})
           aadd(aMetaContents,{'Keywords',"Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin,"+cItem})
 
-      oHtm1 := THTML():New( "htm\harbour.htm" ,aMetaContents)
+      oHtm1 := THTML():New( "htm/harbour.htm" ,aMetaContents)
 //          oHtm:WriteMetaTag('Keywords',"Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin,Harbour Documentation")
       oHtm1:WriteTitle( "Harbour Reference Guide" )
       oHtm1:WriteText( "<H1>Harbour Reference Guide</H1>" )
@@ -625,15 +625,15 @@ set console off
 
       oHtm:Close()
    ELSEIF lChm
-      nHpj := FCREATE( 'chm\'+lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hhp" )
+      nHpj := FCREATE( 'chm/'+lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hhp" )
 
       FWRITE( nHpj, '[OPTIONS]' + CRLF )
       FWRITE( nHpj, 'Compatibility=1.1 or later'+CRLF)
       FWRITE( nHpj, 'Auto Index=Yes'+CRLF)
       FWRITE( nHpj,'Full-text search=Yes'+CRLF)
       FWRITE( nHpj, 'Language=0x416 Português (brasileiro)' + CRLF )
-      FWRITE( nHpj, 'Contents file=.\'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hhc"+ CRLF )
-      FWRITE( nHpj, 'Compiled file=.\'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".chm"+ CRLF )
+      FWRITE( nHpj, 'Contents file=./'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hhc"+ CRLF )
+      FWRITE( nHpj, 'Compiled file=./'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".chm"+ CRLF )
       FWRITE( nHpj, 'Display compile progress=No'+CRLF)
       nPos:=aScan(awww,{|x| Upper(x[1])="OVERVIEW"})
       if nPos > 0
@@ -649,7 +649,7 @@ set console off
 
 
 
-          ohtm:=THTML():NewContent('chm\'+lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hhc")
+          ohtm:=THTML():NewContent('chm/'+lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hhc")
           ohtm:WriteText('<!--Sitemap 1.0-->')
           ohtm:Addobject("text/site properties")
           oHtm:AddParam("FrameName","Ajuda")
@@ -789,11 +789,11 @@ set console off
          SET ALTERNATE TO "assembl.bat" ADDITIVE
          SET ALTERNATE ON
          SET CONSOLE OFF
-         ? 'Copy ngi\overview.ngi .'
-         ? 'Copy ngi\License.ngi  .'
-         ? 'Copy ngi\Funcam.txt   .'
-         ? 'Copy ngi\funcn_.txt   .'
-         ? 'copy ngi\comm.txt     .'
+         ? 'Copy ngi/overview.ngi .'
+         ? 'Copy ngi/License.ngi  .'
+         ? 'Copy ngi/Funcam.txt   .'
+         ? 'Copy ngi/funcn_.txt   .'
+         ? 'copy ngi/comm.txt     .'
          ? 'Compiling Sources'
          ? 'ngxc overview.ngi'
          ? 'ngxc license.ngi'
@@ -802,7 +802,7 @@ set console off
          ? 'ngxc comm.txt'
          ? 'Linking the Guide'
          ? 'ngxl '+cLinkName
-         ? 'del ngi\*.*'
+         ? 'del ngi/*.*'
          ? 'del *.ngo'
       ENDIF
 
