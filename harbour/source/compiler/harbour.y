@@ -16,6 +16,7 @@
 #include <malloc.h>     /* required for allocating and freeing memory */
 #include "pcode.h"      /* pcode values */
 #include "types.h"      /* our defined types */
+#include "compiler.h"
 
 #ifdef __BORLANDC__
    #define HAVE_STRUPR
@@ -27,7 +28,7 @@
 #endif
 
 /* TODO: #define this for various platforms */
-#define PATH_DELIMITER  "/\\"
+#define PATH_DELIMITER  "\\"
 #define IS_PATH_SEP( c ) (strchr(PATH_DELIMITER, (c))!=NULL)
 
 extern FILE * yyin;     /* currently yacc parsed file */
@@ -51,30 +52,6 @@ typedef struct
 
 int Include( char * szFileName );  /* end #include support */
 
-typedef struct _VAR        /* locals, static, public variables support */
-{
-   char *szName;           /* variable name */
-   char *szAlias;          /* variable alias namespace */
-   struct _VAR * pNext;    /* pointer to next defined variable */
-} VAR, * PVAR;
-
-typedef struct __FUNC      /* functions definition support */
-{
-   char * szName;          /* name of a defined Clipper function */
-   char   cScope;          /* scope of a defined Clipper function */
-   BYTE   bFlags;          /* some flags we may need */
-   WORD   wParamCount;     /* number of declared parameters */
-   PVAR   pLocals;         /* pointer to local variables list */
-   PVAR   pStatics;        /* pointer to static variables list */
-   PVAR   pFields;         /* pointer to fields variables list */
-   BYTE * pCode;           /* pointer to a memory block where pcode is stored */
-   LONG   lPCodeSize;      /* total memory size for pcode */
-   LONG   lPCodePos;       /* actual pcode offset */
-   WORD   wStaticsBase;    /* base for this function statics */
-   struct __FUNC * pOwner; /* pointer to the function/procedure that owns the codeblock */
-   struct __FUNC * pNext;  /* pointer to the next defined function */
-} _FUNC, * PFUNCTION;  /* structure to hold a Clipper defined function */
-
 /*
  * flags for bFlags member
 */
@@ -83,29 +60,8 @@ typedef struct __FUNC      /* functions definition support */
 #define FUN_PROCEDURE     4 /* This is a procedure that shouldn't return value */
 #define FUN_ILLEGAL_INIT  8 /* Attempt to initialize static variable with a function call */
 
-typedef struct
-{
-   PFUNCTION pFirst;       /* pointer to the first defined funtion */
-   PFUNCTION pLast;        /* pointer to the last defined function */
-   int      iCount;        /* number of defined functions */
-} FUNCTIONS;               /* structure to control all Clipper defined functions */
-
 /* pcode chunks bytes size */
 #define PCODE_CHUNK   100
-
-typedef struct _COMSYMBOL  /* compiler symbol support structure */
-{
-   char * szName;          /* the name of the symbol */
-   char   cScope;          /* the scope of the symbol */
-   struct _COMSYMBOL * pNext;  /* pointer to the next defined symbol */
-} COMSYMBOL, * PCOMSYMBOL;
-
-typedef struct             /* symbol table support structures */
-{
-   PCOMSYMBOL pFirst;      /* pointer to the first defined symbol */
-   PCOMSYMBOL pLast;       /* pointer to the last defined symbol */
-   int    iCount;          /* number of defined symbols */
-} SYMBOLS;
 
 typedef struct __ELSEIF
 {
@@ -181,7 +137,6 @@ void GenError( int, char*, char * );      /* generic parsing error management fu
 void GenExterns( void ); /* generates the symbols for the EXTERN names */
 void GenReturn( WORD wOffset );  /* generates a return offset to later on fill it with the proper exiting pcode address */
 PFUNCTION GetFuncall( char * szFunName ); /* locates a previously defined called function */
-PFUNCTION GetFunction( char * szFunName ); /* locates a previously defined function */
 PVAR GetVar( PVAR pVars, WORD wOrder ); /* returns a variable if defined or zero */
 WORD GetVarPos( PVAR pVars, char * szVarName ); /* returns the order + 1 of a variable if defined or zero */
 int GetLocalVarPos( char * szVarName ); /* returns the order + 1 of a local variable */
@@ -226,15 +181,12 @@ void StaticDefStart( void );
 void StaticDefEnd( WORD );
 void StaticAssign( void ); /* checks if static variable is initialized with function call */
 
-void * OurMalloc( LONG lSize ); /* our malloc with error control */
-void * OurRealloc( void * p, LONG lSize ); /* our malloc with error control */
-#define OurFree( p )    free( (p) );    /* just for symetry -we can expand it later */
-
 /* output related functions */
 void GenCCode( char *, char * );      /* generates the C language output */
 void GenJava( char *, char * );       /* generates the Java language output */
 void GenPascal( char *, char * );     /* generates the Pascal language output */
 void GenRC( char *, char * );         /* generates the RC language output */
+void GenObj32( char *, char * );      /* generates OBJ 32 bits */
 
 void PrintUsage( char * );
 
@@ -384,6 +336,7 @@ int _iSyntaxCheckOnly = 0; /* syntax check only */
 int _iLanguage = LANG_C;   /* default Harbour generated output language */
 int _iRestrictSymbolLength = 0; /* generate 10 chars max symbols length */
 int _iShortCuts = 1;       /* .and. & .or. expressions shortcuts */
+int _iObj32 = 0;           /* generate OBJ 32 bits */
 WORD _wStatics = 0;        /* number of defined statics variables on the PRG */
 PRETURN pReturns = 0;      /* list of multiple returns from a function */
 PEXTERN pExterns = 0;
@@ -989,7 +942,7 @@ void EXTERNAL_LINKAGE close_on_exit( void )
   }
 }
 
-int harbour_main( int argc, char * argv[] )
+int main( int argc, char * argv[] )
 {
    int iStatus = 0, iArg = 1;
    char szFileName[ _POSIX_PATH_MAX ];    /* filename to parse */
@@ -1028,6 +981,16 @@ int harbour_main( int argc, char * argv[] )
                           AddDefine( szDefText, szDefText + i + 1 );
                        }
                        free( szDefText );
+                    }
+                    break;
+
+               case 'f':
+               case 'F':
+                    {
+                       char * szUpper = strupr( strdup( &argv[ iArg ][ 2 ] ) );
+                       if( ! strcmp( szUpper, "OBJ32" ) )
+                          _iObj32 = 1;
+                       free( szUpper );
                     }
                     break;
 
@@ -1143,7 +1106,7 @@ int harbour_main( int argc, char * argv[] )
          fclose( yyin );
          files.pLast =NULL;
 
-         if( ! _iSyntaxCheckOnly )
+         if( ! _iSyntaxCheckOnly && ! _iObj32 )
          {
             if( _pInitFunc )
             {
@@ -1189,6 +1152,12 @@ int harbour_main( int argc, char * argv[] )
                     break;
             }
          }
+         if( _iObj32 )
+         {
+            pFileName->extension = ".obj";
+            MakeFilename( szFileName, pFileName );
+            GenObj32( szFileName, pFileName->name );
+         }
       }
       else
       {
@@ -1211,6 +1180,8 @@ void PrintUsage( char * szSelf )
   printf( "Syntax: %s <file.prg> [options]\n"
           "\nOptions: \n"
           "\t/d<id>[=<val>]\t#define <id>\n"
+          "\t/f\t\tgenerated object file\n"
+          "\t\t\t /fobj32 --> Windows/Dos 32 bits OBJ\n"
           "\t/g\t\tgenerated output language\n"
           "\t\t\t /gc (C default) --> <file.c>\n"
           "\t\t\t /gj (Java)      --> <file.java>\n"
@@ -1523,11 +1494,11 @@ int Include( char * szFileName )
       pFile->pPrev = files.pLast;
       files.pLast  = pFile;
    }
-#ifdef __cplusplus   
+#ifdef __cplusplus
    yy_switch_to_buffer( (YY_BUFFER_STATE) pFile->pBuffer = yy_create_buffer( yyin, 8192 * 2 ) );
-#else   
+#else
    yy_switch_to_buffer( pFile->pBuffer = yy_create_buffer( yyin, 8192 * 2 ) );
-#endif   
+#endif
    files.iFiles++;
    return 1;
 }
@@ -1545,19 +1516,19 @@ int yywrap( void )   /* handles the EOF of the currently processed file */
       files.pLast = ( PFILE ) ( ( PFILE ) files.pLast )->pPrev;
       iLine = files.pLast->iLine;
       printf( "\nparsing file %s\n", files.pLast->szFileName );
-#ifdef __cplusplus      
+#ifdef __cplusplus
       yy_delete_buffer( (YY_BUFFER_STATE) ( ( PFILE ) pLast )->pBuffer );
 #else
       yy_delete_buffer( ( ( PFILE ) pLast )->pBuffer );
-#endif      
+#endif
       free( pLast );
       files.iFiles--;
       yyin = files.pLast->handle;
-#ifdef __cplusplus      
+#ifdef __cplusplus
       yy_switch_to_buffer( (YY_BUFFER_STATE) files.pLast->pBuffer );
 #else
       yy_switch_to_buffer( files.pLast->pBuffer );
-#endif      
+#endif
       return 0;      /* we close the currently include file and continue */
    }
 }
@@ -1779,7 +1750,8 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
    {
       if( pFunc->cScope != FS_PUBLIC )
          fprintf( yyc, "static " );
-      fprintf( yyc, "HARBOUR %s( void )\n{\n  static BYTE pcode[]={\n", pFunc->szName );
+
+      fprintf( yyc, "HARBOUR %s( void )\n{\n  static BYTE pcode[] = { \n", pFunc->szName );
 
       lPCodePos = 0;
       while( lPCodePos < pFunc->lPCodePos )
@@ -2605,6 +2577,29 @@ WORD GetSymbolPos( char * szSymbolName ) /* return 0 if not found or order + 1 *
    return 0;
 }
 
+WORD GetFunctionPos( char * szFunctionName ) /* return 0 if not found or order + 1 */
+{
+   PFUNCTION pFunc = functions.pFirst;
+   WORD wFunction = _iStartProc;
+
+   while( pFunc )
+   {
+      if( ! strcmp( pFunc->szName, szFunctionName ) && pFunc != functions.pFirst )
+         return wFunction;
+      else
+      {
+         if( pFunc->pNext )
+         {
+            pFunc = pFunc->pNext;
+            wFunction++;
+         }
+         else
+            return 0;
+      }
+   }
+   return 0;
+}
+
 void Inc( void )
 {
    GenPCode1( _INC );
@@ -3012,9 +3007,8 @@ void SetFrame( void ) /* generates the proper _FRAME values */
 */
 void CodeBlockStart()
 {
-   PFUNCTION pFunc;
+   PFUNCTION pFunc = FunctionNew( NULL, FS_STATIC );
 
-   pFunc =FunctionNew( NULL, FS_STATIC );
    pFunc->pOwner       = functions.pLast;
    pFunc->wStaticsBase = functions.pLast->wStaticsBase;
 

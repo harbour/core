@@ -1,5 +1,6 @@
 # makefile for Borland C/C++ 32 bits
 
+.path.asm = source\compiler
 .path.c   = source\compiler;source\vm;source\rtl;source\tools
 .path.h   = include
 .path.l   = source\compiler
@@ -14,7 +15,8 @@ PROJECT: harbour.lib libs\b32\terminal.lib libs\win32\terminal.lib harbour.exe
 harbour.lib : arrays.obj classes.obj codebloc.obj dates.obj datesx.obj \
               debug.obj dynsym.obj environ.obj error.obj \
               errorapi.obj errorsys.obj extend.obj files.obj itemapi.obj math.obj \
-              mathx.obj set.obj strings.obj stringsx.obj strcmp.obj tclass.obj transfrm.obj
+              mathx.obj set.obj symbols.obj strings.obj stringsx.obj strcmp.obj \
+              tclass.obj transfrm.obj
 
 libs\b32\terminal.lib : console.obj
 
@@ -25,7 +27,9 @@ console.obj  : console.c  extend.h types.h
   tlib .\libs\b32\terminal.lib -+$@,,
   bcc32 -c -O2 -DWINDOWS -I.\include -o$@ source\rtl\console.c
   tlib .\libs\win32\terminal.lib -+$@,,
-   
+
+symbols.obj  : symbols.asm
+
 arrays.obj   : arrays.c   extend.h types.h
 classes.obj  : classes.c  extend.h types.h
 codebloc.obj : codebloc.c extend.h types.h
@@ -53,6 +57,10 @@ error.c      : error.prg     harbour.exe
 errorsys.c   : errorsys.prg  harbour.exe
 tclass.c     : tclass.prg    harbour.exe
 
+.asm.obj:
+  tasm $<, $@
+  tlib .\libs\b32\harbour.lib -+$@,,
+
 .prg.c:
   bin\harbour $< /n /osource\rtl
 
@@ -60,12 +68,12 @@ tclass.c     : tclass.prg    harbour.exe
   bcc32 -c -O2 -I.\include -o$@ $<
   tlib .\libs\b32\harbour.lib -+$@,,
 
-harbour.exe : y_tab.c lexyy.c harbour.obj
+harbour.exe : y_tab.c lexyy.c genobj32.c compiler.h
    bcc32  -O2 -ebin\harbour.exe -Iinclude;source\compiler \
-      source\compiler\y_tab.c source\compiler\lexyy.c \
-       source\compiler\harbour.obj
+      source\compiler\y_tab.c source\compiler\lexyy.c source\compiler\genobj32.c
    del y_tab.obj
    del lexyy.obj
+   del compiler.obj
 
 y_tab.c : harbour.y
    bison -d -v -y -osource\compiler\y_tab.c source\compiler\harbour.y
