@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-02-01 12:10 UTC+0100 Ignacio Ortiz <ignacio@fivetech.com>
+   * source/rtl/transfrm.c
+     * Memory buffer overflow reported by Lorenzo Fiorini
+
 2002-02-01 12:00 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * include/hbexpra.c
      * Temporary workaround for the "EVAL" bug
