@@ -519,7 +519,7 @@ HBDOC_EXE_OBJS = \
    $(OBJ_DIR)\os2.obj \
    $(OBJ_DIR)\rtf.obj \
    $(OBJ_DIR)\troff.obj \
-   $(OBJ_DIR)\fileread.obj
+   $(OBJ_DIR)\filerea1.obj
 
 #
 # Our default target
@@ -2033,8 +2033,8 @@ $(OBJ_DIR)\troff.c : $(HBDOC_DIR)\troff.prg
 $(OBJ_DIR)\troff.obj : $(OBJ_DIR)\troff.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\fileread.c : $(HBDOC_DIR)\fileread.prg
+$(OBJ_DIR)\filerea1.c : $(HBDOC_DIR)\fileread.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
-$(OBJ_DIR)\fileread.obj : $(OBJ_DIR)\fileread.c
+$(OBJ_DIR)\filerea1.obj : $(OBJ_DIR)\filerea1.c
    $(CC) $(CLIBFLAGS) -o$@ $**

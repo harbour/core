@@ -1,3 +1,9 @@
+20000326-13:14 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * makefile.bc
+     ! Fixed.
+   * ChangeLog.006
+     ! Corrected the case.
+
 20000326-03:42 EST Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/gtwin/gtwin.c
      * This is an old problem:
