@@ -1,3 +1,7 @@
+19991101-11:53 GMT+3 Alexander Kresin
+  * source/pp/hbpp.c
+    * Fixed bug
+
 19991101-10:10 GMT+3 Alexander Kresin
   * source/pp/hbpp.c
     * Fixed bug, reported by Antonio Linares

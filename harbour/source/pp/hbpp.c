@@ -1901,6 +1901,7 @@ int md_strAt(char *szSub, int lSubLen, char *szText, int checkword, int checkPrt
   int State = STATE_NORMAL;
   long lPos = 0, lSubPos = 0;
   int kolPrth = 0;
+  int lCase = ( *szSub == '\1' )? 0:1;
 
   HB_TRACE(("md_strAt(%s, %d, %s, %d, %d)", szSub, lSubLen, szText, checkword, checkPrth));
 
@@ -1943,7 +1944,8 @@ int md_strAt(char *szSub, int lSubLen, char *szText, int checkword, int checkPrt
               continue;
             }
 
-          if( toupper(*(szText + lPos)) == toupper(*(szSub + lSubPos)) )
+          if( ( lCase && toupper(*(szText + lPos)) == toupper(*(szSub + lSubPos)) ) ||
+              ( !lCase && *(szText + lPos) == *(szSub + lSubPos) ) )
             {
               lSubPos++;
               lPos++;
