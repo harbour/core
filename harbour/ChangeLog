@@ -7,6 +7,13 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2002-07-08 01:40 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/rtl/tget.prg
+    ! Fix minor bug in PutMask() method.
+
+      Reported by Luiz Rafael Culik from brazilian user
+
 2002-07-08 00:20 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
    * contrib/rdd_ads/ads1.c
       * Fixed bug on adsPutValue() function when numeric data to be putted are more the 10 number
