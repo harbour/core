@@ -1,3 +1,10 @@
+20000402-01:41 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/substr.c
+     ! Minor fix in comment.
+   * source/rtl/filesys.c
+     ! Bug fixed for __WATCOMC__
+
 20000401-18:00 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/version.c

@@ -1101,7 +1101,7 @@ USHORT  hb_fsChDrv( BYTE nDrive )
    {
       /* 'unsigned int' _have to_ be used in Watcom
        */
-      unsigned int uiSave = _getdrive();
+      unsigned int uiSave;
       unsigned int uiTotal;
 
       /* 1 = A:, 2 = B:, 3 = C:, etc
