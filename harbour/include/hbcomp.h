@@ -339,6 +339,7 @@ extern char *      hb_comp_szAnnounce;
 
 extern PHB_FNAME   hb_comp_pOutPath;
 extern BOOL        hb_comp_bCredits;
+extern BOOL        hb_comp_bBuildInfo;
 extern BOOL        hb_comp_bLogo;
 extern BOOL        hb_comp_bSyntaxCheckOnly;
 extern int         hb_comp_iLanguage;

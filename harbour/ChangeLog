@@ -1,3 +1,22 @@
+20000501-17:42 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/vm/cmdarg.c
+   * source/common/hbver.c
+   * include/hbcomp.h
+   * source/compiler/harbour.c
+   * source/compiler/cmdcheck.c
+     + Added /BUILD option for the compiler.
+       This option will now also print the platform and Harbour versions.
+     ! Fixed check for /CREDIT switch.
+
+   * source/compiler/hbgenerr.c
+     * Some small cleanups on the error texts.
+
+   * makefile.bc
+     - Removed duplicated and Borland only default language selection.
+       This feature is already built in to HBSETUP.H, so there's no 
+       point to duplicate it. Or I'm missing something obvious.
+
 20000501-16:08 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbpcode.h

@@ -111,6 +111,7 @@ int         hb_comp_iStaticCnt;                        /* number of defined stat
 int         hb_comp_iVarScope;                         /* holds the scope for next variables to be defined */
 PHB_FNAME   hb_comp_pOutPath = NULL;
 BOOL        hb_comp_bCredits = FALSE;                  /* print credits */
+BOOL        hb_comp_bBuildInfo = FALSE;                /* print build info */
 BOOL        hb_comp_bLogo = TRUE;                      /* print logo */
 BOOL        hb_comp_bSyntaxCheckOnly = FALSE;          /* syntax check only */
 int         hb_comp_iLanguage = LANG_C;                /* default Harbour generated output language */
@@ -152,6 +153,13 @@ int main( int argc, char * argv[] )
 
    if( hb_comp_bLogo )
       hb_compPrintLogo();
+
+   if( hb_comp_bBuildInfo )
+   {
+      printf( "\n" );
+      hb_verBuildInfo();
+      return iStatus;
+   }
 
    if( hb_comp_bCredits )
    {
@@ -372,6 +380,18 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
       free( pMem );
    else
       hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_MEMFREE, NULL, NULL );
+}
+
+void hb_conOutErr( char * pStr, ULONG ulLen )
+{
+   HB_SYMBOL_UNUSED( ulLen );
+
+   printf( pStr );
+}
+
+char * hb_conNewLine( void )
+{
+   return "\n";
 }
 
 /* ------------------------------------------------------------------------- */

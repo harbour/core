@@ -194,30 +194,43 @@ void hb_compChkEnvironVar( char * szSwitch )
 
              case 'b':
              case 'B':
-                hb_comp_bDebugInfo = TRUE;
-                hb_comp_bLineNumbers = TRUE;
+                {
+                   unsigned int i = 0;
+                   char * szOption = hb_strupr( hb_strdup( s ) );
+                   while( i < strlen( szOption ) && !HB_ISOPTSEP( szOption[ i ] ) )
+                      i++;
+                   szOption[ i ] = '\0';
+
+                   if( strcmp( szOption, "BUILD" ) == 0 )
+                      hb_comp_bBuildInfo = TRUE;
+                   else
+                   {
+                      hb_comp_bDebugInfo = TRUE;
+                      hb_comp_bLineNumbers = TRUE;
+                   }
+
+                   free( szOption );
+                }
                 break;
 
              case 'c':
              case 'C':
                 {
                    unsigned int i = 0;
-                   char * szCredits = hb_strupr( hb_strdup( s ) );
-                   while( i < strlen( szCredits ) && !HB_ISOPTSEP( szCredits[ i ] ) )
+                   char * szOption = hb_strupr( hb_strdup( s ) );
+                   while( i < strlen( szOption ) && !HB_ISOPTSEP( szOption[ i ] ) )
                       i++;
-                   szCredits[ i ] = '\0';
+                   szOption[ i ] = '\0';
 
-                   if( strcmp( szCredits, "CREDITS" ) ||
-                       strcmp( szCredits, "CREDIT" ) ||
-                       strcmp( szCredits, "CREDI" ) ||
-                       strcmp( szCredits, "CRED" ) )
-                   {
+                   if( strcmp( szOption, "CREDITS" ) == 0 ||
+                       strcmp( szOption, "CREDIT" ) == 0 ||
+                       strcmp( szOption, "CREDI" ) == 0 ||
+                       strcmp( szOption, "CRED" ) == 0 )
                       hb_comp_bCredits = TRUE;
-                   }
                    else
-                      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, szCredits, NULL );
+                      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, szOption, NULL );
 
-                   free( szCredits );
+                   free( szOption );
                 }
                 break;
 

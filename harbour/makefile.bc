@@ -59,9 +59,7 @@ ARFLAGS = /P32
 !if !$d(BCC_NOOPTIM)
 CFLAGS = -O2 $(CFLAGS)
 !endif
-!if !$d(HB_LANG_DEFAULT)
-HB_LANG_DEFAULT=EN
-!endif
+
 #
 # Directory macros. These should never have to change.
 #
@@ -85,7 +83,7 @@ HBPP_DIR     = utils\hbpp
 # C compiler definition and C flags. These should never have to change.
 #
 
-CFLAGS         = -I$(INCLUDE_DIR) -d $(C_USR) $(CFLAGS) -DHB_LANG_DEFAULT=$(HB_LANG_DEFAULT)
+CFLAGS         = -I$(INCLUDE_DIR) -d $(C_USR) $(CFLAGS)
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSDEBUG = -v $(CLIBFLAGS)
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
