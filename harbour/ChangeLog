@@ -1,3 +1,9 @@
+19990901-20:34 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/vm/initsymb.c
+    + HB_LOCK pointer added.
+  * tests/working/Makefile
+    ! Mistakenly got replaced with my private one. Fixed.
+
 19990901-17:20 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/working/rtl_test.prg
     + Added tests for decimals handling. (NUMPAR.PRG)
@@ -46,9 +52,10 @@
 
        NOTE [vszel]: 
         1.) I've #ifdef-ed out the new stuff for __CYGWIN__ since 
-          setdisk()/getdisk() were neither declared nor in any libraries.
+          setdisk()/getdisk() were neither declared nor present in any 
+          libraries.
         2.) I've added some new header files to FILESYS.C. Please check them
-            on your system, if they are correct.
+            on your system, whether they are correct.
 
 19990901-14:05 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/filesys.c

@@ -39,7 +39,7 @@ extern HARBOUR HB_INT( void );
 extern HARBOUR HB_LASTREC( void );
 extern HARBOUR HB_LEFT( void );
 extern HARBOUR HB_LEN( void );
-/* extern HARBOUR HB_LOCK( void ); */
+extern HARBOUR HB_LOCK( void );
 extern HARBOUR HB_LOG( void );
 extern HARBOUR HB_LOWER( void );
 extern HARBOUR HB_LTRIM( void );
@@ -104,7 +104,7 @@ static HB_SYMB symbols[] = {
    { "LASTREC"   , FS_PUBLIC, HB_LASTREC      , 0 },
    { "LEFT"      , FS_PUBLIC, HB_LEFT         , 0 },
    { "LEN"       , FS_PUBLIC, HB_LEN          , 0 },
-   { "LOCK"      , FS_PUBLIC, NULL            , 0 }, /* TODO: */
+   { "LOCK"      , FS_PUBLIC, HB_LOCK         , 0 },
    { "LOG"       , FS_PUBLIC, HB_LOG          , 0 },
    { "LOWER"     , FS_PUBLIC, HB_LOWER        , 0 },
    { "LTRIM"     , FS_PUBLIC, HB_LTRIM        , 0 },
