@@ -1,3 +1,28 @@
+2000-08-12 20:20 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+*doc/en/compiler.txt
+ doc/en/harbext.txt
+ doc/en/var.txt
+ doc/en/file.txt
+ doc/en/hvm.txt
+ doc/en/math.txt
+ doc/en/subcodes.txt
+    *Small formating
+     Correct the case of some categories
++doc/en/cmdline.txt
+    *Formated as an hbdoc source.
+*doc/genhtm.rsp
+ +added cmdline.txt to response file
+*utils/hbdoc/genhtm.prg
+ utils/hbdoc/genchm.prg
+    *Fixed an small Bug
+*utils/hbdoc/hbdoc.prg
+ utils/hbdoc/genrtf.prg
+ utils/hbdoc/rtf.prg
+    *Added code to generate the Winhelp .cnt file dinanmicall,So every time
+     the doc is updated , the winhelp.cnt file will also be updated.
+
+
+
 Changelog: 2000-08-12 20:00 UTC+0500 April White <awhite@user.rose.com>
    disregard my: 2000-07-29 03:00 UTC+0500
    TODO: remove the old hb*.txt files from doc/en
