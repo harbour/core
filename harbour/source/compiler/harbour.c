@@ -31,6 +31,13 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
  * their web site at http://www.gnu.org/).
  *
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 RonPinkas <Ron@Profit-Master.com>
+ *    hb_compPrepareOptimize()
+ *    hb_compOptimizeJumps()
+ *    hb_compOptimizeFrames()
  */
 
 #include <malloc.h>     /* required for allocating and freeing memory */
@@ -56,7 +63,7 @@ static void hb_compGenFieldPCode( BYTE , int, char *, PFUNCTION );      /* gener
 static void hb_compGenVariablePCode( BYTE , char * );    /* generates the pcode for undeclared variable */
 static void hb_compGenVarPCode( BYTE , char * );    /* generates the pcode for undeclared variable */
 
-void hb_compFixReturns( void ); /* fixes all last defined function returns jumps offsets */
+void hb_compFinalizeFunction( void ); /* fixes and finalize the last defined function */
 static PFUNCTION hb_compFunctionNew( char *, char );  /* creates and initialises the _FUNC structure */
 static void hb_compCheckDuplVars( PVAR pVars, char * szVarName, int iVarScope ); /*checks for duplicate variables definitions */
 
@@ -720,7 +727,7 @@ void hb_compFunctionAdd( char * szFunName, HB_SYMBOLSCOPE cScope, int iType )
    PFUNCTION pFunc;
    char * szFunction;
 
-   hb_compFixReturns();    /* fix all previous function returns offsets */
+   hb_compFinalizeFunction();    /* fix all previous function returns offsets */
 
    pFunc = hb_compFunctionFind( szFunName );
    if( pFunc )
@@ -2339,7 +2346,7 @@ static void hb_compCheckDuplVars( PVAR pVar, char * szVarName, int iVarScope )
    }
 }
 
-void hb_compFixReturns( void ) /* fixes all last defined function returns jumps offsets */
+void hb_compFinalizeFunction( void ) /* fixes all last defined function returns jumps offsets */
 {
    if( hb_comp_functions.pLast && (hb_comp_functions.pLast->bFlags & FUN_WITH_RETURN) == 0 )
    {
@@ -2403,7 +2410,7 @@ void hb_compOptimizeFrames( PFUNCTION pFunc )
          pFunc->pCode[ 6 ] = HB_LOBYTE( w );
          pFunc->pCode[ 7 ] = HB_HIBYTE( w );
 
-         /* Remove the SFRAME pcode if there's no global static 
+         /* Remove the SFRAME pcode if there's no global static
             initialization: */
 
          /* NOTE: For some reason this will not work for the static init
@@ -2416,7 +2423,7 @@ void hb_compOptimizeFrames( PFUNCTION pFunc )
          }
       }
    }
-   else if( pFunc->pCode[ 0 ] == HB_P_FRAME && 
+   else if( pFunc->pCode[ 0 ] == HB_P_FRAME &&
             pFunc->pCode[ 3 ] == HB_P_SFRAME )
    {
       PVAR pLocal;
@@ -2487,7 +2494,6 @@ void hb_compOptimizeJumps( void )
 {
    /* Jump Optimizer */
    BYTE * pCode      = hb_comp_functions.pLast->pCode;
-   BYTE * pOptimized = ( BYTE * ) hb_xgrab( hb_comp_functions.pLast->lPCodePos - hb_comp_functions.pLast->iNOOPs );
    ULONG * pNOOPs    = hb_comp_functions.pLast->pNOOPs;
    ULONG * pJumps    = hb_comp_functions.pLast->pJumps;
    int * piShifts    = ( int * ) hb_xgrab( sizeof( int ) * hb_comp_functions.pLast->iJumps );
@@ -2499,82 +2505,9 @@ void hb_compOptimizeJumps( void )
    int iJump;
    BOOL bForward = FALSE;
 
-   //printf( "\rOptimize ON" );
-   //getchar();
-
    /* Needed so the pasting of PCODE pieces below will work correctly  */
    qsort( ( void * ) pNOOPs, hb_comp_functions.pLast->iNOOPs, sizeof( ULONG ), hb_compSort_ULONG );
 
-/*
-   for( iNOOP = 0; iNOOP < hb_comp_functions.pLast->iNOOPs; iNOOP++ )
-   {
-      printf( "\rNOOP #%i at:%li", iNOOP, pNOOPs[ iNOOP ] );
-      getchar();
-
-      if( pNOOPs[ iNOOP ] == 0 )
-      {
-         printf( "\r*** 0 *** NOOP # %i at:%li", iNOOP, pNOOPs[ iNOOP ] );
-         getchar();
-      }
-   }
-
-   for( iJump = 0; iJump < hb_comp_functions.pLast->iJumps; iJump++ )
-   {
-      switch( pCode[ pJumps[ iJump ] ] )
-      {
-         case HB_P_JUMPSHORT :
-         case HB_P_JUMPSHORTFALSE :
-         case HB_P_JUMPSHORTTRUE :
-         {
-            ulOffset = pCode[ pJumps[ iJump ] + 1 ];
-
-            if( ulOffset > 127 )
-            {
-               ulOffset -= 256;
-               bForward = FALSE;
-            }
-            else
-               bForward = TRUE;
-         }
-         break;
-
-         case HB_P_JUMP :
-         case HB_P_JUMPFALSE :
-         case HB_P_JUMPTRUE :
-         {
-            ulOffset = ( ULONG ) ( pCode[ pJumps[ iJump ] + 1 ] + ( pCode[ pJumps[ iJump ] + 2 ] * 256 ) );
-            if( ulOffset > SHRT_MAX )
-            {
-               ulOffset -= 65536;
-               bForward = FALSE;
-            }
-            else
-               bForward = TRUE;
-         }
-         break;
-
-         default:
-         {
-            ulOffset = ( ULONG )( pCode[ pJumps[ iJump ] + 1 ] + ( pCode[ pJumps[ iJump ] + 2 ] * 256 ) + ( pCode[ pJumps[ iJump ] + 3 ] * 65536 ) );
-            if( ulOffset > 8388607L )
-            {
-               ulOffset -= 16777216L;
-               bForward = FALSE;
-            }
-         }
-         break;
-      }
-
-      printf( "\rJump=%li, Base=%li, Offset=%li, Target=%li", iJump, pJumps[ iJump ], ulOffset, pJumps[ iJump ] + ulOffset );
-      getchar();
-
-      if( pJumps[ iJump ] == 0 || ulOffset == 0 )
-      {
-         printf( "\r*** 0 *** Jump=%li, Base=%li, Offset=%li, Target=%li", iJump, pJumps[ iJump ], ulOffset, pJumps[ iJump ] + ulOffset );
-         getchar();
-      }
-   }
-*/
 
    for( iJump = 0; iJump < hb_comp_functions.pLast->iJumps; iJump++ )
       piShifts[ iJump ] = 0;
@@ -2633,9 +2566,6 @@ void hb_compOptimizeJumps( void )
          /* Only interested in forward (positive) jumps. */
          if( bForward )
          {
-            //printf( "\rCurrent NOOP=%li, Address=%li, Jump=%i, Base=%li, Offset=%li, Target=%li", iNOOP, pNOOPs[ iNOOP ], iJump, pJumps[ iJump ], ulOffset, pJumps[ iJump ] + ulOffset );
-            //getchar();
-
             /* Only if points to code beyond the current fix. */
             if( pJumps[ iJump ] < pNOOPs[ iNOOP ] && pJumps[ iJump ] + piShifts[ iJump ] + ulOffset > pNOOPs[ iNOOP ] )
             {
@@ -2649,17 +2579,11 @@ void hb_compOptimizeJumps( void )
                   pCode[ pJumps[ iJump ] + 1 ] = 255;
                   pCode[ pJumps[ iJump ] + 2 ]--;
                }
-
-               //printf( "\rAdjusted Jump=%li To: %li", iJump, ( pCode[ pJumps[ iJump ] + 1 ] + pCode[ pJumps[ iJump ] + 2 ] * 256 ) );
-               //getchar();
             }
          }
          else
          {
             /* Adjusting all later jumps (if negative) and target prior the current NOOP. */
-
-            //printf( "\rCurrent NOOP=%li, Address=%li, Jump=%i, Base=%li, Offset=%li, Target=%li", iNOOP, pNOOPs[ iNOOP ], iJump, pJumps[ iJump ], ulOffset, pJumps[ iJump ] + ulOffset );
-            //getchar();
 
             // Only if points to code beyond the current fix.
             if(  pJumps[ iJump ] > pNOOPs[ iNOOP ] && pJumps[ iJump ] + piShifts[ iJump ] + ulOffset < pNOOPs[ iNOOP ] )
@@ -2674,42 +2598,29 @@ void hb_compOptimizeJumps( void )
                   pCode[ pJumps[ iJump ] + 1 ] = 0;
                   pCode[ pJumps[ iJump ] + 2 ]++;
                }
-
-               //printf( "\rAdjusted Jump=%li To: %li", iJump, ( pCode[ pJumps[ iJump ] + 1 ] + pCode[ pJumps[ iJump ] + 2 ] * 256 - 65536 ) );
-               //getchar();
             }
          }
       }
    }
-
-   //printf( "\rPasting" );
-   //getchar();
 
    /* Second Scan, after all adjustements been made, we can copy the optimized code. */
    for( iNOOP = 0; iNOOP < hb_comp_functions.pLast->iNOOPs; iNOOP++ )
    {
       ulBytes2Copy = ( pNOOPs[ iNOOP ] - ulNextByte ) ;
 
-      while( ulBytes2Copy-- > 0 )
-         pOptimized[ ulOptimized++ ] = pCode[ ulNextByte++ ];
+      memmove( pCode + ulOptimized, pCode + ulNextByte, ulBytes2Copy );
+
+      ulOptimized += ulBytes2Copy;
+      ulNextByte  += ulBytes2Copy;
 
       /* Skip the NOOP and point to next valid byte */
       ulNextByte++;
    }
 
-   //printf( "\rCopying Remainder" );
-   //getchar();
+   ulBytes2Copy = ( hb_comp_functions.pLast->lPCodePos - ulNextByte ) ;
+   memmove( pCode + ulOptimized, pCode + ulNextByte, ulBytes2Copy );
+   ulOptimized += ulBytes2Copy;
 
-   /* Copy remainder beyond the last NOOP. */
-   while( ulNextByte < hb_comp_functions.pLast->lPCodePos )
-      pOptimized[ ulOptimized++ ] = pCode[ ulNextByte++ ];
-
-   //printf( "\rCopied" );
-   //getchar();
-
-   hb_xfree( ( void * ) pCode );
-
-   hb_comp_functions.pLast->pCode      = pOptimized;
    hb_comp_functions.pLast->lPCodePos  = ulOptimized;
    hb_comp_functions.pLast->lPCodeSize = ulOptimized;
 }

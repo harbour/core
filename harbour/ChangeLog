@@ -1,13 +1,21 @@
+20000422-20:40 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+   * source/compiler/hvm.c
+     - Removed pOptimized from hb_compOptimizeJumps() which now uses memmove() and thus more effective.
+     * Renamed hb_compFixReturns() to hb_compFinalizeFunction().
+
+   * source/compiler/harbour.y
+     * Renamed call to hb_compFixReturns() to hb_compFinalizeFunction().
+
 20000423-05:15 GMT+1 Victor Szakats <info@szelvesz.hu>
 
-   - doc/compiler.txt 
-   - doc/gnulice.txt  
-   - doc/harbext.txt  
-   - doc/subcodes.txt 
-   + doc/en/compiler.txt 
-   + doc/en/gnulice.txt  
-   + doc/en/harbext.txt  
-   + doc/en/subcodes.txt 
+   - doc/compiler.txt
+   - doc/gnulice.txt
+   - doc/harbext.txt
+   - doc/subcodes.txt
+   + doc/en/compiler.txt
+   + doc/en/gnulice.txt
+   + doc/en/harbext.txt
+   + doc/en/subcodes.txt
      * Moved some doc files which are part of the HBDOC generated docs.
 
 20000423-04:02 GMT+1 Victor Szakats <info@szelvesz.hu>
@@ -15,13 +23,13 @@
    * source/compiler/genc.c
    * source/compiler/harbour.c
    * source/vm/hvm.c
-     ! PUSHLOCALNEAR and POPLOCALNEAR pcodes fixed. They didn't work in a 
+     ! PUSHLOCALNEAR and POPLOCALNEAR pcodes fixed. They didn't work in a
        codeblock.
 
 20000423-03:24 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/compiler/harbour.c
-     ! Frame optimizer is called after all functions have been processed, 
+     ! Frame optimizer is called after all functions have been processed,
        otherwise the static frames cannot be fixed up correctly.
      ! Frame optimizer also called for the static initialization function to
        fixup or remove its SFRAME/STATICS pcode.

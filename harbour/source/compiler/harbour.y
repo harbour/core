@@ -1438,7 +1438,7 @@ int hb_compYACCMain( char * szName )
    yyparse();
 
    /* fix all previous function returns offsets */
-   hb_compFixReturns();
+   hb_compFinalizeFunction();
 
    hb_compExternGen();       /* generates EXTERN symbols names */
 
