@@ -63,7 +63,11 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    DEFAULT nPos       TO 1                 // The number of the selected item
    DEFAULT nHiLiteRow TO 0                 // The row to be highlighted
 
-   nNumCols := nRight - nLeft + 1
+   IF nRight == 79 .and. nLeft ==0
+      nNumCols := 79
+   ELSE
+      nNumCols := nRight - nLeft + 1
+   ENDIF
    nNumRows := nBottom - nTop + 1
 
 
@@ -499,8 +503,15 @@ STATIC PROCEDURE DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPo
    LOCAL nIndex                            // Array index
    LOCAL nSaveRow := Row()                 // Position at start of routine
    LOCAL nSaveCol := Col()                 // Position at start of routine
+   LOCAL nRightPos := 0
 
    Default nRowsClr to nNumRows
+
+   IF nRight == 79 .and. nLeft == 0
+      nRightPos := nRight
+   ELSE                            
+      nRightPos := nRight - nLeft + 1 
+   ENDIF
 
    DispBegin()
 
