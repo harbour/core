@@ -121,7 +121,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       CASE ValType( xMessage ) == "B" ; xMessage := "{||...}"
       OTHERWISE                       ; xMessage := "NIL"
       ENDCASE
-
+     if Len(cOld) >60
       WHILE LEN(cOld) > 0
 
         IF AT( ';' , cOld ) > 0 //Dont do this  if ; exist
@@ -148,7 +148,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
 
     ENDDO
 
-        
+     endif
 
       DO WHILE ( nPos := At( ';', xMessage ) ) != 0
          AAdd( aSay, Left( xMessage, nPos - 1 ) )

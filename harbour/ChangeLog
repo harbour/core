@@ -7,6 +7,9 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-11-07 08:30 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
+  * source/rtl/alert.prg
+    ! minor fix to my change from yesterday
 
 2002-11-06 18:38 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * source/rtl/achoice.prg
