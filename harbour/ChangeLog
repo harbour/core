@@ -1,3 +1,10 @@
+19991110-14:11 GMT+1 Victor Szel <info@szelvesz.hu>
+  * include/hbsetup.h
+    - Removed #defines which were previously moved to hbsetup.ch.
+  * include/hbextern.ch
+    source/runner/stdalone/external.prg
+    + __PREPROCESS added as EXTERNAL  
+
 19991110-11:08 GMT+1 Bruno Cantero <bruno@issnet.net>
   * include/rddapi.h
     source/rdd/dbcmd.c

@@ -36,6 +36,8 @@
 #ifndef HB_EXTERN_CH_
 #define HB_EXTERN_CH_
 
+EXTERNAL __PREPROCESS
+
 // Files from: vm
 //
 //

@@ -117,25 +117,13 @@
 /*#define HARBOUR_OBJ_GENERATION*/
 
 /* ***********************************************************************
- * This symbol defines if we want to use strict Clipper compatibility
+ * You can select here, what type of main entry will be used in the 
+ * application (main() or WinMain()).
  *
- * By default it is disabled (symbol is not defined)
+ * By default the standard C main() function will be used.
 */
-/*#define HARBOUR_STRICT_CLIPPER_COMPATIBILITY*/
-
-/* ***********************************************************************
- * You can select here, whether you want to include feature introduced in
- * Clipper implementations other than Cl*pper 5.2e.
- *
- * By default these are all turned on
-*/
-
-/* Include new CA-Cl*pper 5.3[a,b] functions */
-#define HB_COMPAT_C53
-/* Include new Alaska XBase++ functions */
-#define HB_COMPAT_XPP
-/* Include new CA-VO functions */
-#define HB_COMPAT_VO
+/*#define HARBOUR_MAIN_STD*/
+/*#define HARBOUR_MAIN_WIN*/
 
 /* ***********************************************************************
  * You can select here, what type of main entry will be used in the 
