@@ -1,10 +1,17 @@
+2000-07-27 01:45 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.c
+     ! Corrected pVar->iDeclLine line number
+
+   * source/compiler/hbgenerr.c
+     ! Corrcted intermitent GPF when hb_compGenWarning() was called with NULL hb_comp_files.pLast
+
 2000-07-27 10:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *include/error.ch
     *include/hbapilng.h
         *added internal error HB_MEMOVERFLOW
         *adjusted internal data for Lang API
-        
+
     *source/lang/msg_tpl.c
     *source/lang/msgca.c
     *source/lang/msgcs852.c
@@ -32,16 +39,16 @@
     *source/lang/msgsr852.c
     *source/lang/msgsriso.c
         * added internal error message: "Memory buffer overflow"
-        
+
     *source/lang/msgpl852.c
     *source/lang/msgpliso.c
     *source/lang/msgplmaz.c
         *updated to work with current Lang API
 
     *source/vm/fm.c
-        * memory blocks are marked with a signature at the end of buffer 
-        to check if memory was overwritten 
-        
+        * memory blocks are marked with a signature at the end of buffer
+        to check if memory was overwritten
+
     *source/rtl/transfrm.c
         * fixed bug when "@(BX" picture was used (it caused that some
         bytes were copied after the allocated buffer)

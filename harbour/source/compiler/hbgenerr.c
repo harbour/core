@@ -147,13 +147,12 @@ void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szErro
 void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2)
 {
    char * szText = szWarnings[ iWarning - 1 ];
-   int iLine = 0;
-
-   iLine = hb_comp_iLine - 1;
+   int iLine = hb_comp_iLine - 1;
 
    if( ( szText[ 0 ] - '0' ) <= hb_comp_iWarnings )
    {
-      printf( "\r%s(%i) ", hb_comp_files.pLast->szFileName, iLine );
+      if( hb_comp_files.pLast && hb_comp_files.pLast->szFileName )
+         printf( "\r%s(%i) ", hb_comp_files.pLast->szFileName, iLine );
 
       printf( "Warning %c%04i  ", cPrefix, iWarning );
       printf( szText + 1, szWarning1, szWarning2 );

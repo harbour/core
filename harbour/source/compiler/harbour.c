@@ -480,7 +480,7 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
    pVar->cType = cValueType;
    pVar->iUsed = VU_NOT_USED;
    pVar->pNext = NULL;
-   pVar->iDeclLine = hb_comp_iLine;
+   pVar->iDeclLine = hb_comp_iCompiled;
 
    if ( toupper( cValueType ) == 'S' )
    {
@@ -2691,7 +2691,7 @@ void hb_compFinalizeFunction( void ) /* fixes all last defined function returns 
          pVar = pFunc->pLocals;
          while( pVar )
          {
-            if( pVar->szName && pFunc->szName && pFunc->szName[0] && ! ( pVar->iUsed & VU_USED ) )
+            if( pVar->szName && pFunc->szName && pFunc->szName[0] && (! ( pVar->iUsed & VU_USED )) )
             {
                char szFun[ 256 ];
                sprintf( szFun, "%s(%i)", pFunc->szName, pVar->iDeclLine );
