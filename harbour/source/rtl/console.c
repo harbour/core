@@ -14,10 +14,10 @@
 #if defined(__GNUC__)
   #include <unistd.h>
   #if defined(__DJGPP__)
-    #include <io.h>   
+    #include <io.h>
   #endif
 #else
-   #include <io.h>   
+   #include <io.h>
 #endif
 #ifdef USE_GTAPI
    #include <gtapi.h>
@@ -48,25 +48,37 @@ HARBOUR HB_SETPOS( void );
 HARBOUR HB_SETPRC( void );
 HARBOUR HB_QOUT( void );
 HARBOUR HB_QQOUT( void );
+HARBOUR HB_DISPBOX( void );
+HARBOUR HB_DISPBEGIN( void );
+HARBOUR HB_DISPEND( void );
+HARBOUR HB_DISPCOUNT( void );
+HARBOUR HB_ISCOLOR( void );
+HARBOUR HB_NOSNOW( void );
 
 static SYMBOL symbols[] = {
-{ "__ACCEPT", FS_PUBLIC, HB___ACCEPT, 0 },
-{ "__EJECT" , FS_PUBLIC, HB___EJECT , 0 },
-{ "COL"     , FS_PUBLIC, HB_COL     , 0 },
-{ "DEVOUT"  , FS_PUBLIC, HB_DEVOUT  , 0 },
-{ "DEVPOS"  , FS_PUBLIC, HB_DEVPOS  , 0 },
-{ "MAXCOL"  , FS_PUBLIC, HB_MAXCOL  , 0 },
-{ "MAXROW"  , FS_PUBLIC, HB_MAXROW  , 0 },
-{ "OUTERR"  , FS_PUBLIC, HB_OUTERR  , 0 },
-{ "OUTSTD"  , FS_PUBLIC, HB_OUTSTD  , 0 },
-{ "PCOL"    , FS_PUBLIC, HB_PCOL    , 0 },
-{ "PROW"    , FS_PUBLIC, HB_PROW    , 0 },
-{ "ROW"     , FS_PUBLIC, HB_ROW     , 0 },
-{ "SCROLL"  , FS_PUBLIC, HB_SCROLL  , 0 },
-{ "SETPOS"  , FS_PUBLIC, HB_SETPOS  , 0 },
-{ "SETPRC"  , FS_PUBLIC, HB_SETPRC  , 0 },
-{ "QOUT"    , FS_PUBLIC, HB_QOUT    , 0 },
-{ "QQOUT"   , FS_PUBLIC, HB_QQOUT   , 0 }
+{ "__ACCEPT" , FS_PUBLIC, HB___ACCEPT , 0 },
+{ "__EJECT"  , FS_PUBLIC, HB___EJECT  , 0 },
+{ "COL"      , FS_PUBLIC, HB_COL      , 0 },
+{ "DEVOUT"   , FS_PUBLIC, HB_DEVOUT   , 0 },
+{ "DEVPOS"   , FS_PUBLIC, HB_DEVPOS   , 0 },
+{ "MAXCOL"   , FS_PUBLIC, HB_MAXCOL   , 0 },
+{ "MAXROW"   , FS_PUBLIC, HB_MAXROW   , 0 },
+{ "OUTERR"   , FS_PUBLIC, HB_OUTERR   , 0 },
+{ "OUTSTD"   , FS_PUBLIC, HB_OUTSTD   , 0 },
+{ "PCOL"     , FS_PUBLIC, HB_PCOL     , 0 },
+{ "PROW"     , FS_PUBLIC, HB_PROW     , 0 },
+{ "ROW"      , FS_PUBLIC, HB_ROW      , 0 },
+{ "SCROLL"   , FS_PUBLIC, HB_SCROLL   , 0 },
+{ "SETPOS"   , FS_PUBLIC, HB_SETPOS   , 0 },
+{ "SETPRC"   , FS_PUBLIC, HB_SETPRC   , 0 },
+{ "QOUT"     , FS_PUBLIC, HB_QOUT     , 0 },
+{ "QQOUT"    , FS_PUBLIC, HB_QQOUT    , 0 },
+{ "DISPBOX"  , FS_PUBLIC, HB_DISPBOX  , 0 },
+{ "DISPBEGIN", FS_PUBLIC, HB_DISPBEGIN, 0 },
+{ "DISPEND"  , FS_PUBLIC, HB_DISPEND  , 0 },
+{ "DISPCOUNT", FS_PUBLIC, HB_DISPCOUNT, 0 },
+{ "ISCOLOR"  , FS_PUBLIC, HB_ISCOLOR  , 0 },
+{ "NOSNOW"   , FS_PUBLIC, HB_NOSNOW   , 0 }
 };
 
 void Console__InitSymbols( void )
@@ -104,7 +116,7 @@ USHORT hb_max_row( void )
 #ifdef USE_GTAPI
    return hb_gtMaxRow ();
 #else
-   return 23;
+   return 23; /* QUESTION: Shouldn't this be 24 ? info@szelvesz.hu */
 #endif
 }
 
@@ -121,6 +133,7 @@ USHORT hb_max_col( void )
 static void adjust_pos( char * fpStr, WORD uiLen, USHORT * row, USHORT * col, USHORT max_row, USHORT max_col )
 {
    WORD uiCount;
+
    for( uiCount = 0; uiCount < uiLen; uiCount++ )
    {
       switch( fpStr[ uiCount ]  )
@@ -172,10 +185,10 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
 #ifdef OS_UNIX_COMPATIBLE
    fgets( szResult, ACCEPT_BUFFER_LEN, stdin );             /* Read the data. Using fgets()            */
 #else
-/*TODO: check if it can be replaced with fgets() function 
+/*TODO: check if it can be replaced with fgets() function
 */
    gets( szResult ); /* Read the data. using gets(). Note; it doesn't check for buffer overflow */
-#endif   
+#endif
    hb_retc( szResult );
    hb_xfree( szResult );
 }
@@ -233,6 +246,7 @@ static void hb_outstd( char * fpStr, WORD uiLen )
 {
    WORD uiCount = uiLen;
    char * fpPtr = fpStr;
+
    while( uiCount-- )
       printf( "%c", *fpPtr++ );
    fflush( stdout );
@@ -436,23 +450,24 @@ HARBOUR HB_DEVOUT( void ) /* writes a single values to the current device (scree
 {
    if( hb_pcount() > 0 )
    {
-      char fpOldColor[ 64 ];
-      fpOldColor[ 0 ] = 0;
-      if( hb_pcount() > 1 )
+#ifdef USE_GTAPI
+      char fpOldColor[ CLR_STRLEN ];
+
+      if( ISCHAR(2) )
       {
-      #ifdef USE_GTAPI
-         PHB_ITEM pColor = hb_param( 2, IT_STRING );
-         if( pColor )
-         {
-            hb_gtGetColorStr( fpOldColor );
-            hb_gtSetColorStr( pColor->value.szText );
-         }
-      #endif
+         hb_gtGetColorStr( fpOldColor );
+         hb_gtSetColorStr( _parc(2) );
       }
+#endif
+
       hb_out( 1, hb_devout );
-      #ifdef USE_GTAPI
-      if( fpOldColor[ 0 ] ) hb_gtSetColorStr( fpOldColor );
-      #endif
+
+#ifdef USE_GTAPI
+      if( ISCHAR(2) )
+      {
+         hb_gtSetColorStr( fpOldColor );
+      }
+#endif
    }
 }
 
@@ -541,3 +556,80 @@ HARBOUR HB_COL( void ) /* Return the current screen column position (zero origin
 {
    hb_retni( dev_col );
 }
+
+HARBOUR HB_DISPBOX (void)
+{
+#ifdef USE_GTAPI
+   if (ISNUM(1) && ISNUM(2) && ISNUM(3) && ISNUM(4))
+   {
+      char szOldColor [CLR_STRLEN];
+
+      if (ISCHAR(6))
+      {
+         _gtGetColorStr(szOldColor);
+         _gtSetColorStr(_parc(6));
+      }
+
+      if (ISCHAR(1))
+      {
+         _gtBox(_parni(1), _parni(2), _parni(3), _parni(4), _parc(5));
+      }
+      else if (ISNUM(5) && _parni(5) == 2)
+      {
+         _gtBoxD(_parni(1), _parni(2), _parni(3), _parni(4));
+      }
+      else
+      {
+         _gtBoxS(_parni(1), _parni(2), _parni(3), _parni(4));
+      }
+
+      if (ISCHAR(6))
+      {
+         _gtSetColorStr(szOldColor);
+      }
+   }
+#endif
+}
+
+HARBOUR HB_DISPBEGIN (void)
+{
+#ifdef USE_GTAPI
+   _gtDispBegin();
+#endif
+}
+
+HARBOUR HB_DISPEND (void)
+{
+#ifdef USE_GTAPI
+   _gtDispBegin();
+#endif
+}
+
+HARBOUR HB_DISPCOUNT (void)
+{
+#ifdef USE_GTAPI
+   _retni(_gtDispCount());
+#else
+   _retni(0);
+#endif
+}
+
+HARBOUR HB_ISCOLOR (void)
+{
+#ifdef USE_GTAPI
+   _retl(_gtIsColor());
+#else
+   _retl(FALSE);
+#endif
+}
+
+HARBOUR HB_NOSNOW (void)
+{
+#ifdef USE_GTAPI
+   if (ISLOG(1))
+   {
+      _gtSetSnowFlag(_parl(1));
+   }
+#endif
+}
+

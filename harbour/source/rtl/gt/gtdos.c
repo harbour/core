@@ -184,27 +184,27 @@ int gtGetCursorStyle(void)
 
     if((start == 32) && (end == 32))
     {
-        rc=0;
+        rc=_SC_NONE;
     }
-    else if((start == 7) && (end == 8))
+    else if((start == 6) && (end == 7))
     {
-        rc=1;
+        rc=_SC_NORMAL;
     }
     else if((start == 4) && (end == 7))
     {
-        rc=2;
+        rc=_SC_INSERT;
     }
     else if((start == 0) && (end == 7))
     {
-        rc=3;
+        rc=_SC_SPECIAL1;
     }
-    else if((start == 7) && (end == 4))
+    else if((start == 0) && (end == 3))
     {
-        rc=4;
+        rc=_SC_SPECIAL2;
     }
     else
     {
-        rc=5;
+        rc=_SC_NONE;
     }
 
     return(rc);
@@ -214,27 +214,27 @@ void gtSetCursorStyle(int style)
 {
     switch(style)
     {
-        case 0:
+    case _SC_NONE:
         gtSetCursorSize(32, 32);
         break;
 
-        case 1:
-        gtSetCursorSize(7, 8);
+    case _SC_NORMAL:
+        gtSetCursorSize(6, 7);
         break;
 
-        case 2:
+    case _SC_INSERT:
         gtSetCursorSize(4, 7);
         break;
 
-        case 3:
+    case _SC_SPECIAL1:
         gtSetCursorSize(0, 7);
         break;
 
-        case 4:
-        gtSetCursorSize(7, 4);
+    case _SC_SPECIAL2:
+        gtSetCursorSize(0, 3);
         break;
 
-        default:
+    default:
         break;
     }
 }

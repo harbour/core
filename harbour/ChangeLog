@@ -1,3 +1,20 @@
+19990620-20:00 CET Victor Szel <info@szelvesz.hu>
+  * source/rtl/gtapi.c
+    hb_gtGetColorStr() fixed, so that is doesn't
+    require that the passed memory should be zero
+    terminated, checks for null pointer.
+  * source/rtl/console.c
+    64 -> CLR_STRLEN
+    Added DISPBOX(), DISPBEGIN(), DISPEND(), DISPCOUNT(),
+    ISCOLOR(), NOSNOW()
+    HB_DEVOUT() cleaned up.
+  * source/rtl/gt/gtdos.c
+    source/rtl/gt/gtwin.c
+    Using manifest constants.
+    Cursors sizes in DOS made exactly compatible with Clipper.
+    Removed not Clipper compatible cursor type 5, changed
+    to NONE.
+
 19990620-22:29 Alexander Kresin
  updated:
  * source\hbpp\hbppmain.c
@@ -12,7 +29,7 @@
     Leaves the cursor at the same place as Clipper does.
     Handling of empty or short frame string parameter
     fixed. Bit slower.
-    source/compiler/gtapi.c
+    source/rtl/gtapi.c
 
 19990620-02:40 Ryszard Glab <rglab@imid.med.pl>
 

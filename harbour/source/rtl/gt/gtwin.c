@@ -73,27 +73,31 @@ void gtSetCursorStyle(int style)
     GetConsoleCursorInfo(HOutput, &cci);
     switch (style)
     {
-    case 0:
+    case _SC_NONE:
         cci.bVisible = 0;
         SetConsoleCursorInfo(HOutput, &cci);
         break;
 
-    case 1:
+    case _SC_NORMAL:
         cci.bVisible = 1;
         cci.dwSize = 12;
         SetConsoleCursorInfo(HOutput, &cci);
         break;
 
-    case 2:
+    case _SC_INSERT:
         cci.bVisible = 1;
         cci.dwSize = 99;
         SetConsoleCursorInfo(HOutput, &cci);
         break;
 
-    case 3:
+    case _SC_SPECIAL1:
         cci.bVisible = 1;
         cci.dwSize = 49;
         SetConsoleCursorInfo(HOutput, &cci);
+        break;
+
+    case _SC_SPECIAL2:
+        /* TODO: Why wasn't this implemented ? */
         break;
 
     default:
@@ -110,27 +114,28 @@ int gtGetCursorStyle(void)
 
     if(cci.bVisible)
     {
-        rc=0;
+        /* QUESTION: Is this really correct ? IF _VISIBLE_ -> NONE */
+        rc=_SC_NONE;
     }
     else
     {
         switch(cci.dwSize)
         {
-            case 12:
-            rc=1;
+        case 12:
+            rc=_SC_NORMAL;
             break;
 
-            case 49:
-            rc=2;
+        case 99:
+            rc=_SC_INSERT;
             break;
 
-            case 99:
-            rc=3;
+        case 49:
+            rc=_SC_SPECIAL1;
             break;
 
-            /* TODO: cannot tell if the block is upper or lower for cursor */
-            default:
-            rc=4;
+        /* TODO: cannot tell if the block is upper or lower for cursor */
+        default:
+            rc=_SC_SPECIAL2;
         }
     }
 

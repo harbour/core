@@ -133,18 +133,29 @@ int hb_gtDispEnd(void)
     return(0);
 }
 
-int hb_gtGetColorStr(char * fpColorString)
+int hb_gtSetColorStr(char * fpColorString)
 {
-    int iDestLen = strlen(fpColorString);
-    int iSrcLen = strlen(s_szColorStr);
-
-    if(iSrcLen > iDestLen)
+    if (strlen(fpColorString) > CLR_STRLEN)
     {
         return(1);
     }
     else
     {
-        strncpy(fpColorString, s_szColorStr, iSrcLen);
+        strcpy(s_szColorStr, fpColorString);
+    }
+
+    return(0);
+}
+
+int hb_gtGetColorStr(char * fpColorString)
+{
+    if (fpColorString)
+    {
+        strcpy(fpColorString, s_szColorStr);
+    }
+    else
+    {
+        return(1);
     }
 
     return(0);
@@ -262,22 +273,6 @@ int hb_gtScrDim(USHORT * uipHeight, USHORT * uipWidth)
 
 int hb_gtSetBlink(BOOL bBlink)
 {
-    return(0);
-}
-
-int hb_gtSetColorStr(char * fpColorString)
-{
-    int iLength = strlen(fpColorString);
-
-    if(iLength > CLR_STRLEN)
-    {
-        return(1);
-    }
-    else
-    {
-        strncpy(s_szColorStr, fpColorString, iLength);
-    }
-
     return(0);
 }
 
