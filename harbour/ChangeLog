@@ -1,3 +1,7 @@
+2001-07-16 03:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/vm/hvm.c
+     + Added call to hb_pp_Free() in hb_vmQuit() to release pp tables if loaded by macro evaluation.
+
 2001-07-16 02:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/vm/hvm.c
      * Few improvements to recent support for lists in macro expansion

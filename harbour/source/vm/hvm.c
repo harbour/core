@@ -391,6 +391,7 @@ void hb_vmQuit( void )
    {
       hb_xfree( (void*) hb_vm_aiMacroListParameters );
    }
+   hb_pp_Free();
 
    s_uiActionRequest = 0;         /* EXIT procedures should be processed */
    hb_vmDoExitFunctions();       /* process defined EXIT functions */
