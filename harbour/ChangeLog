@@ -1,3 +1,33 @@
+20000321-02:00 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   + source/vm/runner.c
+   - source/runner/runlib.c
+   - source/runner/Makefile
+   - source/runner/stdalone/Makefile
+   - source/runner/stdalone/hbrun.prg
+   + utils/hbrun/Makefile
+   + utils/hbrun/hbrun.prg
+   * source/Makefile
+     source/vm/Makefile
+     utils/Makefile
+     makefile.bc
+     makefile.vc
+     * Runner library code moved to SOURCE/VM
+     * Runner standalone utility moved to UTILS/HBRUN
+
+   * source/rtl/filesys.c
+   + source/rtl/philes.c
+   - source/rtl/getenv.c
+   + source/rtl/gete.c
+   - source/rtl/stris.c
+   + source/rtl/is.c
+     source/rtl/Makefile
+     makefile.bc
+     makefile.vc
+     + Harbour callable low-level file handling routines moved to a separate
+       source file.
+     * Two files renamed to match Clipper.
+
 20000321-01:10 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/gtapi.c

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * The FileSys API
+ * The FileSys API (C level)
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://www.harbour-project.org
@@ -43,7 +43,6 @@
  *    hb_fsReadLarge()
  *    hb_fsWriteLarge()
  *    hb_fsCurDirBuff()
- *    HB_CURDIR()
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  *    hb_fsChDrv()
@@ -67,9 +66,7 @@
 #include <ctype.h>
 
 #include "hbapi.h"
-#include "hbapiitm.h"
 #include "hbapifs.h"
-#include "hbapierr.h"
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
    #include <sys/types.h>
@@ -1287,110 +1284,6 @@ FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
    return s_uiErrorLast;
 }
 
-HARBOUR HB_FOPEN( void )
-{
-   if( ISCHAR( 1 ) )
-      hb_retni( hb_fsOpen( ( BYTE * ) hb_parc( 1 ),
-                           ISNUM( 2 ) ? hb_parni( 2 ) : FO_READ | FO_COMPAT ) );
-   else
-      hb_errRT_BASE( EG_ARG, 2021, NULL, "FOPEN" ); /* NOTE: Undocumented but existing Clipper Run-time error */
-}
-
-HARBOUR HB_FCREATE( void )
-{
-   if( ISCHAR( 1 ) )
-      hb_retni( hb_fsCreate( ( BYTE * ) hb_parc( 1 ),
-                             ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL ) );
-   else
-      hb_retni( FS_ERROR );
-}
-
-HARBOUR HB_FREAD( void )
-{
-   ULONG ulRead;
-
-   if( ISNUM( 1 ) && ISCHAR( 2 ) && ISBYREF( 2 ) && ISNUM( 3 ) )
-   {
-      ulRead = hb_parnl( 3 );
-
-      /* NOTE: CA-Clipper determines the maximum size by calling _parcsiz()
-               instead of _parclen(), this means that the maximum read length
-               will be one more than the length of the passed buffer, because
-               the terminating zero could be used if needed. [vszakats] */
-
-      if( ulRead <= hb_parcsiz( 2 ) )
-         /* NOTE: Warning, the read buffer will be directly modified,
-                  this is normal here ! [vszakats] */
-         ulRead = hb_fsReadLarge( hb_parni( 1 ),
-                                  ( BYTE * ) hb_parc( 2 ),
-                                  ulRead );
-      else
-         ulRead = 0;
-   }
-   else
-      ulRead = 0;
-
-   hb_retnl( ulRead );
-}
-
-HARBOUR HB_FWRITE( void )
-{
-   if( ISNUM( 1 ) && ISCHAR( 2 ) )
-      hb_retnl( hb_fsWriteLarge( hb_parni( 1 ),
-                                 ( BYTE * ) hb_parc( 2 ),
-                                 ISNUM( 3 ) ? hb_parnl( 3 ) : hb_parclen( 2 ) ) );
-   else
-      hb_retnl( 0 );
-}
-
-HARBOUR HB_FERROR( void )
-{
-   hb_retni( hb_fsError() );
-}
-
-HARBOUR HB_FCLOSE( void )
-{
-   s_uiErrorLast = 0;
-
-   if( ISNUM( 1 ) )
-   {
-      hb_fsClose( hb_parni( 1 ) );
-      hb_retl( s_uiErrorLast == 0 );
-   }
-   else
-      hb_retl( FALSE );
-}
-
-HARBOUR HB_FERASE( void )
-{
-   s_uiErrorLast = 3;
-
-   if( ISCHAR( 1 ) )
-      hb_retni( hb_fsDelete( ( BYTE * ) hb_parc( 1 ) ) );
-   else
-      hb_retni( -1 );
-}
-
-HARBOUR HB_FRENAME( void )
-{
-   s_uiErrorLast = 2;
-
-   if( ISCHAR( 1 ) && ISCHAR( 2 ) )
-      hb_retni( hb_fsRename( ( BYTE * ) hb_parc( 1 ), ( BYTE * ) hb_parc( 2 ) ) );
-   else
-      hb_retni( -1 );
-}
-
-HARBOUR HB_FSEEK( void )
-{
-   if( ISNUM( 1 ) && ISNUM( 2 ) )
-      hb_retnl( hb_fsSeek( hb_parni( 1 ),
-                           hb_parnl( 2 ),
-                           ISNUM( 3 ) ? hb_parni( 3 ) : FS_SET ) );
-   else
-      hb_retnl( 0 );
-}
-
 BOOL hb_fsFile( BYTE * pFilename )
 {
    BOOL bIsFile;
@@ -1421,55 +1314,5 @@ BOOL hb_fsFile( BYTE * pFilename )
 #endif
 
    return bIsFile;
-}
-
-HARBOUR HB_FILE( void )
-{
-   hb_retl( ISCHAR( 1 ) ? hb_fsFile( ( BYTE * ) hb_parc( 1 ) ) : FALSE );
-}
-
-HARBOUR HB_FREADSTR( void )
-{
-   if( ISNUM( 1 ) && ISNUM( 2 ) )
-   {
-      ULONG ulToRead = ( ULONG ) hb_parnl( 2 );
-
-      if( ulToRead > 0 )
-      {
-         FHANDLE fhnd = ( FHANDLE ) hb_parni( 1 );
-         BYTE * buffer = ( BYTE * ) hb_xgrab( ulToRead + 1 );
-         ULONG ulRead;
-
-         ulRead = hb_fsReadLarge( fhnd, buffer, ulToRead );
-         buffer[ ulRead ] = '\0';
-
-         /* NOTE: Clipper will not return zero chars from this functions. */
-
-         hb_retc( ( char * ) buffer );
-
-         hb_xfree( buffer );
-      }
-      else
-         hb_retc( "" );
-   }
-   else
-      hb_retc( "" );
-}
-
-/* NOTE: This function should not return the leading and trailing */
-/*       (back)slashes. */
-
-HARBOUR HB_CURDIR( void )
-{
-   USHORT uiErrorOld = s_uiErrorLast;
-   BYTE * pbyBuffer = ( BYTE * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
-
-   hb_fsCurDirBuff( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
-      ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0, pbyBuffer, _POSIX_PATH_MAX + 1 );
-
-   hb_retc( ( char * ) pbyBuffer );
-   hb_xfree( pbyBuffer );
-
-   s_uiErrorLast = uiErrorOld;
 }
 

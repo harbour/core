@@ -24,6 +24,7 @@ C_SOURCES=\
         pcount.c     \
         proc.c       \
         pvalue.c     \
+        runner.c     \
 
 PRG_SOURCES=\
         harbinit.prg \

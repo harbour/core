@@ -35,12 +35,13 @@ C_SOURCES=\
         fnsplit.c    \
         fssize.c     \
         fstemp.c     \
-        getenv.c     \
+        gete.c       \
         gt.c         \
         gtapi.c      \
         gx.c         \
         hardcr.c     \
         inkey.c      \
+        is.c         \
         isprint.c    \
         langapi.c    \
         left.c       \
@@ -62,6 +63,7 @@ C_SOURCES=\
         oldbox.c     \
         oldclear.c   \
         pad.c        \
+        philes.c     \
         philes53.c   \
         philesx.c    \
         rat.c        \
@@ -83,7 +85,6 @@ C_SOURCES=\
         str.c        \
         strcase.c    \
         strings.c    \
-        stris.c      \
         strmatch.c   \
         strtran.c    \
         strzero.c    \

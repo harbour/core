@@ -50,9 +50,9 @@ MACRO_DIR    = source\macro
 PP_DIR       = source\pp
 RDD_DIR      = source\rdd
 RTL_DIR      = source\rtl
-RUNNER_DIR   = source\runner
 TOOLS_DIR    = source\tools
 VM_DIR       = source\vm
+HBRUN_DIR    = utils\hbrun
 HBTEST_DIR   = utils\hbtest
 HBDOC_DIR    = utils\hbdoc
 
@@ -79,7 +79,6 @@ NULSYS_LIB   = $(LIB_DIR)\nulsys.lib
 PP_LIB       = $(LIB_DIR)\pp.lib
 RDD_LIB      = $(LIB_DIR)\rdd.lib
 RTL_LIB      = $(LIB_DIR)\rtl.lib
-RUNNER_LIB   = $(LIB_DIR)\runner.lib
 TOOLS_LIB    = $(LIB_DIR)\tools.lib
 VM_LIB       = $(LIB_DIR)\vm.lib
 
@@ -126,7 +125,6 @@ LIBLIST = \
    $(DBFCDX_LIB) \
    $(DBFNTX_LIB) \
    $(NULSYS_LIB) \
-   $(RUNNER_LIB) \
    $(TOOLS_LIB) \
    $(VM_LIB) \
    $(HB_GT_LIB)
@@ -202,12 +200,13 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\fnsplit.obj \
    $(OBJ_DIR)\fssize.obj \
    $(OBJ_DIR)\fstemp.obj \
-   $(OBJ_DIR)\getenv.obj \
+   $(OBJ_DIR)\gete.obj \
    $(OBJ_DIR)\gt.obj \
    $(OBJ_DIR)\gtapi.obj \
    $(OBJ_DIR)\gx.obj \
    $(OBJ_DIR)\hardcr.obj \
    $(OBJ_DIR)\inkey.obj \
+   $(OBJ_DIR)\is.obj \
    $(OBJ_DIR)\isprint.obj \
    $(OBJ_DIR)\langapi.obj \
    $(OBJ_DIR)\left.obj \
@@ -229,6 +228,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\oldbox.obj \
    $(OBJ_DIR)\oldclear.obj \
    $(OBJ_DIR)\pad.obj \
+   $(OBJ_DIR)\philes.obj \
    $(OBJ_DIR)\philes53.obj \
    $(OBJ_DIR)\philesx.obj \
    $(OBJ_DIR)\rat.obj \
@@ -250,7 +250,6 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\str.obj \
    $(OBJ_DIR)\strcase.obj \
    $(OBJ_DIR)\strings.obj \
-   $(OBJ_DIR)\stris.obj \
    $(OBJ_DIR)\strmatch.obj \
    $(OBJ_DIR)\strtran.obj \
    $(OBJ_DIR)\strzero.obj \
@@ -443,16 +442,6 @@ DBFCDX_LIB_OBJS = \
    $(OBJ_DIR)\dbfcdx0.obj
 
 #
-# RUNNER.LIB rules
-#
-
-{$(RUNNER_DIR)}.c{$(OBJ_DIR)}.obj::
-   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
-
-RUNNER_LIB_OBJS = \
-   $(OBJ_DIR)\runlib.obj
-
-#
 # PP.LIB rules
 #
 
@@ -532,6 +521,7 @@ VM_LIB_OBJS = \
    $(OBJ_DIR)\pcount.obj \
    $(OBJ_DIR)\proc.obj \
    $(OBJ_DIR)\pvalue.obj \
+   $(OBJ_DIR)\runner.obj \
    \
    $(OBJ_DIR)\symbols.obj \
    \
@@ -590,7 +580,6 @@ all: zot \
    $(NULSYS_LIB) \
    $(DBFNTX_LIB) \
    $(DBFCDX_LIB) \
-   $(RUNNER_LIB) \
    $(GTPCA_LIB) \
    $(GTSTD_LIB) \
    $(GTWIN_LIB) \
@@ -627,7 +616,6 @@ all: \
    $(NULSYS_LIB) \
    $(DBFNTX_LIB) \
    $(DBFCDX_LIB) \
-   $(RUNNER_LIB) \
    $(GTPCA_LIB) \
    $(GTSTD_LIB) \
    $(GTWIN_LIB) \
@@ -646,11 +634,10 @@ $(HBPP_EXE) : \
    $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $** -o $(HBPP_EXE) /link $(PP_LIB) $(COMMON_LIB)
 
 #
-# Runner
+# HBRUN.EXE rules
 #
 
-$(HBRUN_EXE) : \
-   $(RUNNER_DIR)\stdalone\hbrun.prg
+$(HBRUN_EXE) : $(HBRUN_DIR)\hbrun.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
    $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbrun.c -o $(BIN_DIR)\hbrun /link $(LIBS2)
 
@@ -659,8 +646,8 @@ $(HBRUN_EXE) : \
 #
 # To compile this you must have a JDK installed
 #
-$(HBRUNJAV_DLL) : $(RUNNER_DIR)\runjava.c
-   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(RUNNER_DIR)\runjava.c -o $(BIN_DIR)\runjava.dll /link-dll $(LIBS)
+$(HBRUNJAV_DLL) : $(HBRUN_DIR)\runjava.c
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(HBRUN_DIR)\runjava.c -o $(BIN_DIR)\runjava.dll /link-dll $(LIBS)
     -del $(BIN_DIR)\runjava.exp
     -del $(BIN_DIR)\runjava.lib
 
@@ -757,9 +744,6 @@ $(DBFNTX_LIB) : $(DBFNTX_LIB_OBJS)
 $(NULSYS_LIB) : $(NULSYS_LIB_OBJS)
    lib /out:$@ $**
 
-$(RUNNER_LIB) : $(RUNNER_LIB_OBJS)
-   lib /out:$@ $**
-
 $(TOOLS_LIB) : $(TOOLS_LIB_OBJS)
    lib /out:$@ $**
 
@@ -815,7 +799,6 @@ $(RDD_LIB)2    : $(RDD_LIB_OBJS)
 $(DBFCDX_LIB)2 : $(DBFCDX_LIB_OBJS)
 $(DBFNTX_LIB)2 : $(DBFNTX_LIB_OBJS)
 $(NULSYS_LIB)2 : $(NULSYS_LIB_OBJS)
-$(RUNNER_LIB)2 : $(RUNNER_LIB_OBJS)
 $(TOOLS_LIB)2  : $(TOOLS_LIB_OBJS)
 $(VM_LIB)2     : $(VM_LIB_OBJS)
 $(GTPCA_LIB)2  : $(GTPCA_LIB_OBJS)

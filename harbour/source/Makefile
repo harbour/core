@@ -14,6 +14,5 @@ DIRS=\
 	macro \
         debug \
 	tools \
-        runner \
 
 include $(ROOT)config/dir.cf

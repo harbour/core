@@ -49,9 +49,9 @@ MACRO_DIR    = source\macro
 PP_DIR       = source\pp
 RDD_DIR      = source\rdd
 RTL_DIR      = source\rtl
-RUNNER_DIR   = source\runner
 TOOLS_DIR    = source\tools
 VM_DIR       = source\vm
+HBRUN_DIR    = utils\hbrun
 HBTEST_DIR   = utils\hbtest
 HBDOC_DIR    = utils\hbdoc
 
@@ -77,7 +77,6 @@ NULSYS_LIB   = $(LIB_DIR)\nulsys.lib
 PP_LIB       = $(LIB_DIR)\pp.lib
 RDD_LIB      = $(LIB_DIR)\rdd.lib
 RTL_LIB      = $(LIB_DIR)\rtl.lib
-RUNNER_LIB   = $(LIB_DIR)\runner.lib
 TOOLS_LIB    = $(LIB_DIR)\tools.lib
 VM_LIB       = $(LIB_DIR)\vm.lib
 
@@ -161,12 +160,13 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\fnsplit.obj \
    $(OBJ_DIR)\fssize.obj \
    $(OBJ_DIR)\fstemp.obj \
-   $(OBJ_DIR)\getenv.obj \
+   $(OBJ_DIR)\gete.obj \
    $(OBJ_DIR)\gt.obj \
    $(OBJ_DIR)\gtapi.obj \
    $(OBJ_DIR)\gx.obj \
    $(OBJ_DIR)\hardcr.obj \
    $(OBJ_DIR)\inkey.obj \
+   $(OBJ_DIR)\is.obj \
    $(OBJ_DIR)\isprint.obj \
    $(OBJ_DIR)\langapi.obj \
    $(OBJ_DIR)\left.obj \
@@ -188,6 +188,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\oldbox.obj \
    $(OBJ_DIR)\oldclear.obj \
    $(OBJ_DIR)\pad.obj \
+   $(OBJ_DIR)\philes.obj \
    $(OBJ_DIR)\philes53.obj \
    $(OBJ_DIR)\philesx.obj \
    $(OBJ_DIR)\rat.obj \
@@ -209,7 +210,6 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\str.obj \
    $(OBJ_DIR)\strcase.obj \
    $(OBJ_DIR)\strings.obj \
-   $(OBJ_DIR)\stris.obj \
    $(OBJ_DIR)\strmatch.obj \
    $(OBJ_DIR)\strtran.obj \
    $(OBJ_DIR)\strzero.obj \
@@ -350,13 +350,6 @@ DBFCDX_LIB_OBJS = \
    $(OBJ_DIR)\dbfcdx0.obj
 
 #
-# RUNNER.LIB rules
-#
-
-RUNNER_LIB_OBJS = \
-   $(OBJ_DIR)\runlib.obj
-
-#
 # PP.LIB rules
 #
 
@@ -413,6 +406,7 @@ VM_LIB_OBJS = \
    $(OBJ_DIR)\pcount.obj \
    $(OBJ_DIR)\proc.obj \
    $(OBJ_DIR)\pvalue.obj \
+   $(OBJ_DIR)\runner.obj \
    \
    $(OBJ_DIR)\symbols.obj \
    \
@@ -519,7 +513,6 @@ all: \
    $(NULSYS_LIB) \
    $(DBFNTX_LIB) \
    $(DBFCDX_LIB) \
-   $(RUNNER_LIB) \
    $(HB_GT_LIBS) \
    $(HBRUN_EXE) \
    $(HBPP_EXE) \
@@ -539,7 +532,6 @@ $(NULSYS_LIB) : $(NULSYS_LIB_OBJS)
 $(PP_LIB)     : $(PP_LIB_OBJS)
 $(RDD_LIB)    : $(RDD_LIB_OBJS)
 $(RTL_LIB)    : $(RTL_LIB_OBJS)
-$(RUNNER_LIB) : $(RUNNER_LIB_OBJS)
 $(TOOLS_LIB)  : $(TOOLS_LIB_OBJS)
 $(VM_LIB)     : $(VM_LIB_OBJS)
 $(GTDOS_LIB)  : $(GTDOS_LIB_OBJS)
@@ -842,6 +834,10 @@ $(OBJ_DIR)\pvalue.obj : $(VM_DIR)\pvalue.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(VM_LIB) -+$@,,
 
+$(OBJ_DIR)\runner.obj : $(VM_DIR)\runner.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(VM_LIB) -+$@,,
+
 $(OBJ_DIR)\symbols.obj : $(VM_DIR)\symbols.asm
    $(AS) $**, $@
    tlib $(VM_LIB) -+$@,,
@@ -1065,7 +1061,7 @@ $(OBJ_DIR)\fstemp.obj : $(RTL_DIR)\fstemp.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
 
-$(OBJ_DIR)\getenv.obj : $(RTL_DIR)\getenv.c
+$(OBJ_DIR)\gete.obj : $(RTL_DIR)\gete.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
 
@@ -1093,6 +1089,10 @@ $(OBJ_DIR)\input.c : $(RTL_DIR)\input.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\input.obj : $(OBJ_DIR)\input.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) -+$@,,
+
+$(OBJ_DIR)\is.obj : $(RTL_DIR)\is.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
 
@@ -1205,6 +1205,10 @@ $(OBJ_DIR)\pad.obj : $(RTL_DIR)\pad.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
 
+$(OBJ_DIR)\philes.obj : $(RTL_DIR)\philes.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) -+$@,,
+
 $(OBJ_DIR)\philes53.obj : $(RTL_DIR)\philes53.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
@@ -1314,10 +1318,6 @@ $(OBJ_DIR)\strcase.obj : $(RTL_DIR)\strcase.c
    tlib $(RTL_LIB) -+$@,,
 
 $(OBJ_DIR)\strings.obj : $(RTL_DIR)\strings.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(RTL_LIB) -+$@,,
-
-$(OBJ_DIR)\stris.obj : $(RTL_DIR)\stris.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
 
@@ -1723,14 +1723,6 @@ $(OBJ_DIR)\dbfcdx1.obj : $(RDD_DIR)\dbfcdx\dbfcdx1.c
    tlib $(DBFCDX_LIB) -+$@,,
 
 #
-# RUNNER.LIB dependencies
-#
-
-$(OBJ_DIR)\runlib.obj : $(RUNNER_DIR)\runlib.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(RUNNER_LIB) -+$@,,
-
-#
 # DEBUG.LIB dependencies
 #
 
@@ -1823,11 +1815,9 @@ $(HBPP_EXE) : \
 #
 # HBRUN.EXE dependencies
 #
-$(HBRUN_EXE) : \
-   $(RUNNER_DIR)\stdalone\hbrun.prg \
-   $(RUNNER_LIB)
+$(HBRUN_EXE) : $(HBRUN_DIR)\hbrun.prg 
 
-   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(RUNNER_DIR)\stdalone\hbrun.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBRUN_DIR)\hbrun.prg
    $(CC) $(CLIBFLAGS) -o$(OBJ_DIR)\hbrun.obj $(OBJ_DIR)\hbrun.c
 
    echo. $(CFLAGS) > make.tmp
@@ -1842,7 +1832,6 @@ $(HBRUN_EXE) : \
    echo. $(RDD_LIB) >> make.tmp
    echo. $(MACRO_LIB) >> make.tmp
    echo. $(TOOLS_LIB) >> make.tmp
-   echo. $(RUNNER_LIB) >> make.tmp
    echo. $(DBFNTX_LIB) >> make.tmp
    echo. $(DBFCDX_LIB) >> make.tmp
    $(CC) @make.tmp
@@ -1872,7 +1861,6 @@ $(HBTEST_EXE) : $(HBTEST_EXE_OBJS)
    echo. $(HB_GT_LIB) >> make.tmp
    echo. $(RDD_LIB) >> make.tmp
    echo. $(MACRO_LIB) >> make.tmp
-   echo. $(RUNNER_LIB) >> make.tmp
    echo. $(DBFNTX_LIB) >> make.tmp
    echo. $(DBFCDX_LIB) >> make.tmp
    $(CC) @make.tmp
@@ -1956,7 +1944,6 @@ $(HBDOC_EXE) : $(HBDOC_EXE_OBJS)
    echo. $(RDD_LIB) >> make.tmp
    echo. $(MACRO_LIB) >> make.tmp
    echo. $(TOOLS_LIB) >> make.tmp
-   echo. $(RUNNER_LIB) >> make.tmp
    echo. $(DBFNTX_LIB) >> make.tmp
    echo. $(DBFCDX_LIB) >> make.tmp
    $(CC) @make.tmp

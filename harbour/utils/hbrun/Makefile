@@ -6,7 +6,7 @@ ifeq ($(HB_MAIN),)
 HB_MAIN = std
 endif
 
-ROOT = ../../../
+ROOT = ../../
 
 PRG_SOURCES=\
 	hbrun.prg \
