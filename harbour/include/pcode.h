@@ -60,6 +60,7 @@ typedef enum
    HB_P_LINE,           /* currently compiled source code line number */
    HB_P_MESSAGE,        /* sends a message to an object */
    HB_P_MINUS,          /* subs the latest two values on the stack, removing them and leaving there the result */
+   HB_P_MODULENAME,     /* name of the PRG file and function when using debugger info */
    HB_P_MODULUS,        /* calculates the modulus of the two values on the stack, removing them and leaving there the result */
    HB_P_MULT,           /* multiplies the latest two values on the stack, removing them and leaving there the result */
    HB_P_NEGATE,         /* numerically negates the latest value on the stack */
