@@ -1,3 +1,8 @@
+20000412-04:39 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/gtapi.c
+     + hb_gtGetColorStr() fixed.
+
 20000412-03:14 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/tools/ctmisc.prg
