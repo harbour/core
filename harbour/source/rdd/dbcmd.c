@@ -3565,8 +3565,8 @@ static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName, BOOL creat
 /* Fill pInfo structure */
   memset( &pInfo, 0, sizeof(DBOPENINFO) );
   pInfo.uiArea = uiRddID;
-  szDbfName = ( BYTE * )  hb_xgrab( _POSIX_PATH_MAX + 1 );
-  pInfo.abName = szDbfName;
+  szDbfName = ( char * )  hb_xgrab( _POSIX_PATH_MAX + 1 );
+  pInfo.abName = (BYTE *) szDbfName;
   strcpy( ( char * ) pInfo.abName, szFileName );
   pInfo.atomAlias = ( BYTE * ) "__TMPAREA";
   pInfo.fShared = FALSE;
@@ -3612,7 +3612,7 @@ static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName, BOOL creat
              ptr ++;
           else
              ptr = (char *)pField->item.asString.value;
-          if( ( uiCount = hb_rddFieldIndex( (AREAP) s_pCurrArea->pArea, 
+          if( ( uiCount = hb_rddFieldIndex( (AREAP) s_pCurrArea->pArea,
                            hb_strUpper( ptr,strlen(ptr)) ) ) != 0 )
              AddField( pFieldArray, pItem, pData, uiCount );
        }

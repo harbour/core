@@ -57,7 +57,7 @@ extern void yy_delete_buffer( void * ); /* yacc functions to manage multiple fil
 /* lex & yacc related prototypes */
 #if !defined(__GNUC__) && !defined(__IBMCPP__)
    #if 0
-      /* This makes BCC 551 fail with Bison 1.30, even with the 
+      /* This makes BCC 551 fail with Bison 1.30, even with the
          supplied harbour.simple file, which makes Bison 1.30 blow.
          [vszakats] */
       void __yy_memcpy ( char*, const char*, unsigned int ); /* to satisfy Borland compiler */
@@ -124,6 +124,8 @@ char * hb_comp_buffer; /* yacc input buffer */
 
 static PTR_LOOPEXIT hb_comp_pLoops = NULL;
 static HB_RTVAR_PTR hb_comp_rtvars = NULL;
+
+extern int hb_compLocalGetPos( char * szVarName );   /* returns the order + 1 of a local variable */
 
 char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
 
@@ -272,11 +274,11 @@ Line       : LINE NUM_INTEGER LITERAL Crlf
            ;
 
 ProcReq    : PROCREQ CompTimeStr ')' Crlf {}
-	   ;
+           ;
 
 CompTimeStr: LITERAL { hb_compAutoOpenAdd( $1 ); }
-	   | LITERAL '+' LITERAL { char szFileName[ _POSIX_PATH_MAX ]; sprintf( szFileName, "%s%s", $1, $3 ); hb_compAutoOpenAdd( szFileName ); }
-	   ;
+           | LITERAL '+' LITERAL { char szFileName[ _POSIX_PATH_MAX ]; sprintf( szFileName, "%s%s", $1, $3 ); hb_compAutoOpenAdd( szFileName ); }
+           ;
 
 Function   : FunScope FUNCTION  IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, 0 ); } Params Crlf {}
            | FunScope PROCEDURE IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, FUN_PROCEDURE ); } Params Crlf {}
@@ -294,7 +296,7 @@ Params     :                                                         { $$ = 0; }
            ;
 
 AsType     : /* not specified */           { hb_comp_cVarType = ' '; }
-	   | StrongType
+           | StrongType
            ;
 
 StrongType : AS_NUMERIC                    { hb_comp_cVarType = 'N'; }
@@ -305,7 +307,7 @@ StrongType : AS_NUMERIC                    { hb_comp_cVarType = 'N'; }
            | AS_OBJECT                     { hb_comp_cVarType = 'O'; }
            | AS_CLASS IdentName            { hb_comp_cVarType = 'S'; hb_comp_szFromClass = $2 }
            | AS_VARIANT                    { hb_comp_cVarType = ' '; }
-	   | AsArray
+           | AsArray
            ;
 
 AsArray    : AS_ARRAY                      { hb_comp_cVarType = 'A'; }
@@ -372,8 +374,8 @@ Statement  : ExecFlow { hb_comp_bDontGenLineNum = TRUE; } CrlfStmnt     { }
                      }
            | RETURN { hb_compLinePushIfInside(); hb_comp_cVarType = ' '; } Expression Crlf {
 
-		        hb_comp_cCastType = hb_comp_cVarType;
-		        hb_comp_cVarType = ' ';
+                        hb_comp_cCastType = hb_comp_cVarType;
+                        hb_comp_cVarType = ' ';
 
                         if( hb_comp_wSeqCounter )
                         {
@@ -633,7 +635,7 @@ VariableAtAlias : VariableAt ALIASOP      { $$ = $1; }
  */
 FunCall    : IdentName '(' ArgList ')' { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( $1 ), $3 ); }
            | MacroVar '(' ArgList ')'  { $$ = hb_compExprNewFunCall( $1, $3 ); }
-	   | MacroExpr '(' ArgList ')'  { $$ = hb_compExprNewFunCall( $1, $3 ); }
+           | MacroExpr '(' ArgList ')'  { $$ = hb_compExprNewFunCall( $1, $3 ); }
            ;
 
 ArgList    : Argument                     { $$ = hb_compExprNewArgList( $1 ); }
@@ -732,9 +734,9 @@ SimpleExpression :
            ;
 
 Expression : Variable         { $$ = $1; }
-	   | SimpleExpression { $$ = $1; }
-	   | PareExpList      { $$ = $1; }
-	   | Variable         { hb_comp_cVarType = ' ';} StrongType { $$ = $1; }
+           | SimpleExpression { $$ = $1; }
+           | PareExpList      { $$ = $1; }
+           | Variable         { hb_comp_cVarType = ' ';} StrongType { $$ = $1; }
            | PareExpList      { hb_comp_cVarType = ' ';} StrongType { $$ = $1; }
            ;
 
@@ -1146,8 +1148,8 @@ VarDef     : IdentName AsType { hb_compVariableAdd( $1, hb_comp_cVarType ); }
                               }
              INASSIGN {hb_comp_cVarType = ' ';} Expression
                {
-		  hb_comp_cCastType = hb_comp_cVarType;
-		  hb_comp_cVarType = ' ';
+                  hb_comp_cCastType = hb_comp_cVarType;
+                  hb_comp_cVarType = ' ';
 
                   hb_comp_iVarScope = $<iNumber>3;
                   if( hb_comp_iVarScope == VS_STATIC )
@@ -1202,7 +1204,7 @@ MemvarList : IdentName AsType                     { hb_compVariableAdd( $1, hb_c
 Declaration: DECLARE IdentName '(' { hb_compDeclaredAdd( $2 ); hb_comp_szDeclaredFun = $2; } DecList ')' AsType Crlf
              {
                if( hb_comp_pLastDeclared )
-	       {
+               {
                  hb_comp_pLastDeclared->cType = hb_comp_cVarType;
 
                  if ( toupper( hb_comp_cVarType ) == 'S' )
@@ -1217,7 +1219,7 @@ Declaration: DECLARE IdentName '(' { hb_compDeclaredAdd( $2 ); hb_comp_szDeclare
                    /* Resetting */
                    hb_comp_szFromClass = NULL;
                  }
-	       }
+               }
                hb_comp_szDeclaredFun = NULL;
                hb_comp_cVarType = ' ';
                hb_comp_iVarScope = VS_NONE;
@@ -1229,8 +1231,8 @@ Declaration: DECLARE IdentName '(' { hb_compDeclaredAdd( $2 ); hb_comp_szDeclare
            ;
 
 DecDataList: DecData
-	   | DecDataList ',' DecData
-	   ;
+           | DecDataList ',' DecData
+           ;
 
 ClassInfo  : DecMethod
            | ClassInfo DecMethod
@@ -1267,8 +1269,8 @@ DecData    : IdentName { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastCl
                  PCOMCLASS pClass;
                  char * szSetData = ( char * ) hb_xgrab( strlen( $1 ) + 2 );
 
-		 /* List Type overrides if exists. */
-		 if( hb_comp_cDataListType ) hb_comp_cVarType = hb_comp_cDataListType;
+                 /* List Type overrides if exists. */
+                 if( hb_comp_cDataListType ) hb_comp_cVarType = hb_comp_cDataListType;
 
                  hb_comp_pLastMethod->cType = hb_comp_cVarType;
                  if ( toupper( hb_comp_cVarType ) == 'S' )
@@ -1310,7 +1312,7 @@ DecData    : IdentName { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastCl
 
 DecList    : /* Nothing */ {}
            | FormalList
-	   | OptList
+           | OptList
            | FormalList ',' OptList
            ;
 

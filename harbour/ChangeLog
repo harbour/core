@@ -8,6 +8,16 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-02-10 23:20 UTC+1 jf Lefebvre (mafact) <jfl@mafact.com>
+  * source\compiler\harbour.y
+    Missing external declaration 'hb_compLocalGetPos'
+  * include/hbapirdd.h
+    added function missing declaration at line 1059. 'hb_rddFieldIndex'
+      used in source\rdd\dbfcdx\dbfcdx1.c(1223) 
+  * rdd/dbcmd.c changed 1 type casting BYTE * to char *
+    added one type casting to BYTE *
+
+
 2003-02-10 16:00 UTC-0500 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/filesys.c
   	! I missed one place where the X__WIN32__ guard needs to be used
