@@ -48,7 +48,7 @@
  *  $COMPLIANCE$
  *      __objHasData() is a Harbour extension.   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      __ObjGetMethodList(),__objGetMsgList(),__objHasMethod()
  *  $END$
@@ -84,7 +84,7 @@
  *  $COMPLIANCE$
  *      __objHasMethod() is a Harbour extension.   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      __ObjGetMethodList(),__objGetMsgList(),__objHasData()
  *  $END$
@@ -132,7 +132,7 @@
  *  $COMPLIANCE$
  *      __objGetMsgList() is a Harbour extension.   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      __ObjGetMethodList(),__ObjGetValueList(),__objHasData(),__objHasMethod()
  *  $END$
@@ -170,7 +170,7 @@
  *  $COMPLIANCE$
  *      __objGetMethodList() is a Harbour extension.   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      __objGetMsgList(),__ObjGetValueList(),__objHasData(),__objHasMethod()
  *  $END$
@@ -215,7 +215,7 @@
  *      __objGetValueList() is a Harbour extension.   
  *  $FILES$
  *      Header file is hboo.ch   
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      __objGetMethodList(),__objGetMsgList(),__objHasData(),__objHasMethod(),__ObjSetValueList()
  *  $END$
@@ -267,7 +267,7 @@
  *      __ObjSetValueList() is a Harbour extension.   
  *  $FILES$
  *      Header file is hboo.ch   
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      __ObjGetValueList()
  *  $END$
@@ -322,7 +322,7 @@
  *  $COMPLIANCE$
  *      __objAddMethod() is a Harbour extension.   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      __objAddInline(),__objAddData(),__objDelMethod(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModMethod()
  *  $END$
@@ -363,7 +363,7 @@
  *  $COMPLIANCE$
  *      __objAddInline() is a Harbour extension.   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      __objAddData(),__objAddMethod(),__objDelInline(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod() ,__objModInline()
  *  $END$
@@ -404,7 +404,7 @@
  *  $COMPLIANCE$
  *      __objAddData() is a Harbour extension.   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      __objAddInline(),__objAddMethod(),__objDelData(),__objGetMsgList(),__ObjGetValueList(),__objHasData(),__ObjSetValueList()
  *  $END$
@@ -472,7 +472,7 @@
  *  $COMPLIANCE$
  *      __objModMethod() is a Harbour extension.   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      __objAddMethod(),__objDelMethod(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod()
  *  $END$
@@ -519,7 +519,7 @@
  *  $COMPLIANCE$
  *      __objModInline() is a Harbour extension.   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      __objAddInline(),__objDelInline(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod()
  *  $END$
@@ -572,7 +572,7 @@
  *  $COMPLIANCE$
  *      __objDelMethod() is a Harbour extension.   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      __objAddInline(),__objAddMethod(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModInline(),__objModMethod()
  *  $END$
@@ -623,7 +623,7 @@
  *  $COMPLIANCE$
  *      __objDelMethod() is a Harbour extension.   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      __objAddInline(),__objAddMethod(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModInline(),__objModMethod()
  *  $END$
@@ -663,7 +663,7 @@
  *  $COMPLIANCE$
  *      __objDelData() is a Harbour extension.   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *    __objAddData(),__objGetMsgList(),__ObjGetValueList(),__objHasData(),__ObjSetValueList()
  *  $END$

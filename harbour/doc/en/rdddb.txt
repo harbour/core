@@ -63,7 +63,7 @@
  *  $COMPLIANCE$
  *      DBEVAL is fully CA-Clipper compliant.
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      EVAL()
  *  $END$
@@ -99,7 +99,7 @@
  *  $COMPLIANCE$
  *      DBF() is fully CA-Clipper compliant.
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      ALIAS()
  *  $END$
@@ -153,7 +153,7 @@
  *  $COMPLIANCE$
  *      DBAPPEND() is fully CA-Clipper compliant.
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      DBUNLOCK(0,DBUNLOCKALL()
  *  $END$
@@ -192,7 +192,7 @@
  *  $COMPLIANCE$
  *      DBCLEARFILTER() is fully CA-Clipper compliant.
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      DBSETFILTER(),DBFILTER()
  *  $END$
@@ -234,7 +234,7 @@
  *  $COMPLIANCE$
  *      DBCLOSEALL() is fully CA-Clipper compliant.
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      DBUSEAREA(),DBCLOSEAREA()
  *  $END$
@@ -271,7 +271,7 @@
  *  $COMPLIANCE$
  *      DBCLOSEAREA() is fully CA-Clipper compliant.
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      DBUSEAREA(),DBCLOSEALL()
  *  $END$
@@ -315,7 +315,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      DBCLOSEALL(),DBCOMMITALL(),DBUNLOCK()
  *  $END$
@@ -363,7 +363,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant.
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *     DBCLOSEALL(),DBCOMMIT(),DBUNLOCK()
  *  $END$
@@ -433,7 +433,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant.
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      EOF(),FOUND()
  *  $END$
@@ -513,7 +513,7 @@
  *  $COMPLIANCE$
  *      This function is Not CA-Clipper compliant
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *      Header  is Dbstruct.ch
  *  $SEEALSO$
  *      AFIELDS(),DBSTRUCT()
@@ -553,7 +553,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      DBRECALL()
  *  $END$
@@ -588,7 +588,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      DBRELATION(),DBRSELECT()
  *  $END$
@@ -623,7 +623,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      BOF(),EOF(),DBSKIP(),DBSEEK(),DBGOTOP()
  *  $END$
@@ -672,7 +672,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant.
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      BOF(),EOF(),DBGOTOP(),DBGOBOTTOM(),DBSEEK(),DBSKIP()
  *  $END$
@@ -707,7 +707,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      BOF(),EOF(),DBSKIP(),DBSEEK(),DBGOBOTTOM()
  *  $END$
@@ -744,7 +744,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      DBDELETE()
  *  $END$
@@ -784,7 +784,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      DBUNLOCK(),DBUNLOCKALL(),FLOCK(),RLOCK()
  *  $END$
@@ -826,7 +826,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      RLOCK(),DBRLOCK(),DBRUNLOCK()
  *  $END$
@@ -865,7 +865,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      RLOCK(),DBRLOCK(),DBRLOCKLIST()
  *  $END$
@@ -934,7 +934,7 @@
  *  $COMPLIANCE$
  *      DBSEEK() is  Compatible with CA-Clipper 5.3
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      DBGOBOTTOM(),DBGOTOP(),DBSKIP(),EOF(),BOF(),FOUND()
  *  $END$
@@ -981,7 +981,7 @@
  *  $COMPLIANCE$
  *      This function is CA-CLIPPER compatible.
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      DBUSEAREA(),SELECT()
  *  $END$
@@ -1013,7 +1013,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compatible
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      DBUSEAREA()
  *  $END$
@@ -1053,7 +1053,7 @@
  *  $COMPLIANCE$
  *      This function is CA-CLIPPER compatible
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *    BOF(),DBGOBOTTOM(),DBGOTOP(),DBSEEK(),EOF()
  *  $END$
@@ -1092,7 +1092,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant.
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      DBFILTER(),DBCLEARFILTER()
  *  $END$
@@ -1131,7 +1131,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *      Header is  DbStruct.ch
  *  $SEEALSO$
  *      AFIELDS()
@@ -1169,7 +1169,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compatible.
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      DBUNLOCKALL(),FLOCK(),RLOCK()
  *  $END$
@@ -1207,7 +1207,7 @@
  *  $COMPLIANCE$
  *      This function is CA Clipper compliant
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      DBUNLOCK(),FLOCK(),RLOCK()
  *  $END$
@@ -1267,7 +1267,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      DBCLOSEAREA(),DBSETDRIVER(),SELECT(),SET()
  *  $END$
@@ -1313,6 +1313,6 @@
  *  $COMPLIANCE$
  *      This function is CA Clipper compliant
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $END$
  */

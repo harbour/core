@@ -49,7 +49,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      EXP()
  *  $END$
@@ -81,7 +81,7 @@
  *  $PLATFORMS$
  *      All   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      LOG()
  *  $END$
@@ -116,7 +116,7 @@
  *  $PLATFORMS$
  *      All   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      ROUND(),STRZERO()
  *  $END$
@@ -150,7 +150,7 @@
  *  $PLATFORMS$
  *      All   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      EXP()
  *  $END$
@@ -190,7 +190,7 @@
  *  $PLATFORMS$
  *      All    
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      Min()
  *  $END$
@@ -227,7 +227,7 @@
  *  $PLATFORMS$
  *      All    
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      MAX()
  *  $END$
@@ -263,7 +263,7 @@
  *  $PLATFORMS$
  *      All   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      %
  *  $END$
@@ -297,7 +297,7 @@
  *  $PLATFORMS$
  *      All   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      ROUND()
  *  $END$
@@ -334,7 +334,7 @@
  *  $PLATFORMS$
  *      All   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      INT(),STR(),VAL(),SET FIXED
  *  $END$

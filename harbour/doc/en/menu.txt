@@ -85,7 +85,7 @@
  *      ENDIF
  *  </fixed>
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      MENU TO
  *  $END$
@@ -149,7 +149,7 @@
  *      items are the maximum that could be defined per one menu, Harbour
  *      does not have this limit (not that you'll ever need that).   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      ACHOICE(),MENU TO,SET MESSAGE,SET INTENSITY,SET WRAP,__MENUTO()
  *  $END$
@@ -300,7 +300,7 @@
  *  $COMPLIANCE$
  *      This command is CA-Clipper compliant   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      @...PROMPT,ACHOICE(),SET MESSAGE,SET INTENSITY,SET WRAP,__ATPROMPT()
  *  $END$

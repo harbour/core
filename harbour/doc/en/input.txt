@@ -83,7 +83,7 @@
  *      would never return, because it was, in effect, asked to wait forever
  *      for no events (Note: In Clipper, this also blocks SET KEY events).  
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      inkey.ch
  *  $END$
@@ -125,7 +125,7 @@
  *  $COMPLIANCE$
  *      __KEYBOARD() is compliant with CA-Clipper 5.3  
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *    CLEAR TYPEAHEAD,KEYBOARD
  *  $END$
@@ -164,7 +164,7 @@
  *  $COMPLIANCE$
  *      Was not part of Clipper  
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      KEYBOARD,CLEAR TYPEAHEAD,INKEY()
  *  $END$
@@ -210,7 +210,7 @@
  *  $COMPLIANCE$
  *      NEXTKEY() is compliant with CA-Clipper 5.3  
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      INKEY(),LASTKEY()
  *  $END$
@@ -249,7 +249,7 @@
  *  $COMPLIANCE$
  *      LASTKEY() is compliant with CA-Clipper 5.3  
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      INKEY(),LASTKEY()
  *  $END$
@@ -339,7 +339,7 @@
  *  $COMPLIANCE$
  *      READKEY() works exactly like CA-Clipper's READKEY().  
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *       @...GET,INKEY(),LASTKEY(),READ,READEXIT(),UPDATED()
  *  $END$
@@ -373,7 +373,7 @@
  *  $PLATFORMS$
  *      This function is Windows Specific  
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      MCOL()
  *  $END$
@@ -407,7 +407,7 @@
  *  $PLATFORMS$
  *      This function is Windows Specific  
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      MROW()
  *  $END$

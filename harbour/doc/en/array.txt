@@ -52,7 +52,7 @@
  *      arrays in Harbour can have an unlimited number of dimensions, while
  *      Clipper has a limit of 4096 array elements.
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $SEEALSO$
  *      AADD(),ADEL(),AFILL(),AINS()
  *  $END$
@@ -90,7 +90,7 @@
  *  $STATUS$
  *      R
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $SEEALSO$
  *      AINS(),ASIZE()
  *  $END$
@@ -129,7 +129,7 @@
  *      If HB_COMPAT_C53 is defined, the function generates an Error,
  *      else it will return the array itself.
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $SEEALSO$
  *      AADD(),ADEL(),AFILL(),AINS()
  *  $END$
@@ -160,7 +160,7 @@
  *  $COMPLIANCE$
  *      This function is CA Clipper compliant
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $SEEALSO$
  *      LEN(),ARRAY(),ASIZE(),AADD()
  *  $END$
@@ -200,7 +200,7 @@
  *  $COMPLIANCE$
  *      This function is CA Clipper compliant   
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $SEEALSO$
  *      AADD(),ACOPY(),ADEL(),AEVAL(),AFILL(),ASIZE()
  *  $END$
@@ -239,7 +239,7 @@
  *  $COMPLIANCE$
  *      This function is CA Clipper compliant   
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $SEEALSO$
  *      ACOPY(),AINS(),AFILL()
  *  $END$
@@ -285,7 +285,7 @@
  *  $COMPLIANCE$
  *      This function is CA Clipper compliant   
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $SEEALSO$
  *      AADD(),AEVAL(),DBSTRUCT(),DIRECTORY()
  *  $END$
@@ -337,7 +337,7 @@
  *  $COMPLIANCE$
  *      This function is not CA-Clipper compatible. Clipper ASCAN() is affected by the SET EXACT ON/OFF Condition   
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $SEEALSO$
  *      AEVAL()
  *  $END$
@@ -382,7 +382,7 @@
  *  $COMPLIANCE$
  *      This function is CA Clipper compliant   
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $SEEALSO$
  *      EVAL(),DBEVAL()
  *  $END$
@@ -443,7 +443,7 @@
  *  $COMPLIANCE$
  *      This function is CA Clipper compliant   
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $SEEALSO$
  *      ACLONE(),ADEL(),AEVAL(),AFILL(),AINS(),ASORT()
  *  $END$
@@ -479,7 +479,7 @@
  *  $COMPLIANCE$
  *      Clipper will return NIL if the parameter is not an array.   
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $SEEALSO$
  *      ACOPY(),ADEL(),AINS(),ASIZE()
  *  $END$
@@ -545,7 +545,7 @@
  *      in Clipper. But this is block calling frequency and order differs
  *      from Clipper anyway, since they use different sorting algorithm.   
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is vm
  *  $SEEALSO$
  *      ASCAN(),EVAL(),SORT
  *  $END$

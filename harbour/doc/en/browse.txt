@@ -129,6 +129,8 @@
  *      When <xUserFunc> is omitted, two more keys are active:
 
  *     <table>
+ *       Key              Meaning
+ *
  *       Esc              Terminate BROWSE()
  *       Enter            Terminate BROWSE()
  *     </table>
@@ -196,7 +198,7 @@
  *      This mode is not supported by Harbour.   
  *  $FILES$
  *      Header files are dbedit.ch, inkey.ch   
- *      Library is rtl.lib
+ *      Library is rtl
 
  *  $SEEALSO$
  *     @...SAY,BROWSE(),TBrowse class,TRANSFORM()
@@ -268,7 +270,7 @@
  *  $STATUS$
  *      S
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      DBEDIT()*,TBrowse class
  *  $END$
@@ -310,7 +312,7 @@
  *  $COMPLIANCE$
  *      TBrowseDB() works exactly like CA-Clipper's TBrowseDB().   
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      BROWSE(),TBColumn class,TBrowse class,TBrowseNew()
  *  $END$
@@ -356,7 +358,7 @@
  *      This function is only visible if source/rtl/browdb.prg was compiled
  *      with the HB_COMPAT_XPP flag.   
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      DBSKIP(),SKIP
  *  $END$

@@ -63,7 +63,7 @@
  *  $COMPLIANCE$
  *      AFIELDS() is fully CA-Clipper compliant.
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $END$
  */
 
@@ -99,7 +99,7 @@
  *  $COMPLIANCE$
  *      ALIAS() is fully CA-Clipper compliant.
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      DBF()
  *  $END$
@@ -136,7 +136,7 @@
  *  $COMPLIANCE$
  *      BOF() is fully CA-Clipper compliant.
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *    EOF(),FOUND(),LASTREC()
  *  $END$
@@ -200,7 +200,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      DBDELETE()
  *  $END$
@@ -235,7 +235,7 @@
  *  $COMPLIANCE$
  *      EOF() is fully CA-Clipper compliant.
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *    BOF(),FOUND(),LASTREC()
  *  $END$
@@ -267,7 +267,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      FIELDNAME(),TYPE()
  *  $END$
@@ -302,7 +302,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper Compliant.
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      FIELDPUT()
  *  $END$
@@ -340,7 +340,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compatible.
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *    DBSTRUCT(),FCOUNT(),LEN(),VALTYPE()
  *  $END$
@@ -375,7 +375,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant.
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      FIELDGET(),FIELDPUT()
  *  $END$
@@ -411,7 +411,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compatible.
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      FIELDGET()
  *  $END$
@@ -445,7 +445,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compatible
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      RLOCK()
  *  $END$
@@ -482,7 +482,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compatible
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      EOF()
  *  $END$
@@ -514,7 +514,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compatible
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      DISKSPACE(),LASTREC(),RECSIZE()
  *  $END$
@@ -546,7 +546,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      EOF()
  *  $END$
@@ -602,7 +602,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      FIELDNAME(),LASTREC(),RECSIZE()
  *  $END$

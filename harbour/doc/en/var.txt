@@ -50,7 +50,7 @@
  *  $COMPLIANCE$
  *      This function is a Harbour extension
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $SEEALSO$
  *
  *  $END$
@@ -86,7 +86,7 @@
  *  $COMPLIANCE$
  *      This function is a Harbour extension   
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $END$
  */
 
@@ -145,7 +145,7 @@
  *  $COMPLIANCE$
  *      This function is a Harbour extension   
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *
  *  $END$
  */
@@ -185,7 +185,7 @@
  *  $COMPLIANCE$
  *      This function is a Harbour extension   
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $END$
  */
 
@@ -244,7 +244,7 @@
  *  $COMPLIANCE$
  *      This function is a Harbour Extension   
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $SEEALSO$
  *      include/hbmemvar.ch   
  *  $END$
@@ -275,7 +275,7 @@
  *  $COMPLIANCE$
  *      This function is a Harbour extension   
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $SEEALSO$
  *      __MVPUBLIC()
  *  $END$
@@ -392,7 +392,7 @@
  *  $COMPLIANCE$
  *     This function should be called from the debugger only.   
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $END$
  */
 
@@ -425,7 +425,7 @@
  *  $SEEALSO$
  *      __MVPUT()
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $END$
  */
 
@@ -460,7 +460,7 @@
  *  $COMPLIANCE$
  *      This function is a Harbour extension   
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $SEEALSO$
  *    __MVPUT()
  *  $END$
@@ -505,7 +505,7 @@
  *  $SEEALSO$
  *      __MVGET(),__MVPUT()
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $END$
  */
 
@@ -553,7 +553,7 @@
  *
  *      CA-Clipper would raise BASE/1003 error if the field does not exist.   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      EVAL(),FIELDWBLOCK(),MEMVARBLOCK()
  *  $END$
@@ -613,7 +613,7 @@
  *
  *      CA-Clipper would raise BASE/1003 error if the field does not exist.   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      EVAL(),FIELDBLOCK(),MEMVARBLOCK()
  *  $END$
@@ -707,7 +707,7 @@
  *          function/procedure that will cause runtime errors during
  *          evaluation of expression.   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      VALTYPE()
  *  $END$
@@ -749,7 +749,7 @@
  *  $COMPLIANCE$
  *      VALTYPE() is fully CA-Clipper compliant.   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      TYPE()
  *  $END$

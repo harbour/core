@@ -58,7 +58,7 @@
  *  $PLATFORMS$
  *      All      
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *      ISDIGIT(),ISLOWER(),ISUPPER(),LOWER(),UPPER()
  *  $END$
@@ -93,7 +93,7 @@
  *  $PLATFORMS$
  *      All   
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *      ISALPHA(),ISLOWER(),ISUPPER(),LOWER(),UPPER()
  *  $END$
@@ -128,7 +128,7 @@
  *  $PLATFORMS$
  *      All    
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *      ISALPHA(),ISLOWER(),ISDIGIT(),LOWER(),UPPER()
  *  $END$
@@ -163,7 +163,7 @@
  *  $PLATFORMS$
  *      All   
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *      ISALPHA(),ISDIGIT(),ISUPPER(),LOWER(),UPPER()
  *  $END$
@@ -194,7 +194,7 @@
  *  $PLATFORMS$
  *      All  
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *      TRIM(),RTRIM(),ALLTRIM()
  *  $END$
@@ -231,7 +231,7 @@
  *  $PLATFORMS$
  *      All   
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *      RAT()
  *  $END$
@@ -268,7 +268,7 @@
  *  $PLATFORMS$
  *      All   
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *      AT(),SUBSTR(),RIGHT()
  *  $END$
@@ -303,7 +303,7 @@
  *  $PLATFORMS$
  *      All   
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *      SUBSTR(),RIGHT(),AT(),RAT()
  *  $END$
@@ -336,7 +336,7 @@
  *  $PLATFORMS$
  *      All   
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *      SUBSTR(),LEFT(),AT(),RAT()
  *  $END$
@@ -388,7 +388,7 @@
  *  $PLATFORMS$
  *      All    
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *     LEFT(),AT(),RIGHT()
  *  $END$
@@ -462,7 +462,7 @@
  *  $COMPLIANCE$
  *      CA-Clipper compatible.   
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *      STRZERO(),VAL()
  *  $END$
@@ -536,7 +536,7 @@
  *  $COMPLIANCE$
  *      CA-Clipper compatible (it was not mentioned in the docs though).   
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *      STR(),VAL()
  *  $END$
@@ -575,7 +575,7 @@
  *  $COMPLIANCE$
  *      HB_VALTOSTR() is a Harbour enhancement.   
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *      STR(),VAL()
  *  $END$
@@ -615,7 +615,7 @@
  *  $COMPLIANCE$
  *      LEN() is fully CA-Clipper compliant.   
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *      EMPTY(),RTRIM(),LTRIM(),AADD(),ASIZE()
  *  $END$
@@ -653,7 +653,7 @@
  *  $COMPLIANCE$
  *      EMPTY() is fully CA-Clipper compliant.   
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *      LEN()
  *  $END$
@@ -688,7 +688,7 @@
  *  $COMPLIANCE$
  *      DESCEND() is fully CA-Clipper compliant.   
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *       INDEX,SEEK
  *  $END$
@@ -723,7 +723,7 @@
  *  $PLATFORMS$
  *      This functions work only on Windows Plataform   
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *      HB_OEMTOANSI()
  *  $END$
@@ -758,7 +758,7 @@
  *  $PLATFORMS$
  *      This functions work only on Windows Plataform   
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *      HB_ANSITOOEM()
  *  $END$
@@ -793,7 +793,7 @@
  *  $PLATFORMS$
  *      ALL   
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *      UPPER(),ISLOWER(),ISUPPER()
  *  $END$
@@ -826,7 +826,7 @@
  *  $PLATFORMS$
  *      All   
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *      LOWER(),ISUPPER(),ISLOWER()
  *  $END$
@@ -863,7 +863,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$   
  *      ASC(),INKEY()
  *  $END$
@@ -895,7 +895,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *      CHR()
  *  $END$

@@ -46,7 +46,7 @@
  * $RETURNS$
  *      Either the current or previous century setting as a logical value
  * $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  * $END$
  */
 
@@ -411,7 +411,7 @@
  * $RETURNS$
  *      SET() The current or previous setting
  * $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  * $END$
  */
 
@@ -466,7 +466,7 @@
  *  $PLATFORMS$
  *      All   
  * $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      INKEY(),SETKEY(),__Keyboard(),SET KEY
  *  $END$
@@ -573,7 +573,7 @@
  *      be conditionally turned off or on.  This condition-block cannot be
  *      returned once set - see SetKeyGet()   
  * $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      HB_SETKEYSAVE()
  *  $END$
@@ -612,7 +612,7 @@
  *  $COMPLIANCE$
  *      HB_SETKEYGET() is a new function and hence not CA-Clipper compliant.   
  * $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      SETKEY(),HB_SETKEYSAVE(),HB_SETKEYCHECK()
  *  $END$
@@ -652,7 +652,7 @@
  *  $COMPLIANCE$
  *     HB_SETKEYSAVE() is new.    
  * $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *     SETKEY()
  *  $END$
@@ -703,7 +703,7 @@
  *  $COMPLIANCE$
  *      HB_SETKEYCHECK() is new.   
  * $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      SETKEY(),HB_SETKEYSAVE()
  *  $END$
@@ -785,7 +785,7 @@
  *  $COMPLIANCE$
  *      SETTYPEAHEAD() is fully CA-Clipper compliant.   
  * $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      __ACCEPT(),__INPUT()
  *  $END$
@@ -814,7 +814,7 @@
  *  $COMPLIANCE$
  *      __XHELP() is fully CA-Clipper compliant.
  * $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $END$
  */
 

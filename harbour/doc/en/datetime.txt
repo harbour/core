@@ -44,7 +44,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      DAY(),DOW(),DATE(),CMONTH()
  *  $END$
@@ -80,7 +80,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      CDOW(),DATE(),MONTH(),YEAR(),DOW(),DTOC()
  *  $END$
@@ -112,7 +112,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$   
  *      CTOD(),DTOS(),DTOC(),DAY(),MONTH(),CMONTH()
  *  $END$
@@ -147,7 +147,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      SET DATE,DATE(),DTOS()
  *  $END$
@@ -179,7 +179,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      CTOD(),DTOS(),DTOC(),DATE(),MONTH(),CMONTH()
  *  $END$
@@ -211,7 +211,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      SECONDS(),SECS(),ELAPTIME()
  *  $END$
@@ -243,7 +243,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      DTOC(),CDOW(),DATE(),DTOS(),DAY()
  *  $END$
@@ -277,7 +277,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      SET DATE,DATE(),DTOS()
  *  $END$
@@ -309,7 +309,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      DTOC(),DATE(),DTOS()
  *  $END$
@@ -348,7 +348,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      SECS(),SECONDS(),TIME(),DAY()
  *  $END$
@@ -381,7 +381,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      CDOW(),DOW(),YEAR(),CMONTH()
  *  $END$
@@ -415,7 +415,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      TIME()
  *  $END$
@@ -447,7 +447,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      SECONDS(),ELAPTIME(),TIME()
  *  $END$
@@ -478,7 +478,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      DATE(),SECONDS()
  *  $END$
@@ -514,7 +514,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      DAY(),MONTH()
  *  $END$

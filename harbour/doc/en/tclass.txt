@@ -60,7 +60,7 @@
  *  $PLATFORMS$
  *      All   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      __objHasData(),Object Oriented Programming,CLASS
  *  $END$

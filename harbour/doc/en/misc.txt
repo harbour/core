@@ -67,7 +67,7 @@
  *      All
  *  $FILES$
  *      source/rtl/version.c   
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      OS()
  *  $END$
@@ -108,7 +108,7 @@
  *      All
  *  $FILES$
  *     source/rtl/gete.c   
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $END$
  */
 
@@ -145,7 +145,7 @@
  *      All
  *  $FILES$
  *      source/rtl/run.c   
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      RUN
  *  $END$
@@ -201,7 +201,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      CHR(),SET BELL
  *  $END$
@@ -235,7 +235,7 @@
  *      All
  *  $FILES$
  *      source/rtl/run.c   
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      RUN
  *  $END$

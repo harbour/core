@@ -49,7 +49,7 @@
  *  $COMPLIANCE$
  *      MEMOTRAN() is fully CA-Clipper compliant.   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      HARDCR(),STRTRAN()
  *  $END$
@@ -84,7 +84,7 @@
  *  $COMPLIANCE$
  *      HARDCR() is fully CA-Clipper compliant.   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      MEMOTRAN(),STRTRAN()
  *  $END$

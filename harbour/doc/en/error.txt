@@ -35,7 +35,7 @@
  *  $COMPLIANCE$
  *      ERRORSYS() works exactly like CA-Clipper's ERRORSYS().   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      ERRORBLOCK(),Error class
  *  $END$

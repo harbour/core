@@ -65,7 +65,7 @@
  *      __XSaveScreen() is part of the GT API, and supported only by some
  *      platforms.
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *       RESTORE SCREEN,RESTSCREEN(),SAVESCREEN()
  *  $END$
@@ -150,7 +150,7 @@
  *      __XRestScreen() is part of the GT API, and supported only by some
  *      platforms.
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      __XRESTSCREEN(),SAVE SCREEN,__XSAVESCREEN()
  *  $END$
@@ -292,7 +292,7 @@
  *
  *      <nDelay> is a Harbour extension.
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *       @...PROMPT,MENU TO,STDOUT(),__NONOALERT()
  *  $END$
@@ -321,7 +321,7 @@
  *  $STATUS$
  *      R
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $COMPLIANCE$
  *      __NONOALERT() is an undocumented CA-Clipper function and exist only
  *      if HB_C52_UNDOC was defined during the compilation of
@@ -370,7 +370,7 @@
  *      (like DOS) the return value is the Carriage-Return plus Line-Feed
  *      (0x0d 0x0a) characters CHR(13)+CHR(10).
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      OS(),OUTSTD(),OUTERR()
  *  $END$
@@ -407,7 +407,7 @@
  *  $COMPLIANCE$
  *      Was not part of CA-Clipper.
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      ColorSelect()
  *  $END$
@@ -449,7 +449,7 @@
  *      DEVOUTPICT() is mostly CA-Clipper compliant. Any differences are due
  *      to enhancements in the Harbour TRANSFORM() over CA-Clipper.
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      DEVOUT(),TRANSFORM()
  *  $END$
@@ -476,7 +476,7 @@
  *  $COMPLIANCE$
  *      __INPUT() is fully CA-Clipper compliant.
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      __WAIT(),__ACCEPT()
  *  $END$
@@ -508,7 +508,7 @@
  *  $PLATFORMS$
  *      ALL
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      SET(),SET ALTERNATE,SET PRINTER,TEXT,__TextRestore()
  *  $END$
@@ -538,7 +538,7 @@
  *  $PLATFORMS$
  *       All
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      SET(),SET ALTERNATE,SET PRINTER,TEXT,__TextSave()
  *  $END$
@@ -574,7 +574,7 @@
  *  $COMPLIANCE$
  *      __WAIT() is fully CA-Clipper compliant.
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *  $SEEALSO$
  *      __ACCEPT(),__INPUT()
  *  $END$

@@ -787,7 +787,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      INDEXKEY(),INDEXORD()
  *  $END$
@@ -826,7 +826,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      INDEXORD()
  *  $END$
@@ -863,7 +863,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      INDEXKEY()
  *  $END$

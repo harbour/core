@@ -57,7 +57,7 @@
  *  $COMPLIANCE$
  *      PROCNAME() is fully CA-Clipper compliant.   </par>
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $SEEALSO$
  *      PROCLINE(),PROCFILE()
  *  $END$
@@ -95,7 +95,7 @@
  *  $COMPLIANCE$
  *      PROCLINE() is fully CA-Clipper compliant.   </par>
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $SEEALSO$
  *      PROCNAME(),PROCFILE()
  *  $END$
@@ -132,7 +132,7 @@
  *  $COMPLIANCE$
  *      PROCFILE() is fully CA-Clipper compliant.   </par>
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $SEEALSO$
  *      PROCNAME(),PROCLINE()
  *  $END$
@@ -169,7 +169,7 @@
  *  $COMPLIANCE$
  *      HB_PVALUE() is a new function and hence not CA-Clipper compliant.   </par>
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $SEEALSO$
  *      PCOUNT()
  *  $END$
@@ -209,7 +209,7 @@
  *  $COMPLIANCE$
  *      PCOUNT() is fully CA-Clipper compliant.   </par>
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $SEEALSO$
  *      HB_PVALUE()
  *  $END$
@@ -246,7 +246,7 @@
  *  $COMPLIANCE$
  *      __QUIT() is fully CA-Clipper compliant.   </par>
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $SEEALSO$
  *      QUIT
  *  $END$
@@ -304,7 +304,7 @@
  *  $COMPLIANCE$
  *      __SetHelpK() works exactly like CA-Clipper's __SetHelpK()   </par>
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $SEEALSO$
  *      __XHelp(),SET KEY,SETKEY()
  *  $END$
@@ -335,7 +335,7 @@
  *  $COMPLIANCE$
  *      BREAK() is fully CA-Clipper compliant.   </par>
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $SEEALSO$
  *      BEGIN SEQUENCE
  *  $END$
@@ -377,7 +377,7 @@
  *      DO &cFunction WITH 3
  *  </fixed>
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is rtl
  *  $END$
  */
 
@@ -400,6 +400,6 @@
  *  $DESCRIPTION$
  *      This function is used from the debugger   </par>
  *  $FILES$
- *      Library is Vm.lib
+ *      Library is vm
  *  $END$
  */
