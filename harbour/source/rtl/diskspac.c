@@ -54,7 +54,7 @@
    #include <dos.h>
 #endif
 
-HARBOUR HB_DISKSPACE( void )
+HB_FUNC( DISKSPACE )
 {
    ULONG ulSpaceFree = 0;
    USHORT uiDrive = ISNUM( 1 ) ? hb_parni( 1 ) : 0;

@@ -220,20 +220,17 @@
    #endif
 #endif
 
+#ifndef HB_OS_UNIX
+   #if defined(__GNUC__) && !(defined(__DJGPP__) || defined(HARBOUR_GCC_OS2) || defined(__CYGNUS__))
+      #define HB_OS_UNIX
+   #endif
+#endif
+
 #ifndef HB_OS_MAC
    #if defined(__MPW__)
       #define HB_OS_MAC
    #endif
 #endif
 
-/* Compatibility */
-
-#if defined(HB_OS_DOS) && !defined(DOS)
-   #define DOS
-#endif
-
-#if defined(HB_OS_OS2) && !defined(OS2)
-   #define OS2
-#endif
-
 #endif /* HB_SETUP_H_ */
+

@@ -1,3 +1,28 @@
+20000321-07:46 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbdefs.h
+     + HB_FUNC() macro added. This method has the advantage over the old
+       HARBOUR ??( void ) method, that it can be easily extended, the prefix
+       can be changed globally (we'll need this), and the parameter list can
+       be extended (later for multithreading for example).
+       Please use this from now on instead of the old method:
+       HB_FUNC( DTOC )
+       {
+          /* ... */
+       }
+
+   * source/rtl/diskspac.c
+     + Uses HB_FUNC()
+
+   * compiler/harbour.c
+     rtl/gtdos/gtdos.c
+     rtl/filesys.c
+     rtl/inkey.c
+     tools/io.c
+     include/hbsetup.h
+     + Old DOS and OS2 macros changed to HB_OS_* macros in the source.
+     - Old DOS and OS2 macros removed from the header.
+
 2000-03-20 21:55 GMT-5 David G. Holm <dholm@jsd-llc.com>
 
    * config/os2/icc.cf

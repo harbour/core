@@ -131,7 +131,7 @@
    #include <fcntl.h>
 #endif
 
-#if defined(DOS)
+#if defined(HB_OS_DOS)
    #include <dos.h>
 #endif
 
@@ -192,7 +192,7 @@ static USHORT s_uiErrorLast = 0;
    #define HB_FS_SOPEN
 #endif
 
-#if ( defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) || defined(_WIN32) ) && ! defined(__CYGWIN__) ) || defined(__MINGW32__)
+#if ( defined(HAVE_POSIX_IO) && ( defined(HB_OS_OS2) || defined(HB_OS_DOS) || defined(_Windows) || defined(_WIN32) ) && ! defined(__CYGWIN__) ) || defined(__MINGW32__)
 /* These platforms and/or compilers have common drive letter support */
    #define HB_FS_DRIVE_LETTER
 #endif

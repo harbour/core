@@ -150,9 +150,9 @@ void hb_releaseCPU( void )
 /* TODO: Add code to release time slices on all platforms */
 #if defined(_WINDOWS_) || defined(__MINGW32__)
    /* according to ms docs, you should not do this in a Win app. dos only */
-#elif defined(OS2)
+#elif defined(HB_OS_OS2)
    DosSleep( 25 ); /* Duration is in milliseconds */
-#elif defined(DOS)
+#elif defined(HB_OS_DOS)
 /* NOTE: there is a bug under NT 4 (2000 unknown) -  if the app is running
    in protected mode, time slices will _not_ be released - you must switch
    to real mode first, execute the following, and switch back.

@@ -93,7 +93,7 @@
 #if defined(__POWERC) || (defined(__TURBOC__) && !defined(__BORLANDC__)) || \
    (defined(__ZTC__) && !defined(__SC__))
    #define FAR far
-#elif (defined(__MSDOS__) || defined(MSDOS) || defined(DOS)) && !defined(__DJGPP__)
+#elif defined(HB_OS_DOS) && !defined(__DJGPP__)
    #define FAR _far
 #else
    #define FAR

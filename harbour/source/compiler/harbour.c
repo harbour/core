@@ -37,7 +37,7 @@
 
 #include "hbcomp.h"
 
-#if defined(DOS) && defined(__BORLANDC__)
+#if defined(HB_OS_DOS) && defined(__BORLANDC__)
    #include <limits.h>
    extern unsigned _stklen = UINT_MAX;
 #endif
