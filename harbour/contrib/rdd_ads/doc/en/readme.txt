@@ -4,14 +4,19 @@
 /*
  * $DOC$
  * $FUNCNAME$
- *      Overview
+ *      ADS Overview
  * $CATEGORY$
  *      Document
  * $ONELINER$
  *      Advantage Database Server RDD
  * $DESCRIPTION$
- *      RDD for the Advantage Database Server by Extended Systems.
- *      RDD by Alexander Kresin <alex@belacy.belgorod.su>
+ *      RDDADS is an RDD for the Advantage Database Server, an xBase data
+ *      server by Extended Systems <www.advantagedatabase.com>.
+ *      The RDD was written by Alexander Kresin <alex@belacy.belgorod.su>
+ *
+ *      Your Harbour application can access a remote database server for a
+ *      true client/server architecture, or it can use the "local server"
+ *      ADSLOC32.DLL for stand-alone or even small network installations.
  *
  *      <b>For using this RDD you need to have:   </b></par>
  *      <b>ace32.dll  ( Advantage Client Engine ),   </b></par>
@@ -32,7 +37,7 @@
  *      rddRegister( "ADS", 1 )   </par>
  *      rddsetdefault( "ADS" )   </par>
  *
- *      By default RDD is tuned for remote server and cdx indexes. To
+ *      By default RDDADS is tuned for remote server and cdx indexes. To
  *      change this you may use commands, defined in ads.ch:
  *
  *      SET SERVER LOCAL

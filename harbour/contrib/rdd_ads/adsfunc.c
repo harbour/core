@@ -222,21 +222,24 @@ HB_FUNC( ADSKEYCOUNT )
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
    if( pArea )
    {
-      if( hb_pcount() > 0 )
+      if( ISNUM( 1 ) )
       {
-         if( ISNUM( 1 ) )
-         {
-            ordNum = hb_parni( 1 );
-            AdsGetIndexHandleByOrder( pArea->hTable, ordNum, &hIndex );
-         }
-         else
-         {
-            ordName = (UCHAR*)hb_parc( 1 );
-            AdsGetIndexHandle( pArea->hTable, ordName, &hIndex );
-         }
+         ordNum = hb_parni( 1 );
+         AdsGetIndexHandleByOrder( pArea->hTable, ordNum, &hIndex );
+      }
+      else if(ISCHAR( 1 ))
+      {
+         ordName = (UCHAR*)hb_parc( 1 );
+         AdsGetIndexHandle( pArea->hTable, ordName, &hIndex );
+      }
+      else if(! ISNIL( 1 ))
+      {
+         hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSKEYCOUNT" );
+         return;
       }
       else
          hIndex = (pArea->hOrdCurrent == 0)? pArea->hTable:pArea->hOrdCurrent;
+
       if( hb_pcount() > 2 )
       {
          if( ISNUM( 3 ) )
@@ -278,8 +281,8 @@ HB_FUNC( ADSCUSTOMIZEAOF )
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
    if( pArea )
    {
-      pulRecords[1] = hb_parni( 1 );
-      if( hb_pcount() > 1 )
+      pulRecords[0] = hb_parnl( 1 );
+      if( ISNUM(2) )
          usOption = hb_parni( 2 );
       ulRetVal = AdsCustomizeAOF( pArea->hTable, 1, pulRecords, usOption);
       if ( ulRetVal == AE_SUCCESS )

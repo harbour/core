@@ -52,7 +52,7 @@
  *  $ARGUMENTS$
  *      None
  *  $RETURNS$
- *      <cReturn>   String containing the Harbour Version/
+ *      <cReturn>   String containing the Harbour Version
  *  $DESCRIPTION$
  *      This function returns the current Harbour Version.
  *  $EXAMPLES$

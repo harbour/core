@@ -1,3 +1,18 @@
+2000-08-28 12:03 UTC+0800 Brian Hays <bhays@abacuslaw.com>
+   * contrib/rdd_ads/doc/en/readme.txt
+      * small formatting changes
+   * contrib/rdd_ads/adsfunc.c
+      * adsKeyCount:
+         fixed parameter checking to look at ISNIL/ISNUM instead of pcount
+            (had a bug if called adsKeyCount(,,ADS_RESPECTFILTERS))
+      * adsCustomizeAOF:
+         fixed parameter checks and retrieval of a record# as a long
+         fixed array reference to 0 for first element in C array
+   * doc/en/idle.txt
+      * misc. grammar fixes
+   * doc/en/misc.txt
+      * removed a stray character
+
 2000-08-28 10:35 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.c
    * source/compiler/harbour.y
