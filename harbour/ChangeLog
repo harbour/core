@@ -1,3 +1,7 @@
+2000-02-11 19:15 GMT-5 David G. Holm <dholm@ sd-llc.com>
+   * source/rtl/inkey.c
+     ! First pass at international character support for Windows console mode.
+
 20000211-23:05 GMT+1 Victor Szakats <info@szelvesz.hu>
    * make*.bat
      * The different make systems generate log files with different names.

@@ -365,7 +365,12 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
                /* Save the keyboard state and ASCII key code */
                DWORD dwState = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState;
                ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar;
-               if( ch == 0 || ( dwState & ( ENHANCED_KEY | LEFT_ALT_PRESSED | LEFT_CTRL_PRESSED | RIGHT_ALT_PRESSED | RIGHT_CTRL_PRESSED | SHIFT_PRESSED ) ) )
+               if( ch < 0 )
+               {
+                  /* Process international key codes */
+                  ch += 256;
+               }
+               else if( ch == 0 || ( dwState & ( ENHANCED_KEY | LEFT_ALT_PRESSED | LEFT_CTRL_PRESSED | RIGHT_ALT_PRESSED | RIGHT_CTRL_PRESSED | SHIFT_PRESSED ) ) )
                {
                   /* Process non-ASCII key codes */
                   WORD wKey;
