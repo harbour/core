@@ -8,6 +8,17 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-06-25 08:32 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * source/compiler/gencli.c
+    ! object type use implementation for QOUT()
+
+  Notice: Harbour (as Clipper) any type value vars support is implemented
+  through the use of IL object type. I consulted this idea with Miguel de
+  Icaza and he agreed.
+
+  So all variables types are declared as object, unless strong typing is
+  required ( AS ... ), then we will use specific types instead of object one.
+
 2003-06-23 17:56 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/compiler/gencli.c
     ! Some quick & dirty implementations, to provide an IL overview
