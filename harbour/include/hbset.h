@@ -140,7 +140,7 @@ typedef struct
    BOOL    HB_SET_ALTERNATE;
    char *  HB_SET_ALTFILE;
    BOOL    HB_SET_AUTOPEN;
-   BOOL    HB_SET_AUTORDER;
+   int     HB_SET_AUTORDER;
    int     HB_SET_AUTOSHARE;
    BOOL    HB_SET_BELL;
    BOOL    HB_SET_CANCEL;

@@ -426,8 +426,14 @@ HB_FUNC( SET )
          if( args > 1 ) hb_set.HB_SET_AUTOPEN = set_logical( pArg2 );
          break;
       case HB_SET_AUTORDER   :
-         hb_retl( hb_set.HB_SET_AUTORDER );
-         if( args > 1 ) hb_set.HB_SET_AUTORDER = set_logical( pArg2 );
+         hb_retni( hb_set.HB_SET_AUTORDER );
+         if( args > 1 )
+         {
+            if( set_number( pArg2, hb_set.HB_SET_AUTORDER ) < 0 )
+               hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+            else
+               hb_set.HB_SET_AUTORDER = set_number( pArg2, hb_set.HB_SET_AUTORDER );
+         }
          break;
       case HB_SET_AUTOSHARE  :
          hb_retni( hb_set.HB_SET_AUTOSHARE );
@@ -751,7 +757,7 @@ void hb_setInitialize( void )
    hb_set.HB_SET_ALTFILE = NULL;
    hb_set.hb_set_althan = FS_ERROR;
    hb_set.HB_SET_AUTOPEN = TRUE;
-   hb_set.HB_SET_AUTORDER = FALSE;
+   hb_set.HB_SET_AUTORDER = 0;
    hb_set.HB_SET_AUTOSHARE = 0;
    hb_set.HB_SET_BELL = FALSE;
    hb_set.HB_SET_CANCEL = TRUE;
