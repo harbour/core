@@ -10,11 +10,8 @@
   #include <unistd.h>
   #include <fcntl.h>
   #include <errno.h>
-#endif
-
-#if defined(__DJGPP__)
   #if !defined(HAVE_POSIX_IO)
-  #define HAVE_POSIX_IO
+  #define HAVE_POSIX_OI
   #endif
 #endif
 
@@ -34,6 +31,10 @@
 #if defined(__BORLANDC__)
   #include <sys\stat.h>
   #include <io.h>
+  
+  #if !defined(HAVE_POSIX_IO)
+  #define HAVE_POSIX_IO
+  #endif
 #endif
 
 #define IT_NUMBER       (IT_INTEGER|IT_LONG|IT_DOUBLE)
