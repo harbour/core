@@ -1,3 +1,17 @@
+2000-09-19 20:00 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+ +contrib/pdflib/pdfhbdoc.c
+   *Wraper functions for PDF generation for HBDOC
+ +contrib/pdflib/pdflib.h
+     *PDflib header file
+ *makefile.bc
+  hb_slex.bc
+   * Added support for PDF generation when -DPDF is used
+ +utils/hdboc/genpfdf1.prg
+   *PDF file generation support
+ *utils/hdboc/hbdoc.prg
+   +Added code to support PDF generation then compiled with -dPDF
+ *contrib/rdd_ads/doc/en/adsfuncs.txt
+   *small formating
 2000-09-20 23:36 UTC+0200 JFL (mafact) <jfl@mafact.com>
   * harbour/include/hbsetup.ch
     + added a #define HB_CLS_ENFORCERO to enable full ReadOnly test on DATA

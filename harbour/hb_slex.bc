@@ -86,6 +86,9 @@ HBRUN_DIR    = utils\hbrun
 HBTEST_DIR   = utils\hbtest
 HBDOC_DIR    = utils\hbdoc
 HBPP_DIR     = utils\hbpp
+!if $d(PDF)
+HBPDF_DIR   = contrib\pdflib
+!endif
 
 #
 # C compiler definition and C flags. These should never have to change.
@@ -94,7 +97,12 @@ HBPP_DIR     = utils\hbpp
 CFLAGS         = -I$(INCLUDE_DIR) -d $(C_USR) $(CFLAGS)
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSDEBUG = -v $(CLIBFLAGS)
+!if $d(PDF)
+HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS) -dPDF 
+!else
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
+!endif
+
 LDFLAGS        = $(LDFLAGS)
 
 #
@@ -594,6 +602,11 @@ HBDOC_EXE_OBJS = \
    $(OBJ_DIR)\fclass1.obj \
    $(OBJ_DIR)\ffile1.obj \
    $(OBJ_DIR)\ft_funcs.obj
+!if $d(PDF)
+   HBDOC_EXE_OBJS = $(HBDOC_EXE_OBJS) \
+   $(OBJ_DIR)\pdfhbdoc.obj \
+   $(OBJ_DIR)\genpdf1.obj 
+!endif
 
 #
 # Our default target
@@ -2214,6 +2227,12 @@ $(HBDOC_EXE) : $(HBDOC_EXE_OBJS)
    echo. $(MACRO_LIB) >> make.tmp
    echo. $(DBFNTX_LIB) >> make.tmp
    echo. $(DBFCDX_LIB) >> make.tmp
+!if $d(PDF)
+   echo. $(OBJ_DIR)\genpdf1.obj >> make.tmp
+   echo. $(OBJ_DIR)\pdfhbdoc.obj >> make.tmp
+   echo. $(LIB_DIR)\pdflib.lib >> make.tmp
+!endif
+
    $(CC) @make.tmp
    del make.tmp
 
@@ -2318,3 +2337,13 @@ $(OBJ_DIR)\ft_funcs.c : $(HBDOC_DIR)\ft_funcs.prg
 
 $(OBJ_DIR)\ft_funcs.obj : $(OBJ_DIR)\ft_funcs.c
    $(CC) $(CLIBFLAGS) -o$@ $**
+!if $d(PDF)
+$(OBJ_DIR)\genpdf1.c : $(HBDOC_DIR)\genpdf1.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\genpdf1.obj : $(OBJ_DIR)\genpdf1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\pdfhbdoc.obj : $(HBPDF_DIR)\pdfhbdoc.c
+   $(CC) $(CLIBFLAGS) -v -y -I$(HBPDF_DIR) -o$@ $**
+!endif
