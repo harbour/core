@@ -33,8 +33,21 @@
  *
  */
 
+#include "hbsetup.ch"
+
+#ifdef HB_C52_UNDOC
+
 FUNCTION __Input( xPrompt )
    LOCAL cString := __Accept( xPrompt )
 
    RETURN iif( Empty( cString ), NIL, &cString )
+
+#else
+
+/* NOTE: To make it compile */
+
+STATIC PROCEDURE Dummy()
+   RETURN
+
+#endif
 

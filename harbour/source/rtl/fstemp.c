@@ -70,6 +70,8 @@ FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiA
    return FS_ERROR;
 }
 
+#ifdef HB_EXTENSION
+
 HB_FUNC( HB_FTEMPNAME )
 {
    BYTE szName[ _POSIX_PATH_MAX + 1 ];
@@ -86,3 +88,4 @@ HB_FUNC( HB_FTEMPCREATE )
                               ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL ) );
 }
 
+#endif

@@ -38,8 +38,6 @@
 #include "hbapi.h"
 
 /* determines if first char of string is letter */
-/* TEST: QOUT( "isalpha( 'hello' ) = ", isalpha( 'hello' ) ) */
-/* TEST: QOUT( "isalpha( '12345' ) = ", isalpha( '12345' ) ) */
 
 HB_FUNC( ISALPHA )
 {
@@ -47,8 +45,6 @@ HB_FUNC( ISALPHA )
 }
 
 /* determines if first char of string is digit */
-/* TEST: QOUT( "isdigit( '12345' ) = ", isdigit( '12345' ) ) */
-/* TEST: QOUT( "isdigit( 'abcde' ) = ", isdigit( 'abcde' ) ) */
 
 HB_FUNC( ISDIGIT )
 {
@@ -56,8 +52,6 @@ HB_FUNC( ISDIGIT )
 }
 
 /* determines if first char of string is upper-case */
-/* TEST: QOUT( "isupper( 'Abcde' ) = ", isupper( 'Abcde' ) ) */
-/* TEST: QOUT( "isupper( 'abcde' ) = ", isupper( 'abcde' ) ) */
 
 HB_FUNC( ISUPPER )
 {
@@ -65,8 +59,6 @@ HB_FUNC( ISUPPER )
 }
 
 /* determines if first char of string is lower-case */
-/* TEST: QOUT( "islower( 'abcde' ) = ", islower( 'abcde' ) ) */
-/* TEST: QOUT( "islower( 'Abcde' ) = ", islower( 'Abcde' ) ) */
 
 HB_FUNC( ISLOWER )
 {

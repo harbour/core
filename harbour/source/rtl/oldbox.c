@@ -35,6 +35,8 @@
 
 #include "hbapigt.h"
 
+#ifdef HB_C52_UNDOC
+
 HB_FUNC( __BOX )
 {
    if( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) && ISNUM( 4 ) )
@@ -53,3 +55,6 @@ HB_FUNC( __BOXS )
    if( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) && ISNUM( 4 ) )
       hb_gtBoxS( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
 }
+
+#endif
+

@@ -38,7 +38,7 @@
 #include "hbapierr.h"
 
 /* returns n copies of a single space */
-/* TEST: QOUT( "space( 5 ) = '" + space( 5 ) + "'" ) */
+
 HB_FUNC( SPACE )
 {
    if( ISNUM( 1 ) )

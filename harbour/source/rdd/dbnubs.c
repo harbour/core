@@ -35,6 +35,8 @@
 
 #include "hbdefs.h"
 
+#ifdef HB_C52_UNDOC
+
 extern HB_FUNC( DBSEEK );
 extern HB_FUNC( DBSKIP );
 extern HB_FUNC( DBGOTOP );
@@ -181,4 +183,6 @@ HB_FUNC( __DBSELECT )
 {
    HB_FUNCNAME( DBSELECTAREA )();
 }
+
+#endif
 

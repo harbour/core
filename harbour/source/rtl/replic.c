@@ -38,7 +38,7 @@
 #include "hbapierr.h"
 
 /* returns n copies of given string */
-/* TEST: QOUT( "replicate( 'abc', 5 ) = " + replicate( 'abc', 5 ) ) */
+
 HB_FUNC( REPLICATE )
 {
    if( ISCHAR( 1 ) && ISNUM( 2 ) )

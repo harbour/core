@@ -38,31 +38,20 @@
 #ifndef HB_SETUP_CH_
 #define HB_SETUP_CH_
 
-/* ***********************************************************************
- * This symbol defines if we want to use strict Clipper compatibility
- *
- * By default it is disabled (symbol is not defined)
-*/
-/*#define HARBOUR_STRICT_CLIPPER_COMPATIBILITY*/
+/* NOTE: You can select here, which features you to include of the different 
+         Clipper implementations. */
 
-/* ***********************************************************************
- * You can select here, whether you want to include feature introduced in
- * Clipper implementations other than Cl*pper 5.2e.
- *
- * By default 5.3x and Xbase++ are turned on
-*/
+#define HB_EXTENSION              /* Enable Harbour extensions */
 
-/* Include CA-Cl*pper 5.3[a,b] extensions */
-#define HB_COMPAT_C53
-/* Include Alaska Xbase++ extensions */
-#define HB_COMPAT_XPP
-/* Include CA-VO extensions */
-/* #define HB_COMPAT_VO */
-/* Include Flagship extensions */
-/* #define HB_COMPAT_FLAGSHIP */
-/* Include FoxPro extensions */
-/* #define HB_COMPAT_FOXPRO */
-/* Include dBase extensions */
-/* #define HB_COMPAT_DBASE */
+#define HB_C52_UNDOC              /* Enable CA-Cl*pper 5.2e undocumented features */
+/* #define HB_C52_STRICT */       /* Enable CA-Cl*pper 5.2e strict compatibility */
+
+#define HB_COMPAT_C53             /* Enable CA-Cl*pper 5.3x extensions */
+#define HB_COMPAT_XPP             /* Enable Alaska Xbase++ extensions */
+/* #define HB_COMPAT_VO */        /* Enable CA-VO extensions */
+/* #define HB_COMPAT_FLAGSHIP */  /* Enable Flagship extensions */
+/* #define HB_COMPAT_FOXPRO */    /* Enable FoxPro extensions */
+/* #define HB_COMPAT_DBASE */     /* Enable dBase extensions */
 
 #endif /* HB_SETUP_CH_ */
+

@@ -52,10 +52,21 @@ extern HB_FUNC( QOUT );
 
 #define ACCEPT_BUFFER_LEN 256 /* length of input buffer for ACCEPT command */
 
+#ifdef HB_C52_UNDOC
+
 static char s_szAcceptResult[ ACCEPT_BUFFER_LEN ] = { '\0' };
+
+HB_FUNC( __ACCEPTSTR )
+{
+   hb_retc( s_szAcceptResult );
+}
+
+#endif
 
 HB_FUNC( __ACCEPT )
 {
+   char szAcceptResult[ ACCEPT_BUFFER_LEN ];
+
    int input;
    ULONG ulLen;
 
@@ -65,6 +76,8 @@ HB_FUNC( __ACCEPT )
 
    ulLen = 0;
    input = 0;
+
+   szAcceptResult[ 0 ] = '\0';
 
    while( input != K_ENTER )
    {
@@ -84,20 +97,19 @@ HB_FUNC( __ACCEPT )
          default:
             if( ulLen < ( ACCEPT_BUFFER_LEN - 1 ) && input >= 32 )
             {
-               s_szAcceptResult[ ulLen ] = input; /* Accept the input */
-               hb_gtWriteCon( ( BYTE * ) &s_szAcceptResult[ ulLen ], sizeof( char ) ); /* Then display it */
+               szAcceptResult[ ulLen ] = input; /* Accept the input */
+               hb_gtWriteCon( ( BYTE * ) &szAcceptResult[ ulLen ], sizeof( char ) ); /* Then display it */
                ulLen++;  /* Then adjust the input count */
             }
       }
    }
 
-   s_szAcceptResult[ ulLen ] = '\0';
+   szAcceptResult[ ulLen ] = '\0';
 
-   hb_retc( s_szAcceptResult );
-}
+#ifdef HB_C52_UNDOC
+   strcpy( s_szAcceptResult, szAcceptResult );
+#endif
 
-HB_FUNC( __ACCEPTSTR )
-{
-   hb_retc( s_szAcceptResult );
+   hb_retc( szAcceptResult );
 }
 

@@ -238,8 +238,8 @@ FUNCTION RangeCheck( oGet, xDummy, xLow, xHigh )
 
    IF Set( _SET_SCOREBOARD )
       
-      cMessage := Left( NationMsg( _GET_RANGE_FROM ) + LTrim( hb_ValToStr( xLow ) ) + ;
-                        NationMsg( _GET_RANGE_TO ) + LTrim( hb_ValToStr( xHigh ) ), MaxCol() )
+      cMessage := Left( NationMsg( _GET_RANGE_FROM ) + LTrim( Transform( xLow, "" ) ) + ;
+                        NationMsg( _GET_RANGE_TO ) + LTrim( Transform( xHigh, "" ) ), MaxCol() )
 
       nOldRow := Row()
       nOldCol := Col()

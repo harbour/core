@@ -142,7 +142,7 @@ void hb_compFunCallCheck( char * szFuncCall, int iArgs )
    {
       if( iArgs < f[ iPos ].iMinParam || ( f[ iPos ].iMaxParam != -1 && iArgs > f[ iPos ].iMaxParam ) )
       {
-#if defined( HARBOUR_STRICT_CLIPPER_COMPATIBILITY )
+#if defined( HB_C52_STRICT )
          /* Clipper way */
          hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_CHECKING_ARGS, szFuncCall, NULL );
 #else

@@ -176,7 +176,6 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    //  Entry Point
    //
 
-   MHIDE()
    //  Delete log file if present
 
    IF FILE( "hbdocerr.log" )
@@ -622,7 +621,6 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    SET CONSOLE ON
    SET ALTERNATE OFF
    SET ALTERNATE TO
-   MSHOW()
    @ MAXROW(), 0 SAY "Execute ASSEMBL.BAT to compile and link Guides"         
 
    //  Return to caller

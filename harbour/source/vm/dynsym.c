@@ -285,6 +285,8 @@ void hb_dynsymRelease( void )
    hb_xfree( s_pDynItems );
 }
 
+#ifdef HB_EXTENSION
+
 HB_FUNC( __DYNSCOUNT ) /* How much symbols do we have: dsCount = __dynsymCount() */
 {
    hb_retnl( ( long ) s_uiDynSymbols );
@@ -309,3 +311,6 @@ HB_FUNC( __DYNSGETINDEX ) /* Gimme index number of symbol: dsIndex = __dynsymGet
    else
       hb_retnl( 0L );
 }
+
+#endif
+

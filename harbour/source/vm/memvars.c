@@ -1300,7 +1300,7 @@ HB_FUNC( __MVSAVE )
                      hb_itemGetNLen( pItem, &iWidth, &iDec );
 
                      buffer[ 11 ] = 'N' + 128;
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
 /* NOTE: This is the buggy, but fully CA-Cl*pper compatible method. [vszakats] */
                      buffer[ 16 ] = ( BYTE ) iWidth + ( HB_IS_DOUBLE( pItem ) ? iDec + 1 : 0 );
 #else

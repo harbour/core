@@ -78,7 +78,7 @@ FUNCTION Main_ARRAY()
    TEST_LINE( aSort(10)                       , NIL                                        )
    TEST_LINE( aSort({})                       , "{.[0].}"                                  )
    TEST_LINE( aSort(ErrorNew())               , NIL                                        )
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
 #ifndef __XPP__
    TEST_LINE( aFill()                         , "E BASE 2017 Argument error AEVAL "        )
 #endif

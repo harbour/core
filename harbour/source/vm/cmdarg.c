@@ -315,8 +315,24 @@ void hb_cmdargProcessVM( void )
          hb_xfree( pszVersion );
       }
 
-      hb_conOutErr( "Strict CA-Clipper compatibility: ", 0 );
-#if defined( HARBOUR_STRICT_CLIPPER_COMPATIBILITY )
+      hb_conOutErr( "Harbour extensions: ", 0 );
+#if defined( HB_EXTENSION )
+      hb_conOutErr( "Yes", 0 );
+#else
+      hb_conOutErr( "No", 0 );
+#endif
+      hb_conOutErr( hb_conNewLine(), 0 );
+
+      hb_conOutErr( "CA-Clipper 5.2e undocumented: ", 0 );
+#if defined( HB_C52_UNDOC )
+      hb_conOutErr( "Yes", 0 );
+#else
+      hb_conOutErr( "No", 0 );
+#endif
+      hb_conOutErr( hb_conNewLine(), 0 );
+
+      hb_conOutErr( "CA-Clipper 5.2e strict compatibility: ", 0 );
+#if defined( HB_C52_STRICT )
       hb_conOutErr( "Yes", 0 );
 #else
       hb_conOutErr( "No", 0 );

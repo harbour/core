@@ -327,11 +327,15 @@ void hb_inkeyPut( int ch )
    }
 }
 
+#ifdef HB_EXTENSION
+
 HB_FUNC( HB_KEYPUT )
 {
    if( ISNUM( 1 ) )
       hb_inkeyPut( hb_parni( 1 ) );
 }
+
+#endif
 
 HB_FUNC( NEXTKEY )
 {

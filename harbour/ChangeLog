@@ -1,3 +1,79 @@
+20000411-13:12 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbextern.ch
+   * source/vm/memvclip.c
+   * source/vm/proc.c
+   * source/vm/pvalue.c
+   * source/vm/dynsym.c
+   * source/rtl/dummy.prg
+   * source/rtl/fssize.c
+   * source/rtl/fstemp.c
+   * source/rtl/setposbs.c
+   * source/rtl/shadow.c
+   * source/rtl/accept.c
+   * source/rtl/oldbox.c
+   * source/rtl/oldclear.c
+   * source/rtl/alert.prg
+   * source/rtl/setta.prg
+   * source/rtl/console.c
+   * source/rtl/setkey.prg
+   * source/rtl/oemansi.c
+   * source/rtl/inkey.c
+   * source/rtl/valtostr.c
+   * source/rtl/trace.c
+   * source/rdd/dbnubs.c
+   * source/rdd/dbstrux.prg
+   * source/pp/pplib.c
+     + Updated/extended the guards for the UNDOC features and some extensions.
+       It's now possible to turn UNDOC or EXTENSIONS off.
+     ! __ACCEPT made multithread safe, at least for the documented part.
+
+   * source/rtl/dbstrux.prg
+     ! Fixed for disabled HB_COMPAT_XPP mode.
+
+   * source/rtl/alert.prg
+   * utils/hbdoc/hbdoc.prg
+     ! Fixed for disabled HB_COMPAT_C53 mode.
+
+   * source/rtl/getsys.prg
+   * utils/hbtest/rt_stra.prg
+     ! Fixed for disabled HB_EXTENSION
+
+   ; Note that HBDOC will still need HB_COMPAT_C53 to link (for MAKEDIR()).
+
+   * include/hbexprb.c
+   * include/hbexprc.c
+   * include/hbextern.ch
+   * include/hbsetup.h
+   * compiler/harbour.c
+   * compiler/hbfunchk.c
+   * rdd/dbstrux.prg
+   * rtl/alert.prg
+   * rtl/dircmd.prg
+   * rtl/strzero.c
+   * vm/arrayshb.c
+   * vm/hvm.c
+   * vm/memvars.c
+   * utils/hbtest/rt_array.prg
+   * utils/hbtest/rt_main.ch
+   * utils/hbtest/rt_stra.prg
+   * include/hbsetup.ch
+   * source/vm/cmdarg.c
+     + Added HB_EXTENSION macro to guard Harbour extensions.
+     + Added HB_C52_UNDOC macro to guard undocumented interfaces of 
+       CA-Cl*pper 5.2e
+     * HARBOUR_STRICT_CLIPPER_COMPATIBILITY renamed to HB_STRICT_C52
+
+   * source/rtl/is.c
+   * source/rtl/at.c
+   * source/rtl/replic.c
+   * source/rtl/space.c
+   * source/rtl/trim.c
+     - Some tests embedded to the source removed.
+
+   * utils/hbtest/Makefile
+     - PP removed.
+
 20000411-03:04 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * utils/hbtest/*
@@ -6,6 +82,7 @@
    * include/hbsetup.ch
    * source/vm/cmdarg.c
      + Added defines for Flagship/FoxPro/dBase extensions.
+     - Disabled HB_COMPAT_VO by default.
 
 20000411-02:32 GMT+1 Victor Szakats <info@szelvesz.hu>
 

@@ -54,6 +54,6 @@
 #ifdef __HARBOUR__
    #include "hbsetup.ch"
 #else
-   #define HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+   #define HB_C52_STRICT
 #endif
 

@@ -45,6 +45,8 @@ extern HB_FUNC( __MVRESTORE );
 
 /* NOTE: Undocumented Clipper internal function */
 
+#ifdef HB_C52_UNDOC
+
 HB_FUNC( __QQPUB )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
@@ -52,6 +54,8 @@ HB_FUNC( __QQPUB )
    if( pItem )
       hb_memvarCreateFromItem( pItem, VS_PUBLIC, NULL );
 }
+
+#endif
 
 /* CA-Clipper 5.2e compatibility functions. */
 
@@ -79,4 +83,3 @@ HB_FUNC( __MRESTORE )
 {
    HB_FUNCNAME( __MVRESTORE )();
 }
-

@@ -107,7 +107,7 @@ HB_FUNC( STRZERO )
       }
       else
       {
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
          /* NOTE: In CA-Cl*pper STRZERO() is written in Clipper, and will call
                   STR() to do the job, the error (if any) will also be thrown
                   by STR().  [vszakats] */

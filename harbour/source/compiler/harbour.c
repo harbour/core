@@ -1369,7 +1369,7 @@ static void hb_compGenVariablePCode( BYTE bPCode, char * szVarName )
    * Clipper always assumes a memvar variable if undeclared variable
    * is popped (a value is asssigned to a variable).
    */
-#if defined( HARBOUR_STRICT_CLIPPER_COMPATIBILITY )
+#if defined( HB_C52_STRICT )
    if( hb_comp_bForceMemvars || bPCode == HB_P_POPVARIABLE )
 #else
    if( hb_comp_bForceMemvars )

@@ -52,7 +52,7 @@ PROCEDURE __Dir( cFileMask )
                This is hard wired to English. So this is a small 
                incompatibility */
 
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
       QOut( "Database Files    # Records    Last Update     Size" )
 #else
       QOut( NationMsg( _DIR_HEADER ) )

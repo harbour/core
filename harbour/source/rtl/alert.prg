@@ -36,14 +36,16 @@
          this is not documented. This implementation converts the first 
          parameter to a string if another type was passed. You can switch back 
          to Clipper compatible mode by defining constant
-         HARBOUR_STRICT_CLIPPER_COMPATIBILITY. [vszakats] */
+         HB_C52_STRICT. [vszakats] */
 
 /* NOTE: Clipper handles these buttons { "Ok", "", "Cancel" } in a buggy way.
          This is fixed. [vszakats] */
 
 /* NOTE: nDelay parameter is a Harbour extension. */
 
+#ifdef HB_C52_UNDOC
 STATIC s_lNoAlert := NIL
+#endif
 
 FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
    LOCAL nChoice
@@ -59,11 +61,15 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
    LOCAL nOldDispCount
    LOCAL nCount
 
+#ifdef HB_COMPAT_C53
    LOCAL nMRow, nMCol
+#endif
 
    /* TOFIX: Clipper decides at runtime, whether the GT is linked in,
              if it is not, the console mode is choosen here. [vszakats] */
    LOCAL lConsole := .F.
+
+#ifdef HB_C52_UNDOC
 
    DEFAULT s_lNoAlert TO hb_argCheck( "NOALERT" )
 
@@ -71,9 +77,11 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       RETURN NIL
    ENDIF
 
+#endif
+
    aSay := {}
 
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
 
    IF !ISCHARACTER( xMessage )
       RETURN NIL
@@ -151,7 +159,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
 
    IF Len( aOptionsOK ) == 0
       aOptionsOK := { 'Ok' }
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
    /* NOTE: Clipper allows only four options [vszakats] */
    ELSEIF Len( aOptionsOK ) > 4
       aSize( aOptionsOK, 4 )
@@ -266,6 +274,8 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
             nChoice := 0
             EXIT
 
+#ifdef HB_COMPAT_C53
+
          CASE nKey == K_LBUTTONDOWN
 
             nMRow := MRow()
@@ -284,6 +294,8 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
                nChoice := 0
                EXIT
             ENDIF
+
+#endif
 
          CASE ( nKey == K_LEFT .OR. nKey == K_SH_TAB ) .AND. Len( aOptionsOK ) > 1
 
@@ -326,8 +338,13 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
 
    RETURN nChoice
 
+#ifdef HB_C52_UNDOC
+
 PROCEDURE __NONOALERT()
 
    s_lNoAlert := .F.
 
    RETURN
+
+#endif
+

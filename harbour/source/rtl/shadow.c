@@ -46,8 +46,12 @@ HB_FUNC( HB_SHADOW )
                        ISNUM( 5 ) ? hb_parni( 5 ) : 7 );
 }
 
+#ifdef HB_C52_UNDOC
+
 HB_FUNC( DBGSHADOW )
 {
    HB_FUNCNAME( HB_SHADOW )();
 }
+
+#endif
 

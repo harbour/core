@@ -33,6 +33,8 @@
  *
  */
 
+#include "hbsetup.ch"
+
 #include "common.ch"
 
 // macro substitutions to access sub-array elements of aSetKeys[]
@@ -80,6 +82,8 @@ Function SetKey( anKey, bBlock, bCondition )
    endif
 
 return bReturn
+
+#ifdef HB_EXTENSION
 
 Function HB_SetKeyGet( nKey, bCondition )
    local nFound
@@ -142,4 +146,6 @@ Function HB_SetKeyCheck( nKey, p1, p2, p3 )
    endif
 
 return .f.
+
+#endif
 

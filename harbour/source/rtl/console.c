@@ -98,6 +98,7 @@ void hb_conInit( void )
    s_iFilenoStdin = fileno( stdin );
    s_iFilenoStdout = fileno( stdout );
 
+#ifdef HB_C52_UNDOC
    {
       int iStderr = hb_cmdargNum( "STDERR" ); /* Undocumented CA-Clipper switch //STDERR:x */
 
@@ -108,6 +109,9 @@ void hb_conInit( void )
       else                     /* //STDERR:x */
          s_iFilenoStderr = iStderr;
    }
+#else
+   s_iFilenoStderr = fileno( stderr );
+#endif
 
    /* Some compilers open stdout and stderr in text mode, but
       Harbour needs them to be open in binary mode. */

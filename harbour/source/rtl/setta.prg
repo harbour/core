@@ -33,5 +33,19 @@
  *
  */
 
+#include "hbsetup.ch"
+
+#ifdef HB_C52_UNDOC
+
 FUNCTION SetTypeahead( nSize )
    RETURN Set( _SET_TYPEAHEAD, nSize )
+
+#else
+
+/* NOTE: To make it compile */
+
+STATIC PROCEDURE Dummy()
+   RETURN
+
+#endif
+

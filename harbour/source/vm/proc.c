@@ -89,6 +89,8 @@ HB_FUNC( PROCLINE )
       hb_retni( 0 );
 }
 
+#ifdef HB_C52_UNDOC
+
 /* NOTE: Clipper undocumented function, which always returns an empty
          string. [vszakats] */
 
@@ -96,3 +98,5 @@ HB_FUNC( PROCFILE )
 {
    hb_retc( "" );
 }
+
+#endif

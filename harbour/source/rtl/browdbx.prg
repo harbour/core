@@ -71,4 +71,11 @@ FUNCTION dbSkipper( nRecs )
 
    RETURN nSkipped
 
+#else
+
+/* NOTE: To make it compile */
+
+STATIC PROCEDURE Dummy()
+   RETURN
+
 #endif

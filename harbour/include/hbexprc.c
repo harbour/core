@@ -83,7 +83,7 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
       HB_EXPR_PCODE1( hb_compGenMessageData, pObj->value.asMessage.szMessage );
 
       /* Now push current value of variable */
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
       /* push object */
       HB_EXPR_USE( pObj->value.asMessage.pObject, HB_EA_PUSH_PCODE );
 #else
@@ -98,7 +98,7 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
       HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_FUNCTION, 0, 0 );
 
 /* NOTE: COMPATIBILITY ISSUE:
- *  The above HARBOUR_STRICT_CLIPPER_COMPATIBILITY setting determines
+ *  The above HB_C52_STRICT setting determines
  * the way the chained send messages are handled.
  * For example, the following code:
  *
@@ -167,7 +167,7 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
       HB_EXPR_PCODE1( hb_compGenMessageData, pObj->value.asMessage.szMessage );
 
       /* Now push current value of variable */
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
       /* push object */
       HB_EXPR_USE( pObj->value.asMessage.pObject, HB_EA_PUSH_PCODE );
 #else
@@ -221,7 +221,7 @@ void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper )
       HB_EXPR_PCODE1( hb_compGenMessageData, pObj->value.asMessage.szMessage );
 
       /* Now push current value of variable */
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
       /* push object */
       HB_EXPR_USE( pObj->value.asMessage.pObject, HB_EA_PUSH_PCODE );
 #else

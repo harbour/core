@@ -145,7 +145,7 @@ FUNCTION Main_STRA()
 
    /* STRZERO() */
 
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
    TEST_LINE( StrZero(NIL)                    , "E BASE 1099 Argument error STR F:S" )
    TEST_LINE( StrZero("A", 10, 2)             , "E BASE 1099 Argument error STR F:S" )
    TEST_LINE( StrZero(100, 10, "A")           , "E BASE 1099 Argument error STR F:S" )
@@ -461,6 +461,7 @@ FUNCTION Exact_Str()
 FUNCTION New_STRINGS()
 
 #ifdef __HARBOUR__
+#ifdef HB_EXTENSION
 
    TEST_LINE( HB_ValToStr( 4 )                     , "         4"    )
    TEST_LINE( HB_ValToStr( 4.0 / 2 )               , "         2.00" )
@@ -470,6 +471,7 @@ FUNCTION New_STRINGS()
    TEST_LINE( HB_ValToStr( .F. )                   , ".F."           )
    TEST_LINE( HB_ValToStr( .T. )                   , ".T."           )
 
+#endif
 #endif
 
    RETURN NIL

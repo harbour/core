@@ -38,7 +38,6 @@
 #include "hbapierr.h"
 
 /* locates a substring in a string */
-/* TEST: QOUT( "at( 'cde', 'abcdefgfedcba' ) = '" + at( 'cde', 'abcsefgfedcba' ) + "'" ) */
 
 HB_FUNC( AT )
 {

@@ -2011,7 +2011,7 @@ static HB_EXPR_FUNC( hb_compExprUseOr )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
 #else
@@ -2080,7 +2080,7 @@ static HB_EXPR_FUNC( hb_compExprUseAnd )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
 #else
@@ -2145,7 +2145,7 @@ static HB_EXPR_FUNC( hb_compExprUseNot )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
 #else
@@ -2267,7 +2267,7 @@ static HB_EXPR_FUNC( hb_compExprUseEqual )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
 #else
@@ -2344,7 +2344,7 @@ static HB_EXPR_FUNC( hb_compExprUseEQ )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
 #else
@@ -2399,7 +2399,7 @@ static HB_EXPR_FUNC( hb_compExprUseLT )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
 #else
@@ -2454,7 +2454,7 @@ static HB_EXPR_FUNC( hb_compExprUseGT )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
 #else
@@ -2510,7 +2510,7 @@ static HB_EXPR_FUNC( hb_compExprUseLE )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
 #else
@@ -2566,7 +2566,7 @@ static HB_EXPR_FUNC( hb_compExprUseGE )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
 #else
@@ -2622,7 +2622,7 @@ static HB_EXPR_FUNC( hb_compExprUseNE )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
 #else
@@ -2679,7 +2679,7 @@ static HB_EXPR_FUNC( hb_compExprUseIN )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
 #else
@@ -2734,7 +2734,7 @@ static HB_EXPR_FUNC( hb_compExprUsePlus )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
 #else
@@ -2789,7 +2789,7 @@ static HB_EXPR_FUNC( hb_compExprUseMinus )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
 #else
@@ -2844,7 +2844,7 @@ static HB_EXPR_FUNC( hb_compExprUseMult )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
 #else
@@ -2899,7 +2899,7 @@ static HB_EXPR_FUNC( hb_compExprUseDiv )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
 #else
@@ -2954,7 +2954,7 @@ static HB_EXPR_FUNC( hb_compExprUseMod )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
 #else
@@ -3006,7 +3006,7 @@ static HB_EXPR_FUNC( hb_compExprUsePower )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
 #else
@@ -3073,7 +3073,7 @@ static HB_EXPR_FUNC( hb_compExprUseNegate )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
 #else

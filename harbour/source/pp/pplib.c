@@ -50,6 +50,8 @@
 #include "hbapi.h"
 #include "hbapierr.h"
 
+#ifdef HB_EXTENSION
+
 PATHNAMES * hb_comp_pIncludePath = NULL;
 PHB_FNAME   hb_comp_pFileName = NULL;
 FILES       hb_comp_files;
@@ -156,3 +158,6 @@ void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, char * 
    HB_SYMBOL_UNUSED( szWarning1 );
    HB_SYMBOL_UNUSED( szWarning2 );
 }
+
+#endif
+

@@ -36,6 +36,8 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
+#ifdef HB_EXTENSION
+
 HB_FUNC( HB_VALTOSTR )
 {
    ULONG ulLen;
@@ -47,4 +49,6 @@ HB_FUNC( HB_VALTOSTR )
    if( bFreeReq )
       hb_xfree( buffer );
 }
+
+#endif
 

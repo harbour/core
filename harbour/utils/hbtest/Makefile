@@ -31,7 +31,6 @@ LIBS=\
 	rtl \
 	vm \
 	macro \
-	pp \
 	common \
 
 include $(TOP)$(ROOT)config/bin.cf

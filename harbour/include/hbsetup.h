@@ -146,7 +146,7 @@
          symbol name to 10. Sometimes this can be useful for compiling legacy 
          code. [vszakats] */
 /*
-   #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+   #ifdef HB_C52_STRICT
       #define HB_SYMBOL_NAME_LEN   10
    #else
 */

@@ -33,26 +33,32 @@
  *
  */
 
+#include "hbsetup.ch"
+
 /* TODO: Dummy functions, should be removed when implemented. */
 
-FUNCTION ordCond()         ; RETURN NIL /* 5.3 */
-FUNCTION ordDescend()      ; RETURN .F. /* 5.3 */
-FUNCTION ordIsUnique()     ; RETURN .F. /* 5.3 */
-FUNCTION ordKeyAdd()       ; RETURN .F. /* 5.3 */
-FUNCTION ordKeyCount()     ; RETURN 0   /* 5.3 */
-FUNCTION ordKeyDel()       ; RETURN .F. /* 5.3 */
-FUNCTION ordKeyGoto()      ; RETURN .F. /* 5.3 */
-FUNCTION ordKeyNo()        ; RETURN 0   /* 5.3 */
-FUNCTION ordKeyVal()       ; RETURN NIL /* 5.3 */
-FUNCTION ordSetRelation()  ; RETURN NIL /* 5.3 */
-FUNCTION ordSkipUnique()   ; RETURN .F. /* 5.3 */
+#ifdef HB_COMPAT_C53
+FUNCTION ordCond()         ; RETURN NIL
+FUNCTION ordDescend()      ; RETURN .F.
+FUNCTION ordIsUnique()     ; RETURN .F.
+FUNCTION ordKeyAdd()       ; RETURN .F.
+FUNCTION ordKeyCount()     ; RETURN 0  
+FUNCTION ordKeyDel()       ; RETURN .F.
+FUNCTION ordKeyGoto()      ; RETURN .F.
+FUNCTION ordKeyNo()        ; RETURN 0  
+FUNCTION ordKeyVal()       ; RETURN NIL
+FUNCTION ordSetRelation()  ; RETURN NIL
+FUNCTION ordSkipUnique()   ; RETURN .F.
+#endif
 
-FUNCTION dbFileGet()       ; RETURN .F. /* 5.3 */
-FUNCTION dbFilePut()       ; RETURN .F. /* 5.3 */
-FUNCTION dbInfo()          ; RETURN NIL /* 5.3 */
-FUNCTION dbOrderInfo()     ; RETURN NIL /* 5.3 */
-FUNCTION dbRecordInfo()    ; RETURN NIL /* 5.3 */
-FUNCTION dbFieldInfo()     ; RETURN NIL /* 5.3 */
+#ifdef HB_COMPAT_C53
+FUNCTION dbFileGet()       ; RETURN .F.
+FUNCTION dbFilePut()       ; RETURN .F.
+FUNCTION dbInfo()          ; RETURN NIL
+FUNCTION dbOrderInfo()     ; RETURN NIL
+FUNCTION dbRecordInfo()    ; RETURN NIL
+FUNCTION dbFieldInfo()     ; RETURN NIL
+#endif
 
 FUNCTION dbSetRelation()   ; RETURN NIL
 FUNCTION dbClearRelation() ; RETURN NIL

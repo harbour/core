@@ -36,6 +36,8 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
+#ifdef HB_EXTENSION
+
 HB_FUNC( HB_PVALUE )
 {
    USHORT uiParam = hb_parni( 1 );
@@ -45,3 +47,4 @@ HB_FUNC( HB_PVALUE )
       hb_itemReturn( pBase + 1 + uiParam );
 }
 
+#endif
