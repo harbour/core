@@ -42,7 +42,6 @@ HARBOUR_LIB=$(LIB_DIR)\harbour.lib
 TERMINAL_LIB=$(LIB_DIR)\terminal.lib
 TOOLS_LIB=$(LIB_DIR)\hbtools.lib
 HBPP_LIB=$(LIB_DIR)\hbpp.lib
-RDD_LIB=$(LIB_DIR)\rdd.lib
 DBFNTX_LIB=$(LIB_DIR)\dbfntx.lib
 HARBOUR_EXE=$(BIN_DIR)\harbour.exe
 HARBOURFLAGS=-iinclude -n
@@ -86,7 +85,8 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\setcolor.obj \
     $(OBJ_DIR)\strings.obj \
     $(OBJ_DIR)\tclass.obj \
-    $(OBJ_DIR)\transfrm.obj
+    $(OBJ_DIR)\transfrm.obj \
+    $(RDD_OBJS)
 
 #
 # OBJ list for hbtools.lib. Add new ones as needed
@@ -132,7 +132,7 @@ TERMINAL_LIB_OBJS = \
 # OBJ list for rdds. Add new ones as needed
 #
 
-RDD_LIB_OBJS = \
+RDD_OBJS = \
     $(OBJ_DIR)\dbcmd.obj \
     $(OBJ_DIR)\dbf0.obj \
     $(OBJ_DIR)\dbf1.obj \
@@ -165,7 +165,6 @@ all: $(HARBOUR_EXE) \
      $(TOOLS_LIB) \
      $(TERMINAL_LIB) \
      $(HBPP_LIB) \
-     $(RDD_LIB) \
      $(DBFNTX_LIB)
 
 $(HARBOUR_EXE) : \
@@ -199,9 +198,6 @@ $(HBPP_LIB) : $(HBPP_LIB_OBJS)
 
 $(TERMINAL_LIB) : $(TERMINAL_LIB_OBJS)
     lib /OUT:$(TERMINAL_LIB) $(TERMINAL_LIB_OBJS)
-
-$(RDD_LIB) : $(RDD_LIB_OBJS)
-    lib /OUT:$(RDD_LIB) $(RDD_LIB_OBJS)
 
 $(DBFNTX_LIB) : $(DBFNTX_LIB_OBJS)
     lib /OUT:$(DBFNTX_LIB) $(DBFNTX_LIB_OBJS)

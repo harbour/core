@@ -1,3 +1,9 @@
+19990731-17:00 EDT Paul Tucker <ptucker@sympatico.ca>
+  * makefile.vc
+    * moved contents of rdd.lib into harbour.lib
+  * tests/working/buildvc.bat
+    * removed reference to rdd.lib
+
 19990731-22:27 GMT+1 Bruno Cantero <bruno@issnet.net>
    * makefile.dos
      Removed target 'nat'
