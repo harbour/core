@@ -495,7 +495,7 @@ METHOD SetColumnWidth( oCol ) CLASS TBrowse
 
    // if oCol has :Width property set I use it
    if oCol:Width <> nil
-      nWidth := Min(oCol:Width, nWidthMax - 2)
+      nWidth := Min(oCol:Width, nWidthMax)
 
    else
       if ISBLOCK( oCol:block )
@@ -526,7 +526,7 @@ METHOD SetColumnWidth( oCol ) CLASS TBrowse
          enddo
       endif
 
-      nWidth:= Min(iif(nColwidth > nLen, nColwidth, nLen), nWidthMax - 2)
+      nWidth:= Min(iif(nColwidth > nLen, nColwidth, nLen), nWidthMax )
 
    endif
 
