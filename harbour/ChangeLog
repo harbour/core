@@ -1,3 +1,27 @@
+2001-02-09 05:33 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * harbour/source/debug/dbgmenu.prg
+     + Some new options added.
+
+   * harbour/source/debug/dbgtarr.prg
+     + mono display option supported.
+
+   * harbour/source/debug/dbgtmenu.prg
+     + mono display debugger colors supported.
+
+   * harbour/source/debug/dbgtobj.prg
+     + mono display debugger colors supported.
+
+   * harbour/source/debug/dbgtwin.prg
+     ! some minor fixes
+
+   * harbour/source/debug/dbgwa.prg
+     + mono display debugger colors supported.
+
+   * harbour/source/debug/debugger.prg
+     + New METHOD MonoDisplay() added.
+     + New METHOD PathForFiles() added.
+     + New METHOD TabWidth() added.
+
 2001-02-08 20:57 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * harbour/source/rdd/dbfntx/dbfntx1.c
      + ntxPutValue()
