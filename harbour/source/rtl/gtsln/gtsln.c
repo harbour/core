@@ -91,7 +91,7 @@ static BOOL s_bSuspended = FALSE;
 
 /* to convert high characters (mostly graphics, nation and control chars) */
 static SLsmg_Char_Type s_convHighChars[ 256 ];
-/* bit indication if char is a nation char -  assums char is 8-bit */
+/* bit indication if char is a nation char -  assumes char is 8-bit */
 static unsigned char s_IsNationChar[ 128 / 8 ];
 
 /* to convert colors to Clipper mode */
@@ -157,13 +157,13 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
             /* do not indicate USER_BREAK in SLang_Error - ??? */
             SLang_Ignore_User_Abort = 1;
 
-            /* default abort procesing */
+            /* no default abort procesing */
             SLang_set_abort_signal( NULL );
 
             /* NOTE: this is incompatible with CLIPPER
                but under Unix we should assume cursor is
                visible on startup because we cannot figure
-               out a current cursor state  
+               out a current cursor state
             */
             /* turn on a cursor visibility */
             if( SLtt_set_cursor_visibility( 1 ) == -1 )
@@ -225,7 +225,7 @@ void hb_gt_Exit( void )
    hb_mouse_Exit();
 
    /* NOTE: This is incompatible with Clipper
-   - on exit leave a cursor visible     */
+      - on exit leave a cursor visible     */
    if( s_sCursorStyle != SC_UNAVAIL )
       hb_gt_SetCursorStyle( SC_NORMAL );
 
@@ -378,6 +378,7 @@ void hb_gt_SetCursorStyle( USHORT uiStyle )
       s_sCursorStyle = uiStyle;
       SLtt_set_cursor_visibility( s_sCursorStyle != SC_NONE );
 
+#ifdef __linux__
       /* NOTE: cursor apearence works only under linux console */
       if( s_linuxConsole )
       {
@@ -411,6 +412,7 @@ void hb_gt_SetCursorStyle( USHORT uiStyle )
          if( s_uiDispCount == 0 )
             SLsmg_refresh();
       }
+#endif
    }
 }
 
@@ -435,7 +437,7 @@ static void hb_gt_xPutch( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar )
    Pos = ( unsigned char ) ( ( byChar & 0x7F ) >> 3 );
    Mask = ( unsigned char ) ( 1 << ( byChar & 0x07 ) );
 
-   /* this hack turns on Normal Char Set when we should draw nation char. */
+   /* this hack turns on Normal Char Set when we should draw a nation char. */
    /* build a Slang converted char - note we are clearing a high bit of color */
    if( s_bUse_Alt_Char_Hack || !( s_IsNationChar[ Pos ] & Mask ) )
       SLchar = s_convHighChars[ byChar ] | ( SLsmg_Char_Type )( ( ( (int)byAttr + SLANG_RESERVED_COLORS ) & 0x7F ) << 8 );
@@ -467,7 +469,7 @@ void hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE * pbyStr, ULONG u
       Pos = ( unsigned char ) ( ( byChar & 0x7F ) >> 3 );
       Mask = ( unsigned char ) ( 1 << ( byChar & 0x07 ) );
 
-      /* this hack turns on Normal Char Set when we should draw nation char. */
+      /* this hack turns on Normal Char Set when we should draw a nation char. */
       /* build a Slang converted char - note we are clearing a high bit of color */
       if( s_bUse_Alt_Char_Hack || !( s_IsNationChar[ Pos ] & Mask ) )
          SLchar = s_convHighChars[ byChar ] | ( SLsmg_Char_Type )( ( ( (int)byAttr + SLANG_RESERVED_COLORS ) & 0x7F ) << 8 );
@@ -723,7 +725,7 @@ void hb_gt_Replicate( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar, ULON
    Pos = ( unsigned char ) ( ( byChar & 0x7F ) >> 3 );
    Mask = ( unsigned char ) ( 1 << ( byChar & 0x07 ) );
 
-   /* this hack turns on Normal Char Set when we should draw nation char. */
+   /* this hack turns on Normal Char Set when we should draw a nation char. */
    /* build a Slang converted char - note we are clearing a high bit of color */
    if( s_bUse_Alt_Char_Hack || !( s_IsNationChar[ Pos ] & Mask ) )
       SLchar = s_convHighChars[ byChar ] | ( SLsmg_Char_Type )( ( ( (int)byAttr + SLANG_RESERVED_COLORS ) & 0x7F ) << 8 );
@@ -979,7 +981,7 @@ static void hb_gt_build_conv_tabs()
    SLtt_set_color( 0, ( char * ) NULL, s_colorNames[ 7 ], s_colorNames[ 0 ] );
    SLtt_set_color( 1, ( char * ) NULL, s_colorNames[ 0 ], s_colorNames[ 7 ] );
 
-   /* build an conversion chars table */
+   /* build a conversion chars table */
    for( i = 0; i < 32; i++ )
       /* under Unix control-chars are not visible in a general meaning */
       s_convHighChars[ i ] = ( SLsmg_Char_Type ) '.';
@@ -1028,24 +1030,24 @@ static void hb_gt_build_conv_tabs()
             case SLSMG_BULLET_CHAR  :  s_convHighChars[  ] = SLch; break;
 */
 #if SLANG_VERSION > 10400
-            case SLSMG_DIAMOND_CHAR :  s_convHighChars[ 04 ] = SLch; 
+            case SLSMG_DIAMOND_CHAR :  s_convHighChars[ 04 ] = SLch;
                                        break;
             case SLSMG_LARROW_CHAR  :  s_convHighChars[ 17 ] = SLch;
-                                       s_convHighChars[ 27 ] = SLch; 
-				       break;
+                                       s_convHighChars[ 27 ] = SLch;
+                                       break;
             case SLSMG_RARROW_CHAR  :  s_convHighChars[ 16 ] = SLch;
                                        s_convHighChars[ 26 ] = SLch;
-				       break;
+                                       break;
             case SLSMG_DARROW_CHAR  :  s_convHighChars[ 25 ] = SLch;
-                                       s_convHighChars[ 31 ] = SLch; 
+                                       s_convHighChars[ 31 ] = SLch;
                                        break;
             case SLSMG_UARROW_CHAR  :  s_convHighChars[ 24 ] = SLch;
-                                       s_convHighChars[ 30 ] = SLch; 
+                                       s_convHighChars[ 30 ] = SLch;
                                        break;
 #endif
-            case SLSMG_BOARD_CHAR   :  s_convHighChars[ 178 ] = SLch; 
+            case SLSMG_BOARD_CHAR   :  s_convHighChars[ 178 ] = SLch;
                                        break;
-            case SLSMG_BLOCK_CHAR   :  s_convHighChars[ 219 ] = SLch; 
+            case SLSMG_BLOCK_CHAR   :  s_convHighChars[ 219 ] = SLch;
                                        break;
          }
 
@@ -1105,7 +1107,7 @@ static void hb_gt_build_conv_tabs()
          s_IsNationChar[ Pos ] |= Mask;
          ++p;
       }
-/*  
+/*
       for( i=0; i <= ( ( int ) s_convKDeadKeys[ 0 ] ) * 2; i++ )
          fprintf( stderr, "%3d %c\r\n", i, s_convKDeadKeys[ i ] );
       ch=getc( stdin );

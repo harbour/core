@@ -194,10 +194,10 @@ Here is a (probably not complete) list of them :
       although they work on a textmode Linux console. This is a very big
       problem and at least any solution should be developed to emulate this.
       One attempt is a Dead key workaround I've implemented for national
-      characters
+      characters and a Meta key for simulate Alt key. By default as a Meta
+      key I've chosen ESC key pressed once.
 
-    - abort key is CTRL+C not ALT+C on Unixes, although it still is ALT+C
-      on Linux text console
+    - abort key is CTRL+\ not CTRL+BREAK on Unixes
 
     - to get an ESC key you have to press ESC twice. This is an issue
       related to OS behavior where ESC begins a control sequence

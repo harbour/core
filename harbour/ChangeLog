@@ -1,3 +1,13 @@
+2001-07-01 21:20 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+    Changes, provided by  Marek Paliwoda.
+    *doc/en/gtslang.txt
+    *source/rtl/gtsln/gtsln.c
+    *source/rtl/gtsln/kbsln.c
+    *source/rtl/gtsln/keytrans.c
+      ! Fixed a bug with processing '.' key
+      * Added support for an Alt emulation using Meta key (which is
+        an ESC key as in most Linux applications).
+
 2001-04-04 01:20 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * source/vm/dynsym.c
       * added test for spaces to hb_dynsymFindName so

@@ -41,7 +41,7 @@
 /* *********************************************************************** */
 
 /* a table of keys translation */
-static int KeyTrans[][ 2 ] =
+static int KeyTranslationTable[][ 2 ] =
 {
    { SL_KEY_UP,                                      K_UP         },
    { SL_KEY_DOWN,                                    K_DOWN       },
@@ -114,50 +114,6 @@ static int KeyTrans[][ 2 ] =
 
    { K_TAB             | ( SHIFT_PRESSED << 16 ),    K_SH_TAB     },
 #endif
-
-   { SL_KEY_F(1),      K_F1        },
-   { SL_KEY_F(2),      K_F2        },
-   { SL_KEY_F(3),      K_F3        },
-   { SL_KEY_F(4),      K_F4        },
-   { SL_KEY_F(5),      K_F5        },
-   { SL_KEY_F(6),      K_F6        },
-   { SL_KEY_F(7),      K_F7        },
-   { SL_KEY_F(8),      K_F8        },
-   { SL_KEY_F(9),      K_F9        },
-   { SL_KEY_F(10),     K_F10       },
-
-   { SL_KEY_F(11),     K_SH_F1     },
-   { SL_KEY_F(12),     K_SH_F2     },
-   { SL_KEY_F(13),     K_SH_F3     },
-   { SL_KEY_F(14),     K_SH_F4     },
-   { SL_KEY_F(15),     K_SH_F5     },
-   { SL_KEY_F(16),     K_SH_F6     },
-   { SL_KEY_F(17),     K_SH_F7     },
-   { SL_KEY_F(18),     K_SH_F8     },
-   { SL_KEY_F(19),     K_SH_F9     },
-   { SL_KEY_F(20),     K_SH_F10    },
-
-   { SL_KEY_F(21),     K_CTRL_F1   },
-   { SL_KEY_F(22),     K_CTRL_F2   },
-   { SL_KEY_F(23),     K_CTRL_F3   },
-   { SL_KEY_F(24),     K_CTRL_F4   },
-   { SL_KEY_F(25),     K_CTRL_F5   },
-   { SL_KEY_F(26),     K_CTRL_F6   },
-   { SL_KEY_F(27),     K_CTRL_F7   },
-   { SL_KEY_F(28),     K_CTRL_F8   },
-   { SL_KEY_F(29),     K_CTRL_F9   },
-   { SL_KEY_F(30),     K_CTRL_F10  },
-
-   { SL_KEY_F(31),     K_ALT_F1    },
-   { SL_KEY_F(32),     K_ALT_F2    },
-   { SL_KEY_F(33),     K_ALT_F3    },
-   { SL_KEY_F(34),     K_ALT_F4    },
-   { SL_KEY_F(35),     K_ALT_F5    },
-   { SL_KEY_F(36),     K_ALT_F6    },
-   { SL_KEY_F(37),     K_ALT_F7    },
-   { SL_KEY_F(38),     K_ALT_F8    },
-   { SL_KEY_F(39),     K_ALT_F9    },
-   { SL_KEY_F(40),     K_ALT_F10   },
 
 #if HB_GT_KBD_MODIF_MASK
 #ifdef __linux__
@@ -350,43 +306,88 @@ static int KeyTrans[][ 2 ] =
    { SL_KEY_ALT( '6' ),  K_ALT_6 },
    { SL_KEY_ALT( '7' ),  K_ALT_7 },
    { SL_KEY_ALT( '8' ),  K_ALT_8 },
-   { SL_KEY_ALT( '9' ),  K_ALT_9 }
+   { SL_KEY_ALT( '9' ),  K_ALT_9 },
+
+   { SL_KEY_F(1),      K_F1        },
+   { SL_KEY_F(2),      K_F2        },
+   { SL_KEY_F(3),      K_F3        },
+   { SL_KEY_F(4),      K_F4        },
+   { SL_KEY_F(5),      K_F5        },
+   { SL_KEY_F(6),      K_F6        },
+   { SL_KEY_F(7),      K_F7        },
+   { SL_KEY_F(8),      K_F8        },
+   { SL_KEY_F(9),      K_F9        },
+   { SL_KEY_F(10),     K_F10       },
+
+   { SL_KEY_F(11),     K_SH_F1     },
+   { SL_KEY_F(12),     K_SH_F2     },
+   { SL_KEY_F(13),     K_SH_F3     },
+   { SL_KEY_F(14),     K_SH_F4     },
+   { SL_KEY_F(15),     K_SH_F5     },
+   { SL_KEY_F(16),     K_SH_F6     },
+   { SL_KEY_F(17),     K_SH_F7     },
+   { SL_KEY_F(18),     K_SH_F8     },
+   { SL_KEY_F(19),     K_SH_F9     },
+   { SL_KEY_F(20),     K_SH_F10    },
+
+   { SL_KEY_F(21),     K_CTRL_F1   },
+   { SL_KEY_F(22),     K_CTRL_F2   },
+   { SL_KEY_F(23),     K_CTRL_F3   },
+   { SL_KEY_F(24),     K_CTRL_F4   },
+   { SL_KEY_F(25),     K_CTRL_F5   },
+   { SL_KEY_F(26),     K_CTRL_F6   },
+   { SL_KEY_F(27),     K_CTRL_F7   },
+   { SL_KEY_F(28),     K_CTRL_F8   },
+   { SL_KEY_F(29),     K_CTRL_F9   },
+   { SL_KEY_F(30),     K_CTRL_F10  },
+
+   { SL_KEY_F(31),     K_ALT_F1    },
+   { SL_KEY_F(32),     K_ALT_F2    },
+   { SL_KEY_F(33),     K_ALT_F3    },
+   { SL_KEY_F(34),     K_ALT_F4    },
+   { SL_KEY_F(35),     K_ALT_F5    },
+   { SL_KEY_F(36),     K_ALT_F6    },
+   { SL_KEY_F(37),     K_ALT_F7    },
+   { SL_KEY_F(38),     K_ALT_F8    },
+   { SL_KEY_F(39),     K_ALT_F9    },
+   { SL_KEY_F(40),     K_ALT_F10   }
 };
 
 /* *********************************************************************** */
 
-#define KeyTransSize ( sizeof( KeyTrans ) / ( 2 * sizeof ( int ) ) )
+#define KeyTranslationTableSize \
+            ( sizeof( KeyTranslationTable ) / ( 2 * sizeof ( int ) ) )
 
-static void hb_gt_SortKeyTrans( void )
+static void hb_gt_SortKeyTranslationTable( void )
 {
    int i, j, min, KeyTmp[ 2 ];
 
-   for ( i = 0; i < ( KeyTransSize - 1 ); i++ )
+   for ( i = 0; i < ( KeyTranslationTableSize - 1 ); i++ )
    {
       min = i;
 
-      for ( j = i + 1; j < KeyTransSize; j++ )
+      for ( j = i + 1; j < KeyTranslationTableSize; j++ )
       {
-         if ( KeyTrans[ j ][ 0 ] < KeyTrans[ min ][ 0 ] )
+         if ( KeyTranslationTable[ j ][ 0 ] < KeyTranslationTable[ min ][ 0 ] )
             min = j;
       }
 
       if ( min > i )
       {
-         KeyTmp[ 0 ] = KeyTrans[ i ][ 0 ];
-         KeyTmp[ 1 ] = KeyTrans[ i ][ 1 ];
+         KeyTmp[ 0 ] = KeyTranslationTable[ i ][ 0 ];
+         KeyTmp[ 1 ] = KeyTranslationTable[ i ][ 1 ];
 
-         KeyTrans[ i ][ 0 ] = KeyTrans[ min ][ 0 ];
-         KeyTrans[ i ][ 1 ] = KeyTrans[ min ][ 1 ];
+         KeyTranslationTable[ i ][ 0 ] = KeyTranslationTable[ min ][ 0 ];
+         KeyTranslationTable[ i ][ 1 ] = KeyTranslationTable[ min ][ 1 ];
 
-         KeyTrans[ min ][ 0 ] = KeyTmp[ 0 ];
-         KeyTrans[ min ][ 1 ] = KeyTmp[ 1 ];
+         KeyTranslationTable[ min ][ 0 ] = KeyTmp[ 0 ];
+         KeyTranslationTable[ min ][ 1 ] = KeyTmp[ 1 ];
       }
    }
 
 /*
-   for ( i = 0; i < KeyTransSize; i++ )
-      fprintf( stderr, "%02x %8x %8x\n", i, KeyTrans[ i ][ 0 ], KeyTrans[ i ][ 1 ] );
+   for ( i = 0; i < KeyTranslationTableSize; i++ )
+      fprintf( stderr, "%02x %8x %8x\n", i, KeyTranslationTable[ i ][ 0 ], KeyTranslationTable[ i ][ 1 ] );
 */
 
 }
@@ -394,28 +395,28 @@ static void hb_gt_SortKeyTrans( void )
 /* ************************************************************************* */
 
 /* standard binary search */
-static int hb_gt_FindKeyTrans( int SlangKey )
+static int hb_gt_FindKeyTranslation( int SlangKey )
 {
    int Start,Stop,CurPos;
 
-   if ( ( SlangKey >= KeyTrans[ 0 ][ 0 ] ) &&
-        ( SlangKey <= KeyTrans[ KeyTransSize - 1 ][ 0 ] ) )
+   if ( ( SlangKey >= KeyTranslationTable[ 0 ][ 0 ] ) &&
+        ( SlangKey <= KeyTranslationTable[ KeyTranslationTableSize - 1 ][ 0 ] ) )
    {
-      Start = 0; Stop = KeyTransSize - 1;
+      Start = 0; Stop = KeyTranslationTableSize - 1;
 
       while( Start <= Stop )
       {
          CurPos = ( Start + Stop ) / 2;
 
-         /* fprintf( stderr, "%d %d %d\n", i, KeyTrans[ i ][ 0 ], KeyTrans[ i ][ 1 ] ); */
+         /* fprintf( stderr, "%d %d %d\n", i, KeyTranslationTable[ i ][ 0 ], KeyTranslationTable[ i ][ 1 ] ); */
 
-         if( SlangKey == KeyTrans[ CurPos ][ 0 ] )
-            return( KeyTrans[ CurPos ][ 1 ] );
+         if( SlangKey == KeyTranslationTable[ CurPos ][ 0 ] )
+            return( KeyTranslationTable[ CurPos ][ 1 ] );
 
-         else if( SlangKey < KeyTrans[ CurPos ][ 0 ] )
+         else if( SlangKey < KeyTranslationTable[ CurPos ][ 0 ] )
             Stop = CurPos - 1;
 
-         else if( SlangKey > KeyTrans[ CurPos ][ 0 ] )
+         else if( SlangKey > KeyTranslationTable[ CurPos ][ 0 ] )
             Start = CurPos + 1;
       }
    }
@@ -426,21 +427,22 @@ static int hb_gt_FindKeyTrans( int SlangKey )
 
 /* ************************************************************************* */
 
-int hb_gt_SetKeyTrans( int SlangKey, int ClipKey )
+int hb_gt_SetKeyInKeyTranslationTable( int SlangKey, int ClipKey )
 {
    int i;
 
-   if ( ( SlangKey >= KeyTrans[ 0 ][ 0 ] ) &&
-        ( SlangKey <= KeyTrans[ KeyTransSize - 1 ][ 0 ] ) )
+   if ( ( SlangKey >= KeyTranslationTable[ 0 ][ 0 ] ) &&
+        ( SlangKey <= KeyTranslationTable[ KeyTranslationTableSize - 1 ][ 0 ] ) )
    {
-      for ( i = 0; i < KeyTransSize; i++ )
+      for ( i = 0; i < KeyTranslationTableSize; i++ )
       {
-         if ( SlangKey == KeyTrans[ i ][ 0 ] )
-            KeyTrans[ i ][ 1 ] = ClipKey;
+         if ( SlangKey == KeyTranslationTable[ i ][ 0 ] )
+            KeyTranslationTable[ i ][ 1 ] = ClipKey;
+            /* we don't break here because SlangKey can be defined more than once */
       }
    }
 
-   return( i < KeyTransSize );
+   return( i < KeyTranslationTableSize );
 }
 
 /* ************************************************************************* */

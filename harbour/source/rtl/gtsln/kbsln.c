@@ -82,13 +82,14 @@
     ( ( SHIFT_PRESSED | CONTROL_PRESSED | ALTL_PRESSED ) << 16 )
 
 /* extra keysyms definitions */
-#define SL_KEY_NUM_5 SL_KEY_B2       /* this is checked explicitly */
-#define SL_KEY_MAX   ( ( unsigned int ) 0x1000 )
-#define SL_KEY_ESC   ( SL_KEY_MAX + 1 )
+#define SL_KEY_NUM_5      SL_KEY_B2       /* this is checked explicitly */
+#define SL_KEY_MAX        ( ( unsigned int ) 0x1000 )
+#define SL_KEY_ESC        ( SL_KEY_MAX + 1 )
 #define SL_KEY_ALT( ch )  ( SL_KEY_MAX + ( ( unsigned int ) ch ) )
 
-/* abort key is Ctrl+C on Unix ( but Alt+C on Linux console ) */
-static int s_hb_gt_Abort_Key = K_CTRL_C;
+/* we choose Ctrl+\ as an abort key on Unixes where it is a SIGQUIT key by default */
+/* abort key is Ctrl+\ on Unix ( but Ctrl+@ on Linux console ) */
+static int s_hb_gt_Abort_key = 28;
 
 /* *********************************************************************** */
 
@@ -115,12 +116,19 @@ int hb_gt_Kbd_State();
 
 /* *********************************************************************** */
 
-static void hb_gt_Init_KeyTranslat()
+static void hb_gt_Init_KeyTranslations()
 {
    char ch, keyname[ SLANG_MAX_KEYMAP_KEY_SEQ + 1 ];
    int  keynum, i;
-
    char * keyseq;
+
+   /* for defining ^[<Key> sequences - this simulates Alt+Keys */
+   char AltChars[][ 2 ] =
+   {
+      { '0',   '9' },
+      { 'A',   'Z' },
+      { 'a',   'z' }
+   };
 
    /* on Unix systems ESC is a special key so let
       assume ESC is a doble pressed ESC key    */
@@ -148,38 +156,31 @@ static void hb_gt_Init_KeyTranslat()
       }
    }
 
-   /* if we are on linux console pressing Alt generates ^[ before sequence */
-   if( s_linuxConsole || s_underXTerm )
+   /* We assume Esc key is a Meta key which is treated as an Alt key.
+      Also pressing Alt+Key on linux console and xterm gives the same 
+      key sequences so we are happy */
+
+   keyname[ 0 ] = 033;
+   keyname[ 2 ] = 0;
+
+   /* Alt+Letter & Alt+digit definition takes place in three phases :
+      from '0' to '9', from 'A' to 'Z' and from 'a' to 'z'         */
+   for( i = 0; i < 3; i++ )
    {
-      char AltChars[][ 2 ] =
+      for( ch = AltChars[ i ][ 0 ]; ch <= AltChars[ i ][ 1 ]; ch++ )
       {
-         { '0',   '9' },
-         { 'A',   'Z' },
-         { 'a',   'z' }
-      };
+         /* fprintf( stderr, "%d %c\n", i, ch ); */
+         keyname[ 1 ] = ch;
 
-      keyname[ 0 ] = 033;
-      keyname[ 2 ] = 0;
-
-      /* Alt+Letter & Alt+digit definition takes place in three phases :
-         from '0' to '9', from 'A' to 'Z' and from 'a' to 'z'         */
-      for( i = 0; i < 3; i++ )
-      {
-         for( ch = AltChars[ i ][ 0 ]; ch <= AltChars[ i ][ 1 ]; ch++ )
-         {
-            /* fprintf( stderr, "%d %c\n", i, ch ); */
-            keyname[ 1 ] = ch;
-
-            /* QUESTION: why Slang reports error for defining Alt+O ???.
-                         Have I any error in key definitiions ???     */
-            if( ch != 'O' )
-               SLkp_define_keysym( keyname, SL_KEY_ALT( ch ) );
-         }
+         /* QUESTION: why Slang reports error for defining Alt+O ???.
+                      Have I any hidden error in key definitiions ??? */
+         if( ch != 'O' )
+            SLkp_define_keysym( keyname, SL_KEY_ALT( ch ) );
       }
-
-      /* five on numeric console */
-      /* SLkp_define_keysym( "^[[G", SL_KEY_NUM_5 ); */
    }
+
+   /* five on numeric console */
+   /* SLkp_define_keysym( "^[[G", SL_KEY_NUM_5 ); */
 }
 
 /* *********************************************************************** */
@@ -190,6 +191,8 @@ int hb_gt_Init_Terminal( int phase )
    unsigned char *p;
    int ret = 0;
 
+   /* first time init phase - we don't want this after
+      return from system command ( see run.c )      */
    if( phase == 0 )
    {
       /* an uncertain way to check if we run under linux console */
@@ -197,9 +200,11 @@ int hb_gt_Init_Terminal( int phase )
       /* an uncertain way to check if we run under linux xterm */
       s_underXTerm = ( strstr( getenv( "TERM" ), "xterm" ) != NULL );
 
-      /* for Linux console and for Linux xterm */
-      if( s_linuxConsole || s_underXTerm )
-         s_hb_gt_Abort_Key = K_ALT_C;
+#ifdef __linux__
+      /* for Linux console */
+      if( s_linuxConsole )
+         s_hb_gt_Abort_key = 0;
+#endif
 
       /* get Dead key definition */
       if( ( p = getenv( hb_DeadKeyEnvName ) ) )
@@ -208,10 +213,13 @@ int hb_gt_Init_Terminal( int phase )
         if( len > 0 )
            hb_DeadKey = ( int ) *p;
       }
+
+      /* number of keys dealing with a Dead key */
+      s_convKDeadKeys[ 0 ] = 0;
    }
 
-   /* Ctrl-C to abort, no flow-control, no output processing */
-   if( SLang_init_tty( s_hb_gt_Abort_Key, 0, 0 ) != -1 )
+   /* Ctrl+\ to abort, no flow-control, no output processing */
+   if( SLang_init_tty( s_hb_gt_Abort_key, 0, 0 ) != -1 )
    {
       /* do missing disable of start/stop processing */
       if( tcgetattr( SLang_TT_Read_FD, &newTTY ) == 0 )
@@ -219,6 +227,8 @@ int hb_gt_Init_Terminal( int phase )
          newTTY.c_cc[ VSTOP ]  = 255;  /* disable ^S start/stop processing */
          newTTY.c_cc[ VSTART ] = 255;  /* disable ^Q start/stop processing */
          newTTY.c_cc[ VSUSP ]  = 255;  /* disable ^Z suspend processing */
+         /* already done in Slang */
+         /* newTTY.c_cc[ VDSUSP ] = 255; */  /* disable ^Y delayed suspend processing */
 
          if( tcsetattr( SLang_TT_Read_FD, TCSADRAIN, &newTTY ) == 0 )
             /* everything looks ok so far */
@@ -231,9 +241,9 @@ int hb_gt_Init_Terminal( int phase )
    if( ret && ( phase == 0 ) )
    {
       /* define keyboard translations */
-      hb_gt_Init_KeyTranslat();
+      hb_gt_Init_KeyTranslations();
       /* for binary search of key translations */
-      hb_gt_SortKeyTrans();
+      hb_gt_SortKeyTranslationTable();
    }
 
    return ret;
@@ -280,6 +290,31 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
       kbdflags = 0;
 #endif
 
+#if 1
+/* ------- one key ESC handling ----------------- */
+      /* NOTE: This will probably not work on slow terminals
+         or on very busy lines (i.e. modem lines )
+	       I plan to remove it.  */
+      ch = SLang_getkey();
+
+#ifdef DO_LOCAL_DEBUG
+         hb_gtGetPos( &savy, &savx );
+         SLsmg_gotorc( 23, 40 );
+         SLsmg_printf( " %8x %d              ", ch, kbdflags );
+         SLsmg_gotorc( savy, savx );
+#endif
+      if( ch == 033 )   /* escape */
+         if( 0 == SLang_input_pending( 10 ) )
+            return( 0 );
+	    
+      /* user AbortKey break */
+      if( ch == s_hb_gt_Abort_key )
+         return HB_BREAK_FLAG;
+
+      SLang_ungetkey( ch );
+/* ------------------------------------------------- */
+#endif
+
       ch = SLkp_getkey();
 
       if( ch != SL_KEY_ERR )
@@ -292,10 +327,6 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
          SLsmg_printf( " %8x %d                             ", ch, kbdflags );
          SLsmg_gotorc( savy, savx );
 #endif
-         /* user AbortKey break */
-         if( ch == s_hb_gt_Abort_Key )
-            return HB_BREAK_FLAG;
-
          /* Dead key handling */
          if( InDeadState )
          {
@@ -317,10 +348,10 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
          /* any special key ? */
          if( ( tmp = ( ch | ( kbdflags << 16 ) ) ) > 256 )
          {
-            tmp = hb_gt_FindKeyTrans( tmp );
+            tmp = hb_gt_FindKeyTranslation( tmp );
             if( tmp == 0 )
             {
-               tmp = hb_gt_FindKeyTrans( ch );
+               tmp = hb_gt_FindKeyTranslation( ch );
                /* TOFIX: this can generate problems with values returned */
                if( tmp == 0 && ch < 256 ) tmp = ch;
             }
