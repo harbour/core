@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-11-12 12:55 UTC+0100 Antonio Linares <alinares@fivetech.com>
+  * source/vm/hvm.c
+    + ":=" operator overloading support for locals and statics variables.
+
 2002-11-12 10:23 UTC+0100 Antonio Linares <alinares@fivetech.com>
   * source/vm/classes.c
   * source/vm/hvm.c
