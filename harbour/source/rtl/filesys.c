@@ -1490,6 +1490,15 @@ void    hb_fsCommit( FHANDLE hFileHandle )
       /* faster - flushes data buffers only, without updating directory info
       */
       s_uiErrorLast = ( fdatasync( hFileHandle ) < -1 ) ? FS_ERROR : 0;
+      if( s_uiErrorLast == EINVAL || s_uiErrorLast == ENOSYS )
+      {
+         /* Either fdatasync is not supported in this POSIX implementation or
+            this implementation does not support synchronised I/O for this file,
+            so use the slower method that flushes all file data buffers and i-node
+            info for this file.
+         */
+         s_uiErrorLast = ( fsync( hFileHandle ) < -1 ) ? FS_ERROR : 0;
+      }
    #else
       /* slower - flushes all file data buffers and i-node info
       */
