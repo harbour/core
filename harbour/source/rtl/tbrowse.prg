@@ -638,13 +638,7 @@ METHOD Hilite() CLASS TBrowse
    // Start of cell
    SetPos( nRow, ::aColumns[ ::ColPos ]:ColPos )
 
-   if ::AutoLite
-      cType := ::DispCell(::ColPos, CLR_ENHANCED)
-
-   else
-      cType := ::DispCell(::ColPos, CLR_STANDARD)
-
-   endif
+   cType := ::DispCell(::ColPos, CLR_ENHANCED)
 
    // Put cursor back on first char of cell value
    SetPos(nRow, ::aColumns[ ::ColPos ]:ColPos + iif(cType == "L", ::aColumns[::ColPos]:Width / 2, 0 ))
@@ -1037,7 +1031,9 @@ METHOD Stabilize() CLASS TBrowse
          ::HitTop := ::lHitTop
          ::HitBottom := ::lHitBottom
 
-         ::Hilite()
+         if ::AutoLite
+            ::Hilite()
+         endif
          SetCursor(nOldCursor)
          ::stable := .T.
 
@@ -1046,7 +1042,9 @@ METHOD Stabilize() CLASS TBrowse
 
    else
       /* NOTE: DBU relies upon current cell being reHilited() even if already stable */
-      ::Hilite()
+      if ::AutoLite
+         ::Hilite()
+      endif
       SetCursor(nOldCursor)
       return .T.
 
@@ -1064,7 +1062,9 @@ METHOD Moved() CLASS TBrowse
       ::lHitTop := .F.
       ::lHitBottom := .F.
 
-      ::DeHilite()
+      if ::AutoLite
+         ::DeHilite()
+      endif
       ::stable := .F.
    endif
 

@@ -1,3 +1,15 @@
+2001-09-27 14:33 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/rtl/memofile.c
+     ! MEMOWRIT() - Restored CA-Cl*pper compatibility.
+
+   * source/rtl/dbedit.prg
+     ! DBEDIT() - Restored CA-Cl*pper compatibility.
+
+   * source/rtl/tbrowse.prg
+     ! Fixed AutoLite/Hilite/DeHilite() support. Now DBEDIT() works 
+       as expected.
+
 2001-09-27 01:52 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
   * source/rtl/memofile.c
     * Fixed: MemoWrit added an EOF (0x1A) everytime 

@@ -69,6 +69,7 @@ HB_FUNC( MEMOREAD )
       if( fhnd != FS_ERROR )
       {
          ULONG ulSize = hb_fsSeek( fhnd, 0, FS_END );
+
          if( ulSize != 0 )
          {
             BYTE * pbyBuffer;
@@ -79,8 +80,7 @@ HB_FUNC( MEMOREAD )
             {
                BYTE byEOF = HB_CHAR_NUL;
 
-               hb_fsSeek( fhnd, ulSize-1, FS_SET );
-
+               hb_fsSeek( fhnd, -1, FS_END );
                hb_fsRead( fhnd, &byEOF, sizeof( BYTE ) );
 
                if( byEOF == HB_CHAR_EOF )
@@ -128,8 +128,8 @@ HB_FUNC( MEMOWRIT )
          #if ! defined(OS_UNIX_COMPATIBLE)
          {
             BYTE byEOF = HB_CHAR_EOF;
-            if ( (ulSize == 0) || ( (( BYTE * ) hb_itemGetCPtr( pString ))[ulSize-1] != HB_CHAR_EOF) )
-               hb_fsWrite( fhnd, &byEOF, sizeof( BYTE ) );
+
+            hb_fsWrite( fhnd, &byEOF, sizeof( BYTE ) );
          }
          #endif
 

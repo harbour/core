@@ -126,7 +126,7 @@ FUNCTION dbEdit(;
    oBrowse:HeadSep   := iif( ISCHARACTER( xHeadingSeparators ), xHeadingSeparators, Chr( 205 ) + Chr( 209 ) + Chr( 205 ) )
    oBrowse:ColSep    := iif( ISCHARACTER( xColumnSeparators ), xColumnSeparators, " " + Chr( 179 ) + " " )
    oBrowse:FootSep   := iif( ISCHARACTER( xFootingSeparators ), xFootingSeparators, "" )
-   oBrowse:AutoLite  := .t. //don't know why it was .F. (if it break something...)
+   oBrowse:AutoLite  := .F. /* Set to .F. just like in CA-Cl*pper. [vszakats] */
 
    // Calculate the number of columns
 
