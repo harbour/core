@@ -1,3 +1,38 @@
+20000515-20:22 GMT+4 April White <awhite@user.rose.com>
+
+  * source\rtl\makefile
+    - setkey.prg from PRG_SOURCES section
+    + setkey.c to C_SOURCES section
+
+  * makefile.bc
+    - removed setkey.prg rule (?)
+    * changed (OBJ_DIR)\setkey.c to (RTL_DIR)\setkey.c
+
+  * makefile.vc
+    * moved the setkey.obj rule from PRG section to C section
+
+  * source\rtl\console.c
+    + added hb_setkeyInit() to hb_conInit()
+    + added hb_setkeyExit() to hb_conRelease()
+
+  * include\hbapigt.h
+    + added declaration for hb_setkeyInit() and hb_setkeyExit()
+
+  + source\rtl\setkey.prg
+    + C implimentation of setkey
+
+  * tests\setkeys.prg
+    * added code to disable (and later restore) F8 hot key while
+      inside it's action block - prevents recursion
+    * changed condition block on F10 hot-key to use getactive():VarGet() vs
+      getactive():buffer - this prevented testing non-character gets
+
+  * tests\gnu_test.bat
+    * added % to end of hb_architecture & hb_compiler where needed
+
+  * include\hbextern.ch
+    * changed 'rtl\setkey.prg' to 'rtl\setkey.c'
+
 20000516-03:59 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/lang/Makefile

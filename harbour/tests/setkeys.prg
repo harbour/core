@@ -36,13 +36,15 @@
   #include "inkey.ch"
   Procedure Main()
     local GetList := {}
-    local alpha, bravo, charlie, k
+    local alpha, bravo, charlie, k, l
+    local F8Active := .t.
 
     cls
 
     @ 2, 2 say "Press F10 to popup alert box of current get, not active if empty"
     @ 3, 2 say "Press F9 to disable all setkeys, except F9 to restore (uses SetKeySave())"
-    @ 4, 2 say "Press F8 to test setkey w/ array, and SetKeyCheck()"
+    @ 4, 2 say "Press F8 to test setkey w/ array, SetKeyCheck(), and SetKeyGet()"
+    @ 5, 2 say "Press F7 to active/deactive F8"
 
     alpha   := "alpha    "
     bravo   := 123
@@ -61,10 +63,12 @@
 
     #endif
 
-    setKey( K_F10, {|| Alert( transform( getactive():varGet(), NIL ) ) }, {|| !empty( getactive():buffer ) } )
+    setKey( K_F10, {|| Alert( transform( getactive():varGet(), NIL ) ) }, ;
+                   {|| !empty( getactive():VarGet() ) } )  /* :buffer */
     setKey( K_F9 , {|| k := hb_SetKeySave( NIL ), ;
                        SetKey( K_F9, {|| hb_SetKeySave( k ) } ) } )
-    SetKey( K_F8 , {|| SubMain() } )
+    SetKey( K_F8 , {|| SubMain() }, {|| F8Active } )
+    SetKey( K_F7 , {|| F8Active := .not. F8Active } )
 
     read
     ? alpha, bravo, charlie
@@ -72,6 +76,11 @@
 
   static Procedure SubMain()
     local n
+    local bF8Action, bF8Active
+
+    bF8Action := hb_SetKeyGet( K_F8, @bF8Active )
+    SetKey( K_F8, NIL )
+
     SetKey( { 49, 50, 52, 53 }, {|x| qout( chr( x ) ) } )
     do while ( n := inkey( 0 ) ) != K_ESC
       if hb_SetKeyCheck( n )
@@ -81,4 +90,6 @@
         qqout( " hit cold" )
       endif
     end
+
     SetKey( { 49, 50, 52, 53 }, NIL )
+    SetKey( K_F8, bF8Action, bF8Active )

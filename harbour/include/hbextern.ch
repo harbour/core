@@ -647,7 +647,7 @@ EXTERNAL __OBJDELDATA
 //
 EXTERNAL READKEY
 //
-//symbols from file: rtl\setkey.prg
+//symbols from file: rtl\setkey.c
 //
 EXTERNAL SETKEY
 #ifdef HB_EXTENSION

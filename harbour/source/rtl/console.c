@@ -39,7 +39,7 @@
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_conOutAlt(), hb_conOutDev(), DEVOUT(), hb_conDevPos(),
- *    DEVPOS(), __EJECT(), 
+ *    DEVPOS(), __EJECT(),
  *    hb_conOut(), hb_conOutErr(), OUTERR(),
  *    hb_conOutStd(), OUTSTD(), PCOL(), PROW(),
  *    SETPRC(), and hb_conInit()
@@ -123,6 +123,8 @@ void hb_conInit( void )
 
    hb_mouseInit();
    hb_gtInit( s_iFilenoStdin, s_iFilenoStdout, s_iFilenoStderr );
+
+   hb_setkeyInit();  /* April White, May 6, 2000 */
 }
 
 void hb_conRelease( void )
@@ -135,6 +137,8 @@ void hb_conRelease( void )
    /* The is done by the OS from now on */
    s_szCrLf[ 0 ] = HB_CHAR_LF;
    s_szCrLf[ 1 ] = '\0';
+
+   hb_setkeyExit();  /* April White, May 6, 2000 */
 
    hb_gtExit();
    hb_mouseExit();

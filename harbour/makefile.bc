@@ -1374,10 +1374,7 @@ $(OBJ_DIR)\setfunc.obj : $(OBJ_DIR)\setfunc.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\setkey.c : $(RTL_DIR)\setkey.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\setkey.obj : $(OBJ_DIR)\setkey.c
+$(OBJ_DIR)\setkey.obj : $(RTL_DIR)\setkey.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 

@@ -235,6 +235,18 @@ extern int    hb_mouse_CountButton( void );
 extern void   hb_mouse_SetBounds( int iTop, int iLeft, int iBottom, int iRight );
 extern void   hb_mouse_GetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight );
 
+/* SetKey related declarations */
+
+/* Public interface. These should never change, only be added to. */
+
+extern void hb_setkeyInit( void );
+extern void hb_setkeyExit( void );
+
+/* Private interface listed below. these are common to all platforms */
+
+/* none as of yet */
+
+
 #if defined(HB_EXTERN_C)
 }
 #endif

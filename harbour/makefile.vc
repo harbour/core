@@ -265,6 +265,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\set.obj \
    $(OBJ_DIR)\setcolor.obj \
    $(OBJ_DIR)\setcurs.obj \
+   $(OBJ_DIR)\setkey.obj \
    $(OBJ_DIR)\setpos.obj \
    $(OBJ_DIR)\setposbs.obj \
    $(OBJ_DIR)\shadow.obj \
@@ -314,7 +315,6 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\readkey.obj \
    $(OBJ_DIR)\readvar.obj \
    $(OBJ_DIR)\setfunc.obj \
-   $(OBJ_DIR)\setkey.obj \
    $(OBJ_DIR)\setta.obj \
    $(OBJ_DIR)\tbcolumn.obj \
    $(OBJ_DIR)\tbrowse.obj \
