@@ -39,7 +39,7 @@
  *
  * Copyright 2000 JF Lefebvre <jfl@mafact.com> and RA Cuylen <rac@mafact.com>
  *    Support for Class(y), TopClass and Visual Object compatibility
- *    Support for MI (multiple inheritance), 
+ *    Support for MI (multiple inheritance),
  *    Scoping (Protect, Hidden and Readonly),
  *    Delegating, DATA Shared
  *    Support of 10 Chars limits
@@ -101,7 +101,9 @@
 #xtranslate  ( <name>{ [<p,...>] }        =>  ( <name>():New( <p> )
 #xtranslate := <name>{ [<p,...>] }        => := <name>():New( <p> )
 #xtranslate  = <name>{ [<p,...>] }        =>  = <name>():New( <p> )
-#xtranslate  , <name>{ [<p,...>] }        =>  , <name>():New( <p> )
+
+// This rule is generating preprocess matching errors.
+// #xtranslate  , <name>{ [<p,...>] }        =>  , <name>():New( <p> )
 
 #xtranslate    EXPORTED:       =>      nScope := HB_OO_CLSTP_EXPORTED
 #xtranslate    VISIBLE:        =>      nScope := HB_OO_CLSTP_EXPORTED
@@ -274,7 +276,7 @@
 
 #xcommand METHOD <MethodName>( [<params,...>] ) SETGET => ;
    oClass:AddMethod( <(MethodName)>, CLSMETH _CLASS_NAME_ <MethodName>(), HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_READONLY ) ;;
-   oClass:AddMethod( _<(MethodName)>, CLSMETH _CLASS_NAME_ _<MethodName>() )
+   oClass:AddMethod( "_" + <(MethodName)>, CLSMETH _CLASS_NAME_ <MethodName>() )
 
 #xcommand ACCESS <AccessName> => ;
    oClass:AddMethod( <(AccessName)>, CLSMETH _CLASS_NAME_ <AccessName>(), HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_READONLY )
@@ -337,4 +339,3 @@
 #endif /* HB_SHORTNAMES */
 
 #endif /* HB_CLASS_CH_ */
-
