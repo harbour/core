@@ -108,8 +108,17 @@ HB_FUNC( DIRECTORY )
 {
    PHB_ITEM  pDirSpec = hb_param( 1, HB_IT_STRING );
    PHB_ITEM  pAttributes = hb_param( 2, HB_IT_STRING );
-
    USHORT    uiMask;
+
+/*
+#if defined(__MINGW32__) || ( defined(_MSC_VER) && _MSC_VER >= 910 )
+   PHB_ITEM pEightDotThree = hb_param( 3, HB_IT_LOGICAL );
+   BOOL     bEightDotThree;
+
+   // Do we want 8.3 support?
+   bEightDotThree = ( pEightDotThree ? hb_itemGetL( pEightDotThree ) : FALSE );
+#endif
+*/
 
    PHB_ITEM  pDir = hb_itemArrayNew( 0 );
 
@@ -117,9 +126,20 @@ HB_FUNC( DIRECTORY )
 
    /* Get the passed attributes and convert them to Harbour Flags */
 
-   uiMask = HB_FA_ARCHIVE | HB_FA_NORMAL;
+   uiMask = HB_FA_ARCHIVE
+          | HB_FA_DEVICE
+          | HB_FA_TEMPORARY
+          | HB_FA_SPARSE
+          | HB_FA_REPARSE
+          | HB_FA_COMPRESSED
+          | HB_FA_OFFLINE
+          | HB_FA_NOTINDEXED
+          | HB_FA_ENCRYPTED
+          | HB_FA_VOLCOMP;
+
    if( pAttributes && hb_itemGetCLen( pAttributes ) > 0 )
-      uiMask |= hb_fsAttrEncode( hb_itemGetCPtr( pAttributes ) );
+      if ( ( uiMask |= hb_fsAttrEncode( hb_itemGetCPtr( pAttributes ) ) ) & HB_FA_LABEL )
+         uiMask = HB_FA_LABEL;
 
    /* Get the file list */
 
@@ -135,6 +155,7 @@ HB_FUNC( DIRECTORY )
       {
          if( !( ( ( uiMask & HB_FA_HIDDEN    ) == 0 && ( ffind->attr & HB_FA_HIDDEN    ) != 0 ) ||
                 ( ( uiMask & HB_FA_SYSTEM    ) == 0 && ( ffind->attr & HB_FA_SYSTEM    ) != 0 ) ||
+                ( ( uiMask & HB_FA_LABEL     ) == 0 && ( ffind->attr & HB_FA_LABEL     ) != 0 ) ||
                 ( ( uiMask & HB_FA_DIRECTORY ) == 0 && ( ffind->attr & HB_FA_DIRECTORY ) != 0 ) ) )
          {
             PHB_ITEM pSubarray = hb_itemArrayNew( F_LEN );

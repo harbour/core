@@ -7,6 +7,12 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * contrib/libgt/makefile.vc
+    ! Renamed the GT library file from libgt to gt in order to match
+      the library file renaming for the libct and libmisc libraries.
+  * source/common/hbffind.c
+    ! DOS BCC fixes.
+  * source/common/hbfhnd.c
     ! DOS BCC fixes.
   * source/common/hbgete.c
     ! OS/2 IBM C++ fix.
