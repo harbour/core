@@ -1,3 +1,7 @@
+2000-06-04 03:25 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+   * source/pp/ppcore.c
+     * Added \n to error message in SetRules()
+
 2000-06-04 03:05 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
 
    * include/hbcomp.h
