@@ -1,3 +1,26 @@
+2001-06-29 17:00 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/vm/classes.c
+     + Profiler support added:
+
+       New function __GetMsgPrf( nClass, cMsg ) --> aMethodInfo // { nTimes, nTime }
+       Returns a method called and consumed times, to be called from PRG level.
+
+       New function void * hb_mthRequested( void )
+       It provides to the HVM the just requested method pointer.
+
+       New function void hb_mthAddTime( void * pMethod, ULONG ulClockTicks )
+       It increases a called method consumed time.
+
+   * source/vm/hvm.c
+     + Profiler support added just for called methods (by now).
+
+   * source/rtl/profiler.prg
+     + New function Profiler(). It may be called any moment to generate
+       a profiler.txt file.
+
+   * tests
+     + Added TestProf.prg sample showing how to use the profiler.
+
 2001-06-27 01:30 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
    * /contrib/libct/atadjust.c
                     atrepl.c
@@ -27,7 +50,7 @@
    * harbour/source/vm/Classe.c
      - Hb_ClsScope() deleted (to avoid warning) till after 0.37
      - Hb_ObjGetpMethod() deleted (to avoid warning) till after 0.37
-     ! Misc reformating and some braces added 
+     ! Misc reformating and some braces added
 
 2001-06-25 14:51 GMT+1 Patrick Mast <harbour@PatrickMast.com>
    * contrib/tprepro/tprepro.prg
