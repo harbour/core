@@ -143,6 +143,15 @@ For gcc on Win95/WinNT with the Mingw32 library:
   HB_COMPILER       mingw32
 
 For MSVC on Win95/WinNT:
+  Notes: You must create an empty unistd.h in the include directory.
+         gnu make is case sensitive!  If your editor converts
+         harbour.c to HARBOUR.C when it saves the file, then gnu make
+         _will_not_work.
+         If you have MAKE_MODE in your dos environment, make sure it is
+         not set to unix
+
+         For best results, in your copy of make_tpl.bat, also set:
+  C_USR=-DHARBOUR_USE_WIN_GTAPI -TP
   HB_ARCHITECTURE   win32
   HB_COMPILER       msvc
 

@@ -1,3 +1,11 @@
+19991015-23:25 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/compiler/harbour.c
+     + || defined(_MSC_VER) around isatty()
+      This allows gnu make to compile harbour.exe
+      It doesn't seem to affect ms make
+   * doc/gmake.txt
+     * updated notes regarding MSVC
+
 19991015-23:15 EDT David G. Holm <dholm@jsd-llc.com>
 
    * include/set.h
