@@ -3830,7 +3830,7 @@ void hb_vmPushString( char * szText, ULONG length )
    pStackTopItem->type = HB_IT_STRING;
    pStackTopItem->item.asString.length = length;
    pStackTopItem->item.asString.value  = szTemp;
-   pStackTopItem->item.asString.bPcode = FALSE;
+   pStackTopItem->item.asString.bStatic = FALSE;
    pStackTopItem->item.asString.puiHolders = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
    *( pStackTopItem->item.asString.puiHolders ) = 1;
    hb_stackPush();
@@ -3845,7 +3845,7 @@ void hb_vmPushStringPcode( char * szText, ULONG length )
    pStackTopItem->type = HB_IT_STRING;
    pStackTopItem->item.asString.length = length;
    pStackTopItem->item.asString.value  = szText;
-   pStackTopItem->item.asString.bPcode = TRUE;
+   pStackTopItem->item.asString.bStatic = TRUE;
    hb_stackPush();
 }
 

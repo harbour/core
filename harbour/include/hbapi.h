@@ -200,7 +200,7 @@ struct hb_struString
 {
    ULONG length;
    char * value;
-   BOOL bPcode;         /* it is a string created from the pcode */
+   BOOL bStatic;        /* it is a static string from pcode or from a C string */
    USHORT * puiHolders; /* number of holders of this string */
 };
 

@@ -199,13 +199,13 @@ PHB_ITEM hb_itemPutC( PHB_ITEM pItem, char * szText )
    {
       pItem->item.asString.length = 0;
       pItem->item.asString.value  = "";
-      pItem->item.asString.bPcode = TRUE;
+      pItem->item.asString.bStatic = TRUE;
    }
    else
    {
       pItem->item.asString.length = strlen( szText );
       pItem->item.asString.value = ( char * ) hb_xgrab( pItem->item.asString.length + 1 );
-      pItem->item.asString.bPcode = FALSE;
+      pItem->item.asString.bStatic = FALSE;
       pItem->item.asString.puiHolders = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
       * ( pItem->item.asString.puiHolders ) = 1;
       strcpy( pItem->item.asString.value, szText );
@@ -224,7 +224,7 @@ PHB_ITEM hb_itemPutCConst( PHB_ITEM pItem, char * szText )
       pItem = hb_itemNew( NULL );
 
    pItem->type = HB_IT_STRING;
-   pItem->item.asString.bPcode = TRUE;
+   pItem->item.asString.bStatic = TRUE;
 
    if( szText == NULL )
    {
@@ -236,7 +236,7 @@ PHB_ITEM hb_itemPutCConst( PHB_ITEM pItem, char * szText )
       pItem->item.asString.length = strlen( szText );
       pItem->item.asString.value  = szText;
    }
-   
+
    return pItem;
 }
 
@@ -259,7 +259,7 @@ PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, char * szText, ULONG ulLen )
    {
       pItem->item.asString.length = 0;
       pItem->item.asString.value  = "";
-      pItem->item.asString.bPcode = TRUE;
+      pItem->item.asString.bStatic = TRUE;
    }
    else
    {
@@ -267,7 +267,7 @@ PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, char * szText, ULONG ulLen )
       pItem->item.asString.value = ( char * ) hb_xgrab( ulLen + 1 );
       hb_xmemcpy( pItem->item.asString.value, szText, ulLen );
       pItem->item.asString.value[ ulLen ] = '\0';
-      pItem->item.asString.bPcode = FALSE;
+      pItem->item.asString.bStatic = FALSE;
       pItem->item.asString.puiHolders = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
       * ( pItem->item.asString.puiHolders ) = 1;
    }
@@ -288,7 +288,7 @@ PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText, ULONG ulLen )
    pItem->item.asString.length = ulLen;
    pItem->item.asString.value = szText;
    pItem->item.asString.value[ ulLen ] = '\0';
-   pItem->item.asString.bPcode = FALSE;
+   pItem->item.asString.bStatic = FALSE;
    pItem->item.asString.puiHolders = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
    * ( pItem->item.asString.puiHolders ) = 1;
 
@@ -835,7 +835,7 @@ void hb_itemClear( PHB_ITEM pItem )
 
    if( HB_IS_STRING( pItem ) )
    {
-      if( pItem->item.asString.bPcode )
+      if( pItem->item.asString.bStatic )
          pItem->item.asString.value = NULL;
       else
       {
@@ -876,7 +876,7 @@ void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
 
    memcpy( pDest, pSource, sizeof( HB_ITEM ) );
 
-   if( HB_IS_STRING( pSource ) && ! pSource->item.asString.bPcode )
+   if( HB_IS_STRING( pSource ) && ! pSource->item.asString.bStatic )
    {
       ++*( pSource->item.asString.puiHolders );
    }
