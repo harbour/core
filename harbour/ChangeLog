@@ -1,3 +1,7 @@
+19990716-16:00 CET Eddie Runia <eddie@runia.com>
+  * source/rtl/transfrm.c
+    Memory allocation error resolved
+
 19990716-15:00 CET Eddie Runia <eddie@runia.com>
   * source/rtl/math.c
     Round() : One byte more should be allocated
