@@ -394,7 +394,7 @@ void hb_compStrongType( int iSize )
        {
          /* The Object is not declared. */
        }
-       else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == '+' )
+       else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == 'S' )
        {
          pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256 );
 
@@ -437,7 +437,7 @@ void hb_compStrongType( int iSize )
         if ( pFunc->iStackIndex < ( wVar + 1 ) )
           break;
 
-        if ( pFunc->pStack[ pFunc->iStackIndex - ( wVar + 1 ) ] == '+' )
+        if ( pFunc->pStack[ pFunc->iStackIndex - ( wVar + 1 ) ] == 'S' )
         {
           if ( pFunc->iStackFunctions > 0 && pFunc->pStackFunctions[ --pFunc->iStackFunctions ] )
           {
@@ -509,13 +509,13 @@ void hb_compStrongType( int iSize )
         /* Removing all the parameters.*/
         pFunc->iStackIndex -= wVar;
 
-        if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == '+' && pFunc->pStackFunctions[ pFunc->iStackFunctions ] )
+        if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == 'S' && pFunc->pStackFunctions[ pFunc->iStackFunctions ] )
         {
           pFunc->pStack[ pFunc->iStackIndex - 1 ] = pFunc->pStackFunctions[ pFunc->iStackFunctions ]->cType;
 
           /*printf( "\nDeclared Method!!! Stack: %i Type: %c\n", pFunc->iStackIndex, pFunc->pStack[ pFunc->iStackIndex - 1 ] );*/
 
-          if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == '+' && pFunc->iStackClasses < 8 )
+          if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == 'S' && pFunc->iStackClasses < 8 )
           {
             /*printf( "\nNested CLASS!!! Stack: %i Type: %c Class Pointer: %i\n", pFunc->iStackIndex, pFunc->pStack[ pFunc->iStackIndex - 1 ], pFunc->pStackFunctions[ pFunc->iStackFunctions ]->pClass );*/
             pFunc->pStackClasses[ pFunc->iStackClasses++ ] = pFunc->pStackFunctions[ pFunc->iStackFunctions ]->pClass;
@@ -1143,11 +1143,11 @@ void hb_compStrongType( int iSize )
           /* Mark as used */
           pVar->iUsed |= VU_USED;
 
-          if ( pVar->cType == '+' && pFunc->iStackClasses < 8 )
+          if ( pVar->cType == 'S' && pFunc->iStackClasses < 8 )
           {
             /* Object of declared class */
             pFunc->pStackClasses[ pFunc->iStackClasses++ ] = pVar->pClass;
-            pFunc->pStack[ pFunc->iStackIndex++ ] = '+';
+            pFunc->pStack[ pFunc->iStackIndex++ ] = 'S';
           }
           else if ( pFunc->pCode[ ulPos ] == HB_P_PUSHLOCALREF )
              pFunc->pStack[ pFunc->iStackIndex++ ] = pVar->cType + VT_OFFSET_BYREF;
@@ -1187,11 +1187,11 @@ void hb_compStrongType( int iSize )
           /* Mark as used */
           pVar->iUsed |= VU_USED;
 
-          if ( pVar->cType == '+' && pFunc->iStackClasses < 8 )
+          if ( pVar->cType == 'S' && pFunc->iStackClasses < 8 )
           {
             /* Object of declared class */
             pFunc->pStackClasses[ pFunc->iStackClasses++ ] = pVar->pClass;
-            pFunc->pStack[ pFunc->iStackIndex++ ] = '+';
+            pFunc->pStack[ pFunc->iStackIndex++ ] = 'S';
           }
           if ( pFunc->pCode[ ulPos ] == HB_P_PUSHSTATICREF )
              pFunc->pStack[ pFunc->iStackIndex++ ] = pVar->cType + VT_OFFSET_BYREF;
@@ -1275,11 +1275,11 @@ void hb_compStrongType( int iSize )
             /* Mark as used */
             pVar->iUsed |= VU_USED;
 
-            if ( pVar->cType == '+' && pFunc->iStackClasses < 8 )
+            if ( pVar->cType == 'S' && pFunc->iStackClasses < 8 )
             {
                /* Object of declared class */
                pFunc->pStackClasses[ pFunc->iStackClasses++ ] = pVar->pClass;
-               pFunc->pStack[ pFunc->iStackIndex++ ] = '+';
+               pFunc->pStack[ pFunc->iStackIndex++ ] = 'S';
             }
             else if ( pFunc->pCode[ ulPos ] == HB_P_PUSHMEMVARREF )
                pFunc->pStack[ pFunc->iStackIndex - 1 ] = pVar->cType + VT_OFFSET_BYREF;
@@ -1476,7 +1476,7 @@ void hb_compStrongType( int iSize )
      case HB_P_POPVARIABLE :
        pFunc->iStackIndex--;
 
-       if ( pFunc->pStack[ pFunc->iStackIndex ] == '+' && pFunc->iStackClasses > 0 )
+       if ( pFunc->pStack[ pFunc->iStackIndex ] == 'S' && pFunc->iStackClasses > 0 )
        {
          /* Object of declared class */
          pFunc->pStackClasses[ --pFunc->iStackClasses ] = NULL;
@@ -1488,7 +1488,7 @@ void hb_compStrongType( int iSize )
        /* TODO: check what is aliasedvar? */
        pFunc->iStackIndex--;
 
-       if ( pFunc->pStack[ pFunc->iStackIndex ] == '+' && pFunc->iStackClasses > 0 )
+       if ( pFunc->pStack[ pFunc->iStackIndex ] == 'S' && pFunc->iStackClasses > 0 )
        {
          /* Object of declared class */
          pFunc->pStackClasses[ --pFunc->iStackClasses ] = NULL;
@@ -1538,7 +1538,7 @@ void hb_compStrongType( int iSize )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
 
-       if ( pFunc->pStack[ pFunc->iStackIndex ] == '+' && pFunc->iStackClasses > 0 )
+       if ( pFunc->pStack[ pFunc->iStackIndex ] == 'S' && pFunc->iStackClasses > 0 )
        {
          /* Object of declared class */
          pFunc->pStackClasses[ --pFunc->iStackClasses ] = NULL;
@@ -1678,7 +1678,7 @@ void hb_compStrongType( int iSize )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
 
-       if ( pFunc->pStack[ pFunc->iStackIndex ] == '+' && pFunc->iStackClasses > 0 )
+       if ( pFunc->pStack[ pFunc->iStackIndex ] == 'S' && pFunc->iStackClasses > 0 )
        {
          /* Object of declared class */
          pFunc->pStackClasses[ --pFunc->iStackClasses ] = NULL;
@@ -1752,7 +1752,7 @@ void hb_compStrongType( int iSize )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
 
-       if ( pFunc->pStack[ pFunc->iStackIndex ] == '+' && pFunc->iStackClasses > 0 )
+       if ( pFunc->pStack[ pFunc->iStackIndex ] == 'S' && pFunc->iStackClasses > 0 )
        {
          /* Object of declared class */
          pFunc->pStackClasses[ --pFunc->iStackClasses ] = NULL;

@@ -1,7 +1,17 @@
+20000519-10:17 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/harbour.y
+   * source/compiler/harbour.c
+   * source/compiler/hbpcode.c
+     + Added support for AS Array Of Objects FROM CLASS ClassName syntax and type checking.
+
+   * tests/testwarn.prg
+     + Added code to demonstrate syntax and warnings for AS Array Of Objects FROM CLASS ClassName syntax and type checking.
+
 20000519-02:05 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * include/hbcomp.h
-     ! Consoldated COMDECLARED and COMMETHOD into COMDECLARED
+     ! Consolidated COMDECLARED and COMMETHOD into COMDECLARED
      + Added member pClass to COMDECLARED
      + Added member pLast to COMCLASS
 

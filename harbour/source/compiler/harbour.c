@@ -550,7 +550,7 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
    pVar->pNext = NULL;
    pVar->iDeclLine = hb_comp_iLine;
 
-   if ( cValueType == '+' )
+   if ( toupper( cValueType ) == 'S' )
    {
       /*printf( "\nVariable %s is of Class: %s\n", szVarName, hb_comp_szClass );*/
 
