@@ -211,8 +211,6 @@ HARBOUR HB_CLASSADD(void)
          pNewMeth->pMessage = pMessage;
          pClass->wMethods++;                    /* One more message         */
       }
-      else
-         printf("\nOld %li\n",(long) pNewMeth->pFunction);
 
       switch( wType )
       {
