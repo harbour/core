@@ -1,6 +1,37 @@
 /*
  * $Id$
- */
+ *
+   Harbour Project source code
+
+   This file is a part of Harbour Runtime Library and it contains code
+   that handles codeblocks
+
+   Copyright (C) 1999 Ryszard Glab
+   www - http://www.harbour-project.org
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version, with one exception:
+
+   The exception is that if you link the Harbour Runtime Library (HRL)
+   and/or the Harbour Virtual Machine (HVM) with other files to produce
+   an executable, this does not by itself cause the resulting executable
+   to be covered by the GNU General Public License. Your use of that
+   executable is in no way restricted on account of linking the HRL
+   and/or HVM code into it.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
+   their web site at http://www.gnu.org/).
+
+*/
 
 /* The Harbour implementation of codeblocks */
 
@@ -18,177 +49,176 @@ extern STACK stack;
 
 /* Creates the codeblock structure
  *
- * The buffer should contain:
- * +0 bytes -> number of referenced local variables
- * +2 bytes -> table of referenced local variables
- * +2 + 2 *(number of referenced variables) -> codeblock pcode
+ * pBuffer -> the buffer with pcodes (without HB_P_PUSHBLOCK)
+ * wLocals -> number of local variables referenced in a codeblock
+ * pLocalPosTable -> a table with positions on eval stack for referenced variables
+ * pSymbols    -> a pointer to the module symbol table
+ *
+ * Note: pLocalPosTable cannot be used if wLocals is ZERO
+ *
  */
-HB_CODEBLOCK_PTR CodeblockNew( BYTE * pBuffer, WORD wSize, PSYMBOL pSymbols,
-            int iStaticsBase, WORD wStackBase )
+HB_CODEBLOCK_PTR hb_CodeblockNew( BYTE * pBuffer,
+            WORD wLocals,
+            WORD *pLocalPosTable,
+            PSYMBOL pSymbols )
 {
   HB_CODEBLOCK_PTR pCBlock;
-  WORD wVars;
 
   pCBlock =( HB_CODEBLOCK_PTR ) hb_xgrab( sizeof(HB_CODEBLOCK) );
 
-  /* Check the number of referenced local variables
+  /* Store the number of referenced local variables
    */
-  wVars = * ( (WORD *) pBuffer );
-  wSize -= ( wVars + 1 ) * 2;
-  pBuffer +=2;
-  pCBlock->wLocals =wVars;
-  if( wVars )
+  pCBlock->wLocals =wLocals;
+  if( wLocals )
   {
-    WORD w = 0;
-
-    /* Create the table with references to local variables
-     * If this codeblock will be exported from a function then
-     * all references will be replaced with current values of
-     * these variables
+    /* NOTE: if a codeblock will be created by macro compiler then
+     * wLocal have to be ZERO
      */
-    pCBlock->pItems =(PHB_ITEM) hb_xgrab( sizeof(HB_ITEM) * wVars );
+    WORD w = 0;
+    PHB_ITEM pLocal;
+    HANDLE hGlobal;
 
-    while( wVars-- )
+    /* Create a table that will store the values of local variables
+     * accessed in a codeblock
+     */
+    pCBlock->pLocals =(PHB_ITEM) hb_xgrab( wLocals * sizeof(HB_ITEM) );
+
+    while( wLocals-- )
     {
-      pCBlock->pItems[ w ].type =IT_BYREF; /* not really integer  */
-      pCBlock->pItems[ w ].item.asRefer.value = * ( (WORD*) pBuffer );
+      /* Swap the current value of local variable with the reference to this
+       * value.
+       * TODO: If Harbour will support threads in the future then we need
+       * to implement some kind of semaphores here.
+       */
+      pLocal =stack.pBase +1 +(*pLocalPosTable++);
+
+      if( ! IS_MEMVAR( pLocal ) )
+      {
+         /* Change the value only if this variable is not referenced
+          * by another codeblock yet.
+          * In this case we have to copy the current value to a global memory
+          * pool so it can be shared by codeblocks
+          */
+
+         hGlobal =hb_GlobalValueNew( pLocal );
+
+         pLocal->type =IT_BYREF | IT_MEMVAR;
+         pLocal->item.asMemvar.itemsbase =hb_GlobalValueBaseAddress();
+         pLocal->item.asMemvar.offset    =0;
+         pLocal->item.asMemvar.value     =hGlobal;
+
+         hb_GlobalValueIncRef( pLocal->item.asMemvar.value );
+         memcpy( pCBlock->pLocals + w, pLocal, sizeof(HB_ITEM) );
+      }
+      else
+      {
+         /* This variable is already detached (by another codeblock)
+          * - copy the reference to a value
+          */
+         /* Increment the reference counter so this value will not be
+          * released if other codeblock will be deleted
+          */
+         hb_GlobalValueIncRef( pLocal->item.asMemvar.value );
+         memcpy( pCBlock->pLocals + w, pLocal, sizeof(HB_ITEM) );
+
+      }
+
       ++w;
-      pBuffer +=2;
     }
   }
   else
-    pCBlock->pItems =NULL;
+    pCBlock->pLocals =NULL;
 
-  /* the codeblock initally contains references to local variables
-   */
-  pCBlock->wDetached =FALSE;
   /*
-   * pcode is stored in static segment now.
+   * The codeblock pcode is stored in static segment.
    * The only allowed operation on a codeblock is evaluating it then
-   * there is no need to duplicate its pcode -just store the pointer to it
+   * there is no need to duplicate its pcode - just store the pointer to it
    */
   pCBlock->pCode = pBuffer;
 
   pCBlock->pSymbols  =pSymbols;
-  pCBlock->wDetached =FALSE;
   pCBlock->lCounter  =1;
-  pCBlock->iStatBase =iStaticsBase;
-  /*
-   * wStackBase is stack base of function where the codeblock was defined
-   * We need it because stack.pBase points to a stack base of EVAL function
-   * at the time of codeblock evaluation.
-   */
-  pCBlock->wRefBase  =wStackBase;
 
 #ifdef CODEBLOCKDEBUG
-  printf( "codeblock created (%li) %lx\n", pCBlock->lCounter, pCBlock );
+  printf( "\ncodeblock created (%li) %lx", pCBlock->lCounter, pCBlock );
 #endif
   return pCBlock;
 }
 
 /* Delete a codeblock
  */
-void  CodeblockDelete( HB_CODEBLOCK_PTR pCBlock )
+void  hb_CodeblockDelete( HB_ITEM_PTR pItem )
 {
+   HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
 #ifdef CODEBLOCKDEBUG
-  printf( "delete a codeblock (%li) %lx\n", pCBlock->lCounter, pCBlock );
+   printf( "\ndelete a codeblock (%li) %lx", pCBlock->lCounter, pCBlock );
 #endif
-  if( --pCBlock->lCounter == 0 )
-  {
-    WORD w = 0;
+   if( --pCBlock->lCounter == 0 )
+   {
+      /* free space allocated for local variables
+      */
+      if( pCBlock->pLocals )
+      {
+         WORD w = 0;
+         while( w < pCBlock->wLocals )
+         {
+            hb_GlobalValueDecRef( pCBlock->pLocals[ w ].item.asMemvar.value );
+            ++w;
+         }
+         hb_xfree( pCBlock->pLocals );
+      }
 
-    /* free space allocated for local variables
-    */
-    if( pCBlock->pItems )
-    {
-      while( w < pCBlock->wLocals )
-        ItemRelease( &pCBlock->pItems[ w++ ] );
-      hb_xfree( pCBlock->pItems );
-    }
-
-    /* free space allocated for a CODEBLOCK structure
-    */
-    hb_xfree( pCBlock );
-    #ifdef CODEBLOCKDEBUG
-      printf( "codeblock deleted (%li) %lx\n", pCBlock->lCounter, pCBlock );
-    #endif
-  }
-}
-
-/* Function to unlink variables referenced in a codeblock from a function
- * where this codeblock was created
- */
-void CodeblockDetach( HB_CODEBLOCK_PTR pCBlock )
-{
-  if( pCBlock->wLocals && !pCBlock->wDetached )
-  {
-    /* this codeblock refers to local variables */
-    WORD w = 0;
-    PHB_ITEM pItem;
-
-    while( w < pCBlock->wLocals )
-    {
-      /* replace the position of local variable on the stack with
-       * it's current value
-       * stack.pBase still points to a stack frame of function
-       * where this codeblock was defined
-       */
-      pItem =pCBlock->pItems + w;
-      pItem =stack.pBase +pItem->item.asRefer.value + 1;
-      if( IS_BYREF( pItem ) )
-          pItem =stack.pItems +pItem->item.asRefer.value;
-      ItemCopy( pCBlock->pItems + w, pItem );
-      ++w;
-    }
-    pCBlock->wDetached =TRUE;
-  }
-    #ifdef CODEBLOCKDEBUG
-      printf( "codeblock detached(%li) %lx\n", pCBlock->lCounter, pCBlock );
-    #endif
+      /* free space allocated for a CODEBLOCK structure
+      */
+      hb_xfree( pCBlock );
+      #ifdef CODEBLOCKDEBUG
+         printf( "\ncodeblock deleted (%li) %lx", pCBlock->lCounter, pCBlock );
+      #endif
+   }
 }
 
 /* Evaluate passed codeblock
- * wStackBase is stack base of function where the codeblock was defined
- * We need it because stack.pBase points to a stack base of EVAL function
+ * Before evaluation we have to switch to a static variable base that
+ * was defined when the codeblock was created.
+ * (The codeblock can only see the static variables defined in a module
+ * where the codeblock was created)
  */
-void CodeblockEvaluate( HB_CODEBLOCK_PTR pCBlock )
+void hb_CodeblockEvaluate( HB_ITEM_PTR pItem )
 {
   int iStatics = stack.iStatics;
 
-  stack.iStatics = pCBlock->iStatBase;
-  VirtualMachine( pCBlock->pCode, pCBlock->pSymbols );
+  stack.iStatics = pItem->item.asBlock.statics;
+  VirtualMachine( pItem->item.asBlock.value->pCode, pItem->item.asBlock.value->pSymbols );
   stack.iStatics = iStatics;
 }
 
 /* Get local variable referenced in a codeblock
  */
-PHB_ITEM  CodeblockGetVar( PHB_ITEM pItem, LONG iItemPos )
+PHB_ITEM  hb_CodeblockGetVar( PHB_ITEM pItem, LONG iItemPos )
+{
+   HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
+   /* local variables accessed in a codeblock are always stored as reference */
+   return ItemUnRef( pCBlock->pLocals -iItemPos -1 );
+}
+
+/* Get local variable passed by reference
+ */
+PHB_ITEM  hb_CodeblockGetRef( PHB_ITEM pItem, PHB_ITEM pRefer )
 {
   HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
-  PHB_ITEM pLocalVar;
 
-  pLocalVar =&pCBlock->pItems[ -iItemPos -1 ];
-  /* if a codeblock have detached local variables then it stores their value */
-  if( !pCBlock->wDetached )
-  {
-    /* when variables are not detached then a codeblock stores the variable's
-     * position on the stack
-     */
-    pLocalVar =stack.pItems +pCBlock->wRefBase +pLocalVar->item.asRefer.value + 1;
-  }
-
-  return pLocalVar;
+  return pCBlock->pLocals -pRefer->item.asRefer.value -1;
 }
 
 /* Copy the codeblock
  * TODO: check if such simple pointer coping will allow to evaluate
  * codeblocks recursively
  */
-void  CodeblockCopy( PHB_ITEM pDest, PHB_ITEM pSource )
+void  hb_CodeblockCopy( PHB_ITEM pDest, PHB_ITEM pSource )
 {
   pDest->item.asBlock.value =pSource->item.asBlock.value;
   pDest->item.asBlock.value->lCounter++;
   #ifdef CODEBLOCKDEBUG
-    printf( "copy a codeblock (%li) %lx\n", pDest->item.asBlock.valuevalue->lCounter, pDest->item.asBlock.valuevalue);
+    printf( "\ncopy a codeblock (%li) %lx", pSource->item.asBlock.value->lCounter, pSource->item.asBlock.value );
   #endif
 }

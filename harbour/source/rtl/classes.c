@@ -212,13 +212,13 @@ HARBOUR HB_CLASSADD(void)
          pClass->wMethods++;                    /* One more message         */
       }
       else
-         printf("\nOld %i\n",(long) pNewMeth->pFunction);
+         printf("\nOld %li\n",(long) pNewMeth->pFunction);
 
       switch( wType )
       {
          case MET_METHOD:
               pNewMeth->pFunction = ( HARBOURFUNC ) hb_parnl( 3 );
-              printf("\nPointer=%i\n",hb_parnl( 3 ));
+              printf("\nPointer=%li\n",hb_parnl( 3 ));
               break;
 
          case MET_DATA:
@@ -502,7 +502,7 @@ static HARBOUR ClassName( void )
    PHB_ITEM pItemRef;
 
    if( IS_BYREF( stack.pBase + 1 ) )            /* Variables by reference   */
-      pItemRef = stack.pItems + ( stack.pBase + 1 )->item.asRefer.value;
+      pItemRef = ItemUnRef( stack.pBase + 1 );
    else
       pItemRef = stack.pBase + 1;
 
@@ -558,7 +558,7 @@ static HARBOUR ClassSel(void)
    /* Variables by reference */
    if( ( ! wClass ) && IS_BYREF( stack.pBase + 1 ) )
    {
-      pItemRef = stack.pItems + ( stack.pBase + 1 )->item.asRefer.value;
+      pItemRef = ItemUnRef( stack.pBase + 1 );
       if( IS_ARRAY( pItemRef ) )
          wClass = pItemRef->item.asArray.value->wClass;
    }

@@ -1,3 +1,78 @@
+19990711-20:25 Ryszard Glab <rglab@imid.med.pl>
+
+* include/extend.h
+ + added HB_VALUE structure for storing memvars and detached locals
+ + added hb_struMemvar used in HB_ITEM structure
+
+* include/hbdefs.h
+ + added IT_MEMVAR constant for values stored as memvar reference
+ + added IS_MEMVAR macro
+
+* source/vm/hvm.c
+ * corrected support for detached local variables
+ + added support for static variables passed by reference
+ * variables passed by reference can be now chained and a reference to
+   static variable can be mixed with a reference to local variable
+   (this should work for memvar variables too)
+
+* source/rtl/codebloc.c
+ * corrected support for detached local variables
+ + added copyright info
+
++ source/rtl/memvars.c
+ + new file for PUBLIC and PRIVATE variables handling
+   (it supports detached locals currently)
+
+* source/rtl/classes.c
+ * updated to use 'ItemUnRef()' function instead of direct stack access
+
+* source/rtl/extend.c
+ * updated to use 'ItemUnRef()' function instead of direct stack access
+ * removed all if( pItem->type & IT_BYREF ) and replaced with the *only*
+   correct if( IS_BYREF(pItem) )
+
+* source/rtl/Makefile
+ + added memvars.c file
+ 
+- tests/working/codebl2.c
+ - removed this file because its code is now in codebl.prg file
+
+* tests/working/codebl.prg
+ * added new code to test detached locals (donated by David Pearson)
+
+* tests/working/byref.prg
+ * added new code to test if Harbour handles variables passed by
+   reference correctly
+
+* tests/working/Makefile
+ - removed codebl2.prg
+
+* doc/codebloc.txt
+ * updated information to reflect current implementation of codeblocks
+
++ config/win32/bcc32.cf
+ + new file for Borland C/C++ Builder
+   (This file is NOT TESTED yet)
+
++ config/win32/icc.cf
+ + new file for IBM Visual Age C++
+   (This file is NOT TESTED yet)
+
+* makefile.b16
+* makefile.b32
+* makefile.icc
+* makefile.vc
+ + added source/rtl/memvars.c
+
+* makedos.env
+ * added '-I.' switch for compiler flags
+
+* source/compiler/harbour.l
+ - removed #include "./harboury.h" (it is now handled by makedos.env)
+
+* source/tools/stringp.prg
+ * corrected bug in line 101 (':=' should be here instead of '+='
+
 19990710-23:15 Alexander Kresin
   * source\hbpp\hbpp.c
     * fixed some bugs - now we can use classes.ch

@@ -38,6 +38,7 @@ $(path_lib)\harbour.lib : \
                 $(path_obj)\initsymb.obj \
                 $(path_obj)\itemapi.obj \
                 $(path_obj)\math.obj \
+                $(path_obj)\memvars.obj \
                 $(path_obj)\msguk.obj \
                 $(path_obj)\mtran.obj \
                 $(path_obj)\objfunc.obj \
@@ -107,6 +108,7 @@ $(path_obj)\io.obj       : {$(path_c)}io.c       $(path_h)\extend.h $(path_h)\hb
 $(path_obj)\initsymb.obj : {$(path_c)}initsymb.c $(path_h)\extend.h $(path_h)\hbdefs.h
 $(path_obj)\itemapi.obj  : {$(path_c)}itemapi.c  $(path_h)\extend.h $(path_h)\hbdefs.h $(path_h)\itemapi.h $(path_h)\set.h $(path_h)\ctoharb.h $(path_h)\dates.h
 $(path_obj)\math.obj     : {$(path_c)}math.c     $(path_h)\extend.h $(path_h)\hbdefs.h $(path_h)\errorapi.h $(path_h)\error.ch
+$(path_obj)\memvars.obj  : {$(path_c)}memvars.c  $(path_h)\extend.h $(path_h)\hbdefs.h
 $(path_obj)\mathx.obj    : {$(path_c)}mathx.c    $(path_h)\extend.h $(path_h)\hbdefs.h
 $(path_obj)\mtran.obj    : {$(path_c)}mtran.c    $(path_h)\extend.h $(path_h)\hbdefs.h
 $(path_obj)\set.obj      : {$(path_c)}set.c      $(path_h)\extend.h $(path_h)\hbdefs.h $(path_h)\set.h $(path_h)\errorapi.h $(path_h)\error.ch

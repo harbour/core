@@ -98,7 +98,7 @@ function ToChar( xTxt, cSeparator, lDebug )
 
       case cValTxt=="A"                         // Array
          if lDebug
-            cOut += "{"
+            cOut := "{"
          else
             cOut := ""
          endif

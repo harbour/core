@@ -3,7 +3,7 @@ Ryszard Glab <rglab@imid.med.pl>
 
 
 The compilation of a codeblock.
-  During compile the codeblock is stored in the following form:
+  During compile time the codeblock is stored in the following form:
 - the header
 - the stream of pcode bytes
 
@@ -29,15 +29,14 @@ the table of local variables positions (copied from the header) is used.
 The negative value is used as an index to distinguish it from the reference
 to a codeblock parameter. The table of local variables positions is created
 during creation of a codeblock (in PushBlock() function). 
-
-
-Detached locals.
-  If the codeblock is returned from a function and this codeblock refers to
-local variables defined in that function then the position of local variable
-stored in a codeblock is replaced with the current value of the variable.
-In this way the value of local variable can be accessed even outside of the
-function where the variable was declared. This proccess is also called 
-'detaching local variables'
+  During a codeblock creation, values of all local variables defined in a 
+procedure and accessed in a codeblock are replaced with a reference to 
+a value stored in a global memory variables pool. This allows to correct
+access for detached local variables in a codeblock returned from this 
+function either directly (in RETURN statement) or indirectly (by assigning 
+it to a static or memvar variable). This automatic and unconditional
+replace is required because there is no safe method to find if a codeblock
+will be accessed from an outside of a function where it is created.
 
 
 Incompatbility with the Clipper.

@@ -1,0 +1,69 @@
+# 
+# $Id$
+#
+# The Harbour Project
+# GNU MAKE file for Borland C/C++ Builder
+#
+# This code is NOT TESTED yet! (19990711)
+
+include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
+
+OBJ_EXT = .obj
+EXE_EXT = .exe
+LIB_PREF =
+LIB_EXT = .lib
+
+$(HB_ARCHITECTURE)_$(HB_COMPILER)_GRANDP = $(subst /,\\,$(GRANDP))
+_HB_INC_DIR = $(subst /,\\,$(HB_INC_DIR))
+_HL = $(notdir $(HB_LIB_DIR))
+ifeq ($(_HL),)
+#there is an ending slash
+_HB_LIB_DIR = $(subst /,\,$(HB_LIB_DIR))
+else
+_HB_LIB_DIR = $(subst /,\,$(HB_LIB_DIR)/)
+endif
+
+CC = bcc32
+CC_IN = -c
+CC_OUT = -o
+CPPFLAGS = -O2
+CFLAGS = -i. -i$(_HB_INC_DIR)
+
+#Note: The empty line below HAVE TO exist!
+define link_file
+$(COMSPEC) /E:2048 /Cecho $(file) >> __link__.tmp
+
+endef
+
+
+define link_exe_file
+$(COMSPEC) /E:2048 /Cecho $(LDFLAGS) -e$@ > __link__.tmp
+$(foreach file, $^, $(link_file))
+$(COMSPEC) /E:2048 /Cecho $(LINKLIBS) >> __link__.tmp
+-$(LD) @__link__.tmp
+endef
+
+LD = bcc32
+LDFLAGS = -O2
+LINKLIBS = $(foreach lib, $(LIBS), $(_HB_LIB_DIR)$(lib))
+LD_RULE = $(link_exe_file)
+
+#Note: The empty line below HAVE TO exist!
+define lib_object
+echo -+$(file) >> __lib__.tmp
+
+endef
+
+define create_library
+echo $@ > __lib__.tmp
+$(foreach file, $^, $(lib_object))
+$(AR) @__lib__.tmp
+del __lib__.tmp
+endef
+
+AR = tlib
+ARFLAGS =
+AR_RULE = $(create_library)
+
+include $(TOP)$(ROOT)config/rules.cf
+

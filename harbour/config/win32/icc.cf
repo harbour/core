@@ -1,0 +1,68 @@
+#
+# $Id$
+#
+# The Harbour Project
+# GNU MAKE file for IBM Visual Age for C++
+#
+# This code is NOT TESTED yet! (19990711)
+
+include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
+
+OBJ_EXT = .obj
+EXE_EXT = .exe
+LIB_PREF =
+LIB_EXT = .lib
+
+$(HB_ARCHITECTURE)_$(HB_COMPILER)_GRANDP = $(subst /,\\,$(GRANDP))
+_HB_INC_DIR = $(subst /,\\,$(HB_INC_DIR))
+_HL = $(notdir $(HB_LIB_DIR))
+ifeq ($(_HL),)
+#there is an ending slash
+_HB_LIB_DIR = $(subst /,\,$(HB_LIB_DIR))
+else
+_HB_LIB_DIR = $(subst /,\,$(HB_LIB_DIR)/)
+endif
+
+CC = icc
+CC_IN = /Tp
+CC_OUT = /Fo
+CPPFLAGS = /C+
+CFLAGS = /W2 /Sd /Se+ /Ti+ /i. /i$(_HB_INC_DIR)
+
+#Note: The empty line below HAVE TO exist!
+define link_file
+echo /fo$(file) >> __link__.tmp
+
+endef
+
+
+define link_exe_file
+echo $(LDFLAGS) -Fe$@ > __link__.tmp
+$(foreach file, $^, $(link_file))
+echo $(LINKLIBS) >> __link__.tmp
+-$(LD) @__link__.tmp
+endef
+
+LD = icc
+LDFLAGS = $(CFLAGS)
+LINKLIBS = $(foreach lib, $(LIBS), $(_HB_LIB_DIR)$(lib))
+LD_RULE = $(link_exe_file)
+
+#Note: The empty line below HAVE TO exist!
+define lib_object
+echo -+$(file) >> __lib__.tmp
+
+endef
+
+define create_library
+echo $@ > __lib__.tmp
+$(foreach file, $^, $(lib_object))
+$(AR) @__lib__.tmp
+del __lib__.tmp
+endef
+
+AR = ilib
+ARFLAGS =
+AR_RULE = $(create_library)
+
+include $(TOP)$(ROOT)config/rules.cf

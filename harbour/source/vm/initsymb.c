@@ -153,6 +153,7 @@ void InitSymbolTable( void )
   /* 
    * The symbol tables from runtime support modules start here
    */ 
+#ifdef HARBOUR_STRICT_ANSI_C
   Arrays__InitSymbols();
   Classes__InitSymbols();
   Console__InitSymbols();
@@ -170,6 +171,7 @@ void InitSymbolTable( void )
   Strings__InitInfinity();
 #endif  
   Transfrm__InitSymbols();
+#endif
 
   /*
    * The system symbol table with runtime functions HAVE TO be called last

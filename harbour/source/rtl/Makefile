@@ -22,6 +22,7 @@ C_SOURCES=\
 	hardcr.c \
 	itemapi.c \
 	math.c \
+	memvars.c \
 	mtran.c \
 	set.c \
 	strcmp.c \

@@ -20,7 +20,6 @@ PRG_SOURCES=\
 	classes.prg \
 	cmphello.prg \
 	codebl.prg \
-	codebl2.prg \
 	codebloc.prg \
 	comments.prg \
 	dates.prg \

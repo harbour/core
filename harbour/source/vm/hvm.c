@@ -79,6 +79,7 @@ void GreaterEqual( void );    /* checks if the latest - 1 value is greater than 
 void Inc( void );             /* increment the latest numeric value on the stack */
 void Instring( void );        /* check whether string 1 is contained in string 2 */
 void ItemCopy( PHB_ITEM pDest, PHB_ITEM pSource ); /* copies an item to one place to another respecting its containts */
+PHB_ITEM ItemUnRef( PHB_ITEM pItem ); /* de-references passed variable */
 void Less( void );            /* checks if the latest - 1 value is less than the latest, removes both and leaves result */
 void LessEqual( void );       /* checks if the latest - 1 value is less than or equal the latest, removes both and leaves result */
 void Line( WORD wLine );      /* keeps track of the currently processed PRG line */
@@ -101,7 +102,7 @@ double PopNumber( void );          /* pops the stack latest value and returns it
 void PopStatic( WORD wStatic );    /* pops the stack latest value onto a static */
 void Power( void );            /* power the latest two values on the stack, removes them and leaves the result */
 void Push( PHB_ITEM pItem );     /* pushes a generic item onto the stack */
-void PushBlock( BYTE * pCode, WORD wSize, WORD wParam, PSYMBOL pSymbols ); /* creates a codeblock */
+void PushBlock( BYTE * pCode, PSYMBOL pSymbols ); /* creates a codeblock */
 void PushDate( LONG lDate );   /* pushes a long date onto the stack */
 void PushDouble( double lNumber, WORD wDec ); /* pushes a double number onto the stack */
 void PushLocal( SHORT iLocal );     /* pushes the containts of a local onto the stack */
@@ -111,6 +112,7 @@ void PushLong( long lNumber ); /* pushes a long number onto the stack */
 void PushNil( void );            /* in this case it places nil at self */
 void PushNumber( double dNumber, WORD wDec ); /* pushes a number on to the stack and decides if it is integer, long or double */
 void PushStatic( WORD wStatic );   /* pushes the containts of a static onto the stack */
+void PushStaticByRef( WORD iLocal ); /* pushes a static by refrence onto the stack */
 void PushString( char * szText, ULONG length );  /* pushes a string on to the stack */
 void PushSymbol( PSYMBOL pSym ); /* pushes a function pointer onto the stack */
 void PushInteger( int iNumber ); /* pushes a integer number onto the stack */
@@ -140,12 +142,16 @@ void StackPush( void );       /* pushes an item on to the stack */
 void StackInit( void );       /* initializes the stack */
 void StackShow( void );       /* show the types of the items on the stack for debugging purposes */
 
-HB_CODEBLOCK_PTR CodeblockNew( BYTE *, WORD, PSYMBOL, int, WORD );
-void CodeblockDelete( HB_CODEBLOCK_PTR );
-PHB_ITEM CodeblockGetVar( PHB_ITEM, LONG );
-void CodeblockEvaluate( HB_CODEBLOCK_PTR );
-void CodeblockCopy( PHB_ITEM, PHB_ITEM );
-void CodeblockDetach( HB_CODEBLOCK_PTR );
+HB_CODEBLOCK_PTR hb_CodeblockNew( BYTE *, WORD, WORD *, PSYMBOL );
+void hb_CodeblockDelete( PHB_ITEM );
+PHB_ITEM hb_CodeblockGetVar( PHB_ITEM, LONG );
+PHB_ITEM hb_CodeblockGetRef( PHB_ITEM, PHB_ITEM );
+void hb_CodeblockEvaluate( PHB_ITEM );
+void hb_CodeblockCopy( PHB_ITEM, PHB_ITEM );
+
+/* Initialisation and closing memvars subsystem */
+void hb_MemvarInit( void );
+void hb_MemvarRelease( void );
 
 void InitSymbolTable( void );   /* initialization of runtime support symbols */
 
@@ -179,8 +185,9 @@ extern POBJSYMBOLS HB_FIRSTSYMBOL, HB_LASTSYMBOL;
 #endif
 #endif
 
-STACK stack;
 int iHB_DEBUG = 0;      /* if 1 traces the virtual machine activity */
+
+STACK stack;
 SYMBOL symEval = { "__EVAL", FS_PUBLIC, DoBlock, 0 }; /* symbol to evaluate codeblocks */
 PSYMBOL pSymStart;     /* start symbol of the application. MAIN() is not required */
 HB_ITEM aStatics;         /* Harbour array to hold all application statics variables */
@@ -216,6 +223,7 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
    StackInit();
    NewDynSym( &symEval );  /* initialize dynamic symbol for evaluating codeblocks */
    hb_setInitialize();     /* initialize Sets */
+   hb_MemvarInit();
 /*   InitializeConsole();    initialize Console */
 #ifdef HARBOUR_OBJ_GENERATION
    ProcessObjSymbols(); /* initialize Harbour generated OBJs symbols */
@@ -257,6 +265,7 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
    ReleaseLocalSymbols();       /* releases the local modules linked list */
    ReleaseDynamicSymbols();     /* releases the dynamic symbol table */
    hb_setRelease();             /* releases Sets */
+   hb_MemvarRelease();
    StackFree();
    /* LogSymbols(); */
    HB_DEBUG( "Done!\n" );
@@ -476,11 +485,6 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
               w++;
               break;
 
-         case HB_P_POPDEFSTAT:
-              PopDefStat( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
-              w += 3;
-              break;
-
          case HB_P_POPLOCAL:
               PopLocal( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
               w += 3;
@@ -503,12 +507,8 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
                * +5 +6 -> number of referenced local variables
                * +7 -> start of table with referenced local variables
                */
-              wSize = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-              PushBlock( pCode + w + 5,
-                         wSize - 5,
-                         pCode[ w + 3 ] + ( pCode[ w + 4 ] * 256 ),
-                         pSymbols );
-              w += wSize;
+              PushBlock( pCode + w, pSymbols );
+              w += (pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ));
               break;
 
          case HB_P_PUSHDOUBLE:
@@ -548,6 +548,11 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
 
          case HB_P_PUSHSTATIC:
               PushStatic( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+              w += 3;
+              break;
+
+         case HB_P_PUSHSTATICREF:
+              PushStaticByRef( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
               w += 3;
               break;
 
@@ -779,7 +784,7 @@ HARBOUR DoBlock( void )
     */
    stack.pBase->item.asSymbol.lineno =pBlock->item.asBlock.lineno;
 
-   CodeblockEvaluate( pBlock->item.asBlock.value );
+   hb_CodeblockEvaluate( pBlock );
 
    /* restore stack pointers */
    stack.pBase = stack.pItems + wStackBase;
@@ -1101,8 +1106,11 @@ void ItemRelease( PHB_ITEM pItem )
    }
    else if( IS_BLOCK( pItem ) )
    {
-      CodeblockDelete( pItem->item.asBlock.value );
+      hb_CodeblockDelete( pItem );
    }
+   else if( IS_MEMVAR( pItem ) )
+      hb_GlobalValueDecRef( pItem->item.asMemvar.value );
+
    pItem->type = IT_NIL;
 }
 
@@ -1154,9 +1162,47 @@ void ItemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
 
    else if( IS_BLOCK( pSource ) )
    {
-      CodeblockCopy( pDest, pSource );
+      hb_CodeblockCopy( pDest, pSource );
+   }
+   else if( IS_MEMVAR( pSource ) )
+   {
+      hb_GlobalValueIncRef( pSource->item.asMemvar.value );
    }
 }
+
+/* De-references item passed by the reference
+ *
+ */
+PHB_ITEM ItemUnRef( PHB_ITEM pItem )
+{
+   while( IS_BYREF( pItem ) )
+   {
+      if( IS_MEMVAR( pItem ) )
+      {
+         HB_VALUE_PTR pValue;
+
+         pValue =*(pItem->item.asMemvar.itemsbase) + pItem->item.asMemvar.offset +
+                  pItem->item.asMemvar.value;
+         pItem =&pValue->item;
+      }
+      else
+      {
+         if( pItem->item.asRefer.value >= 0 )
+            pItem =*(pItem->item.asRefer.itemsbase) + pItem->item.asRefer.offset +
+                     pItem->item.asRefer.value;
+         else
+         {
+            /* local variable referenced in a codeblock
+            */
+            pItem =hb_CodeblockGetRef( *(pItem->item.asRefer.itemsbase) + pItem->item.asRefer.offset,
+                     pItem );
+         }
+      }
+   }
+
+   return pItem;
+}
+
 
 void Less( void )
 {
@@ -1469,6 +1515,9 @@ void Plus( void )
    else if( IS_OBJECT( pItem1 ) && hb_isMessage( pItem2, "+" ) )
       OperatorCall( pItem1, pItem2, "+" );
 
+   else
+      hb_errorRT_BASE( 1081, 1081, "Types of arguments do not match", "+" );
+
    /* TODO: Generate an error if types don't match */
    HB_DEBUG( "Plus\n" );
 }
@@ -1487,27 +1536,6 @@ long PopDate( void )
    }
 }
 
-void PopDefStat( WORD wStatic )     /* Pops a default value to a STATIC */
-{
-   PHB_ITEM pStatic;
-
-   StackPop();
-   pStatic = aStatics.item.asArray.value->pItems + stack.iStatics +
-             wStatic - 1;
-
-   if( IS_BYREF( pStatic ) )
-   {
-      if( ( stack.pItems + pStatic->item.asRefer.value )->type == IT_NIL )
-                                    /* Only initialize when NIL */
-         ItemCopy( stack.pItems + pStatic->item.asRefer.value, stack.pPos );
-   }
-   else
-      if( pStatic->type == IT_NIL ) /* Only initialize when NIL */
-         ItemCopy( pStatic, stack.pPos );
-
-   ItemRelease( stack.pPos );
-   HB_DEBUG( "PopDefStat\n" );
-}
 
 double PopDouble( WORD *pwDec )
 {
@@ -1552,19 +1580,15 @@ void PopLocal( SHORT iLocal )
       /* local variable or local parameter */
       pLocal = stack.pBase + 1 + iLocal;
       if( IS_BYREF( pLocal ) )
-      {
-        if( pLocal->item.asRefer.value >= 0)
-          ItemCopy( stack.pItems + pLocal->item.asRefer.value, stack.pPos );
-        else
-          /* local variable referenced in a codeblock */
-          ItemCopy( CodeblockGetVar( stack.pItems +pLocal->item.asRefer.stackbase +1, pLocal->item.asRefer.value ), stack.pPos );
-      }
+         ItemCopy( ItemUnRef( pLocal ), stack.pPos );
       else
-          ItemCopy( pLocal, stack.pPos );
+         ItemCopy( pLocal, stack.pPos );
     }
    else
-      /* local variable referenced in a codeblock */
-      ItemCopy( CodeblockGetVar( stack.pBase + 1, iLocal ), stack.pPos );
+      /* local variable referenced in a codeblock
+       * stack.pBase+1 points to a codeblock that is currently evaluated
+       */
+      ItemCopy( hb_CodeblockGetVar( stack.pBase + 1, iLocal ), stack.pPos );
 
    ItemRelease( stack.pPos );
    HB_DEBUG( "PopLocal\n" );
@@ -1622,11 +1646,10 @@ void PopStatic( WORD wStatic )
    PHB_ITEM pStatic;
 
    StackPop();
-   pStatic = aStatics.item.asArray.value->pItems + stack.iStatics +
-             wStatic - 1;
+   pStatic = aStatics.item.asArray.value->pItems + stack.iStatics + wStatic - 1;
 
    if( IS_BYREF( pStatic ) )
-      ItemCopy( stack.pItems + pStatic->item.asRefer.value, stack.pPos );
+      ItemCopy( ItemUnRef( pStatic ), stack.pPos );
    else
       ItemCopy( pStatic, stack.pPos );
 
@@ -1654,26 +1677,23 @@ void PushLogical( int iTrueFalse )
 
 void PushLocal( SHORT iLocal )
 {
-   PHB_ITEM pLocal;
-
    if( iLocal >= 0 )
    {
+      PHB_ITEM pLocal;
+
       /* local variable or local parameter */
       pLocal = stack.pBase + 1 + iLocal;
       if( IS_BYREF( pLocal ) )
-      {
-        if( pLocal->item.asRefer.value >= 0 )
-         ItemCopy( stack.pPos, stack.pItems + pLocal->item.asRefer.value );
-        else
-         /* local variable referenced in a codeblock */
-         ItemCopy( stack.pPos, CodeblockGetVar( stack.pItems + pLocal->item.asRefer.stackbase +1, pLocal->item.asRefer.value) );
-      }
+         ItemCopy( stack.pPos, ItemUnRef( pLocal ) );
       else
          ItemCopy( stack.pPos, pLocal );
    }
    else
-      /* local variable referenced in a codeblock */
-     ItemCopy( stack.pPos, CodeblockGetVar( stack.pBase + 1, (LONG)iLocal ) );
+      /* local variable referenced in a codeblock
+       * stack.pBase+1 points to a codeblock that is currently evaluated
+       */
+     ItemCopy( stack.pPos, hb_CodeblockGetVar( stack.pBase + 1, (LONG)iLocal ) );
+
    StackPush();
    HB_DEBUG2( "PushLocal %i\n", iLocal );
 }
@@ -1683,16 +1703,9 @@ void PushLocalByRef( SHORT iLocal )
    ItemRelease( stack.pPos );
    stack.pPos->type = IT_BYREF;
    /* we store its stack offset instead of a pointer to support a dynamic stack */
-   if( iLocal >= 0 )
-      /* local variable or local parameter */
-      /* store the position of referenced local variable on the eval stack */
-      stack.pPos->item.asRefer.value = stack.pBase + 1 + iLocal - stack.pItems;
-   else
-   {
-      /* local variable referenced in a codeblock */
-      stack.pPos->item.asRefer.value = iLocal;
-      stack.pPos->item.asRefer.stackbase = stack.pBase - stack.pItems;
-   }
+   stack.pPos->item.asRefer.value = iLocal;
+   stack.pPos->item.asRefer.offset = stack.pBase - stack.pItems +1;
+   stack.pPos->item.asRefer.itemsbase = &stack.pItems;
 
    StackPush();
    HB_DEBUG2( "PushLocalByRef %i\n", iLocal );
@@ -1722,10 +1735,28 @@ void PushNumber( double dNumber, WORD wDec )
 
 void PushStatic( WORD wStatic )
 {
-   ItemCopy( stack.pPos, aStatics.item.asArray.value->pItems +
-             stack.iStatics + wStatic - 1 );
+   PHB_ITEM pStatic;
+
+   pStatic = aStatics.item.asArray.value->pItems + stack.iStatics + wStatic - 1;
+   if( IS_BYREF(pStatic) )
+      ItemCopy( stack.pPos, ItemUnRef(pStatic) );
+   else
+      ItemCopy( stack.pPos, pStatic );
    StackPush();
    HB_DEBUG2( "PushStatic %i\n", wStatic );
+}
+
+void PushStaticByRef( WORD wStatic )
+{
+   ItemRelease( stack.pPos );
+   stack.pPos->type = IT_BYREF;
+   /* we store the offset instead of a pointer to support a dynamic stack */
+   stack.pPos->item.asRefer.value = wStatic -1;
+   stack.pPos->item.asRefer.offset = stack.iStatics;
+   stack.pPos->item.asRefer.itemsbase = &aStatics.item.asArray.value->pItems;
+
+   StackPush();
+   HB_DEBUG2( "PushStaticByRef %i\n", wStatic );
 }
 
 void PushString( char * szText, ULONG length )
@@ -1760,18 +1791,35 @@ void Push( PHB_ITEM pItem )
    HB_DEBUG( "Push\n" );
 }
 
-void PushBlock( BYTE * pCode, WORD wSize, WORD wParam, PSYMBOL pSymbols )
+/* +0   -> HB_P_PUSHBLOCK
+* +1 +2 -> size of codeblock
+* +3 +4 -> number of expected parameters
+* +5 +6 -> number of referenced local variables
+* +7 -> start of table with referenced local variables
+*/
+void PushBlock( BYTE * pCode, PSYMBOL pSymbols )
 {
+   WORD wLocals;
+
    ItemRelease( stack.pPos );
    stack.pPos->type   = IT_BLOCK;
-   stack.pPos->item.asBlock.value = CodeblockNew( pCode, wSize, pSymbols,
-      stack.iStatics, stack.pBase - stack.pItems );
-   /* store the stack base of function where the codeblock was defined */
-   stack.pPos->item.asBlock.stackbase = stack.pBase - stack.pItems;
-   /* store the number of expected parameters */
-   stack.pPos->item.asBlock.paramcnt = wParam;
-   /* store the line number where the codeblock was defined */
-   stack.pPos->item.asBlock.lineno   = stack.pBase->item.asSymbol.lineno;
+
+   wLocals =pCode[ 5 ] + ( pCode[ 6 ] * 256 );
+   stack.pPos->item.asBlock.value =
+         hb_CodeblockNew( pCode + 7 + wLocals*2, /* pcode buffer         */
+         wLocals,                             /* number of referenced local variables */
+         (WORD *)(pCode +7),                  /* table with referenced local variables */
+         pSymbols );
+
+   /* store the statics base of function where the codeblock was defined
+    */
+   stack.pPos->item.asBlock.statics = stack.iStatics;
+   /* store the number of expected parameters
+    */
+   stack.pPos->item.asBlock.paramcnt = pCode[ 3 ] + ( pCode[ 4 ] * 256 );
+   /* store the line number where the codeblock was defined
+    */
+   stack.pPos->item.asBlock.lineno = stack.pBase->item.asSymbol.lineno;
    StackPush();
    HB_DEBUG( "PushBlock\n" );
 }
@@ -1823,8 +1871,6 @@ void RetValue( void )
 {
    StackPop();
    ItemCopy( &stack.Return, stack.pPos );
-   if( stack.Return.type == IT_BLOCK )
-      CodeblockDetach( stack.Return.item.asBlock.value );
    HB_DEBUG( "RetValue\n" );
 }
 

@@ -1,6 +1,8 @@
 #
 # $Id$
 #
+# The Harbour project
+# GNU MAKE file for Watcom C/C++ 10.x
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 
@@ -33,7 +35,7 @@ $(COMSPEC) /E:2048 /Cecho $(LINKLIBS) >> __link__.tmp
 endef
 
 LD = wlink
-LDFLAGS = debug all OP osn=DOS4G OP stack=16384
+LDFLAGS = debug all OP osn=DOS4G OP stack=65536
 LINKLIBS := LIBP $(subst /,\,$(HB_LIB_DIR)) $(foreach lib, $(LIBS), LIB $(lib))
 LD_RULE = $(link_exe_file)
 

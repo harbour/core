@@ -64,14 +64,21 @@ void ProcessSymbols( SYMBOL *, WORD );
 #define IT_MEMO      ( IT_MEMOFLAG & IT_STRING )
 #define IT_BLOCK     0x1000
 #define IT_BYREF     0x2000
+#define IT_MEMVAR    0x4000
 #define IT_ARRAY     0x8000
 #define IT_OBJECT    IT_ARRAY
 #define IT_NUMERIC   ( IT_INTEGER | IT_LONG | IT_DOUBLE )
 #define IT_ANY       0xFFFF
 
-struct _HB_CODEBLOCK;       /* forward declaration */
-struct _HB_BASEARRAY;       /* forward declaration */
+/* forward declarations
+*/
+struct _HB_CODEBLOCK;
+struct _HB_BASEARRAY;
+struct _HB_ITEM;
+struct _HB_VALUE;
 
+/* Internal structures that holds data
+*/
 struct hb_struArray
 {
   struct _HB_BASEARRAY * value;
@@ -79,7 +86,7 @@ struct hb_struArray
 
 struct hb_struBlock
 {
-  LONG stackbase;
+  LONG statics;
   WORD lineno;
   WORD paramcnt;
   struct _HB_CODEBLOCK * value;
@@ -118,14 +125,22 @@ struct hb_struLong
   long value;
 };
 
+struct hb_struMemvar
+{
+  struct _HB_VALUE * *itemsbase;
+  LONG offset;
+  LONG value;
+};
+
 struct hb_struPointer
 {
-  void *value;
+  PVOID value;
 };
 
 struct hb_struRefer
 {
-  LONG stackbase;
+  struct _HB_ITEM * *itemsbase;
+  LONG offset;
   LONG value;
 };
 
@@ -143,7 +158,7 @@ struct hb_struSymbol
   PSYMBOL value;
 };
 
-typedef struct        /* items hold at the virtual machine stack */
+typedef struct _HB_ITEM       /* items hold at the virtual machine stack */
 {
   WORD type;
   union
@@ -155,6 +170,7 @@ typedef struct        /* items hold at the virtual machine stack */
         struct hb_struInteger asInteger;
         struct hb_struLogical asLogical;
         struct hb_struLong    asLong;
+        struct hb_struMemvar  asMemvar;
         struct hb_struPointer asPointer;
         struct hb_struRefer   asRefer;
         struct hb_struString  asString;
@@ -162,6 +178,7 @@ typedef struct        /* items hold at the virtual machine stack */
   } item;
 }
 HB_ITEM, *PHB_ITEM;
+typedef PHB_ITEM HB_ITEM_PTR;
 
 typedef struct _HB_BASEARRAY
 {
@@ -196,14 +213,18 @@ typedef struct
 typedef struct _HB_CODEBLOCK
 {
   BYTE * pCode;       /* codeblock pcode */
-  PHB_ITEM pItems;       /* table with referenced local variables */
+  PHB_ITEM pLocals;   /* table with referenced local variables */
   WORD wLocals;       /* number of referenced local variables */
-  WORD wDetached;     /* holds if pItems table variables values */
   PSYMBOL pSymbols;   /* codeblocks symbols */
-  WORD wRefBase;      /* stack frame position for referenced local variables */
-  int iStatBase;      /* static base for function where CB was created */
-  long lCounter;      /* numer of references to this codeblock */
+  ULONG lCounter;     /* numer of references to this codeblock */
 } HB_CODEBLOCK, * HB_CODEBLOCK_PTR;
+
+typedef struct _HB_VALUE
+{
+  HB_ITEM item;
+  ULONG counter;
+  PDYNSYM symbol;
+} HB_VALUE, * HB_VALUE_PTR;
 
 
 PHB_ITEM hb_param( int iParam, WORD wType ); /* retrieve a generic parameter */
@@ -232,11 +253,15 @@ void     hb_retni( int iNumber );    /* returns a integer number */
 void     hb_retnl( long lNumber );   /* returns a long number */
 void     hb_retnd( double dNumber ); /* returns a double */
 void     hb_reta( ULONG ulLen );  /* returns an array with a specific length */
+
 void *   hb_xgrab( ULONG lSize );   /* allocates memory */
 void *   hb_xrealloc( void * pMem, ULONG lSize );   /* reallocates memory */
 void     hb_xfree( void * pMem );    /* frees memory */
+
 void     ItemCopy( PHB_ITEM pDest, PHB_ITEM pSource );
 void     ItemRelease( PHB_ITEM pItem );
+PHB_ITEM ItemUnRef( PHB_ITEM pItem ); /* de-references passed variable */
+
 void     hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ); /* creates a new array */
 void     hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* retrieves an item */
 ULONG    hb_arrayLen( PHB_ITEM pArray ); /* retrives the array len */
@@ -265,5 +290,11 @@ char *   hb_GetClassName( PHB_ITEM pObject ); /* retrieves an object class name 
 PDYNSYM  GetDynSym( char * szName );   /* finds and creates a dynamic symbol if not found */
 PDYNSYM  NewDynSym( PSYMBOL pSymbol ); /* creates a new dynamic symbol based on a local one */
 PDYNSYM  FindDynSym( char * szName );  /* finds a dynamic symbol */
+
+/* functions for memvar variables */
+HANDLE hb_GlobalValueNew( PHB_ITEM );
+void hb_GlobalValueIncRef( HANDLE );
+void hb_GlobalValueDecRef( HANDLE );
+HB_VALUE_PTR * hb_GlobalValueBaseAddress( void );
 
 #endif /* HB_EXTEND_H_ */

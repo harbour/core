@@ -43,6 +43,9 @@ typedef int BOOL;
 #undef PVOID
 typedef void * PVOID;
 
+#undef HANDLE
+typedef USHORT HANDLE;
+
 #define LOBYTE(w)           ((BYTE)(w))
 #define HIBYTE(w)           ((BYTE)(((WORD)(w) >> 8) & 0xFF))
 #define LOWORD(l)           ((WORD)(l))
@@ -87,6 +90,7 @@ typedef HARBOUR ( * HARBOURFUNC )( void );
 #define IS_OBJECT( p )     IS_OF_TYPE( p, IT_ARRAY )
 #define IS_STRING( p )     IS_OF_TYPE( p, IT_STRING )
 #define IS_SYMBOL( p )     IS_OF_TYPE( p, IT_SYMBOL )
+#define IS_MEMVAR( p )     IS_OF_TYPE( p, IT_MEMVAR )
 
 #define PCOUNT             hb_parinfo( 0 )
 

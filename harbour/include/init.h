@@ -32,7 +32,7 @@ void ProcessSymbols( SYMBOL * pSymbols, WORD wSymbols );
 #ifdef HARBOUR_STRICT_ANSI_C
 
 #define HB_INIT_SYMBOLS_BEGIN( func ) \
-static SYMBOL symbols[] = {
+  static SYMBOL symbols[] = {
 
 #define HB_INIT_SYMBOLS_END( func ) }; }; \
   void func( void ) \
@@ -50,14 +50,14 @@ static SYMBOL symbols[] = {
   static SYMBOL symbols[] = {
 
 #define HB_INIT_SYMBOLS_END( func )  }; \
-  void __attribute__ ((constructor)) func( void ) \
+  static void __attribute__ ((constructor)) func( void ) \
   { \
      ProcessSymbols( symbols, sizeof( symbols ) / sizeof( SYMBOL ) ); \
   }
 
 
 #define HB_CALL_ON_STARTUP_BEGIN( func ) \
-  void __attribute__ ((constructor)) func( void ) {
+  static void __attribute__ ((constructor)) func( void ) {
 
 #define HB_CALL_ON_STARTUP_END( func ) }
 #endif
@@ -68,13 +68,13 @@ static SYMBOL symbols[] = {
   static SYMBOL symbols[] = {
 
 #define HB_INIT_SYMBOLS_END( func )  }; \
-  void func( void ) \
+  static void func( void ) \
   { \
     ProcessSymbols( symbols, sizeof( symbols ) / sizeof( SYMBOL ) ); \
   }
 
 #define HB_CALL_ON_STARTUP_BEGIN( func ) \
-  void func( void ) {
+  static void func( void ) {
 
 #define HB_CALL_ON_STARTUP_END( func ) }
 #endif
@@ -84,37 +84,37 @@ static SYMBOL symbols[] = {
   static SYMBOL symbols[] = {
 
 #define HB_INIT_SYMBOLS_END( func ) }; \
-  int func( void ) \
+  static int func( void ) \
   { \
      ProcessSymbols( symbols, sizeof( symbols ) / sizeof( SYMBOL ) ); \
      return 1; \
   }; \
-  int static_int_##func = func()
+  static int static_int_##func = func()
 
 #define HB_CALL_ON_STARTUP_BEGIN( func ) \
-int func( void ) {
+  static int func( void ) {
 
 #define HB_CALL_ON_STARTUP_END( func ) return 1; } \
-  int static_int_##func = func()
+  static int static_int_##func = func()
 #endif
 
 #ifdef __WATCOMC__
 #define HB_INIT_SYMBOLS_BEGIN( func ) \
-  SYMBOL symbols[] = {
+  static SYMBOL symbols[] = {
 
 #define HB_INIT_SYMBOLS_END( func ) }; \
-  int func( void ) \
+  static int func( void ) \
   { \
      ProcessSymbols( symbols, sizeof( symbols ) / sizeof( SYMBOL ) ); \
      return 1; \
   }; \
-  int static_int_##func = func()
+  static int static_int_##func = func()
 
 #define HB_CALL_ON_STARTUP_BEGIN( func ) \
-  int func( void ) {
+  static int func( void ) {
 
 #define HB_CALL_ON_STARTUP_END( func ) return 1; }; \
-  int static_int_##func = func()
+  static int static_int_##func = func()
 #endif
 
 #endif /*HARBOUR_STRICT_ANSI_C */
