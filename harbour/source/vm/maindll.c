@@ -38,9 +38,12 @@
 #include <windows.h>
 #include "hbvm.h"
 
-__declspec(dllexport) BOOL WINAPI DllEntryPoint( HINSTANCE hInstance, 
-                                                 DWORD fdwReason,
-                                                 PVOID pvReserved )
+#if defined(__BORLAND__)
+BOOL WINAPI _export
+#else
+__declspec(dllexport) BOOL
+#endif
+WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
 {
    HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %d)", hInstance, fdwReason,
              pvReserved ) );

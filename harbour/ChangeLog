@@ -5,6 +5,11 @@
      ! It's not relying on the default CC and AS macros, to make it work
        on BCC45 without any cludges. BCC45 MAKE.EXE is defaulting to bcc or 
        bcc32 depending on the WIN32 macro.
+   * source/rtl/maindll.c
+     ! Fixed to compile with BCC45
+   * source/rtl/console.c
+     - Removed the GT branch from __ACCEPT(). In CA-Cl*pper ACCEPT doesn't use
+       the GT system.
 
 20000316-04:10 EST Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/gt/gtpca.c

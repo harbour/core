@@ -849,14 +849,13 @@ HARBOUR HB___ACCEPT( void )
          case K_LEFT:
             if( ulLen > 0 )
             {
-               ulLen--; /* Adjust input count to get rid of last character,
-                         then erase it from the screen. */
-#ifdef HARBOUR_USE_GTAPI
-               hb_gtWriteCon( ( BYTE * ) "\x8 \x8", 3L );
-#else
-               fputs( "\x8 \x8", stdout );
-               fflush( stdout );
-#endif
+               /* Erase last character from the screen. */
+               USHORT user_ferror = hb_fsError(); /* Save current user file error code */
+               hb_fsWrite( s_iFilenoStdout, ( BYTE * ) "\x8 \x8", 3 );
+               hb_fsSetError( user_ferror ); /* Restore last user file error code */
+
+               /* Adjust input count to get rid of last character */
+               ulLen--;
             }
             break;
 
