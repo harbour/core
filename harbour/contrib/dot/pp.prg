@@ -28,7 +28,11 @@
    #INCLUDE "hbextern.ch"
    #DEFINE  CRLF HB_OsNewLine()
 #else
+   #DEFINE __CLIPPER__
+
    #DEFINE  CRLF Chr(13) + Chr(10)
+
+   STATIC s_abBlocks := {}, nBlockId := 0
 
    EXTERNAL BROWSE
 
@@ -321,7 +325,27 @@ PROCEDURE ExecuteLine( sPPed )
             sSymbol = "__SETDOCASE" .OR. sSymbol = "__SETCASE" .OR. sSymbol = "__SETOTHERWISE" .OR. sSymbol = "__SETENDCASE" .OR. ;
             abIf[ nIf ]
 
+            #ifdef __CLIPPER__
+               /* Clipper Macro Compiler can't ompile nested blocks! */
+               CompileNestedBlocks( sBlock, @sBlock )
+            #endif
+
+            IF ! bRun
+               @ 0,0 SAY "PP: "
+               @ 0,4 SAY Pad( sBlock, 76 ) COLOR "N/R"
+            ENDIF
+            DevPos( nRow, nCol )
+
             Eval( &( "{|| " + sBlock + " }" ) )
+            nRow := Row()
+            nCol := Col()
+
+            #ifdef __CLIPPER__
+               IF ! bRun
+                  nBlockID := 0
+                  aSize( s_abBlocks, 0 )
+               ENDIF
+            #endif
          ENDIF
 
          sTemp  := RTrim( SubStr( sTemp, nNext + 1 ) )
@@ -360,7 +384,26 @@ PROCEDURE ExecuteLine( sPPed )
             sSymbol = "__SETIF" .OR. sSymbol = "__SETELSE" .OR. sSymbol = "__SETELSEIF" .OR. sSymbol = "__SETEND" .OR. ;
             sSymbol = "__SETDOCASE" .OR. sSymbol = "__SETCASE" .OR. sSymbol = "__SETOTHERWISE" .OR. sSymbol = "__SETENDCASE" .OR. ;
             abIf[ nIf ]
-            Eval( &( "{|| " + sTemp + " }" ) )
+
+            #ifdef __CLIPPER__
+                /* Clipper Macro Compiler can't ompile nested blocks! */
+                CompileNestedBlocks( sBlock, @sBlock )
+            #endif
+
+            IF ! bRun
+               @ 0,0 SAY "PP: "
+               @ 0,4 SAY Pad( sBlock, 76 ) COLOR "N/R"
+            ENDIF
+            DevPos( nRow, nCol )
+
+            Eval( &( "{|| " + sBlock + " }" ) )
+
+            #ifdef __CLIPPER__
+               IF ! bRun
+                  nBlockID := 0
+                  aSize( s_abBlocks, 0 )
+               ENDIF
+            #endif
          ENDIF
       ENDIF
 
@@ -496,6 +539,105 @@ FUNCTION __SetEndCase()
    ENDIF
 
 RETURN nIf
+
+//--------------------------------------------------------------//
+
+#ifdef __CLIPPER__
+
+   //--------------------------------------------------------------//
+
+   FUNCTION CompileNestedBlocks( sTemp, sMain )
+
+      LOCAL asBlocks, nBlocks, Counter, aReplace
+
+      asBlocks := asBlocks(sTemp )
+      nBlocks  := Len( asBlocks )
+
+      FOR Counter := 1 TO nBlocks
+         aReplace := CompileNestedBlocks( SubStr( asBlocks[Counter], 2 ), @sMain )
+      NEXT
+
+      IF ProcName(1) == ProcName(0) // .AND. nBlocks == 0
+         IF aReplace != NIL
+            sTemp := StrTran( sTemp, aReplace[1], aReplace[2] )
+         ELSE
+            aReplace := Array(2)
+         ENDIF
+
+         aReplace[1] :=  '{' + sTemp
+         aReplace[2] := "PP_Block(" + LTrim( Str( ++nBlockId, 3, 0 ) ) + ')'
+         aAdd( s_abBlocks, &( aReplace[1]) )
+
+         sMain := StrTran( sMain, aReplace[1], aReplace[2] )
+
+         RETURN aReplace
+      ENDIF
+
+   RETURN NIL
+
+   //--------------------------------------------------------------//
+
+   FUNCTION asBlocks( sBlock, asBlocks )
+
+      LOCAL nStart, nEnd, nPosition, sNested, nOpen, lBlock := .F.
+
+      IF asBlocks == NIL
+         asBlocks := {}
+      ENDIF
+
+      nStart := At( '{', sBlock )
+      IF nStart > 0
+         nEnd   := Len( sBlock )
+         FOR nPosition := nStart + 1 TO nEnd
+            IF SubStr( sBlock, nPosition, 1 ) != ' '
+               EXIT
+            ENDIF
+         NEXT
+         IF SubStr( sBlock, nPosition, 1 ) == '|'
+            lBlock := .T.
+         ENDIF
+
+         nOpen := 1
+         DO WHILE nOpen > 0 .AND. nPosition <= nEnd
+            IF SubStr( sBlock, nPosition, 1 ) == '"'
+               DO WHILE nPosition <= nEnd
+                  nPosition++
+                  IF SubStr( sBlock, nPosition, 1 ) == '"'
+                     EXIT
+                  ENDIF
+               ENDDO
+            ELSEIF SubStr( sBlock, nPosition, 1 ) == "'"
+               DO WHILE nPosition <= nEnd
+                  nPosition++
+                  IF SubStr( sBlock, nPosition, 1 ) == "'"
+                     EXIT
+                  ENDIF
+               ENDDO
+            ELSEIF SubStr( sBlock, nPosition, 1 ) == '{'
+               nOpen++
+            ELSEIF SubStr( sBlock, nPosition, 1 ) == '}'
+               nOpen--
+            ENDIF
+            nPosition++
+         ENDDO
+      ENDIF
+
+      IF lBlock
+         sNested := SubStr( sBlock, nStart, ( nPosition - nStart ) )
+         aAdd( asBlocks, sNested )
+         asBlocks( SubStr( sBlock, nPosition + 1 ), asBlocks )
+      ENDIF
+
+   RETURN asBlocks
+
+   //--------------------------------------------------------------//
+
+   FUNCTION PP_Block( nId )
+
+   RETURN s_abBlocks[nId]
+
+   //--------------------------------------------------------------//
+#endif
 
 //------------------------------- *** END - RP DOT Functions *** -------------------------------//
 

@@ -890,8 +890,8 @@ ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInf
                   {
                      pTag = pTag->pNext;
                      --uiTag;
-                   }   
-               }   
+                   }
+               }
          }
          if ( pTag )
             pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult, pTag->KeyExpr );
@@ -914,8 +914,8 @@ ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInf
                   {
                      pTag = pTag->pNext;
                      --uiTag;
-                   }   
-               }   
+                   }
+               }
          }
          if ( pTag )
             pOrderInfo->itmResult = hb_itemPutL( pOrderInfo->itmResult, pTag->UniqueKey );
@@ -939,8 +939,8 @@ ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInf
                   {
                      pTag = pTag->pNext;
                      --uiTag;
-                   }   
-               }   
+                   }
+               }
          }
          if ( pTag )
             pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult, pTag->szName );
@@ -2408,7 +2408,7 @@ static LPCDXTAG hb_cdxGetActiveTag( LPCDXINDEX PIF )
    {
       pTag = pTag->pNext;
       --uiTag;
-   }   
+   }
 
    if( !pTag )
       PIF->uiTag = 0;
@@ -3179,7 +3179,7 @@ static void hb_cdxSortInsertWord( LPSORTINFO pSort, LONG Tag, char * Value,
    LPSORTDATA wx;
 
    hb_cdxDNtoSort( ( double ) Tag, (BYTE *) &s[0] );
-   
+
    if( pSort->NodeLimit - pSort->NodeCur < uiLen + 8 )
    {
       cc = pSort->ChunkCur;
@@ -4107,12 +4107,12 @@ extern ERRCODE hb_cdxOrderListClear( CDXAREAP pArea )
 
 ERRCODE hb_cdxOrderListFocus( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
 {
+   LPCDXTAG pTag = hb_cdxGetActiveTag( pArea->lpIndexes );
+
    HB_TRACE(HB_TR_DEBUG, ("cdxOrderListFocus(%p, %p)", pArea, pOrderInfo));
 
    //HB_SYMBOL_UNUSED( pArea );
    //HB_SYMBOL_UNUSED( pOrderInfo );
-
-   LPCDXTAG pTag = hb_cdxGetActiveTag( pArea->lpIndexes );
 
    if ( ! pTag )
       return SUCCESS;
@@ -4132,9 +4132,10 @@ ERRCODE hb_cdxOrderListFocus( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
 
 ERRCODE hb_cdxGoTop( CDXAREAP pArea )
 {
-   HB_TRACE(HB_TR_DEBUG, ("cdxGoTop(%p)", pArea));
    /*must change to follow ordSetFocus()*/
    LPCDXTAG pTag = hb_cdxGetActiveTag( pArea->lpIndexes );
+
+   HB_TRACE(HB_TR_DEBUG, ("cdxGoTop(%p)", pArea));
 
    if ( ! pTag )
       SUPER_GOTOP( ( AREAP ) pArea );
@@ -4149,9 +4150,10 @@ ERRCODE hb_cdxGoTop( CDXAREAP pArea )
 
 ERRCODE hb_cdxGoBottom( CDXAREAP pArea )
 {
-   HB_TRACE(HB_TR_DEBUG, ("cdxGoBottom(%p)", pArea));
    /*must change to follow ordSetFocus()*/
    LPCDXTAG pTag = hb_cdxGetActiveTag( pArea->lpIndexes );
+
+   HB_TRACE(HB_TR_DEBUG, ("cdxGoBottom(%p)", pArea));
 
    if ( ! pTag )
      SUPER_GOBOTTOM( ( AREAP ) pArea );
@@ -4166,10 +4168,10 @@ ERRCODE hb_cdxGoBottom( CDXAREAP pArea )
 
 ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, LONG lToSkip )
 {
-   HB_TRACE(HB_TR_DEBUG, ("cdxSkipRaw(%p, %ld)", pArea, lToSkip));
-
    /*must change to follow ordSetFocus()*/
    LPCDXTAG pTag = hb_cdxGetActiveTag( pArea->lpIndexes );
+
+   HB_TRACE(HB_TR_DEBUG, ("cdxSkipRaw(%p, %ld)", pArea, lToSkip));
 
    if ( ! pTag )
      SUPER_SKIPRAW( ( AREAP ) pArea, lToSkip );
@@ -4231,13 +4233,13 @@ ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLas
 {
    PHB_ITEM pError;
    ERRCODE retvalue;
+   LPCDXTAG pTag = hb_cdxGetActiveTag( pArea->lpIndexes );
+
    HB_TRACE(HB_TR_DEBUG, ("cdxSeek(%p, %d, %p, %d)", pArea, bSoftSeek, pKey, bFindLast));
    /*HB_SYMBOL_UNUSED( pArea );       */
    /*HB_SYMBOL_UNUSED( bSoftSeek );   */
    /*HB_SYMBOL_UNUSED( pKey );        */
    /*HB_SYMBOL_UNUSED( bFindLast );   */
-
-   LPCDXTAG pTag = hb_cdxGetActiveTag( pArea->lpIndexes );
 
    if ( ! pTag )
    {
@@ -4416,7 +4418,7 @@ ERRCODE hb_cdxGoHot( CDXAREAP pArea )
                hb_vmPush( pTag->pKeyItem );
                hb_vmDo( 0 );
                hb_cdxKeyPutItem( pKey, &hb_stack.Return );
-            }                     
+            }
             else
             {
                pMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pTag->pKeyItem );

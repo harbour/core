@@ -1,3 +1,14 @@
+2001-02-24 19:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     + Added CompileNestedBlocks() #ifdef __CLIPPER__, because Clipper's Macro Compiler can *not* compile nested blocks.
+
+     /* Clipper macro compiler can't compile literal blocks which contain nested blocks. This is needed by #commands like:
+        INDEX ON ... TO ...
+        Now PP will pre-compile such nested blocks. This makes PP fully functional when compiled with Clipper too :-) */
+
+   * harbour/source/rdd/dbfcdx1.c
+     ! Moved few declarations above the HB_TRACE() lien, to fix compilation errors.
+
 2001-02-24 18:10 UTC+0300 Alex Shashkov <shashkov@ostu.ru>
    * harbour/source/rtl/console.c
      ! Fixed bug STDOUT(..,"",..) on Watcom C 11.0
