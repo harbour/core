@@ -12,5 +12,7 @@
 #define B_DOUBLE               "…Õª∫ºÕ»∫"
 #define B_SINGLE_DOUBLE        "÷ƒ∑∫Ωƒ”∫"
 #define B_DOUBLE_SINGLE        "’Õ∏≥æÕ‘≥"
+#define B_THIN                 "€ﬂ€€€‹€€"
+#define B_FAT                  "€€€€€€€€"
 
 #endif /* HB_BOX_H_ */

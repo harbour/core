@@ -35,6 +35,7 @@ C_SOURCES=\
         msgxxx.c \
 
 PRG_SOURCES=\
+        achoice.prg \
         alert.prg \
         asort.prg \
         devoutp.prg \

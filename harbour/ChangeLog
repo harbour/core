@@ -1,3 +1,16 @@
+19990803-19:00 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/achoice.prg
+    source/rtl/Makefile
+    tests/working/ac_test.prg
+    tests/working/Makefile
+    + ACHOICE() plus test program AC_TEST added.
+      (Please update other makefiles accordingly)
+  * include/box.ch
+    include/box.h
+    + XBase++ compatible B_THIN, B_FAT border types added.
+  * include/memoedit.ch
+    + Some XBase++ extensions added.
+
 19990803-16:50 GMT+1 Victor Szel <info@szelvesz.hu>
   * config/win32/gcc.cf
     config/os2/gcc.cf (not tested)
