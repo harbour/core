@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * include/hbcomp.h
+     + definition of HB_COMPGENC_NO_STARTUP
+
+2001-12-28 22:53 UTC+0100 Patrick Mast <email@patrickmast.com>
    * contrib/apollo
      + Added function sx_GoBottom()
      + Added function sx_Go()
