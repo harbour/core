@@ -107,7 +107,6 @@ int         hb_comp_iErrorCount;
 char        hb_comp_cVarType;                          /* current declared variable type */
 BOOL        hb_comp_bDontGenLineNum = FALSE;           /* suppress line number generation */
 ULONG       hb_comp_ulLastLinePos;                     /* position of last opcode with line number */
-ULONG       hb_comp_ulMessageFix;                      /* Position of the message which needs to be changed */
 int         hb_comp_iStaticCnt;                        /* number of defined statics variables on the PRG */
 int         hb_comp_iVarScope;                         /* holds the scope for next variables to be defined */
 PHB_FNAME   hb_comp_pOutPath = NULL;
@@ -116,6 +115,7 @@ BOOL        hb_comp_bLogo = TRUE;                      /* print logo */
 BOOL        hb_comp_bSyntaxCheckOnly = FALSE;          /* syntax check only */
 int         hb_comp_iLanguage = LANG_C;                /* default Harbour generated output language */
 int         hb_comp_iJumpOptimize = 1;
+BOOL        hb_comp_EOL;
 
 typedef struct __EXTERN
 {
@@ -427,7 +427,6 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
    {
       /* Variable declaration is outside of function/procedure body.
          In this case only STATIC and PARAMETERS variables are allowed. */
-      --hb_comp_iLine;
       hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_OUTSIDE, NULL, NULL );
       return;
    }
@@ -438,7 +437,6 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
     */
    if( ( hb_comp_functions.pLast->bFlags & FUN_STATEMENTS ) && !( hb_comp_iVarScope == VS_FIELD || ( hb_comp_iVarScope & VS_MEMVAR ) ) )
    {
-      --hb_comp_iLine;
       hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_FOLLOWS_EXEC, ( hb_comp_iVarScope == VS_LOCAL ? "LOCAL" : "STATIC" ), NULL );
    }
 
@@ -448,7 +446,10 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
       /* variable defined in a function/procedure */
       hb_compCheckDuplVars( pFunc->pFields, szVarName, hb_comp_iVarScope );
       hb_compCheckDuplVars( pFunc->pStatics, szVarName, hb_comp_iVarScope );
-      if( !( hb_comp_iVarScope & VS_PRIVATE || hb_comp_iVarScope == VS_PUBLIC ) )
+      /*NOTE: Clipper warns if PARAMETER variable duplicates the MEMVAR
+       * declaration
+      */
+      if( !( hb_comp_iVarScope == VS_PRIVATE || hb_comp_iVarScope == VS_PUBLIC ) )
          hb_compCheckDuplVars( pFunc->pMemvars, szVarName, hb_comp_iVarScope );
    }
    else
@@ -2310,8 +2311,6 @@ static void hb_compCheckDuplVars( PVAR pVar, char * szVarName, int iVarScope )
    {
       if( ! strcmp( pVar->szName, szVarName ) )
       {
-         if( ! ( iVarScope & VS_PARAMETER ) )
-            --hb_comp_iLine;
          hb_compErrorDuplVar( szVarName );
          break;
       }
@@ -2883,9 +2882,9 @@ static void hb_compInitVars( void )
    hb_comp_iErrorCount = 0;
    hb_comp_cVarType = ' ';
    hb_comp_ulLastLinePos = 0;
-   hb_comp_ulMessageFix = 0;
    hb_comp_iStaticCnt = 0;
    hb_comp_iVarScope = VS_LOCAL;
+   hb_comp_EOL = FALSE;
 }
 
 static void hb_compGenOutput( int iLanguage )

@@ -375,6 +375,8 @@ extern USHORT      hb_comp_wIfCounter;
 extern USHORT      hb_comp_wWhileCounter;
 extern USHORT      hb_comp_wCaseCounter;
 
+extern BOOL        hb_comp_EOL;
+
 extern char *      hb_comp_szErrors[];
 extern char *      hb_comp_szWarnings[];
 

@@ -69,7 +69,10 @@
 #include "hbpcode.h"
 #include "hbset.h"
 
-#include <windows.h>
+#ifdef HB_OS_WIN_32
+  /* do not include it on U*ix and pure DOS */
+  #include <windows.h>
+#endif
 
 typedef struct _SYMBOLS
 {

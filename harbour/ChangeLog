@@ -1,3 +1,25 @@
+20000425-12:40 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbcomp.h
+    *source/compiler/harbour.c
+    *source/compiler/harbour.l
+    *source/compiler/harbour.y
+    *source/compiler/hbgenerr.c
+    *source/pp/ppcore.c
+	* fixed STATIC var[ <value> ] declaration
+	* fixed DO &(<name>) WITH ... syntax
+	* fixed reporting of line numbers in errors/warnings messages
+	NOTE: fix in ppcore.c needs Alexander to review it - anyway
+	empty lines cannot be buffered by a preprocessor (see
+	hb_pp_nEmptyStrings)
+	
+    *source/rtl/gtstd/gtstd.c
+	* removed atexit() call when HB_OS_UNIX is defined
+	
+    *source/vm/hvm.c
+	* <windows.h> can be included only if HB_OS_WIN_32 is defined
+
+
 20000425-11:36 GMT+1 Antonio Linares <alinares@fivetech.com>
    + source/vm/startup.asm
        Harbour startup for Win32 when not using any C compiler startup

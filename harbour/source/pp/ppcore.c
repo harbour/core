@@ -2047,6 +2047,13 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
         }
     }
   while(--readed >= 0 && ( buffer[readed] == ' ' || buffer[readed] == '\t') );
+  /* rglab: start */
+  if( cha == '\n' && readed < 0 )
+  {
+     readed = 0;
+     buffer[ readed ] = ' ';   /* return an empty line */
+  }
+  /* rglab: end */
   if( buffer[readed] != ';' && s_ParseState != STATE_COMMENT )
      s_ParseState = STATE_NORMAL;
   readed++;

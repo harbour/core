@@ -1264,10 +1264,11 @@ Separator     {SpaceTab}
                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                 unput( yytext[ yyleng-1 ] );
                 if( hb_comp_iState == WHILE ||
-		    hb_comp_iState == DO ||
-		    hb_comp_iState == MACROVAR ||
-		    hb_comp_iState == MACROTEXT ||
-		    hb_comp_iState == IDENTIFIER )
+                    hb_comp_iState == DO ||
+                    hb_comp_iState == MACROVAR ||
+                    hb_comp_iState == MACROTEXT ||
+                    hb_comp_iState == IDENTIFIER || 
+                    hb_comp_iState == SEPARATOR )
                 { /* DO <ident> WITH <arg> */
                   hb_comp_iState =WITH;
                   return WITH;

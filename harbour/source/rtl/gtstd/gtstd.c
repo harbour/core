@@ -70,7 +70,7 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
       struct termios ta;
       
       tcgetattr( STDIN_FILENO, &startup_attributes );
-      atexit( restore_input_mode );
+//      atexit( restore_input_mode );
       
       tcgetattr( STDIN_FILENO, &ta );
       ta.c_lflag &= ~( ICANON | ECHO );

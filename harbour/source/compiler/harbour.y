@@ -237,21 +237,21 @@ Main       : { hb_compLinePush(); } Source       { }
            | /* empty file */
            ;
 
-Source     : Crlf
-           | VarDefs
-           | FieldsDef
-           | MemvarDef
-           | Function
-           | Statement
-           | Line
-           | Source Crlf
-           | Source Function
-           | Source Statement
-           | Source VarDefs
-           | Source FieldsDef
-           | Source MemvarDef
-           | Source Line
-	   | Source error Crlf { yyclearin; }
+Source     : Crlf         { hb_comp_EOL = FALSE; }   
+           | VarDefs      { hb_comp_EOL = FALSE; }
+           | FieldsDef    { hb_comp_EOL = FALSE; }
+           | MemvarDef    { hb_comp_EOL = FALSE; }
+           | Function     { hb_comp_EOL = FALSE; }
+           | Statement    { hb_comp_EOL = FALSE; }
+           | Line         { hb_comp_EOL = FALSE; }
+           | Source Crlf        { hb_comp_EOL = FALSE; }
+           | Source Function    { hb_comp_EOL = FALSE; }
+           | Source Statement   { hb_comp_EOL = FALSE; }
+           | Source VarDefs     { hb_comp_EOL = FALSE; }
+           | Source FieldsDef   { hb_comp_EOL = FALSE; }
+           | Source MemvarDef   { hb_comp_EOL = FALSE; }
+           | Source Line        { hb_comp_EOL = FALSE; }
+           | Source error Crlf { hb_comp_EOL = FALSE; yyclearin; }
            ;
 
 Line       : LINE NUM_INTEGER LITERAL Crlf
@@ -303,7 +303,7 @@ Statement  : ExecFlow   CrlfStmnt   { }
            | ExprPostOp CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
            | ExprOperEq CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
            | ExprEqual CrlfStmnt    { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
-           | ExprAssign CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
+           | ExprAssign CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); } 
            | DoProc CrlfStmnt       { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
            | BREAK CrlfStmnt        { hb_compGenBreak(); hb_compGenPCode2( HB_P_DOSHORT, 0 );
                                       hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
@@ -1128,8 +1128,8 @@ IfEndif    : IfBegin EndIf                    { hb_compGenJumpHere( $1 ); }
            | IfBegin IfElseIf IfElse EndIf    { hb_compGenJumpHere( $1 ); hb_compElseIfFix( $2 ); }
            ;
 
-EmptyStats : /* empty */      { hb_comp_bDontGenLineNum = TRUE; }
-           | Statements
+EmptyStats : /* empty */      { hb_comp_bDontGenLineNum = TRUE; hb_comp_EOL = FALSE; }
+           | Statements       { hb_comp_EOL = FALSE; }
            ;
 
 IfBegin    : IF SimpleExpression { ++hb_comp_wIfCounter; hb_compLinePush(); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2 ) ); $$ = hb_compGenJumpFalse( 0 ); hb_compLinePush(); }
@@ -1202,7 +1202,6 @@ DoCaseBegin : DoCaseStart            { }
             | DoCaseStart Statements {
                         if( $<lNumber>2 > 0 )
                         {
-                           --hb_comp_iLine;
                            hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_MAYHEM_IN_CASE, NULL, NULL );
                         }
                      }
@@ -1413,7 +1412,7 @@ DoArgument : IdentName                { $$ = hb_compExprNewVarRef( $1 ); }
            | PareExpList               { $$ = $1; }
            ;
 
-Crlf       : '\n'          { ++hb_comp_iLine; }
+Crlf       : '\n'          { ++hb_comp_iLine; hb_comp_EOL = TRUE; }
            | ';'           { hb_comp_bDontGenLineNum = TRUE; }
            ;
 
@@ -1477,6 +1476,7 @@ int hb_compYACCMain( char * szName )
 
 void yyerror( char * s )
 {
+   hb_comp_EOL = FALSE; /* we are in the middle of a line */
    if( yytext[ 0 ] == '\n' )
       hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_YACC, s, "<eol>" );
    else
@@ -1863,9 +1863,9 @@ static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue )
      HB_EXPR_PTR pVar = hb_compExprNewVar( szName );
      HB_EXPR_PTR pAssign;
 
-     hb_compStaticDefStart();   /* switch to statics pcode buffer */
      /* create a static variable */
      hb_compVariableAdd( szName, 'A' );
+     hb_compStaticDefStart();   /* switch to statics pcode buffer */
      /* create an array */
      hb_compExprGenPush( pInitValue );
      hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ) );
