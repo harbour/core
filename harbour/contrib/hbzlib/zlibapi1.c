@@ -209,7 +209,7 @@ int hb___CompressOneFile(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_
 
                 if (err == ZIP_OK)
                 {
-                    nFileHandle = (FHANDLE) hb_fsOpen(filenameinzip,FO_READ+FO_COMPAT);
+                    nFileHandle = (FHANDLE) hb_fsOpen((BYTE*) filenameinzip,FO_READ+FO_COMPAT);
                     if (nFileHandle==NULL)
                     {
                         err=ZIP_ERRNO;
@@ -223,7 +223,7 @@ int hb___CompressOneFile(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_
                     {
                         err = ZIP_OK;
 
-                        size_read = hb_fsRead(nFileHandle,cBuffer,Size_Buf);
+                        size_read = hb_fsRead(nFileHandle,(BYTE*) cBuffer,Size_Buf);
                         if (size_read < Size_Buf)
 
                             if (hb_fsEof(nFileHandle)==0)                        {
@@ -322,7 +322,7 @@ int   hb___CompressMultipleFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_
 
                 if (err == ZIP_OK)                {
 
-                nFileHandle = (FHANDLE)hb_fsOpen((char*)  filenameinzip,FO_READ+FO_COMPAT);
+                nFileHandle = (FHANDLE)hb_fsOpen((BYTE*)  filenameinzip,FO_READ+FO_COMPAT);
 
                     if (nFileHandle==NULL)
                     {
@@ -338,7 +338,7 @@ int   hb___CompressMultipleFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_
                     {
                         err = ZIP_OK;
 
-                        size_read = hb_fsRead(nFileHandle,cBuffer,Size_Buf);
+                        size_read = hb_fsRead(nFileHandle,(BYTE*) cBuffer,Size_Buf);
                         if (size_read < Size_Buf)
                             if (hb_fsEof(nFileHandle)==0)
                         {
