@@ -73,7 +73,7 @@
 
 HB_FUNC( HB_DISKSPACE )
 {
-   char * szPath = ISCHAR( 1 ) ? hb_parc( 1 ) : NULL;
+   char * szPath = hb_parc( 1 );
    USHORT uiType = ISNUM( 2 ) ? hb_parni( 2 ) : HB_DISK_AVAIL;
    double dSpace = 0.0;
 

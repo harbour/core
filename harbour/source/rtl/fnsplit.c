@@ -73,10 +73,10 @@ HB_FUNC( HB_FNAMEMERGE )
    HB_FNAME pFileName;
    char szFileName[ _POSIX_PATH_MAX ];
 
-   pFileName.szPath = ISCHAR( 1 ) ? hb_parc( 1 ) : NULL;
-   pFileName.szName = ISCHAR( 2 ) ? hb_parc( 2 ) : NULL;
-   pFileName.szExtension = ISCHAR( 3 ) ? hb_parc( 3 ) : NULL;
-   pFileName.szDrive = ISCHAR( 4 ) ? hb_parc( 4 ) : NULL;
+   pFileName.szPath = hb_parc( 1 );
+   pFileName.szName = hb_parc( 2 );
+   pFileName.szExtension = hb_parc( 3 );
+   pFileName.szDrive = hb_parc( 4 );
 
    hb_retc( hb_fsFNameMerge( szFileName, &pFileName ) );
 }

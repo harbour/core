@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-19 16:26 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/box.c
+   * source/rtl/disksphb.c
+   * source/rtl/errorapi 
+   * source/rtl/fnsplit 
+   * source/rtl/setcolor 
+     ! Simplified some calls to hb_parc()
+
 2002-10-19 21:40 UTC+0100 Martin Vogel <vogel@inttec.de>
    * contrib/libct/Makefile
    * contrib/libct/Makefile.bc

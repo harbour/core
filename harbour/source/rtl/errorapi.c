@@ -730,7 +730,7 @@ HB_FUNC( __ERRRT_BASE )
 {
    hb_errRT_BASE( ( ULONG ) hb_parnl( 1 ),
                   ( ULONG ) hb_parnl( 2 ),
-                  ISCHAR( 3 ) ? hb_parc( 3 ) : NULL,
+                  hb_parc( 3 ),
                   hb_parc( 4 ),
                   ( USHORT ) hb_parni( 5 ),
                   hb_param( 6, HB_IT_ANY ) );
@@ -740,7 +740,7 @@ HB_FUNC( __ERRRT_SBASE )
 {
    hb_errRT_BASE_SubstR( ( ULONG ) hb_parnl( 1 ),
                          ( ULONG ) hb_parnl( 2 ),
-                         ISCHAR( 3 ) ? hb_parc( 3 ) : NULL,
+                         hb_parc( 3 ),
                          hb_parc( 4 ),
                          ( USHORT ) hb_parni( 5 ),
                          hb_param( 6, HB_IT_ANY ) );

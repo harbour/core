@@ -68,7 +68,7 @@ char * hb_conSetColor( char * szColor )
 
 HB_FUNC( SETCOLOR )
 {
-   hb_retc( hb_conSetColor( ISCHAR( 1 ) ? hb_parc( 1 ) : NULL ) );
+   hb_retc( hb_conSetColor( hb_parc( 1 ) ) );
 }
 
 HB_FUNC( COLORSELECT )

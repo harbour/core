@@ -63,7 +63,7 @@ HB_FUNC( DISPBOX )
 
    if( pTop && pLeft && pBottom && pRight )
    {
-      char * pszColor = ISCHAR( 6 ) ? hb_parc( 6 ) : NULL;
+      char * pszColor = hb_parc( 6 );
       char szOldColor[ CLR_STRLEN ];
 
       if( pszColor )
@@ -95,4 +95,3 @@ HB_FUNC( DISPBOX )
          hb_gtSetColorStr( szOldColor );
    }
 }
-
