@@ -706,6 +706,11 @@ static int hb_ntxTagFindCurrentKey( LPTAGINFO pTag, LPPAGEINFO pPage, LPKEYINFO 
          }
          else if( k <= 0 && pPage->CurKey < pPage->uiKeys )
             pTag->stackLevel = 0;
+         if( k <= 0 && pPage->CurKey < pPage->uiKeys && pTag->CurKeyInfo->Tag == 0 )
+         {
+            pTag->CurKeyInfo->Xtra = p->rec_no;
+            pTag->CurKeyInfo->Tag = pPage->Page;
+         }
       }
       if( k > 0 && ++pPage->CurKey <= pPage->uiKeys )
       {
