@@ -695,7 +695,7 @@ EXTERNAL __TEXTRESTORE
 //
 EXTERNAL GETNEW
 EXTERNAL __GET
-EXTERNAL _GET_
+EXTERNAL __GETA
 //
 //symbols from file: rtl\tgetlist.prg
 //

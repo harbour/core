@@ -1,3 +1,15 @@
+2000-11-02 15:20 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.sly
+     + Added support for extended parameters to __GET() and __GETA()
+     ! Corrected 2nd parameter of __GETA() to reflect only the Base Array Name.
+
+   * source/rtl/tget.prg
+     ! Added support for :SubScript in __GETA()
+
+   * include/hbextern.ch
+     - Removed _GET_
+     + Added __GETA
+
 2000-11-02 19:20 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    *doc/en/tbrowse.txt
      *added missing CVS ID
@@ -11,7 +23,7 @@
    *utils/hbdoc/rtf.prg
     utils/hbdoc/genrtf.prg
     utils/hbdoc/hbdoc.prg
-     *Small Changes   
+     *Small Changes
     *utils/hbdoc/genrtf.prg
      utils/hbdoc/genrtf.prg
      *Small Fix to work with $CLASSDOC$ style headers
@@ -32,7 +44,7 @@
    *utils/hbdoc/rtf.prg
     utils/hbdoc/genrtf.prg
     utils/hbdoc/hbdoc.prg
-     *Small Changes   
+     *Small Changes
 
 2000-11-01 17:25 UTC+0800 Ron Pinkas <ron@profit-master.com>
 

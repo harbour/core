@@ -1111,12 +1111,6 @@ return Get():New( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
 
 //---------------------------------------------------------------------------//
 
-/* Huummm, why not using something like */
-/* Function __GET(...)                  */
-/* Return _GET_(...)                    */
-
-/* NOTE: Same as _GET_() */
-
 FUNCTION __GET( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
 
    LOCAL oGet := Get():New(,, bSetGet, cVarName, cPicture )
@@ -1128,36 +1122,23 @@ FUNCTION __GET( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
 
 RETURN oGet
 
-FUNCTION __GETA( aBaseVar, cVarName, cPicture, bValid, bWhen, bSetGet, anIndex )
+FUNCTION __GETA( aBaseVar, cVarName, cPicture, bValid, bWhen, anIndex )
 
-   LOCAL oGet, cIndex := '', nLen := Len( anIndex ), Counter
+   LOCAL bSetGet, oGet, cIndex := '', nLen := Len( anIndex ), Counter
 
    FOR Counter := 1 TO nLen
-      cIndex += '[' + LTrim( Str( anIndex[ Counter ] ) ) + ']'
+      cIndex += "[" + LTrim( Str( anIndex[ Counter ] ) ) + "]"
    NEXT
 
    bSetGet := {|x| M->__aArray := aBaseVar, IIF( x == NIL, M->&( "__aArray" + cIndex ), M->&( "__aArray" + cIndex ) := x ) }
 
-   oGet := Get():New(,, bSetGet, cVarName, cPicture )
+   oGet := Get():New( , , bSetGet, cVarName, cPicture )
 
-   oGet:PreBlock := bWhen
+   oGet:PreBlock  := bWhen
    oGet:PostBlock := bValid
+   oGet:SubScript := anIndex
 
 RETURN oGet
-
-/* NOTE: Same as __GET() */
-
-FUNCTION _GET_( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
-
-   LOCAL oGet := Get():New(,, bSetGet, cVarName, cPicture )
-
-   uVar := uVar // Suppress unused variable warning
-
-   oGet:PreBlock := bWhen
-   oGet:PostBlock := bValid
-
-RETURN oGet
-
 
 /* Here for compatibility reason with previous version   */
 /* Not sure it should be keeped here ... (JFL)           */
