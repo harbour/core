@@ -1,3 +1,33 @@
+19990513-22:20 EDT David G. Holm <dholm@jsd-llc.com>
+  * makefile.b31
+    - Removed harbour.obj from harbour.exe build, due
+      to change from harbour_main to main in harbour.y
+  * include/extend.h
+    - Added 3rd parameter, BOOL bForceExact, to hb_itemStrCmp
+  * include/pcode.h
+    - Added new PCODE for _EXACTLYEQUAL to handle difference between = and ==
+  * source/compiler/harbour.y
+    - Changed Expression EQ (for ==) to generate new PCODE _EXACTLYEQUAL
+  * source/rtl/arrays.c
+    - Modified ASCAN to call hb_itemStrCmp with FALSE as new 3rd parameter in
+      order to match Clipper's use of the = operator for comparisons
+  * source/rtl/strcmp.c
+    - Added 3rd parameter, BOOL bForceExact, to hb_itemStrCmp and modified the
+      code for comparing two strings to not adjust the return value when the
+      second string is shorter than the first string and matches the first
+      string up to the length of the second string, unless either bForceExact
+      or hb_set.HB_SET_EXACT are TRUE
+  * source/vm/hvm.c
+    - Modifed the Equal function to take one parameter: BOOL bExact
+    - Modified the handler for PCODE _EQUAL to call Equal( FALSE )
+    - Added new handler for PCODE _EXACTLYEQUAL, which calls Equal( TRUE )
+    - Modified the Equal function to call hb_itemStrCmp with bExact as the
+      new third parameter
+  * tests/working/strings3.prg
+    - Added display of the SET EXACT setting before the big string comparison
+      test, then duplicated the entire test and added SET (_SET_EXACT, .T.)
+      prior to the second set of tests
+
 19990513-11:05 Eddie Runia
   * obj/symbols.obj added
   * makefile.b32

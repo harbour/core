@@ -150,7 +150,7 @@ void ArrayRelease( PITEM pArray ); /* releases an array - don't call it - use It
 char * ArrayGetString( PITEM pArray, ULONG ulIndex ); /* retrieves the string contained on an array element */
 ULONG ArrayGetStringLen( PITEM pArray, ULONG ulIndex ); /* retrieves the string length contained on an array element */
 
-int  hb_itemStrCmp( PITEM pFirst, PITEM pSecond ); /* our string compare */
+int  hb_itemStrCmp( PITEM pFirst, PITEM pSecond, BOOL bForceExact ); /* our string compare */
 BOOL hb_strempty( char * szText, ULONG ulLen );
 long hb_dateEncode( long lDay, long lMonth, long lYear );
 void hb_dateDecode( long julian, long * plDay, long * plMonth, long * plYear );

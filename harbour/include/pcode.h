@@ -15,6 +15,7 @@ typedef enum
    _EQUAL,       /* check if the latest two values on the stack are equal, removing them and leaving there the result */
    _ENDBLOCK,    /* end of a codeblock definition */
    _ENDPROC,     /* instructs the virtual machine to end execution */
+   _EXACTLYEQUAL,/* check if the latest two values on the stack are exactly equal, removing them and leaving there the result */
    _FALSE,       /* pushes false on the virtual machine stack */
    _FORTEST,     /* For STEP. If step > 1 less. If step < 1 greater. */
    _FUNCTION,    /* instructs the virtual machine to execute a function saving its result */

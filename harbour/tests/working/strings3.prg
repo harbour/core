@@ -1,3 +1,5 @@
+#include "set.ch"
+
 function main
 local cStr := "This is " + CHR(0) + " a test."
 local cTest, nI, nJ, crlf := CHR(13)+CHR(10)
@@ -74,6 +76,28 @@ local cTest, nI, nJ, crlf := CHR(13)+CHR(10)
    OUTSTD (crlf)
 
    // Test the string comparison operators in the HVM.
+   OUTSTD ("EXACT ")
+   IF SET (_SET_EXACT)
+      OUTSTD ("ON")
+   ELSE
+      OUTSTD ("OFF")
+   ENDIF
+   StrTest ("ABC", "ABC")
+   StrTest ("ABC", "ABCD")
+   StrTest ("ABCD", "ABC")
+   StrTest ("ABC", "DEF")
+   StrTest ("ABC", "DEFG")
+   StrTest ("ABCD", "DEF")
+   OUTSTD (crlf)
+   OUTSTD (crlf)
+   OUTSTD ("EXACT ")
+   
+   SET (_SET_EXACT, .T.)
+   IF SET (_SET_EXACT)
+      OUTSTD ("ON")
+   ELSE
+      OUTSTD ("OFF")
+   ENDIF
    StrTest ("ABC", "ABC")
    StrTest ("ABC", "ABCD")
    StrTest ("ABCD", "ABC")
@@ -92,6 +116,8 @@ function StrTest (Str1, Str2)
    OUTSTD (Str2)
    OUTSTD (" == ")
    OUTSTD (Str1 == Str2)
+   OUTSTD (" = ")
+   OUTSTD (Str1 = Str2)
    OUTSTD (", != ")
    OUTSTD (Str1 != Str2)
    OUTSTD (", < ")
@@ -109,6 +135,8 @@ function StrTest (Str1, Str2)
    OUTSTD (Str1)
    OUTSTD (" == ")
    OUTSTD (Str2 == Str1)
+   OUTSTD (" = ")
+   OUTSTD (Str2 = Str1)
    OUTSTD (", != ")
    OUTSTD (Str2 != Str1)
    OUTSTD (", < ")
