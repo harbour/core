@@ -340,6 +340,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\memvarbl.obj \
    $(OBJ_DIR)\menuto.obj \
    $(OBJ_DIR)\objfunc.obj \
+   $(OBJ_DIR)\pushbtn.obj \
    $(OBJ_DIR)\radiobtn.obj \
    $(OBJ_DIR)\radiogrp.obj \
    $(OBJ_DIR)\readkey.obj \

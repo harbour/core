@@ -306,6 +306,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\memvarbl.obj \
    $(OBJ_DIR)\menuto.obj \
    $(OBJ_DIR)\objfunc.obj \
+   $(OBJ_DIR)\pushbtn.obj \
    $(OBJ_DIR)\radiobtn.obj \
    $(OBJ_DIR)\radiogrp.obj \
    $(OBJ_DIR)\readkey.obj \
@@ -1496,6 +1497,13 @@ $(OBJ_DIR)\radiobtn.c : $(RTL_DIR)\radiobtn.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\radiobtn.obj : $(OBJ_DIR)\radiobtn.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\pushbtn.c : $(RTL_DIR)\pushbtn.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\pushbtn.obj : $(OBJ_DIR)\pushbtn.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
