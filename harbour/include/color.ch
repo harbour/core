@@ -33,8 +33,6 @@
  *
  */
 
-/* NOTE: This file is also used by C code. */
-
 #ifndef _COLOR_CH
 #define _COLOR_CH
 
@@ -44,6 +42,5 @@
 #define CLR_BORDER      2
 #define CLR_BACKGROUND  3
 #define CLR_UNSELECTED  4
-#define CLR_LASTCOLOR   CLR_UNSELECTED
 
 #endif /* _COLOR_CH */

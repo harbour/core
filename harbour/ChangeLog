@@ -1,3 +1,23 @@
+20000415-20:46 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rdd/dbfcdx/dbfcdx1.c
+     ! non-ANSI stricmp() changed to hb_stricmp()
+     - Removed stdio.h and string.h since they are always included from hbapi.h
+     ! Proprietary function _ltoa() changed to hb_cdxltoa()
+
+   * include/hbapigt.h
+     ! Doesn't include color.ch, but defines the same constants with HB_
+       prefix to avoid collision with OS/2 (so far).
+     * HB_CLR_LASTCOLOR renamed to HB_CLR_MAX_
+
+   * source/rtl/gtapi.c
+     + Using HB_CLR_MAX_ instead of duplicated define.
+     * Prefixed CLR_ with HB_
+
+   * include/color.ch
+     - Removed the note that this file is also included from .C files.
+     - Removed CLR_LASTCOLOR which was not CA-Cl*pper compatible anyway.
+
 20000415-19:09 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * source/rdd/dbfcdx/dbfcdx1.c

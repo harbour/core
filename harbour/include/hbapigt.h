@@ -53,15 +53,6 @@
 
 #include "hbapi.h"
 
-/* 15/04/2000 - maurilio.longo@libero.it
-   CLR_BACKGROUND from os2.h (os2emx.h) conflicts with color.ch definition,
-   but we can undef it while we stay a VIO only program */
-#if defined(HB_OS_OS2) && !defined(INCL_GPI)
-   #undef CLR_BACKGROUND
-#endif
-
-#include "color.ch"
-
 #if defined(HB_EXTERN_C)
 extern "C" {
 #endif
@@ -71,7 +62,16 @@ extern "C" {
          original CA-Cl*pper versions. [vszakats] */
 
 /* maximum length of color string */
-#define CLR_STRLEN      64
+#define CLR_STRLEN              64
+
+/* attributes for color strings, these are the same as the ones in color.ch
+   but prefixed with HB_ to avoid collision. */
+#define HB_CLR_STANDARD         0
+#define HB_CLR_ENHANCED         1
+#define HB_CLR_BORDER           2
+#define HB_CLR_BACKGROUND       3
+#define HB_CLR_UNSELECTED       4
+#define HB_CLR_MAX_             HB_CLR_UNSELECTED
 
 /* strings for borders (same as box.ch, but defined for use by C) */
                                /*01234567*/

@@ -91,14 +91,12 @@ static int *  s_pColor;
 
 /* gt API functions */
 
-#define COLOR_COUNT_DEF 5
-
 void hb_gtInit( int s_iFilenoStdin, int s_iFilenoStdout, int s_iFilenoStderr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gtInit()"));
 
-   s_pColor = ( int * ) hb_xgrab( COLOR_COUNT_DEF * sizeof( int ) );
-   s_uiColorCount = COLOR_COUNT_DEF;
+   s_pColor = ( int * ) hb_xgrab( ( HB_CLR_MAX_ + 1 ) * sizeof( int ) );
+   s_uiColorCount = HB_CLR_MAX_ + 1;
 
    hb_gt_Init( s_iFilenoStdin, s_iFilenoStdout, s_iFilenoStderr );
 
@@ -611,7 +609,7 @@ USHORT hb_gtSetColorStr( char * szColorString )
    if( nPos > 0 && nPos < 4 )
       s_pColor[ 4 ] = s_pColor[ 1 ];
 
-   s_uiColorIndex = CLR_STANDARD; /* hb_gtColorSelect( CLR_STANDARD ); */
+   s_uiColorIndex = HB_CLR_STANDARD; /* hb_gtColorSelect( HB_CLR_STANDARD ); */
 
    return 0;
 }

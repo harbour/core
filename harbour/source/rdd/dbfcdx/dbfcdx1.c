@@ -37,8 +37,6 @@
 
 #include <time.h>
 #include <ctype.h>
-#include <string.h>
-#include <stdio.h>
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -252,12 +250,12 @@ typedef struct
 typedef SORTINFO * LPSORTINFO;
 
 
-HB_FUNC(_DBFCDX);
-HB_FUNC(DBFCDX_GETFUNCTABLE);
+extern HB_FUNC( _DBFCDX );
+extern HB_FUNC( DBFCDX_GETFUNCTABLE );
 
 HB_INIT_SYMBOLS_BEGIN( dbfcdx1__InitSymbols )
-{ "_DBFCDX",             HB_FS_PUBLIC, HB_FUNCNAME(_DBFCDX), NULL },
-{ "DBFCDX_GETFUNCTABLE", HB_FS_PUBLIC, HB_FUNCNAME(DBFCDX_GETFUNCTABLE), NULL }
+{ "_DBFCDX",             HB_FS_PUBLIC, HB_FUNCNAME( _DBFCDX ), NULL },
+{ "DBFCDX_GETFUNCTABLE", HB_FS_PUBLIC, HB_FUNCNAME( DBFCDX_GETFUNCTABLE ), NULL }
 HB_INIT_SYMBOLS_END( dbfcdx1__InitSymbols )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
    #pragma startup dbfcdx1__InitSymbols
@@ -1928,7 +1926,7 @@ static void hb_cdxIndexAddTag( LPINDEXINFO pIndex, char * szTagName, char * szKe
    pLastTag = NULL;
    while( pTag != NULL )
    {
-      if( stricmp( pTag->TagName, szTagName ) == 0 )
+      if( hb_stricmp( pTag->TagName, szTagName ) == 0 )
       {
          pKey->Tag = pTag->TagBlock;
          if( hb_cdxTagKeyFind( pIndex->CompoundTag, pKey ) > 0 )
@@ -2078,7 +2076,7 @@ static void hb_cdxSortInsertWord( LPSORTINFO pSort, LONG Tag, char * Value )
    SHORT v;
    LPSORTDATA wx;
 
-   _ltoa( Tag, s + 1, 10 );
+   hb_cdxltoa( Tag, s + 1, 10 );
    w = strlen( Value );
    if( pSort->NodeLimit - pSort->NodeCur < w + strlen( s + 1 ) + 1 )
    {
@@ -3284,11 +3282,11 @@ static RDDFUNCS cdxTable = { cdxBof,
                              cdxWhoCares
                            };
 
-HB_FUNC(_DBFCDX)
+HB_FUNC( _DBFCDX )
 {
 }
 
-HB_FUNC(DBFCDX_GETFUNCTABLE)
+HB_FUNC( DBFCDX_GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
    USHORT * uiCount;
