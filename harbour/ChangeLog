@@ -1,3 +1,19 @@
+19990727-02:22 EDT Paul Tucker <ptucker@sympatico.ca>
+   * include/gtapi.h
+     + added definition of gtSetAttribute
+   * source/rtl/dates.c
+     * hb__seconds - fixed MSC support for correct hundreths.
+   * source/rtl/dir.c
+     * Directory() now works under msc.  Other platform users should
+       review the code and add defined()'s or code as needed.
+   * source/rtl/gt/gtwin.c
+     + gtSetAttribute()
+   * source/rtl/gt/gtdos.c source/rtl/gt/gtos2.c
+     + Empty gtSetAttribute()
+   * source/rtl/console.c
+     + empty SAVESCREEN,RESTSCREEN
+     + SHADOW() and DBGSHADOW() now implimented
+
 19990727-07:50 CET Felipe Coury
    * tests/working/hscript/dir.hs; tests/working/hscript/hello.hs;
      tests/working/hscript/hscript.prg; tests/working/hscript/multiply.hs;

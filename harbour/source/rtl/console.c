@@ -73,7 +73,9 @@
 #endif
 
 HARBOUR HB___ACCEPT(void);
+HARBOUR HB___EJECT( void );
 HARBOUR HB_COL( void );
+HARBOUR HB_DBGSHADOW( void );
 HARBOUR HB_DEVOUT( void );
 HARBOUR HB_DEVOUTPICT( void );
 HARBOUR HB_DEVPOS( void );
@@ -82,7 +84,6 @@ HARBOUR HB_DISPBOX( void );
 HARBOUR HB_DISPCOUNT( void );
 HARBOUR HB_DISPEND( void );
 HARBOUR HB_DISPOUT( void );
-HARBOUR HB___EJECT( void );
 HARBOUR HB_ISCOLOR( void );
 HARBOUR HB_MAXCOL( void );
 HARBOUR HB_MAXROW( void );
@@ -95,12 +96,14 @@ HARBOUR HB_ROW( void );
 HARBOUR HB_SCROLL( void );
 HARBOUR HB_SETPOS( void );
 HARBOUR HB_SETPRC( void );
+HARBOUR HB_SHADOW( void );
 HARBOUR HB_QOUT( void );
 HARBOUR HB_QQOUT( void );
 
 HB_INIT_SYMBOLS_BEGIN( Console__InitSymbols )
 { "__ACCEPT"  , FS_PUBLIC, HB___ACCEPT  , 0 },
 { "__EJECT"   , FS_PUBLIC, HB___EJECT   , 0 },
+{ "DBGSHADOW" , FS_PUBLIC, HB_DBGSHADOW , 0 },
 { "DEVOUT"    , FS_PUBLIC, HB_DEVOUT    , 0 },
 { "DEVOUTPICT", FS_PUBLIC, HB_DEVOUTPICT, 0 },
 { "DISPBEGIN" , FS_PUBLIC, HB_DISPBEGIN , 0 },
@@ -117,6 +120,7 @@ HB_INIT_SYMBOLS_BEGIN( Console__InitSymbols )
 { "SCROLL"    , FS_PUBLIC, HB_SCROLL    , 0 },
 { "SETPOS"    , FS_PUBLIC, HB_SETPOS    , 0 },
 { "SETPRC"    , FS_PUBLIC, HB_SETPRC    , 0 },
+{ "SHADOW"    , FS_PUBLIC, HB_SHADOW    , 0 },
 { "QOUT"      , FS_PUBLIC, HB_QOUT      , 0 },
 { "QQOUT"     , FS_PUBLIC, HB_QQOUT     , 0 }
 HB_INIT_SYMBOLS_END( Console__InitSymbols );
@@ -968,4 +972,25 @@ HARBOUR HB_NOSNOW (void)
       hb_gtSetSnowFlag(hb_parl(1));
    }
 #endif
+}
+
+HARBOUR HB_SHADOW (void)
+{
+#ifdef HARBOUR_USE_GTAPI
+   if( hb_pcount() == 5 )
+      gtSetAttribute(hb_parni(1)+1,hb_parni(2)+1,hb_parni(3)+1,hb_parni(4)+1,hb_parni(5));
+#endif
+}
+
+HARBOUR HB_DBGSHADOW (void)
+{
+   HB_SHADOW();
+}
+
+HARBOUR HB_SAVESCREEN (void)
+{
+}
+
+HARBOUR HB_RESTSCREEN (void)
+{
 }

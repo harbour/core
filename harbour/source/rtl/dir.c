@@ -2,6 +2,18 @@
  * $Id$
  */
 
+/*
+ *  DIR.C: Returns a Harbour array of specified directory contents filtered
+ *         by the optional file and attribute mask.
+ *
+ * Latest mods:
+ * 1.21   19990722   ptucker   Implimented directory for MSVC
+ *                             Includes new attributes
+ * 1.20   19990722   ptucker   Corrected hang when attribute types have
+ *                             been requested.
+ *
+ */
+
 #include <hbsetup.h>
 #include <extend.h>
 #include <string.h>
@@ -30,7 +42,7 @@
 
 #endif
 
-#if defined(__WATCOMC__)
+#if defined(__WATCOMC__) || defined( _MSC_VER )
   #include <sys/stat.h>
   #include <share.h>
   #include <fcntl.h>
@@ -83,6 +95,16 @@
     #define FA_LABEL        8
     #define FA_DIREC        16
     #define FA_ARCH         32
+/* this may not work, but lets find out (only implimented for msvc) */
+    #define FA_ENCRYPTED    64
+    #define FA_NORMAL       128
+    #define FA_TEMPORARY    256
+    #define FA_SPARSE       512
+    #define FA_REPARSE      1024
+    #define FA_COMPRESSED   2048
+    #define FA_OFFLINE      4096
+    #define FA_NOTINDEXED   8192
+    #define FA_VOLCOMP      32764
 #endif
 
 HARBOUR HB_DIRECTORY(void);
@@ -100,19 +122,27 @@ static  BOOL  hb_strMatchDOS (char *pszString, char *pszMask);
 HARBOUR HB_DIRECTORY( void )
 {
 #if defined(HAVE_POSIX_IO)
+   extern STACK  stack;
+
    PHB_ITEM arg1_it = hb_param(1,IT_STRING);
    PHB_ITEM arg2_it = hb_param(2,IT_STRING);
 
-   extern STACK  stack;
-
    struct stat statbuf;
-   struct dirent *entry;
    struct tm *ft;
 
+#if defined(_MSC_VER )
+   struct _finddata_t entry;
+   long hFile;
+#else
+   struct dirent *entry;
+   DIR  * dir;
+#endif
+
    char   fullfile[_POSIX_PATH_MAX+1];
+   char   filename[_POSIX_PATH_MAX+1];
    char   pattern[_POSIX_PATH_MAX+1];
    char   dirname[_POSIX_PATH_MAX+1];
-   char   filename[_POSIX_PATH_MAX+1];
+   char   string[_POSIX_PATH_MAX+1];
    char   pfname[_POSIX_PATH_MAX+1];
    char   pfext[_POSIX_PATH_MAX+1];
    char   fname[_POSIX_PATH_MAX+1];
@@ -120,13 +150,10 @@ HARBOUR HB_DIRECTORY( void )
    char   filesize[10];
    char   ddate[9];
    char   ttime[9];
-   int    attrib;
    char   aatrib[8];
-   char   string[_POSIX_PATH_MAX+1];
-   char * pos;
-   long   fsize;
-   DIR  * dir;
+   int    attrib;
    time_t ftime;
+   char * pos;
 
    PHB_ITEM  pdir;
    PHB_ITEM  psubarray;
@@ -138,7 +165,6 @@ HARBOUR HB_DIRECTORY( void )
 
    dirname[0] = '\0';
    pattern[0] = '\0';
-
 
    if( arg1_it )
    {
@@ -181,8 +207,12 @@ HARBOUR HB_DIRECTORY( void )
          pfext[0] = '\0';
       }
    }
+
+/* redundant 
    if (strlen(pfext) < 1)
       pfext[0] = '\0';
+*/
+
    if (strlen(pfname) < 1)
       strcpy(pfname,"*");
 
@@ -195,9 +225,23 @@ HARBOUR HB_DIRECTORY( void )
 
    tzset();
    pdir = hb_itemArrayNew(0);
+
+#if defined(_MSC_VER)
+
+   strcpy(string,dirname);
+   strcat(string,pattern);
+   if( (hFile = _findfirst( string, &entry )) != -1L )
+   {
+
+    do
+    {
+      strcpy(string,entry.name);
+
+#else
    dir = opendir( dirname );
    if (NULL == dir)
    {
+      /* TODO: proper error handling */
       printf("\n invalid dirname %s ",dirname);
       while(0==getchar());
    }
@@ -205,8 +249,9 @@ HARBOUR HB_DIRECTORY( void )
    /* now put everything into an array */
    while ((entry = readdir( dir )) != NULL)
    {
-
       strcpy(string,entry->d_name);
+
+#endif
       pos = strrchr(string,'.');
       if( pos )
       {
@@ -219,47 +264,60 @@ HARBOUR HB_DIRECTORY( void )
          strcpy(fname,string);
          fext[0] = '\0';
       }
+
+/* redundant
       if (strlen(fext) < 1)
          fext[0] = '\0';
+ */
+
       if (strlen(fname) < 1)
          strcpy(fname,"*");
 
 /*   debug code
       printf("\n fname fext %s %s ",fname,fext);
       while(0==getchar());
-*/
+ */
       if (hb_strMatchDOS( fname,pfname) && hb_strMatchDOS( fext,pfext))
       {
-
-         aatrib[0] = '\0';
+         attrib      = 0;
+         aatrib[0]   = '\0';
          filesize[0] = '\0';
-         filename[0] = '\0';
-         attrib = 0;
-         fullfile[0] = '\0';
-         strcat(filename,entry->d_name);
-         strcat(fullfile,dirname);
-         strcat(fullfile,entry->d_name);
+
+#if defined(_MSC_VER)
+         strcpy(filename,entry.name);
+#else
+         strcpy(filename,entry->d_name);
+#endif
+         strcpy(fullfile,dirname);
+         strcat(fullfile,filename);
 
          if (-1 == stat(fullfile,&statbuf))
          {
+            /* TODO: proper error handling */
             printf("\n invalid file %s ",fullfile);
             while(0==getchar());
          }
+         else
+         {
+/* This might be a problem under Novell when the file is a directory */
+/* needs test */
+            sprintf(filesize, "%ld", statbuf.st_size);
 
-         fsize = statbuf.st_size;
-         sprintf(filesize, "%ld", fsize);
-         ftime = statbuf.st_mtime;
-         ft = localtime(&ftime);
+            ftime = statbuf.st_mtime;
+            ft = localtime(&ftime);
+	    sprintf(ddate, "%04d%02d%02d",
+                    ft->tm_year+1900, ft->tm_mon + 1, ft->tm_mday);
 
-	 sprintf(ddate, "%04d%02d%02d",
-         ft->tm_year+1900, ft->tm_mon + 1, ft->tm_mday);
-	 sprintf(ttime, "%02d:%02d:%02d",
-		 ft->tm_hour, ft->tm_min, ft->tm_sec);
+            sprintf(ttime, "%02d:%02d:%02d",
+		    ft->tm_hour, ft->tm_min, ft->tm_sec);
 
 /* debug code
-         printf("\n name date time    %s %s %s ",entry,ddate,ttime);
-         while(0==getchar());
-*/
+
+            printf("\n name date time    %s %s %s ",filename,ddate,ttime);
+            while(0==getchar());
+ */
+
+         }
 
 #if defined(OS_UNIX_COMPATIBLE)
 /* GNU C on Linux or on other UNIX */
@@ -279,22 +337,43 @@ HARBOUR HB_DIRECTORY( void )
 	 if( S_ISSOCK(statbuf.st_mode) )
 	   strcat( aatrib, "K" );
 #else
-         /* TODO: seems to not clear on root entries ? */
-         attrib = _chmod(fullfile,0);
+         attrib = entry.attrib;
          if (attrib & FA_ARCH)
             strcat(aatrib,"A");
          if (attrib & FA_DIREC)
             strcat(aatrib,"D");
          if (attrib & FA_HIDDEN)
             strcat(aatrib,"H");
-         if (attrib & FA_LABEL)
-            strcat(aatrib,"V");
          if (attrib & FA_RDONLY)
             strcat(aatrib,"R");
          if (attrib & FA_SYSTEM)
             strcat(aatrib,"S");
-#endif
+         if (attrib & FA_LABEL)
+         {
+            strcat(aatrib,"V");
+            if (attrib & FA_VOLCOMP)
+               strcat(aatrib,"L");  /* volume supports compression. */
+         }
+/* some of these are known to work under NT - I picked the letters to use.*/
+/* needs testing on a Novell drive */
+         if (attrib & FA_ENCRYPTED)
+            strcat(aatrib,"E");
+//         if (attrib & FA_NORMAL)
+//            strcat(aatrib,"N");
+         if (attrib & FA_TEMPORARY)
+            strcat(aatrib,"T");
+         if (attrib & FA_SPARSE)
+            strcat(aatrib,"P");
+         if (attrib & FA_REPARSE)
+            strcat(aatrib,"Z");
+         if (attrib & FA_COMPRESSED)
+            strcat(aatrib,"C");
+         if (attrib & FA_OFFLINE)
+            strcat(aatrib,"O");
+         if (attrib & FA_NOTINDEXED)
+            strcat(aatrib,"X");
 
+#endif
          /* TODO: attribute match rtn */
          pos = string;
          if( arg2_it && hb_parclen(2) >= 1)
@@ -302,13 +381,11 @@ HARBOUR HB_DIRECTORY( void )
             strcpy(string, hb_parc(2));
             while (*pos != '\0')
             {
-               *pos = toupper(*pos);
+               *pos = (char)toupper(*pos);
                pos++;
             }
             pos = strchr(string,*aatrib);
          }
-         else
-            pos = string;
 
          if ( pos )
          {
@@ -336,14 +413,23 @@ HARBOUR HB_DIRECTORY( void )
          }
       }
    }
+#if defined(_MSC_VER)
+   while( _findnext( hFile, &entry ) == 0 );
+
+   _findclose( hFile );
+#else
    closedir( dir );
+#endif
 
    ItemCopy( &stack.Return, pdir ); /* DIRECTORY() returns an array */
 
    hb_itemRelease(pdir);
 
+#if defined(_MSC_VER)
+
+   }
+#endif
 #endif /* HAVE_POSIX_IO */
-   return;
 }
 
 static  BOOL  hb_strMatchDOS (char *pszString, char *pszMask)
@@ -386,4 +472,3 @@ static  BOOL  hb_strMatchDOS (char *pszString, char *pszMask)
    return !((!(*pszString) && *pszMask && *pszMask != '*') ||
            (!(*pszMask) && *pszString));
 }
-

@@ -119,5 +119,6 @@ int  gtGetCursorStyle(void);
 void gtPuts(char x, char y, char attr, char *str, int len);
 void gtGetText(char x1, char y1, char x2, char y2, char *dest);
 void gtPutText(char x1, char y1, char x2, char y2, char *srce);
+void gtSetAttribute( char x1, char y1, char x2, char y2, char attribute );
 
 #endif /* HB_GTAPI_H_ */

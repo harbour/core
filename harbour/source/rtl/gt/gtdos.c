@@ -294,6 +294,10 @@ void gtPutText(char x1, char y1, char x2, char y2, char *srce)
     }
 }
 
+void gtSetAttribute( char x1, char y1, char x2, char y2, char attribute )
+{
+}
+
 char gtWhereX(void)
 {
 #if defined(__TURBOC__)

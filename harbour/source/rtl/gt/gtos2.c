@@ -126,3 +126,7 @@ void gtPutText(char x1, char y1, char x2, char y2, char *srce)
         srce += width;
     }
 }
+
+void gtSetAttribute(char x, char y, char attr, char *str, int len)
+{
+}

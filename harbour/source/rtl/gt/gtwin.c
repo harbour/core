@@ -5,8 +5,8 @@
 /*
  *  GTWIN.C: Video subsystem for Windows 95/NT compilers.
  *
- *  This module is based on VIDMGR by Andrew Clarke and modified for
- *  the Harbour project
+ *  This module is based (somewhat) on VIDMGR by
+ *   Andrew Clarke and modified for the Harbour project
  */
 
 #include <stdlib.h>
@@ -53,6 +53,7 @@ void gtInit(void)
   HOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 }
 
+/* TODO: this can very likely be removed */
 HARBOUR GTINIT( void )
 {
   gtInit();
@@ -80,7 +81,7 @@ char gtGetScreenHeight(void)
 {
   CONSOLE_SCREEN_BUFFER_INFO csbi;
 
-  LOG("GetScreenWidth");
+  LOG("GetScreenHeight");
   GetConsoleScreenBufferInfo(HOutput, &csbi);
   return (char)csbi.dwSize.Y;
 }
@@ -272,6 +273,34 @@ void gtPutText(char x1, char y1, char x2, char y2, char *srce)
     }
   hb_xfree(pwattr);
   hb_xfree(pstr);
+}
+
+void gtSetAttribute( char x1, char y1, char x2, char y2, char attribute )
+{
+/* ptucker */
+
+  DWORD len, i, width;
+  COORD coord;
+  LPWORD pwattr;
+  width = (y2 - y1 + 1);
+
+  pwattr = (LPWORD) hb_xgrab(width * sizeof(*pwattr));
+  if (!pwattr)
+    return;
+  memset( pwattr, attribute, width *sizeof(*pwattr) );
+
+  coord.X = (DWORD) (y1); /* note */
+  coord.Y = (DWORD) (x2);
+  WriteConsoleOutputAttribute(HOutput, pwattr, width, coord, &len);
+
+  coord.X = (DWORD)( y2 );
+  for( i=x1;i<=x2;i++)
+  {
+     coord.Y = (DWORD) (i);
+     WriteConsoleOutputAttribute(HOutput, pwattr, 1, coord, &len);
+  }
+
+  hb_xfree( pwattr );
 }
 
 char gtWhereX(void)

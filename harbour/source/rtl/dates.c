@@ -46,7 +46,9 @@
 #if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__)
   #include <dos.h>
 #endif
-
+#if defined( _MSC_VER )
+  #include <sys\timeb.h>
+#endif
 #ifndef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
    #define HB_OPTIMIZE_DTOS
 #endif
@@ -82,11 +84,21 @@ HB_INIT_SYMBOLS_END( Dates__InitSymbols );
 
 double hb__seconds( void )
 {
-#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__) || defined(_MSC_VER)
+#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__) // || defined(_MSC_VER)
    struct time t;
    gettime( &t );
-   return( ( ( t.ti_hour * 3600 ) + ( t.ti_min * 60 ) + t.ti_sec ) + t.ti_hund / 100.0 );
-#else
+   return( ( ( t.ti_hour * 3600 ) + ( t.ti_min * 60 ) + t.ti_sec ) + (double)t.ti_hund /100 );
+#elif defined(_MSC_VER)
+   struct _timeb tb;
+   struct tm *oTime;
+
+   _ftime( &tb );
+   oTime = localtime(&tb.time);
+   return( ( oTime->tm_hour * 3600 ) + 
+           ( oTime->tm_min * 60 ) + 
+             oTime->tm_sec + 
+           ( (double) tb.millitm /1000 ) );
+#else   
    time_t t;
    struct tm *oTime;
    time(&t);
