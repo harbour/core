@@ -238,3 +238,36 @@ COUNT() function will be called only once, before addition.
   be changed
 
 (See also: source/compiler/expropt.c)
+
+Initialization of static variables
+----------------------------------
+
+There is a difference in handling of initialization of static variables that
+are initialized with a codeblock that refers to a local variarble.
+For example:
+
+PROCEDURE TEST()
+LOCAL MyLocalVar
+STATIC MyStaticVar := {|| MyLocalVar}
+
+  MyLocalVar :=0
+  ? EVAL( MyStaticVar )
+
+RETURN
+
+The above code compiles fine in Clipper however it generates a runtime error
+Error/BASE 1132 Bound error: array access
+Called form (b)STATICS$(0)
+
+In Harbour this code generates a compile time error:
+Error E0009  Illegal variable (b) initializer: 'MyLocalVar'
+
+Both Clipper and Harbour are handing all local variables used in a codeblock
+in a special way: they are detached from the local stack of function/procedure
+where they are declared. This allows to access these variables after the exit 
+from a function/procedure. However all static variables are initialized
+in a separate procedure ('STATICS$' in Clipper and '(_INITSTATICS)' in Harbour)
+before the main procedure and before all INIT procedures. The local variables
+don't exist on the eval stack when static variables are initialized then
+they cannot be detached.
+

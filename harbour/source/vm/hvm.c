@@ -343,14 +343,14 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmExecute(%p, %p)", pCode, pSymbols));
 
-   /* NOTE: if pSymbols == NULL then hb_vmExecute is called from macro 
+   /* NOTE: if pSymbols == NULL then hb_vmExecute is called from macro
     * evaluation. In this case all PRIVATE variables created during
     * macro evaluation belong to a function/procedure where macro
     * compiler was called.
     */
    if( pSymbols )
        ulPrivateBase = hb_memvarGetPrivatesBase();
-       
+
    while( ( bCode = pCode[ w ] ) != HB_P_ENDPROC )
    {
       switch( bCode )
@@ -3644,15 +3644,9 @@ static void hb_vmDoInitStatics( void )
 
             if( scope == ( FS_INIT | FS_EXIT ) )
             {
-               /* _INITSTATICS procedure cannot call any function and it
-               * cannot use any local variable then it is safe to call
-               * this procedure directly
-               * hb_vmPushSymbol( pLastSymbols->pModuleSymbols + ui );
-               * hb_vmPushNil();
-               * hb_vmDo( 0 );
-               */
-               if( ( pLastSymbols->pModuleSymbols + ui )->pFunPtr )
-                  ( pLastSymbols->pModuleSymbols + ui )->pFunPtr();
+               hb_vmPushSymbol( pLastSymbols->pModuleSymbols + ui );
+               hb_vmPushNil();
+               hb_vmDo( 0 );
             }
          }
       }

@@ -941,7 +941,7 @@ static int hb_compLocalGetPos( char * szVarName ) /* returns the order + 1 of a 
       /* we are in a function/procedure -we don't need any tricks */
       if( pFunc->pOwner )
          pFunc =pFunc->pOwner;
-      return hb_compVariableGetPos( pFunc->pLocals, szVarName );
+      iVar = hb_compVariableGetPos( pFunc->pLocals, szVarName );
    }
    else
    {
@@ -1884,12 +1884,10 @@ void hb_compGenPushString( char * szText, ULONG ulStrLen )
 void hb_compGenPushSymbol( char * szSymbolName, int iIsFunction )
 {
    USHORT wSym;
-   PCOMSYMBOL pSym;
 
-   pSym = hb_compSymbolFind( szSymbolName, &wSym );
-   if( ! pSym )  /* the symbol was not found on the symbol table */
+   if( ! hb_compSymbolFind( szSymbolName, &wSym ) )  /* the symbol was not found on the symbol table */
    {
-      pSym = hb_compSymbolAdd( szSymbolName, &wSym );
+      hb_compSymbolAdd( szSymbolName, &wSym );
       if( iIsFunction )
          hb_compFunCallAdd( szSymbolName );
    }

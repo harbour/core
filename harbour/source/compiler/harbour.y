@@ -308,7 +308,7 @@ Statement  : ExecFlow   CrlfStmnt   { }
            | DoProc CrlfStmnt       { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
            | BREAK CrlfStmnt        { hb_compGenBreak(); hb_compGenPCode3( HB_P_DO, 0, 0 );
                                       hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
-           | BREAK Expression CrlfStmnt  { hb_compGenBreak(); hb_compExprDelete( hb_compExprGenPush( $2 ) );
+           | BREAK { hb_compLinePushIfInside(); } Expression Crlf { hb_compGenBreak(); hb_compExprDelete( hb_compExprGenPush( $3 ) );
                                            hb_compGenPCode3( HB_P_DO, 1, 0 );
                                            hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE;
                                          }
@@ -326,12 +326,12 @@ Statement  : ExecFlow   CrlfStmnt   { }
                         hb_comp_bDontGenLineNum = TRUE;
                         hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE;
                      }
-           | RETURN Expression CrlfStmnt {
+           | RETURN { hb_compLinePushIfInside(); } Expression Crlf {
                         if( hb_comp_wSeqCounter )
                         {
                            hb_compGenError( hb_comp_szErrors, 'E', ERR_EXIT_IN_SEQUENCE, "RETURN", NULL );
                         }
-                        hb_compExprGenPush( $2 );   /* TODO: check if return value agree with declared value */
+                        hb_compExprGenPush( $3 );   /* TODO: check if return value agree with declared value */
                         hb_compGenPCode1( HB_P_RETVALUE );
                         hb_compGenPCode1( HB_P_ENDPROC );
                         if( hb_comp_functions.pLast->bFlags & FUN_PROCEDURE )
@@ -342,9 +342,11 @@ Statement  : ExecFlow   CrlfStmnt   { }
                         hb_comp_bDontGenLineNum = TRUE;
                         hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE;
                      }
-           | PUBLIC { hb_comp_iVarScope = VS_PUBLIC; } ExtVarList
+           | PUBLIC { hb_compLinePushIfInside(); hb_comp_iVarScope = VS_PUBLIC; } 
+	            ExtVarList
                     { hb_compRTVariableGen( "__MVPUBLIC" ); } CrlfStmnt
-           | PRIVATE { hb_comp_iVarScope = VS_PRIVATE; } ExtVarList
+           | PRIVATE { hb_compLinePushIfInside(); hb_comp_iVarScope = VS_PRIVATE; } 
+	             ExtVarList
                     { hb_compRTVariableGen( "__MVPRIVATE" ); } CrlfStmnt
 
            | EXITLOOP  CrlfStmnt            { hb_compLoopExit(); hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
@@ -1259,7 +1261,7 @@ DoWhile    : WhileBegin Expression Crlf
                 }
            ;
 
-WhileBegin : WHILE    { $$ = hb_comp_functions.pLast->lPCodePos; ++hb_comp_wWhileCounter; hb_compLoopStart(); }
+WhileBegin : WHILE    { $$ = hb_comp_functions.pLast->lPCodePos; hb_compLinePushIfInside(); ++hb_comp_wWhileCounter; hb_compLoopStart(); }
            ;
 
 EndWhile   : END
