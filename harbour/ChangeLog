@@ -1,3 +1,17 @@
+19990917-04:58 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/vm/hvm.c
+    + Added WORD typedef for HARBOUR_OBJ_GENERATION section.
+  * source/rtl/memofile.c
+    + Added, this time for sure.
+  * makefile.vc
+    ! Now in alphabetical order.
+  * source/compiler/harbour.y
+    + Now the compiler shows if a message is a YACC error.
+  * source/rtl/console.c
+    + hb_max_row() now returns 23 for UNIXes and 24 otherwise.
+    % fputs(" "...) -> fputc(' '...)
+
 19990917-03:22 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/memofile.c

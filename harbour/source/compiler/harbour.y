@@ -307,7 +307,7 @@ char * _szCErrors[] =
    "Memory allocation error",
    "Memory reallocation error",
    "Freeing a NULL memory pointer",
-   "%s", /* YACC error messages */
+   "Parser says: \"%s\"",
    "Jump offset too long",
    "Can't create output file: \'%s\'",
    "Can't create preprocessed output file: \'%s\'",

@@ -156,7 +156,11 @@ USHORT hb_max_row( void )
 #ifdef HARBOUR_USE_GTAPI
    return hb_gtMaxRow();
 #else
-   return 23; /* NOTE: Intentionally 23 to match Unix terminals */
+   #if defined(HB_OS_UNIX_COMPATIBLE)
+      return 23;
+   #else
+      return 24;
+   #endif
 #endif
 }
 
@@ -498,7 +502,7 @@ void hb_setpos( USHORT row, USHORT col )
       for( uiCount = s_uiDevRow; uiCount < row; uiCount++ )
          fputs( s_szCrLf, stdout );
       for( uiCount = s_uiDevCol; uiCount < col; uiCount++ )
-         fputs( " ", stdout );
+         fputc( ' ', stdout );
 #endif
 
    s_uiDevRow = row;

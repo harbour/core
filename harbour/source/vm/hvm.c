@@ -78,6 +78,18 @@ static void    hb_vmDebuggerEndProc( void ); /* notifies the debugger for an end
 static void    hb_vmArrayNew( HB_ITEM_PTR, USHORT ); /* creates array */
 
 #ifdef HARBOUR_OBJ_GENERATION
+
+/* TODO: Remove these (WORD/DWORD) when the compiler is cleaned up from them. */
+#if defined(__IBMCPP__)
+   #undef WORD                            /* 2 bytes unsigned */
+   typedef unsigned short int WORD;
+#else
+   #if ! defined(HB_DONT_DEFINE_BASIC_TYPES)
+      #undef WORD                            /* 2 bytes unsigned */
+      typedef unsigned short int WORD;
+   #endif
+#endif
+
 static void    hb_vmProcessObjSymbols ( void ); /* process Harbour generated OBJ symbols */
 
 typedef struct

@@ -412,13 +412,13 @@ $(OBJ_DIR)\langapi.obj : $(RTL_DIR)\langapi.c
 $(OBJ_DIR)\math.obj : $(RTL_DIR)\math.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(OBJ_DIR)\memofile.obj : $(RTL_DIR)\memofile.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(RTL_DIR)\memvarbl.c : $(RTL_DIR)\memvarbl.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\memvarbl.obj : $(RTL_DIR)\memvarbl.c
-    $(CC) $(CLIBFLAGS) -Fo$@ $**
-
-$(OBJ_DIR)\memofile.obj : $(RTL_DIR)\memofile.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\memvars.obj : $(RTL_DIR)\memvars.c
