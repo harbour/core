@@ -26,7 +26,11 @@ ARCH_DOS = $(subst /,\,$(ARCH))
 MK := $(subst \,/,$(subst \~,~,$(MAKE)))
 
 ifeq ($(COMSPEC),) #location of command.com
-  COMSPEC := command.com
+  ifeq ($(OS),Windows_NT)
+    COMSPEC := cmd.exe
+  else
+    COMSPEC := command.com
+  endif
 endif
 
 RM = del
