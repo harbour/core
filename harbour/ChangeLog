@@ -1,3 +1,18 @@
+2001-06-04 17:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * contrib/libmisc/dbftools.c
+  * contrib/rdd_ads/ads0.prg
+  * contrib/rdd_ads/ads1.c
+  * contrib/rdd_ads/adsfunc.c
+  * source/lang/msgru866.c
+  * source/lang/msgruwin.c
+  * source/pp/ppcomp.c
+  * source/pp/pptable.c
+  * utils/hbpp/hbpp.c
+    * Replaced the old Harbour License and Exception with the
+      new Harbour License and Exception, with permission from
+       Alexander S.Kresin <alex@belacy.belgorod.su>.
+
 2001-06-04 16:15 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * contrib/libnf/proper.c
