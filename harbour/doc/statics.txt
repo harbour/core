@@ -1,5 +1,5 @@
 /*
- * $Id:
+ * $Id$
  */
 
   I just started implementing Classes and objects creation when I realized
