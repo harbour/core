@@ -1,4 +1,4 @@
-OBJECT oForm3 AS TForm3
+OBJECT oForm3 AS HBForm3
 
    ::Caption = "Harbour GUI Framework power"
    ::Top     = 200
