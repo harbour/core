@@ -20,6 +20,10 @@ PRG_SOURCES=\
     pickfile.prg \
     prb_stak.prg \
 
+C_SOURCES=\
+   hbmlang.c        \
+
+
 PRG_MAIN=hbmake.prg
 
 LIBS=\

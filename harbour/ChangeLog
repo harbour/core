@@ -8,6 +8,16 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-05-18 10:20 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
+  * makefile.bc
+    makefile.vc
+    utils/hbmake/Makefile
+    * Added hbmlang.c to dependencie list
+  * utils/hbmake/hbmake.prg
+    - Removed GETLANG() function and moved to an new file
+  + utils/hbmake/hbmlang.c
+    * GETLANG.c is on this file now
+
 2002-05-18 14:55 UTC+0100 J.lefebvre (Mafact) <jfl@mafact.com>
  * utils/hbmake/hbmake.prg
    added missing #include "windows.h" at the end (inline code)

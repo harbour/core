@@ -878,7 +878,7 @@ $(HBMAKE_EXE) : \
    $(HBMAKE_DIR)\ft_funcs.prg \
    $(HBMAKE_DIR)\pickarry.prg \
    $(HBMAKE_DIR)\pickfile.prg \
-   $(HBMAKE_DIR)\prb_stak.prg
+   $(HBMAKE_DIR)\prb_stak.prg 
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
    $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\  $(OBJ_DIR)\hbmake.c \
                                    $(OBJ_DIR)\hbmutils.c \
@@ -890,6 +890,7 @@ $(HBMAKE_EXE) : \
                                    $(OBJ_DIR)\pickarry.c \
                                    $(OBJ_DIR)\pickfile.c \
                                    $(OBJ_DIR)\prb_stak.c \
+                                   $(HBMAKE_DIR)\hbmlang.c \
                    -o $(HBMAKE_EXE) /link $(LDFLAGS) $(LIBS2)
 
 #
