@@ -158,12 +158,7 @@ HB_FUNC( CTOD )
       hb_retds( szDateFormat );
    }
    else
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1119, NULL, "CTOD" );
-
-      if( pResult )
-         hb_itemRelease( hb_itemReturn( pResult ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 1119, NULL, "CTOD" );
 }
 
 HB_FUNC( DTOC )
@@ -176,12 +171,7 @@ HB_FUNC( DTOC )
       hb_retc( hb_dateFormat( hb_pardsbuff( szDate, 1 ), szFormatted, hb_set.HB_SET_DATEFORMAT ) );
    }
    else
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1118, NULL, "DTOC" );
-
-      if( pResult )
-         hb_itemRelease( hb_itemReturn( pResult ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 1118, NULL, "DTOC" );
 }
 
 HB_FUNC( DTOS )
@@ -193,12 +183,7 @@ HB_FUNC( DTOS )
       hb_retc( hb_pardsbuff( szDate, 1 ) );
    }
    else
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1120, NULL, "DTOS" );
-
-      if( pResult )
-         hb_itemRelease( hb_itemReturn( pResult ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 1120, NULL, "DTOS" );
 }
 
 /* NOTE: Harbour extension, exactly the same as STOD(). */
@@ -221,12 +206,7 @@ HB_FUNC( YEAR )
       hb_retnllen( lYear, 5 );
    }
    else
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1112, NULL, "YEAR" );
-
-      if( pResult )
-         hb_itemRelease( hb_itemReturn( pResult ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 1112, NULL, "YEAR" );
 }
 
 HB_FUNC( MONTH )
@@ -242,12 +222,7 @@ HB_FUNC( MONTH )
       hb_retnllen( lMonth, 3 );
    }
    else
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1113, NULL, "MONTH" );
-
-      if( pResult )
-         hb_itemRelease( hb_itemReturn( pResult ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 1113, NULL, "MONTH" );
 }
 
 HB_FUNC( DAY )
@@ -263,12 +238,7 @@ HB_FUNC( DAY )
       hb_retnllen( lDay, 3 );
    }
    else
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1114, NULL, "DAY" );
-
-      if( pResult )
-         hb_itemRelease( hb_itemReturn( pResult ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 1114, NULL, "DAY" );
 }
 
 HB_FUNC( TIME )
@@ -305,11 +275,6 @@ HB_FUNC( DOW )
          hb_retnllen( 0, 3 );
    }
    else
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1115, NULL, "DOW" );
-
-      if( pResult )
-         hb_itemRelease( hb_itemReturn( pResult ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 1115, NULL, "DOW" );
 }
 

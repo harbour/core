@@ -605,11 +605,6 @@ HB_FUNC( TRANSFORM )
    /* If there was any parameter error, launch a runtime error */
 
    if( bError )
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1122, NULL, "TRANSFORM" );
-
-      if( pResult )
-         hb_itemRelease( hb_itemReturn( pResult ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 1122, NULL, "TRANSFORM" );
 }
 

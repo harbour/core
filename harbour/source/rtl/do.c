@@ -85,11 +85,6 @@ HB_FUNC( DO )
       hb_vmDo( uiPCount - 1 );
    }
    else
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 3012, NULL, "DO" );
-
-      if( pResult )
-         hb_itemRelease( hb_itemReturn( pResult ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, "DO" );
 }
 

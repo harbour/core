@@ -85,12 +85,7 @@ HB_FUNC( LTRIM )
       hb_retclen( szText, ulLen );
    }
    else
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1101, NULL, "LTRIM" );
-
-      if( pResult )
-         hb_itemRelease( hb_itemReturn( pResult ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 1101, NULL, "LTRIM" );
 }
 
 /* trims trailing spaces from a string */
@@ -109,13 +104,8 @@ HB_FUNC( RTRIM )
          ISLOG( 2 ) ? hb_parl( 2 ) : FALSE ) );
    }
    else
-   {
       /* NOTE: "TRIM" is right here [vszakats] */
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1100, NULL, "TRIM" );
-
-      if( pResult )
-         hb_itemRelease( hb_itemReturn( pResult ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 1100, NULL, "TRIM" );
 }
 
 /* synonymn for RTRIM */
@@ -143,12 +133,7 @@ HB_FUNC( ALLTRIM )
    }
    else
 #ifdef HB_COMPAT_C53
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 2022, NULL, "ALLTRIM" ); /* NOTE: This appeared in CA-Cl*pper 5.3 [vszakats] */
-
-      if( pResult )
-         hb_itemRelease( hb_itemReturn( pResult ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 2022, NULL, "ALLTRIM" ); /* NOTE: This appeared in CA-Cl*pper 5.3 [vszakats] */
 #else
       hb_retc( "" );
 #endif

@@ -58,12 +58,7 @@ HB_FUNC( CHR )
       hb_retclen( szChar, 1 );
    }
    else
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1104, NULL, "CHR" );
-
-      if( pResult )
-         hb_itemRelease( hb_itemReturn( pResult ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 1104, NULL, "CHR" );
 }
 
 /* converts a character value to an ASCII code */
@@ -79,11 +74,6 @@ HB_FUNC( ASC )
          hb_retni( 0 );
    }
    else
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1107, NULL, "ASC" );
-
-      if( pResult )
-         hb_itemRelease( hb_itemReturn( pResult ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 1107, NULL, "ASC" );
 }
 

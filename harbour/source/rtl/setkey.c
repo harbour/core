@@ -187,12 +187,8 @@ HB_FUNC( SETKEY )
             PHB_ITEM pIsActiveResults = sk_list_tmp->pIsActive ? hb_vmEvalBlockV( sk_list_tmp->pIsActive, 1, pKeyCode ) : NULL;
 
             if( pIsActiveResults == NULL || ! HB_IS_LOGICAL( pIsActiveResults ) || hb_itemGetL( pIsActiveResults ) )
-            {
 #endif
                hb_itemReturn( sk_list_tmp->pAction );
-#if defined( HB_EXTENSION )
-            }
-#endif
          }
       }
    }

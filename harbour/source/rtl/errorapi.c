@@ -323,11 +323,11 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
           */
          s_errorHandler->Error = pError;
          s_errorHandler->ErrorBlock = &s_errorBlock;
-         pResult = (s_errorHandler->Func)( s_errorHandler );
+         pResult = ( s_errorHandler->Func )( s_errorHandler );
          s_errorHandler->Error = NULL;
       }
       else
-          pResult = hb_itemDo( &s_errorBlock, 1, pError );
+         pResult = hb_itemDo( &s_errorBlock, 1, pError );
 
       hb_gcUnlockItem( pError );
       s_iLaunchCount--;
@@ -338,14 +338,14 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
       if( usRequest == HB_QUIT_REQUESTED )
       {
          if( pResult )
-             hb_itemRelease( pResult );
+            hb_itemRelease( pResult );
          hb_errRelease( pError );
          hb_vmQuit();
       }
       else if( usRequest == HB_BREAK_REQUESTED || usRequest == HB_ENDPROC_REQUESTED )
       {
          if( pResult )
-             hb_itemRelease( pResult );
+            hb_itemRelease( pResult );
          pResult = NULL;
       }
       else
@@ -733,11 +733,10 @@ HB_FUNC( __ERRRT_BASE )
 
 HB_FUNC( __ERRRT_SBASE )
 {
-   hb_itemRelease( hb_itemReturn(
-         hb_errRT_BASE_Subst( ( ULONG ) hb_parnl( 1 ),
-                              ( ULONG ) hb_parnl( 2 ),
-                              ISCHAR( 3 ) ? hb_parc( 3 ) : NULL,
-                              hb_parc( 4 ) ) ) );
+   hb_errRT_BASE_SubstR( ( ULONG ) hb_parnl( 1 ),
+                         ( ULONG ) hb_parnl( 2 ),
+                         ISCHAR( 3 ) ? hb_parc( 3 ) : NULL,
+                         hb_parc( 4 ) );
 }
 
 USHORT hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
@@ -777,6 +776,13 @@ PHB_ITEM hb_errRT_BASE_Subst( ULONG ulGenCode, ULONG ulSubCode, char * szDescrip
    hb_errRelease( pError );
 
    return pRetVal;
+}
+
+void hb_errRT_BASE_SubstR( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
+{
+   PHB_ITEM pError = hb_errRT_New_Subst( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+   hb_itemRelease( hb_itemReturn( hb_errLaunchSubst( pError ) ) );
+   hb_errRelease( pError );
 }
 
 USHORT hb_errRT_TERM( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOSCode, USHORT uiFlags )

@@ -97,12 +97,7 @@ HB_FUNC( LOWER )
       hb_itemFreeC( pszBuffer );
    }
    else
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1103, NULL, "LOWER" );
-
-      if( pResult )
-         hb_itemRelease( hb_itemReturn( pResult ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 1103, NULL, "LOWER" );
 }
 
 /* converts string to upper case */
@@ -120,10 +115,5 @@ HB_FUNC( UPPER )
       hb_itemFreeC( pszBuffer );
    }
    else
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1102, NULL, "UPPER" );
-
-      if( pResult )
-         hb_itemRelease( hb_itemReturn( pResult ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 1102, NULL, "UPPER" );
 }

@@ -73,11 +73,7 @@ HB_FUNC( SUBSTR )
             }
             else
             {
-               PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1110, NULL, "SUBSTR" );
-
-               if( pResult )
-                  hb_itemRelease( hb_itemReturn( pResult ) );
-
+               hb_errRT_BASE_SubstR( EG_ARG, 1110, NULL, "SUBSTR" );
                /* NOTE: Exit from inside [vszakats] */
                return;
             }
@@ -94,10 +90,5 @@ HB_FUNC( SUBSTR )
          hb_retc( "" );
    }
    else
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1110, NULL, "SUBSTR" );
-
-      if( pResult )
-         hb_itemRelease( hb_itemReturn( pResult ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 1110, NULL, "SUBSTR" );
 }

@@ -131,6 +131,7 @@ extern PHB_ITEM hb_errRT_New_Subst( USHORT uiSeverity, char * szSubSystem,
 extern USHORT   hb_errRT_BASE           ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
 extern USHORT   hb_errRT_BASE_Ext1      ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags );
 extern PHB_ITEM hb_errRT_BASE_Subst     ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
+extern void     hb_errRT_BASE_SubstR    ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
 extern USHORT   hb_errRT_TERM           ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOSCode, USHORT uiFlags );
 extern USHORT   hb_errRT_DBCMD          ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
 extern USHORT   hb_errRT_TOOLS          ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
@@ -141,16 +142,16 @@ extern void     hb_errInternal          ( ULONG ulIntCode, char * szText, char *
 struct HB_ERROR_INFO_;   /* forward declaration */
 #define HB_ERROR_HANDLE( hbfunc )   HB_ITEM_PTR hbfunc( struct HB_ERROR_INFO_ * ErrorInfo )
 typedef HB_ERROR_HANDLE( HB_ERROR_HANDLER );
-typedef HB_ERROR_HANDLER *HB_ERROR_HANDLER_PTR;
+typedef HB_ERROR_HANDLER * HB_ERROR_HANDLER_PTR;
 
 typedef struct HB_ERROR_INFO_
 {
    HB_ERROR_HANDLER_PTR Func;
    HB_ITEM_PTR Error;
    void * Cargo;
-   struct HB_ERROR_INFO_ *Previous;
+   struct HB_ERROR_INFO_ * Previous;
    HB_ITEM_PTR ErrorBlock;
-} HB_ERROR_INFO, *HB_ERROR_INFO_PTR;
+} HB_ERROR_INFO, * HB_ERROR_INFO_PTR;
 
 /*  set/get current error handler */
 extern HB_ERROR_INFO_PTR hb_errorHandler( HB_ERROR_INFO_PTR pNewHandler );

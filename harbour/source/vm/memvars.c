@@ -1140,10 +1140,7 @@ HB_FUNC( __MVGET )
       /* TODO: This should be expanded a little to report a passed incorrect
        * value to the error handler
        */
-      HB_ITEM_PTR pRetValue = hb_errRT_BASE_Subst( EG_ARG, 3009, NULL, NULL );
-
-      if( pRetValue )
-         hb_itemRelease( hb_itemReturn( pRetValue ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 3009, NULL, NULL );
    }
 }
 

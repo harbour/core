@@ -34,7 +34,6 @@
  */
 
 #include "hbapi.h"
-#include "hbapiitm.h"
 #include "hbapierr.h"
 
 HB_FUNC( TYPE )
@@ -44,11 +43,6 @@ HB_FUNC( TYPE )
    if( pItem )
       hb_retc( hb_macroGetType( pItem ) );
    else
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1121, NULL, "TYPE" );
-
-      if( pResult )
-         hb_itemRelease( hb_itemReturn( pResult ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 1121, NULL, "TYPE" );
 }
 

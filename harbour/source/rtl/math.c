@@ -116,12 +116,8 @@ HB_FUNC( EXP )
 
       if( s_internal_math_error )
       {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( s_internal_math_error, 1096, NULL, "EXP" );
-
+         hb_errRT_BASE_SubstR( s_internal_math_error, 1096, NULL, "EXP" );
          s_internal_math_error = 0;
-
-         if( pResult )
-            hb_itemRelease( hb_itemReturn( pResult ) );
       }
       else
          hb_retnd( dResult );
@@ -130,12 +126,7 @@ HB_FUNC( EXP )
 #endif
    }
    else
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1096, NULL, "EXP" );
-
-      if( pResult )
-         hb_itemRelease( hb_itemReturn( pResult ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 1096, NULL, "EXP" );
 }
 
 HB_FUNC( LOG )
@@ -147,12 +138,8 @@ HB_FUNC( LOG )
 
       if( s_internal_math_error )
       {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( s_internal_math_error, 1095, NULL, "LOG" );
-
+         hb_errRT_BASE_SubstR( s_internal_math_error, 1095, NULL, "LOG" );
          s_internal_math_error = 0;
-
-         if( pResult )
-            hb_itemRelease( hb_itemReturn( pResult ) );
       }
       else
          hb_retnd( dResult );
@@ -167,12 +154,7 @@ HB_FUNC( LOG )
 #endif
    }
    else
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1095, NULL, "LOG" );
-
-      if( pResult )
-         hb_itemRelease( hb_itemReturn( pResult ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 1095, NULL, "LOG" );
 }
 
 HB_FUNC( SQRT )
@@ -184,12 +166,8 @@ HB_FUNC( SQRT )
 
       if( s_internal_math_error )
       {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( s_internal_math_error, 1097, NULL, "SQRT" );
-
+         hb_errRT_BASE_SubstR( s_internal_math_error, 1097, NULL, "SQRT" );
          s_internal_math_error = 0;
-
-         if( pResult )
-            hb_itemRelease( hb_itemReturn( pResult ) );
       }
       else
          hb_retnd( dResult );
@@ -200,11 +178,6 @@ HB_FUNC( SQRT )
 #endif
    }
    else
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1097, NULL, "SQRT" );
-
-      if( pResult )
-         hb_itemRelease( hb_itemReturn( pResult ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 1097, NULL, "SQRT" );
 }
 

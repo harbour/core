@@ -106,18 +106,13 @@ HB_FUNC( STRZERO )
             hb_retc( "" );
       }
       else
-      {
 #ifdef HB_C52_STRICT
          /* NOTE: In CA-Cl*pper STRZERO() is written in Clipper, and will call
                   STR() to do the job, the error (if any) will also be thrown
                   by STR().  [vszakats] */
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1099, NULL, "STR" );
+         hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "STR" );
 #else
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 9999, NULL, "STRZERO" );
+         hb_errRT_BASE_SubstR( EG_ARG, 9999, NULL, "STRZERO" );
 #endif
-
-         if( pResult )
-            hb_itemRelease( hb_itemReturn( pResult ) );
-      }
    }
 }

@@ -55,11 +55,6 @@ HB_FUNC( LEFT )
       hb_retclen( hb_itemGetCPtr( pText ), lLen );
    }
    else
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1124, NULL, "LEFT" );
-
-      if( pResult )
-         hb_itemRelease( hb_itemReturn( pResult ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 1124, NULL, "LEFT" );
 }
 

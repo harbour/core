@@ -2780,20 +2780,12 @@ void hb_vmDo( USHORT uiParams )
 
       if( pFunc )
          pFunc();
+      else if( pSym->szName[ 0 ] == '_' )
+         hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1 );
       else
-      {
-         PHB_ITEM pResult;
-
-         if( pSym->szName[ 0 ] == '_' )
-            pResult = hb_errRT_BASE_Subst( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1 );
-         else
-            pResult = hb_errRT_BASE_Subst( EG_NOMETHOD, 1004, NULL, pSym->szName );
-
-         if( pResult )
-            hb_itemRelease( hb_itemReturn( pResult ) );
-      }
+         hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName );
    }
-   else                     /* it is a function */
+   else /* it is a function */
    {
       pFunc = pSym->pFunPtr;
 
@@ -2875,20 +2867,12 @@ void hb_vmSend( USHORT uiParams )
 
       if( pFunc )
          pFunc();
+      else if( pSym->szName[ 0 ] == '_' )
+         hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1 );
       else
-      {
-         PHB_ITEM pResult;
-
-         if( pSym->szName[ 0 ] == '_' )
-            pResult = hb_errRT_BASE_Subst( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1 );
-         else
-            pResult = hb_errRT_BASE_Subst( EG_NOMETHOD, 1004, NULL, pSym->szName );
-
-         if( pResult )
-            hb_itemRelease( hb_itemReturn( pResult ) );
-      }
+         hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName );
    }
-   else                     /* it is a function */
+   else /* it is a function */
    {
       pFunc = pSym->pFunPtr;
 

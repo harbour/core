@@ -50,11 +50,6 @@ HB_FUNC( AT )
                           hb_itemGetCPtr( pText ), hb_itemGetCLen( pText ) ) );
    }
    else
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1108, NULL, "AT" );
-
-      if( pResult )
-         hb_itemRelease( hb_itemReturn( pResult ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, "AT" );
 }
 

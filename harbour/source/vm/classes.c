@@ -1825,14 +1825,7 @@ HB_FUNC( __EVAL )
       hb_vmDo( ( USHORT ) hb_pcount() );                       /* Self is also an argument */
    }
    else
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_NOMETHOD, 1004, NULL, "EVAL" );
-
-      if( pResult )
-         hb_itemRelease( hb_itemReturn( pResult ) );
-   }
-
-   hb_itemRelease( pObject );
+      hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, "EVAL" );
 }
 
 /* ================================================ */
@@ -1997,12 +1990,7 @@ static HARBOUR hb___msgEval( void )
       hb_vmDo( ( USHORT ) hb_pcount() );                       /* Self is also an argument */
    }
    else
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_NOMETHOD, 1004, NULL, "EVAL" );
-
-      if( pResult )
-         hb_itemRelease( hb_itemReturn( pResult ) );
-   }
+      hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, "EVAL" );
 }
 
 /*

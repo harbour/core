@@ -105,12 +105,7 @@ HB_FUNC( AADD )
          hb_errRT_BASE( EG_BOUND, 1187, NULL, "AADD" );
    }
    else
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1123, NULL, "AADD" );
-
-      if( pResult )
-         hb_itemRelease( hb_itemReturn( pResult ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 1123, NULL, "AADD" );
 }
 
 /* NOTE: CA-Cl*pper 5.3 and older will return NIL on bad parameter, 5.3a,b

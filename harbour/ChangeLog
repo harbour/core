@@ -1,3 +1,47 @@
+2000-07-25 13:47 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/errorapi.c
+   * include/hbapierr.h
+     + hb_errRT_BASE_SubstR() added, which will automatically return the 
+       substituted value.
+
+   * source/rtl/abs.c
+   * source/rtl/at.c
+   * source/rtl/chrasc.c
+   * source/rtl/datec.c
+   * source/rtl/dateshb.c
+   * source/rtl/do.c
+   * source/rtl/left.c
+   * source/rtl/len.c
+   * source/rtl/math.c
+   * source/rtl/minmax.c
+   * source/rtl/mod.c
+   * source/rtl/replic.c
+   * source/rtl/round.c
+   * source/rtl/space.c
+   * source/rtl/str.c
+   * source/rtl/strcase.c
+   * source/rtl/strtran.c
+   * source/rtl/strzero.c
+   * source/rtl/substr.c
+   * source/rtl/transfrm.c
+   * source/rtl/trim.c
+   * source/rtl/type.c
+   * source/rtl/val.c
+   * source/vm/arrayshb.c
+   * source/vm/classes.c
+   * source/vm/eval.c
+   * source/vm/hvm.c
+   * source/vm/memvars.c
+   * source/vm/runner.c
+     % hb_errRT_BASE_Subst() -> hb_itemReturn() -> hb_itemRelease() constructs
+       replaced with a simple call to hb_errRT_BASE_SubstR(), this way many 
+       local variables were removed, the code got smaller and a bit faster.
+       The error handling code in the RTL functions is very simple now.
+
+   * source/rtl/setkey.c
+     * Minor formatting.
+
 2000-07-24 18:25 UTC+0800 Ron Pinkas <ron@profit-master.com>
    ! tests\test.dbf
      ! Recovered previous version.
