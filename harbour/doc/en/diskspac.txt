@@ -17,7 +17,7 @@
  *  $FUNCNAME$
  *      DISKSPACE()
  *  $CATEGORY$
- *      Low level disk information
+ *      Low level
  *  $ONELINER$
  *      Get the amount of space available on a disk
  *  $SYNTAX$

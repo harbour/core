@@ -19,7 +19,7 @@
  *  $FUNCNAME$
  *      __dbCopyStruct()
  *  $CATEGORY$
- *      Databases
+ *      Database
  *  $ONELINER$
  *      Create a new database based on current database structure
  *  $SYNTAX$
@@ -61,7 +61,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      COPY STRUCTURE,COPY STRUCTURE EXTENDED,DBCREATE(),DBSTRUCT(),__dbCopyXStruct(),__dbCreate(),__dbStructFilter()
  *  $END$
@@ -117,7 +117,7 @@
  *  $FUNCNAME$
  *      __dbCopyXStruct()
  *  $CATEGORY$
- *      Databases
+ *      Database
  *  $ONELINER$
  *      Copy current database structure into a definition file
  *  $SYNTAX$
@@ -183,7 +183,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE,CREATE FROM,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCreate()
  *  $END$
@@ -263,7 +263,7 @@
  *  $FUNCNAME$
  *      __dbCreate()
  *  $CATEGORY$
- *      Databases
+ *      Database
  *  $ONELINER$
  *      Create structure extended file or use one to create new file
  *  $SYNTAX$
@@ -364,7 +364,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE,CREATE FROM,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCopyXStruct()
  *  $END$
@@ -510,7 +510,7 @@
  *  $FUNCNAME$
  *      __FLEDIT()*
  *  $CATEGORY$
- *      Databases
+ *      Database
  *  $ONELINER$
  *      Filter a database structure array
  *  $SYNTAX$
@@ -590,7 +590,7 @@
  *      All
  *  $FILES$
  *      Header file is dbstruct.ch
- *      Library is rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbStructFilter()
  *  $END$
@@ -600,7 +600,7 @@
  *  $FUNCNAME$
  *      __dbStructFilter()
  *  $CATEGORY$
- *      Databases
+ *      Database
  *  $ONELINER$
  *      Filter a database structure array
  *  $SYNTAX$
@@ -672,7 +672,7 @@
  *      All
  *  $FILES$
  *      Header file is dbstruct.ch
- *      Library is rdd.lib
+ *      Library is rdd
  *  $SEEALSO$
  *      DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__FLEDIT()*
  *  $END$

@@ -21,7 +21,7 @@
  *  $FUNCNAME$
  *      FOPEN()
  *  $CATEGORY$
- *      Low level file handling
+ *      Low level
  *  $ONELINER$
  *      Open a file.
  *  $SYNTAX$
@@ -68,7 +68,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant   
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *      Header  is fileio.ch
  *  $SEEALSO$
  *      FCREATE(),FERROR(),FCLOSE()
@@ -79,7 +79,7 @@
  *  $FUNCNAME$
  *      FCREATE()
  *  $CATEGORY$
- *      Low level file handling
+ *      Low level
  *  $ONELINER$
  *      Creates a file
  *  $SYNTAX$
@@ -123,7 +123,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant   
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *      Header is fileio.ch
  *  $SEEALSO$
  *      FCLOSE(),FOPEN(),FWRITE(),FREAD(),FERROR()
@@ -134,7 +134,7 @@
  *  $FUNCNAME$
  *      FREAD()
  *  $CATEGORY$
- *      Low level file handling
+ *      Low level
  *  $ONELINER$
  *      Reads a specified number of bytes from a file.
  *  $SYNTAX$
@@ -184,7 +184,7 @@
  *     This function is not CA-Clipper compliant since may can read
  *     strings greather the 65K depending of platform.   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is Rtl
  *  $SEEALSO$
  *     BIN2I(),BIN2L(),BIN2W(),FERROR(),FWRITE()
  *  $END$
@@ -194,7 +194,7 @@
  *  $FUNCNAME$
  *      FWRITE()
  *  $CATEGORY$
- *      Low level file handling
+ *      Low level
  *  $ONELINER$
  *      Writes characters to a file
  *  $SYNTAX$
@@ -238,7 +238,7 @@
  *      This function is not CA-Clipper compatile since
  *      it can writes strings greather the 64K   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is Rtl
  *  $SEEALSO$
  *      FCLOSE(),FCREATE(),FERROR(),FOPEN(),I2BIN(),L2BIN()
  *  $END$
@@ -248,7 +248,7 @@
  *  $FUNCNAME$
  *      FERROR()
  *  $CATEGORY$
- *      Low level file handling
+ *      Low level
  *  $ONELINER$
  *      Reports the error status of low-level file functions
  *  $SYNTAX$
@@ -297,7 +297,7 @@
  *  $COMPLIANCE$
  *     This function is CA-Clipper compatible   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is Rtl
  *  $SEEALSO$
  *     FCLOSE(),FERASE(),FOPEN(),FWRITE()
  *  $END$
@@ -307,7 +307,7 @@
  *  $FUNCNAME$
  *     FCLOSE()
  *  $CATEGORY$
- *     Low level file handling
+ *     Low level
  *  $ONELINER$
  *     Closes an open file
  *  $SYNTAX$
@@ -331,7 +331,7 @@
  *  $COMPLIANCE$
  *     This function is CA-Clipper compliant   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is Rtl
  *  $SEEALSO$
  *     FOPEN(),FCREATE(),FREAD(),FWRITE(),FERROR()
  *  $END$
@@ -341,7 +341,7 @@
  *  $FUNCNAME$
  *      FERASE()
  *  $CATEGORY$
- *      Low level file handling
+ *      Low level
  *  $ONELINER$
  *      Erase a file from disk
  *  $SYNTAX$
@@ -377,7 +377,7 @@
  *  $COMPLIANCE$
  *     This function is CA-Clipper Compatible   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is Rtl
  *  $SEEALSO$
  *     FERROR(),FRENAME()
  *  $END$
@@ -431,7 +431,7 @@
  *  $COMPLIANCE$
  *     This function is CA-Clipper compliant   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is Rtl
  *  $SEEALSO$
  *     ERASE,FERASE(),FERROR(),FILE(),RENAME
  *  $END$
@@ -441,7 +441,7 @@
  *  $FUNCNAME$
  *      FSEEK()
  *  $CATEGORY$
- *      Low level file handling
+ *      Low level
  *  $ONELINER$
  *      Positions the file pointer in a file.
  *  $SYNTAX$
@@ -507,7 +507,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant.   
  *  $FILES$
- *      Library is rtl.lib
+ *      Library is rtl
  *      Header is fileio.ch
  *  $SEEALSO$
  *      FCREATE(),FERROR(),FOPEN(),FREAD(),FREADSTR(),FWRITE()
@@ -547,7 +547,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compatible.   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is Rtl
  *  $SEEALSO$
  *      SET PATH,SET DEFAULT,SET()
  *  $END$
@@ -557,7 +557,7 @@
  *  $FUNCNAME$
  *      FREADSTR()
  *  $CATEGORY$
- *      Low level file handling
+ *      Low level
  *  $ONELINER$
  *      Reads a string from a file.
  *  $SYNTAX$
@@ -599,7 +599,7 @@
  *      This function is not CA-Clipper compliant since may read
  *      strings greather the 65K depending of platform.   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is Rtl
  *  $SEEALSO$
  *      BIN2I(),BIN2L(),BIN2W(),FERROR(),FREAD(),FSEEK()
  *  $END$
@@ -637,7 +637,7 @@
  *  $COMPLIANCE$
  *      This command is CA-Clipper compatible   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is Rtl
  *  $SEEALSO$
  *      CURDIR(),ERASE,FILE(),FERASE(),FRENAME()
  *  $END$
@@ -759,7 +759,7 @@
  *  $COMPLIANCE$
  *      __TYPEFILE() works exactly like CA-Clipper's __TYPEFILE()   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is Rtl
  *  $SEEALSO$
  *      COPY FILE,SET DEFAULT,SET PATH,SET PRINTER,TYPE
  *  $END$
@@ -863,7 +863,7 @@
  *  $PLATFORMS$
  *      ALL   
  *  $FILES$
- *      Library is Rtl.lib
+ *      Library is Rtl
  *  $SEEALSO$
  *      FILE()
  *  $END$
