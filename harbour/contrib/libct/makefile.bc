@@ -114,11 +114,13 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctchksum.obj \
    $(OBJ_DIR)\ctcolton.obj \
    $(OBJ_DIR)\ctcrypt.obj \
-   $(OBJ_DIR)\ctposupp.obj \
    $(OBJ_DIR)\finan.obj \
    $(OBJ_DIR)\justify.obj \
    $(OBJ_DIR)\math.obj \
    $(OBJ_DIR)\num1.obj \
+   $(OBJ_DIR)\pos1.obj \
+   $(OBJ_DIR)\pos2.obj \
+   $(OBJ_DIR)\posdiff.obj \
    $(OBJ_DIR)\relation.obj \
    $(OBJ_DIR)\token1.obj \
    $(OBJ_DIR)\trig.obj \
@@ -239,10 +241,6 @@ $(OBJ_DIR)\ctcrypt.obj : $(TOOLS_DIR)\ctcrypt.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\ctposupp.obj : $(TOOLS_DIR)\ctposupp.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
 $(OBJ_DIR)\finan.obj : $(TOOLS_DIR)\finan.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
@@ -256,6 +254,18 @@ $(OBJ_DIR)\math.obj : $(TOOLS_DIR)\math.c
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\num1.obj : $(TOOLS_DIR)\num1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\pos1.obj : $(TOOLS_DIR)\pos1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\pos2.obj : $(TOOLS_DIR)\pos2.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\posdiff.obj : $(TOOLS_DIR)\posdiff.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 

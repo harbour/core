@@ -29,11 +29,13 @@ C_SOURCES = \
         ctchksum.c \
         ctcolton.c \
         ctcrypt.c \
-        ctposupp.c \
-	finan.c \
+        finan.c \
 	justify.c \
 	math.c \
 	num1.c \
+	pos1.c \
+	pos2.c \
+	posdiff.c \
 	relation.c \
         token1.c \
 	trig.c \

@@ -37,6 +37,8 @@ Martin Vogel <vogel@inttec.de>
 
 + CHARSUB()    subtracts corresponding ASCII values
 
++ COSH()       hyperbolic cosine 
+
 + CSETARGERR() set behaviour on argument errors
 
 + CTINIT()     library init function
@@ -47,6 +49,10 @@ Martin Vogel <vogel@inttec.de>
                can store the acutal wildcard character in it
 
 + SETMATHERR() math error handling
+
++ SINH()       hyperbolic sine
+
++ TANH()       hyperbolic tangent
 
 * TOKEN()      New 5th and 6th parameter where the function can store
                the tokenizer before and after the extracted token.
