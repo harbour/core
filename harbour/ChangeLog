@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-08-01 14:38 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/rtl/filesys.c
+     ! Out of bound buffer access fixed. (I couldn't test this)
+       (Thanks to Chen Kedem)
+
 2004-07-27 20:41 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * include/hbclass.ch
     + Added a previous #undef _HB_CLS_FUNCNAME for multiple classes

@@ -1716,9 +1716,16 @@ USHORT  HB_EXPORT hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen
                so we don't need to strip it. [vszakats] */
 
       if( pbyStart[ 1 ] == ':' )
+      {
          pbyStart += 2;
+         ulLen -= 2;
+      }
+
       if( strchr( OS_PATH_DELIMITER_LIST, pbyStart[ 0 ] ) )
+      {
          pbyStart++;
+         ulLen--;
+      }
 
       if( pbyBuffer != pbyStart )
          memmove( pbyBuffer, pbyStart, ulLen );
