@@ -1,3 +1,17 @@
+19991113-13:49 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/arrays.c
+    source/rtl/console.c
+    source/rtl/dates.c
+    source/rtl/do.c
+    source/rtl/filesys.c
+    source/rtl/inkey.c
+    source/rtl/math.c
+    source/rtl/strings.c
+    source/rtl/transfrm.c
+    source/vm/hvm.c
+    doc/subcodes.txt 
+    % Removed the runtime argument count checks.
+
 19991113-13:25 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/extend.c
     include/extend.h
@@ -24,7 +38,7 @@
 19991113-03:23 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/itemapi.c
     % hb_evalNew(), hb_evalPutParam(), hb_evalRelease(), hb_itemRelease(),
-      hb_itemFreeC() - Variables and double initializations elimiated, faster, 
+      hb_itemFreeC() - Variables and double initializations elimiated, faster,
       simpler.
   * source/rtl/dates.c
     - DTOS() optimalization removed, it's now always 100% Clipper compatible,
@@ -52,13 +66,13 @@
 19991112-01:35 GMT+1 Victor Szel <info@szelvesz.hu>
    * config/w32/mingw32.cf
      - "-g" switch removed, so now no debug info will be included by default.
-       This makes the generated binaries to be much smaller, and the make 
-       process mych faster. 
-       WARNING! If you need the debug functionality please use the C_USR=-g 
+       This makes the generated binaries to be much smaller, and the make
+       process mych faster.
+       WARNING! If you need the debug functionality please use the C_USR=-g
        envvar.
      ! Fixed comment explaining why the USER32 lib is needed.
-   + source/rtl/natmsg/msgzhbig.c 
-   + source/rtl/natmsg/msgzhgb.c 
+   + source/rtl/natmsg/msgzhbig.c
+   + source/rtl/natmsg/msgzhgb.c
    * source/rtl/msgxxx.c
      + Chinese-GB and Chinese-BIG5 Language Modules added
        Thanks to Dongming Wang <dongming@km169.net>
@@ -203,25 +217,25 @@
 
 Tue Nov 09 11:56:05 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* include/hbsetup.h:
-	* source/rtl/gt/gtsln.c:
-	* source/rtl/gtxxx.c:
-	* source/rtl/mousexxx.c:
-	Added an initial implementation of GT over S-lang.
+        * include/hbsetup.h:
+        * source/rtl/gt/gtsln.c:
+        * source/rtl/gtxxx.c:
+        * source/rtl/mousexxx.c:
+        Added an initial implementation of GT over S-lang.
 
-	* source/rtl/inkey.c:
-	Changed the order in which the #ifdef/#endif checks are done, to
-	make sure the curses and S-lang implementations are picked up
-	correctly.
+        * source/rtl/inkey.c:
+        Changed the order in which the #ifdef/#endif checks are done, to
+        make sure the curses and S-lang implementations are picked up
+        correctly.
 
-	* config/linux/gcc.cf:
-	* config/w32/gcc.cf:
-	* config/w32/mingw32.cf:
-	Added initial support for easily switching between curses and
-	slang. This could be vastly improved.
+        * config/linux/gcc.cf:
+        * config/w32/gcc.cf:
+        * config/w32/mingw32.cf:
+        Added initial support for easily switching between curses and
+        slang. This could be vastly improved.
 
-	* tests/testbrw.prg:
-	Added a piece of code bound to K_TAB, just for the fun of it...
+        * tests/testbrw.prg:
+        Added a piece of code bound to K_TAB, just for the fun of it...
 
 19991109-01:58 GMT+1 Victor Szel <info@szelvesz.hu>
   * samples/Makefile
@@ -307,7 +321,7 @@ Tue Nov 09 11:56:05 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 19991105-14:07 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/codebloc.prg
-	* memory occupied by detached local variables is properly released now
+        * memory occupied by detached local variables is properly released now
 
 19991104-23:45 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/filesys.c
@@ -329,78 +343,78 @@ Tue Nov 09 11:56:05 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Thu Nov 04 14:32:06 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/common/hbtrace.c:
-	* doc/tracing.txt:
-	Added the possibility to direct tracing output to a file by
-	specifying its name in the HB_TR_OUTPUT environment variable. The
-	default is stderr.
+        * source/common/hbtrace.c:
+        * doc/tracing.txt:
+        Added the possibility to direct tracing output to a file by
+        specifying its name in the HB_TR_OUTPUT environment variable. The
+        default is stderr.
 
 Thu Nov 04 13:49:23 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* include/hbtrace.h:
-	* source/common/hbtrace.c:
-	* doc/tracing.txt:
-	Implemented a better way of tracing with support for several
-	levels (ALWAYS, FATAL, ERROR, WARNING, INFO and DEBUG), efficient
-	compile-out of unwanted levels and level control using an
-	environment variable at run-time. See doc/tracing.txt for detailed
-	information.
+        * include/hbtrace.h:
+        * source/common/hbtrace.c:
+        * doc/tracing.txt:
+        Implemented a better way of tracing with support for several
+        levels (ALWAYS, FATAL, ERROR, WARNING, INFO and DEBUG), efficient
+        compile-out of unwanted levels and level control using an
+        environment variable at run-time. See doc/tracing.txt for detailed
+        information.
 
-	* source/pp/hbpp.c:
-	* source/pp/hbppint.c:
-	* source/pp/hbpplib.c:
-	* source/pp/stdalone/hbpp.c:
-	* source/rdd/dbcmd.c:
-	* source/rdd/dbf1.c:
-	* source/rdd/dbfcdx/dbfcdx1.c:
-	* source/rtl/arrays.c:
-	* source/rtl/classes.c:
-	* source/rtl/codebloc.c:
-	* source/rtl/console.c:
-	* source/rtl/copyfile.c:
-	* source/rtl/dates.c:
-	* source/rtl/descend.c:
-	* source/rtl/dir.c:
-	* source/rtl/environ.c:
-	* source/rtl/errorapi.c:
-	* source/rtl/extend.c:
-	* source/rtl/filesys.c:
-	* source/rtl/fm.c:
-	* source/rtl/gtapi.c:
-	* source/rtl/hardcr.c:
-	* source/rtl/inkey.c:
-	* source/rtl/itemapi.c:
-	* source/rtl/langapi.c:
-	* source/rtl/math.c:
-	* source/rtl/memvars.c:
-	* source/rtl/mouseapi.c:
-	* source/rtl/mtran.c:
-	* source/rtl/natmsg.c:
-	* source/rtl/samples.c:
-	* source/rtl/set.c:
-	* source/rtl/setcolor.c:
-	* source/rtl/strings.c:
-	* source/rtl/tone.c:
-	* source/rtl/transfrm.c:
-	* source/rtl/gt/gt_tpl.c:
-	* source/rtl/gt/gtcrs.c:
-	* source/rtl/gt/gtdos.c:
-	* source/rtl/gt/gtos2.c:
-	* source/rtl/gt/gtstd.c:
-	* source/rtl/gt/gtwin.c:
-	* source/runner/runlib.c:
-	* source/tools/dates2.c:
-	* source/tools/hb_f.c:
-	* source/tools/strasint.c:
-	* source/tools/stringsx.c:
-	* source/vm/cmdarg.c:
-	* source/vm/debug.c:
-	* source/vm/dynsym.c:
-	* source/vm/hvm.c:
-	* source/vm/initsymb.c:
-	* source/vm/mainstd.c:
-	* source/vm/mainwin.c:
-	Changed calls to HB_TRACE to incorporate the new level parameter.
+        * source/pp/hbpp.c:
+        * source/pp/hbppint.c:
+        * source/pp/hbpplib.c:
+        * source/pp/stdalone/hbpp.c:
+        * source/rdd/dbcmd.c:
+        * source/rdd/dbf1.c:
+        * source/rdd/dbfcdx/dbfcdx1.c:
+        * source/rtl/arrays.c:
+        * source/rtl/classes.c:
+        * source/rtl/codebloc.c:
+        * source/rtl/console.c:
+        * source/rtl/copyfile.c:
+        * source/rtl/dates.c:
+        * source/rtl/descend.c:
+        * source/rtl/dir.c:
+        * source/rtl/environ.c:
+        * source/rtl/errorapi.c:
+        * source/rtl/extend.c:
+        * source/rtl/filesys.c:
+        * source/rtl/fm.c:
+        * source/rtl/gtapi.c:
+        * source/rtl/hardcr.c:
+        * source/rtl/inkey.c:
+        * source/rtl/itemapi.c:
+        * source/rtl/langapi.c:
+        * source/rtl/math.c:
+        * source/rtl/memvars.c:
+        * source/rtl/mouseapi.c:
+        * source/rtl/mtran.c:
+        * source/rtl/natmsg.c:
+        * source/rtl/samples.c:
+        * source/rtl/set.c:
+        * source/rtl/setcolor.c:
+        * source/rtl/strings.c:
+        * source/rtl/tone.c:
+        * source/rtl/transfrm.c:
+        * source/rtl/gt/gt_tpl.c:
+        * source/rtl/gt/gtcrs.c:
+        * source/rtl/gt/gtdos.c:
+        * source/rtl/gt/gtos2.c:
+        * source/rtl/gt/gtstd.c:
+        * source/rtl/gt/gtwin.c:
+        * source/runner/runlib.c:
+        * source/tools/dates2.c:
+        * source/tools/hb_f.c:
+        * source/tools/strasint.c:
+        * source/tools/stringsx.c:
+        * source/vm/cmdarg.c:
+        * source/vm/debug.c:
+        * source/vm/dynsym.c:
+        * source/vm/hvm.c:
+        * source/vm/initsymb.c:
+        * source/vm/mainstd.c:
+        * source/vm/mainwin.c:
+        Changed calls to HB_TRACE to incorporate the new level parameter.
 
 19991103-22:38 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/filesys.c
@@ -416,13 +430,13 @@ Thu Nov 04 13:49:23 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Wed Nov 03 18:38:03 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* tests/testbrdb.prg:
-	The test now restores the color setting and does a CLS before
-	exiting.
+        * tests/testbrdb.prg:
+        The test now restores the color setting and does a CLS before
+        exiting.
 
-	* tests/testbrw.prg:
-	The test now remembers its device position, cursor setting and
-	color and restores everything before exiting.
+        * tests/testbrw.prg:
+        The test now remembers its device position, cursor setting and
+        color and restores everything before exiting.
 
 19991103-07:28 GMT+1 Antonio Linares
    * source/rtl/classes.c
@@ -545,31 +559,31 @@ Wed Nov 03 18:38:03 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Tue Oct 26 17:16:43 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/common/hbtrace.c:
-	Now it is REALLY efficient; no copying, nothing.
+        * source/common/hbtrace.c:
+        Now it is REALLY efficient; no copying, nothing.
 
-	* source/rtl/codebloc.c:
-	* source/rtl/dir.c:
-	* source/rtl/filesys.c:
-	* source/rtl/inkey.c:
-	* source/rtl/memvars.c:
-	* source/rtl/set.c:
-	* source/vm/hvm.c:
-	Got rid of other ways of tracing. Hopefully now HB_TRACE() is the
-	only, standard way used in Harbour.
+        * source/rtl/codebloc.c:
+        * source/rtl/dir.c:
+        * source/rtl/filesys.c:
+        * source/rtl/inkey.c:
+        * source/rtl/memvars.c:
+        * source/rtl/set.c:
+        * source/vm/hvm.c:
+        Got rid of other ways of tracing. Hopefully now HB_TRACE() is the
+        only, standard way used in Harbour.
 
-	* source/rtl/gt/gt_tpl.c:
-	* source/rtl/gt/gtdos.c:
-	* source/rtl/gt/gtos2.c:
-	* source/rtl/gt/gtstd.c:
-	* source/rtl/gt/gtwin.c:
-	Made sure all the GT implementations (including the template) have
-	proper HB_TRACE() calls.
+        * source/rtl/gt/gt_tpl.c:
+        * source/rtl/gt/gtdos.c:
+        * source/rtl/gt/gtos2.c:
+        * source/rtl/gt/gtstd.c:
+        * source/rtl/gt/gtwin.c:
+        Made sure all the GT implementations (including the template) have
+        proper HB_TRACE() calls.
 
 Tue Oct 26 13:20:46 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/runner/runlib.c:
-	Added HB_TRACE() calls to the RUNNER library.
+        * source/runner/runlib.c:
+        Added HB_TRACE() calls to the RUNNER library.
 
 19991026-18:10 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/gt/gtwin.c
@@ -587,29 +601,29 @@ Tue Oct 26 13:20:46 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Tue Oct 26 13:11:19 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/tools/dates2.c:
-	* source/tools/hb_f.c:
-	* source/tools/strasint.c:
-	* source/tools/stringsx.c:
-	Added HB_TRACE() calls to the TOOLS library.
+        * source/tools/dates2.c:
+        * source/tools/hb_f.c:
+        * source/tools/strasint.c:
+        * source/tools/stringsx.c:
+        Added HB_TRACE() calls to the TOOLS library.
 
 Tue Oct 26 12:55:49 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/rdd/dbcmd.c:
-	* source/rdd/dbf1.c:
-	* source/rdd/dbfcdx/dbfcdx1.c:
-	Added HB_TRACE() calls to the RDD library.
+        * source/rdd/dbcmd.c:
+        * source/rdd/dbf1.c:
+        * source/rdd/dbfcdx/dbfcdx1.c:
+        Added HB_TRACE() calls to the RDD library.
 
 Tue Oct 26 12:15:01 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/vm/cmdarg.c:
-	* source/vm/debug.c:
-	* source/vm/dynsym.c:
-	* source/vm/hvm.c:
-	* source/vm/initsymb.c:
-	* source/vm/mainstd.c:
-	* source/vm/mainwin.c:
-	Added HB_TRACE() calls to the VM.
+        * source/vm/cmdarg.c:
+        * source/vm/debug.c:
+        * source/vm/dynsym.c:
+        * source/vm/hvm.c:
+        * source/vm/initsymb.c:
+        * source/vm/mainstd.c:
+        * source/vm/mainwin.c:
+        Added HB_TRACE() calls to the VM.
 
 19991026-14:07 GMT+1 Victor Szel <info@szelvesz.hu>
   * include/itemapi.h

@@ -601,47 +601,26 @@ HARBOUR HB_QOUT( void )
 
 HARBOUR HB_SETPOS( void ) /* Sets the screen position */
 {
-   if( hb_pcount() == 2 )
-   {
-      if( ISNUM( 1 ) && ISNUM( 2 ) )
-      {
-         /* Set the new screen position */
-         hb_setpos( hb_parni( 1 ), hb_parni( 2 ) );
-      }
-   }
-   else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "SETPOS" ); /* NOTE: Clipper catches this at compile time! */
+   if( ISNUM( 1 ) && ISNUM( 2 ) )
+      hb_setpos( hb_parni( 1 ), hb_parni( 2 ) );
 }
 
 /* Move the screen position to the right by one column */
 HARBOUR HB_SETPOSBS( void )
 {
-   if( hb_pcount() == 0 )
-   {
 #ifdef HARBOUR_USE_GTAPI
-      SHORT iRow, iCol;
+   SHORT iRow, iCol;
 
-      /* NOTE: Clipper does no checks about reaching the border or anything */
-      hb_gtGetPos( &iRow, &iCol );
-      hb_gtSetPos( iRow, iCol + 1 );
+   /* NOTE: Clipper does no checks about reaching the border or anything */
+   hb_gtGetPos( &iRow, &iCol );
+   hb_gtSetPos( iRow, iCol + 1 );
 #endif
-   }
-   else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "SETPOSBS" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 HARBOUR HB_DEVPOS( void ) /* Sets the screen and/or printer position */
 {
-   if( hb_pcount() == 2 )
-   {
-      if( ISNUM( 1 ) && ISNUM( 2 ) )
-      {
-         /* Set the new screen position */
-         hb_devpos( hb_parni( 1 ), hb_parni( 2 ) );
-      }
-   }
-   else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "DEVPOS" ); /* NOTE: Clipper catches this at compile time! */
+   if( ISNUM( 1 ) && ISNUM( 2 ) )
+      hb_devpos( hb_parni( 1 ), hb_parni( 2 ) );
 }
 
 HARBOUR HB_DEVOUT( void ) /* writes a single value to the current device (screen or printer), but is not affected by SET ALTERNATE */
@@ -734,18 +713,12 @@ HARBOUR HB___EJECT( void ) /* Ejects the current page from the printer */
 
 HARBOUR HB_PROW( void ) /* Returns the current printer row position */
 {
-   if( hb_pcount() == 0 )
-      hb_retni( s_uiPRow );
-   else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "PROW" ); /* NOTE: Clipper catches this at compile time! */
+   hb_retni( s_uiPRow );
 }
 
 HARBOUR HB_PCOL( void ) /* Returns the current printer row position */
 {
-   if( hb_pcount() == 0 )
-      hb_retni( s_uiPCol );
-   else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "PCOL" ); /* NOTE: Clipper catches this at compile time! */
+   hb_retni( s_uiPCol );
 }
 
 HARBOUR HB_SETPRC( void ) /* Sets the current printer row and column positions */
@@ -814,28 +787,18 @@ HARBOUR HB_MAXCOL( void ) /* Return the maximum screen column number (zero origi
 
 HARBOUR HB_ROW( void ) /* Return the current screen row position (zero origin) */
 {
-   if( hb_pcount() == 0 )
-   {
 #ifdef HARBOUR_USE_GTAPI
-      hb_gtGetPos( &s_iDevRow, &s_iDevCol );
+   hb_gtGetPos( &s_iDevRow, &s_iDevCol );
 #endif
-      hb_retni( s_iDevRow );
-   }
-   else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "ROW" ); /* NOTE: Clipper catches this at compile time! */
+   hb_retni( s_iDevRow );
 }
 
 HARBOUR HB_COL( void ) /* Return the current screen column position (zero origin) */
 {
-   if( hb_pcount() == 0 )
-   {
 #ifdef HARBOUR_USE_GTAPI
-      hb_gtGetPos( &s_iDevRow, &s_iDevCol );
+   hb_gtGetPos( &s_iDevRow, &s_iDevCol );
 #endif
-      hb_retni( s_iDevCol );
-   }
-   else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "COL" ); /* NOTE: Clipper catches this at compile time! */
+   hb_retni( s_iDevCol );
 }
 
 HARBOUR HB_DISPBOX( void )

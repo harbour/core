@@ -246,30 +246,25 @@ char * hb_strLTrim( const char * szText, ULONG * ulLen )
 /* TEST: QOUT( "ltrim( '  hello world  ' ) = '" + ltrim( '  hello world  ' ) + "'" ) */
 HARBOUR HB_LTRIM( void )
 {
-   if( hb_pcount() == 1 )
+   PHB_ITEM pText = hb_param( 1, IT_STRING );
+
+   if( pText )
    {
-      PHB_ITEM pText = hb_param( 1, IT_STRING );
+      ULONG ulLen = pText->item.asString.length;
+      char * szText = hb_strLTrim( pText->item.asString.value, &ulLen );
 
-      if( pText )
-      {
-         ULONG ulLen = pText->item.asString.length;
-         char * szText = hb_strLTrim( pText->item.asString.value, &ulLen );
-
-         hb_retclen( szText, ulLen );
-      }
-      else
-      {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1101, NULL, "LTRIM" );
-
-         if( pResult )
-         {
-            hb_itemReturn( pResult );
-            hb_itemRelease( pResult );
-         }
-      }
+      hb_retclen( szText, ulLen );
    }
    else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "LTRIM" ); /* NOTE: Clipper catches this at compile time! */
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1101, NULL, "LTRIM" );
+
+      if( pResult )
+      {
+         hb_itemReturn( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 }
 
 /* returns szText and the new length in lLen */
@@ -297,30 +292,24 @@ ULONG hb_strRTrimLen( const char * szText, ULONG ulLen, BOOL bAnySpace )
 /* TEST: QOUT( "rtrim( '  hello world  ' ) = '" + rtrim( '  hello world  ' ) + "'" ) */
 HARBOUR HB_RTRIM( void )
 {
-   if( hb_pcount() >= 1 && hb_pcount() <= 2 )
+   PHB_ITEM pText = hb_param( 1, IT_STRING );
+
+   if( pText )
    {
-      PHB_ITEM pText = hb_param( 1, IT_STRING );
-
-      if( pText )
-      {
-         BOOL bAnySpace = ( ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
-         hb_retclen( pText->item.asString.value, hb_strRTrimLen( pText->item.asString.value, pText->item.asString.length, bAnySpace ) );
-      }
-      else
-      {
-         /* NOTE: "TRIM" is right here */
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1100, NULL, "TRIM" );
-
-         if( pResult )
-         {
-            hb_itemReturn( pResult );
-            hb_itemRelease( pResult );
-         }
-      }
+      BOOL bAnySpace = ( ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
+      hb_retclen( pText->item.asString.value, hb_strRTrimLen( pText->item.asString.value, pText->item.asString.length, bAnySpace ) );
    }
    else
+   {
       /* NOTE: "TRIM" is right here */
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "TRIM" ); /* NOTE: Clipper catches this at compile time! */
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1100, NULL, "TRIM" );
+
+      if( pResult )
+      {
+         hb_itemReturn( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 }
 
 /* NOTE: The second parameter is a Harbour extension */
@@ -576,29 +565,24 @@ ULONG hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG u
 /* TEST: QOUT( "at( 'cde', 'abcdefgfedcba' ) = '" + at( 'cde', 'abcsefgfedcba' ) + "'" ) */
 HARBOUR HB_AT( void )
 {
-   if( hb_pcount() == 2 )
+   PHB_ITEM pSub = hb_param( 1, IT_STRING );
+   PHB_ITEM pText = hb_param( 2, IT_STRING );
+
+   if( pText && pSub )
    {
-      PHB_ITEM pSub = hb_param( 1, IT_STRING );
-      PHB_ITEM pText = hb_param( 2, IT_STRING );
-
-      if( pText && pSub )
-      {
-         hb_retnl( hb_strAt( pSub->item.asString.value, pSub->item.asString.length,
-                             pText->item.asString.value, pText->item.asString.length ) );
-      }
-      else
-      {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1108, NULL, "AT" );
-
-         if( pResult )
-         {
-            hb_itemReturn( pResult );
-            hb_itemRelease( pResult );
-         }
-      }
+      hb_retnl( hb_strAt( pSub->item.asString.value, pSub->item.asString.length,
+                          pText->item.asString.value, pText->item.asString.length ) );
    }
    else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "AT" ); /* NOTE: Clipper catches this at compile time! */
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1108, NULL, "AT" );
+
+      if( pResult )
+      {
+         hb_itemReturn( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 }
 
 /* locates a substring in a string starting at the end */
@@ -638,99 +622,84 @@ HARBOUR HB_RAT( void )
 /* converts an ASCII code to a character value */
 HARBOUR HB_CHR( void )
 {
-   if( hb_pcount() == 1 )
+   if( ISNUM( 1 ) )
    {
-      if( ISNUM( 1 ) )
-      {
-         char szChar[ 2 ];
+      char szChar[ 2 ];
 
-         /* NOTE: CA-Cl*pper's compiler optimizer will be wrong for those
-                  CHR() cases where the passed parameter is a constant which
-                  can be divided by 256 but it's not zero, in this case it
-                  will return an empty string instead of a Chr(0). [vszel] */
+      /* NOTE: CA-Cl*pper's compiler optimizer will be wrong for those
+               CHR() cases where the passed parameter is a constant which
+               can be divided by 256 but it's not zero, in this case it
+               will return an empty string instead of a Chr(0). [vszel] */
 
-         /* Believe it or not, clipper does this! */
-         szChar[ 0 ] = hb_parnl( 1 ) % 256;
-         szChar[ 1 ] = '\0';
+      /* Believe it or not, clipper does this! */
+      szChar[ 0 ] = hb_parnl( 1 ) % 256;
+      szChar[ 1 ] = '\0';
 
-         hb_retclen( szChar, 1 );
-      }
-      else
-      {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1104, NULL, "CHR" );
-
-         if( pResult )
-         {
-            hb_itemReturn( pResult );
-            hb_itemRelease( pResult );
-         }
-      }
+      hb_retclen( szChar, 1 );
    }
    else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "CHR" ); /* NOTE: Clipper catches this at compile time! */
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1104, NULL, "CHR" );
+
+      if( pResult )
+      {
+         hb_itemReturn( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 }
 
 /* converts a character value to an ASCII code */
 HARBOUR HB_ASC( void )
 {
-   if( hb_pcount() == 1 )
+   PHB_ITEM pText = hb_param( 1, IT_STRING );
+
+   if( pText )
    {
-      PHB_ITEM pText = hb_param( 1, IT_STRING );
-
-      if( pText )
-      {
-         if( pText->item.asString.length > 0 )
-            hb_retni( ( BYTE ) * ( pText->item.asString.value ) );
-         else
-            hb_retni( 0 );
-      }
+      if( pText->item.asString.length > 0 )
+         hb_retni( ( BYTE ) * ( pText->item.asString.value ) );
       else
-      {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1107, NULL, "ASC" );
-
-         if( pResult )
-         {
-            hb_itemReturn( pResult );
-            hb_itemRelease( pResult );
-         }
-      }
+         hb_retni( 0 );
    }
    else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "ASC" ); /* NOTE: Clipper catches this at compile time! */
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1107, NULL, "ASC" );
+
+      if( pResult )
+      {
+         hb_itemReturn( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 }
 
 /* returns the left-most n characters in string */
 HARBOUR HB_LEFT( void )
 {
-   if( hb_pcount() == 2 )
+   PHB_ITEM pText = hb_param( 1, IT_STRING );
+
+   if( pText && ISNUM( 2 ) )
    {
-      PHB_ITEM pText = hb_param( 1, IT_STRING );
+      LONG lLen = hb_parnl( 2 );
 
-      if( pText && ISNUM( 2 ) )
-      {
-         LONG lLen = hb_parnl( 2 );
+      if( lLen > ( LONG ) pText->item.asString.length )
+         lLen = ( LONG ) pText->item.asString.length;
 
-         if( lLen > ( LONG ) pText->item.asString.length )
-            lLen = ( LONG ) pText->item.asString.length;
+      else if( lLen < 0 )
+         lLen = 0;
 
-         else if( lLen < 0 )
-            lLen = 0;
-
-         hb_retclen( pText->item.asString.value, lLen );
-      }
-      else
-      {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1124, NULL, "LEFT" );
-
-         if( pResult )
-         {
-            hb_itemReturn( pResult );
-            hb_itemRelease( pResult );
-         }
-      }
+      hb_retclen( pText->item.asString.value, lLen );
    }
    else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "LEFT" ); /* NOTE: Clipper catches this at compile time! */
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1124, NULL, "LEFT" );
+
+      if( pResult )
+      {
+         hb_itemReturn( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 }
 
 /* returns the right-most n characters in string */
@@ -760,76 +729,71 @@ HARBOUR HB_RIGHT( void )
 /* returns l characters from n characters into string */
 HARBOUR HB_SUBSTR( void )
 {
-   if( hb_pcount() >= 2 && hb_pcount() <= 3 )
+   PHB_ITEM pText = hb_param( 1, IT_STRING );
+
+   if( pText && ISNUM( 2 ) )
    {
-      PHB_ITEM pText = hb_param( 1, IT_STRING );
+      LONG lPos = hb_parnl( 2 );
 
-      if( pText && ISNUM( 2 ) )
+      if( lPos < 0 )
       {
-         LONG lPos = hb_parnl( 2 );
-
+         lPos += ( LONG ) pText->item.asString.length;
          if( lPos < 0 )
-         {
-            lPos += ( LONG ) pText->item.asString.length;
-            if( lPos < 0 )
-               lPos = 0;
-         }
-         else if( lPos )
-         {
-            lPos--;
-         }
+            lPos = 0;
+      }
+      else if( lPos )
+      {
+         lPos--;
+      }
 
-         if( lPos < ( LONG ) pText->item.asString.length )
-         {
-            LONG lLen;
+      if( lPos < ( LONG ) pText->item.asString.length )
+      {
+         LONG lLen;
 
-            if( hb_pcount() >= 3 )
+         if( hb_pcount() >= 3 )
+         {
+            if( ISNUM( 3 ) )
             {
-               if( ISNUM( 3 ) )
-               {
-                  lLen = hb_parnl( 3 );
+               lLen = hb_parnl( 3 );
 
-                  if( lLen > ( LONG ) pText->item.asString.length - lPos )
-                     lLen = ( LONG ) pText->item.asString.length - lPos;
-               }
-               else
-               {
-                  PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1110, NULL, "SUBSTR" );
-
-                  if( pResult )
-                  {
-                     hb_itemReturn( pResult );
-                     hb_itemRelease( pResult );
-                  }
-
-                  /* NOTE: Exit from inside */
-                  return;
-               }
+               if( lLen > ( LONG ) pText->item.asString.length - lPos )
+                  lLen = ( LONG ) pText->item.asString.length - lPos;
             }
             else
-               lLen = ( LONG ) pText->item.asString.length - lPos;
+            {
+               PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1110, NULL, "SUBSTR" );
 
-            if( lLen > 0 )
-               hb_retclen( pText->item.asString.value + lPos, lLen );
-            else
-               hb_retc( "" );
+               if( pResult )
+               {
+                  hb_itemReturn( pResult );
+                  hb_itemRelease( pResult );
+               }
+
+               /* NOTE: Exit from inside */
+               return;
+            }
          }
+         else
+            lLen = ( LONG ) pText->item.asString.length - lPos;
+
+         if( lLen > 0 )
+            hb_retclen( pText->item.asString.value + lPos, lLen );
          else
             hb_retc( "" );
       }
       else
-      {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1110, NULL, "SUBSTR" );
-
-         if( pResult )
-         {
-            hb_itemReturn( pResult );
-            hb_itemRelease( pResult );
-         }
-      }
+         hb_retc( "" );
    }
    else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "SUBSTR" ); /* NOTE: Clipper catches this at compile time! */
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1110, NULL, "SUBSTR" );
+
+      if( pResult )
+      {
+         hb_itemReturn( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 }
 
 /* converts szText to lower case. Does not create a new string! */
@@ -848,32 +812,27 @@ char * hb_strLower( char * szText, ULONG ulLen )
 /* converts string to lower case */
 HARBOUR HB_LOWER( void )
 {
-   if( hb_pcount() == 1 )
+   PHB_ITEM pText = hb_param( 1, IT_STRING );
+
+   if( pText )
    {
-      PHB_ITEM pText = hb_param( 1, IT_STRING );
+      char * pszBuffer = hb_itemGetC( pText );
+      ULONG ulLen = hb_itemGetCLen( pText );
 
-      if( pText )
-      {
-         char * pszBuffer = hb_itemGetC( pText );
-         ULONG ulLen = hb_itemGetCLen( pText );
+      hb_retclen( hb_strLower( pszBuffer, ulLen ), ulLen );
 
-         hb_retclen( hb_strLower( pszBuffer, ulLen ), ulLen );
-
-         hb_itemFreeC( pszBuffer );
-      }
-      else
-      {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1103, NULL, "LOWER" );
-
-         if( pResult )
-         {
-            hb_itemReturn( pResult );
-            hb_itemRelease( pResult );
-         }
-      }
+      hb_itemFreeC( pszBuffer );
    }
    else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "LOWER" ); /* NOTE: Clipper catches this at compile time! */
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1103, NULL, "LOWER" );
+
+      if( pResult )
+      {
+         hb_itemReturn( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 }
 
 void hb_strupr( char * szText )
@@ -918,132 +877,117 @@ char * hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen )
 /* converts string to upper case */
 HARBOUR HB_UPPER( void )
 {
-   if( hb_pcount() == 1 )
+   PHB_ITEM pText = hb_param( 1, IT_STRING );
+
+   if( pText )
    {
-      PHB_ITEM pText = hb_param( 1, IT_STRING );
+      char * pszBuffer = hb_itemGetC( pText );
+      ULONG ulLen = hb_itemGetCLen( pText );
 
-      if( pText )
-      {
-         char * pszBuffer = hb_itemGetC( pText );
-         ULONG ulLen = hb_itemGetCLen( pText );
+      hb_retclen( hb_strUpper( pszBuffer, ulLen ), ulLen );
 
-         hb_retclen( hb_strUpper( pszBuffer, ulLen ), ulLen );
-
-         hb_itemFreeC( pszBuffer );
-      }
-      else
-      {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1102, NULL, "UPPER" );
-
-         if( pResult )
-         {
-            hb_itemReturn( pResult );
-            hb_itemRelease( pResult );
-         }
-      }
+      hb_itemFreeC( pszBuffer );
    }
    else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "UPPER" ); /* NOTE: Clipper catches this at compile time! */
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1102, NULL, "UPPER" );
+
+      if( pResult )
+      {
+         hb_itemReturn( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 }
 
 /* returns n copies of given string */
 /* TEST: QOUT( "replicate( 'abc', 5 ) = " + replicate( 'abc', 5 ) ) */
 HARBOUR HB_REPLICATE( void )
 {
-   if( hb_pcount() == 2 )
+   if( ISCHAR( 1 ) && ISNUM( 2 ) )
    {
-      if( ISCHAR( 1 ) && ISNUM( 2 ) )
+      LONG lTimes = hb_parnl( 2 );
+
+      if( lTimes > 0 )
       {
-         LONG lTimes = hb_parnl( 2 );
+         ULONG ulLen = hb_parclen( 1 );
 
-         if( lTimes > 0 )
+         if( ( double ) ( ( double ) ulLen * ( double ) lTimes ) < ( double ) ULONG_MAX )
          {
-            ULONG ulLen = hb_parclen( 1 );
+            char * szText = hb_parc( 1 );
+            char * szResult = ( char * ) hb_xgrab( ( ulLen * lTimes ) + 1 );
+            char * szPtr = szResult;
+            LONG i;
 
-            if( ( double ) ( ( double ) ulLen * ( double ) lTimes ) < ( double ) ULONG_MAX )
+            for( i = 0; i < lTimes; i++ )
             {
-               char * szText = hb_parc( 1 );
-               char * szResult = ( char * ) hb_xgrab( ( ulLen * lTimes ) + 1 );
-               char * szPtr = szResult;
-               LONG i;
-
-               for( i = 0; i < lTimes; i++ )
-               {
-                  hb_xmemcpy( szPtr, szText, ulLen );
-                  szPtr += ulLen;
-               }
-
-               hb_retclen( szResult, ulLen * lTimes );
-               hb_xfree( szResult );
+               hb_xmemcpy( szPtr, szText, ulLen );
+               szPtr += ulLen;
             }
-            else
-            {
-               PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_STROVERFLOW, 1234, NULL, "REPLICATE" );
 
-               if( pResult )
-               {
-                  hb_itemReturn( pResult );
-                  hb_itemRelease( pResult );
-               }
-            }
+            hb_retclen( szResult, ulLen * lTimes );
+            hb_xfree( szResult );
          }
          else
-            hb_retc( "" );
-      }
-      else
-      {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1106, NULL, "REPLICATE" );
-
-         if( pResult )
          {
-            hb_itemReturn( pResult );
-            hb_itemRelease( pResult );
+            PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_STROVERFLOW, 1234, NULL, "REPLICATE" );
+
+            if( pResult )
+            {
+               hb_itemReturn( pResult );
+               hb_itemRelease( pResult );
+            }
          }
       }
+      else
+         hb_retc( "" );
    }
    else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "REPLICATE" ); /* NOTE: Clipper catches this at compile time! */
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1106, NULL, "REPLICATE" );
+
+      if( pResult )
+      {
+         hb_itemReturn( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 }
 
 /* returns n copies of a single space */
 /* TEST: QOUT( "space( 5 ) = '" + space( 5 ) + "'" ) */
 HARBOUR HB_SPACE( void )
 {
-   if( hb_pcount() == 1 )
+   if( ISNUM( 1 ) )
    {
-      if( ISNUM( 1 ) )
+      LONG lLen = hb_parnl( 1 );
+
+      if( lLen > 0 )
       {
-         LONG lLen = hb_parnl( 1 );
+         char * szResult = ( char * ) hb_xgrab( lLen + 1 );
 
-         if( lLen > 0 )
-         {
-            char * szResult = ( char * ) hb_xgrab( lLen + 1 );
+         /* NOTE: String overflow could never occure since a string can */
+         /*       be as large as ULONG_MAX, and the maximum length that */
+         /*       can be specified is LONG_MAX here.                    */
+         /* hb_errRT_BASE( EG_STROVERFLOW, 1233, NULL, "SPACE" ); */
 
-            /* NOTE: String overflow could never occure since a string can */
-            /*       be as large as ULONG_MAX, and the maximum length that */
-            /*       can be specified is LONG_MAX here.                    */
-            /* hb_errRT_BASE( EG_STROVERFLOW, 1233, NULL, "SPACE" ); */
-
-            hb_xmemset( szResult, ' ', lLen );
-            hb_retclen( szResult, lLen );
-            hb_xfree( szResult );
-         }
-         else
-            hb_retc( "" );
+         hb_xmemset( szResult, ' ', lLen );
+         hb_retclen( szResult, lLen );
+         hb_xfree( szResult );
       }
       else
-      {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1105, NULL, "SPACE" );
-
-         if( pResult )
-         {
-            hb_itemReturn( pResult );
-            hb_itemRelease( pResult );
-         }
-      }
+         hb_retc( "" );
    }
    else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "SPACE" ); /* NOTE: Clipper catches this at compile time! */
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1105, NULL, "SPACE" );
+
+      if( pResult )
+      {
+         hb_itemReturn( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 }
 
 /* replaces characters in a string */
@@ -1254,42 +1198,37 @@ double hb_strVal( const char * szText )
 /* returns the numeric value of a character string representation of a number  */
 HARBOUR HB_VAL( void )
 {
-   if( hb_pcount() == 1 )
+   PHB_ITEM pText = hb_param( 1, IT_STRING );
+
+   if( pText )
    {
-      PHB_ITEM pText = hb_param( 1, IT_STRING );
+      int iWidth;
+      int iDec;
+      char * ptr = strchr( pText->item.asString.value, '.' );
 
-      if( pText )
+      if( ptr )
       {
-         int iWidth;
-         int iDec;
-         char * ptr = strchr( pText->item.asString.value, '.' );
-
-         if( ptr )
-         {
-            iWidth = ptr - pText->item.asString.value;
-            iDec = strlen( ptr + 1 );
-         }
-         else
-         {
-            iWidth = strlen( pText->item.asString.value );
-            iDec = 0;
-         }
-
-         hb_retnlen( hb_strVal( pText->item.asString.value ), iWidth, iDec );
+         iWidth = ptr - pText->item.asString.value;
+         iDec = strlen( ptr + 1 );
       }
       else
       {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1098, NULL, "VAL" );
-
-         if( pResult )
-         {
-            hb_itemReturn( pResult );
-            hb_itemRelease( pResult );
-         }
+         iWidth = strlen( pText->item.asString.value );
+         iDec = 0;
       }
+
+      hb_retnlen( hb_strVal( pText->item.asString.value ), iWidth, iDec );
    }
    else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "VAL" ); /* NOTE: Clipper catches this at compile time! */
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1098, NULL, "VAL" );
+
+      if( pResult )
+      {
+         hb_itemReturn( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 }
 
 /*  $DOC$
@@ -1362,55 +1301,50 @@ HARBOUR HB_VAL( void )
 
 HARBOUR HB_STR( void )
 {
-   if( hb_pcount() >= 1 && hb_pcount() <= 3 )
+   BOOL bValid = TRUE;
+   PHB_ITEM pNumber = hb_param( 1, IT_NUMERIC );
+   PHB_ITEM pWidth  = NULL;
+   PHB_ITEM pDec    = NULL;
+
+   if( !pNumber )
+      bValid = FALSE;
+   else
    {
-      BOOL bValid = TRUE;
-      PHB_ITEM pNumber = hb_param( 1, IT_NUMERIC );
-      PHB_ITEM pWidth  = NULL;
-      PHB_ITEM pDec    = NULL;
-
-      if( !pNumber )
-         bValid = FALSE;
-      else
+      if( hb_pcount() >= 2 )
       {
-         if( hb_pcount() >= 2 )
-         {
-            pWidth = hb_param( 2, IT_NUMERIC );
-            if( !pWidth )
-               bValid = FALSE;
-         }
-         if( hb_pcount() >= 3 )
-         {
-            pDec = hb_param( 3, IT_NUMERIC );
-            if( !pDec )
-               bValid = FALSE;
-         }
+         pWidth = hb_param( 2, IT_NUMERIC );
+         if( !pWidth )
+            bValid = FALSE;
       }
-      if( bValid )
+      if( hb_pcount() >= 3 )
       {
-         char * szResult = hb_itemStr( pNumber, pWidth, pDec );
-
-         if( szResult )
-         {
-            hb_retc( szResult );
-            hb_xfree( szResult );
-         }
-         else
-            hb_retc( "" );
-      }
-      else
-      {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1099, NULL, "STR" );
-
-         if( pResult )
-         {
-            hb_itemReturn( pResult );
-            hb_itemRelease( pResult );
-         }
+         pDec = hb_param( 3, IT_NUMERIC );
+         if( !pDec )
+            bValid = FALSE;
       }
    }
+   if( bValid )
+   {
+      char * szResult = hb_itemStr( pNumber, pWidth, pDec );
+
+      if( szResult )
+      {
+         hb_retc( szResult );
+         hb_xfree( szResult );
+      }
+      else
+         hb_retc( "" );
+   }
    else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "STR" ); /* NOTE: Clipper catches this at compile time! */
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1099, NULL, "STR" );
+
+      if( pResult )
+      {
+         hb_itemReturn( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 }
 
 /* ------------------------------------------------- */
@@ -1616,3 +1550,4 @@ HARBOUR HB_HB_VALTOSTR( void )
    if( bFreeReq )
       hb_xfree( buffer );
 }
+

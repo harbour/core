@@ -86,93 +86,81 @@
 HARBOUR HB_DO( void )
 {
    USHORT uiPCount = hb_pcount();
+   PHB_ITEM pItem = hb_param( 1, IT_ANY );
 
-   if( uiPCount >= 1 )
+   if( IS_STRING( pItem ) )
    {
-      PHB_ITEM pItem = hb_param( 1, IT_ANY );
+      PHB_DYNS pDynSym = hb_dynsymFindName( hb_itemGetCPtr( pItem ) );
 
-      if( IS_STRING( pItem ) )
-      {
-         PHB_DYNS pDynSym = hb_dynsymFindName( hb_itemGetCPtr( pItem ) );
-
-         if( pDynSym )
-         {
-            USHORT uiParam;
-
-            hb_vmPushSymbol( pDynSym->pSymbol );
-            hb_vmPushNil();
-            for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-               hb_vmPush( hb_param( uiParam, IT_ANY ) );
-            hb_vmDo( uiPCount - 1 );
-         }
-         else
-            hb_errRT_BASE( EG_NOFUNC, 1001, NULL, pItem->item.asString.value );
-      }
-      else if( IS_BLOCK( pItem ) )
+      if( pDynSym )
       {
          USHORT uiParam;
 
-         hb_vmPushSymbol( &hb_symEval );
-         hb_vmPush( pItem );
-         for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-            hb_vmPush( hb_param( uiParam, IT_ANY ) );
-         hb_vmDo( uiPCount - 1 );
-      }
-      else if( IS_SYMBOL( pItem ) )
-      {
-         USHORT uiParam;
-
-         hb_vmPushSymbol( pItem->item.asSymbol.value );
+         hb_vmPushSymbol( pDynSym->pSymbol );
          hb_vmPushNil();
          for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
             hb_vmPush( hb_param( uiParam, IT_ANY ) );
          hb_vmDo( uiPCount - 1 );
       }
       else
-      {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 3012, NULL, "DO" );
+         hb_errRT_BASE( EG_NOFUNC, 1001, NULL, pItem->item.asString.value );
+   }
+   else if( IS_BLOCK( pItem ) )
+   {
+      USHORT uiParam;
 
-         if( pResult )
-         {
-            hb_itemReturn( pResult );
-            hb_itemRelease( pResult );
-         }
-      }
+      hb_vmPushSymbol( &hb_symEval );
+      hb_vmPush( pItem );
+      for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
+         hb_vmPush( hb_param( uiParam, IT_ANY ) );
+      hb_vmDo( uiPCount - 1 );
+   }
+   else if( IS_SYMBOL( pItem ) )
+   {
+      USHORT uiParam;
+
+      hb_vmPushSymbol( pItem->item.asSymbol.value );
+      hb_vmPushNil();
+      for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
+         hb_vmPush( hb_param( uiParam, IT_ANY ) );
+      hb_vmDo( uiPCount - 1 );
    }
    else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "DO" );
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 3012, NULL, "DO" );
+
+      if( pResult )
+      {
+         hb_itemReturn( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 }
 
 HARBOUR HB_EVAL( void )
 {
    USHORT uiPCount = hb_pcount();
+   PHB_ITEM pItem = hb_param( 1, IT_BLOCK );
 
-   if( uiPCount >= 1 )
+   if( pItem )
    {
-      PHB_ITEM pItem = hb_param( 1, IT_BLOCK );
+      USHORT uiParam;
 
-      if( pItem )
-      {
-         USHORT uiParam;
-
-         hb_vmPushSymbol( &hb_symEval );
-         hb_vmPush( pItem );
-         for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-            hb_vmPush( hb_param( uiParam, IT_ANY ) );
-         hb_vmDo( uiPCount - 1 );
-      }
-      else
-      {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_NOMETHOD, 1004, NULL, "EVAL" );
-
-         if( pResult )
-         {
-            hb_itemReturn( pResult );
-            hb_itemRelease( pResult );
-         }
-      }
+      hb_vmPushSymbol( &hb_symEval );
+      hb_vmPush( pItem );
+      for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
+         hb_vmPush( hb_param( uiParam, IT_ANY ) );
+      hb_vmDo( uiPCount - 1 );
    }
    else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "EVAL" ); /* NOTE: Clipper catches this at compile time! */
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_NOMETHOD, 1004, NULL, "EVAL" );
+
+      if( pResult )
+      {
+         hb_itemReturn( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 }
 

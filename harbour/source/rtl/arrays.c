@@ -805,32 +805,27 @@ HARBOUR HB_ARRAY( void )
 
 HARBOUR HB_AADD( void )
 {
-   if( hb_pcount() == 2 )
+   PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
+
+   if( pArray )
    {
-      PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
+      PHB_ITEM pValue = hb_param( 2, IT_ANY );
 
-      if( pArray )
-      {
-         PHB_ITEM pValue = hb_param( 2, IT_ANY );
-
-         if( pValue && hb_arrayAdd( pArray, pValue ) )
-            hb_itemReturn( pValue );
-         else
-            hb_errRT_BASE( EG_BOUND, 1187, NULL, "AADD" );
-      }
+      if( pValue && hb_arrayAdd( pArray, pValue ) )
+         hb_itemReturn( pValue );
       else
-      {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1123, NULL, "AADD" );
-
-         if( pResult )
-         {
-            hb_itemReturn( pResult );
-            hb_itemRelease( pResult );
-         }
-      }
+         hb_errRT_BASE( EG_BOUND, 1187, NULL, "AADD" );
    }
    else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "AADD" ); /* NOTE: Clipper catches this at compile time! */
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1123, NULL, "AADD" );
+
+      if( pResult )
+      {
+         hb_itemReturn( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 }
 
 HARBOUR HB_ASIZE( void )

@@ -540,7 +540,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_PARAMETER:
             uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
             hb_memvarNewParameter( pSymbols + uiParams, hb_stack.pBase + 1 + pCode[ w + 3 ] );
-	    HB_TRACE(HB_TR_INFO, ("(hb_vmPopParameter)"));
+            HB_TRACE(HB_TR_INFO, ("(hb_vmPopParameter)"));
             w += 4;
             break;
 
@@ -580,7 +580,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_ENDBLOCK:
             hb_vmEndBlock();
-	    HB_TRACE(HB_TR_INFO, ("(EndBlock)"));
+            HB_TRACE(HB_TR_INFO, ("(EndBlock)"));
             return;   /* end of a codeblock - stop evaluation */
 
          /* BEGIN SEQUENCE/RECOVER/END SEQUENCE */
@@ -734,7 +734,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_PUSHNIL:
             hb_stack.pPos->type = IT_NIL;
             hb_stackPush();
-	    HB_TRACE(HB_TR_INFO, ("(hb_vmPushNil)"));
+            HB_TRACE(HB_TR_INFO, ("(hb_vmPushNil)"));
             w++;
             break;
 
@@ -800,7 +800,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
             hb_rddGetFieldValue( hb_stack.pPos, pSymbols + uiParams );
             hb_stackPush();
-	    HB_TRACE(HB_TR_INFO, ("(hb_vmPushField)"));
+            HB_TRACE(HB_TR_INFO, ("(hb_vmPushField)"));
             w += 3;
             break;
 
@@ -828,7 +828,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
             hb_memvarGetValue( hb_stack.pPos, pSymbols + uiParams );
             hb_stackPush();
-	    HB_TRACE(HB_TR_INFO, ("(hb_vmPushMemvar)"));
+            HB_TRACE(HB_TR_INFO, ("(hb_vmPushMemvar)"));
             w += 3;
             break;
 
@@ -836,7 +836,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
             hb_memvarGetRefer( hb_stack.pPos, pSymbols + uiParams );
             hb_stackPush();
-	    HB_TRACE(HB_TR_INFO, ("(hb_vmPushMemvarRef)"));
+            HB_TRACE(HB_TR_INFO, ("(hb_vmPushMemvarRef)"));
             w += 3;
             break;
 
@@ -873,7 +873,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
                   }
                }
                while( uiAction == E_RETRY );
-	       HB_TRACE(HB_TR_INFO, ("(hb_vmPushVariable)"));
+               HB_TRACE(HB_TR_INFO, ("(hb_vmPushVariable)"));
                w += 3;
             }
             break;
@@ -914,7 +914,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             hb_stackDec();
             hb_rddPutFieldValue( hb_stack.pPos, pSymbols + uiParams );
             hb_itemClear( hb_stack.pPos );
-	    HB_TRACE(HB_TR_INFO, ("(hb_vmPopField)"));
+            HB_TRACE(HB_TR_INFO, ("(hb_vmPopField)"));
             w += 3;
             break;
 
@@ -933,7 +933,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             hb_stackDec();
             hb_memvarSetValue( pSymbols + uiParams, hb_stack.pPos );
             hb_itemClear( hb_stack.pPos );
-	    HB_TRACE(HB_TR_INFO, ("(hb_vmPopMemvar)"));
+            HB_TRACE(HB_TR_INFO, ("(hb_vmPopMemvar)"));
             w += 3;
             break;
 
@@ -951,7 +951,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             if( hb_rddFieldPut( hb_stack.pPos, pSymbols + uiParams ) == FAILURE )
                hb_memvarSetValue( pSymbols + uiParams, hb_stack.pPos );
             hb_itemClear( hb_stack.pPos );
-	    HB_TRACE(HB_TR_INFO, ("(hb_vmPopVariable)"));
+            HB_TRACE(HB_TR_INFO, ("(hb_vmPopVariable)"));
             w += 3;
             break;
 
@@ -3377,134 +3377,119 @@ void hb_vmForceLink( void )
 
 HARBOUR HB_LEN( void )
 {
-   if( hb_pcount() == 1 )
+   PHB_ITEM pItem = hb_param( 1, IT_ANY );
+
+   /* NOTE: pItem cannot be NULL here */
+
+   switch( pItem->type )
    {
-      PHB_ITEM pItem = hb_param( 1, IT_ANY );
+      case IT_ARRAY:
+         hb_retnl( hb_arrayLen( pItem ) );
+         break;
 
-      /* NOTE: pItem cannot be NULL here */
+      case IT_STRING:
+         hb_retnl( hb_itemGetCLen( pItem ) );
+         break;
 
-      switch( pItem->type )
+      default:
       {
-         case IT_ARRAY:
-            hb_retnl( hb_arrayLen( pItem ) );
-            break;
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1111, NULL, "LEN" );
 
-         case IT_STRING:
-            hb_retnl( hb_itemGetCLen( pItem ) );
-            break;
-
-         default:
+         if( pResult )
          {
-            PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1111, NULL, "LEN" );
-
-            if( pResult )
-            {
-               hb_itemReturn( pResult );
-               hb_itemRelease( pResult );
-            }
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
          }
       }
    }
-   else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "LEN" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 HARBOUR HB_EMPTY( void )
 {
-   if( hb_pcount() == 1 )
+   PHB_ITEM pItem = hb_param( 1, IT_ANY );
+
+   /* NOTE: pItem cannot be NULL here */
+
+   switch( pItem->type & ~IT_BYREF )
    {
-      PHB_ITEM pItem = hb_param( 1, IT_ANY );
+      case IT_ARRAY:
+         hb_retl( hb_arrayLen( pItem ) == 0 );
+         break;
 
-      /* NOTE: pItem cannot be NULL here */
+      case IT_STRING:
+         hb_retl( hb_strEmpty( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) ) );
+         break;
 
-      switch( pItem->type & ~IT_BYREF )
-      {
-         case IT_ARRAY:
-            hb_retl( hb_arrayLen( pItem ) == 0 );
-            break;
+      case IT_INTEGER:
+         hb_retl( hb_itemGetNI( pItem ) == 0 );
+         break;
 
-         case IT_STRING:
-            hb_retl( hb_strEmpty( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) ) );
-            break;
+      case IT_LONG:
+         hb_retl( hb_itemGetNL( pItem ) == 0 );
+         break;
 
-         case IT_INTEGER:
-            hb_retl( hb_itemGetNI( pItem ) == 0 );
-            break;
+      case IT_DOUBLE:
+         hb_retl( hb_itemGetND( pItem ) == 0.0 );
+         break;
 
-         case IT_LONG:
-            hb_retl( hb_itemGetNL( pItem ) == 0 );
-            break;
+      case IT_DATE:
+         /* NOTE: This is correct ! Get the date as long value. */
+         hb_retl( hb_itemGetNL( pItem ) == 0 );
+         break;
 
-         case IT_DOUBLE:
-            hb_retl( hb_itemGetND( pItem ) == 0.0 );
-            break;
+      case IT_LOGICAL:
+         hb_retl( ! hb_itemGetL( pItem ) );
+         break;
 
-         case IT_DATE:
-            /* NOTE: This is correct ! Get the date as long value. */
-            hb_retl( hb_itemGetNL( pItem ) == 0 );
-            break;
+      case IT_BLOCK:
+         hb_retl( FALSE );
+         break;
 
-         case IT_LOGICAL:
-            hb_retl( ! hb_itemGetL( pItem ) );
-            break;
-
-         case IT_BLOCK:
-            hb_retl( FALSE );
-            break;
-
-         default:
-            hb_retl( TRUE );
-            break;
-      }
+      default:
+         hb_retl( TRUE );
+         break;
    }
-   else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "EMPTY" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 HARBOUR HB_VALTYPE( void )
 {
-   if( hb_pcount() == 1 )
+   PHB_ITEM pItem = hb_param( 1, IT_ANY );
+
+   /* NOTE: pItem cannot be NULL here */
+
+   switch( pItem->type & ~IT_BYREF )
    {
-      PHB_ITEM pItem = hb_param( 1, IT_ANY );
+      case IT_ARRAY:
+         hb_retc( hb_arrayIsObject( pItem ) ? "O" : "A" );
+         break;
 
-      /* NOTE: pItem cannot be NULL here */
+      case IT_BLOCK:
+         hb_retc( "B" );
+         break;
 
-      switch( pItem->type & ~IT_BYREF )
-      {
-         case IT_ARRAY:
-            hb_retc( hb_arrayIsObject( pItem ) ? "O" : "A" );
-            break;
+      case IT_DATE:
+         hb_retc( "D" );
+         break;
 
-         case IT_BLOCK:
-            hb_retc( "B" );
-            break;
+      case IT_LOGICAL:
+         hb_retc( "L" );
+         break;
 
-         case IT_DATE:
-            hb_retc( "D" );
-            break;
+      case IT_INTEGER:
+      case IT_LONG:
+      case IT_DOUBLE:
+         hb_retc( "N" );
+         break;
 
-         case IT_LOGICAL:
-            hb_retc( "L" );
-            break;
+      case IT_STRING:
+         hb_retc( "C" );
+         break;
 
-         case IT_INTEGER:
-         case IT_LONG:
-         case IT_DOUBLE:
-            hb_retc( "N" );
-            break;
-
-         case IT_STRING:
-            hb_retc( "C" );
-            break;
-
-         case IT_NIL:
-         default:
-            hb_retc( "U" );
-            break;
-      }
+      case IT_NIL:
+      default:
+         hb_retc( "U" );
+         break;
    }
-   else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "VALTYPE" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 HARBOUR HB_TYPE( void )
@@ -3518,15 +3503,10 @@ HARBOUR HB_TYPE( void )
 
 HARBOUR HB_WORD( void )
 {
-   if( hb_pcount() == 1 )
-   {
-      if( ISNUM( 1 ) )
-         hb_retni( hb_parni( 1 ) );
-      else
-         hb_errRT_BASE( EG_ARG, 1091, NULL, "WORD" );
-   }
+   if( ISNUM( 1 ) )
+      hb_retni( hb_parni( 1 ) );
    else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "WORD" );
+      hb_errRT_BASE( EG_ARG, 1091, NULL, "WORD" );
 }
 
 HARBOUR HB_PROCNAME( void )
@@ -3594,15 +3574,10 @@ HARBOUR HB_ERRORLEVEL( void )
 
 HARBOUR HB_PCOUNT( void )
 {
-   if( hb_pcount() == 0 )
-   {
-      /* Skip current function */
-      PHB_ITEM pBase = hb_stack.pItems + hb_stack.pBase->item.asSymbol.stackbase;
+   /* Skip current function */
+   PHB_ITEM pBase = hb_stack.pItems + hb_stack.pBase->item.asSymbol.stackbase;
 
-      hb_retni( pBase->item.asSymbol.paramcnt );
-   }
-   else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "PCOUNT" ); /* NOTE: Clipper catches this at compile time! */
+   hb_retni( pBase->item.asSymbol.paramcnt );
 }
 
 HARBOUR HB_PVALUE( void )                               /* PValue( <nArg> )         */
@@ -3717,3 +3692,4 @@ HARBOUR HB___VMVARSGET( void )
    hb_itemReturn( s_aStatics.item.asArray.value->pItems +
                   hb_stack.iStatics + hb_parni( 1 ) - 1 );
 }
+

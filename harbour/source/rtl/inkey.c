@@ -946,9 +946,6 @@ HARBOUR HB_INKEY( void )
    double seconds = 0.0;
    HB_inkey_enum event_mask = hb_set.HB_SET_EVENTMASK; /* Default to the SET input event mask */
 
-   if( args > 2 )
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "INKEY" ); /* NOTE: Clipper catches this at compile time! */
-
    if( args == 1 || ( args > 1 && hb_param( 1, IT_NUMERIC ) ) )
    {
       /* If only one parameter or if 1st parameter is numeric, then use it

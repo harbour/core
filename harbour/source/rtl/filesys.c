@@ -1447,10 +1447,7 @@ BOOL hb_fsFile( BYTE * pFilename )
 
 HARBOUR HB_FILE( void )
 {
-   if( hb_pcount() == 1 )
-      hb_retl( ISCHAR( 1 ) ? hb_fsFile( ( BYTE * ) hb_parc( 1 ) ) : FALSE );
-   else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "FILE" ); /* NOTE: Clipper catches this at compile time! */
+   hb_retl( ISCHAR( 1 ) ? hb_fsFile( ( BYTE * ) hb_parc( 1 ) ) : FALSE );
 }
 
 HARBOUR HB_FREADSTR( void )

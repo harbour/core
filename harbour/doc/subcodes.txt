@@ -1055,17 +1055,11 @@ start from 3000
  *  $SUBCODE$
  *      BASE/3000
  *  $CATEGORY$
- *      arguments
  *  $ONELINER$
- *      Incorrect number of arguments
  *  $DESCRIPTION$
- *      The number of arguments passed to a function is incorrect
  *  $FUNCTION$
- *      DTOS
  *  $STATUS$
- *      Harbour specific
  *  $SEEALSO$
- *
  *  $END$
  */
 
