@@ -110,6 +110,7 @@ char * hb_comp_szWarnings[] =
    "3Duplicate Declaration of Function %s",
    "3Function \'%s\' conflicting with its declaration",
    "3Variable \'%s\' used but never initialized",
+   "3Incompatible type in assignment to declared array element expected: \'%s\'",
    "0Meaningless use of expression: \'%s\'",
    "2Unreachable code",
    "1Redundant \'ANNOUNCE %s\' statement ignored"

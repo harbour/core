@@ -1,16 +1,62 @@
+20000504-03:10 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/harbour.l
+     + Added:
+	"as bool array"      { return AS_LOGICAL_ARRAY; }
+	"as boolean array"   { return AS_LOGICAL_ARRAY; }
+	"as var"             { return AS_VARIANT; }
+	"as variant"         { return AS_VARIANT; }
+	"as num array"       { return AS_NUMERIC_ARRAY; }
+	"as numeric array"   { return AS_NUMERIC_ARRAY; }
+	"as char array"      { return AS_CHARACTER_ARRAY; }
+	"as character array" { return AS_CHARACTER_ARRAY; }
+	"as string array"    { return AS_CHARACTER_ARRAY; }
+	"as logical array"   { return AS_LOGICAL_ARRAY; }
+	"as bool array"      { return AS_LOGICAL_ARRAY; }
+	"as boolean array"   { return AS_LOGICAL_ARRAY; }
+	"as date array"      { return AS_DATE_ARRAY; }
+	"as array array"     { return AS_ARRAY_ARRAY; }
+	"as block array"     { return AS_BLOCK_ARRAY; }
+	"as object array"    { return AS_OBJECT_ARRAY; }
+	"as var array"       { return AS_VARIANT; }
+	"as variant array"   { return AS_VARIANT; }
+
+   * source/compiler/harbour.y
+     + Added AsArray
+     + Added : %token AS_NUMERIC_ARRAY AS_CHARACTER_ARRAY AS_LOGICAL_ARRAY AS_DATE_ARRAY AS_ARRAY_ARRAY AS_BLOCK_ARRAY AS_OBJECT_ARRAY AS_VARIANT_ARRAY
+     + Added rules to support declarion of array elements type
+
+   * source/compiler/harbour.c
+     ! Minor fix to hb_compVariableGetPos() to signify var usage if warning level lower than 3
+
+   * source/compiler/hbpcode.c
+     + Added logic to hb_compStrongType() to support type checking of array elements declared type.
+
+   * include/hberrors.h
+     + Added #define HB_COMP_ARRAY_ASSIGN_TYPE
+
+   * source/compiler/hbgenerr.c
+     + Added : "3Incompatible type in assignment to declared array element expected: \'%s\'"
+
+   * tests/testwarn.prg
+     + Added code to demonstrate more warnings.
+
+   * contrib/hbclip/hbclip.ch
+     + Added additional strong typing compatibility translations
+
 20000504-12:07 GMT+3 Chen Kedem <niki@actcom.co.il>
    * doc/en/array.txt
      ! Change ASORT() $COMPLIANCE$ as suggested by Victor Szakats
 
 20000504-09:12 GMT+1 Victor Szakats <info@szelvesz.hu>
 
-   * contrib/hbclip/hbclip.ch 
+   * contrib/hbclip/hbclip.ch
      + Added strong typing compatibility translation
 
    * include/hbcomp.h
    * include/hberrors.h
-   * source/compiler/harbour.c 
-   * source/compiler/hbpcode.c 
+   * source/compiler/harbour.c
+   * source/compiler/hbpcode.c
      ! Some macros renamed
      ! One warning fixed.
      ! Minor fixes.

@@ -161,7 +161,8 @@ char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
 %token PLUSEQ MINUSEQ MULTEQ DIVEQ POWER EXPEQ MODEQ EXITLOOP
 %token PRIVATE BEGINSEQ BREAK RECOVER RECOVERUSING DO WITH SELF LINE
 %token MACROVAR MACROTEXT
-%token AS_NUMERIC AS_CHARACTER AS_LOGICAL AS_DATE AS_ARRAY AS_BLOCK AS_OBJECT DECLARE_FUN
+%token AS_NUMERIC AS_CHARACTER AS_LOGICAL AS_DATE AS_ARRAY AS_BLOCK AS_OBJECT AS_VARIANT DECLARE_FUN
+%token AS_NUMERIC_ARRAY AS_CHARACTER_ARRAY AS_LOGICAL_ARRAY AS_DATE_ARRAY AS_ARRAY_ARRAY AS_BLOCK_ARRAY AS_OBJECT_ARRAY AS_VARIANT_ARRAY
 
 /*the lowest precedence*/
 /*postincrement and postdecrement*/
@@ -193,7 +194,7 @@ char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
 %type <valDouble>  NUM_DOUBLE
 %type <valInteger> NUM_INTEGER
 %type <valLong>    NUM_LONG
-%type <iNumber> FunScope AsType
+%type <iNumber> FunScope AsType AsArray
 %type <iNumber> Params ParamList
 %type <iNumber> IfBegin VarList ExtVarList
 %type <iNumber> FieldList
@@ -285,6 +286,26 @@ AsType     : /* not specified */           { hb_comp_cVarType = ' '; }
            | AS_ARRAY                      { hb_comp_cVarType = 'A'; }
            | AS_BLOCK                      { hb_comp_cVarType = 'B'; }
            | AS_OBJECT                     { hb_comp_cVarType = 'O'; }
+           | AS_VARIANT                    { hb_comp_cVarType = ' '; }
+           | AS_NUMERIC_ARRAY              { hb_comp_cVarType = 'n'; }
+           | AS_CHARACTER_ARRAY            { hb_comp_cVarType = 'c'; }
+           | AS_DATE_ARRAY                 { hb_comp_cVarType = 'd'; }
+           | AS_LOGICAL_ARRAY              { hb_comp_cVarType = 'l'; }
+           | AS_ARRAY_ARRAY                { hb_comp_cVarType = 'a'; }
+           | AS_BLOCK_ARRAY                { hb_comp_cVarType = 'b'; }
+           | AS_OBJECT_ARRAY               { hb_comp_cVarType = 'o'; }
+           | AS_VARIANT_ARRAY              { hb_comp_cVarType = 'A'; }
+           ;
+
+AsArray    : AS_ARRAY                      { hb_comp_cVarType = 'A'; }
+           | AS_NUMERIC_ARRAY              { hb_comp_cVarType = 'n'; }
+           | AS_CHARACTER_ARRAY            { hb_comp_cVarType = 'c'; }
+           | AS_DATE_ARRAY                 { hb_comp_cVarType = 'd'; }
+           | AS_LOGICAL_ARRAY              { hb_comp_cVarType = 'l'; }
+           | AS_ARRAY_ARRAY                { hb_comp_cVarType = 'a'; }
+           | AS_BLOCK_ARRAY                { hb_comp_cVarType = 'b'; }
+           | AS_OBJECT_ARRAY               { hb_comp_cVarType = 'o'; }
+           | AS_VARIANT_ARRAY              { hb_comp_cVarType = 'A'; }
            ;
 
 ParamList  : IdentName AsType                { hb_compVariableAdd( $1, ' ' ); $$ = 1; }
@@ -1041,7 +1062,7 @@ ExtVarDef  : VarDef
                   hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), ( BOOL ) 1 );
                   hb_compRTVariableAdd( hb_compExprNewRTVar( NULL, $1 ), TRUE );
                }
-           | MacroVar DimList AS_ARRAY
+           | MacroVar DimList AsArray
                {
                   USHORT uCount = hb_compExprListLen( $2 );
                   hb_compExprDelete( hb_compExprGenPush( $2 ) );
@@ -1087,8 +1108,8 @@ VarDef     : IdentName AsType { hb_compVariableAdd( $1, $2 ); }
                   hb_comp_iVarScope = $<iNumber>3;
                }
 
-           | IdentName DimList        { hb_compVariableDim( $1, $2 ); }
-           | IdentName DimList AS_ARRAY   { hb_comp_cVarType = 'A'; hb_compVariableDim( $1, $2 ); }
+           | IdentName DimList          { hb_compVariableDim( $1, $2 ); }
+           | IdentName DimList AsArray  { hb_compVariableDim( $1, $2 ); }
            ;
 
 /* NOTE: DimList and DimIndex is the same as ArrayIndex and IndexList

@@ -218,7 +218,7 @@ void hb_compStrongType( int iSize )
    ULONG ulPos = pFunc->lPCodePos - iSize;
    SHORT wVar;
    int iVar;
-   char szType1[32], szType2[32];
+   char szType1[32], szType2[32], cType;
    BYTE bLast1, bLast2;
 
    /* Make sure we have enough stack space. */
@@ -659,10 +659,6 @@ void hb_compStrongType( int iSize )
           /* Mark as used */
           pVar->iUsed |= VU_USED;
 
-          /* Review with Ryszard. */
-          if ( pVar->cType == 'U' )
-             pVar->cType = ' ';
-
           pFunc->pStack[ pFunc->iStackIndex++ ] = pVar->cType;
        }
        else
@@ -776,9 +772,23 @@ void hb_compStrongType( int iSize )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
 
-       pFunc->iStackIndex -= wVar;
+       cType = pFunc->pStack[ pFunc->iStackIndex - 1 ];
+       while ( --wVar )
+       {
+          pFunc->iStackIndex--;
 
-       pFunc->pStack[ pFunc->iStackIndex++ ] = 'A';
+          if ( cType == ' ' || cType != pFunc->pStack[ pFunc->iStackIndex - 1 ] )
+          {
+             cType = 'A';
+             break;
+          }
+       }
+
+       /* Lower Case Indicates array of ...*/
+       if ( cType != 'A' )
+          cType = tolower( cType );
+
+       pFunc->pStack[ pFunc->iStackIndex - 1 ] = cType;
 
        break;
 
@@ -789,9 +799,23 @@ void hb_compStrongType( int iSize )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
 
-       pFunc->iStackIndex -= wVar;
+       cType = pFunc->pStack[ pFunc->iStackIndex - 1 ];
+       while ( --wVar )
+       {
+          pFunc->iStackIndex--;
 
-       pFunc->pStack[ pFunc->iStackIndex++ ] = 'A';
+          if ( cType == ' ' || cType != pFunc->pStack[ pFunc->iStackIndex - 1 ] )
+          {
+             cType = 'A';
+             break;
+          }
+       }
+
+       /* Lowe Case Indicates array of ...*/
+       if ( cType != 'A' )
+          cType = tolower( cType );
+
+       pFunc->pStack[ pFunc->iStackIndex - 1 ] = cType;
 
        break;
 
@@ -805,13 +829,37 @@ void hb_compStrongType( int iSize )
 
        if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' )
           ;
-       else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] != 'A' )
+       else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] != 'A' && isupper( pFunc->pStack[ pFunc->iStackIndex - 1 ] ) )
           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_NOT_ARRAY, NULL, NULL );
 
        /* TODO: allow declaration of the Array Elements Type. */
 
        /* Now we have the array elent on the stack.*/
-       pFunc->pStack[ pFunc->iStackIndex - 1 ] = ' ';
+       pFunc->pStack[ pFunc->iStackIndex - 1 ] = toupper( pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+       break;
+
+     case HB_P_ARRAYPOP :
+       /* Poping the Array Index. */
+       pFunc->iStackIndex--;
+
+       if ( pFunc->iStackIndex < 1 )
+          /* TODO Error Message after finalizing all possible pcodes. */
+          break;
+
+       if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' )
+          ;
+       else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] != 'A' && isupper( pFunc->pStack[ pFunc->iStackIndex - 1 ] ) )
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_NOT_ARRAY, NULL, NULL );
+       else if ( toupper( pFunc->pStack[ pFunc->iStackIndex - 1 ] ) != pFunc->pStack[ pFunc->iStackIndex - 1 ] )
+       {
+         char szType[2];
+         sprintf( szType, "%c", toupper( pFunc->pStack[ pFunc->iStackIndex - 1 ] ) );
+         hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_ARRAY_ASSIGN_TYPE, szType, NULL );
+       }
+
+       /* Poping the Assigned Value. */
+       pFunc->iStackIndex--;
+
        break;
 
      /* Macros type unknown */
@@ -870,8 +918,10 @@ void hb_compStrongType( int iSize )
 
          if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
             hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_SUSPECT, pSym->szName, szType );
-         else if ( pSym->cType != pFunc->pStack[ pFunc->iStackIndex ] )
+         else if ( isupper( pSym->cType ) && pSym->cType != pFunc->pStack[ pFunc->iStackIndex ] )
             hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pSym->szName, szType );
+         else if ( toupper( pSym->cType ) != pFunc->pStack[ pFunc->iStackIndex ] )
+            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_ARRAY_ASSIGN_TYPE, szType, NULL );
        }
 
        break;
@@ -897,8 +947,10 @@ void hb_compStrongType( int iSize )
 
          if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
             hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_SUSPECT, pSym->szName, szType );
-         else if ( pSym->cType != pFunc->pStack[ pFunc->iStackIndex ] )
+         else if ( isupper( pSym->cType ) && pSym->cType != pFunc->pStack[ pFunc->iStackIndex ] )
             hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pSym->szName, szType );
+         else if ( toupper( pSym->cType ) != pFunc->pStack[ pFunc->iStackIndex ] )
+            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_ARRAY_ASSIGN_TYPE, szType, NULL );
        }
 
        break;
@@ -937,8 +989,10 @@ void hb_compStrongType( int iSize )
 
          if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
             hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_SUSPECT, pVar->szName, szType );
-         else if ( pVar->cType != pFunc->pStack[ pFunc->iStackIndex ] )
+         else if ( isupper( pVar->cType ) && pVar->cType != pFunc->pStack[ pFunc->iStackIndex ] )
             hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pVar->szName, szType );
+         else if ( toupper( pVar->cType ) != pFunc->pStack[ pFunc->iStackIndex ] )
+            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_ARRAY_ASSIGN_TYPE, szType, NULL );
        }
 
        break;
@@ -973,12 +1027,14 @@ void hb_compStrongType( int iSize )
        if ( pVar && pVar->cType != ' ' )
        {
          char szType[2];
-         sprintf( szType, "%c", pVar->cType );
+         sprintf( szType, "%c", toupper( pVar->cType ) );
 
          if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
             hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_SUSPECT, pVar->szName, szType );
-         else if ( pVar->cType != pFunc->pStack[ pFunc->iStackIndex ] )
+         else if ( isupper( pVar->cType ) && pVar->cType != pFunc->pStack[ pFunc->iStackIndex ] )
             hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pVar->szName, szType );
+         else if ( toupper( pVar->cType ) != pFunc->pStack[ pFunc->iStackIndex ] )
+            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_ARRAY_ASSIGN_TYPE, szType, NULL );
        }
 
        break;
@@ -1010,6 +1066,8 @@ void hb_compStrongType( int iSize )
             hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_SUSPECT, pVar->szName, szType );
          else if ( pVar->cType != pFunc->pStack[ pFunc->iStackIndex ] )
             hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pVar->szName, szType );
+         else if ( toupper( pVar->cType ) != pFunc->pStack[ pFunc->iStackIndex ] )
+            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_ARRAY_ASSIGN_TYPE, szType, NULL );
        }
 
        break;
@@ -1024,24 +1082,6 @@ void hb_compStrongType( int iSize )
      case HB_P_MACROPOPALIASED :
         pFunc->iStackIndex--;
         break;
-
-     case HB_P_ARRAYPOP :
-       /* Poping the Array Index. */
-       pFunc->iStackIndex--;
-
-       if ( pFunc->iStackIndex < 0 )
-          /* TODO Error Message after finalizing all possible pcodes. */
-          break;
-
-       if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' )
-          ;
-       else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] != 'A' )
-          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_NOT_ARRAY, NULL, NULL );
-
-       /* Poping the Assigned Value. */
-       pFunc->iStackIndex--;
-
-       break;
    }
 
    /* TODO Error or trace messages when completed. */
