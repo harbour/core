@@ -136,4 +136,32 @@
   #define OS_DOS_COMPATIBLE
 #endif
 
+/* ***********************************************************************
+ * Platform detection
+ */
+
+#ifndef DOS
+#if defined(_QC) || defined(__DOS__) || defined(MSDOS) || defined(__MSDOS__)
+#define DOS
+#endif
+#endif
+
+#ifndef OS2
+#if defined(__OS2__) || defined(OS_2)
+#define OS2
+#endif
+#endif
+
+#ifndef EMX
+#if defined(__EMX__)
+#define EMX
+#endif
+#endif
+
+#ifndef WINNT
+#if defined(__NT__)
+#define WINNT
+#endif
+#endif
+
 #endif /* HB_SETUP_H_ */

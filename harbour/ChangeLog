@@ -1,3 +1,33 @@
+19990803-12:22 GMT+1 Victor Szel <info@szelvesz.hu>
+   ! include/rddapi.h
+     ITEM -> PHB_ITEM
+     #ifdef COMMENT -> #ifdef 0
+   + include/error.api
+     ERRORP definition added.
+   ! include/itemapi.h - HB_EVAL_PARAM_MAX_ set back to 9
+   + include/*.api - #include all the things they include in original
+     CA-Cl*pper. (*.api, clipdefs.h)
+     Some other CA-Cl*pper compatible typedefs added.
+   + include/fm.api - Some Clipper'87 compatible memory alloc functions
+     added, also contained in CA-Cl*pper.
+     _exmgrab(), _exmback (anyone using these ? 8-)
+   ! include/filesys.h
+     source/rtl/files.c
+     ERRORP -> PHB_ITEM
+   * source/rtl/files.c -> source/rtl/filesys.c
+     source/rtl/Makefile
+     makefile.*
+   ! makefile.b31 - Fixed a bug where filesys.obj depended on extend.c
+   + include/filesys.api 
+     include/extend.api - Some more CA-Cl*pper defines added.
+   * source/rtl/gt/gtwin.c
+     __CYGWIN32__ -> __CYGWIN__
+     Since Cygnus's wrote somewhere that the "32" will be removed
+     in the future versions of Cygwin GCC.
+   * include/gtapi.h - Platform detection code moved to
+     include/hbsetup.h
+     BTW, it seems that it's not used anywhere yet.
+
 19990803-04:50 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/codebloc.c source/rtl/memvars.c
      + #include "itemapi.h"

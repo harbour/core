@@ -8,7 +8,25 @@
 #ifndef HB_EXTEND_API_
 #define HB_EXTEND_API_
 
+#include "clipdefs.h"
 #include "extend.h"
+
+/* Compatible defines */
+
+#define UNDEF           IT_NIL
+#define CHARACTER       IT_STRING
+#define NUMERIC         IT_NUMERIC
+#define LOGICAL         IT_LOGICAL
+#define DATE            IT_DATE
+#define ALIAS           IT_ALIAS
+#define MPTR            IT_BYREF        /* or'ed with type when passed by reference */
+#define MEMO            IT_MEMO
+#define WORD            ( IT_INTEGER | IT_LONG )
+#define ARRAY           IT_ARRAY
+#define BLOCK           IT_BLOCK
+#define DOUBLE          IT_DOUBLE
+
+/* Functions */
 
 #define _parc           hb_parc
 #define _parclen        hb_parclen

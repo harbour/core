@@ -2,10 +2,10 @@
  * $Id$
  */
 
+#include <string.h>
 #include "extend.h"
 #include "init.h"
 #include "filesys.h"
-#include <string.h>
 #include "errorapi.h"
 
 #if defined(__CYGWIN__)
@@ -558,7 +558,7 @@ USHORT  hb_fsIsDrv  ( BYTE nDrive )
 
 /* TODO: Implement hb_fsExtOpen */
 FHANDLE hb_fsExtOpen( BYTEP fpFilename, BYTEP fpDefExt,
-                      USHORT uiFlags, BYTEP fpPaths, ERRORP pError )
+                      USHORT uiFlags, BYTEP fpPaths, PHB_ITEM pError )
 {
    return FS_ERROR;
 }

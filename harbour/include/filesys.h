@@ -50,7 +50,6 @@
 #include "extend.h"
 #include "fileio.ch"
 
-typedef void * ERRORP;
 typedef int    FHANDLE;
 typedef PBYTE  BYTEP;
 
@@ -64,7 +63,7 @@ extern BYTE     hb_fsCurDrv    ( void );
 extern void     hb_fsDelete    ( BYTEP fpFilename );
 extern USHORT   hb_fsError     ( void );
 extern FHANDLE  hb_fsExtOpen   ( BYTEP fpFilename, BYTEP fpDefExt,
-                                 USHORT uiFlags, BYTEP fpPaths, ERRORP pError );
+                                 USHORT uiFlags, BYTEP fpPaths, PHB_ITEM pError );
 extern USHORT   hb_fsIsDrv     ( BYTE nDrive );
 extern BOOL     hb_fsLock      ( FHANDLE hFileHandle, ULONG ulStart,
                                  ULONG ulLength, USHORT uiMode );

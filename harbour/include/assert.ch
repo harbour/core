@@ -26,4 +26,3 @@
 #endif /* NDEBUG */
 
 #endif /* _ASSERT_CH */
-

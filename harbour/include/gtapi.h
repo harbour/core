@@ -2,6 +2,38 @@
  * $Id$
  */
 
+/*
+   GTAPI.H; Screen drawing, cursor and keyboard routines for text mode
+            16-bit and 32-bit MS-DOS, 16-bit and 32-bit OS/2, and 32-bit
+            Windows 95/NT applications.
+
+   This module is based on VIDMGR by Andrew Clarke and modified for
+   the Harbour project
+
+   GTAPI has been compiled and tested with the following C compilers:
+
+     - Turbo C++ (16-bit) for DOS 3.0
+     - Borland C++ (16-bit) for DOS 3.1
+     - Borland C++ (16-bit) for DOS 4.5
+     - Borland C++ (32-bit) for OS/2 1.0
+     - Cygnus GNU C (32-bit) for Windows 95/NT b14.0
+     - DJGPP GNU C (32-bit) for DOS 2.0
+     - EMX GNU C (32-bit) for OS/2 & DOS 0.9b
+     - IBM VisualAge C/C++ 3.0 (32-bit) for OS/2
+     - Microsoft C/C++ (16-bit) for OS/2 6.00a
+     - Microsoft C/C++ (16-bit) for DOS 8.00c
+     - Microsoft Quick C (16-bit) for DOS 2.50
+     - Microsoft Visual C/C++ (16-bit) for DOS 1.52
+     - Microsoft Visual C/C++ (32-bit) for Windows 95/NT 5.0 and 6.0
+     - WATCOM C/C++ (16-bit & 32-bit) for DOS 9.5
+     - WATCOM C/C++ (16-bit & 32-bit) for DOS 10.0
+     - WATCOM C/C++ (32-bit) for OS/2 10.0
+     - WATCOM C/C++ (32-bit) for Windows 95/NT 10.0
+     - HI-TECH Pacific C (16-bit) for DOS 7.51
+     - Symantec C/C++ (16-bit) for DOS 7.0
+     - Zortech C/C++ (16-bit) for DOS 3.0r4
+*/
+
 #ifndef HB_GTAPI_H_
 #define HB_GTAPI_H_
 
@@ -12,38 +44,6 @@
 
 /* maximum length of color string */
 #define CLR_STRLEN      64
-
-/*
- *  GTAPI.H; Screen drawing, cursor and keyboard routines for text mode
- *           16-bit and 32-bit MS-DOS, 16-bit and 32-bit OS/2, and 32-bit
- *           Windows 95/NT applications.
- *
- *  This module is based on VIDMGR by Andrew Clarke and modified for
- *  the Harbour project
- *
- *  GTAPI has been compiled and tested with the following C compilers:
- *
- *    - Turbo C++ (16-bit) for DOS 3.0
- *    - Borland C++ (16-bit) for DOS 3.1
- *    - Borland C++ (16-bit) for DOS 4.5
- *    - Borland C++ (32-bit) for OS/2 1.0
- *    - Cygnus GNU C (32-bit) for Windows 95/NT b14.0
- *    - DJGPP GNU C (32-bit) for DOS 2.0
- *    - EMX GNU C (32-bit) for OS/2 & DOS 0.9b
- *    - IBM VisualAge C/C++ 3.0 (32-bit) for OS/2
- *    - Microsoft C/C++ (16-bit) for OS/2 6.00a
- *    - Microsoft C/C++ (16-bit) for DOS 8.00c
- *    - Microsoft Quick C (16-bit) for DOS 2.50
- *    - Microsoft Visual C/C++ (16-bit) for DOS 1.52
- *    - Microsoft Visual C/C++ (32-bit) for Windows 95/NT 5.0 and 6.0
- *    - WATCOM C/C++ (16-bit & 32-bit) for DOS 9.5
- *    - WATCOM C/C++ (16-bit & 32-bit) for DOS 10.0
- *    - WATCOM C/C++ (32-bit) for OS/2 10.0
- *    - WATCOM C/C++ (32-bit) for Windows 95/NT 10.0
- *    - HI-TECH Pacific C (16-bit) for DOS 7.51
- *    - Symantec C/C++ (16-bit) for DOS 7.0
- *    - Zortech C/C++ (16-bit) for DOS 3.0r4
-*/
 
 /* Public interface. These should never change, only be added to. */
 
@@ -79,30 +79,6 @@ extern int    hb_gtSetSnowFlag(BOOL bNoSnow);
 extern int    hb_gtWrite(char * fpStr, ULONG length);
 extern int    hb_gtWriteAt(USHORT uiRow, USHORT uiCol, char * fpStr, ULONG length);
 extern int    hb_gtWriteCon(char * fpStr, ULONG length);
-
-#ifndef DOS
-#if defined(_QC) || defined(__DOS__) || defined(MSDOS) || defined(__MSDOS__)
-#define DOS
-#endif
-#endif
-
-#ifndef OS2
-#if defined(__OS2__) || defined(OS_2)
-#define OS2
-#endif
-#endif
-
-#ifndef EMX
-#if defined(__EMX__)
-#define EMX
-#endif
-#endif
-
-#ifndef WINNT
-#if defined(__NT__)
-#define WINNT
-#endif
-#endif
 
 /* private interface listed below. these are common to all platforms */
 

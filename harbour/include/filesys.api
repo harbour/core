@@ -48,7 +48,24 @@
 #ifndef HB_FILESYS_API_
 #define HB_FILESYS_API_
 
+#include "clipdefs.h"
 #include "filesys.h"
+#include "error.api"
+
+/* Compatible types */
+
+typedef FHANDLE fhandle;
+typedef FHANDLE * FHANDLEP;
+
+/* DOS predefined standard handles */
+
+#define STDIN           0
+#define STDOUT          1
+#define STDERR          2
+#define STDAUX          3
+#define STDPRN          4
+
+/* Functions */
 
 #define _fsChDir        hb_fsChDir
 #define _fsChDrv        hb_fsChDrv

@@ -10,10 +10,6 @@
 
 #include "itemapi.h"
 
-#ifndef ITEM
-#define ITEM            PHB_ITEM
-#endif
-
 #define _evalLaunch     hb_evalLaunch
 #define _evalNew        hb_evalNew
 #define _evalPutParam   hb_evalPutParam

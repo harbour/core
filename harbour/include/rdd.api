@@ -8,6 +8,8 @@
 #ifndef HB_RDD_API_
 #define HB_RDD_API_
 
+#include "clipdefs.h"
 #include "rddapi.h"
+#include "item.api"
 
 #endif /* HB_RDD_API_ */

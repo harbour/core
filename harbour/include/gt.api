@@ -8,6 +8,7 @@
 #ifndef HB_GT_API_
 #define HB_GT_API_
 
+#include "clipdefs.h"
 #include "gtapi.h"
 
 #define _gtBox          hb_gtBox

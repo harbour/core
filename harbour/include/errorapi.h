@@ -107,4 +107,3 @@ extern void     hb_errorInternal	( ULONG ulCode );
 extern char *   hb_errorNatDescription	( ULONG ulGenCode ); /* Reads error description in national language */
 
 #endif /* HB_ERRORAPI_H_ */
-

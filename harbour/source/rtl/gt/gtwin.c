@@ -24,7 +24,7 @@
 #include "gtapi.h"
 
 #if ! defined(__GNUC__)
-#ifdef __CYGWIN32__
+#ifdef __CYGWIN__
 typedef WORD far *LPWORD;
 #endif
 #endif /* __GNUC__ */
@@ -158,21 +158,21 @@ int hb_gt_GetCursorStyle(void)
       switch(cci.dwSize)
         {
         case 12:
-	  rc=SC_NORMAL;
-	  break;
+          rc=SC_NORMAL;
+          break;
 
         case 99:
-	  rc=SC_INSERT;
-	  break;
+          rc=SC_INSERT;
+          break;
 
         case 49:
-	  rc=SC_SPECIAL1;
-	  break;
+          rc=SC_SPECIAL1;
+          break;
 
-	  /* TODO: cannot tell if the block is upper or lower for cursor */
+          /* TODO: cannot tell if the block is upper or lower for cursor */
           /* Answer: Supposed to be upper third, but ms don't support it. */
         default:
-	  rc=SC_SPECIAL2;
+          rc=SC_SPECIAL2;
         }
     }
 
@@ -221,10 +221,10 @@ void hb_gt_GetText(char cTop, char cLeft, char cBottom, char cRight, char *dest)
       ReadConsoleOutputAttribute(HOutput, pwattr, width, coord, &len);
       for (i = 0; i < width; i++)
         {
-	  *dest = *(pstr + i);
-	  dest++;
-	  *dest = (char)*(pwattr + i)&0xff;
-	  dest++;
+          *dest = *(pstr + i);
+          dest++;
+          *dest = (char)*(pwattr + i)&0xff;
+          dest++;
         }
     }
   hb_xfree(pwattr);
@@ -255,10 +255,10 @@ void hb_gt_PutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
     {
       for (i = 0; i < width; i++)
         {
-	  *(pstr + i) = *srce;
-	  srce++;
-	  *(pwattr + i) = (WORD)((unsigned char)*srce)&0xff;
-	  srce++;
+          *(pstr + i) = *srce;
+          srce++;
+          *(pwattr + i) = (WORD)((unsigned char)*srce)&0xff;
+          srce++;
         }
       coord.X = (DWORD) (cLeft);
       coord.Y = (DWORD) (y);
@@ -444,7 +444,7 @@ void hb_gt_DispEnd(void)
                 coBuf,                      /* col/row size of source buffer */
                 coDest,         /* upper-left cell to write data from in src */
                 &srWin);              /* screen buffer rect to write data to */
-  
+
   hb_xfree(pCharInfo);
 }
 

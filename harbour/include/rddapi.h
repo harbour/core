@@ -12,8 +12,8 @@ typedef void * FARP;
 
 /* RDD method return codes */
 
-#define SUCCESS 0
-#define FAILURE 1
+#define SUCCESS            0
+#define FAILURE            1
 
 /* Flags for DBTRANSINFO */
 
@@ -163,28 +163,28 @@ typedef DBOPENINFO * LPDBOPENINFO;
 *  La estructura de creaci¢n condicional de orden
 */
 
-#ifdef COMMENT
+#ifdef 0
 typedef struct _DBORDERCONDINFO
 {
-   BOOL  fActive;
-   BYTEP abFor;
-   ITEM  itmCobFor;
-   ITEM  itmCobWhile;
-   ITEM  itmCobEval;
-   LONG  lStep;
-   LONG  lStartRecno;
-   LONG  lNextCount;
-   LONG  lRecno;
-   BOOL  fRest;
-   BOOL  fDescending;
-   BOOL  fScoped;
-   BOOL  fAll;
+   BOOL     fActive;
+   BYTEP    abFor;
+   PHB_ITEM itmCobFor;
+   PHB_ITEM itmCobWhile;
+   PHB_ITEM itmCobEval;
+   LONG     lStep;
+   LONG     lStartRecno;
+   LONG     lNextCount;
+   LONG     lRecno;
+   BOOL     fRest;
+   BOOL     fDescending;
+   BOOL     fScoped;
+   BOOL     fAll;
 
-   BOOL  fAdditive;
-   BOOL  fUseCurrent;
-   BOOL  fCustom;
-   BOOL  fNoOptimize;
-   FARP  lpvCargo;
+   BOOL     fAdditive;
+   BOOL     fUseCurrent;
+   BOOL     fCustom;
+   BOOL     fNoOptimize;
+   FARP     lpvCargo;
 
 } DBORDERCONDINFO;
 
@@ -199,19 +199,19 @@ typedef DBORDERCONDINFO * LPDBORDERCONDINFO;
 *  La estructura de creaci¢n de orden
 */
 
-#ifdef COMMENT
+#ifdef 0
 typedef struct
 {
    LPDBORDERCONDINFO lpdbOrdCondInfo; /* Informaci¢n condicional */
    BYTEP             abBagName;       /* Nombre del contenedor de ¢rdenes */
    BYTEP             atomBagName;
-   ITEM              itmOrder;
+   PHB_ITEM          itmOrder;
    BOOL              fUnique;         /* Indicador que determina si todas */
                                       /* las claves con £nicas */
 
-   ITEM              itmCobExpr;      /* Bloque de c¢digo conteniendo la */
+   PHB_ITEM          itmCobExpr;      /* Bloque de c¢digo conteniendo la */
                                       /* expresi¢n clave */
-   ITEM              abExpr;          /* Cadena conteniendo la expresi¢n clave */
+   PHB_ITEM          abExpr;          /* Cadena conteniendo la expresi¢n clave */
 } DBORDERCREATEINFO;
 
 typedef DBORDERCREATEINFO * LPDBORDERCREATEINFO;
@@ -225,17 +225,17 @@ typedef DBORDERCREATEINFO * LPDBORDERCREATEINFO;
 *  La estructura de Set Index
 */
 
-#ifdef COMMENT
+#ifdef 0
 typedef struct
 {
-   ITEM atomBagName;  /* Nombre del contenedor de ¢rdenes */
-   ITEM itmOrder;     /* Nombre o n£mero de la orden */
+   PHB_ITEM atomBagName;  /* Nombre del contenedor de ¢rdenes */
+   PHB_ITEM itmOrder;     /* Nombre o n£mero de la orden */
 
-   ITEM itmCobExpr;   /* Bloque de c¢digo conteniendo la expresi¢n clave */
+   PHB_ITEM itmCobExpr;   /* Bloque de c¢digo conteniendo la expresi¢n clave */
 
-   ITEM itmResult;    /* Resultado de la operaci¢n */
+   PHB_ITEM itmResult;    /* Resultado de la operaci¢n */
 
-   BOOL fAllTags;     /* Indicador de todos los tags a abrir */
+   BOOL     fAllTags;     /* Indicador de todos los tags a abrir */
 
 } DBORDERINFO;
 
@@ -250,21 +250,21 @@ typedef DBORDERINFO * LPDBORDERINFO;
 *  La estructura de  mbito
 */
 
-#ifdef COMMENT
+#ifdef 0
 typedef struct
 {
-   ITEM itmCobFor;   /* Bloque de c¢digo representaci¢n de una cl usula FOR */
-   ITEM lpstrFor;    /* Cadena representaci¢n de una cl usula FOR */
-   ITEM itmCobWhile; /* Bloque de c¢digo representaci¢n de una cl usula WHILE */
-   ITEM lpstrWhile;  /* Cadena representaci¢n de una cl usula WHILE */
-   ITEM lNext;
-   ITEM itmRecID;
-   ITEM fRest;       /* TRUE si se empieza desde el registro actual */
+   PHB_ITEM itmCobFor;   /* Bloque de c¢digo representaci¢n de una cl usula FOR */
+   PHB_ITEM lpstrFor;    /* Cadena representaci¢n de una cl usula FOR */
+   PHB_ITEM itmCobWhile; /* Bloque de c¢digo representaci¢n de una cl usula WHILE */
+   PHB_ITEM lpstrWhile;  /* Cadena representaci¢n de una cl usula WHILE */
+   PHB_ITEM lNext;
+   PHB_ITEM itmRecID;
+   PHB_ITEM fRest;       /* TRUE si se empieza desde el registro actual */
 
-   BOOL fIgnoreFilter;
-   BOOL fIncludeDeleted;
-   BOOL fLast;
-   BOOL fIgnoreDuplicates;
+   BOOL     fIgnoreFilter;
+   BOOL     fIncludeDeleted;
+   BOOL     fLast;
+   BOOL     fIgnoreDuplicates;
 
 } DBSCOPEINFO;
 
@@ -279,12 +279,12 @@ typedef DBSCOPEINFO * LPDBSCOPEINFO;
 *  La estructura de filtro
 */
 
-#ifdef COMMENT
+#ifdef 0
 typedef struct
 {
-   ITEM itmCobExpr;       /* Bloque representaci¢n de la expresi¢n FILTER */
-   ITEM abFilterText;     /* Cadena representaci¢n de la expresi¢n FILTER */
-   BOOL fFilter;
+   PHB_ITEM itmCobExpr;       /* Bloque representaci¢n de la expresi¢n FILTER */
+   PHB_ITEM abFilterText;     /* Cadena representaci¢n de la expresi¢n FILTER */
+   BOOL     fFilter;
 } DBFILTERINFO;
 
 typedef DBFILTERINFO * LPDBFILTERINFO;
@@ -298,11 +298,11 @@ typedef DBFILTERINFO * LPDBFILTERINFO;
 *  La estrurcura de relaciones
 */
 
-#ifdef COMMENT
+#ifdef 0
 typedef struct _DBRELINFO
 {
-   ITEM               itmCobExpr;   /* Bloque representaci¢n de la clave relacional SEEK */
-   ITEM               abKey;        /* Cadena representaci¢n de la clave relacional SEEK */
+   PHB_ITEM           itmCobExpr;   /* Bloque representaci¢n de la clave relacional SEEK */
+   PHB_ITEM           abKey;        /* Cadena representaci¢n de la clave relacional SEEK */
 
    struct _AREA      *lpaParent;    /* El padre de esta relaci¢n */
    struct _AREA      *lpaChild;     /* Los hijos del padre */
@@ -325,10 +325,10 @@ typedef DBRELINFO * LPDBRELINFO;
 *  en cada registro del  rea de trabajo
 */
 
-#ifdef COMMENT
+#ifdef 0
 typedef struct
 {
-   ITEM        itmBlock;  /* El bloque a evaluar */
+   PHB_ITEM    itmBlock;  /* El bloque a evaluar */
    DBSCOPEINFO dbsci;     /* Ambito que limita la evaluaci¢n */
 } DBEVALINFO;
 
@@ -345,7 +345,7 @@ typedef DBEVALINFO * LPDBEVALINFO;
 *  de una base de datos a otra; utilizada por DBTRANSINFO
 */
 
-#ifdef COMMENT
+#ifdef 0
 typedef struct
 {
    USHORT uiSource;       /* N£mero de ¡ndice de campo del fuente */
@@ -365,7 +365,7 @@ typedef DBTRANSITEM * LPDBTRANSITEM;
 *   rea de trabajo a otra
 */
 
-#ifdef COMMENT
+#ifdef 0
 typedef struct
 {
    struct _AREA *lpaSource;     /* Puntero al  rea de trabajo fuente */
@@ -392,7 +392,7 @@ typedef DBTRANSINFO * LPDBTRANSINFO;
 *  orden de la ordenaci¢n.
 */
 
-#ifdef COMMENT
+#ifdef 0
 typedef struct
 {
    USHORT uiField;        /* Indice dentro de la estructura */
@@ -421,7 +421,7 @@ typedef DBSORTITEM * LPDBSORTITEM;
 *  Informaci¢n para la ordenaci¢n f¡sica en un  rea de trabajo
 */
 
-#ifdef COMMENT
+#ifdef 0
 typedef struct
 {
    DBTRANSINFO   dbtri;        /* Informaci¢n de transferencia del  rea de */
@@ -444,7 +444,7 @@ typedef DBSORTINFO * LPDBSORTINFO;
 *  Contiene informaci¢n de bloqueos de registro o fichero
 */
 
-#ifdef COMMENT
+#ifdef 0
 typedef struct
 {
    ULONG  itmRecID;
@@ -497,16 +497,16 @@ typedef struct _AREA
 {
    struct _RDDFUNCS * lprfsHost; /* Virtual method table for this workarea */
 
-   USHORT  uiArea;               /* The number assigned to this workarea */
-// FARP    atomAlias;            /* Pointer to the alias symbol for this workarea */
+   USHORT   uiArea;              /* The number assigned to this workarea */
+// FARP     atomAlias;           /* Pointer to the alias symbol for this workarea */
 
-// USHORT  uiFieldExtent;        /* Total number of fields allocated */
-   USHORT  uiFieldCount;         /* Total number of fields used */
-   LPFIELD lpFields;             /* Pointer to an array of fields */
+// USHORT   uiFieldExtent;       /* Total number of fields allocated */
+   USHORT   uiFieldCount;        /* Total number of fields used */
+   LPFIELD  lpFields;            /* Pointer to an array of fields */
 
-// FARP lpFieldExtents;          /* Void ptr for additional field properties */
+// FARP     lpFieldExtents;      /* Void ptr for additional field properties */
 
-// ITEM valResult;               /* All purpose result holder */
+// PHB_ITEM valResult;           /* All purpose result holder */
 
 // BOOL fTop;                    /* TRUE if "top" */
 // BOOL fBottom;                 /* TRUE if "bottom" */
@@ -547,7 +547,7 @@ typedef USHORT ( * DBENTRYP_SI   )( AREAP area, USHORT index, PHB_ITEM param );
 typedef USHORT ( * DBENTRYP_VP   )( AREAP area, LPDBOPENINFO param );
 typedef USHORT ( * DBENTRYP_SP   )( AREAP area, USHORT * param );
 
-#ifdef COMMENT
+#ifdef 0
 typedef USHORT ( * DBENTRYP_S    )( AREAP area, USHORT param);
 typedef USHORT ( * DBENTRYP_LP   )( AREAP area, LONGP param);
 typedef USHORT ( * DBENTRYP_PP   )( AREAP area, FARPP param);
@@ -556,8 +556,8 @@ typedef USHORT ( * DBENTRYP_SVPB )( AREAP area, USHORT index, FARP param, USHORT
 typedef USHORT ( * DBENTRYP_VPL  )( AREAP area, FARP p1, LONG p2);
 typedef USHORT ( * DBENTRYP_VPLP )( AREAP area, FARP p1, LONGP p2);
 typedef USHORT ( * DBENTRYP_LSP  )( AREAP area, LONG p1, USHORTP p2);
-typedef USHORT ( * DBENTRYP_SSI  )( AREAP area, USHORT p1, USHORT p2, ITEM p3);
-typedef USHORT ( * DBENTRYP_ISI  )( AREAP area, ITEM p1, USHORT p2, ITEM p3);
+typedef USHORT ( * DBENTRYP_SSI  )( AREAP area, USHORT p1, USHORT p2, PHB_ITEM p3);
+typedef USHORT ( * DBENTRYP_ISI  )( AREAP area, PHB_ITEM p1, USHORT p2, PHB_ITEM p3);
 typedef USHORT ( * DBENTRYP_VSP  )( AREAP area, USHORT action, LONG lRecord);
 #endif
 
@@ -861,7 +861,7 @@ typedef RDDFUNCS * PRDDFUNCS;
 
 /*--------------------* M‚todos SUPER *------------------------*/
 
-#ifdef COMMENT
+#ifdef 0
 
 /* M‚todos de movimiento y posicionamiento */
 

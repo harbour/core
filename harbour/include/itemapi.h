@@ -29,7 +29,7 @@
 
 #include "extend.h"
 
-#define HB_EVAL_PARAM_MAX_ 10
+#define HB_EVAL_PARAM_MAX_ 9
 
 typedef struct
 {

@@ -8,6 +8,7 @@
 #ifndef HB_VM_API_
 #define HB_VM_API_
 
+#include "clipdefs.h"
 #include "extend.h"
 
 typedef void * HANDLE;
@@ -42,4 +43,3 @@ typedef void * HANDLE;
 #define _xvheapunlock(h, offset)     /* dummy */
 
 #endif /* HB_VM_API_ */
-

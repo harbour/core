@@ -24,4 +24,3 @@
 /*       edit action corresponding to the key whose value is returned. */
 
 #endif /* _MEMOEDIT_CH */
-

@@ -10,9 +10,10 @@
 #ifndef HB_CAUNDOC_API_
 #define HB_CAUNDOC_API_
 
-/* Undocumented TSUPPORT API */
-
+#include "clipdefs.h"
 #include "filesys.h"
+
+/* Undocumented TSUPPORT API */
 
 #define _tcreat         hb_fsCreate
 #define _tunlink        hb_fsDelete

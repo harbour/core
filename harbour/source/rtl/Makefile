@@ -17,7 +17,7 @@ C_SOURCES=\
         environ.c \
         errorapi.c \
         extend.c \
-        files.c \
+        filesys.c \
         fm.c \
         gtapi.c \
         hardcr.c \

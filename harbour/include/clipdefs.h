@@ -13,12 +13,21 @@
 
 #include "hbdefs.h"
 
-/* old types */
+/* Types moved here from *.api files */
+
+typedef PHB_ITEM  ERRORP;
+typedef double    XDOUBLE;
+typedef PHB_ITEM  ITEM;
+typedef PEVALINFO EVALINFOP;
+
+/* Old types */
+
 typedef BYTE    byte;
 typedef USHORT  quant;
 typedef BOOL    Boolean;
 
-/* new types */
+/* New types */
+
 typedef BYTE*   BYTEP;
 typedef BYTEP   PBYTE;
 typedef BYTEP   BYTEPP;

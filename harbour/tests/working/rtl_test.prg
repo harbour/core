@@ -110,14 +110,14 @@ FUNCTION Main()
 
      TEST_LINE( PadL("abcdef", -5)            , ""               )
      TEST_LINE( PadL("abcdef", 0)             , ""               )
-     TEST_LINE( PadL("abcdef", 5)             , "abcde"          ) /* QUESTION: CA-Clipper "bug", should return: "bcdef" ? */
+     TEST_LINE( PadL("abcdef", 5)             , "abcde"          ) /* QUESTION: CA-Cl*pper "bug", should return: "bcdef" ? */
      TEST_LINE( PadL("abcdef", 10)            , "    abcdef"     )
      TEST_LINE( PadL("abcdef", 10, "1")       , "1111abcdef"     )
      TEST_LINE( PadL("abcdef", 10, "12")      , "1111abcdef"     )
 
      TEST_LINE( PadC("abcdef", -5)            , ""               )
      TEST_LINE( PadC("abcdef", 0)             , ""               )
-     TEST_LINE( PadC("abcdef", 2)             , "ab"             ) /* QUESTION: CA-Clipper "bug", should return: "cd" ? */
+     TEST_LINE( PadC("abcdef", 2)             , "ab"             ) /* QUESTION: CA-Cl*pper "bug", should return: "cd" ? */
      TEST_LINE( PadC("abcdef", 5)             , "abcde"          )
      TEST_LINE( PadC("abcdef", 10)            , "  abcdef  "     )
      TEST_LINE( PadC("abcdef", 10, "1")       , "11abcdef11"     )

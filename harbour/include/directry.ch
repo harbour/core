@@ -16,4 +16,3 @@
 #define F_LEN           5
 
 #endif /* _DIRECTRY_CH */
-

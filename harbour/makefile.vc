@@ -325,7 +325,7 @@ $(OBJ_DIR)\error.obj : $(RTL_DIR)\error.c
 $(OBJ_DIR)\extend.obj : $(RTL_DIR)\extend.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\files.obj : $(RTL_DIR)\files.c
+$(OBJ_DIR)\files.obj : $(RTL_DIR)\filesys.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\fm.obj    : $(RTL_DIR)\fm.c
