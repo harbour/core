@@ -176,7 +176,7 @@ static void hb_out( WORD wParam, hb_out_func_typedef * hb_out_func )
 {
    char * szText;
    PHB_ITEM pItem = hb_param( wParam, IT_ANY );
-   char szBuffer [11];
+   char szBuffer [ 11 ];
 
    switch( hb_parinfo( wParam ) )
    {
@@ -524,12 +524,9 @@ HARBOUR HB_QOUT( void )
 
 HARBOUR HB_SETPOS( void ) /* Sets the screen position */
 {
-   PHB_ITEM pRow, pCol;
    if( hb_pcount() > 1 )
    {
-      pRow = hb_param( 1, IT_NUMERIC );
-      pCol = hb_param( 2, IT_NUMERIC );
-      if( pRow && pCol )
+      if( ISNUM( 1 ) && ISNUM( 2 ) )
       {
          int i_row = hb_parni( 1 );
          int i_col = hb_parni( 2 );
@@ -551,12 +548,9 @@ HARBOUR HB_SETPOS( void ) /* Sets the screen position */
 
 HARBOUR HB_DEVPOS( void ) /* Sets the screen and/or printer position */
 {
-   PHB_ITEM pRow, pCol;
    if( hb_pcount() > 1 )
    {
-      pRow = hb_param( 1, IT_NUMERIC );
-      pCol = hb_param( 2, IT_NUMERIC );
-      if( pRow && pCol )
+      if( ISNUM( 1 ) && ISNUM( 2 ) )
       {
          long l_row = hb_parnl( 1 );
          long l_col = hb_parnl( 2 );
@@ -582,7 +576,7 @@ HARBOUR HB_DEVOUT( void ) /* writes a single value to the current device (screen
    {
 #ifdef HARBOUR_USE_GTAPI
       char fpOldColor[ CLR_STRLEN ];
-      if( ISCHAR(2) )
+      if( ISCHAR( 2 ) )
       {
          hb_gtGetColorStr( fpOldColor );
          hb_gtSetColorStr( hb_parc(2) );
@@ -592,7 +586,7 @@ HARBOUR HB_DEVOUT( void ) /* writes a single value to the current device (screen
       hb_out( 1, hb_devout );
 
 #ifdef HARBOUR_USE_GTAPI
-      if( ISCHAR(2) )
+      if( ISCHAR( 2 ) )
       {
          hb_gtSetColorStr( fpOldColor );
       }
@@ -607,7 +601,7 @@ HARBOUR HB_DISPOUT( void ) /* writes a single value to the current device (scree
 #ifdef HARBOUR_USE_GTAPI
       char fpOldColor[ CLR_STRLEN ];
 
-      if( ISCHAR(2) )
+      if( ISCHAR( 2 ) )
       {
          hb_gtGetColorStr( fpOldColor );
          hb_gtSetColorStr( hb_parc(2) );
@@ -617,7 +611,7 @@ HARBOUR HB_DISPOUT( void ) /* writes a single value to the current device (scree
       hb_out( 1, hb_dispout );
 
 #ifdef HARBOUR_USE_GTAPI
-      if( ISCHAR(2) )
+      if( ISCHAR( 2 ) )
       {
          hb_gtSetColorStr( fpOldColor );
       }
@@ -648,9 +642,7 @@ HARBOUR HB_SETPRC( void ) /* Sets the current printer row and column positions *
 {
    if( hb_pcount() > 1 )
    {
-      PHB_ITEM pRow = hb_param( 1, IT_NUMERIC );
-      PHB_ITEM pCol = hb_param( 1, IT_NUMERIC );
-      if( pRow && pCol )
+      if( ISNUM( 1 ) && ISNUM( 2 ) )
       {
          long l_row = hb_parnl( 1 );
          long l_col = hb_parnl( 2 );
@@ -672,17 +664,17 @@ HARBOUR HB_SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
    v_scroll = 0, h_scroll = 0;
    WORD top, left, bottom, right;
 
-   if( hb_pcount() > 0 && hb_param( 1, IT_NUMERIC ) )
+   if( hb_pcount() > 0 && ISNUM( 1 ) )
       i_top = hb_parni( 1 );
-   if( hb_pcount() > 1 && hb_param( 2, IT_NUMERIC ) )
+   if( hb_pcount() > 1 && ISNUM( 2 ) )
       i_left = hb_parni( 2 );
-   if( hb_pcount() > 2 && hb_param( 3, IT_NUMERIC ) )
+   if( hb_pcount() > 2 && ISNUM( 3 ) )
       i_bottom = hb_parni( 3 );
-   if( hb_pcount() > 3 && hb_param( 4, IT_NUMERIC ) )
+   if( hb_pcount() > 3 && ISNUM( 4 ) )
       i_right = hb_parni( 4 );
-   if( hb_pcount() > 4 && hb_param( 5, IT_NUMERIC ) )
+   if( hb_pcount() > 4 && ISNUM( 5 ) )
       v_scroll = hb_parni( 5 );
-   if( hb_pcount() > 5 && hb_param( 6, IT_NUMERIC ) )
+   if( hb_pcount() > 5 && ISNUM( 6 ) )
       h_scroll = hb_parni( 6 );
 
    /* Enforce limits of (0,0) to (MAXROW(),MAXCOL()) */
@@ -743,21 +735,21 @@ HARBOUR HB_COL( void ) /* Return the current screen column position (zero origin
 HARBOUR HB_DISPBOX (void)
 {
 #ifdef HARBOUR_USE_GTAPI
-   if (ISNUM(1) && ISNUM(2) && ISNUM(3) && ISNUM(4))
+   if( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) && ISNUM( 4 ) )
    {
       char szOldColor [CLR_STRLEN];
 
-      if (ISCHAR(6))
+      if( ISCHAR( 6 ) )
       {
          hb_gtGetColorStr(szOldColor);
          hb_gtSetColorStr(hb_parc(6));
       }
 
-      if (ISCHAR(5))
+      if( ISCHAR( 5 ) )
       {
          hb_gtBox(hb_parni(1), hb_parni(2), hb_parni(3), hb_parni(4), hb_parc(5));
       }
-      else if (ISNUM(5) && hb_parni(5) == 2)
+      else if( ISNUM( 5 ) && hb_parni( 5 ) == 2 )
       {
          hb_gtBoxD(hb_parni(1), hb_parni(2), hb_parni(3), hb_parni(4));
       }
@@ -766,13 +758,13 @@ HARBOUR HB_DISPBOX (void)
          hb_gtBoxS(hb_parni(1), hb_parni(2), hb_parni(3), hb_parni(4));
       }
 
-      if (ISCHAR(6))
+      if( ISCHAR( 6 ) )
       {
          hb_gtSetColorStr(szOldColor);
       }
    }
 #else
-   if (ISNUM(1) && ISNUM(2) && ISNUM(3) && ISNUM(4))
+   if( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) && ISNUM( 4 ) )
    {
       char * szBorderStyle = B_SINGLE;
       int i_top = hb_parni( 1 ), i_left = hb_parni( 2 );
@@ -920,7 +912,7 @@ HARBOUR HB_ISCOLOR (void)
 HARBOUR HB_NOSNOW (void)
 {
 #ifdef HARBOUR_USE_GTAPI
-   if ( ISLOG( 1 ) )
+   if( ISLOG( 1 ) )
    {
       hb_gtSetSnowFlag(hb_parl(1));
    }
@@ -1013,7 +1005,7 @@ HARBOUR HB_SETBLINK( void )
    BOOL bPreviousBlink;
 
    hb_gtGetBlink( &bPreviousBlink );
-   if ( ISLOG( 1 ) )
+   if( ISLOG( 1 ) )
       hb_gtSetBlink( hb_parl( 1 ) );
 
    hb_retl( bPreviousBlink );
@@ -1040,7 +1032,7 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
    /* Read the data using fgets(), because hb_inkeyPoll() doesn't support
        Unix compatible operating systems yet. */
    szResult[0] = '\x0';             /* start with something defined */
-   if (fgets( szResult, ACCEPT_BUFFER_LEN, stdin ))
+   if( fgets( szResult, ACCEPT_BUFFER_LEN, stdin ) )
    {
       strtok(szResult, "\n");     /* strip off the trailing newline
                                      if it exists */
@@ -1123,40 +1115,40 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
 
 HARBOUR HB___COLORINDEX( void )
 {
-   if ( ISCHAR( 1 ) && ISNUM( 2 ) )
+   if( ISCHAR( 1 ) && ISNUM( 2 ) )
    {
       char * szColor = hb_parc( 1 );
       ULONG  ulColorPos;
       ULONG  ulColorLen;
-      USHORT uiColorIndex = (USHORT) hb_parni( 2 );
+      USHORT uiColorIndex = ( USHORT ) hb_parni( 2 );
 
       /* Skip the given number of commas */
 
-      for ( ulColorPos = 0 ; szColor[ ulColorPos ] != '\0' && uiColorIndex > 0 ; ulColorPos++ )
+      for( ulColorPos = 0 ; szColor[ ulColorPos ] != '\0' && uiColorIndex > 0 ; ulColorPos++ )
       {
-         if ( szColor[ ulColorPos ] == ',' )
+         if( szColor[ ulColorPos ] == ',' )
             uiColorIndex--;
       }
 
       /* if found, continue */
 
-      if ( uiColorIndex == 0 )
+      if( uiColorIndex == 0 )
       {
          /* Skip the spaces after the comma */
 
-         while ( szColor[ ulColorPos ] == ' ' ) ulColorPos++;
+         while( szColor[ ulColorPos ] == ' ' ) ulColorPos++;
 
          /* Search for next comma or end of string */
 
          ulColorLen = 0;
 
-         while ( szColor[ ulColorPos + ulColorLen ] != '\0' &&
-                 szColor[ ulColorPos + ulColorLen ] != ',' ) ulColorLen++;
+         while( szColor[ ulColorPos + ulColorLen ] != '\0' &&
+                szColor[ ulColorPos + ulColorLen ] != ',' ) ulColorLen++;
 
          /* Skip the trailing spaces */
 
-         while ( ulColorLen > 0 &&
-                 szColor[ ulColorPos + ulColorLen - 1 ] == ' ' ) ulColorLen--;
+         while( ulColorLen > 0 &&
+                szColor[ ulColorPos + ulColorLen - 1 ] == ' ' ) ulColorLen--;
 
          /* Return the string */
 

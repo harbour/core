@@ -1,3 +1,82 @@
+19990824-18:05 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rtl/extend.c
+    include/extend.h
+    % Variable declarations moved to inner blocks.
+    ! Parameter number zero is considered a bad case, instead of undefined.
+    % Optimalization and cleanup. Returns from inner blocks optimed out.
+    % Array index parameter is only evaluated when actual parameter is an
+      array, so that it should be faster now.
+    % The type checkings reordered, so that the first is the most probable one.
+      Array type is checked last, since this is the most rarely occuring case.
+      This will speed up things a bit.
+    ! Casting to (long) fixed in hb_parni() when return an array element.
+    ! Variable parameters are treated consistently as longs, we are not
+      Clipper compatible here, but in Harbour an array index can be ULONG, just
+      as like the string lengths were already ULONGs instead of ints.
+    ! WORD wArrayIndex changed to ULONG ulArrayIndex.
+    ! hb_storclen() WORD parameter changed to ULONG.
+    + Some casts added to hb_parni(), hb_parnd()
+    ! hb_parl() is returning valid values for INTEGER, LONG and DOUBLE type of
+      parameters. (Clipper does the same except for DOUBLE)
+    ! hb_parnl() is returning the date value as a long is the paramater is DATE
+      type. (just like in Clipper).
+    ; Reformatted to Harbour standard.
+
+  * source/arrays.c
+    ! hb_arrayGetDouble() is now returning a value even for the DATE type,
+      to be consistent with hb_parn*();
+    ! hb_arrayGetBool() is now returning a value even for INTEGER, LONG and
+      DOUBLE types, to be consistent with hb_parl().
+    * Reindented using Harbour standard.
+    % Removed hb_ret() calls, they are not needed, since the default return
+      value is always NIL.
+    ! AEVAL() GPF fixed when the second parameter was not a codeblock.
+    - Removed (unsigned) casts from hb_arrayLen().
+    ; Reformatted to Harbour standard.
+
+  * source/rdd/dbcmd.c
+    ! HB_DBSKIP() it will work even when a DOUBLE type of numeric was passed,
+      (like Clipper). The low level HB_ITEM access changes to use the
+      extend API.
+
+  * makefile.b32
+    ! Fixes by Luiz Rafael Culik <Culik@sl.conex.net> implemented.
+
+  * source/rtl/strings.c
+    + Added a new runtime error for ALLTRIM(), this error has been 
+      introduced in Clipper 5.3.
+      (Put between HB_COMPATIBILITY_CLIPPER_53 guard)
+    % Some PHB_ITEM accesses changed to type checking macros, only where
+      the PHB_ITEM was only used to check the type.
+    * Some reformatting (putting spaces between ()[] chars)
+    ; Reformatted to Harbour standard.
+
+  * source/rtl/math.c
+    % PHB_ITEM access changed to Extend API calls and/or type checking macros.
+
+  * source/rtl/console.c
+    % PHB_ITEM access changed to Extend API calls and/or type checking macros.
+    ! SETPRC() was checking the first parameter type two times, but not at all
+      the second.
+
+  * source/rtl/descend.c
+    ! One (double) cast moved to the right place.
+
+  * source/rtl/classes.c
+    % One hb_ret() removed.
+    * Some reformatting.
+
+  * tests/working/rtl_test.prg
+    + CA-Clipper bugs documented somewhat better.
+
+  * source/rtl/dates.c
+    source/rtl/dir.c
+    source/rtl/inkey.c
+    source/vm/hvm.c
+    * Some minor formatting change: defined( x ) -> defined(x).
+    + Two (double) casts added to hb_vmPopDouble()
+
 19990824-17:57 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/debug/debugger.prg
      + Added support for Next Window (K_TAB) and Prev Window (K_SH_TAB)

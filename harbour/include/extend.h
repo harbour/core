@@ -230,7 +230,7 @@ extern void     hb_retnd( double dNumber ); /* returns a double */
 extern void     hb_reta( ULONG ulLen );  /* returns an array with a specific length */
 
 extern void     hb_storc( char * szText, int iParam, ... ); /* stores a szString on a variable by reference */
-extern void     hb_storclen( char * fixText, WORD wLength, int iParam, ... ); /* stores a fixed length string on a variable by reference */
+extern void     hb_storclen( char * fixText, ULONG ulLength, int iParam, ... ); /* stores a fixed length string on a variable by reference */
 extern void     hb_stords( char * szDate, int iParam, ... );   /* szDate must have yyyymmdd format */
 extern void     hb_storl( int iLogical, int iParam, ... ); /* stores a logical integer on a variable by reference */
 extern void     hb_storni( int iValue, int iParam, ... ); /* stores an integer on a variable by reference */

@@ -67,7 +67,7 @@
 
 char * hb_strDescend( char * szText, ULONG ulLen )
 {
-   if (!(ulLen == 1 && szText[0] == '\0'))
+   if( ! ( ulLen == 1 && szText[ 0 ] == '\0' ) )
    {
       char *s;
 
@@ -82,7 +82,7 @@ HARBOUR HB_DESCEND( void )
 {
    if( hb_pcount() == 1 )
    {
-      PHB_ITEM pItem = hb_param(1, IT_ANY );
+      PHB_ITEM pItem = hb_param( 1, IT_ANY );
 
       if( pItem )
       {
@@ -95,12 +95,12 @@ HARBOUR HB_DESCEND( void )
             PHB_ITEM pReturn;
             double dValue;
 
-            if ( IS_DOUBLE( pItem ) )
-               dValue = (double)pItem->item.asDouble.value;
+            if( IS_DOUBLE( pItem ) )
+               dValue = pItem->item.asDouble.value;
             else if( IS_INTEGER( pItem ) )
-               dValue = (double)pItem->item.asInteger.value;
+               dValue = ( double ) pItem->item.asInteger.value;
             else if( IS_LONG( pItem ) )
-               dValue = pItem->item.asLong.value;
+               dValue = ( double ) pItem->item.asLong.value;
 
             pReturn = hb_itemPutND( NULL, -1 * dValue );
             hb_itemReturn( pReturn );
@@ -111,7 +111,7 @@ HARBOUR HB_DESCEND( void )
 */
          }
          else if( IS_LOGICAL( pItem ) )
-            hb_retl( !pItem->item.asLogical.value );
+            hb_retl( ! pItem->item.asLogical.value );
       }
    }
 }

@@ -101,7 +101,7 @@ static PHB_SYMB pSymStart;        /* start symbol of the application. MAIN() is 
 static PSYMBOLS pSymbols = 0;     /* to hold a linked list of all different modules symbol tables */
 static BYTE     byErrorLevel = 0; /* application exit errorlevel */
 
-/* Stores the position on the stack of current SEQUENCE envelope or 0 if no 
+/* Stores the position on the stack of current SEQUENCE envelope or 0 if no
  * SEQUENCE is active
  */
 static LONG     RecoverBase = 0;
@@ -119,7 +119,7 @@ static WORD wActionRequest  = 0;
 /* uncomment it to trace the virtual machine activity */
 /* #define  bHB_DEBUG */
 
-#if defined( bHB_DEBUG )
+#if defined(bHB_DEBUG)
 #define HB_DEBUG( x )         printf( x )
 #define HB_DEBUG2( x, y )     printf( x, y )
 #else
@@ -1734,23 +1734,24 @@ static void hb_vmPopAliasedField( PHB_SYMB pSym )
 
 double hb_vmPopDouble( WORD *pwDec )
 {
-   double d;
+   double dNumber;
 
    hb_stackDec();
+
    switch( stack.pPos->type & ~IT_BYREF )
    {
       case IT_INTEGER:
-           d = stack.pPos->item.asInteger.value;
+           dNumber = ( double ) stack.pPos->item.asInteger.value;
            *pwDec =0;
            break;
 
       case IT_LONG:
-           d = stack.pPos->item.asLong.value;
+           dNumber = ( double ) stack.pPos->item.asLong.value;
            *pwDec =0;
            break;
 
       case IT_DOUBLE:
-           d = stack.pPos->item.asDouble.value;
+           dNumber = stack.pPos->item.asDouble.value;
            *pwDec =stack.pPos->item.asDouble.decimal;
            break;
 
@@ -1758,9 +1759,12 @@ double hb_vmPopDouble( WORD *pwDec )
            hb_errInternal( 9999, "Incorrect item type trying to Pop a double", NULL, NULL );
            break;
    }
+
    stack.pPos->type = IT_NIL;
+
    HB_DEBUG( "hb_vmPopDouble\n" );
-   return d;
+
+   return dNumber;
 }
 
 static void hb_vmPopField( PHB_SYMB pSym )
@@ -1842,11 +1846,14 @@ double hb_vmPopNumber( void )
            break;
 
       default:
-           hb_stackShow();
            hb_errInternal( 9999, "Incorrect item on the stack trying to pop a number", NULL, NULL );
            break;
    }
+
    stack.pPos->type = IT_NIL;
+
+   HB_DEBUG( "hb_vmPopNumber\n" );
+
    return dNumber;
 }
 

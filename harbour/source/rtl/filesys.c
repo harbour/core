@@ -8,53 +8,53 @@
 #include "errorapi.h"
 
 #if defined(__CYGWIN__)
-  #include <mingw32/share.h>
+   #include <mingw32/share.h>
 #endif
 
 #if defined(__GNUC__)
-  #include <sys/types.h>
-  #include <sys/stat.h>
-  #include <unistd.h>
-  #include <fcntl.h>
-  #include <errno.h>
+   #include <sys/types.h>
+   #include <sys/stat.h>
+   #include <unistd.h>
+   #include <fcntl.h>
+   #include <errno.h>
 
-  #if !defined(HAVE_POSIX_IO)
-  #define HAVE_POSIX_IO
-  #endif
+   #if !defined(HAVE_POSIX_IO)
+      #define HAVE_POSIX_IO
+   #endif
 #endif
 
 #if defined(__WATCOMC__)
-  #include <sys/stat.h>
-  #include <share.h>
-  #include <fcntl.h>
-  #include <io.h>
-  #include <direct.h>
-  #include <errno.h>
+   #include <sys/stat.h>
+   #include <share.h>
+   #include <fcntl.h>
+   #include <io.h>
+   #include <direct.h>
+   #include <errno.h>
 
-  #if !defined(HAVE_POSIX_IO)
-  #define HAVE_POSIX_IO
-  #endif
+   #if !defined(HAVE_POSIX_IO)
+      #define HAVE_POSIX_IO
+   #endif
 #endif
 
 #if defined(__BORLANDC__) || defined(__IBMCPP__) || defined(_MSC_VER)
-  #include <sys\stat.h>
-  #include <io.h>
-  #include <fcntl.h>
-  #include <share.h>
-  #if defined(__IBMCPP__) || defined(_MSC_VER)
-    #include <direct.h>
-  #else
-    #include <dir.h>
-  #endif
+   #include <sys\stat.h>
+   #include <io.h>
+   #include <fcntl.h>
+   #include <share.h>
+   #if defined(__IBMCPP__) || defined(_MSC_VER)
+      #include <direct.h>
+   #else
+      #include <dir.h>
+   #endif
 
-  #if defined(_MSC_VER)
-    #include <sys\locking.h>
-  #else
-    #if !defined(HAVE_POSIX_IO)
-    #define HAVE_POSIX_IO
-    #endif
-  #endif
-  #include <errno.h>
+   #if defined(_MSC_VER)
+      #include <sys\locking.h>
+   #else
+      #if !defined(HAVE_POSIX_IO)
+         #define HAVE_POSIX_IO
+      #endif
+   #endif
+   #include <errno.h>
 #endif
 
 #ifdef __MPW__
@@ -62,57 +62,54 @@
 #endif
 
 #ifndef O_BINARY
-   #define O_BINARY 0   /* O_BINARY not defined on Linux */
+   #define O_BINARY     0       /* O_BINARY not defined on Linux */
 #endif
 
 #ifndef S_IEXEC
-#define S_IEXEC  0x0040 /* owner may execute <directory search> */
+   #define S_IEXEC      0x0040  /* owner may execute <directory search> */
 #endif
 
 #ifndef S_IRWXU
-#define S_IRWXU  0x01c0 /* RWE permissions mask for owner */
+   #define S_IRWXU      0x01C0  /* RWE permissions mask for owner */
 #endif
 
 #ifndef S_IRUSR
-#define S_IRUSR  0x0100 /* owner may read */
+   #define S_IRUSR      0x0100  /* owner may read */
 #endif
 
 #ifndef S_IWUSR
-#define S_IWUSR  0x0080 /* owner may write */
+   #define S_IWUSR      0x0080  /* owner may write */
 #endif
 
 #ifndef S_IXUSR
-#define S_IXUSR  0x0040 /* owner may execute <directory search> */
+   #define S_IXUSR      0x0040  /* owner may execute <directory search> */
 #endif
 
 #ifndef SH_COMPAT
-#define SH_COMPAT       0x00    /* Compatibility */
+   #define SH_COMPAT    0x00    /* Compatibility */
 #endif
 
 #ifndef SH_DENYRW
-#define SH_DENYRW       0x10    /* Deny read/write */
+   #define SH_DENYRW    0x10    /* Deny read/write */
 #endif
 
 #ifndef SH_DENYWR
-#define SH_DENYWR       0x20    /* Deny write */
+   #define SH_DENYWR    0x20    /* Deny write */
 #endif
 
 #ifndef SH_DENYRD
-#define SH_DENYRD       0x30    /* Deny read */
+   #define SH_DENYRD    0x30    /* Deny read */
 #endif
 
 #ifndef SH_DENYNO
-#define SH_DENYNO       0x40    /* Deny nothing */
+   #define SH_DENYNO    0x40    /* Deny nothing */
 #endif
 
-
-#define IT_NUMBER       (IT_INTEGER|IT_LONG|IT_DOUBLE)
-
-static USHORT last_error = 0;
+static USHORT s_uiErrorLast = 0;
 
 #if !defined(PATH_MAX)
 /* if PATH_MAX isn't defined, 256 bytes is a good number :) */
-#define PATH_MAX 256
+   #define PATH_MAX 256
 #endif
 
 #define MKLONG(_1,_2,_3,_4) (((long)_4)<<24)|(((long)_3)<<16)|(((long)_2)<<8)|_1
@@ -124,73 +121,73 @@ extern int rename( const char *, const char * );
 
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
 
-static int convert_open_flags( int flags )
+static int convert_open_flags( USHORT uiFlags )
 {
-        /* by default FO_READ+FO_COMPAT is set */
-        int result_flags = 0;
+   /* by default FO_READ + FO_COMPAT is set */
+   int result_flags = 0;
 
-        result_flags |= O_BINARY;
+   result_flags |= O_BINARY;
 
-        if( flags == 0 )
-                result_flags |= O_RDONLY|SH_COMPAT;
+   if( uiFlags == 0 )
+      result_flags |= O_RDONLY | SH_COMPAT;
 
-        /* read & write flags */
-        if( flags & FO_WRITE )
-                result_flags |= O_WRONLY;
+   /* read & write flags */
+   if( uiFlags & FO_WRITE )
+      result_flags |= O_WRONLY;
 
-        if( flags & FO_READWRITE )
-                result_flags |= O_RDWR;
+   if( uiFlags & FO_READWRITE )
+      result_flags |= O_RDWR;
 
-        /* shared flags */
-        if( flags & FO_EXCLUSIVE )
-                result_flags |= SH_DENYRW;
+   /* shared flags */
+   if( uiFlags & FO_EXCLUSIVE )
+      result_flags |= SH_DENYRW;
 
-        if( flags & FO_DENYWRITE )
-                result_flags |= SH_DENYWR;
+   if( uiFlags & FO_DENYWRITE )
+      result_flags |= SH_DENYWR;
 
-        if( flags & FO_DENYREAD )
-                result_flags |= SH_DENYRD;
+   if( uiFlags & FO_DENYREAD )
+      result_flags |= SH_DENYRD;
 
-        if( flags & FO_DENYNONE )
-                result_flags |= SH_DENYNO;
+   if( uiFlags & FO_DENYNONE )
+      result_flags |= SH_DENYNO;
 
-        if( flags & FO_SHARED )
-                result_flags |= SH_DENYNO;
+   if( uiFlags & FO_SHARED )
+      result_flags |= SH_DENYNO;
 
-        return result_flags;
+   return result_flags;
 }
 
-static int convert_seek_flags( int flags )
+static int convert_seek_flags( USHORT uiFlags )
 {
-        /* by default FS_SET is set */
-        int result_flags=0;
+   /* by default FS_SET is set */
+   int result_flags = 0;
 
-        result_flags = SEEK_SET;
+   result_flags = SEEK_SET;
 
-        if( flags & FS_RELATIVE )
-                result_flags = SEEK_CUR;
+   if( uiFlags & FS_RELATIVE )
+      result_flags = SEEK_CUR;
 
-        if( flags & FS_END )
-                result_flags = SEEK_END;
+   if( uiFlags & FS_END )
+      result_flags = SEEK_END;
 
-        return result_flags;
+   return result_flags;
 }
 
-static void convert_create_flags( int flags, int *result_flags, unsigned *result_pmode )
+static void convert_create_flags( USHORT uiFlags, int * result_flags, unsigned * result_pmode )
 {
-        /* by default FC_NORMAL is set */
+   /* by default FC_NORMAL is set */
 
-        *result_flags = O_BINARY | O_CREAT | O_TRUNC | O_RDWR;
-        *result_pmode = S_IRUSR | S_IWUSR;
+   *result_flags = O_BINARY | O_CREAT | O_TRUNC | O_RDWR;
+   *result_pmode = S_IRUSR | S_IWUSR;
 
-        if( flags & FC_READONLY )
-                *result_pmode = S_IRUSR;
+   if( uiFlags & FC_READONLY )
+      *result_pmode = S_IRUSR;
 
-        if( flags & FC_HIDDEN )
-                *result_flags |= 0;
+   if( uiFlags & FC_HIDDEN )
+      *result_flags |= 0;
 
-        if( flags & FC_SYSTEM )
-                *result_flags |= 0;
+   if( uiFlags & FC_SYSTEM )
+      *result_flags |= 0;
 }
 
 #endif
@@ -200,338 +197,489 @@ static void convert_create_flags( int flags, int *result_flags, unsigned *result
  * FILESYS.API FUNCTIONS --
  */
 
-FHANDLE hb_fsOpen   ( BYTE * name, USHORT flags )
+FHANDLE hb_fsOpen   ( BYTE * pFilename, USHORT uiFlags )
 {
-        FHANDLE handle;
-#if defined(HAVE_POSIX_IO)
-        errno = 0;
-        handle = open((char *)name,convert_open_flags(flags));
-        last_error = errno;
-#else
-  #if defined( _MSC_VER )
-        errno = 0;
-        handle = _open( ( char * ) name, convert_open_flags( flags ) );
-        last_error = errno;
-  #else
-        handle = FS_ERROR;
-        last_error = FS_ERROR;
-  #endif
-#endif
-        return handle;
-}
-
-FHANDLE hb_fsCreate ( BYTE * name, USHORT flags )
-{
-        FHANDLE handle;
-        int oflag;
-        unsigned pmode;
+   FHANDLE hFileHandle;
 
 #if defined(HAVE_POSIX_IO)
-        errno = 0;
-        convert_create_flags( flags, &oflag, &pmode );
-        handle = open((char *)name,oflag,pmode);
-        if( handle == FS_ERROR)
-        {
-           /* This if block is required, because errno will be set
-              if the file did not exist and had to be created, even
-              when the create is successful! */
-           last_error = errno;
-        }
+
+   errno = 0;
+   hFileHandle = open( ( char * ) pFilename, convert_open_flags( uiFlags ) );
+   s_uiErrorLast = errno;
+
 #else
-  #if defined( _MSC_VER )
-        errno = 0;
-        convert_create_flags( flags, &oflag, &pmode );
-        handle = _open( ( char * ) name, oflag, pmode );
-        if( handle == FS_ERROR )
-        {
-           /* This if block is required, because errno will be set
-              if the file did not exist and had to be created, even
-              when the create is successful! */
-           last_error = errno;
-        }
-  #else
-        handle = FS_ERROR;
-        last_error = FS_ERROR;
-  #endif
+
+   #if defined(_MSC_VER)
+
+      errno = 0;
+      hFileHandle = _open( ( char * ) pFilename, convert_open_flags( uiFlags ) );
+      s_uiErrorLast = errno;
+
+   #else
+
+      hFileHandle = FS_ERROR;
+      s_uiErrorLast = FS_ERROR;
+
+   #endif
+
 #endif
-        return handle;
+
+   return hFileHandle;
 }
 
-void    hb_fsClose  ( FHANDLE handle )
+FHANDLE hb_fsCreate ( BYTE * pFilename, USHORT uiFlags )
 {
-#if defined( HAVE_POSIX_IO )
-    close( handle );
-    return;
-#else
-  #if defined( _MSC_VER )
-    _close( handle );
-    return;
-  #endif
-#endif
-}
+   FHANDLE hFileHandle;
+   int oflag;
+   unsigned pmode;
 
-USHORT  hb_fsRead   ( FHANDLE handle, BYTE * buff, USHORT count )
-{
-        USHORT bytes;
-#if defined( HAVE_POSIX_IO )
-        errno = 0;
-        bytes = read( handle, buff, count );
-        last_error = errno;
-        if( bytes == 65535U ) bytes = 0;
-#else
-  #if defined( _MSC_VER )
-        errno = 0;
-        bytes = _read( handle, buff, count );
-        last_error = errno;
-        if( bytes == 65535U ) bytes = 0;
-  #else
-        bytes = 0;
-        last_error = FS_ERROR;
-  #endif
-#endif
-        return bytes;
-}
+   s_uiErrorLast = 0;
 
-USHORT  hb_fsWrite  ( FHANDLE handle, BYTE * buff, USHORT count )
-{
-        USHORT bytes;
-#if defined( HAVE_POSIX_IO )
-        errno = 0;
-        bytes = write( handle, buff, count );
-        last_error = errno;
-#else
-  #if defined( _MSC_VER )
-        errno = 0;
-        bytes = _write( handle, buff, count );
-        last_error = errno;
-  #else
-        bytes = 0;
-        last_error = FS_ERROR;
-  #endif
-#endif
-        return bytes;
-}
-
-ULONG   hb_fsSeek   ( FHANDLE handle, LONG offset, USHORT flags )
-{
-        ULONG position;
 #if defined(HAVE_POSIX_IO)
-        errno = 0;
-        position = lseek( handle, offset, convert_seek_flags( flags ) );
-        last_error = errno;
+
+   errno = 0;
+   convert_create_flags( uiFlags, &oflag, &pmode );
+   hFileHandle = open( ( char * ) pFilename, oflag, pmode );
+   if( hFileHandle == -1 )
+   {
+      /* This if block is required, because errno will be set
+         if the file did not exist and had to be created, even
+         when the create is successful! */
+      s_uiErrorLast = errno;
+   }
+
 #else
-  #if defined( _MSC_VER )
-        errno = 0;
-        position = _lseek( handle, offset, convert_seek_flags( flags ) );
-        last_error = errno;
-  #else
-        position = 0;
-        last_error = FS_ERROR;
-  #endif
+
+   #if defined(_MSC_VER)
+
+      errno = 0;
+      convert_create_flags( uiFlags, &oflag, &pmode );
+      hFileHandle = _open( ( char * ) pFilename, oflag, pmode );
+      if( hFileHandle == -1 )
+      {
+         /* This if block is required, because errno will be set
+            if the file did not exist and had to be created, even
+            when the create is successful! */
+         s_uiErrorLast = errno;
+      }
+
+   #else
+
+      hFileHandle = FS_ERROR;
+      s_uiErrorLast = FS_ERROR;
+
+   #endif
+
 #endif
-        return position;
+
+   return hFileHandle;
+}
+
+void    hb_fsClose  ( FHANDLE hFileHandle )
+{
+#if defined(HAVE_POSIX_IO)
+
+   errno = 0;
+   close( hFileHandle );
+   s_uiErrorLast = errno;
+
+#else
+
+   #if defined(_MSC_VER)
+
+      errno = 0;
+      _close( hFileHandle );
+      s_uiErrorLast = errno;
+
+   #else
+
+      s_uiErrorLast = FS_ERROR;
+
+   #endif
+
+#endif
+
+}
+
+USHORT  hb_fsRead   ( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
+{
+   USHORT uiRead;
+
+#if defined(HAVE_POSIX_IO)
+
+   errno = 0;
+   uiRead = read( hFileHandle, pBuff, uiCount );
+   s_uiErrorLast = errno;
+   if( uiRead == ( USHORT )-1 )
+      uiRead = 0;
+
+#else
+
+   #if defined(_MSC_VER)
+
+      errno = 0;
+      uiRead = _read( hFileHandle, pBuff, uiCount );
+      s_uiErrorLast = errno;
+      if( uiRead == ( USHORT )-1 )
+         uiRead = 0;
+
+   #else
+
+      uiRead = 0;
+      s_uiErrorLast = FS_ERROR;
+
+   #endif
+
+#endif
+
+   return uiRead;
+}
+
+USHORT  hb_fsWrite  ( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
+{
+   USHORT uiWritten;
+
+#if defined(HAVE_POSIX_IO)
+
+   errno = 0;
+   uiWritten = write( hFileHandle, pBuff, uiCount );
+   s_uiErrorLast = errno;
+   if( uiWritten == (USHORT)-1 )
+      uiWritten = 0;
+
+#else
+
+   #if defined(_MSC_VER)
+
+      errno = 0;
+      uiWritten = _write( hFileHandle, pBuff, uiCount );
+      s_uiErrorLast = errno;
+      if( uiWritten == (USHORT)-1 )
+         uiWritten = 0;
+
+   #else
+
+      uiWritten = 0;
+      s_uiErrorLast = FS_ERROR;
+
+   #endif
+
+#endif
+
+   return uiWritten;
+}
+
+ULONG   hb_fsSeek   ( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
+{
+   ULONG ulPos;
+
+#if defined(HAVE_POSIX_IO)
+
+   errno = 0;
+   ulPos = lseek( hFileHandle, lOffset, convert_seek_flags( uiFlags ) );
+   s_uiErrorLast = errno;
+
+#else
+
+   #if defined(_MSC_VER)
+
+      errno = 0;
+      ulPos = _lseek( hFileHandle, lOffset, convert_seek_flags( uiFlags ) );
+      s_uiErrorLast = errno;
+
+   #else
+
+      ulPos = 0;
+      s_uiErrorLast = FS_ERROR;
+
+   #endif
+
+#endif
+
+   return ulPos;
 }
 
 USHORT  hb_fsError  ( void )
 {
-        return last_error;
+   return s_uiErrorLast;
 }
 
-void    hb_fsDelete ( BYTE * name )
+void    hb_fsDelete ( BYTE * pFilename )
 {
 #if defined(HAVE_POSIX_IO)
-        errno = 0;
-        unlink( ( char * ) name );
-        last_error = errno;
-        return;
+
+   errno = 0;
+   unlink( ( char * ) pFilename );
+   s_uiErrorLast = errno;
+
 #else
-  #if defined( _MSC_VER )
-        errno = 0;
-        remove( ( char *) name );
-        last_error = errno;
-        return;
-  #endif
+
+   #if defined(_MSC_VER)
+
+      errno = 0;
+      remove( ( char *) pFilename );
+      s_uiErrorLast = errno;
+
+   #else
+
+      s_uiErrorLast = FS_ERROR;
+
+   #endif
+
 #endif
 }
 
-void    hb_fsRename ( BYTE * older, BYTE * newer )
+void    hb_fsRename ( BYTE * pOldName, BYTE * pNewName )
 {
-#if defined(HAVE_POSIX_IO) || defined( _MSC_VER )
-        errno = 0;
-        rename( ( char * ) older, ( char * ) newer );
-        last_error = errno;
-        return;
+#if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
+
+   errno = 0;
+   rename( ( char * ) pOldName, ( char * ) pNewName );
+   s_uiErrorLast = errno;
+
+#else
+
+   s_uiErrorLast = FS_ERROR;
+
 #endif
 }
 
-BOOL    hb_fsLock   ( FHANDLE handle, ULONG start,
-                      ULONG length, USHORT mode )
+BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
+                      ULONG ulLength, USHORT uiMode )
 {
-        int result=0;
+   int iResult = 0;
 
 #if defined(_MSC_VER)
-        ULONG position;
+   ULONG ulPos;
 #endif
 
 #if defined(HAVE_POSIX_IO) && !defined(__GNUC__) && !defined(__IBMCPP__)
-        errno = 0;
-        switch( mode )
-        {
-           case FL_LOCK:
-              result = lock(handle, start, length);
-              break;
 
-           case FL_UNLOCK:
-              result = unlock(handle, start, length);
-        }
-        last_error = errno;
+   errno = 0;
+   switch( uiMode )
+   {
+      case FL_LOCK:
+         iResult = lock( hFileHandle, ulStart, ulLength );
+         break;
+
+      case FL_UNLOCK:
+         iResult = unlock( hFileHandle, ulStart, ulLength );
+   }
+   s_uiErrorLast = errno;
+
 #else
+
 #if defined(_MSC_VER)
-        position = hb_fsSeek( handle, start, 0 );
-        result = locking( handle, mode?_LK_UNLCK:_LK_LOCK,length );
-        hb_fsSeek( handle, position, 0 );
+
+   ulPos = hb_fsSeek( hFileHandle, ulStart, FS_SET );
+
+   switch( uiMode )
+   {
+      case FL_LOCK:
+         iResult = locking( hFileHandle, _LK_LOCK, ulLength );
+         break;
+
+      case FL_UNLOCK:
+         iResult = locking( hFileHandle, _LK_UNLCK, ulLength );
+   }
+
+   hb_fsSeek( hFileHandle, ulPos, FS_SET );
+
 #else
-        result = 1;
-        last_error = FS_ERROR;
+
+   iResult = 1;
+   s_uiErrorLast = FS_ERROR;
+
 #endif
+
 #endif
-        return (result ? FALSE : TRUE );
+
+   return ( iResult ? FALSE : TRUE );
 }
 
-void    hb_fsCommit ( FHANDLE handle )
+void    hb_fsCommit ( FHANDLE hFileHandle )
 {
 #if defined(HAVE_POSIX_IO)
 
-        int dup_handle;
-        errno = 0;
-        dup_handle = dup(handle);
-        last_error = errno;
-        if (dup_handle != -1)
-        {
-           close(dup_handle);
-           last_error = errno;
-        }
+   int dup_handle;
+
+   errno = 0;
+   dup_handle = dup( hFileHandle );
+   s_uiErrorLast = errno;
+
+   if( dup_handle != -1 )
+   {
+      close( dup_handle );
+      s_uiErrorLast = errno;
+   }
+
+#else
+
+   s_uiErrorLast = FS_ERROR;
 
 #endif
-        return;
 }
 
-BOOL    hb_fsMkDir  ( BYTE * name )
+BOOL    hb_fsMkDir  ( BYTE * pDirname )
 {
-        int result;
+   int iResult;
+
 #if defined(HAVE_POSIX_IO)
-        errno = 0;
-  #if !defined(__WATCOMC__) && !defined(__BORLANDC__) && !defined(__IBMCPP__)
-        result = mkdir( (char *)name, S_IWUSR|S_IRUSR);
-  #else
-        result = mkdir( (char *)name );
-  #endif
-        last_error = errno;
+
+   errno = 0;
+
+   #if !defined(__WATCOMC__) && !defined(__BORLANDC__) && !defined(__IBMCPP__)
+      iResult = mkdir( ( char * ) pDirname, S_IWUSR | S_IRUSR );
+   #else
+      iResult = mkdir( ( char * ) pDirname );
+   #endif
+
+   s_uiErrorLast = errno;
+
 #else
-        result = 1;
-        last_error = FS_ERROR;
+
+   iResult = 1;
+   s_uiErrorLast = FS_ERROR;
+
 #endif
-        return (result ? FALSE : TRUE );
+
+   return ( iResult ? FALSE : TRUE );
 }
 
-BOOL    hb_fsChDir  ( BYTE * name )
+BOOL    hb_fsChDir  ( BYTE * pDirname )
 {
-        int result;
+   int iResult;
+
 #if defined(HAVE_POSIX_IO)
-        errno = 0;
-        result = chdir( (char *)name );
-        last_error = errno;
+
+   errno = 0;
+   iResult = chdir( ( char * ) pDirname );
+   s_uiErrorLast = errno;
+
 #else
-        result = 1;
-        last_error = FS_ERROR;
+
+   iResult = 1;
+   s_uiErrorLast = FS_ERROR;
+
 #endif
-        return (result ? FALSE : TRUE );
+
+   return ( iResult ? FALSE : TRUE );
 }
 
-BOOL    hb_fsRmDir  ( BYTE * name )
+BOOL    hb_fsRmDir  ( BYTE * pDirname )
 {
-        int result;
+   int iResult;
+
 #if defined(HAVE_POSIX_IO)
-        errno = 0;
-        result = rmdir( (char *)name );
-        last_error = errno;
+
+   errno = 0;
+   iResult = rmdir( ( char * ) pDirname );
+   s_uiErrorLast = errno;
+
 #else
-        result = 1;
-        last_error = FS_ERROR;
+
+   iResult = 1;
+   s_uiErrorLast = FS_ERROR;
+
 #endif
-        return (result ? FALSE : TRUE );
+
+   return ( iResult ? FALSE : TRUE );
 }
 
 /* TODO: Make it thread safe */
 
 BYTE *  hb_fsCurDir ( USHORT uiDrive )
 {
-        static char cwd_buff[PATH_MAX+1];
+   static char cwd_buff[ PATH_MAX + 1 ];
+
 #if defined(HAVE_POSIX_IO)
-        errno = 0;
-        getcwd(cwd_buff,PATH_MAX);
-        last_error = errno;
+
+   errno = 0;
+   getcwd( cwd_buff, PATH_MAX );
+   s_uiErrorLast = errno;
+
 #else
-        cwd_buff[0] = 0;
-        last_error = FS_ERROR;
+
+   cwd_buff[ 0 ] = '\0';
+   s_uiErrorLast = FS_ERROR;
+
 #endif
-#if defined(_MSC_VER)
-   BYTE * dmm = ( BYTE * )cwd_buff;
-#endif
-        return ( BYTE * )cwd_buff;
+
+   return ( BYTE * ) cwd_buff;
 }
 
 /* TODO: Implement nDrive */
 
 USHORT  hb_fsChDrv  ( BYTE * nDrive )
 {
-        USHORT result;
+   USHORT iResult;
+
 #if defined(HAVE_POSIX_IO)
-        errno = 0;
-        result = 0;
-        last_error = errno;
-        last_error = FS_ERROR; /* TODO: Remove when function implemented */
+
+   errno = 0;
+   iResult = 0;
+   s_uiErrorLast = errno;
+   s_uiErrorLast = FS_ERROR; /* TODO: Remove when function implemented */
+
 #else
-        result = 0;
-        last_error = FS_ERROR;
+
+   iResult = 0;
+   s_uiErrorLast = FS_ERROR;
+
 #endif
-        return result;
+
+   return iResult;
 }
 
 BYTE    hb_fsCurDrv ( void )
 {
-        USHORT result;
+   USHORT iResult;
+
 #if defined(HAVE_POSIX_IO)
-        errno = 0;
-        result = 0;
-        last_error = errno;
-        last_error = FS_ERROR; /* TODO: Remove when function implemented */
+
+   errno = 0;
+   iResult = 0;
+   s_uiErrorLast = errno;
+   s_uiErrorLast = FS_ERROR; /* TODO: Remove when function implemented */
+
 #else
-        result = 0;
-        last_error = FS_ERROR;
+
+   iResult = 0;
+   s_uiErrorLast = FS_ERROR;
+
 #endif
-        return result;
+
+   return iResult;
 }
 
 USHORT  hb_fsIsDrv  ( BYTE nDrive )
 {
-        USHORT result;
+   USHORT iResult;
+
 #if defined(HAVE_POSIX_IO)
-        errno = 0;
-        result = 0;
-        last_error = errno;
-        last_error = FS_ERROR; /* TODO: Remove when function implemented */
+
+   errno = 0;
+   iResult = 0;
+   s_uiErrorLast = errno;
+   s_uiErrorLast = FS_ERROR; /* TODO: Remove when function implemented */
+
 #else
-        result = 0;
-        last_error = FS_ERROR;
+
+   iResult = 0;
+   s_uiErrorLast = FS_ERROR;
+
 #endif
-        return result;
+
+   return iResult;
 }
 
 /* TODO: Implement hb_fsExtOpen */
-FHANDLE hb_fsExtOpen( BYTE * fpFilename, BYTE * fpDefExt,
-                      USHORT uiFlags, BYTE * fpPaths, PHB_ITEM pError )
+FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
+                      USHORT uiFlags, BYTE * pPaths, PHB_ITEM pError )
 {
+
+   s_uiErrorLast = FS_ERROR;
+
    return FS_ERROR;
 }
 
@@ -541,216 +689,183 @@ FHANDLE hb_fsExtOpen( BYTE * fpFilename, BYTE * fpDefExt,
 
 HARBOUR HB_FOPEN( void )
 {
-        PHB_ITEM arg1_it = hb_param(1,IT_STRING);
-        PHB_ITEM arg2_it = hb_param(2,IT_NUMBER);
-
-        int open_flags;
-        int file_handle = -1;
-
-        if( arg1_it )
-        {
-            if( arg2_it )
-                open_flags = hb_parni(2);
-            else
-                open_flags = 0;
-
-            file_handle = hb_fsOpen( ( BYTE * )hb_parc(1), open_flags );
-        }
-        else
-        {
-            hb_errRT_BASE(EG_ARG, 3006, NULL, "FOPEN");
-        }
-
-        hb_retni(file_handle);
-        return;
+   if( ISCHAR( 1 ) )
+   {
+      hb_retni( hb_fsOpen( ( BYTE * ) hb_parc( 1 ), 
+                           ISNUM( 2 ) ? hb_parni( 2 ) : FO_READ ) );
+   }
+   else
+   {
+      /* NOTE: Undocumented but existing Clipper Run-time error */
+      hb_errRT_BASE( EG_ARG, 2021, NULL, "FOPEN" );
+   }
 }
 
 HARBOUR HB_FCREATE( void )
 {
-        PHB_ITEM arg1_it = hb_param(1,IT_STRING);
-        PHB_ITEM arg2_it = hb_param(2,IT_NUMBER);
+   FHANDLE hFileHandle;
 
-        int create_flags;
-        int file_handle = -1;
+   if( ISCHAR( 1 ) )
+      hFileHandle = hb_fsCreate( ( BYTE * ) hb_parc( 1 ), 
+                                 ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL );
+   else
+      hFileHandle = FS_ERROR;
 
-        if( arg1_it )
-        {
-            if( arg2_it )
-                create_flags = hb_parni(2);
-            else
-                create_flags = 0;
-
-            file_handle = hb_fsCreate( ( BYTE * )hb_parc(1), create_flags );
-        }
-
-        hb_retni(file_handle);
-        return;
+   hb_retni( hFileHandle );
 }
 
 HARBOUR HB_FREAD( void )
 {
-        PHB_ITEM arg1_it = hb_param(1,IT_NUMBER);
-        PHB_ITEM arg2_it = hb_param(2,IT_STRING+IT_BYREF);
-        PHB_ITEM arg3_it = hb_param(3,IT_NUMBER);
+   ULONG ulRead = 0;
 
-        long   bytes=0;
+   if( ISNUM( 1 ) && hb_param( 2, IT_STRING | IT_BYREF ) != NULL && ISNUM( 3 ) )
+   {
+      ULONG ulToRead = hb_parnl( 3 );
 
-        if( arg1_it && arg2_it && arg3_it )
-        {
-            bytes = hb_fsRead(hb_parni(1), ( BYTE * )hb_parc(2), hb_parnl(3) );
-        }
+      if( ulToRead <= hb_parclen( 2 ) )
+      {
+         /* NOTE: Warning, the read buffer will be directly modified ! */
 
-        hb_retnl(bytes);
-        return;
+         ulRead = hb_fsRead( hb_parni( 1 ),
+                             hb_parc( 2 ),
+                             ulToRead );
+      }
+      else ulRead = (ULONG) -1;
+   }
+   else ulRead = (ULONG) -1;
+
+   hb_retnl( ulRead );
 }
 
 HARBOUR HB_FWRITE( void )
 {
-        PHB_ITEM arg1_it = hb_param(1,IT_NUMBER);
-        PHB_ITEM arg2_it = hb_param(2,IT_STRING);
-        PHB_ITEM arg3_it = hb_param(3,IT_NUMBER);
+   ULONG ulWritten;
 
-        long   bytes=0;
+   if( ISNUM( 1 ) && ISCHAR( 2 ) )
+      ulWritten = hb_fsWrite( hb_parni( 1 ), 
+                              ( BYTE * ) hb_parc( 2 ), 
+                              ISNUM( 3 ) ? hb_parnl( 3 ) : hb_parclen( 2 ) );
+   else
+      ulWritten = 0;
 
-        if( arg1_it && arg2_it )
-        {
-            bytes = (arg3_it ? hb_parnl(3) : hb_parclen( 2 ) );
-            bytes = hb_fsWrite( hb_parni(1), ( BYTE * )hb_parc(2), bytes);
-        }
-
-        hb_retnl(bytes);
-        return;
+   hb_retnl( ulWritten );
 }
 
 HARBOUR HB_FERROR( void )
 {
-        hb_retni(hb_fsError());
-        return;
+   hb_retni( hb_fsError() );
 }
 
 HARBOUR HB_FCLOSE( void )
 {
-        PHB_ITEM arg1_it = hb_param(1,IT_NUMBER);
+   s_uiErrorLast = 0;
 
-        last_error = 0;
-        if( arg1_it )
-        {
-            hb_fsClose(hb_parni(1));
-        }
-        hb_retl( last_error == 0 );
-        return;
+   if( ISNUM( 1 ) )
+   {
+      hb_fsClose( hb_parni( 1 ) );
+      hb_retl( s_uiErrorLast == 0 );
+   }
+   else
+      hb_retl( FALSE );
 }
 
 HARBOUR HB_FERASE( void )
 {
-        PHB_ITEM arg1_it = hb_param(1,IT_STRING);
+   if( ISCHAR( 1 ) )
+   {
+      hb_fsDelete( ( BYTE * ) hb_parc( 1 ) );
+   }
 
-        if( arg1_it )
-        {
-           hb_fsDelete( ( BYTE * )hb_parc(1) );
-        }
-
-        hb_retni(last_error=0);
-        return;
+   hb_retni( s_uiErrorLast );
 }
 
 HARBOUR HB_FRENAME( void )
 {
-        PHB_ITEM arg1_it = hb_param(1,IT_STRING);
-        PHB_ITEM arg2_it = hb_param(2,IT_STRING);
+   if( ISCHAR( 1 ) && ISCHAR( 2 ) )
+   {
+      hb_fsRename( ( BYTE * ) hb_parc( 1 ), 
+                   ( BYTE * ) hb_parc( 2 ) );
+   }
 
-        if( arg1_it && arg2_it )
-        {
-            hb_fsRename( ( BYTE * )hb_parc(1), ( BYTE * )hb_parc(2) );
-        }
-
-        hb_retni(last_error);
-        return;
+   hb_retni( s_uiErrorLast );
 }
 
 HARBOUR HB_FSEEK( void )
 {
-        PHB_ITEM arg1_it = hb_param(1,IT_NUMBER);
-        PHB_ITEM arg2_it = hb_param(2,IT_NUMBER);
-        PHB_ITEM arg3_it = hb_param(3,IT_NUMBER);
+   ULONG ulPos;
 
-        long bytes=0;
-        int  pos;
+   if( ISNUM( 1 ) && ISNUM( 2 ) )
+      ulPos = hb_fsSeek( hb_parni( 1 ), 
+                         hb_parnl( 2 ), 
+                         ISNUM( 3 ) ? hb_parni( 3 ) : FS_SET );
+   else
+      ulPos = 0;
 
-        if( arg1_it && arg2_it )
-        {
-            pos = (arg3_it ? hb_parni(3) : FS_SET);
-            bytes = hb_fsSeek(hb_parni(1),hb_parnl(2),pos);
-        }
-
-        hb_retnl(bytes);
-        return;
+   hb_retnl( ulPos );
 }
 
 HARBOUR HB_FILE( void )
 {
-        PHB_ITEM arg1_it = hb_param( 1, IT_STRING );
+   if( ISCHAR( 1 ) )
+   {
 
-        if( arg1_it )
-        {
 /*TODO: Check if F_OK is defined in all compilers */
 #ifdef OS_UNIX_COMPATIBLE
-           hb_retl( access(hb_parc(1), F_OK) == 0 );
-#else
-  #ifdef __MPW__
-           int hFileHandle;
 
-           if( (hFileHandle = open( hb_parc( 1 ), O_RDONLY )) >= 0 )
-           {
-               close( hFileHandle );
-               hb_retl( 1 );
-           }
-           else hb_retl(0);
-  #else
-           hb_retl( access(hb_parc(1), 0) == 0 );
-  #endif
+      hb_retl( access( hb_parc( 1 ), F_OK ) == 0 );
+
+#else
+
+   #ifdef __MPW__
+
+      int hFileHandle;
+
+      if( ( hFileHandle = open( hb_parc( 1 ), O_RDONLY ) ) >= 0 )
+      {
+         close( hFileHandle );
+         hb_retl( TRUE );
+      }
+      else
+         hb_retl( FALSE );
+
+   #else
+
+      hb_retl( access( hb_parc( 1 ), 0 ) == 0 );
+
+   #endif
+
 #endif
-        }
-        else hb_retl(0);
-        return;
+
+   }
+   else
+      hb_retl( FALSE );
 }
 
 HARBOUR HB_FREADSTR( void )
 {
-        PHB_ITEM arg1_it = hb_param( 1, IT_NUMBER );
-        PHB_ITEM arg2_it = hb_param( 2, IT_NUMBER );
+   if( ISNUM( 1 ) && ISNUM( 2 ) )
+   {
+      ULONG ulToRead = hb_parnl( 2 );
 
-        int    handle;
-        long   bytes;
-        long   nRead;
-        long   readed;
-        char * buffer;
-        char   ch[1];
+      if( ulToRead > 0 )
+      {
+         BYTE * buffer = ( BYTE * ) hb_xgrab( ulToRead + 1 );
+         ULONG ulRead;
 
-        if( arg1_it )
-        {
-           handle = hb_parni(1);
-           bytes  = (arg2_it ? hb_parnl(2) : 0);
-           buffer = ( char * ) hb_xgrab(bytes + 1);
+         ulRead = hb_fsRead( ( FHANDLE ) hb_parni( 1 ), buffer, ulToRead );
 
-           readed=0; ch[0]=1;
-           while( readed < bytes )
-           {
-                 nRead = read(handle,ch,1);
-                 if( nRead < 1 )
-                        break;
-                 buffer[readed]=ch[0];
-                 readed++;
-           }
+         buffer[ ulRead ] = '\0';
 
-           buffer[readed]=0;
-           hb_retc(buffer);
-           hb_xfree(buffer);
-        }
-        else
-           hb_retc("");
+         /* NOTE: This is valid, Clipper will not return Chr(0) from FREADSTR() */
+         hb_retc( buffer );
 
-        return;
+         hb_xfree( buffer );
+      }
+      else
+         hb_retc( "" );
+   }
+   else
+      hb_retc( "" );
 }
 
 /* NOTE: This function should not return the leading and trailing */
@@ -758,209 +873,232 @@ HARBOUR HB_FREADSTR( void )
 
 HARBOUR HB_CURDIR( void )
 {
-   hb_retc( (char *)hb_fsCurDir( ( ISCHAR( 1 ) && hb_parclen( 1 ) ) ? (USHORT)( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0 ) );
+   hb_retc( ( char * ) hb_fsCurDir( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ? 
+      ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0 ) );
 }
 
 HARBOUR HB_BIN2I( void )
 {
-        PHB_ITEM arg1_it = hb_param( 1, IT_STRING );
-        char * s;
-        int    result=0;
+   int iResult = 0;
 
-        if( arg1_it )
-        {
-           s = hb_parc(1);
-           if( hb_parclen(1) >= 2 )
-                result = MKINT(s[0],s[1]);
-           else
-              result = 0;
-        }
+   if( ISCHAR( 1 ) )
+   {
+      char * szString = hb_parc( 1 );
 
-        hb_retni(result);
-        return;
+      if( hb_parclen( 1 ) >= 2 )
+         iResult = MKINT( szString[ 0 ], szString[ 1 ] );
+   }
+
+   hb_retni( iResult );
 }
 
 HARBOUR HB_BIN2L( void )
 {
-        PHB_ITEM arg1_it = hb_param( 1, IT_STRING );
-        char * s;
-        long   result=0;
+   long lResult = 0;
 
-        if( arg1_it )
-        {
-           s = hb_parc(1);
-           if( hb_parclen(1) >= 4 )
-              result = MKLONG(s[0],s[1],s[2],s[3]);
-           else
-              result = 0;
-        }
+   if( ISCHAR( 1 ) )
+   {
+      char * szString = hb_parc( 1 );
 
-        hb_retni(result);
-        return;
+      if( hb_parclen( 1 ) >= 4 )
+         lResult = MKLONG( szString[ 0 ], szString[ 1 ], szString[ 2 ], szString[ 3 ] );
+   }
+
+   hb_retnl( lResult );
 }
 
 HARBOUR HB_BIN2W( void )
 {
-        HB_BIN2I();
+   HB_BIN2I();
 }
 
 HARBOUR HB_I2BIN( void )
 {
-        PHB_ITEM arg1_it = hb_param( 1, IT_INTEGER );
-        int n;
-        char s[3];
+   char szString[ 2 ];
 
-        if( arg1_it )
-        {
-           n = hb_parni(1);
-           s[0] = n & 0xFF;
-           s[1] = (n & 0xFF00)>>8;
-           s[2] = 0;
-           hb_retclen(s,3);
-        }
-        else
-           hb_retclen("\0\0",2);
+   if( ISNUM( 1 ) )
+   {
+      int iValue = hb_parni( 1 );
 
-        return;
+      szString[ 0 ] =   iValue & 0x00FF;
+      szString[ 1 ] = ( iValue & 0xFF00 ) >> 8;
+   }
+   else
+   {
+      szString[ 0 ] =
+      szString[ 1 ] = '\0';
+   }
+
+   hb_retclen( szString, 2 );
 }
 
 HARBOUR HB_L2BIN( void )
 {
-        PHB_ITEM arg1_it = hb_param( 1, IT_LONG );
-        long  n;
-        char  s[5];
+   char szString[ 4 ];
 
-        if( arg1_it )
-        {
-           n = hb_parnl(1);
-           s[0] =  n & 0x000000FF;
-           s[1] = (n & 0x0000FF00)>>8;
-           s[2] = (n & 0x00FF0000)>>16;
-           s[3] = (n & 0xFF000000)>>24;
-           s[4] = 0;
-           hb_retclen(s,5);
-        }
-        else
-           hb_retclen("\0\0\0\0",4);
+   if( ISNUM( 1 ) )
+   {
+      long lValue = hb_parnl( 1 );
 
-        return;
+      szString[ 0 ] =   lValue & 0x000000FF;
+      szString[ 1 ] = ( lValue & 0x0000FF00 ) >> 8;
+      szString[ 2 ] = ( lValue & 0x00FF0000 ) >> 16;
+      szString[ 3 ] = ( lValue & 0xFF000000 ) >> 24;
+   }
+   else
+   {
+      szString[ 0 ] =
+      szString[ 1 ] =
+      szString[ 2 ] =
+      szString[ 3 ] = '\0';
+   }
+
+   hb_retclen( szString, 4 );
 }
 
 HARBOUR HB_W2BIN( void )
 {
-        HB_I2BIN();
+   HB_I2BIN();
 }
 
-#define IS_PATH_SEP( c ) (c == OS_PATH_DELIMITER)
+#define IS_PATH_SEP( c ) ( c == OS_PATH_DELIMITER )
 
 /* Split given filename into path, name and extension */
 PHB_FNAME hb_fsFNameSplit( char *szFilename )
 {
-  PHB_FNAME pName = (PHB_FNAME) hb_xgrab( sizeof(HB_FNAME) );
-  int iLen = strlen(szFilename);
-  int iSlashPos;
-  int iDotPos;
-  int iPos;
+   PHB_FNAME pName = ( PHB_FNAME ) hb_xgrab( sizeof( HB_FNAME ) );
 
-  pName->szPath = pName->szName = pName->szExtension = NULL;
+   int iLen = strlen( szFilename );
+   int iSlashPos;
+   int iDotPos;
+   int iPos;
 
-  iSlashPos = iLen-1;
-  iPos = 0;
+   pName->szPath =
+   pName->szName =
+   pName->szExtension = NULL;
 
-  while( iSlashPos >= 0 && !IS_PATH_SEP(szFilename[ iSlashPos ]) )
-    --iSlashPos;
+   iSlashPos = iLen - 1;
+   iPos = 0;
 
-  if( iSlashPos == 0 )
-  {
-    /* root path ->  \filename */
-    pName->szBuffer[ 0 ] = OS_PATH_DELIMITER;
-    pName->szBuffer[ 1 ] = '\x0';
-    pName->szPath = pName->szBuffer;
-    iPos = 2;  /* first free position after the slash */
-  }
-  else if( iSlashPos > 0 )
-  {
-    /* path with separator ->  path\filename */
-    memcpy( pName->szBuffer, szFilename, iSlashPos );
-    pName->szBuffer[ iSlashPos ] = '\x0';
-    pName->szPath = pName->szBuffer;
-    iPos = iSlashPos + 1;   /* first free position after the slash */
-  }
+   while( iSlashPos >= 0 && !IS_PATH_SEP( szFilename[ iSlashPos ] ) )
+      --iSlashPos;
 
-  iDotPos = iLen-1;
-  while( iDotPos > iSlashPos && szFilename[ iDotPos ] != '.' )
-    --iDotPos;
-  if( (iDotPos-iSlashPos) > 1 )
-  {
-    /* the dot was found
-     * and there is at least one character between a slash and a dot
-     */
-    if( iDotPos == iLen-1 )
-    {
-      /* the dot is the last character -use it as extension name */
-      pName->szExtension = pName->szBuffer+iPos;
-      pName->szBuffer[ iPos++ ] = '.';
-      pName->szBuffer[ iPos++ ] = '\x0';
-    }
-    else
-    {
-      pName->szExtension = pName->szBuffer+iPos;
-      /* copy rest of the string with terminating ZERO character */
-      memcpy( pName->szExtension, szFilename+iDotPos+1, iLen-iDotPos );
-      iPos += iLen-iDotPos;
-    }
-  }
-  else
-    /* there is no dot in the filename or it is  '.filename' */
-    iDotPos = iLen;
+   if( iSlashPos == 0 )
+   {
+      /* root path -> \filename */
+      pName->szBuffer[ 0 ] = OS_PATH_DELIMITER;
+      pName->szBuffer[ 1 ] = '\0';
+      pName->szPath = pName->szBuffer;
+      iPos = 2;  /* first free position after the slash */
+   }
+   else if( iSlashPos > 0 )
+   {
+      /* path with separator -> path\filename */
+      memcpy( pName->szBuffer, szFilename, iSlashPos );
+      pName->szBuffer[ iSlashPos ] = '\0';
+      pName->szPath = pName->szBuffer;
+      iPos = iSlashPos + 1;   /* first free position after the slash */
+   }
 
-  pName->szName = pName->szBuffer + iPos;
-  memcpy( pName->szName, szFilename + iSlashPos + 1, iDotPos - iSlashPos - 1 );
-  pName->szName[ iDotPos - iSlashPos - 1 ] = '\x0';
+   iDotPos = iLen - 1;
+   while( iDotPos > iSlashPos && szFilename[ iDotPos ] != '.' )
+      --iDotPos;
 
-  return pName;
+   if( ( iDotPos - iSlashPos ) > 1 )
+   {
+      /* the dot was found
+       * and there is at least one character between a slash and a dot
+       */
+      if( iDotPos == iLen - 1 )
+      {
+         /* the dot is the last character -use it as extension name */
+         pName->szExtension = pName->szBuffer + iPos;
+         pName->szBuffer[ iPos++ ] = '.';
+         pName->szBuffer[ iPos++ ] = '\0';
+      }
+      else
+      {
+         pName->szExtension = pName->szBuffer + iPos;
+         /* copy rest of the string with terminating ZERO character */
+         memcpy( pName->szExtension, szFilename + iDotPos + 1, iLen - iDotPos );
+         iPos += iLen - iDotPos;
+      }
+   }
+   else
+      /* there is no dot in the filename or it is  '.filename' */
+      iDotPos = iLen;
+
+   pName->szName = pName->szBuffer + iPos;
+   memcpy( pName->szName, szFilename + iSlashPos + 1, iDotPos - iSlashPos - 1 );
+   pName->szName[ iDotPos - iSlashPos - 1 ] = '\0';
+
+   return pName;
 }
 
 /* This function joins path, name and extension into a string with a filename */
 char * hb_fsFNameMerge( char *szFileName, PHB_FNAME pFileName )
 {
-  if( pFileName->szPath && pFileName->szPath[ 0 ] )
-  {
-    /* we have not empty path specified */
-    int iLen = strlen(pFileName->szPath);
+   if( pFileName->szPath && pFileName->szPath[ 0 ] )
+   {
+      /* we have not empty path specified */
+      int iLen = strlen( pFileName->szPath );
 
-    strcpy( szFileName, pFileName->szPath );
+      strcpy( szFileName, pFileName->szPath );
 
-    /* if the path is a root directory then we don't need to add path separator */
-    if( !(IS_PATH_SEP(pFileName->szPath[ 0 ]) && pFileName->szPath[ 0 ] == '\x0') )
-    {
-      /* add the path separator only in cases:
-       *  when a name doesn't start with it
-       *  when the path doesn't end with it
-       */
-      if( !( IS_PATH_SEP(pFileName->szName[ 0 ]) || IS_PATH_SEP(pFileName->szPath[ iLen-1 ]) ) )
+      /* if the path is a root directory then we don't need to add path separator */
+      if( !( IS_PATH_SEP( pFileName->szPath[ 0 ] ) && pFileName->szPath[ 0 ] == '\0' ) )
       {
-        szFileName[ iLen++ ] = OS_PATH_DELIMITER;
-        szFileName[ iLen ] = '\x0';
+         /* add the path separator only in cases:
+          *  when a name doesn't start with it
+          *  when the path doesn't end with it
+          */
+         if( !( IS_PATH_SEP( pFileName->szName[ 0 ] ) || IS_PATH_SEP( pFileName->szPath[ iLen-1 ] ) ) )
+         {
+            szFileName[ iLen++ ] = OS_PATH_DELIMITER;
+            szFileName[ iLen ] = '\0';
+         }
       }
-    }
-    strcpy( szFileName+iLen, pFileName->szName );
-  }
-  else
-    strcpy( szFileName, pFileName->szName );
+      strcpy( szFileName + iLen, pFileName->szName );
+   }
+   else
+      strcpy( szFileName, pFileName->szName );
 
-  if( pFileName->szExtension )
-  {
-    int iLen = strlen(szFileName);
+   if( pFileName->szExtension )
+   {
+      int iLen = strlen( szFileName );
 
-    if( !(pFileName->szExtension[ 0 ] == '.' || szFileName[ iLen-1 ] == '.') )
-    {
-      /* add extension separator only when extansion doesn't contain it */
-      szFileName[ iLen++ ] = '.';
-      szFileName[ iLen ] = '\x0';
-    }
-    strcpy( szFileName+iLen, pFileName->szExtension );
-  }
+      if( !( pFileName->szExtension[ 0 ] == '.' || szFileName[ iLen-1 ] == '.') )
+      {
+         /* add extension separator only when extansion doesn't contain it */
+         szFileName[ iLen++ ] = '.';
+         szFileName[ iLen ] = '\0';
+      }
+      strcpy( szFileName + iLen, pFileName->szExtension );
+   }
 
-  return szFileName;
+   return szFileName;
 }
+
+/*
+If you call pFileName = hb_fsFNameSplit( "C:FILE.EXT" ) the result is:
+   pFileName->szPath      => (null)       must be 'C:'
+   pFileName->szName      => 'C:FILE'     must be 'FILE'
+   pFileName->szExtension => '.EXT'       Ok!
+
+If you call pFileName = hb_fsFNameSplit( "C:\FILE.EXT" ) the result is:
+   pFileName->szPath      => 'C:'         must be 'C:\'
+   pFileName->szName      => 'FILE'       Ok!
+   pFileName->szExtension => '.EXT'       Ok!
+
+If you call pFileName = hb_fsFNameSplit( "\FILE.EXT" ) the result is:
+   pFileName->szPath      => '\'          Ok!
+   pFileName->szName      => 'FILE'       Ok!
+   pFileName->szExtension => '.EXT'       Ok!
+
+If you call pFileName = hb_fsFNameSplit( "C:\DIR\FILE.EXT" ) the result
+is:
+   pFileName->szPath      => 'C:\DIR'     Ok!
+   pFileName->szName      => 'FILE'       Ok!
+   pFileName->szExtension => '.EXT'       Ok!
+
+*/

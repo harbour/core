@@ -60,9 +60,7 @@ HARBOUR HB_EXP( void )
 {
    if( hb_pcount() == 1 )
    {
-      PHB_ITEM pNumber = hb_param(1, IT_NUMERIC);
-
-      if( pNumber )
+      if( ISNUM( 1 ) )
       {
          hb_retnd( exp( hb_parnd( 1 ) ) );
          /* Always set default number of decimals after EXP() */
@@ -102,9 +100,7 @@ HARBOUR HB_LOG( void )
 {
    if( hb_pcount() == 1 )
    {
-      PHB_ITEM pNumber = hb_param(1, IT_NUMERIC);
-
-      if( pNumber )
+      if( ISNUM( 1 ) )
       {
          double dNumber = hb_parnd( 1 );
          hb_retnd( log( dNumber ) );
@@ -209,9 +205,8 @@ FUNCTION MOD(cl_num, cl_base)
                            IF(cl_result * cl_base < 0, cl_result + cl_base, cl_result) )
 */
    PHB_ITEM pNumber = hb_param(1, IT_NUMERIC);
-   PHB_ITEM pBase = hb_param(2, IT_NUMERIC);
 
-   if( pNumber && pBase )
+   if( pNumber && ISNUM( 2 ) )
    {
       double dNumber = hb_parnd(1);
       double dBase = hb_parnd(2); /* dBase! Cool! */
@@ -232,12 +227,12 @@ FUNCTION MOD(cl_num, cl_base)
       {
          hb_retnd(dNumber);
          /* Set the correct number of decimals */
-         stack.Return.item.asDouble.decimal = (pNumber->item.asDouble.decimal);
+         stack.Return.item.asDouble.decimal = pNumber->item.asDouble.decimal;
       }
    }
    else
    {
-      hb_errRT_BASE(EG_ARG, 1085, NULL, "%");
+      hb_errRT_BASE( EG_ARG, 1085, NULL, "%" );
    }
 }
 
@@ -306,9 +301,7 @@ HARBOUR HB_SQRT( void )
 {
    if( hb_pcount() == 1 )
    {
-      PHB_ITEM pNumber = hb_param(1, IT_NUMERIC);
-
-      if( pNumber )
+      if( ISNUM( 1 ) )
       {
          double dNumber = hb_parnd(1);
 

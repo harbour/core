@@ -1078,19 +1078,13 @@ HARBOUR HB_DBSETDRIVER( void )
 
 HARBOUR HB_DBSKIP( void )
 {
-   PHB_ITEM pItem;
    LONG lToSkip = 1;
 
    if( pCurrArea )
    {
-      pItem = hb_param( 1, IT_NUMERIC );
-      if( pItem )
-      {
-         if( pItem->type == IT_INTEGER )
-            lToSkip = pItem->item.asInteger.value;
-         else if( pItem->type == IT_LONG )
-            lToSkip = pItem->item.asLong.value;
-      }
+      if( ISNUM( 1 ) )
+         lToSkip = hb_parnl( 1 );
+
       SELF_SKIP( ( AREAP ) pCurrArea->pArea, lToSkip );
    }
    else

@@ -79,7 +79,7 @@
 #include "inkey.h"
 #include "init.h"
 
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined(OS_UNIX_COMPATIBLE)
 #include <unistd.h>
 #include <termios.h>
 

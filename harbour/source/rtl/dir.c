@@ -47,7 +47,7 @@
   #include <time.h>
 #endif
 
-#if defined(__WATCOMC__) || defined( _MSC_VER )
+#if defined(__WATCOMC__) || defined(_MSC_VER)
   #include <sys/stat.h>
   #include <share.h>
   #include <fcntl.h>
@@ -262,13 +262,13 @@ HARBOUR HB_DIRECTORY( void )
     {
       strcpy(string,entry.achName);
 #else
-   #if defined( __WATCOMC__ )
+   #if defined(__WATCOMC__)
    /* opendir in Watcom doesn't like the path delimiter at the end of a string */
      dirname[ iDirnameLen   ] ='.';
      dirname[ iDirnameLen+1 ] ='\x0';
    #endif
    dir = opendir( dirname );
-   #if defined( __WATCOMC__ )
+   #if defined(__WATCOMC__)
      dirname[ iDirnameLen ] ='\x0';
    #endif   
    if (NULL == dir)

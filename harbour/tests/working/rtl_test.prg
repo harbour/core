@@ -443,7 +443,7 @@ FUNCTION Main( cPar1 )
    TEST_LINE( Transform( SToD("19101112") , "9#-9#/##"   ) , "1910.11.12"                  )
    TEST_LINE( Transform( SToD("19920101") , ""           ) , "1992.01.01"                  )
    TEST_LINE( Transform( SToD("19920101") , "DO THIS "   ) , "1992.01.01"                  )
-   TEST_LINE( Transform( SToD("19920102") , "@E"         ) , "02/01/1992"                  ) /* BUG in Clipper */
+   TEST_LINE( Transform( SToD("19920102") , "@E"         ) , "02/01/1992"                  ) /* Bug in CA-Cl*pper, it returns: "2.91901.02" */
    TEST_LINE( Transform( 1234             , "@D 9999"    ) , "1234.00.0 "                  )
    TEST_LINE( Transform( 1234             , "@BD 9999"   ) , "1234.00.0 "                  )
 
@@ -461,7 +461,7 @@ FUNCTION Main( cPar1 )
    TEST_LINE( Transform( SToD("19101112") , "9#-9#/##"   ) , "10.11.12"                    )
    TEST_LINE( Transform( SToD("19920101") , ""           ) , "92.01.01"                    )
    TEST_LINE( Transform( SToD("19920101") , "DO THIS "   ) , "92.01.01"                    )
-   TEST_LINE( Transform( SToD("19920102") , "@E"         ) , "02/01/92"                    ) /* BUG in Clipper */
+   TEST_LINE( Transform( SToD("19920102") , "@E"         ) , "02/01/92"                    ) /* Bug in CA-Cl*pper, it returns: "01.92.02" */
    TEST_LINE( Transform( 1234             , "@D 9999"    ) , "**.**.* "                    )
    TEST_LINE( Transform( 1234             , "@BD 9999"   ) , "**.**.* "                    )
 
@@ -502,7 +502,7 @@ FUNCTION Main( cPar1 )
    TEST_LINE( Transform( -7        , "9X9^"        )       , "-X7^"                        )
    TEST_LINE( Transform( 1         , "@R 9HI!"     )       , "1HI!"                        )
    TEST_LINE( Transform( 1         , "9HI!"        )       , "1HI!"                        )
-   TEST_LINE( Transform( -12       , "@( 99"       )       , "(*)"                         ) /* BUG Fix */
+   TEST_LINE( Transform( -12       , "@( 99"       )       , "(*)"                         ) /* Bug in CA-Cl*pper, it returns: "(2)" */
    TEST_LINE( Transform( 12        , "@( 99"       )       , "12"                          )
    TEST_LINE( Transform( 1         , ""            )       , "         1"                  )
    TEST_LINE( Transform( 32768     , ""            )       , "     32768"                  )
@@ -510,9 +510,9 @@ FUNCTION Main( cPar1 )
    TEST_LINE( Transform( 1048576   , ""            )       , "   1048576"                  )
    TEST_LINE( Transform( 21.65     , ""            )       , "        21.65"               )
    TEST_LINE( Transform( -3.33     , ""            )       , "        -3.33"               )
-   TEST_LINE( Transform( -1234     , "@( 9999"     )       , "(***)"                       ) /* BUG Fix */
+   TEST_LINE( Transform( -1234     , "@( 9999"     )       , "(***)"                       ) /* Bug in CA-Cl*pper, it returns: "(234)" */
    TEST_LINE( Transform( -1234     , "@B 9999"     )       , "****"                        )
-   TEST_LINE( Transform( -1234     , "@B( 9999"    )       , "(***)"                       ) /* BUG Fix */
+   TEST_LINE( Transform( -1234     , "@B( 9999"    )       , "(***)"                       ) /* Bug in CA-Cl*pper, it returns: "(234)" */
    TEST_LINE( Transform( 1234      , "@E 9,999.99" )       , "1.234,00"                    )
    TEST_LINE( Transform( 12.2      , "@E 9,999.99" )       , "   12,20"                    )
    TEST_LINE( Transform( -1234     , "@X 9999"     )       , "1234 DB"                     )
