@@ -22,6 +22,13 @@
    You can contact me at: alinares@fivetech.com
  */
 
+/* Harbour Project source code
+   http://www.Harbour-Project.org/
+   The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
+      hb_itemSetNLen()
+   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
+*/
+
 #include "extend.h"
 #include "itemapi.h"
 #include "ctoharb.h"
@@ -388,8 +395,8 @@ PHB_ITEM hb_itemPutNL( PHB_ITEM pItem, long lNumber )
 
 void hb_itemSetNLen( PHB_ITEM pItem, WORD wWidth, WORD wDecimal )
 {
-   if( pItem 
-    && wWidth > 0 && wWidth <= 99 
+   if( pItem
+    && wWidth > 0 && wWidth <= 99
     && ( wDecimal == 0 || wDecimal < ( wWidth - 1 ) ) )
    {
       switch( pItem->type )
