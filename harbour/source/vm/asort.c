@@ -232,7 +232,7 @@ BOOL hb_arraySort( PHB_ITEM pArray, ULONG * pulStart, ULONG * pulCount, PHB_ITEM
       ULONG ulLen = pBaseArray->ulLen;
       ULONG ulStart;
       ULONG ulCount;
-      
+
       if( pulStart && ( *pulStart >= 1 ) )
          ulStart = *pulStart;
       else
@@ -240,7 +240,7 @@ BOOL hb_arraySort( PHB_ITEM pArray, ULONG * pulStart, ULONG * pulCount, PHB_ITEM
       
       if( ulStart <= ulLen )
       {
-         if( pulCount && ( *pulCount <= ulLen - ulStart ) )
+         if( pulCount && *pulCount >= 1 && ( *pulCount <= ulLen - ulStart ) )
             ulCount = *pulCount;
          else
             ulCount = ulLen - ulStart + 1;
