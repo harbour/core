@@ -1,3 +1,13 @@
+19990803-04:15 EDT Paul Tucker <ptucker@sympatico.ca>
+   + source/rtl/gt/gt_tpl.c
+      * renamed source/rtl/gt/gtxxx.c since it's a template.
+   * source/rtl/gt/gtwin.c
+      * major changes
+        Working DispBegin/DispEnd - original was leaving screen turds when
+        running in a window (hard to figure out, easy to fix)
+   * source/rtl/gtapi.c
+      * minor changes
+      
 19990803-05:30 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *tests/working/Makefile

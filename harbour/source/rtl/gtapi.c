@@ -86,19 +86,20 @@ ULONG *_ScrnBuffer;
 
 void hb_gtInit(void)
 {
+/* ptucker */
     _Color = (int *)hb_xgrab(5*sizeof(int));
     _ColorCount = 5;
     _ScrnBuffer = (ULONG *)hb_xgrab( sizeof( ULONG ) );
-    s_uiDispCount = 0;
     hb_gt_Init();
     hb_gtSetColorStr( hb_set.HB_SET_COLOR );
-    hb_gtSetMode( 50,80 );
+    hb_gtSetMode( hb_gtMaxRow()+1, hb_gtMaxCol()+1 );
     hb_gtSetPos( hb_gt_Row(), hb_gt_Col() );
 }
 
 void hb_gtExit(void)
 {
     hb_gt_Done();
+/* ptucker */
     hb_xfree( _Color );
     while( s_uiDispCount )
        hb_gtDispEnd();
@@ -109,6 +110,7 @@ void hb_gtExit(void)
 /* otherwise it has to be duplicated in each driver */
 ULONG hb_gt_ScreenBuffer( ULONG NewBuffer)
 {
+/* ptucker */
    ULONG Previous = _ScrnBuffer[s_uiDispCount];
 
    if( NewBuffer )
@@ -169,7 +171,7 @@ int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
     /* Draw the box or line as specified */
     height = uiBottom - uiTop + 1;
     width  = uiRight - uiLeft + 1;
-/*     hb_gtDispBegin(); */
+/*    hb_gtDispBegin(); */
 
     if( height > 1 && width > 1 )
     {
@@ -242,6 +244,7 @@ int hb_gtColorSelect(USHORT uiColorIndex)
 
 int hb_gtDispBegin(void)
 {
+/* ptucker */
     ++s_uiDispCount;
     _ScrnBuffer = (ULONG *)hb_xrealloc( _ScrnBuffer, sizeof( ULONG ) * (s_uiDispCount+1) );
     hb_gt_DispBegin();
@@ -255,6 +258,7 @@ USHORT hb_gtDispCount(void)
 
 int hb_gtDispEnd(void)
 {
+/* ptucker */
     hb_gt_DispEnd();
     --s_uiDispCount;
     _ScrnBuffer = (ULONG *)hb_xrealloc( _ScrnBuffer, sizeof( ULONG ) * (s_uiDispCount+1) );
@@ -263,6 +267,7 @@ int hb_gtDispEnd(void)
 
 int hb_gtSetColorStr(char * fpColorString)
 {
+/* ptucker */
     char c, buff[6];
     int nPos   = 0,
         nFore  = 0,
@@ -409,6 +414,7 @@ int hb_gtSetColorStr(char * fpColorString)
 
 int hb_gtGetColorStr(char * fpColorString)
 {
+/* ptucker */
     char *sColors;
     int i,j=0,k = 0, nColor;
 
@@ -500,12 +506,12 @@ BOOL hb_gtIsColor(void)
 
 USHORT hb_gtMaxCol(void)
 {
-    return(hb_gt_GetScreenWidth() - 1);
+    return(s_uiMaxCol = hb_gt_GetScreenWidth() - 1);
 }
 
 USHORT hb_gtMaxRow(void)
 {
-    return(hb_gt_GetScreenHeight() - 1);
+    return(s_uiMaxRow = hb_gt_GetScreenHeight() - 1);
 }
 
 int hb_gtPostExt(void)
@@ -584,6 +590,7 @@ int hb_gtSetCursor(USHORT uiCursorShape)
 
 int hb_gtSetMode(USHORT uiRows, USHORT uiCols)
 {
+/* ptucker */
     hb_gt_SetMode( uiRows, uiCols );
     s_uiMaxRow = hb_gtMaxRow();
     s_uiMaxCol = hb_gtMaxCol();
