@@ -269,6 +269,9 @@ return aIn
 //
 // Warning : Recursion ahead !
 //
+// For instructions :
+// http://monty.cnri.reston.va.us/grail/demo/quicksort/quicksort.htm
+//
 function QuickSort( nLeft, nRight, aSort )
 
    local nI := nLeft
