@@ -59,6 +59,7 @@
  *
  * See doc/license.txt for licensing terms.
  *
+ */
 
 #define HB_OS_WIN_32_USED
 
