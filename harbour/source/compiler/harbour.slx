@@ -172,6 +172,8 @@ SELF_CONTAINED_WORDS_ARE {
 /* When reservered words are used as Identifier. */
 #define HB_IDENTIFIER    LEX_CUSTOM_ACTION - 24
 
+#define HB_INLINE        LEX_CUSTOM_ACTION - 25
+
 #define USE_KEYWORDS
 
 /* Key Words. */
@@ -257,6 +259,7 @@ LANGUAGE_WORDS_ARE {
                      LEX_WORD( "AS{WS}USUAL"                    ) AS_TOKEN( AS_CHARACTER       + DONT_REDUCE ),
 
                      LEX_WORD( "FIELD"           		) AS_TOKEN( FIELD              ),
+                     LEX_WORD( "HB_INLINE"                      ) AS_TOKEN( HB_INLINE          ),
                      LEX_WORD( "IF"              		) AS_TOKEN( IIF                ),
                      LEX_WORD( "IIF"             		) AS_TOKEN( IIF                ),
                      LEX_WORD( "IN"              		) AS_TOKEN( HB_IN              ),
@@ -762,9 +765,9 @@ int hb_comp_SLX_CustomAction( int x, int aiHold[], int *ptr_iHold, BOOL *ptr_bIg
 
    if( x < HB_WANTS_EXP )
    {
-	   *ptr_bIgnoreWords = FALSE;
+      *ptr_bIgnoreWords = FALSE;
       iWantsEXP = (-x) + (HB_WANTS_EXP) ;
-	   return REJECT_OP;
+      return REJECT_OP;
    }
    else if( x < HB_WANTS_EOL )
    {
@@ -942,14 +945,14 @@ int hb_comp_SLX_CustomAction( int x, int aiHold[], int *ptr_iHold, BOOL *ptr_bIg
          return IDENTIFIER + DONT_REDUCE;
 
       case HB_NESTED_LIT :
-      {
-	 int iPairLen = strlen( sPair );
+	 {
+	    int iPairLen = strlen( sPair );
 
-	 sPair[ iPairLen ] = sTerm[0];
-	 sPair[ iPairLen + 1 ] = '\0';
-         yylval.string = hb_compIdentifierNew( sPair, TRUE );
-         return LITERAL + DONT_REDUCE ;
-      }
+	    sPair[ iPairLen ] = sTerm[0];
+	    sPair[ iPairLen + 1 ] = '\0';
+            yylval.string = hb_compIdentifierNew( sPair, TRUE );
+            return LITERAL + DONT_REDUCE ;
+	 }
 
       case HB_QOUT_ACT :
 	 iIdentifier++;
@@ -996,6 +999,96 @@ int hb_comp_SLX_CustomAction( int x, int aiHold[], int *ptr_iHold, BOOL *ptr_bIg
 	 iIdentifier++;
 	 DEBUG_INFO( printf( "RELEASED ID_ON_HOLD: %s - Increased to: %i\n", sIdOnHold, iIdentifier ) );
          return IDENTIFIER;
+
+      case HB_INLINE :
+	 {
+	    char sBuffer[ YY_BUF_SIZE ], *pBuffer, sInlineSym[] = "HB_INLINE_0";
+	    int iSize, iBraces = 0;
+	    extern BOOL hb_pp_bInline;
+            PINLINE pInline;
+
+            hb_pp_bInline = TRUE;
+
+	    sInlineSym[10] = hb_comp_cInlineID++;
+
+	    switch( sInlineSym[10] )
+	    {
+	       case '9' + 1 :
+		  sInlineSym[10] = 'A';
+		  break;
+
+	       case 'Z' + 1 :
+                  hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_TOOMANY_INLINE, NULL, NULL );
+		  break;
+	    }
+
+            pInline = hb_compInlineAdd( hb_compIdentifierNew( sInlineSym, TRUE ) );
+
+	  DigestInline :
+
+            YY_INPUT( (char*) sBuffer, iSize, YY_BUF_SIZE );
+	    if( iSize == 0 )
+	    {
+               hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_INVALID_INLINE, hb_comp_functions.pLast->szName, NULL );
+	       hb_pp_bInline = FALSE;
+	       return '\n' + DONT_REDUCE;
+	    }
+	    pBuffer = (char*) sBuffer;
+
+	    while( *pBuffer && ( *pBuffer == ' ' || *pBuffer == '\t' ) )
+	    {
+               pBuffer++;
+	    }
+
+	    if( *pBuffer == '\0' )
+	    {
+	       goto DigestInline;
+	    }
+	    else if( *pBuffer == '{' )
+	    {
+	       iBraces++;
+	    }
+	    else if( *pBuffer == '}' && iBraces > 1 )
+	    {
+	       iBraces--;
+	    }
+	    else if( *pBuffer == '}' )
+	    {
+	       if( pInline->pCode == NULL )
+	       {
+	          pInline->pCode = hb_xgrab( ( iSize = strlen( (char*) sBuffer ) ) + 1 );
+	          strcpy( pInline->pCode, (char*) sBuffer );
+	       }
+	       else
+	       {
+	          pInline->pCode = hb_xrealloc( pInline->pCode, pInline->lPCodeSize + ( iSize = strlen( (char*) sBuffer ) ) + 1 );
+	          strcpy( pInline->pCode + pInline->lPCodeSize, (char*) sBuffer );
+	       }
+
+	       pInline->lPCodeSize += iSize;
+
+	       hb_pp_bInline = FALSE;
+               yylval.string = hb_compIdentifierNew( sInlineSym, TRUE );
+	       iIdentifier++;
+	       DEBUG_INFO( printf( "INLINE, Primary Identifier %s Increased to: %i\n", "INLINE", iIdentifier ) );
+               return IDENTIFIER + DONT_REDUCE;
+	    }
+
+	    if( pInline->pCode == NULL )
+	    {
+	       pInline->pCode = hb_xgrab( ( iSize = strlen( (char*) sBuffer ) ) + 1 );
+	       strcpy( pInline->pCode, (char*) sBuffer );
+	    }
+	    else
+	    {
+	       pInline->pCode = hb_xrealloc( pInline->pCode, pInline->lPCodeSize + ( iSize = strlen( (char*) sBuffer ) ) + 1 );
+	       strcpy( pInline->pCode + pInline->lPCodeSize, (char*) sBuffer );
+	    }
+
+	    pInline->lPCodeSize += iSize;
+
+	    goto DigestInline;
+	 }
 
       default:
          printf( "WARNING! No Handler for Custom Action %i\n", x );

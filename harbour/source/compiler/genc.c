@@ -52,6 +52,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    PCOMSYMBOL pSym = hb_comp_symbols.pFirst;
    PCOMDECLARED pDeclared;
    FILE * yyc; /* file handle for C output */
+   PINLINE pInline = hb_comp_inlines.pFirst;
 
    if( ! pFileName->szExtension )
       pFileName->szExtension = ".c";
@@ -98,13 +99,27 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
             fprintf( yyc, "HB_FUNC( %s );\n", pFunc->szName );
          pFunc = pFunc->pNext;
       }
+
+      /* write functions prototypes for inline blocks */
+      while( pInline )
+      {
+         fprintf( yyc, "static HB_FUNC( %s );\n", pInline->szName );
+         pInline = pInline->pNext;
+      }
+
       /* write functions prototypes for called functions outside this PRG */
       pFunc = hb_comp_funcalls.pFirst;
       while( pFunc )
       {
          pFTemp = hb_compFunctionFind( pFunc->szName );
          if( ! pFTemp || pFTemp == hb_comp_functions.pFirst )
-            fprintf( yyc, "extern HB_FUNC( %s );\n", pFunc->szName );
+         {
+            if( pFTemp == NULL && hb_compInlineFind( pFunc->szName ) == NULL )
+            {
+               fprintf( yyc, "extern HB_FUNC( %s );\n", pFunc->szName );
+            }
+         }
+
          pFunc = pFunc->pNext;
       }
 
@@ -213,6 +228,20 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
          fprintf( yyc, "   hb_vmExecute( pcode, symbols );\n}\n\n" );
          pFunc = pFunc->pNext;
       }
+
+      /* Generate codeblocks data
+       */
+      if( hb_comp_inlines.iCount )
+      {
+         fprintf( yyc, "#include \"hbapi.h\"\n" );
+         pInline = hb_comp_inlines.pFirst;
+         while( pInline )
+         {
+            fprintf( yyc, "static HB_FUNC( %s )\n", pInline->szName );
+            fprintf( yyc, "%s", pInline->pCode );
+            pInline = pInline->pNext;
+         }
+      }
    }
    else
       fprintf( yyc, "/* Empty source file */\n\n" );
@@ -229,6 +258,14 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       hb_comp_funcalls.pFirst = pFunc->pNext;
       hb_xfree( ( void * ) pFunc );  /* NOTE: szName will be released by hb_compSymbolKill() */
       pFunc = hb_comp_funcalls.pFirst;
+   }
+
+   pInline = hb_comp_inlines.pFirst;
+   while( pInline )
+   {
+      hb_comp_inlines.pFirst = pInline->pNext;
+      hb_xfree( ( void * ) pInline );  /* NOTE: szName will be released by hb_compSymbolKill() */
+      pInline = hb_comp_inlines.pFirst;
    }
 
    pDeclared = hb_comp_pFirstDeclared;

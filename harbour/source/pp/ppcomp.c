@@ -49,6 +49,8 @@
 #include "hbpp.h"
 #include "hbcomp.h"
 
+BOOL hb_pp_bInline = FALSE;
+
 static char s_szLine[ HB_PP_STR_SIZE ];
 static char s_szOutLine[ HB_PP_STR_SIZE ];
 static int hb_pp_LastOutLine = 1;
@@ -86,7 +88,7 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
            hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_BUFFER_OVERFLOW, NULL, NULL );
         }
 
-        if( s_szLine[ lens - 1 ] == ';' )
+        if( s_szLine[ lens - 1 ] == ';' && ! hb_pp_bInline )
         {
            lContinue = 1;
            lens--;

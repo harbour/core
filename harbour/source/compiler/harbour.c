@@ -69,6 +69,7 @@ static void hb_compGenVariablePCode( BYTE , char * );    /* generates the pcode 
 static void hb_compGenVarPCode( BYTE , char * );    /* generates the pcode for undeclared variable */
 
 static PFUNCTION hb_compFunctionNew( char *, HB_SYMBOLSCOPE );  /* creates and initialises the _FUNC structure */
+static PINLINE hb_compInlineNew( char * );  /* creates and initialises the _INLINE structure */
 static void hb_compCheckDuplVars( PVAR pVars, char * szVarName ); /*checks for duplicate variables definitions */
 
 /* int hb_compSort_ULONG( ULONG * ulLeft, ULONG * ulRight ); */
@@ -129,6 +130,9 @@ char *        hb_comp_szDeclaredFun = NULL;
 
 BOOL          hb_comp_bAutoOpen = TRUE;
 BOOL          hb_comp_bError = FALSE;
+char          hb_comp_cInlineID = '0';
+
+INLINES       hb_comp_inlines;
 
 /* EXTERNAL statement can be placed into any place in a function - this flag is
  * used to suppress error report generation
@@ -976,6 +980,20 @@ static PFUNCTION hb_compFunctionNew( char * szName, HB_SYMBOLSCOPE cScope )
    return pFunc;
 }
 
+static PINLINE hb_compInlineNew( char * szName )
+{
+   PINLINE pInline;
+
+   pInline = ( PINLINE ) hb_xgrab( sizeof( _INLINE ) );
+
+   pInline->szName     = szName;
+   pInline->pCode      = NULL;
+   pInline->lPCodeSize = 0;
+   pInline->pNext      = NULL;
+
+   return pInline;
+}
+
 /*
  * Stores a Clipper defined function/procedure
  * szFunName - name of a function
@@ -1057,6 +1075,28 @@ void hb_compFunctionAdd( char * szFunName, HB_SYMBOLSCOPE cScope, int iType )
       hb_xfree( pBuffer );
    }
    hb_comp_bDontGenLineNum = FALSE; /* reset the flag */
+}
+
+PINLINE hb_compInlineAdd( char * szFunName )
+{
+   PINLINE pInline;
+
+   pInline = hb_compInlineNew( szFunName );
+
+   if( hb_comp_inlines.iCount == 0 )
+   {
+      hb_comp_inlines.pFirst = pInline;
+      hb_comp_inlines.pLast  = pInline;
+   }
+   else
+   {
+      hb_comp_inlines.pLast->pNext = pInline;
+      hb_comp_inlines.pLast = pInline;
+   }
+
+   hb_comp_inlines.iCount++;
+
+   return pInline;
 }
 
 /* create an ANNOUNCEd procedure
@@ -1238,6 +1278,25 @@ PFUNCTION hb_compFunctionFind( char * szFunctionName ) /* returns a previously d
       {
          if( pFunc->pNext )
             pFunc = pFunc->pNext;
+         else
+            return NULL;
+      }
+   }
+   return NULL;
+}
+
+PINLINE hb_compInlineFind( char * szFunctionName )
+{
+   PINLINE pInline = hb_comp_inlines.pFirst;
+
+   while( pInline )
+   {
+      if( ! strcmp( pInline->szName, szFunctionName ) )
+         return pInline;
+      else
+      {
+         if( pInline->pNext )
+            pInline = pInline->pNext;
          else
             return NULL;
       }
@@ -3273,6 +3332,10 @@ static void hb_compInitVars( void )
    hb_comp_ulLastLinePos = 0;
    hb_comp_iStaticCnt = 0;
    hb_comp_iVarScope = VS_LOCAL;
+
+   hb_comp_inlines.iCount   = 0;
+   hb_comp_inlines.pFirst   = NULL;
+   hb_comp_inlines.pLast    = NULL;
 }
 
 static void hb_compGenOutput( int iLanguage )

@@ -156,6 +156,15 @@ typedef struct __FUNC
    struct __FUNC * pNext;                 /* pointer to the next defined function */
 } _FUNC, * PFUNCTION;
 
+/* structure to hold a Clipper defined function */
+typedef struct __INLINE
+{
+   char *       szName;                   /* name of a inline function */
+   BYTE *       pCode;                    /* pointer to a memory block where pcode is stored */
+   ULONG        lPCodeSize;               /* total memory size for pcode */
+   struct __INLINE * pNext;               /* pointer to the next defined inline */
+} _INLINE, * PINLINE;
+
 /* structure to control all Clipper defined functions */
 typedef struct
 {
@@ -163,6 +172,14 @@ typedef struct
    PFUNCTION pLast;             /* pointer to the last defined function */
    int       iCount;            /* number of defined functions */
 } FUNCTIONS;
+
+/* structure to control all Clipper defined functions */
+typedef struct
+{
+   PINLINE pFirst;            /* pointer to the first defined inline */
+   PINLINE pLast;             /* pointer to the last defined inline */
+   int     iCount;            /* number of defined inlines */
+} INLINES;
 
 /* compiler symbol support structure */
 typedef struct _COMSYMBOL
@@ -232,9 +249,11 @@ void hb_compPCodeEval( PFUNCTION, HB_PCODE_FUNC_PTR *, void * );
 
 extern void      hb_compFunctionAdd( char * szFunName, HB_SYMBOLSCOPE cScope, int iType ); /* starts a new Clipper language function definition */
 extern PFUNCTION hb_compFunctionFind( char * szFunName ); /* locates a previously defined function */
+extern PINLINE   hb_compInlineFind( char * szFunName );
 extern USHORT    hb_compFunctionGetPos( char * szSymbolName ); /* returns the index + 1 of a function on the functions defined list */
 extern PFUNCTION hb_compFunctionKill( PFUNCTION );    /* releases all memory allocated by function and returns the next one */
 extern void      hb_compAnnounce( char * );
+extern PINLINE   hb_compInlineAdd( char * szFunName );
 
 extern PFUNCTION hb_compFunCallAdd( char * szFuntionName );
 extern PFUNCTION hb_compFunCallFind( char * szFunName ); /* locates a previously defined called function */
@@ -443,6 +462,9 @@ extern char *        hb_comp_szWarnings[];
 extern char *        hb_pp_STD_CH;
 extern BOOL          hb_comp_bAutoOpen;
 extern BOOL          hb_comp_bError;
+extern char          hb_comp_cInlineID;
+
+extern INLINES     hb_comp_inlines;
 
 /* /GC command line setting types */
 #define HB_COMPGENC_COMPACT     0

@@ -1,3 +1,21 @@
+2000-01-01 22:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
+
+   * include/hberrors.h
+   * source/compiler/hbgenerr.c
+     + Added: "Unterminated inline block in function: \'%s\'" and "Too many inline blocks"
+
+   * include/hbcomp.h
+   * source/compiler/harbour.c
+     + Added hb_compInlineNew(), hb_compInlineAdd(), and hb_compInlineFind()
+
+   * source/pp/ppcomp.c
+   * source/compiler/harbour.slx
+   * source/compiler/genc.c
+     + Added support for inline C code blocks.
+
+   + tests/inline_c.prg
+     + Added new test to demonstrate new inline C support.
+
 2001-01-01 22:15 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    *utils/hbdoc/genpdf.prg
    *contrib/pdflib/pdfhbdoc.c
