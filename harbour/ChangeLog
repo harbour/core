@@ -1,20 +1,31 @@
+20000430-20:35 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * source/rtl/teditor.prg
+     + Implements TEditor CLASS and exports MemoEdit function. VERY miminal
+       functionality / compatibility. Very little testing, but nonetheless fast
+       enough for medium sized text.
+   * source/rtl/Makefile
+     + added teditor.prg to list of needed files.
+   * source/rtl/dummy.prg
+     - removed MemoEdit() declaration
+
 20000430-17:45 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbcomp.h
     *include/hbexprop.h
     *include/hbmacro.h
     *source/vm/macro.c
-	* removed redundancy in extern declarations
-	* removed unused bStackAffected parameter used for
-	  strong typing
+   * removed redundancy in extern declarations
+   * removed unused bStackAffected parameter used for
+     strong typing
 
 20000430-13:50 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.c
-	*fixed possible memory reallocation error in hb_compNOOPadd()
-	
+   *fixed possible memory reallocation error in hb_compNOOPadd()
+
     *source/compiler/hbpcode.c
-	*fixed pVar -> pSym
+   *fixed pVar -> pSym
 
 20000430 04:10 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
 *contrib/libgt/doc/gendoc.bat
@@ -38,7 +49,7 @@
 
     * harbour/source/compiler/harbour.y
       ! Fixed hb_compExprCBVarAdd( $<asExpr>0, $1, $2 ) to hb_compExprCBVarAdd( $<asExpr>0, $1, hb_comp_cVarType ) and
-	hb_compExprCBVarAdd( $<asExpr>0, $3, $4 ) to hb_compExprCBVarAdd( $<asExpr>0, $3, hb_comp_cVarType ) so that
+   hb_compExprCBVarAdd( $<asExpr>0, $3, $4 ) to hb_compExprCBVarAdd( $<asExpr>0, $3, hb_comp_cVarType ) so that
         correct type is passed.
       + Added hb_comp_cVarType = ' ' to reset declared type after BlockVar[s] PRIVATE and PUBLIC.
 
@@ -81,8 +92,8 @@
 20000427-20:40 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.c
-	* changed hb_xgrab/hb_xrealloc to use sprintf in case
-	  unsuccessfull allocation only
+   * changed hb_xgrab/hb_xrealloc to use sprintf in case
+     unsuccessfull allocation only
 
 20000426 23:30 Luiz Rafael Culik <culik@sl.conex.net>
 !ChangeLog

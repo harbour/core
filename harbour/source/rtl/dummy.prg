@@ -42,10 +42,10 @@ FUNCTION ordCond()         ; RETURN NIL
 FUNCTION ordDescend()      ; RETURN .F.
 FUNCTION ordIsUnique()     ; RETURN .F.
 FUNCTION ordKeyAdd()       ; RETURN .F.
-FUNCTION ordKeyCount()     ; RETURN 0  
+FUNCTION ordKeyCount()     ; RETURN 0
 FUNCTION ordKeyDel()       ; RETURN .F.
 FUNCTION ordKeyGoto()      ; RETURN .F.
-FUNCTION ordKeyNo()        ; RETURN 0  
+FUNCTION ordKeyNo()        ; RETURN 0
 FUNCTION ordKeyVal()       ; RETURN NIL
 FUNCTION ordSetRelation()  ; RETURN NIL
 FUNCTION ordSkipUnique()   ; RETURN .F.
@@ -63,7 +63,7 @@ FUNCTION dbFieldInfo()     ; RETURN NIL
 FUNCTION dbSetRelation()   ; RETURN NIL
 FUNCTION dbClearRelation() ; RETURN NIL
 
-FUNCTION MemoEdit( str )   ; RETURN str
+//FUNCTION MemoEdit( str )   ; RETURN str
 FUNCTION MLCToPos()        ; RETURN 0
 FUNCTION MPosToLC()        ; RETURN 0
 
