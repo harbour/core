@@ -19,7 +19,14 @@ DECLARE FUNCTION int( n AS NUMERIC ) AS NUMERIC
 
 DECLARE FUNCTION TEST AS NUMERIC
 
-PROC MAIN0()
+PROCEDURE MAIN
+   LOCAL RPT, APARAMS
+
+   Rpt := Array( Len( AParams ) - 2 )
+
+RETURN
+
+PROC MAIN1()
   PRIVATE OTHER, TEST AS CHAR
 
   Var1 := M->TEST
@@ -34,7 +41,7 @@ RETURN
 Function Test()
 return .t.
 
-Function Main()
+Function Main2()
   Local n As Numeric, lVar AS LOGICAL
 
   n := IIF( lVar, 'A', 3 )
@@ -45,7 +52,7 @@ Function Main()
 
 Return( NIL )
 
-FUNCTION Main1()
+FUNCTION Main3()
 
    LOCAL n AS NUMERIC, cVar AS CHARACTER, a[5,5,5] AS ARRAY
 

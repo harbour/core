@@ -1,6 +1,18 @@
+20000503-01:45 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * include/hberrors.h
+     + Added:
+        #define HB_COMP_NOT_INITIALIZED
+
+   * source/compiler/hbgenerr.c
+     + Added: "3Variable \'%s\' used but never initialized"
+
+   * source/compiler/hbpcode.c
+     * Enhanced hb_compStrongType() to warn against un-initialized varaiable usage.
+
 20000503-01:00 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
    * source/compiler/hbpcode.c
-     * Fixed hb_compStrongType() to difrentiate between a MEMVAR and a DECLARED FUNCTION with the same name.
+     * Fixed hb_compStrongType() to diffrentiate between a MEMVAR and a DECLARED FUNCTION with the same name.
      + Added support for HB_P_ARRAYPUSH
 
    * source/compiler/hbgenerr.c
@@ -40,8 +52,8 @@
        "3Function \'%s\' conflicting with its declaration"
 
    * source/compiler/hbpcode.c
-     * Modifief hb_compStrongType() to utilize PCOMDECLARED rather than PCOMSYMBOL
-     * Modifief hb_compStrongType() to increase the pFunc->pStack as needed.
+     * Modified hb_compStrongType() to utilize PCOMDECLARED rather than PCOMSYMBOL
+     * Modified hb_compStrongType() to increase the pFunc->pStack as needed.
 
    * tests/testwarn.prg
      + Added code to demonstrate more warnings.

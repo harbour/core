@@ -653,6 +653,9 @@ void hb_compStrongType( int iSize )
 
        if ( pVar )
        {
+          if ( pVar->iUsed >= 0 )
+             hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_NOT_INITIALIZED, pVar->szName, NULL );
+
           /* Review with Ryszard. */
           if ( pVar->cType == 'U' )
              pVar->cType = ' ';
@@ -689,9 +692,8 @@ void hb_compStrongType( int iSize )
 
        if ( pVar )
        {
-          /* Review with Ryszard. */
-          if ( pVar->cType == 'U' )
-             pVar->cType = ' ';
+          if ( pVar->iUsed >= 0 )
+             hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_NOT_INITIALIZED, pVar->szName, NULL );
 
           pFunc->pStack[ pFunc->iStackIndex++ ] = pVar->cType;
        }
@@ -713,14 +715,13 @@ void hb_compStrongType( int iSize )
 
        if ( pVar )
        {
-          /* Review with Ryszard. */
-          if ( pVar->cType == 'U' )
-             pVar->cType = ' ';
+          if ( pVar->iUsed >= 0 )
+             hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_NOT_INITIALIZED, pVar->szName, NULL );
 
-         pFunc->pStack[ pFunc->iStackIndex++ ] = pVar->cType;
+          pFunc->pStack[ pFunc->iStackIndex++ ] = pVar->cType;
        }
        else
-         pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
+          pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
 
        break;
 
@@ -917,6 +918,9 @@ void hb_compStrongType( int iSize )
        else
          pVar = hb_compVariableFind( pFunc->pLocals, wVar );
 
+       if ( pVar )
+          pVar->iUsed = -1;
+
        if ( pVar && pVar->cType != ' ' )
        {
          char szType[2];
@@ -954,6 +958,9 @@ void hb_compStrongType( int iSize )
        else
          pVar = hb_compVariableFind( pFunc->pLocals, iVar );
 
+       if ( pVar )
+          pVar->iUsed = -1;
+
        if ( pVar && pVar->cType != ' ' )
        {
          char szType[2];
@@ -981,6 +988,9 @@ void hb_compStrongType( int iSize )
           pTmp = pTmp->pNext;
 
        pVar = hb_compVariableFind( pTmp->pStatics, wVar - pTmp->iStaticsBase );
+
+       if ( pVar )
+          pVar->iUsed = -1;
 
        if ( pVar && pVar->cType != ' '  )
        {
