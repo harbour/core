@@ -8,7 +8,7 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
-2004-07-18 19:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+2004-07-18 19:50 UTC+0200 Tomaz Zupan <tomaz.zupan@orpo.si>
   * harbour.spec
     * Changed Optimisation level for rpm package to -O2,
       because there are pboblems with -O3 and gcc 3.3 on Mandrake Linux
