@@ -219,6 +219,18 @@ static HB_FIX_FUNC( hb_p_pushlocalnear )
    return (USHORT) 3;
 }
 
+static HB_FIX_FUNC( hb_p_staticname )
+{
+   ULONG ulStart = lPCodePos;
+
+   HB_SYMBOL_UNUSED( cargo );
+   lPCodePos += 3;
+   while( pFunc->pCode[ lPCodePos ] )
+      ++lPCodePos;
+
+   return (USHORT) (lPCodePos - ulStart + 1) ;
+}
+
 /* NOTE: The  order of functions have to match the order of opcodes
  *       mnemonics
  */
@@ -340,6 +352,7 @@ static HB_FIX_FUNC_PTR s_fixlocals_table[] =
    NULL,                       /* HB_P_SEQRECOVER,           */
    NULL,                       /* HB_P_SFRAME,               */
    NULL,                       /* HB_P_STATICS,              */
+   hb_p_staticname,            /* HB_P_STATICNAME,           */
    NULL,                       /* HB_P_SWAPALIAS,            */
    NULL,                       /* HB_P_TRUE,                 */
    NULL,                       /* HB_P_ZERO,                 */
