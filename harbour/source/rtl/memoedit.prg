@@ -68,6 +68,7 @@ CLASS TMemoEditor FROM HBEditor
    METHOD IdleHook()                      // Gets called every time there are no more keys to hanlde
 
    METHOD HandleUserKey(nKey, nUserKey)   // Handles keys returned to MemoEdit() by user function
+   METHOD xDo(nStatus)                    // Calls xUserFunction saving and restoring cursor position and shape
 
 ENDCLASS
 
@@ -83,7 +84,7 @@ METHOD MemoInit(cUserFunction) CLASS TMemoEditor
 
    if ISCHARACTER(::xUserFunction)
       // Keep calling user function until it returns 0
-      while (nKey := Do(::xUserFunction, ME_INIT, ::nRow, ::nCol - 1)) <> ME_DEFAULT
+      while (nKey := ::xDo(ME_INIT)) <> ME_DEFAULT
 
          // At this time there is no input from user of MemoEdit() only handling
          // of values returned by ::xUserFunction, so I pass these value on both
@@ -120,14 +121,14 @@ METHOD Edit() CLASS TMemoEditor
 
          nKey := Inkey(0)
 
-         if ! ( ( bKeyBlock := Setkey( nKey ) ) == NIL )
-            eval( bKeyBlock )
-            loop
+         if (bKeyBlock := Setkey( nKey )) <> NIL
+            Eval( bKeyBlock )
+            Loop
          endif
 
          // Is it a configurable key ?
          if AScan(aConfigurableKeys, nKey) > 0
-            nUserKey := Do(::xUserFunction, iif(::lDirty, ME_UNKEYX, ME_UNKEY), ::nRow, ::nCol - 1)
+            nUserKey := ::xDo(iif(::lDirty, ME_UNKEYX, ME_UNKEY))
             ::HandleUserKey(nKey, nUserKey)
 
          else
@@ -155,7 +156,7 @@ METHOD KeyboardHook(nKey) CLASS TMemoEditor
 
    if ISCHARACTER(::xUserFunction)
 
-      nUserKey := Do(::xUserFunction, iif(::lDirty, ME_UNKEYX, ME_UNKEY), ::nRow, ::nCol - 1)
+      nUserKey := ::xDo(iif(::lDirty, ME_UNKEYX, ME_UNKEY))
       ::HandleUserKey(nKey, nUserKey)
 
    endif
@@ -166,7 +167,7 @@ return Self
 METHOD IdleHook() CLASS TMemoEditor
 
    if ISCHARACTER(::xUserFunction)
-      Do(::xUserFunction, ME_IDLE, ::nRow, ::nCol - 1)
+      ::xDo(ME_IDLE)
 
    endif
 
@@ -182,13 +183,12 @@ METHOD HandleUserKey(nKey, nUserKey) CLASS TMemoEditor
    do case
       // I won't reach this point during ME_INIT since ME_DEFAULT ends initialization phase of MemoEdit()
       case nUserKey == ME_DEFAULT
-         // HBEditor is not able to handle keys with a value higher than 256
-         if nKey <= 256 .AND. AScan(aUnHandledKeys, nKey) == 0
+
+         // HBEditor is not able to handle keys with a value higher than 256, but I have to tell him
+         // that user wants to save text
+         if (nKey <= 256 .OR. nKey == K_ALT_W) .AND. AScan(aUnHandledKeys, nKey) == 0
             super:Edit(nKey)
          endif
-      if nKey == K_ALT_W
-           super:Edit(nKey)
-      endif
 
       // TOFIX: Not clipper compatible, see teditor.prg
       case (nUserKey >= 1 .AND. nUserKey <= 31) .OR. nUserKey == K_ALT_W
@@ -219,6 +219,21 @@ METHOD HandleUserKey(nKey, nUserKey) CLASS TMemoEditor
    endcase
 
 return Self
+
+
+METHOD xDo(nStatus) CLASS TMemoEditor
+
+   LOCAL nCurRow := ::Row()
+   LOCAL nCurCol := ::Col()
+   LOCAL nCurCur := SetCursor()
+   LOCAL xRes
+
+   xRes := Do(::xUserFunction, nStatus, ::nRow, ::nCol - 1)
+
+   ::SetPos(nCurRow, nCurCol)
+   SetCursor(nCurCur)
+
+return xRes
 
 
 /*----------------------------------------------------------------------------------------*/
