@@ -133,8 +133,16 @@ static void hb_cdxSortAddExternal( LPSORTINFO pSort, USHORT Lvl, LONG Tag, LONG 
                                    LPKEYINFO Value );
 static void hb_cdxSortAddInternal( LPSORTINFO pSort, USHORT Lvl, LONG Tag, LONG Link,
                                    LPKEYINFO Value );
-static LPCDXTAG hb_cdxGetActiveTag( LPCDXINDEX PIF );
+
+/* static LPCDXTAG hb_cdxGetActiveTag( LPCDXINDEX PIF ); */
+static LPCDXTAG hb_cdxGetActiveTag( CDXAREAP pArea );
 static USHORT hb_cdxFindTag( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
 static LPCDXTAG hb_cdxGetTagByNumber(CDXAREAP pArea,  USHORT uiTag );
 static PHB_ITEM hb_cdxKeyGetItem( LPKEYINFO pKey, PHB_ITEM pItem, USHORT uiType );
+
+static USHORT hb_cdxIndexCheckVersion( LPCDXINDEX pIndex );
+static USHORT hb_cdxIndexUnLockRead( LPCDXINDEX pIndex, LPCDXTAG pTag );
+static USHORT hb_cdxIndexLockRead( LPCDXINDEX pIndex, LPCDXTAG pTag );
+static USHORT hb_cdxIndexLockWrite ( LPCDXINDEX pIndex, LPCDXTAG pTag );
+static USHORT hb_cdxIndexUnLockWrite ( LPCDXINDEX pIndex, LPCDXTAG pTag );
 

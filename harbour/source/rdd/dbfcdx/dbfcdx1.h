@@ -58,9 +58,9 @@
 #define LOCK_FILE                       0x3FFFFFFFL
 #define MEMO_BLOCK                      64
 #define CDX_MAX_KEY                     240
-#define CDX_MAX_TAG_NAME_LEN            10
 #define CDX_BLOCK_SIZE                  512
 */
+#define CDX_MAX_TAG_NAME_LEN            10
 
 #define CDX_INTERNAL_SPACE              500
 #define CDX_EXTERNAL_SPACE              488
