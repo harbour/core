@@ -1516,7 +1516,9 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                            ? "Removed repeatble: " + aTail( aMarkers[ aMP[1] - 1000 ] )
                            WAIT
                         ENDIF
-                        aSize( aMarkers[ aMP[1] - 1000 ], Len( aMarkers[ aMP[1] - 1000 ] ) - 1 )
+                        IF ValType( aMarkers[ aMP[1] - 1000 ] ) == 'A'
+                           aSize( aMarkers[ aMP[1] - 1000 ], Len( aMarkers[ aMP[1] - 1000 ] ) - 1 )
+                        ENDIF
                      ENDIF
                      IF aMP[2] > 0
                         EXIT
