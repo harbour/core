@@ -57,7 +57,7 @@ function TClass()
    static hClass := 0
 
    if hClass == 0
-      hClass = __clsNew( "TCLASS", 8 )
+      hClass = __clsNew( "TCLASS", 10 )
 
       __clsAddMsg( hClass, "New",          @New(),          MET_METHOD )
       __clsAddMsg( hClass, "Create",       @Create(),       MET_METHOD )
@@ -67,6 +67,8 @@ function TClass()
       __clsAddMsg( hClass, "AddMethod",    @AddMethod(),    MET_METHOD )
       __clsAddMsg( hClass, "AddVirtual",   @AddVirtual(),   MET_METHOD )
       __clsAddMsg( hClass, "Instance",     @Instance(),     MET_METHOD )
+      __clsAddMsg( hClass, "SetInit",      @SetInit(),      MET_METHOD )
+      __clsAddMsg( hClass, "SetType",      @SetType(),      MET_METHOD )
 
       __clsAddMsg( hClass, "hClass",     1, MET_DATA )
       __clsAddMsg( hClass, "_hClass",    1, MET_DATA )
@@ -84,6 +86,10 @@ function TClass()
       __clsAddMsg( hClass, "_aVirtuals", 7, MET_DATA )
       __clsAddMsg( hClass, "cSuper",     8, MET_DATA )
       __clsAddMsg( hClass, "_cSuper",    8, MET_DATA )
+      __clsAddMsg( hClass, "uInit",      9, MET_DATA )
+      __clsAddMsg( hClass, "_uInit",     9, MET_DATA )
+      __clsAddMsg( hClass, "cType",     10, MET_DATA )
+      __clsAddMsg( hClass, "_cType",    10, MET_DATA )
    endif
 
 return __clsInst( hClass )
@@ -181,6 +187,10 @@ static function AddData( cData, xInit )         /* xInit is initializer     */
 
    local Self := QSelf()
 
+   if ::uInit != nil
+      xInit = ::uInit
+   endif
+
    AAdd( ::aDatas, { cData, xInit } )
 
 return nil
@@ -222,6 +232,26 @@ static function AddVirtual( cMethod )
    local Self := QSelf()
 
    AAdd( ::aVirtuals, cMethod )
+
+return nil
+
+//----------------------------------------------------------------------------//
+
+static function SetInit( uValue )
+
+   local Self := QSelf()
+
+   ::uInit = uValue
+
+return nil
+
+//----------------------------------------------------------------------------//
+
+static function SetType( cType )
+
+   local Self := QSelf()
+
+   ::cType = cType
 
 return nil
 

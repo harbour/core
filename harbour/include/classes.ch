@@ -46,14 +46,32 @@
      [ ; #translate Super : => ::<SuperClass>: ] ;
      [ ; extern <SuperClass> ]
 
-#xcommand DATA <DataName1> [,<DataNameN>] => ;
-   oClass:AddData( <(DataName1)> ) [; oClass:AddData( <(DataNameN)> ) ]
+#xcommand DATA <DataName1> [,<DataNameN>] [ AS <type> ] [ INIT <uValue> ] => ;
+   [ oClass:SetType( <(type)> ) ; ][ oClass:SetInit( <uValue> ) ; ] ;
+     oClass:AddData( <(DataName1)> ) ;
+   [; oClass:AddData( <(DataNameN)> ) ] ;
+   [; oClass:SetInit(,<uValue>) ] [ ; oClass:SetType(,<(type)>) ]
+   // Note the use of commas ',' on the above two rules to avoid their call
+   // if there are no AS ... or INIT clauses specified. As we just use
+   // those methods first parameter, the second one supplied acts as a dummy one
 
-#xcommand CLASSDATA <DataName1> [,<DataNameN>] => ;
-   oClass:AddClassData( <(DataName1)> ) [; oClass:AddClassData( <(DataNameN)> ) ]
+#xcommand CLASSDATA <DataName1> [,<DataNameN>] [ AS <type> ] [ INIT <uValue> ] => ;
+   [ oClass:SetType( <(type)> ) ; ][ oClass:SetInit( <uValue> ) ; ] ;
+     oClass:AddClassData( <(DataName1)> ) ;
+   [; oClass:AddClassData( <(DataNameN)> ) ] ;
+   [; oClass:SetInit(,<uValue>) ] [ ; oClass:SetType(,<(type)>) ]
+   // Note the use of commas ',' on the above two rules to avoid their call
+   // if there are no AS ... or INIT clauses specified. As we just use
+   // those methods first parameter, the second one supplied acts as a dummy one
 
 #xcommand METHOD <MethodName>( [<params,...>] ) [ CONSTRUCTOR ] => ;
    oClass:AddMethod( <(MethodName)>, CLSMETH _CLASS_NAME_ <MethodName>() )
+
+#xcommand METHOD <MethodName>( [<params,...>] ) BLOCK <CodeBlock> => ;
+   oClass:AddInline( <(MethodName)>, <CodeBlock> )
+
+#xcommand METHOD <MethodName>( [<params,...>] ) EXTERN <FuncName>( [<params,...>] ) => ;
+   oClass:AddMethod( <(MethodName)>, @<FuncName>() )
 
 #xcommand METHOD <MethodName>( [<params,...>] ) INLINE <Code,...> => ;
    oClass:AddInline( <(MethodName)>, {|Self [,<params>] | <Code> } )
