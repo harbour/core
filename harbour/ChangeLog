@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-07-13 12:32 UTC-0400 Alejandro de Garate <alex_degarate@hotmail.com>
+  * doc/es/lang.txt
+    ! Fixed accents, etc, minor formating. Now in sync with english version 
+    
 2003-07-13 12:24 UTC-0400 Alejandro de Garate <alex_degarate@hotmail.com>
   * doc/es/hbpplib.txt
   * doc/es/howtobsd.txt
