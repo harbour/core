@@ -105,7 +105,7 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
               else
                  AAdd( ATail( __DbgStatics )[ 2 ], cStaticName )
               endif
-              return nil  // We can not use s_oDebugger yet, so we return
+              return  // We can not use s_oDebugger yet, so we return
            endif
 
            if s_oDebugger != nil
@@ -153,7 +153,7 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
 
       otherwise   // called from hvm.c hb_vmDebuggerEndProc()
          if Empty( ProcName( 1 ) ) // ending (_INITSTATICS)
-            return nil
+            return
          endif
          if s_oDebugger != nil
             s_oDebugger:EndProc()
@@ -175,15 +175,23 @@ CLASS TDebugger
    DATA   aBreakPoints, aCallStack
    DATA   aLastCommands, nCommand, oGetListCommand
    DATA   lGo
-   DATA   cClrDialog
    DATA   aColors
    DATA   lCaseSensitive
    DATA   cSearchString
+   DATA   cPathForFiles
+   DATA   nTabWidth
+   DATA   lMonoDisplay
 
    METHOD New()
    METHOD Activate( cModuleName )
+   METHOD BarDisplay()
    METHOD BuildCommandWindow()
+
+   METHOD ClrModal() INLINE If( ::lMonoDisplay, "N/W, W+/W, W/N, W+/N",;
+                                "N/W, R/W, N/BG, R/BG" )
+
    METHOD CodeWindowProcessKey( nKey )
+   METHOD Colors()
    METHOD CommandWindowProcessKey( nKey )
    METHOD EditVar( nVar )
    METHOD EndProc()
@@ -195,18 +203,29 @@ CLASS TDebugger
    METHOD InputBox( cMsg, uValue, bValid )
    METHOD IsBreakPoint( nLine )
    METHOD LoadVars()
+   METHOD MonoDisplay()
    METHOD NextWindow()
    METHOD Open()
    METHOD OSShell()
+
+   METHOD PathForFiles() INLINE ;
+          ::cPathForFiles := ::InputBox( "Search path for source files:",;
+                                         ::cPathForFiles )
+
    METHOD PrevWindow()
    METHOD RestoreAppStatus()
    METHOD SaveAppStatus()
-   METHOD SelColors()
    METHOD Show()
    METHOD ShowAppScreen()
    METHOD ShowCallStack()
    METHOD ShowCode( cModuleName )
    METHOD ShowVars()
+
+   METHOD Step() INLINE ::RestoreAppStatus(), ::Exit()
+
+   METHOD TabWidth() INLINE ;
+          ::nTabWidth := ::InputBox( "Tab width", ::nTabWidth )
+
    METHOD ToggleBreakPoint()
    METHOD ViewSets()
    METHOD WndVarsLButtonDown( nMRow, nMCol )
@@ -223,19 +242,22 @@ ENDCLASS
 
 METHOD New() CLASS TDebugger
 
-   ::aColors := { "BG+/B", "BG+/B", "BG+/B", "N/BG", "N/BG", "N/BG", "GR+/B",;
+   ::aColors := { "BG+/B", "BG+/B", "BG+/B", "N/BG", "N/W", "N/BG", "GR+/B",;
                   "N/BG", "GR+/BG", "W+/N", "GR+/N" }
+   ::lMonoDisplay   := .f.
    s_oDebugger := Self
 
    ::aWindows       := {}
    ::nCurrentWindow := 1
-   ::cClrDialog     := "N/W"
    ::oPullDown      := __dbgBuildMenu( Self )
 
    ::oWndCode       := TDbWindow():New( 1, 0, MaxRow() - 6, MaxCol() )
    ::oWndCode:bKeyPressed := { | nKey | ::CodeWindowProcessKey( nKey ) }
    ::oWndCode:bGotFocus   := { || ::oGetListCommand:SetFocus(), SetCursor( SC_SPECIAL1 ) }
    ::oWndCode:bLostFocus  := { || SetCursor( SC_NONE ) }
+   ::oWndCode:bPainted = { || ::oBrwText:SetColor( __DbgColors()[ 3 ] + "," + ;
+                              __DbgColors()[ 4 ] + "," + __DbgColors()[ 5 ] ),;
+                              If( ::oBrwText != nil, ::oBrwText:RefreshWindow(), nil ) }
 
    AAdd( ::aWindows, ::oWndCode )
 
@@ -248,6 +270,8 @@ METHOD New() CLASS TDebugger
    ::aVars          := {}
    ::lCaseSensitive := .f.
    ::cSearchString  := ""
+   ::cPathForFiles  := ""
+   ::nTabWidth      := 4
 
 return Self
 
@@ -261,9 +285,35 @@ METHOD Activate( cModuleName ) CLASS TDebugger
 
 return nil
 
+METHOD BarDisplay() CLASS TDebugger
+
+   local cClrItem   := __DbgColors()[ 8 ]
+   local cClrHotKey := __DbgColors()[ 9 ]
+
+   DispBegin()
+   SetColor( cClrItem )
+   @ MaxRow(), 0 CLEAR TO MaxRow(), MaxCol()
+
+   DispOutAt( MaxRow(),  0,;
+   "F1-Help F2-Zoom F3-Repeat F4-User F5-Go F6-WA F7-Here F8-Step F9-BkPt F10-Trace",;
+   cClrItem )
+   DispOutAt( MaxRow(),  0, "F1", cClrHotKey )
+   DispOutAt( MaxRow(),  8, "F2", cClrHotKey )
+   DispOutAt( MaxRow(), 16, "F3", cClrHotKey )
+   DispOutAt( MaxRow(), 26, "F4", cClrHotKey )
+   DispOutAt( MaxRow(), 34, "F5", cClrHotKey )
+   DispOutAt( MaxRow(), 40, "F6", cClrHotKey )
+   DispOutAt( MaxRow(), 46, "F7", cClrHotKey )
+   DispOutAt( MaxRow(), 54, "F8", cClrHotKey )
+   DispOutAt( MaxRow(), 62, "F9", cClrHotKey )
+   DispOutAt( MaxRow(), 70, "F10", cClrHotKey )
+   DispEnd()
+
+return nil
+
 METHOD BuildCommandWindow() CLASS TDebugger
 
-   local GetList := {}
+   local GetList := {}, oGet
    local cCommand
 
    ::oWndCommand := TDbWindow():New( MaxRow() - 5, 0, MaxRow() - 1, MaxCol(),;
@@ -272,7 +322,8 @@ METHOD BuildCommandWindow() CLASS TDebugger
    ::oWndCommand:bLostFocus  := { || SetCursor( SC_NONE ) }
    ::oWndCommand:bKeyPressed := { | nKey | ::CommandWindowProcessKey( nKey ) }
    ::oWndCommand:bPainted    := { || DispOutAt( ::oWndCommand:nBottom - 1,;
-                             ::oWndCommand:nLeft + 1, "> ", ::oWndCommand:cColor ) }
+                             ::oWndCommand:nLeft + 1, "> ", ::oWndCommand:cColor ),;
+                        oGet:ColorDisp( Replicate( __DbgColors()[ 2 ] + ",", 5 ) ) }
    AAdd( ::aWindows, ::oWndCommand )
 
    ::aLastCommands := {}
@@ -280,9 +331,9 @@ METHOD BuildCommandWindow() CLASS TDebugger
 
    cCommand := Space( ::oWndCommand:nRight - ::oWndCommand:nLeft - 3 )
    // We don't use the GET command here to avoid the painting of the GET
-   AAdd( GetList, Get():New( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3,;
+   AAdd( GetList, oGet := Get():New( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3,;
          { | u | iif( PCount() > 0, cCommand := u, cCommand ) }, "cCommand" ) )
-   ATail( GetList ):ColorSpec := Replicate( ::oWndCommand:cColor + ",", 5 )
+   oGet:ColorSpec := Replicate( __DbgColors()[ 2 ] + ",", 5 )
    ::oGetListCommand := TGetList():New( GetList )
 
 return nil
@@ -315,6 +366,48 @@ METHOD CodeWindowProcessKey( nKey ) CLASS TDebugger
            ::oBrwText:PageDown()
 
    endcase
+
+return nil
+
+METHOD Colors() CLASS TDebugger
+
+   local oWndColors := TDbWindow():New( 4, 5, 16, MaxCol() - 5,;
+                                        "Debugger Colors[1..11]", "N/W" )
+   local aColors := { "Border", "Text", "Text High", "Text PPO", "Text Selected",;
+                      "Text High Sel.", "Text PPO Sel.", "Menu", "Menu High",;
+                      "Menu Selected", "Menu High Sel." }
+
+   local oBrwColors := TBrowseNew( oWndColors:nTop + 1, oWndColors:nLeft + 1,;
+                                 oWndColors:nBottom - 1, oWndColors:nRight - 1 )
+   local n := 1
+   local nWidth := oWndColors:nRight - oWndColors:nLeft - 1
+   local oCol
+
+   if ::lMonoDisplay
+      Alert( "Monochrome display" )
+      return nil
+   endif
+
+   oBrwColors:ColorSpec := ::ClrModal()
+   oBrwColors:GoTopBlock := { || n := 1 }
+   oBrwColors:GoBottomBlock := { || n := Len( aColors ) }
+   oBrwColors:SkipBlock := { | nSkip, nPos | nPos := n,;
+                          n := iif( nSkip > 0, Min( Len( aColors ), n + nSkip ),;
+                          Max( 1, n + nSkip ) ), n - nPos }
+   oBrwColors:AddColumn( ocol := TBColumnNew( "", { || PadR( aColors[ n ], 14 ) } ) )
+   oCol:colorblock :=   { || { iif( n == oBrwColors:Cargo, 2, 1 ), 2 } }
+   oBrwColors:AddColumn( oCol := TBColumnNew( "",;
+                       { || PadR( '"' + ::aColors[ n ] + '"', nWidth - 15 ) } ) )
+   oBrwColors:Cargo := 1 // Actual highligthed row
+   oBrwColors:colPos:=2
+   oBrwColors:Freeze:=1
+   oCol:ColorBlock := { || { iif( n == oBrwColors:Cargo, 3, 1 ), 3 } }
+
+
+   oWndColors:bPainted    := { || oBrwColors:ForceStable() }
+   oWndColors:bKeyPressed := { | nKey | SetsKeyPressed( nKey, oBrwColors,;
+                               Len( aColors ), oWndColors, "Debugger Colors" ) }
+   oWndColors:ShowModal()
 
 return nil
 
@@ -560,8 +653,7 @@ METHOD HandleEvent() CLASS TDebugger
               ::Go()
 
          case nKey == K_F8
-              ::RestoreAppStatus()
-              ::Exit()
+              ::Step()
 
          case nKey == K_F9
               ::ToggleBreakPoint()
@@ -593,6 +685,24 @@ METHOD Hide() CLASS TDebugger
    ::cAppImage := nil
    SetColor( ::cAppColors )
    SetCursor( ::nAppCursor )
+
+return nil
+
+METHOD MonoDisplay() CLASS TDebugger
+
+   local n
+
+   ::lMonoDisplay := ! ::lMonoDisplay
+
+   ::oPullDown:LoadColors()
+   ::oPullDown:Refresh()
+
+   ::BarDisplay()
+
+   for n = 1 to Len( ::aWindows )
+      ::aWindows[ n ]:LoadColors()
+      ::aWindows[ n ]:Refresh()
+   next
 
 return nil
 
@@ -628,43 +738,6 @@ METHOD PrevWindow() CLASS TDebugger
 
 return nil
 
-METHOD SelColors() CLASS TDebugger
-
-   local oWndColors := TDbWindow():New( 4, 5, 16, MaxCol() - 5,;
-                                        "Debugger Colors[1..11]", "N/W" )
-   local aColors := { "Border", "Text", "Text High", "Text PPO", "Text Selected",;
-                      "Text High Sel.", "Text PPO Sel.", "Menu", "Menu High",;
-                      "Menu Selected", "Menu High Sel." }
-
-   local oBrwColors := TBrowseNew( oWndColors:nTop + 1, oWndColors:nLeft + 1,;
-                                 oWndColors:nBottom - 1, oWndColors:nRight - 1 )
-   local n := 1
-   local nWidth := oWndColors:nRight - oWndColors:nLeft - 1
-   local oCol
-
-   oBrwColors:ColorSpec := "N/W, R/W, N/BG"
-   oBrwColors:GoTopBlock := { || n := 1 }
-   oBrwColors:GoBottomBlock := { || n := Len( aColors ) }
-   oBrwColors:SkipBlock := { | nSkip, nPos | nPos := n,;
-                          n := iif( nSkip > 0, Min( Len( aColors ), n + nSkip ),;
-                          Max( 1, n + nSkip ) ), n - nPos }
-   oBrwColors:AddColumn( ocol := TBColumnNew( "", { || PadR( aColors[ n ], 14 ) } ) )
-   oCol:colorblock :=   { || { iif( n == oBrwColors:Cargo, 2, 1 ), 2 } }
-   oBrwColors:AddColumn( oCol := TBColumnNew( "",;
-                       { || PadR( '"' + ::aColors[ n ] + '"', nWidth - 15 ) } ) )
-   oBrwColors:Cargo := 1 // Actual highligthed row
-   oBrwColors:colPos:=2
-   oBrwColors:Freeze:=1
-   oCol:ColorBlock := { || { iif( n == oBrwColors:Cargo, 3, 1 ), 3 } }
-
-
-   oWndColors:bPainted    := { || oBrwColors:ForceStable() }
-   oWndColors:bKeyPressed := { | nKey | SetsKeyPressed( nKey, oBrwColors,;
-                               Len( aColors ), oWndColors, "Debugger Colors" ) }
-   oWndColors:ShowModal()
-
-return nil
-
 METHOD Show() CLASS TDebugger
 
    ::cAppImage  := SaveScreen()
@@ -678,20 +751,7 @@ METHOD Show() CLASS TDebugger
    ::oWndCommand:Show()
    DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1, ">" )
 
-   SetColor( "N/BG" )
-   @ MaxRow(), 0 CLEAR TO MaxRow(), MaxCol()
-
-   DispOutAt( MaxRow(),  0, "F1-Help F2-Zoom F3-Repeat F4-User F5-Go F6-WA F7-Here F8-Step F9-BkPt F10-Trace", "N/BG" )
-   DispOutAt( MaxRow(),  0, "F1", "GR+/BG" )
-   DispOutAt( MaxRow(),  8, "F2", "GR+/BG" )
-   DispOutAt( MaxRow(), 16, "F3", "GR+/BG" )
-   DispOutAt( MaxRow(), 26, "F4", "GR+/BG" )
-   DispOutAt( MaxRow(), 34, "F5", "GR+/BG" )
-   DispOutAt( MaxRow(), 40, "F6", "GR+/BG" )
-   DispOutAt( MaxRow(), 46, "F7", "GR+/BG" )
-   DispOutAt( MaxRow(), 54, "F8", "GR+/BG" )
-   DispOutAt( MaxRow(), 62, "F9", "GR+/BG" )
-   DispOutAt( MaxRow(), 70, "F10", "GR+/BG" )
+   ::BarDisplay()
 
 return nil
 
@@ -714,7 +774,6 @@ METHOD ShowCallStack() CLASS TDebugger
       ::oWndCode:SetFocus( .t. )
       ::oWndStack := TDbWindow():New( 1, MaxCol() - 15, MaxRow() - 6, MaxCol(),;
                                      "Stack" )
-      ::oWndStack:Show( .f. )
       AAdd( ::aWindows, ::oWndStack )
       ::oBrwStack := TBrowseNew( 2, MaxCol() - 14, MaxRow() - 7, MaxCol() - 1 )
       ::oBrwStack:ColorSpec := ::aColors[ 3 ] + "," + ::aColors[ 4 ] + "," + ::aColors[ 5 ]
@@ -726,6 +785,10 @@ METHOD ShowCallStack() CLASS TDebugger
 
       ::oBrwStack:AddColumn( TBColumnNew( "",  { || PadC( ::aCallStack[ n ], 14 ) } ) )
       ::oBrwStack:ForceStable()
+      ::oWndStack:bPainted = { || ::oBrwStack:ColorSpec := __DbgColors()[ 3 ] + "," + ;
+                                 __DbgColors()[ 4 ] + "," + __DbgColors()[ 5 ],;
+                                 ::oBrwStack:RefreshAll(), ::oBrwStack:ForceStable() }
+      ::oWndStack:Show( .f. )
    endif
 
 return nil
@@ -788,6 +851,9 @@ METHOD ShowVars( bSort, nType ) CLASS TDebugger
 
       ::oWndVars:bLButtonDown = { | nMRow, nMCol | ::WndVarsLButtonDown( nMRow, nMCol ) }
       ::oWndVars:bLDblClick = { | nMRow, nMCol | ::EditVar( n ) }
+      ::oWndVars:bPainted = { || ::oBrwVars:ColorSpec := __DbgColors()[ 3 ] + "," + ;
+                                 __DbgColors()[ 4 ] + "," + __DbgColors()[ 5 ],;
+                                 ::oBrwVars:RefreshAll(), ::oBrwVars:ForceStable() }
 
       ::oBrwVars := TBrowseNew( 2, 1, 6, MaxCol() - iif( ::oWndStack != nil,;
                                ::oWndStack:nWidth(), 0 ) - 1 )
@@ -921,9 +987,9 @@ METHOD InputBox( cMsg, uValue, bValid ) CLASS TDebugger
    oWndInput:Show()
 
    if bValid == nil
-      @ nTop + 1, nLeft + 1 GET uTemp
+      @ nTop + 1, nLeft + 1 GET uTemp COLOR "," + __DbgColors()[ 5 ]
    else
-      @ nTop + 1, nLeft + 1 GET uTemp VALID bValid
+      @ nTop + 1, nLeft + 1 GET uTemp VALID bValid COLOR "," + __DbgColors()[ 5 ]
    endif
 
    nOldCursor := SetCursor( SC_NORMAL )
@@ -1001,7 +1067,7 @@ return nil
 METHOD ViewSets() CLASS TDebugger
 
    local oWndSets := TDbWindow():New( 1, 8, MaxRow() - 2, MaxCol() - 8,;
-                                      "System Settings[1..47]", ::cClrDialog )
+                                      "System Settings[1..47]", ::ClrModal() )
    local aSets := { "Exact", "Fixed", "Decimals", "DateFormat", "Epoch", "Path",;
                     "Default", "Exclusive", "SoftSeek", "Unique", "Deleted",;
                     "Cancel", "Debug", "TypeAhead", "Color", "Cursor", "Console",;
@@ -1018,7 +1084,7 @@ METHOD ViewSets() CLASS TDebugger
    local nWidth := oWndSets:nRight - oWndSets:nLeft - 1
    local oCol
 
-   oBrwSets:ColorSpec := "N/W, R/W, N/BG"
+   oBrwSets:ColorSpec := ::ClrModal()
    oBrwSets:GoTopBlock := { || n := 1 }
    oBrwSets:GoBottomBlock := { || n := Len( aSets ) }
    oBrwSets:SkipBlock := { | nSkip, nPos | nPos := n,;
@@ -1213,4 +1279,10 @@ return nil
 
 function __DbgColors()
 
-return s_oDebugger:aColors
+return If( ! s_oDebugger:lMonoDisplay, s_oDebugger:aColors,;
+           { "W+/N", "W+/N", "W+/N", "N/W", "W/N", "N/W", "W+/N",;
+             "N/W", "W+/W", "W/N", "W+/N" } )
+
+function __Dbg()
+
+return s_oDebugger
