@@ -365,8 +365,8 @@ void hb_gt_DispBegin(void)
   COORD coBuf;                        /* the size of the buffer to read into */
   CHAR_INFO *pCharInfo;       /* buffer to store info from ReadConsoleOutput */
   SMALL_RECT srWin;                         /* source rectangle to read from */
-  CONSOLE_CURSOR_INFO cci;
 /*
+  CONSOLE_CURSOR_INFO cci;
   DWORD dsize;
   int vis;
 

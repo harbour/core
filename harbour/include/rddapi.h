@@ -163,7 +163,7 @@ typedef DBOPENINFO * LPDBOPENINFO;
 *  The Create Order conditional Info structure
 */
 
-#ifdef 0
+#if 0
 typedef struct _DBORDERCONDINFO
 {
    BOOL     fActive;
@@ -199,7 +199,7 @@ typedef DBORDERCONDINFO * LPDBORDERCONDINFO;
 *  The Create Order Info structure
 */
 
-#ifdef 0
+#if 0
 typedef struct
 {
    LPDBORDERCONDINFO lpdbOrdCondInfo; /* Conditional information */
@@ -224,7 +224,7 @@ typedef DBORDERCREATEINFO * LPDBORDERCREATEINFO;
 *  The Set Index Info structure
 */
 
-#ifdef 0
+#if 0
 typedef struct
 {
    PHB_ITEM atomBagName;  /* Name of the Order Bag */
@@ -249,7 +249,7 @@ typedef DBORDERINFO * LPDBORDERINFO;
 *  The Scope Info structure
 */
 
-#ifdef 0
+#if 0
 typedef struct
 {
    PHB_ITEM itmCobFor;   /* Code Block representation of a FOR clause */
@@ -278,7 +278,7 @@ typedef DBSCOPEINFO * LPDBSCOPEINFO;
 *  The Filter Info structure
 */
 
-#ifdef 0
+#if 0
 typedef struct
 {
    PHB_ITEM itmCobExpr;       /* Block representation of the FILTER expression */
@@ -297,7 +297,7 @@ typedef DBFILTERINFO * LPDBFILTERINFO;
 *  The Relationship Info structure
 */
 
-#ifdef 0
+#if 0
 typedef struct _DBRELINFO
 {
    PHB_ITEM           itmCobExpr;   /* Block representation of the relational SEEK key */
@@ -324,7 +324,7 @@ typedef DBRELINFO * LPDBRELINFO;
 *  on each record of the workarea
 */
 
-#ifdef 0
+#if 0
 typedef struct
 {
    PHB_ITEM    itmBlock;  /* The block to be evaluated */
@@ -344,7 +344,7 @@ typedef DBEVALINFO * LPDBEVALINFO;
 *  one database to another; used by DBTRANSINFO
 */
 
-#ifdef 0
+#if 0
 typedef struct
 {
    USHORT uiSource;       /* Field index number from the source */
@@ -364,7 +364,7 @@ typedef DBTRANSITEM * LPDBTRANSITEM;
 *  to another
 */
 
-#ifdef 0
+#if 0
 typedef struct
 {
    struct _AREA *lpaSource;     /* Pointer to source work area */
@@ -391,7 +391,7 @@ typedef DBTRANSINFO * LPDBTRANSINFO;
 *  order of the sorting.
 */
 
-#ifdef 0
+#if 0
 typedef struct
 {
    USHORT uiField;        /* Index into the workarea->fields structure */
@@ -419,7 +419,7 @@ typedef DBSORTITEM * LPDBSORTITEM;
 *  Information for a physical sort on the workarea
 */
 
-#ifdef 0
+#if 0
 typedef struct
 {
    DBTRANSINFO   dbtri;        /* Destination workarea transfer information */
@@ -441,7 +441,7 @@ typedef DBSORTINFO * LPDBSORTINFO;
 *  Information for a record or file lock
 */
 
-#ifdef 0
+#if 0
 typedef struct
 {
    ULONG  itmRecID;
@@ -544,7 +544,7 @@ typedef USHORT ( * DBENTRYP_SI   )( AREAP area, USHORT index, PHB_ITEM param );
 typedef USHORT ( * DBENTRYP_VP   )( AREAP area, LPDBOPENINFO param );
 typedef USHORT ( * DBENTRYP_SP   )( AREAP area, USHORT * param );
 
-#ifdef 0
+#if 0
 typedef USHORT ( * DBENTRYP_S    )( AREAP area, USHORT param);
 typedef USHORT ( * DBENTRYP_LP   )( AREAP area, LONGP param);
 typedef USHORT ( * DBENTRYP_PP   )( AREAP area, FARPP param);
@@ -858,7 +858,7 @@ typedef RDDFUNCS * PRDDFUNCS;
 
 /*--------------------* SUPER Methods *------------------------*/
 
-#ifdef 0
+#if 0
 
 /* Movement and positioning methods */
 

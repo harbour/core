@@ -1,3 +1,13 @@
+Tue Aug 03 11:20:17 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* include/rddapi.h: 
+	Changed all #ifdef 0 with #if 0, assuming the original intent was
+	to comment those sections out.
+	
+	* source/rtl/gt/gtwin.c: 
+	Moved an unused variable within the commented out portion of the
+	code where it was used.
+
 19990803-14:55 GMT+1 Victor Szel <info@szelvesz.hu>
   ! source/rtl/strings.c - ASC() fixed. It could return negative values
     since a typecase (BYTE) was missing.
