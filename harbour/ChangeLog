@@ -8,6 +8,17 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-04-15 13:10 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  + contrib/ole
+  + contrib/ole/bldtest.bat
+  + contrib/ole/build32.bat
+  + contrib/ole/hbtest.prg
+  + contrib/ole/ole2.c
+  + contrib/ole/oleauto.prg
+    + With a kind permission of the author, José F. Giménez <jfgimenez@wanadoo.es>,
+      ole library for harbour added.
+      Some unused stuff is removed from the original files, few bug fixes are made.
+
 2003-04-14 14:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * source/common/hbgete.c
     ! Added #ifdef to allow OS/2 GCC to use PSZ and OS/2 VAC++ to use PCSZ for EnvValue.
