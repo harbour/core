@@ -485,7 +485,7 @@ long hb_parnl( int iParam, ... ) /* retrieve a numeric parameter as a long */
       return 0;
 }
 
-void hb_storc( char * szText, int iParam, ... )
+int hb_storc( char * szText, int iParam, ... )
 {
    FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
    FARPROC pStorC = GetProcAddress( GetModuleHandle( NULL ), "_hb_storc" );
@@ -502,13 +502,21 @@ void hb_storc( char * szText, int iParam, ... )
          va_end( va );
 
          ( ( HB_STORC2) pStorC )( szText, iParam, ulArrayIndex );
+         return 1;
       }
       else
+      {
          ( ( HB_STORC ) pStorC )( szText, iParam );
+         return 1;
+      }
+
+      return 0;
    }
+
+   return 0;
 }
 
-void hb_storclen( char * szText, ULONG ulLen, int iParam, ... )
+int hb_storclen( char * szText, ULONG ulLen, int iParam, ... )
 {
    FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
    FARPROC pStorC = GetProcAddress( GetModuleHandle( NULL ), "_hb_storclen" );
@@ -525,13 +533,21 @@ void hb_storclen( char * szText, ULONG ulLen, int iParam, ... )
          va_end( va );
 
          ( ( HB_STORCLEN2) pStorC )( szText, ulLen, iParam, ulArrayIndex );
+         return 1;
       }
       else
+      {
          ( ( HB_STORCLEN ) pStorC )( szText, ulLen, iParam );
+         return 1;
+      }
+
+      return 0;
    }
+
+   return 0;
 }
 
-void hb_stords( char * szDate, int iParam, ... )
+int hb_stords( char * szDate, int iParam, ... )
 {
    FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
    FARPROC pStorDs = GetProcAddress( GetModuleHandle( NULL ), "_hb_stords" );
@@ -548,13 +564,22 @@ void hb_stords( char * szDate, int iParam, ... )
          va_end( va );
 
          ( ( HB_STORDS2) pStorDs )( szDate, iParam, ulArrayIndex );
+
+         return 1;
       }
       else
+      {
          ( ( HB_STORDS ) pStorDs )( szDate, iParam );
+         return 1;
+      }
+
+      return 0;
    }
+
+   return 0;
 }
 
-void hb_storl( int iLogical, int iParam, ... )
+int hb_storl( int iLogical, int iParam, ... )
 {
    FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
    FARPROC pStorL = GetProcAddress( GetModuleHandle( NULL ), "_hb_storl" );
@@ -571,13 +596,21 @@ void hb_storl( int iLogical, int iParam, ... )
          va_end( va );
 
          ( ( HB_STORL2) pStorL )( iLogical, iParam, ulArrayIndex );
+         return 1;
       }
       else
+      {
          ( ( HB_STORL ) pStorL )(  iLogical, iParam );
+         return 1;
+      }
+
+      return 0;
    }
+
+   return 0;
 }
 
-void hb_storni( int iValue, int iParam, ... )
+int hb_storni( int iValue, int iParam, ... )
 {
    FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
    FARPROC pStorNi = GetProcAddress( GetModuleHandle( NULL ), "_hb_storni" );
@@ -594,13 +627,21 @@ void hb_storni( int iValue, int iParam, ... )
          va_end( va );
 
          ( ( HB_STORNI2) pStorNi )( iValue, iParam, ulArrayIndex );
+         return 1;
       }
       else
+      {
          ( ( HB_STORNI) pStorNi )(  iValue, iParam );
+         return 1;
+      }
+
+      return 0;
    }
+
+   return 0;
 }
 
-void hb_stornl( long lValue, int iParam, ... )
+int hb_stornl( long lValue, int iParam, ... )
 {
    FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
    FARPROC pStorNl = GetProcAddress( GetModuleHandle( NULL ), "_hb_stornl" );
@@ -617,13 +658,21 @@ void hb_stornl( long lValue, int iParam, ... )
          va_end( va );
 
          ( ( HB_STORNL2) pStorNl )( lValue, iParam, ulArrayIndex );
+         return 1;
       }
       else
+      {
          ( ( HB_STORNL) pStorNl )(  lValue, iParam );
+         return 1;
+      }
+
+      return 0;
    }
+
+   return 0;
 }
 
-void hb_stornd( double dNumber, int iParam, ... )
+int hb_stornd( double dNumber, int iParam, ... )
 {
    FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
    FARPROC pStorNd = GetProcAddress( GetModuleHandle( NULL ), "_hb_stornd" );
@@ -640,10 +689,18 @@ void hb_stornd( double dNumber, int iParam, ... )
          va_end( va );
 
          ( ( HB_STORND2) pStorNd )( dNumber, iParam, ulArrayIndex );
+         return 1;
       }
       else
+      {
          ( ( HB_STORND) pStorNd )( dNumber, iParam );
+         return 1;
+      }
+
+      return 0;
    }
+
+   return 0;
 }
 
 BOOL     hb_arrayNew( PHB_ITEM pItem, ULONG ulLen )  /* creates a new array */

@@ -342,13 +342,13 @@ extern void  HB_EXPORT  hb_reta( ULONG ulLen );  /* returns an array with a spec
 
 #endif
 
-extern void  HB_EXPORT  hb_storc( char * szText, int iParam, ... ); /* stores a szString on a variable by reference */
-extern void  HB_EXPORT  hb_storclen( char * szText, ULONG ulLength, int iParam, ... ); /* stores a fixed length string on a variable by reference */
-extern void  HB_EXPORT  hb_stords( char * szDate, int iParam, ... );   /* szDate must have yyyymmdd format */
-extern void  HB_EXPORT  hb_storl( int iLogical, int iParam, ... ); /* stores a logical integer on a variable by reference */
-extern void  HB_EXPORT  hb_storni( int iValue, int iParam, ... ); /* stores an integer on a variable by reference */
-extern void  HB_EXPORT  hb_stornl( long lValue, int iParam, ... ); /* stores a long on a variable by reference */
-extern void  HB_EXPORT  hb_stornd( double dValue, int iParam, ... ); /* stores a double on a variable by reference */
+extern int   HB_EXPORT  hb_storc( char * szText, int iParam, ... ); /* stores a szString on a variable by reference */
+extern int   HB_EXPORT  hb_storclen( char * szText, ULONG ulLength, int iParam, ... ); /* stores a fixed length string on a variable by reference */
+extern int   HB_EXPORT  hb_stords( char * szDate, int iParam, ... );   /* szDate must have yyyymmdd format */
+extern int   HB_EXPORT  hb_storl( int iLogical, int iParam, ... ); /* stores a logical integer on a variable by reference */
+extern int   HB_EXPORT  hb_storni( int iValue, int iParam, ... ); /* stores an integer on a variable by reference */
+extern int   HB_EXPORT  hb_stornl( long lValue, int iParam, ... ); /* stores a long on a variable by reference */
+extern int   HB_EXPORT  hb_stornd( double dValue, int iParam, ... ); /* stores a double on a variable by reference */
 
 extern void    HB_EXPORT hb_xinit( void );                         /* Initialize fixed memory subsystem */
 extern void    HB_EXPORT hb_xexit( void );                         /* Deinitialize fixed memory subsystem */
@@ -608,4 +608,3 @@ extern char * hb_getenv( const char * name );
 #endif
 
 #endif /* HB_APIEXT_H_ */
-
