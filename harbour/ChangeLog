@@ -1,3 +1,8 @@
+2000-05-29 22:26 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * doc/whatsnew.txt
+     * Updated with items from Jose
+
 2000-05-29 03:25 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
    * contrib\libct\makefile.vc
    * contrib\libgt\makefile.vc

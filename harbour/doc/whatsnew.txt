@@ -26,7 +26,7 @@ Version 0.34 Build 34 (2000-??-??)
 - OBJ generation support for BCC5x + Blinker5
 - Several new CONTRIBs (Nanfor LIB, ZLIB, MSQL, CA-Tools LIB, GT LIB)
 - Clipper 5.3 compatible MENUITEM, POPUP, TOPBAR classes
-- Documentation further enhanced
+- HBDOC further enhanced
 - RSX32 and RSXNT compiler support
 - SETKEY functions, ASORT(), SAVESCREEN/RESTSCREEN rewritten in C
 - Extensions (XPP, C53, Harbour) are easier to switch of and better separated 
@@ -37,6 +37,14 @@ Version 0.34 Build 34 (2000-??-??)
 - Compiler /BUILD switch added
 - Crew list added to /CREDIT compiler switch
 - CURDIR(), CURDRIVE() fixed
+- Updated national language modules
+- More documented functions
+- Documented all db* related functions
+- New Item and Extend API functions
+- New tests
+- HBTEST made compatible with Xbase++
+- DBU sources can be compiled with Harbour without changes
+- Added more ADS RDD functions
 
 Version 0.33 Build 33 (2000-04-07)
 
