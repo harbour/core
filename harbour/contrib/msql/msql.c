@@ -179,3 +179,58 @@ HB_FUNC(MSQLGETERR) // char *msqlGetErrMsg(char *);
    _retc(msqlGetErrMsg(NULL));
 }
 
+
+HB_FUNC(MSQLLISTDB) // m_result * msqlListDBs(int);
+{
+   int sock = _parnl(1);
+   m_result *mresult;
+   m_row mrow;
+   long nr, i;
+   ITEM aDBs;
+   ITEM temp;
+
+   mresult = msqlListDBs(sock);
+   nr = msqlNumRows(mresult);
+   aDBs = _itemArrayNew(nr);
+
+   for (i = 0; i < nr; i++) {
+      mrow = msqlFetchRow(mresult);
+      temp = _itemPutC(NULL, mrow[0]);
+
+      _itemArrayPut(aDBs, i + 1, temp);
+      _itemRelease(temp);
+   }
+
+   msqlFreeResult(mresult);
+   _itemReturn(aDBs);
+   _itemRelease(aDBs);
+}
+
+
+HB_FUNC(MSQLLISTTA) // m_result * msqlListTables(int);
+{
+   int sock = _parnl(1);
+   m_result *mresult;
+   m_row mrow;
+   long nr, i;
+   ITEM aTables;
+   ITEM temp;
+
+   mresult = msqlListTables(sock);
+   nr = msqlNumRows(mresult);
+   aTables = _itemArrayNew(nr);
+
+   for (i = 0; i < nr; i++) {
+
+      mrow = msqlFetchRow(mresult);
+      temp = _itemPutC(NULL, mrow[0]);
+
+      _itemArrayPut(aTables, i + 1, temp);
+      _itemRelease(temp);
+   }
+
+   msqlFreeResult(mresult);
+   _itemReturn(aTables);
+   _itemRelease(aTables);
+}
+

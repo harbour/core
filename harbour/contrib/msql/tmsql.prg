@@ -583,10 +583,14 @@ CLASS TmSQLServer
 
    METHOD   SelectDB(cDBName)    // Which data base I will use for subsequent queries
 
-   METHOD   CreateTable(cName, aStruct)         // Create new table using the same syntax of dbCreate()
-   METHOD   DeleteTable(cName)                  // delete table
+   METHOD   CreateTable(cTable, aStruct)  // Create new table using the same syntax of dbCreate()
+   METHOD   DeleteTable(cTable)           // delete table
+   METHOD   TableStruct(cTable)           // returns a structure array compatible with clipper's dbStruct() ones
    METHOD   CreateIndex(cName, cTable, aFNames, lUnique) // Create an index (unique) on field name(s) passed as an array of strings aFNames
    METHOD   DeleteIndex(cName, cTable)                   // Delete index cName from cTable
+
+   METHOD   ListDBs()            // returns an array with list of data bases available
+   METHOD   ListTables()         // returns an array with list of available tables in current database
 
    METHOD   Query(cQuery)        // Gets a textual query and returns a TmSQLQuery or TmSQLTable object
 
@@ -622,9 +626,9 @@ METHOD SelectDB(cDBName) CLASS TmSQLServer
 return .F.
 
 
-METHOD CreateTable(cName, aStruct) CLASS TmSQLServer
+METHOD CreateTable(cTable, aStruct) CLASS TmSQLServer
 
-   local cCreateQuery := "CREATE TABLE " + cName + " ("
+   local cCreateQuery := "CREATE TABLE " + cTable + " ("
    local i
 
    for i := 1 to Len(aStruct)
@@ -704,9 +708,9 @@ METHOD DeleteIndex(cName, cTable) CLASS TmSQLServer
 return .F.
 
 
-METHOD DeleteTable(cName) CLASS TmSQLServer
+METHOD DeleteTable(cTable) CLASS TmSQLServer
 
-   local cDropQuery := "DROP TABLE " + cName
+   local cDropQuery := "DROP TABLE " + cTable
 
    if msqlQuery(::nSocket, cDropQuery) == 1
       return .T.
@@ -756,3 +760,77 @@ METHOD Error() CLASS TmSQLServer
 
 return msqlGetErr()
 
+
+METHOD ListDBs() CLASS TmSQLServer
+
+   local aList
+
+   aList := msqlListDB(::nSocket)
+
+return aList
+
+
+METHOD ListTables() CLASS TmSQLServer
+
+   local aList
+
+   aList := msqlListTa(::nSocket)
+
+return aList
+
+
+/* TOFIX: Conversion creates a .dbf with fields of wrong dimension (often) */
+METHOD TableStruct(cTable) CLASS TmSQLServer
+
+   local nRes, aField, aStruct, aSField, i
+
+   aStruct := {}
+   nRes := msqlListFi(::nSocket, cTable)
+
+   if nRes > 0
+      for i := 1 to msqlNumFie(nRes)
+
+         aField := msqlFetchF(nRes)
+         aSField := Array(DBS_DEC)
+
+         // don't count indexes as real fields
+         if aField[MSQL_FS_TYPE] <= MSQL_LAST_REAL_TYPE
+
+            aSField[DBS_NAME] := Left(aField[MSQL_FS_NAME], 10)
+            aSField[DBS_DEC] := 0
+
+            do case
+            case aField[MSQL_FS_TYPE] == MSQL_INT_TYPE
+               aSField[DBS_TYPE] := "N"
+               aSField[DBS_LEN] := 11
+
+            case aField[MSQL_FS_TYPE] == MSQL_UINT_TYPE
+               aSField[DBS_TYPE] := "L"
+               aSField[DBS_LEN] := 1
+
+            case aField[MSQL_FS_TYPE] == MSQL_CHAR_TYPE
+               aSField[DBS_TYPE] := "C"
+               aSField[DBS_LEN] := aField[MSQL_FS_LENGTH]
+
+            case aField[MSQL_FS_TYPE] == MSQL_DATE_TYPE
+               aSField[DBS_TYPE] := "D"
+               aSField[DBS_LEN] := aField[MSQL_FS_LENGTH]
+
+            case aField[MSQL_FS_TYPE] == MSQL_REAL_TYPE
+               aSField[DBS_TYPE] := "N"
+               aSField[DBS_LEN] := 12
+               aSFIeld[DBS_DEC] := 8
+
+            otherwise
+
+            endcase
+
+            AAdd(aStruct, aSField)
+         endif
+      next
+
+      msqlFreeR(nRes)
+
+   endif
+
+return aStruct
