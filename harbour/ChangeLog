@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-03-19 11:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * utils/hbmake/hbmake.prg
+      *fixed #define datediff(<x>,<y>) into datediff(x,y)
+      (Clipper compatibility)    (thanks to Jacek Kubica)
+
+
 2004-03-19 08:20 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/debug/debugger.prg
       * fixed refreshing of watchpoints

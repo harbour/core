@@ -65,7 +65,7 @@
 #xtranslate timetosec(<x>) => ((val(substr(<x>,1,2))*3600)+(val(substr(<x>,4,2))*60)+(val(substr(<x>,7,2))))
 
 #ifdef __HARBOUR__
-#define datediff(<x>,<y>) (<x>-<y>)
+#define datediff(x,y) (x-y)
 #else
 #translate datediff(<x>,<y>) => (<x>-<y>)
 #endif
