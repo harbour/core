@@ -59,7 +59,7 @@ static char ** s_argv = NULL;
 
 static char * hb_cmdargGet( const char * pszName, BOOL bRetValue );
 
-void hb_cmdargInit( int argc, char * argv[] )
+void HB_EXPORT hb_cmdargInit( int argc, char * argv[] )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_cmdargInit(%d, %p)", argc, argv));
 
