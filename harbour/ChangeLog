@@ -1,3 +1,10 @@
+2001-09-04 11:30 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * harbour/source/rtl/persist.prg
+     some improvements for arrays
+
+   * harbour/tests/testpers.prg
+     some improvements for testing nested arrays
+
 2001-09-04 08:41 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * contrib/hgf/os2pm/*
      ! fixed menu items handling under OS/2 where you cannot change a MIS_TEXT into
