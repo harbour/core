@@ -184,7 +184,9 @@
    #define HARBOUR void
 #endif
 
-#define __HARBOUR__
+#if ! defined(__HARBOUR__)
+   #define __HARBOUR__
+#endif
 
 typedef HARBOUR ( * PHB_FUNC )( void );
 typedef PHB_FUNC HB_FUNC_PTR;
