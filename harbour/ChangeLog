@@ -1,3 +1,9 @@
+19990603-13:30 EDT David G. Holm <dholm@jsd-llc.com>
+  Thanks go to Jose Lalin <dezac@corevia.com>
+  * source/rtl/dates.c
+    - localtime() returns tm_year with 1900 already subtracted from it,
+      so it is necessary to add 1900 back when formatting the date.
+
 19990603-18:30 CET Eddie Runia
   * source/rtl/classes.c; source/rtl/tclass.prg; source/rtl/arrays.c
   * include/ctoharb.h; include/extend.h

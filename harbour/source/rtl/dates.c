@@ -440,7 +440,7 @@ HARBOUR DATE( void )
 
       time(&t);
       oTime = localtime(&t);
-      sprintf(szTime, "%04d%02d%02d", oTime->tm_year, oTime->tm_mon + 1,
+      sprintf(szTime, "%04d%02d%02d", oTime->tm_year + 1900, oTime->tm_mon + 1,
 oTime->tm_mday);
       _retds(szTime);
    }
