@@ -1,5 +1,6 @@
 2001-08-31 11:32 GMT+1 Antonio Linares <alinares@fivetech.com>
-   + Added Marek Paliwoda's Linux GTK application entry point
+   + harbour/source/vm/mainlgtk.c
+     Added Marek Paliwoda's Linux GTK application entry point
 
 2001-08-28 21:10 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    * added #include "dir.h" inside platform tags
