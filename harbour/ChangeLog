@@ -1,3 +1,7 @@
+19990604-14:24 CET Victor Szel (upload Eddie Runia)
+  + source/rtl/natmsg/msghu.c
+    National language message file for Hungarian
+
 19990604-13:56 CET Thomas Braun (upload Eddie Runia)
   + source/rtl/natmsg/msgger.c
     National language message file for German
