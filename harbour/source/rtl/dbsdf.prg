@@ -159,16 +159,6 @@ PROCEDURE __dbSDF( lExport, cFile, aFields, bFor, bWhile, nNext, nRecord, lRest 
       END IF
    ELSE
       // APPEND FROM SDF
-         oErr := ErrorNew()
-         oErr:severity := ES_ERROR
-         oErr:genCode := EG_UNSUPPORTED
-         oErr:subSystem := "SDF"
-         oErr:subCode := 9999
-         oErr:description := HB_LANGERRMSG( oErr:genCode )
-         oErr:canRetry := .F.
-         oErr:canDefault := .T.
-         Eval(ErrorBlock(), oErr)
-      /*
       handle := FOPEN( cFileName )
       IF handle == -1
          oErr := ErrorNew()
@@ -190,16 +180,17 @@ PROCEDURE __dbSDF( lExport, cFile, aFields, bFor, bWhile, nNext, nRecord, lRest 
          nFileLen := FSEEK( handle,0,FS_END )
          FSEEK( handle,0 )
          aStruct := DBSTRUCT()
-         WHILE FSEEK( handle,0,FS_RELATIVE ) + 1 <= nFileLen
+         WHILE FSEEK( handle,0,FS_RELATIVE ) + 1 < nFileLen
+            APPEND BLANK
             IF EMPTY( aFields )
                // Process all fields.
                FOR index := 1 TO FCOUNT()
-                  FieldPut( index,ImportFixed( handle,index,aStruct )
+                  FieldPut( index,ImportFixed( handle,index,aStruct ) )
                NEXT index
             ELSE
                // Process the specified fields.
                FOR index := 1 TO LEN( aFields )
-                  FieldPut( FIELDPOS( aFields[ index ] ),ImportFixed( handle,FIELDPOS( aFields[ index ],aStruct )
+                  FieldPut( FIELDPOS( aFields[ index ] ),ImportFixed( handle,FIELDPOS( aFields[ index ] ),aStruct ) )
                NEXT index
             END IF
             // Set up for the start of the next record.
@@ -207,7 +198,6 @@ PROCEDURE __dbSDF( lExport, cFile, aFields, bFor, bWhile, nNext, nRecord, lRest 
          END WHILE
          FCLOSE( handle )
       END IF
-      */
    END IF
 RETURN
 
@@ -227,7 +217,7 @@ STATIC FUNCTION ExportFixed( handle, xField )
 RETURN .T.
 
 STATIC FUNCTION ImportFixed( handle, index, aStruct )
-   LOCAL cBuffer
+   LOCAL cBuffer := Space(aStruct[ index,3 ])
    FREAD( handle, @cBuffer, aStruct[ index,3 ] )
    DO CASE
       CASE aStruct[ index,2 ] == "C"
