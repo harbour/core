@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+    ! Fixed problems with hb_strupr( ( hb_parc(1) ) by using hb_strdup()
+  * source/rdd/workarea.c
+    ! Fixed a bug in hb_waAddField()
+
 2002-02-10 16:00 UTC+0100 Antonio Linares <alinares@fivetech.com>
   * include/hbapi.h
   * source/vm/debug.c

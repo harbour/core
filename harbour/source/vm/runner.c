@@ -174,10 +174,10 @@ HB_FUNC( __HRBRUN )
          if( argv )
             hb_xfree( argv );
          hb_retl( 1 );
+         hb_hrbUnLoad( pHrbBody );
       }
       else
          hb_retl( 0 );
-      hb_hrbUnLoad( pHrbBody );
    }
    else
       hb_errRT_BASE( EG_ARG, 9999, NULL, "__HRBRUN", 0 );
@@ -199,16 +199,22 @@ HB_FUNC( __HRBDO )
    {
       int i;
       char **argv = NULL;
+      PHRB_BODY pHrbBody = (PHRB_BODY) hb_parnl( 1 );
 
-      if( argc > 1 )
+      if( pHrbBody )
       {
-         argv = (char**) hb_xgrab( sizeof(char*) * (argc-1) );
-         for( i=0; i<argc-1; i++ )
-            argv[i] = hb_parc( i+2 );
+         if( argc > 1 )
+         {
+            argv = (char**) hb_xgrab( sizeof(char*) * (argc-1) );
+            for( i=0; i<argc-1; i++ )
+               argv[i] = hb_parc( i+2 );
+         }
+         hb_hrbDo( pHrbBody, argc-1, argv );
+         if( argv )
+            hb_xfree( argv );
       }
-      hb_hrbDo( (PHRB_BODY) hb_parnl( 1 ), argc-1, argv );
-      if( argv )
-         hb_xfree( argv );
+      else
+         hb_errRT_BASE( EG_ARG, 9999, NULL, "__HRBDO", 0 );
    }
    else
       hb_errRT_BASE( EG_ARG, 9999, NULL, "__HRBDO", 0 );
@@ -230,16 +236,21 @@ HB_FUNC( __HRBGETFU )
       char * szName = hb_strupr( hb_parc( 2 ) );
       ULONG ulPos = 0;
 
-      while( ulPos < pHrbBody->ulSymbols )
+      if( pHrbBody )
       {
-         if( !strcmp( szName, pHrbBody->pSymRead[ ulPos ].szName ) )
-            break;
-         ulPos++;
+         while( ulPos < pHrbBody->ulSymbols )
+         {
+            if( !strcmp( szName, pHrbBody->pSymRead[ ulPos ].szName ) )
+               break;
+            ulPos++;
+         }
+         if( ulPos < pHrbBody->ulSymbols )
+            hb_retnl( (LONG) ( pHrbBody->pSymRead + ulPos ) );
+         else
+            hb_retnl( 0 );
       }
-      if( ulPos < pHrbBody->ulSymbols )
-         hb_retnl( (LONG) ( pHrbBody->pSymRead + ulPos ) );
       else
-         hb_retnl( 0 );
+         hb_errRT_BASE( EG_ARG, 9999, NULL, "__HRBGETFU", 0 );
    }
    else
       hb_errRT_BASE( EG_ARG, 9999, NULL, "__HRBGETFU", 0 );
@@ -251,13 +262,19 @@ HB_FUNC( __HRBDOFU )
    if( argc >=1 )
    {
       int i;
+      PHB_SYMB pSym = (PHB_SYMB) hb_parnl( 1 );
 
-      hb_vmPushSymbol( (PHB_SYMB) hb_parnl( 1 ) );
-      hb_vmPushNil();
-      for( i = 0; i < argc-1; i++ ) /* Push other  params  */
-         hb_vmPush( hb_param( i + 2, HB_IT_ANY ) );
+      if( pSym )
+      {
+         hb_vmPushSymbol( pSym );
+         hb_vmPushNil();
+         for( i = 0; i < argc-1; i++ ) /* Push other  params  */
+            hb_vmPush( hb_param( i + 2, HB_IT_ANY ) );
 
-      hb_vmSend( argc-1 );          /* Run function        */
+         hb_vmSend( argc-1 );          /* Run function        */
+      }
+      else
+         hb_errRT_BASE( EG_ARG, 9999, NULL, "__HRBDOFU", 0 );
    }
    else
       hb_errRT_BASE( EG_ARG, 9999, NULL, "__HRBDOFU", 0 );
