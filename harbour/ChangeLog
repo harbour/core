@@ -1,3 +1,21 @@
+2000-08-08 02:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
+  * source/compiler/harbour.c
+    * Corrected display of errors statistics to use \r so that error count doen't appear connected to the last reported
+      compiler line number progress.
+
+  * source/macro/macro.slx
+    - Removed unused asHold
+
+  * source/compiler/harbour.slx
+    - Removed unused asHold
+    - Optimized some rules.
+
+  * source/compiler/simplex.c
+    - Removed unused asHold
+
+  * tests/keywords.prg
+    * Uncommented all code that was commented other than few lines which I added TODO: PP ... for (problem resulting from PP)
+
 2000-08-07 12:20 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.y
      + Added support for OPTIONAL Var... as first parameter[s] of declared function.

@@ -80,7 +80,7 @@ DELIMITER_BELONGS_TO_TOKEN_IF_ONE_OF_THESE( "" );
 /* Custom Action can be requested by setting reduction to LEX_CUSTOM_ACTION or lower. */
 
 /* Intermediate Token needed to be expanded. */
-#define HB_LIT_ACT    -1001
+#define HB_LIT_ACT   -1001
 
 /* Stream Pairs. */
 DEFINE_STREAM_AS_ONE_OF_THESE {
@@ -92,7 +92,7 @@ DEFINE_STREAM_AS_ONE_OF_THESE {
 START_NEW_LINE_IF_ONE_OF_THESE( "\n;" );
 
 /* Intermediate Token neede to be expanded. */
-#define _DOT_DOT_  1000
+#define _DOT_DOT_  1001
 
 SELF_CONTAINED_WORDS_ARE {
                            LEX_WORD( ".T."   ) AS_TOKEN( TRUEVALUE  ),
@@ -122,39 +122,46 @@ SELF_CONTAINED_WORDS_ARE {
                          };
 
 /* Intermediate Key Words when ambigious. */
-#define BEGIN_     1001
-#define PROCREQ_   1002
-#define WITH_      1003
-#define FIELD_     1004
-#define PRIVATE_   1005
+#define EXIT_      1002
+#define BEGIN_     1003
+#define PROCREQ_   1004
+#define FIELD_     1005
+#define PRIVATE_   1006
 
-/* Suspend reserved words after these (waiting for Identifier). */
-#define HB_EXTERN  -1003
-#define HB_DECLARE -1004
-#define HB_PUBLIC  -1005
-#define HB_PRIVATE -1006
-#define HB_LOCAL   -1007
-#define HB_MEMVAR  -1008
-#define HB_FIELD   -1009
-#define HB_PARAM   -1010
-#define HB_FOR     -1011
+/* Custom Actions - Suspend reserved words after these (waiting for Identifier). */
+#define HB_FUNCTION  -1002
+#define HB_PROCEDURE -1003
+#define HB_EXTERN    -1004
+#define HB_DECLARE   -1005
+#define HB_PUBLIC    -1006
+#define HB_PRIVATE   -1007
+#define HB_LOCAL     -1008
+#define HB_MEMVAR    -1009
+#define HB_FIELD     -1010
+#define HB_PARAM     -1011
+#define HB_FOR       -1012
 
 /* When 2 identifiers are correct syntax like in class declaration, we have to temporarily store the 2nd identifier. */
 /*
-#define HB_ID_ON_HOLD -1012
+#define HB_ID_ON_HOLD -1013
 */
 
-#define HB_MACRO_ERR  -1013
+#define HB_MACRO_ERR -1014
 
-#define HB_CHK_NEXT   -1014
-#define HB_CHK_EXIT   -1015
-#define HB_CHK_LOOP   -1016
-#define HB_CHK_IN     -1017
+#define HB_CHK_NEXT  -1015
+#define HB_CHK_EXIT  -1016
+#define HB_CHK_LOOP  -1017
+#define HB_CHK_IN    -1018
+
+#define HB_INIT_PROC -1019
+#define HB_EXIT_PROC -1020
+#define HB_INIT_FUNC -1021
+#define HB_EXIT_FUNC -1022
 
 /* Key Words. */
 LANGUAGE_KEY_WORDS_ARE {
-                         LEX_WORD( "FUNCTION"   ) AS_TOKEN( FUNCTION    ),
-                         LEX_WORD( "PROCEDURE"  ) AS_TOKEN( PROCEDURE   ),
+                         LEX_WORD( "FUNCTION"   ) AS_TOKEN( HB_FUNCTION ),
+                         LEX_WORD( "PROCEDURE"  ) AS_TOKEN( HB_PROCEDURE),
                          LEX_WORD( "RETURN"     ) AS_TOKEN( RETURN      ),
                          LEX_WORD( "LOCAL"      ) AS_TOKEN( HB_LOCAL    ),
                          LEX_WORD( "STATIC"     ) AS_TOKEN( STATIC      ),
@@ -166,7 +173,7 @@ LANGUAGE_KEY_WORDS_ARE {
                          LEX_WORD( "ANNOUNCE"   ) AS_TOKEN( ANNOUNCE    ),
                          LEX_WORD( "EXTERNAL"   ) AS_TOKEN( HB_EXTERN   ),
                          LEX_WORD( "INIT"       ) AS_TOKEN( INIT        ),
-                         LEX_WORD( "EXIT"       ) AS_TOKEN( EXITLOOP    ),
+                         LEX_WORD( "EXIT"       ) AS_TOKEN( EXIT_       ),
                          LEX_WORD( "PUBLIC"     ) AS_TOKEN( HB_PUBLIC   ),
                          LEX_WORD( "CASE"       ) AS_TOKEN( CASE        ),
                          LEX_WORD( "OTHERWISE"  ) AS_TOKEN( OTHERWISE   ),
@@ -183,40 +190,41 @@ LANGUAGE_KEY_WORDS_ARE {
                          LEX_WORD( "RECOVER"    ) AS_TOKEN( RECOVER     ),
                          LEX_WORD( "DO"         ) AS_TOKEN( DO          ),
                          LEX_WORD( "WHILE"      ) AS_TOKEN( WHILE       ),
-                         LEX_WORD( "WITH"       ) AS_TOKEN( WITH_       ),
                          LEX_WORD( "DECLARE"    ) AS_TOKEN( HB_DECLARE  ),
                          LEX_WORD( "_PROCREQ_"  ) AS_TOKEN( PROCREQ_    ),
                          LEX_WORD( "FIELD"      ) AS_TOKEN( HB_FIELD    )
                        };
 
 /* Intermediate Words when ambigious. */
-#define _IF_        2001
-#define _USING_     2002
-#define _SEQUENCE_  2003
-#define _OF_        2004
-#define QSELF       2005
-#define _LINE_      2006
-#define _AS_        2007
-#define _ARRAY_     2008
-#define _BLOCK_     2009
-#define _STRING_    2010
-#define _CLASS_     2011
-#define _DATE_      2012
-#define _LOGICAL_   2013
-#define _NUMERIC_   2014
-#define _OBJECT_    2015
-#define _VARIANT_   2016
-#define _FIELD_     2017
-#define _FIELD      2018
-#define _CASE_      2019
-#define _WHILE_     2020
-#define _WITH_      2021
-#define _SELF_      2022
+#define _FUNC_      2001
+#define _PROC_      2002
+#define _IF_        2003
+#define _USING_     2004
+#define _SEQUENCE_  2005
+#define _OF_        2006
+#define QSELF       2007
+#define _LINE_      2008
+#define _AS_        2009
+#define _ARRAY_     2010
+#define _BLOCK_     2011
+#define _STRING_    2012
+#define _CLASS_     2013
+#define _DATE_      2014
+#define _LOGICAL_   2015
+#define _NUMERIC_   2016
+#define _OBJECT_    2017
+#define _VARIANT_   2018
+#define _FIELD_     2019
+#define _FIELD      2020
+#define _CASE_      2021
+#define _WHILE_     2022
+#define _WITH_      2023
+#define _SELF_      2024
 
 /* Words. */
 LANGUAGE_WORDS_ARE {
-                     LEX_WORD( "FUNCTION"  ) AS_TOKEN( FUNCTION    ),
-                     LEX_WORD( "PROCEDURE" ) AS_TOKEN( PROCEDURE   ),
+                     LEX_WORD( "FUNCTION"  ) AS_TOKEN( _FUNC_      ),
+                     LEX_WORD( "PROCEDURE" ) AS_TOKEN( _PROC_      ),
                      LEX_WORD( "IF"        ) AS_TOKEN( _IF_        ),
                      LEX_WORD( "CASE"      ) AS_TOKEN( _CASE_      ),
                      LEX_WORD( "WHILE"     ) AS_TOKEN( _WHILE_     ),
@@ -310,13 +318,14 @@ LANGUAGE_WORDS_ARE {
 #define _WHL_ID_SEMI      3010
 #define _VAR_ARRAY        3011
 #define _TEXT_ARRAY       3012
+#define _INC_CR           3013
+#define _INC_SEMI         3014
+#define _DEC_CR           3015
+#define _DEC_SEMI         3016
 
 LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( '^'         , 0           , 0      , 0          ) REDUCE_TO( POWER             , 0             ),
                     IF_SEQUENCE_IS( '!'         , 0           , 0      , 0          ) REDUCE_TO( NOT               , 0             ),
-
-		    /* Return only last CR in a sequence.  */
-                 /* IF_SEQUENCE_IS( '\n'        , '\n'        , 0      , 0          ) REDUCE_TO( '\n'              , 0             ), */
 
 		    /* Strong Types */
                     IF_SEQUENCE_IS( _AS_        , _ARRAY_     , 0      , 0          ) REDUCE_TO( AS_ARRAY          , 0             ),
@@ -353,6 +362,15 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( _OBJECT_    , 0           , 0      , 0          ) REDUCE_TO( HB_OBJECT_ID      , 0             ),
 
                     /* Commands and Statements (Key Words only match at <BOL> ). */
+
+                    IF_SEQUENCE_IS( FUNCTION    , IDENTIFIER  , 0      , 0          ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( FUNCTION    , '['         , 0      , 0          ) REDUCE_TO( HB_FUNCTION_ID    , '['          ),
+                    IF_SEQUENCE_IS( FUNCTION    , 0           , 0      , 0          ) REDUCE_TO( HB_FUNCTION_ID    , 0            ),
+
+                    IF_SEQUENCE_IS( PROCEDURE   , IDENTIFIER  , 0      , 0          ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( PROCEDURE   , '['         , 0      , 0          ) REDUCE_TO( HB_PROCEDURE_ID   , '['          ),
+                    IF_SEQUENCE_IS( PROCEDURE   , 0           , 0      , 0          ) REDUCE_TO( HB_PROCEDURE_ID   , 0            ),
+
                     IF_SEQUENCE_IS( EXTERN      , IDENTIFIER  , 0      , 0          ) PASS_THROUGH(),
                     IF_SEQUENCE_IS( EXTERN      , '['         , 0      , 0          ) REDUCE_TO( HB_EXTERN_ID      , '['          ),
                     IF_SEQUENCE_IS( EXTERN      , 0           , 0      , 0          ) REDUCE_TO( HB_EXTERN_ID      , 0            ),
@@ -422,7 +440,11 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( LOCAL       , '['         , 0      , 0          ) REDUCE_TO( HB_LOCAL_ID       , '['           ),
                     IF_SEQUENCE_IS( LOCAL       , 0           , 0      , 0          ) REDUCE_TO( HB_LOCAL_ID       , 0             ),
 
-		    /* May have STATIC Func/Proc - Exclusion works best here. */
+		    /* STATIC Func/Proc. */
+                    IF_SEQUENCE_IS( STATIC      , _PROC_      , 0      , 0          ) REDUCE_TO( STATIC            , PROCEDURE     ),
+                    IF_SEQUENCE_IS( STATIC      , _FUNC_      , 0      , 0          ) REDUCE_TO( STATIC            , FUNCTION      ),
+
+		    /* STATIC IDENTIFIER - Exclusion works best here because we may also have STATIC Func/Proc (above). */
                     IF_SEQUENCE_IS( STATIC      , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      , INASSIGN      ),
                     IF_SEQUENCE_IS( STATIC      , INC         , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      , INC           ),
                     IF_SEQUENCE_IS( STATIC      , DEC         , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      , DEC           ),
@@ -437,7 +459,6 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( STATIC      , '['         , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      , '['           ),
                     IF_SEQUENCE_IS( STATIC      , '='         , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      , '='           ),
                     IF_SEQUENCE_IS( STATIC      , ':'         , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      , ':'           ),
-                    IF_SEQUENCE_IS( STATIC      , '\n'        , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      , '\n'          ),
                     IF_SEQUENCE_IS( STATIC      , ';'         , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      , ';'           ),
                     IF_SEQUENCE_IS( STATIC      , 0           , 0      , 0          ) PASS_THROUGH(),
 
@@ -469,17 +490,10 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( OTHERWISE   , 0           , 0      , 0          ) REDUCE_TO( HB_OTHERWISE_ID   , 0             ),
 
                     IF_SEQUENCE_IS( RETURN      , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , INASSIGN      ),
-
-		    /* INC/DEC belongs to the following Identifier. */
-                    IF_SEQUENCE_IS( RETURN      , INC         ,IDENTIFIER,0         ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( RETURN      , INC         ,MACROVAR,0           ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( RETURN      , INC         ,MACROTEXT,0          ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( RETURN      , DEC         ,IDENTIFIER,0         ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( RETURN      , DEC         ,MACROVAR,0           ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( RETURN      , DEC         ,MACROTEXT,0          ) PASS_THROUGH(),
-
-                    IF_SEQUENCE_IS( RETURN      , INC         , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , INC           ),
-                    IF_SEQUENCE_IS( RETURN      , DEC         , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , DEC           ),
+                    IF_SEQUENCE_IS( RETURN      , INC         , '\n'   , 0          ) REDUCE_TO( HB_RETURN_ID      , _INC_CR       ),
+                    IF_SEQUENCE_IS( RETURN      , INC         , ';'    , 0          ) REDUCE_TO( HB_RETURN_ID      , _INC_SEMI     ),
+                    IF_SEQUENCE_IS( RETURN      , DEC         , '\n'   , 0          ) REDUCE_TO( HB_RETURN_ID      , _DEC_CR       ),
+                    IF_SEQUENCE_IS( RETURN      , DEC         , ';'    , 0          ) REDUCE_TO( HB_RETURN_ID      , _DEC_SEMI     ),
                     IF_SEQUENCE_IS( RETURN      , ALIASOP     , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , ALIASOP       ),
                     IF_SEQUENCE_IS( RETURN      , PLUSEQ      , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , PLUSEQ        ),
                     IF_SEQUENCE_IS( RETURN      , MINUSEQ     , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , MINUSEQ       ),
@@ -506,18 +520,18 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( NEXT        , '['         , 0      , 0          ) REDUCE_TO( HB_NEXT_ID        , '['           ),
                     IF_SEQUENCE_IS( NEXT        , 0           , 0      , 0          ) REDUCE_TO( HB_NEXT_ID        , 0             ),
 
-                    IF_SEQUENCE_IS( EXITLOOP    , '\n'        , 0      , 0          ) REDUCE_TO( HB_CHK_EXIT       , '\n'          ),
-                    IF_SEQUENCE_IS( EXITLOOP    , ';'         , 0      , 0          ) REDUCE_TO( HB_CHK_EXIT       , ';'           ),
+                    IF_SEQUENCE_IS( EXIT_       , '\n'        , 0      , 0          ) REDUCE_TO( HB_CHK_EXIT       , '\n'          ),
+                    IF_SEQUENCE_IS( EXIT_       , ';'         , 0      , 0          ) REDUCE_TO( HB_CHK_EXIT       , ';'           ),
 
-                    IF_SEQUENCE_IS( INIT        , PROCEDURE   , 0      , 0          ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( INIT        , FUNCTION    , 0      , 0          ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( INIT        , _PROC_      , 0      , 0          ) REDUCE_TO( HB_INIT_PROC      , 0             ),
+                    IF_SEQUENCE_IS( INIT        , _FUNC_      , 0      , 0          ) REDUCE_TO( HB_INIT_FUNC      , 0             ),
                     IF_SEQUENCE_IS( INIT        ,  '['        , 0      , 0          ) REDUCE_TO( HB_INIT_ID        , '['           ),
                     IF_SEQUENCE_IS( INIT        ,  0          , 0      , 0          ) REDUCE_TO( HB_INIT_ID        , 0             ),
 
-                    IF_SEQUENCE_IS( EXITLOOP    , PROCEDURE   , 0      , 0          ) REDUCE_TO( EXIT              , PROCEDURE     ),
-                    IF_SEQUENCE_IS( EXITLOOP    , FUNCTION    , 0      , 0          ) REDUCE_TO( EXIT              , FUNCTION      ),
-                    IF_SEQUENCE_IS( EXITLOOP    ,  '['        , 0      , 0          ) REDUCE_TO( HB_EXIT_ID        , '['           ),
-                    IF_SEQUENCE_IS( EXITLOOP    ,  0          , 0      , 0          ) REDUCE_TO( HB_EXIT_ID        , 0             ),
+                    IF_SEQUENCE_IS( EXIT_       , _PROC_      , 0      , 0          ) REDUCE_TO( HB_EXIT_PROC      , 0             ),
+                    IF_SEQUENCE_IS( EXIT_       , _FUNC_      , 0      , 0          ) REDUCE_TO( HB_EXIT_FUNC      , 0             ),
+                    IF_SEQUENCE_IS( EXIT_       , '['         , 0      , 0          ) REDUCE_TO( HB_EXIT_ID        , '['           ),
+                    IF_SEQUENCE_IS( EXIT_       , 0           , 0      , 0          ) REDUCE_TO( HB_EXIT_ID        , 0             ),
 
                     /* LOOP at BOL if followed by anything other the NEW LINE than Identifier else LOOP. */
                     IF_SEQUENCE_IS( LOOP        , '\n'        , 0      , 0          ) REDUCE_TO( HB_CHK_LOOP       , '\n'          ),
@@ -533,17 +547,10 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( _SEQUENCE_  , 0           , 0      , 0          ) REDUCE_TO( HB_SEQUENCE_ID    , 0             ),
 
                     IF_SEQUENCE_IS( BREAK       , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , INASSIGN      ),
-
-		    /* INC/DEC belongs to the following Identifier. */
-                    IF_SEQUENCE_IS( BREAK       , INC         ,IDENTIFIER,0         ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( BREAK       , INC         ,MACROVAR, 0          ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( BREAK       , INC         ,MACROTEXT,0          ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( BREAK       , DEC         ,IDENTIFIER,0         ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( BREAK       , DEC         ,MACROVAR, 0          ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( BREAK       , DEC         ,MACROTEXT,0          ) PASS_THROUGH(),
-
-                    IF_SEQUENCE_IS( BREAK       , INC         , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , INC           ),
-                    IF_SEQUENCE_IS( BREAK       , DEC         , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , DEC           ),
+                    IF_SEQUENCE_IS( BREAK       , INC         , '\n'   , 0          ) REDUCE_TO( HB_BREAK_ID       , _INC_CR       ),
+                    IF_SEQUENCE_IS( BREAK       , INC         , ';'    , 0          ) REDUCE_TO( HB_BREAK_ID       , _INC_SEMI     ),
+                    IF_SEQUENCE_IS( BREAK       , DEC         , '\n'   , 0          ) REDUCE_TO( HB_BREAK_ID       , _DEC_CR       ),
+                    IF_SEQUENCE_IS( BREAK       , DEC         , ';'    , 0          ) REDUCE_TO( HB_BREAK_ID       , _DEC_SEMI     ),
                     IF_SEQUENCE_IS( BREAK       , ALIASOP     , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , ALIASOP       ),
                     IF_SEQUENCE_IS( BREAK       , PLUSEQ      , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , PLUSEQ        ),
                     IF_SEQUENCE_IS( BREAK       , MINUSEQ     , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , MINUSEQ       ),
@@ -551,6 +558,7 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( BREAK       , DIVEQ       , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , DIVEQ         ),
                     IF_SEQUENCE_IS( BREAK       , EXPEQ       , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       ,  EXPEQ        ),
                     IF_SEQUENCE_IS( BREAK       , MODEQ       , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       ,  MODEQ        ),
+                    IF_SEQUENCE_IS( BREAK       , '('         , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , '('           ),
                     IF_SEQUENCE_IS( BREAK       , '['         , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , '['           ),
                     IF_SEQUENCE_IS( BREAK       , '='         , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , '='           ),
                     IF_SEQUENCE_IS( BREAK       , ':'         , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , ':'           ),
@@ -584,6 +592,10 @@ LANGUAGE_RULES_ARE {
 
                     /* This WHILE is only at BOL if followed by operator (other than logicals .t., .f., !) than Identifier else CASE. */
                     IF_SEQUENCE_IS( WHILE       , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , INASSIGN     ),
+                    IF_SEQUENCE_IS( WHILE       , INC         , '\n'   , 0          ) REDUCE_TO( HB_WHILE_ID       , _INC_CR       ),
+                    IF_SEQUENCE_IS( WHILE       , INC         , ';'    , 0          ) REDUCE_TO( HB_WHILE_ID       , _INC_SEMI     ),
+                    IF_SEQUENCE_IS( WHILE       , DEC         , '\n'   , 0          ) REDUCE_TO( HB_WHILE_ID       , _DEC_CR       ),
+                    IF_SEQUENCE_IS( WHILE       , DEC         , ';'    , 0          ) REDUCE_TO( HB_WHILE_ID       , _DEC_SEMI     ),
                     IF_SEQUENCE_IS( WHILE       , ALIASOP     , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , ALIASOP      ),
                     IF_SEQUENCE_IS( WHILE       , PLUSEQ      , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , PLUSEQ       ),
                     IF_SEQUENCE_IS( WHILE       , MINUSEQ     , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , MINUSEQ      ),
@@ -591,6 +603,7 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( WHILE       , DIVEQ       , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , DIVEQ        ),
                     IF_SEQUENCE_IS( WHILE       , EXPEQ       , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    ,  EXPEQ       ),
                     IF_SEQUENCE_IS( WHILE       , MODEQ       , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    ,  MODEQ       ),
+                 /* IF_SEQUENCE_IS( WHILE       , '('         , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , '('          ), */
                     IF_SEQUENCE_IS( WHILE       , '['         , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , '['          ),
                     IF_SEQUENCE_IS( WHILE       , '='         , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , '='          ),
                     IF_SEQUENCE_IS( WHILE       , ':'         , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , ':'          ),
@@ -602,6 +615,10 @@ LANGUAGE_RULES_ARE {
 
                     /* This CASE is only at BOL if followed by operator (other than logicals .t., .f., !) than Identifier else CASE. */
                     IF_SEQUENCE_IS( CASE        , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , INASSIGN     ),
+                    IF_SEQUENCE_IS( CASE        , INC         , '\n'   , 0          ) REDUCE_TO( HB_CASE_ID         , _INC_CR      ),
+                    IF_SEQUENCE_IS( CASE        , INC         , ';'    , 0          ) REDUCE_TO( HB_CASE_ID         , _INC_SEMI    ),
+                    IF_SEQUENCE_IS( CASE        , DEC         , '\n'   , 0          ) REDUCE_TO( HB_CASE_ID         , _DEC_CR      ),
+                    IF_SEQUENCE_IS( CASE        , DEC         , ';'    , 0          ) REDUCE_TO( HB_CASE_ID         , _DEC_SEMI    ),
                     IF_SEQUENCE_IS( CASE        , ALIASOP     , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , ALIASOP      ),
                     IF_SEQUENCE_IS( CASE        , PLUSEQ      , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , PLUSEQ       ),
                     IF_SEQUENCE_IS( CASE        , MINUSEQ     , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , MINUSEQ      ),
@@ -609,19 +626,23 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( CASE        , DIVEQ       , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , DIVEQ        ),
                     IF_SEQUENCE_IS( CASE        , EXPEQ       , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , EXPEQ        ),
                     IF_SEQUENCE_IS( CASE        , MODEQ       , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , MODEQ        ),
+                 /* IF_SEQUENCE_IS( CASE        , '('         , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , '('          ), */
                     IF_SEQUENCE_IS( CASE        , '['         , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , '['          ),
                     IF_SEQUENCE_IS( CASE        , '='         , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , '='          ),
                     IF_SEQUENCE_IS( CASE        , ':'         , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , ':'          ),
                     IF_SEQUENCE_IS( CASE        , 0           , 0      , 0          ) PASS_THROUGH(),
 
-                    /* This WITH is at BOL always IDENTIFIER. */
-                    IF_SEQUENCE_IS( WITH_       , 0           , 0      , 0          ) REDUCE_TO( HB_WITH_ID        , 0             ),
+                    IF_SEQUENCE_IS( _INC_CR     , 0           , 0      , 0          ) REDUCE_TO( INC 	            , '\n'         ),
+                    IF_SEQUENCE_IS( _INC_SEMI   , 0           , 0      , 0          ) REDUCE_TO( INC 	            , ';'          ),
+                    IF_SEQUENCE_IS( _DEC_CR     , 0           , 0      , 0          ) REDUCE_TO( DEC 	            , '\n'         ),
+                    IF_SEQUENCE_IS( _DEC_SEMI   , 0           , 0      , 0          ) REDUCE_TO( DEC 	            , ';'          ),
 
                     /* This _WITH_ is not at BOL. */
                     IF_SEQUENCE_IS( IDENTIFIER  , _WITH_      , 0      , 0          ) REDUCE_TO( IDENTIFIER         , WITH         ),
                     IF_SEQUENCE_IS( MACROVAR    , _WITH_      , 0      , 0          ) REDUCE_TO( MACROVAR           , WITH         ),
                     IF_SEQUENCE_IS( MACROTEXT   , _WITH_      , 0      , 0          ) REDUCE_TO( MACROTEXT          , WITH         ),
                     IF_SEQUENCE_IS( ')'         , _WITH_      , 0      , 0          ) REDUCE_TO( ')'                , WITH         ),
+                    IF_SEQUENCE_IS( _WITH_      , '['         , 0      , 0          ) REDUCE_TO( HB_WITH_ID  	    , '['          ),
                     IF_SEQUENCE_IS( _WITH_      , 0           , 0      , 0          ) REDUCE_TO( HB_WITH_ID  	    , 0            ),
 
                     IF_SEQUENCE_IS( DO          , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , INASSIGN     ),
@@ -638,7 +659,6 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( DO          , '['         , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , '['          ),
                     IF_SEQUENCE_IS( DO          , '='         , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , '='          ),
                     IF_SEQUENCE_IS( DO          , ':'         , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , ':'          ),
-                    IF_SEQUENCE_IS( DO          , '\n'        , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , '\n'         ),
                     IF_SEQUENCE_IS( DO          , ';'         , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , ';'          ),
                     IF_SEQUENCE_IS( DO          , 0           , 0      , 0          ) PASS_THROUGH(),
 
@@ -755,6 +775,7 @@ LANGUAGE_RULES_ARE {
    #undef INTERCEPT_ACTION
    	#define INTERCEPT_ACTION(x) \
 	\
+	yytext = (char*) sToken; \
 /*\
       	if( x == IDENTIFIER ) \
 	{ \
@@ -763,36 +784,48 @@ LANGUAGE_RULES_ARE {
 */\
         \
       	if( x == IDENTIFIER ) \
-         	printf( "   IDENTIFIER = \"%s\"\n", yylval.string  ); \
+           printf( "   IDENTIFIER = \"%s\"\n", yylval.string  ); \
       	else if( x == LITERAL ) \
-         	printf( "   LITERAL = \"%s\"\n", yylval.string  ); \
+           printf( "   LITERAL = \"%s\"\n", yylval.string  ); \
       	else if( x == MACROVAR ) \
-         	printf( "   MACROVAR = \"%s\"\n", yylval.string  ); \
+           printf( "   MACROVAR = \"%s\"\n", yylval.string  ); \
       	else if( x == MACROTEXT ) \
-         	printf( "   MACROTEXT = \"%s\"\n", yylval.string  ); \
+           printf( "   MACROTEXT = \"%s\"\n", yylval.string  ); \
       	else if( x == NUM_INTEGER ) \
-         	printf( "   INTEGER = %i\n", yylval.valInteger.iNumber  ); \
+           printf( "   INTEGER = %i\n", yylval.valInteger.iNumber  ); \
       	else if( x == NUM_LONG ) \
-         	printf( "   INTEGER = %il\n", yylval.valLong.lNumber  ); \
+           printf( "   INTEGER = %il\n", yylval.valLong.lNumber  ); \
       	else if( x == NUM_DOUBLE ) \
-         	printf( "   DOUBLE = %f\n", yylval.valDouble.dNumber  ); \
+           printf( "   DOUBLE = %f\n", yylval.valDouble.dNumber  ); \
       	else if( x < 256 ) \
-         	if( x == '\n' || x == ';' ) \
-            	printf( "                           NEW LINE %i\n", hb_comp_iLine - 1  ); \
-         	else \
-            	printf( "   DELIMITER = \"%c\"\n", x  ); \
+	{ \
+	   yytext[0] = x; \
+	   yytext[1] = '\0'; \
+	\
+           if( x == '\n' || x == ';' ) \
+              printf( "                           NEW LINE %i\n", hb_comp_iLine - 1  ); \
+           else \
+              printf( "   DELIMITER = \"%c\"\n", x  ); \
+	} \
       	else \
-          	printf( "   TOKEN = %i\n", x  );
-/*
+           printf( "   TOKEN = %i\n", x  );
 #else
    #undef INTERCEPT_ACTION
    	#define INTERCEPT_ACTION(x) \
 	\
+	yytext = (char*) sToken; \
+	\
+/* \
       	if( x == IDENTIFIER ) \
 	{ \
 	   iIdentifier--; \
+	} \
+*/ \
+      	if( x < 256 ) \
+	{ \
+	   yytext[0] = x; \
+	   yytext[1] = '\0'; \
 	}
-*/
 #endif
 
 /* Support Functions implemented as macros for speed. */
@@ -979,7 +1012,7 @@ LANGUAGE_RULES_ARE {
    }
 
 #undef CUSTOM_ACTION
-   #define CUSTOM_ACTION(x) x = hb_lex_CustomAction(x, iWordLen, aiHold, asHold, &iHold, &bIgnoreWords, iLastToken )
+   #define CUSTOM_ACTION(x) x = hb_lex_CustomAction(x, iWordLen, aiHold, &iHold, &bIgnoreWords, iLastToken, aiReturn, &iReturn )
 
 #undef INIT_ACTION
    #define INIT_ACTION() hb_comp_bSimpLex = TRUE;
@@ -1028,7 +1061,7 @@ long hb_lex_Hex2L( char* sHex )
    return lSum;
 }
 
-int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_SIZE], int *ptr_iHold, BOOL *ptr_bIgnoreWords, int iLastToken )
+int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], int *ptr_iHold, BOOL *ptr_bIgnoreWords, int iLastToken, int aiReturn[], int *ptr_iReturn )
 {
    BOOL bRestored = FALSE;
    static char sIdentifier[11];
@@ -1044,12 +1077,26 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
          x = LITERAL;
          break;
 
+      case HB_FUNCTION :
+	 *ptr_bIgnoreWords = TRUE;
+
+         aiHold[ (*ptr_iHold)++ ] = FUNCTION;
+
+         x = 0;
+         break;
+
+      case HB_PROCEDURE :
+	 *ptr_bIgnoreWords = TRUE;
+
+         aiHold[ (*ptr_iHold)++ ] = PROCEDURE;
+
+         x = 0;
+         break;
+
       case HB_EXTERN :
 	 *ptr_bIgnoreWords = TRUE;
 
-         /* Equivalent of PUSH_TOKEN(x). */
          aiHold[ (*ptr_iHold)++ ] = EXTERN;
-         asHold[ (*ptr_iHold) - 1 ][0] = '\0';
 
          x = 0;
          break;
@@ -1057,9 +1104,7 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
       case HB_DECLARE :
 	 *ptr_bIgnoreWords = TRUE;
 
-         /* Equivalent of PUSH_TOKEN(x). */
          aiHold[ (*ptr_iHold)++ ] = DECLARE;
-         asHold[ (*ptr_iHold) - 1 ][0] = '\0';
 
          x = 0;
          break;
@@ -1067,9 +1112,7 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
       case HB_PUBLIC :
 	 *ptr_bIgnoreWords = TRUE;
 
-         /* Equivalent of PUSH_TOKEN(x). */
          aiHold[ (*ptr_iHold)++ ] = PUBLIC;
-         asHold[ (*ptr_iHold) - 1 ][0] = '\0';
 
          x = 0;
          break;
@@ -1077,9 +1120,7 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
       case HB_PRIVATE :
 	 *ptr_bIgnoreWords = TRUE;
 
-         /* Equivalent of PUSH_TOKEN(x). */
          aiHold[ (*ptr_iHold)++ ] = PRIVATE_;
-         asHold[ (*ptr_iHold) - 1 ][0] = '\0';
 
          x = 0;
          break;
@@ -1087,9 +1128,7 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
       case HB_LOCAL :
 	 *ptr_bIgnoreWords = TRUE;
 
-         /* Equivalent of PUSH_TOKEN(x). */
          aiHold[ (*ptr_iHold)++ ] = LOCAL;
-         asHold[ (*ptr_iHold) - 1 ][0] = '\0';
 
          x = 0;
          break;
@@ -1097,9 +1136,7 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
       case HB_MEMVAR :
 	 *ptr_bIgnoreWords = TRUE;
 
-         /* Equivalent of PUSH_TOKEN(x). */
          aiHold[ (*ptr_iHold)++ ] = MEMVAR;
-         asHold[ (*ptr_iHold) - 1 ][0] = '\0';
 
          x = 0;
          break;
@@ -1107,9 +1144,7 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
       case HB_FIELD :
 	 *ptr_bIgnoreWords = TRUE;
 
-         /* Equivalent of PUSH_TOKEN(x). */
          aiHold[ (*ptr_iHold)++ ] = FIELD_;
-         asHold[ (*ptr_iHold) - 1 ][0] = '\0';
 
          x = 0;
          break;
@@ -1117,9 +1152,7 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
       case HB_PARAM :
 	 *ptr_bIgnoreWords = TRUE;
 
-         /* Equivalent of PUSH_TOKEN(x). */
          aiHold[ (*ptr_iHold)++ ] = PARAMETERS;
-         asHold[ (*ptr_iHold) - 1 ][0] = '\0';
 
          x = 0;
          break;
@@ -1127,9 +1160,7 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
       case HB_FOR :
 	 *ptr_bIgnoreWords = TRUE;
 
-         /* Equivalent of PUSH_TOKEN(x). */
          aiHold[ (*ptr_iHold)++ ] = FOR;
-         asHold[ (*ptr_iHold) - 1 ][0] = '\0';
 
          x = 0;
          break;
@@ -1166,6 +1197,34 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
             x = IDENTIFIER;
 	 }
 	 break;
+
+      case HB_INIT_PROC :
+         aiReturn[ (*ptr_iReturn)++ ] = PROCEDURE;
+         aiReturn[ (*ptr_iReturn)++ ] = INIT;
+
+         x = 0;
+         break;
+
+      case HB_INIT_FUNC :
+         aiReturn[ (*ptr_iReturn)++ ] = FUNCTION;
+         aiReturn[ (*ptr_iReturn)++ ] = INIT;
+
+         x = 0;
+         break;
+
+      case HB_EXIT_PROC :
+         aiReturn[ (*ptr_iReturn)++ ] = PROCEDURE;
+         aiReturn[ (*ptr_iReturn)++ ] = EXIT;
+
+         x = 0;
+         break;
+
+      case HB_EXIT_FUNC :
+         aiReturn[ (*ptr_iReturn)++ ] = FUNCTION;
+         aiReturn[ (*ptr_iReturn)++ ] = EXIT;
+
+         x = 0;
+         break;
 
       case HB_EXTERN_ID :
          strncpy( (char*) sIdentifier, "EXTERNAL", iWordLen );
@@ -1447,7 +1506,7 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
          break;
 */
       default:
-         printf( "No Handler for Custom Action %i\n", x );
+         printf( "WARNING! No Handler for Custom Action %i\n", x );
    }
 
    if( x == IDENTIFIER && ! bRestored )
@@ -1457,9 +1516,7 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
 /*
       iIdentifier++;
 */
-      /* Equivalent of PUSH_TOKEN(x). */
       aiHold[ (int)(*ptr_iHold)++ ] = x;
-      strcpy( asHold[ (int)(*ptr_iHold) - 1 ], yylval.string );
 
       x = 0;
    }

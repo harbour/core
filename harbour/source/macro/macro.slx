@@ -368,7 +368,7 @@ LANGUAGE_RULES_ARE {
    }
 
 #undef CUSTOM_ACTION
-   #define CUSTOM_ACTION(x) x = hb_lex_CustomAction(x, iWordLen, aiHold, asHold, &iHold, yylval_ptr, pMacro )
+   #define CUSTOM_ACTION(x) x = hb_lex_CustomAction(x, iWordLen, aiHold, &iHold, yylval_ptr, pMacro )
 
 long hb_lex_Hex2L( char* sHex )
 {
@@ -406,7 +406,7 @@ long hb_lex_Hex2L( char* sHex )
    return lSum;
 }
 
-int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_SIZE], int *ptr_iHold, YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
+int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], int *ptr_iHold, YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
 {
    char * sIdentifier;
 
@@ -464,9 +464,7 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
    {
       yylval_ptr->string = hb_strdup( sIdentifier );
 
-      /* Equivalent of PUSH_TOKEN(x). */
       aiHold[ (*ptr_iHold)++ ] = x;
-      strcpy( asHold[ (*ptr_iHold) - 1 ], yylval_ptr->string );
 
       x = 0;
    }

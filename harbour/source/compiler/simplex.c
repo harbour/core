@@ -147,7 +147,6 @@ extern YYSTYPE yylval;
 /* Look ahead Tokens. */
 static int  iHold = 0;
 static int  aiHold[4];
-static char asHold[4][ TOKEN_SIZE ];
 
 /* Pre-Checked Tokens. */
 static int  iReturn = 0;
@@ -205,20 +204,9 @@ int Reduce( int iToken, BOOL bReal );
 #define RESET_LEX() { iLen = 0; iMatched = 0; iHold = 0; iReturn = 0; bNewLine = TRUE; bStart = TRUE; }
 #define FORCE_REDUCE() Reduce( 0, TRUE )
 
-#define HOLD_TOKEN(x, y) \
+#define HOLD_TOKEN(x) \
                       /* Last In, First Out */ \
                       { iRet = x ; aiHold[ iHold++ ] = iRet; \
-                        \
-                        if( y ) \
-                        { \
-                           strcpy( asHold[ iHold - 1 ], y ); \
-                        } \
-                        else \
-                        { \
-                           asHold[ iHold - 1 ][0] = '\0'; \
-                        } \
-                        \
-                        DEBUG_INFO( printf( "Placed on hold: %i Position %i Text: >%s<\n", iRet, iHold, asHold[ iHold - 1 ] ) ); \
                         DEBUG_INFO( printf("Now Holding %i Tokens: %i %i %i %i\n", iHold, aiHold[0], aiHold[1], aiHold[2], aiHold[3] ) ); \
                       }
 
@@ -315,7 +303,7 @@ int Reduce( int iToken, BOOL bReal );
                      { \
                         DEBUG_INFO( printf( "Holding Self >%s<\n", sSelf ) ); \
                         \
-                        HOLD_TOKEN( aSelfs[iSelf].iToken, sSelf ); \
+                        HOLD_TOKEN( aSelfs[iSelf].iToken ); \
                         \
                         /* Terminate current token and check it. */ \
                         sToken[ iLen ] = '\0'; \
@@ -425,10 +413,6 @@ int Reduce( int iToken, BOOL bReal );
             /* Last in First Out. */ \
             iHold--; \
             iRet = aiHold[iHold]; \
-            if( asHold[iHold] ) \
-            { \
-               strcpy( (char*) sToken, asHold[iHold] );\
-            } \
             \
             DEBUG_INFO( printf(  "Released %i Now Holding %i Tokens: %i %i %i %i\n", iRet, iHold, aiHold[0], aiHold[1], aiHold[2], aiHold[3] ) ); \
             \
@@ -708,8 +692,6 @@ int Reduce( int iToken, BOOL bReal );
    aiHold[ iHold++ ] = iPushToken;\
 \
    /* We don't know what was the text value of this Token any more. */\
-   asHold[ iHold - 1 ][0] = '\0'; \
-   DEBUG_INFO( printf( "Placed on hold: %i Position %i\n", iPushToken, iHold ) ); \
    DEBUG_INFO( printf("Now Holding %i Tokens: %i %i %i %i\n", iHold, aiHold[0], aiHold[1], aiHold[2], aiHold[3] ) ); \
 }
 
@@ -841,8 +823,8 @@ YY_DECL
 
        if( bStart )
        {
-         bStart = FALSE;
-         INIT_ACTION();
+          bStart = FALSE;
+          INIT_ACTION();
        }
 
        YY_INPUT( (char*) szLexBuffer, iSize, YY_BUF_SIZE );
@@ -1051,7 +1033,7 @@ YY_DECL
                 if( iLen )
                 {
                     /* Will return NewLine on next call. */
-                    HOLD_TOKEN(chr, NULL);
+                    HOLD_TOKEN( chr );
 
                     /* Terminate current token and check it. */
                     sToken[ iLen ] = '\0';
@@ -1084,7 +1066,7 @@ YY_DECL
                 if( iLen )
                 {
                     /* Will be rturned on next cycle. */
-                    HOLD_TOKEN(chr, NULL);
+                    HOLD_TOKEN( chr );
 
                     /* Terminate current token and check it. */
                     sToken[ iLen ] = '\0';
@@ -1126,7 +1108,7 @@ YY_DECL
                 if( iLen )
                 {
                    /* <EOF> */
-                   HOLD_TOKEN(-1, NULL);
+                   HOLD_TOKEN( -1 );
 
                    /* Terminate current token and check it. */
                    sToken[ iLen ] = '\0';

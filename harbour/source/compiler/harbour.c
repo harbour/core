@@ -3444,7 +3444,7 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
                {
                   iStatus = EXIT_FAILURE;
                   bSkipGen = TRUE;
-                  printf( "%i error%s\n\nNo code generated\n", hb_comp_iErrorCount, ( hb_comp_iErrorCount > 1 ? "s" : "" ) );
+                  printf( "\r%i error%s\n\nNo code generated\n", hb_comp_iErrorCount, ( hb_comp_iErrorCount > 1 ? "s" : "" ) );
                }
                else if( hb_comp_iExitLevel == HB_EXITLEVEL_SETEXIT )
                {

@@ -33,8 +33,10 @@ Function Main()
    case :=CASE( CASE )	//this is valid
 
    //DO is reserved function name in Clipper!
-   DO_( nExt+bEgin/bReak-do*wHile%cAse $ wIth )
-//   WHILE( while ) //it is not possible to call while() in this context
+   DO( nExt+bEgin/bReak-do*wHile%cAse $ wIth )
+
+   WHILE( while ) //it is not possible to call while() in this context
+   END
 
    ELSE_()      //ELSE is reserved word for *real*
    ELSEIF_()    //ELSEIF is reserved word for *real*
@@ -76,11 +78,12 @@ RETURN( return )
 * * * * * ** Checking for NEXT
 */
 FUNCTION NeXT( next_next/*next next*/ )
+
 Local nExt, nExt7, nExtNEXT
 
     For NExt := 1 To 10
 
-       OutStd( nExT ) // Actually this needs to use str()
+       OutStd( nExT )
 
    Next /*next*/ nExt     //next
 
@@ -95,17 +98,17 @@ Local nExt, nExt7, nExtNEXT
 
    nExt := 10 //next
 
-//   nExt++	/*in Clipper: NEXT does not match FOR*/
+   //nExt++  // TODO: PP steals the ++ in Clipper: NEXT does not match FOR
    nExt :=nExt++
    --nExt	/*next*/
    nExt7 :=7
    nExtNEXT := nExt	//next
 
-//   nExt[ 1 ] :=nExt	//in Clipper: NEXT does not match FOR
-//   nExt[ nExt ] := next[ next ]
+   //nExt[ 1 ] :=nExt   // TODO: PP steals the [... in Clipper: NEXT does not match FOR
+   //nExt[ nExt ] := next[ next ]
    nExt :=next[ next ]
 
-//   next->next :=next->next + next->next	//NEXT does not match FOR
+   next->next :=next->next + next->next //NEXT does not match FOR
    next :=next->next
    ( next )->( next() )
 
@@ -124,8 +127,8 @@ RETURN( nExt * /*next*/ nExt )
 **/
 FUNCTION BEGIN( BEGIN_BEGIN )
 LOCAL bEgin
-//LOCAL bEgin0, /* BEGIN OF BEGIN */ ;    /* in Clipper: Incomplete statement */
-//	bEgin1
+LOCAL bEgin0, /* BEGIN OF BEGIN */ ;    /* in Clipper: Incomplete statement */
+bEgin1
 
 BEGIN SEQUENCE
     bEgin :=0
@@ -141,8 +144,8 @@ BEGIN SEQUENCE
 
     bEgin :=begin->begin
 
-//    begin->begin :=begin->begin +; /************************/
-//	begin->begin
+   begin->begin :=begin->begin +; /************************/
+begin->begin
     bEgin :=BEGIN( begin +bEgin ) +;
             bEgin[ bEgin ]
 
@@ -198,7 +201,7 @@ begin sequence
   NEXT bReak
   break->break :=break->break +break->break
   BREAK
-//  break :=break[ 2 ] //not allowed in Clipper
+  break :=break[ 2 ] //not allowed in Clipper
   bReak :=IIF( bReak=1, BREAK(0), BREAK(bReak) )
 recover USING bReak
   BREAK( Break( break(0) ) )
@@ -219,13 +222,13 @@ LOCAL case
 case )
   NEXT case
 
-//  case[ case ] :=case	//in Clipper: Case is not immediatelly within DO CASE
-//  case[ 2 ] :=2	//in Clipper: the same as above - Harbour compiles both
-//  case :=case[ 2 ]
+  case[ case ] :=case //in Clipper: Case is not immediatelly within DO CASE
+  case[ 2 ] :=2 //in Clipper: the same as above - Harbour compiles both
+  case :=case[ 2 ]
   case =case + case - case
   case :={|case| case( case )}
   case :={|| case }
-//  case :={|case| case[ 4 ]}
+  case :={|case| case[ 4 ]}
 
   DO /* case */ CASE
   CASE 1
@@ -233,8 +236,8 @@ case )
   CASE 2+case
     case =case +1
   CASE case++
-//    case--	//sorry -Clipper also doesn't compile this line
-//    case++	//sorry -Clipper also doesn't compile this line
+    case--   //sorry -Clipper also doesn't compile this line - but SimpLex does
+    case++   //sorry -Clipper also doesn't compile this line - but SimpLex does
     ( case++ )
     ( case-- )
   CASE ++case
@@ -251,7 +254,7 @@ case )
 */
   CASE( CASE )
     case =case != case
-  CASE( CASE )	//new CASE or function call? :)
+  CASE( CASE ) //new CASE or function call? :) - CASE supercedes case as identifier when syntax is valid.
   CASE case->case
     case->case :=case->case +1
     ( case )->( case() )
@@ -270,12 +273,12 @@ LOCAL while
 LOCAL with
 
   do case
-  case do
-  case case
+    case do
+    case case
   endcase
 
   do/***do***/case/**/
-  case do
+    case do
   endcase
 
   DO CASE
@@ -285,15 +288,16 @@ LOCAL with
   enddo
 
   do ;
-   while do
-   do :=1
+  while do
+    do :=1
   enddo
 
   do/***do***/while do/***do do do, da da da***/
-   do :=do
+    do :=do
   enddo
 
   do :={|do| do}
+
   do while do
     do()
     do->do :=do()
@@ -310,51 +314,54 @@ LOCAL with
   do->do :=do->do +1
   ( do )->( do() )
   do[ 1 ] :=do
-////////  do[ do ] :=do[ do ][ do ]
+  do[ do ] :=do[ do ][ do ]
 
   DO do WITH do
   DO do WITH do()
   DO do
 
   DO while;
-   while
-   while :=while()
+  while
+    while :=while()
   ENDDO
 
   while while
-//   while++	//incomplete statement or unbalanced delimiter
-//   while--	//incomplete statement or unbalanced delimiter
-   ( while++ )
-   ( while-- )
-   --while
-   while +=while
-   while->while :=while() +while->while
+    while++   //incomplete statement or unbalanced delimiter
+    while--   //incomplete statement or unbalanced delimiter
+    ( while++ )
+    ( while-- )
+    --while
+    while +=while
+    while->while :=while() +while->while
   enddo
 
   do->do :=while->while
 
-//  while[ 1 ] :=while
-//  while[ 2 ] +=2
-//  while( while )
-//  while( while[1] )
-//  while[ while ] :=while[ 1 ]	//in Clipper: syntax error ' 1 '
-  while :={|while| while}
+  while[ 1 ] :=while
+  while[ 2 ] +=2
 
-  while while++ < 10
-    ( while )->( while() )
+  while( while )
+    while( while[1] )
+      while[ while ] :=while[ 1 ]  //in Clipper: syntax error ' 1 '
+      while :={|while| while}
+
+      while while++ < 10
+        ( while )->( while() )
+      enddo
+    enddo
   enddo
 
-//  while while[1]	//in Clipper: syntax error ' 1 '
-//  enddo
+  while while[1]   //in Clipper: syntax error ' 1 '
+  enddo
 
   DO /* ****  */;
 ;
 ;
- while
+  while
 
 
   DO while WITH
-   do :=with + while
+    do :=with + while
   ENDDO
 
   do WITH;
@@ -375,9 +382,9 @@ LOCAL with
   with->with :=with() +with->with +1
   ( with )->( with() )
   with :={|with| with}
-//  with :=with[ 1 ]	//Syntax error ' 1 '
-//  with[ with ] :=1	//Syntax error ' WITH '
-//  with[ with ][ with ] =with[ with ][ with ]
+  with :=with[ 1 ] //Syntax error ' 1 '
+  with[ with ] :=1 //Syntax error ' WITH '
+  with[ with ][ with ] =with[ with ][ with ]
 
   DO with WITH with
   DO with WITH with()
@@ -387,7 +394,6 @@ LOCAL with
   DO with WITH while()
 
 RETURN DO
-
 
 FUNCTION WHILE( while )
 RETURN while
@@ -401,22 +407,22 @@ RETURN with
 FUNCTION END_(  )
 LOCAL end, while
 
-//  end()	//in Clipper: ENDIF does not match IF
+  //end()   TODO: PP steals the () //in Clipper: ENDIF does not match IF
   end :=end()
 
   ++end
-//  end++		//in Clipper ENDIF does not match IF
+  //end++  TODO: PP steals the ++    //in Clipper ENDIF does not match IF
   ( end++ )
   ( end-- )
   end :=end++
 
-//  end->end +=1		//in Clipper; ENDIF does not match IF
+  end->end +=1     //in Clipper; ENDIF does not match IF
   end :=end->end
 
   DO end WITH end
   DO end WITH end++
 
-//  end->( end() )	//in Clipper: ENDIF does not match IF
+  end->( end() )   //in Clipper: ENDIF does not match IF
   ( end )->( end() )
 
   DO WHILE !end
@@ -434,8 +440,8 @@ LOCAL end, while
   CASE end
   END
 
-//  end[ 1 ] :=1		//in Clipper: ENDIF does not match IF
-//  end[ end ] :=2
+  //end[ 1 ] :=1     //TODO: PP steals the [...  in Clipper: ENDIF does not match IF
+  //end[ end ] :=2
   end :=end[ end ]
   end =end[ end ]
   end +=end
@@ -455,7 +461,6 @@ RETURN end * end
 * Test for EXIT
 */
 EXIT FUNCTION EXIT( exit )
-//LOCAL exit
 
   exit++
   ++exit
@@ -555,7 +560,6 @@ RETURN field
 * Test for FOR
 */
 FUNCTION FOR( for )
-//LOCAL for
 
   for++
   --for
@@ -569,9 +573,9 @@ FUNCTION FOR( for )
   for[ for ] :=for
   for[ for ][ for ] :=for [ for ]
 
-//  for( for( for ) )	//incomplete statement or unbalanced delimiters
-//  for( 0 ) 		//incomplete statement or unbalanced delimiters
-//  for()		//syntax error ')'
+  for( for( for ) )   //incomplete statement or unbalanced delimiters
+  for( 0 )      //incomplete statement or unbalanced delimiters
+  for()      //syntax error ')'
   for :=for()
   for :=for( for( for ) )
 
@@ -856,7 +860,7 @@ PRIVATE &return
   return-=return
   return->return ^= 3
   return:return()
-  
+
   return::return
   return ::return
   return-1
@@ -918,7 +922,7 @@ PRIVATE &RECOVER
   RECOVER--
   ( RECOVER++ )
   ( RECOVER-- )
-  
+
   BEGIN SEQUENCE
     ? RECOVER
   RECOVER
@@ -971,7 +975,7 @@ PRIVATE &OTHERWISE
   OTHE
     ? OTHERWISE +1
 //  OTHER           //Mayhem in CASE
-//    ? OTHERWISE +2
+    ? OTHERWISE +2
   END
 
 
