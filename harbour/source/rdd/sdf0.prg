@@ -28,6 +28,8 @@ ANNOUNCE SDF
 
 init procedure SDFInit
 
+   QOut( "init procedure SDFInit" )
+
    REQUEST _SDF
 
    rddRegister( "SDF", RDT_TRANSFER )

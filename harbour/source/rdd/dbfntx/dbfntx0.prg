@@ -28,6 +28,8 @@ ANNOUNCE DBFNTX
 
 init procedure DBFNTXInit
 
+   QOut( "init procedure DBFNTXInit" )
+
    REQUEST _DBFNTX
 
    rddRegister( "DBFNTX", RDT_FULL )

@@ -28,6 +28,8 @@ ANNOUNCE DELIM
 
 init procedure DELIMInit
 
+   QOut( "init procedure DELIMInit")
+
    REQUEST _DELIM
 
    rddRegister( "DELIM", RDT_TRANSFER )

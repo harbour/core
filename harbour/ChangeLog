@@ -1,3 +1,12 @@
+19990801-20:40 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * source/rdd/rddsys.prg
+     source/rdd/dbf0.prg
+     source/rdd/sdf0.prg
+     source/rdd/delim0.prg
+     source/rdd/dbfntx/dbfntx0.prg
+     tests/working/testdbf.prg
+     Added a message for check if all the RDD's are linked
+
 19990801-20:20 GMT+1 Bruno Cantero <bruno@issnet.net>
    * source/rtl/files.c
      Changed for MSVC

@@ -6,9 +6,12 @@ function main()
 		      { "DATE",      "D",  8, 0 }, ;
 		      { "LOGICAL",   "L",  1, 0 } }
 
-   QQOut( "Testing the DBF RDD driver" )
+   local aRdd := rddList()
+
+   QOut( "Registered RDD's:", LTrim( Str( Len( aRdd ) ) ), "=>" )
+   aEval( aRdd, { | cDriver | QQOut( "", cDriver ) } )
    QOut()
-   QOut()
+   QOut( "Creating a DBF file" )
    dbCreate( "testdbf.dbf", aStruct )
 
 return nil

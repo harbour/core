@@ -28,6 +28,8 @@ ANNOUNCE RDDSYS
 
 init procedure RddInit
 
+   QOut( "init procedure RddInit" )
+
    REQUEST DBFNTX
 
    rddSetDefault( "DBFNTX" )
@@ -35,6 +37,8 @@ init procedure RddInit
 return
 
 exit procedure RddExit
+
+   QOut( "exit procedure RddExit" )
 
    rddShutdown()
 
