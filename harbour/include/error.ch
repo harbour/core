@@ -133,6 +133,6 @@
 #define HB_EI_XMEMOVERFLOW      9022 /* "Memory buffer overflow" */
 #define HB_EI_XGRABNULLSIZE     9023 /* "hb_xgrab requested to allocate zero byte" */
 #define HB_EI_XREALLOCNULLSIZE  9024 /* "hb_xrealloc requested to resize to zero byte" */
+#define HB_EI_XALLOCNULLSIZE    9025 /* "hb_xalloc requested to allocate zero byte" */
 
 #endif /* _ERROR_CH */
-
