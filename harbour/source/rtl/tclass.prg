@@ -82,7 +82,6 @@ FUNCTION TClass()
       __clsAddMsg( s_hClass, "Instance"       , @Instance()       , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "SetOnError"     , @SetOnError()     , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "InitClass"      , @InitClass()      , HB_OO_MSG_METHOD )
-      __clsAddMsg( s_hClass, "ClassName"      , @ClassName()      , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "cSuper"         , {| Self | iif( ::acSuper == NIL .OR. Len( ::acSuper ) == 0, NIL, ::acSuper[ 1 ] ) }, HB_OO_MSG_INLINE )
       __clsAddMsg( s_hClass, "_cSuper"        , {| Self, xVal | iif( ::acSuper == NIL .OR. Len( ::acSuper ) == 0, ( ::acSuper := { xVal } ), ::acSuper[ 1 ] := xVal ), xVal }, HB_OO_MSG_INLINE )
       __clsAddMsg( s_hClass, "hClass"         ,  1, HB_OO_MSG_DATA )
@@ -404,9 +403,3 @@ STATIC FUNCTION InitClass()
    RETURN Self
 
 //----------------------------------------------------------------------------//
-
-STATIC FUNCTION ClassName()
-
-   LOCAL Self := QSelf()
-
-   RETURN Self:cName
