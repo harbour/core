@@ -1,23 +1,28 @@
+19990825-09:02 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/debug/debugger.prg
+     + Breakpoints already working.
+     (Notice the Harbour debugger does not debug multiple files yet).
+
 19990825-01:15 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/extend.c
-    ! hb_parinfo() fixed so that it will return proper type information for 
+    ! hb_parinfo() fixed so that it will return proper type information for
       parameters passed by reference, like in Clipper.
     ! hb_par*() functions accept zero parameter again to access self.
       NOTE: added about this.
 
   * tests/working/fileio.prg
     source/rtl/filesys.c
-    ! FREAD() fixed, it now checks second parameter correctly using 
+    ! FREAD() fixed, it now checks second parameter correctly using
       hb_parinfo().
-    + Some new tests added, one test put between 
+    + Some new tests added, one test put between
       HARBOUR_STRICT_CLIPPER_COMPATIBILITY guards, see next.
     ! FREAD() uses hb_parcsiz() (hb_parclen()+1) as the maximum number of
-      bytes which could be read. Modified FREAD() but put between 
-      HARBOUR_STRICT_CLIPPER_COMPATIBILITY guards, since this is a rather 
-      unexpected behaviour, plus it can overwrite the terminating zero byte 
+      bytes which could be read. Modified FREAD() but put between
+      HARBOUR_STRICT_CLIPPER_COMPATIBILITY guards, since this is a rather
+      unexpected behaviour, plus it can overwrite the terminating zero byte
       in the string buffer.
-    + NOTE: added about an incompatibility in hb_fsSeek()/hb_fsWrite() 
+    + NOTE: added about an incompatibility in hb_fsSeek()/hb_fsWrite()
       behaviour.
 
   * contrib/odbc/odbc.c
@@ -56,7 +61,7 @@
 
   * include/hbdefs.h
     ! ISBYREF() macro changed to call hb_parinfo() instead of hb_param(),
-      it was not working previously since hb_param() was automatically 
+      it was not working previously since hb_param() was automatically
       dereferencing the parameter.
       FOPEN() parameter checking was not working correctly because of this.
 
@@ -65,7 +70,7 @@
         FRead() IS NOT WORKING RIGHT NOW )
 
     doc/subcodes.txt
-    * Huge cleanup, reformatted, eliminated usage of internal structures, 
+    * Huge cleanup, reformatted, eliminated usage of internal structures,
       fixed types, standardized variable names, explicit constants changed
       to manifest constants, fixed a whole bunch of bugs, simplified code
       fragments, optimalized variable usage and scope. 65535U -> (USHORT)-1
@@ -77,7 +82,7 @@
     ! FREAD() will check if the passed buffer size is smaller than the
       required read length.
     ! FREAD(): Added warning about the fact, that the buffer returned by
-      hb_parc() will be directly modified. (this is strictly prohibited by 
+      hb_parc() will be directly modified. (this is strictly prohibited by
       Clipper doc).
     ! hb_fsCreate() didn't reset the last error code on success.
     ! hb_fsDelete(), hb_fsRename(), hb_fsLock(), hb_fsCommit() - the not
@@ -99,7 +104,7 @@
     ! MIN(), MAX() code fixed to behave exactly like Clipper, it will now
       return a DOUBLE if any parameter is DOUBLE, it will return LONG if
       any parameter is LONG, otherwise it will return INT, the HB_ITEM
-      decimals now are only accessed for DOUBLE types (and of course only set 
+      decimals now are only accessed for DOUBLE types (and of course only set
       for DOUBLE return types). The bug could be observed by running AC_TEST
       pressing PgDn at the bottom of the list then pressing Up button, the
       index display was shown with decimals in it.
@@ -152,7 +157,7 @@
     ! Fixes by Luiz Rafael Culik <Culik@sl.conex.net> implemented.
 
   * source/rtl/strings.c
-    + Added a new runtime error for ALLTRIM(), this error has been 
+    + Added a new runtime error for ALLTRIM(), this error has been
       introduced in Clipper 5.3.
       (Put between HB_COMPATIBILITY_CLIPPER_53 guard)
     % Some PHB_ITEM accesses changed to type checking macros, only where

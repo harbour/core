@@ -2,7 +2,7 @@
  * $Id$
  */
 
-/* Harbour debugger first outline
+/* Harbour debugger
  * Copyright(C) 1999 by Antonio Linares <alinares@fivetech.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -52,6 +52,9 @@ function __dbgEntry( uParam )  // debugger entry point
       case ValType( uParam ) == "N"   // called from hvm.c hb_vmDebugShowLines()
            if oDebugger != nil
               oDebugger:SaveAppStatus()
+              if oDebugger:lGo
+                 oDebugger:lGo = ! oDebugger:IsBreakPoint( uParam )
+              endif
               if ! oDebugger:lGo
                  oDebugger:GoToLine( uParam )
                  oDebugger:HandleEvent()
@@ -72,7 +75,7 @@ CLASS TDebugger
 
    DATA   aWindows, nCurrentWindow
    DATA   oPullDown
-   DATA   oWndCode, oWndCommand
+   DATA   oWndCode, oWndCommand, oWndStack
    DATA   oBar, oBrwText, cPrgName
    DATA   cImage
    DATA   lEnd
@@ -88,6 +91,7 @@ CLASS TDebugger
    METHOD HandleEvent()
    METHOD Hide()
    METHOD InputBox( cMsg, uValue )
+   METHOD IsBreakPoint( nLine )
    METHOD NextWindow()
    METHOD Open()
    METHOD PrevWindow()
@@ -95,6 +99,7 @@ CLASS TDebugger
    METHOD SaveAppStatus()
    METHOD Show()
    METHOD ShowAppScreen()
+   METHOD ShowCallStack()
    METHOD ShowCode( cModuleName )
    METHOD ToggleBreakPoint()
 
@@ -271,6 +276,17 @@ METHOD ShowAppScreen() CLASS TDebugger
 
 return nil
 
+METHOD ShowCallStack() CLASS TDebugger
+
+   if ::oWndStack == nil
+      ::oWndStack = TDbWindow():New( 1, MaxCol() - 15, MaxRow() - 1, MaxCol(),;
+                                     "Stack", "BG+/B" )
+      ::oWndStack:Show( .f. )
+      AAdd( ::aWindows, ::oWndStack )
+   endif
+
+return nil
+
 static function CompareLine( Self )
 
 return { | a | a[ 1 ] == Self:oBrwText:nLine }
@@ -321,6 +337,10 @@ METHOD InputBox( cMsg, uValue ) CLASS TDebugger
    Set( _SET_SCOREBOARD, lScoreBoard )
 
 return If( LastKey() != K_ESC, uTemp, uValue )
+
+METHOD IsBreakPoint( nLine ) CLASS TDebugger
+
+return AScan( ::aBreakPoints, { | aBreak, n | aBreak[ 1 ] == nLine } ) != 0
 
 METHOD GotoLine( nLine ) CLASS TDebugger
 
@@ -912,7 +932,7 @@ function BuildMenu( oDebugger )  // Builds the debugger pulldown menu
          MENUITEM " &WorkAreas  F6"   ACTION Alert( "Not implemented yet!" )
          MENUITEM " &App screen F4 "  ACTION oDebugger:ShowAppScreen()
          SEPARATOR
-         MENUITEM " &CallStack"       ACTION Alert( "Not implemented yet!" )
+         MENUITEM " &CallStack"       ACTION oDebugger:ShowCallStack()
       ENDMENU
 
       MENUITEM " &Run "
