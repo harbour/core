@@ -64,9 +64,11 @@ pushd source/vm
     make fm.o
     ar -r $HB_LIB_INSTALL/libfm.a fm.o
     rm -f fm.o
-    make fm.o 'HB_LIBCOMP_MT=YES'
-    ar -r $HB_LIB_INSTALL/libfmmt.a fm.o
-    rm -f fm.o
+    if [ $HB_MT = "MT" ]; then
+        make fm.o 'HB_LIBCOMP_MT=YES'
+        ar -r $HB_LIB_INSTALL/libfmmt.a fm.o
+        rm -f fm.o
+    fi
     C_USR=$TMP_C_USR
 popd
 
