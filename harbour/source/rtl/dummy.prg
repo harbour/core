@@ -79,5 +79,5 @@ FUNCTION __dbOpenSDF()     ; RETURN NIL
 FUNCTION __dbTrans()       ; RETURN NIL
 FUNCTION __dbTransRec()    ; RETURN NIL
 
-FUNCTION __TypeFile()      ; RETURN NIL
+
 

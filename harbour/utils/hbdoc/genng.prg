@@ -48,7 +48,7 @@
 #define LINELINE     14
 #define ERRORLINE    20
 #define LONGLINE     78
-#define LONGONELINE  66
+#define LONGONELINE  78
 #define CRLF HB_OSNewLine()
 //  The delimiter
 #define DELIM   "$"                 // keyword delimiter
@@ -162,7 +162,7 @@ FUNCTION ProcessiNg()
 
          //  Read a line
 
-         cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
+         cBuffer := STRTRAN(TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) ),space(5),Space(2))
          nLineCnt ++
          IF nLineCnt % 10 = 0
             @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )
@@ -175,8 +175,8 @@ FUNCTION ProcessiNg()
                             + " at line" + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
             ENDIF
             lDoc    := .T.
-            cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), ;
-                             nCommentLen ) )
+            cBuffer := strtran(TRIM( SUBSTR( ReadLN( @lEof ), ;
+                             nCommentLen ) ),space(5),space(3))
             nLineCnt ++
             cCategory := cFuncName := cSeeAlso := ""
             nMode     := D_IGNORE
@@ -302,7 +302,8 @@ FUNCTION ProcessiNg()
 
                nMode := D_ONELINE
                //  Now start writing out what we know
-               oNgi:WriteTitle( PAD( cFuncName, 21 ) + cOneLine, cFuncName )
+
+               oNgi:WriteTitle( PAD( cFuncName, LEN( cFuncName )+2 ) + cOneLine, cFuncName )
                oNgi:WritePar( cOneLine )
                oNgi:WritePar(  cBar )
                //  4) all other stuff
@@ -644,7 +645,11 @@ FUNCTION ProcNgiInput()
    ASORT( acfiles )
    FOR x := 1 TO LEN( acfiles )
       cFile := acfiles[ x ]
-      IF LEFT( cFile, AT( '.', cFile ) - 1 ) <> "LICENSE" .AND. LEFT( cFile, AT( '.', cFile ) - 1 ) <> "OVERVIEW"
+      IF upper(LEFT( cFile, AT( '.', cFile ) - 1 )) <> "LICENSE";
+         .AND. upper(LEFT( cFile, AT( '.', cFile ) - 1 )) <> "OVERVIEW" ;
+         .AND. upper(LEFT( cFile, AT( '.', cFile ) - 1 )) <> "COMPILEROPTIONS" ;
+         .AND. upper(LEFT( cFile, AT( '.', cFile ) - 1 )) <> "GNULICENSE" ;
+         .AND. upper(LEFT( cFile, AT( '.', cFile ) - 1 )) <> "GNULICENSEPART2" 
 
          @ INFILELINE, 33 SAY PAD( cfile, 47 )
 
@@ -709,14 +714,14 @@ FUNCTION ProcNgiAlso2( cSeealso )
          nPos := AT( "()", xAlso[ hPos ] )
          IF nPos > 0
             AADD( aAlso, "funcam.ngo:" + ALLTRIM( xAlso[ hPos ] ) + ' ' )
-         ELSEIF nPos = 0 .AND. xAlso[ hPos ] <> "LICENSE" .AND. xAlso[ hPos ] <> "OVERVIEW" .AND. !EMPTY( xAlso[ hPos ] )
+         ELSEIF nPos = 0 .AND. UPPER(xAlso[ hPos ]) <> "LICENSE" .AND. UPPER(xAlso[ hPos ]) <> "OVERVIEW" .AND. !EMPTY( xAlso[ hPos ] )
             AADD( aAlso, "Comm.ngo:" + ALLTRIM( xAlso[ hPos ] ) + ' ' )
          ENDIF
       ELSE
          nPos := AT( "()", xAlso[ hPos ] )
          IF nPos > 0
             AADD( aAlso, "funcn_.ngo:" + ALLTRIM( xAlso[ hPos ] ) + ' ' )
-         ELSEIF nPos = 0 .AND. xAlso[ hPos ] <> "LICENSE" .AND. xAlso[ hPos ] <> "OVERVIEW" .AND. !EMPTY( xAlso[ hPos ] )
+         ELSEIF nPos = 0 .AND. UPPER(xAlso[ hPos ]) <> "LICENSE" .AND. UPPER(xAlso[ hPos ]) <> "OVERVIEW" .AND. !EMPTY( xAlso[ hPos ] )
             AADD( aAlso, "Comm.ngo:" + ALLTRIM( xAlso[ hPos ] ) + ' ' )
          ENDIF
       ENDIF

@@ -393,21 +393,19 @@ HARBOUR HB_SETCANCEL( void )
 
 /* $DOC$
  * $FUNCNAME$
- *    __SETCENTURY()
- *
+ *      __SETCENTURY()
  * $CATEGORY$
- *    Environment
+ *      Environment
  *  $ONELINER$
  *      Set the Current Century
-
  * $SYNTAX$
- *    __SETCENTURY([<lFlag> | <cOnOff> ] ) --> lPreviousValue
+ *      __SETCENTURY([<lFlag> | <cOnOff> ] ) --> lPreviousValue
  * $ARGUMENTS$
- *     optional <lFlag> or <cOnOff> (not case sensitive)
+ *      optional <lFlag> or <cOnOff> (not case sensitive)
  *              .T. or "ON" to enable the century setting (4-digit years)
  *              .F. or "OFF" to disable the century setting (2-digit years)
  * $RETURNS$
- *    Either the current or previous century setting as a logical value
+ *      Either the current or previous century setting as a logical value
  * $END$
  */
 
@@ -496,13 +494,13 @@ HARBOUR HB___SETCENTURY( void )
 
 /* $DOC$
  * $FUNCNAME$
- *    SET()
+ *      SET()
  * $CATEGORY$
- *    Environment
+ *      Environment
  *  $ONELINER$
  *      Changes or evaluated enviromental settings
  * $SYNTAX$
- *    Set<nSet> [, <xNewSetting> [, <xOption> ] ] ) --> xPreviousSetting
+ *      Set<nSet> [, <xNewSetting> [, <xOption> ] ] ) --> xPreviousSetting
  * $ARGUMENTS$
  *               <nSet>           <xNewSetting>           <xOption>
  *              _SET_ALTERNATE   <lFlag> | <cOnOff>
@@ -749,7 +747,7 @@ HARBOUR HB___SETCENTURY( void )
  *                   to the last. When disabled, which is the default, there
  *                   is a hard stop at the first and last positions.
  * $RETURNS$
- *   The current or previous setting
+ *      The current or previous setting
  * $END$
  */
 

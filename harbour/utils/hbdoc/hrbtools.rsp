@@ -79,9 +79,11 @@
 ..\..\source\rtl\text.prg
 ..\..\source\rtl\tget.prg
 ..\..\source\rtl\tgetlist.prg
+..\..\source\rtl\tlabel.prg
 ..\..\source\rtl\tone.c
 ..\..\source\rtl\trace.c
 ..\..\source\rtl\transfrm.c
+..\..\source\rtl\treport.prg
 ..\..\source\rtl\type.c
 ..\..\source\rtl\valtype.c
 ..\..\source\rtl\wait.prg

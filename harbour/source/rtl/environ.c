@@ -526,26 +526,27 @@ char * hb_version( USHORT uiMode )
 
 /*  $DOC$
  *  $FUNCNAME$
- *     VERSION()
+ *      VERSION()
  *  $CATEGORY$
- *     Environment
+ *      Environment
  *  $ONELINER$
- *     Returns the HARBOUR Version or the Harbour/Compiler Version
+ *      Returns the HARBOUR Version or the Harbour/Compiler Version
  *  $SYNTAX$
- *     VERSION([<nMode>]  --> <cReturn>
+ *      VERSION([<nMode>]  --> <cReturn>
  *  $ARGUMENTS$
- *     [<nMode>]   Optional Parameter that toggle to the display
- *     of the C compiler version that HARBOUR was Build. Default is 0
+ *      [<nMode>]   Optional Parameter that toggle to the display
+ *      of the C compiler version that HARBOUR was Build. Default is 0
  *
- *    [<nMode>]              Returns
+ *      [<nMode>]              Returns
  *        0                  Harbour Version
  *        1                  Harbour Version+C compiler Version
  *  $RETURNS$
- *    <cReturn>   String contining the Harbour Version or the
- *     Harbour Version+C compiler Version when the <nMode> parameter is defined
+ *      <cReturn>   String contining the Harbour Version or the
+ *      Harbour Version+C compiler Version when the <nMode> parameter is
+ *      defined.
  *  $DESCRIPTION$
- *     This function returns the HARBOUR Version or the Harbour Version+C compiler Version
- *     used to create the Harbour runtime library 
+ *      This function returns the HARBOUR Version or the Harbour Version+C
+ *      compiler Version used to create the Harbour runtime library 
  *  $EXAMPLES$
  *     ? QOUT(VERSION())
  *     ? OOUT(VERSION(1))
@@ -554,9 +555,9 @@ char * hb_version( USHORT uiMode )
  *  $STATUS$
  *     S
  *  $COMPLIANCE$
- *     This function isn't compatible with CA CLIPPER.
- *     CA  Clipper only returns the Version of the Clipper Compiler
- *     Harbour returns the Harbour Version or the Harbour Version+C compiler Version
+ *      This function isn't compatible with CA CLIPPER.
+ *      CA  Clipper only returns the Version of the Clipper Compiler
+ *      Harbour returns the Harbour Version or the Harbour Version+C compiler Version
  *     when the <nMode> parameter is set to 1
  *  $PLATFORMS$
  *

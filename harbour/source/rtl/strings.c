@@ -723,7 +723,8 @@ HARBOUR HB_PADC( void )
  *      the first string <cSearch>. If the substring is not contained within
  *      the second expression,the function will return 0.
  *  $EXAMPLES$
- *      QOUT( "at( 'cde', 'abcdefgfedcba' ) = '" + at( 'cde', 'abcsefgfedcba' ) + "'" )
+ *      QOUT( "at( 'cde', 'abcdefgfedcba' ) = '" +;
+ *      at( 'cde', 'abcsefgfedcba' ) + "'" )
  *  $TESTS$
  *  $STATUS$
  *      R
@@ -781,7 +782,8 @@ HARBOUR HB_AT( void )
  *      of <cString> to the left. If the function is unable to find any
  *      occurence of <cSearch> in <cString>,the value of the function will be 0.
  *  $EXAMPLES$
- *      QOUT( "rat( 'cde', 'abcdefgfedcba' ) = '" + rat( 'cde', 'abcsefgfedcba' ) + "'" )
+ *      QOUT( "rat( 'cde', 'abcdefgfedcba' ) = '" +;
+ *      rat( 'cde', 'abcsefgfedcba' ) + "'" )
  *  $TESTS$
  *
  *  $STATUS$
@@ -1044,8 +1046,8 @@ HARBOUR HB_RIGHT( void )
  *      R
  *  $COMPLIANCE$
  *      This functions is CA CLIPPER compatible with the execption that
- *      CA CLIPPER will generate an error if the passed string is >65519 bytes and
- *      Harbour depends of plataform.
+ *      CA CLIPPER will generate an error if the passed string is >65519 bytes
+ *      and Harbour depends of plataform.
  *  $PLATFORMS$
  *
  *  $FILES$

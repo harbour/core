@@ -1545,22 +1545,19 @@ HARBOUR HB_AFIELDS( void )
  *  $RETURNS$
  *      <cWorkArea> Name of alias
  *  $DESCRIPTION$
- *        This function returns the alias of the work area
- *      indicated by <nWorkArea>. If <nWorkArea> is not
- *      provided, the alias of the current work area is
- *      returned.This function does not differ from the Clipper
- *      function DBF(), with is a strictly  a compatibility function
+ *      This function returns the alias of the work area indicated by <nWorkArea>
+ *      If <nWorkArea> is not provided, the alias of the current work area is
+ *      returned.
  *  $EXAMPLES$
  *      FUNCTION Main()
  *         
- *         USE Test
+ *      USE Test
+ *      select 0
+ *      qOut( IF(Alias()=="","No Name",Alias()))
+ *      Test->(qOut(Alias())
+ *      qOut(Alias(1))
  *
- *         select 0
- *         qOut( IF(Alias()=="","No Name",Alias()))
- *         Test->(qOut(Alias())
- *         qOut(Alias(1))
- *
- *         RETURN NIL
+ *      RETURN NIL
  *  $TESTS$
  *  $STATUS$
  *      R
@@ -1720,7 +1717,7 @@ HARBOUR HB_DBEVAL( void )
  *  $CATEGORY$
  *      DATA BASE
  *  $ONELINER$
- *      Returns the alias name of a work area
+ *      Alias name of a work area
  *  $SYNTAX$
  *      Dbf() --> <cWorkArea>
  *  $ARGUMENTS$
@@ -1728,9 +1725,8 @@ HARBOUR HB_DBEVAL( void )
  *  $RETURNS$
  *      <cWorkArea> Name of alias
  *  $DESCRIPTION$
- *        This function returns the same alias name of
- *      the currently selected work area.
- *      This function is the same as Alias()
+ *      This function returns the same alias name ofthe currently selected work
+ *      area.
  *  $EXAMPLES$
  *      FUNCTION Main()
  *         
@@ -1746,7 +1742,7 @@ HARBOUR HB_DBEVAL( void )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      ALIAS() is fully CA-Clipper compliant.
+ *      DBF() is fully CA-Clipper compliant.
  *  $SEEALSO$
  *  $END$
  */
@@ -1789,12 +1785,11 @@ HARBOUR HB_DBF( void )
  *  $RETURNS$
  *      Logical true (.T.) or false (.F.)
  *  $DESCRIPTION$
- *        This function determines if the beggining of the file
- *      marker has been reached. If so, the function will return
- *      a logical true (.T.); otherwise, a logical false(.F.) will
- *      be returned.
- *        By default, BOF() will apply to the currently selected
- *      database unless the function is preceded by an alias
+ *      This function determines if the beggining of the file marker has been
+ *      reached. If so, the function will return a logical true (.T.); otherwise,
+ *      a logical false(.F.) will be returned.
+ *      By default, BOF() will apply to the currently selected database unless
+ *      the function is preceded by an alias
  *  $EXAMPLES$
  *      FUNCTION Main()
  *        USE Tests NEW
@@ -4297,55 +4292,32 @@ HARBOUR HB___DBZAP( void )
  *  $CATEGORY$
  *      Data Base
  *  $ONELINER$
- *      Return the deleted status of the current record
+ *      Tests the record's deletion flag.
  *  $SYNTAX$
  *      DELETED() --> lDeleted
- *  $ARGUMENTS$
- *      
+ *  $ARGUMENTS$    
  *  $RETURNS$
- *      DELETED() returns true (.T.) if the current record is marked for
- *   deletion; otherwise, it returns false (.F.).  If there is no database
- *   file in USE in the current work area, DELETED() returns false (.F.).
- *   
+ *      DELETED() return a logical true (.T.) or false (.F.).
  *  $DESCRIPTION$
- *      DELETED() is a database function that determines if the current record
- *   in the active work area is marked for deletion.  Since each work area
- *   with an open database file can have a current record, each work area has
- *   its own DELETED() value.
- *
- *      By default, DELETED() operates on the currently selected work area.  It
- *   will operate on an unselected work area if you specify it as part of an
- *   aliased expression (see example below).
- *
- *      In applications, DELETED() is generally used to query the deleted status
- *   as a part of record processing conditions, or to display the deleted
- *   status as a part of screens and reports.
- *   
+ *      This function returns a logical true (.T.) is the current record in the
+ *      selected or designated work area ha ben marked for deletion.If not, the
+ *      function will return a logical false (.F.).
  *  $EXAMPLES$
- *      This example uses DELETED() in the current and in an
- *      unselected work area:
- *
- *      USE Customer NEW
- *
- *      USE Sales NEW
- *      ? DELETED() // Result: .F.
- *      DELETE
- *      ? DELETED()  // Result: .T.
- *      ? Customer->(DELETED())       // Result: .F.
- *
- *      This example uses DELETED() to display a record's deleted
- *      status in screens and reports:
- *
- *      @ 1, 65 SAY IF(DELETED(), "Inactive", "Active")
- *
+ *      FUNCTION Main()
+ *      USE Test New
+ *      DBGOTO()
+ *      DBDELETE()
+ *      ? "Is Record Deleted",Test->(DELETED())
+ *      DBRECALL()
+ *      USE
+ *      RETURN NIL
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is CA-Clipper compliant
  *  $SEEALSO$
- *      
+ *      DBDELETE()
  *  $INCLUDE$
  *      
  *  $END$
@@ -4366,7 +4338,7 @@ HARBOUR HB_DELETED( void )
  *  $CATEGORY$
  *      DATA BASE
  *  $ONELINER$
- *      Test for end-of-file condition
+ *      Test for end-of-file condition.
  *  $SYNTAX$
  *      EOF() --> <lEnd>
  *  $ARGUMENTS$
@@ -4455,40 +4427,29 @@ HARBOUR HB_FCOUNT( void )
  *  $CATEGORY$
  *      Data Base
  *  $ONELINER$
- *      Obtains the value 
+ *      Obtains the value  of a specified field
  *  $SYNTAX$
  *      FIELDGET(<nField>) --> ValueField
  *  $ARGUMENTS$
- *      <nField> is the ordinal position of the field in the record
- *   structure for the current work area.
+ *      <nField> Is the numeric field position
  *  $RETURNS$
- *      FIELDGET() returns the value of the specified field.  If <nField> does
- *   not correspond to the position of any field in the current database
- *   file, FIELDGET() returns NIL.     
+ *      FIELDGET() Any expression
  *  $DESCRIPTION$
- *      FIELDGET() is a database function that retrieves the value of a field
- *   using its position within the database file structure rather than its
- *   field name.  Within generic database service functions this allows,
- *   among other things, the retrieval of field values without use of the
- *   macro operator.     
+ *      This function returns the value of the field at the <nField>th location
+ *      in the selected or designed work area.If the value in <nField> does not
+ *      correspond to n avaliable field position in this work area, the function
+ *      will return a NIL data type.
  *  $EXAMPLES$
- *      This example compares FIELDGET() to functionally equivalent
- *      code that uses the macro operator to retrieve the value of a field:
- *
- *      LOCAL nField := 1, FName, FVal
- *      USE Customer NEW
- *      //
- *      // Using macro operator
- *      FName := FIELD( nField )        // Get field name
- *      FVal := &FName        // Get field value
- *      // Using FIELDGET()
- *      FVal := FIELDGET( nField )      // Get field value
+ *      FUNCTION Main()
+ *      USE Test NEW
+ *      ? Test->(FieldGet(1))
+ *      USE
+ *      RETURN NIL
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is CA-Clipper Compliant.
  *  $SEEALSO$
  *      FIELDPUT()
  *  $INCLUDE$
@@ -4581,46 +4542,29 @@ HARBOUR HB_FIELDNAME( void )
  *  $CATEGORY$
  *      Data Base
  *  $ONELINER$
- *      Return the position of a field in a work area
+ *      Return the ordinal position of a field.
  *  $SYNTAX$
  *      FIELDPOS(<cFieldName>) --> nFieldPos
  *  $ARGUMENTS$
- *      <cFieldName> is the name of a field in the current or specified work
- *   area.
+ *      <cFieldName> Name of a field.
  *  $RETURNS$
- *      FIELDPOS() returns the position of the specified field within the list
- *   of fields associated with the current or specified work area.  If the
- *   current work area has no field with the specified name, FIELDPOS()
- *   returns zero.
+ *      FIELDPOS() returns the ordinal position of the field.
  *  $DESCRIPTION$
- *      FIELDPOS() is a database function that is the inverse of the FIELDNAME()
- *   function.  FIELDPOS() is most often used with the FIELDPUT() and
- *   FIELDGET() functions.
- *
- *      FIELDPOS() return the names of fields in any unselected work area by
- *   referring to the function using an aliased expression.  See the example
- *   below.
+ *      This function return the ordinal position of the specified field <cField>
+ *      in the current or aliased work areaIf there isn't  field under the name
+ *      of <cField> or of no database is open in the selected work area, the func-
+ *      tion will return a 0.
  *  $EXAMPLES$
- *      This example demonstrates a typical specification of the
- *      FIELDPOS() function:
- *
- *      USE Customer NEW
- *      ? FIELDPOS("Name") *    *    *    *    // Result: 1
- *      ? FIELDGET(FIELDPOS("Name")) *    *    // Result: Kate
- *
- *      This example uses FIELDPOS() to return the position of a
- *      specified field in a unselected work area:
- *
- *      USE Customer NEW
- *      USE Invoices NEW
- *      ? Customer->(FIELDPOS("Name")) *       // Result: 1
- *      ? Customer->(FIELDGET(FIELDPOS("Name")))  // Result: Kate
+ *      FUNCTION Main()
+ *      USE Test NEW
+ *      ? Test->(FIELDPOS("ID"))
+ *      USE
+ *      RETURN NIL
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is CA-Clipper compliant.
  *  $SEEALSO$
  *      FIELDGET(),FIELDPUT()
  *  $INCLUDE$
