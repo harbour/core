@@ -60,9 +60,9 @@ echo END >> __lib__.tmp
 $(AR) -M < __lib__.tmp
 endef
 
-# Under OS/2 || isn't a command separator (inside a shell, that is); correct separator is & 
+# Under OS/2 || isn't a command separator (inside a shell, that is); correct separator is &
 AR = ar
 ARFLAGS =
-AR_RULE = $(RM) $@ & $(create_library) & $(RM) __lib__.tmp
+AR_RULE = IF EXIST $@ $(RM) $@ & $(create_library) & $(RM) __lib__.tmp
 
 include $(TOP)$(ROOT)config/rules.cf

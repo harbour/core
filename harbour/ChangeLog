@@ -1,3 +1,10 @@
+20000417-16:06 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * config/os2/gcc.cf
+     ! hope it's last time; before deleting old .a check if it exists
+   * source/rtl/gtos2/gtos2.c
+     ! a few calls to TRACE macro with wrong parameters name
+
 20000417-15:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/diskspac.c
@@ -34,10 +41,10 @@
         *changed to use HB_XREGS
 
     *source/rtl/gtapi.c
-	*fixed printing using console output
+   *fixed printing using console output
 
     *source/rtl/gtcrs/gtcrs.c
-	*altarnate characters set is disabled for xterm
+   *altarnate characters set is disabled for xterm
 
 20000417-06:32 GMT+1 Victor Szakats <info@szelvesz.hu>
 
