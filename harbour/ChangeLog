@@ -8,6 +8,8 @@
     + Copyright info added.
   * include/filesys.h
     + Indenting corrected.
+  - bin/empty
+    - Removed.
 
 19991117-13:05 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
