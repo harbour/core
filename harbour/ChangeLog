@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-09-18 16:33 UTC-0800 Luis Krause Mantilla <lkrausem@shaw.ca>
+  * contrib/rdd_ads/ads1.c
+    ! Fixed bug when passing a numeric to adsCustomizeAOF() (Nil and
+      array worked ok).  Thanks to Brian Hays for the fix.
+  * include/ads.ch
+    ! The ROLLBACK TRANSACTION command was translating to 
+      AdsRollbackTransaction() instead of just AdsRollback()
+
 2003-09-18 10:20 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/rdd/dbcmd.c
     ! Fixed several places more where hb_strncpyUpper() was wrongly used
@@ -23,7 +31,7 @@
     ! fixed bug on hb_strncpyUpper() use from DbUseArea()
 
 2003-09-17 10:54 UTC-0800 Luis Krause Mantilla <lkrausem@shaw.ca>
-  * harbour/source/ftl/tget.prg
+  * harbour/source/rtl/tget.prg
     ! Fixed bug in unTransform() method that truncated
       trailing spaces in variable when using "@R" template
   Borrowed from xharbour by Andi Jahja:

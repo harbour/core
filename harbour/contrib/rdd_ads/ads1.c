@@ -3082,7 +3082,10 @@ HB_FUNC( ADSCUSTOMIZEAOF )
          ulRecord = pArea->ulRecNo;
       }
       else if( ISNUM( 1 ) )             /* Passed a single recno */
+      {
+         ulNumRecs = 1;
          ulRecord = hb_parnl( 1 );
+      }
       else if( ISARRAY( 1 ) )           /* convert array of recnos to C array */
          ulNumRecs = hb_parinfa( 1, 0 );
 
