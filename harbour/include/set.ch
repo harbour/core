@@ -122,6 +122,6 @@
 #define _SET_EOF          105 /* Harbour extension */
 
 #define HB_SET_BASE       100
-#define HB_SET_COUNT      2
+#define HB_SET_COUNT      6
 
 #endif /* _SET_CH */
