@@ -23,7 +23,7 @@ function main()
   ?
   ? "Original.....:", aDump( t := c )
   ? "Asort.c......:", aDump( aSort( t := aClone( c ) ) )
-  ? "Asort.c.block:", aDump( aSort( t := aClone( c ), , , {| x, y | x < y } ) )
+  ? "Asort.c.block:", aDump( aSort( t := aClone( c ), , , {| x, y | xToStr(x) < xToStr(y) } ) )
 
 return nil
 

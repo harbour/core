@@ -629,17 +629,19 @@ static int hb_comp_SLX_ElementToken( char* szToken, unsigned int iTokenLen )
             }
             else
             {
+               /*
                yytext = hb_compIdentifierNew( yytext, TRUE );
-
-               yylval.string = yytext;
+               */
+               yylval.string = hb_strdup( yytext );
                iRet = MACROTEXT;
             }
          }
          else
          {
+            /*
             yytext = hb_compIdentifierNew( yytext, TRUE );
-
-            yylval.string = yytext;
+            */
+            yylval.string = hb_strdup( yytext );
             iRet = MACROTEXT;
          }
       }

@@ -1,3 +1,10 @@
+2001-07-19 02:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.slx
+     * Changed storing of MACROTEXT from hb_compIdentifierNew() to hb_strdup().
+
+   * tests/tstasort.prg
+     ! Fixed R/T Error resulting from comparing unrelated types in sorting codeblock.
+
 2001-07-19 12:40 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rtl/transfrm.c
     * added some code for proper handling of numeric parameters
