@@ -1,3 +1,11 @@
+2000-01-23 10:53 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/tbrowse.prg
+     * The newly retrieved data is passed as an argument to ColorBlock
+       (accordingly to Clipper ColorBlock documentation)
+
+   * source/debug/debugger.prg
+     * Improved debugger: View Sets is partially working.
+
 2000-01-22 20:03 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/debug/debugger.prg
      * Improved debugger: Command window is starting working.
