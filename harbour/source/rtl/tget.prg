@@ -122,7 +122,7 @@ CLASS Get
    METHOD SetFocus()
    METHOD Undo()
    METHOD UnTransform()
-   METHOD UpdateBuffer() INLINE  ::buffer := ::PutMask(), ::Assign(), ::Display(), Self
+   METHOD UpdateBuffer() INLINE  ::buffer := ::PutMask(), ::Assign():Display(), Self
 
    METHOD VarGet()
    METHOD VarPut(xValue, lReFormat)
@@ -313,7 +313,11 @@ METHOD Display( lForced ) CLASS Get
    DEFAULT lForced TO .t.
 
    if ::HasScroll() .and. ::Pos != NIL
-      ::nDispPos := Max( 1, Min( ::Pos - Int( ::nDispLen / 2 ), ::nMaxLen - ::nDispLen + 1 ) )
+      if ::nDispLen > 8
+         ::nDispPos := Max( 1, Min( ::Pos - ::nDispLen + 4, ::nMaxLen - ::nDispLen + 1 ) )
+      else
+         ::nDispPos := Max( 1, Min( ::Pos - int( ::nDispLen / 2 ), ::nMaxLen - ::nDispLen + 1 ) )
+      endif
    endif
 
    if lForced .or. ( ::nDispPos != ::nOldPos )
@@ -537,6 +541,7 @@ METHOD overstrike( cChar ) CLASS Get
       ::lEdit  := .t.
    endif
 
+
    do while ! ::IsEditable( ::pos ) .and. ::pos <= ::nMaxLen
       ::pos++
    enddo
@@ -553,6 +558,7 @@ METHOD overstrike( cChar ) CLASS Get
    endif
 
    ::buffer := SubStr( ::buffer, 1, ::Pos - 1 ) + cChar + SubStr( ::buffer, ::Pos + 1 )
+
    ::Changed := !( ::unTransform() == ::Original )
    ::Assign()
    ::Right( .f. )
@@ -941,16 +947,15 @@ METHOD PutMask( xValue, lEdit ) CLASS Get
 
    if lEdit .and. ::type == "N" .and. ! Empty( ::cPicMask )
       nLen  := Len( cBuffer )
+      cMask := ::cPicMask
       if "E" $ ::cPicFunc
-         cMask := StrTran(::cPicMask, ",", Chr(1))
+         cMask := StrTran(cMask, ",", Chr(1))
          cMask := StrTran(cMask, ".", ",")
          cMask := StrTran(cMask, Chr(1), ".")
-      else
-         cMask := ::cPicFunc
       endif
       for nFor := 1 to nLen
          cChar := SubStr( cMask, nFor, 1 )
-         if cChar $ ",." .and. !( SubStr( cBuffer, nFor, 1 ) == cChar )
+         if cChar $ ",." .and. SubStr( cBuffer, nFor, 1 ) != cChar
             cBuffer := SubStr( cBuffer, 1, nFor - 1 ) + cChar + SubStr( cBuffer, nFor + 1 )
          endif
       next

@@ -326,13 +326,11 @@ METHOD GetPostValidate() CLASS HBGetList
    endif
 
    if oGet:Changed
-//      oGet:Assign()
       oGet:UpdateBuffer()
-      oGet:Display()
       ::lUpdated := .t.
    endif
 
-   oGet:Reset()
+   oGet:Reset():Display()
 
    if oGet:PostBlock != NIL
 
