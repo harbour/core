@@ -94,7 +94,7 @@ void hb_compGenObj32( PHB_FNAME pFileName )
 
   if( ! ( hObjFile = fopen( szFileName, "wb" ) ) )
     {
-      hb_compGenError( hb_comp_szErrors, 'E', ERR_CREATE_OUTPUT, szFileName, NULL );
+      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_CREATE_OUTPUT, szFileName, NULL );
       return;
     }
 
@@ -257,13 +257,13 @@ static void GenerateDataSegment( FILE * hObjFile )
 
       if( IsExternal( ul ) )
         {
-          if( ! ( pSymbol->cScope & FS_MESSAGE ) )
+          if( ! ( pSymbol->cScope & _HB_FS_MESSAGE ) )
             Fixup( hObjFile, 0xE4, ( ul * sizeof( HB_SYMB ) ) + 5, 0x56,
                    GetExternalPos( GetSymbolName( ul ) ) + 1 );
         }
       else
         {
-          /* if( ! ( pSymbol->cScope & FS_MESSAGE ) ) */
+          /* if( ! ( pSymbol->cScope & _HB_FS_MESSAGE ) ) */
           Fixup( hObjFile, 0xE4, ( ul * sizeof( HB_SYMB ) ) + 5, 0x54, 1 ); /* function address location */
         }
       pSymbol = pSymbol->pNext;
@@ -283,7 +283,7 @@ static void GenerateCodeSegment( FILE * hObjFile )
 
   while( pFunc )
     {
-      if( !( pFunc->cScope & ( FS_STATIC | FS_INIT | FS_EXIT ) ) )
+      if( !( pFunc->cScope & ( _HB_FS_STATIC | _HB_FS_INIT | _HB_FS_EXIT ) ) )
         PubDef( hObjFile, pFunc->szName, 1, w * sizeof( prgFunction ) );
       w++;
       pFunc = pFunc->pNext;
@@ -547,8 +547,8 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, USHORT wSymLen, USHORT 
       else
         * ( ( ULONG * ) &symbol[ 5 ] ) = 0;
 
-      if( pSymbol->cScope == FS_MESSAGE )
-        symbol[ 4 ] = FS_PUBLIC;
+      if( pSymbol->cScope == _HB_FS_MESSAGE )
+        symbol[ 4 ] = _HB_FS_PUBLIC;
       else
         symbol[ 4 ] = pSymbol->cScope;
 

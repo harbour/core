@@ -45,8 +45,8 @@ HARBOUR HB__DBFNTX( void );
 HARBOUR HB_DBFNTX_GETFUNCTABLE( void );
 
 HB_INIT_SYMBOLS_BEGIN( dbfntx1__InitSymbols )
-{ "_DBFNTX",             FS_PUBLIC, HB__DBFNTX,             0 },
-{ "DBFNTX_GETFUNCTABLE", FS_PUBLIC, HB_DBFNTX_GETFUNCTABLE, 0 }
+{ "_DBFNTX",             _HB_FS_PUBLIC, HB__DBFNTX,             0 },
+{ "DBFNTX_GETFUNCTABLE", _HB_FS_PUBLIC, HB_DBFNTX_GETFUNCTABLE, 0 }
 HB_INIT_SYMBOLS_END( dbfntx1__InitSymbols )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
    #pragma startup dbfntx1__InitSymbols

@@ -220,7 +220,7 @@ int hb_pp_ParseDirective( char * sLine )
   if( i == 4 && memcmp( sDirective, "ELSE", 4 ) == 0 )
     {     /* ---  #else  --- */
       if( hb_pp_nCondCompile == 0 )
-        hb_compGenError( hb_pp_szErrors, 'F', ERR_DIRECTIVE_ELSE, NULL, NULL );
+        hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_DIRECTIVE_ELSE, NULL, NULL );
       else if( hb_pp_nCondCompile == 1 || hb_pp_aCondCompile[hb_pp_nCondCompile-2] )
         hb_pp_aCondCompile[hb_pp_nCondCompile-1] = 1 - hb_pp_aCondCompile[hb_pp_nCondCompile-1];
     }
@@ -228,7 +228,7 @@ int hb_pp_ParseDirective( char * sLine )
   else if( i >= 4 && i <= 5 && memcmp( sDirective, "ENDIF", i ) == 0 )
     {     /* --- #endif  --- */
       if( hb_pp_nCondCompile == 0 )
-        hb_compGenError( hb_pp_szErrors, 'F', ERR_DIRECTIVE_ENDIF, NULL, NULL );
+        hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_DIRECTIVE_ENDIF, NULL, NULL );
       else hb_pp_nCondCompile--;
     }
 
@@ -245,7 +245,7 @@ int hb_pp_ParseDirective( char * sLine )
           char cDelimChar;
 
           if( *sLine != '\"' && *sLine != '\'' && *sLine != '<' )
-            hb_compGenError( hb_pp_szErrors, 'F', ERR_WRONG_NAME, NULL, NULL );
+            hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_WRONG_NAME, NULL, NULL );
 
           cDelimChar = *sLine;
           if( cDelimChar == '<' )
@@ -256,12 +256,12 @@ int hb_pp_ParseDirective( char * sLine )
           sLine++; i = 0;
           while( *(sLine+i) != '\0' && *(sLine+i) != cDelimChar ) i++;
           if( *(sLine+i) != cDelimChar )
-            hb_compGenError( hb_pp_szErrors, 'F', ERR_WRONG_NAME, NULL, NULL );
+            hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_WRONG_NAME, NULL, NULL );
           *(sLine+i) = '\0';
 
           /*   if((handl_i = fopen(sLine, "r")) == NULL) */
           if( !OpenInclude( sLine, hb_comp_pIncludePath, hb_comp_pFileName, ( cDelimChar == '>' ), szInclude ) )
-             hb_compGenError( hb_pp_szErrors, 'F', ERR_CANNOT_OPEN, sLine, NULL );
+             hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_CANNOT_OPEN, sLine, NULL );
         }
 
       else if( i >= 4 && i <= 6 && memcmp( sDirective, "DEFINE", i ) == 0 )
@@ -285,7 +285,7 @@ int hb_pp_ParseDirective( char * sLine )
 
       else if( i >= 4 && i <= 5 && memcmp( sDirective, "ERROR", i ) == 0 )
         /* --- #error  --- */
-        hb_compGenError( hb_pp_szErrors, 'E', ERR_EXPLICIT, sLine, NULL );
+        hb_compGenError( hb_pp_szErrors, 'E', HB_PP_ERR_EXPLICIT, sLine, NULL );
 
       else if( i == 4 && memcmp( sDirective, "LINE", 4 ) == 0 )
         return -1;
@@ -294,7 +294,7 @@ int hb_pp_ParseDirective( char * sLine )
          ParsePragma( sLine );   /* --- #pragma  --- */
 
       else
-        hb_compGenError( hb_pp_szErrors, 'F', ERR_WRONG_DIRECTIVE, sDirective, NULL );
+        hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_WRONG_DIRECTIVE, sDirective, NULL );
     }
   return 0;
 }
@@ -333,7 +333,7 @@ static int ParseDefine( char * sLine )
       lastdef->pars = ( npars <= 0 ) ? NULL : hb_strdup( pars );
     }
   else
-    hb_compGenError( hb_pp_szErrors, 'F', ERR_DEFINE_ABSENT, NULL, NULL );
+    hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_DEFINE_ABSENT, NULL, NULL );
 
   return 0;
 }
@@ -404,7 +404,7 @@ static int ParseIfdef( char * sLine, int usl )
     {
       NextWord( &sLine, defname, FALSE );
       if( *defname == '\0' )
-        hb_compGenError( hb_pp_szErrors, 'F', ERR_DEFINE_ABSENT, NULL, NULL );
+        hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_DEFINE_ABSENT, NULL, NULL );
     }
   if( hb_pp_nCondCompile == s_maxCondCompile )
     {
@@ -535,7 +535,7 @@ static void ParseCommand( char * sLine, BOOL com_or_xcom, BOOL com_or_tra )
     stcmd->value = ( rlen > 0 ) ? hb_strdup( rpatt ) : NULL;
   }
   else
-    hb_compGenError( hb_pp_szErrors, 'F', ERR_COMMAND_DEFINITION, NULL, NULL );
+    hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_COMMAND_DEFINITION, NULL, NULL );
 }
 
 /* ConvertPatterns()
@@ -584,13 +584,13 @@ static void ConvertPatterns( char * mpatt, int mlen, char * rpatt, int rlen )
             {
               if( *(exppatt+explen-1) == '*' ) explen--;
               else
-                hb_compGenError( hb_pp_szErrors, 'F', ERR_PATTERN_DEFINITION, NULL, NULL );
+                hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PATTERN_DEFINITION, NULL, NULL );
             }
           else if( exptype == '4' )
             {
               if( *(exppatt+explen-1) == ')' ) explen--;
               else
-                hb_compGenError( hb_pp_szErrors, 'F', ERR_PATTERN_DEFINITION, NULL, NULL );
+                hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PATTERN_DEFINITION, NULL, NULL );
             }
 
           rmlen = i - ipos + 1;
@@ -808,7 +808,7 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
       kolpass++;
       if( kolpass > 20 && rezDef )
       {
-        hb_compGenError( hb_pp_szErrors, 'F', ERR_RECURSE, NULL, NULL );
+        hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_RECURSE, NULL, NULL );
         break;
       }
     }
@@ -2421,7 +2421,7 @@ static int ParsePragma( char * sLine )
                      break;
 
                   default:
-                     hb_compGenError( hb_pp_szErrors, 'F', ERR_PRAGMA_BAD_VALUE, NULL, NULL );
+                     hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PRAGMA_BAD_VALUE, NULL, NULL );
                }
                DebugPragma( pragma, hb_comp_iExitLevel, FALSE );
             }
@@ -2465,7 +2465,7 @@ static int ParsePragma( char * sLine )
                   /* There is -w<0,1,2,3> probably */
                   hb_comp_iWarnings = pragma[ 2 ] - '0';
                   if( hb_comp_iWarnings < 0 || hb_comp_iWarnings > 3 )
-                     hb_compGenError( hb_pp_szErrors, 'F', ERR_PRAGMA_BAD_VALUE, NULL, NULL );
+                     hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PRAGMA_BAD_VALUE, NULL, NULL );
 
                   DebugPragma( pragma, -1, hb_comp_iWarnings );
                }
@@ -2506,7 +2506,7 @@ static int ParsePragma( char * sLine )
       {
          hb_comp_iExitLevel = StringToInt( temp, hb_comp_iExitLevel );
          if( hb_comp_iExitLevel < 0 || hb_comp_iExitLevel > 2 )
-            hb_compGenError( hb_pp_szErrors, 'F', ERR_PRAGMA_BAD_VALUE, NULL, NULL );
+            hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PRAGMA_BAD_VALUE, NULL, NULL );
          DebugPragma( pragma, hb_comp_iExitLevel, FALSE );
       }
       else if( memcmp( temp, "FORCEMEMVARS", PRAGMAS_LEN ) == 0 )
@@ -2538,7 +2538,7 @@ static int ParsePragma( char * sLine )
       {
          hb_comp_iWarnings = StringToInt( temp, hb_comp_iWarnings );
          if( hb_comp_iWarnings < 0 || hb_comp_iWarnings > 3 )
-            hb_compGenError( hb_pp_szErrors, 'F', ERR_PRAGMA_BAD_VALUE, NULL, NULL );
+            hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PRAGMA_BAD_VALUE, NULL, NULL );
          DebugPragma( pragma, -1, hb_comp_iWarnings );
       }
       else if( memcmp( temp, "TRACEPRAGMAS", PRAGMAS_LEN ) == 0 )

@@ -55,7 +55,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    yyc = fopen( szFileName, "wb" );
    if( ! yyc )
    {
-      hb_compGenError( hb_comp_szErrors, 'E', ERR_CREATE_OUTPUT, szFileName, NULL );
+      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_CREATE_OUTPUT, szFileName, NULL );
       return;
    }
 
@@ -66,7 +66,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    }
 
    fprintf( yyc, "/*\n * Harbour Compiler, Build %i%s (%04d.%02d.%02d)\n",
-         hb_build, hb_revision, hb_year, hb_month, hb_day );
+         HB_VER_BUILD, HB_VER_REVISION, HB_VER_YEAR, HB_VER_MONTH, HB_VER_DAY );
    fprintf( yyc, " * Generated C source code\n */\n\n" );
 
    fprintf( yyc, "#include \"hbvmpub.h\"\n" );
@@ -78,7 +78,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    /* write functions prototypes for PRG defined functions */
    while( pFunc )
    {
-      if( pFunc->cScope & FS_STATIC || pFunc->cScope & FS_INIT || pFunc->cScope & FS_EXIT )
+      if( pFunc->cScope & _HB_FS_STATIC || pFunc->cScope & _HB_FS_INIT || pFunc->cScope & _HB_FS_EXIT )
          fprintf( yyc, "static " );
       else
          fprintf( yyc, "       " );
@@ -116,29 +116,29 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
          * we are using these two bits to mark the special function used to
          * initialize static variables
          */
-         fprintf( yyc, "{ \"(_INITSTATICS)\", FS_INIT | FS_EXIT, hb_INITSTATICS, 0}" ); /* NOTE: hb_ intentionally in lower case */
+         fprintf( yyc, "{ \"(_INITSTATICS)\", _HB_FS_INIT | _HB_FS_EXIT, hb_INITSTATICS, 0}" ); /* NOTE: hb_ intentionally in lower case */
       }
       else
       {
          fprintf( yyc, "{ \"%s\", ", pSym->szName );
 
-         if( pSym->cScope & FS_STATIC )
-            fprintf( yyc, "FS_STATIC" );
+         if( pSym->cScope & _HB_FS_STATIC )
+            fprintf( yyc, "_HB_FS_STATIC" );
 
-         else if( pSym->cScope & FS_INIT )
-            fprintf( yyc, "FS_INIT" );
+         else if( pSym->cScope & _HB_FS_INIT )
+            fprintf( yyc, "_HB_FS_INIT" );
 
-         else if( pSym->cScope & FS_EXIT )
-            fprintf( yyc, "FS_EXIT" );
+         else if( pSym->cScope & _HB_FS_EXIT )
+            fprintf( yyc, "_HB_FS_EXIT" );
 
          else
-            fprintf( yyc, "FS_PUBLIC" );
+            fprintf( yyc, "_HB_FS_PUBLIC" );
 
          if( pSym->cScope & VS_MEMVAR )
-            fprintf( yyc, " | FS_MEMVAR" );
+            fprintf( yyc, " | _HB_FS_MEMVAR" );
 
-         if( ( pSym->cScope != FS_MESSAGE ) && ( pSym->cScope & FS_MESSAGE ) ) /* only for non public symbols */
-            fprintf( yyc, " | FS_MESSAGE" );
+         if( ( pSym->cScope != _HB_FS_MESSAGE ) && ( pSym->cScope & _HB_FS_MESSAGE ) ) /* only for non public symbols */
+            fprintf( yyc, " | _HB_FS_MESSAGE" );
 
          /* specify the function address if it is a defined function or an
             external called function */
@@ -165,7 +165,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       pFunc = pFunc->pNext; /* No implicit starting procedure */
    while( pFunc )
    {
-      if( pFunc->cScope != FS_PUBLIC )
+      if( pFunc->cScope != _HB_FS_PUBLIC )
          fprintf( yyc, "static " );
 
       if( pFunc == hb_comp_pInitFunc )        /* Is it (_INITSTATICS) */
@@ -753,7 +753,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                    * because at the time of C code generation we don't know
                    * in which function was defined this local variable
                    */
-                  if( (pFunc->cScope & (FS_INIT | FS_EXIT)) != (FS_INIT | FS_EXIT) )
+                  if( ( pFunc->cScope & ( _HB_FS_INIT | _HB_FS_EXIT ) ) != ( _HB_FS_INIT | _HB_FS_EXIT ) )
                      if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %s */", hb_compVariableFind( pFunc->pLocals, w )->szName );
                   fprintf( yyc, "\n" );
                   lPCodePos +=2;

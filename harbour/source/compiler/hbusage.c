@@ -103,7 +103,7 @@ void hb_compPrintCredits( void )
 void hb_compPrintLogo( void )
 {
    printf( "Harbour Compiler, Build %i%s (%04d.%02d.%02d)\n",
-      hb_build, hb_revision, hb_year, hb_month, hb_day );
+      HB_VER_BUILD, HB_VER_REVISION, HB_VER_YEAR, HB_VER_MONTH, HB_VER_DAY );
    printf( "Copyright 1999-2000, http://www.harbour-project.org\n" );
 }
 

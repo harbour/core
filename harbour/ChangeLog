@@ -1,7 +1,58 @@
+20000306-13:25 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * include/hberrors.h
+     - Obsolete WARN_NONDIRECTIVE #define removed.
+   * include/hbdefs.h
+     + NOTE added.
+   * include/hbvmpub.h
+     compiler/genc.c
+     compiler/genhrb.c
+     compiler/genjava.c
+     compiler/genobj32.c
+     compiler/harbour.c
+     compiler/harbour.y
+     rdd/dbfcdx/dbfcdx1.c
+     rdd/dbfntx/dbfntx1.c
+     rdd/dbf1.c
+     rdd/delim1.c
+     rdd/sdf1.c
+     runner/runlib.c
+     vm/dynsym.c
+     vm/hvm.c
+     vm/initsymb.c
+     * FS_* macros renamed to _HB_FS_*
+   * include/hbver.h
+     compiler/genc.c
+     compiler/genjava.c
+     compiler/hbusage.c
+     pp/stdalone/hbpp.c
+     rtl/environ.c
+     * Version #define name prefixed with HB_VER_ and converted to
+       uppercase.
+   * include/hberrors.h
+     compiler/cmdcheck.c
+     compiler/genc.c
+     compiler/genhrb.c
+     compiler/genjava.c
+     compiler/genobj32.c
+     compiler/harbour.c
+     compiler/harbour.l
+     compiler/harbour.y
+     compiler/hbfunchk.c
+     compiler/hbgenerr.c
+     pp/stdalone/hbpp.c
+     pp/hbpp.c
+     * ERR_ and WARN_ macros prefixed with HB_COMP_ or HB_PP_.
+
+20000306-11:56 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * include/clipdefs.h
+     ! Includes hbapi.h instead of extend.h to avoid compile error
+       reported by Matteo.
+
 20000305-08:38 GMT-8 Brian Hays <bhays@abacuslaw.com>
    * tests/testop.prg
    * doc/en/command.txt
      + added Operator Overloading test and reference to it in METHOD Command
+
 20000306-04:43 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/rtl/cmdcheck.c
      ! -gc0 switch got removed. Added again.

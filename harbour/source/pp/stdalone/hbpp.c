@@ -94,8 +94,8 @@ int main( int argc, char * argv[] )
   HB_TRACE(HB_TR_DEBUG, ("main(%d, %p)", argc, argv));
 
   printf( "Harbour Preprocessor, Build %i%s (%04d.%02d.%02d)\n",
-          hb_build, hb_revision, hb_year, hb_month, hb_day );
-  printf( "Copyright 1999, http://www.harbour-project.org\n" );
+     HB_VER_BUILD, HB_VER_REVISION, HB_VER_YEAR, HB_VER_MONTH, HB_VER_DAY );
+  printf( "Copyright 1999-2000, http://www.harbour-project.org\n" );
 
   while( iArg < argc )
     {
@@ -568,7 +568,7 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
   HB_TRACE(HB_TR_DEBUG, ("hb_xgrab(%lu)", ulSize));
 
   if( ! pMem )
-    hb_compGenError( hb_pp_szErrors, 'P', ERR_PPMEMALLOC, NULL, NULL );
+    hb_compGenError( hb_pp_szErrors, 'P', HB_PP_ERR_MEMALLOC, NULL, NULL );
 
   return pMem;
 }
@@ -580,7 +580,7 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
   HB_TRACE(HB_TR_DEBUG, ("hb_xrealloc(%p, %lu)", pMem, ulSize));
 
   if( ! pResult )
-    hb_compGenError( hb_pp_szErrors, 'P', ERR_PPMEMREALLOC, NULL, NULL );
+    hb_compGenError( hb_pp_szErrors, 'P', HB_PP_ERR_MEMREALLOC, NULL, NULL );
 
   return pResult;
 }
@@ -592,7 +592,7 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
   if( pMem )
     free( pMem );
   else
-    hb_compGenError( hb_pp_szErrors, 'P', ERR_PPMEMFREE, NULL, NULL );
+    hb_compGenError( hb_pp_szErrors, 'P', HB_PP_ERR_MEMFREE, NULL, NULL );
 }
 
 BOOL hb_pp_fopen( char * szFileName )

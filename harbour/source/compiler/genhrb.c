@@ -59,7 +59,7 @@ void hb_compGenPortObj( PHB_FNAME pFileName )
    yyc = fopen( szFileName, "wb" );
    if( ! yyc )
    {
-      hb_compGenError( hb_comp_szErrors, 'E', ERR_CREATE_OUTPUT, szFileName, NULL );
+      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_CREATE_OUTPUT, szFileName, NULL );
       return;
    }
 
@@ -93,7 +93,7 @@ void hb_compGenPortObj( PHB_FNAME pFileName )
    {
       fputs( pSym->szName, yyc );
       fputc( 0, yyc );
-      if( pSym->cScope != FS_MESSAGE )
+      if( pSym->cScope != _HB_FS_MESSAGE )
          fputc( pSym->cScope, yyc );
       else
          fputc( 0, yyc );

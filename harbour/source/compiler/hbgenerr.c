@@ -144,61 +144,61 @@ void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, char * 
 HB_EXPR_PTR hb_compErrorLValue( HB_EXPR_PTR pExpr )
 {
    char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenError( hb_comp_szErrors, 'E', ERR_INVALID_LVALUE, szDesc, NULL );
+   hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_LVALUE, szDesc, NULL );
    return pExpr;
 }
 
 HB_EXPR_PTR hb_compErrorType( HB_EXPR_PTR pExpr )
 {
    char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenError( hb_comp_szErrors, 'E', ERR_INVALID_TYPE, szDesc, NULL );
+   hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_TYPE, szDesc, NULL );
    return pExpr;
 }
 
 HB_EXPR_PTR hb_compErrorIndex( HB_EXPR_PTR pExpr )
 {
    char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenError( hb_comp_szErrors, 'E', ERR_INVALID_INDEX, szDesc, NULL );
+   hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_INDEX, szDesc, NULL );
    return pExpr;
 }
 
 HB_EXPR_PTR hb_compErrorBound( HB_EXPR_PTR pExpr )
 {
    char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenError( hb_comp_szErrors, 'E', ERR_INVALID_BOUND, szDesc, NULL );
+   hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_BOUND, szDesc, NULL );
    return pExpr;
 }
 
 HB_EXPR_PTR hb_compErrorSyntax( HB_EXPR_PTR pExpr )
 {
    char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenError( hb_comp_szErrors, 'E', ERR_SYNTAX, szDesc, NULL );
+   hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX, szDesc, NULL );
    return pExpr;
 }
 
 HB_EXPR_PTR hb_compErrorAlias(  HB_EXPR_PTR pExpr )
 {
    char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenError( hb_comp_szErrors, 'E', ERR_INVALID_ALIAS, szDesc, NULL );
+   hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_ALIAS, szDesc, NULL );
    return pExpr;
 }
 
 HB_EXPR_PTR hb_compErrorStatic( char * szVarName, HB_EXPR_PTR pExpr )
 {
    char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenError( hb_comp_szErrors, 'E', ERR_ILLEGAL_INIT, szVarName, szDesc );
+   hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_ILLEGAL_INIT, szVarName, szDesc );
    return pExpr;
 }
 
 void hb_compErrorDuplVar( char * szVarName )
 {
-   hb_compGenError( hb_comp_szErrors, 'E', ERR_VAR_DUPL, szVarName, NULL );
+   hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_VAR_DUPL, szVarName, NULL );
 }
 
 HB_EXPR_PTR hb_compWarnMeaningless( HB_EXPR_PTR pExpr )
 {
    char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenWarning(  hb_comp_szWarnings, 'W', WARN_MEANINGLESS, szDesc, NULL );
+   hb_compGenWarning(  hb_comp_szWarnings, 'W', HB_COMP_WARN_MEANINGLESS, szDesc, NULL );
    return pExpr;
 }
 

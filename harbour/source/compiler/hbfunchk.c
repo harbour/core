@@ -144,7 +144,7 @@ void hb_compFunCallCheck( char * szFuncCall, int iArgs )
       {
 #if defined( HARBOUR_STRICT_CLIPPER_COMPATIBILITY )
          /* Clipper way */
-         hb_compGenError( hb_comp_szErrors, 'E', ERR_CHECKING_ARGS, szFuncCall, NULL );
+         hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_CHECKING_ARGS, szFuncCall, NULL );
 #else
          char szMsg[ 40 ];
 
@@ -155,7 +155,7 @@ void hb_compFunCallCheck( char * szFuncCall, int iArgs )
          else
             sprintf( szMsg, "\nPassed: %i, expected: %i - %i", iArgs, f[ iPos ].iMinParam, f[ iPos ].iMaxParam );
 
-         hb_compGenError( hb_comp_szErrors, 'E', ERR_CHECKING_ARGS, szFuncCall, szMsg );
+         hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_CHECKING_ARGS, szFuncCall, szMsg );
 #endif
       }
    }

@@ -85,7 +85,7 @@ PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
    pDynSym = hb_dynsymFind( pSymbol->szName ); /* Find position */
    if( pDynSym )            /* If name exists */
    {
-      if( ! ( pSymbol->cScope & ( FS_STATIC | FS_INIT | FS_EXIT ) ) ) /* only for FS_PUBLIC */
+      if( ! ( pSymbol->cScope & ( _HB_FS_STATIC | _HB_FS_INIT | _HB_FS_EXIT ) ) ) /* only for _HB_FS_PUBLIC */
       {
          if( ( ! pDynSym->pFunPtr ) && pSymbol->pFunPtr ) /* The DynSym existed */
             pDynSym->pFunPtr = pSymbol->pFunPtr;  /* but had no function ptr assigned */
@@ -118,7 +118,7 @@ PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
    pDynSym->hMemvar = 0;
    pDynSym->hArea   = 0;
 
-   if( ! ( pSymbol->cScope & ( FS_STATIC | FS_INIT | FS_EXIT ) ) ) /* only for FS_PUBLIC */
+   if( ! ( pSymbol->cScope & ( _HB_FS_STATIC | _HB_FS_INIT | _HB_FS_EXIT ) ) ) /* only for _HB_FS_PUBLIC */
    {
       if( pDynSym->pFunPtr != pSymbol->pFunPtr ) /* it contains a function pointer */
          pDynSym->pFunPtr = pSymbol->pFunPtr;    /* place the function at DynSym */

@@ -100,8 +100,8 @@ HARBOUR HB__DBFC( void );
 HARBOUR HB_DBF_GETFUNCTABLE( void );
 
 HB_INIT_SYMBOLS_BEGIN( dbf1__InitSymbols )
-{ "_DBFC",            FS_PUBLIC, HB__DBFC,            0 },
-{ "DBF_GETFUNCTABLE", FS_PUBLIC, HB_DBF_GETFUNCTABLE, 0 }
+{ "_DBFC",            _HB_FS_PUBLIC, HB__DBFC,            0 },
+{ "DBF_GETFUNCTABLE", _HB_FS_PUBLIC, HB_DBF_GETFUNCTABLE, 0 }
 HB_INIT_SYMBOLS_END( dbf1__InitSymbols )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
    #pragma startup dbf1__InitSymbols

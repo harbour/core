@@ -199,7 +199,7 @@ extern POBJSYMBOLS HB_FIRSTSYMBOL, HB_LASTSYMBOL;
 /* virtual machine state */
 
 HB_STACK hb_stack;
-HB_SYMB  hb_symEval = { "__EVAL", FS_PUBLIC, hb_vmDoBlock, NULL }; /* symbol to evaluate codeblocks */
+HB_SYMB  hb_symEval = { "__EVAL", _HB_FS_PUBLIC, hb_vmDoBlock, NULL }; /* symbol to evaluate codeblocks */
 
 static HB_ITEM  s_aStatics;         /* Harbour array to hold all application statics variables */
 static PHB_SYMB s_pSymStart = NULL; /* start symbol of the application. MAIN() is not required */
@@ -286,7 +286,7 @@ void hb_vmInit( BOOL bStartMainProc )
       int i;
       int iArgCount;
 
-      hb_vmPushSymbol( s_pSymStart ); /* pushes first FS_PUBLIC defined symbol to the stack */
+      hb_vmPushSymbol( s_pSymStart ); /* pushes first _HB_FS_PUBLIC defined symbol to the stack */
       hb_vmPushNil();                 /* places NIL at self */
 
       iArgCount = 0;
@@ -2676,7 +2676,7 @@ static void hb_vmSFrame( PHB_SYMB pSym )      /* sets the statics frame for a fu
    HB_TRACE(HB_TR_DEBUG, ("hb_vmSFrame(%p)", pSym));
 
    /* _INITSTATICS is now the statics frame. Statics() changed it! */
-   hb_stack.iStatics = ( int ) pSym->pFunPtr; /* pSym is { "$_INITSTATICS", FS_INIT | FS_EXIT, _INITSTATICS } for each PRG */
+   hb_stack.iStatics = ( int ) pSym->pFunPtr; /* pSym is { "$_INITSTATICS", _HB_FS_INIT | _HB_FS_EXIT, _INITSTATICS } for each PRG */
 }
 
 static void hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ) /* initializes the global aStatics array or redimensionates it */
@@ -3577,10 +3577,10 @@ void hb_vmProcessSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols ) /* m
 
       hSymScope = ( pModuleSymbols + ui )->cScope;
       pNewSymbols->hScope |= hSymScope;
-      if( ( ! s_pSymStart ) && ( hSymScope == FS_PUBLIC ) )
+      if( ( ! s_pSymStart ) && ( hSymScope == _HB_FS_PUBLIC ) )
          s_pSymStart = pModuleSymbols + ui;  /* first public defined symbol to start execution */
 
-      if( ( hSymScope == FS_PUBLIC ) || ( hSymScope & ( FS_MESSAGE | FS_MEMVAR ) ) )
+      if( ( hSymScope == _HB_FS_PUBLIC ) || ( hSymScope & ( _HB_FS_MESSAGE | _HB_FS_MEMVAR ) ) )
          hb_dynsymNew( pModuleSymbols + ui );
    }
 }
@@ -3622,7 +3622,7 @@ static void hb_vmReleaseLocalSymbols( void )
 }
 
 /* This calls all _INITSTATICS functions defined in the application.
- * We are using a special symbol's scope ( FS_INIT | FS_EXIT ) to mark
+ * We are using a special symbol's scope ( _HB_FS_INIT | _HB_FS_EXIT ) to mark
  * this function. These two bits cannot be marked at the same
  * time for normal user defined functions.
  */
@@ -3634,15 +3634,15 @@ static void hb_vmDoInitStatics( void )
 
    do
    {
-      if( ( pLastSymbols->hScope & ( FS_INIT | FS_EXIT ) ) == ( FS_INIT | FS_EXIT ) )
+      if( ( pLastSymbols->hScope & ( _HB_FS_INIT | _HB_FS_EXIT ) ) == ( _HB_FS_INIT | _HB_FS_EXIT ) )
       {
          USHORT ui;
 
          for( ui = 0; ui < pLastSymbols->uiModuleSymbols; ui++ )
          {
-            HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->cScope & ( FS_EXIT | FS_INIT );
+            HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->cScope & ( _HB_FS_EXIT | _HB_FS_INIT );
 
-            if( scope == ( FS_INIT | FS_EXIT ) )
+            if( scope == ( _HB_FS_INIT | _HB_FS_EXIT ) )
             {
                hb_vmPushSymbol( pLastSymbols->pModuleSymbols + ui );
                hb_vmPushNil();
@@ -3664,15 +3664,15 @@ static void hb_vmDoExitFunctions( void )
    do
    {
       /* only if module contains some EXIT functions */
-      if( pLastSymbols->hScope & FS_EXIT )
+      if( pLastSymbols->hScope & _HB_FS_EXIT )
       {
          USHORT ui;
 
          for( ui = 0; ui < pLastSymbols->uiModuleSymbols; ui++ )
          {
-            HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->cScope & ( FS_EXIT | FS_INIT );
+            HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->cScope & ( _HB_FS_EXIT | _HB_FS_INIT );
 
-            if( scope == FS_EXIT )
+            if( scope == _HB_FS_EXIT )
             {
                hb_vmPushSymbol( pLastSymbols->pModuleSymbols + ui );
                hb_vmPushNil();
@@ -3698,15 +3698,15 @@ static void hb_vmDoInitFunctions( void )
    do
    {
       /* only if module contains some INIT functions */
-      if( pLastSymbols->hScope & FS_INIT )
+      if( pLastSymbols->hScope & _HB_FS_INIT )
       {
          USHORT ui;
 
          for( ui = 0; ui < pLastSymbols->uiModuleSymbols; ui++ )
          {
-            HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->cScope & ( FS_EXIT | FS_INIT );
+            HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->cScope & ( _HB_FS_EXIT | _HB_FS_INIT );
 
-            if( scope == FS_INIT )
+            if( scope == _HB_FS_INIT )
             {
                int argc = hb_cmdargARGC();
                char ** argv = hb_cmdargARGV();

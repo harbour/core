@@ -206,7 +206,7 @@ HARBOUR HB___HRBRUN( void )
                {
                   /* Exists and NOT static ?  */
 /*                if(    hb_dynsymFind( pSymRead[ ul ].szName ) &&
-                      !( pSymRead[ ul ].cScope & FS_STATIC ) )
+                      !( pSymRead[ ul ].cScope & _HB_FS_STATIC ) )
                   {
                      hb_errRT_BASE( EG_ARG, 9999, "Duplicate symbol", pSymRead[ ul ].szName );
                      bError = TRUE;
@@ -241,7 +241,7 @@ HARBOUR HB___HRBRUN( void )
              */
             for( ul = 0; ul < ulSymbols; ul++ )    /* Check INIT functions     */
             {
-               if( ( pSymRead[ ul ].cScope & FS_INITEXIT ) == FS_INITEXIT )
+               if( ( pSymRead[ ul ].cScope & _HB_FS_INITEXIT ) == _HB_FS_INITEXIT )
                {
                   /* call (_INITSTATICS) function. This function assigns
                    * literal values to static variables only. There is no need
@@ -253,7 +253,7 @@ HARBOUR HB___HRBRUN( void )
             }
             for( ul = 0; ul < ulSymbols; ul++ )    /* Check INIT functions     */
             {
-               if( ( pSymRead[ ul ].cScope & FS_INITEXIT ) == FS_INIT )
+               if( ( pSymRead[ ul ].cScope & _HB_FS_INITEXIT ) == _HB_FS_INIT )
                {
                   hb_vmPushSymbol( pSymRead + ul );
                   hb_vmPushNil();
@@ -275,12 +275,12 @@ HARBOUR HB___HRBRUN( void )
 
             for( ul = 0; ul < ulSymbols; ul++ )    /* Check EXIT functions     */
             {
-               if( ( pSymRead[ ul ].cScope & FS_INITEXIT ) == FS_EXIT )
+               if( ( pSymRead[ ul ].cScope & _HB_FS_INITEXIT ) == _HB_FS_EXIT )
                {
                   hb_vmPushSymbol( pSymRead + ul );
                   hb_vmPushNil();
                   hb_vmDo( 0 );                        /* Run exit function        */
-                  pSymRead[ ul ].cScope = pSymRead[ ul ].cScope & ( ~FS_EXIT );
+                  pSymRead[ ul ].cScope = pSymRead[ ul ].cScope & ( ~_HB_FS_EXIT );
                                                   /* Exit function cannot be
                                                      handled by main in hvm.c */
                }

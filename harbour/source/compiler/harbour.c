@@ -174,7 +174,7 @@ int main( int argc, char * argv[] )
          hb_comp_yyppo = fopen( szPpoName, "w" );
          if( ! hb_comp_yyppo )
          {
-            hb_compGenError( hb_comp_szErrors, 'F', ERR_CREATE_PPO, szPpoName, NULL );
+            hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_CREATE_PPO, szPpoName, NULL );
             return iStatus;
          }
       }
@@ -277,7 +277,7 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
    void * pMem = malloc( ulSize );
 
    if( ! pMem )
-      hb_compGenError( hb_comp_szErrors, 'F', ERR_MEMALLOC, NULL, NULL );
+      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_MEMALLOC, NULL, NULL );
 
    return pMem;
 }
@@ -287,7 +287,7 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
    void * pResult = realloc( pMem, ulSize );
 
    if( ! pResult )
-      hb_compGenError( hb_comp_szErrors, 'F', ERR_MEMREALLOC, NULL, NULL );
+      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_MEMREALLOC, NULL, NULL );
 
    return pResult;
 }
@@ -297,7 +297,7 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
    if( pMem )
       free( pMem );
    else
-      hb_compGenError( hb_comp_szErrors, 'F', ERR_MEMFREE, NULL, NULL );
+      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_MEMFREE, NULL, NULL );
 }
 
 /* ------------------------------------------------------------------------- */
@@ -362,7 +362,7 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
       /* Variable declaration is outside of function/procedure body.
          In this case only STATIC and PARAMETERS variables are allowed. */
       --hb_comp_iLine;
-      hb_compGenError( hb_comp_szErrors, 'E', ERR_OUTSIDE, NULL, NULL );
+      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_OUTSIDE, NULL, NULL );
       return;
    }
 
@@ -373,7 +373,7 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
    if( ( hb_comp_functions.pLast->bFlags & FUN_STATEMENTS ) && !( hb_comp_iVarScope == VS_FIELD || ( hb_comp_iVarScope & VS_MEMVAR ) ) )
    {
       --hb_comp_iLine;
-      hb_compGenError( hb_comp_szErrors, 'E', ERR_FOLLOWS_EXEC, ( hb_comp_iVarScope == VS_LOCAL ? "LOCAL" : "STATIC" ), NULL );
+      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_FOLLOWS_EXEC, ( hb_comp_iVarScope == VS_LOCAL ? "LOCAL" : "STATIC" ), NULL );
    }
 
    /* Check if a declaration of duplicated variable name is requested */
@@ -557,11 +557,11 @@ BOOL hb_compVariableMacroCheck( char * szVarName )
    BOOL bValid = FALSE;
 
    if( hb_compLocalGetPos( szVarName ) > 0 )
-      hb_compGenError( hb_comp_szErrors, 'E', ERR_BAD_MACRO, szVarName, NULL );
+      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szVarName, NULL );
    else if( hb_compStaticGetPos( szVarName, hb_comp_functions.pLast ) > 0 )
-      hb_compGenError( hb_comp_szErrors, 'E', ERR_BAD_MACRO, szVarName, NULL );
+      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szVarName, NULL );
    else if( hb_compFieldGetPos( szVarName, hb_comp_functions.pLast ) > 0 )
-      hb_compGenError( hb_comp_szErrors, 'E', ERR_BAD_MACRO, szVarName, NULL );
+      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szVarName, NULL );
    else if( ! hb_comp_bStartProc )
    {
       if( hb_compMemvarGetPos( szVarName, hb_comp_functions.pLast ) == 0 )
@@ -569,9 +569,9 @@ BOOL hb_compVariableMacroCheck( char * szVarName )
          /* This is not a local MEMVAR
           */
          if( hb_compFieldGetPos( szVarName, hb_comp_functions.pFirst ) > 0 )
-            hb_compGenError( hb_comp_szErrors, 'E', ERR_BAD_MACRO, szVarName, NULL );
+            hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szVarName, NULL );
          else if( hb_compStaticGetPos( szVarName, hb_comp_functions.pFirst ) > 0 )
-            hb_compGenError( hb_comp_szErrors, 'E', ERR_BAD_MACRO, szVarName, NULL );
+            hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szVarName, NULL );
          else
             bValid = TRUE;    /* undeclared variable */
       }
@@ -659,7 +659,7 @@ void hb_compFunctionAdd( char * szFunName, HB_SYMBOLSCOPE cScope, int iType )
       /* The name of a function/procedure is already defined */
       if( ( pFunc != hb_comp_functions.pFirst ) || hb_comp_bStartProc )
          /* it is not a starting procedure that was automatically created */
-         hb_compGenError( hb_comp_szErrors, 'F', ERR_FUNC_DUPL, szFunName, NULL );
+         hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_FUNC_DUPL, szFunName, NULL );
    }
 
    szFunction = hb_compReservedName( szFunName );
@@ -668,7 +668,7 @@ void hb_compFunctionAdd( char * szFunName, HB_SYMBOLSCOPE cScope, int iType )
       /* We are ignoring it when it is the name of PRG file and we are
        * not creating implicit starting procedure
        */
-      hb_compGenError( hb_comp_szErrors, 'E', ERR_FUNC_RESERVED, szFunction, szFunName );
+      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_FUNC_RESERVED, szFunction, szFunName );
    }
 
    hb_comp_iFunctionCnt++;
@@ -678,7 +678,7 @@ void hb_compFunctionAdd( char * szFunName, HB_SYMBOLSCOPE cScope, int iType )
       /* there is not a symbol on the symbol table for this function name */
       pSym = hb_compSymbolAdd( szFunName, NULL );
 
-   if( cScope != FS_PUBLIC )
+   if( cScope != _HB_FS_PUBLIC )
       pSym->cScope |= cScope; /* we may have a non public function and a object message */
 
    pFunc = hb_compFunctionNew( szFunName, cScope );
@@ -723,8 +723,8 @@ void hb_compAnnounce( char * szFunName )
       /* there is a function/procedure defined already - ANNOUNCEd procedure
        * have to be a public symbol - check if existing symbol is public
        */
-      if( pFunc->cScope & FS_STATIC )
-         hb_compGenError( hb_comp_szErrors, 'F', ERR_FUNC_ANNOUNCE, szFunName, NULL );
+      if( pFunc->cScope & _HB_FS_STATIC )
+         hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_FUNC_ANNOUNCE, szFunName, NULL );
    }
    else
    {
@@ -733,9 +733,9 @@ void hb_compAnnounce( char * szFunName )
       /* create a new procedure
        */
       pSym = hb_compSymbolAdd( szFunName, NULL );
-      pSym->cScope = FS_PUBLIC;
+      pSym->cScope = _HB_FS_PUBLIC;
 
-      pFunc = hb_compFunctionNew( szFunName, FS_PUBLIC );
+      pFunc = hb_compFunctionNew( szFunName, _HB_FS_PUBLIC );
       pFunc->bFlags |= FUN_PROCEDURE;
 
       if( hb_comp_functions.iCount == 0 )
@@ -960,7 +960,7 @@ static int hb_compLocalGetPos( char * szVarName ) /* returns the order + 1 of a 
          while( pFunc )
          {
             bStatic = FALSE;
-            if( ( pFunc->cScope & (FS_INIT | FS_EXIT) ) == (FS_INIT | FS_EXIT) )
+            if( ( pFunc->cScope & ( _HB_FS_INIT | _HB_FS_EXIT ) ) == ( _HB_FS_INIT | _HB_FS_EXIT ) )
             {
                /* we are in a codeblock used to initialize a static variable -
                 * skip to a function where this static variable was declared
@@ -978,7 +978,7 @@ static int hb_compLocalGetPos( char * szVarName ) /* returns the order + 1 of a 
                   * It is not possible to access a parameter of a codeblock in which
                   * the current codeblock is defined
                   */
-                  hb_compGenError( hb_comp_szErrors, 'E', ERR_OUTER_VAR, szVarName, NULL );
+                  hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_OUTER_VAR, szVarName, NULL );
                   return iVar;
                }
                else if( bStatic )
@@ -997,7 +997,7 @@ static int hb_compLocalGetPos( char * szVarName ) /* returns the order + 1 of a 
                    * 'bound error: array acccess'
                    * Called from: (b)STATICS$(0)
                    */
-                  hb_compGenError( hb_comp_szErrors, 'E', ERR_ILLEGAL_INIT, "(b)", szVarName );
+                  hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_ILLEGAL_INIT, "(b)", szVarName );
                   return iVar;
                }
                else
@@ -1211,7 +1211,7 @@ ULONG hb_compGenJump( LONG lOffset )
    /* TODO: We need a longer offset (longer then two bytes)
     */
    if( lOffset < ( LONG ) SHRT_MIN || lOffset > ( LONG ) SHRT_MAX )
-      hb_compGenError( hb_comp_szErrors, 'F', ERR_JUMP_TOO_LONG, NULL, NULL );
+      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
 
    hb_compGenPCode3( HB_P_JUMP, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
 
@@ -1223,7 +1223,7 @@ ULONG hb_compGenJumpFalse( LONG lOffset )
    /* TODO: We need a longer offset (longer then two bytes)
     */
    if( lOffset < ( LONG ) SHRT_MIN || lOffset > ( LONG ) SHRT_MAX )
-      hb_compGenError( hb_comp_szErrors, 'F', ERR_JUMP_TOO_LONG, NULL, NULL );
+      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
 
    hb_compGenPCode3( HB_P_JUMPFALSE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
 
@@ -1238,7 +1238,7 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
    /* TODO: We need a longer offset (longer then two bytes)
     */
    if( lOffset < ( LONG ) SHRT_MIN || lOffset > ( LONG ) SHRT_MAX )
-      hb_compGenError( hb_comp_szErrors, 'F', ERR_JUMP_TOO_LONG, NULL, NULL );
+      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
 
    pCode[ ( ULONG ) ulFrom ]     = HB_LOBYTE( lOffset );
    pCode[ ( ULONG ) ulFrom + 1 ] = HB_HIBYTE( lOffset );
@@ -1254,7 +1254,7 @@ ULONG hb_compGenJumpTrue( LONG lOffset )
    /* TODO: We need a longer offset (longer then two bytes)
     */
    if( lOffset < ( LONG ) SHRT_MIN || lOffset > ( LONG ) SHRT_MAX )
-      hb_compGenError( hb_comp_szErrors, 'F', ERR_JUMP_TOO_LONG, NULL, NULL );
+      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
    hb_compGenPCode3( HB_P_JUMPTRUE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
 
    return hb_comp_functions.pLast->lPCodePos - 2;
@@ -1279,7 +1279,7 @@ void hb_compLinePush( void ) /* generates the pcode with the currently compiled 
    if( hb_comp_functions.pLast->bFlags & FUN_BREAK_CODE )
    {
       /* previous line contained RETURN/BREAK/LOOP/EXIT statement */
-      hb_compGenWarning( hb_comp_szWarnings, 'W', WARN_UNREACHABLE, NULL, NULL );
+      hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_UNREACHABLE, NULL, NULL );
    }
    hb_comp_bDontGenLineNum = FALSE;
    /* clear RETURN/BREAK flag */
@@ -1298,7 +1298,7 @@ void hb_compLinePushIfDebugger( void )
       if( hb_comp_functions.pLast->bFlags & FUN_BREAK_CODE )
       {
          /* previous line contained RETURN/BREAK/LOOP/EXIT statement */
-         hb_compGenWarning( hb_comp_szWarnings, 'W', WARN_UNREACHABLE, NULL, NULL );
+         hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_UNREACHABLE, NULL, NULL );
       }
       hb_comp_functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );  /* clear RETURN flag */
    }
@@ -1315,7 +1315,7 @@ void hb_compLinePushIfInside( void ) /* generates the pcode with the currently c
       hb_comp_bExternal = FALSE;
       if( ! hb_comp_bStartProc && hb_comp_functions.iCount <= 1 )
       {
-         hb_compGenError( hb_comp_szErrors, 'E', ERR_OUTSIDE, NULL, NULL );
+         hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_OUTSIDE, NULL, NULL );
       }
    }
 
@@ -1341,7 +1341,7 @@ static void hb_compGenVariablePCode( BYTE bPCode, char * szVarName )
    {
       /* -v switch was used -> assume it is a memvar variable
        */
-      hb_compGenWarning( hb_comp_szWarnings, 'W', WARN_MEMVAR_ASSUMED, szVarName, NULL );
+      hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_MEMVAR_ASSUMED, szVarName, NULL );
 
       if( bPCode == HB_P_POPVARIABLE )
          bPCode = HB_P_POPMEMVAR;
@@ -1351,7 +1351,7 @@ static void hb_compGenVariablePCode( BYTE bPCode, char * szVarName )
          bPCode = HB_P_PUSHMEMVARREF;
    }
    else
-      hb_compGenWarning( hb_comp_szWarnings, 'W', WARN_AMBIGUOUS_VAR, szVarName, NULL );
+      hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_AMBIGUOUS_VAR, szVarName, NULL );
 
    hb_compGenVarPCode( bPCode, szVarName );
 }
@@ -1412,7 +1412,7 @@ void hb_compGenMessage( char * szMsgName )       /* sends a message to an object
 
    if( ! pSym )  /* the symbol was not found on the symbol table */
       pSym = hb_compSymbolAdd( szMsgName, &wSym );
-   pSym->cScope |= FS_MESSAGE;
+   pSym->cScope |= _HB_FS_MESSAGE;
    hb_compGenPCode3( HB_P_MESSAGE, HB_LOBYTE( wSym ), HB_HIBYTE( wSym ) );
 }
 
@@ -1455,7 +1455,7 @@ void hb_compGenPopVar( char * szVarName ) /* generates the pcode to pop a value 
        * initialization function - if YES then we have to switch to a function
        * where the static variable was declared
        */      
-      if( ( hb_comp_functions.pLast->cScope & (FS_INIT | FS_EXIT) ) == (FS_INIT | FS_EXIT) )
+      if( ( hb_comp_functions.pLast->cScope & ( _HB_FS_INIT | _HB_FS_EXIT ) ) == ( _HB_FS_INIT | _HB_FS_EXIT ) )
           pFunc = hb_comp_functions.pLast->pOwner;
       else
           pFunc = hb_comp_functions.pLast;
@@ -1700,7 +1700,7 @@ void hb_compGenPushVarRef( char * szVarName ) /* generates the pcode to push a v
          if( iVar )
          {
             /* pushing fields by reference is not allowed */
-            hb_compGenError( hb_comp_szErrors, 'E', ERR_INVALID_REFER, szVarName, NULL );
+            hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_REFER, szVarName, NULL );
          }
          else
          {
@@ -1729,7 +1729,7 @@ void hb_compGenPushVarRef( char * szVarName ) /* generates the pcode to push a v
                   if( iVar )
                   {
                      /* pushing fields by reference is not allowed */
-                     hb_compGenError( hb_comp_szErrors, 'E', ERR_INVALID_REFER, szVarName, NULL );
+                     hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_REFER, szVarName, NULL );
                   }
                   else
                   {
@@ -1926,7 +1926,7 @@ void hb_compFixReturns( void ) /* fixes all last defined function returns jumps 
       while( pVar )
       {
          if( pVar->szName && hb_comp_functions.pLast->szName && hb_comp_functions.pLast->szName[0] && ! pVar->iUsed )
-            hb_compGenWarning( hb_comp_szWarnings, 'W', WARN_VAR_NOT_USED, pVar->szName, hb_comp_functions.pLast->szName );
+            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, hb_comp_functions.pLast->szName );
 
          pVar = pVar->pNext;
       }
@@ -1935,7 +1935,7 @@ void hb_compFixReturns( void ) /* fixes all last defined function returns jumps 
       while( pVar )
       {
          if( pVar->szName && hb_comp_functions.pLast->szName && hb_comp_functions.pLast->szName[0] && ! pVar->iUsed )
-            hb_compGenWarning( hb_comp_szWarnings, 'W', WARN_VAR_NOT_USED, pVar->szName, hb_comp_functions.pLast->szName );
+            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, hb_comp_functions.pLast->szName );
 
          pVar = pVar->pNext;
       }
@@ -1944,7 +1944,7 @@ void hb_compFixReturns( void ) /* fixes all last defined function returns jumps 
        */
       if( (hb_comp_functions.pLast->bFlags & FUN_WITH_RETURN) == 0 &&
           (hb_comp_functions.pLast->bFlags & FUN_PROCEDURE) == 0 )
-         hb_compGenWarning( hb_comp_szWarnings, 'W', WARN_FUN_WITH_NO_RETURN,
+         hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_FUN_WITH_NO_RETURN,
                      hb_comp_functions.pLast->szName, NULL );
    }
 }
@@ -2043,10 +2043,10 @@ void hb_compStaticDefStart( void )
    {
       BYTE pBuffer[ 5 ];
 
-      hb_comp_pInitFunc = hb_compFunctionNew( hb_strdup("(_INITSTATICS)"), FS_INIT );
+      hb_comp_pInitFunc = hb_compFunctionNew( hb_strdup("(_INITSTATICS)"), _HB_FS_INIT );
       hb_comp_pInitFunc->pOwner = hb_comp_functions.pLast;
       hb_comp_pInitFunc->bFlags = FUN_USES_STATICS | FUN_PROCEDURE;
-      hb_comp_pInitFunc->cScope = FS_INIT | FS_EXIT;
+      hb_comp_pInitFunc->cScope = _HB_FS_INIT | _HB_FS_EXIT;
       hb_comp_functions.pLast = hb_comp_pInitFunc;
 
       pBuffer[ 0 ] = HB_P_STATICS;
@@ -2080,7 +2080,7 @@ void hb_compStaticDefEnd( void )
 */
 void hb_compCodeBlockStart()
 {
-   PFUNCTION pFunc = hb_compFunctionNew( NULL, FS_STATIC );
+   PFUNCTION pFunc = hb_compFunctionNew( NULL, _HB_FS_STATIC );
 
    pFunc->pOwner       = hb_comp_functions.pLast;
    pFunc->iStaticsBase = hb_comp_functions.pLast->iStaticsBase;
@@ -2158,7 +2158,7 @@ void hb_compCodeBlockEnd( void )
    while( pVar )
    {
       if( hb_comp_iWarnings && pFunc->szName && pVar->szName && ! pVar->iUsed )
-         hb_compGenWarning( hb_comp_szWarnings, 'W', WARN_BLOCKVAR_NOT_USED, pVar->szName, pFunc->szName );
+         hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_BLOCKVAR_NOT_USED, pVar->szName, pFunc->szName );
 
       /* free used variables */
       pFree = pVar;

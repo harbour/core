@@ -41,7 +41,7 @@
 #ifndef _CLIPDEFS_H
 #define _CLIPDEFS_H
         
-#include "extend.h"
+#include "hbapi.h"
 
 /* Old types */
 

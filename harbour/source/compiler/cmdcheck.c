@@ -180,7 +180,7 @@ void hb_compChkEnvironVar( char * szSwitch )
          show an error
       */
       if( !HB_ISOPTSEP( *s ) )
-         hb_compGenError( hb_comp_szErrors, 'F', ERR_BADOPTION, s, NULL );
+         hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
       else
       {
          s++;
@@ -219,7 +219,7 @@ void hb_compChkEnvironVar( char * szSwitch )
                       hb_comp_bCredits = TRUE;
                    }
                    else
-                      hb_compGenError( hb_comp_szErrors, 'F', ERR_BADOPTION, szCredits, NULL );
+                      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, szCredits, NULL );
 
                    free( szCredits );
                 }
@@ -266,11 +266,11 @@ void hb_compChkEnvironVar( char * szSwitch )
                          break;
 
                       default:
-                         hb_compGenError( hb_comp_szErrors, 'F', ERR_BADOPTION, s, NULL );
+                         hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
                    }              
                 }
                 else
-                   hb_compGenError( hb_comp_szErrors, 'F', ERR_BADOPTION, s, NULL );
+                   hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
 
                 break;
 
@@ -294,7 +294,7 @@ void hb_compChkEnvironVar( char * szSwitch )
                             break;
                       
                          default:
-                            hb_compGenError( hb_comp_szErrors, 'F', ERR_BADOPTION, s, NULL );
+                            hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
                       }
                       break;
 
@@ -430,7 +430,7 @@ void hb_compChkEnvironVar( char * szSwitch )
                   {  /*there is -w<0,1,2,3> probably */
                      hb_comp_iWarnings = s[ 1 ] - '0';
                      if( hb_comp_iWarnings < 0 || hb_comp_iWarnings > 3 )
-                        hb_compGenError( hb_comp_szErrors, 'F', ERR_BADOPTION, s, NULL );
+                        hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
                   }
                 break;
 
@@ -467,7 +467,7 @@ void hb_compChkEnvironVar( char * szSwitch )
                 break;
 
              default:
-                hb_compGenError( hb_comp_szErrors, 'F', ERR_BADOPTION, s, NULL );
+                hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
                 break;
          }
       }
@@ -482,7 +482,7 @@ void hb_compChkCompileFileName( int iArg, char * Args[] )
       multiple file name in command line and @file.clp syntax
    */
    if( hb_comp_pFileName )
-      hb_compGenError( hb_comp_szErrors, 'F', ERR_BADPARAM, Args[ iArg ], NULL );
+      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADPARAM, Args[ iArg ], NULL );
 
    if( iArg )
    {
@@ -506,7 +506,7 @@ void hb_compChkCompileFileName( int iArg, char * Args[] )
                hb_comp_pFileName = hb_fsFNameSplit( Args[ i ] );
 
                if( ! hb_comp_pFileName->szName )
-                  hb_compGenError( hb_comp_szErrors, 'F', ERR_BADFILENAME, Args[ iArg ], NULL );
+                  hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADFILENAME, Args[ iArg ], NULL );
             }
          }
       }

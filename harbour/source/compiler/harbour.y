@@ -267,10 +267,10 @@ Function   : FunScope FUNCTION  IdentName { hb_comp_cVarType = ' '; hb_compFunct
            | FunScope DECLARE_FUN IdentName Params AsType Crlf { hb_compSymbolAdd( $3, NULL ); }
            ;
 
-FunScope   :                  { $$ = FS_PUBLIC; }
-           | STATIC           { $$ = FS_STATIC; }
-           | INIT             { $$ = FS_INIT; }
-           | EXIT             { $$ = FS_EXIT; }
+FunScope   :                  { $$ = _HB_FS_PUBLIC; }
+           | STATIC           { $$ = _HB_FS_STATIC; }
+           | INIT             { $$ = _HB_FS_INIT; }
+           | EXIT             { $$ = _HB_FS_EXIT; }
            ;
 
 Params     :                                               { $$ = 0; }
@@ -318,12 +318,12 @@ Statement  : ExecFlow   CrlfStmnt   { }
            | RETURN CrlfStmnt {
                      if( hb_comp_wSeqCounter )
                         {
-                           hb_compGenError( hb_comp_szErrors, 'E', ERR_EXIT_IN_SEQUENCE, "RETURN", NULL );
+                           hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "RETURN", NULL );
                         }
                         hb_compGenPCode1( HB_P_ENDPROC );
                         if( (hb_comp_functions.pLast->bFlags & FUN_PROCEDURE) == 0 )
                         { /* return from a function without a return value */
-                           hb_compGenWarning( hb_comp_szWarnings, 'W', WARN_NO_RETURN_VALUE, NULL, NULL );
+                           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_NO_RETURN_VALUE, NULL, NULL );
                         }
                         hb_comp_functions.pLast->bFlags |= FUN_WITH_RETURN;
                         hb_comp_bDontGenLineNum = TRUE;
@@ -332,14 +332,14 @@ Statement  : ExecFlow   CrlfStmnt   { }
            | RETURN { hb_compLinePushIfInside(); } Expression Crlf {
                         if( hb_comp_wSeqCounter )
                         {
-                           hb_compGenError( hb_comp_szErrors, 'E', ERR_EXIT_IN_SEQUENCE, "RETURN", NULL );
+                           hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "RETURN", NULL );
                         }
                         hb_compExprGenPush( $3 );   /* TODO: check if return value agree with declared value */
                         hb_compGenPCode1( HB_P_RETVALUE );
                         hb_compGenPCode1( HB_P_ENDPROC );
                         if( hb_comp_functions.pLast->bFlags & FUN_PROCEDURE )
                         { /* procedure returns a value */
-                           hb_compGenWarning( hb_comp_szWarnings, 'W', WARN_PROC_RETURN_VALUE, NULL, NULL );
+                           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_PROC_RETURN_VALUE, NULL, NULL );
                         }
                         hb_comp_functions.pLast->bFlags |= FUN_WITH_RETURN;
                         hb_comp_bDontGenLineNum = TRUE;
@@ -363,11 +363,11 @@ Statement  : ExecFlow   CrlfStmnt   { }
                   */
                   char * szFunction = hb_compReservedName( $2 );
                   if( szFunction )
-                     hb_compGenError( hb_comp_szErrors, 'E', ERR_FUNC_RESERVED, szFunction, $2 );
+                     hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_FUNC_RESERVED, szFunction, $2 );
                   hb_comp_szAnnounce = $2;
                }
                else
-                  hb_compGenWarning( hb_comp_szWarnings, 'W', WARN_DUPL_ANNOUNCE, $2, NULL );
+                  hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_DUPL_ANNOUNCE, $2, NULL );
              } Crlf
 
            ;
@@ -591,7 +591,7 @@ FunCallAlias : FunCall ALIASOP        { $$ = $1; }
 /* Object's instance variable
  */
 SendId      : IdentName      { $$ = $1; }
-            | MacroVar        { $$ = "&"; hb_compGenError( hb_comp_szErrors, 'E', ERR_INVALID_SEND, "&", NULL); }
+            | MacroVar        { $$ = "&"; hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_SEND, "&", NULL); }
             ;
 
 ObjectData  : NumValue ':' SendId        { $$ = hb_compExprNewSend( $1, $3 ); }
@@ -1010,7 +1010,7 @@ IfInlineAlias : IfInline ALIASOP       { $$ = $1; }
 VarDefs    : LOCAL { hb_comp_iVarScope = VS_LOCAL; hb_compLinePush(); } VarList Crlf { hb_comp_cVarType = ' '; }
            | STATIC { hb_comp_iVarScope = VS_STATIC; hb_compLinePush(); } VarList Crlf { hb_comp_cVarType = ' '; }
            | PARAMETERS { if( hb_comp_functions.pLast->bFlags & FUN_USES_LOCAL_PARAMS )
-                             hb_compGenError( hb_comp_szErrors, 'E', ERR_PARAMETERS_NOT_ALLOWED, NULL, NULL );
+                             hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_PARAMETERS_NOT_ALLOWED, NULL, NULL );
                           else
                              hb_comp_functions.pLast->wParamNum=0; hb_comp_iVarScope = ( VS_PRIVATE | VS_PARAMETER ); }
                              MemvarList Crlf
@@ -1207,7 +1207,7 @@ DoCaseBegin : DoCaseStart            { }
                         if( $<lNumber>2 > 0 )
                         {
                            --hb_comp_iLine;
-                           hb_compGenError( hb_comp_szErrors, 'E', ERR_MAYHEM_IN_CASE, NULL, NULL );
+                           hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_MAYHEM_IN_CASE, NULL, NULL );
                         }
                      }
            ;
@@ -1243,7 +1243,7 @@ Cases      : CASE Expression Crlf
 
 Otherwise  : OTHERWISE Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; hb_compLinePush(); }
                 EmptyStats
-           | Otherwise OTHERWISE { hb_compGenError( hb_comp_szErrors, 'E', ERR_MAYHEM_IN_CASE, NULL, NULL ); } Crlf 
+           | Otherwise OTHERWISE { hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_MAYHEM_IN_CASE, NULL, NULL ); } Crlf 
                 EmptyStats
            ;
 
@@ -1433,13 +1433,13 @@ int hb_compYACCMain( char * szName )
    /* Generate the starting procedure frame
       */
    if( hb_comp_bStartProc )
-      hb_compFunctionAdd( hb_strupr( hb_strdup( szName ) ), FS_PUBLIC, FUN_PROCEDURE );
+      hb_compFunctionAdd( hb_strupr( hb_strdup( szName ) ), _HB_FS_PUBLIC, FUN_PROCEDURE );
    else
          /* Don't pass the name of module if the code for starting procedure
          * will be not generated. The name cannot be placed as first symbol
          * because this symbol can be used as function call or memvar's name.
          */
-      hb_compFunctionAdd( hb_strupr( hb_strdup( "" ) ), FS_PUBLIC, FUN_PROCEDURE );
+      hb_compFunctionAdd( hb_strupr( hb_strdup( "" ) ), _HB_FS_PUBLIC, FUN_PROCEDURE );
 
    yyparse();
 
@@ -1482,9 +1482,9 @@ int hb_compYACCMain( char * szName )
 void yyerror( char * s )
 {
    if( yytext[ 0 ] == '\n' )
-      hb_compGenError( hb_comp_szErrors, 'F', ERR_YACC, s, "<eol>" );
+      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_YACC, s, "<eol>" );
    else
-      hb_compGenError( hb_comp_szErrors, 'F', ERR_YACC, s, yytext );
+      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_YACC, s, yytext );
 }
 
 
@@ -1628,7 +1628,7 @@ static void hb_compLoopLoop( void )
 {
    if( ! hb_comp_pLoops )
    {
-      hb_compGenError( hb_comp_szErrors, 'E', ERR_EXIT_IN_SEQUENCE, "LOOP", NULL );
+      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "LOOP", NULL );
    }
    else
    {
@@ -1649,7 +1649,7 @@ static void hb_compLoopLoop( void )
          * Current SEQUENCE counter is different then at the beginning of loop
          * Notice that LOOP is allowed in RECOVER code.
          */
-         hb_compGenError( hb_comp_szErrors, 'E', ERR_EXIT_IN_SEQUENCE, "LOOP", NULL );
+         hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "LOOP", NULL );
       }
       else
       {
@@ -1670,7 +1670,7 @@ static void hb_compLoopExit( void )
 {
    if( ! hb_comp_pLoops )
    {
-      hb_compGenError( hb_comp_szErrors, 'E', ERR_EXIT_IN_SEQUENCE, "EXIT", NULL );
+      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "EXIT", NULL );
    }
    else
    {
@@ -1691,7 +1691,7 @@ static void hb_compLoopExit( void )
          * Current SEQUENCE counter is different then at the beginning of loop
          * Notice that LOOP is allowed in RECOVER code.
          */
-         hb_compGenError( hb_comp_szErrors, 'E', ERR_EXIT_IN_SEQUENCE, "EXIT", NULL );
+         hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "EXIT", NULL );
       }
       else
       {

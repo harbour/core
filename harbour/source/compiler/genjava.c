@@ -69,7 +69,7 @@ void hb_compGenJava( PHB_FNAME pFileName )
    yyc = fopen( szFileName, "wb" );
    if( ! yyc )
    {
-      hb_compGenError( hb_comp_szErrors, 'E', ERR_CREATE_OUTPUT, szFileName, NULL );
+      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_CREATE_OUTPUT, szFileName, NULL );
       return;
    }
 
@@ -82,7 +82,7 @@ void hb_compGenJava( PHB_FNAME pFileName )
    s_nChar = 0;
 
    fprintf( yyc, "/*\n * Harbour Compiler, Build %i%s (%04d.%02d.%02d)\n",
-         hb_build, hb_revision, hb_year, hb_month, hb_day );
+         HB_VER_BUILD, HB_VER_REVISION, HB_VER_YEAR, HB_VER_MONTH, HB_VER_DAY );
    fprintf( yyc, " * Generated JAVA source code\n */\n\n" );
 
    fprintf( yyc, "public class %s\n", pFileName->szName );
@@ -115,7 +115,7 @@ void hb_compGenJava( PHB_FNAME pFileName )
    {
       hb_fputs( pSym->szName, yyc );
       hb_fputc( 0, yyc );
-      if( pSym->cScope != FS_MESSAGE )
+      if( pSym->cScope != _HB_FS_MESSAGE )
          hb_fputc( pSym->cScope, yyc );
       else
          hb_fputc( 0, yyc );

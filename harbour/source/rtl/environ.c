@@ -372,7 +372,7 @@ char * hb_version( USHORT uiMode )
    pszVersion = ( char * ) hb_xgrab( HB_VERSION_BUFFER_LEN );
 
    sprintf( pszVersion, "Harbour %d.%d Intl. (Build %d%s)  (%04d.%02d.%02d)",
-      hb_major, hb_minor, hb_build, hb_revision, hb_year, hb_month, hb_day );
+      HB_VER_MAJOR, HB_VER_MINOR, HB_VER_BUILD, HB_VER_REVISION, HB_VER_YEAR, HB_VER_MONTH, HB_VER_DAY );
 
    if( uiMode != 0 )
    {

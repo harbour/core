@@ -93,6 +93,8 @@ typedef unsigned long ULONG;
 #endif /* HB_DONT_DEFINE_BASIC_TYPES */
 #endif /* __IBMCPP__ */
 
+/* NOTE: Underscore postfix needed to avoid conflict with the functions
+         named HB_MIN() and HB_MAX() [vszakats] */
 #define HB_MAX_( a, b )         ( ( ( a ) > ( b ) ) ? ( a ) : ( b ) )
 #define HB_MIN_( a, b )         ( ( ( a ) < ( b ) ) ? ( a ) : ( b ) )
 
