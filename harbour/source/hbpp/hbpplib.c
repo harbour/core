@@ -59,8 +59,8 @@ HARBOUR HB_PREPROCESS(void)
 {
   if (ISCHAR(1))
   {
-    char *pText = hb_xgrab(STR_SIZE);
-    char *pOut = hb_xgrab(STR_SIZE);
+    char *pText = (char *)hb_xgrab(STR_SIZE);
+    char *pOut = (char *)hb_xgrab(STR_SIZE);
     char *ptr = pText;
 
     int resParse;

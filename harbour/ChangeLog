@@ -1,7 +1,12 @@
-19990730-08:50 EDT Paul Tucker <ptucker@sympatico.ca>
+19990730-09:20 EDT Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      + added sdf and delim support
      * changed natmsg\msgxxx to msgxxx
+   * source/hbpp/hbpplib.c
+     + added typecasts to 2 xgrab calls
+   * source/rdd/dbcmd.c
+     + added typecasts at line 337 but wrapped this one in an
+       #if defined(_MSC_VER)
 
 19990730-14:55 CET Victor Szel <info@szelvesz.hu>
    ! source/hbpp/preproc.c - defines _pFileName.

@@ -333,8 +333,12 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
       memcpy( pTable, &defTable, sizeof( RDDFUNCS ) );
    else
    {
+#if defined(_MSC_VER)
+      szDrvName = (PBYTE)hb_strUpper( (char *)szDrvName, strlen( (const char *)szDrvName ) );
+#else
       szDrvName = hb_strUpper( szDrvName, strlen( szDrvName ) );
-      if( !( pRddNode = hb_FindRddNode( szDrvName ) ) )
+#endif
+      if( !( pRddNode = hb_FindRddNode( (char *)szDrvName ) ) )
 	 return FAILURE;
       memcpy( pTable, &pRddNode->pTable, sizeof( RDDFUNCS ) );
    }
