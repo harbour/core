@@ -14,6 +14,9 @@ typedef unsigned short int WORD;
 #undef SHORT                           /* 2 bytes signed */
 typedef short int SHORT;
 
+#undef USHORT                          /* 2 bytes unsigned */
+typedef unsigned short int USHORT;
+
 #undef LONG                            /* 4 bytes signed */
 typedef long LONG;
 typedef unsigned long ULONG;
