@@ -1406,6 +1406,7 @@ HB_FUNC( DBGOTO )
       hb_errRT_DBCMD( EG_ARG, EDBCMD_NOVAR, NULL, "DBGOTO" );
    else
       SELF_GOTOID( ( AREAP ) s_pCurrArea->pArea, pItem );
+   hb_ret();
 }
 
 HB_FUNC( DBGOTOP )
@@ -3208,7 +3209,7 @@ HB_FUNC( DBINFO )
 
 HB_FUNC( DBORDERINFO )
 {
-   PHB_ITEM pType, pInfo;
+   PHB_ITEM pType;
    BOOL bDeleteItem;
    DBORDERINFO pOrderInfo;
 
@@ -3224,23 +3225,21 @@ HB_FUNC( DBORDERINFO )
          if( !pOrderInfo.itmOrder )
             pOrderInfo.itmOrder = hb_param( 3, HB_IT_NUMERIC );
 
-         /*  TODO: 4TH parameter is not supported in current ads code or the structure */
-         pInfo = hb_param( 4 , HB_IT_ANY );  /* Set new value */
-         if( !pInfo )
+         pOrderInfo.itmNewVal = hb_param( 4 , HB_IT_ANY );
+         if( !pOrderInfo.itmNewVal )
          {
-            pInfo = hb_itemNew( NULL );
+            pOrderInfo.itmNewVal = hb_itemNew( NULL );
             bDeleteItem = TRUE;
          }
          else
             bDeleteItem = FALSE;
-
          pOrderInfo.itmResult = hb_itemNew( NULL );
          SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, hb_itemGetNI( pType ), &pOrderInfo );
          hb_itemReturn(  pOrderInfo.itmResult );
          hb_itemRelease( pOrderInfo.itmResult );
 
          if( bDeleteItem )
-            hb_itemRelease( pInfo );
+            hb_itemRelease( pOrderInfo.itmNewVal );
          return;
       }
       hb_errRT_DBCMD( EG_ARG, EDBCMD_DBCMDBADPARAMETER, NULL, "DBORDERINFO" );
