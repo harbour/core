@@ -129,12 +129,12 @@ LANGUAGE_KEY_WORDS_ARE {
 
 /* Words. */
 LANGUAGE_WORDS_ARE {
+                     LEX_WORD( "FIELD"     ) AS_TOKEN( _FIELD_     ),
                      LEX_WORD( "IF"        ) AS_TOKEN( _IF_        ),
                      LEX_WORD( "IIF"       ) AS_TOKEN( IIF         ),
                      LEX_WORD( "NIL"       ) AS_TOKEN( NIL         ),
-                     LEX_WORD( "SELF"      ) AS_TOKEN( _SELF_      ),
                      LEX_WORD( "QSELF"     ) AS_TOKEN( QSELF       ),
-                     LEX_WORD( "FIELD"     ) AS_TOKEN( _FIELD_     ),
+                     LEX_WORD( "SELF"      ) AS_TOKEN( _SELF_      ),
                      LEX_WORD( "_FIELD"    ) AS_TOKEN( _FIELD      )
                    };
 

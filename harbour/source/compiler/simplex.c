@@ -176,12 +176,12 @@ static int  aiReturn[4];
 
 /* Rules Support */
 static int  aiMatched[ MAX_MATCH ];
-static int  iMatched = 0;
+static unsigned int  iMatched = 0;
 static int  aiTentative[2] = { 0, 0 };
-static int  iTentative = 0;
+static unsigned int  iTentative = 0;
 static int  aiProspects[ 256 ];
-static int  iProspects = 0;
-static int  iFound = 0;
+static unsigned int  iProspects = 0;
+static unsigned int  iFound = 0;
 static int  iReduce = 0;
 
 /* yylex */
@@ -189,7 +189,7 @@ static char * tmpPtr;
 static char sToken[TOKEN_SIZE];
 static int  iLen = 0;
 static char chr, cPrev = 0;
-static int  iKey, iWord, iMatch, iRemove, iWordLen, iPush, iLastToken = 0;
+static unsigned int  iMatch, iRemove, iWordLen, iPush, iLastToken = 0;
 static char szLexBuffer[ YY_BUF_SIZE ];
 static char * s_szBuffer;
 static int  iSize = 0;
@@ -204,13 +204,23 @@ int yyleng;
 /* NewLine Support. */
 static BOOL bNewLine = TRUE, bStart = TRUE;
 
-static int iSelfs = (int) ( sizeof( aSelfs  ) / LEX_WORD_SIZE );
-static int iKeys  = (int) ( sizeof( aKeys   ) / LEX_WORD_SIZE );
-static int iWords = (int) ( sizeof( aWords  ) / LEX_WORD_SIZE );
-static int iRules = (int) ( sizeof( aiRules ) / LEX_RULE_SIZE );
-static int iPairs = (int) ( sizeof( aPairs  ) / LEX_PAIR_SIZE );
+static unsigned int iSelfs = (int) ( sizeof( aSelfs  ) / LEX_WORD_SIZE );
+static unsigned int iKeys  = (int) ( sizeof( aKeys   ) / LEX_WORD_SIZE );
+static unsigned int iWords = (int) ( sizeof( aWords  ) / LEX_WORD_SIZE );
+static unsigned int iRules = (int) ( sizeof( aiRules ) / LEX_RULE_SIZE );
+static unsigned int iPairs = (int) ( sizeof( aPairs  ) / LEX_PAIR_SIZE );
+
+typedef struct _TREE_NODE
+{
+   unsigned int iMin;
+   unsigned int iMax;
+} TREE_NODE;                    /* support structure for Streams (Pairs). */
+
+TREE_NODE aKeyNodes[256], aWordNodes[256];
 
 int Reduce( int iToken, BOOL bReal );
+
+static void GenTrees( void );
 
 /* --------------------------------------------------------------------------------- */
 
@@ -256,9 +266,9 @@ int Reduce( int iToken, BOOL bReal );
 
 #define IF_BEGIN_PAIR(chr) \
          {\
-            register int iPair = 0, iStartLen; \
-            register char chrStart; \
-            int iLastPair = 0, iLastLen = 0; \
+            register unsigned int iPair = 0, iStartLen; \
+            register unsigned char chrStart; \
+            unsigned int iLastPair = 0, iLastLen = 0; \
             \
             DEBUG_INFO( printf( "Checking %i Streams for %c At: >%s<\n", iPairs, chr, szBuffer - 1 ) ); \
             \
@@ -335,8 +345,8 @@ int Reduce( int iToken, BOOL bReal );
             DEBUG_INFO( printf( "Checking %i Selfs for %c At: >%s<\n", iSelfs, chr, szBuffer - 1 ) ); \
             \
          {\
-            register int iSelf = 0, iSelfLen; \
-            register char chrSelf; \
+            register unsigned int iSelf = 0, iSelfLen; \
+            register unsigned char chrSelf; \
             \
             while( iSelf < iSelfs ) \
             { \
@@ -587,7 +597,7 @@ int Reduce( int iToken, BOOL bReal );
 
 #define SCAN_PROSPECTS()\
 {\
-   register int iScan = 0;\
+   register unsigned int iScan = 0;\
    \
    DEBUG_INFO( printf(  "Scaning %i Prospects for %i at Pos: %i\n", iProspects, iToken, iMatched ) ); \
    \
@@ -638,7 +648,7 @@ int Reduce( int iToken, BOOL bReal );
 
 #define SCAN_RULES()\
 {\
-   register int iScan = 0;\
+   register unsigned int iScan = 0;\
    \
    DEBUG_INFO( printf(  "Scaning %i Rules for %i at Pos: %i\n", iRules, iToken, iMatched ) ); \
    \
@@ -905,6 +915,7 @@ YY_DECL
        if( bStart )
        {
           bStart = FALSE;
+          GenTrees()
           INIT_ACTION();
        }
 
@@ -1209,6 +1220,8 @@ YY_DECL
 
     CheckToken:
         {
+            unsigned int i, iMax;
+
             if( bNewLine )
             {
                bIgnoreWords = FALSE;
@@ -1222,13 +1235,16 @@ YY_DECL
                   }
                #endif
 
-               iKey = 0;
-               while ( iKey < iKeys )
+               i = aKeyNodes[ sToken[0] ].iMin;
+               iMax = aKeyNodes[ sToken[0] ].iMax + 1;
+               DEBUG_INFO( printf(  "Scanning %i Keys for Token: %s\n", iMax - i, (char*) sToken ) );
+
+               while ( i < iMax )
                {
                   #ifdef LEX_ABBREVIATE_KEYS
-                     if( strncmp( (char*) sToken, (char*)( aKeys[ iKey++ ].sWord ), iWordLen ) == 0 )
+                     if( strncmp( (char*) sToken, (char*)( aKeys[ i++ ].sWord ), iWordLen ) == 0 )
                   #else
-                     if( strcmp( (char*) sToken, (char*) ( aKeys[ iKey++ ].sWord ) ) == 0 )
+                     if( strcmp( (char*) sToken, (char*) ( aKeys[ i++ ].sWord ) ) == 0 )
                   #endif
                   {
                      DEBUG_INFO( printf(  "Reducing Key Word: %s\n", (char*) sToken ) );
@@ -1236,9 +1252,9 @@ YY_DECL
                      bNewLine = FALSE;
                      NEW_LINE_ACTION();
 
-                     if( aKeys[ iKey - 1 ].iToken < LEX_CUSTOM_ACTION )
+                     if( aKeys[ i - 1 ].iToken < LEX_CUSTOM_ACTION )
                      {
-                        iRet = aKeys[ iKey - 1 ].iToken;
+                        iRet = aKeys[ i - 1 ].iToken;
                         iRet = CUSTOM_ACTION( iRet );
                         if( iRet )
                         {
@@ -1251,7 +1267,7 @@ YY_DECL
                      }
                      else
                      {
-                        RETURN_TOKEN( REDUCE( aKeys[ iKey - 1 ].iToken ), (char*) sToken );
+                        RETURN_TOKEN( REDUCE( aKeys[ i - 1 ].iToken ), (char*) sToken );
                      }
                   }
                }
@@ -1262,7 +1278,6 @@ YY_DECL
                   NEW_LINE_ACTION();
                }
             }
-
 
             if( bIgnoreWords )
             {
@@ -1280,20 +1295,23 @@ YY_DECL
                   }
                #endif
 
-               iWord = 0;
-               while ( iWord < iWords )
+               i = aWordNodes[ sToken[0] ].iMin;
+               iMax = aWordNodes[ sToken[0] ].iMax + 1;
+               DEBUG_INFO( printf(  "Scanning %i Words for Token: %s\n", iMax - i, (char*) sToken ) );
+
+               while ( i < iMax )
                {
                   #ifdef LEX_ABBREVIATE_WORDS
-                     if( strncmp( (char*) sToken, (char*) ( aWords[ iWord++ ].sWord ), iWordLen ) == 0 )
+                     if( strncmp( (char*) sToken, (char*) ( aWords[ i++ ].sWord ), iWordLen ) == 0 )
                   #else
-                     if( strcmp( (char*) sToken, (char*) ( aWords[ iWord++ ].sWord ) ) == 0 )
+                     if( strcmp( (char*) sToken, (char*) ( aWords[ i++ ].sWord ) ) == 0 )
                   #endif
                   {
                      DEBUG_INFO( printf(  "Reducing Word: %s\n", (char*) sToken ) );
 
-                     if( aWords[ iWord - 1 ].iToken < LEX_CUSTOM_ACTION )
+                     if( aWords[ i - 1 ].iToken < LEX_CUSTOM_ACTION )
                      {
-                        iRet = aWords[ iWord - 1 ].iToken;
+                        iRet = aWords[ i - 1 ].iToken;
                         iRet = CUSTOM_ACTION( iRet );
                         if( iRet )
                         {
@@ -1306,7 +1324,7 @@ YY_DECL
                      }
                      else
                      {
-                       RETURN_TOKEN( REDUCE( aWords[ iWord - 1 ].iToken ), (char*) sToken );
+                       RETURN_TOKEN( REDUCE( aWords[ i - 1 ].iToken ), (char*) sToken );
                      }
                   }
                }
@@ -1456,4 +1474,50 @@ void * yy_bytes_buffer( char * pBuffer, int iBufSize )
    s_szBuffer = pBuffer;
    iSize = iBufSize;
    return s_szBuffer;
+}
+
+static void GenTrees( void )
+{
+   register unsigned int i;
+   register unsigned char cIndex;
+
+   i = 0;
+   while( i < 256 )
+   {
+      aKeyNodes[i].iMin = 0;
+      aKeyNodes[i].iMax = 0;
+      aWordNodes[i].iMin = 0;
+      aWordNodes[i].iMax = 0;
+      i++;
+   }
+
+   i = 0;
+   while ( i < iKeys )
+   {
+      cIndex = aKeys[i].sWord[0];
+
+      if( aKeyNodes[ cIndex ].iMin == 0 )
+      {
+         aKeyNodes[ cIndex ].iMin = i;
+      }
+
+      aKeyNodes[ cIndex ].iMax = i;
+
+      i++;
+   }
+
+   i = 0;
+   while ( i < iWords )
+   {
+      cIndex = aWords[i].sWord[0];
+
+      if( aWordNodes[ cIndex ].iMin == 0 )
+      {
+         aWordNodes[ cIndex ].iMin = i;
+      }
+
+      aWordNodes[ cIndex ].iMax = i;
+
+      i++;
+   }
 }
