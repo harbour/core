@@ -55,7 +55,7 @@ void hb_gt_Init( void )
 
    s_iRow = 0;
    s_iCol = 0;
-#if defined(HB_OS_UNIX_COMPATIBLE)
+#if defined(OS_UNIX_COMPATIBLE)
    s_uiMaxRow = 24;
 #else
    s_uiMaxRow = 25;

@@ -1,3 +1,9 @@
+20000312-13:04 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/rtl/set.c
+     source/rtl/memofile.c
+     source/rtl/gt/gtstd.c
+     ! HB_OS_UNIX_COMPATIBLE -> OS_UNIX_COMPATIBLE
+
 20000312-14:20 GMT+3 Alexander Kresin
    * contrib/rdd_ads/ads.ch
    * contrib/rdd_ads/adsfunc.c

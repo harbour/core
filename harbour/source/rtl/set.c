@@ -333,13 +333,13 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
             handle = hb_fsOpen( ( BYTE * ) path, FO_READWRITE | FO_DENYWRITE );
             if( handle != FS_ERROR )
             {  /* Position to EOF */
-            #if ! defined(HB_OS_UNIX_COMPATIBLE)
+            #if ! defined(OS_UNIX_COMPATIBLE)
                /* Non-Unix needs special binary vs. text file handling */
                if( set_specifier == HB_SET_PRINTFILE )
                {  /* PRINTFILE is binary and needs no special handling. */
             #endif
                   hb_fsSeek( handle, 0, FS_END );
-            #if ! defined(HB_OS_UNIX_COMPATIBLE)
+            #if ! defined(OS_UNIX_COMPATIBLE)
                }
                else
                {  /* All other files are text files and may have an EOF
