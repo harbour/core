@@ -509,7 +509,7 @@ int hb_comp_SLX_InterceptAction( int iRet, char *sToken )
       else if( iRet == REJECT_OP )
          { yylval.string = hb_compIdentifierNew( (char*) sToken, TRUE ); iRet = IDENTIFIER; }
       else
-         { printf( "Error SLX0001 Missing handler for %i\n", iRet ); hb_comp_iErrorCount++; }
+         { printf( "Error SLX0001 Missing handler for '%i' line: %i\n", iRet, hb_comp_iLine - 1 ); hb_comp_iErrorCount++; }
    }
 
    #ifdef SHOW_LEX_TOKENS
@@ -641,7 +641,7 @@ static int hb_comp_SLX_ElementToken( char* szToken, unsigned int iTokenLen )
       }
       else
       {
-	 printf( "Error SLX0002 Too many numerals in line %i\n", hb_comp_iLine );
+	 printf( "Error SLX0002 Too many numerals in line: %i\n", hb_comp_iLine - 1 );
 	 hb_comp_iErrorCount++;
 	 iTexts = 0;
       }

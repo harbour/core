@@ -143,6 +143,7 @@ extern "C" {
 #define HB_PP_ERR_CANNOT_OPEN_RULES             15
 #define HB_PP_ERR_BAD_RULES_FILE_NAME           16
 #define HB_PP_ERR_TOO_MANY_INCLUDES             17
+#define HB_PP_ERR_BUFFER_OVERFLOW               18
 
 #define HB_PP_WARN_DEFINE_REDEF                 1
 #define HB_PP_WARN_NO_DIRECTIVES                2

@@ -179,7 +179,8 @@ char * hb_pp_szErrors[] =
    "Value out of range in #pragma directive",
    "Can\'t open command definitions file: \'%s\'",
    "Invalid command definitions file name: \'%s\'",
-   "Too many nested #includes, can\'t open: \'%s\'"
+   "Too many nested #includes, can\'t open: \'%s\'",
+   "Input buffer overflow"
 };
 
 /* Table with warnings */

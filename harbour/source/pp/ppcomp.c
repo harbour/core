@@ -81,6 +81,11 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
         lens += rdlen;
         hb_comp_iLine ++;
 
+        if( lens >= HB_PP_STR_SIZE )
+        {
+           hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_BUFFER_OVERFLOW, NULL, NULL );
+        }
+
         if( s_szLine[ lens - 1 ] == ';' )
         {
            lContinue = 1;
@@ -209,7 +214,10 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
   if( handl_o )
      hb_pp_WrStr( handl_o, sOut );
 
-//  printf( "%d : %s\n",hb_comp_iLine,sOut );
+  #if 0
+     printf( "%d : %s\n", hb_comp_iLine, sOut );
+  #endif
+
   return lens;
 }
 

@@ -1,3 +1,9 @@
+2000-11-26 21:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * include/hberrors.h
+   * source/pp/ppcomp.c
+   * source/pp/ppcore.c
+     + Added error support for Input buffer overflow .
+
 2000-11-26 18:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.slx
      + Added Error message if NUMERALS_PER_LINE is exhausted, and set it to 3000 (just below apparent parser limitation)
