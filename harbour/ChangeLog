@@ -1,3 +1,10 @@
+2001-04-20 15:04 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/memoedit.prg
+      * simplified handling of keys and prevented infinite recursion when a key not
+        handled by TEditor was pressed inside a MemoEdit() window.
+      * ME_TOGGLESCROLL is not handled since TEditor cannot handle such a kind of "movement"
+      * K_CTRL_T (delete word right) is not handled since TEditor is not able to do it
+
 2001-04-20 11:09 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/memoedit.prg
       ! fixed handling of K_ALT_W

@@ -65,7 +65,9 @@ CLASS TMemoEditor FROM TEditor
    METHOD MemoInit(cUserFunction)         // This method is called after ::New() returns to perform ME_INIT actions
    METHOD Edit()                          // Calls super:Edit(nKey) but is needed to handle configurable keys
    METHOD KeyboardHook(nKey)              // Gets called every time there is a key not handled directly by TEditor
-   METHOD IdleHook()                      // Gets called every time there are no more keys to hanlde just before TEditor blocks itself waiting for a char
+   METHOD IdleHook()                      // Gets called every time there are no more keys to hanlde
+
+   METHOD HandleUserKey(nKey, nUserKey)   // Handles keys returned to MemoEdit() by user function
 
 ENDCLASS
 
@@ -83,28 +85,10 @@ METHOD MemoInit(cUserFunction) CLASS TMemoEditor
       // Keep calling user function until it returns 0
       while (nKey := Do(::xUserFunction, ME_INIT, ::nRow, ::nCol - 1)) <> ME_DEFAULT
 
-         do case
-            case nKey >= 1 .AND. nKey <= 31
-               super:Edit(nKey)
-
-            case nKey == ME_DATA
-               super:Edit(nKey)
-
-            case nKey == ME_TOGGLEWRAP
-               ::lWordWrap := !::lWordWrap
-
-            case nKey == ME_TOGGLESCROLL
-               // Don't know what to do ;-)
-
-            case nKey == ME_WORDRIGHT
-               ::MoveCursor(K_CTRL_RIGHT)
-
-            case nKey == ME_BOTTOMRIGHT
-               ::MoveCursor(K_CTRL_END)
-
-            otherwise
-
-         endcase
+         // At this time there is no input from user of MemoEdit() only handling
+         // of values returned by ::xUserFunction, so I pass these value on both
+         // parameters of ::HandleUserKey()
+         ::HandleUserKey(nKey, nKey)
 
       enddo
 
@@ -132,38 +116,13 @@ METHOD Edit() CLASS TMemoEditor
          if NextKey() == 0
             ::IdleHook()
          endif
+
          nKey := Inkey(0)
 
          // Is it a configurable key ?
          if AScan(aConfigurableKeys, nKey) > 0
             nUserKey := Do(::xUserFunction, iif(::lDirty, ME_UNKEYX, ME_UNKEY), ::nRow, ::nCol - 1)
-
-            do case
-               case nUserKey == ME_DEFAULT
-                  super:Edit(nKey)
-
-               // TOFIX: Not clipper compatible, see teditor.prg
-               case (nUserKey >= 1 .AND. nUserKey <= 31) .OR. nUserKey == K_ALT_W
-                  super:Edit(nUserKey)
-
-               case nUserKey == ME_DATA
-                  super:Edit(nKey)
-
-               case nUserKey == ME_TOGGLEWRAP
-                  ::lWordWrap := !::lWordWrap
-
-               case nUserKey == ME_TOGGLESCROLL
-                  // Don't know what to do ;-)
-
-               case nUserKey == ME_WORDRIGHT
-                  ::MoveCursor(K_CTRL_RIGHT)
-
-               case nUserKey == ME_BOTTOMRIGHT
-                  ::MoveCursor(K_CTRL_END)
-
-               otherwise
-
-            endcase
+            ::HandleUserKey(nKey, nUserKey)
 
          else
             super:Edit(nKey)
@@ -189,31 +148,9 @@ METHOD KeyboardHook(nKey) CLASS TMemoEditor
    local nUserKey
 
    if ::xUserFunction <> nil
+
       nUserKey := Do(::xUserFunction, iif(::lDirty, ME_UNKEYX, ME_UNKEY), ::nRow, ::nCol - 1)
-
-      do case
-         // TOFIX: Not clipper compatible, see teditor.prg
-         case (nUserKey >= 1 .AND. nUserKey <= 31) .OR. nUserKey == K_ALT_W
-            super:Edit(nUserKey)
-
-         case nUserKey == ME_DATA
-            //super:Edit(nKey)
-
-         case nUserKey == ME_TOGGLEWRAP
-            ::lWordWrap := !::lWordWrap
-
-         case nUserKey == ME_TOGGLESCROLL
-            // Don't know what to do ;-)
-
-         case nUserKey == ME_WORDRIGHT
-            ::MoveCursor(K_CTRL_RIGHT)
-
-         case nUserKey == ME_BOTTOMRIGHT
-            ::MoveCursor(K_CTRL_END)
-
-         otherwise
-
-      endcase
+      ::HandleUserKey(nKey, nUserKey)
 
    endif
 
@@ -226,6 +163,51 @@ METHOD IdleHook() CLASS TMemoEditor
       Do(::xUserFunction, ME_IDLE, ::nRow, ::nCol - 1)
 
    endif
+
+return Self
+
+
+METHOD HandleUserKey(nKey, nUserKey) CLASS TMemoEditor
+
+   // TEditor does not handle these keys and would call ::KeyboardHook() causing infinite loop
+   local aUnHandledKeys := {K_CTRL_J, K_CTRL_K, K_CTRL_L, K_CTRL_N, K_CTRL_O, K_CTRL_P, K_CTRL_Q, K_CTRL_T,;
+                            K_CTRL_U, K_F1 }
+
+   do case
+      // I won't reach this point during ME_INIT since ME_DEFAULT ends initialization phase of MemoEdit()
+      case nUserKey == ME_DEFAULT
+         // TEditor is not able to handle keys with a value higher than 256
+         if nKey <= 256 .AND. AScan(aUnHandledKeys, nKey) == 0
+            super:Edit(nKey)
+         endif
+
+      // TOFIX: Not clipper compatible, see teditor.prg
+      case (nUserKey >= 1 .AND. nUserKey <= 31) .OR. nUserKey == K_ALT_W
+         if AScan(aUnHandledKeys, nUserKey) == 0
+            super:Edit(nUserKey)
+         endif
+
+      case nUserKey == ME_DATA
+         if nKey <= 256 .AND. AScan(aUnHandledKeys, nKey) == 0
+            super:Edit(nKey)
+         endif
+
+      case nUserKey == ME_TOGGLEWRAP
+         ::lWordWrap := !::lWordWrap
+
+      case nUserKey == ME_TOGGLESCROLL
+         // TODO: TEditor does not support vertical scrolling of text inside window without moving cursor position
+
+      case nUserKey == ME_WORDRIGHT
+         ::MoveCursor(K_CTRL_RIGHT)
+
+      case nUserKey == ME_BOTTOMRIGHT
+         ::MoveCursor(K_CTRL_END)
+
+      otherwise
+         // Do nothing
+
+   endcase
 
 return Self
 
