@@ -1,6 +1,6 @@
 2000-08-21 15:45 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/simplex.c
-     ! Optimized Keywords and Words search, Lexer is 10-15% faster.
+     ! Optimized Keywords and Words search, Lexer is ~5% faster.
 
    * source/compiler/harbour.slx
    * source/macro/macro.slx
