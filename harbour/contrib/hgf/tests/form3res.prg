@@ -17,8 +17,6 @@ return nil
 
 CLASS TForm3 FROM TForm
 
-   DATA   aTest PROPERTY
-
    METHOD FormClick( oSender, nX, nY ) INLINE MsgInfo( "Click" )
 
 ENDCLASS
