@@ -121,6 +121,32 @@ typedef struct _CDXDATA
    } cdxu;
 } CDXDATA;
 
+typedef struct _SORTSWAPPAGE
+{
+   char        mark[2];
+   USHORT      pageNum;
+   ULONG       pageLen;
+   ULONG       keyCount;
+   USHORT      nCurPos;
+   USHORT      nBufLeft;
+   ULONG       nFileOffset;
+   ULONG       nBytesLeft;
+   ULONG       keysLeft;
+   ULONG       tmpRecNo;  /* to speed up access */
+   BYTE        tmpKeyLen;
+   char *      tmpKeyVal;
+   char        page[ 512 ];
+} SORTSWAPPAGE;
+typedef SORTSWAPPAGE * LPSORTSWAPPAGE;
+
+typedef struct _SORTSWAPITEM
+{
+   ULONG    recno;
+   BYTE     keyLen;
+   char     key[ 1 ];
+} SORTSWAPITEM;
+typedef SORTSWAPITEM * LPSORTSWAPITEM;
+
 #if (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
    #pragma option -a /* default alignment */
 #elif defined(__GNUC__)
@@ -133,17 +159,17 @@ typedef struct _CDXDATA
 
 typedef CDXDATA * LPCDXDATA;
 
-typedef struct _KEYINFO
+typedef struct _CDXKEYINFO
 {
    char   * Value;
    ULONG    length;
    BOOL     fString;
    LONG     Tag;
    LONG     Xtra;
-   struct  _KEYINFO * pNext;
-} KEYINFO;
+   struct  _CDXKEYINFO * pNext;
+} CDXKEYINFO;
 
-typedef KEYINFO * LPKEYINFO;
+typedef CDXKEYINFO * LPCDXKEYINFO;
 
 struct _CDXTAG;    /* forward declaration */
 
@@ -159,7 +185,7 @@ typedef struct HB_PAGEINFO_STRU
    BOOL      ChkBOF;
    BOOL      ChkEOF;
    BYTE      PageType;
-   LONG      RNMask;
+   ULONG     RNMask;
    BYTE      ReqByte;
    BYTE      RNBits;
    BYTE      DCBits;
@@ -167,7 +193,7 @@ typedef struct HB_PAGEINFO_STRU
    BYTE      DCMask;
    BYTE      TCMask;
    USHORT    Space;
-   LPKEYINFO pKeys;
+   LPCDXKEYINFO pKeys;
    USHORT    uiKeys;
    SHORT     CurKey;
    struct HB_PAGEINFO_STRU * Owner;
@@ -241,12 +267,19 @@ typedef struct
    BOOL       Unique;
    BOOL       Ascend;
    BOOL       Closing;
+
+   USHORT     nSwapPages;
+   LPSORTSWAPPAGE pSwapPage;
+   FHANDLE    hTempFile;
+   char *     szTempFileName;
+   LONG       TotalWordCount;
+
    BYTE       WPch[ 256 ];
    SORTDATA * WAdr;
    struct _CDXTAG * CurTag;
    LPCDXDATA  NodeList[ 32 ];
-   LPKEYINFO  KeyWork;
-   LPKEYINFO  LastKey;
+   LPCDXKEYINFO  KeyWork;
+   LPCDXKEYINFO  LastKey;
 } SORTINFO;
 
 typedef SORTINFO * LPSORTINFO;
