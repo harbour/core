@@ -516,7 +516,8 @@ void ConvertPatterns ( char *mpatt, int mlen, char *rpatt, int rlen )
             }
           rmlen = i - ipos + 1;
           /* Convert match marker into inner format */
-          lastchar = (char) ( (unsigned int)lastchar + 1 );
+          lastchar = (lastchar!='Z')? ( (char) ( (unsigned int)lastchar + 1 ) ):
+                                       'a';
           expreal[1] = lastchar;
           expreal[2] = exptype;
           pp_Stuff ( expreal, mpatt+ipos, 4, rmlen, mlen );
@@ -1518,13 +1519,13 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
       rezs = 0;
       ptr = ptrOut + ifou - 2;
       kolmarkers = 0;
-      ptr = PrevSquare( ptr, ptrOut, &kolmarkers );      
+      ptr = PrevSquare( ptr, ptrOut, &kolmarkers );
       if ( ptr )
         {
           if( Repeate ) aIsRepeate[ Repeate - 1 ]++;
           if( !lReplacePat ) return;
           ptr2 = ptrOut + ifou + 3;
-          while ( *ptr2 != ']' && *(ptr-1) != '\\' )
+          while ( *ptr2 != ']' || *(ptr2-1) == '\\' )
             {
               if ( *ptr2 == '\1' ) kolmarkers++;
               ptr2++;

@@ -1,3 +1,7 @@
+19991101-10:10 GMT+3 Alexander Kresin
+  * source/pp/hbpp.c
+    * Fixed bug, reported by Antonio Linares
+
 19991030-03:24 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/rtl_test.prg
     + Four new Pad*() tests added.
