@@ -335,7 +335,21 @@ static const char * _szReservedFun[] = {
 };
 #define RESERVED_FUNCTIONS  sizeof(_szReservedFun) / sizeof(char *)
 /* function compares strings upto maximum 4 characters (used in bsearch) */
-int sz_compare4( const void *, const void * );
+
+/* Compare first 4 characters
+ * If they are the same then compare the whole name
+ */
+int sz_compare4( const void *pLookup, const void *pReserved )
+{
+  int iCmp;
+
+  iCmp = strncmp( (const char *)pLookup, *((const char * *)pReserved), 4 );
+  if( iCmp == 0 )
+     iCmp = strncmp( (const char *)pLookup, *((const char * *)pReserved),
+                     strlen((const char *)pLookup) );
+  return iCmp;
+}
+
 #define RESERVED_FUNC(szName) \
  bsearch( (szName), _szReservedFun, RESERVED_FUNCTIONS, sizeof(char*), sz_compare4 )
 
@@ -3056,20 +3070,6 @@ int FieldsCount()
   }
 
   return iFields;
-}
-
-/* Compare first 4 characters
- * If they are the same then compare the whole name
- */
-int sz_compare4( const void *pLookup, const void *pReserved )
-{
-  int iCmp;
-
-  iCmp = strncmp( (const char *)pLookup, *((const char * *)pReserved), 4 );
-  if( iCmp == 0 )
-     iCmp = strncmp( (const char *)pLookup, *((const char * *)pReserved),
-                     strlen((const char *)pLookup) );
-  return iCmp;
 }
 
 /*
