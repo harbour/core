@@ -57,7 +57,7 @@
          about several statistical data about memory management, it will show
          these on exit if memory seem to have leaked.
          This should be normally turned off in a final release */
-#define HB_FM_STATISTICS
+//#define HB_FM_STATISTICS
 
 /* NOTE: The following #include "hbwinapi.h" must
          be ahead of any other #include statements! */
@@ -341,9 +341,7 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
    HB_TRACE(HB_TR_DEBUG, ("hb_xfree(%p)", pMem));
 
    if( pMem )
-   {
-      free( ( char * ) pMem - sizeof( ULONG ) - sizeof( ULONG ) );
-   }
+      free( ( char * ) pMem );
    else
       hb_errInternal( 9999, "hb_xfree called with a NULL pointer", NULL, NULL );
 
