@@ -40,6 +40,9 @@
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  *    __objGetMsgList
  *
+ * Copyright 2000 Jf. Lefebvre <jfl@mafact.com> and Ra. Cuylen <rac@mafact.com>
+ *    __objDerivedFrom
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -229,3 +232,25 @@ FUNCTION __objDelData( oObject, cSymbol )
    ENDIF
 
    RETURN oObject
+
+
+//Added by R‚C&JfL
+FUNCTION __objDerivedFrom( oObject, xSuper )
+   Local lRetVal, cClassName
+
+   IF !ISOBJECT( oObject )
+      __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
+   ENDIF
+
+   IF ISOBJECT( xSuper )
+      cClassName := xSuper:ClassName()
+   ELSEIF ISCHARACTER( xSuper )
+      cClassName := Upper( xSuper )
+   ELSE
+      __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
+   ENDIF
+
+   lRetVal := __ClsParent( oObject:ClassH, cClassName )
+
+   RETURN lRetVal
+

@@ -38,7 +38,7 @@
 #ifndef HB_SETUP_CH_
 #define HB_SETUP_CH_
 
-/* NOTE: You can select here, which features you to include of the different 
+/* NOTE: You can select here, which features you to include of the different
          Clipper implementations. */
 
 #define HB_EXTENSION              /* Enable Harbour extensions */
@@ -52,6 +52,9 @@
 /* #define HB_COMPAT_FLAGSHIP */  /* Enable Flagship extensions */
 /* #define HB_COMPAT_FOXPRO */    /* Enable FoxPro extensions */
 /* #define HB_COMPAT_DBASE */     /* Enable dBase extensions */
+
+//Added by RaC&JfL
+#define HB_CLS_MASKHIDDEN         /* Disallow heritence of hidden variables */
 
 #endif /* HB_SETUP_CH_ */
 

@@ -6,6 +6,9 @@
  * Harbour Project source code:
  * Header file for low-level object engine
  *
+ * Copyright 2000 J. Lefebvre <jfl@mafact.com> & RA. Cuylen <rac@mafact.com>
+ * www - http://www.harbour-project.org
+ *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
@@ -38,6 +41,19 @@
 #ifndef HB_OO_CH_
 #define HB_OO_CH_
 
+//Added by RAC&JF
+/* Method or Data attribute (nScope)*/
+#define HBCLSTP_EXPORTED        1 // No comment, default
+#define HBCLSTP_PROTECTED       2 // Only usable from one of the object's method (even sublclassed object)
+#define HBCLSTP_HIDDEN          4 // Only usable from one of the object's method (and not from sublclassed one)
+#define HBCLSTP_CTOR            8 // Constructor  (Not yet used)
+#define HBCLSTP_READONLY       16 // No comment
+#define HBCLSTP_SHARED         32 // Allow a classvar (or classmethod) to be shared by all the subclasses.
+                                  // Not the default behaviour as each subclass will have its own copy by default.
+#define HBCLSTP_CLASS          64 // The related message is a superobject call, uidata is the superclass handle
+                                  // pInitValue contain one superclass object instance (absolutely needed for Inline msg and class data)
+#define HBCLSTP_SUPER         128 // The related message is inherited from a superclass
+
 /* Message types */
 #define HB_OO_MSG_METHOD        0
 #define HB_OO_MSG_DATA          1
@@ -46,14 +62,29 @@
 #define HB_OO_MSG_VIRTUAL       4
 #define HB_OO_MSG_SUPER         5
 #define HB_OO_MSG_ONERROR       6
+#define HB_OO_MSG_CLSMTHD       7 //for the futur ;-) RAC&JF
 
 /* Data */
 #define HB_OO_DATA_SYMBOL       1
 #define HB_OO_DATA_VALUE        2
+#define HB_OO_DATA_TYPE         3
+#define HB_OO_DATA_SCOPE        4
 
 /* ClassData */
 #define HB_OO_CLSD_SYMBOL       1
 #define HB_OO_CLSD_VALUE        2
+#define HB_OO_CLSD_TYPE         3
+#define HB_OO_CLSD_SCOPE        4
 
+/* Method */
+#define HB_OO_MTHD_SYMBOL       1
+#define HB_OO_MTHD_PFUNCTION    2
+#define HB_OO_MTHD_SCOPE        3
+
+//Added by RAC&JF
+/* ClassMethod */ //for the future ;-)
+#define HB_OO_CLSM_SYMBOL       1
+#define HB_OO_CLSM_PFUNCTION    2
+#define HB_OO_CLSM_SCOPE        3
 #endif /* HB_OO_CH_ */
 

@@ -6,6 +6,10 @@
  * Harbour Project source code:
  * The declarations for all harbour defined functions/procedures.
  *
+ *
+ * Copyright 2000 J. Lefebvre <jfl@mafact.com> & RA. Cuylen <rac@mafact.com>
+ * www - http://www.harbour-project.org
+ *
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
  * www - http://www.harbour-project.org
  *
@@ -81,6 +85,9 @@ EXTERNAL __CLASSADD
 EXTERNAL __CLASSNAME
 EXTERNAL __CLASSSEL
 EXTERNAL __GETMESSAGE
+EXTERNAL __CLS_PARAM //Added by RaC&JfL
+EXTERNAL __CLSPARENT //Added by RaC&JfL
+EXTERNAL SENDER      //Added by RaC&JfL
 //
 //symbols from file: vm\cmdarg.c
 //
@@ -642,6 +649,7 @@ EXTERNAL __OBJMODINLINE
 EXTERNAL __OBJDELMETHOD
 EXTERNAL __OBJDELINLINE
 EXTERNAL __OBJDELDATA
+EXTERNAL __OBJDERIVEDFROM //Added by RaC&JfL
 //
 //symbols from file: rtl\readkey.prg
 //

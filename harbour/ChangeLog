@@ -1,3 +1,33 @@
+2000-05-28 22:16 UTC+0200   Jfl&RaC <jfl@mafact.com>
+
+
+*harbour/include/hboo.ch
+*harbour/include/hbclass.ch
+ Now support MI, scoping, fowarding and delegating
+ Also support 10 chars limit by not prefixing the Classname when in 10 chars mode
+
+*harbour/include/hbsetup.ch
+ Allow the configuration of Hidden message
+
+*harbour/source/rtl/objfunc.prg
+ added function __objDerivedFrom(oSelf, oObj | cClassName)
+
+*harbour/source/rtl/tclass.prg
+ Major modification to implement MI & scoping
+ Added message :Super to acces frist superclass object instance
+ Added message :IsDerivedFrom(oObj | cClassName ) (Xbase++ comp.)
+
+*harbour/source/vm/proc.c
+ added char * hb_procname( int iLevel, char * szName )
+ extracted from HB_FUNC( PROCNAME ) to allow it to be called from c
+ HB_FUNC( PROCNAME ) modified to call the previous'one
+
+*harbour/source/vm/classes.c
+ Major modification to implement MI & Scoping
+ Added function Sender() used by delegating to allow full polymorphism
+ Added function __CLS_PARAM used by the preprocessor
+
+
 2000-05-27 23:12 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/gtdos/gtdos.c

@@ -46,9 +46,24 @@
 
 #include "hbapi.h"
 
+char * hb_procname( int iLevel, char * szName ); //Added by RAC&JF
+
+//Modified by RAC&JF
 HB_FUNC( PROCNAME )
 {
    int iLevel = hb_parni( 1 ) + 1;  /* we are already inside ProcName() */
+   char sName[255];
+
+   // Added by RAC&JF
+   // Extracted to an internal function to allow us to call it from a c hb_internal
+   hb_procname( iLevel, &sName );
+   hb_retc( ( char *) &sName );
+}
+
+/*
+HB_FUNC( PROCNAME )
+{
+   int iLevel = hb_parni( 1 ) + 1;  // we are already inside ProcName()
    PHB_ITEM pBase = hb_stack.pBase;
 
    while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
@@ -56,7 +71,7 @@ HB_FUNC( PROCNAME )
 
    if( ( iLevel == -1 ) )
    {
-      if( ( pBase + 1 )->type == HB_IT_ARRAY )  /* it is a method name */
+      if( ( pBase + 1 )->type == HB_IT_ARRAY )  // it is a method name
       {
          char * szProcName;
 
@@ -74,7 +89,7 @@ HB_FUNC( PROCNAME )
    else
       hb_retc( "" );
 }
-
+*/
 HB_FUNC( PROCLINE )
 {
    int iLevel = hb_parni( 1 ) + 1;  /* we are already inside ProcName() */
@@ -100,3 +115,30 @@ HB_FUNC( PROCFILE )
 }
 
 #endif
+
+
+//Added by RAC&JF  because we need it from classes.c
+char * hb_procname( int iLevel, char * szName )
+{
+   PHB_ITEM pBase = hb_stack.pBase;
+
+   while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
+      pBase = hb_stack.pItems + pBase->item.asSymbol.stackbase;
+
+   if( ( iLevel == -1 ) )
+   {
+      if( ( pBase + 1 )->type == HB_IT_ARRAY )  /* it is a method name */
+      {
+         strcpy( szName, hb_objGetClsName( pBase + 1 ) );
+         strcat( szName, ":" );
+         strcat( szName, pBase->item.asSymbol.value->szName );
+      }
+      else
+         strcpy( szName, pBase->item.asSymbol.value->szName );
+   }
+   else
+      strcpy( szName, "" );
+
+   return( szName );
+}
+
