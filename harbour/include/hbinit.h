@@ -61,6 +61,12 @@ extern "C" {
 
 extern void HB_EXPORT hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* statics symbols initialization */
 
+
+#if ! defined(__GNUC__) && ! defined(_MSC_VER)
+  #define HB_USE_PRAGMA_STARTUP  
+#endif
+
+
 #if defined(HARBOUR_STRICT_ANSI_C)
 
    #define HB_INIT_SYMBOLS_BEGIN( func ) \
