@@ -1,3 +1,18 @@
+2000-08-15 23:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
+  * source/compiler/harbour.slx
+    ! Corrected support for stringified strings to include nested string delimiters in the LITERAL.
+
+    /* Please note, both lexers are subject to extreme rare incomatibility, with direct code as follow:
+
+       ? [" 1st. char is a Quote, last charcter is not.] ; MoreCode := [other SB delimited str ending with quote."]
+
+       I can't see that being a real problem on one hand, and I don't know that we can flag a specific LITERAL
+       within any given line as a PP stringified, as opposed to direct code, unless PP generates a specific [inline]
+       marker for lexer. Since Clipper PPO of stringified string does NOT compile, I tend to think that's what Clipper
+       does. Finally, since Clipper can't compile such PPO of valid code, I would suggest that if we ever decide to
+       correct this, we include the "marker" in PPO output too, making it valid.
+    */
+
 2000-08-15 18:25 UTC+0800 Ron Pinkas <ron@profit-master.com>
   * source/compiler/simplex.c
     + Added support for multi-charcters Stream Start and Stream End delimiters.

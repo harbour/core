@@ -61,9 +61,7 @@
 	   if( sTerm[1] == ']' && iCloseSquare ) \
 	   { \
               szBuffer -= ( ( strlen( sPair ) - iCloseSquare ) + 1 ); \
-	      memmove( (char*) &(sPair[1]), (char*) &(sPair[0]), iCloseSquare - 1 ); \
-	      sPair[0] = sStart[1]; \
-	      sPair[ iCloseSquare ] = '\0'; \
+	      sPair[ iCloseSquare - 1 ] = '\0'; \
               aiReturn[ iReturn++ ] = HB_LIT_ACT; \
 	   } \
 	   else \
@@ -76,6 +74,7 @@
 
 #undef STREAM_APPEND
    #define STREAM_APPEND(x) \
+   if( iPairLen == 0 && sStart[1] ) sPair[ iPairLen++ ] = sStart[1]; \
    if( x == ']' && ! iCloseSquare ) iCloseSquare = iPairLen + 1; sPair[ iPairLen++ ] = x
 
 #undef STREAM_OPEN
@@ -84,7 +83,7 @@
          iCloseSquare = 0; \
 	 \
          if( sStarter[0] == 'Q' ) \
-           bTmp = FALSE /* TODO: hb_ppInsideTextBlock*/; \
+           bTmp = FALSE /* TODO: hb_pp_bInsideTextBlock */; \
          else \
            bTmp = TRUE; \
       } \
@@ -110,7 +109,8 @@ DELIMITER_BELONGS_TO_TOKEN_IF_ONE_OF_THESE( "" );
 /* Custom Action can be requested by setting reduction to LEX_CUSTOM_ACTION or lower. */
 
 /* Intermediate Token needed to be expanded. */
-#define HB_LIT_ACT      -1001
+#define HB_LIT_ACT      -1000
+#define HB_NESTED_LIT   -1001
 #define HB_QOUT_ACT     -1002
 #define HB_RET_QOUT_LIT -1003
 
@@ -119,9 +119,9 @@ DEFINE_STREAM_AS_ONE_OF_THESE {
                                 START_WITH("\'")     END_WITH("\'")   STOP_IF_ONE_OF_THESE("\n") TEST_LEFT(FALSE) AS_PAIR_TOKEN(HB_LIT_ACT),
                                 START_WITH("\"")     END_WITH("\"" )  STOP_IF_ONE_OF_THESE("\n") TEST_LEFT(FALSE) AS_PAIR_TOKEN(HB_LIT_ACT),
                                 START_WITH("[")      END_WITH("]" )   STOP_IF_ONE_OF_THESE("\n") TEST_LEFT(TRUE ) AS_PAIR_TOKEN(HB_LIT_ACT),
-                                START_WITH("[\'")    END_WITH("\']" ) STOP_IF_ONE_OF_THESE("\n") TEST_LEFT(FALSE) AS_PAIR_TOKEN(HB_LIT_ACT),
-                                START_WITH("[\"")    END_WITH("\"]" ) STOP_IF_ONE_OF_THESE("\n") TEST_LEFT(FALSE) AS_PAIR_TOKEN(HB_LIT_ACT),
-                                START_WITH("[[")     END_WITH("]]" )  STOP_IF_ONE_OF_THESE("\n") TEST_LEFT(FALSE) AS_PAIR_TOKEN(HB_LIT_ACT),
+                                START_WITH("[\'")    END_WITH("\']" ) STOP_IF_ONE_OF_THESE("\n") TEST_LEFT(FALSE) AS_PAIR_TOKEN(HB_NESTED_LIT),
+                                START_WITH("[\"")    END_WITH("\"]" ) STOP_IF_ONE_OF_THESE("\n") TEST_LEFT(FALSE) AS_PAIR_TOKEN(HB_NESTED_LIT),
+                                START_WITH("[[")     END_WITH("]]" )  STOP_IF_ONE_OF_THESE("\n") TEST_LEFT(FALSE) AS_PAIR_TOKEN(HB_NESTED_LIT),
                                 START_WITH("QOUT([") END_WITH("])\n") STOP_IF_ONE_OF_THESE("\n") TEST_LEFT(FALSE) AS_PAIR_TOKEN(HB_QOUT_ACT)
                               };
 
@@ -1084,6 +1084,15 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], int *ptr_iHold, BOOL
          x = LITERAL;
          break;
 
+      case HB_NESTED_LIT :
+      {
+	 int iPairLen = strlen( sPair );
+	 sPair[ iPairLen ] = sTerm[0];
+	 sPair[ iPairLen + 1 ] = '\0';
+         yylval.string = hb_compIdentifierNew( sPair, TRUE );
+         x = LITERAL;
+         break;
+      }
       case HB_QOUT_ACT :
 	 /* iIdentifier++; */
          yylval.string = hb_compIdentifierNew( "QOUT", TRUE );
