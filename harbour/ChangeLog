@@ -1,3 +1,7 @@
+2001-09-01 09:00 GMT+1 Antonio Linares <alinares@fivetech.com>
+  + harbour/contrib/hgf/win32/tests/form2.prg
+    Harbour Class TForm inheritance sample
+
 2001-09-01 08:35 GMT+1 Antonio Linares <alinares@fivetech.com>
 
   + harbour/contrib/hgf/win32/make_b32.bat
