@@ -109,6 +109,8 @@ CLASS TBrowse
    DATA stable                // Indicates if the TBrowse object is stable
 
 #ifdef HB_COMPAT_C53
+   DATA nRow                  // Row number for the actual cell
+   DATA nCol                  // Col number for the actual cell
    DATA aKeys
    DATA mColpos,mrowPos,message
 #endif
@@ -200,7 +202,7 @@ CLASS TBrowse
                                           // > 0 only when there are frozen columns
    DATA nFrozenCols                       // Number of frozen columns on left side of TBrowse
    DATA nColumns                          // Number of columns added to TBrowse
-   DATA lNeverDisplayed                   // .T. if TBrowse has never been stabilize()d
+   DATA lNeverDisplayed                   // .T. if TBrowse has never been stabilized()
 #ifdef HB_COMPAT_C53
    DATA rect
    DATA aVisibleCols
@@ -248,18 +250,21 @@ METHOD New(nTop, nLeft, nBottom, nRight) CLASS TBrowse
    ::nColumns        := 0
    ::lNeverDisplayed := .T.
 
-   ::nTop    := nTop
-   ::nLeft   := nLeft
-   ::nBottom := nBottom
-   ::nRight  := nRight
-   #ifdef HB_COMPAT_C53
-   ::mColPos  := 0
-   ::mRowPos  := 0
-   ::rect:={nTop,nLeft,nBottom,nRight}
-   ::aVisibleCols:={}
-   ::message:=''
+   ::nTop            := nTop
+   ::nLeft           := nLeft
+   ::nBottom         := nBottom
+   ::nRight          := nRight
 
-   #endif
+ #ifdef HB_COMPAT_C53
+   ::mColPos         := 0
+   ::mRowPos         := 0
+   ::rect            :={nTop,nLeft,nBottom,nRight}
+   ::aVisibleCols    :={}
+   ::message         :=''
+   ::nRow            := 0
+   ::nCol            := 0
+ #endif
+
 return Self
 
 
@@ -775,18 +780,25 @@ return Self
 
 METHOD Hilite() CLASS TBrowse
 
-   local nRow
+   local nRow, nCol
    local cType
 
    nRow := ::nTop + ::RowPos + iif(::lHeaders, ::nHeaderHeight, 0) + iif(Empty(::HeadSep), 0, 1) - 1
+   nCol := ::aColumns[ ::ColPos ]:ColPos
 
    // Start of cell
-   SetPos( nRow, ::aColumns[ ::ColPos ]:ColPos )
+   SetPos( nRow, nCol)
 
    cType := ::DispCell(::ColPos, CLR_ENHANCED)
+   nCol  += iif(cType == "L", ::aColsWidth[::ColPos] / 2, 0 )
 
    // Put cursor back on first char of cell value
-   SetPos(nRow, ::aColumns[ ::ColPos ]:ColPos + iif(cType == "L", ::aColsWidth[::ColPos] / 2, 0 ))
+   SetPos(nRow, nCol)
+   
+ #ifdef HB_COMPAT_C53
+   ::nRow := nRow
+   ::nCol := nCol
+ #endif
 
 return Self
 
@@ -794,10 +806,18 @@ return Self
 METHOD PosCursor() CLASS TBrowse
 
    local nRow := ::nTop + ::RowPos + iif(::lHeaders, ::nHeaderHeight, 0) + iif(Empty(::HeadSep), 0, 1) - 1
+   local nCol 
    local cType := ValType( Eval( ::aColumns[ ::ColPos ]:block ) )
+   
+   nCol := ::aColumns[ ::ColPos ]:ColPos + iif(cType == "L", ::aColsWidth[::ColPos] / 2, 0 )
 
    // Put cursor on first char of cell value
-   SetPos(nRow, ::aColumns[ ::ColPos ]:ColPos + iif(cType == "L", ::aColsWidth[::ColPos] / 2, 0 ))
+   SetPos(nRow, nCol)
+
+ #ifdef HB_COMPAT_C53
+   ::nRow := nRow
+   ::nCol := nCol
+ #endif
 
 return Self
 
