@@ -17,6 +17,7 @@ endif
 ifeq ($(PM),)	# PM not defined = build all files
 PRG_SOURCES=\
         ac_test.prg \
+        adirtest.prg \
 	ainstest.prg \
 	and_or.prg \
 	array16.prg \
@@ -39,6 +40,7 @@ PRG_SOURCES=\
 	codebloc.prg \
 	comments.prg \
 	copyfile.prg \
+        curdirt.prg \
 	dates.prg \
 	dates2.prg \
 	dates3.prg \

@@ -1,3 +1,33 @@
+19990803-22:30 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/gtapi.c
+    include/gtapi.h
+    + hb_gtGetBlink() added.
+    (still dummy though)
+  * source/rtl/console.c
+    + SETBLINK() added.
+  * source/rtl/filesys.c
+    source/rtl/Makefile
+    tests/working/curdirt.prg
+    tests/working/Makefile
+    + CURDIR() plus test program CURDIRT added.
+      (Please update other makefiles accordingly)
+      Note that hb_fsCurDir() is not fully implemented yet,
+      so the test will not work like Clipper.
+  * source/rtl/setcolor.c
+    + COLORSELECT() added.
+  * source/rtl/adir.prg
+    source/rtl/Makefile
+    tests/working/adirtest.prg
+    tests/working/Makefile
+    + ADIR() plus test program ADIRTEST added.
+      (Please update other makefiles accordingly)
+  * funclist.txt
+    * Updated statuses
+    + Added some functions (_fs*())
+  * doc/codestyl.txt
+    + "NOTE:" Added
+  * tests/working/descend.prg - Byref test added.
+
 19990803-19:00 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/achoice.prg
     source/rtl/Makefile

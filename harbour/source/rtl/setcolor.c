@@ -58,9 +58,11 @@ char *hb_setColor( char *sColor )
 }
 
 HARBOUR HB_SETCOLOR( void );
+HARBOUR HB_COLORSELECT( void );
 
 HB_INIT_SYMBOLS_BEGIN( SETCOLOR__InitSymbols )
-{ "SETCOLOR", FS_PUBLIC, HB_SETCOLOR, 0 }
+{ "SETCOLOR"    , FS_PUBLIC, HB_SETCOLOR   , 0 },
+{ "COLORSELECT" , FS_PUBLIC, HB_COLORSELECT, 0 }
 HB_INIT_SYMBOLS_END( SETCOLOR__InitSymbols );
 #if ! defined(__GNUC__)
 #pragma startup SETCOLOR__InitSymbols
@@ -69,4 +71,10 @@ HB_INIT_SYMBOLS_END( SETCOLOR__InitSymbols );
 HARBOUR HB_SETCOLOR( void )
 {
     hb_retc( hb_setColor( hb_pcount() ? hb_parc(1) : NULL ) );
+}
+
+HARBOUR HB_COLORSELECT( void )
+{
+    if (ISNUM(1))
+        hb_gtColorSelect( hb_parni(1) );
 }

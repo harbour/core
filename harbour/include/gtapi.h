@@ -56,6 +56,7 @@ extern int    hb_gtColorSelect(USHORT uiColorIndex);
 extern int    hb_gtDispBegin(void);
 extern USHORT hb_gtDispCount(void);
 extern int    hb_gtDispEnd(void);
+extern int    hb_gtGetBlink(BOOL * bBlink);
 extern int    hb_gtGetColorStr(char * fpColorString);
 extern int    hb_gtGetCursor(USHORT * uipCursorShape);
 extern int    hb_gtGetPos(USHORT * uipRow, USHORT * uipCol);

@@ -3,6 +3,7 @@
  */
 
 #include <string.h>
+#include <ctype.h>
 #include "extend.h"
 #include "init.h"
 #include "filesys.h"
@@ -133,6 +134,7 @@ HARBOUR HB_FREADSTR( void );
 HARBOUR HB_FRENAME( void );
 HARBOUR HB_FSEEK( void );
 HARBOUR HB_FWRITE( void );
+HARBOUR HB_CURDIR( void );
 HARBOUR HB_I2BIN( void );
 HARBOUR HB_L2BIN( void );
 HARBOUR HB_W2BIN( void );
@@ -151,6 +153,7 @@ HB_INIT_SYMBOLS_BEGIN( Files__InitSymbols )
 { "FREADSTR", FS_PUBLIC, HB_FREADSTR, 0 },
 { "FSEEK"   , FS_PUBLIC, HB_FSEEK   , 0 },
 { "FWRITE"  , FS_PUBLIC, HB_FWRITE  , 0 },
+{ "CURDIR"  , FS_PUBLIC, HB_CURDIR  , 0 },
 { "I2BIN"   , FS_PUBLIC, HB_I2BIN   , 0 },
 { "L2BIN"   , FS_PUBLIC, HB_L2BIN   , 0 },
 { "W2BIN"   , FS_PUBLIC, HB_W2BIN   , 0 }
@@ -511,6 +514,8 @@ BYTEP   hb_fsCurDir ( USHORT uiDrive )
         return (BYTEP)cwd_buff;
 }
 
+/* TODO: Implement nDrive */
+
 USHORT  hb_fsChDrv  ( BYTEP nDrive )
 {
         USHORT result;
@@ -779,6 +784,14 @@ HARBOUR HB_FREADSTR( void )
            hb_retc("");
 
         return;
+}
+
+/* NOTE: This function should not return the leading and trailing */
+/*       (back)slashes. */
+
+HARBOUR HB_CURDIR( void )
+{
+   hb_retc( hb_fsCurDir( ( ISCHAR( 1 ) && hb_parclen( 1 ) ) ? (USHORT)( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0 ) );
 }
 
 HARBOUR HB_BIN2I( void )

@@ -1,5 +1,6 @@
 
 /* Please note the following comments we may use everywhere
+   NOTE: Notes 
    TODO: something should be added here
    TOFIX: something needs to be fixed
    OBSOLETE: something could be removed from here

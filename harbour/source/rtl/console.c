@@ -88,6 +88,7 @@ HARBOUR HB_ROW( void );
 HARBOUR HB_SCROLL( void );
 HARBOUR HB_SAVESCREEN( void );
 HARBOUR HB_SETCURSOR( void );
+HARBOUR HB_SETBLINK( void );
 HARBOUR HB_SETPOS( void );
 HARBOUR HB_SETPRC( void );
 HARBOUR HB_SHADOW( void );
@@ -115,6 +116,7 @@ HB_INIT_SYMBOLS_BEGIN( Console__InitSymbols )
 { "SCROLL"    , FS_PUBLIC, HB_SCROLL    , 0 },
 { "SAVESCREEN", FS_PUBLIC, HB_SAVESCREEN, 0 },
 { "SETCURSOR" , FS_PUBLIC, HB_SETCURSOR , 0 },
+{ "SETBLINK"  , FS_PUBLIC, HB_SETBLINK  , 0 },
 { "SETPOS"    , FS_PUBLIC, HB_SETPOS    , 0 },
 { "SETPRC"    , FS_PUBLIC, HB_SETPRC    , 0 },
 { "SHADOW"    , FS_PUBLIC, HB_SHADOW    , 0 },
@@ -943,7 +945,7 @@ HARBOUR HB_ISCOLOR (void)
 HARBOUR HB_NOSNOW (void)
 {
 #ifdef HARBOUR_USE_GTAPI
-   if (ISLOG(1))
+   if ( ISLOG( 1 ) )
    {
       hb_gtSetSnowFlag(hb_parl(1));
    }
@@ -1027,6 +1029,21 @@ HARBOUR HB_SETCURSOR( void )
       hb_gtSetCursor( hb_parni( 1 ) );
 
    hb_retni( usPreviousCursor );
+#endif
+}
+
+HARBOUR HB_SETBLINK( void )
+{
+#ifdef HARBOUR_USE_GTAPI
+   BOOL bPreviousBlink;
+
+   hb_gtGetBlink( &bPreviousBlink );
+   if ( ISLOG( 1 ) )
+      hb_gtSetBlink( hb_parl( 1 ) );
+
+   hb_retl( bPreviousBlink );
+#else
+   hb_retl( FALSE );
 #endif
 }
 

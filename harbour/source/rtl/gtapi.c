@@ -60,6 +60,7 @@
 /* TODO: functions not implemented yet
 int hb_gtPostExt(void);
 int hb_gtPreExt(void);
+int hb_gtGetBlink(BOOL * bBlink);
 int hb_gtSetBlink(BOOL bBlink);
 int hb_gtSetMode(USHORT uiRows, USHORT uiCols);
 */
@@ -574,6 +575,13 @@ int hb_gtScrDim(USHORT * uipHeight, USHORT * uipWidth)
     *uipWidth = s_uiMaxCol;
 
     return(0);
+}
+
+int hb_gtGetBlink(BOOL * bBlink)
+{
+    *bBlink = FALSE;
+
+    return ( 0 );
 }
 
 int hb_gtSetBlink(BOOL bBlink)

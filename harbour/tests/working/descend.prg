@@ -7,7 +7,11 @@
 function main()
 
   LOCAL dDate
+  LOCAL cString
 
+  cString := "HARBOUR POWER & MAGIC"
+  OutSpec( Descend( cString ) )
+  OutSpec( Descend( &cString ) )
   OutSpec( Descend( "HARBOUR POWER & MAGIC" ) )
   OutSpec( Descend( Descend( "HARBOUR POWER & MAGIC" ) ) )
   OutSpec( Descend( .f. ) )
