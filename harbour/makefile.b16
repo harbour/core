@@ -26,7 +26,7 @@ libs\win16\terminal.lib : console.obj
 console.obj  : console.c  extend.h hbdefs.h
   bcc -c -O2 -I.\include -o$@ source\rtl\console.c
   tlib .\libs\b16\terminal.lib -+$@,,
-  bcc -c -O2 -DWINDOWS -I.\include -o$@ source\rtl\console.c
+  bcc -c -O2 -DWINDOWS _DHARBOUR_USE_GTAPI -I.\include -o$@ source\rtl\console.c
   tlib .\libs\win16\terminal.lib -+$@,,
 
 arrays.obj   : arrays.c   extend.h hbdefs.h
@@ -75,7 +75,8 @@ tclass.c     : tclass.prg    harbour.exe
   bin\harbour $< /n /osource\rtl
 
 .c.obj:
-  bcc -c -ml -O2 -I.\include -o$@ $<
+  bcc -c -ml -O2 -I.\include -o$@ -DHARBOUR_USE_GTAPI $<
+
   tlib .\libs\b16\harbour.lib -+$@,,
 
 harbour.exe : harboury.c harbourl.c harbour.obj

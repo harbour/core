@@ -1,3 +1,7 @@
+19990724-11:50 CET Patrick Mast <harbour@PatrickMast.com>
+  * Makefile.b16 and Makefile.b32
+    added -DHARBOUR_USE_GTAPI swicth
+
 19990723-06:39 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/gtapi.c
    * source/rtl/setcolor.c

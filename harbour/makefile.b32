@@ -77,7 +77,8 @@ tclass.c     : tclass.prg    harbour.exe
   bin\harbour $< /n /osource\rtl /iinclude
 
 .c.obj:
-  bcc32 -c -O2 -I.\include -o$@ $<
+  bcc32 -c -O2 -I.\include -o$@ -DHARBOUR_USE_GTAPI $<
+
   tlib .\libs\b32\harbour.lib -+$@,,
 
 harbour.exe : harboury.c harbourl.c genobj32.obj harbour.obj compiler.h hbppint.c hbpp.c table.c
