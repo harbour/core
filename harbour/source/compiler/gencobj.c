@@ -173,7 +173,7 @@ void hb_compGenCObj( PHB_FNAME pFileName )
 
 #if defined(_MSC_VER)
       strcat( szOutPath, "-Fo" );
-#elif
+#else
       strcat( szOutPath, "-o" );
 #endif
 
