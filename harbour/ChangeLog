@@ -1,3 +1,7 @@
+2000-12-03 10:45 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/pp/ppcore.c
+     + Added support for whaite space between = and > in #[x]command/[x]translate rules.
+
 2000-12-02 01:15 UTC+0500 April <awhite@user.rose.com>
    * source/rtl/xhelp.prg
      * added code to push the params passed to xhelp back onto the stack

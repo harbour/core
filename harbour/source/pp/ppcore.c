@@ -168,7 +168,7 @@ char * hb_pp_szErrors[] =
    "#endif does not match #ifdef",
    "Bad filename in #include",
    "#define without parameters",
-   "Missing => in #translate/#command",
+   "Missing => in #translate/#command \'%s\' [%s]'",
    "Error in pattern definition",
    "Cycled #define",
    "Invalid name follows #: \'%s\'",
@@ -702,11 +702,13 @@ static void ParseCommand( char * sLine, BOOL com_or_xcom, BOOL com_or_tra )
   int mlen,rlen;
   int ipos;
 
+  /* Ron Pinkas added 2000-12-03 */
+  BOOL bOk = FALSE;
+
   HB_TRACE(HB_TR_DEBUG, ("ParseCommand(%s, %d, %d)", sLine, com_or_xcom, com_or_tra));
 
   HB_SKIPTABSPACES( sLine );
   ipos = 0;
-
 
   /* JFL 2000-09-19 */
   /* This was the original line as Alexander wrote it */
@@ -723,14 +725,59 @@ static void ParseCommand( char * sLine, BOOL com_or_xcom, BOOL com_or_tra )
   hb_strupr( cmdname );
   HB_SKIPTABSPACES(sLine);
 
-  if( (ipos = hb_strAt( "=>", 2, sLine, strlen(sLine) )) > 0 )
+  /* Ron Pinkas added 2000-12-03 */
+  ipos = 0;
+  while( *sLine )
   {
-    stroncpy( mpatt, sLine, ipos-1 );
+     mpatt[ipos++] = *sLine;
+
+     if( *sLine == '=' )
+     {
+        int i = ipos;
+
+        sLine++;
+        mpatt[i++] = *sLine;
+
+        while( *sLine && ( *sLine == ' ' || *sLine == '\t' ) )
+        {
+           sLine++;
+           mpatt[i++] = *sLine;
+        }
+
+        if( *sLine == '>' )
+        {
+           ipos = ipos - 2;
+           while( mpatt[ipos] == ' ' || mpatt[ipos] == '\t' )
+           {
+              ipos--;
+           }
+
+           mpatt[ipos + 1] = '\0';
+           sLine++;
+           bOk = TRUE;
+           break;
+        }
+
+        ipos = i;
+     }
+
+     sLine++;
+  }
+  /* End - Ron Pinkas added 2000-12-03 */
+
+  /* Ron Pinkas modified 2000-12-03
+  if( (ipos = hb_strAt( "=>", 2, sLine, strlen(sLine) )) > 0 ) */
+  if( bOk )
+  {
+    /* Ron Pinkas removed 2000-12-03
+    stroncpy( mpatt, sLine, ipos-1 ); */
 
     RemoveSlash( mpatt );
     mlen = strotrim( mpatt );
 
-    sLine += ipos + 1;
+    /* Ron Pinkas removed 2000-12-03
+    sLine += ipos + 1; */
+
     HB_SKIPTABSPACES(sLine);
     hb_pp_strocpy( rpatt, sLine );
     rlen = strotrim( rpatt );
@@ -753,7 +800,10 @@ static void ParseCommand( char * sLine, BOOL com_or_xcom, BOOL com_or_tra )
 
   }
   else
-    hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_COMMAND_DEFINITION, NULL, NULL );
+  {
+     sLine -= ( ipos + 1 );
+     hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_COMMAND_DEFINITION, cmdname, sLine );
+  }
 }
 
 /* ConvertPatterns()
