@@ -512,7 +512,7 @@ static void hb_dbfGetMemo( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       pBuffer = ( BYTE * ) hb_xgrab( ulSize + 1 );
       ulBlock = hb_dbfGetMemoBlock( pArea, uiIndex );
       hb_fsSeek( pArea->hMemoFile, ulBlock * DBT_BLOCKSIZE, FS_SET );
-      hb_fsRead( pArea->hMemoFile, pBuffer, ulSize );
+      hb_fsReadLarge( pArea->hMemoFile, pBuffer, ulSize );
       hb_itemPutCPtr( pItem, ( char * ) pBuffer, ulSize );
       hb_itemSetCMemo( pItem );
    }
@@ -521,18 +521,18 @@ static void hb_dbfGetMemo( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 /*
  * Write memo data.
  */
-static void hb_dbfWriteMemo( DBFAREAP pArea, ULONG ulBlock, PHB_ITEM pItem, USHORT uiLen,
+static void hb_dbfWriteMemo( DBFAREAP pArea, ULONG ulBlock, PHB_ITEM pItem, ULONG ulLen,
                              ULONG * ulStoredBlock )
 {
    BYTE pBlock[ DBT_BLOCKSIZE ];
    BOOL bNewBlock;
    ULONG ulNewBlock, ulNextBlock;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_dbfWriteMemo(%p, %lu, %p, %hu, %p)", pArea, ulBlock, pItem,
+   HB_TRACE(HB_TR_DEBUG, ("hb_dbfWriteMemo(%p, %lu, %p, %lu, %p)", pArea, ulBlock, pItem,
                            ulLen, ulNewBlock));
 
    memset( pBlock, 0x1A, DBT_BLOCKSIZE );
-   bNewBlock = !( ulBlock && uiLen < DBT_BLOCKSIZE - 1 );
+   bNewBlock = !( ulBlock && ulLen < DBT_BLOCKSIZE - 1 );
    if( bNewBlock )
    {
       /* Get next block from header */
@@ -549,12 +549,12 @@ static void hb_dbfWriteMemo( DBFAREAP pArea, ULONG ulBlock, PHB_ITEM pItem, USHO
    * ulStoredBlock = ulNewBlock;
 
    /* Write memo data and eof mark */
-   hb_fsWrite( pArea->hMemoFile, ( BYTE * ) hb_itemGetCPtr( pItem ), uiLen );
-   hb_fsWrite( pArea->hMemoFile, pBlock, ( DBT_BLOCKSIZE - uiLen % DBT_BLOCKSIZE) );
+   hb_fsWriteLarge( pArea->hMemoFile, ( BYTE * ) hb_itemGetCPtr( pItem ), ulLen );
+   hb_fsWrite( pArea->hMemoFile, pBlock, ( DBT_BLOCKSIZE - ( USHORT ) ( ulLen % DBT_BLOCKSIZE ) ) );
 
    if( bNewBlock )
    {
-      ulNextBlock += uiLen + 1;
+      ulNextBlock += ulLen + 1;
       ulNextBlock += ( DBT_BLOCKSIZE - ulNextBlock % DBT_BLOCKSIZE );
       ulNextBlock /= DBT_BLOCKSIZE;
       hb_fsSeek( pArea->hMemoFile, 0, FS_SET );
