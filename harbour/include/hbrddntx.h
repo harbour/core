@@ -283,10 +283,12 @@ typedef struct _NTXAREA
    BOOL fDeleted;                /* TRUE if record is deleted */
    BOOL fUpdateHeader;           /* Update header of file */
    BOOL fFLocked;                /* TRUE if file is locked */
+   BOOL fHeaderLocked;           /* TRUE if DBF header is locked */
    LPDBRELINFO lpdbPendingRel;   /* Pointer to parent rel struct */
    BYTE bYear;                   /* Last update */
    BYTE bMonth;
    BYTE bDay;
+   BYTE bLockType;               /* Type of locking shemes */
    ULONG * pLocksPos;            /* List of records locked */
    ULONG ulNumLocksPos;          /* Number of records locked */
    PHB_CODEPAGE cdPage;          /* Area's codepage pointer  */

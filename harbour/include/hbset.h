@@ -128,7 +128,8 @@ typedef enum
    HB_SET_FILECASE      = 102,
    HB_SET_DIRCASE       = 103,
    HB_SET_DIRSEPARATOR  = 104,
-   HB_SET_EOF           = 105
+   HB_SET_EOF           = 105,
+   HB_SET_DBFLOCKSCHEME = 106
 
 } HB_set_enum;
 
@@ -192,11 +193,17 @@ typedef struct
    char    HB_SET_DIRSEPARATOR;
    int     HB_SET_VIDEOMODE;
    BOOL    HB_SET_WRAP;
+   int     HB_SET_DBFLOCKSCHEME;
 } HB_SET_STRUCT;
 
 #define HB_SET_CASE_MIXED  0
 #define HB_SET_CASE_LOWER  1
 #define HB_SET_CASE_UPPER  2
+
+#define HB_SET_DBFLOCK_DEFAULT    0
+#define HB_SET_DBFLOCK_CLIP       1
+#define HB_SET_DBFLOCK_CL53       2
+#define HB_SET_DBFLOCK_VFP        3
 
 extern HB_SET_STRUCT hb_set;
 

@@ -44,6 +44,7 @@ C_SOURCES=\
     gtapiu.c     \
     gx.c         \
     hardcr.c     \
+    hbrandom.c   \
     idle.c       \
     inkey.c      \
     is.c         \

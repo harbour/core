@@ -2005,3 +2005,48 @@ static HANDLE DostoWinHandle( FHANDLE fHandle)
 }
 
 #endif
+
+BYTE HB_EXPORT * hb_fileNameConv(char *str) {
+   // Convert file and dir case. The allowed SET options are:
+   // LOWER - Convert all caracters of file to lower
+   // UPPER - Convert all caracters of file to upper
+   // MIXED - Leave as is
+
+   // The allowed environment options are:
+   // FILECASE - define the case of file
+   // DIRCASE - define the case of path
+   // DIRSEPARATOR - define separator of path (Ex. "/")
+
+   size_t a;
+   char *filename;
+   char *dirname=str;
+   size_t dirlen;
+   char * szFileTrim =str;
+   ULONG ulPos;
+
+   // Look for filename (Last "\" or DIRSEPARATOR)
+   if( hb_set.HB_SET_DIRSEPARATOR != '\\' ) {
+      for(a=0;a<strlen(str);a++)
+         if( str[a] == '\\' )
+            str[a] = hb_set.HB_SET_DIRSEPARATOR;
+   }
+   if(( filename = strrchr( str, hb_set.HB_SET_DIRSEPARATOR )) != NULL)
+      filename++;
+   else
+      filename=str;
+   dirlen=filename-str;
+
+   // FILECASE
+   if( hb_set.HB_SET_FILECASE == HB_SET_CASE_LOWER )
+      hb_strLower( filename, strlen(filename) );
+   else if( hb_set.HB_SET_FILECASE == HB_SET_CASE_UPPER )
+      hb_strUpper( filename, strlen(filename) );
+
+   // DIRCASE
+   if( hb_set.HB_SET_DIRCASE == HB_SET_CASE_LOWER )
+      hb_strLower(dirname,dirlen);
+   else if( hb_set.HB_SET_DIRCASE == HB_SET_CASE_UPPER )
+      hb_strUpper(dirname,dirlen);
+   return (( BYTE * ) str);
+}
+

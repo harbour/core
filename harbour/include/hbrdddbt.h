@@ -59,7 +59,7 @@
 #ifndef HB_CDP_SUPPORT_OFF
 #include "hbapicdp.h"
 #endif
-#define HB_EXTRANAL_RDDDBF_USE
+#define HB_EXTERNAL_RDDDBF_USE
 #include "hbrdddbf.h"
 
 #if defined(HB_EXTERN_C)

@@ -66,6 +66,40 @@ extern "C" {
 #define DBF_TABLEEXT                              ".dbf"
 /* DBF lock */
 #define DBF_LOCKPOS                          1000000000L
+/* DBF locking schemes */
+#define DBF_LOCKPOS_CLIP                  1000000000L
+#define DBF_LOCKPOS_CL53                  1000000000L
+#define DBF_LOCKPOS_VFP                   0x40000000L
+#define DBF_LOCKPOS_VFPX                  0x7ffffffeL
+
+#define DBF_LOCKDIR_CLIP                  1
+#define DBF_LOCKDIR_CL53                  1
+#define DBF_LOCKDIR_VFP                   2  /* lock forward at at record offset */
+#define DBF_LOCKDIR_VFPX                  -1
+
+#define DBF_FLCKSIZE_CLIP                 1000000000L
+#define DBF_FLCKSIZE_CL53                 1000000000L
+#define DBF_FLCKSIZE_VFP                  0x3ffffffdL
+#define DBF_FLCKSIZE_VFPX                 0x07ffffffL
+
+#define DBF_RLCKSIZE_CLIP                 1L
+#define DBF_RLCKSIZE_CL53                 1L
+#define DBF_RLCKSIZE_VFP                  1L
+#define DBF_RLCKSIZE_VFPX                 1L
+
+#define IDX_LOCKPOS_CLIP                  1000000000L
+#define IDX_LOCKPOS_CL53                  0xfffeffffL
+#define IDX_LOCKPOS_VFP                   0x7ffffffeL
+
+#define IDX_LOCKPOOL_CLIP                 0L
+#define IDX_LOCKPOOL_CL53                 0x00010000L
+#define IDX_LOCKPOOL_VFP                  0L
+
+#ifdef OS_UNIX_COMPATIBLE
+#define DBF_EXLUSIVE_LOCKPOS              0x7fffffffL
+#define DBF_EXLUSIVE_LOCKSIZE             1L
+#endif
+
 
 
 
@@ -134,10 +168,12 @@ typedef struct _DBFAREA
    BOOL fDeleted;                /* TRUE if record is deleted */
    BOOL fUpdateHeader;           /* Update header of file */
    BOOL fFLocked;                /* TRUE if file is locked */
+   BOOL fHeaderLocked;           /* TRUE if DBF header is locked */
    LPDBRELINFO lpdbPendingRel;   /* Pointer to parent rel struct */
    BYTE bYear;                   /* Last update */
    BYTE bMonth;
    BYTE bDay;
+   BYTE bLockType;               /* Type of locking shemes */
    ULONG * pLocksPos;            /* List of records locked */
    ULONG ulNumLocksPos;          /* Number of records locked */
    PHB_CODEPAGE cdPage;          /* Area's codepage pointer  */
@@ -150,7 +186,7 @@ typedef DBFAREA * LPDBFAREA;
 #endif
 
 
-#ifndef HB_EXTRANAL_RDDDBF_USE
+#ifndef HB_EXTERNAL_RDDDBF_USE
 
 /*
  * -- DBF METHODS --
@@ -256,7 +292,13 @@ static BOOL    hb_dbfExists( PHB_ITEM pItemTable, PHB_ITEM pItemIndex );
 
 #define hb_dbfWhoCares                             NULL
 
-#endif /* HB_EXTRANAL_RDDDBF_USE */
+#endif /* HB_EXTERNAL_RDDDBF_USE */
+
+extern ULONG HB_EXPORT hb_dbfGetMemoBlock( DBFAREAP pArea, USHORT uiIndex );
+extern void  HB_EXPORT hb_dbfPutMemoBlock( DBFAREAP pArea, USHORT uiIndex, ULONG ulBlock );
+extern ERRCODE HB_EXPORT hb_dbfGetEGcode( ERRCODE errCode );
+extern BOOL HB_EXPORT hb_dbfLockIdxFile( FHANDLE hFile, BYTE bScheme, USHORT usMode, ULONG *pPoolPos );
+extern BOOL HB_EXPORT hb_dbfLockIdxGetData( BYTE bScheme, ULONG *ulPos, ULONG *ulPool );
 
 #if defined(HB_EXTERN_C)
 }

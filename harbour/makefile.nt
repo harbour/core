@@ -310,6 +310,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\gtapiu.obj \
    $(OBJ_DIR)\gx.obj \
    $(OBJ_DIR)\hardcr.obj \
+   $(OBJ_DIR)\hbrandom.obj \
    $(OBJ_DIR)\idle.obj \
    $(OBJ_DIR)\inkey.obj \
    $(OBJ_DIR)\is.obj \

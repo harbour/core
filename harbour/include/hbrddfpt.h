@@ -53,19 +53,19 @@
 #ifndef HB_RDDFPT_H_
 #define HB_RDDFPT_H_
 
+#include "hbsetup.h"
 #include "hbdbf.h"
 #include "hbdbferr.h"
 #include "hbapirdd.h"
 #ifndef HB_CDP_SUPPORT_OFF
 #include "hbapicdp.h"
 #endif
-#define HB_EXTRANAL_RDDDBF_USE
+#define HB_EXTERNAL_RDDDBF_USE
 #include "hbrdddbf.h"
 
 #if defined(HB_EXTERN_C)
 extern "C" {
 #endif
-
 
 /* MEMO constants and defaults */
 #define FPT_MEMOEXT                          ".fpt"
@@ -115,16 +115,20 @@ extern "C" {
 #define FPTIT_FLEX_LONG    0x03F6
 #define FPTIT_FLEX_DOUBLE  0x03F8
 
-#define FPTIT_FLEXAR_ARAY  0x0C
-#define FPTIT_FLEXAR_NIL   0x00
-#define FPTIT_FLEXAR_TRUE  0x19
-#define FPTIT_FLEXAR_FALSE 0x1A
-#define FPTIT_FLEXAR_DATE  0x0E
-#define FPTIT_FLEXAR_BYTE  0x12
-#define FPTIT_FLEXAR_SHORT 0x13
-#define FPTIT_FLEXAR_LONG  0x20
-#define FPTIT_FLEXAR_DBL   0x0F
-#define FPTIT_FLEXAR_STR   0x07
+#define FPTIT_FLEXAR_ARAY   0x0C
+#define FPTIT_FLEXAR_NIL    0x00
+#define FPTIT_FLEXAR_TRUE   0x19
+#define FPTIT_FLEXAR_FALSE  0x1A
+#define FPTIT_FLEXAR_DATE   0x0E
+#define FPTIT_FLEXAR_BYTE1  0x11
+#define FPTIT_FLEXAR_BYTE   0x12
+#define FPTIT_FLEXAR_BYTE2  0x1D
+#define FPTIT_FLEXAR_SHORT  0x13
+#define FPTIT_FLEXAR_SHORT2 0x1E
+#define FPTIT_FLEXAR_LONG   0x20
+#define FPTIT_FLEXAR_DBL    0x0F
+#define FPTIT_FLEXAR_STR    0x07
+#define FPTIT_FLEXAR_NUL    0x18
 
 /*
 #define HB_IT_NIL       ( ( USHORT ) 0x0000 )
@@ -310,9 +314,5 @@ static ERRCODE hb_fptWriteDBHeader( FPTAREAP pArea );
 #if defined(HB_EXTERN_C)
 }
 #endif
-
-extern ULONG hb_dbfGetMemoBlock( DBFAREAP pArea, USHORT uiIndex );
-extern void  hb_dbfPutMemoBlock( DBFAREAP pArea, USHORT uiIndex, ULONG ulBlock );
-extern ERRCODE hb_dbfGetEGcode( ERRCODE errCode );
 
 #endif /* HB_RDDFPT */

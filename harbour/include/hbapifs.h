@@ -202,6 +202,7 @@ extern ULONG     hb_fsAttrToRaw( USHORT uiAttr );
 extern USHORT    hb_fsAttrEncode( const char * szAttr );
 extern char *    hb_fsAttrDecode( USHORT uiAttr, char * szAttr );
 extern BYTE *    hb_filecase ( char * ); /* Convert string to environment case */
+extern BYTE HB_EXPORT * hb_fileNameConv(char *str) ;
 
 #if defined(HB_EXTERN_C)
 }

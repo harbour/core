@@ -267,20 +267,20 @@ static void commonError( NTXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode, cha
 static void hb_IncString( NTXAREAP pArea, char* s, int slen )
 {
    char *ptr;
-   unsigned int nsymb;
+   UINT nsymb;
 
    for( ptr=s+slen-1;ptr>=s;ptr-- )
    {
-      nsymb = (unsigned int) *ptr;
+      nsymb = (UINT) *ptr;
       if( nsymb < 255 )
       {
-         unsigned int n1, i;
-         if( pArea->cdPage->lSort && ( n1 = (unsigned int)pArea->cdPage->s_chars[ nsymb ] ) != 0 )
+         UINT n1, i;
+         if( pArea->cdPage->lSort && ( n1 = (UINT)pArea->cdPage->s_chars[ nsymb ] ) != 0 )
          {
             n1 ++;
             for( i=0; i<255; i++ )
             {
-               if( n1 == (unsigned int)pArea->cdPage->s_chars[ i ] )
+               if( n1 == (UINT)pArea->cdPage->s_chars[ i ] )
                {
                   *ptr = (char) i;
                   break;
@@ -2437,7 +2437,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
    USHORT uiCurLen;
    char szBuffer[ HB_MAX_DOUBLE_LENGTH + 1 ];
    char * pszTempName = NULL;
-   NTXAREAP pArea;
+   NTXAREAP pArea = pIndex->Owner;
    LPTAGINFO pTag;
    HB_MACRO_PTR pMacro;
    PHB_ITEM pItem;
@@ -2449,8 +2449,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
    BOOL fValidBuffer;
    PHB_CODEPAGE cdpTmp = s_cdpage;
 
-   ulRecCount = pIndex->Owner->ulRecCount;
-   pArea = pIndex->Owner;
+   ulRecCount = pArea->ulRecCount;
    pTag = pIndex->CompoundTag;
    pItem = hb_itemNew( NULL );
    s_cdpage = pArea->cdPage;

@@ -3,11 +3,10 @@
  */
 
 /*
- * Harbour Project source code:
- * Harbour math functions and API
+ * xHarbour Project source code:
+ * Random number generator routine
  *
- * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
- *        Author: Martin Vogel <vogel@inttec.de>
+ * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -51,80 +50,92 @@
  *
  */
 
-#ifndef HB_MATH_H_
-#define HB_MATH_H_
+#include <hbmath.h>
+#include <stdlib.h>
+#include <time.h>
 
-#include "hbapi.h"
-
-#if defined(__DJGPP__)
-#include <libm/math.h>
-#else
-#include <math.h>
+#ifndef HB_OS_WIN_32
+#include <float.h>
 #endif
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
-
-#if defined(__WATCOMC__)
-   #define HB_MATH_HANDLER
-   #if (__WATCOMC__ > 1000) && defined(__cplusplus)
-      #define exception _exception
-   #endif
-#elif defined(__BORLANDC__)
-   #if (__BORLANDC__ == 1328) && defined(__cplusplus)
-      /* NOTE: There seem to be a bug in Borland C++ 5.3 C++ mode which prevents
-               the redefinition of matherr, because nor "_exception" neither
-               "exception" will work. [vszakats] */
-   #else
-      #define HB_MATH_HANDLER
-      #define matherr _matherr
-      /* NOTE: This is needed for Borland C++ 5.5 in C++/STDC mode. [vszakats] */
-      #if (__BORLANDC__ >= 1360)
-         #define exception _exception
-      #endif
-   #endif
-#elif defined(__MINGW32__)
-   #define HB_MATH_HANDLER
-   #define matherr _matherr
-   #define exception _exception
-#elif defined(__DJGPP__)
-   #define HB_MATH_HANDLER
-#endif
-
-typedef struct _HB_MATH_EXCEPTION
+/* Globally available data, no need to MT it */
+volatile static int s_bInit = 0;
+ 
+/*
+* HB_RANDOM
+*
+* HB_RANDOM() --> returns a real value n so that 0 <= n < 1
+* HB_RANDOM( x ) --> returns a real number n so that 0 <= n < x 
+* HB_RANDOM( x, y) --> Returns a  real number n so that  x <= n < y 
+*/
+HB_FUNC( HB_RANDOM )
 {
-  int    type;
-  char * funcname;
-  char * error;
-  double arg1;
-  double arg2;
-  double retval;
-  int    retvalwidth;
-  int    retvaldec;
-  int    handled;
-} HB_MATH_EXCEPTION;
+   double dRnd;
+   double dX, dY;
 
-typedef int (* HB_MATH_HANDLERPROC)(HB_MATH_EXCEPTION * err);
+   dRnd = hb_random_num();
 
-extern void hb_mathResetError (void);
-extern int hb_mathGetLastError (HB_MATH_EXCEPTION * phb_exc);
-extern int hb_mathIsMathErr (void);
+   if( ! ISNUM( 1 ) )
+   {
+      hb_retnd( dRnd );
+   }
+   else if( ! ISNUM(2) )
+   {
+      hb_retnd( dRnd * hb_parnd(1) );
+   }
+   else
+   {
+      dX = hb_parnd( 2 );
+      dY = hb_parnd( 1 );
 
-extern int hb_mathSetDefErrMode (int imode);
-extern int hb_mathGetDefErrMode (void);
-extern int hb_matherr (HB_MATH_EXCEPTION * pexc);
+      if ( dX > dY )
+      {
+         double dZ = dY;
+         dY = dX;
+         dX = dZ;
+      }
 
-extern HB_MATH_HANDLERPROC hb_mathSetHandler (HB_MATH_HANDLERPROC handlerproc);
-extern HB_MATH_HANDLERPROC hb_mathGetHandler (void);
-
-extern double hb_random_num( void );
-
-/* include defines from math.ch */
-#include <math.ch>
-
-#if defined(HB_EXTERN_C)
+      hb_retnd(  dRnd * (dY - dX ) + dX );
+   }
 }
-#endif
 
-#endif /* HB_MATH_H_ */
+HB_FUNC( HB_RANDOMSEED )
+{
+   if( ! ISNUM( 1 ) )
+   {
+      srand( (unsigned)time( NULL ) );
+   }
+   else 
+   {
+      srand( hb_parni(1) );
+   }
+   
+   s_bInit = 1;
+}
+      
+/* Returns a double value between 0 and 1 */
+double hb_random_num()
+{
+   double d1, d2;
+
+   if( s_bInit == 0 )
+   {
+      srand( (unsigned)time( NULL ) );
+      s_bInit = 1;
+   }
+   
+   d1 = (double) rand();
+   d2 = (double) RAND_MAX;
+   #ifdef HB_OS_WIN_32
+   /* It seems that on win32 platform there some weirdness about EPSILON value so
+      that a float division using an epsilon smaller than 1e-10 may be rounded.
+      Must dig if it's a borland lib bug or a windows problem.
+   */
+   d2 += 0.001;
+   #else
+   d2 += DBL_EPSILON;
+   #endif
+   
+   return d1 / d2;
+}
+

@@ -53,16 +53,18 @@
 #ifndef HB_RDDCDX_H_
 #define HB_RDDCDX_H_
 
+#include "hbsetup.h"
 #include "hbapirdd.h"
 #include "hbdbferr.h"
 #ifndef HB_CDP_SUPPORT_OFF
 #include "hbapicdp.h"
 #endif
+#define HB_EXTERNAL_RDDDBF_USE
+#include "hbrdddbf.h"
 
 #if defined(HB_EXTERN_C)
 extern "C" {
 #endif
-
 
 /* CDX constants and defaults */
 #define CDX_INDEXEXT                              ".cdx"
@@ -72,10 +74,10 @@ extern "C" {
 #define CDX_INT_FREESPACE                           500
 #define CDX_EXT_FREESPACE                           488
 #define CDX_DUMMYNODE                       0xFFFFFFFFL
-#define CDX_LOCKOFFSET                      0x7FFFFFFEL
-#define CDX_LOCKSIZE                                 1L
+//#define CDX_LOCKOFFSET                      0x7FFFFFFEL
+//#define CDX_LOCKSIZE                                 1L
 #define CDX_STACKSIZE                                64
-#define CDX_PAGECACHESIZE                            16
+#define CDX_PAGECACHESIZE                             8
 #define CDX_NODE_BRANCH                               0
 #define CDX_NODE_ROOT                                 1
 #define CDX_NODE_LEAF                                 2
@@ -113,7 +115,7 @@ extern "C" {
 #define CURKEY_ISSET(pTag)    (((pTag)->curKeyState & (CDX_CURKEY_NOTEXIST | CDX_CURKEY_UNDEF)) == 0)
 #define CURKEY_REC(pTag)      ((((pTag)->curKeyState & CDX_CURKEY_REC) != 0) ? (pTag)->curKey->rec : 0)
 #define CURKEY_VAL(pTag)      ((((pTag)->curKeyState & CDX_CURKEY_VAL) != 0) ? (pTag)->curKey->val : NULL)
-#define CURKEY_REFRESH(pTag)  
+#define CURKEY_REFRESH(pTag)
 */
 
 #define HB_CDXMAXKEY( x )     ((USHORT) ((x) > CDX_MAXKEY ? CDX_MAXKEY : (x)))
@@ -147,7 +149,7 @@ typedef struct _CDXTAGHEADER
    BYTE     forExpPos[ 2 ];   /* offset of filter expression */
    BYTE     forExpLen[ 2 ];   /* length of filter expression */
    BYTE     keyExpPos[ 2 ];   /* offset of key expression */
-   BYTE     keyExpLen[ 2 ];   /* length of key expression */                        
+   BYTE     keyExpLen[ 2 ];   /* length of key expression */
    BYTE     keyExpPool[ CDX_PAGELEN ];
 } CDXTAGHEADER;
 typedef CDXTAGHEADER * LPCDXTAGHEADER;
@@ -232,7 +234,7 @@ typedef struct _CDXPAGE
    SHORT    bufKeyLen;                    /* and maybe temporary overwriten when adding  */
    SHORT    iFree;                        /* new key to interior node record.            */
    BYTE *   pKeyBuf;                      /* pointer to uncompressed leaf page key pool  */
-   //SHORT    iKeyInBuf;
+   /* SHORT    iKeyInBuf; */
 
    struct _CDXPAGE * Owner;
    struct _CDXPAGE * Child;
@@ -320,6 +322,11 @@ typedef struct _CDXINDEX
    LPCDXLIST freeLst;         /* list of free pages in index file */
    int      lockWrite;        /* number of write lock set */
    int      lockRead;         /* number of read lock set */
+   ULONG    ulLockPos;        /* readlock position for CL53 lock scheme */
+#ifdef HB_CDX_DBGCODE
+   BOOL     RdLck;
+   BOOL     WrLck;
+#endif
    BOOL     fChanged;         /* changes written to index, need upadte ulVersion */
    ULONG    ulVersion;        /* network version/update flag */
 } CDXINDEX;
@@ -391,10 +398,12 @@ typedef struct _CDXAREA
    BOOL fDeleted;                /* TRUE if record is deleted */
    BOOL fUpdateHeader;           /* Update header of file */
    BOOL fFLocked;                /* TRUE if file is locked */
+   BOOL fHeaderLocked;           /* TRUE if DBF header is locked */
    LPDBRELINFO lpdbPendingRel;   /* Pointer to parent rel struct */
    BYTE bYear;                   /* Last update */
    BYTE bMonth;
    BYTE bDay;
+   BYTE bLockType;               /* Type of locking shemes */
    ULONG * pLocksPos;            /* List of records locked */
    ULONG ulNumLocksPos;          /* Number of records locked */
 #ifndef HB_CDP_SUPPORT_OFF
