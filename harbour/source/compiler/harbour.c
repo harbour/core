@@ -1907,6 +1907,9 @@ int hb_compLocalGetPos( char * szVarName ) /* returns the order + 1 of a variabl
    int iVar;
    PFUNCTION pFunc = hb_comp_functions.pLast;
 
+   if( ! szVarName )
+      return 0;
+      
    if( pFunc->szName )
    {
       /* we are in a function/procedure -we don't need any tricks */
