@@ -1,3 +1,17 @@
+19991103-07:28 GMT+1 Antonio Linares
+   * source/rtl/classes.c
+     * hb___msgSuper() simplied, faster and less memory consume.
+   * source/rtl/arrays.c
+     * bSuperCast is no longer checked.
+   * source/vm/hvm.c
+     * simpler after super casting process.
+   * include/extend.h
+     - BASEARRAY struct bSuperCast member removed.
+     - BASEARRAY struct uiPrevCls member removed.
+   + tests/clasinh.prg
+     * New test added proving Super access does not generate unreleased
+       memory blocks.
+
 19991102-16:33 GMT+1 Antonio Linares
    * makefile.b32
    * rdd.b32
