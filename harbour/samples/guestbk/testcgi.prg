@@ -26,75 +26,8 @@
 **/
 
 #include "cgi.ch"
+#include "harbour.ch"
 #define IF_BUFFER 65535
-
-FUNCTION Main()
-
-   LOCAL oHTML := THTML():New()
-   LOCAL hFile, nPos, cString, cBuf, i, cTable, cLine
-
-   oHTML:SetHTMLFile( "function.cfm" )
-
-   hFile := fOpen( "list.txt", 0 )
-
-   cString := space( IF_BUFFER )
-   cBuf    := ""
-   cTable  := ""
-
-   // Builds dynamic table replacement
-   WHILE hFile != -1 .AND. (nPos := fRead( hFile, @cString, IF_BUFFER )) > 0
-      i := 1
-      DO WHILE i <= nPos
-
-         IF substr( cString, i, 1 ) = chr( 13 )
-            i := i + 1
-            cLine := cBuf
-            cBuf  := ""
-
-            IF left( cLine, 1 ) <> ';'
-               cTable += '<TR>' + chr(10)+chr(13) + ;
-                 '<TD WIDTH="50%"><FONT SIZE="2" FACE="Tahoma">' +                 ;
-                 ParseString( cLine, ';', 1 ) + '</FONT></TD>' + chr(10)+chr(13) + ;
-                 '<TD WIDTH="16%">' +                                              ;
-                 if( ParseString( cLine, ';', 2 ) = 'R',                           ;
-                    '<CENTER><IMG SRC="images/purple-m.gif">',                     ;
-                    '&nbsp' ) +                                                    ;
-                 '</TD>' + chr(10)+chr(13) +                                       ;
-                 '<TD WIDTH="16%">' +                                              ;
-                 if( ParseString( cLine, ';', 2 ) = 'S',                           ;
-                    '<CENTER><IMG SRC="images/purple-m.gif">',                     ;
-                    '&nbsp' ) +                                                    ;
-                 '</TD>' + chr(10)+chr(13) +                                       ;
-                 '<TD WIDTH="16%">' +                                              ;
-                 if( ParseString( cLine, ';', 2 ) = 'N',                           ;
-                    '<CENTER><IMG SRC="images/purple-m.gif">',                     ;
-                    '&nbsp' ) +                                                    ;
-                 '</TD>' + chr(10)+chr(13) +                                       ;
-                 '</TR>'
-            ENDIF
-         ELSE
-            cBuf := cBuf + substr( cString, i, 1 )
-         ENDIF
-
-         i++
-      ENDDO
-   ENDDO
-
-   fClose( hFile )
-
-   oHTML:AddReplaceTag( "Functions", cTable )
-   oHTML:Generate()
-
-   // Uncomment the following if you don't have a Web Server to test
-   // this sample
-
-//   oHTML:SaveToFile( "test.htm" )
-
-   // If the above is uncommented, you may comment this line:
-
-   oHTML:ShowResult()
-
-   RETURN( NIL )
 
 FUNCTION ParseString( cString, cDelim, nRet )
 
@@ -242,8 +175,8 @@ STATIC FUNCTION AddPara( cPara, cAlign )
    LOCAL Self := QSelf()
 
    ::cBody := ::cBody + ;
-      "<P ALIGN='" + cAlign + "'>" + HB_OSNewLine() + ;
-      cPara + HB_OSNewLine() + ;
+      "<P ALIGN='" + cAlign + "'>" + hb_OSNewLine() + ;
+      cPara + hb_OSNewLine() + ;
       "</P>"
 
    RETURN( Self )
@@ -257,11 +190,11 @@ STATIC FUNCTION Generate()
    // Is this a meta file or hand generated script?
    IF empty( ::cHTMLFile )
       ::cContent :=                                                        ;
-         "<HTML><HEAD>"                                        + HB_OSNewLine() + ;
-         "<TITLE>" + ::cTitle + "</TITLE>"                     + HB_OSNewLine() + ;
+         "<HTML><HEAD>"                                        + hb_OSNewLine() + ;
+         "<TITLE>" + ::cTitle + "</TITLE>"                     + hb_OSNewLine() + ;
          "<BODY link='" + ::cLinkColor + "' " +                            ;
-         "vlink='" + ::cvLinkColor + "'>" +                    + HB_OSNewLine() + ;
-         ::cBody                                               + HB_OSNewLine() + ;
+         "vlink='" + ::cvLinkColor + "'>" +                    + hb_OSNewLine() + ;
+         ::cBody                                               + hb_OSNewLine() + ;
          "</BODY></HTML>"
    ELSE
       ::cContent := ""
@@ -321,8 +254,8 @@ STATIC FUNCTION ShowResult()
    LOCAL Self := QSelf()
 
    OutStd(                                                                 ;
-      "HTTP/1.0 200 OK"                                        + HB_OSNewLine() + ;
-      "CONTENT-TYPE: TEXT/HTML"                      + HB_OSNewLine() + HB_OSNewLine() + ;
+      "HTTP/1.0 200 OK"                                        + hb_OSNewLine() + ;
+      "CONTENT-TYPE: TEXT/HTML"                      + hb_OSNewLine() + hb_OSNewLine() + ;
       ::cContent )
 
    RETURN( Self )

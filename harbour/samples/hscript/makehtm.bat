@@ -1,12 +1,17 @@
 @echo off
+rem
+rem $Id$
+rem
+
 IF NOT EXIST hscript.exe GOTO :missing
 
 :start
-SET HARBOUR_DIR=\HARBOUR\BIN\
+SET HARBOURDIR=.\
 
-hscript hello.hs    >hello.htm
-hscript multiply.hs >multiply.htm
-hscript dir.hs      >dir.htm
+hscript hello.hs    > hello.htm
+hscript multiply.hs > multiply.htm
+hscript dir.hs      > dir.htm
+hscript ugly.hs     > ugly.htm
 
 cls
 echo Ready to go!

@@ -71,7 +71,6 @@ PRG_SOURCES=\
         fornext2.prg \
         fortest.prg \
         funcarr.prg \
-        guess.prg \
         hardcr.prg \
         hello.prg \
         ifelse.prg \
@@ -87,7 +86,6 @@ PRG_SOURCES=\
         longdev.prg \
         longstr.prg \
         longstr2.prg \
-        mankala.prg \
         mathtest.prg \
         memfile.prg \
         memvar.prg \

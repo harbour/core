@@ -1,4 +1,7 @@
 @echo off
+rem
+rem $Id$
+rem
 
 ..\..\bin\harbour /n guestbk
 ..\..\bin\harbour /n ..\..\tests\inifiles

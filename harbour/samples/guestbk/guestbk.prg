@@ -1,6 +1,8 @@
 /*
  * $Id$
- *
+ */
+
+/*
    Harbour Project source code
 
    This file contains source for a script of a Guestbook
@@ -32,7 +34,7 @@
 
 */
 
-FUNCTION GuestMain()
+FUNCTION Main()
 
    LOCAL oIni  := TIniFile():New( "c:\inetpub\wwwroot\guestbk.ini" )
    LOCAL oHTML := THTML():New()

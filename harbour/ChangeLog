@@ -1,3 +1,27 @@
+19991007-19:40 GMT+1 Victor Szel <info@szelvesz.hu>
+   * tests/mankala.prg -> samples/misc/mankala.prg
+     tests/guess.prg -> samples/misc/guess.prg
+     tests/Makefile
+     * Sample type of tests moved to /samples directory
+   * samples/hscript/guest*.* -> samples/guestbk/*.*
+     * Separated hscript and guestbk.
+   * samples/hscript/*.bat
+     samples/guestbk/*.bat
+     + Borland build batch files updated, standardized.
+     ! Fixed some issues, hb_OSNewLine() usage added, some RTL function
+       names updated, minor fixes applied, now both works with the GNU make
+       system (tested with MINGW32)
+   + samples/Makefile
+     samples/guestbk/Makefile
+     samples/hscript/Makefile
+     samples/misc/Makefile
+     + GNU make files added for the samples.
+       They are currently not invoked by the mainstream make process, but
+       can be invoked manually.
+   * tests/testcgi.prg
+     % Got rid of s_cNewLine, so the HTML class no longer requires this 
+       variable.
+
 19991008-20:00 CET Eddie Runia <eddie@runia.com>
     * include/extend.h
       uiPrevCls added to BASEARRAY
@@ -52,7 +76,6 @@
      * removed symbols.obj from compiler - I thought it needed it, but not so.
      * shortened filelist for Harbour.exe to $**
 
->>>>>>> 1.1163
 19991007-17:00 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y

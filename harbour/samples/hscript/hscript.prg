@@ -1,48 +1,50 @@
 /*
-* $Id$
-*
-*  HScript.PRG
-*  HarbourScript translation engine
-*
-*
-* Copyright (C) 1999  Felipe Coury <fcoury@flexsys-ci.com>
-* www - http://www.harbour-project.org
-*
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version, with one exception:
-*
-* The exception is that if you link the Harbour Runtime Library (HRL)
-* and/or the Harbour Virtual Machine (HVM) with other files to produce
-* an executable, this does not by itself cause the resulting executable
-* to be covered by the GNU General Public License. Your use of that
-* executable is in no way restricted on account of linking the HRL
-* and/or HVM code into it.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
-* their web site at http://www.gnu.org/).
-*
-*  1999/06/13  First implementation.
-*  1999/06/24  Enhanced tag matching routines.
-*  1999/07/26  Corrections to CGI output, qOut() -> OutStd().
-*
-**/
+ * $Id$
+ */
 
-#include "CGI.ch"
+/*
+ * HScript.PRG
+ * HarbourScript translation engine
+ *
+ *
+ * Copyright (C) 1999  Felipe Coury <fcoury@flexsys-ci.com>
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version, with one exception:
+ *
+ * The exception is that if you link the Harbour Runtime Library (HRL)
+ * and/or the Harbour Virtual Machine (HVM) with other files to produce
+ * an executable, this does not by itself cause the resulting executable
+ * to be covered by the GNU General Public License. Your use of that
+ * executable is in no way restricted on account of linking the HRL
+ * and/or HVM code into it.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
+ * their web site at http://www.gnu.org/).
+ *
+ *  1999/06/13  First implementation.
+ *  1999/06/24  Enhanced tag matching routines.
+ *  1999/07/26  Corrections to CGI output, qOut() -> OutStd().
+ *
+ */
+
+#include "hbextern.ch"
+#include "cgi.ch"
 #define IF_BUFFER 65535
-#ifdef __HARBOUR__
-#define NewLine   chr(10)
-#else
-#define NewLine   chr(13)
-#endif
+
+REQUEST DIRECTORY
+REQUEST GETENV
+REQUEST ASORT
 
 FUNCTION Main( cScript )
 
@@ -75,14 +77,14 @@ FUNCTION Main( cScript )
 
       IF empty( cScriptName )
          IF !empty( GetEnv( "SERVER_NAME" ) )
-            OutStd( "content-type: text/html" + NewLine )
-            OutStd( NewLine )
-            OutStd( "<HTML><BODY><H1>Server Error</H1><P>" + NewLine )
-            OutStd( "Must specify scriptname using hscript.exe?script=<scriptname>" + NewLine )
-            OutStd( "</BODY></HTML>" + NewLine )
+            OutStd( "content-type: text/html" + hb_OSNewLine() )
+            OutStd( hb_OSNewLine() )
+            OutStd( "<HTML><BODY><H1>Server Error</H1><P>" + hb_OSNewLine() )
+            OutStd( "Must specify scriptname using hscript.exe?script=<scriptname>" + hb_OSNewLine() )
+            OutStd( "</BODY></HTML>" + hb_OSNewLine() )
 
          ELSE
-            OutStd( "Please give .hs name" + NewLine )
+            OutStd( "Please give .hs name" + hb_OSNewLine() )
 
          ENDIF
 
@@ -92,9 +94,9 @@ FUNCTION Main( cScript )
       // Script not found
       IF !file( cScriptName )
          IF !empty( GetEnv( "SERVER_NAME" ) )
-            OutStd( "CONTENT-TYPE: text/html" + NewLine )
+            OutStd( "CONTENT-TYPE: text/html" + hb_OSNewLine() )
          ENDIF
-         OutStd( "<H1>Server Error</H1><P>Script not found: " + cScriptName + NewLine )
+         OutStd( "<H1>Server Error</H1><P>Script not found: " + cScriptName + hb_OSNewLine() )
          EXIT
       ENDIF
 
@@ -122,7 +124,7 @@ FUNCTION Main( cScript )
                   // Abre script
                   IF i > 1
                      //cTrans += " ; "
-                     cTrans += NewLine
+                     cTrans += hb_OSNewLine()
                   ENDIF
                   IF i + 1 < nLen
                      cTrans += "OutStd( '"
@@ -142,7 +144,7 @@ FUNCTION Main( cScript )
                   lOpen  := .f.
                   IF i < nLen
                      // cTrans += " ; "
-                     cTrans += NewLine
+                     cTrans += hb_OSNewLine()
                   ENDIF
 
                ENDIF
@@ -174,13 +176,13 @@ FUNCTION Main( cScript )
       fClose( hFile )
 
       // Creates the temporary HRB, erases the PRG
-      __Run( cHarbourDir + "harbour.exe " + cFile + " /q /n /gHRB /o" + ;
-        left( cHarbourDir, len( cHarbourDir ) - 1 ) )
+      __Run( cHarbourDir + "harbour.exe " + cFile + " /q /n /gh /o" + ;
+        left( cHarbourDir, len( cHarbourDir ) - 1 ) + "\" )
       fErase( cFile )
 
       // Runs using Tugboat
-      cFile := strtran( upper( cFile ), ".PRG", ".HRB" )
-      HB_Run( cFile )
+      cFile := strtran( upper( cFile ), ".PRG", ".hrb" )
+      __hrbRun( cFile )
       // Erases the HRB file
       fErase( cFile )
 
@@ -203,14 +205,14 @@ FUNCTION ParseString( cString, cDelim, nRet )
    FOR i := 1 TO nSize
       nPosFim := at( cDelim, cBuf )
 
-      IF nPosFim > 0 
+      IF nPosFim > 0
          aElem[i] := substr( cBuf, 1, nPosFim - 1 )
       ELSE
          aElem[i] := cBuf
       ENDIF
 
       cBuf := substr( cBuf, nPosFim + 1, len( cBuf ) )
-         
+
    NEXT i
 
    RETURN( aElem[ nRet ] )

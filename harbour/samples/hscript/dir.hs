@@ -32,11 +32,11 @@ FUNCTION Main()
    FOR i := 1 TO len( aDir )
 %>
 <TR>
-<TD><% OutStr( aDir[i,1] ) %></TD>
-<TD><% OutStr( aDir[i,2] ) %></TD>
-<TD><% OutStr( aDir[i,3] ) %></TD>
-<TD><% OutStr( aDir[i,4] ) %></TD>
-<TD><% OutStr( aDir[i,5] ) %></TD>
+<TD><% OutStd( aDir[i,1] ) %></TD>
+<TD><% OutStd( aDir[i,2] ) %></TD>
+<TD><% OutStd( aDir[i,3] ) %></TD>
+<TD><% OutStd( aDir[i,4] ) %></TD>
+<TD><% OutStd( aDir[i,5] ) %></TD>
 </TR>
 <%
    NEXT
