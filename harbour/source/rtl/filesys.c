@@ -1703,41 +1703,6 @@ FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
    return s_uiErrorLast;
 }
 
-/* TOFIX: CA-Cl*pper will allow wildcards in the filename. This should be
-          added to Harbour. [vszakats] */
-
-BOOL hb_fsFile( BYTE * pFilename )
-{
-   BOOL bIsFile;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsFile(%s)", (char*) pFilename));
-
-/* TODO: Check if F_OK is defined in all compilers */
-#if defined(OS_UNIX_COMPATIBLE)
-
-   bIsFile = ( access( ( const char * ) pFilename, F_OK ) == 0 );
-
-#elif defined(__MPW__)
-   {
-      int hFileHandle;
-
-      if( ( hFileHandle = open( pFilename, O_RDONLY ) ) >= 0 )
-      {
-         close( hFileHandle );
-         bIsFile = TRUE;
-      }
-      else
-         bIsFile = FALSE;
-   }
-#else
-
-   bIsFile = ( access( ( const char * ) pFilename, 0 ) == 0 );
-
-#endif
-
-   return bIsFile;
-}
-
 BOOL hb_fsEof( FHANDLE hFileHandle )
 {
 #if defined(__DJGPP__) || defined(__CYGWIN__) || defined(OS_UNIX_COMPATIBLE)

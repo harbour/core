@@ -273,8 +273,8 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\datesx.obj \
    $(OBJ_DIR)\defpath.obj \
    $(OBJ_DIR)\descend.obj \
-   $(OBJ_DIR)\dir.obj \
    $(OBJ_DIR)\dirdrive.obj \
+   $(OBJ_DIR)\direct.obj \
    $(OBJ_DIR)\diskspac.obj \
    $(OBJ_DIR)\disksphb.obj \
    $(OBJ_DIR)\do.obj \

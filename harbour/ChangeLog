@@ -7,6 +7,30 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * source/rtl/filesys.c
+   * source/rtl/philes.c
+   * include/hbapifs.h
+     ! Fixed hb_fsRename() and hb_fsDelete() to return BOOL
+       instead of platform specific error codes.
+     ! All low-level functions returning BOOL now check
+       for valid API call return value inside the platform
+       spcific branches.
+     + New implementation of the DIRECTORY() function, faster 
+       parameter was invalid.
+       Please test this as extensively as possible, with special 
+2001-12-21 16:31 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+     + New implementation of FILE() function, now it 
+   + source/rtl/filehb.c
+   * source/rtl/direct.c
+   * source/rtl/Makefile
+   * makefile.bc
+   * makefile.vc
+     * Some fixes for FILE().
+
+2001-12-21 16:08 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+     ! Fixed date handling. The null terminating char was 
+   + source/rtl/direct.c
    * source/rtl/Makefile
    * makefile.bc
    * makefile.vc

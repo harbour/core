@@ -172,14 +172,6 @@ HB_FUNC( FSEEK )
       hb_retnl( 0 );
 }
 
-/* TODO: Xbase++ has an extension where the second parameter can specify
-         the required attribute. */
-
-HB_FUNC( FILE )
-{
-   hb_retl( ISCHAR( 1 ) ? hb_spFile( ( unsigned char * ) hb_parc( 1 ) ) : FALSE );
-}
-
 HB_FUNC( FREADSTR )
 {
    if( ISNUM( 1 ) && ISNUM( 2 ) )

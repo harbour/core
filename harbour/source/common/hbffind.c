@@ -498,6 +498,7 @@ static void hb_fsFindFill( PHB_FFIND ffind )
 
    ffind->lDate = hb_dateEncode( nYear, nMonth, nDay );
    hb_dateStrPut( ffind->szDate, nYear, nMonth, nDay );
+   ffind->szDate[ 8 ] = '\0';
    
    sprintf( ffind->szTime, "%02d:%02d:%02d", nHour, nMin, nSec );
 }

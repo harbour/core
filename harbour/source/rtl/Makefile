@@ -22,8 +22,8 @@ C_SOURCES=\
 	datesx.c     \
 	defpath.c    \
 	descend.c    \
-	dir.c        \
 	dirdrive.c   \
+	direct.c     \
 	diskspac.c   \
 	disksphb.c   \
 	do.c         \
