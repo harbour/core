@@ -391,7 +391,7 @@ FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
       hFile = ( HANDLE ) CreateFile( ( char * ) pFilename, dwFlags,
                 dwShare, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL );
 
-      if( hFilee == ( HANDLE ) INVALID_HANDLE_VALUE )
+      if( hFile == ( HANDLE ) INVALID_HANDLE_VALUE )
          errno = GetLastError();
       hFileHandle=(int)hFile;
       s_uiErrorLast = errno;
