@@ -1,3 +1,19 @@
+2001-09-04 11:50 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * harbour/contrib/hgf/win32/win32.c
+     events routing implemented
+
+   * harbour/contrib/hgf/win32/tmenu.prg
+     inheritance from TPersistent implemented
+
+   * harbour/contrib/hgf/win32/tform.prg
+     events routing implemented. Inheritance from TPersistent implemented.
+
+   * harbour/contrib/hgf/tests/form2.prg
+     some little changes to test events routing
+
+   + harbour/contrib/hgf/tests/formtext.prg
+     testing forms view as text based on persistence
+
 2001-09-04 11:30 GMT+1 Antonio Linares <alinares@fivetech.com>
    * harbour/source/rtl/persist.prg
      some improvements for arrays
