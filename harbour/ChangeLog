@@ -1,3 +1,7 @@
+2001-02-03 06:48 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/debug/dbgtobj.prg
+     + Debugger objects datas already editables.
+
 2001-02-03 05:21 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/debug/dbgtarr.prg
      - removed SetsUp(), SetsDown() and MyColors() not needed functions.
