@@ -430,8 +430,8 @@ char * hb_verHarbour( void )
 
    pszVersion = ( char * ) hb_xgrab( 80 );
 
-   sprintf( pszVersion, "Harbour %d.%d%s Intl. (Build %d) (%04d.%02d.%02d) (%s)",
-      HB_VER_MAJOR, HB_VER_MINOR, HB_VER_REVISION, HB_VER_BUILD, HB_VER_YEAR, HB_VER_MONTH, HB_VER_DAY, HB_VER_LEX );
+   sprintf( pszVersion, "Harbour %d.%d.%d Intl. (%s)",
+      HB_VER_MAJOR, HB_VER_MINOR, HB_VER_REVISION, HB_VER_LEX );
 
    return pszVersion;
 }
@@ -465,6 +465,43 @@ void hb_verBuildInfo( void )
       hb_conOutErr( pszVersion, 0 );
       hb_conOutErr( hb_conNewLine(), 0 );
       hb_xfree( pszVersion );
+   }
+
+   hb_conOutErr( hb_conNewLine(), 0 );
+
+   hb_conOutErr( "Built on: ", 0 );
+   hb_conOutErr( __DATE__, 0 );
+   hb_conOutErr( " ", 0 );
+   hb_conOutErr( __TIME__, 0 );
+   hb_conOutErr( hb_conNewLine(), 0 );
+
+   hb_conOutErr( "Last ChangeLog entry: ", 0 );
+   hb_conOutErr( HB_VER_LENTRY, 0 );
+   hb_conOutErr( hb_conNewLine(), 0 );
+
+   hb_conOutErr( "ChangeLog CVS version: ", 0 );
+   hb_conOutErr( HB_VER_CHLCVS, 0 );
+   hb_conOutErr( hb_conNewLine(), 0 );
+
+   if( strlen( HB_VER_C_USR ) )
+   {
+      hb_conOutErr( "Harbour compiler switches: ", 0 );
+      hb_conOutErr( HB_VER_C_USR, 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
+   }
+
+   if( strlen( HB_VER_L_USR ) )
+   {
+      hb_conOutErr( "C compiler switches: ", 0 );
+      hb_conOutErr( HB_VER_L_USR, 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
+   }
+      
+   if( strlen( HB_VER_PRG_USR ) )
+   {
+      hb_conOutErr( "Linker switches: ", 0 );
+      hb_conOutErr( HB_VER_PRG_USR, 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
    }
 
    hb_conOutErr( hb_conNewLine(), 0 );

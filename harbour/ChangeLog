@@ -8,11 +8,36 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-17 14:57 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * include/hbver.h
+   * source/common/hbver.c 
+   * source/compiler/genc.c 
+   * source/compiler/genjava.c 
+   * source/compiler/genobj32.c 
+   * source/compiler/hbusage.c
+   * utils/hbpp/hbpp.c 
+     - Build number removed, since it was the same as the 
+       version number, and it doesn stands for something 
+       which doesn't have too much meaning in an open-source 
+       project anyway.
+     - Removed the date/month/day of the version number, 
+       since it was only yet another version-number duplicate.
+     + Added #defines for last ChangeLog entry, ChangeLog CVS 
+       version string, optional C, PRG and linker option.
+       As of now these should be manually edited whenever 
+       doing a build, but the goal is make this step completely 
+       automated.
+       One can retrieve these new version details by running 
+       Harbour compiler with the -build switch, or any 
+       Harbour applications by running it with //BUILD switch.
+       Optional switches are only displayed when not empty.
+     + -build and -credits undocumented options now put into 
+       the command-line help screen.
 
 2001-12-17 14:13 UTC+0100 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/tbrowse.prg
      * ::DispCell() a little change on Logical values display
-
 
 2001-12-17 13:02 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 

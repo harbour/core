@@ -60,10 +60,17 @@
 #endif
 #define HB_VER_MAJOR    0       /* Major version number */
 #define HB_VER_MINOR    38      /* Minor version number */
-#define HB_VER_REVISION ""      /* Revision letter */
-#define HB_VER_BUILD    38      /* Build number */
-#define HB_VER_YEAR     2001    /* Build year */
-#define HB_VER_MONTH    12      /* Build month */
-#define HB_VER_DAY      15      /* Build day */
+#define HB_VER_REVISION 0       /* Revision number */
+
+/* TOFIX: Ideally these should be generated dynamically, until 
+          then, they should be updated by the builder. [vszakats] */
+
+#define HB_VER_LENTRY   "2001-12-17 13:02 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>"
+#define HB_VER_CHLCVS   "ChangeLog,v 1.3653 2001/12/17 12:05:11 vszakats Exp"
+#define HB_VER_C_USR    ""
+#define HB_VER_L_USR    ""
+#define HB_VER_PRG_USR  ""
+
+/* #include "hb_ver_.h" */
 
 #endif /* HB_VER_H_ */

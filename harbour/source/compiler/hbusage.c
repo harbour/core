@@ -61,6 +61,8 @@ void hb_compPrintUsage( char * szSelf )
    {
            "\nOptions:  %ca               automatic memvar declaration",
            "\n          %cb               debug info",
+           "\n          %cbuild           display detailed version info",
+           "\n          %ccredits         display credits",
            "\n          %cd<id>[=<val>]   #define <id>",
            "\n          %ces[<level>]     set exit severity",
            "\n          %cg<type>         output type generated is <type> (see below)",
@@ -118,6 +120,7 @@ void hb_compPrintModes( void )
            "\n          ?               this info",
            "\n"
    };
+
    int iLine;
 
    printf( "\nCompatibility flags (lowercase/uppercase significant): -k[options]\n" );
@@ -175,8 +178,8 @@ void hb_compPrintCredits( void )
  */
 void hb_compPrintLogo( void )
 {
-   printf( "Harbour Compiler %d.%d%s (Build %d) (%04d.%02d.%02d) (%s)\n",
-      HB_VER_MAJOR, HB_VER_MINOR, HB_VER_REVISION, HB_VER_BUILD, HB_VER_YEAR, HB_VER_MONTH, HB_VER_DAY, HB_VER_LEX );
+   printf( "Harbour Compiler %d.%d.%d (%s)\n",
+      HB_VER_MAJOR, HB_VER_MINOR, HB_VER_REVISION, HB_VER_LEX );
    printf( "Copyright 1999-2001, http://www.harbour-project.org/\n" );
 }
 
