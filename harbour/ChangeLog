@@ -1,3 +1,15 @@
+19990804-20:00 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/console.c
+     tests/working/colorind.prg
+     tests/working/Makefile
+     source/rtl/tget.prg
+     + Added function: __COLORINDEX().
+     ! TGET modified to use __COLORINDEX() instead of STRTOKEN()
+   * source/rtl/Makefile
+     source/rtl/stringsx.c
+     source/tools/stringsx.c
+     ! STRTOKEN() put back to TOOLS.
+
 19990804-00:40 EDT Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      + tget tgetlist langapi

@@ -30,7 +30,6 @@ C_SOURCES=\
         set.c \
         setcolor.c \
         strings.c \
-        stringsx.c \
         transfrm.c \
         \
         gtxxx.c \

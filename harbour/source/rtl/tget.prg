@@ -25,6 +25,7 @@
 */
 
 #include "classes.ch"
+#include "color.ch"
 
 #xcommand DEFAULT <uVar1> := <uVal1> ;
                [, <uVarN> := <uValN> ] => ;
@@ -190,7 +191,7 @@ return Self
 
 METHOD Display() CLASS TGet
 
-   local cClrInverse := StrToken( SetColor(), 2, "," )
+   local cClrInverse := __ColorIndex( SetColor(), CLR_ENHANCED )
    local nOldCursor  := SetCursor( 0 )
 
    @ ::Row, ::Col SAY ::buffer COLOR cClrInverse
