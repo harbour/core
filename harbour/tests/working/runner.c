@@ -45,13 +45,13 @@ typedef struct
 #define SYM_NOT_FOUND 0xFFFFFFFF                /* Symbol not found.
                                                    FindSymbol               */
 
-PASM_CALL CreateFun( PSYMBOL, PBYTE );          /* Create a dynamic function*/
+static PASM_CALL CreateFun( PSYMBOL, PBYTE );          /* Create a dynamic function*/
 void      Do( WORD );
-ULONG     FindSymbol( char *, PDYNFUNC, ULONG );
+static ULONG     FindSymbol( char *, PDYNFUNC, ULONG );
 HARBOUR   HB_RUN();
-void      HRB_FileClose( FILE * );
-void      HRB_FileRead ( char *, int, int, FILE * );
-FILE     *HRB_FileOpen ( char * );
+static void      HRB_FileClose( FILE * );
+static void      HRB_FileRead ( char *, int, int, FILE * );
+static FILE     *HRB_FileOpen ( char * );
 void      Push( PHB_ITEM );
 void      PushNil( void );
 void      PushSymbol( PSYMBOL );
@@ -116,7 +116,7 @@ HARBOUR HB_RUN( void )
          {
             pSymRead[ ul ].szName  = ReadId( file );
             pSymRead[ ul ].cScope  = ReadByte( file );
-            pSymRead[ ul ].pFunPtr = (void *) ReadByte( file );
+            pSymRead[ ul ].pFunPtr = ( HARBOURFUNC ) ReadByte( file );
             pSymRead[ ul ].pDynSym = NULL;
          }
 
@@ -259,7 +259,6 @@ static ULONG FindSymbol( char *szName, PDYNFUNC pDynFunc, ULONG ulLoaded )
    Read the next (zero terminated) identifier */
 char *ReadId( FILE *file )
 {
-   char *szFileName;
    char *szTemp;                                /* Temporary buffer         */
    char *szIdx;
    char *szRet;
