@@ -446,7 +446,8 @@ FUNCTION ProcessWww()
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
                //  get the category
-               cCategory := ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) 
+               cCategory := ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
+               cCategory := strtran( cCategory, hb_OSNewLine(), '' )
 
                //  3) One line description
 
