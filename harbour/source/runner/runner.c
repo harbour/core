@@ -142,7 +142,7 @@ HARBOUR HB_MAIN( void )
          {
             pSymRead[ ul ].szName  = ReadId( file );
             pSymRead[ ul ].cScope  = ReadByte( file );
-            pSymRead[ ul ].pFunPtr = ( PHB_FUNC ) ReadByte( file );
+            pSymRead[ ul ].pFunPtr = ( PHB_FUNC ) (ULONG) ReadByte( file );
             pSymRead[ ul ].pDynSym = NULL;
          }
 

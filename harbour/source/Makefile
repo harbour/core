@@ -7,10 +7,10 @@ ROOT = ../
 DIRS=\
 	hbpp \
 	compiler \
-        debug \
 	rtl \
 	vm \
 	rdd \
+        debug \
 	tools \
         runner \
 

@@ -1,3 +1,13 @@
+Mon Aug 09 11:53:18 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* source/Makefile: 
+	Moved the debug directory after rdd.
+	
+	* source/hbpp/hbpp.c: 
+	* source/rtl/filesys.c: 
+	* source/runner/runner.c: 
+	Got rid of several warnings.
+
 199908.09-15:24 GMT+3 Alexander Kresin
   * source/hbpp/hbpp.c
     * fixed problem with new DATA implementation

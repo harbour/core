@@ -412,7 +412,10 @@ BOOL    hb_fsLock   ( FHANDLE handle, ULONG start,
                       ULONG length, USHORT mode )
 {
         int result=0;
+
+#if defined(_MSC_VER)
         ULONG position;
+#endif
 
 #if defined(HAVE_POSIX_IO) && !defined(__GNUC__) && !defined(__IBMCPP__)
         errno = 0;
