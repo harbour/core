@@ -197,7 +197,7 @@ static s_sBlock
 
 //--------------------------------------------------------------//
 
-PROCEDURE Main( sSource, p1, p2, p3, p4, p5, p6, p7, p8, p9 )
+PROCEDURE PP_Main( sSource, p1, p2, p3, p4, p5, p6, p7, p8, p9 )
 
    LOCAL sIncludePath, nNext, sPath, sSwitch := ""
    LOCAL nAt, sParams
@@ -312,7 +312,7 @@ PROCEDURE Main( sSource, p1, p2, p3, p4, p5, p6, p7, p8, p9 )
    CompileDefine( "__PP__" )
 
    #ifdef __HARBOUR__
-      //ProcessLine( "#DEFINE __HARBOUR__", 0, '' )
+      //PP_ProcessLine( "#DEFINE __HARBOUR__", 0, '' )
       CompileDefine( "__HARBOUR__" )
    #endif
 
@@ -337,7 +337,7 @@ PROCEDURE Main( sSource, p1, p2, p3, p4, p5, p6, p7, p8, p9 )
 
          PP_Run( sSource )
       ELSE
-         ProcessFile( sSource )
+         PP_ProcessFile( sSource )
       ENDIF
    ELSE
       nRow := 1
@@ -351,7 +351,7 @@ RETURN
 
 //------------------------------- *** RP DOT and Interpreter Functions *** -------------------------------//
 
-Function ExecuteMethod( sProcName, p1, p2, p3, p4, p5, p6, p7, p8, p9 )
+FUNCTION ExecuteMethod( sProcName, p1, p2, p3, p4, p5, p6, p7, p8, p9 )
 
     LOCAL sProc, nProc, nParams
 
@@ -436,7 +436,7 @@ RETURN s_xRet
 
 //--------------------------------------------------------------//
 
-PROCEDURE ExecuteProcedure( aProc, sProcName )
+STATIC PROCEDURE ExecuteProcedure( aProc, sProcName )
 
    LOCAL nBlock, nBlocks := Len( aProc[2] ), xErr
    LOCAL nVar, nVars
@@ -570,7 +570,7 @@ PROCEDURE RP_Dot()
 
    bCount := .F.
 
-   ProcessFile( "rp_dot.ch" )
+   PP_ProcessFile( "rp_dot.ch" )
 
    ErrorBlock( {|oErr| RP_Dot_Err( oErr ) } )
 
@@ -588,14 +588,14 @@ PROCEDURE RP_Dot()
 
       sLine := StrTran( sLine,  Chr(9), "  " )
 
-      ExecuteLine( ProcessLine( RTrim( sLine ), 1, '' ) )
+      ExecuteLine( PP_ProcessLine( RTrim( sLine ), 1, '' ) )
    ENDDO
 
 RETURN
 
 //--------------------------------------------------------------//
 
-PROCEDURE ExecuteLine( sPPed )
+STATIC PROCEDURE ExecuteLine( sPPed )
 
    LOCAL nNext, sBlock, sTemp
    LOCAL sTemp2, nLen, sLeft, sSymbol, nNextAssign
@@ -738,7 +738,7 @@ RETURN
 
 //--------------------------------------------------------------//
 
-PROCEDURE CompileLine( sPPed, nLine )
+STATIC PROCEDURE CompileLine( sPPed, nLine )
 
    LOCAL nNext, sBlock, sTemp
    LOCAL sSymbol
@@ -1592,7 +1592,7 @@ PROCEDURE PP_Run( cFile )
 
    ErrorBlock( {|oErr| RP_Comp_Err( oErr ) } )
 
-   //ProcessFile( "rp_run.ch" )
+   //PP_ProcessFile( "rp_run.ch" )
 
    IF ! s_lRunLoaded
       s_lRunLoaded := .T.
@@ -1609,7 +1609,7 @@ PROCEDURE PP_Run( cFile )
       ENDIF
    ENDIF
 
-   ProcessFile( cFile )
+   PP_ProcessFile( cFile )
 
    ErrorBlock( {|oErr| RP_Run_Err( oErr ) } )
 
@@ -1650,7 +1650,7 @@ RETURN
 
 //--------------------------------------------------------------//
 
-PROCEDURE RP_Dot_Err( oErr )
+STATIC PROCEDURE RP_Dot_Err( oErr )
 
    LOCAL Counter, xArg, sArgs := ""
 
@@ -1701,7 +1701,7 @@ PROCEDURE RP_Dot_Err( oErr )
 
 //--------------------------------------------------------------//
 
-PROCEDURE RP_Comp_Err( oErr )
+STATIC PROCEDURE RP_Comp_Err( oErr )
 
    LOCAL Counter, xArg, sArgs := ""
 
@@ -1754,7 +1754,7 @@ PROCEDURE RP_Comp_Err( oErr )
 
 //--------------------------------------------------------------//
 
-FUNCTION RP_Run_Err( oErr )
+STATIC FUNCTION RP_Run_Err( oErr )
 
    LOCAL Counter, xArg, sArgs := "", nProc, sProc
 
@@ -1943,7 +1943,7 @@ RETURN nIf
 
    //--------------------------------------------------------------//
 
-   FUNCTION CompileNestedBlocks( sTemp, sMain )
+   STATIC FUNCTION CompileNestedBlocks( sTemp, sMain )
 
       LOCAL asBlocks, nBlocks, Counter, aReplace
 
@@ -2038,7 +2038,7 @@ RETURN nIf
 
 //------------------------------- *** END - RP DOT Functions *** -------------------------------//
 
-FUNCTION ProcessFile( sSource )
+FUNCTION PP_ProcessFile( sSource )
 
    LOCAL hSource, sBuffer, sLine, nPosition, sExt, cPrev
    LOCAL nLen, nMaxPos, cChar := '', nClose, nBase, nNext, nLine := 0
@@ -2197,7 +2197,7 @@ FUNCTION ProcessFile( sSource )
                                FWrite( hPP, CRLF )
                             ENDIF
                          ELSE
-                            sLine := ProcessLine( sLine, nLine, sPath + sSource )
+                            sLine := PP_ProcessLine( sLine, nLine, sPath + sSource )
                             IF bBlanks .OR. ! ( sLine == '' )
                                FWrite( hPP, sLine + CRLF )
                             ENDIF
@@ -2235,7 +2235,7 @@ FUNCTION ProcessFile( sSource )
                             FWrite( hPP, CRLF )
                          ENDIF
                       ELSE
-                         sLine := ProcessLine( sLine, nLine, sPath + sSource )
+                         sLine := PP_ProcessLine( sLine, nLine, sPath + sSource )
                          IF bBlanks .OR. ! ( sLine == '' )
                             FWrite( hPP, sLine + CRLF )
                          ENDIF
@@ -2410,7 +2410,7 @@ FUNCTION ProcessFile( sSource )
                       ENDIF
                    ELSE
                       //sLine += sRight
-                      sLine := ProcessLine( sLine, nLine, sPath + sSource )
+                      sLine := PP_ProcessLine( sLine, nLine, sPath + sSource )
                       IF bBlanks .OR. ! ( sLine == '' )
                          FWrite( hPP, sLine + CRLF )
                       ENDIF
@@ -2433,7 +2433,7 @@ FUNCTION ProcessFile( sSource )
                       FWrite( hPP, CRLF )
                    ENDIF
                 ELSE
-                   sLine := ProcessLine( sLine, nLine, sPath + sSource )
+                   sLine := PP_ProcessLine( sLine, nLine, sPath + sSource )
                    IF bBlanks .OR. ! ( sLine == '' )
                       FWrite( hPP, sLine + CRLF )
                    ENDIF
@@ -2495,7 +2495,7 @@ FUNCTION ProcessFile( sSource )
          FWrite( hPP, sLine )
       ENDIF
    ELSE
-      sLine := ProcessLine( sLine, nLine, sPath + sSource )
+      sLine := PP_ProcessLine( sLine, nLine, sPath + sSource )
       IF bBlanks .OR. ! ( sLine == '' )
          FWrite( hPP, sLine )
       ENDIF
@@ -2518,7 +2518,7 @@ RETURN .T.
 
 //--------------------------------------------------------------//
 
-FUNCTION ProcessLine( sLine, nLine, sSource )
+FUNCTION PP_ProcessLine( sLine, nLine, sSource )
 
    LOCAL sDirective, bX, sToken, nRule
    LOCAL nNewLineAt, nLines, Counter
@@ -2713,7 +2713,7 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
                   ENDIF
                ENDIF
             ELSE
-               ProcessFile( sLine ) // Intentionally not using s_sIncludeFile
+               PP_ProcessFile( sLine ) // Intentionally not using s_sIncludeFile
 
                /* Recursion safety - don't use the Static might be modified. */
                s_sIncludeFile := sLine
@@ -2991,7 +2991,7 @@ RETURN sOut
 
 //--------------------------------------------------------------//
 
-FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
+STATIC FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
 
    LOCAL Counter, nRules, nRule, aMarkers, xMarker
    LOCAL aMP, nOptional := 0, sAnchor, cType, aList, nMarkerId, nKeyLen
@@ -3192,7 +3192,7 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                         sNextStopper := Left( sStopper, nSpaceAt - 1 )
 
                         IF aRules[nRule][3]
-                           nLen := 10
+                           nLen := 64
                         ELSE
                            nLen := Max( 4, Len( sToken ) )
                         ENDIF
@@ -3210,7 +3210,7 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                      ENDDO
 
                      IF aRules[nRule][3]
-                        nLen := 10
+                        nLen := 64
                      ELSE
                         nLen := Max( 4, Len( sToken ) )
                      ENDIF
@@ -3740,7 +3740,7 @@ RETURN 0
 
 #ifndef __HARBOUR__
 
-FUNCTION NextToken( sLine, lDontRecord )
+STATIC FUNCTION NextToken( sLine, lDontRecord )
 
    LOCAL sReturn, Counter, nLen, nClose
    LOCAL s1, s2, s3
@@ -4015,7 +4015,7 @@ RETURN sReturn
 
 static BOOL s_bArrayPrefix = FALSE;
 
-HB_FUNC( NEXTTOKEN )
+static HB_FUNC( NEXTTOKEN )
 {
    PHB_ITEM pLine       = hb_param( 1, HB_IT_STRING );
    PHB_ITEM pDontRecord = hb_param( 2, HB_IT_LOGICAL );
@@ -4355,7 +4355,7 @@ HB_FUNC( NEXTTOKEN )
 
 //--------------------------------------------------------------//
 
-FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor, bX )
+STATIC FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor, bX )
 
   LOCAL  sExp, sTemp, Counter, sPad, sToken, sList
   LOCAL  sNextLine, sNextToken, sLastToken, sJustToken, sJustNext, cLastChar
@@ -4415,7 +4415,7 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor, bX )
                  sNextStopper := Left( sStopper, nSpaceAt - 1 )
 
                  IF bX
-                    nLen := 10
+                    nLen := 64
                  ELSE
                     nLen := Max( 4, Len( sToken ) )
                  ENDIF
@@ -4433,7 +4433,7 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor, bX )
               ENDDO
 
               IF bX
-                 nLen := 10
+                 nLen := 64
               ELSE
                  nLen := Max( 4, Len( sToken ) )
               ENDIF
@@ -4953,7 +4953,7 @@ RETURN IIF( cType == 'A', aExp, sExp )
 
 //--------------------------------------------------------------//
 
-FUNCTION PPOut( aResults, aMarkers )
+STATIC FUNCTION PPOut( aResults, aMarkers )
 
   LOCAL Counter, nResults, sResult := "", nMarker, nMatches, nMatch//, aMarkers := aResults[3]
   LOCAL xValue, nRepeats := 0, nDependee, nGroupStart, sDumb, aBackUp
@@ -5308,7 +5308,7 @@ RETURN sResult
 
 //--------------------------------------------------------------//
 
-FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
+STATIC FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
 
    LOCAL nNext, sKey, sAnchor := NIL, nOptional := 0, cType := NIL, nId := 0, aRule := NIL, aMatch, aWords := NIL
    LOCAL nOptionalAt, nMarkerAt, aMarkers := {}, Counter, nType, aResult := {}, sTemp, aModifiers, aValues
@@ -6213,7 +6213,7 @@ RETURN NIL
 
 //--------------------------------------------------------------//
 
-FUNCTION RemoveDefine( sDefine )
+STATIC FUNCTION RemoveDefine( sDefine )
 
    LOCAL nId, nLen
 
@@ -6230,7 +6230,7 @@ RETURN nId
 
 //--------------------------------------------------------------//
 
-FUNCTION CompileDefine( sRule )
+STATIC FUNCTION CompileDefine( sRule )
 
    LOCAL sKey, sResult, aRule, nCloseAt, nId, sMarker, nCommaAt, aMP
    LOCAL sToken, aRPs, sAnchor, aMarkers := {}, aResult
@@ -6445,7 +6445,7 @@ FUNCTION DropTrailingWS( sLine, sWS )
 
    //? "Before Drop: '" + sLine + "'"
 
-   /* Tabs are converted to spaces at ProcessFile() */
+   /* Tabs are converted to spaces at PP_ProcessFile() */
 
    WHILE nLen > 0 .AND. ( cChar := SubStr( sLine, nLen, 1 ) ) == ' ' //$ ( ' ' + Chr(9) ) // Tabs converted to spaces
       nLen--
@@ -6489,7 +6489,7 @@ FUNCTION DropExtraTrailingWS( sLine )
   #else
 
    LOCAL nLen := Len( sLine )
-   /* Tabs are converted to spaces at ProcessFile() */
+   /* Tabs are converted to spaces at PP_ProcessFile() */
 
    //? "Before Extra: '" + sLine + "'"
 
@@ -6506,7 +6506,7 @@ RETURN sLine
 
 //--------------------------------------------------------------//
 
-FUNCTION SetIfDef( sDefine, bExist )
+STATIC FUNCTION SetIfDef( sDefine, bExist )
 
    LOCAL nId
 
@@ -6528,7 +6528,7 @@ RETURN nIfDef
 
 //--------------------------------------------------------------//
 
-FUNCTION CompileToCCH( sSource )
+STATIC FUNCTION CompileToCCH( sSource )
 
    LOCAL hCCH, Counter, aRules, nRules, nRule, aRule, nMatches, nMatch, aMatch, nWords, nWord, aWords
    LOCAL aResults, nResults, nResult, aResult, nRPs, nRP, aRP, nIDs, nID, nModifier
@@ -6709,7 +6709,7 @@ RETURN .T.
 
 //--------------------------------------------------------------//
 
-FUNCTION InitRules()
+STATIC FUNCTION InitRules()
 
   /* Defines */
   aDefRules := {}
@@ -7003,7 +7003,7 @@ RETURN .T.
 
 //--------------------------------------------------------------//
 
-FUNCTION InitResults()
+STATIC FUNCTION InitResults()
 
   /* Defines Results*/
   aDefResults := {}
@@ -7297,7 +7297,7 @@ RETURN .T.
 
 //--------------------------------------------------------------//
 
-FUNCTION InitClsRules()
+STATIC FUNCTION InitClsRules()
 
   #ifdef __HARBOUR__
 
@@ -7448,7 +7448,7 @@ RETURN .T.
 
 //--------------------------------------------------------------//
 
-FUNCTION InitClsResults()
+STATIC FUNCTION InitClsResults()
 
   #ifdef __HARBOUR__
 
@@ -7703,7 +7703,7 @@ RETURN s_oSelf
 
 #ifndef __HARBOUR__
 
-FUNCTION NextIdentifier( sLine, sSkipped )
+STATIC FUNCTION NextIdentifier( sLine, sSkipped )
 
    LOCAL nAt, nLen := Len( sLine ), cChar, cLastChar, nStart, sIdentifier, sTmp
 
@@ -7777,7 +7777,7 @@ RETURN sIdentifier
 
 #pragma BEGINDUMP
 
-HB_FUNC( NEXTIDENTIFIER )
+static HB_FUNC( NEXTIDENTIFIER )
 {
    PHB_ITEM pLine    = hb_param( 1, HB_IT_STRING );
    PHB_ITEM pSkipped = hb_param( 2, HB_IT_ANY );
@@ -7955,7 +7955,7 @@ FUNCTION nAtSkipStr( sFind, sLine )
 RETURN 0
 
 //--------------------------------------------------------------//
-FUNCTION InitFWRules()
+STATIC FUNCTION InitFWRules()
 
    #ifdef __HARBOUR__
 
@@ -8416,7 +8416,7 @@ FUNCTION InitFWRules()
 RETURN .T.
 
 //--------------------------------------------------------------//
-FUNCTION InitFWResults()
+STATIC FUNCTION InitFWResults()
 
    #ifdef __HARBOUR__
 
@@ -8877,7 +8877,7 @@ FUNCTION InitFWResults()
 RETURN .T.
 
 //--------------------------------------------------------------//
-FUNCTION InitRunRules()
+STATIC FUNCTION InitRunRules()
 
    /* Translates */
    aAdd( aTransRules, { 'AS' , { {    1,   0, NIL, ':', { 'ANYTYPE', 'ARRAY', 'CHARACTER', 'CODEBLOCK', 'DATE', 'LOGICAL', 'NUMERIC', 'OBJECT', 'STRING', 'USUAL' } } } , .F. } )
@@ -8938,7 +8938,7 @@ RETURN .T.
 
 //--------------------------------------------------------------//
 
-FUNCTION InitRunResults()
+STATIC FUNCTION InitRunResults()
 
    aAdd( aTransResults, { , , { NIL }  } )
    aAdd( aTransResults, { , , { NIL }  } )
