@@ -4,6 +4,14 @@ rem $Id$
 rem 
 
 rem ---------------------------------------------------------------
+rem This is a generic template file, if it doesn't fit your own needs 
+rem please DON'T MODIFY IT.
+rem
+rem Instead, make a local copy and modify that one, or make a call to 
+rem this batch file from your customized one. [vszakats]
+rem ---------------------------------------------------------------
+
+rem ---------------------------------------------------------------
 rem Template to initialize the environment before starting
 rem the GNU make system for Harbour
 rem

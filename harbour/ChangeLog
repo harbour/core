@@ -1,3 +1,13 @@
+2001-11-04 13:56 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * bin/bld.bat
+   * bin/bld_b16.bat
+   * bin/bld_b32.bat
+   * bin/bld_vc.bat
+   * make_gnu.bat
+     ! Removed the LIBMISC.LIB requirement for BCC and VC platforms.
+     + Added note to not modify these files as they are templates.
+
 2001-11-03 14:00 GMT+7 Andi Jahja <harbour@cbn.net.id>
    * contrib/rdd_ads/ads1.c
      ! some clean ups
