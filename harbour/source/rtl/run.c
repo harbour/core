@@ -36,6 +36,9 @@
 #include "hbapi.h"
 #include "hbapierr.h"
 
+extern BOOL hb_gt_Suspend();
+extern BOOL hb_gt_Resume();
+
 /* TOFIX: The screen buffer handling is not right for all platforms (Win32) 
           The output of the launched (DOS?) app is not visible. */
 
@@ -43,7 +46,16 @@ HB_FUNC( __RUN )
 {
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__IBMCPP__) || defined(__GNUC__)
    if( ISCHAR( 1 ) )
-      system( hb_parc( 1 ) );
+   {
+      if ( hb_gt_Suspend() )
+      {
+         system( hb_parc( 1 ) );
+         if ( hb_gt_Resume() )
+	 {
+	 /* indicate internal error here */
+	 }
+      }
+   }
 #else
    hb_errRT_BASE_Ext1( EG_UNSUPPORTED, 9999, NULL, "__RUN", 0, EF_CANDEFAULT );
 #endif

@@ -947,3 +947,13 @@ USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar,
       hb_gt_xPutch( uRow++, uiCol, byAttr, byChar );
    return 0;
 }
+
+BOOL hb_gt_Suspend()
+{
+   return 1;
+}
+
+BOOL hb_gt_Resume()
+{
+   return 1;
+}
