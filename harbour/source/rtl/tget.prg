@@ -153,7 +153,7 @@ CLASS Get
    // Protected
 
    DATA cPicMask, cPicFunc, nMaxLen, lEdit, lDecRev, lPicComplex
-   DATA nDispLen, nDispPos, nOldPos, lCleanZero
+   DATA nDispLen, nDispPos, nOldPos, lCleanZero, cDelimit
 
    METHOD DeleteAll()
    METHOD IsEditable( nPos )
@@ -199,6 +199,7 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
    ::nDispPos   := 1
    ::nOldPos    := 0
    ::lCleanZero := .f.
+   ::cDelimit   := if( SET(_SET_DELIMITERS), SET(_SET_DELIMCHARS), NIL )
 
    ::Picture    := cPicture
 
@@ -342,15 +343,19 @@ METHOD Display( lForced ) CLASS Get
    endif
 
    if ::buffer != NIL .and. ( lForced .or. ( ::nDispPos != ::nOldPos ) )
-      DispOutAt( ::Row, ::Col,;
+      DispOutAt( ::Row, ::Col + if( ::cDelimit == NIL, 0, 1 ),;
                  Substr( ::buffer, ::nDispPos, ::nDispLen ), ;
                  hb_ColorIndex( ::ColorSpec, iif( ::HasFocus, GET_CLR_ENHANCED, GET_CLR_UNSELECTED ) ) )
+      if !(::cDelimit == NIL)
+         DispOutAt( ::Row, ::Col, Substr( ::cDelimit, 1, 1), hb_ColorIndex( ::ColorSpec, iif( ::HasFocus, GET_CLR_ENHANCED, GET_CLR_UNSELECTED ) ) )
+         DispOutAt( ::Row, ::Col + ::nDispLen + 1, Substr( ::cDelimit, 2, 1), hb_ColorIndex( ::ColorSpec, iif( ::HasFocus, GET_CLR_ENHANCED, GET_CLR_UNSELECTED ) ) )
+      endif
    endif
 
    ::nOldPos := ::nDispPos
 
    if ::Pos != NIL
-      SetPos( ::Row, ::Col + ::Pos - ::nDispPos  )
+      SetPos( ::Row, ::Col + ::Pos - ::nDispPos + if( ::cDelimit == NIL, 0, 1 ) )
    endif
 
    SetCursor( nOldCursor )
@@ -1299,7 +1304,7 @@ METHOD HitTest(mrow,mcol) CLASS GET
         if ::row != mrow
            return HTNOWHERE
         endif
-        if mcol >= ::col .and. mrow <= ::col+::ndispLen
+        if mcol >= ::col .and. mrow <= ::col+::ndispLen+if( ::cDelimit == NIL, 0, 2 )
            return HTCLIENT
         endif
 return HTNOWHERE
