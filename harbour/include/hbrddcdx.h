@@ -173,6 +173,10 @@ typedef struct _CDXTAG
    LPKEYINFO  CurKeyInfo;    /* current value of key expression */
    LPPAGEINFO RootPage;
    LPKEYINFO  HotKey;        /* value of hot key expression */
+   PHB_ITEM   topScope;
+   LPKEYINFO  topScopeKey;
+   PHB_ITEM   bottomScope;
+   LPKEYINFO  bottomScopeKey;
 } CDXTAG;
 typedef CDXTAG * LPCDXTAG;
 
@@ -454,13 +458,16 @@ extern ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
 extern ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInfo );
 #define hb_cdxClearFilter                          NULL
 #define hb_cdxClearLocate                          NULL
-#define hb_cdxClearScope                           NULL
+/* #define hb_cdxClearScope                           NULL */
+static ERRCODE hb_cdxClearScope( CDXAREAP pArea );
 #define hb_cdxCountScope                           NULL
 #define hb_cdxFilterText                           NULL
-#define hb_cdxScopeInfo                            NULL
+/* #define hb_cdxScopeInfo                            NULL */
+static ERRCODE hb_cdxScopeInfo( CDXAREAP pArea, USHORT nScope, PHB_ITEM pItem );
 #define hb_cdxSetFilter                            NULL
 #define hb_cdxSetLocate                            NULL
-#define hb_cdxSetScope                             NULL
+/* #define hb_cdxSetScope                             NULL */
+static ERRCODE hb_cdxSetScope( CDXAREAP pArea, LPDBORDSCOPEINFO sInfo );
 #define hb_cdxSkipScope                            NULL
 #define hb_cdxCompile                              NULL
 #define hb_cdxError                                NULL
