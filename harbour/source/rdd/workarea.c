@@ -48,6 +48,11 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
+ *
+ * The following functions are added by
+ *       Horacio Roldan <harbour_ar@yahoo.com.ar>
+ * hb_waCloseAux()
+ *
  */
 
 #include <ctype.h>
@@ -445,6 +450,8 @@ ERRCODE hb_waAlias( AREAP pArea, BYTE * szAlias )
 /*
  * Close the table in the WorkArea.
  */
+short hb_waCloseAux ( AREAP pArea, int nChildArea );
+
 ERRCODE hb_waClose( AREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_waClose(%p)", pArea));
@@ -455,10 +462,54 @@ ERRCODE hb_waClose( AREAP pArea )
    SELF_CLEARLOCATE( pArea );
 
    if( pArea->uiParents > 0 )
-      printf( "\nTODO: hb_waClose() %d\n",pArea->uiParents );
+   {
+      /* Clear relations that has this area as a child */
+      hb_rddIterateWorkAreas ( hb_waCloseAux, pArea->uiArea );
+   }
 
    ( ( PHB_DYNS ) pArea->atomAlias )->hArea = 0;
    return SUCCESS;
+}
+
+short hb_waCloseAux ( AREAP pArea, int nChildArea )
+{
+   USHORT uiPrevArea, uiArea;
+   LPDBRELINFO lpdbRelation, lpdbRelPrev, lpdbRelTmp;
+
+   uiArea = ( USHORT ) nChildArea;
+   if ( pArea->lpdbRelations )
+   {
+      uiPrevArea = hb_rddGetCurrentWorkAreaNumber();
+      lpdbRelation = pArea->lpdbRelations;
+      lpdbRelPrev = NULL;
+      while ( lpdbRelation ) {
+         if ( lpdbRelation->lpaChild->uiArea == uiArea ) {
+            /* Clear this relation */
+            hb_rddSelectWorkAreaNumber( lpdbRelation->lpaChild->uiArea );
+            SELF_CHILDEND( lpdbRelation->lpaChild, lpdbRelation );
+            hb_rddSelectWorkAreaNumber( uiPrevArea );
+            if( lpdbRelation->itmCobExpr )
+            {
+               hb_itemRelease( lpdbRelation->itmCobExpr );
+            }
+            if( lpdbRelation->abKey )
+               hb_itemRelease( lpdbRelation->abKey );
+            lpdbRelTmp = lpdbRelation;
+            if ( lpdbRelPrev )
+               lpdbRelPrev->lpdbriNext = lpdbRelation->lpdbriNext;
+            else
+               pArea->lpdbRelations = lpdbRelation->lpdbriNext;
+            lpdbRelation = lpdbRelation->lpdbriNext;
+            hb_xfree( lpdbRelTmp );
+         }
+         else
+         {
+            lpdbRelPrev  = lpdbRelation;
+            lpdbRelation = lpdbRelation->lpdbriNext;
+         }
+      }
+   }
+   return 1;
 }
 
 /*

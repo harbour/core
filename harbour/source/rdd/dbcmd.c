@@ -56,6 +56,7 @@
  * ordKeyVal()
  * ordKeyAdd()
  * ordKeyDel()
+ * hb_rddIterateWorkAreas()
  *
  */
 
@@ -478,6 +479,7 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
 void hb_rddReleaseCurrentArea( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_rddReleaseCurrentArea()"));
+   SELF_FORCEREL( ( AREAP ) s_pCurrArea->pArea );
    SELF_CLOSE( ( AREAP ) s_pCurrArea->pArea );
    SELF_RELEASE( ( AREAP ) s_pCurrArea->pArea );
 
@@ -610,6 +612,25 @@ static USHORT hb_rddFieldIndex( AREAP pArea, char * szName )
    }
    return 0;
 }
+
+
+
+ERRCODE hb_rddIterateWorkAreas ( WACALLBACK pCallBack, int data )
+{
+   LPAREANODE pAreaNode;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_rddIterateWorkAreas(%p)", pCallBack));
+
+   pAreaNode = s_pWorkAreas;
+   while( pAreaNode )
+   {
+      if ( ! (*pCallBack)( ( AREAP ) pAreaNode->pArea, data ) )
+         break;
+      pAreaNode = pAreaNode->pNext;
+   }
+   return SUCCESS;
+}
+
 
 /*
  * -- FUNCTIONS ACCESSED FROM VIRTUAL MACHINE --
@@ -3604,7 +3625,7 @@ static void rddMoveFields( AREAP pAreaFrom, AREAP pAreaTo, PHB_ITEM pFields, BOO
         f = hb_rddFieldIndex( pAreaTo, (( PHB_DYNS )(pAreaFrom->lpFields + i)->sym )->pSymbol->szName );
       if ( f )
       {
-        LPAREANODE s_curr = s_pCurrArea; 
+        LPAREANODE s_curr = s_pCurrArea;
         SELF_GETVALUE( pAreaFrom, i+1, fieldValue );
         if( s )
            s_pCurrArea = s;
