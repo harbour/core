@@ -441,8 +441,7 @@
  *  $CATEGORY$
  *      Matemáticas API
  *  $ONELINER$
- *      Agrega un manejador de errores definido por el usuario la
- *      cadena de manejadores de error.
+ *      Agrega un manejador de errores definido por el usuario la cadena de manejadores de error.
  *  $SYNTAX$
  *      C Prototype
  *
@@ -475,8 +474,7 @@
  *  $CATEGORY$
  *      Matemáticas API
  *  $ONELINER$
- *      Quita un manejador de errores definido por el usuario de la
- *      cadena de manejadores de error.
+ *      Quita un manejador de errores definido por el usuario de la cadena de manejadores de error.
  *  $SYNTAX$
  *      C Prototype
  *
@@ -509,8 +507,7 @@
  *  $CATEGORY$
  *      Matemáticas API
  *  $ONELINER$
- *      Pone el estado del manejador de errores definido por el usuario en la
- *      cadena de manejadores de error.
+ *      Pone el estado del manejador de errores definido por el usuario en la cadena de manejadores de error.
  *  $SYNTAX$
  *      C Prototype
  *
@@ -548,8 +545,7 @@
  *  $CATEGORY$
  *      Matemáticas API
  *  $ONELINER$
- *      Lee el estado del manejador de errores definido por el usuario en la
- *      cadena de manejadores de error.
+ *      Lee el estado del manejador de errores definido por el usuario en la cadena de manejadores de error.
  *  $SYNTAX$
  *      C Prototype
  *

@@ -1,0 +1,140 @@
+
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2001 Antonio Linares
+ *   Documentación en Inglés
+ *
+ * Copyright 2001 Alejandro de Gárate <alex_degarate@hotmail.com>
+ *   Traducción al Español de pcode.txt
+ *
+ * Vea doc/license.txt por los términos de la licencia.
+ *
+ */
+
+
+El OBJ de Clipper y el modelo pcode (GNU|Open|Clipper project)
+==============================================================
+
+Consideremos el siguiente ejemplo de Clipper, test.prg:
+
+function Main()
+
+   ? "Hola mundo!"
+
+return nil
+
+Una vez que esto se compila dentro de un OBJ, qué es lo que hay dentro 
+de él ?
+En efecto, lo que nosostros tenemos es un equivalente a la siguiente 
+aplicación de lenguaje C:
+
+SYMBOL symbols[] = { ... };
+
+void MAIN( void )
+{
+   BYTE pcode[] = { ... };
+
+   VirtualMachine( pcode, symbols );
+}
+
+Básicamente, el código fuente de test.prg ha sido convertido en una 
+secuencia de bytes pcode contenidos en el array pcode[] = {...}
+Todo lo que nuestra función MAIN hace es invocar, en tiempo de ejecución
+a la función de VirtualMachine() que procesará aquellos bytes de pcodes.
+
+Vamos a revisar la estructura de pcodes de test.prg con más detalle:
+
+0000 (2A) LINE 0                    2A 00 00
+0003 (2A) LINE 3                    2A 03 00
+0006 (13)   SYMF [QOUT]             13 02 00
+0009 (01)   PUSHC "Hello world!"    01 ...
+0018 (27)   DO(1)                   27 01 00
+001B (2A) LINE 5                    2A 05 00
+001E (7B)   UNDEF                   7B
+001F (79)   SAVE_RET                79
+0020 (1E)   JMP 0023                1E 00 00
+0023 (60) ENDPROC                   60
+
+Nosotros podemos definir un archivo hbpcode.h para leer mejor aquellos 
+pcode:
+
+----------------------
+hbpcode.h
+
+#define  LINE    0x2A
+#define  SYMF    0x13
+#define  PUSHC   0x01
+#define  DO      0x27
+#define  UNDEF   0x7B
+...
+----------------------
+
+Así finalmente esto quedaría como:
+
+BYTE pcode[] =
+     { LINE, 0, 0,
+       LINE, 3, 0,
+       SYMF, 2, 0,
+       PUSHC, 'H', 'o', 'l', 'a', ' ', 'm', 'u', 'n', 'd', 'o', '!', '0',
+       DO,   1, 0,
+       LINE, 5, 0,
+       UNDEF,
+       SAVE_RET,
+       JMP, 0, 0,
+       ENDPROC };
+
+Y qué es SYMBOL symbols[] ?
+Cliper crea una tabla de símbolos en el archivo OBJ que luego será usada 
+para crear una tabla dinámica de símbolos compartida por la aplicación
+entera. cada uno de esos símbolos tiene la siguiente estructura:
+
+   typedef struct
+   {
+      char * szName;  // Clipper de hecho mantiene un array aquí (11 bytes)
+      BYTE   bScope;
+      LPVOID pVoid;
+   } SYMBOL;
+
+#define PUBLIC 0    // el alcance de la función !
+
+SYMBOL symbols[] = { { "MAIN",  PUBLIC, MAIN },
+                     { "QQOUT", PUBLIC, QQOUT } };
+
+Recordemos que el nombre de una función (MAIN, QQOUT) es la dirección de 
+la función, así nuestra tabla de símbolos estará lista para usarla para 
+saltar y ejecutar cualquier función enlazada (linkeada). 
+
+De hecho, el pcode SYMF 2, 0 en nuestro ejemplo, instruirá a la función
+VirtualMachine(), para usar el 2do símbolo que es QQOUT.
+
+Vamos a leer el pcode:
+
+LINE 0, 0   =>  Nosotros estamos ubicados en la línea 0
+LINE 3, 0   =>  Nosotros estamos ubicados en la línea 3
+SYMF 2, 0   =>  Vamos a llamar a QQOUT desde nuestra tabla de símbolos
+PUSHC ...   =>  Esta cadena va a ser usada como un parámetro
+DO   1, 0   =>  ok, saltemos a QQOUT y recordemos que le dimos 1 parámetro
+LINE 5, 0   =>  Estamos de vuelta desde QQOUT y estamos ubicados en línea 5
+UNDEF       =>  Nosotros vamos a retornar este valor (NIL)
+SAVE_RET    =>  Ok, retornemoslo
+JMP  0      =>  No saltamos dondequiera, continuamos con el próximo pcode
+ENDPROC     =>  Es el fin. hemos completado la ejecución de esta función
+
+Todas estas funciones serán evaluadas desde nuestra función 
+VirtualMachine(), (Clipper la llama _plankton() ). Todas las funciones 
+terminan usando ENDPROC, así cuando VirtualMachine() encuentra ENDPROC 
+sabe que ha alcanzado el final de una función pcode.
+
+Ahora que nosotros entendemos claramente el modelo básico, nosotros 
+estamos en condiciones de comenzar a implementar "reglas de producción" 
+en nuestra sintaxis yacc (harbour.y) para generar el archivo de salida 
+específico (test.c) con la estructura de arriba (ó nosotros podemos 
+fácilmente generar el archivo OBJ para él).
+
+Continuará...
+
+Antonio Linares
+
+

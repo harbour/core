@@ -1,0 +1,91 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2001 Antonio Linares
+ *   Documentación en Inglés de statics.txt
+ *
+ * Copyright 2001 Alejandro de Gárate <alex_degarate@hotmail.com>
+ *   Traducción al Español de statics.txt
+ *
+ * Vea doc/license.txt por los términos de la licencia.
+ *
+ */
+
+
+ 
+VARIABLES ESTÁTICAS
+===================
+
+Comencé la implementación de Clases y creación de objetos cuando 
+Harbour aún no estaba manejando variables estáticas. (Harbour las 
+reconocía pero no generaba el pcode apropiado para ellas) .
+
+Así Yo podría hacer una introducción al manejo de las variables 
+estáticas como es, un sofisticado sistema, que Harbour esta yendo
+a implementar.
+
+Es algo conocido públicamente que las variables estáticas en Clipper 
+están localizadas al final del segmento de datos. Esto ha causado 
+todo tipo de problemas. Esto explica por qué, cuando he diseñado 
+FiveWin lo hice en una forma que no pudiera causar ningún problema 
+en el futuro.
+
+En Harbour todas las variables estáticas (y quiero significar en todos 
+los PRGs) son almacenadas en un sólo array de Harbour (un array del 
+lenguaje Clipper), esto garantiza que podemos tener tantas variables 
+estáticas como deseamos sin limites (sólo limitados por la memoria 
+disponible).
+Este array aStatics no es visible desde la aplicación (nivel PRG).
+
+Basicamente lo que sucede cuando una función es llamada y esta 
+función usa variables estáticas, es que la pila establece un puntero
+al sector del array donde están nuestras variables estaticas, así 
+desde este momento en adelante, acceder a la static1, static2, ... 
+es acceder a algún elemento de ese array.
+
+    static1 = statics[ statics_base_for_this_function + 1 ]
+ 
+    ...
+
+    staticn = statics[ statics_base_for_this_function + n ]
+
+En orden de implementar esto nostros solo usamos dos nuevos opcodes:
+_STATICS y _SFRAME. 
+_STATICS, hace crecer el array global de estaticas lo suficiente para 
+para soportar nuestras variables estaticas recién definidas:
+
+    _STATICS <n> -->  ASize( aStatics, Len( aStatics ) + <n> )
+
+   _SFRAME --> le dice a la pila (stack) en que ubicación dentro del
+               array aStatics estamos nosotros.
+
+_STATICS, es sólo llamada una vez en el todo el PRG desde una función 
+de inicio llamada _INITSTATICS (STATICS$ y SINIT en Clipper). 
+
+Esta función almacena en un lugar astuto (su propio puntero en la 
+tabla de símbolos !) nuestra base estática y luego _SFRAME 
+simplemente la toma de allí y la establece en la pila. 
+Esta función _INITSTATICS ejecutará cualquier inicialización que 
+nuestras globales estáticas puedan tener definidas en aquel PRG).
+
+Uds. van a ver el código de todo esto. Solo quería darles una 
+clara idea sobre como Harbour hace esta magia :-)
+
+Antonio Linares
+
+
+
+ 
+
+
+
+
+
+
+
+

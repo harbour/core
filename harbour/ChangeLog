@@ -7,6 +7,29 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * source\common\hbffind.c
+    * Since I had used an undocumented 0x04000 as an attribute check.
+    * it was causing trouble. Fixed.
+
+2002-01-23 09:10 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
+  * source\common\hbffind.c
+    * removed extra comment marker.
+
+2002-01-22 22:30 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
+  * source\common\hbffind.c
+    * It seems that at some point prior to the release of Win2k, MS
+    * changed the definition of FILE_ATTRIBUTE_ENCRYPTED from
+    * 0x00004000 to 0x00000040
+    * If you installed the Release Win2k over a beta or RC version of
+    * the O/S, then Harbour's directory() will show an attribute of
+    * 'I' for Encrypted files.  Otherwise, it will show 'E'.  It seems
+    * that the only way to corect this is to reinstall the OS fresh.
+    * (This text is subject to correction if anyone has a better description)
+
+2002-01-22 20:30 UTC-0300 Luiz Rafael Culik <culik@sl.conex.net>
+  * source/common/hbffind.c
+    * Fixes for linux
+  + doc\es\idle.txt
   + doc\es\codebloc.txt
   + doc\es\dbstrux.txt
   + doc\es\hbpplib.txt

@@ -1,0 +1,87 @@
+$Id$
+
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2001 Ron Pinkas 
+ *   Documentación en Inglés
+ *
+ * Copyright 2001 Alejandro de Gárate <alex_degarate@hotmail.com>
+ *   Traducción al Español de clipper.txt
+ *
+ * Vea doc/license.txt por los términos de la licencia.
+ *
+ */
+
+
+   Este documento intenta describir las características que separan
+   Harbour de Clipper.
+
+/* TODO: @FuncPointer(), y todas las otras extensiones de Harbour. */
+
+
+    El Compilador de Macros de Harbour
+    ----------------------------------
+    El Compilador de Macros de Harbour ofrece dos capas adicionales de
+    funcionalidad por medio de la función HB_SETMACRO()*, no disponible
+    en Clipper.
+
+    HB_SETMACRO( HB_SM_HARBOUR, TRUE ) habilitará compilación de macros
+    y evaluación de expresiones complejas, no soportadas por Clipper como:
+
+     - exp++, exp--, var += exp, (exp), etc..
+     - bloques de código (codeblocks) anidados.
+     - Expresiones más largas de 254 caracteres.
+
+
+    HB_SETMACRO( HB_SM_XBASE, TRUE ) habilitará compilación de macros
+    y evaluación de listas separadas por comas, en todos los contextos
+    donde las listas son aceptadas por Clipper*, incluyendo:
+
+     - { &cMacro }         // Literal de la lista de elementos de un array.
+     - SomeArray[ &cMacro ]// Lista de indices de un array.
+     - SomeFun( &cMacro )  // Lista de Argumentos de una función.
+     - ( &cMacro )         // Lista de expresiones parentizada.
+
+    *Clipper sólo soporta lista de macros dentro del contexto de bloques
+    de código (codeblocks).
+
+    Ambas capas extras estan activadas por defecto.
+
+    * Vea también el switch -k del Compilador
+
+
+    Comando LIST
+    ------------
+
+    LIST &cMacro
+
+    LIST en clipper soporta [superficialmente] macros de listas de
+    expresiones.
+    Ningún error será producido, y todas las expresiones en la lista serán
+    evaluadas, pero *solamente* la *última* expresion será visualizada.
+    Esto no está documentado ni en el comando LIST, ni en la descripción
+    del operador Macro (&), pero es el comportamiento por defecto en 
+    todas las versiones de Clipper 5.x
+
+    Harbour en su lugar, no sólo evalúa todas las expresiones en esa 
+    lista de macros, sino que también visualiza todos aquellos valores. 
+    Este comportamiento por defecto de Harbour, puede ser deshabilitado 
+    HB_SETMACRO( HB_SM_XBASE, .F. )*
+
+    * Vea también el switch -k del Compilador
+
+
+    INIT/EXIT y procedimientos de inicio
+    ------------------------------------
+
+    En Clipper el procedimiento de inicio es siempre el primer procedimiento
+    /función del modulo principal, aún si ese símbolo es el símbolo INIT 
+    ó EXIT. En tal caso el programa nunca ejecutará el símbolo "main".
+    En Harbour el primer símbolo que no sea INIT/EXIT, será ejecutado como
+    el símbolo "main" después que todos los procedimientos INIT hayan sido
+    ejecutados.
+
+
+

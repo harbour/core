@@ -1,0 +1,117 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2001 Jose Lalin <dezac@corevia.com>
+ *   Documentación en Inglés
+ *
+ * Copyright 2001 Alejandro de Gárate <alex_degarate@hotmail.com>
+ *   Traducción al Español de pragma.txt
+ *
+ * Vea doc/license.txt por los términos de la licencia.
+ *
+ */
+
+
+DIRECTIVA #pragma
+=================  
+
+
+INTRODUCCION
+============
+Este archivo explica qué es y cómo usar la directiva #pragma con Harbour.
+Primariamente esto le da control sobre los switches de la línea de 
+comandos del compilador, desde adentro de su código fuente.
+
+
+QUE ES ?
+========
+#pragma es una directiva usada dentro del código fuente en muchos 
+compiladores para cambiar el comportamiento del compilador en tiempo 
+de compilación.
+
+
+USO
+===
+
+La directiva #pragma puede ser usada en dos formas:
+1- el modo switch
+2- modo comando
+
+La sintaxis es: #pragma <Expression>[=On/Off] ó
+                #pragma -CompilerFlag[+|-]
+
+Ud. puede usar ambos modos mezclados en el mismo módulo y en mayúsculas ó
+minúsculas sin preocuparse.
+
+Para habilitar ó deshabilitar un comando ó un switch Ud simplemente haga:
+
+  * Modo Comando                      Modo Switch 
+  --------------------------------------------------------------
+  * #pragma <CommandName>=On/Off      #pragma /<SwitchName>+/-
+
+  Ejemplo: 
+     #pragma AddDebugInfo=Off    /* Suprime información de depuración */
+     #pragma /B+                 /* Agrega información de depuración 
+                                        desde aquí                    */
+
+
+IMPLEMENTACION
+==============
+
+Esta es la lista de los comandos soportados y switches:
+
+  * Comando                           Switch
+  -----------------------------------------------
+  * AUTOMEMVARS         =<On/Off>     /A<+/->
+  * DEBUGINFO           =<On/Off>     /B<+/->
+  * ENABLEWARNINGS      =<On/Off>     /W<+/->
+  * EXITSEVERITY        =<nNivel>     /E<nNivel>
+  * FORCEMEMVARS        =<On/Off>     /V<+/->
+  * LINEINFO            =<On/Off>     /L<+/->
+  * NOSTARTPROC         =<On/Off>     /N<+/->
+  * PREPROCESSING       =<On/Off>     /P<+/->
+  * WARNINGLEVEL        =<nNivel>     /W<nNivel>
+  * SHORTCUTTING        =<On/Off>     /Z<+/->
+
+  Los switches tienen el mismo comportamiento que los del compilador  
+  y los comandos son sinónimos de los switches.
+
+  * TRACEPRAGMAS (Rastreo de pragmas)
+  Este comando muestra la actividad de los pragmas en tiempo de 
+  compilación cuando están habilitados.
+
+  NOTA: Ud. puede usar el modo de comando abreviado tipeando solamente 
+        los ocho primeros caracteres.
+
+
+NOTAS:
+======
+Esta directiva no es soportada en la versión aislada del preprocesador 
+de Harbour.
+
+
+EJEMPLOS
+========
+#pragma NoStartProc=Off
+/* #pragma /N- */
+
+function Test()
+return nil
+
+Esto es lo mismo que llamar a Harbour con el switch -n en la línea de
+comandos pero con el gran beneficio que si Ud. olvida pasar el switch, 
+este podrá ser usado de todas maneras, porque está incluido dentro del 
+código fuente.
+
+
+
+
+
+
+
+

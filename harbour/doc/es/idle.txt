@@ -1,0 +1,222 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 Brian Hays <bhays@abacuslaw.com>
+ * Documentación en Inglés de: 
+ *              Readme for Idle state, HB_IDLEADD(), HB_IDLEDEL()
+ *              HB_IDLESTATE(), hb_idleState()
+ *
+ * Copyright 2000 Alejandro de Gárate <alex_degarate@hotmail.com>
+ * Documentación en Español de: 
+ *              Leame para Estado Inactivo, HB_IDLEADD(), HB_IDLEDEL()
+ *              HB_IDLESTATE(), hb_idleState()
+ *
+ * Vea doc/license.txt por los términos de la licencia.
+ *
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      Estado de Espera
+ *  $CATEGORY$
+ *      Documentación
+ *  $ONELINER$
+ *      Archivo Léame para Estado de Espera
+ *  $DESCRIPTION$
+ *      El estado de espera ó inactivo es el estado de la máquina virtual de
+ *      Harbour cuando esta espera por una acción del usuario a través del
+ *      teclado ó el mouse. El estado inactivo ocurre actualmente durante
+ *      las llamadas a INKEY(). Todas las funciones que no usen la función 
+ *      INKEY() pueden señalizar el estado inactivo con una llamada a la 
+ * 	función Harbour HB_IDLESTATE() ó hb_idleState() a nivel de lenguaje
+ *      C.
+ *
+ *      Durante los estado de espera, la máquina virtual llama al recolector 
+ *      de memoria y este puede llamar a acciones definidas por el usuario
+ *      (tareas en segundo plano ó background). Este también libera porciones 
+ *      del tiempo de la CPU para algunas plataformas deficientes que no son
+ *      lo suficientemente inteligentes (Windows NT).
+ *
+ *      Por definición de tareas en segundo plano vea las funciones:
+ *       HB_IDLEADD() y HB_IDLEDEL().
+ *
+ *      Para llamar directamente a acciones en segundo plano vea la función:
+ *	HB_IDLESTATE().
+ *
+ *      Para indicar el estado inactivo desde código en lenguaje C vea la
+ *	hb_idleState() en la API,
+ *  $SEEALSO$
+ *      HB_IDLEADD(),HB_IDLEDEL()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      HB_IDLEADD()
+ *  $CATEGORY$
+ *      Estado de Espera
+ *  $ONELINER$
+ *      Agrega tareas en segundo plano.
+ *  $SYNTAX$
+ *      HB_IDLEADD( <cbAccion> ) --> nHandle
+ *  $ARGUMENTS$
+ *      <cbAccion> es un bloque de código que será ejecutado durante los 
+ *      estados de espera, No hay argumentos pasados a este bloque de código 
+ *	durante la evaluación.
+ *  $RETURNS$
+ *      <nHandle> El manejador (un valor entero) que identifica la tarea. 
+ *      Este manejador puede ser usado para eliminar la tarea.
+ *  $DESCRIPTION$
+ *      HB_IDLEADD() agrega el pasado bloque de código a las lista de tareas
+ *      en segundo plano que serán evaluadas durante los estados inactivos.
+ *      No hay un límite para el número de tareas.
+ *  $EXAMPLES$
+ *      nTarea := HB_IDLEADD( {|| SayTime()} )
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Extensión de Harbour, similar a la función FT_ONIDLE() disponible
+ *      en la librería Nanforum.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      El archivo fuente es ../source/rtl/idle.c
+ *  $SEEALSO$
+ *      HB_IDLEDEL(),HB_IDLESTATE()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      HB_IDLEDEL()
+ *  $CATEGORY$
+ *      Estado de Espera
+ *  $ONELINER$
+ *      Remueve tareas desde la lista de tareas en segundo plano.
+ *  $SYNTAX$
+ *      HB_IDLEDEL( <nHandle> ) --> xAccion
+ *  $ARGUMENTS$
+ *      <nHandle> es el identificador de la tarea devuelto por la función
+ *      HB_IDLEADD().
+ *  $RETURNS$
+ *      Retorna <xAccion> igual a NIL si un manejador no válido es pasado
+ *  $DESCRIPTION$
+ *      La función HB_IDLEDEL() remueve la acción asociada con el identi-
+ *      ficador pasado desde la lista de tareas en segundo plano. 
+ *      El identificador debería ser el valor retornado por la llamada 
+ *	previa a la función HB_IDLEADD().
+ *      Si la tarea especificada está definida, entonces el codeblock es
+ *	retornado, de otro modo el valor NIL es retornado.
+ *  $EXAMPLES$
+ *      nTarea := HB_IDLEADD( {|| SayTime()} )
+ *      INKEY(10)
+ *      cbAccion := HB_IDLEDEL( nTarea )
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Extensión de Harbour 
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      El archivo fuente es ../source/rtl/idle.c
+ *  $SEEALSO$
+ *      HB_IDLEADD(),HB_IDLESTATE()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      HB_IDLESTATE()
+ *  $CATEGORY$
+ *      Estado de Espera
+ *  $ONELINER$
+ *      Evalúa una sola tarea en segundo plano y llama al recolector
+ *  $SYNTAX$
+ *      HB_IDLESTATE()
+ *  $ARGUMENTS$
+ *      Ninguno
+ *  $RETURNS$
+ *      NIL
+ *  $DESCRIPTION$
+ *      La función HB_IDLESTATE() solicita la recolección de memoria sin 
+ *      uso y ejecuta una única tarea definida por el bloque de código 
+ *      pasado con la función HB_IDLEADD(). Cada llamada a esta función 
+ *      evalúa una tarea diferente en el orden de la creación de tareas. 
+ *      No hay argumentos pasados durante la evaluación del bloque de 
+ *      código.
+ *      Esta función puede ser llamada con seguridad, aún si no hay tareas
+ *      definidas en segundo plano.
+ *  $EXAMPLES$
+ *      nTarea1 := HB_IDLEADD( {|| MuestreLaHora()} )
+ *      nTarea2 := HB_IDLEADD( {|| SaveScreen()} )
+ *
+ *      DO WHILE( ! bTerminado )
+ *         bTerminado := HagaAlgoMuyImportante()
+ *         HB_IdleState()
+ *      ENDDO
+ *
+ *      cbAccion := HB_IDLEDEL( nTarea1 )
+ *      HB_IDLEDEL( nTarea2 )
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Extensión de Harbour, similar a la función FT_IAMIDLE() disponible
+ *      en la librería Nanforum.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      El archivo fuente es ../source/rtl/idle.c
+ *  $SEEALSO$
+ *      HB_IDLEADD(),HB_IDLEDEL()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_idleState()
+ *  $CATEGORY$
+ *      Estado de Espera
+ *  $ONELINER$
+ *      Evalúa una sola tarea en segundo plano y llama al recolector
+ *  $SYNTAX$
+ *      void hb_idleState( void );
+ *  $ARGUMENTS$
+ *      Ninguno
+ *  $RETURNS$
+ *      Nada.
+ *  $DESCRIPTION$
+ *      La función hb_idleState() es una función en lenguaje C que solicita
+ *      la recolección de memoria sin uso y ejecuta una sola tarea en 
+ *      segundo plano, definida por el bloque de código pasado con la 
+ *      función HB_IDLEADD(). Esta también libera porciones de tiempo de 
+ *	CPU para aquellas plataformas que lo requieran.
+ *
+ *	Cada llamda a esta función evalúa una tarea diferente en el orden 
+ *      de la creación de tareas. No hay argumentos pasados durante la 
+ *      evaluación del bloque de código.
+ *
+ *      Esta función puede ser llamada con seguridad, aún si no hay tareas
+ *      definidas en segundo plano.
+ *
+ *      Esta función es automáticamente llamada desde la función INKEY().
+ *  $STATUS$
+ *      R
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      El archivo fuente es ../source/rtl/idle.c
+ *  $SEEALSO$
+ *      HB_IDLEADD(),HB_IDLEDEL(),HB_IDLESTATE()
+ *  $END$
+ */
+

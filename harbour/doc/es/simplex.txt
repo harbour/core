@@ -1,0 +1,110 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2001 Ron Pinkas <ron@profit-master.com> 
+ *   Documentación en Inglés de: simplex.txt
+ *
+ * Copyright 2002 Alejandro de Gárate <alex_degarate@hotmail.com>
+ *   Documentación en Español de: simplex.txt
+ *
+ * Vea doc/license.txt por los términos de la licencia.
+ *
+ */
+
+
+SIMPLEX
+=======
+
+Simplex usa definiciones de alto nivel, lo cual para muchos 
+programadores podría ser más legible, que las definiciones 
+equivalentes de Flex.
+Las definiciones de Simplex son divididas en 6 secciones 
+principales:
+
+1. Delimiters (Delimitadores). Hay tres tipos de delimitadores 
+   Léxicos:
+
+   a. Ignorable. Típico ejemplo de estos delimitadores son los 
+      "espacios en blanco", por ej. espacio y tabulador.            
+
+   b. Retornable: Típico ejemplos de estos delimitadores son 
+      las comas, paréntesis y operadores matemáticos.
+
+   c. Agregables. Mientras Yo no tengo ningún ejemplo en mente, 
+      sospecho que podría haber una necesidad para esos 
+      delimitadores. 
+      Este tipo de delimitadores deberían ser agregados al 
+      token que lo precede, haciendo de ese delimitador, un 
+      caracter terminador.
+
+
+2. Streams (flujos). 
+   Estos son referidos como "pares". flujos, como su nombre 
+   puede sugerir, es cualquier secuencia (ó flujo) de caracteres, 
+   encerrados dentro de caracter[es] de inicio (START) y 
+   caracter[es] de finalización (END) (el par).
+   Típico ejemplo de ese elemento léxico es una cadena literal, 
+   por ejemplo: "Hola Mundo".
+
+
+3. Self Contained Words (Palabras Auto-contenidas).
+   Estos son un grupo específico de palabras reservadas, las 
+   cuales NO necesitan NINGUN delimitador. Estas palabras podrían 
+   ser vistas como una forma de meta delimitadores. Estas palabras
+   serán extraidas desde el fujo de entrada sin importar los 
+   caracteres que los preceden ó los caracteres que los siguen.
+   Típico ejemplo de estos tokens son los operadores lógicos de 
+   dBase: .AND., .OR., .NOT., los operadores de asignación en 
+   linea de lenguaje C  +=  *= etc., así como también los 
+   operadores pre y post incremento / decremento -- y ++
+   El único atributo de esos esos elementos es el hecho que 
+   estos elementos NO requieren delimitadores precedentes ó 
+   siguientes.
+
+   
+4. Keywords (Palabras Claves). 
+   Estos son un grupo específico de palabras reservadas, 
+   las cuales tienen significancia léxica en el lenguaje 
+   definido, cuando aparecen como el token primero (FIRST) 
+   en una línea dada del fuente.
+   Las palabras Claves pueden ser contracciones de múltiples 
+   palabras con espacios en blanco (delimitadores ignorables) 
+   cuando se usa el patrón de coincidencia predefinido (WS).
+
+
+5. Words (Palabras). 
+   Estos son un grupo específico de palabras reservadas, las 
+   cuales tienen significancia léxica en el lenguaje definido, 
+   cuando aparecen en cualquier lugar de una linea dada de 
+   código fuente.
+   Las palabras pueden ser contracciones de múltiples palabras 
+   con espacios en blanco (delimitadores ignorables) cuando se 
+   usa el patrón de coincidencia predefinido (WS).
+
+   
+6. Rules (Reglas). hay 2 tipos de reglas:
+
+   a. Reduction Rules (Reglas de reducción). 
+      Este tipo de reglas definen la traducción de uno
+      ó muchos tokens dentro de uno ó más tokens (ó 
+      acciones establecidas).
+      Las Reducciones son infinitamente recursivas, lo 
+      cual significa que los resultados de la reducción, 
+      son puestos de nuevo, en caso de ser parte todavía 
+      de otra regla.
+      Para eliminar esos ciclos recursivos, los resultados 
+      de la Reducción pueden ser de la forma de n + DONT_REDUCE, 
+      pasando así a través del token resultante sin chequeos 
+      posteriores.
+
+   b. Pass Through (Pasaje a Través, asociación izquierda). 
+      Este tipo de reglas dirige al lexer para aceptar esos 
+      tokens como una forma válida. 
+
+
+

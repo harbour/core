@@ -116,13 +116,12 @@ HB_FILE_VER( "$Id$" )
    #include <errno.h>
    #include <dirent.h>
    #include <time.h>
-
+   #include <fnmatch.h>
    typedef struct
    {
       DIR *           dir;
       struct dirent * entry;
-      char   pfname[ _POSIX_PATH_MAX + 1 ];
-      char   pfext[ _POSIX_PATH_MAX + 1 ];
+      char   pattern[_POSIX_PATH_MAX +1];
 
    } HB_FFIND_INFO, * PHB_FFIND_INFO;
 
@@ -368,8 +367,9 @@ static void hb_fsFindFill( PHB_FFIND ffind )
 
    /* Set the default values in case some platforms don't
       support some of these, or they may fail on them. */
-
+   
    ffind->szName[ 0 ] = '\0';
+//   printf(" filename: %s",info->entry->d_name);
    ffind->size = 0;
 
    /* Convert platform specific find info structure into
@@ -378,6 +378,7 @@ static void hb_fsFindFill( PHB_FFIND ffind )
 #if defined(HB_OS_DOS)
 
    {
+      
       strncpy( ffind->szName, info->entry.ff_name, _POSIX_PATH_MAX );
       ffind->size = info->entry.ff_fsize;
 
@@ -484,7 +485,9 @@ static void hb_fsFindFill( PHB_FFIND ffind )
 
       stat( info->entry->d_name, &sStat );
 
-      strncpy( ffind->szName, info->entry->d_name, _POSIX_PATH_MAX );
+
+      strncpy( ffind->szName, info->entry->d_name, 256 );
+
       ffind->size = sStat.st_size;
 
       raw_attr = sStat.st_mode;
@@ -632,57 +635,37 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
    {
       PHB_FFIND_INFO info;
       char     string[ _POSIX_PATH_MAX + 1 ];
-      char     pattern[ _POSIX_PATH_MAX + 1 ];
+
       char     dirname[ _POSIX_PATH_MAX + 1 ];
-      char     fname[ _POSIX_PATH_MAX + 1 ];
-      char     fext[ _POSIX_PATH_MAX + 1 ];
 
-
+    
       char *   pos;
       ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
       info = ( PHB_FFIND_INFO ) ffind->info;
-
+      bFound =0;
       dirname[ 0 ] = '\0';
-      pattern[ 0 ] = '\0';
+      info->pattern[ 0 ] = '\0';
       if( pszFileName )
       {
          strcpy( string, pszFileName );
          pos = strrchr( string, OS_PATH_DELIMITER );
          if( pos )
          {
-            strcpy( pattern, pos + 1 );
+            strcpy( info->pattern, pos + 1 );
             *( pos + 1 ) = '\0';
             strcpy( dirname, string );
          }
          else
          {
-            strcpy( pattern, string );
+            strcpy( info->pattern, string );
             strcpy( dirname, ".X" );
             dirname[ 1 ] = OS_PATH_DELIMITER;
+	    dirname[ 2 ] = '\0';
          }
       }
-      if( !*pattern )
-         strcpy( pattern, "*.*" );
+      if( !*info->pattern )
+         strcpy( info->pattern, "*.*" );
 
-      if( strlen( pattern ) > 0 )
-      {
-         strcpy( string, pattern );
-         pos = strrchr( string, '.' );
-         if( pos )
-         {
-            strcpy( info->pfext, pos + 1 );
-            *pos = '\0';
-            strcpy( info->pfname, string );
-         }
-         else
-    {
-            strcpy( info->pfname, string );
-            info->pfext[ 0 ] = '\0';
-         }
-      }
-
-      if( strlen( info->pfname ) < 1 )
-         strcpy( info->pfname, "*" );
       tzset();
 
       info->dir = opendir( dirname );
@@ -691,25 +674,7 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
          while( ( info->entry = readdir( info->dir ) ) != NULL )
          {
             strcpy( string, info->entry->d_name );
-            pos = strrchr( string, OS_PATH_DELIMITER );
-            pos = strrchr( pos ? ( pos + 1 ) : string, '.' );
-
-            if( pos && ! ( pos == &string[ 0 ] ) )
-            {
-               strcpy( fext, pos + 1 );
-               *pos = '\0';
-            }
-            else
-               fext[ 0 ] = '\0';
-
-            pos = strrchr( string, OS_PATH_DELIMITER );
-            strcpy( fname, pos ? ( pos + 1 ) : string );
-
-            if( !*fname )
-               strcpy( fname, "*" );
-
-            /* TOFIX: uiAttr check */
-            if( hb_strMatchRegExp( fname, info->pfname ) && hb_strMatchRegExp( fext, info->pfext ) )
+            if( fnmatch( info->pattern,string,FNM_PERIOD|FNM_PATHNAME)==0)
             {
                bFound=TRUE;
                break;
@@ -793,10 +758,6 @@ BOOL hb_fsFindNext( PHB_FFIND ffind )
 
    {
       char     string[ _POSIX_PATH_MAX + 1 ];
-      char *   pos;
-      char     fname[ _POSIX_PATH_MAX + 1 ];
-      char     fext[ _POSIX_PATH_MAX + 1 ];
-      BOOL bTest;
 
       bFound=FALSE;
 
@@ -804,30 +765,12 @@ BOOL hb_fsFindNext( PHB_FFIND ffind )
       {
 
          strcpy( string, info->entry->d_name );
-         pos = strrchr( string, OS_PATH_DELIMITER );
-         pos = strrchr( pos ? ( pos + 1 ) : string, '.' );
+            if( fnmatch( info->pattern,string,FNM_PERIOD|FNM_PATHNAME)==0)
+            {
+               bFound=TRUE;
+               break;
+            }
 
-         if( pos && ! ( pos == &string[ 0 ] ) )
-         {
-            strcpy( fext, pos + 1 );
-            *pos = '\0';
-         }
-         else
-            fext[ 0 ] = '\0';
-
-         pos = strrchr( string, OS_PATH_DELIMITER );
-         strcpy( fname, pos ? ( pos + 1 ) : string );
-         if( !*fname )
-            strcpy( fname, "*" );
-
-         /* TOFIX: uiAttr check */
-         bTest=hb_strMatchRegExp( fname, info->pfname ) && hb_strMatchRegExp( fext, info->pfext ) ;
-
-         if( bTest )
-         {
-            bFound=TRUE;
-            break;
-         }
 
       }
 
