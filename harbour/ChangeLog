@@ -8,6 +8,27 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-05-24 01:50 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/rtl/console.c
+    ! Fix print in the same line when the new position is previus
+      to the current one.
+
+  * source/rtl/achoice.prg
+    * More compliant with Cli**er.
+    *  Support for use acItems directly without internal copy.
+           This permit modify acItems and reflect this changes.
+
+    *  Support for use xSelect directly, if its an array,
+       without internal copy.
+           This permit modify xSelect and reflect this changes.
+
+    *  No call to xUserFunc again when xUserFunc its call with
+       nMode = AC_EXCEPT, and xUserFunc return AC_CONT
+
+    *  Always redraw the page when return from xUserFunc.
+
+    *  Support for return AC_REDRAW.
+
 2002-05-23 12:46 UTC-0800 Ron Pinkas <ron@ronpinkas.com>
   * source/compiler/harbour.slx
     ! Fixed SELF[...] // Self as Array in IF_BELONG_LEFT() ( borrowed from from xHarbour )
