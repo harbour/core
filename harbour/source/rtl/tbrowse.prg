@@ -55,9 +55,9 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 2000, 2001 Maurilio Longo <maurilio.longo@libero.it>
- * Cursor movement handling and stabilization loop
+ * Cursor movement handling, stabilization loop, multi-line headers and footers support
  * ::PageUp(), ::PageDown(), ::Down(), ::Up(), ::GoBottom(), ::GoTop(), ::Stabilize()
- * ::GotoXY(), ::DispCell()
+ * ::GotoXY(), ::DispCell(), ::WriteMLineText(), ::RedrawHeaders()
  *
  * Copyright 2001 Manu Exposito <maex14@dipusevilla.es>
  * Activate data PICTURE DispCell(nColumn, nColor)
@@ -82,8 +82,6 @@
           Clipper will not allow the user to assign a NIL to the :width
           variable. Clipper will determine the width even when the caller
           explicitly set the :width after adding the column. [vszakats] */
-
-/* TOFIX: Multiline headers and footer are not supported. [vszakats] */
 
 #include "common.ch"
 #include "hbclass.ch"
@@ -185,6 +183,9 @@ CLASS TBrowse
    METHOD Moved()                         // Every time a movement key is issued I need to reset certain properties
                                           // of TBrowse, I do these settings inside this method
 
+   METHOD WriteMLineText(cStr, nPadLen, lHeader, cColor) // Writes a multi-line text where ";" is a line break, lHeader
+                                                         // is .T. if it is a header and not a footer
+
    DATA aRect                             // The rectangle specified with ColorRect()
    DATA aRectColor                        // The color positions to use in the rectangle specified with ColorRect()
    DATA aRedraw                           // Array of logical items indicating, is appropriate row need to be redraw
@@ -198,6 +199,9 @@ CLASS TBrowse
    DATA nRecsToSkip                       // Recs to skip on next Stabilize()
    DATA nNewRowPos                        // Next position of data source (after first phase of stabilization)
    DATA nLastRetrieved                    // Position, relative to first row, of last retrieved row (with an Eval(::SkipBlock, n))
+
+   DATA nHeaderHeight                     // How many lines is highest Header/Footer and so how many lines of
+   DATA nFooterHeight                     // screen space I have to reserve
 
 ENDCLASS
 
@@ -235,6 +239,8 @@ METHOD New(nTop, nLeft, nBottom, nRight) CLASS TBrowse
    ::aRectColor      := {}
    ::nColsWidth      := 0
    ::nColsVisible    := 0
+   ::nHeaderHeight   := 1
+   ::nFooterHeight   := 1
 
 
    ::nTop    := nTop
@@ -264,13 +270,13 @@ return Self
 
 METHOD Configure(nMode) CLASS TBrowse
 
-   local n
+   local n, nHeight
 
    ::lHeaders := .F.
    ::lFooters := .F.
    ::lRedrawFrame := .T.
 
-   // Are there any column header to paint ?
+   // Are there column headers to paint ?
    for n := 1 to Len(::aColumns)
       if !Empty(::aColumns[n]:Heading)
          ::lHeaders := .T.
@@ -278,7 +284,7 @@ METHOD Configure(nMode) CLASS TBrowse
       endif
    next
 
-   // Are there any column footer to paint ?
+   // Are there column footers to paint ?
    for n := 1 to Len(::aColumns)
       if !Empty(::aColumns[n]:Footing)
          ::lFooters := .T.
@@ -286,11 +292,38 @@ METHOD Configure(nMode) CLASS TBrowse
       endif
    next
 
+
+   ::nHeaderHeight := 1
+   ::nFooterHeight := 1
+
+   // Find out highest header and footer
+   for n := 1 to Len(::aColumns)
+
+      if ::lHeaders .AND. !Empty(::aColumns[n]:Heading)
+         nHeight := Len(::aColumns[n]:Heading) - Len(StrTran(::aColumns[n]:Heading, ";")) + 1
+
+         if nHeight > ::nHeaderHeight
+            ::nHeaderHeight := nHeight
+         endif
+
+      endif
+
+      if ::lFooters .AND. !Empty(::aColumns[n]:Footing)
+         nHeight := Len(::aColumns[n]:Footing) - Len(StrTran(::aColumns[n]:Footing, ";")) + 1
+
+         if nHeight > ::nFooterHeight
+            ::nFooterHeight := nHeight
+         endif
+
+      endif
+   next
+
+
    // 20/nov/2000 - maurilio.longo@libero.it
-   // If I add (or remove) header or footer separator I have to change number
+   // If I add (or remove) header or footer (separator) I have to change number
    // of available rows
-   ::RowCount := ::nBottom - ::nTop + 1 - iif( ::lHeaders, 1, 0 ) - ;
-                  iif( ::lFooters, 1, 0 ) - iif( Empty( ::HeadSep ), 0, 1 ) - ;
+   ::RowCount := ::nBottom - ::nTop + 1 - iif( ::lHeaders, ::nHeaderHeight, 0 ) - ;
+                  iif( ::lFooters, ::nFooterHeight, 0 ) - iif( Empty( ::HeadSep ), 0, 1 ) - ;
                   iif( Empty( ::FootSep ), 0, 1 )
 
    if Len(::aRedraw) <> ::RowCount
@@ -300,6 +333,7 @@ METHOD Configure(nMode) CLASS TBrowse
    ::Invalidate()
 
 return Self
+
 
 // Adds a TBColumn object to the TBrowse object
 METHOD AddColumn( oCol ) CLASS TBrowse
@@ -574,7 +608,7 @@ return Self
 
 METHOD DeHilite() CLASS TBrowse
 
-   local nRow := ::nTop + ::RowPos - iif( ::lHeaders, 0, 1 ) + iif( Empty( ::HeadSep ), 0, 1 )
+   local nRow := ::nTop + ::RowPos + iif(::lHeaders, ::nHeaderHeight, 0 ) + iif(Empty(::HeadSep), 0, 1) - 1
 
    SetPos( nRow, ::aColumns[ ::ColPos ]:ColPos )
    ::DispCell(::ColPos, CLR_STANDARD)
@@ -596,7 +630,7 @@ METHOD Hilite() CLASS TBrowse
    local cColor
    local nRow
 
-   nRow := ::nTop + ::RowPos - iif( ::lHeaders, 0, 1 ) + iif( Empty( ::HeadSep ), 0, 1 )
+   nRow := ::nTop + ::RowPos + iif(::lHeaders, ::nHeaderHeight, 1) + iif(Empty(::HeadSep), 0, 1) - 1
 
    SetPos( nRow, ::aColumns[ ::ColPos ]:ColPos )
 
@@ -677,28 +711,39 @@ return Self
 METHOD RedrawHeaders(nWidth) CLASS TBrowse
 
    local n, iW
+   local cBlankBox := Space(9)
 
    if ::lHeaders          // Drawing headers
-      DispOutAt( ::nTop, ::nLeft, Space( ( nWidth - ::nColsWidth ) / 2 ), ::ColorSpec )
+
+      if ::nHeaderHeight > 1
+         // Clear area of screen occupied by headers
+         DispBox(::nTop, ::nLeft, ::nTop + ::nHeaderHeight - 1, ::nRight, cBlankBox, ::ColorSpec)
+
+      else
+         DispOutAt(::nTop, ::nLeft, Space(::nRight - ::nLeft + 1), ::ColorSpec )
+
+      endif
+
+      // Set cursor at first field start of description
+      DevPos(::nTop, ::nLeft + (( nWidth - ::nColsWidth ) / 2))
+
       for n := iif(::Freeze > 0, 1, ::leftVisible) to ::rightVisible
          if ::Freeze > 0 .and. n == ::Freeze + 1
             n := ::leftVisible
          endif
-         DispOut( PadR( ::aColumns[ n ]:Heading, ::aColumns[ n ]:Width ), ::ColorSpec )
+
+         ::WriteMLineText(::aColumns[ n ]:Heading, ::aColumns[ n ]:Width, .T., ::ColorSpec)
+
          if n < ::rightVisible
-            DispOut( Space( iif( ::aColumns[ n + 1 ]:ColSep != NIL, ;
-                     Len( ::aColumns[ n + 1 ]:ColSep ), Len( ::ColSep ) ) ), ::ColorSpec )
+            // Set cursor at start of next field description
+            DevPos(Row(), Col() + iif(::aColumns[n + 1]:ColSep != NIL, Len(::aColumns[n + 1]:ColSep), Len(::ColSep)))
+
          endif
       next
-
-      // Every time there is some space to fill up and this space is an odd number of chars we need to
-      // round it up to next value here since first DispOutAt() does round it down because it uses a simple
-      // division (ie Space(7/2) gives 3 on first call and 4 here).
-      DispOut(Space(Int(Round((nWidth - ::nColsWidth) / 2, 0))), ::ColorSpec)
    endif
 
    if ! Empty( ::HeadSep )  //Drawing heading separator
-      DispOutAt( ::nTop + iif( ::lHeaders, 1, 0 ), ::nLeft, Replicate( Right( ::HeadSep, 1 ), ( nWidth - ::nColsWidth ) / 2 ), ::ColorSpec )
+      DispOutAt( ::nTop + iif(::lHeaders, ::nHeaderHeight , 0 ), ::nLeft, Replicate( Right( ::HeadSep, 1 ), ( nWidth - ::nColsWidth ) / 2 ), ::ColorSpec )
       if Len( ::HeadSep ) > 1
          iW := 0
          for n := iif( ::Freeze > 0, 1, ::leftVisible ) to ::rightVisible
@@ -719,7 +764,7 @@ METHOD RedrawHeaders(nWidth) CLASS TBrowse
    endif
 
    if ! Empty( ::FootSep ) // Drawing footing separator
-      DispOutAt( ::nBottom - iif( ::lFooters, 1, 0 ), ::nLeft, Replicate( Right( ::FootSep, 1 ), ( nWidth - ::nColsWidth ) / 2 ), ::ColorSpec )
+      DispOutAt(::nBottom - iif(::lFooters, ::nFooterHeight, 0), ::nLeft, Replicate(Right(::FootSep, 1), (nWidth - ::nColsWidth ) / 2 ), ::ColorSpec)
       if Len( ::FootSep ) > 1
          iW := 0
          for n := iif( ::Freeze > 0, 1, ::leftVisible ) to ::rightVisible
@@ -740,18 +785,32 @@ METHOD RedrawHeaders(nWidth) CLASS TBrowse
    endif
 
    if ::lFooters                // Drawing footers
-      DispOutAt( ::nBottom, ::nLeft, Space( ( nWidth - ::nColsWidth ) / 2 ), ::ColorSpec )
+
+      // Clear area of screen occupied by footers
+      if ::nFooterHeight > 1
+         DispBox(::nBottom - ::nFooterHeight + 1, ::nLeft, ::nBottom, ::nRight, cBlankBox, ::ColorSpec)
+
+      else
+         DispOutAt(::nBottom, ::nLeft, Space(::nRight - ::nLeft + 1), ::ColorSpec)
+
+      endif
+
+      // Set cursor at first field start of description
+      DevPos(::nBottom, ::nLeft + (( nWidth - ::nColsWidth ) / 2))
+
       for n := iif( ::Freeze > 0, 1, ::leftVisible ) to ::rightVisible
          if ::Freeze > 0 .and. n == ::Freeze + 1
             n := ::leftVisible
          endif
-         DispOut( PadR( ::aColumns[ n ]:Footing, ::aColumns[ n ]:Width ), ::ColorSpec )
+
+         ::WriteMLineText(::aColumns[ n ]:Footing, ::aColumns[ n ]:Width, .F., ::ColorSpec)
+
          if n < ::rightVisible
-            DispOut( Space( iif( ::aColumns[ n + 1 ]:ColSep != NIL, ;
-                     Len( ::aColumns[ n + 1 ]:ColSep ), Len( ::ColSep ) ) ), ::ColorSpec )
+            // Set cursor at start of next field description
+            DevPos(Row(), Col() + iif(::aColumns[n + 1]:ColSep != NIL, Len(::aColumns[n + 1]:ColSep), Len(::ColSep)))
+
          endif
       next
-      DispOut(Space(Int(Round((nWidth - ::nColsWidth) / 2, 0))), ::ColorSpec)
    endif
 
 return Self
@@ -848,7 +907,7 @@ METHOD Stabilize() CLASS TBrowse
                else // K_DN or K_UP
 
                   // Where does really start first TBrowse row?
-                  nFirstRow := ::nTop + iif( ::lHeaders, 1, 0 ) + iif( Empty( ::HeadSep ), 0, 1 )
+                  nFirstRow := ::nTop + iif( ::lHeaders, ::nHeaderHeight, 0 ) + iif( Empty( ::HeadSep ), 0, 1 )
 
                   // I'm at top or bottom of TBrowse so I can scroll
                   if ::nNewRowPos == ::RowCount
@@ -910,7 +969,7 @@ METHOD Stabilize() CLASS TBrowse
          // if there is a row to repaint
          if ::aRedraw[nRow]
 
-            DispOutAt(::nTop + nRow + iif( ::lHeaders, 0, -1 ) + iif( Empty( ::HeadSep ), 0, 1 ), ::nLeft,;
+            DispOutAt(::nTop + nRow + iif(::lHeaders, ::nHeaderHeight, 0) + iif(Empty(::HeadSep), 0, 1) - 1, ::nLeft,;
                       Space( ( nWidth - ::nColsWidth ) / 2 ), ::ColorSpec )
 
             for n := iif( ::Freeze > 0, 1, ::leftVisible ) to ::rightVisible
@@ -1166,7 +1225,7 @@ METHOD MGotoYX(nRow, nCol) CLASS TBrowse
       endif
 
       // Set new row position
-      nNewRow := nRow - ::nTop + iif(::lHeaders, 0, -1) + iif(Empty(::HeadSep), 0, 1)
+      nNewRow := nRow - ::nTop + iif(::lHeaders, ::nHeaderHeight, 0) + iif(Empty(::HeadSep), 0, 1) - 1
       ::nRecsToSkip := nNewRow - ::nNewRowPos
 
       // move data source accordingly
@@ -1192,6 +1251,63 @@ METHOD MGotoYX(nRow, nCol) CLASS TBrowse
 
       // Force redraw of current row with new cell position
       ::RefreshCurrent()
+
+   endif
+
+return Self
+
+
+METHOD WriteMLineText(cStr, nPadLen, lHeader, cColor) CLASS TBrowse
+
+   local n, cS
+   local nCol := Col()
+   local nRow := Row()
+
+   // Do I have to write an header or a footer?
+   if lHeader
+
+      // Simple case, write header as usual
+      if ::nHeaderHeight == 1
+         DispOut(PadR(cStr, nPadLen), cColor)
+
+      else
+         // __StrToken needs that even last token be ended with token separator
+         cS := cStr + ";"
+
+         for n := ::nHeaderHeight to 1 step -1
+            DevPos(nRow + n - 1, nCol)
+            DispOut(PadR(__StrToken(@cS, n, ";"), nPadLen), cColor)
+
+            //cSubStr := iif((nSemiCPos := Rat(";", cStr)) <> 0, Right(cStr, Len(cStr) - nSemiCPos), cStr)
+            //cStr := Left(cStr, nSemiCPos - 1)
+         next
+
+         DevPos(nRow, nCol + nPadLen)
+
+      endif
+
+   // footer
+   else
+
+      // Simple case, write footer as usual
+      if ::nFooterHeight == 1
+         DispOut(PadR(cStr, nPadLen), cColor)
+
+      else
+         // __StrToken needs that even last token be ended with token separator
+         cS := cStr + ";"
+
+         for n := 0 to (::nFooterHeight - 1)
+            DevPos(nRow - n, nCol)
+            DispOut(PadR(__StrToken(@cS, ::nFooterHeight - n, ";"), nPadLen), cColor)
+
+            //cSubStr := iif((nSemiCPos := Rat(";", cStr)) <> 0, Right(cStr, Len(cStr) - nSemiCPos), cStr)
+            //cStr := Left(cStr, nSemiCPos - 1)
+         next
+
+         DevPos(nRow, nCol + nPadLen)
+
+      endif
 
    endif
 

@@ -255,28 +255,28 @@ METHOD EditField() CLASS TBrowseSQL
    if ::oCurRow:FieldType(oCol:nFieldNum) == "M"
 
       /* save, clear, and frame window for memoedit */
-   	cMemoBuff := SaveScreen(10, 10, 22, 69)
-   	
-		Scroll(10, 10, 22, 69, 0)
-		DispBox(10, 10, 22, 69)
+      cMemoBuff := SaveScreen(10, 10, 22, 69)
 
-		/* use fieldspec for title */
-		//@ 10,((76 - Len(::oCurRow:FieldName(oCol:nFieldNum)) / 2) SAY "  " + (::oCurRow:FieldName(oCol:nFieldNum)) + "  "
+      Scroll(10, 10, 22, 69, 0)
+      DispBox(10, 10, 22, 69)
 
-		/* edit the memo field */
-		cMemo := MemoEdit(::oCurRow:FieldGet(oCol:nFieldNum), 11, 11, 21, 68, .T.)
-		
-		if Lastkey() == K_CTRL_END
+      /* use fieldspec for title */
+      //@ 10,((76 - Len(::oCurRow:FieldName(oCol:nFieldNum)) / 2) SAY "  " + (::oCurRow:FieldName(oCol:nFieldNum)) + "  "
+
+      /* edit the memo field */
+      cMemo := MemoEdit(::oCurRow:FieldGet(oCol:nFieldNum), 11, 11, 21, 68, .T.)
+
+      if Lastkey() == K_CTRL_END
          ::oCurRow:FieldPut(oCol:nFieldNum, cMemo)
 
          /* NOTE: To do in a better way */
          if !::oQuery:Update(::oCurRow)
             Alert(Left(::oQuery:Error(), 60))
-         endif		                   					
+         endif
       endif
-		
-		RestScreen(10, 10, 22, 69, cMemoBuff)
-		
+
+      RestScreen(10, 10, 22, 69, cMemoBuff)
+
    else
       // Create a corresponding GET
       // NOTE: I need to use ::oCurRow:FieldPut(...) when changing values since message redirection doesn't work at present

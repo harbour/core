@@ -56,21 +56,23 @@
 
 CLASS TBColumn
 
-   DATA Block      // Code block to retrieve data for the column
-   DATA Cargo      // User-definable variable
-   DATA ColorBlock // Code block that determines color of data items
-   DATA ColSep     // Column separator character
-   DATA DefColor   // Array of numeric indexes into the color table
-   DATA Footing    // Column footing
-   DATA FootSep    // Footing separator character
-   DATA Heading    // Column heading
-   DATA HeadSep    // Heading separator character
-   DATA Picture    // Column picture string
-   DATA Width      // Column display width
+   DATA  Block                // Code block to retrieve data for the column
+   DATA  Cargo                // User-definable variable
+   DATA  ColorBlock           // Code block that determines color of data items
+   DATA  ColSep               // Column separator character
+   DATA  DefColor             // Array of numeric indexes into the color table
+   DATA  Heading              // Column heading
+   DATA  Footing              // Column footing
+   DATA  FootSep              // Footing separator character
+   DATA  HeadSep              // Heading separator character
+   DATA  Picture              // Column picture string
+   DATA  Width                // Column display width
 
-   DATA ColPos     // Temporary column position on screen
+   // NOTE: 17/08/01 - <maurilio.longo@libero.it>
+   //       It is not correct in my opinion that this instance variable be exported
+   DATA  ColPos               // Temporary column position on screen needed by TBrowse class
 
-   METHOD New( cHeading, bBlock )    // Constructor
+   METHOD New(cHeading, bBlock)  // Constructor
 
 #ifdef HB_COMPAT_C53
    METHOD SetStyle()
@@ -80,7 +82,7 @@ ENDCLASS
 
 METHOD New( cHeading, bBlock ) CLASS TBColumn
 
-   local cType
+   local cType, nTokenPos := 0, nL
 
    ::DefColor := { 1, 2 }
    ::FootSep  := ""
@@ -114,7 +116,13 @@ METHOD New( cHeading, bBlock ) CLASS TBColumn
             ::Width := 0
       endcase
 
-      ::Width := iif( cHeading != NIL, Max( Len( cHeading ), ::Width ), ::Width )
+      cHeading +=  ";"
+      while (nL := Len(__StrTkPtr(@cHeading, @nTokenPos, ";"))) > 0
+         if nL > ::Width
+            ::Width := nL
+         endif
+      enddo
+
    endif
 
 return Self
@@ -129,7 +137,7 @@ return Self
 #endif
 
 
-function TBColumnNew( cHeading, bBlock )
+function TBColumnNew(cHeading, bBlock)
 
 return TBColumn():New(cHeading, bBlock)
 

@@ -1,3 +1,8 @@
+2001-08-18 00:11 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/tbrowse.prg
+   * source/rtl/tbcolumn.prg
+     + Added multi-line column header/footer support to TBrowse
+
 2001-08-17 16:10 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   Update from "Fergus McDonald" <listsub@qvolution.com>:
@@ -16,11 +21,11 @@
     *doc/en/compiler.txt
     *source/compiler/hbusage.c
         *updated to keep current state of compiler switches
-        
+
     *include/hbexprc.c
         *fixed support for "&macro" syntax (macro was not expanded in
         cases: "&macro.&(macro)"
-        
+
     *include/hbapi.h
     *include/hbexprb.c
     *source/vm/hvm.c
