@@ -1,3 +1,6 @@
+/*
+ * $Id$
+ */
 
 /*
  * Las siguientes partes son derechos adquiridos de sus autores individuales.
@@ -24,15 +27,15 @@
  *  $SYNTAX$
  *      __Dir( [<cFileMask>] ) --> NIL
  *  $ARGUMENTS$
- *      <cFileMask> Máscara de archivos para incluir en el retorno de la 
- *      función. Esta podría contener subdirectorios (path) y caracteres 
+ *      <cFileMask> Máscara de archivos para incluir en el retorno de la
+ *      función. Esta podría contener subdirectorios (path) y caracteres
  *      estándar usados como comdines, segun sean soportados por el sistema
  *      operativo (como * y ?). Si <cFileMask> no contiene la ruta al archivo
  *      entonces SET DEFAULT es usado para mostrar archivos en la máscara.
  *  $RETURNS$
  *      __Dir() siempre retorna NIL.
  *  $DESCRIPTION$
- *      Si ninguna <cFileMask> es dada, __Dir() muestra información acerca de 
+ *      Si ninguna <cFileMask> es dada, __Dir() muestra información acerca de
  *      todos los *.DBF en la ruta SET DEFAULT. Esta información contiene:
  *      - Nombre del archivo
  *      - Numero de registros
@@ -55,23 +58,23 @@
  *
  *      __Dir( "*.dbf" )       // Lista todos los DBF en el directorio actual
  *
- *      // Lista todos los PRG de la librería de ejecución (RTL) de Harbour 
- *      // para sistemas operativos compatibles con DOS 
+ *      // Lista todos los PRG de la librería de ejecución (RTL) de Harbour
+ *      // para sistemas operativos compatibles con DOS
  *      __Dir( "c:\harbour\source\rtl\*.prg" )
  *
- *      // Lista todos los archivos de la sección pública sobre una máquina 
- *      // tipo Unix 
+ *      // Lista todos los archivos de la sección pública sobre una máquina
+ *      // tipo Unix
  *      __Dir( "/pub" )
     </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Información de DBF: CA-Clipper muestra nombres de archivos en el 
+ *      Información de DBF: CA-Clipper muestra nombres de archivos en el
  *      formato 8.3, Harbour muestra los primeros 15 caracteres si un nombre
  *      largo de archivo esta disponible.
  *
  *      Listado de archivos: para formatear los nombres mostrados usamos algo
- *      así como: 
+ *      así como:
  *      PADR( Nombre, 8 ) + " " + PADR( Ext, 3 )
  *      CA-Clipper usa nombres de archivo 8.3, con Harbour probablemente se
  *      podría cortar los nombres largos de archivo para llenar este molde.
@@ -93,13 +96,13 @@
  *  $SYNTAX$
  *      DIR [<cFileMask>]
  *  $ARGUMENTS$
- *      <cFileMask> Máscara de archivos para incluir en el retorno de la 
- *      función. Esta podría contener subdirectorios (path) y caracteres 
+ *      <cFileMask> Máscara de archivos para incluir en el retorno de la
+ *      función. Esta podría contener subdirectorios (path) y caracteres
  *      estándar usados como comdines, segun sean soportados por el sistema
  *      operativo (como * y ?). Si <cFileMask> no contiene la ruta al archivo
  *      entonces SET DEFAULT es usado para mostrar archivos en la máscara.
  *  $DESCRIPTION$
- *      Si ninguna <cFileMask> es dada, __Dir() muestra información acerca de 
+ *      Si ninguna <cFileMask> es dada, __Dir() muestra información acerca de
  *      todos los *.DBF en la ruta SET DEFAULT. esta información contiene:
  *      - Nombre del archivo
  *      - Número de registros
@@ -122,23 +125,23 @@
  *
  *      __Dir( "*.dbf" )       // Lista todos los DBF en el directorio actual
  *
- *      // Lista todos los PRG de la librería de ejecución (RTL) de Harbour 
- *      // para sistemas operativos compatibles con DOS 
+ *      // Lista todos los PRG de la librería de ejecución (RTL) de Harbour
+ *      // para sistemas operativos compatibles con DOS
  *      __Dir( "c:\harbour\source\rtl\*.prg" )
  *
- *      // Lista todos los archivos de la sección pública sobre una máquina 
- *      // tipo Unix 
+ *      // Lista todos los archivos de la sección pública sobre una máquina
+ *      // tipo Unix
  *      __Dir( "/pub" )
     </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Información de DBF: CA-Clipper muestra nombres de archivos en el 
+ *      Información de DBF: CA-Clipper muestra nombres de archivos en el
  *      formato 8.3, Harbour muestra los primeros 15 caracteres si un nombre
  *      largo de archivo está disponible.
  *
  *      Listado de archivos: para formatear los nombres mostrados usamos algo
- *      así como: 
+ *      así como:
  *      PADR( Nombre, 8 ) + " " + PADR( Ext, 3 )
  *      CA-Clipper usa nombres de archivo 8.3, con Harbour probablemente se
  *      podría cortar los nombres largos de archivo para llenar este molde.
@@ -159,8 +162,8 @@
  *      ADIR( [<cFileMask>], [<aNombre>], [<aTamano>], [<aFecha>],
  *            [<aHora>], [<aAtrib>] ) -> nEntradasDirectorio
  *  $ARGUMENTS$
- *      <cFileMask> Máscara de archivos para incluir en el retorno de la 
- *      función. Esta podria contener subdirectorios (path) y caracteres 
+ *      <cFileMask> Máscara de archivos para incluir en el retorno de la
+ *      función. Esta podria contener subdirectorios (path) y caracteres
  *      estandar usados como comodines, segun sean soportados por el sistema
  *      operativo (como * y ?). Si <cFileMask> no contiene la ruta al archivo
  *      entonces SET DEFAULT es usado para mostrar archivos en la máscara.
@@ -180,10 +183,10 @@
  *      archivo que cumplen con <cFileMask>. Cada elemento es del tipo "Date"
  *
  *      <aHora> Array para llenar con la Hora de la ultima modificación del
- *      archivo que cumplen con <cFileMask>. Cada elemento es una cadena de 
+ *      archivo que cumplen con <cFileMask>. Cada elemento es una cadena de
  *      caracteres en el formato:      HH:MM:SS.
  *
- *      <aAtrib> Array para llenar con los atributos de los archivos que 
+ *      <aAtrib> Array para llenar con los atributos de los archivos que
  *      cumplen con <cFileMask>. Cada elemento es una cadena de caracteres,
  *      Vea DIRECTORY() por información sobre los valores de los atributos.
  *      Si Ud. pasa un array a <aAtrib>, la función va a devolver archivos
@@ -191,7 +194,7 @@
  *      Si <aAtrib> no es especificado o es distinto de un array solo
  *      archivos con atributo normal porian ser devueltos.
  *
- *      Nota: Al momento de escribir esta documentación todavia no había 
+ *      Nota: Al momento de escribir esta documentación todavia no había
  *            información sobre el comportamiento de esta función con los
  *            atributos que poseen las maquinas tipo Unix.
  *  $RETURNS$

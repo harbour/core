@@ -1,3 +1,6 @@
+/*
+ * $Id$
+ */
 
 /*
  * Las siguientes partes son derechos adquiridos de sus autores individuales.
@@ -39,8 +42,8 @@
  *
  *      HB_FS_AVAIL   La cantidad de espacio disponible para el usuario que
  *                    hace la solicitud. Este valor podría ser menor que
- *                    HB_FS_FREE si las asignaciones de espacio en disco 
- *                    (quotas) son soportadas por el sistema operativo al 
+ *                    HB_FS_FREE si las asignaciones de espacio en disco
+ *                    (quotas) son soportadas por el sistema operativo al
  *                    tiempo de ejecución y estas quotas están asignadas.
  *                    De otro modo el valor será igual al retornado por
  *                    HB_FS_FREE.
@@ -75,5 +78,3 @@
  *      El archivo de cabecera es fileio.ch
  *  $END$
  */
-
-

@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 /*  $DOC$
  *  $COMMANDNAME$
  *      @...Get
@@ -8,7 +12,7 @@
  *  $SYNTAX$
  *      @ <nRow>,<nCol> [SAY <cSay> [PICTURE <cSayPict>] COLOR <cSayColor> ]
  *      GET <xVar> [PICTURE <cGetPict>] [WHEN <lWhen>] [COLOR <cGetColor>]
- *      [VALID <lValid> / RANGE <xStart>,<xEnd>]       
+ *      [VALID <lValid> / RANGE <xStart>,<xEnd>]
  *  $ARGUMENTS$
  *      <nRow>      The row coordinate.
  *
@@ -93,15 +97,15 @@
  *      @S<nSize>   Allows horizontal scrolling of a field or variable that
  *                  is <nSize> characters wide.
  *      @X          All negative numbers will be followed by DB
- *      @Z          Displays zero values as blanks.      
- *      @!          Forces uppercase lettering     
+ *      @Z          Displays zero values as blanks.
+ *      @!          Forces uppercase lettering
  *      @(          Displays negative numbers in parentheses with leading spaces.
  *      @)          Displays negative numbers in parentheses without leading spaces.
  *      </table>
 
  *      GET templates/formatting rules:
 
- *      <table>    
+ *      <table>
  *      A   Only alphabetic characters allowed.
  *      N   Only alphabetic and numeric characters allowed
  *      X   Any character allowed.
@@ -156,13 +160,13 @@
  *      @ <nRow>,<nCol> SAY <xValue> [ PICTURE <cPict> ] [COLOR <cColor>]
  *  $ARGUMENTS$
  *      <nRow>     Row coordinate
- *      
+ *
  *      <nCol>     Column coordinate
- *      
+ *
  *      <xValue>   Value to display
- *      
+ *
  *      <cPict>    PICTURE format
- *      
+ *
  *      <cColor>   Color string
  *  $RETURNS$
  *      None

@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 /*  $DOC$
  *  $COMMANDNAME$
  *      FIELD
@@ -9,7 +13,7 @@
  *      FIELD <xField> [,<xFieldn...>  [in <cDatabase>]
  *  $ARGUMENTS$
  *      <xField>    A valid field name
- *                   
+ *
  *      <xFieldn>   Additional field name
  *
  *      <cDatabase> An valid alias name
@@ -28,7 +32,7 @@
  *  $EXAMPLES$
  *      Func main
  *      FIELD iD
- *      FIELD Name 
+ *      FIELD Name
  *      USE TESTS NEW
  *      name:="Sales"
  *      Id:=5
@@ -90,7 +94,7 @@
  *      LOCAL variables and arrays are not affected by the RELEASE command.
  *  $EXAMPLES$
  *      Function Main2()
- *      Local n , lVar 
+ *      Local n , lVar
  *
  *      n := IIF( lVar, 'A', 3 )
  *      n := 2
@@ -99,11 +103,11 @@
  *      n := int( seconds() + 2 )
  *      Return( NIL )
  *  $TESTS$
- *      See Tests/testwarn.prg for more examples    
+ *      See Tests/testwarn.prg for more examples
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command works exactaly as CA-Clipper. 
+ *      This command works exactaly as CA-Clipper.
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -121,7 +125,7 @@
  *  $ONELINER$
  *      Declares private and public variables and arrays.
  *  $SYNTAX$
- *      MEMVAR <xVar> 
+ *      MEMVAR <xVar>
  *  $ARGUMENTS$
  *      <xVar> Memory variable Name
  *  $RETURNS$
@@ -140,7 +144,7 @@
  *  $EXAMPLES$
  *      MEMVAR y As Numeric
  *      Function Main2()
- *      Local n , lVar 
+ *      Local n , lVar
  *
  *      n := IIF( lVar, 'A', 3 )
  *      n := 2
@@ -151,7 +155,7 @@
  *      ? y
  *      Return( NIL )
  *  $TESTS$
- *      See Tests/testwarn.prg for more examples    
+ *      See Tests/testwarn.prg for more examples
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

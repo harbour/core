@@ -1,3 +1,6 @@
+/*
+ * $Id$
+ */
 
 /*
  * Las siguientes partes son derechos adquiridos de sus autores individuales.
@@ -40,5 +43,3 @@
  *      ERRORBLOCK(),Error class
  *  $END$
  */
-
-

@@ -1,3 +1,6 @@
+/*
+ * $Id$
+ */
 
 /*
  * Las siguientes partes son derechos adquiridos de sus autores individuales.
@@ -30,17 +33,17 @@
  *
  *      <xVal...>  Lista de argumentos para ser pasados al bloque de código.
  *  $RETURNS$
- *      EVAL() retorna <xExpresion>, el valor de la última expresión dentro 
+ *      EVAL() retorna <xExpresion>, el valor de la última expresión dentro
  *      del bloque. El valor devuelto puede ser de cualquier tipo válido.
  *  $DESCRIPTION$
  *      Esta función evalúa el bloque de código expresado como <bBloque> al
  *      ejecutarlo y pasarle los parámetros como argumentos ,luego retorna su
- *      valor evaluado. Si hay múltiples expresiones dentro del bloque de 
+ *      valor evaluado. Si hay múltiples expresiones dentro del bloque de
  *      código, la última expresión será el valor de esta función.
  *
  *      Si el bloque de código requiere parámetros para ser pasados a éste,
  *      ellos son especificados en la lista de parámetros <xVal>.
- *      Cada parámetro es separado por una coma dentro de la lista de 
+ *      Cada parámetro es separado por una coma dentro de la lista de
  *      parámetros y cada expresión es separada por comas dentro de la lista
  *      de expresiones.
  *
@@ -50,19 +53,19 @@
  *            permite exportar variables estáticas y locales dentro de él,
  *            la da una gran versatilidad.
  *            Aunque las macros y los bloques de código son similares, las
- *            Las macros son cadenas de caracteres que se compilan durante 
+ *            Las macros son cadenas de caracteres que se compilan durante
  *            la ejecución de un programa y se ejecutan a continuación.
- *	      Los bloques de código se compilan junto con los otros PRG
- *	      durante la compilación del programa. Por esto son más rápidos,
+ *            Los bloques de código se compilan junto con los otros PRG
+ *            durante la compilación del programa. Por esto son más rápidos,
  *            Es posible compilar un bloque de código en tiempo de ejecución
- *	      desde una cadena de caracteres usando el operador de macros (&).
+ *            desde una cadena de caracteres usando el operador de macros (&).
  *            Un bloque de código esta compuesto por:
- *            { |<lista argumentos>| <lista expresiones> }         
+ *            { |<lista argumentos>| <lista expresiones> }
  *            Los separadores verticales deben estar presentes aunque no el
  *            bloque no reciba argumentos.
  *  $EXAMPLES$
  *       bBloque = {|arg1, arg2| QOUT( arg1+arg2) }
- *       EVAL( bBloque, "Harbour", " es fabuloso") 
+ *       EVAL( bBloque, "Harbour", " es fabuloso")
  *  $TESTS$
  *      Ver ejemplos.
  *  $STATUS$

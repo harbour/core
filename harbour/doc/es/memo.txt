@@ -1,3 +1,6 @@
+/*
+ * $Id$
+ */
 
 /*
  * Las siguientes partes son derechos adquiridos de sus autores individuales.
@@ -9,6 +12,7 @@
  * Vea doc/license.txt por los términos de la licencia.
  *
  */
+
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -91,5 +95,3 @@
  *      MEMOTRAN(),STRTRAN()
  *  $END$
  */
-
-

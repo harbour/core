@@ -1,3 +1,30 @@
+2001-07-30 16:40 UTC+0300 Chen Kedem <niki@actcom.co.il>
+
+   * doc/en/memvar2.txt
+   * doc/en/sayget.txt
+   * doc/en/strotype.txt
+   * doc/es/array.txt
+   * doc/es/binnum.txt
+   * doc/es/browse.txt
+   * doc/es/command.txt
+   * doc/es/compiler.txt
+   * doc/es/datetime.txt
+   * doc/es/dir.txt
+   * doc/es/diskspac.txt
+   * doc/es/error.txt
+   * doc/es/eval.txt
+   * doc/es/garbage.txt
+   * doc/es/lang.txt
+   * doc/es/memo.txt
+     + Add missing CVS ID
+
+   * doc/es/license.txt
+     + add missing CVS ID
+     * small text formatting
+
+   * source/rtl/profiler.prg
+     ! Fix CVS ID
+
 2001-07-26 16:21 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/vm/macro.c
      * Corrected typo in trace message within hb_macroExpandString()

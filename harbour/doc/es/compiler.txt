@@ -1,3 +1,6 @@
+/*
+ * $Id$
+ */
 
 /*
  * Las siguientes partes son derechos adquiridos de sus autores individuales.
@@ -31,7 +34,7 @@
  *
  *
  *      Las opciones de la línea de comandos debe ser separada, al menos por
- *      un espacio en blanco. 	</par>
+ *      un espacio en blanco.   </par>
  *      Las opciones pueden comenzar con el carácter '/' ó '-',    </par>
  *
  *      Opciones de la línea de comandos de:   </par>
@@ -39,7 +42,7 @@
  *
  *      /a               Declaración Automática de memvar    </par>
  *      -----------------   </par>
- *          Esto causa que todas las variables declaradas por las sentencias 
+ *          Esto causa que todas las variables declaradas por las sentencias
  *          PARAMETER, PRIVATE ó PUBLIC sean automáticamente declaradas como
  *          variables MEMVAR.          </par>
  *
@@ -55,9 +58,9 @@
  *
  *          /es or /es0 - Todas las advertencias son ignoradas y el código de
  *                        salida retornado por el compilador (accedido por el
- *                        comando de DOS ERRORLEVEL) es igual a cero si no 
+ *                        comando de DOS ERRORLEVEL) es igual a cero si no
  *                        hay errores en el archivo fuente compilado. </par>
- *          /es1        - Cualquier advertencia genera un código de salida 
+ *          /es1        - Cualquier advertencia genera un código de salida
  *                        distinto de cero, pero la salida es aún creada. </par>
  *          /es2        - Cualquier advertencia es tratada como error y ningún
  *                        archivo de salida es creado. El código de salida es
@@ -87,9 +90,9 @@
  *
  *      /n               sin procedimiento de inicio implícito </par>
  *      -----------------   </par>
- *          El compilador no crea un procedimiento con el mismo nombre 
- *          que el del archivo compilado.  Esto significa que algunas 
- *          declaraciones puestas antes de la primera sentencia de 
+ *          El compilador no crea un procedimiento con el mismo nombre
+ *          que el del archivo compilado.  Esto significa que algunas
+ *          declaraciones puestas antes de la primera sentencia de
  *          PROCEDURE ó FUNCTION tienen el alcance del archivo y pueden ser
  *          accedidas/usadas en todas las funciones/procedimientos definidos
  *          en el archivo fuente compilado. Todas las sentencias ejecutables
@@ -101,7 +104,7 @@
  *
  *      /p               genera un archivo de salida Pre-procesada (.ppo) </par>
  *      -----------------   </par>
- *          El compilador solamente crea el archivo que contiene el 
+ *          El compilador solamente crea el archivo que contiene el
  *          resultado del archivo fuente pre-procesado.   </par>
  *
  *      /q               Quieto  </par>
@@ -109,7 +112,7 @@
  *          El compilador no imprime ningún mensaje durante la compilación
  *          (excepto la información del copyright).   </par>
  *
- *          /q0          que permanezca realmente Quieto y no muestre ni 
+ *          /q0          que permanezca realmente Quieto y no muestre ni
  *                       siquiera la información del copyright.   </par>
  *
  *      /r[<libreria>]   solicita al linker Revisar por <libreria> (ó ninguna) </par>
@@ -123,7 +126,7 @@
  *
  *      /t<ruta>         ruta para la creación de un archivo Temporario  </par>
  *      -----------------   </par>
- *          Actualmente no usado en harbour (El compilador de harbour no 
+ *          Actualmente no usado en harbour (El compilador de harbour no
  *          crea ningún archivo temporal)   </par>
  *
  *      /u[<archivo>]       Usar la definición de comando establecido en el
@@ -134,33 +137,33 @@
  *      /v               las Variables son asumidas como M->   </par>
  *      -----------------   </par>
  *          Todas las variables sin declarar ó unaliased son asumidas como
- *          variables MEMVAR (variables privadas ó públicas). si este switch 
+ *          variables MEMVAR (variables privadas ó públicas). si este switch
  *          no es usado entones el alcance de estas variables es chequeado
  *          en tiempo de ejecución.    </par>
  *
- *      /w[<nivel>]      Establece el número de nivel de las advertencias 
+ *      /w[<nivel>]      Establece el número de nivel de las advertencias
  *                       (Warnings) (0..4, por defecto es 1)   </par>
  *      -----------------   </par>
  *
- *         /w0         - sin advertencias			   </par>
+ *         /w0         - sin advertencias                          </par>
  *         /w or /w1   - advertencias compatibles con Clipper      </par>
  *         /w2         - algunas advertencias útiles ausentes en Clipper </par>
  *         /w3         - advertencias generadas para extensiones al lenguaje
- *                       hechas en Harbour. También habilita el chequeo de 
- *                       sintaxis fuertemente tipeada pero sólo advierte 
+ *                       hechas en Harbour. También habilita el chequeo de
+ *                       sintaxis fuertemente tipeada pero sólo advierte
  *                       contra los tipos declarados, o los tipos que pueden
  *                       ser calculados en tiempo de compilación.    </par>
  *         /w4         - habilita advertencias acerca de operaciones que son
- *                       sospechosas, lo cual significa que si se mezclan tipos 
+ *                       sospechosas, lo cual significa que si se mezclan tipos
  *                       sin declarar ó tipos que no pueden ser calculados
- *                       en tiempo de compilación, junto con los tipos ya 
+ *                       en tiempo de compilación, junto con los tipos ya
  *                       declarados, una advertencia será generada.   </par>
  *
- *      /x[<prefijo>]    establece el símbolo del prefijo agregado al nombre 
+ *      /x[<prefijo>]    establece el símbolo del prefijo agregado al nombre
  *                       de función (para archivo.c solamente)   </par>
  *      -----------------   </par>
- *          Establece el símbolo del prefijo agregado al nombre de función 
- *          de inicio (en la salida de lenguaje C, actualmente). Esta función 
+ *          Establece el símbolo del prefijo agregado al nombre de función
+ *          de inicio (en la salida de lenguaje C, actualmente). Esta función
  *          es generada automáticamente para cada módulo de PRG compilado.
  *          Este prefijo adicional puede ser usado para suprimir problemas
  *          con símbolos duplicados durante el enlazado de una aplicación
@@ -177,7 +180,7 @@
  *
  *      /10              restringe la longitud de símbolos a 10 caracteres. </par>
  *      -----------------   </par>
- *          Todos los nombres de variables y de funciones son cortados a un 
+ *          Todos los nombres de variables y de funciones son cortados a un
  *          máximo de 10 caracteres.  </par>
  *
  *
@@ -197,7 +200,7 @@
  *        Si desea librerías de compilación y ejecución 100 % compatibles,
  *      entonces Ud. debe definir: HARBOUR_STRICT_CLIPPER_COMPATIBILITY.
  *      Esta opción debe ser definida en el archvivo ../include/hbsetup.h
- *      (en efecto esta opción es puesta en un comentario por defecto - Ud. 
+ *      (en efecto esta opción es puesta en un comentario por defecto - Ud.
  *      necesita remover los caracteres /* */ solamente. Este cambio debe ser
  *      realizado antes de invocar la utilidad make.   </par>
  *
@@ -205,27 +208,27 @@
  *      Manejo de variables sin declarar </par>
  *      --------------------------------   </par>
  *        Cuando un valor es asignado a una variable no declarada y la opción
- *      -v  de la línea de comandos no es usada, entonces el compilador 
- *      Clipper asume que la variable es una variable PRIVATE ó PUBLIC y 
+ *      -v  de la línea de comandos no es usada, entonces el compilador
+ *      Clipper asume que la variable es una variable PRIVATE ó PUBLIC y
  *      genera un opcode POPM (pop memvar).   </par>
  *
  *      Cuando el valor de una variable no declarada es accedido y la opción
- *      -v de la línea de comandos no es usada, el compilador Harbour genera 
+ *      -v de la línea de comandos no es usada, el compilador Harbour genera
  *      un opcode  PUSHV (push variable) para determinar el tipo de variable
- *      en tiempo de ejecución 
+ *      en tiempo de ejecución
 
  *      Si un campo con el nombre requerido existe en el area de trabajo
  *      actual, entonces este valor es usado. Si no existe el campo, entones
  *      una variable PRIVATE ó PUBLIC es usada (si existe).   </par>
  *
  *        El compilador Harbour genera un opcode para determinar el tipo de
- *      variable en tiempo de ejecución (POPVARIABLE or PUSHVARIABLE) en 
+ *      variable en tiempo de ejecución (POPVARIABLE or PUSHVARIABLE) en
  *      ambos casos (asignación y acceso).   </par>
  *
  *      La diferencia puede ser chequeada por el siguiente código:   </par>
 
  *          <fixed>
- *      PROCEDURE MAIN()  
+ *      PROCEDURE MAIN()
  *      PRIVATE myname
  *
  *        DBCREATE( "TEST", { { "MYNAME", "C", 10, 0} } )
@@ -248,7 +251,7 @@
  *
  *      RETURN
  *     </fixed>
- *         
+ *
  *      Pasando por refeerencia una variable no declarada   </par>
  *      -------------------------------------------------   </par>
  *        El compilador Harbour usa un opcode especial PUSHP para pasar una
@@ -283,12 +286,12 @@
  *
  *        En la práctica, Clipper llamará a la función COUNT() dos veces:
  *      La primera vez antes de la adición y la segunda después de la
- *      adición. 
+ *      adición.
  *      En Harbour, COUNT() será llamada sólo una vez, antes de la adición. </par>
  *
  *        El método Harbour (no-estricto) es:   </par>
  *      1) Más rápido   </par>
- *      2) Garantiza que la misma variable de instancia del mismo 
+ *      2) Garantiza que la misma variable de instancia del mismo
  *         objeto será cambiada.  </par>
  *
  *      (Ver también: ../source/compiler/expropt.c)   </par>
@@ -297,8 +300,8 @@
  *      Inicialización variables estáticas     </par>
  *      ----------------------------------      </par>
  *
- *      Hay una diferencia en la inicialización de las variables estáticas 
- *      que son inicializadas con un bloque de código que refiere a una 
+ *      Hay una diferencia en la inicialización de las variables estáticas
+ *      que son inicializadas con un bloque de código que refiere a una
  *      variable local. Por ejemplo:   </par>
 
  *      <fixed>
@@ -313,7 +316,7 @@
  *      RETURN
  *      </fixed>
 
- *      El código de arriba compila bien en Clipper, pero éste genera un 
+ *      El código de arriba compila bien en Clipper, pero éste genera un
  *      error de ejecución:
  *           Error/BASE 1132 Bound error: array access
  *      Called from (b)STATICS$(0)   </par>
@@ -322,9 +325,9 @@
  *      Error E0009 Illegal variable (b) initializer: 'MyLocalVar'   </par>
  *
  *      Ambos Clipper y Harbour estan manejando todas las variables locales
- *      usadas en una forma especial: ellas son separadas de la pila (stack) 
+ *      usadas en una forma especial: ellas son separadas de la pila (stack)
  *      local de la función / procedimiento donde ellas son declaradas.
- *      Esto permite acceder a estas variables despues de la salida de una 
+ *      Esto permite acceder a estas variables despues de la salida de una
  *      función / procedimiento. Sin embargo todas las variables estáticas
  *      son inicializadas en un procedimiento separado ('STATICS$' en Clipper
  *      y '(_INITSTATICS)' en Harbour) antes del procedimiento principal y

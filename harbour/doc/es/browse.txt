@@ -1,3 +1,6 @@
+/*
+ * $Id$
+ */
 
 /*
  * Las siguientes partes son derechos adquiridos de sus autores individuales.
@@ -27,32 +30,32 @@
  *              [<xSeparadorCabecera>], [<xSeparadorColumna>], ;
  *              [<xSeparadorPie>], [<xPieColumna>] ) --> lExito
  *  $ARGUMENTS$
- *      <nSup> coordenada para la fila Superior de visualización. El rango 
- *      para <nSup> va de cero a MAXROW(), por defecto es cero.   
+ *      <nSup> coordenada para la fila Superior de visualización. El rango
+ *      para <nSup> va de cero a MAXROW(), por defecto es cero.
  *
- *      <nIzq> coordenada para la columna izquierda de visualización. El rango 
+ *      <nIzq> coordenada para la columna izquierda de visualización. El rango
  *      para <nIzq> va de cero a MAXCOL(), por defecto es cero.
  *
- *      <nInf> coordenada para la fila inferior de visualización. El rango 
- *      para <nInf> va de cero a MAXROW(), por defecto es MAXROW().   
+ *      <nInf> coordenada para la fila inferior de visualización. El rango
+ *      para <nInf> va de cero a MAXROW(), por defecto es MAXROW().
  *
- *      <nDer> coordenada para la columna derecha de visualización. El rango 
- *      para <nDer> va de cero a MAXCOL(), por defecto es MAXCOL().   
+ *      <nDer> coordenada para la columna derecha de visualización. El rango
+ *      para <nDer> va de cero a MAXCOL(), por defecto es MAXCOL().
  *
- *      <acColumnas> es un array de expresiones de caracteres que contienen 
+ *      <acColumnas> es un array de expresiones de caracteres que contienen
  *      los nombres de los campos de la base de datos,o expresiones para la
  *      visualización en cada columna.
- *      Si no es especificada, por defecto es la visualización de todos los 
+ *      Si no es especificada, por defecto es la visualización de todos los
  *      campos de la base de datos en el area de trabajo actual.
  *
  *      <xFuncionUsuario> es el nombre de una función ó un bloque de codigo
- *      que podría ser llamado cada vez que una tecla no reconocida ha sido 
+ *      que podría ser llamado cada vez que una tecla no reconocida ha sido
  *      presionada ó cuando no hay más teclas para ser procesadas y DBEDIT()
  *      va al modo inactivo. Si <xFuncionUsuario> es una cadena de caracteres,
  *      esta debe contener el nombre de una función de usuario definida, que
  *      sea válida y sin paréntesis.
  *      Ambos la función definida por el usuario ó el bloque de código deberán
- *      aceptar dos parámetros: nModo y nActualColumna. 
+ *      aceptar dos parámetros: nModo y nActualColumna.
  *      Ambos deberían devolver un valor numérico que corresponda a uno de
  *      los códigos de retorno esperados.
  *      (Vea la tabla más abajo con la lista de nModo y los códigos de retorno)
@@ -62,7 +65,7 @@
  *      pueden usar el mismo valor como cadena de molde (picture).
  *      Si <xColumnSayPictures> es un array, cada elemento debe ser una cadena
  *      de caracteres que corresponde a la cadena (picture) usada de molde
- *      para la columna con el mismo índice. Vea la ayuda para @...SAY para 
+ *      para la columna con el mismo índice. Vea la ayuda para @...SAY para
  *      tener más información acreca de los valores de molde (picture).
  *
  *      <xCabeceraColumna> contiene los titulos de cabecera para cada columna
@@ -71,14 +74,14 @@
  *      de caracteres que contienen el titulo de cabecera para cada campo.
  *      La cabecera puede ser dividido en más de una linea al poner un punto
  *      y coma (;) en los lugares donde Ud. desea romper la linea.
- *      Si es omitida el valor por defecto para cada cabecera de columna es 
+ *      Si es omitida el valor por defecto para cada cabecera de columna es
  *      tomado de <acColumnas> ó el nombre del campo de la base de datos, si
  *      <acColumnas> no fue especificado
  *
  *      <xSeparadorCabecera> es un array que contiene caracteres que dibujan
  *      las lineas que separan las cabeceras y los datos de los campos .
- *      En lugar de un array Ud. puede usar una cadena de caracteres que 
- *      podría ser usada para la visualización de la misma linea para todos 
+ *      En lugar de un array Ud. puede usar una cadena de caracteres que
+ *      podría ser usada para la visualización de la misma linea para todos
  *      los campos.
  *      El valor por defecto es una linea doble.
  *
@@ -90,8 +93,8 @@
  *
  *      <xSeparadorPie> es un array que contiene caracteres que dibujan
  *      las lineas que separan el area de datos de los campos y el pie.
- *      En lugar de un array Ud. puede usar una cadena de caracteres que 
- *      podría ser usada para la visualización de la misma linea para todos 
+ *      En lugar de un array Ud. puede usar una cadena de caracteres que
+ *      podría ser usada para la visualización de la misma linea para todos
  *      los campos. El valor por defecto es ningún separador de pie.
  *
  *      <xPieColumna> contiene el pie para ser visualizado al final de
@@ -99,12 +102,12 @@
  *      tendran el mismo pie, si este es un array, cada elemento es una cadena
  *      de caracteres que contienen el pie para cada campo. El pie puede ser
  *      dividido en más de una linea al poner un punto y coma (;) en los
- *      lugares donde Ud. desea romper la linea. Si es omitido ningun pie es 
+ *      lugares donde Ud. desea romper la linea. Si es omitido ningun pie es
  *      visualizado.
  *  $RETURNS$
  *      DBEDIT() retorna .F. si no hay una base de datos abierta en ese area
  *      de trabajo, ó si el número de columnas para la visualización es cero,
- *      en caso contrario DBEDIT() devuelve .T.   
+ *      en caso contrario DBEDIT() devuelve .T.
  *  $DESCRIPTION$
  *      DBEDIT() visualiza y permite editar registros de una ó más areas de
  *      trabajo en una grilla en pantalla. Cada columna es definida por los
@@ -112,7 +115,7 @@
  *      Cada fila es el equivalente de un registro de la base de datos.
  *
  *      A Continuación estan las teclas manejadas por DBEDIT(): </par>
- *      -------------------------------------------------------  
+ *      -------------------------------------------------------
  *     <table>
  *       Tecla            Significado
  *
@@ -141,23 +144,23 @@
  *     </table>
  *      Cuando DBEDIT() ejecuta <xFuncionUsuario> le pasa los siguientes
  *      argumentos:
- *      nModo y el índice del registro actual en <acColumnas>. 
- *      Si <acColumnas> es omitido, el número de índice es número de FIELD() 
+ *      nModo y el índice del registro actual en <acColumnas>.
+ *      Si <acColumnas> es omitido, el número de índice es número de FIELD()
  *      de la estructura de la base de datos abierta.
  *
  *
  *      Valores de los Modos en DBEDIT() :    </par>
- *      ---------------------------------   
+ *      ---------------------------------
  *      <table>
  *       Dbedit.ch     Valor  Significado
  *
- *       DE_IDLE        0     DBEDIT() esta inactivo, todas la teclas de 
+ *       DE_IDLE        0     DBEDIT() esta inactivo, todas la teclas de
  *                            movimiento han sido procesadas.
  *       DE_HITTOP      1     Intento de mover el cursor más alla de la parte
  *                            superior del archivo
- *       DE_HITBOTTOM   2     Intento de mover el cursor despues del final 
+ *       DE_HITBOTTOM   2     Intento de mover el cursor despues del final
  *                            del archivo.
- *       DE_EMPTY       3     No hay registros en el area de trabajo, la base 
+ *       DE_EMPTY       3     No hay registros en el area de trabajo, la base
  *                            de datos está vacia.
  *       DE_EXCEPT      4     Interrupción de teclado
  *      </table>
@@ -172,22 +175,22 @@
  *
  *       DE_ABORT     0      Aborta DBEDIT().
  *       DE_CONT      1      Continua DBEDIT() como ahora.
- *       DE_REFRESH   2      Fueza relectura/revisualización en pantalla de 
+ *       DE_REFRESH   2      Fueza relectura/revisualización en pantalla de
  *                           todas las filas de datos
  *      </table>
  *
- *      La función del usuario es llamada una vez en cada uno de los 
+ *      La función del usuario es llamada una vez en cada uno de los
  *      siguientes casos:
  *      - La base de datos esta vacía.
- *      - El usuario trata de mover más alla de la parte superior ó de la 
+ *      - El usuario trata de mover más alla de la parte superior ó de la
  *        parte inferior del archivo.
- *      - Interrupción de teclado, el usuario ha presionado una tecla que no 
- *        puede ser manejada por DBEDIT(). 
+ *      - Interrupción de teclado, el usuario ha presionado una tecla que no
+ *        puede ser manejada por DBEDIT().
  *      - El buffer de teclado esta vacío ó un refresco de pantalla acaba
  *        de ocurrir.
  *
  *      Nota Importante:
- *      --------------- 
+ *      ---------------
  *      DBEDIT() es una función de compatibilidad, esta fué superada por la
  *      clase TBrowse y no es recomendada para nuevas aplicaciones.
  *  $EXAMPLES$
@@ -199,9 +202,9 @@
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      <xFuncionUsuario> puede ser también un bloque de código, esta es una 
+ *      <xFuncionUsuario> puede ser también un bloque de código, esta es una
  *      extensión de Harbour.
- *         
+ *
  *      CA-Clipper lanzará un error si no hay una base de datos abierta
  *      Harbour puede retornar .F.
  *
@@ -210,14 +213,14 @@
  *      Las NG de CA-Clipper 5.2 indican que el valor devuelto es NIL,
  *      esto es erróneo y debería ser un valor lógico.
  *
- *      Hay un código de retorno (3) indocumentado para las funciones  
- *      definidas por el usuario en Clipper (ambos 87 and 5.x). este es un  
+ *      Hay un código de retorno (3) indocumentado para las funciones
+ *      definidas por el usuario en Clipper (ambos 87 and 5.x). este es un
  *      Modo de agregado (Append) el cual:
- *      "Divide la pantalla para permitir más que datos sean agregados en el 
+ *      "Divide la pantalla para permitir más que datos sean agregados en el
  *      area de la ventana".
- *      Este modo no es soportado por Harbour.   
+ *      Este modo no es soportado por Harbour.
  *  $FILES$
- *      Los archivos de cabecera son dbedit.ch, inkey.ch   
+ *      Los archivos de cabecera son dbedit.ch, inkey.ch
  *      La librería es rtl
  *  $SEEALSO$
  *     @...SAY,BROWSE(),TBrowse class,TRANSFORM()
@@ -237,17 +240,17 @@
  *  $ARGUMENTS$
  *      <nSup> coordenada de la fila Superior de visualización.
  *
- *      <nIzq> coordenada de la columna izquierda de visualización. 
+ *      <nIzq> coordenada de la columna izquierda de visualización.
  *
- *      <nInf> coordenada de la fila inferior de visualización.   
+ *      <nInf> coordenada de la fila inferior de visualización.
  *
- *      <nDer> coordenada de la columna derecha de visualización. 
+ *      <nDer> coordenada de la columna derecha de visualización.
  *  $RETURNS$
  *      BROWSE() retorna .F. si no hay una base de datos abierta en ese area
- *      de trabajo, en caso contrario devuelve .T.   
+ *      de trabajo, en caso contrario devuelve .T.
  *  $DESCRIPTION$
  *      BROWSE() es un visualizador de bases de datos de propósito general,
- *      sin demasiado trabajo ud. puede desplegar un archivo DBF con las 
+ *      sin demasiado trabajo ud. puede desplegar un archivo DBF con las
  *      siguientes teclas:
 
  *      <table>
@@ -275,7 +278,7 @@
  *
  *      <table>
  *      Registro ###/### Número registro actual / Número Total de registros.
- *       <none>           No hay registros, el archivo esta vacio.  
+ *       <none>           No hay registros, el archivo esta vacio.
  *       <new>            Ud.esta en modo de Agregado al final del archivo.
  *       <Deleted>        El registro actual esta borrado.
  *       <bof>            Ud. esta en el comienzo del archivo.
@@ -283,7 +286,7 @@
  *
  *      Ud. debería pasar las cuatro coordenadas validas, si menos de cuatro
  *      parámetros son pasados al BROWSE() las coordenadas por defecto son:
- *      1, 0, MAXROW(), MAXCOL().   
+ *      1, 0, MAXROW(), MAXCOL().
  *  $EXAMPLES$
     <fixed>
  *      // muestra como desplegar una base de datos
@@ -310,16 +313,16 @@
  *  $SYNTAX$
  *      TBrowseDB( [<nSup>], [<nIzq>], [<nInf>], [<nDer>] ) --> oBrowse
  *  $ARGUMENTS$
- *      <nSup> coordenada de la fila superior de visualización. 
+ *      <nSup> coordenada de la fila superior de visualización.
  *
- *      <nIzq> coordenada de la columna izquierda de visualización.     
+ *      <nIzq> coordenada de la columna izquierda de visualización.
  *
- *      <nInf> coordenada de la fila inferior de visualización.    
+ *      <nInf> coordenada de la fila inferior de visualización.
  *
- *      <nDer> coordenada de la columna derecha de visualización.   
+ *      <nDer> coordenada de la columna derecha de visualización.
  *  $RETURNS$
  *      TBrowseDB() retorna un nuevo objeto TBrowse con unas coordenadas
- *      específicas y un :SkipBlock, :GoTopBlock y :GoBottomBlock por defecto 
+ *      específicas y un :SkipBlock, :GoTopBlock y :GoBottomBlock por defecto
  *      para desplegar una base de datos.
  *  $DESCRIPTION$
  *      TBrowseDB() es una forma rápida de crear un objeto TBrowse junto con
@@ -327,14 +330,14 @@
  *      Note que el objeto TBrowse devuelto no contiene objetos TBColumn y Ud.
  *      necesita agregar una columna para cada campo por Ud. mismo
  *  $EXAMPLES$
-        <fixed> 
+        <fixed>
  *      Para un buen ejemplo, mire en el código fuente de la función BROWSE()
  *      en el subdirectorio ../source/rtl/browse.prg
-        </fixed> 
+        </fixed>
  *  $STATUS$
- *      S   
+ *      S
  *  $COMPLIANCE$
- *      TBrowseDB() funciona exactamente como la función de CA-Clipper TBrowseDB().   
+ *      TBrowseDB() funciona exactamente como la función de CA-Clipper TBrowseDB().
  *  $FILES$
  *      La librería es rtl
  *  $SEEALSO$
@@ -355,13 +358,13 @@
  *  $ARGUMENTS$
  *      <nRecs> es el número de registros a saltar relativos al registro actual.
  *      Números positivos tratan de mover el puntero de registro hacia adelante
- *      y Números negativos tratan de mover el puntero de registro hacia atras 
+ *      y Números negativos tratan de mover el puntero de registro hacia atras
  *      <nRecs> registros.
  *  $RETURNS$
  *      dbSkipper() retorna el número actual de registros saltados.
  *  $DESCRIPTION$
  *      dbSkipper() es una función de ayuda usada en el mecanismo de despliegue
- *      para saltar un número de registros mientras le da al llamador una 
+ *      para saltar un número de registros mientras le da al llamador una
  *      indicación del número actual de registros saltados.
  *  $EXAMPLES$
     <fixed>
@@ -377,8 +380,8 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      dbSkipper() es una función de compatibilidad con XBase++ y no existe 
- *      como una función estándar en CA-Clipper 5.x 
+ *      dbSkipper() es una función de compatibilidad con XBase++ y no existe
+ *      como una función estándar en CA-Clipper 5.x
  *      Esta función es solamente visible si el archivo:
  *       ../source/rtl/browdb.prg fue compilado con la bandera HB_COMPAT_XPP.
  *  $FILES$
@@ -387,4 +390,3 @@
  *      DBSKIP(),SKIP
  *  $END$
  */
-

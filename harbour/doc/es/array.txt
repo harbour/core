@@ -1,3 +1,6 @@
+/*
+ * $Id$
+ */
 
 /*
  * Las siguientes partes son derechos adquiridos de sus autores individuales.
@@ -5,8 +8,8 @@
  *
  * Copyright 2000 Alejandro de Gárate <alex_degarate@hotmail.com>
  * Documentación en Español de: ARRAY(), AADD(), ASIZE(), ATAIL(), ASIZE(),
- *				AINS(), ADEL(), ADEL(), AFILL(), ASCAN()
- *				AEVAL(), ACOPY(), ACLONE(), ASORT()
+ *                              AINS(), ADEL(), ADEL(), AFILL(), ASCAN()
+ *                              AEVAL(), ACOPY(), ACLONE(), ASORT()
  *
  * Vea doc/license.txt por los términos de la licencia.
  *
@@ -653,4 +656,3 @@
  *      ASCAN(),EVAL(),SORT
  *  $END$
  */
-

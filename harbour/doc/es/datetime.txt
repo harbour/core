@@ -1,10 +1,13 @@
+/*
+ * $Id$
+ */
 
 /*
  * Las siguientes partes son derechos adquiridos de sus autores individuales.
  * www - http://www.harbour-project.org
  *
  * Copyright 2000 Alejandro de Gárate <alex_degarate@hotmail.com>
- * Documentación en Español de: 
+ * Documentación en Español de:
  *      CDOW(),CMONTH(),DATE(),CTOD(),DAY(),DAYS(), DOW(),DTOS(),
  *      DTOC(),ELAPTIME(),MONTH(),SECONDS(),SECS(),TIME(),YEAR()
  *
@@ -24,7 +27,7 @@
  *  $CATEGORY$
  *      Fecha
  *  $ONELINER$
- *      Convierte una fecha al Nombre del día de la semana 
+ *      Convierte una fecha al Nombre del día de la semana
  *  $SYNTAX$
  *      CDOW(<dFecha>)  --> cDia
  *  $ARGUMENTS$
@@ -62,7 +65,7 @@
  *  $CATEGORY$
  *      Fecha
  *  $ONELINER$
- *      Retorna una cadena de caracteres con el nombre del mes 
+ *      Retorna una cadena de caracteres con el nombre del mes
  *  $SYNTAX$
  *      CMONTH(<dFecha>)  --> cMes
  *  $ARGUMENTS$
@@ -72,7 +75,7 @@
  *  $DESCRIPTION$
  *      Esta función retorna el nombre del mes (Enero, Febrero, etc.) de una
  *      expresión de fecha <dFecha> pasada a ella.
- *      Si una fecha NULL es pasada a la función, el valor de la función sera 
+ *      Si una fecha NULL es pasada a la función, el valor de la función sera
  *      un byte NULL.
  *      Nota: El valor devuelto depende del módulo de lenguaje en uso.
  *  $EXAMPLES$
@@ -142,11 +145,11 @@
  *  $RETURNS$
  *      <dFecha> Una expresión de fecha.
  *  $DESCRIPTION$
- *      Esta función convierte una fecha que ha sido aportada como una 
+ *      Esta función convierte una fecha que ha sido aportada como una
  *      expresión de caracteres a una expresión de fecha. La expresión de
  *      caracteres sera en la forma MM/DD/YY" (basada en el valor por defecto
- *      en SET DATE) o en el formato apropiado especificado por el comado 
- *	SET DATE TO. Si una impropia cadena de caracteres es pasada a la 
+ *      en SET DATE) o en el formato apropiado especificado por el comado
+ *      SET DATE TO. Si una impropia cadena de caracteres es pasada a la
  *      función, un valor de fecha vacía será retornado.
  *  $EXAMPLES$
  *      ? CTOD('12/21/00')
@@ -243,10 +246,10 @@
  *  $ARGUMENTS$
  *      <dFecha>  Cualquier expresión válida de fecha.
  *  $RETURNS$
- *      DOW() retorna el dia de la semana en la forma numérica <nDay>  
+ *      DOW() retorna el dia de la semana en la forma numérica <nDay>
  *  $DESCRIPTION$
  *      Esta función convierte un valor de fecha en un número representando
- *      el dia de la semana. En el rango de 1 al 7, siendo 1 el dia Domingo  
+ *      el dia de la semana. En el rango de 1 al 7, siendo 1 el dia Domingo
  *      y 7 el dia Sábado.
  *  $EXAMPLES$
  *      ? DOW( DATE())
@@ -279,10 +282,10 @@
  *  $RETURNS$
  *      Retorna la cadena de caracteres <cFecha> representando la fecha
  *  $DESCRIPTION$
- *      Esta función convierte una expresión de fecha (sea un campo ó una 
+ *      Esta función convierte una expresión de fecha (sea un campo ó una
  *      variable) expresada como <dFecha> a una expresión de caracteres en el
  *      formato por defecto "MM/DD/YY". El formato de fecha devuelto por esta
- *      función es controlado por el formato especificado por el comando 
+ *      función es controlado por el formato especificado por el comando
  *      SET DATE y es variable a diferencia del devuelto por la función DTOS().
  *  $EXAMPLES$
  *      ? DTOC( DATE())
@@ -312,11 +315,11 @@
  *  $ARGUMENTS$
  *      <dFecha> Cualquier expresión válida de fecha.
  *  $RETURNS$
- *      DTOS() retorna <cFecha> 
+ *      DTOS() retorna <cFecha>
  *  $DESCRIPTION$
  *      Esta función convierte un valor de fecha a una cadena de 8 caracteres
  *      en el formato AAAAMMDD (no contiene separadores). Si el valor de
- *      <dFecha> es una fecha vacía, esta función retorna una cadena de 
+ *      <dFecha> es una fecha vacía, esta función retorna una cadena de
  *      caracteres de 8 espacios en blanco.
  *  $EXAMPLES$
  *      ? DTOS( DATE())
@@ -351,10 +354,10 @@
  *  $DESCRIPTION$
  *      Esta función devuelve una cadena que muestra la diferencia entre la
  *      hora inicial representada por <cHoraInicial> y la hora final
- *      representada por <cHoraFinal>. Si la hora de inicio es mayor que la 
+ *      representada por <cHoraFinal>. Si la hora de inicio es mayor que la
  *      de finalización, la función asume que la fecha a cambiado una vez.
  *  $EXAMPLES$
- *      // Muestra el tiempo que se uso el programa parecido a como lo 
+ *      // Muestra el tiempo que se uso el programa parecido a como lo
  *      // hacía el viejo Norton Utilities
  *      STATIC cHoraIni       // al inicio del programa
  *      cHoraIni := TIME()
@@ -369,7 +372,7 @@
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
- *	La librería es rtl
+ *      La librería es rtl
  *  $SEEALSO$
  *      SECS(),SECONDS(),TIME(),DAY()
  *  $END$
@@ -394,7 +397,7 @@
  *      Esta función devuelve el valor numérico del mes contenido en <dFecha>.
  *      Este valor esta en el formato de cuatro dígitos y no es afectado
  *      por el seteo de los comandos SET CENTURY y SET DATE.
- *      Si se pasa una fecha vacía CTOD("") a esta función devuelve el valor 
+ *      Si se pasa una fecha vacía CTOD("") a esta función devuelve el valor
  *      cero.
  *  $EXAMPLES$
  *      ? Month(DATE())
@@ -436,7 +439,7 @@
  *      // Muestra el tiempo que estuvo en ejecución una rutina
  *      nArranque = SECONDS()
  *
- *      // Aca va la llamada a la rutina 
+ *      // Aca va la llamada a la rutina
  *      //  : :
  *      ? "Tardó: ", SECONDS()- nArranque  ," segundos"
  *  $STATUS$
@@ -478,7 +481,7 @@
  *  $COMPLIANCE$
  *      Esta función es totalmente compatible con CA-Clipper.
  *      Nota: No esta documentada en las NG, ni en el manual en español de
- *	      CA-Clipper.
+ *            CA-Clipper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -487,7 +490,7 @@
  *      SECONDS(),ELAPTIME(),TIME()
  *  $END$
  */
- 
+
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -503,7 +506,7 @@
  *  $RETURNS$
  *      TIME() retorna la cadena de caracteres <cHora> representando la hora
  *  $DESCRIPTION$
- *      Esta función devuelve la hora del sistema representada como una 
+ *      Esta función devuelve la hora del sistema representada como una
  *      expresión de caracteres en el formato HH:MM:SS, para calculos de
  *      tiempo conviene usar SECONDS().
  *  $EXAMPLES$
@@ -539,7 +542,7 @@
  *      Esta función devuelve el valor numérico del año contenido en <dFecha>
  *      Este valor esta en el formato de cuatro dígitos y no es afectado
  *      por el seteo de los comandos SET CENTURY y SET DATE.
- *      Si se pasa una fecha vacía CTOD("") a esta función devuelve el valor 
+ *      Si se pasa una fecha vacía CTOD("") a esta función devuelve el valor
  *      cero.
  *  $EXAMPLES$
  *      ? YEAR( DATE())                // Resultado: 2000
@@ -556,4 +559,3 @@
  *      DAY(),MONTH()
  *  $END$
  */
-
