@@ -127,7 +127,7 @@ int ct_getref (void)
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is ctset.c.
+ *      Source is ctset.c, library is libct.
  *  $SEEALSO$
  *      ADDASCII()   BLANK()       CHARADD()
  *      CHARAND()    CHARMIRR()    CHARNOT()
@@ -209,7 +209,7 @@ int ct_getatmupa (void)
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is ctset.c.
+ *      Source is ctset.c, library is libct.
  *  $SEEALSO$
  *      ATNUM()       AFTERATNUM()  BEFORATNUM()
  *      ATREPL()      NUMAT()       ATADJUST()
@@ -303,6 +303,14 @@ char ct_getatlikechar (void)
  *      considered to match within these functions. If CT_SETATLIKE_WILDCARD
  *      is set (e.g. "?"), then "?" matches every other character.
  *
+ *      <nMode> can be one of the following values that are defined
+ *      in ct.ch
+ * 
+ *      Definition            | Value
+ *      ----------------------|------
+ *      CT_SETATLIKE_EXACT    |   0 
+ *      CT_SETATLIKE_WILDCARD |   1 
+ *
  *  $EXAMPLES$
  *  $TESTS$
  *  $STATUS$
@@ -314,7 +322,7 @@ char ct_getatlikechar (void)
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is ctset.c, header is ct.ch.
+ *      Source is ctset.c, header is ct.ch, library is libct.
  *  $SEEALSO$
  *  $END$
  */

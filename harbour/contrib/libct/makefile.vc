@@ -110,6 +110,7 @@ LIBLIST = \
    $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(TOOLS_LIB)2
 
 TOOLS_LIB_OBJS = \
+   $(OBJ_DIR)\addascii.obj \
    $(OBJ_DIR)\ctset.obj \
    $(OBJ_DIR)\ctstr.obj \
    $(OBJ_DIR)\ctchksum.obj \
@@ -132,8 +133,9 @@ all: \
    $(TOOLS_LIB)
 
 CLEAN:
-   -@if exist $(OBJ_DIR)\ctchksum.* del $(OBJ_DIR)\ctset.*
-   -@if exist $(OBJ_DIR)\ctchksum.* del $(OBJ_DIR)\ctstr.*
+   -@if exist $(OBJ_DIR)\addascii.* del $(OBJ_DIR)\addascii.*
+   -@if exist $(OBJ_DIR)\ctset.* del $(OBJ_DIR)\ctset.*
+   -@if exist $(OBJ_DIR)\ctstr.* del $(OBJ_DIR)\ctstr.*
    -@if exist $(OBJ_DIR)\ctchksum.* del $(OBJ_DIR)\ctchksum.*
    -@if exist $(OBJ_DIR)\ctchrevn.* del $(OBJ_DIR)\ctchrevn.*
    -@if exist $(OBJ_DIR)\ctchrmix.* del $(OBJ_DIR)\ctchrmix.*

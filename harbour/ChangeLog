@@ -1,3 +1,25 @@
+2001-04-17 18:40 CET Martin Vogel <vogel@inttec.de>
+   * contrib/libct/readme.txt
+     + Added paragraph for enhancements over original CT3 library
+   
+   + contrib/libct/addascii.c
+   
+   * contrib/libct/Makefile
+     + added addascii.c
+   
+   * contrib/libct/makefile.vc
+     + added addascii.c
+   
+   * contrib/libct/makefile.bc
+     + added addascii.c
+   
+   + contrib/libct/tests
+   + contrib/libct/tests/Makefile
+   + contrib/libct/tests/csetref.prg
+   + contrib/libct/tests/csetatmu.prg
+   + contrib/libct/tests/setatlik.prg
+   + contrib/libct/tests/addascii.prg
+
 2001-04-17 17:55 CET Martin Vogel <vogel@inttec.de>
    + contrib/libct/ct.ch
    + contrib/libct/ct.h

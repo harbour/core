@@ -120,6 +120,10 @@ $(TOOLS_LIB)  : $(TOOLS_LIB_OBJS)
 # TOOLS.LIB dependencies
 #
 
+$(OBJ_DIR)\ctset.obj : $(TOOLS_DIR)\addascii.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\ctset.obj : $(TOOLS_DIR)\ctset.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
