@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-08 10:15 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
+   * contrib/rdd_ads/ads1.c
+      * Fixed bug on adsGetValue() function when numeric data to be putted are more the 10 number
+       long and no decimals(ie: 123456789124) Fix By Luiz Rafael Culik and Charles Kwon
+
 2002-07-08 09:08 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * harbour/source/debug/debugger.prg
      * Change implemented by Davor Siklic
