@@ -110,6 +110,7 @@
    #include <io.h>
    #include <direct.h>
    #include <errno.h>
+   #include <dos.h>
 
    #if !defined(HAVE_POSIX_IO)
       #define HAVE_POSIX_IO
@@ -435,7 +436,7 @@ void    hb_fsClose( FHANDLE hFileHandle )
 void    hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
 {
 
-#if defined(__BORLANDC__) || defined(__IBMCPP__) || defined(__DJGPP__) || defined(__CYGWIN__)
+#if defined(__BORLANDC__) || defined(__IBMCPP__) || defined(__DJGPP__) || defined(__CYGWIN__) || defined(__WATCOMC__)
 
    errno = 0;
    switch( uiDevMode )
@@ -915,6 +916,9 @@ BYTE *  hb_fsCurDir( USHORT uiDrive )
    return ( BYTE * ) cwd_buff;
 }
 
+/* TODO: add documentation
+ */
+
 USHORT  hb_fsChDrv( BYTE nDrive )
 {
    USHORT uiResult;
@@ -935,6 +939,27 @@ USHORT  hb_fsChDrv( BYTE nDrive )
       s_uiErrorLast = FS_ERROR;
    }
 
+#elif defined( __WATCOMC__ )
+
+   unsigned uiSave;
+   unsigned uiTotal;
+
+   /* 1=  A:, 2 = B:, 3 = C:, etc
+    * _dos_*() functions don't set 'errno'
+    */
+   _dos_getdrive( &uiSave );
+
+   s_uiErrorLast = 0;
+   uiResult = 1;
+   _dos_setdrive( nDrive, &uiTotal );
+   _dos_getdrive( &uiTotal );
+   if( nDrive != uiTotal )
+   {
+      _dos_setdrive( uiSave, &uiTotal );
+      s_uiErrorLast = FS_ERROR;
+      uiResult = 0;
+   }
+
 #else
 
    uiResult = 0;
@@ -945,6 +970,9 @@ USHORT  hb_fsChDrv( BYTE nDrive )
    return uiResult;
 }
 
+/* TODO: add documentation
+ * QUESTION: Is A: drive numbered as 0 or as 1 ?
+ */
 BYTE    hb_fsCurDrv( void )
 {
    USHORT uiResult;
@@ -954,6 +982,17 @@ BYTE    hb_fsCurDrv( void )
    errno = 0;
    uiResult = _getdrive();
    s_uiErrorLast = errno;
+
+#elif defined( __WATCOMC__ )
+
+   unsigned uiDrive;
+
+   /* 1=  A:, 2 = B:, 3 = C:, etc
+    * _dos_*() functions don't set 'errno'
+    */
+   _dos_getdrive( &uiDrive );
+   s_uiErrorLast = 0;
+   uiResult = ( USHORT ) uiDrive;
 
 #else
 
@@ -987,6 +1026,27 @@ USHORT  hb_fsIsDrv( BYTE nDrive )
    }
 
    _chdrive( uiSave );
+
+#elif defined( __WATCOMC__ )
+
+   unsigned uiSave;
+   unsigned uiTotal;
+
+   /* 1=  A:, 2 = B:, 3 = C:, etc
+    * _dos_*() functions don't set 'errno'
+    */
+   _dos_getdrive( &uiSave );
+
+   s_uiErrorLast = 0;
+   uiResult = 1;
+   _dos_setdrive( nDrive, &uiTotal );
+   _dos_getdrive( &uiTotal );
+   if( nDrive != uiTotal )
+   {
+      s_uiErrorLast = FS_ERROR;
+      uiResult = 0;
+   }
+   _dos_setdrive( uiSave, &uiTotal );
 
 #else
 
@@ -1307,7 +1367,7 @@ HARBOUR HB_DISKSPACE( void )
    USHORT uiDrive = ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
                      ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0;
 
-#ifdef DOS
+#if defined( DOS ) || defined( __WATCOMC__ )
    struct diskfree_t disk;
    unsigned uiResult;
 

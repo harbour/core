@@ -241,7 +241,7 @@ USHORT hb_max_col( void )
 }
 
 #ifndef HARBOUR_USE_GTAPI
-static void adjust_pos( char * pStr, ULONG ulLen, USHORT * row, USHORT * col, USHORT max_row, USHORT max_col )
+static void adjust_pos( char * pStr, ULONG ulLen, SHORT * row, SHORT * col, USHORT max_row, USHORT max_col )
 {
    ULONG ulCount;
    char * pPtr = pStr;

@@ -115,6 +115,7 @@ Identifier    (([a-zA-Z])|([_a-zA-Z][_a-zA-Z0-9]+))
 PseudoFunc    {Identifier}"("+.*")"+
 
 Array         {Identifier}[ \t]*"["
+AtArray       "}"[ \t]*"["
 ExpArray      ")"[ \t]*"["
 SubArray      "]"[ \t]*"["
 
@@ -1247,6 +1248,20 @@ Separator     {SpaceTab}
                unput( '[' );
                _iState = OPERATOR;
                return ']';
+            }
+
+{AtArray}  {
+               /* Must be recursive */
+               if( ! i_INDEX_STATE )
+               {
+                  BEGIN INDEX;
+                  i_INDEX_STATE = 1;
+               }
+
+               unput( '[' );
+               _iState = OPERATOR;
+               --_iOpenBracket;
+               return '}';
             }
 
 {Identifier}               {

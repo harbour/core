@@ -1,3 +1,18 @@
+19991010-13:25 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/rtl/console.c
+	* replaced USHORT for SHORT in adjust_pos
+
+    *source/rtl/filesys.c
+	* added WATCOMC branch for drive related functions
+	We really need documentation here !
+	QUESTION: Does drive numbering start from 0 or 1 ?
+	Is a A: drive numbered as 0 or 1 ?
+
+    *source/compiler/harbour.l
+    *source/compiler/harbour.y
+	* { 1, 2, 3 }[ 2 ] syntax is supported now
+	
 19991010-12:22 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/compiler/genc.c
      source/compiler/genhrb.c

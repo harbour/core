@@ -49,7 +49,6 @@
  * 8) Support this syntax: _FIELD->c->mmezo := mt
  * 9) Support this syntax: nPtr := @Hello()
  *10) Support for syntax: FOR [ array | object | alias_expr | other ] := value
- *11) Support this syntax: {1,2}[2]
  */
 
 /* Compile using: bison -d -v harbour.y */
@@ -642,12 +641,13 @@ Statement  : ExecFlow Crlf        {}
            | IfInline Crlf        { GenPopPCode(); }
            | ObjectMethod Crlf    { GenPopPCode(); }
            | VarUnary Crlf        { GenPopPCode(); }
-           | VarAssign Crlf       { GenPopPCode(); }
+           | VarExpr Crlf       { GenPopPCode(); }
 
            | IDENTIFIER '=' Expression { PopId( $1 ); } Crlf
            | AliasVar '=' { $<pVoid>$=( void * )pAliasId; pAliasId = NULL; } Expression { pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); AliasRemove(); } Crlf
            | AliasFunc '=' Expression             { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); } Crlf
            | VarAt '=' Expression                 { ArrayPut(); GenPopPCode(); } Crlf
+           | ArrayAt '=' Expression               { GenPopPCode();GenPopPCode(); GenPopPCode(); } Crlf
            | FunCallArray '=' Expression          { ArrayPut(); GenPopPCode(); } Crlf
            | ObjectData '=' { MessageFix( SetData( $1 ) ); } Expression { Function( 1 ); GenPopPCode(); } Crlf
            | ObjectData ArrayIndex '=' Expression    { ArrayPut(); GenPopPCode(); } Crlf
@@ -745,11 +745,12 @@ ObjectMethod : IdSend IDENTIFIER { Message( $2 ); } '(' MethParams ')' { Functio
            | ObjFunCall MethCall                   { Function( $2 ); }
            | ObjFunArray  ':' MethCall             { Function( $3 ); }
            | ObjectData   ':' MethCall             { Function( $3 ); }
-	   | ObjectArr MethCall                    { Function( $2 ); }
+           | ObjectArr MethCall                    { Function( $2 ); }
            | ObjectMethod ':' MethCall             { Function( $3 ); }
            ;
 
 VarAtSend  : VarAt ':'                             { ArrayAt(); }
+           | ArrayAt ':'                           { ArrayAt(); }
            ;
 
 ObjectArr  : ObjectData ArrayIndex ':'              { ArrayAt(); }
@@ -835,6 +836,8 @@ VarUnary   : IDENTIFIER IncDec %prec POST    { PushId( $1 ); Duplicate(); $2 ? I
            | IncDec IDENTIFIER %prec PRE     { PushId( $2 ); $1 ? Inc(): Dec(); Duplicate(); PopId( $2 ); }
            | VarAt IncDec %prec POST { DupPCode( $1 ); ArrayAt(); $2 ? Inc(): Dec(); ArrayPut(); $2 ? Dec(): Inc(); }
            | IncDec VarAt %prec PRE  { DupPCode( $2 ); ArrayAt(); $1 ? Inc(): Dec(); ArrayPut(); }
+           | ArrayAt IncDec %prec POST { ArrayAt(); }
+           | IncDec ArrayAt %prec PRE  { ArrayAt(); $1 ? Inc(): Dec(); }
            | FunCallArray IncDec %prec POST { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); $2 ? Inc(): Dec(); ArrayPut(); $2 ? Dec(): Inc(); }
            | IncDec FunCallArray %prec PRE  { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); $1 ? Inc(): Dec(); ArrayPut(); }
            | ObjectData IncDec %prec POST   { MessageDupl( SetData( $1 ) ); Function( 0 ); $2 ? Inc(): Dec(); Function( 1 ); $2 ? Dec(): Inc(); }
@@ -852,7 +855,7 @@ IncDec     : INC                             { $$ = 1; }
            ;
 
 Variable   : VarAt                     { ArrayAt(); }
-           | Array ArrayIndex          { ArrayAt(); }
+           | ArrayAt                   { ArrayAt(); }
            | FunCallArray              { ArrayAt(); }
            | ObjectData                {}
            | ObjectData ArrayIndex     { ArrayAt(); }
@@ -863,6 +866,9 @@ Variable   : VarAt                     { ArrayAt(); }
 VarAt      : IDENTIFIER { $<iNumber>$ = functions.pLast->lPCodePos; PushId( $1 ); } ArrayIndex { $$ =$<iNumber>2;  }
            ;
 
+ArrayAt    : Array ArrayIndex
+           ;
+
 ArrayIndex : '[' IndexList ']'
            | ArrayIndex { ArrayAt(); } '[' IndexList ']'
            ;
@@ -871,56 +877,65 @@ IndexList  : Expression
            | IndexList { ArrayAt(); } ',' Expression
            ;
 
-VarAssign  : IDENTIFIER INASSIGN Expression { PopId( $1 ); PushId( $1 ); }
-           | IDENTIFIER PLUSEQ   { PushId( $1 ); } Expression { GenPlusPCode( HB_P_PLUS ); PopId( $1 ); PushId( $1 ); }
+VarAssign  : IDENTIFIER             INASSIGN Expression { PopId( $1 ); PushId( $1 ); }
+           | VarAt                  INASSIGN Expression { ArrayPut(); }
+           | ArrayAt                INASSIGN { GenPopPCode();GenPopPCode(); }  Expression
+           | FunCallArray           INASSIGN Expression { ArrayPut(); }
+           | ObjectData             INASSIGN { MessageFix ( SetData( $1 ) ); } Expression { Function( 1 ); }
+           | ObjectData ArrayIndex  INASSIGN Expression      { ArrayPut(); }
+           | ObjectMethod ArrayIndex INASSIGN Expression    { ArrayPut(); }
+           | AliasVar               INASSIGN { $<pVoid>$=( void * ) pAliasId; pAliasId = NULL; } Expression { pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
+           | AliasFunc              INASSIGN Expression { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
+           ;
+
+VarOpEq    : IDENTIFIER PLUSEQ   { PushId( $1 ); } Expression { GenPlusPCode( HB_P_PLUS ); PopId( $1 ); PushId( $1 ); }
            | IDENTIFIER MINUSEQ  { PushId( $1 ); } Expression { GenPlusPCode( HB_P_MINUS ); PopId( $1 ); PushId( $1 ); }
            | IDENTIFIER MULTEQ   { PushId( $1 ); } Expression { GenNumPCode( HB_P_MULT    ); PopId( $1 ); PushId( $1 ); }
            | IDENTIFIER DIVEQ    { PushId( $1 ); } Expression { GenNumPCode( HB_P_DIVIDE  ); PopId( $1 ); PushId( $1 ); }
            | IDENTIFIER EXPEQ    { PushId( $1 ); } Expression { GenNumPCode( HB_P_POWER   ); PopId( $1 ); PushId( $1 ); }
            | IDENTIFIER MODEQ    { PushId( $1 ); } Expression { GenNumPCode( HB_P_MODULUS ); PopId( $1 ); PushId( $1 ); }
-           | VarAt INASSIGN Expression { ArrayPut(); }
            | VarAt PLUSEQ   { DupPCode( $1 ); ArrayAt(); } Expression { GenPlusPCode( HB_P_PLUS ); ArrayPut(); }
            | VarAt MINUSEQ  { DupPCode( $1 ); ArrayAt(); } Expression { GenPlusPCode( HB_P_MINUS ); ArrayPut(); }
            | VarAt MULTEQ   { DupPCode( $1 ); ArrayAt(); } Expression { GenNumPCode( HB_P_MULT    ); ArrayPut(); }
            | VarAt DIVEQ    { DupPCode( $1 ); ArrayAt(); } Expression { GenNumPCode( HB_P_DIVIDE  ); ArrayPut(); }
            | VarAt EXPEQ    { DupPCode( $1 ); ArrayAt(); } Expression { GenNumPCode( HB_P_POWER   ); ArrayPut(); }
            | VarAt MODEQ    { DupPCode( $1 ); ArrayAt(); } Expression { GenNumPCode( HB_P_MODULUS ); ArrayPut(); }
-           | FunCallArray INASSIGN Expression { ArrayPut(); }
+           | ArrayAt PLUSEQ   { ArrayAt(); } Expression { GenPlusPCode( HB_P_PLUS ); }
+           | ArrayAt MINUSEQ  { ArrayAt(); } Expression { GenPlusPCode( HB_P_MINUS ); }
+           | ArrayAt MULTEQ   { ArrayAt(); } Expression { GenNumPCode( HB_P_MULT    ); }
+           | ArrayAt DIVEQ    { ArrayAt(); } Expression { GenNumPCode( HB_P_DIVIDE  ); }
+           | ArrayAt EXPEQ    { ArrayAt(); } Expression { GenNumPCode( HB_P_POWER   ); }
+           | ArrayAt MODEQ    { ArrayAt(); } Expression { GenNumPCode( HB_P_MODULUS ); }
            | FunCallArray PLUSEQ   { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); }  Expression { GenPlusPCode( HB_P_PLUS ); ArrayPut(); }
            | FunCallArray MINUSEQ  { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); }  Expression { GenPlusPCode( HB_P_MINUS ); ArrayPut(); }
            | FunCallArray MULTEQ   { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); }  Expression { GenNumPCode( HB_P_MULT    ); ArrayPut(); }
            | FunCallArray DIVEQ    { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); }  Expression { GenNumPCode( HB_P_DIVIDE  ); ArrayPut(); }
            | FunCallArray EXPEQ    { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); }  Expression { GenNumPCode( HB_P_POWER   ); ArrayPut(); }
            | FunCallArray MODEQ    { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); }  Expression { GenNumPCode( HB_P_MODULUS ); ArrayPut(); }
-           | ObjectData INASSIGN { MessageFix ( SetData( $1 ) ); } Expression { Function( 1 ); }
            | ObjectData PLUSEQ   { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPlusPCode( HB_P_PLUS );    Function( 1 ); }
            | ObjectData MINUSEQ  { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPlusPCode( HB_P_MINUS );   Function( 1 ); }
            | ObjectData MULTEQ   { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenNumPCode( HB_P_MULT );    Function( 1 ); }
            | ObjectData DIVEQ    { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenNumPCode( HB_P_DIVIDE );  Function( 1 ); }
            | ObjectData EXPEQ    { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenNumPCode( HB_P_POWER );   Function( 1 ); }
            | ObjectData MODEQ    { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenNumPCode( HB_P_MODULUS ); Function( 1 ); }
-           | ObjectData ArrayIndex INASSIGN Expression      { ArrayPut(); }
            | ObjectData ArrayIndex PLUSEQ   { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenPlusPCode( HB_P_PLUS ); ArrayPut(); }
            | ObjectData ArrayIndex MINUSEQ  { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenPlusPCode( HB_P_MINUS ); ArrayPut(); }
            | ObjectData ArrayIndex MULTEQ   { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenNumPCode( HB_P_MULT    ); ArrayPut(); }
            | ObjectData ArrayIndex DIVEQ    { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenNumPCode( HB_P_DIVIDE  ); ArrayPut(); }
            | ObjectData ArrayIndex EXPEQ    { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenNumPCode( HB_P_POWER   ); ArrayPut(); }
            | ObjectData ArrayIndex MODEQ    { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenNumPCode( HB_P_MODULUS ); ArrayPut(); }
-           | ObjectMethod ArrayIndex INASSIGN Expression    { ArrayPut(); }
            | ObjectMethod ArrayIndex PLUSEQ   { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenPlusPCode( HB_P_PLUS ); ArrayPut(); }
            | ObjectMethod ArrayIndex MINUSEQ  { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenPlusPCode( HB_P_MINUS ); ArrayPut(); }
            | ObjectMethod ArrayIndex MULTEQ   { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenNumPCode( HB_P_MULT    ); ArrayPut(); }
            | ObjectMethod ArrayIndex DIVEQ    { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenNumPCode( HB_P_DIVIDE  ); ArrayPut(); }
            | ObjectMethod ArrayIndex EXPEQ    { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenNumPCode( HB_P_POWER   ); ArrayPut(); }
            | ObjectMethod ArrayIndex MODEQ    { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenNumPCode( HB_P_MODULUS ); ArrayPut(); }
-           | AliasVar INASSIGN { $<pVoid>$=( void * ) pAliasId; pAliasId = NULL; } Expression { pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
            | AliasVar PLUSEQ   { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenPlusPCode( HB_P_PLUS ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
            | AliasVar MINUSEQ  { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenPlusPCode( HB_P_MINUS ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
            | AliasVar MULTEQ   { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenNumPCode( HB_P_MULT    ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
            | AliasVar DIVEQ    { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenNumPCode( HB_P_DIVIDE  ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
            | AliasVar EXPEQ    { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenNumPCode( HB_P_POWER   ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
            | AliasVar MODEQ    { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenNumPCode( HB_P_MODULUS ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
-           | AliasFunc INASSIGN Expression { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
            | AliasFunc PLUSEQ   Expression { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
            | AliasFunc MINUSEQ  Expression { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
            | AliasFunc MULTEQ   Expression { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
@@ -929,6 +944,9 @@ VarAssign  : IDENTIFIER INASSIGN Expression { PopId( $1 ); PushId( $1 ); }
            | AliasFunc MODEQ    Expression { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
            ;
 
+VarExpr    : VarAssign
+           | VarOpEq
+           ;
 
 Operators  : Expression '='    Expression   { GenRelPCode( HB_P_EQUAL ); } /* compare */
            | Expression '+'    Expression   { GenPlusPCode( HB_P_PLUS ); }
@@ -952,7 +970,7 @@ Operators  : Expression '='    Expression   { GenRelPCode( HB_P_EQUAL ); } /* co
            | NOT Expression                 { GenNotPCode( ); }
            | '-' Expression %prec UNARY     { GenNegatePCode( ); }
            | '+' Expression %prec UNARY
-           | VarAssign                      { }
+           | VarExpr                      { }
            ;
 
 Logical    : TRUEVALUE                                   { $$ = 1; }
