@@ -67,26 +67,26 @@
 /* it seem actually impossible to completely separate it without creating */
 /* four differents include file (what I would not see in fact ) */
 
-#ifndef HB_FWOCLASS
-#ifndef HB_CSYCLASS
-#ifndef HB_VOCLASS
-#ifndef HB_TOPCLASS
+#ifndef HB_CLS_FWO
+#ifndef HB_CLS_CSY
+#ifndef HB_CLS_VO
+#ifndef HB_CLS_TOP
 
  /* IF NOTHING DECIDED BY THE PROGRAMER USE ALL */
-#define HB_FWOCLASS
-#define HB_CSYCLASS
-#define HB_VOCLASS
-#define HB_TOPCLASS
+#define HB_CLS_FWO
+#define HB_CLS_CSY
+#define HB_CLS_VO
+#define HB_CLS_TOP
 
-#Endif
-#Endif
-#Endif
-#Endif
+#endif
+#endif
+#endif
+#endif
 
 #xtranslate HBCLSCHOICE( <export>, <protect>, <hidde> ) => iif( <export>, HB_OO_CLSTP_EXPORTED , iif( <protect>, HB_OO_CLSTP_PROTECTED, iif( <hidde>, HB_OO_CLSTP_HIDDEN, nScope) ) )
 
 /* CLASSY SYNTAX */
-#IFDEF HB_CSYCLASS
+#IFDEF HB_CLS_CSY
 #xtranslate CREATE CLASS => CLASS
 #endif
 
@@ -127,7 +127,7 @@
 #endif /* HB_SHORTNAMES */
 
 /* CLASSY SYNTAX */
-#IFDEF HB_CSYCLASS
+#IFDEF HB_CLS_CSY
 
 /* Classy compatibility */
 #xtranslate  :CLASS  =>
@@ -173,7 +173,7 @@
 
 
 /* VO SYNTAX */
-#ifdef HB_VOCLASS
+#ifdef HB_CLS_VO
 
 #xtranslate  ( <name>{ [<p,...>] }        =>  ( <name>():New( <p> )
 #xtranslate  := <name>{ [<p,...>] }       => := <name>():New( <p> )
@@ -209,7 +209,7 @@
 
 
 /* FWOBJECT SYNTAX */
-#ifdef HB_FWOCLASS
+#ifdef HB_CLS_FWO
 
 #xcommand DATA <DataNames,...> [ AS <type> ] [ INIT <uValue> ] [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] => ;
    s_oClass:AddMultiData( <(type)>, <uValue>, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ), \{<(DataNames)>\} ) ;

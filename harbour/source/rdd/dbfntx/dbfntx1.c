@@ -44,7 +44,7 @@
 #include "hbapierr.h"
 #include "hbapilng.h"
 
-HB_FUNC(_DBFNTX );
+HB_FUNC( _DBFNTX );
 HB_FUNC( DBFNTX_GETFUNCTABLE );
 
 HB_INIT_SYMBOLS_BEGIN( dbfntx1__InitSymbols )

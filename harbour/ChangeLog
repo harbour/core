@@ -1,3 +1,39 @@
+2000-07-29 02:58 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * source/lang/msgko.c
+     ! Some fixes (KR -> KO).
+
+   * source/rdd/dbfntx/dbfntx1.c
+   * source/rtl/dircmd.prg
+   * source/rtl/setkey.c
+     * Minor formatting.
+
+   * source/rtl/console.c
+     - Removed TOFIX from EJECT.
+
+   * include/hbvm.h
+     - Removed double declaration for hb_vmQuit()
+
+   * include/hbclass.ch
+     * The class syntax disabler macros renamed.
+
+   - tests/teststru.prg
+     - Removed.
+
+   * include/hbpp.h
+   * source/pp/ppcore.c
+     + added prototype for ParsePragma
+     ! Some prototypes moved from ppcore to hbpp.h, to keep the externs in
+       the headers.
+   * source/pp/ppcore.c
+     - removed all pragma stuff
+   * source/pp/pragma.c
+     + new file with all the pragmas related stuff
+   * source/pp/Makefile
+   * makefile.bc
+   * makefile.vc
+     Thanks to Jose Lalin.
+
 2000-07-28 14:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.slx
      + Added logic to account for HB_SYMBOL_NAME_LEN

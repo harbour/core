@@ -395,7 +395,8 @@ PP_LIB_OBJS = \
    $(OBJ_DIR)\ppcore.obj \
    $(OBJ_DIR)\ppcomp.obj \
    $(OBJ_DIR)\pplib.obj \
-   $(OBJ_DIR)\pptable.obj
+   $(OBJ_DIR)\pptable.obj \
+   $(OBJ_DIR)\pragma.obj
 
 #
 # DEBUG.LIB rules
@@ -667,6 +668,10 @@ $(OBJ_DIR)\pplib.obj : $(PP_DIR)\pplib.c
    tlib $(PP_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\pptable.obj : $(PP_DIR)\pptable.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(PP_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\pragma.obj : $(PP_DIR)\pragma.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(PP_LIB) $(ARFLAGS) -+$@,,
 

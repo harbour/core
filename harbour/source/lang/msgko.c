@@ -180,12 +180,12 @@ static HB_LANG s_lang =
    }
 };
 
-HB_LANG_ANNOUNCE( KR );
+HB_LANG_ANNOUNCE( KO );
 
-HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_KR )
+HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_KO )
    hb_langRegister( &s_lang );
-HB_CALL_ON_STARTUP_END( hb_lang_Init_KR )
+HB_CALL_ON_STARTUP_END( hb_lang_Init_KO )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup hb_lang_Init_KR
+   #pragma startup hb_lang_Init_KO
 #endif
 

@@ -44,7 +44,7 @@ extern "C" {
 
 /* Harbour virtual machine init/exit functions */
 extern void    hb_vmInit( BOOL bStartMainProc );
-extern void    hb_vmQuit( void );
+extern void    hb_vmQuit( void );            /* Immediately quits the virtual machine */
 
 /* Harbour virtual machine functions */
 extern void    hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
@@ -57,7 +57,6 @@ extern void    hb_vmRequestEndProc( void );
 extern void    hb_vmRequestCancel( void );
 extern void    hb_vmRequestBreak( PHB_ITEM pItem );
 extern USHORT  hb_vmRequestQuery( void );
-extern void    hb_vmQuit( void );            /* Immediately quits the virtual machine */
 
 /* Return values of hb_vmRequestQuery() */
 #define HB_QUIT_REQUESTED       1   /* immediately quit the application */

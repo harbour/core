@@ -77,13 +77,14 @@ typedef struct _COMMANDS
 
 #define HB_SKIPTABSPACES( sptr ) while( *sptr == ' ' || *sptr == '\t' ) ( sptr )++
 
-/* HBPP.C exported functions */
+/* PPCORE.C exported functions and variables */
 
 #define HB_INCLUDE_FUNC_( hbFunc ) BOOL hbFunc( char *, PATHNAMES * )
 typedef HB_INCLUDE_FUNC_( HB_INCLUDE_FUNC );
-typedef HB_INCLUDE_FUNC *HB_INCLUDE_FUNC_PTR;
+typedef HB_INCLUDE_FUNC * HB_INCLUDE_FUNC_PTR;
 
 extern void   hb_pp_SetRules( HB_INCLUDE_FUNC_PTR hb_compInclude, BOOL hb_comp_bQuiet );
+extern int    hb_pp_ReadRules( void );
 extern void   hb_pp_Init( void );
 extern int    hb_pp_ParseDirective( char * ); /* Parsing preprocessor directives ( #... ) */
 extern int    hb_pp_ParseExpression( char *, char * ); /* Parsing a line ( without preprocessor directive ) */
@@ -93,12 +94,6 @@ extern void   hb_pp_Stuff( char *, char *, int, int, int );
 extern int    hb_pp_strocpy( char *, char * );
 extern DEFINES * hb_pp_AddDefine( char *, char * );         /* Add new #define to a linked list */
 
-/* HBPPINT.C exported functions */
-
-extern int    hb_pp_Internal( FILE *, char * );
-
-/* HBPP.C exported variables */
-
 extern int    hb_pp_lInclude;
 extern int *  hb_pp_aCondCompile;
 extern int    hb_pp_nCondCompile;
@@ -106,14 +101,25 @@ extern char * hb_pp_szErrors[];
 extern char * hb_pp_szWarnings[];
 extern int    hb_pp_nEmptyStrings;
 
-/* TABLE.C exported variables */
+/* PPCOMP.C exported functions */
+
+extern int    hb_pp_Internal( FILE *, char * );
+
+/* PPTABLE.C exported functions and variables */
+
+extern void   hb_pp_Table( void );
 
 extern DEFINES *  hb_pp_topDefine;
 extern COMMANDS * hb_pp_topCommand;
 extern COMMANDS * hb_pp_topTranslate;
+
+/* PRAGMA.C exported functions */
+
+extern void hb_pp_ParsePragma( char * szline );
 
 #if defined(HB_EXTERN_C)
 }
 #endif
 
 #endif /* HB_PP_H_ */
+

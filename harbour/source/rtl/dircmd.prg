@@ -58,7 +58,7 @@ PROCEDURE __Dir( cFileMask )
       QOut( NationMsg( _DIR_HEADER ) )
 #endif
 
-      aEval( Directory( hb_FNameMerge( Set( _SET_DEFAULT ), "*", ".dbf" ) ),;
+      AEval( Directory( hb_FNameMerge( Set( _SET_DEFAULT ), "*", ".dbf" ) ),;
          {| aDirEntry | PutDbf( aDirEntry ) } )
    ELSE
 
@@ -67,7 +67,7 @@ PROCEDURE __Dir( cFileMask )
          cPath := Set( _SET_DEFAULT )
       ENDIF
 
-      aEval( Directory( hb_FNameMerge( cPath, cName, cExt ) ),;
+      AEval( Directory( hb_FNameMerge( cPath, cName, cExt ) ),;
          {| aDirEntry | PutNormal( aDirEntry ) } )
    ENDIF
 

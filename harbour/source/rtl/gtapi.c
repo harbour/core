@@ -649,10 +649,36 @@ USHORT hb_gtGetPos( SHORT * piRow, SHORT * piCol )
 
 USHORT hb_gtSetPos( SHORT iRow, SHORT iCol )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtSetPos(%hd, %hd)", iRow, iCol ));
+   USHORT uiMaxRow;
+   USHORT uiMaxCol;
 
-   return hb_gtSetPosContext( iRow, iCol, HB_GT_SET_POS_BEFORE );
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtSetPosContext(%hd, %hd, %hd)", iRow, iCol, iMethod));
+
+   uiMaxRow = hb_gt_GetScreenHeight();
+   uiMaxCol = hb_gt_GetScreenWidth();
+
+   /* Validate the new cursor position */
+   if( iRow >= 0 && iRow < uiMaxRow &&
+       iCol >= 0 && iCol < uiMaxCol )
+   {
+      hb_gt_SetPos( iRow, iCol, HB_GT_SET_POS_BEFORE );
+
+      /* If cursor was out bounds, now enable it */
+      if( s_iRow < 0 || s_iRow >= uiMaxRow ||
+          s_iCol < 0 || s_iCol >= uiMaxCol )
+         hb_gt_SetCursorStyle( s_uiCursorStyle );
+   }
+   else
+      hb_gt_SetCursorStyle( SC_NONE ); /* Disable cursor if out of bounds */
+
+   s_iRow = iRow;
+   s_iCol = iCol;
+
+   return 0;
 }
+
+/* NOTE: Exactly the same as hb_gtSetPos(), but with the additional 
+         parameter. */
 
 USHORT hb_gtSetPosContext( SHORT iRow, SHORT iCol, SHORT iMethod )
 {

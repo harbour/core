@@ -112,7 +112,7 @@ static void sk_add( BOOL bReturn, SHORT iKeyCode, PHB_ITEM pAction, PHB_ITEM pIs
             /* lock codeblock to prevent deallocation by the GC */
             hb_gcLockItem( sk_list_tmp->pAction );
             if( sk_list_tmp->pIsActive )
-                hb_gcLockItem( sk_list_tmp->pIsActive );
+               hb_gcLockItem( sk_list_tmp->pIsActive );
 
             if( sk_list_end == NULL )
                s_sk_list = sk_list_tmp;
@@ -145,7 +145,7 @@ static void sk_add( BOOL bReturn, SHORT iKeyCode, PHB_ITEM pAction, PHB_ITEM pIs
             /* lock codeblock to prevent deallocation by the GC */
             hb_gcLockItem( sk_list_tmp->pAction );
             if( sk_list_tmp->pIsActive )
-                hb_gcLockItem( sk_list_tmp->pIsActive );
+               hb_gcLockItem( sk_list_tmp->pIsActive );
          }
          else
          {

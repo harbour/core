@@ -9,6 +9,7 @@ C_SOURCES=\
 	ppcomp.c \
 	pplib.c \
 	pptable.c \
+	pragma.c \
 
 LIBNAME=pp
 

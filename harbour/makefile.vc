@@ -471,7 +471,8 @@ PP_LIB_OBJS = \
    $(OBJ_DIR)\ppcore.obj \
    $(OBJ_DIR)\ppcomp.obj \
    $(OBJ_DIR)\pplib.obj \
-   $(OBJ_DIR)\pptable.obj
+   $(OBJ_DIR)\pptable.obj \
+   $(OBJ_DIR)\pragma.obj
 
 #
 # DEBUG.LIB rules

@@ -336,8 +336,6 @@ HB_FUNC( QOUT )
    HB_FUNCNAME( QQOUT )();
 }
 
-/* TOFIX: CA-Cl*pper will print an eject even if SET DEVICE=SCREEN */
-
 HB_FUNC( __EJECT ) /* Ejects the current page from the printer */
 {
    if( hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set.hb_set_printhan != FS_ERROR )
