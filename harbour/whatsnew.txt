@@ -1,3 +1,17 @@
+Build #27 18 June 1999
+
+- Added new directory with GNU MAKE files for GCC on Linux
+- Added support for Watcom C/C++ compiler
+- Harbour compiles fine on Linux now.
+- Optional Strong Typed Variables
+- New DosShell function for DOS, OS/2 & Windows
+- First release of hScript added. Internet Scripting Samples!
+- Integrated preprocessor into compiler
+- Check on non used variables in codeblocks
+- Extended syntax for AllTrim and RTrim
+
+----------------------------------------------------------------------
+
 Build #26 12 June 1999
 
 - Check for non used declared variable
