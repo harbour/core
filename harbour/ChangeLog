@@ -7,6 +7,15 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * source/pp/pptable.c
+    + SET OPTIMIZE ON/OFF/expression  command added
+
+2002-01-09 11:00 UTC+0100 Ignacio Ortiz <ignacio@ozs.com>
+  * source/rtl/tget.prg
+    * Picture "@Z" fixed
+
+2002-01-09 17:30 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  * include/hbsetup.h
   * source/rtl/console.c
     + Added HB_EOL_CRLF to allow the EOL string to be forced to CRLF.
       Defaults to commented out, so that the EOL string that is used

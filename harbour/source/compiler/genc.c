@@ -77,8 +77,8 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       fflush( stdout );
    }
 
-   fprintf( yyc, "/*\n * Harbour Compiler, %d.%d.%d (%s)\n",
-      HB_VER_MAJOR, HB_VER_MINOR, HB_VER_REVISION, HB_VER_LEX );
+   fprintf( yyc, "/*\n * Harbour Compiler, Apha build %d.%d (%s)\n",
+      HB_VER_MINOR, HB_VER_REVISION, HB_VER_LEX );
    fprintf( yyc, " * Generated C source code\n */\n\n" );
 
    if( hb_comp_iFunctionCnt )
@@ -130,7 +130,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       pFunc = hb_comp_funcalls.pFirst;
       while( pFunc )
       {
-         if( hb_compFunctionFind( pFunc->szName ) == NULL && 
+         if( hb_compFunctionFind( pFunc->szName ) == NULL &&
              hb_compInlineFind( pFunc->szName ) == NULL )
             fprintf( yyc, "extern HB_FUNC( %s );\n", pFunc->szName );
 

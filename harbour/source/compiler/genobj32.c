@@ -84,8 +84,8 @@ void hb_compGenObj32( PHB_FNAME pFileName )
     fflush( stdout );
   }
 
-  sprintf( compiler, "Harbour Compiler %d.%d.%d (%s)",
-     HB_VER_MAJOR, HB_VER_MINOR, HB_VER_REVISION, HB_VER_LEX );
+  sprintf( compiler, "Harbour Compiler Alpha build %d.%d (%s)",
+     HB_VER_MINOR, HB_VER_REVISION, HB_VER_LEX );
 
   CompiledFileName( hObjFile, szFileName );
   CompilerVersion( hObjFile, compiler );

@@ -430,8 +430,8 @@ char * hb_verHarbour( void )
 
    pszVersion = ( char * ) hb_xgrab( 80 );
 
-   sprintf( pszVersion, "Harbour %d.%d.%d Intl. (%s)",
-      HB_VER_MAJOR, HB_VER_MINOR, HB_VER_REVISION, HB_VER_LEX );
+   sprintf( pszVersion, "Harbour Alpha build %d.%d Intl. (%s)",
+      HB_VER_MINOR, HB_VER_REVISION, HB_VER_LEX );
 
    return pszVersion;
 }
@@ -496,7 +496,7 @@ void hb_verBuildInfo( void )
       hb_conOutErr( HB_VER_L_USR, 0 );
       hb_conOutErr( hb_conNewLine(), 0 );
    }
-      
+
    if( strlen( HB_VER_PRG_USR ) )
    {
       hb_conOutErr( "Linker switches: ", 0 );
@@ -628,4 +628,3 @@ void hb_verBuildInfo( void )
    hb_conOutErr( "---------------------------", 0 );
    hb_conOutErr( hb_conNewLine(), 0 );
 }
-
