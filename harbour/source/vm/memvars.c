@@ -207,6 +207,11 @@ HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar )
    else
       pValue->item.type = HB_IT_NIL;
 
+   if( bTrueMemvar )
+       pValue->hPrevMemvar = 0;
+   else
+       pValue->hPrevMemvar = ( HB_HANDLE )-1;    /* detached variable */
+
    HB_TRACE(HB_TR_INFO, ("hb_memvarValueNew: memvar item created with handle %i", hValue));
 
    return hValue;
@@ -1486,8 +1491,11 @@ BOOL hb_memvarsIsMemvarRef( void *pBlock )
 
       while( ulCnt )
       {
-         if( s_globalTable[ ulCnt ].counter )
+         if( s_globalTable[ ulCnt ].counter && s_globalTable[ ulCnt ].hPrevMemvar != ( HB_HANDLE )-1 )
          {
+            /* do not check detached variables - for these variables only
+             * references from the eval stack are meaningfull for the GC
+            */
             if( hb_gcItemRef( &s_globalTable[ ulCnt ].item, pBlock ) )
                return TRUE;   /* this item is referenced - stop processing */
          }

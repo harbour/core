@@ -241,8 +241,14 @@ void hb_gcCollectAll( void )
 BOOL hb_gcItemRef( HB_ITEM_PTR pItem, void *pBlock )
 {
    if( HB_IS_BYREF( pItem ) )
-      return FALSE;   /* all items should be passed directly */
-   else if( HB_IS_ARRAY( pItem ) )
+   {
+      if( HB_IS_MEMVAR( pItem ) )
+         pItem = hb_itemUnRef( pItem );    /* detached variable */
+      else
+         return FALSE;   /* all items should be passed directly */
+   }
+         
+   if( HB_IS_ARRAY( pItem ) )
    {
       /* NOTE: this checks for objects too */
       if( pItem->item.asArray.value == ( HB_BASEARRAY_PTR )pBlock )

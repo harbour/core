@@ -1,3 +1,10 @@
+2000-06-02 12:30 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/vm/garbage.c
+    *source/vm/memvars.c
+        * codeblocks that are self referencing (cb := {|| cb}) are
+        correctly released by the garbage collector
+        
 2000-07-01 23:55 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
    * source\rdd\dbfntx\dbfntx1.c
      * added a few casts
