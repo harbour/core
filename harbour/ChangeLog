@@ -8,10 +8,23 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
    * source/rtl/saverest.c
+   * source/rtl/space.c
+   * source/rtl/strtran.c
+   * source/rtl/stuff.c
+   * source/rtl/transfrm.c
+   * source/rtl/version.c
+     * The above optimization implemented in Harbour.
+       AMPM(), DESCEND(), LANGNAME(), MEMOREAD(), MEMOLINE()
+       MSAVESTATE(), HB_ANSITOOEM(), HB_OEMTOANSI(),
+       PADC(), PADR(), PADL(), FREADSTR(), REPLICATE(),
+       SAVESCREEN(), SPACE(), STRTRAN(), STUFF(), TRANSFORM(),
+       OS(), HB_COMPILER(), VERSION() are now faster.
+
+2002-01-29 20:15 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * include/hbapi.h
    * source/vm/extend.c
      * hb_retcconst() and hb_retcbuffer() renamed into
-	
+       hb_retc_const() and hb_retc_buffer() as per Viktor's
        instructions.
 
 2002-01-29 10:00 UTC+0100 Antonio Linares <alinares@fivetech.com>
