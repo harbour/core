@@ -1,3 +1,9 @@
+20000315-18:00 EST Paul Tucker <ptucker@sympatico.ca>
+   * source/tools/hb_f.c
+   * source/rtl/gt/gtwin.c
+   * source/rtl/gtapi.c
+     * added explicit casts to remove warnings.
+   
 2000-03-15 19:00 GMT-5 David G. Holm <dholm@ sd-llc.com>
    * source/rtl/tone.c
      ! Rearranged include file #elif list to test for __CYGWIN__

@@ -161,7 +161,7 @@ static long hb_hbfskip( int recs )
          }
 
          hb_fsSeek( handles[area], read_pos, SEEK_SET );
-         read_len = hb_fsRead( handles[area], ( BYTE * ) b, read_len );
+         read_len = hb_fsRead( handles[area], ( BYTE * ) b, ( USHORT )read_len );
 
          for (x = read_len - 4; x >= 0; x-- ) {
             if ( ((*(b + x) == 13) && (*(b + x + 1) == 10)) ||

@@ -355,8 +355,8 @@ void hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE attr, BYTE * str, ULONG len )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Puts(%hu, %hu, %d, %p, %lu)", uiRow, uiCol, (int) attr, str, len));
 
-   coord.X = ( DWORD ) uiCol;
-   coord.Y = ( DWORD ) uiRow;
+   coord.X = ( SHORT ) uiCol;
+   coord.Y = ( SHORT ) uiRow;
 
    FillConsoleOutputAttribute( s_HOutput, ( WORD )( attr & 0xFF ), ( DWORD ) len, coord, &dwWritten );
    WriteConsoleOutputCharacterA( s_HOutput, ( char * ) str, ( DWORD ) len, coord, &dwWritten );
@@ -380,8 +380,8 @@ void hb_gt_GetText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight
       USHORT i;
       DWORD dwWritten;
 
-      coord.X = ( DWORD ) uiLeft;
-      coord.Y = ( DWORD ) uiTop;
+      coord.X = ( SHORT ) uiLeft;
+      coord.Y = ( SHORT ) uiTop;
       ReadConsoleOutputCharacterA( s_HOutput, ( char * ) pstr, width, coord, &dwWritten );
       ReadConsoleOutputAttribute( s_HOutput, pwattr, width, coord, &dwWritten );
       for( i = 0; i < width; i++ )
@@ -422,8 +422,8 @@ void hb_gt_PutText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight
          *( pwattr + i ) = ( ( WORD )( ( BYTE ) *srce ) & 0xFF );
          srce++;
       }
-      coord.X = ( DWORD ) uiLeft;
-      coord.Y = ( DWORD ) uiTop;
+      coord.X = ( SHORT ) uiLeft;
+      coord.Y = ( SHORT ) uiTop;
       WriteConsoleOutputAttribute( s_HOutput, pwattr, width, coord, &dwWritten );
       WriteConsoleOutputCharacterA( s_HOutput, ( char * ) pstr, width, coord, &dwWritten );
    }
@@ -443,7 +443,7 @@ void hb_gt_SetAttribute( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT ui
 
    width = uiRight - uiLeft + 1;
 
-   coord.X = ( DWORD ) uiLeft;
+   coord.X = ( SHORT ) uiLeft;
 
    for( ; uiTop <= uiBottom; uiTop++ )
    {
@@ -487,7 +487,7 @@ void hb_gt_Scroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
       COORD coord;
       USHORT width = uiRight - uiLeft + 1;
 
-      coord.X = ( DWORD ) uiLeft;
+      coord.X = ( SHORT ) uiLeft;
 
       for( ; uiTop <= uiBottom; uiTop++ )
       {

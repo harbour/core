@@ -838,7 +838,7 @@ USHORT hb_gtWrite( BYTE * fpStr, ULONG length )
       hb_gt_Puts( s_iCurrentRow, s_iCurrentCol, attr, fpStr, size );
    }
    /* Finally, save the new cursor position, even if off-screen */
-   hb_gtSetPos( s_iCurrentRow, s_iCurrentCol + length );
+   hb_gtSetPos( s_iCurrentRow, s_iCurrentCol + (SHORT) length );
 
    return 0;
 }
