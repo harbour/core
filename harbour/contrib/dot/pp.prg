@@ -2805,6 +2805,8 @@ FUNCTION PPOut( aResults, aMarkers )
               FOR nMatch := 1 TO nMatches
                  IF Left( xValue[nMatch], 1 ) $ '"['
                     sResult += '[' + RTrim( xValue[nMatch] ) + ']'
+                 ELSEIF Left( xValue[nMatch], 1 ) == '&'
+                    sResult += RTrim( SubStr( xValue[nMatch], 2 ) )
                  ELSE
                     sResult += '"' + RTrim( xValue[nMatch] ) + '"'
                  ENDIF
@@ -2817,6 +2819,8 @@ FUNCTION PPOut( aResults, aMarkers )
               IF ! ( xValue == NIL )
                  IF Left( xValue, 1 ) $ '"['
                     sResult += '[' + RTrim( xValue ) + ']'
+                 ELSEIF Left( xValue, 1 ) == '&'
+                    sResult += RTrim( SubStr( xValue, 2 ) )
                  ELSE
                     sResult += '"' + RTrim( xValue ) + '"'
                  ENDIF
@@ -2831,11 +2835,13 @@ FUNCTION PPOut( aResults, aMarkers )
                  IF Left( xValue[nMatch], 1 ) == '('
                     sResult += xValue[nMatch]
                  ELSE
-                       IF Left( xValue[nMatch], 1 ) $ '"['
-                          sResult += '[' + RTrim( xValue[nMatch] ) + ']'
-                       ELSE
-                          sResult += '"' + RTrim( xValue[nMatch] ) + '"'
-                       ENDIF
+                    IF Left( xValue[nMatch], 1 ) $ '"['
+                       sResult += '[' + RTrim( xValue[nMatch] ) + ']'
+                    ELSEIF Left( xValue[nMatch], 1 ) == '&'
+                       sResult += RTrim( SubStr( xValue[nMatch], 2 ) )
+                    ELSE
+                       sResult += '"' + RTrim( xValue[nMatch] ) + '"'
+                    ENDIF
                  ENDIF
 
                  IF nMatch < nMatches
@@ -2849,6 +2855,8 @@ FUNCTION PPOut( aResults, aMarkers )
                  ELSE
                     IF Left( xValue, 1 ) $ '"['
                        sResult += '[' + RTrim( xValue ) + ']'
+                    ELSEIF Left( xValue, 1 ) == '&'
+                       sResult += RTrim( SubStr( xValue, 2 ) )
                     ELSE
                        sResult += '"' + RTrim( xValue ) + '"'
                     ENDIF
@@ -4148,29 +4156,91 @@ RETURN sWS
 
 FUNCTION DropTrailingWS( sLine, sWS )
 
-   LOCAL nLen := Len( sLine ), cChar
+  #ifdef __HARBOUR__
 
-   /* Tabs are converted to spaces at ProcessFile() */
+   HB_INLINE( @sLine, @sWs )
+   {
+      extern PHB_ITEM hb_stackItemFromBase( int );
+      extern PHB_ITEM hb_itemUnRef( PHB_ITEM );
+      extern PHB_ITEM hb_itemClear( PHB_ITEM );
 
-   sWS := ''
+      PHB_ITEM pItem1 = hb_itemUnRef( hb_stackItemFromBase( 1 ) );
+      PHB_ITEM pItem2 = hb_itemUnRef( hb_stackItemFromBase( 2 ) );
+      size_t iLen = pItem1->item.asString.length, i = iLen - 1;
+
+      while( pItem1->item.asString.value[i] == ' ' )
+      {
+         i--;
+      }
+
+      if( ++i < iLen )
+      {
+         pItem1->item.asString.length = i;
+         pItem1->item.asString.value[i] = '\0';
+      }
+
+      if( pItem2 )
+      {
+         hb_itemClear( pItem2 );
+         pItem2->type = HB_IT_STRING;
+         pItem2->item.asString.length = ( iLen - i );
+         pItem2->item.asString.value = ( char * ) hb_xgrab( pItem2->item.asString.length + 1 );
+         memset( pItem2->item.asString.value, ' ', pItem2->item.asString.length );
+         pItem2->item.asString.value[ pItem2->item.asString.length ] = '\0';
+      }
+
+   }
+
+  #else
+
+   LOCAL nLenSource, nLen := Len( sLine ), cChar
+
+   nLenSource := nLen
 
    //? "Before Drop: '" + sLine + "'"
 
+   /* Tabs are converted to spaces at ProcessFile() */
+
    WHILE nLen > 0 .AND. ( cChar := SubStr( sLine, nLen, 1 ) ) == ' ' //$ ( ' ' + Chr(9) ) // Tabs converted to spaces
-      sWS := cChar + sWs
       nLen--
    ENDDO
 
    sLine := Left( sLine, nLen )
+   sWS   := Space( nLenSource - nLen )
 
    //? "After Drop: '" + sLine + "'"
+
+  #endif
 
 RETURN sLine
 
 FUNCTION DropExtraTrailingWS( sLine )
 
-   LOCAL nLen := Len( sLine )
+  #ifdef __HARBOUR__
 
+   HB_INLINE( @sLine )
+   {
+      extern PHB_ITEM hb_stackItemFromBase( int );
+      extern PHB_ITEM hb_itemUnRef( PHB_ITEM );
+
+      PHB_ITEM pItem = hb_itemUnRef( hb_stackItemFromBase( 1 ) );
+      size_t iLen = pItem->item.asString.length, i = iLen - 1;
+
+      while( i > 1 && pItem->item.asString.value[i] == ' ' && pItem->item.asString.value[i - 1] == ' ' )
+      {
+         i--;
+      }
+
+      if( ++i < iLen )
+      {
+         pItem->item.asString.length = i;
+         pItem->item.asString.value[i] = '\0';
+      }
+   }
+
+  #else
+
+   LOCAL nLen := Len( sLine )
    /* Tabs are converted to spaces at ProcessFile() */
 
    //? "Before Extra: '" + sLine + "'"
@@ -4182,7 +4252,7 @@ FUNCTION DropExtraTrailingWS( sLine )
 
    sLine := Left( sLine, nLen )
 
-   //? "After Extra: '" + sLine + "'"
+  #endif
 
 RETURN sLine
 

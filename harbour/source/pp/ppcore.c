@@ -2476,10 +2476,23 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
             lenitem = (ifou)? ifou-1:lenreal;
             if( *expreal != '\0' )
               {
-                i = (ifou)? 3:2;
-                pp_rQuotes( expreal, sQuotes );
-                hb_pp_Stuff( sQuotes, ptro, i, 0, lenres );
-                hb_pp_Stuff( expreal, ptro+1, lenitem, 0, lenres+i );
+                /* Ron Pinkas added 2000-01-21 */
+                if( *expreal == '&' )
+                {
+                  i = 0;
+                  if( ! ifou )
+                  {
+                    lenitem--;
+                  }
+                  hb_pp_Stuff( expreal + 1, ptro, lenitem, 0, lenres );
+                }
+                else /* END Ron Pinkas 2000-01-21 */
+                {
+                  i = (ifou)? 3:2;
+                  pp_rQuotes( expreal, sQuotes );
+                  hb_pp_Stuff( sQuotes, ptro, i, 0, lenres );
+                  hb_pp_Stuff( expreal, ptro+1, lenitem, 0, lenres+i );
+                }
                 ptro += i + lenitem;
                 rmlen += i + lenitem;
               }
@@ -2490,10 +2503,19 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
       }
     else
       {
-        pp_rQuotes( expreal, sQuotes );
-        hb_pp_Stuff( sQuotes, ptro, 2, 4, lenres );
-        hb_pp_Stuff( expreal, ptro+1, lenreal, 0, lenres );
-        rmlen = lenreal + 2;
+        /* Ron Pinkas added 2000-01-21 */
+        if( *expreal == '&' )
+        {
+          rmlen--;
+          hb_pp_Stuff( expreal + 1, ptro, lenreal - 1, 4, lenres );
+        }
+        else /* END Ron Pinkas 2000-01-21 */
+        {
+          pp_rQuotes( expreal, sQuotes );
+          hb_pp_Stuff( sQuotes, ptro, 2, 4, lenres );
+          hb_pp_Stuff( expreal, ptro+1, lenreal, 0, lenres );
+          rmlen = lenreal + 2;
+        }
       }
     break;
   case '3':  /* Smart stringify result marker  */
