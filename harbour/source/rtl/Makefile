@@ -48,6 +48,7 @@ PRG_SOURCES=\
         alert.prg \
         asort.prg \
         browdb.prg \
+        browse.prg \
         devoutp.prg \
         dircmd.prg \
         dummy.prg \

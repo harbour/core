@@ -1,3 +1,10 @@
+19991016-10:06 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/Makefile
+     + browse.prg added
+   * source/compiler/harbour.y
+     ! Temporarily commented out the new code from RemoveExtraPush() since
+       it broke many existing code.
+
 19991016-03:08 EDT Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      + source/rtl/browse.prg

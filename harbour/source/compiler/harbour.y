@@ -4051,6 +4051,10 @@ static void SetLastPushPos( void )
 
 static void RemoveExtraPush( void )
 {
+   /* NOTE: Commented out because it will break the pcode generation for 
+            assigments inside codeblocks and possibly for some other cases, 
+            too. */
+#if 0
    PFUNCTION pFunc = functions.pLast;   /* get the currently defined Clipper function */
 
    if( _lLastPushPos > -1 && pFunc->lPCodePos > _lLastPushPos )
@@ -4059,6 +4063,7 @@ static void RemoveExtraPush( void )
       _lLastPushPos = -1;
    }
    else
+#endif
       GenPCode1( HB_P_POP );
 
    ValTypePop( 1 );
