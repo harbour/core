@@ -58,27 +58,46 @@
 
 HB_FUNC( ISALPHA )
 {
-   hb_retl( isalpha( ( int ) *hb_parc( 1 ) ) );
+   char * szString = hb_parc( 1 );
+
+   if( szString != NULL )
+      hb_retl( isalpha( ( int ) * szString ) );
+   else
+      hb_retl( FALSE );
 }
 
 /* determines if first char of string is digit */
 
 HB_FUNC( ISDIGIT )
 {
-   hb_retl( isdigit( ( int ) *hb_parc( 1 ) ) );
+   char * szString = hb_parc( 1 );
+
+   if( szString != NULL )
+      hb_retl( isdigit( ( int ) * szString ) );
+   else
+      hb_retl( FALSE );
 }
 
 /* determines if first char of string is upper-case */
 
 HB_FUNC( ISUPPER )
 {
-   hb_retl( isupper( ( int ) *hb_parc( 1 ) ) );
+   char * szString = hb_parc( 1 );
+
+   if( szString != NULL )
+      hb_retl( isupper( ( int ) * szString ) );
+   else
+      hb_retl( FALSE );
 }
 
 /* determines if first char of string is lower-case */
 
 HB_FUNC( ISLOWER )
 {
-   hb_retl( islower( ( int ) *hb_parc( 1 ) ) );
-}
+   char * szString = hb_parc( 1 );
 
+   if( szString != NULL )
+      hb_retl( islower( ( int ) * szString ) );
+   else
+      hb_retl( FALSE );
+}
