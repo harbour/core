@@ -1,3 +1,22 @@
+Wed Jul 14 20:02:55 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* config/bin.cf: 
+	* config/c.cf: 
+	* config/global.cf: 
+	* config/header.cf: 
+	* config/lib.cf: 
+	* config/rules.cf: 
+	* config/win32/bcc32.cf: 
+	* config/win32/gcc.cf: 
+	* config/win32/icc.cf: 
+	* config/win32/msvc.cf: 
+	Now there are two sets of variables to control compilation and
+	installation: HB_*_COMPILE points to where to get all the files
+	(binaries, includes, etc.); if not defined, it will pick them off
+	the working repository. HB_*_INSTALL points to where you want to
+	install the files (binaries, includes, etc.) when you issue a
+	"make install".
+
 Wed Jul 14 18:20:24 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* config/global.cf: 

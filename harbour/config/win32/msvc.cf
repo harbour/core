@@ -10,15 +10,15 @@ LIB_EXT = .lib
 CC = cl.exe
 CC_IN = -c
 CC_OUT = -Fo
-CPPFLAGS = -DDEBUG -I. -I$(HB_INC_DIR)
+CPPFLAGS = -DDEBUG -I. -I$(HB_INC_COMPILE)
 CFLAGS = -W0 -Zi  # -W4 for max warnings
 
 LD = cl.exe
 LD_OUT = -Fe
-ifeq ($(HB_LIB_DIR),)
+ifeq ($(HB_LIB_COMPILE),)
 LINKPATHS = -link $(foreach lib, $(LIBS), -LIBPATH:$(TOP)$(ROOT)source/$(lib)/$(ARCH))
 else
-LINKPATHS = -link -LIBPATH:$(HB_LIB_DIR)
+LINKPATHS = -link -LIBPATH:$(HB_LIB_COMPILE)
 endif
 LINKLIBS = $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
 # LINKLIBS += -lm

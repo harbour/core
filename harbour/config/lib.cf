@@ -29,6 +29,6 @@ $(LIB_NAME) : $(ALL_OBJS)
 
 
 INSTALL_OBJS = $(LIB_ARCH)
-INSTALL_DIR = $(HB_LIB_DIR)
+INSTALL_DIR = $(HB_LIB_INSTALL)
 
 include $(TOP)$(ROOT)config/install.cf

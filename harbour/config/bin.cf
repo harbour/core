@@ -27,6 +27,6 @@ $(EXE_NAME) : $(ALL_OBJS)
 
 
 INSTALL_OBJS = $(EXE_ARCH)
-INSTALL_DIR = $(HB_BIN_DIR)
+INSTALL_DIR = $(HB_BIN_INSTALL)
 
 include $(TOP)$(ROOT)config/install.cf

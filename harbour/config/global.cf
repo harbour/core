@@ -11,23 +11,23 @@ include $(TOP)$(ROOT)config/$(ARCH).cf
 # How to run Harbour.
 #
 
-ifeq ($(HB_BIN_DIR),)
-HB_BIN_DIR := $(TOP)$(ROOT)source/compiler/$(ARCH)
+ifeq ($(HB_BIN_COMPILE),)
+HB_BIN_COMPILE := $(TOP)$(ROOT)source/compiler/$(ARCH)
 endif
 
-ifeq ($(HB_INC_DIR),)
-HB_INC_DIR := $(TOP)$(ROOT)include
+ifeq ($(HB_INC_COMPILE),)
+HB_INC_COMPILE := $(TOP)$(ROOT)include
 endif
 
-ifeq ($(HB_LIB_DIR),)
-HB_LIB_DIR := 
+ifeq ($(HB_LIB_COMPILE),)
+HB_LIB_COMPILE := 
 endif
 
-HB := $(notdir $(HB_BIN_DIR))
+HB := $(notdir $(HB_BIN_COMPILE))
 ifneq ($(HB),)
 # there is no slash at the end
-HB := $(HB_BIN_DIR)/
+HB := $(HB_BIN_COMPILE)/
 endif
 HB := $(HB)harbour$(EXE_EXT)
 
-HB_FLAGS = -n -q -I$(TOP) -I$(HB_INC_DIR)
+HB_FLAGS = -n -q -I$(TOP) -I$(HB_INC_COMPILE)

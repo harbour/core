@@ -14,20 +14,20 @@ LIB_PREF =
 LIB_EXT = .lib
 
 $(HB_ARCHITECTURE)_$(HB_COMPILER)_GRANDP = $(subst /,\\,$(GRANDP))
-_HB_INC_DIR = $(subst /,\\,$(HB_INC_DIR))
-_HL = $(notdir $(HB_LIB_DIR))
+_HB_INC_COMPILE = $(subst /,\\,$(HB_INC_COMPILE))
+_HL = $(notdir $(HB_LIB_COMPILE))
 ifeq ($(_HL),)
 #there is an ending slash
-_HB_LIB_DIR = $(subst /,\,$(HB_LIB_DIR))
+_HB_LIB_COMPILE = $(subst /,\,$(HB_LIB_COMPILE))
 else
-_HB_LIB_DIR = $(subst /,\,$(HB_LIB_DIR)/)
+_HB_LIB_COMPILE = $(subst /,\,$(HB_LIB_COMPILE)/)
 endif
 
 CC = icc
 CC_IN = /Tp
 CC_OUT = /Fo
 CPPFLAGS = /C+
-CFLAGS = /W2 /Sd /Se+ /Ti+ /i. /i$(_HB_INC_DIR)
+CFLAGS = /W2 /Sd /Se+ /Ti+ /i. /i$(_HB_INC_COMPILE)
 
 #Note: The empty line below HAVE TO exist!
 define link_file
@@ -45,7 +45,7 @@ endef
 
 LD = icc
 LDFLAGS = $(CFLAGS)
-LINKLIBS = $(foreach lib, $(LIBS), $(_HB_LIB_DIR)$(lib))
+LINKLIBS = $(foreach lib, $(LIBS), $(_HB_LIB_COMPILE)$(lib))
 LD_RULE = $(link_exe_file)
 
 #Note: The empty line below HAVE TO exist!
