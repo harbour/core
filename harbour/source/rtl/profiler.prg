@@ -107,7 +107,7 @@
 #include "inkey.ch"
 
 Function Main()
-Local oProfile := HB_Profile():new()
+Local oProfile := HBProfile():new()
 Local n
 
    // Turn on profiling.
@@ -127,19 +127,19 @@ Local n
 
    // Report on calls greater than 0
    DrawScreen( "All methods/functions called one or more times" )
-   memoedit( HB_ProfileReportToString():new( oProfile:callSort() ):generate( {|o| o:nCalls > 0 } ), 1,,,, .F. )
+   memoedit( HBProfileReportToString():new( oProfile:callSort() ):generate( {|o| o:nCalls > 0 } ), 1,,,, .F. )
 
    // Sorted by name
    DrawScreen( "All methods/functions called one or more times, sorted by name" )
-   memoedit( HB_ProfileReportToString():new( oProfile:nameSort() ):generate( {|o| o:nCalls > 0 } ), 1,,,, .F. )
+   memoedit( HBProfileReportToString():new( oProfile:nameSort() ):generate( {|o| o:nCalls > 0 } ), 1,,,, .F. )
 
    // Sorted by time
    DrawScreen( "All methods/functions taking measurable time, sorted by time" )
-   memoedit( HB_ProfileReportToString():new( oProfile:timeSort() ):generate( {|o| o:nTicks > 0 } ), 1,,,, .F. )
+   memoedit( HBProfileReportToString():new( oProfile:timeSort() ):generate( {|o| o:nTicks > 0 } ), 1,,,, .F. )
 
    // TBrowse all calls greater than 0
    DrawScreen( "TBrowse all methods/functions called one or more times" )
-   Browser( HB_ProfileReportToTBrowse():new( oProfile:callSort() ):generate( {|o| o:nCalls > 0 }, 1 ) )
+   Browser( HBProfileReportToTBrowse():new( oProfile:callSort() ):generate( {|o| o:nCalls > 0 }, 1 ) )
 
    // Some closing stats
    DrawScreen( "Totals" )
@@ -210,9 +210,9 @@ Return( NIL )
 #endif
 
 ////////////////////////////////////////////////////////////////////////////
-// Class: HB_ProfileEntity
+// Class: HBProfileEntity
 
-Create Class HB_ProfileEntity
+Create Class HBProfileEntity
 
    Exported:
 
@@ -231,7 +231,7 @@ End Class
 
 /////
 
-Method init( cName, aInfo ) Class HB_ProfileEntity
+Method init( cName, aInfo ) Class HBProfileEntity
 
    ::cName  := cName
    ::nCalls := aInfo[ 1 ]
@@ -241,28 +241,28 @@ Return( self )
 
 /////
 
-Access nSeconds Class HB_ProfileEntity
+Access nSeconds Class HBProfileEntity
 Return( HB_Clocks2Secs( ::nTicks ) )
 
 /////
 
-Access nMeanTicks Class HB_ProfileEntity
+Access nMeanTicks Class HBProfileEntity
 Return( if( ::nCalls == 0, 0, ::nTicks / ::nCalls ) )
 
 /////
 
-Access nMeanSeconds Class HB_ProfileEntity
+Access nMeanSeconds Class HBProfileEntity
 Return( if( ::nCalls == 0, 0, ::nSeconds / ::nCalls ) )
 
 /////
 
-Method describe Class HB_ProfileEntity
+Method describe Class HBProfileEntity
 Return( "Base Entity" )
 
 ////////////////////////////////////////////////////////////////////////////
-// Class: HB_ProfileFunction
+// Class: HBProfileFunction
 
-Create Class HB_ProfileFunction Inherit HB_ProfileEntity
+Create Class HBProfileFunction Inherit HBProfileEntity
 
    Exported:
 
@@ -272,13 +272,13 @@ End Class
 
 /////
 
-Method describe Class HB_ProfileFunction
+Method describe Class HBProfileFunction
 Return( "Function" )
 
 ////////////////////////////////////////////////////////////////////////////
-// Class: HB_ProfileMethod
+// Class: HBProfileMethod
 
-Create Class HB_ProfileMethod Inherit HB_ProfileEntity
+Create Class HBProfileMethod Inherit HBProfileEntity
 
    Exported:
 
@@ -288,13 +288,13 @@ End Class
 
 /////
 
-Method describe Class HB_ProfileMethod
+Method describe Class HBProfileMethod
 Return( "Method" )
 
 ////////////////////////////////////////////////////////////////////////////
-// Class: HB_Profile
+// Class: HBProfile
 
-Create Class HB_Profile
+Create Class HBProfile
 
    Exported:
 
@@ -320,7 +320,7 @@ End Class
 
 /////
 
-Method init Class HB_Profile
+Method init Class HBProfile
 Local lProfile := __setProfiler( .F. )
 
    ::reset()
@@ -331,7 +331,7 @@ Return( self )
 
 /////
 
-Method reset Class HB_Profile
+Method reset Class HBProfile
 
    ::aProfile := {}
 
@@ -339,13 +339,13 @@ Return( self )
 
 /////
 
-Method ignoreSymbol( cSymbol ) Class HB_Profile
-Local cProfPrefix := "HB_PROFILE"
+Method ignoreSymbol( cSymbol ) Class HBProfile
+Local cProfPrefix := "HBPROFILE"
 Return( ( left( cSymbol, len( cProfPrefix ) ) == cProfPrefix ) .Or. ( cSymbol == "__SETPROFILER" ) )
 
 /////
 
-Method gather Class HB_Profile
+Method gather Class HBProfile
 Local lProfile  := __setProfiler( .F. )
 Local nSymCount := __DynSCount()
 Local cName
@@ -372,7 +372,7 @@ Local n
          // If we're not ignoring the symbol...
          If !::ignoreSymbol( cName := __DynSGetName( n ) )
             // Yes, it is, add it to the profile.
-            aadd( ::aProfile, HB_ProfileFunction():new( cName, __DynSGetPrf( n ) ) )
+            aadd( ::aProfile, HBProfileFunction():new( cName, __DynSGetPrf( n ) ) )
          EndIf
 
       EndIf
@@ -414,7 +414,7 @@ Return( self )
 
 /////
 
-Method forEach( b ) Class HB_Profile
+Method forEach( b ) Class HBProfile
 Local lProfile := __setProfiler( .F. )
 
    aeval( ::aProfile, b )
@@ -425,7 +425,7 @@ Return( self )
 
 /////
 
-Method sort( b ) Class HB_Profile
+Method sort( b ) Class HBProfile
 Local lProfile := __setProfiler( .F. )
 
    asort( ::aProfile,,, b )
@@ -436,7 +436,7 @@ Return( self )
 
 /////
 
-Method nameSort Class HB_Profile
+Method nameSort Class HBProfile
 Local lProfile := __setProfiler( .F. )
 
    ::sort( {|oX, oY| oX:cName < oY:cName } )
@@ -447,7 +447,7 @@ Return( self )
 
 /////
 
-Method callSort Class HB_Profile
+Method callSort Class HBProfile
 Local lProfile := __setProfiler( .F. )
 
    ::sort( {|oX, oY| oX:nCalls > oY:nCalls } )
@@ -458,7 +458,7 @@ Return( self )
 
 /////
 
-Method timeSort Class HB_Profile
+Method timeSort Class HBProfile
 Local lProfile := __setProfiler( .F. )
 
    ::sort( {|oX, oY| oX:nTicks > oY:nTicks } )
@@ -469,7 +469,7 @@ Return( self )
 
 /////
 
-Method totalCalls Class HB_Profile
+Method totalCalls Class HBProfile
 Local lProfile := __setProfiler( .F. )
 Local nCalls   := 0
 
@@ -481,7 +481,7 @@ Return( nCalls )
 
 /////
 
-Method totalTicks Class HB_Profile
+Method totalTicks Class HBProfile
 Local lProfile := __setProfiler( .F. )
 Local nTicks   := 0
 
@@ -493,7 +493,7 @@ Return( nTicks )
 
 /////
 
-Method totalSeconds Class HB_Profile
+Method totalSeconds Class HBProfile
 Local lProfile := __setProfiler( .F. )
 Local nSeconds := 0
 
@@ -504,9 +504,9 @@ Local nSeconds := 0
 Return( nSeconds )
 
 ////////////////////////////////////////////////////////////////////////////
-// Class: HB_ProfileReport
+// Class: HBProfileReport
 
-Create Class HB_ProfileReport
+Create Class HBProfileReport
 
 // Protected:
 
@@ -527,7 +527,7 @@ End Class
 
 /////
 
-Method init( oProfile ) Class HB_ProfileReport
+Method init( oProfile ) Class HBProfileReport
 Local lProfile := __setProfiler( .F. )
 
    ::oProfile := oProfile
@@ -538,7 +538,7 @@ Return( self )
 
 /////
 
-Method writeLines( aLines ) Class HB_ProfileReport
+Method writeLines( aLines ) Class HBProfileReport
 
    aeval( aLines, {|c| qout( c ) } )
 
@@ -546,13 +546,13 @@ Return( self )
 
 /////
 
-Method header Class HB_ProfileReport
+Method header Class HBProfileReport
 Return( { "Name                                Type       Calls    Ticks       Seconds",;
           "=================================== ========== ======== =========== ===========" } )
 
 /////
 
-Method emitHeader Class HB_ProfileReport
+Method emitHeader Class HBProfileReport
 
    ::writeLines( ::header() )
 
@@ -560,7 +560,7 @@ Return( self )
 
 /////
 
-Method line( oEntity ) Class HB_ProfileReport
+Method line( oEntity ) Class HBProfileReport
 Return( { padr( oEntity:cName,      35 ) + " " + ;
           padr( oEntity:describe(),  8 ) + " " + ;
           padl( oEntity:nCalls,     10 ) + " " + ;
@@ -569,7 +569,7 @@ Return( { padr( oEntity:cName,      35 ) + " " + ;
 
 /////
 
-Method emitLine( oEntity ) Class HB_ProfileReport
+Method emitLine( oEntity ) Class HBProfileReport
 
    ::writeLines( ::line( oEntity ) )
 
@@ -577,7 +577,7 @@ Return( self )
 
 /////
 
-Method generate( bFilter ) Class HB_ProfileReport
+Method generate( bFilter ) Class HBProfileReport
 Local lProfile := __setProfiler( .F. )
 
    Default bFilter To {|| .T. }
@@ -589,9 +589,9 @@ Local lProfile := __setProfiler( .F. )
 Return( self )
 
 ////////////////////////////////////////////////////////////////////////////
-// Class: HB_ProfileReportToFile
+// Class: HBProfileReportToFile
 
-Create Class HB_ProfileReportToFile Inherit HB_ProfileReport
+Create Class HBProfileReportToFile Inherit HBProfileReport
 
 // Protected:
 
@@ -607,17 +607,17 @@ End Class
 
 /////
 
-Method writeLines( aLines ) Class HB_ProfileReportToFile
+Method writeLines( aLines ) Class HBProfileReportToFile
 
    If ::hFile != F_ERROR
-      aeval( aLines, {|c| fwrite( ::hFile, c + HB_OsNewLine() ) } )
+      aeval( aLines, {|c| fwrite( ::hFile, c + HB_OSNewLine() ) } )
    EndIf
 
 Return( self )
 
 /////
 
-Method generate( bFilter, cFile ) Class HB_ProfileReportToFile
+Method generate( bFilter, cFile ) Class HBProfileReportToFile
 Local lProfile := __setProfiler( .F. )
 
    Default cFile To "hbprof.txt"
@@ -634,9 +634,9 @@ Local lProfile := __setProfiler( .F. )
 Return( self )
 
 ////////////////////////////////////////////////////////////////////////////
-// Class: HB_ProfileReportToArray
+// Class: HBProfileReportToArray
 
-Create Class HB_ProfileReportToArray Inherit HB_ProfileReport
+Create Class HBProfileReportToArray Inherit HBProfileReport
 
 // Protected:
 
@@ -652,7 +652,7 @@ End Class
 
 /////
 
-Method writeLines( aLines ) Class HB_ProfileReportToArray
+Method writeLines( aLines ) Class HBProfileReportToArray
 
    aeval( aLines, {|c| aadd( ::aReport, c ) } )
 
@@ -660,7 +660,7 @@ Return( self )
 
 /////
 
-Method generate( bFilter ) Class HB_ProfileReportToArray
+Method generate( bFilter ) Class HBProfileReportToArray
 
    ::aReport := {}
    ::super:generate( bFilter )
@@ -668,9 +668,9 @@ Method generate( bFilter ) Class HB_ProfileReportToArray
 Return( ::aReport )
 
 ////////////////////////////////////////////////////////////////////////////
-// Class: HB_ProfileReportToString
+// Class: HBProfileReportToString
 
-Create Class HB_ProfileReportToString Inherit HB_ProfileReportToArray
+Create Class HBProfileReportToString Inherit HBProfileReportToArray
 
    Exported:
 
@@ -680,18 +680,18 @@ End Class
 
 /////
 
-Method generate( bFilter ) Class HB_ProfileReportToString
+Method generate( bFilter ) Class HBProfileReportToString
 Local cReport := ""
 
-   aeval( ::super:generate( bFilter ), {|c| cReport += c + HB_OsNewLine() } )
+   aeval( ::super:generate( bFilter ), {|c| cReport += c + HB_OSNewLine() } )
 
 Return( cReport )
 
 ////////////////////////////////////////////////////////////////////////////
-// Class: HB_ProfileReportToTBrowse
+// Class: HBProfileReportToTBrowse
 
 
-Create Class HB_ProfileReportToTBrowse Inherit HB_ProfileReportToArray
+Create Class HBProfileReportToTBrowse Inherit HBProfileReportToArray
 
 // Protected:
 
@@ -710,7 +710,7 @@ End Class
 
 /////
 
-Method emitHeader Class HB_ProfileReportToTBrowse
+Method emitHeader Class HBProfileReportToTBrowse
 
    // No header required.
 
@@ -718,7 +718,7 @@ Return( self )
 
 /////
 
-Method emitLine( oEntity ) Class HB_ProfileReportToTBrowse
+Method emitLine( oEntity ) Class HBProfileReportToTBrowse
 
    // Don't "emit" anything, simply add the entity to the array.
    aadd( ::aReport, oEntity )
@@ -727,7 +727,7 @@ Return( self )
 
 /////
 
-Method generate( bFilter, nTop, nLeft, nBottom, nRight ) Class HB_ProfileReportToTBrowse
+Method generate( bFilter, nTop, nLeft, nBottom, nRight ) Class HBProfileReportToTBrowse
 Local lProfile := __setProfiler( .F. )
 Local oBrowse
 
@@ -755,7 +755,7 @@ Return( oBrowse )
 
 /////
 
-Method addColumns( oBrowse ) Class HB_ProfileReportToTBrowse
+Method addColumns( oBrowse ) Class HBProfileReportToTBrowse
 
    oBrowse:addColumn( tbcolumnnew( "Name",         {|| padr( ::currentEntity():cName,        35    ) } ) )
    oBrowse:addColumn( tbcolumnnew( "Type",         {|| padr( ::currentEntity():describe(),    8    ) } ) )
@@ -769,7 +769,7 @@ Return( self )
 
 /////
 
-Method currentEntity Class HB_ProfileReportToTBrowse
+Method currentEntity Class HBProfileReportToTBrowse
 Return( ::aReport[ ::nEntity ] )
 
 /* 

@@ -7,7 +7,7 @@
 #include "inkey.ch"
 
 Function Main()
-Local oProfile := HB_Profile():new()
+Local oProfile := HBProfile():new()
 Local oGet     := GetNew()
 Local n
 
@@ -33,19 +33,19 @@ Local n
 
    // Report on calls greater than 0
    DrawScreen( "All methods/functions called one or more times" )
-   memoedit( HB_ProfileReportToString():new( oProfile:callSort() ):generate( {|o| o:nCalls > 0 } ), 1,,,, .F. )
+   memoedit( HBProfileReportToString():new( oProfile:callSort() ):generate( {|o| o:nCalls > 0 } ), 1,,,, .F. )
 
    // Sorted by name
    DrawScreen( "All methods/functions called one or more times, sorted by name" )
-   memoedit( HB_ProfileReportToString():new( oProfile:nameSort() ):generate( {|o| o:nCalls > 0 } ), 1,,,, .F. )
+   memoedit( HBProfileReportToString():new( oProfile:nameSort() ):generate( {|o| o:nCalls > 0 } ), 1,,,, .F. )
 
    // Sorted by time
    DrawScreen( "All methods/functions taking measurable time, sorted by time" )
-   memoedit( HB_ProfileReportToString():new( oProfile:timeSort() ):generate( {|o| o:nTicks > 0 } ), 1,,,, .F. )
+   memoedit( HBProfileReportToString():new( oProfile:timeSort() ):generate( {|o| o:nTicks > 0 } ), 1,,,, .F. )
 
    // TBrowse all calls greater than 0
    DrawScreen( "TBrowse all methods/functions called one or more times" )
-   Browser( HB_ProfileReportToTBrowse():new( oProfile:callSort() ):generate( {|o| o:nCalls > 0 }, 1 ) )
+   Browser( HBProfileReportToTBrowse():new( oProfile:callSort() ):generate( {|o| o:nCalls > 0 }, 1 ) )
 
    // Some closing stats
    DrawScreen( "Totals" )
