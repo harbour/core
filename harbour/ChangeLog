@@ -1,3 +1,7 @@
+19990905-02:47 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/filesys.c
+    * casts on access() and in HB_FILE
+
 19990904-23:35 EDT David G. Holm <dholm@jsd-llc.com>
   * include/hbver.h
     * Bumped revision from "a" to "b".

@@ -1054,7 +1054,7 @@ BOOL hb_fsFile ( BYTE * pFilename )
 /* TODO: Check if F_OK is defined in all compilers */
 #ifdef OS_UNIX_COMPATIBLE
 
-         is_file = ( access( pFilename, F_OK ) == 0 );
+         is_file = ( access( (const char *)pFilename, F_OK ) == 0 );
 
 #else
 
@@ -1070,7 +1070,7 @@ BOOL hb_fsFile ( BYTE * pFilename )
 
    #else
 
-         is_file = ( access( pFilename, 0 ) == 0 );
+         is_file = ( access( (const char *)pFilename, 0 ) == 0 );
 
    #endif
 
@@ -1085,7 +1085,7 @@ HARBOUR HB_FILE( void )
    {
       if( ISCHAR( 1 ) )
       {
-         hb_retl( hb_fsFile( hb_parc( 1 ) ) );
+         hb_retl( hb_fsFile( (BYTE *)hb_parc( 1 ) ) );
       }
       else
          hb_retl( FALSE );
