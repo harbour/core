@@ -1,6 +1,8 @@
 19990818-16:16 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/console.c source/rtl/gtapi.c source/rtl/gt/gtwin.c
      * fixes to my fixes
+   * makefile.vc
+     + source/debug/tbrwtext.prg
 
 19990818-14:33 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/console.c
