@@ -176,6 +176,7 @@ CLASS TBrowse
 
    HIDDEN:         /* H I D D E N */
 
+   METHOD PosCursor()                     // Positions the cursor to the beginning of the call, used only when autolite==.F.
    METHOD LeftDetermine()                 // Determine leftmost unfrozen column in display
    METHOD DispCell(nColumn, nColor)       // Displays a single cell and returns cell type as a single letter like Valtype()
    METHOD HowManyCol(nWidth)              // Counts how many cols can be displayed
@@ -646,6 +647,17 @@ METHOD Hilite() CLASS TBrowse
 return Self
 
 
+METHOD PosCursor() CLASS TBrowse
+
+   local nRow := ::nTop + ::RowPos + iif(::lHeaders, ::nHeaderHeight, 0) + iif(Empty(::HeadSep), 0, 1) - 1
+   local cType := ValType( Eval( ::aColumns[ ::ColPos ]:block ) )
+
+   // Put cursor on first char of cell value
+   SetPos(nRow, ::aColumns[ ::ColPos ]:ColPos + iif(cType == "L", ::aColumns[::ColPos]:Width / 2, 0 ))
+
+return Self
+
+
 // Calculate how many columns fit on the browse width including ColSeps
 METHOD HowManyCol(nWidth) CLASS TBrowse
 
@@ -1033,6 +1045,8 @@ METHOD Stabilize() CLASS TBrowse
 
          if ::AutoLite
             ::Hilite()
+         else
+            ::PosCursor()
          endif
          SetCursor(nOldCursor)
          ::stable := .T.
@@ -1044,6 +1058,8 @@ METHOD Stabilize() CLASS TBrowse
       /* NOTE: DBU relies upon current cell being reHilited() even if already stable */
       if ::AutoLite
          ::Hilite()
+      else
+         ::PosCursor()
       endif
       SetCursor(nOldCursor)
       return .T.
@@ -1064,6 +1080,8 @@ METHOD Moved() CLASS TBrowse
 
       if ::AutoLite
          ::DeHilite()
+      else
+         ::PosCursor()
       endif
       ::stable := .F.
    endif
