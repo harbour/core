@@ -1,3 +1,7 @@
+/*
+ * $id$
+ */
+
 STATIC cScrn
 
 Procedure __XSAVESCREEN()
