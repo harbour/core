@@ -1,3 +1,9 @@
+19991012-00:52 EDT Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+     + source/rtl/input.prg
+     + source/rtl/setta.prg
+     + source/rtl/wait.prg
+
 19991012-03:12 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/compiler/harbour.y
      ! lLastPushPos -> _lLastPushPos

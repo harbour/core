@@ -96,6 +96,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\hvm.obj \
     $(OBJ_DIR)\initsymb.obj \
     $(OBJ_DIR)\inkey.obj \
+    $(OBJ_DIR)\input.obj \
     $(OBJ_DIR)\itemapi.obj \
     $(OBJ_DIR)\langapi.obj \
     $(OBJ_DIR)\main.obj \
@@ -116,6 +117,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\setcolor.obj \
     $(OBJ_DIR)\setfunc.obj \
     $(OBJ_DIR)\setkey.obj \
+    $(OBJ_DIR)\setta.obj \
     $(OBJ_DIR)\strings.obj \
     $(OBJ_DIR)\symbols.obj \
     $(OBJ_DIR)\tbcolumn.obj \
@@ -126,6 +128,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\tget.obj \
     $(OBJ_DIR)\tgetlist.obj \
     $(OBJ_DIR)\tone.obj \
+    $(OBJ_DIR)\wait.obj \
     $(OBJ_DIR)\transfrm.obj \
     $(OBJ_DIR)\xsavescr.obj \
     $(RDD_OBJS)
@@ -481,6 +484,12 @@ $(OBJ_DIR)\hardcr.obj : $(RTL_DIR)\hardcr.c
 $(OBJ_DIR)\inkey.obj : $(RTL_DIR)\inkey.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(RTL_DIR)\input.c : $(RTL_DIR)\input.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+
+$(OBJ_DIR)\input.obj : $(RTL_DIR)\input.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(OBJ_DIR)\itemapi.obj : $(RTL_DIR)\itemapi.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
@@ -562,6 +571,12 @@ $(RTL_DIR)\setkey.c : $(RTL_DIR)\setkey.prg
 $(OBJ_DIR)\setkey.obj : $(RTL_DIR)\setkey.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(RTL_DIR)\setta.c : $(RTL_DIR)\setta.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+
+$(OBJ_DIR)\setta.obj : $(RTL_DIR)\setta.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(OBJ_DIR)\strings.obj : $(RTL_DIR)\strings.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
@@ -614,6 +629,12 @@ $(OBJ_DIR)\tone.obj : $(RTL_DIR)\tone.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\transfrm.obj : $(RTL_DIR)\transfrm.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(RTL_DIR)\wait.c : $(RTL_DIR)\wait.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+
+$(OBJ_DIR)\wait.obj : $(RTL_DIR)\wait.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\xsavescr.c : $(RTL_DIR)\xsavescr.prg
