@@ -18,6 +18,9 @@
  * Copyright 1999 Victor Szel <info@szelvesz.hu>
  *    Changes for higher Clipper compatibility
  *
+ * Copyright 1999 Chen Kedem <niki@actcom.co.il>
+ *    Documentation
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -41,9 +44,102 @@
 
 STATIC s_lNoAlert := NIL
 
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ALERT()
+ *  $CATEGORY$
+ *      Data input and output
+ *  $ONELINER$
+ *      Display a dialog box with a message
+ *  $SYNTAX$
+ *      ALERT( <xMessage>, [<aOptions>], [<cColorNorm>],
+ *             [<nDelay>] ) --> nChoice or NIL
+ *  $ARGUMENTS$
+ *      <xMessage> Message to display in the dialog box. <xMessage> can be
+ *      of any Harbour type.
+ *      If <xMessage> is an array of Character strings, each element would
+ *      be displayed in a new line. <xMessage> is converted to Character
+ *      string, you could split the message to several lines by placing
+ *      semicolon (;) in the desired places.
+ *
+ *      <aOptions> Array with available response. Each element should be
+ *      Character string. If omitted, default is { "Ok" }.
+ *
+ *      <cColorNorm> Color string to paint the dialog box with.
+ *      If omitted, default color is "W+/R".
+ *
+ *      <nDelay> Number of seconds to wait to user response before abort.
+ *      Default value is 0, that wait forever.
+ *  $RETURNS$
+ *      ALERT() return Numeric value representing option number chosen.
+ *      If ESC was pressed, return value is zero. The return value is NIL
+ *      if ALERT() is called with no parameters, or if <xMessage> type is
+ *      not Character and HARBOUR_STRICT_CLIPPER_COMPATIBILITY option was
+ *      used. If <nDelay> seconds had passed without user response, the
+ *      return value is 1.
+ *  $DESCRIPTION$
+ *      ALERT() display simple dialog box on screen and let the user select
+ *      one option. The user can move the highlight bar using arrow keys or
+ *      TAB key. To select an option the user can press ENTER, SPACE or the
+ *      first letter of the option.
+ *
+ *      If the program is executed with the //NOALERT command line switch,
+ *      nothing is  displayed and the program simply QUIT. This switch could
+ *      be override with __NONOALERT().
+ *
+ *      If the GT system is linked in, ALERT() display the message using
+ *      the full screen I/O system, if not, the information is printed to
+ *      the standard output using OUTSTD().
+ *  $EXAMPLES$
+ *      LOCAL cMessage, aOptions, nChoice
+ *
+ *      // harmless message
+ *      cMessage := "Major Database Corruption Detected!;" +  ;
+ *                  "(deadline in few hours);;"             +  ;
+ *                  "where DO you want to go today?"
+ *
+ *      // define response option
+ *      aOptions := { "Ok", "www.jobs.com", "Oops" }
+ *
+ *      // show message and let end user select panic level
+ *      nChoice := ALERT( cMessage, aOptions )
+ *      DO CASE
+ *         CASE nChoice == 0
+ *              // do nothing, blame it on some one else
+ *         CASE nChoice == 1
+ *              ? "Please call home and tell them you're gonn'a be late"
+ *         CASE nChoice == 2
+ *              // make sure your resume is up to date
+ *         CASE nChoice == 3
+ *              ? "Oops mode is not working in this version"
+ *      ENDCASE
+ *  $TESTS$
+ *  $STATUS$
+ *  $COMPLIANCE$
+ *      This function is sensitive to HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+ *      settings.
+ *
+ *      ON:  <xMessage> accept Character values only and return NIL if other
+ *           types are passed,
+ *      OFF: <xMessage> could be any type, and internally converted to
+ *           Character string. If type is Array, multi-line message is
+ *           displayed.
+ *
+ *      ON:  Only the first four valid <aOptions> are taken.
+ *      OFF: <aOptions> could contain as many as needed options.
+ *
+ *      <cColorNorm> is an Harbour extension, or at least un-documented
+ *      in Clipper 5.2 NG.
+ *
+ *      <nDelay> is an Harbour extension.
+ *  $SEEALSO$
+ *      @...PROMPT, MENU TO, STDOUT(), __NONOALERT()
+ *  $END$
+ */
+
 FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
    LOCAL nChoice
-   LOCAL aSay, nPos, nWidth, nOpWidth, nInitRow, nInitCol, iEval
+   LOCAL aSay, nPos, nWidth, nOpWidth, nInitRow, nInitCol, nEval
    LOCAL nKey, aPos, nCurrent, aHotkey, aOptionsOK
    LOCAL cColorHigh
 
@@ -87,9 +183,9 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
 
    IF ISARRAY( xMessage )
 
-      FOR iEval := 1 TO Len( xMessage )
-         IF ISCHARACTER( xMessage[ iEval ] )
-            AAdd( aSay, xMessage[ iEval ] )
+      FOR nEval := 1 TO Len( xMessage )
+         IF ISCHARACTER( xMessage[ nEval ] )
+            AAdd( aSay, xMessage[ nEval ] )
          ENDIF
       NEXT
 
@@ -137,9 +233,9 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
 
    /* Cleanup the button array */
    aOptionsOK := {}
-   FOR iEval := 1 TO Len( aOptions )
-      IF ISCHARACTER( aOptions[ iEval ] ) .AND. !Empty( aOptions[ iEval ] )
-         AAdd( aOptionsOK, aOptions[ iEval ] )
+   FOR nEval := 1 TO Len( aOptions )
+      IF ISCHARACTER( aOptions[ nEval ] ) .AND. !Empty( aOptions[ nEval ] )
+         AAdd( aOptionsOK, aOptions[ nEval ] )
       ENDIF
    NEXT
 
@@ -169,23 +265,51 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
    nCurrent := nInitCol + Int( ( nWidth - nOpWidth ) / 2 ) + 2
    AEval( aOptionsOK, {| x | AAdd( aPos, nCurrent ), AAdd( aHotKey, Upper( Left( x, 1 ) ) ), nCurrent += Len( x ) + 4 } )
 
+   nChoice := 1
+
    IF lConsole
 
-      FOR iEval := 1 TO Len( aSay )
-         OutStd( aSay[ iEval ] )
-         IF iEval < Len( aSay )
+      FOR nEval := 1 TO Len( aSay )
+         OutStd( aSay[ nEval ] )
+         IF nEval < Len( aSay )
             OutStd( Chr( 13 ) + Chr( 10 ) )
          ENDIF
       NEXT
 
       OutStd( " (" )
-      FOR iEval := 1 TO Len( aOptionsOK )
-         OutStd( aOptionsOK[ iEval ] )
-         IF iEval < Len( aOptionsOK )
+      FOR nEval := 1 TO Len( aOptionsOK )
+         OutStd( aOptionsOK[ nEval ] )
+         IF nEval < Len( aOptionsOK )
             OutStd( ", " )
          ENDIF
       NEXT
       OutStd( ") " )
+
+      /* choice loop */
+      DO WHILE .T.
+
+         nKey := Inkey( nDelay )
+
+         DO CASE
+         CASE nKey == 0
+
+            EXIT
+
+         CASE nKey == K_ESC
+
+            nChoice := 0
+            EXIT
+
+         CASE aScan( aHotkey, {| x | x == Upper( Chr( nKey ) ) } ) > 0
+
+            nChoice := aScan( aHotkey, {| x | x == Upper( Chr( nKey ) ) } )
+            EXIT
+
+         ENDCASE
+
+      ENDDO
+
+      OutStd( Chr( nKey ) )
 
    ELSE
 
@@ -203,68 +327,60 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       cOldScreen := SaveScreen( nInitRow, nInitCol, nInitRow + Len( aSay ) + 3, nInitCol + nWidth + 1 )
 
       /* draw box */
-      @ nInitRow, nInitCol, nInitRow + Len( aSay ) + 3, nInitCol + nWidth + 1  ;
-            BOX B_SINGLE + ' ' COLOR cColorNorm
+      DispBox( nInitRow, nInitCol, nInitRow + Len( aSay ) + 3, nInitCol + nWidth + 1, B_SINGLE + ' ', cColorNorm )
 
-      FOR iEval := 1 TO Len( aSay )
-         @ nInitRow + iEval, nInitCol + 1 + Int( ( ( nWidth - Len( aSay[ iEval ] ) ) / 2 ) + .5 ) SAY aSay[ iEval ] ;
-               COLOR cColorNorm
+      FOR nEval := 1 TO Len( aSay )
+         DispOutAt( nInitRow + nEval, nInitCol + 1 + Int( ( ( nWidth - Len( aSay[ nEval ] ) ) / 2 ) + .5 ), aSay[ nEval ], cColorNorm )
       NEXT
 
-   ENDIF
+      /* choice loop */
+      DO WHILE .T.
 
-   nChoice := 1
-
-   /* choice loop */
-   DO WHILE .T.
-
-      IF !lConsole
-         FOR iEval := 1 TO Len( aOptionsOK )
-            @ nInitRow + Len( aSay ) + 2, aPos[ iEval ] SAY " " + aOptionsOK[ iEval ] + " " ;
-                  COLOR iif( iEval == nChoice, cColorHigh, cColorNorm )
+         FOR nEval := 1 TO Len( aOptionsOK )
+            DispOutAt( nInitRow + Len( aSay ) + 2, aPos[ nEval ], " " + aOptionsOK[ nEval ] + " ",;
+               iif( nEval == nChoice, cColorHigh, cColorNorm ) )
          NEXT
-      ENDIF
 
-      nKey := Inkey( nDelay )
+         nKey := Inkey( nDelay )
 
-      DO CASE
-      CASE nKey == K_ENTER .OR. nKey == 0
+         DO CASE
+         CASE nKey == K_ENTER .OR. ;
+              nKey == K_SPACE .OR. ;
+              nKey == 0
 
-         EXIT
+            EXIT
 
-      CASE nKey == K_ESC
+         CASE nKey == K_ESC
 
-         nChoice := 0
-         EXIT
+            nChoice := 0
+            EXIT
 
-      CASE ( nKey == K_LEFT .OR. nKey == K_SH_TAB ) .AND. Len( aOptionsOK ) > 1
+         CASE ( nKey == K_LEFT .OR. nKey == K_SH_TAB ) .AND. Len( aOptionsOK ) > 1
 
-         nChoice--
-         IF nChoice == 0
-            nChoice := Len( aOptionsOK )
-         ENDIF
+            nChoice--
+            IF nChoice == 0
+               nChoice := Len( aOptionsOK )
+            ENDIF
 
-      CASE ( nKey == K_RIGHT .OR. nKey == K_TAB ) .AND. Len( aOptionsOK ) > 1
+            nDelay := 0
 
-         nChoice++
-         IF nChoice > Len( aOptionsOK )
-            nChoice := 1
-         ENDIF
+         CASE ( nKey == K_RIGHT .OR. nKey == K_TAB ) .AND. Len( aOptionsOK ) > 1
 
-      CASE aScan( aHotkey, {| x | x == Upper( Chr( nKey ) ) } ) > 0
+            nChoice++
+            IF nChoice > Len( aOptionsOK )
+               nChoice := 1
+            ENDIF
 
-         nChoice := aScan( aHotkey, {| x | x == Upper( Chr( nKey ) ) } )
-         EXIT
+            nDelay := 0
 
-      ENDCASE
+         CASE aScan( aHotkey, {| x | x == Upper( Chr( nKey ) ) } ) > 0
 
-   ENDDO
+            nChoice := aScan( aHotkey, {| x | x == Upper( Chr( nKey ) ) } )
+            EXIT
 
-   IF lConsole
+         ENDCASE
 
-      OutStd( Chr( nKey ) )
-
-   ELSE
+      ENDDO
 
       /* Restore status */
       RestScreen( nInitRow, nInitCol, nInitRow + Len( aSay ) + 3, nInitCol + nWidth + 1, cOldScreen )
@@ -280,10 +396,37 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
 
    RETURN nChoice
 
-/* Undocumented CA-Clipper functions */
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __NONOALERT()
+ *  $CATEGORY$
+ *      Data input and output
+ *  $ONELINER$
+ *      Override //NOALERT command line switch
+ *  $SYNTAX$
+ *      __NONOALERT() --> NIL
+ *  $ARGUMENTS$
+ *      This function take no arguments.
+ *  $RETURNS$
+ *      __NONOALERT() always return NIL.
+ *  $DESCRIPTION$
+ *      The //NOALERT command line switch cause the program to QUIT whenever
+ *      it encounter ALERT() function, this function override this behavior
+ *      and always display ALERT() dialog box.
+ *  $EXAMPLES$
+ *      // make sure alert are been displayed
+ *      __NONOALERT()
+ *  $TESTS$
+ *  $STATUS$
+ *  $COMPLIANCE$
+ *      __NONOALERT() is an Undocumented CA-Clipper function
+ *  $SEEALSO$
+ *  $END$
+ */
 
 PROCEDURE __NONOALERT()
 
    s_lNoAlert := .F.
 
    RETURN
+

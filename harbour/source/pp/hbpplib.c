@@ -87,6 +87,7 @@ HARBOUR HB___PREPROCESS( void )
          {
             /* Some error here? */
          }
+
          hb_retc( pText ); /* Preprocessor returns parsed line in input buffer */
       }
       else
@@ -108,6 +109,8 @@ void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szErro
 {
    PHB_ITEM pError;
    char buffer[ 128 ];
+
+   HB_SYMBOL_UNUSED( cPrefix );
 
    HB_TRACE(HB_TR_DEBUG, ("GenError(%p, %c, %d, %s, %s)", szErrors, cPrefix, iError, szError1, szError2));
 

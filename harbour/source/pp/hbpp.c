@@ -1410,6 +1410,8 @@ static BOOL CheckOptional( char * ptrmp, char * ptri, char * ptro, int * lenres,
   char * lastInputptr[ 5 ];
   char * lastopti[ 3 ], *ptr;
 
+  HB_SYMBOL_UNUSED( com_or_tra );
+
   HB_TRACE(HB_TR_DEBUG, ("CheckOptional(%s, %s, %s, %p, %d, %d)", ptrmp, ptri, ptro, lenres, com_or_tra, com_or_xcom));
 
   s_bReplacePat = FALSE;

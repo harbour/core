@@ -1,8 +1,19 @@
+19991127-17:25 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/alert.prg
+    + Documentation by Chen Kedem added
+    + Added SPACE key handling for GT mode.
+    ! Fixed autodelay after a LEFT/RIGHT key.
+    ! Fixed ENTER/LEFT/RIGHT key handling in console mode.
+    ! SAY/BOX converted to DispBox()/DispOutAt()
+  * source/rtl/adir.prg
+    + Documentation by Chen Kedem added
+  * source/pp/*
+    ! Some Borland warnings fixed.
+
 19991126-12:00 WIB Andi Jahja <andij@aonlippo.co.id>
   * tests
     + hversion.prg - List version of Harbour source codes
     + entries.ini -  File list for hversion.prg to work
-
 
 19991126-01:11 GMT+1 Jose Lalin <dezac@corevia.com>
   * source/rtl/input.prg

@@ -116,7 +116,7 @@ PHB_FNAME hb_fsFNameSplit( char * pszFileName )
       platforms where applicable. Note that the drive info is always
       present also in the path itself. */
 
-   if( pFileName->szPath && ( pszAt = strchr( pFileName->szPath, ':' ) ) )
+   if( pFileName->szPath && ( pszAt = strchr( pFileName->szPath, ':' ) ) != NULL )
    {
       pFileName->szDrive = pszPos;
       strncpy( pszPos, pFileName->szPath, pszAt - pFileName->szPath + 1 );

@@ -67,7 +67,8 @@ int main( int argc, char * argv[] )
   FILE * handl_o;
   char szFileName[ _POSIX_PATH_MAX ];
   char * szDefText;
-  int iArg = 1, i;
+  int iArg = 1;
+  unsigned int i;
   BOOL bOutTable = FALSE;
   BOOL bOutNew = FALSE;
   DEFINES * stdef = hb_pp_topDefine;
@@ -217,7 +218,9 @@ int hb_pp_Parse( FILE * handl_i, FILE * handl_o, char * szSource )
   int iBuffer = 10, lenBuffer = 10;
   int lens = 0, rdlen;
 
-  HB_TRACE(HB_TR_DEBUG, ("hb_pp_Parse(%p, %p)", handl_i, handl_o));
+  HB_SYMBOL_UNUSED( szSource );
+
+  HB_TRACE(HB_TR_DEBUG, ("hb_pp_Parse(%p, %p, %s)", handl_i, handl_o, szSource));
 
   while( ( rdlen = hb_pp_RdStr( handl_i, s_szLine + lens, HB_PP_STR_SIZE - lens, lContinue,
                                 sBuffer, &lenBuffer, &iBuffer ) ) >= 0 )

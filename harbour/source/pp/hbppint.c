@@ -145,6 +145,8 @@ int hb_pp_Parse( FILE * handl_i, FILE * handl_o, char * szSource )
   int iBuffer = 10, lenBuffer = 10;
   int lens = 0, rdlen, iLine = 0;
 
+  HB_SYMBOL_UNUSED( handl_o );
+
   HB_TRACE(HB_TR_DEBUG, ("hb_pp_Parse(%p, %p)", handl_i, handl_o));
 
   while( ( rdlen = hb_pp_RdStr( handl_i, s_szLine + lens, HB_PP_STR_SIZE - lens, lContinue,
