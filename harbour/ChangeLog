@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2002-10-19 11:16 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * include/hbtypes.h
+     ! minor change to avoid compiling errors if using -DHB_API_MACROS
+
 2002-10-17 14:40 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
    * source/rtl/tbrowse.prg
      ! Fixed SetColumnMethod() that was not using all Display Area(The nWidthMax variable was substraced by 2)
