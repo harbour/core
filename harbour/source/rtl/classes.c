@@ -614,10 +614,9 @@ char * hb_objGetClsName( PHB_ITEM pObject )
 static HARBOUR hb___msgGetClsData( void )
 {
    WORD wClass = ( stack.pBase + 1 )->item.asArray.value->wClass;
-   WORD wIndex = s_pMethod->wData;
 
    if( wClass && wClass <= s_wClasses )
-      hb_arrayGet( s_pClasses[ wClass - 1 ].pClassDatas, wIndex, &stack.Return );
+      hb_arrayGet( s_pClasses[ wClass - 1 ].pClassDatas, s_pMethod->wData, &stack.Return );
 }
 
 

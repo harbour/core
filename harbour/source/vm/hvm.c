@@ -899,8 +899,8 @@ void hb_vmDimArray( WORD wDimensions ) /* generates a wDimensions Array and init
 
 /*
    for( w = 0; w < wElements; w++ )
-     hb_itemCopy( itArray.item.asArray.value->pItems + w,
-               stack.pPos - wElements + w );
+      hb_itemCopy( itArray.item.asArray.value->pItems + w,
+                   stack.pPos - wElements + w );
 */
 
    for( w = 0; w < wDimensions; w++ )
@@ -1203,7 +1203,7 @@ void hb_vmGenArray( WORD wElements ) /* generates a wElements Array and fills it
    hb_arrayNew( &itArray, wElements );
    for( w = 0; w < wElements; w++ )
       hb_itemCopy( itArray.item.asArray.value->pItems + w,
-                stack.pPos - wElements + w );
+                   stack.pPos - wElements + w );
 
    for( w = 0; w < wElements; w++ )
       hb_stackPop();
@@ -2451,17 +2451,14 @@ void hb_stackDispLocal( void )
 
    for( pBase = stack.pBase; pBase <= stack.pPos; pBase++ )
    {
-      switch( pBase->type )
+      switch( hb_itemType( pBase ) )
       {
          case IT_NIL:
               printf( "NIL " );
               break;
 
          case IT_ARRAY:
-              if( pBase->item.asArray.value->wClass )
-                 printf( "OBJECT " );
-              else
-                 printf( "ARRAY " );
+              printf( hb_arrayIsObject( pBase ) ? "OBJECT " : "ARRAY " );
               break;
 
          case IT_BLOCK:
@@ -2477,7 +2474,7 @@ void hb_stackDispLocal( void )
               break;
 
          case IT_LOGICAL:
-              printf( "LOGICAL[%c] ", pBase->item.asLogical.value ? 'T' : 'F' );
+              printf( "LOGICAL[%c] ", hb_itemGetL( pBase ) ? 'T' : 'F' );
               break;
 
          case IT_LONG:
@@ -2485,7 +2482,7 @@ void hb_stackDispLocal( void )
               break;
 
          case IT_INTEGER:
-              printf( "INTEGER[%i] ", pBase->item.asInteger.value );
+              printf( "INTEGER[%i] ", hb_itemGetNI( pBase ) );
               break;
 
          case IT_STRING:
@@ -2497,7 +2494,7 @@ void hb_stackDispLocal( void )
               break;
 
          default:
-              printf( "UNKNOWN[%i] ", pBase->type );
+              printf( "UNKNOWN[%i] ", hb_itemType( pBase ) );
               break;
       }
    }
@@ -2830,11 +2827,11 @@ HARBOUR HB_LEN( void )
       switch( pItem->type )
       {
          case IT_ARRAY:
-              hb_retnl( pItem->item.asArray.value->ulLen );
+              hb_retnl( hb_arrayLen( pItem ) );
               break;
 
          case IT_STRING:
-              hb_retnl( pItem->item.asString.length );
+              hb_retnl( hb_itemGetCLen( pItem ) );
               break;
 
          default:
@@ -2857,31 +2854,32 @@ HARBOUR HB_EMPTY( void )
       switch( pItem->type & ~IT_BYREF )
       {
          case IT_ARRAY:
-              hb_retl( pItem->item.asArray.value->ulLen == 0 );
+              hb_retl( hb_arrayLen( pItem ) == 0 );
               break;
 
          case IT_STRING:
-              hb_retl( hb_strEmpty( hb_parc( 1 ), hb_parclen( 1 ) ) );
+              hb_retl( hb_strEmpty( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) ) );
               break;
 
          case IT_INTEGER:
-              hb_retl( ! hb_parni( 1 ) );
+              hb_retl( hb_itemGetNI( pItem ) == 0 );
               break;
 
          case IT_LONG:
-              hb_retl( ! hb_parnl( 1 ) );
+              hb_retl( hb_itemGetNL( pItem ) == 0 );
               break;
 
          case IT_DOUBLE:
-              hb_retl( ! hb_parnd( 1 ) );
+              hb_retl( hb_itemGetND( pItem ) == 0.0 );
               break;
 
          case IT_DATE:
-              hb_retl( atol( hb_pards( 1 ) ) == 0 );  /* Convert to long */
+              /* NOTE: This is correct ! Get the date as long value. */
+              hb_retl( hb_itemGetNL( pItem ) == 0 );
               break;
 
          case IT_LOGICAL:
-              hb_retl( ! hb_parl( 1 ) );
+              hb_retl( ! hb_itemGetL( pItem ) );
               break;
 
          case IT_BLOCK:
@@ -2908,10 +2906,7 @@ HARBOUR HB_VALTYPE( void )
       switch( pItem->type & ~IT_BYREF )
       {
          case IT_ARRAY:
-              if( pItem->item.asArray.value->wClass )
-                 hb_retc( "O" );  /* it is an object */
-              else
-                 hb_retc( "A" );
+              hb_retc( hb_arrayIsObject( pItem ) ? "O" : "A" );
               break;
 
          case IT_BLOCK:

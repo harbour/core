@@ -34,13 +34,13 @@ extern void hb_vmProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics 
 #ifdef HARBOUR_STRICT_ANSI_C
 
 #define HB_INIT_SYMBOLS_BEGIN( func ) \
-  static HB_SYMB symbols[] = {
+   static HB_SYMB symbols[] = {
 
 #define HB_INIT_SYMBOLS_END( func ) }; \
-  void func( void ) \
-  { \
-    hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
-  }
+   void func( void ) \
+   { \
+      hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
+   }
 
 #define HB_CALL_ON_STARTUP_BEGIN( func ) func( void ) {
 #define HB_CALL_ON_STARTUP_END( func ) }
@@ -49,17 +49,17 @@ extern void hb_vmProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics 
 
 #ifdef __GNUC__
 #define HB_INIT_SYMBOLS_BEGIN( func ) \
-  static HB_SYMB symbols[] = {
+   static HB_SYMB symbols[] = {
 
 #define HB_INIT_SYMBOLS_END( func )  }; \
-  void __attribute__ ((constructor)) func( void ) \
-  { \
-     hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
-  }
+   void __attribute__ ((constructor)) func( void ) \
+   { \
+      hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
+   }
 
 
 #define HB_CALL_ON_STARTUP_BEGIN( func ) \
-  static void __attribute__ ((constructor)) func( void ) {
+   static void __attribute__ ((constructor)) func( void ) {
 
 #define HB_CALL_ON_STARTUP_END( func ) }
 #endif
@@ -67,56 +67,56 @@ extern void hb_vmProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics 
 
 #ifdef __BORLANDC__
 #define HB_INIT_SYMBOLS_BEGIN( func ) \
-  static HB_SYMB symbols[] = {
+   static HB_SYMB symbols[] = {
 
 #define HB_INIT_SYMBOLS_END( func )  }; \
-  void func( void ) \
-  { \
-    hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
-  }
+   void func( void ) \
+   { \
+      hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
+   }
 
 #define HB_CALL_ON_STARTUP_BEGIN( func ) \
-  static void func( void ) {
+   static void func( void ) {
 
 #define HB_CALL_ON_STARTUP_END( func ) }
 #endif
 
 #if (defined(_MSC_VER) || defined(__IBMCPP__) || defined(__MPW__))
 #define HB_INIT_SYMBOLS_BEGIN( func ) \
-  static HB_SYMB symbols[] = {
+   static HB_SYMB symbols[] = {
 
 #define HB_INIT_SYMBOLS_END( func ) }; \
-  int func( void ) \
-  { \
-     hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
-     return 1; \
-  }; \
-  static int static_int_##func = func();
+   int func( void ) \
+   { \
+      hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
+      return 1; \
+   }; \
+   static int static_int_##func = func();
 
 #define HB_CALL_ON_STARTUP_BEGIN( func ) \
-  static int func( void ) {
+   static int func( void ) {
 
 #define HB_CALL_ON_STARTUP_END( func ) return 1; } \
-  static int static_int_##func = func();
+   static int static_int_##func = func();
 #endif
 
 #ifdef __WATCOMC__
 #define HB_INIT_SYMBOLS_BEGIN( func ) \
-  static HB_SYMB symbols[] = {
+   static HB_SYMB symbols[] = {
 
 #define HB_INIT_SYMBOLS_END( func ) }; \
-  static int func( void ) \
-  { \
-     hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
-     return 1; \
-  }; \
-  static int static_int_##func = func();
+   static int func( void ) \
+   { \
+      hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
+      return 1; \
+   }; \
+   static int static_int_##func = func();
 
 #define HB_CALL_ON_STARTUP_BEGIN( func ) \
-  static int func( void ) {
+   static int func( void ) {
 
 #define HB_CALL_ON_STARTUP_END( func ) return 1; }; \
-  static int static_int_##func = func();
+   static int static_int_##func = func();
 #endif
 
 #endif /* HARBOUR_STRICT_ANSI_C */

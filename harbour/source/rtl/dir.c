@@ -445,29 +445,29 @@ HARBOUR HB_DIRECTORY( void )
 
          if( pos )
          {
-             /* array  cname, csize, ddate, ctime, cattributes */
-             pfilename = hb_itemPutC( NULL, filename );
-             psize     = hb_itemPutC( NULL, filesize );
-             pdate     = hb_itemPutDS( NULL, ddate );
-             ptime     = hb_itemPutC( NULL, ttime );
-             pattr     = hb_itemPutC( NULL, aatrib );
-             psubarray = hb_itemArrayNew( 5 );
-             hb_itemArrayPut( psubarray, 1, pfilename );
-             hb_itemArrayPut( psubarray, 2, psize );
-             hb_itemArrayPut( psubarray, 3, pdate );
-             hb_itemArrayPut( psubarray, 4, ptime );
-             hb_itemArrayPut( psubarray, 5, pattr );
+            /* array  cname, csize, ddate, ctime, cattributes */
+            pfilename = hb_itemPutC( NULL, filename );
+            psize     = hb_itemPutC( NULL, filesize );
+            pdate     = hb_itemPutDS( NULL, ddate );
+            ptime     = hb_itemPutC( NULL, ttime );
+            pattr     = hb_itemPutC( NULL, aatrib );
+            psubarray = hb_itemArrayNew( 5 );
+            hb_itemArrayPut( psubarray, 1, pfilename );
+            hb_itemArrayPut( psubarray, 2, psize );
+            hb_itemArrayPut( psubarray, 3, pdate );
+            hb_itemArrayPut( psubarray, 4, ptime );
+            hb_itemArrayPut( psubarray, 5, pattr );
 
-             /* NOTE: Simply ignores the situation where the array length
-                      limit is reached. */
-             hb_arrayAdd( pdir, psubarray );
+            /* NOTE: Simply ignores the situation where the array length
+                     limit is reached. */
+            hb_arrayAdd( pdir, psubarray );
 
-             hb_itemRelease( pfilename );
-             hb_itemRelease( psize );
-             hb_itemRelease( pdate );
-             hb_itemRelease( ptime );
-             hb_itemRelease( pattr );
-             hb_itemRelease( psubarray );
+            hb_itemRelease( pfilename );
+            hb_itemRelease( psize );
+            hb_itemRelease( pdate );
+            hb_itemRelease( ptime );
+            hb_itemRelease( pattr );
+            hb_itemRelease( psubarray );
          }
       }
    }

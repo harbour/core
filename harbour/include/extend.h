@@ -279,6 +279,7 @@ extern ULONG    hb_xsize( void * pMem );                 /* returns the size of 
 extern BOOL     hb_arrayError( PHB_ITEM pArray, ULONG ulIndex, BOOL bAssign ); /* Checks if the passed parameters are valid, launches runtim error if needed */
 extern BOOL     hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ); /* creates a new array */
 extern ULONG    hb_arrayLen( PHB_ITEM pArray ); /* retrives the array len */
+extern BOOL     hb_arrayIsObject( PHB_ITEM pArray ); /* retrives if the array is an object */
 extern BOOL     hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pItemValue );
 extern BOOL     hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex );
 extern BOOL     hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex );

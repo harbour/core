@@ -448,6 +448,8 @@ FUNCTION Main( cPar1 )
    TEST_LINE( lcString >= 1                   , "E BASE 1076 Argument error >= F:S"               )
    TEST_LINE( lcString <> 1                   , "E BASE 1072 Argument error <> F:S"               )
    TEST_LINE( lcString == 1                   , "E BASE 1070 Argument error == F:S"               )
+   TEST_LINE( loObject == loObject            , "E BASE 1070 Argument error == F:S"               )
+   TEST_LINE( {} == {}                        , "E BASE 1070 Argument error == F:S"               )
    TEST_LINE( {|| NIL } == {|| NIL }          , "E BASE 1070 Argument error == F:S"               )
    TEST_LINE( lcString = 1                    , "E BASE 1071 Argument error = F:S"                )
    TEST_LINE( lcString < 1                    , "E BASE 1073 Argument error < F:S"                )
@@ -1112,10 +1114,11 @@ FUNCTION Main( cPar1 )
 
    RETURN NIL
 
-#define TEST_RESULT_COL1_WIDTH  4
-#define TEST_RESULT_COL2_WIDTH  30
-#define TEST_RESULT_COL3_WIDTH  55
-#define TEST_RESULT_COL4_WIDTH  40
+#define TEST_RESULT_COL1_WIDTH  1
+#define TEST_RESULT_COL2_WIDTH  4
+#define TEST_RESULT_COL3_WIDTH  30
+#define TEST_RESULT_COL4_WIDTH  55
+#define TEST_RESULT_COL5_WIDTH  40
 
 STATIC FUNCTION TEST_BEGIN( cParam )
    LOCAL cOs := OS()
@@ -1160,12 +1163,12 @@ STATIC FUNCTION TEST_BEGIN( cParam )
                     "     Switches: " + cParam + s_cNewLine +;
                     "===========================================================================" + s_cNewLine )
 
-   fWrite( s_nFhnd, PadL( "No", TEST_RESULT_COL1_WIDTH ) + ". " +;
-                    PadR( "TestCall()", TEST_RESULT_COL2_WIDTH ) + " -> " +;
-                    PadR( "Result", TEST_RESULT_COL3_WIDTH ) + " | " +;
-                    PadR( "Expected", TEST_RESULT_COL4_WIDTH ) +;
-                    " [! *FAIL* !]" + s_cNewLine )
-   fWrite( s_nFhnd, "---------------------------------------------------------------------------" + s_cNewLine )
+   fWrite( s_nFhnd, PadL( "R", TEST_RESULT_COL1_WIDTH ) + " " +;
+                    PadL( "No", TEST_RESULT_COL2_WIDTH ) + ". " +;
+                    PadR( "TestCall()", TEST_RESULT_COL3_WIDTH ) + " -> " +;
+                    PadR( "Result", TEST_RESULT_COL4_WIDTH ) + " | " +;
+                    PadR( "Expected", TEST_RESULT_COL5_WIDTH ) + s_cNewLine +;
+                    "---------------------------------------------------------------------------" + s_cNewLine )
 
    RETURN NIL
 
@@ -1209,14 +1212,11 @@ STATIC FUNCTION TEST_CALL( cBlock, bBlock, xResultExpected )
 
    IF s_lShowAll .OR. lFailed
 
-      fWrite( s_nFhnd, Str( s_nCount, TEST_RESULT_COL1_WIDTH ) + ". " +;
-                       PadR( cBlock, TEST_RESULT_COL2_WIDTH ) + " -> " +;
-                       PadR( XToStr( xResult ), TEST_RESULT_COL3_WIDTH ) + " | " +;
-                       PadR( XToStr( xResultExpected ), TEST_RESULT_COL4_WIDTH ) )
-
-      IF lFailed
-         fWrite( s_nFhnd, " ! *FAIL* !" )
-      ENDIF
+      fWrite( s_nFhnd, PadR( iif( lFailed, "!", " " ), TEST_RESULT_COL1_WIDTH ) + " " +;
+                       Str( s_nCount, TEST_RESULT_COL2_WIDTH ) + ". " +;
+                       PadR( cBlock, TEST_RESULT_COL3_WIDTH ) + " -> " +;
+                       PadR( XToStr( xResult ), TEST_RESULT_COL4_WIDTH ) + " | " +;
+                       PadR( XToStr( xResultExpected ), TEST_RESULT_COL5_WIDTH ) )
 
       fWrite( s_nFhnd, s_cNewLine )
    ENDIF

@@ -1,3 +1,53 @@
+19990903-19:00 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/itemapi.c
+    include/itemapi.h
+    + hb_itemGetCPtr() function added. Use this with care, don't modify the
+      returned buffer. This is the fastest way to access a string buffer via
+      the standard API. The retval should really be declared const, but that
+      would generated a bunch of compiler warnings, so I didn't add it.
+    ! hb_itemGetDS() made compliant with the Clipper NG, it now terminates
+      the date with a zero character, so the buffer needs to be 9 characters
+      long. Although Clipper itself is buggy in this respect and doesn't 
+      append a trailing zero, even the example in the NG is buggy. 
+      NOTE added about this.
+  * source/vm/hvm.c
+    * LEN(), EMPTY(), VALTYPE(), hb_stackDispLocal() (almost) now use no 
+      internals, or uses Item API instead of Extend API, since it's faster
+      in their case.
+  * source/rtl/arrays.c
+    source/rtl/extend.c
+    include/extend.h
+    + hb_arrayIsObject() function added.
+    * hb_arrayGetString() now uses hb_itemGetCPtr()
+    + Copyright info added to arrays.c
+    ! hb_arrayGetDate() now returns the date with a terminating zero.
+    * Small cosmetic change in array.c.
+  * source/rtl/extend.c
+    % hb_stor*() functions further optimized, usage of ulArrayIndex eliminated.
+    ! One bug slipped in to one of the hb_stor*() functions at the previous
+      changes. Fixed. ( if -> else if )
+    + NOTE added to hb_parc()
+    * hb_ret*() functions now uses Item API calls, this way a huge amount
+      or sensitive redundant code has been eliminated. Since these functions
+      are always called only once in Harbour callable function, the speed hit
+      should not be noticable (There's one more NULL check and a function 
+      call). hb_retn?len() functions were not converted. We could make these
+      functions inline to speed it up. Notice that the size of extend.c has
+      been reduced from 23K to 17K.
+    ; hb_par*() functions also have many redundant code, but it would be more 
+      of a speed hit to convert them, since these are generally called several 
+      times in a function, and two additional if()s would be also executed.
+  * source/compiler/harbour.y
+    + The parameter count checking now shows the expected *range* in the
+      error message if applicable (not only the minimum number of params).
+  * tests/working/rtl_test.prg
+    + Changed the column layout. Few new tests added (==).
+  * source/rtl/classes.c
+    % One variable eliminated (wIndex).
+  * source/rtl/dir.c
+    include/init.h
+    ! Indenting errors fixed.
+
 19990903-15:30 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/itemapi.c
     % hb_itemPutDS() contained one more hb_itemClear() then needed.

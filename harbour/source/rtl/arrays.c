@@ -22,6 +22,14 @@
    You can contact me at: alinares@fivetech.com
 */
 
+/* Harbour Project source code
+   http://www.Harbour-Project.org/
+   The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
+      hb_arrayIsObject()
+      hb_arrayError()
+   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
+*/
+
 #include "extend.h"
 #include "itemapi.h"
 #include "errorapi.h"
@@ -83,8 +91,16 @@ ULONG hb_arrayLen( PHB_ITEM pArray )
 {
    if( IS_ARRAY( pArray ) )
       return pArray->item.asArray.value->ulLen;
+   else
+      return 0;
+}
 
-   return 0;
+BOOL hb_arrayIsObject( PHB_ITEM pArray )
+{
+   if( IS_ARRAY( pArray ) )
+      return pArray->item.asArray.value->wClass != 0;
+   else
+      return FALSE;
 }
 
 BOOL hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
@@ -242,7 +258,10 @@ char * hb_arrayGetDate( PHB_ITEM pArray, ULONG ulIndex, char * szDate )
          hb_itemGetDS( pArray->item.asArray.value->pItems + ulIndex - 1, szDate );
    }
    else
+   {
       memset( szDate, ' ', 8 );
+      szDate[ 8 ] = '\0';
+   }
 
    return szDate;
 }

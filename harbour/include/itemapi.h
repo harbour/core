@@ -47,6 +47,7 @@ extern PHB_ITEM hb_itemArrayPut ( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem
 extern ULONG    hb_itemCopyC    ( PHB_ITEM pItem, char * szBuffer, ULONG ulLen );
 extern BOOL     hb_itemFreeC    ( char *szText );
 extern char *   hb_itemGetC     ( PHB_ITEM pItem );
+extern char *   hb_itemGetCPtr  ( PHB_ITEM pItem );
 extern ULONG    hb_itemGetCLen  ( PHB_ITEM pItem );
 extern char *   hb_itemGetDS    ( PHB_ITEM pItem, char * szDate );
 extern BOOL     hb_itemGetL     ( PHB_ITEM pItem );

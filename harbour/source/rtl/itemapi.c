@@ -27,6 +27,7 @@
    The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
       hb_itemPutNI()
       hb_itemGetNI()
+      hb_itemGetCPtr()
       hb_itemGetCLen()
       hb_itemGetNLen()
       hb_itemSetNLen()
@@ -238,6 +239,16 @@ char * hb_itemGetC( PHB_ITEM pItem )
       return NULL;
 }
 
+/* NOTE: Caller should not modify the buffer returned by this function */
+
+char * hb_itemGetCPtr( PHB_ITEM pItem )
+{
+   if( pItem && IS_STRING( pItem ) )
+      return pItem->item.asString.value;
+   else
+      return NULL;
+}
+
 ULONG hb_itemGetCLen( PHB_ITEM pItem )
 {
    if( pItem && IS_STRING( pItem ) )
@@ -274,6 +285,11 @@ BOOL hb_itemFreeC( char * szText )
    return bResult;
 }
 
+/* NOTE: Clipper is buggy and will not append a trailing zero, although
+         the NG says that it will. Check your buffers, since what may have 
+         worked with Clipper could overrun the buffer with Harbour. 
+         The correct buffer size is 9 bytes: char szDate[ 9 ] */
+
 char * hb_itemGetDS( PHB_ITEM pItem, char * szDate )
 {
    if( pItem && IS_DATE( pItem ) )
@@ -285,6 +301,8 @@ char * hb_itemGetDS( PHB_ITEM pItem, char * szDate )
    }
    else
       memset( szDate, ' ', 8 );
+
+   szDate[ 8 ] = '\0';
 
    return szDate;
 }
@@ -421,8 +439,7 @@ PHB_ITEM hb_itemPutND( PHB_ITEM pItem, double dNumber )
       pItem = hb_itemNew( NULL );
 
    pItem->type = IT_DOUBLE;
-   if( dNumber > 10000000000.0 ) pItem->item.asDouble.length = 20;
-   else pItem->item.asDouble.length = 10;
+   pItem->item.asDouble.length = ( dNumber > 10000000000.0 ) ? 20 : 10;
    pItem->item.asDouble.decimal = hb_set.HB_SET_DECIMALS;
    pItem->item.asDouble.value = dNumber;
 
