@@ -1,3 +1,10 @@
+19990721-15:10 CET Felipe Coury
+  + bldodbc.bat; hbodbc.b32; source/odbc/bld32exe.bat; source/odbc/harbour.mdb;
+    source/odbc/hb32.bat; source/odbc/odbc.c; source/odbc/odbc.txt;
+    source/odbc/odbc32.def; source/odbc/sql.ch; source/odbc/sql.h;
+    source/odbc/sqlext.h; source/odbc/sqltypes.h; source/odbc/testodbc.prg
+    First version of ODBC implemented.
+
 19990720-14:35 CET Matthew Hamilton
   * tests/working/inifiles.prg
     New version installed
