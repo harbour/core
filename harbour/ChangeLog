@@ -1,3 +1,7 @@
+2001-04-25 20:08 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/vm/debug.c
+      ! __VMPARLLIST( <nProcLevel> ) enhanced to accept a nProcLevel.
+
 2001-04-21 22:59 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/memoedit.prg
       ! fixed error when UserFunction is a logical value.
