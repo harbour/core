@@ -104,8 +104,6 @@ METHOD New() CLASS TForm
 
    DEFAULT ::lRegistered TO .f.
 
-   Super:New()
-
    if ! ::lRegistered
       WinRegisterClass( "HB_TFORM" )
       ::lRegistered = .t.

@@ -66,8 +66,6 @@ ENDCLASS
 
 METHOD New( oForm ) CLASS TMenu
 
-   Super:New()
-
    ::Items   = {}
 
    if oForm != nil
