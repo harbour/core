@@ -869,6 +869,16 @@ static void ConvertPatterns( char * mpatt, int mlen, char * rpatt, int rlen )
             { exptype = '3'; i++; }
           else if( *(mpatt+i) == '(' )   /* Extended expression match marker */
             { exptype = '4'; i++; }
+          ptr = mpatt + i;
+          while( *ptr != '>' )
+          {
+             if( *ptr == '\0' || *ptr == '<' || *ptr == '[' || *ptr == ']' )
+             {
+                hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PATTERN_DEFINITION, NULL, NULL );
+                return;
+             }
+             ptr++;
+          }
           while( *(mpatt+i) != '>' )
             {
               if( *(mpatt+i) == ',' )      /* List match marker */
