@@ -1,3 +1,22 @@
+2001-03-15 17:00 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+
+  * contrib/libmisc/Makefile
+  * contrib/libmisc/makefile.bc
+  * contrib/libmisc/makefile.vc
+    + Added twirler.prg
+
+  + contrib/libmisc/twirler.prg
+    + New class provides twirler functionality with optional title
+      and smoothing (by specifying a minimum time between updates).
+
+  + Makefile
+    + Added the new twirl.prg module to BAD_PRG_SOURCES, because
+      it uses the LIBMISC library (to build this program, you'll
+      have to add "CONTRIBS=LIBMISC" ahead of "LIBS=\").
+
+  + tests/twirl.prg
+    + New module to test the twirler class using seven twirlers.
+
 2001-03-15 20:40 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    files posted by Juan Agustin Barriga <harrier@topconnect.cl>
    * source/rdd/dbcmd.c

@@ -18,6 +18,7 @@ PRG_SOURCES=\
 	numtxthu.prg \
 	numtxten.prg \
 	stringp.prg \
+	twirler.prg \
 
 LIBNAME=libmisc
 

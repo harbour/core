@@ -101,7 +101,8 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\nconvert.obj \
    $(OBJ_DIR)\numtxten.obj \
    $(OBJ_DIR)\numtxthu.obj \
-   $(OBJ_DIR)\stringp.obj
+   $(OBJ_DIR)\stringp.obj \
+   $(OBJ_DIR)\twirler.obj
 
 #
 # Our default target
@@ -179,3 +180,9 @@ $(OBJ_DIR)\stringsx.obj : $(TOOLS_DIR)\stringsx.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\twirler.c : $(TOOLS_DIR)\twirler.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\twirler.obj : $(OBJ_DIR)\twirler.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,

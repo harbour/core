@@ -180,6 +180,7 @@ BAD_PRG_SOURCES=\
 	testhbf.prg \
 	testtok.prg \
 	tstprag.prg \
+	twirl.prg \
 	vec1.prg \
 
 C_SOURCES=\

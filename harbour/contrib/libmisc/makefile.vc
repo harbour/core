@@ -121,7 +121,8 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\nconvert.obj \
    $(OBJ_DIR)\numtxten.obj \
    $(OBJ_DIR)\numtxthu.obj \
-   $(OBJ_DIR)\stringp.obj
+   $(OBJ_DIR)\stringp.obj \
+   $(OBJ_DIR)\twirler.obj
 
 #
 # Our default target
@@ -143,6 +144,7 @@ CLEAN:
    -@if exist $(OBJ_DIR)\numtxten.* del $(OBJ_DIR)\numtxten.*
    -@if exist $(OBJ_DIR)\numtxthu.* del $(OBJ_DIR)\numtxthu.*
    -@if exist $(OBJ_DIR)\stringp.* del $(OBJ_DIR)\stringp.*
+   -@if exist $(OBJ_DIR)\twirler.* del $(OBJ_DIR)\twirler.*
    -@if exist $(TOOLS_LIB) del $(TOOLS_LIB)
 
 #
