@@ -225,7 +225,7 @@ PROCEDURE RP_Dot()
 
    bCount := .F.
 
-   ProcessFile( "RP_Dot.ch" )
+   ProcessFile( "rp_dot.ch" )
 
    ErrorBlock( {|| RP_Dot_Err() } )
 
@@ -236,8 +236,8 @@ PROCEDURE RP_Dot()
    @ 0,4 SAY Space( 76 ) COLOR "N/R"
 
    DO WHILE .T.
-      @ 24,00 SAY '.'
-      @ 24,01 GET sLine PICTURE '@KS79'
+      @ MaxRow(), 00 SAY '.'
+      @ MaxRow(), 01 GET sLine PICTURE '@KS79'
       SET CURSOR ON
       READ
 
@@ -405,7 +405,6 @@ FUNCTION ProcessFile( sSource, sSwitch )
 
           DO CASE
              CASE ( cChar == '/' .AND. SubStr( sBuffer, nPosition + 1, 1 ) == '*' )
-
                 nPosition++
                 WHILE .T.
                    nClose := At( "*/", SubStr( sBuffer, nPosition + 1 ) )
@@ -453,7 +452,6 @@ FUNCTION ProcessFile( sSource, sSwitch )
                 ENDDO
 
              CASE ( cChar == '/' .AND. SubStr( sBuffer, nPosition + 1, 1 ) == '/' )
-
                 nPosition++
                 WHILE .T.
                    nClose := At( Chr(10), SubStr( sBuffer, nPosition + 1 ) )
@@ -516,7 +514,6 @@ FUNCTION ProcessFile( sSource, sSwitch )
                 ENDDO
 
              CASE ( cChar == '&' .AND. SubStr( sBuffer, nPosition + 1, 1 ) == '&' )
-
                 nPosition++
                 WHILE .T.
                    nClose := At( Chr(10), SubStr( sBuffer, nPosition + 1 ) )
@@ -555,7 +552,6 @@ FUNCTION ProcessFile( sSource, sSwitch )
                 ENDDO
 
              CASE ( cChar == '*' )
-
                 IF LTrim( sLine ) == ''
                    WHILE .T.
                       nClose := At( Chr(10), SubStr( sBuffer, nPosition + 1 ) )
@@ -588,7 +584,6 @@ FUNCTION ProcessFile( sSource, sSwitch )
                 ENDIF
 
              CASE ( cChar == '"' )
-
                 WHILE .T.
                    nClose := At( '"', SubStr( sBuffer, nPosition + 1 ) )
                    nNewLine := At( Chr(10), SubStr( sBuffer, nPosition + 1 ) )
@@ -622,7 +617,6 @@ FUNCTION ProcessFile( sSource, sSwitch )
                 ENDDO
 
              CASE ( cChar == "'" )
-
                 WHILE .T.
                    nClose   := At( "'", SubStr( sBuffer, nPosition + 1 ) )
                    nNewLine := At( Chr(10), SubStr( sBuffer, nPosition + 1 ) )
@@ -698,7 +692,6 @@ FUNCTION ProcessFile( sSource, sSwitch )
                 cChar := ''
 
              CASE cChar == Chr(10)
-
                 DropTrailingWS( @sLine, @sRight )
 
                 nLine++
@@ -1718,7 +1711,7 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                   /* Nested optional, maybe last in its group. */
                   IF aMP[2] > 1
                      nTemp := aMP[2]
-                     /* Skip dependents ans nested optionals, if any. */
+                     /* Skip dependents and nested optionals, if any. */
                      nMatch++
                      WHILE nMatch < nMatches .AND. ( ( aRules[nRule][2][nMatch][2] < 0 .AND. Abs( aRules[nRule][2][nMatch][2] ) == nTemp ).OR. aRules[nRule][2][nMatch][2] > nTemp )
                         nMatch++
@@ -1981,7 +1974,7 @@ FUNCTION NextToken( sLine, bCheckRules )
 
      nClose := AT( ']]', sLine )
      IF nClose == 0
-        Alert( "ERROR! [NextExp()] Unterminated '[[' at: " + sLine )
+        Alert( "ERROR! [NextToken()] Unterminated '[[' at: " + sLine )
         RETURN NIL
      ELSE
         sReturn := Left( sLine, nClose + 1 )
@@ -1991,7 +1984,7 @@ FUNCTION NextToken( sLine, bCheckRules )
 
      nClose := AT( '"', SubStr( sLine, 2 ) )
      IF nClose == 0
-        Alert( 'ERROR! [NextExp()] Unterminated ["] at: ' + sLine )
+        Alert( 'ERROR! [NextToken()] Unterminated ["] at: ' + sLine )
         RETURN NIL
      ELSE
         sReturn := Left( sLine, nClose + 1 )
@@ -2174,13 +2167,11 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
         ENDIF
 
      CASE cType == 'A'
-
         IF aExp == NIL
            aExp := {}
         ENDIF
 
      CASE cType == NIL
-
         RETURN "-"
 
   ENDCASE
