@@ -64,17 +64,22 @@ void hb_pp_Init( void )
 
 int hb_pp_Internal( FILE * handl_o, char * sOut )
 {
-  char *sBuffer = (char*) hb_comp_files.pLast->pBuffer;  /* File read buffer */
-  char * ptr, * ptrOut = sOut;
-  int lContinue = 0;
-  int lens = 0, rdlen;
-  FILE * handl_i = hb_comp_files.pLast->handle;
+  PFILE pFile;
+  char *ptr, *ptrOut;
+  int lContinue;
+  int lens, rdlen;
+  int nEmptyStrings = 0, lLine = 0, i;
 
   HB_TRACE(HB_TR_DEBUG, ("PreProcess(%p, %p, %s)", handl_o, sOut));
 
-     while( ( rdlen = hb_pp_RdStr( handl_i, s_szLine + lens, HB_PP_STR_SIZE -
-                  lens, lContinue, sBuffer, &(hb_comp_files.pLast->lenBuffer),
-                  &(hb_comp_files.pLast->iBuffer) ) ) >= 0 )
+  while( 1 )
+  {
+     pFile = hb_comp_files.pLast;
+     lens = lContinue = 0;
+     ptrOut = sOut;
+     while( ( rdlen = hb_pp_RdStr( pFile->handle, s_szLine + lens, HB_PP_STR_SIZE -
+                  lens, lContinue, pFile->pBuffer, &(pFile->lenBuffer),
+                  &(pFile->iBuffer) ) ) >= 0 )
        {
          lens += rdlen;
 
@@ -87,7 +92,7 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
              s_szLine[ ++lens ] = ' ';
              s_szLine[ ++lens ] = '\0';
 
-             *ptrOut++ = '\n';
+               nEmptyStrings++;
            }
          else
            {
@@ -104,20 +109,41 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
                  if( *ptr == '#' )
                    {
                      hb_pp_ParseDirective( ptr + 1 );
-                     if( sBuffer != hb_comp_files.pLast->pBuffer )
-                        sprintf( s_szLine, "#line 1 \"%s\"",
+                     if( pFile != hb_comp_files.pLast )
+                     {
+                        pFile = ( PFILE ) ( ( PFILE ) hb_comp_files.pLast )->pPrev;
+                        if( lLine )
+                           sprintf( s_szLine, "#line %d \"%s\"\n",
+                           pFile->iLine+nEmptyStrings, pFile->szFileName );
+                        else
+                           *s_szLine = '\0';
+                        lLine = 0;
+                        pFile->iLine += 1+nEmptyStrings;
+                        sprintf( s_szLine+strlen(s_szLine), "#line 1 \"%s\"",
                                   hb_comp_files.pLast->szFileName );
+                        nEmptyStrings = 0;
+                     }
                      else
+                     {
                         *s_szLine = '\0';
+                        nEmptyStrings++;
+                     }
                    }
                  else
                    {
                      if( hb_pp_nCondCompile == 0 || hb_pp_aCondCompile[ hb_pp_nCondCompile - 1 ] )
+                     {
                          hb_pp_ParseExpression( ptr, s_szOutLine );
+                     }
                      else
+                     {
                        *s_szLine = '\0';
+                       nEmptyStrings++;
+                     }
                    }
                }
+             else
+                nEmptyStrings++;
              break;
            }
        }
@@ -127,7 +153,6 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
            return 0;      /* we have reached the main EOF */
         else
           {  /* we close the currently include file and continue */
-           PFILE pFile;
            fclose( hb_comp_files.pLast->handle );
            hb_xfree( hb_comp_files.pLast->pBuffer );
            hb_xfree( hb_comp_files.pLast->szFileName );
@@ -136,10 +161,23 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
            hb_comp_files.pLast = pFile;
            hb_comp_iLine = hb_comp_files.pLast->iLine;
            hb_comp_files.iFiles--;
-           sprintf( s_szLine, "#line %d \"%s\"",hb_comp_iLine+2,hb_comp_files.pLast->szFileName );
+           lLine = 1;
+           nEmptyStrings = 0;
           }
        }
-
+     if( *s_szLine ) break;
+  }
+  if( lLine )
+  {
+     sprintf( ptrOut, "#line %d \"%s\"\n",hb_comp_iLine+nEmptyStrings,hb_comp_files.pLast->szFileName );
+     while( *ptrOut ) ptrOut++;
+  }
+  else
+  {
+     if( nEmptyStrings )
+        for( i=0;i<nEmptyStrings;i++ )
+           *ptrOut++ = '\n';
+  }
   lens = hb_pp_strocpy( ptrOut, s_szLine ) + ( ptrOut - sOut );
   *( sOut + lens++ ) = '\n';
   *( sOut + lens ) = '\0';

@@ -1,3 +1,10 @@
+20000220-19:55 GMT+3 Alexander Kresin
+   * source/pp/stdalone/hbpp.c
+   * source/pp/hbppint.c
+   * source/pp/hbpp.c
+     * corrected .ppo output - removed empty lines in #include files, as
+       CA-Clipper does it
+
 20000220-14:30 GMT+1 Victor Szakats <info@szelvesz.hu>
    * ../FT_HELPC.PRG
      ../HA.LNK
@@ -5,7 +12,7 @@
      ! Trying to remove trash from the root of the repository.
    * source/rtl/objfunc.prg
      - Removed the runtime errors if the method/data to be deleted doesn't
-       exist, or the method/data to be added already exist. Reasons: These 
+       exist, or the method/data to be added already exist. Reasons: These
        error cases are better handled manually by the developer if needed.
        ! PLEASE UPDATE THE DOCS !
    * makefile.bc

@@ -170,10 +170,6 @@ char * hb_pp_szErrors[] =
 /* NOTE: The first character stores the warning's level that triggers this
  * warning. The warning's level is set by -w<n> command line option.
  */
-char * hb_pp_szWarnings[] =
-{
-   "3Non directive in include file %s(%s)"
-};
 
 int hb_pp_ParseDirective( char * sLine )
 {
