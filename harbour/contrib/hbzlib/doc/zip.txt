@@ -1,0 +1,113 @@
+/*
+ * $DOC$
+ * $FUNCNAME$
+ *      HB_ZIPFILE()
+ * $CATEGORY$
+ *      ZIP FUNCTION
+ * $ONELINER$
+ *      Create a zip file
+ * $SYNTAX$
+ *      HB_ZIPFILE( <cFile> , <cFileToCompress> | <aFiles>, <nLevel> ,
+ *      <bBlock>,<lOverWrite> ) ---> lCompress
+ * $ARGUMENTS$
+ *      <cFile>   Name of the zip file
+ *
+ *      <cFileToCompress>  Name of a file to Compress ,Drive and/or path
+ *      can be used
+ *
+ *      <aFiles>  An array containing files to compress,Drive and/or path
+ *      can be used
+ *
+ *      <nLevel>  Compression level ranging from 0 to 9
+ *
+ *      <bBlock>  Code block to execute while compressing
+ *
+ *      <lOverWrite>  Toggle to overwite the file if exists
+ * $RETURNS$
+ *      <lCompress>  .T. if file was create,otherwise .f.
+ * $DESCRIPTION$
+ *      This function create a zip file named <cFile>. If the extension
+ *      is ommited , .ZIP will be assumed. If the second parameter is a
+ *      character string, this file will be added to the zip file.If the
+ *      second parameter is an array,all files names contained in <aFiles>
+ *      will be compressed.
+ *
+ *      If <nLevel> is used, it detemines the compression type where 0 means
+ *      No compression and 9 means best compression.
+ *
+ *      If <bBlock> is used, every time the file is opened to compress it
+ *      will do the action specified.
+ *
+ *      If <lOverWrite> is used , it toggles to overwrite or not the existing
+ *      file.Default is to overwrite the file.
+ * $EXAMPLES$
+ *      FUNCTION MAIN()
+ *      IF HB_ZIPFILE( "TEST.ZIP","TEST.PRG") 
+ *         qout("File was successly create")
+ *      ENDIF
+ *      IF HB_ZIPFILE( "TEST1.ZIP",{"TEST.PRG","c:\windows\win.ini"}) 
+ *         qout("File was successly create")
+ *      ENDIF
+ *      IF HB_ZIPFILE( "TEST2.ZIP",{"TEST.PRG","c:\windows\win.ini"},8,{|cFile|,qout(cFile)}) 
+ *         qout("File was successly create")
+ *      ENDIF
+ *
+ *      Return Nil
+ * $STATUS$
+ *      R
+ * $COMPLIANCE$
+ *      This function is a Harbour extension
+ * $PLATFORMS$
+ *      Win32
+ * $FILES$
+ *      Library is zlib.lib and zlib_bor.lib For Borland Compilers
+ *      Library is zlib.lib zlib_ms.lib for MSVC compilers
+ * $END$
+ */ 
+
+/*
+ * $DOC$
+ * $FUNCNAME$
+ *      HB_UNZIPFILE()
+ * $CATEGORY$
+ *      ZIP FUNCTION
+ * $ONELINER$
+ *      Unzip a compressed file
+ * $SYNTAX$
+ *      HB_UNZIPFILE( <cFile> , <bBlock> ) ---> lCompress
+ * $ARGUMENTS$
+ *      <cFile>   Name of the zip file
+ *
+ *      <bBlock>  Code block to execute while compressing
+ *
+ * $RETURNS$
+ *      <lCompress>  .T. if all file was successfuly restored,otherwise .f.
+ * $DESCRIPTION$
+ *      This function restores all files contained inside the <cFile>.
+ *      If the extension is ommited ,.ZIP will be assumed. If a file already 
+ *      exists, it wlllbe overwriten.
+ *
+ *      If <bBlock> is used, every time the file is opened to compress it
+ *      will do the action specified.
+ * $EXAMPLES$
+ *      FUNCTION MAIN()
+ *      IF HB_UNZIPFILE( "TEST.ZIP") 
+ *         qout("File was successly create")
+ *      ENDIF
+ *      IF HB_ZIPFILE( "TEST2.ZIP",{|cFile|,qout(cFile)}) 
+ *         qout("File was successly create")
+ *      ENDIF
+ *
+ *      Return Nil
+ * $STATUS$
+ *      S
+ * $COMPLIANCE$
+ *      This function is a Harbour extension
+ * $PLATFORMS$
+ *      Win32
+ * $FILES$
+ *      Library is zlib.lib and zlib_bor.lib For Borland Compilers
+ *      Library is zlib.lib zlib_ms.lib for MSVC compilers
+ * $END$
+ */ 
+
