@@ -13,6 +13,9 @@
    * source/rtl/math.c
      + Multithreading related NOTE added.
 
+   * make_b16.bat
+     + CLEAN will remove .MAP files.
+
 20000405-15:29 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    + utils/hbtest/rt_hvma.prg
