@@ -81,6 +81,7 @@ extern ULONG    hb_fsRead       ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCou
 extern BOOL     hb_fsRmDir      ( BYTE * pDirName );
 extern int      hb_fsRename     ( BYTE * pOldName, BYTE * pNewName );
 extern ULONG    hb_fsSeek       ( FHANDLE hFileHandle, LONG lOffset, USHORT uiMode );
+extern void     hb_fsSetMode    ( FHANDLE hFileHandle, USHORT uiMode );
 extern ULONG    hb_fsWrite      ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount );
 
 extern PHB_FNAME hb_fsFNameSplit ( char * szFilename ); /* Split given filename into path, name and extension */

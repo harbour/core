@@ -909,7 +909,7 @@ HARBOUR HB_STUFF( void )
 }
 
 /* TODO: Check for string overflow, Clipper can crash if the resulting
-         string is too large. Example: 
+         string is too large. Example:
          StrTran( "...", ".", Replicate( "A", 32000 ) ) */
 
 /* replaces lots of characters in a string */
@@ -1073,9 +1073,7 @@ HARBOUR HB_VAL( void )
          else
             nWidth = strlen( pText->item.asString.value );
 
-         hb_retnd( hb_strVal( pText->item.asString.value ) );
-         stack.Return.item.asDouble.length = nWidth;
-         stack.Return.item.asDouble.decimal = nDec;
+         hb_retndlen( hb_strVal( pText->item.asString.value ), nWidth, nDec );
       }
       else
          hb_errRT_BASE( EG_ARG, 1098, NULL, "VAL" );
@@ -1100,46 +1098,30 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
    {
       /* Default to the width and number of decimals specified by the item,
          with a limit of 20 integer places and 9 decimal places */
-      int iWidth;
-      int iDec;
+      WORD wWidth;
+      WORD wDec;
 
-      if( IS_DOUBLE( pNumber ) )
-      {
-         iWidth = pNumber->item.asDouble.length;
-         iDec   = pNumber->item.asDouble.decimal;
-      }
-      else if( IS_INTEGER( pNumber ) )
-      {
-         iWidth = pNumber->item.asInteger.length;
-         iDec   = 0;
-      }
-      else if( IS_LONG( pNumber ) )
-      {
-         iWidth = pNumber->item.asLong.length;
-         iDec   = 0;
-      }
-      else
-      {
-         iWidth = 0;
-         iDec   = 0;
-      }
+      hb_itemGetNLen( pNumber, &wWidth, &wDec );
 
-      if( iWidth > 20 )
-         iWidth = 20;
-      if( iDec > 9 )
-         iDec = 9;
+      if( wWidth > 20 )
+         wWidth = 20;
+      if( wDec > 9 )
+         wDec = 9;
       if( hb_set.HB_SET_FIXED )
-         iDec = hb_set.HB_SET_DECIMALS;
+         wDec = hb_set.HB_SET_DECIMALS;
 
       if( pWidth )
       {
          /* If the width parameter is specified, override the default value
             and set the number of decimals to zero */
-         iWidth = ( int ) hb_itemGetNL( pWidth );
+         int iWidth = ( int ) hb_itemGetNL( pWidth );
 
          if( iWidth < 1 )
-            iWidth = 10;                   /* If 0 or negative, use default */
-         iDec = 0;
+            wWidth = 10;                   /* If 0 or negative, use default */
+         else
+            wWidth = ( WORD ) iWidth;
+
+         wDec = 0;
       }
 
       if( pDec )
@@ -1147,24 +1129,27 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
          /* This function does not include the decimal places in the width,
             so the width must be adjusted downwards, if the decimal places
             parameter is greater than 0  */
-         iDec = ( int ) hb_itemGetNL( pDec );
+         int iDec = ( int ) hb_itemGetNL( pDec );
 
          if( iDec < 0 )
-            iDec = 0;
+            wDec = 0;
          else if( iDec > 0 )
-            iWidth -= ( iDec + 1 );
+         {
+            wDec = ( WORD ) iDec;
+            wWidth -= ( wDec + 1 );
+         }
       }
 
-      if( iWidth )
+      if( wWidth )
       {
          /* We at least have a width value */
          int iBytes;
-         int iSize = ( iDec ? iWidth + 1 + iDec : iWidth );
+         int iSize = ( wDec ? wWidth + 1 + wDec : wWidth );
 
          /* Be paranoid and use a large amount of padding */
          szResult = ( char * ) hb_xgrab( HB_MAX_DOUBLE_LENGTH );
 
-         if( IS_DOUBLE( pNumber ) || iDec != 0 )
+         if( IS_DOUBLE( pNumber ) || wDec != 0 )
          {
             double dNumber = hb_itemGetND( pNumber );
 
@@ -1175,23 +1160,23 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
             else
             #endif
             {
-               if( iDec < pNumber->item.asDouble.decimal )
-                  dNumber = hb_numRound( dNumber, iDec );
+               if( wDec < pNumber->item.asDouble.decimal )
+                  dNumber = hb_numRound( dNumber, wDec );
 
-               if( iDec > 0 )
-                  iBytes = sprintf( szResult, "%*.*f", iSize, iDec, dNumber );
+               if( wDec > 0 )
+                  iBytes = sprintf( szResult, "%*.*f", iSize, wDec, dNumber );
                else
-                  iBytes = sprintf( szResult, "%*ld", iWidth, ( LONG ) dNumber );
+                  iBytes = sprintf( szResult, "%*ld", wWidth, ( LONG ) dNumber );
             }
          }
          else switch( pNumber->type & ~IT_BYREF )
          {
             case IT_INTEGER:
-                 iBytes = sprintf( szResult, "%*i", iWidth, pNumber->item.asInteger.value );
+                 iBytes = sprintf( szResult, "%*i", wWidth, pNumber->item.asInteger.value );
                  break;
 
             case IT_LONG:
-                 iBytes = sprintf( szResult, "%*li", iWidth, pNumber->item.asLong.value );
+                 iBytes = sprintf( szResult, "%*li", wWidth, pNumber->item.asLong.value );
                  break;
 
             default:

@@ -11,6 +11,7 @@
 #include <math.h>
 #include "extend.h"
 #include "set.h"
+#include "itemapi.h"
 #include "errorapi.h"
 
 HARBOUR HB_ABS( void )
@@ -37,10 +38,9 @@ HARBOUR HB_ABS( void )
 
          case IT_DOUBLE:
             if( pNumber->item.asDouble.value >= 0.0 )
-               hb_retnd( pNumber->item.asDouble.value );
+               hb_retndlen( pNumber->item.asDouble.value, 0, pNumber->item.asDouble.decimal );
             else
-               hb_retnd( -pNumber->item.asDouble.value );
-            stack.Return.item.asDouble.decimal = pNumber->item.asDouble.decimal;
+               hb_retndlen( -pNumber->item.asDouble.value, 0, pNumber->item.asDouble.decimal );
       }
       else
          hb_errRT_BASE( EG_ARG, 1089, NULL, "ABS" );
@@ -54,11 +54,7 @@ HARBOUR HB_EXP( void )
    if( hb_pcount() == 1 )
    {
       if( ISNUM( 1 ) )
-      {
          hb_retnd( exp( hb_parnd( 1 ) ) );
-         /* Always set default number of decimals after EXP() */
-         stack.Return.item.asDouble.decimal = hb_set.HB_SET_DECIMALS;
-      }
       else
          hb_errRT_BASE( EG_ARG, 1096, NULL, "EXP" );
    }
@@ -86,12 +82,12 @@ HARBOUR HB_LOG( void )
       if( ISNUM( 1 ) )
       {
          double dNumber = hb_parnd( 1 );
-         hb_retnd( log( dNumber ) );
-         /* Always set default number of decimals after LOG() */
-         stack.Return.item.asDouble.decimal = hb_set.HB_SET_DECIMALS;
+
          if( dNumber <= 0.0 )
             /* Indicate overflow if called with an invalid argument */
-            stack.Return.item.asDouble.length = 99;
+            hb_retndlen( log( dNumber ), 99, ( WORD ) -1 );
+         else
+            hb_retnd( log( dNumber ) );
       }
       else
          hb_errRT_BASE( EG_ARG, 1095, NULL, "LOG" );
@@ -121,12 +117,13 @@ HARBOUR HB_MAX( void )
             double d1 = hb_parnd( 1 );
             double d2 = hb_parnd( 2 );
 
-            int iDec1 = ( wType1 == IT_DOUBLE ) ? p1->item.asDouble.decimal : 0;
-            int iDec2 = ( wType2 == IT_DOUBLE ) ? p2->item.asDouble.decimal : 0;
+            WORD wDec1;
+            WORD wDec2;
 
-            hb_retnd( d1 >= d2 ? d1 : d2 );
+            hb_itemGetNLen( p1, NULL, &wDec1 );
+            hb_itemGetNLen( p2, NULL, &wDec2 );
 
-            stack.Return.item.asDouble.decimal = ( d1 >= d2 ? iDec1 : iDec2 );
+            hb_retndlen( d1 >= d2 ? d1 : d2, 0, ( d1 >= d2 ? wDec1 : wDec2 ) );
          }
          else if( wType1 == IT_LONG || wType2 == IT_LONG )
          {
@@ -178,12 +175,13 @@ HARBOUR HB_MIN( void )
             double d1 = hb_parnd( 1 );
             double d2 = hb_parnd( 2 );
 
-            int iDec1 = ( wType1 == IT_DOUBLE ) ? p1->item.asDouble.decimal : 0;
-            int iDec2 = ( wType2 == IT_DOUBLE ) ? p2->item.asDouble.decimal : 0;
+            WORD wDec1;
+            WORD wDec2;
 
-            hb_retnd( d1 <= d2 ? d1 : d2 );
+            hb_itemGetNLen( p1, NULL, &wDec1 );
+            hb_itemGetNLen( p2, NULL, &wDec2 );
 
-            stack.Return.item.asDouble.decimal = ( d1 <= d2 ? iDec1 : iDec2 );
+            hb_retndlen( d1 <= d2 ? d1 : d2, 0, ( d1 <= d2 ? wDec1 : wDec2 ) );
          }
          else if( wType1 == IT_LONG || wType2 == IT_LONG )
          {
@@ -245,14 +243,14 @@ FUNCTION MOD(cl_num, cl_base)
             hb_retnd( dResult + dBase );
          else
             hb_retnd( dResult );
-         /* Always set default number of decimals after computing mod */
-         stack.Return.item.asDouble.decimal = hb_set.HB_SET_DECIMALS;
       }
       else
       {
-         hb_retnd( dNumber );
-         /* Set the correct number of decimals */
-         stack.Return.item.asDouble.decimal = pNumber->item.asDouble.decimal;
+         WORD wDec;
+
+         hb_itemGetNLen( pNumber, NULL, &wDec );
+
+         hb_retndlen( dNumber, 0, wDec );
       }
    }
    else
@@ -306,8 +304,7 @@ HARBOUR HB_ROUND( void )
       {
          int iDec = hb_parni( 2 );
 
-         hb_retnd( hb_numRound( hb_parnd( 1 ), iDec ) );
-         stack.Return.item.asDouble.decimal = iDec;
+         hb_retndlen( hb_numRound( hb_parnd( 1 ), iDec ), 0, iDec );
       }
       else
          hb_errRT_BASE( EG_ARG, 1094, NULL, "ROUND" );
@@ -325,14 +322,9 @@ HARBOUR HB_SQRT( void )
          double dNumber = hb_parnd( 1 );
 
          if( dNumber > 0 )
-         {
             hb_retnd( sqrt( dNumber ) );
-         }
          else
-            /* Clipper doesn't error! */
-            hb_retnd( 0 );
-         /* Always set default number of decimals after SQRT() */
-         stack.Return.item.asDouble.decimal = hb_set.HB_SET_DECIMALS;
+            hb_retnd( 0 ); /* Clipper doesn't error! */
       }
       else
          hb_errRT_BASE( EG_ARG, 1097, NULL, "SQRT" );

@@ -74,13 +74,17 @@
 #define FO_INHERITED  0x0000   /* Spawned processes can inherit this file handle     */
 #define FO_PRIVATE    0x0080   /* Spawned processes can not inherit this file handle */
 
-/* File mode flags */
+/* File seek mode flags */
 #define FS_SET        0x0000   /* Seek from beginning of file    */
 #define FS_RELATIVE   0x0001   /* Seek from current file poitner */
 #define FS_END        0x0002   /* Seek from end of file          */
 
+/* File mode flags */
+#define FM_BINARY          1   /* Binary mode (raw)  */
+#define FM_TEXT            2   /* Test mode (cooked) */
+
 /* File system error codes */
-#define FS_ERROR      (-1)     /* Unspecified error */
+#define FS_ERROR      ( -1 )   /* Unspecified error */
 
 /* Extended file open mode flags */
 #define FXO_TRUNCATE  0x0100   /* Create (truncate if exists) */

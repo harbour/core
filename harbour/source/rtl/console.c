@@ -54,6 +54,7 @@
 #include "extend.h"
 #include "itemapi.h"
 #include "errorapi.h"
+#include "filesys.h"
 #include "dates.h"
 #include "set.h"
 #include "inkey.h"
@@ -68,7 +69,6 @@
 #else
    #include <io.h>
 #endif
-#include <fcntl.h>
 
 #define ACCEPT_BUFFER_LEN 256 /*length of input buffer for ACCEPT command */
 
@@ -106,13 +106,9 @@ void hb_consoleInitialize( void )
 
    /* Some compilers open stdout and stderr in text mode, but
       Harbour needs them to be open in binary mode. */
-#if defined(__BORLANDC__) || defined(__IBMCPP__) || defined(__DJGPP__) || defined(__CYGWIN__)
-   setmode( fileno( stdout ), O_BINARY );
-   setmode( fileno( stderr ), O_BINARY );
-#elif defined(_MSC_VER)
-   _setmode( _fileno( stdout ), _O_BINARY );
-   _setmode( _fileno( stderr ), _O_BINARY );
-#endif
+
+   hb_fsSetMode( fileno( stdout ), FM_BINARY );
+   hb_fsSetMode( fileno( stderr ), FM_BINARY );
 
 #ifdef HARBOUR_USE_GTAPI
    hb_gtInit();

@@ -22,6 +22,15 @@
    You can contact me at: alinares@fivetech.com
  */
 
+/* Harbour Project source code
+   http://www.Harbour-Project.org/
+   The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
+      hb_retnilen()
+      hb_retnllen()
+      hb_retndlen()
+   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
+*/
+
 #include "extend.h"
 #include "itemapi.h"
 #include "set.h"
@@ -209,7 +218,7 @@ char * hb_pards( int iParam, ... )
          }
       }
    }
-           
+
    return "        "; /* 8 spaces */
 }
 
@@ -477,6 +486,13 @@ void hb_retds( char * szDate ) /* szDate must have yyyymmdd format */
    stack.Return.item.asDate.value = hb_dateEncode( lDay, lMonth, lYear );
 }
 
+void hb_retl( int iLogical )
+{
+   hb_itemClear( &stack.Return );
+   stack.Return.type                 = IT_LOGICAL;
+   stack.Return.item.asLogical.value = iLogical ? TRUE : FALSE;
+}
+
 void hb_retnd( double dNumber )
 {
    hb_itemClear( &stack.Return );
@@ -485,8 +501,8 @@ void hb_retnd( double dNumber )
       stack.Return.item.asDouble.length = 20;
    else
       stack.Return.item.asDouble.length = 10;
-   stack.Return.item.asDouble.decimal   = hb_set.HB_SET_DECIMALS;
-   stack.Return.item.asDouble.value     = dNumber;
+   stack.Return.item.asDouble.decimal  = hb_set.HB_SET_DECIMALS;
+   stack.Return.item.asDouble.value    = dNumber;
 }
 
 void hb_retni( int iNumber )
@@ -497,19 +513,54 @@ void hb_retni( int iNumber )
    stack.Return.item.asInteger.value   = iNumber;
 }
 
-void hb_retl( int iLogical )
-{
-   hb_itemClear( &stack.Return );
-   stack.Return.type                 = IT_LOGICAL;
-   stack.Return.item.asLogical.value = iLogical ? TRUE : FALSE;
-}
-
 void hb_retnl( long lNumber )
 {
    hb_itemClear( &stack.Return );
-   stack.Return.type                = IT_LONG;
-   stack.Return.item.asLong.length  = 10;
-   stack.Return.item.asLong.value   = lNumber;
+   stack.Return.type                   = IT_LONG;
+   stack.Return.item.asLong.length     = 10;
+   stack.Return.item.asLong.value      = lNumber;
+}
+
+void hb_retndlen( double dNumber, WORD wWidth, WORD wDecimal )
+{
+   if( wWidth == 0 || wWidth > 99 )
+   {
+      if( dNumber > 10000000000.0 )
+         wWidth = 20;
+      else
+         wWidth = 10;
+   }
+
+   if( wDecimal == ( ( WORD ) -1 ) || ( wDecimal != 0 && wDecimal >= ( wWidth - 1 ) ) )
+      wDecimal = hb_set.HB_SET_DECIMALS;
+
+   hb_itemClear( &stack.Return );
+   stack.Return.type                   = IT_DOUBLE;
+   stack.Return.item.asDouble.value    = dNumber;
+   stack.Return.item.asDouble.length   = wWidth;
+   stack.Return.item.asDouble.decimal  = wDecimal;
+}
+
+void hb_retnilen( int iNumber, WORD wWidth )
+{
+   if( wWidth == 0 || wWidth > 99 )
+      wWidth = 10;
+
+   hb_itemClear( &stack.Return );
+   stack.Return.type                   = IT_INTEGER;
+   stack.Return.item.asInteger.value   = iNumber;
+   stack.Return.item.asInteger.length  = wWidth;
+}
+
+void hb_retnllen( long lNumber, WORD wWidth )
+{
+   if( wWidth == 0 || wWidth > 99 )
+      wWidth = 10;
+
+   hb_itemClear( &stack.Return );
+   stack.Return.type                   = IT_LONG;
+   stack.Return.item.asLong.value      = lNumber;
+   stack.Return.item.asLong.length     = wWidth;
 }
 
 void hb_storc( char * szText, int iParam, ... )

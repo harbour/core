@@ -1,3 +1,55 @@
+19990901-17:20 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/working/rtl_test.prg
+    + Added tests for decimals handling. (NUMPAR.PRG)
+  * source/rtl/strings.c
+    + VAL() now using hb_retndlen() instead of internalling (wow!).
+    + hb_itemStr() is now using hb_itemGetNLen()
+  * source/rtl/math.c
+    + No functions (except ABS()) are now accessing the internals. They
+      are using hb_retndlen() and hb_itemGetNLen() instead.
+      ABS(), MAX(), MIN(), MOD(), ROUND()
+    ! HB_MOD() accessed item.asDouble even if the item was not a DOUBLE.
+    - There were places were the decimals places were explicitly set to the
+      default SET_DECIMAL setting, even though the hb_retnd() call already set
+      this. I've removed these assigments. (David, is this OK ?)
+  * source/rtl/itemapi.c
+    * hb_itemGetNLen() is now optionally returning the parameters, so passing
+      a NULL is now valid.
+    ! hb_itemGetNLen() now returns zeros for non-numeric values.
+    ; hb_itemSetNLen() tested.
+  * source/rtl/extend.c
+    include/extend.h
+    + hb_retndlen(), hb_retnilen(), hb_retnllen() added, which are the same
+      as the standard hb_retn*() functions, but the width and decimals can be
+      specified.
+  * source/rtl/dates.c
+    + DAY(), MONTH(), YEAR(), DOW() now using the new hb_itemSetNLen() API call
+      instead of dealing with the internals.
+  * source/rtl/console.c
+    + Changed to call hb_fsSetMode().
+  * source/rtl/filesys.c
+    include/filesys.h
+    include/fileio.ch
+    + Added hb_fsSetMode() function, and the constants.
+  * Changes by Jose Lalin implemented.
+
+19990901-15:00 GMT+1 Jose Lalin <dezac@corevia.com>
+   * filesys.c
+     + Added hb_fsChDrv()
+     + Added hb_fsCurDrv()
+     + Added hb_fsIsDrv()
+     ! BC4.5 docs: setdisk/getdisk are for DOS, WIN16, WIN32 and OS/2
+       I don't know if they work under Unix/Linux too.
+     * hb_fsCurDir()
+     * hb_fsExtOpen
+       + some HB_SYMBOL_UNUSED added.
+
+       NOTE [vszel]: 
+        1.) I've #ifdef-ed out the new stuff for __CYGWIN__ since 
+          setdisk()/getdisk() were neither declared nor in any libraries.
+        2.) I've added some new header files to FILESYS.C. Please check them
+            on your system, if they are correct.
+
 19990901-14:05 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/filesys.c
      * hb_fsread() -> account for the possibility that num read is less

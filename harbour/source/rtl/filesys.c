@@ -15,6 +15,15 @@
    See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
 */
 
+/* Harbour Project source code
+   http://www.Harbour-Project.org/
+   The following functions are Copyright 1999 Jose Lalin <dezac@corevia.com>:
+      hb_fsChDrv()
+      hb_fsCurDrv()
+      hb_fsIsDrv()
+   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
+*/
+
 /* NOTE: In DOS/DJGPP under WinNT4 hb_fsSeek( fhnd, offset < 0, FS_SET) will
          set the file pointer to the passed negative value, and the subsequent
          hb_fsWrite() call will fail. In CA-Clipper hb_fsSeek() will fail,
@@ -31,6 +40,8 @@
 
 #if defined(__CYGWIN__)
    #include <mingw32/share.h>
+   #include <fcntl.h>
+   #include <io.h>
 #endif
 
 #if defined(__GNUC__)
@@ -39,6 +50,13 @@
    #include <unistd.h>
    #include <fcntl.h>
    #include <errno.h>
+
+   #if defined(__DJGPP__) || defined(__CYGWIN__) || defined(HARBOUR_GCC_OS2)
+      #include <io.h>
+   #endif
+   #if defined(__DJGPP__)
+      #include <dir.h>
+   #endif
 
    #if !defined(HAVE_POSIX_IO)
       #define HAVE_POSIX_IO
@@ -233,7 +251,7 @@ static void convert_create_flags( USHORT uiFlags, int * result_flags, unsigned *
  * FILESYS.API FUNCTIONS --
  */
 
-FHANDLE hb_fsOpen   ( BYTE * pFilename, USHORT uiFlags )
+FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
 {
    FHANDLE hFileHandle;
 
@@ -277,7 +295,7 @@ FHANDLE hb_fsOpen   ( BYTE * pFilename, USHORT uiFlags )
    return hFileHandle;
 }
 
-FHANDLE hb_fsCreate ( BYTE * pFilename, USHORT uiFlags )
+FHANDLE hb_fsCreate( BYTE * pFilename, USHORT uiFlags )
 {
    FHANDLE hFileHandle;
    int oflag;
@@ -308,7 +326,7 @@ FHANDLE hb_fsCreate ( BYTE * pFilename, USHORT uiFlags )
    return hFileHandle;
 }
 
-void    hb_fsClose  ( FHANDLE hFileHandle )
+void    hb_fsClose( FHANDLE hFileHandle )
 {
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
 
@@ -328,9 +346,49 @@ void    hb_fsClose  ( FHANDLE hFileHandle )
 
 }
 
+void    hb_fsSetMode( FHANDLE hFileHandle, USHORT uiMode )
+{
+
+#if defined(__BORLANDC__) || defined(__IBMCPP__) || defined(__DJGPP__) || defined(__CYGWIN__)
+
+   errno = 0;
+   switch( uiMode )
+   {
+      case FM_BINARY:
+         setmode( hFileHandle, O_BINARY );
+         break;
+
+      case FM_TEXT:
+         setmode( hFileHandle, O_TEXT );
+         break;
+   }
+   s_uiErrorLast = errno;
+
+#elif defined(_MSC_VER)
+
+   errno = 0;
+   switch( uiMode )
+   {
+      case FM_BINARY:
+         _setmode( hFileHandle, _O_BINARY );
+
+      case FM_TEXT:
+         _setmode( hFileHandle, _O_TEXT );
+         break;
+   }
+   s_uiErrorLast = errno;
+
+#else
+
+   s_uiErrorLast = FS_ERROR;
+
+#endif
+
+}
+
 /* NOTE: CA-Clipper uses USHORT instead of ULONG here. */
 
-ULONG   hb_fsRead   ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
+ULONG   hb_fsRead( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 {
    ULONG ulReadTotal = 0;
 
@@ -363,7 +421,7 @@ ULONG   hb_fsRead   ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 
 /* NOTE: CA-Clipper uses USHORT instead of ULONG here. */
 
-ULONG   hb_fsWrite  ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
+ULONG   hb_fsWrite( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 {
    ULONG ulWrittenTotal = 0;
 
@@ -390,7 +448,7 @@ ULONG   hb_fsWrite  ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
    return ulWrittenTotal;
 }
 
-ULONG   hb_fsSeek   ( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
+ULONG   hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
 {
    ULONG ulPos = -1;
    USHORT Flags = convert_seek_flags( uiFlags );
@@ -435,7 +493,7 @@ ULONG   hb_fsSeek   ( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
    return ulPos;
 }
 
-USHORT  hb_fsError  ( void )
+USHORT  hb_fsError( void )
 {
    return s_uiErrorLast;
 }
@@ -468,7 +526,7 @@ int hb_fsDelete ( BYTE * pFilename )
    return retval;
 }
 
-int hb_fsRename ( BYTE * pOldName, BYTE * pNewName )
+int hb_fsRename( BYTE * pOldName, BYTE * pNewName )
 {
    int retval = -1;
 
@@ -507,6 +565,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
 
       case FL_UNLOCK:
          iResult = unlock( hFileHandle, ulStart, ulLength );
+         break;
    }
    s_uiErrorLast = errno;
 
@@ -524,6 +583,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
 
       case FL_UNLOCK:
          iResult = locking( hFileHandle, _LK_UNLCK, ulLength );
+         break;
    }
 
    hb_fsSeek( hFileHandle, ulOldPos, FS_SET );
@@ -540,7 +600,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
    return ( iResult ? FALSE : TRUE );
 }
 
-void    hb_fsCommit ( FHANDLE hFileHandle )
+void    hb_fsCommit( FHANDLE hFileHandle )
 {
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
 
@@ -563,7 +623,7 @@ void    hb_fsCommit ( FHANDLE hFileHandle )
 #endif
 }
 
-BOOL    hb_fsMkDir  ( BYTE * pDirname )
+BOOL    hb_fsMkDir( BYTE * pDirname )
 {
    int iResult;
 
@@ -589,7 +649,7 @@ BOOL    hb_fsMkDir  ( BYTE * pDirname )
    return ( iResult ? FALSE : TRUE );
 }
 
-BOOL    hb_fsChDir  ( BYTE * pDirname )
+BOOL    hb_fsChDir( BYTE * pDirname )
 {
    int iResult;
 
@@ -609,7 +669,7 @@ BOOL    hb_fsChDir  ( BYTE * pDirname )
    return ( iResult ? FALSE : TRUE );
 }
 
-BOOL    hb_fsRmDir  ( BYTE * pDirname )
+BOOL    hb_fsRmDir( BYTE * pDirname )
 {
    int iResult;
 
@@ -631,9 +691,11 @@ BOOL    hb_fsRmDir  ( BYTE * pDirname )
 
 /* TODO: Make it thread safe */
 
-BYTE *  hb_fsCurDir ( USHORT uiDrive )
+BYTE *  hb_fsCurDir( USHORT uiDrive )
 {
    static char cwd_buff[ PATH_MAX + 1 ];
+
+   HB_SYMBOL_UNUSED( uiDrive );
 
 #if defined(HAVE_POSIX_IO)
 
@@ -651,69 +713,86 @@ BYTE *  hb_fsCurDir ( USHORT uiDrive )
    return ( BYTE * ) cwd_buff;
 }
 
-/* TODO: Implement nDrive */
-
-USHORT  hb_fsChDrv  ( BYTE nDrive )
+USHORT  hb_fsChDrv( BYTE nDrive )
 {
-   USHORT iResult;
+   USHORT uiResult;
 
-#if defined(HAVE_POSIX_IO)
+#if defined(HAVE_POSIX_IO) && ! defined(__CYGWIN__)
+
+   USHORT uiSave = getdisk();
 
    errno = 0;
-   iResult = 0;
-   s_uiErrorLast = errno;
-   s_uiErrorLast = FS_ERROR; /* TODO: Remove when function implemented */
+   uiResult = setdisk( nDrive );
+   if( nDrive == getdisk() )
+   {
+      s_uiErrorLast = errno;
+   }
+   else
+   {
+      setdisk( uiSave );
+      s_uiErrorLast = FS_ERROR;
+   }
 
 #else
 
-   iResult = 0;
+   uiResult = 0;
    s_uiErrorLast = FS_ERROR;
 
 #endif
 
-   return iResult;
+   return uiResult;
 }
 
-BYTE    hb_fsCurDrv ( void )
+BYTE    hb_fsCurDrv( void )
 {
-   USHORT iResult;
+   USHORT uiResult;
 
-#if defined(HAVE_POSIX_IO)
+#if defined(HAVE_POSIX_IO) && ! defined(__CYGWIN__)
 
    errno = 0;
-   iResult = 0;
+   uiResult = getdisk();
    s_uiErrorLast = errno;
-   s_uiErrorLast = FS_ERROR; /* TODO: Remove when function implemented */
 
 #else
 
-   iResult = 0;
+   uiResult = 0;
    s_uiErrorLast = FS_ERROR;
 
 #endif
 
-   return iResult;
+   return uiResult;
 }
 
-USHORT  hb_fsIsDrv  ( BYTE nDrive )
+USHORT  hb_fsIsDrv( BYTE nDrive )
 {
-   USHORT iResult;
+   USHORT uiResult;
 
-#if defined(HAVE_POSIX_IO)
+#if defined(HAVE_POSIX_IO) && ! defined(__CYGWIN__)
+
+   USHORT uiSave = getdisk();
 
    errno = 0;
-   iResult = 0;
-   s_uiErrorLast = errno;
-   s_uiErrorLast = FS_ERROR; /* TODO: Remove when function implemented */
+   setdisk( nDrive );
+   if( nDrive == getdisk() )
+   {
+      uiResult = 1;
+      s_uiErrorLast = errno;
+   }
+   else
+   {
+      uiResult = 0;
+      setdisk( uiSave );
+      s_uiErrorLast = FS_ERROR;
+   }
 
 #else
 
-   iResult = 0;
+   uiResult = 0;
    s_uiErrorLast = FS_ERROR;
 
 #endif
 
-   return iResult;
+   return uiResult;
 }
 
 /* TODO: Implement hb_fsExtOpen */
@@ -723,6 +802,12 @@ FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
 {
 
    s_uiErrorLast = FS_ERROR;
+
+   HB_SYMBOL_UNUSED( pFilename );
+   HB_SYMBOL_UNUSED( pDefExt );
+   HB_SYMBOL_UNUSED( uiFlags );
+   HB_SYMBOL_UNUSED( pPaths );
+   HB_SYMBOL_UNUSED( pError );
 
    return FS_ERROR;
 }

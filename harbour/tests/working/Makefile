@@ -20,132 +20,26 @@ ifeq ($(PM),)
 endif
 ifeq ($(PM),)   # PM not defined = build all files
 PRG_SOURCES=\
-        ac_test.prg \
-        adirtest.prg \
-        ainstest.prg \
-        and_or.prg \
-        array16.prg \
-        arrayidx.prg \
-        arrays.prg \
-        arreval.prg \
-        arrindex.prg \
-        atest.prg \
-	begin.prg \
-        box.prg \
-        byref.prg \
-        calling.prg \
-        cdow.prg \
-        clasinit.prg \
-        clasname.prg \
-        classch.prg \
-        classes.prg \
-        clsdata.prg \
-        cmphello.prg \
-        codebl.prg \
-        codebloc.prg \
-        comments.prg \
-        copyfile.prg \
-        curdirt.prg \
-        cursrtst.prg \
-        dates.prg \
-        dates2.prg \
-        dates3.prg \
-        dates4.prg \
-        debugtst.prg \
-        descend.prg \
-        dirtest.prg \
-        docase.prg \
-        dosshell.prg \
-        dynobj.prg \
-        dynsym.prg \
-        exittest.prg \
-        fib.prg \
-        fileio.prg \
-        filexist.prg \
-        fornext.prg \
-        fornext2.prg \
-        fortest.prg \
-        funcarr.prg \
-        guess.prg \
-        hardcr.prg \
-        hello.prg \
-        ifelse.prg \
-        ifinline.prg \
-        inherit.prg \
-        inifiles.prg \
-        initexit.prg \
-        inkeytst.prg \
-        inline.prg \
-        instr.prg \
-        iotest.prg \
-        iotest2.prg \
-        longstr.prg \
-        longstr2.prg \
-        mankala.prg \
-        mathtest.prg \
-        memvar.prg \
-        menutest.prg \
-        mtran.prg \
-        multiarg.prg \
-        nums.prg \
-        objarr.prg \
-        objasign.prg \
-        objects.prg \
-        operat.prg \
-        os.prg \
-        output.prg \
-        overload.prg \
-        passref.prg \
-        procline.prg \
-        procname.prg \
-        readfile.prg \
-        readhrb.prg \
-        recursiv.prg \
-        returns.prg \
-        round.prg \
-        rtfclass.prg \
-        rtl_test.prg \
-        say.prg \
-        scroll.prg \
-        seconds.prg \
-        set_num.prg \
-        set_test.prg \
-        sound.prg \
-        statfun.prg \
-        statics.prg \
-        strcmp.prg \
-        strdelim.prg \
-        strings.prg \
-        strings2.prg \
-        strings3.prg \
-        strip.prg \
-        syserror.prg \
-        t1.prg \
-        test.prg \
-        test_all.prg \
-        testbrw.prg \
-        testcgi.prg \
-        testcopy.prg \
-        testdbf.prg \
-        testerro.prg \
-        testfor.prg \
-        testgt.prg \
-        testhbf.prg \
-        testhtml.prg \
-        testinc.prg \
-        testmem.prg \
-        teststr.prg \
-        testtok.prg \
-        testpre.prg \
-        testread.prg \
-        testrdd.prg \
-        testvars.prg \
-        testwarn.prg \
-        tstcolor.prg \
-        transdef.prg \
-        val.prg \
-        version.prg \
-        while.prg \
+ac_test.prg \
+fortest.prg \
+olvas.prg \
+huh.prg \
+testdbf.prg \
+rtl_test.prg \
+descend.prg \
+fileio.prg \
+and_or.prg \
+copyfile.prg \
+kej.prg \
+kejj.prg \
+inkeytst.prg \
+para.prg \
+i.prg \
+j.prg \
+k.prg \
+ac_test.prg \
+testrdd.prg \
+testdbf.prg \
 
 PRG_HEADERS=\
         cgi.ch \

@@ -223,9 +223,12 @@ extern void     hb_retc( char * szText );   /* returns a string */
 extern void     hb_retclen( char * szText, ULONG ulLen ); /* returns a string with a specific length */
 extern void     hb_retds( char * szDate );  /* returns a date, must use yyyymmdd format */
 extern void     hb_retl( int iTrueFalse );  /* returns a logical integer */
+extern void     hb_retnd( double dNumber ); /* returns a double */
 extern void     hb_retni( int iNumber );    /* returns a integer number */
 extern void     hb_retnl( long lNumber );   /* returns a long number */
-extern void     hb_retnd( double dNumber ); /* returns a double */
+extern void     hb_retndlen( double dNumber, WORD wWidth, WORD wDecimal ); /* returns a double, with specific width and decimals */
+extern void     hb_retnilen( int iNumber, WORD wWidth ); /* returns a integer number, with specific width */
+extern void     hb_retnllen( long lNumber, WORD wWidth ); /* returns a long number, with specific width */
 extern void     hb_reta( ULONG ulLen );  /* returns an array with a specific length */
 
 extern void     hb_storc( char * szText, int iParam, ... ); /* stores a szString on a variable by reference */

@@ -401,18 +401,23 @@ void hb_itemGetNLen( PHB_ITEM pItem, WORD * pwWidth, WORD * pwDecimal )
       switch( pItem->type )
       {
          case IT_DOUBLE:
-            * pwWidth = pItem->item.asDouble.length;
-            * pwDecimal = pItem->item.asDouble.decimal;
+            if( pwWidth ) * pwWidth = pItem->item.asDouble.length;
+            if( pwDecimal ) * pwDecimal = pItem->item.asDouble.decimal;
             break;
 
          case IT_LONG:
-            * pwWidth = pItem->item.asLong.length;
-            * pwDecimal = 0;
+            if( pwWidth ) * pwWidth = pItem->item.asLong.length;
+            if( pwDecimal ) * pwDecimal = 0;
             break;
 
          case IT_INTEGER:
-            * pwWidth = pItem->item.asInteger.length;
-            * pwDecimal = 0;
+            if( pwWidth ) * pwWidth = pItem->item.asInteger.length;
+            if( pwDecimal ) * pwDecimal = 0;
+            break;
+
+         default:
+            if( pwWidth ) * pwWidth = 0;
+            if( pwDecimal ) * pwDecimal = 0;
             break;
       }
    }

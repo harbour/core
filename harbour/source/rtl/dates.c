@@ -494,21 +494,11 @@ HARBOUR HB_DAY( void )
 
       if( pDate )
       {
-         PHB_ITEM pReturn = hb_itemNew( NULL );
          long lDay, lMonth, lYear;
 
          hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
 
-         pReturn->type = IT_LONG;
-         pReturn->item.asLong.value = lDay;
-         pReturn->item.asLong.length = 3;
-         hb_itemReturn( pReturn );
-         hb_itemRelease( pReturn );
-/*
-         hb_retni( lDay );
- * It is dangerous to manipulate the stack return value directly!
-         stack.Return.item.asInteger.length = 3;
- */
+         hb_retnllen( lDay, 3 );
       }
       else
          hb_errRT_BASE( EG_ARG, 1114, NULL, "DAY" );
@@ -525,21 +515,11 @@ HARBOUR HB_MONTH( void )
 
       if( pDate )
       {
-         PHB_ITEM pReturn = hb_itemNew( NULL );
          long lDay, lMonth, lYear;
 
          hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
 
-         pReturn->type = IT_LONG;
-         pReturn->item.asLong.value = lMonth;
-         pReturn->item.asLong.length = 3;
-         hb_itemReturn( pReturn );
-         hb_itemRelease( pReturn );
-/*
-         hb_retni( lMonth );
- * It is dangerous to manipulate the stack return value directly!
-         stack.Return.item.asInteger.length = 3;
- */
+         hb_retnllen( lMonth, 3 );
       }
       else
          hb_errRT_BASE( EG_ARG, 1113, NULL, "MONTH" );
@@ -556,21 +536,11 @@ HARBOUR HB_YEAR( void )
 
       if( pDate )
       {
-         PHB_ITEM pReturn = hb_itemNew( NULL );
          long lDay, lMonth, lYear;
 
          hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
 
-         pReturn->type = IT_LONG;
-         pReturn->item.asLong.value = lYear;
-         pReturn->item.asLong.length = 5;
-         hb_itemReturn( pReturn );
-         hb_itemRelease( pReturn );
-/*
-         hb_retni( lYear );
- * It is dangerous to manipulate the stack return value directly!
-         stack.Return.item.asInteger.length = 5;
- */
+         hb_retnllen( lYear, 5 );
       }
       else
          hb_errRT_BASE( EG_ARG, 1112, NULL, "YEAR" );
@@ -634,30 +604,16 @@ HARBOUR HB_DOW( void )
 
       if( pDate )
       {
-         PHB_ITEM pReturn = hb_itemNew( NULL );
-
-         pReturn->type = IT_LONG;
-
          if( pDate->item.asDate.value )
          {
             long lDay, lMonth, lYear;
 
             hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
-            pReturn->item.asLong.value = hb_dow( lDay, lMonth, lYear );
-            /* hb_retni( hb_dow( lDay, lMonth, lYear ) );
-            */
+
+            hb_retnllen( hb_dow( lDay, lMonth, lYear ), 3 );
          }
          else
-            pReturn->item.asLong.value = 0;
-            /* hb_retni( 0 );
-            */
-
-         pReturn->item.asLong.length = 3;
-         hb_itemReturn( pReturn );
-         hb_itemRelease( pReturn );
-/*
-         stack.Return.item.asInteger.length = 3;
- */
+            hb_retnllen( 0, 3 );
       }
       else
          hb_errRT_BASE( EG_ARG, 1115, NULL, "DOW" );
