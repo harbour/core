@@ -1,3 +1,35 @@
+2001-02-08 11:30 GMT+1 Antonio Linares <alinares@fivetech.com>
+  * harbour/source/compiler/genc.c
+    ! improved support for HB_P_STATICNAME
+
+  * harbour/source/compiler/harbour.c
+    ! improved support for HB_P_STATICNAME
+
+  * harbour/source/debug/dbgmenu.prg
+    + New OSShell() action added
+
+  * harbour/source/debug/dbgtmenu.prg
+    ! some minor fixes
+
+  * harbour/source/debug/dbgtobj.prg
+    ! some minor fixes
+
+  * harbour/source/debug/debugger.prg
+    ! improved statics vars support.
+    + New method OSShell() added
+
+  * harbour/source/rtl/tget.prg
+    ! some minor fixes to let the debugger inspect a GetNew() object
+
+  * harbour/source/vm/hvm.c
+    ! improved support for HB_P_STATICNAME
+    ! __vmVarSGet() changed to use the entire statics array, not just the
+      statics frame based one.
+    + New __vmVarSSet( <nStaticIndex>, <uValue> ) function added to
+      change the value of any static variable.
+
+  Notice: Debugger statics vars inspection is almost finished! :-)
+
 2001-02-07 17:15 UTC-0500 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/gtwin/gtwin.c
     ! Improved handling of international characters and keyboards,
