@@ -37,7 +37,7 @@
 2001-08-21 08:30 GMT Dave Pearson <davep@davep.org>
    * source/compiler/gencobj.c
       * Fixed bugs 453424 (compiler core dumps on GNU/Linux when no
-      harbour.cfg can be found) and 45325 (an empty harbour.cfg fails to
+      harbour.cfg can be found) and 453425 (an empty harbour.cfg fails to
       correctly report that no compiler command has been specified.
 
 2001-08-21 01:30 UTC-0800 Brian Hays <bhays@abacuslaw.com>
