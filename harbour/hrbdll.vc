@@ -1573,7 +1573,7 @@ $(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
 
 $(OBJ_DIR)\macrol.obj : $(OBJ_DIR)\macrol.c
    -echo. > $(OBJ_DIR)\unistd.h
-   $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -o$@ $**
+   $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) /Fo$@ $**
    -del $(OBJ_DIR)\unistd.h
 
 $(OBJ_DIR)\macroa.obj : $(MACRO_DIR)\macroa.c
