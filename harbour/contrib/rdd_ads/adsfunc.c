@@ -250,7 +250,7 @@ HB_FUNC( ADSSETDEFAULT )
 
    AdsGetDefault( pucDefault, &pusLen);
 
-   hb_retclen( pucDefault, pusLen );
+   hb_retclen( (char*)pucDefault, pusLen );
 
    if( ISCHAR(1) )
       AdsSetDefault( (UNSIGNED8*) hb_parc( 1 ) );
@@ -265,7 +265,7 @@ HB_FUNC( ADSSETSEARCHPATH )
 
    AdsGetSearchPath( pucPath, &pusLen);
 
-   hb_retclen( pucPath, pusLen );
+   hb_retclen( (char*)pucPath, pusLen );
 
    if( ISCHAR(1) )
       AdsSetSearchPath( (UNSIGNED8*) hb_parc( 1 ) );
