@@ -1,3 +1,13 @@
+20000528-13:45 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   + contrib/msql/readme.txt
+   + contrib/msql/Makefile
+   + contrib/msql/msql.c
+   + contrib/msql/msql.h
+   + contrib/msql/msql.ch
+   + contrib/msql/tmsql.prg
+     + added cvs ID to all files
+
 20000528-13:41 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * contrib/msql/test.prg
