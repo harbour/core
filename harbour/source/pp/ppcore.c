@@ -1172,45 +1172,65 @@ static int WorkPseudoF( char ** ptri, char * ptro, DEFINES * stdef )
   lenres = hb_pp_strocpy( ptro, stdef->value );  /* Copying value of macro to destination string  */
 
   if( stdef->pars )
-    {
-      ipos = 0; ibeg = 0;
-      do                               /* Parsing through parameters */
-        {                                /* in macro definition        */
-          if( *(stdef->pars+ipos) == ',' || *(stdef->pars+ipos) == '\0' )
-            {
-              *(parfict+ipos-ibeg) = '\0';
-              lenfict = ipos - ibeg;
+  {
+     ipos = 0; ibeg = 0;
+     do                               /* Parsing through parameters */
+     {                                /* in macro definition        */
+        if( *(stdef->pars+ipos) == ',' || *(stdef->pars+ipos) == '\0' )
+        {
+           *(parfict+ipos-ibeg) = '\0';
+           lenfict = ipos - ibeg;
 
-              if( **ptri != ')' )
-                {
-                  (*ptri)++;             /* Get next real parameter */
-                  HB_SKIPTABSPACES( *ptri );
-                  ptrreal = *ptri;
-                  lenreal = NextParm( ptri, NULL);
+           if( **ptri != ')' )
+           {
+              (*ptri)++;             /* Get next real parameter */
+              HB_SKIPTABSPACES( *ptri );
+              ptrreal = *ptri;
+              lenreal = NextParm( ptri, NULL);
 
-                  ptrb = ptro;
-                  while( (ifou = hb_strAt( parfict, lenfict, ptrb, lenres-(ptrb-ptro) )) > 0 )
-                    {
-                      ptrb = ptrb+ifou-1;
-                      if( !ISNAME(*(ptrb-1)) && !ISNAME(*(ptrb+lenfict)) )
-                        {
-                          hb_pp_Stuff( ptrreal, ptrb, lenreal, lenfict, lenres );
-                          lenres += lenreal - lenfict;
-                          ptrb += lenreal;
-                        }
-                      else ptrb++;
-                    }
-                  ibeg = ipos+1;
-                }
-            }
-          else *(parfict+ipos-ibeg) = *(stdef->pars+ipos);
-          if( *(stdef->pars+ipos) == '\0' ) break;
-          ipos++;
+              ptrb = ptro;
+              while( (ifou = hb_strAt( parfict, lenfict, ptrb, lenres-(ptrb-ptro) )) > 0 )
+              {
+                 ptrb = ptrb+ifou-1;
+                 if( !ISNAME(*(ptrb-1)) && !ISNAME(*(ptrb+lenfict)) )
+                 {
+                    hb_pp_Stuff( ptrreal, ptrb, lenreal, lenfict, lenres );
+                    lenres += lenreal - lenfict;
+                    ptrb += lenreal;
+                 }
+                 else
+                 {
+                    ptrb++;
+                 }
+              }
+
+              ibeg = ipos+1;
+           }
         }
-      while( 1 );
-    }
-  else  while( **ptri != ')' ) (*ptri)++;
+        else
+        {
+           *(parfict+ipos-ibeg) = *(stdef->pars+ipos);
+        }
+
+        if( *(stdef->pars+ipos) == '\0' )
+        {
+           break;
+        }
+
+        ipos++;
+     }
+     while( 1 );
+  }
+  else
+  {
+     while( **ptri != ')' )
+     {
+       (*ptri)++;
+     }
+  }
+
   (*ptri)++;
+
   return lenres;
 }
 
@@ -3247,6 +3267,16 @@ static int NextParm( char ** sSource, char * sDest )
      {
         State = STATE_QUOTE3;
      }
+     /* Ron Pinkas added 2000-11-26 */
+     else if( **sSource == '[' )
+     {
+        StBr++;
+     }
+     else if( **sSource == ']' )
+     {
+        StBr--;
+     }
+     /* END - Ron Pinkas added 2000-11-26 */
      else if( **sSource == '(' )
      {
         StBr++;
@@ -3278,13 +3308,17 @@ static int NextParm( char ** sSource, char * sDest )
      lenName++;
   }
 
-  if( sDest != NULL )
+  if( sDest )
   {
      *sDest = '\0';
-     #if 0
-        printf( "NextParm: >%s<\n", sDest - lenName );
-     #endif
   }
+
+  #if 0
+     if( sDest )
+        printf( "NextParm: >%s<\n", sDest - lenName );
+     else
+        printf( "NextParm Len: %i\n", lenName );
+  #endif
 
   return lenName;
 }
