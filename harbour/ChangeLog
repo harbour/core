@@ -1,3 +1,7 @@
+20000421-10:11 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/compiler/genobj32.c
+     * Some little fixes after Ron changes
+
 20000420-23:15 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/cmdcheck.c
