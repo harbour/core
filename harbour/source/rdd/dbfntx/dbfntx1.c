@@ -2826,7 +2826,7 @@ static LPTAGINFO ntxFindIndex( NTXAREAP pArea , PHB_ITEM lpOrder )
    {
       do
       {
-         if( !stricmp( current->TagName , hb_itemGetCPtr( lpOrder ) ) )
+         if( !hb_stricmp( current->TagName , hb_itemGetCPtr( lpOrder ) ) )
             return current;
          current = current->pNext;
       } while( current );
