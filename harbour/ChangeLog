@@ -1,3 +1,9 @@
+2000-05-31 23:57 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * source/vm/itemapi.c
+     ! hb_itemNew() fixed for non NULL pNull values.
+       Thanks go to Janica Lubos for the fix.
+
 2000-05-31 23:43 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * contrib/hbclip/make_clp.bat 
