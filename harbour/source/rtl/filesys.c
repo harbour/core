@@ -997,7 +997,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
       s_uiErrorLast = errno;
    }
 
-#elif defined(HAVE_POSIX_IO) && !defined(__IBMCPP__)
+#elif defined(HAVE_POSIX_IO) && !defined(__IBMCPP__) && !defined(__RSXNT__)
 
    errno = 0;
    switch( uiMode )

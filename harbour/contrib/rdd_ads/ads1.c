@@ -44,6 +44,7 @@
 #include "hbapilng.h"
 #include "hbdate.h"
 #include "rddads.h"
+#include <ctype.h>
 
 static ERRCODE adsRecCount( ADSAREAP pArea, ULONG * pRecCount );
 
