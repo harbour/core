@@ -38,7 +38,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
- *    HB___ACCEPTSTR()
+ *    __ACCEPTSTR()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -48,20 +48,20 @@
 #include "hbapigt.h"
 #include "inkey.ch"
 
-extern HARBOUR HB_QOUT( void );
+extern HB_FUNC( QOUT );
 
 #define ACCEPT_BUFFER_LEN 256 /* length of input buffer for ACCEPT command */
 
 static char s_szAcceptResult[ ACCEPT_BUFFER_LEN ] = { '\0' };
 
-HARBOUR HB___ACCEPT( void )
+HB_FUNC( __ACCEPT )
 {
    int input;
    ULONG ulLen;
 
    /* cPrompt(s) passed ? */
    if( hb_pcount() >= 1 )
-      HB_QOUT();
+      HB_FUNCNAME( QOUT )();
 
    ulLen = 0;
    input = 0;
@@ -96,7 +96,7 @@ HARBOUR HB___ACCEPT( void )
    hb_retc( s_szAcceptResult );
 }
 
-HARBOUR HB___ACCEPTSTR( void )
+HB_FUNC( __ACCEPTSTR )
 {
    hb_retc( s_szAcceptResult );
 }

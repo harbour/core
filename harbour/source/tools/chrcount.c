@@ -19,7 +19,7 @@
 
 #include "hbapi.h"
 
-HARBOUR HB_GT_CHRCOUNT( void )
+HB_FUNC( GT_CHRCOUNT )
 {
   char *s1, *s2;
   int count, pos2, len;

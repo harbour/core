@@ -35,7 +35,7 @@
 
 #include "hbapi.h"
 
-HARBOUR HB_CT_CHECKSUM( void )
+HB_FUNC( CT_CHECKSUM )
 {
    BYTE * pbyString = ( BYTE * ) hb_parc( 1 );
    ULONG ulLen = hb_parclen( 1 );

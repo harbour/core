@@ -161,22 +161,22 @@ void hb_mouseGetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight
 
 #ifdef HB_COMPAT_C53
 
-HARBOUR HB_MPRESENT( void )
+HB_FUNC( MPRESENT )
 {
    hb_retl( hb_mouseIsPresent() );
 }
 
-HARBOUR HB_MHIDE( void )
+HB_FUNC( MHIDE )
 {
    hb_mouseSetCursor( FALSE );
 }
 
-HARBOUR HB_MSHOW( void )
+HB_FUNC( MSHOW )
 {
    hb_mouseSetCursor( TRUE );
 }
 
-HARBOUR HB_MSETCURSOR( void )
+HB_FUNC( MSETCURSOR )
 {
    hb_retl( hb_mouseGetCursor() );
 
@@ -184,33 +184,33 @@ HARBOUR HB_MSETCURSOR( void )
       hb_mouseSetCursor( hb_parl( 1 ) );
 }
 
-HARBOUR HB_MROW( void )
+HB_FUNC( MROW )
 {
    hb_retni( hb_mouseRow() );   
 }
 
-HARBOUR HB_MCOL( void )
+HB_FUNC( MCOL )
 {
    hb_retni( hb_mouseCol() );   
 }
 
-HARBOUR HB_MSETPOS( void )
+HB_FUNC( MSETPOS )
 {
    if( ISNUM( 1 ) && ISNUM( 2 ) )
       hb_mouseSetPos( hb_parni( 1 ), hb_parni( 2 ) );
 }
 
-HARBOUR HB_MRIGHTDOWN( void )
+HB_FUNC( MRIGHTDOWN )
 {
    hb_retl( hb_mouseIsButtonPressed( s_iRightButton ) );
 }
 
-HARBOUR HB_MLEFTDOWN( void )
+HB_FUNC( MLEFTDOWN )
 {
    hb_retl( hb_mouseIsButtonPressed( s_iLeftButton ) );
 }
 
-HARBOUR HB_MDBLCLK( void )
+HB_FUNC( MDBLCLK )
 {
    hb_retni( s_uiDoubleClickSpeed );
 
@@ -223,7 +223,7 @@ HARBOUR HB_MDBLCLK( void )
    }
 }
 
-HARBOUR HB_MSAVESTATE( void )
+HB_FUNC( MSAVESTATE )
 {
    int iTop, iLeft, iBottom, iRight;
 
@@ -260,7 +260,7 @@ HARBOUR HB_MSAVESTATE( void )
    hb_xfree( pBuffer );
 }
 
-HARBOUR HB_MRESTSTATE( void )
+HB_FUNC( MRESTSTATE )
 {
    USHORT uiLen = sizeof( int ) + 
                   sizeof( int ) + 
@@ -301,7 +301,7 @@ HARBOUR HB_MRESTSTATE( void )
    }
 }
 
-HARBOUR HB_MSETBOUNDS( void )
+HB_FUNC( MSETBOUNDS )
 {
    int iTop    = ISNUM( 1 ) ? hb_parni( 1 ) : 0;
    int iLeft   = ISNUM( 2 ) ? hb_parni( 2 ) : 0; 
@@ -313,34 +313,3 @@ HARBOUR HB_MSETBOUNDS( void )
 
 #endif
 
-#ifdef HB_COMPAT_XPP
-
-/* NOTE: XBase++ compatible function */
-
-HARBOUR HB_NUMBUTTONS( void )
-{
-   hb_retni( hb_mouseCountButton() );
-}
-
-/* NOTE: XBase++ compatible function */
-
-HARBOUR HB_SETMOUSE( void )
-{
-   hb_retl( hb_mouseGetCursor() );
-
-   if( ISLOG( 1 ) )
-      hb_mouseSetCursor( hb_parl( 1 ) );
-
-   {
-      PHB_ITEM pRow = hb_param( 2, IT_NUMERIC );
-      PHB_ITEM pCol = hb_param( 3, IT_NUMERIC );
-
-      if( pRow || pCol )
-      {
-         hb_mouseSetPos( pRow ? hb_itemGetNI( pRow ) : hb_mouseRow() ,
-                         pCol ? hb_itemGetNI( pCol ) : hb_mouseCol() );
-      }
-   }
-}
-
-#endif

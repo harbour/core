@@ -37,7 +37,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-HARBOUR HB_STR( void )
+HB_FUNC( STR )
 {
    BOOL bValid;
    PHB_ITEM pNumber = hb_param( 1, IT_NUMERIC );

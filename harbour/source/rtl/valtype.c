@@ -67,7 +67,7 @@ char * hb_valtypeGet( HB_ITEM_PTR pItem )
    return "U";
 }
 
-HARBOUR HB_VALTYPE( void )
+HB_FUNC( VALTYPE )
 {
    hb_retc( hb_valtypeGet( hb_param( 1, IT_ANY ) ) );
 }

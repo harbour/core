@@ -59,7 +59,7 @@ char * hb_strHardCR( char * pszString, ULONG ulStringLen )
    return pszString;
 }
 
-HARBOUR HB_HARDCR( void )
+HB_FUNC( HARDCR )
 {
    PHB_ITEM pString = hb_param( 1, IT_STRING );
 

@@ -621,7 +621,7 @@ ULONG hb_xquery( USHORT uiMode )
    return ulResult;
 }
 
-HARBOUR HB_MEMORY( void )
+HB_FUNC( MEMORY )
 {
    hb_retnl( hb_xquery( hb_parni( 1 ) ) );
 }

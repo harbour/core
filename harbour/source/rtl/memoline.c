@@ -35,7 +35,7 @@
 
 #include "hbapi.h"
 
-HARBOUR HB_MEMOLINE( void )
+HB_FUNC( MEMOLINE )
 {
    char * pszString    = ISCHAR( 1 ) ? hb_parc( 1 ) : "";
    ULONG  ulLineLength = ISNUM( 2 ) ? hb_parni( 2 ) : 79;

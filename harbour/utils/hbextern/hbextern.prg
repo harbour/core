@@ -122,11 +122,11 @@ PROCEDURE ProcessLine( nOut, cLine )
       ENDIF
    ENDIF
 
-   nPos =AT( "HARBOUR", cLine )
+   nPos =AT( "HB_FUNC(", cLine )
    IF nPos > 0
       cLine = LTRIM( SUBSTR( cLine, nPos+7 ) )
       IF AT( "HB_", cLine ) == 1
-         nPos =AT( "(", cLine )
+         nPos =AT( ")", cLine )
          IF nPos > 0
             cLine :=ALLTRIM( SUBSTR( cLine, 4, nPos-4 ) )
             ? cLine

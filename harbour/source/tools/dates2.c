@@ -108,7 +108,7 @@ long hb_woy( long lDay, long lMonth, long lYear, BOOL bISO )
    return iWeek;
 }
 
-HARBOUR HB_AMONTHS( void )
+HB_FUNC( AMONTHS )
 {
    PHB_ITEM pReturn = hb_itemArrayNew( 12 );    /* Create array */
    PHB_ITEM pString;
@@ -125,7 +125,7 @@ HARBOUR HB_AMONTHS( void )
    hb_itemRelease( pReturn );
 }
 
-HARBOUR HB_ADAYS( void )
+HB_FUNC( ADAYS )
 {
    PHB_ITEM pReturn = hb_itemArrayNew( 7 );    /* Create array */
    PHB_ITEM pString;
@@ -142,7 +142,7 @@ HARBOUR HB_ADAYS( void )
    hb_itemRelease( pReturn );
 }
 
-HARBOUR HB_ISLEAPYEAR( void )
+HB_FUNC( ISLEAPYEAR )
 {
    if( ISDATE( 1 ) )
    {
@@ -158,7 +158,7 @@ HARBOUR HB_ISLEAPYEAR( void )
    }
 }
 
-HARBOUR HB_DAYSINMONTH( void )
+HB_FUNC( DAYSINMONTH )
 {
    if( ISDATE( 1 ) )
    {
@@ -172,7 +172,7 @@ HARBOUR HB_DAYSINMONTH( void )
       hb_retni( 0 );
 }
 
-HARBOUR HB_EOM( void )
+HB_FUNC( EOM )
 {
    if( ISDATE( 1 ) )
    {
@@ -189,7 +189,7 @@ HARBOUR HB_EOM( void )
       hb_retds( "" );
 }
 
-HARBOUR HB_BOM( void )
+HB_FUNC( BOM )
 {
    if( ISDATE( 1 ) )
    {
@@ -205,7 +205,7 @@ HARBOUR HB_BOM( void )
       hb_retds( "" );
 }
 
-HARBOUR HB_WOM( void )
+HB_FUNC( WOM )
 {
    if( ISDATE( 1 ) )
    {
@@ -219,7 +219,7 @@ HARBOUR HB_WOM( void )
       hb_retni( 0 );
 }
 
-HARBOUR HB_DOY( void )
+HB_FUNC( DOY )
 {
    if( ISDATE( 1 ) )
    {
@@ -235,7 +235,7 @@ HARBOUR HB_DOY( void )
 
 /* Return the nWeek of the year (1 - 52, 0 - 52 if ISO) */
 
-HARBOUR HB_WOY( void )
+HB_FUNC( WOY )
 {
    if( ISDATE( 1 ) )
    {
@@ -249,7 +249,7 @@ HARBOUR HB_WOY( void )
       hb_retni( 0 );
 }
 
-HARBOUR HB_EOY( void )
+HB_FUNC( EOY )
 {
    if( ISDATE( 1 ) )
    {
@@ -265,7 +265,7 @@ HARBOUR HB_EOY( void )
       hb_retds( "" );
 }
 
-HARBOUR HB_BOY( void )
+HB_FUNC( BOY )
 {
    if( ISDATE( 1 ) )
    {
@@ -281,7 +281,7 @@ HARBOUR HB_BOY( void )
       hb_retds( "" );
 }
 
-HARBOUR HB_DATETIME( void )
+HB_FUNC( DATETIME )
 {
    time_t current_time;
    char * szResult = ( char * ) hb_xgrab( 26 );

@@ -61,7 +61,7 @@ static void hb_arrayNewRagged( PHB_ITEM pArray, int iDimension )
    }
 }
 
-HARBOUR HB_ARRAY( void )
+HB_FUNC( ARRAY )
 {
    int iPCount = hb_pcount();
 
@@ -91,7 +91,7 @@ HARBOUR HB_ARRAY( void )
    }
 }
 
-HARBOUR HB_AADD( void )
+HB_FUNC( AADD )
 {
    PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
 
@@ -119,7 +119,7 @@ HARBOUR HB_AADD( void )
 /* NOTE: CA-Cl*pper 5.3 and older will return NIL on bad parameter, 5.3a,b
          will throw a runtime error. [vszakats] */
 
-HARBOUR HB_ASIZE( void )
+HB_FUNC( ASIZE )
 {
    PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
 
@@ -137,7 +137,7 @@ HARBOUR HB_ASIZE( void )
 #endif
 }
 
-HARBOUR HB_ATAIL( void )
+HB_FUNC( ATAIL )
 {
    PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
 
@@ -145,7 +145,7 @@ HARBOUR HB_ATAIL( void )
       hb_arrayLast( pArray, &hb_stack.Return );
 }
 
-HARBOUR HB_AINS( void )
+HB_FUNC( AINS )
 {
    PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
 
@@ -158,7 +158,7 @@ HARBOUR HB_AINS( void )
    }
 }
 
-HARBOUR HB_ADEL( void )
+HB_FUNC( ADEL )
 {
    PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
 
@@ -171,7 +171,7 @@ HARBOUR HB_ADEL( void )
    }
 }
 
-HARBOUR HB_AFILL( void )
+HB_FUNC( AFILL )
 {
    PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
 
@@ -194,7 +194,7 @@ HARBOUR HB_AFILL( void )
    }
 }
 
-HARBOUR HB_ASCAN( void )
+HB_FUNC( ASCAN )
 {
    PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
    PHB_ITEM pValue = hb_param( 2, IT_ANY );
@@ -213,7 +213,7 @@ HARBOUR HB_ASCAN( void )
       hb_retnl( 0 );
 }
 
-HARBOUR HB_AEVAL( void )
+HB_FUNC( AEVAL )
 {
    PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
    PHB_ITEM pBlock = hb_param( 2, IT_BLOCK );
@@ -234,7 +234,7 @@ HARBOUR HB_AEVAL( void )
       hb_errRT_BASE( EG_ARG, 2017, NULL, "AEVAL" );
 }
 
-HARBOUR HB_ACOPY( void )
+HB_FUNC( ACOPY )
 {
    PHB_ITEM pSrcArray = hb_param( 1, IT_ARRAY );
    PHB_ITEM pDstArray = hb_param( 2, IT_ARRAY );
@@ -261,7 +261,7 @@ HARBOUR HB_ACOPY( void )
 
 /* NOTE: Clipper will return NIL if the parameter is not an array. [vszakats] */
 
-HARBOUR HB_ACLONE( void )
+HB_FUNC( ACLONE )
 {
    PHB_ITEM pSrcArray = hb_param( 1, IT_ARRAY );
 

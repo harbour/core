@@ -36,12 +36,12 @@
 #include "hbapi.h"
 #include "hbapigt.h"
 
-HARBOUR HB_MAXROW( void ) /* Return the maximum screen row number (zero origin) */
+HB_FUNC( MAXROW ) /* Return the maximum screen row number (zero origin) */
 {
    hb_retni( hb_gtMaxRow() );
 }
 
-HARBOUR HB_MAXCOL( void ) /* Return the maximum screen column number (zero origin) */
+HB_FUNC( MAXCOL ) /* Return the maximum screen column number (zero origin) */
 {
    hb_retni( hb_gtMaxCol() );
 }

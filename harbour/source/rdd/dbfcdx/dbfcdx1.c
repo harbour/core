@@ -95,12 +95,12 @@ typedef struct _DBFMEMO
 typedef DBFMEMO * LPDBFMEMO;
 
 
-HARBOUR HB__DBFCDX( void );
-HARBOUR HB_DBFCDX_GETFUNCTABLE( void );
+HB_FUNC( _DBFCDX );
+HB_FUNC( DBFCDX_GETFUNCTABLE );
 
 HB_INIT_SYMBOLS_BEGIN( dbfcdx1__InitSymbols )
-{ "_DBFCDX",             _HB_FS_PUBLIC, HB__DBFCDX,             0 },
-{ "DBFCDX_GETFUNCTABLE", _HB_FS_PUBLIC, HB_DBFCDX_GETFUNCTABLE, 0 }
+{ "_DBFCDX",             HB_FS_PUBLIC, HB_FUNCNAME( _DBFCDX ), NULL },
+{ "DBFCDX_GETFUNCTABLE", HB_FS_PUBLIC, HB_FUNCNAME( DBFCDX_GETFUNCTABLE ), NULL }
 HB_INIT_SYMBOLS_END( dbfcdx1__InitSymbols )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
    #pragma startup dbfcdx1__InitSymbols
@@ -924,11 +924,11 @@ static RDDFUNCS cdxTable = { cdxBof,
                              cdxWhoCares
                            };
 
-HARBOUR HB__DBFCDX( void )
+HB_FUNC( _DBFCDX )
 {
 }
 
-HARBOUR HB_DBFCDX_GETFUNCTABLE( void )
+HB_FUNC( DBFCDX_GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
    USHORT * uiCount;

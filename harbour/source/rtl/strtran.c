@@ -43,7 +43,7 @@
 
 /* replaces lots of characters in a string */
 /* TOFIX: Will not work with a search string of > 64 KB on some platforms */
-HARBOUR HB_STRTRAN( void )
+HB_FUNC( STRTRAN )
 {
    PHB_ITEM pText = hb_param( 1, IT_STRING );
 

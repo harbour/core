@@ -41,12 +41,12 @@
 #include "hbapirdd.h"
 #include "rddsys.ch"
 
-HARBOUR HB__DBFNTX( void );
-HARBOUR HB_DBFNTX_GETFUNCTABLE( void );
+HB_FUNC( _DBFNTX );
+HB_FUNC( DBFNTX_GETFUNCTABLE );
 
 HB_INIT_SYMBOLS_BEGIN( dbfntx1__InitSymbols )
-{ "_DBFNTX",             _HB_FS_PUBLIC, HB__DBFNTX,             0 },
-{ "DBFNTX_GETFUNCTABLE", _HB_FS_PUBLIC, HB_DBFNTX_GETFUNCTABLE, 0 }
+{ "_DBFNTX",             HB_FS_PUBLIC, HB_FUNCNAME( _DBFNTX ), NULL },
+{ "DBFNTX_GETFUNCTABLE", HB_FS_PUBLIC, HB_FUNCNAME( DBFNTX_GETFUNCTABLE ), NULL }
 HB_INIT_SYMBOLS_END( dbfntx1__InitSymbols )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
    #pragma startup dbfntx1__InitSymbols
@@ -60,11 +60,11 @@ static RDDFUNCS ntxSuper = { 0 };
 
 static RDDFUNCS ntxTable = { 0 };
 
-HARBOUR HB__DBFNTX( void )
+HB_FUNC( _DBFNTX )
 {
 }
 
-HARBOUR HB_DBFNTX_GETFUNCTABLE( void )
+HB_FUNC( DBFNTX_GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
    USHORT * uiCount;

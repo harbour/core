@@ -41,7 +41,7 @@
 /* TEST: QOUT( "isalpha( 'hello' ) = ", isalpha( 'hello' ) ) */
 /* TEST: QOUT( "isalpha( '12345' ) = ", isalpha( '12345' ) ) */
 
-HARBOUR HB_ISALPHA( void )
+HB_FUNC( ISALPHA )
 {
    hb_retl( isalpha( *hb_parc( 1 ) ) );
 }
@@ -50,7 +50,7 @@ HARBOUR HB_ISALPHA( void )
 /* TEST: QOUT( "isdigit( '12345' ) = ", isdigit( '12345' ) ) */
 /* TEST: QOUT( "isdigit( 'abcde' ) = ", isdigit( 'abcde' ) ) */
 
-HARBOUR HB_ISDIGIT( void )
+HB_FUNC( ISDIGIT )
 {
    hb_retl( isdigit( *hb_parc( 1 ) ) );
 }
@@ -59,7 +59,7 @@ HARBOUR HB_ISDIGIT( void )
 /* TEST: QOUT( "isupper( 'Abcde' ) = ", isupper( 'Abcde' ) ) */
 /* TEST: QOUT( "isupper( 'abcde' ) = ", isupper( 'abcde' ) ) */
 
-HARBOUR HB_ISUPPER( void )
+HB_FUNC( ISUPPER )
 {
    hb_retl( isupper( *hb_parc( 1 ) ) );
 }
@@ -68,7 +68,7 @@ HARBOUR HB_ISUPPER( void )
 /* TEST: QOUT( "islower( 'abcde' ) = ", islower( 'abcde' ) ) */
 /* TEST: QOUT( "islower( 'Abcde' ) = ", islower( 'Abcde' ) ) */
 
-HARBOUR HB_ISLOWER( void )
+HB_FUNC( ISLOWER )
 {
    hb_retl( islower( *hb_parc( 1 ) ) );
 }

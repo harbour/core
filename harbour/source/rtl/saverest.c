@@ -36,7 +36,7 @@
 #include "hbapi.h"
 #include "hbapigt.h"
 
-HARBOUR HB_SAVESCREEN( void )
+HB_FUNC( SAVESCREEN )
 {
    USHORT uiTop    = ISNUM( 1 ) ? hb_parni( 1 ) : 0;      
    USHORT uiLeft   = ISNUM( 2 ) ? hb_parni( 2 ) : 0;      
@@ -55,7 +55,7 @@ HARBOUR HB_SAVESCREEN( void )
    hb_xfree( ( char * ) pBuffer );
 }
 
-HARBOUR HB_RESTSCREEN( void )
+HB_FUNC( RESTSCREEN )
 {
    if( ISCHAR( 5 ) )
       hb_gtRest( ISNUM( 1 ) ? hb_parni( 1 ) : 0,            

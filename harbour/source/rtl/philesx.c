@@ -42,7 +42,7 @@
 
 /* NOTE: XBase++ compatible */
 
-HARBOUR HB_CURDRIVE( void )
+HB_FUNC( CURDRIVE )
 {
    USHORT uiErrorOld = hb_fsError();
    char szDrive[ 1 ];

@@ -85,7 +85,7 @@ PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
    pDynSym = hb_dynsymFind( pSymbol->szName ); /* Find position */
    if( pDynSym )            /* If name exists */
    {
-      if( ! ( pSymbol->cScope & ( _HB_FS_STATIC | _HB_FS_INIT | _HB_FS_EXIT ) ) ) /* only for _HB_FS_PUBLIC */
+      if( ! ( pSymbol->cScope & ( HB_FS_STATIC | HB_FS_INIT | HB_FS_EXIT ) ) ) /* only for HB_FS_PUBLIC */
       {
          if( ( ! pDynSym->pFunPtr ) && pSymbol->pFunPtr ) /* The DynSym existed */
             pDynSym->pFunPtr = pSymbol->pFunPtr;  /* but had no function ptr assigned */
@@ -118,7 +118,7 @@ PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
    pDynSym->hMemvar = 0;
    pDynSym->hArea   = 0;
 
-   if( ! ( pSymbol->cScope & ( _HB_FS_STATIC | _HB_FS_INIT | _HB_FS_EXIT ) ) ) /* only for _HB_FS_PUBLIC */
+   if( ! ( pSymbol->cScope & ( HB_FS_STATIC | HB_FS_INIT | HB_FS_EXIT ) ) ) /* only for HB_FS_PUBLIC */
    {
       if( pDynSym->pFunPtr != pSymbol->pFunPtr ) /* it contains a function pointer */
          pDynSym->pFunPtr = pSymbol->pFunPtr;    /* place the function at DynSym */
@@ -285,12 +285,12 @@ void hb_dynsymRelease( void )
    hb_xfree( s_pDynItems );
 }
 
-HARBOUR HB___DYNSCOUNT( void ) /* How much symbols do we have: dsCount = __dynsymCount() */
+HB_FUNC( __DYNSCOUNT ) /* How much symbols do we have: dsCount = __dynsymCount() */
 {
    hb_retnl( ( long ) s_uiDynSymbols );
 }
 
-HARBOUR HB___DYNSGETNAME( void ) /* Get name of symbol: cSymbol = __dynsymGetName( dsIndex ) */
+HB_FUNC( __DYNSGETNAME ) /* Get name of symbol: cSymbol = __dynsymGetName( dsIndex ) */
 {
    long lIndex = hb_parnl( 1 ); /* NOTE: This will return zero if the parameter is not numeric */
 
@@ -300,7 +300,7 @@ HARBOUR HB___DYNSGETNAME( void ) /* Get name of symbol: cSymbol = __dynsymGetNam
       hb_retc( "" );
 }
 
-HARBOUR HB___DYNSGETINDEX( void ) /* Gimme index number of symbol: dsIndex = __dynsymGetIndex( cSymbol ) */
+HB_FUNC( __DYNSGETINDEX ) /* Gimme index number of symbol: dsIndex = __dynsymGetIndex( cSymbol ) */
 {
    PHB_DYNS pDynSym = hb_dynsymFindName( hb_parc( 1 ) );
 

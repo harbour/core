@@ -40,7 +40,7 @@
          in CALL commands parameter list, otherwise it will return
          NIL, in Harbour it will work anywhere. */
 
-HARBOUR HB_WORD( void )
+HB_FUNC( WORD )
 {
    if( ISNUM( 1 ) )
       hb_retni( hb_parni( 1 ) );

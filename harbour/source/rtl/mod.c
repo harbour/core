@@ -47,7 +47,7 @@
 /* NOTE: This C version fully emulates the behaviour of the original
          CA-Cl*pper version, including bugs/side-effects. [vszakats] */
 
-HARBOUR HB_MOD( void )
+HB_FUNC( MOD )
 {
    PHB_ITEM pNumber = hb_param( 1, IT_NUMERIC );
 

@@ -35,7 +35,7 @@
 
 #include "hbapi.h"
 
-HARBOUR HB_HB_COLORINDEX( void )
+HB_FUNC( HB_COLORINDEX )
 {
    if( ISCHAR( 1 ) && ISNUM( 2 ) )
    {

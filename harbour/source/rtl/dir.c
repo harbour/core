@@ -344,7 +344,7 @@ static BYTE * HarbourMaskToAttributes( USHORT usMask, BYTE * byAttrib )
 
 /* NOTE: The third (lEightDotThree) parameter is a Harbour extension. */
 
-HARBOUR HB_DIRECTORY( void )
+HB_FUNC( DIRECTORY )
 {
 #if defined(HAVE_POSIX_IO)
 

@@ -49,18 +49,18 @@ char * hb_setColor( char * szColor )
    return hb_set.HB_SET_COLOR;
 }
 
-HARBOUR HB_SETCOLOR( void )
+HB_FUNC( SETCOLOR )
 {
    hb_retc( hb_setColor( ISCHAR( 1 ) ? hb_parc( 1 ) : NULL ) );
 }
 
-HARBOUR HB_COLORSELECT( void )
+HB_FUNC( COLORSELECT )
 {
    if( ISNUM( 1 ) )
       hb_gtColorSelect( hb_parni( 1 ) );
 }
 
-HARBOUR HB_SETBLINK( void )
+HB_FUNC( SETBLINK )
 {
    BOOL bPreviousBlink;
 

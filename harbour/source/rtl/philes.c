@@ -38,7 +38,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
- *    HB_CURDIR()
+ *    CURDIR()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -50,7 +50,7 @@
 #include "hbapifs.h"
 #include "hbapierr.h"
 
-HARBOUR HB_FOPEN( void )
+HB_FUNC( FOPEN )
 {
    if( ISCHAR( 1 ) )
       hb_retni( hb_fsOpen( ( BYTE * ) hb_parc( 1 ),
@@ -59,7 +59,7 @@ HARBOUR HB_FOPEN( void )
       hb_errRT_BASE( EG_ARG, 2021, NULL, "FOPEN" ); /* NOTE: Undocumented but existing Clipper Run-time error */
 }
 
-HARBOUR HB_FCREATE( void )
+HB_FUNC( FCREATE )
 {
    if( ISCHAR( 1 ) )
       hb_retni( hb_fsCreate( ( BYTE * ) hb_parc( 1 ),
@@ -68,7 +68,7 @@ HARBOUR HB_FCREATE( void )
       hb_retni( FS_ERROR );
 }
 
-HARBOUR HB_FREAD( void )
+HB_FUNC( FREAD )
 {
    ULONG ulRead;
 
@@ -96,7 +96,7 @@ HARBOUR HB_FREAD( void )
    hb_retnl( ulRead );
 }
 
-HARBOUR HB_FWRITE( void )
+HB_FUNC( FWRITE )
 {
    if( ISNUM( 1 ) && ISCHAR( 2 ) )
       hb_retnl( hb_fsWriteLarge( hb_parni( 1 ),
@@ -106,12 +106,12 @@ HARBOUR HB_FWRITE( void )
       hb_retnl( 0 );
 }
 
-HARBOUR HB_FERROR( void )
+HB_FUNC( FERROR )
 {
    hb_retni( hb_fsError() );
 }
 
-HARBOUR HB_FCLOSE( void )
+HB_FUNC( FCLOSE )
 {
    hb_fsSetError( 0 );
 
@@ -124,7 +124,7 @@ HARBOUR HB_FCLOSE( void )
       hb_retl( FALSE );
 }
 
-HARBOUR HB_FERASE( void )
+HB_FUNC( FERASE )
 {
    hb_fsSetError( 3 );
 
@@ -134,7 +134,7 @@ HARBOUR HB_FERASE( void )
       hb_retni( -1 );
 }
 
-HARBOUR HB_FRENAME( void )
+HB_FUNC( FRENAME )
 {
    hb_fsSetError( 2 );
 
@@ -144,7 +144,7 @@ HARBOUR HB_FRENAME( void )
       hb_retni( -1 );
 }
 
-HARBOUR HB_FSEEK( void )
+HB_FUNC( FSEEK )
 {
    if( ISNUM( 1 ) && ISNUM( 2 ) )
       hb_retnl( hb_fsSeek( hb_parni( 1 ),
@@ -154,12 +154,12 @@ HARBOUR HB_FSEEK( void )
       hb_retnl( 0 );
 }
 
-HARBOUR HB_FILE( void )
+HB_FUNC( FILE )
 {
    hb_retl( ISCHAR( 1 ) ? hb_fsFile( ( BYTE * ) hb_parc( 1 ) ) : FALSE );
 }
 
-HARBOUR HB_FREADSTR( void )
+HB_FUNC( FREADSTR )
 {
    if( ISNUM( 1 ) && ISNUM( 2 ) )
    {
@@ -190,7 +190,7 @@ HARBOUR HB_FREADSTR( void )
 /* NOTE: This function should not return the leading and trailing */
 /*       (back)slashes. [vszakats] */
 
-HARBOUR HB_CURDIR( void )
+HB_FUNC( CURDIR )
 {
    USHORT uiErrorOld = hb_fsError();
    BYTE * pbyBuffer = ( BYTE * ) hb_xgrab( _POSIX_PATH_MAX + 1 );

@@ -97,7 +97,7 @@ int matherr( struct exception * err )
 }
 #endif
 
-HARBOUR HB_EXP( void )
+HB_FUNC( EXP )
 {
    if( ISNUM( 1 ) )
    {
@@ -134,7 +134,7 @@ HARBOUR HB_EXP( void )
    }
 }
 
-HARBOUR HB_LOG( void )
+HB_FUNC( LOG )
 {
    if( ISNUM( 1 ) )
    {
@@ -177,7 +177,7 @@ HARBOUR HB_LOG( void )
    }
 }
 
-HARBOUR HB_SQRT( void )
+HB_FUNC( SQRT )
 {
    if( ISNUM( 1 ) )
    {

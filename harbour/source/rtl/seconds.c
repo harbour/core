@@ -62,7 +62,7 @@ double hb_secondsToday( void )
           ( ( double ) tb.millitm / 1000 );
 }
 
-HARBOUR HB_SECONDS( void )
+HB_FUNC( SECONDS )
 {
    hb_retnd( hb_secondsToday() );
 }

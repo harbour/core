@@ -19,7 +19,7 @@
 
 #include "hbapi.h"
 
-HARBOUR HB_GT_CHRTOTAL( void )
+HB_FUNC( GT_CHRTOTAL )
 {
   char *s1, *s2;
   int count, p1, p2, l2, l1;

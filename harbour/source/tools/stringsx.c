@@ -57,7 +57,7 @@ char *hb_strtoken(char *szText,
 }
 
 /* returns the nth occurence of a substring within a token-delimited string */
-HARBOUR HB_STRTOKEN( void )
+HB_FUNC( STRTOKEN )
 {
   char *szText;
   long lIndex = hb_parnl(2);
@@ -74,7 +74,7 @@ HARBOUR HB_STRTOKEN( void )
 }
 
 /* debug function to dump the ASCII values of an entire string */
-HARBOUR HB_STRDUMP( void )
+HB_FUNC( STRDUMP )
 {
   char *szText = hb_parc(1);
   long i, lLength = hb_parclen(1);
@@ -83,7 +83,7 @@ HARBOUR HB_STRDUMP( void )
   printf("\n");
 }
 
-HARBOUR HB_ROT13( void )
+HB_FUNC( ROT13 )
 {
   if( ISCHAR(1) )
     {

@@ -35,7 +35,7 @@
 
 #include "hbapi.h"
 
-HARBOUR HB_RAT( void )
+HB_FUNC( RAT )
 {
    ULONG ulSubLen = hb_parclen( 1 );
 

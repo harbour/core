@@ -41,7 +41,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-HARBOUR HB_HB_ANSITOOEM( void )
+HB_FUNC( HB_ANSITOOEM )
 {
    PHB_ITEM pString = hb_param( 1, IT_STRING );
 
@@ -63,7 +63,7 @@ HARBOUR HB_HB_ANSITOOEM( void )
       hb_retc( "" );
 }
            
-HARBOUR HB_HB_OEMTOANSI( void )
+HB_FUNC( HB_OEMTOANSI )
 {
    PHB_ITEM pString = hb_param( 1, IT_STRING );
 
@@ -89,16 +89,16 @@ HARBOUR HB_HB_OEMTOANSI( void )
 
 /* NOTE: XBase++ compatible function */
 
-HARBOUR HB_CONVTOOEMCP( void )
+HB_FUNC( CONVTOOEMCP )
 {
-   HB_HB_ANSITOOEM();
+   HB_FUNCNAME( HB_ANSITOOEM )();
 }
 
 /* NOTE: XBase++ compatible function */
 
-HARBOUR HB_CONVTOANSICP( void )
+HB_FUNC( CONVTOANSICP )
 {
-   HB_HB_OEMTOANSI();
+   HB_FUNCNAME( HB_OEMTOANSI )();
 }
 
 #endif

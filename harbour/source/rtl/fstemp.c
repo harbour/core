@@ -70,7 +70,7 @@ FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiA
    return FS_ERROR;
 }
 
-HARBOUR HB_HB_FTEMPNAME()
+HB_FUNC( HB_FTEMPNAME )
 {
    BYTE szName[ _POSIX_PATH_MAX + 1 ];
 
@@ -79,7 +79,7 @@ HARBOUR HB_HB_FTEMPNAME()
    hb_retc( ( char * ) szName );
 }
 
-HARBOUR HB_HB_FTEMPCREATE( void )
+HB_FUNC( HB_FTEMPCREATE )
 {
    hb_retni( hb_fsCreateTemp( ( BYTE * ) hb_parc( 1 ),
                               ( BYTE * ) hb_parc( 2 ),

@@ -49,7 +49,7 @@ USHORT hb_setCursor( BOOL bSetCursor, USHORT usNewCursor )
    return usPreviousCursor;
 }
 
-HARBOUR HB_SETCURSOR( void )
+HB_FUNC( SETCURSOR )
 {
    hb_retni( hb_setCursor( ISNUM( 1 ), hb_parni( 1 ) ) );
 }

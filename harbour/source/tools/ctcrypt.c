@@ -35,7 +35,7 @@
 
 #include "hbapi.h"
 
-HARBOUR HB_CT_CRYPT( void )
+HB_FUNC( CT_CRYPT )
 {
    ULONG ulCryptLen = hb_parclen( 2 );
 

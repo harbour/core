@@ -35,7 +35,7 @@
 
 #include "hbapi.h"
 
-HARBOUR HB_PCOUNT( void )
+HB_FUNC( PCOUNT )
 {
    /* Skip current function */
    PHB_ITEM pBase = hb_stack.pItems + hb_stack.pBase->item.asSymbol.stackbase;

@@ -95,7 +95,7 @@ static char * hb_itemPadConv( PHB_ITEM pItem, char * buffer, ULONG * pulSize )
 
 /* right-pads a date, number, or string with spaces or supplied character */
 /* TEST: QOUT( "padr( 'hello', 10 ) = '" + padr( 'hello', 10 ) + "'" ) */
-HARBOUR HB_PADR( void )
+HB_FUNC( PADR )
 {
    ULONG ulSize;
    char buffer[ 128 ];
@@ -134,14 +134,14 @@ HARBOUR HB_PADR( void )
 }
 
 /* synonymn for PADR */
-HARBOUR HB_PAD( void )
+HB_FUNC( PAD )
 {
-   HB_PADR();
+   HB_FUNCNAME( PADR )();
 }
 
 /* left-pads a date, number, or string with spaces or supplied character */
 /* TEST: QOUT( "padl( 'hello', 10 ) = '" + padl( 'hello', 10 ) + "'" ) */
-HARBOUR HB_PADL( void )
+HB_FUNC( PADL )
 {
    ULONG ulSize;
    char buffer[ 128 ];
@@ -183,7 +183,7 @@ HARBOUR HB_PADL( void )
 
 /* centre-pads a date, number, or string with spaces or supplied character */
 /* TEST: QOUT( "padc( 'hello', 10 ) = '" + padc( 'hello', 10 ) + "'" ) */
-HARBOUR HB_PADC( void )
+HB_FUNC( PADC )
 {
    ULONG ulSize;
    char buffer[ 128 ];
@@ -225,3 +225,4 @@ HARBOUR HB_PADC( void )
    else
       hb_retc( "" );
 }
+

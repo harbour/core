@@ -36,7 +36,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-HARBOUR HB_EMPTY( void )
+HB_FUNC( EMPTY )
 {
    PHB_ITEM pItem = hb_param( 1, IT_ANY );
 

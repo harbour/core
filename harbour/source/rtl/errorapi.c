@@ -38,15 +38,15 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
- *    HB___ERRINHANDLER()
- *    HB_DOSERROR()
+ *    DOSERROR()
+ *    __ERRINHANDLER()
+ *    __ERRRT_BASE()
  *    hb_errLaunch()
  *    hb_errLaunchSubst()
  *    hb_errGetFlags()
  *    hb_errPutFlags()
  *    hb_errRT_New()
  *    hb_errRT_New_Subst()
- *    HB___ERRRT_BASE()
  *    hb_errRT_BASE()
  *    hb_errRT_BASE_Ext1()
  *    hb_errRT_BASE_Subst()
@@ -73,7 +73,7 @@ static HB_ITEM s_errorBlock;
 static int     s_iLaunchCount = 0;
 static USHORT  s_uiErrorDOS = 0; /* The value of DOSERROR() */
 
-extern HARBOUR HB_ERRORNEW( void );
+extern HB_FUNC( ERRORNEW );
 
 /* NOTE: This is called via its symbol name, so we should make sure
          that it gets linked. WARNING ! DON'T make this function static. 
@@ -82,18 +82,18 @@ void hb_errForceLink()
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errForceLink()"));
 
-   HB_ERRORNEW();
+   HB_FUNCNAME( ERRORNEW )();
 }
 
 /* There's a similar undocumented, internal functions in CA-Cl*pper named
    ErrorInHandler(). [vszakats] */
 
-HARBOUR HB___ERRINHANDLER( void )
+HB_FUNC( __ERRINHANDLER )
 {
    hb_errInternal( 9999, "Error recovery failure", NULL, NULL );
 }
 
-HARBOUR HB_ERRORBLOCK( void )
+HB_FUNC( ERRORBLOCK )
 {
    HB_ITEM oldError;
    PHB_ITEM pNewErrorBlock = hb_param( 1, IT_BLOCK );
@@ -124,7 +124,7 @@ HB_ERROR_INFO_PTR hb_errorHandler( HB_ERROR_INFO_PTR pNewHandler )
 
 /* TOFIX: Make it Clipper compatible. [vszakats] */
 
-HARBOUR HB_DOSERROR( void )
+HB_FUNC( DOSERROR )
 {
    hb_retni( s_uiErrorDOS );
 
@@ -697,7 +697,7 @@ PHB_ITEM hb_errRT_New_Subst(
    return( pError );
 }
 
-HARBOUR HB___ERRRT_BASE( void )
+HB_FUNC( __ERRRT_BASE )
 {
    hb_errRT_BASE( ( ULONG ) hb_parnl( 1 ),
                   ( ULONG ) hb_parnl( 2 ),

@@ -19,7 +19,7 @@
 
 #include "hbapi.h"
 
-HARBOUR HB_GT_ASCIISUM( void )
+HB_FUNC( GT_ASCIISUM )
 {
 	char *str;
    int  len, i;

@@ -60,7 +60,7 @@
 #include "hbapi.h"
 #include "hbapigt.h"
 
-HARBOUR HB_TONE( void )
+HB_FUNC( TONE )
 {
    if( ISNUM( 1 ) )
       hb_gtTone( hb_parnd( 1 ), ( ISNUM( 2 ) ? hb_parnd( 2 ) : 1.0 ) );

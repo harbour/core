@@ -66,7 +66,7 @@
 /* NOTE: The parameter is an extension over CA-Cl*pper, it's also supported
          by XBase++. [vszakats] */
 
-HARBOUR HB_ISPRINTER( void )
+HB_FUNC( ISPRINTER )
 {
    char * pszDOSPort = ( ISCHAR( 1 ) && hb_parclen( 1 ) >= 4 ) ? hb_parc( 1 ) : "LPT1";
    USHORT uiPort = atoi( pszDOSPort + 3 );

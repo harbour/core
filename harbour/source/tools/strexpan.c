@@ -19,7 +19,7 @@
 
 #include "hbapi.h"
 
-HARBOUR HB_GT_STREXPAND( void )
+HB_FUNC( GT_STREXPAND )
 {
   char *in, *out;
   int  nIns = 1;

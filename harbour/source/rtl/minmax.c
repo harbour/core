@@ -38,7 +38,7 @@
 #include "hbapierr.h"
 
 /* returns the maximum of two date or numerics */
-HARBOUR HB_MAX( void )
+HB_FUNC( MAX )
 {
    PHB_ITEM p1 = hb_param( 1, IT_ANY );
    PHB_ITEM p2 = hb_param( 2, IT_ANY );
@@ -98,7 +98,7 @@ HARBOUR HB_MAX( void )
 }
 
 /* returns the minimum of two date or numerics */
-HARBOUR HB_MIN( void )
+HB_FUNC( MIN )
 {
    PHB_ITEM p1 = hb_param( 1, IT_ANY );
    PHB_ITEM p2 = hb_param( 2, IT_ANY );

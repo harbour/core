@@ -36,7 +36,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-HARBOUR HB_HB_VALTOSTR( void )
+HB_FUNC( HB_VALTOSTR )
 {
    ULONG ulLen;
    BOOL bFreeReq;

@@ -38,7 +38,7 @@
 
 /* Scrolls a screen region */
 
-HARBOUR HB_SCROLL( void )
+HB_FUNC( SCROLL )
 {
    int iMaxRow = hb_gtMaxRow();
    int iMaxCol = hb_gtMaxCol();

@@ -38,8 +38,8 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
- *    HB__NATSORTVER()
- *    HB__NATMSGVER()
+ *    _NATSORTVER()
+ *    _NATMSGVER()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -93,21 +93,21 @@ char * hb_nationGetMsg( USHORT uiMsg )
    return ( uiMsg >= 1 && uiMsg <= ( sizeof( s_szMessages ) / sizeof( char * ) ) ) ? s_szMessages[ uiMsg - 1 ] : "";
 }
 
-HARBOUR HB_ISAFFIRM( void )
+HB_FUNC( ISAFFIRM )
 {
    PHB_ITEM pItem = hb_param( 1, IT_STRING );
 
    hb_retl( pItem && hb_itemGetCLen( pItem ) >= 1 && toupper( hb_itemGetCPtr( pItem )[ 0 ] ) == s_szMessages[ _LF_YN - 1 ][ 0 ] );
 }
 
-HARBOUR HB_ISNEGATIVE( void )
+HB_FUNC( ISNEGATIVE )
 {
    PHB_ITEM pItem = hb_param( 1, IT_STRING );
 
    hb_retl( pItem && hb_itemGetCLen( pItem ) >= 1 && toupper( hb_itemGetCPtr( pItem )[ 0 ] ) == s_szMessages[ _LF_YN - 1 ][ 2 ] );
 }
 
-HARBOUR HB_NATIONMSG( void )
+HB_FUNC( NATIONMSG )
 {
    if( hb_pcount() == 0 )
       /* TODO: Replace this with Language API call. */
@@ -121,7 +121,7 @@ HARBOUR HB_NATIONMSG( void )
 /* NOTE: Intentionally using one leading underscore, like in Clipper. 
          [vszakats] */
 
-HARBOUR HB__NATSORTVER( void )
+HB_FUNC( _NATSORTVER )
 {
    /* NOTE: CA-Cl*pper 5.2e Intl. will return: "NATSORT v1.2i x14 19/Mar/93" */
    /* NOTE: CA-Cl*pper 5.3  Intl. will return: "NATSORT v1.3i x19 06/Mar/95" */
@@ -132,7 +132,7 @@ HARBOUR HB__NATSORTVER( void )
 /* NOTE: Intentionally using one leading underscore, like in Clipper. 
          [vszakats] */
 
-HARBOUR HB__NATMSGVER( void )
+HB_FUNC( _NATMSGVER )
 {
    /* NOTE: CA-Cl*pper 5.2e Intl. will return: "NATMSGS v1.2i x14 19/Mar/93" */
    /* NOTE: CA-Cl*pper 5.3  Intl. will return: "NATMSGS v1.3i x19 06/Mar/95" */

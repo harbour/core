@@ -36,7 +36,7 @@
 #include "hbapi.h"
 
 /* replaces characters in a string */
-HARBOUR HB_STUFF( void )
+HB_FUNC( STUFF )
 {
    if( ISCHAR( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) && ISCHAR( 4 ) )
    {

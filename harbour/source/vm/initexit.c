@@ -36,7 +36,7 @@
 #include "hbapi.h"
 #include "hbvm.h"
 
-HARBOUR HB___QUIT( void )
+HB_FUNC( __QUIT )
 {
    hb_vmRequestQuit();
 }

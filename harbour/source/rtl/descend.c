@@ -49,7 +49,7 @@ void hb_strDescend( char * szStringTo, const char * szStringFrom, ULONG ulLen )
    }
 }
 
-HARBOUR HB_DESCEND( void )
+HB_FUNC( DESCEND )
 {
    PHB_ITEM pItem = hb_param( 1, IT_ANY );
 

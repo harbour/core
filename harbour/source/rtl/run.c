@@ -36,7 +36,7 @@
 #include "hbapi.h"
 #include "hbapierr.h"
 
-HARBOUR HB___RUN( void )
+HB_FUNC( __RUN )
 {
 #if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(_MSC_VER) || defined(__IBMCPP__) || defined(__GNUC__)
    if( ISCHAR( 1 ) )

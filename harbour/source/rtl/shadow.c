@@ -36,7 +36,7 @@
 #include "hbapi.h"
 #include "hbapigt.h"
 
-HARBOUR HB_HB_SHADOW( void )
+HB_FUNC( HB_SHADOW )
 {
    if( hb_pcount() >= 4 )
       hb_gtDrawShadow( hb_parni( 1 ),
@@ -46,8 +46,8 @@ HARBOUR HB_HB_SHADOW( void )
                        ISNUM( 5 ) ? hb_parni( 5 ) : 7 );
 }
 
-HARBOUR HB_DBGSHADOW( void )
+HB_FUNC( DBGSHADOW )
 {
-   HB_HB_SHADOW();
+   HB_FUNCNAME( HB_SHADOW )();
 }
 

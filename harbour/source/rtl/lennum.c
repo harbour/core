@@ -36,7 +36,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-HARBOUR HB_LENNUM( void )
+HB_FUNC( LENNUM )
 {
    PHB_ITEM pNumber = hb_param( 1, IT_NUMERIC );
    ULONG ulLen = 0;

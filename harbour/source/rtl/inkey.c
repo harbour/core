@@ -72,7 +72,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
- *    HB_HB_KEYPUT()
+ *    HB_KEYPUT()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -321,7 +321,7 @@ void hb_inkeyReset( BOOL allocate )     /* Reset the keyboard buffer */
    }
 }
 
-HARBOUR HB_INKEY( void )
+HB_FUNC( INKEY )
 {
    int args = hb_pcount();
    int key = 0;
@@ -357,7 +357,7 @@ HARBOUR HB_INKEY( void )
    hb_retni( key );
 }
 
-HARBOUR HB___KEYBOARD( void )
+HB_FUNC( __KEYBOARD )
 {
    /* Clear the typeahead buffer without reallocating the keyboard buffer */
    hb_inkeyReset( FALSE );
@@ -410,18 +410,18 @@ void hb_inkeyPut( int ch )
    }
 }
 
-HARBOUR HB_HB_KEYPUT( void )
+HB_FUNC( HB_KEYPUT )
 {
    if( ISNUM( 1 ) )
       hb_inkeyPut( hb_parni( 1 ) );
 }
 
-HARBOUR HB_NEXTKEY( void )
+HB_FUNC( NEXTKEY )
 {
    hb_retni( hb_inkeyNext() );
 }
 
-HARBOUR HB_LASTKEY( void )
+HB_FUNC( LASTKEY )
 {
    hb_retni( s_inkeyLast );
 }

@@ -41,7 +41,7 @@
          the BREAK statement, because both generate a BREAK() function
          call on the pcode level, we should drop the checking. [vszakats] */
 
-HARBOUR HB_BREAK( void )
+HB_FUNC( BREAK )
 {
    hb_vmRequestBreak( hb_param( 1, IT_ANY ) );
 }

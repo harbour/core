@@ -19,7 +19,7 @@
 
 #include "hbapi.h"
 
-HARBOUR HB_GT_STRPBRK( void )
+HB_FUNC( GT_STRPBRK )
 {
   char *string;
   char *cset;

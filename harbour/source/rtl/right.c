@@ -39,7 +39,7 @@
 
 /* returns the right-most n characters in string */
 
-HARBOUR HB_RIGHT( void )
+HB_FUNC( RIGHT )
 {
    PHB_ITEM pText = hb_param( 1, IT_STRING );
 

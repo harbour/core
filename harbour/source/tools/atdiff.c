@@ -19,7 +19,7 @@
 
 #include "hbapi.h"
 
-HARBOUR HB_GT_ATDIFF( void )
+HB_FUNC( GT_ATDIFF )
 {
   char *s1, *s2;
   int pos, len;

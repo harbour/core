@@ -35,7 +35,7 @@
 
 #include "hbapigt.h"
 
-HARBOUR HB___ATCLEAR( void )
+HB_FUNC( __ATCLEAR )
 {
    if( hb_pcount() == 4 )
    {
@@ -44,7 +44,7 @@ HARBOUR HB___ATCLEAR( void )
    }
 }
 
-HARBOUR HB___CLEAR( void )
+HB_FUNC( __CLEAR )
 {
    hb_gtScroll( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), 0, 0 );
    hb_gtSetPos( 0, 0 );

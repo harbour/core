@@ -35,7 +35,7 @@
 
 #include "hbapi.h"
 
-HARBOUR HB_AMPM( void )
+HB_FUNC( AMPM )
 {
    char * pszTime = hb_parc( 1 );
    ULONG  ulTimeLen = hb_parclen( 1 );

@@ -38,7 +38,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    HB_ROUND()
+ *    ROUND()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -50,7 +50,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-HARBOUR HB_INT( void )
+HB_FUNC( INT )
 {
    PHB_ITEM pNumber = hb_param( 1, IT_NUMERIC );
 
@@ -115,7 +115,7 @@ double hb_numRound( double dResult, int iDec )
    return dResult;
 }
 
-HARBOUR HB_ROUND( void )
+HB_FUNC( ROUND )
 {
    if( ISNUM( 1 ) && ISNUM( 2 ) )
    {

@@ -19,7 +19,7 @@
 
 #include "hbapi.h"
 
-HARBOUR HB_GT_CHARODD( void )
+HB_FUNC( GT_CHARODD )
 {
   char *s1, *s2;
   int len, i;

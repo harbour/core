@@ -39,7 +39,7 @@
 
 /* returns the left-most n characters in string */
 
-HARBOUR HB_LEFT( void )
+HB_FUNC( LEFT )
 {
    PHB_ITEM pText = hb_param( 1, IT_STRING );
 

@@ -19,7 +19,7 @@
 
 #include "hbapi.h"
 
-HARBOUR HB_GT_STRLEFT( void )
+HB_FUNC( GT_STRLEFT )
 {
   char *string;
   char *cset;

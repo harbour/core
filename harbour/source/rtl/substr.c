@@ -39,7 +39,7 @@
 
 /* returns l characters from n characters into string */
 
-HARBOUR HB_SUBSTR( void )
+HB_FUNC( SUBSTR )
 {
    PHB_ITEM pText = hb_param( 1, IT_STRING );
 

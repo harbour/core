@@ -19,7 +19,7 @@
 
 #include "hbapi.h"
 
-HARBOUR HB_GT_CHARMIX( void )
+HB_FUNC( GT_CHARMIX )
 {
   char *s1, *s2, *s3;
   int l1, l2, i, pos3;

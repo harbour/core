@@ -78,7 +78,7 @@ static USHORT hb_stackLenGlobal( void )
    return uiCount;
 }
 
-HARBOUR HB___VMSTKGCOUNT( void )
+HB_FUNC( __VMSTKGCOUNT )
 {
    hb_retni( hb_stackLenGlobal() );
 }
@@ -87,7 +87,7 @@ HARBOUR HB___VMSTKGCOUNT( void )
  * $FuncName$     <aStack> __vmStkGList()
  * $Description$  Returns the global stack
  * $End$ */
-HARBOUR HB___VMSTKGLIST( void )
+HB_FUNC( __VMSTKGLIST )
 {
    PHB_ITEM pReturn;
    PHB_ITEM pItem;
@@ -121,7 +121,7 @@ static USHORT StackLen( void )
 
    return uiCount;
 }
-HARBOUR HB___VMSTKLCOUNT( void )
+HB_FUNC( __VMSTKLCOUNT )
 {
    hb_retni( StackLen() );
 }
@@ -137,7 +137,7 @@ HARBOUR HB___VMSTKLCOUNT( void )
  *                [x+1 .. y] Locals
  *                [y+1 ..]   Pushed data
  * $End$ */
-HARBOUR HB___VMSTKLLIST( void )
+HB_FUNC( __VMSTKLLIST )
 {
    PHB_ITEM pReturn;
    PHB_ITEM pItem;
@@ -160,7 +160,7 @@ HARBOUR HB___VMSTKLLIST( void )
                /* TODO : put bLocals / bParams      */
                /* somewhere for declared parameters */
                /* and locals                        */
-HARBOUR HB___VMPARLLIST( void )
+HB_FUNC( __VMPARLLIST )
 {
    PHB_ITEM pReturn;
    PHB_ITEM pItem;
@@ -178,7 +178,7 @@ HARBOUR HB___VMPARLLIST( void )
    hb_itemRelease( pReturn );
 }
 
-HARBOUR HB___VMVARLGET( void )
+HB_FUNC( __VMVARLGET )
 {
    int iLevel = hb_parni( 1 ) + 1;
    PHB_ITEM pBase = hb_stack.pBase;

@@ -36,7 +36,7 @@
 #include "hbapi.h"
 #include "hbset.h"
 
-HARBOUR HB_DEFPATH( void )
+HB_FUNC( DEFPATH )
 {
    char buffer[ _POSIX_PATH_MAX ];
    char delimiter[ 2 ] = ":";
@@ -70,8 +70,8 @@ HARBOUR HB_DEFPATH( void )
    hb_retc( buffer );
 }
 
-HARBOUR HB___DEFPATH( void )
+HB_FUNC( __DEFPATH )
 {
-   HB_DEFPATH();
+   HB_FUNCNAME( DEFPATH )();
 }
 

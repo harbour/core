@@ -40,7 +40,7 @@
 /* NOTE: XBase++ compatible function */
 /* NOTE: XBase++ checks for the parameter count at compile time */
 
-HARBOUR HB_STOD( void )
+HB_FUNC( STOD )
 {
    hb_retds( hb_parc( 1 ) );
 }

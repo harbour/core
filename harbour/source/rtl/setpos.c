@@ -50,14 +50,14 @@
 #include "hbapi.h"
 #include "hbapigt.h"
 
-HARBOUR HB_SETPOS( void ) /* Sets the screen position */
+HB_FUNC( SETPOS ) /* Sets the screen position */
 {
    if( ISNUM( 1 ) && ISNUM( 2 ) )
       hb_gtSetPos( hb_parni( 1 ), hb_parni( 2 ) );
 }
 
 /* Move the screen position to the right by one column */
-HARBOUR HB_SETPOSBS( void )
+HB_FUNC( SETPOSBS )
 {
    SHORT iRow, iCol;
 
@@ -67,7 +67,7 @@ HARBOUR HB_SETPOSBS( void )
    hb_gtSetPos( iRow, iCol + 1 );
 }
 
-HARBOUR HB_ROW( void ) /* Return the current screen row position (zero origin) */
+HB_FUNC( ROW ) /* Return the current screen row position (zero origin) */
 {
    SHORT iRow;
    SHORT iCol;
@@ -77,7 +77,7 @@ HARBOUR HB_ROW( void ) /* Return the current screen row position (zero origin) *
    hb_retni( iRow );
 }
 
-HARBOUR HB_COL( void ) /* Return the current screen column position (zero origin) */
+HB_FUNC( COL ) /* Return the current screen column position (zero origin) */
 {
    SHORT iRow;
    SHORT iCol;

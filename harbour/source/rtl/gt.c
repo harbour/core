@@ -36,17 +36,17 @@
 #include "hbapi.h"
 #include "hbapigt.h"
 
-HARBOUR HB_DISPBEGIN( void )
+HB_FUNC( DISPBEGIN )
 {
    hb_gtDispBegin();
 }
 
-HARBOUR HB_DISPEND( void )
+HB_FUNC( DISPEND )
 {
    hb_gtDispEnd();
 }
 
-HARBOUR HB_DISPCOUNT( void )
+HB_FUNC( DISPCOUNT )
 {
    hb_retni( hb_gtDispCount() );
 }

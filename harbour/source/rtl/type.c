@@ -36,7 +36,7 @@
 #include "hbapi.h"
 #include "hbapierr.h"
 
-HARBOUR HB_TYPE( void )
+HB_FUNC( TYPE )
 {
    HB_ITEM_PTR pItem = hb_param( 1, IT_STRING );
 

@@ -37,7 +37,7 @@
 #include "hbapierr.h"
 #include "hbapiitm.h"
 
-HARBOUR HB_LEN( void )
+HB_FUNC( LEN )
 {
    PHB_ITEM pItem = hb_param( 1, IT_ANY );
 

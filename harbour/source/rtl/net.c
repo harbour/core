@@ -55,7 +55,7 @@
                       AX         Error code, if CF is set
 */
 
-HARBOUR HB_NETNAME( void )
+HB_FUNC( NETNAME )
 {
 #if defined(HB_OS_WIN_32)
    {

@@ -38,17 +38,17 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    HB_DAY()
- *    HB_MONTH()
- *    HB_YEAR()
- *    HB_DOW()
+ *    DAY()
+ *    MONTH()
+ *    YEAR()
+ *    DOW()
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    HB_CTOD()
- *    HB_DATE()
+ *    CTOD()
+ *    DATE()
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
- *    HB_HB_STOD()
+ *    HB_STOD()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -73,7 +73,7 @@
    #include <dos.h>
 #endif
 
-HARBOUR HB_CTOD( void )
+HB_FUNC( CTOD )
 {
    if( ISCHAR( 1 ) )
    {
@@ -169,7 +169,7 @@ HARBOUR HB_CTOD( void )
    }
 }
 
-HARBOUR HB_DTOC( void )
+HB_FUNC( DTOC )
 {
    if( ISDATE( 1 ) )
    {
@@ -190,7 +190,7 @@ HARBOUR HB_DTOC( void )
    }
 }
 
-HARBOUR HB_DTOS( void )
+HB_FUNC( DTOS )
 {
    if( ISDATE( 1 ) )
    {
@@ -212,12 +212,12 @@ HARBOUR HB_DTOS( void )
 
 /* NOTE: Harbour extension, exactly the same as STOD(). */
 
-HARBOUR HB_HB_STOD( void )
+HB_FUNC( HB_STOD )
 {
    hb_retds( hb_parc( 1 ) );
 }
 
-HARBOUR HB_YEAR( void )
+HB_FUNC( YEAR )
 {
    PHB_ITEM pDate = hb_param( 1, IT_DATE );
 
@@ -241,7 +241,7 @@ HARBOUR HB_YEAR( void )
    }
 }
 
-HARBOUR HB_MONTH( void )
+HB_FUNC( MONTH )
 {
    PHB_ITEM pDate = hb_param( 1, IT_DATE );
 
@@ -265,7 +265,7 @@ HARBOUR HB_MONTH( void )
    }
 }
 
-HARBOUR HB_DAY( void )
+HB_FUNC( DAY )
 {
    PHB_ITEM pDate = hb_param( 1, IT_DATE );
 
@@ -289,7 +289,7 @@ HARBOUR HB_DAY( void )
    }
 }
 
-HARBOUR HB_TIME( void )
+HB_FUNC( TIME )
 {
    char szResult[ 9 ];
 
@@ -309,7 +309,7 @@ HARBOUR HB_TIME( void )
    hb_retclen( szResult, 8 );
 }
 
-HARBOUR HB_DATE( void )
+HB_FUNC( DATE )
 {
    char szResult[ 9 ];
 
@@ -329,7 +329,7 @@ HARBOUR HB_DATE( void )
    hb_retds( szResult );
 }
 
-HARBOUR HB_DOW( void )
+HB_FUNC( DOW )
 {
    PHB_ITEM pDate = hb_param( 1, IT_DATE );
 

@@ -38,15 +38,15 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_altout(), hb_devout(), HB_DEVOUT(), hb_devpos(),
- *    HB_DEVPOS(), hb_dispout(), HB___EJECT(), 
- *    hb_out(), hb_outerr(), HB_OUTERR(),
- *    hb_outstd(), HB_OUTSTD(), HB_PCOL(), HB_PROW(),
- *    HB_SETPRC(), and hb_consoleInitialize()
+ *    hb_altout(), hb_devout(), DEVOUT(), hb_devpos(),
+ *    DEVPOS(), hb_dispout(), __EJECT(), 
+ *    hb_out(), hb_outerr(), OUTERR(),
+ *    hb_outstd(), OUTSTD(), PCOL(), PROW(),
+ *    SETPRC(), and hb_consoleInitialize()
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    hb_consoleGetNewLine()
- *    HB_DISPOUTAT()
+ *    DISPOUTAT()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -144,7 +144,7 @@ char * hb_consoleGetNewLine( void )
    return s_szCrLf;
 }
 
-HARBOUR HB_HB_OSNEWLINE( void )
+HB_FUNC( HB_OSNEWLINE )
 {
    hb_retc( s_szCrLf );
 }
@@ -315,13 +315,13 @@ void hb_devpos( SHORT row, SHORT col )
 
 /* NOTE: This should be placed after the hb_devpos() definition. */
 
-HARBOUR HB_DEVPOS( void ) /* Sets the screen and/or printer position */
+HB_FUNC( DEVPOS ) /* Sets the screen and/or printer position */
 {
    if( ISNUM( 1 ) && ISNUM( 2 ) )
       hb_devpos( hb_parni( 1 ), hb_parni( 2 ) );
 }
 
-HARBOUR HB_OUTSTD( void ) /* writes a list of values to the standard output device */
+HB_FUNC( OUTSTD ) /* writes a list of values to the standard output device */
 {
    USHORT uiPCount = hb_pcount();
    USHORT uiParam;
@@ -334,7 +334,7 @@ HARBOUR HB_OUTSTD( void ) /* writes a list of values to the standard output devi
    }
 }
 
-HARBOUR HB_OUTERR( void ) /* writes a list of values to the standard error device */
+HB_FUNC( OUTERR ) /* writes a list of values to the standard error device */
 {
    USHORT uiPCount = hb_pcount();
    USHORT uiParam;
@@ -347,7 +347,7 @@ HARBOUR HB_OUTERR( void ) /* writes a list of values to the standard error devic
    }
 }
 
-HARBOUR HB_QQOUT( void ) /* writes a list of values to the current device (screen or printer) and is affected by SET ALTERNATE */
+HB_FUNC( QQOUT ) /* writes a list of values to the current device (screen or printer) and is affected by SET ALTERNATE */
 {
    USHORT uiPCount = hb_pcount();
    USHORT uiParam;
@@ -360,7 +360,7 @@ HARBOUR HB_QQOUT( void ) /* writes a list of values to the current device (scree
    }
 }
 
-HARBOUR HB_QOUT( void )
+HB_FUNC( QOUT )
 {
    hb_altout( s_szCrLf, CRLF_BUFFER_LEN - 1 );
 
@@ -377,10 +377,10 @@ HARBOUR HB_QOUT( void )
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
    }
 
-   HB_QQOUT();
+   HB_FUNCNAME( QQOUT )();
 }
 
-HARBOUR HB_DEVOUT( void ) /* writes a single value to the current device (screen or printer), but is not affected by SET ALTERNATE */
+HB_FUNC( DEVOUT ) /* writes a single value to the current device (screen or printer), but is not affected by SET ALTERNATE */
 {
    if( hb_pcount() >= 1 )
    {
@@ -402,7 +402,7 @@ HARBOUR HB_DEVOUT( void ) /* writes a single value to the current device (screen
 
 /* TOFIX: CA-Cl*pper will print an eject even if SET DEVICE=SCREEN */
 
-HARBOUR HB___EJECT( void ) /* Ejects the current page from the printer */
+HB_FUNC( __EJECT ) /* Ejects the current page from the printer */
 {
    if( hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set.hb_set_printhan != FS_ERROR )
    {
@@ -414,17 +414,17 @@ HARBOUR HB___EJECT( void ) /* Ejects the current page from the printer */
    s_uiPRow = s_uiPCol = 0;
 }
 
-HARBOUR HB_PROW( void ) /* Returns the current printer row position */
+HB_FUNC( PROW ) /* Returns the current printer row position */
 {
    hb_retni( s_uiPRow );
 }
 
-HARBOUR HB_PCOL( void ) /* Returns the current printer row position */
+HB_FUNC( PCOL ) /* Returns the current printer row position */
 {
    hb_retni( s_uiPCol );
 }
 
-HARBOUR HB_SETPRC( void ) /* Sets the current printer row and column positions */
+HB_FUNC( SETPRC ) /* Sets the current printer row and column positions */
 {
    if( ISNUM( 1 ) && ISNUM( 2 ) )
    {
@@ -433,7 +433,7 @@ HARBOUR HB_SETPRC( void ) /* Sets the current printer row and column positions *
    }
 }
 
-HARBOUR HB_DISPOUT( void ) /* writes a single value to the screen, but is not affected by SET ALTERNATE */
+HB_FUNC( DISPOUT ) /* writes a single value to the screen, but is not affected by SET ALTERNATE */
 {
    if( hb_pcount() >= 1 )
    {
@@ -455,7 +455,7 @@ HARBOUR HB_DISPOUT( void ) /* writes a single value to the screen, but is not af
 
 /* Undocumented Clipper function */
 
-HARBOUR HB_DISPOUTAT( void ) /* writes a single value to the screen at speficic position, but is not affected by SET ALTERNATE */
+HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position, but is not affected by SET ALTERNATE */
 {
    if( hb_pcount() >= 3 )
    {

@@ -80,12 +80,12 @@ static ULONG hb_TimeStrToSec( char * pszTime )
    return ulTime;
 }
 
-HARBOUR HB_DAYS( void )
+HB_FUNC( DAYS )
 {
    hb_retnl( hb_parnl( 1 ) / 86400 );
 }
 
-HARBOUR HB_ELAPTIME( void )
+HB_FUNC( ELAPTIME )
 {
    ULONG ulStart = hb_TimeStrToSec( hb_parc( 1 ) );
    ULONG ulEnd = hb_TimeStrToSec( hb_parc( 2 ) );
@@ -94,12 +94,12 @@ HARBOUR HB_ELAPTIME( void )
    hb_retc( hb_SecToTimeStr( szTime, ( ulEnd < ulStart ? 86400 : 0 ) + ulEnd - ulStart ) );
 }
 
-HARBOUR HB_SECS( void )
+HB_FUNC( SECS )
 {
    hb_retnl( hb_TimeStrToSec( hb_parc( 1 ) ) );
 }
 
-HARBOUR HB_TSTRING( void )
+HB_FUNC( TSTRING )
 {
    char szTime[ 9 ];
 

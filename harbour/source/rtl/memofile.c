@@ -41,7 +41,7 @@
          this limit is extended, so we are not *stricly* compatible here. 
          [vszakats] */
 
-HARBOUR HB_MEMOREAD( void )
+HB_FUNC( MEMOREAD )
 {
    PHB_ITEM pFileName = hb_param( 1, IT_STRING );
 
@@ -83,7 +83,7 @@ HARBOUR HB_MEMOREAD( void )
       hb_retc( "" );
 }
 
-HARBOUR HB_MEMOWRIT( void )
+HB_FUNC( MEMOWRIT )
 {
    PHB_ITEM pFileName = hb_param( 1, IT_STRING );
    PHB_ITEM pString = hb_param( 2, IT_STRING );

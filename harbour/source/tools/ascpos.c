@@ -19,7 +19,7 @@
 
 #include "hbapi.h"
 
-HARBOUR HB_GT_ASCPOS( void )
+HB_FUNC( GT_ASCPOS )
 {
   char *s;
   ULONG p;

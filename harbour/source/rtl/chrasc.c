@@ -40,7 +40,7 @@
 #include "hbapierr.h"
 
 /* converts an ASCII code to a character value */
-HARBOUR HB_CHR( void )
+HB_FUNC( CHR )
 {
    if( ISNUM( 1 ) )
    {
@@ -70,7 +70,7 @@ HARBOUR HB_CHR( void )
 }
 
 /* converts a character value to an ASCII code */
-HARBOUR HB_ASC( void )
+HB_FUNC( ASC )
 {
    PHB_ITEM pText = hb_param( 1, IT_STRING );
 

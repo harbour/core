@@ -40,7 +40,7 @@
 
 #ifdef HB_COMPAT_XPP
 
-HARBOUR HB_BIN2U( void )
+HB_FUNC( BIN2U )
 {
    PHB_ITEM pItem = hb_param( 1, IT_STRING );
 
@@ -64,7 +64,7 @@ HARBOUR HB_BIN2U( void )
       hb_retnl( 0 );
 }
 
-HARBOUR HB_W2BIN( void )
+HB_FUNC( W2BIN )
 {
    char szString[ 2 ];
 
@@ -84,7 +84,7 @@ HARBOUR HB_W2BIN( void )
    hb_retclen( szString, 2 );
 }
 
-HARBOUR HB_U2BIN( void )
+HB_FUNC( U2BIN )
 {
    char szString[ 4 ];
 

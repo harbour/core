@@ -39,7 +39,7 @@
 
 /* returns n copies of given string */
 /* TEST: QOUT( "replicate( 'abc', 5 ) = " + replicate( 'abc', 5 ) ) */
-HARBOUR HB_REPLICATE( void )
+HB_FUNC( REPLICATE )
 {
    if( ISCHAR( 1 ) && ISNUM( 2 ) )
    {

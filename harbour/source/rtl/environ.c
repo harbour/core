@@ -94,7 +94,7 @@
    #endif
 #endif
 
-HARBOUR HB_OS( void )
+HB_FUNC( OS )
 {
    char * cformat = "%s %d.%02d%c";
 
@@ -489,7 +489,7 @@ char * hb_version( USHORT uiMode )
    return pszVersion;
 }
 
-HARBOUR HB_VERSION( void )
+HB_FUNC( VERSION )
 {
    char * pszVersion = hb_version( hb_pcount() > 0 ? 1 : 0 );
    hb_retc( pszVersion );

@@ -373,7 +373,7 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
    return handle;
 }
 
-HARBOUR HB_SETCANCEL( void )
+HB_FUNC( SETCANCEL )
 {
    hb_retl( hb_set.HB_SET_CANCEL );
 
@@ -381,7 +381,7 @@ HARBOUR HB_SETCANCEL( void )
       hb_set.HB_SET_CANCEL = hb_parl( 1 );
 }
 
-HARBOUR HB___SETCENTURY( void )
+HB_FUNC( __SETCENTURY )
 {
    BOOL old_century_setting = hb_set.hb_set_century;
 
@@ -463,7 +463,7 @@ HARBOUR HB___SETCENTURY( void )
    hb_retl( old_century_setting );
 }
 
-HARBOUR HB_SET( void )
+HB_FUNC( SET )
 {
    BOOL bFlag;
    int args = hb_pcount();

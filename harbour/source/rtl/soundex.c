@@ -40,7 +40,7 @@
 
 #define SOUNDEX_LEN_MAX         4
 
-HARBOUR HB_SOUNDEX( void )
+HB_FUNC( SOUNDEX )
 {
    PHB_ITEM pString = hb_param( 1, IT_STRING );
    char szResult[ SOUNDEX_LEN_MAX + 1 ];

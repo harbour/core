@@ -37,7 +37,7 @@
 #include "hbapierr.h"
 #include "hbapiitm.h"
 
-HARBOUR HB_HB_PVALUE( void )
+HB_FUNC( HB_PVALUE )
 {
    USHORT uiParam = hb_parni( 1 );
    PHB_ITEM pBase = hb_stack.pItems + hb_stack.pBase->item.asSymbol.stackbase; /* Skip function + self */

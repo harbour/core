@@ -36,7 +36,7 @@
 #include "hbapi.h"
 #include "hbvm.h"
 
-HARBOUR HB___XHELP( void )
+HB_FUNC( __XHELP )
 {
    PHB_DYNS pDynSym = hb_dynsymFind( "HELP" );
 

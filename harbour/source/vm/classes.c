@@ -391,7 +391,7 @@ ULONG hb_objHasMsg( PHB_ITEM pObject, char *szString )
  * <nType>     see HB_OO_MSG_*
  * <xInit>     Optional initializer for DATA
  */
-HARBOUR HB___CLSADDMSG( void )
+HB_FUNC( __CLSADDMSG )
 {
    USHORT uiClass = hb_parni( 1 );
 
@@ -519,7 +519,7 @@ HARBOUR HB___CLSADDMSG( void )
  * <nDatas>     Number of DATAs in the class
  * <hSuper>     Optional handle of superclass
  */
-HARBOUR HB___CLSNEW( void )
+HB_FUNC( __CLSNEW )
 {
    USHORT uiSuper = hb_parni( 3 );          /* Super class present */
    PCLASS pNewCls;
@@ -594,7 +594,7 @@ HARBOUR HB___CLSNEW( void )
  * <oObj>     Object
  * <cMessage> Message
  */
-HARBOUR HB___CLSDELMSG( void )
+HB_FUNC( __CLSDELMSG )
 {
    USHORT uiClass = hb_parni( 1 );
    PHB_ITEM pString = hb_param( 2, IT_STRING );
@@ -653,7 +653,7 @@ HARBOUR HB___CLSDELMSG( void )
  *
  * Create a new object from class definition <hClass>
  */
-HARBOUR HB___CLSINST( void )
+HB_FUNC( __CLSINST )
 {
    USHORT uiClass = hb_parni( 1 );
 
@@ -706,7 +706,7 @@ HARBOUR HB___CLSINST( void )
  *
  * Modify message (only for INLINE and METHOD)
  */
-HARBOUR HB___CLSMODMSG( void )
+HB_FUNC( __CLSMODMSG )
 {
    USHORT uiClass = hb_parni( 1 );
    PHB_ITEM pString = hb_param( 2, IT_STRING );
@@ -761,7 +761,7 @@ HARBOUR HB___CLSMODMSG( void )
  *
  * Returns class name of <hClass>
  */
-HARBOUR HB___OBJGETCLSNAME( void )
+HB_FUNC( __OBJGETCLSNAME )
 {
    PHB_ITEM pObject = hb_param( 0, IT_OBJECT );
    USHORT uiClass;
@@ -789,7 +789,7 @@ HARBOUR HB___OBJGETCLSNAME( void )
  *
  * Is <cSymbol> a valid message for the <oObj>
  */
-HARBOUR HB___OBJHASMSG( void )
+HB_FUNC( __OBJHASMSG )
 {
    PHB_ITEM pObject = hb_param( 1, IT_OBJECT );
    PHB_ITEM pString = hb_param( 2, IT_STRING );
@@ -806,7 +806,7 @@ HARBOUR HB___OBJHASMSG( void )
  *
  * Clone an object. Note the similarity with aClone ;-)
  */
-HARBOUR HB___OBJCLONE( void )
+HB_FUNC( __OBJCLONE )
 {
    PHB_ITEM pSrcObject = hb_param( 1, IT_OBJECT );
 
@@ -827,7 +827,7 @@ HARBOUR HB___OBJCLONE( void )
  *
  * Send a message to an object
  */
-HARBOUR HB___OBJSENDMSG( void )
+HB_FUNC( __OBJSENDMSG )
 {
    PHB_ITEM pObject  = hb_param( 1, IT_OBJECT );
    PHB_ITEM pMessage = hb_param( 2, IT_STRING );
@@ -858,7 +858,7 @@ HARBOUR HB___OBJSENDMSG( void )
  *
  * Instance super class and return class handle
  */
-HARBOUR HB___CLSINSTSUPER( void )
+HB_FUNC( __CLSINSTSUPER )
 {
    PHB_ITEM pString = hb_param( 1, IT_STRING );
    BOOL bFound = FALSE;
@@ -902,7 +902,7 @@ HARBOUR HB___CLSINSTSUPER( void )
  *
  * Return number of class datas
  */
-HARBOUR HB___CLS_CNTCLSDATA( void )
+HB_FUNC( __CLS_CNTCLSDATA )
 {
    USHORT uiClass = hb_parni( 1 );
 
@@ -919,7 +919,7 @@ HARBOUR HB___CLS_CNTCLSDATA( void )
  *
  * Return number of datas
  */
-HARBOUR HB___CLS_CNTDATA( void )
+HB_FUNC( __CLS_CNTDATA )
 {
    USHORT uiClass = hb_parni( 1 );
 
@@ -933,7 +933,7 @@ HARBOUR HB___CLS_CNTDATA( void )
  *
  * Return number of datas and decrease
  */
-HARBOUR HB___CLS_DECDATA( void )
+HB_FUNC( __CLS_DECDATA )
 {
    USHORT uiClass = hb_parni( 1 );
 
@@ -947,7 +947,7 @@ HARBOUR HB___CLS_DECDATA( void )
  *
  * Return number of datas and decrease
  */
-HARBOUR HB___CLS_INCDATA( void )
+HB_FUNC( __CLS_INCDATA )
 {
    USHORT uiClass = hb_parni( 1 );
 
@@ -957,36 +957,36 @@ HARBOUR HB___CLS_INCDATA( void )
 
 /* NOTE: Undocumented Clipper function */
 
-HARBOUR HB___CLASSNEW( void )
+HB_FUNC( __CLASSNEW )
 {
-   HB___CLSNEW();
+   HB_FUNCNAME( __CLSNEW )();
 }
 
 /* NOTE: Undocumented Clipper function */
 
-HARBOUR HB___CLASSINSTANCE( void )
+HB_FUNC( __CLASSINSTANCE )
 {
-   HB___CLSINST();
+   HB_FUNCNAME( __CLSINST )();
 }
 
 /* NOTE: Undocumented Clipper function */
 
-HARBOUR HB___CLASSADD( void )
+HB_FUNC( __CLASSADD )
 {
-   HB___CLSADDMSG();
+   HB_FUNCNAME( __CLSADDMSG )();
 }
 
 /* NOTE: Undocumented Clipper function */
 
-HARBOUR HB___CLASSNAME( void )
+HB_FUNC( __CLASSNAME )
 {
-   HB___OBJGETCLSNAME();
+   HB_FUNCNAME( __OBJGETCLSNAME )();
 }
 
 /* NOTE: Undocumented Clipper function */
 /* NOTE: Based on hb___msgClsSel() */
 
-HARBOUR HB___CLASSSEL( void )
+HB_FUNC( __CLASSSEL )
 {
    USHORT uiClass = hb_parni( 1 );
    PHB_ITEM pReturn = hb_itemNew( NULL );
@@ -1248,7 +1248,7 @@ static HARBOUR hb___msgVirtual( void )
 }
 
 /* to be used from Classes ERROR HANDLER method */
-HARBOUR HB___GETMESSAGE()
+HB_FUNC( __GETMESSAGE )
 {
    PHB_ITEM pBase = hb_stack.pBase;
 
@@ -1256,3 +1256,4 @@ HARBOUR HB___GETMESSAGE()
 
    hb_retc( pBase->item.asSymbol.value->szName );
 }
+

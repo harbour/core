@@ -36,137 +36,135 @@
 #include "hbapi.h"
 #include "hbvm.h"
 
-extern HARBOUR HB_AADD( void );
-extern HARBOUR HB_ABS( void );
-extern HARBOUR HB_ASC( void );
-extern HARBOUR HB_AT( void );
-extern HARBOUR HB_BOF( void );
-extern HARBOUR HB_BREAK( void );
-extern HARBOUR HB_CDOW( void );
-extern HARBOUR HB_CHR( void );
-extern HARBOUR HB_CMONTH( void );
-extern HARBOUR HB_COL( void );
-extern HARBOUR HB_CTOD( void );
-extern HARBOUR HB_DATE( void );
-extern HARBOUR HB_DAY( void );
-extern HARBOUR HB_DELETED( void );
-extern HARBOUR HB_DEVPOS( void );
-extern HARBOUR HB_DOW( void );
-extern HARBOUR HB_DTOC( void );
-extern HARBOUR HB_DTOS( void );
-extern HARBOUR HB_EMPTY( void );
-extern HARBOUR HB_EOF( void );
-extern HARBOUR HB_EXP( void );
-extern HARBOUR HB_FCOUNT( void );
-extern HARBOUR HB_FIELDNAME( void );
-extern HARBOUR HB_FLOCK( void );
-extern HARBOUR HB_FOUND( void );
-extern HARBOUR HB_INKEY( void );
-extern HARBOUR HB_INT( void );
-extern HARBOUR HB_LASTREC( void );
-extern HARBOUR HB_LEFT( void );
-extern HARBOUR HB_LEN( void );
-extern HARBOUR HB_LOCK( void );
-extern HARBOUR HB_LOG( void );
-extern HARBOUR HB_LOWER( void );
-extern HARBOUR HB_LTRIM( void );
-extern HARBOUR HB_MAX( void );
-extern HARBOUR HB_MIN( void );
-extern HARBOUR HB_MONTH( void );
-extern HARBOUR HB_PCOL( void );
-extern HARBOUR HB_PCOUNT( void );
-extern HARBOUR HB_PROW( void );
-extern HARBOUR HB_RECCOUNT( void );
-extern HARBOUR HB_RECNO( void );
-extern HARBOUR HB_REPLICATE( void );
-extern HARBOUR HB_RLOCK( void );
-extern HARBOUR HB_ROUND( void );
-extern HARBOUR HB_ROW( void );
-extern HARBOUR HB_RTRIM( void );
-extern HARBOUR HB_SECONDS( void );
-extern HARBOUR HB_SELECT( void );
-extern HARBOUR HB_SETPOS( void );
-extern HARBOUR HB_SETPOSBS( void );
-extern HARBOUR HB_SPACE( void );
-extern HARBOUR HB_SQRT( void );
-extern HARBOUR HB_STR( void );
-extern HARBOUR HB_SUBSTR( void );
-extern HARBOUR HB_TIME( void );
-extern HARBOUR HB_TRANSFORM( void );
-extern HARBOUR HB_TRIM( void );
-extern HARBOUR HB_TYPE( void );
-extern HARBOUR HB_UPPER( void );
-extern HARBOUR HB_VAL( void );
-extern HARBOUR HB_WORD( void );
-extern HARBOUR HB_YEAR( void );
+extern HB_FUNC( AADD );
+extern HB_FUNC( ABS );
+extern HB_FUNC( ASC );
+extern HB_FUNC( AT );
+extern HB_FUNC( BOF );
+extern HB_FUNC( BREAK );
+extern HB_FUNC( CDOW );
+extern HB_FUNC( CHR );
+extern HB_FUNC( CMONTH );
+extern HB_FUNC( COL );
+extern HB_FUNC( CTOD );
+extern HB_FUNC( DATE );
+extern HB_FUNC( DAY );
+extern HB_FUNC( DELETED );
+extern HB_FUNC( DEVPOS );
+extern HB_FUNC( DOW );
+extern HB_FUNC( DTOC );
+extern HB_FUNC( DTOS );
+extern HB_FUNC( EMPTY );
+extern HB_FUNC( EOF );
+extern HB_FUNC( EXP );
+extern HB_FUNC( FCOUNT );
+extern HB_FUNC( FIELDNAME );
+extern HB_FUNC( FLOCK );
+extern HB_FUNC( FOUND );
+extern HB_FUNC( INKEY );
+extern HB_FUNC( INT );
+extern HB_FUNC( LASTREC );
+extern HB_FUNC( LEFT );
+extern HB_FUNC( LEN );
+extern HB_FUNC( LOCK );
+extern HB_FUNC( LOG );
+extern HB_FUNC( LOWER );
+extern HB_FUNC( LTRIM );
+extern HB_FUNC( MAX );
+extern HB_FUNC( MIN );
+extern HB_FUNC( MONTH );
+extern HB_FUNC( PCOL );
+extern HB_FUNC( PCOUNT );
+extern HB_FUNC( PROW );
+extern HB_FUNC( RECCOUNT );
+extern HB_FUNC( RECNO );
+extern HB_FUNC( REPLICATE );
+extern HB_FUNC( RLOCK );
+extern HB_FUNC( ROUND );
+extern HB_FUNC( ROW );
+extern HB_FUNC( RTRIM );
+extern HB_FUNC( SECONDS );
+extern HB_FUNC( SELECT );
+extern HB_FUNC( SETPOS );
+extern HB_FUNC( SETPOSBS );
+extern HB_FUNC( SPACE );
+extern HB_FUNC( SQRT );
+extern HB_FUNC( STR );
+extern HB_FUNC( SUBSTR );
+extern HB_FUNC( TIME );
+extern HB_FUNC( TRANSFORM );
+extern HB_FUNC( TRIM );
+extern HB_FUNC( TYPE );
+extern HB_FUNC( UPPER );
+extern HB_FUNC( VAL );
+extern HB_FUNC( WORD );
+extern HB_FUNC( YEAR );
 
 static HB_SYMB symbols[] = {
-   { "AADD"      , _HB_FS_PUBLIC, HB_AADD         , 0 },
-   { "ABS"       , _HB_FS_PUBLIC, HB_ABS          , 0 },
-   { "ASC"       , _HB_FS_PUBLIC, HB_ASC          , 0 },
-   { "AT"        , _HB_FS_PUBLIC, HB_AT           , 0 },
-   { "BOF"       , _HB_FS_PUBLIC, HB_BOF          , 0 },
-   { "BREAK"     , _HB_FS_PUBLIC, HB_BREAK        , 0 },
-   { "CDOW"      , _HB_FS_PUBLIC, HB_CDOW         , 0 },
-   { "CHR"       , _HB_FS_PUBLIC, HB_CHR          , 0 },
-   { "CMONTH"    , _HB_FS_PUBLIC, HB_CMONTH       , 0 },
-   { "COL"       , _HB_FS_PUBLIC, HB_COL          , 0 },
-   { "CTOD"      , _HB_FS_PUBLIC, HB_CTOD         , 0 },
-   { "DATE"      , _HB_FS_PUBLIC, HB_DATE         , 0 },
-   { "DAY"       , _HB_FS_PUBLIC, HB_DAY          , 0 },
-   { "DELETED"   , _HB_FS_PUBLIC, HB_DELETED      , 0 },
-   { "DEVPOS"    , _HB_FS_PUBLIC, HB_DEVPOS       , 0 },
-   { "DOW"       , _HB_FS_PUBLIC, HB_DOW          , 0 },
-   { "DTOC"      , _HB_FS_PUBLIC, HB_DTOC         , 0 },
-   { "DTOS"      , _HB_FS_PUBLIC, HB_DTOS         , 0 },
-   { "EMPTY"     , _HB_FS_PUBLIC, HB_EMPTY        , 0 },
-   { "EOF"       , _HB_FS_PUBLIC, HB_EOF          , 0 },
-   { "EXP"       , _HB_FS_PUBLIC, HB_EXP          , 0 },
-   { "FCOUNT"    , _HB_FS_PUBLIC, HB_FCOUNT       , 0 },
-   { "FIELDNAME" , _HB_FS_PUBLIC, HB_FIELDNAME    , 0 },
-   { "FLOCK"     , _HB_FS_PUBLIC, HB_FLOCK        , 0 },
-   { "FOUND"     , _HB_FS_PUBLIC, HB_FOUND        , 0 },
-   { "INKEY"     , _HB_FS_PUBLIC, HB_INKEY        , 0 },
-   { "INT"       , _HB_FS_PUBLIC, HB_INT          , 0 },
-   { "LASTREC"   , _HB_FS_PUBLIC, HB_LASTREC      , 0 },
-   { "LEFT"      , _HB_FS_PUBLIC, HB_LEFT         , 0 },
-   { "LEN"       , _HB_FS_PUBLIC, HB_LEN          , 0 },
-   { "LOCK"      , _HB_FS_PUBLIC, HB_LOCK         , 0 },
-   { "LOG"       , _HB_FS_PUBLIC, HB_LOG          , 0 },
-   { "LOWER"     , _HB_FS_PUBLIC, HB_LOWER        , 0 },
-   { "LTRIM"     , _HB_FS_PUBLIC, HB_LTRIM        , 0 },
-   { "MAX"       , _HB_FS_PUBLIC, HB_MAX          , 0 },
-   { "MIN"       , _HB_FS_PUBLIC, HB_MIN          , 0 },
-   { "MONTH"     , _HB_FS_PUBLIC, HB_MONTH        , 0 },
-   { "PCOL"      , _HB_FS_PUBLIC, HB_PCOL         , 0 },
-   { "PCOUNT"    , _HB_FS_PUBLIC, HB_PCOUNT       , 0 },
-   { "PROW"      , _HB_FS_PUBLIC, HB_PROW         , 0 },
-   { "RECCOUNT"  , _HB_FS_PUBLIC, HB_RECCOUNT     , 0 },
-   { "RECNO"     , _HB_FS_PUBLIC, HB_RECNO        , 0 },
-   { "REPLICATE" , _HB_FS_PUBLIC, HB_REPLICATE    , 0 },
-   { "RLOCK"     , _HB_FS_PUBLIC, HB_RLOCK        , 0 },
-   { "ROUND"     , _HB_FS_PUBLIC, HB_ROUND        , 0 },
-   { "ROW"       , _HB_FS_PUBLIC, HB_ROW          , 0 },
-   { "RTRIM"     , _HB_FS_PUBLIC, HB_RTRIM        , 0 },
-   { "SECONDS"   , _HB_FS_PUBLIC, HB_SECONDS      , 0 },
-   { "SELECT"    , _HB_FS_PUBLIC, HB_SELECT       , 0 },
-   { "SETPOS"    , _HB_FS_PUBLIC, HB_SETPOS       , 0 },
-   { "SETPOSBS"  , _HB_FS_PUBLIC, HB_SETPOSBS     , 0 },
-   { "SPACE"     , _HB_FS_PUBLIC, HB_SPACE        , 0 },
-   { "SQRT"      , _HB_FS_PUBLIC, HB_SQRT         , 0 },
-   { "STR"       , _HB_FS_PUBLIC, HB_STR          , 0 },
-   { "SUBSTR"    , _HB_FS_PUBLIC, HB_SUBSTR       , 0 },
-   { "TIME"      , _HB_FS_PUBLIC, HB_TIME         , 0 },
-   { "TRANSFORM" , _HB_FS_PUBLIC, HB_TRANSFORM    , 0 },
-   { "TRIM"      , _HB_FS_PUBLIC, HB_TRIM         , 0 },
-   { "TYPE"      , _HB_FS_PUBLIC, HB_TYPE         , 0 },
-   { "UPPER"     , _HB_FS_PUBLIC, HB_UPPER        , 0 },
-   { "VAL"       , _HB_FS_PUBLIC, HB_VAL          , 0 },
-   { "WORD"      , _HB_FS_PUBLIC, HB_WORD         , 0 },
-   { "YEAR"      , _HB_FS_PUBLIC, HB_YEAR         , 0 }
+   { "AADD"      , HB_FS_PUBLIC, HB_FUNCNAME( AADD )       , NULL },
+   { "ABS"       , HB_FS_PUBLIC, HB_FUNCNAME( ABS )        , NULL },
+   { "ASC"       , HB_FS_PUBLIC, HB_FUNCNAME( ASC )        , NULL },
+   { "AT"        , HB_FS_PUBLIC, HB_FUNCNAME( AT )         , NULL },
+   { "BOF"       , HB_FS_PUBLIC, HB_FUNCNAME( BOF )        , NULL },
+   { "BREAK"     , HB_FS_PUBLIC, HB_FUNCNAME( BREAK )      , NULL },
+   { "CDOW"      , HB_FS_PUBLIC, HB_FUNCNAME( CDOW )       , NULL },
+   { "CHR"       , HB_FS_PUBLIC, HB_FUNCNAME( CHR )        , NULL },
+   { "CMONTH"    , HB_FS_PUBLIC, HB_FUNCNAME( CMONTH )     , NULL },
+   { "COL"       , HB_FS_PUBLIC, HB_FUNCNAME( COL )        , NULL },
+   { "CTOD"      , HB_FS_PUBLIC, HB_FUNCNAME( CTOD )       , NULL },
+   { "DATE"      , HB_FS_PUBLIC, HB_FUNCNAME( DATE )       , NULL },
+   { "DAY"       , HB_FS_PUBLIC, HB_FUNCNAME( DAY )        , NULL },
+   { "DELETED"   , HB_FS_PUBLIC, HB_FUNCNAME( DELETED )    , NULL },
+   { "DEVPOS"    , HB_FS_PUBLIC, HB_FUNCNAME( DEVPOS )     , NULL },
+   { "DOW"       , HB_FS_PUBLIC, HB_FUNCNAME( DOW )        , NULL },
+   { "DTOC"      , HB_FS_PUBLIC, HB_FUNCNAME( DTOC )       , NULL },
+   { "DTOS"      , HB_FS_PUBLIC, HB_FUNCNAME( DTOS )       , NULL },
+   { "EMPTY"     , HB_FS_PUBLIC, HB_FUNCNAME( EMPTY )      , NULL },
+   { "EOF"       , HB_FS_PUBLIC, HB_FUNCNAME( EOF )        , NULL },
+   { "EXP"       , HB_FS_PUBLIC, HB_FUNCNAME( EXP )        , NULL },
+   { "FCOUNT"    , HB_FS_PUBLIC, HB_FUNCNAME( FCOUNT )     , NULL },
+   { "FIELDNAME" , HB_FS_PUBLIC, HB_FUNCNAME( FIELDNAME )  , NULL },
+   { "FLOCK"     , HB_FS_PUBLIC, HB_FUNCNAME( FLOCK )      , NULL },
+   { "FOUND"     , HB_FS_PUBLIC, HB_FUNCNAME( FOUND )      , NULL },
+   { "INKEY"     , HB_FS_PUBLIC, HB_FUNCNAME( INKEY )      , NULL },
+   { "INT"       , HB_FS_PUBLIC, HB_FUNCNAME( INT )        , NULL },
+   { "LASTREC"   , HB_FS_PUBLIC, HB_FUNCNAME( LASTREC )    , NULL },
+   { "LEFT"      , HB_FS_PUBLIC, HB_FUNCNAME( LEFT )       , NULL },
+   { "LEN"       , HB_FS_PUBLIC, HB_FUNCNAME( LEN )        , NULL },
+   { "LOCK"      , HB_FS_PUBLIC, HB_FUNCNAME( LOCK )       , NULL },
+   { "LOG"       , HB_FS_PUBLIC, HB_FUNCNAME( LOG )        , NULL },
+   { "LOWER"     , HB_FS_PUBLIC, HB_FUNCNAME( LOWER )      , NULL },
+   { "LTRIM"     , HB_FS_PUBLIC, HB_FUNCNAME( LTRIM )      , NULL },
+   { "MAX"       , HB_FS_PUBLIC, HB_FUNCNAME( MAX )        , NULL },
+   { "MIN"       , HB_FS_PUBLIC, HB_FUNCNAME( MIN )        , NULL },
+   { "MONTH"     , HB_FS_PUBLIC, HB_FUNCNAME( MONTH )      , NULL },
+   { "PCOL"      , HB_FS_PUBLIC, HB_FUNCNAME( PCOL )       , NULL },
+   { "PCOUNT"    , HB_FS_PUBLIC, HB_FUNCNAME( PCOUNT )     , NULL },
+   { "PROW"      , HB_FS_PUBLIC, HB_FUNCNAME( PROW )       , NULL },
+   { "RECCOUNT"  , HB_FS_PUBLIC, HB_FUNCNAME( RECCOUNT )   , NULL },
+   { "RECNO"     , HB_FS_PUBLIC, HB_FUNCNAME( RECNO )      , NULL },
+   { "REPLICATE" , HB_FS_PUBLIC, HB_FUNCNAME( REPLICATE )  , NULL },
+   { "RLOCK"     , HB_FS_PUBLIC, HB_FUNCNAME( RLOCK )      , NULL },
+   { "ROUND"     , HB_FS_PUBLIC, HB_FUNCNAME( ROUND )      , NULL },
+   { "ROW"       , HB_FS_PUBLIC, HB_FUNCNAME( ROW )        , NULL },
+   { "RTRIM"     , HB_FS_PUBLIC, HB_FUNCNAME( RTRIM )      , NULL },
+   { "SECONDS"   , HB_FS_PUBLIC, HB_FUNCNAME( SECONDS )    , NULL },
+   { "SELECT"    , HB_FS_PUBLIC, HB_FUNCNAME( SELECT )     , NULL },
+   { "SETPOS"    , HB_FS_PUBLIC, HB_FUNCNAME( SETPOS )     , NULL },
+   { "SETPOSBS"  , HB_FS_PUBLIC, HB_FUNCNAME( SETPOSBS )   , NULL },
+   { "SPACE"     , HB_FS_PUBLIC, HB_FUNCNAME( SPACE )      , NULL },
+   { "SQRT"      , HB_FS_PUBLIC, HB_FUNCNAME( SQRT )       , NULL },
+   { "STR"       , HB_FS_PUBLIC, HB_FUNCNAME( STR )        , NULL },
+   { "SUBSTR"    , HB_FS_PUBLIC, HB_FUNCNAME( SUBSTR )     , NULL },
+   { "TIME"      , HB_FS_PUBLIC, HB_FUNCNAME( TIME )       , NULL },
+   { "TRANSFORM" , HB_FS_PUBLIC, HB_FUNCNAME( TRANSFORM )  , NULL },
+   { "TRIM"      , HB_FS_PUBLIC, HB_FUNCNAME( TRIM )       , NULL },
+   { "TYPE"      , HB_FS_PUBLIC, HB_FUNCNAME( TYPE )       , NULL },
+   { "UPPER"     , HB_FS_PUBLIC, HB_FUNCNAME( UPPER )      , NULL },
+   { "VAL"       , HB_FS_PUBLIC, HB_FUNCNAME( VAL )        , NULL },
+   { "WORD"      , HB_FS_PUBLIC, HB_FUNCNAME( WORD )       , NULL },
+   { "YEAR"      , HB_FS_PUBLIC, HB_FUNCNAME( YEAR )       , NULL }
 };
-
-/* Registers runtime support functions symbols */
 
 /* NOTE: The system symbol table with runtime functions HAVE TO be called
          last */

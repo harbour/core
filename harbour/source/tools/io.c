@@ -10,7 +10,7 @@
    #include <bios.h>
 #endif
 
-HARBOUR HB_CD( void )
+HB_FUNC( CD )
 {
 #if defined(HB_OS_DOS)
    hb_retni( ISCHAR( 1 ) ? chdir( hb_parc( 1 ) ) : 0 );
@@ -19,7 +19,7 @@ HARBOUR HB_CD( void )
 #endif
 }
 
-HARBOUR HB_MD( void )
+HB_FUNC( MD )
 {
 #if defined(HB_OS_DOS)
    hb_retni( ISCHAR( 1 ) ? mkdir( hb_parc( 1 ) ) : 0 );
@@ -28,7 +28,7 @@ HARBOUR HB_MD( void )
 #endif
 }
 
-HARBOUR HB_RD( void )
+HB_FUNC( RD )
 {
 #if defined(HB_OS_DOS)
    hb_retni( ISCHAR( 1 ) ? rmdir( hb_parc( 1 ) ) : 0 );
@@ -37,7 +37,7 @@ HARBOUR HB_RD( void )
 #endif
 }
 
-HARBOUR HB_DISKUSED( void )
+HB_FUNC( DISKUSED )
 {
 #if defined(HB_OS_DOS)
    struct diskfree_t disk;
@@ -58,7 +58,7 @@ HARBOUR HB_DISKUSED( void )
 #endif
 }
 
-HARBOUR HB_DISKFREE( void )
+HB_FUNC( DISKFREE )
 {
 #if defined(HB_OS_DOS)
    struct diskfree_t disk;
@@ -73,7 +73,7 @@ HARBOUR HB_DISKFREE( void )
 #endif
 }
 
-HARBOUR HB_DISKFULL( void )
+HB_FUNC( DISKFULL )
 {
 #if defined(HB_OS_DOS)
    struct diskfree_t disk;

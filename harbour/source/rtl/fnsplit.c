@@ -36,7 +36,7 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
-HARBOUR HB_HB_FNAMESPLIT( void )
+HB_FUNC( HB_FNAMESPLIT )
 {
    if( ISCHAR( 1 ) )
    {
@@ -51,7 +51,7 @@ HARBOUR HB_HB_FNAMESPLIT( void )
    }
 }
 
-HARBOUR HB_HB_FNAMEMERGE( void )
+HB_FUNC( HB_FNAMEMERGE )
 {
    HB_FNAME pFileName;
    char szFileName[ _POSIX_PATH_MAX ];

@@ -38,8 +38,8 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Eddie Runia <eddie@runia.com>
- *    HB___VMVARSGET()
- *    HB___VMVARSLIST()
+ *    __VMVARSGET()
+ *    __VMVARSLIST()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -68,7 +68,7 @@ typedef struct _SYMBOLS
    HB_SYMBOLSCOPE hScope;    /* scope collected from all symbols in module used to speed initialization code */
 } SYMBOLS, * PSYMBOLS;       /* structure to keep track of all modules symbol tables */
 
-extern HARBOUR HB_SYSINIT( void );
+extern HB_FUNC( SYSINIT );
 
 /* PCode functions */
 
@@ -199,7 +199,7 @@ extern POBJSYMBOLS HB_FIRSTSYMBOL, HB_LASTSYMBOL;
 /* virtual machine state */
 
 HB_STACK hb_stack;
-HB_SYMB  hb_symEval = { "__EVAL", _HB_FS_PUBLIC, hb_vmDoBlock, NULL }; /* symbol to evaluate codeblocks */
+HB_SYMB  hb_symEval = { "__EVAL", HB_FS_PUBLIC, hb_vmDoBlock, NULL }; /* symbol to evaluate codeblocks */
 
 static HB_ITEM  s_aStatics;         /* Harbour array to hold all application statics variables */
 static PHB_SYMB s_pSymStart = NULL; /* start symbol of the application. MAIN() is not required */
@@ -286,7 +286,7 @@ void hb_vmInit( BOOL bStartMainProc )
       int i;
       int iArgCount;
 
-      hb_vmPushSymbol( s_pSymStart ); /* pushes first _HB_FS_PUBLIC defined symbol to the stack */
+      hb_vmPushSymbol( s_pSymStart ); /* pushes first HB_FS_PUBLIC defined symbol to the stack */
       hb_vmPushNil();                 /* places NIL at self */
 
       iArgCount = 0;
@@ -2677,7 +2677,7 @@ static void hb_vmSFrame( PHB_SYMB pSym )      /* sets the statics frame for a fu
    HB_TRACE(HB_TR_DEBUG, ("hb_vmSFrame(%p)", pSym));
 
    /* _INITSTATICS is now the statics frame. Statics() changed it! */
-   hb_stack.iStatics = ( int ) pSym->pFunPtr; /* pSym is { "$_INITSTATICS", _HB_FS_INIT | _HB_FS_EXIT, _INITSTATICS } for each PRG */
+   hb_stack.iStatics = ( int ) pSym->pFunPtr; /* pSym is { "$_INITSTATICS", HB_FS_INIT | HB_FS_EXIT, _INITSTATICS } for each PRG */
 }
 
 static void hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ) /* initializes the global aStatics array or redimensionates it */
@@ -3580,10 +3580,10 @@ void hb_vmProcessSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols ) /* m
 
       hSymScope = ( pModuleSymbols + ui )->cScope;
       pNewSymbols->hScope |= hSymScope;
-      if( ( ! s_pSymStart ) && ( hSymScope == _HB_FS_PUBLIC ) )
+      if( ( ! s_pSymStart ) && ( hSymScope == HB_FS_PUBLIC ) )
          s_pSymStart = pModuleSymbols + ui;  /* first public defined symbol to start execution */
 
-      if( ( hSymScope == _HB_FS_PUBLIC ) || ( hSymScope & ( _HB_FS_MESSAGE | _HB_FS_MEMVAR ) ) )
+      if( ( hSymScope == HB_FS_PUBLIC ) || ( hSymScope & ( HB_FS_MESSAGE | HB_FS_MEMVAR ) ) )
          hb_dynsymNew( pModuleSymbols + ui );
    }
 }
@@ -3625,7 +3625,7 @@ static void hb_vmReleaseLocalSymbols( void )
 }
 
 /* This calls all _INITSTATICS functions defined in the application.
- * We are using a special symbol's scope ( _HB_FS_INIT | _HB_FS_EXIT ) to mark
+ * We are using a special symbol's scope ( HB_FS_INIT | HB_FS_EXIT ) to mark
  * this function. These two bits cannot be marked at the same
  * time for normal user defined functions.
  */
@@ -3637,15 +3637,15 @@ static void hb_vmDoInitStatics( void )
 
    do
    {
-      if( ( pLastSymbols->hScope & ( _HB_FS_INIT | _HB_FS_EXIT ) ) == ( _HB_FS_INIT | _HB_FS_EXIT ) )
+      if( ( pLastSymbols->hScope & ( HB_FS_INIT | HB_FS_EXIT ) ) == ( HB_FS_INIT | HB_FS_EXIT ) )
       {
          USHORT ui;
 
          for( ui = 0; ui < pLastSymbols->uiModuleSymbols; ui++ )
          {
-            HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->cScope & ( _HB_FS_EXIT | _HB_FS_INIT );
+            HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->cScope & ( HB_FS_EXIT | HB_FS_INIT );
 
-            if( scope == ( _HB_FS_INIT | _HB_FS_EXIT ) )
+            if( scope == ( HB_FS_INIT | HB_FS_EXIT ) )
             {
                hb_vmPushSymbol( pLastSymbols->pModuleSymbols + ui );
                hb_vmPushNil();
@@ -3667,15 +3667,15 @@ static void hb_vmDoExitFunctions( void )
    do
    {
       /* only if module contains some EXIT functions */
-      if( pLastSymbols->hScope & _HB_FS_EXIT )
+      if( pLastSymbols->hScope & HB_FS_EXIT )
       {
          USHORT ui;
 
          for( ui = 0; ui < pLastSymbols->uiModuleSymbols; ui++ )
          {
-            HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->cScope & ( _HB_FS_EXIT | _HB_FS_INIT );
+            HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->cScope & ( HB_FS_EXIT | HB_FS_INIT );
 
-            if( scope == _HB_FS_EXIT )
+            if( scope == HB_FS_EXIT )
             {
                hb_vmPushSymbol( pLastSymbols->pModuleSymbols + ui );
                hb_vmPushNil();
@@ -3701,15 +3701,15 @@ static void hb_vmDoInitFunctions( void )
    do
    {
       /* only if module contains some INIT functions */
-      if( pLastSymbols->hScope & _HB_FS_INIT )
+      if( pLastSymbols->hScope & HB_FS_INIT )
       {
          USHORT ui;
 
          for( ui = 0; ui < pLastSymbols->uiModuleSymbols; ui++ )
          {
-            HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->cScope & ( _HB_FS_EXIT | _HB_FS_INIT );
+            HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->cScope & ( HB_FS_EXIT | HB_FS_INIT );
 
-            if( scope == _HB_FS_INIT )
+            if( scope == HB_FS_INIT )
             {
                int argc = hb_cmdargARGC();
                char ** argv = hb_cmdargARGV();
@@ -3747,12 +3747,12 @@ void hb_vmForceLink( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmForceLink()"));
 
-   HB_SYSINIT();
+   HB_FUNCNAME( SYSINIT )();
 }
 
 /* ----------------------------- */
 
-HARBOUR HB_ERRORLEVEL( void )
+HB_FUNC( ERRORLEVEL )
 {
    hb_retni( s_byErrorLevel );
 
@@ -3819,7 +3819,7 @@ void hb_vmRequestCancel( void )
  * $FuncName$     <aStat> __vmVarSList()
  * $Description$  Return the statics array. Please aClone before assignments
  * $End$ */
-HARBOUR HB___VMVARSLIST( void )
+HB_FUNC( __VMVARSLIST )
 {
    PHB_ITEM pStatics = hb_arrayClone( &s_aStatics );
 
@@ -3831,7 +3831,7 @@ HARBOUR HB___VMVARSLIST( void )
  * $FuncName$     <xStat> __vmVarSGet(<nStatic>)
  * $Description$  Return a specified statics
  * $End$ */
-HARBOUR HB___VMVARSGET( void )
+HB_FUNC( __VMVARSGET )
 {
    hb_itemReturn( s_aStatics.item.asArray.value->pItems +
                   hb_stack.iStatics + hb_parni( 1 ) - 1 );

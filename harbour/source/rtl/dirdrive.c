@@ -42,7 +42,7 @@
 
 /* NOTE: Clipper 5.3 only */
 
-HARBOUR HB_DIRCHANGE( void )
+HB_FUNC( DIRCHANGE )
 {
    USHORT uiErrorOld = hb_fsError();
 
@@ -58,7 +58,7 @@ HARBOUR HB_DIRCHANGE( void )
 /* NOTE: Clipper 5.3 NG incorrectly states that the name if this function is
          DIRMAKE(), in reality it's not. */
 
-HARBOUR HB_MAKEDIR( void )
+HB_FUNC( MAKEDIR )
 {
    USHORT uiErrorOld = hb_fsError();
 
@@ -72,7 +72,7 @@ HARBOUR HB_MAKEDIR( void )
 
 /* NOTE: Clipper 5.3 only */
 
-HARBOUR HB_DIRREMOVE( void )
+HB_FUNC( DIRREMOVE )
 {
    USHORT uiErrorOld = hb_fsError();
 
@@ -86,7 +86,7 @@ HARBOUR HB_DIRREMOVE( void )
 
 /* NOTE: Clipper 5.3 undocumented */
 
-HARBOUR HB_ISDISK()
+HB_FUNC( ISDISK )
 {
    USHORT uiErrorOld = hb_fsError();
 
@@ -97,7 +97,7 @@ HARBOUR HB_ISDISK()
    hb_fsSetError( uiErrorOld );
 }
 
-HARBOUR HB_DISKCHANGE( void )
+HB_FUNC( DISKCHANGE )
 {
    USHORT uiErrorOld = hb_fsError();
 
@@ -108,7 +108,7 @@ HARBOUR HB_DISKCHANGE( void )
    hb_fsSetError( uiErrorOld );
 }
 
-HARBOUR HB_DISKNAME( void )
+HB_FUNC( DISKNAME )
 {
    USHORT uiErrorOld = hb_fsError();
    char szDrive[ 1 ];

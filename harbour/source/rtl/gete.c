@@ -38,7 +38,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
- *    HB_GETE()
+ *    GETE()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -51,7 +51,7 @@
          function will return an empty string if called with more than one
          parameter. [vszakats] */
 
-HARBOUR HB_GETENV( void )
+HB_FUNC( GETENV )
 {
    PHB_ITEM pName = hb_param( 1, IT_STRING );
 
@@ -98,8 +98,8 @@ HARBOUR HB_GETENV( void )
 
 /* NOTE: Undocumented Clipper function. [vszakats] */
 
-HARBOUR HB_GETE( void )
+HB_FUNC( GETE )
 {
-   HB_GETENV();
+   HB_FUNCNAME( GETENV )();
 }
 

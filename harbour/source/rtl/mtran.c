@@ -77,7 +77,7 @@ char * hb_strMemotran( char * pszResult, ULONG * ulResultLen, const char * pszSt
    return pszResult;
 }
 
-HARBOUR HB_MEMOTRAN( void )
+HB_FUNC( MEMOTRAN )
 {
    PHB_ITEM pString = hb_param( 1, IT_STRING );
 

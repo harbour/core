@@ -19,7 +19,7 @@
 
 #include "hbapi.h"
 
-HARBOUR HB_GT_CHAREVEN( void )
+HB_FUNC( GT_CHAREVEN )
 {
   char *s1, *s2;
   int len, i;

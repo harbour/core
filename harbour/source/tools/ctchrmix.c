@@ -38,7 +38,7 @@
 
 /* NOTE: CA-Tools will hang if the second parameter is an empty string */
 
-HARBOUR HB_CT_CHARMIX( void )
+HB_FUNC( CT_CHARMIX )
 {
    PHB_ITEM pStr1 = hb_param( 1, IT_STRING );
    PHB_ITEM pStr2 = hb_param( 2, IT_STRING );

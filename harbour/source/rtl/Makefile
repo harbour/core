@@ -56,6 +56,7 @@ C_SOURCES=\
         mlpos.c      \
         mod.c        \
         mouseapi.c   \
+        mousex.c     \
         mtran.c      \
         natmsg.c     \
         net.c        \

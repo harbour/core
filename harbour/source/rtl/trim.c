@@ -74,7 +74,7 @@ ULONG hb_strRTrimLen( const char * szText, ULONG ulLen, BOOL bAnySpace )
 /* trims leading spaces from a string */
 /* TEST: QOUT( "ltrim( '  hello world  ' ) = '" + ltrim( '  hello world  ' ) + "'" ) */
 
-HARBOUR HB_LTRIM( void )
+HB_FUNC( LTRIM )
 {
    PHB_ITEM pText = hb_param( 1, IT_STRING );
 
@@ -101,7 +101,7 @@ HARBOUR HB_LTRIM( void )
 
 /* trims trailing spaces from a string */
 /* TEST: QOUT( "rtrim( '  hello world  ' ) = '" + rtrim( '  hello world  ' ) + "'" ) */
-HARBOUR HB_RTRIM( void )
+HB_FUNC( RTRIM )
 {
    PHB_ITEM pText = hb_param( 1, IT_STRING );
 
@@ -128,16 +128,16 @@ HARBOUR HB_RTRIM( void )
 /* NOTE: The second parameter is a Harbour extension [vszakats] */
 
 /* synonymn for RTRIM */
-HARBOUR HB_TRIM( void )
+HB_FUNC( TRIM )
 {
-   HB_RTRIM();
+   HB_FUNCNAME( RTRIM )();
 }
 
 /* NOTE: The second parameter is a Harbour extension [vszakats] */
 
 /* trims leading and trailing spaces from a string */
 /* TEST: QOUT( "alltrim( '  hello world  ' ) = '" + alltrim( '  hello world  ' ) + "'" ) */
-HARBOUR HB_ALLTRIM( void )
+HB_FUNC( ALLTRIM )
 {
    if( ISCHAR( 1 ) )
    {

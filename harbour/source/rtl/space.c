@@ -39,7 +39,7 @@
 
 /* returns n copies of a single space */
 /* TEST: QOUT( "space( 5 ) = '" + space( 5 ) + "'" ) */
-HARBOUR HB_SPACE( void )
+HB_FUNC( SPACE )
 {
    if( ISNUM( 1 ) )
    {

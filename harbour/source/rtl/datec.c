@@ -52,7 +52,7 @@ char * hb_cdow( int iDay )
    return ( iDay >= 1 && iDay <= 7 ) ? hb_daysname[ iDay - 1 ] : "";
 }
 
-HARBOUR HB_CMONTH( void )
+HB_FUNC( CMONTH )
 {
    PHB_ITEM pDate = hb_param( 1, IT_DATE );
 
@@ -75,7 +75,7 @@ HARBOUR HB_CMONTH( void )
    }
 }
 
-HARBOUR HB_CDOW( void )
+HB_FUNC( CDOW )
 {
    PHB_ITEM pDate = hb_param( 1, IT_DATE );
 

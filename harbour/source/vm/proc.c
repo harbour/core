@@ -46,7 +46,7 @@
 
 #include "hbapi.h"
 
-HARBOUR HB_PROCNAME( void )
+HB_FUNC( PROCNAME )
 {
    int iLevel = hb_parni( 1 ) + 1;  /* we are already inside ProcName() */
    PHB_ITEM pBase = hb_stack.pBase;
@@ -75,7 +75,7 @@ HARBOUR HB_PROCNAME( void )
       hb_retc( "" );
 }
 
-HARBOUR HB_PROCLINE( void )
+HB_FUNC( PROCLINE )
 {
    int iLevel = hb_parni( 1 ) + 1;  /* we are already inside ProcName() */
    PHB_ITEM pBase = hb_stack.pBase;
@@ -92,7 +92,7 @@ HARBOUR HB_PROCLINE( void )
 /* NOTE: Clipper undocumented function, which always returns an empty
          string. [vszakats] */
 
-HARBOUR HB_PROCFILE( void )
+HB_FUNC( PROCFILE )
 {
    hb_retc( "" );
 }

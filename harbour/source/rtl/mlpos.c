@@ -35,7 +35,7 @@
 
 #include "hbapi.h"
 
-HARBOUR HB_MLPOS( void )
+HB_FUNC( MLPOS )
 {
    char * pszString    = ISCHAR( 1 ) ? hb_parc( 1 ) : "";
    ULONG  ulLineLength = hb_parni( 2 );

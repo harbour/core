@@ -19,7 +19,7 @@
 
 #include "hbapi.h"
 
-HARBOUR HB_GT_STRCSPN( void )
+HB_FUNC( GT_STRCSPN )
 {
   char *string;
   char *cset;

@@ -35,20 +35,20 @@
 
 #include "hbapigt.h"
 
-HARBOUR HB___BOX( void )
+HB_FUNC( __BOX )
 {
    if( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) && ISNUM( 4 ) )
       hb_gtBox( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ),
                 ( BYTE * ) ( ISCHAR( 5 ) ? hb_parc( 5 ) : " " ) );
 }
 
-HARBOUR HB___BOXD( void )
+HB_FUNC( __BOXD )
 {
    if( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) && ISNUM( 4 ) )
       hb_gtBoxD( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
 }
 
-HARBOUR HB___BOXS( void )
+HB_FUNC( __BOXS )
 {
    if( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) && ISNUM( 4 ) )
       hb_gtBoxS( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) );

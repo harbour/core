@@ -19,7 +19,7 @@
 
 #include "hbapi.h"
 
-HARBOUR HB_GT_CHRFIRST( void )
+HB_FUNC( GT_CHRFIRST )
 {
   char *string;
   char *cset;

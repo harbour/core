@@ -36,7 +36,7 @@
 #include "hbapi.h"
 #include "hbapigt.h"
 
-HARBOUR HB_DISPBOX( void )
+HB_FUNC( DISPBOX )
 {
    if( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) && ISNUM( 4 ) )
    {

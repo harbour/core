@@ -40,7 +40,7 @@
 /* locates a substring in a string */
 /* TEST: QOUT( "at( 'cde', 'abcdefgfedcba' ) = '" + at( 'cde', 'abcsefgfedcba' ) + "'" ) */
 
-HARBOUR HB_AT( void )
+HB_FUNC( AT )
 {
    PHB_ITEM pSub = hb_param( 1, IT_STRING );
    PHB_ITEM pText = hb_param( 2, IT_STRING );

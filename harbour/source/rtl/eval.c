@@ -38,7 +38,7 @@
 #include "hbapierr.h"
 #include "hbvm.h"
 
-HARBOUR HB_EVAL( void )
+HB_FUNC( EVAL )
 {
    PHB_ITEM pItem = hb_param( 1, IT_BLOCK );
 

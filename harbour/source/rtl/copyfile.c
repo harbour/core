@@ -116,7 +116,7 @@ static BOOL hb_fsCopy( char * szSource, char * szDest )
 
 /* Clipper returns .F. on failure and NIL on success */
 
-HARBOUR HB___COPYFILE( void )
+HB_FUNC( __COPYFILE )
 {
    if( ISCHAR( 1 ) && ISCHAR( 2 ) )
    {

@@ -40,7 +40,7 @@
 
 /* NOTE: Clipper 5.3 undocumented */
 
-HARBOUR HB_FSETDEVMOD( void )
+HB_FUNC( FSETDEVMOD )
 {
    if( ISNUM( 1 ) && ISNUM( 2 ) )
       hb_fsSetDevMode( hb_parni( 1 ), hb_parni( 2 ) );

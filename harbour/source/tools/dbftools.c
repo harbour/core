@@ -36,7 +36,7 @@
 #include "hbapi.h"
 #include "hbapirdd.h"
  
-HARBOUR HB_FIELDTYPE( void )
+HB_FUNC( FIELDTYPE )
 {
    USHORT uiField;
    LPFIELD pField;
@@ -49,7 +49,7 @@ HARBOUR HB_FIELDTYPE( void )
    hb_retc( ( char * ) &( pField->uiType ) );
 }
 
-HARBOUR HB_FIELDSIZE( void )
+HB_FUNC( FIELDSIZE )
 {
    USHORT uiField;
    LPFIELD pField;
@@ -62,7 +62,7 @@ HARBOUR HB_FIELDSIZE( void )
    hb_retni( pField->uiLen );
 }
 
-HARBOUR HB_FIELDDECI( void )
+HB_FUNC( FIELDDECI )
 {
    USHORT uiField;
    LPFIELD pField;

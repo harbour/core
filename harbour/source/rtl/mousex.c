@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * NOSNOW(), SETMODE(), ISCOLOR() functions
+ * NUMBUTTONS(), SETMOUSE() XBase++ compatible functions.
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
@@ -33,34 +33,36 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
- *
- * Copyright 1999 {list of individual authors and e-mail addresses}
- *    SETMODE()
- *
- * See doc/license.txt for licensing terms.
- *
- */
-
 #include "hbapi.h"
+#include "hbapiitm.h"
 #include "hbapigt.h"
 
-HB_FUNC( ISCOLOR )
+/* NOTE: XBase++ compatible functions */
+
+#ifdef HB_COMPAT_XPP
+
+HB_FUNC( NUMBUTTONS )
 {
-   hb_retl( hb_gtIsColor() );
+   hb_retni( hb_mouseCountButton() );
 }
 
-HB_FUNC( NOSNOW )
+HB_FUNC( SETMOUSE )
 {
+   hb_retl( hb_mouseGetCursor() );
+
    if( ISLOG( 1 ) )
-      hb_gtSetSnowFlag( hb_parl( 1 ) );
+      hb_mouseSetCursor( hb_parl( 1 ) );
+
+   {
+      PHB_ITEM pRow = hb_param( 2, IT_NUMERIC );
+      PHB_ITEM pCol = hb_param( 3, IT_NUMERIC );
+
+      if( pRow || pCol )
+      {
+         hb_mouseSetPos( pRow ? hb_itemGetNI( pRow ) : hb_mouseRow() ,
+                         pCol ? hb_itemGetNI( pCol ) : hb_mouseCol() );
+      }
+   }
 }
 
-HB_FUNC( SETMODE )
-{
-   hb_retl( hb_gtSetMode( ISNUM( 1 ) ? hb_parni( 1 ) : ( hb_gtMaxRow() + 1 ),
-                          ISNUM( 2 ) ? hb_parni( 2 ) : ( hb_gtMaxCol() + 1 ) ) == 0 );
-}
-
+#endif

@@ -57,7 +57,7 @@
 /* TODO: Fill the error codes with valid ones (instead of 9999) */
 /* TOFIX: Change this assembler hack to something standard and portable */
 /* TODO: Change the fopen()/fread()/fclose() calls to hb_fs*() */
-/* TODO: Add default extension handling */
+/* TOFIX: Fix the memory leak on error. */
 
 /* NOTE: This is the assembler output from : hb_vmExecute( pcode, symbols ).  */
 
@@ -125,7 +125,7 @@ static ULONG     s_ulSymEntry = 0;              /* Link enhancement         */
    binary/executable itself
 */
 
-HARBOUR HB___HRBRUN( void )
+HB_FUNC( __HRBRUN )
 {
    if( hb_pcount() >= 1 )
    {
@@ -206,7 +206,7 @@ HARBOUR HB___HRBRUN( void )
                {
                   /* Exists and NOT static ?  */
 /*                if(    hb_dynsymFind( pSymRead[ ul ].szName ) &&
-                      !( pSymRead[ ul ].cScope & _HB_FS_STATIC ) )
+                      !( pSymRead[ ul ].cScope & HB_FS_STATIC ) )
                   {
                      hb_errRT_BASE( EG_ARG, 9999, "Duplicate symbol", pSymRead[ ul ].szName );
                      bError = TRUE;
@@ -241,7 +241,7 @@ HARBOUR HB___HRBRUN( void )
              */
             for( ul = 0; ul < ulSymbols; ul++ )    /* Check INIT functions     */
             {
-               if( ( pSymRead[ ul ].cScope & _HB_FS_INITEXIT ) == _HB_FS_INITEXIT )
+               if( ( pSymRead[ ul ].cScope & HB_FS_INITEXIT ) == HB_FS_INITEXIT )
                {
                   /* call (_INITSTATICS) function. This function assigns
                    * literal values to static variables only. There is no need
@@ -253,7 +253,7 @@ HARBOUR HB___HRBRUN( void )
             }
             for( ul = 0; ul < ulSymbols; ul++ )    /* Check INIT functions     */
             {
-               if( ( pSymRead[ ul ].cScope & _HB_FS_INITEXIT ) == _HB_FS_INIT )
+               if( ( pSymRead[ ul ].cScope & HB_FS_INITEXIT ) == HB_FS_INIT )
                {
                   hb_vmPushSymbol( pSymRead + ul );
                   hb_vmPushNil();
@@ -275,12 +275,12 @@ HARBOUR HB___HRBRUN( void )
 
             for( ul = 0; ul < ulSymbols; ul++ )    /* Check EXIT functions     */
             {
-               if( ( pSymRead[ ul ].cScope & _HB_FS_INITEXIT ) == _HB_FS_EXIT )
+               if( ( pSymRead[ ul ].cScope & HB_FS_INITEXIT ) == HB_FS_EXIT )
                {
                   hb_vmPushSymbol( pSymRead + ul );
                   hb_vmPushNil();
                   hb_vmDo( 0 );                        /* Run exit function        */
-                  pSymRead[ ul ].cScope = pSymRead[ ul ].cScope & ( ~_HB_FS_EXIT );
+                  pSymRead[ ul ].cScope = pSymRead[ ul ].cScope & ( ~HB_FS_EXIT );
                                                   /* Exit function cannot be
                                                      handled by main in hvm.c */
                }
@@ -515,3 +515,4 @@ static void hb_hrbAsmPatchRelative( BYTE * pCode, ULONG ulOffset,
 /* #elseif ... */
 /* #endif */
 }
+

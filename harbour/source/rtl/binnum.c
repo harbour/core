@@ -36,7 +36,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-HARBOUR HB_BIN2W( void )
+HB_FUNC( BIN2W )
 {
    PHB_ITEM pItem = hb_param( 1, IT_STRING );
 
@@ -56,7 +56,7 @@ HARBOUR HB_BIN2W( void )
       hb_retni( 0 );
 }
 
-HARBOUR HB_BIN2I( void )
+HB_FUNC( BIN2I )
 {
    PHB_ITEM pItem = hb_param( 1, IT_STRING );
 
@@ -76,7 +76,7 @@ HARBOUR HB_BIN2I( void )
       hb_retni( 0 );
 }
 
-HARBOUR HB_BIN2L( void )
+HB_FUNC( BIN2L )
 {
    PHB_ITEM pItem = hb_param( 1, IT_STRING );
 
@@ -100,7 +100,7 @@ HARBOUR HB_BIN2L( void )
       hb_retnl( 0 );
 }
 
-HARBOUR HB_I2BIN( void )
+HB_FUNC( I2BIN )
 {
    char szString[ 2 ];
 
@@ -120,7 +120,7 @@ HARBOUR HB_I2BIN( void )
    hb_retclen( szString, 2 );
 }
 
-HARBOUR HB_L2BIN( void )
+HB_FUNC( L2BIN )
 {
    char szString[ 4 ];
 

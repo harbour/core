@@ -38,12 +38,12 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
- *    HB___MVSAVE()
- *    HB___MVRESTORE() (Thanks to Dave Pearson and Jo French for the original
- *                      Clipper function (FReadMem()) to read .MEM files)
- *    HB___MSAVE()
- *    HB___MRESTORE()
- *    HB___QQPUB()
+ *    __MVSAVE()
+ *    __MVRESTORE() (Thanks to Dave Pearson and Jo French for the original
+ *                   Clipper function (FReadMem()) to read .MEM files)
+ *    __MSAVE()
+ *    __MRESTORE()
+ *    __QQPUB()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -906,7 +906,7 @@ static HB_DYNS_PTR hb_memvarFindSymbol( HB_ITEM_PTR pName )
 
 /* ************************************************************************** */
 
-HARBOUR HB___MVPUBLIC( void )
+HB_FUNC( __MVPUBLIC )
 {
    int iCount = hb_pcount();
 
@@ -943,7 +943,7 @@ HARBOUR HB___MVPUBLIC( void )
 
 /* NOTE: Undocumented Clipper internal function */
 
-HARBOUR HB___QQPUB( void )
+HB_FUNC( __QQPUB )
 {
    PHB_ITEM pItem = hb_param( 1, IT_STRING );
 
@@ -951,7 +951,7 @@ HARBOUR HB___QQPUB( void )
       hb_memvarCreateFromItem( pItem, VS_PUBLIC, NULL );
 }
 
-HARBOUR HB___MVPRIVATE( void )
+HB_FUNC( __MVPRIVATE )
 {
    int iCount = hb_pcount();
 
@@ -986,7 +986,7 @@ HARBOUR HB___MVPRIVATE( void )
    }
 }
 
-HARBOUR HB___MVXRELEASE( void )
+HB_FUNC( __MVXRELEASE )
 {
    int iCount = hb_pcount();
 
@@ -1021,7 +1021,7 @@ HARBOUR HB___MVXRELEASE( void )
    }
 }
 
-HARBOUR HB___MVRELEASE( void )
+HB_FUNC( __MVRELEASE )
 {
    int iCount = hb_pcount();
 
@@ -1045,7 +1045,7 @@ HARBOUR HB___MVRELEASE( void )
    }
 }
 
-HARBOUR HB___MVSCOPE( void )
+HB_FUNC( __MVSCOPE )
 {
    int iMemvar = HB_MV_ERROR;
 
@@ -1060,12 +1060,12 @@ HARBOUR HB___MVSCOPE( void )
    hb_retni( iMemvar );
 }
 
-HARBOUR HB___MVCLEAR( void )
+HB_FUNC( __MVCLEAR )
 {
    hb_dynsymEval( hb_memvarClear, NULL );
 }
 
-HARBOUR HB___MVDBGINFO( void )
+HB_FUNC( __MVDBGINFO )
 {
    int iCount = hb_pcount();
 
@@ -1116,7 +1116,7 @@ HARBOUR HB___MVDBGINFO( void )
    }
 }
 
-HARBOUR HB___MVGET( void )
+HB_FUNC( __MVGET )
 {
    HB_ITEM_PTR pName = hb_param( 1, IT_STRING );
 
@@ -1180,7 +1180,7 @@ HARBOUR HB___MVGET( void )
    }
 }
 
-HARBOUR HB___MVPUT( void )
+HB_FUNC( __MVPUT )
 {
    HB_ITEM_PTR pName = hb_param( 1, IT_STRING );
    HB_ITEM nil;
@@ -1231,7 +1231,7 @@ HARBOUR HB___MVPUT( void )
 #define HB_MEM_REC_LEN          32
 #define HB_MEM_NUM_LEN          8
 
-HARBOUR HB___MVSAVE( void )
+HB_FUNC( __MVSAVE )
 {
    /* Clipper also checks for the number of arguments here */
    if( hb_pcount() == 3 && ISCHAR( 1 ) && ISCHAR( 2 ) && ISLOG( 3 ) )
@@ -1372,7 +1372,7 @@ HARBOUR HB___MVSAVE( void )
          load (or not load) variable names with a specific name mask.
          [vszakats] */
 
-HARBOUR HB___MVRESTORE( void )
+HB_FUNC( __MVRESTORE )
 {
    /* Clipper checks for the number of arguments here here, but we cannot
       in Harbour since we have two optional parameters as an extension. */
@@ -1508,27 +1508,28 @@ HARBOUR HB___MVRESTORE( void )
 
 /* CA-Clipper 5.2e compatibility functions. */
 
-HARBOUR HB___MCLEAR( void )
+HB_FUNC( __MCLEAR )
 {
-   HB___MVCLEAR();
+   HB_FUNCNAME( __MVCLEAR )();
 }
 
-HARBOUR HB___MRELEASE( void )
+HB_FUNC( __MRELEASE )
 {
-   HB___MVRELEASE();
+   HB_FUNCNAME( __MVRELEASE )();
 }
 
-HARBOUR HB___MXRELEASE( void )
+HB_FUNC( __MXRELEASE )
 {
-   HB___MVXRELEASE();
+   HB_FUNCNAME( __MVXRELEASE )();
 }
 
-HARBOUR HB___MSAVE( void )
+HB_FUNC( __MSAVE )
 {
-   HB___MVSAVE();
+   HB_FUNCNAME( __MVSAVE )();
 }
 
-HARBOUR HB___MRESTORE( void )
+HB_FUNC( __MRESTORE )
 {
-   HB___MVRESTORE();
+   HB_FUNCNAME( __MVRESTORE )();
 }
+

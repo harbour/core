@@ -46,7 +46,7 @@ double hb_strVal( const char * szText )
 }
 
 /* returns the numeric value of a character string representation of a number  */
-HARBOUR HB_VAL( void )
+HB_FUNC( VAL )
 {
    PHB_ITEM pText = hb_param( 1, IT_STRING );
 

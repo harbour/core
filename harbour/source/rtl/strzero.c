@@ -37,7 +37,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-HARBOUR HB_STRZERO( void )
+HB_FUNC( STRZERO )
 {
    if( hb_pcount() >= 1 && hb_pcount() <= 3 )
    {

@@ -37,7 +37,7 @@
 
 #define HB_STRFORMAT_PARNUM_MAX_ 9
 
-HARBOUR HB_STRFORMAT (void) /* StrFormat() */
+HB_FUNC( STRFORMAT )
 {
    char* pszMask = hb_parc(1);
    ULONG nMaskLen = hb_parclen(1);

@@ -328,7 +328,7 @@ static char * NumPicture( char * szPic, ULONG ulPicLen, USHORT * puiPicFlags, do
    return szResult;
 }
 
-HARBOUR HB_TRANSFORM( void )
+HB_FUNC( TRANSFORM )
 {
    PHB_ITEM pExp = hb_param( 1, IT_ANY ); /* Input parameter */
    PHB_ITEM pPic = hb_param( 2, IT_STRING ); /* Picture string */

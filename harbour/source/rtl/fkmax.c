@@ -38,14 +38,14 @@
 
 /* Dumb function to maintain dBase III+ and CA-Cl*pper compatibility */
 
-HARBOUR HB_FKMAX( void )
+HB_FUNC( FKMAX )
 {
    hb_retni( 40 ); /* IBM specific */
 }
 
 /* Dumb function to maintain dBase III+ and CA-Cl*pper compatibility */
 
-HARBOUR HB_FKLABEL( void )
+HB_FUNC( FKLABEL )
 {
    PHB_ITEM pPar1 = hb_param( 1, IT_NUMERIC );
 
