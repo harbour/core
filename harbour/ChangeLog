@@ -1,3 +1,8 @@
+19990607-09:40 Alexander Kresin
+  + source/rtl/natmsg/msgru866.c
+  + source/rtl/natmsg/msgr1251.c
+    National language message files for Russian
+
 19990606-16:42 PST Ron Pinkas
   * include/hberrors.h
     added define WARN_AMBIGUOUS_VAR 1
