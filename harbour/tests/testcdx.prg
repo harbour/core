@@ -16,13 +16,14 @@ function Main()
    dbCreate( "testcdx", aStruct, "DBFCDX", .T., "TESTCDX" )
 
    ? "RddName:", RddName()
-   ? "Press any key to continue..."
-   InKey( 0 )
+//   ? "Press any key to continue..."
+//   InKey( 0 )
    Select( "TESTDBF" )
    SET FILTER TO TESTDBF->SALARY > 140000
    TESTDBF->( dbGoTop() )
    while !TESTDBF->( Eof() )
       TESTCDX->( dbAppend() )
+      TESTCDX->CHARACTER = TESTDBF->FIRST
       TESTCDX->NUMERIC = TESTDBF->SALARY
       TESTCDX->MEMO := TESTDBF->FIRST + Chr( 13 ) + Chr( 10 ) + ;
                        TESTDBF->LAST + Chr( 13 ) + Chr( 10 ) + ;
@@ -37,9 +38,12 @@ function Main()
       ? TESTCDX->( RecNo() ), TESTCDX->NUMERIC
       ? TESTCDX->MEMO
       TESTCDX->( dbSkip() )
-      ? "Press any key to continue..."
-      InKey( 0 )
+//      ? "Press any key to continue..."
+//      InKey( 0 )
    end
+
+   Select( "TESTCDX" )
+   OrdCreate( "testcdx", "Character", "CHARACTER", FIELD->CHARACTER, .F. )
 
 
 return nil

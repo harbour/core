@@ -2277,26 +2277,26 @@ HB_FUNC( ORDCONDSET )
 
 HB_FUNC( ORDCREATE )
 {
-   DBORDERCREATEINFO pOrderInfo;
+   DBORDERCREATEINFO dbOrderInfo;
 
    if( s_pCurrArea )
    {
-      pOrderInfo.abBagName = ( BYTE * ) hb_parc( 1 );
-      pOrderInfo.atomBagName = ( BYTE * ) hb_parc( 2 );
-      pOrderInfo.abExpr = hb_param( 3, HB_IT_STRING );
-      if( ( ( strlen( ( char * ) pOrderInfo.abBagName ) == 0 ) &&
-            ( strlen( ( char * ) pOrderInfo.atomBagName ) == 0 ) ) ||
-          !pOrderInfo.abExpr )
+      dbOrderInfo.abBagName = ( BYTE * ) hb_parc( 1 );
+      dbOrderInfo.atomBagName = ( BYTE * ) hb_parc( 2 );
+      dbOrderInfo.abExpr = hb_param( 3, HB_IT_STRING );
+      if( ( ( strlen( ( char * ) dbOrderInfo.abBagName ) == 0 ) &&
+            ( strlen( ( char * ) dbOrderInfo.atomBagName ) == 0 ) ) ||
+          !dbOrderInfo.abExpr )
       {
          hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, "ORDCREATE" );
          return;
       }
-      pOrderInfo.itmCobExpr = hb_param( 4, HB_IT_BLOCK );
+      dbOrderInfo.itmCobExpr = hb_param( 4, HB_IT_BLOCK );
       if( ISLOG( 5 ) )
-         pOrderInfo.fUnique = hb_parl( 5 );
+         dbOrderInfo.fUnique = hb_parl( 5 );
       else
-         pOrderInfo.fUnique = hb_set.HB_SET_UNIQUE;
-      SELF_ORDCREATE( ( AREAP ) s_pCurrArea->pArea, &pOrderInfo );
+         dbOrderInfo.fUnique = hb_set.HB_SET_UNIQUE;
+      SELF_ORDCREATE( ( AREAP ) s_pCurrArea->pArea, &dbOrderInfo );
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "ORDCREATE" );

@@ -56,6 +56,7 @@ extern "C" {
 #define EDBF_SHARED                                1023
 #define EDBF_APPENDLOCK                            1024
 #define EDBF_READONLY                              1025
+#define EDBF_INVALIDKEY                            1026
 
 
 
@@ -64,11 +65,14 @@ extern "C" {
 
 
 
-/* FPT's */
+/* FPT's and CDX's */
 
 #define FPT_DEFBLOCKSIZE                             64
 #define SIZEOFMEMOFREEBLOCK                           6
 #define MAXFREEBLOCKS                                82
+#define CDX_MAXKEY                                  240
+
+
 
 typedef struct _MEMOHEADER
 {
@@ -284,7 +288,7 @@ extern ERRCODE hb_cdxSysName( CDXAREAP pArea, BYTE * pBuffer );
 #define hb_cdxOrderListFocus                       NULL
 #define hb_cdxOrderListRebuild                     NULL
 #define hb_cdxOrderCondition                       NULL
-#define hb_cdxOrderCreate                          NULL
+extern ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo );
 #define hb_cdxOrderDestroy                         NULL
 #define hb_cdxOrderInfo                            NULL
 #define hb_cdxClearFilter                          NULL

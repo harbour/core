@@ -69,42 +69,6 @@ typedef struct _ADSAREA_
    USHORT rddID;
 
    /*
-   *  DBFS's additions to the workarea structure
-   *
-   *  Warning: The above section MUST match WORKAREA exactly!  Any
-   *  additions to the structure MUST be added below, as in this
-   *  example.
-   */
-
-   FHANDLE hDataFile;            /* Data file handle */
-   FHANDLE hMemoFile;            /* Memo file handle */
-   USHORT uiHeaderLen;           /* Size of header */
-   USHORT uiRecordLen;           /* Size of record */
-   ULONG ulRecCount;             /* Total records */
-   char * szDataFileName;        /* Name of data file */
-   char * szMemoFileName;        /* Name of memo file */
-   BOOL fHasMemo;                /* WorkArea with Memo fields */
-   BOOL fHasTags;                /* WorkArea with MDX or CDX index */
-   BOOL fShared;                 /* Shared file */
-   BOOL fReadOnly;               /* Read only file */
-   USHORT * pFieldOffset;        /* Pointer to field offset array */
-   BYTE * pRecord;               /* Buffer of record data */
-   BOOL fValidBuffer;            /* State of buffer */
-   BOOL fPositioned;             /* Positioned record */
-   ULONG ulRecNo;                /* Current record */
-   BOOL fRecordChanged;          /* Record changed */
-   BOOL fAppend;                 /* TRUE if new record is added */
-   BOOL fDeleted;                /* TRUE if record is deleted */
-   BOOL fUpdateHeader;           /* Update header of file */
-   BOOL fFLocked;                /* TRUE if file is locked */
-   LPDBRELINFO lpdbPendingRel;   /* Pointer to parent rel struct */
-   BYTE bYear;                   /* Last update */
-   BYTE bMonth;
-   BYTE bDay;
-   ULONG * pLocksPos;            /* List of records locked */
-   ULONG ulNumLocksPos;          /* Number of records locked */
-
-   /*
    *  ADS's additions to the workarea structure
    *
    *  Warning: The above section MUST match WORKAREA exactly!  Any
@@ -112,6 +76,21 @@ typedef struct _ADSAREA_
    *  example.
    */
 
+   char * szDataFileName;        /* Name of data file */
+   USHORT uiHeaderLen;           /* Size of header */
+   USHORT uiRecordLen;           /* Size of record */
+   ULONG ulRecCount;             /* Total records */
+   ULONG ulRecNo;                /* Current record */
+   BYTE bYear;                   /* Last update */
+   BYTE bMonth;
+   BYTE bDay;
+   USHORT * pFieldOffset;        /* Pointer to field offset array */
+   BYTE * pRecord;               /* Buffer of record data */
+   BOOL fValidBuffer;            /* State of buffer */
+   BOOL fRecordChanged;          /* Record changed */
+   BOOL fShared;                 /* Shared file */
+   BOOL fReadOnly;               /* Read only file */
+   BOOL fFLocked;                /* TRUE if file is locked */
    ADSHANDLE hTable;
    ADSHANDLE hOrdCurrent;
 } ADSAREA;

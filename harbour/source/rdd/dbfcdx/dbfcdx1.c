@@ -772,6 +772,20 @@ ERRCODE hb_cdxSysName( CDXAREAP pArea, BYTE * pBuffer )
 }
 
 /*
+ * Create new order.
+ */
+ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_cdxOrderCreate(%p, %p)", pArea, pOrderInfo));
+   HB_SYMBOL_UNUSED( pOrderInfo );
+
+   if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
+      return FAILURE;
+
+   return SUCCESS;
+}
+
+/*
  * Create a memo file in the WorkArea.
  */
 ERRCODE hb_cdxCreateMemFile( CDXAREAP pArea, LPDBOPENINFO pCreateInfo )
