@@ -253,7 +253,8 @@ static LONG     s_lRecoverBase;
 #define  HB_RECOVER_ADDRESS   -3
 #define  HB_RECOVER_VALUE     -4
 
-int hb_vm_iFunCalls = 0, *hb_vm_aiMacroListParameters = NULL, hb_vm_iMacroListAllocated = 0, hb_vm_iExtraParams;
+int hb_vm_iExtraParams = 0;
+PHB_SYMB hb_vm_pExtraParamsSymbol = NULL;
 
 /* Request for some action - stop processing of opcodes
  */
@@ -289,8 +290,6 @@ void hb_vmInit( BOOL bStartMainProc )
    s_bDebuggerIsWorking = FALSE;
    s_lRecoverBase = 0;
    s_uiActionRequest = 0;
-
-   hb_vm_aiMacroListParameters = (int *) hb_xgrab( sizeof( int ) * ( hb_vm_iMacroListAllocated = 16 ) );
 
    hb_stack.pItems = NULL; /* keep this here as it is used by fm.c */
    hb_stack.Return.type = HB_IT_NIL;
@@ -396,11 +395,6 @@ void hb_vmQuit( void )
    #ifdef HB_MACRO_STATEMENTS
      hb_pp_Free();
    #endif
-
-   if( hb_vm_aiMacroListParameters )
-   {
-      hb_xfree( (void*) hb_vm_aiMacroListParameters );
-   }
 
    s_uiActionRequest = 0;         /* EXIT procedures should be processed */
    hb_vmDoExitFunctions();       /* process defined EXIT functions */
@@ -594,13 +588,6 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          /* Object */
 
          case HB_P_MESSAGE:
-            if( hb_vm_iFunCalls >= hb_vm_iMacroListAllocated )
-            {
-                //printf( "\nRealloc! FunCalls: %i Allocated: %i \n", hb_vm_iFunCalls, hb_vm_iMacroListAllocated );
-                hb_vm_aiMacroListParameters = (int *) hb_xrealloc( (void*) hb_vm_aiMacroListParameters, sizeof( int ) * ( hb_vm_iMacroListAllocated += 16 ) );
-            }
-            hb_vm_aiMacroListParameters[ hb_vm_iFunCalls++ ] = 0;
-
             hb_vmMessage( pSymbols + ( USHORT ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) ) );
             w += 3;
             break;
@@ -615,102 +602,42 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          /* Execution */
 
          case HB_P_DO:
-            if( hb_vm_iFunCalls )
-            {
-               hb_vm_iExtraParams = hb_vm_aiMacroListParameters[ --hb_vm_iFunCalls ];
-            }
-            else
-            {
-               hb_vm_iExtraParams = 0;
-               //printf( "\nOops!\n" );
-            }
-
-            hb_vmDo( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + hb_vm_iExtraParams );
+            hb_vmDo( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
             w += 3;
             break;
 
          case HB_P_DOSHORT:
-            if( hb_vm_iFunCalls )
-            {
-               hb_vm_iExtraParams = hb_vm_aiMacroListParameters[ --hb_vm_iFunCalls ];
-            }
-            else
-            {
-               hb_vm_iExtraParams = 0;
-               //printf( "\nOops!\n" );
-            }
-
-            hb_vmDo( pCode[ w + 1 ] + hb_vm_iExtraParams );
+            hb_vmDo( pCode[ w + 1 ] );
             w += 2;
             break;
 
          case HB_P_FUNCTION:
-            if( hb_vm_iFunCalls )
-            {
-               hb_vm_iExtraParams = hb_vm_aiMacroListParameters[ --hb_vm_iFunCalls ];
-            }
-            else
-            {
-               hb_vm_iExtraParams = 0;
-               //printf( "\nOops!\n" );
-            }
-
             hb_itemClear( &hb_stack.Return );
-            hb_vmDo( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + hb_vm_iExtraParams );
+            hb_vmDo( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
             hb_itemCopy( hb_stackTopItem(), &hb_stack.Return );
             hb_stackPush();
             w += 3;
             break;
 
          case HB_P_FUNCTIONSHORT:
-            if( hb_vm_iFunCalls )
-            {
-               hb_vm_iExtraParams = hb_vm_aiMacroListParameters[ --hb_vm_iFunCalls ];
-            }
-            else
-            {
-               hb_vm_iExtraParams = 0;
-               //printf( "\nOops!\n" );
-            }
-
             hb_itemClear( &hb_stack.Return );
-            hb_vmDo( pCode[ w + 1 ] + hb_vm_iExtraParams );
+            hb_vmDo( pCode[ w + 1 ] );
             hb_itemCopy( hb_stackTopItem(), &hb_stack.Return );
             hb_stackPush();
             w += 2;
             break;
 
          case HB_P_SEND:
-            if( hb_vm_iFunCalls )
-            {
-               hb_vm_iExtraParams = hb_vm_aiMacroListParameters[ --hb_vm_iFunCalls ];
-            }
-            else
-            {
-               hb_vm_iExtraParams = 0;
-               //printf( "\nOops!\n" );
-            }
-
             hb_itemClear( &hb_stack.Return );
-            hb_vmSend( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 + hb_vm_iExtraParams ) );
+            hb_vmSend( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
             hb_itemCopy( hb_stackTopItem(), &hb_stack.Return );
             hb_stackPush();
             w += 3;
             break;
 
          case HB_P_SENDSHORT:
-            if( hb_vm_iFunCalls )
-            {
-               hb_vm_iExtraParams = hb_vm_aiMacroListParameters[ --hb_vm_iFunCalls ];
-            }
-            else
-            {
-               hb_vm_iExtraParams = 0;
-               //printf( "\nOops!\n" );
-            }
-
             hb_itemClear( &hb_stack.Return );
-            hb_vmSend( pCode[ w + 1 ] + hb_vm_iExtraParams );
+            hb_vmSend( pCode[ w + 1 ] );
             hb_itemCopy( hb_stackTopItem(), &hb_stack.Return );
             hb_stackPush();
             w += 2;
@@ -1104,25 +1031,11 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_PUSHSYM:
-            if( hb_vm_iFunCalls >= hb_vm_iMacroListAllocated )
-            {
-                //printf( "\nRealloc! FunCalls: %i Allocated: %i \n", hb_vm_iFunCalls, hb_vm_iMacroListAllocated );
-                hb_vm_aiMacroListParameters = (int *) hb_xrealloc( (void*) hb_vm_aiMacroListParameters, sizeof( int ) * ( hb_vm_iMacroListAllocated += 16 ) );
-            }
-            hb_vm_aiMacroListParameters[ hb_vm_iFunCalls++ ] = 0;
-
             hb_vmPushSymbol( pSymbols + ( USHORT ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) ) );
             w += 3;
             break;
 
          case HB_P_PUSHSYMNEAR:
-            if( hb_vm_iFunCalls >= hb_vm_iMacroListAllocated )
-            {
-                //printf( "\nRealloc! FunCalls: %i Allocated: %i \n", hb_vm_iFunCalls, hb_vm_iMacroListAllocated );
-                hb_vm_aiMacroListParameters = (int *) hb_xrealloc( (void*) hb_vm_aiMacroListParameters, sizeof( int ) * ( hb_vm_iMacroListAllocated += 16 ) );
-            }
-            hb_vm_aiMacroListParameters[ hb_vm_iFunCalls++ ] = 0;
-
             hb_vmPushSymbol( pSymbols + ( USHORT ) pCode[ w + 1 ] );
             w += 2;
             break;
@@ -1323,8 +1236,24 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             /* the topmost element on the stack contains a macro
              * string for compilation
              */
+            if( pCode[ w + 1 ] == HB_P_PUSHSYMNEAR )
+            {
+               hb_vm_pExtraParamsSymbol = pSymbols + ( USHORT ) ( pCode[ w + 2 ] );
+               w += 3;
+            }
+            else if( pCode[ w + 1 ] == HB_P_MPUSHSYM )
+            {
+               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 2 );
+
+               hb_vm_pExtraParamsSymbol = ( *pDynSym )->pSymbol;
+               w += sizeof( HB_DYNS_PTR ) + 2;
+            }
+            else
+            {
+               hb_vm_pExtraParamsSymbol = pSymbols + ( USHORT ) ( pCode[ w + 2 ] + ( pCode[ w + 3 ] * 256 ) );
+               w += 4;
+            }
             hb_macroGetValue( hb_stackItemFromTop( -1 ), TRUE );
-            w++;
             break;
 
          case HB_P_MACROPUSHALIASED:
@@ -1335,13 +1264,6 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_MACROSYMBOL:
             /* compile into a symbol name (used in function calls) */
-            if( hb_vm_iFunCalls >= hb_vm_iMacroListAllocated )
-            {
-                //printf( "\nRealloc! FunCalls: %i Allocated: %i \n", hb_vm_iFunCalls, hb_vm_iMacroListAllocated );
-                hb_vm_aiMacroListParameters = (int *) hb_xrealloc( (void*) hb_vm_aiMacroListParameters, sizeof( int ) * ( hb_vm_iMacroListAllocated += 16 ) );
-            }
-            hb_vm_aiMacroListParameters[ hb_vm_iFunCalls++ ] = 0;
-
             hb_macroPushSymbol( hb_stackItemFromTop( -1 ) );
             w++;
             break;
@@ -1359,14 +1281,6 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_MMESSAGE:
          {
             HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
-
-            if( hb_vm_iFunCalls >= hb_vm_iMacroListAllocated )
-            {
-                //printf( "\nRealloc! FunCalls: %i Allocated: %i \n", hb_vm_iFunCalls, hb_vm_iMacroListAllocated );
-                hb_vm_aiMacroListParameters = (int *) hb_xrealloc( (void*) hb_vm_aiMacroListParameters, sizeof( int ) * ( hb_vm_iMacroListAllocated += 16 ) );
-            }
-            hb_vm_aiMacroListParameters[ hb_vm_iFunCalls++ ] = 0;
-
             hb_vmMessage( ( *pDynSym )->pSymbol );
             w += sizeof( HB_DYNS_PTR ) + 1;
             break;
@@ -2960,6 +2874,16 @@ void hb_vmDo( USHORT uiParams )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDo(%hu)", uiParams));
 
+   /*
+   printf( "\nItems: %i Params: %i Extra %i\n", hb_stack.pPos - hb_stack.pBase, uiParams, hb_vm_iExtraParams );
+   */
+   if( hb_vm_iExtraParams && ( ( hb_stack.pPos - hb_stack.pBase ) >= ( uiParams + hb_vm_iExtraParams + 2 ) ) && HB_IS_SYMBOL( pItem = hb_stackItemFromTop( -( uiParams + hb_vm_iExtraParams + 2 ) ) ) && pItem->item.asSymbol.value == hb_vm_pExtraParamsSymbol )
+   {
+      uiParams += hb_vm_iExtraParams;
+      hb_vm_iExtraParams = 0;
+      hb_vm_pExtraParamsSymbol = NULL;
+   }
+
    if( bProfiler )
       ulClock = ( ULONG ) clock();
 
@@ -3082,6 +3006,13 @@ void hb_vmSend( USHORT uiParams )
    BOOL bProfiler = hb_bProfiler; /* because profiler state may change */
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmSend(%hu)", uiParams));
+
+   if( hb_vm_iExtraParams && ( hb_stack.pPos - hb_stack.pBase >= ( uiParams + hb_vm_iExtraParams + 2 ) ) && HB_IS_SYMBOL( pItem = hb_stackItemFromTop( -( uiParams + hb_vm_iExtraParams + 2 ) ) ) && pItem->item.asSymbol.value == hb_vm_pExtraParamsSymbol )
+   {
+      uiParams += hb_vm_iExtraParams;
+      hb_vm_iExtraParams = 0;
+      hb_vm_pExtraParamsSymbol = NULL;
+   }
 
    if( bProfiler )
       ulClock = ( ULONG ) clock();

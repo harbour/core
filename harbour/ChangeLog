@@ -1,3 +1,18 @@
+2001-07-18 16:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/vm/macro.c
+   * source/vm/hvm.c
+     % Simplified logic for suppoting macro lists. Removed global variables:
+          int hb_vm_iFunCalls = 0, *hb_vm_aiMacroListParameters = NULL, hb_vm_iMacroListAllocated
+       which are no longer needed. No longer using any logic in any PCODE case, other than HB_P_PUSHMACROARG.
+       No longer using any arrays, or memory allocations.
+
+   * include/hbexpra.c
+   * include/hbexprb.c
+     * HB_P_PUSHMACROARG will now be followed with a push symbol sequence, indicating its parrent function call.
+
+   * include/hbpcode.h
+     * Added decimal values into the description comments for readability.
+
 2001-07-18 12:17 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/rtl/seconds.c
      + Added Clocks2Secs() function

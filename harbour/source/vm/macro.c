@@ -427,7 +427,7 @@ char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
  */
 void hb_macroGetValue( HB_ITEM_PTR pItem, BOOL bArg )
 {
-   extern int *hb_vm_aiMacroListParameters, hb_vm_iFunCalls;
+   extern int hb_vm_iExtraParams;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_macroGetValue(%p)", pItem));
 
@@ -474,19 +474,15 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BOOL bArg )
         hb_xfree( pOut );
       #endif
 
-      if( hb_vm_iFunCalls )
-      {
-         hb_vm_aiMacroListParameters[ hb_vm_iFunCalls - 1 ] = struMacro.iListElements;
-      }
-      else
-      {
-         //printf( "Oops\n" );
-      }
-
       hb_stackPop();    /* remove compiled string */
       if( iStatus == HB_MACRO_OK && ( struMacro.status & HB_MACRO_CONT ) )
       {
          hb_macroEvaluate( &struMacro );
+
+         if( bArg && struMacro.iListElements > 0 )
+         {
+            hb_vm_iExtraParams += struMacro.iListElements;
+         }
       }
       else
          hb_macroSyntaxError( &struMacro );

@@ -219,6 +219,7 @@ HB_EXPR_FUNC_PTR hb_comp_ExprTable[] = {
 };
 
 extern BOOL hb_exp_bArgList;
+extern HB_EXPR_PTR hb_exp_pSelf;
 
 /* ************************************************************************* */
 
@@ -1007,6 +1008,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                if( hb_exp_bArgList )
                {
                   HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHARG );
+                  HB_EXPR_USE( hb_exp_pSelf->value.asFunCall.pFunName, HB_EA_PUSH_PCODE );
                }
                else
                {
@@ -1112,6 +1114,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                if( usCount )
                {
                   hb_exp_bArgList = TRUE;
+                  hb_exp_pSelf = pSelf;
                   HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
                   hb_exp_bArgList = FALSE;
                }
@@ -1145,6 +1148,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                if( usCount )
                {
                   hb_exp_bArgList = TRUE;
+                  hb_exp_pSelf = pSelf;
                   HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
                   hb_exp_bArgList = FALSE;
                }

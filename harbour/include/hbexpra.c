@@ -130,6 +130,7 @@ static BYTE s_PrecedTable[] = {
 };
 
 BOOL hb_exp_bArgList = FALSE;
+HB_EXPR_PTR hb_exp_pSelf;
 
 static HB_CBVAR_PTR hb_compExprCBVarNew( char *, BYTE );
 
