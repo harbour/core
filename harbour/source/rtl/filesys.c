@@ -1205,7 +1205,7 @@ USHORT  hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen )
 
       if( pbyStart[ 1 ] == ':' )
          pbyStart += 2;
-      if( pbyStart[ 0 ] == '\\' )
+      if( strchr( OS_PATH_DELIMITER_LIST, pbyStart[ 0 ] ) )
          pbyStart++;
 
       if( pbyBuffer != pbyStart )

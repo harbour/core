@@ -1,3 +1,19 @@
+2000-07-04 04:05 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * contrib/odbc/bld_b32.bat
+     ! Fixed.
+
+   * source/rtl/tget.prg 
+     ! Fix by Chen Kedem applied for __GET()/_GET_()/GetNew() not passed 
+       setget block bug.
+
+   * source/rtl/filesys.c 
+   * source/rtl/memoline.c
+   * source/rtl/gtsln/kbsln.c 
+   * source/rtl/gtsln/keytrans.c 
+   * source/vm/classes.c 
+     * Formatting.
+
 2000-07-03 20:00 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm/garbage.c

@@ -338,10 +338,11 @@ BOOL hb_clsIsClassRef( void *pBlock )
    {
       if( pClass->pInlines )
          if( hb_gcItemRef( pClass->pInlines, pBlock ) )
-             return TRUE;
+            return TRUE;
+
       if( pClass->pClassDatas )
          if( hb_gcItemRef( pClass->pClassDatas, pBlock ) )
-             return TRUE;
+            return TRUE;
              
       uiLimit = ( USHORT ) ( pClass->uiHashKey * BUCKET );
       pMeth = pClass->pMethods;
@@ -352,6 +353,7 @@ BOOL hb_clsIsClassRef( void *pBlock )
                
       ++pClass;
    }
+
    return FALSE;    /* passed block is not referenced in any class */
 }
 
@@ -497,43 +499,43 @@ char * hb_objGetClsName( PHB_ITEM pObject )
          szClassName =
             ( s_pClasses + pObject->item.asArray.value->uiClass - 1 )->szName;
    }
-   else                                         /* built in types           */
+   else                                         /* built in types */
    {
       switch( pObject->type )
       {
          case HB_IT_NIL:
-              szClassName = "NIL";
-              break;
+            szClassName = "NIL";
+            break;
 
          case HB_IT_STRING:
-              szClassName = "CHARACTER";
-              break;
+            szClassName = "CHARACTER";
+            break;
 
          case HB_IT_BLOCK:
-              szClassName = "BLOCK";
-              break;
+            szClassName = "BLOCK";
+            break;
 
          case HB_IT_SYMBOL:
-              szClassName = "SYMBOL";
-              break;
+            szClassName = "SYMBOL";
+            break;
 
          case HB_IT_DATE:
-              szClassName = "DATE";
-              break;
+            szClassName = "DATE";
+            break;
 
          case HB_IT_INTEGER:
          case HB_IT_LONG:
          case HB_IT_DOUBLE:
-              szClassName = "NUMERIC";
-              break;
+            szClassName = "NUMERIC";
+            break;
 
          case HB_IT_LOGICAL:
-              szClassName = "LOGICAL";
-              break;
+            szClassName = "LOGICAL";
+            break;
 
          default:
-              szClassName = "UNKNOWN";
-              break;
+            szClassName = "UNKNOWN";
+            break;
       }
    }
 
@@ -571,7 +573,6 @@ PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
       {
          if( pClass->pMethods[ uiAt ].pMessage == pMsg )
          {
-
             s_pMethod = pClass->pMethods + uiAt;
             hb_clsScope( pObject, s_pMethod );
             return s_pMethod->pFunction;
@@ -812,7 +813,6 @@ HB_FUNC( __CLSADDMSG )
 *                MessageBox(0,cTmp,"AddMsg ClassData Shared",0);
 *               }
 */
-
             }
 
             break;
@@ -984,75 +984,75 @@ HB_FUNC( __CLSNEW )
 
          for( ui = 0; ui < uiLimit; ui++ )
          {
-             USHORT uiBucket;
+            USHORT uiBucket;
 
-             pMsg = ( PHB_DYNS ) pSprCls->pMethods[ ui ].pMessage;
+            pMsg = ( PHB_DYNS ) pSprCls->pMethods[ ui ].pMessage;
 
-             if( pMsg )
-             {
-                uiAt = ( USHORT ) ( ( ( hb_cls_MsgToNum( pMsg ) ) % pNewCls->uiHashKey ) * BUCKET );
+            if( pMsg )
+            {
+               uiAt = ( USHORT ) ( ( ( hb_cls_MsgToNum( pMsg ) ) % pNewCls->uiHashKey ) * BUCKET );
 
-                for( uiBucket = 0; uiBucket < BUCKET; uiBucket++ )
-                {
+               for( uiBucket = 0; uiBucket < BUCKET; uiBucket++ )
+               {
 
 #ifdef HB_CLS_MASKHIDDEN /* no hidden methods allowed by the inheritence. */
-                   if( ( pSprCls->pMethods[ ui ].uiScope & HB_OO_CLSTP_HIDDEN ) == HB_OO_CLSTP_HIDDEN )
-                      break;
+                  if( ( pSprCls->pMethods[ ui ].uiScope & HB_OO_CLSTP_HIDDEN ) == HB_OO_CLSTP_HIDDEN )
+                     break;
 #endif
 
-                   if( pNewCls->pMethods[ uiAt+uiBucket ].pMessage == 0 ) /* this message position is empty */
-                   {
-                      /* Now, we can increment the msg count */
-                      pNewCls->uiMethods++;
+                  if( pNewCls->pMethods[ uiAt+uiBucket ].pMessage == 0 ) /* this message position is empty */
+                  {
+                     /* Now, we can increment the msg count */
+                     pNewCls->uiMethods++;
 
-                      hb_xmemcpy(pNewCls->pMethods + ( uiAt+uiBucket ), pSprCls->pMethods + ui, sizeof( METHOD ) );
+                     hb_xmemcpy(pNewCls->pMethods + ( uiAt+uiBucket ), pSprCls->pMethods + ui, sizeof( METHOD ) );
 
-                      if(
-                          pNewCls->pMethods[ uiAt+uiBucket ].pFunction ==  hb___msgSetClsData
-                          ||
-                          pNewCls->pMethods[ uiAt+uiBucket ].pFunction ==  hb___msgGetClsData
-                        )
-                         pNewCls->pMethods[ uiAt+uiBucket ].uiData += nLenClsDatas;
+                     if(
+                         pNewCls->pMethods[ uiAt+uiBucket ].pFunction ==  hb___msgSetClsData
+                         ||
+                         pNewCls->pMethods[ uiAt+uiBucket ].pFunction ==  hb___msgGetClsData
+                       )
+                        pNewCls->pMethods[ uiAt+uiBucket ].uiData += nLenClsDatas;
 
-                      if(
-                          pNewCls->pMethods[ uiAt+uiBucket ].pFunction ==  hb___msgSetData
-                          ||
-                          pNewCls->pMethods[ uiAt+uiBucket ].pFunction ==  hb___msgGetData
-                          ||
-                          pNewCls->pMethods[ uiAt+uiBucket ].pFunction ==  hb___msgSuper
-                        )
-                      {
-                        pNewCls->pMethods[ uiAt+uiBucket ].uiData     += nLenDatas;
-                      }
+                     if(
+                         pNewCls->pMethods[ uiAt+uiBucket ].pFunction ==  hb___msgSetData
+                         ||
+                         pNewCls->pMethods[ uiAt+uiBucket ].pFunction ==  hb___msgGetData
+                         ||
+                         pNewCls->pMethods[ uiAt+uiBucket ].pFunction ==  hb___msgSuper
+                       )
+                     {
+                       pNewCls->pMethods[ uiAt+uiBucket ].uiData     += nLenDatas;
+                     }
 
-                      if( pNewCls->pMethods[ uiAt+uiBucket ].pFunction ==  hb___msgEvalInline )
-                         pNewCls->pMethods[ uiAt+uiBucket ].uiData += nLenInlines;
+                     if( pNewCls->pMethods[ uiAt+uiBucket ].pFunction ==  hb___msgEvalInline )
+                        pNewCls->pMethods[ uiAt+uiBucket ].uiData += nLenInlines;
 
-                      if( ( pSprCls->pMethods[ ui ].uiScope & HB_OO_CLSTP_SUPER ) != HB_OO_CLSTP_SUPER )
-                         pNewCls->pMethods[ uiAt+uiBucket ].uiScope = ( USHORT ) ( pSprCls->pMethods[ ui ].uiScope + HB_OO_CLSTP_SUPER );
-                      else
-                         pNewCls->pMethods[ uiAt+uiBucket ].uiScope = pSprCls->pMethods[ ui ].uiScope;
+                     if( ( pSprCls->pMethods[ ui ].uiScope & HB_OO_CLSTP_SUPER ) != HB_OO_CLSTP_SUPER )
+                        pNewCls->pMethods[ uiAt+uiBucket ].uiScope = ( USHORT ) ( pSprCls->pMethods[ ui ].uiScope + HB_OO_CLSTP_SUPER );
+                     else
+                        pNewCls->pMethods[ uiAt+uiBucket ].uiScope = pSprCls->pMethods[ ui ].uiScope;
 
-                      if( pSprCls->pMethods[ ui ].pInitValue )
-                      {
-                         PHB_ITEM pInitValue;
+                     if( pSprCls->pMethods[ ui ].pInitValue )
+                     {
+                        PHB_ITEM pInitValue;
 
-                         if( HB_IS_ARRAY( pSprCls->pMethods[ ui ].pInitValue ) )
-                            pNewCls->pMethods[ uiAt + uiBucket ].pInitValue = hb_arrayClone( pSprCls->pMethods[ ui ].pInitValue );
-                         else
-                         {
-                            pInitValue = hb_itemNew( NULL );
+                        if( HB_IS_ARRAY( pSprCls->pMethods[ ui ].pInitValue ) )
+                           pNewCls->pMethods[ uiAt + uiBucket ].pInitValue = hb_arrayClone( pSprCls->pMethods[ ui ].pInitValue );
+                        else
+                        {
+                           pInitValue = hb_itemNew( NULL );
 
-                            hb_itemCopy( pInitValue, pSprCls->pMethods[ ui ].pInitValue );
-                            pNewCls->pMethods[ uiAt + uiBucket ].pInitValue = pInitValue;
-                         }
-                      }
-                      break;
-                   }
-                   else if( pNewCls->pMethods[ uiAt + uiBucket ].pMessage == pMsg ) /*if( strcmp( pNewCls->pMethods[ uiAt+uiBucket ].pMessage->pSymbol->szName, pMsg->pSymbol->szName ) == 0 )*/
-                      break;
-                }
-             }
+                           hb_itemCopy( pInitValue, pSprCls->pMethods[ ui ].pInitValue );
+                           pNewCls->pMethods[ uiAt + uiBucket ].pInitValue = pInitValue;
+                        }
+                     }
+                     break;
+                  }
+                  else if( pNewCls->pMethods[ uiAt + uiBucket ].pMessage == pMsg ) /*if( strcmp( pNewCls->pMethods[ uiAt+uiBucket ].pMessage->pSymbol->szName, pMsg->pSymbol->szName ) == 0 )*/
+                     break;
+               }
+            }
          }
       }
    }
@@ -1200,24 +1200,24 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, BOOL bInit )
       pMeth = pClass->pMethods;
       for( uiAt = 0; uiAt < uiLimit; uiAt++, pMeth++ )
       {
-          if( ( pMeth->uiScope & HB_OO_CLSTP_CLASS ) == HB_OO_CLSTP_CLASS
-               &&
-              ( pMeth->uiScope & HB_OO_CLSTP_SUPER ) != HB_OO_CLSTP_SUPER
-            )
-          {
-             pSprObj = hb_clsInst( pMeth->uiSprClass, FALSE );  /*instance super object*/
-             hb_arraySet( pSelf, pMeth->uiData, pSprObj );
-             hb_itemRelease( pSprObj );
+         if( ( pMeth->uiScope & HB_OO_CLSTP_CLASS ) == HB_OO_CLSTP_CLASS
+              &&
+             ( pMeth->uiScope & HB_OO_CLSTP_SUPER ) != HB_OO_CLSTP_SUPER
+           )
+         {
+            pSprObj = hb_clsInst( pMeth->uiSprClass, FALSE );  /*instance super object*/
+            hb_arraySet( pSelf, pMeth->uiData, pSprObj );
+            hb_itemRelease( pSprObj );
 
-             ++s_uiSize;
-             if( s_ppObjects == NULL )
-                s_ppObjects = ( PHB_ITEM * ) hb_xgrab( sizeof( PHB_ITEM ) );
-             else
-                s_ppObjects = ( PHB_ITEM * ) hb_xrealloc( s_ppObjects, s_uiSize * sizeof( PHB_ITEM ) );
+            ++s_uiSize;
+            if( s_ppObjects == NULL )
+               s_ppObjects = ( PHB_ITEM * ) hb_xgrab( sizeof( PHB_ITEM ) );
+            else
+               s_ppObjects = ( PHB_ITEM * ) hb_xrealloc( s_ppObjects, s_uiSize * sizeof( PHB_ITEM ) );
 
-             pTmp = hb_arrayGetItemPtr( pSelf, pMeth->uiData );
-             s_ppObjects[ s_uiSize - 1 ] = pTmp;
-          }
+            pTmp = hb_arrayGetItemPtr( pSelf, pMeth->uiData );
+            s_ppObjects[ s_uiSize - 1 ] = pTmp;
+         }
       }
 
       /* Phase II Create link between A:C and A:B:C !! */
@@ -1254,18 +1254,17 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, BOOL bInit )
       {
 
          /* Init Classdata (inherited and not) if needed */
-         if( pMeth->pInitValue  && pMeth->pFunction == hb___msgGetClsData && !( pMeth->bClsDataInitiated ) )
-           {
-               HB_ITEM init;
-               hb_arrayGet( pClass->pClassDatas, pMeth->uiData, &init );
-               if( init.type == HB_IT_NIL )
-               {
-                  hb_arraySet( pClass->pClassDatas, pMeth->uiData, pMeth->pInitValue );
-                  pMeth->bClsDataInitiated = 1;
-               }
-               hb_itemClear( &init );
-           }
-
+         if( pMeth->pInitValue && pMeth->pFunction == hb___msgGetClsData && !( pMeth->bClsDataInitiated ) )
+         {
+            HB_ITEM init;
+            hb_arrayGet( pClass->pClassDatas, pMeth->uiData, &init );
+            if( init.type == HB_IT_NIL )
+            {
+               hb_arraySet( pClass->pClassDatas, pMeth->uiData, pMeth->pInitValue );
+               pMeth->bClsDataInitiated = 1;
+            }
+            hb_itemClear( &init );
+         }
 
          if( ( pMeth->uiScope & HB_OO_CLSTP_SUPER ) == HB_OO_CLSTP_SUPER )
          {
@@ -1292,8 +1291,8 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, BOOL bInit )
 
                      for( uiBucket = 0; uiBucket < BUCKET; uiBucket++ )
                      {
-                         if( pMsg == pSprCls->pMethods[ ui+uiBucket ].pMessage /*strcmp( pMsg->pSymbol->szName, pSprCls->pMethods[ ui+uiBucket ].pMessage->pSymbol->szName ) == 0*/ )
-                            break;
+                        if( pMsg == pSprCls->pMethods[ ui+uiBucket ].pMessage /*strcmp( pMsg->pSymbol->szName, pSprCls->pMethods[ ui+uiBucket ].pMessage->pSymbol->szName ) == 0*/ )
+                           break;
                      }
 
                      pDataHrtd = ( PHB_ITEM ) hb_arrayGetItemPtr( pTmp, pSprCls->pMethods[ ui+uiBucket ].uiData );
@@ -1318,8 +1317,7 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, BOOL bInit )
                   hb_itemRelease( pInitValue );
                }
                else
-                  hb_arraySet( pSelf, pMeth->uiData,
-                                   pMeth->pInitValue );
+                  hb_arraySet( pSelf, pMeth->uiData, pMeth->pInitValue );
             }
             else if( pMeth->pFunction == hb___msgGetShrData && !( pMeth->bClsDataInitiated ) )
             {
@@ -1333,8 +1331,7 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, BOOL bInit )
                   pMeth->bClsDataInitiated = 1;
                }
                hb_itemClear( &init );
-
-             }
+            }
          }
       }
    }
@@ -1687,9 +1684,9 @@ HB_FUNC( __CLS_PARAM )
       array = hb_itemArrayNew( uiParam );
       for( n = 1; n <= uiParam; n++ )
       {
-          PHB_ITEM iTmp = hb_itemParam( n );
-          hb_itemArrayPut( array, n, iTmp );
-          hb_itemRelease( iTmp );
+         PHB_ITEM iTmp = hb_itemParam( n );
+         hb_itemArrayPut( array, n, iTmp );
+         hb_itemRelease( iTmp );
       }
    }
    else

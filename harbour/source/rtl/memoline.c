@@ -70,10 +70,7 @@ HB_FUNC( MEMOLINE )
          case HB_CHAR_LF:
             ulCurLength = 0;
             ulLastSpace = 0;
-            if ( ulPos >= 2 )
-               ulLineEnd = ulPos -2;
-            else
-               ulLineEnd = ulLineBegin;
+            ulLineEnd = ( ulPos >= 2 ) ? ( ulPos - 2 ) : ulLineBegin;
             ulLines++;
             if( ulLines < ulLineNumber )
             {
@@ -131,10 +128,7 @@ HB_FUNC( MEMOLINE )
    if( ulLineEnd == 0 )
    {
       ulLines++;
-      if ( ulPos == 0)
-         ulLineEnd = 0;
-      else
-         ulLineEnd = ulPos - 1;
+      ulLineEnd = ( ulPos == 0 ) ? 0 : ( ulPos - 1 );
    }
 
    if( ulLineNumber == ulLines && ulLineEnd >= ulLineBegin )
@@ -158,3 +152,4 @@ HB_FUNC( MEMOLINE )
    else
       hb_retc( "" );
 }
+
