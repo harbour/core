@@ -818,7 +818,7 @@ METHOD HandleEvent() CLASS TDebugger
               ::Exit()
 
          case nKey == K_UP .or. nKey == K_DOWN .or. nKey == K_HOME .or. ;
-              nKey == K_END .or. nKey == K_ENTER
+              nKey == K_END .or. nKey == K_ENTER .or. nKey == K_PGDN .or. nKey == K_PGUP
               oWnd := ::aWindows[ ::nCurrentWindow ]
               oWnd:KeyPressed( nKey )
 
@@ -1097,10 +1097,13 @@ METHOD ShowVars() CLASS TDebugger
 
       ::oWndVars:Show( .f. )
       AAdd( ::aWindows, ::oWndVars )
-      ::oWndVars:bKeyPressed := { | nKey | iif( nKey == K_DOWN .and. ;
-      n < Len( ::aVars ), ( ::oBrwVars:Down(), ::oBrwVars:ForceStable() ), nil ),;
-      iif( nKey == K_UP .and. n > 1, ( ::oBrwVars:Up(), ::oBrwVars:ForceStable() ),;
-      nil ), iif( nKey == K_ENTER, ::EditVar( n ), nil ) }
+      ::oWndVars:bKeyPressed := { | nKey | ( iif( nKey == K_DOWN ;
+      , ::oBrwVars:Down(), nil ), iif( nKey == K_UP, ::oBrwVars:Up(), nil ) ;
+      , iif( nKey == K_PGDN, ::oBrwVars:PageDown(), nil ) ;
+      , iif( nKey == K_PGUP, ::oBrwVars:PageUp(), nil ) ;
+      , iif( nKey == K_HOME, ::oBrwVars:GoTop(), nil ) ;
+      , iif( nKey == K_END, ::oBrwVars:GoBottom(), nil ) ;
+      , iif( nKey == K_ENTER, ::EditVar( n ), nil ), ::oBrwVars:ForceStable() ) }
 
       ::oWndVars:bLButtonDown = { | nMRow, nMCol | ::WndVarsLButtonDown( nMRow, nMCol ) }
       ::oWndVars:bLDblClick = { | nMRow, nMCol | ::EditVar( n ) }
