@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-05-22 23:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+  * contrib/rdd_ads/ads1.c
+  * contrib/rdd_ads/adsfunc.c
+  * contrib/rdd_ads/rddads.h
+  	+ Added support for DBINFO(DBI_DB_VERSION), DBINFO(DBI_RDD_VERSION),
+  	  and ADSVERSION([<nType>]) (but only for nType == 0 and nType == 3
+  	  and without date and time information for nType == 3).
+
 2003-05-21 20:34 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/vm/hvm.c
     ! Fixed arrays comparison. Now it is Clipper compatible.

@@ -1363,3 +1363,30 @@ HB_FUNC(ADSUSEDICTIONARY)
 }
 
 #endif
+
+HB_FUNC(ADSVERSION)
+{
+   int iVersionType = ISNUM(1) ? hb_parni(1) : 0;
+   UNSIGNED32 ulMajor;
+   UNSIGNED32 ulMinor;
+   UNSIGNED8  ucLetter;
+   UNSIGNED8  ucDesc[128];
+   UNSIGNED16 usDescLen = sizeof(ucDesc) - 1;
+   UNSIGNED8  ucVersion[256];
+
+   AdsGetVersion( &ulMajor, &ulMinor, &ucLetter, ucDesc, &usDescLen);
+
+   switch(iVersionType)
+   {
+   case 0:
+      sprintf(ucVersion, "%ld.%ld%c", ulMajor, ulMinor, ucLetter);
+      break;
+   case 3:
+      sprintf(ucVersion, "%s, v%ld.%ld%c", ucDesc, ulMajor, ulMinor, ucLetter);
+      break;
+   default:
+      ucVersion[0] = 0;
+   }
+
+   hb_retc(ucVersion);
+}

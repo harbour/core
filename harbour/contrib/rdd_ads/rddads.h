@@ -54,6 +54,14 @@
 #include "ace.h"
 
 /*
+*  ADS RDD Version
+*  --------
+*  Change to be one higher than the current version number in the Id string.
+*/
+
+#define HB_RDD_ADS_VERSION_STRING "ADS RDD 1.12"
+
+/*
 *  ADS WORKAREA
 *  --------
 *  The Workarea Structure of Advantage Database Server RDD
