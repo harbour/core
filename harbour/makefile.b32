@@ -17,7 +17,7 @@ harbour.lib : achoice.obj adir.obj alert.obj arrays.obj asort.obj \
               dates.obj dates2.obj datesx.obj debug.obj descend.obj devoutp.obj \
               dir.obj do.obj dynsym.obj environ.obj error.obj \
               errorapi.obj errorsys.obj extend.obj fileread.obj filesys.obj fm.obj \
-              hardcr.obj hb_f.obj initsymb.obj inkey.obj itemapi.obj \
+              hardcr.obj hb_f.obj hvm.obj initsymb.obj inkey.obj itemapi.obj \
               langapi.obj math.obj mathx.obj memvars.obj menuto.obj mtran.obj \
               objfunc.obj \
               set.obj setcolor.obj setkey.obj strings.obj symbols.obj stringp.obj \
@@ -52,6 +52,7 @@ filesys.obj  : filesys.c  extend.h hbdefs.h
 fm.obj       : fm.c       extend.h hbdefs.h
 hardcr.obj   : hardcr.c   extend.h hbdefs.h
 hb_f.obj     : hb_f.c     extend.h hbdefs.h
+hvm.obj      : hvm.c      extend.h hbdefs.h
 initsymb.obj : initsymb.c extend.h hbdefs.h
 inkey.obj    : inkey.c    extend.h hbdefs.h
 itemapi.obj  : itemapi.c  extend.h hbdefs.h

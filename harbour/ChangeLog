@@ -1,3 +1,11 @@
+19990806-19:35 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * include/pcode.h
+     + Added new HB_P_LOCALNAME opcode
+   * source/compiler/harbour.y
+     + Added support for HB_P_LOCALNAME opcode
+   * source/vm/hvm.c
+     + Added support for HB_P_LOCALNAME opcode
+
 19990806-18:43 GMT+1 Antonio Linares <alinares@fivetech.com>
    * include/pcode.h
      + Added new HB_P_MODULENAME opcode
