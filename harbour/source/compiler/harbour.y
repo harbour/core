@@ -256,6 +256,10 @@ void GenPortObj( char *, char * );    /* generates the portable objects */
 void GenObj32( char *, char * );      /* generates OBJ 32 bits */
 #endif
 
+/* JOSE */
+/* argument checking */
+void CheckArgs( char *, int );
+
 void PrintUsage( char * );
 
 #define YYDEBUG        1    /* Parser debug information support */
@@ -297,7 +301,9 @@ char * _szCErrors[] = { "Statement not allowed outside of procedure or function"
                        "Unclosed control structures at line: %i",
                        "%s statement with no loop in sight",
                        "Syntax error: \'%s\' in: \'%s\'",
-                       "Incomplete statement: %s"
+                       "Incomplete statement: %s",
+                       /* JOSE */
+                       "Incorrect number of arguments: %s %s"
                      };
 
 /* Table with parse warnings */
@@ -599,8 +605,14 @@ ExtList    : IDENTIFIER                               { AddExtern( $1 ); }
            | ExtList ',' IDENTIFIER                   { AddExtern( $3 ); }
            ;
 
+/*
 FunCall    : FunStart ')'                { $$ = 0; }
            | FunStart ArgList ')'        { $$ = $2; }
+           ;
+*/
+/* JOSE */
+FunCall    : FunStart ')' { $$=0; CheckArgs( $1, $$ ); }
+           | FunStart ArgList ')' { $$=$2; CheckArgs( $1, $$ ); }
            ;
 
 FunStart   : IDENTIFIER '('              { StaticAssign(); PushSymbol( $1, 1 ); PushNil(); $$ = $1; }
@@ -4927,3 +4939,109 @@ void GenPortObj( char *szFileName, char *szName )
       printf( "%s -> done!\n", szFileName );
 }
 
+typedef struct
+{
+   char * cFuncName;                /* function name              */
+   int    iMinParam;                /* min no of parms it needs   */
+                                    /* iMinParam = -1, means no checking */
+   int    iMaxParam;                /* max no of parms need       */
+} FUNCINFO, * PFUNCINFO;
+
+static FUNCINFO _StdFun[] = {
+{ "AADD"      , 2, 2 },
+{ "ABS"       , 1, 1 }, 
+{ "ASC"       , 1, 1 },
+{ "AT"        , 1, 1 },
+{ "BOF"       , 0, 0 },
+{ "BREAK"     , 1, 1 },
+{ "CDOW"      , 1, 1 },
+{ "CHR"       , 1, 1 },
+{ "CMONTH"    , 1, 1 },
+{ "COL"       , 1, 1 },
+{ "CTOD"      , 1, 1 },
+{ "DATE"      , 0, 0 },
+{ "DAY"       , 1, 1 },
+{ "DELETED"   , 0, 0 },
+{ "DEVPOS"    , 2, 2 },
+{ "DOW"       , 1, 1 },
+{ "DTOC"      , 1, 1 },
+{ "DTOS"      , 1, 1 },
+{ "EMPTY"     , 1, 1 },
+{ "EOF"       , 0, 0 },
+{ "EXP"       , 1, 1 },
+{ "FCOUNT"    , 1, 1 },
+{ "FIELDNAME" , 1, 1 },
+{ "FILE"      , 1, 1 },
+{ "FLOCK"     , 0, 0 },
+{ "FOUND"     , 0, 0 },
+{ "INKEY"     , 1, 1 },
+{ "INT"       , 1, 1 },
+{ "LASTREC"   , 0, 0 },
+{ "LEN"       , 1, 1 },
+{ "LOCK"      , 0, 0 },
+{ "LOG"       , 1, 1 },
+{ "LOWER"     , 1, 1 },
+{ "LTRIM"     , 1, 1 },
+{ "MAX"       , 2, 2 },
+{ "MIN"       , 2, 2 },
+{ "MONTH"     , 1, 1 },
+{ "PCOL"      , 0, 0 },
+{ "PCOUNT"    , 1, 1 },
+{ "PROW"      , 0, 0 },
+{ "RECCOUNT"  , 0, 0 },
+{ "RECNO"     , 0, 0 },
+{ "REPLICATE" , 2, 2 },
+{ "RLOCK"     , 0, 0 },
+{ "ROUND"     , 1, 2 },
+{ "ROW"       , 0, 0 },
+{ "RTRIM"     , 1, 1 },
+{ "SECONDS"   , 0, 0 },
+{ "SELECT"    , 1, 1 },
+{ "SETPOS"    , 2, 2 },
+{ "SPACE"     , 1, 1 },
+{ "SQRT"      , 1, 1 },
+{ "STR"       , 1, 2 },
+{ "SUBSTR"    , 2, 3 },
+{ "TIME"      , 0, 0 },
+{ "TRANSFORM" , 2, 2 },
+{ "TRIM"      , 1, 1 },
+{ "TYPE"      , 1, 1 },
+{ "UPPER"     , 1, 1 },
+{ "VAL"       , 1, 1 },
+{ "VALTYPE"   , 1, 1 },
+{ "WORD"      , 1, 1 },
+{ "YEAR"      , 1, 1 },
+{ 0           , 0, 0 },
+};
+
+/* JOSE */
+void CheckArgs( char *cFuncCall, int iArgs )
+{
+   FUNCINFO *f = _StdFun;
+   int i = 0;
+   int iPos = -1;
+   int len = 0;
+   char *s = cFuncCall;
+
+   while( *s ) { s++; len++; }
+
+   while( f[i].cFuncName )
+      if( strncmp( f[i].cFuncName, cFuncCall, len ) == 0 )
+      {
+         iPos = i;
+         break;
+      }
+      else
+         ++i;
+
+      if( iPos >= 0 && ( _StdFun[iPos].iMinParam != -1 ) )
+         if( iArgs < _StdFun[iPos].iMinParam || iArgs > _StdFun[iPos].iMaxParam )
+         {
+            char *szMsg = ( char * ) OurMalloc( 50 );
+
+            sprintf( szMsg, " Passed: %i Expected: %i", iArgs, _StdFun[iPos].iMinParam );
+            GenError( _szCErrors, 'E', ERR_CHECKING_ARGS, cFuncCall, szMsg );
+
+            //GenError( _szCErrors, 'E', ERR_CHECKING_ARGS, cFuncCall, NULL );
+         }
+}

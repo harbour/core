@@ -1,4 +1,8 @@
-19990718-20:30 CET Eddie Runia
+19990718-20:35 CET Jose Lalin
+  * source/compiler/harbour.y; include/hberrors.h
+    Argument checking for standard functions added. Thanks to Ryszard
+
+19990718-20:30 CET Eddie Runia <eddie@runia.com>
   + source/rdd/rdd.api
     Restore from the attic
 
