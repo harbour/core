@@ -70,19 +70,20 @@
 #include "hbset.h"
 
 /* Picture function flags */
-#define PF_LEFT    0x0001   /* @B */
-#define PF_CREDIT  0x0002   /* @C */
-#define PF_DEBIT   0x0004   /* @X */
-#define PF_PADL    0x0008   /* @L */ /* NOTE: This is a FoxPro/XPP extension [vszakats] */
-#define PF_PARNEG  0x0010   /* @( */
-#define PF_REMAIN  0x0020   /* @R */
-#define PF_UPPER   0x0040   /* @! */
-#define PF_DATE    0x0080   /* @D */
-#define PF_BRITISH 0x0100   /* @E */
-#define PF_EXCHANG 0x0100   /* @E. Also means exchange . and , */
-#define PF_EMPTY   0x0200   /* @Z */
-#define PF_NUMDATE 0x0400   /* Internal flag. Ignore decimal dot */
-#define PF_WIDTH   0x0800   /* @S */
+#define PF_LEFT       0x0001   /* @B */
+#define PF_CREDIT     0x0002   /* @C */
+#define PF_DEBIT      0x0004   /* @X */
+#define PF_PADL       0x0008   /* @L */ /* NOTE: This is a FoxPro/XPP extension [vszakats] */
+#define PF_PARNEG     0x0010   /* @( */
+#define PF_REMAIN     0x0020   /* @R */
+#define PF_UPPER      0x0040   /* @! */
+#define PF_DATE       0x0080   /* @D */
+#define PF_BRITISH    0x0100   /* @E */
+#define PF_EXCHANG    0x0100   /* @E. Also means exchange . and , */
+#define PF_EMPTY      0x0200   /* @Z */
+#define PF_NUMDATE    0x0400   /* Internal flag. Ignore decimal dot */
+#define PF_WIDTH      0x0800   /* @S */
+#define PF_PARNEGWOS  0x1000   /* @) Similar to PF_PARNEG but without leading spaces */
 
 HB_FUNC( TRANSFORM )
 {
@@ -137,6 +138,9 @@ HB_FUNC( TRANSFORM )
                case '(':
                   uiPicFlags |= PF_PARNEG;
                   break;
+               case ')':
+                  uiPicFlags |= PF_PARNEGWOS;
+                  break;
                case 'L':
                   uiPicFlags |= PF_PADL;
                   byParamL = '0';
@@ -149,6 +153,7 @@ HB_FUNC( TRANSFORM )
                   break;
                case 'D':
                   uiPicFlags |= PF_DATE;
+                  uiPicFlags |= PF_NUMDATE;
                   break;
                case 'E':
                   uiPicFlags |= PF_BRITISH;
@@ -197,9 +202,6 @@ HB_FUNC( TRANSFORM )
 
          /* Grab enough */
 
-         szResult = ( char * ) hb_xgrab( ulExpLen + ulPicLen + 1 );
-         ulResultPos = 0;
-
          /* Support date function for strings */
          if( uiPicFlags & PF_DATE )
          {
@@ -211,6 +213,8 @@ HB_FUNC( TRANSFORM )
             szPic = szPicDate;
             ulPicLen = strlen( szPicDate );
          }
+         szResult = ( char * ) hb_xgrab( ulExpLen + ulPicLen + 1 );
+         ulResultPos = 0;
 
          /* Template string */
          if( ulPicLen )
@@ -318,14 +322,29 @@ HB_FUNC( TRANSFORM )
 
          char *   szStr;
          char     cPic;
+         char     szPicDate[ 11 ];
 
          PHB_ITEM pNumber;
          PHB_ITEM pWidth;
          PHB_ITEM pDec;
 
          BOOL     bFound = FALSE;
+         BOOL     bInit  = FALSE;
+         BOOL     bEnd   = FALSE;
 
          hb_itemGetNLen( pValue, &iOrigWidth, &iOrigDec );
+
+         /* Support date function for numbers */
+         if( uiPicFlags & PF_DATE )
+         {
+            hb_dateFormat( "99999999", szPicDate,
+               ( uiPicFlags & PF_BRITISH ) ?
+                 ( hb_set.hb_set_century ? "DD/MM/YYYY" : "DD/MM/YY" ) :
+                 hb_set.HB_SET_DATEFORMAT );
+
+            szPic = szPicDate;
+            ulPicLen = strlen( szPicDate );
+         }
 
          /* TODO: maybe replace this 16 with something else */
          szResult = ( char * ) hb_xgrab( ulPicLen + 16 );   /* Grab enough */
@@ -360,7 +379,7 @@ HB_FUNC( TRANSFORM )
          else
             iDec = 0;
 
-         if( ( uiPicFlags & ( PF_DEBIT + PF_PARNEG ) ) && dValue < 0 )
+         if( ( uiPicFlags & ( PF_DEBIT + PF_PARNEG + PF_PARNEGWOS ) ) && dValue < 0 )
             dPush = -dValue;                           /* Always push absolute val */
          else
             dPush = dValue;
@@ -400,9 +419,15 @@ HB_FUNC( TRANSFORM )
                for( i = 0; i < ulPicLen; i++ )
                {
                   cPic = szPic[ i ];
+
+                  if( bInit && cPic == ' ' )
+                     bEnd  = TRUE;
+
+                  if( !bInit && ( cPic == '9' || cPic == '#' || cPic == '$' || cPic == '*' ) )
+                     bInit = TRUE;
                   if( cPic == '9' || cPic == '#' )
                      szResult[ i ] = szStr[ iCount++ ];  /* Just copy                */
-                  else if( cPic == '.' )
+                  else if( cPic == '.' && bInit && !bEnd )
                   {
                      if( uiPicFlags & PF_NUMDATE )    /* Dot in date              */
                         szResult[ i ] = cPic;
@@ -417,7 +442,7 @@ HB_FUNC( TRANSFORM )
                            szResult[ i ] = szStr[ iCount++ ];
                      }
                   }
-                  else if( cPic == '$' || cPic == '*' )
+                  else if( ( cPic == '$' || cPic == '*' ) && !bEnd )
                   {
                      if( szStr[ iCount ] == ' ' )
                      {
@@ -427,7 +452,7 @@ HB_FUNC( TRANSFORM )
                      else
                         szResult[ i ] = szStr[ iCount++ ];
                   }
-                  else if( cPic == ',' )              /* Comma                    */
+                  else if( cPic == ',' && bInit && !bEnd )    /* Comma                    */
                   {
                      if( iCount && isdigit( ( int ) szStr[ iCount - 1 ] ) )
                      {                                /* May we place it     */
@@ -437,7 +462,12 @@ HB_FUNC( TRANSFORM )
                            szResult[ i ] = ',';
                      }
                      else
-                        szResult[ i ] = ' ';
+                     {
+                        if( i && szResult[ i - 1 ] == '*' ) 
+                           szResult[ i ] = '*';
+                        else
+                           szResult[ i ] = ' ';
+                     }
                   }
                   else
                      szResult[ i ] = cPic;
@@ -448,17 +478,76 @@ HB_FUNC( TRANSFORM )
                i = strlen( szStr );
             }
 
-            if( ( uiPicFlags & PF_PARNEG ) && dValue < 0 )
+            if( ( uiPicFlags & PF_PARNEG ) && dValue < 0 && !( uiPicFlags & PF_PARNEGWOS ) )
+                              /* This is a behavior of Clipper, 
+                                 if exist PF_PARNEG and PF_PARNEGWOS,
+                                 PR_PARNEGWOS prevails. */
+       
             {
-               if( isdigit( ( int ) *szResult ) )          /* Overflow */
+               for( iCount = 0; ( ULONG ) iCount < i; iCount++ )
+                   /* Permit to detect overflow when picture init with mask */
                {
-                  for( iCount = 1; ( ULONG ) iCount < i; iCount++ )
+                  if( isdigit( ( int ) szResult[ iCount ] ) && 
+                         !( szResult[ iCount ] == '0' ) &&     /* if not PF_PADL */
+                         !isdigit( ( int ) szPic[ iCount ] ) ) /* if not mask symbol */
+                                                               /* Overflow */
                   {
-                     if( isdigit( ( int ) szResult[ iCount ] ) )
-                        szResult[ iCount ] = '*';
+                     for( iCount++; ( ULONG ) iCount < i; iCount++ )
+                     {
+                        if( isdigit( ( int ) szResult[ iCount ] ) )
+                           szResult[ iCount ] = '*';
+                     }
+                     break;
+                  }
+                  else
+                  {
+                     if( !isdigit( ( int ) szResult[ iCount ] ) ||
+                            ( szResult[ iCount ] == '0' && !isdigit( ( int ) szPic[ iCount ] ) ) )
+                        break;
                   }
                }
                *szResult       = '(';
+               szResult[ i++ ] = ')';
+            }
+
+            if( ( uiPicFlags & PF_PARNEGWOS ) && dValue < 0 )
+            {
+               for( iCount = 0; ( ULONG ) iCount < i; iCount++ )
+                   /* Permit to detect overflow when picture init with mask */
+               {
+                  if( isdigit( ( int ) szResult[ iCount ] ) && 
+                         !( szResult[ iCount ] == '0' ) &&     /* if not PF_PADL */
+                         !isdigit( ( int ) szPic[ iCount ] ) ) /* if not mask symbol */
+                                                               /* Overflow */
+                  {
+                     for( iCount++; ( ULONG ) iCount < i; iCount++ )
+                     {
+                        if( isdigit( ( int ) szResult[ iCount ] ) )
+                           szResult[ iCount ] = '*';
+                     }
+                     break;
+                  }
+                  else
+                  {
+                     if( !isdigit( ( int ) szResult[ iCount ] ) ||
+                            ( szResult[ iCount ] == '0' && !isdigit( ( int ) szPic[ iCount ] ) ) )
+                     {
+                        for( ; ( ULONG ) iCount < i; iCount++ )
+                        {
+                           if( szResult[ iCount ] != ' ' )
+                           {
+                              if( iCount > 0 )
+                                 szResult[ iCount - 1 ] = '(';
+                              else
+                                 *szResult       = '(';
+
+                              break;
+                           }
+                        }
+                        break;
+                     }
+                  }
+               }
                szResult[ i++ ] = ')';
             }
 
