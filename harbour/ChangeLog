@@ -7,7 +7,7 @@
       decimals now are only accessed for DOUBLE types (and of course only set 
       for DOUBLE return types). The bug could be observed by running AC_TEST
       pressing PgDn at the bottom of the list then pressing Up button, the
-      index display was showed with decimals in it.
+      index display was shown with decimals in it.
     % MIN(), MAX() code optimalized.
     * Some direct hb_param() calls changed to macros.
 
