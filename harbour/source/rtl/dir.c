@@ -260,102 +260,6 @@ static USHORT osToHarbourMask( USHORT usMask )
    return usRetMask;
 }
 
-static USHORT HarbourToOsMask( USHORT usMask )
-{
-   USHORT usRetMask = usMask;
-
-   HB_TRACE(HB_TR_DEBUG, ("HarbourToOsMask(%hu)", usMask));
-
-#if defined(OS_UNIX_COMPATIBLE)
-/* TODO: Need to look into this one */
-/* what to do with Hidden and System? */
-
-   usRetMask = 0;
-   if( usMask & FA_ARCH )
-      usRetMask = S_IFREG;    /* 0x0000  (numbers as in ms impimentation) */
-   if( usMask & FA_DIREC )
-      usRetMask |= S_IFDIR;   /* 0x3000 */
-   if( usMask & FA_REPARSE )
-      usRetMask |= S_IFLNK;   /* -not in ms- cygwin=120000 decimal */
-   if( usMask & FA_COMPRESSED )
-      usRetMask |= S_IFCHR;   /* 0x2000 */
-   if( usMask & FA_DEVICE )    /* s_isblk... */
-      usRetMask |= S_IFBLK;   /* 0x1000 */
-   if( usMask & FA_TEMPORARY ) /* s_isfifo... */
-      usRetMask |= S_IFIFO;   /* 0x4000 */
-   if( usMask & FA_SPARSE )    /* s_issock... */
-      usRetMask |= S_IFSOCK;  /* -not in ms- cygwin=140000 decimal! */
-   if( usMask & FA_LABEL )
-      usRetMask |= 0;	/* TODO: check this: S_IFLABEL; */ /* 0x5000 */
-   if( usMask & FA_RDONLY )
-      usRetMask &= ~S_IWUSR;   /* clear the WRITE permission bit */
-
-#else
-   #if defined(__IBMCPP__)
-/* TODO: Need more! -> FA_LABEL */
-      usRetMask = 0;
-      if( usMask & FA_ARCH )
-         usRetMask |= FILE_ARCHIVED;
-      if( usMask & FA_DIREC )
-         usRetMask |= FILE_DIRECTORY;
-      if( usMask & FA_HIDDEN )
-         usRetMask |= FILE_HIDDEN;
-      if( usMask & FA_RDONLY )
-         usRetMask |= FILE_READONLY;
-      if( usMask & FA_SYSTEM )
-         usRetMask |= FILE_SYSTEM;
-   #endif
-#endif
-
-   return usRetMask;
-}
-
-/*
-static USHORT osAttributesToMask( BYTE * byAttrib )
-{
-   USHORT usRetMask = 0;
-
-   HB_TRACE(HB_TR_DEBUG, ("osAttributes(%p)", byAttrib));
-
-#if defined(OS_UNIX_COMPATIBLE)
-#else
-   #if defined(__IBMCPP__)
-   #else
-      #if defined(_MSC_VER) || defined(__MINGW32__)
-      #elif defined(__BORLANDC__) || defined(__DJGPP__)
-      #else
-      #endif
-      #if defined(USE_NT)
-      #endif
-   #endif
-#endif
-
-   return usRetMask;
-}
-
-static BYTE * osMaskToAttributes( USHORT usMask, BYTE * byAttrib )
-{
-   char * cAttrib = ( char * ) byAttrib;
-
-   HB_TRACE(HB_TR_DEBUG, ("osMaskToAttributes(%hu, %p)", usMask, byAttrib));
-
-#if defined(OS_UNIX_COMPATIBLE)
-#else
-   #if defined(__IBMCPP__)
-   #else
-      #if defined(_MSC_VER) || defined(__MINGW32__)
-      #elif defined(__BORLANDC__) || defined(__DJGPP__)
-      #else
-      #endif
-      #if defined(USE_NT)
-      #endif
-   #endif
-#endif
-
-   return byAttrib;
-}
-*/
-
 static USHORT HarbourAttributesToMask( BYTE * byAttrib )
 {
    BYTE * pos = byAttrib;
@@ -387,6 +291,7 @@ static USHORT HarbourAttributesToMask( BYTE * byAttrib )
          case 'P': usMask |= FA_SPARSE;     break;
       }
    }
+
    return usMask;
 }
 
@@ -447,7 +352,9 @@ HARBOUR HB_DIRECTORY( void )
 
    PHB_ITEM pDirSpec = hb_param( 1, IT_STRING );
    PHB_ITEM pAttributes = hb_param( 2, IT_STRING );
+#if defined(_MSC_VER) || defined(__MINGW32__)
    PHB_ITEM pEightDotThree = hb_param( 3, IT_LOGICAL );
+#endif
 
    char     fullfile[ _POSIX_PATH_MAX + 1 ];
    char     filename[ _POSIX_PATH_MAX + 1 ];
@@ -458,7 +365,9 @@ HARBOUR HB_DIRECTORY( void )
    char     pfext[ _POSIX_PATH_MAX + 1 ];
    char     fname[ _POSIX_PATH_MAX + 1 ];
    char     fext[ _POSIX_PATH_MAX + 1 ];
+#if defined(_MSC_VER) || defined(__MINGW32__)
    BOOL     bEightDotThree;
+#endif
    char     ddate[ 9 ];
    char     ttime[ 9 ];
    char     aatrib[ 17 ];
@@ -466,8 +375,9 @@ HARBOUR HB_DIRECTORY( void )
    long     fsize;
    time_t   ftime;
    char *   pos;
+#if defined(__WATCOMC__)
    int      iDirnameLen;
-   USHORT   usosMask;
+#endif
    USHORT   ushbMask = FA_ARCH;
    PHB_ITEM pDir;
 
@@ -495,11 +405,10 @@ HARBOUR HB_DIRECTORY( void )
    if( pAttributes && hb_itemGetCLen( pAttributes ) >= 1 )
       ushbMask |= HarbourAttributesToMask( ( BYTE * ) hb_itemGetCPtr( pAttributes ) );
 
-   /* Translate Harbour Flags into OS specific flags */
-   usosMask = HarbourToOsMask( ushbMask );
-
+#if defined(_MSC_VER) || defined(__MINGW32__)
    /* Do we want 8.3 support? */
    bEightDotThree = ( pEightDotThree ? hb_itemGetL( pEightDotThree ) : FALSE );
+#endif
 
    pattern[ 0 ] = '\0';
 
@@ -545,6 +454,7 @@ HARBOUR HB_DIRECTORY( void )
          strcpy( pattern, "*.*" );
    }
 
+#if defined(__WATCOMC__)
    iDirnameLen = strlen( dirname );
    if( iDirnameLen < 1 )
    {
@@ -552,6 +462,7 @@ HARBOUR HB_DIRECTORY( void )
       dirname[ 1 ] = OS_PATH_DELIMITER;
       iDirnameLen = 2;
    }
+#endif
 
    if( strlen( pattern ) > 0 )
    {
@@ -632,10 +543,7 @@ HARBOUR HB_DIRECTORY( void )
 
 #endif
       pos = strrchr( string, OS_PATH_DELIMITER );
-      if( pos )
-         pos = strrchr( pos + 1, '.' );
-      else
-         pos = strrchr( string, '.' );
+      pos = strrchr( pos ? ( pos + 1 ) : string, '.' );
 
       if( pos && ! ( pos == &string[ 0 ] ) )
       {
@@ -646,10 +554,7 @@ HARBOUR HB_DIRECTORY( void )
          fext[ 0 ] = '\0';
 
       pos = strrchr( string, OS_PATH_DELIMITER );
-      if( pos )
-         strcpy( fname, pos + 1 );
-      else
-         strcpy( fname, string );
+      strcpy( fname, pos ? ( pos + 1 ) : string );
 
       if( !*fname )
          strcpy( fname, "*" );
@@ -685,7 +590,6 @@ HARBOUR HB_DIRECTORY( void )
             strcpy( fullfile, dirname );
             strcpy( filename, entry.name );
          }
-
 #elif defined(__IBMCPP__)
          strcpy( filename, entry.achName );
          strcpy( fullfile, dirname );
@@ -703,37 +607,34 @@ HARBOUR HB_DIRECTORY( void )
 
             #if defined(OS_UNIX_COMPATIBLE)
                /* GNU C on Linux or on other UNIX */
-               attrib = osToHarbourMask( statbuf.st_mode );
-            #else
-               #if defined(__IBMCPP__)
-                  attrib = entry.attrFile;
-               #else
-                  #if defined(_MSC_VER) || defined(__MINGW32__)
-                     attrib = entry.attrib;
-                     if( bEightDotThree )
-                     {
-                         /* need to strip off the path */
-                         pos = strrchr( filename, OS_PATH_DELIMITER );
-                         if( pos )
-                            strcpy( filename, ++pos );
-                     }
-                  #elif defined(__BORLANDC__) 
-                     attrib = _rtl_chmod( fullfile, 0 );
-                  #elif     defined(__DJGPP__)
-                      attrib = _chmod( fullfile, 0 );
-                  #else
-                     attrib = 0;
-                  #endif
-               #endif
-               attrib = osToHarbourMask( attrib );
-               if( attrib & FA_DIREC )
+               attrib = statbuf.st_mode;
+            #elif defined(__IBMCPP__)
+               attrib = entry.attrFile;
+            #elif defined(_MSC_VER) || defined(__MINGW32__)
+               attrib = entry.attrib;
+               if( bEightDotThree )
                {
-                  /* MS says size for a Directory is undefined.
-                     Novell uses these bits for other purposes
-                   */
-                  fsize = 0;
+                   /* need to strip off the path */
+                   pos = strrchr( filename, OS_PATH_DELIMITER );
+                   if( pos )
+                      strcpy( filename, ++pos );
                }
+            #elif defined(__BORLANDC__) 
+               attrib = chmod( fullfile, 0 );
+            #elif defined(__DJGPP__)
+               attrib = _chmod( fullfile, 0 );
+            #else
+               attrib = 0;
             #endif
+
+            attrib = osToHarbourMask( attrib );
+            if( attrib & FA_DIREC )
+            {
+               /* MS says size for a Directory is undefined.
+                  Novell uses these bits for other purposes
+                */
+               fsize = 0;
+            }
 
             ft = localtime( &ftime );
             sprintf( ddate, "%04d%02d%02d",

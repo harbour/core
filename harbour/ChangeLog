@@ -1,3 +1,12 @@
+20000307-21:06 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * doc/whatsnew.txt
+     + Build 31c things added.
+   * source/rtl/dir.c
+     % Flattened an #ifdef maze.
+     * _rtl_chmod() changed to the less specific chmod().
+     ! Fixed the other three Borland warnings.
+     - Removed unused parts from the code.
+
 20000307-14:20 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
   *utils/hbdoc/genrtf.prg
   source/tools/rtf.prg
@@ -27,7 +36,6 @@
    doc/en/rdd.txt
       *Some formating. Their was many docs that the text starts on line 8 or 7
       !removed empty tag from the docs
-
 
 20000307-17:34 GMT+1 Victor Szakats <info@szelvesz.hu>
    ; Now the non-GNU make process reorganization can be considered done.
