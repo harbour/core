@@ -69,7 +69,7 @@ procedure AltD( nAction )
 
 return
 
-procedure __dbgEntry( uParam1, uParam2 )  // debugger entry point
+procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
 
    do case
       case ValType( uParam1 ) == "C"   // called from hvm.c hb_vmModuleName()
@@ -84,8 +84,12 @@ procedure __dbgEntry( uParam1, uParam2 )  // debugger entry point
 
       case ValType( uParam1 ) == "N"   // called from hvm.c hb_vmDebuggerShowLines()
            if s_oDebugger != nil
-              if PCount() == 2 // called from hvm.c hb_vmLocalName()
-                 AAdd( s_oDebugger:aVars, { uParam2, uParam1, "Local", ProcName( 1 ) } )
+              if PCount() == 3 // called from hvm.c hb_vmLocalName() and hb_vmStaticName()
+                 if uParam3 == 1 // static variable
+                    AAdd( s_oDebugger:aVars, { uParam2, uParam1, "Static", ProcName( 1 ) } )
+                 else            // local variable
+                    AAdd( s_oDebugger:aVars, { uParam2, uParam1, "Local", ProcName( 1 ) } )
+                 endif
                  if s_oDebugger:oBrwVars != nil
                     s_oDebugger:oBrwVars:RefreshAll()
                  endif
@@ -684,6 +688,10 @@ static function GetVarInfo( aVar )
                   ">: " + ValToStr( __vmVarLGet( nProcLevel, aVar[ 2 ] ) )
 
       case aVar[ 3 ] == "Public" .or. aVar[ 3 ] == "Private"
+           return aVar[ 1 ] + " <" + aVar[ 3 ] + ", " + ValType( aVar[ 2 ] ) + ;
+                  ">: " + ValToStr( aVar[ 2 ] )
+
+      case aVar[ 3 ] == "Static"
            return aVar[ 1 ] + " <" + aVar[ 3 ] + ", " + ValType( aVar[ 2 ] ) + ;
                   ">: " + ValToStr( aVar[ 2 ] )
    endcase
