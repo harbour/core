@@ -36,6 +36,7 @@ Language extensions:
 
 * Optional Compile Time STRONG TYPE declaration (and compile time TYPE
   MISMATCH warnings)
+
   Example: LOCAL/STATIC Var AS ...
 
 * The Harbour debugger provides new interesting classes:
