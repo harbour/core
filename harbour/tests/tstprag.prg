@@ -13,13 +13,13 @@
 function Main()
 
 #pragma Shortcut=On
-#pragma Shortcut= On
+#pragma Shortcut= Off
 #pragma Shortcut = On
-#pragma Shortcut(On)
+#pragma Shortcut(OFF)
 #pragma Shortcut( On)
 #pragma Shortcut( OFF )
 #pragma Shortcut( On )
-#pragma Shortcut( ON )
+#pragma Shortcut( OFF )
 #pragma Shortcut( ON
 
 /* or #pragma /Z+ */
@@ -38,8 +38,10 @@ function Main()
 #pragma Exitseverity=0
 #pragma Exitseverity=1
 #pragma Exitseverity(0)
-#pragma Exitseverity( 0 )
 #pragma Exitseverity( 1 )
+#pragma Exitseverity( 0 )
+#pragma Exitseverity= 2
+#pragma Exitseverity= 1
 
 /* Pragmas with bad values will cause an error  */
 #pragma WarningLevel=8

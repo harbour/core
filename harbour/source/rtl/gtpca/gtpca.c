@@ -185,7 +185,7 @@ BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
 #else
 int hb_gt_ReadKey( HB_inkey_enum eventmask )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) event_mask));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) eventmask));
    HB_SYMBOL_UNUSED( eventmask );
    /* TODO: */
    return 0;

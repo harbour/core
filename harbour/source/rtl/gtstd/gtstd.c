@@ -85,7 +85,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
 {
    int ch;
    
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) event_mask));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) eventmask));
 
    HB_SYMBOL_UNUSED( eventmask );
 

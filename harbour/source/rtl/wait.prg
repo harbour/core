@@ -35,17 +35,12 @@
 
 #include "inkey.ch"
 
-FUNCTION __Wait( cString )
+FUNCTION __Wait( xPrompt )
    LOCAL nKey
    LOCAL bBlock
 
-   IF cString == NIL
-      /* TODO: Here we can use LangApi to localize default message
-      */
-      ? "Press any key to continue..."
-   ELSE
-      ? cString
-   ENDIF
+   /* TODO: Here we can use LangApi to localize default message */
+   QOut( iif( xPrompt == NIL, "Press any key to continue...", xPrompt ) )
 
    DO WHILE .T.
 
@@ -55,7 +50,7 @@ FUNCTION __Wait( cString )
          Eval( bBlock, ProcName( 1 ), ProcLine( 1 ), "" )
       ELSE
          IF nKey >= 32 .and. nKey <= 255
-            ?? Chr( nKey )
+            QQOut( Chr( nKey ) )
          ELSE
             nKey := 0
          ENDIF
@@ -66,3 +61,4 @@ FUNCTION __Wait( cString )
    ENDDO
 
    RETURN Chr( nKey )
+

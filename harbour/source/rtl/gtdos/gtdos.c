@@ -216,7 +216,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
 {
    int ch = 0;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) event_mask));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) eventmask));
 
 #if defined(__DJGPP__)
    /* Check to see if Ctrl+Break has been detected */

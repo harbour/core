@@ -132,7 +132,7 @@ void hb_gtExit( void )
 
 int hb_gtReadKey( HB_inkey_enum eventmask )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtReadKey(%d)", (int) event_mask));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtReadKey(%d)", (int) eventmask));
 
    return hb_gt_ReadKey( eventmask );
 }

@@ -42,10 +42,7 @@ FUNCTION __dbCopyStruct( cFileName, aFieldList )
 
 FUNCTION __dbCopyXStruct( cFileName )
    LOCAL nOldArea
-
-   LOCAL lError := .F.
    LOCAL oError
-
    LOCAL aStruct
 
    IF Empty( aStruct := dbStruct() )
@@ -69,9 +66,9 @@ FUNCTION __dbCopyXStruct( cFileName )
                                   FIELD->FIELD_DEC := aField[ DBS_DEC ] } )
 
    /* NOTE: CA-Cl*pper has a bug, where only a plain RECOVER statement is
-            used here, so oError will always be NIL. */
+            used here (without the USING keyword), so oError will always be 
+            NIL. */
    RECOVER USING oError
-      lError := .T.
    END SEQUENCE
 
    IF Select() != nOldArea
@@ -79,7 +76,7 @@ FUNCTION __dbCopyXStruct( cFileName )
       dbSelectArea( nOldArea )
    ENDIF
 
-   IF lError
+   IF oError != NIL
       Break( oError )
    ENDIF
 
@@ -91,13 +88,10 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDDName, lNew, cAlias )
    LOCAL oError
 
    DEFAULT lNew TO .F.
-   DEFAULT cAlias TO cFileName
 
    IF Used() .AND. !lNew
       dbCloseArea()
    ENDIF
-
-   hb_FNameSplit( cAlias, NIL, @cAlias )
 
    BEGIN SEQUENCE
 
@@ -152,7 +146,6 @@ FUNCTION __FLEDIT( aStruct, aFieldList )
 #endif
 
 /* NOTE: Internal helper function, CA-Cl*pper name is: __FLEDIT() */
-
 
 FUNCTION __dbStructFilter( aStruct, aFieldList )
    LOCAL aStructFiltered

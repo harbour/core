@@ -140,7 +140,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
 {
    int ch;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) event_mask));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) eventmask));
 
 #if defined(HARBOUR_GCC_OS2)
    /* 25/03/2000 - maurilio.longo@libero.it

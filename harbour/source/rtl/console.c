@@ -160,7 +160,7 @@ static void hb_conOut( USHORT uiParam, hb_out_func_typedef * pOutFunc )
    ULONG ulLen;
    BOOL bFreeReq;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_conOut(%hu, %p)", uiParam, hb_out_func));
+   HB_TRACE(HB_TR_DEBUG, ("hb_conOut(%hu, %p)", uiParam, pOutFunc));
 
    pItem = hb_param( uiParam, HB_IT_ANY );
    pszString = hb_itemString( pItem, &ulLen, &bFreeReq );
@@ -367,7 +367,7 @@ HB_FUNC( PCOL ) /* Returns the current printer row position */
 
 static void hb_conDevPos( SHORT iRow, SHORT iCol )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_conDevPos(%hd, %hd)", row, col));
+   HB_TRACE(HB_TR_DEBUG, ("hb_conDevPos(%hd, %hd)", iRow, iCol));
 
    /* Position printer if SET DEVICE TO PRINTER and valid printer file
       otherwise position console */

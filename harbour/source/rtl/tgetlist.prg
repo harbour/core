@@ -42,7 +42,11 @@
 #define SCORE_ROW       0
 #define SCORE_COL       60
 
-#define K_UNDO   K_CTRL_U
+#define _GET_INSERT_ON  7
+#define _GET_INSERT_OFF 8
+#define _GET_INVD_DATE  9
+
+#define K_UNDO          K_CTRL_U
 
 CLASS TGetList
 
@@ -463,12 +467,17 @@ METHOD ShowScoreboard() CLASS TGetList
    local nRow, nCol, nOldCursor
 
    if Set( _SET_SCOREBOARD )
+
       nRow := Row()
       nCol := Col()
+
       nOldCursor := SetCursor( SC_NONE )
-      DispOutAt( SCORE_ROW, SCORE_COL, If( Set( _SET_INSERT ), "Ins", "   " ) )
+
+      DispOutAt( SCORE_ROW, SCORE_COL, iif( Set( _SET_INSERT ), NationMsg( _GET_INSERT_ON ), NationMsg( _GET_INSERT_OFF ) ) )
       SetPos( nRow, nCol )
+
       SetCursor( nOldCursor )
+
    endif
 
 return Self
@@ -483,13 +492,13 @@ METHOD DateMsg() CLASS TGetList
       nRow := Row()
       nCol := Col()
 
-      DispOutAt( SCORE_ROW, SCORE_COL, "Invalid date" )
+      DispOutAt( SCORE_ROW, SCORE_COL, NationMsg( _GET_INVD_DATE ) )
       SetPos( nRow, nCol )
 
       do while NextKey() == 0
       enddo
 
-      DispOutAt( SCORE_ROW, SCORE_COL, Space( Len( "Invalid date" ) ) )
+      DispOutAt( SCORE_ROW, SCORE_COL, Space( Len( NationMsg( _GET_INVD_DATE ) ) ) )
       SetPos( nRow, nCol )
 
    endif

@@ -1,3 +1,29 @@
+20000404-11:06 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/dircmd.prg
+     + Changed to use NationMsg() instead of the hard-wired English
+       string. The previous 100% compatible version left in STRICT_COMPAT 
+       branch.
+
+   * source/rtl/console.c
+   * source/rtl/gtapi.c
+   * source/rtl/gt*/gt*.c
+     ! Fixed some TRACE calls.
+
+   * source/rtl/wait.prg
+   * source/rtl/input.prg
+     % Small optimization.
+     * Variable renamed to better reflect purpose and types.
+
+   * source/rtl/tgetlist.prg
+     ! Using NationMsg() instead of the hard-coded strings.
+
+   * source/rdd/dbstrux.prg
+     % Some optimizations.
+
+   * tests/tstprag.prg
+     + New tests changed.
+
 20000404-08:55 GMT+2 Chen Kedem <niki@actcom.co.il>
    * doc/en/dbstrux.txt
      + documentation for __dbCreate()
