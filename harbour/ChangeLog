@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-04-01 08:49 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * bin/bld.bat
+     * Updated
+
 2004-03-31 21:45 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
    * xharbour/source/rdd/workarea.c
      + added scopped relations. Now OrdSetRelation() works with DBFCDX like it
