@@ -1,3 +1,10 @@
+19990816-12:03 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * include/ctoharb.h
+     + Added new hb_callStackShow() prototype
+   * source/vm/hvm.c
+     + Added new hb_callStackShow() function
+     * improved internal errors reporting information
+
 19990816-01:11 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/vm/hvm.c
     * ProcessObjSymbols -> hb_vmProcessObjSymbols
