@@ -25,15 +25,16 @@
  *  $ARGUMENTS$
  *      <cNewLang>  The ID of the country language module
  *      The possible values for <cNewLang> is below as is defined in the
- *      Lang library.
+ *      Lang library,sorted by language.
  *
  *      <table>
  *      <cNewLang>   Language     Codepage
- *      PT           Portuguese   850
- *      EN           English      437
- *      ES           Spanish      850
- *      CA           Catalan      850
  *      EU           Basque       850
+ *      CS852        Czech        852
+ *      CSISO        Czech        ISO-8859-2
+ *      CSKAM        Czech        KAM
+ *      CA           Catalan      850
+ *      EN           English      437
  *      FR           French       850
  *      GL           Galician     850
  *      HE862        Hebrew       862
@@ -42,7 +43,11 @@
  *      HUCWI        Hungarian    CWI-2
  *      HUWIN        Hungarian    Windows-1
  *      IS85         Icelandic    850
+ *      PT           Portuguese   850
  *      RO           Romanian     852
+ *      SRISO        Serbian      ISO-8859-2
+ *      SR852        Serbian      852
+ *      ES           Spanish      850
  *      </table>
  *  $RETURNS$
  *      <cOldLang>   The old language indentifier
