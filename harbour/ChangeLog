@@ -1,3 +1,20 @@
+2000-05-29 08:29 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/xsavescr.c
+     - Removed superfluous ";" char.
+
+   * source/rtl/tbrowse.prg
+   * source/rtl/memofile.c
+     ! Typo
+
+   * source/rtl/filesys.c
+     % Optimized hb_fsEof(). Note that this code is not multiplatform.
+
+   * source/compiler/harbour.l
+   * source/rtl/tclass.prg
+     - :: now again translates to Self, since QSelf() is not working well 
+       when used in a codeblock. So this change postponed after version 0.34
+
 2000-05-28 23:00 GMT -3 Luiz Rafaek Culik <culik@sl.conex.net>
   *contrib/hbzlib/zlibapi.c
    contrib/hbzlib/zipfile1.c

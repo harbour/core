@@ -112,6 +112,7 @@ FUNCTION TClass()
 
 STATIC FUNCTION New( cClassName, xSuper )
 
+   LOCAL Self := QSelf()
    LOCAL nSuper, i
 
    IF ISARRAY( xSuper ) .AND. Len( xSuper ) >= 1
@@ -139,7 +140,7 @@ STATIC FUNCTION New( cClassName, xSuper )
    NEXT
    IF i < nSuper
       nSuper := i - 1
-      ASize(::acSuper, nSuper)
+      ASize( ::acSuper, nSuper)
    ENDIF
 
    RETURN QSelf()
@@ -148,6 +149,7 @@ STATIC FUNCTION New( cClassName, xSuper )
 
 STATIC PROCEDURE Create()
 
+   LOCAL Self := QSelf()
    LOCAL n
    LOCAL nLen := Len( ::acSuper )
    LOCAL nLenDatas := Len( ::aDatas ) //Datas local to the class !!
@@ -226,11 +228,16 @@ STATIC PROCEDURE Create()
 //----------------------------------------------------------------------------//
 
 STATIC FUNCTION Instance()
+
+   LOCAL Self := QSelf()
+
    RETURN __clsInst( ::hClass )
 
 //----------------------------------------------------------------------------//
 
 STATIC PROCEDURE AddData( cData, xInit, cType, nScope )  /* xInit is initializer */
+
+   LOCAL Self := QSelf()
 
    AAdd( ::aDatas, { cData, xInit, cType, nScope } )
 
@@ -240,6 +247,7 @@ STATIC PROCEDURE AddData( cData, xInit, cType, nScope )  /* xInit is initializer
 
 STATIC PROCEDURE AddMultiData( cType, xInit, nScope, aData )
 
+   LOCAL Self := QSelf()
    LOCAL i
    LOCAL nParam := Len( aData )
 
@@ -263,6 +271,8 @@ STATIC PROCEDURE AddMultiData( cType, xInit, nScope, aData )
 
 STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope )
 
+   LOCAL Self := QSelf()
+
    AAdd( ::aClsDatas, { cData, xInit, cType, nScope } )
 
    RETURN
@@ -271,6 +281,7 @@ STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope )
 
 STATIC PROCEDURE AddMultiClsData( cType, xInit, nScope, aData )
 
+   LOCAL Self := QSelf()
    LOCAL i
    LOCAL nParam := Len( aData )
 
@@ -294,6 +305,8 @@ STATIC PROCEDURE AddMultiClsData( cType, xInit, nScope, aData )
 
 STATIC PROCEDURE AddInline( cMethod, bCode, nScope )
 
+   LOCAL Self := QSelf()
+
    AAdd( ::aInlines, { cMethod, bCode, nScope } )
 
    RETURN
@@ -301,6 +314,8 @@ STATIC PROCEDURE AddInline( cMethod, bCode, nScope )
 //----------------------------------------------------------------------------//
 
 STATIC PROCEDURE AddMethod( cMethod, nFuncPtr, nScope )
+
+   LOCAL Self := QSelf()
 
    AAdd( ::aMethods, { cMethod, nFuncPtr, nScope } )
 
@@ -310,6 +325,8 @@ STATIC PROCEDURE AddMethod( cMethod, nFuncPtr, nScope )
 
 STATIC PROCEDURE AddVirtual( cMethod )
 
+   LOCAL Self := QSelf()
+
    AAdd( ::aVirtuals, cMethod )
 
    RETURN
@@ -317,6 +334,8 @@ STATIC PROCEDURE AddVirtual( cMethod )
 //----------------------------------------------------------------------------//
 
 STATIC PROCEDURE SetOnError( nFuncPtr )
+
+   LOCAL Self := QSelf()
 
    ::nOnError := nFuncPtr
 

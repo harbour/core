@@ -90,6 +90,7 @@ CLASS TBrowse
    DATA rowPos        // Current cursor row position
    DATA skipBlock     // Code block used to reposition data source
    DATA stable        // Indicates if the TBrowse object is stable
+
    DATA aRedraw       // Array of logical items indicating, is appropriate row need to be redraw
    DATA RelativePos   // Indicates record position relatively position of first record on the screen
    DATA lHeaders      // Internal variable, indicate, are there column headers to paint

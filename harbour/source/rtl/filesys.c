@@ -52,6 +52,7 @@
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  *    hb_fsEof()
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -1458,9 +1459,7 @@ BOOL hb_fsFile( BYTE * pFilename )
    return bIsFile;
 }
 
-BOOL    hb_fsEof( FHANDLE hFileHandle )
+BOOL hb_fsEof( FHANDLE hFileHandle )
 {
-   int iResult;
-   iResult = eof(hFileHandle);
-   return ( iResult ? FALSE : TRUE );
+   return eof( hFileHandle ) != 0;
 }

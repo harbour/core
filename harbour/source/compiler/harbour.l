@@ -1500,7 +1500,7 @@ Separator     {SpaceTab}
 ".and."        hb_comp_iState =OPERATOR; return AND;
 ".or."         hb_comp_iState =OPERATOR; return OR;
 "!"|".not."    hb_comp_iState =OPERATOR; return NOT;
-"::"           unput( ':' ); unput( ')' ); unput( '(' ); unput( 'f' ); unput( 'l' ); unput( 'e' ); unput( 'S' ); unput( 'Q' );
+"::"           unput( ':' ); unput( 'f' ); unput( 'l' ); unput( 'e' ); unput( 'S' );
 [,\{\}\|\#\&\.\:\<\>\[\]\@] hb_comp_iState =OPERATOR; return yytext[ 0 ];
 [\(]           ++_iOpenBracket; hb_comp_iState =SEPARATOR; return yytext[ 0 ];
 [\)]           --_iOpenBracket; hb_comp_iState =SEPARATOR; return yytext[ 0 ];

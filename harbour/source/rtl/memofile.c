@@ -38,7 +38,7 @@
 #include "hbapifs.h"
 
 /* NOTE: CA-Clipper has 64K (65516 bytes exactly) limit on read, in Harbour
-         this limit is extended, so we are not *stricly* compatible here. 
+         this limit is extended, so we are not *strictly* compatible here. 
          [vszakats] */
 
 HB_FUNC( MEMOREAD )

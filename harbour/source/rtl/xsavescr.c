@@ -59,7 +59,7 @@ void hb_conXSaveRestRelease( void )
    {
       hb_xfree( s_pBuffer );
       s_pBuffer = NULL;
-   };
+   }
 }
 
 HB_FUNC( __XSAVESCREEN )
