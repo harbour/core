@@ -65,7 +65,7 @@
 
 #ifndef HB_CDP_SUPPORT_OFF
 #  include "hbapicdp.h"
-   extern PHB_CODEPAGE s_cdpage;
+   extern PHB_CODEPAGE hb_cdp_page;
 #endif
 
 #define __PRG_SOURCE__ __FILE__
@@ -967,7 +967,7 @@ static ERRCODE hb_fptReadSixItem( FPTAREAP pArea, BYTE ** pbMemoBuf, BYTE * bBuf
             {
                hb_itemPutCL( pItem, ( char *) (*pbMemoBuf), ulLen );
 #ifndef HB_CDP_SUPPORT_OFF
-               hb_cdpnTranslate( pItem->item.asString.value, pArea->cdPage, s_cdpage, ulLen );
+               hb_cdpnTranslate( pItem->item.asString.value, pArea->cdPage, hb_cdp_page, ulLen );
 #endif
             }
             else
@@ -1142,7 +1142,7 @@ static ERRCODE hb_fptReadFlexItem( FPTAREAP pArea, BYTE ** pbMemoBuf, BYTE * bBu
                hb_itemPutCL( pItem, ( char *) *pbMemoBuf, ulLen );
                *pbMemoBuf += ulLen;
 #ifndef HB_CDP_SUPPORT_OFF
-               hb_cdpnTranslate( pItem->item.asString.value, pArea->cdPage, s_cdpage, ulLen );
+               hb_cdpnTranslate( pItem->item.asString.value, pArea->cdPage, hb_cdp_page, ulLen );
 #endif
             }
             else
@@ -1275,7 +1275,7 @@ static ERRCODE hb_fptGetMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
                break;
             case FPTIT_TEXT:
 #ifndef HB_CDP_SUPPORT_OFF
-               hb_cdpnTranslate( ( char *) pBuffer, pArea->cdPage, s_cdpage, ulSize );
+               hb_cdpnTranslate( ( char *) pBuffer, pArea->cdPage, hb_cdp_page, ulSize );
 #endif
             case FPTIT_PICT:
                pBuffer[ ulSize ] = '\0';
@@ -1421,7 +1421,7 @@ static ULONG hb_fptStoreSixItem( FPTAREAP pArea, PHB_ITEM pItem, BYTE ** bBufPtr
          {
             memcpy( *bBufPtr, pItem->item.asString.value, ulLen );
 #ifndef HB_CDP_SUPPORT_OFF
-            hb_cdpnTranslate( ( char *) *bBufPtr, pArea->cdPage, s_cdpage, ulLen );
+            hb_cdpnTranslate( ( char *) *bBufPtr, pArea->cdPage, hb_cdp_page, ulLen );
 #endif
             *bBufPtr += ulLen;
          }
@@ -1502,7 +1502,7 @@ static void hb_fptStoreFlexItem( FPTAREAP pArea, PHB_ITEM pItem, BYTE ** bBufPtr
          *bBufPtr += 2;
          memcpy( *bBufPtr, pItem->item.asString.value, ulLen );
 #ifndef HB_CDP_SUPPORT_OFF
-         hb_cdpnTranslate( ( char *) *bBufPtr, pArea->cdPage, s_cdpage, ulLen );
+         hb_cdpnTranslate( ( char *) *bBufPtr, pArea->cdPage, hb_cdp_page, ulLen );
 #endif
          *bBufPtr += ulLen;
          break;
@@ -1649,11 +1649,11 @@ static ERRCODE hb_fptPutMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       ulLen = pItem->item.asString.length;
       bBufPtr = ( BYTE *) pItem->item.asString.value;
 #ifndef HB_CDP_SUPPORT_OFF
-      if ( pArea->cdPage != s_cdpage )
+      if ( pArea->cdPage != hb_cdp_page )
       {
          bBufAlloc = ( BYTE * ) hb_xgrab( ulLen );
          memcpy( bBufAlloc, bBufPtr, ulLen );
-         hb_cdpnTranslate( ( char *) bBufAlloc, s_cdpage, pArea->cdPage, ulLen );
+         hb_cdpnTranslate( ( char *) bBufAlloc, hb_cdp_page, pArea->cdPage, ulLen );
          bBufPtr = bBufAlloc;
       }
 #endif

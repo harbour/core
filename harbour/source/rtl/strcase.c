@@ -57,7 +57,7 @@
 #include "hbapierr.h"
 #include "hbapicdp.h"
 
-extern PHB_CODEPAGE s_cdpage;
+extern PHB_CODEPAGE hb_cdp_page;
 
 /* converts szText to lower case. Does not create a new string! */
 char * hb_strLower( char * szText, ULONG ulLen )
@@ -66,9 +66,9 @@ char * hb_strLower( char * szText, ULONG ulLen )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strLower(%s, %lu)", szText, ulLen));
 
-   if( s_cdpage->nChars )
+   if( hb_cdp_page->nChars )
       for( i = 0; i < ulLen; i++ )
-         szText[ i ] = (char) s_cdpage->s_lower[szText[i]&255];
+         szText[ i ] = (char) hb_cdp_page->s_lower[szText[i]&255];
    else
       for( i = 0; i < ulLen; i++ )
          szText[ i ] = tolower( (unsigned char) szText[ i ] );
@@ -83,9 +83,9 @@ char * hb_strUpper( char * szText, ULONG ulLen )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strUpper(%s, %lu)", szText, ulLen));
 
-   if( s_cdpage->nChars )
+   if( hb_cdp_page->nChars )
       for( i = 0; i < ulLen; i++ )
-         szText[ i ] = (char) s_cdpage->s_upper[szText[i]&255];
+         szText[ i ] = (char) hb_cdp_page->s_upper[szText[i]&255];
    else
       for( i = 0; i < ulLen; i++ )
          szText[ i ] = toupper( (unsigned char) szText[ i ] );

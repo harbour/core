@@ -55,7 +55,7 @@
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-extern PHB_CODEPAGE s_cdpage;
+extern PHB_CODEPAGE hb_cdp_page;
 
 /* determines if first char of string is letter */
 
@@ -67,8 +67,8 @@ HB_FUNC( ISALPHA )
    {
       if( isalpha( ( unsigned char ) * szString ) )
          hb_retl( TRUE );
-      else if( s_cdpage->nChars && szString[0] && 
-           ( strchr( s_cdpage->CharsUpper,* szString ) || strchr( s_cdpage->CharsLower,* szString ) ) )
+      else if( hb_cdp_page->nChars && szString[0] && 
+           ( strchr( hb_cdp_page->CharsUpper,* szString ) || strchr( hb_cdp_page->CharsLower,* szString ) ) )
          hb_retl( TRUE );
       else
          hb_retl( FALSE );
@@ -99,7 +99,7 @@ HB_FUNC( ISUPPER )
    {
       if( isupper( ( unsigned char ) * szString ) )
          hb_retl( TRUE );
-      else if( s_cdpage->nChars && szString[0] && strchr( s_cdpage->CharsUpper,* szString ) )
+      else if( hb_cdp_page->nChars && szString[0] && strchr( hb_cdp_page->CharsUpper,* szString ) )
          hb_retl( TRUE );
       else
          hb_retl( FALSE );
@@ -118,7 +118,7 @@ HB_FUNC( ISLOWER )
    {
       if( islower( ( unsigned char ) * szString ) )
          hb_retl( TRUE );
-      else if( s_cdpage->nChars && szString[0] && strchr( s_cdpage->CharsLower,* szString ) )
+      else if( hb_cdp_page->nChars && szString[0] && strchr( hb_cdp_page->CharsLower,* szString ) )
          hb_retl( TRUE );
       else
          hb_retl( FALSE );

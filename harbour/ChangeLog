@@ -8,6 +8,23 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-05-08 10:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+   * source/rdd/dbf1.c
+   * source/rdd/dbfcdx/dbfcdx1.c
+   * source/rdd/dbfdbt/dbfdbt1.c
+   * source/rdd/dbffpt/dbffpt1.c
+   * source/rdd/dbfntx/dbfntx1.c
+   * source/rtl/is.c
+   * source/rtl/strcase.c
+   * source/rtl/transfrm.c
+      * updated to refer hb_cdp_page instead of s_cdpage
+
+   * source/vm/itemapi.c
+      * snprintf is used only in GCC/Linux and WatcomC
+      guarded with #ifdef HB_HAS_SNPRINTF
+      (this is ommision from my previous commit)
+
 2004-05-07 19:30 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
    + config/dos/owatcom.cf

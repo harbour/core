@@ -65,7 +65,7 @@
 #include "error.ch"
 #include <errno.h>
 #include "hbapicdp.h"
-extern PHB_CODEPAGE s_cdpage;
+extern PHB_CODEPAGE hb_cdp_page;
 
 #define __PRG_SOURCE__ __FILE__
 
@@ -1069,7 +1069,7 @@ static ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       case HB_IT_STRING:
          hb_itemPutCL( pItem, ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
                        pField->uiLen );
-         hb_cdpTranslate( pItem->item.asString.value, pArea->cdPage, s_cdpage );
+         hb_cdpTranslate( pItem->item.asString.value, pArea->cdPage, hb_cdp_page );
          break;
 
       case HB_IT_LOGICAL:
@@ -1276,7 +1276,7 @@ static ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
                     hb_itemGetCPtr( pItem ), uiSize );
             if( HB_IS_STRING( pItem ) )
-               hb_cdpnTranslate( (char *) pArea->pRecord + pArea->pFieldOffset[ uiIndex ], s_cdpage, pArea->cdPage, uiSize );
+               hb_cdpnTranslate( (char *) pArea->pRecord + pArea->pFieldOffset[ uiIndex ], hb_cdp_page, pArea->cdPage, uiSize );
             memset( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] + uiSize,
                     ' ', pField->uiLen - uiSize );
          }
@@ -1770,10 +1770,10 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    {
       pArea->cdPage = hb_cdpFind( (char *) pOpenInfo->cdpId );
       if( !pArea->cdPage )
-         pArea->cdPage = s_cdpage;
+         pArea->cdPage = hb_cdp_page;
    }
    else
-      pArea->cdPage = s_cdpage;
+      pArea->cdPage = hb_cdp_page;
    pArea->fShared = pOpenInfo->fShared;
    pArea->fReadonly = pOpenInfo->fReadonly;
    /* Force exclusive mode

@@ -129,7 +129,7 @@
 #include "hbrddntx.h"
 #include "hbapicdp.h"
 
-extern PHB_CODEPAGE s_cdpage;
+extern PHB_CODEPAGE hb_cdp_page;
 #define __PRG_SOURCE__ __FILE__
 extern USHORT hb_rddFieldIndex( AREAP pArea, char * szName );
 
@@ -799,10 +799,10 @@ static USHORT hb_ntxPageFindCurrentKey( LPPAGEINFO pPage, ULONG ulRecno )
 static void hb_ntxGetCurrentKey( LPTAGINFO pTag, LPKEYINFO pKey )
 {
    char szBuffer[ NTX_MAX_KEY ];
-   PHB_CODEPAGE cdpTmp = s_cdpage;
+   PHB_CODEPAGE cdpTmp = hb_cdp_page;
    PHB_ITEM pItem;
 
-   s_cdpage = pTag->Owner->Owner->cdPage;
+   hb_cdp_page = pTag->Owner->Owner->cdPage;
    if( pTag->nField )
    {
       pItem = hb_itemNew( NULL );
@@ -847,7 +847,7 @@ static void hb_ntxGetCurrentKey( LPTAGINFO pTag, LPKEYINFO pKey )
    else if( hb_itemType( pTag->pKeyItem ) != HB_IT_BLOCK )
       hb_stackPop();
    pKey->Xtra = pTag->Owner->Owner->ulRecNo;
-   s_cdpage = cdpTmp;
+   hb_cdp_page = cdpTmp;
 }
 
 static BOOL hb_ntxTagGoToNextKey( LPTAGINFO pTag, BOOL lContinue )
@@ -1955,8 +1955,8 @@ static void hb_ntxKeysSort( LPNTXSORTINFO pSortInfo, LPSORTITEM* pKeyFirst, LPSO
       }
       else if( pSortInfo->pKey1 )
       {
-         result = (s_cdpage->lSort)?
-              hb_cdpcmp( pKeyNew->key, pSortInfo->pKey1->key, (ULONG)KeyLength, s_cdpage, NULL ):memcmp( pKeyNew->key, pSortInfo->pKey1->key, KeyLength );
+         result = (hb_cdp_page->lSort)?
+              hb_cdpcmp( pKeyNew->key, pSortInfo->pKey1->key, (ULONG)KeyLength, hb_cdp_page, NULL ):memcmp( pKeyNew->key, pSortInfo->pKey1->key, KeyLength );
          if( fDescend && result )
             result = ( result > 0 )? -1:1;
          if( result >= 0 )
@@ -1980,8 +1980,8 @@ static void hb_ntxKeysSort( LPNTXSORTINFO pSortInfo, LPSORTITEM* pKeyFirst, LPSO
          pKey = *pKeyFirst;
       while( pKey )
       {
-         result = (s_cdpage->lSort)?
-              hb_cdpcmp( pKeyNew->key, pKey->key, (ULONG)KeyLength, s_cdpage, NULL ):memcmp( pKeyNew->key, pKey->key, KeyLength );
+         result = (hb_cdp_page->lSort)?
+              hb_cdpcmp( pKeyNew->key, pKey->key, (ULONG)KeyLength, hb_cdp_page, NULL ):memcmp( pKeyNew->key, pKey->key, KeyLength );
          if( fDescend && result )
             result = ( result > 0 )? -1:1;
          if( result < 0 )
@@ -2447,12 +2447,12 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
    USHORT numRecinBuf = 0, nParts = 0;
    BYTE * pRecordTmp;
    BOOL fValidBuffer;
-   PHB_CODEPAGE cdpTmp = s_cdpage;
+   PHB_CODEPAGE cdpTmp = hb_cdp_page;
 
    ulRecCount = pArea->ulRecCount;
    pTag = pIndex->CompoundTag;
    pItem = hb_itemNew( NULL );
-   s_cdpage = pArea->cdPage;
+   hb_cdp_page = pArea->cdPage;
 
    memset( &sortInfo, 0, sizeof( sortInfo ) );
    readBuffer = (BYTE*) hb_xgrab( pArea->uiRecordLen * 10 );
@@ -2618,7 +2618,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
    /* Building index file with previously sorted keys */
    hb_ntxBufferSave( pTag, &sortInfo );
 
-   s_cdpage = cdpTmp;
+   hb_cdp_page = cdpTmp;
 
    if( pszTempName )
    {  /*  Close temporary swap file, delete it and free name buffer */
@@ -3072,7 +3072,7 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
            }
            keylen = ( ((USHORT)pKey->item.asString.length)<pTag->KeyLength)? pKey->item.asString.length:pTag->KeyLength;
            memcpy( pKey2->key, pKey->item.asString.value, keylen );
-           hb_cdpnTranslate( pKey2->key, s_cdpage, pArea->cdPage, keylen );
+           hb_cdpnTranslate( pKey2->key, hb_cdp_page, pArea->cdPage, keylen );
            break;
         case HB_IT_INTEGER:
         case HB_IT_LONG:
@@ -4155,7 +4155,7 @@ static ERRCODE ntxSetScope( NTXAREAP pArea, LPDBORDSCOPEINFO sInfo )
                   if( *ppItem == NULL )
                      *ppItem = hb_itemNew( NULL );
                   hb_itemCopy( *ppItem, sInfo->scopeValue );
-                  hb_cdpnTranslate( (*ppItem)->item.asString.value, s_cdpage, pArea->cdPage, (*ppItem)->item.asString.length );
+                  hb_cdpnTranslate( (*ppItem)->item.asString.value, hb_cdp_page, pArea->cdPage, (*ppItem)->item.asString.length );
                }
                break;
             case HB_IT_INTEGER:
