@@ -88,12 +88,12 @@ C_SOURCES=\
 	str.c        \
 	strcase.c    \
 	strings.c    \
-	stringsx.c   \
 	strmatch.c   \
 	strtran.c    \
 	strzero.c    \
 	stuff.c      \
 	substr.c     \
+	teditorl.c   \
 	tone.c       \
 	trace.c      \
 	transfrm.c   \

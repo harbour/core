@@ -273,12 +273,12 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\str.obj \
    $(OBJ_DIR)\strcase.obj \
    $(OBJ_DIR)\strings.obj \
-   $(OBJ_DIR)\stringsx.obj \
    $(OBJ_DIR)\strmatch.obj \
    $(OBJ_DIR)\strtran.obj \
    $(OBJ_DIR)\strzero.obj \
    $(OBJ_DIR)\stuff.obj \
    $(OBJ_DIR)\substr.obj \
+   $(OBJ_DIR)\teditorl.obj \
    $(OBJ_DIR)\tone.obj \
    $(OBJ_DIR)\trace.obj \
    $(OBJ_DIR)\transfrm.obj \

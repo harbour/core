@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * __STRTOKEN() helper routine for TEDITOR.PRG
  *
- * Copyright 2000 Harbour project.
+ * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

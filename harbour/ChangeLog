@@ -1,3 +1,14 @@
+20000513-13:51 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   - source/rtl/stringsx.c
+     - removed
+   + source/rtl/teditorl.c
+     + added
+   * source/rtl/Makefile
+   * Makefile.bc
+   * Makefile.vc
+     * changed to reflect previous changes
+
 20000513-00:51 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * Makefile.bc

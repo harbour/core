@@ -243,12 +243,12 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\str.obj \
    $(OBJ_DIR)\strcase.obj \
    $(OBJ_DIR)\strings.obj \
-   $(OBJ_DIR)\stringsx.obj \
    $(OBJ_DIR)\strmatch.obj \
    $(OBJ_DIR)\strtran.obj \
    $(OBJ_DIR)\strzero.obj \
    $(OBJ_DIR)\stuff.obj \
    $(OBJ_DIR)\substr.obj \
+   $(OBJ_DIR)\teditorl.obj \
    $(OBJ_DIR)\tone.obj \
    $(OBJ_DIR)\trace.obj \
    $(OBJ_DIR)\transfrm.obj \
@@ -1418,10 +1418,6 @@ $(OBJ_DIR)\strings.obj : $(RTL_DIR)\strings.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\stringsx.obj : $(RTL_DIR)\stringsx.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
-
 $(OBJ_DIR)\strmatch.obj : $(RTL_DIR)\strmatch.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
@@ -1467,6 +1463,10 @@ $(OBJ_DIR)\teditor.c : $(RTL_DIR)\teditor.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\teditor.obj : $(OBJ_DIR)\teditor.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\teditorl.obj : $(RTL_DIR)\teditorl.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
