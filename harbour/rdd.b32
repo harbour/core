@@ -32,5 +32,5 @@ delim1.obj  : delim1.c
   tlib .\libs\b32\rdd.lib -+$@,,
 
 .prg.c:
-  bin\harbour $< /n /osource\rdd /iinclude
+  bin\harbour $< /n /osource\rdd\ /iinclude
 
