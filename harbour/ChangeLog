@@ -1,3 +1,7 @@
+19991026-19:55 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/gt/gtwin.c
+     * Added WINAPI to the handler func def.
+
 Tue Oct 26 17:16:43 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* source/common/hbtrace.c: 

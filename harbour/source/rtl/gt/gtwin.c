@@ -103,7 +103,7 @@ static HANDLE HCursor;  /* When DispBegin is in effect, all cursor related
                            be different than the one being written to.
                          */
 
-static BOOL hb_gt_CtrlHandler( DWORD dwCtrlType )
+static BOOL WINAPI hb_gt_CtrlHandler( DWORD dwCtrlType )
 {
    BOOL bHandled;
 
