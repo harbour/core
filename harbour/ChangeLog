@@ -1,3 +1,7 @@
+19990730-12:46 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * tests/working/testrdd.prg
+     Fixed a bug
+
 19990730-12:24 GMT+1 Bruno Cantero <bruno@issnet.net>
    + source/rdd/sdf0.prg, source/rdd/sdf1.c, source/rdd/delim0.prg and source/rdd/delim1.c
      Support for two RDD's (SDF and DELIM)
