@@ -723,9 +723,9 @@ static ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
    uiItems = ( USHORT ) hb_arrayLen( pStruct );
    SELF_SETFIELDEXTENT( (AREAP)pArea, uiItems );
 
-   pFieldInfo.uiTypeExtended = 0;
    for( uiCount = 0; uiCount < uiItems; uiCount++ )
    {
+      pFieldInfo.uiTypeExtended = 0;
       pFieldDesc = hb_arrayGetItemPtr( pStruct, uiCount + 1 );
       pFieldInfo.atomName = ( BYTE * ) hb_arrayGetCPtr( pFieldDesc, 1 );
       iData = hb_arrayGetNI( pFieldDesc, 3 );

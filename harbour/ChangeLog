@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-06-06 23:21 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * contrib/rddads/ads1.c
+    ! Fixed bug, related to creating databases with extended data types
+
 2002-06-06 14:40 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/gtwin/gtwin.c
     ! Removed Clipper-incompatible change that made Shift+ESC
