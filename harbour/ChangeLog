@@ -7,6 +7,37 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2002-04-19 19:32 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbfntx/dbfntx1.c
+    * Minor bug fixed in indexing empty files
+
+2002-04-19 11:33 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * include/hbrddntx.h
+  * source/rdd/dbfntx/dbfntx1.c
+  * source/rdd/dbf1.c
+    * Some fixes in locking to provide Clipper compatibility
+
+2002-04-18 22:56 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbfntx/dbfntx1.c
+    * Some improvements in keys per page calculating while indexing
+
+2002-04-18 13:30 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbfntx/dbfntx1.c
+    * Algorithm of key deleting is rewritten to keep the index tree
+      balanced.
+
+2002-04-18 03:55 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * contrib/libnf/ftattr.c
+    + Initial version of FT_SAVEATT() & FT_RESTATT().
+      For save and restore the attribute bytes of a specified screen region.
+
+  * contrib/libnf/getver.c
+    * Diferent compilation for HB_OS_DOS_32 in _FT_TEMPFILE
+
+  * contrib/libnf/tempfile.prg
+    + New code for plataform diferent of HB_OS_DOS and HB_OS_DOS_32.
+      The new code not use call to C function.
     + Add new parameter. FT_TEMPFIL( cPath, [lHidden], [@nHandle] )
       if [@]nHandle is used, the function not close the temp file and
       return the handle by nHandle.
