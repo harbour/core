@@ -58,6 +58,7 @@ typedef enum
    HB_P_LESSEQUAL,      /* checks if the second latest value on the stack is less equal that the latest one, leaves the result only */
    HB_P_LESS,           /* checks if the second latest value on the stack is less that the lastest one */
    HB_P_LINE,           /* currently compiled source code line number */
+   HB_P_LOCALNAME,      /* name of locals and parmaters when using debugger info */
    HB_P_MESSAGE,        /* sends a message to an object */
    HB_P_MINUS,          /* subs the latest two values on the stack, removing them and leaving there the result */
    HB_P_MODULENAME,     /* name of the PRG file and function when using debugger info */
