@@ -1396,18 +1396,58 @@ HARBOUR HB_ALIAS( void )
    hb_retc( "" );
 }
 
+/*  $DOC$
+ *  $FUNCNAME$
+ *      DBEVAL()
+ *  $CATEGORY$
+ *  $ONELINER$
+ *      Performs a code block operation on the current data base
+ *  $SYNTAX$
+ *      DBEVAL( <bBlock>, [<bFor>], [<bWhile>], [<nNext>], [<nRecord>], [<lRest>] ) --> NIL
+ *  $ARGUMENTS$
+ *      <bBlock> Operation that is to be performed
+ *      <bFor> Code block for the For condition
+ *      <bWhile> Code block for the WHILE condition
+ *      <nNext> Number of NEXT records  to process
+ *      <nRecord> Record number to work on exactly
+ *      <lRest> Toggle to rewind record pointer
+ *  $RETURNS$
+ *      NIL
+ *  $DESCRIPTION$
+ *      Performs a code block operation on the current data base
+ *  $EXAMPLES$
+ *      FUNCTION Main()
+ *         LOCAL nCount
+ *
+ *         USE Test
+ *
+ *         dbGoto( 4 )
+ *         ? RecNo()
+ *         COUNT TO nCount
+ *         ? RecNo(), nCount
+ *         COUNT TO nCount NEXT 10
+ *         ? RecNo(), nCount
+ *
+ *         RETURN NIL
+ *  $TESTS$
+ *  $STATUS$
+ *      S
+ *  $COMPLIANCE$
+ *      DBEVAL is fully CA-Clipper compliant.
+ *  $SEEALSO$
+ *  $END$
+ */
+
 HARBOUR HB_DBEVAL( void )
 {
-   DBEVALINFO pEvalInfo;
-
-   if( !pCurrArea )
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBEVAL" );
-   else
+   if( pCurrArea )
    {
+      DBEVALINFO pEvalInfo;
+
       pEvalInfo.itmBlock = hb_param( 1, IT_BLOCK );
       if( !pEvalInfo.itmBlock )
       {
-         hb_errRT_DBCMD( EG_ARG, 12019, NULL, "DBEVAL" );
+         hb_errRT_DBCMD( EG_ARG, 2019, NULL, "DBEVAL" );
          return;
       }
 
@@ -1416,7 +1456,7 @@ HARBOUR HB_DBEVAL( void )
       {
          if( !ISNIL( 2 ) )
          {
-            hb_errRT_DBCMD( EG_ARG, 22019, NULL, "DBEVAL" );
+            hb_errRT_DBCMD( EG_ARG, 2019, NULL, "DBEVAL" );
             return;
          }
       }
@@ -1426,7 +1466,7 @@ HARBOUR HB_DBEVAL( void )
       {
          if( !ISNIL( 3 ) )
          {
-            hb_errRT_DBCMD( EG_ARG, 32019, NULL, "DBEVAL" );
+            hb_errRT_DBCMD( EG_ARG, 2019, NULL, "DBEVAL" );
             return;
          }
       }
@@ -1436,7 +1476,7 @@ HARBOUR HB_DBEVAL( void )
       {
          if( !ISNIL( 4 ) )
          {
-            hb_errRT_DBCMD( EG_ARG, 42019, NULL, "DBEVAL" );
+            hb_errRT_DBCMD( EG_ARG, 2019, NULL, "DBEVAL" );
             return;
          }
       }
@@ -1446,7 +1486,7 @@ HARBOUR HB_DBEVAL( void )
       {
          if( !ISNIL( 5 ) )
          {
-            hb_errRT_DBCMD( EG_ARG, 52019, NULL, "DBEVAL" );
+            hb_errRT_DBCMD( EG_ARG, 2019, NULL, "DBEVAL" );
             return;
          }
       }
@@ -1456,13 +1496,15 @@ HARBOUR HB_DBEVAL( void )
       {
          if( !ISNIL( 6 ) )
          {
-            hb_errRT_DBCMD( EG_ARG, 62019, NULL, "DBEVAL" );
+            hb_errRT_DBCMD( EG_ARG, 2019, NULL, "DBEVAL" );
             return;
          }
       }
 
       SELF_DBEVAL( ( AREAP ) pCurrArea->pArea, &pEvalInfo );
    }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBEVAL" );
 }
 
 HARBOUR HB_DBF( void )

@@ -1,3 +1,17 @@
+19991203-02:25 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rdd/dbcmd.c
+    + DBEVAL() doc added from dbeval.prg
+    ! Error codes fixed in DBEVAL()
+    % Some optimization made in DBEVAL()
+  * source/rdd/Makefile
+  - source/rdd/dbeval.prg
+    rdd.b32
+    makefile.vc
+    - old bad_DBEVAL() removed
+  * include/hbextern.ch
+    source/runner/stdalone/external.prg
+    ! PVALUE -> HB_PVALUE
+
 19991202-18:00 GMT+1 Bruno Cantero <bruno@issnet.net>
   * source/rdd/dbeval.prg
     * Function dbEval() renamed to Bad_dbEval()

@@ -211,7 +211,6 @@ RDD_OBJS = \
     $(OBJ_DIR)\dbcmd.obj \
     $(OBJ_DIR)\dbf0.obj \
     $(OBJ_DIR)\dbf1.obj \
-    $(OBJ_DIR)\dbeval.obj \
     $(OBJ_DIR)\dbnubs.obj \
     $(OBJ_DIR)\dbstrux.obj \
     $(OBJ_DIR)\sdf0.obj \
@@ -934,12 +933,6 @@ $(OBJ_DIR)\dbf0.obj : $(RDD_DIR)\dbf0.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\dbf1.obj : $(RDD_DIR)\dbf1.c
-    $(CC) $(CLIBFLAGS) -Fo$@ $**
-
-$(RDD_DIR)\dbeval.c : $(RDD_DIR)\dbeval.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
-
-$(OBJ_DIR)\dbeval.obj : $(RDD_DIR)\dbeval.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\dbnubs.obj : $(RDD_DIR)\dbnubs.c
