@@ -8,6 +8,20 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-17 12:34 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * include/hbmath.h
+    ! Fix multiple declaration of _LIB_VERSION_TYPE if it's declared here
+
+  * source/rtl/math.c
+    + Add declaration for _LIB_VERSION_TYPE (DJGPP compiler)
+
+  * config/dos/djgpp.cf
+    - LDFLAGS because -lm is not a flag, it's a library.
+    + LDLIBS -lm for add math library.
+
+  * contrib/libct/ctmath.h
+    * Conditional includes of math.h for DJGPP compiler
+
 2002-07-17 18:15 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/debug/debugger.prg
     ! Minor bug fixed
