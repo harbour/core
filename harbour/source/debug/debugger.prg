@@ -2099,7 +2099,7 @@ static function DoCommand( o,cCommand )
 
    for i := 1 to nLocals
       vtmp := __mvGet( o:aCallStack[1][2][i][1] )
-      if Valtype( vtmp ) != "A"
+      if !(Valtype( vtmp ) $ "AO")
          if vtmp != __vmVarLGet( nProcLevel, o:aCallStack[1][2][i][2] )
             __vmVarLSet( nProcLevel, o:aCallStack[1][2][i][2], vtmp )
          endif
