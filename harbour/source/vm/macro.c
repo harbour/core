@@ -662,6 +662,7 @@ char * hb_macroGetType( HB_ITEM_PTR pItem )
       struMacro.Flags      = HB_MACRO_GEN_PUSH | HB_MACRO_GEN_TYPE;
       struMacro.bShortCuts = hb_comp_bShortCuts;
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
+      struMacro.status     = HB_MACRO_CONT;
       iStatus = hb_macroParse( &struMacro, szString );
 
       if( iStatus == HB_MACRO_OK )
@@ -828,7 +829,7 @@ static void hb_compMemvarCheck( char * szVarName, HB_MACRO_DECL )
          /* checking for variable is quite expensive than don't check it
           * if there are already some undefined symbols or variables
          */
-         if( hb_memvarScope( szVarName, strlen( szVarName ) ) <= HB_MV_ERROR )
+         if( hb_memvarScope( szVarName, strlen( szVarName ) + 1 ) <= HB_MV_ERROR )
          {
             /* there is no memvar variable visible at this moment */
             HB_MACRO_DATA->status |= HB_MACRO_UNKN_VAR;
