@@ -60,12 +60,32 @@ function Main()
    ClassAdd( oForm:ClassH, "cHelp" , nSeq, MET_DATA )
    ClassAdd( oForm:ClassH, "_cHelp", nSeq, MET_DATA )
    
-
    oForm:cHelp := "This is a real tricky test"
 
    QOut( "Data items after" )
    HBDebug( oForm )
 
+   QOut( "Let's attach a bigger smile" )
+
+   ClassMod( oForm:ClassH, "Smile", @BigSmile() )
+
+   QOut( "Let's smile" )
+   oForm:Smile()
+
+/*   QOut( "Let's crash" )
+   ClassMod( oForm:ClassH, "cText", 24 )
+   ClassMod( oForm:ClassH, "_cText", 24 ) */
+
+   QOut( "And CalcArea() will now give a result in square inches" )
+
+   ClassAdd( oForm:ClassH, "CalcArea", ;
+      {|self| ( ::nRight  - ::nLeft ) * ( ::nBottom - ::nTop ) / (2.54*2.54) },;
+      MET_INLINE )
+
+   QOut( "What is the Form area ?" )
+   QOut( oForm:CalcArea() )
+
+   QOut( "Just one left : Delete" )
 return nil
 
 
@@ -112,6 +132,14 @@ static function Smile()
    else
       QOut( ":-(" )
    endif
+return self
+
+
+static function BigSmile()
+
+   local self := QSelf()
+
+   QOut( ":-)))" )
 return self
 
 
