@@ -112,7 +112,7 @@ CLASS TGetList
    METHOD ReadVar( cNewVarName )
    METHOD ReadExit( lNew ) INLINE Set( _SET_EXIT, lNew )
 
-   METHOD SetFocus() INLINE oGetListActive := ::oGetList,;
+   METHOD SetFocus() INLINE oGetListActive := Self,;
                             ::aGetList[ ::nPos ]:SetFocus()
 
    METHOD Updated() INLINE ::lUpdated

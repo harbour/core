@@ -42,7 +42,7 @@ AINS                    ;R;
 ALERT                   ;R;
 ALIAS                   ;R;
 ALLTRIM                 ;R;
-ALTD                    ;N;
+ALTD                    ;S;
 ARRAY                   ;R;
 ASC                     ;R;
 ASCAN                   ;R;

@@ -33,10 +33,6 @@
  *
  */
 
-/* NOTE: Don't use SAY/DevOut()/DevPos() for screen output, otherwise
-         the debugger output may interfere with the applications output
-         redirection, and is also slower. [vszel] */
-
 #include "hbclass.ch"
 #include "hbmemvar.ch"
 #include "box.ch"
@@ -56,12 +52,13 @@ static s_oDebugger
 static s_lExit := .F.
 static s_lEnabled := .t.
 
-function _AltD( nAction ) // it should be AltD(), but Harbour refuses to compile it
+function AltD( nAction )
 
    do case
       case nAction == nil
            if s_lEnabled
-              ___dbgEntry( ProcLine( 2 ) )
+              s_lExit = .f.
+              __dbgEntry( ProcLine( 2 ) )
            endif
 
       case nAction == ALTD_DISABLE
@@ -1515,12 +1512,6 @@ function BuildMenu( oDebugger )  // Builds the debugger pulldown menu
 
 return oMenu
 
-function AltD()
-
-   s_lExit := .F.
-
-return nil
-
 static function ValToStr( uVal )
 
    local cType := ValType( uVal )
@@ -1550,4 +1541,3 @@ static function ValToStr( uVal )
    endcase
 
 return cResult
-
