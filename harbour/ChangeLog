@@ -55,6 +55,7 @@
   * tests/working/spawn2.prg
     - Added //NOTEST
   * tests/working/test_all.prg
+    - Use HB_FILE instead of FILE
     - Made compiler independent
     - Added restart capability
     - Renamed created batch file to TESTALL.BAT, so that it can be run
