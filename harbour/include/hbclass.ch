@@ -118,6 +118,8 @@
                       endif ;;
                       return oClass:Instance()
 
+#xcommand END CLASS => ENDCLASS
+
 #xcommand METHOD <MethodName>( [<params,...>] ) CLASS <ClassName> => ;
           static function <ClassName>_<MethodName>( [<params>] ) ;;
           local Self := QSelf()
