@@ -1,10 +1,18 @@
+19990807-8:39 GMT+1 Antonio Linares <alinares@fivetech.com>
+   + source/rtl/tbrowse.prg
+     * Harbour Class TBrowse first outline
+   + tests/working/testbrw.prg
+     * Harbour Class TBrowse sample
+   * makefile.b32
+     * tbrowse module added
+
 Fri Aug 06 20:04:05 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* config/rules.cf: 
+	* config/rules.cf:
 	Added the removal of *.core to the clean target.
-	
-	* source/hbpp/hbpp.c: 
-	* source/hbpp/stdalone/hbpp.c: 
+
+	* source/hbpp/hbpp.c:
+	* source/hbpp/stdalone/hbpp.c:
 	Fixed two unused variable warnings.
 
 199908.06-22:12 GMT+3 Alexander Kresin
