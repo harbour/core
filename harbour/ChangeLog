@@ -1,3 +1,7 @@
+199908.01-16:30 GMT+3 Alexander Kresin
+  * source/hbpp/hbppint.c
+    * Bug fixed ( related to line continuation )
+    
 199908.01-20:30 WIB Andi Jahja
   * msgxxx.c
     correct directives, it now works
@@ -35,7 +39,7 @@
          to VirtualMachine function
 
     *source/rtl/itemapi.c
-	+ added checking for proper type before calling hb_itemClear
+        + added checking for proper type before calling hb_itemClear
 
     *include/rddapi.h
         * added forward declaration for _RDDFUNC struct
@@ -53,10 +57,10 @@
          function before other INIT functions
 
     *include/run_exp.h
-	+ added symols: __MVPUBLIC, __MVPRIVATE
+        + added symols: __MVPUBLIC, __MVPRIVATE
 
     *source/runner/Makefile
-	+ added required libraries
+        + added required libraries
 
     *include/extend.h
         * added declaration for hb_strMatchRegExp() function

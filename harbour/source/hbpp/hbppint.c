@@ -82,6 +82,7 @@ int PreProcess( FILE* handl_i, FILE* handl_o, char *sOut )
    lContinue = 1;
    lens--; lens--;
    while ( sLine[lens] == ' ' || sLine[lens] == '\t' ) lens--;
+   if ( sLine[lens+1] == ' ' || sLine[lens+1] == '\t' ) lens++;
    sLine[++lens] = '\0';
 
    *ptrOut++ = '\n';
