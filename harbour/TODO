@@ -23,20 +23,6 @@ string copies)
 Remove #pragma pack() tricks                 ???
 from rdd .h files.
 
-Rewrite filesys.c to use native platform     ???
-specific file I/O with unlimited number 
-of file handles, while maintaining 
-compatibility with the CA-Cl*pper legacy 
-handle numbering system. This either 
-involves adding a linked list for the 
-translation table, or we should state that 
-only handles 0-4 are number compatible. 
-[Optimization]
-
-Optimize out the need for the PUSHNIL        Ryszard Glab
-opcode before each function call.
-[Optimization]
-
 OO system                                    Jean-Francois Lefebvre (JFL)
    Adding Class Method
    Adding Multiple Constructor
@@ -53,15 +39,26 @@ dummy.prg. Move dbcmd.c
 'SAVE TO' statement doesn't work             ???
 like clipper's.  Is memofile
 support complete?
+[more info ???]
 
 
 =======================================================================
 Tasks for v.1 release:
 _______________________________________________________________________
 
-Dynamic multi-language compiler/runtime      ???
-support
+Rewrite filesys.c to use native platform     ???
+specific file I/O with unlimited number 
+of file handles, while maintaining 
+compatibility with the CA-Cl*pper legacy 
+handle numbering system. This either 
+involves adding a linked list for the 
+translation table, or we should state that 
+only handles 0-4 are number compatible. 
+[Optimization]
 
+Optimize out the need for the PUSHNIL        Ryszard Glab
+opcode before each function call.
+[Optimization]
 
 
 =======================================================================
@@ -69,7 +66,12 @@ Tasks for after v.1 release:
 _______________________________________________________________________
 
 
+Dynamic multi-language compiler/runtime      ???
+support
 
+UNICODE support.                             ???
+
+Multithreading support.                      ???
 
 =======================================================================
 Detail descriptions for Tasks:

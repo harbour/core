@@ -8,12 +8,24 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-17 10:31 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/rtl/gtapi.c
+     ! Modified hb_gtSetCursor() to allow cursor setting when 
+       the cursor position is off by one from the screen.
+       This fixes the disappearing cursor in TBROWSE()
+       Since I don't know why the bounds checking is there, 
+       I can't tell if this is the correct fix. If you have 
+       some idea, please tell.
+
+   * TODO
+     + Added a few things.
+
 2001-12-17 07:20 UTC+0100 JFL (Mafact) <jfl@mafact.com>
 
   * source/vm/garbage.c
     ! RON Fix for forever loop when GC try to free first item in the
       arrayclone cloned list.
-
 
 2001-12-16 21:28 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 

@@ -662,8 +662,8 @@ USHORT hb_gtSetCursor( USHORT uiCursorStyle )
    if( uiCursorStyle <= SC_SPECIAL2 )
    {
       /* Set the cursor only when, it's in bounds. */
-      if( s_iRow >= 0 && s_iRow < hb_gt_GetScreenHeight() &&
-          s_iCol >= 0 && s_iCol < hb_gt_GetScreenWidth() )
+      if( s_iRow >= 0 && s_iRow <= hb_gt_GetScreenHeight() &&
+          s_iCol >= 0 && s_iCol <= hb_gt_GetScreenWidth() )
          hb_gt_SetCursorStyle( uiCursorStyle );
 
       s_uiCursorStyle = uiCursorStyle;
