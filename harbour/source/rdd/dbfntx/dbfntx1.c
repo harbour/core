@@ -182,6 +182,8 @@ static char * numToStr( PHB_ITEM pItem, char* szBuffer, USHORT length, USHORT de
    return szBuffer;
 }
 
+/* Implementation of internal functions */
+
 static BOOL checkLogicalExpr( PHB_ITEM pForItem, PHB_ITEM pItem )
 {
    HB_MACRO_PTR pMacro;
@@ -212,7 +214,17 @@ static BOOL checkLogicalExpr( PHB_ITEM pForItem, PHB_ITEM pItem )
    return res;
 }
 
-/* Implementation of internal functions */
+static ULONG hb_ntxTagKeyNo( LPTAGINFO pTag )
+{
+   HB_SYMBOL_UNUSED( pTag );
+   return 0;
+}
+
+static ULONG hb_ntxTagKeyCount( LPTAGINFO pTag )
+{
+   HB_SYMBOL_UNUSED( pTag );
+   return 0;
+}
 
 static LPKEYINFO hb_ntxKeyNew( LPKEYINFO pKeyFrom )
 {
@@ -248,22 +260,20 @@ static LONG hb_ntxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey, BOOL * result )
    K = hb_ntxTagFindCurrentKey( hb_ntxPageLoad( 0 ), pKey->Tag, pKey, FALSE, TRUE, 1 );
    if( K == 0 )
    {
-      // if( pTag->pForItem == NULL )
-      // {
+      /* if( pTag->pForItem == NULL )
+         { */
          *result = TRUE;
          return pKey->Xtra;
-      // }
-      // else
-         /* TODO: test for expression */
-         // pTag->TagEOF = TRUE;
+      /* }
+         else
+            pTag->TagEOF = TRUE; */
    }
    else if( K < 0 )
    {
-      // if( pTag->pForItem == NULL )
+      /* if( pTag->pForItem == NULL ) */
          return pKey->Xtra;
-      // else
-         /* TODO: test for expression */
-         // pTag->TagEOF = TRUE;
+      /* else
+           pTag->TagEOF = TRUE; */
    }
    else
       pTag->TagEOF = TRUE;
@@ -390,7 +400,6 @@ static USHORT hb_ntxPageFindCurrentKey( LPPAGEINFO pPage, ULONG ulRecno )
 static void hb_ntxGetCurrentKey( LPTAGINFO pTag, LPKEYINFO pKey )
 {
    char szBuffer[ NTX_MAX_KEY ];
-   /* printf( "\n\rhb_ntxGetCurrentKey - 0:  |%s|",pTag->KeyExpr ); */
    if( hb_itemType( pTag->pKeyItem ) == HB_IT_BLOCK )
    {
       hb_vmPushSymbol( &hb_symEval );
@@ -779,24 +788,24 @@ static void hb_ntxTagKeyRead( LPTAGINFO pTag, BYTE bTypRead, BOOL * lContinue )
       switch( bTypRead )
       {
          case TOP_RECORD:
-            // if( pTag->pForItem != NULL )
-            //   printf( "hb_ntxTagKeyRead()" );
-            // else
+            /* if( pTag->pForItem != NULL )
+                 printf( "hb_ntxTagKeyRead()" );
+               else */
                pTag->TagBOF = !hb_ntxPageReadTopKey( NULL,0 );
-            // if( pTag->pForItem != NULL )
-            //   printf( "hb_ntxTagTestRange()" );
+            /* if( pTag->pForItem != NULL )
+                 printf( "hb_ntxTagTestRange()" ); */
             if( pTag->TagEOF )
                pTag->TagBOF = TRUE;
             pTag->TagEOF = pTag->TagBOF;
             break;
 
          case BTTM_RECORD:
-            // if( pTag->pForItem != NULL )
-            //    printf( "hb_ntxTagKeyRead()" );
-            // else
+            /* if( pTag->pForItem != NULL )
+                  printf( "hb_ntxTagKeyRead()" );
+               else */
                pTag->TagEOF = !hb_ntxPageReadBottomKey( NULL,0 );
-            // if( pTag->pForItem != NULL )
-            //   printf( "hb_ntxTagTestRange()" );
+            /* if( pTag->pForItem != NULL )
+                 printf( "hb_ntxTagTestRange()" ); */
             if( pTag->TagBOF )
                pTag->TagEOF = TRUE;
             pTag->TagBOF = pTag->TagEOF;
@@ -2533,8 +2542,8 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    hb_itemCopy( pKeyExp, pExpr );
 
    /* Get a blank record before testing expression */
-   // SELF_GOBOTTOM( ( AREAP ) pArea );
-   // SELF_SKIP( ( AREAP ) pArea, 1 );
+   /* SELF_GOBOTTOM( ( AREAP ) pArea );
+      SELF_SKIP( ( AREAP ) pArea, 1 ); */
    pExpMacro = pForMacro = NULL;
    if( hb_itemType( pExpr ) == HB_IT_BLOCK )
    {
@@ -2644,7 +2653,6 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
          hb_itemCopy( pResult, &hb_stack.Return );
       }
       uiType = hb_itemType( pResult );
-      // hb_itemRelease( pResult );
       if( uiType != HB_IT_LOGICAL )
       {
          hb_itemRelease( pKeyExp );
@@ -2798,6 +2806,28 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
          break;
       case DBOI_BAGEXT:
          hb_itemPutC( pInfo->itmResult, ".ntx" );
+         break;
+      case DBOI_KEYCOUNT:
+         if( pArea->lpNtxIndex )
+         {
+            pIndex = ntxFindIndex( pArea , pInfo->itmOrder );
+            if( pIndex )
+            {
+               hb_itemPutNL( pInfo->itmResult, hb_ntxTagKeyCount( pIndex->CompoundTag ) );
+               return SUCCESS;
+            }
+         }
+         break;
+      case DBOI_POSITION:
+         if( pArea->lpNtxIndex )
+         {
+            pIndex = ntxFindIndex( pArea , pInfo->itmOrder );
+            if( pIndex )
+            {
+               hb_itemPutNL( pInfo->itmResult, hb_ntxTagKeyNo( pIndex->CompoundTag ) );
+               return SUCCESS;
+            }
+         }
          break;
    }
    return SUCCESS;

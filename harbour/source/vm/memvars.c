@@ -438,6 +438,7 @@ void hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem )
           */
          hb_memvarCreateFromDynSymbol( pDyn, VS_PRIVATE, pItem );
       }
+      s_globalTable[ pDyn->hMemvar ].item.type &= ~HB_IT_MEMOFLAG;
    }
    else
       hb_errInternal( HB_EI_MVBADSYMBOL, NULL, pMemvarSymb->szName, NULL );

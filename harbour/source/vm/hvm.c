@@ -2608,6 +2608,7 @@ static void hb_vmArrayPop( void )
    {
       if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       {
+         pValue->type &= ~HB_IT_MEMOFLAG;
          hb_arraySet( pArray, ulIndex, pValue );
          hb_itemCopy( pArray, pValue );  /* places pValue at pArray position */
          hb_stackPop();
@@ -4231,6 +4232,7 @@ static void hb_vmPopLocal( SHORT iLocal )
 
    hb_stackDec();
 
+   hb_stackTopItem()->type &= ~HB_IT_MEMOFLAG;
    if( iLocal >= 0 )
    {
       /* local variable or local parameter */
@@ -4257,6 +4259,7 @@ static void hb_vmPopStatic( USHORT uiStatic )
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPopStatic(%hu)", uiStatic));
 
    hb_stackDec();
+   hb_stackTopItem()->type &= ~HB_IT_MEMOFLAG;
    pStatic = s_aStatics.item.asArray.value->pItems + hb_stack.iStatics + uiStatic - 1;
 
    if( HB_IS_BYREF( pStatic ) )
