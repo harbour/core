@@ -7,6 +7,18 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2002-02-16 20:25 UTC+0500 Jorge A. Giraldo <jgiraldo@col2.telecom.com.co>
+   * source/vm/itemapi.c
+     ! hb_itemStr() - Eliminated the limit of 9 decimals if not SET FIXED ON
+     ! hb_itemStr() - Rounded starting from 17th less significant number.
+                      This is the behavior of Clipper.
+       Ex:
+          Before ? str( 1191.63, 20, 15 ) -> 1191.629999999999882
+          Now    ? str( 1191.63, 20, 15 ) -> 1191.630000000000000
+
+   * source/rtl/val.c
+     ! hb_strVal() - Change dValue from double to long double.
        This allows that the string-number conversions are same for program
        and for compilation.
        ? ( val("1191.63") == 1191.63 ) -> TRUE
