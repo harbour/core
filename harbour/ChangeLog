@@ -1,3 +1,18 @@
+19990930-22:15 GMT+1 Victor Szel <info@szelvesz.hu>
+  * include/external.ch
+    + Added HB_OSNEWLINE
+  * source/compiler/genc.c
+    + It's now possible to request to code generator not to put 
+      comments in the C code. This and some other small format changes
+      can result in about 30% smaller generated source code size.
+      This feature is currently permanently turned off, I will add switch for 
+      it soon.
+    + If an incorrect pcode is encountered it's now put in the 
+      generated C file, with a proper comment which says that it's a
+      invalid opcode. BTW, ideally it should exit on such errors.
+    + The Harbour Compiler version is now included in the generated pcode as
+      a comment.
+
 19990930-15:20 EDT David G. Holm <dholm@jsd-llc.com>
 
   * include/extend.h
