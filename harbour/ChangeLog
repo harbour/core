@@ -1,3 +1,13 @@
+2000-06-09 15:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+   * source/compiler/harbour.l
+     ! Added missing cast on pBuffer assignment to YY_CURRENT_BUFFER
+       in void hb_compSet_YY_CURRENT_BUFFER( void * pBuffer ).
+
+   * source/rdd/dbfntx/dbfntx1.c
+     ! Added several missing type casts on hb_xgrab() calls.
+     * Converted source code from double spaced to single spaced.
+
 2000-06-07 22:50 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
 
   * include/hbpp.h

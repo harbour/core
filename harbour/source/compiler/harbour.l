@@ -1783,7 +1783,7 @@ void * hb_compGet_YY_CURRENT_BUFFER()
 
 void hb_compSet_YY_CURRENT_BUFFER( void * pBuffer )
 {
-   YY_CURRENT_BUFFER = pBuffer;
+   YY_CURRENT_BUFFER = ( YY_BUFFER_STATE )pBuffer;
    yy_load_buffer_state();
 }
 
