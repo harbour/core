@@ -121,8 +121,8 @@ BAD_PRG_SOURCES=\
 	testid.prg \
 
 LIBS=\
+	tools \
 	vm \
 	rtl \
-	tools \
 
 include $(TOP)$(ROOT)config/test.cf

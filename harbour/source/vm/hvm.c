@@ -852,7 +852,7 @@ void Equal( BOOL bExact )
 
    else if( pItem1->type != pItem2->type )
    {
-      printf( "types not match on equal operation\n" );
+      printf( "types do not match on equal operation\n" );
       exit( 1 );
    }
 
@@ -986,7 +986,7 @@ void Greater( void )
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
    {
-      printf( "types not match on greater operation\n" );
+      printf( "types do not match on greater operation %d, %d\n", (stack.pPos - 2)->type, (stack.pPos - 1)->type );
       exit( 1 );
    }
 }
@@ -1033,7 +1033,7 @@ void GreaterEqual( void )
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
    {
-      printf( "types not match on greaterequal operation\n" );
+      printf( "types do not match on greaterequal operation\n" );
       exit( 1 );
    }
 }
@@ -1183,7 +1183,7 @@ void Less( void )
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
    {
-      printf( "types not match on less operation\n" );
+      printf( "types do not match on less operation\n" );
       exit( 1 );
    }
 }
@@ -1230,7 +1230,7 @@ void LessEqual( void )
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
    {
-      printf( "types not match on lessequal operation\n" );
+      printf( "types do not match on lessequal operation\n" );
       exit( 1 );
    }
 }
@@ -1314,7 +1314,7 @@ void NotEqual( void )
 
    else if( pItem1->type != pItem2->type )
    {
-      printf( "types not match on equal operation\n" );
+      printf( "types do not match on equal operation\n" );
       exit( 1 );
    }
 

@@ -112,7 +112,7 @@ int main (int argc, char * argv [])
             if (rc == 0)
             {
                /* Initialize. */
-               int copy = 0, move1 = 0, move2 = 0, move3 = 0, check_count = 7;
+               int copy = 0, move1 = 0, move2 = 0, move3 = 0, check_count = 6;
                int defer_move = 0, defer_end = 0;
                static char inbuf [BUF_SIZE + 1];
                static char outbuf [sizeof (inbuf)];
@@ -140,6 +140,7 @@ int main (int argc, char * argv [])
                            /* It's the first of the two big tables.
                               Move it out of source into dest1, leaving only
                               an extern or extern "C" declaration. */
+                           printf("\nLocated table yy_nxt");
                            fixup (inbuf, outbuf, c_plus_plus);
                            move1 = 1;
                            defer_move = 1;
@@ -153,6 +154,7 @@ int main (int argc, char * argv [])
                               /* It's the second of the two big tables.
                                  Move it out of source into dest2, leaving only
                                  an extern or extern "C" declaration. */
+                              printf("\nLocated table yy_chk");
                               fixup (inbuf, outbuf, c_plus_plus);
                               move2 = 1;
                               defer_move = 1;
@@ -166,15 +168,22 @@ int main (int argc, char * argv [])
                                  /* It's the start of various #defines that
                                     need to be copied from source to dest in
                                     order to set up the yyconst define. */
+                                 printf("\nLocated first #define to copy");
                                  copy = 1;
                                  check_count--;
                               }
                               else
                               {
-                                 ptr = strstr (inbuf, "yy_acclist");
-                                 if (!ptr) ptr = strstr (inbuf, "yy_accept");
-                                 if (!ptr) ptr = strstr (inbuf, "yy_base");
-                                 if (!ptr) ptr = strstr (inbuf, "yy_def");
+                                 #define TABLE_MAX 3
+                                 int i;
+                                 char * table [TABLE_MAX] =
+                                 { "yy_accept", "yy_base", "yy_def" };
+                                 ptr = 0;
+                                 for( i = 0; i < TABLE_MAX && !ptr; i++ )
+                                 {
+                                    ptr = strstr (inbuf, table [i]);
+                                    if (ptr) printf("\nLocated table %s", table [i]);
+                                 }
                                  if (ptr)
                                  {
                                     /* It's one of the smaller big tables.
@@ -197,7 +206,11 @@ int main (int argc, char * argv [])
                         else
                         {
                            ptr = strstr (inbuf, "#ifdef YY_USE_PROTOS");
-                           if (ptr && copy) copy = 0; /* End of #defines to copy. */
+                           if (ptr && copy)
+                           {
+                              printf("\nLocated last #define to copy");
+                              copy = 0; /* End of #defines to copy. */
+                           }
                         }
                      }
                      if (move1 || move2 || move3 || copy)
