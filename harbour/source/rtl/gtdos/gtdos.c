@@ -126,6 +126,7 @@ static void hb_gt_GetCursorSize( char * start, char * end );
 #endif
 
 static BOOL s_bBreak; /* Used to signal Ctrl+Break to hb_inkeyPoll() */
+static USHORT s_uiDispCount;
 
 #ifndef __DJGPP__
 #if defined(__WATCOMC__)
@@ -168,6 +169,7 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
    HB_SYMBOL_UNUSED( iFilenoStderr );
 
    s_bBreak = FALSE;
+   s_uiDispCount = 0;
 
 #if defined(__DJGPP__)
    gppconio_init();
@@ -926,7 +928,7 @@ void hb_gt_DispBegin( void )
 
 /* ptucker */
 #ifndef __DJGPP__
-   if( hb_gtDispCount() == 1 )
+   if( ++s_uiDispCount == 1 )
    {
       char FAR * ptr;
       ULONG nSize;
@@ -948,7 +950,7 @@ void hb_gt_DispEnd( void )
 
 /* ptucker */
 #ifndef __DJGPP__
-   if( hb_gtDispCount() == 1 )
+   if( --s_uiDispCount == 0 )
    {
       char FAR * ptr;
       ULONG nSize;
@@ -1073,4 +1075,9 @@ void hb_gt_Tone( double dFrequency, double dDuration )
 char * hb_gt_Version( void )
 {
    return "Harbour Terminal: DOS console";
+}
+
+USHORT hb_gt_DispCount()
+{
+   return s_uiDispCount;
 }

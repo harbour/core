@@ -38,6 +38,8 @@
 #include "hbapigt.h"
 #include "hbinit.h"
 
+static USHORT s_uiDispCount;
+
 static void gt_GetMaxRC(int* r, int* c);
 static void gt_GetRC(int* r, int* c);
 static void gt_SetRC(int r, int c);
@@ -110,6 +112,8 @@ HB_CALL_ON_STARTUP_END( init_input_mode )
 void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
+
+   s_uiDispCount=0;
 
    initscr();
    if( has_colors() )
@@ -363,6 +367,7 @@ void hb_gt_DispBegin( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispBegin()"));
 
+   ++s_uiDispCount;
    /* TODO: Is there a way to change screen buffers?
       ie: can we write somewhere without it going to the screen
       and then update the screen from this buffer at a later time?
@@ -374,6 +379,7 @@ void hb_gt_DispEnd()
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispEnd()"));
 
+   --s_uiDispCount;
    /* TODO: here we flush the buffer, and restore normal screen writes */
 }
 
@@ -453,4 +459,9 @@ static void gt_SetRC(int r, int c)
 char * hb_gt_Version( void )
 {
    return "Harbour Terminal: Curses";
+}
+
+USHORT hb_gt_DispCount()
+{
+   return s_uiDispCount;
 }

@@ -1,3 +1,17 @@
+20000325-09:22 EST Paul Tucker <ptucker@sympatico.ca>
+   * include/hbapigt.h
+     source/rtl/gtcrs/gtcrs.c
+     source/rtl/gtdos/gtdos.c
+     source/rtl/gtos2/gtos2.c
+     source/rtl/gtpca/gtpca.c
+     source/rtl/gtsln/gtsln.c
+     source/rtl/gtstd/gtstd.c
+     source/rtl/gtwin/gtwin.c
+     source/rtl/gt_tpl/gt_tpl.c
+     + hb_gt_DispCount()
+   * source/rtl/gtapi.c
+     * modified DispCount Handling.
+
 20000325-07:50 EST Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/gtwin/gtwin.c
      * correct handling of the screen buffers and fix a gpf when
