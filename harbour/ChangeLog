@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-08-07 16:20 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * source/rdd/dbf1.c
+     ! added os error code, for neterr() support
+       and temporary fix for Win/DOS platforms.
+
 2002-08-05 23:38 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * source/rdd/dbcmd.c
         ! fix GPF in dbCloseAll, reported by Jorge Mason
