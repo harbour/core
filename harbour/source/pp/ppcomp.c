@@ -119,7 +119,9 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
            char cQuote;
            int i;
 
-           if( !strncmp_nocase( s_szLine,"ENDTEXT",7 ) && *(s_szLine+7) <= ' ' )
+           ptr = s_szLine;
+           HB_SKIPTABSPACES( ptr );
+           if( !strncmp_nocase( ptr,"ENDTEXT",7 ) && *(ptr+7) <= ' ' )
            {
               hb_ppInsideTextBlock = FALSE;
               strcpy( s_szLine,"__TextRestore()" );
