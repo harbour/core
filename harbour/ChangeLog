@@ -1,3 +1,8 @@
+19991013-18:37 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/browdb.prg
+     * Renamed function to public function DbSkipper()
+     * New function _DbSkipper() (just calls DbSkipper())
+
 19991013-14:06 GMT+1 Bruno Cantero <bruno@issnet.net>
 
   * source/rdd/dbf1.c
