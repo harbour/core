@@ -140,7 +140,7 @@ static HARBOUR GetData( void )
    PITEM pObject = stack.pBase + 1;
    WORD  wIndex  = pMethod->wData;
 
-   if( wIndex > ArrayLen ( pObject ) )          /* Resize needed            */
+   if( wIndex > hb_arrayLen ( pObject ) )       /* Resize needed            */
       hb_arraySize( pObject, wIndex );          /* Make large enough        */
    hb_arrayGet( pObject, wIndex, &stack.Return );
 }
