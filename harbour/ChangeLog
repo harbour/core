@@ -1,3 +1,12 @@
+2000-07-29 03:08 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/oldclear.c
+   * source/rtl/setpos.c
+   * source/rtl/console.c
+   * source/rtl/gtapi.c
+     % Calls to hb_gtSetPosContext(..., _BEFORE) changed to a faster call to 
+       hb_gtSetPos().
+
 2000-07-29 03:00 UTC+0500 April White <awhite@user.rose.com>
 
    * doc/en

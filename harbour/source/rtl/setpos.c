@@ -50,7 +50,7 @@
 HB_FUNC( SETPOS ) /* Sets the screen position */
 {
    if( ISNUM( 1 ) && ISNUM( 2 ) )
-      hb_gtSetPosContext( hb_parni( 1 ), hb_parni( 2 ), HB_GT_SET_POS_BEFORE );
+      hb_gtSetPos( hb_parni( 1 ), hb_parni( 2 ) );
 }
 
 HB_FUNC( ROW ) /* Return the current screen row position (zero origin) */

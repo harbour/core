@@ -887,7 +887,7 @@ USHORT hb_gtWriteCon( BYTE * pStr, ULONG ulLength )
    iCol = ( s_iCol <= iMaxCol ) ? s_iCol : iMaxCol;
 
    if( iRow != s_iRow || iCol != s_iCol )
-      hb_gtSetPosContext( iRow, iCol, HB_GT_SET_POS_BEFORE );
+      hb_gtSetPos( iRow, iCol );
 
    while( ulLength-- )
    {

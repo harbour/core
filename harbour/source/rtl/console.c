@@ -395,7 +395,7 @@ static void hb_conDevPos( SHORT iRow, SHORT iCol )
       hb_fsSetError( uiErrorOld ); /* Restore last user file error code */
    }
    else
-      hb_gtSetPosContext( iRow, iCol, HB_GT_SET_POS_BEFORE );
+      hb_gtSetPos( iRow, iCol );
 }
 
 /* NOTE: This should be placed after the hb_devpos() definition. */

@@ -41,7 +41,7 @@ HB_FUNC( __ATCLEAR )
 {
    if( hb_pcount() == 4 )
    {
-      hb_gtSetPosContext( hb_parni( 1 ), hb_parni( 2 ), HB_GT_SET_POS_BEFORE );
+      hb_gtSetPos( hb_parni( 1 ), hb_parni( 2 ) );
       hb_gtScroll( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), 0, 0 );
    }
 }
