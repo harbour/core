@@ -216,7 +216,7 @@ FUNCTION Main_MISC()
    TEST_LINE( TFORNEXTXF(   1, 10, -4 )       , "F-9999T1S1R1"                                                                   )
    TEST_LINE( TFORNEXTXF(  10,  1,  4 )       , "F-9999T10S10R10"                                                                )
 
-   /* EVAL(), :EVAL */
+   /* EVAL(), :EVAL(), :EVAL */
 
    TEST_LINE( Eval( NIL )                     , "E BASE 1004 No exported method EVAL F:S" )
    TEST_LINE( Eval( 1 )                       , "E BASE 1004 No exported method EVAL F:S" )
@@ -227,6 +227,16 @@ FUNCTION Main_MISC()
    TEST_LINE( Eval( {|p1,p2| p1+p2 },"A","B") , "AB"                                      )
    TEST_LINE( Eval( {|p1,p2,p3| p1 },"A","B") , "A"                                       )
 /* Harbour compiler not yet handles these */
+#ifndef __HARBOUR__
+   TEST_LINE( suNIL:Eval()                    , "E BASE 1004 No exported method EVAL F:S" )
+#endif
+   TEST_LINE( scString:Eval()                 , "E BASE 1004 No exported method EVAL F:S" )
+   TEST_LINE( snIntP:Eval()                   , "E BASE 1004 No exported method EVAL F:S" )
+   TEST_LINE( sdDateE:Eval()                  , "E BASE 1004 No exported method EVAL F:S" )
+   TEST_LINE( slFalse:Eval()                  , "E BASE 1004 No exported method EVAL F:S" )
+   TEST_LINE( sbBlock:Eval()                  , NIL                                       )
+   TEST_LINE( saArray:Eval()                  , "E BASE 1004 No exported method EVAL F:S" )
+   TEST_LINE( soObject:Eval()                 , "E BASE 1004 No exported method EVAL F:S" )
 #ifndef __HARBOUR__
    TEST_LINE( suNIL:Eval                      , "E BASE 1004 No exported method EVAL F:S" )
 #endif

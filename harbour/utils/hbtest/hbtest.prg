@@ -39,9 +39,14 @@
 
 /* NOTE: The test suite will not work if the DTOS() function is not included
          in Harbour (-DHB_COMPAT_XPP). */
+
 /* NOTE: Always compile with /n switch */
 /* NOTE: It's worth to make tests with and without the /z switch */
 /* NOTE: Guard all Harbour extensions with __HARBOUR__ #ifdefs */
+/* NOTE: Use ":className()" instead of ":className" to make your code work
+         with XBase++. XBase++ seem to take differenciate between the 
+         object method and object variable form. In CA-Clipper and Harbour
+         both syntax is accepted. Same goes for ":Eval()" */
 
 /* TODO: Add checks for string parameters with embedded NUL character */
 /* TODO: Add test cases for other string functions */
@@ -412,11 +417,7 @@ FUNCTION XToStr( xValue )
    CASE cType == "N" ; RETURN LTrim( Str( xValue ) )
    CASE cType == "D" ; RETURN 'SToD("' + DToS( xValue ) + '")'
    CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
-#ifdef __XPP__
-   CASE cType == "O" ; RETURN xValue:className() + "Object"
-#else
-   CASE cType == "O" ; RETURN xValue:className + " Object"
-#endif
+   CASE cType == "O" ; RETURN xValue:className() + " Object"
    CASE cType == "U" ; RETURN "NIL"
    CASE cType == "B" ; RETURN '{||...}'
    CASE cType == "A" ; RETURN '{.[' + LTrim( Str( Len( xValue ) ) ) + '].}'
@@ -437,13 +438,9 @@ STATIC FUNCTION ErrorMessage( oError )
       CASE oError:severity == ES_CATASTROPHIC ; cMessage += "C "
       ENDCASE
    ENDIF
-#ifdef __XPP__
-   cMessage += "BASE" + " "
-#else
    IF ValType( oError:subsystem ) == "C"
-      cMessage += oError:subsystem() + " "
+      cMessage += oError:subsystem + " "
    ENDIF
-#endif
    IF ValType( oError:subCode ) == "N"
       cMessage += LTrim( Str( oError:subCode ) ) + " "
    ENDIF

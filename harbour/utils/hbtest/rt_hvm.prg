@@ -176,64 +176,68 @@ FUNCTION Main_HVM()
 /* Harbour compiler not yet handles these */
 #ifndef __HARBOUR__
 #ifndef __XPP__
-   TEST_LINE( NIL:className                   , "NIL"       )
+   TEST_LINE( NIL:className()                 , "NIL"       )
 #endif
 #endif                                                      )
 #ifndef __XPP__
-   TEST_LINE( "":className                    , "CHARACTER" )
-   TEST_LINE( 0:className                     , "NUMERIC"   )
-   TEST_LINE( SToD( "" ):className            , "DATE"      )
-   TEST_LINE( .F.:className                   , "LOGICAL"   )
-   TEST_LINE( {|| NIL }:className             , "BLOCK"     )
-   TEST_LINE( {}:className                    , "ARRAY"     )
-   TEST_LINE( ErrorNew():className            , "ERROR"     )
+   TEST_LINE( "":className()                  , "CHARACTER" )
+   TEST_LINE( 0:className()                   , "NUMERIC"   )
+   TEST_LINE( SToD( "" ):className()          , "DATE"      )
+   TEST_LINE( .F.:className()                 , "LOGICAL"   )
+   TEST_LINE( {|| NIL }:className()           , "BLOCK"     )
+   TEST_LINE( {}:className()                  , "ARRAY"     )
 #endif
+   TEST_LINE( ErrorNew():className()          , "ERROR"     )
+   TEST_LINE( ErrorNew():className            , "ERROR"     )
 /* Harbour compiler not yet handles these */
 #ifndef __HARBOUR__
 #ifndef __XPP__
-   TEST_LINE( NIL:classH                      , 0           )
+   TEST_LINE( NIL:classH()                    , 0           )
 #endif
 #endif
 #ifndef __XPP__
-   TEST_LINE( "":classH                       , 0           )
-   TEST_LINE( 0:classH                        , 0           )
-   TEST_LINE( SToD( "" ):classH               , 0           )
-   TEST_LINE( .F.:classH                      , 0           )
-   TEST_LINE( {|| NIL }:classH                , 0           )
-   TEST_LINE( {}:classH                       , 0           )
-   TEST_LINE( ErrorNew():classH > 0           , .T.         )
+   TEST_LINE( "":classH()                     , 0           )
+   TEST_LINE( 0:classH()                      , 0           )
+   TEST_LINE( SToD( "" ):classH()             , 0           )
+   TEST_LINE( .F.:classH()                    , 0           )
+   TEST_LINE( {|| NIL }:classH()              , 0           )
+   TEST_LINE( {}:classH()                     , 0           )
 #endif
+   TEST_LINE( ErrorNew():classH() > 0         , .T.         )
+   TEST_LINE( ErrorNew():classH > 0           , .T.         )
 
 /* Harbour compiler not yet handles these */
 #ifndef __HARBOUR__
 #ifndef __XPP__
-   TEST_LINE( suNIL:className                 , "NIL"       )
+   TEST_LINE( suNIL:className()               , "NIL"       )
 #endif
 #endif
 #ifndef __XPP__
-   TEST_LINE( scString:className              , "CHARACTER" )
-   TEST_LINE( snIntP:className                , "NUMERIC"   )
-   TEST_LINE( sdDateE:className               , "DATE"      )
-   TEST_LINE( slFalse:className               , "LOGICAL"   )
-   TEST_LINE( sbBlock:className               , "BLOCK"     )
-   TEST_LINE( saArray:className               , "ARRAY"     )
-   TEST_LINE( soObject:className              , "ERROR"     )
+   TEST_LINE( scString:className()            , "CHARACTER" )
+   TEST_LINE( snIntP:className()              , "NUMERIC"   )
+   TEST_LINE( sdDateE:className()             , "DATE"      )
+   TEST_LINE( slFalse:className()             , "LOGICAL"   )
+   TEST_LINE( sbBlock:className()             , "BLOCK"     )
+   TEST_LINE( saArray:className()             , "ARRAY"     )
 #endif
+   TEST_LINE( soObject:className()            , "ERROR"     )
+   TEST_LINE( soObject:className              , "ERROR"     )
 /* Harbour compiler not yet handles these */
 #ifndef __HARBOUR__
 #ifndef __XPP__
-   TEST_LINE( suNIL:classH                    , 0           )
+   TEST_LINE( suNIL:classH()                  , 0           )
 #endif
 #endif
 #ifndef __XPP__
-   TEST_LINE( scString:classH                 , 0           )
-   TEST_LINE( snIntP:classH                   , 0           )
-   TEST_LINE( sdDateE:classH                  , 0           )
-   TEST_LINE( slFalse:classH                  , 0           )
-   TEST_LINE( sbBlock:classH                  , 0           )
-   TEST_LINE( saArray:classH                  , 0           )
-   TEST_LINE( soObject:classH > 0             , .T.         )
+   TEST_LINE( scString:classH()               , 0           )
+   TEST_LINE( snIntP:classH()                 , 0           )
+   TEST_LINE( sdDateE:classH()                , 0           )
+   TEST_LINE( slFalse:classH()                , 0           )
+   TEST_LINE( sbBlock:classH()                , 0           )
+   TEST_LINE( saArray:classH()                , 0           )
 #endif
+   TEST_LINE( soObject:classH() > 0           , .T.         )
+   TEST_LINE( soObject:classH > 0             , .T.         )
 
    /* (operators) */
 

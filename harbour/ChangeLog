@@ -1,3 +1,11 @@
+20000403-18:25 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * utils/hbtest/*
+     + Some __XPP__ branches removed.
+     + Documented and added tests for the :className() <-> :className
+       difference.
+     ! Worked around ALINK /OUT: handling bug (by not using this switch).
+
 20000403-16:35 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * utils/hbtest/*
@@ -7,11 +15,11 @@
 
        Comparison:
 
-       Platform        Filename      Size      Passes Failures Total
-       --------------- ------------- --------- ------ -------- -----
-       CA-Clipper 5.2e hbtest5x.exe    504.832   2976       25  3001
-       Harbour (BCC55) hbtest.exe      566.272   3186       82  3268
-       XBase++ 1.10    hbtestxp.exe  1.375.232   1977      771  2748
+       Platform        Filename      Size      Passes Failures Total Time
+       --------------- ------------- --------- ------ -------- ----- ----
+       CA-Clipper 5.2e hbtest5x.exe    504.832   2976       25  3001 ~1 s
+       Harbour (BCC55) hbtest.exe      566.272   3186       82  3268 ~4 s
+       XBase++ 1.10    hbtestxp.exe  1.375.232   1977      771  2748 ~2 s
 
    * source/rtl/philesx.c
      ! CURDRIVE() error handling made more like XBase++. Retry is allowed,
