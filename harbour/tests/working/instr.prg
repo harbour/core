@@ -11,7 +11,7 @@ qout('"d" $ "BCDE" ', "d" $ "BCDE",.f.)
 qout('"D" $ "bcde" ', "D" $ "bcde",.f.)
 
 qout('"de" $ "bcde"', "de" $ "bcde",.t.)
-qout('"bd" $ "bcde"', "bd" $ "bcde",.t.)
+qout('"bd" $ "bcde"', "bd" $ "bcde",.f.)
 qout('"BD" $ "bcde"', "BD" $ "bcde",.f.)
 
 return nil

@@ -1058,13 +1058,11 @@ void Instring( void )
    PITEM pItem1 = stack.pPos - 2;
    PITEM pItem2 = stack.pPos - 1;
    int   iResult;
-   ULONG ul;
 
    if( IS_STRING( pItem1 ) && IS_STRING( pItem2 ) )
    {
-      for( iResult = 0, ul = 0; !iResult && ul < (ULONG) pItem1->wLength; ul++ )
-         iResult = hb_strAt( pItem1->value.szText + ul, 1,
-                             pItem2->value.szText, pItem2->wLength );
+      iResult = hb_strAt( pItem1->value.szText, pItem1->wLength,
+                          pItem2->value.szText, pItem2->wLength );
       StackPop();
       StackPop();
       PushLogical( iResult == 0 ? 0 : 1 );
