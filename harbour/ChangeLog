@@ -7,6 +7,14 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2002-02-01 07:05 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/strcase.c
+     * Faster Upper() and Lower() as they use now hb_retclen_buffer()
+
+   * source/rtl/hardcr.c
+     * Faster HardCR() as it uses now hb_retclen_buffer()
+
    These changes have been implemented by Viktor
 
 2002-02-01 06:50 UTC+0100 Antonio Linares <alinares@fivetech.com>
