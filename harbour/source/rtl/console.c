@@ -2,14 +2,33 @@
  * $Id$
  */
 
-/*
- * Partial Copyright (C) 1999 Eddie Runia <eddie@runia.com>
- *    partial copyright regarding the following function :
- *       __ACCEPT()
- */
-
 /* Harbour Project source code
    http://www.Harbour-Project.org/
+
+   Copyright(C) 1999 by Antonio Linares.
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published
+   by the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR
+   PURPOSE.  See the GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public
+   License along with this program; if not, write to:
+
+   The Free Software Foundation, Inc.,
+   675 Mass Ave, Cambridge, MA 02139, USA.
+
+   You can contact me at: alinares@fivetech.com
+
+   Partial Copyright (C) 1999 Eddie Runia <eddie@runia.com>
+     partial copyright regarding the following function :
+        __ACCEPT()
+
    The following functions are Copyright 1999 David G. Holm:
       adjust_pos(), hb_altout(), hb_devout(), HB_DEVOUT(), hb_devpos(),
       HB_DEVPOS(), hb_dispout(), HB___EJECT(), hb_max_col(), HB_MAXCOL(),
@@ -543,7 +562,7 @@ HARBOUR HB_SETPOS( void ) /* Sets the screen position */
          int i_row = hb_parni( 1 );
          int i_col = hb_parni( 2 );
          WORD row, col;
-         
+
          /* Limit the new position to the range (0,0) to (MAXROW(),MAXCOL()) */
          if( i_row < 0 ) row = 0;
          else if( i_row > hb_max_row() ) row = hb_max_row();
@@ -570,7 +589,7 @@ HARBOUR HB_DEVPOS( void ) /* Sets the screen and/or printer position */
          long l_row = hb_parnl( 1 );
          long l_col = hb_parnl( 2 );
          WORD row, col;
-         
+
          /* Limit the new position to the range (0,0) to (65535,65535) */
          if( l_row < 0 ) row = 0;
          else if( l_row > USHRT_MAX ) row = USHRT_MAX;
@@ -664,7 +683,7 @@ HARBOUR HB_SETPRC( void ) /* Sets the current printer row and column positions *
       {
          long l_row = hb_parnl( 1 );
          long l_col = hb_parnl( 2 );
-         
+
          /* Limit the new position to the range (0,0) to (65535,65535) */
          if( l_row < 0 ) p_row = 0;
          else if( l_row > USHRT_MAX ) p_row = USHRT_MAX;
@@ -678,7 +697,7 @@ HARBOUR HB_SETPRC( void ) /* Sets the current printer row and column positions *
 
 HARBOUR HB_SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
 {
-   int i_top = 0, i_left = 0, i_bottom = hb_max_row(), i_right = hb_max_col(), 
+   int i_top = 0, i_left = 0, i_bottom = hb_max_row(), i_right = hb_max_col(),
    v_scroll = 0, h_scroll = 0;
    WORD top, left, bottom, right;
 
@@ -695,7 +714,7 @@ HARBOUR HB_SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
    if( hb_pcount() > 5 && hb_param( 6, IT_NUMERIC ) )
       h_scroll = hb_parni( 6 );
 
-   /* Enforce limits of (0,0) to (MAXROW(),MAXCOL()) */   
+   /* Enforce limits of (0,0) to (MAXROW(),MAXCOL()) */
    if( i_top < 0 ) top = 0;
    else if( i_top > hb_max_row() ) top = hb_max_row ();
    else top = i_top;

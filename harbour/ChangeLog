@@ -1,3 +1,58 @@
+19990808-12:18 Antonio Linares <alinares@fivetech.com>
+
+   * source/vm/hvm.c
+     Added copyright and license information
+   * source/vm/dynsym.c
+     Added copyright and license information
+   * source/compiler/harbour.l
+     Added copyright and license information
+   * source/compiler/harbour.y
+     Added copyright and license information
+   * source/compiler/genobj32.c
+     Added copyright and license information
+   * source/compiler/symbols.asm
+     Added copyright and license information
+   * source/rtl/dates.c
+     Added copyright and license information
+   * source/rtl/console.c
+     Added copyright and license information
+   * source/rtl/extend.c
+     Added copyright and license information
+   * source/rtl/strings.c
+     Added copyright and license information
+   * source/rtl/arrays.c
+     Added copyright and license information
+   * source/rtl/classes.c
+     Added copyright and license information
+   * source/rtl/errorapi.c
+     Added copyright and license information
+   * source/rtl/itemapi.c
+     Added copyright and license information
+   * source/rtl/tclass.prg
+     Added copyright and license information
+   * source/rtl/error.prg
+     Added copyright and license information
+   * source/rtl/errorsys.prg
+     Added copyright and license information
+   * source/rtl/errorapi.prg
+     Added copyright and license information
+   * include/classes.ch
+     New Harbour file for classes creation commands
+   * include/compiler.h
+     Added copyright and license information
+   * include/ctoharb.h
+     Added copyright and license information
+   * include/errorapi.h
+     Added copyright and license information
+   * include/extend.h
+     Added copyright and license information
+   * include/init.h
+     Added copyright and license information
+   * include/itemapi.h
+     Added copyright and license information
+   * include/pcode.h
+     Added copyright and license information
+
 19990808-10:15 Eddie Runia <eddie@runia.com>
    * source/rtl/transfrm.c
      header change

@@ -1,6 +1,26 @@
 /*
  * $Id$
- */
+
+   Copyright(C) 1999 by Antonio Linares.
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published
+   by the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR
+   PURPOSE.  See the GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public
+   License along with this program; if not, write to:
+
+   The Free Software Foundation, Inc.,
+   675 Mass Ave, Cambridge, MA 02139, USA.
+
+   You can contact me at: alinares@fivetech.com
+*/
 
 #include <itemapi.h>
 #include <extend.h>
@@ -95,9 +115,9 @@ char * hb_arrayGetDate( PHB_ITEM pArray, ULONG ulIndex )
     }
   return "        ";
 }
- 
- 
- 
+
+
+
 BOOL hb_arrayGetBool( PHB_ITEM pArray, ULONG ulIndex )
 {
   if( IS_ARRAY( pArray ) )
@@ -152,9 +172,9 @@ double hb_arrayGetDouble( PHB_ITEM pArray, ULONG ulIndex )
       hb_errorRT_BASE(EG_ARG, 1068, "Argument error", "array access");
     }
   return 0;
-} 
- 
- 
+}
+
+
 void hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array */
 {
    PBASEARRAY pBaseArray = ( PBASEARRAY ) hb_xgrab( sizeof( BASEARRAY ) );

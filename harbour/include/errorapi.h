@@ -1,4 +1,4 @@
-/* 
+/*
  * $Id$
  */
 
@@ -7,7 +7,7 @@
 
    This file contains the Harbour internal error handling definitions
 
-   Copyright (C) 1999  ?
+   Copyright (C) 1999  Antonio Linares
    www - http://www.harbour-project.org
 
    This program is free software; you can redistribute it and/or modify

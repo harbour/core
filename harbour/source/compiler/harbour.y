@@ -8,6 +8,29 @@
  * Build 27 summer 1999
  * Usage: bison -d -v harbour.y
  * You may find Bison at www.harbour.project.org
+ *
+ * Copyright(C) 1999 by Antonio Linares.
+ *
+ * The generated C output files structure by the function GenCCode()
+ * is also under this copyright.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to:
+ *
+ * The Free Software Foundation, Inc.,
+ * 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
+ * You can contact me at: alinares@fivetech.com
  */
 
 #define BUILD         27    /* current harbour.y build */
@@ -438,7 +461,7 @@ extern int _iState;     /* current parser state (defined in harbour.l */
 %token INC DEC ALIAS DOCASE CASE OTHERWISE ENDCASE ENDDO MEMVAR
 %token WHILE EXIT LOOP END FOR NEXT TO STEP LE GE FIELD IN PARAMETERS
 %token PLUSEQ MINUSEQ MULTEQ DIVEQ POWER EXPEQ MODEQ EXITLOOP
-%token PRIVATE BEGINSEQ BREAK RECOVER USING DO WITH SELF
+%token PRIVATE BEGINSEQ BREAK RECOVER USING DO WITH SELF LINE
 %token AS_NUMERIC AS_CHARACTER AS_LOGICAL AS_DATE AS_ARRAY AS_BLOCK AS_OBJECT DECLARE_FUN
 
 /*the lowest precedence*/
@@ -484,6 +507,11 @@ Main       : { Line(); } Source       {
 
 Source     : Crlf
            | Extern
+<<<<<<< harbour.y
+           | Include
+           | Line
+=======
+>>>>>>> 1.83
            | VarDefs
            | FieldsDef
            | MemvarDef
@@ -491,6 +519,11 @@ Source     : Crlf
            | Statement
            | Source Crlf
            | Source Extern
+<<<<<<< harbour.y
+           | Source Include
+           | Source Line
+=======
+>>>>>>> 1.83
            | Source Function
            | Source { LineBody(); } Statement
            | Source VarDefs
@@ -498,6 +531,17 @@ Source     : Crlf
            | Source MemvarDef
            ;
 
+<<<<<<< harbour.y
+Include    : NE1 INCLUDE LITERAL { if( ! Include( $3, _pIncludePath ) )
+                                      GenError( ERR_CANT_OPEN_INCLUDE, $3, NULL );
+                                   _iState =LOOKUP;
+                                 } Crlf
+           ;
+
+Line       : NE1 LINE INTLONG LITERAL Crlf
+           ;
+=======
+>>>>>>> 1.83
 
 Extern     : EXTERN ExtList { _iState =LOOKUP; } Crlf
            ;

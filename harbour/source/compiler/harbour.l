@@ -8,6 +8,27 @@
  * Build 27: Summer 99
  * Usage: flex -i -8 -oyylex.c harbour.l
  * You may find flex.exe at www.harbour-project.org
+ *
+ * Copyright(C) 1999 by Antonio Linares.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to:
+ *
+ * The Free Software Foundation, Inc.,
+ * 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
+ * You can contact me at: alinares@fivetech.com
+ *
 */
 
 #include <stdio.h>
@@ -705,6 +726,7 @@ Separator     {SpaceTab}
 %{
 /* ************************************************************************ */
 %}
+"line"         return LINE;
 "local"        BEGIN LOCAL_;
 <LOCAL_>{Separator}+[_a-zA-Z]   { /* an identifier after LOCAL */
                  unput( yytext[ yyleng-1 ] );
