@@ -428,7 +428,7 @@ void hb_compChkEnvironVar( char * szSwitch )
                   if( s[ 1 ] )
                   {  /*there is -w<0,1,2,3> probably */
                      hb_comp_iWarnings = s[ 1 ] - '0';
-                     if( hb_comp_iWarnings < 0 || hb_comp_iWarnings > 3 )
+                     if( hb_comp_iWarnings < 0 || hb_comp_iWarnings > 4 )
                         hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
                   }
                 break;
