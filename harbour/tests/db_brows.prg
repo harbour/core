@@ -99,6 +99,10 @@ PRIVATE str_bar := "±þ"
    LI_X2 := x2
    IF LI_MSF == Nil
       LI_COLCOUNT := FCOUNT()
+      LI_MSTYP := ARRAY( LI_COLCOUNT )
+      LI_MSLEN := ARRAY( LI_COLCOUNT )
+      LI_MSDEC := ARRAY( LI_COLCOUNT )
+      AFIELDS( ,LI_MSTYP,LI_MSLEN,LI_MSDEC )
    ELSE
       LI_COLCOUNT := LEN( LI_MSF )
       IF LI_MSTYP == Nil
@@ -121,7 +125,7 @@ PRIVATE str_bar := "±þ"
                   LI_MSLEN[ i ] := 1
                ENDIF
             ELSE
-               LI_MSTYP[ i ] := FieldType( FIELDPOS( LI_MSF[ i ] ) )
+               LI_MSTYP[ i ] := ValType( FIELDGET( FIELDPOS( LI_MSF[ i ] ) ) )
             ENDIF
          NEXT
       ENDIF
@@ -400,7 +404,7 @@ PRIVATE str_bar := "±þ"
                   IF LI_BDESHOUT != Nil .AND. VALTYPE( varbuf ) == "C"
                      varbuf := EVAL( LI_BDESHOUT, mslist, varbuf )
                   ENDIF
-FIELDPUT( fipos, varbuf )
+                  FIELDPUT( fipos, varbuf )
                   IF .NOT. SET( _SET_EXCLUSIVE )
                      UNLOCK
                   ENDIF
@@ -653,12 +657,14 @@ LOCAL fldtype, rez, vartmp
          ENDIF
       ENDIF
    ENDIF
-   fldtype := FIELDTYPE( numf )
+   // fldtype := FIELDTYPE( numf )
+   fldtype := LI_MSTYP[ numf ]
    DO CASE
    CASE fldtype = "C"
       rez := FIELDGET( numf )
    CASE fldtype = "N"
-      rez := STR( FIELDGET( numf ), FIELDSIZE( numf ), FIELDDECI( numf ) )
+      // rez := STR( FIELDGET( numf ), FIELDSIZE( numf ), FIELDDECI( numf ) )
+      rez := STR( FIELDGET( numf ), LI_MSLEN[ numf ], LI_MSDEC[ numf ] )
    CASE fldtype = "D"
       rez := DTOC( FIELDGET( numf ) )
    CASE fldtype = "L"
@@ -728,12 +734,13 @@ RETURN mslist
 *+
 FUNCTION Defpict( i, maxlen )
 
-LOCAL spict, fldd, fldtype := FIELDTYPE( i ), fldlen := FIELDSIZE( i )
+// LOCAL spict, fldd, fldtype := FIELDTYPE( i ), fldlen := FIELDSIZE( i )
+LOCAL spict, fldd, fldtype := LI_MSTYP[ i ], fldlen := LI_MSLEN[ i ]
    DO CASE
    CASE fldtype == "C"
       spict := IIF( maxlen = Nil, REPLICATE( "X", fldlen ), "@S" + NUM_STR( maxlen, 2 ) )
    CASE fldtype == "N"
-      fldd  := FIELDDECI( i )
+      fldd  := LI_MSDEC[ i ]
       spict := IIF( fldd = 0, REPLICATE( "9", fldlen ), REPLICATE( "9", fldlen - 1 - fldd ) + "." + REPLICATE( "9", fldd ) )
    CASE fldtype == "D"
       spict := "@D"
