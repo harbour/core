@@ -201,7 +201,7 @@ char * hb_consoleGetNewLine( void )
  *      ...
  *  $TESTS$
  *      valtype( HB_OSNewLine() ) == "C"
- *      LEN( HB_OSNewLine( { "ANOTHERDOS" }, { "" } ) ) == 1
+ *      LEN( HB_OSNewLine() ) == 1
  *  $STATUS$
  *      C
  *  $COMPLIANCE$

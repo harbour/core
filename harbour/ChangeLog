@@ -1,3 +1,10 @@
+19990923-03:30 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rtl/gt/gtwin.c
+    ! Tab removed from the top of the file.
+  * source/rtl/console.c
+    ! Small fix in the function header of HB_OSNewLine().
+
 19990923-00:30 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/compiler/genc.c
