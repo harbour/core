@@ -419,6 +419,7 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgru866.obj \
    $(OBJ_DIR)\msgruwin.obj \
    $(OBJ_DIR)\msgrukoi.obj \
+   $(OBJ_DIR)\msgsl437.obj \
    $(OBJ_DIR)\msgsl852.obj \
    $(OBJ_DIR)\msgsliso.obj \
    $(OBJ_DIR)\msgslwin.obj \
@@ -441,6 +442,7 @@ CODEPAGE_LIB_OBJS = \
    $(OBJ_DIR)\cdpru866.obj \
    $(OBJ_DIR)\cdpruwin.obj \
    $(OBJ_DIR)\cdprukoi.obj \
+   $(OBJ_DIR)\cdpsl437.obj \
    $(OBJ_DIR)\cdpsl852.obj \
    $(OBJ_DIR)\cdpsliso.obj \
    $(OBJ_DIR)\cdpslwin.obj
@@ -2178,6 +2180,10 @@ $(OBJ_DIR)\msgrukoi.obj : $(LANG_DIR)\msgrukoi.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\msgsl437.obj : $(LANG_DIR)\msgsl437.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\msgsl852.obj : $(LANG_DIR)\msgsl852.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
@@ -2258,6 +2264,10 @@ $(OBJ_DIR)\cdpruwin.obj : $(CODEPAGE_DIR)\cdpruwin.c
    tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\cdprukoi.obj : $(CODEPAGE_DIR)\cdprukoi.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\cdpsl437.obj : $(CODEPAGE_DIR)\cdpsl437.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
 

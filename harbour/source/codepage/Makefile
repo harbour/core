@@ -18,6 +18,7 @@ C_SOURCES=\
 	cdpru866.c    \
 	cdprukoi.c    \
 	cdpruwin.c    \
+	cdpsl437.c    \
 	cdpsl852.c    \
 	cdpsliso.c    \
 	cdpslwin.c

@@ -39,6 +39,7 @@ C_SOURCES=\
 	msgru866.c   \
 	msgrukoi.c   \
 	msgruwin.c   \
+	msgsl437.c   \
 	msgsl852.c   \
 	msgsliso.c   \
 	msgslwin.c   \

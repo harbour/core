@@ -472,6 +472,7 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgru866.obj \
    $(OBJ_DIR)\msgrukoi.obj \
    $(OBJ_DIR)\msgruwin.obj \
+   $(OBJ_DIR)\msgsl437.obj \
    $(OBJ_DIR)\msgsl852.obj \
    $(OBJ_DIR)\msgsliso.obj \
    $(OBJ_DIR)\msgslwin.obj \
@@ -501,6 +502,7 @@ CODEPAGE_LIB_OBJS = \
    $(OBJ_DIR)\cdpru866.obj \
    $(OBJ_DIR)\cdprukoi.obj \
    $(OBJ_DIR)\cdpruwin.obj \
+   $(OBJ_DIR)\cdpsl437.obj \
    $(OBJ_DIR)\cdpsl852.obj \
    $(OBJ_DIR)\cdpsliso.obj \
    $(OBJ_DIR)\cdpslwin.obj

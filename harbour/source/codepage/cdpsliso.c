@@ -85,7 +85,7 @@
  */
 
 static HB_CODEPAGE s_codepage = { "SLISO",NUMBER_OF_CHARACTERS,
-    "ABCÈÆDÐEFGHIJKLMNOPQRS©TUVWZ®XY","abcèdðefghijklmnopqrs¹tuvwz¾xy",
+    "ABCÈÆDÐEFGHIJKLMNOPQRS©TUVWZ®XY","abcèædðefghijklmnopqrs¹tuvwz¾xy",
     IS_LATIN,ACCENTED_EQUAL,ACCENTED_INTERLEAVED,0,NULL,NULL,NULL,NULL,0,NULL };
 
 HB_CODEPAGE_ANNOUNCE( SLISO );

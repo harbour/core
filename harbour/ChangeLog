@@ -8,6 +8,22 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-07-03 10:54 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  + source/codepage/cdpsl437.c
+  + source/lang/msgsl437.c
+    + New codepage and lang modules for Slovenian 7bit 437, provided by
+      Mitja Podgornik <Mitja.Podgornik@zgs.gov.si>
+  * source/codepage/cdpsl852.c
+  * source/codepage/cdpsliso.c
+  * source/codepage/cdpslwin.c
+    ! Some fixes, provided by Mitja Podgornik <Mitja.Podgornik@zgs.gov.si>
+  * makefile.bc
+  * makefile.nt
+  * makefile.vc
+  * source/codepage/Makefile
+  * source/lang/Makefile
+    * Makefiles updated.
+
 2003-07-03 10:00 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c
     ! Bug fixed - there was memory leak after INDEX ON ... ADDITIVE if there

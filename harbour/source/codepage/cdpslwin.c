@@ -53,7 +53,7 @@
 
 /* Language name: Slovenian */
 /* ISO language code (2 chars): SL */
-/* Codepage: Windows-1250 */
+/* Codepage: 1250 */
 
 #include <ctype.h>
 #include "hbapi.h"
@@ -85,7 +85,7 @@
  */
 
 static HB_CODEPAGE s_codepage = { "SLWIN",NUMBER_OF_CHARACTERS,
-    "ABCÈÆDÐEFGHIJKLMNOPQRSŠTUVWZŽXY","abcèdðefghijklmnopqrsštuvwzžxy",
+    "ABCÈÆDÐEFGHIJKLMNOPQRSŠTUVWZŽXY","abcèædðefghijklmnopqrsštuvwzžxy",
     IS_LATIN,ACCENTED_EQUAL,ACCENTED_INTERLEAVED,0,NULL,NULL,NULL,NULL,0,NULL };
 
 HB_CODEPAGE_ANNOUNCE( SLWIN );

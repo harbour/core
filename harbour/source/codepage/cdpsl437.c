@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( SL852 )
+ * National Collation Support Module ( SL437 )
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
@@ -53,7 +53,7 @@
 
 /* Language name: Slovenian */
 /* ISO language code (2 chars): SL */
-/* Codepage: 852 */
+/* Codepage: 437 */
 
 #include <ctype.h>
 #include "hbapi.h"
@@ -84,16 +84,16 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "SL852",NUMBER_OF_CHARACTERS,
-    "ABC¨èD—EFGHIJKLMNOPQRSÊTUVWZ¶XY","abcüÜd–efghijklmnopqrsÁtuvwzßxy",
+static HB_CODEPAGE s_codepage = { "SL437",NUMBER_OF_CHARACTERS,
+    "ABC^]D\EFGHIJKLMNOPQRS[TUVWZ@XY","abc~}d|efghijklmnopqrs{tuvwz`xy",
     IS_LATIN,ACCENTED_EQUAL,ACCENTED_INTERLEAVED,0,NULL,NULL,NULL,NULL,0,NULL };
 
-HB_CODEPAGE_ANNOUNCE( SL852 );
+HB_CODEPAGE_ANNOUNCE( SL437 );
 
-HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_SL852 )
+HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_SL437 )
    hb_cdpRegister( &s_codepage );
-HB_CALL_ON_STARTUP_END( hb_codepage_Init_SL852 )
+HB_CALL_ON_STARTUP_END( hb_codepage_Init_SL437 )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup hb_codepage_Init_SL852
+   #pragma startup hb_codepage_Init_SL437
 #endif
 
