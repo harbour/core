@@ -1,3 +1,7 @@
+20000402-07:00 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+    *doc/whatsnew.txt
+        *some changes
+
 20000402-08:44 GMT+2 Chen Kedem <niki@actcom.co.il>
    + doc/en/dbstrux.txt
      + documentation for __dbCopyStruct()
