@@ -279,6 +279,11 @@ static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc )
             lPCodePos += 3;
             break;
 
+         case HB_P_DOSHORT:
+            fprintf( yyc, "\tHB_P_DO, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
+            lPCodePos += 2;
+            break;
+
          case HB_P_DUPLICATE:
             fprintf( yyc, "\tHB_P_DUPLICATE,\n" );
             lPCodePos++;
@@ -343,6 +348,11 @@ static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc )
                      pFunc->pCode[ lPCodePos + 1 ],
                      pFunc->pCode[ lPCodePos + 2 ] );
             lPCodePos += 3;
+            break;
+
+         case HB_P_FUNCTIONSHORT:
+            fprintf( yyc, "\tHB_P_FUNCTIONSHORT, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
+            lPCodePos += 2;
             break;
 
          case HB_P_ARRAYGEN:
@@ -1083,7 +1093,37 @@ static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc )
                USHORT wLen = pFunc->pCode[ lPCodePos + 1 ] +
                              pFunc->pCode[ lPCodePos + 2 ] * 256;
                if( bVerbose ) fprintf( yyc, "\t/* %i */", wLen );
-               lPCodePos +=3;
+               lPCodePos += 3;
+               if( wLen > 0 )
+               {
+                  fprintf( yyc, "\n\t" );
+                  while( wLen-- )
+                  {
+                     BYTE uchr = ( BYTE ) pFunc->pCode[ lPCodePos++ ];
+                     /*
+                      * NOTE: After optimization some CHR(n) can be converted
+                      *    into a string containing nonprintable characters.
+                      *
+                      * TODO: add switch to use hexadecimal format "%#04x"
+                      */
+                     if( ( uchr < ( BYTE ) ' ' ) || ( uchr >= 127 ) )
+                        fprintf( yyc, "%i, ", uchr );
+                     else if( strchr( "\'\\\"", uchr ) )
+                        fprintf( yyc, "%i, ", uchr );
+                     else
+                        fprintf( yyc, "\'%c\', ", uchr );
+                  }
+               }
+            }
+            fprintf( yyc, "\n" );
+            break;
+
+         case HB_P_PUSHSTRSHORT:
+            fprintf( yyc, "\tHB_P_PUSHSTRSHORT, %i,", pFunc->pCode[ lPCodePos + 1 ] );
+            {
+               USHORT wLen = pFunc->pCode[ lPCodePos + 1 ];
+               if( bVerbose ) fprintf( yyc, "\t/* %i */", wLen );
+               lPCodePos += 2;
                if( wLen > 0 )
                {
                   fprintf( yyc, "\n\t" );
@@ -1115,6 +1155,14 @@ static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc )
             if( bVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 )->szName );
             fprintf( yyc, "\n" );
             lPCodePos += 3;
+            break;
+
+         case HB_P_PUSHSYMNEAR:
+            fprintf( yyc, "\tHB_P_PUSHSYMNEAR, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ] );
+            if( bVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] )->szName );
+            fprintf( yyc, "\n" );
+            lPCodePos += 2;
             break;
 
          case HB_P_PUSHVARIABLE:

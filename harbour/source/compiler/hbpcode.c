@@ -45,9 +45,8 @@ void hb_compGenPCode1( BYTE byte )
       pFunc->lPCodeSize = HB_PCODE_CHUNK;
       pFunc->lPCodePos  = 0;
    }
-   else
-      if( ( pFunc->lPCodeSize - pFunc->lPCodePos ) < 1 )
-         pFunc->pCode = ( BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += HB_PCODE_CHUNK );
+   else if( ( pFunc->lPCodeSize - pFunc->lPCodePos ) < 1 )
+      pFunc->pCode = ( BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += HB_PCODE_CHUNK );
 
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte;
 }
@@ -62,9 +61,8 @@ void hb_compGenPCode2( BYTE byte1, BYTE byte2 )
       pFunc->lPCodeSize = HB_PCODE_CHUNK;
       pFunc->lPCodePos  = 0;
    }
-   else
-      if( ( pFunc->lPCodeSize - pFunc->lPCodePos ) < 2 )
-         pFunc->pCode = ( BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += HB_PCODE_CHUNK );
+   else if( ( pFunc->lPCodeSize - pFunc->lPCodePos ) < 2 )
+      pFunc->pCode = ( BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += HB_PCODE_CHUNK );
 
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte1;
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte2;
@@ -80,9 +78,8 @@ void hb_compGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3 )
       pFunc->lPCodeSize = HB_PCODE_CHUNK;
       pFunc->lPCodePos  = 0;
    }
-   else
-      if( ( pFunc->lPCodeSize - pFunc->lPCodePos ) < 3 )
-         pFunc->pCode = ( BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += HB_PCODE_CHUNK );
+   else if( ( pFunc->lPCodeSize - pFunc->lPCodePos ) < 3 )
+      pFunc->pCode = ( BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += HB_PCODE_CHUNK );
 
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte1;
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte2;

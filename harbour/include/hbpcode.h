@@ -50,6 +50,7 @@ typedef enum
    HB_P_FALSE,             /* pushes false on the virtual machine stack */
    HB_P_FORTEST,           /* For STEP. If step > 1 less. If step < 1 greater. */
    HB_P_FUNCTION,          /* instructs the virtual machine to execute a function saving its result */
+   HB_P_FUNCTIONSHORT,     /* instructs the virtual machine to execute a function saving its result */
    HB_P_FRAME,             /* instructs the virtual machine about how many parameters and locals a function uses */
    HB_P_FUNCPTR,           /* returns a function address pointer */
    HB_P_GREATER,           /* checks if the second latest value on the stack is greater that the lastest one */
@@ -57,6 +58,7 @@ typedef enum
    HB_P_DEC,               /* decrements the latest value on the virtual machine stack */
    HB_P_DIVIDE,            /* divides the latest two values on the stack, removing them and leaving there the result */
    HB_P_DO,                /* instructs the virtual machine to execute a function discarding its result */
+   HB_P_DOSHORT,           /* instructs the virtual machine to execute a function discarding its result */
    HB_P_DUPLICATE,         /* places a copy of the latest virtual machine stack value on to the stack */
    HB_P_DUPLTWO,           /* places a copy of the latest two virtual machine stack value on to the stack */
    HB_P_INC,               /* increments the latest value on the virtual machine stack */
@@ -137,7 +139,9 @@ typedef enum
    HB_P_PUSHSTATIC,        /* pushes the contains of a static variable to the virtual machine stack */
    HB_P_PUSHSTATICREF,     /* pushes the a static variable by reference to the virtual machine stack */
    HB_P_PUSHSTR,           /* places a string on the virtual machine stack */
+   HB_P_PUSHSTRSHORT,      /* places a string on the virtual machine stack */
    HB_P_PUSHSYM,           /* places a symbol on the virtual machine stack */
+   HB_P_PUSHSYMNEAR,       /* places a symbol on the virtual machine stack */
    HB_P_PUSHVARIABLE,      /* pushes the contains of an undeclared variable to the virtual machine stack */
    HB_P_RETVALUE,          /* instructs the virtual machine to return the latest stack value */
    HB_P_SEQBEGIN,          /* BEGIN SEQUENCE */

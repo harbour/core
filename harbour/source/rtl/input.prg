@@ -42,12 +42,5 @@ FUNCTION __Input( xPrompt )
 
    RETURN iif( Empty( cString ), NIL, &cString )
 
-#else
-
-/* NOTE: To make it compile */
-
-STATIC PROCEDURE Dummy()
-   RETURN
-
 #endif
 

@@ -2280,7 +2280,10 @@ void hb_compGenPushLong( long lNumber )
 /* generates the pcode to push a string on the virtual machine stack */
 void hb_compGenPushString( char * szText, ULONG ulStrLen )
 {
-   hb_compGenPCode3( HB_P_PUSHSTR, HB_LOBYTE( ulStrLen ), HB_HIBYTE( ulStrLen ) );
+   if( ulStrLen > 255 )
+      hb_compGenPCode3( HB_P_PUSHSTR, HB_LOBYTE( ulStrLen ), HB_HIBYTE( ulStrLen ) );
+   else
+      hb_compGenPCode2( HB_P_PUSHSTRSHORT, ( BYTE ) ulStrLen );
    hb_compGenPCodeN( ( BYTE * ) szText, ulStrLen );
 }
 
@@ -2300,7 +2303,11 @@ void hb_compGenPushSymbol( char * szSymbolName, int iIsFunction )
       if( iIsFunction && ! hb_compFunCallFind( szSymbolName ) )
          hb_compFunCallAdd( szSymbolName );
    }
-   hb_compGenPCode3( HB_P_PUSHSYM, HB_LOBYTE( wSym ), HB_HIBYTE( wSym ) );
+
+   if( wSym > 255 )
+      hb_compGenPCode3( HB_P_PUSHSYM, HB_LOBYTE( wSym ), HB_HIBYTE( wSym ) );
+   else
+      hb_compGenPCode2( HB_P_PUSHSYMNEAR, ( BYTE ) wSym );
 }
 
 
