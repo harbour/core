@@ -53,7 +53,6 @@ PRG_SOURCES=\
 	instr.prg \
 	iotest.prg \
 	iotest2.prg \
-	keywords.prg \
 	longstr.prg \
 	mankala.prg \
 	mathtest.prg \
@@ -78,8 +77,6 @@ PRG_SOURCES=\
 	seconds.prg \
 	set_num.prg \
 	set_test.prg \
-	spawn.prg \
-	spawn2.prg \
 	statfun.prg \
 	statics.prg \
 	strcmp.prg \
@@ -91,7 +88,6 @@ PRG_SOURCES=\
 	strip.prg \
 	t1.prg \
 	test.prg \
-	test10.prg \
 	test_all.prg \
 	testcgi.prg \
 	testerro.prg \
@@ -99,7 +95,6 @@ PRG_SOURCES=\
 	testgt.prg \
 	testhbf.prg \
 	testhtml.prg \
-	testid.prg \
 	testinc.prg \
 	testmem.prg \
 	teststr.prg \
@@ -112,6 +107,11 @@ PRG_SOURCES=\
 
 BAD_PRG_SOURCES=\
 	dupvars.prg \
+	spawn.prg \
+	spawn2.prg \
+	keywords.prg \
+	test10.prg \
+	testid.prg \
 
 LIBS=\
 	vm \

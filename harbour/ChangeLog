@@ -1,3 +1,11 @@
+19990619-10:42 Ryszard Glab <rglab@imid.med.pl>
+
+* tests/working/Makefile
+ * moved some files into BAD_PRG_SOURCES
+ 
+* tests/working/testid.prg
+ + added TODO comment because it core dumps if /dTEST is not passed
+ 
 19990619-09:49 CET Patrick Mast
   * Updated build numbers
 
