@@ -317,7 +317,6 @@ STATIC PROCEDURE Main( sSource, p1, p2, p3, p4, p5, p6, p7, p8, p9 )
    CompileDefine( "__PP__" )
 
    #ifdef __HARBOUR__
-      //PP_PreProLine( "#DEFINE __HARBOUR__", 0, '' )
       CompileDefine( "__HARBOUR__" )
    #endif
 
@@ -2229,7 +2228,7 @@ FUNCTION PP_PreProFile( sSource, sPPOExt, bBlanks )
                                FWrite( hPP, CRLF )
                             ENDIF
                          ELSE
-                            sLine := PP_PreProLine( sLine, nLine, sPath + sSource )
+                            sLine := PP_PreProLine( sLine, nLine, sPath + sSource, .F. )
                             IF bBlanks .OR. ! ( sLine == '' )
                                FWrite( hPP, sLine + CRLF )
                             ENDIF
@@ -2267,7 +2266,7 @@ FUNCTION PP_PreProFile( sSource, sPPOExt, bBlanks )
                             FWrite( hPP, CRLF )
                          ENDIF
                       ELSE
-                         sLine := PP_PreProLine( sLine, nLine, sPath + sSource )
+                         sLine := PP_PreProLine( sLine, nLine, sPath + sSource, .F. )
                          IF bBlanks .OR. ! ( sLine == '' )
                             FWrite( hPP, sLine + CRLF )
                          ENDIF
@@ -2430,7 +2429,7 @@ FUNCTION PP_PreProFile( sSource, sPPOExt, bBlanks )
                       ENDIF
                    ELSE
                       //sLine += sRight
-                      sLine := PP_PreProLine( sLine, nLine, sPath + sSource )
+                      sLine := PP_PreProLine( sLine, nLine, sPath + sSource, .F. )
                       IF bBlanks .OR. ! ( sLine == '' )
                          FWrite( hPP, sLine + CRLF )
                       ENDIF
@@ -2453,7 +2452,7 @@ FUNCTION PP_PreProFile( sSource, sPPOExt, bBlanks )
                       FWrite( hPP, CRLF )
                    ENDIF
                 ELSE
-                   sLine := PP_PreProLine( sLine, nLine, sPath + sSource )
+                   sLine := PP_PreProLine( sLine, nLine, sPath + sSource, .F. )
                    IF bBlanks .OR. ! ( sLine == '' )
                       FWrite( hPP, sLine + CRLF )
                    ENDIF
@@ -2515,7 +2514,7 @@ FUNCTION PP_PreProFile( sSource, sPPOExt, bBlanks )
          FWrite( hPP, sLine )
       ENDIF
    ELSE
-      sLine := PP_PreProLine( sLine, nLine, sPath + sSource )
+      sLine := PP_PreProLine( sLine, nLine, sPath + sSource, .F. )
       IF bBlanks .OR. ! ( sLine == '' )
          FWrite( hPP, sLine )
       ENDIF
@@ -2538,7 +2537,7 @@ RETURN .T.
 
 //--------------------------------------------------------------//
 
-FUNCTION PP_PreProLine( sLine, nLine, sSource )
+FUNCTION PP_PreProLine( sLine, nLine, sSource, bSplit )
 
    LOCAL nPendingLines := 0, aPendingLines  := {}
 
@@ -2552,33 +2551,39 @@ FUNCTION PP_PreProLine( sLine, nLine, sSource )
    LOCAL sBackupLine
    LOCAL sSkipped
 
-   nPosition := 0
-   WHILE ( nNewLineAt := nAtSkipStr( ';', sLine ) ) > 0
-      nPendingLines++
-      aSize( aPendingLines, nPendingLines )
+   IF bSplit == NIL
+      bSplit := .T.
+   ENDIF
 
-      nPosition++
-      aIns( aPendingLines, nPosition )
-      aPendingLines[ nPosition ] := Left( sLine, nNewLineAt - 1 )
-
-      //? "Pending #", nPendingLines,  Left( sLine, nNewLineAt - 1 ), aPendingLines[nPendingLines]
-      sLine := LTrim( SubStr( sLine, nNewLineAt + 1 ) )
-   ENDDO
-
-   IF nPosition > 0
-      IF ! Empty( sLine )
+   IF bSplit
+       nPosition := 0
+       WHILE ( nNewLineAt := nAtSkipStr( ';', sLine ) ) > 0
           nPendingLines++
           aSize( aPendingLines, nPendingLines )
 
           nPosition++
           aIns( aPendingLines, nPosition )
-          aPendingLines[ nPosition ] := sLine
-      ENDIF
+          aPendingLines[ nPosition ] := Left( sLine, nNewLineAt - 1 )
 
-      //? "Pending #", nPendingLines, sLine, aPendingLines[nPendingLines]
-      sLine := aPendingLines[1]
-      aDel( aPendingLines, 1 )
-      nPendingLines--
+          //? "Pending #", nPendingLines,  Left( sLine, nNewLineAt - 1 ), aPendingLines[nPendingLines]
+          sLine := LTrim( SubStr( sLine, nNewLineAt + 1 ) )
+       ENDDO
+
+       IF nPosition > 0
+          IF ! Empty( sLine )
+              nPendingLines++
+              aSize( aPendingLines, nPendingLines )
+
+              nPosition++
+              aIns( aPendingLines, nPosition )
+              aPendingLines[ nPosition ] := sLine
+          ENDIF
+
+          //? "Pending #", nPendingLines, sLine, aPendingLines[nPendingLines]
+          sLine := aPendingLines[1]
+          aDel( aPendingLines, 1 )
+          nPendingLines--
+       ENDIF
    ENDIF
 
    WHILE .T.
@@ -2897,6 +2902,7 @@ FUNCTION PP_PreProLine( sLine, nLine, sSource )
             ELSE
                aAdd( aTranslated, nRule )
             ENDIF
+
 
             nPosition := 0
             WHILE ( nNewLineAt := nAtSkipStr( ';', sLine ) ) > 0

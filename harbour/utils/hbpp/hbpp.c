@@ -456,7 +456,9 @@ void hb_compGenError( char * _szErrors[], char cPrefix, int iError, const char *
   printf( _szErrors[ iError - 1 ], szError1, szError2 );
   printf( "\n\n" );
 
+  /*
   exit( EXIT_FAILURE );
+  */
 }
 
 void hb_compGenWarning( char* _szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2)

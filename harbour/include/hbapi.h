@@ -525,7 +525,7 @@ typedef struct HB_MACRO_    /* a macro compiled pcode container */
    int iListElements;
 } HB_MACRO, * HB_MACRO_PTR;
 
-extern void   hb_macroGetValue( HB_ITEM_PTR pItem ); /* retrieve results of a macro expansion */
+extern void   hb_macroGetValue( HB_ITEM_PTR pItem, BOOL bArg ); /* retrieve results of a macro expansion */
 extern void   hb_macroSetValue( HB_ITEM_PTR pItem ); /* assign a value to a macro-expression item */
 extern void   hb_macroTextValue( HB_ITEM_PTR pItem ); /* macro text substitution */
 extern void   hb_macroPushSymbol( HB_ITEM_PTR pItem ); /* handle a macro function calls, e.g. var := &macro() */

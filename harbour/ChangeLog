@@ -1,3 +1,36 @@
+2001-07-17 18:25 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * utils/hbpp/hbpp.c
+     * Commented an exit() call in hb_compGenError() to continue processing after an error just like Harbour does.
+
+   * include/hbapi.h
+     + Added 2nd parameter BOOL bArg to hb_macroGetValue()
+
+   * include/hbexpra.c
+     + Added global BOOL hb_exp_bArgList = FALSE;
+
+   * include/hbexprb.c
+     + Added logic to generate HB_P_MACROPUSHARG rather than HB_MACROPUSH when pushed macro is a function call argument.
+
+   * include/hbpcode.h
+   * source/compiler/genc.c
+   * source/compiler/hbfix.c
+   * source/compiler/hbpcode.c
+     + Added new HB_P_MACROPUSHARG
+
+   * source/macro/macro.y
+     + Added logic to generate an error if macro expression is list, unless servicing an HB_MACROPUSHARG.
+
+   * source/vm/hvm.c
+     + Added support for new HB_P_MACROPUSHARG calling hb_macroGetValue() with TRUE for bArg.
+
+   * source/vm/macro.c
+     + Added 2nd parameter BOOL bArg to hb_macroGetValue() to signify servicing of HB_P_MACROPUSHARG.
+
+   * contrib/dot/pp.prg
+     + Added bSplit 4th paramater to PP_PreProLine() defaulting to .T.. - Calls from PP_PreProFile() set it to .F..
+
+  /* NOTE!!! All prg MUST be recompiled due to addition of NEW pcode!!! */
+
 2001-07-17 22:30 MEST Martin Vogel <vogel@inttec.de>
 
    * contrib/libct/tests/Makefile
@@ -64,7 +97,7 @@
    * contrib/libct/Makefile
    * contrib/libct/makefile.bc
    * contrib/libct/makefile.vc
-     + ct.c 
+     + ct.c
      + ctmath.c
 
    * contrib/libct/ctflist.c
@@ -80,7 +113,7 @@
    * harbour/include/hbclass.ch
     ! Change NO_OO_ERR to HB_CLS_NO_OO_ERR
       Changed one Xtranslate in case of HB_CLS_NO_OO_ERR defined
-      to allow multiples classes not ordered. 
+      to allow multiples classes not ordered.
 
 2001-07-16 22:55 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
   * source/pp/ppcore.c

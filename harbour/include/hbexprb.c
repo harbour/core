@@ -218,6 +218,8 @@ HB_EXPR_FUNC_PTR hb_comp_ExprTable[] = {
    hb_compExprUsePreDec     /* highest precedence */
 };
 
+extern BOOL hb_exp_bArgList;
+
 /* ************************************************************************* */
 
 static HB_EXPR_FUNC( hb_compExprUseDummy )
@@ -1001,7 +1003,16 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
             if( pSelf->value.asMacro.SubType == HB_ET_MACRO_SYMBOL )
                HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROSYMBOL );
             else if( pSelf->value.asMacro.SubType != HB_ET_MACRO_ALIASED )
-               HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSH );
+            {
+               if( hb_exp_bArgList )
+               {
+                  HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHARG );
+               }
+               else
+               {
+                  HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSH );
+               }
+            }
             /* NOTE: pcode for alias context is generated in
              * hb_compExprUseAliasVar()
              */
@@ -1099,7 +1110,11 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                if( usCount == 1 && pSelf->value.asFunCall.pParms->value.asList.pExprList->ExprType == HB_ET_NONE )
                   --usCount;
                if( usCount )
+               {
+                  hb_exp_bArgList = TRUE;
                   HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
+                  hb_exp_bArgList = FALSE;
+               }
             }
             else
                usCount = 0;
@@ -1128,7 +1143,11 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                if( usCount == 1 && pSelf->value.asFunCall.pParms->value.asList.pExprList->ExprType == HB_ET_NONE )
                   --usCount;
                if( usCount )
+               {
+                  hb_exp_bArgList = TRUE;
                   HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
+                  hb_exp_bArgList = FALSE;
+               }
             }
             else
                usCount = 0;

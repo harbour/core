@@ -425,7 +425,7 @@ char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
  * a parameter.
  * PUSH operation
  */
-void hb_macroGetValue( HB_ITEM_PTR pItem )
+void hb_macroGetValue( HB_ITEM_PTR pItem, BOOL bArg )
 {
    extern int *hb_vm_aiMacroListParameters, hb_vm_iFunCalls;
 
@@ -448,7 +448,7 @@ void hb_macroGetValue( HB_ITEM_PTR pItem )
       struMacro.bShortCuts    = hb_comp_bShortCuts;
       struMacro.uiNameLen     = HB_SYMBOL_NAME_LEN;
       struMacro.status        = HB_MACRO_CONT;
-      struMacro.iListElements = 0;
+      struMacro.iListElements = ( bArg ? 0 : -1 );
 
       #ifdef HB_MACRO_STATEMENTS
          slen = HB_MIN( strlen( szString ), HB_PP_STR_SIZE - 1 );

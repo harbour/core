@@ -469,7 +469,16 @@ Expression : SimpleExpression                 { $$ = $1; HB_MACRO_CHECK( $$ ); }
            | PareExpList                      { $$ = $1; HB_MACRO_CHECK( $$ ); }
 ;
 
-RootParamList : EmptyExpression ',' EmptyExpression  { HB_MACRO_DATA->iListElements = 1; $$ = hb_compExprAddListExpr( hb_compExprNewArgList( $1 ), $3 ); }
+RootParamList : EmptyExpression ',' { /* AsParamList only acceptable for HB_P_MACROPUSHARG in which case iListElements == 0 */
+                                      if( HB_MACRO_DATA->iListElements != 0 )
+                                      {
+                                         HB_TRACE(HB_TR_DEBUG, ("macro -> invalid expression: %s", HB_MACRO_DATA->string));
+                                         hb_macroError( EG_SYNTAX, HB_MACRO_PARAM );
+                                         hb_compExprDelete( $1, HB_MACRO_PARAM );
+                                         YYABORT;
+                                      }
+                                    }
+                EmptyExpression     { HB_MACRO_DATA->iListElements = 1; $$ = hb_compExprAddListExpr( hb_compExprNewArgList( $1 ), $4 ); }
 
 AsParamList  : RootParamList                    { $$ = $1; }
              | AsParamList ',' EmptyExpression  { HB_MACRO_DATA->iListElements++; $$ = hb_compExprAddListExpr( $1, $3 ); }

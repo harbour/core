@@ -1312,7 +1312,16 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             /* the topmost element on the stack contains a macro
              * string for compilation
              */
-            hb_macroGetValue( hb_stackItemFromTop( -1 ) );
+            hb_macroGetValue( hb_stackItemFromTop( -1 ), FALSE );
+            w++;
+            break;
+
+         case HB_P_MACROPUSHARG:
+            /* compile and run - leave the result on the stack */
+            /* the topmost element on the stack contains a macro
+             * string for compilation
+             */
+            hb_macroGetValue( hb_stackItemFromTop( -1 ), TRUE );
             w++;
             break;
 

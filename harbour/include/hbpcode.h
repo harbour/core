@@ -102,6 +102,7 @@ typedef enum
    HB_P_MACROPOP,              /* compile and run - pop a value from the stack */
    HB_P_MACROPOPALIASED,       /* compile and run - pop a field value from the stack */
    HB_P_MACROPUSH,             /* compile and run - leave the result on the stack */
+   HB_P_MACROPUSHARG,          /* compile and run - leave the result on the stack */
    HB_P_MACROPUSHALIASED,      /* compile and run - leave the field value on the stack */
    HB_P_MACROSYMBOL,           /* compile into a symbol name (used in function calls) */
    HB_P_MACROTEXT,             /* macro text substitution */
