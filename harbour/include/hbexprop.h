@@ -206,6 +206,7 @@ typedef struct HB_EXPR_
       } asOperator;
    } value;
    ULONG ulLength;
+   ULONG Counter;
    unsigned char ExprType;  /* internal expression type */
    USHORT ValType;          /* language level value type */
    struct HB_EXPR_ *pNext;  /* next expression in the list of expressions */
@@ -330,6 +331,7 @@ HB_EXPR_PTR hb_compExprReduce( HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprAssign( HB_EXPR_PTR, HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprEqual( HB_EXPR_PTR, HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR, HB_EXPR_PTR );
+HB_EXPR_PTR hb_compExprClone( HB_EXPR_PTR pSrc );
 ULONG hb_compExprListLen( HB_EXPR_PTR );
 void hb_compExprClear( HB_EXPR_PTR );
 char * hb_compExprDescription( HB_EXPR_PTR );
@@ -352,6 +354,7 @@ HB_EXPR_PTR hb_compExprGenStatement( HB_EXPR_PTR, HB_MACRO_DECL );
 HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR, HB_EXPR_PTR, HB_MACRO_DECL );
 HB_EXPR_PTR hb_compExprCBVarAdd( HB_EXPR_PTR, char *, HB_MACRO_DECL );
 void hb_compExprDelete( HB_EXPR_PTR, HB_MACRO_DECL );
+HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr, HB_MACRO_DECL  );
 
 #else
 
@@ -363,6 +366,7 @@ HB_EXPR_PTR hb_compExprGenStatement( HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR, HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprCBVarAdd( HB_EXPR_PTR, char *, BYTE );
 void hb_compExprDelete( HB_EXPR_PTR );
+HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr );
 
 #endif
 

@@ -123,6 +123,7 @@ HB_EXPR_PTR hb_compExprNew( int iType )
    pExpr->ExprType = iType;
    pExpr->pNext    = NULL;
    pExpr->ValType  = HB_EV_UNKNOWN;
+   pExpr->Counter  = 1;
 
    return pExpr;
 }
@@ -131,7 +132,17 @@ HB_EXPR_PTR hb_compExprNew( int iType )
  */
 void hb_compExprClear( HB_EXPR_PTR pExpr )
 {
-   HB_XFREE( pExpr );
+   if( --pExpr->Counter == 0 )
+      HB_XFREE( pExpr );
+}
+
+/* Increase a reference counter (this allows to share the same expression
+ * in more then one context)
+ */
+HB_EXPR_PTR hb_compExprClone( HB_EXPR_PTR pSrc )
+{
+   pSrc->Counter++;
+   return pSrc;
 }
 
 char * hb_compExprDescription( HB_EXPR_PTR pExpr )

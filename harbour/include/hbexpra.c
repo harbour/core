@@ -126,8 +126,11 @@ void hb_compExprDelete( HB_EXPR_PTR pExpr )
 #endif
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_compExprDelete()"));
-   HB_EXPR_USE( pExpr, HB_EA_DELETE );
-   HB_XFREE( pExpr );
+   if( --pExpr->Counter == 0 )
+   {
+      HB_EXPR_USE( pExpr, HB_EA_DELETE );
+      HB_XFREE( pExpr );
+   }
 }
 
 /* Delete all components and delete self
@@ -135,8 +138,11 @@ void hb_compExprDelete( HB_EXPR_PTR pExpr )
 void hb_compExprFree( HB_EXPR_PTR pExpr, HB_MACRO_DECL )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_compExprFree()"));
-   HB_EXPR_USE( pExpr, HB_EA_DELETE );
-   HB_XFREE( pExpr );
+   if( --pExpr->Counter == 0 )
+   {
+      HB_EXPR_USE( pExpr, HB_EA_DELETE );
+      HB_XFREE( pExpr );
+   }
    HB_SYMBOL_UNUSED( HB_MACRO_VARNAME );
 }
 
@@ -460,19 +466,28 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
             }
          }
          else
+         {
+            HB_EXPR_PTR pNext;
 #ifdef HB_MACRO_SUPPORT
             HB_XFREE( pName->value.asSymbol );
             pName->value.asSymbol = hb_strdup( "__GET" );
 #else
             pName->value.asSymbol = hb_compIdentifierNew( "__GET", TRUE );
-            if( pArg->ExprType == HB_ET_VARIABLE )
-            {
-               /* Change into a variable reference so a set/get codeblock
-                * will assign a new value correctly
-                */
-               pArg->ExprType = HB_ET_VARREF;
-            }
 #endif
+            /* store second and a rest of arguments */
+            pNext = pArg->pNext;
+            pArg->pNext = NULL;
+            /* replace first argument with a set/get codeblock */
+#ifdef HB_MACRO_SUPPORT
+            pArg = hb_compExprSetGetBlock( pArg, HB_MACRO_PARAM );
+#else
+            pArg = hb_compExprSetGetBlock( pArg );
+#endif
+            /* restore next arguments */
+            pArg->pNext = pNext;
+            /* set an updated list of arguments */
+            pParms->value.asList.pExprList = pArg;
+         }
       }
 
 #endif
@@ -791,3 +806,54 @@ HB_EXPR_PTR hb_compExprReduce( HB_EXPR_PTR pExpr )
   return hb_compExprListStrip( HB_EXPR_USE( pExpr, HB_EA_REDUCE ), NULL );
 }
 #endif
+
+/* Creates a set/get codeblock for passed expression used in __GET
+ *
+ * {|| IIF( PCOUNT()==0, <pExpr>, <pExpr>:=HB_PARAM(1) )}
+ */
+#ifdef HB_MACRO_SUPPORT
+HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr, HB_MACRO_DECL )
+#else
+HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr )
+#endif
+{
+   HB_EXPR_PTR pIIF;
+   HB_EXPR_PTR pSet;
+
+   /* create PCOUNT() expression */
+#ifdef HB_MACRO_SUPPORT
+   pIIF = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("PCOUNT") ), 
+              hb_compExprNewArgList( hb_compExprNewEmpty() ), HB_MACRO_PARAM );
+#else
+   pIIF = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("PCOUNT") ), 
+              hb_compExprNewArgList( hb_compExprNewEmpty() ) );
+#endif              
+   /* create PCOUNT()==0 */
+#ifdef HB_MACRO_SUPPORT
+   pIIF = hb_compExprSetOperand( hb_compExprNewEQ( pIIF ), hb_compExprNewLong( 0 ), HB_MACRO_PARAM );
+#else   
+   pIIF = hb_compExprSetOperand( hb_compExprNewEQ( pIIF ), hb_compExprNewLong( 0 ) );
+#endif   
+   /* create ( PCOUNT()==0, */
+   pIIF = hb_compExprNewList( pIIF );
+   /* create ( PCOUNT()==0, <pExpr>, */
+   pIIF = hb_compExprAddListExpr( pIIF, pExpr );
+   /* create HB_PCOUNT(1) */
+#ifdef HB_MACRO_SUPPORT
+   pSet = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("HB_PVALUE") ), 
+              hb_compExprNewArgList( hb_compExprNewLong( 1 ) ), HB_MACRO_PARAM );
+#else
+   pSet = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("HB_PVALUE") ), 
+              hb_compExprNewArgList( hb_compExprNewLong( 1 ) ) );
+#endif
+   /* create <pExpr>:=HB_PCOUNT(1) */
+   pSet = hb_compExprAssign( hb_compExprClone( pExpr ), pSet );   
+   /* create ( PCOUNT()==0, <pExpr>, <pExpr>:=HB_PARAM(1)) */
+   pIIF = hb_compExprAddListExpr( pIIF, pSet );
+   /* create IIF() expression */
+   pIIF = hb_compExprNewIIF( pIIF );
+   /* create a codeblock 
+    * NOTE: we can ommit a local variable if HB_PARAM() is used
+   */
+   return hb_compExprAddListExpr( hb_compExprNewCodeBlock(), pIIF );
+}
