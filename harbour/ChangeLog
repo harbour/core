@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-06-28 14:41 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * source/compiler/gencli.c
+    + do case implemented for Harbour.NET
+    ! .NET IL implementation for HB_P_JUMP, HB_P_EXACTLYEQUAL
+    + Added ObjExactlyEqual( object, object ) for HB_P_EXACTLYEQUAL support
+
 2003-06-28 11:56 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/compiler/gencli.c
     + for...next loops implemented for Harbour.NET
