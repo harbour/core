@@ -131,6 +131,34 @@
       [; ATail(GetList):Control:<guimsg>]                                   ;
        ; ATail(GetList):Control:Display()
 
+#command @ <top>, <left>, <bottom>, <right> GET <var>                    ;
+                        LISTBOX    <items>                               ;
+                        [VALID <valid>]                                  ;
+                        [WHEN <when>]                                    ;
+                        [CAPTION <caption>]                              ;
+                        [MESSAGE <message>]                              ;
+                        [COLOR <color>]                                  ;
+                        [FOCUS <fblock>]                                 ;
+                        [STATE <sblock>]                                 ;
+                        [<drop: DROPDOWN>]                               ;
+                        [<scroll: SCROLLBAR>]                            ;
+                        [SEND <msg>]                                     ;
+                        [GUISEND <guimsg>]                               ;
+                                                                         ;
+      => SetPos( <top>, <left> )                                         ;
+       ; AAdd( GetList,                                                  ;
+              _GET_( <var>, <(var)>, NIL, <{valid}>, <{when}> ) )        ;
+       ; ATail(GetList):Control := _ListBox_( ATail(Getlist):row,        ;
+                                              ATail(Getlist):col,        ;
+                <bottom>, <right>, <var>, <items>, <caption>, <message>, ;
+                          <color>, <{fblock}>, <{sblock}>, <.drop.>,     ; 
+                                   <.scroll.> )               ;
+       ; ATail(GetList):reader  := { | a, b, c, d |                      ;
+                                    GuiReader( a, b, c, d ) }            ;
+      [; ATail(GetList):<msg>]                                           ;
+      [; ATail(GetList):Control:<guimsg>]                                ;
+       ; ATail(GetList):Control:Display()
+
 
 #command READ [MSG AT <nRow>, <nLeft>, <nRight>          ;
                [MSG COLOR <cColor>]]                                    ;

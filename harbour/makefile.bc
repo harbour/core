@@ -319,6 +319,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\getlist.obj \
    $(OBJ_DIR)\getsys.obj \
    $(OBJ_DIR)\input.obj \
+   $(OBJ_DIR)\listbox.obj \
    $(OBJ_DIR)\memoedit.obj \
    $(OBJ_DIR)\memvarbl.obj \
    $(OBJ_DIR)\menuto.obj \
@@ -331,6 +332,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\radiogrp.obj \
    $(OBJ_DIR)\readkey.obj \
    $(OBJ_DIR)\readvar.obj \
+   $(OBJ_DIR)\scrollbr.obj \
    $(OBJ_DIR)\setfunc.obj \
    $(OBJ_DIR)\setta.obj \
    $(OBJ_DIR)\tbcolumn.obj \
@@ -1440,6 +1442,13 @@ $(OBJ_DIR)\lennum.obj : $(RTL_DIR)\lennum.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\listbox.c : $(RTL_DIR)\listbox.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\listbox.obj : $(OBJ_DIR)\listbox.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\math.obj : $(RTL_DIR)\math.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
@@ -1655,6 +1664,13 @@ $(OBJ_DIR)\saverest.obj : $(RTL_DIR)\saverest.c
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\scroll.obj : $(RTL_DIR)\scroll.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\scrollbr.c : $(RTL_DIR)\scrollbr.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\scrollbr.obj : $(OBJ_DIR)\scrollbr.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 

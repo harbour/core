@@ -24,7 +24,6 @@ string copies)
 
 Finish HbMake                                Luiz Rafael Culik
 
-CaClipper remaining classes                  Luiz Rafael Culik
 
 Map Harbour functions 10 chars to be         Luiz Rafael Culik
 compatible with Caclipper

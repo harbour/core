@@ -339,6 +339,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\getlist.obj \
    $(OBJ_DIR)\getsys.obj \
    $(OBJ_DIR)\input.obj \
+   $(OBJ_DIR)\listbox.obj \
    $(OBJ_DIR)\memoedit.obj \
    $(OBJ_DIR)\memvarbl.obj \
    $(OBJ_DIR)\menuto.obj \
@@ -351,6 +352,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\radiogrp.obj \
    $(OBJ_DIR)\readkey.obj \
    $(OBJ_DIR)\readvar.obj \
+   $(OBJ_DIR)\scrollbr.obj \
    $(OBJ_DIR)\setfunc.obj \
    $(OBJ_DIR)\setta.obj \
    $(OBJ_DIR)\tbcolumn.obj \
