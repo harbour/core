@@ -331,8 +331,12 @@ METHOD EditVar( nVar ) CLASS TDebugger
            // It is an object, don't do anything
             __DbgObject(::avars[nVar][2],cVarname)
       otherwise
-         ::aVars[ nVar ][ 2 ] := &uVarValue
-         &( ::aVars[ nVar ][ 1 ] ) := ::aVars[ nVar ][ 2 ]
+         if ::aVars[ nVar ][ 3 ] == "Local"
+            __vmVarLSet( nProcLevel, ::aVars[ nVar ][ 2 ], &uVarValue )
+         else
+            ::aVars[ nVar ][ 2 ] := &uVarValue
+            &( ::aVars[ nVar ][ 1 ] ) := ::aVars[ nVar ][ 2 ]
+         endif
    endcase
 
    ::oBrwVars:RefreshCurrent()
