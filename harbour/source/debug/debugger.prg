@@ -512,7 +512,7 @@ METHOD EditColor( nColor, oBrwColors ) CLASS TDebugger
 
    SetCursor( SC_NORMAL )
    @ Row(), Col() GET cColor COLOR SubStr( ::ClrModal(), 5 ) ;
-      VALID If( ValType( &cColor ) != "C", ( Alert( "Must be string" ), .f. ), .t. )
+      VALID If( Type( cColor ) != "C", ( Alert( "Must be string" ), .f. ), .t. )
 
    READ
    SetCursor( SC_NONE )

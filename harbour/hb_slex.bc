@@ -431,7 +431,8 @@ DEBUG_LIB_OBJS = \
    $(OBJ_DIR)\debugger.obj \
    $(OBJ_DIR)\dbgtarr.obj \
    $(OBJ_DIR)\dbgtobj.obj \
-   $(OBJ_DIR)\tbrwtext.obj
+   $(OBJ_DIR)\tbrwtext.obj \
+   $(OBJ_DIR)\dbgwa.obj
 
 #
 # COMMON.LIB rules
@@ -2017,6 +2018,13 @@ $(OBJ_DIR)\dbgtobj.c : $(DEBUG_DIR)\dbgtobj.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\dbgtobj.obj : $(OBJ_DIR)\dbgtobj.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(DEBUG_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\dbgwa.c : $(DEBUG_DIR)\dbgwa.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dbgwa.obj : $(OBJ_DIR)\dbgwa.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(DEBUG_LIB) $(ARFLAGS) -+$@,,
 
