@@ -1,3 +1,12 @@
+19990820-14:40 GMT+1 Victor Szel <info@szelvesz.hu>
+  * include/hbsetup.h
+    + HARBOUR_USE_GTAPI is automatically #defined if any type of the GTAPIs
+      is #defined.
+      So from now on only one of these should be #defined to turn on the GT:
+      #define HARBOUR_USE_DOS_GTAPI
+      #define HARBOUR_USE_OS2_GTAPI
+      #define HARBOUR_USE_WIN_GTAPI
+
 19990820-14:30 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/compiler/harbour.y
     source/hbpp/hbpp.c

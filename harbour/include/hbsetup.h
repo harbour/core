@@ -109,10 +109,14 @@
  *
  * By default they are disabled (symbols are not defined)
 */
-/*#define HARBOUR_USE_GTAPI*/
 /*#define HARBOUR_USE_DOS_GTAPI*/
 /*#define HARBOUR_USE_OS2_GTAPI*/
 /*#define HARBOUR_USE_WIN_GTAPI*/
+
+/* Indicate that one of the GTAPIs is defined */
+#if defined(HARBOUR_USE_DOS_GTAPI) || defined(HARBOUR_USE_OS2_GTAPI) || defined(HARBOUR_USE_WIN_GTAPI)
+  #define HARBOUR_USE_GTAPI
+#endif
 
 /* ***********************************************************************
  * Operating system specific definitions
