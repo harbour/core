@@ -1,4 +1,8 @@
 19990729-22:00 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/inkey.c
+      + added comments and example for implimenting ReleaseCPU
+
+19990729-22:00 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/console.c
       * HB_SHADOW/DBGSHADOW
         5th param is optinal and defaults to 7  (w/n)

@@ -29,6 +29,8 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.5    Paul Tucker                 ReleaseCPU comments
+   V 1.4    Victor Szel
    V 1.3    Victor Szel                 #include <x> changed to #include "x".
    V 1.2    Gonzalo Diethelm            ?
    V 1.1    David G. Holm               Committed to CVS.
@@ -104,11 +106,41 @@ void hb_releaseCPU( void )
 {
 /* TODO: Add code to release time slices on all platforms */
 #if defined(_Windows)
+  /* according to ms docs, you should not do this in a Win app. dos only */
 #elif defined(HARBOUR_GCC_OS2) || defined(__IBMCPP__)
 #elif defined(OS_DOS_COMPATIBLE)
 #elif defined(OS_UNIX_COMPATIBLE)
 #else
 #endif
+/* with the above said, here's how to do it when running in a winDos box */
+/* example - untested */
+
+/* NOTE: there is a bug under NT 4 (2000 unknown) -  if the app is running
+   in protected mode, time slices will _not_ be released - you must switch
+   to real mode first, execute the following, and switch back.
+
+   returns zero on failure. (means not supported)
+ */
+/*
+
+#if defined(__TURBOC__)
+   _AX = 0x1680;
+    geninterrupt(0x2f);
+   _AH = 0;
+   _AL ^= 0x80;
+#else
+    union REGS regs;
+    regs.h.ah = 0x16;
+    regs.h.al = 0x80;
+#if defined(__WATCOMC__) && defined(__386__)
+    int386(0x2f, &regs, &regs);
+#else
+    int86(0x2f, &regs, &regs);
+#endif
+    regs.h.ah  = 0;
+    regs.h.al ^= 0x80;  /* xor */
+#endif
+*/
 }
 
 int hb_inkeyGet( void )       /* Extract the next key from the keyboard buffer */
