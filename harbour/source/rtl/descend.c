@@ -75,7 +75,7 @@ HB_FUNC( DESCEND )
       if( HB_IS_STRING( pItem ) )
       {
          ULONG ulLen = hb_itemGetCLen( pItem );
-         char * szBuffer = ( char * ) hb_xgrab( ulLen );
+         char * szBuffer = ( char * ) hb_xgrab( ulLen + 1);
          hb_strDescend( szBuffer, hb_itemGetCPtr( pItem ), ulLen );
          hb_retclen( szBuffer, ulLen );
          hb_xfree( szBuffer );

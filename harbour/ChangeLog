@@ -7,6 +7,13 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+   * source/rtl/isprint.c
+     ! Made more multiplatform by passing the complete printer
+       name to the fsOpen() function.
+     * Platform specific uiPort moved to DOS branch.
+     + Added support for PRN under DOS.
+     + Added a C callable interface hb_printerIsReady() (not
        yet prototyped in the central headers).
      + Win32 version reworked so that it checks for the printer
        name passed to the function. This also made the program
