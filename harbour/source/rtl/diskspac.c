@@ -67,7 +67,7 @@ HB_FUNC( DISKSPACE )
    USHORT uiType = ISNUM( 2 ) ? hb_parni( 2 ) : HB_DISK_AVAIL;
    double dSpace = 0.0;
 
-   uiType = min( uiType, HB_DISK_TOTAL );
+   uiType = HB_MIN( uiType, HB_DISK_TOTAL );
 
 #if defined(HB_OS_DOS) || defined(__WATCOMC__)
 
