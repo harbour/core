@@ -1,3 +1,26 @@
+19990708-01:33 Bruno Cantero <bruno@issnet.net>
+CVSed by Andi Jahja <andij@aonlippo.co.id>
+
+source/rt/arrays.c
+  * hb_arrayGetDate()
+    - fixed warning : function returns address of local variable.
+
+include/extend.api
+  + #define _parinfa  hb_parinfa
+
+include/extend.h
+  + declaration  hb_parinfa
+
+source/rtl/extend.c:
+  * hb_parinfa
+    - now return long
+
+tests/working :
+  + extend1.prg
+  + extend2.c
+    These are test programs for Harbour extend system
+
+
 19990707-20:10 Eddie Runia <eddie@runia.com>
   * tests/working/mankala.prg; tests/working/transfrm.prg;
     tests/working/debugtst.prg; tests/working/readhrb.prg;
