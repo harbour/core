@@ -26,7 +26,8 @@
 **/
 
 #include "cgi.ch"
-#include "harbour.ch"
+#include "hbclip.ch"
+
 #define IF_BUFFER 65535
 
 FUNCTION ParseString( cString, cDelim, nRet )

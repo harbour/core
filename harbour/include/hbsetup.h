@@ -38,6 +38,9 @@
 
 #include <limits.h>
 
+/* Include settings common for .PRG and .C files */
+#include "hbsetup.ch"
+
 /* ***********************************************************************
  * This symbol defines if Harbour is compiled using C compiler
  * that support strict ANSI C only
@@ -121,6 +124,20 @@
 /*#define HARBOUR_STRICT_CLIPPER_COMPATIBILITY*/
 
 /* ***********************************************************************
+ * You can select here, whether you want to include feature introduced in
+ * Clipper implementations other than Cl*pper 5.2e.
+ *
+ * By default these are all turned on
+*/
+
+/* Include new CA-Cl*pper 5.3[a,b] functions */
+#define HB_COMPAT_C53
+/* Include new Alaska XBase++ functions */
+#define HB_COMPAT_XPP
+/* Include new CA-VO functions */
+#define HB_COMPAT_VO
+
+/* ***********************************************************************
  * You can select here, what type of main entry will be used in the 
  * application (main() or WinMain()).
  *
@@ -156,7 +173,7 @@
 
 /* Indicate that one of the GTAPIs is defined */
 #if defined(HARBOUR_USE_DOS_MSAPI) || defined(HARBOUR_USE_OS2_MSAPI) || defined(HARBOUR_USE_WIN_MSAPI)
-  #define HARBOUR_USE_MSAPI
+   #define HARBOUR_USE_MSAPI
 #endif
 
 /* ***********************************************************************

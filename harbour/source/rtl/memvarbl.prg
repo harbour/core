@@ -33,8 +33,10 @@
  *
  */
 
-#include "common.ch"
+#include "hbsetup.ch"
 #include "hbmemvar.ch"
+
+#include "common.ch"
 
 /*  $DOC$
  *  $FUNCNAME$

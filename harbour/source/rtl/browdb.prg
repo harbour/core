@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * TBROWSEDB() function
+ * TBROWSEDB() function, and DBSKIPPER() function for XBase++
  *
  * Copyright 1999 Paul Tucker <ptucker@sympatico.ca>
  * www - http://www.harbour-project.org
@@ -33,17 +33,30 @@
  *
  */
 
+#include "hbsetup.ch"
+
+/* NOTE: XBase++ has a standard function named dbSkipper(), it's not a
+         standard CA-Cl*pper 5.x function, though. */
+
 FUNCTION TBrowseDB( nTop, nLeft, nBottom, nRight )
 
    LOCAL oBrowse := TBrowseNew( nTop, nLeft, nBottom, nRight )
 
+#ifdef HB_COMPAT_XPP
+   oBrowse:SkipBlock     := { | nRecs | dbSkipper( nRecs ) }
+#else
    oBrowse:SkipBlock     := { | nRecs | Skipped( nRecs ) }
+#endif
    oBrowse:GoTopBlock    := { || dbGoTop() }
    oBrowse:GoBottomBlock := { || dbGoBottom() }
 
    RETURN oBrowse
 
+#ifdef HB_COMPAT_XPP
+FUNCTION dbSkipper( nRecs )
+#else
 STATIC FUNCTION Skipped( nRecs )
+#endif
 
    LOCAL nSkipped := 0
 
@@ -63,7 +76,7 @@ STATIC FUNCTION Skipped( nRecs )
          WHILE nSkipped > nRecs
             dbSkip( -1 )
             IF Bof()
-               exit
+               EXIT
             ENDIF
             --nSkipped
          ENDDO

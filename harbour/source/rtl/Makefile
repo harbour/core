@@ -6,6 +6,7 @@ ROOT = ../../
 
 C_SOURCES=\
         arrays.c \
+        binnum.c \
         classes.c \
         codebloc.c \
         console.c \

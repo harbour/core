@@ -1,3 +1,42 @@
+19991020-20:23 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/alert.prg
+     source/rtl/browdb.prg
+     source/rtl/memvarbl.prg
+     + #include hbsetup.ch added.
+   + include/hbsetup.ch
+     include/hbsetup.h
+     include/Makefile
+     + New header file added to setup things which are common to both 
+       .PRG and .C source files, currently HARBOUR_STRICT_CLIPPER_COMPATIBILITY 
+       was moved from hbsetup.h
+     + HB_COMPAT_C53
+       HB_COMPAT_XPP 
+       HB_COMPAT_VO
+       #defines added to be able to toggle inclusion of the new features 
+       of these compilers. All these are turned on by default.
+   * source/rtl/browdb.prg
+     + dbSkipper() function added, it's now guarded with 
+       HARBOUR_COMPAT_XPP, so there is a possibility to switch to the 
+       fully Clipper compliant, or the XBase++ compliant method.
+     + NOTE added about dbSkipper.
+   * source/rtl/filesys.c
+   + source/rtl/binnum.c (added)
+     * BIN2W(), BIN2I(), BIN2L(), I2BIN(), L2BIN() functions moved to 
+       a separate source file. Since these were not FileSys APi functions.
+       WARNING ! Please update non-GNU make systems.
+   - include/caundoc.api renamed to
+   + include/hbundoc.api
+     include/Makefile
+     tests/extend2.c
+     * Include file name standardized, now the HBUNDOC.API file should 
+       contain all undocumented API calls (not only for CA-Cl*pper).
+   - include/harbour.ch renamed to
+   + include/hbclip.ch
+     include/Makefile
+     samples/guestbk/testcgi.prg
+     * Include file renamed to better fit into the include file naming
+       scheme (hb prefix for all non-standard .ch files).
+
 19991020-13:27 GMT+1 Victor Szel <info@szelvesz.hu>
    * include/extend.h
      source/rtl/arrays.c

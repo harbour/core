@@ -12,7 +12,7 @@
 #include "extend.api"
 
 #ifdef __HARBOUR__
-   #include "caundoc.api"
+   #include "hbundoc.api"
 #endif
 
 CLIPPER HB_STRINGS1()

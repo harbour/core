@@ -40,16 +40,16 @@
  */
 
 /*
- * Extend as needed
+ * TODO: Extend as needed.
  */
 
 #ifndef __HARBOUR__
 
-#ifndef HB_HARBOUR_CH_
-#define HB_HARBOUR_CH_
+#ifndef HB_CLIP_CH_
+#define HB_CLIP_CH_
 
-#xtranslate HB_OsNewLine() => Chr( 13 ) + Chr( 10 )
+#xtranslate hb_OSNewLine() => Chr( 13 ) + Chr( 10 )
 
-#endif /* HB_HARBOUR_CH_ */
+#endif /* HB_CLIP_CH_ */
 
 #endif

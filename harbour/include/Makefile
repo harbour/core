@@ -47,6 +47,7 @@ PRG_HEADERS=\
         hbclass.ch   \
         hbextern.ch  \
         hbmemvar.ch  \
+        hbsetup.ch   \
         inkey.ch     \
         memoedit.ch  \
         rddsys.ch    \
@@ -57,12 +58,12 @@ PRG_HEADERS=\
         std.ch       \
 
 API_HEADERS=\
-        caundoc.api  \
         error.api    \
         extend.api   \
         filesys.api  \
         fm.api       \
         gt.api       \
+        hbundoc.api  \
         item.api     \
         rdd.api      \
         vm.api       \
