@@ -7,6 +7,12 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+      to call them from .hrb .
+
+2002-02-06 08:34 UTC+0100 Maurilio Longo <maurilio.longo@libero.it>
+   * include/hbapiitm.h	
+     ! fixed ::aRedraw handling inside ::Stabilize()
+	
 2002-02-05 21:22 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
    * contrib/odbc/Makefile
    * contrib/odbc/odbc.c
