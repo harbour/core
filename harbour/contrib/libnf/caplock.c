@@ -73,11 +73,12 @@ HB_FUNC(FT_CAPLOCK)
    hb_retl( ( int ) ( status_byte & 0x40 ) );
 
    if ( hb_pcount() )
+   {
       if ( ISLOG(1) )
          status_byte = ( status_byte | ( unsigned char ) 0x40 );
       else
          status_byte = ( status_byte & ( unsigned char ) 0xBF );
-
+   }
    return;
    }
 #endif
