@@ -296,7 +296,7 @@ METHOD Open() CLASS TODBC
 
          ::Fields[ len( ::Fields ) ] :FieldID   := i
          ::Fields[ len( ::Fields ) ] :FieldName := cColName
-         ::Fields[ len( ::Fields ) ] :DataSize  := nNameLen
+         ::Fields[ len( ::Fields ) ] :DataSize  := nColSize
          ::Fields[ len( ::Fields ) ] :DataType  := nDataType
          ::Fields[ len( ::Fields ) ] :DataDecs  := nDecimals
          ::Fields[ len( ::Fields ) ] :AllowNull := ( nNul != 0 )

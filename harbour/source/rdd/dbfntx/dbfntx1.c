@@ -724,7 +724,7 @@ static int hb_ntxTagFindCurrentKey( LPTAGINFO pTag, LPPAGEINFO pPage, LPKEYINFO 
          {
             kChild = hb_ntxTagFindCurrentKey( pTag, hb_ntxPageLoad(
                      pTag,p->page ), pKey, keylen, bExact, lSeek );
-            if( kChild == 0 || ( lSeek==2 && kChild < 0 ) )
+            if( kChild == 0 || ( lSeek==2 && kChild < 0 && k != 0 ) )
                k = kChild;
 
             if( k <= 0 )
