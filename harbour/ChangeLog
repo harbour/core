@@ -1,4 +1,4 @@
-20000207-12:22 GMT+1 Victor Szakats <info@szelvesz.hu>
+20000207-16:39 GMT+1 Victor Szakats <info@szelvesz.hu>
    * include/hbextern.ch
      source/runner/stdalone/external.prg
      ! Added #include "hbsetup.ch"
