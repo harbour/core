@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-11 14:30 UTC+0100 Maurilio Longo <maurilio.longo@libero.it>
+   * source/common/Makefile
+     + added hbgete.c entry
+   * source/common/hbgete.c
+     + added OS/2 specific code
+
 2001-12-11 00:02 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    + ChangeLog
@@ -21,7 +27,7 @@
    * source/vm/hvm.c
    * makefile.bc
    * makefile.vc
-     ! Removed assembler parts. TASM is no longer required to 
+     ! Removed assembler parts. TASM is no longer required to
        build Harbour.
 
    - source/common/hash.c
@@ -36,14 +42,14 @@
    * source/common/Makefile
    * makefile.vc
    * makefile.bc
-     ! File handle tweaking functions moved to a separate 
+     ! File handle tweaking functions moved to a separate
        source file.
 
    * source/common/hbgete.c
      * Some tweaks.
 
    * source/vm/hvm.c
-     - Removed some line not needed anymore, related to 
+     - Removed some line not needed anymore, related to
        Windows exception handler.
 
    * source/vm/estack.c
@@ -51,11 +57,11 @@
 
    * makefile.bc
    * makefile.vc
-     + Added note to not modify these files to add 
+     + Added note to not modify these files to add
        optional command line switches.
 
    * makefile.bc
-     - Removed explicit debug switches from on PDF 
+     - Removed explicit debug switches from on PDF
        related file and from the 16 bit branch.
 
 2001-12-10 19:55 GMT+1 Antonio Linares <alinares@fivetech.com>

@@ -7,6 +7,7 @@ ROOT = ../../
 C_SOURCES=\
 	hbfhnd.c \
 	hbfsapi.c \
+	hbgete.c \
 	hbhash.c \
 	hbstr.c \
 	hbtrace.c \

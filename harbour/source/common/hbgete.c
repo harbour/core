@@ -53,6 +53,9 @@
 /* NOTE: Notice that this code is needed as ANSI C getenv() crashes
          so badly when used from a Windows DLL. */
 
+/* For OS/2 */
+#define INCL_DOSMISC
+
 #define HB_OS_WIN_32_USED
 
 #include "hbapi.h"
@@ -68,9 +71,26 @@ char * hb_getenv( const char * name )
 
       if( nSize == 0 )
          pszBuffer[ 0 ] = '\0';
+
       else
          GetEnvironmentVariable( name, pszBuffer, nSize );
    }
+
+
+#elif defined(HB_OS_OS2)
+
+   {
+   	PSZ EnvValue = "";
+   	ULONG ulrc = DosScanEnv(name, &EnvValue);
+   	
+   	if (ulrc == NO_ERROR) {
+   	   strcpy( pszBuffer, (char *) EnvValue );
+   	
+   	} else {
+   	   pszBuffer[ 0 ] = '\0';
+   	
+   	}
+   }	
 
 #else
 
