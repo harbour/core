@@ -352,7 +352,7 @@ fflush( stderr );
                if( memcmp( s_mouse_event_seq, key_codes, s_mouse_event_len ) == 0 )
                {
                   /* Convert the mouse event into INKEY keycodes */
-                  return hb_mouse_xevent( key_codes+s_mouse_event_len, eventmask );
+                  return hb_mouse_xevent( ( char * ) key_codes+s_mouse_event_len, eventmask );
                }
             }
             /* keymap not found */
@@ -385,7 +385,7 @@ static void hb_gt_Add_keymap( int InkeyCode, char *key_string, BOOL bxfree )
          sum += key_string[ i++ ];
       sum &= HB_HASH_KEY - 1;
 
-      keymap = hb_xgrab( sizeof( struct key_map_struc ) );
+      keymap = ( struct key_map_struc * ) hb_xgrab( sizeof( struct key_map_struc ) );
       keymap->inkey_code = InkeyCode;
       keymap->key_string = key_string;
       keymap->length = iLength;
@@ -465,7 +465,7 @@ HB_FUNC( HB_GT_ADDKEYMAP )
 		char * code;
 		int len = hb_parclen(2);
 		
-		code = hb_xgrab( len + 1 );
+		code = ( char * ) hb_xgrab( len + 1 );
 		memcpy( code, hb_parc(2), len );
 		code[ len ] = '\0';
 		hb_gt_Add_keymap( hb_parni( 1 ), code, TRUE );

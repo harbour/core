@@ -48,7 +48,7 @@ void hb_compGenCObj( PHB_FNAME pFileName )
    char szOptions[ HB_CFG_LINE_LEN ] = "";
    char szCommandLine[ HB_CFG_LINE_LEN * 2 ];
    char szOutPath[ _POSIX_PATH_MAX ] = "\0";
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( HOST_OS_UNIX_COMPATIBLE )
    char szDefaultUnixPath[ _POSIX_PATH_MAX ] = "/etc:/usr/local/etc";
    #define HB_NULL_STR " > /dev/null"
    #define HB_ACCESS_FLAG F_OK

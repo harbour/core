@@ -102,13 +102,6 @@
 #include "hbmath.h"
 #include "hbapicdp.h"
 
-#if defined(__GNUC__) && defined(OS_UNIX_COMPATIBLE)
-   #define HB_HAS_SNPRINTF
-#elif defined(__WATCOMC__)
-   #define HB_HAS_SNPRINTF
-   #define snprintf _bprintf
-#endif 
-
 extern PHB_CODEPAGE hb_cdp_page;
 extern char *hb_vm_sNull;
 extern char *hb_vm_acAscii[256];
@@ -390,7 +383,7 @@ ULONG HB_EXPORT hb_itemCopyC( PHB_ITEM pItem, char * szBuffer, ULONG ulLen )
 
    if( pItem && HB_IS_STRING( pItem ) )
    {
-      if( ulLen == 0 )
+      if( ulLen == 0 || ulLen > pItem->item.asString.length )
          ulLen = pItem->item.asString.length;
 
       hb_xmemcpy( szBuffer, pItem->item.asString.value, ulLen );
@@ -601,7 +594,7 @@ void * HB_EXPORT hb_itemGetPtr( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemGetPtr(%p)", pItem));
 
-   if( pItem )
+   if( pItem && HB_IS_POINTER( pItem ) )
       return pItem->item.asPointer.value;
    else
       return NULL;
@@ -1760,11 +1753,7 @@ char * HB_EXPORT hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
             buffer = ( char * ) hb_xgrab( size );
             do
             {
-#ifndef HB_HAS_SNPRINTF
-               n = sprintf( buffer, "%p", hb_itemGetPtr( pItem ) );
-#else
                n = snprintf( buffer, size, "%p", hb_itemGetPtr( pItem ) );
-#endif
                if( (n > -1) && (n < size) )
                {
                   bFail = FALSE;

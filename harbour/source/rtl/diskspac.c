@@ -69,7 +69,7 @@
    #include <sys/mount.h>
 #elif defined(HB_OS_SUNOS)
    #include <sys/statvfs.h>
-#elif defined(HB_OS_UNIX)
+#elif defined(HB_OS_UNIX) && !defined(__WATCOMC__)
    #include <sys/vfs.h>
 #endif
 
@@ -203,7 +203,7 @@ HB_FUNC( DISKSPACE )
          bError = TRUE;
    }
 
-#elif defined(HB_OS_UNIX)
+#elif defined(HB_OS_UNIX) && !defined(__WATCOMC__)
 
    {
       char *szName = ISCHAR( 1 ) ? hb_parc( 1 ) : "/";

@@ -9,17 +9,16 @@ EXE_EXT = .exe
 LIB_PREF = lib
 LIB_EXT = .a
 
-CC = gcc
+CC = $(CCPREFIX)gcc
 CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE) -mno-cygwin
+CFLAGS = -Wall -W
 ifeq ($(HB_LEX),SIMPLEX)
-CFLAGS = -Wall -DSIMPLEX
-else
-CFLAGS = -Wall
+CFLAGS += -DSIMPLEX
 endif
 
-LD = gcc
+LD = $(CCPREFIX)gcc
 LD_OUT = -o
 
 # Add all libraries specified in CONTRIBS and LIBS.
@@ -30,11 +29,12 @@ else
 LINKPATHS += -L$(HB_LIB_COMPILE)
 endif
 
+# our libs have a lot of cross referenced now and we have to group them
+# untill we don't clean them
+LINKLIBS += -Wl,--start-group
+
 LINKLIBS += $(foreach lib, $(CONTRIBS), -l$(subst lib,,$(lib)))
 LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))
-
-# This library is needed for CharToOemBuff() and OemToCharBuff() support.
-LINKLIBS += -luser32 -lwinspool
 
 # If LIBS specifies the rdd library, add all DB drivers.
 ifeq ($(findstring rdd,$(LIBS)),rdd)
@@ -70,6 +70,11 @@ endif
 # cyclic dependencies, but I think it is not really necessary if the
 # libraries are kept in proper order.
 # LINKLIBS += -Wl,-)
+LINKLIBS += -Wl,--end-group
+
+# This library is needed for CharToOemBuff() and OemToCharBuff() support.
+LINKLIBS += -luser32 -lwinspool
+
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 # It causes that every echo command will be separated by LF
@@ -85,7 +90,7 @@ echo. CREATE $@ > __lib__.tmp
 $(foreach file, $^, $(lib_object))
 echo. SAVE >> __lib__.tmp
 echo. END >> __lib__.tmp
-$(AR) -M < __lib__.tmp
+$(AR) $(ARFLAGS) -M < __lib__.tmp
 endef
 
 # NOTE: The empty line below HAVE TO exist!
@@ -104,11 +109,16 @@ endef
 
 LDFLAGS = $(LINKPATHS) -mno-cygwin
 
-AR = ar
-ARFLAGS = $(A_USR)
-AR_RULE = $(AR) $(ARFLAGS) r $@ $^ || $(RM) $@
-#AR_RULE = $(create_library)
+RANLIB = $(CCPREFIX)ranlib
 
-#LD_RULE = $(link_exe_file)
+AR = $(CCPREFIX)ar
+ARFLAGS = $(A_USR)
+
+ifeq ($(SHLVL),) # COMMAND.COM - length of command line is limited
+AR_RULE = $(create_library)
+LD_RULE = $(link_exe_file)
+else
+AR_RULE = $(AR) $(ARFLAGS) r $@ $^ && $(RANLIB) $@ || $(RM) $@
+endif
 
 include $(TOP)$(ROOT)config/rules.cf

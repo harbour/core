@@ -67,7 +67,7 @@
    #include <sys/mount.h>
 #elif defined(HB_OS_SUNOS)
    #include <sys/statvfs.h>
-#elif defined( HB_OS_UNIX )
+#elif defined( HB_OS_UNIX ) && !defined(__WATCOMC__)
    #include <sys/vfs.h>
 #endif
 
@@ -306,7 +306,7 @@ HB_FUNC( HB_DISKSPACE )
       }
    }
 
-#elif defined(HB_OS_UNIX)
+#elif defined(HB_OS_UNIX) && !defined(__WATCOMC__)
 
    {
 #if defined(HB_OS_SUNOS)

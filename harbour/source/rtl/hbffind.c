@@ -145,7 +145,9 @@ HB_FILE_VER( "$Id$" )
    #include <errno.h>
    #include <dirent.h>
    #include <time.h>
+#if !defined( __WATCOMC__ )
    #include <fnmatch.h>
+#endif
 
    typedef struct
    {
@@ -727,7 +729,11 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          {
             strcpy( string, info->entry->d_name );
       
+#if defined( __WATCOMC__ )
+            if( hb_strMatchWild( string, info->pattern ) )
+#else
             if( fnmatch( info->pattern, string, FNM_PERIOD | FNM_PATHNAME ) == 0 )
+#endif
             {
                bFound = TRUE;
                break;

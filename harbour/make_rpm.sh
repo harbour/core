@@ -18,8 +18,9 @@
 # --with pgsql       - build pgsql lib
 # --with odbc        - build build odbc lib
 # --with allegro     - build GTALLEG - Allegro based GT driver
+# --without gpl      - do not build libs which needs GPL 3-rd party code
 # --without nf       - do not build nanforum lib
-# --without x11      - do not build GTXVT
+# --without x11      - do not build GTXVT and GTXWC
 # --without gpm      - build GTSLN and GTCRS without GPM support
 # --without gtsln    - do not build GTSLN
 ######################################################################
@@ -49,7 +50,7 @@ get_rpmmacro()
     echo -n "${R}"
 }
 
-NEED_RPM="gcc binutils bash bison ncurses ncurses-devel"
+NEED_RPM="make gcc binutils bison flex bash ncurses ncurses-devel"
 
 FORCE=""
 BUGGY_RPM=""
@@ -100,10 +101,19 @@ if test_reqrpm "allegro-devel"
 then
     INST_PARAM="${INST_PARAM} --with allegro"
 fi
-if ! test_reqrpm "gpm-devel"
+if [ "${HB_COMMERCE}" = "yes" ]
+then
+    INST_PARAM="${INST_PARAM} --without gpl"
+fi
+if [ "${HB_COMMERCE}" = "yes" ] || ! test_reqrpm "gpm-devel"
 then
     INST_PARAM="${INST_PARAM} --without gpm"
 fi
+if ! test_reqrpm "XFree86-devel"
+then
+    INST_PARAM="${INST_PARAM} --without X11"
+fi
+
 
 TOINST_LST=""
 for i in ${NEED_RPM}

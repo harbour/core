@@ -55,14 +55,12 @@
 #include <time.h>
 #if defined( HB_OS_BSD)
    #include <sys/time.h>
-   #include <sys/times.h>
-   #include <unistd.h>
-#elif defined( OS_UNIX_COMPATIBLE )
-   #include <sys/timeb.h>
-   #include <sys/times.h>
-   #include <unistd.h>
 #else
-   #include <sys\timeb.h>
+   #include <sys/timeb.h>
+#endif
+#if defined( OS_UNIX_COMPATIBLE )
+   #include <sys/times.h>
+   #include <unistd.h>
 #endif
 
 double hb_dateSeconds( void )

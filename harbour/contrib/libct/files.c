@@ -52,16 +52,15 @@
  */
 
 #define HB_OS_WIN_32_USED
-#include <hbapi.h>
-#include <hbapifs.h>
+#include "hbapi.h"
+#include "hbapifs.h"
+#include "hb_io.h"
 
 #if defined( HB_OS_DOS ) && !defined( __WATCOMC__ )
    static struct ffblk fsOldFiles;
 #endif
 
 #if defined(HB_OS_OS2) && defined(__GNUC__)
-
-   #include "hb_io.h"
 
    #if defined(__EMX__)
       #include <emx/syscalls.h>
@@ -78,14 +77,12 @@
       #include <sys/farptr.h>
       #include <sys/param.h>
    #endif
-      #include "hb_io.h"
-      #include "dos.h"
-    #if defined( __WATCOMC__ )
-    #else
+    #include "dos.h"
+    #if !defined( __WATCOMC__ )
       #include <dir.h>
     #endif
 #endif
-#if defined(__GNUC__) && !defined(__MINGW32__)
+#if defined(OS_UNIX_COMPATIBLE) || (defined(__GNUC__) && !defined(__MINGW32__))
    #include <sys/types.h>
    #include <sys/stat.h>
    #include <fcntl.h>

@@ -74,14 +74,6 @@
       /* disabled to avoid problems with windows.h */
       /* #define HB_OS_WIN_32_USED */
    #endif
-   /*
-    * This is a temporary hack to resolve problem with binary
-    * compatibility 3-rd party binaries - mostly FWH now.
-    * I hope we will be able to remove it soon
-   #ifndef HB_LONG_HOLDERS
-      #define HB_FWH_COMPATIBLE
-   #endif
-    */
 #else
    #undef HB_WIN32_IO
    #undef HB_OS_WIN_32_USED

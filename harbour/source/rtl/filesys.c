@@ -108,81 +108,82 @@
 
 #if defined(OS_UNIX_COMPATIBLE)
    #include <unistd.h>
-#endif
-
-#if defined(__GNUC__) && !defined(__MINGW32__)
+   #include <signal.h>
    #include <sys/types.h>
-   #include <sys/stat.h>
-   #include <fcntl.h>
-   #include <errno.h>
-
-   #if defined(__CYGWIN__)
-      #include <io.h>
+   #include <sys/wait.h>
+   #if !defined( HB_OS_DARWIN )
+      extern char **environ;
+   #else
+      #include <crt_externs.h>
+      #define environ (*_NSGetEnviron())
    #endif
-
-   #if defined(__DJGPP__)
-      #include <dir.h>
-      #define _getdrive getdisk
-      #define _chdrive  setdisk
-   #endif
-
-   #if !defined(HAVE_POSIX_IO)
-      #define HAVE_POSIX_IO
-   #endif
-
-   extern int rename( const char *, const char * );
-
 #endif
-
-#if defined(__WATCOMC__)
+#if ( defined(__BORLANDC__) || defined(__IBMCPP__) || defined(_MSC_VER) || \
+      defined(__MINGW32__) || defined(__WATCOMC__) ) && !defined( HB_OS_UNIX )
    #include <sys/stat.h>
    #include <share.h>
    #include <fcntl.h>
-   #include <direct.h>
    #include <errno.h>
-   #include <dos.h>
-
-   #if !defined(HAVE_POSIX_IO)
-      #define HAVE_POSIX_IO
-   #endif
-   #define ftruncate chsize
-#endif
-
-#if defined(__BORLANDC__) || defined(__IBMCPP__) || defined(_MSC_VER) || defined(__MINGW32__)
-   #include <sys\stat.h>
-   #include <share.h>
-   #include <fcntl.h>
    #include <direct.h>
+   #include <process.h>
    #if defined(__BORLANDC__)
       #include <dir.h>
       #include <dos.h>
-      #include <windows.h>
+   #elif defined(__WATCOMC__)
+      #include <dos.h>
    #endif
 
    #if defined(_MSC_VER) || defined(__MINGW32__)
-      #include <sys\locking.h>
+      #include <sys/locking.h>
       #define ftruncate _chsize
       #if defined(__MINGW32__) && !defined(_LK_UNLCK)
          #define _LK_UNLCK _LK_UNLOCK
       #endif
-      #if defined(_MSC_VER) && !defined(HAVE_POSIX_IO)
-         #define HAVE_POSIX_IO
-      #endif
    #else
       #define ftruncate chsize
-      #if !defined(HAVE_POSIX_IO)
-         #define HAVE_POSIX_IO
-      #endif
    #endif
+   #if !defined(HAVE_POSIX_IO)
+      #define HAVE_POSIX_IO
+   #endif
+#elif defined(__GNUC__) || defined( HB_OS_UNIX )
+   #include <sys/types.h>
+   #include <sys/stat.h>
+   #include <fcntl.h>
    #include <errno.h>
+   #if defined(__CYGWIN__)
+      #include <io.h>
+   #elif defined(__DJGPP__)
+      #include <dir.h>
+   #endif
+   #if !defined(HAVE_POSIX_IO)
+      #define HAVE_POSIX_IO
+   #endif
 #endif
 
 #if defined(__MPW__)
    #include <fcntl.h>
 #endif
 
+#if defined(HB_OS_HPUX)
+   extern int fdatasync(int fildes);
+#endif
+
 #if defined(HB_OS_DOS)
    #include <dos.h>
+#endif
+
+#if defined( HB_WIN32_IO )
+   #include <windows.h>
+
+   #if ( defined( _MSC_VER ) || defined( __LCC__ ) ) && !defined( INVALID_SET_FILE_POINTER )
+      #define INVALID_SET_FILE_POINTER ((DWORD)-1)
+   #endif
+#endif
+
+#ifdef HB_OS_OS2
+   #include <sys/signal.h>
+   #include <sys/process.h>
+   #include <sys/wait.h>
 #endif
 
 #ifndef O_BINARY
@@ -274,11 +275,6 @@ static USHORT s_uiErrorLast = 0;
    #define HB_FS_SOPEN
 #endif
 
-#if ( defined(HAVE_POSIX_IO) && ( defined(HB_OS_OS2) || defined(HB_OS_DOS) || defined(HB_OS_WIN_32) ) && ! defined(__CYGWIN__) ) || defined(__MINGW32__)
-/* These platforms and/or compilers have common drive letter support */
-   #define HB_FS_DRIVE_LETTER
-#endif
-
 #if UINT_MAX == USHRT_MAX
    #define LARGE_MAX ( UINT_MAX - 1L )
 #else
@@ -300,8 +296,6 @@ static USHORT s_uiErrorLast = 0;
 /* Convert HARBOUR flags to IO subsystem flags */
 
 #if defined(HB_FS_FILE_IO)
-
-extern char **environ;
 
 static int convert_open_flags( USHORT uiFlags )
 {
@@ -550,7 +544,7 @@ FHANDLE hb_fsPOpen( BYTE * pFilename, BYTE * pMode )
       ULONG ulLen;
       int iMaxFD;
 
-      ulLen = strlen( pFilename );
+      ulLen = strlen( ( char * ) pFilename );
       if( pMode && ( *pMode == 'r' || *pMode == 'w' ) )
          bRead = ( *pMode == 'r' );
       else
@@ -570,7 +564,7 @@ FHANDLE hb_fsPOpen( BYTE * pFilename, BYTE * pMode )
       }
       if( pFilename[ ulLen - 1 ] == '|' )
       {
-          pbyTmp = hb_strdup( pFilename );
+          pbyTmp = hb_strdup( ( char * ) pFilename );
           pbyTmp[--ulLen] = 0;
           pFilename = pbyTmp;
       } else
@@ -1275,7 +1269,6 @@ BOOL HB_EXPORT  hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
    }
 
 #elif defined(HB_OS_OS2)
-
    {
       struct _FILELOCK fl, ful;
 
@@ -1308,12 +1301,9 @@ BOOL HB_EXPORT  hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
       default:
          bResult = FALSE;
       }
-
       s_uiErrorLast = errno;
    }
-
 #elif defined(_MSC_VER)
-
    {
       ULONG ulOldPos = hb_fsSeek( hFileHandle, ulStart, FS_SET );
 
@@ -1335,9 +1325,7 @@ BOOL HB_EXPORT  hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
 
       hb_fsSeek( hFileHandle, ulOldPos, FS_SET );
    }
-
 #elif defined(__MINGW32__)
-
    {
       ULONG ulOldPos = hb_fsSeek( hFileHandle, ulStart, FS_SET );
 
@@ -1359,9 +1347,7 @@ BOOL HB_EXPORT  hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
 
       hb_fsSeek( hFileHandle, ulOldPos, FS_SET );
    }
-
-#elif defined(__GNUC__) && defined(HB_OS_UNIX)
-
+#elif defined(HB_OS_UNIX)
    {
       /* TODO: check for append locks (SEEK_END)
        */
@@ -1396,7 +1382,6 @@ BOOL HB_EXPORT  hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
          default:
             bResult = FALSE;
       }
-
       s_uiErrorLast = bResult ? 0 : errno;
    }
 
@@ -1747,11 +1732,13 @@ BOOL HB_EXPORT hb_fsMkDir( BYTE * pDirname )
 
    errno = 0;
 
-   #if !defined(__WATCOMC__) && !defined(__BORLANDC__) && !defined(__IBMCPP__) && !defined(__MINGW32__)
-      bResult = ( mkdir( ( char * ) pDirname, S_IWUSR | S_IRUSR | S_IXUSR ) == 0 );
-   #else
+#  if ! defined(HB_OS_UNIX) && \
+      ( defined(__WATCOMC__) || defined(__BORLANDC__) || \
+        defined(__IBMCPP__) || defined(__MINGW32__) )
       bResult = ( mkdir( ( char * ) pDirname ) == 0 );
-   #endif
+#  else
+      bResult = ( mkdir( ( char * ) pDirname, S_IRWXU | S_IRWXG | S_IRWXO ) == 0 );
+#  endif
 
    s_uiErrorLast = errno;
 
@@ -1931,7 +1918,7 @@ USHORT HB_EXPORT hb_fsChDrv( BYTE nDrive )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsChDrv(%d)", (int) nDrive));
 
-#if defined(HB_FS_DRIVE_LETTER)
+#if defined(OS_HAS_DRIVE_LETTER)
 
  #if defined( __WATCOMC__ )
 
@@ -2003,7 +1990,7 @@ USHORT HB_EXPORT hb_fsIsDrv( BYTE nDrive )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsIsDrv(%d)", (int) nDrive));
 
-#if defined(HB_FS_DRIVE_LETTER)
+#if defined(OS_HAS_DRIVE_LETTER)
 
  #if defined( __WATCOMC__ )
 
@@ -2068,10 +2055,10 @@ BOOL HB_EXPORT  hb_fsIsDevice( FHANDLE hFileHandle )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsIsDevice(%p)", hFileHandle));
 
-#if defined(HB_FS_DRIVE_LETTER)
+#if defined(HB_FS_FILE_IO)
 
    errno = 0;
-   bResult = ( isatty( hFileHandle ) == 0 );
+   bResult = ( isatty( hFileHandle ) != 0 );
    s_uiErrorLast = errno;
 
 #else
@@ -2093,8 +2080,22 @@ BYTE HB_EXPORT  hb_fsCurDrv( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsCurDrv()"));
 
-#if defined(HB_FS_DRIVE_LETTER)
+#if defined(OS_HAS_DRIVE_LETTER)
 
+   #if defined( __WATCOMC__ )
+   {
+      /* 'unsigned int' _have to_ be used in Watcom
+       */
+      unsigned uiDrive;
+
+      /* 1 = A:, 2 = B:, 3 = C:, etc
+       * _dos_*() functions don't set 'errno'
+       */
+      _dos_getdrive( &uiDrive );
+      s_uiErrorLast = 0;
+      uiResult = ( USHORT ) uiDrive - 1;
+   }
+   #else
    {
       errno = 0;
       uiResult = _getdrive();
@@ -2114,21 +2115,7 @@ BYTE HB_EXPORT  hb_fsCurDrv( void )
       #endif
       s_uiErrorLast = errno;
    }
-
-#elif defined( __WATCOMC__ )
-
-   {
-      /* 'unsigned int' _have to_ be used in Watcom
-       */
-      unsigned uiDrive;
-
-      /* 1 = A:, 2 = B:, 3 = C:, etc
-       * _dos_*() functions don't set 'errno'
-       */
-      _dos_getdrive( &uiDrive );
-      s_uiErrorLast = 0;
-      uiResult = ( USHORT ) uiDrive - 1;
-   }
+   #endif
 
 #else
 

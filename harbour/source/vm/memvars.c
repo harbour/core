@@ -400,14 +400,6 @@ void hb_memvarValueDecGarbageRef( HB_HANDLE hValue )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarValueDecRef(%lu)", hValue));
 
-   /* Might be called from hb_gcAll() after hb_memvarsRelease()
-    * if HB_FM_STATISTICS defined.
-    */
-   if( s_globalTable == NULL )
-   {
-      return;
-   }
-
    pValue = s_globalTable + hValue;
 
    HB_TRACE(HB_TR_INFO, ("Memvar item (%i) decrement refCounter=%li", hValue, pValue->counter-1));

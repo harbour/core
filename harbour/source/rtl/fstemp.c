@@ -65,7 +65,7 @@
 
 /* NOTE: The buffer must be at least _POSIX_PATH_MAX chars long */
 
-#if !defined( HB_OS_UNIX )
+#if !defined( HB_OS_UNIX ) || defined( __WATCOMC__ )
 static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * pszPrefix )
 {
    /* TODO: Implement these: */
@@ -92,7 +92,7 @@ FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiA
 
    errno = 0;
 
-#if !defined( HB_OS_UNIX )
+#if !defined( HB_OS_UNIX ) || defined( __WATCOMC__ )
    while( --nAttemptLeft )
    {
       if( hb_fsTempName( pszName, pszDir, pszPrefix ) )
@@ -117,7 +117,7 @@ FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiA
 #else
    HB_SYMBOL_UNUSED( uiAttr );
 
-   if( ( ( pszDir ? strlen( pszDir ) : 0 ) + ( pszPrefix ? strlen( pszPrefix ) : 0 ) + 6 ) < _POSIX_PATH_MAX )
+   if( ( ( pszDir ? strlen( ( char * ) pszDir ) : 0 ) + ( pszPrefix ? strlen( ( char * ) pszPrefix ) : 0 ) + 6 ) < _POSIX_PATH_MAX )
    {
       FHANDLE fhnd;
       char cTemplate[_POSIX_PATH_MAX];
@@ -126,7 +126,7 @@ FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiA
       if( pszDir )
       {
          int nLen;
-         strcpy( cTemplate, pszDir );
+         strcpy( cTemplate, ( char * ) pszDir );
          nLen = strlen( cTemplate );
          if( cTemplate[nLen] != hb_set.HB_SET_DIRSEPARATOR )
          {
@@ -136,7 +136,7 @@ FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiA
       }
       if( pszPrefix )
       {
-         strcat( cTemplate, pszPrefix );
+         strcat( cTemplate, ( char * ) pszPrefix );
       }
       strcat( cTemplate, "XXXXXX" ); /* required by mkstemp */
       while( --nAttemptLeft )
@@ -144,7 +144,7 @@ FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiA
          fhnd = mkstemp( cTemplate );	
          if( fhnd >= 0 )
          {
-            strcpy( pszName, cTemplate );
+            strcpy( ( char * ) pszName, cTemplate );
             return fhnd;
          }
       }

@@ -100,12 +100,17 @@ HB_FUNC( NETNAME )
 #if defined(HB_OS_UNIX) || ( defined(HB_OS_OS2) && defined(__GNUC__) )
 
    {
+#if defined(__WATCOMC__)
+      char * pszValue = hb_getenv( "HOSTNAME" );
+      hb_retc_buffer( pszValue );
+#else
       char szValue[ MAXGETHOSTNAME + 1 ];
       szValue[ 0 ] = '\0';
 
       gethostname( szValue, MAXGETHOSTNAME );
 
       hb_retc( szValue );
+#endif
    }
 
 #elif defined(HB_OS_DOS)

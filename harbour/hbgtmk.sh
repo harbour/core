@@ -7,7 +7,7 @@
 # Copyright 2003 Przemyslaw Czerpak <druzus@polbox.com>
 # This script checks you have all tools to build Harbour binaries
 # installed then takes current Harbour sources from SourceForge CVS
-# and build binaries RPMs at your local host
+# and build binary RPMs at your local host
 #
 # See doc/license.txt for licensing terms.
 # ---------------------------------------------------------------
@@ -23,7 +23,7 @@ test_reqrpm()
 }
 
 TOINST_LST=""
-for i in cvs gcc binutils bash bison ncurses ncurses-devel
+for i in cvs make gcc binutils bison flex bash ncurses ncurses-devel
 do
     test_reqrpm "$i" || TOINST_LST="${TOINST_LST} $i"
 done

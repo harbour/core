@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/bin/sh
+[ "$BASH" ] || exec bash `which $0` ${1+"$@"}
 #
 # $Id$
 #
@@ -15,53 +16,86 @@
 # ---------------------------------------------------------------
 
 if [ -z "$HB_ARCHITECTURE" ]; then
-    hb_arch=`uname -s | tr -d "[-]" | tr "[A-Z]" "[a-z]" 2>/dev/null`
-    case "$hb_arch" in
-        *windows*) hb_arch="w32" ;;
-        *dos)      hb_arch="dos" ;;
-        *bsd)      hb_arch="bsd" ;;
-    esac
+    if [ "$OSTYPE" = "msdosdjgpp" ]; then
+        hb_arch="dos"
+    else
+        hb_arch=`uname -s | tr -d "[-]" | tr '[A-Z]' '[a-z]' 2>/dev/null`
+        case "$hb_arch" in
+            *windows*) hb_arch="w32" ;;
+            *dos)      hb_arch="dos" ;;
+            *bsd)      hb_arch="bsd" ;;
+        esac
+    fi
     export HB_ARCHITECTURE="$hb_arch"
 fi
 
 if [ -z "$HB_COMPILER" ]; then
     case "$HB_ARCHITECTURE" in
-        w32) hb_comp="mingw32" ;;
-        dos) hb_comp="djgpp" ;;
-        *)   hb_comp="gcc" ;;
+        w32) HB_COMPILER="mingw32" ;;
+        dos) HB_COMPILER="djgpp" ;;
+        *)   HB_COMPILER="gcc" ;;
     esac
-    export HB_COMPILER="$hb_comp"
+    export HB_COMPILER
 fi
-if [ -z "$HB_GT_LIB" ]; then export HB_GT_LIB=; fi
+
+if [ -z "$HB_GT_LIB" ]; then
+    case "$HB_ARCHITECTURE" in
+        w32) HB_GT_LIB="gtwin" ;;
+        dos) HB_GT_LIB="gtdos" ;;
+        os2) HB_GT_LIB="gtos2" ;;
+        *)   HB_GT_LIB="gtstd" ;;
+    esac
+    export HB_GT_LIB
+fi
+
+if [ -z "$HB_GPM_MOUSE" ]; then
+    if [ "$HB_ARCHITECTURE" = "linux" ] && \
+       ( [ -f /usr/include/gpm.h ] || [ -f /usr/local/include/gpm.h ]); then
+        HB_GPM_MOUSE=yes
+    else
+        HB_GPM_MOUSE=no
+    fi
+    export HB_GPM_MOUSE
+fi
+
+if [ -z "$HB_COMMERCE" ]; then export HB_COMMERCE=no; fi
+
+if [ "$HB_COMMERCE" = yes ]
+then
+   export HB_GPM_MOUSE=no
+   export HB_WITHOUT_GTSLN=yes
+fi
 
 # export PRG_USR=
 # export C_USR=
 # export L_USR=
 
+if [ -z "$PREFIX" ]; then export PREFIX=/usr/local; fi
+
 # Set to constant value to be consistent with the non-GNU make files.
 
-if [ -z "$HB_BIN_INSTALL" ]; then export HB_BIN_INSTALL=bin/; fi
-if [ -z "$HB_LIB_INSTALL" ]; then export HB_LIB_INSTALL=lib/; fi
-if [ -z "$HB_INC_INSTALL" ]; then export HB_INC_INSTALL=include/; fi
+if [ -z "$HB_BIN_INSTALL" ]; then export HB_BIN_INSTALL=$PREFIX/bin/; fi
+if [ -z "$HB_LIB_INSTALL" ]; then export HB_LIB_INSTALL=$PREFIX/lib/harbour/; fi
+if [ -z "$HB_INC_INSTALL" ]; then export HB_INC_INSTALL=$PREFIX/include/harbour/; fi
 
 if [ -z "$HB_ARCHITECTURE" ]; then
-   echo Error: HB_ARCHITECTURE is not set.
+   echo "Error: HB_ARCHITECTURE is not set."
 fi
 if [ -z "$HB_COMPILER" ]; then
-   echo Error: HB_COMPILER is not set.
+   echo "Error: HB_COMPILER is not set."
 fi
 
 if [ -z "$HB_ARCHITECTURE" ] || [ -z "$HB_COMPILER" ]; then
 
    echo
-   echo Usage: make_gnu.sh [command]
+   echo "Usage: make_gnu.sh [command]"
    echo
-   echo The following commands are supported:
+   echo "The following commands are supported:"
    echo "  - all (default)"
    echo "  - clean"
    echo "  - install"
    echo
-   echo Notes:
+   echo "Notes:"
    echo
    echo "  - HB_ARCHITECTURE and HB_COMPILER envvars must be set."
    echo "    The following values are currently supported:"
@@ -86,8 +120,8 @@ if [ -z "$HB_ARCHITECTURE" ] || [ -z "$HB_COMPILER" ]; then
    echo "      - When HB_ARCHITECTURE=w32"
    echo "        - bcc32   (Borland C++ 4.x, 5.x, Windows 32-bit)"
    echo "        - gcc     (Cygnus/Cygwin GNU C, Windows 32-bit)"
-   echo "        - mingw32 (Cygnus/Mingw32 GNU C, Windows 32-bit)"
-   echo "        - rxsnt   (EMX/RSXNT/Win32 GNU C, Windows 32-bit)"
+   echo "        - mingw32 (MinGW32 GNU C, Windows 32-bit)"
+   echo "        - rsxnt   (EMX/RSXNT/Win32 GNU C, Windows 32-bit)"
    echo "        - icc     (IBM Visual Age C++, Windows 32-bit)"
    echo "        - msvc    (Microsoft Visual C++, Windows 32-bit)"
    echo "      - When HB_ARCHITECTURE=linux"
@@ -119,7 +153,7 @@ else
    # ---------------------------------------------------------------
    # Start the GNU make system
 
-   if [ "$HB_ARCHITECTURE" = "bsd" ]; then
+   if [ "$HB_ARCHITECTURE" = "bsd" ] || [ `uname` = "FreeBSD" ]; then
       gmake $*
    else
       make $*

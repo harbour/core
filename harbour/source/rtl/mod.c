@@ -53,6 +53,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
+#include "hbmath.h"
 
 /* NOTE: In CA-Cl*pper this is written in Clipper, see the source below,
          and the error handling is NOT made here, but in the % operator.
@@ -75,12 +76,7 @@ HB_FUNC( MOD )
 
       if( dBase )
       {
-         double dResult = dNumber - ( ( long ) ( dNumber / dBase ) * dBase );
-
-         if( dResult * dBase < 0 )
-            hb_retnd( dResult + dBase );
-         else
-            hb_retnd( dResult );
+         hb_retnd( fmod( dNumber, dBase ) );
       }
       else
       {

@@ -40,19 +40,13 @@ MV = move
 MD = md
 
 dirbase::
-	-if not exist $(HB_ARCHITECTURE) $(MD) $(HB_ARCHITECTURE)
-	-if not exist $(ARCH_DOS)        $(MD) $(ARCH_DOS)
+	-@for %%d in ($(HB_ARCHITECTURE) $(ARCH_DOS)) do if not exist %%d\. $(MD) %%d
 
 clean::
-	-for %f in ($(ARCH_DOS)\*.*) do $(RM) %f
-	-for %%f in ($(ARCH_DOS)\*.*) do $(RM) %%f
-	-if exist *.bak $(RM) *.bak
-	-if exist *.obj $(RM) *.obj
-	-if exist core $(RM) core
-	-if exist *.o $(RM) *.o
-	-if exist *.tds $(RM) *.tds
-	-$(RD) $(ARCH_DOS)
-	-$(RD) $(HB_ARCHITECTURE)
+	-@for %%f in ($(ARCH_DOS)\*.* *.bak *.obj *.o *.tds) do $(RM) %%f
+	-@for %f in ($(ARCH_DOS)\*.* *.bak *.obj *.o *.tds) do $(RM) %f
+	-@for %%d in ($(ARCH_DOS) $(HB_ARCHITECTURE)) do if exist %%d\. $(RD) %%d
+	-@for %d in ($(ARCH_DOS) $(HB_ARCHITECTURE)) do if exist %d\NUL $(RD) %d
 else  # bash
 
 ARCH_DIR = $(HB_ARCH)/

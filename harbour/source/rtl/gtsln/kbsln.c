@@ -54,6 +54,12 @@
 
 /* *********************************************************************** */
 
+#include "hbapigt.h"
+#include "inkey.ch"
+
+#if defined(HB_OS_DARWIN) || ( defined(HB_OS_LINUX) && defined(__WATCOMC__) )
+#define REAL_UNIX_SYSTEM /* this is for slang.h to include some defs */
+#endif
 #include <slang.h>
 #include <sys/ioctl.h>
 
@@ -63,9 +69,6 @@
 #endif
 
 #include <termios.h> /* we're assuming target has termios - should be better done */
-
-#include "hbapigt.h"
-#include "inkey.ch"
 
 /* *********************************************************************** */
 
@@ -110,7 +113,7 @@ extern BOOL hb_gt_sln_bScreen_Size_Changed;
 
 /* DeadKey definition's ENVVAR name. This EnvVar contains */
 /* an ASCII value of a key, which serves as a DeadKey */
-unsigned char *hb_DeadKeyEnvName = "HRBNATIONDEADKEY";
+static char *hb_DeadKeyEnvName = "HRBNATIONDEADKEY";
 
 /* a table for Keys work with a Dead key. The first
    element contains a number of defined keys */
@@ -236,7 +239,7 @@ int hb_gt_Init_Terminal( int phase )
 
       if( p && p[ 0 ] != '\0' )
       {
-         int len = strlen( p );
+         int len = strlen( ( char * ) p );
          if( len > 0 )
             hb_DeadKey = ( int ) *p;
       }

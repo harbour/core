@@ -22,30 +22,46 @@ hb_instfile="${name}-${hb_ver}${hb_platform}.inst.sh"
 hb_lnkso="yes"
 hb_pref="hb"
 hb_contrib=""
+hb_sysdir="yes"
+hb_exesuf=""
 export C_USR="-DHB_FM_STATISTICS_OFF -O2"
 
+if [ -z "$TMPDIR" ]; then TMPDIR="/tmp"; fi
+HB_INST_PREF="$TMPDIR/$name.bin.$USER.$$"
+
 if [ -z "$HB_ARCHITECTURE" ]; then
-    hb_arch=`uname -s | tr -d "[-]" | tr "[A-Z]" "[a-z]" 2>/dev/null`
-    case "$hb_arch" in
-        *windows*) hb_arch="w32" ;;
-        *dos)      hb_arch="dos" ;;
-        *bsd)      hb_arch="bsd" ;;
-    esac
-    export HB_ARCHITECTURE="$hb_arch"
+    if [ "$OSTYPE" = "msdosdjgpp" ]; then
+        hb_arch="dos"
+    else
+        hb_arch=`uname -s | tr -d "[-]" | tr '[A-Z]' '[a-z]' 2>/dev/null`
+        case "$hb_arch" in
+            *windows*) hb_arch="w32" ;;
+            *dos)      hb_arch="dos" ;;
+            *bsd)      hb_arch="bsd" ;;
+        esac
+        export HB_ARCHITECTURE="$hb_arch"
+    fi
 fi
 
 if [ -z "$HB_COMPILER" ]; then
     case "$HB_ARCHITECTURE" in
-        w32) hb_comp="mingw32" ;;
-        dos) hb_comp="djgpp" ;;
-        *)   hb_comp="gcc" ;;
+        w32) HB_COMPILER="mingw32" ;;
+        dos) HB_COMPILER="djgpp" ;;
+        *)   HB_COMPILER="gcc" ;;
     esac
-    export HB_COMPILER="$hb_comp"
+    export HB_COMPILER
 fi
 
-if [ -z "$HB_GT_LIB" ]; then export HB_GT_LIB=gtcrs; fi
+if [ -z "$HB_GT_LIB" ]; then
+    case "$HB_ARCHITECTURE" in
+        w32) HB_GT_LIB="gtwin" ;;
+        dos) HB_GT_LIB="gtdos" ;;
+        *)   HB_GT_LIB="gtcrs" ;;
+    esac
+    export HB_GT_LIB
+fi
+
 if [ -z "$HB_MULTI_GT" ]; then export HB_MULTI_GT=no; fi
-if [ -z "$HB_MT" ]; then export HB_MT=no; fi
 if [ -z "$HB_COMMERCE" ]; then export HB_COMMERCE=no; fi
 
 # default lib dir name
@@ -58,6 +74,15 @@ case "$HB_ARCHITECTURE" in
         [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr"
         [ -d "$HB_INSTALL_PREFIX/lib64" ] && HB_LIBDIRNAME="lib64"
         HB_INSTALL_GROUP=root
+        ;;
+    dos)
+        [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/${name}"
+        HB_INSTALL_GROUP=root
+        hb_sysdir="no"
+        hb_exesuf=".exe"
+        hb_instfile=""
+        hb_archfile="${name}.tgz"
+        HB_INST_PREF="$TMPDIR/hb-$$"
         ;;
     *)
         [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr/local"
@@ -75,9 +100,21 @@ case "$HB_ARCHITECTURE" in
 esac
 
 # Set other platform-specific build options
+if [ -z "$HB_GPM_MOUSE" ]; then
+    if [ "$HB_ARCHITECTURE" = "linux" ] && \
+       ( [ -f /usr/include/gpm.h ] || [ -f /usr/local/include/gpm.h ]); then
+        HB_GPM_MOUSE=yes
+    else
+        HB_GPM_MOUSE=no
+    fi
+    export HB_GPM_MOUSE
+fi
+
 case "$HB_ARCHITECTURE" in
     linux)
-        export HB_GPM_MOUSE=yes
+        ;;
+    dos)
+        hb_lnkso="no"
         ;;
     darwin)
         # Autodetect old Darwin versions and set appropriate build options
@@ -97,9 +134,15 @@ then
    export HB_WITHOUT_GTSLN=yes
 fi
 
-export HB_BIN_INSTALL="$HB_INSTALL_PREFIX/bin"
-export HB_INC_INSTALL="$HB_INSTALL_PREFIX/include/${name}"
-export HB_LIB_INSTALL="$HB_INSTALL_PREFIX/$HB_LIBDIRNAME/${name}"
+if [ "${hb_sysdir}" = "yes" ]; then
+    export HB_BIN_INSTALL="$HB_INSTALL_PREFIX/bin"
+    export HB_INC_INSTALL="$HB_INSTALL_PREFIX/include/${name}"
+    export HB_LIB_INSTALL="$HB_INSTALL_PREFIX/$HB_LIBDIRNAME/${name}"
+else
+    export HB_BIN_INSTALL="$HB_INSTALL_PREFIX/bin"
+    export HB_INC_INSTALL="$HB_INSTALL_PREFIX/include"
+    export HB_LIB_INSTALL="$HB_INSTALL_PREFIX/$HB_LIBDIRNAME"
+fi
 
 # build
 umask 022
@@ -113,8 +156,6 @@ do
 done
 
 # install
-if [ -z "$TMPDIR" ]; then TMPDIR="/tmp"; fi
-HB_INST_PREF="$TMPDIR/$name.bin.$USER.$$"
 rm -fR "${HB_INST_PREF}"
 
 export _DEFAULT_BIN_DIR=$HB_BIN_INSTALL
@@ -135,19 +176,23 @@ do
 done
 
 # Keep the size of the binaries to a minimim.
-strip $HB_BIN_INSTALL/harbour
+strip $HB_BIN_INSTALL/harbour${hb_exesuf}
 # Keep the size of the libraries to a minimim, but don't try to strip symlinks.
 strip -S `find $HB_LIB_INSTALL -type f`
+
+if [ "${hb_sysdir}" = "yes" ]; then
 
 mkdir -p $HB_INST_PREF/etc/harbour
 #$INSTALL -m644 source/rtl/gtcrs/hb-charmap.def $HB_INST_PREF/etc/harbour/hb-charmap.def
 
 cat > $HB_INST_PREF/etc/harbour.cfg <<EOF
 CC=gcc
-CFLAGS=-c -I$_DEFAULT_INC_DIR -O2
+CFLAGS=-c -I$_DEFAULT_INC_DIR -O3
 VERBOSE=YES
 DELTMP=YES
 EOF
+
+fi
 
 # check if we should rebuild tools with shared libs
 if [ "${hb_lnkso}" = yes ]
@@ -182,15 +227,18 @@ rm -f pp
 popd
 
 
-$TAR -czvf "${hb_archfile}" --owner=${HB_INSTALL_OWNER} --group=${HB_INSTALL_GROUP} -C "${HB_INST_PREF}" .
+CURDIR=$(pwd)
+(cd "${HB_INST_PREF}"; $TAR -czvf "${CURDIR}/${hb_archfile}" --owner=${HB_INSTALL_OWNER} --group=${HB_INSTALL_GROUP} .)
 rm -fR "${HB_INST_PREF}"
 
-if [ "${HB_ARCHITECTURE}" = darwin ]; then
-  DO_LDCONFIG=""
-else
-  DO_LDCONFIG="&& ldconfig"
-fi
-cat > "${hb_instfile}" <<EOF
+if [ -n "${hb_instfile}" ]; then
+
+   if [ "${HB_ARCHITECTURE}" = linux ]; then
+      DO_LDCONFIG="&& ldconfig"
+   else
+      DO_LDCONFIG=""
+   fi
+   cat > "${hb_instfile}" <<EOF
 #!/bin/sh
 if [ "\$1" == "--extract" ]; then
     sed -e '1,/^HB_INST_EOF\$/ d' \$0 > "${hb_archfile}"
@@ -209,6 +257,8 @@ fi
 exit \$?
 HB_INST_EOF
 EOF
-cat "${hb_archfile}" >> "${hb_instfile}"
-chmod +x "${hb_instfile}"
-rm -f "${hb_archfile}"
+    cat "${hb_archfile}" >> "${hb_instfile}"
+    chmod +x "${hb_instfile}"
+    rm -f "${hb_archfile}"
+
+fi

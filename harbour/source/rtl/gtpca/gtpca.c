@@ -57,21 +57,13 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
-#if defined(__GNUC__) && ! defined(__MINGW32__)
-   #include <unistd.h>
-   #if defined(__DJGPP__) || defined(__CYGWIN__) || defined(__EMX__)
-      #include <io.h>
-   #endif
-#else
-   #include <io.h>
-#endif
+#include "hbapigt.h"
+#include "hb_io.h"
+#include "hbset.h"
+#include "inkey.ch"
 
 #include <ctype.h>
 #include <string.h>
-
-#include "hbapigt.h"
-#include "hbset.h"
-#include "inkey.ch"
 
 static USHORT s_usRow, s_usCol, s_usMaxRow, s_usMaxCol;
 static int s_iFilenoStdin, s_iFilenoStdout, s_iFilenoStderr;

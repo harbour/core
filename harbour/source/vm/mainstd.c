@@ -53,6 +53,7 @@
 #include "hbapi.h"
 #include "hbvm.h"
 
+HB_EXTERN_BEGIN
 #if defined(__MINGW32__)
 int _CRT_glob = 0;
 #endif
@@ -81,3 +82,8 @@ char ** __crt0_glob_function( char * _arg )
 }
 #endif
 
+#if defined(HB_OS_LINUX) && defined(__WATCOMC__)
+void HB_EXPORT hb_forceLinkMainStd( void ) {}
+#endif
+
+HB_EXTERN_END

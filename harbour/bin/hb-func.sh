@@ -26,7 +26,7 @@ get_hbplatform()
     [ "${id}" = "" ] && id=`rel=$(rpm -q --queryformat='.%{VERSION}' conectiva-release 2>/dev/null) && echo "cl$rel"|tr -d "."`
     [ "${id}" = "" ] && id=`rel=$(rpm -q --queryformat='.%{VERSION}' aurox-release 2>/dev/null) && echo "cl$rel"|tr -d "."`
     [ "${id}" = "" ] && id=`[ -f /etc/pld-release ] && cat /etc/pld-release|sed -e '/1/ !d' -e 's/[^0-9]//g' -e 's/^/pld/'`
-    [ "${id}" = "" ] && id=`uname -sr | tr "[A-Z]" "[a-z]" | tr -d " "`
+    [ "${id}" = "" ] && id=`uname -sr | tr '[A-Z]' '[a-z]' | tr -d " "`
     echo -n "${id}"
 }
 
@@ -81,8 +81,14 @@ mk_hbtools()
     hb_cmpname="${HB_CMPNAME-harbour}"
     if [ "${HB_ARCHITECTURE}" = "dos" ]; then
         hb_tool="$1/${hb_pref}-bld"
+        hb_path_separator=";"
+        hb_static="yes"
+        hb_static_default=" (default)"
     else
         hb_tool="$1/${hb_pref}-build"
+        hb_path_separator=":"
+        hb_static="no"
+        hb_shared_default=" (default)"
     fi
     hb_libs=`mk_hbgetlibs "$2"`
     hb_libsc=`mk_hbgetlibsctb "$3"`
@@ -130,9 +136,9 @@ if [ \$# = 0 ]; then
 \"${hb_pref}cc\", \"${hb_pref}cmp\", \"${hb_pref}lnk\" and \"${hb_pref}mk\" parameters:
     -o<outputfilename>  # output file name
 \"${hb_pref}lnk\" and \"${hb_pref}mk\" parameters:
-    -static             # link with static ${name} libs
+    -static             # link with static ${name} libs${hb_static_default}
     -fullstatic         # link with all static libs
-    -shared             # link with shared libs (default)
+    -shared             # link with shared libs${hb_shared_default}
     -mt                 # link with multi-thread libs
     -gt<hbgt>           # link with <hbgt> GT driver, can be repeated to
                         # link with more GTs. The first one will be
@@ -165,7 +171,7 @@ elif [ "\$*" = "mk-links" ]; then
 fi
 
 ## default parameters
-HB_STATIC="no"
+HB_STATIC="${hb_static}"
 HB_MT=""
 HB_GT="${HB_GT_LIB#gt}"
 HB_MG="${HB_MULTI_GT}"
@@ -230,13 +236,13 @@ HB_GT_STAT=""
 [ -z "\${HB_GT_REQ}" ] && HB_GT_REQ="\${HB_GT}"
 if [ "\${HB_MG}" != "yes" ]; then
     if [ "\${HB_STATIC}" = "yes" ] || [ "\${HB_STATIC}" = "full" ]; then
-        HB_GT_STAT=\`echo \${HB_GT_REQ}|tr "[A-Z]" "[a-z]"\`
+        HB_GT_STAT=\`echo \${HB_GT_REQ}|tr '[A-Z]' '[a-z]'\`
     fi
     HB_GT_REQ=""
 else
-    HB_GT_REQ=\`echo \${HB_GT_REQ}|tr "[a-z]" "[A-Z]"\`
+    HB_GT_REQ=\`echo \${HB_GT_REQ}|tr '[a-z]' '[A-Z]'\`
 fi
-HB_MAIN_FUNC=\`echo \${HB_MAIN_FUNC}|tr "[a-z]" "[A-Z]"\`
+HB_MAIN_FUNC=\`echo \${HB_MAIN_FUNC}|tr '[a-z]' '[A-Z]'\`
 
 # set environment variables
 export HB_ARCHITECTURE="${HB_ARCHITECTURE}"
@@ -246,7 +252,7 @@ export HB_COMPILER="${HB_COMPILER}"
 [ -z "\${HB_LIB_INSTALL}" ] && export HB_LIB_INSTALL="${_DEFAULT_LIB_DIR}"
 
 # be sure that ${name} binaries are in your path
-export PATH="\${HB_BIN_INSTALL}:\${PATH}"
+export PATH="\${HB_BIN_INSTALL}${hb_path_separator}\${PATH}"
 
 HB_PATHS="-I\${HB_INC_INSTALL}"
 GCC_PATHS="\${HB_PATHS} -L\${HB_LIB_INSTALL}"
@@ -363,10 +369,12 @@ hb_cc()
 
 hb_link()
 {
-    if [ -n "\${HB_MAIN_FUNC}" ]; then
-        HB_MAIN_FUNC="@\${HB_MAIN_FUNC}"
-    elif [ -f "\${FOUTO}" ]; then
-        HB_MAIN_FUNC=\`hb_lnk_main "\${FOUTO}"\`
+    if [ "\${HB_COMPILER}" != "djgpp" ]; then
+        if [ -n "\${HB_MAIN_FUNC}" ]; then
+            HB_MAIN_FUNC="@\${HB_MAIN_FUNC}"
+        elif [ -f "\${FOUTO}" ]; then
+            HB_MAIN_FUNC=\`hb_lnk_main "\${FOUTO}"\`
+        fi
     fi
     if [ -n "\${HB_LNK_REQ}" ] || [ -n "\${HB_GT_REQ}" ] || [ -n "\${HB_MAIN_FUNC}" ]; then
         hb_lnk_request > \${_TMP_FILE_} && \\

@@ -56,6 +56,7 @@
 #include "hbvm.h"
 
 #if defined(HB_OS_WIN_32)
+HB_EXTERN_BEGIN
 
 int argc = 0;
 char * argv[ 20 ];
@@ -118,8 +119,10 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    return 0;
 } 
 
-#if defined(__WATCOMC__)
-void HB_EXPORT hb_froceLinkMain() {}
+#if ( defined(__WATCOMC__) || defined(__MINGW32__) ) && !defined(__EXPORT__)
+void HB_EXPORT hb_forceLinkMainWin( void ) {}
 #endif
+
+HB_EXTERN_END
 
 #endif

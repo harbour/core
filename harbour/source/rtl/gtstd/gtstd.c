@@ -72,10 +72,8 @@
 #include <time.h>
 #if defined( HB_OS_BSD )
    #include <sys/time.h>
-#elif defined( OS_UNIX_COMPATIBLE )
-   #include <sys/timeb.h>
 #else
-   #include <sys\timeb.h>
+   #include <sys/timeb.h>
 #endif
 
 

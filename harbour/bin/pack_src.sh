@@ -4,21 +4,21 @@
 #
 # This script requires "TAR" utilities for compression.
 
-hb_ver="0.44.0"
-
 hb_archbin="tar"
 hb_archopt="-cz --ignore-failed-read -f"
 hb_ext=".tar.gz"
+if [ -f bin/hb-func.sh ]; then
+  hb_rootdir="."
+else
+  hb_rootdir=`dirname $0`
+  hb_rootdir="${hb_rootdir}/.."
+  hb_archopt="-C $hb_rootdir $hb_archopt"
+fi
+. ${hb_rootdir}/bin/hb-func.sh
+
+hb_ver=`get_hbver ${hb_rootdir}`
 hb_filename="harbour-${hb_ver}.src${hb_ext}"
 [ -f $hb_filename ] && rm -f $hb_filename
-
-if [ ! -f bin/pack_src.sh ]; then
-  hb_rootdir=`dirname $0`
-  hb_rootdir="${hb_rootdir}/../"
-  hb_archopt="-C $hb_rootdir $hb_archopt"
-else
-  hb_rootdir="."
-fi
 
 #[ -z "$TZ" ] && export TZ=PST8PDT
 
@@ -53,12 +53,12 @@ $hb_collect config/os2/*.cf
 $hb_collect config/w32/*.cf
 
 # DOC
-$hb_collect doc/Makefile
+$hb_collect doc/[Mm]akefile*
 $hb_collect doc/*.txt
-$hb_collect doc/en/*.txt
 $hb_collect doc/en/[Mm]akefile*
-$hb_collect doc/es/*.txt
+$hb_collect doc/en/*.txt
 $hb_collect doc/es/[Mm]akefile*
+$hb_collect doc/es/*.txt
 
 # INCLUDE
 $hb_collect include/Makefile

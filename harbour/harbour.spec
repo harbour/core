@@ -17,8 +17,9 @@
 # --with mysql       - build mysql lib (unused)
 # --with pgsql       - build pgsql lib (unused)
 # --with odbc        - build build odbc lib
+# --without gpl      - do not build libs which needs GPL 3-rd party code
 # --without nf       - do not build nanforum lib
-# --without x11      - do not build GTXVT and GTXWC
+# --without x11      - do not build GTXVT and GTXWC (unused)
 # --without gpm      - build GTSLN and GTCRS without GPM support
 # --without gtsln    - do not build GTSLN
 ######################################################################
@@ -69,7 +70,7 @@
 %define hb_idir  export HB_INC_INSTALL=%{_includedir}/%{name}
 %define hb_ldir  export HB_LIB_INSTALL=%{_libdir}/%{name}
 %define hb_opt   export HB_GTALLEG=%{?_with_allegro:yes}
-%define hb_cmrc  export HB_COMMERCE=no
+%define hb_cmrc  export HB_COMMERCE=%{?_without_gpl:yes}
 %define hb_env   %{hb_arch} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_mt} ; %{hb_gt} ; %{hb_gpm} ; %{hb_sln} ; %{hb_x11} ; %{hb_mgt} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_opt} ; %{hb_cmrc}
 
 %define hb_host  www.harbour-project.org
@@ -91,7 +92,7 @@ Vendor:         %{hb_host}
 URL:            http://%{hb_host}/
 Source:         %{name}-%{version}.src.tar.gz
 Packager:       Przemys³aw Czerpak <druzus@polbox.com> Luiz Rafael Culik Guimaraes <culikr@uol.com.br>
-BuildPrereq:    gcc binutils bash bison ncurses ncurses-devel %{!?_without_gpm: gpm-devel}
+BuildPrereq:    gcc binutils bison flex bash ncurses ncurses-devel %{!?_without_gpm: gpm-devel}
 Requires:       gcc binutils bash sh-utils %{name}-lib = %{version}
 Provides:       %{name} harbour
 BuildRoot:      /tmp/%{name}-%{version}-root

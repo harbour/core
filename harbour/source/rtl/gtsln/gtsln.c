@@ -54,6 +54,13 @@
 
 /* *********************************************************************** */
 
+#include "hbapi.h"
+#include "hbapigt.h"
+#include "inkey.ch"
+
+#if defined(HB_OS_DARWIN) || ( defined(HB_OS_LINUX) && defined(__WATCOMC__) )
+#define REAL_UNIX_SYSTEM /* this is for slang.h to include some defs */
+#endif
 #include <slang.h>
 
 /* missing defines in previous versions of Slang - this can not work ! */
@@ -87,10 +94,6 @@
 #include <time.h>
 #endif
 
-#include "hbapi.h"
-#include "hbapigt.h"
-#include "inkey.ch"
-
 /* *********************************************************************** */
 
 /* if we can not manipulate cursor state */
@@ -109,7 +112,7 @@ static void hb_gt_build_conv_tabs();
 /* A definition is a list of pairs of chars. The first char in each pair is  */
 /* an ASCII key, which should be pressed *after* a "DeadKey" was pressed to  */
 /* get the nation char, a second in that pair is a corresponding nation char */
-unsigned char *hb_NationCharsEnvName = "HRBNATIONCHARS";
+static char *hb_NationCharsEnvName = "HRBNATIONCHARS";
 
 /* *********************************************************************** */
 
@@ -427,9 +430,6 @@ USHORT hb_gt_GetCursorStyle( void )
 
 void hb_gt_SetCursorStyle( USHORT uiStyle )
 {
-   /* keyseq to define cursor shape under linux console */
-   static char cursDefseq[] = { 27, '[', '?', '1', 'c', 0 };
-
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetCursorStyle(%hu)", uiStyle));
 
    /* TODO: How to set the shape of the cursor on terminals ? */
@@ -439,10 +439,12 @@ void hb_gt_SetCursorStyle( USHORT uiStyle )
 
    if( ( s_sCursorStyle >= SC_NONE ) && ( s_sCursorStyle <= SC_SPECIAL2 ) )
    {
+      /* keyseq to define cursor shape under linux console */
+      static char cursDefseq[] = { 27, '[', '?', '1', 'c', 0 };
+
       s_sCursorStyle = uiStyle;
       SLtt_set_cursor_visibility( s_sCursorStyle != SC_NONE );
 
-#ifdef __linux__
       /* NOTE: cursor apearence works only under linux console */
       if( s_linuxConsole )
       {
@@ -473,7 +475,6 @@ void hb_gt_SetCursorStyle( USHORT uiStyle )
 
          SLtt_write_string( cursDefseq );
       }
-#endif
 
       if( s_uiDispCount == 0 )
          /* SLsmg_refresh(); */
@@ -1248,7 +1249,7 @@ static void hb_gt_build_conv_tabs()
    /* init an alternate chars table */
    if( ( p = SLtt_Graphics_Char_Pairs ) )
    {
-      len = strlen( p );
+      len = strlen( ( char * ) p );
 
       /* alternate char set should be even */
       if( ( len != ( ( len / 2 ) * 2 ) ) && ( len > 0 ) )
@@ -1371,7 +1372,7 @@ static void hb_gt_build_conv_tabs()
    {
       unsigned char Pos, Msk;
 
-      len = strlen( p );
+      len = strlen( ( char * ) p );
 
       /* a len of definition of National chars should be even */
       if( ( len != ( ( len / 2 ) * 2 ) ) && ( len > 0 ) )

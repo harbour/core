@@ -8,6 +8,88 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+2004-01-12 18:25 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/hbgtmk.sh
+  * harbour/make_rpm.sh
+  * harbour/harbour.spec
+    * added flex to dependences
+    * added --without gpl swich to exclude code which needs 3-rd party
+      GPL libs (GPM, SLANG) - necessary for people who want to create
+      commercial closed source application
+
+  * harbour/make_gnu.sh
+    * modified DJGPP detection - try to use env var first
+    * set HB_GT_LIB depending on platform information
+    * check PREFIX env var for default installation
+
+  * harbour/make_tgz.sh
+    * modified to work with DJGPP and 8.3 file names
+
+  * harbour/bin/hb-func.sh
+    * DJGPP support
+
+  * harbour/bin/pack_src.sh
+    * autodetect Harbour version number
+
+  * harbour/config/linux/gcc.cf
+    * added small comment
+
+  + harbour/config/linux/owatcom.cf
+    + OpenWatcom support on Linux
+
+  * harbour/config/w32/global.cf
+  * harbour/config/w32/mingw32.cf
+    * small modification in clean procedure
+    + added Phil's modification for MINGW cross compilation in Linux and BSD
+
+  * harbour/source/compiler/gencobj.c
+    + added Phil's modification for MINGW cross compilation in Linux and BSD
+
+  * harbour/include/hbsetup.h
+    * added OS_HAS_DRIVE_LETTER, OS_PATH_DELIMITER_STRING, OS_FILE_MASK,
+      OS_DRIVE_DELIMITER and HOST_OS_UNIX_COMPATIBLE
+    * modified for OW on Linux and MINGW cross compilation
+    * added snprintf macro for compilers which do not support it
+
+  * harbour/source/rtl/mod.c
+    ! fixed bug in mod(a,b) when a/b exceeds LONG limit
+
+  * harbour/source/rtl/filesys.c
+    * removed HB_FS_DRIVE_LETTER - use OS_HAS_DRIVE_LETTER
+    * modified for OW on Linux and MINGW cross compilation
+
+  * harbour/contrib/libct/files.c
+  * harbour/include/hb_io.h
+  * harbour/include/hbdefs.h
+  * harbour/source/rtl/diskspac.c
+  * harbour/source/rtl/disksphb.c
+  * harbour/source/rtl/fssize.c
+  * harbour/source/rtl/fstemp.c
+  * harbour/source/rtl/hbffind.c
+  * harbour/source/rtl/net.c
+  * harbour/source/rtl/seconds.c
+  * harbour/source/rtl/gtcrs/Makefile
+  * harbour/source/rtl/gtcrs/kbdcrs.c
+  * harbour/source/rtl/gtpca/gtpca.c
+  * harbour/source/rtl/gtsln/Makefile
+  * harbour/source/rtl/gtsln/gtsln.c
+  * harbour/source/rtl/gtsln/kbsln.c
+  * harbour/source/rtl/gtstd/gtstd.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/mainstd.c
+  * harbour/source/vm/mainwin.c
+    * modified for OW on Linux and MINGW cross compilation
+
+  * harbour/source/vm/memvars.c
+    - removed unnecessary checking for s_globalTable == NULL in
+      hb_memvarValueDecRef() - in Harbour it cannot happen
+  * harbour/source/vm/itemapi.c
+    - removed snprintf macros (see hbsetup.h)
+    * fixed possible GPF in hb_itemCopyC()
+    * modified hb_itemGetPtr() to check item type
+
+
 2005-01-06 12:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/pp/ppcore.c
       * defined pseudo-functions' parameters are case sensitive now

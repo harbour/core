@@ -5519,13 +5519,6 @@ HB_FUNC( __OPGETPRF ) /* profiler: It returns an array with an opcode called and
    }
 }
 
-#if defined(HB_OS_WIN_32) && defined(__WATCOMC__)
-extern void HB_EXPORT hb_froceLinkMain();
-void _hb_froceLinkMain()
-{
-   hb_froceLinkMain();
-}
-#endif
 
 HB_FUNC( __VMVARSLIST )
 {
@@ -5546,3 +5539,27 @@ HB_FUNC( __VMVARSSET )
 {
    HB_FUNCNAME(HB_DBG_VMVARSSET)();
 }
+
+
+#undef HB_FORCE_LINK_MAIN
+
+#if defined(HB_OS_WIN_32) && !defined(__EXPORT__) && \
+    ( defined(__WATCOMC__) || defined(__MINGW32__) )
+
+#  define HB_FORCE_LINK_MAIN  hb_forceLinkMainWin
+
+#elif defined(HB_OS_LINUX) && defined(__WATCOMC__)
+
+#  define HB_FORCE_LINK_MAIN  hb_forceLinkMainStd
+
+#endif
+
+#ifdef HB_FORCE_LINK_MAIN
+HB_EXTERN_BEGIN
+extern void HB_EXPORT HB_FORCE_LINK_MAIN( void );
+HB_EXTERN_END
+void _hb_forceLinkMain()
+{
+   HB_FORCE_LINK_MAIN();
+}
+#endif
