@@ -50,7 +50,7 @@
      * Minor fixes.
 
    * source/rtl/gtwin/gtwin.c
-     * ...
+     * Minor formatting.
 
    * include/hbapigt.h
    * source/rtl/gtapi.c
