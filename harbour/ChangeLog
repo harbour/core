@@ -1,5 +1,4 @@
 20000227-00:39 GMT-8 Brian Hays <bhays@abacuslaw.com>
-     + doc for all function
    * include/hbclass.ch
      ! added Docs for all Class Commands
    * source/rtl/tclass.prg
