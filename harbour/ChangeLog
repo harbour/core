@@ -8,6 +8,37 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
     ! Bug fixed in ntxGoBottom(), reported by Lorenzo Fiorini
+
+2002-01-27 22:55 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/vm/hvm1.c
+    * Bug fixed in hb_vmSend() - thanks to Ron Pinkas
+  * source/rdd/dbfntx/dbfntx1.c
+    * hb_vmDo() calls are replaced by hb_vmSend()
+
+2002-01-27 18:30 UTC+0100 Antonio Linares <alinares@fivetech.com>
+  * include/hbapi.h
+    * some minor fixes to use C compiler define -DHB_API_MACROS
+
+    Notice: Using -DHB_API_MACROS C compiler define, results in a
+    faster application execution!
+
+2002-01-27 19:35 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbfntx/dbfntx1.c
+    ! Bug fixed, reported by Lorenzo Fiorini
+    * UNIQUE indexes creation implemented
+
+2002-01-27 10:30 UTC+0100 Antonio Linares <alinares@fivetech.com>
+
+   ! Strings sharing and strings pcode based implementation
+
+   * harbour/include/hbapi.h
+     + Two new members added to struct hb_struString
+     * hb_itemPutC(), hb_itemPutCL(), hb_itemPutCPtr(), hb_itemClear()
+   * harbour/include/hbexprb.c
+     * Compiler expressions optimizer modified to return a final zero
+       for pcode strings.
+
+   * harbour/include/hbvm.h
      + Added hb_vmPushStringPcode() prototype
 
    * harbour/source/vm/arrays.c
@@ -49,6 +80,7 @@
 
 2002-01-25 19:00 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/vm/eval.c
+     + New function HB_ForNext() added
        Syntax: HB_ForNext( nStart, nEnd | bEnd, bCode [, nStep ] )
                * bCode receives the nIndex of the For...Next loop as
                  a parameter:  { | nIndex | ...code... }
