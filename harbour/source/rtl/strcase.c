@@ -132,9 +132,7 @@ HB_FUNC( LOWER )
       char * pszBuffer = hb_itemGetC( pText );
       ULONG ulLen = hb_itemGetCLen( pText );
 
-      hb_retclen( hb_strLower( pszBuffer, ulLen ), ulLen );
-
-      hb_itemFreeC( pszBuffer );
+      hb_retclen_buffer( hb_strLower( pszBuffer, ulLen ), ulLen );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1103, NULL, "LOWER", 1, hb_paramError( 1 ) );
@@ -150,9 +148,7 @@ HB_FUNC( UPPER )
       char * pszBuffer = hb_itemGetC( pText );
       ULONG ulLen = hb_itemGetCLen( pText );
 
-      hb_retclen( hb_strUpper( pszBuffer, ulLen ), ulLen );
-
-      hb_itemFreeC( pszBuffer );
+      hb_retclen_buffer( hb_strUpper( pszBuffer, ulLen ), ulLen );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1102, NULL, "UPPER", 1, hb_paramError( 1 ) );
