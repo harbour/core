@@ -80,12 +80,13 @@ typedef struct
 /* dynamic symbol structure */
 typedef struct _HB_DYNS
 {
-   HB_HANDLE hArea;       /* Workarea number */
-   HB_HANDLE hMemvar;     /* Index number into memvars ( publics & privates ) array */
-   PHB_SYMB  pSymbol;     /* pointer to its relative local symbol */
-   PHB_FUNC  pFunPtr;     /* Pointer to the function address */
-   ULONG     ulCalls;     /* profiler support */
-   ULONG     ulTime;      /* profiler support */
+   HB_HANDLE hArea;        /* Workarea number */
+   HB_HANDLE hMemvar;      /* Index number into memvars ( publics & privates ) array */
+   PHB_SYMB  pSymbol;      /* pointer to its relative local symbol */
+   PHB_FUNC  pFunPtr;      /* Pointer to the function address */
+   ULONG     ulCalls;      /* profiler support */
+   ULONG     ulTime;       /* profiler support */
+   ULONG     ulRecurse;    /* profiler support */
 } HB_DYNS, * PHB_DYNS, * HB_DYNS_PTR;
 
 #define HB_DYNS_FUNC( hbfunc )   BOOL hbfunc( PHB_DYNS pDynSymbol, void * Cargo )

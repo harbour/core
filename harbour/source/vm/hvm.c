@@ -2972,8 +2972,8 @@ void hb_vmDo( USHORT uiParams )
    PHB_ITEM pSelf;
    PHB_FUNC pFunc;
    BOOL bDebugPrevState;
-   ULONG ulClock;
-   void * pMethod;
+   ULONG ulClock = 0;
+   void * pMethod = NULL;
    BOOL bProfiler = hb_bProfiler; /* because profiler state may change */
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDo(%hu)", uiParams));
@@ -3001,7 +3001,7 @@ void hb_vmDo( USHORT uiParams )
    {
 
       BOOL lPopSuper = FALSE ;
-      PHB_BASEARRAY pSelfBase;
+      PHB_BASEARRAY pSelfBase = NULL;
 
       if( pSym == &( hb_symEval ) && HB_IS_BLOCK( pSelf ) )
          pFunc = pSym->pFunPtr;                 /* __EVAL method = function */
@@ -3069,12 +3069,24 @@ void hb_vmDo( USHORT uiParams )
 
       if( pFunc )
       {
+         if( bProfiler && pSym->pDynSym ) {
+            pSym->pDynSym->ulRecurse++;
+         }
+
          pFunc();
 
          if( bProfiler && pSym->pDynSym )
          {
             pSym->pDynSym->ulCalls++;                   /* profiler support */
-            pSym->pDynSym->ulTime += clock() - ulClock; /* profiler support */
+
+            /* Time spent has to be added only inside topmost call of a recursive function */
+            if( pSym->pDynSym->ulRecurse == 1 ) {
+               pSym->pDynSym->ulTime += clock() - ulClock; /* profiler support */
+            }
+         }
+
+         if( bProfiler && pSym->pDynSym ) {
+            pSym->pDynSym->ulRecurse--;
          }
       }
       else
@@ -3103,8 +3115,8 @@ void hb_vmSend( USHORT uiParams )
    PHB_ITEM pSelf;
    PHB_FUNC pFunc;
    BOOL bDebugPrevState;
-   ULONG ulClock;
-   void * pMethod;
+   ULONG ulClock = 0;
+   void * pMethod = NULL;
    BOOL bProfiler = hb_bProfiler; /* because profiler state may change */
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmSend(%hu)", uiParams));
@@ -3242,12 +3254,24 @@ void hb_vmSend( USHORT uiParams )
 
       if( pFunc )
       {
+         if( bProfiler && pSym->pDynSym ) {
+            pSym->pDynSym->ulRecurse++;
+         }
+
          pFunc();
 
          if( bProfiler && pSym->pDynSym )
          {
             pSym->pDynSym->ulCalls++;                   /* profiler support */
-            pSym->pDynSym->ulTime += clock() - ulClock; /* profiler support */
+
+            /* Time spent has to be added only inside topmost call of a recursive function */
+            if ( pSym->pDynSym->ulRecurse == 1 ) {
+               pSym->pDynSym->ulTime += clock() - ulClock; /* profiler support */
+            }
+         }
+
+         if( bProfiler && pSym->pDynSym ) {
+            pSym->pDynSym->ulRecurse--;
          }
       }
       else

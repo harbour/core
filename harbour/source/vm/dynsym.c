@@ -110,6 +110,7 @@ PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
             pDynSym->pSymbol = pSymbol;
             pDynSym->ulCalls = 0; /* profiler support */
             pDynSym->ulTime  = 0; /* profiler support */
+            pDynSym->ulRecurse = 0;
          }
       }
       pSymbol->pDynSym = pDynSym;    /* place a pointer to DynSym */
@@ -141,6 +142,7 @@ PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
    pDynSym->hArea   = 0;
    pDynSym->ulCalls = 0; /* profiler support */
    pDynSym->ulTime  = 0; /* profiler support */
+   pDynSym->ulRecurse = 0;
 
    if( ! ( pSymbol->cScope & ( HB_FS_STATIC | HB_FS_INIT | HB_FS_EXIT ) ) ) /* only for HB_FS_PUBLIC */
    {

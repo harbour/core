@@ -120,16 +120,17 @@
 
 typedef struct
 {
-   PHB_DYNS pMessage;          /* Method Symbolic name */
-   PHB_FUNC pFunction;         /* Function 'pointer' */
-   USHORT   uiData;            /* Item position for data (Harbour like, begin from 1) */
-   USHORT   uiDataShared;      /* Item position for datashared (original pos within Shared Class) */
-   USHORT   uiSprClass;        /* Originalclass'handel (super or current class'handel if not herited). */ /*Added by RAC&JF*/
-   USHORT   uiScope;           /* Scoping value */
-   PHB_ITEM pInitValue;        /* Init Value for data */
-   BYTE     bClsDataInitiated; /* There is one value assigned at init time */
-   ULONG    ulCalls;           /* profiler support */
-   ULONG    ulTime;            /* profiler support */
+   PHB_DYNS pMessage;            /* Method Symbolic name */
+   PHB_FUNC pFunction;           /* Function 'pointer' */
+   USHORT   uiData;              /* Item position for data (Harbour like, begin from 1) */
+   USHORT   uiDataShared;        /* Item position for datashared (original pos within Shared Class) */
+   USHORT   uiSprClass;          /* Originalclass'handel (super or current class'handel if not herited). */ /*Added by RAC&JF*/
+   USHORT   uiScope;             /* Scoping value */
+   PHB_ITEM pInitValue;          /* Init Value for data */
+   BYTE     bClsDataInitiated;   /* There is one value assigned at init time */
+   ULONG    ulCalls;             /* profiler support */
+   ULONG    ulTime;              /* profiler support */
+   ULONG    ulRecurse;           /* profiler support */
 } METHOD, * PMETHOD;
 
 typedef struct
@@ -940,6 +941,7 @@ HB_FUNC( __CLSADDMSG )
       pNewMeth->bClsDataInitiated = 0 ; /* reset state */
       pNewMeth->ulCalls = 0;
       pNewMeth->ulTime = 0;
+      pNewMeth->ulRecurse = 0;
 
       /* in cas eof re-used message */
       if ( pNewMeth->pInitValue )
@@ -1079,8 +1081,8 @@ HB_FUNC( __CLSADDMSG )
 HB_FUNC( __CLSNEW )
 {
    PCLASS pNewCls;
-   ULONG ulSize;	/* USHORT is small. Maximum 409 methods. In some
-                           cases it is enough. This eliminate random GPFs 
+   ULONG ulSize;  /* USHORT is small. Maximum 409 methods. In some
+                           cases it is enough. This eliminate random GPFs
                            in this function for big classes */
 
    PHB_ITEM pahSuper;

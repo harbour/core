@@ -1,8 +1,20 @@
+2001-08-08 23:52 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * include/hbvmpub.h
+   * source/vm/classes.c
+   * source/vm/hvm.c
+   * source/vm/dynsym.c
+     ! Fixed profiler counting of time elapsed inside recursive functions. It still has to
+       be fixed for methods.
+       NOTE: My knowledge of harbour VM is very poor. I hope I didn't break anything else :-))
+     ! Fixed a few warnings inside hb_vmDo() and hb_vmSend()
+   * source/vm/arrayshb.c
+     ! Fixed isalnum() call on line 359, isalnum() requires an int
+
 2001-08-07 23:11 GMT Dave Pearson <davep@davep.org>
 
   * doc/en/clipper.txt
     * Fixed a spelling mistake and added an ID tag.
-	
+
 2001-08-07 17:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * source/rtl.net.c
@@ -12,7 +24,7 @@
 
     * doc/en/compiler.txt
         *updated to keep current compiler state
-        
+
     * include/hbcomp.h
     * source/compiler/cmdcheck.c
     * source/compiler/genc.c
@@ -21,9 +33,9 @@
         * added a new switch -ks that request the synchronization of
         compile time and runtime options (enabled by default).
         Use -kc to disable it.
-        
+
     * source/compiler/harbour.l
-        * fixed bug when HB_INLINE is interpreted as an identifier 
+        * fixed bug when HB_INLINE is interpreted as an identifier
         (-ki option)
 
 
@@ -51,9 +63,9 @@
 
   * source/rtl/gtsln/gtsln.c
   * contrib/libct/ctstr.c
-  	! Fixed typos causing compile errors with HB_TR_DEBUG and gcc. Case
-  	  error in variable names in debug info calls (e.g. nstrLen instead
-  	  of nStrLen). Fixed by "Fergus McDonald" <listsub@qvolution.com>
+   ! Fixed typos causing compile errors with HB_TR_DEBUG and gcc. Case
+     error in variable names in debug info calls (e.g. nstrLen instead
+     of nStrLen). Fixed by "Fergus McDonald" <listsub@qvolution.com>
 
 2001-08-06 20:30 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    *source/rtl/tbrowse.prg

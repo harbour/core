@@ -356,7 +356,7 @@ HB_FUNC( HB_AEXPRESSIONS )
             break;
 
          case '[' :
-            if( bArray || ( i && isalnum( pLine->item.asString.value[i - 1] ) ) )
+            if( bArray || ( i && isalnum((int) pLine->item.asString.value[i - 1] ) ) )
             {
                iIndexs++;
             }
