@@ -1,3 +1,7 @@
+19990525-23:25 Les Griffith
+  * source/rtl/files.c
+    added logic to readstr for lasterror
+
 19990525-22:45 CET Eddie Runia
   * tests/working/spawn2.prg; tests/working/runner.c
     support for STATIC functions added and error message for duplicate
