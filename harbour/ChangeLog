@@ -1,3 +1,17 @@
+20000422-20:37 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/vm/hvm.c
+     % Removed the temporary uiParams variable in hb_vmExecute().
+
+   * include/hbvm.h
+   * include/hbvmpub.h
+   * source/vm/hvm.c
+     ! hb_vmExecute() first param marked "const"
+
+   * source/compiler/harbour.c
+   * source/compiler/genc.c
+     + Added support for empty .prg files. Thanks to Jose Lalin.
+
 20000422-18:41 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbpcode.h

@@ -66,141 +66,146 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       HB_VER_MAJOR, HB_VER_MINOR, HB_VER_REVISION, HB_VER_BUILD, HB_VER_YEAR, HB_VER_MONTH, HB_VER_DAY );
    fprintf( yyc, " * Generated C source code\n */\n\n" );
 
-   fprintf( yyc, "#include \"hbvmpub.h\"\n" );
-   if( hb_comp_iGenCOutput != HB_COMPGENC_COMPACT )
-      fprintf( yyc, "#include \"hbpcode.h\"\n" );
-   fprintf( yyc, "#include \"hbinit.h\"\n\n\n" );
-
-   if( ! hb_comp_bStartProc )
-      pFunc = pFunc->pNext; /* No implicit starting procedure */
-
-   /* write functions prototypes for PRG defined functions */
-   while( pFunc )
+   if( hb_comp_iFunctionCnt )
    {
-      if( pFunc->cScope & HB_FS_STATIC || pFunc->cScope & HB_FS_INIT || pFunc->cScope & HB_FS_EXIT )
-         fprintf( yyc, "static " );
-      else
-         fprintf( yyc, "       " );
-
-      if( pFunc == hb_comp_pInitFunc )
-         fprintf( yyc, "HARBOUR hb_INITSTATICS( void );\n" ); /* NOTE: hb_ intentionally in lower case */
-      else
-         fprintf( yyc, "HB_FUNC( %s );\n", pFunc->szName );
-      pFunc = pFunc->pNext;
-   }
-   /* write functions prototypes for called functions outside this PRG */
-   pFunc = hb_comp_funcalls.pFirst;
-   while( pFunc )
-   {
-      pFTemp = hb_compFunctionFind( pFunc->szName );
-      if( ! pFTemp || pFTemp == hb_comp_functions.pFirst )
-         fprintf( yyc, "extern HB_FUNC( %s );\n", pFunc->szName );
-      pFunc = pFunc->pNext;
-   }
-
-   /* writes the symbol table */
-   /* Generate the wrapper that will initialize local symbol table
-    */
-   hb_strupr( pFileName->szName );
-   fprintf( yyc, "\n\nHB_INIT_SYMBOLS_BEGIN( hb_vm_SymbolInit_%s%s )\n", hb_comp_szPrefix, pFileName->szName );
-
-   while( pSym )
-   {
-      if( pSym->szName[ 0 ] == '(' )
+      fprintf( yyc, "#include \"hbvmpub.h\"\n" );
+      if( hb_comp_iGenCOutput != HB_COMPGENC_COMPACT )
+         fprintf( yyc, "#include \"hbpcode.h\"\n" );
+      fprintf( yyc, "#include \"hbinit.h\"\n\n\n" );
+      
+      if( ! hb_comp_bStartProc )
+         pFunc = pFunc->pNext; /* No implicit starting procedure */
+      
+      /* write functions prototypes for PRG defined functions */
+      while( pFunc )
       {
-         /* Since the normal function cannot be INIT and EXIT at the same time
-         * we are using these two bits to mark the special function used to
-         * initialize static variables
-         */
-         fprintf( yyc, "{ \"(_INITSTATICS)\", HB_FS_INIT | HB_FS_EXIT, hb_INITSTATICS, NULL }" ); /* NOTE: hb_ intentionally in lower case */
+         if( pFunc->cScope & HB_FS_STATIC || pFunc->cScope & HB_FS_INIT || pFunc->cScope & HB_FS_EXIT )
+            fprintf( yyc, "static " );
+         else
+            fprintf( yyc, "       " );
+      
+         if( pFunc == hb_comp_pInitFunc )
+            fprintf( yyc, "HARBOUR hb_INITSTATICS( void );\n" ); /* NOTE: hb_ intentionally in lower case */
+         else
+            fprintf( yyc, "HB_FUNC( %s );\n", pFunc->szName );
+         pFunc = pFunc->pNext;
       }
-      else
+      /* write functions prototypes for called functions outside this PRG */
+      pFunc = hb_comp_funcalls.pFirst;
+      while( pFunc )
       {
-         fprintf( yyc, "{ \"%s\", ", pSym->szName );
-
-         if( pSym->cScope & HB_FS_STATIC )
-            fprintf( yyc, "HB_FS_STATIC" );
-
-         else if( pSym->cScope & HB_FS_INIT )
-            fprintf( yyc, "HB_FS_INIT" );
-
-         else if( pSym->cScope & HB_FS_EXIT )
-            fprintf( yyc, "HB_FS_EXIT" );
-
-         else
-            fprintf( yyc, "HB_FS_PUBLIC" );
-
-         if( pSym->cScope & VS_MEMVAR )
-            fprintf( yyc, " | HB_FS_MEMVAR" );
-
-         if( ( pSym->cScope != HB_FS_MESSAGE ) && ( pSym->cScope & HB_FS_MESSAGE ) ) /* only for non public symbols */
-            fprintf( yyc, " | HB_FS_MESSAGE" );
-
-         /* specify the function address if it is a defined function or an
-            external called function */
-         if( hb_compFunctionFind( pSym->szName ) ) /* is it a function defined in this module */
-            fprintf( yyc, ", HB_FUNCNAME( %s ), NULL }", pSym->szName );
-         else if( hb_compFunCallFind( pSym->szName ) ) /* is it a function called from this module */
-            fprintf( yyc, ", HB_FUNCNAME( %s ), NULL }", pSym->szName );
-         else
-            fprintf( yyc, ", NULL, NULL }" );   /* memvar */
+         pFTemp = hb_compFunctionFind( pFunc->szName );
+         if( ! pFTemp || pFTemp == hb_comp_functions.pFirst )
+            fprintf( yyc, "extern HB_FUNC( %s );\n", pFunc->szName );
+         pFunc = pFunc->pNext;
       }
-
-      if( pSym != hb_comp_symbols.pLast )
-         fprintf( yyc, ",\n" );
-
-      pSym = pSym->pNext;
+      
+      /* writes the symbol table */
+      /* Generate the wrapper that will initialize local symbol table
+       */
+      hb_strupr( pFileName->szName );
+      fprintf( yyc, "\n\nHB_INIT_SYMBOLS_BEGIN( hb_vm_SymbolInit_%s%s )\n", hb_comp_szPrefix, pFileName->szName );
+      
+      while( pSym )
+      {
+         if( pSym->szName[ 0 ] == '(' )
+         {
+            /* Since the normal function cannot be INIT and EXIT at the same time
+            * we are using these two bits to mark the special function used to
+            * initialize static variables
+            */
+            fprintf( yyc, "{ \"(_INITSTATICS)\", HB_FS_INIT | HB_FS_EXIT, hb_INITSTATICS, NULL }" ); /* NOTE: hb_ intentionally in lower case */
+         }
+         else
+         {
+            fprintf( yyc, "{ \"%s\", ", pSym->szName );
+      
+            if( pSym->cScope & HB_FS_STATIC )
+               fprintf( yyc, "HB_FS_STATIC" );
+      
+            else if( pSym->cScope & HB_FS_INIT )
+               fprintf( yyc, "HB_FS_INIT" );
+      
+            else if( pSym->cScope & HB_FS_EXIT )
+               fprintf( yyc, "HB_FS_EXIT" );
+      
+            else
+               fprintf( yyc, "HB_FS_PUBLIC" );
+      
+            if( pSym->cScope & VS_MEMVAR )
+               fprintf( yyc, " | HB_FS_MEMVAR" );
+      
+            if( ( pSym->cScope != HB_FS_MESSAGE ) && ( pSym->cScope & HB_FS_MESSAGE ) ) /* only for non public symbols */
+               fprintf( yyc, " | HB_FS_MESSAGE" );
+      
+            /* specify the function address if it is a defined function or an
+               external called function */
+            if( hb_compFunctionFind( pSym->szName ) ) /* is it a function defined in this module */
+               fprintf( yyc, ", HB_FUNCNAME( %s ), NULL }", pSym->szName );
+            else if( hb_compFunCallFind( pSym->szName ) ) /* is it a function called from this module */
+               fprintf( yyc, ", HB_FUNCNAME( %s ), NULL }", pSym->szName );
+            else
+               fprintf( yyc, ", NULL, NULL }" );   /* memvar */
+         }
+      
+         if( pSym != hb_comp_symbols.pLast )
+            fprintf( yyc, ",\n" );
+      
+         pSym = pSym->pNext;
+      }
+      
+      fprintf( yyc, "\nHB_INIT_SYMBOLS_END( hb_vm_SymbolInit_%s%s )\n"
+                    "#if defined(_MSC_VER)\n"
+                    "   #if _MSC_VER >= 1010\n"
+                    /* [pt] First version of MSC I have that supports this */
+                    /* is msvc4.1 (which is msc 10.10) */
+                    "      #pragma data_seg( \".CRT$XIY\" )\n"
+                    "      #pragma comment( linker, \"/Merge:.CRT=.data\" )\n"
+                    "   #else\n"
+                    "      #pragma data_seg( \"XIY\" )\n"
+                    "   #endif\n"
+                    "   static HB_$INITSYM hb_vm_auto_SymbolInit_%s%s = hb_vm_SymbolInit_%s%s;\n"
+                    "   #pragma data_seg()\n"
+                    "#elif ! defined(__GNUC__)\n"
+                    "   #pragma startup hb_vm_SymbolInit_%s%s\n"
+                    "#endif\n\n",
+                    hb_comp_szPrefix, pFileName->szName,
+                    hb_comp_szPrefix, pFileName->szName,
+                    hb_comp_szPrefix, pFileName->szName,
+                    hb_comp_szPrefix, pFileName->szName );
+      
+      /* Generate functions data
+       */
+      pFunc = hb_comp_functions.pFirst;
+      
+      if( ! hb_comp_bStartProc )
+         pFunc = pFunc->pNext; /* No implicit starting procedure */
+      
+      while( pFunc )
+      {
+         if( pFunc->cScope != HB_FS_PUBLIC )
+            fprintf( yyc, "static " );
+      
+         if( pFunc == hb_comp_pInitFunc )        /* Is it STATICS$ */
+            fprintf( yyc, "HARBOUR hb_INITSTATICS( void )" ); /* NOTE: hb_ intentionally in lower case */
+         else
+            fprintf( yyc, "HB_FUNC( %s )", pFunc->szName );
+      
+         fprintf( yyc, "\n{\n   static const BYTE pcode[] =\n   {\n" );
+      
+         if( hb_comp_iGenCOutput == HB_COMPGENC_COMPACT )
+            hb_compGenCCompact( pFunc, yyc );
+         else
+            hb_compGenCReadable( pFunc, yyc );
+      
+         fprintf( yyc, "   };\n\n" );
+         fprintf( yyc, "   hb_vmExecute( pcode, symbols );\n}\n\n" );
+         pFunc = pFunc->pNext;
+      }
    }
-
-   fprintf( yyc, "\nHB_INIT_SYMBOLS_END( hb_vm_SymbolInit_%s%s )\n"
-                 "#if defined(_MSC_VER)\n"
-                 "   #if _MSC_VER >= 1010\n"
-                 /* [pt] First version of MSC I have that supports this */
-                 /* is msvc4.1 (which is msc 10.10) */
-                 "      #pragma data_seg( \".CRT$XIY\" )\n"
-                 "      #pragma comment( linker, \"/Merge:.CRT=.data\" )\n"
-                 "   #else\n"
-                 "      #pragma data_seg( \"XIY\" )\n"
-                 "   #endif\n"
-                 "   static HB_$INITSYM hb_vm_auto_SymbolInit_%s%s = hb_vm_SymbolInit_%s%s;\n"
-                 "   #pragma data_seg()\n"
-                 "#elif ! defined(__GNUC__)\n"
-                 "   #pragma startup hb_vm_SymbolInit_%s%s\n"
-                 "#endif\n\n",
-                 hb_comp_szPrefix, pFileName->szName,
-                 hb_comp_szPrefix, pFileName->szName,
-                 hb_comp_szPrefix, pFileName->szName,
-                 hb_comp_szPrefix, pFileName->szName );
-
-   /* Generate functions data
-    */
-   pFunc = hb_comp_functions.pFirst;
-
-   if( ! hb_comp_bStartProc )
-      pFunc = pFunc->pNext; /* No implicit starting procedure */
-
-   while( pFunc )
-   {
-      if( pFunc->cScope != HB_FS_PUBLIC )
-         fprintf( yyc, "static " );
-
-      if( pFunc == hb_comp_pInitFunc )        /* Is it STATICS$ */
-         fprintf( yyc, "HARBOUR hb_INITSTATICS( void )" ); /* NOTE: hb_ intentionally in lower case */
-      else
-         fprintf( yyc, "HB_FUNC( %s )", pFunc->szName );
-
-      fprintf( yyc, "\n{\n   static const BYTE pcode[] =\n   {\n" );
-
-      if( hb_comp_iGenCOutput == HB_COMPGENC_COMPACT )
-         hb_compGenCCompact( pFunc, yyc );
-      else
-         hb_compGenCReadable( pFunc, yyc );
-
-      fprintf( yyc, "   };\n\n" );
-      fprintf( yyc, "   hb_vmExecute( pcode, symbols );\n}\n\n" );
-      pFunc = pFunc->pNext;
-   }
-
+   else
+      fprintf( yyc, "/* Empty source file */\n\n" );
+      
    fclose( yyc );
 
    pFunc = hb_comp_functions.pFirst;

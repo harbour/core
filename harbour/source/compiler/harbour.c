@@ -231,12 +231,11 @@ int main( int argc, char * argv[] )
                      /* we create the output file name */
                      hb_compOutputFile();
 
+                     if( ! hb_comp_bStartProc )
+                        --hb_comp_iFunctionCnt;
+
                      if( ! hb_comp_bQuiet )
-                     {
-                        if( ! hb_comp_bStartProc )
-                           --hb_comp_iFunctionCnt;
                         printf( "\rLines %i, Functions/Procedures %i\n", hb_comp_iLine, hb_comp_iFunctionCnt );
-                     }
 
                      hb_compGenOutput( hb_comp_iLanguage );
                   }

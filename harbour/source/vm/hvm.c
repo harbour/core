@@ -359,11 +359,10 @@ void hb_vmQuit( void )
    exit( s_byErrorLevel );
 }
 
-void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
+void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 {
    BYTE bCode;
    LONG w = 0;
-   USHORT uiParams;
    BOOL bCanRecover = FALSE;
    ULONG ulPrivateBase;
    LONG lOffset;
@@ -523,8 +522,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
          /* Object */
 
          case HB_P_MESSAGE:
-            uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-            hb_vmMessage( pSymbols + uiParams );
+            hb_vmMessage( pSymbols + ( USHORT ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) ) );
             w += 3;
             break;
 
@@ -559,8 +557,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_PARAMETER:
-            uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-            hb_memvarNewParameter( pSymbols + uiParams, hb_stack.pBase + 1 + pCode[ w + 3 ] );
+            hb_memvarNewParameter( pSymbols + ( USHORT ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) ), hb_stack.pBase + 1 + pCode[ w + 3 ] );
             HB_TRACE(HB_TR_INFO, ("(hb_vmPopParameter)"));
             w += 4;
             break;
@@ -571,14 +568,12 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_SFRAME:
-            uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-            hb_vmSFrame( pSymbols + uiParams );
+            hb_vmSFrame( pSymbols + ( USHORT ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) ) );
             w += 3;
             break;
 
          case HB_P_STATICS:
-            uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-            hb_vmStatics( pSymbols + uiParams, pCode[ w + 3 ] + ( pCode[ w + 4 ] * 256 ) );
+            hb_vmStatics( pSymbols + ( USHORT ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) ), pCode[ w + 3 ] + ( pCode[ w + 4 ] * 256 ) );
             w += 5;
             break;
 
@@ -933,8 +928,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_PUSHSYM:
-            uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-            hb_vmPushSymbol( pSymbols + uiParams );
+            hb_vmPushSymbol( pSymbols + ( USHORT ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) ) );
             w += 3;
             break;
 
@@ -944,22 +938,19 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_PUSHALIASEDFIELD:
-            uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-            hb_vmPushAliasedField( pSymbols + uiParams );
+            hb_vmPushAliasedField( pSymbols + ( USHORT ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) ) );
             w += 3;
             break;
 
          case HB_P_PUSHALIASEDVAR:
-            uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-            hb_vmPushAliasedVar( pSymbols + uiParams );
+            hb_vmPushAliasedVar( pSymbols + ( USHORT ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) ) );
             w += 3;
             break;
 
          case HB_P_PUSHFIELD:
             /* It pushes the current value of the given field onto the eval stack
              */
-            uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-            hb_rddGetFieldValue( hb_stack.pPos, pSymbols + uiParams );
+            hb_rddGetFieldValue( hb_stack.pPos, pSymbols + ( USHORT ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) ) );
             hb_stackPush();
             HB_TRACE(HB_TR_INFO, ("(hb_vmPushField)"));
             w += 3;
@@ -991,16 +982,14 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_PUSHMEMVAR:
-            uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-            hb_memvarGetValue( hb_stack.pPos, pSymbols + uiParams );
+            hb_memvarGetValue( hb_stack.pPos, pSymbols + ( USHORT ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) ) );
             hb_stackPush();
             HB_TRACE(HB_TR_INFO, ("(hb_vmPushMemvar)"));
             w += 3;
             break;
 
          case HB_P_PUSHMEMVARREF:
-            uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-            hb_memvarGetRefer( hb_stack.pPos, pSymbols + uiParams );
+            hb_memvarGetRefer( hb_stack.pPos, pSymbols + ( USHORT ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) ) );
             hb_stackPush();
             HB_TRACE(HB_TR_INFO, ("(hb_vmPushMemvarRef)"));
             w += 3;
@@ -1036,14 +1025,12 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_POPALIASEDFIELD:
-            uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-            hb_vmPopAliasedField( pSymbols + uiParams );
+            hb_vmPopAliasedField( pSymbols + ( USHORT ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) ) );
             w += 3;
             break;
 
          case HB_P_POPALIASEDVAR:
-            uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-            hb_vmPopAliasedVar( pSymbols + uiParams );
+            hb_vmPopAliasedVar( pSymbols + ( USHORT ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) ) );
             w += 3;
             break;
 
@@ -1051,9 +1038,8 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             /* Pops a value from the eval stack and uses it to set
              * a new value of the given field
              */
-            uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
             hb_stackDec();
-            hb_rddPutFieldValue( hb_stack.pPos, pSymbols + uiParams );
+            hb_rddPutFieldValue( hb_stack.pPos, pSymbols + ( USHORT ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) ) );
             hb_itemClear( hb_stack.pPos );
             HB_TRACE(HB_TR_INFO, ("(hb_vmPopField)"));
             w += 3;
@@ -1075,15 +1061,17 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_POPMEMVAR:
-            uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
             hb_stackDec();
-            hb_memvarSetValue( pSymbols + uiParams, hb_stack.pPos );
+            hb_memvarSetValue( pSymbols + ( USHORT ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) ), hb_stack.pPos );
             hb_itemClear( hb_stack.pPos );
             HB_TRACE(HB_TR_INFO, ("(hb_vmPopMemvar)"));
             w += 3;
             break;
 
          case HB_P_POPVARIABLE:
+         {
+            USHORT uiParams;
+
             /* Pops a value from the eval stack and uses it to set
              * a new value of a variable of unknown type.
              */
@@ -1100,6 +1088,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             HB_TRACE(HB_TR_INFO, ("(hb_vmPopVariable)"));
             w += 3;
             break;
+         }
 
          /* macro creation */
 

@@ -47,7 +47,7 @@ extern void    hb_vmInit( BOOL bStartMainProc );
 extern void    hb_vmQuit( void );
 
 /* Harbour virtual machine functions */
-extern void    hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
+extern void    hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
 extern void    hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* statics symbols initialization */
 extern void    hb_vmSymbolInit_RT( void );   /* initialization of runtime support symbols */
 
