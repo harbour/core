@@ -44,95 +44,109 @@ extern "C" {
 
 extern void hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* statics symbols initialization */
 
-#ifdef HARBOUR_STRICT_ANSI_C
+#if defined(HARBOUR_STRICT_ANSI_C)
 
-#define HB_INIT_SYMBOLS_BEGIN( func ) \
-   static HB_SYMB symbols[] = {
+   #define HB_INIT_SYMBOLS_BEGIN( func ) \
+      static HB_SYMB symbols[] = {
+   
+   #define HB_INIT_SYMBOLS_END( func ) }; \
+      void func( void ) \
+      { \
+         hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
+      }
 
-#define HB_INIT_SYMBOLS_END( func ) }; \
-   void func( void ) \
-   { \
-      hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
-   }
+   #define HB_CALL_ON_STARTUP_BEGIN( func ) func( void ) {
+   #define HB_CALL_ON_STARTUP_END( func ) }
 
-#define HB_CALL_ON_STARTUP_BEGIN( func ) func( void ) {
-#define HB_CALL_ON_STARTUP_END( func ) }
+#elif defined(__GNUC__)
 
-#else /* HARBOUR_STRICT_ANSI_C */
+   #define HB_INIT_SYMBOLS_BEGIN( func ) \
+      static HB_SYMB symbols[] = {
 
-#if defined(__GNUC__)
-#define HB_INIT_SYMBOLS_BEGIN( func ) \
-   static HB_SYMB symbols[] = {
+   #define HB_INIT_SYMBOLS_END( func )  }; \
+      static void __attribute__ ((constructor)) func( void ) \
+      { \
+         hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
+      }
 
-#define HB_INIT_SYMBOLS_END( func )  }; \
-   static void __attribute__ ((constructor)) func( void ) \
-   { \
-      hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
-   }
+   #define HB_CALL_ON_STARTUP_BEGIN( func ) \
+      static void __attribute__ ((constructor)) func( void ) {
 
+   #define HB_CALL_ON_STARTUP_END( func ) }
 
-#define HB_CALL_ON_STARTUP_BEGIN( func ) \
-   static void __attribute__ ((constructor)) func( void ) {
+#elif defined(__BORLANDC__)
 
-#define HB_CALL_ON_STARTUP_END( func ) }
+   #define HB_INIT_SYMBOLS_BEGIN( func ) \
+      static HB_SYMB symbols[] = {
+
+   #define HB_INIT_SYMBOLS_END( func )  }; \
+      static void func( void ) \
+      { \
+         hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
+      }
+
+   #define HB_CALL_ON_STARTUP_BEGIN( func ) \
+      static void func( void ) {
+
+   #define HB_CALL_ON_STARTUP_END( func ) }
+
+#elif defined(__IBMCPP__) || defined(__MPW__)
+
+   #define HB_INIT_SYMBOLS_BEGIN( func ) \
+      static HB_SYMB symbols[] = {
+
+   #define HB_INIT_SYMBOLS_END( func ) }; \
+      static int func( void ) \
+      { \
+         hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
+         return 1; \
+      }; \
+      static int static_int_##func = func();
+
+   #define HB_CALL_ON_STARTUP_BEGIN( func ) \
+      static int func( void ) {
+
+   #define HB_CALL_ON_STARTUP_END( func ) return 1; } \
+      static int static_int_##func = func();
+
+#elif defined(_MSC_VER)
+
+   #define HB_INIT_SYMBOLS_BEGIN( func ) \
+      static HB_SYMB symbols[] = {
+
+   #define HB_INIT_SYMBOLS_END( func ) }; \
+      static int func( void ) \
+      { \
+         hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
+         return 1; \
+      }
+
+   #define HB_CALL_ON_STARTUP_BEGIN( func ) \
+      static int func( void ) {
+
+   #define HB_CALL_ON_STARTUP_END( func ) return 1; } \
+      static int static_int_##func = func();
+
+#elif defined(__WATCOMC__)
+
+   #define HB_INIT_SYMBOLS_BEGIN( func ) \
+      static HB_SYMB symbols[] = {
+
+   #define HB_INIT_SYMBOLS_END( func ) }; \
+      static int func( void ) \
+      { \
+         hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
+         return 1; \
+      }; \
+      static int static_int_##func = func();
+
+   #define HB_CALL_ON_STARTUP_BEGIN( func ) \
+      static int func( void ) {
+
+   #define HB_CALL_ON_STARTUP_END( func ) return 1; }; \
+      static int static_int_##func = func();
+
 #endif
-
-
-#if defined(__BORLANDC__)
-#define HB_INIT_SYMBOLS_BEGIN( func ) \
-   static HB_SYMB symbols[] = {
-
-#define HB_INIT_SYMBOLS_END( func )  }; \
-   static void func( void ) \
-   { \
-      hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
-   }
-
-#define HB_CALL_ON_STARTUP_BEGIN( func ) \
-   static void func( void ) {
-
-#define HB_CALL_ON_STARTUP_END( func ) }
-#endif
-
-#if defined(_MSC_VER) || defined(__IBMCPP__) || defined(__MPW__)
-#define HB_INIT_SYMBOLS_BEGIN( func ) \
-   static HB_SYMB symbols[] = {
-
-#define HB_INIT_SYMBOLS_END( func ) }; \
-   static int func( void ) \
-   { \
-      hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
-      return 1; \
-   }; \
-   static int static_int_##func = func();
-
-#define HB_CALL_ON_STARTUP_BEGIN( func ) \
-   static int func( void ) {
-
-#define HB_CALL_ON_STARTUP_END( func ) return 1; } \
-   static int static_int_##func = func();
-#endif
-
-#if defined(__WATCOMC__)
-#define HB_INIT_SYMBOLS_BEGIN( func ) \
-   static HB_SYMB symbols[] = {
-
-#define HB_INIT_SYMBOLS_END( func ) }; \
-   static int func( void ) \
-   { \
-      hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
-      return 1; \
-   }; \
-   static int static_int_##func = func();
-
-#define HB_CALL_ON_STARTUP_BEGIN( func ) \
-   static int func( void ) {
-
-#define HB_CALL_ON_STARTUP_END( func ) return 1; }; \
-   static int static_int_##func = func();
-#endif
-
-#endif /* HARBOUR_STRICT_ANSI_C */
 
 #if defined(HB_EXTERN_C)
 }
