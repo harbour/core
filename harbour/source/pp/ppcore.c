@@ -428,8 +428,12 @@ void hb_pp_Init( void )
       pDst[n++] = '"';
       pDst[ n ] = 0;
 
-      hb_xfree( szPlatform );
       hb_pp_AddDefine( sOS, sVer );
+#ifdef HB_OS_UNIX
+      strcpy( &sOS[12], "UNIX" );
+      hb_pp_AddDefine( sOS, sVer );
+#endif
+      hb_xfree( szPlatform );
    }
 
    {

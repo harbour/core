@@ -604,7 +604,7 @@ FUNCTION HB_SToD( cDate )
 #endif
 
 STATIC FUNCTION BADFNAME()
-#ifdef __PLATFORM__Linux
+#ifdef __PLATFORM__UNIX
    return "*BADNAM/*.MEM"
 #else
    return "*BADNAM*.MEM"

@@ -30,11 +30,11 @@
 
 #ifdef __CLIP__
    #ifdef __LINUX__
-      #define __PLATFORM__Linux
+      #define __PLATFORM__UNIX
    #endif
 #endif
 
-#ifdef __PLATFORM__Linux
+#ifdef __PLATFORM__UNIX
    #ifndef OS_PATH_DELIMITER
       #define OS_PATH_DELIMITER '/'
    #endif
@@ -433,7 +433,7 @@ STATIC s_aSwitchDefs := {}
       QUIT
    endif
 
-   #ifdef __PLATFORM__Linux
+   #ifdef __PLATFORM__UNIX
       if right( hb_argv( 0 ), 6 ) == "/pprun"
          bCount := .F.
          bCompile := .T.
@@ -2854,7 +2854,7 @@ FUNCTION PP_PreProFile( sSource, sPPOExt, bBlanks, bDirectivesOnly )
                    ENDDO
                 ENDIF
 
-          #ifdef __PLATFORM__Linux
+          #ifdef __PLATFORM__UNIX
              CASE ( nLine == 0 .AND. nPosition == 1 .AND. cChar == '#' .AND. SubStr( sBuffer, nPosition + 1, 1 ) == '!' )
                 WHILE .T.
                    nClose := At( Chr(10), sBuffer, nPosition + 1 )

@@ -8,6 +8,23 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-10-20 17:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/pp/ppcore.c
+    + added predefined macro __PLATFORM__UNIX for all *nix compatible
+      systems
+
+  * harbour/contrib/dot/pp.prg
+  * harbour/source/pp/ppcore.c
+  * harbour/utils/hbtest/hbtest.prg
+  * harbour/utils/hbtest/rt_misc.prg
+    * replaced __PLATFORM__Linux with __PLATFORM__UNIX
+
+  * harbour/harbour.spec
+    ! fixed stripping script files
+
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+    ! fixed casting
+
 2004-10-20 12:00 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbcmd.c
     ! Fixed a small bug in ordListAdd() function - there was a memory leak if

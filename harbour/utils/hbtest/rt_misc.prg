@@ -847,14 +847,14 @@ STATIC FUNCTION BADFNAME()
    /* NOTE: The dot in the "*INVALID*." filename is intentional and serves
             to hide different path handling, since Harbour is platform
             independent. */
-#ifdef __PLATFORM__Linux
+#ifdef __PLATFORM__UNIX
    return "*INVALID/*."
 #else
    return "*INVALID*."
 #endif
 
 STATIC FUNCTION BADFNAME2()
-#ifdef __PLATFORM__Linux
+#ifdef __PLATFORM__UNIX
    return "*INVALI/*.TMP"
 #else
    return "*INVALI*.TMP"

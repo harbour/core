@@ -2521,7 +2521,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
                sortInfo.tempHandle = hb_fsCreateTemp( NULL, NULL, FC_NORMAL, szTempName );
                if( sortInfo.tempHandle == FS_ERROR )
                   hb_errInternal( HB_EI_ERRUNRECOV, "Cannot create temp file", "hb_ntxIndexCreate", NULL );
-               pszTempName = hb_strdup( szTempName );
+               pszTempName = hb_strdup( ( const char * ) szTempName );
             }
             hb_ntxSortKeyEnd( pTag, &sortInfo );
             hb_ntxSwapPageSave( pTag, &sortInfo, nParts-1 );

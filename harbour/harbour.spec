@@ -249,7 +249,7 @@ pushd source/vm
 popd
 
 # Keep the size of the binaries to a minimim.
-strip $HB_BIN_INSTALL/*
+strip $HB_BIN_INSTALL/harbour
 # Keep the size of the libraries to a minimim.
 strip --strip-debug $HB_LIB_INSTALL/*
 
