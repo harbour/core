@@ -1499,6 +1499,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
 
 /* *********************************************************************** */
 
+#if defined(__BORLANDC__) || defined(_MSC_VER)
 static int hb_Inp9x( USHORT usPort )
 {
   USHORT usVal;
@@ -1535,7 +1536,6 @@ static int hb_Outp9x( USHORT usPort, USHORT usVal )
 
     return usVal;
 }
-
 
 /* *********************************************************************** */
 
@@ -1620,6 +1620,7 @@ static void hb_gt_w9xTone( double dFreq, double dDurat, double dTick )
     hb_idleReset();
 
 }
+#endif
 
 /* *********************************************************************** */
 
@@ -1665,12 +1666,11 @@ void hb_gt_Tone( double dFrequency, double dDuration )
 
     if( dDuration > 0 ) 
     {
-
-       #if defined( _MSC_VER )
-           double dTick = (double) ( 1000.0 / CLOCKS_PER_SEC );
-       #else
-           double dTick = (double) ( CLOCKS_PER_SEC / 18.2 );
-       #endif
+      #if defined( _MSC_VER )
+         double dTick = (double) ( 1000.0 / CLOCKS_PER_SEC );
+      #else
+         double dTick = (double) ( CLOCKS_PER_SEC / 18.2 );
+      #endif
 
       dMillisecs = dDuration * dTick;   /* milliseconds */
 
@@ -1681,13 +1681,13 @@ void hb_gt_Tone( double dFrequency, double dDuration )
       /* If Windows 95 or 98, use w9xTone for BCC32, MSVC */
       if (osv.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS)
       {
-       #if defined(__BORLANDC__) || defined( _MSC_VER )
-        hb_gt_w9xTone( HB_MIN( HB_MAX( 0.0, dFrequency ), 32767.0 ),
-              dMillisecs, dTick );
-       #else
-        hb_gt_wNtTone( HB_MIN( HB_MAX( 0.0, dFrequency ), 32767.0 ),
-              dMillisecs, dTick );
-       #endif
+         #if defined(__BORLANDC__) || defined( _MSC_VER )
+            hb_gt_w9xTone( HB_MIN( HB_MAX( 0.0, dFrequency ), 32767.0 ),
+                           dMillisecs, dTick );
+         #else
+            hb_gt_wNtTone( HB_MIN( HB_MAX( 0.0, dFrequency ), 32767.0 ),
+                           dMillisecs, dTick );
+         #endif
       }
 
       /* If Windows NT or NT2k, use wNtTone, which provides TONE()

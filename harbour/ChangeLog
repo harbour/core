@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-29 20:45 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/gtwin/gtwin.c
+    * Win9x Tone() support currently only for Borland and MSVC compilers.
+    * The only issue for the moment, is if the calculation of TICKS is
+    * incorrect for other compilers.  SEE dTicks in hb_gt_Tone().
+    * Someone may wish to adapt the code above hb_gt_tone() in gtwin.c
+    * for other compilers.
+
 2002-10-29 16:20 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
   * makefile.vc
     * slight re-ordering and added missed codepage.lib directive.
