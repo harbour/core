@@ -99,8 +99,13 @@ void  CodeblockDelete( PCODEBLOCK pCBlock )
 
     /* free space allocated for local variables
     */
-    while( w < pCBlock->wLocals )
-      ItemRelease( &pCBlock->pItems[ w++ ] );
+    if( pCBlock->pItems )
+    {
+      while( w < pCBlock->wLocals )
+        ItemRelease( &pCBlock->pItems[ w++ ] );
+      _xfree( pCBlock->pItems );
+    }
+
     /* free space allocated for a CODEBLOCK structure
     */
     _xfree( pCBlock );

@@ -1,3 +1,7 @@
+19990514-19:50 CET Eddie Runia
+  * source/rtl/codebloc.c
+    Codeblock patch from Ryszard applied
+
 19990514-19:45 CET Eddie Runia
   * source/rtl/arrays.c
     Patch from David (see below) was overwritten ??
