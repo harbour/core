@@ -94,7 +94,7 @@
 HB_FUNC( SCREENATTR )
 {
 
-  USHORT uiSize;
+  UINT   uiSize;
   int    iRow, iCol;
   char * pcPos;
 
