@@ -58,6 +58,7 @@ function __MenuTo( bBlock, cVariable )
 
    local lDeclared
    local bAction
+   local nMouseClik
 
    // Detect if a memvar was passed
 
@@ -175,6 +176,15 @@ function __MenuTo( bBlock, cVariable )
 
          // check for keystrokes
          do case
+         case nKey == 1001
+         case nKey == 1002 .OR. nKey == 1006
+            if ( ( nMouseClik := hittest(s_aLevel, mrow(), mcol()) ) > 0 )
+                n := nMouseClik
+            endif
+            if ( nKey == 1006 )
+                lExit := .T.
+            endif
+
          case nKey == K_DOWN .or. nKey == K_RIGHT
             if ++n > nArrLen
                n := iif( Set( _SET_WRAP ), 1, nArrLen )
@@ -228,3 +238,14 @@ function __MenuTo( bBlock, cVariable )
 
    return n
 
+static function HITTEST( aMenu, nMouseRow, nMouseCol )
+
+   local nPos, nLen := Len(aMenu)
+   for nPos := 1 to nLen
+      if ( nMouseRow != aMenu[ nPos ][ 1 ] )
+      elseif ( nMouseCol < aMenu[ nPos ][ 2 ] )
+      elseif ( nMouseCol < aMenu[ nPos ][ 2 ] + Len(aMenu[ nPos ][ 3 ]) )
+         return nPos
+      endif
+   next
+   return 0
