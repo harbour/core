@@ -1,3 +1,30 @@
+2001-04-27 15:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * include/achoice.ch
+  * include/assert.ch
+  * include/box.ch
+  * include/button.ch
+  * include/color.ch
+  * include/common.ch
+  * include/dbedit.ch
+  * include/dbstruct.ch
+  * include/directry.ch
+  * include/error.ch
+  * include/getexit.ch
+  * include/hbapigt.h
+  * include/hbapirdd.h
+  * include/hbdefs.h
+  * include/inkey.ch
+  * include/memoedit.ch
+  * include/ord.ch
+  * include/rddsys.ch
+  * include/reserved.ch
+  * include/setcurs.ch
+  * include/simpleio.ch
+  * include/std.ch
+    * Changed the license in all "anonymous" include files from the
+      old license to the new one.
+
 2001-04-26 22:10 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * contrib/mysql/mysql.c
      + added functions sqlHostInfo(), sqlSrvInfo()
