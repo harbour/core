@@ -1,3 +1,8 @@
+20000515-19:45 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+  * source/compiler/harbour.l
+    ! Corrected (again) rules for OPTIONAL to not conflict with DO OPTIONAL WITH ... and FOR Counter := OPTIONAL TO ...
+
 20000515-20:22 GMT+4 April White <awhite@user.rose.com>
 
   * source\rtl\makefile
@@ -46,10 +51,10 @@
 20000515-18:00 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
   * source/compiler/harbour.c
-    - Removed: warning of unitialized static variable.
+    - Removed: warning of uninitialized static variable.
 
   * source/compiler/hbpcode.c
-    - Removed: warning of unitialized static variable.
+    - Removed: warning of uninitialized static variable.
     ! Minor correction to hb_compStrongType()
 
 20000515-23:11 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
