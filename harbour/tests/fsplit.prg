@@ -56,6 +56,10 @@ BEGIN SEQUENCE
       fseek( hsource, 0, FS_SET )               // go to top of file
       cdestination := csplit+ltrim(str(nsplit)) // destination file name
       hbat         := fcreate( cbat )           // join.bat
+      if hbat <> -1
+      else
+         break
+      endif
       ctmp         += "rem source file " + csource + " size "+ ltrim(str(nfilesize ) ) + cret
       ctmp         += "rem split on " + dtoc(date()) + " "+ time() + cret
       ccommand     := "copy /b "                // line in join.bat
@@ -76,8 +80,12 @@ BEGIN SEQUENCE
                cdestination  := csplit + ltrim(str(++nsplit))  // next file name
                ccommand      += cdestination + "+"             // line in join.bat
                hdestination  := fcreate(cdestination)          // create next file
-               aadd( afile, cdestination )
-               dispoutat(24,00,padr("Writing " + cdestination,80))
+               if hdestination <> -1
+                  aadd( afile, cdestination )
+                  dispoutat(24,00,padr("Writing " + cdestination,80))
+               else
+                  break
+               endif
             endif
          enddo
          fclose( hsource )         // close source file
@@ -117,6 +125,8 @@ BEGIN SEQUENCE
       else
          break
       endif
+   else
+      break
    endif
 RECOVER
    ? chr(7)
