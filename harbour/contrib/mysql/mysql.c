@@ -68,6 +68,7 @@
    #include <windows.h>
 #endif
 
+#include "hbapifs.h"
 #include "extend.api"
 #include "item.api"
 #include "mysql.h"
@@ -275,7 +276,7 @@ HB_FUNC(SQLLISTDB) // MYSQL_RES * mysql_list_dbs(MYSQL *, char * wild);
    ITEM temp;
 
    mresult = mysql_list_dbs(mysql, NULL);
-   nr = mysql_num_rows(mresult);
+   nr = (LONG) mysql_num_rows(mresult);
    aDBs = _itemArrayNew(nr);
 
    for (i = 0; i < nr; i++) {
@@ -302,7 +303,7 @@ HB_FUNC(SQLLISTTBL) // MYSQL_RES * mysql_list_tables(MYSQL *, char * wild);
    ITEM temp;
 
    mresult = mysql_list_tables(mysql, NULL);
-   nr = mysql_num_rows(mresult);
+   nr = (LONG) mysql_num_rows(mresult);
    aTables = _itemArrayNew(nr);
 
    for (i = 0; i < nr; i++) {
@@ -328,7 +329,7 @@ HB_FUNC(SQLAND)
 
 HB_FUNC(SQLAFFROWS)
 {
-   _retnl( mysql_affected_rows( (MYSQL *)_parnl(1) ) );
+   _retnl( (LONG) mysql_affected_rows( (MYSQL *)_parnl(1) ) );
 }
 
 HB_FUNC(SQLHOSTINFO)
@@ -343,9 +344,10 @@ HB_FUNC(SQLSRVINFO)
 
 char *filetoBuff(char *f,char *s)
 {
-   int i=0;
-   int fh= hb_fsOpen(s,2);
-   i=hb_fsReadLarge(fh,f,filelength(fh));
+/* int i=0; */
+   int i;
+   int fh= hb_fsOpen((BYTE*)s,2);
+   i=hb_fsReadLarge(fh,(BYTE*)f,filelength(fh));
    f[ i ] = '\0';
    hb_fsClose(fh);
    return f   ;
@@ -360,7 +362,7 @@ HB_FUNC(DATATOSQL)
    from=hb_parc(1);
    iLen=hb_parclen(1)*2;
    iSize=strlen(from);
-   buffer=hb_xgrab(iLen);
+   buffer=(char*)hb_xgrab(iLen);
    mysql_escape_string(buffer,from,iSize);
    hb_retc((char*)buffer);
    hb_xfree(buffer);
@@ -375,13 +377,13 @@ HB_FUNC(FILETOSQLBINARY)
    int iLen;
    char *buffer;
    char *FromBuffer;
-   fh=hb_fsOpen(szFile,2);
+   fh=hb_fsOpen((BYTE*)szFile,2);
    iSize=filelength(fh);
    iLen=iSize*2;
-   FromBuffer=hb_xgrab(iSize+1);
+   FromBuffer=(char*)hb_xgrab(iSize+1);
    hb_fsClose(fh);
    from=(char*)filetoBuff(FromBuffer,szFile);
-   buffer=hb_xgrab(iLen);
+   buffer=(char*)hb_xgrab(iLen);
    mysql_escape_string(buffer,from,iSize);
    hb_retc((char*)buffer);
    hb_xfree(buffer);
