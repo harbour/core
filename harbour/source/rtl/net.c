@@ -57,8 +57,20 @@
 
 #include "hbapi.h"
 #include "hb_io.h"
-#if defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__)
-    #include "sys/param.h"
+#if defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__) && ! defined(HB_OS_OS2)
+   #include "sys/param.h"
+
+/* EMX GCC does need a different approach to include gethostname()
+   NOTE: you need to link socket.a library to every program from now on or you'll get:
+   rtl.a(net.o): Undefined symbol _gethostname referenced from text segment
+   */
+#elif defined(__GNUC__) && defined(HB_OS_OS2)
+   #include "sys/types.h"
+   #include "sys/socket.h"
+   #include "sys/ioctl.h"
+   #include "netdb.h"
+   #define MAXGETHOSTNAME  256      /* should be enough for a host name */
+
 #endif
 /* NOTE: Clipper will only return a maximum of 15 bytes from this function.
          And it will be padded with spaces. Harbour does the same in the
@@ -72,7 +84,7 @@ HB_FUNC( NETNAME )
       {
      char * pszValue = (char *) hb_xgrab(MAXGETHOSTNAME+1);
      pszValue[ 0 ] = '\0';
-          
+
      gethostname (pszValue, MAXGETHOSTNAME);
 
      hb_retc( pszValue );

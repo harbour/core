@@ -1,3 +1,9 @@
+2001-06-11 14:16 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/net.c
+     ! To compile under OS/2 EMX GCC compiler there were missing include files.
+       NOTE: you need to link socket.a library to every program from now on or you'll get:
+       rtl.a(net.o): Undefined symbol _gethostname referenced from text segment
+
 2001-06-10 17:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
   + contrib/dot/pp.prg
     + Restored deleted file.
