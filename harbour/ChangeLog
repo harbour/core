@@ -8,6 +8,20 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-15 10:05 UTC+0100 Antonio Linares <Antonio Linares@alinares@fivetech.com>
+   + source/vm/dynlibhb.c
+     + HB_LIBLOAD()
+     + HB_LIBFREE()
+     + HB_LIBDO()
+     Dynamic link libraries management functions
+
+   * source/vm/eval.c
+     - HB_DLLDO()
+     Removed and included in dynlibhb.c as HB_LIBDO()
+
+   * makefile.bc
+     + added dynlibhb.c module
+
 2001-12-14 10:17 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * include/hbapifs.h
@@ -32,9 +46,9 @@
 
    * include/Makefile
    * include/hbapi.h
-   + include/hblang.ch 
+   + include/hblang.ch
      + Added HB_I_() define for translatable strings.
-       In Harbour sources which contains translatable 
+       In Harbour sources which contains translatable
        strings #include "hblang.ch" must be added.
 
 2001-12-13 16:40 UTC+0100 Antonio Linares <alinares@fivetech.com>
