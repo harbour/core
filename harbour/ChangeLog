@@ -1,3 +1,22 @@
+2000-06-25 22:14 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+   * source/compiler/harbour.l
+     + Added rule for orphan "]"
+     * Monor improvments to INDEX
+
+   * source/compiler/hbgenerr.c
+     * Minor improvements
+
+   * source/pp/ppcomp.c
+     ! Corrected line number was adding EmptyLines twice.
+
+2000-06-25 03:35 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+   * source/compiler/hbgenerr.c
+     ! Refined line numbers reported.
+
+   * source/compiler/harbour.l
+     ! Rewrote (again) rules for STRING1 STRING2 STRING3 INDEX. Rules for strings much simpler.
+       /* Flex had some problem with $ that caused output of strings. */
+
 2000-06-25 23:58 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm/garbage.c
@@ -6,9 +25,9 @@
 
     *source/rtl/errorapi.c
         *fixed call for hb_itemInit()
-                
+
     *tests/onidle.prg
-        *commented self-referencing codeblock since it requires some 
+        *commented self-referencing codeblock since it requires some
         more work
 
 2000-06-25 21:52 UTC+0100 Victor Szakats <info@szelvesz.hu>

@@ -236,7 +236,7 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
 
   if( lLine )
   {
-     sprintf( ptrOut, "#line %d \"%s\"", ( hb_comp_files.pLast->iLine += hb_pp_nEmptyStrings ) , hb_comp_files.pLast->szFileName );
+     sprintf( ptrOut, "#line %d \"%s\"", ( hb_comp_files.pLast->iLine + hb_pp_nEmptyStrings ) , hb_comp_files.pLast->szFileName );
      while( *ptrOut ) ptrOut++;
 
      /* Ron Pinkas added 2000-06-14 */

@@ -129,10 +129,6 @@ void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szErro
    if( cPrefix != 'F' && hb_comp_bError )
       return;
 
-   #ifdef DEBUG_ERRORS
-      printf( "PP %i Empty: %i >%s<\n", hb_comp_files.pLast->iLine, hb_pp_nEmptyStrings, yytext );
-   #endif
-
    printf( "\r%s(%i) ", hb_comp_szFile, iLine );
 
    printf( "Error %c%04i  ", cPrefix, iError );
@@ -151,11 +147,14 @@ void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szErro
 void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2)
 {
    char * szText = szWarnings[ iWarning - 1 ];
+   int iLine = 0;
+
+   if( hb_comp_files.pLast && hb_comp_files.pLast->iLine )
+      iLine = hb_comp_files.pLast->iLine - 1;
 
    if( ( szText[ 0 ] - '0' ) <= hb_comp_iWarnings )
    {
-      if( hb_comp_files.pLast && hb_comp_files.pLast->szFileName  )
-         printf( "\r%s(%i) ", hb_comp_files.pLast->szFileName, hb_comp_files.pLast->iLine - 1 );
+      printf( "\r%s(%i) ", hb_comp_szFile, iLine );
 
       printf( "Warning %c%04i  ", cPrefix, iWarning );
       printf( szText + 1, szWarning1, szWarning2 );

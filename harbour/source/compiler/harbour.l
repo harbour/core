@@ -157,9 +157,10 @@ Separator     {SpaceTab}
 ^[ \t]*"do"[ \t]*"while"[ \t]*"["    { BEGIN STRING3;                    return WHILE;    }
 <INITIAL>\[                          { BEGIN STRING3; }
 
+<INITIAL>\]			     { hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX, "orphan \"]\"", NULL ); }
+
 <STRING1>[^'\n]*\n  {
 		      unput( '\n' );
-
 		      yytext[--yyleng] = '\0';
 
 		      #ifdef DEBUG_STRINGS
@@ -167,16 +168,17 @@ Separator     {SpaceTab}
 		      #endif
 
                       hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, yytext, NULL );
+
                       iIndexSets = 0;
                       i_INDEX_STATE = 0;
 		      hb_comp_iState = LOOKUP;
                       BEGIN 0;
+
                       return LITERAL;
                     }
 
 <STRING2>[^"\n]*\n  {
 		      unput( '\n' );
-
 		      yytext[--yyleng] = '\0';
 
 		      #ifdef DEBUG_STRINGS
@@ -184,59 +186,66 @@ Separator     {SpaceTab}
 		      #endif
 
                       hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, yytext, NULL );
+
                       iIndexSets = 0;
                       i_INDEX_STATE = 0;
 		      hb_comp_iState = LOOKUP;
                       BEGIN 0;
+
                       return LITERAL;
                     }
 
-<STRING3>[^]\n]*\n  {
+<STRING3>[^\]\n]*\n {
 		      unput( '\n' );
-
 		      yytext[--yyleng] = '\0';
 
 		      #ifdef DEBUG_STRINGS
-		        printf("\nEOL in STRING3\n");
+		         printf("\nEOL in STRING3\n");
 		      #endif
 
                       hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, yytext, NULL );
+
                       iIndexSets = 0;
                       i_INDEX_STATE = 0;
 		      hb_comp_iState = LOOKUP;
                       BEGIN 0;
+
                       return LITERAL;
-                     }
+                    }
 
-<STRING1>[^'\n]*'  {  if( i_INDEX_STATE )
-                          BEGIN INDEX;
-                        else
-                          BEGIN 0;
+<STRING1>[^'\n]*'   {
+                      if( i_INDEX_STATE )
+                        BEGIN INDEX;
+                      else
+                        BEGIN 0;
 
-                        yytext[yyleng--] = '\0';
-                        yylval.string = hb_strdup( yytext );
-                        return LITERAL;
-                     }
+                      yytext[yyleng--] = '\0';
+                      yylval.string = hb_strdup( yytext );
 
-<STRING2>[^"\n]*\"  {  if( i_INDEX_STATE )
-                          BEGIN INDEX;
-                        else
-                          BEGIN 0;
+                      return LITERAL;
+                    }
 
-                        yytext[yyleng--] = '\0';
-                        yylval.string = hb_strdup( yytext );
-                        return LITERAL;
-                     }
+<STRING2>[^"\n]*\"  { if( i_INDEX_STATE )
+                        BEGIN INDEX;
+                      else
+                        BEGIN 0;
 
-<STRING3>[^\]\n]*]  {  if( i_INDEX_STATE )
-                          BEGIN INDEX;
-                        else
-                          BEGIN 0;
+                      yytext[yyleng--] = '\0';
+                      yylval.string = hb_strdup( yytext );
 
-                        yytext[yyleng--] = '\0';
-                        yylval.string = hb_strdup( yytext );
-                        return LITERAL;
-                     }
+                      return LITERAL;
+                    }
+
+<STRING3>[^\]\n]*]  { if( i_INDEX_STATE )
+                         BEGIN INDEX;
+                      else
+                         BEGIN 0;
+
+                      yytext[yyleng--] = '\0';
+                      yylval.string = hb_strdup( yytext );
+
+                      return LITERAL;
+                    }
 
 <INDEX>\[[^;\n]*[;\n]  {
 		     {
@@ -257,61 +266,78 @@ Separator     {SpaceTab}
 			   }
 		        }
 
-			/* No Closing Bracket - Error! */
 			hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_UNTERM_ARRAY_INDEX, NULL, NULL );
+
                         i_INDEX_STATE = 0;
 			iIndexSets = 0;
 		        hb_comp_iState = LOOKUP;
                         BEGIN 0;
+
 			return yytext[yyleng -1];
 		     }
                   }
 
-<INDEX>\][^;\n]*[;\n] { if( iIndexSets )
-                        iIndexSets-- ;
+<INDEX>\][^;\n]*[;\n] {
+                         iIndexSets-- ;
 
-		        #ifdef DEBUG_INDEX
-                          printf( "Closed: %i At: >%s<\n", iIndexSets, yytext );
-		        #endif
+		         #ifdef DEBUG_INDEX
+                            printf( "Closed: %i At: >%s<\n", iIndexSets, yytext );
+		         #endif
 
-                     if( iIndexSets == 0 )
-                     {
-			char * tmpStr = yytext + 1;
+                         if( iIndexSets == 0 )
+                         {
+			    char * tmpStr = yytext + 1;
 
-			/* Default to no immediate Opening Bracket. */
-                        i_INDEX_STATE = 0;
-                        BEGIN 0;
+			    /* Default to no immediate Opening Bracket. */
+                            i_INDEX_STATE = 0;
+                            BEGIN 0;
 
-			#ifdef DEBUG_INDEX
-			   printf( "Assumed Normal but Searching...\n" );
-			#endif
+			    #ifdef DEBUG_INDEX
+			      printf( "Assumed Normal but Searching...\n" );
+			    #endif
 
-                        /* We have to BEGIN INDEX because lex ate the ']' so it will misss the "]"[ \t]"[" SubArray rule. */
-                        while( ( *tmpStr == ' ' || *tmpStr == '\t' || *tmpStr == '['  ) && *tmpStr != '\0' )
-			{
-                           if( *tmpStr++ == '[' )
-			   {
-		              #ifdef DEBUG_INDEX
-                                 printf( "Retained! Found: >%s<\n", tmpStr );
-			      #endif
+                            /* We have to BEGIN INDEX because lex ate the ']' so it will misss the "]"[ \t]"[" SubArray rule. */
+                            while( ( *tmpStr == ' ' || *tmpStr == '\t' || *tmpStr == '[' || *tmpStr == ']' ) && *tmpStr != '\0' )
+			    {
+                               if( *tmpStr == ']' )
+			       {
+				  hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX, "orphan \"]\"", NULL );
+				  break;
+			       }
+                               else if( *tmpStr == '[' )
+			       {
+		                  #ifdef DEBUG_INDEX
+                                    printf( "Retained! Found: >%s<\n", tmpStr );
+			          #endif
 
-                              i_INDEX_STATE = 1;
-                              BEGIN INDEX;
-                              break;
-			   }
-			}
-                     }
-		     else
-		     {
-			#ifdef DEBUG_INDEX
-                           printf( "Still Open: %i\n", iIndexSets );
-			#endif
-		     }
+                                  i_INDEX_STATE = 1;
+                                  BEGIN INDEX;
 
-		     yyless(1);
-                     hb_comp_iState = OPERATOR;
-                     return ']';
-             	   }
+                                  break;
+			       }
+
+			       tmpStr++;
+			    }
+
+			    if( i_INDEX_STATE == 0 )
+			    {
+		               #ifdef DEBUG_INDEX
+                                 printf( "Resumed NORMAL!\n" );
+			       #endif
+			    }
+                         }
+		         else
+		         {
+			    #ifdef DEBUG_INDEX
+                              printf( "Still Open: %i\n", iIndexSets );
+			    #endif
+		         }
+
+		         yyless(1);
+                         hb_comp_iState = OPERATOR;
+
+                         return ']';
+             	      }
 
 {SpaceTab}     ;
 
