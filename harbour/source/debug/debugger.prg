@@ -117,6 +117,7 @@ CLASS TDebugger
    METHOD Hide()
    METHOD InputBox( cMsg, uValue )
    METHOD IsBreakPoint( nLine )
+   METHOD LoadVars()
    METHOD NextWindow()
    METHOD Open()
    METHOD PrevWindow()
@@ -348,6 +349,25 @@ METHOD ShowCallStack() CLASS TDebugger
 
 return nil
 
+METHOD LoadVars() CLASS TDebugger // updates monitored variables
+
+   local nCount, n, xValue, cName
+
+   ::aVars = {}
+
+   nCount = __mvDbgInfo( HB_MV_PUBLIC )
+   for n = nCount to 1 step -1
+      xValue = __mvDbgInfo( HB_MV_PUBLIC, n, @cName )
+      AAdd( ::aVars, { cName, xValue, "Public" } )
+   next
+   nCount = __mvDbgInfo( HB_MV_PRIVATE )
+   for n = nCount to 1 step -1
+      xValue = __mvDbgInfo( HB_MV_PRIVATE, n, @cName )
+      AAdd( ::aVars, { cName, xValue, "Private" } )
+   next
+
+return nil
+
 METHOD ShowVars() CLASS TDebugger
 
    local n := 1
@@ -368,20 +388,10 @@ METHOD ShowVars() CLASS TDebugger
       ::oBrwVars:ForceStable() ), nil ), If( nKey == K_UP, ( ::oBrwVars:Up(),;
       ::oBrwVars:ForceStable() ), nil ) }
 
-      nCount = __mvDBGINFO( HB_MV_PUBLIC )
-      for i = 1 to nCount
-         xValue = __mvDBGINFO( HB_MV_PUBLIC, i, @cName )
-         AAdd( ::aVars, { cName, "Public" } )
-      next
-      nCount = __mvDBGINFO( HB_MV_PRIVATE )
-      for i = 1 to nCount
-         xValue = __mvDBGINFO( HB_MV_PRIVATE, i, @cName )
-         AAdd( ::aVars, { cName, "Private" } )
-      next
-
       ::oBrwVars = TBrowseNew( 2, 1, 4, MaxCol() - If( ::oWndStack != nil,;
                                ::oWndStack:nWidth(), 0 ) - 1 )
       ::oBrwVars:ColorSpec = "BG+/B, N/BG"
+      ::LoadVars()
       ::oBrwVars:GoTopBlock = { || n := 1 }
       ::oBrwVars:GoBottomBlock = { || n := Len( ::aVars ) }
       ::oBrwVars:SkipBlock = { | nSkip, nPos | nPos := n,;
@@ -390,15 +400,44 @@ METHOD ShowVars() CLASS TDebugger
 
       nWidth = ::oWndVars:nWidth() - 1
       ::oBrwVars:AddColumn( TBColumnNew( "",  { || AllTrim( Str( n ) ) + ") " + ;
-         PadR( ::aVars[ n ][ 1 ] + " <" + ::aVars[ n ][ 2 ] + ", " + ;
-         If( ::aVars[ n ][ 2 ] == "Local", ValType( __vmVarLGet( 6, ::aVars[ n ][ 3 ] ) ),;
-         "" ) + ">:" + If( ::aVars[ n ][ 2 ] == "Local",;
-         " Class " + __vmVarLGet( 6, ::aVars[ n ][ 3 ] ):ClassName(), "" ),;
-         ::oWndVars:nWidth() - 5 ) } ) )
+         PadR( GetVarInfo( ::aVars[ n ] ), ::oWndVars:nWidth() - 5 ) } ) )
       ::oBrwVars:ForceStable()
    endif
 
 return nil
+
+static function GetVarInfo( aVar )
+
+   do case
+      case aVar[ 3 ] == "Public" .or. aVar[ 3 ] == "Private"
+           return aVar[ 1 ] + " <" + aVar[ 3 ] + ", " + ValType( aVar[ 2 ] ) + ;
+                  ">: " + GetVarValue( aVar[ 2 ] )
+
+      case aVar[ 3 ] == "Local"
+           return aVar[ 1 ] + " <" + aVar[ 2 ] + ", " + ;
+                  ValType( __vmVarLGet( 7, aVar[ 3 ] ) ) + ;
+                  ">: " + GetVarValue( __vmVarLGet( 7, aVar[ 3 ] ) )
+   endcase
+
+return ""
+
+static function GetVarValue( u )
+
+   local cType := ValType( u )
+   local cResult := ""
+
+   do case
+      case cType == "A"
+           cResult = "{ ... }"
+
+      case cType == "C"
+           cResult = '"' + u + '"'
+
+      case cType == "N"
+           cResult = AllTrim( Str( u ) )
+   endcase
+
+return cResult
 
 static function CompareLine( Self )
 
@@ -475,7 +514,9 @@ METHOD GotoLine( nLine ) CLASS TDebugger
 
    ::oBrwText:GotoLine( nLine )
 
-   if ::oBrwVars != nil .and. ! ::oBrwVars:Stable
+   if ::oBrwVars != nil
+      ::LoadVars()
+      ::oBrwVars:RefreshAll()
       ::oBrwVars:ForceStable()
    endif
 
