@@ -156,12 +156,19 @@ char * hb_verPlatform( void )
 
    {
       unsigned long aulQSV[ QSV_MAX ] = { 0 };
-      APIRET rc = DosQuerySysInfo( 1L, QSV_MAX, ( void * ) aulQSV, sizeof( ULONG ) * QSV_MAX );
+      APIRET rc;
+
+      rc = DosQuerySysInfo( 1L, QSV_MAX, ( void * ) aulQSV, sizeof( ULONG ) * QSV_MAX );
 
       if( rc == 0 )
-         sprintf( pszPlatform, "OS/2 %ld.%02ld",
-            aulQSV[ QSV_VERSION_MAJOR ] / 10,
-            aulQSV[ QSV_VERSION_MINOR ] );
+         /* is this OS/2 2.x ? */
+         if (aulQSV[ QSV_VERSION_MINOR -1 ] < 30)
+            sprintf( pszPlatform, "OS/2 %d.%02d",
+               aulQSV[ QSV_VERSION_MAJOR -1 ] / 10,
+               aulQSV[ QSV_VERSION_MINOR -1 ] );
+         else
+            sprintf( pszPlatform, "OS/2 %2.2f",
+               (float) aulQSV[ QSV_VERSION_MINOR -1 ] / 10);
       else
          sprintf( pszPlatform, "OS/2" );
    }

@@ -1,3 +1,9 @@
+2000-08-08 12:11 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * source/common/hbver.c
+     ! fixed Operating System/2 version report (broken since it wasn't taking into account that from OS/2 3.x version
+       number is inside QSV_VERSION_MINOR and that QSV_ constants need to be decremented by one to
+       access correct values inside array.
+
 2000-08-08 02:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
   * source/compiler/harbour.c
     * Corrected display of errors statistics to use \r so that error count doen't appear connected to the last reported
