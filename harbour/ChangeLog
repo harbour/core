@@ -1,3 +1,8 @@
+2001-11-01 21:40 GMT+7 Andi Jahja <harbour@cbn.net.id>
+   * include/hbdefs.h
+     ! add argument to __HARBOUR__ definition => define if not defined yet
+       since in some cases __HARBOUR__ is defined in command line
+
 2001-11-01 15:15 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/vm/classes.c
      type cast to avoid a msvc error
