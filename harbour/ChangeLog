@@ -1,3 +1,10 @@
+2001-08-09 17:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.c
+     * Minor correction to handling of HB_FS_FIRST
+
+   * source/vm/hvm.c
+     * Added extern "C" protection to hb_macroAutoSetMacro() declaration.
+
 2001-08-08 15:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * tests/gtstdtst.prg

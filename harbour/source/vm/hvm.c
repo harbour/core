@@ -264,7 +264,11 @@ int hb_vm_aiExtraElements[HB_MAX_MACRO_ARGS], hb_vm_iExtraElementsIndex = 0, hb_
 
 int hb_vm_iExtraIndex;
 
-extern ULONG hb_macroAutoSetMacro( ULONG ulFlag );
+#ifdef __cplusplus
+   extern "C" ULONG hb_macroAutoSetMacro( ULONG ulFlag );
+#else
+   extern ULONG hb_macroAutoSetMacro( ULONG ulFlag );
+#endif
 
 /* Request for some action - stop processing of opcodes
  */

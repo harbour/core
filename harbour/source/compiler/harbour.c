@@ -3756,7 +3756,7 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
                {
                   hb_compOptimizeFrames( pFunc );
 
-                  if( szFirstFunction == NULL && pFunc->szName[0] && pFunc->cScope == 0 )
+                  if( szFirstFunction == NULL && pFunc->szName[0] && ! ( pFunc->cScope & HB_FS_INIT || pFunc->cScope & HB_FS_EXIT ) )
                   {
                      szFirstFunction = pFunc->szName;
                   }
