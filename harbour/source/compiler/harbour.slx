@@ -54,8 +54,7 @@ static unsigned char iIdentifier = 0;
 static char* sIdOnHold;
 
 long        hb_comp_SLX_Hex2L( char* sHex );
-static void hb_comp_SLX_ConvertNumber(void);
-static void hb_comp_SLX_EelemntToken(void);
+static int  hb_compElementToken( char* szToken, unsigned int iTokenLen );
 
 /* -----------------------------------------------------  Language Definitions. ---------------------------------------------------- */
 
@@ -431,7 +430,7 @@ LANGUAGE_RULES_ARE {
    #define INTERCEPT_ACTION(x) hb_comp_SLX_InterceptAction()
 
 #undef ELEMENT_TOKEN
-  #define ELEMENT_TOKEN(x,y) hb_compElementToken()
+  #define ELEMENT_TOKEN(x,y) hb_compElementToken(x,y)
 
 #undef YY_INPUT      /* to implement our own YY_INPUT function to manage PRGs without \n at the end */
    extern FILE * yyin;  /* currently yacc parsed file */
@@ -545,14 +544,16 @@ void hb_comp_SLX_InterceptAction(void)
    #endif
 }
 
-static void hb_compElementToken( void )
+static int hb_compElementToken( char* szToken, unsigned int iTokenLen )
 {
-   extern char *tmpPtr, *yytext, sToken[TOKEN_SIZE];
-   extern int yyleng, iRet;
-   extern unsigned int iLen;
+   extern char *yytext;
+   extern int yyleng;
 
-   yytext = (char*) sToken;
-   yyleng = iLen;
+   char* tmpPtr;
+   int   iRet;
+
+   yytext = szToken;
+   yyleng = (int) iTokenLen;
 
    if( ( *yytext > 64 && *yytext < 91 ) || *yytext == '&' || *yytext == '_' )
    {
@@ -632,93 +633,84 @@ static void hb_compElementToken( void )
    }
    else
    {
-      DEBUG_INFO( printf(  "Passing Element \"%s\" to CONVERT_NUMBER()\n", sToken ) );
+      /* ConverNumber */
 
-      /* "Returns" Token in iRet. (yylval.string already allocated). */
       yylval.string = (char*) hb_xgrab( TOKEN_SIZE );
       yylval.string[0] = 0;
       aTexts[iTexts++] = yylval.string;
 
-      /* "Paramters" yytext & yyleng, "returns" result in iRet. */
-      hb_comp_SLX_ConvertNumber();
-
-      DEBUG_INFO( printf(  "Element \"%s\" is %i\n", sToken, iRet ) );
-   }
-}
-
-static void hb_comp_SLX_ConvertNumber(void)
-{
-   extern int iRet, yyleng;
-   extern char *tmpPtr, *yytext;
-
-   /* Hex Number */
-   if( yytext[0] == '0' && yytext[1] == 'X' )
-   {
-      long lNumber = hb_comp_SLX_Hex2L( yytext + 2 );
-
-      if( ( double ) SHRT_MIN <= lNumber && lNumber <= ( double ) SHRT_MAX )
+      /* Hex Number */
+      if( yytext[0] == '0' && yytext[1] == 'X' )
       {
-         yylval.valInteger.iNumber = lNumber;
-         yylval.valInteger.szValue = yytext;
-         iRet = NUM_INTEGER;
-      }
-      else if( ( double ) LONG_MIN <= lNumber && lNumber <= ( double ) LONG_MAX )
-      {
-         yylval.valLong.lNumber = lNumber;
-         yylval.valLong.szValue = yytext;
-         iRet = NUM_LONG;
-      }
-      else
-      {
-         /* NOTE: This will never happen */
-         yylval.valDouble.dNumber = lNumber;
-         yylval.valDouble.bWidth = HB_DEFAULT_WIDTH;
-         yylval.valDouble.bDec = 0;
-         yylval.valDouble.szValue = yytext;
-         iRet = NUM_DOUBLE;
-      }
-   }
-   else
-   {
-      yylval.valDouble.dNumber = atof( yytext );
-      tmpPtr = strchr( yytext, '.' );
+         long lNumber = hb_comp_SLX_Hex2L( yytext + 2 );
 
-      if( tmpPtr )
-      {
-         yylval.valDouble.bDec = strlen( tmpPtr + 1 );
-         yylval.valDouble.bWidth = yyleng - yylval.valDouble.bDec;
-         if( yylval.valDouble.bDec )
-	 {
-            yylval.valDouble.bWidth--;
-	 }
-         yylval.valDouble.szValue = yytext;
-         iRet = NUM_DOUBLE;
-      }
-      else
-      {
-         if( ( double )SHRT_MIN <= yylval.valDouble.dNumber && yylval.valDouble.dNumber <= ( double )SHRT_MAX )
+         if( ( double ) SHRT_MIN <= lNumber && lNumber <= ( double ) SHRT_MAX )
          {
-            yylval.valInteger.iNumber = ( int ) yylval.valDouble.dNumber;
-            yylval.valInteger.szValue = yytext;
-            iRet = NUM_INTEGER;
+       	    yylval.valInteger.iNumber = lNumber;
+       	    yylval.valInteger.szValue = yytext;
+       	    iRet = NUM_INTEGER;
          }
-         else if( ( double )LONG_MIN <= yylval.valDouble.dNumber && yylval.valDouble.dNumber <= ( double )LONG_MAX )
+         else if( ( double ) LONG_MIN <= lNumber && lNumber <= ( double ) LONG_MAX )
          {
-            yylval.valLong.lNumber = ( long ) yylval.valDouble.dNumber;
-            yylval.valLong.szValue = yytext;
-            iRet = NUM_LONG;
+       	    yylval.valLong.lNumber = lNumber;
+       	    yylval.valLong.szValue = yytext;
+       	    iRet = NUM_LONG;
          }
          else
          {
-            yylval.valDouble.bWidth = yyleng + 1;
-            yylval.valDouble.bDec = 0;
-            yylval.valDouble.szValue = yytext;
-            iRet = NUM_DOUBLE;
+       	    /* NOTE: This will never happen */
+       	    yylval.valDouble.dNumber = lNumber;
+       	    yylval.valDouble.bWidth = HB_DEFAULT_WIDTH;
+       	    yylval.valDouble.bDec = 0;
+       	    yylval.valDouble.szValue = yytext;
+       	    iRet = NUM_DOUBLE;
          }
       }
+      else
+      {
+         yylval.valDouble.dNumber = atof( yytext );
+         tmpPtr = strchr( yytext, '.' );
+
+         if( tmpPtr )
+         {
+       	    yylval.valDouble.bDec = strlen( tmpPtr + 1 );
+       	    yylval.valDouble.bWidth = yyleng - yylval.valDouble.bDec;
+       	    if( yylval.valDouble.bDec )
+	    {
+               yylval.valDouble.bWidth--;
+	    }
+       	    yylval.valDouble.szValue = yytext;
+       	    iRet = NUM_DOUBLE;
+         }
+         else
+         {
+       	    if( ( double )SHRT_MIN <= yylval.valDouble.dNumber && yylval.valDouble.dNumber <= ( double )SHRT_MAX )
+       	    {
+               yylval.valInteger.iNumber = ( int ) yylval.valDouble.dNumber;
+               yylval.valInteger.szValue = yytext;
+               iRet = NUM_INTEGER;
+       	    }
+       	    else if( ( double )LONG_MIN <= yylval.valDouble.dNumber && yylval.valDouble.dNumber <= ( double )LONG_MAX )
+       	    {
+               yylval.valLong.lNumber = ( long ) yylval.valDouble.dNumber;
+               yylval.valLong.szValue = yytext;
+               iRet = NUM_LONG;
+       	    }
+       	    else
+       	    {
+               yylval.valDouble.bWidth = yyleng + 1;
+               yylval.valDouble.bDec = 0;
+               yylval.valDouble.szValue = yytext;
+               iRet = NUM_DOUBLE;
+       	    }
+         }
+      }
+
+      iRet += DONT_REDUCE;
    }
 
-   iRet += DONT_REDUCE;
+   DEBUG_INFO( printf(  "Element \"%s\" is %i\n", sToken, iRet ) );
+   return iRet;
 }
 
 long hb_comp_SLX_Hex2L( char* sHex )

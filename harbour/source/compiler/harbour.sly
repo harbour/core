@@ -1187,7 +1187,7 @@ Declaration: DECLARE IdentName '(' { hb_compDeclaredAdd( $2 ); hb_comp_szDeclare
            | DECLARE IdentName { hb_comp_pLastClass = hb_compClassAdd( $2 ); } ClassInfo Crlf { hb_comp_iVarScope = VS_NONE; }
            | DECLARE_CLASS IdentName Crlf { hb_comp_pLastClass = hb_compClassAdd( $2 ); hb_comp_iVarScope = VS_NONE; }
            | DECLARE_MEMBER DecMethod Crlf { hb_comp_iVarScope = VS_NONE; }
-           | DECLARE_MEMBER '{' AsType { hb_comp_cDataListType = hb_comp_cVarType; } DecDataList '}' Crlf { hb_comp_cDataListType = NULL; hb_comp_iVarScope = VS_NONE; }
+           | DECLARE_MEMBER '{' AsType { hb_comp_cDataListType = hb_comp_cVarType; } DecDataList '}' Crlf { hb_comp_cDataListType = 0; hb_comp_iVarScope = VS_NONE; }
            ;
 
 DecDataList: DecData

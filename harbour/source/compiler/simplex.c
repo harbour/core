@@ -250,13 +250,13 @@ static int rulecmp( const void * pLeft, const void * pRight );
 #define HOLD_TOKEN(x) PUSH_TOKEN(x)
 
 #define IF_BEGIN_PAIR(chr) \
-         if( aPairNodes[chr].iMin == -1 ) \
+         if( aPairNodes[(int)chr].iMin == -1 ) \
          { \
             bTmp = FALSE; \
          } \
          else \
          { \
-            register unsigned int i = aPairNodes[chr].iMin, iMax = aPairNodes[chr].iMax + 1, iStartLen; \
+            register unsigned int i = aPairNodes[(int)chr].iMin, iMax = aPairNodes[(int)chr].iMax + 1, iStartLen; \
             register unsigned char chrStart; \
             unsigned int iLastPair = 0, iLastLen = 0; \
             \
@@ -321,9 +321,9 @@ static int rulecmp( const void * pLeft, const void * pRight );
          if( bTmp )
 
 #define CHECK_SELF_CONTAINED(chr) \
-         if( aSelfNodes[chr].iMin != -1 ) \
+         if( aSelfNodes[(int)chr].iMin != -1 ) \
          { \
-            register unsigned int i = aSelfNodes[chr].iMin, iMax = aSelfNodes[chr].iMax + 1, iSelfLen; \
+            register unsigned int i = aSelfNodes[(int)chr].iMin, iMax = aSelfNodes[(int)chr].iMax + 1, iSelfLen; \
             register unsigned char chrSelf; \
             \
             DEBUG_INFO( printf( "Checking %i Selfs for %c At: >%s<\n", iSelfs, chr, szBuffer - 1 ) ); \
@@ -557,9 +557,9 @@ int SimpLex_GetNextToken( void )
 
             /* Not using LEX_CASE() yet (white space)!!! */
 
-            if( acOmmit[chr] )
+            if( acOmmit[(int)chr] )
             {
-               while( acOmmit[*szBuffer] )
+               while( acOmmit[(int)(*szBuffer)] )
                {
                   iSize--; szBuffer++;
                }
@@ -714,9 +714,9 @@ int SimpLex_GetNextToken( void )
             /* End Pairs. */
 
             /* NewLine ? */
-            if( acNewLine[chr] )
+            if( acNewLine[(int)chr] )
             {
-               while( acNewLine[*szBuffer] )
+               while( acNewLine[(int)(*szBuffer)] )
                {
                   iSize--; szBuffer++;
                }
@@ -756,7 +756,7 @@ int SimpLex_GetNextToken( void )
                }
             #endif
 
-            if( acReturn[chr] )
+            if( acReturn[(int)chr] )
             {
                 s_szBuffer = szBuffer;
 
@@ -764,7 +764,7 @@ int SimpLex_GetNextToken( void )
                 {
                     /* Will be returned on next cycle. */
 
-                    HOLD_TOKEN( acReturn[chr] );
+                    HOLD_TOKEN( acReturn[(int)chr] );
 
                     /* Terminate current token and check it. */
                     sToken[ iLen ] = '\0';
@@ -783,7 +783,7 @@ int SimpLex_GetNextToken( void )
                     }
 
                     DEBUG_INFO( printf(  "Reducing Delimiter: '%c' As: %i\n", chr, iRet ) );
-                    return acReturn[chr];
+                    return acReturn[(int)chr];
                 }
             }
 
@@ -873,8 +873,7 @@ int SimpLex_CheckToken( void )
 
     DEBUG_INFO( printf(  "Reducing Element: \"%s\"\n", (char*) sToken ) );
 
-    /* "Returns" result in iRet. */
-    ELEMENT_TOKEN( sToken, iLen );
+    iRet = ELEMENT_TOKEN( (char*)sToken, iLen );
 
     bRecursive = FALSE;
     return iRet;
@@ -1077,8 +1076,8 @@ void SimpLex_CheckWords( void )
   #ifdef USE_KEYWORDS
    if( bNewLine )
    {
-      i      = aKeyNodes[ sToken[0] ].iMin;
-      iMax   = aKeyNodes[ sToken[0] ].iMax + 1;
+      i      = aKeyNodes[ (int)(sToken[0]) ].iMin;
+      iMax   = aKeyNodes[ (int)(sToken[0]) ].iMax + 1;
       aCheck = (LEX_WORD*) ( &(aKeys[0]) );
      #ifdef DEBUG_LEX
       sDesc  = (char*) sKeyDesc;
@@ -1087,8 +1086,8 @@ void SimpLex_CheckWords( void )
    else
   #endif
    {
-      i      = aWordNodes[ sToken[0] ].iMin;
-      iMax   = aWordNodes[ sToken[0] ].iMax + 1;
+      i      = aWordNodes[ (int)(sToken[0]) ].iMin;
+      iMax   = aWordNodes[ (int)(sToken[0]) ].iMax + 1;
       aCheck = (LEX_WORD*) ( &( aWords[0] ) );
      #ifdef DEBUG_LEX
       sDesc  = (char*) sWordDesc;
@@ -1166,7 +1165,7 @@ void SimpLex_CheckWords( void )
       if( pNextSpacer )
       {
          /* Token not followed by white space - can't match this [or any latter] pattern! */
-         if( ! acOmmit[cSpacer] )
+         if( ! acOmmit[(int)cSpacer] )
          {
             DEBUG_INFO( printf( "Skip... Pattern [%s] requires {WS}, cSpacer: %c\n", sKeys2Match, cSpacer ) );
 
@@ -1453,21 +1452,21 @@ static void GenTrees( void )
    i = 0;
    while ( szOmmit[i] )
    {
-      acOmmit[ szOmmit[i] ] = 1;
+      acOmmit[ (int)(szOmmit[i]) ] = 1;
       i++;
    }
 
    i = 0;
    while ( szNewLine[i] )
    {
-      acNewLine[ szNewLine[i] ] = 1;
+      acNewLine[ (int)(szNewLine[i]) ] = 1;
       i++;
    }
 
    i = 0;
    while ( i < iDelimiters )
    {
-      acReturn[ aDelimiters[i].cDelimiter ] = aDelimiters[i].iToken;
+      acReturn[ (int)(aDelimiters[i].cDelimiter) ] = aDelimiters[i].iToken;
       i++;
    }
 

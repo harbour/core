@@ -1,3 +1,11 @@
+2000-09-18 09:30 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.slx
+   * source/compiler/harbour.sly
+   * source/compiler/harbour.y
+   * source/compiler/simplex.c
+   * source/macro/macro.slx
+     ! Corrected compiler warnings.
+
 2000-09-17 23:45 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.l
      ! Corrected definition of _PROCREQ_()
@@ -16,7 +24,7 @@
      + Added support for predefind match pattern, {WS} (White Space), in KEYWORDS and WORDS.
 
    + source/compiler/harbour.sly
-     * Same as harbour.y, exclusing un-needed support for reserved words used as identifiers.
+     * Same as harbour.y, excluding un-needed support for reserved words used as identifiers.
      /* Harbour.slx works with either harbour.y or harbour.sly, but harbour.sly creates smaller harbour.exe. */
 
    * hb_slex.bc

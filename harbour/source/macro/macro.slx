@@ -68,8 +68,7 @@ static HB_MACRO_PTR pMacro;
 static YYSTYPE *pYYLVAL;
 
 static int  hb_macro_SLX_CustomAction( int x, int aiHold[], int *ptr_iHold, char *sToken );
-static void hb_macro_SLX_EelemntToken(void);
-static void hb_macro_SLX_ConvertNumber(void);
+static int  hb_macro_SLX_ElementToken( char* szToken, unsigned int iTokenLen );
 long        hb_macro_SLX_Hex2L( char* sHex );
 
 void * yy_bytes_buffer( char * pBuffer, int iBufSize );
@@ -212,7 +211,7 @@ LANGUAGE_RULES_ARE {
 #endif
 
 #undef ELEMENT_TOKEN
-  #define ELEMENT_TOKEN(x,y) hb_macro_SLX_ElementToken()
+  #define ELEMENT_TOKEN(x,y) hb_macro_SLX_ElementToken(x,y)
 
 #undef CUSTOM_ACTION
    #define CUSTOM_ACTION(x) x = hb_macro_SLX_CustomAction( x, aiHold, &iHold, (char*) sToken  )
@@ -220,14 +219,16 @@ LANGUAGE_RULES_ARE {
 #undef LEX_USER_SETUP
    #define LEX_USER_SETUP() if( pYYLVAL == NULL ) pYYLVAL = yylval_ptr;
 
-void hb_macro_SLX_ElementToken(void)
+static int hb_macro_SLX_ElementToken( char* szToken, unsigned int iTokenLen )
 {
-   extern char *tmpPtr, *yytext, sToken[TOKEN_SIZE];
-   extern int yyleng, iRet;
-   extern unsigned int iLen;
+   extern char *yytext;
+   extern int yyleng;
 
-   yytext = (char*) sToken;
-   yyleng = iLen;
+   char *tmpPtr;
+   int iRet;
+
+   yytext = szToken;
+   yyleng = iTokenLen;
 
    if( ( *yytext > 64 && *yytext < 91 ) || *yytext == '&' || *yytext == '_' )
    {
@@ -287,76 +288,68 @@ void hb_macro_SLX_ElementToken(void)
          }
 
          pYYLVAL->string = hb_strdup( yytext );
-   	 iRet = IDENTIFIER + DONT_REDUCE;
+   	 iRet = IDENTIFIER;
       }
    }
    else
    {
-      /* "Paramters" yytext & yyleng, "returns" result in iRet. */
-      hb_macro_SLX_ConvertNumber();
 
-      DEBUG_INFO( printf(  "Element \"%s\" is %i\n", sToken, iRet ) );
-   }
-}
-
-static void hb_macro_SLX_ConvertNumber(void)
-{
-   extern int iRet, yyleng;
-   extern char *tmpPtr, *yytext;
-
-   if( yytext[0] == '0' && yytext[1] == 'X' )
-   {
-      long lNumber = hb_macro_SLX_Hex2L( yytext + 2 );
-
-      if( ( double ) LONG_MIN <= lNumber && lNumber <= ( double ) LONG_MAX )
+      if( yytext[0] == '0' && yytext[1] == 'X' )
       {
-         pYYLVAL->valLong.lNumber = lNumber;
-         pYYLVAL->valLong.szValue = yytext;
-         iRet = NUM_LONG;
-      }
-      else
-      {
-         pYYLVAL->valDouble.dNumber = lNumber;
-         pYYLVAL->valDouble.bWidth = HB_DEFAULT_WIDTH;
-         pYYLVAL->valDouble.bDec = 0;
-         pYYLVAL->valDouble.szValue = yytext;
-         iRet = NUM_DOUBLE;
-      }
-   }
-   else
-   {
-      pYYLVAL->valDouble.dNumber = atof( yytext );
-      tmpPtr = strchr( yytext, '.' );
+      	 long lNumber = hb_macro_SLX_Hex2L( yytext + 2 );
 
-      if( tmpPtr )
-      {
-         pYYLVAL->valDouble.bDec = strlen( tmpPtr + 1 );
-         pYYLVAL->valDouble.bWidth = yyleng - pYYLVAL->valDouble.bDec;
-         if( pYYLVAL->valDouble.bDec )
-	 {
-            pYYLVAL->valDouble.bWidth--;
-	 }
-         pYYLVAL->valDouble.szValue = yytext;
-         iRet = NUM_DOUBLE;
-      }
-      else
-      {
-         if( ( double )LONG_MIN <= pYYLVAL->valDouble.dNumber && pYYLVAL->valDouble.dNumber <= ( double )LONG_MAX )
-         {
-            pYYLVAL->valLong.lNumber = ( long ) pYYLVAL->valDouble.dNumber;
+      	 if( ( double ) LONG_MIN <= lNumber && lNumber <= ( double ) LONG_MAX )
+      	 {
+            pYYLVAL->valLong.lNumber = lNumber;
             pYYLVAL->valLong.szValue = yytext;
             iRet = NUM_LONG;
-         }
-         else
-         {
-            pYYLVAL->valDouble.bWidth = yyleng + 1;
+      	 }
+      	 else
+      	 {
+            pYYLVAL->valDouble.dNumber = lNumber;
+            pYYLVAL->valDouble.bWidth = HB_DEFAULT_WIDTH;
             pYYLVAL->valDouble.bDec = 0;
             pYYLVAL->valDouble.szValue = yytext;
+       	    iRet = NUM_DOUBLE;
+      	 }
+      }
+      else
+      {
+       	 pYYLVAL->valDouble.dNumber = atof( yytext );
+      	 tmpPtr = strchr( yytext, '.' );
+
+      	 if( tmpPtr )
+      	 {
+            pYYLVAL->valDouble.bDec = strlen( tmpPtr + 1 );
+            pYYLVAL->valDouble.bWidth = yyleng - pYYLVAL->valDouble.bDec;
+            if( pYYLVAL->valDouble.bDec )
+	    {
+            	pYYLVAL->valDouble.bWidth--;
+	    }
+            pYYLVAL->valDouble.szValue = yytext;
             iRet = NUM_DOUBLE;
-         }
+      	 }
+      	 else
+      	 {
+            if( ( double )LONG_MIN <= pYYLVAL->valDouble.dNumber && pYYLVAL->valDouble.dNumber <= ( double )LONG_MAX )
+            {
+            	pYYLVAL->valLong.lNumber = ( long ) pYYLVAL->valDouble.dNumber;
+            	pYYLVAL->valLong.szValue = yytext;
+            	iRet = NUM_LONG;
+            }
+            else
+            {
+            	pYYLVAL->valDouble.bWidth = yyleng + 1;
+            	pYYLVAL->valDouble.bDec = 0;
+            	pYYLVAL->valDouble.szValue = yytext;
+            	iRet = NUM_DOUBLE;
+            }
+      	 }
       }
    }
-   iRet += DONT_REDUCE;
+
+   DEBUG_INFO( printf(  "Element \"%s\" is %i\n", sToken, iRet ) );
+   return iRet + DONT_REDUCE;
 }
 
 long hb_macro_SLX_Hex2L( char* sHex )
