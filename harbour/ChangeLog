@@ -1,3 +1,7 @@
+19990804-19:07 GMT+1 Victor Szel <info@szelvesz.hu>
+   + include/langapi.h
+     Added. (Missed from the previous CVS session, sorry)
+
 19990804-00:40 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/gtwin.c
       * reduced the internal buffering to 1 level to improve speed.
