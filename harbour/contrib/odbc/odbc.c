@@ -64,7 +64,10 @@
  *
  */
 
-#include <windows.h>
+#if defined(HB_OS_WIN_32)
+   #include <windows.h>
+#endif
+
 #include <limits.h>
 #include <malloc.h>
 #include <math.h>
@@ -99,10 +102,18 @@ HB_FUNC( SQLDRIVERC ) /* HB_SQLDRIVERCONNECT( hDbc, @ cConnectString, lPrompt ) 
 {
    BYTE  bBuffer1[ 1024 ];
    SWORD  wLen;
-   RETCODE ret =  SQLDriverConnect( ( HDBC ) hb_parnl( 1 ),
+   #if defined(HB_OS_WIN_32)
+      RETCODE ret =  SQLDriverConnect( ( HDBC ) hb_parnl( 1 ),
                              GetDesktopWindow(),
                              hb_parc( 2 ), strlen(hb_parc(2)),
                              bBuffer1, 1024, &wLen, SQL_DRIVER_COMPLETE ) ;
+   #elif defined(HB_OS_UNIX)
+      RETCODE ret =  SQLDriverConnect( ( HDBC ) hb_parnl( 1 ),
+                             0,
+                             hb_parc( 2 ), strlen(hb_parc(2)),
+                             bBuffer1, 1024, &wLen, SQL_DRIVER_COMPLETE ) ;
+
+   #endif
    hb_storc( bBuffer1 , 3 );
    hb_retni( ret );
 }

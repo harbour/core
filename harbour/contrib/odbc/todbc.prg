@@ -149,6 +149,7 @@ RETURN( "Error " + cErrorClass + " - " + cErrorMsg )
 METHOD New( cODBCStr ) CLASS TODBC
 
    LOCAL xBuf
+   LOCAL nRet
 
 //   WHILE .t.
       ::cODBCStr := cODBCStr
@@ -278,6 +279,9 @@ RETURN ( ( nRet == 0 ) )
 
 // Only executes the SQL Statement
 METHOD ExecSQL() CLASS TODBC
+   LOCAL lRet
+   LOCAL xBuf
+   LOCAL nRet
 
    WHILE .T.
 

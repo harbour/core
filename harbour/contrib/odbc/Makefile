@@ -8,9 +8,8 @@ C_SOURCES=\
 	odbc.c \
 
 PRG_SOURCES=\
+	todbc.prg\
 
-PRG_MAIN=testodbc.prg
+LIBNAME=hbodbc
 
-LIBS=\
-
-include $(TOP)$(ROOT)config/bin.cf
+include $(TOP)$(ROOT)config/lib.cf
