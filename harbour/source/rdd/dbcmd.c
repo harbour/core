@@ -2489,7 +2489,7 @@ HB_FUNC( ORDLISTADD )
          return;
       }
       SELF_ORDLSTADD( ( AREAP ) s_pCurrArea->pArea, &pOrderInfo );
-      hb_itemRelease( pOrderInfo.itmResult );
+
       if ( bFirst )                     /* set as controlling order and go top */
       {
          pOrderInfo.itmOrder  = hb_itemPutNI( NULL, 1 );
@@ -2497,6 +2497,7 @@ HB_FUNC( ORDLISTADD )
          hb_itemRelease( pOrderInfo.itmOrder );
          SELF_GOTOP( ( AREAP ) s_pCurrArea->pArea );
       }
+      hb_itemRelease( pOrderInfo.itmResult );
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "ORDLISTADD" );
