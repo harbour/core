@@ -170,6 +170,7 @@ static HB_LANG s_lang =
       "Desbordamiento negativo en la Pila",
       "Un item estaba siendo copiado sobre s¡ mismo desde %s",
       "S¡mbolo item no v lido pasado como memvar %s",
+      "Memory buffer overflow",
 
       /* Texts */
 

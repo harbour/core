@@ -171,6 +171,7 @@ static HB_LANG s_lang =
       "Stack underflow", 
       "An item was going to be copied to itself from %s", 
       "Invalid symbol item passed as memvar %s",
+      "Memory buffer overflow",
    
       /* Texts */
    

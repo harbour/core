@@ -2,91 +2,190 @@
  * $Id$
  */
 
-/* Language Support Module - Polskoj©zyczny moduà dla Harbour */
+/*
+ * Harbour Project source code:
+ * Language Support Module (PL Mazowia)
+ *
+ * Copyright 1999 {list of individual authors and e-mail addresses}
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version, with one exception:
+ *
+ * The exception is that if you link the Harbour Runtime Library (HRL)
+ * and/or the Harbour Virtual Machine (HVM) with other files to produce
+ * an executable, this does not by itself cause the resulting executable
+ * to be covered by the GNU General Public License. Your use of that
+ * executable is in no way restricted on account of linking the HRL
+ * and/or HVM code into it.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
+ * their web site at http://www.gnu.org/).
+ *
+ */
 
 /* Language name: Polish */
 /* ISO language code (2 chars): PL */
 /* Codepage: Mazowia */
 
-#include "hbdefs.h"
+#include "hbapilng.h"
 
-char *hb_dateMonthsName[ 12 ] =
+static HB_LANG s_lang =
 {
-   "Stycze§",
-   "Luty",
-   "Marzec",
-   "Kwiecie§",
-   "Maj",
-   "Czerwiec",
-   "Lipiec",
-   "Sierpie§",
-   "Wrzesie§",
-   "Pa¶dziernik",
-   "Listopad",
-   "Grudzie§"
+   {
+      /* Identification */
+
+      "PLMAZ",                     /* ID */
+      "Polish",                    /* Name (in English) */
+      "Polski",                    /* Name (in native language) */
+      "PL",                        /* RFC ID */
+      "Mazowia",                   /* Codepage */
+      "$Revision$ $Date$",         /* Version */
+
+      /* Month names */
+
+       "Stycze§",
+       "Luty",
+       "Marzec",
+       "Kwiecie§",
+       "Maj",
+       "Czerwiec",
+       "Lipiec",
+       "Sierpie§",
+       "Wrzesie§",
+       "Pa¶dziernik",
+       "Listopad",
+       "Grudzie§",
+
+      /* Day names */
+
+       "Niedziela",
+       "Poniedziaíek",
+       "Wtorek",
+       "òroda",
+       "Czwartek",
+       "PiÜtek",
+       "Sobota",
+
+      /* CA-Cl*pper compatible natmsg items */
+
+      "Baza danych       #Rekord¢w    Uaktualniona Rozmiar",
+      "Wiëcej przykíad¢w?",
+      "Strona",
+      "** Subtotal **",
+      "* Subsubtotal *",
+      "*** Total ***",
+      "Wst",    /* wstaw */
+      "Zas",    /* zastap */
+      "Nieprawidíowa data",
+      "Zakres:",
+      " - ",
+      "T/N",
+      "Bíëdne wyraßenie",
+
+      /* Error description names */
+
+       "BíÜd bez opisu",
+       "Nieprawidíowy argument",
+       "BíÜd zakresu tablicy",
+       "Za dußy string",
+       "Przepeínienie numeryczne",
+       "Dzielenie przez zero",
+       "BíÜd numeryczny",
+       "Nieprawidíowa skíadnia",
+       "Operacja zbyt zíoßona",
+      "",
+      "",
+       "Za maío pamiëci",
+       "Niezdefiniowana funkcja",
+       "Metoda jest niedostëpna",
+       "Zmienna nie istnieje",
+       "Alias bazy nie istnieje",
+       "Zmienna jest niedostëpna",
+       "Nieprawidíowy alias bazy",
+       "Podany alias juß istnieje",
+      "",
+       "BíÜd podczas tworzenia zbioru",
+       "BíÜd podczas otwarcia zbioru",
+       "BíÜd podczas zamkniëcia zbioru",
+       "BíÜd podczas odczytu ze zbioru",
+       "BíÜd podczas zapisu do zbioru",
+       "BíÜd wydruku",
+      "",
+      "",
+      "",
+      "",
+       "Nieprawidíowa operacja",
+       "Przekroczony limit",
+       "Uszkodzony indeks bazy",
+       "Niezgodny typ danych",
+       "Wartoûç poza zakresem",
+       "Baza jest nie otwarta",
+       "Baza nie ma indeksu",
+       "Wymagany jest wyíÜczny dostëp do bazy",
+       "Wymagana blokada dostëpu",
+       "Zapis niedozwolony",
+       "Brak blokady dostëpu podczas dodawania rekordu",
+       "Nie udaío sië zablokowaç dostëpu",
+      "",
+      "",
+      "",
+      "",
+       "Nieprawidíowa liczba argument¢w",
+       "pobranie elementu tablicy",
+       "zmiana wartoûci elementu tablicy",
+       "wymagana jest tablica",
+       "wymagany typ: logiczny",
+
+      /* Internal error names */
+
+      "Nienaprawialny bíÜd nr %lu: ",
+      "Nieudana pr¢ba naprawy bíëdu",
+      "Brak kodu obsíugi ERRORBLOCK()",
+      "Zbyt wiele zagnießdßonych bíëd¢w",
+      "Niezaíadowany lub zíy RDD",
+      "Zíy typ metody woíanej z %s",
+      "hb_xgrab nie moße zarezerwowaç pamiëci",
+      "hb_xrealloc wywoíany ze wska¶nikiem NULL",
+      "hb_xrealloc wywoíany ze zíym wska¶nikiem",
+      "hb_xrealloc nie moße powiëkszyç bloku pamiëci",
+      "hb_xfree wywoíany ze zíym wska¶nikiem",
+      "hb_xfree wywoíany ze wska¶nikiem NULL",
+      "Brak definicji procedury startowej: \'%s\'",
+      "Brak procedury startowej",
+      "Nieprawidíowa wartoûç VM opcode",
+      "W %s wymagany jest item typu \'Symbol\'",
+      "W %s podano zíy item dla SELF",
+      "W %s oczekiwany jest item typu \'Codeblock\'",
+      "Funkcja %s wymaga innego typu na stosie",
+      "Stos ponißej dna",
+      "Item nie moße byç skopiowany w %s",
+      "W %s podano zíy item jako memvar",
+      "Zapis poza przydzielonym obszarem",
+
+      /* Texts */
+
+      "YYYY.MM.DD",
+      "T",
+      "N"
+   }
 };
 
-char *hb_dateDaysName[ 7 ] =
-{
-   "Niedziela",
-   "Poniedziaíek",
-   "Wtorek",
-   "òroda",
-   "Czwartek",
-   "PiÜtek",
-   "Sobota"
-};
+HB_LANG_ANNOUNCE( PLMAZ );
 
-char *hb_errorsGeneric[] =
-{
-   "BíÜd bez opisu",
-   "Nieprawidíowy argument",
-   "BíÜd zakresu tablicy",
-   "Za dußy string",
-   "Przepeínienie numeryczne",
-   "Dzielenie przez zero",
-   "BíÜd numeryczny",
-   "Nieprawidíowa skíadnia",
-   "Operacja zbyt zíoßona",
-   "",
-   "",
-   "Za maío pamiëci",
-   "Niezdefiniowana funkcja",
-   "Metoda jest niedostëpna",
-   "Zmienna nie istnieje",
-   "Alias bazy nie istnieje",
-   "Zmienna jest niedostëpna",
-   "Nieprawidíowy alias bazy",
-   "Podany alias juß istnieje",
-   "",
-   "BíÜd podczas tworzenia zbioru",
-   "BíÜd podczas otwarcia zbioru",
-   "BíÜd podczas zamkniëcia zbioru",
-   "BíÜd podczas odczytu ze zbioru",
-   "BíÜd podczas zapisu do zbioru",
-   "BíÜd wydruku",
-   "",
-   "",
-   "",
-   "",
-   "Nieprawidíowa operacja",
-   "Przekroczony limit",
-   "Uszkodzony indeks bazy",
-   "Niezgodny typ danych",
-   "Wartoûç poza zakresem",
-   "Baza jest nie otwarta",
-   "Baza nie ma indeksu",
-   "Wymagany jest wyíÜczny dostëp do bazy",
-   "Wymagana blokada dostëpu",
-   "Zapis niedozwolony",
-   "Brak blokady dostëpu podczas dodawania rekordu",
-   "Nie udaío sië zablokowaç dostëpu",
-   "",
-   "",
-   "",
-   "Nieprwidíowa liczba argument¢w",
-   "pobranie elementu tablicy",
-   "zmiana wartoûci elementu tablicy",
-   "wymagana jest tablica",
-   "wymagany typ: logiczny"
-};
+HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_PLMAZ )
+   hb_langRegister( &s_lang );
+HB_CALL_ON_STARTUP_END( hb_lang_Init_PLMAZ )
+#if ! defined(__GNUC__) && ! defined(_MSC_VER)
+   #pragma startup hb_lang_Init_PLMAZ
+#endif
+

@@ -1,3 +1,51 @@
+2000-07-27 10:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/error.ch
+    *include/hbapilng.h
+        *added internal error HB_MEMOVERFLOW
+        *adjusted internal data for Lang API
+        
+    *source/lang/msg_tpl.c
+    *source/lang/msgca.c
+    *source/lang/msgcs852.c
+    *source/lang/msgcsiso.c
+    *source/lang/msgcskam.c
+    *source/lang/msgcswin.c
+    *source/lang/msgde.c
+    *source/lang/msgen.c
+    *source/lang/msges.c
+    *source/lang/msgeu.c
+    *source/lang/msgfr.c
+    *source/lang/msggl.c
+    *source/lang/msghe862.c
+    *source/lang/msghewin.c
+    *source/lang/msghr852.c
+    *source/lang/msghriso.c
+    *source/lang/msghu852.c
+    *source/lang/msghucwi.c
+    *source/lang/msghuwin.c
+    *source/lang/msgis850.c
+    *source/lang/msgit.c
+    *source/lang/msgko.c
+    *source/lang/msgpt.c
+    *source/lang/msgro.c
+    *source/lang/msgsr852.c
+    *source/lang/msgsriso.c
+        * added internal error message: "Memory buffer overflow"
+        
+    *source/lang/msgpl852.c
+    *source/lang/msgpliso.c
+    *source/lang/msgplmaz.c
+        *updated to work with current Lang API
+
+    *source/vm/fm.c
+        * memory blocks are marked with a signature at the end of buffer 
+        to check if memory was overwritten 
+        
+    *source/rtl/transfrm.c
+        * fixed bug when "@(BX" picture was used (it caused that some
+        bytes were copied after the allocated buffer)
+
 2000-07-27 00:15 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
 *source/lang/msgit.c
    *Renamed TPL to IT

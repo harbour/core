@@ -182,6 +182,7 @@ static HB_LANG s_lang =
       "Stack underflow",
       "Um item iria ser copiado para ele mesmo em %s",
       "Symbol item inv lido passado como memvar  %s",
+      "Memory buffer overflow",
 
       /* Texts */
    

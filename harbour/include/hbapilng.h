@@ -51,8 +51,8 @@ extern "C" {
 #define HB_LANG_ITEM_BASE_NATMSG        25
 #define HB_LANG_ITEM_BASE_ERRDESC       38
 #define HB_LANG_ITEM_BASE_ERRINTR       89
-#define HB_LANG_ITEM_BASE_TEXT          111
-#define HB_LANG_ITEM_MAX_               114
+#define HB_LANG_ITEM_BASE_TEXT          112
+#define HB_LANG_ITEM_MAX_               115
 
 /* This hack is needed to force preprocessing if id is also a macro */
 #define HB_LANG_REQUEST( id )           HB_LANG_REQUEST_( id )

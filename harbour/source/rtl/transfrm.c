@@ -308,8 +308,9 @@ HB_FUNC( TRANSFORM )
          BOOL     bFound = FALSE;
 
          hb_itemGetNLen( pValue, &iOrigWidth, &iOrigDec );
-      
-         szResult = ( char * ) hb_xgrab( ulPicLen + 4 );   /* Grab enough              */
+
+         /* TODO: maybe replace this 16 with something else */      
+         szResult = ( char * ) hb_xgrab( ulPicLen + 16 );   /* Grab enough */
          *szResult = '\0';
 
          for( i = 0; i < ulPicLen && !bFound; i++ )      /* Count number in front    */

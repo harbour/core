@@ -113,6 +113,7 @@
 #define HB_EI_STACKUFLOW        9019 /* "Stack underflow" */
 #define HB_EI_ITEMBADCOPY       9020 /* "An item was going to be copied to itself from %s" */
 #define HB_EI_MVBADSYMBOL       9021 /* "Invalid symbol item passed as memvar %s" */
+#define HB_EI_XMEMOVERFLOW      9022 /* "Memory buffer overflow" */
 
 #endif /* _ERROR_CH */
 
