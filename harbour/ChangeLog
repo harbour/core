@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-13 03:50 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/vm/maindllp.c
+     * First VM/RTL functions added
+
+   * source/vm/hvm.c
+     * hvm support for pcode DLLs
+
 2001-12-12 18:49 UTC+0100 Antonio Linares <alinares@fivetech.com>
    + source/vm/maindllp.c
      * Windows pcode DLL entry point and VM/RTL routing functions
