@@ -28,8 +28,8 @@ function Main()
 
    QOut( "Let's add inline 'CalcArea' at run-time to an already instanced class" )
 
-   ClassAdd( oForm:ClassH, "CalcArea", ;
-      {|self| ( ::nRight  - ::nLeft ) * ( ::nBottom - ::nTop ) }, MET_INLINE )
+   oAddInline( oForm, "CalcArea", ;
+      {|self| ( ::nRight  - ::nLeft ) * ( ::nBottom - ::nTop ) } )
 
    QOut( "What methods are in the class :" )
    HBDebug( aoMethod( oForm ) )
@@ -39,7 +39,7 @@ function Main()
 
    QOut( "Let's add method 'Smile' at run-time to an already instanced class" )
 
-   ClassAdd( oForm:ClassH, "Smile", @Smile(), MET_METHOD )
+   oAddMethod( oForm, "Smile", @Smile() )
 
    QOut( "What methods are in the class :" )
    HBDebug( aoMethod( oForm ) )
@@ -55,10 +55,7 @@ function Main()
 
    QOut( "Let's add an additional data item" )
 
-   nSeq := __wDataInc( oForm:ClassH )           // Allocate new Seq#
-   QOut( "New Seq# ", nSeq )
-   ClassAdd( oForm:ClassH, "cHelp" , nSeq, MET_DATA )
-   ClassAdd( oForm:ClassH, "_cHelp", nSeq, MET_DATA )
+   oAddData( oForm, "cHelp" )
    
    oForm:cHelp := "This is a real tricky test"
 
@@ -69,18 +66,14 @@ function Main()
 
    QOut( "Let's attach a bigger smile" )
 
-   ClassMod( oForm:ClassH, "Smile", @BigSmile() )
+   oModMethod( oForm, "Smile", @BigSmile() )
 
    QOut( "Let's smile" )
    oForm:Smile()
 
-/*   QOut( "Let's crash" )
-   ClassMod( oForm:ClassH, "cText", 24 )
-   ClassMod( oForm:ClassH, "_cText", 24 ) */
-
    QOut( "And CalcArea() will now give a result in square inches" )
 
-   ClassMod( oForm:ClassH, "CalcArea", ;
+   oModInline( oForm, "CalcArea", ;
       {|self| ( ::nRight  - ::nLeft ) * ( ::nBottom - ::nTop ) / (2.54*2.54) } )
 
    QOut( "What is the Form area ?" )
@@ -90,13 +83,13 @@ function Main()
    HBDebug( aoMethod( oForm ) )
 
    QOut( "Delete CalcArea" )
-   ClassDel( oForm:ClassH, "CalcArea" )
+   oDelInline( oForm, "CalcArea" )
 
    QOut( "What methods are in the class :" )
    HBDebug( aoMethod( oForm ) )
 
    QOut( "Delete Smile" )
-   ClassDel( oForm:ClassH, "Smile" )
+   oDelMethod( oForm, "Smile" )
 
    QOut( "What methods are in the class :" )
    HBDebug( aoMethod( oForm ) )
@@ -108,9 +101,7 @@ function Main()
 
    QOut( "Let's delete cHelp" )
 
-   ClassDel( oForm:ClassH, "cHelp"  )
-   ClassDel( oForm:ClassH, "_cHelp" )
-   __wDataDec( oForm:ClassH )
+   oDelData( oForm, "cHelp" )
    
    QOut( "Data items after" )
    HBDebug( oForm )
@@ -178,3 +169,141 @@ function Pause()
 
    __Accept( "Pause :" )
 return nil
+
+
+//
+// <oObj> := oAddMethod( <oObj>, <cSymbol>, <nFuncPtr> )
+//
+// Add a method to an already existing class
+//
+function oAddMethod( oObj, cSymbol, nFuncPtr )
+
+   if IsMessage( oObj, cSymbol )
+      QOut( "OADDMETHOD: ", cSymbol, " already exists in class." )
+   elseif ValType( nFuncPtr ) != "N"
+      QOut( "OADDMETHOD: Argument type error <nFuncPtr>" )
+   elseif ValType( oObj ) != "O"
+      QOut( "OADDMETHOD: Argument type error <oObj>" )
+   else
+      ClassAdd( oObj:ClassH, cSymbol, nFuncPtr, MET_METHOD )
+   endif
+return oObj
+
+
+//
+// <oObj> := oAddInline( <oObj>, <cSymbol>, <bInline> )
+//
+// Add an INLINE to an already existing class
+//
+function oAddInline( oObj, cSymbol, bInline )
+
+   if IsMessage( oObj, cSymbol )
+      QOut( "OADDINLINE: ", cSymbol, " already exists in class." )
+   elseif ValType( bInline ) != "B"
+      QOut( "OADDINLINE: Argument type error <bInline>" )
+   elseif ValType( oObj ) != "O"
+      QOut( "OADDINLINE: Argument type error <oObj>" )
+   else
+      ClassAdd( oObj:ClassH, cSymbol, bInline, MET_INLINE )
+   endif
+return oObj
+
+//
+// <oObj> := oAddData( <oObj>, <cSymbol> )
+//
+// Add a DATA to an already existing class
+//
+function oAddData( oObj, cSymbol )
+
+   local nSeq
+
+   if IsMessage( oObj, cSymbol ) .or. IsMessage( oObj, "_" + cSymbol )
+      QOut( "OADDDATA: ", cSymbol, " already exists in class." )
+   elseif ValType( oObj ) != "O"
+      QOut( "OADDDATA: Argument type error <oObj>" )
+   else
+      nSeq := __wDataInc( oObj:ClassH )         // Allocate new Seq#
+      ClassAdd( oObj:ClassH, cSymbol,       nSeq, MET_DATA )
+      ClassAdd( oObj:ClassH, "_" + cSymbol, nSeq, MET_DATA )
+   endif
+return oObj
+
+//
+// <oObj> := oModMethod( <oObj>, <cSymbol>, <nFuncPtr> )
+//
+// Modify a method to an already existing class
+//
+function oModMethod( oObj, cSymbol, nFuncPtr )
+
+   if !IsMethod( oObj, cSymbol )
+      QOut( "OMODMETHOD: ", cSymbol, " doesnot exists in class." )
+   elseif ValType( nFuncPtr ) != "N"
+      QOut( "OMODMETHOD: Argument type error <nFuncPtr>" )
+   elseif ValType( oObj ) != "O"
+      QOut( "OMODMETHOD: Argument type error <oObj>" )
+   else
+      ClassMod( oObj:ClassH, cSymbol, nFuncPtr )
+   endif
+return oObj
+
+
+//
+// <oObj> := oModInline( <oObj>, <cSymbol>, <bInline> )
+//
+// Modify an INLINE to an already existing class
+//
+function oModInline( oObj, cSymbol, bInline )
+
+   if !IsMethod( oObj, cSymbol )
+      QOut( "OMODINLINE: ", cSymbol, " doesnot exists in class." )
+   elseif ValType( bInline ) != "B"
+      QOut( "OMODINLINE: Argument type error <bInline>" )
+   elseif ValType( oObj ) != "O"
+      QOut( "OMODINLINE: Argument type error <oObj>" )
+   else
+      ClassMod( oObj:ClassH, cSymbol, bInline )
+   endif
+return oObj
+
+
+//
+// <oObj> := oDelMethod( <oObj>, <cSymbol> )
+//
+// Delete a method from an already existing class
+//
+function oDelMethod( oObj, cSymbol )
+
+   if !IsMethod( oObj, cSymbol )
+      QOut( "ODELMETHOD: ", cSymbol, " doesnot exists in class." )
+   elseif ValType( oObj ) != "O"
+      QOut( "ODELMETHOD: Argument type error <oObj>" )
+   else
+      ClassDel( oObj:ClassH, cSymbol )
+   endif
+return oObj
+
+function oDelInline( oObj, cSymbol )
+return oDelMethod( oObj, cSymbol )              // Same story
+
+
+//
+// <oObj> := oDelData( <oObj>, <cSymbol> )
+//
+// Delete a DATA from an already existing class
+//
+function oDelData( oObj, cSymbol )
+
+   local nSeq
+
+   if !IsData( oObj, cSymbol )
+      QOut( "ODELDATA: ", cSymbol, " doesnot exists in class." )
+   elseif ValType( oObj ) != "O"
+      QOut( "ODELDATA: Argument type error <oObj>" )
+   else
+      ClassDel( oObj:ClassH, cSymbol,      )
+      ClassDel( oObj:ClassH, "_" + cSymbol )
+      nSeq := __wDataDec( oObj:ClassH )         // Decrease wData
+   endif
+return oObj
+
+
