@@ -24,10 +24,10 @@ int _GT_Internal_StringAsInt(char *String, int Start, int End)
    for (Digit = End; Digit >= Start; Digit--)
      {
        if (ISDIGIT(String[Digit]))
-	 {
-	   Value   += (String[Digit] - 0x30) * Decimal;
-	   Decimal *= 0xA;
-	 }
+         {
+           Value   += (String[Digit] - 0x30) * Decimal;
+           Decimal *= 0xA;
+         }
      }
    return(Value);
 }

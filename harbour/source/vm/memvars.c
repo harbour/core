@@ -339,7 +339,7 @@ void hb_memvarValueDecRef( HB_HANDLE hValue )
          else
             ++s_globalFreeCnt;
 
-	 HB_TRACE(HB_TR_INFO, ("Memvar item (%i) deleted", hValue));
+         HB_TRACE(HB_TR_INFO, ("Memvar item (%i) deleted", hValue));
       }
    }
    /* This can happen if for example PUBLIC variable holds a codeblock

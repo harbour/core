@@ -703,27 +703,27 @@ void hb_gt_Puts( USHORT cRow, USHORT cCol, BYTE attr, BYTE *str, ULONG len )
      ptr = ch_attr = hb_xgrab( i * 2 );
      while( i-- )
        {
-	 *ptr++ = *str++;
-	 *ptr++ = attr;
+         *ptr++ = *str++;
+         *ptr++ = attr;
        }
      i = len - 1; /* We want end position, not next cursor position */
      right = left;
      bottom = top;
      if( right + i > width - 1 )
        {
-	 /*
-	  * Calculate end row position and the remainder size for the
-	  * end column adjust.
-	  */
-	 bottom += ( i / width );
-	 i = i % width;
+         /*
+          * Calculate end row position and the remainder size for the
+          * end column adjust.
+          */
+         bottom += ( i / width );
+         i = i % width;
        }
      right += i;
      if( right > width - 1 )
        {
-	 /* Column movement overflows into next row */
-	 bottom++;
-	 right -= width;
+         /* Column movement overflows into next row */
+         bottom++;
+         right -= width;
        }
      puttext( left + 1, top + 1, right + 1, bottom + 1, ch_attr );
      hb_xfree( ch_attr );
@@ -736,8 +736,8 @@ void hb_gt_Puts( USHORT cRow, USHORT cCol, BYTE attr, BYTE *str, ULONG len )
      p = hb_gt_ScreenPtr( cRow, cCol );
      for( i = 0; i < len; i++ )
        {
-	 *p++ = *str++;
-	 *p++ = attr;
+         *p++ = *str++;
+         *p++ = attr;
        }
    }
 #endif
@@ -757,11 +757,11 @@ void hb_gt_GetText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
 
      for( y = usTop; y <= usBottom; y++ )
        {
-	 for( x = usLeft; x <= usRight; x++ )
-	   {
-	     hb_gt_xGetXY( y, x, dest + 1, dest );
-	     dest += 2;
-	   }
+         for( x = usLeft; x <= usRight; x++ )
+           {
+             hb_gt_xGetXY( y, x, dest + 1, dest );
+             dest += 2;
+           }
        }
    }
 #endif
@@ -781,11 +781,11 @@ void hb_gt_PutText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
 
      for( y = usTop; y <= usBottom; y++ )
        {
-	 for( x = usLeft; x <= usRight; x++ )
-	   {
-	     hb_gt_xPutch( y, x, *( srce + 1 ), *srce );
-	     srce += 2;
-	   }
+         for( x = usLeft; x <= usRight; x++ )
+           {
+             hb_gt_xPutch( y, x, *( srce + 1 ), *srce );
+             srce += 2;
+           }
        }
    }
 #endif

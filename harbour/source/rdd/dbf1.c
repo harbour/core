@@ -236,8 +236,7 @@ static BOOL hb_dbfWriteMemo( AREAP pArea, LPDBFMEMO pMemo, ULONG * lNewRecNo )
    BYTE szBuffer[ MEMO_BLOCK ];
    MEMOHEADER pMemoHeader;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_dbfWriteMemo(%p, %p, %p)",
-			  pArea, pMemo, lNewRecNo));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dbfWriteMemo(%p, %p, %p)", pArea, pMemo, lNewRecNo));
 
    if( !pArea->lpExtendInfo->fExclusive && !pArea->lpDataInfo->fFileLocked &&
        !hb_fsLock( pArea->lpDataInfo->pNext->hFile, LOCK_APPEND - 1, 1, FL_LOCK ) )

@@ -1148,13 +1148,13 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
          else if( s_uiActionRequest & HB_QUIT_REQUESTED )
             break;
          else if( s_uiActionRequest & HB_ENDPROC_REQUESTED )
-	 {
-	     /* request to stop current procedure was issued
-	      * (from macro evaluation)
-	      */
-	     s_uiActionRequest = 0;
+         {
+             /* request to stop current procedure was issued
+              * (from macro evaluation)
+              */
+             s_uiActionRequest = 0;
              break;
-	 }
+         }
       }
    }
    if( pSymbols )
@@ -2232,7 +2232,7 @@ static void hb_vmArrayPop( void )
       hb_itemCopy( pArray, pValue );  /* places pValue at pArray position */
       hb_stackPop();
       hb_stackPop();
-      hb_stackPop();	/* remove the value from the stack just like other POP operations */
+      hb_stackPop();    /* remove the value from the stack just like other POP operations */
    }
 }
 

@@ -16,9 +16,9 @@ C_SOURCES=\
 	chrtotal.c \
 	ctchksum.c \
 	ctchrmix.c \
-        ctcolton.c \
+	ctcolton.c \
 	ctcrypt.c \
-        ctposupp.c \
+	ctposupp.c \
 	dates2.c \
 	dbftools.c \
 	hb_f.c \
@@ -35,7 +35,7 @@ C_SOURCES=\
 	strright.c \
 
 PRG_SOURCES=\
-        ctmisc.prg \
+	ctmisc.prg \
 	fileread.prg \
 	nconvert.prg \
 	numtxthu.prg \

@@ -385,7 +385,7 @@ static void hb_hrbFileRead( char * file, char * cBuffer, int iSize, int iCount )
 
    while( nChar>0 ){
       cBuffer[nChar-1] = ((char*)file+nPos)[nChar-1];
-	  nChar--;
+      nChar--;
    }
    nPos += iSize*iCount;
 }

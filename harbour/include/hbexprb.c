@@ -314,9 +314,9 @@ static HB_EXPR_FUNC( hb_compExprUseString )
          {
             HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asString, pSelf->ulLength );
 #if !defined( HB_MACRO_SUPPORT )
-		/* only memvar variables are allowed in macro compilation - there is no
-		 * need to check for locals or static variables
-		 */
+                /* only memvar variables are allowed in macro compilation - there is no
+                 * need to check for locals or static variables
+                 */
          if( hb_compExprCheckMacroVar( pSelf->value.asString ) )
             HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
 #endif

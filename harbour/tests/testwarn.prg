@@ -23,7 +23,7 @@ FUNCTION Hex2Dec( lVar AS LOGICAL )
 
    nVar := 1
 
-	nVar := 'A'
+        nVar := 'A'
 
    cVar := 2
 
@@ -37,13 +37,13 @@ FUNCTION Hex2Dec( lVar AS LOGICAL )
 
    cVar := nVar
 
-	NondDeclared := 2
+        NondDeclared := 2
 
    cVar := {|x,y,z| nMyFunc( 3 ) }
 
-	nVar := 8 + cVar
+        nVar := 8 + cVar
 
-	IF 1
+        IF 1
 
    ENDIF
 

@@ -171,7 +171,7 @@ RETURN
 
 PROCEDURE TEST5()
 PUBLIC mempublic, public3:=3
-//PUBLIC public2[ 10 ]		//unsupported yet
+//PUBLIC public2[ 10 ]  //unsupported yet
 PRIVATE memprivate
 PARAMETERS memparam
 
@@ -210,7 +210,7 @@ FUNCTION UseVar( value )
   UseRef( @value )
 
 #ifdef __HARBOUR__
-  __mvPUBLIC( "public1" )	//, "public21" )
+  __mvPUBLIC( "public1" )      //, "public21" )
 //  __mvPRIVATE( "private1", "private2", "private3" )
   __mvPRIVATE( {"private1", "private2", "private3"} )
   Qout( "undeclared PUBLIC created by __PUBLIC function=", public1 )

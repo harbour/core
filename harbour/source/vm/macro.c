@@ -595,7 +595,7 @@ void hb_macroPushSymbol( HB_ITEM_PTR pItem )
          /* NOTE: checking for valid function name (valid pointer) is done
           * in hb_vmDo()
           */
-         hb_vmPushSymbol( pDynSym->pSymbol );	/* push compiled symbol instead of a string */
+         hb_vmPushSymbol( pDynSym->pSymbol );  /* push compiled symbol instead of a string */
 
          if( bNewBuffer )
             hb_xfree( szString );   /* free space allocated in hb_macroTextSubst */

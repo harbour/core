@@ -1,3 +1,30 @@
+20000403-02:11 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * contrib/runjava/runjava.c
+   * include/hbexprb.c
+   * include/hbapilng.h
+   * include/hbvmpub.h
+   * source/rdd/dbf1.c
+   * source/rtl/gtdos/gtdos.c 
+   * source/rtl/gtsln/gtsln.c 
+   * source/rtl/tget.prg
+   * source/tools/asciisum.c 
+   * source/tools/strasint.c 
+   * source/tools/stringsx.c
+   * source/tools/nconvert.prg
+   * source/vm/hvm.c 
+   * source/vm/macro.c
+   * source/vm/memvars.c 
+   * tests/memvar.prg
+   * tests/testwarn.prg
+   * tests/tstmacro.prg
+     ! Tabs converted to spaces.
+       Please don't use tabs in the sources, because the formatting may be 
+       much different when using another editor.
+
+   * source/tools/Makefile
+     ! Some corrections
+
 20000403-01:26 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/vm/itemapi.c

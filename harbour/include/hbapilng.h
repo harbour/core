@@ -45,10 +45,10 @@ extern "C" {
 #define HB_LANG_TEXT_DATEFMT    0
 #define HB_LANG_TEXT_YESCHAR    1
 #define HB_LANG_TEXT_NOCHAR     2
-#define HB_LANG_TEXT_MAX_	3
+#define HB_LANG_TEXT_MAX_       3
 
-#define HB_LANG_ED_MAX_		51
-#define HB_LANG_EI_MAX_		6
+#define HB_LANG_ED_MAX_         51
+#define HB_LANG_EI_MAX_         6
 
 /* ; */
 
@@ -93,16 +93,16 @@ extern void     hb_langListRelease      ( void );
 
 /* Default language selection and data query */
 
-extern void     hb_langDSet 	  	( PHB_LANG lang );
-extern PHB_LANG hb_langDGet 	  	( void );
+extern void     hb_langDSet             ( PHB_LANG lang );
+extern PHB_LANG hb_langDGet             ( void );
 
-extern char *   hb_langDGetName  	( void );
-extern char *   hb_langDGetID    	( void );
-extern char *   hb_langDGetText		( ULONG ulIndex );
-extern char *   hb_langDGetDayName	( ULONG ulIndex );
-extern char *   hb_langDGetMonthName	( ULONG ulIndex );
-extern char *   hb_langDGetErrorDesc	( ULONG ulIndex );
-extern char *   hb_langDGetErrorIntr	( ULONG ulIndex );
+extern char *   hb_langDGetName         ( void );
+extern char *   hb_langDGetID           ( void );
+extern char *   hb_langDGetText         ( ULONG ulIndex );
+extern char *   hb_langDGetDayName      ( ULONG ulIndex );
+extern char *   hb_langDGetMonthName    ( ULONG ulIndex );
+extern char *   hb_langDGetErrorDesc    ( ULONG ulIndex );
+extern char *   hb_langDGetErrorIntr    ( ULONG ulIndex );
 
 /* Single language */
 

@@ -50,8 +50,8 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
    SLtt_get_terminfo();
    SLkp_init();
    SLang_init_tty(34, /* Ctrl-G */
-		  0,  /* no flow-control */
-		  0); /* no output processing */
+                  0,  /* no flow-control */
+                  0); /* no output processing */
    SLang_set_abort_signal(NULL);
    SLsmg_init_smg ();
 }

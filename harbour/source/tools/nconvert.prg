@@ -38,8 +38,8 @@ FUNCTION IsBin(cString)
    cString:=AllTrim(cString)
    FOR nX:=1 to Len(cString)
       IF !(SubStr(cString,nX,1) $"01")
-	 lFlag:=.F.
-	 EXIT
+         lFlag:=.F.
+         EXIT
       ENDIF
    NEXT nX
    RETURN(lFlag)
@@ -49,8 +49,8 @@ FUNCTION IsOctal(cString)
    cString:=AllTrim(cString)
    FOR nX:=1 to Len(cString)
       if !(SubStr(cString,nX,1) $"01234567")
-	 lFlag:=.f.
-	 EXIT
+         lFlag:=.f.
+         EXIT
       ENDIF
    NEXT nX
    RETURN(lFlag)
@@ -60,8 +60,8 @@ FUNCTION IsDec(cString)
    cString:=AllTrim(cString)
    FOR nX:=1 to Len(cString)
       if !(SubStr(cString,nX,1) $"0123456789")
-	 lFlag:=.f.
-	 EXIT
+         lFlag:=.f.
+         EXIT
       ENDIF
    NEXT nX
    RETURN(lFlag)
@@ -71,8 +71,8 @@ FUNCTION IsHexa(cString)
    cString:=AllTrim(cString)
    FOR nX:=1 to Len(cString)
       if !(SubStr(cString,nX,1) $"0123456789ABCDEF")
-	 lFlag:=.f.
-	 EXIT
+         lFlag:=.f.
+         EXIT
       ENDIF
    NEXT nX
    RETURN(lFlag)
@@ -113,7 +113,7 @@ FUNCTION BinToDec(cString)
    local nLen:=Len(cNewString)
    FOR nX:=1 to nLen
       nNumber+=(At(SubStr(cNewString,nX,1),'01')-1)*;
-	 (2**(nLen-nX))
+        (2**(nLen-nX))
    NEXT nX
    RETURN(nNumber)
 
@@ -123,7 +123,7 @@ FUNCTION OctalToDec(cString)
    local nLen:=Len(cNewString)
    FOR nX:=1 to nLen
       nNumber+=(At(SubStr(cNewString,nX,1),'01234567')-1)*;
-	 (8**(nLen-nX))
+         (8**(nLen-nX))
    NEXT nX
    RETURN(nNumber)
                         
@@ -133,7 +133,7 @@ FUNCTION HexaToDec(cString)
    local nLen:=Len(cNewString)
    FOR nX:=1 to nLen
       nNumber+=(At(SubStr(cNewString,nX,1),'0123456789ABCDEF')-1)*;
-	 (16**(nLen-nX))
+         (16**(nLen-nX))
    NEXT nX
    RETURN nNumber
 

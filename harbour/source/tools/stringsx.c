@@ -7,10 +7,10 @@
 /* TODO: search this file for TODO and find 'em! */
 
 char *hb_strtoken(char *szText,
-		  long lText,
-		  long lIndex,
-		  char cDelimiter,
-		  long *lLen)
+                  long lText,
+                  long lIndex,
+                  char cDelimiter,
+                  long *lLen)
 {
   long wStart;
   long wEnd = 0;
@@ -23,25 +23,25 @@ char *hb_strtoken(char *szText,
       wStart = wEnd;
 
       if( cDelimiter != ' ' )
-	{
-	  if( szText[wStart] == cDelimiter )
+        {
+          if( szText[wStart] == cDelimiter )
             wStart++;
-	}
+        }
       else
-	{
-	  while( wStart < lText && szText[wStart] == cDelimiter )
+        {
+          while( wStart < lText && szText[wStart] == cDelimiter )
             wStart++;
-	}
+        }
 
       if( wStart < lText && szText[wStart] != cDelimiter )
-	{
-	  wEnd = wStart + 1;
+        {
+          wEnd = wStart + 1;
 
-	  while( wEnd < lText && szText[wEnd] != cDelimiter )
+          while( wEnd < lText && szText[wEnd] != cDelimiter )
             wEnd++;
-	}
+        }
       else
-	wEnd = wStart;
+        wEnd = wStart;
     } while( wCounter++ < lIndex - 1 && wEnd < lText );
 
   if( wCounter < lIndex )
@@ -92,15 +92,15 @@ HB_FUNC( ROT13 )
       char *szResult = (char*)hb_xgrab(lLen + 1);
 
       for( i = 0; i < lLen; i++ )
-	{
-	  char c = szText[i];
-	  if( (c >= 'A' && c <= 'M') || (c >= 'a' && c <= 'm') )
+        {
+          char c = szText[i];
+          if( (c >= 'A' && c <= 'M') || (c >= 'a' && c <= 'm') )
             c += 13;
-	  else if( (c >= 'N' && c <= 'Z') || (c >= 'n' && c <= 'z') )
+          else if( (c >= 'N' && c <= 'Z') || (c >= 'n' && c <= 'z') )
             c -= 13;
 
-	  szResult[i] = c;
-	}
+          szResult[i] = c;
+        }
       hb_retclen(szResult, lLen);
       hb_xfree(szResult);
     }
