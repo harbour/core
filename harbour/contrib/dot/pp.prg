@@ -4157,7 +4157,7 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor, bX )
         //? "EXP <*>: " + sExp
         RETURN sExp
 
-     CASE cType == '('
+     CASE cType == '(' .AND. Left( sLine, 1 ) != '('
         nSpaceAt := At( ' ', sLine )
 
         IF nSpaceAt = 0
