@@ -22,7 +22,9 @@
  *
  * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>
  *    Documentation for: SET WRAP,SET DEFAULT,SET MESSAGE
- *    Documentation for: SET PATH
+ *    Documentation for: SET PATH,SET INTENSITY,SET ALTERNATE
+ *    Documentation for: SET CENTURY,SET DATE,SET CONSOLE
+ *    Documentation for: SET EPOCH
  *
  * See doc/license.txt for licensing terms.
  *
@@ -797,7 +799,7 @@
  *  $ONELINER$
  *      Specifies a search path for opening files
  *  $SYNTAX$
- *      SET WRAP TO [<cPath>]   </par>
+ *      SET PATH TO [<cPath>]   </par>
  *  $ARGUMENTS$
  *      <cPath> Search path for files   </par>
  *  $DESCRIPTION$
@@ -816,5 +818,155 @@
  *      This command is Ca-Clipper Compliant.   </par>
  *  $SEEALSO$
  *      SET DEFAULT,CURDIR(),SET()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      SET INTENSITY
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Toggles the enhaced display of PROMPT's and GETs.
+ *  $SYNTAX$
+ *      SET INTENSITY [ON / OFF] [(<lInte>)]
+ *  $ARGUMENTS$
+ *      <lInte> Logical expression for toggle command
+ *  $DESCRIPTION$
+ *      This command set the field input color and @...PROMPT menu color
+ *      to either highlighted (inverse video) or normal color. The default
+ *      condition is ON (highlighted).
+ *  $EXAMPLES$
+ *      SET INTENSITY ON
+ *  $STATUS$
+ *      R 
+ *  $COMPLIANCE$
+ *      This command is Ca-Clipper Compliant.   </par>
+ *  $SEEALSO$
+ *      @...GET,@...PROMPT,@...SAY,SET()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      SET ALTERNATE
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Toggle and echos output to an alternate file
+ *  $SYNTAX$
+ *      SET ALTERNATE to <cFile> [ADDITIVE]
+ *      SET ALTERNATE [ON / OFF] [(<lAlter>)]  
+ *  $ARGUMENTS$
+ *      <cFile> Name of alternate file.
+ *
+ *      <lAlter> Logical expression for toggle   </par>
+ *  $DESCRIPTION$
+ *      This command toggles and output console information to the alternate
+ *      file <cFile>,provided that the command is toggled on or the condition
+ *      <lAlter> is set to a logical true (.T.). If <cFile> does not has a
+ *      file extension, .TXT will be assumed.The file name may optionally
+ *      have a drive letter and/or directory path.If none is speficied, the
+ *      current drive and directory will be used.
+ *      If the ALTERNATE file is created but no ALTERNATE ON command is
+ *      issued,nothing will be echoed to the file.
+ *      If ADDITIVE clause is used,then the information will be appended
+ *      to the existing alternate file.Otherwise,a new file will be created
+ *      with the specified name (or an existing one will be overwritten) and
+ *      the information will be appended to the file.The default is to create
+ *      a new file.
+ *      A SET ALTERNATE TO command will close the alternate file
+ *  $EXAMPLES$
+ *      SET ALTERNATE TO test.txt
+ *      SET ALTERNATE ON
+ *      ? 'Harbour'
+ *      ? "is"
+ *      ? "Power"
+ *      SET ALTERNATE TO
+ *      SET ALTERNATE OFF
+ *  $STATUS$
+ *      R 
+ *  $COMPLIANCE$
+ *      This command is Ca-Clipper Compliant.   </par>
+ *  $SEEALSO$
+ *      CLOSE,SET PRINTER,SET CONSOLE,SET()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      SET CENTURY
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Toggle the century digits in all ates display
+ *  $SYNTAX$
+ *      SET CENTURY [ON / OFF] [(<lCent>)]
+ *  $ARGUMENTS$
+ *      <lCent> Logical expression for toggle   </par>
+ *  $DESCRIPTION$
+ *      This command allows the input and display of dates with the century
+ *      prefix.It will be in the standart MM/DD/YYYY format unless specified
+ *      by the SET DATE command or SET() function.If <lCent> is a logical
+ *      true (.T.),the command will be set on;otherwise, the command will
+ *      be set off
+ *  $EXAMPLES$
+ *      SET CENTURY ON
+ *      ? DATE()
+ *      SET CENTURY OFF
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This command is Ca-Clipper compliant
+ *  $SEEALSO$
+ *      SET DATE,SET EPOCH,CTOD(),DATE(),DTOC(),SET()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      SET DATE
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Assings a date format or chooses a predefined date data set.
+ *  $SYNTAX$
+ *      SET DATE FORMAT [TO] <cFormat>
+ *      SET DATE [TO] [ ANSI / BRITISH / FRENCH / GERMAN / ITALIAN / JAPAN /
+ *      USA / AMERICAN]    
+ *  $ARGUMENTS$
+ *      <cFormat> Keyword for date format
+ *  $DESCRIPTION$
+ *      This command sets the date format for function display purposes.
+ *      If specified,<cFormat> may be a customized date format in which the
+ *      letters d,m and y may be used to desing a date format.The default
+ *      is an AMERICAN date format;specifying no parameters will set the
+ *      date format to AMERICAN.Below is a table of the varius predefined
+ *      dates formats.
+ *      
+ *      <table>
+ *       Syntax         Date Format
+ *       ANSI           yy.mm.dd
+ *       BRITISH        dd/mm/yy
+ *       FRENCH         dd/mm/yy
+ *       GERMAN         dd.mm.yy
+ *       ITALIAN        dd-mm-yy
+ *       JAPAN          yy.mm.dd
+ *       USA            mm-dd-yy
+ *       AMERICAN       mm/dd/yy
+ *      </table>
+ *  $EXAMPLES$
+ *      SET DATE JAPAN
+ *      ? DATE()
+ *      SET DATE GERMAN
+ *      ? Date()
+ *  $TESTS$
+ *      See tests/dates.prg
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This command is Ca-Clipper compliant
+ *  $SEEALSO$
+ *      SET DATE,SET EPOCH,CTOD(),DATE(),DTOC(),SET()
  *  $END$
  */

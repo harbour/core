@@ -21,22 +21,22 @@
  *  $ONELINER$
  *      Html Class
  *  $SYNTAX$
- *      oHtml:=THtml():New(<cFile>)
+ *      oHtml:=THtml():New(<cFile>) --> oHtm
  *  $ARGUMENTS$
- *      <cFile> Name of the Html file to create
+ *      <cFile> Name of the Html file to create   </par>
  *  $RETURNS$
- *      An  instance of the THtml Class
+ *      <oHtm> An  instance of the THtml Class   </par>
  *  $DESCRIPTION$
  *      THtml() is a class that creates an .html file of the same
- *      name you pass to the constructor.
- *      The class methods are as follows:
- *         New(<cFile>)         Create a new instance of the THtml class
- *         Close()              Close the created file
- *         WriteTitle(<cTitle>) Write the file title
- *         WritePar(<cPar>)     Writes a paragraph
- *         WriteParBold(<cPar>) Same as WritePar(), but the text is bold
- *         WriteLink(<cLink>,<cName>)  Write a link to another topic
- *         WriteText(<cText>)   Write any text
+ *      name you pass to the constructor.   </par>
+ *      The class methods are as follows:   </par>
+ *         New(<cFile>)         Create a new instance of the THtml class   </par>
+ *         Close()              Close the created file   </par>
+ *         WriteTitle(<cTitle>) Write the file title   </par>
+ *         WritePar(<cPar>)     Writes a paragraph   </par>
+ *         WriteParBold(<cPar>) Same as WritePar(), but the text is bold   </par>
+ *         WriteLink(<cLink>,<cName>)  Write a link to another topic   </par>
+ *         WriteText(<cText>)   Write any text   </par>
  *  $EXAMPLES$
  *      FUNCTION MAIN()
  *
@@ -51,13 +51,13 @@
  *      oHtm:WritePar( "See the Links Above" )
  *      oHtm:Close()
  *      RETURN Nil
- *
+ *  </par>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This is a new Harbour Tools class
+ *      This is a new Harbour Tools class   </par>
  *  $PLATFORMS$
- *      ALL
+ *      ALL   </par>
  *  $SEEALSO$
  *      TCLASS()
  *  $END$
@@ -71,23 +71,23 @@
  *  $ONELINER$
  *      OS/2 Documentation Class
  *  $SYNTAX$
- *      oNg:=TOs2():New(<cFile>)
+ *      oNg:=TOs2():New(<cFile>) --> oOs2
  *  $ARGUMENTS$
- *      <cFile> Name of the IPF Source file to create
+ *      <cFile> Name of the IPF Source file to create   </par>
  *  $RETURNS$
- *      An instance of the TOs2 Class
+ *      <oOs2> An instance of the TOs2 Class   </par>
  *  $DESCRIPTION$
  *      TOs2() is a class that creates the OS/2 IPF Source
- *      of the same name you pass to the constructor.
- *      The class methods are as follows:
- *         New(<cFile>)          Create a new instance of the TOs2 class
- *         Close()               Close the created file
- *         WriteTitle(<cTopic>,<cTitle>)  Write the file title
- *         WritePar(<cPar>)      Write a paragraph
- *         WriteParBold(<cPar>)  Same as WritePar(), but the text is bold
- *         WriteLink(<cLink>)    Write a link to another topic
- *         ScanLink(<clink>)     Scan the aLinkRef array for a valid topic
- *         DosToOs2Text(<cText>) Convert a Dos string to a OS/2 String
+ *      of the same name you pass to the constructor.   </par>
+ *      The class methods are as follows:   </par>
+ *         New(<cFile>)          Create a new instance of the TOs2 class   </par>
+ *         Close()               Close the created file   </par>
+ *         WriteTitle(<cTopic>,<cTitle>)  Write the file title   </par>
+ *         WritePar(<cPar>)      Write a paragraph   </par>
+ *         WriteParBold(<cPar>)  Same as WritePar(), but the text is bold   </par>
+ *         WriteLink(<cLink>)    Write a link to another topic   </par>
+ *         ScanLink(<clink>)     Scan the aLinkRef array for a valid topic   </par>
+ *         DosToOs2Text(<cText>) Convert a Dos string to a OS/2 String   </par>
  *  $EXAMPLES$
  *      FUNCTION MAIN()
  *
@@ -102,15 +102,13 @@
  *      oNg:WritePar( "See the Links Above" )
  *      oNg:Close()
  *      RETURN Nil
- *
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This is a new Harbour Tools class
+ *      This is a new Harbour Tools class   </par>
  *  $PLATFORMS$
- *      ALL
- *  $FILES$
- *
+ *      ALL   </par>
  *  $SEEALSO$
  *      TNortonGuide()
  *  $END$
@@ -124,21 +122,21 @@
  *  $ONELINER$
  *      Norton Guide Class
  *  $SYNTAX$
- *      oNg:=TNortonGuide():New(<cFile>)
+ *      oNg:=TNortonGuide():New(<cFile>) --> oNg
  *  $ARGUMENTS$
- *      <cFile> Name of the Ng Source file to create
+ *      <cFile> Name of the Ng Source file to create   </par>
  *  $RETURNS$
- *      An instance of the TNortonGuide Class
+ *      <oNg> An instance of the TNortonGuide Class   </par>
  *  $DESCRIPTION$
  *      TNortonGuide() is a class that creates the Norton Guide Source
- *      Code of the same name you pass to the constructor.
- *      The class methods are as follows:
- *         New(<cFile>)         Create an instance of the TNortonGuide class
- *         Close()              Close the created file
- *         WriteTitle(<cTopic>,<cTitle>)  Write the file title
- *         WritePar(<cPar>)     Write a paragraph
- *         WriteParBold(<cPar>) Same as WritePar(), but the text is bold
- *         WriteLink(<cLink>)   Write a link to another topic
+ *      Code of the same name you pass to the constructor.   </par>
+ *      The class methods are as follows:   </par>
+ *         New(<cFile>)         Create an instance of the TNortonGuide class   </par>
+ *         Close()              Close the created file   </par>
+ *         WriteTitle(<cTopic>,<cTitle>)  Write the file title   </par>
+ *         WritePar(<cPar>)     Write a paragraph   </par>
+ *         WriteParBold(<cPar>) Same as WritePar(), but the text is bold   </par>
+ *         WriteLink(<cLink>)   Write a link to another topic   </par>
  *  $EXAMPLES$
  *      FUNCTION MAIN()
  *
@@ -153,12 +151,13 @@
  *      oNg:WritePar( "See the Links Above" )
  *      oNg:Close()
  *      RETURN Nil
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This is a new Harbour Tools class
+ *      This is a new Harbour Tools class   </par>
  *  $PLATFORMS$
- *      ALL
+ *      ALL   </par>
  *  $SEEALSO$
  *      TTroff(),TRtf(),THtml(),TOs2()
  *  $END$
@@ -172,23 +171,23 @@
  *  $ONELINER$
  *      Rtf Class
  *  $SYNTAX$
- *      oNg:=TRtf():New(<cFile>)
+ *      oNg:=TRtf():New(<cFile>) --> oRtf
  *  $ARGUMENTS$
- *      <cFile> Name of the RTF file to create
+ *      <cFile> Name of the RTF file to create   </par>
  *  $RETURNS$
- *      An  instance of the TRtf Class
+ *      <oRtf> An  instance of the TRtf Class   </par>
  *  $DESCRIPTION$
  *      TRtf() is a class that creates the RTF Documentation Source
- *      Code of the same name you pass to the constructor.
- *      The class methods are as follows:
- *         New(<cFile>)         Create a new instance of the TRtf class
- *         Close()              Close the create file
- *         WriteTitle(<cTopic>,<cTitle>)  Write the file title
- *         WritePar(<cPar>)     Write a paragraph
- *         WriteParBold(<cPar>) Same as WritePar(), but the text is bold
- *         WriteLink(<cLink>)   Write a link to another topic
- *         WriteHeader()        Write the RTF header
- *         EndPar()             Write the end paragraph delimiter
+ *      Code of the same name you pass to the constructor.   </par>
+ *      The class methods are as follows:   </par>
+ *         New(<cFile>)         Create a new instance of the TRtf class   </par>
+ *         Close()              Close the create file   </par>
+ *         WriteTitle(<cTopic>,<cTitle>)  Write the file title   </par>
+ *         WritePar(<cPar>)     Write a paragraph   </par>
+ *         WriteParBold(<cPar>) Same as WritePar(), but the text is bold   </par>
+ *         WriteLink(<cLink>)   Write a link to another topic   </par>
+ *         WriteHeader()        Write the RTF header   </par>
+ *         EndPar()             Write the end paragraph delimiter   </par>
  *  $EXAMPLES$
  *      FUNCTION MAIN()
  *
@@ -204,13 +203,13 @@
  *      oRtf:WritePar( "See the Links Above" ):EndPar()
  *      oRtf:Close()
  *      RETURN Nil
- *
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This is a new Harbour Tools class
+ *      This is a new Harbour Tools class   </par>
  *  $PLATFORMS$
- *      ALL
+ *      ALL   </par>
  *  $SEEALSO$
  *      TNortonGuide()
  *  $END$
@@ -224,22 +223,22 @@
  *  $ONELINER$
  *      Troff Class
  *  $SYNTAX$
- *      oTroff:=TTrof():New(<cFile>)
+ *      oTroff:=TTrof():New(<cFile>) --> oTrf
  *  $ARGUMENTS$
- *      <cFile> Name of the Troff file to create
+ *      <cFile> Name of the Troff file to create   </par>
  *  $RETURNS$
- *      An  instance of the TTroff Class
+ *      <oTrf>  instance of the TTroff Class   </par>
  *  $DESCRIPTION$
  *      TTroff() is a class that creates the TROFF Documentation Source
- *      Code of the same name you pass to the constructor.
- *      The class methods are as follows:
+ *      Code of the same name you pass to the constructor.   </par>
+ *      The class methods are as follows:   </par>
  *         New(<cFile>)         Create a new instance of the THtml class
- *         Close()              Close the created file
- *         WriteTitle(<cTopic>,<cTitle>) Write the file title
- *         WritePar(<cPar>)     Write a paragraph
- *         WriteParBold(<cPar>) Same as WritePar(), but the text is bold
- *         WriteLink(<cLink>)   Write a link to another topic
- *         WriteText()          Writes text without formating
+ *         Close()              Close the created file   </par>
+ *         WriteTitle(<cTopic>,<cTitle>) Write the file title   </par>
+ *         WritePar(<cPar>)     Write a paragraph   </par>
+ *         WriteParBold(<cPar>) Same as WritePar(), but the text is bold   </par>
+ *         WriteLink(<cLink>)   Write a link to another topic   </par>
+ *         WriteText()          Writes text without formating   </par>
  *  $EXAMPLES$
  *      FUNCTION MAIN()
  *
@@ -254,13 +253,13 @@
  *      oTroff:Close()
  *
  *      RETURN Nil
- *
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This is a new Harbour Tools class
+ *      This is a new Harbour Tools class   </par>
  *  $PLATFORMS$
- *      ALL
+ *      ALL   </par>
  *  $SEEALSO$
  *      TNortonGuide()
  *  $END$

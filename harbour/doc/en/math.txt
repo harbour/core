@@ -8,7 +8,7 @@
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  *    Documentation for: ABS(),EXP(),LOG(),INT(),MAX()
- *    MIN()
+ *    MIN(),SQRT()
  * See doc/license.txt for licensing terms.
  *
  */
@@ -249,5 +249,37 @@
  *      All   </par>
  *  $SEEALSO$
  *      %
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SQRT()
+ *  $CATEGORY$
+ *      Math
+ *  $ONELINER$
+ *      Calculates the square root of a number
+ *  $SYNTAX$
+ *      SQRT( <nNumber> ) --> <nSqrt>
+ *  $ARGUMENTS$
+ *      <nNumber> Any  numeric value
+ *  $RETURNS$
+ *      <nSqrt> Square root of <number>
+ *  $DESCRIPTION$
+ *      This function returns the square rot of <nNumber>. The precsion of
+ *      this evaluation is based solly on the settings of the SET DECIMAL TO
+ *      command.Any negative number passed as <nNumber> will always return a 0.
+ *  $EXAMPLES$
+ *      SET Decimal to 5   
+ *      ? SQRT(632512.62541)
+ *      ? SQRT(845414111.91440)     
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is CA-Clipper compliant.   
+ *  $PLATFORMS$
+ *      All   
+ *  $SEEALSO$
+ *      ROUND()
  *  $END$
  */

@@ -1,0 +1,492 @@
+/*
+ * $Id$
+ */
+
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+ *    Documentation for: CDOW(),CMONTH(),DATE(),CTOD(),DAY(),DAYS()
+ *    DOW(),DTOS(),DTOC(),ELAPTIME(),MONTH(),SECONDS(),SECS(),TIME(),YEAR()
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      CDOW()
+ *  $CATEGORY$
+ *      Date
+ *  $ONELINER$
+ *      Converts a date to the day of week
+ *  $SYNTAX$
+ *      CDOW(<dDate>)  --> cDay
+ *  $ARGUMENTS$
+ *      <dDate>  Any date expression.
+ *  $RETURNS$
+ *      <cDay>  The current day of week.
+ *  $DESCRIPTION$
+ *      This function returns a character string of the day of the week,
+ *      from a date expression <dDate> passed to it.
+ *      If a NULL date is passed to the function, the value of the function
+ *      will be a NULL byte.
+ *  $EXAMPLES$
+ *      ? CDOW(DATE())
+ *      if CDOW(DATE()+10) =="SUNDAY"
+ *         ? "This is a sunny day."
+ *      Endif
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is Ca-Clipper compliant.
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      DAY(),DOW(),DATE(),CMONTH()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      CMONTH()
+ *  $CATEGORY$
+ *      Date
+ *  $ONELINER$
+ *      Return the name of the month.
+ *  $SYNTAX$
+ *      CMONTH(<dDate>)  --> cMonth
+ *  $ARGUMENTS$
+ *      <dDate>  Any date expression.
+ *  $RETURNS$
+ *      <cMonth>  The current month name
+ *  $DESCRIPTION$
+ *      This function returns the name of the month (January,February,etc.)
+ *      from a date expression <dDate> passed to it.
+ *      If a NULL date is passed to the function, the value of the function
+ *      will be a NULL byte.
+ *  $EXAMPLES$
+ *      ? CMONTH(DATE())
+ *      if CMONTH(DATE()+10) =="March"
+ *         ? "Have you done your system BACKUP?"
+ *      Endif
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is Ca-Clipper compliant
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      CDOW(),DATE(),MONTH(),YEAR(),DOW(),DTOC()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      DATE()
+ *  $CATEGORY$
+ *      Date
+ *  $ONELINER$
+ *      Return the Current OS Date
+ *  $SYNTAX$
+ *      DATE() --> dCurDate
+ *  $ARGUMENTS$
+ *      None
+ *  $RETURNS$
+ *      <dCurDate>  Current system date.
+ *  $DESCRIPTION$
+ *      This function returns the current system date.
+ *  $EXAMPLES$
+ *      ? Date()        
+ *  $TESTS$
+ *      ? "Today is ",Day(date())," of ",cMonth(date())," of ",Year(date())
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is Ca-Clipper Compliant
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$   
+ *      CTOD(),DTOS(),DTOC(),DAY(),MONTH(),CMONTH()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      CTOD()
+ *  $CATEGORY$
+ *      Date
+ *  $ONELINER$
+ *      Converts a character string to a date expression
+ *  $SYNTAX$
+ *      CTOD(<cDateString>)  --> dDate
+ *  $ARGUMENTS$
+ *      <cDateString> A character date in format 'mm/dd/yy'
+ *  $RETURNS$
+ *      <dDate> A date expression 
+ *  $DESCRIPTION$
+ *      This function converts a date that has been entered as a character
+ *      expression to a date expression.The character expression will be in
+ *      the form "MM/DD/YY" (based on the default value in SET DATE) or in
+ *      the appropriate format specified by the SET DATE TO command. If an
+ *      improper character string is passed to the function,an empty date
+ *      value will be returned.
+ *  $EXAMPLES$
+ *      ? CTOD('12/21/00')
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is Ca-Clipper compliant
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      SET DATE,DATE(),DTOS()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      DAY()
+ *  $CATEGORY$
+ *      Date
+ *  $ONELINER$
+ *      Return the numeric day of th month.
+ *  $SYNTAX$
+ *      DAY(<cDate>) --> nMonth
+ *  $ARGUMENTS$
+ *      <cDate> Any valid date expression.
+ *  $RETURNS$
+ *     <nMonth> Numeric value of the day of month.
+ *  $DESCRIPTION$
+ *      This function returns the numeric value of the day of month from a
+ *      date.
+ *  $EXAMPLES$
+ *      ? Day(DATE())
+ *      ? Day(DATE()+6325)
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is Ca-Clipper compliant
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      CTOD(),DTOS(),DTOC(),DATE(),MONTH(),CMONTH()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      DAYS()
+ *  $CATEGORY$
+ *      Date
+ *  $ONELINER$
+ *      Convert elapsed seconds into days
+ *  $SYNTAX$
+ *      DAYS(<nSecs> ) --> nDay
+ *  $ARGUMENTS$
+ *      <nSecs> The number of seconds
+ *  $RETURNS$
+ *      <nDay>  The number of days
+ *  $DESCRIPTION$
+ *      This function converst <nSecs> seconds to the equivalent number
+ *      of days;86399 seconds represent one day,0 seconds being midnight.
+ *  $EXAMPLES$
+ *      ? DAYS(2434234)
+ *      ? "Has been passed ",DAYS(63251),' since midnight'
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is Ca-Clipper compliant
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      SECONDS(),SECS(),ELAPTIME()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      DOW()
+ *  $CATEGORY$
+ *      Date
+ *  $ONELINER$
+ *      Value for the day of week.
+ *  $SYNTAX$
+ *      DOW(<dDate>) --> nDay
+ *  $ARGUMENTS$
+ *      <dDate>  Any valid date expression
+ *  $RETURNS$
+ *      <nDay>  The current day number
+ *  $DESCRIPTION$
+ *      This function returns the number representing the day of the week
+ *      for the date expressed as <dDate>.
+ *  $EXAMPLES$
+ *      ? DOW(DATE())
+ *      ? DOW(DATE()-6584)
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is Ca-Clipper compliant
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      DTOC(),CDOW(),DATE(),DTOS(),DAY()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      DTOC()
+ *  $CATEGORY$
+ *      Date
+ *  $ONELINER$
+ *      Date to character conversion
+ *  $SYNTAX$
+ *      DTOC(<dDateString>)  --> cDate
+ *  $ARGUMENTS$
+ *      <dDateString> Any date
+ *  $RETURNS$
+ *      <dDate> Character represention of date
+ *  $DESCRIPTION$
+ *      This function converts any date expression (a field or variable )
+ *      expressed as <dDateString> to a character expression in the default
+ *      format "MM/DD/YY".The date format is expressed by this function is
+ *      controled in part by the date format specified in the SET DATE
+ *      command
+ *  $EXAMPLES$
+ *      ? DTOC(Date())
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is Ca-Clipper compliant
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      SET DATE,DATE(),DTOS()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      DTOS()
+ *  $CATEGORY$
+ *      Date
+ *  $ONELINER$
+ *      Date to string conversion
+ *  $SYNTAX$
+ *      DTOS(<dDateString>)  --> cDate
+ *  $ARGUMENTS$
+ *      <dDateString> Any date
+ *  $RETURNS$
+ *      <dDate> String notation of the date
+ *  $DESCRIPTION$
+ *      This function returns the value of <dDateString> as a character
+ *      string in the format of YYYYMMDD.If the value of <dDateString> is
+ *      an empty date , this function will returbn eight blank spaces.
+ *  $EXAMPLES$
+ *      ? DTOS(Date())
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is Ca-Clipper compliant
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      DTOC(),DATE(),DTOS()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ELAPTIME()
+ *  $CATEGORY$
+ *      Time
+ *  $ONELINER$
+ *      Calculates elapted time.
+ *  $SYNTAX$
+ *      ELAPTIME(<cStartTime>,<cEndTime>) --> cDiference                                      
+ *  $ARGUMENTS$
+ *      <cStartTime> Start in time as a string format
+ *      <cEndTime>   End time as a string format
+ *  $RETURNS$
+ *      <cDiference>  Difference between the times
+ *  $DESCRIPTION$
+ *      This function returns a string that shows the difference between
+ *      the starting time represented as <cStartTime> and the ending time
+ *      as <cEndTime>. If the stating time is greater then the ending
+ *      time,the function will assume that the date changed once.
+ *  $EXAMPLES$
+ *      Static cStartTime
+ *      Init Proc Startup
+ *      cStartTime:=Time()
+ *
+ *      Exit Proc StartExit
+ *      ? "You used this program by",ELAPTIME(cStartTime,Time())
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is Ca-Clipper compliant
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      SECS(),SECONDS(),TIME(),DAY()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      MONTH()   
+ *  $CATEGORY$
+ *      Date
+ *  $ONELINER$
+ *      Converts a date expression to a month value
+ *  $SYNTAX$
+ *      MONTH(<dDate>) --> nMonth
+ *  $ARGUMENTS$
+ *      <dDate> Any valid date expression
+ *  $RETURNS$
+ *     <nMonth> Corresponding number of the month in the year, ranging from
+ *      0 to 12
+ *  $DESCRIPTION$
+ *      This function returns a number that representate the month of  given
+ *      date expression <dDate>. If a NULL date (CTOD('')) is passed to the
+ *      function, the value of the function will be 0.
+ *  $EXAMPLES$
+ *      ? Month(DATE())
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is Ca-Clipper compliant
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      CDOW(),DOW(),YEAR(),CMONTH()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SECONDS()
+ *  $CATEGORY$
+ *      Time
+ *  $ONELINER$
+ *      Returns the number of elapsed seconds past midnight.
+ *  $SYNTAX$
+ *      SECONDS() --> nSeconds
+ *  $ARGUMENTS$
+ *      None
+ *  $RETURNS$
+ *      <nSeconds> Number of seconds since midnight
+ *  $DESCRIPTION$
+ *      This function returns a numeric value representing the number of
+ *      elapsed seconds based on the current system time.
+ *      The system time is considered to start at 0 (midnight);it continues
+ *      up to 86399 seconds.The value of the return expression is displayed
+ *      in both seconds and hundredths of seconds.
+ *  $EXAMPLES$
+ *      ? Seconds()
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is Ca-Clipper compliant
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      TIME()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SECS()
+ *  $CATEGORY$
+ *      Time
+ *  $ONELINER$
+ *      Return the number of seconds from the system date.
+ *  $SYNTAX$
+ *      SECS( <cTime> ) --> nSeconds
+ *  $ARGUMENTS$ 
+ *      <cTime> Character expression in a time string format
+ *  $RETURNS$
+ *      <nSeconds> Number of seconds
+ *  $DESCRIPTION$
+ *      This function returns a numeric value that is a number of elapsed
+ *      seconds from midnight base on a time string given as <cTime>.
+ *  $EXAMPLES$
+ *      ? Secs(Time())
+ *      ? Secs(time()-10)
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is Ca-Clipper compliant
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      SECONDS(),ELAPTIME(),TIME()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      TIME()
+ *  $CATEGORY$
+ *      Time
+ *  $ONELINER$
+ *      Returns the system time as a string
+ *  $SYNTAX$
+ *      TIME() --> cTime
+ *  $ARGUMENTS$
+ *      None
+ *  $RETURNS$
+ *      <cTime> Character string representing time
+ *  $DESCRIPTION$
+ *      This function returns the system time represented as a character
+ *      expression in the format of HH:MM:SS
+ *  $EXAMPLES$
+ *      ? Time()
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is Ca-Clipper compliant
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      DATE(),SECONDS()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      YEAR()
+ *  $CATEGORY$
+ *      Date
+ *  $ONELINER$
+ *      Converts the year portion of a date into a numeric value
+ *  $SYNTAX$
+ *      YEAR(<cDate>) --> nYear
+ *  $ARGUMENTS$
+ *      <dDate> Any valid date expression
+ *  $RETURNS$
+ *      <nYear> The year portion of the date.
+ *  $DESCRIPTION$
+ *      This function returns the numeric value for the year in <dDate>.
+ *      This value will always be a four-digit number and is not affected
+ *      by the setting of the SET CENTURY and SET DATE commands. Addition
+ *      ally, an empty date expression passed to this function will yield
+ *      a zero value.
+ *      
+ *  $EXAMPLES$
+ *      ? Year(date())
+ *      ? year(CTOD("01/25/3251"))
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is Ca-Clipper compliant
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      DAY(),MONTH()
+ *  $END$
+ */
+

@@ -161,7 +161,7 @@
  *      that match passed skeleton should be either included in deletion
  *      (if .T.) or excluded from deletion (if .F.)   </par>
  *  $RETURNS$
- *    Nothing
+ *    Nothing   </par>
  *  $DESCRIPTION$
  *      This function releases values stored in memory variables. It shouldn't
  *      be called directly, it should be placed into RELEASE ALL command.   </par>
@@ -206,8 +206,6 @@
  *      function/procedure   </par>
  *      HB_MV_PRIVATE_LOCAL  =for private variables declared in current
  *      function/procedure   </par>
- *  $DESCRIPTION$
- *
  *  $EXAMPLES$
  *
  *      PROCEDURE MAIN()
@@ -241,7 +239,7 @@
  *  $COMPLIANCE$
  *      This function is a Harbour Extension   </par>
  *  $SEEALSO$
- *      include/hbmemvar.ch   </par>
+ *      include/hbmemvar.ch   
  *  $END$
  */
 

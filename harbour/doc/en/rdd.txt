@@ -26,8 +26,11 @@
  *      AFields(<aNames>[,<aTypes>][,<aLen>][,<aDecs>]) --> <nFields>
  *  $ARGUMENTS$
  *      <aNames>  Array of field names
+
  *      <aTypes>  Array of field names
+
  *      <aLens>  Array of field names
+
  *      <aDecs>  Array of field names
  *  $RETURNS$
  *      <nFields> Number od fields in a database or work area
@@ -59,8 +62,7 @@
  *      R
  *  $COMPLIANCE$
  *      AFIELDS() is fully CA-Clipper compliant.
- *  $SEEALSO$
- *  $END$
+  *  $END$
  */
 
 /*  $DOC$
@@ -112,10 +114,15 @@
  *      [<lRest>] ) --> NIL
  *  $ARGUMENTS$
  *      <bBlock> Operation that is to be performed
+
  *      <bFor> Code block for the For condition
+
  *      <bWhile> Code block for the WHILE condition
+
  *      <nNext> Number of NEXT records  to process
+
  *      <nRecord> Record number to work on exactly
+
  *      <lRest> Toggle to rewind record pointer
  *  $RETURNS$
  *      DBEVAL() always returns NIL
@@ -219,7 +226,7 @@
  *  $ONELINER$
  *      Appends a new record to a database file.
  *  $SYNTAX$
- *      DbAppend(<<lLock>]) --> NIL
+ *      DbAppend(<lLock>]) --> NIL
  *  $ARGUMENTS$
  *      <lLock> Toggle to release record locks
  *  $RETURNS$
@@ -233,8 +240,8 @@
  *     with NULL bytes.The header of the database is not updated until
  *     the record is flushed from the buffer and the contents are
  *     written to the disk.
- *     Under a networking enviroment, DBAPPEND() performs an addi-
- *     tional operation: It attrmps to lock the newly added record. If
+ *     Under a networking enviroment, DBAPPEND() performs an additional
+ *     operation: It attrmps to lock the newly added record. If
  *     the database file is currently locked or if a locking assignment
  *     if made to LASTREC()+1,NETERR() will return a logical true (.T.)
  *     immediately after the DBAPPEND() function. This function does
@@ -263,7 +270,7 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *     DBCLEARFILTER()
+ *      DBCLEARFILTER()
  *  $CATEGORY$
  *      DATA BASE
  *  $ONELINER$
@@ -273,7 +280,7 @@
  *  $RETURNS$
  *      DbClearFilTer() always returns NIL
  *  $DESCRIPTION$
- *        This function clears any active filter condiction
+ *      This function clears any active filter condiction
  *      for the current or selected work area.
  *  $EXAMPLES$
  *      Function Main()
@@ -300,7 +307,7 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *     DBCLOSEALL()
+ *      DBCLOSEALL()
  *  $CATEGORY$
  *      DATA BASE
  *  $ONELINER$
@@ -541,10 +548,14 @@
  *      [<cAlias>]) --> NIL
  *  $ARGUMENTS$
  *      <cDatabase> Name of database to be create
+
  *      <aStruct>   Name of a multidimensional array that contains the a database
  *                  structure
+
  *      <cDriver>   Name of the RDD
+
  *      <lOpen>     Toggle to Open the create File
+
  *      <cAlias>    Name of database Alias
  *  $RETURNS$
  *      DBCREATE() always returns NIL.
@@ -947,7 +958,9 @@
  *      DBSEEK(<expKey>, [<lSoftSeek>],[<lFindLast>]) --> lFound
  *  $ARGUMENTS$
  *      <expKey> Any expression
+
  *      <lSoftSeek> Toggle SOFTSEEK condition
+
  *      <lFindLast> is an optional logical value that set the current
  *      record position to the last record if successful
  *  $RETURNS$
@@ -1123,6 +1136,7 @@
  *      DBSETFILTER(<bCondition>, [<cCondition>]) --> NIL
  *  $ARGUMENTS$
  *      <bCondition> Code block expression for filtered evaluation.
+
  *      <cCondition> Optional character expression of code block.
  *  $RETURNS$
  *      DBSETFILTER() always returns NIL.
@@ -1270,10 +1284,15 @@
  *      [<lShared>], [<lReadonly>]) --> NIL
  *  $ARGUMENTS$
  *     <lNewArea>  A optional logical expression for the new work area
+
  *     <cDriver>   Database driver name
+
  *     <cName>     File Name
+
  *     <xcAlias>   Alias name
+
  *     <lShared>   Shared/exclusive status flag
+
  *     <lReadonly> Read-write status flag.
  *  $RETURNS$
  *      DBUSEAREA() always returns NIL.
@@ -1653,7 +1672,7 @@
  *  $SYNTAX$
  *      FOUND() --> lSuccess
  *  $ARGUMENTS$
- *
+ *      None.
  *  $RETURNS$
  *      <lSuccess> A logical true (.T.) is successful;otherwise, false (.F.)
  *  $DESCRIPTION$

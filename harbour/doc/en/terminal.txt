@@ -106,7 +106,6 @@
  *  $PLATFORMS$
  *      __XSaveScreen() is part of the GT API, and supported only by some
  *      platforms.   </par>
- *  $FILES$
  *  $SEEALSO$
  *      RESTORE SCREEN,__XRESTSCREEN(),__XSAVESCREEN()
  *  $END$
@@ -193,7 +192,6 @@
  *  $PLATFORMS$
  *      Rest Screen is part of the GT API, and supported only by some
  *      platforms.   </par>
- *  $FILES$
  *  $SEEALSO$
  *      __XRESTSCREEN(),SAVE SCREEN,__XSAVESCREEN()
  *  $END$
@@ -281,12 +279,12 @@
  *           displayed.   </par>
  *
  *      ON:  Only the first four valid <aOptions> are taken.       </par>
- *      OFF: <aOptions> could contain as many as needed options.   </par>
+ *      OFF: <aOptions> could contain as many as needed options.   
  *
  *      <cColorNorm> is a Harbour extension, or at least un-documented
- *      in Clipper 5.2 NG.                  </par>
+ *      in Clipper 5.2 NG.                  
  *
- *      <nDelay> is a Harbour extension.    </par>
+ *      <nDelay> is a Harbour extension.    
  *  $SEEALSO$
  *       @...PROMPT,MENU TO,STDOUT(),__NONOALERT()
  *  $END$
@@ -317,7 +315,6 @@
  *      R
  *  $COMPLIANCE$
  *      __NONOALERT() is an undocumented CA-Clipper function   </par>
- *  $SEEALSO$
  *  $END$
  */
 
@@ -386,7 +383,7 @@
  *      ? hb_ColorIndex( "W/N, N/W", CLR_ENHANCED ) // "N/W"
  *      </fixed>
  *  $TESTS$
- *      see the regression test suit for comprehensive tests.   </par>
+ *      see the regression test suit for comprehensive tests.   
  *      </fixed>
  *  $STATUS$
  *      R

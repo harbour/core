@@ -23,22 +23,23 @@
  *  $SYNTAX$
  *      StrFormat(<cMask>[, <cPar1>[, <cParn>[, ...]]) --> cString
  *  $ARGUMENTS$
- *      <cMask> Holds the mask for the resulting string
+ *      <cMask> Holds the mask for the resulting string   </par>
  *      <cParn> Holds the strings to be inserted in the mask
- *             maximum 9 of them can be specified.
+ *             maximum 9 of them can be specified.   </par>
  *  $RETURNS$
- *      <cString> Return the mask with all the parameters inserted.
+ *      <cString> Return the mask with all the parameters inserted.   </par>
  *  $DESCRIPTION$
  *      String replacment, can be useful when writing international
  *      apps. You can separate the constant strings from the variable ones.
  *      Each %1 - %9 marks will be replaced with the appropriate parameter
- *      from the parameter list.
- *      Marks can be in any order, and can be duplicated.
- *      You can print "%" character with "%%".
+ *      from the parameter list.   </par>
+ *      Marks can be in any order, and can be duplicated.   </par>
+ *      You can print "%" character with "%%".   </par>
  *  $EXAMPLES$
  *      StrFormat("Please insert disk %1 to drive %2", LTrim(Str(2)), "A:")
  *      StrFormat("This is %1 from %2", "Victor", "Hungary")
  *      StrFormat("%2 %1 %2", "Param1", "Param2")
+ *   </fixed>
  *  $TESTS$
  *      ? StrFormat("Please insert disk %1 to drive %2", LTrim(Str(2)), "A:")
  *      ? StrFormat("This is %1 from %2", "Victor", "Hungary")
@@ -50,10 +51,11 @@
  *      ? StrFormat("%2 - %", "one", "two")
  *      ? StrFormat("%% - %", "one", "two")
  *      ? StrFormat("%9 - %", "one", "two")
+ *  </fixed>
  *  $STATUS$
  *      Done
  *  $COMPLIANCE$
- *      All platforms
+ *      All platforms   </par>
  *  $END$
  */
 
