@@ -7,6 +7,14 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * source/vm/arrayshb.c
+    ! Adel() fixed - second parameter = 1 by default
+
+2002-02-11 12:15 UTC+0100 Ignacio Ortiz <ignacio@fivetech.com>
+  * source/rtl/Tget.prg
+    * Minor modifications proposed by Walter Negro
+
+2002-02-11 05:30 UTC+0100 Antonio Linares <alinares@fivetech.com>
   * contrib/hgf/win32/make_b32.bat
   * contrib/hgf/win32/makefile.bc
   * contrib/hgf/win32/makefile.vc
