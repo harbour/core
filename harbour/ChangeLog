@@ -1,3 +1,16 @@
+19990908-00:05 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/environ.c
+    ! Version 1.43 added Windows code to detect the Windows version, but
+      it also replaced the DOS code to detect Windows with Windows code
+      to detect Windows. But Borland C 3.1 refuses to compile Windows code
+      when creating DOS programs and I suspect that other DOS compilers do
+      the same. So I restored version 1.42 and then put the Windows code 
+      from version 1.43 back in the only place where it belongs.
+    - I removed the "95/98" designation from the Windows detection in DOS
+      mode, because that code should also be able to detect Windows 3.x.
+  * source/rtl/tget.prg
+    ! Added missing ::Display() at end of ::Delete()
+
 19990908-04:52 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/working/rtl_test.prg
     + Some tests now are only included when compiled with Harbour, to skip

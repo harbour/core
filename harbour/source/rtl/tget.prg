@@ -741,6 +741,7 @@ METHOD _Delete() CLASS TGet
    endcase
 
    ::Assign()
+   ::Display()
 
 return Self
 
