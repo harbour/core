@@ -1,3 +1,18 @@
+2000-05-29 21:00 GMT -3 Luiz Rafaek Culik <culik@sl.conex.net>
+  *contrib/libmisc/doc/gendoc.bat
+   contrib/libmisc/doc/gendoc.cmd
+     *small changes
+  *contrib/libmisc/doc/gendoc.rsp
+     +dates2.txt added
+  +contrib/libmisc/doc/en/dates2.txt
+     *docs provided by Jose Lanin
+  +contrib/hbzlib/zipfile2.c
+     *interface to the unzip function
+  *contrib/hbzlib/zipfile1.c
+     *Added HB_UNZIPFILE() function
+  *contrib/hbzlib/makefile.bc
+     *added zipfile2.c to dependencies
+
 2000-05-29 22:41 UTC+0200 JFl&RaC <jfl@mafact.com>,<rac@mafact.com>
  *Some test prog for the new classes and accepted syntax
  +harbour/tests/DELEGAT.PRG
