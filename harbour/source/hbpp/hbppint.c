@@ -32,11 +32,11 @@
    their web site at http://www.gnu.org/).
  */
 
-#if defined(__GNUC__)
+#if defined(__GNUC__) || defined(__WATCOMC__)
  #include <string.h>
  #include <stdlib.h>
 #else
- #if (defined(_MSC_VER) || defined(__IBMCPP__) || defined(__WATCOMC__))
+ #if ( defined(_MSC_VER) || defined(__IBMCPP__) )
   #include <memory.h>
   #include <stdlib.h>
  #else

@@ -1,3 +1,14 @@
+19990824-14:55 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.y
+	* corrected arguments type checking in Inc/Dec functions
+	
+    *source/hbppint.h
+	* memory.h is not defined in WATCOM C/C++
+	
+    *include/rddapi.h
+	* added forward declaration for _AREA struct
+	
 19990824-11:07 GMT+1 Bruno Cantero <bruno@issnet.net>
    * funclist.txt
      include/rddapi.h

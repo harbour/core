@@ -115,6 +115,12 @@ typedef USHORT ERRCODE;
 #define APPEND_LOCK        7
 #define APPEND_UNLOCK      8
 
+/* forward declarations  
+ */
+struct _RDDFUNCS;       
+struct _AREA;
+
+
 typedef struct _FILEINFO
 {
    FHANDLE hFile;
@@ -480,7 +486,7 @@ typedef FIELD * LPFIELD;
 *
 *  Information to administrate the workarea
 */
-struct _RDDFUNCS;       /* forward declaration */
+
 
 typedef struct _AREA
 {

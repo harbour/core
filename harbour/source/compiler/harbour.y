@@ -3625,11 +3625,13 @@ void Inc( void )
       else
         debug_msg( "\n* *Inc() Compile time stack overflow\n", NULL );
 
-
-      if( pStackValType && pStackValType->cType == ' ' )
-         GenWarning( _szCWarnings, 'W', WARN_NUMERIC_SUSPECT, NULL, NULL );
-      else if( pStackValType->cType != 'N' )
-         GenWarning( _szCWarnings, 'W', WARN_NUMERIC_TYPE, sType, NULL );
+    if( pStackValType )
+    {
+	if(  pStackValType->cType == ' ' )
+	    GenWarning( _szCWarnings, 'W', WARN_NUMERIC_SUSPECT, NULL, NULL );
+	else if( pStackValType->cType != 'N' )
+	    GenWarning( _szCWarnings, 'W', WARN_NUMERIC_TYPE, sType, NULL );
+    }
    }
 }
 
@@ -4372,10 +4374,13 @@ void Dec( void )
       else
         debug_msg( "\n***Dec() Compile time stack overflow\n", NULL );
 
-      if( pStackValType && pStackValType->cType == ' ' )
-         GenWarning( _szCWarnings, 'W', WARN_NUMERIC_SUSPECT, NULL, NULL );
-      else if( pStackValType->cType != 'N' )
-         GenWarning( _szCWarnings, 'W', WARN_NUMERIC_TYPE, sType, NULL );
+    if( pStackValType )
+    {
+	if( pStackValType->cType == ' ' )
+	    GenWarning( _szCWarnings, 'W', WARN_NUMERIC_SUSPECT, NULL, NULL );
+	else if( pStackValType->cType != 'N' )
+	    GenWarning( _szCWarnings, 'W', WARN_NUMERIC_TYPE, sType, NULL );
+    }
    }
 }
 
