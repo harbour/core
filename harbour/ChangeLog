@@ -1,3 +1,8 @@
+19991011-04:59 GMT+8 Ron Pinkas <Ron@Profit-Master.com>
+   * harbour.y
+          + SetLastPushPos() to bookmark position of last possible redundant push.
+          + RemoveExtraPush() to reset pFunc->lpCodePos to last known bookmark - in effect removing redundant last push.
+
 19991011-13:42 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/vm/hvm.c
      * Finally fixed. Victor changed a wrong one I posted and
