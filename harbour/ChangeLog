@@ -8,6 +8,19 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+2004-05-03 05:04 UTC+0200 Ilias Lazaridis <ilias@lazaridis.com>
+   * source/include/hbinit.h
+     + added macro HB_USE_PRAGMA_STARTUP
+
+   * source/include/hdcdpapi.h
+     + added macro HB_CODEPAGE_INIT
+
+   * source/codepage/cdpesdos.c
+     ! used HB_USE_PRAGMA_STARTUP and HB_CODEPAGE_INIT
+       (changes are applyable to other cdp*.c files, too, but will wait
+        until cdpesdos.c is completely reworked)
+
 2004-05-02 09:25 UTC+0300 Chen Kedem <niki@actcom.co.il>
   * doc/howtocvs.txt
     * Change references to CVSROOT (according to SourceForge documents)
