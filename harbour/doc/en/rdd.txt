@@ -1731,38 +1731,27 @@
  *  $SYNTAX$
  *      FIELDPUT(<nField>, <expAssign>) --> ValueAssigned
  *  $ARGUMENTS$
- *    <nField> is the ordinal position of the field in the current
- *   database file.
- *
- *      <expAssign> is the value to assign to the given field.  The data
- *   type of this expression must match the data type of the designated field
- *   variable.
+ *      <nField> The field numeric position
+ *  
+ *      <expAssign> Expression to be assigned to the specified field
  *  $RETURNS$
- *      FIELDPUT() returns the value assigned to the designated field.  If
- *   <nField> does not correspond to the position of any field in the current
- *   database file, FIELDPUT() returns NIL.
+ *      <ValueAssigned> Any expression
  *  $DESCRIPTION$
- *      FIELDPUT() is a database function that assigns <expAssign> to the field
- *   at ordinal position <nField> in the current work area.  This function
- *   allows you to set the value of a field using its position within the
- *   database file structure rather than its field name.  Within generic
- *   database service functions this allows, among other things, the setting
- *   of field values without use of the macro operator.
+ *      This function assings the value in <expAssing> to the <nField>th
+ *      field in the current or designated work area.If the operation is
+ *      successful,the return value of the function will be the same value
+ *      assigned to the specified field.If the operation is not successful,
+ *      the function will return a NIL data type
  *  $EXAMPLES$
- *      This example compares FIELDPUT() to functionally equivalent
- *      code that uses the macro operator to set the value of a field:
- *
- *      // Using macro operator
- *      FName := FIELD(nField)         // Get field name
- *      FIELD->&FName := FVal          // Set field value
- *      // Using FIELDPUT()
- *      FIELDPUT(nField, FVal)         // Set field value
+ *      USE Tests New
+ *      FIELDPUT(1,"Mr. Jones")
+ *      USE
  *  $TESTS$
  *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is CA-Clipper compatible.
  *  $SEEALSO$
  *      FIELDGET()
  *  $INCLUDE$
@@ -1776,88 +1765,31 @@
  *  $CATEGORY$
  *      Data Base
  *  $ONELINER$
- *      Lock an open and shared database file
+ *      Locks a file
  *  $SYNTAX$
  *      FLOCK() --> lSuccess
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *      FLOCK() returns true (.T.) if an attempt to lock a database file in USE
- *   in the current work area succeeds; otherwise, it returns false (.F.).
- *   For more information on file locking, refer to the Network Programming
- *   chapter in the Programming and Utilities guide.
- *
+ *      <lSuccess> A true (.T.) value, if the lock was successful;otherwise
+ *      false (.F.)
  *  $DESCRIPTION$
- *      FLOCK() is a database function used in network environments to lock an
- *   open and shared database file, preventing other users from updating the
- *   file until the lock is released.  Records in the locked file are
- *   accessible for read-only operations.
- *
- *      FLOCK() is related to USE...EXCLUSIVE and RLOCK().  USE...EXCLUSIVE
- *   opens a database file so that no other user can open the same file at
- *   the same time and is the most restrictive locking mechanism in
- *   HARBOUR.  RLOCK() is the least restrictive and attempts to place an
- *   update lock on a shared record, precluding other users from updating the
- *   current record.  FLOCK() falls in the middle.
- *
- *    FLOCK() is used for operations that access the entire database file.
- *   Typically, these are commands that update the file with a scope or a
- *   condition such as DELETE or REPLACE ALL.  The following is a list of
- *   such commands:
- *
- *   Commands that require an FLOCK()
- *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
- *   Command                       Mode
- *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
- *   APPEND FROM                   FLOCK() or USE...EXCLUSIVE
- *   DELETE (multiple records)     FLOCK() or USE...EXCLUSIVE
- *   RECALL (multiple records)     FLOCK() or USE...EXCLUSIVE
- *   REPLACE (multiple records)    FLOCK() or USE...EXCLUSIVE
- *   UPDATE ON                     FLOCK() or USE...EXCLUSIVE
- *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
- *
- *      For each invocation of FLOCK(), there is one attempt to lock the
- *   database file, and the result is returned as a logical value.  A file
- *   lock fails if another user currently has a file or record lock for the
- *   same database file or EXCLUSIVE USE of the database file.  If FLOCK() is
- *   successful, the file lock remains in place until you UNLOCK, CLOSE the
- *   DATABASE, or RLOCK().
- *
- *      By default, FLOCK() operates on the currently selected work area as
- *   shown in the example below.
- *
- *      Notes
- *
- *      SET RELATION: HARBOUR does not automatically lock all work
- *      areas in the relation chain when you lock the current work area, and
- *      an UNLOCK has no effect on related work areas.
+ *      This function returns a logical true (.T.0 if a file lock is
+ *      attempted and is successfully placed on the current or designated
+ *      database.This function will also unlock all records locks placed
+ *      by the same network station.
  *  $EXAMPLES$
- *      This example uses FLOCK() for a batch update of prices in
- *      Inventory.dbf:
- *
- *      USE Inventory NEW
+ *      USE Tests New
  *      IF FLOCK()
- *         REPLACE ALL Inventory->Price WITH ;
- *               Inventory->Price * 1.1
- *      ELSE
- *         ? "File not available"
+ *         SUM Tests->Ammount
  *      ENDIF
- *
- *      This example uses an aliased expression to attempt a file lock
- *      in an unselected work area:
- *
- *      USE Sales NEW
- *      USE Customer NEW
- *      //
- *      IF !Sales->(FLOCK())
- *         ? "Sales is in use by another"
- *      ENDIF
+ *      USE
  *  $TESTS$
  *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is CA-Clipper compatible
  *  $SEEALSO$
  *      RLOCK()
  *  $INCLUDE$
@@ -1877,76 +1809,26 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *      FOUND() returns true (.T.) if the last search command was successful;
- *   otherwise, it returns false (.F.).
- *
+ *      <lSuccess> A logical true (.T.) is successful;otherwise, false (.F.)
  *  $DESCRIPTION$
- *      FOUND() is a database function that determines whether a search
- *   operation (i.e., FIND, LOCATE, CONTINUE, SEEK, or SET RELATION)
- *   succeeded.  When any of these commands are executed, FOUND() is set to
- *   true (.T.) if there is a match; otherwise, it is set to false (.F.).
- *
- *      If the search command is LOCATE or CONTINUE, a match is the next record
- *   meeting the scope and condition.  If the search command is FIND, SEEK or
- *   SET RELATION, a match is the first key in the controlling index that
- *   equals the search argument.  If the key value equals the search
- *   argument, FOUND() is true (.T.); otherwise, it is false (.F.).
- *
- *      The value of FOUND() is retained until another record movement command
- *   is executed.  Unless the command is another search command, FOUND() is
- *   automatically set to false (.F.).
- *
- *      Each work area has a FOUND() value.  This means that if one work area
- *   has a RELATION set to a child work area, querying FOUND() in the child
- *   returns true (.T.) if there is a match.
- *
- *      By default, FOUND() operates on the currently selected work area.  It
- *   can be made to operate on an unselected work area by specifying it
- *   within an aliased expression (see example below).
- *
- *    FOUND() will return false (.F.) if there is no database open in the
- *   current work area.
+ *      This function is used to test if the previous SEEK,LOCATE,CONTINUE,
+ *      or FIND operation was successful.Each wrk area has its own FOUND()
+ *      flag,so that a FOUND() condition may be tested in unselected work
+ *      areas by using an alias.
  *  $EXAMPLES$
- *      This example illustrates the behavior of FOUND() after a
- *      record movement command:
- *
- *      USE Sales INDEX Sales
- *      ? INDEXKEY(0)            // Result: SALESMAN
- *      SEEK "1000"
- *      ? FOUND()                // Result: .F.
- *      SEEK "100"
- *      ? FOUND()                // Result: .T.
- *      SKIP
- *      ? FOUND()                // Result: .F.
- *
- *      This example tests a FOUND() value in an unselected work area
- *      using an aliased expression:
- *
- *      USE Sales INDEX Sales NEW
- *      USE Customer INDEX Customer NEW
- *      SET RELATION TO CustNum INTO Sales
- *      //
- *      SEEK "Smith"
- *      ? FOUND(), Sales->(FOUND())
- *
- *      This code fragment processes all Customer records with the key
- *      value "Smith" using FOUND() to determine when the key value changes:
- *
- *      USE Customer INDEX Customer NEW
- *      SEEK "Smith"
- *      DO WHILE FOUND()
- *         .
- *         . <statements>
- *         .
- *         SKIP
- *         LOCATE REST WHILE Name == "Smith"
- *      ENDDO
+ *      nId:=100
+ *      USE Tests NEW INDEX Tests
+ *      SEEK nId
+ *      IF FOUND()
+ *        ? Tests->Name
+ *      ENDIF
+ *      USE
  *  $TESTS$
  *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is CA-Clipper compatible
  *  $SEEALSO$
  *      EOF()
  *  $INCLUDE$
@@ -1960,47 +1842,29 @@
  *  $CATEGORY$
  *      Data Base
  *  $ONELINER$
- *      Return the current database file header length
+ *      Return the length of a database file header 
  *  $SYNTAX$
  *      HEADER() --> nBytes
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *     HEADER() returns the number of bytes in the header of the current
- *   database file as an integer numeric value.  If no database file is in
- *   use, HEADER() returns a zero (0).
+ *      <nBytes> The numeric size of a database file header in bytes
  *  $DESCRIPTION$
- *     HEADER() is a database function that is used with LASTREC(), RECSIZE(),
- *   and DISKSPACE() to create procedures for backing up files.
+ *      This function returns the number of bytes in the header of the
+ *      selected database ot the database in the designated work area.
  *
- *     By default, HEADER() operates on the currently selected work area.  It
- *   will operate on an unselected work area if you specify it as part of an
- *   aliased expression (see example below).
+ *      If used in conjunction with the LASTREC(),RECSIZE() and DISKSPACE()
+ *      functions,this functions is capable of implementing a backup and
+ *      restore routine.
  *  $EXAMPLES$
- *     This example determines the header size of the Sales.dbf:
- *
- *      USE Sales NEW
- *      ? HEADER()            // Result: 258
- *
- *     This example defines a pseudofunction, DbfSize(), that uses
- *      HEADER() with RECSIZE() and LASTREC() to calculate the size of the
- *      current database file in bytes:
- *
- *      #define DbfSize()   ((RECSIZE() * LASTREC()) + ;
- *            HEADER() + 1)
- *
- *      Later you can use DbfSize() as you would any function:
- *
- *      USE Sales NEW
- *      USE Customer NEW
- *      ? DbfSize()
- *      ? Sales->(DbfSize())
+ *      USE Tests New
+ *      ? Header()
  *  $TESTS$
  *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is CA-Clipper compatible
  *  $SEEALSO$
  *      DISKSPACE(),LASTREC(),RECSIZE()
  *  $INCLUDE$

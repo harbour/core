@@ -569,6 +569,10 @@ FUNCTION ProcessRtf()
                             Else
                               oRtf:WriteParText(  " "+ ALLTRIM(cBuffer) +" ")                             
                             endif
+                     ELSEIF   StrPos(cBuffer)=12
+                          cBuffer:=Substr(cBuffer,6)
+                          oRtf:WriteParNoIndent(cBuffer+" ")
+
                      ELSEIF AT("<",cBuffer)> 0
                         nPos := AT("<",cBuffer)
                         if  nPos>0   .and. nPos<12
@@ -784,15 +788,9 @@ func filesize(cfile)
 return nretval
 */
 FUNCTION  ProcRtfDesc(cBuffer,lBlankLine,oRtf,lPar)
-LOCAL nPos:=0
-LOCAL ePos:=0
           IF   StrPos(cBuffer)=12
-                nPos := AT("           ",cBuffer)
- //             ePos := StrPos(cBuffer)
-  //            ? nPos
-   //           inkey(0)
-              cBuffer:=Substr(cBuffer,3)
-              oRtf:WritePar(cBuffer+" ")
+              cBuffer:=Substr(cBuffer,6)
+              oRtf:WriteParNoIndent(cBuffer+" ")
               lPar:=.f.
           ELSEIF lPar
               oRtf:WritePar(cBuffer+" ")
@@ -805,7 +803,6 @@ LOCAL ePos:=0
               lPar:=.T.
           ELSE    
               oRtf:WriteParText(" "+alltrim(cBuffer))
-              lPar:=.F.
           ENDIF
 
 RETURN lPar

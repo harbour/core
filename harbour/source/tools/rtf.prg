@@ -51,6 +51,7 @@ CLASS TRTF
    METHOD New( cFile )
    METHOD WritePar( cPar )
    METHOD WriteParText( cPar )
+   METHOD WriteParNoIndent(cPar)
    METHOD WriteLink( clink )
    METHOD WriteJumpLink( clink )
    METHOD Close()
@@ -117,8 +118,14 @@ RETURN Self
 METHOD WritePar( cPar ) CLASS TRTF
    cPar:=StrTran(cPar,"{","\{")
    cPar:=StrTran(cPar,"}","\}")
-   FWRITE( Self:nHandle, '\par \pard\cf1\f6\fs20\b0\i0\li300' + HB_OEMTOANSI(cPar )+CRLF)
+   FWRITE( Self:nHandle, '\par'+CRLF+ '\pard\cf1\f6\fs20\b0\i0\li300' + HB_OEMTOANSI(cPar )+CRLF)
 RETURN Self
+METHOD WriteParNoIndent( cPar ) CLASS TRTF
+   cPar:=StrTran(cPar,"{","\{")
+   cPar:=StrTran(cPar,"}","\}")
+   FWRITE( Self:nHandle, '\par'+CRLF+ '\pard\cf1\f8\fs20\b0\i0' + cPar +CRLF)
+RETURN Self
+
 METHOD WriteParText( cPar ) CLASS TRTF
    cPar:=StrTran(cPar,"{","\{")
    cPar:=StrTran(cPar,"}","\}")

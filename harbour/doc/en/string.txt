@@ -22,6 +22,8 @@
  *    LEFT()      Documentation
  *    RIGHT()     Documentation
  *    SUBSTR()    Documentation  
+ *    UPPER()     Documentation  
+ *    LOWER()     Documentation
  *
  * See doc/license.txt for licensing terms.
  *
@@ -715,3 +717,66 @@
  *      HB_ANSITOOEM()
  *  $END$
  */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      LOWER()
+ *  $CATEGORY$
+ *      Strings()
+ *  $ONELINER$
+ *      Universally lowercases a character string expression.
+ *  $SYNTAX$
+ *      LOWER( <cString> ) --> cLowerString
+ *  $ARGUMENTS$
+ *      <cString> Any character expression.  
+ *  $RETURNS$
+ *      <cLowerString> Lowercased value of <cString>
+ *  $DESCRIPTION$
+ *      This function converts any character expression passes as <cString>
+ *      to its lowercased representation.Any nonalphabetic character withing
+ *      <cString> will remain unchanged.
+ *  $EXAMPLES$
+ *      ? Lower("HARBOUR")
+ *      ? Lower("Hello All")
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is CA-Clipper compatible
+ *  $PLATFORMS$
+ *      ALL
+ *  $SEEALSO$
+ *      UPPER(),ISLOWER(),ISUPPER()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      UPPER()
+ *  $CATEGORY$
+ *      Strings
+ *  $ONELINER$
+ *      Converts a character expression to uppercase format
+ *  $SYNTAX$
+ *      UPPER( <cString> ) --> cUpperString
+ *  $ARGUMENTS$
+ *      <cString> Any character expression.  
+ *  $RETURNS$
+ *      <cUpperString> Uppercased value of <cString>
+ *  $DESCRIPTION$
+ *      This function converts all alpha characters in <cString> to upper
+ *      case values and returns that formatted character expression.
+ *  $EXAMPLES$
+ *      ? UPPER("harbour")
+ *      ? UPPER("Harbour")
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is CA-Clipper compatible
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      LOWER(),ISUPPER(),ISLOWER()
+ *  $END$
+ */
+

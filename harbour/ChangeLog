@@ -1,3 +1,16 @@
+20000304-08:20 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+  *utils/hbdoc/genrtf.prg
+  *source/tools/rtf.prg
+      *small changes
+  *utils/hbdoc/genhtm.prg
+      *Fixed warnings reported by Andi
+  *doc/en/rdd.txt
+    *some docs changed
+  *doc/en/set.txt
+  *doc/en/browse.txt
+  *doc/en/string.txt
+    *Small formating
+
 20000303-17:50 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
   *utils/hbdoc/genrtf.prg
       *small changes

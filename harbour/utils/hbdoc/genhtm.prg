@@ -122,8 +122,8 @@ FUNCTION ProcessWww()
    LOCAL lFirstPass:= .T.
    LOCAL lFirstArg := .T.
    LOCAL lData := .F.
-   LOCAL lEndDataLink := .F.
-   LOCAL lEndMethodLink := .F.
+   LOCAL lIsDataLink := .F.
+   LOCAL lIsMethodLink := .F.
    LOCAL lMethod := .F.
    LOCAL cDoc       := DELIM + "DOC" + DELIM                   // DOC keyword
    LOCAL cEnd       := DELIM + "END" + DELIM                   // END keyword
@@ -672,7 +672,7 @@ FUNCTION ProcessWww()
                   ohtm:WriteText('<DD><P>')
                   nMode     := D_DATALINK
                   lAddBlank := .T.
-                  lEnddatalink := .T.
+//                  lEnddatalink := .T.
                   lIsDataLink := .T.
 
                ELSEIF AT( cDatanolink, cBuffer ) > 0
@@ -683,7 +683,7 @@ FUNCTION ProcessWww()
                   endif
                   nMode     := D_NORMAL
                   lAddBlank := .T.
-                  lEndDatalink:=.t.
+//                  lEndDatalink:=.t.
 
                ELSEIF AT(  cMethodslink, cBuffer ) > 0
 
@@ -691,7 +691,7 @@ FUNCTION ProcessWww()
                   ohtm:WriteText('<DD><P>')
                   nMode     := D_METHODLINK
                   lAddBlank := .T.
-                  lEndMethodlink := .T.
+  //                lEndMethodlink := .T.
                   lIsMethodLink := .T.
 
                ELSEIF AT(  cMethodsnolink, cBuffer ) > 0
@@ -703,7 +703,7 @@ FUNCTION ProcessWww()
 
                   nMode     := D_NORMAL
                   lAddBlank := .T.
-                  lEndMethodlink := .T.
+//                  lEndMethodlink := .T.
 
 
                ELSEIF AT( cExam, cBuffer ) > 0

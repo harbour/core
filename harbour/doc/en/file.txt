@@ -57,7 +57,6 @@
  *           65         Share write only
  *           66         Share read/write
  *
- *
  *      If there is an error in opening a file, a -1 will be returned by
  *      the function.Files handles may be in the range of 0 to 65535. The
  *      status of the SET DEFAULT TO and SET PATH TO commands has no effect
