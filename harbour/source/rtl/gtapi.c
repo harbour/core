@@ -1,97 +1,304 @@
-#include <stdio.h>
-#include <types.h>
+/*
+ *  WARNING !!! DOS specific
+ */
 
-#ifdef __BORLANDC__
-   #include <conio.h>
-#endif
+#include <dos.h>
+#include <gtapi.h>
 
-#define SC_NONE     0   /* None */
-#define SC_NORMAL   1   /* Underline */
-#define SC_INSERT   2   /* Lower half block */
-#define SC_SPECIAL1 3   /* Full block */
-#define SC_SPECIAL2 4   /* Upper half block */
+#define VIDEO_INT 0x10
 
-int _gtGetPos( USHORT * uipRow, USHORT * uipCol )
+static WORD  suiRow        = 0;
+static WORD  suiCol        = 0;
+static WORD  suiDispCount  = 0;
+static WORD  suiMaxRow     = 24;
+static WORD  suiMaxCol     = 79;
+static BYTE *sfpScreenBuffer;
+static WORD  suiAttribs[ 4 ] = { 0x07, 0x70, 0x00, 0x00, 0x07 };
+static WORD  suiAttrIndex = 0;
+
+HARBOUR TERMINIT( void )
 {
-   #ifdef __BORLANDC__
-      * uipRow = wherey();
-      * uipCol = wherex();
-   #endif
+  WORD uiRectSize;
 
-   return 0;
+  _gtRectSize( 0, 0, suiMaxRow, suiMaxCol, &uiRectSize );
+  sfpScreenBuffer = ( BYTE * )_xgrab( uiRectSize );
 }
 
-int _gtSetPos( USHORT uiRow, USHORT uiCol )
+HARBOUR TERMDONE( void )
 {
-   #ifdef __BORLANDC__
-      gotoxy( uiRow, uiCol );
-   #endif
-
-   return 0;
+  _xfree( sfpScreenBuffer );
 }
 
-int _gtMaxCol( void )
+ERRORCODE _gtBox( WORD uiTop, WORD uiLeft, WORD uiBottom, WORD uiRight, BYTE *fpBoxString )
 {
-   #ifdef __BORLANDC__
-      struct text_info ti;
-      gettextinfo( &ti );
+  int iCount;
 
-      return ti.screenwidth;
-   #else
-      return 0;
-   #endif
+  if ( uiTop > _gtMaxRow() || uiBottom > _gtMaxRow() ||
+       uiLeft > _gtMaxCol() || uiRight > _gtMaxCol() ||
+       uiTop > uiBottom || uiLeft > uiRight )
+    return 1;
+
+  _gtDispBegin();
+
+  /* left upper corner */
+  _gtSetPos( uiTop, uiLeft );
+  _gtWrite( fpBoxString, 1 );
+
+  /* top line */
+  _gtRepChar( uiTop, uiLeft + 1, fpBoxString[ 1 ], uiRight - uiLeft - 2 );
+
+  /* right upper corner */
+  _gtSetPos( uiTop, uiLeft );
+  _gtWrite( &fpBoxString[ 2 ], 1 );
+
+  /* left and right */
+  for ( iCount = uiTop; iCount < uiBottom; iCount ++ )
+    {
+      _gtSetPos( iCount, uiLeft );
+      _gtWrite( &fpBoxString[ 3 ], 1 );
+
+      _gtSetPos( iCount, uiRight );
+      _gtWrite( &fpBoxString[ 4 ], 1 );
+    }
+
+  /* left bottom corner */
+  _gtSetPos( uiBottom, uiLeft );
+  _gtWrite( &fpBoxString[ 5 ], 1 );
+
+  /* top line */
+  _gtRepChar( uiTop, uiLeft + 1, fpBoxString[ 6 ], uiRight - uiLeft - 2 );
+
+  /* right bottom corner */
+  _gtSetPos( uiTop, uiLeft );
+  _gtWrite( &fpBoxString[ 7 ], 1 );
+
+  _gtDispEnd();
+  return 0;
 }
 
-int _gtMaxRow( void )
+ERRORCODE _gtBoxD( WORD uiTop, WORD uiLeft, WORD uiBottom, WORD uiRight )
 {
-   #ifdef __BORLANDC__
-      struct text_info ti;
-      gettextinfo( &ti );
-
-      return ti.screenheight;
-   #else
-      return 0;
-   #endif
+  return _gtBox( uiTop, uiLeft, uiBottom, uiRight, _B_DOUBLE );
 }
 
-int _gtWrite( BYTE * fpStr, USHORT uiLen )
+ERRORCODE _gtBoxS( WORD uiTop, WORD uiLeft, WORD uiBottom, WORD uiRight )
 {
-   USHORT u = 0;
-
-   while( u < uiLen )
-      printf( "%c", * ( fpStr + u++ ) );
-
-   return 0;
+  return _gtBox( uiTop, uiLeft, uiBottom, uiRight, _B_SINGLE );
 }
 
-int _gtGetCursor( USHORT * uipCursorShape )
+ERRORCODE _gtColorSelect( WORD uiColorIndex )
 {
-   USHORT startLine = 0, endLine = 0;
+  if ( uiColorIndex > 4 )
+    return 1;
 
-   #ifdef __BORLANDC__
-      asm pusha;
-      _BH = 0;
-      _AH = 3;
-      asm int 0x10;
-      startLine = _CH;
-      endLine = _CL;
-      asm popa;
-   #endif
-
-   if( ( startLine == 0 ) && ( endLine == 0 ) )
-      * uipCursorShape = SC_NONE;
-
-   else if( ( startLine == 0 ) && ( endLine == 1 ) )
-      * uipCursorShape = SC_NORMAL;
-
-   else if( ( startLine == 0 ) && ( endLine == 3 ) )
-      * uipCursorShape = SC_INSERT;
-
-   else if( ( startLine == 0 ) && ( endLine == 7 ) )
-      * uipCursorShape = SC_SPECIAL1;
-
-   else if( ( startLine == 4 ) && ( endLine == 7 ) )
-      * uipCursorShape = SC_SPECIAL2;
-
-   return 0;
+  suiAttrIndex = uiColorIndex;
+  return 0;
 }
+
+ERRORCODE _gtDispBegin( void )
+{
+  suiDispCount ++;
+  return 0;
+}
+
+ERRORCODE _gtDispCount( void )
+{
+  return suiDispCount;
+}
+
+ERRORCODE _gtDispEnd( void )
+{
+  suiDispCount --;
+
+  if ( !suiDispCount )
+    {
+      _gtFlush();
+      _gtUpdateCursor();
+    }
+
+  return 0;
+}
+
+ERRORCODE _gtFlush( void )
+{
+  BYTE *fpVideoMemory;
+
+  /* get address of video memory */
+  
+  return 0;
+}
+
+ERRORCODE _gtGetColorStr( BYTE *fpColorString )
+{
+  return 0;
+}
+
+ERRORCODE _gtGetCursor( WORD *uipCursorShape )
+{
+  return 0;
+}
+
+ERRORCODE _gtGetPos( WORD *uipRow, WORD *uipCol )
+{
+  *uipRow = suiRow;
+  *uipCol = suiCol;
+
+  return 0;
+}
+
+BOOL _gtIsColor( void )
+{
+  return TRUE;
+}
+
+WORD _gtMaxCol( void )
+{
+  return suiMaxCol;
+}
+
+WORD _gtMaxRow( void )
+{
+  return suiMaxRow;
+}
+
+void _gtPostExt( void )
+{
+}
+
+void _gtPreExt( void )
+{
+}
+
+ERRORCODE _gtRectSize( WORD uiTop, WORD uiLeft, WORD uiBottom, WORD uiRight, WORD *uipBuffSize )
+{
+  if ( uiTop > _gtMaxRow() || uiBottom > _gtMaxRow() ||
+       uiLeft > _gtMaxCol() || uiRight > _gtMaxCol() ||
+       uiTop > uiBottom || uiLeft > uiRight )
+    return 1;
+
+  *uipBuffSize = ( uiBottom - uiTop  + 1 ) * ( uiRight - uiLeft + 1 ) * 2;
+  return 0;
+}
+
+ERRORCODE _gtRepChar( WORD uiRow, WORD uiCol, WORD uiChar, WORD uiCount )
+{
+  char buff[ 255 ];
+
+  memset( buff, uiChar, uiCount );
+  buff[ uiCount ] = 0x0;
+  _gtSetPos( uiRow, uiCol );
+  _gtWrite( buff, uiCount );
+  return 0;
+}
+
+ERRORCODE _gtRest( WORD uiTop, WORD uiLeft, WORD uiBottom, WORD uiRight, BYTE *fpScrBuff )
+{
+  return 0;
+}
+
+ERRORCODE _gtSave( WORD uiTop, WORD uiLeft, WORD uiBottom, WORD uiRight, BYTE *fpScrBuff )
+{
+  return 0;
+}
+
+ERRORCODE _gtScrDim( WORD *uipHeight, WORD *uipWidth )
+{
+  *uipHeight = suiMaxRow;
+  *uipWidth  = suiMaxCol;
+  return 0;
+}
+
+ERRORCODE _gtScroll( WORD uiTop, WORD uiLeft, WORD uiBottom, WORD uiRight, SHORT iRows, SHORT iCols )
+{
+  return 0;
+}
+
+ERRORCODE _gtSetBlink( BOOL bBlink )
+{
+  return 0;
+}
+
+ERRORCODE _gtSetColorStr( BYTE *fpColorString )
+{
+  return 0;
+}
+
+ERRORCODE _gtSetCursor( WORD uiCursorShape )
+{
+  return 0;
+}
+
+ERRORCODE _gtSetMode( WORD uiRows, WORD uiCols )
+{
+  if ( suiMaxRow != uiRows || suiMaxCol != uiCols )
+    {
+      suiMaxRow = uiRows;
+      suiMaxCol = uiCols;
+
+      /* change buffer */
+    }
+
+  return 0;
+}
+
+ERRORCODE _gtSetPos( WORD uiRow, WORD uiCol )
+{
+  if ( uiRow > _gtMaxRow() || uiCol > _gtMaxCol() )
+    return 1;
+
+  suiRow = uiRow;
+  suiCol = uiCol;
+  _gtUpdateCursor();
+
+  return 0;
+}
+
+ERRORCODE _gtSetSnowFlag( BOOL bNoSnow )
+{
+  return 0;
+}
+
+ERRORCODE _gtUpdateCursor( void )
+{
+  union REGS regs;
+
+  regs.h.ah = 2;  /* set cursor position */
+  regs.h.bh = 0;
+  regs.h.dh = suiRow;
+  regs.h.dl = suiCol;
+
+  int86( VIDEO_INT, &regs, &regs );
+
+  return 0;
+}
+
+ERRORCODE _gtWrite( BYTE *fpStr, WORD uiLen )
+{
+  int iOffset = suiRow * suiMaxRow + suiCol;
+  int iCount;
+
+  for ( iCount = 0; uiLen > 0; iCount ++, uiLen --, iOffset += 2 )
+    {
+      sfpScreenBuffer[ iOffset ] = fpStr[ iCount ];
+      sfpScreenBuffer[ iOffset + 1 ] = suiAttribs[ suiAttrIndex ];
+    }
+
+  if ( !suiDispCount )
+    _gtFlush();
+
+  return 0;
+}
+
+ERRORCODE _gtWriteAt( WORD uiRow, WORD uiCol, BYTE *fpStr, WORD uiLen )
+{
+  if ( !_gtSetPos( uiRow, uiCol ) )
+    return _gtWrite( fpStr, uiLen );
+
+  return 1;
+}
+
+ERRORCODE _gtWriteCon( BYTE *fpStr, WORD uiLen )
+{
+  return 0;
+}
+
