@@ -5901,7 +5901,7 @@ HARBOUR HB_ORDBAGEXT( void )
       else
       {
          pInfo.itmResult = hb_itemPutC( NULL, "" );
-         SELF_ORDINFO( ( AREAP ) pCurrArea->pArea, DBOI_BAGEXT, &pInfo );
+         SELF_ORDINFO( pTempArea, DBOI_BAGEXT, &pInfo );
          hb_retc( pInfo.itmResult->item.asString.value );
          hb_itemRelease( pInfo.itmResult );
          SELF_RELEASE( ( AREAP ) pTempArea );

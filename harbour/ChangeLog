@@ -1,3 +1,8 @@
+20000117-16:05 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/rdd/dbcmd.c
+	* fixed GPF in ORDBAGEXT()
+	
 20000117-13:30 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/type.c
