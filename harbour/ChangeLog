@@ -1,3 +1,9 @@
+19990605-00:22 CET Eddie Runia
+  * tests/broken/exittest.prg; tests/broken/codebloc.prg
+    removed, since they work !
+  * tests/working/exittest.prg; tests/working/codebl.prg
+    added (renamed codebloc to avoid conflict)
+
 19990605-00:00 CET Eddie Runia
   * tests/working/runner.c
     PITEM -> PHB_ITEM
