@@ -1,3 +1,8 @@
+2000-08-10 17:33 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.l
+        * fixed DO DECLARE syntax
+        
 2000-08-10 11:50 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.l

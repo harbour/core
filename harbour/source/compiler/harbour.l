@@ -359,8 +359,14 @@ Separator     {SpaceTab}
 %}
 
 "decl"|"decla"|"declar"|"declare" {
-    BEGIN DECLARE_;
     yylval.string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
+    if( hb_comp_iState == DO )
+    {
+        hb_comp_iState = IDENTIFIER;
+        return IDENTIFIER;
+    }
+    else
+        BEGIN DECLARE_;
 }
 <DECLARE_>{Separator}+[_a-zA-Z] { /* an Identifier after DECLARE */
     unput( yytext[ yyleng-1 ] );
@@ -403,9 +409,9 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "opti"|"optio"|"option"|"optiona"|"optional"    { 
-                        yylval.string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
-                        return OPTIONAL;
-                     }
+    yylval.string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
+    return OPTIONAL;
+}
 %{
 /* ************************************************************************ */
 %}
