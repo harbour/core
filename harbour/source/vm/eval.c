@@ -322,3 +322,24 @@ void hb_evalBlock1( PHB_ITEM pCodeBlock, PHB_ITEM pParam )
    hb_vmPush( pParam );
    hb_vmFunction( 1 );
 }
+
+/* same functionality but with a NULL terminated list of parameters */
+void hb_evalBlock( PHB_ITEM pCodeBlock, ... )
+{
+   va_list args;
+   unsigned int uiParams = 0;
+   PHB_ITEM pParam;
+
+   hb_vmPushSymbol( &hb_symEval );
+   hb_vmPush( pCodeBlock );
+
+   va_start( args, pCodeBlock );
+   while( ( pParam = va_arg( args, PHB_ITEM ) ) != NULL )
+   {
+      hb_vmPush( pParam );
+      uiParams++;
+   }
+   va_end( args );
+
+   hb_vmFunction( uiParams );
+}
