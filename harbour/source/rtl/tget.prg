@@ -83,7 +83,7 @@ ENDCLASS
 
 //---------------------------------------------------------------------------//
 
-METHOD New(nRow, nCol, bVarBlock, cVarName, cPicture, cColor) CLASS tGet
+METHOD New(nRow, nCol, bVarBlock, cVarName, cPicture, cColor) CLASS TGet
 
    local cChar
    local nAt, nFor
@@ -187,15 +187,17 @@ return Self
 METHOD Display() CLASS TGet
 
    local cClrInverse := StrToken( SetColor(), 2, "," )
+   local nOldCursor  := SetCursor( 0 )
 
    @ ::Row, ::Col SAY ::buffer COLOR cClrInverse
    SetPos( ::Row, ::Col + If( ::Pos != nil, ::Pos - 1, 0 ) )
+   SetCursor( nOldCursor )
 
 return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD Reset() CLASS tGet
+METHOD Reset() CLASS TGet
 
    if ::hasfocus
       ::buffer := ::PutMask(::VarGet())
@@ -206,7 +208,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD Undo() CLASS tGet
+METHOD Undo() CLASS TGet
 
    if ::hasfocus
       ::buffer := ::PutMask(::original)
@@ -217,7 +219,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD SetFocus() CLASS tGet
+METHOD SetFocus() CLASS TGet
 
    ::hasfocus   := .t.
    ::rejected   := .f.
@@ -249,7 +251,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD KillFocus() CLASS tGet
+METHOD KillFocus() CLASS TGet
 
    ::hasfocus   := .f.
    ::pos        := Nil
@@ -262,7 +264,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD VarPut(xValue) CLASS tGet
+METHOD VarPut(xValue) CLASS TGet
 
    Eval(::block, xValue)
 
@@ -270,13 +272,13 @@ return xValue
 
 //---------------------------------------------------------------------------//
 
-METHOD VarGet() CLASS tGet
+METHOD VarGet() CLASS TGet
 
 return Eval(::block)
 
 //---------------------------------------------------------------------------//
 
-METHOD Untransform(cBuffer) CLASS tGet
+METHOD Untransform(cBuffer) CLASS TGet
 
    local xValue
    local cChar
@@ -333,7 +335,7 @@ return xValue
 
 //---------------------------------------------------------------------------//
 
-METHOD overstrike(cChar) CLASS tGet
+METHOD overstrike(cChar) CLASS TGet
 
    if ::type == "N" .and. !::lEdit
       ::pos := 1
@@ -384,7 +386,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD Insert(cChar) CLASS tGet
+METHOD Insert(cChar) CLASS TGet
 
    if ::type == "N" .and. !::lEdit
       ::pos := 1
@@ -423,7 +425,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD _Right() CLASS tGet
+METHOD _Right() CLASS TGet
 
    local nPos
 
@@ -451,11 +453,13 @@ METHOD _Right() CLASS tGet
       ::TypeOut := .t.
    endif
 
+   DevPos( ::Row, ::Col + ::Pos - 1 )
+
 return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD _Left() CLASS tGet
+METHOD _Left() CLASS TGet
 
    local nPos
 
@@ -483,11 +487,13 @@ METHOD _Left() CLASS tGet
       ::TypeOut := .t.
    endif
 
+   DevPos( ::Row, ::Col + ::Pos - 1 )
+
 return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD WordLeft() CLASS tGet
+METHOD WordLeft() CLASS TGet
 
    local nPos
 
@@ -517,7 +523,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD WordRight() CLASS tGet
+METHOD WordRight() CLASS TGet
 
    local nPos
 
@@ -547,7 +553,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
- METHOD ToDecPos() CLASS tGet
+ METHOD ToDecPos() CLASS TGet
 
    if !::hasFocus .or. ::decpos == Nil
        Return .f.
@@ -561,7 +567,7 @@ return .t.
 
 //---------------------------------------------------------------------------//
 
-METHOD IsEditable(nPos) CLASS tGet
+METHOD IsEditable(nPos) CLASS TGet
 
    local cChar
 
@@ -590,7 +596,7 @@ return .f.
 
 //---------------------------------------------------------------------------//
 
-METHOD Input(cChar) CLASS tGet
+METHOD Input(cChar) CLASS TGet
 
    do case
    case ::type == "N"
@@ -631,7 +637,7 @@ return cChar
 
 //---------------------------------------------------------------------------//
 
-METHOD PutMask(xValue, lEdit) CLASS tGet
+METHOD PutMask(xValue, lEdit) CLASS TGet
 
    local cChar, cBuffer
    local nFor, nLen, nAt
@@ -663,7 +669,7 @@ return cBuffer
 
 //---------------------------------------------------------------------------//
 
-METHOD BackSpace() CLASS tGet
+METHOD BackSpace() CLASS TGet
 
    local nPos := ::Pos
 
@@ -677,7 +683,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD _Delete() CLASS tGet
+METHOD _Delete() CLASS TGet
 
    do case
    case ::type == "C"
@@ -711,7 +717,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD DeleteAll() CLASS tGet
+METHOD DeleteAll() CLASS TGet
 
    local xValue
 
@@ -736,7 +742,7 @@ return Self
 
 Function GetNew( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
 
-return tGet():New( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
+return TGet():New( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
 
 //---------------------------------------------------------------------------//
 
@@ -745,4 +751,3 @@ function _GET_( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
 return TGet():New(,, bSetGet, cVarName, cPicture )
 
 //---------------------------------------------------------------------------//
-
