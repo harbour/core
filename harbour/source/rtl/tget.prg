@@ -178,6 +178,7 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
    DEFAULT cColorSpec TO hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," + hb_ColorIndex( SetColor(), CLR_ENHANCED )
 
    ::HasFocus   := .f.
+   ::lEdit      := .f.
    ::BadDate    := .f.
    ::Block      := bVarBlock
    ::Changed    := .f.
