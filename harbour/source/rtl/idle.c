@@ -53,6 +53,9 @@
 #include "hbapiitm.h"
 #include "hbvm.h"
 #include "error.ch"
+#if defined(HB_OS_UNIX)
+  #include <time.h>
+#endif
 
 /* list of background tasks */
 static HB_ITEM_PTR s_pIdleTasks = NULL;
@@ -116,6 +119,11 @@ static void hb_releaseCPU( void )
    }
 
 #elif defined(HB_OS_UNIX)
+  {
+     static struct timespec nanosecs = { 0, 1000 };
+     /* NOTE: it will sleep at least 10 miliseconds (forced by kernel) */     
+     nanosleep( &nanosecs, NULL );
+  }
 #else
 #endif
 }

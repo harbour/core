@@ -57,6 +57,9 @@
 #include "inkey.ch"
 
 #include <time.h>
+#if defined( HB_OS_UNIX )
+  #include <sys/times.h>
+#endif
 
 static int *  s_inkeyBuffer = 0; /* Harbour keyboard buffer (empty if head == tail)     */
 static int    s_inkeyHead;       /* Harbour keyboard buffer head pointer (next insert)  */
@@ -104,9 +107,20 @@ int hb_inkey( BOOL bWait, double dSeconds, HB_inkey_enum event_mask )
       }
       else
       {
+#if defined( HB_OS_UNIX )
+         /* NOTE: clock() returns a time used by a program - if it is suspended
+          * then this time will be zero
+         */
+         clock_t end_clock;
+         struct tms tm;
+         
+         end_clock = times( &tm ) + ( clock_t ) ( dSeconds * 100 );
+         while( hb_inkeyNext() == 0 && (times( &tm ) < end_clock) )
+#else
          clock_t end_clock = clock() + ( clock_t ) ( dSeconds * CLOCKS_PER_SEC );
-
+         
          while( hb_inkeyNext() == 0 && clock() < end_clock )
+#endif         
          {
             hb_idleState();
          }

@@ -1,3 +1,9 @@
+2000-11-27 18:55 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+    *source/rtl/idle.c
+    *source/rtl/inkey.c
+        * Added support for CPU releasing in U*ix
+
+
 2000-11-27 17:14 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/tbrowse.prg
       * changed ::RelativePos into ::LastRetrieved (seems more descriptive to me)
