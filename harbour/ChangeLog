@@ -1,4 +1,4 @@
-2000-11-04 14:45 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-05 14:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/ppcore.c
      ! Fixed droped redundant spaces in [] strings, by adding STATE_QUOTE3 to strotrim().
      ! Fixed conversion of string delimiters in getExpReal()
