@@ -91,7 +91,7 @@ HB_FUNC( __XRESTSCREEN )
       hb_xfree( s_pBuffer );
       s_pBuffer = NULL;
 
-      hb_gtSetPos( s_iRow, s_iCol );
+      hb_gtSetPos( s_iRow, s_iCol, HB_GT_SET_POS_AFTER );
    }
 }
 

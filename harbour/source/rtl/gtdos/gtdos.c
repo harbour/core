@@ -499,11 +499,13 @@ USHORT hb_gt_GetScreenHeight( void )
 #endif
 }
 
-void hb_gt_SetPos( SHORT iRow, SHORT iCol )
+void hb_gt_SetPos( SHORT iRow, SHORT iCol, SHORT iMethod )
 {
    union REGS regs;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hd, %hd)", iRow, iCol));
+
+   HB_SYMBOL_UNUSED( iMethod );
 
    regs.h.ah = 0x02;
    regs.h.bh = 0;

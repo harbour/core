@@ -191,7 +191,7 @@ USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, B
       else
          hb_gt_HorizLine( uiTop, uiLeft, uiRight, szBox[ 1 ], ( BYTE ) s_pColor[ s_uiColorIndex ] );
 
-      hb_gtSetPos( uiTop + 1, uiLeft + 1 );
+      hb_gtSetPos( uiTop + 1, uiLeft + 1, HB_GT_SET_POS_AFTER );
 
       return 0;
    }
@@ -220,7 +220,7 @@ USHORT hb_gtBoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight )
       else
          hb_gt_HorizLine( uiTop, uiLeft, uiRight, HB_B_DOUBLE_V, ( BYTE ) s_pColor[ s_uiColorIndex ] );
 
-      hb_gtSetPos( uiTop + 1, uiLeft + 1 );
+      hb_gtSetPos( uiTop + 1, uiLeft + 1, HB_GT_SET_POS_AFTER );
 
       return 0;
    }
@@ -249,7 +249,7 @@ USHORT hb_gtBoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight )
       else
          hb_gt_HorizLine( uiTop, uiLeft, uiRight, HB_B_SINGLE_H, ( BYTE ) s_pColor[ s_uiColorIndex ] );
 
-      hb_gtSetPos( uiTop + 1, uiLeft + 1 );
+      hb_gtSetPos( uiTop + 1, uiLeft + 1, HB_GT_SET_POS_AFTER );
 
       return 0;
    }
@@ -647,12 +647,12 @@ USHORT hb_gtGetPos( SHORT * piRow, SHORT * piCol )
    return 0;
 }
 
-USHORT hb_gtSetPos( SHORT iRow, SHORT iCol )
+USHORT hb_gtSetPos( SHORT iRow, SHORT iCol, SHORT iMethod )
 {
    USHORT uiMaxRow;
    USHORT uiMaxCol;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtSetPos(%hd, %hd)", iRow, iCol));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtSetPos(%hd, %hd, %hd)", iRow, iCol, iMethod));
 
    uiMaxRow = hb_gt_GetScreenHeight();
    uiMaxCol = hb_gt_GetScreenWidth();
@@ -661,7 +661,7 @@ USHORT hb_gtSetPos( SHORT iRow, SHORT iCol )
    if( iRow >= 0 && iRow < uiMaxRow &&
        iCol >= 0 && iCol < uiMaxCol )
    {
-      hb_gt_SetPos( iRow, iCol );
+      hb_gt_SetPos( iRow, iCol, iMethod );
 
       /* If cursor was out bounds, now enable it */
       if( s_iRow < 0 || s_iRow >= uiMaxRow ||
@@ -801,7 +801,7 @@ USHORT hb_gtWrite( BYTE * pStr, ULONG ulLength )
    }
 
    /* Finally, save the new cursor position, even if off-screen */
-   hb_gtSetPos( s_iRow, s_iCol + ( SHORT ) ulLength );
+   hb_gtSetPos( s_iRow, s_iCol + ( SHORT ) ulLength, HB_GT_SET_POS_AFTER );
 
    return 0;
 }
@@ -824,7 +824,7 @@ USHORT hb_gtWriteAt( USHORT uiRow, USHORT uiCol, BYTE * pStr, ULONG ulLength )
    }
 
    /* Finally, save the new cursor position, even if off-screen */
-   hb_gtSetPos( uiRow, uiCol + ( SHORT ) ulLength );
+   hb_gtSetPos( uiRow, uiCol + ( SHORT ) ulLength, HB_GT_SET_POS_AFTER );
 
    return 0;
 }
@@ -854,7 +854,7 @@ USHORT hb_gtWriteCon( BYTE * pStr, ULONG ulLength )
    iCol = ( s_iCol <= iMaxCol ) ? s_iCol : iMaxCol;
 
    if( iRow != s_iRow || iCol != s_iCol )
-      hb_gtSetPos( iRow, iCol );
+      hb_gtSetPos( iRow, iCol, HB_GT_SET_POS_BEFORE );
 
    while( ulLength-- )
    {
@@ -940,7 +940,7 @@ USHORT hb_gtWriteCon( BYTE * pStr, ULONG ulLength )
                and cursor off top edge of display */
             hb_gtScroll( 0, 0, iMaxRow, iMaxCol, 1, 0 );
          }
-         hb_gtSetPos( iRow, iCol );
+         hb_gtSetPos( iRow, iCol, HB_GT_SET_POS_AFTER );
          bDisp = FALSE;
          bNewLine = FALSE;
       }

@@ -338,9 +338,11 @@ USHORT hb_gt_GetScreenHeight( void )
    return vi.row;
 }
 
-void hb_gt_SetPos( SHORT iRow, SHORT iCol )
+void hb_gt_SetPos( SHORT iRow, SHORT iCol, SHORT iMethod )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hd, %hd)", iRow, iCol));
+
+   HB_SYMBOL_UNUSED( iMethod );
 
    VioSetCurPos( ( USHORT ) iRow, ( USHORT ) iCol, 0 );
 }

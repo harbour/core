@@ -1,3 +1,33 @@
+2000-07-27 18:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+   * source/rtl/gtstd/gtstd.c
+     * This has become the standard terminal library for CGI programs.
+     * The MAXROW() and MAXCOL() values are both 32767.
+     * The row and column positions are maintained independently from
+       the actual device position.
+     * If the device scrolls earlier than the GTSTD driver, this will
+       not be reflected in the GTSTD driver cursor position.
+     * The column position is maintained if all output is in left to
+       right order, but will get messed up for any reverse position.
+     * The row position is maintained if all output is in left to
+       right and top to bottom order, but the device will only be
+       scrolled by one line, regardless of row position change.
+     * All console output goes to stdout and positioning works
+       within the above limitations.
+     * The various BOX() functions work to a limited extent (the row
+       position is ignored, but the column position is honored).
+     * The on-screen cursor is only set when the cursor position is
+       being set before text has been displayed, because it is not
+       possible to set the device cursor without changing it.
+
+   * source/rtl/gtapi.c
+   * source/rtl/gt*/gt*.c
+     * The hb_gtSetPos() and hb_gt_SetPos functions now takes a third
+       parameter that tells if the cursor position is changing before
+       or after text was displayed. This feature is required by the
+       GTSTD driver, because it can't set the device position without
+       actually changing it.
+
 2000-07-28 00:10 UTC+0200 JfL <jfl@mafact.com> & RaC <Rac@mafact.com>
    * source/rtl/tclass.prg
      * Some minor modifs I forget to identify before

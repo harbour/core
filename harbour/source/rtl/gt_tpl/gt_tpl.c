@@ -115,7 +115,7 @@ BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
       }
    }
 
-   hb_gt_SetPos( row, col );
+   hb_gt_SetPos( row, col, HB_GT_SET_POS_AFTER );
 
    return TRUE;
 }
@@ -144,9 +144,11 @@ USHORT hb_gt_GetScreenHeight( void )
    return 0;
 }
 
-void hb_gt_SetPos( SHORT iRow, SHORT iCol )
+void hb_gt_SetPos( SHORT iRow, SHORT iCol, SHORT iMethod )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hd, %hd)", iRow, iCol));
+
+   HB_SYMBOL_UNUSED( iMethod );
 
    /* TODO: How to reposition the cursor? */
 

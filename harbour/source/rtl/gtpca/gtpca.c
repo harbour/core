@@ -181,7 +181,7 @@ BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
             }
       }
    }
-   hb_gt_SetPos( row, col );
+   hb_gt_SetPos( row, col, HB_GT_SET_POS_AFTER );
    return TRUE;
 }
 
@@ -218,9 +218,12 @@ USHORT hb_gt_GetScreenHeight( void )
    return s_usMaxRow + 1;
 }
 
-void hb_gt_SetPos( SHORT iRow, SHORT iCol )
+void hb_gt_SetPos( SHORT iRow, SHORT iCol, SHORT iMethod )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hd, %hd)", iRow, iCol));
+
+   HB_SYMBOL_UNUSED( iMethod );
+
    if( iRow < 0 ) iRow = 0;
    else if( iRow > s_usMaxRow ) iRow = s_usMaxRow;
    if( iCol < 0 ) iCol = 0;

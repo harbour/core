@@ -675,7 +675,7 @@ BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
 
    GetConsoleScreenBufferInfo( s_HActive, &csbi );
 
-   hb_gtSetPos( csbi.dwCursorPosition.Y, csbi.dwCursorPosition.X );
+   hb_gtSetPos( csbi.dwCursorPosition.Y, csbi.dwCursorPosition.X, HB_GT_SET_POS_AFTER );
 
    return TRUE;
 }
@@ -712,11 +712,13 @@ USHORT hb_gt_GetScreenHeight( void )
    return HB_MAX( csbi.dwSize.Y, 25 );
 }
 
-void hb_gt_SetPos( SHORT iRow, SHORT iCol )
+void hb_gt_SetPos( SHORT iRow, SHORT iCol, SHORT iMethod )
 {
    COORD dwCursorPosition;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hd, %hd)", iRow, iCol));
+
+   HB_SYMBOL_UNUSED( iMethod );
 
    dwCursorPosition.X = iCol;
    dwCursorPosition.Y = iRow;

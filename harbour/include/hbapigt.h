@@ -85,6 +85,12 @@ extern "C" {
 #define HB_B_DOUBLE_V          'º'
 #define HB_B_DOUBLE_H          'Í'
 
+/* Used to tell hb_gt_SetPos() when the cursor position
+   is being set. Before or after text is or was displayed.
+*/
+#define HB_GT_SET_POS_AFTER     1
+#define HB_GT_SET_POS_BEFORE    0
+
 /* Keyboard filters */
 
 typedef enum
@@ -145,7 +151,7 @@ extern USHORT hb_gtSetBlink( BOOL bBlink );
 extern USHORT hb_gtSetColorStr( char * pszColorString );
 extern USHORT hb_gtSetCursor( USHORT uiCursorShape );
 extern USHORT hb_gtSetMode( USHORT uiRows, USHORT uiCols );
-extern USHORT hb_gtSetPos( SHORT iRow, SHORT iCol );
+extern USHORT hb_gtSetPos( SHORT iRow, SHORT iCol, SHORT iMode );
 extern USHORT hb_gtSetSnowFlag( BOOL bNoSnow );
 extern void   hb_gtTone( double dFrequency, double dDuration );
 extern USHORT hb_gtWrite( BYTE * pbyStr, ULONG ulLen );
@@ -211,7 +217,7 @@ extern void   hb_gt_SetAttribute( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, 
 extern void   hb_gt_SetBlink( BOOL bBlink );
 extern void   hb_gt_SetCursorStyle( USHORT uiCursorShape );
 extern BOOL   hb_gt_SetMode( USHORT uiRows, USHORT uiCols );
-extern void   hb_gt_SetPos( SHORT iRow, SHORT iCol );
+extern void   hb_gt_SetPos( SHORT iRow, SHORT iCol, SHORT iMethod );
 extern void   hb_gt_Tone( double dFrequency, double dDuration );
 extern char * hb_gt_Version( void );
 extern USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar, BYTE byAttr );
