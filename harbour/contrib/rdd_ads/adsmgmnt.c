@@ -116,7 +116,7 @@ HB_FUNC( ADSMGGETACTIVITYINFO )
    UNSIGNED32  ulRetVal;
    UNSIGNED16  usStructSize;
    ADS_MGMT_ACTIVITY_INFO  stActivityInfo;
-   UINT iOption = hb_parni( 1 );
+   unsigned int iOption = hb_parni( 1 );
 
    usStructSize = sizeof( ADS_MGMT_ACTIVITY_INFO );
    ulRetVal = AdsMgGetActivityInfo( hMgmtHandle, &stActivityInfo, &usStructSize );
@@ -364,7 +364,7 @@ HB_FUNC( ADSMGGETUSERNAMES )   /* Return array of connected users */
 
    UNSIGNED32  ulRetVal ;
    UNSIGNED16  ulMaxUsers = 100 ;        /* needed for array memory allocation; caller can set with 2nd arg */
-   UNSIGNED32  ulCount;
+   UNSIGNED16  ulCount;
    UNSIGNED16  usStructSize = sizeof( ADS_MGMT_USER_INFO );
    ADS_MGMT_USER_INFO*  pastUserInfo;
 /*

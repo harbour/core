@@ -2433,12 +2433,20 @@ static ERRCODE adsSetScope( ADSAREAP pArea, LPDBORDSCOPEINFO sInfo )
 
             case ADS_DATE:
                if ( sInfo->scopeValue->type == HB_IT_DATE )
-                  hb_itemGetDS(  sInfo->scopeValue, (char *) pucScope );
+               {
+                  double dTemp;
+                  bTypeError = FALSE;
+                  dTemp = hb_itemGetDL( sInfo->scopeValue ) ;
+                  usDataType = ADS_DOUBLEKEY ;
+                  AdsSetScope( pArea->hOrdCurrent, (sInfo->nScope + 1),
+                      (UNSIGNED8*) &dTemp,
+                      (UNSIGNED16) sizeof( dTemp ), usDataType );
+               }
+               break;
 /*                  bTypeError = FALSE;
   TODO: needs adsDateFormat, confirm it's DTOS if possible, else convert
 hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, "ORDSCOPE" );
 */
-               break;
 
 /*            case ADS_LOGICAL:
                if ( sInfo->scopeValue->type == HB_IT_LOGICAL )
