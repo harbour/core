@@ -1107,7 +1107,7 @@ _Get_      : GET { pArrayIndexAsList = NULL; }
            ;
 
 GetA       : _Get_ GetVarArray { pGetArgList = hb_compExprNewArgList( $2 ); bTrancuateBaseArray = TRUE; } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, ( pBaseArrayName ? pBaseArrayName : $5 ) ); pBaseArrayName = NULL; /* Var Name */ } ','
+             EmptyExpression { hb_compExprAddListExpr( pGetArgList, ( pBaseArrayName ? pBaseArrayName : $5 ) ); bTrancuateBaseArray = FALSE; pBaseArrayName = NULL; /* Var Name */ } ','
              EmptyExpression { hb_compExprAddListExpr( pGetArgList, $8 ) ; /* Picture    */ } ','
              EmptyExpression { hb_compExprAddListExpr( pGetArgList, $11 ); /* ValidBlock */ } ','
              EmptyExpression { hb_compExprAddListExpr( pGetArgList, $14 ); /* WhenBlock  */
