@@ -73,6 +73,8 @@ static PHB_SET_LISTENER sp_sl_first;
 static PHB_SET_LISTENER sp_sl_last;
 static int s_next_listener;
 
+static char hb_dirsep_string[2];
+
 static HB_PATHNAMES * sp_set_path;
 
 static void hb_setFreeSetPath( void )
@@ -97,6 +99,24 @@ static void hb_setFreeSetPath( void )
    }
 
    sp_set_path = NULL;
+}
+
+static char set_char( PHB_ITEM pItem, char oldChar )
+{
+   char newChar = oldChar;
+
+   HB_TRACE(HB_TR_DEBUG, ("set_char(%p, %c)", pItem, oldChar));
+
+   if( HB_IS_STRING( pItem ) )
+   {
+      /* Only replace if string has at least one character. */
+      ULONG ulLen = hb_itemGetCLen( pItem );
+      if( ulLen > 0 )
+      {
+         newChar = *hb_itemGetCPtr( pItem );
+      }
+   }
+   return newChar;
 }
 
 static BOOL set_logical( PHB_ITEM pItem )
@@ -822,20 +842,14 @@ HB_FUNC( SET )
             else
                hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
          }
-         /*
-         if( hb_set.HB_SET_DIRCASE ) hb_retc( hb_set.HB_SET_DIRCASE );
-         else hb_retc( NULL );
-	 if( args > 1 ) hb_set.HB_SET_DIRCASE = set_string( pArg2, hb_set.HB_SET_DIRCASE );
-         */
          break;
       case HB_SET_DIRSEPARATOR :
-         /*
-         if( hb_set.HB_SET_DIRSEPARATOR ) hb_retc( hb_set.HB_SET_DIRSEPARATOR );
-         else hb_retc( NULL );
-	 if( args > 1 ) hb_set.HB_SET_DIRSEPARATOR = set_string( pArg2, hb_set.HB_SET_DIRSEPARATOR );
+         hb_dirsep_string[0] = hb_set.HB_SET_DIRSEPARATOR;
+         hb_dirsep_string[1] = '\0';
+         hb_retc( hb_dirsep_string );
+	 if( args > 1 ) hb_set.HB_SET_DIRSEPARATOR = set_char( pArg2, hb_set.HB_SET_DIRSEPARATOR );
          break;
       default                :
-         */
          /* Return NIL if called with invalid SET specifier */
          break;
    }
@@ -915,18 +929,9 @@ void hb_setInitialize( void )
    hb_set.HB_SET_STRICTREAD = FALSE;
    hb_set.HB_SET_TYPEAHEAD = 50; hb_inkeyReset( TRUE ); /* Allocate keyboard typeahead buffer */
    hb_set.HB_SET_UNIQUE = FALSE;
-   /*
-   hb_set.HB_SET_FILECASE = ( char * ) hb_xgrab( 6 );
-   memcpy( hb_set.HB_SET_FILECASE, "MIXED", 6 );
-   hb_set.HB_SET_DIRCASE = ( char * ) hb_xgrab( 6 );
-   memcpy( hb_set.HB_SET_DIRCASE, "MIXED", 6 );
-   hb_set.HB_SET_DIRSEPARATOR = ( char * ) hb_xgrab( 2 );
-   memcpy( hb_set.HB_SET_DIRSEPARATOR, "\\", 2 );
-   */
    hb_set.HB_SET_FILECASE = HB_SET_CASE_MIXED;
    hb_set.HB_SET_DIRCASE = HB_SET_CASE_MIXED;
    hb_set.HB_SET_DIRSEPARATOR = '\\';
-
    hb_set.HB_SET_VIDEOMODE = 0;
    hb_set.HB_SET_WRAP = FALSE;
 
@@ -964,9 +969,6 @@ void hb_setRelease( void )
    if( hb_set.HB_SET_MFILEEXT  )  hb_xfree( hb_set.HB_SET_MFILEEXT );
    if( hb_set.HB_SET_PATH )       hb_xfree( hb_set.HB_SET_PATH );
    if( hb_set.HB_SET_PRINTFILE )  hb_xfree( hb_set.HB_SET_PRINTFILE );
-   // if( hb_set.HB_SET_FILECASE )   hb_xfree( hb_set.HB_SET_FILECASE );
-   // if( hb_set.HB_SET_DIRCASE )    hb_xfree( hb_set.HB_SET_FILECASE );
-   // if( hb_set.HB_SET_DIRSEPARATOR ) hb_xfree( hb_set.HB_SET_FILECASE );
 
    hb_set.HB_SET_TYPEAHEAD = -1; hb_inkeyReset( TRUE ); /* Free keyboard typeahead buffer */
 

@@ -8,6 +8,16 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-22 18:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/set.c
+    ! Removed comment block that incorrectly commented out
+      the default case in the HB_SET switch block.
+    ! Fixed the previously commented out code that prevented
+      changing the new HB_SET_DIRSEPARATOR value.
+  * tests/set_test.prg
+    + Added tests to display the Harbour-specific SET values
+      and a test for changing the _SET_DIRSEPARATOR value.
+
 2002-10-22 17:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * source/rdd/dbfcmd.c
     * Made FIELDNAME Clipper compatible for the case where there is

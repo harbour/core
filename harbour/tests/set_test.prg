@@ -73,11 +73,22 @@ function Main()
    TestLine( "_SET_AUTOSHARE",    47)
 #endif
 
+#ifdef _SET_LANGUAGE
+   TestLine( "_SET_LANGUAGE",    100)
+   TestLine( "_SET_IDLEREPEAT",  101)
+   TestLine( "_SET_FILECASE",    102)
+   TestLine( "_SET_DIRCASE",     103)
+   TestLine( "_SET_DIRSEPARATOR",104)
+   Set(_SET_DIRSEPARATOR, "/")
+   TestLine( "_SET_DIRSEPARATOR",104)
+#endif
 
 return nil
 
 proc testline( c, n )
-outstd( s_cNewLine )
-outstd( str( n, 3 ) )
-outstd( " "+Padr( c, 17 ) )
-outstd( Set( n ) )
+   outstd( s_cNewLine )
+   outstd( str( n, 3 ) )
+   outstd( " " )
+   outstd( Padr( c, 20 ) )
+   outstd( Set( n ) )
+return
