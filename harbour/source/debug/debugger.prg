@@ -95,7 +95,7 @@ return
 
 procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
 
-   local cModuleName
+   local cModuleName, cProcName
    local nStaticsBase, nStaticIndex, cStaticName
    local cLocalName, nLocalIndex
    local nAt
@@ -124,7 +124,8 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
               __DbgStatics := {}
            endif
 
-           if ProcName( 1 ) == "(_INITSTATICS)"
+           cProcName := ProcName( 1 )
+           if cProcName == "(_INITSTATICS)"
               nStaticsBase := uParam1
               cStaticName  := uParam2
               if AScan( __DbgStatics, { | a | a[ 1 ] == nStaticsBase } ) == 0
@@ -162,12 +163,12 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
                     if s_oDebugger:lShowLocals
                        if ( nAt := AScan( s_oDebugger:aVars,; // Is there another var with this name ?
                             { | aVar | aVar[ 1 ] == cLocalName } ) ) != 0
-                          s_oDebugger:aVars[ nAt ] := { cLocalName, nLocalIndex, "Local", ProcName( 1 ) }
+                          s_oDebugger:aVars[ nAt ] := { cLocalName, nLocalIndex, "Local", cProcName }
                        else
-                          AAdd( s_oDebugger:aVars, { cLocalName, nLocalIndex, "Local", ProcName( 1 ) } )
+                          AAdd( s_oDebugger:aVars, { cLocalName, nLocalIndex, "Local", cProcName } )
                        endif
                     endif
-                    AAdd( s_oDebugger:aCallStack[ 1 ][ 2 ], { cLocalName, nLocalIndex, "Local", ProcName( 1 ) } )
+                    AAdd( s_oDebugger:aCallStack[ 1 ][ 2 ], { cLocalName, nLocalIndex, "Local", cProcName } )
                  endif
                  if s_oDebugger:oBrwVars != nil
                     s_oDebugger:oBrwVars:RefreshAll()
