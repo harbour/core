@@ -1256,7 +1256,7 @@ if lBcc
  Fwrite( nLinkHandle, "CFLAG2 =  -I$(BHC)\include;$(BCB)\include" +CRLF)
 
  Fwrite( nLinkHandle, "RFLAGS = "+CRLF)
- Fwrite( nLinkHandle, "LFLAGS = -L$(BCB)\lib\obj;$(BCB)\lib;$(BHC)\lib;$(FWH)\lib -Gn -M -m -s -aa" + if(lFwh,"-Tpe","")+CRLF)
+ Fwrite( nLinkHandle, "LFLAGS = -L$(BCB)\lib\obj;$(BCB)\lib;$(BHC)\lib;$(FWH)\lib -Gn -M -m -s -aa" + if(lFwh," -Tpe","")+CRLF)
  Fwrite( nLinkHandle, "IFLAGS = " +CRLF)
  Fwrite( nLinkHandle, "LINKER = ilink32"+CRLF)
  Fwrite( nLinkHandle, " "+CRLF)
