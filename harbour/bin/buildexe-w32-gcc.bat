@@ -24,5 +24,5 @@ exit
 :compile
 
 harbour %1.prg /n /i..\include
-gcc %1.c -I..\include -L..\lib -lrtl -lrdd -lvm -lrdd -lrtl -ldbfntx
+gcc %1.c -I..\include -L..\lib -lrtl -lrdd -lvm -lrdd -lrtl -ldbfntx -ldbfcdx
 del %1.c

@@ -23,6 +23,6 @@ exit
 :compile
 
 harbour %1.prg /n /i..\include
-cl -Fd..\bin\harbour -w -Zi -TP -GZ -GA -DHARBOUR_USE_WIN_GTAPI -I..\include %1.c /link /subsystem:CONSOLE ..\obj\symbols.obj ..\lib\harbour.lib ..\lib\terminal.lib ..\lib\hbtools.lib ..\lib\dbfntx.lib ..\lib\debug.lib
+cl -Fd..\bin\harbour -w -Zi -TP -GZ -GA -DHARBOUR_USE_WIN_GTAPI -I..\include %1.c /link /subsystem:CONSOLE ..\obj\symbols.obj ..\lib\harbour.lib ..\lib\terminal.lib ..\lib\hbtools.lib ..\lib\dbfntx.lib ..\lib\dbfcdx.lib ..\lib\debug.lib
 echo Ignore LNK4033 warning
 del %1.c

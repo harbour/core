@@ -24,5 +24,5 @@ exit
 :compile
 
 harbour %1.prg /n /i..\include
-bcc -O2 -mh -I..\include %1.c ..\lib\rtl.lib ..\lib\rdd.lib ..\lib\vm.lib ..\lib\rdd.lib ..\lib\rtl.lib ..\lib\dbfntx.lib
+bcc -O2 -mh -I..\include %1.c ..\lib\rtl.lib ..\lib\rdd.lib ..\lib\vm.lib ..\lib\rdd.lib ..\lib\rtl.lib ..\lib\dbfntx.lib ..\lib\dbfcdx.lib
 del %1.c

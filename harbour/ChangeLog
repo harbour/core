@@ -1,3 +1,7 @@
+19991010-14:03 GMT+1 Victor Szel <info@szelvesz.hu>
+   * bin/*.bat
+     + dbfcdx lib added.
+
 19991010-13:36 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/vm/hvm.c
      ! HB_P_NOOP - Caused an infinite loop, fixed.
