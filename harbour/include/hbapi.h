@@ -577,6 +577,10 @@ extern char * hb_verCompiler( void ); /* retrieves a newly allocated buffer cont
 extern char * hb_verHarbour( void ); /* retrieves a newly allocated buffer containing harbour version */
 extern void   hb_verBuildInfo( void ); /* display harbour, compiler, and platform versions to standard console */
 
+/* environment variables access */
+/* WARNING: This returned pointer must be freed using hb_xfree( ( void * ) ptr ); */
+extern char * hb_getenv( const char * name );
+
 #if defined(HB_EXTERN_C)
 }
 #endif
