@@ -1,3 +1,8 @@
+20000419-10:37 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * ChangeLog
+     ! Some typos for my last ChangeLog
+
 20000418-22:05 DST Paul Tucker <ptucker@sympatico.ca>
    * source/compiler/harbour.c
      * added casts.
@@ -13,9 +18,9 @@
      ! Removed "Linux" from the version string.
 
    * source/rtl/dateshb.c
-     % Local variables removed, non-standard string conversion, slow sprintf()
-       call removed. Now using hb_retd() to return the value. It's faster and
-       smaller now.
+     % DATE() local variables removed, non-standard string conversion, slow 
+       sprintf() call removed. Now using hb_retd() to return the value. It's 
+       faster and smaller now.
 
    * source/lang/Makefile
    * makefile.bc
@@ -26,6 +31,7 @@
 
    * include/set.ch
      * __SET_COUNT_HB -> HB_SET_COUNT
+     + HB_SET_BASE
 
    * bin/bld.*
      ! Redone some undocumented changes in the build batch files.
