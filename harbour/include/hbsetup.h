@@ -189,18 +189,18 @@
  * Platform detection
  */
 
-#ifdef __WATCOMC__
-  #if defined(__OS2__)
-    #define HB_OS_OS2
-  #elif defined(__NT__) || defined(__WINDOWS_386__) || defined(__WINDOWS__)
-    #define HB_OS_WIN_32
-  #elif defined(__386__)
-    #define HB_OS_DOS
-    #define HB_OS_DOS_32
-  #else
-    #define HB_OS_DOS
-    #define HB_OS_DOS_16
-  #endif
+#if defined(__WATCOMC__)
+   #if defined(__OS2__)
+      #define HB_OS_OS2
+   #elif defined(__NT__) || defined(__WINDOWS_386__) || defined(__WINDOWS__)
+      #define HB_OS_WIN_32
+   #elif defined(__386__)
+      #define HB_OS_DOS
+      #define HB_OS_DOS_32
+   #else
+      #define HB_OS_DOS
+      #define HB_OS_DOS_16
+   #endif
 #endif
 
 #ifndef HB_OS_DOS

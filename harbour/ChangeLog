@@ -1,3 +1,16 @@
+2000-06-03 01:13 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * include/button.ch 
+   * source/rtl/tmenuitm.prg 
+     * Some minor namespace fixes.
+
+   * include/hbsetup.h 
+     * Minor formatting
+
+   * utils/hbtest/rt_misc.prg 
+     ! The filename split/merge tests changed so that they now pass for Unix 
+       systems. (there are still 4 tests which need to fixed)
+
 2000-06-02 14:45 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/pp/ppcore.c

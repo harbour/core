@@ -33,8 +33,9 @@
  *
  */
 
-#ifndef _BUTTON_DEFINED
-#define _BUTTON_DEFINED
+#ifndef HB_BUTTON_CH_
+#define HB_BUTTON_CH_
+#define _BUTTON_DEFINED /* NOTE: For complete CA-Clipper compatibility */
 
 /* orientation modes for scrollbar class */
 #define SCROLL_VERTICAL          1
@@ -42,12 +43,12 @@
 
 /* menu separators strings */
 #define MENU_SEPARATOR           Chr(196)
-#define SEPARATOR_DOUBLE         ( Chr(204) + Chr(205) + Chr(185) )        // double line left and right and double separator for popup menu
-#define SEPARATOR_SINGLE         ( Chr(195) + MENU_SEPARATOR + Chr(180) )  // single separator for popup menu
-#define SEPARATOR_DOUBLE_SINGLE  ( Chr(199) + MENU_SEPARATOR + Chr(182) )  // double line left and right and single separator for popup menu
+#define SEPARATOR_DOUBLE         ( Chr(204) + Chr(205) + Chr(185) )        /* double line left and right and double separator for popup menu */
+#define SEPARATOR_SINGLE         ( Chr(195) + MENU_SEPARATOR + Chr(180) )  /* single separator for popup menu */
+#define SEPARATOR_DOUBLE_SINGLE  ( Chr(199) + MENU_SEPARATOR + Chr(182) )  /* double line left and right and single separator for popup menu */
 
 /* string constants for menuitems display */
-#define MENU_STYLE               ( Chr(251) + Chr(16) )
+#define HB_TMENUITEM_STYLE       ( Chr(251) + Chr(16) )
 
 /* return values for HitTest methods */
 #define HTNOWHERE                0
@@ -95,4 +96,4 @@
 #define HTREDUCE                 HTMINBUTTON
 #define HTZOOM                   HTMAXBUTTON
 
-#endif /* _BUTTON_DEFINED */
+#endif /* HB_BUTTON_CH_ */
