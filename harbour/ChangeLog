@@ -1,3 +1,9 @@
+2001-01-08 12:35 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     * Added support for leading and traing WS before/after #.
+     * Extra logic for [...] within # directives in ProcessFile()
+     * Fixed logic of // and && terminating at EOF.
+
 2001-01-08 02:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      * Few corrections in NextExp() and MatchRule().
