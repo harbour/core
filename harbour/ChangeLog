@@ -1,3 +1,38 @@
+20000229-23:13 GMT+1 Victor Szakats <info@szelvesz.hu>
+   + doc/en/array.txt
+   + doc/en/binnum.txt
+   + doc/en/browse.txt
+   + doc/en/command.txt
+   + doc/en/dir.txt
+   + doc/en/error.txt
+   + doc/en/file.txt
+   + doc/en/ht_class.txt
+   + doc/en/ht_conv.txt
+   + doc/en/ht_dbf.txt
+   + doc/en/ht_doc.txt
+   + doc/en/ht_file.txt
+   + doc/en/ht_gt.txt
+   + doc/en/ht_str.txt
+   + doc/en/hvm.txt
+   + doc/en/input.txt
+   + doc/en/license.txt
+   + doc/en/memo.txt
+   + doc/en/menu.txt
+   + doc/en/misc.txt
+   + doc/en/nation.txt
+   + doc/en/objfunc.txt
+   + doc/en/rdd.txt
+   + doc/en/readme.txt
+   + doc/en/set.txt
+   + doc/en/string.txt
+   + doc/en/tclass.txt
+   + doc/en/terminal.txt
+   + doc/en/tgetlist.txt
+   + doc/en/tlabel.txt
+   + doc/en/treport.txt
+   + doc/en/var.txt
+     + English documentation readded separated from the source files.
+
 20000229-22:00 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/rtl/*
      source/rdd/dbcmd.c

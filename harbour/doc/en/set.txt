@@ -1,0 +1,683 @@
+/*
+ * $Id$
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ *    SET()
+ *    __SETCENTURY()
+ *
+ * Copyright 1999 A White <awhite@user.rose.com>
+ *    SETKEY()
+ *    HB_SetKeyGet()
+ *    HB_SETKEYSAVE()
+ *    HB_SetKeyCheck()
+ *    SET KEY
+ *
+ * Copyright 1999 Chen Kedem <niki@actcom.co.il>
+ *    __SetFunction() documentation
+ *
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
+ *    SETTYPEAHEAD()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
+/* $DOC$
+ * $FUNCNAME$
+ *      __SETCENTURY()
+ * $CATEGORY$
+ *      Environment
+ *  $ONELINER$
+ *      Set the Current Century
+ * $SYNTAX$
+ *      __SETCENTURY([<lFlag> | <cOnOff> ] ) --> lPreviousValue
+ * $ARGUMENTS$
+ *      optional <lFlag> or <cOnOff> (not case sensitive)
+ *              .T. or "ON" to enable the century setting (4-digit years)
+ *              .F. or "OFF" to disable the century setting (2-digit years)
+ * $RETURNS$
+ *      Either the current or previous century setting as a logical value
+ * $END$
+ */
+
+/* $DOC$
+ * $FUNCNAME$
+ *      SET()
+ * $CATEGORY$
+ *      Environment
+ *  $ONELINER$
+ *      Changes or evaluated enviromental settings
+ * $SYNTAX$
+ *      Set<nSet> [, <xNewSetting> [, <xOption> ] ] ) --> xPreviousSetting
+ * $ARGUMENTS$
+ *               <nSet>           <xNewSetting>           <xOption>
+ *              _SET_ALTERNATE   <lFlag> | <cOnOff>
+ *                   If enabled, QOUT() and QQOUT() write to the screen and to
+ *                   a file, provided that a file has been opened or created
+ *                   with _SET_ALTFILE. If disabled, which is the default,
+ *                   QOUT() and QQOUT() only write to the screen (and/or to
+ *                   the PRINTFILE). Defaults to disabled.
+ *              _SET_ALTFILE     <cFileName>             <lAdditive>
+ *                   When set, creates or opens file to write QOUT() and
+ *                   QQOUT() output to. If <lAdditive> is TRUE and the file
+ *                   already exists, the file is opened and positioned at end
+ *                   of file. Otherwise, the file is created. If a file is
+ *                   already opened, it is closed before the new file is
+ *                   opened or created (even if it is the same file). The
+ *                   default file extension is ".txt". There is no default
+ *                   file name. Call with an empty string to close the file.
+ *              _SET_AUTOPEN     <lFlag> | <cOnOff>
+ *                   TODO: Document
+ *              _SET_AUTORDER    <lFlag> | <cOnOff>
+ *                   TODO: Document
+ *              _SET_AUTOSHARE   <lFlag> | <cOnOff>
+ *                   TODO: Document
+ *              _SET_BELL        <lFlag> | <cOnOff>
+ *                   When enabled, the bell sounds when the last position of
+ *                   a GET is reached and/or when a GET validation fails.
+ *                   Disabled by default.
+ *              _SET_CANCEL      <lFlag> | <cOnOff>
+ *                   When enabled, which is the default, pressing Alt+C or
+ *                   Ctrl+Break terminates the program. When disabled, both
+ *                   keystrokes can be read by INKEY(). Note: SET KEY has
+ *                   precedence over SET CANCEL.
+ *              _SET_COLOR       <cColorSet>
+ *                   Sets the current color scheme, using color pairs in the
+ *                   sequence "<standard>,<enhanced>,<border>,<background>,
+ *                   <unselected>". Each color pair uses the format
+ *                   "<foreground>/<background>". The color codes are space
+ *                   or "N" for black, "B" for blue, "G" for green, "BG" for
+ *                   Cyan, "R" for red, "RB" for magenta, "GR" for brown, "W"
+ *                   for white, "N+" for gray, "B+" for bright blue, "G+" for
+ *                   bright green, "BG+" for bright cyan, "R+" for bright red,
+ *                   "RB+" for bright magenta, "GR+" for yellow, and "W+" for
+ *                   bright white. Special codes are "I" for inverse video,
+ *                   "U" for underline on a monochrome monitor (blue on a
+ *                   color monitor), and "X" for blank. The default color is
+ *                   "W/N,N/W,N,N,N/W".
+ *              _SET_CONFIRM     <lFlag> | <cOnOff>
+ *                   If enabled, an exit key must be pressed to leave a GET.
+ *                   If disabled, which is the default, typing past the end
+ *                    will leave a GET.
+ *              _SET_CONSOLE     <lFlag> | <cOnOff>
+ *                   If enabled, which is the default, all screen output goes
+ *                   to the screen. When disabled, screen output is suppressed
+ *                   (Note: This setting does not affect OUTSTD() or OUTERR()).
+ *              _SET_CURSOR      <nCursorType>
+ *                   If enabled, which is the default, the cursor is displayed
+ *                   on screen. If disabled, the screen cursor is hidden.
+ *              _SET_DATEFORMAT  <cDateFormat>
+ *                   Sets the default date format for display, date input, and
+ *                   date conversion. Defaults to American ("mm/dd/yy"). Other
+ *                   formats include ANSI ("yy.mm.dd"), British ("dd/mm/yy"),
+ *                   French ("dd/mm/yy"), German ("dd.mm.yy"), Italian
+ *                   ("dd-mm-yy"), Japan ("yy/mm/dd"), and USA ("mm-dd-yy").
+ *                   SET CENTURY modifies the date format. SET CENTURY ON
+ *                   replaces the "y"s with "YYYY". SET CENTURY OFF replaces
+ *                   the "y"s with "YY".
+ *              _SET_DEBUG       <lStatus>
+ *                   When set to .t., pressing Alt+D activates the debugger.
+ *                   When set to .f., which is the default, Alt+D can be read
+ *                   by INKEY(). (Also affected by AltD(1) and AltD(0))
+ *              _SET_DECIMALS    <nNumberOfDecimals>
+ *                   Sets the number of decimal digits to use when displaying
+ *                   printing numeric values when SET FIXED is ON. Defaults to
+ *                   2. If SET FIXED is OFF, then SET DECIMALS is only used to
+ *                   determine the number of decimal digits to use after using
+ *                   EXP(), LOG(), SQRT(), or division. Other math operations
+ *                   may adjust the number of decimal digits that the result
+ *                   will display. Note: This never affects the precision of
+ *                   a number. Only the display format is affected.
+ *              _SET_DEFAULT     <cDefaultDirectory>
+ *                   Sets the default directory in which to open, create and
+ *                   check for files. Defaults to current directory (blank).
+ *              _SET_DELETED     <lFlag> | <cOnOff>
+ *                   If enabled, deleted records will be processed. If
+ *                   disabled, which is the default, deleted records will
+ *                   be ignored.
+ *              _SET_DELIMCHARS  <cDelimiters>
+ *                   Sets the GET delimiter characters. Defaults to "::".
+ *              _SET_DELIMITERS  <lFlag> | <cOnOff>
+ *                   If enabled, GETs are delimited on screen. If disabled,
+ *                   which is the default, no GET delimiters are used.
+ *              _SET_DEVICE      <cDeviceName>
+ *                   Selects the output device for DEVOUT(). When set to
+ *                   "PRINTER", all output is sent to the printer device or
+ *                   file set by _SET_PRINTFILE. When set to anything else,
+ *                   all output is sent to the screen. Defaults to "SCREEN".
+ *              _SET_EPOCH       <nYear>
+ *                   Determines how to handle the conversion of 2-digit years
+ *                   to 4 digit years. When a 2-digit year is greater than or
+ *                   equal to the year part of the epoch, the century part of
+ *                   the epoch is added to the year. When a 2-digit year is
+ *                   less than the year part of the epoch, the century part
+ *                   of the epoch is incremented and added to the year. The
+ *                   default epoch is 1900, which converts all 2-digit years
+ *                   to 19xx. Example: If the epoch is set to 1950, 2-digit
+ *                   years in the range from 50 to 99 get converted to 19xx
+ *                   and 2-digit years in the range 00 to 49 get converted
+ *                   to 20xx.
+ *              _SET_ESCAPE      <lFlag> | <cOnOff>
+ *                   When enabled, which is the default, pressing Esc will
+ *                   exit a READ. When disabled, pressing Esc during a READ
+ *                   is ignored, unless the Esc key has been assigned to a
+ *                   function using SET KEY.
+ *              _SET_EVENTMASK   <nEventCodes>
+ *                   Determines which events INKEY() will respond to.
+ *                   INKEY_MOVE allows mouse movement events. INKEY_LDOWN
+ *                   allows the left mouse button down click. INKEY_LUP
+ *                   allows the left mouse button up click. INKEY_RDOWN
+ *                   allows the right mouse button down click. INKEY_RUP
+ *                   allows the right mouse button up clock. INKEY_KEYBOARD
+ *                   allows keyboard keystrokes. INKEY_ALL allows all of the
+ *                   preceding events. Events may be combined (e.g., using
+ *                   INKEY_LDOWN + INKEY_RUP will allow left mouse button
+ *                   down clicks and right mouse button up clicks). The
+ *                   default is INKEY_KEYBOARD.
+ *              _SET_EXACT       <lFlag> | <cOnOff>
+ *                   When enabled, all string comparisons other than "=="
+ *                   exclude trailing spaces when checking for equality.
+ *                   When disabled, which is the default, all string
+ *                   comparisons other than "==" treat two strings as
+ *                   equal if the right hand string is "" or if the right
+ *                   hand string is shorter than or the same length as the
+ *                   left hand string and all of the characters in the right
+ *                   hand string match the corresponding characters in the
+ *                   left hand string.
+ *              _SET_EXCLUSIVE   <lFlag> | <cOnOff>
+ *                   When enabled, which is the default, all database files
+ *                   are opened in exclusive mode. When disabled, all
+ *                   database files are opened in shared mode. Note: The
+ *                   EXCLUSIVE and SHARED clauses of the USE command can be
+ *                   used to override this setting.
+ *              _SET_EXIT        <lFlag> | <cOnOff>
+ *                   Toggles the use of Uparrow and Dnarrow as READ exit keys.
+ *                   Specifying true (.T.) enables them as exit keys, and
+ *                   false (.F.) disables them. Used internally by the
+ *                   ReadExit() function.
+ *              _SET_EXTRA       <lFlag> | <cOnOff>
+ *                   QUESTION: What is this for?
+ *                   It does not affect _SET_EXTRAFILE in Clipper!
+ *              _SET_EXTRAFILE   <cFileName>             <lAdditive>
+ *                   When set, creates or opens file to write QOUT() and
+ *                   QQOUT() output to. If <lAdditive> is TRUE and the file
+ *                   already exists, the file is opened and positioned at end
+ *                   of file. Otherwise, the file is created. If a file is
+ *                   already opened, it is closed before the new file is
+ *                   opened or created (even if it is the same file). The
+ *                   default file extension is ".prn". There is no default
+ *                   file name. Call with an empty string to close the file.
+ *              _SET_FIXED       <lFlag> | <cOnOff>
+ *                   When enabled, all numeric values will be displayed
+ *                   and printed with the number of decimal digits set
+ *                   by SET DECIMALS, unless a PICTURE clause is used.
+ *                   When disabled, which is the default, the number
+ *                   of decimal digits that are displayed depends upon
+ *                   a variety of factors. See _SET_DECIMALS for more.
+ *              _SET_INSERT      <lFlag> | <cOnOff>
+ *                   When enabled, characters typed in a GET or MEMOEDIT
+ *                   are inserted. When disabled, which is the default,
+ *                   characters typed in a GET or MEMOEDIT overwrite.
+ *                   Note: This setting can also be toggled between on and
+ *                   off by pressing the Insert key during a GET or MEMOEDIT.
+ *              _SET_INTENSITY   <lFlag> | <cOnOff>
+ *                   When enabled, which is the default, GETs and PROMPTs
+ *                   are displayed using the enhanced color setting. When
+ *                   disabled, GETs and PROMPTs are displayed using the
+ *                   standard color setting.
+ *              _SET_MARGIN      <nColumns>
+ *                   Sets the left margin for all printed output. The default
+ *                   value is 0. Note: PCOL() reflects the printer's column
+ *                   position including the margin (e.g., SET MARGIN TO 5
+ *                   followed by DEVPOS(5, 10) makes PCOL() return 15).
+ *              _SET_MBLOCKSIZE <nMemoBlockSize>
+ *                   TODO: Document
+ *              _SET_MCENTER     <lFlag> | <cOnOff>
+ *                   If enabled, display PROMPTs centered on the MESSAGE row.
+ *                   If disabled, which is the default, display PROMPTS at
+ *                   column position 0 on the MESSAGE row.
+ *              _SET_MESSAGE     <nRow>
+ *                   If set to 0, which is the default, PROMPTs are always
+ *                   suppressed. Otherwise, PROMPTs are displayed on the
+ *                   set row. Note: It is not possible to display prompts
+ *                   on the top-most screen row, because row 0 is reserved
+ *                   for the SCOREBOARD, if enabled.
+ *              _SET_MFILEEXT    <cMemoFileExt>
+ *                   TODO: Document
+ *              _SET_OPTIMIZE    <lFlag> | <cOnOff>
+ *                   TODO: Document
+ *              _SET_PATH        <cDirectories>
+ *                   Specifies a path of directories to search through to
+ *                   locate a file that can't be located in the DEFAULT
+ *                   directory. Defaults to no path (""). Directories must
+ *                   be separated by a semicolon (e.g., "C:\DATA;C:\MORE").
+ *              _SET_PRINTER     <lFlag> | <cOnOff>
+ *                   If enabled, QOUT() and QQOUT() write to the screen and to
+ *                   a file, provided that a file has been opened or created
+ *                   with _SET_ALTFILE. If disabled, which is the default,
+ *                   QOUT() and QQOUT() only write to the screen (and/or to
+ *                   the ALTFILE).
+ *              _SET_PRINTFILE   <cFileName>             <lAdditive>
+ *                   When set, creates or opens file to write QOUT(), QQOUT()
+ *                   and DEVOUT() output to. If <lAdditive> is TRUE and the
+ *                   file already exists, the file is opened and positioned
+ *                   at end of file. Otherwise, the file is created. If a
+ *                   file is already opened, it is closed before the new file
+ *                   is opened or created (even if it is the same file). The
+ *                   default file extension is ".prn". The default file name
+ *                   is "PRN", which maps to the default printer device. Call
+ *                   with an empty string to close the file.
+ *              _SET_SCOREBOARD  <lFlag> | <cOnOff>
+ *                   When enabled, which is the default, READ and MEMOEDIT
+ *                   display status messages on screen row 0. When disabled,
+ *                   READ and MEMOEDIT status messages are suppressed.
+ *              _SET_SCROLLBREAK <lFlag> | <cOnOff>
+ *                   QUESTION: What is this flag for?
+ *              _SET_SOFTSEEK    <lFlag> | <cOnOff>
+ *                   When enabled, a SEEK that fails will position the record
+ *                   pointer to the first key that is higher than the sought
+ *                   after key or to LASTREC() + 1 if there is no higher key.
+ *                   When disabled, which is the default, a SEEK that fails
+ *                   will position the record pointer to LASTREC()+1.
+ *              _SET_STRICTREAD  <lFlag> | <cOnOff>
+ *                   TODO: Document
+ *              _SET_TYPEAHEAD   <nKeyStrokes>
+ *                   Sets the size of the keyboard typeahead buffer. Defaults
+ *                   to 50. The minimum is 16 and the maximum is 4096.
+ *              _SET_UNIQUE      <lFlag> | <cOnOff>
+ *                   When enabled, indexes are not allowed to have duplicate
+ *                   keys. When disabled, indexes are allowed duplicate keys.
+ *              _SET_VIDEOMODE   <nValue>
+ *                   TODO: Document
+ *              _SET_WRAP        <lFlag> | <cOnOff>
+ *                   When enabled, lightbar menus can be navigated from the
+ *                   last position to the first and from the first position
+ *                   to the last. When disabled, which is the default, there
+ *                   is a hard stop at the first and last positions.
+ * $RETURNS$
+ *      The current or previous setting
+ * $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __SetFunction()
+ *  $CATEGORY$
+ *      Environment
+ *  $ONELINER$
+ *      Assign a character string to a function key
+ *  $SYNTAX$
+ *      __SetFunction( <nFunctionKey>, [<cString>] ) --> NIL
+ *  $ARGUMENTS$
+ *      <nFunctionKey> is a number in the range 1..40 that represent the
+ *      function key to be assigned.
+ *
+ *      <cString> is a character string to set. If <cString> is not
+ *      specified, the function key is going to be set to NIL releasing by
+ *      that any previous __SetFunction() or SETKEY() for that function.
+ *  $RETURNS$
+ *      __SetFunction() always return NIL.
+ *  $DESCRIPTION$
+ *      __SetFunction() assign a character string with a function key, when
+ *      this function key is pressed, the keyboard is stuffed with this
+ *      character string. __SetFunction() has the effect of clearing any
+ *      SETKEY() previously set to the same function number and vice versa.
+ *
+ *      nFunctionKey    Key to be set
+ *      ------------    -------------
+ *         1 .. 12      F1 .. F12
+ *        13 .. 20      Shift-F3 .. Shift-F10
+ *        21 .. 30      Ctrl-F1 .. Ctrl-F10
+ *        31 .. 40      Alt-F1 .. Alt-F10
+ *
+ *      SET FUNCTION command is preprocessed into __SetFunction() function
+ *      during compile time.
+ *  $EXAMPLES$
+ *      // Set F1 with a string
+ *      CLS
+ *      __SetFunction( 1, "I Am Lazy" + CHR( 13 ) )
+ *      cTest := SPACE( 20 )
+ *      @ 10, 0 SAY "type something or F1 for lazy mode " GET cTest
+ *      READ
+ *      ? cTest
+ *  $TESTS$
+ *  $STATUS$
+ *  $COMPLIANCE$
+ *      Harbour use 11 and 12 to represent F11 and F12, while CA-Clipper use
+ *      11 and 12 to represent Shift-F1 and Shift-F2.
+ *  $PLATFORMS$
+ *  $FILES$
+ *  $SEEALSO$
+ *      INKEY(),SETKEY(),__Keyboard(),SET KEY
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *     SET FUNCTION
+ *  $CATEGORY$
+ *     Command
+ *  $ONELINER$
+ *      Assign a character string to a function key
+ *  $SYNTAX$
+ *      SET FUNCTION <nFunctionKey> TO [<cString>]
+ *  $ARGUMENTS$
+ *      <nFunctionKey> is a number in the range 1..40 that represent the
+ *      function key to be assigned.
+ *
+ *      <cString> is a character string to set. If <cString> is not
+ *      specified, the function key is going to be set to NIL releasing by
+ *      that any previous  Set Function or SETKEY() for that function.
+ *  $RETURNS$
+ *  $DESCRIPTION$
+ *        Set Function assign a character string with a function key, when
+ *      this function key is pressed, the keyboard is stuffed with this
+ *      character string. Set Function has the effect of clearing any
+ *      SETKEY() previously set to the same function number and vice versa.
+ *
+ *      nFunctionKey    Key to be set
+ *      ------------    -------------
+ *         1 .. 12      F1 .. F12
+ *        13 .. 20      Shift-F3 .. Shift-F10
+ *        21 .. 30      Ctrl-F1 .. Ctrl-F10
+ *        31 .. 40      Alt-F1 .. Alt-F10
+ *
+ *      SET FUNCTION command is preprocessed into __SetFunction() function
+ *      during compile time.
+ *  $EXAMPLES$
+ *      // Set F1 with a string
+ *      CLS
+ *      Set Function  1 to  "I Am Lazy" + CHR( 13 )
+ *      cTest := SPACE( 20 )
+ *      @ 10, 0 SAY "type something or F1 for lazy mode " GET cTest
+ *      READ
+ *      ? cTest
+ *  $TESTS$
+ *  $STATUS$
+ *  $COMPLIANCE$
+ *      Harbour use 11 and 12 to represent F11 and F12, while CA-Clipper use
+ *      11 and 12 to represent Shift-F1 and Shift-F2.
+ *  $PLATFORMS$
+ *  $FILES$
+ *  $SEEALSO$
+ *      INKEY(),SETKEY(),__Keyboard()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SETKEY()
+ *  $CATEGORY$
+ *      Events
+ *  $ONELINER$
+ *      Assign an action block to a key
+ *  $SYNTAX$
+ *      SETKEY( <anKey> [, <bAction> [, <bCondition> ] ] )
+ *  $ARGUMENTS$
+ *      <anKey> is either a numeric key value, or an array of such values
+ *      <bAction> is an optional code-block to be assigned
+ *      <bCondition> is an optional condition code-block
+ *  $RETURNS$
+ *      Current assigned action-block
+ *  $DESCRIPTION$
+ *      The SetKey() function returns the current code-block assigned to a
+ *      key when called with only the key value.  If the action block (and
+ *      optionally the condition block) are passed, the current block is
+ *      returned, and the new code block and condition block are stored.
+ *      A group of keys may be assigned the same code block/condition block
+ *      by using an array of key values in place on the first parameter.
+ *  $EXAMPLES$
+ *      local bOldF10 := setKey( K_F10, {|| Yahoo() } )
+ *      ... // some other processing
+ *      SetKey( K_F10, bOldF10 )
+ *      ... // some other processing
+ *      bBlock := SetKey( K_SPACE )
+ *      if bBlock != NIL ...
+ *
+ *      // make F10 exit current get, but only if in a get - ignores other
+ *      // wait-states such as menus, achoices, etc...
+ *      SetKey( K_F10, {|| GetActive():State := GE_WRITE },;
+ *       {|| GetActive() != NIL } )
+ *  $TESTS$
+ *      None definable
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      SETKEY() is mostly CA-Clipper compliant. The only difference is the
+ *      addition of the condition code-block parameter, allowing set-keys to
+ *      be conditionally turned off or on.  This condition-block cannot be
+ *      returned once set - see SetKeyGet()
+ *  $SEEALSO$
+ *      HB_SETKEYSAVE()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      HB_SetKeyGet()
+ *  $CATEGORY$
+ *      Events
+ *  $ONELINER$
+ *      Determine a set-key code block & condition-block
+ *  $SYNTAX$
+ *      HB_SETKEYGET( <nKey> [, <bConditionByRef> ] )
+ *  $ARGUMENTS$
+ *      <anKey> is an numeric key value
+ *      <bConditionByRef> is an optional return-parameter
+ *  $RETURNS$
+ *      Current assigned action-block
+ *  $DESCRIPTION$
+ *      The HB_SetKeyGet() function returns the current code-block assigned to 
+ *      a key, and optionally assignes the condition-block to the 
+ *      return-parameter
+ *  $EXAMPLES$
+ *      local bOldF10, bOldF10Cond
+ *      bOldF10 := HB_SetKeyGet( K_F10, @bOldF10Cond )
+ *      ... // some other processing
+ *      SetKey( K_F10, bOldF10, bOldF10Cond )
+ *  $TESTS$
+ *      See test code above
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      HB_SETKEYGET() is a new function and hence not CA-Clipper compliant.
+ *  $SEEALSO$
+ *      SETKEY(),HB_SETKEYSAVE(),HB_SETKEYCHECK()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *     HB_SETKEYSAVE()
+ *  $CATEGORY$
+ *     Events
+ *  $ONELINER$
+ *     Returns a copy of internal set-key list, optionally overwriting
+ *  $SYNTAX$
+ *     HB_SETKEYSAVE( [ <OldKeys> ] )
+ *  $ARGUMENTS$
+ *     <OldKeys> is an optional set-key list from a previous call to
+ *     HB_SetKeySave(), or NIL to clear current set-key list
+ *  $RETURNS$
+ *     Current set-key list
+ *  $DESCRIPTION$
+ *     HB_SetKeySave() is designed to act like the set() function which 
+ *     returns the current state of an environment setting, and optionally 
+ *     assigning a new value.  In this case, the "environment setting" is the 
+ *     internal set-key list, and the optional new value is either a value 
+ *     returned from a previous call to SetKeySave() - to restore that list, 
+ *     or the value of NIL to clear the current list.
+ *  $EXAMPLES$
+ *     local aKeys := HB_SetKeySave( NIL )  // removes all current set=keys
+ *     ... // some other processing
+ *     HB_SetKeySave( aKeys )
+ *  $TESTS$
+ *     None definable
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     HB_SETKEYSAVE() is new.
+ *  $SEEALSO$
+ *     SETKEY()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      HB_SetKeyCheck()
+ *  $CATEGORY$
+ *      Events
+ *  $ONELINER$
+ *      Impliments common hot-key activation code
+ *  $SYNTAX$
+ *      HB_SetKeyCheck( <nKey> [, <p1> ][, <p2> ][, <p3> ] )
+ *  $ARGUMENTS$
+ *      <nKey> is a numeric key value to be tested
+ *      code-block, if executed
+ *      <p1>..<p3> are optional parameters that will be passed to the code-block
+ *  $RETURNS$
+ *      True if there is a hot-key associated with <nKey> and it was executed;
+ *      otherwise False
+ *      If there is a hot-key association (before checking any condition):
+ *      - if there is a condition-block, it is passed one parameter - <nKey>
+ *      - when the hot-key code-block is called, it is passed 1 to 4 parameters,
+ *      depending on the parameters passed to HB_SetKeyCheck().  Any 
+ *      parameters so passed are directly passed to the code-block, with an 
+ *      additional parameter being <nKey>
+ *  $DESCRIPTION$
+ *      HB_SetKeyCheck() is intended as a common interface to the SetKey()
+ *      functionality for such functions as ACHOICE(), DBEDIT(), MEMOEDIT(),
+ *      ACCEPT, INPUT, READ, and WAIT
+ *  $EXAMPLES$
+ *      // within ReadModal()
+ *      if HB_SetKeyCheck( K_ALT_X, GetActive() )
+ *      ... // some other processing
+ *      endif
+ *      // within TBrowse handler
+ *      case HB_SetKeyCheck( nInkey, oTBrowse )
+ *        return
+ *      case nInKey == K_ESC
+ *      ... // some other processing
+ *  $TESTS$
+ *      None definable
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      HB_SETKEYCHECK() is new.
+ *  $SEEALSO$
+ *      SETKEY(),HB_SETKEYSAVE()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SET KEY
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Assign an action block to a key
+ *  $SYNTAX$
+ *      SET KEY   <anKey> to p<bAction>] [when  <bCondition> ]  )
+ *  $ARGUMENTS$
+ *      <anKey> is either a numeric key value, or an array of such values
+ *      <bAction> is an optional code-block to be assigned
+ *      <bCondition> is an optional condition code-block
+ *  $RETURNS$
+ *
+ *  $DESCRIPTION$
+ *      The Set Key Command function is translated to the SetKey() function
+ *      witch returns the current code-block assigned to a
+ *      key when called with only the key value.  If the action block (and
+ *      optionally the condition block) are passed, the current block is
+ *      returned, and the new code block and condition block are stored.
+ *      A group of keys may be assigned the same code block/condition block
+ *      by using an array of key values in place on the first parameter.
+ *  $EXAMPLES$
+ *      local bOldF10 := setKey( K_F10, {|| Yahoo() } )
+ *      ... // some other processing
+ *      Set Key  K_F10 to  bOldF10)
+ *      ... // some other processing
+ *      bBlock := SetKey( K_SPACE )
+ *      if bBlock != NIL ...
+ *
+ *      // make F10 exit current get, but only if in a get - ignores other
+ *      // wait-states such as menus, achoices, etc...
+ *      SetKey( K_F10, {|| GetActive():State := GE_WRITE },;
+ *       {|| GetActive() != NIL } )
+ *  $TESTS$
+ *      None definable
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      SET KEY is mostly CA-Clipper compliant. The only difference is the
+ *      addition of the condition code-block parameter, allowing set-keys to
+ *      be conditionally turned off or on.  This condition-block cannot be
+ *      returned once set - see SetKeyGet()
+ *  $SEEALSO$
+ *      HB_SETKEYSAVE()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SETTYPEAHEAD()
+ *  $CATEGORY$
+ *      Environment
+ *  $ONELINER$
+ *      Sets the typeahead buffer to given size.
+ *  $SYNTAX$
+ *      SETTYPEAHEAD( <nSize> ) --> <nPreviousSize>
+ *  $ARGUMENTS$
+ *      <nSize> is a valid typeahead size.
+ *  $RETURNS$
+ *      The previous state of _SET_TYPEAHEAD
+ *  $DESCRIPTION$
+ *      This function sets the typeahead buffer to a valid given size as is
+ *      Set( _SET_TYPEAHEAD ) where used.
+ *  $EXAMPLES$
+ *      // Sets typeahead to 12
+ *      SetTypeahead( 12 )
+ *  $TESTS$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      SETTYPEAHEAD() is fully CA-Clipper compliant.
+ *  $SEEALSO$
+ *      __ACCEPT(),__INPUT()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __XHELP()
+ *  $CATEGORY$
+ *      Internal
+ *  $ONELINER$
+ *      Looks if a Help() user defined function exist.
+ *  $SYNTAX$
+ *      __XHELP() --> <xValue>
+ *  $ARGUMENTS$
+ *      None
+ *  $RETURNS$
+ *      This function returns aleatory values.
+ *  $DESCRIPTION$
+ *      This is an internal undocumented Clipper function, which will
+ *      try to call the user defined function HELP() if it's defined
+ *      in the current application. This is the default SetKey() handler
+ *      for the F1 key.
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      __XHELP() is fully CA-Clipper compliant.
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */

@@ -1,0 +1,261 @@
+/*
+ * $Id$
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Luiz Rafael Culik <Culik@sl.conex.net>
+ *    Documentation
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *   ISBIN()
+ *  $CATEGORY$
+ *     Conversion
+ *  $ONELINER$
+ *  Check if the value is a Binary  Number
+ *  $SYNTAX$
+ *   ISBIN(<CN>) -><CNR>
+ *  $ARGUMENTS$
+ *  <CN> STRING TO BE CHECKED
+ *  $RETURNS$
+ *     .T. IF THE STRING IS BYNARY
+ *     .F. IF NOT
+ *  $DESCRIPTION$
+ *   check if the passed string is a bynary number or not
+ *  $EXAMPLES$
+ *  $SEEALSO$
+ *    ISOCTAL(),ISDEC(),ISHEXA()
+ *  $INCLUDE$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *   ISOCTAL()
+ *  $CATEGORY$
+ *     Conversion
+ *  $ONELINER$
+ *   Check if the value is a Octal  Number
+ *  $SYNTAX$
+ *   ISOCTAL(<CN>) -><CNR>
+ *  $ARGUMENTS$
+ *  <CN> STRING TO BE CHECKED
+ *  $RETURNS$
+ *   .T. IF THE STRING IS OCTAL
+ *   .F. IF NOT
+ *  $DESCRIPTION$
+ *   check if the passed string is a octal number or not
+ *  $EXAMPLES$
+ *  $SEEALSO$
+ *  ISBIN(),ISDEC(),ISHEXA()
+ *  $INCLUDE$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *   ISDEC()
+ *  $CATEGORY$
+ *     Conversion
+ *  $ONELINER$
+ *   Check if the value is a Decimal  Number
+ *  $SYNTAX$
+ *   ISDEC(<CN>) -><CNR>
+ *  $ARGUMENTS$
+ *  <CN> STRING TO BE CHECKED
+ *  $RETURNS$
+ *   .T. IF THE STRING IS DECIMAL
+ *   .F. IF NOT
+ *  $DESCRIPTION$
+ *   check if the passed string is a decimal number or not
+ *  $EXAMPLES$
+ *  $SEEALSO$
+ *  ISOCTAL(),ISBIN(),ISHEXA()
+ *  $INCLUDE$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *   ISHEXA()
+ *  $CATEGORY$
+ *     Conversion
+ *  $ONELINER$
+ *   Check if the value is a Hexal  Number
+ *  $SYNTAX$
+ *   ISHEXA(<CN>) -><CNR>
+ *  $ARGUMENTS$
+ *  <CN> STRING TO BE CHECKED
+ *  $RETURNS$
+ *   .T. IF THE STRING IS HEXA
+ *   .F. IF NOT
+ *  $DESCRIPTION$
+ *     check if the passed string is a hexa number or not
+ *  $EXAMPLES$
+ *  $SEEALSO$
+ *  ISOCTAL(),ISDEC(),ISBIN()
+ *  $INCLUDE$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *   DECTOBIN()
+ *  $CATEGORY$
+ *     Conversion
+ *  $ONELINER$
+ *   Converts a Decimal Value to Binary
+ *  $SYNTAX$
+ *   DECTOBIN(<CN>) -><CNR>
+ *  $ARGUMENTS$
+ *  <CN> NUMBER TO BE CONVERTED
+ *  $RETURNS$
+ *  <CNR>  NUMBER CONVERTED
+ *  $DESCRIPTION$
+ *    This function converts a string <CN> from an decimal value
+ *    to an binary value.
+ *  $EXAMPLES$
+ *
+ *  $SEEALSO$
+ *     Dectohexa(),dectooctal()
+ *  $INCLUDE$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *   DECTOOCTAL()
+ *  $CATEGORY$
+ *     Conversion
+ *  $ONELINER$
+ *   Converts a Decimal Value to Octal
+ *  $SYNTAX$
+ *   DECTOOCTAL(<CN>) -><CNR>
+ *  $ARGUMENTS$
+ *  <CN> NUMBER TO BE CONVERTED
+ *  $RETURNS$
+ *  <CNR>  NUMBER CONVERTED
+ *  $DESCRIPTION$
+ *    This function converts a string <CN> from an decimal value
+ *    to an octal value.
+ *  $EXAMPLES$
+ *
+ *  $SEEALSO$
+ *  Dectohexa(),dectobin()
+ *  $INCLUDE$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *   DECTOHEXA()
+ *  $CATEGORY$
+ *     Conversion
+ *  $ONELINER$
+ *   Converts a Decimal Value to Hexa
+ *  $SYNTAX$
+ *   DECTOHEXA(<CN>) -><CNR>
+ *  $ARGUMENTS$
+ *  <CN> NUMBER TO BE CONVERTED
+ *  $RETURNS$
+ *  <CNR>  NUMBER CONVERTED
+ *  $DESCRIPTION$
+ *    This function converts a string <CN> from an decimal value
+ *    to an hexadecimal value.
+ *  $EXAMPLES$
+ *
+ *  $SEEALSO$
+ *     Dectobin(),dectoctal()
+ *  $INCLUDE$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *   BIntODEC()
+ *  $CATEGORY$
+ *     Conversion
+ *  $ONELINER$
+ *   Converts a Binary Value to Decimal
+ *  $SYNTAX$
+ *   BIntODEC(<CN>) -><CNR>
+ *  $ARGUMENTS$
+ *  <CN> NUMBER TO BE CONVERTED
+ *  $RETURNS$
+ *  <CNR>  NUMBER CONVERTED
+ *  $DESCRIPTION$
+ *    This function converts a string <CN> from an binary value
+ *    to a numeric decimal value.
+ *  $EXAMPLES$
+ *
+ *  $SEEALSO$
+ *     OctaltoDec(),HexatoDec()
+ *  $INCLUDE$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *   OCTALTODEC()
+ *  $CATEGORY$
+ *     Conversion
+ *  $ONELINER$
+ *   Converts a Octal Value to Decimal
+ *  $SYNTAX$
+ *   OCTALTODEC(<CN>) -><CNR>
+ *  $ARGUMENTS$
+ *  <CN> NUMBER TO BE CONVERTED
+ *  $RETURNS$
+ *  <CNR>  NUMBER CONVERTED
+ *  $DESCRIPTION$
+ *     This function converts a string <CN> from an octal value
+ *     to a numeric decimal value.
+ *  $EXAMPLES$
+ *
+ *  $SEEALSO$
+ *     BintoDec(),HexatoDec()
+ *  $INCLUDE$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *     HEXATODEC()
+ *  $CATEGORY$
+ *     Conversion
+ *  $ONELINER$
+ *     Converts a Hexa Value to Decimal
+ *  $SYNTAX$
+ *     HEXATODEC(<CN>) -><CNR>
+ *  $ARGUMENTS$
+ *    <CN> NUMBER TO BE CONVERTED
+ *  $RETURNS$
+ *    <CNR>  NUMBER CONVERTED
+ *  $DESCRIPTION$
+ *    This function converts a string <CN> from an hexadecimal value
+ *    to a numeric decimal value.
+ *  $EXAMPLES$
+ *
+ *  $SEEALSO$
+ *      OctaltoDec(),BintoDec()
+ *  $INCLUDE$
+ *
+ *  $END$
+ */
+
