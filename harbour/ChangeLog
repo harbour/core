@@ -1,3 +1,27 @@
+19990707-20:45 EDT David G. Holm <dholm@jsd-llc.com>
+  * doc/gmake.txt
+    + Added NOTES section with steps needed for a clean build
+  * include/version.h
+    + Added copyright and license header and filled in version history
+  * source/rtl/console.c
+    + Added copyright and license information for functions that I wrote
+  * source/rtl/dates.c
+    + Added copyright and license information for functions that I wrote
+  * source/rtl/math.c
+    + Added copyright and license information for function that I wrote
+  * source/rtl/strcmp.c
+    + Added copyright and license information for function that I wrote
+  * tests/working/output.prg
+    + Added copyright and license information
+  * tests/working/round.prg
+    + Added copyright and license information
+  * tests/working/scroll.prg
+    + Added copyright and license information
+  * tests/working/seconds.prg
+    + Added copyright and license information
+  * tests/working/version.prg
+    + Added public domain information
+
 19990708-01:33 Bruno Cantero <bruno@issnet.net>
 CVSed by Andi Jahja <andij@aonlippo.co.id>
 

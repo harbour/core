@@ -8,6 +8,17 @@
  *       __ACCEPT()
  */
 
+/* Harbour Project source code
+   http://www.Harbour-Project.org/
+   The following functions are Copyright 1999 David G. Holm:
+      adjust_pos(), hb_altout(), hb_devout(), HB_DEVOUT(), hb_devpos(),
+      HB_DEVPOS(), hb_dispout(), HB___EJECT(), hb_max_col(), HB_MAXCOL(),
+      hb_max_row(), HB_MAXROW(), hb_out(), hb_outerr(), HB_OUTERR(),
+      hb_outstd(), HB_OUTSTD(), HB_PCOL(), HB_PROW(), hb_setpos(),
+      HB_SETPOS(), HB_SETPRC(), HB_SCROLL(), and InitializeConsole().
+   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
+*/
+
 #ifdef WINDOWS
    #include <windows.h>
 #endif

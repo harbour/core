@@ -178,3 +178,23 @@ The most used targets are these:
 * clean: Clean up everything made by make.
 
 * install: Install stuff into the appropriate directory.
+
+
+NOTES
+=====
+In order to get a clean build after making source changes or after
+receiving updated source files, you must use the following three steps:
+
+1) make -r clean
+2) make -r install
+3) make -r
+
+Without the first step, changes to the Harbour compiler will not be
+reflected in any object modules created from Harbour source code.
+
+Without the second step, you can't build the Harbour compiler, because
+it requires that the HBPP library be installed.
+
+The third step is optional if all you want is an updated Harbour compiler,
+because what it does is rebuild the working test programs (which won't
+happen if you omit the first step).

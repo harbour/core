@@ -5,9 +5,14 @@
 /*
  * StrCmp. String comparision functions
  *
- * stricmp       : Copyright (C) 1999 David Holm (...)
  * hb_itemStrCmp : Copyright (C) 1999 Eddie Runia (eddie@runia.com)
  */
+/* Harbour Project source code
+   http://www.Harbour-Project.org/
+   The following function is Copyright 1999 David G. Holm:
+      hb_stricmp().
+   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
+*/
 
 #include <hbsetup.h>
 #include <ctype.h>

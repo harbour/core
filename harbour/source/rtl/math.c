@@ -1,6 +1,12 @@
 /*
  * $Id$
  */
+/* Harbour Project source code
+   http://www.Harbour-Project.org/
+   The following function is Copyright 1999 David G. Holm:
+      HB_ROUND().
+   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
+*/
 
 #include <extend.h>
 #include <init.h>

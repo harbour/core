@@ -1,4 +1,9 @@
 // Testing Harbour device management.
+/* Harbour Project source code
+   http://www.Harbour-Project.org/
+   Copyright 1999 David G. Holm
+   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
+*/
 
 #include "set.ch"
 #define cNewLine CHR( 13 ) + CHR( 10 )

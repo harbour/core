@@ -1,6 +1,12 @@
 /*
  * $Id$
  */
+/* Harbour Project source code
+   http://www.Harbour-Project.org/
+   The following functions are Copyright 1999 David G. Holm:
+      HB_CTOD(), HB_DATE(), hb_dtoc().
+   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
+*/
 
 #include <hbsetup.h>
 #include <extend.h>
