@@ -102,7 +102,7 @@ typedef HB_DYNS_FUNC( PHB_DYNS_FUNC );
 #define HB_FS_MESSAGE  ( ( HB_SYMBOLSCOPE ) 0x20 )
 #define HB_FS_MEMVAR   ( ( HB_SYMBOLSCOPE ) 0x80 )
 
-extern void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
+extern void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
 
 #if defined(HB_EXTERN_C)
 }
