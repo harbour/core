@@ -108,6 +108,12 @@ CLASS Get
    DATA cPicture     HIDDEN   // Used only for METHOD Picture
    DATA bBlock       HIDDEN   // Used only for METHOD Block
 
+   // Protected
+
+   DATA cPicMask, cPicFunc, nMaxLen, lEdit, lDecRev, lPicComplex
+   DATA nDispLen, nDispPos, nOldPos, lCleanZero, cDelimit, nMaxEdit
+   DATA lMinusPrinted
+
    METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec )
 
    METHOD Assign()
@@ -152,12 +158,6 @@ CLASS Get
 
    METHOD Insert( cChar )
    METHOD OverStrike( cChar )
-
-   // Protected
-
-   DATA cPicMask, cPicFunc, nMaxLen, lEdit, lDecRev, lPicComplex
-   DATA nDispLen, nDispPos, nOldPos, lCleanZero, cDelimit, nMaxEdit
-   DATA lMinusPrinted
 
    METHOD DeleteAll()
    METHOD IsEditable( nPos )
@@ -1009,7 +1009,12 @@ METHOD ToDecPos() CLASS Get
    ::Clear  := .f.
    ::lEdit  := .t.
    ::buffer := ::PutMask( ::UnTransform(), .f. )
-   ::pos    := ::DecPos + 1
+
+   if ::DecPos != 0
+      ::pos := ::DecPos + 1
+   else
+      ::pos := ::nDispLen
+   endif
 
    ::Display( .t. )
 
