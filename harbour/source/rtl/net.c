@@ -65,7 +65,7 @@
 
 #include "hbapi.h"
 
-#if defined(HB_OS_OS2)
+#if defined(HB_OS_OS2) && defined(__GNUC__)
 
    #include "hb_io.h"
 
@@ -92,7 +92,7 @@
 
 HB_FUNC( NETNAME )
 {
-#if defined(HB_OS_OS2)
+#if defined(HB_OS_OS2) && defined(__GNUC__)
 
    {
       char * pszValue = ( char * ) hb_xgrab( MAXGETHOSTNAME + 1 );
