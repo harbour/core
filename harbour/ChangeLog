@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-16 14:53 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/rtl/tbrowse.prg
+     ! DispCell() - Fixed displaying of logical fields.
+
+   * source/vm/estack.c
+     + Added language markers HB_I_()
+
 2001-12-16 14:20 UTC+0200 Chen Kedem <niki@actcom.co.il>
 
    * doc/en/lang.txt

@@ -257,7 +257,7 @@ void hb_stackDispLocal( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_stackDispLocal()"));
 
    printf( hb_conNewLine() );
-   printf( "Virtual Machine Stack Dump at %s(%i):", ( *(hb_stack.pBase) )->item.asSymbol.value->szName, ( *(hb_stack.pBase) )->item.asSymbol.lineno );
+   printf( HB_I_("Virtual Machine Stack Dump at %s(%i):"), ( *(hb_stack.pBase) )->item.asSymbol.value->szName, ( *(hb_stack.pBase) )->item.asSymbol.lineno );
    printf( hb_conNewLine() );
    printf( "--------------------------" );
 
@@ -268,53 +268,53 @@ void hb_stackDispLocal( void )
       switch( hb_itemType( *pBase ) )
       {
          case HB_IT_NIL:
-            printf( "NIL " );
+            printf( HB_I_("NIL ") );
             break;
 
          case HB_IT_ARRAY:
             if( hb_arrayIsObject( *pBase ) )
-               printf( "OBJECT = %s ", hb_objGetClsName( *pBase ) );
+               printf( HB_I_("OBJECT = %s "), hb_objGetClsName( *pBase ) );
             else
-               printf( "ARRAY " );
+               printf( HB_I_("ARRAY ") );
             break;
 
          case HB_IT_BLOCK:
-            printf( "BLOCK " );
+            printf( HB_I_("BLOCK ") );
             break;
 
          case HB_IT_DATE:
             {
                char szDate[ 9 ];
-               printf( "DATE = \"%s\" ", hb_itemGetDS( *pBase, szDate ) );
+               printf( HB_I_("DATE = \"%s\" "), hb_itemGetDS( *pBase, szDate ) );
             }
             break;
 
          case HB_IT_DOUBLE:
-            printf( "DOUBLE = %f ", hb_itemGetND( *pBase ) );
+            printf( HB_I_("DOUBLE = %f "), hb_itemGetND( *pBase ) );
             break;
 
          case HB_IT_LOGICAL:
-            printf( "LOGICAL = %s ", hb_itemGetL( *pBase ) ? ".T." : ".F." );
+            printf( HB_I_("LOGICAL = %s "), hb_itemGetL( *pBase ) ? ".T." : ".F." );
             break;
 
          case HB_IT_LONG:
-            printf( "LONG = %lu ", hb_itemGetNL( *pBase ) );
+            printf( HB_I_("LONG = %lu "), hb_itemGetNL( *pBase ) );
             break;
 
          case HB_IT_INTEGER:
-            printf( "INTEGER = %i ", hb_itemGetNI( *pBase ) );
+            printf( HB_I_("INTEGER = %i "), hb_itemGetNI( *pBase ) );
             break;
 
          case HB_IT_STRING:
-            printf( "STRING = \"%s\" ", hb_itemGetCPtr( *pBase ) );
+            printf( HB_I_("STRING = \"%s\" "), hb_itemGetCPtr( *pBase ) );
             break;
 
          case HB_IT_SYMBOL:
-            printf( "SYMBOL = %s ", ( *pBase )->item.asSymbol.value->szName );
+            printf( HB_I_("SYMBOL = %s "), ( *pBase )->item.asSymbol.value->szName );
             break;
 
          default:
-            printf( "UNKNOWN = TYPE %i ", hb_itemType( *pBase ) );
+            printf( HB_I_("UNKNOWN = TYPE %i "), hb_itemType( *pBase ) );
             break;
       }
    }
@@ -333,11 +333,11 @@ void hb_stackDispCall( void )
       pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
 
       if( ( *( pBase + 1 ) )->type == HB_IT_ARRAY )
-         sprintf( buffer, "Called from %s:%s(%i)", hb_objGetClsName( *(pBase + 1) ),
+         sprintf( buffer, HB_I_("Called from %s:%s(%i)"), hb_objGetClsName( *(pBase + 1) ),
             ( *pBase )->item.asSymbol.value->szName,
             ( *pBase )->item.asSymbol.lineno );
       else
-         sprintf( buffer, "Called from %s(%i)",
+         sprintf( buffer, HB_I_("Called from %s(%i)"),
             ( *pBase )->item.asSymbol.value->szName,
             ( *pBase )->item.asSymbol.lineno );
 
@@ -387,11 +387,11 @@ WINBASEAPI LONG WINAPI UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * Ex
       char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ];
 
       if( ( *( pBase + 1 ) )->type == HB_IT_ARRAY )
-         sprintf( buffer, "Called from %s:%s(%i)\n", hb_objGetClsName( *(pBase + 1) ),
+         sprintf( buffer, HB_I_("Called from %s:%s(%i)\n"), hb_objGetClsName( *(pBase + 1) ),
             ( *pBase )->item.asSymbol.value->szName,
             ( *pBase )->item.asSymbol.lineno );
       else
-         sprintf( buffer, "Called from %s(%i)\n",
+         sprintf( buffer, HB_I_("Called from %s(%i)\n"),
             ( *pBase )->item.asSymbol.value->szName,
             ( *pBase )->item.asSymbol.lineno );
 
@@ -401,7 +401,7 @@ WINBASEAPI LONG WINAPI UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * Ex
    }
    while( pBase != hb_stack.pItems );
 
-   MessageBox( NULL, msg, "Harbour Exception", MB_ICONSTOP );
+   MessageBox( NULL, msg, HB_I_("Harbour Exception"), MB_ICONSTOP );
 
    return EXCEPTION_EXECUTE_HANDLER; /* EXCEPTION_CONTINUE_SEARCH; */
 }
@@ -426,16 +426,16 @@ ULONG _System OS2TermHandler(PEXCEPTIONREPORTRECORD       p1,
       during debugging */
    if (p1->ExceptionNum != XCPT_UNWIND && p1->ExceptionNum < XCPT_BREAKPOINT) {
 
-      fprintf(stderr, "\nException %lx at address %lx \n", p1->ExceptionNum, (ULONG)p1->ExceptionAddress);
+      fprintf(stderr, HB_I_("\nException %lx at address %lx \n"), p1->ExceptionNum, (ULONG)p1->ExceptionAddress);
 
       do
       {
          if( ( *( pBase + 1 ) )->type == HB_IT_ARRAY )
-            fprintf( stderr, "Called from %s:%s(%i)\n", hb_objGetClsName( *(pBase + 1) ),
+            fprintf( stderr, HB_I_("Called from %s:%s(%i)\n"), hb_objGetClsName( *(pBase + 1) ),
                      ( *pBase )->item.asSymbol.value->szName,
                      ( *pBase )->item.asSymbol.lineno );
          else
-            fprintf( stderr, "Called from %s(%i)\n",
+            fprintf( stderr, HB_I_("Called from %s(%i)\n"),
                      ( *pBase )->item.asSymbol.value->szName,
                      ( *pBase )->item.asSymbol.lineno );
 

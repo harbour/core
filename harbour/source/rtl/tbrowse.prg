@@ -1084,34 +1084,36 @@ METHOD DispCell( nColumn, nColor ) CLASS TBrowse
    LOCAL oCol   := ::aColumns[nColumn]
    LOCAL ftmp   := Eval(oCol:block)
    LOCAL cType  := ValType( ftmp )
-   LOCAL cPict  := iif(empty(oCol:Picture), "", oCol:Picture)
-   LOCAL cDisp
+   LOCAL cPict  := iif(Empty(oCol:Picture), "", oCol:Picture)
+
+   LOCAL tmp
+
    // NOTE: When nColor is used as an array index we need to increment it by one since CLR_STANDARD is 0
    LOCAL cColor := iif(oCol:ColorBlock != NIL,;
                        hb_ColorIndex(::ColorSpec, Eval(oCol:ColorBlock, ftmp)[nColor + 1] - 1),;
                        hb_ColorIndex(::ColorSpec, nColor))
 
    do case
-      case cType $ "CM"
-         cDisp := PadL(Transform(ftmp, cPict), oCol:Width)
+   case cType $ "CM"
+      DispOut( PadL(Transform(ftmp, cPict), oCol:Width ), cColor )
 
-      case cType == "N"
-         cDisp := PadR(Transform(ftmp, cPict), oCol:Width)
+   case cType == "N"
+      DispOut( PadR(Transform(ftmp, cPict), oCol:Width ), cColor )
 
-      case cType == "D"
-         cPict := iif(cPict == "", "@D", cPict)
-         cDisp := PadR(Transform(ftmp, cPict), oCol:Width)
+   case cType == "D"
+      cPict := iif(cPict == "", "@D", cPict)
+      DispOut( PadR(Transform(ftmp, cPict), oCol:Width ), cColor )
 
-      case cType == "L"
-         cDisp := PadC(iif(ftmp, "T", "F"), oCol:Width)
+   case cType == "L"
+      tmp := PadC( "X", oCol:Width )
+      DispOut( Space( Len( tmp ) - Len( LTrim( tmp ) ) ) )
+      DispOut( iif(ftmp, "T", "F"), cColor )
+      DispOut( Space( Len( tmp ) - Len( RTrim( tmp ) ) ) )
 
-      otherwise
-         cDisp := Space(oCol:Width)
+   otherwise
+      DispOut( Space(oCol:Width), cColor )
 
    endcase
-
-   // Display cell value
-   DispOut(cDisp, cColor)
 
 return cType
 
