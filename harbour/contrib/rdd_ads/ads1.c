@@ -339,6 +339,7 @@ static ERRCODE adsAppend( ADSAREAP pArea, BOOL bUnLockAll )
    HB_TRACE(HB_TR_DEBUG, ("adsAppend(%p, %d)", pArea, (int) bUnLockAll));
 
    AdsAppendRecord  ( pArea->hTable );
+   hb_adsCheckBofEof( pArea );
    return SUCCESS;
 }
 

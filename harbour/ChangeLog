@@ -1,3 +1,7 @@
+20000313-12:42 GMT+3 Alexander Kresin
+   * contrib/rdd_ads/ads1.c
+     * Little bug fixed in adsAppend()
+
 2000-03-12 21:50 GMT-5 David G. Holm <dholm@ sd-llc.com>
    * source/compiler/harbour.y
      ! Added missing ( char * ) override for C++ on line 1549.
