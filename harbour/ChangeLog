@@ -1,3 +1,26 @@
+2000-06-16 18:45 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/classes.c
+     ! Formatting, warnings fixed.
+     * hb_itemCopy( &hb_stack.return, ... ) -> hb_itemReturn( ... )
+
+   * source/rdd/dbfntx/dbfntx1.c
+     * Some formatting.
+
+   -------------------------------------------------------------------------
+   ; Please DON'T use non-ANSI comment (//) in the code. Use /**/ instead.
+
+     I haven't corrected the new // comments this time, but I would kindly 
+     ask the original uploaders to do so. Thanks.
+
+     These files contain // comments:
+
+     pp\ppcore.c
+     rdd\dbfntx\dbfntx1.c
+     rtl\gtsln\kbsln.c
+     vm\classes.c
+   -------------------------------------------------------------------------
+
 2000-06-16 13:37 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * include/hbapigt.h
@@ -10,7 +33,7 @@
 
    * source/rtl/transfrm.c
      ! Fixed handling of "S" picture function, now it works for every 
-       data type, and doesn't need to be the first function to work.
+       data types, and doesn't need to be the first function to work.
      * "0" picture function renamed to "L", some steps made towards the 
        optional filling char support. In the meantime the filling char is 
        always "0".
@@ -20,6 +43,7 @@
    * source/rtl/teditorl.c
      % Some optimizations made, many casts removed.
      ! Non-portable ULONG casts on pointers removed.
+     ! Usage of compatibility (.API) header files removed.
 
    * makefile.bc
      % Removed some more redundant -I$(INCLUDE_DIR)s

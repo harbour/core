@@ -32,8 +32,6 @@
  * their web site at http://www.gnu.org/).
  *
  */
-//#define DEBUG  
-   /* This is only for testing of this module a possibility of finding errors */
 
 #define SUPERTABLE ( &ntxSuper )
 
@@ -84,7 +82,7 @@ typedef struct _NTXHEADER    /* Header of NTX file */
    USHORT   key_dec;
    USHORT   max_item;
    USHORT   half_page;
-   char     key_expr[NTX_MAX_KEY];
+   char     key_expr[ NTX_MAX_KEY ];
    char     unique;
 } NTXHEADER;
 
@@ -94,16 +92,16 @@ typedef struct _NTXBUFFER    /* Header of each block in NTX file (only block
                                 with header has other format */
 {
    USHORT   item_count;
-   USHORT   item_offset[1];
-} NTXBUFFER ;
+   USHORT   item_offset[ 1 ];
+} NTXBUFFER;
 
 typedef NTXBUFFER * LPNTXBUFFER;
 
 typedef struct _NTXITEM      /* each item in NTX block has following format */
 {
-   ULONG    page;    /* subpage (each key in subpage has < value like this key */
-   ULONG    rec_no;  /* RecNo of record with this key */
-   char     key[1];  /* value of key */
+   ULONG    page;     /* subpage (each key in subpage has < value like this key */
+   ULONG    rec_no;   /* RecNo of record with this key */
+   char     key[ 1 ]; /* value of key */
 } NTXITEM; 
 
 typedef NTXITEM * LPNTXITEM;
@@ -117,7 +115,7 @@ static void hb_ntxPageDump( LPPAGEINFO pPage );
 #endif
 
 /* Internal functions */
-static ERRCODE hb_ntxHeaderLoad( LPINDEXINFO pIndex , char *ITN);
+static ERRCODE hb_ntxHeaderLoad( LPINDEXINFO pIndex , char * ITN );
          /* Load NTX header an fill structures pIndex */
 static void hb_ntxHeaderSave( LPINDEXINFO pIndex );
          /* Save NTX header */
@@ -173,9 +171,9 @@ static void hb_ntxPageDump( LPPAGEINFO pPage )
    LPPAGEINFO pLoadedPage;
 
    printf("Dump page : %lX\n",pPage->Page);
-   for ( i = 0 ; i < pPage->uiKeys; i++ )
+   for( i = 0 ; i < pPage->uiKeys; i++ )
    {
-      if ( pPage->pKeys[i].Tag )
+      if( pPage->pKeys[i].Tag )
       {
          pLoadedPage = hb_ntxPageLoad( pPage, pPage->pKeys[i].Tag );
          hb_ntxPageDump( pLoadedPage );
@@ -185,7 +183,7 @@ static void hb_ntxPageDump( LPPAGEINFO pPage )
             pPage->pKeys[i].Xtra,
             pPage->pKeys[i].pItem->item.asString.value);
    }
-   if (pPage->pKeys[i].Tag )
+   if( pPage->pKeys[i].Tag )
    {
       pLoadedPage = hb_ntxPageLoad( pPage, pPage->pKeys[i].Tag );
       hb_ntxPageDump( pLoadedPage );
@@ -199,7 +197,7 @@ static void hb_ntxIndexDump( LPINDEXINFO pIndex )
    LPPAGEINFO pPage;
 
    pPage = hb_ntxIndexRootPageLoad( pIndex );
-   if ( pPage )
+   if( pPage )
    {
       hb_ntxPageDump( pPage );
       hb_ntxPageFree( pPage );
@@ -217,7 +215,8 @@ static int hb_ntxItemCompare( PHB_ITEM pKey1, PHB_ITEM pKey2 )
    if( pKey2 == NULL || pKey2->item.asString.length == 0 )
       return 1;
    if( pKey1 == NULL || pKey1->item.asString.length == 0 )
-      return ( pKey2->item.asString.length == 0 ) ? 0: -1;
+      return ( pKey2->item.asString.length == 0 ) ? 0 : -1;
+
    switch( hb_itemType( pKey1 ) )
    {
       case HB_IT_STRING:
@@ -230,6 +229,7 @@ static int hb_ntxItemCompare( PHB_ITEM pKey1, PHB_ITEM pKey2 )
                       pKey2->item.asString.value[ EndPos ];
             EndPos += 1;
          } while( iResult == 0 && EndPos < iLimit );
+
          if( iResult == 0 )
          {
             EndPos += 1;
@@ -258,27 +258,27 @@ static ERRCODE hb_ntxPageAddPageKeyAdd( LPPAGEINFO pPage, PHB_ITEM pKey, int lev
    LPPAGEINFO pNewPage;
 
    pNewPage = hb_ntxPageNew( pPage->TagParent, pPage );
-   if ( pNewPage == NULL )
+   if( pNewPage == NULL )
       return FAILURE;
    nBegin = pos;
    nCount = 0;
-   while ( ( nCount < nMaxCount ) && ( nBegin > 0 ) && ( pPage->pKeys[ nBegin - 1 ].Tag == 0 ) )
+   while( ( nCount < nMaxCount ) && ( nBegin > 0 ) && ( pPage->pKeys[ nBegin - 1 ].Tag == 0 ) )
    {
       nBegin--;
       nCount++;
    }
    nEnd = pos;
-   while ( ( nCount < nMaxCount ) && ( nEnd < MaxKeys ) && ( pPage->pKeys[ nEnd + 1 ].Tag == 0 ) )
+   while( ( nCount < nMaxCount ) && ( nEnd < MaxKeys ) && ( pPage->pKeys[ nEnd + 1 ].Tag == 0 ) )
    {
       nEnd++;
       nCount++;
    }
    nNewPos = pos - nBegin ;
-   if ( nNewPos > 0 )
+   if( nNewPos > 0 )
       memmove( pNewPage->pKeys, pPage->pKeys + nBegin,  nNewPos * sizeof( KEYINFO ));
    pNewPage->pKeys[nNewPos].Xtra = pPage->TagParent->Owner->Owner->lpExtendInfo->ulRecNo;
    pNewPage->pKeys[nNewPos].pItem = hb_itemNew( pKey );
-   if ( nEnd > pos )
+   if( nEnd > pos )
       memmove( pNewPage->pKeys + nNewPos + 1, pPage->pKeys + pos,  ( nEnd - pos ) * sizeof( KEYINFO ));
    pPage->pKeys[nEnd].Tag = pNewPage->Page;
    memmove( pPage->pKeys + nBegin , pPage->pKeys + nEnd, 
@@ -311,7 +311,7 @@ static ERRCODE hb_ntxPageKeyAdd( LPPAGEINFO pPage, PHB_ITEM pKey, int level)
    LPPAGEINFO pLoadedPage;
    
    i=0;
-   if ( pPage->uiKeys == 0 )
+   if( pPage->uiKeys == 0 )
    {
       pPage->uiKeys=1;
       pPage->Changed = TRUE;
@@ -319,19 +319,19 @@ static ERRCODE hb_ntxPageKeyAdd( LPPAGEINFO pPage, PHB_ITEM pKey, int level)
       pPage->pKeys->pItem = hb_itemNew( pKey );
       return SUCCESS;
    }
-   while ( i < pPage->uiKeys )
+   while( i < pPage->uiKeys )
    {
       cmp = hb_ntxItemCompare( pPage->pKeys[ i ].pItem , pKey );
-      if ( cmp > 0 )
+      if( cmp > 0 )
       {
-         if ( pPage->uiKeys == pPage->TagParent->MaxKeys )
+         if( pPage->uiKeys == pPage->TagParent->MaxKeys )
          {
             hb_ntxPageAddPageKeyAdd(pPage, pKey, level, i );
          }
-         else if ( pPage->pKeys[i].Tag != 0 )
+         else if( pPage->pKeys[i].Tag != 0 )
          {
             pLoadedPage = hb_ntxPageLoad( pPage, pPage->pKeys[i].Tag );
-            if ( pLoadedPage == NULL )
+            if( pLoadedPage == NULL )
             {
                // TODO : Error recovery ???
                return FAILURE;
@@ -347,12 +347,13 @@ static ERRCODE hb_ntxPageKeyAdd( LPPAGEINFO pPage, PHB_ITEM pKey, int level)
       }
       i++;
    }
-   if ( pPage->uiKeys == pPage->TagParent->MaxKeys )
+   if( pPage->uiKeys == pPage->TagParent->MaxKeys )
    {
-   } else if ( pPage->pKeys[i].Tag != 0 )
+   }
+   else if( pPage->pKeys[i].Tag != 0 )
    {
       pLoadedPage = hb_ntxPageLoad( pPage, pPage->pKeys[i].Tag );
-      if ( pLoadedPage == NULL )
+      if( pLoadedPage == NULL )
       {
          // TODO : Error recovery ???
          return FAILURE;
@@ -371,7 +372,7 @@ static ERRCODE hb_ntxTagKeyAdd( LPTAGINFO pTag, PHB_ITEM pKey)
 {
    LPPAGEINFO pPage;
 
-   if ( pTag->RootPage ) 
+   if( pTag->RootPage ) 
    { 
       /* TODO :
          Add next keys */
@@ -402,21 +403,21 @@ static LPINDEXINFO hb_ntxIndexNew( AREAP pArea )
    pIndex->Owner = pArea;
    pIndex->NextAvail = -1;
    pIndex->TagRoot = 1;
-   if ( pArea->lpIndexInfo )
+   if( pArea->lpIndexInfo )
    {
       do
       {
          found = 0;
          pIndex->TagRoot++;
          pIndexes = pArea->lpIndexInfo;
-         while ( pIndexes->pNext != pArea->lpIndexInfo )
+         while( pIndexes->pNext != pArea->lpIndexInfo )
          {
-            if ( pIndex->TagRoot == pIndexes->TagRoot )
+            if( pIndex->TagRoot == pIndexes->TagRoot )
                found = 1;
             pIndexes = pIndexes->pNext;
          }
       }
-      while ( found );
+      while( found );
    } 
    return pIndex;
 }
@@ -426,17 +427,17 @@ static void hb_ntxIndexFree( LPINDEXINFO pIndex )
    LPTAGINFO pTag;
 
    pTag = pIndex->CompoundTag;
-   if ( pTag->RootPage > 0 )
+   if( pTag->RootPage > 0 )
       hb_ntxPageFree( pTag->RootPage );
    hb_fsClose( pIndex->DiskFile );
    hb_xfree( pTag->TagName );
-   if ( pTag->KeyExpr != NULL )
+   if( pTag->KeyExpr != NULL )
       hb_xfree( pTag->KeyExpr );
-   if ( pTag->ForExpr != NULL )
+   if( pTag->ForExpr != NULL )
       hb_xfree( pTag->ForExpr );
-   if ( pTag->pKeyItem != NULL )
+   if( pTag->pKeyItem != NULL )
       hb_itemRelease( pTag->pKeyItem );
-   if ( pTag->pForItem != NULL )
+   if( pTag->pForItem != NULL )
       hb_itemRelease( pTag->pForItem );
    hb_xfree( pTag );
    hb_xfree( pIndex->IndexName );
@@ -451,12 +452,12 @@ static LPTAGINFO hb_ntxTagNew( LPINDEXINFO PIF, char * ITN, char *szKeyExpr, PHB
    memset( pTag, 0, sizeof( TAGINFO ) );
    pTag->TagName = (char *) hb_xgrab( strlen( ITN ) + 1 );
    hb_strncpyUpper( pTag->TagName, ITN, strlen( ITN ) + 1 );
-   if ( szKeyExpr )
+   if( szKeyExpr )
    {
       pTag->KeyExpr = (char *) hb_xgrab( NTX_MAX_KEY );
       strcpy( pTag->KeyExpr, szKeyExpr );
    }
-   if ( szForExp )
+   if( szForExp )
    {
       pTag->ForExpr = (char *) hb_xgrab( NTX_MAX_KEY ); 
       strcpy( pTag->ForExpr, szForExp );
@@ -492,7 +493,7 @@ static ERRCODE hb_ntxIndexCreate( LPINDEXINFO pIndex )
    pArea = pIndex->Owner;
    pTag = pIndex->CompoundTag;
    pItem = hb_itemNew( NULL );
-   for ( ulRecNo = 1; ulRecNo <= ulRecCount; ulRecNo++) 
+   for( ulRecNo = 1; ulRecNo <= ulRecCount; ulRecNo++) 
    { 
       hb_fsSeek( pArea->lpDataInfo->hFile,
                  pArea->lpExtendInfo->uiHeaderLen +
@@ -525,9 +526,9 @@ static ERRCODE hb_ntxIndexCreate( LPINDEXINFO pIndex )
          {
             case HB_IT_STRING:
                uiCurLen = hb_itemGetCLen( pItem );
-               if (uiCurLen > NTX_MAX_KEY )
+               if(uiCurLen > NTX_MAX_KEY )
                   uiCurLen = NTX_MAX_KEY ;
-               if ( pTag->KeyLength != uiCurLen )
+               if( pTag->KeyLength != uiCurLen )
                {
                   hb_itemRelease( pItem );
                   return FAILURE;
@@ -539,11 +540,11 @@ static ERRCODE hb_ntxIndexCreate( LPINDEXINFO pIndex )
                hb_ntxTagKeyAdd( pTag, pItem );
 #ifdef DEBUG
                pPage = pTag->RootPage;
-               while ( pPage ) 
+               while( pPage ) 
                {
-                  if ( pPage->Changed )
+                  if( pPage->Changed )
                   {
-                     if ( pPage->NewRoot ) 
+                     if( pPage->NewRoot ) 
                      {
                         pPage->TagParent->RootBlock = pPage->Page;
                         hb_ntxHeaderSave( pIndex );
@@ -570,16 +571,16 @@ static void hb_ntxPageFree( LPPAGEINFO pPage )
 {
    int i;
 
-   if ( pPage->Child )
+   if( pPage->Child )
       hb_ntxPageFree( pPage->Child );
-   if ( pPage->Changed )
+   if( pPage->Changed )
       hb_ntxPageSave( pPage );
-   if ( pPage->NewRoot )
+   if( pPage->NewRoot )
    {
       pPage->TagParent->RootBlock = pPage->Page;
       hb_ntxHeaderSave( pPage->TagParent->Owner );
    }
-   for ( i = 0; i< pPage->uiKeys; i++)
+   for( i = 0; i< pPage->uiKeys; i++)
    {
       hb_itemRelease( pPage->pKeys[i].pItem );
    }
@@ -614,7 +615,7 @@ static void hb_ntxPageSave( LPPAGEINFO pPage )
    pKey = pPage->pKeys;
    itemlist = ( LPNTXBUFFER ) buffer;
    itemlist->item_count = pPage->uiKeys;
-   for (i=0; i<pPage->uiKeys; i++) 
+   for( i = 0; i < pPage->uiKeys; i++ ) 
    {
       itemlist->item_offset[i] = 2 + 2 * ( pPage->TagParent->MaxKeys + 1 ) + 
                i * ( pPage->TagParent->KeyLength + 8 );
@@ -643,7 +644,7 @@ static LPPAGEINFO hb_ntxIndexRootPageLoad( LPINDEXINFO pIndex )
 
    hb_fsSeek( pIndex->DiskFile, pIndex->CompoundTag->RootBlock, FS_SET );
    uiCount = hb_fsRead( pIndex->DiskFile, buffer, NTXBLOCKSIZE );
-   if ( uiCount != NTXBLOCKSIZE )
+   if( uiCount != NTXBLOCKSIZE )
    {
       return NULL;
    }
@@ -657,7 +658,7 @@ static LPPAGEINFO hb_ntxIndexRootPageLoad( LPINDEXINFO pIndex )
    memset( pPage->pKeys, 0, sizeof( KEYINFO ) * ( pPage->TagParent->MaxKeys + 1 ) );
    itemlist = ( LPNTXBUFFER ) buffer;
    pPage->uiKeys = itemlist->item_count;
-   for ( i = 0; i < itemlist->item_count; i++) 
+   for( i = 0; i < itemlist->item_count; i++ ) 
    {
       item=(NTXITEM *)(buffer+itemlist->item_offset[i]);
       pPage->pKeys[i].Xtra = item->rec_no;
@@ -680,7 +681,7 @@ static LPPAGEINFO hb_ntxPageLoad( LPPAGEINFO pParentPage, ULONG ulOffset )
 
    hb_fsSeek( pParentPage->TagParent->Owner->DiskFile, ulOffset, FS_SET );
    uiCount = hb_fsRead( pParentPage->TagParent->Owner->DiskFile, buffer, NTXBLOCKSIZE );
-   if ( uiCount != NTXBLOCKSIZE )
+   if( uiCount != NTXBLOCKSIZE )
    {
       return NULL;
    }
@@ -695,7 +696,7 @@ static LPPAGEINFO hb_ntxPageLoad( LPPAGEINFO pParentPage, ULONG ulOffset )
 
    itemlist = ( LPNTXBUFFER ) buffer;
    pPage->uiKeys = itemlist->item_count ;
-   for ( i = 0; i < itemlist->item_count; i++) 
+   for( i = 0; i < itemlist->item_count; i++ ) 
    {
       item=(NTXITEM *)(buffer+itemlist->item_offset[i]);
       pPage->pKeys[i].Xtra = item->rec_no;
@@ -725,7 +726,7 @@ static void hb_ntxHeaderSave( LPINDEXINFO pIndex )
    Header.unique = pIndex->CompoundTag->UniqueKey;
    hb_fsSeek( pIndex->DiskFile , 0 , 0 );
    hb_fsWrite( pIndex->DiskFile,(BYTE*)&Header,sizeof(NTXHEADER));
-   if ( pIndex->CompoundTag->RootPage )
+   if( pIndex->CompoundTag->RootPage )
       pIndex->CompoundTag->RootPage->NewRoot = FALSE;
 }
 
@@ -736,9 +737,9 @@ static ERRCODE hb_ntxHeaderLoad( LPINDEXINFO pIndex , char *ITN)
    PHB_ITEM pExpr;
 
    hb_fsSeek( pIndex->DiskFile , 0 , 0 );
-   if ( hb_fsRead( pIndex->DiskFile,(BYTE*)&Header,sizeof(NTXHEADER)) != sizeof(NTXHEADER) )
+   if( hb_fsRead( pIndex->DiskFile,(BYTE*)&Header,sizeof(NTXHEADER)) != sizeof(NTXHEADER) )
       return FAILURE;
-   if ( SELF_COMPILE( pIndex->Owner, Header.key_expr ) == FAILURE )
+   if( SELF_COMPILE( pIndex->Owner, Header.key_expr ) == FAILURE )
       return FAILURE;
    pExpr = pIndex->Owner->valResult;
    pIndex->Owner->valResult = NULL;
@@ -767,23 +768,23 @@ static LPINDEXINFO ntxFindIndex( AREAP pArea , PHB_ITEM lpOrder )
 
    start = pArea->lpIndexInfo;
    current=start;
-   if ( hb_itemType( lpOrder ) == HB_IT_STRING )
+   if( hb_itemType( lpOrder ) == HB_IT_STRING )
    {
       do
       {
-         if ( !strcmp( current->CompoundTag->TagName , hb_itemGetCPtr( lpOrder ) ) )
+         if( !strcmp( current->CompoundTag->TagName , hb_itemGetCPtr( lpOrder ) ) )
             return current;
          current = current->pNext;
-      } while ( start != current );
+      } while( start != current );
    }
    else
    {
       do
       {
-         if ( current->TagRoot == hb_itemGetNI( lpOrder ) )
+         if( current->TagRoot == hb_itemGetNI( lpOrder ) )
             return current;
          current = current->pNext;
-      } while ( start != current );
+      } while( start != current );
    }
    return NULL;
 }
@@ -918,7 +919,7 @@ static ERRCODE ntxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
          {
             hb_itemRelease( pKeyExp );
             hb_itemRelease( pForExp );
-            if ( pExpMacro != NULL )
+            if( pExpMacro != NULL )
                 hb_macroDelete( pExpMacro );
             return FAILURE;
          }
@@ -937,9 +938,9 @@ static ERRCODE ntxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
       {
          hb_itemRelease( pKeyExp );
          hb_itemRelease( pForExp );
-         if ( pExpMacro != NULL )
+         if( pExpMacro != NULL )
             hb_macroDelete( pExpMacro );
-         if ( pForMacro != NULL )
+         if( pForMacro != NULL )
             hb_macroDelete( pForMacro );
          return FAILURE;
       }
@@ -988,7 +989,7 @@ static ERRCODE ntxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    pIndex->CompoundTag = pTag;
 
    pIndex->DiskFile = hb_fsCreate( szFileName , FC_NORMAL );
-   if (pIndex->DiskFile == FS_ERROR) {
+   if(pIndex->DiskFile == FS_ERROR) {
       hb_xfree( szFileName );
       hb_itemRelease( pKeyExp );
       if( pForExp != NULL )
@@ -1000,7 +1001,7 @@ static ERRCODE ntxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
       return FAILURE;
    }
    hb_ntxHeaderSave( pIndex );
-   if ( hb_ntxIndexCreate( pIndex ) == FAILURE )
+   if( hb_ntxIndexCreate( pIndex ) == FAILURE )
    {
       return FAILURE;
    }
@@ -1017,10 +1018,10 @@ static ERRCODE ntxOrderInfo( AREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo )
    switch( uiIndex )
    {
       case DBOI_CONDITION:
-         if ( pArea->lpIndexInfo )
+         if( pArea->lpIndexInfo )
          {
             pIndex = ntxFindIndex( pArea , pInfo->itmOrder );
-            if ( pIndex && ( pIndex->CompoundTag->ForExpr != NULL ) )
+            if( pIndex && ( pIndex->CompoundTag->ForExpr != NULL ) )
             {
                hb_itemPutC( pInfo->itmResult , pIndex->CompoundTag->ForExpr );
                return SUCCESS;
@@ -1029,10 +1030,10 @@ static ERRCODE ntxOrderInfo( AREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo )
          hb_itemPutC( pInfo->itmResult, "" );
          break;
       case DBOI_EXPRESSION:  
-         if ( pArea->lpIndexInfo )
+         if( pArea->lpIndexInfo )
          {
             pIndex = ntxFindIndex( pArea , pInfo->itmOrder );
-            if ( pIndex )
+            if( pIndex )
             {
                hb_itemPutC( pInfo->itmResult , pIndex->CompoundTag->KeyExpr );
                return SUCCESS;
@@ -1041,10 +1042,10 @@ static ERRCODE ntxOrderInfo( AREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo )
          hb_itemPutC( pInfo->itmResult, "" );
          break;
       case DBOI_NUMBER:  
-         if ( pArea->lpIndexInfo )
+         if( pArea->lpIndexInfo )
          {
             pIndex = ntxFindIndex( pArea , pInfo->itmOrder );
-            if ( pIndex )
+            if( pIndex )
             {
                hb_itemPutNI( pInfo->itmResult, pIndex->TagRoot );
                return SUCCESS;
@@ -1053,10 +1054,10 @@ static ERRCODE ntxOrderInfo( AREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo )
          //TODO: Raise recoverable error
          break;
       case DBOI_BAGNAME:  
-         if ( pArea->lpIndexInfo )
+         if( pArea->lpIndexInfo )
          {
             pIndex = ntxFindIndex( pArea , pInfo->itmOrder );
-            if ( pIndex )
+            if( pIndex )
             {
                hb_itemPutC( pInfo->itmResult, pIndex->IndexName );
                return SUCCESS;
@@ -1065,7 +1066,7 @@ static ERRCODE ntxOrderInfo( AREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo )
          hb_itemPutC( pInfo->itmResult, "" );
          break;
       case DBOI_BAGEXT:
-         hb_itemPutC( pInfo->itmResult, ".NTX" );
+         hb_itemPutC( pInfo->itmResult, ".ntx" );
          break;
    }
    return SUCCESS;
@@ -1093,7 +1094,7 @@ static ERRCODE ntxOrderListAdd( AREAP pArea, LPDBORDERINFO pOrderInfo )
    }
    pIndex = hb_ntxIndexNew( pArea );
    pIndex->DiskFile = hb_fsOpen( szFileName , FO_READWRITE | FO_DENYNONE );
-   if ( hb_ntxHeaderLoad( pIndex, pFileName->szName ) == FAILURE )
+   if( hb_ntxHeaderLoad( pIndex, pFileName->szName ) == FAILURE )
    {
       hb_xfree( pIndex );
       hb_xfree( szFileName );
@@ -1104,7 +1105,7 @@ static ERRCODE ntxOrderListAdd( AREAP pArea, LPDBORDERINFO pOrderInfo )
    pIndex->IndexName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
    strncpy( pIndex->IndexName, szFileName, _POSIX_PATH_MAX );
 
-   if ( pArea->lpIndexInfo )
+   if( pArea->lpIndexInfo )
    {
       pIndex->pNext = pArea->lpIndexInfo->pNext;
       pArea->lpIndexInfo->pNext = pIndex;
