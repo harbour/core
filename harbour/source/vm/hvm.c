@@ -588,7 +588,7 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          /* Object */
 
          case HB_P_MESSAGE:
-            hb_vmMessage( pSymbols + ( USHORT ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) ) );
+            hb_vmPushSymbol( pSymbols + ( USHORT ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) ) );
             w += 3;
             break;
 
@@ -1420,7 +1420,7 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_MMESSAGE:
          {
             HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
-            hb_vmMessage( ( *pDynSym )->pSymbol );
+            hb_vmPushSymbol( ( *pDynSym )->pSymbol );
             w += sizeof( HB_DYNS_PTR ) + 1;
             break;
          }
@@ -2829,20 +2829,6 @@ static void hb_vmArrayNew( HB_ITEM_PTR pArray, USHORT uiDimension )
 /* ------------------------------- */
 /* Object                          */
 /* ------------------------------- */
-
-void hb_vmMessage( PHB_SYMB pSymMsg ) /* sends a message to an object */
-{
-   PHB_ITEM pItemMsg = hb_stackItemFromTop( -1 );
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmMessage(%p, %s)", pSymMsg, pSymMsg->szName));
-
-   hb_itemCopy( hb_stackTopItem(), pItemMsg ); /* moves the object forward */
-   hb_itemClear( pItemMsg );
-   pItemMsg->type = HB_IT_SYMBOL;
-   pItemMsg->item.asSymbol.value = pSymMsg;
-   pItemMsg->item.asSymbol.stackbase = hb_stackTopOffset() - 1;
-   hb_stackPush();
-}
 
 static void hb_vmOperatorCall( PHB_ITEM pObjItem, PHB_ITEM pMsgItem, char * szSymbol )
 {
