@@ -3329,6 +3329,14 @@ static int md_strAt( char * szSub, int lSubLen, char * szText, BOOL checkword, B
            continue;
         }
 
+        if( lSubPos && checkPrth && ( kolPrth > 0 || kolFig > 0 ) )
+        {
+           cLastChar = *(szText+lPos);
+           lPos++;
+           lSubPos = 0;
+           continue;
+        }
+
         if( ( lCase && toupper(*(szText + lPos)) == toupper(*(szSub + lSubPos)) ) || ( !lCase && *(szText + lPos) == *(szSub + lSubPos) ) )
         {
            lSubPos++;

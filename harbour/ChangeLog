@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-02-27 01:27 UTC+0100 Maurilio Longo <maurilio.longo@libero.it>
+	* harbour/source/rtl/tbrowse.prg
+	  ! fixed columns' width calc (quick and not very much tested)
+
 2002-02-26 21:50 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
   * include/hbapi.h
     * Added newline at the end to clear gcc warning
