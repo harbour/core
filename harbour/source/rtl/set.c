@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Set functions
  *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ * Copyright 1999-2001 David G. Holm <dholm@jsd-llc.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -72,6 +72,29 @@ typedef struct HB_SET_LISTENER_
 static PHB_SET_LISTENER sp_sl_first;
 static PHB_SET_LISTENER sp_sl_last;
 static int s_next_listener;
+
+static PATHNAMES * sp_set_path;
+
+static void hb_setFreeSetPath( void )
+{
+   /* Free all set paths */
+   PATHNAMES * curPath = sp_set_path;
+   PATHNAMES * nextPath;
+   while( curPath )
+   {
+      nextPath = curPath->pNext;
+      hb_xfree( curPath );
+      curPath = nextPath;
+   }
+   if( sp_set_path )
+   {
+      /* Only the first path holds an allocated string.
+         All of the other paths in the list are part of
+         that first string. */
+      hb_xfree( sp_set_path->szPath );
+      sp_set_path = NULL;
+   }
+}
 
 static BOOL set_logical( PHB_ITEM pItem )
 {
@@ -609,7 +632,12 @@ HB_FUNC( SET )
       case HB_SET_PATH       :
          if( hb_set.HB_SET_PATH ) hb_retc( hb_set.HB_SET_PATH );
          else hb_retc( "" );
-         if( args > 1 ) hb_set.HB_SET_PATH = set_string( pArg2, hb_set.HB_SET_PATH );
+         if( args > 1 )
+         {
+            hb_setFreeSetPath();
+            hb_set.HB_SET_PATH = set_string( pArg2, hb_set.HB_SET_PATH );
+            hb_fsAddSearchPath( hb_set.HB_SET_PATH, &sp_set_path );
+         }
          break;
       case HB_SET_PRINTER    :
          hb_retl( hb_set.HB_SET_PRINTER );
@@ -797,7 +825,7 @@ void hb_setRelease( void )
    if( hb_set.HB_SET_PRINTFILE )  hb_xfree( hb_set.HB_SET_PRINTFILE );
 
    hb_set.HB_SET_TYPEAHEAD = -1; hb_inkeyReset( TRUE ); /* Free keyboard typeahead buffer */
-   
+
    while( sp_sl_first )
    {
       /* Free all set listeners */
@@ -805,6 +833,8 @@ void hb_setRelease( void )
       hb_xfree( sp_sl_first );
       sp_sl_first = sp_sl_last;
    }
+
+   hb_setFreeSetPath();
 }
 
 int hb_setListenerAdd( HB_SET_LISTENER_CALLBACK * callback )
@@ -849,4 +879,9 @@ int hb_setListenerRemove( int listener )
       }
    }
    return listener;
+}
+
+PATHNAMES * hb_setGetFirstSetPath( void )
+{
+   return sp_set_path;
 }

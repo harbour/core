@@ -91,6 +91,7 @@ C_SOURCES=\
 	shadow.c     \
 	soundex.c    \
 	space.c      \
+	spfiles.c    \
 	str.c        \
 	strcase.c    \
 	strings.c    \

@@ -71,7 +71,45 @@ extern void _RTLENTRY _init_streams(void);
 #pragma startup       _init_streams 5
 #endif
 
+/*
+ * Function that adds at most one path to a list of pathnames to search
+ */
+static void AddSearchPath( char * szPath, PATHNAMES * * pSearchList )
+{
+   PATHNAMES * pPath = *pSearchList;
 
+   if( pPath )
+   {
+      while( pPath->pNext )
+         pPath = pPath->pNext;
+
+      pPath->pNext = ( PATHNAMES * ) hb_xgrab( sizeof( PATHNAMES ) );
+      pPath = pPath->pNext;
+   }
+   else
+      *pSearchList = pPath = ( PATHNAMES * ) hb_xgrab( sizeof( PATHNAMES ) );
+
+   pPath->pNext  = NULL;
+   pPath->szPath = szPath;
+}
+
+/*
+ * Function that adds zero or more paths to a list of pathnames to search
+ */
+void hb_fsAddSearchPath( char * szPath, PATHNAMES * * pSearchList )
+{
+   char * pPath;
+   char * pDelim;
+
+   pPath = hb_strdup( szPath );
+   while( ( pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR ) ) != NULL )
+   {
+      * pDelim = '\0';
+      AddSearchPath( pPath, pSearchList );
+      pPath = pDelim + 1;
+   }
+   AddSearchPath( pPath, pSearchList );
+}
 
 /* Split given filename into path, name and extension, plus determine drive */
 PHB_FNAME hb_fsFNameSplit( char * pszFileName )

@@ -62,13 +62,6 @@
 extern "C" {
 #endif
 
-/* the list of pathnames to search with #include */
-typedef struct _PATHNAMES
-{
-   char * szPath;
-   struct _PATHNAMES * pNext;
-} PATHNAMES;
-
 struct _DEFINES;
 typedef struct _DEFINES
 {

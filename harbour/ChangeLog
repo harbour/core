@@ -1,3 +1,32 @@
+2001-11-28 19:45 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+
+  * include/hbapifs.h
+    + Moved PATHNAMES support from include/hbpp.h.
+
+  * include/hbpp.h
+    - Moved PATHNAMES support into include/hbapifs.h
+
+  * include/hbset.h
+    + Added PATHNAMES support for SET PATH.
+
+  * source/common/hbfsapi.c
+    + Moved PATHNAMES support from source/compiler/cmdcheck.c
+
+  * source/compiler/cmdcheck.c
+    - Moved PATHNAMES support into source/common/hbfsapi.c
+
+  * source/rtl/Makefile
+    + Added spfiles.c
+
+  * source/rtl/philes.c
+    ! FILES uses the new search path file API.
+
+  * source/rtl/set.c
+    + Added PATHNAMES support for SET PATH.
+
+  + source/rtl/spfiles.c
+    + New search path file API functions.
+
 2001-11-28 22:45 GMT+1 JFL (mafact) <jfl@mafact.com>
    * harbour/source/vm/classes.c
      * Now releasing Classes from the last one to check Bryan GPF

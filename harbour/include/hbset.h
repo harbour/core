@@ -190,6 +190,7 @@ extern HB_SET_STRUCT hb_set;
 
 extern void hb_setInitialize( void );
 extern void hb_setRelease( void );
+extern PATHNAMES * hb_setGetFirstSetPath( void );
 
 typedef enum
 {

@@ -52,6 +52,7 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hbapierr.h"
+#include "hbset.h"
 
 HB_FUNC( FOPEN )
 {
@@ -176,7 +177,7 @@ HB_FUNC( FSEEK )
 
 HB_FUNC( FILE )
 {
-   hb_retl( ISCHAR( 1 ) ? hb_fsFile( ( BYTE * ) hb_parc( 1 ) ) : FALSE );
+   hb_retl( ISCHAR( 1 ) ? hb_spFile( hb_parc( 1 ) ) : FALSE );
 }
 
 HB_FUNC( FREADSTR )

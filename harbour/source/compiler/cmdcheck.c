@@ -55,27 +55,6 @@ extern int hb_pp_ParseDefine( char * );
    -r -t || getenv( "TMP" )
 */
 
-/*
- * Function that adds specified path to the list of pathnames to search list
- */
-static void AddSearchPath( char * szPath, PATHNAMES * * pSearchList )
-{
-   PATHNAMES * pPath = *pSearchList;
-
-   if( pPath )
-   {
-      while( pPath->pNext )
-         pPath = pPath->pNext;
-
-      pPath->pNext = ( PATHNAMES * ) hb_xgrab( sizeof( PATHNAMES ) );
-      pPath = pPath->pNext;
-   }
-   else
-      *pSearchList = pPath = ( PATHNAMES * ) hb_xgrab( sizeof( PATHNAMES ) );
-
-   pPath->pNext  = NULL;
-   pPath->szPath = szPath;
-}
 
 /* NOTE: Making the date and time info to fit into 32 bits can only be done
          in a "lossy" way, in practice that means it's not possible to unpack
@@ -603,19 +582,7 @@ void hb_compChkEnvironVar( char * szSwitch )
                */
              case 'i':
              case 'I':
-                {
-                   char * pPath;
-                   char * pDelim;
-
-                   pPath = hb_strdup( s + 1 );
-                   while( ( pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR ) ) != NULL )
-                   {
-                      * pDelim = '\0';
-                      AddSearchPath( pPath, &hb_comp_pIncludePath );
-                      pPath = pDelim + 1;
-                   }
-                   AddSearchPath( pPath, &hb_comp_pIncludePath );
-                }
+                hb_fsAddSearchPath( s + 1, &hb_comp_pIncludePath );
                 break;
 
              case 'k':
@@ -811,17 +778,7 @@ void hb_compChkPaths( void )
 
    if( szInclude )
    {
-      char * pPath;
-      char * pDelim;
-
-      pPath = szInclude = hb_strdup( szInclude );
-      while( ( pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR ) ) != NULL )
-      {
-         *pDelim = '\0';
-         AddSearchPath( pPath, &hb_comp_pIncludePath );
-         pPath = pDelim + 1;
-      }
-      AddSearchPath( pPath, &hb_comp_pIncludePath );
+      hb_fsAddSearchPath( szInclude, &hb_comp_pIncludePath );
    }
 }
 
