@@ -53,10 +53,19 @@ return Self
 function TBColumnNew( cHeading, bBlock )
 
    local oCol := TBColumn():New()
+   loca nWidth, nType := Valtype( Eval( bBlock ) )
 
    oCol:Heading = cHeading
    oCol:block   = bBlock
-   oCol:Width   = If( cHeading != nil, Len( cHeading ), Len( Eval( bBlock ) ) )
+   do case
+   case nType = "N"
+      nWidth = 10
+   case nType = "L"
+      nWidth = 3
+   case nType = "C"
+      nWidth = Len( Eval( bBlock ) )
+   endcase
+   oCol:Width = If( cHeading != nil, Max( Len( cHeading ), nWidth ), nWidth )
 
 return oCol
 

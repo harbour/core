@@ -1,3 +1,11 @@
+19990812-22:29 GMT+3 Alexander Kresin
+  * source/rtl/tbrowse.prg
+  * source/rtl/tbcolumn.prg
+  * tests/working/testbrw.prg
+    * added some functionality
+  * funclist.txt
+    * updated status of TBrowse functions
+  
 19990812-14:15 EDT David G. Holm <dholm@jsd-llc.com>
   * funclist.txt
     * Updated the status of several functions to S or R
@@ -19,20 +27,20 @@
 19990812-14:10 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
-	* PARAMETERS statement can be used before LOCAL statement
-	 (the stack frame is calculated correctly)
-	* PARAMETERS statement cannot be used if there are local
-	 parameters (parameters inside '()') declared already
-	
+        * PARAMETERS statement can be used before LOCAL statement
+         (the stack frame is calculated correctly)
+        * PARAMETERS statement cannot be used if there are local
+         parameters (parameters inside '()') declared already
+
     *include/compiler.h
-	+ added wParamNum member to _FUNC structure
-	
+        + added wParamNum member to _FUNC structure
+
     *include/hberrors.h
-	+ added new error code ERR_PARAMETERS_NOT_ALLOWED
-	
+        + added new error code ERR_PARAMETERS_NOT_ALLOWED
+
     *source/rtl/console.c
-	* corrected `\0` to '\x0' for OS_UNIX_COMPATIBLE 
-	
+        * corrected `\0` to '\x0' for OS_UNIX_COMPATIBLE
+
 19990812-08:32 GMT+1 Antonio Linares <alinares@fivetech.com>
   * source/rtl/tbrowse.prg
     * enhanced
@@ -139,13 +147,13 @@
 
 Mon Aug 09 11:53:18 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/Makefile:
-	Moved the debug directory after rdd.
+        * source/Makefile:
+        Moved the debug directory after rdd.
 
-	* source/hbpp/hbpp.c:
-	* source/rtl/filesys.c:
-	* source/runner/runner.c:
-	Got rid of several warnings.
+        * source/hbpp/hbpp.c:
+        * source/rtl/filesys.c:
+        * source/runner/runner.c:
+        Got rid of several warnings.
 
 199908.09-15:24 GMT+3 Alexander Kresin
   * source/hbpp/hbpp.c
@@ -154,8 +162,8 @@ Mon Aug 09 11:53:18 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 19990809-12:20 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
-	* restored all code related to debugger
-	* fixed alias expressions in '=' statement
+        * restored all code related to debugger
+        * fixed alias expressions in '=' statement
 
 199908.09-13:12 GMT+3 Alexander Kresin
   * source/hbpp/hbpp.c
@@ -242,8 +250,8 @@ Mon Aug 09 11:53:18 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
          definitions of data types.
 
     *include/langapi.h
-	- removed declaration of extern langDef (Watcom reported error)
-	 see TODO comment in this file
+        - removed declaration of extern langDef (Watcom reported error)
+         see TODO comment in this file
 
     *include/pcode.h
         - removed unused HB_P_PUSHWORD
@@ -255,8 +263,8 @@ Mon Aug 09 11:53:18 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
                 HB_P_PUSHFIELD
                 HB_P_POPALIASEDFIELD
                 HB_P_PUSHALIASEDFIELD
-	NOTE: 
-	You have to rebuild all harbour libraries and object files !
+        NOTE:
+        You have to rebuild all harbour libraries and object files !
 
     *source/vm/hvm.c
         + added initial support for aliased expressions (fields are not
@@ -268,24 +276,24 @@ Mon Aug 09 11:53:18 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
     *tests/working/alias.prg
         + new file to check if aliased expressions are handled correctly
-         (only manual check at this moment - by looking at generated 
+         (only manual check at this moment - by looking at generated
          C code)
 
     *test/working/Makefile
         + added alias.prg into BAD_PRG_SOURCES because it cannot be run yet
-	- removed debugger.prg
+        - removed debugger.prg
 
     *source/rtl/console.c
-	- io.h cannot be included on Linux/GCC (placed inside #ifdef)
+        - io.h cannot be included on Linux/GCC (placed inside #ifdef)
 
     *source/vm/dynsym.c
-	+ restored definition of SYM_ALLOCATED because it is local symbol
-	 NOTE: 
-	 When compared then this symbol _have to_ be type casted
-	 to SYMBOLSCOPE. If it will be not type casted then some
-	 compilers will compare (int)-1 with (char)-1 which is never
-	 true! (I am changing it for the second time :)
-	 
+        + restored definition of SYM_ALLOCATED because it is local symbol
+         NOTE:
+         When compared then this symbol _have to_ be type casted
+         to SYMBOLSCOPE. If it will be not type casted then some
+         compilers will compare (int)-1 with (char)-1 which is never
+         true! (I am changing it for the second time :)
+
 19990808-11:50 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/runner/runner.c
      source/runner/Makefile
@@ -543,12 +551,12 @@ Mon Aug 09 11:53:18 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Fri Aug 06 20:04:05 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* config/rules.cf:
-	Added the removal of *.core to the clean target.
+        * config/rules.cf:
+        Added the removal of *.core to the clean target.
 
-	* source/hbpp/hbpp.c:
-	* source/hbpp/stdalone/hbpp.c:
-	Fixed two unused variable warnings.
+        * source/hbpp/hbpp.c:
+        * source/hbpp/stdalone/hbpp.c:
+        Fixed two unused variable warnings.
 
 199908.06-22:12 GMT+3 Alexander Kresin
   * include/hbpp.h
