@@ -58,7 +58,6 @@ CLASS TBrwText FROM TEditor
 
    METHOD RefreshAll()
    METHOD RefreshCurrent()
-   METHOD ForceStable()
 
    METHOD GotoLine(n)
    METHOD GetLine(nRow)

@@ -795,6 +795,7 @@ METHOD Stabilize() CLASS TBrowse
             if (::nNewRowPos + nRecsSkipped >= 1) .AND. (::nNewRowPos + nRecsSkipped <= ::RowCount)
                ::nNewRowPos += nRecsSkipped
                ::nLastRetrieved := ::nNewRowPos
+               ::aRedraw[::nNewRowPos] := .T.
 
             else
                // It was K_PGDN or K_PGUP

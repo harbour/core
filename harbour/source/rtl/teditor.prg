@@ -33,8 +33,6 @@
  *
  */
 
-/* TODO: Load, Save, GotoLine, SkipLine methods (to be used with debugger)
-         Test to see if it behaves more or less like MemoEdit() */
 
 #include "common.ch"
 #include "hbclass.ch"

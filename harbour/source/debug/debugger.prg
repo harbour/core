@@ -222,27 +222,22 @@ METHOD CodeWindowProcessKey( nKey ) CLASS TDebugger
    do case
       case nKey == K_HOME
            ::oBrwText:GoTop()
-           ::oBrwText:ForceStable()
 
       case nKey == K_END
            ::oBrwText:GoBottom()
-           ::oBrwText:ForceStable()
 
       case nKey == K_UP
            ::oBrwText:Up()
-           ::oBrwText:ForceStable()
 
       case nKey == K_DOWN
            ::oBrwText:Down()
-           ::oBrwText:ForceStable()
 
       case nKey == K_PGUP
            ::oBrwText:PageUp()
-           ::oBrwText:ForceStable()
 
       case nKey == K_PGDN
            ::oBrwText:PageDown()
-           ::oBrwText:ForceStable()
+
    endcase
 
 return nil
@@ -677,7 +672,6 @@ METHOD ShowCode( cModuleName ) CLASS TDebugger
       //::oBrwText:aColumns[ 1 ]:ColorBlock := { || iif( AScan( ::aBreakPoints,;
       //   CompareLine( Self ) ) != 0, { 3, 4 }, { 1, 2 } ) }
 
-      ::oBrwText:ForceStable()
       ::oWndCode:SetCaption( ::cPrgName )
    endif
 
@@ -776,7 +770,6 @@ METHOD ToggleBreakPoint() CLASS TDebugger
    endif
 
    ::oBrwText:RefreshCurrent()
-   ::oBrwText:ForceStable()
 
 return nil
 
@@ -870,53 +863,20 @@ return
 
 static procedure SetsUp( oBrw )
 
-   local nRow := oBrw:RowPos
-   local nSetPos
-   if oBrw:RowPos == 1
-      nSetPos := oBrw:Cargo
-      oBrw:Cargo := 0
-      oBrw:Refreshall()
-      oBrw:ForceStable()
-      oBrw:Cargo := nSetPos
-   endif
-   oBrw:colpos:=1
-   oBrw:dehilite()
-   oBrw:colpos:=2
+   oBrw:RefreshCurrent()
    oBrw:Up()
-   oBrw:Refreshall()
-
-   if nRow != oBrw:Cargo
-      oBrw:aReDraw[ nRow ] := .f.
-      oBrw:Up()
-   endif
    oBrw:ForceStable()
-   myColors(oBrw,{1,2})
+   //myColors(oBrw,{1,2}) //NOTE: What is this needed for?
+
 return
 
 static procedure SetsDown( oBrw )
 
-   local nRow := oBrw:RowPos
-   local nSetPos
-
-   if oBrw:RowPos == oBrw:RowCount
-      nSetPos := oBrw:Cargo
-      oBrw:Cargo := 0
-      oBrw:Refreshall()
-      oBrw:ForceStable()
-      oBrw:Cargo := nSetPos
-   endif
-   oBrw:colpos:=1
-   oBrw:dehilite()
-   oBrw:colpos:=2
+   oBrw:RefreshCurrent()
    oBrw:Down()
-   oBrw:Refreshall()
-
-   if nRow != oBrw:Cargo
-      oBrw:aReDraw[ nRow ] := .f.
-      oBrw:Down()
-   endif
    oBrw:ForceStable()
-   myColors(oBrw,{1,2})
+   //myColors(oBrw,{1,2})
+
 return
 
 static function ValToStr( uVal )
@@ -951,6 +911,7 @@ static function ValToStr( uVal )
    endcase
 
 return cResult
+
 static function myColors( oBrowse, aColColors )
    local i
    local nColPos := oBrowse:colpos

@@ -1,3 +1,20 @@
+2001-02-02 22:45 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
+   * source/debug/debugger.prg
+     - removed calls to oBrwText:ForceStable() method which is no more available
+     ! SetsUp() and SetsDown() functions where calling ::RefreshAll() and movement methods
+     without any reason causing a noticeable delay during Sets scrolling.
+   * source/debug/tbrwtext.prg
+     - removed empty ::ForceStable() method
+   * source/rtl/tbrowse.prg
+     ! when a movement happens inside available on screen rows (like a ::Down() from row 1 to
+     row 2) I have to force repainting of target row or else this sequence (for example)
+     fails: ::RefreshCurrent():Down():ForceStable() because to paint the row where I issued a
+     ::RefreshCurrent() I have to move one back from ::nNewRowPos, but there I stay since
+     ::nNewRowPos is not to redraw. I'm sure nobody uderstands what I'm clearly unable to
+     explain :-)
+   * source/rtl/teditor.prg
+     - removed a TODO: comment which is no more needed.
+
 2001-02-02 16:48 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/vm/debug.c
      + New function __vmVarLSet() added.
