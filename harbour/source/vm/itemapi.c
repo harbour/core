@@ -1058,6 +1058,24 @@ void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
       hb_memvarValueIncRef( pSource->item.asMemvar.value );
 }
 
+void hb_itemSwap( PHB_ITEM pItem1, PHB_ITEM pItem2 )
+{
+   HB_ITEM temp;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemSwap(%p, %p)", pItem1, pItem2));
+
+   hb_itemCopy( &temp, pItem2 );
+   hb_itemCopy( pItem2, pItem1 );
+   hb_itemCopy( pItem1, &temp );
+   hb_itemClear( &temp );
+
+/* Faster less safe way */
+   memcpy( &temp, pItem2, sizeof( HB_ITEM ) );
+   memcpy( pItem2, pItem1, sizeof( HB_ITEM ) );
+   memcpy( pItem1, &temp, sizeof( HB_ITEM ) );
+*/
+}
+
 /* Internal API, not standard Clipper */
 /* De-references item passed by the reference */
 

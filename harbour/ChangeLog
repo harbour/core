@@ -1,3 +1,27 @@
+20000417-05:49 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbapi.h
+   - source/rtl/asort.prg
+   * source/rtl/Makefile
+   + source/vm/asort.c
+   * source/vm/Makefile
+   * makefile.bc
+   * makefile.vc
+     + ASORT() rewritten using optimized C code, and using an optimized
+       quicksort algorithm, the number of compares is even less than before.
+     * ASORT() is now CA-Cl*pper compatible in handling the case when no
+       codeblock is supplied, or the codeblock returns non logical value.
+     ; Note that the function is new, so please test it as thoroughly as
+       possible.
+     ; Also thanks go to Jose Lalin.
+
+   * include/hbapiitm.h
+   * source/vm/itemapi.c
+     + hb_itemSwap() function added.
+
+   * source/lang/msges.c
+     * Spanish language module updated.
+
 20000416-15:23 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
       * config/os2/gcc.cf

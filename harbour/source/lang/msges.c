@@ -35,7 +35,7 @@
 
 /* Language name: Spanish */
 /* ISO language code (2 chars): ES */
-/* Codepage: ???? */
+/* Codepage: 850 */
 
 #include "hbapilng.h"
 
@@ -78,19 +78,19 @@ static HB_LANG s_lang =
    
       /* CA-Cl*pper compatible natmsg items */
    
-      "Database Files    # Records    Last Update     Size",
-      "Do you want more samples?",
-      "Page No.",
+      "Bases de Datos    # Records    Last Update     Size",
+      "Desea Ud. m s ejemplos?",
+      "P gina N§.",
       "** Subtotal **",
       "* Subsubtotal *",
       "*** Total ***",
       "Ins",
       "   ",
-      "Invalid date",
-      "Range: ",
+      "Fecha no v lida",
+      "Rango: ",
       " - ",
-      "Y/N",
-      "INVALID EXPRESSION",
+      "S/N",
+      "EXPRESION NO VALIDA",
    
       /* Error description names */
    
@@ -140,40 +140,40 @@ static HB_LANG s_lang =
       "",
       "",
       "",
-      "array access",
-      "array assign",
-      "array dimension", 
-      "not an array",
+      "acceso al array",
+      "asignaci¢n del array",
+      "dimensi¢n del array",
+      "no es un array",
       "conditional",
    
       /* Internal error names */
    
-      "Unrecoverable error %lu: ",
-      "Error recovery failure",
-      "No ERRORBLOCK() for error", 
-      "Too many recursive error handler calls", 
-      "RDD invalid or failed to load",
-      "Invalid method type from %s", 
-      "hb_xgrab can't allocate memory", 
-      "hb_xrealloc called with a NULL pointer", 
-      "hb_xrealloc called with an invalid pointer", 
-      "hb_xrealloc can't reallocate memory", 
-      "hb_xfree called with an invalid pointer", 
-      "hb_xfree called with a NULL pointer", 
-      "Can\'t locate the starting procedure: \'%s\'",
-      "No starting procedure", 
-      "Unsupported VM opcode", 
-      "Symbol item expected from %s",
-      "Invalid symbol type for self from %s", 
-      "Codeblock expected from %s", 
-      "Incorrect item type on the stack trying to pop from %s",
-      "Stack underflow", 
-      "An item was going to be copied to itself from %s", 
-      "Invalid symbol item passed as memvar %s",
-   
+      "Error irrecuperable %lu: ",
+      "Falla en recuperaci¢n de error",
+      "No hay ERRORBLOCK() por error",
+      "Demasiadas llamadas recursivas al controlador de errores",
+      "RDD no v lido ¢ falla al cargar",
+      "Tipo de m‚todo no v lido desde %s",
+      "hb_xgrab no puede asignar memoria",
+      "hb_xrealloc llamado con un puntero NULL",
+      "hb_xrealloc llamado con un puntero no v lido",
+      "hb_xrealloc no puede reubicar la memoria",
+      "hb_xfree llamado con un puntero no v lido",
+      "hb_xfree llamado con un puntero NULL",
+      "No se puede localizar el procedimiento de inicio: \'%s\'",
+      "No hay procedimiento de inicio",
+      "Opcode de memoria virtual (VM) no soportado",
+      "S¡mbolo item esperado desde %s",
+      "Tipo de s¡mbolo para self no v lido desde %s",
+      "Bloque de c¢digo esperado desde %s",
+      "Tipo item incorrecto en la Pila al tratar de sacarlo desde %s",
+      "Falla de Pila por defecto",
+      "Un item estaba siendo copiado sobre s¡ mismo desde %s",
+      "S¡mbolo item no v lido pasado como memvar %s",
+
       /* Texts */
-   
-      "DD/MM/YYYY",
+
+      "YYYY/MM/DD",
       "S",
       "N"
    }

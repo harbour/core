@@ -111,6 +111,7 @@ extern char *   hb_itemStr      ( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pD
 extern char *   hb_itemString   ( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq );  /* Convert any scalar to a string */
 extern PHB_ITEM hb_itemValToStr ( PHB_ITEM pItem ); /* Convert any scalar to a string */
 extern char *   hb_itemPadConv  ( PHB_ITEM pItem, char * buffer, ULONG * pulSize );
+extern void     hb_itemSwap     ( PHB_ITEM pItem1, PHB_ITEM pItem2 );
 
 #if defined(HB_EXTERN_C)
 }

@@ -258,7 +258,6 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\achoice.obj \
    $(OBJ_DIR)\adir.obj \
    $(OBJ_DIR)\alert.obj \
-   $(OBJ_DIR)\asort.obj \
    $(OBJ_DIR)\browdb.obj \
    $(OBJ_DIR)\browdbx.obj \
    $(OBJ_DIR)\browse.obj \
@@ -434,6 +433,7 @@ COMMON_LIB_OBJS = \
 VM_LIB_OBJS = \
    $(OBJ_DIR)\arrays.obj \
    $(OBJ_DIR)\arrayshb.obj \
+   $(OBJ_DIR)\asort.obj \
    $(OBJ_DIR)\break.obj \
    $(OBJ_DIR)\classes.obj \
    $(OBJ_DIR)\cmdarg.obj \
@@ -826,6 +826,10 @@ $(OBJ_DIR)\arrayshb.obj : $(VM_DIR)\arrayshb.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(VM_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\asort.obj : $(VM_DIR)\asort.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(VM_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\break.obj : $(VM_DIR)\break.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(VM_LIB) $(ARFLAGS) -+$@,,
@@ -959,13 +963,6 @@ $(OBJ_DIR)\alert.obj : $(OBJ_DIR)\alert.c
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\ampm.obj : $(RTL_DIR)\ampm.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\asort.c : $(RTL_DIR)\asort.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\asort.obj : $(OBJ_DIR)\asort.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 

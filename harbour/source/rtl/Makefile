@@ -110,7 +110,6 @@ PRG_SOURCES=\
 	achoice.prg  \
 	adir.prg     \
 	alert.prg    \
-	asort.prg    \
 	browdb.prg   \
 	browdbx.prg  \
 	browse.prg   \
