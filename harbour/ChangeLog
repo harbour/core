@@ -1,3 +1,16 @@
+2001-09-06 14:50 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * harbour/source/rtl/persist.prg
+     added methods LoadFromText() and LoadFromFile()
+
+   * harbour/contrib/hgf/tests/form3.prg
+     Added OnClick assignment test
+
+   * harbour/contrib/hgf/tests/form3.hbf
+     Added saved form OnClick property
+
+   * harbour/contrib/hgf/tests/form3res.prg
+     Loading persistence files at runtime sample
+
 2001-09-06 14:39 UTC+0300 Chen Kedem <niki@actcom.co.il>
    + doc/dirstruc.txt
      * add a document which list Harbour directory structure
