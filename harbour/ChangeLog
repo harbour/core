@@ -1,3 +1,13 @@
+2000-10-18 01:30 UTC+0800 Ron Pinkas <ron@profit-master.com>
+    * contrib/dot/pp.prg
+      ! More corrections and refinments in pre-processing
+      * Improved handling of command line parameters (no longer requires -P, -CCH doesn't require -U)
+      ! Corrected handling of file extension.
+
+    * include/hbclass.ch
+      * Corrected <MethodName> to \<MethodName> when result marker not a match marker.
+      * Corrected <params,...> to <param> (result marker used match marker format).
+
 2000-10-17 21:15 UTC+0200 JFL (mafact) <jfl@mafact.com>
     * include/hbclass.ch
       * Minor typo's corrected as John's indication

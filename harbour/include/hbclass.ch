@@ -136,7 +136,7 @@ DECLARE TClass ;
          s_oClass := TClass():New( <(ClassName)>, __HB_CLS_PAR ([ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ;;
      #undef _CLASS_NAME_ ;;
      #define _CLASS_NAME_ <ClassName> ;;
-     #translate CLSMETH <ClassName> <MethodName>() => @<ClassName>_<MethodName>() ;
+     #translate CLSMETH <ClassName> \<MethodName>() => @<ClassName>_\<MethodName>() ;
      [ ; #translate Super( <SuperClassN> ) : => ::<SuperClassN>: ] ;
      [ ; #translate Super( <SuperClass1> ) : => ::<SuperClass1>: ] ;
      [ ; #translate Super() : => ::<SuperClass1>: ] ;
@@ -194,7 +194,6 @@ DECLARE TClass ;
    s_oClass:AddInline( "_" + <(DataName1)>, {|Self, param| Self:<DataName2> := param }, HB_OO_CLSTP_EXPORTED )
 
 #xcommand VAR <DataName1> IS <DataName2> TO <oObject> => ;
-   _HB_MEMBER \{[AS <type>] <DataName1>\} ;;
    s_oClass:AddInline( <(DataName1)>, {|Self| Self:<oObject>:<DataName2> }, HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_READONLY ) ;;
    s_oClass:AddInline( "_" + <(DataName1)>, {|Self, param| Self:<oObject>:<DataName2> := param }, HB_OO_CLSTP_EXPORTED )
 
