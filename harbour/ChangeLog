@@ -1,3 +1,14 @@
+19991005-20:34 GMT+1 Victor Szel <info@szelvesz.hu>
+  * include/hbextern.ch
+    source/runner/stdalone/external.prg
+    - One of the two HB_OSNEWLINE removed.
+  + source/rtl/memoline.c
+    source/rtl/Makefile
+    doc/funclist.txt
+    + MEMOLINE() added
+      (thanks to Ignacio Ortiz de Zúniga <ignacio@fivetech.com>)
+      !! WARNING !! Please modify non-GNU make files.
+
 19991005-18:20 GMT+1 Victor Szel <info@szelvesz.hu>
   + source/rtl/rddord.prg
     source/rtl/Makefile

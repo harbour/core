@@ -26,6 +26,7 @@ C_SOURCES=\
         langapi.c \
         math.c \
         memofile.c \
+        memoline.c \
         memvars.c \
         mlcount.c \
         mouseapi.c \
