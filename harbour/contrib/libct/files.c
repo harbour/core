@@ -216,7 +216,7 @@ HB_FUNC(SETFATTR)
    {
 
    int iFlags;
-   int iReturn;
+   int iReturn = 0;
    const char *szFile=hb_parc(1);
 
    if (ISNUM(2))
