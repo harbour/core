@@ -1,8 +1,52 @@
+2001-09-07 13:06 GMT+1 Antonio Linares <alinares@fivetech.com>
+
+   - harbour/contrib/hgf/win32/tform.prg
+   + harbour/contrib/hgf/win32/form.prg
+     tform.prg renamed as form.prg
+
+   - harbour/contrib/hgf/win32/tmenu.prg
+   + harbour/contrib/hgf/win32/menu.prg
+     tmenu.prg renamed as menu.prg
+
+   + harbour/contrib/hgf/win32/win32.ch
+     Win32.ch constants definitions header file
+
+   + harbour/contrib/hgf/win32/winctrl.prg
+     Class HBWinControl
+
+   + harbour/contrib/hgf/win32/button.prg
+     Class HBButton
+
+   * harbour/contrib/hgf/win32/makefile.bc
+     updated
+
+   + harbour/contrib/hgf/tests/testctrl.prg
+     Testing Harbour GUI framework controls
+
+   * harbour/contrib/hgf/win32/win32.c
+     Some fixes and a new function ShowWindow() added
+
+   * harbour/contrib/hgf/win32/menuitem.prg
+     "T" Classes prefix changed into "HB"
+
+   * harbour/contrib/hgf/tests/testform.prg
+   * harbour/contrib/hgf/tests/formtext.prg
+   * harbour/contrib/hgf/tests/form3res.prg
+   * harbour/contrib/hgf/tests/form3.prg
+   * harbour/contrib/hgf/tests/form2.prg
+     "T" Classes prefix changed into "HB"
+
+   * harbour/contrib/hgf/tests/form.hbf
+     some minor changes
+
+   * harbour/contrib/hgf/tests/build_b32.bat
+     some minor fixes
+
 2001-09-07 09:13 GMT Dave Pearson <davep@davep.org>
    * doc/readme.txt
       * Updated the pointer to dirstruc.txt (I'd committed the wrong
         version of the file last time, Doh!).
-	
+
 2001-09-07 08:40 GMT Dave Pearson <davep@davep.org>
    * doc/readme.txt
       * Added a pointer to dirstruc.txt.
