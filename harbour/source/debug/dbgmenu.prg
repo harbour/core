@@ -48,6 +48,7 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
    local oMenu
    local oLineNumbers
    local oCaseSensitive
+   local oMonoDisplay
 
    MENU oMenu
       MENUITEM " ~File "
@@ -83,7 +84,7 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
       MENU
          MENUITEM " ~Restart"               ACTION Alert( "Not implemented yet!" )
          MENUITEM " ~Animate"               ACTION Alert( "Not implemented yet!" )
-         MENUITEM " ~Step              F8 " ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Step              F8 " ACTION oDebugger:Step()
          MENUITEM " ~Trace            F10"  ACTION Alert( "Not implemented yet!" )
          MENUITEM " ~Go                F5"  ACTION oDebugger:Go()
          MENUITEM " to ~Cursor         F7"  ACTION Alert( "Not implemented yet!" )
@@ -120,10 +121,11 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
          MENUITEM " swap on ~Input"         ACTION Alert( "Not implemented yet!" )
          MENUITEM " code~Block Trace"       ACTION Alert( "Not implemented yet!" )
          MENUITEM " ~Menu Bar"              ACTION Alert( "Not implemented yet!" )
-         MENUITEM " mono ~Display"          ACTION Alert( "Not implemented yet!" )
-         MENUITEM " ~Colors..."             ACTION oDebugger:SelColors()
-         MENUITEM " ~Tab Width..."          ACTION Alert( "Not implemented yet!" )
-         MENUITEM " path for ~Files..."     ACTION Alert( "Not implemented yet!" )
+         MENUITEM oMonoDisplay PROMPT " mono ~Display" ;
+            ACTION ( oDebugger:MonoDisplay(), oMonoDisplay:Toggle() )
+         MENUITEM " ~Colors..."             ACTION oDebugger:Colors()
+         MENUITEM " ~Tab Width..."          ACTION oDebugger:TabWidth()
+         MENUITEM " path for ~Files..."     ACTION oDebugger:PathForFiles()
          SEPARATOR
          MENUITEM " ~Save Settings..."      ACTION Alert( "Not implemented yet!" )
          MENUITEM " ~Restore Settings... "  ACTION Alert( "Not implemented yet!" )
