@@ -50,6 +50,10 @@
  *
  */
 
+/* -----------------29/12/2001 19:23-----------------
+ * NOTE: Functions are liste alfabeticly
+ * --------------------------------------------------*/
+
 #define HB_OS_WIN_32_USED
 #define MAX_STR_LEN 255
 
@@ -57,6 +61,133 @@
 #include "sde60.h"
 
 
+/* -----------------29/12/2001 19:21-----------------
+ * sx_AppendBlank()
+ * --------------------------------------------------*/
+HB_FUNC( SX_APPENDBLANK )
+{
+   sx_AppendBlank( );
+}
+
+
+/* -----------------29/12/2001 20:13-----------------
+ * sx_Close()
+ * --------------------------------------------------*/
+HB_FUNC( SX_CLOSE )
+{
+    sx_Close( ) ;
+}
+
+
+/* -----------------29/12/2001 19:26-----------------
+ * sx_Commit()
+ * --------------------------------------------------*/
+HB_FUNC( SX_COMMIT )
+{
+    sx_Commit( );
+}
+
+
+/* -----------------29/12/2001 19:18-----------------
+ * sx_CreateField()
+ * --------------------------------------------------*/
+HB_FUNC( SX_CREATEFIELD )
+{
+   sx_CreateField( hb_parc( 1 ),        /* Field name */
+                   hb_parc( 2 ),        /* Field type */
+                   hb_parni( 3 ),       /* Field lenght */
+                   hb_parni( 4 ) );     /* Field decimals */
+}
+
+
+/* -----------------29/12/2001 20:13-----------------
+ * sx_Eof()
+ * --------------------------------------------------*/
+HB_FUNC( SX_EOF )
+{
+    hb_retl( sx_Eof( ) );
+}
+
+
+/* -----------------29/12/2001 20:13-----------------
+ * sx_GetString()
+ * --------------------------------------------------*/
+HB_FUNC( SX_GETSTRING )
+{
+   char *szString=(char*)sx_GetString( hb_parc( 1 ) );  /* Field name  */
+   hb_retc(szString);
+}
+
+
+/* -----------------29/12/2001 20:13-----------------
+ * sx_GoTop()
+ * --------------------------------------------------*/
+HB_FUNC( SX_GOTOP )
+{
+    sx_GoTop( ) ;
+}
+
+
+/* -----------------29/12/2001 19:59-----------------
+ * sx_IndexTag()
+ * --------------------------------------------------*/
+HB_FUNC( SX_INDEXTAG )
+{
+    hb_retni(
+     sx_IndexTag( hb_parc( 1 ),         /* Field name */
+                  hb_parc( 2 ),         /* Tag name */
+                  hb_parc( 3 ),         /* Index expression as a string */
+                  hb_parni( 4 ),        /* Option (0=Standard) (1=Unique) (2=Roll-Your-Own) */
+                  hb_parl( 5 ),         /* True for a descend index */
+                  hb_parc( 6) ) );      /* Condition */
+}
+
+
+/* -----------------29/12/2001 20:13-----------------
+ * sx_RecNo()
+ * --------------------------------------------------*/
+HB_FUNC( SX_RECNO )
+{
+    hb_retni( sx_RecNo( ) );
+}
+
+
+/* -----------------29/12/2001 19:59-----------------
+ * sx_Replace()
+ * --------------------------------------------------*/
+HB_FUNC( SX_REPLACE )
+{
+    sx_Replace( hb_parc( 1 ),           /* Field name */
+                hb_parni( 2 ),          /* Data type */
+                hb_parc( 3) );          /* Data */
+}
+
+
+/* -----------------29/12/2001 20:13-----------------
+ * sx_Skip()
+ * --------------------------------------------------*/
+HB_FUNC( SX_SKIP )
+{
+    sx_Skip( hb_parni( 1 ) );           /* Number of records to skip */
+}
+
+
+
+/* -----------------29/12/2001 19:17-----------------
+ * sx_Use()
+ * --------------------------------------------------*/
+HB_FUNC( SX_USE )
+{
+ hb_retni( sx_Use( hb_parc( 1 ),        /* Filename */
+                   hb_parc( 2 ),        /* Alias */
+                   hb_parni( 3 ),       /* OpenMode */
+                   hb_parni( 4) ));     /* RDE Type */
+}
+
+
+/* -----------------29/12/2001 19:17-----------------
+ * sx_Version()
+ * --------------------------------------------------*/
 HB_FUNC( SX_VERSION )
 {
    char *szVersion=(char*)sx_Version();
@@ -65,8 +196,10 @@ HB_FUNC( SX_VERSION )
 }
 
 
-HB_FUNC( SX_CREATEFIELD )
+/* -----------------29/12/2001 19:18-----------------
+ * sx_Zap()
+ * --------------------------------------------------*/
+HB_FUNC( SX_ZAP )
 {
-   sx_CreateField( hb_parc( 1 ), hb_parc( 2 ), hb_parni( 3 ),
-                   hb_parni( 4 ) );
+   sx_Zap( );
 }

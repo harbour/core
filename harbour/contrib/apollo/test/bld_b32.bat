@@ -11,6 +11,7 @@ rem Instead, make a local copy and modify that one, or make a call to
 rem this batch file from your customized one. [vszakats]
 rem ---------------------------------------------------------------
 
+cls
 set HB_ARCHITECTURE=w32
 set HB_COMPILER=bcc32
 

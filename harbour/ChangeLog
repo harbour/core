@@ -7,6 +7,24 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     * Added added functions in the test application.
+
+2001-12-30 04:40 UTC+0700 Andi Jahja <harbour@cbn.net.id>
+   * include/hbapi.h
+     * declaration of exported functions in source/vm/extend.c and
+       source/vm/arrays.c synchronized ( MSVC requirement )
+
+2001-12-29 19:00 UTC-0300 Luiz Rafael Culik <culik@sl.conex.net>
+   * source/vm/maindllp.c
+     * All extended function api implemented and started the array api
+   + include/hbtypes.h
+     * Header file for maindllp.c. Contain the typedef needed by maindllp.c
+   * contrib/hbzlib/zipcomp.cpp
+     * fixed an small error
+   * utils/hbmake/hbmake.prg
+     * some enhecements to select library code
+   * source/vm/extend.c
+     source/vm/arrays.c
      * All functions marked as exported
 
 2001-12-28 20:39 UTC+0100 Patrick Mast <email@patrickmast.com>

@@ -50,8 +50,63 @@
  *
  */
 
-Function Main()
+/* ************************************ */
+/* Data type identifiers for sx_Replace */
+/* ************************************ */
+#define R_INTEGER       1
+#define R_LONG          2
+#define R_DOUBLE        8
+#define R_JULIAN       32
+#define R_LOGICAL     128
+#define R_CHAR       1024
+#define R_DATESTR    1056
+#define R_MEMO       3072
+#define R_BITMAP     4096
+#define R_BLOBFILE   8192
+#define R_BLOBPTR    8193
+#define R_GENERAL    8195
 
-   Alert( sx_Version() )
+#define SDENTX          1   // CA-Clipper compatible DBF-NTX driver
+#define SDEFOX          2   // FoxPro compatible DBF-IDX/CDX driver
+#define SDENSX          3   // Vista DBF-NSX driver
+
+#define READWRITE       0
+#define READONLY        1
+#define EXCLUSIVE       2
+
+Function Main()
+LOCAL nAlias,f
+
+   ? "Apollo version " + sx_Version()
+
+   nAlias:=sx_Use("TEST.DBF","test2",EXCLUSIVE,SDENSX)
+   sx_Zap()
+   IF Valtype(nAlias)="N" .AND. nAlias # 0
+      ? "OK opening 'TEST.DBF'"
+
+      ? "Adding 1000 records..."
+      FOR f=1 to 1000
+         sx_AppendBlank()
+         sx_Replace("FIRST", R_CHAR, "Patrick " + Str( f ) )
+         sx_Replace("LAST" , R_CHAR, LTrim( Str( f ) ) + " Mast" )
+         sx_Replace("NOTES", R_MEMO, "This is record " + LTrim( Str( f ) ) )
+         sx_Commit()
+      NEXT
+
+      ? "Creating Index..."
+      sx_IndexTag(,"LAST","LAST+FIRST",0)
+      ? "Created a HiPer-Six index. See 'TEST.NSX'"
+
+      sx_GoTop()
+      WHILE !sx_Eof()
+         @ 17,2 SAY "RecNo: "+ LTrim( Str( sx_RecNo() ) )
+         @ 18,2 SAY sx_GetString( "LAST" )
+         sx_Skip(1)
+      ENDDO
+      sx_Close()
+
+   ELSE
+      ? "ERROR Opening 'TEST.DBF'"
+   ENDIF
 
 return
