@@ -70,7 +70,15 @@ DECLARE MyClass                              ;
         nMyFunc( nVal As Num ) As Num ;
         nMyFunc( nVal As Num ) As Num ;
         cMyData    ;
-        oNext() As Object FROM CLASS MyClass
+        aInstances AS Array Of Object FROM CLASS MyClass ;
+        oNext( oInstance AS Object FROM CLASS MyClass ) As Object FROM CLASS MyClass
+
+DECLARE OtherClass                              ;
+        nMyFunc( nVal As Num ) As Num ;
+        nMyFunc( nVal As Num ) As Num ;
+        cMyData    ;
+        aInstances AS Array Of Object FROM CLASS MyClass ;
+        oNext( oInstance AS Object FROM CLASS OtherClass ) As Object FROM CLASS MyClass
 
 FIELD a AS CHAR
 FIELD b AS CHAR
@@ -82,9 +90,10 @@ STATIC lGlobal AS LOGICAL
 PROCEDURE THEMAIN( optional )
 
   STATIC lStatic := 0, oMyObj As Object From CLASS WrongClass
+
   LOCAL cVar AS CHAR := [declare function]
 
-  LOCAL a As Char, b AS Object FROM CLASS MyClass
+  LOCAL a As Char, ob AS Object FROM CLASS MyClass, c AS Char, d AS Object FROM CLASS OtherClass
 
   FIELD b AS NUM
   USE TEMP
@@ -99,10 +108,13 @@ PROCEDURE THEMAIN( optional )
   a := b:nMyFunc(2,3)
   a := b:nMyFunc(2)
 
-  a := b:oNext:cMyData
+  a := b:oNext( 1 ):cMyData
+  a := b:oNext( c ):cMyData2
+  a := b:oNext( d ):cMyData
+  a := b:oNext( ob ):cMyData
 
-  a := b:oNext:cMyData2
-
+  a := b:aInstances[1]:oNext:cMyData2
+  a := b:aInstances[1]:oNext:cMyData
 
   DO Optional WITH Var1
   DO Optional WITH 1

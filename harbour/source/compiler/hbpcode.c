@@ -381,6 +381,8 @@ void hb_compStrongType( int iSize )
                   PCOMCLASS hb_comp_pParamClass = pFunc->pStackFunctions[ pFunc->iStackFunctions ]->pParamClasses[ iOffset ];
                   sprintf( ( char * ) szType2, "ARRAY OF %s", hb_comp_pParamClass->szName );
                 }
+                else if ( toupper( pFunc->pStack[ iParamBase + iOffset ] ) == 'S' )
+                   pFunc->pStackClasses[ --pFunc->iStackClasses ] = NULL;
                 else if ( cFormalType > ( 'A' + VT_OFFSET_BYREF ) )
                   sprintf( ( char * ) szType2, "@%c", cFormalType - VT_OFFSET_BYREF );
                 else
@@ -559,6 +561,8 @@ void hb_compStrongType( int iSize )
                     PCOMCLASS hb_comp_pFormalClass = pFunc->pStackFunctions[ pFunc->iStackFunctions ]->pParamClasses[ iOffset ];
                     sprintf( ( char * ) szType2, "ARRAY OF %s", hb_comp_pFormalClass->szName );
                   }
+                  else if ( toupper( pFunc->pStack[ iParamBase + iOffset ] ) == 'S' )
+                     pFunc->pStackClasses[ --pFunc->iStackClasses ] = NULL;
                   else if ( cFormalType > ( 'A' + VT_OFFSET_BYREF ) )
                     sprintf( ( char * ) szType2, "@%c", cFormalType - VT_OFFSET_BYREF );
                   else

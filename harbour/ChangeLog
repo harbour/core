@@ -1,3 +1,8 @@
+20000519-15:40 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/hbpcode.c
+     + Minor correction in hb_compStrongType()
+
 20000519-15:28 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * include/hbcomp.h
