@@ -196,7 +196,7 @@ char * hb_pp_szErrors[] =
 char * hb_pp_szWarnings[] =
 {
    "1Redefinition or duplicate definition of #define %s",
-   "No directives found in: %s%s\n"
+   "1No directives in command definitions file"
 };
 
 void hb_pp_SetRules( BOOL (*hb_compInclude)(char *, PATHNAMES * ) )
@@ -262,7 +262,7 @@ void hb_pp_SetRules( BOOL (*hb_compInclude)(char *, PATHNAMES * ) )
                }
                else
                {
-                  hb_compGenWarning( hb_pp_szWarnings, 'W', HB_PP_WARN_NO_DIRECTIVES, szFileName, NULL );
+                  hb_compGenWarning( hb_pp_szWarnings, 'I', HB_PP_WARN_NO_DIRECTIVES, NULL /*szFileName*/, NULL );
                }
 
                fclose( hb_comp_files.pLast->handle );
@@ -291,12 +291,15 @@ void hb_pp_SetRules( BOOL (*hb_compInclude)(char *, PATHNAMES * ) )
       else
       {
          if( ! hb_comp_bQuiet )
-            printf( "Standard Rules excluded!\n" );
+            printf( "Standard command definitions excluded!\n" );
+
+         hb_pp_Init();
       }
    }
    else
    {
       hb_pp_Table();
+      hb_pp_Init();
    }
 }
 

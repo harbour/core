@@ -3406,9 +3406,6 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
          }
          else
          {
-            /* Initialization of preprocessor arrays */
-            hb_pp_Init();
-
             /* Add /D command line or envvar defines */
             hb_compChkDefines( argc, argv );
 

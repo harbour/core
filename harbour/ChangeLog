@@ -1,4 +1,13 @@
-2000-06-05 19:50 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+2000-06-07 22:50 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/harbour.c
+     * main() Moved calls to hb_pp_init() to hb_pp_SetRules() in ppcore.c to avoid redefinition of standard defs.
+
+   * source/pp/ppcore.c
+     * hb_pp_SetRules() Moved calls to hb_pp_init() from main() in Harbour.c to avoid redefinition of standard defs.
+     ! Minor fixes to warnings and errors.
+
+2000-06-07 21:40 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/pp/ppcore.c
      * Changed hb_pp_SetRules() to only always default to .CH extension, if file name supplied without extension.
