@@ -1,3 +1,9 @@
+19990709-19:00 Eddie Runia <eddie@runia.com>
+  + tests/working/clsdata.prg
+    Test program supplied by Bruno Cantero
+  * source/rtl/classes.c; source/rtl/tclass.prg
+    inheritance class data bug resolved.
+
 19990709-18:21 Antonio Linares <alinares@fivetech.com>
   + source/compiler/harbour.l
     added support for ppo #line token

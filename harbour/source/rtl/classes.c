@@ -36,6 +36,7 @@
  *      OSEND
  *      SELECTSUPER
  *      __INSTSUPER
+ *      __WCLSDATAS
  *      __WDATAS
  *      __WDATADEC
  *      __WDATAINC
@@ -206,13 +207,18 @@ HARBOUR HB_CLASSADD(void)
 
       pNewMeth = pClass->pMethods + wAt;
       if( !pNewMeth->pMessage )
+      {
+         pNewMeth->pMessage = pMessage;
          pClass->wMethods++;                    /* One more message         */
-      pNewMeth->pMessage = pMessage;
+      }
+      else
+         printf("\nOld %i\n",(long) pNewMeth->pFunction);
 
       switch( wType )
       {
          case MET_METHOD:
               pNewMeth->pFunction = ( HARBOURFUNC ) hb_parnl( 3 );
+              printf("\nPointer=%i\n",hb_parnl( 3 ));
               break;
 
          case MET_DATA:
@@ -688,9 +694,10 @@ char * hb_GetClassName( PHB_ITEM pObject )
 static HARBOUR GetClassData( void )
 {
    WORD wClass = ( stack.pBase + 1 )->item.asArray.value->wClass;
+   WORD wIndex = pMethod->wData;
 
    if( wClass && wClass <= wClasses )
-      hb_arrayGet( pClasses[ wClass - 1 ].pClassDatas, pMethod->wData,
+      hb_arrayGet( pClasses[ wClass - 1 ].pClassDatas, wIndex,
                    &stack.Return );
 }
 
@@ -1025,6 +1032,23 @@ HARBOUR HB___INSTSUPER( void )
       hb_retni( 0 );
 }
 
+
+/*
+ * <nSeq> = hb__wClsDatas( <hClass> )
+ *
+ * Return number of class datas
+ */
+HARBOUR HB___WCLSDATAS(void)
+{
+   WORD  wClass = hb_parnl( 1 );
+   PCLASS pClass;
+
+   if( wClass )
+   {
+      pClass = &pClasses[ wClass - 1 ];
+      hb_retni( hb_arrayLen( pClass->pClassDatas ) );
+   }
+}
 
 /*
  * <nSeq> = hb__wDataDec( <hClass> )

@@ -104,8 +104,9 @@ static function Create()
    local Self := QSelf()
    local n
    local nLen
-   local nLenDatas  := Len( ::aDatas )
-   local nDataBegin := 0
+   local nLenDatas   := Len( ::aDatas )
+   local nDataBegin  := 0
+   local nClassBegin := 0
    local hClass
    local hSuper
    local ahSuper := {}
@@ -121,6 +122,7 @@ static function Create()
       ClassAdd( hClass, "SUPER", hSuper, MET_SUPER )
 
       nDataBegin := __WDatas( hSuper )          // Get offset for new DATAs
+      nClassBegin := __WClsDatas( hSuper )      // Get offset for new ClassData
    endif
 
    ::hClass = hClass
@@ -138,8 +140,8 @@ static function Create()
 
    nLen = Len( ::aClsDatas )
    for n = 1 to nLen
-      ClassAdd( hClass, ::aClsDatas[ n ], n, MET_CLASSDATA )
-      ClassAdd( hClass, "_" + ::aClsDatas[ n ], n, MET_CLASSDATA )
+      ClassAdd( hClass, ::aClsDatas[ n ], n + nClassBegin, MET_CLASSDATA )
+      ClassAdd( hClass, "_" + ::aClsDatas[ n ], n + nClassBegin, MET_CLASSDATA )
    next
 
    nLen = Len( ::aInlines )
