@@ -1,3 +1,7 @@
+2001-04-18 15:50 CET Martin Vogel <vogel@inttec.de>
+   * contrib/libct/makefile.bc
+     ! Corrected a typo
+
 2001-04-18 01:30 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/vm/arrays.c
      ! Corrected a minor typo, that could cause some un-released memory on some occasions.
