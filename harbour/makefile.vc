@@ -853,6 +853,7 @@ $(HBMAKE_EXE) : \
    $(HBMAKE_DIR)\prb_stak.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
    $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\  $(OBJ_DIR)\hbmake.c \
+                                   $(OBJ_DIR)\hbmutils.c \
                                    $(OBJ_DIR)\radios.c \
                                    $(OBJ_DIR)\checks.c \
                                    $(OBJ_DIR)\fclass1.c \
