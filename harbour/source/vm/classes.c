@@ -389,14 +389,27 @@ void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
    char * szNameBase;
    char * szNameObject;
 
-   while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
+   if ( (( uiScope & HB_OO_CLSTP_PROTECTED ) == HB_OO_CLSTP_PROTECTED ) ||
+        (( uiScope & HB_OO_CLSTP_HIDDEN ) == HB_OO_CLSTP_HIDDEN ) ||
+        (( uiScope & HB_OO_CLSTP_READONLY ) == HB_OO_CLSTP_READONLY )
+      )
+    {
+
+     while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
       pBase = hb_stack.pItems + pBase->item.asSymbol.stackbase;
 
-   szNameBase = hb_objGetClsName( pBase + 1 );
-   szNameObject = hb_objGetClsName( pObject );
+     szNameBase = hb_objGetClsName( pBase + 1 );
+     szNameObject = hb_objGetClsName( pObject );
 
-   if( iLevel == -1 )
-   {
+     /* Huumm probably an inline so back one ... */
+     if ( ( strcmp( szNameBase, "__EVAL" ) != 0 ) && pBase != hb_stack.pItems)
+      {
+        pBase = hb_stack.pItems + pBase->item.asSymbol.stackbase;
+        szNameBase = hb_objGetClsName( pBase + 1 );
+      }
+
+     if( iLevel == -1 )
+     {
       if( ( pBase + 1 )->type == HB_IT_ARRAY )  /* it is a message */
       {
          if( ( uiScope & HB_OO_CLSTP_PROTECTED ) == HB_OO_CLSTP_PROTECTED )
@@ -469,7 +482,9 @@ void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
       }
 #endif
 
-   }
+     }
+
+    }
 }
 
 ULONG hb_cls_MsgToNum( PHB_DYNS pMsg )

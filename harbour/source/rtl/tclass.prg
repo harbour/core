@@ -236,15 +236,17 @@ RETURN __clsInst( ::hClass )
 
 //----------------------------------------------------------------------------//
 
-STATIC PROCEDURE AddData( cData, xInit, cType, nScope )  /* xInit is initializer */
+STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit )
 
    LOCAL Self := QSelf()
 
+   if lNoInit==NIL;lNoInit:=.F.;endif
+
    // Default Init for Logical and numeric
-   IF cType != NIL .AND. xInit == NIL
+   IF ! lNoInit .AND. cType != NIL .AND. xInit == NIL
       IF Upper( Left( cType, 1 ) ) == "L"
          xInit := .F.
-      ELSEIF Upper( Left( cType, 1 ) ) == "N"
+      ELSEIF Upper( Left( cType, 1 ) ) $ "NI"   /* Numeric Int */
          xInit := 0
       ENDIF
    ENDIF
@@ -255,7 +257,7 @@ STATIC PROCEDURE AddData( cData, xInit, cType, nScope )  /* xInit is initializer
 
 //----------------------------------------------------------------------------//
 
-STATIC PROCEDURE AddMultiData( cType, xInit, nScope, aData )
+STATIC PROCEDURE AddMultiData( cType, xInit, nScope, aData, lNoInit )
 
    LOCAL Self := QSelf()
    LOCAL i
@@ -272,22 +274,24 @@ STATIC PROCEDURE AddMultiData( cType, xInit, nScope, aData )
    ENDIF
 
    FOR i := 1 TO nParam
-      ::AddData( aData[ i ], xInit, cType, nScope )
+      ::AddData( aData[ i ], xInit, cType, nScope, lNoInit )
    NEXT
 
    RETURN
 
 //----------------------------------------------------------------------------//
 
-STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope )
+STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope, lNoInit )
 
    LOCAL Self := QSelf()
 
+   if lNoInit==NIL;lNoInit:=.F.;endif
+
    // Default Init for Logical and numeric
-   IF cType != NIL .AND. xInit == NIL
+   IF ! lNoInit .AND. cType != NIL .AND. xInit == NIL
       IF Upper( Left( cType, 1 ) ) == "L"
          xInit := .F.
-      ELSEIF Upper( Left( cType, 1 ) ) == "N"
+      ELSEIF Upper( Left( cType, 1 ) ) $ "NI"  /* Numeric Int */
          xInit := 0
       ENDIF
    ENDIF
@@ -298,7 +302,7 @@ STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope )
 
 //----------------------------------------------------------------------------//
 
-STATIC PROCEDURE AddMultiClsData( cType, xInit, nScope, aData )
+STATIC PROCEDURE AddMultiClsData( cType, xInit, nScope, aData, lNoInit )
 
    LOCAL Self := QSelf()
    LOCAL i
@@ -315,7 +319,7 @@ STATIC PROCEDURE AddMultiClsData( cType, xInit, nScope, aData )
    ENDIF
 
    FOR i := 1 TO nParam
-      ::AddClassData( aData[ i ], xInit, cType, nScope )
+      ::AddClassData( aData[ i ], xInit, cType, nScope, lNoInit )
    NEXT
 
    RETURN

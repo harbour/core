@@ -936,6 +936,7 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
                       }
                   }
               }
+
               /* Look for definitions from #translate    */
               stcmd = hb_pp_topTranslate;
               while( stcmd != NULL )
@@ -970,7 +971,9 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
                 }
 
               /* Look for definitions from #command      */
-              if( kolpass < 3 )       /* JFL ! */
+              /* JFL ! Was 3 but insufficient in most cases */
+              /* I know this is a new hardcoded limit ... any better idea's welcome */
+              if( kolpass < 20 )
                 {
                   ptri = sLine + isdvig;
                   HB_SKIPTABSPACES( ptri );
@@ -1018,6 +1021,7 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
                 *(sLine+isdvig+ipos-1) = ';';
             }
           isdvig += ipos;
+
         }
       while( ipos != 0 );
 
