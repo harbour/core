@@ -53,16 +53,14 @@
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
-#include "hbapiitm.h"
 
 #if defined(HB_OS_DOS) || defined(__WATCOMC__)
    #include <dos.h>
 #endif
 
-HB_FUNC( DISKSPACE )
+double hb_DiskSpace( USHORT uiDrive, USHORT uiType )
 {
-   double dSpaceFree = 0.0;
-   USHORT uiDrive = ISNUM( 1 ) ? hb_parni( 1 ) : 0;
+   double dSpace = 0.0;
 
 #if defined(HB_OS_DOS) || defined(__WATCOMC__)
 
@@ -78,12 +76,30 @@ HB_FUNC( DISKSPACE )
    }
 
    if( uiResult != 0 )
-      dSpaceFree = ( double ) disk.avail_clusters *
+      switch( uiType )
+      {
+         case HB_DISK_FREE:
+         case HB_DISK_AVAIL:
+            dSpace = ( double ) disk.avail_clusters *
+                     ( double ) disk.sectors_per_cluster *
+                     ( double ) disk.bytes_per_sector;
+            break;
+
+         case HB_DISK_TOTAL:
+         case HB_DISK_USED:
+            dSpace = ( double ) disk.total_clusters *
+                     ( double ) disk.sectors_per_cluster *
+                     ( double ) disk.bytes_per_sector );
+            break;
+      }
+      if( uiType == HB_DISK_USED )
+         dSpace -= ( double ) disk.avail_clusters *
                    ( double ) disk.sectors_per_cluster *
                    ( double ) disk.bytes_per_sector;
+      }
 
 #elif defined(HB_OS_WIN_32)
-   
+
    {
 
       typedef BOOL (WINAPI *P_GDFSE)(LPCTSTR, PULARGE_INTEGER, 
@@ -113,16 +129,44 @@ HB_FUNC( DISKSPACE )
 
       if( pGetDiskFreeSpaceEx )
       {
-         ULARGE_INTEGER i64FreeBytesToCaller;
-         ULARGE_INTEGER i64TotalBytes;
-         ULARGE_INTEGER i64FreeBytes;
+         ULARGE_INTEGER i64FreeBytesToCaller,
+                        i64TotalBytes,
+                        i64FreeBytes,
+                        i64RetVal;
 
          if( pGetDiskFreeSpaceEx( szPath,
-                                  ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
-                                  ( PULARGE_INTEGER ) &i64TotalBytes,
-                                  ( PULARGE_INTEGER ) &i64FreeBytes ) )
+                                  &i64FreeBytesToCaller,
+                                  &i64TotalBytes,
+                                  &i64FreeBytes ) )
+         {
+            switch( uiType )
+            {
+               case HB_DISK_FREE:
+                  memcpy( &i64RetVal, &i64FreeBytes, sizeof( ULARGE_INTEGER ) );
+                  break;
 
-            dSpaceFree = ( double ) (unsigned)i64FreeBytesToCaller.QuadPart ;
+               case HB_DISK_AVAIL:
+                  memcpy( &i64RetVal, &i64FreeBytesToCaller, sizeof( ULARGE_INTEGER ) );
+                  break;
+
+               case HB_DISK_TOTAL:
+               case HB_DISK_USED:
+                  memcpy( &i64RetVal, &i64TotalBytes, sizeof( ULARGE_INTEGER ) );
+            }
+
+            dSpace  = ( double ) i64RetVal.HighPart +
+                      ( double ) i64RetVal.HighPart *
+                      ( double ) 0xffffffff ;
+            dSpace += ( double ) i64RetVal.LowPart ;
+
+            if( uiType == HB_DISK_USED )
+            {
+               dSpace -= ( double ) i64FreeBytes.HighPart +
+                         ( double ) i64FreeBytes.HighPart *
+                         ( double ) 0xffffffff ;
+               dSpace -= ( double ) i64FreeBytes.LowPart  ;
+            }
+         }
       }
       else 
       {
@@ -137,7 +181,26 @@ HB_FUNC( DISKSPACE )
                                &dwNumberOfFreeClusters,
                                &dwTotalNumberOfClusters ) )
          {
-            dSpaceFree = ( double ) dwNumberOfFreeClusters *
+            switch( uiType )
+            {
+               case HB_DISK_FREE:
+               case HB_DISK_AVAIL:
+                  dSpace = ( double ) dwNumberOfFreeClusters *
+                           ( double ) dwSectorsPerCluster *
+                           ( double ) dwBytesPerSector;
+                  break;
+
+               case HB_DISK_TOTAL:
+               case HB_DISK_USED:
+                  dSpace  = ( double ) dwTotalNumberOfClusters *
+                            ( double ) dwSectorsPerCluster *
+                            ( double ) dwBytesPerSector;
+                  break;
+
+            }
+
+            if( uiType == HB_DISK_USED )
+               dSpace -= ( double ) dwNumberOfFreeClusters *
                          ( double ) dwSectorsPerCluster *
                          ( double ) dwBytesPerSector;
          }
@@ -150,13 +213,11 @@ HB_FUNC( DISKSPACE )
 
 #endif
 
-   {
-      PHB_ITEM pRetVal;
-
-      pRetVal = hb_itemNew( NULL );
-      hb_itemPutNLen( pRetVal, dSpaceFree, -1, 0 );
-      hb_itemReturn( pRetVal );
-      hb_itemRelease( pRetVal );
-   }
+   return dSpace;
 }
 
+
+HB_FUNC( DISKSPACE )
+{
+   hb_retnd( hb_DiskSpace( ISNUM( 1 ) ? hb_parni( 1 ) : 0, HB_DISK_AVAIL ));
+}
