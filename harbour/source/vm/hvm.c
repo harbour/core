@@ -4404,6 +4404,18 @@ static void hb_vmPopLocal( SHORT iLocal )
       /* local variable or local parameter */
       PHB_ITEM pLocal = hb_stackItemFromBase( iLocal );
 
+      if( HB_IS_OBJECT( pLocal ) && hb_objHasMsg( pLocal, "__OpAssign" ) )
+      {
+         HB_ITEM item;
+
+         hb_itemInit( &item );
+         hb_itemCopy( &item, hb_stackTopItem() );
+         hb_vmOperatorCall( pLocal, &item, "__OPASSIGN" );
+         hb_itemClear( &item );
+         hb_stackPush();
+         return;
+      }
+
       if( HB_IS_BYREF( pLocal ) )
          hb_itemCopy( hb_itemUnRef( pLocal ), hb_stackTopItem() );
       else
@@ -4427,6 +4439,18 @@ static void hb_vmPopStatic( USHORT uiStatic )
    hb_stackDec();
    hb_stackTopItem()->type &= ~HB_IT_MEMOFLAG;
    pStatic = s_aStatics.item.asArray.value->pItems + hb_stack.iStatics + uiStatic - 1;
+
+   if( HB_IS_OBJECT( pStatic ) && hb_objHasMsg( pStatic, "__OpAssign" ) )
+   {
+      HB_ITEM item;
+
+      hb_itemInit( &item );
+      hb_itemCopy( &item, hb_stackTopItem() );
+      hb_vmOperatorCall( pStatic, &item, "__OPASSIGN" );
+      hb_itemClear( &item );
+      hb_stackPush();
+      return;
+   }
 
    if( HB_IS_BYREF( pStatic ) )
       hb_itemCopy( hb_itemUnRef( pStatic ), ( hb_stackTopItem() ) );
