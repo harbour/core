@@ -7,6 +7,20 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     * Minor fix to Win32 branch
+   * include/hbapifs.h
+     * Added HB_FA_NORMAL
+
+2002-01-07 17:30 UTC-0300 Luiz Rafael Culik <culik@sl.conex.net>
+   * source/rtl/direct.c
+     * Now Directory finds files with out attribute set.
+       This fix the problem reported by Jorge Manson With the Adir function
+
+2002-01-07 09:20 UTC-0300 Luiz Rafael Culik <culik@sl.conex.net>
+   * source/rtl/isprint.c
+     * Fixed an small typo
+
+2002-01-07 00:45 UTC-0300 Luiz Rafael Culik <culik@sl.conex.net>
    * source/lang/msgpt.c
      * Translated the new error message to Portuguese
    * include/hbapifs.h
@@ -27,32 +41,32 @@
        languages from English.
 
 2002-01-06 19:40 UTC+0700 Andi Jahja <harbour@cbn.net.id>
-      
+   * source/compiler/genc.c
      * change definition of INIT/EXIT PROCEDURE from HB_FUNC_STATIC()
      to HB_FUNC_INIT()/HB_FUNC_EXIT() to avoid ambiguity
    * include/hbdefs.h
-     + Added checking of ulSize == 0, only when 
+     * added back definitions of HB_FUNC_INIT() and HB_FUNC_EXIT()
 
 2002-01-06 09:55 UTC-0300 Luiz Rafael Culik <culik@sl.conex.net>
    * source/rtl/isprint.c
      * Fixed an small typo
    * utils/hbmake/hbmake.prg
      * Updated the date
-       NOTE to translators or language file maintainers: 
-       The two new strings should be translated to the proper 
+
+2002-01-06 09:05 UTC-0300 Luiz Rafael Culik <culik@sl.conex.net>
    * source/lang/msgpt.c
-     * Updated copyright headers to the new one in some language 
+     * translated the two new error to Portuguese
    * source/rtl/isprint.c
      * Change IsPrinter() logic for Win32;If no Printer is passed, it check the
        default instaled printer.If an Printer name is passed, the name should match
-     ! Made more multiplatform by passing the complete printer 
+       the one listed on the Printer folders
 
 2002-01-06 10:00 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
-     + Added a C callable interface hb_printerIsReady() (not 
+   * source/vm/fm.c
      + Added checking of ulSize == 0, only when
-     + Win32 version reworked so that it checks for the printer 
-       name passed to the function. This also made the program 
+       HB_FM_STATISTICS is _ON_
+
    * include/error.ch
    * include/hbapilng.h
    * source/lang/*.c
@@ -77,18 +91,18 @@
    * source/rtl/descend.c
    * source/rtl/transfrm.c
      * Small changes in last fix.
-     ! Removed the explicit declaration of __yy_memcpy(), since 
-       it made BCC551 fail with Bison 1.30, even even with the 
+
+   - source/lang/msgnl.c
      - Old style language removed.
-       Now we again have the usual warning, but at least it 
+
 2002-01-05 16:20 UTC+0700 Andi Jahja <harbour@cbn.net.id>
    * source/rtl/transform.c
      ! Transform("","@" ) -> memory allocation error, fixed by adding 1 byte
        to hb_xgrab()
    * source/rtl/descend.c
      ! Descend("" ) -> memory allocation error, fixed by adding 1 byte to
-     - Removed two wrapper functions to hb_fsSetDevMode 
-       which were there to maintain supposed compatibility 
+       hb_xgrab()
+
 2002-01-03 23:26 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/filesys.c
@@ -96,7 +110,7 @@
 
    * source/compiler/harbour.y
    * source/macro/macro.y
-     ! hb_fsCommit() fixed Win32 branch, and put it 
+     ! Removed the explicit declaration of __yy_memcpy(), since
        it made BCC551 fail with Bison 1.30, even even with the
        supplied harbour.simple file, which makes Bison 1.30 blow.
        Now we again have the usual warning, but at least it
@@ -119,7 +133,7 @@
        in the right place multiplatform #define-wise.
 
    * source/rtl/profiler.prg
-     * No more file limit on Win32  
+     * Formatting change.
 
    * source/vm/memvars.c
      ! Fixed warnings in __MVEXIST()
@@ -177,7 +191,7 @@
    * source/compiler/hbusage.c
      + description of /n switch
      - remove description of /gc3
-     % Optimized a bit of code related to the generation of 
+
 2002-01-01 12:30 UTC+0700 Andi Jahja <harbour@cbn.net.id>
    * source/compiler/hbusage.c
      * bump Copyright year to 2002
