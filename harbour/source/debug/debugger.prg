@@ -242,7 +242,8 @@ CLASS TDebugger
    METHOD HandleEvent()
    METHOD Hide()
    METHOD HideVars()
-   METHOD InputBox( cMsg, uValue, bValid )
+   METHOD InputBox( cMsg, uValue, bValid, lEditable )
+   METHOD Inspect( uValue, cValueName )
    METHOD IsBreakPoint( nLine )
    METHOD LoadSettings()
    METHOD LoadVars()
@@ -269,7 +270,7 @@ CLASS TDebugger
    METHOD ShowAppScreen()
    METHOD ShowCallStack()
    METHOD ShowCode( cModuleName )
-   METHOD ShowHelp( nTopic ) INLINE __dbgHelp( nTopic )
+   METHOD ShowHelp( nTopic )
    METHOD ShowVars()
 
 /*   METHOD Sort() INLINE ASort( ::aVars,,, {|x,y| x[1] < y[1] } ),;
@@ -336,8 +337,8 @@ METHOD New() CLASS TDebugger
    ::lShowLocals       := .f.
    ::lAll              := .f.
    ::lSortVars         := .f.
-
    ::cSettingsFileName := "init.cld"
+
    if File( ::cSettingsFileName )
       ::LoadSettings()
    endif
@@ -567,19 +568,31 @@ METHOD CommandWindowProcessKey( nKey ) CLASS TDebugger
               case Empty( cCommand )
                  lDisplay = .f.
 
+              case SubStr( LTrim( cCommand ), 1, 3 ) == "?? "
+                 begin sequence
+                    ::Inspect( AllTrim( SubStr( LTrim( cCommand ), 4 ) ),;
+                               &( AllTrim( SubStr( LTrim( cCommand ), 4 ) ) ) )
+                    lDisplay = .f.
+                 recover using oE
+                    cResult = "Command error: " + oE:description
+                    lDisplay = .t.
+                 end sequence
+
               case SubStr( LTrim( cCommand ), 1, 2 ) == "? "
                  begin sequence
                     cResult = ValToStr( &( AllTrim( SubStr( LTrim( cCommand ), 3 ) ) ) )
-
                  recover using oE
                     cResult = "Command error: " + oE:description
-
                  end sequence
                  lDisplay = .t.
 
               case Upper( SubStr( LTrim( cCommand ), 1, 3 ) ) == "DOS"
                  ::OsShell()
                  SetCursor( SC_NORMAL )
+                 lDisplay = .f.
+
+              case Upper( SubStr( LTrim( cCommand ), 1, 4 ) ) == "HELP"
+                 ::ShowHelp()
                  lDisplay = .f.
 
               case Upper( SubStr( LTrim( cCommand ), 1, 4 ) ) == "QUIT"
@@ -770,7 +783,7 @@ return nil
 
 METHOD HandleEvent() CLASS TDebugger
 
-   local nPopup, oWnd
+   local nPopup, oWnd, nCursor
    local nKey, nMRow, nMCol, n
 
    if ::lAnimate
@@ -799,6 +812,7 @@ METHOD HandleEvent() CLASS TDebugger
               ::oPullDown:ProcessKey( nKey )
               if ::oPullDown:nOpenPopup == 0 // Closed
                  ::aWindows[ ::nCurrentWindow ]:SetFocus( .t. )
+                 SetCursor( nCursor )
               endif
 
          case nKey == K_LDBLCLK
@@ -895,7 +909,7 @@ METHOD HandleEvent() CLASS TDebugger
          otherwise
               if ( nPopup := ::oPullDown:GetHotKeyPos( __dbgAltToKey( nKey ) ) ) != 0
                  if ::oPullDown:nOpenPopup != nPopup
-                    SetCursor( SC_NONE )
+                    nCursor = SetCursor( SC_NONE )
                     ::oPullDown:ShowPopup( nPopup )
                  endif
               endif
@@ -1139,6 +1153,15 @@ METHOD LoadVars() CLASS TDebugger // updates monitored variables
 
 return nil
 
+METHOD ShowHelp( nTopic ) CLASS TDebugger
+
+   local nCursor := SetCursor( SC_NONE )
+
+   __dbgHelp( nTopic )
+   SetCursor( nCursor )
+
+return nil
+
 METHOD ShowVars() CLASS TDebugger
 
    local n
@@ -1363,32 +1386,69 @@ METHOD HideVars() CLASS TDebugger
 
 return nil
 
-METHOD InputBox( cMsg, uValue, bValid ) CLASS TDebugger
+METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS TDebugger
 
-   local nTop    := ( MaxRow() / 2 ) - 5
+   local nTop    := ( MaxRow() / 2 ) - 8
    local nLeft   := ( MaxCol() / 2 ) - 25
-   local nBottom := ( MaxRow() / 2 ) - 3
+   local nBottom := ( MaxRow() / 2 ) - 6
    local nRight  := ( MaxCol() / 2 ) + 25
    local cType   := ValType( uValue )
    local uTemp   := PadR( uValue, nRight - nLeft - 1 )
    local GetList := {}
    local nOldCursor
    local lScoreBoard := Set( _SET_SCOREBOARD, .f. )
+   local lExit
    local oWndInput := TDbWindow():New( nTop, nLeft, nBottom, nRight, cMsg,;
                                        ::oPullDown:cClrPopup )
+
+   DEFAULT lEditable TO .t.
 
    oWndInput:lShadow := .t.
    oWndInput:Show(.t.)
 
-   if bValid == nil
-      @ nTop + 1, nLeft + 1 GET uTemp COLOR "," + __DbgColors()[ 5 ]
+   if lEditable
+      if bValid == nil
+         @ nTop + 1, nLeft + 1 GET uTemp COLOR "," + __DbgColors()[ 5 ]
+      else
+         @ nTop + 1, nLeft + 1 GET uTemp VALID bValid COLOR "," + __DbgColors()[ 5 ]
+      endif
+
+      nOldCursor := SetCursor( SC_NORMAL )
+      READ
+      SetCursor( nOldCursor )
    else
-      @ nTop + 1, nLeft + 1 GET uTemp VALID bValid COLOR "," + __DbgColors()[ 5 ]
+      @ nTop + 1, nLeft + 1 SAY ValToStr( uValue ) COLOR __DbgColors()[ 5 ]
+      SetPos( nTop + 1, nLeft + 1 )
+
+      nOldCursor := SetCursor( SC_NORMAL )
+      lExit = .f.
+
+      while ! lExit
+         Inkey( 0 )
+
+         do case
+            case LastKey() == K_ESC
+               lExit = .t.
+
+            case LastKey() == K_ENTER
+               if cType == "A"
+                  __DbgArrays( uValue, cMsg, .f. )
+
+               elseif cType == "O"
+                  __DbgObject( uValue, cMsg, .f. )
+
+               else
+                  Alert( "Value cannot be edited" )
+               endif
+
+            otherwise
+               Alert( "Value cannot be edited" )
+         endcase
+      end
+
+      SetCursor( nOldCursor )
    endif
 
-   nOldCursor := SetCursor( SC_NORMAL )
-   READ
-   SetCursor( nOldCursor )
    oWndInput:Hide()
    Set( _SET_SCOREBOARD, lScoreBoard )
 
@@ -1406,6 +1466,11 @@ METHOD InputBox( cMsg, uValue, bValid ) CLASS TDebugger
 
 return iif( LastKey() != K_ESC, uTemp, uValue )
 
+METHOD Inspect( uValue, cValueName ) CLASS TDebugger
+
+   uValue = ::InputBox( uValue, cValueName,, .f. )
+
+return nil
 
 METHOD IsBreakPoint( nLine ) CLASS TDebugger
 
