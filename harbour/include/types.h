@@ -5,6 +5,8 @@
 #ifndef _TYPES_H
 #define _TYPES_H
 
+#include <limits.h>
+
 #ifdef __IBMCPP__
   #define INCL_TYPES
   #include <os2.h>

@@ -1,3 +1,24 @@
+19990607-19:45 EDT David G. Holm <dholm@jsd-llc.com>
+  * include/extend.h
+    - Moved "#include <limits.h>" to include/types.h
+  * include/types.h
+    - Moved "#include <limits.h>" from include/extend.h in order to
+      avoid having to require that extend.h be included before set.h
+  * source/rtl/dates.c
+    - HARBOUR SECONDS() and support module hb_seconds() courtesy of
+      Jose Lalin <dezac@corevia.com>. I removed the use of clock()
+      from hb_time(), because clock() returns the number of clock
+      ticks since the program started, which has no relationship to
+      when the seconds of the real time clock roll over. This means
+      that SECONDS() will always return whole seconds instead of
+      seconds and hundredths. I also provided an alternate hb_seconds
+      implementation for DOS platforms using gettime() instead of
+      time() and localtime(), because gettime() includes 1/100ths.
+  * source/rtl/files.c
+    - Don't "#include <mingw32/share.h>" if compiling with DJGPP.
+  + tests/working/seconds.prg
+    - New test program for SECONDS().
+
 19990607-20:30 CET Eddie Runia
    * makefile.b32
      change little bug (hb.c)

@@ -6,6 +6,9 @@
 #include <set.h>
 #include <ctype.h>
 #include <time.h>
+#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__)
+  #include <dos.h>
+#endif
 
 #ifndef _STRICT_CLIPPER_COMPATIBILITY
    #define _OPTIMIZE_DTOS
@@ -21,6 +24,23 @@ extern STACK stack;
 /* In msgxxx.c modules */
 extern char *hb_monthsname[];
 extern char *hb_daysname[];
+
+double hb_seconds( void )
+{
+#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__)
+   struct time t;
+   gettime( &t );
+   return( ( ( t.ti_hour * 3600 ) + ( t.ti_min * 60 ) + t.ti_sec ) + t.ti_hund / 100.0 );
+#else
+   time_t t;
+   struct tm *oTime;
+
+   time(&t);
+   oTime = localtime(&t);
+
+   return( ( oTime->tm_hour * 3600 ) + ( oTime->tm_min * 60 ) + oTime->tm_sec );
+#endif
+}
 
 char *hb_cmonth( int month )
 {
@@ -562,6 +582,20 @@ HARBOUR CDOW( void )
       /* QUESTION: Clipper catches this at compile time! */
       PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Incorrect number of arguments: CDOW");
+      _errLaunch(pError);
+      _errRelease(pError);
+   }
+}
+
+HARBOUR SECONDS( void )
+{
+   if( _pcount() == 0 )
+      _retnd( hb_seconds() );
+   else
+   {
+      /* QUESTION: Clipper catches this at compile time! */
+      PHB_ITEM pError = _errNew();
+      _errPutDescription(pError, "Incorrect number of arguments: SECONDS");
       _errLaunch(pError);
       _errRelease(pError);
    }
