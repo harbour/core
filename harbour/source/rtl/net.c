@@ -60,15 +60,12 @@ HARBOUR HB_NETNAME( void )
 {
 #if defined(_Windows) || defined(WINNT)
    {
-      HKEY hKey;
-      DWORD ulLen = 128;
+      DWORD ulLen = MAX_COMPUTERNAME_LENGTH + 1;
       char * pszValue = hb_xgrab( ulLen );
 
       pszValue[ 0 ] = '\0';
 
-      RegOpenKey( HKEY_LOCAL_MACHINE, "SYSTEM\\CurrentControlSet\\Control\\ComputerName\\ComputerName", &hKey );
-      RegQueryValueEx( hKey, "ComputerName", NULL, NULL, pszValue, &ulLen );
-      RegCloseKey( hKey );
+      GetComputerName( pszValue, &ulLen );
 
       hb_retc( pszValue );
       hb_xfree( pszValue );
