@@ -51,6 +51,9 @@ char * yy_strupr( char * p );
 char * yy_strdup( char * p );
 extern void     hb_xfree( void * pMem );    /* frees memory */
 
+/* helper functions */
+static int yy_ConvertNumber( char * szBuffer );
+
 /* YACC functions */
 void yyerror( char * );
 static void yyunput( int, char * );
@@ -101,8 +104,8 @@ int i_INDEX_STATE = 0;
 %}
 
 SpaceTab      [ \t]+
-InvalidNumber [0-9]+\.
 Number        ([0-9]+)|([0-9]*\.[0-9]+)
+InvalidNumber [0-9]+\.
 HexNumber     0x[0-9A-F]+
 Identifier    (([a-zA-Z])|([_a-zA-Z][_a-zA-Z0-9]+))
 
@@ -121,6 +124,7 @@ Separator     {SpaceTab}
 %x            NEXT_ BREAK_ CASE_ DO_ WHILE_ WITH_ END_ EXIT_ EXTERNAL_ FIELD_
 %x            FOR_ FUNCTION_ IIF_ IF_ IN_ INIT_ LOCAL_ LOOP_ DECLARE_
 %x            MEMVAR_ PARAM_ PRIVATE_ PUBLIC_
+%x            INVALIDNUM_
 %s            INDEX
 
 %%
@@ -1150,37 +1154,20 @@ Separator     {SpaceTab}
 [\(]           ++_iOpenBracket; _iState =SEPARATOR; return yytext[ 0 ];
 [\)]           --_iOpenBracket; _iState =SEPARATOR; return yytext[ 0 ];
 
-{InvalidNumber} GenError( _szCErrors, 'E', ERR_NUMERIC_FORMAT, NULL, NULL );
+{InvalidNumber} BEGIN INVALIDNUM_; yylval.string = yy_strupr( yy_strdup( yytext ) );
+<INVALIDNUM_>("."|{Separator}+) {
+                   GenError( _szCErrors, 'E', ERR_NUMERIC_FORMAT, NULL, NULL );
+                 }
+<INVALIDNUM_>.   {
+                    unput( yytext[ yyleng-1 ] );
+                    unput( '.' );
+                    if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                    yylval.string[ strlen(yylval.string) - 1 ] = '\0';
+                    return yy_ConvertNumber( yylval.string );
+                 }
 
-{Number}       { char * ptr;
-                 yylval.dNum.dNumber = atof( yytext );
-                 ptr = strchr( yytext, '.' );
-                 if( ptr )
-                 {
-                    yylval.dNum.bDec = strlen( ptr + 1 );
-                    return DOUBLE;
-                 }
-                 else
-                 {
-                    if( ( double )SHRT_MIN <= yylval.dNum.dNumber &&
-                        yylval.dNum.dNumber <= ( double )SHRT_MAX )
-                    {
-                       yylval.iNumber = ( int ) yylval.dNum.dNumber;
-                       return INTEGER;
-                    }
-                    else if( ( double )LONG_MIN <= yylval.dNum.dNumber &&
-                             yylval.dNum.dNumber <= ( double )LONG_MAX )
-                    {
-                       yylval.lNumber = ( long ) yylval.dNum.dNumber;
-                       return INTLONG;
-                    }
-                    else
-                    {
-                       yylval.dNum.bDec = 0;
-                       return DOUBLE;
-                    }
-                 }
-               }
+
+{Number}       { return yy_ConvertNumber( yytext ); }
 
 {HexNumber}   {  sscanf( yytext, "%lxI", &lNumber );
 
@@ -1287,4 +1274,37 @@ int yy_lex_input( char *buffer, int iBufferSize )
    HB_SYMBOL_UNUSED( iBufferSize );
 
    return PreProcess( yyin, _bPPO ? yyppo : NULL, buffer );
+}
+
+static int yy_ConvertNumber( char * szBuffer )
+{
+   char * ptr;
+
+   yylval.dNum.dNumber = atof( szBuffer );
+   ptr = strchr( szBuffer, '.' );
+   if( ptr )
+   {
+      yylval.dNum.bDec = strlen( ptr + 1 );
+      return DOUBLE;
+   }
+   else
+   {
+      if( ( double )SHRT_MIN <= yylval.dNum.dNumber &&
+            yylval.dNum.dNumber <= ( double )SHRT_MAX )
+      {
+         yylval.iNumber = ( int ) yylval.dNum.dNumber;
+         return INTEGER;
+      }
+      else if( ( double )LONG_MIN <= yylval.dNum.dNumber &&
+                 yylval.dNum.dNumber <= ( double )LONG_MAX )
+      {
+         yylval.lNumber = ( long ) yylval.dNum.dNumber;
+         return INTLONG;
+      }
+      else
+      {
+         yylval.dNum.bDec = 0;
+         return DOUBLE;
+      }
+   }
 }

@@ -34,6 +34,15 @@
  *
  */
 
+/* TODO list
+ * 1) jumps longer then 2^15 bytes
+ * 2) macro support
+ * 3) correct support for undeclared variables (all variables are assumed
+ *       memvars now - we should add runtime recognition of variable type)
+ *       - work in progress (rglab@imid.med.pl)
+ * 4) in some cases incorrect warnings are generated when -w option is used
+ */
+
 /* Compile using: bison -d -v harbour.y */
 
 #include <stdio.h>
@@ -89,6 +98,7 @@ typedef struct _LOOPEXIT
 {
    ULONG ulOffset;
    int iLine;
+   WORD wSeqCounter;
    struct _LOOPEXIT * pLoopList;
    struct _LOOPEXIT * pExitList;
    struct _LOOPEXIT * pNext;
@@ -618,8 +628,20 @@ Statement  : ExecFlow Crlf        {}
 
            | BREAK { GenBreak(); } Crlf               { Do( 0 ); }
            | BREAK { GenBreak(); } Expression Crlf    { Do( 1 ); }
-           | RETURN Crlf              { if( _wSeqCounter ) GenError( _szCErrors, 'E', ERR_EXIT_IN_SEQUENCE, "RETURN", NULL ); GenPCode1( HB_P_ENDPROC ); }
-           | RETURN Expression Crlf   { if( _wSeqCounter ) GenError( _szCErrors, 'E', ERR_EXIT_IN_SEQUENCE, "RETURN", NULL ); GenPCode1( HB_P_RETVALUE ); GenPCode1( HB_P_ENDPROC ); }
+           | RETURN Crlf   { 
+                             if( _wSeqCounter ) 
+                               { --iLine; 
+                                 GenError( _szCErrors, 'E', ERR_EXIT_IN_SEQUENCE, "RETURN", NULL ); 
+                               }
+                               GenPCode1( HB_P_ENDPROC );
+                           }
+           | RETURN Expression Crlf   { 
+                           if( _wSeqCounter ) 
+                           {  --iLine;
+                              GenError( _szCErrors, 'E', ERR_EXIT_IN_SEQUENCE, "RETURN", NULL ); 
+                           }
+                           GenPCode1( HB_P_RETVALUE ); GenPCode1( HB_P_ENDPROC ); 
+                        }
            | PUBLIC { iVarScope = VS_PUBLIC; } VarList Crlf
            | PRIVATE { iVarScope = VS_PRIVATE; } VarList Crlf
 
@@ -4695,8 +4717,9 @@ static void LoopStart( void )
    pLoop->pNext       = NULL;
    pLoop->pExitList   = NULL;
    pLoop->pLoopList   = NULL;
-   pLoop->ulOffset = functions.pLast->lPCodePos;  /* store the start position */
-   pLoop->iLine   = iLine;
+   pLoop->ulOffset    = functions.pLast->lPCodePos;  /* store the start position */
+   pLoop->iLine       = iLine;
+   pLoop->wSeqCounter = _wSeqCounter;  /* store current SEQUENCE counter */
 }
 
 /*
@@ -4706,14 +4729,6 @@ static void LoopLoop( void )
 {
    PTR_LOOPEXIT pLast, pLoop;
 
-   if( _wSeqCounter && _wSeqCounter >= _wWhileCounter )
-   {
-      /* Attempt to LOOP from BEGIN/END sequence
-       * Notice that LOOP is allowed in RECOVER code.
-       */
-      GenError( _szCErrors, 'E', ERR_EXIT_IN_SEQUENCE, "LOOP", NULL );
-   }
-
    pLoop = ( PTR_LOOPEXIT ) hb_xgrab( sizeof( LOOPEXIT ) );
 
    pLoop->pLoopList = NULL;
@@ -4722,6 +4737,16 @@ static void LoopLoop( void )
    pLast = pLoops;
    while( pLast->pNext )
       pLast = pLast->pNext;
+
+   if( pLast->wSeqCounter != _wSeqCounter )
+   {
+      /* Attempt to LOOP from BEGIN/END sequence
+       * Current SEQUENCE counter is different then at the beginning of loop
+       * Notice that LOOP is allowed in RECOVER code.
+       */
+      --iLine;    /* this is called after CR is processed */
+      GenError( _szCErrors, 'E', ERR_EXIT_IN_SEQUENCE, "LOOP", NULL );
+   }
 
    while( pLast->pLoopList )
       pLast = pLast->pLoopList;
@@ -4738,14 +4763,6 @@ static void LoopExit( void )
 {
    PTR_LOOPEXIT pLast, pLoop;
 
-   if( _wSeqCounter && _wSeqCounter >= _wWhileCounter )
-   {
-      /* Attempt to EXIT from BEGIN/END sequence
-       * Notice that EXIT is allowed in RECOVER code.
-       */
-      GenError( _szCErrors, 'E', ERR_EXIT_IN_SEQUENCE, "EXIT", NULL );
-   }
-
    pLoop = ( PTR_LOOPEXIT ) hb_xgrab( sizeof( LOOPEXIT ) );
 
    pLoop->pExitList = NULL;
@@ -4754,6 +4771,16 @@ static void LoopExit( void )
    pLast = pLoops;
    while( pLast->pNext )
       pLast = pLast->pNext;
+
+   if( pLast->wSeqCounter != _wSeqCounter )
+   {
+      /* Attempt to LOOP from BEGIN/END sequence
+       * Current SEQUENCE counter is different then at the beginning of loop
+       * Notice that LOOP is allowed in RECOVER code.
+       */
+      --iLine;    /* this is called after CR is processed */
+      GenError( _szCErrors, 'E', ERR_EXIT_IN_SEQUENCE, "EXIT", NULL );
+   }
 
    while( pLast->pExitList )
       pLast = pLast->pExitList;

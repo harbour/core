@@ -391,7 +391,7 @@ static void hb_devout( BYTE * pStr, ULONG ulLen )
 #else
       ULONG ulCount = ulLen;
       BYTE * pPtr = pStr;
-      if( strlen( pStr ) != ulCount )
+      if( strlen( (char *) pStr ) != ulCount )
          while( ulCount-- ) fputc( *pPtr++, stdout );
       else
          fputs( ( char * ) pStr, stdout );
@@ -410,7 +410,7 @@ static void hb_dispout( BYTE * pStr, ULONG ulLen )
 #else
    ULONG ulCount = ulLen;
    BYTE * pPtr = pStr;
-   if( strlen( pStr ) != ulCount )
+   if( strlen( (char *) pStr ) != ulCount )
       while( ulCount-- ) fputc( *pPtr++, stdout );
    else
       fputs( ( char * ) pStr, stdout );

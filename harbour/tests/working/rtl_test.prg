@@ -373,6 +373,10 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( "Z"              >  "A"              , .T.                                               )
    TEST_LINE( Chr(0)           >  " "              , .F.                                               )
 
+   //NOTE: These expressions have to be written with no separators!
+   TEST_LINE( mnIntP==10.or.mnIntP=0               , .T.                                               )
+   TEST_LINE( mnIntP==10.and.mnLongP=0             , .F.                                               )   
+   
    TEST_LINE( NIL + 1                         , "E BASE 1081 Argument error + F:S" )
    TEST_LINE( NIL - 1                         , "E BASE 1082 Argument error - F:S" )
 

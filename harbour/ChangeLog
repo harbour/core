@@ -1,3 +1,19 @@
+19990919-14:25 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+    *soource/rtl/console.c
+        * added two (char *) casts
+
+    *source/compiler/harbour.y
+        * corrected invalid error when LOOP or EXIT was used inside
+          a BEGIN/END sequence
+
+    *source/compiler/harbour.l
+        * corrected recognition of invalid number when no separators
+          were used (for example:  ? ( a=22.or.b=10 )
+
+    *tests/broken/numform.prg
+        - removed (code moved to tests/working/rtl_test.prg)
+
 19990919-01:55 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/environ.c
     * added 1 cast to an xgrab call.
