@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+    source/rtl/tbrowse.prg
+    * Code CleanUP
+
+2002-04-26 21:45 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
+   * bin/bld.sh
      ! Fix: Script didn't add screen library needed by GT lib.
 
 2002-04-26 21:56 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>

@@ -126,8 +126,8 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDDName, lNew, cAlias )
 
          dbUseArea( lNew,, cFileFrom ) 
 
-         dbEval( {|| AAdd( aStruct, { FIELD->FIELD_NAME ,;
-                                      FIELD->FIELD_TYPE ,;
+         dbEval( {|| AAdd( aStruct, { Rtrim(FIELD->FIELD_NAME) ,;
+                                      Rtrim(FIELD->FIELD_TYPE) ,;
                                       FIELD->FIELD_LEN ,;
                                       FIELD->FIELD_DEC } ) } )
          dbCloseArea()
