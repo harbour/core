@@ -53,6 +53,8 @@
 #include "hbclass.ch"
 #include "common.ch"
 
+extern HB_STOD
+
 CLASS HBPersistent
 
    METHOD CreateNew() INLINE Self
