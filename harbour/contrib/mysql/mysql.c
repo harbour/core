@@ -229,10 +229,12 @@ HB_FUNC(SQLNUMFI) // unsigned int mysql_num_fields(MYSQL_RES *)
    _retnl(mysql_num_fields(((MYSQL_RES *)_parnl(1))));
 }
 
+#if MYSQL_VERSION_ID > 32200
 HB_FUNC(SQLFICOU) // unsigned int mysql_num_fields(MYSQL_RES *)
 {
    _retnl(mysql_field_count(((MYSQL *)_parnl(1))));
 }
+#endif
 
 HB_FUNC(SQLLISTF) // MYSQL_RES *mysql_list_fields(MYSQL *, char *);
 {

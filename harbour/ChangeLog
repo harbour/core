@@ -1,3 +1,9 @@
+2001-07-10 10:40 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/browse.prg
+     ! fixed status line display
+   * contrib/mysql/mysql.c
+     ! mysql_field_count() is not available before version 3.22 of mysql
+
 2001-07-09 22:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      * Changed PP_Main() to STATIC Main() to have a Main procedure for build that require a MAIN yet avoid conflict if linked with a prg including a MAIN.

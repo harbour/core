@@ -99,8 +99,8 @@ function Browse( nTop, nLeft, nBottom, nRight )
 
       if NextKey() == 0
 
-         Statline( oBrw )
          oBrw:forceStable()
+         Statline( oBrw )
 
          nKey := Inkey( 0 )
 
