@@ -131,7 +131,7 @@ BOOL HB_EXPORT hb_extIsArray( int iParam )
 /* NOTE: Caller should not modify the buffer returned by this function.
          [vszakats] */
 
-char * HB_EXPORT hb_parc( int iParam, ... )
+char HB_EXPORT * hb_parc( int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_parc(%d, ...)", iParam));
 

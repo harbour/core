@@ -274,7 +274,7 @@ typedef USHORT ERRCODE;
 extern HB_SYMB  hb_symEval;
 
 /* Extend API */
-extern char *   hb_parc( int iParam, ... );  /* retrieve a string parameter */
+extern char HB_EXPORT * hb_parc( int iParam, ... );  /* retrieve a string parameter */
 extern ULONG    hb_parclen( int iParam, ... ); /* retrieve a string parameter length */
 extern ULONG    hb_parcsiz( int iParam, ... ); /* retrieve a by-reference string parameter length, including terminator */
 extern char *   hb_pards( int iParam, ... ); /* retrieve a date as a string yyyymmdd */

@@ -72,7 +72,7 @@ typedef char * ( * EXT_PARC2 )  ( int iParam, ULONG ulArrayIndex );
 
 #if defined(HB_OS_WIN_32)
 
-BOOL WINAPI HB_EXPORT DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
+BOOL HB_EXPORT WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
 {
    HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %d)", hInstance, fdwReason,
              pvReserved ) );

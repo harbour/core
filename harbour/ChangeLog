@@ -7,6 +7,20 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2001-12-28 23:30 UTC+0700 Andi Jahja <harbour@cbn.net.id>
+       IMPORTANT: For those who get duplicate defines when compiling
+       Win32 code, the #define HB_OS_WIN_32_USED should be defined
+       somewhere before including clipdefs.h.
+
+2001-12-28 18:54 UTC+0100 Patrick Mast <email@patrickmast.com>
+   * contrib/apollo
+     + added readme.txt
+   * contrib/apollo/test
+     + bld.bat
+     + bld_b32.bat
+     * updated apollo.prg
+
+2001-12-28 13:28 UTC+0100 Patrick Mast <email@patrickmast.com>
    + contrib/apollo
      * Started Apollo SDE60.DLL connection for accessing
        SIXNSX database files
