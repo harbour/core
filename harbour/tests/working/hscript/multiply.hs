@@ -14,9 +14,8 @@ FUNCTION Main()
    LOCAL i, j
 
    IF !empty( GetEnv( "SERVER_NAME" ) )
-      qqOut( "HTTP/1.0 200 OK" )
-      qOut( "CONTENT-TYPE: TEXT/HTML" )
-      qOut( "" )
+      OutStd( "HTTP/1.0 200 OK" + chr(10) )
+      OutStd( "CONTENT-TYPE: TEXT/HTML" + chr(10) + chr(10) )
    ENDIF
 %>
 <HTML>
@@ -24,7 +23,7 @@ FUNCTION Main()
 <TITLE>Testing script</TITLE>
 </HEAD>
 
-<H1><% qOut( "Teste de HarbourScript!" ) %></H1>
+<H1><% OutStd( "HarbourScript Test!" ) %></H1>
 
 <BODY>
 <%
@@ -36,8 +35,8 @@ FUNCTION Main()
       FOR j := 1 TO 10
 %>
 <TR>
-<TD><% qOut( str( i, 2 ) + " x " + str( j, 2 ) ) %></TD>
-<TD><% qOut( i*j ) %></TD>
+<TD><% OutStd( str( i, 2 ) + " x " + str( j, 2 ) ) %></TD>
+<TD><% OutStd( i*j ) %></TD>
 </TR>
 <%
       NEXT

@@ -21,12 +21,17 @@
 *              (See http://www.flexsys-ci.com/harbour-project/functions.htm)
 *  1999/06/11  List can be viewed online at
 *              http://www.flexsys-ci.com/cgi-bin/testcgi.exe
+*  1999/07/29  Changed qOut() calls to OutStd() calls.
 *
 **/
 
 #include "cgi.ch"
 #define IF_BUFFER 65535
-#define NewLine   chr(10)+chr(13)
+#ifdef __HARBOUR__
+#define NewLine   chr(10)
+#else
+#define NewLine   chr(13)
+#endif
 
 FUNCTION Main()
 
@@ -320,7 +325,7 @@ STATIC FUNCTION ShowResult()
 
    LOCAL Self := QSelf()
 
-   qqOut(                                                                  ;
+   OutStd(                                                                 ;
       "HTTP/1.0 200 OK"                                        + NewLine + ;
       "CONTENT-TYPE: TEXT/HTML"                      + NewLine + NewLine + ;
       ::cContent )

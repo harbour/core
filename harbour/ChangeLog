@@ -1,3 +1,11 @@
+19990727-07:50 CET Felipe Coury
+   * tests/working/hscript/dir.hs; tests/working/hscript/hello.hs;
+     tests/working/hscript/hscript.prg; tests/working/hscript/multiply.hs;
+     tests/working/hscript/ugly.hs
+     New version
+   * tests/working/testcgi.prg
+     New version as well
+
 19990727-06:12 GMT+1 Antonio Linares <alinares@fivetech.com>
    * makefile.b32
      + Added inkey.c module

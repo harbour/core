@@ -1,5 +1,5 @@
 /*
-*
+* $Id$
 *
 *  HScript.PRG
 *  HarbourScript translation engine
@@ -32,12 +32,17 @@
 *
 *  1999/06/13  First implementation.
 *  1999/06/24  Enhanced tag matching routines.
+*  1999/07/26  Corrections to CGI output, qOut() -> OutStd().
 *
 **/
 
 #include "CGI.ch"
 #define IF_BUFFER 65535
-#define NewLine   chr(13)+chr(10)
+#ifdef __HARBOUR__
+#define NewLine   chr(10)
+#else
+#define NewLine   chr(13)
+#endif
 
 FUNCTION Main( cScript )
 
@@ -54,29 +59,30 @@ FUNCTION Main( cScript )
 
       IF empty( GetEnv( "SERVER_NAME" ) )
          cScriptName := cScript
-         cLocation   := GetEnv( "PATH_TRANSLATED" ) + ;
-            strtran( GetEnv( "SCRIPT_NAME" ), "/", "\" )
-         cLocation   := substr( cLocation, 1, rat( "\", cLocation ) )
-         cHarbourDir := cLocation
+         cLocation   := cHarbourDir
 
       ELSE
          cScriptName := GetEnv( "QUERY_STRING" )
          IF at( "=", cScriptName ) != 0
             cScriptName := ParseString( cScriptName, "=", 2 )
          ENDIF
+         cLocation   := GetEnv( "PATH_TRANSLATED" ) + ;
+            strtran( GetEnv( "SCRIPT_NAME" ), "/", "\" )
+         cLocation   := substr( cLocation, 1, rat( "\", cLocation ) )
+         cHarbourDir := cLocation
 
       ENDIF
 
       IF empty( cScriptName )
          IF !empty( GetEnv( "SERVER_NAME" ) )
-            qqOut( "content-type: text/html" )
-            qOut(  "" )
-            qOut(  "<HTML><BODY><H1>Server Error</H1><P>" )
-            qOut(  "Must specify scriptname using hscript.exe?script=<scriptname>" )
-            qOut(  "</BODY></HTML>" )
+            OutStd( "content-type: text/html" + NewLine )
+            OutStd( NewLine )
+            OutStd( "<HTML><BODY><H1>Server Error</H1><P>" + NewLine )
+            OutStd( "Must specify scriptname using hscript.exe?script=<scriptname>" + NewLine )
+            OutStd( "</BODY></HTML>" + NewLine )
 
          ELSE
-            qOut( "Please give .hs name" )
+            OutStd( "Please give .hs name" + NewLine )
 
          ENDIF
 
@@ -86,9 +92,9 @@ FUNCTION Main( cScript )
       // Script not found
       IF !file( cScriptName )
          IF !empty( GetEnv( "SERVER_NAME" ) )
-            qqOut( "CONTENT-TYPE: text/html" )
+            OutStd( "CONTENT-TYPE: text/html" + NewLine )
          ENDIF
-         qOut( "<H1>Server Error</H1><P>Script not found: " + cScriptName )
+         OutStd( "<H1>Server Error</H1><P>Script not found: " + cScriptName + NewLine )
          EXIT
       ENDIF
 
@@ -101,7 +107,7 @@ FUNCTION Main( cScript )
          nLen   := len( cLine )
 
          IF lOpen
-            cTrans += "qOut( '"
+            cTrans += "OutStd( '"
          ENDIF
 
          FOR i := 1 TO nLen
@@ -119,7 +125,7 @@ FUNCTION Main( cScript )
                      cTrans += NewLine
                   ENDIF
                   IF i + 1 < nLen
-                     cTrans += "qOut( '"
+                     cTrans += "OutStd( '"
                   ENDIF
                   lOpen  := .t.
 
@@ -132,7 +138,7 @@ FUNCTION Main( cScript )
 
                ELSE
                   // Fecha script
-                  cTrans += "' )"
+                  cTrans += "' + chr(10) )"
                   lOpen  := .f.
                   IF i < nLen
                      // cTrans += " ; "
@@ -150,7 +156,7 @@ FUNCTION Main( cScript )
          NEXT
 
          IF lOpen .AND. substr( cLine, nLen - 1, 2 ) <> "%>"
-            cTrans += "' )"
+            cTrans += "' + chr(10) )"
          ENDIF
 
          aadd( aResult, cTrans )
@@ -168,7 +174,8 @@ FUNCTION Main( cScript )
       fClose( hFile )
 
       // Creates the temporary HRB, erases the PRG
-      __Run( cHarbourDir + "harbour.exe " + cFile + " /q /n /gHRB" )
+      __Run( cHarbourDir + "harbour.exe " + cFile + " /q /n /gHRB /o" + ;
+        left( cHarbourDir, len( cHarbourDir ) - 1 ) )
       fErase( cFile )
 
       // Runs using Tugboat

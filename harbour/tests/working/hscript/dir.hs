@@ -10,9 +10,8 @@ FUNCTION Main()
    LOCAL i
 
    IF !empty( GetEnv( "SERVER_NAME" ) )
-      qqOut( "HTTP/1.0 200 OK" )
-      qOut( "CONTENT-TYPE: TEXT/HTML" )
-      qOut( "" )
+      OutStd( "HTTP/1.0 200 OK" + chr(10) )
+      OutStd( "CONTENT-TYPE: TEXT/HTML" + chr(10) + chr(10) )
    ENDIF
 
    aSort( aDir,,, { |x, y| x[1] < y[1] } )
@@ -33,11 +32,11 @@ FUNCTION Main()
    FOR i := 1 TO len( aDir )
 %>
 <TR>
-<TD><% qOut( aDir[i,1] ) %></TD>
-<TD><% qOut( aDir[i,2] ) %></TD>
-<TD><% qOut( aDir[i,3] ) %></TD>
-<TD><% qOut( aDir[i,4] ) %></TD>
-<TD><% qOut( aDir[i,5] ) %></TD>
+<TD><% OutStr( aDir[i,1] ) %></TD>
+<TD><% OutStr( aDir[i,2] ) %></TD>
+<TD><% OutStr( aDir[i,3] ) %></TD>
+<TD><% OutStr( aDir[i,4] ) %></TD>
+<TD><% OutStr( aDir[i,5] ) %></TD>
 </TR>
 <%
    NEXT

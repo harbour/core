@@ -6,11 +6,11 @@
 */
 
       LOCAL a := "Hello Mom!" %><HTML><BODY><%
-      qOut( a ) %><P>This is a <B>very ugly</B> script!!!<%
-      qOut( "Line 2" )
+      OutStd( a ) %><P>This is a <B>very ugly</B> script!!!<%
+      OutStd( "Line 2" )
       %>
 <P>
 <%
-qOut( a, a, a )
+OutStd( a, a, a )
 %>
 </HTML><%RETURN( NIL )%>
