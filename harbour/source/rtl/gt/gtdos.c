@@ -33,6 +33,16 @@ static char gtGetScreenMode(void);
 static void gtSetCursorSize(char start, char end);
 static void gtGetCursorSize(char *start, char *end);
 
+int _gtGetColorStr( char *fpColorString )
+{
+   return NULL;
+}
+
+int _gtSetColorStr( char *fpColorString )
+{
+   return NULL;
+}
+
 void gtInit(void)
 {
 }

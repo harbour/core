@@ -174,10 +174,14 @@ void hb_devpos( int row, int col )
       dev_col = col;
    }
    else
+   {
       /*TODO: Replace with _gtSetPos( row, col ) once the GT API works */
       #ifdef console_gotoxy
          console_gotoxy( col + 1, row + 1);
+      #else
+         ;
       #endif
+   }
 }
 
 HARBOUR OUTSTD( void ) /* writes a list of values to the standard output device */

@@ -30,6 +30,8 @@
  *    - Zortech C/C++ (16-bit) for DOS 3.0r4
 */
 
+#include "types.h"
+
 #ifndef _GT_API
 #define _GT_API
 

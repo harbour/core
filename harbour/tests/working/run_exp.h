@@ -19,6 +19,10 @@ HARBOUR ACOPY();
 HARBOUR ACLONE();
 HARBOUR __ACCEPT();
 HARBOUR OUTSTD();
+HARBOUR OUTERR();
+HARBOUR DEVPOS();
+HARBOUR DEVOUT();
+HARBOUR EJECT();
 HARBOUR QQOUT();
 HARBOUR QOUT();
 HARBOUR ERRORSYS();
@@ -49,7 +53,7 @@ HARBOUR FCLOSE();
 HARBOUR FERASE();
 HARBOUR FRENAME();
 HARBOUR FSEEK();
-HARBOUR FILE();
+HARBOUR HB_FILE();
 HARBOUR FREADSTR();
 HARBOUR BIN2I();
 HARBOUR BIN2L();
@@ -138,6 +142,10 @@ static SYMBOL symbols[] = {
 { "ACLONE",         FS_PUBLIC, ACLONE        , 0 },
 { "__ACCEPT",       FS_PUBLIC, __ACCEPT      , 0 },
 { "OUTSTD",         FS_PUBLIC, OUTSTD        , 0 },
+{ "OUTERR",         FS_PUBLIC, OUTERR        , 0 },
+{ "DEVPOS",         FS_PUBLIC, DEVPOS        , 0 },
+{ "DEVOUT",         FS_PUBLIC, DEVOUT        , 0 },
+{ "EJECT",          FS_PUBLIC, EJECT         , 0 },
 { "QQOUT",          FS_PUBLIC, QQOUT         , 0 },
 { "QOUT",           FS_PUBLIC, QOUT          , 0 },
 { "ERRORSYS",       FS_PUBLIC, ERRORSYS      , 0 },
@@ -168,7 +176,7 @@ static SYMBOL symbols[] = {
 { "FERASE",         FS_PUBLIC, FERASE        , 0 },
 { "FRENAME",        FS_PUBLIC, FRENAME       , 0 },
 { "FSEEK",          FS_PUBLIC, FSEEK         , 0 },
-{ "FILE",           FS_PUBLIC, FILE         , 0 },
+{ "FILE",           FS_PUBLIC, HB_FILE       , 0 },
 { "FREADSTR",       FS_PUBLIC, FREADSTR      , 0 },
 { "BIN2I",          FS_PUBLIC, BIN2I         , 0 },
 { "BIN2L",          FS_PUBLIC, BIN2L         , 0 },

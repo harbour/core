@@ -1,3 +1,10 @@
+19990527-08:45 CET Eddie Runia
+  * makefile.b32
+    gtdos added
+  * source/rtl/gt/gtdos.c; include/gtapi.h; tests/working/run_exp.h;
+    source/rtl/console.c
+    Minor changes to get it working
+
 19990527-00:14 Les Griffith
     * moved gtos2.c gtwin.c gtdos.c gtxxx.c to source\rtl\gt
       at Matthew Hamilton suggestion
