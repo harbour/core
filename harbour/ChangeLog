@@ -1,3 +1,7 @@
+20000121-17:57 GMT+3 Alexander Kresin
+  * source/pp/hbpp.c
+    * now can be used truncated preprocessor directives ( #defi, #inclu, ... )
+
 20000121-12:50 GMT+1 Ignacio Ortiz <ignacio@fivetech.com>
    + source/rtl/mlpos.c
      * Added function MlPos()

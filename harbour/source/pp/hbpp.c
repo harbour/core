@@ -197,22 +197,22 @@ int hb_pp_ParseDirective( char * sLine )
         hb_pp_aCondCompile[hb_pp_nCondCompile-1] = 1 - hb_pp_aCondCompile[hb_pp_nCondCompile-1];
     }
 
-  else if( i == 5 && memcmp( sDirective, "ENDIF", 5 ) == 0 )
+  else if( i >= 4 && i <= 5 && memcmp( sDirective, "ENDIF", i ) == 0 )
     {     /* --- #endif  --- */
       if( hb_pp_nCondCompile == 0 )
         hb_compGenError( hb_pp_szErrors, 'F', ERR_DIRECTIVE_ENDIF, NULL, NULL );
       else hb_pp_nCondCompile--;
     }
 
-  else if( i == 5 && memcmp( sDirective, "IFDEF", 5 ) == 0 )
+  else if( i >= 4 && i <= 5 && memcmp( sDirective, "IFDEF", i ) == 0 )
     ParseIfdef( sLine, TRUE ); /* --- #ifdef  --- */
 
-  else if( i == 6 && memcmp( sDirective, "IFNDEF", 6 ) == 0 )
+  else if( i >= 4 && i <= 6 && memcmp( sDirective, "IFNDEF", i ) == 0 )
     ParseIfdef( sLine, FALSE ); /* --- #ifndef  --- */
 
   else if( hb_pp_nCondCompile==0 || hb_pp_aCondCompile[hb_pp_nCondCompile-1])
     {
-      if( i == 7 && memcmp( sDirective, "INCLUDE", 7 ) == 0 )
+      if( i >= 4 && i <= 7 && memcmp( sDirective, "INCLUDE", i ) == 0 )
         {    /* --- #include --- */
           char cDelimChar;
 
@@ -243,26 +243,26 @@ int hb_pp_ParseDirective( char * sLine )
             hb_compGenError( hb_pp_szErrors, 'F', ERR_CANNOT_OPEN, sLine, NULL );
         }
 
-      else if( i == 6 && memcmp( sDirective, "DEFINE", 6 ) == 0 )
+      else if( i >= 4 && i <= 6 && memcmp( sDirective, "DEFINE", i ) == 0 )
         ParseDefine( sLine );   /* --- #define  --- */
 
-      else if( i == 5 && memcmp( sDirective, "UNDEF", 5 ) == 0 )
+      else if( i >= 4 && i <= 5 && memcmp( sDirective, "UNDEF", i ) == 0 )
         ParseUndef( sLine );    /* --- #undef  --- */
 
-      else if( (i == 7 && memcmp( sDirective, "COMMAND", 7 ) == 0) ||
-               (i == 8 && memcmp( sDirective, "XCOMMAND", 8 ) == 0) )
+      else if( (i >= 4 && i <= 7 && memcmp( sDirective, "COMMAND", i ) == 0) ||
+               (i >= 4 && i <= 8 && memcmp( sDirective, "XCOMMAND", i ) == 0) )
                                 /* --- #command  --- */
         ParseCommand( sLine, (i==7)? FALSE:TRUE, TRUE );
 
-      else if( (i == 9 && memcmp( sDirective, "TRANSLATE", 9 ) == 0) ||
-               (i == 10 && memcmp( sDirective, "XTRANSLATE", 10 ) == 0) )
+      else if( (i >= 4 && i <= 9 && memcmp( sDirective, "TRANSLATE", i ) == 0) ||
+               (i >= 4 && i <= 10 && memcmp( sDirective, "XTRANSLATE", i ) == 0) )
                                 /* --- #translate  --- */
         ParseCommand( sLine, (i==9)? FALSE:TRUE, FALSE );
 
-      else if( i == 6 && memcmp( sDirective, "STDOUT", 6 ) == 0 )
+      else if( i >= 4 && i <= 6 && memcmp( sDirective, "STDOUT", i ) == 0 )
         printf( "%s\n", sLine ); /* --- #stdout  --- */
 
-      else if( i == 5 && memcmp( sDirective, "ERROR", 5 ) == 0 )
+      else if( i >= 4 && i <= 5 && memcmp( sDirective, "ERROR", i ) == 0 )
         /* --- #error  --- */
         hb_compGenError( hb_pp_szErrors, 'E', ERR_EXPLICIT, sLine, NULL );
 
