@@ -1873,144 +1873,156 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
    while( **ptri != '\0' && !rez && lens < maxrez )
    {
       /* Added by Ron Pinkas 2000-11-08 ( removed lots of related scattered logic below! */
-      if( **ptri == '"' )
+      if( State == STATE_EXPRES || strchr( "({[,$!#=<>^%*/+-", cLastChar ) ) /* Ron Pinkas added if on State 2001-05-02 to avoid multiple strings concatination. */
       {
-         if( expreal != NULL )
-         {
-            *expreal++ = **ptri;
-         }
-
-         (*ptri)++;
-         lens++;
-
-         while( **ptri != '\0' && lens < maxrez )
+         if( **ptri == '"' )
          {
             if( expreal != NULL )
             {
                *expreal++ = **ptri;
             }
 
-            if( **ptri == '"' )
+            (*ptri)++;
+            lens++;
+
+            while( **ptri != '\0' && lens < maxrez )
             {
-               break;
+               if( expreal != NULL )
+               {
+                  *expreal++ = **ptri;
+               }
+
+               if( **ptri == '"' )
+               {
+                  break;
+               }
+
+               (*ptri)++;
+               lens++;
             }
 
             (*ptri)++;
             lens++;
+
+            State = ( StBr1==0 && StBr2==0 && StBr3==0 )? STATE_ID_END: STATE_BRACKET;
+            continue;
          }
-
-         (*ptri)++;
-         lens++;
-
-         State = ( StBr1==0 && StBr2==0 && StBr3==0 )? STATE_ID_END: STATE_BRACKET;
-         continue;
-      }
-      else if( **ptri == '\'' )
-      {
-         char *pString;
-
-         if( expreal != NULL )
+         else if( **ptri == '\'' )
          {
-            *expreal++ = **ptri;
-         }
+            char *pString;
 
-         (*ptri)++;
-         lens++;
-
-         pString = expreal;
-
-         while( **ptri != '\0' && lens < maxrez )
-         {
             if( expreal != NULL )
             {
                *expreal++ = **ptri;
             }
 
-            if( **ptri == '\'' )
+            (*ptri)++;
+            lens++;
+
+            pString = expreal;
+
+            while( **ptri != '\0' && lens < maxrez )
             {
-               break;
+               if( expreal != NULL )
+               {
+                  *expreal++ = **ptri;
+               }
+
+               if( **ptri == '\'' )
+               {
+                  break;
+               }
+
+               (*ptri)++;
+               lens++;
+            }
+
+            if( expreal != NULL )
+            {
+               *(expreal - 1) = '\0';
+               if( strchr( pString, '"' ) == NULL )
+               {
+                  *(pString - 1) = '"';
+                  *(expreal - 1) = '"';
+               }
+               else
+               {
+                  *(expreal - 1) = '\'';
+               }
             }
 
             (*ptri)++;
             lens++;
+
+            State = ( StBr1==0 && StBr2==0 && StBr3==0 )? STATE_ID_END: STATE_BRACKET;
+            continue;
          }
-
-         if( expreal != NULL )
+         else if( **ptri == '[' /* ( see below 5-2-2001 && ( State == STATE_EXPRES || ( strchr( ")]}.", cLastChar ) == NULL && ! ISNAME( cLastChar ) ) )*/ )
          {
-            *(expreal - 1) = '\0';
-            if( strchr( pString, '"' ) == NULL )
-            {
-               *(pString - 1) = '"';
-               *(expreal - 1) = '"';
-            }
-            else
-            {
-               *(expreal - 1) = '\'';
-            }
-         }
+            char *pString;
 
-         (*ptri)++;
-         lens++;
-
-         State = ( StBr1==0 && StBr2==0 && StBr3==0 )? STATE_ID_END: STATE_BRACKET;
-         continue;
-      }
-      else if( **ptri == '[' && ( State == STATE_EXPRES || ( strchr( ")]}.", cLastChar ) == NULL && ! ISNAME( cLastChar ) ) ) )
-      {
-         char *pString;
-
-         if( expreal != NULL )
-         {
-            *expreal++ = **ptri;
-         }
-
-         (*ptri)++;
-         lens++;
-
-         pString = expreal;
-
-         while( **ptri != '\0' && lens < maxrez )
-         {
             if( expreal != NULL )
             {
                *expreal++ = **ptri;
             }
 
-            if( **ptri == ']' )
+            (*ptri)++;
+            lens++;
+
+            pString = expreal;
+
+            while( **ptri != '\0' && lens < maxrez )
             {
-               break;
+               if( expreal != NULL )
+               {
+                  *expreal++ = **ptri;
+               }
+
+               if( **ptri == ']' )
+               {
+                  break;
+               }
+
+               (*ptri)++;
+               lens++;
+            }
+
+            if( expreal != NULL )
+            {
+               *(expreal - 1) = '\0';
+               if( strchr( pString, '"' ) == NULL )
+               {
+                  *(pString - 1) = '"';
+                  *(expreal - 1) = '"';
+               }
+               else if( strchr( pString, '\'' ) == NULL )
+               {
+                  *(pString - 1) = '\'';
+                  *(expreal - 1) = '\'';
+               }
+               else
+               {
+                  *(expreal - 1) = ']';
+               }
             }
 
             (*ptri)++;
             lens++;
+
+            State = ( StBr1==0 && StBr2==0 && StBr3==0 )? STATE_ID_END: STATE_BRACKET;
+            continue;
          }
-
-         if( expreal != NULL )
-         {
-            *(expreal - 1) = '\0';
-            if( strchr( pString, '"' ) == NULL )
-            {
-               *(pString - 1) = '"';
-               *(expreal - 1) = '"';
-            }
-            else if( strchr( pString, '\'' ) == NULL )
-            {
-               *(pString - 1) = '\'';
-               *(expreal - 1) = '\'';
-            }
-            else
-            {
-               *(expreal - 1) = ']';
-            }
-         }
-
-         (*ptri)++;
-         lens++;
-
-         State = ( StBr1==0 && StBr2==0 && StBr3==0 )? STATE_ID_END: STATE_BRACKET;
-         continue;
+      /* Added by Ron Pinkas 2001-05-02 ( removed lots of related scattered logic below! */
       }
-      /* END - Added by Ron Pinkas 2000-11-05 */
+      else if( strchr( "'\"", **ptri ) ) /* New String, can't belong to extracted expression. */
+      {
+         break;
+      }
+      else if( **ptri == '[' && ( strchr( ")]}.", cLastChar ) == NULL && ! ISNAME( cLastChar ) ) )  /* New String, can't belong to extracted expression. */
+      {
+         break;
+      }
+      /* End - END - Added by Ron Pinkas 2000-11-05 */
 
       #if 0
          printf( "State: %i Char:%c\n", State, **ptri );
