@@ -1,3 +1,20 @@
+19990803-05:30 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+    *tests/working/Makefile
+	+ added possibility to build a single file. Usage:
+	 make PM=file
+	 make PM=file.prg
+	 PM can be replaced with pm
+
+    *source/compiler/harbour.y
+	* DO .. WITH .. statement passes variables by reference now
+
+    *source/vm/hvm.c
+	* added reporting of line numbers in some internal errors
+
+    *source/compiler/harbour.l
+	* corrected missed line continuation with BREAK; EXIT; and LOOP;
+
 19990802-20:00 EDT David G. Holm <dholm@jsd-llc.com>
    * config/os2/icc.cf
      * Added '/NOE' to 'AR_FLAGS' to get rid of linker errors for

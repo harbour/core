@@ -501,7 +501,7 @@ extern int _iState;     /* current parser state (defined in harbour.l */
 %type <dNum>    DOUBLE
 %type <iNumber> ArgList ElemList ExpList FunCall FunScope IncDec Logical Params ParamList
 %type <iNumber> INTEGER BlockExpList Argument IfBegin VarId VarList MethParams ObjFunCall
-%type <iNumber> MethCall BlockList FieldList DoArgList
+%type <iNumber> MethCall BlockList FieldList DoArgList VarAt
 %type <lNumber> INTLONG WhileBegin BlockBegin
 %type <pVoid>   IfElseIf Cases
 
@@ -581,7 +581,7 @@ Statement  : ExecFlow Crlf        {}
            | IDENTIFIER '=' Expression Crlf            { PopId( $1 ); }
            | AliasVar '=' Expression Crlf              { /* TODO */ GenPCode1( HB_P_POP ); }
            | AliasFunc '=' Expression Crlf             { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
-           | VarId ArrayIndex '=' Expression Crlf      { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
+           | VarAt '=' Expression Crlf                 { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
            | FunArrayCall '=' Expression Crlf          { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
            | ObjectData '=' { MessageFix( SetData( $1 ) ); } Expression Crlf { Function( 1 ); GenPCode1( HB_P_POP ); }
            | ObjectData ArrayIndex '=' Expression Crlf    { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
@@ -635,7 +635,7 @@ MethParams : /* empty */                       { $$ = 0; }
            ;
 
 ObjectData : IdSend IDENTIFIER                     { $$ = $2; _lMessageFix = functions.pLast->lPCodePos; Message( $2 ); Function( 0 ); }
-           | VarId ArrayIndex ':' IDENTIFIER       { GenPCode1( HB_P_ARRAYAT ); $$ = $4; _lMessageFix = functions.pLast->lPCodePos; Message( $4 ); Function( 0 ); }
+           | VarAt ':' IDENTIFIER                  { GenPCode1( HB_P_ARRAYAT ); $$ = $3; _lMessageFix = functions.pLast->lPCodePos; Message( $3 ); Function( 0 ); }
            | ObjFunCall IDENTIFIER                 { $$ = $2; _lMessageFix = functions.pLast->lPCodePos; Message( $2 ); Function( 0 ); }
            | ObjFunArray  ':' IDENTIFIER           { $$ = $3; _lMessageFix = functions.pLast->lPCodePos; Message( $3 ); Function( 0 ); }
            | ObjectMethod ':' IDENTIFIER           { $$ = $3; _lMessageFix = functions.pLast->lPCodePos; Message( $3 ); Function( 0 ); }
@@ -644,7 +644,7 @@ ObjectData : IdSend IDENTIFIER                     { $$ = $2; _lMessageFix = fun
            ;
 
 ObjectMethod : IdSend IDENTIFIER { Message( $2 ); } '(' MethParams ')' { Function( $5 ); }
-           | VarId ArrayIndex ':' MethCall { Function( $4 ); GenPCode1( HB_P_ARRAYAT ); }
+           | VarAt ':' MethCall { Function( $3 ); GenPCode1( HB_P_ARRAYAT ); }
            | ObjFunCall MethCall                   { Function( $2 ); }
            | ObjFunArray  ':' MethCall             { Function( $3 ); }
            | ObjectData   ':' MethCall             { Function( $3 ); }
@@ -749,8 +749,8 @@ AliasFunc  : IDENTIFIER ALIAS '(' ExpList ')'            {}
 
 VarUnary   : IDENTIFIER IncDec %prec POST    { PushId( $1 ); Duplicate(); $2 ? Inc(): Dec(); PopId( $1 ); }
            | IncDec IDENTIFIER %prec PRE     { PushId( $2 ); $1 ? Inc(): Dec(); Duplicate(); PopId( $2 ); }
-           | VarId ArrayIndex IncDec %prec POST { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); $3 ? Inc(): Dec(); GenPCode1( HB_P_ARRAYPUT ); $3 ? Dec(): Inc(); }
-           | IncDec VarId ArrayIndex %prec PRE  { DupPCode( $2 ); GenPCode1( HB_P_ARRAYAT ); $1 ? Inc(): Dec(); GenPCode1( HB_P_ARRAYPUT ); }
+           | VarAt IncDec %prec POST { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); $2 ? Inc(): Dec(); GenPCode1( HB_P_ARRAYPUT ); $2 ? Dec(): Inc(); }
+           | IncDec VarAt %prec PRE  { DupPCode( $2 ); GenPCode1( HB_P_ARRAYAT ); $1 ? Inc(): Dec(); GenPCode1( HB_P_ARRAYPUT ); }
            | FunArrayCall IncDec %prec POST { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); $2 ? Inc(): Dec(); GenPCode1( HB_P_ARRAYPUT ); $2 ? Dec(): Inc(); }
            | IncDec FunArrayCall %prec PRE  { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); $1 ? Inc(): Dec(); GenPCode1( HB_P_ARRAYPUT ); }
            | ObjectData IncDec %prec POST   { MessageDupl( SetData( $1 ) ); Function( 0 ); $2 ? Inc(): Dec(); Function( 1 ); $2 ? Dec(): Inc(); }
@@ -766,14 +766,25 @@ IncDec     : INC                             { $$ = 1; }
            ;
 
 Variable   : VarId                     {}
-           | VarId ArrayIndex          { GenPCode1( HB_P_ARRAYAT ); }
+           | VarAt                     { GenPCode1( HB_P_ARRAYAT ); }
            | FunArrayCall              { GenPCode1( HB_P_ARRAYAT ); }
            | ObjectData                {}
            | ObjectData ArrayIndex     { GenPCode1( HB_P_ARRAYAT ); }
            | ObjectMethod ArrayIndex   { GenPCode1( HB_P_ARRAYAT ); }
            ;
 
-VarId      : IDENTIFIER        { $$ = functions.pLast->lPCodePos; PushId( $1 ); }
+VarId      : IDENTIFIER        { $$ = functions.pLast->lPCodePos;
+                                 if( _bForceByRefer && functions.pLast->szName )
+                                    /* DO .. WITH uses reference to a variable
+                                     * if not inside a codeblock
+                                     */
+                                    PushIdByRef( $1 );
+                                 else
+                                    PushId( $1 );
+                               }
+           ;
+
+VarAt      : IDENTIFIER { $<iNumber>$ = functions.pLast->lPCodePos; PushId( $1 ); } ArrayIndex { $$ =$<iNumber>2;  }
            ;
 
 ArrayIndex : '[' IndexList ']'
@@ -791,13 +802,13 @@ VarAssign  : IDENTIFIER INASSIGN Expression { PopId( $1 ); PushId( $1 ); }
            | IDENTIFIER DIVEQ    { PushId( $1 ); } Expression { GenPCode1( HB_P_DIVIDE ); PopId( $1 ); PushId( $1 ); }
            | IDENTIFIER EXPEQ    { PushId( $1 ); } Expression { GenPCode1( HB_P_POWER ); PopId( $1 ); PushId( $1 ); }
            | IDENTIFIER MODEQ    { PushId( $1 ); } Expression { GenPCode1( HB_P_MODULUS ); PopId( $1 ); PushId( $1 ); }
-           | VarId ArrayIndex INASSIGN Expression { GenPCode1( HB_P_ARRAYPUT ); }
-           | VarId ArrayIndex PLUSEQ   { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_PLUS    ); GenPCode1( HB_P_ARRAYPUT ); }
-           | VarId ArrayIndex MINUSEQ  { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MINUS   ); GenPCode1( HB_P_ARRAYPUT ); }
-           | VarId ArrayIndex MULTEQ   { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MULT    ); GenPCode1( HB_P_ARRAYPUT ); }
-           | VarId ArrayIndex DIVEQ    { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_DIVIDE  ); GenPCode1( HB_P_ARRAYPUT ); }
-           | VarId ArrayIndex EXPEQ    { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_POWER   ); GenPCode1( HB_P_ARRAYPUT ); }
-           | VarId ArrayIndex MODEQ    { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MODULUS ); GenPCode1( HB_P_ARRAYPUT ); }
+           | VarAt INASSIGN Expression { GenPCode1( HB_P_ARRAYPUT ); }
+           | VarAt PLUSEQ   { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_PLUS    ); GenPCode1( HB_P_ARRAYPUT ); }
+           | VarAt MINUSEQ  { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MINUS   ); GenPCode1( HB_P_ARRAYPUT ); }
+           | VarAt MULTEQ   { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MULT    ); GenPCode1( HB_P_ARRAYPUT ); }
+           | VarAt DIVEQ    { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_DIVIDE  ); GenPCode1( HB_P_ARRAYPUT ); }
+           | VarAt EXPEQ    { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_POWER   ); GenPCode1( HB_P_ARRAYPUT ); }
+           | VarAt MODEQ    { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MODULUS ); GenPCode1( HB_P_ARRAYPUT ); }
            | FunArrayCall INASSIGN Expression { GenPCode1( HB_P_ARRAYPUT ); }
            | FunArrayCall PLUSEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); }  Expression { GenPCode1( HB_P_PLUS    ); GenPCode1( HB_P_ARRAYPUT ); }
            | FunArrayCall MINUSEQ  { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); }  Expression { GenPCode1( HB_P_MINUS   ); GenPCode1( HB_P_ARRAYPUT ); }
@@ -1109,6 +1120,12 @@ RecoverEmpty : RECOVER
 RecoverUsing : RECOVER USING IDENTIFIER
            ;
 
+/* NOTE: In Clipper all variables used in DO .. WITH are passed by reference
+ * however if they are part of an expression then they are passed by value
+ * for example:
+ * DO .. WITH ++variable
+ * will pass the value of variable not a reference
+ */
 DoProc     : DO IDENTIFIER { PushSymbol( $2, 1 ); PushNil(); Do( 0 ); }
            | DO IDENTIFIER { PushSymbol( $2, 1 ); PushNil(); _bForceByRefer=TRUE; } WITH DoArgList { Do( $5 ); _bForceByRefer=FALSE; }
            | WHILE { PushSymbol( yy_strdup("WHILE"), 1 ); PushNil(); _bForceByRefer=TRUE; } WITH DoArgList { Do( $4 ); _bForceByRefer=FALSE; }

@@ -4,6 +4,17 @@
 
 ROOT = ../../
 
+LIBS=\
+	tools \
+	vm \
+	rtl \
+	rdd \
+	hbpp \
+
+ifeq ($(PM),)
+  PM := $(pm)
+endif
+ifeq ($(PM),)	# PM not defined = build all files
 PRG_SOURCES=\
 	ainstest.prg \
 	and_or.prg \
@@ -147,11 +158,19 @@ C_HEADERS=\
 BAD_C_SOURCES=\
 	extend2.c \
 
-LIBS=\
-	tools \
-	vm \
-	rtl \
-	rdd \
-	hbpp \
-
 include $(TOP)$(ROOT)config/test.cf
+
+else #PM defined = build specified file
+
+ifneq ($(findstring .prg,$(PM)),)
+  PRG_MAIN :=$(PM)
+else
+  ifneq ($(findstring .PRG,$(PM)),)
+    PRG_MAIN := $(PM)
+  else
+    PRG_MAIN := $(PM).prg
+  endif
+endif
+include $(TOP)$(ROOT)config/bin.cf
+
+endif

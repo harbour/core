@@ -226,7 +226,7 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "break"        BEGIN BREAK_;
-<BREAK_>{Separator}*\n { /* at the end of line */
+<BREAK_>{Separator}*[\n;] { /* at the end of line */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                unput( yytext[ yyleng-1 ] );
                if( _iState == LOOKUP )
@@ -444,7 +444,7 @@ Separator     {SpaceTab}
 %}
 
 "exit"         { BEGIN EXIT_; }
-<EXIT_>{Separator}*[\n]    { /* EXIT last item in the line */
+<EXIT_>{Separator}*[\n;]    { /* EXIT last item in the line */
                  unput( yytext[ yyleng-1 ] );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  if( _iState == LOOKUP )
@@ -740,7 +740,7 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "loop"         BEGIN LOOP_;
-<LOOP_>{Separator}*\n   { /* at the end of the line */
+<LOOP_>{Separator}*[\n;]   { /* at the end of the line */
                  unput( yytext[ yyleng-1 ] );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  if( _iState == LOOKUP )

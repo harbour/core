@@ -725,7 +725,7 @@ void Do( WORD wParams )
    if( ! IS_SYMBOL( pItem ) )
    {
       StackShow();
-      printf( "symbol item expected as a base from Do()\n" );
+      printf( "symbol item expected as a base from Do() in line %i\n", stack.pBase->item.asSymbol.lineno );
       exit( 1 );
    }
 
@@ -763,7 +763,7 @@ void Do( WORD wParams )
       pFunc = pSym->pFunPtr;
       if( ! pFunc )
       {
-         printf( "error: invalid function pointer (%s) from Do()\n", pSym->szName );
+         printf( "error: invalid function pointer (%s) from Do() in line %i\n", pSym->szName, stack.pBase->item.asSymbol.lineno );
          exit( 1 );
       }
       pFunc();
@@ -784,7 +784,7 @@ HARBOUR DoBlock( void )
 
    if( ! IS_BLOCK( pBlock ) )
    {
-      printf( "error: codeblock expected from DoBlock()\n" );
+      printf( "error: codeblock expected from DoBlock() in line %i\n", stack.pBase->item.asSymbol.lineno );
       exit( 1 );
    }
 
@@ -839,7 +839,7 @@ HARBOUR HB_EVAL( void )
    }
    else
    {
-      printf( "Not a valid codeblock on eval\n" );
+      printf( "Not a valid codeblock on eval in line %i\n", stack.pBase->item.asSymbol.lineno );
       exit( 1 );
    }
 }
@@ -1459,7 +1459,7 @@ long PopDate( void )
    }
    else
    {
-      printf( "incorrect item value trying to Pop a date value\n" );
+      printf( "incorrect item value trying to Pop a date value in line %i\n", stack.pBase->item.asSymbol.lineno );
       exit( 1 );
       return 0;
    }
@@ -1489,7 +1489,7 @@ double PopDouble( WORD *pwDec )
            break;
 
       default:
-           printf( "Incorrect item type trying to Pop a double\n" );
+           printf( "Incorrect item type trying to Pop a double in line %i\n", stack.pBase->item.asSymbol.lineno );
            exit( 1 );
            d = 0;
    }
@@ -1569,7 +1569,8 @@ double PopNumber( void )
            break;
 
       default:
-           printf( "Incorrect item on the stack trying to pop a number\n" );
+           printf( "Incorrect item on the stack trying to pop a number in line %i\n", stack.pBase->item.asSymbol.lineno );
+           StackShow();
            exit( 1 );
            break;
    }
