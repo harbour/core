@@ -1,3 +1,7 @@
+19990525-21:30 CET Eddie Runia
+  * tests/working/spawn2.prg
+    Warning added if not compiled using /gHRB
+
 19990525-19:15 CET Eddie Runia
   * source/runner/runner.c; source/runner/run_exp.h; source/runner
     created. currently in transition.
