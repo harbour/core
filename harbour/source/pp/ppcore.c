@@ -171,8 +171,7 @@ char * hb_pp_szErrors[] =
    "Freeing a NULL memory pointer",
    "Value out of range in #pragma directive",
    "Can\'t open command definitions file: \'%s\'",
-   "Invalid command definitions file name: \'%s\'",
-   "Cyclic #include not allowed: \'%s\'"
+   "Invalid command definitions file name: \'%s\'"
 };
 
 /* Table with warnings */
@@ -2920,34 +2919,6 @@ static BOOL OpenInclude( char * szFileName, PATHNAMES * pSearch, PHB_FNAME pMain
         pFileName->szPath = pMainFileName->szPath;
 
      hb_fsFNameMerge( szInclude, pFileName );
-
-     {
-        char * szRequested, * szOpened;
-        PFILE pFile = hb_comp_files.pLast;
-
-        #if 1
-           #define HB_OS_CASE(s) hb_strupr(s)
-        #else
-           #define HB_OS_CASE(s) s
-        #endif
-
-        szRequested = HB_OS_CASE( hb_strdup( szInclude ) );
-
-        while ( pFile )
-        {
-           szOpened = HB_OS_CASE( hb_strdup( pFile->szFileName ) );
-
-           if( strcmp( szRequested, szOpened  ) == 0 )
-              hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_INCLUDE_CYCLIC, szFileName, NULL );
-
-           pFile = pFile->pPrev;
-        }
-
-        #undef HB_OS_CASE
-
-        hb_xfree( szRequested );
-        hb_xfree( szOpened );
-     }
 
      fptr = fopen( szInclude, "r" );
      hb_xfree( pFileName );

@@ -25,7 +25,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
  * their web site at http://www.gnu.org/).
- *
  */
 
 #include <stdio.h>
@@ -79,7 +78,7 @@ typedef struct _LEX_WORD
 {
    char  sWord[ TOKEN_SIZE ];
    int   iToken;
-} LEX_WORD;                    /* support structure for KEYS and WORDS */
+} LEX_WORD;                    /* support structure for KEYS and WORDS. */
 
 typedef struct _LEX_PAIR
 {
@@ -88,7 +87,7 @@ typedef struct _LEX_PAIR
    char  sExclude[4];
    BOOL  bExclusive;
    int   iToken;
-} LEX_PAIR;                    /* support structure for KEYS and WORDS */
+} LEX_PAIR;                    /* support structure for Streams (Pairs). */
 
 #ifdef __cplusplus
    typedef struct yy_buffer_state *YY_BUFFER_STATE;
@@ -112,19 +111,11 @@ typedef struct _LEX_PAIR
 #define DEBUG_INFO(x)
 #define LEX_CASE(x)
 
-/*
- * Can be used to indicate how many chars needed to qualify as an abbreviation for Key Words.
- *
-#define LEX_ABBREVIATE_KEYS
-#define LEX_ABBREVIATE_WORDS
-*/
-
 #include SLX_RULES
 
 /* Declarations. */
 
 FILE *yyin;      /* currently yacc parsed file */
-
 
 extern void yyerror( char * ); /* parsing error management function */
 
@@ -151,7 +142,7 @@ extern YYSTYPE yylval;
 #define LEX_WORD_SIZE ( sizeof( LEX_WORD ) )
 #define LEX_PAIR_SIZE ( sizeof( LEX_PAIR ) )
 
-/* Using statics when we could use locals to eliminate Allocations and Deallocations each time the yylex is called and returns. */
+/* Using statics when we could use locals to eliminate Allocations and Deallocations each time yylex is called and returns. */
 
 /* Look ahead Tokens. */
 static int  iHold = 0;
@@ -531,7 +522,6 @@ int Reduce( int iToken, BOOL bReal );
       if( aiRules[ aiProspects[iScan] ][ iMatched ] == iToken )\
       {\
          /* No more Tokens - Rule Match. */\
-\
          if( iMatched == MAX_MATCH - 1 || aiRules[ aiProspects[iScan] ][ iMatched + 1 ] == 0 )\
          {\
             iFound++;\
@@ -577,7 +567,6 @@ int Reduce( int iToken, BOOL bReal );
       /* No prospects means we only search 1st Token of Rules. */\
       if( aiRules[iScan][0] == iToken )\
       {\
-\
          /* No more Tokens - Rule Match. */\
          if( aiRules[iScan][1] == 0 )\
          {\
@@ -610,7 +599,6 @@ int Reduce( int iToken, BOOL bReal );
    {\
       /* iProspectNo is already Zero Based. */\
       aiProspects[ iRemove ] = aiProspects[ iRemove + 1 ];\
-\
       iRemove++;\
    }\
 }
@@ -620,9 +608,7 @@ int Reduce( int iToken, BOOL bReal );
     DEBUG_INFO( printf(  "Revert Or Giveup for %i After %i %i %i\n", iToken, aiMatched[0], aiMatched[1], aiMatched[2] ) );\
 \
    /* Have to push the unmatched Token first, so it will Pop LAST after the Left Shift of reverted Tokens. */\
-\
    /* Avoid infinite loop, don't push if this is the only Token, it will be returned instead. */\
-\
    /* iToken maybe ZERO indicating REDUCTION to be FORCED. */\
    if( iMatched && iToken )\
    {\
@@ -638,21 +624,18 @@ int Reduce( int iToken, BOOL bReal );
          DEBUG_INFO( printf(  "Reverting from %i to %i Shifting to Reductions: %i %i\n", iMatched, iTentative, aiTentative[0], aiTentative[1] ) );\
 \
          /* iTentative is Zero Based, iMatched is 1 Based, but iMatched not increased yet for the unmatched Token. */\
-\
          /* Shift unused Token[s] Left. */\
          PUSH_UN_MATCHED( iMatched - iTentative );\
       }\
 \
       /* Will put the Reductions back into the Hold Stack to support Recursive Rules. */\
       REDUCE_TENTATIVE();\
-\
       CLEAN_UP();\
    }\
    else\
    {\
       /* Will get rid of the 1st (Left) Token and will shift the unmatched Tokens 1 position to the left.\
          So we will start again with the First unmatched Token. */\
-\
       GIVE_UP();\
    }\
 }
@@ -679,7 +662,6 @@ int Reduce( int iToken, BOOL bReal );
       DEBUG_INFO( printf(  "Returning Tentative for %i Matches, Associate Left of %i %i %i\n", iTentative, aiMatched[0], aiMatched[1], aiMatched[2] ) );\
 \
       /* Can't have the last Item becuase we just failed a rule. */ \
-\
       if( aiMatched[ 2 ] )\
       {\
          aiReturn[ iReturn++ ] = aiMatched[ 2 ];\
@@ -765,7 +747,6 @@ int Reduce( int iToken, BOOL bReal );
 #define REDUCE_RULE()\
 {\
    /* If Associate Left than don't push reduce, pass through. */\
-\
    if( aiRules[ iReduce ][ MAX_MATCH ] )\
    {\
       DEBUG_INFO( printf(  "Reducing: %i %i %i %i Shifting To: %i %i\n", aiMatched[0], aiMatched[1], aiMatched[2], aiMatched[3], aiRules[ iReduce ][ MAX_MATCH ], aiRules[ iReduce ][ MAX_MATCH + 1 ] ) );\
@@ -887,8 +868,6 @@ YY_DECL
             iSize--;
             chr = LEX_CASE(*szBuffer++) ;
 
-            //DEBUG_INFO( printf(  "Char: %c\n", chr ) );
-
             IF_OMMIT(chr)
             {
                 if ( iLen )
@@ -922,8 +901,6 @@ YY_DECL
 
                 goto CheckToken;
             }
-
-            //DEBUG_INFO( printf(  "Scaning Pairs >%s< for %c\n", szPairs1, chr ) );
 
             /* New Pair ? */
             IF_BEGIN_PAIR( chr )
@@ -967,8 +944,6 @@ YY_DECL
                             /* Next Character. */
                             chrPair = *szBuffer++ ;
 
-                            //DEBUG_INFO( printf(  "Checking: '%c' in Exclusive Pair\n", chrPair ) );
-
                             /* Check if exception. */
                             IF_ABORT_PAIR( chrPair )
                             {
@@ -1008,8 +983,6 @@ YY_DECL
                             }
                             else
                             {
-                               //DEBUG_INFO( printf(  "Adding %c to Pair Pos: %i\n", chrPair, iPairLen ) );
-
                                /* Accumulating. */
                                sPair[ iPairLen++ ] = chrPair;
                             }
@@ -1101,8 +1074,6 @@ YY_DECL
             /* Acumulate and scan next Charcter. */
             sToken[ iLen++ ] = chr;
 
-            //DEBUG_INFO( printf(  "Added: %c\n", chr ) );
-
             continue;
         }
         else
@@ -1152,8 +1123,6 @@ YY_DECL
             iKey = 0;
             while ( bNewLine && iKey < iKeys )
             {
-                //DEBUG_INFO( printf(  "Comparing: \"%s\" and \"%s\"\n", sToken, aTokens[iKey] ) );
-
                 #ifdef LEX_ABBREVIATE_KEYS
                    if( strncmp( (char*) sToken, (char*)( aKeys[ iKey++ ].sWord ), iWordLen ) == 0 )
                 #else
@@ -1256,7 +1225,6 @@ int Reduce( int iToken, BOOL bReal )
           if( iProspects )
           {
              /* Can't reduce yet, can't "bookmark" possible reduction either, must continue checking. */
-
              return 0;
           }
           else
@@ -1269,7 +1237,6 @@ int Reduce( int iToken, BOOL bReal )
           if( iProspects )
           {
              /* Can't reduce yet, "bookmark" possible reduction here, and continue checking. */
-
              SAVE_TENTATIVE();
 
              return 0;
@@ -1277,7 +1244,6 @@ int Reduce( int iToken, BOOL bReal )
           else
           {
              /* One Match and no additional Prospects - we can reduce. */
-
              REDUCE_RULE();
 
              return 0;
@@ -1287,7 +1253,6 @@ int Reduce( int iToken, BOOL bReal )
           if( iProspects )
           {
              /* Can't reduce yet, and can't "bookmark" possible reduction either, must continue checking. */
-
              return 0;
           }
           else

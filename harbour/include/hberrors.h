@@ -138,7 +138,6 @@ extern "C" {
 #define HB_PP_ERR_PRAGMA_BAD_VALUE              14
 #define HB_PP_ERR_CANNOT_OPEN_RULES             15
 #define HB_PP_ERR_BAD_RULES_FILE_NAME           16
-#define HB_PP_ERR_INCLUDE_CYCLIC                17
 
 #define HB_PP_WARN_DEFINE_REDEF                 1
 #define HB_PP_WARN_NO_DIRECTIVES                2
