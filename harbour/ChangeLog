@@ -1,3 +1,15 @@
+20000207-00:25 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/vm/cmdarg.c
+     * Format of build info slightly modified.
+     + Added maximum symbol length to build info.
+   * source/rtl/mouse/mousedos.c
+     ! Several fixes.
+     ! Formatting.
+     % Some variables optimized out.
+     * Mousereg renamed to regs.
+   * Makefile
+     ! Formatting fix.
+
 20000206-20:35 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
     *Makefile
         *Added ngdoc dir to the normal build
@@ -11,6 +23,7 @@
         * Added support for djgpp compiler
     *source/tools/html.prg
         *small changes
+
 20000206-16:55 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/vm/cmdarg.c
      ! Mistyped #ifdef fixed in //BUILD functionality (mentioned by Jose)
@@ -30,7 +43,6 @@
     *doc/compiler.txt
         * added note about incompatibility with Clipper in handling of
           local variables during static variable initialization
-
 
 20000206-10:12 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/debug/debugger.prg

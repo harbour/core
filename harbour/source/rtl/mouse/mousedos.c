@@ -35,9 +35,10 @@
  */
 
 /* TOFIX: Change this to something better */
-/*#define BORLANDC */
-#define MOUSE_INTERRUPT 0x33
+/*        #define BORLANDC */
+
 #if defined(__DJGPP__) || defined(__BORLANDC__)
+   #define MOUSE_INTERRUPT 0x33
    #include <dos.h>
 #endif
 
@@ -57,19 +58,22 @@ void hb_mouse_Init( void )
    /* TODO: */
 
 #if defined(__DJGPP__) || defined(__BORLANDC__)
-      union REGS Mousereg;
-      Mousereg.x.ax=0;
-      int86(MOUSE_INTERRUPT,&Mousereg,&Mousereg);
-      s_bPresent=Mousereg.x.ax;
-      s_iButtons= Mousereg.x.bx;
+   {
+      union REGS regs;
+
+      regs.x.ax = 0;
+      int86( MOUSE_INTERRUPT, &regs, &regs );
+
+      s_bPresent = regs.x.ax;
+      s_iButtons = regs.x.bx;
+   }
+#endif
+
    if( s_bPresent )
    {
       s_iInitCol = hb_mouse_Col();
       s_iInitRow = hb_mouse_Row();
    }
-
-#endif
-
 }
 
 void hb_mouse_Exit( void )
@@ -89,11 +93,13 @@ void hb_mouse_Show( void )
 
    if( s_bPresent )
    {
-#if defined(__DJGPP__) ||defined(__BORLANDC__)
-    union REGS Mousereg;
-    Mousereg.x.ax=1;
-    int86(MOUSE_INTERRUPT,&Mousereg,&Mousereg);
-    s_iCursorVisible = TRUE;
+#if defined(__DJGPP__) || defined(__BORLANDC__)
+      union REGS regs;
+
+      regs.x.ax = 1;
+      int86( MOUSE_INTERRUPT, &regs, &regs );
+
+      s_iCursorVisible = TRUE;
 #endif
    }
 
@@ -105,11 +111,13 @@ void hb_mouse_Hide( void )
 
    if( s_bPresent )
    {
-#if defined(__DJGPP__)||defined(__BORLANDC__)
-    union REGS Mousereg;
-    Mousereg.x.ax=2;
-    int86(MOUSE_INTERRUPT,&Mousereg,&Mousereg);
-    s_iCursorVisible = FALSE;
+#if defined(__DJGPP__)|| defined(__BORLANDC__)
+      union REGS regs;
+
+      regs.x.ax = 2;
+      int86( MOUSE_INTERRUPT, &regs, &regs );
+
+      s_iCursorVisible = FALSE;
 #endif
    }
 }
@@ -120,14 +128,13 @@ int hb_mouse_Col( void )
 
    if( s_bPresent )
    {
+#if defined(__DJGPP__)|| defined(__BORLANDC__)
+      union REGS regs;
 
-      int iCol;
-#if defined(__DJGPP__)||defined(__BORLANDC__)
-    union REGS Mousereg;
-    Mousereg.x.ax=3;
-    int86(MOUSE_INTERRUPT,&Mousereg,&Mousereg);
-    iCol=Mousereg.x.cx;
-    return iCol / 8;
+      regs.x.ax = 3;
+      int86( MOUSE_INTERRUPT, &regs, &regs );
+
+      return regs.x.cx / 8;
 #else
       return 0;
 #endif
@@ -140,12 +147,13 @@ int hb_mouse_Row( void )
 {
    if( s_bPresent )
    {
-      int iRow;
-#if defined(__DJGPP__)||defined(__BORLANDC__)
-    union REGS Mousereg;
-    Mousereg.x.ax=3;
-    int86(MOUSE_INTERRUPT,&Mousereg,&Mousereg);
-    iRow=Mousereg.x.dx;
+#if defined(__DJGPP__)|| defined(__BORLANDC__)
+      union REGS regs;
+
+      regs.x.ax = 3;
+      int86( MOUSE_INTERRUPT, &regs, &regs );
+
+      return regs.x.dx / 8;
 #else
       return 0;
 #endif
@@ -160,12 +168,12 @@ void hb_mouse_SetPos( int iRow, int iCol )
 
    if( s_bPresent )
    {
-    union REGS Mousereg;
-    Mousereg.x.ax=4;
-    Mousereg.x.cx=iRow*8;
-    Mousereg.x.dx=iCol*8;
-    int86(MOUSE_INTERRUPT,&Mousereg,&Mousereg);
+      union REGS regs;
 
+      regs.x.ax = 4;
+      regs.x.cx = iRow * 8;
+      regs.x.dx = iCol * 8;
+      int86( MOUSE_INTERRUPT, &regs, &regs );
    }
 }
 
@@ -175,16 +183,14 @@ BOOL hb_mouse_IsButtonPressed( int iButton )
 
    if( s_bPresent )
    {
+#if defined(__DJGPP__) || defined(__BORLANDC__)
+      union REGS regs;
 
-      int iReturn = 0;
-#if defined(__DJGPP__) ||defined(__BORLANDC__)
+      regs.x.ax = 5;
+      regs.x.bx = iButton;
+      int86( MOUSE_INTERRUPT, &regs, &regs );
 
-    union REGS Mousereg;
-    Mousereg.x.ax=5;
-    Mousereg.x.bx=iButton;
-    int86(MOUSE_INTERRUPT,&Mousereg,&Mousereg);
-    iReturn=Mousereg.x.bx;
-    return ( iReturn);
+      return regs.x.bx;
 #else
       return FALSE;
 #endif
@@ -197,20 +203,19 @@ int hb_mouse_CountButton( void )
 {
    /* TODO: */
 
-   int iButton = 0;
-
    if( s_bPresent )
    {
 #if defined(__DJGPP__) || defined(__BORLANDC__)
+      union REGS regs;
 
-    union REGS Mousereg;
-    Mousereg.x.ax=3;
-    int86(MOUSE_INTERRUPT,&Mousereg,&Mousereg);
-    iButton=Mousereg.x.bx;
+      regs.x.ax = 3;
+      int86( MOUSE_INTERRUPT, &regs, &regs );
+
+      return regs.x.bx;
 #endif
    }
 
-   return iButton;
+   return 0;
 }
 
 void hb_mouse_SetBounds( int iTop, int iLeft, int iBottom, int iRight )
@@ -220,24 +225,23 @@ void hb_mouse_SetBounds( int iTop, int iLeft, int iBottom, int iRight )
    if( s_bPresent )
    {
 #if defined(__DJGPP__) ||defined(__BORLANDC__)
-    union REGS Mousereg;
+      union REGS regs;
 
       iLeft *= 8;
       iRight *= 8;
-    Mousereg.x.ax=7;
-    Mousereg.x.cx=iLeft;
-    Mousereg.x.dx=iRight;
-    int86(MOUSE_INTERRUPT,&Mousereg,&Mousereg);
 
-    iTop *= 8;
-    iBottom *= 8;
+      regs.x.ax = 7;
+      regs.x.cx = iLeft;
+      regs.x.dx = iRight;
+      int86( MOUSE_INTERRUPT, &regs, &regs );
 
-    Mousereg.x.ax=8;
-    Mousereg.x.cx=iTop;
-    Mousereg.x.dx=iBottom;
-    int86(MOUSE_INTERRUPT,&Mousereg,&Mousereg);
+      iTop *= 8;
+      iBottom *= 8;
 
-
+      regs.x.ax = 8;
+      regs.x.cx = iTop;
+      regs.x.dx = iBottom;
+      int86( MOUSE_INTERRUPT, &regs, &regs );
 #endif
    }
 }

@@ -9,7 +9,7 @@ DIRS=\
 	source \
 	obj \
 	tests \
-    ngdoc \
+        ngdoc \
 #       samples \
 
 include $(ROOT)config/dir.cf

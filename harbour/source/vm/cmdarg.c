@@ -290,79 +290,92 @@ void hb_cmdargProcessVM( void )
    {
       hb_outerr( "Harbour Compiler Build Info", 0 );
       hb_outerr( hb_consoleGetNewLine(), 0 );
-/*
       hb_outerr( "---------------------------", 0 );
       hb_outerr( hb_consoleGetNewLine(), 0 );
-*/
+
+      hb_outerr( "Strict CA-Clipper compatibility: ", 0 );
 #if defined( HARBOUR_STRICT_CLIPPER_COMPATIBILITY )
-      hb_outerr( "* Strict CA-Clipper compatibility: Yes", 0 );
-      hb_outerr( hb_consoleGetNewLine(), 0 );
+      hb_outerr( "Yes", 0 );
 #else
-      hb_outerr( "* Strict CA-Clipper compatibility: No", 0 );
-      hb_outerr( hb_consoleGetNewLine(), 0 );
+      hb_outerr( "No", 0 );
 #endif
-
-#if defined( HB_COMPAT_C53 ) || defined( HB_COMPAT_XPP ) || defined( HB_COMPAT_VO )
-      hb_outerr( "  With some support for:", 0 );
       hb_outerr( hb_consoleGetNewLine(), 0 );
 
+      hb_outerr( "CA-Clipper 5.3x extensions: ", 0 );
 #if defined( HB_COMPAT_C53 )
-      hb_outerr( "    CA-Clipper 5.3[a,b]", 0 );
-      hb_outerr( hb_consoleGetNewLine(), 0 );
-#endif
-
-#if defined( HB_COMPAT_XPP )
-      hb_outerr( "    Alaska XBase++", 0 );
-      hb_outerr( hb_consoleGetNewLine(), 0 );
-#endif
-
-#if defined( HB_COMPAT_VO )
-      hb_outerr( "    CA-Visual Objects", 0 );
-      hb_outerr( hb_consoleGetNewLine(), 0 );
-#endif
-
-#endif
-
-#if defined( HARBOUR_USE_GTAPI )
-      hb_outerr( "* GT API: ", 0 );
-#if defined( HARBOUR_USE_STD_GTAPI )
-      hb_outerr( "Standard", 0 );
-#elif defined( HARBOUR_USE_DOS_GTAPI )
-      hb_outerr( "DOS", 0 );
-#elif defined( HARBOUR_USE_OS2_GTAPI )
-      hb_outerr( "OS/2", 0 );
-#elif defined( HARBOUR_USE_WIN_GTAPI )
-      hb_outerr( "Windows", 0 );
-#elif defined( HARBOUR_USE_CRS_GTAPI )
-      hb_outerr( "Unix Curses", 0 );
-#elif defined( HARBOUR_USE_SLN_GTAPI )
-      hb_outerr( "Unix Slang", 0 );
-#endif
-
+      hb_outerr( "Yes", 0 );
 #else
-      hb_outerr( "* GT API: No", 0 );
+      hb_outerr( "No", 0 );
 #endif
       hb_outerr( hb_consoleGetNewLine(), 0 );
 
+      hb_outerr( "Alaska XBase++ extensions: ", 0 );
+#if defined( HB_COMPAT_XPP )
+      hb_outerr( "Yes", 0 );
+#else
+      hb_outerr( "No", 0 );
+#endif
+      hb_outerr( hb_consoleGetNewLine(), 0 );
+
+      hb_outerr( "CA-Visual Objects extensions: ", 0 );
+#if defined( HB_COMPAT_VO )
+      hb_outerr( "Yes", 0 );
+#else
+      hb_outerr( "No", 0 );
+#endif
+      hb_outerr( hb_consoleGetNewLine(), 0 );
+
+      hb_outerr( "GT API support: ", 0 );
+#if defined( HARBOUR_USE_GTAPI )
+      hb_outerr( "Yes ", 0 );
+#if defined( HARBOUR_USE_STD_GTAPI )
+      hb_outerr( "(Standard)", 0 );
+#elif defined( HARBOUR_USE_DOS_GTAPI )
+      hb_outerr( "(DOS)", 0 );
+#elif defined( HARBOUR_USE_OS2_GTAPI )
+      hb_outerr( "(OS/2)", 0 );
+#elif defined( HARBOUR_USE_WIN_GTAPI )
+      hb_outerr( "(Windows)", 0 );
+#elif defined( HARBOUR_USE_CRS_GTAPI )
+      hb_outerr( "(Unix Curses)", 0 );
+#elif defined( HARBOUR_USE_SLN_GTAPI )
+      hb_outerr( "(Unix Slang)", 0 );
+#endif
+#else
+      hb_outerr( "No", 0 );
+#endif
+      hb_outerr( hb_consoleGetNewLine(), 0 );
+
+      hb_outerr( "Object file generation support: ", 0 );
 #if defined( HARBOUR_OBJ_GENERATION )
-      hb_outerr( "With object file generation", 0 );
-      hb_outerr( hb_consoleGetNewLine(), 0 );
+      hb_outerr( "Yes", 0 );
+#else
+      hb_outerr( "No", 0 );
 #endif
+      hb_outerr( hb_consoleGetNewLine(), 0 );
 
-      hb_outerr( "* ANSI C: ", 0 );
+      hb_outerr( "ANSI C usage: ", 0 );
 #if defined( HARBOUR_STRICT_ANSI_C )
       hb_outerr( "Strict", 0 );
 #else
-      hb_outerr( "Non Strict", 0 );
+      hb_outerr( "Non strict", 0 );
 #endif
       hb_outerr( hb_consoleGetNewLine(), 0 );
 
-      hb_outerr( "* Debug mode: ", 0 );
+      hb_outerr( "Compiler YACC debug mode: ", 0 );
 #if defined( HARBOUR_YYDEBUG )
       hb_outerr( "On", 0 );
 #else
       hb_outerr( "Off", 0 );
 #endif
       hb_outerr( hb_consoleGetNewLine(), 0 );
+
+      {
+         char buffer[ 20 ];
+
+         sprintf( buffer, "Maximum symbol name length: %i", HB_SYMBOL_NAME_LEN );
+         hb_outerr( buffer, 0 );
+         hb_outerr( hb_consoleGetNewLine(), 0 );
+      }
    }
 }
