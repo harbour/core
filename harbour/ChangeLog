@@ -3,6 +3,7 @@
    * config/dos/dir.cf
      ! Accidentally broken file restored.
 
+   * utils/hbtest/Makefile
    * utils/hbtest/make_xpp.cmd
      ! Fixed.
 
