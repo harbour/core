@@ -44,7 +44,11 @@ static HB_FUNCINFO hb_StdFunc[] =
    { "AADD"      , 2,  2 },
    { "ABS"       , 1,  1 },
    { "ASC"       , 1,  1 },
+#if defined( HB_C52_STRICT )
    { "AT"        , 2,  2 },
+#else
+   { "AT"        , 2,  4 },
+#endif
    { "BOF"       , 0,  0 },
    { "BREAK"     , 0,  1 },
    { "CDOW"      , 1,  1 },
@@ -157,4 +161,3 @@ void hb_compFunCallCheck( char * szFuncCall, int iArgs )
      }
    }
 }
-

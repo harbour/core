@@ -63,10 +63,24 @@ HB_FUNC( AT )
 
    if( pText && pSub )
    {
-      hb_retnl( hb_strAt( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
-                          hb_itemGetCPtr( pText ), hb_itemGetCLen( pText ) ) );
+      ULONG ulTextLength = hb_itemGetCLen( pText );
+      ULONG ulStart = ISNUM( 3 ) ? hb_parnl( 3 ) : 1;
+      ULONG ulEnd = ISNUM( 4 ) ? hb_parnl( 4 ) : ulTextLength;
+      ULONG ulPos;
+
+      if ( ulStart > ulTextLength || ulEnd < ulStart ) hb_retnl( 0 );
+      else
+      {
+         if ( ulEnd > ulTextLength ) ulEnd = ulTextLength;
+
+         ulPos = hb_strAt( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
+                           hb_itemGetCPtr( pText ) + ulStart - 1, ulEnd - ulStart + 1 );
+
+         if ( ulPos > 0) ulPos += ( ulStart - 1 );
+
+         hb_retnl( ulPos );
+      }
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, "AT", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
 }
-

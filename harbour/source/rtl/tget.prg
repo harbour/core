@@ -124,7 +124,7 @@ CLASS Get
    METHOD UpdateBuffer() INLINE  ::buffer := ::PutMask(), ::Assign(), Self
 
    METHOD VarGet()
-   METHOD VarPut()
+   METHOD VarPut(xValue, lReFormat)
 
    METHOD End()
 #ifdef HB_COMPAT_XPP
@@ -299,7 +299,7 @@ return ::cPicFunc + ' ' + ::cPicMask
 
 METHOD Assign() CLASS Get
 
-   ::VarPut( ::unTransform() )
+   ::VarPut( ::unTransform(), .f.  )
 
 return Self
 
@@ -381,7 +381,7 @@ METHOD Undo() CLASS Get
    if ::hasfocus
       ::buffer := ::PutMask( ::original )
       ::pos    := 1
-      ::VarPut( ::Original )
+      ::VarPut( ::Original, .f.  )
    endif
 
 return Self
@@ -435,13 +435,18 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD VarPut( xValue ) CLASS Get
+METHOD VarPut( xValue, lReFormat ) CLASS Get
+
+   DEFAULT lReFormat TO .t.
 
    if ::block != nil
       Eval( ::block, xValue )
-      ::Type     := ValType( xValue )
-      ::nDispLen := NIL
-      ::Picture( ::cPicture )
+      if lReFormat
+         ::Type     := ValType( xValue )
+         ::nDispLen := NIL
+         ::Picture( ::cPicture )
+         ::BufferUpdate()
+      endif
    endif
 
 return xValue

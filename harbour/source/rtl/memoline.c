@@ -68,8 +68,13 @@ HB_FUNC( MEMOLINE )
    ULONG  ulLineBegin;
    ULONG  ulLineEnd;
 
-   if( ulLineLength < 4 || ulLineLength > 254 )
+   if( ulLineLength < 4 )
       ulLineLength = 79;
+
+#if defined( HB_C52_STRICT )
+   if( ulLineLength > 254 )
+      ulLineLength = 79;
+#endif
 
    if( ulTabLength > ulLineLength )
       ulTabLength = ulLineLength - 1;
