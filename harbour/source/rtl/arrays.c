@@ -76,7 +76,7 @@ BOOL hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array */
    pBaseArray->ulLen      = ulLen;
    pBaseArray->uiHolders  = 1;
    pBaseArray->uiClass    = 0;
-   pBaseArray->bSuperCast = FALSE;
+   pBaseArray->uiPrevCls  = NULL;
 
    for( ulPos = 0; ulPos < ulLen; ulPos++ )
       ( pBaseArray->pItems + ulPos )->type = IT_NIL;
@@ -638,14 +638,12 @@ BOOL hb_arrayRelease( PHB_ITEM pArray )
       ULONG ulLen = pBaseArray->ulLen;
       ULONG ulPos;
 
-      if( !pBaseArray->bSuperCast )
-      {
-         for( ulPos = 0; ulPos < ulLen; ulPos++ )
-            hb_itemClear( pBaseArray->pItems + ulPos );
+      for( ulPos = 0; ulPos < ulLen; ulPos++ )
+         hb_itemClear( pBaseArray->pItems + ulPos );
 
-         if( pBaseArray->pItems )
-            hb_xfree( pBaseArray->pItems );
-      }
+      if( pBaseArray->pItems )
+         hb_xfree( pBaseArray->pItems );
+
       hb_xfree( pBaseArray );
 
       pArray->type = IT_NIL;

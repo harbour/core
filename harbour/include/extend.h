@@ -196,10 +196,8 @@ typedef struct _HB_BASEARRAY
    PHB_ITEM pItems;       /* pointer to the array items */
    ULONG    ulLen;        /* number of items in the array */
    USHORT   uiHolders;    /* number of holders of this array */
-   USHORT   uiPrevHolders; /* for fixing after access super */
    USHORT   uiClass;      /* offset to the classes base if it is an object */
    USHORT   uiPrevCls;    /* for fixing after access super */
-   BOOL     bSuperCast;   /* is it a super cast ? */
 } HB_BASEARRAY, * PHB_BASEARRAY, * HB_BASEARRAY_PTR;
 
 /* stack managed by the virtual machine */
@@ -418,4 +416,3 @@ extern char *   hb_version( USHORT uiMode );
 #endif
 
 #endif /* HB_EXTEND_H_ */
-
