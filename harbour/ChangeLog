@@ -1,3 +1,13 @@
+19991111-11:19 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/vm/hvm.c
+     hb_stack.pItems initialized to NULL (required by fm.c module)
+   * makefile.b32
+     + some files added.
+     * Notice I have left -v as a bcc32.exe compiler option
+       to include debugging information.
+   * source/rtl/classes.c
+     Improved memory management.
+
 19991111-12:02 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/vm/dymsym.c
     % hb_dynsymGet(), hb_dynsymFindName() - Optimized and fixed the uppercase
@@ -22,16 +32,16 @@
     ! hb_xalloc() chaining bug fixed.
     ! hb_xrealloc() chaining bug fixed.
     - Removed the faulty handling of the hb_xrealloc() call with zero size,
-      previously the memory block was considered freed but free() was never 
-      called. I think that until a free() call is not issued for an allocated 
-      block we should consider it allocated regardless of it's size. This way 
+      previously the memory block was considered freed but free() was never
+      called. I think that until a free() call is not issued for an allocated
+      block we should consider it allocated regardless of it's size. This way
       it's also faster and cleaner.
     % DeleteNode() moved to hb_xfree() since it's only used from one place now.
     % Casts removed from the non-FM_STATISTICS branches.
 
 19991111-04:41 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/fm.c
-    ! hb_xrealloc() several things fixed (access to the pointer after 
+    ! hb_xrealloc() several things fixed (access to the pointer after
       reallocating it, uneccessary structure initializations, access to NULL
       pointers of failed or zero size realloc), RTL_TEST GPF fixed.
     ! Simplified, optimized and fixed the dump part.
@@ -45,8 +55,8 @@
     ! hb_xrealloc() signature check moved before any MEMINFO usage.
     ! Explicit \n changed to hb_consoleGetNewLine() call.
     ! 256 buffer size for symbol names changed to HB_SYMBOL_NAME_LEN constant.
-    ! Now the hb_xrealloc() is returning a NULL pointer (instead of trash) 
-      when the passed length is zero, and it's also freeing the pointer with 
+    ! Now the hb_xrealloc() is returning a NULL pointer (instead of trash)
+      when the passed length is zero, and it's also freeing the pointer with
       free().
     % hb_xrealloc() - pResult variable optimized out.
   * source/rtl/hbsetup.h
@@ -60,12 +70,12 @@
   * include/hbtrace.h
     ! Every macro names prefixed with HB_
   * source/vm/hvm.c
-    ! Explicit buffer sizes are now determined using the HB_SYMBOL_NAME_LEN 
+    ! Explicit buffer sizes are now determined using the HB_SYMBOL_NAME_LEN
       constant. They can't overrun anymore.
   * source/vm/dynsym.c
     % hb_dynsymGet(), hb_dynsymFindName() - Using local stack for temp symbol
       name buffer instead of hb_xgrab()/hb_xfree(). Some optimalizations.
-      Now they will cut the symbol name to the HB_SYMBOL_NAME_LEN size, so 
+      Now they will cut the symbol name to the HB_SYMBOL_NAME_LEN size, so
       by setting this to 10, we're 100% Cl*pper compatible from this respect.
       These functions are now faster.
 
@@ -73,14 +83,14 @@
   * include/hbtrace.h
     % Excluded trace calls are converted to nohting instead of "do {} while 0"
       since the latter was generating jumps for MINGW32. This is now violating
-      a -pedantic warning in GCC (duplicated ";"), so this may not be the 
+      a -pedantic warning in GCC (duplicated ";"), so this may not be the
       perfect solution, but at least it doesn't generate any code.
   * source/rtl/fm.c
     ! Casts added.
     ! ulProcLine changed to USHORT.
     + Added signature support.
     + The whole mem tracing stuff can be excluded by a #define.
-    + The memory trace info level is HB_TR_ERROR now, so that it gets logged 
+    + The memory trace info level is HB_TR_ERROR now, so that it gets logged
       by default.
   * tests/Makefile
     + fsplit.prg added.
@@ -94,7 +104,7 @@
     - Removed #defines which were previously moved to hbsetup.ch.
   * include/hbextern.ch
     source/runner/stdalone/external.prg
-    + __PREPROCESS added as EXTERNAL  
+    + __PREPROCESS added as EXTERNAL
 
 19991110-11:08 GMT+1 Bruno Cantero <bruno@issnet.net>
   * include/rddapi.h
@@ -123,30 +133,30 @@
 
 Tue Nov 09 11:56:05 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* include/hbsetup.h: 
-	* source/rtl/gt/gtsln.c: 
-	* source/rtl/gtxxx.c: 
-	* source/rtl/mousexxx.c: 
+	* include/hbsetup.h:
+	* source/rtl/gt/gtsln.c:
+	* source/rtl/gtxxx.c:
+	* source/rtl/mousexxx.c:
 	Added an initial implementation of GT over S-lang.
-	
-	* source/rtl/inkey.c: 
+
+	* source/rtl/inkey.c:
 	Changed the order in which the #ifdef/#endif checks are done, to
 	make sure the curses and S-lang implementations are picked up
 	correctly.
-	
-	* config/linux/gcc.cf: 
-	* config/w32/gcc.cf: 
-	* config/w32/mingw32.cf: 
+
+	* config/linux/gcc.cf:
+	* config/w32/gcc.cf:
+	* config/w32/mingw32.cf:
 	Added initial support for easily switching between curses and
 	slang. This could be vastly improved.
-	
-	* tests/testbrw.prg: 
+
+	* tests/testbrw.prg:
 	Added a piece of code bound to K_TAB, just for the fun of it...
 
 19991109-01:58 GMT+1 Victor Szel <info@szelvesz.hu>
   * samples/Makefile
     samples/cccppc/*.*
-    + Fully CA-Clipper 5.x compatible PP written in Clipper added to the 
+    + Fully CA-Clipper 5.x compatible PP written in Clipper added to the
       samples directory. It also has a special object system (SmallTalk like
       if I'm not mistaken), and it's a good test for the Harbour compiler.
       Note that Harbour can't yet compile it, due to hangs in several .PRG.
@@ -165,7 +175,7 @@ Tue Nov 09 11:56:05 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 19991108-23:41 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/filesys.c
-    % hb_fsWrite(), hb_fsReadLarge(), hb_fsWriteLarge() double var 
+    % hb_fsWrite(), hb_fsReadLarge(), hb_fsWriteLarge() double var
       assigments optimized.
     * Some small cleanups.
   * tests/rtl_test.prg
