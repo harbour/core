@@ -2676,6 +2676,8 @@ METHOD WatchPointsShow() CLASS TDebugger
       elseif Len( ::aWatch ) < ::oWndPnt:nBottom - ::oWndPnt:nTop - 1
          ::oWndPnt:Resize( ,, ::oWndPnt:nTop + Len( ::aWatch ) + 1 )
          lRepaint :=.T.
+      else
+         ::oBrwPnt:refreshAll():forceStable()
       endif
       if ! ::oWndPnt:lVisible .OR. lRepaint
          ::ResizeWindows( ::oWndPnt )

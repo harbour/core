@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-03-19 08:20 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * source/debug/debugger.prg
+      * fixed refreshing of watchpoints
+      
+   * source/pp/ppcore.c
+      * fixed bug introduced with my previous commit
+      
+
 2004-03-18 12:45 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hberrors.h
    * source/pp/ppcore.c

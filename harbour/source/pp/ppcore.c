@@ -603,12 +603,14 @@ int hb_pp_ParseDefine( char * sLine )
                    hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_LABEL_MISSING_IN_DEFINE, defname, NULL );
              }
           }
+          HB_SKIPTABSPACES(sLine);
+          if( *sLine == '\0' )
+            hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PARE_MISSING_IN_DEFINE, defname, NULL );
+
           sLine++;
         }
         
       HB_SKIPTABSPACES(sLine);
-      if( *sLine == '\0' )
-         hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PARE_MISSING_IN_DEFINE, defname, NULL );
 
       if( cParams )
       {
@@ -632,7 +634,7 @@ int hb_pp_ParseDefine( char * sLine )
             {
                if( sLine[iOldPos+iPos] != '\001' )
                {
-                  hb_pp_Stuff( pars, sLine+iOldPos+iPos-1, iPar, iPar-1, iLen-iPos );
+                  hb_pp_Stuff( pars, sLine+iOldPos+iPos-1, iPar, iPar-1, iLen-iPos-iOldPos );
                   iLen++;
                }
                iOldPos +=iPos + iPar;
