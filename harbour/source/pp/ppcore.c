@@ -105,7 +105,7 @@ static int    WorkCommand( char *, char *, COMMANDS * );
 static int    WorkTranslate( char *, char *, COMMANDS *, int * );
 static int    CommandStuff( char *, char *, char *, int *, BOOL, BOOL );
 static int    RemoveSlash( char * );
-static int    WorkMarkers( char **, char **, char *, int *, BOOL );
+static int    WorkMarkers( char **, char **, char *, int *, BOOL, BOOL );
 static int    getExpReal( char *, char **, BOOL, int, BOOL );
 static BOOL   isExpres( char *, BOOL );
 static BOOL   TestOptional( char *, char * );
@@ -128,6 +128,7 @@ static int    NextName( char **, char * );
 static int    NextParm( char **, char * );
 static BOOL   OpenInclude( char *, HB_PATHNAMES *, PHB_FNAME, BOOL bStandardOnly, char * );
 static BOOL   IsIdentifier( char *szProspect );
+static int    IsMacroVar( char *szText, BOOL isCommand );
 
 #define ISNAME( c )  ( isalnum( ( int ) c ) || ( c ) == '_' || ( c ) > 0x7E )
 #define MAX_NAME     255
@@ -1716,7 +1717,7 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
         case '\1':  /*  Match marker */
           if( !s_numBrackets ) strtopti = NULL;
           if( s_numBrackets == 1 && *(ptrmp+2) == '2' ) isWordInside = 1; /*  restricted match marker  */
-          if( !WorkMarkers( &ptrmp, &ptri, ptro, lenres, com_or_xcom ) )
+          if( !WorkMarkers( &ptrmp, &ptri, ptro, lenres, com_or_tra, com_or_xcom ) )
             {
               if( s_numBrackets )
                 {
@@ -1826,7 +1827,7 @@ static int RemoveSlash( char * stroka )
   return lenres;
 }
 
-static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, BOOL com_or_xcom )
+static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, BOOL com_or_tra, BOOL com_or_xcom )
 {
   static char expreal[ MAX_EXP ];
 
@@ -1990,12 +1991,60 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
      {
         if( *ptr == '&' )
         {
+           /* rglab: Thu Sep  2 21:30:07 2004
+            * Special Clipper undocumented restricted match marker: 
+            * <x:&>
+            * Clipper accepts the macro variable only here.
+            * eg.
+            * SET FILTER TO &var. 
+            * SET FILTER TO &var.foo
+            * SET FILTER TO &(var) 
+            *
+            * Notice that any expression that starts from the macro
+            * variable is not valid for this marker
+            * eg.
+            * SET FILTER TO &var+1
+            *  the above command is preprocessed by a general rule
+            * that is using smart match marker <(x)>
+           */
            if( **ptri == '&' )
            {
-              rezrestr = 1;
-              /*  (*ptri)++; */
-              lenreal = getExpReal( expreal, ptri, FALSE, maxlenreal, FALSE );
-              SearnRep( exppatt,expreal,lenreal,ptro,lenres);
+              *ptri +=1;
+              HB_SKIPTABSPACES( *ptri );
+              if( **ptri == '(' ) /* macro expression &( expr )  */
+              {
+                 lenreal = IsMacroVar( *ptri, com_or_tra );
+                 *ptri +=1;
+                 lenreal = getExpReal( expreal+2, ptri, FALSE, maxlenreal, FALSE );
+                 if( **ptri == ')' )
+                 {
+                    *ptri +=1;
+                 }
+                 if( !(**ptri == '\0' || **ptri == ' ') && com_or_tra )
+                    break;
+                 expreal[0] = '&';
+                 expreal[1] = '(';
+                 lenreal +=3;
+                 expreal[lenreal-1] = ')';
+                 SearnRep( exppatt,expreal,lenreal,ptro,lenres);
+                 rezrestr = 1;
+              }
+              else
+              {
+                 lenreal = IsMacroVar( *ptri, com_or_tra );
+                 if( lenreal > 0 )
+                 {
+                    strncpy( expreal+1, *ptri, lenreal );
+                    expreal[ 0 ] ='&';
+                    expreal[ lenreal+1 ] ='\0';
+                    *ptri += lenreal;
+                    SearnRep( exppatt,expreal,lenreal+1,ptro,lenres);
+                    rezrestr = 1;
+                    break;
+                 }
+                 else
+                    return 0;
+              }
               break;
            }
            else
@@ -2032,6 +2081,8 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
      if( rezrestr == 0 )
      {
         /* If restricted match marker doesn't correspond to real parameter */
+        /* rglab: Thu Sep  2 21:27:29 2004 - I don't know why 'if' code
+                  was below, anyway it is the same as the new line
         if( s_numBrackets )
         {
             return 0;
@@ -2040,6 +2091,8 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
         {
             return 0;
         }
+        */
+        return 0;
      }
   }
   else if( *(exppatt+2) == '1' )  /*  ---- list match marker  */
@@ -2635,7 +2688,7 @@ static BOOL CheckOptional( char * ptrmp, char * ptri, char * ptro, int * lenres,
           }
         break;
       case '\1':  /*  Match marker */
-        if( !WorkMarkers( &ptrmp, &ptri, ptro, lenres, com_or_xcom ) )
+        if( !WorkMarkers( &ptrmp, &ptri, ptro, lenres, com_or_tra, com_or_xcom ) )
           {
             if( s_numBrackets - save_numBr > 0 )
               {
@@ -2820,73 +2873,41 @@ static void SearnRep( char * exppatt, char * expreal, int lenreal, char * ptro, 
 
 static BOOL ScanMacro( char * expreal, int lenitem, int * pNewLen )
 {
-	BOOL bSmartMacro;
-	int i, lennew;
+	int i;
 
    HB_TRACE(HB_TR_DEBUG, ("ScanMacro(%s, %d, %p)", expreal, lenitem, pNewLen));
 
-	lennew = lenitem - 1;	
-	bSmartMacro = TRUE;
-	i = 1;
-	do {
-		if( expreal[ i ] == '.' )
-		{
-			/* '&var'   =>  'var'
-				'&var.'  =>  'var'
-			   '&var.x' =>  '"&var.x"'
-				'&var. x' => '&var. x' ->invalid syntax
-				'&var. [1] => '"&var. [1]"'  -> OK syntax
-			*/
-			int iDotPos = i;
-			
-			i++;
-			if( expreal[i] == '\0' || expreal[i] == ',' )
-			{
-				lennew = iDotPos - 1;
-				break;
-			}
-			else if( expreal[i] == ' ' || expreal[i] == '\t' )
-			{
-				while( (i < lenitem) && (expreal[i] == ' ' || expreal[i] == '\t') )
-					i++;
-				if( expreal[i] == '\0' || expreal[i] == ',' )
-					lennew = iDotPos - 1;
-				else if( expreal[i] == '[' )
-					bSmartMacro = FALSE;
-			}
-			else
-				bSmartMacro = FALSE;
-			break;
-		}
-		else if( expreal[ i ] == '[' )
-		{
-			/* &var[x] => "&var[x]"
-				&var.[x] => "&var.[x]"
-			*/
-			bSmartMacro = FALSE;
-			lennew = lenitem-1;
-			break;
-		}
-		else if( expreal[ i ] == '&' )
-		{
-			/* &var&var  => "&var&var" */
-			bSmartMacro = FALSE;
-			lennew = lenitem-1;
-			break;
-		}
-		else if( expreal[ i ] == '(' )
-		{
-			/* &(var)  => "(var)" */
-			break;
-		}
-	} while( i++ < lenitem );
-
-	if( bSmartMacro )
-		*pNewLen = lennew;
-	else
-		*pNewLen = lenitem;
-		
-	return bSmartMacro;
+   expreal++;  /* skip '&' character */
+   i = 0;
+   
+   while( expreal[i] == ' ' || expreal[i] == '\t' )
+   {
+      i++;
+   }
+   if( expreal[i] == '(' )
+   {
+      *pNewLen = lenitem - 1;
+      return TRUE;
+   }
+   else if( isalpha( (int) expreal[i] ) || expreal[i] == '_' )
+   {
+      i++;
+      while( ISNAME( expreal[i] ) )
+      {
+         i++;
+      }
+      *pNewLen = i;
+      if( expreal[i] == '.' )
+      {
+         i++;
+      }
+      if( expreal[i] == '\0' || expreal[i] == ',' || expreal[i] == ')' )      
+      {
+         return TRUE;
+      }
+   }
+   *pNewLen = lenitem;
+   return FALSE;
 }
 
 static int ReplacePattern( char patttype, char * expreal, int lenreal, char * ptro, int lenres )
@@ -4127,6 +4148,43 @@ static BOOL IsIdentifier( char *szProspect )
 
    return FALSE;
 }
+
+
+static int IsMacroVar( char * szText, BOOL isCommand )
+{
+   int len = 0;
+
+   if( isalpha( (int) szText[0] ) || szText[0] == '_' )
+   {
+      int i = 1;
+      
+      while( ISNAME(szText[i]) || isdigit( szText[i] ) || szText[i] == '&' || szText[i] == '.' )
+      {
+         i++;
+      }
+/*         
+      while( ISNAME( szText[i] ) || szText[i] == '&' )
+      {
+         i++;
+      }
+      if( szText[i] == '.' || szText[i] == '&' )
+      {
+         i++;
+         while( ISNAME(szText[i]) || isdigit( szText[i] ) || szText[i] == '&' || szText[i] == '.' )
+         {
+            i++;
+         }
+      }
+*/
+      len = i;
+      if( !(szText[i] == '\0' || szText[i] == ' ' || szText[i] == ')' ) && isCommand )      
+      {
+         return 0;
+      }
+   }
+   return len;
+}
+
 
 static BOOL OpenInclude( char * szFileName, HB_PATHNAMES * pSearch, PHB_FNAME pMainFileName, BOOL bStandardOnly, char * szInclude )
 {
