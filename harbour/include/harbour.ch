@@ -3,7 +3,9 @@
  */
 /*
  * Harbour Project source code:
- * Video subsystem for Win32 compilers
+ *   This file is meant to be included in CA-Clipper applications
+ *   that were written to take advantage of specific Harbour extensions
+ *   or platform dependent features.
  *
  * Copyright 1999 Paul Tucker <ptucker@sympatico.ca>
  *
@@ -31,12 +33,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
  * their web site at http://www.gnu.org/).
  *
- */
-
-/*
- *  NOTE: This file is meant to be included in CA-Clipper applications
- *   that were written to take advantage of specific Harbour extensions
- *   or platform dependent features.
  */
 
 /*
