@@ -770,6 +770,12 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray, PHB_NESTED_CLONED pClonedList )
       pDstBaseArray = pDstArray->item.asArray.value;
       pDstBaseArray->uiClass = pSrcBaseArray->uiClass;
 
+      /*-----------------12/20/2001 7:05PM----------------
+       * TODO: Is this correct? was taken from __objClone()
+       * was token from xHarbour
+       * --------------------------------------------------*/
+      pDstBaseArray->puiClsTree = NULL;
+
       for( ulCount = 0; ulCount < ulSrcLen; ulCount++ )
       {
          PHB_ITEM pSrcItem = pSrcBaseArray->pItems + ulCount;
