@@ -131,7 +131,7 @@ static void    hb_vmStaticName( USHORT uiStatic, char * szStaticName ); /* stati
 static void    hb_vmModuleName( char * szModuleName ); /* PRG and function name information for the debugger */
 static void    hb_vmFrame( BYTE bLocals, BYTE bParams ); /* increases the stack pointer for the amount of locals and params suplied */
 static void    hb_vmSFrame( PHB_SYMB pSym );     /* sets the statics frame for a function */
-static void    hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ); /* increases the the global statics array to hold a PRG statics */
+static void    hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ); /* increases the global statics array to hold a PRG statics */
 static void    hb_vmEndBlock( void );            /* copies the last codeblock pushed value into the return value */
 static void    hb_vmRetValue( void );            /* pops the latest stack value into stack.Return */
 static void    hb_vmDebuggerShowLine( USHORT uiLine ); /* makes the debugger shows a specific source code line */
@@ -3087,7 +3087,7 @@ static void hb_vmStaticName( USHORT uiStatic, char * szStaticName ) /* statics v
    s_bDebugShowLines = FALSE;
    hb_vmPushSymbol( hb_dynsymFind( "__DBGENTRY" )->pSymbol );
    hb_vmPushNil();
-   hb_vmPushLongConst( uiStatic );
+   hb_vmPushLongConst( hb_arrayLen( &s_aStatics ) );
    hb_vmPushString( szStaticName, strlen( szStaticName ) );
    hb_vmPushLongConst( 1 ); /* 1 for statics, 2 for locals */
    s_bDebuggerIsWorking = TRUE;
@@ -4269,4 +4269,3 @@ void hb_vmIsStaticRef( void )
    /* statics are stored as an item of array type */
    hb_gcItemRef( &s_aStatics );
 }
-
