@@ -1223,7 +1223,9 @@ HB_FUNC( DBCREATE )
 
    hb_retl( FALSE );
 
-   if( ( szFileName = hb_parc( 1 ) ) == ( char * ) 0 )
+   if( ISCHAR(1) )
+      szFileName = hb_parc( 1 );
+   else
       szFileName = "";
 
    pStruct = hb_param( 2 , HB_IT_ARRAY );
@@ -1269,28 +1271,24 @@ HB_FUNC( DBCREATE )
       bOpen = TRUE;
       if( hb_parl( 4 ) )
          hb_rddSelectFirstAvailable();
-      else if( s_pCurrArea )                  /* If current WorkArea is used then close it */
+      else if( s_pCurrArea )    /* If current WorkArea is used then close it */
          hb_rddReleaseCurrentArea();
    }
 
    hb_rddCheck();
-   uiLen = ( USHORT ) hb_parclen( 3 );
-   if( uiLen > 0 )
+   if( ISCHAR(3) )
    {
-      if( uiLen > HARBOUR_MAX_RDD_DRIVERNAME_LENGTH )
-         uiLen = HARBOUR_MAX_RDD_DRIVERNAME_LENGTH;
-
-      hb_strncpyUpper( cDriverBuffer,
-                       hb_parc( 3 ) != ( char * ) 0 ? hb_parc( 3 ) : "", uiLen );
+      hb_strncpyUpper( cDriverBuffer, hb_parc( 3 ), HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
       szDriver = cDriverBuffer;
    }
    else
       szDriver = s_szDefDriver;
 
    pFileName = hb_fsFNameSplit( szFileName );
-   strncpy( szAlias, hb_parc( 5 ) != ( char * ) 0 ? hb_parc( 5 ) : "",
-            HARBOUR_MAX_RDD_ALIAS_LENGTH );
-   uiLen = strlen( szAlias );
+   if( ISCHAR(5) )
+      strncpy( szAlias, hb_parc( 5 ), HARBOUR_MAX_RDD_ALIAS_LENGTH );
+
+   uiLen = ( USHORT ) hb_parclen( 5 );
    if( uiLen == 0 )
       strncpy( szAlias, pFileName->szName, HARBOUR_MAX_RDD_ALIAS_LENGTH );
    else if( uiLen == 1 )
@@ -1312,7 +1310,11 @@ HB_FUNC( DBCREATE )
    }
 
    szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
-   strncpy( szFileName, hb_parc( 1 ), _POSIX_PATH_MAX );
+   szFileName[0] = '\0';
+
+   if( ISCHAR(1) )
+      strncpy( szFileName, hb_parc( 1 ), _POSIX_PATH_MAX );
+
    if( !pFileName->szExtension )
    {
       pFileExt = hb_itemPutC( NULL, "" );
@@ -1363,6 +1365,7 @@ HB_FUNC( DBCREATE )
    {
       USHORT uiAreaSize, uiRddID;
       struct _RDDFUNCS * lprfsHost = ( ( AREAP ) s_pCurrArea->pArea )->lprfsHost;
+
       uiRddID = ( ( AREAP ) s_pCurrArea->pArea )->rddID;
       SELF_STRUCTSIZE( ( AREAP ) s_pCurrArea->pArea, &uiAreaSize );
       /* Close and release WorkArea */
@@ -1738,7 +1741,7 @@ HB_FUNC( DBSELECTAREA )
    if( ISCHAR( 1 ) )
    {
       szAlias = hb_parc( 1 );
-      ulLen = strlen( szAlias );
+      ulLen = hb_parclen(1);
       if( ulLen >= 1 && szAlias[ 0 ] >= '0' && szAlias[ 0 ] <= '9' )
          uiNewArea = atoi( szAlias );
       else if( ulLen == 1 && toupper( szAlias[ 0 ] ) >= 'A' && toupper( szAlias[ 0 ] ) <= 'K' )
@@ -1942,29 +1945,30 @@ HB_FUNC( DBUSEAREA )
       hb_rddReleaseCurrentArea();
 
    hb_rddCheck();
-   uiLen = ( USHORT ) hb_parclen( 2 );
-   if( uiLen > 0 )
+   if( ISCHAR(2) )
    {
-      if( uiLen > HARBOUR_MAX_RDD_DRIVERNAME_LENGTH )
-         uiLen = HARBOUR_MAX_RDD_DRIVERNAME_LENGTH;
-
-      hb_strncpyUpper( szDriverBuffer, hb_parc( 2 ), uiLen );
+      hb_strncpyUpper( szDriverBuffer, hb_parc( 2 ), HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
       szDriver = szDriverBuffer;
    }
    else
       szDriver = s_szDefDriver;
 
-   szFileName = hb_parc( 3 );
-   if( szFileName == (char*)0 || strlen( szFileName ) == 0 )
+   if( ISCHAR(3) && hb_parclen( 3 ) > 0 )
+      szFileName = hb_parc( 3 );
+   else
    {
       hb_errRT_DBCMD( EG_ARG, EDBCMD_USE_BADPARAMETER, NULL, "DBUSEAREA" );
       return;
    }
 
    pFileName = hb_fsFNameSplit( szFileName );
-   strncpy( szAlias, (ISCHAR(4))? hb_parc( 4 ):"", HARBOUR_MAX_RDD_ALIAS_LENGTH );
-   if( strlen( szAlias ) == 0 )
+
+   szAlias[0] = '\0';
+   if( ISCHAR(4) )
+      strncpy( szAlias, hb_parc( 4 ), HARBOUR_MAX_RDD_ALIAS_LENGTH );
+   else
       strncpy( szAlias, pFileName->szName, HARBOUR_MAX_RDD_ALIAS_LENGTH );
+
    uiLen = strlen( szAlias );
    if( szAlias[ 0 ] >= '0' && szAlias[ 0 ] <= '9' )
    {
@@ -2325,11 +2329,16 @@ HB_FUNC( ORDCONDSET )
    if( s_pCurrArea )
    {
       lpdbOrdCondInfo = ( LPDBORDERCONDINFO ) hb_xgrab( sizeof( DBORDERCONDINFO ) );
-      szFor = hb_parc( 1 );
-      if( szFor && ( ulLen = strlen( szFor ) ) != 0 )
+
+      ulLen = hb_parclen( 1 );
+      if( ISCHAR(1) && ulLen > 0 )
       {
-         lpdbOrdCondInfo->abFor = ( BYTE * ) hb_xgrab( ulLen + 1 );
-         strcpy( ( char * ) lpdbOrdCondInfo->abFor, szFor );
+         szFor = hb_parc( 1 );
+         if( ulLen > 0 )
+         {
+            lpdbOrdCondInfo->abFor = ( BYTE * ) hb_xgrab( ulLen + 1 );
+            strcpy( ( char * ) lpdbOrdCondInfo->abFor, szFor );
+         }
       }
       else
          lpdbOrdCondInfo->abFor = NULL;
@@ -2398,8 +2407,8 @@ HB_FUNC( ORDCREATE )
       dbOrderInfo.abBagName = ( BYTE * ) hb_parc( 1 );
       dbOrderInfo.atomBagName = ( BYTE * ) hb_parc( 2 );
       dbOrderInfo.abExpr = hb_param( 3, HB_IT_STRING );
-      if( ( ( dbOrderInfo.abBagName == (char*)0 || strlen( ( char * ) dbOrderInfo.abBagName ) == 0 ) &&
-            ( dbOrderInfo.atomBagName == (char*)0 || strlen( ( char * ) dbOrderInfo.atomBagName ) == 0 ) ) ||
+      if( ( ( dbOrderInfo.abBagName == NULL || strlen( ( char * ) dbOrderInfo.abBagName ) == 0 ) &&
+            ( dbOrderInfo.atomBagName == NULL || strlen( ( char * ) dbOrderInfo.atomBagName ) == 0 ) ) ||
           !dbOrderInfo.abExpr )
       {
          hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, "ORDCREATE" );
@@ -2847,20 +2856,22 @@ HB_FUNC( RLOCK )
 
 HB_FUNC( SELECT )
 {
-   char * szAlias;
-   ULONG ulLen;
+   int nRet = 0;
 
-   szAlias = hb_parc( 1 );
-   ulLen = strlen( szAlias );
+   if( ISCHAR(1) )
+   {
+      char * szAlias = hb_parc( 1 );
+      ULONG ulLen = hb_parclen( 1 );
 
-   if( ulLen == 0 && ISCHAR( 1 ))
-      hb_retni( 0 );
-   else if( ulLen == 1 && toupper( szAlias[ 0 ] ) >= 'A' && toupper( szAlias[ 0 ] ) <= 'K' )
-      hb_retni( toupper( szAlias[ 0 ] ) - 'A' + 1 );
-   else if( ulLen > 0 )
-      hb_retni( hb_rddSelect( szAlias ) );
-   else
-      hb_retni( s_uiCurrArea );
+      if( ulLen == 1 && toupper( szAlias[ 0 ] ) >= 'A' && toupper( szAlias[ 0 ] ) <= 'K' )
+         nRet = toupper( szAlias[ 0 ] ) - 'A' + 1;
+      else if( ulLen > 0 )
+         nRet = hb_rddSelect( szAlias );
+      else
+         nRet = s_uiCurrArea;
+   }
+
+   hb_retni( nRet );
 }
 
 HB_FUNC( USED )
