@@ -1,3 +1,9 @@
+19990815-17:40 GMT+1 Victor Szel <info@szelvesz.hu>
+  * bldodbc.bat
+    hbodbc.b32
+    * moved to /contrib/odbc
+    * updated but tested for the new locations.
+
 19990814-20:40 GMT+1 Victor Szel <info@szelvesz.hu>
   * include/hb_vmpub.h
     source/vm/dynsym.c
