@@ -20,6 +20,8 @@
      ! GCC bug fixed (hard-coded .lib extension for the GT lib).
    * source/rtl/diskspac.c
      * Small opt.
+   * include/hbdefs.h
+     ! Minor fix.
 
 2000-03-23 20:45 GMT-5 David G. Holm <dholm@jsd-llc.com>
 
