@@ -31,7 +31,7 @@
      include/classes.ch
      include/set.ch
      Small cleanups. Missing #ifdef guards added.
-   + make_tpl.sh - GNU Make laucher for bash/linux/gcc.
+   + make_tpl.sh - GNU Make launcher for bash/linux/gcc.
 
 19990731-03:33 CET Victor Szel <info@szelvesz.hu>
    ! source/vm/hvm.c - Fixed some error codes.
