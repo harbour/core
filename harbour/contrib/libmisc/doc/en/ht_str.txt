@@ -57,7 +57,7 @@
  *  $COMPLIANCE$
  *      All platforms   </par>
  *  $FILES$
- *      Library is tools
+ *      Library is libmisc
  *  $END$
  */
 

@@ -54,7 +54,7 @@
  *  $COMPLIANCE$
  *      This function is CA-CLIPPER tools compatible   
  *  $FILES$
- *      Library is tools
+ *      Library is libmisc
  *  $SEEALSO$
  *      FIELDSIZE(),FIELDDECI()
  *  $END$
@@ -91,7 +91,7 @@
  *  $COMPLIANCE$
  *      This function is CA-CLIPPER tools compatible   
  *  $FILES$
- *      Library is tools
+ *      Library is libmisc
  *  $SEEALSO$
  *      FIELDTYPE(),FIELDDECI()
  *  $END$
@@ -129,7 +129,7 @@
  *  $COMPLIANCE$
  *      This function is CA-CLIPPER tools compatible
  *  $FILES$
- *      Library is tools
+ *      Library is libmisc
  *  $SEEALSO$
  *      FIELDTYPE(),FIELDSIZE()
  *  $END$

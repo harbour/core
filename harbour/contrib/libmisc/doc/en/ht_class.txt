@@ -89,13 +89,12 @@
  *  </fixed>
  *  $TESTS$
  *      See Examples
- *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This is a new Harbour Tools class   </par>
+ *      This is a new Harbour Tools class  
  *  $FILES$
- *      Library is tools
+ *      Library is libmisc
  *  $SEEALSO$
  *      TClass()
  *  $END$

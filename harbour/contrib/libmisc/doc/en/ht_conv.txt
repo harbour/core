@@ -29,7 +29,7 @@
  *  $DESCRIPTION$
  *      check if the passed string is a bynary number or not   
  *  $FILES$
- *      Library is tools
+ *      Library is libmisc
  *  $SEEALSO$
  *      ISOCTAL(),ISDEC(),ISHEXA()
  *  $END$
@@ -51,7 +51,7 @@
  *  $DESCRIPTION$
  *      check if the passed string is a octal number or not   
  *  $FILES$
- *      Library is tools
+ *      Library is libmisc
  *  $SEEALSO$
  *      ISBIN(),ISDEC(),ISHEXA()
  *  $END$
@@ -73,7 +73,7 @@
  *  $DESCRIPTION$
  *      check if the passed string is a decimal number or not   
  *  $FILES$
- *      Library is tools
+ *      Library is libmisc
  *  $SEEALSO$
  *      ISOCTAL(),ISBIN(),ISHEXA()
  *  $END$
@@ -95,7 +95,7 @@
  *  $DESCRIPTION$
  *      check if the passed string is a hexa number or not   
  *  $FILES$
- *      Library is tools
+ *      Library is libmisc
  *  $SEEALSO$
  *      ISOCTAL(),ISDEC(),ISBIN()
  *  $END$
@@ -118,7 +118,7 @@
  *      This function converts a string <cN> from an decimal value
  *      to an binary value.   
  *  $FILES$
- *      Library is tools
+ *      Library is libmisc
  *  $SEEALSO$
  *      Dectohexa(),dectooctal()
  *  $END$
@@ -141,7 +141,7 @@
  *      This function converts a string <cN> from an decimal value
  *      to an octal value.   
  *  $FILES$
- *      Library is tools
+ *      Library is libmisc
  *  $SEEALSO$
  *      Dectohexa(),dectobin()
  *  $END$
@@ -164,7 +164,7 @@
  *      This function converts a string <cN> from an decimal value
  *      to an hexadecimal value.   
  *  $FILES$
- *      Library is tools
+ *      Library is libmisc
  *  $SEEALSO$
  *      Dectobin(),dectooctal()
  *  $END$
@@ -187,7 +187,7 @@
  *      This function converts a string <cN> from an binary value
  *      to a numeric decimal value.   
  *  $FILES$
- *      Library is tools
+ *      Library is libmisc
  *  $SEEALSO$
  *      OctaltoDec(),HexatoDec()
  *  $END$
@@ -210,7 +210,7 @@
  *      This function converts a string <cN> from an octal value
  *      to a numeric decimal value.   
  *  $FILES$
- *      Library is tools
+ *      Library is libmisc
  *  $SEEALSO$
  *      BintoDec(),HexatoDec()
  *  $END$
@@ -233,7 +233,7 @@
  *      This function converts a string <cN> from an hexadecimal value
  *      to a numeric decimal value.   
  *  $FILES$
- *      Library is tools
+ *      Library is libmisc
  *  $SEEALSO$
  *      OctaltoDec(),BintoDec()
  *  $END$
