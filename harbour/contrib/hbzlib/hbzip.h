@@ -61,7 +61,7 @@ extern uLong hb___filetime(char *f, tm_zip *tmzip, uLong *dt);
 extern char *hb___CheckFile( char * szFile);
 extern int hb___CompressOneFile(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_ITEM pBlock,BOOL bOverWrite);
 extern int hb___CompressMultipleFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBlock,BOOL bOverWrite);
-extern int hb___unZipFiles(char *szFile,PHB_ITEM pBlock,BOOL bExtractPath);
+extern BOOL hb___unZipFiles(char *szFile,PHB_ITEM pBlock,BOOL bExtractPath);
 extern int hb___ExtractCurrentFile(unzFile uf,BOOL popt_extract_without_path,BOOL popt_overwrite,PHB_ITEM pBlock);
 extern void hb____ChangeFileDate(char *filename,uLong dosdate,tm_unz tmu_date);
 extern int hb___MakeDir(char *szNewDirectory);
