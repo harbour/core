@@ -82,7 +82,10 @@ void GenObj32( PHB_FNAME pFileName )
     }
 
   if( ! _bQuiet )
+  {
     printf( "\nGenerating Windows/DOS OBJ32 output to \'%s\'... ", szFileName );
+    fflush( stdout );
+  }
 
   CompiledFileName( hObjFile, szFileName );
   CompilerVersion( hObjFile, "Harbour" );

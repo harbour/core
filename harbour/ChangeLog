@@ -1,3 +1,8 @@
+19990915-01:22 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/compiler/gen*.c
+    + some fflush() calls added to see a better feedback about the progress
+      of the generation process.
+
 19990915-00:38 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/working/sound.prg
     tests/working/*.bat

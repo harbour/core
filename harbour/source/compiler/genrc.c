@@ -47,5 +47,7 @@ void GenRC( PHB_FNAME pFileName )
    hb_fsFNameMerge( szFileName, pFileName );
 
    printf( "\nGenerating Windows resource output to \'%s\'... ", szFileName );
+   fflush( stdout );
+
    printf( "\nNot implemented yet!\n" );
 }

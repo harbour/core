@@ -63,7 +63,10 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
    }
 
    if( ! _bQuiet )
+   {
       printf( "\nGenerating C source output to \'%s\'... ", szFileName );
+      fflush( stdout );
+   }
 
    fprintf( yyc, "/* Harbour compiler generated code */\n\n" );
    fprintf( yyc, "#include \"hb_vmpub.h\"\n" );

@@ -67,7 +67,10 @@ void GenPortObj( PHB_FNAME pFileName )
    }
 
    if( ! _bQuiet )
+   {
       printf( "\nGenerating Harbour Portable Object output to \'%s\'... ", szFileName );
+      fflush( stdout );
+   }
 
    /* writes the symbol table */
 
