@@ -933,8 +933,8 @@ HB_FUNC( __CLSNEW )
 
                 for( uiBucket = 0; uiBucket < BUCKET; uiBucket++ )
                 {
-                   if( ( pSprCls->pMethods[ ui ].uiScope & HB_OO_CLSTP_CLASS ) == HB_OO_CLSTP_CLASS )
-                      break;
+                   /* if( ( pSprCls->pMethods[ ui ].uiScope & HB_OO_CLSTP_CLASS ) == HB_OO_CLSTP_CLASS )
+                      break; commented out following JF Lefevbre indications */
 
 #ifdef HB_CLS_MASKHIDDEN /* no hidden methods allowed by the inheritence. */
                    if( ( pSprCls->pMethods[ ui ].uiScope & HB_OO_CLSTP_HIDDEN ) == HB_OO_CLSTP_HIDDEN )
