@@ -92,8 +92,11 @@ HARBOUR HB_OUTSTD( void );
 HARBOUR HB_OUTERR( void );
 HARBOUR HB_PCOL( void );
 HARBOUR HB_PROW( void );
+HARBOUR HB_RESTSCREEN( void );
 HARBOUR HB_ROW( void );
 HARBOUR HB_SCROLL( void );
+HARBOUR HB_SAVESCREEN( void );
+HARBOUR HB_SETCURSOR( void );
 HARBOUR HB_SETPOS( void );
 HARBOUR HB_SETPRC( void );
 HARBOUR HB_SHADOW( void );
@@ -117,7 +120,10 @@ HB_INIT_SYMBOLS_BEGIN( Console__InitSymbols )
 { "OUTERR"    , FS_PUBLIC, HB_OUTERR    , 0 },
 { "OUTSTD"    , FS_PUBLIC, HB_OUTSTD    , 0 },
 { "NOSNOW"    , FS_PUBLIC, HB_NOSNOW    , 0 },
+{ "RESTSCREEN", FS_PUBLIC, HB_RESTSCREEN, 0 },
 { "SCROLL"    , FS_PUBLIC, HB_SCROLL    , 0 },
+{ "SAVESCREEN", FS_PUBLIC, HB_SAVESCREEN, 0 },
+{ "SETCURSOR" , FS_PUBLIC, HB_SETCURSOR , 0 },
 { "SETPOS"    , FS_PUBLIC, HB_SETPOS    , 0 },
 { "SETPRC"    , FS_PUBLIC, HB_SETPRC    , 0 },
 { "SHADOW"    , FS_PUBLIC, HB_SHADOW    , 0 },
@@ -989,8 +995,26 @@ HARBOUR HB_DBGSHADOW (void)
 
 HARBOUR HB_SAVESCREEN (void)
 {
+   ULONG ulSize = ( hb_parni( 3 ) - hb_parni( 1 ) + 1 ) *
+                  ( hb_parni( 4 ) - hb_parni( 2 ) + 1 ) * 2;
+   char * pBuffer = ( char * ) hb_xgrab( ulSize );
+   hb_gtSave( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), pBuffer );
+   hb_retclen( pBuffer, ulSize );
+   hb_xfree( ( void * ) pBuffer );
 }
 
 HARBOUR HB_RESTSCREEN (void)
 {
+   if( hb_pcount() == 5 )
+      hb_gtRest( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ),
+                 hb_parc( 5 ) );
+}
+
+HARBOUR HB_SETCURSOR( void )
+{
+   USHORT usPreviousCursor;
+
+   hb_gtGetCursor( &usPreviousCursor );
+   hb_gtSetCursor( hb_parni( 1 ) );
+   hb_retni( usPreviousCursor );
 }
