@@ -1,13 +1,12 @@
 /*
- * $id: $
+ * $id:$
 */
 
 /*
  * Harbour Project source code:
  * profiler
  *
- * Copyright 2001 Antonio Linares <alinares@fivetech.com> and
- *                Patrick Mast <email@patrickmast.com>
+ * Copyright 2001 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -70,7 +69,7 @@
  *      Profiler()
  *       => Writes NO info to file, returns Array of profiler info.
  *          Array only contains USED functions/classes.
- * 
+ *
  *      Profiler(,.t.)
  *       => Writes NO info to file, returns Array of profiler info.
  *          Array only contains ALL functions/classes.
