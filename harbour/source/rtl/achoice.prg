@@ -15,7 +15,6 @@
 #include "color.ch"
 #include "common.ch"
 #include "inkey.ch"
-#include "set.ch"
 #include "setcurs.ch"
 
 #define INRANGE( xLo, xVal, xHi )       ( xVal >= xLo .AND. xVal <= xHi )
@@ -49,14 +48,14 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
    lUserFunc := !Empty( xUserFunc ) .AND. ValType( xUserFunc ) $ "CB"
 
-   DEFAULT nTop    TO 0                    // The topmost row of the window
-   DEFAULT nLeft   TO 0                    // The leftmost column of the window
-   DEFAULT nBottom TO MaxRow() + 1         // The bottommost row of the window
-   DEFAULT nRight  TO MaxCol() + 1         // The rightmost column of the window
-
-   DEFAULT acItems TO {}                   // The items from which to choose
-   DEFAULT xSelect TO .T.                  // Array or logical, what is selectable
-   DEFAULT nPos TO 1                       // The number of the selected item
+   DEFAULT nTop       TO 0                 // The topmost row of the window
+   DEFAULT nLeft      TO 0                 // The leftmost column of the window
+   DEFAULT nBottom    TO MaxRow() + 1      // The bottommost row of the window
+   DEFAULT nRight     TO MaxCol() + 1      // The rightmost column of the window
+                      
+   DEFAULT acItems    TO {}                // The items from which to choose
+   DEFAULT xSelect    TO .T.               // Array or logical, what is selectable
+   DEFAULT nPos       TO 1                 // The number of the selected item
    DEFAULT nHiLiteRow TO 0                 // The row to be highlighted
 
    nNumCols := nRight - nLeft + 1

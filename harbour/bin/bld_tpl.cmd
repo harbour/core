@@ -90,7 +90,7 @@ rem set HB_COMPILER=
    if "%HB_COMPILER%" == "bcc32"   bcc32 -O2 -I..\include -L..\lib %1.c tools.lib debug.lib vm.lib rtl.lib rdd.lib macro.lib pp.lib dbfntx.lib dbfcdx.lib common.lib
    if "%HB_COMPILER%" == "gcc"     gcc %1.c -o%1.exe -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
    if "%HB_COMPILER%" == "mingw32" gcc %1.c -o%1.exe -mno-cygwin -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
-   if "%HB_COMPILER%" == "msvc"    cl -Fd..\bin\harbour -w -Zi -TP -GZ -GA -I..\include %1.c /link /subsystem:CONSOLE ..\lib\tools.lib ..\lib\debug.lib ..\lib\vm.lib ..\lib\rtl.lib ..\lib\rdd.lib ..\lib\macro.lib ..\lib\pp.lib ..\lib\dbfntx.lib ..\lib\dbfcdx.lib ..\lib\common.lib
+   if "%HB_COMPILER%" == "msvc"    cl -Fd..\bin\harbour -w -Zi -TP -GZ -GA -I..\include %1.c /link /subsystem:CONSOLE ..\lib\tools.lib ..\lib\debug.lib ..\lib\vm.lib ..\lib\rtl.lib ..\lib\rdd.lib ..\lib\macro.lib ..\lib\pp.lib ..\lib\dbfntx.lib ..\lib\dbfcdx.lib ..\lib\common.lib user32.lib
    if "%HB_COMPILER%" == "msvc"    echo Ignore LNK4033 warning
    goto END
 

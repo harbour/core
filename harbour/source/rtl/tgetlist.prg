@@ -37,7 +37,6 @@
 #include "common.ch"
 #include "getexit.ch"
 #include "inkey.ch"
-#include "set.ch"
 #include "setcurs.ch"
 
 #define SCORE_ROW       0

@@ -98,17 +98,17 @@
 #include "inkey.ch"
 #include "hbinit.h"
 
-#if defined(_WINDOWS_) || defined(WINNT)
-   #if ! defined(HARBOUR_USE_CRS_GTAPI) && ! defined(HARBOUR_USE_SLN_GTAPI)
-      #define INPUT_BUFFER_LEN 128
-      extern BOOL   hb_gtBreak;  /* This variable is located in source/rtl/gt/gtwin.c */
-      extern HANDLE hb_gtHInput; /* This variable is located in source/rtl/gt/gtwin.c */
-      static DWORD s_cNumRead = 0;   /* Ok to use DWORD here, because this is specific... */
-      static DWORD s_cNumIndex = 0;  /* ...to the Windows API, which defines DWORD, etc.  */
-      static INPUT_RECORD s_irInBuf[ INPUT_BUFFER_LEN ];
-      extern int hb_mouse_iCol;
-      extern int hb_mouse_iRow;
-   #endif
+#if (defined(_WINDOWS_) || defined(WINNT)) && defined(HARBOUR_USE_WIN_GTAPI)
+   extern int    hb_mouse_iCol;
+   extern int    hb_mouse_iRow;
+   extern BOOL   hb_gtBreak;  /* This variable is located in source/rtl/gt/gtwin.c */
+   extern HANDLE hb_gtHInput; /* This variable is located in source/rtl/gt/gtwin.c */
+
+   #define INPUT_BUFFER_LEN 128
+
+   static DWORD s_cNumRead = 0;   /* Ok to use DWORD here, because this is specific... */
+   static DWORD s_cNumIndex = 0;  /* ...to the Windows API, which defines DWORD, etc.  */
+   static INPUT_RECORD s_irInBuf[ INPUT_BUFFER_LEN ];
 #endif
 
 #define HB_BREAK_FLAG 256 /* 256, because that's what DJGPP returns Ctrl+Break as.
@@ -169,17 +169,17 @@ static void restore_input_mode( void )
 }
 
 HB_CALL_ON_STARTUP_BEGIN( init_input_mode )
-  struct termios ta;
-
-  tcgetattr( STDIN_FILENO, &startup_attributes );
-  atexit( restore_input_mode );
-
-  tcgetattr( STDIN_FILENO, &ta );
-  ta.c_lflag &= ~( ICANON | ECHO );
-  ta.c_iflag &= ~ICRNL;
-  ta.c_cc[ VMIN ] = 0;
-  ta.c_cc[ VTIME ] = 0;
-  tcsetattr( STDIN_FILENO, TCSAFLUSH, &ta );
+   struct termios ta;
+  
+   tcgetattr( STDIN_FILENO, &startup_attributes );
+   atexit( restore_input_mode );
+  
+   tcgetattr( STDIN_FILENO, &ta );
+   ta.c_lflag &= ~( ICANON | ECHO );
+   ta.c_iflag &= ~ICRNL;
+   ta.c_cc[ VMIN ] = 0;
+   ta.c_cc[ VTIME ] = 0;
+   tcsetattr( STDIN_FILENO, TCSAFLUSH, &ta );
 HB_CALL_ON_STARTUP_END( init_input_mode )
 
 #elif defined(HARBOUR_USE_DOS_GTAPI) && ! defined(__DJGPP__)
@@ -294,6 +294,7 @@ int hb_inkeyLast( void )      /* Return the value of the last key that was extra
    HB_TRACE(HB_TR_DEBUG, ("hb_inkeyLast()"));
 
    hb_inkeyPoll();
+
    return s_inkeyLast;
 }
 
@@ -304,13 +305,18 @@ int hb_inkeyNext( void )      /* Return the next key without extracting it */
    HB_TRACE(HB_TR_DEBUG, ("hb_inkeyNext()"));
 
    hb_inkeyPoll();
+
    if( hb_set.HB_SET_TYPEAHEAD )
    {
       /* Proper typeahead support is enabled */
-      if( s_inkeyHead == s_inkeyTail ) key = 0;   /* No key */
-      else key = s_inkeyBuffer[ s_inkeyTail ];    /* Next key */
+      if( s_inkeyHead == s_inkeyTail )
+         key = 0;                               /* No key */
+      else
+         key = s_inkeyBuffer[ s_inkeyTail ];    /* Next key */
    }
-   else key = s_inkeyForce; /* Typeahead support is disabled */
+   else 
+      key = s_inkeyForce; /* Typeahead support is disabled */
+
    return key;
 }
 
@@ -327,7 +333,7 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
 #elif defined(OS_UNIX_COMPATIBLE)
       if( ! read( STDIN_FILENO, &ch, 1 ) )
          ch = 0;
-#elif defined(_WINDOWS_) || defined(WINNT)
+#elif (defined(_WINDOWS_) || defined(WINNT)) && defined(HARBOUR_USE_WIN_GTAPI)
       /* First check for Ctrl+Break, which is handled by gt/gtwin.c */
       if( hb_gtBreak )
       {

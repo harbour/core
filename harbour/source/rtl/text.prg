@@ -33,8 +33,6 @@
  *
  */
 
-#include "set.ch"
-
 STATIC s_cFile
 STATIC s_lOldPrinter
 STATIC s_lOldExtra

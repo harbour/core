@@ -1,3 +1,21 @@
+20000313-12:40 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/rtl/inkey.c
+     ! Fixed to work with STD_GTAPI on Win32.
+   * bin/bld_tpl.*
+     + user32.lib added for MSVC
+   * source/rtl/oldbox.c
+     - Removed non-GT branches.
+     ! __BOX() fixed handling of the fifth parameter.
+   * source/rtl/console.c
+     * OS_DOS_COMPATIBLE -> OS_UNIX_COMPATIBLE
+   * source/rtl/achoice.prg
+     source/rtl/text.prg
+     source/rtl/tgetlist.prg
+     % Removed #include "set.ch", since it's included anyway with the
+       built-in (default) PP rules.
+   * makefile.bc
+     + NOTE added about "echo."
+
 20000313-12:42 GMT+3 Alexander Kresin
    * contrib/rdd_ads/ads1.c
      * Little bug fixed in adsAppend()
@@ -43,12 +61,12 @@
        So it's possible to link for the Win32 platform a non-GT mode Harbour.
        !!WARNING!! Since this change involves many platform/compiler 
        combinations, please test it on yours and report any possible errors.
-       WIN32/MINGW32, WIN32/GCC, WIN32/BCC32/55, DOS/BCC16/31, WIN32/MSVC has 
+       WIN32/MINGW32, WIN32/GCC, WIN32/BCC32/55, DOS/BCC16/31, WIN32/MSVC have
        been tested.
    * source/rtl/inkey.c
      source/rtl/environ.c
      ! Fixed to use WINNT macro after the #include section.
-     ! Code dependent of the GT API fixed.
+     ! Code dependent on the GT API fixed.
    * include/hbcomp.h
      source/compiler/cmdcheck.c
      source/compiler/hbusage.c
@@ -62,7 +80,7 @@
      source/macro/macro.c
      source/macro/macro.l
      * bName10 structure member replaced with uiNameLen in HB_MACRO. Now
-       the HB_SYMBOL_NAME_LEN is the one and only setting which control the
+       the HB_SYMBOL_NAME_LEN is the one and only setting which controls the
        maximum symbol name length in Harbour.
    * include/hbsetup.h
      - Removed some duplicated platform detection code.

@@ -4,6 +4,9 @@
 
 # makefile for Borland C/C++ compilers
 
+# NOTE: "echo." intentionally used instead of "echo", to avoid conflicts
+#       with external commands named echo.
+
 # Merge duplicate strings
 BCC_OPT = $(BCC_OPT) -d
 

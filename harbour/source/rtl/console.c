@@ -109,13 +109,13 @@ void hb_consoleInitialize( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_consoleInitialize()"));
 
-#if defined(OS_DOS_COMPATIBLE)
+#if defined(OS_UNIX_COMPATIBLE)
+   s_szCrLf[ 0 ] = HB_CHAR_LF;
+   s_szCrLf[ 1 ] = '\0';
+#else
    s_szCrLf[ 0 ] = HB_CHAR_CR;
    s_szCrLf[ 1 ] = HB_CHAR_LF;
    s_szCrLf[ 2 ] = '\0';
-#else
-   s_szCrLf[ 0 ] = HB_CHAR_LF;
-   s_szCrLf[ 1 ] = '\0';
 #endif
 
    s_szAcceptResult[ 0 ] = '\0';
@@ -685,9 +685,9 @@ HARBOUR HB_COL( void ) /* Return the current screen column position (zero origin
 
 HARBOUR HB_DISPBOX( void )
 {
-#ifdef HARBOUR_USE_GTAPI
    if( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) && ISNUM( 4 ) )
    {
+#ifdef HARBOUR_USE_GTAPI
       char szOldColor[ CLR_STRLEN ];
 
       if( ISCHAR( 6 ) )
@@ -705,10 +705,7 @@ HARBOUR HB_DISPBOX( void )
 
       if( ISCHAR( 6 ) )
          hb_gtSetColorStr( szOldColor );
-   }
 #else
-   if( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) && ISNUM( 4 ) )
-   {
       char * szBorderStyle = _B_SINGLE;
       int i_top = hb_parni( 1 );
       int i_left = hb_parni( 2 );
@@ -819,8 +816,8 @@ HARBOUR HB_DISPBOX( void )
       }
       fflush( stdout );
       hb_gtSetPos( bottom + 1, right + 1 );
-   }
 #endif
+   }
 }
 
 HARBOUR HB_DISPBEGIN( void )
@@ -852,13 +849,11 @@ HARBOUR HB_NOSNOW( void )
 HARBOUR HB_HB_SHADOW( void )
 {
    if( hb_pcount() >= 4 )
-   {
       hb_gtDrawShadow( hb_parni( 1 ),
                        hb_parni( 2 ),
                        hb_parni( 3 ),
                        hb_parni( 4 ),
                        ISNUM( 5 ) ? hb_parni( 5 ) : 7 );
-   }
 }
 
 HARBOUR HB_DBGSHADOW( void )
@@ -887,13 +882,11 @@ HARBOUR HB_SAVESCREEN( void )
 HARBOUR HB_RESTSCREEN( void )
 {
    if( ISCHAR( 5 ) )
-   {
       hb_gtRest( ISNUM( 1 ) ? hb_parni( 1 ) : 0,            
                  ISNUM( 2 ) ? hb_parni( 2 ) : 0,            
                  ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow(),
                  ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol(),
                  ( void * ) hb_parc( 5 ) );
-   }
 }
 
 USHORT hb_setCursor( BOOL bSetCursor, USHORT usNewCursor )
