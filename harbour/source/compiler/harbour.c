@@ -1392,7 +1392,7 @@ static int hb_compLocalGetPos( char * szVarName ) /* returns the order + 1 of a 
                      pVar->cType = ' ';
                      pVar->iUsed = VU_NOT_USED;
                      pVar->pNext  = NULL;
-                     pVar->iDeclLine = hb_comp_iLine;
+                     pVar->iDeclLine = hb_comp_iCompiled;
 
                      /* Use negative order to signal that we are accessing a local
                      * variable from a codeblock
