@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-11 02:30 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/vm/itemapi.c
+    ! Fix rounded for big numbers ( more of 16 significant numbers ).
+
 2002-07-10 12:10 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * source/vm/itemapi.c
       ! Recognition of infinite numbers in DJGPP compiler.
