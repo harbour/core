@@ -970,10 +970,14 @@ void hb_itemSwap( PHB_ITEM pItem1, PHB_ITEM pItem2 )
 
 PHB_ITEM hb_itemUnRef( PHB_ITEM pItem )
 {
+   PHB_ITEM pRef = pItem;
+   
    HB_TRACE(HB_TR_DEBUG, ("hb_itemUnRef(%p)", pItem));
 
-   while( HB_IS_BYREF( pItem ) )
+   do {
      pItem = hb_itemUnRefOnce( pItem );
+   }
+   while( HB_IS_BYREF( pItem ) && (pRef != pItem) );
 
    return pItem;
 }

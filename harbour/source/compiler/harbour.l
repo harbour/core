@@ -1506,7 +1506,7 @@ Separator     {SpaceTab}
 		    cText++;
 		}
 		cMark = yytext[ iLen ];
-		yylval.asCodeblock.string = hb_xgrab( iLen+1 );
+		yylval.asCodeblock.string = (char *)hb_xgrab( iLen+1 );
 		memcpy( (void *)yylval.asCodeblock.string, (void *)yytext, iLen );
 		yylval.asCodeblock.string[iLen] = '\0';
 		yylval.asCodeblock.length = iLen;

@@ -442,6 +442,7 @@ BOOL hb_compExprIsValidMacro( char * szText, BOOL *pbUseTextSubst )
       {
 #if defined( HB_MACRO_SUPPORT )
          HB_SYMBOL_UNUSED( bMacroText );
+	 *pbUseTextSubst = TRUE;	/* valid macro expression */
          return TRUE;    /*there is no need to check all '&' occurences */
 #else
          /* There is a valid character after '&' that can be used in

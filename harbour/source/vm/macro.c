@@ -442,8 +442,6 @@ char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
  * EVAL( {|| &macro} )
  *
  */
-void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
-{
    /* TODO: remove these externals */
    extern int hb_vm_aiExtraParams[HB_MAX_MACRO_ARGS], hb_vm_iExtraParamsIndex;
    extern int hb_vm_aiExtraElements[HB_MAX_MACRO_ARGS], hb_vm_iExtraElementsIndex;
@@ -451,6 +449,8 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
 
    extern PHB_SYMB hb_vm_apExtraParamsSymbol[HB_MAX_MACRO_ARGS];
 
+void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
+{
    HB_TRACE(HB_TR_DEBUG, ("hb_macroGetValue(%p)", pItem));
 
    if( hb_macroCheckParam( pItem ) )
