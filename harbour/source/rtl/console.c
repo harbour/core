@@ -211,7 +211,7 @@ char * hb_consoleGetNewLine( void )
  *      valtype( HB_OSNewLine() ) == "C"
  *      LEN( HB_OSNewLine() ) == 1
  *  $STATUS$
- *      C
+ *      R
  *  $COMPLIANCE$
  *      This is an add-on Operating System Tool function.
  *  $SEEALSO$

@@ -114,9 +114,9 @@ char * hb_nationGetMsg( USHORT uiMsg )
  *        ACCEPT "Sure: " TO cYesNo
  *      END DO
  *  $STATUS$
- *      C
+ *      R
  *  $COMPLIANCE$
- *      ISAFFIRM is fully CA-Clipper compliant.
+ *      ISAFFIRM() is fully CA-Clipper compliant.
  *  $SEEALSO$
  *      ISNEGATIVE, NATIONMSG
  *  $END$
@@ -151,9 +151,9 @@ HARBOUR HB_ISAFFIRM( void )
  *        ACCEPT "Sure: " TO cYesNo
  *      END DO
  *  $STATUS$
- *      C
+ *      R
  *  $COMPLIANCE$
- *      ISNEGATIVE is fully CA-Clipper compliant.
+ *      ISNEGATIVE() is fully CA-Clipper compliant.
  *  $SEEALSO$
  *      ISAFFIRM, NATIONMSG
  *  $END$
@@ -192,7 +192,7 @@ HARBOUR HB_ISNEGATIVE( void )
  *  $STATUS$
  *      C
  *  $COMPLIANCE$
- *      ISNEGATIVE is fully CA-Clipper compliant.
+ *      NATIONMSG() is fully CA-Clipper compliant.
  *  $SEEALSO$
  *      ISAFFIRM, ISNEGATIVE
  *  $END$

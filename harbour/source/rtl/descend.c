@@ -56,9 +56,9 @@
  *      DATA->( DBSEEK( DESCEND( "SMITH" ) ) )
  *      will seek "SMITH" into a descending index.
  *  $STATUS$
- *      C
+ *      R
  *  $COMPLIANCE$
- *      DESCEND is fully CA-Clipper compliant.
+ *      DESCEND() is fully CA-Clipper compliant.
  *  $SEEALSO$
  *      INDEX, SEEK
  *  $END$

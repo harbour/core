@@ -88,7 +88,7 @@ static s_aSetKeys := {}       // holds array of hot-key id, code-block, activati
  *  $TESTS$
  *      None definable
  *  $STATUS$
- *      C
+ *      R
  *  $COMPLIANCE$
  *      SETKEY() is mostly CA-Clipper compliant. The only difference is the
  *      addition of the condition code-block parameter, allowing set-keys to
@@ -161,7 +161,7 @@ return bReturn
  *  $TESTS$
  *      See test code above
  *  $STATUS$
- *      C
+ *      R
  *  $COMPLIANCE$
  *      HB_SETKEYGET() is a new function and hence not CA-Clipper compliant.
  *  $SEEALSO$
@@ -214,7 +214,7 @@ return NIL //bReturn
  *  $TESTS$
  *      None definable
  *  $STATUS$
- *      C
+ *      R
  *  $COMPLIANCE$
  *      HB_SETKEYSAVE() is new.
  *  $SEEALSO$
@@ -277,9 +277,9 @@ return aReturn
  *  $TESTS$
  *      None definable
  *  $STATUS$
- *      C
+ *      R
  *  $COMPLIANCE$
- *      HB_SetKeyCheck() is new.
+ *      HB_SETKEYCHECK() is new.
  *  $SEEALSO$
  *      SETKEY(), HB_SETKEYSAVE()
  *  $END$

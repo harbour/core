@@ -60,9 +60,9 @@
  *      will display converted string starting on row two, column two of the
  *      current device.
  *  $STATUS$
- *      C
+ *      R
  *  $COMPLIANCE$
- *      MEMOTRAN is fully CA-Clipper compliant.
+ *      MEMOTRAN() is fully CA-Clipper compliant.
  *  $SEEALSO$
  *      HARDCR(), STRTRAN()
  *  $END$

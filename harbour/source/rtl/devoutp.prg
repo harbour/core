@@ -73,7 +73,7 @@
  *      will display "$(     1.25)" starting on row four, column two of the
  *      current device (without the double quotation marks, of course).
  *  $STATUS$
- *      C
+ *      R
  *  $COMPLIANCE$
  *      DEVOUTPICT() is mostly CA-Clipper compliant. Any differences are due
  *      to enhancements in the Harbour TRANSFORM() over CA-Clipper.

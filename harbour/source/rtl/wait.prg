@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * __WAIT() undocumented function
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -31,6 +31,38 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
  * their web site at http://www.gnu.org/).
  *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __WAIT
+ *  $CATEGORY$
+ *
+ *  $ONELINER$
+ *      Stops the application until a key is pressed.
+ *  $SYNTAX$
+ *      __WAIT( <cMessage> ) --> <cKey>
+ *  $ARGUMENTS$
+ *      <cMessage> is a string.
+ *  $RETURNS$
+ *      Pressed key.
+ *  $DESCRIPTION$
+ *      This function stops the application until a key is pressed. The key
+ *      must be in the range 32..255. Control keys are not processed.
+ *  $EXAMPLES$
+ *      // Wait for a key stroke
+ *      __Wait( "Press a key to continue" )
+ *  $TESTS$
+ *      do while cKey != "Q"
+ *        cKey := __Wait( "Press 'Q' to continue" )
+ *      end do
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      __WAIT() is fully CA-Clipper compliant.
+ *  $SEEALSO$
+ *      __ACCEPT, __INPUT
+ *  $END$
  */
 
 #include "inkey.ch"
@@ -67,4 +99,3 @@ FUNCTION __Wait( cString )
    ENDDO
 
    RETURN Chr( nKey )
-

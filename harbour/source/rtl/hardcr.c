@@ -56,9 +56,9 @@
  *      will display converted string starting on row two, column two of the
  *      current device.
  *  $STATUS$
- *      C
+ *      R
  *  $COMPLIANCE$
- *      HARDCR is fully CA-Clipper compliant.
+ *      HARDCR() is fully CA-Clipper compliant.
  *  $SEEALSO$
  *      MEMOTRAN(), STRTRAN()
  *  $END$

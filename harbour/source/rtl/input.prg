@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * __INPUT() undocumented function
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -31,6 +31,37 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
  * their web site at http://www.gnu.org/).
  *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __INPUT
+ *  $CATEGORY$
+ *
+ *  $ONELINER$
+ *      Stops application 
+ *  $SYNTAX$
+ *      __INPUT( <cMessage> ) --> <cString>
+ *  $ARGUMENTS$
+ *      <cMessage> is any valid expression.
+ *  $RETURNS$
+ *      Macroed <cString>
+ *  $DESCRIPTION$
+ *      This function waits for a console input and returns macroed
+ *      expression entered.
+ *  $EXAMPLES$
+ *      
+ *      
+ *  $TESTS$
+ *      
+ *      
+ *  $STATUS$
+ *      S
+ *  $COMPLIANCE$
+ *      __INPUT() is fully CA-Clipper compliant.
+ *  $SEEALSO$
+ *      __WAIT, __ACCEPT
+ *  $END$
  */
 
 FUNCTION __Input( cMessage )

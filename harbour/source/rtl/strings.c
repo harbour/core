@@ -1495,9 +1495,9 @@ HARBOUR HB_STRZERO( void )
  *      ? HB_VALTOSTR( .F. ) == ".F."
  *      ? HB_VALTOSTR( .T. ) == ".T."
  *  $STATUS$
- *      C
+ *      R
  *  $COMPLIANCE$
- *      HB_VALTOSTR is a Harbour enhancement.
+ *      HB_VALTOSTR() is a Harbour enhancement.
  *  $SEEALSO$
  *      STR(), VAL()
  *  $END$

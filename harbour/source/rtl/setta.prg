@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * SETTYPEAHEAD() undocumented function
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -31,6 +31,36 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
  * their web site at http://www.gnu.org/).
  *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SETTYPEAHEAD
+ *  $CATEGORY$
+ *
+ *  $ONELINER$
+ *      Sets the typeahead buffer to given size.
+ *  $SYNTAX$
+ *      SETTYPEAHEAD( <nSize> ) --> <nPreviousSize>
+ *  $ARGUMENTS$
+ *      <nSize> is a valid typeahead size.
+ *  $RETURNS$
+ *      The previous state of _SET_TYPEAHEAD
+ *  $DESCRIPTION$
+ *      This function sets the typeahead buffer to a valid given size as is
+ *      Set( _SET_TYPEAHEAD ) where used.
+ *  $EXAMPLES$
+ *      // Sets typeahead to 12
+ *      SetTypeahead( 12 )
+ *  $TESTS$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      SETTYPEAHEAD() is fully CA-Clipper compliant.
+ *  $SEEALSO$
+ *      __ACCEPT, __INPUT
+ *  $END$
  */
 
 FUNCTION SetTypeahead( nSize )

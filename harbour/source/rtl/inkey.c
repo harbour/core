@@ -1010,9 +1010,9 @@ HARBOUR HB_INKEY( void )
  *      KEYBOARD CHR(13); ? INKEY() ==> 13
  *      KEYBOARD "HELLO"; CLEAR TYPEAHEAD; ? INKEY() ==> 0
  *  $STATUS$
- *      C
+ *      R
  *  $COMPLIANCE$
- *      NEXTKEY() is compliant with CA-Clipper 5.3
+ *      __KEYBOARD() is compliant with CA-Clipper 5.3
  *  $SEEALSO$
  *      CLEAR TYPEAHEAD, KEYBOARD
  *  $END$
@@ -1092,7 +1092,7 @@ void hb_inkeyPut( int ch )
  *      __keyPut( K_ALT_PGDN ) ; ? INKEY() ==> 417
  *      __keyPut( K_F11 ) ; ? INKEY() ==> -40
  *  $STATUS$
- *      C
+ *      R
  *  $COMPLIANCE$
  *      Was not part of Clipper
  *  $SEEALSO$
@@ -1140,9 +1140,9 @@ HARBOUR HB___KEYPUT( void )
  *  $TESTS$
  *      KEYBOARD "AB"; ? NEXTKEY(), NEXTKEY() ==>   65   65
  *  $STATUS$
- *      C
+ *      R
  *  $COMPLIANCE$
- *      __KEYBOARD is compliant with CA-Clipper 5.3
+ *      NEXTKEY() is compliant with CA-Clipper 5.3
  *  $SEEALSO$
  *      INKEY(), LASTKEY()
  *  $END$
@@ -1180,9 +1180,9 @@ HARBOUR HB_NEXTKEY( void )
  *  $TESTS$
  *      KEYBOARD "AB"; ? INKEY(), LASTKEY() ==>   65   65
  *  $STATUS$
- *      C
+ *      R
  *  $COMPLIANCE$
- *      __KEYBOARD is compliant with CA-Clipper 5.3
+ *      LASTKEY() is compliant with CA-Clipper 5.3
  *  $SEEALSO$
  *      INKEY(), LASTKEY()
  *  $END$

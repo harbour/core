@@ -1,3 +1,40 @@
+19991126-01:11 GMT+1 Jose Lalin <dezac@corevia.com>
+  * input.prg
+    + documented
+  * wait.prg
+    + documented
+  * setta.prg
+    + documented
+
+  There is an error in $STATUS$ in the following functions. They are
+  marked
+  as "C" but they should be marked as "R". Some typos fixed.
+
+  * rtl\console.c
+    ! HB_Osnewline
+  * rtl\descend.c
+  * rtl\hardcr.c
+  * rtl\inkey.c
+    ! __Keyboard, also bad name in $COMPLIANCES$
+    ! __Keyput
+    ! Nextkey, also bad name in $COMPLIANCES$
+    ! Lastkey, also bad name in $COMPLIANCES$
+  * rtl\mtran.c
+  * rtl\strings.c
+    ! HB_Valtostr
+  * rtl\natmsg.c
+    ! IsAffirm
+    ! IsNegative
+    ! NationMsg, also bad name in $COMPLIANCES$
+  * rtl\devoutp.prg
+  * rtl\setkey.prg
+    ! SetKey
+    ! SetKeyGet
+    ! SetKeySave
+    ! SetKeyCheck
+
+    (Uploaded by Victor Szel)
+
 19991126-01:06 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/gt/gtwin.c
     % DispBegin()/DispEnd() switching code optimized. The only "stepback" is
@@ -18,24 +55,24 @@
 
 Wed Nov 24 12:45:36 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* include/hbtrace.h: 
-	* source/common/hbtrace.c: 
-	* source/rtl/trace.c: 
-	* source/rtl/Makefile: 
-	* doc/tracing.txt: 
-	Implememted run-time tracing control; thanks to Jose Lalin
-	<dezac@corevia.com> for suggesting this. The interface is
-	described in doc/tracing.txt.
+        * include/hbtrace.h:
+        * source/common/hbtrace.c:
+        * source/rtl/trace.c:
+        * source/rtl/Makefile:
+        * doc/tracing.txt:
+        Implememted run-time tracing control; thanks to Jose Lalin
+        <dezac@corevia.com> for suggesting this. The interface is
+        described in doc/tracing.txt.
 
-	* source/rdd/dbf1.c: 
-	Fixed a compilation error that only appeared with HB_TR_DEBUG.
-	
-	* source/rtl/inkey.c: 
-	Added a guard to avoid a compilation warning.
+        * source/rdd/dbf1.c:
+        Fixed a compilation error that only appeared with HB_TR_DEBUG.
 
-	* tests/Makefile: 
-	Changed the order of inclusion to make sure you can still do a
-	make 'PRG_SOURCES=foo.prg'.
+        * source/rtl/inkey.c:
+        Added a guard to avoid a compilation warning.
+
+        * tests/Makefile:
+        Changed the order of inclusion to make sure you can still do a
+        make 'PRG_SOURCES=foo.prg'.
 
 19991123-13:35 EDT David G. Holm <dholm@jsd-llc.com>
 
@@ -95,7 +132,7 @@ Wed Nov 24 12:45:36 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
   * source/compiler/harbour.y
       * fixed incorrect error generation if empty lines were placed between
       DO CASE statement and the first CASE statement
-      
+
 19991122-16:12 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/common/hbstr.c
     include/extend.h
@@ -149,7 +186,7 @@ Wed Nov 24 12:45:36 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
   * make_b40.bat
     + RTL_TEST split into multiple files, placed into a separate subdirectory.
       Thanks go to Jose Lalin <dezac@corevia.com> for the splitting !
-    ; PP needs to be enhanced to support code in header files, in order to 
+    ; PP needs to be enhanced to support code in header files, in order to
       elminate duplicated code from the current version.
 
 19991122-11:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
@@ -167,7 +204,7 @@ Wed Nov 24 12:45:36 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     *source/vm/hvm.c
         * double values created during compile time divide optimization
         uses unspecified number of decimal places (defined as
-        HB_DEFAULT_DECIMALS) - this value replaced at runtime by current 
+        HB_DEFAULT_DECIMALS) - this value replaced at runtime by current
         SET DECIMALS setting
 
 
@@ -290,13 +327,13 @@ Wed Nov 24 12:45:36 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
         * fixed NOT operator precedence
         * fixed the infinite loop when a duplicated variable error
         was reported
-	* fixed '=' operator use (there was conflict between a compare
-	and assignment context)
-	* added new warning "Unreachable code'
-	* fatal errors (errors for which the compilation process should
-	terminate immediately should use 'F' prefix)
-	* corrected logic of handling errors (the compilation can be continued
-	with no GPF or core dump)
+        * fixed '=' operator use (there was conflict between a compare
+        and assignment context)
+        * added new warning "Unreachable code'
+        * fatal errors (errors for which the compilation process should
+        terminate immediately should use 'F' prefix)
+        * corrected logic of handling errors (the compilation can be continued
+        with no GPF or core dump)
 
     *source/compiler/expropt.c
         * corrected to support 'DO procname' statement
@@ -313,14 +350,14 @@ Wed Nov 24 12:45:36 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
         * cleared up declarations and visibility of functions and variables
 
     *include/hberrors.h
-	* added new warning "Unreachable code'
+        * added new warning "Unreachable code'
 
     *source/debug/debugger.prg
-	* removed one unreachable RETURN statement
+        * removed one unreachable RETURN statement
 
     *source/pp/hbpp.c
-	* all errors reported by the preprocesor are promoted to fatal
-	errors ('F' prefix)
+        * all errors reported by the preprocesor are promoted to fatal
+        errors ('F' prefix)
 
 19991119-16:59 GMT+1 Antonio Linares
   * updated makefile.b32
@@ -366,10 +403,10 @@ Wed Nov 24 12:45:36 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 19991118-12:50 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     * source/vm/hvm.c
-	* corrected code in hb_vmPopAlias() - the stack pointer was
-	decreased before the call to hb_vmSelectWorkarea - later
-	the error recovery code was overwriting the alias item which
-	caused unreleased memory
+        * corrected code in hb_vmPopAlias() - the stack pointer was
+        decreased before the call to hb_vmSelectWorkarea - later
+        the error recovery code was overwriting the alias item which
+        caused unreleased memory
 
 19991118-06:05 EDT Paul Tucker <ptucker@sympatico.ca>
   * makefile.vc
@@ -399,12 +436,12 @@ Wed Nov 24 12:45:36 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
     *source/rtl/classes.c
     *source/rtl/arrays.c
-	* corrected assignment of NULL to an unsigned int type - some
-	compilers don't like it
+        * corrected assignment of NULL to an unsigned int type - some
+        compilers don't like it
 
     *tests/rtl_test.prg
-	* added #ifdef __HARBOUR__ to suppres generation of errors that
-	are now reported at compile time (array[ 0 ], IIF( "str", ...) )
+        * added #ifdef __HARBOUR__ to suppres generation of errors that
+        are now reported at compile time (array[ 0 ], IIF( "str", ...) )
 
 19991118-07:25 GMT+1 Victor Szel <info@szelvesz.hu>
   + source/common/hbfsapi.c
@@ -449,11 +486,11 @@ Wed Nov 24 12:45:36 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     *source/compiler/harbour.l
     *source/compiler/harbour.c
     *source/compiler/expropt.c
-	* corrected support for expression->identifier syntax
-	* corrected optimization for division operator
+        * corrected support for expression->identifier syntax
+        * corrected optimization for division operator
 
     *include/compiler.h
-	* removed declaration no longer needed
+        * removed declaration no longer needed
 
 19991117-10:51 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/compiler/expropt.c
@@ -523,26 +560,26 @@ Wed Nov 24 12:45:36 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     * source/compiler/genjava.c
         * new implementation of grammar rules - many new syntax supported
         * new expression optimizer
-	* start of introducing new functions' naming scheme 'hb_comp'
+        * start of introducing new functions' naming scheme 'hb_comp'
         * nonprintable characters (CR/LF/TAB, etc.) are inserted into
 
         generated C code using hexdecimal numbers instead of quoted char
 
-	(they can appear as a result of expression optimization)
-       
+        (they can appear as a result of expression optimization)
+
     * source/pp/hbpp.c
     * source/pp/hbppint.c
     * source/pp/hblib.c
     * source/pp/stdalone/hbpp.c
-	* changes to support new functions' naming scheme 'hb_comp'
-	
+        * changes to support new functions' naming scheme 'hb_comp'
+
     *include/pcode.h
 
         *HB_P_ARRAYAAT  -> HB_P_ARRAYPUSH
 
          HB_P_ARRAYAPUT -> HB_P_ARRAYPOP - it removes value from the stack
 
-	 This is compatible with the handling of usual variables
+         This is compatible with the handling of usual variables
 
 
      *source/debug/debugger.prg
@@ -563,33 +600,33 @@ Wed Nov 24 12:45:36 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 
     * doc/compiler.txt
-	* added description of incompatibility with Clipper in object
-	handling
-	
-    * include/compiler.h
-	* new structures related to expression optimizer
-	
-    * include/hberrors.h
-	* new errors: Invalid type, invalid syntax, invalid alias
-	* new warning: meaningless expression
-	
-    * source/vm/hvm.c
-	* change in handling of HB_P_FORTEST opcode used in FOR/NEXT loop
-	* Renamed ArrayAt -> ArrayPush
-	* Renamed ArrayPut -> ArrayPop - it removes the value from the 
-	    eval stack now
+        * added description of incompatibility with Clipper in object
+        handling
 
-   
+    * include/compiler.h
+        * new structures related to expression optimizer
+
+    * include/hberrors.h
+        * new errors: Invalid type, invalid syntax, invalid alias
+        * new warning: meaningless expression
+
+    * source/vm/hvm.c
+        * change in handling of HB_P_FORTEST opcode used in FOR/NEXT loop
+        * Renamed ArrayAt -> ArrayPush
+        * Renamed ArrayPut -> ArrayPop - it removes the value from the
+            eval stack now
+
+
 19991116-15:05 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/memvars.c
     ! __MSAVE() Modified to save MEMVARs with names longer than 10 chars, the
       this way it's more Clipper compatible. But since only the first 10 chars
       of the name can be stored in the .MEM file, the complete name cannot
-      be retrieved on RESTORE. One more issue: if you have multiple long name 
-      which have the same first 10 chars, all these variables will be saved to 
+      be retrieved on RESTORE. One more issue: if you have multiple long name
+      which have the same first 10 chars, all these variables will be saved to
       the .MEM file, with the same name.
-      So to be 100% Clipper compatible you should compile Harbour with 
-      -DHB_SYMBOL_NAME_LEN=10. 
+      So to be 100% Clipper compatible you should compile Harbour with
+      -DHB_SYMBOL_NAME_LEN=10.
   * source/rtl/dates.c
     ! Some HB_TRACE() types fixed.
     % hb_dateStrGet() - strlen() call eliminated for speed.
@@ -656,10 +693,10 @@ Wed Nov 24 12:45:36 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
   * include/error.ch
     - EG_ARGCOUNT removed.
   * include/fileio.ch
-    * The hexa numbers changed to decimals for better cross compiler 
+    * The hexa numbers changed to decimals for better cross compiler
       compatibility, plus some minor cleanups.
   * include/hbclip.ch
-    include/clipdefs.h 
+    include/clipdefs.h
     include/compiler.h
     * Minor changes.
 
@@ -674,7 +711,7 @@ Wed Nov 24 12:45:36 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     source/rtl/strings.c
     source/rtl/transfrm.c
     source/vm/hvm.c
-    doc/subcodes.txt 
+    doc/subcodes.txt
     % Removed the runtime argument count checks.
 
 19991113-13:25 GMT+1 Victor Szel <info@szelvesz.hu>
