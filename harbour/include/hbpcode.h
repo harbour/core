@@ -113,6 +113,7 @@ typedef enum
    HB_P_POPALIASEDVAR,     /* pops aliased variable (either a field or a memvar) */
    HB_P_POPFIELD,          /* pops unaliased field */
    HB_P_POPLOCAL,          /* pops the contains of the virtual machine stack onto a local variable */
+   HB_P_POPLOCALNEAR,      /* pops the contains of the virtual machine stack onto a local variable */
    HB_P_POPMEMVAR,         /* pops the contains of a memvar variable to the virtual machine stack */
    HB_P_POPSTATIC,         /* pops the contains of the virtual machine stack onto a static variable */
    HB_P_POPVARIABLE,       /* pops the contains of an undeclared variable from the virtual machine stack */
@@ -125,6 +126,7 @@ typedef enum
    HB_P_PUSHBYTE,          /* places a 1 byte integer number on the virtual machine stack */
    HB_P_PUSHINT,           /* places an integer number on the virtual machine stack */
    HB_P_PUSHLOCAL,         /* pushes the contains of a local variable to the virtual machine stack */
+   HB_P_PUSHLOCALNEAR,     /* pushes the contains of a local variable to the virtual machine stack */
    HB_P_PUSHLOCALREF,      /* pushes a local variable by reference to the virtual machine stack */
    HB_P_PUSHLONG,          /* places an integer number on the virtual machine stack */
    HB_P_PUSHMEMVAR,        /* pushes the contains of a memvar variable to the virtual machine stack */

@@ -189,7 +189,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       else
          fprintf( yyc, "HB_FUNC( %s )", pFunc->szName );
 
-      fprintf( yyc, "\n{\n   static BYTE pcode[] =\n   {\n" );
+      fprintf( yyc, "\n{\n   static const BYTE pcode[] =\n   {\n" );
 
       if( hb_comp_iGenCOutput == HB_COMPGENC_COMPACT )
          hb_compGenCCompact( pFunc, yyc );
@@ -728,6 +728,32 @@ static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc )
             lPCodePos += 3;
             break;
 
+         case HB_P_POPLOCALNEAR:
+            fprintf( yyc, "\tHB_P_POPLOCALNEAR, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ] );
+            if( bVerbose )
+            {
+               SHORT wVar = ( SHORT ) pFunc->pCode[ lPCodePos + 1 ];
+               /* Variable with negative order are local variables
+                * referenced in a codeblock -handle it with care
+                */
+
+               if( iNestedCodeblock )
+               {
+                  /* we are accesing variables within a codeblock */
+                  /* the names of codeblock variable are lost     */
+                  if( wVar < 0 )
+                     fprintf( yyc, "\t/* localvar%i */", -wVar );
+                  else
+                     fprintf( yyc, "\t/* codeblockvar%i */", wVar );
+               }
+               else
+                  fprintf( yyc, "\t/* %s */", hb_compVariableFind( pFunc->pLocals, wVar )->szName );
+            }
+            fprintf( yyc, "\n" );
+            lPCodePos += 2;
+            break;
+
          case HB_P_POPMEMVAR:
             fprintf( yyc, "\tHB_P_POPMEMVAR, %i, %i,",
                      pFunc->pCode[ lPCodePos + 1 ],
@@ -913,6 +939,32 @@ static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc )
             }
             fprintf( yyc, "\n" );
             lPCodePos += 3;
+            break;
+
+         case HB_P_PUSHLOCALNEAR:
+            fprintf( yyc, "\tHB_P_PUSHLOCALNEAR, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ] );
+            if( bVerbose )
+            {
+               SHORT wVar = ( SHORT ) pFunc->pCode[ lPCodePos + 1 ];
+               /* Variable with negative order are local variables
+                * referenced in a codeblock -handle it with care
+                */
+
+               if( iNestedCodeblock )
+               {
+                  /* we are accesing variables within a codeblock */
+                  /* the names of codeblock variable are lost     */
+                  if( wVar < 0 )
+                     fprintf( yyc, "\t/* localvar%i */", -wVar );
+                  else
+                     fprintf( yyc, "\t/* codeblockvar%i */", wVar );
+               }
+               else
+                  fprintf( yyc, "\t/* %s */", hb_compVariableFind( pFunc->pLocals, wVar )->szName );
+            }
+            fprintf( yyc, "\n" );
+            lPCodePos += 2;
             break;
 
          case HB_P_PUSHLOCALREF:
@@ -1182,7 +1234,7 @@ static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc )
       if( nChar > 1 )
          fprintf( yyc, ", " );
    
-      if( nChar == 9 )
+      if( nChar == 15 )
       {
          fprintf( yyc, "\n\t" );
          nChar = 1;

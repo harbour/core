@@ -1,3 +1,26 @@
+20000422-18:41 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbpcode.h
+   * source/compiler/harbour.c
+   * source/compiler/genc.c
+   * source/compiler/hvm.c
+     + HB_P_PUSHLOCALNEAR and HB_P_POPLOCALNEAR 2 byte pcodes added.
+       These are used when the referred local is the range of -128-127.
+       The code is more compact this way, since these pcodes will be used 
+       in the wast majority of cases.
+
+   * source/compiler/hvm.c
+     - Removed hb_vmPushByte(), replaced with hb_vmPushInteger().
+     % Inlined the code for PUSHBYTE, PUSHINT, PUSHZERO, PUSHONE to make it 
+       faster. hb_vmPushZero()/hb_vmPushOne() removed.
+
+   * source/compiler/genc.c
+     % The static pcode array is now "const"
+     % It will now put 14 opcodes in each line instead of 8 in -gc0 mode.
+
+   * source/compiler/hbusage.c
+     ! Typo.
+
 20000422-16:16 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/compiler/genc.c

@@ -1822,7 +1822,10 @@ void hb_compGenPopVar( char * szVarName ) /* generates the pcode to pop a value 
    {
       /* local variable
        */
-      hb_compGenPCode3( HB_P_POPLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
+      if( iVar >= -128 && iVar <= 127 )
+         hb_compGenPCode2( HB_P_POPLOCALNEAR, iVar );
+      else
+         hb_compGenPCode3( HB_P_POPLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
    }
    else
    {
@@ -1975,7 +1978,10 @@ void hb_compGenPushVar( char * szVarName )
    {
       /* local variable
        */
-      hb_compGenPCode3( HB_P_PUSHLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
+      if( iVar >= -128 && iVar <= 127 )
+         hb_compGenPCode2( HB_P_PUSHLOCALNEAR, iVar );
+      else
+         hb_compGenPCode3( HB_P_PUSHLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
    }
    else
    {

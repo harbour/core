@@ -140,9 +140,6 @@ static void    hb_vmPushAlias( void );            /* pushes the current workarea
 static void    hb_vmPushAliasedField( PHB_SYMB ); /* pushes an aliased field on the eval stack */
 static void    hb_vmPushAliasedVar( PHB_SYMB );   /* pushes an aliased variable on the eval stack */
 static void    hb_vmPushBlock( BYTE * pCode, PHB_SYMB pSymbols ); /* creates a codeblock */
-static void    hb_vmPushOne( void ); /* pushes a 1 onto the stack */
-static void    hb_vmPushZero( void ); /* pushes a 0 onto the stack */
-static void    hb_vmPushByte( BYTE bNumber ); /* pushes a 1 byte integer number onto the stack */
 static void    hb_vmPushDoubleConst( double dNumber, int iWidth, int iDec ); /* Pushes a double constant (pcode) */
 static void    hb_vmPushMacroBlock( BYTE * pCode, PHB_SYMB pSymbols ); /* creates a macro-compiled codeblock */
 static void    hb_vmPushLocal( SHORT iLocal );    /* pushes the containts of a local onto the stack */
@@ -859,12 +856,20 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_ONE:
-            hb_vmPushOne();
+            hb_stack.pPos->type = HB_IT_INTEGER;
+            hb_stack.pPos->item.asInteger.value = 1;
+            hb_stack.pPos->item.asInteger.length = 10;
+            hb_stackPush();
+            HB_TRACE(HB_TR_INFO, ("(hb_vmPushOne)"));
             w++;
             break;
 
          case HB_P_ZERO:
-            hb_vmPushZero();
+            hb_stack.pPos->type = HB_IT_INTEGER;
+            hb_stack.pPos->item.asInteger.value = 0;
+            hb_stack.pPos->item.asInteger.length = 10;
+            hb_stackPush();
+            HB_TRACE(HB_TR_INFO, ("(hb_vmPushZero)"));
             w++;
             break;
 
@@ -876,12 +881,20 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_PUSHBYTE:
-            hb_vmPushByte( ( BYTE ) pCode[ w + 1 ] );
+            hb_stack.pPos->type = HB_IT_INTEGER;
+            hb_stack.pPos->item.asInteger.value = ( int ) pCode[ w + 1 ];
+            hb_stack.pPos->item.asInteger.length = 10;
+            hb_stackPush();
+            HB_TRACE(HB_TR_INFO, ("(hb_vmPushInteger)"));
             w += 2;
             break;
 
          case HB_P_PUSHINT:
-            hb_vmPushInteger( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+            hb_stack.pPos->type = HB_IT_INTEGER;
+            hb_stack.pPos->item.asInteger.value = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+            hb_stack.pPos->item.asInteger.length = 10;
+            hb_stackPush();
+            HB_TRACE(HB_TR_INFO, ("(hb_vmPushInteger)"));
             w += 3;
             break;
 
@@ -955,6 +968,11 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_PUSHLOCAL:
             hb_vmPushLocal( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
             w += 3;
+            break;
+
+         case HB_P_PUSHLOCALNEAR:
+            hb_vmPushLocal( ( SHORT ) pCode[ w + 1 ] );
+            w += 2;
             break;
 
          case HB_P_PUSHLOCALREF:
@@ -1044,6 +1062,11 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_POPLOCAL:
             hb_vmPopLocal( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
             w += 3;
+            break;
+
+         case HB_P_POPLOCALNEAR:
+            hb_vmPopLocal( ( SHORT ) pCode[ w + 1 ] );
+            w += 2;
             break;
 
          case HB_P_POPSTATIC:
@@ -2956,36 +2979,6 @@ void hb_vmPushNumber( double dNumber, int iDec )
 
    else
       hb_vmPushDouble( dNumber, hb_set.HB_SET_DECIMALS );
-}
-
-static void hb_vmPushOne( void )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushOne()"));
-
-   hb_stack.pPos->type = HB_IT_INTEGER;
-   hb_stack.pPos->item.asInteger.value = ( int ) 1;
-   hb_stack.pPos->item.asInteger.length = 10;
-   hb_stackPush();
-}
-
-static void hb_vmPushZero( void )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushZero()"));
-
-   hb_stack.pPos->type = HB_IT_INTEGER;
-   hb_stack.pPos->item.asInteger.value = ( int ) 0;
-   hb_stack.pPos->item.asInteger.length = 10;
-   hb_stackPush();
-}
-
-static void hb_vmPushByte( BYTE bNumber )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushByte(%i)", bNumber));
-
-   hb_stack.pPos->type = HB_IT_INTEGER;
-   hb_stack.pPos->item.asInteger.value = ( int ) bNumber;
-   hb_stack.pPos->item.asInteger.length = 10;
-   hb_stackPush();
 }
 
 void hb_vmPushInteger( int iNumber )
