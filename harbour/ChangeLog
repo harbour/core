@@ -1,3 +1,8 @@
+19991020-19:40 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * include/hbtrace.h
+     ! Added missing HB_ prefix to #define TRACE(x) in the #else block.
+
 19991021-01:37 GMT+1 Victor Szel <info@szelvesz.hu>
    * include/Makefile
      ! Added hbtrace.h and hbwinapi.h

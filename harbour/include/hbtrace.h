@@ -52,7 +52,7 @@ do { \
 
 #else
 
-#define TRACE(x)
+#define HB_TRACE(x)
 
 #endif  /* #if defined(HB_DO_TRACE) */
 
