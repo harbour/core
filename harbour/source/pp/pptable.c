@@ -411,8 +411,9 @@ void hb_pp_Table( void )
    static COMMANDS sC___237 = {0,"SET","ORDER TO \1A00 [IN \1B40]","ordSetFocus( \1A00 [, \1B30] )",&sC___236 };
    static COMMANDS sC___238 = {0,"SET","ORDER TO TAG \1A40 [IN \1B40]","ordSetFocus( \1A30 [, \1B30] )",&sC___237 };
    static COMMANDS sC___239 = {0,"SET","ORDER TO","ordSetFocus(0)",&sC___238 };
+   static COMMANDS sC___240 = {0,"SET","EVENTMASK TO \1A00","Set( _SET_EVENTMASK, \1A00 )",&sC___239 };
 
    hb_pp_topDefine = &sD___52;
-   hb_pp_topCommand = &sC___239;
+   hb_pp_topCommand = &sC___240;
    hb_pp_topTranslate = NULL;
 }
