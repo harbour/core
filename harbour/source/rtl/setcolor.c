@@ -72,3 +72,10 @@ HB_FUNC( SETBLINK )
       hb_gtSetBlink( hb_parl( 1 ) );
 }
 
+HB_FUNC( HB_COLORTON )
+{
+   if( ISCHAR( 1 ) )
+      hb_retni( hb_gtColorToN( hb_parc( 1 ) ) );
+   else
+      hb_retni( 0 );
+}
