@@ -2670,6 +2670,27 @@ static void hb_vmArrayPush( void )
       return;
    }
 
+#ifndef HB_C52_STRICT
+   if( HB_IS_STRING( pArray ) )
+   {
+      BYTE b = 0;
+      HB_ITEM item;
+
+      if( ulIndex > 0 && ulIndex <= pArray->item.asString.length )
+         b = pArray->item.asString.value[ ulIndex - 1 ];
+      else
+         hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
+                        2, pArray, pIndex );
+
+      hb_itemInit( &item );
+      hb_itemPutNI( &item, b );
+      hb_stackPop();
+      hb_itemCopy( hb_stackItemFromTop( -1 ), &item );
+      hb_itemClear( &item );
+      return;
+   }
+#endif
+
    if( HB_IS_OBJECT( pArray ) && hb_objHasMsg( pArray, "__OpArrayIndex" ) )
    {
       hb_vmOperatorCall( pArray, pIndex, "__OPARRAYINDEX" );
