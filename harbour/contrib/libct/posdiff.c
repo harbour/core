@@ -212,7 +212,7 @@ HB_FUNC (POSEQUAL)
     size_t sStrLen2 = hb_parclen (2);
     char *pc1, *pc2;
 
-    size_t sIgnore, sCompare, sCompareCnt, sRet;
+    size_t sIgnore, sCompare, sCompareCnt, sRet = 0;
 
     if (ISNUM (4))
       sIgnore = hb_parnl (4);
