@@ -34,9 +34,11 @@ C_SOURCES = \
 	ctcrypt.c \
 	files.c \
 	finan.c \
+	ftoc.c \
 	justify.c \
 	keyset.c \
 	math.c \
+	misc1.c \
 	num1.c \
 	numat.c \
 	pad.c \
@@ -49,6 +51,7 @@ C_SOURCES = \
 	remove.c \
 	replace.c \
 	strswap.c \
+	tab.c \
 	token1.c \
 	token2.c \
 	trig.c \

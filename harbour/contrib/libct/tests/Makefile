@@ -71,6 +71,7 @@ PRG_SOURCES=\
 	num1.prg \
 	numtoken.prg \
 	setatlik.prg \
+	tab.prg \
 	token.prg \
 	token2.prg \
 	tokenlow.prg \

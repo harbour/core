@@ -45,12 +45,22 @@ Martin Vogel <vogel@inttec.de>
 
 + CTEXIT()     library exit function
 
++ NUMANDX()    \
++ NUMORX()     |
++ NUMXORX()    |- equivalents to NUMAND(),... functions, but working
++ NUMNOTX()    |  with any bit number of 1 to 32
++ NUMROLX()    |
++ NUMMIRRX()   /
+
 * SETATLIKE()  2nd parameter can be passed by reference so that SETATLIKE
                can store the acutal wildcard character in it
 
 + SETMATHERR() math error handling
 
 + SINH()       hyperbolic sine
+
+* TABPACK()    new 4th, 5th and 6th parameter to let one set the carriage-return-line-feed string, 
+* TABEXPAND()  the tab character and the chr(141)[soft line feed] behaviour
 
 + TANH()       hyperbolic tangent
 

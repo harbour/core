@@ -7,6 +7,20 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     * minor fix borrowed from [x]Harbour
+       Many thanks to Ron
+
+       It fixes this kind of code:
+
+       #xcommand INIT[<c>] ;
+                 =>;
+  + contrib/libct/tab.c 
+
+       function Main()
+
+         INIT["test"]
+
+       return nil
 
 2002-02-18 23:41 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
   * utils/hbmake/hbmake.prg

@@ -83,6 +83,35 @@ static void do_charonly (int iSwitch)
     int iShift, iBool;
     char *pcSub, *pc;
 
+    /* check for zero-length strings  */
+    switch (iSwitch)
+    {
+      case DO_CHARONLY_CHARONLY:
+      case DO_CHARONLY_WORDONLY:
+      {
+        if ((sStrLen == 0) || (sOnlySetLen == 0))
+	{
+          hb_retc ("");
+	  return;
+        }
+      }; break;
+
+      case DO_CHARONLY_CHARREM:
+      case DO_CHARONLY_WORDREM:
+      {
+	if (sStrLen == 0)
+	{
+	  hb_retc ("");
+	  return;
+	}
+	if (sOnlySetLen == 0)
+	{
+	  hb_retclen (pcString, sStrLen);
+	  return;
+	}
+      }; break;
+    }
+    
     if ((iSwitch == DO_CHARONLY_WORDONLY) || (iSwitch == DO_CHARONLY_WORDREM))
     {
       iShift = 2;

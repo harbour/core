@@ -138,9 +138,11 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctcolton.obj \
    $(OBJ_DIR)\ctcrypt.obj \
    $(OBJ_DIR)\finan.obj \
+   $(OBJ_DIR)\ftoc.obj \
    $(OBJ_DIR)\justify.obj \
    $(OBJ_DIR)\keyset.obj \
    $(OBJ_DIR)\math.obj \
+   $(OBJ_DIR)\misc1.obj \
    $(OBJ_DIR)\num1.obj \
    $(OBJ_DIR)\numat.obj \
    $(OBJ_DIR)\pad.obj \
@@ -153,6 +155,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\remove.obj \
    $(OBJ_DIR)\replace.obj \
    $(OBJ_DIR)\strswap.obj \
+   $(OBJ_DIR)\tab.obj \
    $(OBJ_DIR)\token1.obj \
    $(OBJ_DIR)\token2.obj \
    $(OBJ_DIR)\trig.obj \
@@ -201,8 +204,10 @@ CLEAN:
    -@if exist $(OBJ_DIR)\ctcolton.* del $(OBJ_DIR)\ctcolton.*
    -@if exist $(OBJ_DIR)\ctcrypt.* del $(OBJ_DIR)\ctcrypt.*
    -@if exist $(OBJ_DIR)\finan.* del $(OBJ_DIR)\finan.*
+   -@if exist $(OBJ_DIR)\ftoc.* del $(OBJ_DIR)\ftoc.*
    -@if exist $(OBJ_DIR)\justify.* del $(OBJ_DIR)\justify.*
    -@if exist $(OBJ_DIR)\math.* del $(OBJ_DIR)\math.*
+   -@if exist $(OBJ_DIR)\misc1.* del $(OBJ_DIR)\misc1.*
    -@if exist $(OBJ_DIR)\num1.* del $(OBJ_DIR)\num1.*
    -@if exist $(OBJ_DIR)\numat.* del $(OBJ_DIR)\numat.*
    -@if exist $(OBJ_DIR)\pad.* del $(OBJ_DIR)\pad.*
@@ -214,6 +219,7 @@ CLEAN:
    -@if exist $(OBJ_DIR)\remove.* del $(OBJ_DIR)\remove.*
    -@if exist $(OBJ_DIR)\replace.* del $(OBJ_DIR)\replace.*
    -@if exist $(OBJ_DIR)\strswap.* del $(OBJ_DIR)\strswap.*
+   -@if exist $(OBJ_DIR)\tab.* del $(OBJ_DIR)\tab.*
    -@if exist $(OBJ_DIR)\token1.* del $(OBJ_DIR)\token1.*
    -@if exist $(OBJ_DIR)\token2.* del $(OBJ_DIR)\token2.*
    -@if exist $(OBJ_DIR)\trig.* del $(OBJ_DIR)\trig.*

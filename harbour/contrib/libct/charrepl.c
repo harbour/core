@@ -145,6 +145,20 @@ HB_FUNC (CHARREPL)
     char *pcRet;
     size_t sIndex;
 
+    /* if sStrLen == 0, we can return immediately */
+    if (sStrLen == 0)
+    {
+      if (iNoRet)
+      {
+        hb_retl (0);
+      }
+      else
+      {
+        hb_retc ("");
+      }
+      return;
+    }
+
     if (ISLOG (4))
     {
       iMode = hb_parl (4);

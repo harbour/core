@@ -101,7 +101,7 @@ static void do_remove (int iSwitch)
       }
     }
 
-    if (iSwitch != DO_REMOVE_REMRIGHT)
+    if (iSwitch != DO_REMOVE_REMLEFT)
     {
       pc = pcString+sStrLen-1;
       while ((*pc == cSearch) && (pc >= pcRet))
