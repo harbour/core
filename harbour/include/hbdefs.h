@@ -263,4 +263,22 @@ typedef BYTE HB_ATTR;
 #define HB_CHAR_SOFT1           ( ( char ) 141 )
 #define HB_CHAR_SOFT2           ( ( char ) HB_CHAR_LF )
 
+#ifndef HB_LONG_LONG_OFF
+#if !defined(LONGLONG) && !defined(_WINNT_H)
+#if defined(__GNUC__)
+  typedef long long LONGLONG;
+#else
+  typedef __int64 LONGLONG;
+#endif
+#endif
+
+#if !defined(ULONGLONG) && !defined(_WINNT_H)
+#if defined(__GNUC__)
+  typedef unsigned long long ULONGLONG;
+#else
+  typedef unsigned __int64 ULONGLONG;
+#endif
+#endif
+#endif /* HB_LONG_LONG_OFF */
+
 #endif /* HB_DEFS_H_ */
