@@ -58,15 +58,20 @@
 #else
    #define HB_VER_LEX "Flex"
 #endif
+
+/* NOTE: One of these next three fields can be incremented by the hbverfix program */
+
 #define HB_VER_MAJOR    0       /* Major version number */
 #define HB_VER_MINOR    43      /* Minor version number */
 #define HB_VER_REVISION 0       /* Revision number */
 
-/* TOFIX: Ideally these should be generated dynamically, until 
-          then, they should be updated by the builder. [vszakats] */
+/* NOTE: The next two fields are automatically updated by the hbverfix program */
 
 #define HB_VER_LENTRY   "2003-09-29 22:10 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>"
 #define HB_VER_CHLCVS   "ChangeLog,v 1.4490 2003/09/29 18:07:24 alkresin"
+
+/* TOFIX: The next three fields need to get updated automatically */
+
 #define HB_VER_C_USR    ""
 #define HB_VER_L_USR    ""
 #define HB_VER_PRG_USR  ""

@@ -112,6 +112,7 @@ HBTEST_DIR   = utils\hbtest
 HBDOC_DIR    = utils\hbdoc
 HBPP_DIR     = utils\hbpp
 HBMAKE_DIR   = utils\hbmake
+HBVER_DIR    = utils\hbver
 
 !if $(HB_LEX) == SIMPLEX
    INCLUDE_DIR = $(INCLUDE_DIR);source\compiler;source\macro
@@ -170,6 +171,7 @@ HBRUN_EXE    = $(BIN_DIR)\hbrun.exe
 HBTEST_EXE   = $(BIN_DIR)\hbtest.exe
 HBDOC_EXE    = $(BIN_DIR)\hbdoc.exe
 HBMAKE_EXE   = $(BIN_DIR)\hbmake.exe
+HBVER_EXE    = $(BIN_DIR)\hbverfix.exe
 
 #
 # GT driver list
@@ -752,6 +754,9 @@ HBMAKE_EXE_OBJS = \
    $(OBJ_DIR)\radios.obj \
    $(OBJ_DIR)\hbmlang.obj
 
+HBVER_EXE_OBJS = \
+   $(OBJ_DIR)\hbverfix.obj \
+
 #
 # Our default target
 #
@@ -777,7 +782,8 @@ all: \
    $(HBPP_EXE) \
    $(HBTEST_EXE) \
    $(HBDOC_EXE) \
-   $(HBMAKE_EXE)
+   $(HBMAKE_EXE) \
+   $(HBVER_EXE)
 #
 # Library dependencies and build rules
 #
@@ -2950,4 +2956,15 @@ $(OBJ_DIR)\prb_stak.obj : $(OBJ_DIR)\prb_stak.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\hbmlang.obj : $(HBMAKE_DIR)\hbmlang.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HBVER_EXE) : $(HBVER_EXE_OBJS)
+
+   $(ECHO) $(CFLAGS) > make.tmp
+   $(ECHO) -e$(HBVER_EXE) >> make.tmp
+   $(ECHO) $(OBJ_DIR)\hbverfix.obj >> make.tmp
+   $(CC) @make.tmp
+   $(DEL) make.tmp
+
+$(OBJ_DIR)\hbverfix.obj : $(HBVER_DIR)\hbverfix.c
    $(CC) $(CLIBFLAGS) -o$@ $**

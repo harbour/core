@@ -172,6 +172,7 @@ HBRUN_EXE    = $(BIN_DIR)\hbrun.exe
 HBTEST_EXE   = $(BIN_DIR)\hbtest.exe
 HBDOC_EXE    = $(BIN_DIR)\hbdoc.exe
 HBMAKE_EXE   = $(BIN_DIR)\hbmake.exe
+HBVER_EXE    = $(BIN_DIR)\hbverfix.exe
 
 #
 # GT driver list
@@ -832,7 +833,8 @@ all: \
    $(HBPP_EXE) \
    $(HBTEST_EXE) \
    $(HBDOC_EXE) \
-   $(HBMAKE_EXE)
+   $(HBMAKE_EXE) \
+   $(HBVER_EXE)
 
 MK_FLAGS = $(MK_FLAGS:A=)
 
@@ -859,7 +861,8 @@ all: \
    $(HBPP_EXE) \
    $(HBTEST_EXE) \
    $(HBDOC_EXE) \
-   $(HBMAKE_EXE)
+   $(HBMAKE_EXE) \
+   $(HBVER_EXE)
 
 !endif
 
@@ -988,6 +991,15 @@ $(HBMAKE_EXE) : \
                                    $(OBJ_DIR)\prb_stak.c \
                                    $(HBMAKE_DIR)\hbmlang.c \
                    -o $(HBMAKE_EXE) /link $(LDFLAGS) $(LIBS2)
+
+#
+# HBVERFIX.EXE rules
+#
+
+$(HBVER_EXE) : \
+   $(HBVER_DIR)\hbverfix.c
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\  $(HBVER_DIR)\hverfix.c \
+                   -o $(HBVER_EXE) /link $(LDFLAGS)
 
 #
 # HARBOUR.EXE rules

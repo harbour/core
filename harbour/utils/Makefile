@@ -6,10 +6,11 @@ ROOT = ../
 
 DIRS=\
 	hbpp \
+	hbver \
 	hbrun \
 	hbdoc \
 	hbtest \
-    hbmake \
+	hbmake \
 #	hbextern \
 
 include $(ROOT)config/dir.cf
