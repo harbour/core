@@ -5320,6 +5320,7 @@ void GenPortObj( char *szFileName, char *szName )
    LONG lPad;
    LONG lSymbols;
    BOOL bEndProcReq;
+   ULONG ulCodeLength;
    FILE * yyc;             /* file handle for C output */
 
    if( ! szName ) szName = 0; /* compiler warning */
@@ -5412,10 +5413,15 @@ void GenPortObj( char *szFileName, char *szName )
    {
       fputs( pFunc->szName, yyc );
       fputc( 0, yyc );
-      fputc( (BYTE) ( ( pFunc->lPCodePos       ) & 255 ), yyc ); /* Write size */
-      fputc( (BYTE) ( ( pFunc->lPCodePos >> 8  ) & 255 ), yyc );
-      fputc( (BYTE) ( ( pFunc->lPCodePos >> 16 ) & 255 ), yyc );
-      fputc( (BYTE) ( ( pFunc->lPCodePos >> 24 ) & 255 ), yyc );
+      /* We will have to add HB_P_ENDPROC in cases when RETURN statement
+       * was not used in a function/procedure - this is why we have to reserve
+       * one additional byte
+       */
+      ulCodeLength =pFunc->lPCodePos +1;
+      fputc( (BYTE) ( ( ulCodeLength       ) & 255 ), yyc ); /* Write size */
+      fputc( (BYTE) ( ( ulCodeLength >> 8  ) & 255 ), yyc );
+      fputc( (BYTE) ( ( ulCodeLength >> 16 ) & 255 ), yyc );
+      fputc( (BYTE) ( ( ulCodeLength >> 24 ) & 255 ), yyc );
 
 /*      printf( "Creating output for %s\n", pFunc->szName ); */
 
@@ -5453,10 +5459,13 @@ void GenPortObj( char *szFileName, char *szName )
             case HB_P_OR:
             case HB_P_PLUS:
             case HB_P_POP:
+	    case HB_P_POPALIAS:
             case HB_P_POWER:
+	    case HB_P_PUSHALIAS:
             case HB_P_PUSHNIL:
             case HB_P_PUSHSELF:
             case HB_P_RETVALUE:
+	    case HB_P_SWAPALIAS:
             case HB_P_TRUE:
             case HB_P_ZERO:
                  fputc( pFunc->pCode[ lPCodePos++ ], yyc );
@@ -5624,9 +5633,19 @@ void GenPortObj( char *szFileName, char *szName )
       if( bEndProcReq )
          fputc( HB_P_ENDPROC, yyc );
       else
-         lPad++;
+      {
+         /* HB_P_ENDPROC was the last opcode: we have to fill the byte
+	  * reserved earlier
+	  */
+         lPad++; 
+      }
       for( ; lPad; lPad-- )
-         fputc( 0, yyc );                       /* Pad optimalizations */
+      {
+         /* write additional bytes to agree with stored earlier
+	  * function/procedure size
+	  */
+         fputc( 0, yyc );      
+      }
       pFunc = pFunc->pNext;
    }
 

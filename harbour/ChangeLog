@@ -1,3 +1,20 @@
+19990817-20:35 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.y
+	* corrected code used to generate HB_P_ENDPROC - the declared
+	 length of function/procedure is now equal to the number of bytes
+	 written into HRB file - some comments added
+	 
+    *source/runner/runner.c
+	* corrected reading of function/procedure body (it was trying to 
+	 read (size+1) bytes)
+	* the MAIN procedure is defined if HARBOUR_START_PROCEDURE is
+	 defined - the runner works with GCC/Linux now
+	* corrected code used to call (_INITSTATIC) function - inside
+	 this function there is no access to passed parameters then
+	 there is no need to pass them - static variables can be
+	 initialized using literal values only
+	
 19990817-20:14 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/working/Makefile
     tests/working/colorind.prg (moved to rtl_test.prg)

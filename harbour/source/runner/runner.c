@@ -25,6 +25,7 @@
 
 #include <stdio.h>
 
+#include "hbsetup.h"
 #include "pcode.h"
 #include "errorapi.h"
 #include "ctoharb.h"
@@ -74,7 +75,11 @@ typedef struct
 #define SYM_NOT_FOUND 0xFFFFFFFF                /* Symbol not found.
                                                    FindSymbol               */
 
+#ifndef HARBOUR_START_PROCEDURE
        HARBOUR   HB_HB_RUN();
+#else
+       HARBOUR   HB_MAIN();
+#endif       
 static PASM_CALL CreateFun( PHB_SYMB, BYTE * ); /* Create a dynamic function*/
 static ULONG     FindSymbol( char *, PDYNFUNC, ULONG );
 static void      HRB_FileClose( FILE * );
@@ -96,6 +101,10 @@ static void InitRunnerTable( void )
 #include "initsymc.h"                           /* Include default symbols  */
 }
 #pragma startup InitRunnerTable
+#else
+HB_CALL_ON_STARTUP_BEGIN( InitRunnerTable )
+#include "initsymc.h"
+HB_CALL_ON_STARTUP_END( InitRunnerTable );
 #endif
 
 
@@ -110,7 +119,11 @@ ULONG ulSymEntry = 0;                           /* Link enhancement         */
    In due time it should also be able to collect the data from the
    binary/executable itself
 */
+#ifndef HARBOUR_START_PROCEDURE
 HARBOUR HB_HB_RUN( void )
+#else
+HARBOUR HB_MAIN( void )
+#endif
 {
    char *szFileName;
 
@@ -152,7 +165,7 @@ HARBOUR HB_HB_RUN( void )
          {
             pDynFunc[ ul ].szName = ReadId( file );
 
-            ulSize = ReadLong( file ) + 1;      /* Read size of function    */
+            ulSize = ReadLong( file );      /* Read size of function    */
             pDynFunc[ ul ].pCode = ( BYTE * )hb_xgrab( ulSize );
             HRB_FileRead( pDynFunc[ ul ].pCode, 1, ulSize, file );
                                                 /* Read the block           */
@@ -204,12 +217,12 @@ HARBOUR HB_HB_RUN( void )
          {
             if( (pSymRead[ ul ].cScope & FS_INITEXIT) == FS_INITEXIT )
             {
-                hb_vmPushSymbol( pSymRead + ul );
-                hb_vmPushNil();
-                for( i = 0; i < (hb_pcount() - 1); i++ )
-                   hb_vmPush( hb_param( i + 2, IT_ANY ) );
-                                                /* Push other cmdline params*/
-                hb_vmDo( hb_pcount() - 1 );            /* Run init function        */
+	        /* call (_INITSTATICS) function. This function assigns
+		 * literal values to static variables only. There is no need
+		 * to pass any parameters to this function because they
+		 * cannot be used to initialize static variable.
+		 */
+	        pSymRead[ ul ].pFunPtr();
             }
          }
          for( ul = 0; ul < ulSymbols; ul++ )    /* Check INIT functions     */

@@ -77,7 +77,11 @@ HARBOUR HB___MVPRIVATE();
 */
 
 HB_INIT_SYMBOLS_BEGIN( RUNNER )
+#ifndef HARBOUR_START_PROCEDURE
 { "HB_RUN",           FS_PUBLIC, HB_HB_RUN          , 0 },
+#else
+{ "MAIN",             FS_PUBLIC, HB_MAIN            , 0 },
+#endif
 { "__AGLOBALSTACK",   FS_PUBLIC, HB___AGLOBALSTACK  , 0 },
 { "__APARAM",         FS_PUBLIC, HB___APARAM        , 0 },
 { "__ASTACK",         FS_PUBLIC, HB___ASTACK        , 0 },
