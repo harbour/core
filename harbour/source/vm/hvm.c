@@ -210,16 +210,16 @@ HB_SYMB  hb_symEval = { "__EVAL", HB_FS_PUBLIC, hb_vmDoBlock, NULL }; /* symbol 
 static HB_ITEM  s_aStatics;         /* Harbour array to hold all application statics variables */
 static PHB_SYMB s_pSymStart = NULL; /* start symbol of the application. MAIN() is not required */
 static PSYMBOLS s_pSymbols = NULL;  /* to hold a linked list of all different modules symbol tables */
-static BYTE     s_byErrorLevel = 0; /* application exit errorlevel */
+static BYTE     s_byErrorLevel;     /* application exit errorlevel */
 
-static BOOL     s_bDebugging = FALSE;
-static BOOL     s_bDebugShowLines = FALSE; /* update source code line on the debugger display */
-static BOOL     s_bDebuggerIsWorking = FALSE; /* to know when __DBGENTRY is beeing invoked */
+static BOOL     s_bDebugging;
+static BOOL     s_bDebugShowLines;  /* update source code line on the debugger display */
+static BOOL     s_bDebuggerIsWorking; /* to know when __DBGENTRY is beeing invoked */
 
 /* Stores the position on the stack of current SEQUENCE envelope or 0 if no
  * SEQUENCE is active
  */
-static LONG     s_lRecoverBase = 0;
+static LONG     s_lRecoverBase;
 #define  HB_RECOVER_STATE     -1
 #define  HB_RECOVER_BASE      -2
 #define  HB_RECOVER_ADDRESS   -3
@@ -227,7 +227,7 @@ static LONG     s_lRecoverBase = 0;
 
 /* Request for some action - stop processing of opcodes
  */
-static USHORT s_uiActionRequest = 0;
+static USHORT   s_uiActionRequest;
 
 /* application entry point */
 
@@ -236,7 +236,15 @@ void hb_vmInit( BOOL bStartMainProc )
    HB_TRACE(HB_TR_DEBUG, ("hb_vmInit()"));
 
    /* initialize internal data structures */
+
    s_aStatics.type = HB_IT_NIL;
+   s_byErrorLevel = 0;
+   s_bDebugging = FALSE;
+   s_bDebugShowLines = FALSE;
+   s_bDebuggerIsWorking = FALSE;
+   s_lRecoverBase = 0;
+   s_uiActionRequest = 0;
+
    hb_stack.pItems = NULL; /* keep this here as it is used by fm.c */
    hb_stack.Return.type = HB_IT_NIL;
 

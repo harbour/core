@@ -82,6 +82,20 @@
 /*#define HARBOUR_YYDEBUG*/
 
 /* ***********************************************************************
+ * If you turn this on, the memory subsystem will collect trace information
+ * and several statistical data about memory management, it will show
+ * these on exit if memory seem to have been leaked. The memory subsystem
+ * will also do pointer checks. [vszakats]
+ * This should be normally turned off in a final release.
+ *
+ * Note that if you turn this on, Harbour will be slighlty slower, larger
+ * and will consume more memory.
+ *
+ * By default this is turned on.
+*/
+#define HB_FM_STATISTICS
+
+/* ***********************************************************************
  * This symbol defines if we are trying to compile using GCC for OS/2
  *
  * By default it is disabled (symbol is not defined)

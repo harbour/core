@@ -46,8 +46,8 @@ static void gt_GetMaxRC(int* r, int* c);
 static void gt_GetRC(int* r, int* c);
 static void gt_SetRC(int r, int c);
 
-void hb_gt_Add_terminfo_keymap( int, char * );
-void hb_gt_Add_keymap( int, char * );
+static void hb_gt_Add_terminfo_keymap( int, char * );
+static void hb_gt_Add_keymap( int, char * );
 
 /* max number of characters in a keymapped string */
 #define HB_MAX_KEYMAP_CHARS	8
@@ -570,7 +570,7 @@ USHORT hb_gt_DispCount()
    return s_uiDispCount;
 }
 
-void hb_gt_Add_keymap( int InkeyCode, char *key_string )
+static void hb_gt_Add_keymap( int InkeyCode, char *key_string )
 {
    struct key_map_struc *keymap;
    int iLength = strlen( key_string );
@@ -602,7 +602,7 @@ void hb_gt_Add_keymap( int InkeyCode, char *key_string )
      }    
 }
 
-void hb_gt_Add_terminfo_keymap( int InkeyCode, char *capname )
+static void hb_gt_Add_terminfo_keymap( int InkeyCode, char *capname )
 {
    char * code;
    

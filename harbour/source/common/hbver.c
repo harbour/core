@@ -317,6 +317,17 @@ char * hb_verCompiler( void )
    iVerMajor /= 100;
    iVerMinor = iVerMajor % 100;
 
+#elif defined(_MSC_VER)
+
+   #if (_MSC_VER >= 800)
+      pszName = "Microsoft Visual C/C++";
+   #else
+      pszName = "Microsoft C/C++";
+   #endif
+
+   iVerMajor = _MSC_VER / 100;
+   iVerMinor = _MSC_VER % 100;
+
 #elif defined(__BORLANDC__)
 
    pszName = "Borland C++";
@@ -337,12 +348,6 @@ char * hb_verCompiler( void )
    iVerMajor = __TURBOC__ >> 8;
    iVerMinor = __TURBOC__ & 0xFF;
 
-#elif defined(_MSC_VER)
-
-   pszName = "Microsoft C/C++";
-   iVerMajor = _MSC_VER / 100;
-   iVerMinor = _MSC_VER % 100;
-
 #elif defined(__MPW__)
 
    pszName = "MPW C";
@@ -355,31 +360,18 @@ char * hb_verCompiler( void )
    iVerMajor = __WATCOMC__ / 100;
    iVerMinor = __WATCOMC__ % 100;
 
-#elif defined(__DJGPP__)
-
-   pszName = "Delorie GCC";
-   iVerMajor = __GNUC__;
-   iVerMinor = __GNUC_MINOR__;
-
-#elif defined(__CYGWIN__)
-
-   pszName = "Cygnus GCC (Cygwin)";
-   iVerMajor = __GNUC__;
-   iVerMinor = __GNUC_MINOR__;
-
-#elif defined(__MINGW32__)
-
-   pszName = hb_xgrab( 80 );
-   sprintf( pszName, "Cygnus GCC (Mingw32 %g)", __MINGW32__ );
-   iVerMajor = __GNUC__;
-   iVerMinor = __GNUC_MINOR__;
-
 #elif defined(__GNUC__)
 
-   #if defined(__EMX__)
-      pszName = "GNU C/EMX C";
+   #if defined(__DJGPP__)
+      pszName = "Delorie GCC";
+   #elif defined(__CYGWIN__)
+      pszName = "Cygnus Cygwin GCC";
+   #elif defined(__MINGW32__)
+      pszName = "Cygnus Mingw32 GCC";
+   #elif defined(__EMX__)
+      pszName = "EMX GCC";
    #else
-      pszName = "GNU C";
+      pszName = "GCC";
    #endif
 
    iVerMajor = __GNUC__;
@@ -396,11 +388,7 @@ char * hb_verCompiler( void )
    if( pszName )
       sprintf( pszCompiler, "%s %d.%d", pszName, iVerMajor, iVerMinor );
    else
-      pszCompiler[ 0 ] = '\0';
-
-#if defined(__MINGW32__)
-   hb_xfree( pszName );
-#endif
+      strcpy( pszCompiler, "(unknown)" );
 
    return pszCompiler;
 }

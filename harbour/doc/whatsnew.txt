@@ -4,6 +4,8 @@
 
 ----------------------------------------------------------------------
 
+Version 0.33 Build 33 (2000-04-07)
+
 - Final cleanups on global macro and symbol names.
   (date*(), console*(), HB_FUNC())
 - DISKSPACE() enhancements

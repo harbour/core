@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Compiler command line and HARBOURCMD/CLIPPERCMD checking
  *
- * Copyright 1999 Jose Lalin <dezac@corevia.com>
+ * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -37,13 +37,14 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
+ *    hb_compChkCompilerSwitch()
  *    hb_compChkEnvironVar()
- *    hb_compChkPaths()
- *    AddSearchPath()
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    PackDateTime()
+ *    hb_compChkDefineSwitch()
+ *    hb_compChkDefines()
  *
  * See doc/license.txt for licensing terms.
  *

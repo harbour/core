@@ -76,7 +76,7 @@ char * hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen )
    {
       /* some compilers impliment toupper as a macro, and this has side effects! */
       /* *pDest++ = toupper( *pSource++ ); */
-      pDest[ulLen] = toupper( pSource[ulLen] );
+      pDest[ ulLen ] = toupper( pSource[ ulLen ] );
    }
 
    return pDest;

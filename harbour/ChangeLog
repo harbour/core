@@ -1,3 +1,39 @@
+20000409-03:48 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/gtcrs/gtcrs.c
+     ! New functions made static
+
+   * source/compiler/cmdcheck.c
+     * Some copyright info arrangment.
+
+   * source/common/hbver.c
+     % hb_verCompiler() some optimizations and streamlining mainly around
+       GCC flavours.
+     + MS "Visual" detection.
+   
+   * source/vm/fm.c
+   * include/hbsetup.h
+     * HB_FM_STATISTICS moved to the setup header.
+
+   * contrib/linux/gcc.cf
+     - Removed -g from the default C switches to be in sync with the other
+       platforms.
+
+   * source/rtl/diskspac.c
+     % Some code made common, platform specific code put in blocks.
+
+   * contrib/rdd_ads/ace32.h
+     ! Fix for Win32 GCC
+
+   * source/vm/hvm.c
+     * Static and global initialization all made in the startup function.
+
+   * doc/whatsnew.txt
+     + Added missing version header
+
+   * source/rtl/strcase.c
+     * Minor format.
+
 20000408-14:38 DST Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/strcase.c
      * some compilers impliment toupper() as a macro, so toupper( pSrc++ )

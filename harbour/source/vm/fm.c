@@ -49,13 +49,6 @@
  *
  */
 
-/* NOTE: If you turn this on, the memory subsystem will collect information
-         and several statistical data about memory management, it will show
-         these on exit if memory seem to have been leaked.
-         This should be normally turned off in a final release 
-         [vszakats] */
-#define HB_FM_STATISTICS
-
 #define HB_OS_WIN_32_USED
 
 #ifndef __MPW__
