@@ -55,24 +55,31 @@
 #include "hbclass.ch"
 #include "inkey.ch"
 #include "common.ch"
+
 Class TDBGArray
 
 data aWindows
 data TheArray
 data arrayname
 data nCurWindow
+data lEditable
 Method new
 method addWindows
 method doget
 method SetsKeyPressed
 end class
 
-method new(aArray,pArName) Class TDBGArray
-::aWindows:={}
-::arrayName:=parName
-::TheArray:=aArray
-::nCurWindow:=0
-::addWindows(::TheArray)
+method new(aArray,pArName,lEditable) Class TDBGArray
+
+   DEFAULT lEditable TO .t.
+
+   ::aWindows:={}
+   ::arrayName:=parName
+   ::TheArray:=aArray
+   ::nCurWindow:=0
+   ::lEditable := lEditable
+   ::addWindows(::TheArray)
+
 Return Self
 
 Method addWindows(aArray,nRow) Class TDBGArray
@@ -164,12 +171,16 @@ method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd ,cName,LenArr,aArray) Class T
                   Alert("Value cannot be edited")
                else
 
-              oBrwSets:RefreshCurrent()
-              ::doget(oBrwsets,aarray,nSet)
-              oBrwSets:RefreshCurrent()
-              oBrwSets:ForceStable()
+              if ::lEditable
+                 oBrwSets:RefreshCurrent()
+                 ::doget(oBrwsets,aarray,nSet)
+                 oBrwSets:RefreshCurrent()
+                 oBrwSets:ForceStable()
+              else
+                 Alert("Value cannot be edited")
+              endif
 
-               endif
+          endif
 
    endcase
       RefreshVarsS(oBrwSets)
@@ -248,12 +259,14 @@ METHOD doGet(oBro,pItem,nSet) Class TDBGArray
     END
 RETURN  nil
 
-function __DbgArrays(aArray,cArrayName)
-return TDBGArray():New(aArray,cArrayName)
+function __DbgArrays(aArray,cArrayName,lEditable)
+return TDBGArray():New(aArray,cArrayName,lEditable)
+
 Static function GetTopPos(nPos)
 Local nReturn:=0
 nReturn:=if((maxrow()-nPos)<5,Maxrow()-nPos,nPos)
 return nReturn
+
 Static function GetBottomPos(nPos)
 Local nReturn:=0
 nReturn :=if(nPos<maxrow()-2,nPos ,maxrow()-2)
