@@ -226,10 +226,15 @@ void hb_compGenILCode( PHB_FNAME pFileName )  /* generates the IL output */
       //              hb_comp_szPrefix, pFileName->szName,
       //              hb_comp_szPrefix, pFileName->szName );
 
-      /* QOUT() */
-      fprintf( yyc, "\n.method public static void QOUT( string c )\n{\n" );
+      /* QOUT( object ) --> object null */
+      fprintf( yyc, "\n.method public static object QOUT( object o )\n{\n" );
+      fprintf( yyc, "   .maxstack  1\n" );
+      fprintf( yyc, "   .locals init ( object V_0 )\n" );
       fprintf( yyc, "   ldarg.0\n" );
-      fprintf( yyc, "   call void [mscorlib]System.Console::WriteLine( string )\n" );
+      fprintf( yyc, "   call void [mscorlib]System.Console::WriteLine( object )\n" );
+      fprintf( yyc, "   ldnull\n" );
+      fprintf( yyc, "   stloc.0\n" );
+      fprintf( yyc, "   ldloc.0\n" );
       fprintf( yyc, "   ret\n}\n" );
 
       /* Generate functions data
@@ -441,7 +446,10 @@ static HB_GENC_FUNC( hb_p_doshort )
 {
    // fprintf( cargo->yyc, "\tHB_P_DOSHORT, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
    if( strcmp( szSymbol, "QOUT" ) == 0 )
-     fprintf( cargo->yyc, "   call void QOUT( string )\n" );
+   {
+     fprintf( cargo->yyc, "   call object QOUT( object )\n" );
+     fprintf( cargo->yyc, "   pop\n" );
+   }
    else
      fprintf( cargo->yyc, "   call void %s()\n", szSymbol );
 
