@@ -309,6 +309,7 @@ METHOD EditVar( nVar ) CLASS TDebugger
    local cVarName   := ::aVars[ nVar ][ 1 ]
    local uVarValue  := ::aVars[ nVar ][ 2 ]
    local nProcLevel := 1
+   local aArray
 
    if ::aVars[ nVar ][ 3 ] == "Local"
       while ProcName( nProcLevel ) != ::aVars[ nVar ][ 4 ]
@@ -321,10 +322,20 @@ METHOD EditVar( nVar ) CLASS TDebugger
 
    do case
       case uVarValue == "{ ... }"
-            if len(::avars[nVar][2])>0
-              __DbgArrays(::avars[nVar][2],cVarname)
+            if ::aVars[ nVar ][ 3 ] == "Local"
+               aArray = __vmVarLGet( nProcLevel, ::aVars[ nVar ][ 2 ] )
+               if Len( aArray ) > 0
+                  __DbgArrays( aArray, cVarName )
+               else
+                  Alert( "Array is empty" )
+               endif
             else
-               Alert("Array is empty")
+               aArray = ::aVars[ nVar ][ 2 ]
+               if Len( aArray ) > 0
+                  __DbgArrays( aArray, cVarName )
+               else
+                  Alert("Array is empty")
+               endif
             endif
 
       case Upper( SubStr( uVarValue, 1, 5 ) ) == "CLASS"
