@@ -1,3 +1,7 @@
+2001-05-11 14:15 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbclass.ch
+     + Added syntax declaration support for METHOD ... OPERATOR ...
+
 2001-05-11 09:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hbclass.ch
      ! Fixed declaration support for OnError() METHODS

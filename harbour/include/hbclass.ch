@@ -359,10 +359,29 @@ DECLARE TClass ;
    _HB_MEMBER <MethodName>() [ AS <type> ];;
    s_oClass:AddVirtual( <(MethodName)> )
 
-#xcommand METHOD <MethodName>( [<params>] ) [ AS <type> ] OPERATOR <op> [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] => ;
-   _HB_MEMBER <MethodName>([<params>])  [ AS <type> ];;
-   s_oClass:AddMethod( <(MethodName)>, CLSMETH _CLASS_NAME_ <MethodName>(), HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) ) ;;
-   s_oClass:AddInline( <(op)>, {|Self [,<params>] | Self:<MethodName>( [<params>] ) }, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) )
+#ifdef STRICT_OO
+  #xcommand METHOD <MethodName> [ AS <type> ] OPERATOR <op> [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] => ;
+    _HB_MEMBER <MethodName>()  [ AS <type> ];;
+     #xcommand METHOD <MethodName> [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED METHOD _CLASS_NAME_ <MethodName>;;
+    s_oClass:AddMethod( <(MethodName)>, CLSMETH _CLASS_NAME_ <MethodName>(), HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) ) ;;
+    s_oClass:AddInline( <(op)>, {|Self [,<params>] | Self:<MethodName>( [<params>] ) }, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) )
+#else
+  #xcommand METHOD <MethodName> [ AS <type> ] OPERATOR <op> [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] => ;
+    _HB_MEMBER <MethodName>()  [ AS <type> ];;
+     #xcommand METHOD <MethodName> [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED METHOD _CLASS_NAME_ <MethodName>;;
+     #xcommand METHOD <MethodName> ([<anyParams,...>]) [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED METHOD _CLASS_NAME_ <MethodName>([<anyParams>]);;
+     #xcommand METHOD <MethodName>() [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED METHOD _CLASS_NAME_ <MethodName>();;
+    s_oClass:AddMethod( <(MethodName)>, CLSMETH _CLASS_NAME_ <MethodName>(), HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) ) ;;
+    s_oClass:AddInline( <(op)>, {|Self [,<params>] | Self:<MethodName>( [<params>] ) }, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) )
+
+  #xcommand METHOD <MethodName>( [<params,...>] ) [ AS <type> ] OPERATOR <op> [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] => ;
+    _HB_MEMBER <MethodName>([<params>])  [ AS <type> ];;
+     #xcommand METHOD <MethodName> [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED METHOD _CLASS_NAME_ <MethodName>;;
+     #xcommand METHOD <MethodName> ([<anyParams,...>]) [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED METHOD _CLASS_NAME_ <MethodName>([<anyParams>]);;
+     #xcommand METHOD <MethodName>() [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED METHOD _CLASS_NAME_ <MethodName>();;
+    s_oClass:AddMethod( <(MethodName)>, CLSMETH _CLASS_NAME_ <MethodName>(), HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) ) ;;
+    s_oClass:AddInline( <(op)>, {|Self [,<params>] | Self:<MethodName>( [<params>] ) }, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) )
+#endif
 
 #ifdef STRICT_OO
   #xcommand MESSAGE <MessageName> [ AS <type> ] METHOD <MethodName> [ <ctor: CONSTRUCTOR> ] [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] => ;
