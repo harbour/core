@@ -1,3 +1,7 @@
+19990516-06:30 CET Eddie Runia
+  * tests/working/bld32exe.bat
+    Correct version added
+
 19990516-01:00 CET Eddie Runia
   * source/rtl/arrays.c, source/rtl/extend.h
     ULONG instead of int hb_arrayLen()
