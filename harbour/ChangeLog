@@ -1,3 +1,22 @@
+2001-02-09 16:44 GMT+1 Antonio Linares <alinares@fivetech.com>
+
+   * harbour/include/hbapigt.h
+     + hb_gtColorToN() prototype added.
+
+   * harbour/source/debug/debugger.prg
+     * some minor fixes.
+
+   * harbour/source/rtl/gtapi.c
+     + hb_gtColorToN() function added.
+
+   * harbour/source/rtl/setcolor.c
+     + HB_COLORTON() function added.
+
+   * harbour/source/rtl/shadow.c
+     + HB_CLRAREA() function added.
+
+   These functions are used by the debugger.
+
 2001-02-09 14:44 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
    * source/debug/tbrwtext.prg
      + fixed coloring
