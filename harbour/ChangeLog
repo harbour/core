@@ -8,10 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 2002-05-14 16:10 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
+  * contrib/mysql/makefile renamed to Makefile. Needed to build 
+    library on Linux.
+
+2002-05-13 13:10 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/rtl/menuto.prg
     ! Fix, initial value was not used.
-   * source\rdd\dbfcdx\dbfcdx1.c
-     ! minor changes
-     ! fixed preventing reopening of same cdx.
+      Reported by Horacio Roldan.
+
+2002-05-13 00:55 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
   * source\rdd\dbfcdx\dbfcdx1.c
     ! minor changes
     ! fixed preventing reopening of same cdx.
