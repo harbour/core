@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * HB_SHADOW(), DBGSHADOW() functions
+ * HB_SHADOW(), HB_CLRAREA(), DBGSHADOW() functions
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
@@ -46,6 +46,16 @@ HB_FUNC( HB_SHADOW )
                        ISNUM( 5 ) ? hb_parni( 5 ) : 7 );
 }
 
+HB_FUNC( HB_CLRAREA )
+{
+   if( hb_pcount() > 4 )
+      hb_gt_SetAttribute( hb_parni( 1 ),
+                          hb_parni( 2 ),
+                          hb_parni( 3 ),
+                          hb_parni( 4 ),
+                          hb_parni( 5 ) );
+}
+
 #ifdef HB_C52_UNDOC
 
 HB_FUNC( DBGSHADOW )
@@ -54,4 +64,3 @@ HB_FUNC( DBGSHADOW )
 }
 
 #endif
-
