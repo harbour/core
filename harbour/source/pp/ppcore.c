@@ -1473,7 +1473,12 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
             {
               lenreal = stroncpy( expreal, *ptri, ipos-1 );
               if( ipos > 1 && isExpres( expreal ) )
-                *ptri += lenreal;
+                {
+                  /*
+                  printf( "Accepted: >%s<\n", expreal );
+                  */
+                  *ptri += lenreal;
+                }
               else
                 {
                   if( s_numBrackets )
@@ -1705,7 +1710,9 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez )
   if( expreal != NULL )
     {
       if( *(expreal-1) == ' ' ) { expreal--; lens--; };
+
       *expreal = '\0';
+
       /*
       printf( "\nLen=%i \'%s\'\n", lens, expreal-lens);
       */
@@ -1716,10 +1723,24 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez )
 static BOOL isExpres( char * stroka )
 {
   int l1,l2;
+
   HB_TRACE(HB_TR_DEBUG, ("isExpres(%s)", stroka));
+
+  /*
+  printf( "Exp: >%s<\n", stroka );
+  */
+
   l1 = strlen( stroka );
   l2 = getExpReal( NULL, &stroka, FALSE, HB_PP_STR_SIZE );
+
+  /*
+  printf( "Len1: %i Len2: %i RealExp: >%s< Last: %c\n", l1, l2, stroka - l2, ( stroka - l2 )[l1-1] );
+  */
+
+  /* Ron Pinkas modified 2000-06-17 Expression can't be valid if last charcter is one of these: ":/*+-%^=(<>"
   return ( l1 <= l2 );
+  */
+  return ( l1 <= l2 && ! IsInStr( ( stroka - l2 )[l1-1], ":/*+-%^=(<>" ) );
 }
 
 static BOOL TestOptional( char *ptr1, char *ptr2 )

@@ -1,3 +1,10 @@
+2000-06-17 13:38 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+   * source/pp/ppcore.c
+     ! Fixed isExpress() to check last charcter of the expression and return false if it is one of these:
+       ":/*+-%^=(<>". This fixed another problem reported by Brian Hays to do with the VO comaptibility #translates.
+
+     /* We still have to find, why was isExpress() called with only partial expression, this should be fixed. */
+
 2000-06-17 17:10 UTC+0500 April White <awhite@user.rose.com>
 
    * hbapi.h
