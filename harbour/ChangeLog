@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-05-23 12:46 UTC-0800 Ron Pinkas <ron@ronpinkas.com>
+  * source/compiler/harbour.slx
+    ! Fixed SELF[...] // Self as Array in IF_BELONG_LEFT() ( borrowed from from xHarbour )
+
+  * source/compiler/harbour.sly
+    ! Corrected typo in GetVar - included item belonging to GetVarArray ( borrowed from from xHarbour )
+    ! Fixed logic of GetA ( borrowed from from xHarbour )
+
 2002-05-23 14:59 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
   * contrib/mysql/tmysql.prg
     ! Change in CreateTable's mapping of the xBase N(dig,0) field
