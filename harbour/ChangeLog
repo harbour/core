@@ -1,3 +1,9 @@
+20000314-07:56 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/compiler/harbour.c
+     ! A few more global variables are reinitialized between files, when 
+       multiple files are passed at the command line. Note the ANNOUNCE-d 
+       symbols and possibly other things are not yet cleared.
+
 20000314-07:11 GMT+1 Victor Szakats <info@szelvesz.hu>
    * makefile.vc
      makefile.bc

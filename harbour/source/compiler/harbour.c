@@ -74,17 +74,16 @@ static PFUNCTION hb_compFunctionNew( char *, char );  /* creates and initialises
 static void hb_compCheckDuplVars( PVAR pVars, char * szVarName, int iVarScope ); /*checks for duplicate variables definitions */
 
 
-void EXTERNAL_LINKAGE close_on_exit( void );
-
 /* global variables */
 FILES       hb_comp_files;
 FUNCTIONS   hb_comp_functions;
 FUNCTIONS   hb_comp_funcalls;
 SYMBOLS     hb_comp_symbols;
 
-int         hb_comp_iLine = 1;                         /* currently processed line number */
+int         hb_comp_iLine;                             /* currently processed line number */
 PFUNCTION   hb_comp_pInitFunc;
 PHB_FNAME   hb_comp_pFileName = NULL;
+
 BOOL        hb_comp_bPPO = FALSE;                      /* flag indicating, is ppo output needed */
 FILE *      hb_comp_yyppo = NULL;                      /* output .ppo file */
 BOOL        hb_comp_bStartProc = TRUE;                 /* holds if we need to create the starting procedure */
@@ -100,14 +99,14 @@ char        hb_comp_szPrefix[ 20 ] = { '\0' };         /* holds the prefix added
 BOOL        hb_comp_bGenCVerbose = TRUE;               /* C code generation should be verbose (use comments) or not */
 int         hb_comp_iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
 PATHNAMES * hb_comp_pIncludePath = NULL;
-int         hb_comp_iFunctionCnt = 0;
-int         hb_comp_iErrorCount = 0;
-char        hb_comp_cVarType = ' ';                    /* current declared variable type */
+int         hb_comp_iFunctionCnt;
+int         hb_comp_iErrorCount;
+char        hb_comp_cVarType;                          /* current declared variable type */
 BOOL        hb_comp_bDontGenLineNum = FALSE;           /* suppress line number generation */
-ULONG       hb_comp_ulLastLinePos = 0;                 /* position of last opcode with line number */
-ULONG       hb_comp_ulMessageFix = 0;                  /* Position of the message which needs to be changed */
-int         hb_comp_iStaticCnt = 0;                    /* number of defined statics variables on the PRG */
-int         hb_comp_iVarScope = VS_LOCAL;              /* holds the scope for next variables to be defined */
+ULONG       hb_comp_ulLastLinePos;                     /* position of last opcode with line number */
+ULONG       hb_comp_ulMessageFix;                      /* Position of the message which needs to be changed */
+int         hb_comp_iStaticCnt;                        /* number of defined statics variables on the PRG */
+int         hb_comp_iVarScope;                         /* holds the scope for next variables to be defined */
 PHB_FNAME   hb_comp_pOutPath = NULL;
 BOOL        hb_comp_bCredits = FALSE;                  /* print credits */
 BOOL        hb_comp_bLogo = TRUE;                      /* print logo */
@@ -197,12 +196,10 @@ int main( int argc, char * argv[] )
             {
                /* Initialization of preprocessor arrays */
                hb_pp_Init();
-               
+
                /* Initialize support variables */
                hb_compInitVars();
-               
-               atexit( close_on_exit );
-               
+
                if( hb_compInclude( szFileName, NULL ) )
                {
                   BOOL bSkipGen;
@@ -217,9 +214,9 @@ int main( int argc, char * argv[] )
 
                   /* Start processing */
                   hb_compYACCMain( hb_comp_pFileName->szName );
-               
+
                   bSkipGen = FALSE;
-               
+
                   if( hb_comp_bAnyWarning )
                   {
                      if( hb_comp_iExitLevel == HB_EXITLEVEL_SETEXIT )
@@ -238,14 +235,14 @@ int main( int argc, char * argv[] )
                   {
                      /* we create the output file name */
                      hb_compOutputFile();
-               
+
                      if( ! hb_comp_bQuiet )
                      {
                         if( ! hb_comp_bStartProc )
                            --hb_comp_iFunctionCnt;
                         printf( "\rLines %i, Functions/Procedures %i\n", hb_comp_iLine, hb_comp_iFunctionCnt );
                      }
-               
+
                      hb_compGenOutput( hb_comp_iLanguage );
                   }
                }
@@ -257,7 +254,32 @@ int main( int argc, char * argv[] )
                }
 
                if( hb_comp_bPPO && hb_comp_yyppo )
+               {
                   fclose( hb_comp_yyppo );
+                  hb_comp_yyppo = NULL;
+               }
+
+               {
+                  PFILE pFile = hb_comp_files.pLast;
+
+                  while( pFile )
+                  {
+                     fclose( pFile->handle );
+                     pFile = ( PFILE ) pFile->pPrev;
+                  }
+               }
+
+               while( hb_comp_pExterns )
+               {
+                   PEXTERN pExtern = hb_comp_pExterns;
+
+                   hb_comp_pExterns = hb_comp_pExterns->pNext;
+
+                   hb_xfree( pExtern->szName );
+                   hb_xfree( pExtern );
+               }
+
+               hb_comp_bExternal = FALSE;
             }
          }
          else
@@ -265,7 +287,7 @@ int main( int argc, char * argv[] )
             hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADFILENAME, argv[ argc ], NULL );
             iStatus = EXIT_FAILURE;
          }
-            
+
          hb_xfree( ( void * ) hb_comp_pFileName );
 
          if( iStatus != EXIT_SUCCESS )
@@ -291,17 +313,6 @@ int isatty( int handle )
    return ( handle < 4 ) ? 1 : 0;
 }
 #endif
-
-void EXTERNAL_LINKAGE close_on_exit( void )
-{
-   PFILE pFile = hb_comp_files.pLast;
-
-   while( pFile )
-   {
-      fclose( pFile->handle );
-      pFile = ( PFILE ) pFile->pPrev;
-   }
-}
 
 /* ------------------------------------------------------------------------- */
 
@@ -1016,7 +1027,7 @@ static int hb_compLocalGetPos( char * szVarName ) /* returns the order + 1 of a 
                }
                else if( bStatic )
                {
-                  /* local variable was referenced in a codeblock during 
+                  /* local variable was referenced in a codeblock during
                    * initialization of static variable. This cannot be supported
                    * because static variables are initialized at program
                    * startup when there is no local variables yet - hence we
@@ -1024,7 +1035,7 @@ static int hb_compLocalGetPos( char * szVarName ) /* returns the order + 1 of a 
                    * For example:
                    * LOCAL locvar
                    * STATIC stavar:={ | x | locvar}
-                   * 
+                   *
                    * NOTE: Clipper creates such a codeblock however at the
                    * time of codeblock evaluation it generates a runtime error:
                    * 'bound error: array acccess'
@@ -1487,7 +1498,7 @@ void hb_compGenPopVar( char * szVarName ) /* generates the pcode to pop a value 
       /* Check if we are generating a pop code for static variable
        * initialization function - if YES then we have to switch to a function
        * where the static variable was declared
-       */      
+       */
       if( ( hb_comp_functions.pLast->cScope & ( _HB_FS_INIT | _HB_FS_EXIT ) ) == ( _HB_FS_INIT | _HB_FS_EXIT ) )
           pFunc = hb_comp_functions.pLast->pOwner;
       else
@@ -2221,6 +2232,15 @@ static void hb_compInitVars( void )
 
    hb_comp_pInitFunc = NULL;
    hb_comp_bAnyWarning = FALSE;
+
+   hb_comp_iLine = 1;
+   hb_comp_iFunctionCnt = 0;
+   hb_comp_iErrorCount = 0;
+   hb_comp_cVarType = ' ';
+   hb_comp_ulLastLinePos = 0;
+   hb_comp_ulMessageFix = 0;
+   hb_comp_iStaticCnt = 0;
+   hb_comp_iVarScope = VS_LOCAL;
 }
 
 static void hb_compGenOutput( int iLanguage )
