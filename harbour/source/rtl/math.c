@@ -62,7 +62,7 @@
 
 #if defined(HB_MATH_HANDLER)
 
-static int s_internal_math_error = 0;
+static int s_internal_math_error = 0; /* TOFIX: This is not thread safe. */
 
 /* define harbour specific error handler for math errors
  */

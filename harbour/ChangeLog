@@ -1,3 +1,17 @@
+20000406-08:52 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * config/dos/dir.cf
+     ! Accidentally broken file restored.
+
+   * utils/hbtest/make_xpp.cmd
+     ! Fixed.
+
+   * include/box.ch
+     + Some extensions guarded as such.
+
+   * source/rtl/math.c
+     + Multithreading related NOTE added.
+
 20000405-15:29 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    + utils/hbtest/rt_hvma.prg

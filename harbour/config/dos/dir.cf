@@ -13,8 +13,7 @@ else
 DIR_LIST := $(subst /,\,$(DIRS))
 DIR_MAKE := $(subst /,\,$(MK))
 DIR_RULE =\
-	$(COMSPEC) /C FOR %%d IN ($(DIR_LIST)) DO $(DIR_MAKE) -C %%d $@
+	$(COMSPEC) /C FOR %d IN ($(DIR_LIST)) DO $(DIR_MAKE) -C %d $@
 endif
 
 endif # ! compiling a specific program module
-
