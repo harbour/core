@@ -189,8 +189,7 @@ typedef struct _HB_ITEM
       struct hb_struString  asString;
       struct hb_struSymbol  asSymbol;
    } item;
-}
-HB_ITEM, * PHB_ITEM, * HB_ITEM_PTR;
+} HB_ITEM, * PHB_ITEM, * HB_ITEM_PTR;
 
 typedef struct _HB_BASEARRAY
 {
