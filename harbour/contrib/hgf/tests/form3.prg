@@ -18,6 +18,8 @@ CLASS TForm3 FROM TForm
 
    METHOD New()
 
+   METHOD FormClick( oSender, nX, nY ) INLINE MsgInfo( "Click" )
+
 ENDCLASS
 
 METHOD New() CLASS TForm3
