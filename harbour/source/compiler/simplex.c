@@ -168,12 +168,13 @@ static char * tmpPtr;
 static char sToken[TOKEN_SIZE];
 static int  iLen = 0;
 static char chr, cPrev = 0;
-static int  iKey, iWord, iMatch, iRemove, iWordLen, iPush;
+static int  iKey, iWord, iMatch, iRemove, iWordLen, iPush, iLastToken = 0;
 static char szLexBuffer[ YY_BUF_SIZE ];
 static char * s_szBuffer;
 static int  iSize = 0;
 static int  iRet;
 static BOOL bTmp;
+static BOOL bIgnoreWords = FALSE;
 
 /* Lex emulation */
 char * yytext;
@@ -334,7 +335,23 @@ int Reduce( int iToken, BOOL bReal );
                            NEW_LINE_ACTION();\
                         }\
                         \
-                        RETURN_TOKEN( REDUCE( aSelfs[iSelf].iToken ), sSelf ); \
+                        if( aSelfs[iSelf].iToken < LEX_CUSTOM_ACTION ) \
+                        { \
+                           iRet = aSelfs[iSelf].iToken; \
+                           iRet = CUSTOM_ACTION( iRet ); \
+                           if( iRet ) \
+                           { \
+                              RETURN_TOKEN( REDUCE( iRet ), (char*) sSelf  ); \
+                           } \
+                           else \
+                           { \
+                              goto Start; \
+                           } \
+                        } \
+                        else \
+                        { \
+                           RETURN_TOKEN( REDUCE( aSelfs[iSelf].iToken ), (char*) sSelf ); \
+                        } \
                      } \
                   } \
                } \
@@ -454,7 +471,7 @@ int Reduce( int iToken, BOOL bReal );
 
 #define LEX_RETURN(x, y) \
         \
-        if( x <= LEX_CUSTOM_ACTION ) \
+        if( x < LEX_CUSTOM_ACTION ) \
         { \
             CUSTOM_ACTION(x); \
             \
@@ -682,6 +699,7 @@ int Reduce( int iToken, BOOL bReal );
       iPush--;\
       iMatched--;\
       PUSH_TOKEN( aiMatched[ iMatched ] );\
+      aiMatched[iMatched] = 0;\
    }\
 }
 
@@ -691,6 +709,8 @@ int Reduce( int iToken, BOOL bReal );
 \
    /* We don't know what was the text value of this Token any more. */\
    asHold[ iHold - 1 ][0] = '\0'; \
+   DEBUG_INFO( printf( "Placed on hold: %i Position %i\n", iPushToken, iHold ) ); \
+   DEBUG_INFO( printf("Now Holding %i Tokens: %i %i %i %i\n", iHold, aiHold[0], aiHold[1], aiHold[2], aiHold[3] ) ); \
 }
 
 #define SAVE_TENTATIVE()\
@@ -698,6 +718,7 @@ int Reduce( int iToken, BOOL bReal );
    iTentative = iMatched;\
    aiTentative[1] = aiRules[ iReduce ][ MAX_MATCH + 1 ];\
    aiTentative[0] = aiRules[ iReduce ][ MAX_MATCH ];\
+   DEBUG_INFO( printf( "Saved Tentative for: %i\n", iTentative ) ); \
 }
 
 #define GIVE_UP()\
@@ -978,8 +999,23 @@ YY_DECL
                                   NEW_LINE_ACTION();
                                }
 
-                               /* LITERAL */
-                               RETURN_TOKEN( REDUCE( iPairToken ), NULL );
+                               if( iPairToken < LEX_CUSTOM_ACTION )
+                               {
+                                  iRet = iPairToken;
+                                  iRet = CUSTOM_ACTION( iRet );
+                                  if( iRet )
+                                  {
+                                     RETURN_TOKEN( REDUCE( iRet ), NULL );
+                                  }
+                                  else
+                                  {
+                                     goto Start;
+                                  }
+                               }
+                               else
+                               {
+                                  RETURN_TOKEN( REDUCE( iPairToken ), NULL );
+                               }
                             }
                             else
                             {
@@ -1111,61 +1147,107 @@ YY_DECL
 
     CheckToken:
         {
-            #ifdef LEX_ABBREVIATE_KEYS
-               iWordLen = strlen( (char*) sToken );
-
-               if( iWordLen < LEX_ABBREVIATE_KEYS )
-               {
-                  iWordLen = LEX_ABBREVIATE_KEYS;
-               }
-            #endif
-
-            iKey = 0;
-            while ( bNewLine && iKey < iKeys )
-            {
-                #ifdef LEX_ABBREVIATE_KEYS
-                   if( strncmp( (char*) sToken, (char*)( aKeys[ iKey++ ].sWord ), iWordLen ) == 0 )
-                #else
-                   if( strcmp( (char*) sToken, (char*) ( aKeys[ iKey++ ].sWord ) ) == 0 )
-                #endif
-                {
-                    DEBUG_INFO( printf(  "Reducing Key Word: %s\n", (char*) sToken ) );
-
-                    bNewLine = FALSE;
-                    NEW_LINE_ACTION();
-
-                    RETURN_TOKEN( REDUCE( aKeys[ iKey - 1 ].iToken ), (char*) sToken );
-                }
-            }
-
             if( bNewLine )
             {
-               bNewLine = FALSE;
-               NEW_LINE_ACTION();
+               bIgnoreWords = FALSE;
+
+               #ifdef LEX_ABBREVIATE_KEYS
+                  iWordLen = strlen( (char*) sToken );
+
+                  if( iWordLen < LEX_ABBREVIATE_KEYS )
+                  {
+                     iWordLen = LEX_ABBREVIATE_KEYS;
+                  }
+               #endif
+
+               iKey = 0;
+               while ( iKey < iKeys )
+               {
+                  #ifdef LEX_ABBREVIATE_KEYS
+                     if( strncmp( (char*) sToken, (char*)( aKeys[ iKey++ ].sWord ), iWordLen ) == 0 )
+                  #else
+                     if( strcmp( (char*) sToken, (char*) ( aKeys[ iKey++ ].sWord ) ) == 0 )
+                  #endif
+                  {
+                     DEBUG_INFO( printf(  "Reducing Key Word: %s\n", (char*) sToken ) );
+
+                     bNewLine = FALSE;
+                     NEW_LINE_ACTION();
+
+                     if( aKeys[ iKey - 1 ].iToken < LEX_CUSTOM_ACTION )
+                     {
+                        iRet = aKeys[ iKey - 1 ].iToken;
+                        iRet = CUSTOM_ACTION( iRet );
+                        if( iRet )
+                        {
+                           RETURN_TOKEN( REDUCE( iRet ), (char*) sToken  );
+                        }
+                        else
+                        {
+                           goto Start;
+                        }
+                     }
+                     else
+                     {
+                        RETURN_TOKEN( REDUCE( aKeys[ iKey - 1 ].iToken ), (char*) sToken );
+                     }
+                  }
+               }
+
+               if( bNewLine )
+               {
+                  bNewLine = FALSE;
+                  NEW_LINE_ACTION();
+               }
             }
 
-            #ifdef LEX_ABBREVIATE_WORDS
-               iWordLen = strlen( (char*) sToken );
 
-               if( iWordLen < LEX_ABBREVIATE_WORDS )
-               {
-                  iWordLen = LEX_ABBREVIATE_WORDS;
-               }
-            #endif
-
-            iWord = 0;
-            while ( iWord < iWords )
+            if( bIgnoreWords )
             {
-                #ifdef LEX_ABBREVIATE_WORDS
-                   if( strncmp( (char*) sToken, (char*) ( aWords[ iWord++ ].sWord ), iWordLen ) == 0 )
-                #else
-                   if( strcmp( (char*) sToken, (char*) ( aWords[ iWord++ ].sWord ) ) == 0 )
-                #endif
-                {
-                    DEBUG_INFO( printf(  "Reducing Word: %s\n", (char*) sToken ) );
+               DEBUG_INFO( printf(  "Skiped Words for Word: %s\n", (char*) sToken ) );
+               bIgnoreWords = FALSE;
+            }
+            else
+            {
+               #ifdef LEX_ABBREVIATE_WORDS
+                  iWordLen = strlen( (char*) sToken );
 
-                    RETURN_TOKEN( REDUCE( aWords[ iWord - 1 ].iToken ), (char*) sToken );
-                }
+                  if( iWordLen < LEX_ABBREVIATE_WORDS )
+                  {
+                     iWordLen = LEX_ABBREVIATE_WORDS;
+                  }
+               #endif
+
+               iWord = 0;
+               while ( iWord < iWords )
+               {
+                  #ifdef LEX_ABBREVIATE_WORDS
+                     if( strncmp( (char*) sToken, (char*) ( aWords[ iWord++ ].sWord ), iWordLen ) == 0 )
+                  #else
+                     if( strcmp( (char*) sToken, (char*) ( aWords[ iWord++ ].sWord ) ) == 0 )
+                  #endif
+                  {
+                     DEBUG_INFO( printf(  "Reducing Word: %s\n", (char*) sToken ) );
+
+                     if( aWords[ iWord - 1 ].iToken < LEX_CUSTOM_ACTION )
+                     {
+                        iRet = aWords[ iWord - 1 ].iToken;
+                        iRet = CUSTOM_ACTION( iRet );
+                        if( iRet )
+                        {
+                           RETURN_TOKEN( REDUCE( iRet ), (char*) sToken );
+                        }
+                        else
+                        {
+                           goto Start;
+                        }
+                     }
+                     else
+                     {
+                       RETURN_TOKEN( REDUCE( aWords[ iWord - 1 ].iToken ), (char*) sToken );
+                     }
+                  }
+               }
             }
 
             DEBUG_INFO( printf(  "Reducing Element: \"%s\"\n", (char*) sToken ) );
@@ -1185,6 +1267,8 @@ int Reduce( int iToken, BOOL bReal )
 
    if( iToken )
    {
+      iLastToken = iToken;
+
       DEBUG_INFO( printf(  "Checking Token: %i After %i %i %i at Pos: %i\n", iToken, aiMatched[0], aiMatched[1], aiMatched[2], iMatched ) );
 
       FIND_MATCH();

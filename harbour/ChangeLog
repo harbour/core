@@ -1,3 +1,13 @@
+2000-08-06 01:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.slx
+     ! Optimized rules, removed ~100 rules. Rules are simpler, smaller, and faster.
+
+   * source/compiler/simplex.c
+     + Added: bIgnoreWords (allows for reserve words check to be suspened).
+     + Added: iLastToken to save last read Token
+     + Added immediate call to CUSTOM_ACTION for Keys, Words, and Selfs, without having to reduce first (when requested).
+     * Optimized Keys search to not check bNewLine on every iteration.
+
 2000-08-04 23:15 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
    * contrib/hbzlib/zlibapi1.c
    * contrib/hbzlib/zipfile2.c
