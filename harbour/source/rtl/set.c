@@ -239,7 +239,7 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
       if( ( bPipe = ( set_specifier == HB_SET_PRINTFILE && \
                       (char) *file_name == '|' ) ) ) {
          file_name++;
-	 bAppend = FALSE;
+         bAppend = FALSE;
       }
    #endif
    if( ! bPipe ) {
@@ -734,6 +734,7 @@ HB_FUNC( SET )
          if( args > 1 && ! HB_IS_NIL( pArg2 ) )
          {
             close_binary( hb_set.hb_set_printhan );
+            hb_set.hb_set_printhan = FS_ERROR;
             if( hb_set.HB_SET_PRINTFILE && strlen( hb_set.HB_SET_PRINTFILE ) > 0 )
                hb_set.hb_set_printhan = open_handle( hb_set.HB_SET_PRINTFILE, bFlag, ".prn", HB_SET_PRINTFILE );
          }
