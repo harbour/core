@@ -154,6 +154,7 @@ typedef struct _TAGINFO
    BYTE       OptFlags;
    LONG       TagBlock;
    LONG       RootBlock;
+   USHORT     nField;
    USHORT     KeyLength;
    USHORT     KeyDec;
    USHORT     MaxKeys;

@@ -130,6 +130,7 @@
 #include "hbapicdp.h"
 
 extern PHB_CODEPAGE s_cdpage;
+extern USHORT hb_rddFieldIndex( AREAP pArea, char * szName );
 
 
 HB_FUNC( _DBFNTX );
@@ -774,61 +775,52 @@ static void hb_ntxGetCurrentKey( LPTAGINFO pTag, LPKEYINFO pKey )
 {
    char szBuffer[ NTX_MAX_KEY ];
    PHB_CODEPAGE cdpTmp = s_cdpage;
+   PHB_ITEM pItem;
 
    s_cdpage = pTag->Owner->Owner->cdPage;
-   if( hb_itemType( pTag->pKeyItem ) == HB_IT_BLOCK )
+   if( pTag->nField )
+   {
+      pItem = hb_itemNew( NULL );
+      SELF_GETVALUE( ( AREAP ) pTag->Owner->Owner, pTag->nField, pItem );
+   }
+   else if( hb_itemType( pTag->pKeyItem ) == HB_IT_BLOCK )
    {
       hb_vmPushSymbol( &hb_symEval );
       hb_vmPush( pTag->pKeyItem );
       hb_vmSend( 0 );
-      switch( hb_itemType( &hb_stack.Return ) )
-      {
-         case HB_IT_STRING:
-            strcpy( pKey->key, (&hb_stack.Return)->item.asString.value );
-            break;
-         case HB_IT_INTEGER:
-         case HB_IT_LONG:
-         case HB_IT_DOUBLE:
-            strcpy( pKey->key, numToStr( &hb_stack.Return, szBuffer, pTag->KeyLength, pTag->KeyDec ) );
-            break;
-        case HB_IT_DATE:
-           hb_itemGetDS( &hb_stack.Return, szBuffer );
-           strcpy( pKey->key,szBuffer );
-           break;
-        case HB_IT_LOGICAL:
-           szBuffer[0] = ( hb_itemGetL( &hb_stack.Return ) ? 'T':'F' );
-           szBuffer[1] = 0;
-           strcpy( pKey->key, szBuffer );
-           break;
-      }
+      pItem = &hb_stack.Return;
    }
    else
    {
       HB_MACRO_PTR pMacro;
       pMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pTag->pKeyItem );
       hb_macroRun( pMacro );
-      switch( hb_itemType( hb_stackItemFromTop( - 1 ) ) )
-      {
-         case HB_IT_STRING:
-            strcpy( pKey->key, hb_stackItemFromTop( - 1 )->item.asString.value );
-            break;
-         case HB_IT_INTEGER:
-         case HB_IT_LONG:
-         case HB_IT_DOUBLE:
-            strcpy( pKey->key, numToStr( hb_stackItemFromTop( - 1 ), szBuffer, pTag->KeyLength, pTag->KeyDec ) );
-            break;
-        case HB_IT_DATE:
-           hb_itemGetDS( hb_stackItemFromTop( - 1 ), szBuffer );
-           strcpy( pKey->key,szBuffer );
-           break;
-        case HB_IT_LOGICAL:
-           szBuffer[0] = ( hb_itemGetL( hb_stackItemFromTop( - 1 ) ) ? 'T' : 'F' );
-           szBuffer[1] = 0;
-           strcpy( pKey->key, szBuffer );
-           break;
-      }
-      hb_stackPop();
+      pItem = hb_stackItemFromTop( - 1 );
    }
+   switch( hb_itemType( pItem ) )
+   {
+      case HB_IT_STRING:
+      strcpy( pKey->key, pItem->item.asString.value );
+         break;
+      case HB_IT_INTEGER:
+      case HB_IT_LONG:
+      case HB_IT_DOUBLE:
+      strcpy( pKey->key, numToStr( pItem, szBuffer, pTag->KeyLength, pTag->KeyDec ) );
+         break;
+     case HB_IT_DATE:
+     hb_itemGetDS( pItem, szBuffer );
+        strcpy( pKey->key,szBuffer );
+        break;
+     case HB_IT_LOGICAL:
+     szBuffer[0] = ( hb_itemGetL( pItem ) ? 'T':'F' );
+        szBuffer[1] = 0;
+        strcpy( pKey->key, szBuffer );
+        break;
+   }
+   if( pTag->nField )
+      hb_itemRelease( pItem );
+   else if( hb_itemType( pTag->pKeyItem ) != HB_IT_BLOCK )
+      hb_stackPop();
    pKey->Xtra = pTag->Owner->Owner->ulRecNo;
    s_cdpage = cdpTmp;
 }
@@ -2526,7 +2518,12 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
             ulKeyNo = 1;
             nParts ++;
          }
-         if( hb_itemType( pTag->pKeyItem ) == HB_IT_BLOCK )
+         if( pTag->nField )
+         {
+            // printf( "\nIndexCreate-1 %d",pTag->nField );
+            SELF_GETVALUE( ( AREAP ) pArea, pTag->nField, pItem );
+         }
+         else if( hb_itemType( pTag->pKeyItem ) == HB_IT_BLOCK )
          {
             hb_vmPushSymbol( &hb_symEval );
             hb_vmPush( pTag->pKeyItem );
@@ -2662,6 +2659,7 @@ static LPTAGINFO hb_ntxTagNew( LPNTXINDEX PIF, char * ITN, char *szKeyExpr,
    pTag = ( LPTAGINFO ) hb_xgrab( sizeof( TAGINFO ) );
    memset( pTag, 0, sizeof( TAGINFO ) );
    pTag->TagName = ITN;
+   pTag->Owner = PIF;
    if( szKeyExpr )
    {
       pTag->KeyExpr = (char *) hb_xgrab( NTX_MAX_KEY );
@@ -2672,6 +2670,8 @@ static LPTAGINFO hb_ntxTagNew( LPNTXINDEX PIF, char * ITN, char *szKeyExpr,
       pTag->ForExpr = (char *) hb_xgrab( NTX_MAX_KEY );
       strcpy( pTag->ForExpr, szForExp );
    }
+   pTag->nField = hb_rddFieldIndex( (AREAP) pTag->Owner->Owner, 
+                           hb_strUpper(szKeyExpr,strlen(szKeyExpr)) );
    pTag->pKeyItem = pKeyExpr;
    pTag->pForItem = pForExp;
    pTag->AscendKey = fAscendKey;
@@ -2680,7 +2680,6 @@ static LPTAGINFO hb_ntxTagNew( LPNTXINDEX PIF, char * ITN, char *szKeyExpr,
    pTag->KeyType = bKeyType;
    pTag->KeyLength = uiKeyLen;
    pTag->KeyDec = uiKeyDec;
-   pTag->Owner = PIF;
    pTag->MaxKeys = (NTXBLOCKSIZE-6)/(uiKeyLen+10) - 1;
    if( pTag->MaxKeys%2 && pTag->MaxKeys>2 )
       pTag->MaxKeys--;
@@ -2805,6 +2804,8 @@ static ERRCODE hb_ntxHeaderLoad( LPNTXINDEX pIndex , char *ITN)
       strcpy( pTag->ForExpr, Header.for_expr );
    }
 
+   pTag->nField = hb_rddFieldIndex( (AREAP) pIndex->Owner,
+               hb_strUpper(Header.key_expr,strlen(Header.key_expr)) );
    pTag->pKeyItem = pKeyExp;
    pTag->pForItem = pForExp;
    pTag->UniqueKey = Header.unique;
