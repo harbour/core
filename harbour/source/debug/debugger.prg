@@ -254,7 +254,8 @@ return nil
 
 METHOD CommandWindowProcessKey( nKey ) CLASS TDebugger
 
-   local cCommand, cResult
+   local cCommand, cResult, oE
+   local bLastHandler
 
    do case
       case nKey == K_UP
@@ -269,7 +270,7 @@ METHOD CommandWindowProcessKey( nKey ) CLASS TDebugger
            endif
 
       case nKey == K_DOWN
-           if ::nCommand <= Len( ::aLastCommands )
+           if ::nCommand > 0 .AND. ::nCommand <= Len( ::aLastCommands )
               ::oGetListCommand:oGet:VarPut( ::aLastCommands[ ::nCommand ] )
               ::oGetListCommand:oGet:Buffer := ::aLastCommands[ ::nCommand ]
               ::oGetListCommand:oGet:Pos := 1
@@ -284,10 +285,23 @@ METHOD CommandWindowProcessKey( nKey ) CLASS TDebugger
            AAdd( ::aLastCommands, cCommand )
            ::nCommand++
            ::oWndCommand:ScrollUp( 1 )
+
+           bLastHandler := ErrorBlock({ |objErr| BREAK (objErr) })
+
            if SubStr( LTrim( cCommand ), 1, 2 ) == "? "
-              cResult := ValToStr( &( AllTrim( SubStr( LTrim( cCommand ), 3 ) ) ) )
+              begin sequence
+                  cResult := ValToStr( &( AllTrim( SubStr( LTrim( cCommand ), 3 ) ) ) )
+
+              recover using oE
+                  cResult := "Command error: " + oE:description
+
+              end sequence
+
            else
               cResult := "Command error"
+
+           ErrorBlock(bLastHandler)
+
            endif
            DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1,;
               Space( ::oWndCommand:nRight - ::oWndCommand:nLeft - 1 ),;
