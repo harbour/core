@@ -1,3 +1,8 @@
+19990716-13:00 Eddie Runia <eddie@runia>
+  * include/initsymb.h; source/vm/initsymb.c; source/runner/runner.c;
+    include/run_exp.h
+    The runner is back on-line :-))
+
 19990716-10:54 Alexander Kresin
   * source\hbpp\hbpp.c
   * source\hbpp\table.c

@@ -50,7 +50,7 @@ void ProcessSymbols( SYMBOL * pSymbols, WORD wSymbols );
   static SYMBOL symbols[] = {
 
 #define HB_INIT_SYMBOLS_END( func )  }; \
-  static void __attribute__ ((constructor)) func( void ) \
+  void __attribute__ ((constructor)) func( void ) \
   { \
      ProcessSymbols( symbols, sizeof( symbols ) / sizeof( SYMBOL ) ); \
   }
@@ -68,7 +68,7 @@ void ProcessSymbols( SYMBOL * pSymbols, WORD wSymbols );
   static SYMBOL symbols[] = {
 
 #define HB_INIT_SYMBOLS_END( func )  }; \
-  static void func( void ) \
+  void func( void ) \
   { \
     ProcessSymbols( symbols, sizeof( symbols ) / sizeof( SYMBOL ) ); \
   }
@@ -84,7 +84,7 @@ void ProcessSymbols( SYMBOL * pSymbols, WORD wSymbols );
   static SYMBOL symbols[] = {
 
 #define HB_INIT_SYMBOLS_END( func ) }; \
-  static int func( void ) \
+  int func( void ) \
   { \
      ProcessSymbols( symbols, sizeof( symbols ) / sizeof( SYMBOL ) ); \
      return 1; \
@@ -103,7 +103,7 @@ void ProcessSymbols( SYMBOL * pSymbols, WORD wSymbols );
   static SYMBOL symbols[] = {
 
 #define HB_INIT_SYMBOLS_END( func ) }; \
-  static int func( void ) \
+  int func( void ) \
   { \
      ProcessSymbols( symbols, sizeof( symbols ) / sizeof( SYMBOL ) ); \
      return 1; \

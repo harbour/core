@@ -65,17 +65,35 @@ static FILE     *HRB_FileOpen ( char * );
        char     *ReadId  ( FILE * );
        long      ReadLong( FILE * );
 
+/*
+ * This file contains the extra exportable functions available to the Harbour
+ * program
+ */
 #include "run_exp.h"
 
-/*
- *
- * This file contains the exportable functions available to the Harbour program
- *
- * Currently being discussed in 'Static initializers'
- *
- * If the discussion has finished, it can be removed from here.
- *
- */
+extern void Arrays__InitSymbols( void );
+extern void Classes__InitSymbols( void );
+extern void Console__InitSymbols( void );
+extern void Dates__InitSymbols( void );
+extern void Descend__InitSymbols( void );
+extern void Dir__InitSymbols( void );
+extern void Environ__InitSymbols( void );
+extern void Files__InitSymbols( void );
+extern void HardCR__InitSymbols( void );
+extern void Math__InitSymbols( void );
+extern void Memotran__InitSymbols( void );
+extern void Set__InitSymbols( void );
+extern void Strings__InitSymbols( void );
+extern void Transfrm__InitSymbols( void );
+
+static void InitRunnerTable( void )
+{
+#include <initsymb.h>                           /* Include default symbols  */
+}
+#if !define( __GNUC__ )
+   #pragma startup InitRunnerTable
+#endif
+
 
 ULONG ulSymEntry = 0;                           /* Link enhancement         */
 
