@@ -1,3 +1,11 @@
+2001-02-12 13:32 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * harbour/source/debug/dbgmenu.prg
+     + more options implemented.
+
+   * harbour/source/debug/debugger.prg
+     + Method Animate() added.
+     (many thanks to Ignacio for the "happy ideas" :-)
+
 2001-02-12 09:24 GMT+1 Antonio Linares <alinares@fivetech.com>
    * harbour/source/debug/dbgmenu.prg
      + more options implemented.
