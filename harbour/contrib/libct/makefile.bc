@@ -115,7 +115,6 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctset.obj \
    $(OBJ_DIR)\ctstr.obj \
    $(OBJ_DIR)\ctchksum.obj \
-   $(OBJ_DIR)\ctcolton.obj \
    $(OBJ_DIR)\ctcrypt.obj \
    $(OBJ_DIR)\exponent.obj \
    $(OBJ_DIR)\files.obj \
@@ -136,6 +135,8 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\relation.obj \
    $(OBJ_DIR)\remove.obj \
    $(OBJ_DIR)\replace.obj \
+   $(OBJ_DIR)\screen1.obj \
+   $(OBJ_DIR)\strdiff.obj \
    $(OBJ_DIR)\strswap.obj \
    $(OBJ_DIR)\tab.obj \
    $(OBJ_DIR)\token1.obj \
@@ -144,10 +145,12 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\wordrepl.obj \
    $(OBJ_DIR)\wordtoch.obj \
    \
+   $(OBJ_DIR)\color.obj \
    $(OBJ_DIR)\ct.obj \
    $(OBJ_DIR)\ctmisc.obj \
    $(OBJ_DIR)\datetime.obj \
    $(OBJ_DIR)\numconv.obj \
+   $(OBJ_DIR)\screen2.obj \
 
 #
 # Our default target
@@ -266,10 +269,6 @@ $(OBJ_DIR)\ctchksum.obj : $(TOOLS_DIR)\ctchksum.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\ctcolton.obj : $(TOOLS_DIR)\ctcolton.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
 $(OBJ_DIR)\ctcrypt.obj : $(TOOLS_DIR)\ctcrypt.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
@@ -350,7 +349,15 @@ $(OBJ_DIR)\replace.obj : $(TOOLS_DIR)\replace.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\screen1.obj : $(TOOLS_DIR)\screen1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\strswap.obj : $(TOOLS_DIR)\strswap.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\strdiff.obj : $(TOOLS_DIR)\strdiff.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
@@ -385,6 +392,13 @@ $(OBJ_DIR)\ct.obj : $(OBJ_DIR)\ct.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\color.c : $(TOOLS_DIR)\color.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\color.obj : $(OBJ_DIR)\color.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\ctmisc.c : $(TOOLS_DIR)\ctmisc.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
@@ -403,5 +417,12 @@ $(OBJ_DIR)\numconv.c : $(TOOLS_DIR)\numconv.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\numconv.obj : $(OBJ_DIR)\numconv.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\screen2.c : $(TOOLS_DIR)\screen2.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\screen2.obj : $(OBJ_DIR)\screen2.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,

@@ -30,7 +30,6 @@ C_SOURCES = \
 	ctset.c \
 	ctstr.c \
 	ctchksum.c \
-	ctcolton.c \
 	ctcrypt.c \
 	exponent.c \
 	files.c \
@@ -51,6 +50,8 @@ C_SOURCES = \
 	relation.c \
 	remove.c \
 	replace.c \
+	screen1.c \
+	strdiff.c \
 	strswap.c \
 	tab.c \
 	token1.c \
@@ -60,10 +61,12 @@ C_SOURCES = \
 	wordtoch.c \
 
 PRG_SOURCES= \
+	color.prg \
 	ct.prg \
 	ctmisc.prg \
 	datetime.prg \
 	numconv.prg \
+	screen2.prg \
 
 LIBNAME=ct
 

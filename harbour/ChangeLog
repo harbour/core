@@ -7,6 +7,35 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     ! fixed found() flag when last record in order must be
+       filtered (eg: deleted), bug reported by Lorenzo Fiorini.
+     + added dummy handler for DBOI_CUSTOM.
+
+2002-05-04 18:40 UTC+0100 Martin Vogel <vogel@inttec.de>
+   + contrib/libct/color.prg
+     + COLORTON()
+     + NTOCOLOR() by Walter Negro <anegro@overnet.com.ar>
+     STANDARD(),ENHANCED(),UNSELECTED() by Viktor Szakats <viktor.szakats@syenar.hu> 
+       pasted from CTMISC.PRG and removed there 
+                                           
+   + contrib/libct/screen1.c
+     + SCREENATTR() by Walter Negro <anegro@overnet.com.ar>
+
+   + contrib/libct/screen2.prg
+     SCREENMIX() by Viktor Szakats <viktor.szakats@searchpath()
+    *makefile.bc
+    hb_slex.vc
+    makefile.vc
+    source/compiler/makefile
+    ! Updated
+
+2001-07-23 22:35 UTC+0100 Lubos Janica <janicalubos@yahoo.com>
+   * classes.c
+       Fixed function __CLSNEW.
+       Changed variable USHORT uiSize to ULONG ulSize
+       This fix random GPFs in function hb_clsDictRealloc by creating
+       classes.
+
 2001-07-23 21:29 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/tbrowse.prg

@@ -11,6 +11,16 @@ of the original CA-T**ls 3 Library for CA-Cl*pper.
 Viktor Szakats <viktor.szakats@syenar.hu>
 
 
+Directories: ./     contains all the source files, include files, make files
+                    and the general text files (like tthe one you are just
+                    reading !),
+             tests  contains some test programs for the functions implemented
+                    in the CT3 library,
+             alt    contains alternative function implementations (not
+                    all are complete, be aware !), mostly in
+                    Harbour, if the function is implemented in C and vice
+                    versa. 
+
 Changes and Enhancements over the original CA-T**ls 3 Library
 Martin Vogel <vogel@inttec.de>
 =============================================================

@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Misc CA-Tools functions
+ *   CT3 video functions: - SCREENATTR()
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 2002 Walter Negro <anegro@overnet.com.ar>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,48 +50,73 @@
  *
  */
 
-#include "color.ch"
-#include "common.ch"
-#include "setcurs.ch"
+#include "hbdefs.h"
+#include "hbapi.h"
+#include "hbapigt.h"
 
-MEMVAR GetList
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SCREENATTE()
+ *  $CATEGORY$
+ *      CT3 video functions
+ *  $ONELINER$
+ *  $SYNTAX$
+ *      SCREENATTR ( [<nRow>],[<nColumn>] ) -> <nAttr>
+ *  $ARGUMENTS$
+ *   <nRow>     Designates the line from which to determine the attribute.
+ *              The default is the cursor line.
+ *
+ *   <nColumn>  Designates the column from which to determine the
+ *              attribute.  The default is the cursor column.
+ *
+ *  $RETURNS$
+ *      SCREENATTR() returns the attribute at the designated position.
+ *
+ *  $DESCRIPTION$
+ *      SCREENATTR() returns the current screen attribute at <nRow> and
+ *      <nColumn>.  You can query targeted attributes this way and save them
+ *      to use later, or process them later with INVERTATTR().
+ *
+ *      TODO: add documentation
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *      Started
+ *  $COMPLIANCE$
+ *  $PLATFORMS$
+ *      All
+ *  $FILES$
+ *      Source is screen1.c, library is libct.
+ *  $SEEALSO$
+ *  $END$
+ */
 
-FUNCTION CENTER( c, n, p )
-   RETURN PadC( AllTrim( c ), n, p )
+HB_FUNC( SCREENATTR )
+{
 
-FUNCTION CSETCURS( l )
+  USHORT uiSize;
+  int    iRow, iCol;
+  char * pcPos;
 
-   IF PCount() == 0
-      RETURN SetCursor() != SC_NONE
-   ENDIF
+  iRow = hb_parni( 1 );
+  iCol = hb_parni( 2 );
 
-   RETURN SetCursor( iif( l, SC_NORMAL, SC_NONE ) ) != SC_NONE
+  hb_gtRectSize( iRow, iCol, iRow, iCol, &uiSize );
+  pcPos = (char * ) hb_xalloc( uiSize );
 
-FUNCTION CSETKEY( n )
-   RETURN SetKey( n )
+  if( pcPos != NULL )
+  {
+     hb_gtSave( iRow, iCol, iRow, iCol, pcPos );
 
-FUNCTION CSETCENT( nCentury )
-   if nCentury == NIL
-      RETURN __SETCENTURY()
-   else
-      RETURN __SETCENTURY( nCentury )
-   endif
-   RETURN NIL
+     pcPos[1] = pcPos[2];
+     pcPos[2] = 0x00;
+
+     hb_retc_buffer( pcPos );
+  }
+  else
+     hb_retc( NULL );
+
+}
 
 
-FUNCTION LTOC( l )
-   RETURN iif( l, "T", "F" )
-
-FUNCTION RESTGETS( aGetList )
-
-   GetList := aGetList
-
-   RETURN .T.
-
-FUNCTION SAVEGETS()
-   LOCAL aGetList := GetList
-
-   GetList := {}
-
-   RETURN aGetList
 

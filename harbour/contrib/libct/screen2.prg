@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Misc CA-Tools functions
- *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ *   CT3 video functions (screen-like functions): - SCREENMIX()
+ * 
+ * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>:
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -52,46 +52,38 @@
 
 #include "color.ch"
 #include "common.ch"
-#include "setcurs.ch"
 
-MEMVAR GetList
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SCREENMIX()
+ *  $CATEGORY$
+ *      CT3 video functions
+ *  $ONELINER$
+ *  $SYNTAX$
+ *      SCREENMIX (<cCharString>, <cAttributeString>, [<nRow>], [<nCol>]) -> <cEmptyString>
+ *  $ARGUMENTS$
+ *  $RETURNS$
+ *  $DESCRIPTION$
+ *      TODO: add documentation
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *      Started
+ *  $COMPLIANCE$
+ *  $PLATFORMS$
+ *      All
+ *  $FILES$
+ *      Source is screen2.prg, library is libct.
+ *  $SEEALSO$
+ *  $END$
+ */
 
-FUNCTION CENTER( c, n, p )
-   RETURN PadC( AllTrim( c ), n, p )
+FUNCTION SCREENMIX( c, a, row, col )
 
-FUNCTION CSETCURS( l )
+   DEFAULT row TO Row()
+   DEFAULT col TO Col()
 
-   IF PCount() == 0
-      RETURN SetCursor() != SC_NONE
-   ENDIF
+   RestScreen( row, col, row, col + Len( a ) - 1, CHARMIX( c, a ) )
 
-   RETURN SetCursor( iif( l, SC_NORMAL, SC_NONE ) ) != SC_NONE
-
-FUNCTION CSETKEY( n )
-   RETURN SetKey( n )
-
-FUNCTION CSETCENT( nCentury )
-   if nCentury == NIL
-      RETURN __SETCENTURY()
-   else
-      RETURN __SETCENTURY( nCentury )
-   endif
-   RETURN NIL
-
-
-FUNCTION LTOC( l )
-   RETURN iif( l, "T", "F" )
-
-FUNCTION RESTGETS( aGetList )
-
-   GetList := aGetList
-
-   RETURN .T.
-
-FUNCTION SAVEGETS()
-   LOCAL aGetList := GetList
-
-   GetList := {}
-
-   RETURN aGetList
+   RETURN ""
 

@@ -4,9 +4,11 @@
 
 /*
  * Harbour Project source code:
- * Misc CA-Tools functions
+ *   Test CT3 function STRDIFF() 
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 2002 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
+ *        Author: Martin Vogel <vogel@inttec.de>
+ *
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,48 +52,32 @@
  *
  */
 
-#include "color.ch"
-#include "common.ch"
-#include "setcurs.ch"
 
-MEMVAR GetList
-
-FUNCTION CENTER( c, n, p )
-   RETURN PadC( AllTrim( c ), n, p )
-
-FUNCTION CSETCURS( l )
-
-   IF PCount() == 0
-      RETURN SetCursor() != SC_NONE
-   ENDIF
-
-   RETURN SetCursor( iif( l, SC_NORMAL, SC_NONE ) ) != SC_NONE
-
-FUNCTION CSETKEY( n )
-   RETURN SetKey( n )
-
-FUNCTION CSETCENT( nCentury )
-   if nCentury == NIL
-      RETURN __SETCENTURY()
-   else
-      RETURN __SETCENTURY( nCentury )
-   endif
-   RETURN NIL
+#include "../ct.ch"
 
 
-FUNCTION LTOC( l )
-   RETURN iif( l, "T", "F" )
+procedure main
 
-FUNCTION RESTGETS( aGetList )
+ ctinit()
 
-   GetList := aGetList
+ qout ("Begin test of STRDIFF()")
+ qout ("")
 
-   RETURN .T.
+ // simple tests
+ qout ("Simple tests:")
 
-FUNCTION SAVEGETS()
-   LOCAL aGetList := GetList
+ qout ([  strdiff("ABC", "ADC") == 3 ?  -> ], strdiff ("ABC", "ADC"))
+ qout ([  strdiff("ABC", "AEC") == 3 ?  -> ], strdiff ("ABC", "AEC"))
+ qout ([  strdiff("CBA", "ABC") == 6 ?  -> ], strdiff ("CBA", "ABC"))
+ qout ([  strdiff("ABC", "AXBC") == 1 ? -> ], strdiff ("ABC", "AXBC"))
+ qout ([  strdiff("AXBC", "ABC") == 6 ? -> ], strdiff ("AXBC", "ABC"))
+ qout ([  strdiff("AXBC", "ADC") == 9 ? -> ], strdiff ("AXBC", "ADC"))
 
-   GetList := {}
+ qout ("End test of STRDIFF()")
+ qout ("")
 
-   RETURN aGetList
+ ctexit()
+
+return
+
 
