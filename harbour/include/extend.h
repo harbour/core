@@ -283,6 +283,7 @@ extern void *   hb_xgrab( ULONG ulSize );                 /* allocates memory, e
 extern void     hb_xfree( void * pMem );                  /* frees memory */
 extern void *   hb_xrealloc( void * pMem, ULONG ulSize ); /* reallocates memory */
 extern ULONG    hb_xsize( void * pMem );                  /* returns the size of an allocated memory block */
+extern ULONG    hb_xquery( USHORT uiMode );               /* Query different types of memory information */
 
 #if UINT_MAX == ULONG_MAX
    /* NOTE: memcpy/memset can work with ULONG data blocks */

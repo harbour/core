@@ -1,3 +1,12 @@
+19991022-10:53 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/vm/hvm.c
+     + //INFO now displays Clipper-like memory info.
+       Just the values are higher ;)
+   * source/rtl/fm.c
+     include/extend.h
+     + MEMORY() functionality split into Harbour and C callable functions.
+       hb_xquery()
+
 19991022-10:41 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/fm.c
      tests/memory.prg

@@ -42,6 +42,7 @@
  *    hb_xmemset()
  *
  * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ *    hb_xquery()
  *    HB_MEMORY()
  *
  * See doc/license.txt for licensing terms.
@@ -281,9 +282,8 @@ void * hb_xmemset( void * pDestArg, int iFill, ULONG ulLen )
 
 #endif
 
-HARBOUR HB_MEMORY( void )
+ULONG hb_xquery( USHORT uiMode )
 {
-   USHORT uiMode = hb_parni( 1 );
    ULONG ulResult;
 
    /* TODO: Return the correct values instead of 9999 [vszel] */
@@ -410,6 +410,11 @@ HARBOUR HB_MEMORY( void )
       ulResult = 0;
    }
 
-   hb_retnl( ulResult );
+   return ulResult;
+}
+
+HARBOUR HB_MEMORY( void )
+{
+   hb_retnl( hb_xquery( hb_parni( 1 ) ) );
 }
 

@@ -260,8 +260,12 @@ void hb_vmInit( void )
    if( hb_cmdargCheck( "INFO" ) )
    {
       char * pszVersion = hb_version( 1 );
+      char buffer[ 128 ];
 
       hb_outerr( pszVersion, 0 );
+      hb_outerr( hb_consoleGetNewLine(), 0 );
+      sprintf( buffer, "DS avail=%luKB  OS avail=%luKB  EMM avail=%luKB", hb_xquery( 1 ), hb_xquery( 3 ), hb_xquery( 4 ) );
+      hb_outerr( buffer, 0 );
       hb_outerr( hb_consoleGetNewLine(), 0 );
 
       hb_xfree( pszVersion );
