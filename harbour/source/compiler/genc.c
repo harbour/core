@@ -1579,6 +1579,7 @@ static HB_GENC_FUNC( hb_p_statics )
    PVAR pVar;
    USHORT wVar = 0, i;
    char chr;
+   long lByteCount = 5;
 
    fprintf( cargo->yyc, "\tHB_P_STATICS, %i, %i, %i, %i,",
             pFunc->pCode[ lPCodePos + 1 ],
@@ -1596,8 +1597,10 @@ static HB_GENC_FUNC( hb_p_statics )
 
          while( pVar )
          {
-            fprintf( cargo->yyc, "\tHB_P_STATICNAME, %i, %i,",
+            fprintf( cargo->yyc, "\tHB_P_STATICNAME, 1, %i, %i,", /* 1 means global static */
                      HB_LOBYTE( wVar + 1 ), HB_HIBYTE( wVar + 1 ) );
+
+            lByteCount += 4;
 
             if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %s */", pVar->szName );
             fprintf( cargo->yyc, "\n" );
@@ -1605,26 +1608,30 @@ static HB_GENC_FUNC( hb_p_statics )
             i = 0;
 
             while( chr = pVar->szName[ i++ ] )
+            {
                if( chr == '\'' || chr == '\\')
                   fprintf( cargo->yyc, " \'\\%c\',", chr );
                else
                   fprintf( cargo->yyc, " \'%c\',", chr );
+               lByteCount++;
+            }
 
             fprintf( cargo->yyc, " 0,\n" );
+            lByteCount++;
             pVar = pVar->pNext;
             wVar++;
          }
       }
    }
 
-   return 5;
+   return lByteCount;
 }
 
 static HB_GENC_FUNC( hb_p_staticname )
 {
    ULONG ulStart = lPCodePos;
 
-   fprintf( cargo->yyc, "\tHB_P_STATICNAME, %i, %i,",
+   fprintf( cargo->yyc, "\tHB_P_STATICNAME, 0, %i, %i,", /* zero means it is a in-function static */
             pFunc->pCode[ lPCodePos + 1 ],
             pFunc->pCode[ lPCodePos + 2 ] );
    if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %s */", ( char * ) pFunc->pCode + lPCodePos + 3 );
