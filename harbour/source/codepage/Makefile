@@ -23,7 +23,8 @@ C_SOURCES=\
 	cdpsl437.c    \
 	cdpsl852.c    \
 	cdpsliso.c    \
-	cdpslwin.c
+	cdpslwin.c    \
+	cdpsrwin.c
 
 LIBNAME=codepage
 

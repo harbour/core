@@ -519,7 +519,8 @@ CODEPAGE_LIB_OBJS = \
    $(OBJ_DIR)\cdpsl437.obj \
    $(OBJ_DIR)\cdpsl852.obj \
    $(OBJ_DIR)\cdpsliso.obj \
-   $(OBJ_DIR)\cdpslwin.obj
+   $(OBJ_DIR)\cdpslwin.obj \
+   $(OBJ_DIR)\cdpsrwin.obj
 
 
 #

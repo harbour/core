@@ -99,7 +99,14 @@
 #include "hbmath.h"
 #include "hbapicdp.h"
 
-extern PHB_CODEPAGE s_cdpage;
+#if defined(__GNUC__) && defined(OS_UNIX_COMPATIBLE)
+   #define HB_HAS_SNPRINTF
+#elif defined(__WATCOMC__)
+   #define HB_HAS_SNPRINTF
+   #define snprintf _bprintf
+#endif 
+
+extern PHB_CODEPAGE hb_cdp_page;
 extern char *hb_vm_sNull;
 extern char *hb_vm_acAscii[256];
 
@@ -1067,8 +1074,8 @@ int HB_EXPORT hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact
    /* One of the strings is empty */
    if( ulMinLen )
    {
-      if( s_cdpage->lSort )
-         iRet = hb_cdpcmp( szFirst,szSecond,ulMinLen,s_cdpage, &ulCounter );
+      if( hb_cdp_page->lSort )
+         iRet = hb_cdpcmp( szFirst,szSecond,ulMinLen,hb_cdp_page, &ulCounter );
       else
          for( ulCounter = 0; ulCounter < ulMinLen && !iRet; ulCounter++ )
          {
@@ -1118,7 +1125,7 @@ BOOL HB_EXPORT hb_itemStrBuf( char *szResult, PHB_ITEM pNumber, int iSize, int i
    {
       double dNumber = hb_itemGetND( pNumber );
 
-      #if defined(__WATCOMC__)
+      #if defined(__WATCOMC__) && __WATCOMC__ > 1000
       #elif defined(__IBMCPP__)
       /* The IBM VAC++ compiler is unable to compare non-finite numbers
          and does not have a function to test if a number if finite. */
@@ -1168,7 +1175,7 @@ BOOL HB_EXPORT hb_itemStrBuf( char *szResult, PHB_ITEM pNumber, int iSize, int i
       sprintf(szResult, "%e", dNumber);
       #endif
       if( pNumber->item.asDouble.length == 99
-      #if defined(__WATCOMC__)
+      #if defined(__WATCOMC__) && (__WATCOMC__ > 1000)
          || !_finite( dNumber )
       #elif defined(_MSC_VER) || (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
          || !_finite(dNumber)
@@ -1410,22 +1417,22 @@ char * HB_EXPORT hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
 
       case HB_IT_POINTER:
          {
-            #ifdef _MSC_VER
-            int size = 16;    /* 8 bytes for address + 0x + \0 + padding (no snprintf function) */
-            #else
+#ifndef HB_HAS_SNPRINTF 
+            int size = 16;    /* 8 bytes for address + 0x + \0 + padding */
+#else
             int size = 11;    /* 8 bytes for address + 0x + \0 */
-            #endif
+#endif
             int n;
             BOOL bFail = TRUE; 
 
             buffer = ( char * ) hb_xgrab( size );
             do
             {
-               #ifdef _MSC_VER
+#ifndef HB_HAS_SNPRINTF
                n = sprintf( buffer, "%p", hb_itemGetPtr( pItem ) );
-               #else
+#else
                n = snprintf( buffer, size, "%p", hb_itemGetPtr( pItem ) );
-               #endif
+#endif
                if( (n > -1) && (n < size) )
                {
                   bFail = FALSE;

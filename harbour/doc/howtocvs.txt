@@ -59,6 +59,24 @@ by Viktor Szakats <viktor.szakats@syenar.hu>
 15) Send the email message containing the changes
 16) Go offline (if needed)
 
+alternative method:
+by Ryszard Glab <rglab@imid.med.pl>
+
+ 1) Do the changes in the source
+ 2) Run CVS UPDATE redirecting the output into a file
+    (for example: "cvs -z3 update -d >.log"
+ 3) Resolve all conflicts, run cvs update again (see point 2), recompile
+    all sources, fix all errors
+ 4) Copy all names of modifed, added or deleted files (files marked with 
+    'M', 'A' or 'D' flag) from update log into a ChangeLog
+ 5) Write necessary comments in the ChangeLog
+ 6) Save all your changes from ChangeLog into a file
+ 7) Run CVS UPDATE again
+ 8) Commit changes running:
+    cvs commit -F file_with_saved_ChangeLog_changes
+ 9) Mail file_with_saved_ChangeLog_changes as an email body (do not
+    send it as an attachment) to the harbour list
+ 
 Important notes:
 
  1) *Always* add a ChangeLog entry when committing to the CVS.

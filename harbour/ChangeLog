@@ -8,6 +8,57 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-05-07 19:30 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+   + config/dos/owatcom.cf
+      * added configuration file for OpenWatcom (renamed
+      from watcom.cf)
+      
+   * config/dos/watcom.cf
+      * restored previous version so it correctly compiles
+      under WatcomC 10 - please use watcom.cf for WatcomC
+      and owatcom.cf for OpenWatcom
+
+   * makefile.bc
+   * makefile.nt
+   * makefile.vc
+   * hrbdll.bc      
+   * source/codepage/Makefile
+   + source/codepage/cdpsrwin.c
+      + new file with Serbian codepage
+
+   * CVSROOT/avail
+      * removed reference to my local file
+      
+   * ERRATA
+      * updated (removed reference to tmpname)
+      
+   * doc/codestyl.txt
+      * updated with some coding guidelines adopted from PHP
+      (please fell free to discuss them ;-)
+      
+   * doc/howtocvs.txt
+      * added description for commit on Linux
+      
+   * include/hbapicdp.h
+   * source/codepage/cdpesdos.c
+      * restored previous versions
+      
+   * include/hbcomp.h
+      * added <malloc.h> reference for WatcomC compiler
+      
+   * include/hbexprc.c
+      * fixed warning reported by WatcomC
+
+   * source/vm/itemapi.c
+      * fixed infinite support for WatcomC
+      
+   * source/rtl/cdpapi.c
+      * renamed global symbol s_cdpage into hb_cdp_page
+      
+   * source/rtl/gtcrs/kbdcrs.c
+      * fixed reporting keystrokes with codes > 127
+
 2004-05-06 21:10 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * source/vm/itemapi.c
     ! The funtion snprintf is not a Standard C function and does not

@@ -3,111 +3,173 @@
  */
 
 /*
+
  * Harbour Project source code:
- * Header file for the CodePages API
+
+ * National Collation Support Module (SRWIN)
+
  *
+
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
+ * SERBIAN collating sequence done by Srdjan Dragojlovic <digikv@yahoo.com>
+
  *
+
  * This program is free software; you can redistribute it and/or modify
+
  * it under the terms of the GNU General Public License as published by
+
  * the Free Software Foundation; either version 2, or (at your option)
+
  * any later version.
+
  *
+
  * This program is distributed in the hope that it will be useful,
+
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+
  * GNU General Public License for more details.
+
  *
+
  * You should have received a copy of the GNU General Public License
+
  * along with this software; see the file COPYING.  If not, write to
+
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+
  *
+
  * As a special exception, the Harbour Project gives permission for
+
  * additional uses of the text contained in its release of Harbour.
+
  *
+
  * The exception is that, if you link the Harbour libraries with other
+
  * files to produce an executable, this does not by itself cause the
+
  * resulting executable to be covered by the GNU General Public License.
+
  * Your use of that executable is in no way restricted on account of
+
  * linking the Harbour library code into it.
+
  *
+
  * This exception does not however invalidate any other reasons why
+
  * the executable file might be covered by the GNU General Public License.
+
  *
+
  * This exception applies only to the code released by the Harbour
+
  * Project under the name Harbour.  If you copy code from other
+
  * Harbour Project or Free Software Foundation releases into a copy of
+
  * Harbour, as the General Public License permits, the exception does
+
  * not apply to the code that you add in this way.  To avoid misleading
+
  * anyone as to the status of such modified files, you must delete
+
  * this exception notice from them.
+
  *
+
  * If you write modifications of your own for Harbour, it is your choice
+
  * whether to permit this exception to apply to your modifications.
+
  * If you do not wish that, delete this exception notice.
+
  *
+
  */
 
-#ifndef HB_APICDP_H_
-#define HB_APICDP_H_
+
+
+/* Language name: Serbian */
+
+/* ISO language code (2 chars): SR */
+
+/* Codepage: Windows-1251 */
+
+
 
 #include <ctype.h>
+
 #include "hbapi.h"
-#include "hbinit.h"
 
-/* This hack is needed to force preprocessing if id is also a macro */
-#define HB_CODEPAGE_REQUEST( id )           HB_CODEPAGE_REQUEST_( id )
-#define HB_CODEPAGE_REQUEST_( id )  \
-   extern HB_FUNC( HB_CODEPAGE_##id ); \
-   void hb_codepage_ForceLink( void ) \
-   { \
-      HB_FUNCNAME( HB_CODEPAGE_##id )(); \
-   }
-
-#define HB_CODEPAGE_ANNOUNCE( id )          HB_FUNC( HB_CODEPAGE_##id ) {}
-
-#define HB_CODEPAGE_INIT( id )                      \
-  HB_CODEPAGE_ANNOUNCE( id );                       \
-  HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_##id ) \
-  hb_cdpRegister( &s_codepage );                    \
-  HB_CALL_ON_STARTUP_END( hb_codepage_Init_##id )   
+#include "hbapicdp.h"
 
 
-typedef struct _HB_MULTICHAR
-{
-   char  cLast[2];
-   char  cFirst[2];
-   int   nCode;
-} HB_MULTICHAR, * PHB_MULTICHAR;
+#define NUMBER_OF_CHARACTERS  30    /* The number of single characters in the
+                                       alphabet, two-as-one aren't considered
+                                       here, accented - are considered. */
+#define IS_LATIN               0    /* Should be 1, if the national alphabet
+                                       is based on Latin */
+#define ACCENTED_EQUAL         0    /* Should be 1, if accented character 
+                                       has the same weight as appropriate
+                                       unaccented. */
+#define ACCENTED_INTERLEAVED   0    /* Should be 1, if accented characters
+                                       sort after their unaccented counterparts
+                                       only if the unaccented versions of all 
+                                       characters being compared are the same 
+                                       ( interleaving ) */
 
-typedef struct _HB_CODEPAGE
-{
-   char *id;
-   int   nChars;
-   char *CharsUpper;
-   char *CharsLower;
-   BOOL  lLatin;
-   BOOL  lAccEqual;
-   BOOL  lAccInterleave;
-   BOOL  lSort;
-   BYTE *s_chars;
-   BYTE *s_upper;
-   BYTE *s_lower;
-   BYTE *s_accent;
-   int   nMulti;
-   PHB_MULTICHAR multi;
-} HB_CODEPAGE, * PHB_CODEPAGE;
+/* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the
+   accented characters with the symbol '~' before each of them, for example:
+      a~Ä
+   If there is two-character sequence, which is considered as one, it should
+   be marked with '.' before and after it, for example:
+      ... h.ch.i ...
 
-extern BOOL hb_cdpRegister( PHB_CODEPAGE );
-extern char * hb_cdpSelectID( char * );
-extern PHB_CODEPAGE hb_cdpSelect( PHB_CODEPAGE );
-extern PHB_CODEPAGE hb_cdpFind( char * );
-extern void hb_cdpTranslate( char*, PHB_CODEPAGE, PHB_CODEPAGE );
-extern void hb_cdpnTranslate( char*, PHB_CODEPAGE, PHB_CODEPAGE, unsigned int );
-extern int hb_cdpcmp( char*, char*, ULONG, PHB_CODEPAGE, ULONG* );
-extern int hb_cdpchrcmp( char cFirst, char cSecond, PHB_CODEPAGE cdpage );
+   The Upper case string and the Lower case string should be absolutely the
+   same excepting the characters case, of course.
+ */
 
-#endif /* HB_APICDP_H_ */
+static HB_CODEPAGE s_codepage = { "SRWIN",
+   NUMBER_OF_CHARACTERS,
+   "¿¡¬√ƒÄ≈∆«»£ ÀäÃÕåŒœ–—“é”‘’÷◊èÿ",
+   "‡·‚„‰êÂÊÁËºÍÎöÏÌúÓÔÒÚûÛÙıˆ˜ü¯",
+
+   IS_LATIN,
+   ACCENTED_EQUAL,
+   ACCENTED_INTERLEAVED,
+   0,
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   0,
+   NULL };
+
+
+HB_CODEPAGE_ANNOUNCE( SRWIN );
+
+
+
+HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_SRWIN )
+
+   hb_cdpRegister( &s_codepage );
+
+HB_CALL_ON_STARTUP_END( hb_codepage_Init_SRWIN )
+
+#if ! defined(__GNUC__) && ! defined(_MSC_VER)
+
+   #pragma startup hb_codepage_Init_SRWIN
+
+#endif
+
+
 

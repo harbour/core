@@ -399,6 +399,7 @@ HARBOUR_DLL_OBJS = \
   $(OBJ_DIR)\cdpsl852.obj \
   $(OBJ_DIR)\cdpsliso.obj \
   $(OBJ_DIR)\cdpslwin.obj \
+  $(OBJ_DIR)\cdpsrwin.obj \
   \
   $(OBJ_DIR)\external.obj
 
@@ -2135,6 +2136,9 @@ $(OBJ_DIR)\cdpsliso.obj : $(CODEPAGE_DIR)\cdpsliso.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\cdpslwin.obj : $(CODEPAGE_DIR)\cdpslwin.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\cdpsrwin.obj : $(CODEPAGE_DIR)\cdpsrwin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 

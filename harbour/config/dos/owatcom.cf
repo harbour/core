@@ -2,7 +2,7 @@
 # $Id$
 #
 # The Harbour project
-# GNU MAKE file for Watcom C/C++ 10.x
+# GNU MAKE file for OpenWatcom C/C++ compiler
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 
@@ -11,29 +11,39 @@ EXE_EXT = .exe
 LIB_PREF =
 LIB_EXT = .lib
 
-$(HB_ARCHITECTURE)_$(HB_COMPILER)_GRANDP = $(subst /,\\,$(GRANDP))
+$(HB_ARCHITECTURE)_$(HB_COMPILER)_GRANDP = $(subst /,\,$(GRANDP))
 
 CC = wpp386
 CC_IN =
 CC_OUT = -fo=
-CPPFLAGS = -d2 -w2 -5r -zq -zt0 -bt=DOS4G
-CFLAGS := -i$(subst \,\\,$(WATCOM))\\h -i$(subst /,\\,$(HB_INC_COMPILE)) -i.
+
+# important: -j is necessary for proper build
+CPPFLAGS = -j -w3 -d2 -5s -5r -fp5 -oxehtz -zq -zt0 -bt=DOS
+CFLAGS := -i$(subst /,\,$(HB_INC_COMPILE)) -i.
+
+# work arround to DOS command line size limit
+export WPP386 := $(CPPFLAGS)
+CPPFLAGS =
+
+ifeq ($(HB_LEX),SIMPLEX)
+CFLAGS += -DSIMPLEX
+endif
 
 # Note: The empty line directly before 'endef' HAVE TO exist!
 # It causes that the 'echo' command is separated by LF
 define link_file
-$(COMSPEC) /E:2048 /Cecho FILE $(file) >> __link__.tmp
+echo FILE $(file) >> __link__.tmp
 
 endef
 
 #Note: The empty line directly before 'endef' HAVE TO exist!
 define link_lib
-$(COMSPEC) /E:2048 /Cecho LIB $(lib) >> __link__.tmp
+echo LIB $(lib) >> __link__.tmp
 
 endef
 
 define link_exe_file
-$(COMSPEC) /E:2048 /Cecho $(LDFLAGS) NAME $@ > __link__.tmp
+echo $(LDFLAGS) NAME $@ > __link__.tmp
 $(foreach file, $^, $(link_file))
 $(foreach lib, $(LINKLIBS), $(link_lib))
 $(foreach lib, $(RDDLIBS), $(link_lib))
@@ -42,7 +52,7 @@ $(foreach lib, $(GTLIBS), $(link_lib))
 endef
 
 LD = wlink
-LDFLAGS = debug all OP osn=DOS4G OP stack=65536 OP CASEEXACT
+LDFLAGS = debug all OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe
 ifeq ($(HB_LIB_COMPILE),)
 LINKLIBS := $(foreach lib, $(CONTRIBS), $(subst /,\,$(TOP)$(ROOT)contrib/$(lib)/$(ARCH)/$(subst lib,,$(lib))))
 LINKLIBS := $(foreach lib, $(LIBS), $(subst /,\,$(TOP)$(ROOT)source/$(lib)/$(ARCH)/$(lib)))
@@ -56,28 +66,38 @@ ifeq ($(findstring rdd,$(LIBS)),rdd)
 RDDLIBS := $(foreach drv, $(HB_DB_DRIVERS), $(subst /,\,$(TOP)$(ROOT)source/rdd/$(drv)/$(ARCH)/$(drv)))
 endif
 
+ifeq ($(findstring rtl,$(LIBS)),rtl)
 GTLIBS := $(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(ARCH)/$(HB_GT_LIB)
+ifeq ($(HB_MULTI_GT),yes)
+GTLIBS := $(TOP)$(ROOT)source/rtl/gtnul/$(ARCH)/gtnul
+endif
 GTLIBS := $(subst /,\,$(GTLIBS))
+endif
+
 
 LD_RULE = $(link_exe_file)
 
 #Note: The empty line below HAVE TO exist!
 define lib_object
-$(COMSPEC) /E:2048 /Cecho -+$(file) >> __lib__.tmp
+echo -+$(file) >> __lib__.tmp
 
 endef
 
 define create_library
-$(COMSPEC) /E:2048 /Cecho $@ > __lib__.tmp
+echo $@ > __lib__.tmp
 $(foreach file, $^, $(lib_object))
 $(AR) $(ARFLAGS) @__lib__.tmp
 endef
 
 AR = wlib
 ARFLAGS = -p=32 -c $(A_USR)
-
 AR_RULE = $(create_library)
 
 include $(TOP)$(ROOT)config/rules.cf
 
-HB := $(subst /,\\,$(HB))
+HB := $(subst /,\,$(HB))
+HB_FLAGS := $(subst /,\,$(HB_FLAGS))
+
+# work arround to DOS command line size limit
+export HARBOURCMD := $(HB_FLAGS)
+HB_FLAGS =

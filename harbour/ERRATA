@@ -30,26 +30,3 @@ Description........:
 
 Current known problems and wishes:
 
-----------------------------------------------------------------------------
-Platform...........: GNU/Linux with "later" GCC/GLIBC combinations.
-Noted as of release: 0.37
-Noted by...........: Dave Pearson <davep@davep.org>
-Severity...........: Annoyance
-Bug/Wish/TODO/etc..: Design issue.
-Description........: 
-
-In GNU/Linux environments with "later" GCC/GLIBC combinations, when a user
-finally links their Harbour compiled application, they see the following
-advisory message:
-
-/usr/local/lib/harbour//librtl.a(fstemp.o): In function `hb_fsTempName':
-/usr/local/src/harbour/source/rtl/linux/gcc/../../fstemp.c:73: the use of `tmpnam' is dangerous, better use `mkstemp'
-
-As the advisory states, the problem is that use of tmpnam is considered
-"dangerous" (presumably a security issue more than anything) and Harbour's
-fstemp uses tmpnam.
-
-Note that the executable is still built and runs fine, the message is simply
-an advisory from the linker. It is worth eradicating as it seems that some
-people think that the executable has failed to build. It's also worth
-eradicating because the warning is probably there for a good reason.

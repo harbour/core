@@ -60,7 +60,8 @@
 
 static HB_CODEPAGE  s_en_codepage = { "EN",0,NULL,NULL,0,0,0,0,NULL,NULL,NULL,NULL,0,NULL };
 static PHB_CODEPAGE s_cdpList[ HB_CDP_MAX_ ];
-PHB_CODEPAGE s_cdpage = &s_en_codepage;
+
+PHB_CODEPAGE hb_cdp_page = &s_en_codepage;
 
 static int hb_cdpFindPos( char * pszID )
 {
@@ -240,13 +241,13 @@ PHB_CODEPAGE  hb_cdpFind( char * pszID )
 
 PHB_CODEPAGE  hb_cdpSelect( PHB_CODEPAGE cdpage )
 {
-   PHB_CODEPAGE cdpOld = s_cdpage;
+   PHB_CODEPAGE cdpOld = hb_cdp_page;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_langSelect(%p)", cdpage));
 
    if( cdpage )
    {
-      s_cdpage = cdpage;
+      hb_cdp_page = cdpage;
    }
 
    return cdpOld;
@@ -254,7 +255,7 @@ PHB_CODEPAGE  hb_cdpSelect( PHB_CODEPAGE cdpage )
 
 char  * hb_cdpSelectID( char * pszID )
 {
-   char * pszIDOld = s_cdpage->id;
+   char * pszIDOld = hb_cdp_page->id;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdpSelectID(%s)", pszID));
 
@@ -429,7 +430,7 @@ void  hb_cdpReleaseAll( void )
 
 HB_FUNC( HB_SETCODEPAGE )
 {
-   hb_retc( s_cdpage->id );
+   hb_retc( hb_cdp_page->id );
 
    if( ISCHAR(1) )
       hb_cdpSelectID( hb_parc( 1 ) );
@@ -448,8 +449,8 @@ HB_FUNC( HB_TRANSLATE )
    if( szIn )
    {
       ilen = hb_parclen(1);
-      cdpIn  = ( szIdIn )? hb_cdpFind( szIdIn ):s_cdpage;
-      cdpOut = ( szIdOut )? hb_cdpFind( szIdOut ):s_cdpage;
+      cdpIn  = ( szIdIn )? hb_cdpFind( szIdIn ):hb_cdp_page;
+      cdpOut = ( szIdOut )? hb_cdpFind( szIdOut ):hb_cdp_page;
       szResult = (char*) hb_xgrab( ilen + 1 );
       memcpy( szResult, szIn, ilen );
       szResult[ ilen ] = '\0';

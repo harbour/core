@@ -64,6 +64,11 @@
 #include "hbcomp.h"
 #include "hbmacro.ch"
 
+#ifdef __WATCOMC__
+/* disable warnings for 'no reference to symbol' */
+#pragma warning 14 9
+#endif
+
 /* ************************************************************************* */
 
 #if defined( HB_MACRO_SUPPORT )
@@ -472,7 +477,8 @@ BOOL hb_compExprIsValidMacro( char * szText, BOOL *pbUseTextSubst, HB_MACRO_DECL
       }
       *pbUseTextSubst |= bTextSubst;
    }
-	
+   HB_SYMBOL_UNUSED( HB_MACRO_PARAM );	
+
    return bMacroText;
 }
 
@@ -491,6 +497,7 @@ HB_EXPR_PTR hb_compExprReducePlusStrings( HB_EXPR_PTR pLeft, HB_EXPR_PTR pRight,
    pLeft->value.asString.string[ pLeft->ulLength ] = '\0';
    hb_compExprFree( pRight, HB_MACRO_PARAM );
 
+   HB_SYMBOL_UNUSED( HB_MACRO_PARAM );    /* to suppress BCC warning */
    return pLeft;
 }
 #else
@@ -513,4 +520,9 @@ HB_EXPR_PTR hb_compExprReducePlusStrings( HB_EXPR_PTR pLeft, HB_EXPR_PTR pRight,
    HB_SYMBOL_UNUSED( HB_MACRO_PARAM );    /* to suppress BCC warning */
    return pLeft;
 }
+#endif
+
+#ifdef __WATCOMC__
+/* enable warnings for unreferenced symbols */
+#pragma warning 14 2
 #endif

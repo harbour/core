@@ -457,7 +457,8 @@ CODEPAGE_LIB_OBJS = \
    $(OBJ_DIR)\cdpsl437.obj \
    $(OBJ_DIR)\cdpsl852.obj \
    $(OBJ_DIR)\cdpsliso.obj \
-   $(OBJ_DIR)\cdpslwin.obj
+   $(OBJ_DIR)\cdpslwin.obj \
+   $(OBJ_DIR)\cdpsrwin.obj
 
 #
 # MACRO.LIB rules
@@ -2353,6 +2354,10 @@ $(OBJ_DIR)\cdpsliso.obj : $(CODEPAGE_DIR)\cdpsliso.c
    tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\cdpslwin.obj : $(CODEPAGE_DIR)\cdpslwin.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\cdpsrwin.obj : $(CODEPAGE_DIR)\cdpsrwin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
 
