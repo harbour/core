@@ -1,3 +1,7 @@
+19990728-01:10 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/gtapi.c
+     * minor correction in case of inverted coordinates
+
 19990728-05:40 CET Victor Szel <info@szelvesz.hu>
    ! source/compiler/harbour.y/MakeFilename() - 
      Fixed bug, which sometimes caused that the

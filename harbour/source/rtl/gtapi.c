@@ -6,6 +6,7 @@
  *  GTAPI.C: Generic Terminal for Harbour
  *
  * Latest mods:
+ * 1.41   19990728   ptucker   Minor correction for inverted coords
  * 1.40   19990726   vszel     Allowing Top > Bottom and Right > Left
  *                             cases again. Clipper allows these, too.
  *                             Cursor positioning fixed to support these cases.
@@ -87,8 +88,8 @@ int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
     char pszBox [10];
     char cPadChar;
 
-    USHORT uiRow = uiTop;
-    USHORT uiCol = uiLeft;
+    USHORT uiRow;
+    USHORT uiCol;
     USHORT height, width, tmp;
 
     USHORT uiTopBak = uiTop;
@@ -127,6 +128,9 @@ int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
        uiLeft = uiRight;
        uiRight = tmp;
     }
+
+    uiRow = uiTop;
+    uiCol = uiLeft;
 
     /* Draw the box or line as specified */
     height = uiBottom - uiTop + 1;
