@@ -142,6 +142,7 @@ PRG_SOURCES=\
 	terror.prg   \
 	text.prg     \
 	tget.prg     \
+	tgetint.prg  \
 	tgetlist.prg \
 	tlabel.prg   \
 	tmenuitm.prg \

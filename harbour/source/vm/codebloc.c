@@ -107,7 +107,6 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
             pLocal->item.asMemvar.offset    = 0;
             pLocal->item.asMemvar.value     = hMemvar;
 
-            hb_memvarValueIncRef( pLocal->item.asMemvar.value );
             memcpy( pCBlock->pLocals + ui, pLocal, sizeof( HB_ITEM ) );
          }
          else
@@ -118,9 +117,9 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
             /* Increment the reference counter so this value will not be
              * released if other codeblock will be deleted
              */
-            hb_memvarValueIncRef( pLocal->item.asMemvar.value );
             memcpy( pCBlock->pLocals + ui, pLocal, sizeof( HB_ITEM ) );
          }
+         hb_memvarValueIncRef( pLocal->item.asMemvar.value );
          ++ui;
       }
    }
@@ -208,20 +207,19 @@ void  hb_codeblockDelete( HB_ITEM_PTR pItem )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_codeblockDelete(%p)", pItem));
 
-   HB_TRACE(HB_TR_INFO, ("deleting a codeblock (%li) %lx", pCBlock->ulCounter, pCBlock));
+   HB_TRACE(HB_TR_INFO, ("deleting a codeblock (%lu) %p", pCBlock->ulCounter, pCBlock));
+
+   if( pCBlock->pLocals )
+   {
+      USHORT ui = pCBlock->uiLocals;
+      while( ui )
+         hb_memvarValueDecRef( pCBlock->pLocals[ ui-- ].item.asMemvar.value );
+   }
 
    if( --pCBlock->ulCounter == 0 )
    {
-      /* free space allocated for local variables
-      */
       if( pCBlock->pLocals )
       {
-         USHORT ui = 1;
-         while( ui <= pCBlock->uiLocals )
-         {
-            hb_memvarValueDecRef( pCBlock->pLocals[ ui ].item.asMemvar.value );
-            ++ui;
-         }
          /* decrement the table reference counter and release memory if
           * it was the last reference
           */
@@ -229,7 +227,7 @@ void  hb_codeblockDelete( HB_ITEM_PTR pItem )
             hb_xfree( pCBlock->pLocals );
       }
 
-      /* free space allocated for pcodes - if it was macro-compiled codeblock
+      /* free space allocated for pcodes - if it was a macro-compiled codeblock
        */
       if( pCBlock->dynBuffer )
          hb_xfree( pCBlock->pCode );
@@ -237,8 +235,6 @@ void  hb_codeblockDelete( HB_ITEM_PTR pItem )
       /* free space allocated for a CODEBLOCK structure
       */
       hb_gcFree( pCBlock );
-
-      HB_TRACE(HB_TR_INFO, ("codeblock deleted (%li) %lx", pCBlock->ulCounter, pCBlock));
    }
 }
 
@@ -249,7 +245,7 @@ HB_GARBAGE_FUNC( hb_codeblockDeleteGarbage )
    HB_CODEBLOCK_PTR pCBlock = ( HB_CODEBLOCK_PTR ) Cargo;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_codeblockDeleteGarbage(%p)", Cargo));
-   
+
    /* free space allocated for local variables
    */
    if( pCBlock->pLocals )
@@ -283,17 +279,12 @@ HB_GARBAGE_FUNC( hb_codeblockDeleteGarbage )
 void hb_codeblockEvaluate( HB_ITEM_PTR pItem )
 {
    int iStatics = hb_stack.iStatics;
-   ULONG ulPrivateBase = hb_memvarGetPrivatesBase();
-   /* NOTE: All PRIVATE variables created during codeblock evaluation have
-    * a scope of a codeblock where they were created.
-    */
 
    HB_TRACE(HB_TR_DEBUG, ("hb_codeblockEvaluate(%p)", pItem));
 
    hb_stack.iStatics = pItem->item.asBlock.statics;
    hb_vmExecute( pItem->item.asBlock.value->pCode, pItem->item.asBlock.value->pSymbols );
    hb_stack.iStatics = iStatics;
-   hb_memvarSetPrivatesBase( ulPrivateBase );
 }
 
 /* Get local variable referenced in a codeblock
@@ -319,16 +310,47 @@ PHB_ITEM  hb_codeblockGetRef( PHB_ITEM pItem, PHB_ITEM pRefer )
    return pCBlock->pLocals - pRefer->item.asRefer.value;
 }
 
-/* Copy the codeblock
- * TODO: check if such simple pointer coping will allow to evaluate
- * codeblocks recursively
+/* Increment reference counter for a codeblock and all detached variables
  */
-void  hb_codeblockCopy( PHB_ITEM pDest, PHB_ITEM pSource )
+void  hb_codeblockIncRef( PHB_ITEM pItem )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockCopy(%p, %p)", pDest, pSource));
+   HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
 
-   pDest->item.asBlock.value = pSource->item.asBlock.value;
-   pDest->item.asBlock.value->ulCounter++;
+   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockIncRef(%p)", pItem));
 
-   HB_TRACE(HB_TR_INFO, ("copied a codeblock (%li) %lx", pSource->item.asBlock.value->ulCounter, pSource->item.asBlock.value));
+   ++pCBlock->ulCounter;
+   if( pCBlock->pLocals )
+   {
+      USHORT ui = pCBlock->uiLocals;
+      while( ui )
+      {
+         if( pItem == hb_itemUnRef( pCBlock->pLocals + ui ) )
+            ++pCBlock->ulCounter;
+         else    
+            hb_memvarValueIncRef( pCBlock->pLocals[ ui ].item.asMemvar.value );
+         --ui;
+      }
+   }
+}
+
+/* Decrement reference counter for a codeblock and all detached variables
+ */
+void  hb_codeblockDecRef( PHB_ITEM pItem )
+{
+   HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
+
+   --pCBlock->ulCounter;
+   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockDecRef(%p)%lu", pItem, pCBlock->ulCounter));
+   if( pCBlock->pLocals )
+   {
+      USHORT ui = pCBlock->uiLocals;
+      while( ui )
+      {
+         if( pItem == hb_itemUnRef( pCBlock->pLocals + ui ) )
+            --pCBlock->ulCounter;
+         else    
+            hb_memvarValueDecRef( pCBlock->pLocals[ ui ].item.asMemvar.value );
+         --ui;
+      }
+   }
 }

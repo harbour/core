@@ -96,7 +96,7 @@ void hb_memvarsInit( void )
    s_privateStackCnt  = s_privateStackBase = 0;
 }
 
-/* clear all variables except the detached ones 
+/* clear all variables except the detached ones
  * Should be called at application exit only
 */
 void hb_memvarsRelease( void )
@@ -112,7 +112,6 @@ void hb_memvarsRelease( void )
          if( s_globalTable[ ulCnt ].counter && s_globalTable[ ulCnt ].hPrevMemvar != ( HB_HANDLE )-1 )
          {
             hb_itemClear( &s_globalTable[ ulCnt ].item );
-            s_globalTable[ ulCnt ].counter = 0;
          }
          --ulCnt;
       }
@@ -204,15 +203,17 @@ HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar )
 
    pValue = s_globalTable + hValue;
    pValue->counter = 1;
+   pValue->item.type = HB_IT_NIL;
    if( pSource )
    {
       if( bTrueMemvar )
          hb_itemCopy( &pValue->item, pSource );
       else
-         memcpy( &pValue->item, pSource, sizeof( HB_ITEM ) );
+      {
+         memcpy( &pValue->item, pSource, sizeof(HB_ITEM) );
+         hb_itemIncRef( pSource );
+      }
    }
-   else
-      pValue->item.type = HB_IT_NIL;
 
    if( bTrueMemvar )
        pValue->hPrevMemvar = 0;
@@ -288,9 +289,24 @@ void hb_memvarSetPrivatesBase( ULONG ulBase )
  */
 void hb_memvarValueIncRef( HB_HANDLE hValue )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_memvarValueIncRef(%p)", hValue));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarValueIncRef(%lu)", hValue));
 
    s_globalTable[ hValue ].counter++;
+   /* Increment reference counter for value stored in the detached item
+    * The value can be shared with other non-detached variables that also
+    * handles the reference counter
+    */
+   if( HB_IS_MEMVAR( &s_globalTable[ hValue ].item ) )
+   {
+      HB_ITEM_PTR pItem = &s_globalTable[ hValue ].item;
+      /* do not fall into recursive calls loop */
+      if( pItem->item.asMemvar.value == hValue )
+         s_globalTable[ hValue ].counter++;
+      else
+         hb_itemIncRef( pItem );
+   }
+   else
+      hb_itemIncRef( &s_globalTable[ hValue ].item );
 
    HB_TRACE(HB_TR_INFO, ("Memvar item (%i) increment refCounter=%li", hValue, s_globalTable[ hValue ].counter));
 }
@@ -304,7 +320,7 @@ void hb_memvarValueDecRef( HB_HANDLE hValue )
 {
    HB_VALUE_PTR pValue;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_memvarValueDecRef(%p)", hValue));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarValueDecRef(%lu)", hValue));
 
    pValue = s_globalTable + hValue;
 
@@ -342,6 +358,19 @@ void hb_memvarValueDecRef( HB_HANDLE hValue )
             ++s_globalFreeCnt;
 
          HB_TRACE(HB_TR_INFO, ("Memvar item (%i) deleted", hValue));
+      }
+      else
+      {
+         if( HB_IS_MEMVAR( &pValue->item ) )
+         {
+            /* do not fall into recursive calls loop */
+            if( pValue->item.item.asMemvar.value == hValue )
+               --pValue->counter;
+            else
+               hb_itemDecRef( &pValue->item );
+         }
+         else
+            hb_itemDecRef( &pValue->item );
       }
    }
 }
@@ -462,6 +491,7 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
          pItem->item.asMemvar.value = pDyn->hMemvar;
          pItem->item.asMemvar.itemsbase = &s_globalTable;
          ++s_globalTable[ pDyn->hMemvar ].counter;
+         hb_itemIncRef( &s_globalTable[ pDyn->hMemvar ].item );
       }
       else
       {
@@ -487,6 +517,7 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
                   pItem->item.asMemvar.value = pDyn->hMemvar;
                   pItem->item.asMemvar.itemsbase = &s_globalTable;
                   ++s_globalTable[ pDyn->hMemvar ].counter;
+                  hb_itemIncRef( &s_globalTable[ pDyn->hMemvar ].item );
                   uiAction = E_DEFAULT;
                }
             }

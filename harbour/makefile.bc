@@ -1618,6 +1618,13 @@ $(OBJ_DIR)\tget.obj : $(OBJ_DIR)\tget.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\tgetint.c : $(RTL_DIR)\tgetint.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\tgetint.obj : $(OBJ_DIR)\tgetint.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\tgetlist.c : $(RTL_DIR)\tgetlist.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 

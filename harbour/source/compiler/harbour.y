@@ -117,9 +117,6 @@ char * hb_comp_buffer; /* yacc input buffer */
 static PTR_LOOPEXIT hb_comp_pLoops = NULL;
 static HB_RTVAR_PTR hb_comp_rtvars = NULL;
 
-static HB_EXPR_PTR pArrayIndexAsList = NULL, pGetArgList = NULL, pBaseArrayName = NULL;
-static BOOL bTrancuateBaseArray = FALSE;
-
 char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
 
 static void hb_compDebugStart( void ) { };
@@ -163,7 +160,7 @@ static void hb_compDebugStart( void ) { };
 %token MACROVAR MACROTEXT
 %token AS_ARRAY AS_BLOCK AS_CHARACTER AS_CLASS AS_DATE AS_LOGICAL AS_NUMERIC AS_OBJECT AS_VARIANT DECLARE OPTIONAL DECLARE_CLASS DECLARE_MEMBER
 %token AS_ARRAY_ARRAY AS_BLOCK_ARRAY AS_CHARACTER_ARRAY AS_CLASS_ARRAY AS_DATE_ARRAY AS_LOGICAL_ARRAY AS_NUMERIC_ARRAY AS_OBJECT_ARRAY
-%token PROCREQ GET
+%token PROCREQ
 
 /*the lowest precedence*/
 /*postincrement and postdecrement*/
@@ -232,7 +229,6 @@ static void hb_compDebugStart( void ) { };
 %type <asExpr>  DimIndex DimList
 %type <asExpr>  FieldAlias FieldVarAlias
 %type <asExpr>  PostOp
-%type <asExpr>  Get GetA GetArgList
 
 %%
 
@@ -457,17 +453,8 @@ NilAlias   : NilValue ALIASOP          { $$ = $1; }
 
 /* Literal string value
  */
-LiteralValue : LITERAL                    { $$ = hb_compExprNewString( $1 );
-					    if( bTrancuateBaseArray )
-                                            { char *pCopy = hb_strdup( $1 ), *pTmp = strchr( pCopy, '[' );
-                                              if( pTmp )
-					      {
-						 pCopy[ pTmp - pCopy ] = '\0';
-                                                 pBaseArrayName = hb_compExprNewString( pCopy );
-					      }
-					      bTrancuateBaseArray = FALSE;
-;                                           }
-					  }
+LiteralValue : LITERAL                    { $$ = hb_compExprNewString( $1 ); }
+;
 
 LiteralAlias : LiteralValue ALIASOP       { $$ = $1; }
 ;
@@ -626,8 +613,6 @@ VariableAtAlias : VariableAt ALIASOP      { $$ = $1; }
  */
 FunCall    : IdentName '(' ArgList ')' { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( $1 ), $3 ); }
            | MacroVar '(' ArgList ')'  { $$ = hb_compExprNewFunCall( $1, $3 ); }
-	   | Get                       { $$ = $1 }
-	   | GetA                      { $$ = $1 }
            ;
 
 ArgList    : Argument                     { $$ = hb_compExprNewArgList( $1 ); }
@@ -986,9 +971,9 @@ ArrayIndex : IndexList ']'                   { $$ = $1; }
 /* NOTE: $0 represents the expression before ArrayIndex
  *    Don't use ArrayIndex in other context than as an array index!
  */
-IndexList  : '[' Expression               { $$ = hb_compExprNewArrayAt( $<asExpr>0, $2 ); pArrayIndexAsList = hb_compExprNewList( $2 ); }
-           | IndexList ',' Expression     { $$ = hb_compExprNewArrayAt( $1, $3 )        ; pArrayIndexAsList = hb_compExprAddListExpr( pArrayIndexAsList, $3 ); }
-           | IndexList ']' '[' Expression { $$ = hb_compExprNewArrayAt( $1, $4 )        ; pArrayIndexAsList = hb_compExprAddListExpr( pArrayIndexAsList, $4 ); }
+IndexList  : '[' Expression               { $$ = hb_compExprNewArrayAt( $<asExpr>0, $2 ); }
+           | IndexList ',' Expression     { $$ = hb_compExprNewArrayAt( $1, $3 ); }
+           | IndexList ']' '[' Expression { $$ = hb_compExprNewArrayAt( $1, $4 ); }
            ;
 
 ElemList   : Argument                { $$ = hb_compExprNewList( $1 ); }
@@ -1000,58 +985,6 @@ CodeBlock  : '{' '|' { $<asExpr>$ = hb_compExprNewCodeBlock(); } BlockNoVar
            | '{' '|' { $<asExpr>$ = hb_compExprNewCodeBlock(); } BlockVarList
              '|' BlockExpList '}'   { $$ = $<asExpr>3; }
            ;
-
-Get        : GET Variable { pGetArgList = hb_compExprNewArgList( $2 ); } ',' GetArgList ')'
-             { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( "__GET"), pGetArgList ); pGetArgList = NULL; }
-           | GET AliasVar { pGetArgList = hb_compExprNewArgList( $2 ); } ',' GetArgList ')'
-             { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( "__GET"), pGetArgList ); pGetArgList = NULL; }
-           | GET ObjectData { pGetArgList = hb_compExprNewArgList( $2 ); } ',' GetArgList ')'
-             { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( "__GET"), pGetArgList ); pGetArgList = NULL; }
-           | GET ObjectData ArrayIndex { pGetArgList = hb_compExprNewArgList( $3 ); } ',' GetArgList ')'
-             { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( "__GET"), pGetArgList ); pGetArgList = NULL; }
-           | GET MacroVar { pGetArgList = hb_compExprNewArgList( $2 ); } ',' GetArgList ')'
-             { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( "__GET"), pGetArgList ); pGetArgList = NULL; }
-           | GET MacroExpr { pGetArgList = hb_compExprNewArgList( $2 ); } ',' GetArgList ')'
-             { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( "__GET"), pGetArgList ); pGetArgList = NULL; }
-	   ;
-
-GetArgList : Argument                     { $$ = hb_compExprAddListExpr( pGetArgList, $1 ); }
-           | GetArgList ',' Argument      { $$ = hb_compExprAddListExpr( pGetArgList, $3 ); }
-           ;
-
-GetA       : GET Variable ArrayIndex { pGetArgList = hb_compExprNewArgList( $2 ); bTrancuateBaseArray = TRUE; } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, ( pBaseArrayName ? pBaseArrayName : $6 ) ); pBaseArrayName = NULL; /* Var Name */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $9 ) ; /* Picture    */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $12 ); /* ValidBlock */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $15 ); /* WhenBlock  */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, hb_compExprNewArray( pArrayIndexAsList ) ); /* Array with Index Expressions as 6th parameter */ }
-	     GetAExt ')' { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( "__GETA"), pGetArgList ); pGetArgList = NULL; }
-          | GET AliasVar ArrayIndex { pGetArgList = hb_compExprNewArgList( $2 ); bTrancuateBaseArray = TRUE; } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, ( pBaseArrayName ? pBaseArrayName : $6 ) ); pBaseArrayName = NULL; /* Var Name */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $9 ) ; /* Picture    */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $12 ); /* ValidBlock */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $15 ); /* WhenBlock  */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, hb_compExprNewArray( pArrayIndexAsList ) ); /* Array with Index Expressions as 6th parameter */ }
-	     GetAExt ')' { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( "__GETA"), pGetArgList ); pGetArgList = NULL; }
-         | GET MacroVar ArrayIndex { pGetArgList = hb_compExprNewArgList( $2 ); bTrancuateBaseArray = TRUE; } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, ( pBaseArrayName ? pBaseArrayName : $6 ) ); pBaseArrayName = NULL; /* Var Name */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $9 ) ; /* Picture    */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $12 ); /* ValidBlock */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $15 ); /* WhenBlock  */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, hb_compExprNewArray( pArrayIndexAsList ) ); /* Array with Index Expressions as 6th parameter */ }
-	     GetAExt ')' { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( "__GETA"), pGetArgList ); pGetArgList = NULL; }
-         | GET MacroExpr ArrayIndex { pGetArgList = hb_compExprNewArgList( $2 ); bTrancuateBaseArray = TRUE; } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, ( pBaseArrayName ? pBaseArrayName : $6 ) ); pBaseArrayName = NULL; /* Var Name */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $9 ) ; /* Picture    */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $12 ); /* ValidBlock */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $15 ); /* WhenBlock  */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, hb_compExprNewArray( pArrayIndexAsList ) ); /* Array with Index Expressions as 6th parameter */ }
-	     GetAExt ')' { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( "__GETA"), pGetArgList ); pGetArgList = NULL; }
-	   ;
-
-GetAExt   : { /* Nothing*/ }
-	  | ',' GetArgList
-	  ;
 
 /* NOTE: This uses $-2 then don't use BlockExpList in other context
  */

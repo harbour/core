@@ -307,6 +307,103 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
             HB_EXPR_PCODE1( hb_compExprDelete, pName );
          }
       }
+      else if( ( strcmp( "_GET_", pName->value.asSymbol ) == 0 ) && iCount )
+      {
+         /* Reserved Clipper function used to handle GET variables
+          */
+         HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
+         USHORT uiCount;
+         if( pArg->ExprType == HB_ET_ARRAYAT )
+         {
+            HB_EXPR_PTR pIndex, pVar;
+
+#ifdef HB_MACRO_SUPPORT
+            HB_XFREE( pName->value.asSymbol );
+            pName->value.asSymbol = hb_strdup( "__GETA" );
+#else
+            pName->value.asSymbol = hb_compIdentifierNew( "__GETA", TRUE );
+#endif
+            /* NOTE: a[ i, j ] is stored as: (pExprList)->(pIndex)
+             * ((a->[ i ])->[ j ])
+             */
+            pVar = HB_EXPR_USE( pArg->value.asList.pExprList, HB_EA_REDUCE );
+            pIndex = HB_EXPR_USE( pArg->value.asList.pIndex, HB_EA_REDUCE );
+            pIndex->pNext = NULL;
+            while( pVar->ExprType == HB_ET_ARRAYAT )
+            {
+               /* traverse back to a leftmost expression and build a list
+                * of index expressions
+                */
+               pVar->value.asList.pIndex->pNext = pIndex;
+               pIndex = pVar->value.asList.pIndex;
+               pVar = pVar->value.asList.pExprList;
+            }
+
+            /* pVar will be the first argument now
+             */
+            pParms->value.asList.pExprList = pVar;
+            /* link the rest of parameters
+             */
+            pVar->pNext = pArg->pNext;
+            /* Delete an argument that was the first one
+             */
+            pArg->value.asList.pIndex = NULL;
+            pArg->value.asList.pExprList = NULL;
+            hb_compExprClear( pArg );
+            /* Create an array with index elements
+             */
+            pIndex = hb_compExprNewArray( hb_compExprNewList( pIndex ) );
+            /* The array with index elements have to be the sixth argument
+             * of __GETA() call
+             */
+            uiCount = 1;
+            while( ++uiCount < 6 )
+            {
+               if( pVar->pNext == NULL )
+                  pVar->pNext = hb_compExprNewNil();
+               pVar = pVar->pNext;
+            }
+            if( pVar->pNext ) /* Delete 6-th argument if present */
+            {
+               pIndex->pNext = pVar->pNext->pNext;
+               HB_EXPR_PCODE1( hb_compExprDelete, pVar->pNext );
+            }
+            pVar->pNext = pIndex;   /* Set a new 6-th argument */
+
+            /* Remove the index expression from a string representation
+             */
+            pVar = pParms->value.asList.pExprList->pNext;
+            if( pVar->ExprType == HB_ET_STRING )
+            {
+               USHORT i = 0;
+               char *szVar = pVar->value.asString.string;
+
+               /* NOTE: Clipper strips a string at the first '[' character too
+                */
+               while( ++i < pVar->ulLength )
+                  if( szVar[ i ] == '[' )
+                  {
+                     szVar[ i ] = 0;
+                     pVar->ulLength = i;
+                     break;
+                  }
+            }
+         }
+         else
+#ifdef HB_MACRO_SUPPORT
+            HB_XFREE( pName->value.asSymbol );
+            pName->value.asSymbol = hb_strdup( "__GET" );
+#else
+            pName->value.asSymbol = hb_compIdentifierNew( "__GET", TRUE );
+            if( pArg->ExprType == HB_ET_VARIABLE )
+            {
+               /* Change into a variable reference so a set/get codeblock 
+                * will assign a new value correctly
+                */
+               pArg->ExprType = HB_ET_VARREF;
+            }
+#endif
+      }
    }
    else if( pName->ExprType == HB_ET_MACRO )
    {

@@ -98,14 +98,14 @@ BOOL hb_evalNew( PEVALINFO pEvalInfo, PHB_ITEM pItem )
 /* NOTE: CA-Cl*pper is buggy and will not check if more parameters are
          added than the maximum (9). [vszakats] */
 
-/* NOTE: CA-Cl*pper NG suggest that the Items passed as parameters should/may 
+/* NOTE: CA-Cl*pper NG suggest that the Items passed as parameters should/may
          be released by the programmer explicitly. But in fact hb_evalRelease()
-         will automatically release all of them. The sample programs in the 
-         NG are doing it that way. Releasing the parameters explicitly in 
-         Harbour will cause an internal error, while it will be silently 
-         ignored (?) in CA-Cl*pper. This is due to the different internal 
-         handling of the Items, but IIRC it causes leak in CA-Clipper. All in 
-         all, don't release the eval parameter Items explicitly to make both 
+         will automatically release all of them. The sample programs in the
+         NG are doing it that way. Releasing the parameters explicitly in
+         Harbour will cause an internal error, while it will be silently
+         ignored (?) in CA-Cl*pper. This is due to the different internal
+         handling of the Items, but IIRC it causes leak in CA-Clipper. All in
+         all, don't release the eval parameter Items explicitly to make both
          Harbour and CA-Clipper happy. [vszakats] */
 
 BOOL hb_evalPutParam( PEVALINFO pEvalInfo, PHB_ITEM pItem )
@@ -163,8 +163,8 @@ PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo )
    return pResult;
 }
 
-/* NOTE: CA-Clipper NG states that hb_evalLaunch() must be called at least 
-         once and only once before calling hb_evalRelease(). Harbour doesn't 
+/* NOTE: CA-Clipper NG states that hb_evalLaunch() must be called at least
+         once and only once before calling hb_evalRelease(). Harbour doesn't
          have these requirements. [vszakats] */
 
 BOOL hb_evalRelease( PEVALINFO pEvalInfo )
@@ -455,7 +455,7 @@ PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, char * szText, ULONG ulLen )
       pItem = hb_itemNew( NULL );
 
    /* NOTE: CA-Clipper seems to be buggy here, it will return ulLen bytes of
-            trash if the szText buffer is NULL, at least with hb_retclen(). 
+            trash if the szText buffer is NULL, at least with hb_retclen().
             [vszakats] */
 
    if( szText == NULL )
@@ -492,7 +492,7 @@ PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText, ULONG ulLen )
 
 void hb_itemSetCMemo( PHB_ITEM pItem )
 {
-   if( pItem && HB_IS_STRING( pItem ) ) 
+   if( pItem && HB_IS_STRING( pItem ) )
       pItem->type |= HB_IT_MEMOFLAG;
 }
 
@@ -571,7 +571,7 @@ BOOL hb_itemFreeC( char * szText )
 /* NOTE: Clipper is buggy and will not append a trailing zero, although
          the NG says that it will. Check your buffers, since what may have
          worked with Clipper could overrun the buffer with Harbour.
-         The correct buffer size is 9 bytes: char szDate[ 9 ] 
+         The correct buffer size is 9 bytes: char szDate[ 9 ]
          [vszakats] */
 
 char * hb_itemGetDS( PHB_ITEM pItem, char * szDate )
@@ -1057,11 +1057,6 @@ void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemCopy(%p, %p)", pDest, pSource));
 
-/* Disabled temporary - It is causes GPF when inline method is called
-   rglab
-   if( HB_IS_BYREF( pDest ) )
-      pDest = hb_itemUnRef( pDest );
-*/      
    if( pDest->type )
       hb_itemClear( pDest );
 
@@ -1078,13 +1073,52 @@ void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
    }
 
    else if( HB_IS_ARRAY( pSource ) )
+   {
       ( pSource->item.asArray.value )->uiHolders++;
-
+   }
    else if( HB_IS_BLOCK( pSource ) )
-      hb_codeblockCopy( pDest, pSource );
+      hb_codeblockIncRef( pSource );
 
    else if( HB_IS_MEMVAR( pSource ) )
       hb_memvarValueIncRef( pSource->item.asMemvar.value );
+}
+
+/* Internal API, not standard Clipper */
+HB_ITEM_PTR hb_itemIncRef( HB_ITEM_PTR pItem )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemIncRef(%p)", pItem));
+
+   if( HB_IS_ARRAY( pItem ) )
+   {
+      ( pItem->item.asArray.value )->uiHolders++;
+   }
+   else if( HB_IS_BLOCK( pItem ) )
+      hb_codeblockIncRef( pItem );
+   else if( HB_IS_MEMVAR( pItem ) )
+      hb_memvarValueIncRef( pItem->item.asMemvar.value );
+   else if( HB_IS_BYREF( pItem ) )
+      pItem = hb_itemIncRef( hb_itemUnRef( pItem ) );
+
+   return pItem;
+}
+
+/* Internal API, not standard Clipper */
+HB_ITEM_PTR hb_itemDecRef( HB_ITEM_PTR pItem )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemDecRef(%p)", pItem));
+
+   if( HB_IS_ARRAY( pItem ) )
+   {
+      ( pItem->item.asArray.value )->uiHolders--;
+   }
+   else if( HB_IS_BLOCK( pItem ) )
+      hb_codeblockDecRef( pItem );
+   else if( HB_IS_MEMVAR( pItem ) )
+      hb_memvarValueDecRef( pItem->item.asMemvar.value );
+   else if( HB_IS_BYREF( pItem ) )
+      pItem = hb_itemIncRef( hb_itemUnRef( pItem ) );
+
+   return pItem;
 }
 
 void hb_itemSwap( PHB_ITEM pItem1, PHB_ITEM pItem2 )

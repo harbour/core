@@ -129,6 +129,7 @@ typedef MEMOROOT * LPMEMOROOT;
 
 /* CDX's */
 
+struct _CDXINDEX;    /* forward declaration */
 typedef struct _CDXTAG
 {
    char * szName;        /* Name of tag */
@@ -194,38 +195,50 @@ typedef struct _CDXHEADER
 
 typedef CDXHEADER * LPCDXHEADER;
 ----- */
+
+#define CDX_TYPE_UNIQUE        1       /* unique index */
+#define CDX_TYPE_FORFILTER     0x08    /* for expression present */
+#define CDX_TYPE_BITVECTOR     0x10    /* SoftC? */
+#define CDX_TYPE_COMPACT       0x20    /* FoxPro */
+#define CDX_TYPE_COMPOUND      0x40    /* FoxPro */
+#define CDX_TYPE_STRUCTURE     0x80    /* FoxPro */
+
 typedef struct _CDXTAGHEADER
 {
-   LONG lRoot;
-   LONG lFreeList;
-   LONG lChgFlag; //lLength;
-   USHORT uiKeySize;
-   BYTE bType;
-   BYTE bSignature;
+   LONG lRoot;                /* offset of the root node */
+   LONG lFreeList;            /* offset of list of free   pages or -1 */
+   LONG lChgFlag; //lLength;  /* Version number ? */
+   USHORT uiKeySize;          /* key length */
+   BYTE bType;                /* index options see CDX_TYPE_* */
+   BYTE bSignature;           /* index signature */
    BYTE bReserved1[ 486 ];
-   USHORT iDescending;
-   USHORT iFilterPos;
-   USHORT iFilterLen;
-   USHORT iExprPos;
-   USHORT iExprLen;
+   USHORT iDescending;        /* 0 = ascending  1 = descending */
+   USHORT iFilterPos;         /* offset of filter expression */
+   USHORT iFilterLen;         /* length of filter expression */
+   USHORT iExprPos;           /* offset of key expression */
+   USHORT iExprLen;           /* length of key expression */
    BYTE   KeyPool[ CDX_PAGELEN ];
 } CDXTAGHEADER;
 typedef CDXTAGHEADER * LPCDXTAGHEADER;
 
+#define CDX_NODE_BRANCH    0
+#define CDX_NODE_ROOT      1
+#define CDX_NODE_LEAF      2
+
 typedef struct _CDXLEAFHEADER
 {
-   USHORT uiNodeType;
-   USHORT uiKeyCount;
-   LONG lLeftNode;
-   LONG lRightNode;
-   USHORT uiFreeSpace;
-   ULONG ulRecNumMask;
-   BYTE bDupByteMask;
-   BYTE bTrailByteMask;
-   BYTE bRecNumLen;
-   BYTE bDupCntLen;
-   BYTE bTrailCntLen;
-   BYTE bInfo;
+   USHORT uiNodeType;        /* node type see CDX_NODE_* */
+   USHORT uiKeyCount;        /* number of keys */
+   LONG lLeftNode;           /* offset of left node or -1 */
+   LONG lRightNode;          /* offset of right node or -1 */
+   USHORT uiFreeSpace;       /* free space available in a page */
+   ULONG ulRecNumMask;       /* record number mask */
+   BYTE bDupByteMask;        /* duplicate bytes count mask */
+   BYTE bTrailByteMask;      /* trailing bytes count mask */
+   BYTE bRecNumLen;          /* number of bits for record number */
+   BYTE bDupCntLen;          /* number of bits for duplicate count */
+   BYTE bTrailCntLen;        /* number of bits for trailing count */
+   BYTE bInfo;               /* total number of bytes for recnn/dup/trail info */
    BYTE bData[ CDX_LEAFFREESPACE ];
 } CDXLEAFHEADER;
 typedef CDXLEAFHEADER * LPCDXLEAFHEADER;

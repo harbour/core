@@ -456,18 +456,6 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 
-%{
-/* ************************************************************************ */
-%}
-"_get_("    {
-                   yylval.string = hb_compIdentifierNew( "_PROCREQ_", TRUE );
-                   hb_comp_iState =IDENTIFIER;
-                   return GET;
-               }
-%{
-/* ************************************************************************ */
-%}
-
 "decl"|"decla"|"declar"|"declare" {
     yylval.string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
     if( hb_comp_iState == DO )

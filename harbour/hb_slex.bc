@@ -313,6 +313,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\terror.obj \
    $(OBJ_DIR)\text.obj \
    $(OBJ_DIR)\tget.obj \
+   $(OBJ_DIR)\tgetint.obj \
    $(OBJ_DIR)\tgetlist.obj \
    $(OBJ_DIR)\tlabel.obj \
    $(OBJ_DIR)\tmenuitm.obj \
@@ -1618,6 +1619,13 @@ $(OBJ_DIR)\tget.c : $(RTL_DIR)\tget.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\tget.obj : $(OBJ_DIR)\tget.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\tgetint.c : $(RTL_DIR)\tgetint.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\tgetint.obj : $(OBJ_DIR)\tgetint.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 

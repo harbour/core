@@ -1,3 +1,56 @@
+2000-11-04 13:35 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    +source/rtl/tgetint.prg
+    *source/rtl/tget.prg
+    *hb_slex.bc
+    *makefile.bc
+    *makefile.vc
+    *source/rtl/Makefile
+        + tgetint.prg a new file with GetNew(), __GET() and __GETA()
+         functions moved here from tget.prg
+        * __GET() and __GETA() both create a set/get codeblock on the 
+         fly with no macro compilation and with no memvar variables
+        * the first argument of __GET() have to be passed by a reference
+         if simple variable is used and set/get codeblock is not
+         specified
+        
+    *include/hbapi.h
+    *include/hbapiitm.h
+        * added hb_itemIncRef/hb_itemDecRef declarations
+        * added hb_codeblockIncRef/hb_codeblockDecRef
+
+    *include/hbrddcdx.h
+        * added a few more comments
+        * added a forward declaration of _CDXTAG structure
+
+    *source/vm/codebloc.c
+    *source/vm/itemapi.c
+    *source/vm/memvars.c
+        * fixed reference counting for detached local variables
+        (This should cure many random core dumps/GPFs)
+
+    *source/compiler/harbour.l
+    *source/compiler/harbour.y
+        *removed the latest Ron's changes
+        
+    *source/compiler/expropta.c
+    *source/macro/macroa.c
+    *include/hbexpra.c
+        * added support for internal _GET_ -> __GET/__GETA translation
+        NOTE: The variable name passed to __GETA can be buggy in some
+        cases, for example:
+        @ 0,0 GET var(other[ i ]):name[ i, 1 ]
+        will pass "var(other" as a variable name (Clipper and Harbour 
+        bug) - the correct behaviour will require some more work -
+        there is no simple workaround for this currently
+        
+    *source/pp/pptable.c
+        * removed a hard-coded set/get codeblock from _GET_() arguments
+          list - it is created in __GET/__GETA now
+          NOTE: This is how Clipper works (no variable names conflicts)
+          This will break current Simplex implementation !!!
+          
+
 2000-11-03 16:05 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/pptable.c
      * Changed {|u| to {|_1| and := u to := _1 in bSetGet of _GET_(...) to avoid unexpected result with @ X,Y GET u
