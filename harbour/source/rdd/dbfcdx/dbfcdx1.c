@@ -945,7 +945,7 @@ static void hb_xfptGetMemo( CDXAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 static void hb_xfptReadItemSx( FHANDLE hMemoFile, PHB_ITEM pItem )
 {
    BYTE itmBuffer[14];
-   char * pStr;
+   BYTE * pStr;
    USHORT usType;
    ULONG ulLen, i;
    PHB_ITEM pArray, pNewItem;
@@ -974,7 +974,7 @@ static void hb_xfptReadItemSx( FHANDLE hMemoFile, PHB_ITEM pItem )
       case 0x0400 : /* CLIP_IT_CHAR */
          ulLen = *(short *)(&itmBuffer[2]);  /* only 2 bytes for SIX compatibility */
          pStr = (char *) hb_xgrab( ulLen + 1 );
-         hb_fsRead( hMemoFile, (unsigned char *) pStr, ulLen );
+         hb_fsRead( hMemoFile, pStr, ulLen );
          hb_itemPutCPtr( pItem, pStr, ulLen );
          break;
 
@@ -1088,7 +1088,7 @@ static ULONG hb_xfptWriteItemSx( FHANDLE hMemoFile, PHB_ITEM pItem )
          ulSize += ulLen;
          if ( ulLen > 0 )
          {
-            hb_fsWrite( hMemoFile, (unsigned char *) (pItem->item.asString.value), ulLen );
+            hb_fsWrite( hMemoFile, (BYTE *) (pItem->item.asString.value), ulLen );
          }
          break;
 

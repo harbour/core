@@ -25,7 +25,7 @@ CC = bcc
 CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -I$($(HB_ARCHITECTURE)_$(HB_COMPILER)_GRANDP) -I$(_HB_INC_COMPILE)
-CFLAGS = -i48 -O2 -mh -d
+CFLAGS = -i48 -O2 -mh -d -DHB_LONG_LONG_OFF
 
 #Note: The empty line below HAVE TO exist!
 define link_file

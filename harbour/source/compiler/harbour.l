@@ -1593,59 +1593,6 @@ int yy_lex_input( char *buffer, int iBufferSize )
    return hb_pp_Internal( hb_comp_bPPO ? hb_comp_yyppo : NULL, buffer );
 }
 
-static double hb_strVal( const char * szText, ULONG ulLen )
-{
-   long double ldValue = 0.0;
-   ULONG ulPos;
-   ULONG ulDecPos = 0;
-   BOOL bNegative = FALSE;
-   long double ldScale = 0.1L;
-
-   /* Look for sign */
-
-   for( ulPos = 0; ulPos < ulLen; ulPos++ )
-   {
-      if( szText[ ulPos ] == '-' )
-      {
-         bNegative = TRUE;
-         ulPos++;
-         break;
-      }
-      else if( szText[ ulPos ] == '+' )
-      {
-         ulPos++;
-         break;
-      }
-      else if( ! HB_ISSPACE( szText[ ulPos ] ) )
-         break;
-   }
-
-   /* Build the number */
-
-   for(; ulPos < ulLen; ulPos++ )
-   {
-      if( szText[ ulPos ] == '.' && ulDecPos == 0 )
-      {
-         ulDecPos++;
-         ldScale = 0.1L;
-      }
-      else if( szText[ ulPos ] >= '0' && szText[ ulPos ] <= '9' )
-      {
-         if( ulDecPos )
-         {
-            ldValue += ldScale * ( long double )( szText[ ulPos ] - '0' );
-            ldScale *= 0.1L;
-         }
-         else
-            ldValue = ( ldValue * 10.0L ) + ( long double )( szText[ ulPos ] - '0' );
-      }
-      else
-         break;
-   }
-
-   return ( double )( bNegative && ldValue != 0.0L ? -ldValue : ldValue );
-}
-
 static int yy_ConvertNumber( char * szBuffer )
 {
    char * ptr;

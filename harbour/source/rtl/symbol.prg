@@ -114,19 +114,19 @@ return .f.
 #include <hbapi.h>
 #include <hbvm.h>
 
-static HB_FUNC( GETSYMBOLPOINTER )
+HB_FUNC( GETSYMBOLPOINTER )
 {
    hb_retnl( ( long ) hb_dynsymGet( hb_parc( 1 ) ) );
 }
 
-static HB_FUNC( GETSYMBOLNAME )
+HB_FUNC( GETSYMBOLNAME )
 {
    PHB_DYNS pDynSym = ( PHB_DYNS ) hb_parnl( 1 );
 
    hb_retc( ( pDynSym != NULL ? pDynSym->pSymbol->szName : "" ) );
 }
 
-static HB_FUNC( SYMBOL_EXEC )
+HB_FUNC( SYMBOL_EXEC )
 {
    PHB_ITEM pSelf = hb_param( 0, HB_IT_OBJECT ); /* we retrieve Self */
    PHB_DYNS pSym;
