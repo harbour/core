@@ -737,6 +737,7 @@ ERRCODE hb_waClearFilter( AREAP pArea )
    /* Free all items */
    if( pArea->dbfi.itmCobExpr )
    {
+      hb_gcUnlockItem(pArea->dbfi.itmCobExpr);
       hb_itemRelease( pArea->dbfi.itmCobExpr );
       pArea->dbfi.itmCobExpr = NULL;
    }
@@ -820,7 +821,10 @@ ERRCODE hb_waSetFilter( AREAP pArea, LPDBFILTERINFO pFilterInfo )
    SELF_CLEARFILTER( pArea );
 
    if( pFilterInfo->itmCobExpr )
+   {
       pArea->dbfi.itmCobExpr = hb_itemNew( pFilterInfo->itmCobExpr );
+      hb_gcLockItem(pArea->dbfi.itmCobExpr);
+   }
 
    if( pFilterInfo->abFilterText )
       pArea->dbfi.abFilterText = hb_itemNew( pFilterInfo->abFilterText );

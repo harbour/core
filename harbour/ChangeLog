@@ -1,3 +1,12 @@
+   source\rdd\dbf1.c
+      !removed reference to unknown pItem in HB_TRACE for hb_dbfUnlockAllRecords
+   doc/en/garbage.txt
+      minor grammar fixes
+   source/rdd/workarea.c
+      added Item lock/unlock to SetFilter/Clearfilter so GC won't
+      de-allocate the codeblock
+      (fixes error at close of app for a bad pointer in hb_xfree)
+
 2000-09-20 13:12 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * source/rdd/workarea.c
    * include/hbrddwrk.h

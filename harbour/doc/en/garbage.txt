@@ -35,7 +35,7 @@
  *      doesn't know their location. This could cause some memory blocks to be
  *      released prematurely. To prevent the premature deallocation of such memory
  *      blocks they have to be locked for the garbage collector. The memory block
- *      can be locked with hb_gcLockItem() (recommendeed method) if
+ *      can be locked with hb_gcLockItem() (recommended method) if
  *      harbour item structure is used or hb_gcLock() function if a direct memory
  *      pointer is used. The memory block can be unlocked by hb_gcUnlockItem() or
  *      hb_gcUnlock().

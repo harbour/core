@@ -262,7 +262,7 @@ static void hb_dbfUnlockAllRecords( DBFAREAP pArea )
 {
    ULONG ulCount;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_dbfUnlockAllRecords(%p, %p)", pArea, pItem));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dbfUnlockAllRecords(%p, %p)", pArea ));
 
    if( pArea->pLocksPos )
    {
@@ -352,7 +352,7 @@ static ERRCODE hb_dbfLockRecord( DBFAREAP pArea, ULONG ulRecNo, BOOL * pResult,
    }
    else
       * pResult = FALSE;
-   return SUCCESS;   
+   return SUCCESS;
 }
 
 /*
@@ -492,7 +492,7 @@ static ULONG hb_dbfGetMemoLen( DBFAREAP pArea, USHORT uiIndex )
       uiIndex = 0;
       while( uiIndex < DBT_BLOCKSIZE && pBlock[ uiIndex ] != 0x1A )
          uiIndex++;
-      ulBlock += uiIndex;      
+      ulBlock += uiIndex;
    } while( uiIndex == DBT_BLOCKSIZE );
    return ulBlock;
 }
@@ -1955,7 +1955,7 @@ ERRCODE hb_dbfPack( DBFAREAP pArea )
       hb_vmPush( pBlock );
       hb_vmDo( 0 );
    }
-   
+
    pArea->ulRecCount = ulRecOut;
    return hb_dbfGoTo( pArea, 1 );
 }
@@ -2243,17 +2243,17 @@ ERRCODE hb_dbfLock( DBFAREAP pArea, LPDBLOCKINFO pLockInfo )
       switch( pLockInfo->uiMethod )
       {
          case DBLM_EXCLUSIVE:
-            return hb_dbfLockRecord( pArea, pArea->ulRecNo, &pLockInfo->fResult, 
+            return hb_dbfLockRecord( pArea, pArea->ulRecNo, &pLockInfo->fResult,
                                      ( pLockInfo->uiMethod == DBLM_EXCLUSIVE ) );
-   
+
          case DBLM_MULTIPLE:
             return hb_dbfLockRecord( pArea, hb_itemGetNL( pLockInfo->itmRecID ),
-                                     &pLockInfo->fResult, 
+                                     &pLockInfo->fResult,
                                      ( pLockInfo->uiMethod == DBLM_EXCLUSIVE ) );
-   
+
          case DBLM_FILE:
             return hb_dbfLockFile( pArea, &pLockInfo->fResult );
-   
+
          default:
             pLockInfo->fResult = FALSE;
       }
@@ -2484,7 +2484,7 @@ HB_FUNC( DBF_GETFUNCTABLE )
    uiCount = ( USHORT * ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
    * uiCount = RDDFUNCSCOUNT;
    pTable = ( RDDFUNCS * ) hb_itemGetPtr( hb_param( 2, HB_IT_POINTER ) );
-   
+
    HB_TRACE(HB_TR_DEBUG, ("DBF_GETFUNCTABLE(%i, %p)", uiCount, pTable));
 
    if( pTable )
