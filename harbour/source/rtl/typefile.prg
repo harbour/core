@@ -56,7 +56,7 @@
 
 #define BUFFER_LENGTH 2048
 
-PROCEDURE __TYPEFILE( cFile, lPrint )
+FUNCTION __TYPEFILE( cFile, lPrint )
    LOCAL nHandle, cBuffer
    LOCAL oErr, xRecover, nRetries
    LOCAL aSaveSet[ 2 ]
@@ -110,7 +110,7 @@ PROCEDURE __TYPEFILE( cFile, lPrint )
       oErr:tries       := ++nRetries
       xRecover := Eval( ErrorBlock(), oErr )
       IF ISLOGICAL( xRecover ) .and. !xRecover      // user select "Default"
-         RETURN
+         RETURN NIL
       ENDIF
    ENDDO
 
@@ -125,9 +125,11 @@ PROCEDURE __TYPEFILE( cFile, lPrint )
    // here we try to read a line at a time but I think we could just
    // display the whole buffer since it said: "without any headings or formating"
 
+   cbuffer := SPACE( BUFFER_LENGTH )
    ?                                                      // start in a new line
    DO WHILE fread( nHandle, @cbuffer, BUFFER_LENGTH ) > 0
       ?? cBuffer
+      cbuffer := SPACE( BUFFER_LENGTH )
    ENDDO
 
    FCLOSE( nHandle )
@@ -137,7 +139,7 @@ PROCEDURE __TYPEFILE( cFile, lPrint )
       Set( _SET_PRINTER, aSaveSet[ 2 ] )
    ENDIF
 
-   RETURN
+   RETURN NIL
 
 /*----------------------------------------------------------------------------*/
 /*         Function aDvd : Divide string to tokens and put tokens into array  */
