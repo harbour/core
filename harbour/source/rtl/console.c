@@ -163,12 +163,12 @@ USHORT hb_max_col( void )
 }
 
 #ifndef HARBOUR_USE_GTAPI
-static void adjust_pos( BYTE * pStr, ULONG len, USHORT * row, USHORT * col, USHORT max_row, USHORT max_col )
+static void adjust_pos( BYTE * pStr, ULONG ulLen, USHORT * row, USHORT * col, USHORT max_row, USHORT max_col )
 {
-   ULONG count;
+   ULONG ulCount;
    BYTE * pPtr = pStr;
 
-   for( count = 0; count < len; count++ )
+   for( ulCount = 0; ulCount < ulLen; ulCount++ )
    {
       switch( *pPtr++  )
       {
@@ -250,17 +250,17 @@ static void hb_out( USHORT uiParam, hb_out_func_typedef * hb_out_func )
 }
 
 /* Output an item to STDOUT */
-static void hb_outstd( BYTE * pStr, ULONG len )
+static void hb_outstd( BYTE * pStr, ULONG ulLen )
 {
-   ULONG count = len;
+   ULONG ulCount = ulLen;
    BYTE * pPtr = pStr;
 
 #ifdef HARBOUR_USE_GTAPI
    hb_gtPreExt();
 #endif
 
-   if( strlen( pStr ) != count )
-      while( count-- ) printf( "%c", *pPtr++ );
+   if( strlen( pStr ) != ulCount )
+      while( ulCount-- ) printf( "%c", *pPtr++ );
    else
       printf( "%s", pStr );
    fflush( stdout );
@@ -275,22 +275,22 @@ static void hb_outstd( BYTE * pStr, ULONG len )
    }
    hb_gtPostExt();
 #else
-   adjust_pos( pStr, len, &s_uiDevRow, &s_uiDevCol, hb_max_row(), hb_max_col() );
+   adjust_pos( pStr, ulLen, &s_uiDevRow, &s_uiDevCol, hb_max_row(), hb_max_col() );
 #endif
 }
 
 /* Output an item to STDERR */
-static void hb_outerr( BYTE * pStr, ULONG len )
+static void hb_outerr( BYTE * pStr, ULONG ulLen )
 {
-   ULONG count = len;
+   ULONG ulCount = ulLen;
    BYTE * pPtr = pStr;
 
 #ifdef HARBOUR_USE_GTAPI
    hb_gtPreExt();
 #endif
 
-   if( strlen( pStr ) != count )
-      while( count-- ) fprintf( stderr, "%c", *pPtr++ );
+   if( strlen( pStr ) != ulCount )
+      while( ulCount-- ) fprintf( stderr, "%c", *pPtr++ );
    else
       fprintf( stderr, "%s", pStr );
    fflush( stderr );
@@ -305,47 +305,47 @@ static void hb_outerr( BYTE * pStr, ULONG len )
    }
    hb_gtPostExt();
 #else
-   adjust_pos( pStr, len, &s_uiDevRow, &s_uiDevCol, hb_max_row(), hb_max_col() );
+   adjust_pos( pStr, ulLen, &s_uiDevRow, &s_uiDevCol, hb_max_row(), hb_max_col() );
 #endif
 }
 
 /* Output an item to the screen and/or printer and/or alternate */
-static void hb_altout( BYTE * pStr, ULONG len )
+static void hb_altout( BYTE * pStr, ULONG ulLen )
 {
    BYTE * pPtr = pStr;
 
    if( hb_set.HB_SET_CONSOLE )
    {
 #ifdef HARBOUR_USE_GTAPI
-      hb_gtWriteCon( pStr, len );
+      hb_gtWriteCon( pStr, ulLen );
       hb_gtGetPos( &s_uiDevRow, &s_uiDevCol );
 #else
-      ULONG count = len;
-      if( strlen( pStr ) != count )
-         while( count-- ) printf( "%c", *pPtr++ );
+      ULONG ulCount = ulLen;
+      if( strlen( pStr ) != ulCount )
+         while( ulCount-- ) printf( "%c", *pPtr++ );
       else
          printf( "%s", pStr );
-      adjust_pos( pStr, len, &s_uiDevRow, &s_uiDevCol, hb_max_row(), hb_max_col() );
+      adjust_pos( pStr, ulLen, &s_uiDevRow, &s_uiDevCol, hb_max_row(), hb_max_col() );
 #endif
    }
    if( hb_set.HB_SET_ALTERNATE && hb_set_althan >= 0 )
    {
       /* Print to alternate file if SET ALTERNATE ON and valid alternate file */
-      int user_ferror = hb_fsError(); /* Save current user file error code */
+      USHORT user_ferror = hb_fsError(); /* Save current user file error code */
       unsigned write_len;
-      ULONG count = len;
+      ULONG ulCount = ulLen;
       pPtr = pStr;
-      while( count )
+      while( ulCount )
       {
-         if( count > UINT_MAX )
+         if( ulCount > UINT_MAX )
          {
             write_len = UINT_MAX;
-            count -= UINT_MAX;
+            ulCount -= UINT_MAX;
          }
          else
          {
-            write_len = count;
-            count = 0;
+            write_len = ulCount;
+            ulCount = 0;
          }
          hb_fsWrite( hb_set_althan, ( BYTE * ) pPtr, write_len );
          pPtr += write_len;
@@ -355,21 +355,21 @@ static void hb_altout( BYTE * pStr, ULONG len )
    if( hb_set_extrahan >= 0 )
    {
       /* Print to extra file if valid alternate file */
-      int user_ferror = hb_fsError(); /* Save current user file error code */
+      USHORT user_ferror = hb_fsError(); /* Save current user file error code */
       unsigned write_len;
-      ULONG count = len;
+      ULONG ulCount = ulLen;
       pPtr = pStr;
-      while( count )
+      while( ulCount )
       {
-         if( count > UINT_MAX )
+         if( ulCount > UINT_MAX )
          {
             write_len = UINT_MAX;
-            count -= UINT_MAX;
+            ulCount -= UINT_MAX;
          }
          else
          {
-            write_len = count;
-            count = 0;
+            write_len = ulCount;
+            ulCount = 0;
          }
          hb_fsWrite( hb_set_extrahan, ( BYTE * ) pPtr, write_len );
          pPtr += write_len;
@@ -379,93 +379,93 @@ static void hb_altout( BYTE * pStr, ULONG len )
    if( hb_set.HB_SET_PRINTER && hb_set_printhan >= 0 )
    {
       /* Print to printer if SET PRINTER ON and valid printer file */
-      int user_ferror = hb_fsError(); /* Save current user file error code */
+      USHORT user_ferror = hb_fsError(); /* Save current user file error code */
       unsigned write_len;
-      ULONG count = len;
+      ULONG ulCount = ulLen;
       pPtr = pStr;
-      while( count )
+      while( ulCount )
       {
-         if( count > UINT_MAX )
+         if( ulCount > UINT_MAX )
          {
             write_len = UINT_MAX;
-            count -= UINT_MAX;
+            ulCount -= UINT_MAX;
          }
          else
          {
-            write_len = count;
-            count = 0;
+            write_len = ulCount;
+            ulCount = 0;
          }
          hb_fsWrite( hb_set_printhan, ( BYTE * ) pPtr, write_len );
          pPtr += write_len;
       }
-      if( len + s_uiPCol > USHRT_MAX ) s_uiPCol = USHRT_MAX;
-      else s_uiPCol += len;
+      if( ulLen + s_uiPCol > USHRT_MAX ) s_uiPCol = USHRT_MAX;
+      else s_uiPCol += ulLen;
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
    }
 }
 
 /* Output an item to the screen and/or printer */
-static void hb_devout( BYTE * pStr, ULONG len )
+static void hb_devout( BYTE * pStr, ULONG ulLen )
 {
    if( hb_set_printhan >= 0 && hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 )
    {
       /* Display to printer if SET DEVICE TO PRINTER and valid printer file */
-      int user_ferror = hb_fsError(); /* Save current user file error code */
+      USHORT user_ferror = hb_fsError(); /* Save current user file error code */
       unsigned write_len;
-      ULONG count = len;
+      ULONG ulCount = ulLen;
       BYTE * pPtr = pStr;
-      while( count )
+      while( ulCount )
       {
-         if( count > UINT_MAX )
+         if( ulCount > UINT_MAX )
          {
             write_len = UINT_MAX;
-            count -= UINT_MAX;
+            ulCount -= UINT_MAX;
          }
          else
          {
-            write_len = count;
-            count = 0;
+            write_len = ulCount;
+            ulCount = 0;
          }
          hb_fsWrite( hb_set_printhan, ( BYTE * ) pPtr, write_len );
          pPtr += write_len;
       }
-      if( len + s_uiPCol > USHRT_MAX ) s_uiPCol = USHRT_MAX;
-      else s_uiPCol += len;
+      if( ulLen + s_uiPCol > USHRT_MAX ) s_uiPCol = USHRT_MAX;
+      else s_uiPCol += ulLen;
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
    }
    else
    {
 #ifdef HARBOUR_USE_GTAPI
       /* Otherwise, display to console */
-      hb_gtWrite( pStr, len );
+      hb_gtWrite( pStr, ulLen );
       hb_gtGetPos( &s_uiDevRow, &s_uiDevCol );
 #else
-      ULONG count = len;
+      ULONG ulCount = ulLen;
       BYTE * pPtr = pStr;
-      if( strlen( pStr ) != count )
-         while( count-- ) printf( "%c", *pPtr++ );
+      if( strlen( pStr ) != ulCount )
+         while( ulCount-- ) printf( "%c", *pPtr++ );
       else
          printf( "%s", pStr );
-      adjust_pos( pStr, len, &s_uiDevRow, &s_uiDevCol, hb_max_row(), hb_max_col() );
+      adjust_pos( pStr, ulLen, &s_uiDevRow, &s_uiDevCol, hb_max_row(), hb_max_col() );
 #endif
    }
 }
 
 /* Output an item to the screen */
-static void hb_dispout( BYTE * pStr, ULONG len )
+static void hb_dispout( BYTE * pStr, ULONG ulLen )
 {
 #ifdef HARBOUR_USE_GTAPI
    /* Display to console */
-   hb_gtWrite( pStr, len );
+   hb_gtWrite( pStr, ulLen );
    hb_gtGetPos( &s_uiDevRow, &s_uiDevCol );
 #else
-   ULONG count = len;
+   ULONG ulCount = ulLen;
    BYTE * pPtr = pStr;
-   if( strlen( pStr ) != count )
-      while( count-- ) printf( "%c", *pPtr++ );
+   if( strlen( pStr ) != ulCount )
+      while( ulCount-- ) printf( "%c", *pPtr++ );
    else
       printf( "%s", pStr );
-   adjust_pos( pStr, len, &s_uiDevRow, &s_uiDevCol, hb_max_row(), hb_max_col() );
+   adjust_pos( pStr, ulLen, &s_uiDevRow, &s_uiDevCol, hb_max_row(), hb_max_col() );
 #endif
 }
 
@@ -474,7 +474,7 @@ void hb_setpos( USHORT row, USHORT col )
 #ifdef HARBOUR_USE_GTAPI
       hb_gtSetPos( row, col );
 #else
-      USHORT count;
+      USHORT uiCount;
 
       if( row < s_uiDevRow || col < s_uiDevCol )
       {
@@ -483,9 +483,9 @@ void hb_setpos( USHORT row, USHORT col )
          s_uiDevRow++;
       }
       else if( row > s_uiDevRow ) s_uiDevCol = 0;
-      for( count = s_uiDevRow; count < row; count++ )
+      for( uiCount = s_uiDevRow; uiCount < row; uiCount++ )
          printf( s_szCrLf );
-      for( count = s_uiDevCol; count < col; count++ )
+      for( uiCount = s_uiDevCol; uiCount < col; uiCount++ )
          printf( " " );
 #endif
 
@@ -495,25 +495,25 @@ void hb_setpos( USHORT row, USHORT col )
 
 void hb_devpos( USHORT row, USHORT col )
 {
-   USHORT count;
+   USHORT uiCount;
    /* Position printer if SET DEVICE TO PRINTER and valid printer file
       otherwise position console */
    if( hb_set_printhan >= 0 && hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 )
    {
-      int user_ferror = hb_fsError(); /* Save current user file error code */
+      USHORT user_ferror = hb_fsError(); /* Save current user file error code */
       if( row < s_uiPRow )
       {
          hb_fsWrite( hb_set_printhan, ( BYTE * ) "\x0C", 1 );
          s_uiPRow = s_uiPCol = 0;
       }
 
-      for( count = s_uiPRow; count < row; count++ )
+      for( uiCount = s_uiPRow; uiCount < row; uiCount++ )
          hb_fsWrite( hb_set_printhan, ( BYTE * ) s_szCrLf, CRLF_BUFFER_LEN-1 );
 
       if( row > s_uiPRow ) s_uiPCol = 0;
       col += hb_set.HB_SET_MARGIN;
 
-      for( count = s_uiPCol; count < col; count++ )
+      for( uiCount = s_uiPCol; uiCount < col; uiCount++ )
          hb_fsWrite( hb_set_printhan, ( BYTE * ) " ", 1 );
 
       s_uiPRow = row;
@@ -564,17 +564,17 @@ HARBOUR HB_QQOUT( void ) /* writes a list of values to the current device (scree
 
 HARBOUR HB_QOUT( void )
 {
-   USHORT count;
+   USHORT uiCount;
 
    hb_altout( s_szCrLf, CRLF_BUFFER_LEN - 1 );
 
    if( hb_set.HB_SET_PRINTER && hb_set_printhan >= 0 )
    {
-      int user_ferror = hb_fsError(); /* Save current user file error code */
+      USHORT user_ferror = hb_fsError(); /* Save current user file error code */
       s_uiPRow++;
       s_uiPCol = hb_set.HB_SET_MARGIN;
-      count = s_uiPCol;
-      while( count-- > 0 )
+      uiCount = s_uiPCol;
+      while( uiCount-- > 0 )
          hb_fsWrite( hb_set_printhan, ( BYTE * ) " ", 1 );
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
    }
@@ -656,7 +656,7 @@ HARBOUR HB_DEVPOS( void ) /* Sets the screen and/or printer position */
 
 HARBOUR HB_DEVOUT( void ) /* writes a single value to the current device (screen or printer), but is not affected by SET ALTERNATE */
 {
-   if( hb_pcount() > 0 )
+   if( hb_pcount() >= 1 )
    {
 #ifdef HARBOUR_USE_GTAPI
       char pOldColor[ CLR_STRLEN ];
@@ -679,7 +679,7 @@ HARBOUR HB_DEVOUT( void ) /* writes a single value to the current device (screen
 
 HARBOUR HB_DISPOUT( void ) /* writes a single value to the current device (screen or printer), but is not affected by SET ALTERNATE */
 {
-   if( hb_pcount() > 0 )
+   if( hb_pcount() >= 1 )
    {
 #ifdef HARBOUR_USE_GTAPI
       char pOldColor[ CLR_STRLEN ];
@@ -704,7 +704,7 @@ HARBOUR HB___EJECT( void ) /* Ejects the current page from the printer */
 {
    if( hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set_printhan >= 0 )
    {
-      int user_ferror = hb_fsError(); /* Save current user file error code */
+      USHORT user_ferror = hb_fsError(); /* Save current user file error code */
       hb_fsWrite( hb_set_printhan, ( BYTE * ) "\x0C\x0D", 2 );
       s_uiPRow = s_uiPCol = 0;
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
@@ -781,9 +781,9 @@ HARBOUR HB_SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
    && left == 0 && right == iMC
    && v_scroll == 0 && h_scroll == 0 )
    {
-      USHORT count;
+      USHORT uiCount;
       s_uiDevRow = iMR;
-      for( count = 0; count < s_uiDevRow ; count++ ) printf( s_szCrLf );
+      for( uiCount = 0; uiCount < s_uiDevRow ; uiCount++ ) printf( s_szCrLf );
       s_uiDevRow = s_uiDevCol = 0;
    }
 #endif
@@ -1014,7 +1014,7 @@ HARBOUR HB___SHADOW( void )
    else if( hb_pcount() == 5 )
       uiAttr = hb_parni( 5 );
 
-   if( hb_pcount() > 3 )
+   if( hb_pcount() >= 4 )
       hb_gt_DrawShadow( hb_parni( 1 ) + 1,
                         hb_parni( 2 ) + 1,
                         hb_parni( 3 ) + 1,
@@ -1119,7 +1119,7 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
                             /* receive data. Parameter : cPrompt. Returns : cRet */
 {
    int input;
-   ULONG len;
+   ULONG ulLen;
 
    if( hb_pcount() >= 1 )          /* cPrompt passed                         */
       HB_QOUT();
@@ -1146,10 +1146,10 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
       ta.c_lflag &= ~( ICANON | ECHO );
       tcsetattr( STDIN_FILENO, TCSAFLUSH, &ta );
 
-      len = strlen( s_szAcceptResult );
+      ulLen = strlen( s_szAcceptResult );
    }
 #else
-   len = 0;
+   ulLen = 0;
    input = 0;
    while( input != 13 )
    {
@@ -1159,9 +1159,9 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
       {
          case 8:  /* Backspace */
          case 19: /* Left arrow */
-            if( len > 0 )
+            if( ulLen > 0 )
             {
-               len--; /* Adjust input count to get rid of last character,
+               ulLen--; /* Adjust input count to get rid of last character,
                          then erase it from the screen. */
 #ifdef HARBOUR_USE_GTAPI
                hb_gtWriteCon( "\x8 \x8", 3L );
@@ -1173,15 +1173,15 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
          case 13:  /* Nothing to do. While loop will now exit. */
             break;
          default:
-            if( len < ( ACCEPT_BUFFER_LEN - 1 ) && input >= 32 )
+            if( ulLen < ( ACCEPT_BUFFER_LEN - 1 ) && input >= 32 )
             {
-               s_szAcceptResult[ len ] = input; /* Accept the input */
-               hb_dispout( &s_szAcceptResult[ len ], sizeof( char ) ); /* Then display it */
-               len++;  /* Then adjust the input count */
+               s_szAcceptResult[ ulLen ] = input; /* Accept the input */
+               hb_dispout( &s_szAcceptResult[ ulLen ], sizeof( char ) ); /* Then display it */
+               ulLen++;  /* Then adjust the input count */
             }
       }
    }
-   s_szAcceptResult[ len ] = '\0';
+   s_szAcceptResult[ ulLen ] = '\0';
 #endif
    hb_retc( s_szAcceptResult );
 }
@@ -1234,8 +1234,8 @@ HARBOUR HB___COLORINDEX( void )
    if( ISCHAR( 1 ) && ISNUM( 2 ) )
    {
       char * szColor = hb_parc( 1 );
-      ULONG  ulColorPos;
-      ULONG  ulColorLen;
+      ULONG ulColorPos;
+      ULONG ulColorLen;
       USHORT uiColorIndex = ( USHORT ) hb_parni( 2 );
 
       /* Skip the given number of commas */

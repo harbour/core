@@ -2509,51 +2509,51 @@ void hb_stackDispLocal( void )
       switch( hb_itemType( pBase ) )
       {
          case IT_NIL:
-              printf( "NIL " );
-              break;
+            printf( "NIL " );
+            break;
 
          case IT_ARRAY:
-              if( hb_arrayIsObject( pBase ) )
-                 printf( "OBJECT = %s ", hb_objGetClsName( pBase ) );
-              else
-                 printf( "ARRAY " );
-              break;
+            if( hb_arrayIsObject( pBase ) )
+               printf( "OBJECT = %s ", hb_objGetClsName( pBase ) );
+            else
+               printf( "ARRAY " );
+            break;
 
          case IT_BLOCK:
-              printf( "BLOCK " );
-              break;
+            printf( "BLOCK " );
+            break;
 
          case IT_DATE:
-              printf( "DATE = \"%s\" ", hb_itemGetDS( pBase, stack.szDate ) );
-              break;
+            printf( "DATE = \"%s\" ", hb_itemGetDS( pBase, stack.szDate ) );
+            break;
 
          case IT_DOUBLE:
-              printf( "DOUBLE = %f ", hb_itemGetND( pBase ) );
-              break;
+            printf( "DOUBLE = %f ", hb_itemGetND( pBase ) );
+            break;
 
          case IT_LOGICAL:
-              printf( "LOGICAL = %s ", hb_itemGetL( pBase ) ? ".T." : ".F." );
-              break;
+            printf( "LOGICAL = %s ", hb_itemGetL( pBase ) ? ".T." : ".F." );
+            break;
 
          case IT_LONG:
-              printf( "LONG = %lu ", hb_itemGetNL( pBase ) );
-              break;
+            printf( "LONG = %lu ", hb_itemGetNL( pBase ) );
+            break;
 
          case IT_INTEGER:
-              printf( "INTEGER = %i ", hb_itemGetNI( pBase ) );
-              break;
+            printf( "INTEGER = %i ", hb_itemGetNI( pBase ) );
+            break;
 
          case IT_STRING:
-              printf( "STRING = \"%s\" ", hb_itemGetCPtr( pBase ) );
-              break;
+            printf( "STRING = \"%s\" ", hb_itemGetCPtr( pBase ) );
+            break;
 
          case IT_SYMBOL:
-              printf( "SYMBOL = %s ", pBase->item.asSymbol.value->szName );
-              break;
+            printf( "SYMBOL = %s ", pBase->item.asSymbol.value->szName );
+            break;
 
          default:
-              printf( "UNKNOWN = TYPE %i ", hb_itemType( pBase ) );
-              break;
+            printf( "UNKNOWN = TYPE %i ", hb_itemType( pBase ) );
+            break;
       }
    }
 }
@@ -3089,7 +3089,7 @@ HARBOUR HB_ERRORLEVEL( void )
    /* NOTE: This should be ISNUM( 1 ), but it's sort of a Clipper bug that it
             accepts other types also and consider them zero. */
 
-   if( hb_pcount() > 0 )
+   if( hb_pcount() >= 1 )
       /* Only replace the error level if a parameter was passed */
       s_byErrorLevel = hb_parni( 1 );
 }
@@ -3109,7 +3109,7 @@ HARBOUR HB_PCOUNT( void )
 
 HARBOUR HB_PVALUE( void )                               /* PValue( <nArg> )         */
 {
-   WORD  wParam = hb_parni( 1 );                  /* Get parameter            */
+   WORD wParam = hb_parni( 1 );                  /* Get parameter            */
    PHB_ITEM pBase = stack.pItems + stack.pBase->item.asSymbol.stackbase;
                                                 /* Skip function + self     */
 

@@ -1,3 +1,29 @@
+19990917-00:05 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * include/hbdefs.h
+    + typedef BYTE HB_CHAR;
+    + typedef BYTE HB_ATTR;
+  * source/rtl/mtran.c
+    % Some Extend API calls changed for Item API, for speed.
+    + const keyword added.
+  * source/rtl/tone.c
+    % TONE() parameters checking simplified.
+    * Variable names standardized.
+  * source/rtl/set.c
+    * Removed all direct item access, replaced them with Item API calls.
+    * Some variable names standardized.
+    ! int -> BOOL in one place.
+    ! int -> USHORT for hb_fsError() retvals.
+  * source/rtl/console.c
+    ! int -> USHORT for hb_fsError() retvals.
+    * Variable names changed ( len -> ulLen, count -> ulCount, uiCount )
+    * pcount() > x -> pcount() >= x+1
+  * source/vm/hvm.c
+    * pcount() > x -> pcount() >= x+1 (ERRORLEVEL())
+  * source/rtl/setcolor.c
+    ! 0 -> '\0'
+    ! SETCOLOR() now doesn't accept a non string parameter.
+
 19990916-23:00 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/gtapi.c

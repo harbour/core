@@ -76,9 +76,6 @@ typedef unsigned char BYTE;            /* 1 byte unsigned */
 #undef SHORT                           /* 2 bytes signed */
 typedef short int SHORT;
 
-#undef WORD                            /* 2 bytes unsigned */
-typedef unsigned short int WORD;
-
 #undef USHORT                          /* 2 bytes unsigned */
 typedef unsigned short int USHORT;
 
@@ -88,6 +85,11 @@ typedef long LONG;
 #undef ULONG                           /* 4 bytes unsigned */
 typedef unsigned long ULONG;
 
+/* TODO: Remove this */
+#undef WORD                            /* 2 bytes unsigned */
+typedef unsigned short int WORD;
+
+/* TODO: Remove this */
 #undef DWORD                           /* 4 bytes unsigned */
 typedef unsigned long DWORD;
 
@@ -144,6 +146,9 @@ typedef unsigned long DWORD;
 #endif
 
 #define __HARBOUR__
+
+typedef BYTE HB_CHAR;
+typedef BYTE HB_ATTR;
 
 typedef HARBOUR ( * PHB_FUNC )( void );
 typedef PHB_FUNC HB_FUNC_PTR;

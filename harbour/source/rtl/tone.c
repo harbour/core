@@ -131,7 +131,7 @@
  *  $END$
  */
 
-void hb_tone( double frequency, double duration )
+void hb_tone( double dFrequency, double dDuration )
 {
    /* platform specific code */
    /*
@@ -152,49 +152,49 @@ void hb_tone( double frequency, double duration )
 #else
    /* Unsupported platform. */
    ULONG temp;    /* Avoid unreferenced temp */
-   duration = -1; /* Exit without delay */
+   dDuration = -1.0; /* Exit without delay */
 #endif
 #if defined(HARBOUR_GCC_OS2) || defined(OS2) || defined(WINNT) || defined(_Windows) || defined(__MINGW32__)
-   frequency = MIN( MAX( 0.0, frequency ), 32767.0 );
-   duration = duration * 1000.0 / 18.2; /* milliseconds */
+   dFrequency = MIN( MAX( 0.0, dFrequency ), 32767.0 );
+   dDuration = dDuration * 1000.0 / 18.2; /* milliseconds */
 #elif defined(__DJGPP) || defined(__BORLANDC__)
-   frequency = MIN( MAX( 0.0, frequency ), 32767.0 );
-   duration = duration * CLOCKS_PER_SEC / 18.2 ; /* clocks */
+   dFrequency = MIN( MAX( 0.0, dFrequency ), 32767.0 );
+   dDuration = dDuration * CLOCKS_PER_SEC / 18.2 ; /* clocks */
 #endif
 #if defined(__BORLANDC__) && ! defined(_Windows) && ! defined(WINNT)
-   sound( ( unsigned ) frequency );
+   sound( ( unsigned ) dFrequency );
 #elif defined(__DJGPP__)
-   sound( ( int ) frequency );
+   sound( ( int ) dFrequency );
 #endif
-   while( duration > 0.0 )
+   while( dDuration > 0.0 )
    {
 #if defined(HARBOUR_GCC_OS2) || defined(_Windows) || defined(__CYGWIN__)
-      temp = MIN( MAX ( 0, duration ), ULONG_MAX );
+      temp = MIN( MAX( 0, dDuration ), ULONG_MAX );
 #elif defined(OS2) || defined(__BORLANDC__) || defined(__DJGPP__) || defined(__MINGW32__)
-      temp = MIN( MAX ( 0, duration ), USHRT_MAX );
+      temp = MIN( MAX( 0, dDuration ), USHRT_MAX );
 #endif
-      duration -= temp;
+      dDuration -= temp;
       if( temp <= 0 )
       {
          /* Ensure that the loop gets terminated when
             only a fraction of the delay time remains. */
-         duration = -1.0;
+         dDuration = -1.0;
       }
       else
       {
 #if defined(HARBOUR_GCC_OS2)
-         DosBeep( ( ULONG ) frequency, temp );
+         DosBeep( ( ULONG ) dFrequency, temp );
 #elif defined(OS2)
-         DosBeep( ( USHORT ) frequency, temp );
+         DosBeep( ( USHORT ) dFrequency, temp );
 #elif defined(__MINGW32__)
-         beep( frequency, temp );
+         beep( dFrequency, temp );
 #elif defined(WINNT)
-         Beep( ( ULONG ) frequency, temp );
+         Beep( ( ULONG ) dFrequency, temp );
 #elif defined(_Windows) && ! defined(_Windows)
          /* Bad news for non-NT Windows platforms: Beep() ignores
             both parameters and either generates the default sound
             event or the standard system beep. */
-         Beep( ( ULONG ) frequency, temp );
+         Beep( ( ULONG ) dFrequency, temp );
 #elif defined(__DJGPP__) || ( defined(__BORLANDC__) && ! defined(_Windows) )
          /* Note: delay() in <dos.h> for DJGPP does not work and
                   delay() in <dos.h> for BORLANDC is not multi-
@@ -214,14 +214,6 @@ void hb_tone( double frequency, double duration )
 
 HARBOUR HB_TONE( void )
 {
-   double frequency, duration;
-   if( PCOUNT > 0 && ISNUM( 1 ) )
-   {
-      frequency = hb_parnd ( 1 );
-      if( PCOUNT > 1 && ISNUM( 2 ) )
-         duration = hb_parnd( 2 );
-      else
-         duration = 1.0;
-      hb_tone( frequency, duration );
-   }
+   if( ISNUM( 1 ) )
+      hb_tone( hb_parnd( 1 ), ( ISNUM( 2 ) ? hb_parnd( 2 ) : 1.0 ) );
 }

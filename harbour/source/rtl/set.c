@@ -1,4 +1,4 @@
-/* 
+/*
  * $Id$
  */
 
@@ -173,6 +173,7 @@
 
 #include <ctype.h>
 #include "extend.h"
+#include "itemapi.h"
 #include "errorapi.h"
 #include "filesys.h"
 #include "set.h"
@@ -186,59 +187,58 @@ FHANDLE hb_set_printhan;
 
 static BOOL set_logical( PHB_ITEM pItem )
 {
-   BOOL logical = FALSE;
+   BOOL bLogical = FALSE;
 
    if( IS_LOGICAL( pItem ) )
-      logical = pItem->item.asLogical.value;
+      bLogical = hb_itemGetL( pItem );
    else if( IS_STRING( pItem ) )
    {
-      if( pItem->item.asString.length >= 2
-       && toupper( pItem->item.asString.value[ 0 ] ) == 'O'
-       && toupper( pItem->item.asString.value[ 1 ] ) == 'N' )
-         logical = TRUE;
-      else if( pItem->item.asString.length >= 3
-       && toupper( pItem->item.asString.value[ 0 ] ) == 'O'
-       && toupper( pItem->item.asString.value[ 1 ] ) == 'F'
-       && toupper( pItem->item.asString.value[ 2 ] ) == 'F' )
-         logical = FALSE;
+      char * szString = hb_itemGetCPtr( pItem );
+      ULONG ulLen = hb_itemGetCLen( pItem );
+
+      if( ulLen >= 2
+       && toupper( szString[ 0 ] ) == 'O'
+       && toupper( szString[ 1 ] ) == 'N' )
+         bLogical = TRUE;
+      else if( ulLen >= 3
+       && toupper( szString[ 0 ] ) == 'O'
+       && toupper( szString[ 1 ] ) == 'F'
+       && toupper( szString[ 2 ] ) == 'F' )
+         bLogical = FALSE;
    }
 
-   return logical;
+   return bLogical;
 }
 
-static int set_number( PHB_ITEM pItem, int old_value )
+static int set_number( PHB_ITEM pItem, int iOldValue )
 {
-   int number;
-
-   if( IS_INTEGER( pItem ) ) number = pItem->item.asInteger.value;
-   else if( IS_LONG( pItem ) ) number = ( int ) pItem->item.asLong.value;
-   else if( IS_DOUBLE( pItem ) ) number = ( int ) pItem->item.asDouble.value;
-   else number = old_value;
-
-   return number;
+   if( IS_NUMERIC( pItem ) )
+      return hb_itemGetNI( pItem );
+   else
+      return iOldValue;
 }
 
-static char * set_string( PHB_ITEM pItem, char * old_str )
+static char * set_string( PHB_ITEM pItem, char * szOldString )
 {
-   char * string;
+   char * szString;
 
    if( IS_STRING( pItem ) )
    {
       /* Limit size of SET strings to 64K, truncating if source is longer */
-      ULONG size = pItem->item.asString.length;
+      ULONG ulLen = hb_itemGetCLen( pItem );
 
-      if( size > USHRT_MAX ) size = USHRT_MAX;
+      if( ulLen > USHRT_MAX ) ulLen = USHRT_MAX;
 
-      if( old_str ) string = ( char * ) hb_xrealloc( old_str, size + 1 );
-      else string = ( char * ) hb_xgrab( size + 1 );
+      if( szOldString ) szString = ( char * ) hb_xrealloc( szOldString, ulLen + 1 );
+      else szString = ( char * ) hb_xgrab( ulLen + 1 );
 
-      memcpy( string, pItem->item.asString.value, size );
-      string[ size ] = '\0';
+      memcpy( szString, hb_itemGetCPtr( pItem ), ulLen );
+      szString[ ulLen ] = '\0';
    }
    else
-      string = old_str;
+      szString = szOldString;
 
-   return string;
+   return szString;
 }
 
 static void close_binary( FHANDLE handle )
@@ -247,7 +247,7 @@ static void close_binary( FHANDLE handle )
    {
       /* Close the file handle without disrupting the current
          user file error value */
-      int user_ferror = hb_fsError();
+      USHORT user_ferror = hb_fsError();
       hb_fsClose( handle );
       hb_fsSetError( user_ferror );
    }
@@ -259,7 +259,7 @@ static void close_text( FHANDLE handle )
    {
       /* Close the file handle without disrupting the current
          user file error value */
-      int user_ferror = hb_fsError();
+      USHORT user_ferror = hb_fsError();
       #if ! defined(OS_UNIX_COMPATIBLE)
          hb_fsWrite( handle, ( BYTE * ) "\x1A", 1 );
       #endif
@@ -270,7 +270,7 @@ static void close_text( FHANDLE handle )
 
 static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_set_enum set_specifier )
 {
-   int user_ferror = hb_fsError(); /* Save the current user file error code */
+   USHORT user_ferror = hb_fsError(); /* Save the current user file error code */
    FHANDLE handle;
    PHB_FNAME pFilename;
    char path[ _POSIX_PATH_MAX + 1 ];
@@ -300,9 +300,9 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
 
       if( bAppend )
       {  /* Append mode */
-	 if( hb_fsFile( ( BYTE * ) path ) )
-	 {  /* If the file already exists, open it (in read-write mode, in
-	       case of non-Unix and text modes). */
+         if( hb_fsFile( ( BYTE * ) path ) )
+         {  /* If the file already exists, open it (in read-write mode, in
+               case of non-Unix and text modes). */
             handle = hb_fsOpen( ( BYTE * ) path, FO_READWRITE | FO_DENYWRITE );
             if( handle != FS_ERROR )
             {  /* Position to EOF */
@@ -344,7 +344,7 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
             wResult = hb_errRT_TERM( EG_CREATE, 2015, NULL, path, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
          else
             wResult = E_DEFAULT;
-   
+
          if( wResult == E_DEFAULT || wResult == E_BREAK )
             break;
       }
@@ -371,7 +371,7 @@ HARBOUR HB_SETCANCEL( void )
  */
 HARBOUR HB___SETCENTURY( void )
 {
-   int old_century_setting = hb_set_century;
+   BOOL old_century_setting = hb_set_century;
 
    /*
     * Change the setting if the parameter is a logical value, or is
@@ -723,7 +723,7 @@ HARBOUR HB_SET( void )
          if( args > 1 ) hb_set.HB_SET_CANCEL = set_logical( pArg2 );
          break;
       case HB_SET_COLOR      :
-         hb_retc( hb_setColor( args >= 2 && IS_STRING( pArg2 ) ? pArg2->item.asString.value : ( char * ) NULL ) );
+         hb_retc( hb_setColor( args >= 2 && IS_STRING( pArg2 ) ? hb_itemGetCPtr( pArg2 ) : ( char * ) NULL ) );
          break;
       case HB_SET_CONFIRM    :
          hb_retl( hb_set.HB_SET_CONFIRM );

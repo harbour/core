@@ -47,7 +47,7 @@ char * hb_setColor( char * sColor )
    hb_gtGetColorStr( hb_set.HB_SET_COLOR );
 #else
    strncpy( s_old_string, hb_set.HB_SET_COLOR, sizeof( hb_set.HB_SET_COLOR ) );
-   s_old_string[ sizeof( hb_set.HB_SET_COLOR ) - 1 ] = 0;
+   s_old_string[ sizeof( hb_set.HB_SET_COLOR ) - 1 ] = '\0';
 #endif
 
    if( sColor != ( char * ) NULL )
@@ -69,7 +69,7 @@ char * hb_setColor( char * sColor )
 
 HARBOUR HB_SETCOLOR( void )
 {
-   hb_retc( hb_setColor( hb_pcount() ? hb_parc( 1 ) : NULL ) );
+   hb_retc( hb_setColor( ISCHAR( 1 ) ? hb_parc( 1 ) : NULL ) );
 }
 
 HARBOUR HB_COLORSELECT( void )
