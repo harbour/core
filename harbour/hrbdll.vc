@@ -214,6 +214,7 @@ HARBOUR_DLL_OBJS = \
   $(OBJ_DIR)\achoice.obj \
   $(OBJ_DIR)\adir.obj \
   $(OBJ_DIR)\alert.obj \
+  $(OBJ_DIR)\altd.obj \
   $(OBJ_DIR)\browdb.obj \
   $(OBJ_DIR)\browdbx.obj \
   $(OBJ_DIR)\browse.obj \
@@ -355,6 +356,7 @@ HARBOUR_DLL_OBJS = \
   $(OBJ_DIR)\dbgtmitm.obj \
   $(OBJ_DIR)\dbgtwin.obj \
   $(OBJ_DIR)\debugger.obj \
+  $(OBJ_DIR)\dbgbrwsr.obj \
   $(OBJ_DIR)\dbgtarr.obj \
   $(OBJ_DIR)\dbgtobj.obj \
   $(OBJ_DIR)\tbrwtext.obj \
@@ -834,6 +836,12 @@ $(OBJ_DIR)\alert.c : $(RTL_DIR)\alert.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\alert.obj : $(OBJ_DIR)\alert.c
+   $(CC) $(CLIBFLAGS) /Fo$@ $**
+
+$(OBJ_DIR)\altd.c : $(RTL_DIR)\altd.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\altd.obj : $(OBJ_DIR)\altd.c
    $(CC) $(CLIBFLAGS) /Fo$@ $**
 
 $(OBJ_DIR)\ampm.obj : $(RTL_DIR)\ampm.c

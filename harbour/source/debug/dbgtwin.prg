@@ -76,6 +76,7 @@ CLASS TDbWindow  // Debugger windows and dialogs
    METHOD Hide()
    METHOD IsOver( nRow, nCol )
    METHOD nWidth() INLINE ::nRight - ::nLeft + 1
+   METHOD Clear()
    METHOD ScrollUp( nLines )
    METHOD SetCaption( cCaption )
    METHOD ShowCaption()
@@ -131,6 +132,14 @@ METHOD ScrollUp( nLines ) CLASS TDbWindow
    Scroll( ::nTop + 1, ::nLeft + 1, ::nBottom - 1, ::nRight - 1, nLines )
 
 return nil
+
+METHOD Clear() CLASS TDbWindow
+
+   SetColor( ::cColor )
+   Scroll( ::nTop+1, ::nLeft+1, ::nBottom-1, ::nRight-1 )
+
+RETURN nil
+
 
 METHOD SetCaption( cCaption ) CLASS TDbWindow
 

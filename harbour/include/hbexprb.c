@@ -127,6 +127,7 @@ static HB_EXPR_FUNC( hb_compExprUseLogical );
 static HB_EXPR_FUNC( hb_compExprUseSelf );
 static HB_EXPR_FUNC( hb_compExprUseArray );
 static HB_EXPR_FUNC( hb_compExprUseVarRef );
+static HB_EXPR_FUNC( hb_compExprUseRef );
 static HB_EXPR_FUNC( hb_compExprUseFunRef );
 static HB_EXPR_FUNC( hb_compExprUseIIF );
 static HB_EXPR_FUNC( hb_compExprUseList );
@@ -192,6 +193,7 @@ HB_EXPR_FUNC_PTR hb_comp_ExprTable[] = {
    hb_compExprUseSelf,
    hb_compExprUseArray,
    hb_compExprUseVarRef,
+   hb_compExprUseRef,
    hb_compExprUseFunRef,
    hb_compExprUseIIF,
    hb_compExprUseList,
@@ -805,6 +807,81 @@ static HB_EXPR_FUNC( hb_compExprUseFunRef )
    return pSelf;
 }
 
+/* actions for HB_ET_REFERENCE expression
+ */
+static HB_EXPR_FUNC( hb_compExprUseRef )
+{
+   switch( iMessage )
+   {
+      case HB_EA_REDUCE:
+         break;
+      case HB_EA_ARRAY_AT:
+         hb_compErrorType( pSelf );
+         break;
+      case HB_EA_ARRAY_INDEX:
+         break;
+      case HB_EA_LVALUE:
+         hb_compErrorLValue( pSelf );
+         break;
+      case HB_EA_PUSH_PCODE:
+         {
+            HB_EXPR_PTR pExp = pSelf->value.asReference;
+            if( pExp->ExprType == HB_ET_MACRO )
+            {
+               pExp->value.asMacro.SubType = HB_ET_MACRO_REFER;
+               HB_EXPR_USE( pExp, HB_EA_PUSH_PCODE );
+            }
+            else if( pExp->ExprType == HB_ET_ALIASVAR )
+            {
+               char *szAlias = pExp->value.asAlias.pAlias->value.asSymbol;
+               if( szAlias[ 0 ] == 'M' && szAlias[ 1 ] == '\0' )
+               {  /* @M->variable */
+                  if( pExp->value.asAlias.pVar->ExprType == HB_ET_VARIABLE )
+                  {
+#if !defined(HB_MACRO_SUPPORT) 
+                     HB_EXPR_PCODE2( hb_compGenVarPCode, HB_P_PUSHMEMVARREF, pExp->value.asAlias.pVar->value.asSymbol );
+#else
+                     HB_EXPR_PCODE2( hb_compMemvarGenPCode, HB_P_MPUSHMEMVARREF, pExp->value.asAlias.pVar->value.asSymbol );
+#endif                  
+                  }
+                  else /* @M->&l,  @M->&l.1,  @&m->l, etc. */
+                     hb_compErrorRefer( pSelf, szAlias );
+               }
+               else
+               {
+                  int iCmp = strncmp( szAlias, "MEMVAR", 4 );
+                  if( iCmp == 0 )
+                     iCmp = strncmp( szAlias, "MEMVAR", strlen( szAlias ) );
+                  if( iCmp == 0 && pExp->value.asAlias.pVar->ExprType == HB_ET_VARIABLE )
+                  {  /* @MEMVAR-> or @MEMVA-> or @MEMV-> */
+#if !defined(HB_MACRO_SUPPORT) 
+                     HB_EXPR_PCODE2( hb_compGenVarPCode, HB_P_PUSHMEMVARREF, pExp->value.asAlias.pVar->value.asSymbol );
+#else
+                     HB_EXPR_PCODE2( hb_compMemvarGenPCode, HB_P_MPUSHMEMVARREF, pExp->value.asAlias.pVar->value.asSymbol );
+#endif                  
+                  }
+                  else
+                     hb_compErrorRefer( pSelf, szAlias );
+               }
+            }
+            else
+               hb_compErrorRefer( pSelf, hb_compExprDescription(pSelf) );
+         }
+         break;
+         
+      case HB_EA_POP_PCODE:
+         break;
+      case HB_EA_PUSH_POP:
+      case HB_EA_STATEMENT:
+         hb_compWarnMeaningless( pSelf );
+      case HB_EA_DELETE:
+         HB_EXPR_PCODE1( hb_compExprDelete, pSelf->value.asReference );
+         break;
+   }
+   return pSelf;
+}
+
+
 /* actions for HB_ET_IIF expression
  */
 static HB_EXPR_FUNC( hb_compExprUseIIF )
@@ -1227,6 +1304,9 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
             if( pSelf->value.asMacro.SubType == HB_ET_MACRO_SYMBOL )
                HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROSYMBOL );
 
+            else if( pSelf->value.asMacro.SubType == HB_ET_MACRO_REFER )
+               HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHREF );
+
             else if( pSelf->value.asMacro.SubType != HB_ET_MACRO_ALIASED )
             {
 					if( HB_COMP_ISSUPPORTED(HB_COMPFLAG_XBASE) )
@@ -1284,7 +1364,9 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
             }
 
             if( ( pSelf->value.asMacro.SubType != HB_ET_MACRO_SYMBOL ) &&
-                ( pSelf->value.asMacro.SubType != HB_ET_MACRO_ALIASED && ! ( pSelf->value.asMacro.SubType & HB_ET_MACRO_ARGLIST ) ) )
+                ( pSelf->value.asMacro.SubType != HB_ET_MACRO_REFER ) &&
+                ( pSelf->value.asMacro.SubType != HB_ET_MACRO_ALIASED && 
+                ! ( pSelf->value.asMacro.SubType & HB_ET_MACRO_ARGLIST ) ) )
             {
                /* Always add add byte to pcode indicating requested macro compiler flag. */
                #if defined( HB_MACRO_SUPPORT )

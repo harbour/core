@@ -233,3 +233,10 @@ void hb_compErrorMacro( char *szText )
 {
     hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szText, NULL );
 }
+
+HB_EXPR_PTR hb_compErrorRefer( HB_EXPR_PTR pExpr, char *szAlias )
+{
+   char * szDesc = hb_compExprDescription( pExpr );
+   hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_REFER, szAlias, szDesc );
+   return pExpr;
+}

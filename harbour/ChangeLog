@@ -8,6 +8,57 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-03-09 13:50 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   + source/rtl/altd.prg
+      +new file with ALTD() procedure code
+      
+   * hrbdll.bc
+   * hrbdll.vc
+   * makefile.bc
+   * makefile.nt
+   * makefile.vc
+   * source/rtl/Makefile
+      *added a reference to rtl/altd.prg
+
+   * source/common/hbffind.c
+      *fixed to compile correctly with HB_OS_UNIX
+            
+   * include/hbcomp.h
+   * include/hbexpra.c
+   * include/hbexprb.c
+   * include/hbexprop.h
+   * include/hbpcode.h
+   * source/common/expropt1.c
+   * source/compiler/expropta.c
+   * source/compiler/exproptb.c
+   * source/compiler/genc.c
+   * source/compiler/harbour.c
+   * source/compiler/harbour.y
+   * source/compiler/hbfix.c
+   * source/compiler/hbgenerr.c
+   * source/compiler/hbpcode.c
+   * source/macro/macro.y
+   * source/macro/macroa.c
+   * source/macro/macrob.c
+   * source/vm/hvm.c
+      +added missing support for @&macro and @M->memvar
+      +added new pcode HB_MACROPUSHREF (all sources have to be
+       recompiled)
+
+   * source/debug/dbgtwin.prg
+   * source/debug/debugger.prg
+      *fixed procedures callstack when modules with/without debug info
+      are linked together
+      *fixed the debugger activation when ALTD() is used in
+      a module with no debug info (the debugger shows up
+      on the first line with debug info after the ALTD()
+      is called)
+
+   NOTICE:
+      Some compilers may require that the debug library has to
+      be specified as an object file in order to get the 
+      debugger linked in.
+
 2004-03-08 19:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
 
   + ChangeLog

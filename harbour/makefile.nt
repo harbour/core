@@ -388,6 +388,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\achoice.obj \
    $(OBJ_DIR)\adir.obj \
    $(OBJ_DIR)\alert.obj \
+   $(OBJ_DIR)\altd.obj \
    $(OBJ_DIR)\browdb.obj \
    $(OBJ_DIR)\browdbx.obj \
    $(OBJ_DIR)\browse.obj \

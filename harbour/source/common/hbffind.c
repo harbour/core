@@ -684,6 +684,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
       /* TODO: HB_FA_LABEL handling */
 
+      string[ 0 ] = '\0';
       if( ffind->bFirst )
       {
          char dirname[ _POSIX_PATH_MAX + 1 ];
@@ -694,7 +695,8 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          dirname[ 0 ] = '\0';
          info->pattern[ 0 ] = '\0';
          
-         strcpy( string, pszFileName );
+/*         strcpy( string, pszFileName ); */
+         strcpy( string, ffind->pszFileMask ); 
          pos = strrchr( string, OS_PATH_DELIMITER );
          if( pos )
          {
@@ -710,7 +712,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          }
          
          if( info->pattern[ 0 ] == '\0' )
-            strcpy( info->pattern, "*.*" );
+            strcpy( info->pattern, "*" );
          
          tzset();
          
@@ -804,7 +806,6 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 PHB_FFIND hb_fsFindFirst( const char * pszFileMask, USHORT attrmask )
 {
    PHB_FFIND ffind = ( PHB_FFIND ) hb_xgrab( sizeof( HB_FFIND ) );
-   PHB_FFIND_INFO info;
 
    /* Allocate platform dependent file find info storage */
 

@@ -424,6 +424,7 @@ ArgList    : Argument                     { $$ = hb_compExprNewArgList( $1 ); }
 
 Argument   : EmptyExpression                   { $$ = $1; }
            | '@' IDENTIFIER                    { $$ = hb_compExprNewVarRef( $2 ); }
+           | '@' AliasVar                      { $$ = hb_compExprNewRef( $2 ); }
            | '@' IDENTIFIER '(' ')'            { $$ = hb_compExprNewFunRef( $2 ); }
            ;
 

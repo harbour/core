@@ -83,6 +83,7 @@ static BYTE s_PrecedTable[] = {
    HB_ET_NIL,                 /*   HB_ET_SELF,        */
    HB_ET_NIL,                 /*   HB_ET_ARRAY,       */
    HB_ET_NIL,                 /*   HB_ET_VARREF,      */
+   HB_ET_NIL,                 /*   HB_ET_REFERENCE,   */
    HB_ET_NIL,                 /*   HB_ET_FUNREF,      */
    HB_ET_NIL,                 /*   HB_ET_IIF,         */
    HB_ET_NIL,                 /*   HB_ET_LIST,        */

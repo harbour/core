@@ -654,19 +654,12 @@ ArgList    : Argument                     { $$ = hb_compExprNewArgList( $1 ); }
            | ArgList ',' Argument         { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
-Argument   : EmptyExpression                    { $$ = $1; }
-           | '@' IdentName                      { $$ = hb_compExprNewVarRef( $2 ); }
-           | '@' IdentName '(' DummyArgList ')' { $$ = hb_compExprNewFunRef( $2 ); }
+Argument   : EmptyExpression               { $$ = $1; }
+           | '@' IdentName                 { $$ = hb_compExprNewVarRef( $2 ); }
+           | '@' IdentName '(' ArgList ')' { $$ = hb_compExprNewFunRef( $2 ); hb_compExprDelete( $4 ); }
+           | '@' MacroVar                  { $$ = hb_compExprNewRef( $2 ); }
+           | '@' AliasVar                  { $$ = hb_compExprNewRef( $2 ); }
            ;
-
-DummyArgList : DummyArgument                  {}
-             | DummyArgList ',' DummyArgument {}
-             ;
-
-DummyArgument : EmptyExpression                    {}
-              | '@' IdentName                      {}
-              | '@' IdentName '(' DummyArgList ')' {}
-              ;
 
 FunCallAlias : FunCall ALIASOP        { $$ = $1; }
 ;
@@ -1330,6 +1323,15 @@ DecList    : /* Nothing */ {}
            | FormalList ',' OptList
            ;
 
+DummyArgList : DummyArgument                  {}
+             | DummyArgList ',' DummyArgument {}
+             ;
+
+DummyArgument : EmptyExpression                    {}
+              | '@' IdentName                      {}
+              | '@' IdentName '(' DummyArgList ')' {}
+              ;
+
 FormalList : IdentName AsType                                  { hb_compDeclaredParameterAdd( $1, hb_comp_cVarType ); }
            | '@' IdentName AsType                              { hb_compDeclaredParameterAdd( $2, hb_comp_cVarType + VT_OFFSET_BYREF ); }
            | '@' IdentName '(' DummyArgList ')'                { hb_compDeclaredParameterAdd( $2, 'F' ); }
@@ -1683,11 +1685,13 @@ DoArgList  : ','                       { $$ = hb_compExprAddListExpr( hb_compExp
            | DoArgList ',' DoArgument  { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
-DoArgument : IdentName                            { $$ = hb_compExprNewVarRef( $1 ); }
-           | '@' IdentName                        { $$ = hb_compExprNewVarRef( $2 ); }
-           | '@' IdentName '(' DummyArgList ')' { $$ = hb_compExprNewFunRef( $2 ); }
-           | SimpleExpression                     { $$ = $1; }
-           | PareExpList                          { $$ = $1; }
+DoArgument : IdentName                     { $$ = hb_compExprNewVarRef( $1 ); }
+           | '@' IdentName                 { $$ = hb_compExprNewVarRef( $2 ); }
+           | '@' IdentName '(' ArgList ')' { $$ = hb_compExprNewFunRef( $2 ); hb_compExprDelete( $4 ); }
+           | SimpleExpression              { $$ = $1; }
+           | PareExpList                   { $$ = $1; }
+           | '@' MacroVar                  { $$ = hb_compExprNewRef( $2 ); }
+           | '@' AliasVar                  { $$ = hb_compExprNewRef( $2 ); }
            ;
 
 Crlf       : '\n'          { hb_comp_bError = FALSE; }

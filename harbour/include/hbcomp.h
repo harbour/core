@@ -328,6 +328,7 @@ extern void hb_compAutoOpenAdd( char * szName );
 #define hb_compErrorBound( p )   hb_macroError( EG_BOUND, HB_MACRO_PARAM )
 #define hb_compErrorAlias( p )   hb_macroError( EG_NOALIAS, HB_MACRO_PARAM )
 #define hb_compErrorDuplVar( c ) hb_macroError( EG_SYNTAX, HB_MACRO_PARAM )
+#define hb_compErrorRefer( p,c ) hb_macroError( EG_SYNTAX, HB_MACRO_PARAM )
 #define hb_compWarnMeaningless( p )
 #define hb_compErrorMacro( p )
 
@@ -362,6 +363,7 @@ extern void hb_compGenPushSymbol( char * szSymbolName, BOOL bFunction, BOOL bAli
 extern void hb_compGenPushAliasedVar( char *, BOOL, char *, long );
 extern void hb_compGenPopAliasedVar( char *, BOOL, char *, long );
 extern void hb_compGenPushFunRef( char * );
+extern void hb_compGenVarPCode( BYTE, char * );
 extern void hb_compGenPCode1( BYTE );             /* generates 1 byte of pcode */
 extern void hb_compGenPData1( BYTE );             /* generates 1 byte of pcode argument */
 extern void hb_compGenPCode2( BYTE, BYTE, BOOL );       /* generates 2 bytes of pcode + flag for optional StrongType(). */
@@ -398,6 +400,7 @@ extern void hb_compErrorDuplVar( char * );
 extern HB_EXPR_PTR hb_compWarnMeaningless( HB_EXPR_PTR );
 extern void hb_compErrorCodeblock( char * );
 extern void hb_compErrorMacro( char * );
+extern HB_EXPR_PTR hb_compErrorRefer( HB_EXPR_PTR, char * );
 
 extern void hb_compChkCompilerSwitch( int, char * Args[] );
 extern void hb_compChkEnvironVar( char * );

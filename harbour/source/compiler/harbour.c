@@ -69,7 +69,6 @@ int hb_compMemvarGetPos( char *, PFUNCTION ); /* return if passed name is a memv
 
 static void hb_compGenFieldPCode( BYTE , int, char *, PFUNCTION );      /* generates the pcode for database field */
 static void hb_compGenVariablePCode( BYTE , char * );    /* generates the pcode for undeclared variable */
-static void hb_compGenVarPCode( BYTE , char * );    /* generates the pcode for undeclared variable */
 
 static PFUNCTION hb_compFunctionNew( char *, HB_SYMBOLSCOPE );  /* creates and initialises the _FUNC structure */
 static PINLINE hb_compInlineNew( char * );  /* creates and initialises the _INLINE structure */

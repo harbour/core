@@ -103,6 +103,7 @@ typedef enum
 #define  HB_ET_MACRO_LIST    16   /* &variable used as in literal arrays or parentesised expressions. */
 #define  HB_ET_MACRO_INDEX   32   /* &variable used as arrays index. */
 #define  HB_ET_MACRO_PARE    64   /* &variable used as arrays index. */
+#define  HB_ET_MACRO_REFER  128   /* &macro used in @ (pass by reference) */
 
 /* types of expressions
  * NOTE: the order of these definition is important - change it carefully
@@ -121,6 +122,7 @@ typedef enum
    HB_ET_SELF,
    HB_ET_ARRAY,
    HB_ET_VARREF,
+   HB_ET_REFERENCE,
    HB_ET_FUNREF,
    HB_ET_IIF,
    HB_ET_LIST,
@@ -207,8 +209,8 @@ typedef struct HB_EXPR_
       struct
       {
          BOOL isMacro;			/* TRUE=codeblock contains macro expression */
-	 BOOL lateEval;			/* TRUE=late evaluation of macro */
-    	 char *string;			/* source code of a codeblock */
+	      BOOL lateEval;			/* TRUE=late evaluation of macro */
+         char *string;			/* source code of a codeblock */
          struct HB_EXPR_ *pExprList;    /* list elements */
          HB_CBVAR_PTR pLocals;      	/* list of local variables */
       } asCodeblock;
@@ -234,6 +236,7 @@ typedef struct HB_EXPR_
          struct HB_EXPR_ *pLeft;       /* object */
          struct HB_EXPR_ *pRight;      /* object */
       } asOperator;
+      struct HB_EXPR_ *asReference;
    } value;
    ULONG ulLength;
    ULONG Counter;
@@ -349,6 +352,7 @@ HB_EXPR_PTR hb_compExprNewNot( HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprNewNegate( HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprNewVarRef( char * );
 HB_EXPR_PTR hb_compExprNewFunRef( char * );
+HB_EXPR_PTR hb_compExprNewRef( HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprNewCodeblockExpr( HB_EXPR_PTR, HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprNewFunCallArg( HB_EXPR_PTR, HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprNewSend( HB_EXPR_PTR, char * );

@@ -1493,6 +1493,24 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             w++;
             break;
 
+         case HB_P_MACROPUSHREF:
+            {
+               PHB_ITEM pMacro = hb_stackItemFromTop( -1 );
+               PHB_SYMB pSym;
+               /* compile into a symbol name (used in function calls) */
+               hb_macroPushSymbol( pMacro );
+               /* NOTE: pMacro string is replaced with a symbol.
+                * Symbol is created if it doesn't exist.
+               */
+               pSym = pMacro->item.asSymbol.value;
+               /* NOTE: pMacro item of symbol type is replaced with 
+                *  the reference 
+               */
+               hb_memvarGetRefer( pMacro, pSym );
+               w++;
+            }
+            break;
+
          case HB_P_MACROSYMBOL:
             /* compile into a symbol name (used in function calls) */
             hb_macroPushSymbol( hb_stackItemFromTop( -1 ) );
@@ -5023,10 +5041,16 @@ void hb_vmRequestDebug( void )
    s_bDebugRequest = TRUE;
 }
 
+/* check if the debugger activation was requested or request the debugger
+activation if .T. is passed
+*/
 HB_FUNC( HB_DBG_INVOKEDEBUG )
 {
    BOOL bRequest = s_bDebugRequest;
-   s_bDebugRequest = FALSE;
+   if( hb_pcount() > 0 )
+      s_bDebugRequest = hb_parl(1);
+   else
+      s_bDebugRequest = FALSE;
    hb_retl( bRequest );
 }
 
