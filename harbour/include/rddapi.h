@@ -185,8 +185,11 @@ typedef struct
    USHORT   uiRecordLen;     /* Size of record */
    BYTE *   bRecord;         /* Buffer of the data */
    BOOL     fHasMemo;        /* Work Area with Memo fields */
-   PHB_ITEM pRecNo;          /* Current record */
+   ULONG    lRecNo;          /* Current record */
    BOOL     fExclusive;      /* Share the Work Area */
+   BYTE     bYear;           /* Last update */
+   BYTE     bMonth;
+   BYTE     bDay;
 } DBEXTENDINFO;
 
 typedef DBEXTENDINFO * LPDBEXTENDINFO;
@@ -537,6 +540,7 @@ typedef USHORT ( * DBENTRYP_S    )( AREAP area, USHORT param );
 typedef USHORT ( * DBENTRYP_LP   )( AREAP area, LONG * param );
 typedef USHORT ( * DBENTRYP_SVP  )( AREAP area, USHORT index, void * param );
 typedef USHORT ( * DBENTRYP_VSP  )( AREAP area, USHORT action, LONG lRecord );
+typedef USHORT ( * DBENTRYP_SSI  )( AREAP area, USHORT p1, USHORT p2, PHB_ITEM p3 );
 
 #if 0
 typedef USHORT ( * DBENTRYP_PP   )( AREAP area, void ** param);
@@ -544,7 +548,6 @@ typedef USHORT ( * DBENTRYP_SVPB )( AREAP area, USHORT index, void * param, USHO
 typedef USHORT ( * DBENTRYP_VPL  )( AREAP area, void * p1, LONG p2);
 typedef USHORT ( * DBENTRYP_VPLP )( AREAP area, void * p1, LONGP p2);
 typedef USHORT ( * DBENTRYP_LSP  )( AREAP area, LONG p1, USHORTP p2);
-typedef USHORT ( * DBENTRYP_SSI  )( AREAP area, USHORT p1, USHORT p2, PHB_ITEM p3);
 typedef USHORT ( * DBENTRYP_ISI  )( AREAP area, PHB_ITEM p1, USHORT p2, PHB_ITEM p3);
 #endif
 
@@ -583,8 +586,8 @@ typedef struct _RDDFUNCS
    DBENTRYP_SP   fieldCount;
 #if 0
    DBENTRYP_VP   fieldDisplay;
-   DBENTRYP_SSI  fieldInfo;
 #endif
+   DBENTRYP_SSI  fieldInfo;
    DBENTRYP_SVP  fieldName;
    DBENTRYP_V    flush;
 #if 0

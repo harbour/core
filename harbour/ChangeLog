@@ -1,3 +1,11 @@
+19990824-17:10 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * funclist.txt
+     include/rddapi.h
+     source/rdd/dbcmd.c
+     source/rdd/dbf1.c
+     + Added FLOCK, DBUNLOCK, DBUNLOCKALL, AFIELDS, DBSTRUCT, LUPDATE, NETERR,
+       HEADER and RECSIZE
+
 19990824-16:04 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/debug/debugger.prg
      + Added support for F5-Go. (Breakpoints are not checked yet).
