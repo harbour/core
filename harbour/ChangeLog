@@ -1,3 +1,15 @@
+2001-08-30 09:31 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * contrib/os2pm/*.*
+     - removed all files
+   + contrib/hgf/os2pm
+   + contrib/hgf/os2pm/os2pm.c
+   + contrib/hgf/os2pm/tform.prg
+   + contrib/hgf/os2pm/os2pm.ch
+   + contrib/hgf/os2pm/tmenu.prg
+   + contrib/hgf/os2pm/tmenuitm.prg
+   + contrib/hgf/os2pm/Makefile
+     + added all files for IBM OS/2 version of HGF
+
 2001-08-28 21:10 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    + contrib/libct/files.c
      * CT3 compatible functions for Fileattr,fileseek,filedate,filetime,setfattr
