@@ -1,3 +1,7 @@
+2001-02-23 17:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/vm/hvm.c
+     ! Added logic to clear items of extraneous parameters in hb_vmFrame().
+
 2001-02-23 21:40 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * harbour/source/rdd/dbfntx/dbfntx1.c
      * bug fixed, reported by Maurilio Longo
@@ -5,6 +9,7 @@
 2001-02-23 21:40 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * harbour/source/rdd/dbfntx/dbfntx1.c
      * building of indexes optimized
+
 2001-02-13 hh:mm GMT+1 Jose Gimenez (JFG) <jfgimenez@wanadoo.es>
   * source/rtl/filesys.c
     * hb_fsOpen
@@ -17,7 +22,7 @@
     * hb_fsSeek
     * hb_fsTell
     + added logic to use Win32 API calls
-  
+
   * tests/files.prg
     * tested up to 20,000 DBF files
 

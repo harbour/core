@@ -3117,9 +3117,17 @@ static void hb_vmModuleName( char * szModuleName ) /* PRG and function name info
 
 static void hb_vmFrame( BYTE bLocals, BYTE bParams )
 {
-   int iTotal;
+   int iTotal, iExtra;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmFrame(%d, %d)", (int) bLocals, (int) bParams));
+
+   iExtra = hb_pcount() - bParams;
+
+   while( iExtra > 0 )
+   {
+      hb_itemClear( hb_stackItemFromTop( -iExtra ) );
+      iExtra--;
+   }
 
    iTotal = bLocals + bParams;
    if( iTotal )
