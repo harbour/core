@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   These changes have been implemented by Viktor
+
+2002-02-01 06:50 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/vm/hvm.c
+     * some minor fix in hb_vmPushAliasedVar() from Viktor CVS,
        but reverted as it seems it is wrong.
 
 2002-01-31 17:35 UTC+0100 Antonio Linares <alinares@fivetech.com>
