@@ -366,17 +366,54 @@ void hb_gt_SetAttribute( USHORT uiTop,
                          USHORT uiRight,
                          BYTE byAttr )
 {
-   int Count = uiRight - uiLeft + 1;
+
+#if (defined(M_UNIX) || defined(hpux)) && !defined(NCURSES_VERSION)
    int newAttr = s_attribmap_table[ byAttr ];
+   int dx;
+   chtype c;
+#else
+   attr_t newAttr = (attr_t)s_attribmap_table[ byAttr ];
+   int Count = uiRight - uiLeft + 1;
    short newColor;
+
+   newColor = PAIR_NUMBER( (newAttr & A_COLOR) );
+#endif
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d)", uiTop, uiLeft, uiBottom, uiRight, (int) byAttr));
 
-   newColor = PAIR_NUMBER( newAttr );
-   newAttr &= A_ATTRIBUTES;	/* extract attributes only */
+   newAttr &= A_ATTRIBUTES;     /* extract attributes only */
+
    while( uiTop <= uiBottom )
+      /*
+        this is an emulation of the mvchgat() function
+        for those curses which are not compatible with
+        XSI curses (like SCO curses and HPUX curses)
+      */
+   #if (defined(M_UNIX) || defined(hpux)) && !defined(NCURSES_VERSION)
+   {
+      for ( dx=uiLeft; dx<=uiRight; dx++ )
+      {
+          c = mvinch( uiTop, dx );
+          /* extract character only (remember about alternate chars) */
+          c &= (A_CHARTEXT | A_ALTCHARSET);
+          /* set new attribute */
+          c |= newAttr;
+          if (addch(c) == ERR)
+             /* QUESTION : should we indicate any error here ? */
+             return;
+      }
+      uiTop++;
+   }
+   #else
+      /*
+         we are assuming here that we compile Harbour
+         with XSI compatible curses (like ncurses)
+      */
       mvchgat( uiTop++, uiLeft, Count, newAttr, newColor, NULL );
+   #endif
+
    if( s_uiDispCount == 0 )
+     /* QUESTION : should we indicate any error here ? */
       refresh();
 }
 

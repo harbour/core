@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Mouse subsystem for plain ANSI C stream IO (stub)
+ * Mouse subsystem based on ncurses
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org

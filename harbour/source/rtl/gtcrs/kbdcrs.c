@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Video subsystem based on ncurses.
+ * Keyboard subsystem based on ncurses.
  *
  * Copyright 2000 Ryszard Glab <rglab@imid.med.pl>
  * www - http://www.harbour-project.org
