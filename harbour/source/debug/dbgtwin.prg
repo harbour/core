@@ -65,8 +65,10 @@ CLASS TDbWindow  // Debugger windows and dialogs
    METHOD ShowModal()
    METHOD LButtonDown( nMRow, nMCol )
    METHOD LDblClick( nMRow, nMCol )
+   METHOD LoadColors() INLINE ::cColor := __DbgColors()[ 1 ]
    METHOD Move()
    METHOD KeyPressed( nKey )
+   METHOD Refresh()
 
 ENDCLASS
 
@@ -151,6 +153,27 @@ METHOD SetFocus( lOnOff ) CLASS TDbWindow
 
 return nil
 
+METHOD Refresh() CLASS TDbWindow
+
+   DispBegin()
+
+   @ ::nTop, ::nLeft, ::nBottom, ::nRight BOX If( ::lFocused, B_DOUBLE, B_SINGLE ) ;
+      COLOR ::cColor
+
+   DispOutAt( ::nTop, ::nLeft + 1, "[" + Chr( 254 ) + "]", ::cColor )
+
+   if ! Empty( ::cCaption )
+      ::SetCaption( ::cCaption )
+   endif
+
+   if ::bPainted != nil
+      Eval( ::bPainted, Self )
+   endif
+
+   DispEnd()
+
+return nil
+
 METHOD Show( lFocused ) CLASS TDbWindow
 
    DEFAULT lFocused TO .f.
@@ -187,7 +210,8 @@ METHOD ShowModal() CLASS TDbWindow
               lExit := .t.
 
          case nKey == K_LBUTTONDOWN
-              if MRow() == ::nTop .and. MCol() == ::nLeft + 2
+              if MRow() == ::nTop .and. MCol() >= ::nLeft + 1 .and. ;
+                 MCol() <= ::nLeft + 3
                  lExit = .t.
               endif
       endcase
