@@ -107,7 +107,7 @@ extern FHANDLE  hb_fsCreateTemp ( const BYTE * pszDir, const BYTE * pszPrefix, U
 extern BYTE *   hb_fsCurDir     ( USHORT uiDrive ); /* retrieve a static pointer containing current directory for specified drive */
 extern USHORT   hb_fsCurDirBuff ( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen ); /* copy current directory for given drive into a buffer */
 extern BYTE     hb_fsCurDrv     ( void ); /* retrieve current drive number */
-extern int      hb_fsDelete     ( BYTE * pszFileName ); /* delete a file */
+extern BOOL     hb_fsDelete     ( BYTE * pszFileName ); /* delete a file */
 extern BOOL     hb_fsEof        ( FHANDLE hFileHandle ); /* determine if an open file is position at end-of-file */
 extern USHORT   hb_fsError      ( void ); /* retrieve file system error */
 extern BOOL     hb_fsFile       ( BYTE * pszFileName ); /* determine if a file exists */
@@ -123,7 +123,7 @@ extern FHANDLE  hb_fsOpen       ( BYTE * pszFileName, USHORT uiFlags ); /* open 
 extern USHORT   hb_fsRead       ( FHANDLE hFileHandle, BYTE * pBuff, USHORT ulCount ); /* read contents of a file into a buffer (<=64K) */
 extern ULONG    hb_fsReadLarge  ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount ); /* read contents of a file into a buffer (>64K) */
 extern BOOL     hb_fsRmDir      ( BYTE * pszDirName ); /* remove a directory */
-extern int      hb_fsRename     ( BYTE * pszOldName, BYTE * pszNewName ); /* rename a file */
+extern BOOL     hb_fsRename     ( BYTE * pszOldName, BYTE * pszNewName ); /* rename a file */
 extern ULONG    hb_fsSeek       ( FHANDLE hFileHandle, LONG lOffset, USHORT uiMode ); /* reposition an open file */
 extern ULONG    hb_fsTell       ( FHANDLE hFileHandle ); /* retrieve the current position of a file */
 extern void     hb_fsSetDevMode ( FHANDLE hFileHandle, USHORT uiDevMode ); /* change the device mode of a file (text/binary) */

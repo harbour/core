@@ -8,6 +8,19 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-22 11:30 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/vm/dynlibhb.c
+     + New function hb_StartApp() added
+
+   * source/vm/hvm.c
+     ! Fixed hb_fsRename() and hb_fsDelete() to return BOOL 
+
+     ! All low-level functions returning BOOL now check 
+       for valid API call return value inside the platform 
+     * Some alingment of the text on edit mode.
+     ! hb_fsLock() fixed to not return TRUE when the mode 
+     * Getsourcefiles() function speed optimized(thanks Victor)
+
 2001-12-22 03:30 UTC+0700 Andi Jahja <harbour@cbn.net.id>
    * source/rtl/filesys.c
      * add required C casts

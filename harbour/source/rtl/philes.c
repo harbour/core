@@ -146,20 +146,16 @@ HB_FUNC( FERASE )
 {
    hb_fsSetError( 3 );
 
-   if( ISCHAR( 1 ) )
-      hb_retni( hb_fsDelete( ( BYTE * ) hb_parc( 1 ) ) );
-   else
-      hb_retni( -1 );
+   hb_retni( ( ISCHAR( 1 ) && 
+               hb_fsDelete( ( BYTE * ) hb_parc( 1 ) ) ) ? 0 : -1 );
 }
 
 HB_FUNC( FRENAME )
 {
    hb_fsSetError( 2 );
 
-   if( ISCHAR( 1 ) && ISCHAR( 2 ) )
-      hb_retni( hb_fsRename( ( BYTE * ) hb_parc( 1 ), ( BYTE * ) hb_parc( 2 ) ) );
-   else
-      hb_retni( -1 );
+   hb_retni( ( ISCHAR( 1 ) && ISCHAR( 2 ) && 
+               hb_fsRename( ( BYTE * ) hb_parc( 1 ), ( BYTE * ) hb_parc( 2 ) ) ) ? 0 : -1 );
 }
 
 HB_FUNC( FSEEK )
