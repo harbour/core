@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+   * source/rtl/persist.prg
+     * some fixes on nested arrays recovering
+
 2002-03-05 11:24 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rtl/dbsdf.prg
     * Uncommented actual code ( forget to do it last time ), some fixes

@@ -95,8 +95,8 @@ static USHORT hb_ntxPageFindCurrentKey( LPPAGEINFO pPage, ULONG ulRecno );
 static void hb_ntxGetCurrentKey( LPTAGINFO pTag, LPKEYINFO pKey );
 static BOOL hb_ntxPageReadNextKey( LPTAGINFO pTag, BOOL lContinue );
 static BOOL hb_ntxPageReadPrevKey( LPTAGINFO pTag, BOOL lContinue );
-static BOOL hb_ntxPageReadTopKey( LPPAGEINFO pPage, ULONG ulOffset );
-static BOOL hb_ntxPageReadBottomKey( LPPAGEINFO pPage, ULONG ulOffset );
+static BOOL hb_ntxPageReadTopKey( LPTAGINFO pTag, LPPAGEINFO pPage, ULONG ulOffset );
+static BOOL hb_ntxPageReadBottomKey( LPTAGINFO pTag, LPPAGEINFO pPage, ULONG ulOffset );
 static LPPAGEINFO hb_ntxPageFind( LPNTXINDEX pIndex ,LONG ulOffset );
 static LPPAGEINFO hb_ntxPageLast( LPNTXINDEX pIndex );
 static ERRCODE hb_ntxHeaderLoad( LPNTXINDEX pIndex , char * ITN );
@@ -123,7 +123,7 @@ static void hb_ntxPageFree( LPPAGEINFO pPage, BOOL lFreeChild );
          /* Release memory allocated for page. If page was modified save it */
 static void hb_ntxPageSave( LPPAGEINFO pPage );
          /* Save page */
-static LPPAGEINFO hb_ntxPageLoad( ULONG ulOffset );
+static LPPAGEINFO hb_ntxPageLoad( LPNTXINDEX pIndex, ULONG ulOffset );
          /* Load page from disk */
 static LPKEYINFO hb_ntxPageKeyDel( LPPAGEINFO pPage, SHORT pos, USHORT level );
          /* Delete key from page */
@@ -255,7 +255,7 @@ static LONG hb_ntxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey, BOOL * result )
 
    pTag->CurKeyInfo->Tag = 0;
    pTag->TagBOF = pTag->TagEOF = *result = FALSE;
-   K = hb_ntxTagFindCurrentKey( hb_ntxPageLoad( 0 ), pKey->Tag, pKey, FALSE, TRUE, 1 );
+   K = hb_ntxTagFindCurrentKey( hb_ntxPageLoad( pTag->Owner,0 ), pKey->Tag, pKey, FALSE, TRUE, 1 );
    if( K == 0 )
    {
       /* if( pTag->pForItem == NULL )
@@ -347,7 +347,7 @@ static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LONG lBlock, LPKEYINFO pKe
                   pPage->TagParent->blockNext = pPage->Page;
                   pPage->TagParent->keyNext = pPage->CurKey;
                }
-            pChildPage = hb_ntxPageLoad( p->Tag );
+            pChildPage = hb_ntxPageLoad( pPage->TagParent->Owner,p->Tag );
             kChild = hb_ntxTagFindCurrentKey( pChildPage, lBlock, pKey, bExact, lSeek, level + 1 );
             if( k != 0 || kChild == 0 )
                k = kChild;
@@ -462,7 +462,7 @@ static BOOL hb_ntxPageReadNextKey( LPTAGINFO pTag, BOOL lContinue )
    pTag->blockNext = 0; pTag->keyNext = 0;
    if( pTag->CurKeyInfo->Tag )
    {
-      pPage =  hb_ntxPageLoad( pTag->CurKeyInfo->Tag );
+      pPage =  hb_ntxPageLoad( pTag->Owner,pTag->CurKeyInfo->Tag );
       pPage->CurKey =  hb_ntxPageFindCurrentKey( pPage,pTag->CurKeyInfo->Xtra );
       if( pPage->CurKey &&
            ( pPage->CurKey < pPage->uiKeys ||
@@ -487,14 +487,14 @@ static BOOL hb_ntxPageReadNextKey( LPTAGINFO pTag, BOOL lContinue )
       else
          hb_ntxGetCurrentKey( pTag,pKey );
       pKey->Tag = NTX_IGNORE_REC_NUM;
-      seekRes = hb_ntxTagFindCurrentKey( hb_ntxPageLoad( 0 ), pKey->Tag, pKey, FALSE, FALSE, 1 );
+      seekRes = hb_ntxTagFindCurrentKey( hb_ntxPageLoad( pTag->Owner,0 ), pKey->Tag, pKey, FALSE, FALSE, 1 );
       hb_ntxKeyFree( pKey );
       if( seekRes )
       {
          printf( "\n\rhb_ntxFindNextKey: Cannot find current key:" );
          return FALSE;
       }
-      pPage =  hb_ntxPageLoad( pTag->CurKeyInfo->Tag );
+      pPage =  hb_ntxPageLoad( pTag->Owner,pTag->CurKeyInfo->Tag );
       pPage->CurKey =  hb_ntxPageFindCurrentKey( pPage,pTag->CurKeyInfo->Xtra );
    }
 
@@ -503,7 +503,7 @@ static BOOL hb_ntxPageReadNextKey( LPTAGINFO pTag, BOOL lContinue )
    {
       while( ( pPage->pKeys+pPage->CurKey )->Tag )
       {
-         pChildPage = hb_ntxPageLoad( ( pPage->pKeys+pPage->CurKey )->Tag );
+         pChildPage = hb_ntxPageLoad( pTag->Owner,( pPage->pKeys+pPage->CurKey )->Tag );
          hb_ntxPageRelease( pPage );
          pPage = pChildPage;
          pPage->CurKey = 0;
@@ -519,7 +519,7 @@ static BOOL hb_ntxPageReadNextKey( LPTAGINFO pTag, BOOL lContinue )
       hb_ntxPageRelease( pPage );
       if( pTag->blockNext )
       {
-         pPage = hb_ntxPageLoad( pTag->blockNext );
+         pPage = hb_ntxPageLoad( pTag->Owner,pTag->blockNext );
          pPage->CurKey =  pTag->keyNext;
          if( pPage->CurKey < pPage->uiKeys )
          {
@@ -557,7 +557,7 @@ static BOOL hb_ntxPageReadPrevKey( LPTAGINFO pTag, BOOL lContinue )
    pTag->blockPrev = 0; pTag->keyPrev = 0;
    if( pTag->CurKeyInfo->Tag )
    {
-      pPage =  hb_ntxPageLoad( pTag->CurKeyInfo->Tag );
+      pPage =  hb_ntxPageLoad( pTag->Owner,pTag->CurKeyInfo->Tag );
       pPage->CurKey =  hb_ntxPageFindCurrentKey( pPage,pTag->CurKeyInfo->Xtra );
       if( pPage->CurKey-- && 
              ( (pPage->pKeys+pPage->CurKey)->Tag || pPage->CurKey >= 1 ) )
@@ -580,14 +580,14 @@ static BOOL hb_ntxPageReadPrevKey( LPTAGINFO pTag, BOOL lContinue )
       else
          hb_ntxGetCurrentKey( pTag, pKey );
       pKey->Tag = NTX_IGNORE_REC_NUM;
-      seekRes = hb_ntxTagFindCurrentKey( hb_ntxPageLoad( 0 ), pKey->Tag, pKey, FALSE, FALSE, 1 );
+      seekRes = hb_ntxTagFindCurrentKey( hb_ntxPageLoad( pTag->Owner,0 ), pKey->Tag, pKey, FALSE, FALSE, 1 );
       hb_ntxKeyFree( pKey );
       if( seekRes )
       {
          printf( "\n\rhb_ntxFindPrevKey: Cannot find current key: |%ld %s|",pTag->Owner->Owner->ulRecNo,pKey->pItem->item.asString.value );
          return FALSE;
       }
-      pPage =  hb_ntxPageLoad( pTag->CurKeyInfo->Tag );
+      pPage =  hb_ntxPageLoad( pTag->Owner,pTag->CurKeyInfo->Tag );
       pPage->CurKey = hb_ntxPageFindCurrentKey( pPage,pTag->CurKeyInfo->Xtra );
       pPage->CurKey--;
    }
@@ -596,7 +596,7 @@ static BOOL hb_ntxPageReadPrevKey( LPTAGINFO pTag, BOOL lContinue )
    {
       do
       {
-         pChildPage = hb_ntxPageLoad( ( pPage->pKeys+pPage->CurKey )->Tag );
+         pChildPage = hb_ntxPageLoad( pTag->Owner,( pPage->pKeys+pPage->CurKey )->Tag );
          hb_ntxPageRelease( pPage );
          pPage = pChildPage;
          pPage->CurKey = pPage->uiKeys;
@@ -619,7 +619,7 @@ static BOOL hb_ntxPageReadPrevKey( LPTAGINFO pTag, BOOL lContinue )
       hb_ntxPageRelease( pPage );
       if( pTag->blockPrev )
       {
-         pPage = hb_ntxPageLoad( pTag->blockPrev );
+         pPage = hb_ntxPageLoad( pTag->Owner,pTag->blockPrev );
          pPage->CurKey =  pTag->keyPrev;
          if( pPage->CurKey < pPage->uiKeys )
          {
@@ -640,12 +640,12 @@ static BOOL hb_ntxPageReadPrevKey( LPTAGINFO pTag, BOOL lContinue )
    }
 }
 
-static BOOL hb_ntxPageReadTopKey( LPPAGEINFO pPage, ULONG ulOffset )
+static BOOL hb_ntxPageReadTopKey( LPTAGINFO pTag, LPPAGEINFO pPage, ULONG ulOffset )
 {
    LPPAGEINFO pChildPage;
    LPKEYINFO pKey;
 
-   pChildPage = hb_ntxPageLoad( ulOffset );
+   pChildPage = hb_ntxPageLoad( pTag->Owner,ulOffset );
    if( pPage )
    {
       hb_ntxPageRelease( pPage );
@@ -656,7 +656,7 @@ static BOOL hb_ntxPageReadTopKey( LPPAGEINFO pPage, ULONG ulOffset )
       ulOffset = pKey->Tag;
       if( ulOffset )
       {
-         return hb_ntxPageReadTopKey( pChildPage,ulOffset );
+         return hb_ntxPageReadTopKey( pTag,pChildPage,ulOffset );
       }
       else
       {
@@ -671,12 +671,12 @@ static BOOL hb_ntxPageReadTopKey( LPPAGEINFO pPage, ULONG ulOffset )
       return FALSE;
 }
 
-static BOOL hb_ntxPageReadBottomKey( LPPAGEINFO pPage, ULONG ulOffset )
+static BOOL hb_ntxPageReadBottomKey( LPTAGINFO pTag, LPPAGEINFO pPage, ULONG ulOffset )
 {
    LPPAGEINFO pChildPage;
    LPKEYINFO pKey;
 
-   pChildPage = hb_ntxPageLoad( ulOffset );
+   pChildPage = hb_ntxPageLoad( pTag->Owner,ulOffset );
    if( pPage )
       hb_ntxPageRelease( pPage );
    if( pChildPage != NULL && pChildPage->uiKeys )
@@ -684,7 +684,7 @@ static BOOL hb_ntxPageReadBottomKey( LPPAGEINFO pPage, ULONG ulOffset )
       pKey = pChildPage->pKeys + pChildPage->uiKeys;
       ulOffset = pKey->Tag;
       if( ulOffset )
-         return hb_ntxPageReadBottomKey( pChildPage,ulOffset );
+         return hb_ntxPageReadBottomKey( pTag,pChildPage,ulOffset );
       else
       {
          pKey -= 1;
@@ -711,12 +711,12 @@ static void hb_ntxTagKeyRead( LPTAGINFO pTag, BYTE bTypRead, BOOL * lContinue )
       switch( bTypRead )
       {
          case TOP_RECORD:
-            pTag->TagBOF = !hb_ntxPageReadTopKey( NULL,0 );
+            pTag->TagBOF = !hb_ntxPageReadTopKey( pTag,NULL,0 );
             pTag->TagEOF = pTag->TagBOF;
             break;
 
          case BTTM_RECORD:
-            pTag->TagEOF = !hb_ntxPageReadBottomKey( NULL,0 );
+            pTag->TagEOF = !hb_ntxPageReadBottomKey( pTag,NULL,0 );
             pTag->TagBOF = pTag->TagEOF;
             break;
 
@@ -842,20 +842,16 @@ static void hb_ntxPageSave( LPPAGEINFO pPage )
    pPage->Changed = FALSE;
 }
 
-static LPPAGEINFO hb_ntxPageLoad( ULONG ulOffset )
+static LPPAGEINFO hb_ntxPageLoad( LPNTXINDEX pIndex, ULONG ulOffset )
 {
    char buffer[NTXBLOCKSIZE];
    int i;
-   NTXAREAP pArea;
-   LPNTXINDEX pIndex;
    LPNTXBUFFER itemlist;
    LPNTXITEM item;
    LPPAGEINFO pPage;
    BOOL bReplace = FALSE;
    USHORT uiKeysBefore;
 
-   pArea = (NTXAREAP) hb_rddGetCurrentWorkAreaPointer();
-   pIndex = pArea->lpCurIndex;
    pPage = hb_ntxPageFind( pIndex, (ulOffset)? ulOffset:pIndex->CompoundTag->RootBlock );
    if( pPage )
    {
@@ -1008,7 +1004,7 @@ static LPPAGEINFO hb_ntxPageNew(LPTAGINFO pParentTag )
          in the page - it is done here now in such a way.
          = Alexander Kresin =
       */
-      pPage = hb_ntxPageLoad( pParentTag->Owner->NextAvail );
+      pPage = hb_ntxPageLoad( pParentTag->Owner,pParentTag->Owner->NextAvail );
       pPage->Page = pParentTag->Owner->NextAvail;
       pParentTag->Owner->NextAvail = pPage->pKeys->Tag;
       hb_ntxHeaderSave( pParentTag->Owner );
@@ -1163,7 +1159,7 @@ static LPKEYINFO hb_ntxPageKeyDel( LPPAGEINFO pPage, SHORT pos, USHORT level )
 
    if( pPage->pKeys[pos].Tag )
    {
-      LPPAGEINFO pPageChild = hb_ntxPageLoad( pPage->pKeys[pos].Tag );
+      LPPAGEINFO pPageChild = hb_ntxPageLoad( pPage->TagParent->Owner,pPage->pKeys[pos].Tag );
       LPKEYINFO pKeyNew = NULL;
 
       pKey = hb_ntxPageKeyDel( pPageChild, pPageChild->uiKeys - 1, level + 1 );
@@ -1243,7 +1239,7 @@ static int hb_ntxPageKeyAdd( LPPAGEINFO pPage, PHB_ITEM pKey, int level, BOOL is
          }
          else if( pPage->pKeys[i].Tag != 0 )
          {
-            pLoadedPage = hb_ntxPageLoad( pPage->pKeys[i].Tag );
+            pLoadedPage = hb_ntxPageLoad( pPage->TagParent->Owner,pPage->pKeys[i].Tag );
             if( pLoadedPage == NULL )
             {
                /* TODO : Error recovery ??? */
@@ -1277,7 +1273,7 @@ static int hb_ntxPageKeyAdd( LPPAGEINFO pPage, PHB_ITEM pKey, int level, BOOL is
    /* printf( "\nntxPageKeyAdd - 1" ); */
    if( pPage->pKeys[i].Tag != 0 )
    {
-      pLoadedPage = hb_ntxPageLoad( pPage->pKeys[i].Tag );
+      pLoadedPage = hb_ntxPageLoad( pPage->TagParent->Owner,pPage->pKeys[i].Tag );
       if( pLoadedPage == NULL )
       {
          /* TODO : Error recovery ??? */
@@ -2542,18 +2538,18 @@ static ERRCODE ntxGoCold( NTXAREAP pArea )
                  hb_itemCopy( pKeyOld->pItem, pTag->CurKeyInfo->pItem );
                  pKeyOld->Xtra = pTag->CurKeyInfo->Xtra;
                  pKeyOld->Tag = NTX_IGNORE_REC_NUM;
-                  if( hb_ntxTagFindCurrentKey( hb_ntxPageLoad( 0 ), pKeyOld->Tag, pKeyOld, FALSE, FALSE, 1 ) )
+                  if( hb_ntxTagFindCurrentKey( hb_ntxPageLoad( pTag->Owner,0 ), pKeyOld->Tag, pKeyOld, FALSE, FALSE, 1 ) )
                   {
                       printf( "\n\rntxGoCold: Cannot find current key:" );
                       lpIndex = lpIndex->pNext;
                       continue;
                   }
-                  pPage = hb_ntxPageLoad( pTag->CurKeyInfo->Tag );
+                  pPage = hb_ntxPageLoad( pTag->Owner,pTag->CurKeyInfo->Tag );
                   pPage->CurKey =  hb_ntxPageFindCurrentKey( pPage,pTag->CurKeyInfo->Xtra ) - 1;
                   hb_ntxPageKeyDel( pPage, pPage->CurKey, 1 );
                }
                if( InIndex )
-                  hb_ntxPageKeyAdd( hb_ntxPageLoad( 0 ), pKey->pItem, 0, FALSE );
+                  hb_ntxPageKeyAdd( hb_ntxPageLoad( pTag->Owner,0 ), pKey->pItem, 0, FALSE );
                if( pArea->fShared )
                {
                   hb_ntxPageFree( pTag->RootPage,TRUE );
