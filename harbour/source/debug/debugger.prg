@@ -179,16 +179,20 @@ METHOD EnableCommand() CLASS TDebugger
    local lExit := .f.
    local cCommand, cResult
    local bRestoreKeys := { || SetKey( K_SH_TAB, nil ), SetKey( K_TAB, nil ),;
-                              SetKey( K_UP, nil ) }
+                              SetKey( K_UP, nil ), SetKey( K_DOWN, nil ) }
 
    Set( _SET_SCOREBOARD, .f. )
    SetKey( K_SH_TAB, { || lExit := .t., Eval( bRestoreKeys ),;
                   __Keyboard( Chr( K_ESC ) + Chr( K_SH_TAB ) ) } )
    SetKey( K_TAB, { || lExit := .t., Eval( bRestoreKeys ),;
                     __Keyboard( Chr( K_ESC ) + Chr( K_TAB ) ) } )
-   SetKey( K_UP, { || If( ::nCommand > 0, ( GetList[ 1 ]:VarPut( ::aLastCommands[ ;
-                   ::nCommand ] ), GetList[ 1 ]:Display(),;
+   SetKey( K_UP, { || If( ::nCommand > 0, ( GetList[ 1 ]:Buffer := ::aLastCommands[ ;
+                   ::nCommand ], GetList[ 1 ]:Pos := 1, GetList[ 1 ]:Display(),;
                    If( ::nCommand > 1, ::nCommand--, nil ) ), nil ) } )
+   SetKey( K_DOWN, { || If( ::nCommand <= Len( ::aLastCommands ),;
+                   ( GetList[ 1 ]:Buffer := ::aLastCommands[ ;
+                   ::nCommand ], GetList[ 1 ]:Pos := 1, GetList[ 1 ]:Display(),;
+                   If( ::nCommand < Len( ::aLastCommands ), ::nCommand++, nil ) ), nil ) } )
 
    while ! lExit
       @ ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1 SAY "> " ;
