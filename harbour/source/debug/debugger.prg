@@ -45,51 +45,51 @@
 #xcommand SEPARATOR => TDbMenu():AddItem( TDbMenuItem():New( "-" ) )
 #xcommand ENDMENU => ATail( TDbMenu():aMenus ):Build()
 
-static oDebugger
-static lExit := .F.
+static s_oDebugger
+static s_lExit := .F.
 
 function __dbgEntry( uParam1, uParam2 )  // debugger entry point
 
    do case
       case ValType( uParam1 ) == "C"   // called from hvm.c hb_vmModuleName()
-           if ! lExit
-              if oDebugger == nil
-                 oDebugger = TDebugger():New()
-                 oDebugger:Activate( uParam1 )
+           if ! s_lExit
+              if s_oDebugger == nil
+                 s_oDebugger = TDebugger():New()
+                 s_oDebugger:Activate( uParam1 )
               else
-                 oDebugger:ShowCode( uParam1 )
+                 s_oDebugger:ShowCode( uParam1 )
               endif
            endif
 
       case ValType( uParam1 ) == "N"   // called from hvm.c hb_vmDebuggerShowLines()
-           if oDebugger != nil
+           if s_oDebugger != nil
               if PCount() == 2 // called from hvm.c hb_vmDebuggerLocalName()
-                 AAdd( oDebugger:aVars, { uParam2, "Local", uParam1 } )
-                 if oDebugger:oBrwVars != nil
-                    oDebugger:oBrwVars:RefreshAll()
+                 AAdd( s_oDebugger:aVars, { uParam2, "Local", uParam1 } )
+                 if s_oDebugger:oBrwVars != nil
+                    s_oDebugger:oBrwVars:RefreshAll()
                  endif
                  return nil
               endif
-              if oDebugger:lGo
-                 oDebugger:lGo = ! oDebugger:IsBreakPoint( uParam1 )
+              if s_oDebugger:lGo
+                 s_oDebugger:lGo = ! s_oDebugger:IsBreakPoint( uParam1 )
               endif
-              if oDebugger:lGo
+              if s_oDebugger:lGo
                  DispBegin()
                  DispBegin()
-                 oDebugger:SaveAppStatus()
-                 oDebugger:RestoreAppStatus()
+                 s_oDebugger:SaveAppStatus()
+                 s_oDebugger:RestoreAppStatus()
                  DispEnd()
                  DispEnd()
               else
-                 oDebugger:SaveAppStatus()
-                 oDebugger:GoToLine( uParam1 )
-                 oDebugger:HandleEvent()
+                 s_oDebugger:SaveAppStatus()
+                 s_oDebugger:GoToLine( uParam1 )
+                 s_oDebugger:HandleEvent()
               endif
            endif
 
       otherwise   // called from hvm.c hb_vmDebuggerEndProc()
-         if oDebugger != nil
-            oDebugger:EndProc()
+         if s_oDebugger != nil
+            s_oDebugger:EndProc()
          endif
    endcase
 
@@ -193,8 +193,8 @@ METHOD HandleEvent() CLASS TDebugger
 
          case nKey == K_ESC
               ::RestoreAppStatus()
-              oDebugger := nil
-              lExit := .T.
+              s_oDebugger := nil
+              s_lExit := .T.
               DispEnd()
               ::Exit()
 
@@ -392,9 +392,9 @@ METHOD ShowVars() CLASS TDebugger
       nWidth = ::oWndVars:nWidth() - 1
       ::oBrwVars:AddColumn( TBColumnNew( "",  { || AllTrim( Str( n ) ) + ") " + ;
          PadR( ::aVars[ n ][ 1 ] + " <" + ::aVars[ n ][ 2 ] + ", " + ;
-         If( ::aVars[ n ][ 2 ] == "Local", ValType( __GetLocal( 6, ::aVars[ n ][ 3 ] ) ),;
+         If( ::aVars[ n ][ 2 ] == "Local", ValType( __vmVarLGet( 6, ::aVars[ n ][ 3 ] ) ),;
          "" ) + ">:" + If( ::aVars[ n ][ 2 ] == "Local",;
-         " Class " + __GetLocal( 6, ::aVars[ n ][ 3 ] ):ClassName(), "" ),;
+         " Class " + __vmVarLGet( 6, ::aVars[ n ][ 3 ] ):ClassName(), "" ),;
          ::oWndVars:nWidth() - 5 ) } ) )
       ::oBrwVars:ForceStable()
    endif
@@ -1173,5 +1173,5 @@ function BuildMenu( oDebugger )  // Builds the debugger pulldown menu
 return oMenu
 
 Function AltD()
-lExit := .F.
+   s_lExit := .F.
 return NIL

@@ -112,7 +112,7 @@ HARBOUR HB_DO( void )
       {
          USHORT uiParam;
 
-         hb_vmPushSymbol( &symEval );
+         hb_vmPushSymbol( &hb_g_symEval );
          hb_vmPush( pItem );
          for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
             hb_vmPush( hb_param( uiParam, IT_ANY ) );
@@ -155,7 +155,7 @@ HARBOUR HB_EVAL( void )
       {
          USHORT uiParam;
 
-         hb_vmPushSymbol( &symEval );
+         hb_vmPushSymbol( &hb_g_symEval );
          hb_vmPush( pItem );
          for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
             hb_vmPush( hb_param( uiParam, IT_ANY ) );

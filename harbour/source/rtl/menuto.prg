@@ -30,22 +30,22 @@
 #include "hbmemvar.ch"
 #include "setcurs.ch"
 
-static aLevel   := {}
-static nPointer := 1
+static s_aLevel   := {}
+static s_nPointer := 1
 
 function __AtPrompt( nCol, nRow, cPrompt, cMsg )
 
-   if nPointer < 1
-      nPointer := 1
+   if s_nPointer < 1
+      s_nPointer := 1
    endif
 
    // add the current level empty array.
-   do while len( aLevel ) < nPointer
-      aadd( aLevel, {} )
+   do while len( s_aLevel ) < s_nPointer
+      aadd( s_aLevel, {} )
    enddo
 
    // add to the static array
-   aadd( aLevel[ nPointer ], { nCol, nRow, cPrompt, cMsg } )
+   aadd( s_aLevel[ s_nPointer ], { nCol, nRow, cPrompt, cMsg } )
 
    // put this prompt on the screen right now
    setpos( nCol, nRow )
@@ -83,15 +83,15 @@ function __MenuTo( bBlock, cVariable )
 
    // if no prompts were defined, exit with 0
 
-   if nPointer < 1 .or. nPointer > len( aLevel )
+   if s_nPointer < 1 .or. s_nPointer > len( s_aLevel )
 
       n := 0
 
    else
 
-      nPointer ++
+      s_nPointer ++
 
-      nArrLen := len( aLevel[ nPointer - 1 ] )
+      nArrLen := len( s_aLevel[ s_nPointer - 1 ] )
 
       // put choice in a valid range
 
@@ -124,7 +124,7 @@ function __MenuTo( bBlock, cVariable )
                dispout( space( len( xMsg ) ) )
             endif
 
-            xMsg := aLevel[ nPointer - 1, n, 4 ]
+            xMsg := s_aLevel[ s_nPointer - 1, n, 4 ]
 
             // Code Block messages ( yes, they are documented! )
             if ISBLOCK( xMsg )
@@ -152,8 +152,8 @@ function __MenuTo( bBlock, cVariable )
          endif
 
          // highlight the prompt
-         setpos( aLevel[ nPointer - 1, n, 1 ], aLevel[ nPointer - 1, n, 2 ] )
-         dispout( aLevel[ nPointer - 1, n, 3 ] )
+         setpos( s_aLevel[ s_nPointer - 1, n, 1 ], s_aLevel[ s_nPointer - 1, n, 2 ] )
+         dispout( s_aLevel[ s_nPointer - 1, n, 3 ] )
 
          if Set( _SET_INTENSITY )
             ColorSelect( CLR_STANDARD )
@@ -207,7 +207,7 @@ function __MenuTo( bBlock, cVariable )
          otherwise
             // did user hit a hot key?
             for y := 1 to nArrLen
-               if upper( left( ltrim( aLevel[ nPointer - 1, y, 3 ] ), 1 ) ) == upper( chr( nKey ) )
+               if upper( left( ltrim( s_aLevel[ s_nPointer - 1, y, 3 ] ), 1 ) ) == upper( chr( nKey ) )
                   n := y
                   lExit := .T.
                   exit
@@ -216,8 +216,8 @@ function __MenuTo( bBlock, cVariable )
          endcase
 
          if n <> 0
-            setpos( aLevel[ nPointer - 1, q, 1 ], aLevel[ nPointer - 1, q, 2 ] )
-            dispout( aLevel[ nPointer - 1, q, 3 ] )
+            setpos( s_aLevel[ s_nPointer - 1, q, 1 ], s_aLevel[ s_nPointer - 1, q, 2 ] )
+            dispout( s_aLevel[ s_nPointer - 1, q, 3 ] )
          endif
 
       enddo
@@ -225,8 +225,8 @@ function __MenuTo( bBlock, cVariable )
       ReadVar( cSaveReadVar )
       SetCursor( nSaveCursor )
 
-      nPointer --
-      asize( aLevel, nPointer - 1 )
+      s_nPointer --
+      asize( s_aLevel, s_nPointer - 1 )
 
    endif
 

@@ -50,7 +50,7 @@
 #define BLOCK      2
 #define CONDITION  3
 
-static aSetKeys := {}       // holds array of hot-key id, code-block, activation-block
+static s_aSetKeys := {}       // holds array of hot-key id, code-block, activation-block
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -105,14 +105,14 @@ Function SetKey( anKey, bBlock, bCondition )
     aEval( anKey, {|x| setKey( x, bBlock, bCondition ) } )
 
   elseif ISNUMBER( anKey ) .and. anKey <> 0
-    if ( nFound := aScan( aSetKeys, {|x| x[ KEY ] == anKey } ) ) == 0
+    if ( nFound := aScan( s_aSetKeys, {|x| x[ KEY ] == anKey } ) ) == 0
       if ISBLOCK( bBlock )
-        aAdd( aSetKeys, { anKey, bBlock, bCondition } )
+        aAdd( s_aSetKeys, { anKey, bBlock, bCondition } )
 
       endif
 
     else
-      aKey := aSetKeys[ nFound ]
+      aKey := s_aSetKeys[ nFound ]
 
       if aKey[ CONDITION ] == NIL .or. eval( aKey[ CONDITION ], anKey )
         bReturn := aKey[ BLOCK ]
@@ -124,7 +124,7 @@ Function SetKey( anKey, bBlock, bCondition )
         aKey[ CONDITION ] := bCondition
 
       elseif pcount() > 1 .and. bBlock == NIL
-        aSize( aDel( aSetKeys, nFound ), len( aSetKeys ) - 1 )
+        aSize( aDel( s_aSetKeys, nFound ), len( s_aSetKeys ) - 1 )
 
       endif
 
@@ -172,12 +172,12 @@ Function HB_SetKeyGet( nKey, bCondition )
   local nFound
 
   if ISNUMBER( nKey ) .and. nKey <> 0
-    if ( nFound := aScan( aSetKeys, {|x| x[ KEY ] == nKey } ) ) == 0
+    if ( nFound := aScan( s_aSetKeys, {|x| x[ KEY ] == nKey } ) ) == 0
       bCondition := NIL
 
     else
-      bCondition := aSetKeys[ nFound, CONDITION ]
-      return        aSetKeys[ nFound, BLOCK ]
+      bCondition := s_aSetKeys[ nFound, CONDITION ]
+      return        s_aSetKeys[ nFound, BLOCK ]
 
     endif
 
@@ -222,14 +222,14 @@ return NIL //bReturn
  *  $END$
  */
 Function HB_SetKeySave( OldKeys )
-  local aReturn := aClone( aSetKeys )
+  local aReturn := aClone( s_aSetKeys )
 
   if pcount() != 0 .or. ISARRAY( OldKeys )
     if OldKeys == NIL
-      aSetKeys := {}
+      s_aSetKeys := {}
 
     else
-      aSetKeys := aClone( OldKeys )
+      s_aSetKeys := aClone( OldKeys )
 
     endif
 
@@ -287,8 +287,8 @@ return aReturn
 Function HB_SetKeyCheck( nKey, p1, p2, p3 )
   local nFound, aKey, bBlock
 
-  if ( nFound := aScan( aSetKeys, {|x| x[ KEY ] == nKey } ) ) > 0
-    aKey   := aSetKeys[ nFound ]
+  if ( nFound := aScan( s_aSetKeys, {|x| x[ KEY ] == nKey } ) ) > 0
+    aKey   := s_aSetKeys[ nFound ]
     bBLock := aKey[ BLOCK ]
 
     if aKey[ CONDITION ] == NIL .or. eval( aKey[ CONDITION ], nKey )

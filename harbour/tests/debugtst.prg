@@ -50,16 +50,16 @@ function Main()
 
    QOut( "-DEBUG Functions-")
    QOut( "-Statics-" )
-   Debug( __aStatic() )
+   Debug( __vmVarSList() )
 
    QOut( "-Global Stack-" )
-   Debug ( __aGlobalStack() )
+   Debug ( __vmStkGList() )
 
    QOut( "-Local Stack-" )
-   Debug ( __aStack() )
+   Debug ( __vmStkLList() )
 
    QOut( "-Parameters-" )
-   Debug ( __aParam() )
+   Debug ( __vmParLList() )
 
    Pause()
 
@@ -84,19 +84,19 @@ function FuncSecond( nParam, cParam, uParam )
    QOut()
 
    QOut( "-Statics-" )
-   Debug ( __aStatic() )
+   Debug ( __vmVarSList() )
    QOut()
 
-   QOut( "-Global Stack- Len=", __GlobalStackLen() )
-   Debug ( __aGlobalStack() )
+   QOut( "-Global Stack- Len=", __vmStkGCount() )
+   Debug ( __vmStkGList() )
    QOut()
 
-   QOut( "-Local Stack- Len=", __StackLen() )
-   xStack := Debug ( __aStack() )
+   QOut( "-Local Stack- Len=", __vmStkLCount() )
+   xStack := Debug ( __vmStkLList() )
    QOut()
 
    QOut( "-Parameters-" )
-   xParam := Debug( __aParam() )
+   xParam := Debug( __vmParLList() )
    if xParam[ xStack[ 7 ] ] == "Hello"
       QOut( ":-)" )
    endif
@@ -226,7 +226,7 @@ return nil
 static function Transfer( x1,x2,x3,x4,x5,x6,x7,x8,x9,x10 /* etc */ )
 
    local self   := QSelf()
-   local aParam := __aParam()
+   local aParam := __vmParLList()
    local nLen   := PCount()
    local xRet
    local xData

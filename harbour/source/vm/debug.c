@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Debugging functions for LOCAL and STATIC variables
+ * Debugging functions for LOCAL, STATIC variables and the stack
  *
  * Copyright 1999 Eddie Runia <eddie@runia.com>
  * www - http://www.harbour-project.org
@@ -33,43 +33,8 @@
  *
  */
 
-/* $Doc$
- * $Description$  Debug functions.
- * $Requirement$  source\rtl\itemapi.c (1999/05/04)
- * $Date$         1999/05/06
- * $End$ */
-
 #include "extend.h"
 #include "itemapi.h"
-
-/* $Doc$
- * $FuncName$     <aStat> __aStatic()
- * $Description$  Return the statics array
- *
- *                Please aClone before assignments
- * $End$ */
-HARBOUR HB___ASTATIC( void )
-{
-   PHB_ITEM pStatics = hb_arrayClone( &aStatics );
-
-   hb_itemCopy( &stack.Return, pStatics );
-   hb_itemRelease( pStatics );
-}
-
-
-/* $Doc$
- * $FuncName$     <xStat> __Static(<nStatic>)
- * $Description$  Return a specified statics
- * $End$ */
-HARBOUR HB___STATIC( void )
-{
-   USHORT uiStatic = hb_parni( 1 );
-   PHB_ITEM pStatic = aStatics.item.asArray.value->pItems +
-                      stack.iStatics + uiStatic - 1;
-
-   hb_itemReturn( pStatic );
-}
-
 
 /* $Doc$
  * $FuncName$     AddToArray( <pItem>, <pReturn>, <uiPos> )
@@ -97,10 +62,10 @@ static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, ULONG ulPos )
 
 
 /* $Doc$
- * $FuncName$     <nVars> __GlobalStackLen()
+ * $FuncName$     <nVars> __vmStkGCount()
  * $Description$  Returns the length of the global stack
  * $End$ */
-static USHORT GlobalStackLen( void )
+static USHORT hb_stackLenGlobal( void )
 {
    PHB_ITEM pItem;
    USHORT uiCount = 0;
@@ -110,22 +75,22 @@ static USHORT GlobalStackLen( void )
    return uiCount;
 }
 
-HARBOUR HB___GLOBALSTACKLEN( void )
+HARBOUR HB___VMSTKGCOUNT( void )
 {
-   hb_retni( GlobalStackLen() );
+   hb_retni( hb_stackLenGlobal() );
 }
 
 
 /* $Doc$
- * $FuncName$     <aStack> __aGlobalStack()
+ * $FuncName$     <aStack> __vmStkGList()
  * $Description$  Returns the global stack
  * $End$ */
-HARBOUR HB___AGLOBALSTACK( void )
+HARBOUR HB___VMSTKGLIST( void )
 {
    PHB_ITEM pReturn;
    PHB_ITEM pItem;
 
-   USHORT uiLen = GlobalStackLen();
+   USHORT uiLen = hb_stackLenGlobal();
    USHORT uiPos = 1;
 
    pReturn = hb_itemArrayNew( uiLen );           /* Create a transfer array  */
@@ -139,7 +104,7 @@ HARBOUR HB___AGLOBALSTACK( void )
 
 
 /* $Doc$
- * $FuncName$     <nVars> __StackLen()
+ * $FuncName$     <nVars> __vmStkLCount()
  * $Description$  Returns the length of the stack of the calling function
  * $End$ */
 static USHORT StackLen( void )
@@ -153,14 +118,14 @@ static USHORT StackLen( void )
 
    return uiCount;
 }
-HARBOUR HB___STACKLEN( void )
+HARBOUR HB___VMSTKLCOUNT( void )
 {
    hb_retni( StackLen() );
 }
 
 
 /* $Doc$
- * $FuncName$     <aStack> __aStack()
+ * $FuncName$     <aStack> __vmStkLList()
  * $Description$  Returns the stack of the calling function
  *                "[<symbol>]"  Means symbol.
  *
@@ -170,7 +135,7 @@ HARBOUR HB___STACKLEN( void )
  *                [x+1 .. y] Locals
  *                [y+1 ..]   Pushed data
  * $End$ */
-HARBOUR HB___ASTACK( void )
+HARBOUR HB___VMSTKLLIST( void )
 {
    PHB_ITEM pReturn;
    PHB_ITEM pItem;
@@ -188,13 +153,13 @@ HARBOUR HB___ASTACK( void )
 
 
 /* $Doc$
- * $FuncName$     <aParam> __aParam()
+ * $FuncName$     <aParam> __vmParLGet()
  * $Description$  Returns the passed parameters of the calling function
  * $End$ */
                /* TODO : put bLocals / bParams      */
                /* somewhere for declared parameters */
                /* and locals                        */
-HARBOUR HB___APARAM( void )
+HARBOUR HB___VMPARLLIST( void )
 {
    PHB_ITEM pReturn;
    PHB_ITEM pItem;
@@ -215,12 +180,12 @@ HARBOUR HB___APARAM( void )
 /* -------------------------------------------------------------------------- */
 /*  $DOC$
  *  $FUNCNAME$
- *    __GETLOCAL()
+ *    __VMVARLGET()
  *  $CATEGORY$
  *    Variable management
  *  $ONELINER$
  *  $SYNTAX$
- *    __GETLOCAL( <nProcLevel>, <nLocal> )
+ *    __VMVARLGET( <nProcLevel>, <nLocal> )
  *  $ARGUMENTS$
  *    <nProcLevel> Is the procedure level, same as used in ProcName()
  *    and ProcLine(), from which a local variable containts is going to
@@ -239,7 +204,7 @@ HARBOUR HB___APARAM( void )
  *  $END$
  */
 
-HARBOUR HB___GETLOCAL( void )
+HARBOUR HB___VMVARLGET( void )
 {
    int iLevel = hb_parni( 1 ) + 1;
    PHB_ITEM pBase = stack.pBase;
@@ -249,3 +214,4 @@ HARBOUR HB___GETLOCAL( void )
 
    hb_itemReturn( pBase + 1 + hb_parni( 2 ) );
 }
+

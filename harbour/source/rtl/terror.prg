@@ -38,30 +38,29 @@
 
 FUNCTION ErrorNew()
 
-   STATIC oClass
+   STATIC s_oClass
 
-   IF oClass == NIL
+   IF s_oClass == NIL
+      s_oClass := TClass():New( "ERROR" )
 
-      oClass := TClass():New( "ERROR" )
+      s_oClass:AddData( "Args"         , 0 )
+      s_oClass:AddData( "CanDefault"   , .F. )
+      s_oClass:AddData( "CanRetry"     , .F. )
+      s_oClass:AddData( "CanSubstitute", .F. )
+      s_oClass:AddData( "Cargo" )
+      s_oClass:AddData( "Description"  , "" )
+      s_oClass:AddData( "FileName"     , "" )
+      s_oClass:AddData( "GenCode"      , 0 )
+      s_oClass:AddData( "Operation"    , "" )
+      s_oClass:AddData( "OsCode"       , 0 )
+      s_oClass:AddData( "Severity"     , 0 )
+      s_oClass:AddData( "SubCode"      , 0 )
+      s_oClass:AddData( "SubSystem"    , "" )
+      s_oClass:AddData( "Tries"        , 0 )
 
-      oClass:AddData( "Args"         , 0 )
-      oClass:AddData( "CanDefault"   , .F. )
-      oClass:AddData( "CanRetry"     , .F. )
-      oClass:AddData( "CanSubstitute", .F. )
-      oClass:AddData( "Cargo" )
-      oClass:AddData( "Description"  , "" )
-      oClass:AddData( "FileName"     , "" )
-      oClass:AddData( "GenCode"      , 0 )
-      oClass:AddData( "Operation"    , "" )
-      oClass:AddData( "OsCode"       , 0 )
-      oClass:AddData( "Severity"     , 0 )
-      oClass:AddData( "SubCode"      , 0 )
-      oClass:AddData( "SubSystem"    , "" )
-      oClass:AddData( "Tries"        , 0 )
-
-      oClass:Create()
+      s_oClass:Create()
 
    ENDIF
 
-   RETURN oClass:Instance()
+   RETURN s_oClass:Instance()
 

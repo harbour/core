@@ -41,6 +41,10 @@
  *    HB_WORD()
  *    HB___XHELP()
  *
+ * Copyright 1999 Eddie Runia <eddie@runia.com>
+ *    HB___VMVARSGET()
+ *    HB___VMVARSLIST()
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -194,9 +198,9 @@ extern POBJSYMBOLS HB_FIRSTSYMBOL, HB_LASTSYMBOL;
 
 /* virtual machine state */
 
-STACK    stack;
-HB_SYMB  symEval = { "__EVAL", FS_PUBLIC, hb_vmDoBlock, 0 }; /* symbol to evaluate codeblocks */
-HB_ITEM  aStatics;         /* Harbour array to hold all application statics variables */
+STACK   stack;
+HB_SYMB hb_g_symEval = { "__EVAL", FS_PUBLIC, hb_vmDoBlock, 0 }; /* symbol to evaluate codeblocks */
+HB_ITEM s_aStatics;          /* Harbour array to hold all application statics variables */
 
 static BOOL     s_bDebugging = FALSE;
 static BOOL     s_bDebugShowLines = FALSE; /* update source code line on the debugger display */
@@ -235,13 +239,13 @@ void hb_vmInit( void )
    HB_DEBUG( "hb_vmInit\n" );
 
    /* initialize internal data structures */
-   aStatics.type = IT_NIL;
+   s_aStatics.type = IT_NIL;
    stack.Return.type = IT_NIL;
 
    hb_xinit();
    hb_errInit();
    hb_stackInit();
-   hb_dynsymNew( &symEval );  /* initialize dynamic symbol for evaluating codeblocks */
+   hb_dynsymNew( &hb_g_symEval );  /* initialize dynamic symbol for evaluating codeblocks */
    hb_setInitialize();        /* initialize Sets */
    hb_consoleInitialize();    /* initialize Console */
    hb_memvarsInit();
@@ -328,7 +332,7 @@ void hb_vmQuit( void )
       hb_stackPop();
 
    hb_itemClear( &stack.Return );
-   hb_arrayRelease( &aStatics );
+   hb_arrayRelease( &s_aStatics );
    hb_rddShutDown();
    hb_errExit();
    hb_clsReleaseAll();
@@ -2180,7 +2184,7 @@ void hb_vmDo( USHORT uiParams )
 
    if( ! IS_NIL( pSelf ) ) /* are we sending a message ? */
    {
-      if( pSym == &( symEval ) && IS_BLOCK( pSelf ) )
+      if( pSym == &( hb_g_symEval ) && IS_BLOCK( pSelf ) )
          pFunc = pSym->pFunPtr;                 /* __EVAL method = function */
       else
          pFunc = hb_objGetMethod( pSelf, pSym );
@@ -2306,18 +2310,18 @@ static void hb_vmStatics( PHB_SYMB pSym ) /* initializes the global aStatics arr
 {
    USHORT uiStatics = hb_vmPopNumber();
 
-   if( IS_NIL( &aStatics ) )
+   if( IS_NIL( &s_aStatics ) )
    {
       pSym->pFunPtr = NULL;         /* statics frame for this PRG */
-      hb_arrayNew( &aStatics, uiStatics );
+      hb_arrayNew( &s_aStatics, uiStatics );
    }
    else
    {
-      pSym->pFunPtr = ( PHB_FUNC )hb_arrayLen( &aStatics );
-      hb_arraySize( &aStatics, hb_arrayLen( &aStatics ) + uiStatics );
+      pSym->pFunPtr = ( PHB_FUNC ) hb_arrayLen( &s_aStatics );
+      hb_arraySize( &s_aStatics, hb_arrayLen( &s_aStatics ) + uiStatics );
    }
 
-   HB_DEBUG2( "Statics %li\n", hb_arrayLen( &aStatics ) );
+   HB_DEBUG2( "Statics %li\n", hb_arrayLen( &s_aStatics ) );
 }
 
 static void hb_vmEndBlock( void )
@@ -2574,7 +2578,7 @@ static void hb_vmPushLocalByRef( SHORT iLocal )
 
 static void hb_vmPushStatic( USHORT uiStatic )
 {
-   PHB_ITEM pStatic = aStatics.item.asArray.value->pItems + stack.iStatics + uiStatic - 1;
+   PHB_ITEM pStatic = s_aStatics.item.asArray.value->pItems + stack.iStatics + uiStatic - 1;
 
    if( IS_BYREF( pStatic ) )
       hb_itemCopy( stack.pPos, hb_itemUnRef( pStatic ) );
@@ -2591,7 +2595,7 @@ static void hb_vmPushStaticByRef( USHORT uiStatic )
    /* we store the offset instead of a pointer to support a dynamic stack */
    stack.pPos->item.asRefer.value = uiStatic - 1;
    stack.pPos->item.asRefer.offset = stack.iStatics;
-   stack.pPos->item.asRefer.itemsbase = &aStatics.item.asArray.value->pItems;
+   stack.pPos->item.asRefer.itemsbase = &s_aStatics.item.asArray.value->pItems;
    hb_stackPush();
 
    HB_DEBUG2( "hb_vmPushStaticByRef %i\n", uiStatic );
@@ -2775,7 +2779,7 @@ static void hb_vmPopStatic( USHORT uiStatic )
    PHB_ITEM pStatic;
 
    hb_stackDec();
-   pStatic = aStatics.item.asArray.value->pItems + stack.iStatics + uiStatic - 1;
+   pStatic = s_aStatics.item.asArray.value->pItems + stack.iStatics + uiStatic - 1;
 
    if( IS_BYREF( pStatic ) )
       hb_itemCopy( hb_itemUnRef( pStatic ), stack.pPos );
@@ -3456,3 +3460,29 @@ HARBOUR HB___XHELP( void )
    }
 }
 
+/* $Doc$
+ * $FuncName$     <aStat> __vmVarSGet()
+ * $Description$  Return the statics array
+ *
+ *                Please aClone before assignments
+ * $End$ */
+HARBOUR HB___VMVARSGET( void )
+{
+   PHB_ITEM pStatics = hb_arrayClone( &s_aStatics );
+
+   hb_itemCopy( &stack.Return, pStatics );
+   hb_itemRelease( pStatics );
+}
+
+/* $Doc$
+ * $FuncName$     <xStat> __vmVarSList(<nStatic>)
+ * $Description$  Return a specified statics
+ * $End$ */
+HARBOUR HB___VMVARSLIST( void )
+{
+   USHORT uiStatic = hb_parni( 1 );
+   PHB_ITEM pStatic = s_aStatics.item.asArray.value->pItems +
+                      stack.iStatics + uiStatic - 1;
+
+   hb_itemReturn( pStatic );
+}

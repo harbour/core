@@ -124,7 +124,7 @@ PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo )
       }
       else if( IS_BLOCK( pEvalInfo->pItems[ 0 ] ) )
       {
-         hb_vmPushSymbol( &symEval );
+         hb_vmPushSymbol( &hb_g_symEval );
          hb_vmPush( pEvalInfo->pItems[ 0 ] );
          while( uiParam <= pEvalInfo->paramCount )
             hb_vmPush( pEvalInfo->pItems[ uiParam++ ] );
@@ -209,7 +209,7 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, USHORT uiPCount, PHB_ITEM pItemArg1, ... )
          va_list va;
 
          va_start( va, pItemArg1 );
-         hb_vmPushSymbol( &symEval );
+         hb_vmPushSymbol( &hb_g_symEval );
          hb_vmPush( pItem );
          if( uiPCount >= 1 ) hb_vmPush( pItemArg1 );
          for( uiParam = 2; uiParam <= uiPCount; uiParam++ )

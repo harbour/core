@@ -49,6 +49,7 @@
  *
  * Copyright 1999 Victor Szel <info@szelvesz.hu>
  *    hb_consoleGetNewLine()
+ *    HB_DISPOUTAT()
  *    HB_SETPOSBS()
  *    HB_DISPBOX() (GT version)
  *    HB_DISPBEGIN()
@@ -693,7 +694,7 @@ HARBOUR HB_DEVOUT( void ) /* writes a single value to the current device (screen
    }
 }
 
-HARBOUR HB_DISPOUT( void ) /* writes a single value to the current device (screen or printer), but is not affected by SET ALTERNATE */
+HARBOUR HB_DISPOUT( void ) /* writes a single value to the screen, but is not affected by SET ALTERNATE */
 {
    if( hb_pcount() >= 1 )
    {
@@ -713,6 +714,35 @@ HARBOUR HB_DISPOUT( void ) /* writes a single value to the current device (scree
          hb_out( 1, hb_dispout );
 #else
       hb_out( 1, hb_devout );
+#endif
+   }
+}
+
+/* Undocumented Clipper function */
+
+HARBOUR HB_DISPOUTAT( void ) /* writes a single value to the screen at speficic position, but is not affected by SET ALTERNATE */
+{
+   if( hb_pcount() >= 3 )
+   {
+      /* NOTE: Clipper does no checks here. */
+      hb_setpos( hb_parni( 1 ), hb_parni( 2 ) );
+
+#ifdef HARBOUR_USE_GTAPI
+      if( ISCHAR( 4 ) )
+      {
+         char szOldColor[ CLR_STRLEN ];
+
+         hb_gtGetColorStr( szOldColor );
+         hb_gtSetColorStr( hb_parc( 2 ) );
+
+         hb_out( 3, hb_dispout );
+
+         hb_gtSetColorStr( szOldColor );
+      }
+      else
+         hb_out( 3, hb_dispout );
+#else
+      hb_out( 3, hb_devout );
 #endif
    }
 }
@@ -1134,7 +1164,7 @@ HARBOUR HB_SETBLINK( void )
 HARBOUR HB_SETMODE( void )
 {
 #ifdef HARBOUR_USE_GTAPI
-   hb_retl( hb_gtSetMode( ISNUM( 1 ) ? hb_parni( 1 ) : ( hb_gtMaxRow() + 1 ), 
+   hb_retl( hb_gtSetMode( ISNUM( 1 ) ? hb_parni( 1 ) : ( hb_gtMaxRow() + 1 ),
                           ISNUM( 2 ) ? hb_parni( 2 ) : ( hb_gtMaxCol() + 1 ) ) == 0 );
 #else
    hb_retl( FALSE );

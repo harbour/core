@@ -139,7 +139,7 @@ struct hb_struLong
 
 struct hb_struMemvar
 {
-   struct _HB_VALUE * *itemsbase;
+   struct _HB_VALUE ** itemsbase;
    LONG offset;
    LONG value;
 };
@@ -151,7 +151,7 @@ struct hb_struPointer
 
 struct hb_struRefer
 {
-   struct _HB_ITEM * *itemsbase;
+   struct _HB_ITEM ** itemsbase;
    LONG offset;
    LONG value;
 };
@@ -236,9 +236,8 @@ typedef USHORT ERRCODE;
 #define SUCCESS            0
 #define FAILURE            1
 
-extern STACK stack;
-extern HB_SYMB symEval;
-extern HB_ITEM aStatics;
+extern STACK   stack;
+extern HB_SYMB hb_g_symEval;
 
 /* Extend API */
 extern char *   hb_parc( int iParam, ... );  /* retrieve a string parameter */

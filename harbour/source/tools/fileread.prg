@@ -323,7 +323,7 @@ LOCAL oSelf := Qself()
 RETURN oSelf:nError
 
 STATIC FUNCTION f_error_msg( cText )
-STATIC cAction := {"on", "creating object for", "opening", "reading from", "closing"}
+STATIC s_cAction := {"on", "creating object for", "opening", "reading from", "closing"}
 LOCAL oSelf := Qself()
 LOCAL cMessage, nTemp
    // Has an error been recorded?
@@ -337,6 +337,6 @@ LOCAL cMessage, nTemp
       ELSE
          nTemp := oSelf:nLastOp + 1
       END IF
-      cMessage := IF( EMPTY( cText ), "", cText ) + "Error " + ALLTRIM( STR( oSelf:nError ) ) + " " + cAction[ nTemp ] + " " + oSelf:cFile
+      cMessage := IF( EMPTY( cText ), "", cText ) + "Error " + ALLTRIM( STR( oSelf:nError ) ) + " " + s_cAction[ nTemp ] + " " + oSelf:cFile
    END IF
 RETURN cMessage

@@ -98,6 +98,7 @@ DISPBOX                 ;R;
 DISPCOUNT               ;S;
 DISPEND                 ;S;
 DISPOUT                 ;R;
+DISPOUTAT               ;R;
 DOSERROR                ;S;
 DOW                     ;R;
 DTOC                    ;R;

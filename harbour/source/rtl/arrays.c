@@ -462,7 +462,7 @@ ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * 
          {
             for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
             {
-               hb_vmPushSymbol( &symEval );
+               hb_vmPushSymbol( &hb_g_symEval );
                hb_vmPush( pValue );
                hb_vmPush( pBaseArray->pItems + ulStart );
                hb_vmDo( 1 );
@@ -562,7 +562,7 @@ BOOL hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG * pulStart, ULONG * p
          {
             PHB_ITEM pItem = pBaseArray->pItems + ulStart;
 
-            hb_vmPushSymbol( &symEval );
+            hb_vmPushSymbol( &hb_g_symEval );
             hb_vmPush( bBlock );
             hb_vmPush( pItem );
             hb_vmPushNumber( ( double ) ( ulStart + 1 ), 0 );
