@@ -55,6 +55,8 @@
 
 CLASS HBPersistent
 
+   METHOD CreateNew() INLINE Self
+
    METHOD SaveToText( cObjectName )
 
    METHOD SaveToFile( cFileName ) INLINE MemoWrit( cFileName, ::SaveToText() )
@@ -63,7 +65,7 @@ ENDCLASS
 
 METHOD SaveToText( cObjectName ) CLASS HBPersistent
 
-   local oNew := &( ::ClassName() + "()" ):New()
+   local oNew := &( ::ClassName() + "()" ):CreateNew()
    local aProperties, n, uValue, cObject, cType
 
    static nIndent := -3
