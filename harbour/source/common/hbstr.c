@@ -43,11 +43,12 @@ ULONG hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG u
 
    if( ulSubLen > 0 && ulLen >= ulSubLen )
    {
-      ULONG ulPos = 0, ulSubPos = 0;
+      ULONG ulPos = 0;
+      ULONG ulSubPos = 0;
 
       while( ulPos < ulLen && ulSubPos < ulSubLen )
       {
-         if( *( szText + ulPos ) == *( szSub + ulSubPos ) )
+         if( szText[ ulPos ] == szSub[ ulSubPos ] )
          {
             ulSubPos++;
             ulPos++;
@@ -57,6 +58,7 @@ ULONG hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG u
          else
             ulPos++;
       }
+
       return ( ulSubPos < ulSubLen ) ? 0 : ( ulPos - ulSubLen + 1 );
    }
    else

@@ -33,8 +33,6 @@
  *
  */
 
-/* Definitions related to the preprocessor */
-
 #ifndef HB_PP_H_
 #define HB_PP_H_
 
@@ -105,10 +103,5 @@ extern char * hb_pp_szWarnings[];
 extern DEFINES *  hb_pp_topDefine;
 extern COMMANDS * hb_pp_topCommand;
 extern COMMANDS * hb_pp_topTranslate;
-
-/* Imported from the compiler */
-
-extern PATHNAMES * hb_comp_pIncludePath;
-extern PHB_FNAME   hb_comp_pFileName;
 
 #endif /* HB_PP_H_ */

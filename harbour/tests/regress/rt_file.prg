@@ -108,7 +108,7 @@ INIT PROCEDURE RT_InitStatics()
    snLongN   := -100000
    snDoubleN := -10.567 /* Use different number of decimals than the default */
    snDoubleI := 0   //Log( 0 )
-   sdDate    := SToD( "19800101" )
+   sdDate    := SToD( "19840325" )
    sdDateE   := SToD( "" )
    slFalse   := .F.
    slTrue    := .T.

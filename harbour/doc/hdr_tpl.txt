@@ -82,6 +82,8 @@ FUNCTION HEADER TEMPLATE
  *
  *  $PLATFORMS$
  *
+ *  $FILES$
+ *
  *  $SEEALSO$
  *
  *  $END$
@@ -130,6 +132,8 @@ FUNCTION HEADER EXAMPLE
  *      different universe from the author of this function.
  *  $PLATFORMS$
  *      All
+ *  $FILES$
+ *
  *  $SEEALSO$
  *      Date() IsWeekend() IsHarbourFinished() IsApocalypse()
  *  $END$
@@ -140,6 +144,7 @@ FUNCTION HEADER EXAMPLE
 /*
  * ChangeLog:
  *
+ * V 1.11   Victor Szel                 $FILES$ added.
  * V 1.10   Victor Szel                 $PLATFORMS$ added.
  * V 1.9    Victor Szel                 Small format changes.
  * V 1.8    Victor Szel                 licence -> license

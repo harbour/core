@@ -67,15 +67,16 @@
  * levels that are less or equal to the COMPILATION time HB_TR_LEVEL.
  */
 
-#define HB_ECHO_CREATE(l, x)  do \
-                              { \
-                                if (hb_tr_level() >= l) { \
-                                  hb_tr_file_ = __FILE__; \
-                                  hb_tr_line_ = __LINE__; \
-                                  hb_tr_level_ = l; \
-                                  hb_tr_trace x ; \
-                                } \
-                              } while (0)
+#define HB_ECHO_CREATE( l, x )  do \
+                                { \
+                                   if( hb_tr_level() >= l ) \
+                                   { \
+                                      hb_tr_file_ = __FILE__; \
+                                      hb_tr_line_ = __LINE__; \
+                                      hb_tr_level_ = l; \
+                                      hb_tr_trace x ; \
+                                   } \
+                                } while( 0 )
 
 #if HB_TR_LEVEL >= HB_TR_DEBUG
 #define HB_ECHO_TRACE_HB_TR_DEBUG(x)    HB_ECHO_CREATE(HB_TR_DEBUG, x)

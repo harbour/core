@@ -362,10 +362,10 @@ extern ULONG    hb_objHasMsg( PHB_ITEM pObject, char * szString );
 extern PHB_DYNS hb_dynsymGet( char * szName );    /* finds and creates a dynamic symbol if not found */
 extern PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol ); /* creates a new dynamic symbol based on a local one */
 extern PHB_DYNS hb_dynsymFind( char * szName );   /* finds a dynamic symbol */
-extern PHB_DYNS hb_dynsymFindName( char * szName );   /* converts to uppercase and finds a dynamic symbol */
+extern PHB_DYNS hb_dynsymFindName( char * szName ); /* converts to uppercase and finds a dynamic symbol */
 extern void     hb_dynsymLog( void );             /* displays all dynamic symbols */
 extern void     hb_dynsymRelease( void );         /* releases the memory of the dynamic symbol table */
-extern void     hb_dynsymEval( PHB_DYNS_FUNC, void * );   /* enumerates all dynamic symbols */
+extern void     hb_dynsymEval( PHB_DYNS_FUNC, void * ); /* enumerates all dynamic symbols */
 
 /* Command line and environment argument management */
 extern void     hb_cmdargInit( int argc, char * argv[] );

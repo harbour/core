@@ -85,8 +85,8 @@ STATIC s_lNoAlert := NIL
  *      first letter of the option.
  *
  *      If the program is executed with the //NOALERT command line switch,
- *      nothing is  displayed and the program simply QUIT. This switch could
- *      be override with __NONOALERT().
+ *      nothing is displayed and it simply returns NIL. This switch could
+ *      be overridden with __NONOALERT().
  *
  *      If the GT system is linked in, ALERT() display the message using
  *      the full screen I/O system, if not, the information is printed to
@@ -273,7 +273,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       FOR nEval := 1 TO Len( aSay )
          OutStd( aSay[ nEval ] )
          IF nEval < Len( aSay )
-            OutStd( Chr( 13 ) + Chr( 10 ) )
+            OutStd( hb_OSNewLine() )
          ENDIF
       NEXT
 

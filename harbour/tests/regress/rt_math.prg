@@ -103,7 +103,7 @@ INIT PROCEDURE RT_InitStatics()
    snLongN   := -100000
    snDoubleN := -10.567 /* Use different number of decimals than the default */
    snDoubleI := 0   //Log( 0 )
-   sdDate    := SToD( "19800101" )
+   sdDate    := SToD( "19840325" )
    sdDateE   := SToD( "" )
    slFalse   := .F.
    slTrue    := .T.
@@ -162,7 +162,7 @@ FUNCTION Main_MATH()
    TEST_LINE( Str(Sqrt(@snIntP))              , "         3.16"                        ) /* Bug in CA-Cl*pper, it returns: "E BASE 1097 Argument error SQRT F:S" */
 #endif
    TEST_LINE( Str(Sqrt(4),21,18)              , " 2.000000000000000000"                )
-   TEST_LINE( Str(Sqrt(3),21,18)              , " 1.732050807568877193"                ) /* Bug in CA-Cl*pper 5.2e, it returns: " 1.732050807568877000" */
+   TEST_LINE( Str(Sqrt(3),21,18)              , " 1.732050807568877293"                ) /* Bug in CA-Cl*pper 5.2e, it returns: " 1.732050807568877000" */
 
    /* ABS() */
 
@@ -174,10 +174,10 @@ FUNCTION Main_MATH()
 #ifdef __HARBOUR__
    TEST_LINE( Str(Abs(@snIntN))               , "        10"                           ) /* Bug in CA-Cl*pper, it returns: "E BASE 1089 Argument error ABS F:S" */
 #endif
-   TEST_LINE( Abs(Month(sdDate))              , 1                                      )
-   TEST_LINE( Abs(-Month(sdDate))             , 1                                      )
-   TEST_LINE( Str(Abs(Month(sdDate)))         , "  1"                                  )
-   TEST_LINE( Str(Abs(-Month(sdDate)))        , "         1"                           )
+   TEST_LINE( Abs(Month(sdDate))              , 3                                      )
+   TEST_LINE( Abs(-Month(sdDate))             , 3                                      )
+   TEST_LINE( Str(Abs(Month(sdDate)))         , "  3"                                  )
+   TEST_LINE( Str(Abs(-Month(sdDate)))        , "         3"                           )
    TEST_LINE( Str(Abs(Val("0")))              , "0"                                    )
    TEST_LINE( Str(Abs(Val("-0")))             , " 0"                                   )
    TEST_LINE( Str(Abs(Val("150")))            , "150"                                  )
@@ -421,7 +421,7 @@ FUNCTION Main_MATH()
    TEST_LINE( Str(100 / 10.00             )   , "        10.00"                )
    TEST_LINE( Str(100 / 10.000            )   , "        10.00"                )
    TEST_LINE( Str(100.00 / 10.0           )   , "        10.00"                )
-   TEST_LINE( Str(sdDate - sdDateE        )   , "   2444240"                   )
+   TEST_LINE( Str(sdDate - sdDateE        )   , "   2445785"                   )
    TEST_LINE( Str(sdDate - sdDate         )   , "         0"                   )
    TEST_LINE( Str(1234567890 * 1234567890 )   , " 1524157875019052100"         ) /* Bug in CA-Cl*pper, it returns: " 1524157875019052000" */
 

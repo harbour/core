@@ -1,3 +1,30 @@
+19991207-16:29 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/regress/*
+    ! SQRT(3) expected result fixed.
+    ! Date() calls in test lines changed to constant dates.
+      (Both fix thanks to Plamen Ivanov <abrasoft@techno-link.com>)
+    + 19800101 changed to 19840325 to better test handling of date parts.
+  * doc/hdr_tpl.txt
+    + $FILES$ entry added.
+  * source/rtl/dbedit.prg
+    + DBEDIT() documentation by Chen Kedem added
+  * source/rtl/extend.c
+    ! Updated TRACE call for hb_pardsbuff()
+  * include/hbpp.h
+    - Removed two compiler variable declarations.
+  * source/common/hbstr.c
+    % Minor code cleanup.
+  * source/rtl/alert.prg
+    ! Chr(13)+Chr(10) changed to hb_OSNewLine().
+    ! Fix in the ALERT() $DESCRIPTION$.
+      (Both fix thanks to Chen Kedem)
+  * source/rtl/dircmd.prg
+    + __DIR() documentation by Chen Kedem added
+  * source/rtl/adir.prg
+    ! Fixed $EXAMPLE$, aSize( var, x ) would result in a RT error, since
+      var is NIL at this point, changed to var := Array( x ), $SEEALSO$
+      changed accordingly.
+
 19991205-14:22 GMT+1 Bruno Cantero <bruno@issnet.net>
   * include/rddapi.h
     source/rdd/dbcmd.c

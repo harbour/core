@@ -106,7 +106,7 @@ INIT PROCEDURE RT_InitStatics()
    snLongN   := -100000
    snDoubleN := -10.567 /* Use different number of decimals than the default */
    snDoubleI := 0   //Log( 0 )
-   sdDate    := SToD( "19800101" )
+   sdDate    := SToD( "19840325" )
    sdDateE   := SToD( "" )
    slFalse   := .F.
    slTrue    := .T.
@@ -703,8 +703,8 @@ FUNCTION Main_HVM()
 
    /* */
 
-   TEST_LINE( -Month(sdDate)                  , -1                                 )
-   TEST_LINE( Str(-(Month(sdDate)))           , "        -1"                       )
+   TEST_LINE( -Month(sdDate)                  , -3                                 )
+   TEST_LINE( Str(-(Month(sdDate)))           , "        -3"                       )
    TEST_LINE( Str(-(Val("10")))               , "       -10"                       )
    TEST_LINE( Str(-(Val("100000")))           , "   -100000"                       )
    TEST_LINE( Str(-(Val("20.876")))           , "       -20.876"                   )

@@ -106,7 +106,7 @@ INIT PROCEDURE RT_InitStatics()
    snLongN   := -100000
    snDoubleN := -10.567 /* Use different number of decimals than the default */
    snDoubleI := 0   //Log( 0 )
-   sdDate    := SToD( "19800101" )
+   sdDate    := SToD( "19840325" )
    sdDateE   := SToD( "" )
    slFalse   := .F.
    slTrue    := .T.
@@ -148,9 +148,9 @@ FUNCTION Main_DATE()
    TEST_LINE( Year(NIL)                       , "E BASE 1112 Argument error YEAR F:S"  )
    TEST_LINE( Year(100)                       , "E BASE 1112 Argument error YEAR F:S"  )
 #ifdef __HARBOUR__
-   TEST_LINE( Year(@sdDate)                   , 1980                                   ) /* Bug in CA-Cl*pper, it returns: "E BASE 1112 Argument error YEAR F:S" */
+   TEST_LINE( Year(@sdDate)                   , 1984                                   ) /* Bug in CA-Cl*pper, it returns: "E BASE 1112 Argument error YEAR F:S" */
 #endif
-   TEST_LINE( Year(sdDate)                    , 1980                                   )
+   TEST_LINE( Year(sdDate)                    , 1984                                   )
    TEST_LINE( Year(sdDateE)                   , 0                                      )
    TEST_LINE( Str(Year(SToD("19990905")))     , " 1999"                                )
 
@@ -159,9 +159,9 @@ FUNCTION Main_DATE()
    TEST_LINE( Month(NIL)                      , "E BASE 1113 Argument error MONTH F:S" )
    TEST_LINE( Month(100)                      , "E BASE 1113 Argument error MONTH F:S" )
 #ifdef __HARBOUR__
-   TEST_LINE( Month(@sdDate)                  , 1                                      ) /* Bug in CA-Cl*pper, it returns: "E BASE 1113 Argument error MONTH F:S" */
+   TEST_LINE( Month(@sdDate)                  , 3                                      ) /* Bug in CA-Cl*pper, it returns: "E BASE 1113 Argument error MONTH F:S" */
 #endif
-   TEST_LINE( Month(sdDate)                   , 1                                      )
+   TEST_LINE( Month(sdDate)                   , 3                                      )
    TEST_LINE( Month(sdDateE)                  , 0                                      )
    TEST_LINE( Str(Month(SToD("19990905")))    , "  9"                                  )
 
@@ -170,9 +170,9 @@ FUNCTION Main_DATE()
    TEST_LINE( Day(NIL)                        , "E BASE 1114 Argument error DAY F:S"   )
    TEST_LINE( Day(100)                        , "E BASE 1114 Argument error DAY F:S"   )
 #ifdef __HARBOUR__
-   TEST_LINE( Day(@sdDate)                    , 1                                      ) /* Bug in CA-Cl*pper, it returns: "E BASE 1114 Argument error DAY F:S" */
+   TEST_LINE( Day(@sdDate)                    , 25                                     ) /* Bug in CA-Cl*pper, it returns: "E BASE 1114 Argument error DAY F:S" */
 #endif
-   TEST_LINE( Day(sdDate)                     , 1                                      )
+   TEST_LINE( Day(sdDate)                     , 25                                     )
    TEST_LINE( Day(sdDateE)                    , 0                                      )
    TEST_LINE( Str(Day(SToD("19990905")))      , "  5"                                  )
 
@@ -185,9 +185,9 @@ FUNCTION Main_DATE()
    TEST_LINE( Dow(NIL)                        , "E BASE 1115 Argument error DOW F:S"   )
    TEST_LINE( Dow(100)                        , "E BASE 1115 Argument error DOW F:S"   )
 #ifdef __HARBOUR__
-   TEST_LINE( Dow(@sdDate)                    , 3                                      ) /* Bug in CA-Cl*pper, it returns: "E BASE 1115 Argument error DOW F:S" */
+   TEST_LINE( Dow(@sdDate)                    , 1                                      ) /* Bug in CA-Cl*pper, it returns: "E BASE 1115 Argument error DOW F:S" */
 #endif
-   TEST_LINE( Dow(sdDate)                     , 3                                      )
+   TEST_LINE( Dow(sdDate)                     , 1                                      )
    TEST_LINE( Dow(sdDateE)                    , 0                                      )
    TEST_LINE( Dow(SToD("20000222"))           , 3                                      )
    TEST_LINE( Dow(SToD("20000223"))           , 4                                      )
@@ -206,9 +206,9 @@ FUNCTION Main_DATE()
    TEST_LINE( CMonth(NIL)                     , "E BASE 1116 Argument error CMONTH F:S" )
    TEST_LINE( CMonth(100)                     , "E BASE 1116 Argument error CMONTH F:S" )
 #ifdef __HARBOUR__
-   TEST_LINE( CMonth(@sdDate)                 , "January"                               ) /* Bug in CA-Cl*pper, it returns: "E BASE 1116 Argument error CMONTH F:S" */
+   TEST_LINE( CMonth(@sdDate)                 , "March"                                 ) /* Bug in CA-Cl*pper, it returns: "E BASE 1116 Argument error CMONTH F:S" */
 #endif
-   TEST_LINE( CMonth(sdDate)                  , "January"                               )
+   TEST_LINE( CMonth(sdDate)                  , "March"                                 )
    TEST_LINE( CMonth(sdDateE)                 , ""                                      )
    TEST_LINE( CMonth(SToD("19990101"))        , "January"                               )
    TEST_LINE( CMonth(SToD("19990201"))        , "February"                              )
@@ -228,9 +228,9 @@ FUNCTION Main_DATE()
    TEST_LINE( CDow(NIL)                       , "E BASE 1117 Argument error CDOW F:S"  )
    TEST_LINE( CDow(100)                       , "E BASE 1117 Argument error CDOW F:S"  )
 #ifdef __HARBOUR__
-   TEST_LINE( CDow(@sdDate)                   , "Tuesday"                              ) /* Bug in CA-Cl*pper, it returns: "E BASE 1117 Argument error CDOW F:S" */
+   TEST_LINE( CDow(@sdDate)                   , "Sunday"                               ) /* Bug in CA-Cl*pper, it returns: "E BASE 1117 Argument error CDOW F:S" */
 #endif
-   TEST_LINE( CDow(sdDate)                    , "Tuesday"                              )
+   TEST_LINE( CDow(sdDate)                    , "Sunday"                               )
    TEST_LINE( CDow(sdDateE)                   , ""                                     )
    TEST_LINE( CDow(SToD("20000222"))          , "Tuesday"                              )
    TEST_LINE( CDow(SToD("20000223"))          , "Wednesday"                            )
@@ -250,9 +250,9 @@ FUNCTION Main_DATE()
    TEST_LINE( DToC(100)                       , "E BASE 1118 Argument error DTOC F:S"  )
    TEST_LINE( DToC("")                        , "E BASE 1118 Argument error DTOC F:S"  )
 #ifdef __HARBOUR__
-   TEST_LINE( DToC(@sdDate)                   , "1980.01.01"                           ) /* Bug in CA-Cl*pper, it returns: "E BASE 1118 Argument error DTOC F:S" */
+   TEST_LINE( DToC(@sdDate)                   , "1984.03.25"                           ) /* Bug in CA-Cl*pper, it returns: "E BASE 1118 Argument error DTOC F:S" */
 #endif
-   TEST_LINE( DToC(sdDate)                    , "1980.01.01"                           )
+   TEST_LINE( DToC(sdDate)                    , "1984.03.25"                           )
    TEST_LINE( DToC(sdDateE)                   , "    .  .  "                           )
 
    /* CTOD() */
@@ -271,9 +271,9 @@ FUNCTION Main_DATE()
    TEST_LINE( DToS(NIL)                       , "E BASE 1120 Argument error DTOS F:S"  )
    TEST_LINE( DToS(100)                       , "E BASE 1120 Argument error DTOS F:S"  )
 #ifdef __HARBOUR__
-   TEST_LINE( DToS(@sdDate)                   , "19800101"                             ) /* Bug in CA-Cl*pper, it returns: "E BASE 1120 Argument error DTOS F:S" */
+   TEST_LINE( DToS(@sdDate)                   , "19840325"                             ) /* Bug in CA-Cl*pper, it returns: "E BASE 1120 Argument error DTOS F:S" */
 #endif
-   TEST_LINE( DToS(sdDate)                    , "19800101"                             )
+   TEST_LINE( DToS(sdDate)                    , "19840325"                             )
    TEST_LINE( DToS(sdDateE)                   , "        "                             )
 
    RETURN NIL

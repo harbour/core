@@ -101,11 +101,11 @@
  *      LOCAL aName, aSize, aDate, aTime, aAttr, nLen, i
  *      nLen := ADIR( "*.JPG" )     // Number of JPG files in this directory
  *      IF nLen > 0
- *         ASIZE( aName, nLen )     // make room to store the information
- *         ASIZE( aSize, nLen )
- *         ASIZE( aDate, nLen )
- *         ASIZE( aTime, nLen )
- *         ASIZE( aAttr, nLen )
+ *         aName := Array( nLen )   // make room to store the information
+ *         aSize := Array( nLen )
+ *         aDate := Array( nLen )
+ *         aTime := Array( nLen )
+ *         aAttr := Array( nLen )
  *         FOR i = 1 TO nLen
  *             ? aName[i], aSize[i], aDate[i], aTime[i], aAttr[i]
  *         NEXT
@@ -118,7 +118,7 @@
  *      <aName> is going to be fill with long file name and not necessarily
  *      the 8.3 uppercase name.
  *  $SEEALSO$
- *      ASIZE(), DIRECTORY(), SET DEFAULT
+ *      ARRAY(), DIRECTORY(), SET DEFAULT
  *  $END$
  */
 

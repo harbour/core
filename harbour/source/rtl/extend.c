@@ -239,7 +239,7 @@ char * hb_pards( int iParam, ... )
 
 char * hb_pardsbuff( char * szDate, int iParam, ... )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_pardsbuff(%d, ...)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_pardsbuff(%p, %d, ...)", szDate, iParam));
 
    if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {

@@ -242,27 +242,27 @@ STATIC FUNCTION TEST_BEGIN( cParam )
 
    /* NOTE: mxNotHere intentionally not declared */
    PUBLIC mcLongerNameThen10Chars := "Long String Name!"
-   PUBLIC mcString  := "HELLO"
-   PUBLIC mcStringE := ""
-   PUBLIC mcStringZ := "A" + Chr( 0 ) + "B"
-   PUBLIC mcStringW := Chr(13)+Chr(10)+Chr(141)+Chr(10)+Chr(9)
-   PUBLIC mnIntZ    := 0
-   PUBLIC mnDoubleZ := 0.0
-   PUBLIC mnIntP    := 10
-   PUBLIC mnLongP   := 100000
-   PUBLIC mnDoubleP := 10.567
-   PUBLIC mnIntN    := -10
-   PUBLIC mnLongN   := -100000
-   PUBLIC mnDoubleN := -10.567
-   PUBLIC mnDoubleI := 0    //Log( 0 )
-   PUBLIC mdDate    := SToD( "19800101" )
-   PUBLIC mdDateE   := SToD( "" )
-   PUBLIC mlFalse   := .F.
-   PUBLIC mlTrue    := .T.
+   PUBLIC mcString  := scString
+   PUBLIC mcStringE := scStringE
+   PUBLIC mcStringZ := scStringZ
+   PUBLIC mcStringW := scStringW
+   PUBLIC mnIntZ    := snIntZ
+   PUBLIC mnDoubleZ := snDoubleZ
+   PUBLIC mnIntP    := snIntP
+   PUBLIC mnLongP   := snLongP
+   PUBLIC mnDoubleP := snDoubleP
+   PUBLIC mnIntN    := snIntN
+   PUBLIC mnLongN   := snLongN
+   PUBLIC mnDoubleN := snDoubleN
+   PUBLIC mnDoubleI := snDoubleI
+   PUBLIC mdDate    := sdDate
+   PUBLIC mdDateE   := sdDateE
+   PUBLIC mlFalse   := slFalse
+   PUBLIC mlTrue    := slTrue
    PUBLIC moObject  := ErrorNew()
-   PUBLIC muNIL     := NIL
-   PUBLIC mbBlock   := {|| NIL }
-   PUBLIC mbBlockC  := {|| "(string)" }
+   PUBLIC muNIL     := suNIL
+   PUBLIC mbBlock   := sbBlock
+   PUBLIC mbBlockC  := sbBlockC
    PUBLIC maArray   := { 9898 }
 
    rddSetDefault( "DBFNTX" )
@@ -287,8 +287,8 @@ STATIC FUNCTION TEST_BEGIN( cParam )
 
    w_TEST->TYPE_C    := "<FieldValue>"
    w_TEST->TYPE_C_E  := ""
-   w_TEST->TYPE_D    := STOD( "19800101" )
-   w_TEST->TYPE_D_E  := STOD( "" )
+   w_TEST->TYPE_D    := sdDate
+   w_TEST->TYPE_D_E  := sdDateE
    w_TEST->TYPE_M    := "<MemoValue>"
    w_TEST->TYPE_M_E  := ""
    w_TEST->TYPE_N_I  := 100
@@ -556,8 +556,8 @@ INIT PROCEDURE RT_InitStatics()
    snIntN    := -10
    snLongN   := -100000
    snDoubleN := -10.567 /* Use different number of decimals than the default */
-   snDoubleI := 0   //Log( 0 )
-   sdDate    := SToD( "19800101" )
+   snDoubleI := 0       // Log( 0 )
+   sdDate    := SToD( "19840325" )
    sdDateE   := SToD( "" )
    slFalse   := .F.
    slTrue    := .T.
@@ -590,3 +590,4 @@ INIT PROCEDURE RT_InitStatics()
       saArray   }
 
    RETURN
+

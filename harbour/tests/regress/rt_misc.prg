@@ -103,7 +103,7 @@ INIT PROCEDURE RT_InitStatics()
    snLongN   := -100000
    snDoubleN := -10.567 /* Use different number of decimals than the default */
    snDoubleI := 0   //Log( 0 )
-   sdDate    := SToD( "19800101" )
+   sdDate    := SToD( "19840325" )
    sdDateE   := SToD( "" )
    slFalse   := .F.
    slTrue    := .T.
@@ -221,7 +221,7 @@ FUNCTION Main_MISC()
    TEST_LINE( NationMsg(11)                   , " - "                                                 )
    TEST_LINE( NationMsg(12)                   , "Y/N"                                                 )
    TEST_LINE( NationMsg(13)                   , "INVALID EXPRESSION"                                  )
-   TEST_LINE( NationMsg(14)                   , "" )
+   TEST_LINE( NationMsg(14)                   , "" ) /* Bug in CA-Clipper 5.3a/b, it will return "ATSORT v1.3i x19 06/Mar/95" */
 #ifndef __CLIPPER__ /* Causes GPF in CA-Cl*pper (5.2e International, 5.3b) */
    TEST_LINE( NationMsg(200)                  , "" ) /* Bug in CA-Cl*pper, it will return "74?" or other trash */
 #endif
