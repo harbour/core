@@ -872,11 +872,31 @@ METHOD OSShell() CLASS TDebugger
 
    local cImage := SaveScreen()
    local cColors := SetColor()
+   local cOs    := Upper( OS() )
+   local cShell := GetEnv("COMSPEC")
+   local bLastHandler := ErrorBlock({ |objErr| BREAK (objErr) })
+   local oE
 
    SET COLOR TO "W/N"
    CLS
    SetCursor( SC_NORMAL )
-   RUN "Command.com"
+
+   begin sequence
+      if At("WINDOWS", cOs) != 0 .OR. At("DOS", cOs) != 0 .OR. At("OS/2", cOs) != 0
+         RUN cShell
+
+      else
+         Alert( "Not implemented yet!" )
+
+      endif
+
+   recover using oE
+      Alert("Error: " + oE:description)
+
+   end sequence
+
+   ErrorBlock(bLastHandler)
+
    SetCursor( SC_NONE )
    RestScreen( ,,,, cImage )
    SetColor( cColors )

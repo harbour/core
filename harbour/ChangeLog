@@ -1,3 +1,7 @@
+2001-02-08 14:55 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
+   * source/debug/debugger.prg
+     * changed OSShell() method to use COMSPEC environment variable
+
 2001-02-08 11:30 GMT+1 Antonio Linares <alinares@fivetech.com>
   * harbour/source/compiler/genc.c
     ! improved support for HB_P_STATICNAME
