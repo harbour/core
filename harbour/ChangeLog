@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2002-10-16 1:50 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * include/dbInfo.ch
+     ! added comments
+
 2002-10-14 17:10 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * source/rtl/tget.prg
     ! fixed get (value and display) involving negative with decimal

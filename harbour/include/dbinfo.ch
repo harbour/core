@@ -55,61 +55,60 @@
 
 /*
    Constants for SELF_ORDINFO ()
-   Be sure these stay in sync with the same ones in hbapirdd.h
 */
 
-#define DBOI_CONDITION            1    /* Get the order's condition     */
-#define DBOI_EXPRESSION           2    /* Get the order's expression    */
-#define DBOI_POSITION             3    /* Get current key position in scope and filter  */
-#define DBOI_RECNO                4    /* Get current key position disregarding filters */
-#define DBOI_NAME                 5    /* Get the order's name          */
-#define DBOI_NUMBER               6    /* Get the order's list position */
-#define DBOI_BAGNAME              7    /* Get the order's Bag name      */
-#define DBOI_BAGEXT               8    /* Get the order's Bag Extension */
+#define DBOI_CONDITION            1    /* The order's conditional expression     */
+#define DBOI_EXPRESSION           2    /* The order's key expression             */
+#define DBOI_POSITION             3    /* The current key position in scope and filter  */
+#define DBOI_RECNO                4    /* The current key position disregarding filters */
+#define DBOI_NAME                 5    /* The name of the order                      */
+#define DBOI_NUMBER               6    /* The numeric position in the list of orders */
+#define DBOI_BAGNAME              7    /* The name of the file containing this order     */
+#define DBOI_BAGEXT               8    /* The extension of the file containing this order */
 #define DBOI_INDEXEXT             DBOI_BAGEXT
 #define DBOI_INDEXNAME            DBOI_BAGNAME
-#define DBOI_ORDERCOUNT           9    /* Get the count of ORDERS in an index file or in total */
-#define DBOI_FILEHANDLE           10   /* Get the handle of the index file */
-#define DBOI_ISCOND               11   /* Does the order have a FOR condition */
-#define DBOI_ISDESC               12   /* Is the order DESCENDing */
-#define DBOI_UNIQUE               13   /* Does the order have the unique attribute set? */
+#define DBOI_ORDERCOUNT           9    /* The count of ORDERS contained in an index file or in total */
+#define DBOI_FILEHANDLE           10   /* The OS file handle of the index     */
+#define DBOI_ISCOND               11   /* Does the order have a FOR condition? */
+#define DBOI_ISDESC               12   /* Is the order DESCENDing? */
+#define DBOI_UNIQUE               13   /* Does the order have the UNIQUE attribute? */
 
 /* 53-level constants */
-#define DBOI_FULLPATH             20  /* Get the order Bag's Full Path            */
-#define DBOI_KEYTYPE              24  /* Get the type of the order's key          */
-#define DBOI_KEYSIZE              25  /* Get the size of the order's key          */
-#define DBOI_KEYCOUNT             26  /* Get the count of keys in scope and filter*/
-#define DBOI_SETCODEBLOCK         27  /* Set codeblock for order key              */
-#define DBOI_KEYDEC               28  /* Get # of decimals in order's key         */
-#define DBOI_HPLOCKING            29  /* Using High performance index locking?    */
-#define DBOI_LOCKOFFSET           35  /* New locking offset                       */
+#define DBOI_FULLPATH             20  /* The full path to the index file (Bag) */
+#define DBOI_KEYTYPE              24  /* The type of the order's key           */
+#define DBOI_KEYSIZE              25  /* The length of the order's key         */
+#define DBOI_KEYCOUNT             26  /* The count of keys in scope and filter */
+#define DBOI_SETCODEBLOCK         27  /* The codeblock that produces the key   */
+#define DBOI_KEYDEC               28  /* The # of decimals in a numeric key    */
+#define DBOI_HPLOCKING            29  /* Using High Performance locking for this order?  */
+#define DBOI_LOCKOFFSET           35  /* The offset used for logical locking             */
 
-#define DBOI_KEYADD               36  /* Gets/Sets the Key to be added            */
-#define DBOI_KEYDELETE            37  /* Gets/Sets the Key to be deleted          */
-#define DBOI_KEYVAL               38  /* Get current key's value                  */
-#define DBOI_SCOPETOP             39  /* Gets/Sets the scope top                  */
-#define DBOI_SCOPEBOTTOM          40  /* Gets/Sets the scope bottom               */
-#define DBOI_SCOPETOPCLEAR        41  /* Clear the top scope setting              */
-#define DBOI_SCOPEBOTTOMCLEAR     42  /* Clear the bottom scope setting           */
+#define DBOI_KEYADD               36  /* Custom Index: Was Key added successfully?       */
+#define DBOI_KEYDELETE            37  /* Custom Index: Was Key Deletion successful?      */
+#define DBOI_KEYVAL               38  /* The value of the current key      */
+#define DBOI_SCOPETOP             39  /* Get or Set the scope top          */
+#define DBOI_SCOPEBOTTOM          40  /* Get or Set the scope botto        */
+#define DBOI_SCOPETOPCLEAR        41  /* Clear the scope top               */
+#define DBOI_SCOPEBOTTOMCLEAR     42  /* Clear the scope bottom            */
 
-#define DBOI_CUSTOM               45  /* Custom created order                     */
-#define DBOI_SKIPUNIQUE           46  /* Flag for skip unique                     */
+#define DBOI_CUSTOM               45  /* Is this a Custom Index?           */
+#define DBOI_SKIPUNIQUE           46  /* Was a skip to adjacent unique Key successful?   */
 
-#define DBOI_KEYSINCLUDED         50  /* # of keys included while indexing        */
+#define DBOI_KEYSINCLUDED         50  /* Number of keys in the index order */
 /* key numbers and counts */
 #define DBOI_KEYGOTO              DBOI_POSITION
-#define DBOI_KEYNORAW             51  /* keyno ignoring any filter                */
-#define DBOI_KEYCOUNTRAW          52  /* keycount ignoring any filter             */
+#define DBOI_KEYNORAW             51  /* The key number disregarding filters  */
+#define DBOI_KEYCOUNTRAW          52  /* The key count disregarding filter    */
 
 /* Query Optimization */
-#define DBOI_OPTLEVEL             53  /* Optimization level for current query      */
+#define DBOI_OPTLEVEL             53  /* Optimization level for current query */
 
-/* Perhaps change these so they don't require an open table */
-#define DBOI_STRICTREAD           60  /* Get/set read-thru RDD when indexing       */
-#define DBOI_OPTIMIZE             61  /* Get/set use of query optimization         */
-#define DBOI_AUTOOPEN             62  /* Get/set auto-open of structural index     */
-#define DBOI_AUTOORDER            63  /* Get/set default order of structural index */
-#define DBOI_AUTOSHARE            64  /* Get/set automatic share control           */
+/* These shouldn't need an open table */
+#define DBOI_STRICTREAD           60  /* Flag for avoiding RDD hierarchy and using a bigger buffer when indexing  */
+#define DBOI_OPTIMIZE             61  /* Flag for whether to use query optimization             */
+#define DBOI_AUTOOPEN             62  /* Flag for automatically opening structural indexes      */
+#define DBOI_AUTOORDER            63  /* When a structural index is opened, the order to be set */
+#define DBOI_AUTOSHARE            64  /* When a network is detected, open the index shared, otherwise open exclusively   */
 
 /* Return values for DBOI_OPTLEVEL */
 #define DBOI_OPTIMIZED_NONE       0
@@ -124,39 +123,39 @@
 #define DBRI_UPDATED              5
 
 
-/* constants for DBINFO() */
-#define DBI_ISDBF                 1  /* Logical: does RDD support DBF file format? */
-#define DBI_CANPUTREC             2  /* Logical: does RDD support Putting Records? */
-#define DBI_GETHEADERSIZE         3  /* Numeric: Get file header size              */
-#define DBI_LASTUPDATE            4  /* Date:    Last date RDD file was updated    */
-#define DBI_GETDELIMITER          5  /* String:  Get the default delimiter         */
-#define DBI_SETDELIMITER          6  /* String:  Set the default delimiter         */
-#define DBI_GETRECSIZE            7  /* Numeric: The size of 1 record in the file  */
-#define DBI_GETLOCKARRAY          8  /* Array:   Get the array of locked records   */
-#define DBI_TABLEEXT              9  /* String:  Get the table's file extension    */
-#define DBI_FULLPATH             10  /* String:  Full path name of the file        */
+/* constants for dbInfo()  */
+#define DBI_ISDBF                 1  /* Does this RDD support DBFs? */
+#define DBI_CANPUTREC             2  /* Can this RDD Put Records?   */
+#define DBI_GETHEADERSIZE         3  /* Data file's header size     */
+#define DBI_LASTUPDATE            4  /* The last date this file was written to  */
+#define DBI_GETDELIMITER          5  /* The delimiter (as a string)         */
+#define DBI_SETDELIMITER          6  /* The delimiter (as a string)         */
+#define DBI_GETRECSIZE            7  /* The size of 1 record in the file    */
+#define DBI_GETLOCKARRAY          8  /* An array of locked records' numbers */
+#define DBI_TABLEEXT              9  /* The data file's file extension      */
+#define DBI_FULLPATH             10  /* The Full path to the data file      */
 
-#define DBI_ISFLOCK              20  /* Get the file lock status             */
-#define DBI_CHILDCOUNT           22  /* Number of open child relations       */
-#define DBI_FILEHANDLE           23  /* Handle of the open data file         */
-#define DBI_BOF                  26  /* BOF flag - alternate for bof()    */
-#define DBI_EOF                  27  /* EOF flag - alternate for eof()    */
-#define DBI_DBFILTER             28  /* Current Filter expression         */
-#define DBI_FOUND                29  /* FOUND flag - alternate to found() */
-#define DBI_FCOUNT               30  /* Number of fields in a record      */
-#define DBI_LOCKCOUNT            31  /* Number of record locks            */
-#define DBI_VALIDBUFFER          32  /* Is the current buffer valid?      */
-#define DBI_ALIAS                33  /* Alias (name) of workarea          */
-#define DBI_GETSCOPE             34  /* LOCATE codeblock                  */
-#define DBI_LOCKOFFSET           35  /* Locking offset                    */
-#define DBI_SHARED               36  /* Get/Set the shared flag           */
-#define DBI_MEMOEXT              37  /* The memo file's file extension    */
-#define DBI_MEMOHANDLE           38  /* File handle of memo file          */
-#define DBI_MEMOBLOCKSIZE        39  /* Memo File Blocksize               */
+#define DBI_ISFLOCK              20  /* Is there a file lock active?        */
+#define DBI_CHILDCOUNT           22  /* Number of child relations set       */
+#define DBI_FILEHANDLE           23  /* The data file's OS file handle      */
+#define DBI_BOF                  26  /* Same as bof()    */
+#define DBI_EOF                  27  /* Same as eof()    */
+#define DBI_DBFILTER             28  /* Current Filter setting              */
+#define DBI_FOUND                29  /* Same as found()  */
+#define DBI_FCOUNT               30  /* How many fields in a record?        */
+#define DBI_LOCKCOUNT            31  /* Number of record locks              */
+#define DBI_VALIDBUFFER          32  /* Is the record buffer valid?         */
+#define DBI_ALIAS                33  /* Name (alias) for this workarea      */
+#define DBI_GETSCOPE             34  /* The codeblock used in LOCATE        */
+#define DBI_LOCKOFFSET           35  /* The offset used for logical locking */
+#define DBI_SHARED               36  /* Was the file opened shared?         */
+#define DBI_MEMOEXT              37  /* The memo file's file extension      */
+#define DBI_MEMOHANDLE           38  /* File handle of the memo file        */
+#define DBI_MEMOBLOCKSIZE        39  /* Memo File's block size              */
 
-#define DBI_DB_VERSION          101  /* Version of Host driver            */
-#define DBI_RDD_VERSION         102  /* current RDD version               */
+#define DBI_DB_VERSION          101  /* Version of the Host driver          */
+#define DBI_RDD_VERSION         102  /* current RDD's version               */
 
-#define DBI_USER               1000  /* Start of user-defined DBI_ values */
+#define DBI_USER               1000  /* User-defined DBI_ constants */
 
 #endif /* HB_DBINFO_CH_ */
