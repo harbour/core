@@ -1,3 +1,7 @@
+19990728-19:35 CET Patrick Mast <harbour@PatrickMast.com> <jsalas@gruposp.com>
+  + /harbour/contrib/directX
+    Added Jesus'es DirectX files.
+
 Wed Jul 28 11:54:06 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* source/rtl/dir.c: 
