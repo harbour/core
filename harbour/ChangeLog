@@ -1,3 +1,13 @@
+20000411-21:08 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/gtapi.c
+     % Some var++/var-- changed back to ++var/--var. Since they produce
+       better code when compiler optimization is turned off.
+
+   * source/vm/cmdarg.c
+   + tests/tscmdarg.c
+     * Tests moved to the test dir.
+
 20000411-20:45 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/gtapi.c

@@ -291,7 +291,7 @@ USHORT hb_gtDispBegin( void )
    if( s_uiPreCount == 0 )
       hb_gt_DispBegin();
    else
-      s_uiPreCount++;
+      ++s_uiPreCount;
 
    return 0;
 }
@@ -310,7 +310,7 @@ USHORT hb_gtDispEnd( void )
    if( s_uiPreCount == 0 )
       hb_gt_DispEnd();
    else
-      s_uiPreCount--;
+      --s_uiPreCount;
 
    return 0;
 }
@@ -336,7 +336,7 @@ USHORT hb_gtPreExt( void )
       s_uiPreCNest = 1;
    }
    else
-      s_uiPreCNest++;
+      ++s_uiPreCNest;
 
    return 0;
 
@@ -355,7 +355,7 @@ USHORT hb_gtPostExt( void )
       s_uiPreCNest = 0;
    }
    else
-      s_uiPreCNest--;
+      --s_uiPreCNest;
 
    return 0;
 }
@@ -468,7 +468,7 @@ USHORT hb_gtSetColorStr( char * szColorString )
       }
       if( i > 0 )
       {
-         i--;
+         --i;
          nColor = 0;
          /* TODO: this can probably be replaced with atoi() */
          /* ie: nColor = atoi( buff ); */
@@ -544,7 +544,7 @@ USHORT hb_gtSetColorStr( char * szColorString )
             if( nPos == s_uiColorCount )
             {
                s_Color = ( int * ) hb_xrealloc( s_Color, sizeof( int ) * ( nPos + 1 ) );
-               s_uiColorCount++;
+               ++s_uiColorCount;
             }
             if( bHasX )
                nFore &= 0x88F8;
@@ -903,7 +903,7 @@ USHORT hb_gtWriteCon( BYTE * pStr, ULONG ulLength )
             break;
 
          default:
-            iCol++;
+            ++iCol;
             if( iCol > iMaxCol || iCol <= 0 )
             {
                /* If the cursor position started off the left edge,
@@ -975,15 +975,15 @@ USHORT hb_gtDrawShadow( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiR
    uiMaxCol = hb_gtMaxCol();
 
    uiLeft += 2;
-   uiBottom++;
+   ++uiBottom;
 
    /* Draw the bottom edge */
 
    if( uiBottom <= uiMaxRow && uiLeft <= uiMaxCol )
       hb_gt_SetAttribute( uiBottom, uiLeft, uiBottom, HB_MIN( uiRight, uiMaxCol ), byAttr );
 
-   uiRight++;
-   uiTop++;
+   ++uiRight;
+   ++uiTop;
 
    /* Draw the right edge */
 
