@@ -127,19 +127,6 @@ static char * GetSymbolName( ULONG ulPos )
   return pSymbol->szName;
 }
 
-static BYTE GetFunctionLocalsCount( PFUNCTION pFunction )
-{
-   PVAR pLocal = pFunction->pLocals;
-   BYTE bLocals = 0;
-
-   while( pLocal )
-   {
-      pLocal = pLocal->pNext;
-      bLocals++;
-   }
-   return bLocals;
-}
-
 static ULONG GetPCodesSize( void )
 {
   ULONG ulTotal = 0;
