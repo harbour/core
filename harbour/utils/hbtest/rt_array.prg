@@ -68,8 +68,13 @@ FUNCTION Main_ARRAY()
    TEST_LINE( aSort(10)                       , NIL                                        )
    TEST_LINE( aSort({})                       , "{.[0].}"                                  )
    TEST_LINE( aSort(ErrorNew())               , NIL                                        )
+#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
    TEST_LINE( aFill()                         , "E BASE 2017 Argument error AEVAL "        )
    TEST_LINE( aFill( NIL )                    , "E BASE 2017 Argument error AEVAL "        )
+#else
+   TEST_LINE( aFill()                         , "E BASE 9999 Argument error AFILL "        )
+   TEST_LINE( aFill( NIL )                    , "E BASE 9999 Argument error AFILL "        )
+#endif
    TEST_LINE( aFill( {} )                     , "{.[0].}"                                  )
    TEST_LINE( aFill( {}, 1 )                  , "{.[0].}"                                  )
    TEST_LINE( aFill( ErrorNew() )             , "ERROR Object"                             )
@@ -111,7 +116,11 @@ FUNCTION Main_ARRAY()
    TEST_LINE( aTail( "" )                     , NIL                                        )
    TEST_LINE( aTail( {} )                     , NIL                                        )
    TEST_LINE( aTail( { 1, 2 } )               , 2                                          )
+#ifdef __HARBOUR__
+   TEST_LINE( aTail( ErrorNew() )             , 0                                          )
+#else
    TEST_LINE( aTail( ErrorNew() )             , NIL                                        )
+#endif
    TEST_LINE( aSize()                         , "E BASE 2023 Argument error ASIZE "        )
    TEST_LINE( aSize( NIL )                    , "E BASE 2023 Argument error ASIZE "        )
    TEST_LINE( aSize( {} )                     , "E BASE 2023 Argument error ASIZE "        )
@@ -353,8 +362,9 @@ STATIC FUNCTION TARRv( nLen )
 STATIC FUNCTION TAStr( aArray )
    LOCAL cString := ""
    LOCAL tmp
+   LOCAL nLen := Len( aArray )
 
-   FOR tmp := 1 TO Len( aArray )
+   FOR tmp := 1 TO nLen
       cString += aArray[ tmp ]
    NEXT
 

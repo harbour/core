@@ -51,3 +51,9 @@
 #define TEST_RESULT_COL4_WIDTH  55
 #define TEST_RESULT_COL5_WIDTH  55
 
+#ifdef __HARBOUR__
+   #include "hbsetup.ch"
+#else
+   #define HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#endif
+

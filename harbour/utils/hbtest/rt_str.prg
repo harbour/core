@@ -767,11 +767,19 @@ FUNCTION Main_STR()
 
    /* STRZERO() */
 
+#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
    TEST_LINE( StrZero(NIL)                    , "E BASE 1099 Argument error STR F:S" )
    TEST_LINE( StrZero("A", 10, 2)             , "E BASE 1099 Argument error STR F:S" )
    TEST_LINE( StrZero(100, 10, "A")           , "E BASE 1099 Argument error STR F:S" )
    TEST_LINE( StrZero(100, 10, NIL)           , "E BASE 1099 Argument error STR F:S" )
    TEST_LINE( StrZero(100, NIL, NIL)          , "E BASE 1099 Argument error STR F:S" )
+#else
+   TEST_LINE( StrZero(NIL)                    , "E BASE 9999 Argument error STRZERO F:S" )
+   TEST_LINE( StrZero("A", 10, 2)             , "E BASE 9999 Argument error STRZERO F:S" )
+   TEST_LINE( StrZero(100, 10, "A")           , "E BASE 9999 Argument error STRZERO F:S" )
+   TEST_LINE( StrZero(100, 10, NIL)           , "E BASE 9999 Argument error STRZERO F:S" )
+   TEST_LINE( StrZero(100, NIL, NIL)          , "E BASE 9999 Argument error STRZERO F:S" )
+#endif
    TEST_LINE( StrZero(10)                     , "0000000010"     )
    TEST_LINE( StrZero(10.0)                   , "0000000010.0"   )
    TEST_LINE( StrZero(10.00)                  , "0000000010.00"  )

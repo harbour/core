@@ -192,6 +192,15 @@ HB_FUNC( AFILL )
 
       hb_itemReturn( pArray ); /* AFill() returns the array itself */
    }
+   else
+#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+      /* NOTE: In CA-Cl*pper AFILL() is written in a manner that it will
+               call AEVAL() to do the job, so the error (if any) will also be 
+               thrown by AEVAL().  [vszakats] */
+      hb_errRT_BASE( EG_ARG, 2017, NULL, "AEVAL" );
+#else
+      hb_errRT_BASE( EG_ARG, 9999, NULL, "AFILL" );
+#endif
 }
 
 HB_FUNC( ASCAN )
