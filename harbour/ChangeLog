@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * source/rdd/dbfntx/dbfntx1.c
+    ! Changed usage of stricmp to hb_stricmp, because stricmp is not an
+      ANSI standard function.
+
 2002-05-14 16:10 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
   * contrib/mysql/makefile renamed to Makefile. Needed to build 
     library on Linux.
