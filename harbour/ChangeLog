@@ -1,3 +1,12 @@
+2001-08-25 03:05 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * contrib/dot/pp.prg
+      * added note: This is being expanded independently from Harbour
+         at this Sourceforge project:
+        http://sourceforge.net/projects/xbase-script
+
+   * source/compiler/harbour.sly
+      * copied Ryszard's last fix to harbour.y
+
 2001-08-24 22:15 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    +source/rtl/pushbtn.prg
       *Push Button Class Compatible with Ca-Clipper 5.3

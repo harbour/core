@@ -19,6 +19,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
  * their web site at http://www.gnu.org/).
+
+ Note: This is being expanded independently from Harbour
+       at this Sourceforge project:
+
+   http://sourceforge.net/projects/xbase-script
+
  */
 
 #DEFINE MAX_CICLES 64
