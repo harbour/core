@@ -450,7 +450,7 @@ METHOD InputBox( cMsg, uValue ) CLASS TDebugger
    local uTemp   := uValue
    local GetList := {}
    local nOldCursor
-   local cImage := SaveScreen( nTop, nLeft, nBottom + 1, nRight + 1 )
+   local cImage := SaveScreen( nTop, nLeft, nBottom + 1, nRight + 2 )
    local lScoreBoard := Set( _SET_SCOREBOARD, .f. )
 
    @ nTop, nLeft, nBottom, nRight BOX B_SINGLE COLOR ::oPullDown:cClrPopup
@@ -462,7 +462,7 @@ METHOD InputBox( cMsg, uValue ) CLASS TDebugger
    nOldCursor = SetCursor( 1 )
    READ
    SetCursor( nOldCursor )
-   RestScreen( nTop, nLeft, nBottom + 1, nRight + 1, cImage )
+   RestScreen( nTop, nLeft, nBottom + 1, nRight + 2, cImage )
    Set( _SET_SCOREBOARD, lScoreBoard )
 
 return If( LastKey() != K_ESC, uTemp, uValue )
@@ -784,19 +784,13 @@ METHOD ClosePopup( nPopup ) CLASS TDbMenu
    local oPopup
    local nAt
 
-   // dispbegin()
    if nPopup != 0
       oPopup = ::aItems[ nPopup ]:bAction
-      RestScreen( oPopup:nTop, oPopup:nLeft, oPopup:nBottom + 1, oPopup:nRight + 1,;
+      RestScreen( oPopup:nTop, oPopup:nLeft, oPopup:nBottom + 1, oPopup:nRight + 2,;
                   oPopup:cBackImage )
       oPopup:cBackImage = nil
-      DispOutAt( 0, ::aItems[ nPopup ]:nCol,;
-         StrTran( ::aItems[ nPopup ]:cPrompt, "~", "" ), ::cClrPopup )
-
-      DispOutAt( 0, ::aItems[ nPopup ]:nCol + ( nAt := At( "~", ::aItems[ nPopup ]:cPrompt ) ) - 1,;
-         SubStr( ::aItems[ nPopup ]:cPrompt, nAt + 2, 1 ), ::cClrHotKey )
+      ::aItems[ nPopup ]:Display( ::cClrPopup, ::cClrHotKey )
    endif
-   // dispend()
 
 return nil
 
@@ -814,12 +808,11 @@ METHOD Display() CLASS TDbMenu
 
    SetColor( ::cClrPopup )
 
-   // DispBegin()
    if ! ::lPopup
       DispOutAt( 0, 0, Space( MaxCol() + 1 ), ::cClrPopup )
       SetPos( 0, 0 )
    else
-      ::cBackImage = SaveScreen( ::nTop, ::nLeft, ::nBottom + 1, ::nRight + 1 )
+      ::cBackImage = SaveScreen( ::nTop, ::nLeft, ::nBottom + 1, ::nRight + 2 )
       @ ::nTop, ::nLeft, ::nBottom, ::nRight BOX B_SINGLE
       __Shadow( ::nTop, ::nLeft, ::nBottom, ::nRight )
    endif
@@ -829,15 +822,9 @@ METHOD Display() CLASS TDbMenu
          DispOutAt( ::aItems[ n ]:nRow, ::nLeft,;
             Chr( 195 ) + Replicate( Chr( 196 ), ::nRight - ::nLeft - 1 ) + Chr( 180 ) )
       else
-         DispOutAt( ::aItems[ n ]:nRow, ::aItems[ n ]:nCol,;
-            StrTran( ::aItems[ n ]:cPrompt, "~", "" ) )
-
-         DispOutAt( ::aItems[ n ]:nRow, ::aItems[ n ]:nCol + ;
-	    ( nAt := At( "~", ::aItems[ n ]:cPrompt ) ) - 1 ,;
-            SubStr( ::aItems[ n ]:cPrompt, nAt + 2, 1 ), ::cClrHotKey )
+         ::aItems[ n ]:Display( ::cClrPopup, ::cClrHotKey )
       endif
    next
-   // DispEnd()
 
 return nil
 
@@ -883,20 +870,12 @@ return nil
 METHOD GoLeft() CLASS TDbMenu
 
    local oMenuItem := ::aItems[ ::nOpenPopup ]
-   local nAt
 
-   // DispBegin()
    if ::nOpenPopup != 0
       if ! ::lPopup
          ::ClosePopup( ::nOpenPopup )
       else
-         SetColor( ::cClrPopup )
-         DispOutAt( oMenuItem:nRow, oMenuItem:nCol,;
-            StrTran( oMenuItem:cPrompt, "~", "" ) )
-
-         DispOutAt( oMenuItem:nRow, oMenuItem:nCol + ;
-	    ( nAt := At( "~", oMenuItem:cPrompt ) ) - 1 ,;
-            SubStr( oMenuItem:cPrompt, nAt + 2, 1 ), ::cClrHotKey )
+         oMenuItem:Display( ::cClrPopup, ::CClrHotKey )
       endif
       if ::nOpenPopup > 1
          --::nOpenPopup
@@ -909,27 +888,18 @@ METHOD GoLeft() CLASS TDbMenu
          ::ShowPopup( ::nOpenPopup := Len( ::aItems ) )
       endif
    endif
-   // DispEnd()
 
 return nil
 
 METHOD GoRight() CLASS TDbMenu
 
    local oMenuItem := ::aItems[ ::nOpenPopup ]
-   local nAt
 
-   // DispBegin()
    if ::nOpenPopup != 0
       if ! ::lPopup
          ::ClosePopup( ::nOpenPopup )
       else
-         SetColor( ::cClrPopup )
-         DispOutAt( oMenuItem:nRow, oMenuItem:nCol ,;
-            StrTran( oMenuItem:cPrompt, "~", "" ) )
-
-         DispOutAt( oMenuItem:nRow, oMenuItem:nCol + ;
-	    ( nAt := At( "~", oMenuItem:cPrompt ) ) - 1 ,;
-            SubStr( oMenuItem:cPrompt, nAt + 2, 1 ), ::cClrHotKey )
+         oMenuItem:Display( ::cClrPopup, ::cClrHotKey )
       endif
       if ::nOpenPopup < Len( ::aItems )
          ++::nOpenPopup
@@ -962,23 +932,7 @@ METHOD ShowPopup( nPopup ) CLASS TDbMenu
 
    local nAt, oMenuItem
 
-   if ! ::lPopup
-      DispOutAt( 0, ::aItems[ nPopup ]:nCol ,;
-        StrTran( ::aItems[ nPopup ]:cPrompt, "~", "" ), ::cClrHilite )
-
-      DispOutAt( 0, ::aItems[ nPopup ]:nCol + ;
-        ( nAt := At( "~", ::aItems[ nPopup ]:cPrompt ) ) - 1 ,;
-        SubStr( ::aItems[ nPopup ]:cPrompt, nAt + 2, 1 ), ::cClrHotFocus )
-   else
-      oMenuItem = ::aItems[ nPopup ]
-      DispOutAt( oMenuItem:nRow, oMenuItem:nCol ,;
-        StrTran( oMenuItem:cPrompt, "~", "" ), ::cClrHilite )
-
-      DispOutAt( oMenuItem:nRow, oMenuItem:nCol + ;
-        ( nAt := At( "~", oMenuItem:cPrompt ) ) - 1 ,;
-        SubStr( oMenuItem:cPrompt, nAt + 2, 1 ), ::cClrHotFocus )
-   endif
-
+   ::aItems[ nPopup ]:Display( ::cClrHilite, ::cClrHotFocus )
    ::nOpenPopup = nPopup
 
    if ValType( ::aItems[ nPopup ]:bAction ) == "O"
@@ -1052,8 +1006,8 @@ METHOD Display( cClrText, cClrHotKey ) CLASS TDbMenuItem
       StrTran( ::cPrompt, "~", "" ), cClrText )
 
    DispOutAt( ::nRow, ::nCol + ;
-      ( nAt := At( "~", ::cPrompt ) ) - 1 ,;
-      SubStr( ::cPrompt, nAt + 2, 1 ), cClrHotKey )
+     ( nAt := At( "~", ::cPrompt ) ) - 1,;
+     SubStr( ::cPrompt, nAt + 1, 1 ), cClrHotKey )
 
 return nil
 
