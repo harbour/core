@@ -903,11 +903,18 @@ void hb_vmArrayPut( void )
 
 static void hb_vmDebuggerEndProc( void )
 {
+   HB_ITEM it;
+
+   hb_itemCopy( &it, &stack.Return ); /* saves the previous returned value */
+
    bDebugShowLines = FALSE;
    hb_vmPushSymbol( hb_dynsymFind( "__DBGENTRY" )->pSymbol );
    hb_vmPushNil();
    hb_vmDo( 0 );
    bDebugShowLines = TRUE;
+
+   hb_itemCopy( &stack.Return, &it ); /* restores the previous returned value */
+   hb_itemClear( &it );
 }
 
 static void hb_vmDebuggerShowLine( WORD wLine ) /* makes the debugger shows a specific source code line */
@@ -1526,6 +1533,8 @@ void hb_vmNotEqual( void )
 
    else if( pItem1->type != pItem2->type )
       hb_errRT_BASE( EG_ARG, 1072, NULL, "<>" );
+
+
 
    else
       hb_vmPushLogical( TRUE );
@@ -2315,7 +2324,7 @@ void hb_stackDispCall( void )
                  pBase->item.asSymbol.value->szName,
                  pBase->item.asSymbol.lineno );
       else
-         printf( "Called from %s(%i)", 
+         printf( "Called from %s(%i)",
                  pBase->item.asSymbol.value->szName,
                  pBase->item.asSymbol.lineno );
 
@@ -2770,7 +2779,7 @@ void hb_vmRequestBreak( PHB_ITEM pItem )
 }
 
 /* NOTE: This function should normally have a parameter count check. But
-         since in Harbour we cannot distinguish between BREAK() function and 
+         since in Harbour we cannot distinguish between BREAK() function and
          the BREAK statement, because both generate a BREAK() function
          call on the pcode level, we should drop the checking. */
 

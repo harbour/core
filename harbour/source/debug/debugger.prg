@@ -73,7 +73,9 @@ function __dbgEntry( uParam )  // debugger entry point
            endif
 
       otherwise   // called from hvm.c hb_vmDebuggerEndProc()
-         oDebugger:EndProc()
+         if oDebugger != nil
+            oDebugger:EndProc()
+         endif
    endcase
 
 return nil
@@ -339,7 +341,11 @@ METHOD ShowCode( cModuleName ) CLASS TDebugger
 
    ASize( ::aCallStack, Len( ::aCallStack ) + 1 )
    AIns( ::aCallStack, 1 )
-   ::aCallStack[ 1 ] = cFunction
+   if Len( ::aCallStack ) == 1
+      ::aCallStack[ 1 ] = ProcName( 3 ) // cFunction
+   else
+      ::aCallStack[ 1 ] = ProcName( 2 ) // cFunction
+   endif
 
    if ::oWndStack != nil
       ::oBrwStack:RefreshAll()
