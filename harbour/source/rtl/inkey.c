@@ -111,19 +111,19 @@ HB_CALL_ON_STARTUP_BEGIN( init_input_mode )
   atexit( restore_input_mode );
 
   tcgetattr( STDIN_FILENO, &ta );
-  ta.c_lflag &= ~(ICANON | ECHO);
-  ta.c_cc[ VMIN ] =0;
-  ta.c_cc[ VTIME ] =0;
+  ta.c_lflag &= ~( ICANON | ECHO );
+  ta.c_cc[ VMIN ] = 0;
+  ta.c_cc[ VTIME ] = 0;
   tcsetattr( STDIN_FILENO, TCSAFLUSH, &ta );
 HB_CALL_ON_STARTUP_END( init_input_mode )
 #endif
 
-static int *s_inkeyBuffer=0;  /* Harbour keyboard buffer (empty if head == tail)     */
-static int  s_inkeyHead;      /* Harbour keyboard buffer head pointer (next insert)  */
-static int  s_inkeyTail;      /* Harbour keyboard buffer tail pointer (next extract) */
-static int  s_inkeyLast;      /* Last key extracted from Harbour keyboard buffer     */
-static BOOL s_inkeyPoll;      /* Flag to override no polling when TYPEAHEAD is 0     */
-static int  s_inkeyForce;     /* Variable to hold keyboard input when TYPEAHEAD is 0 */
+static int * s_inkeyBuffer = 0; /* Harbour keyboard buffer (empty if head == tail)     */
+static int   s_inkeyHead;       /* Harbour keyboard buffer head pointer (next insert)  */
+static int   s_inkeyTail;       /* Harbour keyboard buffer tail pointer (next extract) */
+static int   s_inkeyLast;       /* Last key extracted from Harbour keyboard buffer     */
+static BOOL  s_inkeyPoll;       /* Flag to override no polling when TYPEAHEAD is 0     */
+static int   s_inkeyForce;      /* Variable to hold keyboard input when TYPEAHEAD is 0 */
 static HB_inkey_enum s_eventmask;
 
 void hb_releaseCPU( void )
@@ -146,7 +146,7 @@ void hb_releaseCPU( void )
  */
   #if defined(__TURBOC__)
    _AX = 0x1680;
-    geninterrupt(0x2f);
+    geninterrupt( 0x2f );
    _AH = 0;
    _AL ^= 0x80;
   #else
@@ -154,9 +154,9 @@ void hb_releaseCPU( void )
     regs.h.ah = 0x16;
     regs.h.al = 0x80;
   #if defined(__WATCOMC__) && defined(__386__)
-    int386(0x2f, &regs, &regs);
+    int386( 0x2f, &regs, &regs );
   #else
-    int86(0x2f, &regs, &regs);
+    int86( 0x2f, &regs, &regs );
   #endif
     regs.h.ah  = 0;
     regs.h.al ^= 0x80;
@@ -393,7 +393,7 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
 #elif defined(OS_UNIX_COMPATIBLE)
       /* TODO: */
       if( ! read( STDIN_FILENO, &ch, 1 ) )
-         ch =0;
+         ch = 0;
 #else
       /* TODO: Support for other platforms, such as Mac */
 #endif
@@ -402,7 +402,7 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
    }
 }
 
-void hb_inkeyReset( BOOL allocate)      /* Reset the keyboard buffer */
+void hb_inkeyReset( BOOL allocate )     /* Reset the keyboard buffer */
 {
    /* Reset the buffer head and tail pointers, the last key value,
       and the polling override flag */
@@ -533,7 +533,7 @@ HARBOUR HB_INKEY( void )
    if( wait && forever && ( event_mask & ( INKEY_ALL + INKEY_EXTENDED ) ) == 0 )
    {
       /* There is no point in waiting forever for no input events! */
-      hb_errRT_BASE(EG_ARG, 3007, NULL, "INKEY");
+      hb_errRT_BASE( EG_ARG, 3007, NULL, "INKEY" );
    }
    else
    {
