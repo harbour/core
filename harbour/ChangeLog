@@ -1,3 +1,7 @@
+2001-11-11 08:00 GMT+0700 Andi Jahja <harbour@cbn.net.id>
+   * source/rdd/dbfcdx/dbfcdx1.c
+     ! add type casts as required by MsVC
+
 2001-11-10 20:54 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * source/rdd/dbfcdx/dbfcdx1.c
      ! fixed hb_cdxKeyCompare, inverted sorting if high bit set
