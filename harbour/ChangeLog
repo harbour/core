@@ -1,3 +1,7 @@
+2001-12-06 21:15 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbfntx/dbfntx1.c
+    * Bug fixed, reported by Walter Negro
+
 2001-12-05 21:20 UTC-0500 David G. Holm <dholm@jsd-llc.com>
 
   * source/rtl/seconds.c

@@ -282,7 +282,7 @@ static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LONG lBlock, LPKEYINFO pKe
       /* pKey <= p */
       {
          if( ( k == 0 && !lSeek && (ULONG)p->Xtra != pPage->TagParent->Owner->Owner->ulRecNo )
-             || ( hb_set.HB_SET_DELETED && ntxIsDeleted( pPage->TagParent->Owner->Owner, p->Xtra ) ) )
+             || ( hb_set.HB_SET_DELETED && ntxIsDeleted( pPage->TagParent->Owner->Owner, p->Xtra ) && lSeek ) )
             k = 1;
          if( k <= 0 )
          {
@@ -2212,9 +2212,12 @@ static ERRCODE ntxSkipRaw( NTXAREAP pArea, LONG lToSkip )
             SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Xtra );
           else
           {
-            SUPER_GOBOTTOM( ( AREAP ) pArea );
-            SUPER_SKIPRAW( ( AREAP ) pArea, 1 );
+            LPNTXINDEX lpCurIndex;
+            lpCurIndex = pArea->lpCurIndex;
+            pArea->lpCurIndex = NULL;
+            SUPER_GOTO( ( AREAP ) pArea, pArea->ulRecCount+1 );
             pArea->fEof = pTag->TagEOF = TRUE;
+            pArea->lpCurIndex = lpCurIndex;
           }
        }
      }
