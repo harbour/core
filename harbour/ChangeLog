@@ -1,3 +1,9 @@
+19990806-19:55 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * makefile.b32
+     * hvm module added
+   * tests/working/bld32exe.bat
+     * removed hvm.c module
+
 19990806-19:35 GMT+1 Antonio Linares <alinares@fivetech.com>
    * include/pcode.h
      + Added new HB_P_LOCALNAME opcode
