@@ -89,22 +89,22 @@ HB_FUNC( INT )
 
 double hb_numRound( double doValue, int nPrecision )
 {
-	static const double doBase = 10.0f;
-	double doComplete5, doComplete5i;
-
-	HB_TRACE(HB_TR_DEBUG, ("hb_numRound(%lf, %d)", doValue, iPrecision));
-
-	doComplete5 = doValue * pow(doBase, (double) (nPrecision + 1));
-
-	if(doValue < 0.0f)
-		doComplete5 -= 5.0f;
-	else
-		doComplete5 += 5.0f;
-
-	doComplete5 /= doBase;
-	modf(doComplete5, &doComplete5i);
-
-	return doComplete5i / pow(doBase, (double) nPrecision);
+   static const double doBase = 10.0f;
+   double doComplete5, doComplete5i;
+   
+   HB_TRACE(HB_TR_DEBUG, ("hb_numRound(%lf, %d)", doValue, nPrecision));
+   
+   doComplete5 = doValue * pow( doBase, ( double ) ( nPrecision + 1 ) );
+   
+   if( doValue < 0.0f )
+      doComplete5 -= 5.0f;
+   else
+      doComplete5 += 5.0f;
+   
+   doComplete5 /= doBase;
+   modf( doComplete5, &doComplete5i );
+   
+   return doComplete5i / pow( doBase, ( double ) nPrecision );
 }
 
 HB_FUNC( ROUND )

@@ -2728,7 +2728,7 @@ static BOOL ScanMacro( char * expreal, int lenitem, int * pNewLen )
 	BOOL bSmartMacro;
 	int i, lennew;
 
-   HB_TRACE(HB_TR_DEBUG, ("ScanMacro(%s, %d, %p)", expreal, lenreal, pNewLen));
+   HB_TRACE(HB_TR_DEBUG, ("ScanMacro(%s, %d, %p)", expreal, lenitem, pNewLen));
 
 	lennew = lenitem - 1;	
 	bSmartMacro = TRUE;

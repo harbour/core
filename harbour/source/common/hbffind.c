@@ -155,10 +155,13 @@ HB_FILE_VER( "$Id$" )
 
 /* Internal funtion , Convert Windows Error Values to Dos Error Values */
 #ifdef HB_OS_WIN_32
-int WintoDosError( unsigned long lError)
+
+static int WintoDosError( unsigned long lError)
 {
    int iReturn;
-   switch( lError ) {
+
+   switch( lError )
+   {
    case ERROR_ALREADY_EXISTS:
       iReturn = 5;
       break;
@@ -174,10 +177,10 @@ int WintoDosError( unsigned long lError)
    case ERROR_INVALID_HANDLE:
       iReturn = 6;
       break;
-  default:
-         iReturn=0;
+   default:
+      iReturn = 0;
       break;
-      }
+   }
 
    return iReturn;
 }

@@ -4229,7 +4229,7 @@ static ERRCODE hb_cdxSkipUnique( CDXAREAP pArea, LPCDXTAG pTag, BOOL fForward )
 {
    ERRCODE retval;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_cdxSkipUnique(%p, %ld)", pArea, iDir));
+   HB_TRACE(HB_TR_DEBUG, ("hb_cdxSkipUnique(%p, %p, %d)", pArea, pTag, (int) fForward));
 
    if ( FAST_GOCOLD( ( AREAP ) pArea ) == FAILURE )
       return FAILURE;
@@ -4662,9 +4662,9 @@ static ERRCODE hb_cdxGoTop( CDXAREAP pArea )
 /* ( DBENTRYP_BIB )   hb_cdxSeek */
 static ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL fSoftSeek, PHB_ITEM pKeyItm, BOOL fFindLast )
 {
-   LPCDXTAG pTag
+   LPCDXTAG pTag;
 
-   HB_TRACE(HB_TR_DEBUG, ("cdxSeek(%p, %d, %p, %d)", pArea, fSoftSeek, pKeyItm, fFindLast));
+   HB_TRACE(HB_TR_DEBUG, ("cdxSeek(%p, %d, %p, %d)", pArea, (int) fSoftSeek, pKeyItm, (int) fFindLast));
 
    if ( FAST_GOCOLD( ( AREAP ) pArea ) == FAILURE )
       return FAILURE;

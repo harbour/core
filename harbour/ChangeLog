@@ -8,6 +8,19 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-02-14 03:00 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * makefile.bc
+     ! Fixed compilation of dbgbrwsr
+
+   * source/pp/ppcore.c 
+   * source/rtl/round.c
+   * source/rdd/dbfcdx/dbfcdx1.c
+     ! Fixed errors when compiled with HB_TRACE
+   
+   * source/common/hbffind.c
+     * Formatting.
+
 2004-02-13 23:57 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    + source/codepage/cdphu852.c
@@ -59,9 +72,9 @@
 
    * souce/rtl/gtapi.c
      ! hb_gtSetColorStr() removed one suspicious assigment which 
-       showed incompatible with CA-Cl*pper, whete CLR_UNSELECTED 
+       showed incompatible with CA-Cl*pper, where CLR_UNSELECTED 
        was made equal to CLR_ENHANCED if missing from the color string.
-     * Using CLR_ constants instead of literals.
+     * Using HB_CLR_ constants instead of literals.
 
    * source/rtl/tget.prg
      ! :ColorSpec() method unselected color defaulting fixed.
