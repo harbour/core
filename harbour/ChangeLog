@@ -1,3 +1,19 @@
+2000-07-05 23:55 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   + source\include\harbourl.slx
+   + source\compiler\harbourl.c
+     This is a propoesed new Generic Lexer (SimpLex) that along with language definition file (Harbour.slx) consititue
+     the proposed new Harbour Lexer. It is about half the size of the Flex Lexer and Harbour.exe is about 60K smaller.
+     This might help with 16bit mode and or memory limited situations. It belive it offers few benefits over Flex:
+        Simplicity, Readability, and Consitency of the rules.
+	More elegant look ahead/parsing capabilities.
+	Does not require a 3rd party tool (the Tokens & Rules table, is inserted into the Lexer by means of an #include directive.
+	it doesn't need to be "compiled" like the Flex.exe produces harbourl.c from harbour.l.
+	It is much smaller than the Flex generated Lexer.
+     Please note it is not yet optimized for speed, I would love to get your input/suggestion (Ryszard, Victor, Paul, ...).
+     In the process of resaerching the Lex phase I found many "problems" and tried to address them all. It now compiles
+     the full build including keywords.prg (3 compiler (yacc) errors), our previous lexer didn't fully parse keywords.prg
+     Please forward your opinions...
+
 2000-07-04 20:36 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/teditor.prg
@@ -27,31 +43,31 @@
    * contrib/odbc/bld_b32.bat
      ! Fixed.
 
-   * source/rtl/tget.prg 
-     ! Fix by Chen Kedem applied for __GET()/_GET_()/GetNew() not passed 
+   * source/rtl/tget.prg
+     ! Fix by Chen Kedem applied for __GET()/_GET_()/GetNew() not passed
        setget block bug.
 
-   * source/rtl/filesys.c 
-     ! Fixed bug in hb_fsCurDir[Buff](), it's now stripping the 
+   * source/rtl/filesys.c
+     ! Fixed bug in hb_fsCurDir[Buff](), it's now stripping the
        leading "/" path delimiter.
 
    * source/rtl/memoline.c
      % Minor opt.
 
-   * source/rtl/gtsln/kbsln.c 
-   * source/rtl/gtsln/keytrans.c 
-   * source/vm/classes.c 
+   * source/rtl/gtsln/kbsln.c
+   * source/rtl/gtsln/keytrans.c
+   * source/vm/classes.c
      * Formatting.
 
 2000-07-03 20:00 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm/garbage.c
         * minor change
-        
+
     *source/vm/hvm.c
         * changed order of the GC call on exit - it is now called before any
         stack and memvars table releasing
-        
+
     *tests/onidle.prg
         * fixed to demonstrate the latest changes
 
@@ -60,7 +76,7 @@
     *source/vm/memvars.c
         * the table of memvars is not checked for references from the GC
         after all memvars are released
-        
+
 2000-07-03 11:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbpp.h
@@ -80,14 +96,14 @@
 
     *source/rdd/dbfntx/dbfntx1.c
         * fixed warning for unused variable
-        
+
 2000-07-02 12:30 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm/garbage.c
     *source/vm/memvars.c
         * codeblocks that are self referencing (cb := {|| cb}) are
         correctly released by the garbage collector
-        
+
 2000-07-01 23:55 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
    * source\rdd\dbfntx\dbfntx1.c
      * added a few casts
@@ -96,16 +112,16 @@
 
     *source/vm/garbage.c
         * fixed a bug when releasing the last memory block
-        
+
     *source/vm/hvm.c
         * fixed an order of subsystems shutdown and items relasing
-    
+
 2000-06-29 10:50 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm/classes.c
         *fixed to stop handling of the garbage collector requests
-        (hb_clsIsClassRef()) after all classes were released 
-        
+        (hb_clsIsClassRef()) after all classes were released
+
     *source/rtl/setkey.c
         *fixed to lock codeblocks stored internally to prevent deallocation
         by the garbage collector
@@ -118,13 +134,13 @@
    -removed hb___MyMkdir() function declaration
 
 2000-06-27 11:10 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
-    
+
     *include/hbapi.h
     *source/rtl/errorapi.c
     *source/rtl/idle.c
     *source/vm/classes.c
     *source/vm/garbage.c
-        *the garbage collector is now aware of all items stored internally 
+        *the garbage collector is now aware of all items stored internally
         in class related structures
 
 
