@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * source/vm/extend.c
+     * char * HB_EXPORT => char HB_EXPORT *
+   * source/vm/maindll.c
+     * BOOL WINAPI HB_EXPORT => BOOL HB_EXPORT WINAPI
+     * LONG PASCAL HB_EXPORT => LONG HB_EXPORT PASCAL
    * source/vm/maindllh.c
      * BOOL WINAPI HB_EXPORT => BOOL HB_EXPORT WINAPI
    * source/vm/maindllp.c

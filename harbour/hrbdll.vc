@@ -359,7 +359,7 @@ HARBOUR_DLL_OBJS = \
   $(OBJ_DIR)\dbgtobj.obj \
   $(OBJ_DIR)\tbrwtext.obj \
   $(OBJ_DIR)\dbgwa.obj \
-  $(OBJ_DIR)\maindll.obj \
+  $(OBJ_DIR)\maindllh.obj \
   $(OBJ_DIR)\hvm.obj \
   \
   $(LIBMISC_OBJ)\hb_f.obj \
@@ -780,9 +780,6 @@ $(OBJ_DIR)\itemapi.obj : $(VM_DIR)\itemapi.c
    $(CC) $(CLIBFLAGS) /Fo$@ $**
 
 $(OBJ_DIR)\macro.obj : $(VM_DIR)\macro.c
-   $(CC) $(CLIBFLAGS) /Fo$@ $**
-
-$(OBJ_DIR)\maindll.obj : $(VM_DIR)\maindll.c
    $(CC) $(CLIBFLAGS) /Fo$@ $**
 
 $(OBJ_DIR)\maindllh.obj : $(VM_DIR)\maindllh.c

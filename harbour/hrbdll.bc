@@ -364,7 +364,7 @@ HARBOUR_DLL_OBJS = \
   $(OBJ_DIR)\dbgtobj.obj \
   $(OBJ_DIR)\tbrwtext.obj \
   $(OBJ_DIR)\dbgwa.obj \
-  $(OBJ_DIR)\maindll.obj \
+  $(OBJ_DIR)\maindllh.obj \
   $(OBJ_DIR)\hvm.obj \
   \
   $(LIBMISC_OBJ)\hb_f.obj \
@@ -873,7 +873,7 @@ $(HARBOUR_DLL)  : \
   echo. $(OBJ_DIR)\dbgtobj.obj           + >> hdll.tmp
   echo. $(OBJ_DIR)\tbrwtext.obj          + >> hdll.tmp
   echo. $(OBJ_DIR)\dbgwa.obj             + >> hdll.tmp
-  echo. $(OBJ_DIR)\maindll.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\maindllh.obj          + >> hdll.tmp
   echo. $(OBJ_DIR)\hvm.obj               + >> hdll.tmp
 
   echo. $(LIBMISC_OBJ)\hb_f.obj          + >> hdll.tmp
@@ -1279,9 +1279,6 @@ $(OBJ_DIR)\itemapi.obj : $(VM_DIR)\itemapi.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\macro.obj : $(VM_DIR)\macro.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-
-$(OBJ_DIR)\maindll.obj : $(VM_DIR)\maindll.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\maindllh.obj : $(VM_DIR)\maindllh.c
