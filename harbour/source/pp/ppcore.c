@@ -734,6 +734,10 @@ static void ParseCommand( char * sLine, BOOL com_or_xcom, BOOL com_or_tra )
     stcmd->com_or_xcom = com_or_xcom;
     stcmd->mpatt = hb_strdup( mpatt );
     stcmd->value = ( rlen > 0 ) ? hb_strdup( rpatt ) : NULL;
+
+    /*
+    printf( "Name: %s Pat: %s Val: %s\n", stcmd->name, stcmd->mpatt, stcmd->value );
+    */
   }
   else
     hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_COMMAND_DEFINITION, NULL, NULL );
@@ -934,6 +938,9 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
                                             ptri, TRUE, FALSE )) > 0 )
                     {
                       ptri += ifou -1;
+
+                      //if( *stcmd->mpatt == '\1')
+
                       if( (i = WorkTranslate( ptri+lenToken, ptro, stcmd, &lens )) >= 0 )
                         {
                           lens += lenToken;
@@ -1560,6 +1567,10 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
     {
       /* Copying a real expression to 'expreal' */
       if( !lenreal ) lenreal = getExpReal( expreal, ptri, FALSE, maxlenreal );
+
+      /*
+      printf("Len: %i Pat: %s Exp: %s\n", lenreal, exppatt, expreal );
+      */
       SearnRep( exppatt,expreal,lenreal,ptro,lenres);
     }
   return 1;
@@ -1672,6 +1683,9 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez )
                                    ( *(*ptri-2)=='-' && *(*ptri-1)=='-' ) ) )
               State = STATE_ID_END;
           }
+        /* Ron Pinkas added 2000-06-14 */
+        else if( **ptri == ')' && StBr1 == 0 ) rez = TRUE;
+        /* Ron Pinkas End */
         else if( **ptri == '(' ) { StBr1++; State = STATE_BRACKET; }
         else if( **ptri == '[' ) { StBr2++; State = STATE_BRACKET; }
         else if( **ptri == '{' ) { StBr3++; State = STATE_BRACKET; }
