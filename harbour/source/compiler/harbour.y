@@ -1801,6 +1801,34 @@ void FunDef( char * szFunName, char cScope, int iType )
    PCOMSYMBOL   pSym;
    PFUNCTION pFunc;
    char * *pFunction;
+   PDECLARED_VAR pVarDef, pRelease;
+
+   if ( _iWarnings )
+   {
+       pVarDef = &FunVars;
+       if ( *(pVarDef->szVarName) && ! pVarDef->iVarUsed )
+          GenWarning( WARN_VAR_NOT_USED, pVarDef->szVarName, functions.pLast->szName );
+
+       pVarDef = pVarDef->pNextVar;
+
+       FunVars.szVarName = "";
+       FunVars.cVarType = 'U';
+       FunVars.iVarUsed = 0;
+       FunVars.pNextVar = 0;
+
+       while ( pVarDef )
+       {
+
+          if ( *(pVarDef->szVarName) && ! pVarDef->iVarUsed )
+             GenWarning( WARN_VAR_NOT_USED, pVarDef->szVarName, functions.pLast->szName );
+
+          pRelease = pVarDef;
+
+          pVarDef = pVarDef->pNextVar;
+
+          OurFree( pRelease );
+       }
+   }
 
    if( ( pFunc = GetFunction( szFunName ) ) )
    {
@@ -2564,34 +2592,6 @@ void GenExterns( void ) /* generates the symbols for the EXTERN names */
 void GenReturn( WORD wOffset ) /* generates a return offset to later on fill it with the proper exiting pcode address */
 {
    PRETURN pReturn = ( PRETURN ) OurMalloc( sizeof( _RETURN ) ), pLast;
-   PDECLARED_VAR pVarDef, pRelease;
-
-   if ( _iWarnings )
-   {
-       pVarDef = &FunVars;
-       if ( *(pVarDef->szVarName) && ! pVarDef->iVarUsed )
-          GenWarning( WARN_VAR_NOT_USED, pVarDef->szVarName, functions.pLast->szName );
-
-       pVarDef = pVarDef->pNextVar;
-
-       FunVars.szVarName = "";
-       FunVars.cVarType = 'U';
-       FunVars.iVarUsed = 0;
-       FunVars.pNextVar = 0;
-
-       while ( pVarDef )
-       {
-
-          if ( *(pVarDef->szVarName) && ! pVarDef->iVarUsed )
-             GenWarning( WARN_VAR_NOT_USED, pVarDef->szVarName, functions.pLast->szName );
-
-          pRelease = pVarDef;
-
-          pVarDef = pVarDef->pNextVar;
-
-          OurFree( pRelease );
-       }
-   }
 
    pReturn->wOffset = wOffset;
    pReturn->pNext   = 0;

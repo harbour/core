@@ -1,61 +1,66 @@
+Fri Jun 11 1999 19:35 PST Ron Pinkas
+   * source/compiler/harbour.y
+        Moved code to check non used declared variable from GenReturn() to FunDef()
+        Since Clipper function may have multiple RETURN statements
+
 Fri Jun 11 19:14:22 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* include/Makefile: 
-	* include/set.h: 
-	* source/compiler/harbour.y: 
-	* source/hbpp/harb.h: 
-	* source/hbpp/hbpp.c: 
-	* source/rtl/arrays.c: 
-	* source/rtl/classes.c: 
-	* source/rtl/console.c: 
-	* source/rtl/dates.c: 
-	* source/rtl/descend.c: 
-	* source/rtl/dir.c: 
-	* source/rtl/environ.c: 
-	* source/rtl/files.c: 
-	* source/rtl/hardcr.c: 
-	* source/rtl/math.c: 
-	* source/rtl/mtran.c: 
-	* source/rtl/set.c: 
-	* source/rtl/strings.c: 
-	* source/rtl/transfrm.c: 
-	* source/runner/run_exp.h: 
-	* source/runner/runner.c: 
-	* source/tools/asciisum.c: 
-	* source/tools/ascpos.c: 
-	* source/tools/atdiff.c: 
-	* source/tools/chareven.c: 
-	* source/tools/charmix.c: 
-	* source/tools/charodd.c: 
-	* source/tools/chrcount.c: 
-	* source/tools/chrfirst.c: 
-	* source/tools/chrtotal.c: 
-	* source/tools/datesx.c: 
-	* source/tools/debug.c: 
-	* source/tools/hb_f.c: 
-	* source/tools/io.c: 
-	* source/tools/mathx.c: 
-	* source/tools/strcount.c: 
-	* source/tools/strcspn.c: 
-	* source/tools/strdiff.c: 
-	* source/tools/strexpan.c: 
-	* source/tools/stringsx.c: 
-	* source/tools/strleft.c: 
-	* source/tools/strpbrk.c: 
-	* source/tools/strright.c: 
-	* source/vm/dynsym.c: 
-	* source/vm/hvm.c: 
-	* source/vm/initsymb.c: 
-	* tests/working/Makefile: 
-	* tests/working/dates.prg: 
-	* tests/working/dates2.prg: 
-	* tests/working/empty.prg: 
-	* tests/working/filexist.prg: 
-	* tests/working/inifiles.prg: 
-	* tests/working/next.prg: 
-	* tests/working/test_all.prg: 
-	* tests/working/teststr.prg: 
-	* tests/working/transfrm.prg: 
+	* include/Makefile:
+	* include/set.h:
+	* source/compiler/harbour.y:
+	* source/hbpp/harb.h:
+	* source/hbpp/hbpp.c:
+	* source/rtl/arrays.c:
+	* source/rtl/classes.c:
+	* source/rtl/console.c:
+	* source/rtl/dates.c:
+	* source/rtl/descend.c:
+	* source/rtl/dir.c:
+	* source/rtl/environ.c:
+	* source/rtl/files.c:
+	* source/rtl/hardcr.c:
+	* source/rtl/math.c:
+	* source/rtl/mtran.c:
+	* source/rtl/set.c:
+	* source/rtl/strings.c:
+	* source/rtl/transfrm.c:
+	* source/runner/run_exp.h:
+	* source/runner/runner.c:
+	* source/tools/asciisum.c:
+	* source/tools/ascpos.c:
+	* source/tools/atdiff.c:
+	* source/tools/chareven.c:
+	* source/tools/charmix.c:
+	* source/tools/charodd.c:
+	* source/tools/chrcount.c:
+	* source/tools/chrfirst.c:
+	* source/tools/chrtotal.c:
+	* source/tools/datesx.c:
+	* source/tools/debug.c:
+	* source/tools/hb_f.c:
+	* source/tools/io.c:
+	* source/tools/mathx.c:
+	* source/tools/strcount.c:
+	* source/tools/strcspn.c:
+	* source/tools/strdiff.c:
+	* source/tools/strexpan.c:
+	* source/tools/stringsx.c:
+	* source/tools/strleft.c:
+	* source/tools/strpbrk.c:
+	* source/tools/strright.c:
+	* source/vm/dynsym.c:
+	* source/vm/hvm.c:
+	* source/vm/initsymb.c:
+	* tests/working/Makefile:
+	* tests/working/dates.prg:
+	* tests/working/dates2.prg:
+	* tests/working/empty.prg:
+	* tests/working/filexist.prg:
+	* tests/working/inifiles.prg:
+	* tests/working/next.prg:
+	* tests/working/test_all.prg:
+	* tests/working/teststr.prg:
+	* tests/working/transfrm.prg:
 	When the compiler sees a function called FOO, it generates a call
 	to HB_FOO. This meant updating the code generation (with the help
 	of Eddie Runia) and updating all HARBOUR functions to prepend an
@@ -66,23 +71,23 @@ Fri Jun 11 19:14:22 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Fri Jun 11 17:11:09 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* config/bin.cf: 
-	* config/dir.cf: 
-	* config/global.cf: 
-	* config/install.cf: 
-	* config/lib.cf: 
-	* config/rules.cf: 
-	* config/test.cf: 
-	* config/dos/dir.cf: 
-	* config/dos/djgpp.cf: 
-	* config/dos/global.cf: 
-	* config/dos/install.cf: 
-	* config/win32/dir.cf: 
-	* config/win32/gcc.cf: 
-	* config/win32/global.cf: 
-	* config/win32/install.cf: 
-	* config/win32/msvc.cf: 
-	* config/win32/rules.cf: 
+	* config/bin.cf:
+	* config/dir.cf:
+	* config/global.cf:
+	* config/install.cf:
+	* config/lib.cf:
+	* config/rules.cf:
+	* config/test.cf:
+	* config/dos/dir.cf:
+	* config/dos/djgpp.cf:
+	* config/dos/global.cf:
+	* config/dos/install.cf:
+	* config/win32/dir.cf:
+	* config/win32/gcc.cf:
+	* config/win32/global.cf:
+	* config/win32/install.cf:
+	* config/win32/msvc.cf:
+	* config/win32/rules.cf:
 	Reorganized things in an attempt to make it clearer how to support
 	different platforms and compilers. Also added as much support as I
 	could for running the GNU-make build system under plain
