@@ -142,6 +142,7 @@ HB_FUNC( TRANSFORM )
                   uiPicFlags |= PF_PARNEGWOS;
                   break;
                case 'L':
+               case '0':
                   uiPicFlags |= PF_PADL;
                   byParamL = '0';
                   break;
@@ -395,7 +396,7 @@ HB_FUNC( TRANSFORM )
          }
 
          pNumber = hb_itemPutNDLen( NULL, dPush, -1, iDec );
-         pWidth = hb_itemPutNI( NULL, iWidth );
+         pWidth = hb_itemPutNI( NULL, iWidth + ( !ulPicLen && iDec > 0 ? iDec + 1 : 0 ) );
          pDec = hb_itemPutNI( NULL, iDec );
 
          szStr = hb_itemStr( pNumber, pWidth, pDec );
@@ -488,8 +489,9 @@ HB_FUNC( TRANSFORM )
                    /* Permit to detect overflow when picture init with mask */
                {
                   if( isdigit( ( int ) szResult[ iCount ] ) && 
-                         !( szResult[ iCount ] == '0' ) &&     /* if not PF_PADL */
-                         !isdigit( ( int ) szPic[ iCount ] ) ) /* if not mask symbol */
+                       !( szResult[ iCount ] == '0' ) &&       /* if not PF_PADL */
+                       ( iCount == 0 ||
+                       !isdigit( ( int ) szPic[ iCount ] ) ) ) /* if not mask symbol */
                                                                /* Overflow */
                   {
                      for( iCount++; ( ULONG ) iCount < i; iCount++ )
@@ -516,8 +518,9 @@ HB_FUNC( TRANSFORM )
                    /* Permit to detect overflow when picture init with mask */
                {
                   if( isdigit( ( int ) szResult[ iCount ] ) && 
-                         !( szResult[ iCount ] == '0' ) &&     /* if not PF_PADL */
-                         !isdigit( ( int ) szPic[ iCount ] ) ) /* if not mask symbol */
+                       !( szResult[ iCount ] == '0' ) &&       /* if not PF_PADL */
+                       ( iCount == 0 ||
+                       !isdigit( ( int ) szPic[ iCount ] ) ) ) /* if not mask symbol */
                                                                /* Overflow */
                   {
                      for( iCount++; ( ULONG ) iCount < i; iCount++ )
@@ -601,21 +604,38 @@ HB_FUNC( TRANSFORM )
       else if( HB_IS_LOGICAL( pValue ) )
       {
          BOOL bDone = FALSE;
+         BOOL bExit = FALSE;
 
-         ulResultPos = 1;
+         char cPic;
 
-         if( ulPicLen )                      /* Template string          */
+         ulResultPos = 0;
+
+         szResult = ( char * ) hb_xgrab( ulPicLen + 2 );
+
+         for( ; ( ulPicLen || !bDone ) && !bExit ; ulResultPos++, szPic++, ulPicLen-- )
          {
-            szResult = ( char * ) hb_xgrab( ulPicLen + 1 );
-            switch( *szPic )
+
+            if( ulPicLen )
+               cPic = *szPic;
+            else
+            {
+               cPic  = 'L';
+               bExit = TRUE;
+            }
+
+            switch( cPic )
             {
                case 'y':                     /* Yes/No                   */
                case 'Y':                     /* Yes/No                   */
                {
-                  *szResult = hb_itemGetL( pValue ) ? 'Y' : 'N';
-                  szPic++;
-                  ulPicLen--;
-                  bDone = TRUE;              /* Logical written          */
+                  if( !bDone )
+                  {
+                     szResult[ ulResultPos ] = hb_itemGetL( pValue ) ? 'Y' : 'N';
+                     bDone = TRUE;           /* Logical written          */
+                  }
+                  else
+                     szResult[ ulResultPos ] = ' ';
+
                   break;
                }
 
@@ -623,38 +643,29 @@ HB_FUNC( TRANSFORM )
                case 'l':                     /* True/False               */
                case 'L':                     /* True/False               */
                {
-                  *szResult = hb_itemGetL( pValue ) ? 'T' : 'F';
-                  szPic++;
-                  ulPicLen--;
-                  bDone = TRUE;
+                  if( !bDone )
+                  {
+                     szResult[ ulResultPos ] = hb_itemGetL( pValue ) ? 'T' : 'F';
+                     bDone = TRUE;
+                  }
+                  else
+                     szResult[ ulResultPos ] = ' ';
+
                   break;
                }
 
                default:
-               {
-                  *szResult = *szPic++;
-                  ulPicLen--;
-               }
+                  szResult[ ulResultPos ] = cPic;
             }
-         }
-         else
-         {
-            szResult = ( char * ) hb_xgrab( 2 );
-            *szResult = hb_itemGetL( pValue ) ? 'T' : 'F';
+
+            if( !( uiPicFlags & PF_REMAIN ) )
+               bExit = TRUE;
          }
 
-         /* Any chars left */
-         if( ( uiPicFlags & PF_REMAIN ) && ulPicLen )
-         {
-            /* Copy remainder */
-            while( ulPicLen-- )
-               szResult[ ulResultPos++ ] = *szPic++;
-
-            /* Logical written ? */
-            if( ! bDone )
-               szResult[ ulResultPos - 1 ] = hb_itemGetL( pValue ) ? 'T' : 'F';
-         }
       }
+
+      /* ======================================================= */
+
       else
       {
          szResult = NULL; /* To avoid GCC -O2 warning */
@@ -682,7 +693,7 @@ HB_FUNC( TRANSFORM )
          if( uiPicFlags & PF_EMPTY )
             memset( szResult, ' ', ulResultPos );
 
-         hb_retclen_buffer( szResult, ( uiPicFlags & PF_WIDTH && ulResultPos > ulParamS ) ? ulParamS : ulResultPos );
+         hb_retclen_buffer( szResult, ( uiPicFlags & PF_WIDTH && ulResultPos > ulParamS && ulParamS > 0 ) ? ulParamS : ulResultPos );
       }
    }
    else if( pPic || ISNIL( 2 ) ) /* Picture is an empty string or NIL */
