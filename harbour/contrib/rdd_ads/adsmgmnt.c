@@ -351,6 +351,7 @@ HB_FUNC( ADSMGGETUSERNAMES )   /* Return array of connected users */
    UNSIGNED16  usStructSize = sizeof( ADS_MGMT_USER_INFO );
    ADS_MGMT_USER_INFO*  pastUserInfo;
 //   ADS_MGMT_USER_INFO  astUserInfo[MAX_NUM_USERS];
+// bh:  Enhancement:  Get # of tables from ADS_MGMT_ACTIVITY_INFO.stUsers instead of set size
 
    if ( ISNUM( 2 ) )
       ulMaxUsers = hb_parnl( 2 );
@@ -389,8 +390,12 @@ HB_FUNC( ADSMGGETUSERNAMES )   /* Return array of connected users */
 
 HB_FUNC( ADSMGGETOPENTABLES )
 {
-   UNSIGNED32              ulRetVal = AE_SUCCESS;
-   AdsMgGetOpenTables();
+   UNSIGNED32  ulRetVal ;
+   UNSIGNED32  ulMaxUsers = 100 ;        // needed for array memory allocation; caller can set with 2nd arg
+   UNSIGNED32  ulCount;
+   UNSIGNED16  usStructSize = sizeof( ADS_MGMT_USER_INFO );
+   ADS_MGMT_USER_INFO*  pastUserInfo;
+Get # of tables from ADS_MGMT_ACTIVITY_INFO
 }
 
 HB_FUNC( ADSMGGETOPENINDEXES )

@@ -2167,6 +2167,78 @@ HB_FUNC( ADS_GETFUNCTABLE )
        hb_retni( FAILURE );
 }
 
+HB_FUNC( ADSSETRELKEYPOS )
+{
+   ADSAREAP pArea;
+   DOUBLE pdPos = hb_parnd( 1 );
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      if ( pdPos >= 1.0)
+         adsGoBottom( pArea ) ;
+      else if ( pdPos <= 0)
+         adsGoTop( pArea )    ;
+      else
+      {
+         if ( pArea->hOrdCurrent )
+            hb_retnl(AdsSetRelKeyPos  ( pArea->hOrdCurrent, pdPos)) ;
+         else
+         {
+            ULONG ulRecCount;
+            AdsGetRecordCount( pArea->hTable, ADS_IGNOREFILTERS, &ulRecCount );
+            if ( ulRecCount > 0  )
+               hb_retnl(AdsGotoRecord( pArea->hTable, (ULONG) (ulRecCount * pdPos) ) );
+            else
+            {
+               if ( pArea->fEof )
+                  hb_retnd( 1.0 );
+               else
+                  hb_retnd( (double) pArea->ulRecNo/ ulRecCount  );
+            }
+         }
+      }
+      AdsGetRecordNum( pArea->hTable, ADS_IGNOREFILTERS,
+            (UNSIGNED32 *)&(pArea->ulRecNo) );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSSETRELKEYPOS" );
+}
+
+HB_FUNC( ADSGETRELKEYPOS )
+{
+   ADSAREAP pArea;
+   DOUBLE pdPos = 0.0;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      if ( pArea->hOrdCurrent )
+      {
+         AdsGetRelKeyPos  ( pArea->hOrdCurrent, &pdPos);
+         hb_retnd( pdPos );
+      }
+      else
+      {
+         ULONG ulRecCount;
+         AdsGetRecordNum( pArea->hTable, ADS_IGNOREFILTERS,
+               (UNSIGNED32 *)&(pArea->ulRecNo) );
+         AdsGetRecordCount( pArea->hTable, ADS_IGNOREFILTERS, &ulRecCount );
+         if ( pArea->ulRecNo == 0 || ulRecCount == 0  )
+            hb_retnd( 0.0 );
+         else
+         {
+            if ( pArea->fEof )
+               hb_retnd( 1.0 );
+            else
+               hb_retnd( (double) pArea->ulRecNo/ ulRecCount  );
+         }
+      }
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSGETRELKEYPOS" );
+}
+
 HB_FUNC( ADSCUSTOMIZEAOF )
 {
    ADSAREAP pArea;

@@ -409,39 +409,6 @@ HB_FUNC( ADSSETAOF )
 
 }
 
-HB_FUNC( ADSGETRELKEYPOS )
-{
-   ADSAREAP pArea;
-   DOUBLE pdPos;
-
-   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
-   if( pArea )
-   {
-      if ( pArea->hOrdCurrent )
-      {
-       AdsGetRelKeyPos  ( pArea->hOrdCurrent, &pdPos);
-       hb_retnd( pdPos );
-      }
-      else
-      {
-         ULONG ulRecCount;
-         AdsGetRecordNum( pArea->hTable, ADS_IGNOREFILTERS,
-               (UNSIGNED32 *)&(pArea->ulRecNo) );
-         AdsGetRecordCount( pArea->hTable, ADS_IGNOREFILTERS, &ulRecCount );
-         if ( pArea->ulRecNo == 0 || ulRecCount == 0  )
-            hb_retnd( 0.0 );
-         else
-         {
-            if ( pArea->fEof )
-               hb_retnd( 1.0 );
-            else
-               hb_retnd( (double) pArea->ulRecNo/ ulRecCount  );
-         }
-      }
-   }
-   else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSGETRELKEYPOS" );
-}
 
 HB_FUNC( ADSENABLEENCRYPTION )
 {
@@ -860,5 +827,18 @@ HB_FUNC( ADSISINDEXED )
       hb_retl(pArea->hOrdCurrent);
    else
       hb_retl( FALSE );
+}
+
+HB_FUNC( ADSISEXPRVALID )               /* cExpr */
+{
+   ADSAREAP pArea;
+   BOOL bValidExpr = FALSE;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if(pArea && ISCHAR( 1 ) )
+      AdsIsExprValid( pArea->hTable, (UNSIGNED8*) hb_parc( 1 ),
+                      (UNSIGNED16*) &bValidExpr );
+
+   hb_retl(bValidExpr);
 }
 
