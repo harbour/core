@@ -1,11 +1,19 @@
-
-2000-02-19 01:10 Brian Hays <bhays@abacuslaw.com>
-   + doc/harbext.txt
-     + Added usage of @<Function>()
+20000219-09:10 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+    *makefile.bc
+      *Added -5 Option to the Bcc32 command line
+    *bin/bld_b32.bat
+    *bin/bld_b32w.bat
+      *Added -5 Option to the Bcc32 command line
+      PS: I added the -5 command line option , since the console output
+      Runs faster
 
 20000219-07:02 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
     * source/rtl/environ.c
       ! Added missing $ONELINER$ token to the __run() function
+
+20000219 07:10 Brian Hays
+   *doc/harbext.txt
+      *Added usage of @<Function>()
 
 2000-02-18 17:30 GMT-5 David G. Holm <dholm@ sd-llc.com>
 
