@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+    + Added GNU make Makefile for nanforum library, but had to list
+      ontick.c, peek.c, and poke.c under BAD_C_SOURCES, because the
+      cpmi.h include file is missing.
+
+2002-03-29 15:10 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c
     ! Minor fix
 
