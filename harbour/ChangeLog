@@ -8,6 +8,17 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-04-09 21:40 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * include/hbdbf.h
+  * include/hbrddcdx.h
+  * include/hbrdddbf.h
+  * include/hbrddntx.h
+  * source/rdd/dbf1.c
+  * source/rdd/dbfcdx/dbfcdx1.c
+    * Byte 29 in dbf header with codepage information is added for later
+      implementation. Currently this allows to keep codepage byte ( before
+      it was cleared while header updating ).
+
 2003-04-09 13:40 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * include/hbexprb.c
     * At() function is now Clipper compatible ( At( "","abc" ) ) -

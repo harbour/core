@@ -78,7 +78,8 @@ typedef struct _DBFHEADER
    USHORT uiRecordLen;
    BYTE   bReserved1[ 16 ];
    BYTE   bHasTags;
-   BYTE   bReserved2[ 3 ];
+   BYTE   bCodePage;
+   BYTE   bReserved2[ 2 ];
 } DBFHEADER;
 
 typedef DBFHEADER * LPDBFHEADER;

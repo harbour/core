@@ -7469,6 +7469,7 @@ ERRCODE hb_cdxReadDBHeader( CDXAREAP pArea )
    pArea->ulRecCount = dbHeader.ulRecCount;
    pArea->fHasMemo = ( dbHeader.bVersion == 0xF5 );
    pArea->fHasTags = dbHeader.bHasTags;
+   pArea->bCodePage = dbHeader.bCodePage;
    return SUCCESS;
 }
 
@@ -7490,7 +7491,7 @@ ERRCODE hb_cdxWriteDBHeader( CDXAREAP pArea )
    dbfHeader.bYear = ( BYTE ) ( lYear - 1900 );
    dbfHeader.bMonth = ( BYTE ) lMonth;
    dbfHeader.bDay = ( BYTE ) lDay;
-   dbfHeader.bHasTags = ( BYTE ) pArea->fHasTags;
+   dbfHeader.bCodePage = pArea->bCodePage;
 
    /* Update record count */
    SELF_RECCOUNT( ( AREAP ) pArea, &ulRecCount );

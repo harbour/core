@@ -144,6 +144,7 @@ typedef struct _DBFAREA
    char * szMemoFileName;        /* Name of memo file */
    BOOL fHasMemo;                /* WorkArea with Memo fields */
    BOOL fHasTags;                /* WorkArea with MDX or CDX index */
+   BYTE bCodePage;
    BOOL fShared;                 /* Shared file */
    BOOL fReadonly;               /* Read only file */
    USHORT * pFieldOffset;        /* Pointer to field offset array */

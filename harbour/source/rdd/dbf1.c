@@ -2543,6 +2543,7 @@ ERRCODE hb_dbfReadDBHeader( DBFAREAP pArea )
    pArea->ulRecCount = dbHeader.ulRecCount;
    pArea->fHasMemo = ( dbHeader.bVersion == 0x83 );
    pArea->fHasTags = dbHeader.bHasTags;
+   pArea->bCodePage = dbHeader.bCodePage;
    return SUCCESS;
 }
 
@@ -2563,6 +2564,7 @@ ERRCODE hb_dbfWriteDBHeader( DBFAREAP pArea )
    dbfHeader.bMonth = ( BYTE ) lMonth;
    dbfHeader.bDay = ( BYTE ) lDay;
    dbfHeader.bHasTags = ( BYTE ) pArea->fHasTags;
+   dbfHeader.bCodePage = pArea->bCodePage;
 
    /* Update record count */
    if( pArea->fShared )
