@@ -734,3 +734,8 @@ HB_FUNC( MEMORY )
    hb_retnl( hb_xquery( hb_parni( 1 ) ) );
 }
 
+#ifdef HB_FM_STATISTICS
+HB_FUNC( HB_FM_STAT ) {};
+#else
+HB_FUNC( HB_FM_NOSTAT ) {};
+#endif

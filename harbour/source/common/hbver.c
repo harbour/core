@@ -76,6 +76,7 @@
 
 #include "hbapi.h"
 #include "hbver.h"
+#include "hbmemory.ch"
 
 #if defined(HB_OS_WIN_32)
 
@@ -611,11 +612,14 @@ void hb_verBuildInfo( void )
    hb_conOutErr( hb_conNewLine(), 0 );
 
    hb_conOutErr( "Memory tracing and statistics: ", 0 );
+   hb_conOutErr( hb_xquery( HB_MEM_USEDMAX ) != 0 ? "On" : "Off", 0 );
+/*
 #if defined( HB_FM_STATISTICS )
    hb_conOutErr( "On", 0 );
 #else
    hb_conOutErr( "Off", 0 );
 #endif
+*/
    hb_conOutErr( hb_conNewLine(), 0 );
 
    {

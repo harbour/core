@@ -101,4 +101,7 @@ else
 
    make $*
 
+   if [ "$*" = "clean" ]; then
+      find . -type d -name "$HB_ARCHITECTURE" | xargs rmdir 2> /dev/null
+   fi
 fi

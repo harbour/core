@@ -303,7 +303,8 @@ void hb_cmdargProcessVM( void )
 
       {
          char buffer[ 128 ];
-         sprintf( buffer, "DS avail=%luKB  OS avail=%luKB  EMM avail=%luKB", hb_xquery( HB_MEM_BLOCK ), hb_xquery( HB_MEM_VM ), hb_xquery( HB_MEM_EMS ) );
+         /* sprintf( buffer, "DS avail=%luKB  OS avail=%luKB  EMM avail=%luKB", hb_xquery( HB_MEM_BLOCK ), hb_xquery( HB_MEM_VM ), hb_xquery( HB_MEM_EMS ) ); */
+         sprintf( buffer, "DS avail=%luKB  OS avail=%luKB  EMM avail=%luKB  MemStat:%s", hb_xquery( HB_MEM_BLOCK ), hb_xquery( HB_MEM_VM ), hb_xquery( HB_MEM_EMS ), hb_xquery( HB_MEM_USEDMAX ) ? "On" : "Off" );
          hb_conOutErr( buffer, 0 );
          hb_conOutErr( hb_conNewLine(), 0 );
       }

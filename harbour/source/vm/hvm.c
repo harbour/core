@@ -204,6 +204,10 @@ BOOL hb_bTracePrgCalls = FALSE; /* prg tracing is off */
 ULONG hb_ulOpcodesCalls[ HB_P_LAST_PCODE ]; /* array to profile opcodes calls */
 ULONG hb_ulOpcodesTime[ HB_P_LAST_PCODE ]; /* array to profile opcodes consumed time */
 
+#ifdef HARBOUR_START_PROCEDURE
+   char *s_pszLinkedMain = NULL; /* name of starup function set by linker */
+#endif
+
 /* virtual machine state */
 
 HB_SYMB  hb_symEval = { "__EVAL", HB_FS_PUBLIC, hb_vmDoBlock, NULL }; /* symbol to evaluate codeblocks */
@@ -339,7 +343,20 @@ void HB_EXPORT hb_vmInit( BOOL bStartMainProc )
 #ifdef HARBOUR_START_PROCEDURE
       else
       {
-         pDynSym = hb_dynsymFind( HARBOUR_START_PROCEDURE );
+         /* if first char is '@' then start procedure were set by
+            programmer explicitly and should have the highest priority
+            in other case it's the name of first public function in
+            first linked moudule which is used if there is no
+            HARBOUR_START_PROCEDURE in code */
+         if( s_pszLinkedMain && *s_pszLinkedMain == '@' )
+            pDynSym = hb_dynsymFind( s_pszLinkedMain + 1 );
+         else
+         {
+            pDynSym = hb_dynsymFind( HARBOUR_START_PROCEDURE );
+
+            if( ! ( pDynSym && pDynSym->pSymbol->pFunPtr ) && s_pszLinkedMain )
+               pDynSym = hb_dynsymFind( s_pszLinkedMain );
+         }
 
          if( pDynSym && pDynSym->pSymbol->pFunPtr )
             s_pSymStart = pDynSym->pSymbol;

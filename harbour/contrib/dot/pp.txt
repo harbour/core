@@ -1,7 +1,7 @@
 Command line switches and syntax.
 
 
-   PP filename[.ext] [-CCH] [-D<id>] [-D:E] [-D:M] [-D:P] [-H] [--help][-I<path>] 
+   PP filename[.ext] [-CCH] [-D<id>] [-D:E] [-D:M] [-D:P] [-H] [--help][-I<path>]
                      [-P] [-R] [-STRICT] [-U[<ch-file>]]
 
     -CCH     = Generate a .cch file (compiled command header).
@@ -37,18 +37,18 @@ PP has 3 personalities which are tied tightly together.
     -D:E     = Show tracing information into the Expression Scanner.
     -D:M     = Show tracing information into the Match Engine.
     -D:P     = Show tracing information into the Output Generator.
-    -I<path> = #include file search path(s) (';' seperated).
+    -I<path> = #include file search path(s) (';' separated).
     -STRICT  = Strict Clipper compatability (clone Clipper PreProcessor bugs).
     -U       = Use command definitions set in <ch-file> (or none).
 
-2. DOT prompt, which suppose to allow most of Clipper syntax. Please
+2. DOT prompt, which allows most of the Clipper syntax. Please
    report any syntax you expect to work, but is not supported.
 
    It does support IF [ELSE] [ELSEIF] ENDIF in DOT environment.
 
    Executing PP with no source filename will start the DOT prompt mode.
 
-   In this mode you can execute a single line at a time, by typing the line
+   In this mode you can execute a single line at a time by typing the line
    and pressing the [Enter] key.
 
    Additionally you may type:
@@ -65,10 +65,10 @@ PP has 3 personalities which are tied tightly together.
        - LOCALS have scoping of locals but are implemented as privates
          so you can't have a LOCAL and a PRIVATE with the same name.
 
-     b. Non declared variable are auto-created on assignment in Harbour
+     b. Non-declared variables are auto-created on assignment in Harbour
         but NOT in Clipper (yet).
 
-     c. It does support definition and execution of prg defined
+     c. It does support definition and execution of prg-defined
         FUNCTIONs/PROCEDUREs.
 
      d. It does support ALL control flow structures *except* BEGIN
@@ -78,10 +78,10 @@ PP has 3 personalities which are tied tightly together.
 
   This will create rp_dot.pp$ compilation trace file.
 
-3. Finally, PP is a limited Clipper/Harbour/xBase Interpreter. Subject 
+3. Finally, PP is a limited Clipper/Harbour/xBase Interpreter. Subject
    to those same few limitations it can execute most of Harbour syntax.
-   Executing PP followed by a source file name and the -R switch, will
-   "RUN" that source (it will also create the rp_run.pp$ compilation 
+   Executing PP followed by a source file name and the -R switch will
+   "RUN" that source (it will also create the rp_run.pp$ compilation
    trace file).
 
    This syntax is:
@@ -95,7 +95,7 @@ PP has 3 personalities which are tied tightly together.
     -D:E     = Show tracing information into the Expression Scanner.
     -D:M     = Show tracing information into the Match Engine.
     -D:P     = Show tracing information into the Output Generator.
-    -I<path> = #include file search path(s) (';' seperated).
+    -I<path> = #include file search path(s) (';' separated).
     -P       = Generate .pp$ pre-processed output file.
     -STRICT  = Strict Clipper compatability (clone Clipper PreProcessor bugs).
     -U       = Use command definitions set in <ch-file> (or none).
@@ -107,13 +107,17 @@ PP has 3 personalities which are tied tightly together.
        - LOCALS have scoping of locals but are implemented as privates
          so you can't have a LOCAL and a PRIVATE with the same name.
 
-     b. Non declared variable are auto-created on assignment in Harbour
+     b. Non-declared variables are auto-created on assignment in Harbour
         but NOT in Clipper (yet).
 
-     c. It does support definition and execution of prg defined
+     c. It does support definition and execution of prg-defined
         FUNCTIONs/PROCEDUREs as well as parameter passing and return values.
 
      d. It does support ALL control flow structures *except* BEGIN
         SEQUENCE [BREAK] [RECOVER] END SEQUENCE.
 
-     e. The executed module is compiled with -n option (for now).
+     e. The compiled module is automatically using -n (No implicit startup
+        procedure) if the script starts with a Procedure/Function definition.
+
+     f. Built-in OLE COM Client gateway is included when PP is compiled with
+        Harbour and using -dWIN (harbour pp -dWIN -w ... )

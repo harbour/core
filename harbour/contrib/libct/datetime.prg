@@ -316,9 +316,12 @@ Function EOY( date)
  *  $SEEALSO$
  *  $END$
  */
+/* this function is allready implemented in RTL */
+/*
 Function StoD( cdate)
  Local ofd := Set( _SET_DATEFORMAT, 'dd.mm.yyyy'), rvd
  cdate := If( ValType( cdate) == 'C', cdate, DtoS( Date()))
  rvd := CtoD( SubStr( cDate, 7, 2) + '.' + SubStr( cDate, 5, 2)  + '.' + SubStr( cDate, 1, 4))
  Set( _SET_DATEFORMAT, ofd)
  Return rvd
+*/

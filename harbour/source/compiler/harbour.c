@@ -312,6 +312,12 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
       hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_MEMFREE, NULL, NULL );
 }
 
+ULONG hb_xquery( USHORT uiMode )
+{
+   HB_SYMBOL_UNUSED( uiMode );
+   return 0;
+}
+
 void hb_conOutErr( char * pStr, ULONG ulLen )
 {
    HB_SYMBOL_UNUSED( ulLen );
