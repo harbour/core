@@ -77,6 +77,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\codebloc.obj \
     $(OBJ_DIR)\console.obj \
     $(OBJ_DIR)\copyfile.obj \
+    $(OBJ_DIR)\ctchksum.obj \
     $(OBJ_DIR)\ctchrmix.obj \
     $(OBJ_DIR)\ctcrypt.obj \
     $(OBJ_DIR)\dates.obj \
@@ -754,6 +755,9 @@ $(OBJ_DIR)\chrfirst.obj : $(TOOLS_DIR)\chrfirst.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\chrtotal.obj : $(TOOLS_DIR)\chrtotal.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\ctchksum.obj : $(TOOLS_DIR)\ctchksum.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\ctchrmix.obj : $(TOOLS_DIR)\ctchrmix.c
