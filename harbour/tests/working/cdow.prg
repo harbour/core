@@ -3,7 +3,7 @@
 //
 
 function main()
-local cNewLine := OS_NewLine()
+local cNewLine := HB_OSNewLine()
 
   OutStd( cMonth( date() ) + cNewLine )
   OutStd( cMonth( date() + 31 ) + cNewLine )

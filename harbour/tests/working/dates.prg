@@ -7,13 +7,13 @@
 #include "set.ch"
 
 function Main()
-local cNewLine := OS_NewLine()
+local cNewLine := HB_OSNewLine()
 
    local dDate, dDate2, cMask, cDate
 
    OUTSTD (cNewLine,  "Testing Harbour dates management on", DATE())
 
-   TestCentury(cNewLine)   
+   TestCentury(cNewLine)
 
    OUTSTD (cNewLine, "")
    OUTSTD (cNewLine,  "dDate = CToD( '02/04/1999' ) =>", dDate := CToD( "02/04/1999" ))

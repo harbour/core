@@ -856,7 +856,7 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
                }
                else
                   ptrmp = lastopti[Repeate];
-            }            
+            }
             else ptrmp++;
             numBrackets--;
          }
@@ -1803,7 +1803,7 @@ int truncmp (char* ptro, char** ptri, int lTrunc )
 
 int strincmp (char* ptro, char** ptri )
 {
-   char *ptrb = ptro, co, ci;
+   char co, ci;
 
    for ( ; **ptri != ',' && **ptri != '[' && **ptri != ']' &&
        **ptri != '\1' && **ptri != '\0' && toupper(**ptri)==toupper(*ptro);

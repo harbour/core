@@ -6,7 +6,7 @@
 function main(filespec,attribs,cshort)
 
 local adir := {}
-local x := 0, lShort := .f., cNewLine := OS_NewLine()
+local x := 0, lShort := .f., cNewLine := HB_OSNewLine()
 
    IF !cshort == NIL .and. (Upper( cShort ) == "TRUE" .or. Upper( cShort ) == ".T.")
       lShort := .t.

@@ -11,7 +11,7 @@
 
 function main()
 local n, value := -5
-local cNewLine := OS_NewLine()
+local cNewLine := HB_OSNewLine()
 
    for n := 1 to 100
       OUTSTD(cNewLine)

@@ -8,7 +8,7 @@
 
 function main()
 
-   LOCAL dDate, i, cNewLine := OS_NewLine()
+   LOCAL dDate, i, cNewLine := HB_OSNewLine()
 
    set( _SET_DATEFORMAT, "dd/mm/yyyy" )
    dDate := cToD( "25/05/1999" )
@@ -35,7 +35,7 @@ function main()
 
    dDate += 4
    OutStd( dDate, dow( dDate ), cNewLine )
-   
+
    OutStd( cNewLine )
    dDate := DATE ()
    FOR i := 1 TO 7

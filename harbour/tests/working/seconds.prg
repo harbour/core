@@ -11,7 +11,7 @@
 
 function Main( cParam )
 local n, limit := 10
-local cNewLine := OS_NewLine()
+local cNewLine := HB_OSNewLine()
 
    IF( ! EMPTY( cParam ) )
       limit := VAL( cParam )

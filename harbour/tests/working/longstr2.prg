@@ -9,7 +9,7 @@ function Main()
    local short := "1234567890"
    local i, long, very_long, cNewLine
 
-   cNewLine := OS_NewLine()
+   cNewLine := HB_OSNewLine()
 
    long := short
    for i := 1 TO 12

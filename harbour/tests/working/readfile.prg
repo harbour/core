@@ -13,7 +13,7 @@
 
 PROCEDURE Main( cFile )
 LOCAL oFile := TFileRead():New( cFile )
-LOCAL cNewLine := OS_NewLine()
+LOCAL cNewLine := HB_OSNewLine()
 
    oFile:Open()
    IF oFile:Error()

@@ -11,7 +11,7 @@ function main()
    LOCAL i
    LOCAL dDate := date()
 
-   s_cNewLine := OS_NewLine()
+   s_cNewLine := HB_OSNewLine()
 
    set( _SET_DATEFORMAT, "dd/mm/yyyy" )
 

@@ -375,8 +375,8 @@ STATIC FUNCTION Main_HVM()
 
    //NOTE: These expressions have to be written with no separators!
    TEST_LINE( mnIntP==10.or.mnIntP=0               , .T.                                               )
-   TEST_LINE( mnIntP==10.and.mnLongP=0             , .F.                                               )   
-   
+   TEST_LINE( mnIntP==10.and.mnLongP=0             , .F.                                               )
+
    TEST_LINE( NIL + 1                         , "E BASE 1081 Argument error + F:S" )
    TEST_LINE( NIL - 1                         , "E BASE 1082 Argument error - F:S" )
 
@@ -2068,7 +2068,7 @@ STATIC FUNCTION TEST_BEGIN( cParam )
    s_nStartTime := Seconds()
 
 #ifdef __HARBOUR__
-   s_cNewLine := OS_NewLine()
+   s_cNewLine := HB_OSNewLine()
 #else
    s_cNewLine := Chr( 13 ) + Chr( 10 )
 #endif

@@ -20,7 +20,7 @@ STATIC FUNCTION TestIt( cSpec )
    LOCAL a4
    LOCAL a5
 
-   LOCAL cNewLine := OS_NewLine()
+   LOCAL cNewLine := HB_OSNewLine()
 
    SET DATE ANSI
    SET CENTURY ON

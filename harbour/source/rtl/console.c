@@ -48,6 +48,7 @@
  *    HB_SETPOS(), HB_SETPRC(), HB_SCROLL(), and hb_consoleInitialize()
  *
  * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ *    hb_consoleGetNewLine()
  *    HB_SETPOSBS()
  *    HB_DISPBOX() (GT version)
  *    HB_DISPBEGIN()
@@ -169,6 +170,50 @@ void hb_consoleRelease( void )
 char * hb_consoleGetNewLine( void )
 {
    return s_szCrLf;
+}
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      HB_OSNewLine
+ *  $CATEGORY$
+ *      Operating System Specific
+ *  $ONELINER$
+ *      Returns the newline character(s) to use with the current OS
+ *  $SYNTAX$
+ *      HB_OSNewLine() --> cString
+ *  $ARGUMENTS$
+ *  $RETURNS$
+ *      A character string containing the character or characters required
+ *      to move the screen cursor or print head to the start of a new line.
+ *      The string will hold either CHR( 10 ) or CHR( 13 ) + CHR( 10 ).
+ *  $DESCRIPTION$
+ *      Returns a character string containing the character or characters
+ *      required to move the screen cursor or print head to the start of a
+ *      new line for the operating system that the program is running on
+ *      (or thinks it is running on, if an OS emulator is being used).
+ *  $EXAMPLES$
+ *      // Get the newline character(s) for the current OS using defaults.
+ *      STATIC s_cNewLine
+ *      ...
+ *      s_cNewLine := HB_OSNewLine()
+ *      ...
+ *      OutStd( "Hello World!" + s_cNewLine )
+ *      ...
+ *  $TESTS$
+ *      valtype( HB_OSNewLine() ) == "C"
+ *      LEN( HB_OSNewLine( { "ANOTHERDOS" }, { "" } ) ) == 1
+ *  $STATUS$
+ *      C
+ *  $COMPLIANCE$
+ *      This is an add-on Operating System Tool function.
+ *  $SEEALSO$
+ *      OS(), OUTSTD(), OUTERR()
+ *  $END$
+ */
+
+HARBOUR HB_HB_OSNEWLINE( void )
+{
+   hb_retc( s_szCrLf );
 }
 
 USHORT hb_max_row( void )

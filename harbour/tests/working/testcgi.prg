@@ -35,7 +35,7 @@ FUNCTION Main()
    LOCAL oHTML := THTML():New()
    LOCAL hFile, nPos, cString, cBuf, i, cTable, cLine
 
-   s_cNewLine := OS_NewLine()
+   s_cNewLine := HB_OSNewLine()
 
    oHTML:SetHTMLFile( "function.cfm" )
 

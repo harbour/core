@@ -21,7 +21,7 @@ FUNCTION Main()
 
    LOCAL oHTML := THTML():New()
 
-   s_cNewLine := OS_NewLine()
+   s_cNewLine := HB_OSNewLine()
 
    oHTML:SetTitle( "Harbour Power Demonstration" )
    oHTML:AddHead( "Harbour Project" )

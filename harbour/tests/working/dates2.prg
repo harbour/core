@@ -4,7 +4,7 @@
 
 #include "set.ch"
 function main()
-   local newline := OS_NewLine()
+   local newline := HB_OSNewLine()
    local dDate := CTOD ("04/30/99")
 
    outstd (SET (_SET_DATEFORMAT), dDate, newline)

@@ -1,4 +1,4 @@
-/* 
+/*
  * $Id$
  */
 
@@ -83,6 +83,7 @@
 #include "errorapi.h"
 #include "itemapi.h"
 #include "inkey.h"
+#include "inkey.ch"
 #include "init.h"
 
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__MINGW32__)
@@ -206,7 +207,7 @@ int hb_inkey( double seconds, HB_inkey_enum event_mask, BOOL wait, BOOL forever 
    /* Check or wait for input events */
    if( wait ) end_clock = clock() + seconds * CLOCKS_PER_SEC;
    s_inkeyPoll = TRUE;                         /* Force polling */
-   
+
    while( wait && hb_inkeyNext() == 0 )
    {
       /* Release the CPU between checks */
@@ -283,7 +284,7 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
          ch = _read_kbd( 0, 0, 0 );
          if( ch != -1 ) ch += 256;      /* If it's really a scan code, offset it */
       }
-      /* _read_kbd() returns -1 for no key, the switch statement will handle 
+      /* _read_kbd() returns -1 for no key, the switch statement will handle
          this. */
    #else
       if( kbhit() )
@@ -323,55 +324,55 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
          case -1:  /* No key available */
             return;
          case 328:  /* Up arrow */
-            ch = 5;
+            ch = K_UP;
             break;
          case 336:  /* Down arrow */
-            ch = 24;
+            ch = K_DOWN;
             break;
          case 331:  /* Left arrow */
-            ch = 19;
+            ch = K_LEFT;
             break;
          case 333:  /* Right arrow */
-            ch = 4;
+            ch = K_RIGHT;
             break;
          case 327:  /* Home */
-            ch = 1;
+            ch = K_HOME;
             break;
          case 335:  /* End */
-            ch = 6;
+            ch = K_END;
             break;
          case 329:  /* Page Up */
-            ch = 18;
+            ch = K_PGUP;
             break;
          case 337:  /* Page Down */
-            ch = 3;
+            ch = K_PGDN;
             break;
          case 371:  /*  Ctrl + Left arrow */
-            ch = 26;
+            ch = K_CTRL_LEFT;
             break;
          case 372:  /* Ctrl + Right arrow */
-            ch = 2;
+            ch = K_CTRL_RIGHT;
             break;
          case 375:  /* Ctrl + Home */
-            ch = 29;
+            ch = K_CTRL_HOME;
             break;
          case 373:  /* Ctrl + End */
-            ch = 23;
+            ch = K_CTRL_END;
             break;
          case 388:  /* Ctrl + Page Up */
-            ch = 31;
+            ch = K_CTRL_PGUP;
             break;
          case 374:  /* Ctrl + Page Down */
-            ch = 30;
+            ch = K_CTRL_PGDN;
             break;
          case 338:  /* Insert */
-            ch = 22;
+            ch = K_INS;
             break;
          case 339:  /* Delete */
-            ch = 7;
+            ch = K_DEL;
             break;
          case 315:  /* F1 */
-            ch = 28;
+            ch = K_F1;
             break;
          case 316:  /* F2 */
          case 317:  /* F3 */
@@ -440,12 +441,13 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
          /* Only read keyboard input here if not called
             from the HVM and the typeahead buffer is empty. */
          read( STDIN_FILENO, &ch, 1 );            /* Read a key */
-///         if( ch == '\n' ) ch = '\r';              /* Convert LF to CR */
+/*       if( ch == '\n' )
+            ch = '\r'; */                         /* Convert LF to CR */
       }
 #else
       /* TODO: Support for other platforms, such as Mac */
 #endif
-      if( ch == 302 ) /* K_ALT_C */
+      if( ch == K_ALT_C )
          hb_vmRequestCancel( );  /* Alt-C was pressed */
 
       hb_inkeyPut( ch );

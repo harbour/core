@@ -12,7 +12,7 @@ function Main()
 // for Clipper, this drags in the terminal driver
 @ Row(), col() say ""
 
-   s_cNewLine := OS_NewLine()
+   s_cNewLine := HB_OSNewLine()
 
    TestLine( "_SET_EXACT",        1)
    TestLine( "_SET_FIXED",        2)

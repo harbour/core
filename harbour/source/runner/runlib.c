@@ -187,7 +187,7 @@ HARBOUR HB___HRBRUN( void )
 
             ulSize = hb_hrbFileReadLong( file, szFileName );      /* Read size of function    */
             pDynFunc[ ul ].pCode = ( BYTE * ) hb_xgrab( ulSize );
-            hb_hrbFileRead( file, szFileName, pDynFunc[ ul ].pCode, 1, ulSize );
+            hb_hrbFileRead( file, szFileName, ( char * ) pDynFunc[ ul ].pCode, 1, ulSize );
                                                 /* Read the block           */
 
             pDynFunc[ ul ].pAsmCall = hb_hrbAsmCreateFun( pSymRead,
@@ -370,7 +370,7 @@ static BYTE hb_hrbFileReadByte( FILE * file, char * szFileName )
 {
    BYTE bRet;
 
-   hb_hrbFileRead( file, szFileName, &bRet, 1, 1 );
+   hb_hrbFileRead( file, szFileName, ( char * ) &bRet, 1, 1 );
 
    return bRet;
 }

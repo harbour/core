@@ -12,7 +12,7 @@
 #include "set.ch"
 
 function Main()
-local cNewLine := OS_NewLine()
+local cNewLine := HB_OSNewLine()
 
    OUTSTD (cNewLine,  "Testing Harbour device management on", DATE())
    SET ALTERNATE TO OUTPUT_A ADDITIVE
