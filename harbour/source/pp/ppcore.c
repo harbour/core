@@ -3156,7 +3156,7 @@ static int NextName( char ** sSource, char * sDest )
 
   /* Ron Pinkas added 2000-11-08 - Prepare for next run. */
   pTmp = *sSource;
-  while( *pTmp && ( pTmp == ' ' || pTmp == '\t' ) )
+  while( *pTmp && ( *pTmp == ' ' || *pTmp == '\t' ) )
   {
      pTmp++;
   }
