@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-08 20:45 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/debug/debugger.prg
+     * Command window support for DOS, QUIT, OUTPUT and empty commands
+
 2002-07-08 17:30 UTC+0100 Antonio Linares <alinares@fivetech.com>
    + source/debug/dbghelp.prg
      * The debugger Help system
