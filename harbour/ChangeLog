@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
   * source/rtl/dummy.prg
+    *Removed reference to ordkeydel() and ordkeyadd()
+
+2002-04-27 23:50 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
+  * source/rtl/teditor.prg
+    * Added Support lookup on SetKey()'s Defined functions on Edit()
       and BrowseText() then this are not Handle by TMemoEditor:Edit() method
 
 2002-04-27 19:15 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
