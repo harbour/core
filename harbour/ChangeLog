@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-07-12 10:06 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * source/debug/debugger.prg
+  * source/rtl/philes.c
+  ! Enhancements developed by Lorenzo Fiorini.
+
+  Lorenzo: Please supply us a description of what you have implemented.
+
 2003-07-10 17:43 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
   * source/rtl/memoline.c
     ! Fixed bug with soft returns. Clipper compatible.
