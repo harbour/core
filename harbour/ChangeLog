@@ -1,3 +1,8 @@
+2000-08-01 21:10 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   + doc/cmdline.txt
+     + Command line handling spec added.
+
 2000-08-01 21:03 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * source/common/hbver.c
