@@ -20,6 +20,7 @@ ifdef LIB_DIR
 LDFLAGS = -L$(LIB_DIR)
 endif
 LINKLIBS = $(foreach lib, $(LIBS), -l$(lib))
+# LINKLIBS += -lm
 
 AR = ar
 ARFLAGS =

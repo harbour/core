@@ -982,8 +982,6 @@ int harbour_main( int argc, char * argv[] )
    char *szPath ="";
    FILENAME *pFileName =NULL;
 
-   printf( "Harbour compiler\nbuild %i Spring 1999\n", BUILD );
-
    if( argc > 1 )
    {
       /* Command line options */
@@ -1091,6 +1089,9 @@ int harbour_main( int argc, char * argv[] )
             pFileName =SplitFilename( argv[ iArg ] );
          iArg++;
       }
+
+      if( ! _iQuiet )
+         printf( "Harbour compiler\nbuild %i Spring 1999\n", BUILD );
 
       if( pFileName )
       {
