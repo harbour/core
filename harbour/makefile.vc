@@ -102,6 +102,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\hardcr.obj \
     $(OBJ_DIR)\hbtrace.obj \
     $(OBJ_DIR)\hbfsapi.obj \
+    $(OBJ_DIR)\hbstr.obj \
     $(OBJ_DIR)\hvm.obj \
     $(OBJ_DIR)\initsymb.obj \
     $(OBJ_DIR)\inkey.obj \
@@ -259,11 +260,13 @@ all: $(HARBOUR_EXE) \
 
 $(PP_EXE) : \
     $(PP_DIR)\stdalone\hbpp.c \
-    $(COMMON_DIR)\hbfsapi.c
+    $(COMMON_DIR)\hbfsapi.c \
+    $(COMMON_DIR)\hbstr.c
     @if exist obj\hbpp.obj del obj\hbpp.obj
     $(CC) -TP $(CFLAGS) $** -o $(BIN_DIR)\hbpp /link $(PP_LIB)
     -del hbpp.obj
     -del hbfsapi.obj
+    -del hbstr.obj
 
 $(RUNNER_EXE) : \
     $(RUNNER_DIR)\stdalone\external.prg \
@@ -285,6 +288,8 @@ $(HARBOUR_EXE) : \
     $(COMPILER_DIR)\genjava.c \
     $(COMPILER_DIR)\genpas.c \
     $(COMPILER_DIR)\expropt.c \
+    $(COMMON_DIR)\hbfsapi.c \
+    $(COMMON_DIR)\hbstr.c \
     $(PP_DIR)\hbpp.c \
     $(PP_DIR)\hbppint.c \
     $(PP_DIR)\table.c
@@ -299,6 +304,8 @@ $(HARBOUR_EXE) : \
     -del genjava.obj
     -del genpas.obj
     -del expropt.obj
+    -del hbfsapi.obj
+    -del hbstr.obj
     -del hbpp.obj
     -del hbppint.obj
     -del table.obj
@@ -520,6 +527,9 @@ $(OBJ_DIR)\hbtrace.obj : $(COMMON_DIR)\hbtrace.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\hbfsapi.obj : $(COMMON_DIR)\hbfsapi.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\hbstr.obj : $(COMMON_DIR)\hbstr.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\inkey.obj : $(RTL_DIR)\inkey.c

@@ -1,3 +1,7 @@
+19991122-19:50 EDT Paul Tucker <ptucker@sympatico.ca>
+  * makefile.vc
+    + hbstr and hbfsapi
+
 19991122-01:33 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/hbpplib.c
     ! Standard runtime error is launched from the library version of the
