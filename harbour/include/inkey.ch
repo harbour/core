@@ -38,8 +38,8 @@
 /* NOTE: Keystroke descriptions marked with an asterisk (*) are only */
 /*       available on enhanced keyboards (those with more than 84 keys) */
 
-#ifndef _INKEY_CH
-#define _INKEY_CH
+#ifndef HB_INKEY_CH_
+#define HB_INKEY_CH_
 
 /* Input event masks */
 
@@ -272,4 +272,4 @@
 #define K_SH_F11                -42   /* * Shift-F11                     */
 #define K_SH_F12                -43   /* * Shift-F12                     */
 
-#endif /* _INKEY_CH */
+#endif /* HB_INKEY_CH_ */

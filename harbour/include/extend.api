@@ -35,14 +35,16 @@
 
 /* DON'T USE THIS FILE FOR NEW HARBOUR C CODE */
 
-#ifndef HB_EXTEND_API_
-#define HB_EXTEND_API_
+#ifndef _EXTEND_API
+#define _EXTEND_API
 
 #include "clipdefs.h"
 #include "extend.h"
 
 typedef PHB_ITEM  ITEM;
+#ifndef CLIPPERDEFS
 typedef double    XDOUBLE;
+#endif
 
 /* Compatible defines */
 
@@ -89,4 +91,4 @@ typedef double    XDOUBLE;
 #define _storni         hb_storni
 #define _stornl         hb_stornl
 
-#endif /* HB_EXTEND_API_ */
+#endif /* _EXTEND_API */

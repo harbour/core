@@ -33,9 +33,9 @@
  *
  */
 
-#ifndef _RESERVED_CH
-#define _RESERVED_CH
+#ifndef HB_RESERVED_CH_
+#define HB_RESERVED_CH_
 
 /* TODO: Fill this file. */
 
-#endif /* _RESERVED_CH */
+#endif /* HB_RESERVED_CH_ */

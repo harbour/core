@@ -35,8 +35,8 @@
 
 /* NOTE: This file is also used by C code. */
 
-#ifndef _HBOO_CH
-#define _HBOO_CH
+#ifndef HB_OO_CH_
+#define HB_OO_CH_
 
 #define MET_METHOD        0
 #define MET_DATA          1
@@ -51,4 +51,4 @@
 #define CLASSDATA_SYMBOL  1
 #define CLASSDATA_VALUE   2
 
-#endif /* _HBOO_CH */
+#endif /* HB_OO_CH_ */

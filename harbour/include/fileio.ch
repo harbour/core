@@ -57,10 +57,6 @@
 #define FC_HIDDEN     0x0002   /* Hidden file attribute is set    */
 #define FC_SYSTEM     0x0004   /* System file attribute is set    */
 
-/* File locking flags */
-#define FL_LOCK       0x0000   /* Lock a region   */
-#define FL_UNLOCK     0x0001   /* Unlock a region */
-
 /* File access flags */
 #define FO_READ       0x0000   /* File is opened for reading             */
 #define FO_WRITE      0x0001   /* File is opened for writing             */
@@ -84,17 +80,13 @@
 #define FS_END        0x0002   /* Seek from end of file          */
 
 /* File mode flags */
-#define FM_BINARY          1   /* Binary mode (raw)  */
-#define FM_TEXT            2   /* Test mode (cooked) */
+#define FD_BINARY          1   /* Binary mode (raw)  */
+#define FD_RAW             1
+#define FD_COOKED          2   /* Test mode (cooked) */
+#define FD_TEXT            2
+#define FD_ASCII           2
 
 /* File system error codes */
 #define F_ERROR      ( -1 )   /* Unspecified error */
-
-/* Extended file open mode flags */
-#define FXO_TRUNCATE  0x0100   /* Create (truncate if exists) */
-#define FXO_APPEND    0x0200   /* Create (append if exists)   */
-#define FXO_FORCEEXT  0x0800   /* Force default extension     */
-#define FXO_DEFAULTS  0x1000   /* Use SET command defaults    */
-#define FXO_DEVICERAW 0x2000   /* Open devices in raw mode    */
 
 #endif /* _FILEIO_CH */

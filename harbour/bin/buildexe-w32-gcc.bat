@@ -14,7 +14,7 @@ rem by David G. Holm <dholm@jsd-llc.com>
 if not "%1" == "" goto compile
 
 echo.
-echo Usage: makeexe.bat name
+echo Usage: buildexe.bat name
 echo.
 echo - 'name' is the .prg filename *without* extension.
 echo - Don't forget to make a MAIN function for you application.

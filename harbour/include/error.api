@@ -35,8 +35,8 @@
 
 /* DON'T USE THIS FILE FOR NEW HARBOUR C CODE */
 
-#ifndef HB_ERROR_API_
-#define HB_ERROR_API_
+#ifndef _ERROR_API
+#define _ERROR_API
 
 #include "clipdefs.h"
 #include "errorapi.h"
@@ -67,4 +67,4 @@ typedef PHB_ITEM  ERRORP;
 #define _errPutTries       hb_errPutTries
 #define _errRelease        hb_errRelease
 
-#endif /* HB_ERROR_API_ */
+#endif /* _ERROR_API */

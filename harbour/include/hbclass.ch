@@ -33,8 +33,8 @@
  *
  */
 
-#ifndef _CLASSES_CH
-#define _CLASSES_CH
+#ifndef HB_CLASS_CH_
+#define HB_CLASS_CH_
 
 #xcommand CLASS <ClassName> [ <frm: FROM, INHERIT> <SuperClass> ] => ;
    function <ClassName>() ;;
@@ -97,4 +97,4 @@
           static function <ClassName>_<MethodName>( [<params>] ) ;;
           local Self := QSelf()
 
-#endif /* _CLASSES_CH */
+#endif /* HB_CLASS_CH_ */

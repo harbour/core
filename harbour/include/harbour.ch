@@ -45,11 +45,11 @@
 
 #ifndef __HARBOUR__
 
-#ifndef _HARBOUR_CH
-#define _HARBOUR_CH
+#ifndef HB_HARBOUR_CH_
+#define HB_HARBOUR_CH_
 
 #xtranslate HB_OsNewLine() => Chr( 13 ) + Chr( 10 )
 
-#endif /* _HARBOUR_CH */
+#endif /* HB_HARBOUR_CH_ */
 
 #endif

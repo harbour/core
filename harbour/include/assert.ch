@@ -33,8 +33,9 @@
  *
  */
 
-#ifndef _ASSERT_CH
-#define _ASSERT_CH
+#ifndef HB_ASSERT_CH_
+#define HB_ASSERT_CH_
+#define _ASSERT_DEFINED // NOTE: For complete CA-Clipper compatibility
 
 #ifdef NDEBUG
 
@@ -56,4 +57,4 @@
 
 #endif /* NDEBUG */
 
-#endif /* _ASSERT_CH */
+#endif /* HB_ASSERT_CH_ */

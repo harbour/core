@@ -35,8 +35,8 @@
 
 /* DON'T USE THIS FILE FOR NEW HARBOUR C CODE */
 
-#ifndef HB_FM_API_
-#define HB_FM_API_
+#ifndef _FM_API
+#define _FM_API
 
 #include "clipdefs.h"
 #include "extend.h"
@@ -52,4 +52,4 @@
 #define _exmgrab                hb_xgrab
 #define _exmback( p, s )        hb_xfree( p )
 
-#endif /* HB_FM_API_ */
+#endif /* _FM_API */

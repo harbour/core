@@ -61,6 +61,17 @@
 
 typedef int    FHANDLE;
 
+/* File locking flags */
+#define FL_LOCK       0x0000   /* Lock a region   */
+#define FL_UNLOCK     0x0001   /* Unlock a region */
+
+/* Extended file open mode flags */
+#define FXO_TRUNCATE  0x0100   /* Create (truncate if exists) */
+#define FXO_APPEND    0x0200   /* Create (append if exists)   */
+#define FXO_FORCEEXT  0x0800   /* Force default extension     */
+#define FXO_DEFAULTS  0x1000   /* Use SET command defaults    */
+#define FXO_DEVICERAW 0x2000   /* Open devices in raw mode    */
+
 /* Filename support */
 typedef struct
 {

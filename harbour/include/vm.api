@@ -35,8 +35,8 @@
 
 /* DON'T USE THIS FILE FOR NEW HARBOUR C CODE */
 
-#ifndef HB_VM_API_
-#define HB_VM_API_
+#ifndef _VM_API
+#define _VM_API
 
 #include "clipdefs.h"
 #include "extend.h"
@@ -70,4 +70,4 @@
 #define _xvheaplock( h, offset )     ( 0 )
 #define _xvheapunlock( h, offset )   /* dummy */
 
-#endif /* HB_VM_API_ */
+#endif /* _VM_API */

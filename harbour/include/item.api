@@ -35,8 +35,8 @@
 
 /* DON'T USE THIS FILE FOR NEW HARBOUR C CODE */
 
-#ifndef HB_ITEM_API_
-#define HB_ITEM_API_
+#ifndef _ITEM_API
+#define _ITEM_API
 
 #include "itemapi.h"
 
@@ -70,4 +70,4 @@ typedef PEVALINFO EVALINFOP;
 #define _itemSize       hb_itemSize
 #define _itemType       hb_itemType
 
-#endif /* HB_ITEM_API_ */
+#endif /* _ITEM_API */

@@ -33,11 +33,11 @@
  *
  */
 
-#ifndef _STD_CH
-#define _STD_CH
+#ifndef HB_STD_CH_
+#define HB_STD_CH_
 
 #include "set.ch"
 
 /* TODO: Fill this file. */
 
-#endif /* _STD_CH */
+#endif /* HB_STD_CH_ */

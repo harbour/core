@@ -49,8 +49,8 @@
 
 /* DON'T USE THIS FILE FOR NEW HARBOUR C CODE */
 
-#ifndef HB_FILESYS_API_
-#define HB_FILESYS_API_
+#ifndef _FILESYS_API
+#define _FILESYS_API
 
 #include "clipdefs.h"
 #include "filesys.h"
@@ -60,6 +60,8 @@
 
 typedef FHANDLE fhandle;
 typedef FHANDLE * FHANDLEP;
+
+#define FHANDLE_DEFINED
 
 /* DOS predefined standard handles */
 
@@ -91,4 +93,4 @@ typedef FHANDLE * FHANDLEP;
 #define _fsSeek         hb_fsSeek
 #define _fsWrite        hb_fsWrite
 
-#endif /* HB_FILESYS_API_ */
+#endif /* _FILESYS_API */

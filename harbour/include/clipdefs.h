@@ -38,9 +38,9 @@
 /* This file is provided to support some level of */
 /* Harbour compatibility for old Clipper C extension code */
 
-#ifndef HB_CLIPDEFS_H_
-#define HB_CLIPDEFS_H_
-
+#ifndef _CLIPDEFS_H
+#define _CLIPDEFS_H
+        
 #include "extend.h"
 
 /* Old types */
@@ -106,4 +106,4 @@ typedef FUNCP*  FUNCPP;
    #define NULL    0
 #endif
 
-#endif /* HB_CLIPDEFS_H_ */
+#endif /* _CLIPDEFS_H */

@@ -33,8 +33,8 @@
  *
  */
 
-#ifndef _COMMON_CH
-#define _COMMON_CH
+#ifndef HB_COMMON_CH_
+#define HB_COMMON_CH_
 
 /* Friendly logical aliases */
 #define TRUE                    .T.
@@ -61,4 +61,4 @@
 #command UPDATE <v1> IF <exp> TO <v2> => ;
                                 IF <exp> ; <v1> := <v2> ; END
 
-#endif /* _COMMON_CH */
+#endif /* HB_COMMON_CH_ */

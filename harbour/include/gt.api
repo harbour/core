@@ -35,8 +35,8 @@
 
 /* DON'T USE THIS FILE FOR NEW HARBOUR C CODE */
 
-#ifndef HB_GT_API_
-#define HB_GT_API_
+#ifndef _GT_API
+#define _GT_API
 
 #include "clipdefs.h"
 #include "gtapi.h"
@@ -72,4 +72,4 @@
 #define _gtWriteAt      hb_gtWriteAt
 #define _gtWriteCon     hb_gtWriteCon
 
-#endif /* HB_GT_API_ */
+#endif /* _GT_API */

@@ -35,8 +35,8 @@
 
 /* NOTE: This file is also used by C code. */
 
-#ifndef _MEMVARS_CH
-#define _MEMVARS_CH
+#ifndef HB_MEMVAR_CH_
+#define HB_MEMVAR_CH_
 
 /* Values returned from __MVSCOPE() function */
 #define MV_NOT_FOUND      -2   /* not found in the symbols table */
@@ -47,4 +47,4 @@
 #define MV_PRIVATE_LOCAL   4   /* PRIVATE created in current function/procedure */
 #define MV_PRIVATE         6   /* PRIVATE variable */
 
-#endif /* _MEMVARS_CH */
+#endif /* HB_MEMVAR_CH_ */

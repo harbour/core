@@ -35,11 +35,11 @@
 
 /* DON'T USE THIS FILE FOR NEW HARBOUR C CODE */
 
-#ifndef HB_RDD_API_
-#define HB_RDD_API_
+#ifndef _RDD_API
+#define _RDD_API
 
 #include "clipdefs.h"
 #include "rddapi.h"
 #include "item.api"
 
-#endif /* HB_RDD_API_ */
+#endif /* _RDD_API */

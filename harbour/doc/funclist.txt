@@ -5,10 +5,24 @@
 ; funclist.txt - Function Status List
 ;
 ; Syntax:
-; <function>;<state>;<RTL_file>
+; <function/method>;<state>;<platform>
 ;
 ; Where:
-; <state> - [R]eady, [S]tarted, [N]ot Started
+; <state> - R[eady], S[tarted], N[ot Started]
+; <platform> - dos[-bcc31][+T]
+;              dos[-djgpp][+T]
+;              dos[-watcom][+T]
+;              w32[-bcc32][+T]
+;              w32[-gcc][+T]
+;              w32[-icc][+T]
+;              w32[-mingw32][+T]
+;              w32[-msvc][+T]
+;              os2[-gcc][+T]
+;              os2[-icc][+T]
+;              lin[-gcc][+T]
+;              mac[-mpw][+T]
+;
+;              Examples: w32-gcc+T, w32, w32-icc
 ;
 ; Use ';' for comments
 ;

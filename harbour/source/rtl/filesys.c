@@ -440,11 +440,11 @@ void    hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
    errno = 0;
    switch( uiDevMode )
    {
-      case FM_BINARY:
+      case FD_BINARY:
          setmode( hFileHandle, O_BINARY );
          break;
 
-      case FM_TEXT:
+      case FD_TEXT:
          setmode( hFileHandle, O_TEXT );
          break;
    }
@@ -455,11 +455,11 @@ void    hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
    errno = 0;
    switch( uiDevMode )
    {
-      case FM_BINARY:
+      case FD_BINARY:
          _setmode( hFileHandle, _O_BINARY );
          break;
 
-      case FM_TEXT:
+      case FD_TEXT:
          _setmode( hFileHandle, _O_TEXT );
          break;
    }
@@ -1661,12 +1661,12 @@ HARBOUR HB_HB_FNAMEMERGE( void )
 
 void    hb_fsSetDevRaw( FHANDLE hFileHandle )
 {
-   hb_fsSetDevMode( hFileHandle, FM_BINARY );
+   hb_fsSetDevMode( hFileHandle, FD_BINARY );
 }
 
 void    hb_fsSetDevText( FHANDLE hFileHandle )
 {
-   hb_fsSetDevMode( hFileHandle, FM_TEXT );
+   hb_fsSetDevMode( hFileHandle, FD_TEXT );
 }
 
 /* NOTE: Clipper 5.3 undocumented */

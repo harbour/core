@@ -128,7 +128,7 @@ void hb_consoleInitialize( void )
       Harbour needs them to be open in binary mode. */
 
    s_iFilenoStdout = fileno( stdout );
-   hb_fsSetDevMode( s_iFilenoStdout, FM_BINARY );
+   hb_fsSetDevMode( s_iFilenoStdout, FD_BINARY );
 
    iStderr = hb_cmdargNum( "STDERR" ); /* Undocumented CA-Clipper switch //STDERR:x */
 
@@ -139,7 +139,7 @@ void hb_consoleInitialize( void )
    else                     /* //STDERR:x */
       s_iFilenoStderr = iStderr;
 
-   hb_fsSetDevMode( s_iFilenoStderr, FM_BINARY );
+   hb_fsSetDevMode( s_iFilenoStderr, FD_BINARY );
 
 #ifdef HARBOUR_USE_GTAPI
    hb_gtInit();
@@ -155,8 +155,8 @@ void hb_consoleInitialize( void )
 
 void hb_consoleRelease( void )
 {
-   hb_fsSetDevMode( s_iFilenoStdout, FM_TEXT );
-   hb_fsSetDevMode( s_iFilenoStderr, FM_TEXT );
+   hb_fsSetDevMode( s_iFilenoStdout, FD_TEXT );
+   hb_fsSetDevMode( s_iFilenoStderr, FD_TEXT );
 
    /* The is done by the OS from now on */
    s_szCrLf[ 0 ] = HB_CHAR_LF;

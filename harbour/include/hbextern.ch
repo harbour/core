@@ -33,6 +33,9 @@
  *
  */
 
+#ifndef HB_EXTERN_CH_
+#define HB_EXTERN_CH_
+
 EXTERNAL MEMOLINE
 EXTERNAL MLCOUNT
 
@@ -795,3 +798,5 @@ EXTERNAL READUPDATED
 EXTERNAL UPDATED
 EXTERNAL __QQPUB
 //------------------------------------------------------------
+
+#endif /* HB_EXTERN_CH_ */

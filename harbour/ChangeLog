@@ -1,3 +1,38 @@
+19991010-02:05 GMT+1 Victor Szel <info@szelvesz.hu>
+   * bin/*.bat
+     ! Some minor fix in the help screens
+   * doc/funclist.txt
+     + Changed the format, now the third column (which was not in use) is 
+       meant to store the platform and multithreading support information.
+   * source/compiler/harbour.y
+     + One TODO added.
+   * include/*.api
+     include/assert.ch
+     include/common.ch
+     include/fileio.ch
+     include/harbour.ch
+     include/hbclass.ch
+     include/hbextern.ch
+     include/hbmemvar.ch
+     include/hboo.ch
+     include/inkey.ch
+     include/reserved.ch
+     include/std.ch
+     include/clipdefs.h
+     include/filesys.h
+     source/rtl/filesys.c
+     source/rtl/console.c
+     ! FM_ #define names replaced with FD_ ones for Clipper compatibility.
+     ! FXO_, FL_ #defines moved to filesys.h from filesys.ch for full compat.
+     ! *.API guard names made compatible.
+     ! Some missing #defines added to .API files (assert.ch, filesys.api)
+     ! Small compatibility enhancement in extend.api (XDOUBLE)
+     ! Guard names adjusted (mostly where filenames have changed).
+     + Missing guard added to hbextern.ch
+     + Harbour only #defines in compatbility headers prefixed with HB_
+   * Makefile
+     + Added the samples to the make process, but it's commented out.
+
 19991009-22:19 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/compiler/harbour.y
      * a[ b ]:c expressions fixed.

@@ -49,6 +49,7 @@
  * 8) Support this syntax: _FIELD->c->mmezo := mt
  * 9) Support this syntax: nPtr := @Hello()
  *10) Support for syntax: FOR [ array | object | alias_expr | other ] := value
+ *11) Support this syntax: {1,2}[2]
  */
 
 /* Compile using: bison -d -v harbour.y */
