@@ -190,7 +190,11 @@ HB_FUNC( DTOS )
 
 HB_FUNC( HB_STOD )
 {
+#ifdef HB_FAST_STOD
    hb_retds( hb_parc( 1 ) );
+#else
+   hb_retds( ( ISCHAR( 1 ) && hb_parclen( 1 ) == 8 ) ? hb_parc( 1 ) : "        " );
+#endif
 }
 
 HB_FUNC( YEAR )
