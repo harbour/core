@@ -291,7 +291,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       /* choice loop */
       DO WHILE .T.
 
-         nKey := Inkey( nDelay )
+         nKey := Inkey( nDelay, INKEY_ALL )
 
          DO CASE
 
@@ -345,7 +345,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
                iif( nEval == nChoice, cColorHigh, cColorNorm ) )
          NEXT
 
-         nKey := Inkey( nDelay )
+         nKey := Inkey( nDelay, INKEY_ALL )
 
          DO CASE
          CASE nKey == K_ENTER .OR. ;
