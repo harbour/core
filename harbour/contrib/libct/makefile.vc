@@ -111,6 +111,8 @@ LIBLIST = \
 
 TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\addascii.obj \
+   $(OBJ_DIR)\asciisum.obj \
+   $(OBJ_DIR)\ascpos.obj \
    $(OBJ_DIR)\atadjust.obj \
    $(OBJ_DIR)\atnum.obj \
    $(OBJ_DIR)\charevod.obj \
@@ -136,6 +138,8 @@ all: \
 
 CLEAN:
    -@if exist $(OBJ_DIR)\addascii.* del $(OBJ_DIR)\addascii.*
+   -@if exist $(OBJ_DIR)\asciisum.* del $(OBJ_DIR)\asciisum.*
+   -@if exist $(OBJ_DIR)\ascpos.* del $(OBJ_DIR)\ascpos.*
    -@if exist $(OBJ_DIR)\atadjust.* del $(OBJ_DIR)\atadjust.*
    -@if exist $(OBJ_DIR)\atnum.* del $(OBJ_DIR)\atnum.*
    -@if exist $(OBJ_DIR)\charevod.* del $(OBJ_DIR)\charevod.*

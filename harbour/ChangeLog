@@ -1,3 +1,36 @@
+2001-04-26 14:00 CET Martin Vogel <vogel@inttec.de>
+
+  + contrib/libct/asciisum.c
+    + asciisum() function
+
+  + contrib/libct/ascpos.c
+    + ascpos() and valpos() function
+  
+  * contrib/libct/Makefile
+    + added contrib/libct/asciisum.c
+    + added contrib/libct/ascpos.c
+
+  * contrib/libct/makefile.bc
+    + added contrib/libct/asciisum.c
+    + added contrib/libct/ascpos.c
+
+  * contrib/libct/makefile.vc
+    + added contrib/libct/asciisum.c
+    + added contrib/libct/ascpos.c
+ 
+  * contrib/libct/ctflist.txt
+    * changed status of functions mentioned above
+
+  + contrib/libct/tests/asciisum.prg
+  + contrib/libct/tests/ascpos.prg
+  + contrib/libct/tests/valpos.prg
+    ! small test programs for new functions 
+
+  * contrib/libct/tests/Makefile
+    + added contrib/libct/tests/asciisum.prg
+    + added contrib/libct/tests/ascpos.prg
+    + added contrib/libct/tests/valpos.prg
+
 2001-04-26 01:15 UTC-0800 Brian Hays <bhays@abacuslaw.com>
 
    * source/rdd/dbcmd.c

@@ -91,6 +91,8 @@ HARBOUR_EXE  = $(BIN_DIR)\harbour.exe
 
 TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\addascii.obj \
+   $(OBJ_DIR)\asciisum.obj \
+   $(OBJ_DIR)\ascpos.obj \
    $(OBJ_DIR)\atadjust.obj \
    $(OBJ_DIR)\atnum.obj \
    $(OBJ_DIR)\charevod.obj \
@@ -124,6 +126,14 @@ $(TOOLS_LIB)  : $(TOOLS_LIB_OBJS)
 #
 
 $(OBJ_DIR)\addascii.obj : $(TOOLS_DIR)\addascii.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\asciisum.obj : $(TOOLS_DIR)\asciisum.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\ascpos.obj : $(TOOLS_DIR)\ascpos.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 

@@ -32,6 +32,8 @@ ifeq ($(PM),) # PM not defined = build all files
 PRG_SOURCES=\
 	addascii.prg \
 	afteratn.prg \
+	asciisum.prg \
+	ascpos.prg \
 	atadjust.prg \
 	atnum.prg \
 	beforatn.prg \
@@ -50,6 +52,7 @@ PRG_SOURCES=\
 	csetref.prg \
 	csetatmu.prg \
 	setatlik.prg \
+	valpos.prg \
 	
 
 PRG_HEADERS=\
