@@ -77,7 +77,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       fflush( stdout );
    }
 
-   fprintf( yyc, "/*\n * Harbour Compiler, Apha build %d.%d (%s)\n",
+   fprintf( yyc, "/*\n * Harbour Compiler, Alpha build %d.%d (%s)\n",
       HB_VER_MINOR, HB_VER_REVISION, HB_VER_LEX );
    fprintf( yyc, " * Generated C source code\n */\n\n" );
 
