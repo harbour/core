@@ -43,16 +43,16 @@
  *      /es[<level>]     set exit severity   </par>
  *      =================   </par>
  *
- *          /es or /es0 = all warnings are ignored and exit code returned by
+ *          /es or /es0 - all warnings are ignored and exit code returned by
  *                        the compiler (accessed by DOS ERRORLEVEL command)
  *                        is equal to 0 if there are no errors in compiled
  *                        source file.   
  *
- *          /es1        = any warnings generate a non=zero exit code, but
+ *          /es1        - any warnings generate a non-zero exit code, but
  *                        output is still created.   
  *
- *          /es2        = all warnings are treated as errors and no output
- *                        file is created. The exit code is set to a non=zero
+ *          /es2        - all warnings are treated as errors and no output
+ *                        file is created. The exit code is set to a non-zero
  *                        value.   
  *      /i<path>         add #include file search path   </par>
  *      =================   </par>
@@ -83,7 +83,7 @@
  *
  *          The compiler does not create a procedure with the same name as
  *          the compiled file. This means that any declarations placed
- *          before the first PROCEDURE or FUNCTION statement have file=
+ *          before the first PROCEDURE or FUNCTION statement have file-
  *          wide scope and can be accessed/used in all functions/procedures
  *          defined in the compiled source file. All executable statements
  *          placed at the beginning of the file and before the first
@@ -92,11 +92,11 @@
  *      /o<path>         output file drive and/or path   </par>
  *      =================   </par>
  *
- *      /p               generate pre=processed output (.ppo) file   </par>
+ *      /p               generate pre-processed output (.ppo) file   </par>
  *      =================   </par>
  *
  *          The compiler only creates the file that contains the result of
- *          pre=processing the source file.   
+ *          pre-processing the source file.   
  *
  *      /q               quiet   </par>
  *      =================   </par>
@@ -125,7 +125,7 @@
  *      /u[<file>]       use command definition set in <file> (or none)   </par>
  *      =================   </par>
  *
- *      /v               variables are assumed M=>   </par>
+ *      /v               variables are assumed M->   </par>
  *      =================   </par>
  *
  *          All undeclared or unaliased variables are assumed MEMVAR
@@ -135,18 +135,18 @@
  *      /w[<level>]      set warning level number (0..4, default 1)   </par>
  *      =================   </par>
  *
- *          /w0         = no warnings
+ *          /w0         - no warnings
  *
- *          /w or /w1   = Clipper compatible warnings
+ *          /w or /w1   - Clipper compatible warnings
  *
- *          /w2         = some useful warnings missed in Clipper
+ *          /w2         - some useful warnings missed in Clipper
  *
- *          /w3         = warnings generated for Harbour language extensions
+ *          /w3         - warnings generated for Harbour language extensions
  *                        and also enables strong type checking but only
  *                        warns against declared types, or types which may be
  *                        calculated at compile time
  *
- *          /w4         = Enables warning about suspicious operations, which
+ *          /w4         - Enables warning about suspicious operations, which
  *                        means if you mix undeclared types, or types which
  *                        can not be calculated at compile time,together with
  *                        declared types, a warning will be  generated.  
@@ -191,7 +191,7 @@
  *      If you want a 100% compatible runtime libraries then
  *      you have to define HARBOUR_STRICT_CLIPPER_COMPATIBILITY. This
  *      option should be defined in the file include/hbsetup.h (in fact this
- *      option is placed in a comment by default = you need to remove the
+ *      option is placed in a comment by default - you need to remove the
  *      /* */ characters only). This change has to be done before invoking
  *      the make utility.   
  *
@@ -199,12 +199,12 @@
  *      <b>Handling of undeclared variables  </b> </par>
  *      ================================   </par>
  *
- *      When a value is assigned to an undeclared variable and the '=v'
+ *      When a value is assigned to an undeclared variable and the '-v'
  *      command line option is not used, then the Clipper compiler assumes
  *      that the variable is a PRIVATE or a PUBLIC variable and generates
  *      POPM (pop memvar) opcode.   
  *
- *      When the value of an undeclared variable is accessed and the '=v'
+ *      When the value of an undeclared variable is accessed and the '-v'
  *      command line option is not used, the Clipper compiler generates PUSHV
  *      (push variable) opcode that determines the type of variable at runtime.
  *      If a field with the requested name exists in the current workarea then
@@ -226,16 +226,16 @@
  *        SELECT test
  *        APPEND BLANK
  *
- *        FIELD=>myname  := "FIELD"
- *        MEMVAR=>myname := "MEMVAR"
+ *        FIELD->myname  := "FIELD"
+ *        MEMVAR->myname := "MEMVAR"
  *
  *        myname := myname + " assigned"
  *
  *        // In Clipper: "FIELD",  In Harbour: "FIELD assigned"
- *        ? FIELD=>myname
+ *        ? FIELD->myname
  *
  *        // In Clipper: "MEMVAR assigned", In Harbour: "MEMVAR"
- *        ? MEMVAR=>myname
+ *        ? MEMVAR->myname
  *
  *        USE
  *
@@ -252,7 +252,7 @@
  *      Clipper checks the memvar variable only and doesn't look for a field.
  *      This is the reason why the Harbour compiler uses the usual
  *      PUSHMEMVARREF opcode in such cases. Notice that the runtime behavior
- *      is the same in Clipper and in Harbour = only the generated opcodes
+ *      is the same in Clipper and in Harbour - only the generated opcodes
  *      are different.   
  *
  *
@@ -274,13 +274,13 @@
  *
  *      temp := a:b( COUNT() ), temp:c += 1   
  *
- *      in non=strict mode.   
+ *      in non-strict mode.   
  *
  *      In practice, Clipper will call the COUNT() function two times:
  *      the first time before addition and the second one after addition.
  *      In Harbour, COUNT() will be called only once, before addition.   
  *
- *      The Harbour (non=strict) method is:   </par>
+ *      The Harbour (non-strict) method is:   </par>
  *      1) faster   </par>
  *      2) it guarantees that the same instance variable of the same object
  *      will be changed   
