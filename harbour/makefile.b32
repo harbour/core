@@ -27,7 +27,7 @@ harbour.lib : achoice.obj adir.obj alert.obj arrays.obj asort.obj \
               browdb.obj classes.obj codebloc.obj copyfile.obj \
               dates.obj dates2.obj datesx.obj debug.obj debugger.obj \
               descend.obj devoutp.obj dir.obj do.obj dynsym.obj dummy.obj \
-              environ.obj terror.obj cmdarg.obj errorapi.obj errorsys.obj \
+              environ.obj fieldbl.obj cmdarg.obj errorapi.obj errorsys.obj \
               harbinit.obj extend.obj fileread.obj filesys.obj fm.obj \
               hardcr.obj hb_f.obj hvm.obj initsymb.obj inkey.obj input.obj \
               itemapi.obj langapi.obj mainstd.obj mainwin.obj math.obj \
@@ -36,7 +36,7 @@ harbour.lib : achoice.obj adir.obj alert.obj arrays.obj asort.obj \
               readvar.obj xsavescr.obj memvarbl.obj readkey.obj set.obj \
               setta.obj setcolor.obj setta.obj setkey.obj strfmt.obj \
               strings.obj symbols.obj stringp.obj stringsx.obj tbcolumn.obj \
-              tbrowse.obj tbrwtext.obj tclass.obj tget.obj tgetlist.obj \
+              tbrowse.obj tbrwtext.obj tclass.obj terror.obj tget.obj tgetlist.obj \
               tone.obj transfrm.obj \
               wait.obj
 
@@ -69,6 +69,7 @@ terror.obj   : terror.c   extend.h hbdefs.h
 errorapi.obj : errorapi.c extend.h hbdefs.h
 errorsys.obj : errorsys.c extend.h hbdefs.h
 extend.obj   : extend.c   extend.h hbdefs.h
+fieldbl.obj  : fieldbl.c  extend.h hbdefs.h
 fileread.obj : fileread.c extend.h hbdefs.h
 filesys.obj  : filesys.c  extend.h hbdefs.h
 fm.obj       : fm.c       extend.h hbdefs.h
@@ -126,6 +127,7 @@ devoutp.c    : devoutp.prg   harbour.exe
 dummy.c      : dummy.prg     harbour.exe
 terror.c     : terror.prg    harbour.exe
 errorsys.c   : errorsys.prg  harbour.exe
+fieldbl.c    : fieldbl.prg   harbour.exe
 fileread.c   : fileread.prg  harbour.exe
 harbinit.c   : harbinit.prg  harbour.exe
 input.c      : input.prg     harbour.exe
