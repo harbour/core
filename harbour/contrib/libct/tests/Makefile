@@ -71,6 +71,8 @@ PRG_SOURCES=\
 	math.prg \
 	num1.prg \
 	numtoken.prg \
+	rangerem.prg \
+	rangerepl.prg \
 	setatlik.prg \
 	strdiff.prg \
 	tab.prg \

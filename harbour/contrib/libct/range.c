@@ -70,7 +70,14 @@
  *  $DESCRIPTION$
  *      TODO: add documentation
  *  $EXAMPLES$
+ *      ? rangerem ("0","9","year2002.dbf") // "year.dbf", remove all digits
+ *      ? rangerem ("9","0","year2002.dbf") // "22", testing removal from "9" to chr(255)
+ *                                          // and from chr(0) to "0"
+ *      ? rangerem ("0","9","yearcurr.dbf") // "yearcurr.dbf", test leaving string untouched
  *  $TESTS$
+ *      rangerem ("0","9","year2002.dbf") == "year.dbf"     
+ *      rangerem ("9","0","year2002.dbf") == "22"         
+ *      rangerem ("0","9","yearcurr.dbf") == "yearcurr.dbf" 
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
@@ -140,7 +147,8 @@ HB_FUNC (RANGEREM)
       }
     }
 
-    hb_retclen (pcRet, sRetIndex+1);
+    hb_retclen (pcRet, sRetIndex);
+    hb_xfree (pcRet);
 
   }
   else /* ((hb_parclen (1) > 0) || ISNUM (1)) &&
@@ -196,7 +204,14 @@ HB_FUNC (RANGEREM)
  *  $DESCRIPTION$
  *      TODO: add documentation
  *  $EXAMPLES$
+ *      ? rangerepl ("0","9","year2002.dbf","?") // "year????.dbf", replace all digits
+ *      ? rangerepl ("9","0","year2002.dbf","?") // "????2??2????", testing replacement from "9" to chr(255)
+ *                                               // and from chr(0) to "0"
+ *      ? rangerepl ("0","9","yearcurr.dbf","?") // "yearcurr.dbf", test leaving string untouched
  *  $TESTS$
+ *      rangerepl ("0","9","year2002.dbf","?") == "year????.dbf" 
+ *      rangerepl ("9","0","year2002.dbf","?") == "????2??2????" 
+ *      rangerepl ("0","9","yearcurr.dbf","?") == "yearcurr.dbf" 
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
@@ -285,7 +300,7 @@ HB_FUNC (RANGEREPL)
 
     if (ISBYREF (3))
     {
-      hb_storclen (pcRet, sRetIndex+1, 3);
+      hb_storclen (pcRet, sStrLen, 3);
     }
 
     if (iNoRef)
@@ -294,8 +309,10 @@ HB_FUNC (RANGEREPL)
     }
     else
     {
-      hb_retclen (pcRet, sRetIndex+1);
+      hb_retclen (pcRet, sStrLen);
     }
+    
+    hb_xfree (pcRet);
 
   }
   else /* ((hb_parclen (1) > 0) || ISNUM (1)) &&

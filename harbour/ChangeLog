@@ -7,6 +7,15 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+      but will be kept in memory, what significantly increases the performance.
+      This may be especially helpful in case of creating temporary indexes for
+      reporting, etc.
+
+2002-05-05 21:05 UTC+0100 Martin Vogel <vogel@inttec.de>
+   * contrib/libct/range.c
+   + contrib/libct/tests/rangerem.prg
+   + contrib/libct/tests/rangerepl.prg
+   * contrib/libct/tests/Makefile
      * fix of a bug in RANGEREPL() and RANGEREM(): return string too long,
        reported by Guenther Steiner <byte-one@aon.at>
 	
