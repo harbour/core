@@ -1,3 +1,6 @@
+19990802-17:53 GMT+1 Victor Szel <info@szelvesz.hu>
+   ! source/rtl/setkey.prg - Fix: aSetKeys := aClone( OldKeys )
+
 19990802-10:50 EDT Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      + added setkey

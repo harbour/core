@@ -167,8 +167,7 @@ Function SetKeySave( OldKeys )
       aSetKeys := {}
 
     else
-      aSetKeys := aClone( aSetKeys )
-
+      aSetKeys := aClone( OldKeys )
     endif
 
   endif
