@@ -361,7 +361,7 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       hb_outerr( hb_consoleGetNewLine(), 0 );
 
       for( ui = 1, pMemBlock = s_pFirstBlock; pMemBlock; pMemBlock = pMemBlock->pNextBlock )
-         HB_TRACE( HB_TR_ERROR, ( "block %i: size: %lu %s line %i",
+         HB_TRACE( HB_TR_ERROR, ( "Block %i (size %lu) %s(%i)",
             ui++,
             pMemBlock->ulSize,
             pMemBlock->szProcName,
