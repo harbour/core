@@ -1,3 +1,11 @@
+19990731-14:50 Alexander Kresin
+  * source\hbpp\hbpp.c
+  * source\hbpp\table.c
+    * fixed some bugs, mentioned by Kwon,Oh-Chul ( ?"1234" ), Victor Szel
+    * added support of letters, prefixed by '\' in rezult patterns
+    * some other improvements that I don't remember already :)
+    + added 'ANNOUNCE' keyword
+    
 19990731-11:40 CET Patrick Mast <harbour@PatrickMast.com>
    * updated build40.bat and makefile.b40
 
@@ -56,11 +64,11 @@
    + doc/hdr_tpl.txt - Small modification RCS ID and licenc part
      of the header separated.
    * include/*.* - Standardized (again) RCS ID and licenc headers.
-     
+
 19990731-06:40 GMT+2 Ryszard Glaaab <rglab@imid.med.pl>
     *source/compiler/harbour.y
-	* PUBLIC and PRIVATE variables referenced inside a codeblock 
-	 can be used to initialize a static variables
+        * PUBLIC and PRIVATE variables referenced inside a codeblock
+         can be used to initialize a static variables
 
 19990731-06:00 CET Victor Szel <info@szelvesz.hu>
    + include/achoice.ch
@@ -148,37 +156,37 @@
 
 Fri Jul 30 14:44:00 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* config/bin.cf: 
-	* config/c.cf: 
-	* config/prg.cf: 
-	Added support for recursing into subdirectories in addition to
-	creating a target (library or executable).
-	Added support for executables whose main function is defined in a
-	PRG file.
+        * config/bin.cf:
+        * config/c.cf:
+        * config/prg.cf:
+        Added support for recursing into subdirectories in addition to
+        creating a target (library or executable).
+        Added support for executables whose main function is defined in a
+        PRG file.
 
-	* config/header.cf: 
-	Temporarily got rid of two definitions that look buggy.
-	
-	* include/run_exp.h: 
-	Got rid of warning regarding pragma.
-	
-	* source/hbpp/Makefile: 
-	* source/hbpp/hbppmain.c: 
-	* source/hbpp/stdalone/Makefile: 
-	* source/hbpp/stdalone/hbpp.c: 
-	Support for recursing into stdalone.
-	Moved hbpp/hbppmain.c tp hbpp/stdalone/hbpp.c.
-	
-	* source/odbc/Makefile: 
-	* source/runner/Makefile: 
-	Added GNU-makefiles for these two directories (but they don'
-	compile ok under gcc/Win32).
-	
-	* source/rtl/files.c: 
-	Changed defined(__GNUC__) for defined(__CYGWIN__).
+        * config/header.cf:
+        Temporarily got rid of two definitions that look buggy.
 
-	* source/rtl/gt/gtwin.c: 
-	Got rid of a warning.
+        * include/run_exp.h:
+        Got rid of warning regarding pragma.
+
+        * source/hbpp/Makefile:
+        * source/hbpp/hbppmain.c:
+        * source/hbpp/stdalone/Makefile:
+        * source/hbpp/stdalone/hbpp.c:
+        Support for recursing into stdalone.
+        Moved hbpp/hbppmain.c tp hbpp/stdalone/hbpp.c.
+
+        * source/odbc/Makefile:
+        * source/runner/Makefile:
+        Added GNU-makefiles for these two directories (but they don'
+        compile ok under gcc/Win32).
+
+        * source/rtl/files.c:
+        Changed defined(__GNUC__) for defined(__CYGWIN__).
+
+        * source/rtl/gt/gtwin.c:
+        Got rid of a warning.
 
 19990730-20:24 CET Victor Szel <info@szelvesz.hu>
    - buildicc.cmd - Removed.
@@ -375,65 +383,65 @@ Fri Jul 30 14:44:00 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Thu Jul 29 16:17:09 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* config/dos/djgpp.cf:
-	* config/linux/gcc.cf:
-	* config/os2/gcc.cf:
-	* config/win32/gcc.cf:
-	* config/win32/msvc.cf:
-	One more modification: the DB drivers must be linked against only
-	when the Makefile specifies linking against the rdd
-	library. Otherwise, other binaries such as the Harbour compiler
-	would try to link against the DB drivers.
+        * config/dos/djgpp.cf:
+        * config/linux/gcc.cf:
+        * config/os2/gcc.cf:
+        * config/win32/gcc.cf:
+        * config/win32/msvc.cf:
+        One more modification: the DB drivers must be linked against only
+        when the Makefile specifies linking against the rdd
+        library. Otherwise, other binaries such as the Harbour compiler
+        would try to link against the DB drivers.
 
 Thu Jul 29 15:58:44 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/rdd/Makefile:
-	* source/rdd/nulsys/Makefile:
-	Bruno Cantero pointed out that a user may use all of the DB
-	drivers simultaneously, so I got rid of the environment variable
-	and made sure all of the valid DB drivers are linked against the
-	application. On of the valid drivers is nulsys.
+        * source/rdd/Makefile:
+        * source/rdd/nulsys/Makefile:
+        Bruno Cantero pointed out that a user may use all of the DB
+        drivers simultaneously, so I got rid of the environment variable
+        and made sure all of the valid DB drivers are linked against the
+        application. On of the valid drivers is nulsys.
 
-	* config/global.cf:
-	Now a list of all the valid DB drivers is stored in
-	HB_DB_DRIVERS.
+        * config/global.cf:
+        Now a list of all the valid DB drivers is stored in
+        HB_DB_DRIVERS.
 
-	* config/dos/djgpp.cf:
-	* config/linux/gcc.cf:
-	* config/os2/gcc.cf:
-	* config/win32/gcc.cf:
-	* config/win32/msvc.cf:
-	Deleted support for environment variable HB_DB_DRIVER.
-	Added support for make variable HB_DB_DRIVERS.
+        * config/dos/djgpp.cf:
+        * config/linux/gcc.cf:
+        * config/os2/gcc.cf:
+        * config/win32/gcc.cf:
+        * config/win32/msvc.cf:
+        Deleted support for environment variable HB_DB_DRIVER.
+        Added support for make variable HB_DB_DRIVERS.
 
 Thu Jul 29 14:46:51 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/rdd/Makefile:
-	* source/rdd/dbfntx/Makefile:
-	Now there is a subdirectory for each database driver. For now,
-	only dbfntx/ is supported. The Makefile in rdd/ walks into each
-	subdirectory.
+        * source/rdd/Makefile:
+        * source/rdd/dbfntx/Makefile:
+        Now there is a subdirectory for each database driver. For now,
+        only dbfntx/ is supported. The Makefile in rdd/ walks into each
+        subdirectory.
 
-	* source/rdd/dbfntx0.prg:
-	* source/rdd/dbfntx1.c:
-	* source/rdd/dbfntx/dbfntx0.prg:
-	* source/rdd/dbfntx/dbfntx1.c:
-	Moved these files from rdd/ to rdd/dbfntx/.
+        * source/rdd/dbfntx0.prg:
+        * source/rdd/dbfntx1.c:
+        * source/rdd/dbfntx/dbfntx0.prg:
+        * source/rdd/dbfntx/dbfntx1.c:
+        Moved these files from rdd/ to rdd/dbfntx/.
 
-	* config/bin.cf:
-	* config/dir.cf:
-	* config/header.cf:
-	* config/lib.cf:
-	* config/test.cf:
-	* config/dos/djgpp.cf:
-	* config/linux/gcc.cf:
-	* config/os2/gcc.cf:
-	* config/win32/gcc.cf:
-	* config/win32/msvc.cf:
-	Added support for the new separate directories for the database
-	driver. The user must define an environment variable HB_DB_DRIVER
-	with the appropriate driver he wants to use. For example, defining
-	it to 'dbfntx' will pick up that driver.
+        * config/bin.cf:
+        * config/dir.cf:
+        * config/header.cf:
+        * config/lib.cf:
+        * config/test.cf:
+        * config/dos/djgpp.cf:
+        * config/linux/gcc.cf:
+        * config/os2/gcc.cf:
+        * config/win32/gcc.cf:
+        * config/win32/msvc.cf:
+        Added support for the new separate directories for the database
+        driver. The user must define an environment variable HB_DB_DRIVER
+        with the appropriate driver he wants to use. For example, defining
+        it to 'dbfntx' will pick up that driver.
 
 19990729-18:39 CET Victor Szel <info@szelvesz.hu>
   - source/rdd/dbcmd.c
@@ -608,15 +616,15 @@ Thu Jul 29 14:46:51 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Wed Jul 28 11:54:06 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/rtl/dir.c:
-	Fixed a typo: #if define(USE_NT) => #if defined(USE_NT).
+        * source/rtl/dir.c:
+        Fixed a typo: #if define(USE_NT) => #if defined(USE_NT).
 
-	* source/rtl/inkey.c:
-	Added an include of <mingw32/conio.h> when compiling with gcc.
+        * source/rtl/inkey.c:
+        Added an include of <mingw32/conio.h> when compiling with gcc.
 
-	* include/Makefile:
-	* tests/working/Makefile:
-	Updated list of files.
+        * include/Makefile:
+        * tests/working/Makefile:
+        Updated list of files.
 
 19990728-14:30 CET Eddie Runia <eddie@runia.com>
   * source/rtl/dir.c
@@ -752,8 +760,8 @@ Wed Jul 28 11:54:06 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     *source/rtl/natmsg/msgspa.c
     *source/rtl/natmsg/msguk.c
     *source/rtl/natmsg/msgyu852.c
-	* corrected bug in hb_ErrorNetDescription
-	(was "<=" instead of "<" ;-)
+        * corrected bug in hb_ErrorNetDescription
+        (was "<=" instead of "<" ;-)
 
 19990727-19:48 GMT+1 Bruno Cantero <bruno@issnet.net>
    * source/rdd/dbcmd.c
@@ -917,10 +925,10 @@ Wed Jul 28 11:54:06 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Mon Jul 26 11:42:11 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* include/Makefile:
-	* source/rdd/Makefile:
-	* tests/working/Makefile:
-	Updated file lists.
+        * include/Makefile:
+        * source/rdd/Makefile:
+        * tests/working/Makefile:
+        Updated file lists.
 
 19990726-13:20 CET Victor Szel <info@szelvesz.hu>
    + source/rtl/gtapi.c
@@ -1229,27 +1237,27 @@ Mon Jul 26 11:42:11 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 19990722-16:30 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
-	* symbol names are no longer released for the second time
-	 (it caused that DJGPP hanged in 'free' function)
+        * symbol names are no longer released for the second time
+         (it caused that DJGPP hanged in 'free' function)
 
     *source/hbpp/makefile
-	+ added preproc.c
+        + added preproc.c
 
     *source/hbpp/harb.h
-	- changed to definie LONG and ULONG typedefs if there is no
-	 HB_DEFS_H_ defined (these typedefs are defined in hbdefs.h)
+        - changed to definie LONG and ULONG typedefs if there is no
+         HB_DEFS_H_ defined (these typedefs are defined in hbdefs.h)
 
     *source/hbpp/preproc.c
-	- removed nested /* */
+        - removed nested /* */
 
     *tests/working/Makefile
-	- removed statics1.prg and statics2.prg because these file have to
-	 be linked together into an executable (we should change Makefile
-	 architecture to support it)
-	- removed testpre.prg (it requires hbpp library however this library
-	 cannot be linked because of duplicated symbol 'hb_strAt' defined
-	 in rtl library also) -the changes in source/hbpp/*.c was an attempt
-	 to get it working.
+        - removed statics1.prg and statics2.prg because these file have to
+         be linked together into an executable (we should change Makefile
+         architecture to support it)
+        - removed testpre.prg (it requires hbpp library however this library
+         cannot be linked because of duplicated symbol 'hb_strAt' defined
+         in rtl library also) -the changes in source/hbpp/*.c was an attempt
+         to get it working.
 
 19990722-14:30 CET Matthew Hamilton
   * tests/working/inifiles.prg
@@ -1273,17 +1281,17 @@ Mon Jul 26 11:42:11 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
         * changed GetDynSym to hb_GetDynSym
         * changed NewDynSym to hb_NewDynSym
         * changed FindDynSym to hb_FindDynSym
-	+ added initialization of hMemvar and hArea
+        + added initialization of hMemvar and hArea
 
     *source/vm/hvm.c
         * changed GetDynSym to hb_GetDynSym
         * changed NewDynSym to hb_NewDynSym
         * changed FindDynSym to hb_FindDynSym
         + added support for PUBLIC and PRIVATE variables and PARAMETERS
-	  (not finished yet)
+          (not finished yet)
 
     *include/extend.h
-	* changed definition of DYNSYM
+        * changed definition of DYNSYM
         + added definition of VS_MEMVAR, VS_PUBLIC, VS_PRIVATE
 
     *include/init.h
@@ -1291,7 +1299,7 @@ Mon Jul 26 11:42:11 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
           at this moment)
 
     *config/dos/watcom.cf
-	* changed to not link and lib in no case exact mode
+        * changed to not link and lib in no case exact mode
 
     *include/pcode.h
         - removed unused opcode HB_P_DEFSTATIC
@@ -1305,31 +1313,31 @@ Mon Jul 26 11:42:11 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
         + added support for PUBLIC and PRIVATE statements
         + new __PUBLIC and __PRIVATE functions that can be accessed
           from PRG code to create memvar variables
-	+ support for PARAMETERS statement
+        + support for PARAMETERS statement
 
-	NOTE: It is still in development! There is something wrong with
-	reference counting (see tests/working/memvar.prg)
+        NOTE: It is still in development! There is something wrong with
+        reference counting (see tests/working/memvar.prg)
 
     *source/compiler/harbour.y
         + added support for PUBLIC and PRIVATE variables
-	+ added support for PARAMETERS statement
+        + added support for PARAMETERS statement
 
     *source/compiler/harbour.l
-	+ added full support for PUBLIC, PRIVATE and PARAMETERS
-	* LOCAL can now be used in abbreviated form
+        + added full support for PUBLIC, PRIVATE and PARAMETERS
+        * LOCAL can now be used in abbreviated form
 
     +tests/working/memvar.prg
         + tests memvar variables
-	 (NOTE: it can show unreleased memory blocks)
+         (NOTE: it can show unreleased memory blocks)
 
     *tests/working/Makefile
         + added memvar.prg
 
 Wed Jul 21 17:39:35 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* include/hbsetup.h:
-	Added Win32 as a case when CR/LF must be output for a new line to
-	appear on the screen.
+        * include/hbsetup.h:
+        Added Win32 as a case when CR/LF must be output for a new line to
+        appear on the screen.
 
 19990721-22:36 CET Patrick Mast <harbour@PatrickMast.com>
   * Makefile.vc errorsys compiles with /iinclude now
@@ -1340,22 +1348,22 @@ Wed Jul 21 17:39:35 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Wed Jul 21 15:36:04 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/compiler/harbour.y:
-	Moved printing the "build..." message after the command line
-	arguments have been checked, so that if the user specifies -q, it
-	is not shown.
+        * source/compiler/harbour.y:
+        Moved printing the "build..." message after the command line
+        arguments have been checked, so that if the user specifies -q, it
+        is not shown.
 
-	* source/vm/hvm.c:
-	Got rid of a couple of warnings.
+        * source/vm/hvm.c:
+        Got rid of a couple of warnings.
 
-	* include/Makefile:
-	* tests/working/Makefile:
-	Updates list of files.
+        * include/Makefile:
+        * tests/working/Makefile:
+        Updates list of files.
 
-	* include/init.h:
-	* include/initsymb.h:
-	* source/hbpp/preproc.c:
-	Updated use of RCS Id keyword.
+        * include/init.h:
+        * include/initsymb.h:
+        * source/hbpp/preproc.c:
+        Updated use of RCS Id keyword.
 
 19990721-18:39 GMT+1 Paul Tucker / Bruno Cantero <bruno@issnet.net>
   * source/compiler/harbour.y
@@ -1740,15 +1748,15 @@ Wed Jul 21 15:36:04 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Fri Jul 16 17:53:35 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/rtl/gt/gtwin.c:
-	Added the possibility to log everything to a file; this made it
-	possible for me to find out what was wrong with GTwin (which is,
-	noone was calling gtInit()).
-	
-	* source/rtl/console.c:
-	Call gtInit() as the first console initialization. This finally
-	made it possible to have a working GT on Win32 with gcc (it should
-	work with other compilers too).
+        * source/rtl/gt/gtwin.c:
+        Added the possibility to log everything to a file; this made it
+        possible for me to find out what was wrong with GTwin (which is,
+        noone was calling gtInit()).
+
+        * source/rtl/console.c:
+        Call gtInit() as the first console initialization. This finally
+        made it possible to have a working GT on Win32 with gcc (it should
+        work with other compilers too).
 
 19990716-20:43 Alexander Kresin
   * source\hbpp\hbpp.c

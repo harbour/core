@@ -49,19 +49,19 @@
 #include "hberrors.h"
 
 int Hp_Parse( FILE*, FILE* );
-int ParseDirective( char* );
-int ParseDefine( char* );
-DEFINES* AddDefine ( char*, char* );
-int ParseUndef( char* );
-int ParseIfdef( char*, int);
-int ParseCommand( char*, int, int );
-int ConvertPatterns ( char*, int, char*, int );
-void AddCommand ( char * );
-void AddTranslate ( char * );
+int ParseDirective( char* );                    /* Parsing preprocessor directives ( #... ) */
+int ParseDefine( char* );                       /* Process #define directive */
+DEFINES* AddDefine ( char*, char* );            /* Add new #define to a linked list */
+int ParseUndef( char* );                        /* Process #undef directive */
+int ParseIfdef( char*, int);                    /* Process #ifdef directive */
+int ParseCommand( char*, int, int );            /* Process #command or #translate directive */
+int ConvertPatterns ( char*, int, char*, int ); /* Converting result pattern in #command and #translate */
+void AddCommand ( char * );                     /* Add new #command to an array  */
+void AddTranslate ( char * );                   /* Add new #translate to an array  */
 COMMANDS* getCommand ( int );
-int ParseExpression( char*, char* );
-int WorkDefine ( char**, char**, DEFINES *, int );
-void WorkPseudoF ( char**, char**, DEFINES*);
+int ParseExpression( char*, char* );            /* Parsing a line ( without preprocessor directive ) */
+int WorkDefine ( char**, char**, DEFINES *, int ); /* Replace fragment of code with a #defined result text */
+void WorkPseudoF ( char**, char**, DEFINES*);   /* Replace pseudofunction with a #defined result text */
 int WorkCommand ( char*, char*, char*, int);
 int CommandStuff ( char *, char *, char *, int*, int );
 int WorkTranslate ( char*, char*, char*, int, int* );
@@ -149,10 +149,12 @@ int ParseDirective( char* sLine )
    int i;
    FILE* handl_i;
 
-   i = NextWord( &sLine, sDirective, TRUE );
+   i = NextName( &sLine, sDirective, NULL );
+   stroupper( sDirective );
+
    SKIPTABSPACES(sLine);
 
-   if ( i == 4 && memcmp ( sDirective, "else", 4 ) == 0 )
+   if ( i == 4 && memcmp ( sDirective, "ELSE", 4 ) == 0 )
    {     /* ---  #else  --- */
      if ( nCondCompile == 0 )
        GenError( _szPErrors, 'P', ERR_DIRECTIVE_ELSE, NULL, NULL );
@@ -160,22 +162,22 @@ int ParseDirective( char* sLine )
        aCondCompile[nCondCompile-1] = 1 - aCondCompile[nCondCompile-1];
    }
 
-   else if ( i == 5 && memcmp ( sDirective, "endif", 5 ) == 0 )
+   else if ( i == 5 && memcmp ( sDirective, "ENDIF", 5 ) == 0 )
    {     /* --- #endif  --- */
      if ( nCondCompile == 0 )
        GenError( _szPErrors, 'P', ERR_DIRECTIVE_ENDIF, NULL, NULL );
      else nCondCompile--;
    }
 
-   else if ( i == 5 && memcmp ( sDirective, "ifdef", 5 ) == 0 )
+   else if ( i == 5 && memcmp ( sDirective, "IFDEF", 5 ) == 0 )
      ParseIfdef ( sLine, TRUE ); /* --- #ifdef  --- */
 
-   else if ( i == 6 && memcmp ( sDirective, "ifndef", 6 ) == 0 )
+   else if ( i == 6 && memcmp ( sDirective, "IFNDEF", 6 ) == 0 )
      ParseIfdef ( sLine, FALSE ); /* --- #ifndef  --- */
 
    else if ( nCondCompile==0 || aCondCompile[nCondCompile-1])
  {
-  if ( i == 7 && memcmp ( sDirective, "include", 7 ) == 0 )
+  if ( i == 7 && memcmp ( sDirective, "INCLUDE", 7 ) == 0 )
   {    /* --- #include --- */
    char cDelimChar;
 
@@ -201,31 +203,31 @@ int ParseDirective( char* sLine )
    fclose(handl_i);
   }
 
-  else if ( i == 6 && memcmp ( sDirective, "define", 6 ) == 0 )
+  else if ( i == 6 && memcmp ( sDirective, "DEFINE", 6 ) == 0 )
    ParseDefine ( sLine );   /* --- #define  --- */
 
-  else if ( i == 5 && memcmp ( sDirective, "undef", 5 ) == 0 )
+  else if ( i == 5 && memcmp ( sDirective, "UNDEF", 5 ) == 0 )
    ParseUndef ( sLine );    /* --- #undef  --- */
 
-  else if ( (i == 7 && memcmp ( sDirective, "command", 7 ) == 0) ||
-            (i == 8 && memcmp ( sDirective, "xcommand", 8 ) == 0) )
+  else if ( (i == 7 && memcmp ( sDirective, "COMMAND", 7 ) == 0) ||
+            (i == 8 && memcmp ( sDirective, "XCOMMAND", 8 ) == 0) )
                                 /* --- #command  --- */
    ParseCommand ( sLine, (i==7)? FALSE:TRUE, TRUE );
 
-  else if ( (i == 9 && memcmp ( sDirective, "translate", 9 ) == 0) ||
-            (i == 10 && memcmp ( sDirective, "xtranslate", 10 ) == 0) )
+  else if ( (i == 9 && memcmp ( sDirective, "TRANSLATE", 9 ) == 0) ||
+            (i == 10 && memcmp ( sDirective, "XTRANSLATE", 10 ) == 0) )
                                 /* --- #translate  --- */
    ParseCommand ( sLine, (i==9)? FALSE:TRUE, FALSE );
 
-  else if ( i == 6 && memcmp ( sDirective, "stdout", 6 ) == 0 )
+  else if ( i == 6 && memcmp ( sDirective, "STDOUT", 6 ) == 0 )
    printf ( "%s", sLine ); /* --- #stdout  --- */
 
-  else if ( i == 5 && memcmp ( sDirective, "error", 5 ) == 0 )
+  else if ( i == 5 && memcmp ( sDirective, "ERROR", 5 ) == 0 )
   {                        /* --- #error  --- */
    printf ( "\n#error: %s\n", sLine );
    exit(1);
   }
-  else if ( i == 4 && memcmp ( sDirective, "line", 4 ) == 0 )
+  else if ( i == 4 && memcmp ( sDirective, "LINE", 4 ) == 0 )
     return -1;
   else GenError( _szPErrors, 'P', ERR_WRONG_DIRECTIVE, sDirective, NULL );
  }
@@ -422,78 +424,93 @@ int ParseCommand( char* sLine, int com_or_xcom, int com_or_tra )
  return 0;
 }
 
+/* ConvertPatterns()
+ * Converts result pattern in #command and #translate to inner format
+ */
+
 int ConvertPatterns ( char *mpatt, int mlen, char *rpatt, int rlen )
 {
- int i = 0, ipos, ifou;
- int explen,rmlen;
- char exppatt[MAX_NAME], expreal[5] = "\1  0";
- char lastchar = '@', exptype;
- char *ptr;
+   int i = 0, ipos, ifou;
+   int explen,rmlen;
+   char exppatt[MAX_NAME], expreal[5] = "\1  0";
+   char lastchar = '@', exptype;
+   char *ptr;
 
- while ( *(mpatt+i) != '\0' )
- {
-  if ( *(mpatt+i) == '<' )
-  {  /* Drag match marker, determine it type */
-   explen = 0; ipos = i; i++; exptype = '0';
-   if ( *(mpatt+i) == '*' ) { exptype = '3'; i++; }
-   else if ( *(mpatt+i) == '(' ) { exptype = '4'; i++; }
-   while ( *(mpatt+i) != '>' )
+   while ( *(mpatt+i) != '\0' )
    {
-    if ( *(mpatt+i) == ',' )
-    {
-     exptype = '1';
-     while ( *(mpatt+i) != '>' ) i++;
-     break;
-    }
-    else if ( *(mpatt+i) == ':' ) { exptype = '2'; break; }
-    *(exppatt+explen++) = *(mpatt+i++);
-   }
-   if ( exptype == '3' )
-   {
-     if ( *(exppatt+explen-1) == '*' ) explen--;
-     else GenError( _szPErrors, 'P', ERR_PATTERN_DEFINITION, NULL, NULL );
-   }
-   else if ( exptype == '4' )
-   {
-     if ( *(exppatt+explen-1) == ')' ) explen--;
-     else GenError( _szPErrors, 'P', ERR_PATTERN_DEFINITION, NULL, NULL );
-   }
-   rmlen = i - ipos + 1;
-     /* Replace match marker with new marker */
-   lastchar = (char) ( (unsigned int)lastchar + 1 );
-   expreal[1] = lastchar;
-   expreal[2] = exptype;
-   pp_Stuff ( expreal, mpatt+ipos, 4, rmlen, mlen );
-   mlen += 4 - rmlen; i += 4 - rmlen;
+     if ( *(mpatt+i) == '<' )
+     {  /* Drag match marker, determine it type */
+       explen = 0; ipos = i; i++; exptype = '0';
+       if ( *(mpatt+i) == '*' )
+         { exptype = '3'; i++; }
+       else if ( *(mpatt+i) == '(' )
+         { exptype = '4'; i++; }
+       while ( *(mpatt+i) != '>' )
+       {
+         if ( *(mpatt+i) == ',' )
+         {
+           exptype = '1';
+           while ( *(mpatt+i) != '>' ) i++;
+           break;
+         }
+         else if ( *(mpatt+i) == ':' )
+           { exptype = '2'; break; }
+         *(exppatt+explen++) = *(mpatt+i++);
+       }
+       if ( exptype == '3' )
+       {
+         if ( *(exppatt+explen-1) == '*' ) explen--;
+         else
+           GenError( _szPErrors, 'P', ERR_PATTERN_DEFINITION, NULL, NULL );
+       }
+       else if ( exptype == '4' )
+       {
+         if ( *(exppatt+explen-1) == ')' ) explen--;
+         else
+           GenError( _szPErrors, 'P', ERR_PATTERN_DEFINITION, NULL, NULL );
+       }
+       rmlen = i - ipos + 1;
+          /* Convert match marker into inner format */
+       lastchar = (char) ( (unsigned int)lastchar + 1 );
+       expreal[1] = lastchar;
+       expreal[2] = exptype;
+       pp_Stuff ( expreal, mpatt+ipos, 4, rmlen, mlen );
+       mlen += 4 - rmlen; i += 4 - rmlen;
 
-   ptr = rpatt;
-   while ( (ifou = pp_strAt( exppatt, explen, ptr, rlen-(ptr-rpatt) )) > 0 )
-   {
-    ptr += ifou;
-    if ( *(ptr-2) == '<' && *(ptr+explen-1) == '>' )
-    {
-     if ( *(ptr-3) == '#' ) { exptype = '1'; ptr -= 3; rmlen = explen+3; }
-     else { exptype = '0'; ptr -= 2; rmlen = explen+2; }
-    }
-    else if ( *(ptr-3) == '<' && *(ptr+explen) == '>' )
-    {
-     ptr -= 2;
-     if ( *ptr == '\"' ) exptype = '2';
-     else if ( *ptr == '(' ) exptype = '3';
-     else if ( *ptr == '{' ) exptype = '4';
-     else if ( *ptr == '.' ) exptype = '5';
-     ptr--;
-     rmlen = explen+4;
-    }
-    else continue;
-    expreal[2] = exptype;
-    pp_Stuff ( expreal, ptr, 4, rmlen, rlen );
-    rlen += 4 - rmlen;
+          /* Look for appropriate result markers */
+       ptr = rpatt;
+       while ( (ifou = pp_strAt( exppatt, explen, ptr, rlen-(ptr-rpatt) )) > 0 )
+       {
+          /* Convert result marker into inner format */
+         ptr += ifou;
+         if ( *(ptr-2) == '<' && *(ptr+explen-1) == '>' &&
+               *(ptr-3) != '\\'  && *(ptr+explen-2) != '\\' )  /* <...> */
+         {
+           if ( *(ptr-3) == '#' && *(ptr-4) != '\\' )          /* #<...> */
+             { exptype = '1'; ptr -= 3; rmlen = explen+3; }
+           else
+             { exptype = '0'; ptr -= 2; rmlen = explen+2; }
+         }
+         else if ( *(ptr-3) == '<' && *(ptr+explen) == '>' &&
+               *(ptr-4) != '\\' && *(ptr+explen-1) != '\\' )   /* < ... > */
+         {
+           ptr -= 2;
+           if ( *ptr == '\"' ) exptype = '2';
+           else if ( *ptr == '(' ) exptype = '3';
+           else if ( *ptr == '{' ) exptype = '4';
+           else if ( *ptr == '.' ) exptype = '5';
+           ptr--;
+           rmlen = explen+4;
+         }
+         else continue;
+         expreal[2] = exptype;
+         pp_Stuff ( expreal, ptr, 4, rmlen, rlen );
+         rlen += 4 - rmlen;
+       }
+     }
+     i++;
    }
-  }
-  i++;
- }
- return 0;
+   return 0;
 }
 
 void AddCommand ( char *cmdname )
@@ -528,7 +545,7 @@ int ParseExpression( char* sLine, char* sOutLine )
   char sToken[MAX_NAME];
   char *ptri, *ptro;
   int lenToken, i, ndef, ipos, isdvig, lens;
-  int rezDef, rezDefsub, rezCom, kolpass = 0;
+  int rezDef, rezDefsub, rezTra, rezCom, kolpass = 0;
   int kolused = 0, lastused;
   DEFINES *aUsed[100], *stdef;
 
@@ -536,7 +553,7 @@ int ParseExpression( char* sLine, char* sOutLine )
   {
     strotrim ( sLine );
     ptri = sLine; ptro = sOutLine;
-    rezDef = 0; rezCom = 0;
+    rezDef = 0; rezTra = 0; rezCom = 0;
     lastused = kolused;
     isdvig = 0;
     do
@@ -604,6 +621,7 @@ int ParseExpression( char* sLine, char* sOutLine )
               ptri -= lenToken;
               if ( ipos > 0 )  *(sLine+isdvig+ipos-1) = ';';
               pp_Stuff( ptro, ptri, i, lens+lenToken, strolen(ptri) );
+              rezTra = 1;
               if ( ipos > 0 )
               {
                 ipos += i - lens - lenToken;
@@ -622,7 +640,8 @@ int ParseExpression( char* sLine, char* sOutLine )
           else
           {
             i = 0;
-            while ( *ptri != ' ' && *ptri != '\t' && *ptri != '\0' && !ISNAME(*ptri) )
+            while ( *ptri != ' ' && *ptri != '\t' && *ptri != '\0' &&
+              *ptri != '\"' && *ptri != '\'' && *ptri != '(' && !ISNAME(*ptri) )
             {
               *(sToken+i) = *ptri++;
               i++;
@@ -653,13 +672,14 @@ int ParseExpression( char* sLine, char* sOutLine )
           }
           else if ( ipos > 0 ) *(sLine+isdvig+ipos-1) = ';';
         }
+        else if ( ipos > 0 ) *(sLine+isdvig+ipos-1) = ';';
       }
       isdvig += ipos;
     }
     while ( ipos != 0 );
     kolpass++;
   }
-  while ( rezDef || rezCom );
+  while ( rezDef || rezTra || rezCom );
 
  return 0;
 }
@@ -807,84 +827,124 @@ int WorkTranslate ( char* sToken, char* ptri, char* ptro, int ndef, int *lens )
 
 int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int com_or_tra )
 {
- int nbr = 0, endTranslation = FALSE;
- char *lastopti[2];
- char *ptri = inputLine, *ptr;
+  int nbr = 0, endTranslation = FALSE;
+  char *lastopti[2];
+  char *ptri = inputLine, *ptr;
+  int State = STATE_INIT, lDirective = FALSE;
 
   SKIPTABSPACES( ptri );
   if ( ptrmp == NULL ) { if ( *ptri != '\0' ) return -1; }
   else
-   while ( *ptri != '\0' && !endTranslation )
-   {
-     SKIPTABSPACES( ptrmp );
-     SKIPTABSPACES( ptri );
-     switch ( *ptrmp ) {
-      case '[':
-       nbr++;
-       lastopti[Repeate++] = ptrmp;
-       ptrmp++;
-       break;
-      case ']':
-        if ( Repeate ) { Repeate--; ptrmp = lastopti[Repeate]; nbr--; }
-        else { nbr--; ptrmp++; }
-        break;
-      case ',':
-       if ( *ptri == ',' ) { ptrmp++; ptri++; }
-       else
-       {
-        if ( nbr )
-        {
-          SkipOptional( &ptrmp, ptro, lenres, &nbr);
-        }
-        else return -1;
-       }
-       break;
-      case '\1':  /*  Match marker */
-       if ( !WorkMarkers( &ptrmp, &ptri, ptro, lenres, nbr ) )
-       {
-         if ( nbr )
+    while ( *ptri != '\0' && !endTranslation )
+    {
+      SKIPTABSPACES( ptrmp );
+      SKIPTABSPACES( ptri );
+      switch ( *ptrmp ) {
+       case '[':
+         nbr++;
+         lastopti[Repeate++] = ptrmp;
+         ptrmp++;
+         break;
+       case ']':
+         if ( Repeate )
+           { Repeate--; ptrmp = lastopti[Repeate]; nbr--; }
+         else { nbr--; ptrmp++; }
+         break;
+       case ',':
+         if ( *ptri == ',' ) { ptrmp++; ptri++; }
+         else
          {
-           SkipOptional( &ptrmp, ptro, lenres, &nbr);
+           if ( nbr )
+           {
+             SkipOptional( &ptrmp, ptro, lenres, &nbr);
+           }
+           else return -1;
          }
-         else return -1;
-       }
-       break;
-      case '\0':
-       if ( com_or_tra ) return -1; else endTranslation = TRUE;
-       break;
-      default:    /*   Key word    */
-       ptr = ptrmp;
-       if ( *ptri == ',' || strincmp(ptri, &ptrmp ) )
-       {
-        if ( nbr )
-        {
-           SkipOptional( &ptrmp, ptro, lenres, &nbr);
-        }
-        else return -1;
-       }
-       else if ( *ptri != ',' ) ptri += (ptrmp - ptr);
-     }
-   };
+         break;
+       case '\1':  /*  Match marker */
+         if ( !WorkMarkers( &ptrmp, &ptri, ptro, lenres, nbr ) )
+         {
+           if ( nbr )
+           {
+             SkipOptional( &ptrmp, ptro, lenres, &nbr);
+           }
+           else return -1;
+         }
+         break;
+       case '\0':
+         if ( com_or_tra )
+           return -1;
+         else endTranslation = TRUE;
+         break;
+       default:    /*   Key word    */
+         ptr = ptrmp;
+         if ( *ptri == ',' || strincmp(ptri, &ptrmp ) )
+         {
+           if ( nbr )
+           {
+              SkipOptional( &ptrmp, ptro, lenres, &nbr);
+           }
+           else return -1;
+         }
+         else if ( *ptri != ',' ) ptri += (ptrmp - ptr);
+      }
+    };
 
   if ( *ptrmp != '\0' )
   {
-   if ( Repeate ) { Repeate = 0; ptrmp = lastopti[0]; }
-   do
-   {
-    SKIPTABSPACES( ptrmp );
-    if ( *ptrmp != '\0' )
-     switch ( *ptrmp ) {
-      case '[':
-       ptrmp++;
-       SkipOptional( &ptrmp, ptro, lenres, NULL);
-       ptrmp++;
-       break;
-      case ']': ptrmp++; break;
-      default:
-       return -1;
-     }
-   }
-   while ( *ptrmp != '\0' );
+    if ( Repeate ) { Repeate = 0; ptrmp = lastopti[0]; }
+    do
+    {
+      SKIPTABSPACES( ptrmp );
+      if ( *ptrmp != '\0' )
+        switch ( *ptrmp ) {
+          case '[':
+            ptrmp++;
+            SkipOptional( &ptrmp, ptro, lenres, NULL);
+            ptrmp++;
+            break;
+          case ']': ptrmp++; break;
+          default:
+            return -1;
+        }
+    }
+    while ( *ptrmp != '\0' );
+  }
+
+  ptr = ptro;    /* Removing '\' from result string */
+  while( *ptr != '\0' )
+  {
+    switch( State ) {
+      case STATE_INIT:
+        if( *ptr != ' ' && *ptr != '\t' ) State = STATE_NORMAL;
+        if( *ptr == '#' )  lDirective = TRUE;
+      case STATE_NORMAL:
+        if( *ptr == '\'' )  State = STATE_QUOTE1;
+        else if( *ptr == '\"' )  State = STATE_QUOTE2;
+        else if( *ptr == ';' )
+        {
+          State = STATE_INIT;
+          lDirective = FALSE;
+        }
+        else if( !lDirective )
+        {
+          if( *ptr == '\\' && ( *(ptr+1) == '[' || *(ptr+1) == ']' ||
+               *(ptr+1) == '{' || *(ptr+1) == '}' || *(ptr+1) == '<' ||
+               *(ptr+1) == '>' ) )
+          {
+            pp_Stuff ( "", ptr, 0, 1, *lenres - (ptr - ptro) );
+            (*lenres)--;
+          }
+        }
+        break;
+      case STATE_QUOTE1:
+        if( *ptr == '\'' )  State = STATE_NORMAL;
+        break;
+      case STATE_QUOTE2:
+        if( *ptr == '\"' )  State = STATE_NORMAL;
+        break;
+    }
+    ptr++;
   }
   if ( com_or_tra ) return 1; else return (ptri-inputLine);
 }
@@ -1022,6 +1082,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, int nbr )
         SearnRep( exppatt,"",0,ptro,lenres);
         return 0;
       }
+      else return 0;
    }
   }
   else if ( *(exppatt+2) == '1' )  /*  ---- list match marker  */
@@ -1075,7 +1136,7 @@ int getExpReal ( char *expreal, char **ptri, int prlist, int maxrez )
     case STATE_ID:
     case STATE_ID_END:
      if ( ( (ISNAME(**ptri) || **ptri=='\\') && State == STATE_ID_END ) ||
-          **ptri==',' || **ptri=='\'' || **ptri=='\"')
+          **ptri==',' || **ptri=='\'' || **ptri=='\"' || **ptri==')' )
      {
       if ( **ptri == ',' )
       {
@@ -1190,14 +1251,19 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
      kolmarkers = 0;
      while ( ptr >= ptrOut )
      {
-       if ( *ptr == '[' || *ptr == ']' ) break;
+       if ( (*ptr == '[' || *ptr == ']') && *(ptr-1) != '\\' ) break;
        if  ( *ptr == '\1' ) kolmarkers++;
        ptr--;
      }
      if ( *ptr == '[' )
      {
        ptr2 = ptrOut + ifou + 3;
-       while ( *ptr2 != ']' ) { if ( *ptr2 == '\1' ) kolmarkers++; ptr2++; }
+       while ( *ptr2 != ']' && *(ptr-1) != '\\' )
+       {
+         if ( *ptr2 == '\1' ) kolmarkers++;
+         ptr2++;
+       }
+
        if ( Repeate && lenreal && kolmarkers && lastchar != '0' &&
                                              *(ptrOut + ifou + 2) == '0' )
        {
