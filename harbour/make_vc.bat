@@ -47,3 +47,4 @@ if "%OS%" == "Windows_NT" set MK_FILE=makefile.nt
    if exist make_vc.log  del make_vc.log
 
 :EXIT
+SET MK_FILE=
