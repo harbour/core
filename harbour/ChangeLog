@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     * added information about /g... compiler switches
+
+2002-03-05 21:25 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/debug/dbgtarr.prg
+     * some fixes on arrays debugging
 
    * source/rtl/persist.prg
      * some fixes on nested arrays recovering
