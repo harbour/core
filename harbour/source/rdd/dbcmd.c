@@ -399,6 +399,7 @@ static ERRCODE defclearRel( AREAP pArea )
          hb_xfree( lpdbRelPrev );
       }
       while( lpdbRelations );
+      pArea->lpdbRelations = NULL;
    }
    return SUCCESS;
 }
@@ -416,7 +417,7 @@ static ERRCODE defsetRel( AREAP pArea, LPDBRELINFO lpdbRelInf )
    }
    else
    {
-      while( ! lpdbRelations->lpdbriNext )
+      while( lpdbRelations->lpdbriNext )
          lpdbRelations = lpdbRelations->lpdbriNext;
       lpdbRelations->lpdbriNext = ( LPDBRELINFO ) hb_xgrab( sizeof( DBRELINFO ) );
       lpdbRelations = lpdbRelations->lpdbriNext;

@@ -1,3 +1,8 @@
+2000-08-21 15:18 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   *source/rdd/dbcmd.c
+     * fixed bugs, reported by Juergen Baez
+
+
 2000-08-17 12:18 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * include/hbver.h
