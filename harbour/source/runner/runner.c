@@ -125,7 +125,7 @@ HARBOUR HB_HB_RUN( void )
 
    PHB_SYMB pSymRead;                           /* Symbols read             */
    PDYNFUNC pDynFunc;                           /* Functions read           */
-   PDYNSYM  pDynSym;
+   PHB_DYNS pDynSym;
 
    if( hb_pcount() == 0 )
       printf( "\nPlease give HRB file name\n" );

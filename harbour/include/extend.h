@@ -40,7 +40,7 @@
    #include "fm.api"
 #endif
 
-struct _DYNSYM;         /* forward declaration */
+struct _HB_DYNS;         /* forward declaration */
 
 /* symbol support structure */
 typedef struct
@@ -48,40 +48,40 @@ typedef struct
    char*       szName;  /* the name of the symbol */
    SYMBOLSCOPE cScope;  /* the scope of the symbol */
    PHB_FUNC    pFunPtr; /* function address for function symbol table entries */
-   struct _DYNSYM * pDynSym;   /* pointer to its dynamic symbol if defined */
+   struct _HB_DYNS * pDynSym;   /* pointer to its dynamic symbol if defined */
 } HB_SYMB, * PHB_SYMB, * HB_SYMB_PTR;
 
-/* Harbour Functions scope */
-#define FS_PUBLIC       0
-#define FS_STATIC       2
-#define FS_INIT         8
-#define FS_EXIT        16
-#define FS_INITEXIT    ( FS_INIT | FS_EXIT )
-#define FS_MESSAGE     32
-#define FS_MEMVAR     128
+/* Harbour Functions scope (SYMBOLSCOPE) */
+#define FS_PUBLIC	0x00
+#define FS_STATIC       0x02
+#define FS_INIT         0x08
+#define FS_EXIT         0x10
+#define FS_INITEXIT     ( FS_INIT | FS_EXIT )
+#define FS_MESSAGE      0x20
+#define FS_MEMVAR       0x80
 
 extern void VirtualMachine( BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
 extern void ProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics symbols initialization */
 
 /* items types */
-#define IT_NIL       0x0000
-#define IT_INTEGER   0x0002
-#define IT_LONG      0x0008
-#define IT_DOUBLE    0x0010
-#define IT_DATE      0x0020
-#define IT_LOGICAL   0x0080
-#define IT_SYMBOL    0x0100
-#define IT_ALIAS     0x0200
-#define IT_STRING    0x0400
-#define IT_MEMOFLAG  0x0800
-#define IT_MEMO      ( IT_MEMOFLAG & IT_STRING )
-#define IT_BLOCK     0x1000
-#define IT_BYREF     0x2000
-#define IT_MEMVAR    0x4000
-#define IT_ARRAY     0x8000
-#define IT_OBJECT    IT_ARRAY
-#define IT_NUMERIC   ( IT_INTEGER | IT_LONG | IT_DOUBLE )
-#define IT_ANY       0xFFFF
+#define IT_NIL		0x0000
+#define IT_INTEGER	0x0002
+#define IT_LONG		0x0008
+#define IT_DOUBLE	0x0010
+#define IT_DATE     	0x0020
+#define IT_LOGICAL   	0x0080
+#define IT_SYMBOL    	0x0100
+#define IT_ALIAS     	0x0200
+#define IT_STRING    	0x0400
+#define IT_MEMOFLAG  	0x0800
+#define IT_MEMO      	( IT_MEMOFLAG & IT_STRING )
+#define IT_BLOCK     	0x1000
+#define IT_BYREF     	0x2000
+#define IT_MEMVAR    	0x4000
+#define IT_ARRAY     	0x8000
+#define IT_OBJECT    	IT_ARRAY
+#define IT_NUMERIC   	( IT_INTEGER | IT_LONG | IT_DOUBLE )
+#define IT_ANY       	0xFFFF
 
 /* forward declarations */
 struct _HB_CODEBLOCK;
@@ -214,18 +214,13 @@ typedef struct
 } STACK;
 
 /* dynamic symbol structure */
-typedef struct _DYNSYM
+typedef struct _HB_DYNS
 {
    HB_HANDLE hArea;       /* Workarea number */
    HB_HANDLE hMemvar;     /* Index number into memvars ( publics & privates ) array */
    PHB_SYMB  pSymbol;     /* pointer to its relative local symbol */
    PHB_FUNC  pFunPtr;     /* Pointer to the function address */
-} DYNSYM, * PDYNSYM, * DYNSYM_PTR;
-
-typedef struct
-{
-   PDYNSYM pDynSym;             /* Pointer to dynamic symbol */
-} DYNHB_ITEM, * PDYNHB_ITEM, * DYNHB_ITEM_PTR;
+} HB_DYNS, * PHB_DYNS, * HB_DYNS_PTR;
 
 /* internal structure for codeblocks */
 typedef struct _HB_CODEBLOCK
@@ -321,9 +316,9 @@ extern char *   hb_GetClassName( PHB_ITEM pObject ); /* retrieves an object clas
 extern ULONG    hb_isMessage( PHB_ITEM, char * );
 
 /* dynamic symbol table management */
-extern PDYNSYM  hb_GetDynSym( char * szName );    /* finds and creates a dynamic symbol if not found */
-extern PDYNSYM  hb_NewDynSym( PHB_SYMB pSymbol );  /* creates a new dynamic symbol based on a local one */
-extern PDYNSYM  hb_FindDynSym( char * szName );   /* finds a dynamic symbol */
+extern PHB_DYNS hb_GetDynSym( char * szName );    /* finds and creates a dynamic symbol if not found */
+extern PHB_DYNS hb_NewDynSym( PHB_SYMB pSymbol );  /* creates a new dynamic symbol based on a local one */
+extern PHB_DYNS hb_FindDynSym( char * szName );   /* finds a dynamic symbol */
 extern void     hb_LogDynSym( void );             /* displays all dynamic symbols */
 extern void     hb_ReleaseDynSym( void );         /* releases the memory of the dynamic symbol table */
 extern PHB_SYMB hb_NewSymbol( char * szName );

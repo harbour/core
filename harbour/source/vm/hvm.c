@@ -218,7 +218,7 @@ int main( int argc, char * argv[] )
 
 #ifdef HARBOUR_START_PROCEDURE
    {
-     PDYNSYM pDynSym =hb_FindDynSym( HARBOUR_START_PROCEDURE );
+     PHB_DYNS pDynSym =hb_FindDynSym( HARBOUR_START_PROCEDURE );
      if( pDynSym )
        pSymStart =pDynSym->pSymbol;
      else
@@ -926,12 +926,6 @@ void Equal( BOOL bExact )
 
    else
       PushLogical( 0 );
-}
-
-static void ForceLink( void )  /* To force the link of some functions */
-{
-   HB_ERRORSYS();
-   HB_ERRORNEW();
 }
 
 void ForTest( void )        /* Test to check the end point of the FOR */
@@ -2173,6 +2167,12 @@ void DoInitFunctions( int argc, char * argv[] )
    } while( pLastSymbols );
 }
 
+static void ForceLink( void )  /* To force the link of some functions */
+{
+   HB_ERRORSYS();
+   HB_ERRORNEW();
+}
+
 /* ----------------------------- */
 /* TODO: Put these to /source/rtl/?.c */
 
@@ -2256,7 +2256,7 @@ HARBOUR HB_VALTYPE( void )
 {
    PHB_ITEM pItem;
 
-   if( hb_pcount() )
+   if( hb_pcount() == 1 )
    {
       pItem = hb_param( 1, IT_ANY );
 
@@ -2298,7 +2298,10 @@ HARBOUR HB_VALTYPE( void )
       }
    }
    else
-      hb_retc( "U" );
+   {
+      /* QUESTION: Clipper catches this at compile time! */
+      hb_errorRT_BASE(EG_ARGCOUNT, 3000, NULL, "VALTYPE");
+   }
 }
 
 HARBOUR HB_ERRORBLOCK(void)

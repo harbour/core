@@ -45,6 +45,7 @@ PRG_SOURCES=\
         errorsys.prg \
 	menuto.prg \
         objfunc.prg \
+        readvar.prg \
         setkey.prg \
         tclass.prg \
         tget.prg \

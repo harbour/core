@@ -19,6 +19,7 @@ C_HEADERS=\
         hbpp.h       \
         hbsetup.h    \
         hbver.h      \
+        hb_vmpub.h   \
         init.h       \
         initsymc.h   \
         initsymd.h   \

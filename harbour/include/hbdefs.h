@@ -61,9 +61,9 @@ typedef int BOOL;
 #define FALSE  0
 #define TRUE   1
 
-#define LOBYTE(w)           ((BYTE)(w))
-#define HIBYTE(w)           ((BYTE)(((WORD)(w) >> 8) & 0xFF))
-#define LOWORD(l)           ((WORD)(l))
+#define LOBYTE(w)		((BYTE)(w))
+#define HIBYTE(w)		((BYTE)(((WORD)(w) >> 8) & 0xFF))
+#define LOWORD(l)		((WORD)(l))
 
 #endif /* HB_DONT_DEFINE_BASIC_TYPES */
 #endif /* __IBMCPP__ */
@@ -83,14 +83,15 @@ typedef int BOOL;
    #define HARBOUR void
    #define EXTERNAL_LINKAGE
 #else
-#ifdef __IBMCPP__
-   #define HARBOUR void
-   #define EXTERNAL_LINKAGE _LNK_CONV
-#else
-   #define HARBOUR void pascal
-   #define EXTERNAL_LINKAGE
+   #ifdef __IBMCPP__
+      #define HARBOUR void
+      #define EXTERNAL_LINKAGE _LNK_CONV
+   #else
+      #define HARBOUR void pascal
+      #define EXTERNAL_LINKAGE
+   #endif
 #endif
-#endif
+
 typedef HARBOUR ( * PHB_FUNC )( void );
 typedef PHB_FUNC HB_FUNC_PTR;
 

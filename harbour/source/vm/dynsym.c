@@ -30,6 +30,11 @@
 
 #define SYM_ALLOCATED   (-1)
 
+typedef struct
+{
+   PHB_DYNS pDynSym;             /* Pointer to dynamic symbol */
+} DYNHB_ITEM, * PDYNHB_ITEM, * DYNHB_ITEM_PTR;
+
 static PDYNHB_ITEM pDynItems = 0;              /* Pointer to dynamic items */
 static WORD        wDynSymbols = 0;     /* Number of symbols present */
 static WORD        wClosestDynSym = 0;
@@ -58,9 +63,9 @@ PHB_SYMB hb_NewSymbol( char * szName )      /* Create a new symbol */
    return pSymbol;
 }
 
-PDYNSYM hb_NewDynSym( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
+PHB_DYNS hb_NewDynSym( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
 {
-   PDYNSYM pDynSym = hb_FindDynSym( pSymbol->szName ); /* Find position */
+   PHB_DYNS pDynSym = hb_FindDynSym( pSymbol->szName ); /* Find position */
    WORD w;
 
    if( pDynSym )            /* If name exists */
@@ -87,7 +92,7 @@ PDYNSYM hb_NewDynSym( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
             memcpy( &pDynItems[ wDynSymbols - w ],
                     &pDynItems[ wDynSymbols - w - 1 ], sizeof( DYNHB_ITEM ) );
       }                                     /* Insert element in array */
-      pDynSym = ( PDYNSYM ) hb_xgrab( sizeof( DYNSYM ) );
+      pDynSym = ( PHB_DYNS ) hb_xgrab( sizeof( HB_DYNS ) );
       pDynItems[ wClosestDynSym ].pDynSym = pDynSym;    /* Enter DynSym */
    }
 
@@ -106,9 +111,9 @@ PDYNSYM hb_NewDynSym( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
    return pDynSym;
 }
 
-PDYNSYM hb_GetDynSym( char * szName )  /* finds and creates a symbol if not found */
+PHB_DYNS hb_GetDynSym( char * szName )  /* finds and creates a symbol if not found */
 {
-   PDYNSYM pDynSym;
+   PHB_DYNS pDynSym;
    char * szUprName = ( char * ) hb_xgrab( strlen( szName ) + 1 );
 
    strcpy( szUprName, szName ); /* make a copy as we may get a const string */
@@ -126,14 +131,14 @@ PDYNSYM hb_GetDynSym( char * szName )  /* finds and creates a symbol if not foun
    return pDynSym;
 }
 
-PDYNSYM hb_FindDynSym( char * szName )
+PHB_DYNS hb_FindDynSym( char * szName )
 {
    WORD wFirst = 0, wLast = wDynSymbols, wMiddle = wLast / 2;
 
    if( ! pDynItems )
    {
       pDynItems = ( PDYNHB_ITEM ) hb_xgrab( sizeof( DYNHB_ITEM ) );     /* Grab array */
-      pDynItems->pDynSym = ( PDYNSYM ) hb_xgrab( sizeof( DYNSYM ) );
+      pDynItems->pDynSym = ( PHB_DYNS ) hb_xgrab( sizeof( HB_DYNS ) );
                 /* Always grab a first symbol. Never an empty bucket. *<1>* */
       pDynItems->pDynSym->hMemvar = 0;
       pDynItems->pDynSym->pSymbol = 0;

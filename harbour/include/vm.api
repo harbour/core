@@ -14,19 +14,19 @@
 typedef void * HANDLE;
 
 /* Standard */
-#define _xvalloc(size, flags)        hb_xalloc(size)
-#define _xvfree(h)                   hb_xfree(h)
-#define _xvrealloc(h, size, flags)   hb_xrealloc(h, size)
-#define _xvlock(h)                   (h)
-#define _xvunlock(h)                 /* dummy */
+#define _xvalloc( size, flags )      hb_xalloc( size )
+#define _xvfree( h )                 hb_xfree( h )
+#define _xvrealloc( h, size, flags ) hb_xrealloc( h, size )
+#define _xvlock( h )                 ( h )
+#define _xvunlock( h )               /* dummy */
 
 /* Wire */
-#define _xvwire(h)                   (h)
-#define _xvunwire(h)                 /* dummy */
+#define _xvwire( h )                 ( h )
+#define _xvunwire( h )               /* dummy */
 
 /* State */
-#define _xvlockcount(h)              (0)
-#define _xvsize(h)                   hb_xsize(h)
+#define _xvlockcount( h )            (0)
+#define _xvsize( h )                 hb_xsize( h )
 
 /* -------------------------------------------------------- */
 /* Warning: Heap functionality is not supported by Harbour. */
@@ -34,12 +34,12 @@ typedef void * HANDLE;
 /* -------------------------------------------------------- */
 
 /* Heap */
-#define _xvheapnew(size)             (0)
-#define _xvheapdestroy(h)            /* dummy */
-#define _xvheapresize(h, size)       /* dummy */
-#define _xvheapalloc(h, size)        (0)
-#define _xvheapfree(h, offset)       /* dummy */
-#define _xvheaplock(h, offset)       (0)
-#define _xvheapunlock(h, offset)     /* dummy */
+#define _xvheapnew( size )           (0)
+#define _xvheapdestroy( h )          /* dummy */
+#define _xvheapresize( h, size )     /* dummy */
+#define _xvheapalloc( h, size )      (0)
+#define _xvheapfree( h, offset )     /* dummy */
+#define _xvheaplock( h, offset )     (0)
+#define _xvheapunlock( h, offset )   /* dummy */
 
 #endif /* HB_VM_API_ */

@@ -285,7 +285,7 @@ function achoice( nTop, nLft, nBtm, nRyt, acItems, xSelect, xUserFunc, nPos, nHi
 
          endif
 
-      case ( ( nKey == K_HOME ) .or. ( nKey == K_CTRL_PGUP ) ) .and. ( !lUserFunc )
+      case nKey == K_CTRL_PGUP .or. ( nKey == K_HOME .and. !lUserFunc )
          IF nPos == nFrstItem
             IF nAtTop == max( 1, nPos - nNumRows + 1 )
                nMode := AC_HITTOP
@@ -299,7 +299,7 @@ function achoice( nTop, nLft, nBtm, nRyt, acItems, xSelect, xUserFunc, nPos, nHi
             DispPage( acCopy, alSelect, nTop, nLft, nNumRows, nPos, nAtTop )
          endif
 
-      case ( ( nKey == K_END ) .or. ( nKey == K_CTRL_PGDN ) ) .and. ( !lUserFunc )
+      case nKey == K_CTRL_PGDN .or. ( nKey == K_END .and. !lUserFunc )
          IF nPos == nLastItem
             IF nAtTop == min( nLastItem, nItems - nNumRows + 1 )
                nMode := AC_HITBOTTOM

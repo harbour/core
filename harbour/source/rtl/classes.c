@@ -80,13 +80,13 @@ typedef struct
 #define BUCKET        4
 #define HASH_KEY      (BASE_METHODS / BUCKET)
 
-PCLASS  pClasses     = 0;
-WORD    wClasses     = 0;
-PMETHOD pMethod      = 0;
-PDYNSYM msgClassName = 0;
-PDYNSYM msgClassH    = 0;
-PDYNSYM msgEval      = 0;
-PDYNSYM msgClassSel  = 0;
+PCLASS   pClasses     = 0;
+WORD     wClasses     = 0;
+PMETHOD  pMethod      = 0;
+PHB_DYNS msgClassName = 0;
+PHB_DYNS msgClassH    = 0;
+PHB_DYNS msgEval      = 0;
+PHB_DYNS msgClassSel  = 0;
 
 /* All functions contained in classes.c */
 
@@ -190,7 +190,7 @@ HARBOUR HB_CLASSADD(void)
 
    PHB_ITEM pInit  = hb_param( 5, IT_ANY );
    PCLASS   pClass;
-   PDYNSYM  pMessage;
+   PHB_DYNS pMessage;
    PMETHOD  pNewMeth;
 
    if( wClass && wClass <= wClasses )
@@ -346,7 +346,7 @@ HARBOUR HB_CLASSDEL(void)
 {
    PHB_ITEM pString  = hb_param( 2, IT_STRING );
    PHB_SYMB pMessage = hb_GetDynSym( pString->item.asString.value )->pSymbol;
-   PDYNSYM  pMsg     = ( PDYNSYM ) pMessage->pDynSym;
+   PHB_DYNS pMsg     = pMessage->pDynSym;
    PCLASS   pClass;
 
    WORD     wClass   = hb_parni( 1 );
@@ -447,7 +447,7 @@ HARBOUR HB_CLASSMOD(void)
 {
    PHB_ITEM pString  = hb_param( 2, IT_STRING );
    PHB_SYMB pMessage = hb_GetDynSym( pString->item.asString.value )->pSymbol;
-   PDYNSYM  pMsg     = ( PDYNSYM ) pMessage->pDynSym;
+   PHB_DYNS pMsg     = pMessage->pDynSym;
    PCLASS   pClass;
 
    WORD     wClass   = hb_parni( 1 );
@@ -549,7 +549,7 @@ static HARBOUR ClassSel(void)
    WORD     wAt;
    WORD     wPos = 0;
    PCLASS   pClass;
-   PDYNSYM  pMessage;
+   PHB_DYNS pMessage;
    PHB_ITEM pReturn = hb_itemNew( NULL );
    PHB_ITEM pItem;
    PHB_ITEM pItemRef;
@@ -570,7 +570,7 @@ static HARBOUR ClassSel(void)
                                                 /* Create a transfer array  */
       for( wAt = 0; wAt < wLimit ; wAt++ )
       {
-         pMessage = (PDYNSYM) pClass->pMethods[ wAt ].pMessage;
+         pMessage = pClass->pMethods[ wAt ].pMessage;
          if( pMessage )                         /* Hash Entry used ?        */
          {
             pItem  = hb_itemPutC( NULL, pMessage->pSymbol->szName );
@@ -725,10 +725,10 @@ static HARBOUR GetData( void )
  */
 PHB_FUNC hb_GetMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
 {
-   WORD    wAt, wLimit, wMask;
-   WORD    wClass;
-   PCLASS  pClass;
-   PDYNSYM pMsg = ( PDYNSYM ) pMessage->pDynSym;
+   WORD     wAt, wLimit, wMask;
+   WORD     wClass;
+   PCLASS   pClass;
+   PHB_DYNS pMsg = pMessage->pDynSym;
 
    if( pObject->type == IT_OBJECT )
       wClass = pObject->item.asArray.value->wClass;
@@ -985,7 +985,7 @@ static HARBOUR Virtual( void )
 HARBOUR HB___INSTSUPER( void )
 {
    PHB_ITEM pString = hb_param( 1, IT_STRING );
-   PDYNSYM  pDynSym;
+   PHB_DYNS pDynSym;
    BYTE     bFound  = FALSE;
    WORD     w;
 

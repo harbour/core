@@ -42,7 +42,7 @@
 #define VS_PRIVATE     64
 #define VS_PUBLIC     128
 
-static PDYNSYM *_privateStack  = NULL;
+static PHB_DYNS * _privateStack  = NULL;
 static ULONG _privateStackSize = 0;
 static ULONG _privateStackCnt  = 0;
 static ULONG _privateStackBase = 0;
@@ -61,8 +61,8 @@ static HB_VALUE_PTR _globalTable = NULL;
 */
 
 static void hb_MemvarCreateFromItem( PHB_ITEM, BYTE, PHB_ITEM );
-static void hb_MemvarCreateFromDynSymbol( PDYNSYM, BYTE, PHB_ITEM );
-static void hb_MemvarAddPrivate( PDYNSYM );
+static void hb_MemvarCreateFromDynSymbol( PHB_DYNS, BYTE, PHB_ITEM );
+static void hb_MemvarAddPrivate( PHB_DYNS );
 
 void hb_MemvarsInit( void )
 {
@@ -71,7 +71,7 @@ void hb_MemvarsInit( void )
    _globalFreeCnt   = 0;
    _globalFirstFree = _globalLastFree = 1;
 
-   _privateStack = (PDYNSYM *) hb_xgrab( sizeof(PDYNSYM) * TABLE_INITHB_VALUE );
+   _privateStack = (PHB_DYNS *) hb_xgrab( sizeof(PHB_DYNS) * TABLE_INITHB_VALUE );
    _privateStackSize = TABLE_INITHB_VALUE;
    _privateStackCnt  = _privateStackBase = 0;
 }
@@ -198,7 +198,7 @@ HB_HANDLE hb_MemvarValueNew( HB_ITEM_PTR pSource, int iTrueMemvar )
  * an exit from the function/procedure)
  *
  */
-static void hb_MemvarAddPrivate( PDYNSYM pDynSym )
+static void hb_MemvarAddPrivate( PHB_DYNS pDynSym )
 {
    /* Allocate the value from the end of table
     */
@@ -207,7 +207,7 @@ static void hb_MemvarAddPrivate( PDYNSYM pDynSym )
       /* No more free values in the table - expand the table
        */
       _privateStackSize += TABLE_EXPANDHB_VALUE;
-      _privateStack =(PDYNSYM *) hb_xrealloc( _privateStack, sizeof(PDYNSYM) * _privateStackSize );
+      _privateStack =(PHB_DYNS *) hb_xrealloc( _privateStack, sizeof(PHB_DYNS) * _privateStackSize );
    }
 
    _privateStack[ _privateStackCnt++ ] =pDynSym;
@@ -336,9 +336,9 @@ void hb_MemvarValueDecRef( HB_HANDLE hValue )
  */
 void hb_MemvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem )
 {
-   PDYNSYM pDyn;
+   PHB_DYNS pDyn;
 
-   pDyn = (PDYNSYM) pMemvarSymb->pDynSym;
+   pDyn = (PHB_DYNS) pMemvarSymb->pDynSym;
 
    if( pDyn )
    {
@@ -367,9 +367,9 @@ void hb_MemvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem )
 
 void hb_MemvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
 {
-   PDYNSYM pDyn;
+   PHB_DYNS pDyn;
 
-   pDyn = (PDYNSYM) pMemvarSymb->pDynSym;
+   pDyn = (PHB_DYNS) pMemvarSymb->pDynSym;
 
    if( pDyn )
    {
@@ -395,9 +395,9 @@ void hb_MemvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
 
 void hb_MemvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
 {
-   PDYNSYM pDyn;
+   PHB_DYNS pDyn;
 
-   pDyn = (PDYNSYM) pMemvarSymb->pDynSym;
+   pDyn = (PHB_DYNS) pMemvarSymb->pDynSym;
 
    if( pDyn )
    {
@@ -435,7 +435,7 @@ void hb_MemvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
  */
 static void hb_MemvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pValue )
 {
-   PDYNSYM pDynVar;
+   PHB_DYNS pDynVar;
 
    /* find dynamic symbol or creeate one */
    if( IS_SYMBOL( pMemvar ) )
@@ -449,7 +449,7 @@ static void hb_MemvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pVa
       hb_MemvarCreateFromDynSymbol( pDynVar, bScope, pValue );
 }
 
-static void hb_MemvarCreateFromDynSymbol( PDYNSYM pDynVar, BYTE bScope, PHB_ITEM pValue )
+static void hb_MemvarCreateFromDynSymbol( PHB_DYNS pDynVar, BYTE bScope, PHB_ITEM pValue )
 {
    if( bScope & VS_PUBLIC )
    {
@@ -492,7 +492,7 @@ static void hb_MemvarCreateFromDynSymbol( PDYNSYM pDynVar, BYTE bScope, PHB_ITEM
 void hb_MemvarRelease( HB_ITEM_PTR pMemvar )
 {
    ULONG ulBase = _privateStackCnt;
-   PDYNSYM pDynVar;
+   PHB_DYNS pDynVar;
 
    if( IS_STRING(pMemvar) )
    {
@@ -529,7 +529,7 @@ void hb_MemvarRelease( HB_ITEM_PTR pMemvar )
 void hb_MemvarReleaseWithMask( char *szMask, BOOL bInclude )
 {
    ULONG ulBase = _privateStackCnt;
-   PDYNSYM pDynVar;
+   PHB_DYNS pDynVar;
 
    while( ulBase > _privateStackBase )
    {

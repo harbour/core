@@ -43,7 +43,7 @@ HARBOUR HB_DO( void )
    pItem =hb_param( 1, IT_ANY );
    if( IS_STRING(pItem) )
    {
-      PDYNSYM pDynSym;
+      PHB_DYNS pDynSym;
 
       pDynSym =hb_GetDynSym( pItem->item.asString.value );
       if( pDynSym )

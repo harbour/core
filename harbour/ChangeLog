@@ -1,3 +1,34 @@
+19990806-05:31 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/menuto.prg
+     ! MENU TO made highly Clipper compatible (100%), with the addition of
+       the nesting capability.
+       (only BEGIN/END SEQUENCE and Break() support is missing)
+   * make_tpl.bat
+     make_tpl.cmd (added)
+     make_tpl.sh
+     * Updated and extended make file starter files.
+   * source/rtl/readvar.prg
+     source/rtl/Makefile
+     funclist.txt
+     + Added: READVAR() (used in MENU TO)
+      (Please update other makefiles accordingly)
+   * include/Makefile
+     ! hb_vmpub.h added
+   * source/rtl/achoice.prg
+     ! Fixed handling of Ctrl+PgUp/PgDn/Home/End when a user func was passed.
+   * source/rdd/dbcmd.c
+     source/rtl/classes.c
+     source/rtl/do.c
+     source/rtl/memvars.c
+     source/runner/runner.c
+     source/vm/dynsym.c
+     source/vm/hvm.c
+     include/extend.h
+     include/hb_vmpub.h
+     * DYNSYM -> HB_DYNS
+       PDYNSYM -> PHB_DYNS
+   * include/*.* - More small cleanups
+
 19990805-17:10 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/setcolor.c
      ! #includes "extend.h" instead of "pcode.h"
@@ -22,6 +53,7 @@
        "~" hotkey char support removed, since there's no such in Clipper.
      + Test includes recursive capability
      ! Test added to Makefile
+      (Please update other makefiles accordingly)
    * source/rtl/achoice.prg
      + Added SETKEY() handling.
    * source/rtl/alert.prg
@@ -37,9 +69,9 @@
      include/rddapi.h
      include/rddapi.h
      source/rdd/dbf1.c
-     source/rdd/dbfntx\dbfntx1.c
+     source/rdd/dbfntx/dbfntx1.c
      source/rdd/dbcmd.c
-     source/rtl/gt\gtos2.c
+     source/rtl/gt/gtos2.c
      source/rtl/copyfile.c
      source/rtl/environ.c
      source/rtl/filesys.c

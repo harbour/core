@@ -1,6 +1,6 @@
 @echo off
 
-rem Flavour: DOS/Windows batch file
+rem Flavour: OS/2
 
 rem ---------------------------------------------------------------
 rem Template to initialize the environment before starting
@@ -33,7 +33,7 @@ rem  - win32
 rem  - linux
 rem  - os2
 
-set HB_ARCHITECTURE=dos
+set HB_ARCHITECTURE=os2
 
 rem ---------------------------------------------------------------
 rem The following HB_COMPILER values are currently supported:
@@ -52,7 +52,7 @@ rem  - When HB_ARCHITECTURE=os2
 rem    - gcc
 rem    - icc
 
-set HB_COMPILER=djgpp
+set HB_COMPILER=gcc
 
 rem ---------------------------------------------------------------
 rem Fine tuning of C compiler parameters for "all" command:

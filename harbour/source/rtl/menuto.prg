@@ -10,9 +10,12 @@
 
    Author: Phil Barnett <philb@iag.net>
    Released to Public Domain
+
+   Changes for higher Clipper compatibility by:
+   Victor Szel <info@szelvesz.hu>
 */
 
-/* NOTE: Recursive use is acceptable */
+/* NOTE: Recursive use is supported */
 
 #include "setcurs.ch"
 #include "inkey.ch"
@@ -21,17 +24,7 @@
 static aLevel   := {}
 static nPointer := 1
 
-procedure __AtPrompt( nCol, nRow, cPrompt, cMsg )
-
-   local nMsgLen := 0
-
-   // gather message data
-   if valtype( cMsg ) == 'C' .and. !empty( cMsg )
-      if len( cMsg ) > maxcol() + 1
-         cMsg := left( cMsg, maxcol() + 1 )                    // message too long to display
-      endif
-      nMsgLen := max( nMsgLen, len( cMsg ) )
-   endif
+function __AtPrompt( nCol, nRow, cPrompt, cMsg )
 
    if nPointer < 1
       nPointer := 1
@@ -43,174 +36,205 @@ procedure __AtPrompt( nCol, nRow, cPrompt, cMsg )
    enddo
 
    // add to the static array
-   aadd( aLevel[ nPointer ], { nCol, nRow, cPrompt, cMsg, len( cPrompt ), nMsgLen } )
+   aadd( aLevel[ nPointer ], { nCol, nRow, cPrompt, cMsg } )
 
    // put this prompt on the screen right now
    setpos( nCol, nRow )
    dispout( cPrompt )
 
-   return
+   return .f.
 
 function __MenuTo( bBlock, cVariable )
 
    local nKey
    local y
    local q
-   local n           := eval( bBlock )
-   local nArrLen     := len( aLevel[ nPointer ] )
-   local nMsgRow     := set( _SET_MESSAGE )
-   local lSetMCenter := set( _SET_MCENTER )
-   local nMaxCol     := maxcol() + 1
-   local lDoMessage  := nMsgRow > 0
-   local lGotMessage := .f.
-   local nMsgCol     := int( ( nMaxCol - aLevel[ nPointer ] [ len( aLevel ) ] [ 6 ] ) / 2 )
-   local nSaveCsr    := setcursor( SC_NONE )
+   local n
+   local lExit
+   local nArrLen
+   local xMsg
+   local nMsgCol
+   local nMsgRow
+   local lMsgCenter
+   local nSaveCursor
+   local cSaveReadVar
 
-   ColorSelect( CLR_STANDARD )
+   local bOldError
+   local lBlockError
 
-   nPointer ++
+   // Detect if a memver was passed
 
-   if len( aLevel[ nPointer - 1 ] ) == 0
+// TODO: Enable when implemented
+//
+// bOldError := errorblock( {|| break( NIL ), .F. } )
+// lBlockError := .T.
+// begin sequence
+      n := eval( bBlock )
+      lBlockError := .F.
+// TODO: Enable when implemented
+//
+// end sequence
+// errorblock( bOldError )
+
+   if lBlockError
+      __mvPUBLIC( cVariable )
+   endif
+
+   // if no prompts were defined, exit with 0
+
+   if nPointer < 1 .or. nPointer > len( aLevel )
 
       n := 0
 
    else
 
+      nPointer ++
+
+      nArrLen := len( aLevel[ nPointer - 1 ] )
+
+      // put choice in a valid range
+
       if !( ValType( n ) == "N" ) .OR. n < 1
          n := 1
-      elseif n > len( aLevel[ nPointer - 1 ] )
-         n := len( aLevel[ nPointer - 1 ] )
       endif
 
-      for y := 1 to nArrLen
-         if valtype( aLevel[ nPointer - 1, y, 4 ] ) $ 'CB'
-            lGotMessage := .t.
-            exit
-         endif
-      next
+      if n > nArrLen
+         n := nArrLen
+      endif
 
-      do while .t.
+      //
 
-         // were there any messages?
-         if lGotMessage .and. lDoMessage
+      nSaveCursor := setcursor( iif( Set( _SET_INTENSITY ), SC_NONE, NIL ) )
+      cSaveReadVar := ReadVar( upper( cVariable ) )
+      xMsg := ""
+      nMsgCol := 0
+      nMsgRow := set( _SET_MESSAGE )
+      lMsgCenter := set( _SET_MCENTER )
+      lExit := .F.
 
-            if valtype( aLevel[ nPointer - 1, n, 4 ] ) == 'B'
-               // Code Block messages ( yes, they are documented! )
+      do while n <> 0
 
-               eval( aLevel[ nPointer - 1, n, 4 ] )
+         // should we display messages?
+         if nMsgRow > 0
 
-            elseif valtype( aLevel[ nPointer - 1, n, 4 ] ) == 'C'
-               // Character messages
-
-               // set the display location
-               if lSetMCenter
-
-                  // erase the current message row
-                  dispbox( nMsgRow, nMsgCol, ;
-                           nMsgRow, nMsgCol + aLevel[ nPointer - 1, n, 6 ] )
-
-                  setpos( nMsgRow, ( nMaxcol - len( aLevel[ nPointer - 1, n, 4 ] ) ) / 2 )
-
-               else
-
-                  // erase the current message row
-                  dispbox( nMsgRow, 0, ;
-                           nMsgRow, aLevel[ nPointer - 1, n, 6 ], '         ' )
-
-                  setpos( nMsgRow, 0 )
-
-               endif
-
-               if len( aLevel[ nPointer - 1, n, 4 ] ) > 0
-
-                  // display the message
-                  dispout( aLevel[ nPointer - 1, n, 4 ] )
-
-               endif
-
+            if ! Empty( xMsg )
+               setpos( nMsgRow, nMsgCol )
+               dispout( space( len( xMsg ) ) )
             endif
+
+            xMsg := aLevel[ nPointer - 1, n, 4 ]
+
+            // Code Block messages ( yes, they are documented! )
+            if valtype( xMsg ) == 'B'
+               xMsg := eval( xMsg )
+            endif
+
+            if valtype( xMsg ) <> 'C'
+               xMsg := ""
+            endif
+
+            if lMsgCenter
+               nMsgCol := int( ( maxcol() - len( xMsg ) ) / 2 )
+            endif
+
+            setpos( nMsgRow, nMsgCol )
+            dispout( xMsg )
 
          endif
 
          // save the current row
          q := n
 
-         ColorSelect( CLR_ENHANCED )
+         if Set( _SET_INTENSITY )
+            ColorSelect( CLR_ENHANCED )
+         endif
 
          // highlight the prompt
          setpos( aLevel[ nPointer - 1, n, 1 ], aLevel[ nPointer - 1, n, 2 ] )
          dispout( aLevel[ nPointer - 1, n, 3 ] )
 
-         ColorSelect( CLR_STANDARD )
+         if Set( _SET_INTENSITY )
+            ColorSelect( CLR_STANDARD )
+         endif
 
-         setpos( aLevel[ nPointer - 1, n, 1 ], aLevel[ nPointer - 1, n, 2 ] )
+         if lExit
+            exit
+         endif
 
-         // wait for a keystroke
-         nKey := inkey( 0 )
+         nKey := 0
+         do while nKey == 0
+
+            // wait for a keystroke
+            nKey := inkey( 0 )
+
+            if ( bAction := setkey( nKey ) ) <> NIL
+
+               eval( bBlock, n )
+               eval( bAction, procname( 1 ), procline( 1 ), upper( cVariable ) )
+               n := eval( bBlock )
+
+               if n < 1
+                  n := 1
+               elseif n > nArrLen
+                  n := nArrLen
+               endif
+
+               nKey := 0
+
+            endif
+         enddo
 
          // check for keystrokes
          do case
-         case ( bAction := setkey( nKey ) ) <> NIL
-
-            eval( bAction, procname( 1 ), procline( 1 ), Upper( cVariable ) )
-            if empty( nextkey() )
-               keyboard chr( 255 )
-               inkey()
-               nKey := 0
-            endif
-
          case nKey == K_DOWN .or. nKey == K_RIGHT
-            n ++
-            if n > nArrLen
-               if set( _SET_WRAP )
-                  n := 1
-               else
-                  n := nArrLen
-               endif
+            if ++n > nArrLen
+               n := iif( Set( _SET_WRAP ), 1, nArrLen )
             endif
          case nKey == K_UP .or. nKey == K_LEFT
-            n --
-            if n < 1
-               if set( _SET_WRAP )
-                  n := nArrLen
-               else
-                  n := 1
-               endif
+            if --n < 1
+               n := iif( Set( _SET_WRAP ), nArrLen, 1 )
             endif
-         case nKey == K_ENTER .or. nKey == K_PGUP .or. nKey == K_PGDN
-            exit
-         case nKey == K_ESC
-            n := 0
-            exit
          case nKey == K_HOME
             n := 1
          case nKey == K_END
             n := nArrLen
+         case nKey == K_ENTER .or. nKey == K_PGUP .or. nKey == K_PGDN
+            lExit := .T.
+         case nKey == K_ESC
+            n := 0
          otherwise
             // did user hit a hot key?
             for y := 1 to nArrLen
                if upper( left( ltrim( aLevel[ nPointer - 1, y, 3 ] ), 1 ) ) == upper( chr( nKey ) )
                   n := y
+                  lExit := .T.
                   exit
                endif
             next
          endcase
 
-         // unhighlight the prompt
-         setpos( aLevel[ nPointer - 1, q, 1 ], aLevel[ nPointer - 1, q, 2 ] )
-         dispout( aLevel[ nPointer - 1, q, 3 ] )
+         if n <> 0
+            setpos( aLevel[ nPointer - 1, q, 1 ], aLevel[ nPointer - 1, q, 2 ] )
+            dispout( aLevel[ nPointer - 1, q, 3 ] )
+         endif
 
       enddo
 
+      ReadVar( cSaveReadVar )
+      SetCursor( nSaveCursor )
+
+      nPointer --
+      asize( aLevel, nPointer - 1 )
+
    endif
 
-   nPointer --
-
-   asize( aLevel, nPointer - 1 )
-
-   setcursor( nSaveCsr )
-
    eval( bBlock, n )
+
+   if lBlockError
+      release ( cVariable )
+   endif
+
+   SetPos( MaxRow() - 1, 0)
 
    return n
 

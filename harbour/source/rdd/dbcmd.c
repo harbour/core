@@ -168,7 +168,7 @@ static LPRDDNODE hb_FindRddNode( char * szDriver )
 static int hb_rddRegister( char * szDriver, USHORT uiType )
 {
    LPRDDNODE pRddNode, pRddNewNode;
-   PDYNSYM pGetFuncTable;
+   PHB_DYNS pGetFuncTable;
    char * szGetFuncTable;
 
    if( hb_FindRddNode( szDriver ) )    /* Duplicated RDD */

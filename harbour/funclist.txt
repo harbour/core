@@ -188,7 +188,7 @@ READEXIT                ;N;
 READINSERT              ;N;
 READKEY                 ;N;
 READMODAL               ;N;
-READVAR                 ;N;
+READVAR                 ;R;
 RECCOUNT                ;N;
 RECNO                   ;N;
 RECSIZE                 ;N;
