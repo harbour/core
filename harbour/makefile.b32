@@ -21,7 +21,7 @@ harbour.lib : achoice.obj adir.obj alert.obj arrays.obj asort.obj \
               hardcr.obj hb_f.obj hvm.obj initsymb.obj inkey.obj itemapi.obj \
               langapi.obj math.obj mathx.obj memvars.obj menuto.obj mtran.obj msges.obj \
               objfunc.obj readvar.obj xsavescr.obj\
-              set.obj setcolor.obj setkey.obj strings.obj symbols.obj stringp.obj \
+              set.obj setcolor.obj setkey.obj strfmt.obj strings.obj symbols.obj stringp.obj \
               stringsx.obj tbcolumn.obj tbrowse.obj tbrwtext.obj tclass.obj tget.obj tgetlist.obj tone.obj transfrm.obj
 
 symbols.obj  : symbols.asm
@@ -71,6 +71,7 @@ objfunc.obj  : objfunc.c  extend.h hbdefs.h
 set.obj      : set.c      extend.h hbdefs.h
 setcolor.obj : setcolor.c extend.h hbdefs.h init.h pcode.h
 setkey.obj   : setkey.c   extend.h hbdefs.h
+strfmt.obj   : strfmt.c   extend.h hbdefs.h
 stringp.obj  : stringp.c  extend.h hbdefs.h
 strings.obj  : strings.c  extend.h hbdefs.h
 stringsx.obj : stringsx.c extend.h hbdefs.h
@@ -111,7 +112,7 @@ xsavescr.c   : xsavescr.prg  harbour.exe
   tlib .\libs\b32\harbour.lib -+$@,,
 
 .prg.c:
-  bin\harbour $< /n /osource\rtl /iinclude
+  bin\harbour $< /n /osource\rtl\ /iinclude
 
 .c.obj:
   bcc32 -c -O2 -I.\include -o$@ -DHARBOUR_USE_GTAPI $<

@@ -1,3 +1,7 @@
+19990908-08:09 GMT+1 Antonio Linares <alinares@fivetech.com>
+  * rdd.b32
+    * Fixed missing '\' on the C output file path.
+
 19990908-01:33 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/environ.c
     corrected to work with msvc.
@@ -11,7 +15,7 @@
       it also replaced the DOS code to detect Windows with Windows code
       to detect Windows. But Borland C 3.1 refuses to compile Windows code
       when creating DOS programs and I suspect that other DOS compilers do
-      the same. So I restored version 1.42 and then put the Windows code 
+      the same. So I restored version 1.42 and then put the Windows code
       from version 1.43 back in the only place where it belongs.
     - I removed the "95/98" designation from the Windows detection in DOS
       mode, because that code should also be able to detect Windows 3.x.
@@ -46,7 +50,7 @@
     * WORDs changed to int to reflect the recent Item API changes.
   * include/itemapi.h
     source/rtl/itemapi.c
-    ! hb_itemParam(), hb_itemType() parameter type and retval changed to USHORT 
+    ! hb_itemParam(), hb_itemType() parameter type and retval changed to USHORT
       from WORD, to be Clipper compatible.
     * hb_itemGetNLen(), hb_itemPutN?Len() WORD types changed to int.
   * include/extend.h
