@@ -2642,6 +2642,7 @@ static void pp_rQuotes( char * expreal, char * sQuotes )
 
 int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, char * sBuffer, int * lenBuffer, int * iBuffer )
 {
+  extern BOOL hb_pp_bInline;
   int readed = 0;
   int State = 0;
   char cha, cLast = '\0', symbLast = '\0';
@@ -2652,105 +2653,197 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
 
   HB_TRACE(HB_TR_DEBUG, ("hb_pp_RdStr(%p, %s, %d, %d, %s, %p, %p)", handl_i, buffer, maxlen, lDropSpaces, sBuffer, lenBuffer, iBuffer));
 
-  if( *lenBuffer == 0 ) return -1;
+  if( *lenBuffer == 0 )
+  {
+    return -1;
+  }
+
   while(1)
+  {
+    if( *iBuffer == *lenBuffer )
     {
-      if( *iBuffer == *lenBuffer )
-        {
-          if( (*lenBuffer = fread(sBuffer,1,HB_PP_BUFF_SIZE,handl_i)) < 1 )
-            sBuffer[0] = '\n';
-          *iBuffer = 0;
-        }
-      cha = sBuffer[ *iBuffer ];
-      (*iBuffer)++;
-      if( cha == '\n' )
+      if( (*lenBuffer = fread(sBuffer,1,HB_PP_BUFF_SIZE,handl_i)) < 1 )
       {
-         if( s_ParseState == STATE_COMMENT && symbLast == ';' )
-            buffer[readed++] = ';';
-         break;
+        sBuffer[0] = '\n';
       }
-      if( maxlen > 0 )
-        {
-          switch( s_ParseState ) {
-          case STATE_COMMENT:
-            if( cha == '/' && cLast == '*' )
-              {
-                s_ParseState = STATE_NORMAL;
-                cha = ' ';
-              }
-            cLast = cha;
-            if( cha != ' ' && cha != '\t' ) symbLast = cha;
-            break;
-          case STATE_QUOTE1: if(cha=='\'') s_ParseState = STATE_NORMAL; break;
-          case STATE_QUOTE2: if(cha=='\"') s_ParseState = STATE_NORMAL; break;
-          case STATE_QUOTE3: if(cha==']') s_ParseState = STATE_NORMAL; break;
-          default:
-            switch( cha ) {
+      *iBuffer = 0;
+    }
+
+    cha = sBuffer[ *iBuffer ];
+    (*iBuffer)++;
+
+    if( cha == '\n' )
+    {
+      if( ( ! hb_pp_bInline ) && s_ParseState == STATE_COMMENT && symbLast == ';' )
+      {
+        buffer[readed++] = ';';
+      }
+      break;
+    }
+    else
+    {
+      if( hb_pp_bInline )
+      {
+        buffer[readed++] = cha;
+        continue;
+      }
+    }
+
+    if( maxlen > 0 )
+    {
+      switch( s_ParseState )
+      {
+        case STATE_COMMENT:
+          if( cha == '/' && cLast == '*' )
+          {
+             s_ParseState = STATE_NORMAL;
+             cha = ' ';
+          }
+
+          cLast = cha;
+
+          if( cha != ' ' && cha != '\t' )
+          {
+             symbLast = cha;
+          }
+          break;
+
+        case STATE_QUOTE1: if(cha=='\'')
+          s_ParseState = STATE_NORMAL;
+          break;
+
+        case STATE_QUOTE2: if(cha=='\"')
+          s_ParseState = STATE_NORMAL;
+          break;
+
+        case STATE_QUOTE3: if(cha==']')
+          s_ParseState = STATE_NORMAL;
+          break;
+
+        default:
+          switch( cha )
+          {
             case '[':
               /* Ron Pinkas modified 2000-06-17
               if( ISNAME(s_prevchar) || s_prevchar == ']' )
               */
               if( ISNAME(s_prevchar) || strchr( ")]}.", s_prevchar ) )
+              {
                  s_ParseState = STATE_BRACKET;
+              }
               else
+              {
                  s_ParseState = STATE_QUOTE3;
+              }
               break;
-            case ']': s_ParseState = STATE_NORMAL; break;
+
+            case ']':
+              s_ParseState = STATE_NORMAL;
+              break;
+
             case '\"':
-              if( s_ParseState != STATE_BRACKET ) s_ParseState = STATE_QUOTE2;
+              if( s_ParseState != STATE_BRACKET )
+              {
+                s_ParseState = STATE_QUOTE2;
+              }
               break;
+
             case '\'':
-              if( s_ParseState != STATE_BRACKET ) s_ParseState = STATE_QUOTE1;
+              if( s_ParseState != STATE_BRACKET )
+              {
+                s_ParseState = STATE_QUOTE1;
+              }
               break;
+
             case '&':
-              if( readed>0 && buffer[readed-1] == '&' ) { maxlen = 0; readed--; }
+              if( readed>0 && buffer[readed-1] == '&' )
+              {
+                maxlen = 0;
+                readed--;
+              }
               break;
+
             case '/':
-              if( readed>0 && buffer[readed-1] == '/' ) { maxlen = 0; readed--; }
+              if( readed>0 && buffer[readed-1] == '/' )
+              {
+                maxlen = 0;
+                readed--;
+              }
               break;
+
             case '*':
               if( readed > 0 && buffer[readed-1] == '/' )
-                {
-                  s_ParseState = STATE_COMMENT;
-                  readed--;
-                }
-              else if( !State ) maxlen = readed = 0;
+              {
+                s_ParseState = STATE_COMMENT;
+                readed--;
+              }
+              else if( !State )
+              {
+                maxlen = readed = 0;
+              }
               break;
+
             /* Ron Pinkas added 2000-06-01 */
             case ';':
-               bNewLine = TRUE;
-               break;
-           case '@':
+              bNewLine = TRUE;
+              break;
+
+            case '@':
               if( bNewLine && ( sBuffer[ *iBuffer ] == '&' || sBuffer[ *iBuffer ] == '-' ) )
               {
-                 buffer[readed++] = cha;
-                 s_prevchar = cha;
-                 cha = ' ';
+                buffer[readed++] = cha;
+                s_prevchar = cha;
+                cha = ' ';
               }
               break;
             /* Ron Pinkas end 2000-06-01 */
-            }
-            if( cha != ' ' && cha != ';' ) s_prevchar = cha;
-            /* Ron Pinkas added 2000-06-04 */
-            if( cha != ' ' && cha != '\t' && cha != ';' ) bNewLine = FALSE;
-            /* Ron Pinkas end 2000-06-04 */
           }
-          if( cha != ' ' && cha != '\t' ) State = 1;
-          if( lDropSpaces && State ) lDropSpaces = 0;
-          if( readed<maxlen && (!lDropSpaces || readed==0) && s_ParseState != STATE_COMMENT )
-            buffer[readed++]=cha;
-        }
+
+          if( cha != ' ' && cha != ';' )
+          {
+            s_prevchar = cha;
+          }
+
+          /* Ron Pinkas added 2000-06-04 */
+          if( cha != ' ' && cha != '\t' && cha != ';' )
+          {
+            bNewLine = FALSE;
+          }
+          /* Ron Pinkas end 2000-06-04 */
+      }
+
+      if( cha != ' ' && cha != '\t' )
+      {
+        State = 1;
+      }
+
+      if( lDropSpaces && State )
+      {
+        lDropSpaces = 0;
+      }
+
+      if( readed<maxlen && (!lDropSpaces || readed==0) && s_ParseState != STATE_COMMENT )
+      {
+        buffer[readed++]=cha;
+      }
     }
+  }
+
   while(--readed >= 0 && ( buffer[readed] == ' ' || buffer[readed] == '\t') );
+
   /* rglab: start */
   if( cha == '\n' && readed < 0 )
   {
-     readed = 0;
-     buffer[ readed ] = ' ';   /* return an empty line */
+    readed = 0;
+    buffer[ readed ] = ' ';   /* return an empty line */
   }
+
   /* rglab: end */
   if( buffer[readed] != ';' && s_ParseState != STATE_COMMENT )
-     s_ParseState = STATE_NORMAL;
+  {
+    s_ParseState = STATE_NORMAL;
+  }
+
   readed++;
   buffer[readed]='\0';
 

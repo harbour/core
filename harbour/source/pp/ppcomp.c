@@ -88,7 +88,12 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
            hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_BUFFER_OVERFLOW, NULL, NULL );
         }
 
-        if( s_szLine[ lens - 1 ] == ';' && ! hb_pp_bInline )
+        if( hb_pp_bInline )
+        {
+           break;
+        }
+
+        if( s_szLine[ lens - 1 ] == ';' )
         {
            lContinue = 1;
            lens--;
