@@ -55,7 +55,7 @@
 #include "hbcomp.h"
 
 /* TODO: Add support for this compiler switches
-   -m -r -t || getenv( "TMP" ) -u
+   -r -t || getenv( "TMP" )
 */
 
 /*
@@ -140,8 +140,31 @@ void hb_compChkCompilerSwitch( int iArg, char * Args[] )
       */
       for( i = 0; i < iArg; i++ )
       {
-         if( HB_ISOPTSEP( * Args[ i ] ) )
-            hb_compChkEnvironVar( Args[ i ] );
+         if( ! HB_ISOPTSEP( * Args[ i ] ) )
+            continue;
+
+         CheckSwitch :
+         {
+            int j = 1;
+            while( Args[ i ][j] && ! HB_ISOPTSEP( Args[ i ][j] ) ) j++;
+
+            if( Args[ i ][j] && HB_ISOPTSEP( Args[ i ][j] ) )
+            {
+               char cSep = Args[ i ][j];
+               Args[ i ][j] = 0;
+
+               hb_compChkEnvironVar( Args[ i ] );
+
+               Args[ i ] += j;
+               Args[i][0] = cSep;
+
+               goto CheckSwitch;
+            }
+            else
+            {
+               hb_compChkEnvironVar( Args[ i ] );
+            }
+         }
       }
    }
    else
