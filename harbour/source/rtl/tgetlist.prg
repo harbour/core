@@ -63,7 +63,7 @@ function TGetList( GetList )
    LOCAL oClass := TClass():New( "TGETLIST" )
 
    oClass:AddData( "aGetList",         GetList )
-   oClass:AddData( "oGet",             GetList[ 1 ] )
+   oClass:AddData( "oGet",             IF( GetList == NIL, NIL, GetList[ 1 ] ) )
    oClass:AddData( "nPos",             1 )
    oClass:AddData( "bFormat" )
    oClass:AddData( "lUpdated",         .f. )
