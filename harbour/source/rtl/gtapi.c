@@ -1035,9 +1035,12 @@ USHORT hb_gtScroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gtScroll(%hu, %hu, %hu, %hu, %hd, %hd)", uiTop, uiLeft, uiBottom, uiRight, iRows, iCols));
 
-   hb_gt_Scroll( uiTop, uiLeft, uiBottom, uiRight, ( BYTE ) s_pColor[ s_uiColorIndex ], iRows, iCols );
-
-   return 0;
+   if( uiTop <= uiBottom && uiLeft <= uiRight )
+   {
+      hb_gt_Scroll( uiTop, uiLeft, uiBottom, uiRight, ( BYTE ) s_pColor[ s_uiColorIndex ], iRows, iCols );
+      return 0;
+   }
+   return 1; /* Failed to scroll */
 }
 
 /* NOTE: It would be better if the clipping was done by the low level API */

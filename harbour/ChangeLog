@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-08-04 14:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/gtapi.c
+    ! Enforce Clipper compatibility for SCROLL by only calling hb_gt_Scroll
+      from hb_gtScroll if left <= right and top <= bottom.
+
 2003-07-30 14:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * include/set.ch
     ! Indicate that there are six (6) Harbour SET extensions.
