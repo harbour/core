@@ -3746,10 +3746,12 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderI
       pFileName = hb_fsFNameSplit( pAreaCdx->szDataFileName );
       hb_strncpyUpper( szFileName, pFileName->szName, CDX_MAXTAGNAMELEN );
       hb_xfree( pFileName );
+      hb_fsSeek( pAreaCdx->hDataFile, 0, FS_SET );
       if( strcmp( szFileName, szTagName ) == 0 && hb_fsRead( pAreaCdx->hDataFile,
           ( BYTE * ) &pHeader, sizeof( DBFHEADER ) ) == sizeof( DBFHEADER ) )
       {
          pHeader.bHasTags = 1;
+         hb_fsSeek( pAreaCdx->hDataFile, 0, FS_SET );
          hb_fsWrite( pAreaCdx->hDataFile, ( BYTE * ) &pHeader, sizeof( DBFHEADER ) );
       }
    }
