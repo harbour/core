@@ -1,5 +1,9 @@
 2000-11-05 10:00 UTC+0100 JFL (mafact) <jfl@mafact.com>
    * source/vm/classes.c
+     * strcpy( &cString , ... in place of strcpy( cString, ... :-(((
+
+2000-11-05 10:00 UTC+0100 JFL (mafact) <jfl@mafact.com>
+   * source/vm/classes.c
      * work around due to the fact HB stack can move
        from address to address when stack growth.
        __clsinstsuper() caused GPF

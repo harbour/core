@@ -1600,7 +1600,7 @@ HB_FUNC( __CLSINSTSUPER )
    /*PHB_ITEM pString = hb_param( 1, HB_IT_STRING ); */
    BOOL bFound = FALSE;
 
-   strcpy( &cString, hb_parc(1) );
+   strcpy( cString, hb_parc(1) );
 
    if( /*pString*/ hb_pcount() >= 1 )
    {
