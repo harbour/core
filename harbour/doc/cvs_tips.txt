@@ -1,0 +1,54 @@
+/*
+ * $Id$
+ */
+
+Various tips on CVS usage
+=========================
+
+Switching from anonymous access to read/write access
+====================================================
+by David G. Holm <Harbour@SpaceMoose.com>
+
+1) Change your CVSROOT variable from
+      :pserver:anonymous@cvs.Harbour-project.sourceforge.net:/cvsroot/Harbour-project
+   to
+      :ext:your_source_forge_ID_in_lower_case@cvs.Harbour-project.sourceforge.net:/cvsroot/Harbour-project
+
+2) Set up CVS to use SSH (see cvs_ssh.txt for details).
+
+3) Visit each and every one of the CVS subdirectories in your local
+   CVS tree and change the contents of the 'Root' file from your old
+   CVSROOT contents to your new CVSROOT contents.
+
+Note: Every time you issue a CVS command, you will have to enter your
+SourceForge password.
+
+Things to do to avoid damaging the SourceForge CVS tree
+=======================================================
+by David G. Holm <Harbour@SpaceMoose.com>
+
+1) Always do your Harbour development using your local CVS tree. Do not
+   do your development outside your local CVS tree and then copy your
+   changes into your local CVS tree to commit them, because that leads
+   easily to accidentally overwriting changes made by others, because
+   you didn't notice that a module that you were also working on was
+   changed by someone else. By always doing Harbour development using
+   your local CVS tree, changes made by others will be merged with your
+   changes and you only need to recompile and retest before committing.
+
+2) Always run 'cvs update' from the 'harbour' directory before you run
+   'cvs commit'. Ideally, you should redirect the output from the update
+   to a file and look at the results to confirm that you are ready to do
+   a commit. Any files marked M, A or D are files that you have modified
+   or are adding or deleting. Confirm that you have comments for all of
+   them in your ChangeLog entry. If you see many modules marked P or U,
+   then you need to recompile and retest before you commit your changes.
+
+   If you see any conflicts reported in the update output, then you need
+   to resolve them before committing. CVS is generally good at merging
+   changes, so you probably won't see conflicts very often, but if you
+   edit the ChangeLog file before you run 'cvs update' and other changes
+   have been committed by others, then ChangeLog will have conflicts. To
+   resolve those conflicts, simply remove the conflict markers. What I do
+   to avoid conflicts to ChangeLog is to record my changes in changes.txt
+   and then copy them into ChangeLog between the update and the commit.

@@ -1,3 +1,9 @@
+2000-05-23 13:40 GMT-4 David G. Holm <dholm@jsd-llc.com>
+
+  + doc/cvs_tips.txt
+    + New document with tips regarding CVS usage.
+      Please feel free to add more tips to it.
+
 2000-05-23 12:30 GMT-4 David G. Holm <dholm@jsd-llc.com>
 
   * include/hbver.h
