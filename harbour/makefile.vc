@@ -79,6 +79,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\initsymb.obj \
     $(OBJ_DIR)\inkey.obj \
     $(OBJ_DIR)\itemapi.obj \
+    $(OBJ_DIR)\langapi.obj \
     $(OBJ_DIR)\math.obj \
     $(OBJ_DIR)\memvars.obj \
     $(OBJ_DIR)\msgxxx.obj \
@@ -89,6 +90,8 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\setkey.obj \
     $(OBJ_DIR)\strings.obj \
     $(OBJ_DIR)\tclass.obj \
+    $(OBJ_DIR)\tget.obj \
+    $(OBJ_DIR)\tgetlist.obj \
     $(OBJ_DIR)\transfrm.obj \
     $(RDD_OBJS)
 
@@ -217,7 +220,7 @@ $(COMPILER_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
     flex -i -o$(COMPILER_DIR)\harbourl.c $(COMPILER_DIR)\harbour.l
 
 #
-# Macro compiler source depencies and build rules
+# Macro compiler source dependencies and build rules
 #
 
 #$(MACOMP_DIR)\macroy.c : $(MACOMP_DIR)\macro.y
@@ -355,6 +358,9 @@ $(OBJ_DIR)\inkey.obj : $(RTL_DIR)\inkey.c
 $(OBJ_DIR)\itemapi.obj : $(RTL_DIR)\itemapi.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(OBJ_DIR)\langapi.obj : $(RTL_DIR)\langapi.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(OBJ_DIR)\math.obj : $(RTL_DIR)\math.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
@@ -392,6 +398,18 @@ $(RTL_DIR)\tclass.c : $(RTL_DIR)\tclass.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
 
 $(OBJ_DIR)\tclass.obj : $(RTL_DIR)\tclass.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(RTL_DIR)\tget.c : $(RTL_DIR)\tget.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+
+$(OBJ_DIR)\tget.obj : $(RTL_DIR)\tget.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(RTL_DIR)\tgetlist.c : $(RTL_DIR)\tgetlist.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+
+$(OBJ_DIR)\tgetlist.obj : $(RTL_DIR)\tgetlist.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\transfrm.obj : $(RTL_DIR)\transfrm.c
