@@ -1552,7 +1552,8 @@ static void hb_ntxReadBuf( NTXAREAP pArea, BYTE* readBuffer, USHORT* numRecinBuf
    if( *numRecinBuf == 10 )
       *numRecinBuf = 0;
    if( *numRecinBuf == 0 )
-      hb_fsRead( pArea->hDataFile, readBuffer, pArea->uiRecordLen  * 10 );
+      hb_fsReadLarge( pArea->hDataFile, readBuffer, pArea->uiRecordLen  * 10 );
+
    pArea->pRecord = readBuffer + (*numRecinBuf) * pArea->uiRecordLen;
    (*numRecinBuf) ++;
 }
