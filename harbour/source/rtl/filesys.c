@@ -51,6 +51,7 @@
  *    hb_fsIsDevice()
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+ *            and David G. Holm <dholm@jsd-llc.com>
  *    hb_fsEof()
  *
  * See doc/license.txt for licensing terms.
@@ -1461,5 +1462,20 @@ BOOL hb_fsFile( BYTE * pFilename )
 
 BOOL hb_fsEof( FHANDLE hFileHandle )
 {
+#if defined(__CYGWIN__)
+   long curPos = lseek( hFileHandle, 0L, SEEK_CUR );
+   long endPos = lseek( hFileHandle, 0L, SEEK_END );
+   long newPos = lseek( hFileHandle, curPos, SEEK_SET );
+   if( newPos == -1L )
+   {
+      hb_fsSetError( errno );
+   }
+   else if( newPos != curPos )
+   {
+      hb_fsSetError( FS_ERROR );
+   }
+   return curPos >= endPos;
+#else
    return eof( hFileHandle ) != 0;
+#endif
 }

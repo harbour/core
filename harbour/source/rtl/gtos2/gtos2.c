@@ -544,7 +544,6 @@ void hb_gt_SetCursorStyle( USHORT style )
 {
 /* Chen Kedem <niki@actcom.co.il> */
    char cellsize;
-   VIOCURSORINFO vi;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetCursorStyle(%hu)", style));
 
@@ -749,10 +748,11 @@ BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetMode(%hu, %hu)", uiRows, uiCols));
 
+   vi.cb = sizeof( VIOMODEINFO );
    VioGetMode( &vi, 0 );        /* fill structure with current settings */
    vi.row = uiRows;
    vi.col = uiCols;
-   return ( BOOL ) VioSetMode( &vi, 0 );   /* 0 = Ok, other = Fail */
+   return ! ( BOOL ) VioSetMode( &vi, 0 );   /* 0 = Ok, other = Fail */
 }
 
 BOOL hb_gt_GetBlink()

@@ -13,6 +13,9 @@
  *    Documentation for: FOPEN(), FCLOSE(), FWRITE(), FSEEK(), FREAD(), FILE(),
  *                       FREADSTR(), FRENAME(), FERROR(), RENAME, ERASE, CURDIR()
  *
+ * Copyright 2000 David G. Holm <Harbour@SpaceMoose.com>
+ *    Documentation for: HB_FEOF()
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -898,5 +901,45 @@
  *      This command is Ca-Clipper compliant
  *  $SEEALSO$
  *      ERASE,RENAME,FRENAME(),FERASE()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      HB_FEOF()
+ *  $CATEGORY$
+ *      Low level
+ *  $ONELINER$
+ *      Check for end-of-file.
+ *  $SYNTAX$
+ *      HB_FEOF( <nHandle> ) --> lIsEof
+ *  $ARGUMENTS$
+ *      <nHandle> The handle of an open file.
+ *  $RETURNS$
+ *      <lIsEof> .T. if the file handle is at end-of-file, otherwise .F.
+ *  $DESCRIPTION$
+ *      This function checks an open file handle to see if it is at E-O-F.
+ 
+ *      If the file handle is missing, not numeric, or not open, then this
+ *      function returns .T. and sets the value returned by FERROR() to -1
+ *      (FS_ERROR) or a C-compiler dependent errno value (EBADF or EINVAL).
+ *  $EXAMPLES$
+
+ *      nH:=FOPEN('FILE.TXT')
+ *      ? FREADSTR(nH,80)
+ *      IF HB_FEOF(nH)
+ *         ? 'End-of-file reached.'
+ *      ELSE
+ *         ? FREADSTR(nH,80)
+ *      ENDIF
+ *  </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is a Harbour extension
+ *  $FILES$
+ *      Library is rtl
+ *  $SEEALSO$
+ *      FERROR()
  *  $END$
  */

@@ -1,3 +1,18 @@
+2000-06-01 12:15 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+   * doc/en/file.txt
+     + Added documentation for HB_FEOF( nHandle )
+
+   * source/rtl/filesys.c
+     + Added implementation of hb_fsEof() for defined(__CYGWIN__).
+
+   * source/rtl/philes.c
+     + Added Harbour wrapper HB_FEOF( nHandle ) for hb_fsEof().
+
+   * source/rtl/gtos2/gtos2.c
+     ! Bug fix that should allow video mode changes to work
+       in full screen mode as well as in windowed mode.
+
 20000531-23:20 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
 *bin/bld.bat
     *changed HB_LIB_INSTALL to HB_INC_INSTALL on harbour /i command line

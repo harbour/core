@@ -42,6 +42,11 @@
  *
  * See doc/license.txt for licensing terms.
  *
+ * Copyright 2000 David G. Holm <dholm@jsd-llc.com>
+ *    HB_FEOF()
+ *
+ * See doc/license.txt for licensing terms.
+ *
  */
 
 #include <ctype.h>
@@ -209,3 +214,15 @@ HB_FUNC( CURDIR )
    hb_fsSetError( uiErrorOld );
 }
 
+HB_FUNC( HB_FEOF )
+{
+   if( ISNUM( 1 ) )
+   {
+      hb_retl( hb_fsEof( hb_parni( 1 ) ) );
+   }
+   else
+   {
+      hb_fsSetError( FS_ERROR );
+      hb_retl( 1 );
+   }
+}
