@@ -1,3 +1,12 @@
+19991011-10:40 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/vm/hvm.c
+     ! __vmVarSList() <-> __vmVarSGet(), the function names were mistakenly
+       exchanged, not OK.
+     % __vmVarSGet() - Simplified.
+   * source/vm/hvm.c
+     ! HB_P_NOOP - Caused an infinite loop, fixed. (again)
+     % hb_vmPlus(), hb_vmMinus() - Two returns from inside removed. (again)
+
 19991011-10:04 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/rtl/classes.c
      + little change to fix Super accesses

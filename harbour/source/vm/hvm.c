@@ -959,6 +959,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_NOOP:
             /* Intentionally do nothing */
+            w += 1
             break;
 
          default:
@@ -1059,7 +1060,6 @@ static void hb_vmPlus( void )
             pItem2->item.asString.value = NULL;
          }
          hb_stackPop();
-         return;
       }
       else
          hb_errRT_BASE( EG_STROVERFLOW, 1209, NULL, "+" );
@@ -1160,7 +1160,6 @@ static void hb_vmMinus( void )
             pItem2->item.asString.value = NULL;
          }
          hb_stackPop();
-         return;
       }
       else
          hb_errRT_BASE( EG_STROVERFLOW, 1210, NULL, "-" );
@@ -3474,12 +3473,12 @@ HARBOUR HB___XHELP( void )
 }
 
 /* $Doc$
- * $FuncName$     <aStat> __vmVarSGet()
+ * $FuncName$     <aStat> __vmVarSList()
  * $Description$  Return the statics array
  *
  *                Please aClone before assignments
  * $End$ */
-HARBOUR HB___VMVARSGET( void )
+HARBOUR HB___VMVARSLIST( void )
 {
    PHB_ITEM pStatics = hb_arrayClone( &s_aStatics );
 
@@ -3488,14 +3487,11 @@ HARBOUR HB___VMVARSGET( void )
 }
 
 /* $Doc$
- * $FuncName$     <xStat> __vmVarSList(<nStatic>)
+ * $FuncName$     <xStat> __vmVarSGet(<nStatic>)
  * $Description$  Return a specified statics
  * $End$ */
-HARBOUR HB___VMVARSLIST( void )
+HARBOUR HB___VMVARSGET( void )
 {
-   USHORT uiStatic = hb_parni( 1 );
-   PHB_ITEM pStatic = s_aStatics.item.asArray.value->pItems +
-                      hb_stack.iStatics + uiStatic - 1;
-
-   hb_itemReturn( pStatic );
+   hb_itemReturn( s_aStatics.item.asArray.value->pItems +
+                  hb_stack.iStatics + hb_parni( 1 ) - 1 );
 }
