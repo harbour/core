@@ -6,7 +6,7 @@
 all: compiler vm rtl tools
 
 compiler:
-	make -w --directory=source/compiler -f makefile.dos
+	make -r -w --directory=source/compiler -f makefile.dos
 
 vm:
 	make -w --directory=source/vm -f makefile.dos
@@ -22,7 +22,7 @@ tools:
 #  make -w --directory=tests/working -f makefile.dos
 
 clean:
-	make -w --directory=source/compiler -f makefile.dos clean
+	make -r -w --directory=source/compiler -f makefile.dos clean
 	make -w --directory=source/vm -f makefile.dos clean
 	make -w --directory=source/rtl -f makefile.dos clean
 	make -w --directory=source/tools -f makefile.dos clean

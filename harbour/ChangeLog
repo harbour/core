@@ -1,3 +1,8 @@
+19990603-19:00 EDT David G. Holm <dholm@jsd-llc.com>
+  Thanks go to Ryszard Glab <rglab@imid.med.pl>
+  * makefile.dos
+    - Added -r to two make lines for source/compiler
+
 19990604-00:25 CET Eddie Runia
   * source/rtl/classes.c
     With _GetClassName(); optimized; more comments; more clean-up
