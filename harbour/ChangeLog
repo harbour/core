@@ -1,3 +1,11 @@
+2001-08-06 23:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.c
+     ! Corrected assigment of HB_FS_FIRST scope, for proper execution of first non INIT/EXIT procedure in main module.
+
+   * source/compiler/genc.c
+   * source/vm/hvm.c
+     ! Improved sync logic of HB_SETMACRO() level, to only activate once per application before any prg level code is executed.
+
 2001-08-06 20:50 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * source/rtl/math.c

@@ -263,6 +263,8 @@ int hb_vm_aiExtraElements[HB_MAX_MACRO_ARGS], hb_vm_iExtraElementsIndex = 0, hb_
 
 int hb_vm_iExtraIndex;
 
+BOOL hb_vm_bSetMacroLevel = TRUE;
+
 /* Request for some action - stop processing of opcodes
  */
 static USHORT   s_uiActionRequest;

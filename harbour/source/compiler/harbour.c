@@ -3743,6 +3743,7 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
             if( ! hb_comp_bSyntaxCheckOnly && ! bSkipGen && ( hb_comp_iErrorCount == 0 ) )
             {
                PFUNCTION pFunc;
+               char * szFirstFunction = NULL;
 
                /* we create the output file name */
                hb_compOutputFile();
@@ -3754,19 +3755,18 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
                while( pFunc )
                {
                   hb_compOptimizeFrames( pFunc );
+
+                  if( szFirstFunction == NULL && pFunc->szName[0] && pFunc->cScope == 0 )
+                  {
+                     szFirstFunction = pFunc->szName;
+                  }
+
                   pFunc = pFunc->pNext;
                }
 
+               if( szFirstFunction )
                {
                   PCOMSYMBOL pSym = hb_comp_symbols.pFirst;
-                  char * szFirstFunction;
-
-                  if( hb_comp_bStartProc )
-                     szFirstFunction = hb_comp_functions.pFirst->szName;
-                  else if( hb_comp_functions.pFirst->pNext )
-                     szFirstFunction = hb_comp_functions.pFirst->pNext->szName;
-                  else
-                     szFirstFunction = NULL;
 
                   while( pSym )
                   {
