@@ -257,8 +257,8 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\gtapiu.obj \
    $(OBJ_DIR)\gx.obj \
    $(OBJ_DIR)\hardcr.obj \
-   $(OBJ_DIR)\hbrandom.obj \
    $(OBJ_DIR)\hbffind.obj \
+   $(OBJ_DIR)\hbrandom.obj \
    $(OBJ_DIR)\idle.obj \
    $(OBJ_DIR)\inkey.obj \
    $(OBJ_DIR)\is.obj \
@@ -410,6 +410,8 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgcswin.obj \
    $(OBJ_DIR)\msgde.obj \
    $(OBJ_DIR)\msgdewin.obj \
+   $(OBJ_DIR)\msgel.obj \
+   $(OBJ_DIR)\msgelwin.obj \
    $(OBJ_DIR)\msgen.obj \
    $(OBJ_DIR)\msgeo.obj \
    $(OBJ_DIR)\msges.obj \
@@ -448,6 +450,8 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgzhb5.obj
 
 CODEPAGE_LIB_OBJS = \
+   $(OBJ_DIR)\cdpeldos.obj \
+   $(OBJ_DIR)\cdpelwin.obj \
    $(OBJ_DIR)\cdpesdos.obj \
    $(OBJ_DIR)\cdpeswin.obj \
    $(OBJ_DIR)\cdpgedos.obj \
@@ -572,7 +576,8 @@ DEBUG_LIB_OBJS = \
 #
 
 COMMON_LIB_OBJS = \
-   $(OBJ_DIR)\hbverdsp.obj \
+   $(OBJ_DIR)\expropt1.obj \
+   $(OBJ_DIR)\expropt2.obj \
    $(OBJ_DIR)\hbfhnd.obj \
    $(OBJ_DIR)\hbfsapi.obj \
    $(OBJ_DIR)\hbgete.obj \
@@ -580,8 +585,7 @@ COMMON_LIB_OBJS = \
    $(OBJ_DIR)\hbstr.obj \
    $(OBJ_DIR)\hbtrace.obj \
    $(OBJ_DIR)\hbver.obj \
-   $(OBJ_DIR)\expropt1.obj \
-   $(OBJ_DIR)\expropt2.obj \
+   $(OBJ_DIR)\hbverdsp.obj \
    $(OBJ_DIR)\reserved.obj
 
 #
@@ -828,7 +832,11 @@ $(GTWIN_LIB)  : $(GTWIN_LIB_OBJS)
 # COMMON.LIB dependencies
 #
 
-$(OBJ_DIR)\hbverdsp.obj : $(COMMON_DIR)\hbverdsp.c
+$(OBJ_DIR)\expropt1.obj : $(COMMON_DIR)\expropt1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(COMMON_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\expropt2.obj : $(COMMON_DIR)\expropt2.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(COMMON_LIB) $(ARFLAGS) -+$@,,
 
@@ -860,11 +868,7 @@ $(OBJ_DIR)\hbver.obj : $(COMMON_DIR)\hbver.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(COMMON_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\expropt1.obj : $(COMMON_DIR)\expropt1.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(COMMON_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\expropt2.obj : $(COMMON_DIR)\expropt2.c
+$(OBJ_DIR)\hbverdsp.obj : $(COMMON_DIR)\hbverdsp.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(COMMON_LIB) $(ARFLAGS) -+$@,,
 
@@ -1834,7 +1838,6 @@ $(OBJ_DIR)\radiogrp.obj : $(OBJ_DIR)\radiogrp.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
-
 $(OBJ_DIR)\rat.obj : $(RTL_DIR)\rat.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
@@ -2202,6 +2205,14 @@ $(OBJ_DIR)\msgdewin.obj : $(LANG_DIR)\msgdewin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\msgel.obj : $(LANG_DIR)\msgel.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\msgelwin.obj : $(LANG_DIR)\msgelwin.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\msgen.obj : $(LANG_DIR)\msgen.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
@@ -2349,6 +2360,14 @@ $(OBJ_DIR)\msgzhgb.obj : $(LANG_DIR)\msgzhgb.c
 #
 # CODEPAGE.LIB dependencies
 #
+$(OBJ_DIR)\cdpeldos.obj : $(CODEPAGE_DIR)\cdpeldos.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\cdpelwin.obj : $(CODEPAGE_DIR)\cdpelwin.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\cdpesdos.obj : $(CODEPAGE_DIR)\cdpesdos.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,

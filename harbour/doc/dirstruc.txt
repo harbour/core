@@ -30,11 +30,15 @@ in order to remove empty directories)
 |   |
 |   +---bsd            - Configuration files specific to FreeBSD.
 |   |
+|   +---darwin         - Configuration files specific to BSD/Darwin.
+|   |
 |   +---dos            - Configuration files specific to DOS.
 |   |
 |   +---linux          - Configutation files specific to GNU/Linux.
 |   |
 |   +---os2            - Configutation files specific to OS/2.
+|   |
+|   +---sunos          - Configutation files specific to SunOS.
 |   |
 |   +---w32            - Configutation files specific to MS-Win32.
 |

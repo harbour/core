@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-10-20 09:41 UTC+0200 Chen Kedem <niki@actcom.co.il>
+   * makefile.bc
+     + Add the missing Greek language and codepage files
+   * doc/dirstruc.txt
+     + Add oneliner description for: config/darwin, config/sunos
+
 2004-10-20 07:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbdefs.h
     + added macros HB_{PUT|GET}_{LONG|PTR}
