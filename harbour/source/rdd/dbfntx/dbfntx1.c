@@ -1512,7 +1512,7 @@ static void hb_ntxTagBalance( LPTAGINFO pTag, int level )
       LPPAGEINFO pPage = hb_ntxPageLoad( pTag->Owner, pTag->stack[level].page );
       LPPAGEINFO pPageParent = hb_ntxPageLoad( pTag->Owner, pTag->stack[level+1].page );
 
-      /* printf( "\nntxTagBalance - 0, %d %d %x %x",pTag->stackLevel,level,pPageParent->Page,pPage->Page ); */
+      /* printf( "\nntxTagBalance-1, %d %d %x %x",pTag->stackLevel,level,pPageParent->Page,pPage->Page ); */
       thiskey = pairkey = pTag->stack[level+1].ikey;
       do
          pairkey ++;
@@ -1535,6 +1535,14 @@ static void hb_ntxTagBalance( LPTAGINFO pTag, int level )
         else
         {
            pPagePair = hb_ntxPageLoad( pTag->Owner, KEYITEM( pPageParent, pairkey )->page );
+           if( pPageParent->uiKeys == 1 && 
+                 ( pPage->uiKeys + pPagePair->uiKeys ) > pTag->MaxKeys - 2 )
+           {
+              hb_ntxPageRelease( pPageParent );
+              hb_ntxPageRelease( pPagePair );
+              return;
+           }
+             
            if( pPagePair->uiKeys <= pTag->MaxKeys/2 )
            {
               /* printf( "\nntxTagBalance - 10, %d %d",thiskey,pairkey ); */
@@ -1558,6 +1566,13 @@ static void hb_ntxTagBalance( LPTAGINFO pTag, int level )
          else
          {
            pPagePair = hb_ntxPageLoad( pTag->Owner, KEYITEM( pPageParent, pairkey )->page );
+           if( pPageParent->uiKeys == 1 && 
+                 ( pPage->uiKeys + pPagePair->uiKeys ) > pTag->MaxKeys - 2 )
+           {
+              hb_ntxPageRelease( pPageParent );
+              hb_ntxPageRelease( pPagePair );
+              return;
+           }
            /* printf( "\nntxTagBalance - 3A %x %x %x %d",pPageParent->Page,pPage->Page,pPagePair->Page,pPagePair->uiKeys ); */
            if( pPagePair->uiKeys <= pTag->MaxKeys/2 )
            {

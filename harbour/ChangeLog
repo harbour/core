@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * source/rdd/dbcmd.c
+    * Bug fixed, which caused GPF's while opening of additive index
+
+2002-04-30 12:46 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * include/hbrddntx.h
   * source/rdd/dbfntx/dbfntx1.c
     * Some changes, needed for custom indexes support
 
