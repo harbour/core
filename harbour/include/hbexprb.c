@@ -278,7 +278,7 @@ static HB_EXPR_FUNC( hb_compExprUseNumeric )
          break;
       case HB_EA_PUSH_PCODE:
          if( pSelf->value.asNum.NumType == HB_ET_DOUBLE )
-            HB_EXPR_PCODE3( hb_compGenPushDouble, pSelf->value.asNum.dVal, -1, pSelf->value.asNum.bDec );
+            HB_EXPR_PCODE3( hb_compGenPushDouble, pSelf->value.asNum.dVal, pSelf->value.asNum.bWidth, pSelf->value.asNum.bDec );
          else
             HB_EXPR_PCODE1( hb_compGenPushLong, pSelf->value.asNum.lVal );
          break;

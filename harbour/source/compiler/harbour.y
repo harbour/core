@@ -145,6 +145,7 @@ char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
    {
       double dNumber;   /* to hold a double number returned by lex */
       /* NOTE: Intentionally using "unsigned char" instead of "BYTE" */
+      unsigned char bWidth; /* to hold the width of the value */
       unsigned char bDec; /* to hold the number of decimal points in the value */
       char * szValue;
    } valDouble;
@@ -388,14 +389,14 @@ IdentName  : IDENTIFIER       { $$ = $1; }
 
 /* Numeric values
  */
-NumValue   : NUM_DOUBLE          { $$ = hb_compExprNewDouble( $1.dNumber, $1.bDec ); }
+NumValue   : NUM_DOUBLE          { $$ = hb_compExprNewDouble( $1.dNumber, $1.bWidth, $1.bDec ); }
            | NUM_INTEGER         { $$ = hb_compExprNewLong( $1.iNumber ); }
            | NUM_LONG            { $$ = hb_compExprNewLong( $1.lNumber ); }
            ;
 
 NumAlias   : NUM_INTEGER ALIASOP      { $$ = hb_compExprNewLong( $1.iNumber ); }
            | NUM_LONG    ALIASOP      { $$ = hb_compExprNewLong( $1.lNumber ); }
-           | NUM_DOUBLE  ALIASOP      { $$ = hb_compErrorAlias( hb_compExprNewDouble( $1.dNumber, $1.bDec ) ); }
+           | NUM_DOUBLE  ALIASOP      { $$ = hb_compErrorAlias( hb_compExprNewDouble( $1.dNumber, $1.bWidth, $1.bDec ) ); }
            ;
 
 /* NIL value

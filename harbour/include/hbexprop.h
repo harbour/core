@@ -162,6 +162,7 @@ typedef struct HB_EXPR_
       {
          long lVal;           /* long value */
          double dVal;         /* double value */
+         unsigned char bWidth; /* unsigned char used intentionally */
          unsigned char bDec;  /* unsigned char used intentionally */
          unsigned char NumType;    /* used to distinguish LONG and DOUBLE */
       } asNum;
@@ -268,7 +269,7 @@ typedef  HB_EXPR_PTR HB_EXPR_ACTION( HB_EXPR_PTR pSelf, int iMessage );
 HB_EXPR_PTR hb_compExprNew( int );
 HB_EXPR_PTR hb_compExprNewEmpty( void );
 HB_EXPR_PTR hb_compExprNewNil( void );
-HB_EXPR_PTR hb_compExprNewDouble( double, BYTE );
+HB_EXPR_PTR hb_compExprNewDouble( double, BYTE, BYTE );
 HB_EXPR_PTR hb_compExprNewLong( LONG );
 HB_EXPR_PTR hb_compExprNewString( char * );
 HB_EXPR_PTR hb_compExprNewLogical( int );

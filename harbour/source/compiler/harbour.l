@@ -1357,15 +1357,15 @@ Separator     {SpaceTab}
 
                  sscanf( yytext, "%lxI", &lNumber );
 
-                 if( ( double )SHRT_MIN <= lNumber &&
-                        lNumber <= ( double )SHRT_MAX )
+                 if( ( double ) SHRT_MIN <= lNumber &&
+                        lNumber <= ( double ) SHRT_MAX )
                  {
                     yylval.valInteger.iNumber = lNumber;
                     yylval.valInteger.szValue = yytext;
                     return NUM_INTEGER;
                  }
-                 else if( ( double )LONG_MIN <= lNumber &&
-                          lNumber <= ( double )LONG_MAX )
+                 else if( ( double ) LONG_MIN <= lNumber &&
+                          lNumber <= ( double ) LONG_MAX )
                  {
                     yylval.valLong.lNumber = lNumber;
                     yylval.valLong.szValue = yytext;
@@ -1374,6 +1374,7 @@ Separator     {SpaceTab}
                  else
                  {
                     yylval.valDouble.dNumber = lNumber;
+                    yylval.valDouble.bWidth = HB_DEFAULT_WIDTH;
                     yylval.valDouble.bDec = 0;
                     yylval.valDouble.szValue = yytext;
                     return NUM_DOUBLE;
@@ -1559,6 +1560,7 @@ static int yy_ConvertNumber( char * szBuffer )
    ptr = strchr( szBuffer, '.' );
    if( ptr )
    {
+      yylval.valDouble.bWidth = HB_DEFAULT_WIDTH;
       yylval.valDouble.bDec = strlen( ptr + 1 );
       yylval.valDouble.szValue = szBuffer;
       return NUM_DOUBLE;
@@ -1581,6 +1583,7 @@ static int yy_ConvertNumber( char * szBuffer )
       }
       else
       {
+         yylval.valDouble.bWidth = HB_DEFAULT_WIDTH;
          yylval.valDouble.bDec = 0;
          yylval.valDouble.szValue = szBuffer;
          return NUM_DOUBLE;

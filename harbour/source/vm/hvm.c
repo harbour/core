@@ -3108,7 +3108,7 @@ static void hb_vmPushDoubleConst( double dNumber, int iWidth, int iDec )
                it will be determined at runtime with a relatively slow
                method. [vszakats] */
 
-      if( iWidth == -1 )
+      if( iWidth == HB_DEFAULT_WIDTH )
       {
          char buffer[ 360 ];
          sprintf( buffer, "%.*f", 0, dNumber );

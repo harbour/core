@@ -126,6 +126,7 @@ struct hb_struDate
  * was not specified at compile time (the value is a result of optimization
  * performed by the compiler)
  */
+#define HB_DEFAULT_WIDTH     255
 #define HB_DEFAULT_DECIMALS  255
 
 struct hb_struDouble

@@ -151,7 +151,7 @@ HB_EXPR_PTR hb_compExprNewEmpty( void )
    return hb_compExprNew( HB_ET_NONE );
 }
 
-HB_EXPR_PTR hb_compExprNewDouble( double dValue, BYTE ucDec )
+HB_EXPR_PTR hb_compExprNewDouble( double dValue, BYTE ucWidth, BYTE ucDec )
 {
    HB_EXPR_PTR pExpr;
 
@@ -160,6 +160,7 @@ HB_EXPR_PTR hb_compExprNewDouble( double dValue, BYTE ucDec )
    pExpr =hb_compExprNew( HB_ET_NUMERIC );
 
    pExpr->value.asNum.dVal    = dValue;
+   pExpr->value.asNum.bWidth  = ucWidth;
    pExpr->value.asNum.bDec    = ucDec;
    pExpr->value.asNum.NumType = HB_ET_DOUBLE;
    pExpr->ValType = HB_EV_NUMERIC;
@@ -176,7 +177,7 @@ HB_EXPR_PTR hb_compExprNewLong( long lValue )
    pExpr =hb_compExprNew( HB_ET_NUMERIC );
 
    pExpr->value.asNum.lVal    = lValue;
-   pExpr->value.asNum.bDec     = 0;
+   pExpr->value.asNum.bDec    = 0;
    pExpr->value.asNum.NumType = HB_ET_LONG;
    pExpr->ValType = HB_EV_NUMERIC;
 

@@ -107,6 +107,7 @@ extern void yyerror( char * ); /* parsing error management function */
    {
       double dNumber;   /* to hold a double number returned by lex */
       /* NOTE: Intentionally using "unsigned char" instead of "BYTE" */
+      unsigned char bWidth; /* to hold the width of the value */
       unsigned char bDec; /* to hold the number of decimal points in the value */
       char * szValue;
    } valDouble;
@@ -217,7 +218,7 @@ Main : Expression '\n' {
 
 /* Numeric values
  */
-NumValue   : NUM_DOUBLE      { $$ = hb_compExprNewDouble( $1.dNumber, $1.bDec ); }
+NumValue   : NUM_DOUBLE      { $$ = hb_compExprNewDouble( $1.dNumber, $1.bWidth, $1.bDec ); }
            | NUM_LONG        { $$ = hb_compExprNewLong( $1.lNumber ); }
            ;
 
