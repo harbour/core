@@ -38,9 +38,15 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 2000 J. Lefebvre <jfl@mafact.com> & RA. Cuylen <rac@mafact.com>
+ *    1.40 07/13/2000 JFL&RAC
  *    Now supporting of New and Init method as Class(y) use it
  *    So oMyObj:new(Var1, Var2) will call oMyObj:Init(Var1, Var2)
  *    Currently limited to 20 params
+ *
+ *    1.41 07/18/2000 JFL&RAC
+ *    Improving class(y) compatibility
+ *    adding messages :error() and ::MsgNotFound()
+ *
  *
  * See doc/license.txt for licensing terms.
  *
@@ -64,8 +70,14 @@ FUNCTION TObject()
       s_oClass:AddInline( "CLASSH"         , {| Self | __CLASSH( Self )            }, nScope )
       s_oClass:AddInline( "CLASSSEL"       , {| Self | __CLASSSEL( Self:CLASSH() ) }, nScope )
 
-      s_oClass:AddMethod( "NEW" , @TObject_New() , nScope )
-      s_oClass:AddMethod( "INIT", @TObject_Init(), nScope )
+      s_oClass:AddMethod( "NEW"  , @TObject_New()  , nScope )
+      s_oClass:AddMethod( "INIT" , @TObject_Init() , nScope )
+
+      s_oClass:AddMethod( "ERROR", @TOBJECT_ER() , nScope ) /* see classes.c */
+
+      s_oClass:SetOnError( @TObject_DftonError() )
+
+      s_oClass:AddInline( "MSGNOTFOUND" , {| Self, cMsg | ::Error( "Message not found", __OBJGETCLSNAME( Self ), cMsg, iif(substr(cMsg,1,1)=="_",1005,1004) ) }, nScope )
 
       /* For later use */
       /*s_oClass:AddInline( "CLASS"   , {|| s_oClass }, nScope )*/
@@ -122,15 +134,19 @@ FUNCTION TObject()
 
 static function TObject_New(xPar0, xPar1, xPar2, xPar3, xPar4, xPar5, xPar6, xPar7, xPar8, xPar9, ;
                             xPar10,xPar11,xPar12,xPar13,xPar14,xPar15,xPar16,xPar17,xPar18,xPar19 )
-local Self := QSelf()
 
-return Self:Init(xPar0, xPar1, xPar2, xPar3, xPar4, xPar5, xPar6, xPar7, xPar8, xPar9, ;
+return QSelf():Init(xPar0, xPar1, xPar2, xPar3, xPar4, xPar5, xPar6, xPar7, xPar8, xPar9, ;
                  xPar10,xPar11,xPar12,xPar13,xPar14,xPar15,xPar16,xPar17,xPar18,xPar19 )
 
-
 static function TObject_Init()
-local Self := QSelf()
+return QSelf()
 
-return Self
+static function TObject_Dftonerror(xPar0, xPar1, xPar2, xPar3, xPar4, xPar5, xPar6, xPar7, xPar8, xPar9, ;
+                                   xPar10,xPar11,xPar12,xPar13,xPar14,xPar15,xPar16,xPar17,xPar18,xPar19 )
+return QSelf():MSGNOTFOUND( __GetMessage(), xPar0, xPar1, xPar2, xPar3, xPar4, xPar5, xPar6, xPar7, xPar8, xPar9, ;
+                                            xPar10,xPar11,xPar12,xPar13,xPar14,xPar15,xPar16,xPar17,xPar18,xPar19 )
 
-
+/* This function is stored within classes.c and will generate on runTime error */
+/*
+* static function TObject_Er(cMsgErr, cCls, cMsg)
+*/

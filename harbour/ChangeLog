@@ -1,3 +1,19 @@
+2000-07-18 10:25 UTC+0200 JfL <jfl@mafact.com> & RaC <Rac@mafact.com>
+   * source/vm/classes.c
+     * Improvement within hb_clsinst (no more static var)
+     * Improvement within hb_clsinst, hb_getdata(), hb_setdata()
+       Not more indirect pointer ref. by its long value ...
+     * Unreleased block resolved
+     * One function added to improve class(y) compatibility with mess. :Error
+       tObject:Error(cDesc,cClass,cMsg,nCode)
+       +HB_FUNC( TOBJECT_ER )
+   * include\HBEXTERN.CH
+     +added  TOBJECT_ER
+   * source\rtl\TObject.prg
+     Improving Class(y) compatibility
+     + Added :Error(...)  message
+     + added :MsgNotFound() automatically called when one msg is not found
+
 2000-07-16-20:30 GMT -3  Luiz Rafael Culik <culik@sl.conex.net>
 
 *contrib/hbzlib/hbzip.h
@@ -25,10 +41,10 @@
     *source/common/hash.c
         * added ulCount and ulUsed members of HB_HASH_TABLE structure
         * added hb_hashTableResize() function
-        
+
     *source/compiler/hbident.c
-        *increased the hash table 
-        
+        *increased the hash table
+
     *source/vm/garbage.c
     *source/vm/hvm.c
         * all detached variables are scanned now correctly
@@ -61,11 +77,11 @@
         * expression of string type (created by the exression optimier)
         stores info it is allowed to deallocate the memory occupied by
         the string (normally it stores pointer to memory allocated
-        in the identifies table - however after optimization it can store 
+        in the identifies table - however after optimization it can store
         string allocated outside
-        
+
     *source/compiler/hbident.c
-        * the hash table is increased to 373 items      
+        * the hash table is increased to 373 items
 
 2000-07-14 22:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.slx

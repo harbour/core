@@ -117,16 +117,21 @@
  *    Correction made relative to CLASSDATA SHARED !
  *    Fixed init when redefining on subclass
  *
- *    1.22 06/??/2000 ?
- *    1.23 06/??/2000 ?
- *    1.24 06/??/2000 ?
- *    1.25 06/??/2000 ?
  *    1.26 07/??/2000 RGlab
  *    Garbage collector fixe
  *
- *    1.26 07/15/2000 JFL&RAC
+ *    1.27 07/15/2000 JFL&RAC
  *    Fixe for the potential case where we coudl not find
  *    one free bucket when inheriting the super method
+ *    Reduced the number of base message to 100
+ *
+ *    1.28 07/18/2000 JFL&RAC
+ *    Suppress. static var within hb_clsinst()
+ *    Suppress. indirect call to item pointer by it's Long value
+ *    improved hb_clsinst() hb_getdata() hb_setdata()
+ *    solve lost item pointer (causing unreleased block) at hb_clsaddmsg()
+ *    adding one function called by tObject.prg to implement :Error() message
+ *    so improving class(y) compatibility (HB_FUNC( TOBJECT_ER ))
  *
  * See doc/license.txt for licensing terms.
  *
@@ -185,7 +190,7 @@ static PHB_DYNS s_msgClass     = NULL;
 
 /* All functions contained in classes.c */
 
-static PHB_ITEM hb_clsInst( USHORT uiClass, BOOL bInit );
+static PHB_ITEM hb_clsInst( USHORT uiClass, PHB_ITEM * * ppObjects, USHORT * puiSize );
 static void     hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod );
 static ULONG    hb_cls_MsgToNum( PHB_DYNS pMsg );
 static BOOL     hb_clsIsParent( PCLASS pClass, char * szParentName );
@@ -308,6 +313,7 @@ static void hb_clsRelease( PCLASS pClass )
 
    hb_itemRelease( pClass->pClassDatas );
    hb_itemRelease( pClass->pInlines );
+
 }
 
 
@@ -327,6 +333,7 @@ void hb_clsReleaseAll( void )
 
    if( s_pClasses )
       hb_xfree( s_pClasses );
+
    s_uiClasses = 0;
    s_pClasses  = NULL;
 }
@@ -346,6 +353,7 @@ void hb_clsIsClassRef( void )
 
    while( uiClass-- )
    {
+
       if( pClass->pInlines )
          hb_gcItemRef( pClass->pInlines );
 
@@ -729,8 +737,16 @@ HB_FUNC( __CLSADDMSG )
          pClass->uiMethods++;           /* One more message */
       }
 
+
       pNewMeth->uiSprClass = uiClass  ; /* now used !! */
       pNewMeth->bClsDataInitiated = 0 ; /* reset state */
+
+      /* in cas eof re-used message */
+      if ( pNewMeth->pInitValue )
+       {
+        hb_itemRelease(pNewMeth->pInitValue) ;
+        pNewMeth->pInitValue = 0 ;
+       }
 
       switch( wType )
       {
@@ -879,7 +895,6 @@ HB_FUNC( __CLSNEW )
    USHORT nLenClsDatas = 0;
    USHORT nLenInlines = 0;
    USHORT nLenDatas = 0;
-   BOOL bResize = FALSE;
 
    pahSuper = hb_itemParam( 3 );      /* Replace the initial uiSuper   */
    uiSuper  = ( USHORT ) hb_itemSize( pahSuper ); /* Number of Super class present */
@@ -911,6 +926,7 @@ HB_FUNC( __CLSNEW )
          USHORT ui, uiAt, uiLimit, uiCurrent ;
          PCLASS pSprCls;
          USHORT nLen;
+         BOOL bResize ;
 
          pSuper  =  hb_itemNew( NULL );
          hb_arrayGet( pahSuper, i, pSuper);
@@ -938,12 +954,6 @@ HB_FUNC( __CLSNEW )
          else
          {
             /* Ok add now the previous len to the offset */
-/*          nLenShrDatas += pNewCls->uiDatasShared;
-            nLenClsDatas += ( USHORT ) hb_itemSize( pNewCls->pClassDatas );
-            nLenInlines  += ( USHORT ) hb_itemSize( pNewCls->pInlines );
-            nLenDatas    += ( USHORT ) pNewCls->uiDatas; */
-
-            /*nLenShrDatas  = pNewCls->uiDatasShared;*/
             nLenClsDatas  = ( USHORT ) hb_itemSize( pNewCls->pClassDatas );
             nLenInlines   = ( USHORT ) hb_itemSize( pNewCls->pInlines );
             nLenDatas     = ( USHORT ) pNewCls->uiDatas;
@@ -996,7 +1006,7 @@ HB_FUNC( __CLSNEW )
 
           if( bResize )
           {
-            /* Not easy to debug ... I don't find any samples here where this case appear */
+            /* Not easy to debug ... I don't find any samples where this case appear */
             hb_clsDictRealloc( pNewCls );
             bResize=FALSE;
           }
@@ -1181,7 +1191,11 @@ HB_FUNC( __CLSDELMSG )
 HB_FUNC( __CLSINST )
 {
    PHB_ITEM pSelf ;
-   pSelf = hb_clsInst( ( USHORT ) hb_parni( 1 ), TRUE );
+
+   PHB_ITEM * ppObjects=NULL;
+   USHORT uiSize=0;
+
+   pSelf = hb_clsInst( ( USHORT ) hb_parni( 1 ), &ppObjects, &uiSize );
 
    if( pSelf )
    {
@@ -1189,31 +1203,19 @@ HB_FUNC( __CLSINST )
       hb_itemRelease( pSelf );
    }
 
-   /* Now release memory */
-   hb_clsInst( s_uiClasses + 1 , TRUE );
+   if( ppObjects )
+      hb_xfree( ppObjects );
 }
 
 
 /*
- * [<o(Super)Object>] := hb_clsInst( <hClass>, bInit )
+ * [<o(Super)Object>] := hb_clsInst( <hClass>, <pObjects>, <puiSize> )
  *
  * Create a (super)object from class definition <hClass>
  */
-static PHB_ITEM hb_clsInst( USHORT uiClass, BOOL bInit )
+static PHB_ITEM hb_clsInst( USHORT uiClass, PHB_ITEM * * ppObjects, USHORT * puiSize )
 {
-   static PHB_ITEM * s_ppObjects;
-   static USHORT s_uiSize;
-
    PHB_ITEM pSelf = NULL;
-
-   if( bInit )
-   {
-      if( s_ppObjects )
-         hb_xfree( s_ppObjects );
-
-      s_ppObjects = NULL;
-      s_uiSize = 0;
-   }
 
    if( uiClass <= s_uiClasses )
    {
@@ -1241,18 +1243,22 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, BOOL bInit )
              ( pMeth->uiScope & HB_OO_CLSTP_SUPER ) != HB_OO_CLSTP_SUPER
            )
          {
-            pSprObj = hb_clsInst( pMeth->uiSprClass, FALSE );  /*instance super object*/
+
+            pSprObj = hb_clsInst( pMeth->uiSprClass, ppObjects, puiSize );  /*instance super object*/
+
             hb_arraySet( pSelf, pMeth->uiData, pSprObj );
             hb_itemRelease( pSprObj );
 
-            ++s_uiSize;
-            if( s_ppObjects == NULL )
-               s_ppObjects = ( PHB_ITEM * ) hb_xgrab( sizeof( PHB_ITEM ) );
+            ++(*puiSize);
+            if( *ppObjects == NULL )
+               *ppObjects = ( PHB_ITEM * ) hb_xgrab( sizeof( PHB_ITEM ) );
             else
-               s_ppObjects = ( PHB_ITEM * ) hb_xrealloc( s_ppObjects, s_uiSize * sizeof( PHB_ITEM ) );
+               *ppObjects = ( PHB_ITEM * ) hb_xrealloc( *ppObjects, (*puiSize) * sizeof( PHB_ITEM ) );
 
             pTmp = hb_arrayGetItemPtr( pSelf, pMeth->uiData );
-            s_ppObjects[ s_uiSize - 1 ] = pTmp;
+
+            (*ppObjects)[ (*puiSize) - 1 ] = pTmp;
+
          }
       }
 
@@ -1268,18 +1274,17 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, BOOL bInit )
          {
             USHORT uiCnt;
 
-            for( uiCnt = 1; uiCnt <= s_uiSize; uiCnt++ )
+            for( uiCnt = 1; uiCnt <= (*puiSize); uiCnt++ )
             {
-               pTmp = s_ppObjects[ uiCnt - 1 ];
+               pTmp = (*ppObjects)[ uiCnt - 1 ];
 
                if( pTmp->item.asArray.value->uiClass == pMeth->uiSprClass )
                {
-                  PHB_ITEM pPtrNum = hb_itemPutNL( NULL, ( ULONG ) pTmp );
-                  hb_itemArrayPut( pSelf, pMeth->uiData, pPtrNum );
-                  hb_itemRelease( pPtrNum );
+                  hb_arraySet( pSelf, pMeth->uiData, pTmp );
                   break;
                }
             }
+
          }
       }
 
@@ -1293,11 +1298,24 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, BOOL bInit )
          if( pMeth->pInitValue && pMeth->pFunction == hb___msgGetClsData && !( pMeth->bClsDataInitiated ) )
          {
             HB_ITEM init;
+            PHB_ITEM pInit;
+
             hb_arrayGet( pClass->pClassDatas, pMeth->uiData, &init );
             if( init.type == HB_IT_NIL )
             {
-               hb_arraySet( pClass->pClassDatas, pMeth->uiData, pMeth->pInitValue );
+
+               if( HB_IS_ARRAY( pMeth->pInitValue ) )
+                pInit = hb_arrayClone( pMeth->pInitValue );
+               else
+               {
+                   pInit = hb_itemNew( NULL );
+                   hb_itemCopy( pInit, pMeth->pInitValue );
+               }
+
+               hb_arraySet( pClass->pClassDatas, pMeth->uiData, pInit );
+               hb_itemRelease(pInit);
                pMeth->bClsDataInitiated = 1;
+
             }
             hb_itemClear( &init );
          }
@@ -1308,9 +1326,9 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, BOOL bInit )
             {
                USHORT uiCnt;
 
-               for( uiCnt = 1; uiCnt <= s_uiSize; uiCnt++ )
+               for( uiCnt = 1; uiCnt <= (*puiSize); uiCnt++ )
                {
-                  pTmp = s_ppObjects[ uiCnt - 1 ];
+                  pTmp = (*ppObjects)[ uiCnt - 1 ];
 
                   if( pTmp->item.asArray.value->uiClass == pMeth->uiSprClass )
                   {
@@ -1333,9 +1351,7 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, BOOL bInit )
 
                      pDataHrtd = ( PHB_ITEM ) hb_arrayGetItemPtr( pTmp, pSprCls->pMethods[ ui+uiBucket ].uiData );
 
-                     pPtrNum = hb_itemPutNL( NULL, ( ULONG ) pDataHrtd );
-                     hb_itemArrayPut( pSelf , pMeth->uiData, pPtrNum );
-                     hb_itemRelease( pPtrNum );
+                     hb_arraySet( pSelf, pMeth->uiData, pDataHrtd );
                      break;
 
                   }
@@ -1346,24 +1362,44 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, BOOL bInit )
          {
             if( pMeth->pFunction == hb___msgGetData ) /* is a DATA but not herited */
             {
+               PHB_ITEM pInitValue ;
+
                if( HB_IS_ARRAY( pMeth->pInitValue ) )
                {
-                  PHB_ITEM pInitValue = hb_arrayClone( pMeth->pInitValue );
-                  hb_arraySet( pSelf, pMeth->uiData, pInitValue );
-                  hb_itemRelease( pInitValue );
+                  pInitValue = hb_arrayClone( pMeth->pInitValue );
                }
                else
-                  hb_arraySet( pSelf, pMeth->uiData, pMeth->pInitValue );
+               {
+                  pInitValue = hb_itemNew( NULL );
+                  hb_itemCopy(pInitValue,  pMeth->pInitValue );
+               }
+
+               hb_arraySet( pSelf, pMeth->uiData, pInitValue );
+               hb_itemRelease( pInitValue );
+
             }
             else if( pMeth->pFunction == hb___msgGetShrData && !( pMeth->bClsDataInitiated ) )
             {
                /* Init Shared Classdata as needed, we only need to init the first */
                /* not inherited classdata array where all shared will point to    */
                HB_ITEM init;
+               PHB_ITEM pInit;
+
                hb_arrayGet( pClass->pClassDatas, pMeth->uiData, &init );
                if( init.type == HB_IT_NIL )
                {
-                  hb_arraySet( pClass->pClassDatas, pMeth->uiData, pMeth->pInitValue );
+
+                  if( HB_IS_ARRAY( pMeth->pInitValue ) )
+                   pInit = hb_arrayClone( pMeth->pInitValue );
+                  else
+                  {
+                   pInit = hb_itemNew( NULL );
+                   hb_itemCopy( pInit, pMeth->pInitValue );
+                  }
+
+
+                  hb_arraySet( pClass->pClassDatas, pMeth->uiData, pInit );
+                  hb_itemRelease(pInit);
                   pMeth->bClsDataInitiated = 1;
                }
                hb_itemClear( &init );
@@ -1622,7 +1658,7 @@ HB_FUNC( __CLS_DECDATA )
 /*
  * <nSeq> = __cls_IncData( <hClass> )
  *
- * Return number of datas and decrease
+ * Return number of datas and increase
  */
 HB_FUNC( __CLS_INCDATA )
 {
@@ -1984,22 +2020,6 @@ static HARBOUR hb___msgEval( void )
    }
 }
 
-
-/*
- * __msgGetClsData()
- *
- * Internal function to return a CLASSDATA
- */
-static HARBOUR hb___msgGetClsData( void )
-{
-   USHORT uiClass = ( hb_stack.pBase + 1 )->item.asArray.value->uiClass;
-
-   if( uiClass && uiClass <= s_uiClasses )
-      hb_arrayGet( s_pClasses[ uiClass - 1 ].pClassDatas, s_pMethod->uiData, &hb_stack.Return );
-}
-
-
-
 /*
  * __msgSuper()
  *
@@ -2020,14 +2040,9 @@ static HARBOUR hb___msgSuper( void )
 /* Please don't erase those lines until I do it myself (JF)              */
 /* I have yet to think about a better solution where I could return a    */
 /* real Object as keeping the good Self value within all the class tree  */
-/* if( ( s_pMethod->uiScope & HB_OO_CLSTP_SUPER ) == HB_OO_CLSTP_SUPER ) */
-/* {                                                                     */
-/*    PHB_ITEM pPtrNum = ( PHB_ITEM ) hb_arrayGetNL( pObject, uiIndex ); */
 /*                                                                       */
-/*    hb_itemReturn( pPtrNum );                                          */
-/* }                                                                     */
-/* else                                                                  */
 /*    hb_itemReturn( hb_arrayGetItemPtr( pObject, s_pMethod->uiData ) ); */
+/*                                                                       */
 }
 
 /*
@@ -2041,6 +2056,20 @@ static HARBOUR hb___msgClass( void )
 }
 
 /*
+ * __msgGetClsData()
+ *
+ * Internal function to return a CLASSDATA
+ */
+static HARBOUR hb___msgGetClsData( void )
+{
+   USHORT uiClass = ( hb_stack.pBase + 1 )->item.asArray.value->uiClass;
+
+   if( uiClass && uiClass <= s_uiClasses )
+      hb_arrayGet( s_pClasses[ uiClass - 1 ].pClassDatas, s_pMethod->uiData, &hb_stack.Return );
+}
+
+
+/*
  * __msgSetClsData()
  *
  * Internal function to set a CLASSDATA
@@ -2049,13 +2078,13 @@ static HARBOUR hb___msgSetClsData( void )
 {
    USHORT uiClass = ( hb_stack.pBase + 1 )->item.asArray.value->uiClass;
 
+   PHB_ITEM pReturn = hb_stack.pBase + 2;
+
    if( uiClass && uiClass <= s_uiClasses )
-   {
-      PHB_ITEM pReturn = hb_stack.pBase + 2;
       hb_arraySet( s_pClasses[ uiClass - 1 ].pClassDatas,
                    s_pMethod->uiData, pReturn );
-      hb_itemReturn( pReturn );
-   }
+
+   hb_itemReturn( pReturn );
 }
 
 /*
@@ -2080,13 +2109,13 @@ static HARBOUR hb___msgSetShrData( void )
 {
    USHORT uiSprCls = s_pMethod->uiSprClass;
 
+   PHB_ITEM pReturn = hb_stack.pBase + 2;
+
    if( uiSprCls && uiSprCls <= s_uiClasses )
-   {
-      PHB_ITEM pReturn = hb_stack.pBase + 2;
       hb_arraySet( s_pClasses[ uiSprCls - 1 ].pClassDatas,
                    s_pMethod->uiDataShared, pReturn );
-      hb_itemReturn( pReturn );
-   }
+
+   hb_itemReturn( pReturn );
 }
 
 /*
@@ -2099,23 +2128,11 @@ static HARBOUR hb___msgGetData( void )
    PHB_ITEM pObject = hb_stack.pBase + 1;
    USHORT uiIndex = s_pMethod->uiData;
 
-   /* If it's an herited data, the data reside within it's original Super object */
-   /* So we use the know pointer */
-   if( ( s_pMethod->uiScope & HB_OO_CLSTP_SUPER ) == HB_OO_CLSTP_SUPER )
-   {
-      PHB_ITEM pPtrNum;
-      pPtrNum = ( PHB_ITEM ) hb_arrayGetNL( pObject, uiIndex );
+   /* will arise only if the class has been modified after first instance */
+   if( uiIndex > ( USHORT ) hb_arrayLen( pObject ) ) /* Resize needed */
+      hb_arraySize( pObject, uiIndex ); /* Make large enough */
 
-      hb_itemReturn( pPtrNum );
-   }
-   else
-   {
-      if( uiIndex > ( USHORT ) hb_arrayLen( pObject ) ) /* Resize needed */
-      {
-         hb_arraySize( pObject, uiIndex ); /* Make large enough */
-      }
-      hb_arrayGet( pObject, uiIndex, &hb_stack.Return );
-   }
+   hb_arrayGet( pObject, uiIndex, &hb_stack.Return );
 }
 
 /*
@@ -2129,22 +2146,11 @@ static HARBOUR hb___msgSetData( void )
    PHB_ITEM pReturn = hb_stack.pBase + 2;
    USHORT uiIndex = s_pMethod->uiData;
 
-   /* If it's an herited data, the data reside within it's original Super object */
-   /* So we use the know pointer */
-   if( ( s_pMethod->uiScope & HB_OO_CLSTP_SUPER ) == HB_OO_CLSTP_SUPER )
-   {
-      PHB_ITEM pPtrNum;
-      pPtrNum = ( PHB_ITEM ) hb_arrayGetNL( pObject, uiIndex );
+   /* will arise only if the class has been modified after first instance */
+   if( uiIndex > ( USHORT ) hb_arrayLen( pObject ) ) /* Resize needed ? */
+      hb_arraySize( pObject, uiIndex ); /* Make large enough */
 
-      hb_itemCopy( pPtrNum, pReturn );
-   }
-   else
-   {
-      if( uiIndex > ( USHORT ) hb_arrayLen( pObject ) ) /* Resize needed ? */
-         hb_arraySize( pObject, uiIndex ); /* Make large enough */
-
-      hb_arraySet( pObject, uiIndex, pReturn );
-   }
+   hb_arraySet( pObject, uiIndex, pReturn );
 
    hb_itemReturn( pReturn );
 }
@@ -2156,3 +2162,38 @@ static HARBOUR hb___msgVirtual( void )
    ;
 }
 
+
+/* ************** C Function associate to TObject.prg ********************* */
+
+/* tObject:Error(cDesc,cClass,cMsg,nCode) */
+HB_FUNC( TOBJECT_ER )
+{
+   char * pszDesc  = hb_parc( 1 );
+   char * pszClass = hb_parc( 2 );
+   char * pszMsg   = hb_parc( 3 );
+   char   szTmp[255] ;
+   USHORT uiCode = 1004 ;
+
+   PHB_ITEM pResult ;
+
+   if (hb_pcount()>3)
+    uiCode= (USHORT) hb_parni(4);
+
+   strcpy( szTmp, pszClass );
+   strcat( szTmp, ":" );
+
+   if( uiCode==1005 )
+    {
+     strcat( szTmp, pszMsg+1 );
+     pResult = hb_errRT_BASE_Subst( EG_NOVARMETHOD, 1005, pszDesc, szTmp );
+    }
+   else
+    {
+     strcat( szTmp, pszMsg );
+     pResult = hb_errRT_BASE_Subst( EG_NOMETHOD, 1004, pszDesc, szTmp );
+    }
+
+   hb_itemReturn( pResult );
+   hb_itemRelease( pResult );
+
+}
