@@ -1,3 +1,8 @@
+19990615-23:00 CET Felipe Coury
+  + tests/working/hscript/bld32exe.bat; dir.hs; hb32.bat; hello.hs;
+    hscript.prg; makehs.prg; makehtm.prg; multiply.hs readme.txt
+    First release of hScript added
+
 19990615-21:00 CET Jose Lalin / Eddie Runia
   + source/rtl/natmsg/msgbas.c
   * source/rtl/msgxxx.c
