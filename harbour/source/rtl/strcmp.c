@@ -12,10 +12,17 @@ int hb_itemStrCmp( PITEM pFirst, PITEM pSecond, BOOL bForceExact )
    char *szSecond  = pSecond->value.szText;
    long lLenFirst  = pFirst->wLength;	/* TODO: change ITEM.wLength from WORD to long */
    long lLenSecond = pSecond->wLength;	/* TODO: change ITEM.wLength from WORD to long */
-   long lMinLen    = lLenFirst < lLenSecond ? lLenFirst : lLenSecond;
+   long lMinLen;
    long lCounter;
    int  iRet = 0;                       /* Current status               */
 
+   if (hb_set.HB_SET_EXACT && !bForceExact)
+   {					/* SET EXACT ON and not using == */
+                                        /* Don't include trailing spaces */
+      while( lLenFirst > 0 && szFirst[ lLenFirst - 1 ] == ' ') lLenFirst--;
+      while( lLenSecond > 0 && szSecond[ lLenSecond - 1 ] == ' ') lLenSecond--;
+   }
+   lMinLen = lLenFirst < lLenSecond ? lLenFirst : lLenSecond;
    if( lMinLen )                        /* One of the strings is empty  */
    {
       for( lCounter = 0; lCounter < lMinLen && !iRet; lCounter++ )
@@ -28,19 +35,20 @@ int hb_itemStrCmp( PITEM pFirst, PITEM pSecond, BOOL bForceExact )
            szSecond++;
          }
       }
-/* printf ("\nhb_itemStrCmp: iRet = %d, lCounter = %ld, lLenFirst = %ld, lLenSecond = %ld", iRet, lCounter, lLenFirst, lLenSecond); */
       if( hb_set.HB_SET_EXACT || bForceExact || lLenSecond > lCounter )
       {  /* Force an exact comparison */
          if( !iRet && lLenFirst != lLenSecond )
                                         /* If length is different !     */
-            iRet = (lLenFirst < lLenSecond) ? -1 : 1;
+               iRet = (lLenFirst < lLenSecond) ? -1 : 1;
       }
-/* printf ("\n; hb_set.HB_SET_EXACT = %d, bForceExact = %d, iRet = %d.\n", hb_set.HB_SET_EXACT, bForceExact, iRet); */
    }
    else
    {
       if( lLenFirst != lLenSecond )     /* Both empty ?                 */
-         iRet = (lLenFirst < lLenSecond) ? -1 : 1;
+         if( hb_set.HB_SET_EXACT || bForceExact )
+            iRet = (lLenFirst < lLenSecond) ? -1 : 1;
+         else
+            iRet = (lLenSecond == 0) ? 0 : -1;
       else
          iRet = 0;                      /* Both empty => Equal !        */
    }

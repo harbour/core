@@ -1,3 +1,9 @@
+19990514-20:10 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/strcmp.c
+    - Added SET EXACT ON rules for null strings and trailing spaces.
+  * tests/working/strings3.prg
+    - Added tests for null strings and trailing spaces.
+
 19990515-01:15 CET Eddie Runia
   * source/compiler/harbour.y
     #include again
