@@ -116,11 +116,13 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\rddord.obj \
     $(OBJ_DIR)\readkey.obj \
     $(OBJ_DIR)\readvar.obj \
+    $(OBJ_DIR)\samples.obj \
     $(OBJ_DIR)\set.obj \
     $(OBJ_DIR)\setcolor.obj \
     $(OBJ_DIR)\setfunc.obj \
     $(OBJ_DIR)\setkey.obj \
     $(OBJ_DIR)\setta.obj \
+    $(OBJ_DIR)\soundex.obj \
     $(OBJ_DIR)\strings.obj \
     $(OBJ_DIR)\symbols.obj \
     $(OBJ_DIR)\tbcolumn.obj \
@@ -569,6 +571,9 @@ $(RTL_DIR)\readvar.c : $(RTL_DIR)\readvar.prg
 $(OBJ_DIR)\readvar.obj : $(RTL_DIR)\readvar.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(OBJ_DIR)\samples.obj : $(RTL_DIR)\samples.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(OBJ_DIR)\set.obj : $(RTL_DIR)\set.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
@@ -591,6 +596,9 @@ $(RTL_DIR)\setta.c : $(RTL_DIR)\setta.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\setta.obj : $(RTL_DIR)\setta.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\soundex.obj : $(RTL_DIR)\soundex.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\strings.obj : $(RTL_DIR)\strings.c
