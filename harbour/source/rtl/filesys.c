@@ -657,7 +657,7 @@ ULONG   hb_fsTell( FHANDLE hFileHandle )
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
    errno = 0;
-   ulPos = tell( hFileHandle );
+   ulPos = lseek( hFileHandle, 0L, SEEK_CUR );
    s_uiErrorLast = errno;
 
 #else

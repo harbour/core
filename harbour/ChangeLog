@@ -1,3 +1,9 @@
+Tue Oct 05 14:44:16 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* source/rtl/filesys.c (hb_fsTell): 
+	Replaced use of tell() with an equivalent call to lseek(), so that
+	this is supported under gcc.
+
 19991005-20:34 GMT+1 Victor Szel <info@szelvesz.hu>
   * include/hbextern.ch
     source/runner/stdalone/external.prg
