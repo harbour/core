@@ -50,6 +50,9 @@
  *
  */
 
+/* #define __XHARBOUR__ */
+
+
 #include "hbapi.h"
 #include "hbinit.h"
 #include "hbvm.h"
@@ -68,6 +71,11 @@
 
 extern HB_FUNC( _DBFCDX );
 extern HB_FUNC( DBFCDX_GETFUNCTABLE );
+
+#ifdef HB_PCODE_VER
+   #undef HB_PRG_PCODE_VER
+   #define HB_PRG_PCODE_VER HB_PCODE_VER
+#endif
 
 HB_INIT_SYMBOLS_BEGIN( dbfcdx1__InitSymbols )
 { "_DBFCDX",             HB_FS_PUBLIC, HB_FUNCNAME( _DBFCDX ), NULL },
@@ -2745,7 +2753,8 @@ static USHORT hb_cdxIndexLockRead( LPCDXINDEX pIndex, LPCDXTAG pTag )
          hb_errInternal( 9105, "hb_cdxTagLockRead: bad count of locks.", "", "" );
       return 1;
    }
-   ret = hb_fsLock ( pIndex->hFile, 0x7FFFFFFEL, 1, FL_LOCK );
+   /* ret = hb_fsLock ( pIndex->hFile, 0x7FFFFFFEL, 1, FL_LOCK ); */
+   while (! (ret = hb_fsLock ( pIndex->hFile, 0x7FFFFFFEL, 1, FL_LOCK ) ) );
    if ( !ret )
       hb_errInternal( 9107, "hb_cdxTagLockRead: lock failure.", "", "" ); /* change into error dbfcdx/1038 */
    if ( ret ) {
@@ -3580,7 +3589,7 @@ static void hb_cdxTagClearScope( LPCDXTAG pTag, USHORT nScope )
    PHB_ITEM *pScope;
    LPKEYINFO *pScopeKey;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_cdxTagClearScope(%p, %hu)", pArea, nScope));
+   HB_TRACE(HB_TR_DEBUG, ("hb_cdxTagClearScope(%p, %hu)", pTag, nScope));
 
    pScope    = (nScope == 0) ? &(pTag->topScope) : &(pTag->bottomScope);
    pScopeKey = (nScope == 0) ? &(pTag->topScopeKey) : &(pTag->bottomScopeKey);
@@ -3852,6 +3861,7 @@ ERRCODE hb_cdxGoTo( CDXAREAP pArea, ULONG ulRecNo )
           hb_cdxKeyPutItem( pKey, hb_stackItemFromTop( - 1 ) );
           hb_stackPop();
       }
+      pKey->Tag = pArea->ulRecNo;
 
       hb_cdxIndexLockRead( pTag->pIndex, pTag );
       lRecno = hb_cdxTagKeyFind( pTag, pKey );
@@ -3863,6 +3873,7 @@ ERRCODE hb_cdxGoTo( CDXAREAP pArea, ULONG ulRecNo )
       {
          if( ( ULONG ) lRecno == pArea->ulRecNo )
          {
+            hb_cdxKeyFree( pKey );
             return SUCCESS;
          }
          else
@@ -4340,11 +4351,41 @@ ERRCODE hb_cdxGoCold( CDXAREAP pArea )
 
                   pTag->RootPage->Changed = TRUE;
 
-                  /* if( uiTag == pArea->lpIndexes->uiTag) */
                   if( uiTag == pArea->uiTag)
                      hb_cdxTagTagStore( pTag );
                   else
                      hb_cdxTagTagClose( pTag );
+               }
+               else
+               {
+                  if( bForOk )
+                  {
+                     if( uiTag != pArea->uiTag )
+                       hb_cdxTagKeyFind( pTag, pTag->HotKey );
+                     if ( !pTag->CurKeyInfo || (ULONG) pTag->CurKeyInfo->Tag != pArea->ulRecNo )
+                     {
+                        hb_cdxTagKeyAdd( pTag, pKey );
+                        pTag->RootPage->Changed = TRUE;
+                        if( uiTag == pArea->uiTag)
+                           hb_cdxTagTagStore( pTag );
+                        else
+                           hb_cdxTagTagClose( pTag );
+                     }
+                  }
+                  else
+                  {
+                     if (uiTag != pArea->uiTag)
+                        hb_cdxTagKeyFind( pTag, pTag->HotKey );
+                     if ( pTag->CurKeyInfo && (ULONG) pTag->CurKeyInfo->Tag == pArea->ulRecNo )
+                     {
+                        hb_cdxPageDeleteKey( pTag->RootPage );
+                        pTag->RootPage->Changed = TRUE;
+                        if( uiTag == pArea->uiTag)
+                           hb_cdxTagTagStore( pTag );
+                        else
+                           hb_cdxTagTagClose( pTag );
+                     }
+                  }
                }
             }
 
