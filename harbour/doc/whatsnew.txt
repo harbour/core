@@ -4,6 +4,39 @@
 
 ----------------------------------------------------------------------
 
+Version 0.34 Build 34 (2000-??-??)
+
+- Linux/Unix ncurses screen output and xterm mouse input support
+- MEMOEDIT support started
+- CONTRIBs better separated from core Harbour (TOOLS moved there)
+- Simplified and enhanced base for multiplatform coding
+- Language API (link/compile time language modul selection)
+- Several small optimizations, enhancements and fixes (compiler, macro, GT, 
+  inkey, make and build systems, more strict compiler warnings)
+- Compiler pcode size optimizations (new compact pcode versions added and 
+  other tricks)
+- Far jump pcode support
+- Double number size support in pcode
+- Pcode finalized in the compiler, instead of the output generation modules.
+- OS/2 support improved (DISKSPACE(), MEMORY(), locks, etc...)
+- Linux/Unix support for file locks and commit.
+- DBFCDX index creation support (started)
+- Strong Typing support
+- OBJ generation support for BCC5x + Blinker5
+- Several new CONTRIBs (Nanfor LIB, ZLIB, MSQL, CA-Tools LIB, GT LIB)
+- Clipper 5.3 compatible MENUITEM, POPUP, TOPBAR classes
+- Documentation further enhanced
+- RSX32 and RSXNT compiler support
+- SETKEY functions, ASORT(), SAVESCREEN/RESTSCREEN rewritten in C
+- Extensions (XPP, C53, Harbour) are easier to switch of and better separated 
+  from Harbour.
+- Some fixes for 10 chars support.
+- New most compact and fast -gc0 (C language) output method added.
+- -gf switch renamed to -go
+- Compiler /BUILD switch added
+- Crew list added to /CREDIT compiler switch
+- CURDIR(), CURDRIVE() fixed
+
 Version 0.33 Build 33 (2000-04-07)
 
 - Final cleanups on global macro and symbol names.
@@ -130,7 +163,7 @@ Build #31 2000-01-27
 - Added HARBOURCMD/CLIPPERCMD environment variables
 - Added support for #pragma directives
 - Enhanced Getenv() function
-- Added //BUILD command line to compiler
+- Added //BUILD app command line option
 
 ----------------------------------------------------------------------
 

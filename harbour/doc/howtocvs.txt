@@ -5,8 +5,21 @@
 HOW TO USE THE CVS
 ------------------
 
-Here's how to prepare for uploading to the CVS server
-=====================================================
+Content
+=======
+
+1.1 Here's how to prepare for uploading to the CVS server
+1.2 Here's how to upload your changes to the CVS server
+1.3 Here's how to format your ChangeLog entries
+1.4 Here's how to use the CVS server in anonymous read-only mode (TODO)
+1.5 Switching from anonymous access to read/write access
+1.6 Things to do to avoid damaging the SourceForge CVS tree
+1.7 How I got SSH and CVS to work together
+1.8 How to add CVS ID to new files
+
+1.1 Here's how to prepare for uploading to the CVS server
+=========================================================
+by Victor Szakats <info@szelvesz.hu>
 
  1) Read the Harbour FAQ (www.harbour-project.org), monitor the 
     mailing-list (Harbour at www.egroups.com), consult with the
@@ -22,8 +35,9 @@ Here's how to prepare for uploading to the CVS server
     (see: CVS_SSH.TXT)
  6) Do a complete checkout to get the fresh source tree.
 
-Here's how to upload your changes to the CVS server
-===================================================
+1.2 Here's how to upload your changes to the CVS server
+=======================================================
+by Victor Szakats <info@szelvesz.hu>
 
  1) Do the changes in the source, and in parallel modify ChangeLog
  2) Go online (if needed)
@@ -59,13 +73,16 @@ Important notes:
     the name and placing of it. On the CVS, there's no way to completely 
     remove a directory, that's why this is important.
 
-Here's how to format your ChangeLog entries
-===========================================
+1.3 Here's how to format your ChangeLog entries
+===============================================
+by Victor Szakats <info@szelvesz.hu>
 
 - Always add new entries to the top of the ChangeLog file.
 
 - Add an entry header using this format:
-  YYYYMMDD-HH:MM GMT-+TZ Your Full Name <your_email_address>
+  YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email_address>
+
+  For example: 2000-05-27 23:12 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
 - Add a entry body which lists all filenames changed, all of
   them with full path spec. Mention the name of the changed function or
@@ -92,9 +109,140 @@ Here's how to format your ChangeLog entries
 
 - Leave an empty line between the header and body and one after the body.
 
-Here's how to use the CVS server in anonymous read-only mode
-============================================================
+1.4 Here's how to use the CVS server in anonymous read-only mode
+================================================================
 
 (TODO)
 
-Victor Szakats <info@szelvesz.hu>
+1.5 Switching from anonymous access to read/write access
+========================================================
+by David G. Holm <Harbour@SpaceMoose.com>
+
+1) Change your CVSROOT variable from
+      :pserver:anonymous@cvs.Harbour-project.sourceforge.net:/cvsroot/Harbour-project
+   to
+      :ext:your_source_forge_ID_in_lower_case@cvs.Harbour-project.sourceforge.net:/cvsroot/Harbour-project
+
+2) Set up CVS to use SSH (see cvs_ssh.txt for details).
+
+3) Visit each and every one of the CVS subdirectories in your local
+   CVS tree and change the contents of the 'Root' file from your old
+   CVSROOT contents to your new CVSROOT contents.
+
+Note: Every time you issue a CVS command, you will have to enter your
+SourceForge password.
+
+1.6 Things to do to avoid damaging the SourceForge CVS tree
+===========================================================
+by David G. Holm <Harbour@SpaceMoose.com>
+
+1) Always do your Harbour development using your local CVS tree. Do not
+   do your development outside your local CVS tree and then copy your
+   changes into your local CVS tree to commit them, because that leads
+   easily to accidentally overwriting changes made by others, because
+   you didn't notice that a module that you were also working on was
+   changed by someone else. By always doing Harbour development using
+   your local CVS tree, changes made by others will be merged with your
+   changes and you only need to recompile and retest before committing.
+
+2) Always run 'cvs update' from the 'harbour' directory before you run
+   'cvs commit'. Ideally, you should redirect the output from the update
+   to a file and look at the results to confirm that you are ready to do
+   a commit. Any files marked M, A or D are files that you have modified
+   or are adding or deleting. Confirm that you have comments for all of
+   them in your ChangeLog entry. If you see many modules marked P or U,
+   then you need to recompile and retest before you commit your changes.
+
+   If you see any conflicts reported in the update output, then you need
+   to resolve them before committing. CVS is generally good at merging
+   changes, so you probably won't see conflicts very often, but if you
+   edit the ChangeLog file before you run 'cvs update' and other changes
+   have been committed by others, then ChangeLog will have conflicts. To
+   resolve those conflicts, simply remove the conflict markers. What I do
+   to avoid conflicts to ChangeLog is to record my changes in changes.txt
+   and then copy them into ChangeLog between the update and the commit.
+
+1.7 How I got SSH and CVS to work together
+==========================================
+by David G. Holm <Harbour@SpaceMoose.com>
+
+The trick was in how to set up the CVSROOT variable.
+I did this on NT4, but it should be similar for 95/98 and OS/2.
+
+Note: Your CVS ID is the same as your SourceForge login ID, with one
+      very important difference: Any and all upper case letters are
+      converted to lower case. So if your SourceForge login ID is
+      MyFullName, then your CVS ID will be myfullname.
+
+First I set up SSH, using the following steps:
+
+1) I pointed my web browser to ftp://ftp.cs.hut.fi/pub/ssh/contrib/
+2) I downloaded the ssh-1.2.14-win32bin.zip file
+3) I unzipped the file into a directory that was already on my PATH
+4) I created a directory E:\hb-dev\ for my Harbour development CVS tree
+5) I created a batch file LOGIN.BAT, in the E:\hb-dev\ directory, with
+   the following commands in it:
+      @echo off
+      SET HOME=E:\hb-dev\
+    ssh -l dholm Harbour-project.sourceforge.net
+6) I ran the LOGIN batch file, which automatically created a .ssh
+   directory under E:\hb-dev\, automatically accepted the key from
+      SourceForge, and prompted me for my  password.
+7) I entered my password and got logged into a SourceForge shell,
+   thus confirming that SSH is configured properly.
+8) I entered "exit" to quit back to the DOS prompt.
+
+Next I set up CVS, using the following steps:
+
+1) I pointed my browser to http://download.cyclic.com/pub/cvs-1.10/windows/
+2) I downloaded the cvs-1.10-win.zip file
+3) I renamed my old CVS.EXE to CVS-OLD.EXE
+4) I unzipped the new file into a directory that was already on my PATH
+5) I created a batch file CHECKOUT.BAT, in my E:\hb-dev\ directory,
+      with the following commands in it:
+      @echo off
+      SET HOMEDRIVE=E:
+      SET HOMEPATH=/hb-dev/
+      SET CVSROOT=:ext:dholm@cvs.Harbour-project.sourceforge.net:/cvsroot/Harbour-project
+      SET CVS_RSH=ssh
+      cvs co harbour
+6) I ran the CHECKOUT batch file and was prompted for my SourceForge
+   password. And it checked out the entire harbour CVS tree!
+
+So all you have to do is make the obvious substitions for drive letters,
+path names, and user IDs, and this procedure should work for you.
+You may not even have to download a new copy of CVS, but you may
+have to have a text mode version of SSH.
+
+I found the trick to setting up the CVSROOT properly by doing a search for
+"CVS SSH NT" at http://www.google.com/ and following the third link, named
+"Configuring WinCVS and Secure SHell on Windows NT" and located at
+http://www.cc.gatech.edu/classes/RWL/Projects/scenicview/Web/cvs-ssh-config.html
+
+1.8 How to add CVS ID to new files
+==================================
+by Maurilio Longo <maurilio.longo@libero.it>
+
+When a new file is added to cvs tree it has not a CVS ID.
+CVS IDs look like this:
+
+/*
+ * $Id$
+ */
+
+
+To add one to a file lacking it simply put as first lines:
+
+/*
+ * Chr(36) + "Id" + Chr(36)
+ */
+
+I can't write it here because cvs server would change it as soon as I
+commit this file, but second line should not have Chr(36) but $ signs
+and no spaces between dollar sign and Id.
+
+as soon as you commit your file cvs ID string will be expanded
+by cvs server to full length.
+
+Note that last dollar sign is mandatory.
+

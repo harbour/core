@@ -37,6 +37,9 @@
 #include "button.ch"
 #include "color.ch"
 #include "common.ch"
+#include "hbsetup.ch"
+
+#ifdef HB_COMPAT_C53
 
 /* TOFIX: Harbour doesn't check if the colorSpec instance
           var has always six pairs of colors. It should
@@ -57,10 +60,10 @@ function PopUp( nTop, nLeft, nBottom, nRight )
             coords are initialized to -1, so the TopBar can update them
             accordingly to its own position on to the screen. [jlalin]
    */
-   DEFAULT  nTop     TO -1,   ;
-            nLeft    TO -1,   ;
-            nBottom  TO  0,   ;
-            nRight   TO  0
+   DEFAULT nTop    TO -1
+   DEFAULT nLeft   TO -1
+   DEFAULT nBottom TO  0
+   DEFAULT nRight  TO  0
 
    oClass := TClass():New( "POPUPMENU" )
 
@@ -410,12 +413,12 @@ static function Display()
 
          DispOutAt( ;
             ::aItems[ n ]:row + nTop + n, ::left + 1, ;
-            if( ::aItems[ n ]:checked, SubStr( ::aItems[ n ]:style, 1, 1 ), " " ) + ;
+            iif( ::aItems[ n ]:checked, SubStr( ::aItems[ n ]:style, 1, 1 ), " " ) + ;
                PadR( cPrompt + " ", ::width - 4 ) + ;
-               if( lPopUp, SubStr( ::aItems[ n ]:style, 2, 1 ), " " ), ;
+               iif( lPopUp, SubStr( ::aItems[ n ]:style, 2, 1 ), " " ), ;
             hb_ColorIndex( ::colorSpec, ;
-               if( ::aItems[ n ]:enabled, ;
-                  if( n == ::current, CLR_ENHANCED, CLR_STANDARD ), ;
+               iif( ::aItems[ n ]:enabled, ;
+                  iif( n == ::current, CLR_ENHANCED, CLR_STANDARD ), ;
                      CLR_UNSELECTED ) ) )
 
          if nAt > 0
@@ -423,8 +426,8 @@ static function Display()
                ::aItems[ n ]:row + nTop + n, ::left + nAt + 1, ;
                SubStr( cPrompt, nAt, 1 ), ;
                hb_ColorIndex( ::colorSpec, ;
-                  if( ::aItems[ n ]:enabled, ;
-                     if( n == ::current, CLR_BACKGROUND, CLR_BORDER ), ;
+                  iif( ::aItems[ n ]:enabled, ;
+                     iif( n == ::current, CLR_BACKGROUND, CLR_BORDER ), ;
                      CLR_UNSELECTED ) ) )
          endif
       endif
@@ -459,3 +462,5 @@ static function SetCoors( nItem, nRow, nCol )
 
 return Self
 //--------------------------------------------------------------------------//
+
+#endif

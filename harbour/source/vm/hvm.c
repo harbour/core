@@ -2401,18 +2401,18 @@ static void hb_vmArrayPush( void )
       if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       {
          if( pArray->item.asArray.value->uiHolders > 1 )
-	 {
-	    /* this is a temporary copy of an array - we can overwrite
-	     * it with no problem
-	    */
+         {
+            /* this is a temporary copy of an array - we can overwrite
+             * it with no problem
+            */
             hb_arrayGet( pArray, ulIndex, pArray );
             hb_stackPop();
          }
-	 else
+         else
          {
-	    /* this is a constant array { 1, 2, 3 } - we cannot use
-	     * the optimization here
-	    */
+            /* this is a constant array { 1, 2, 3 } - we cannot use
+             * the optimization here
+            */
             HB_ITEM item;
 
             hb_arrayGet( pArray, ulIndex, &item );

@@ -35,20 +35,24 @@
 
 #include "common.ch"
 #include "button.ch"
+#include "hbsetup.ch"
+
+#ifdef HB_COMPAT_C53
+
 //--------------------------------------------------------------------------//
 function MenuItem( cCaption, boData, nShortcut, cMsg, nID )
 
    LOCAL oClass
 
-   if ValType( boData ) == "B" .or. ValType( boData ) == "O"
-      boData := if( cCaption != MENU_SEPARATOR, boData, nil )
+   if ISBLOCK( boData ) .or. ISOBJECT( boData )
+      boData := iif( cCaption != MENU_SEPARATOR, boData, nil )
    endif
 
-   DEFAULT  cCaption    TO "",   ;
-            boData      TO nil,  ;
-            nShortcut   TO 0,    ;
-            cMsg        TO "",   ;
-            nID         TO 0
+   DEFAULT cCaption  TO ""
+   DEFAULT boData    TO nil
+   DEFAULT nShortcut TO 0
+   DEFAULT cMsg      TO ""
+   DEFAULT nID       TO 0
 
    oClass := TClass():New( "MENUITEM" )
 
@@ -57,7 +61,7 @@ function MenuItem( cCaption, boData, nShortcut, cMsg, nID )
    oClass:AddData( "checked"  ,  FALSE )
    oClass:AddData( "column"   ,  0 )
    oClass:AddData( "data"     ,  boData )
-   oClass:AddData( "enabled"  ,  if( cCaption != MENU_SEPARATOR, TRUE, FALSE ) )
+   oClass:AddData( "enabled"  ,  iif( cCaption != MENU_SEPARATOR, TRUE, FALSE ) )
    oClass:AddData( "id"       ,  nID )
    oClass:AddData( "message"  ,  cMsg )
    oClass:AddData( "row"      ,  0 )
@@ -69,14 +73,18 @@ function MenuItem( cCaption, boData, nShortcut, cMsg, nID )
    oClass:Create()
 
 return oClass:Instance()
+
 //--------------------------------------------------------------------------//
 static function isPopUp()
 
    LOCAL Self  := QSelf()
 
-   if ValType( ::data ) == "O" .and. ::data:ClassName() == "POPUPMENU"
+   if ISOBJECT( ::data ) .and. ::data:ClassName() == "POPUPMENU"
       return TRUE
    endif
 
 return FALSE
+
 //--------------------------------------------------------------------------//
+
+#endif

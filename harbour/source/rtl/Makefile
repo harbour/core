@@ -141,7 +141,10 @@ PRG_SOURCES=\
 	tget.prg     \
 	tgetlist.prg \
 	tlabel.prg   \
+	tmenuitm.prg \
+	tpopup.prg   \
 	treport.prg  \
+	ttopbar.prg  \
 	typefile.prg \
 	wait.prg     \
 

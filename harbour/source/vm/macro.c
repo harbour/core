@@ -76,10 +76,10 @@ static int hb_macroParse( HB_MACRO_PTR pMacro, char * szString )
    pMacro->pCodeInfo->pPrev      = NULL;
    HB_TRACE(HB_TR_DEBUG, ("hb_macroParse.(%p, %s)", pMacro, szString));
    pMacro->pCodeInfo->pCode      = ( BYTE * ) hb_xgrab( HB_PCODE_SIZE );
-   
+
    /* reset the type of compiled expression - this should be filled after
     * successfully compilation
-    */ 
+    */
    pMacro->exprType = HB_ET_NONE;
 
    return hb_compParse( pMacro );
@@ -669,13 +669,13 @@ char * hb_macroGetType( HB_ITEM_PTR pItem )
       {
          /* passed string was successfully compiled
           */
-	      if( struMacro.exprType == HB_ET_CODEBLOCK )
-	      {
-	        /* Clipper ignores any undeclared symbols or UDFs if the
-	         * compiled expression is a valid codeblock
-	         */
-	        szType ="B";
-	      }
+              if( struMacro.exprType == HB_ET_CODEBLOCK )
+              {
+                /* Clipper ignores any undeclared symbols or UDFs if the
+                 * compiled expression is a valid codeblock
+                 */
+                szType ="B";
+              }
          else if( struMacro.status & ( HB_MACRO_UNKN_SYM | HB_MACRO_UNKN_VAR) )
          {
             /* request for a symbol that is not in a symbol table or
@@ -819,7 +819,7 @@ ULONG hb_compGenJumpTrue( LONG lOffset, HB_MACRO_DECL )
    return HB_PCODE_DATA->lPCodePos - 2;
 }
 
-/* Checks if there is a visible memvar variable 
+/* Checks if there is a visible memvar variable
  * szVarName = variable name
 */
 static void hb_compMemvarCheck( char * szVarName, HB_MACRO_DECL )
@@ -835,7 +835,7 @@ static void hb_compMemvarCheck( char * szVarName, HB_MACRO_DECL )
             HB_MACRO_DATA->status |= HB_MACRO_UNKN_VAR;
             HB_MACRO_DATA->status &= ~HB_MACRO_CONT;  /* don't run this pcode */
          }
-      } 
+      }
 }
 
 /*
@@ -1018,7 +1018,7 @@ void hb_compGenPopAliasedVar( char * szVarName,
        * here if passed name is either a field or a memvar
        */
       hb_compMemvarGenPCode( HB_P_MPOPALIASEDVAR, szVarName, HB_MACRO_PARAM );
-      hb_compMemvarCheck( szVarName, HB_MACRO_PARAM );     
+      hb_compMemvarCheck( szVarName, HB_MACRO_PARAM );
    }
 }
 

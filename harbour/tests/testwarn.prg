@@ -34,8 +34,6 @@
     #TRANSLATE AS VARIANT =>
 
     #COMMAND DECLARE <*x*> =>
-
-    #COMMAND STRUCTURE <*x*> =>
 #endif
 
 DECLARE nMyFunc( cVar AS STRING, @nVar AS NUMERIC ) AS NUMERIC

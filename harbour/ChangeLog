@@ -1,3 +1,105 @@
+2000-05-27 23:12 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/gtdos/gtdos.c
+   * source/compiler/hbusage.c
+     * Some cleanups and small fixes.
+     + Crew list updated
+
+   * makefile.bc
+   * makefile.vc
+   * source/rtl/Makefile
+     ! Synchronized.
+     ! Borland makefile fixed for 16 bit compilers (STARTUP excluded)
+
+   * contrib/hbclip/hbclip.ch
+   * tests/testwarn.prg
+     - Structure #translate removed
+
+   * contrib/libgt/makefile.vc
+     ! Minor fix
+
+   * doc/howtocvs.txt
+   - doc/cvs_ssh.txt
+   - doc/cvs_tips.txt
+     * Merged all CVS related info into one file. Content list added.
+     * Updated timestamp format
+
+   * doc/whatsnew.txt
+     + Added Version 0.34 feature list
+
+   * include/hbapi.h
+   * include/hbcomp.h
+
+   * include/hbextern.ch
+     + HB_SETKEYARRAY added
+     + 5.3 menu related stuff added
+
+   * source/compiler/cmdcheck.c
+     * Minor optimization
+
+   * source/compiler/harbour.y
+     ! Extremly long lines fixed.
+     ! GCC -O2 warning fixed.
+
+   * source/pp/pptable.c
+     - Commented out lines removed.
+
+   * source/debug/dbgmenu.prg
+   * source/debug/dbgtmenu.prg
+   * source/debug/debugger.prg
+     ! AltToKey_debugger() renamed to __dbgAltToKey()
+     ! BulidMenu() renamed to __dbgBuildMenu()
+
+   * source/rtl/setkey.c
+     ! Some variables and symbols renamed, indented with three chars
+     ! Some bugs fixed (error situations, handling of zero keycode)
+     % Some things made more simple (removed returns from inside the 
+       functions for example).
+     % Variable scopes adjusted.
+     - Removed extension guards from C level code.
+     - Removed all the runtime error generations
+     - Removed the extension when an array was accepted as the 
+       first parameter of SETKEY().
+     + HB_SETKEYARRAY() added instead of the above feature.
+
+   * source/vm/borinit.c
+     * Minor header formatting.
+
+   * source/compiler/harbour.c
+   * source/rtl/filesys.c
+   * source/rtl/gtcrs/gtcrs.c
+   * source/rtl/gtcrs/kbdcrs.c
+   * source/vm/eval.c
+   * source/vm/hvm.c
+   * source/vm/macro.c
+   * tests/Makefile
+     ! Fixed TAB usage in the source. (please check your editors!)
+
+   + source/rtl/tmenuitm.prg
+   + source/rtl/tpopup.prg
+   + source/rtl/ttopbar.prg
+   - source/rtl/menuitem.prg
+   - source/rtl/popup.prg
+   - source/rtl/topbar.prg
+     ! Renamed to conform with other class filenames (T*.PRG)
+     + Added HB_COMPAT_C53 guards.
+     ! AltToKey_debugger() requirement removed to link without the debugger.
+
+   - doc/depend.txt
+     - Removed since it was very outdated.
+
+ Missing entries:
+
+ +contrib\hbzlib\makefile.bc
+    *makefile for zlib library
+ +contrib\hbzlib\zipfile1.c
+  contrib\hbzlib\zlibapi.c
+    *Source code to the library
+  *contrib\hbzlib\test.prg
+     *test program for the library
+  *contrib\hbzlib\*.h
+    *include files need by the library
+
 20000528-21:38 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * contrib/msql/tmsql.prg
@@ -44,14 +146,14 @@
      + added files making up mSQL access classes. They're work in progress, but
        we all believe in "release early, release often", don't we? :-)
 
-2000-05-28 02:15 UTC-500 Paul Tucker <ptucker@sympatico.ca>
+2000-05-28 02:15 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
    * makefile.bc
      * move eval from rtl.lib to vm.lib
      * (Already built that way, but the dependancy was wrong)
    * makefile.vc
      * bring up to date
 
-2000-05-22 10:40 UTC-800 Ron Pinkas <Ron@Profit-Master.com>
+2000-05-22 10:40 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
 
    * include/hbvmpub.h
      * Modified HB_FS_FIRST to  ( ( HB_SYMBOLSCOPE ) 0x04 )
@@ -91,8 +193,8 @@
 20000524-17:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm/macro.c
-	*fixed bug in TYPE() function (PUBLIC/PRIVATE variables
-	were not recognized properly)
+        *fixed bug in TYPE() function (PUBLIC/PRIVATE variables
+        were not recognized properly)
 
 2000-05-24 10:35 GMT-4 David G. Holm <dholm@jsd-llc.com>
 
@@ -247,7 +349,7 @@
                   DECLARE <StruName> <Var1> AS <Type1> [ <VarN> AS <TypeN> ] ;;
                   #TRANSLATE AS NEW <ClassName> => AS CLASS <StruName> := ( Eval( __<StruName> ), HB_Structure( <StruName> ) )
 
-	#TRANSLATE AS NEW <ClassName> => AS CLASS <ClassName> := <ClassName>():New()
+        #TRANSLATE AS NEW <ClassName> => AS CLASS <ClassName> := <ClassName>():New()
 
    * source/rtl/tclass.prg
      + Added Function HB_Structure() ( Fully Declared! ) This function is used internally, but may be freely called from Clipper level.
@@ -326,19 +428,19 @@
 20000520-15:25 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/gtcrs/gtcrs.c
-	* fixed hb_gt_SetAttribute() to work correctly
-	with ncurses library
-	(thanks to Marek Paliwoda)
+        * fixed hb_gt_SetAttribute() to work correctly
+        with ncurses library
+        (thanks to Marek Paliwoda)
 
 20000520-14:45 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/gtcrs/gtcrs.c
-	* fixed hb_gt_SetAttribute() to work with plain curses library
-	(thanks to Marek Paliwoda)
+        * fixed hb_gt_SetAttribute() to work with plain curses library
+        (thanks to Marek Paliwoda)
 
     *source/rtl/gtcrs/kbdcrs.c
     *source/rtl/gtcrs/mousecrs.c
-	* fixed a module description
+        * fixed a module description
 
 20000519-23:50 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
  *makefile.bc
@@ -508,7 +610,7 @@
 20000515-17:15 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/gtcrs/gtcrs.c
-	*fixed initialization of curses library
+        *fixed initialization of curses library
 
 20000514-22:25 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
@@ -581,20 +683,20 @@
 20000514-14:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
-	* fixed bug in line counting that was causing no code
-	generated for statements placed within BEGIN/END SEQUENCE
+        * fixed bug in line counting that was causing no code
+        generated for statements placed within BEGIN/END SEQUENCE
 
 20000513-14:50 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbcomp.h
-	* added 'int iDeclLine' to VAR structure to hold the line number
-	where a variable was declared
+        * added 'int iDeclLine' to VAR structure to hold the line number
+        where a variable was declared
 
     *source/compiler/harbour.c
     *source/compiler/harbour.y
-	* fixed generation of 'unreachable code' warnings
-	* warnings for declared but not used variable reports the line
-	number where this variable was declared
+        * fixed generation of 'unreachable code' warnings
+        * warnings for declared but not used variable reports the line
+        number where this variable was declared
 
 20000513-13:51 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 

@@ -71,7 +71,7 @@ static void hb_compGenVarPCode( BYTE , char * );    /* generates the pcode for u
 static PFUNCTION hb_compFunctionNew( char *, HB_SYMBOLSCOPE );  /* creates and initialises the _FUNC structure */
 static void hb_compCheckDuplVars( PVAR pVars, char * szVarName ); /*checks for duplicate variables definitions */
 
-//int hb_compSort_ULONG( ULONG * ulLeft, ULONG * ulRight );
+/* int hb_compSort_ULONG( ULONG * ulLeft, ULONG * ulRight ); */
 static void hb_compOptimizeJumps( void );
 static void hb_compPrepareOptimize( void );
 static void hb_compOptimizeFrames( PFUNCTION pFunc );
@@ -939,7 +939,7 @@ PCOMDECLARED hb_compMethodAdd( PCOMCLASS pClass, char * szMethodName )
    pMethod = ( PCOMDECLARED ) hb_xgrab( sizeof( COMDECLARED ) );
 
    pMethod->szName = szMethodName;
-   pMethod->cType = ' '; // Not known yet
+   pMethod->cType = ' '; /* Not known yet */
    pMethod->cParamTypes = NULL;
    pMethod->iParamCount = 0;
    pMethod->pParamClasses = NULL;
@@ -1530,7 +1530,7 @@ static int hb_compLocalGetPos( char * szVarName ) /* returns the order + 1 of a 
                      pVar->cType = ' ';
                      pVar->iUsed = VU_NOT_USED;
                      pVar->pNext  = NULL;
-		     pVar->iDeclLine = hb_comp_iLine;
+                     pVar->iDeclLine = hb_comp_iLine;
 
                      /* Use negative order to signal that we are accessing a local
                      * variable from a codeblock
@@ -2817,9 +2817,9 @@ void hb_compFinalizeFunction( void ) /* fixes all last defined function returns 
          while( pVar )
          {
             if( pVar->szName && pFunc->szName && pFunc->szName[0] && ! ( pVar->iUsed & VU_USED ) )
-	    {
-	       char szFun[ 256 ];
-	       sprintf( szFun, "%s(%i)", pFunc->szName, pVar->iDeclLine );
+            {
+               char szFun[ 256 ];
+               sprintf( szFun, "%s(%i)", pFunc->szName, pVar->iDeclLine );
                hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, szFun );
             }
 
@@ -2830,11 +2830,11 @@ void hb_compFinalizeFunction( void ) /* fixes all last defined function returns 
          while( pVar )
          {
             if( pVar->szName && pFunc->szName && pFunc->szName[0] && ! ( pVar->iUsed & VU_USED ) )
-	    {
+            {
                char szFun[ 256 ];
                sprintf( szFun, "%s(%i)", pFunc->szName, pVar->iDeclLine );
                hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, szFun );
-	    }
+            }
 
             pVar = pVar->pNext;
          }
@@ -2890,7 +2890,7 @@ static void hb_compOptimizeFrames( PFUNCTION pFunc )
          else
          /* Check Global Statics. */
          {
-            //PVAR pVar = pFunc->pStatics;
+            /* PVAR pVar = pFunc->pStatics; */
             PVAR pVar = hb_comp_functions.pFirst->pStatics;
 
             while( pVar )
@@ -3087,7 +3087,7 @@ static void hb_compOptimizeJumps( void )
          {
             /* Adjusting all later jumps (if negative) and target prior the current NOOP. */
 
-            // Only if points to code beyond the current fix.
+            /* Only if points to code beyond the current fix. */
             if(  pJumps[ iJump ] > pNOOPs[ iNOOP ] && pJumps[ iJump ] + piShifts[ iJump ] + ulOffset < pNOOPs[ iNOOP ] )
             {
                /* Decreasing Shift Counter for this Jump. */

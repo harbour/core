@@ -76,7 +76,7 @@ PRG_SOURCES=\
 	inline.prg \
 	iotest.prg \
 	iotest2.prg \
-        langapi.prg \
+	langapi.prg \
 	longdev.prg \
 	longstr.prg \
 	longstr2.prg \
@@ -128,7 +128,7 @@ PRG_SOURCES=\
 	tstalias.prg \
 	tstasort.prg \
 	tstcolor.prg \
-        tstdbi.prg \
+	tstdbi.prg \
 	tstdspac.prg \
 	version.prg \
 	vmasort.prg \

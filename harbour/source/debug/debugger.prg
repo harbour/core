@@ -165,7 +165,7 @@ METHOD New() CLASS TDebugger
    ::aWindows       := {}
    ::nCurrentWindow := 1
    ::cClrDialog     := "N/W"
-   ::oPullDown      := BuildMenu( Self )
+   ::oPullDown      := __dbgBuildMenu( Self )
 
    ::oWndCode       := TDbWindow():New( 1, 0, MaxRow() - 6, MaxCol(),, "BG+/B" )
    ::oWndCode:bKeyPressed := { | nKey | ::CodeWindowProcessKey( nKey ) }
@@ -421,7 +421,7 @@ METHOD HandleEvent() CLASS TDebugger
               ::oWndCommand:KeyPressed( nKey )
 
          otherwise
-              if ( nPopup := ::oPullDown:GetHotKeyPos( AltToKey_debugger( nKey ) ) ) != 0
+              if ( nPopup := ::oPullDown:GetHotKeyPos( __dbgAltToKey( nKey ) ) ) != 0
                  if ::oPullDown:nOpenPopup != nPopup
                     SetCursor( SC_NONE )
                     ::oPullDown:ShowPopup( nPopup )

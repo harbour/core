@@ -94,6 +94,7 @@ void hb_compPrintCredits( void )
            "Credits:  The Harbour Team at www.harbour-project.org\n"
            "\n"
            "April White <awhite@user.rose.com>\n"
+           "Alejandro de Garate <alex_degarate@hotmail.com>\n"
            "Alexander S. Kresin <alex@belacy.belgorod.su>\n"
            "Andi Jahja <andij@aonlippo.co.id>\n"
            "Antonio Linares <alinares@fivetech.com>\n"

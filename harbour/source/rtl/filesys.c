@@ -942,7 +942,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
       /* TODO: check for append locks (SEEK_END)
        */
       struct flock lock_info;
-      
+
       switch( uiMode )
       {
          case FL_LOCK:
@@ -975,7 +975,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
 
          default:
             iResult = 0;
-      } 
+      }
    }
    s_uiErrorLast = errno;
 #else
@@ -993,9 +993,9 @@ void    hb_fsCommit( FHANDLE hFileHandle )
    HB_TRACE(HB_TR_DEBUG, ("hb_fsCommit(%p)", hFileHandle));
 
 #if defined(__WATCOMC__)
-   
+
    _dos_commit( hFileHandle );
-   
+
 #elif defined(HB_FS_FILE_IO) && !defined(HB_OS_OS2) && !defined(HB_OS_UNIX)
 
    {
@@ -1027,18 +1027,18 @@ void    hb_fsCommit( FHANDLE hFileHandle )
     * original or duplicated file handle
    */
    #if defined(_POSIX_SYNCHRONIZED_IO)
-     /* faster - flushes data buffers only, without updating directory info 
+     /* faster - flushes data buffers only, without updating directory info
      */
      if( fdatasync( hFileHandle ) < -1 )
    #else
-     /* slower - flushes all file data buffers and i-node info 
+     /* slower - flushes all file data buffers and i-node info
      */
      if( fsync( hFileHandle ) < -1 )
    #endif
-       s_uiErrorLast = FS_ERROR;	/* failure */
+       s_uiErrorLast = FS_ERROR;        /* failure */
    else
        s_uiErrorLast = 0;
-       
+
 #else
 
    s_uiErrorLast = FS_ERROR;

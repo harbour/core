@@ -390,20 +390,6 @@ static COMMANDS sC___237 = {0,"SET","ORDER TO \1A00 [IN \1B40]","ordSetFocus( \1
 static COMMANDS sC___238 = {0,"SET","ORDER TO TAG \1A40 [IN \1B40]","ordSetFocus( \1A30 [, \1B30] )",&sC___237 };
 static COMMANDS sC___239 = {0,"SET","ORDER TO","ordSetFocus(0)",&sC___238 };
 
-/*
-static COMMANDS sC___240 = {0,"STRUCTURE","\1A00 \1B00 \1C20:AS CLASS,AS STRUCTURE,AS STRU,AS ARRAY OF,AS> \1D00 [, \1E00 \1F20:AS CLASS,AS STRUCTURE,AS STRU,AS ARRAY OF,AS> \1G00 ]","STATIC __\1A00 := {|| IF(__\1A00 == NIL, , ) ,hb_structure( \1A20, { \1B20 [, \1E20] } )} ; DECLARE \1A00 \1B00 \1C00 \1D00 [ \1E00 \1F00 \1G00 ] ; #translate AS NEW \1A00 => AS CLASS \1A00 := ( Eval(__\1A00), hb_Structure( \1A20 ) )",&sC___239 };
-*/
-
-/*
-#COMMAND STRUCTURE <StruName> <Var1> <x1:AS CLASS,AS STRUCTURE,AS STRU,AS ARRAY OF,AS> <Type1> [, <VarN> <xN:AS CLASS,AS STRUCTURE,AS STRU,AS ARRAY OF,AS> <TypeN> ] => ;
-          STATIC __<StruName> := {|| IF( __<StruName> == NIL, , ) , HB_Structure( <"StruName">, { <"Var1"> [, <"VarN">] } )} ;;
-          DECLARE <StruName> <Var1> <x1> <Type1> [ <VarN> <xN> <TypeN> ] ;;
-          #TRANSLATE AS NEW <StruName> => AS STRUCTURE <StruName> := ( Eval( __<StruName> ), HB_Structure( <"StruName"> ) )
-*/
-
-/*
-static COMMANDS sT___1 = {0,"AS","NEW \1A00","AS CLASS \1A00 := \1A00():New()",NULL };
-*/
-
 COMMANDS * hb_pp_topCommand = &sC___239 /*&sC___240*/;
 COMMANDS * hb_pp_topTranslate = NULL /*&sT___1*/;
+

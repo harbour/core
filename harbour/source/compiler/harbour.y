@@ -242,7 +242,7 @@ Source     : Crlf         { hb_comp_EOL = FALSE; }
            | VarDefs      { hb_comp_EOL = FALSE; }
            | FieldsDef    { hb_comp_EOL = FALSE; }
            | MemvarDef    { hb_comp_EOL = FALSE; }
-	   | Declaration  { hb_comp_EOL = FALSE; }
+           | Declaration  { hb_comp_EOL = FALSE; }
            | Function     { hb_comp_EOL = FALSE; }
            | Statement    { hb_comp_EOL = FALSE; }
            | Line         { hb_comp_EOL = FALSE; }
@@ -284,7 +284,7 @@ AsType     : /* not specified */           { hb_comp_cVarType = ' '; }
            | AS_ARRAY                      { hb_comp_cVarType = 'A'; }
            | AS_BLOCK                      { hb_comp_cVarType = 'B'; }
            | AS_OBJECT                     { hb_comp_cVarType = 'O'; }
-	   | AS_CLASS IdentName            { hb_comp_cVarType = 'S'; hb_comp_szFromClass = $2 }
+           | AS_CLASS IdentName            { hb_comp_cVarType = 'S'; hb_comp_szFromClass = $2 }
            | AS_VARIANT                    { hb_comp_cVarType = ' '; }
            | AS_NUMERIC_ARRAY              { hb_comp_cVarType = 'n'; }
            | AS_CHARACTER_ARRAY            { hb_comp_cVarType = 'c'; }
@@ -293,7 +293,7 @@ AsType     : /* not specified */           { hb_comp_cVarType = ' '; }
            | AS_ARRAY_ARRAY                { hb_comp_cVarType = 'a'; }
            | AS_BLOCK_ARRAY                { hb_comp_cVarType = 'b'; }
            | AS_OBJECT_ARRAY               { hb_comp_cVarType = 'o'; }
-	   | AS_CLASS_ARRAY IdentName      { hb_comp_cVarType = 's'; hb_comp_szFromClass = $2 }
+           | AS_CLASS_ARRAY IdentName      { hb_comp_cVarType = 's'; hb_comp_szFromClass = $2 }
            ;
 
 AsArray    : AS_ARRAY                      { hb_comp_cVarType = 'A'; }
@@ -304,8 +304,8 @@ AsArray    : AS_ARRAY                      { hb_comp_cVarType = 'A'; }
            | AS_ARRAY_ARRAY                { hb_comp_cVarType = 'a'; }
            | AS_BLOCK_ARRAY                { hb_comp_cVarType = 'b'; }
            | AS_OBJECT_ARRAY               { hb_comp_cVarType = 'o'; }
-	   | AS_CLASS_ARRAY IdentName      { hb_comp_cVarType = 's'; hb_comp_szFromClass = $2 }
-	   ;
+           | AS_CLASS_ARRAY IdentName      { hb_comp_cVarType = 's'; hb_comp_szFromClass = $2 }
+           ;
 
 ParamList  : IdentName AsType                { hb_compVariableAdd( $1, hb_comp_cVarType ); $$ = 1; }
            | ParamList ',' IdentName AsType  { hb_compVariableAdd( $3, hb_comp_cVarType ); $$++; }
@@ -1138,100 +1138,109 @@ MemvarList : IdentName AsType                     { hb_compVariableAdd( $1, hb_c
            | MemvarList ',' IdentName AsType      { hb_compVariableAdd( $3, hb_comp_cVarType ); }
            ;
 
-Declaration: DECLARE IdentName '(' { hb_compDeclaredAdd( $2 ); hb_comp_szDeclaredFun = $2; } DecList ')' AsType Crlf { if( hb_comp_pLastDeclared )
-                                                                                                                         hb_comp_pLastDeclared->cType = hb_comp_cVarType;
-                                                                                                                       hb_comp_szDeclaredFun = NULL;
-                                                                                                                       hb_comp_cVarType = ' ';
-                                                                                                                       hb_comp_iVarScope = VS_NONE;
-                                                                                                                     }
+Declaration: DECLARE IdentName '(' { hb_compDeclaredAdd( $2 ); hb_comp_szDeclaredFun = $2; } DecList ')' AsType Crlf 
+             { 
+               if( hb_comp_pLastDeclared )
+                 hb_comp_pLastDeclared->cType = hb_comp_cVarType;
+
+               hb_comp_szDeclaredFun = NULL;
+               hb_comp_cVarType = ' ';
+               hb_comp_iVarScope = VS_NONE;
+             }
            | DECLARE IdentName { hb_comp_pLastClass = hb_compClassAdd( $2 ); } ClassInfo Crlf { hb_comp_iVarScope = VS_NONE; }
-	   ;
+           ;
 
 ClassInfo  : DecMethod
-	   | ClassInfo DecMethod
-	   | DecData
-	   | ClassInfo DecData
-	   ;
+           | ClassInfo DecMethod
+           | DecData
+           | ClassInfo DecData
+           ;
 
-DecMethod  : IdentName '(' { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastClass, $1 ); } DecList ')' AsType { if ( hb_comp_pLastMethod )
-														      {
-                                                                                                                        hb_comp_pLastMethod->cType = hb_comp_cVarType;
-															if ( toupper( hb_comp_cVarType ) == 'S' )
-															{
-      															  hb_comp_pLastMethod->pClass = hb_compClassFind( hb_comp_szFromClass );
-      															  if( ! hb_comp_pLastMethod->pClass )
-      															  {
-         														    hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szFromClass, hb_comp_pLastMethod->szName );
-         														    hb_comp_pLastMethod->cType = ( isupper( hb_comp_cVarType ) ? 'O' : 'o' );
-															  }
+DecMethod  : IdentName '(' { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastClass, $1 ); } DecList ')' AsType
+             { 
+               if( hb_comp_pLastMethod )
+               {
+                 hb_comp_pLastMethod->cType = hb_comp_cVarType;
+                 if ( toupper( hb_comp_cVarType ) == 'S' )
+                 {
+                   hb_comp_pLastMethod->pClass = hb_compClassFind( hb_comp_szFromClass );
+                   if( ! hb_comp_pLastMethod->pClass )
+                   {
+                     hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szFromClass, hb_comp_pLastMethod->szName );
+                     hb_comp_pLastMethod->cType = ( isupper( hb_comp_cVarType ) ? 'O' : 'o' );
+                   }
 
-         														  /* Resetting */
-         														  hb_comp_szFromClass = NULL;
-      															}
-														      }
-                                                                                                                      hb_comp_pLastMethod = NULL;
-                                                                                                                      hb_comp_cVarType = ' ';
-                                                                                                                    }
-	   ;
+                   /* Resetting */
+                   hb_comp_szFromClass = NULL;
+                 }
+               }
+               hb_comp_pLastMethod = NULL;
+               hb_comp_cVarType = ' ';
+             }
+           ;
 
-DecData    : IdentName { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastClass, $1 ); } AsType { if ( hb_comp_pLastMethod )
-												      {
-													PCOMCLASS pClass;
-													char * szSetData = ( char * ) hb_xgrab( strlen( $1 ) + 2 );
+DecData    : IdentName { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastClass, $1 ); } AsType
+             {
+               if( hb_comp_pLastMethod )
+               {
+                 PCOMCLASS pClass;
+                 char * szSetData = ( char * ) hb_xgrab( strlen( $1 ) + 2 );
 
-                                                                                                        hb_comp_pLastMethod->cType = hb_comp_cVarType;
-													if ( toupper( hb_comp_cVarType ) == 'S' )
-													{
-      													  pClass = hb_compClassFind( hb_comp_szFromClass );
-													  hb_comp_pLastMethod->pClass = pClass;
-      													  if( ! hb_comp_pLastMethod->pClass )
-      													  {
-         												    hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szFromClass, hb_comp_pLastMethod->szName );
-         												    hb_comp_pLastMethod->cType = ( isupper( hb_comp_cVarType ) ? 'O' :'o' );
-													  }
+                 hb_comp_pLastMethod->cType = hb_comp_cVarType;
+                 if ( toupper( hb_comp_cVarType ) == 'S' )
+                 {
+                   pClass = hb_compClassFind( hb_comp_szFromClass );
+                   hb_comp_pLastMethod->pClass = pClass;
+                   if( ! hb_comp_pLastMethod->pClass )
+                   {
+                     hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szFromClass, hb_comp_pLastMethod->szName );
+                     hb_comp_pLastMethod->cType = ( isupper( hb_comp_cVarType ) ? 'O' :'o' );
+                   }
+                 }
+                 else
+                   pClass = NULL;
 
-      													}
-													sprintf( szSetData, "_%s", $1 );
+                 sprintf( szSetData, "_%s", $1 );
 
-													hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastClass, szSetData );
-                                                                                                        hb_comp_pLastMethod->cType = hb_comp_cVarType;
-													hb_comp_pLastMethod->iParamCount = 1;
+                 hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastClass, szSetData );
+                 hb_comp_pLastMethod->cType = hb_comp_cVarType;
+                 hb_comp_pLastMethod->iParamCount = 1;
 
-													hb_comp_pLastMethod->cParamTypes = ( BYTE * ) hb_xgrab( 1 );
-													hb_comp_pLastMethod->cParamTypes[0] = hb_comp_cVarType;
+                 hb_comp_pLastMethod->cParamTypes = ( BYTE * ) hb_xgrab( 1 );
+                 hb_comp_pLastMethod->cParamTypes[0] = hb_comp_cVarType;
 
-													hb_comp_pLastMethod->pParamClasses = ( PCOMCLASS * ) hb_xgrab( sizeof( COMCLASS ) );
-													hb_comp_pLastMethod->pParamClasses[0] = pClass;
+                 hb_comp_pLastMethod->pParamClasses = ( PCOMCLASS * ) hb_xgrab( sizeof( COMCLASS ) );
+                 hb_comp_pLastMethod->pParamClasses[0] = pClass;
 
-													if ( toupper( hb_comp_cVarType ) == 'S' )
-													{
-      													  hb_comp_pLastMethod->pClass = pClass;
+                 if ( toupper( hb_comp_cVarType ) == 'S' )
+                 {
+                   hb_comp_pLastMethod->pClass = pClass;
 
-         												  /* Resetting */
-         												  hb_comp_szFromClass = NULL;
-      													}
-												      }
-                                                                                                      hb_comp_pLastMethod = NULL;
-                                                                                                      hb_comp_cVarType = ' ';
-                                                                                                    }
-	   ;
+                   /* Resetting */
+                   hb_comp_szFromClass = NULL;
+                 }
+               }
+               hb_comp_pLastMethod = NULL;
+               hb_comp_cVarType = ' ';
+             }
+           ;
 
 DecList    :                  {}
            | FormalList
-	   | FormalList OptList
-	   ;
-
+           | FormalList OptList
+           ;
+           
 FormalList : IdentName AsType                    { hb_compVariableAdd( $1, hb_comp_cVarType ); }
-	   | '@' IdentName AsType                { hb_compVariableAdd( $2, hb_comp_cVarType + VT_OFFSET_BYREF ); }
+           | '@' IdentName AsType                { hb_compVariableAdd( $2, hb_comp_cVarType + VT_OFFSET_BYREF ); }
            | FormalList ',' IdentName AsType     { hb_compVariableAdd( $3, hb_comp_cVarType ); }
            | FormalList ',' '@' IdentName AsType { hb_compVariableAdd( $4, hb_comp_cVarType + VT_OFFSET_BYREF ); }
            ;
 
 OptList    : ',' OPTIONAL IdentName AsType     { hb_compVariableAdd( $3, hb_comp_cVarType + VT_OFFSET_OPTIONAL ); }
-	   | ',' OPTIONAL '@' IdentName AsType { hb_compVariableAdd( $4, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
-	   | OptList ',' OPTIONAL IdentName AsType     { hb_compVariableAdd( $4, hb_comp_cVarType + VT_OFFSET_OPTIONAL ); }
-	   | OptList ',' OPTIONAL '@' IdentName AsType { hb_compVariableAdd( $5, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
-	   ;
+           | ',' OPTIONAL '@' IdentName AsType { hb_compVariableAdd( $4, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
+           | OptList ',' OPTIONAL IdentName AsType     { hb_compVariableAdd( $4, hb_comp_cVarType + VT_OFFSET_OPTIONAL ); }
+           | OptList ',' OPTIONAL '@' IdentName AsType { hb_compVariableAdd( $5, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
+           ;
 
 ExecFlow   : IfEndif
            | DoCase

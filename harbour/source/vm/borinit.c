@@ -1,8 +1,8 @@
-#pragma option -a1 /* byte alignment */
-
 /*
  * $Id$
- *
+ */
+
+/*
  * Harbour Project source code:
  * Borland _INIT_ segment initialization when not using Borland C startup
  *
@@ -33,6 +33,10 @@
  *
  */
 
+#if (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
+   #pragma option -a1 /* byte alignment */
+#endif
+
 typedef struct
 {
    char calltype;
@@ -55,3 +59,4 @@ void hb_vmProcessBorlandInitSegment( void )
       ( ( char * ) pFirst )--;
    }
 }
+

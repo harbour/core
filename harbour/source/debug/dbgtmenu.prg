@@ -372,7 +372,7 @@ METHOD ProcessKey( nKey ) CLASS TDbMenu
            ::GoBottom()
 
       otherwise
-         if ( nPopup := ::GetHotKeyPos( AltToKey_debugger( nKey ) ) ) != 0
+         if ( nPopup := ::GetHotKeyPos( __dbgAltToKey( nKey ) ) ) != 0
             if nPopup != ::nOpenPopup
                ::Close()
                ::ShowPopup( nPopup )
@@ -413,7 +413,7 @@ METHOD Display( cClrText, cClrHotKey ) CLASS TDbMenuItem
 
 return nil
 
-function AltToKey_debugger( nKey )
+function __dbgAltToKey( nKey )
 
    local nIndex := AScan( { K_ALT_A, K_ALT_B, K_ALT_C, K_ALT_D, K_ALT_E, K_ALT_F,;
                             K_ALT_G, K_ALT_H, K_ALT_I, K_ALT_J, K_ALT_K, K_ALT_L,;

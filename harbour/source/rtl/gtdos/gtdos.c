@@ -44,6 +44,19 @@
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_gt_ReadKey()
  *
+ * Copyright 2000 Alejandro de Garate <alex_degarate@hotmail.com>
+ *    vmode12x40()
+ *    vmode25x40()
+ *    vmode28x40()
+ *    vmode50x40()
+ *    vmode12x80()
+ *    vmode25x80()
+ *    vmode28x80()
+ *    vmode43x80()
+ *    vmode50x80()
+ *    hb_gt_SetMode()
+ *    hb_gt_GetDisplay()
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -1161,233 +1174,118 @@ USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar,
    return 0;
 }
 
-/*
- * Copyright 2000 Alejandro de Garate <alex_degarate@hotmail.com>
- *    vmode12x40()
- *    vmode25x40()
- *    vmode28x40()
- *    vmode50x40()
- *    vmode12x80()
- *    vmode25x80()
- *    vmode28x80()
- *    vmode43x80()
- *    vmode50x80()
- *    hb_gt_SetMode()
- *    hb_gt_GetDisplay()
- */
-
 /* some definitions */
 #define INT_VIDEO    0x10
+
 #if defined(__DJGPP__)
-#define POKE_BYTE(s,o,b)  /* Do nothing */
+   #define POKE_BYTE( s, o, b )  /* Do nothing */
 #else
-#define POKE_BYTE(s,o,b)  (*((BYTE FAR *)MK_FP((s),(o)) )=(BYTE)(b))
+   #define POKE_BYTE( s, o, b )  (*((BYTE FAR *)MK_FP((s),(o)) )=(BYTE)(b))
 #endif
 
-
-/* some prototypes */
-BOOL  hb_gt_SetMode( USHORT uiRows, USHORT uiCols );
-
-static   void vmode12x40( void );
-static   void vmode25x40( void );
-static   void vmode28x40( void );
-static   void vmode50x40( void );
-static   void vmode12x80( void );
-static   void vmode25x80( void );
-static   void vmode28x80( void );
-static   void vmode43x80( void );
-static   void vmode50x80( void );
-static USHORT hb_gt_GetDisplay( void );
-
-
-BOOL  hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
-{
- /* hb_gt_IsColor() test for color card, we need to know if it is a VGA board...*/
-  BOOL bIsVGA     = (hb_gt_GetDisplay() == 8 ) ? 1 : 0;
-  BOOL bIsVesa    = FALSE;
-  USHORT bSuccess = FALSE;
-
-  HB_TRACE( HB_TR_DEBUG, ("hb_gt_SetMode(%hu, %hu)", usRows, usCols) );
-
-  /* Available modes in B&N and color screens */
-  if( uiCols == 40) {
-
-      if( uiRows == 12)
-          vmode12x40();
-
-      if( uiRows == 25)
-          vmode25x40();
-
-      if( uiRows == 28)
-          vmode28x40();
-
-      if( uiRows == 50)
-          vmode50x40();
-  } /* endif */
-
- if (bIsVGA) {
-    if( uiCols == 80) {
-
-        if( uiRows == 12)
-            vmode12x80();
-
-        if( uiRows == 25)
-            vmode25x80();
-
-        if( uiRows == 28)
-            vmode28x80();
-
-        if( uiRows == 43)
-            vmode43x80();
-
-        if( uiRows == 50)
-            vmode50x80();
-    }/* cols=80 */
-
-
-    if( uiCols > 80 && bIsVesa ) {
-       /* In development process
-        * return( hb_gt_Modevesa( nMode) );
-        */
-    }
-
- } /* endif bIsVGA */
-
-  /* Check for succesful */
-  if( (hb_gtMaxRow() == uiRows -1) && ( hb_gtMaxCol() == uiCols -1) )
-  {
-       bSuccess = TRUE;
-  } else {
-       vmode25x80();
-       bSuccess = FALSE;
-   } /* endif */
-
- return( bSuccess );
-}
-
-
-void  vmode12x40( void )
+static void vmode12x40( void )
 {
    union REGS regs;
    regs.x.ax = 0x0001;               /* video mode 40 cols */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
-   outportb( 0x03D4, 0x09 );        /* update cursor size / pointers         */
+   outportb( 0x03D4, 0x09 );         /* update cursor size / pointers */
    regs.h.al = ( inportb( 0x03D5 ) | 0x80 );
    outportb( 0x03D5, regs.h.al );
-   POKE_BYTE( 0x40, 0x84, 11);      /* 11 rows number update                 */
-   return;
+   POKE_BYTE( 0x40, 0x84, 11);       /* 11 rows number update */
 }
 
-
-void  vmode25x40( void )
+static void vmode25x40( void )
 {
    union REGS regs;
    regs.x.ax = 0x0001;
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
-   return;
 }
 
-
-void  vmode28x40( void )
+static void vmode28x40( void )
 {
    union REGS regs;
    regs.x.ax = 0x0001;               /* video mode 40 cols */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
-   regs.x.bx = 0;                    /* load block 0 (BL = 0)                 */
+   regs.x.bx = 0;                    /* load block 0 (BL = 0) */
    regs.x.ax = 0x1111;               /* load 8x8 monochrome char set into RAM */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
-   return;
 }
 
-
-void  vmode50x40( void )
+static void vmode50x40( void )
 {
    union REGS regs;
    regs.x.ax = 0x0001;
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
-   regs.x.bx = 0;                    /* load block 0 (BL = 0)                 */
+   regs.x.bx = 0;                    /* load block 0 (BL = 0) */
    regs.x.ax = 0x1112;               /* load 8x8 double dot char set into RAM */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
    outport( 0x03D4, 0x060A );
-   return;
 }
 
-
-void  vmode12x80( void )
+static void vmode12x80( void )
 {
    union REGS regs;
    regs.x.ax = 0x0003;                  /* mode in AL, if bit 7 is on, No CLS */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
-   outportb( 0x03D4, 0x09 );              /* update cursor size / pointers    */
+   outportb( 0x03D4, 0x09 );            /* update cursor size / pointers */
    regs.h.al = ( inportb( 0x03D5 ) | 0x80 );
    outportb( 0x03D5, regs.h.al );
-   POKE_BYTE( 0x40, 0x84, 11);            /* 11 rows number update            */
-   return;
+   POKE_BYTE( 0x40, 0x84, 11);          /* 11 rows number update */
 }
 
-
-void  vmode25x80( void )
+static void vmode25x80( void )
 {
    union REGS regs;
-   regs.x.ax = 0x1202;              /*  select 350 scan line mode            */
+   regs.x.ax = 0x1202;              /* select 350 scan line mode */
    regs.h.bl = 0x30;
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
-   regs.x.ax = 0x0083;             /* mode in AL, if higher bit is on, No CLS */
+   regs.x.ax = 0x0083;              /* mode in AL, if higher bit is on, No CLS */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
-   regs.x.bx = 0;                   /* load block 0 (BL = 0)                  */
-   regs.x.ax = 0x1114;              /* load 8x14 VGA char set into RAM  */
+   regs.x.bx = 0;                   /* load block 0 (BL = 0) */
+   regs.x.ax = 0x1114;              /* load 8x14 VGA char set into RAM */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
-   return;
 }
 
-
-void  vmode28x80( void )
+static void vmode28x80( void )
 {
    union REGS regs;
-   regs.x.ax = 0x0003;             /* mode in AL, if higher bit is on, No CLS */
+   regs.x.ax = 0x0003;              /* mode in AL, if higher bit is on, No CLS */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
-   regs.x.bx = 0;                   /* load block 0 (BL = 0)                  */
-   regs.x.ax = 0x1111;              /* load 8x8 monochrome char set into RAM  */
+   regs.x.bx = 0;                   /* load block 0 (BL = 0) */
+   regs.x.ax = 0x1111;              /* load 8x8 monochrome char set into RAM */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
-   return;
 }
 
-
-void  vmode43x80( void )
+static void vmode43x80( void )
 {
    union REGS regs;
-   regs.x.ax = 0x1201;              /*  select 350 scan line mode            */
+   regs.x.ax = 0x1201;              /*  select 350 scan line mode */
    regs.h.bl = 0x30;
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
-   regs.x.ax = 0x0003;             /* mode in AL, if higher bit is on, No CLS */
+   regs.x.ax = 0x0003;              /* mode in AL, if higher bit is on, No CLS */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
-   regs.h.bh = 0x1;                 /* bytes per character                    */
-   regs.h.bl = 0x0;                 /* load block 0                           */
-   regs.x.ax = 0x1112;              /* load 8x8 double dot char set into RAM  */
+   regs.h.bh = 0x1;                 /* bytes per character */
+   regs.h.bl = 0x0;                 /* load block 0 */
+   regs.x.ax = 0x1112;              /* load 8x8 double dot char set into RAM */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
-   outport( 0x03D4, 0x060A );       /* update cursor size / pointers         */
-   POKE_BYTE( 0x40, 0x84, 42);      /* 42 rows number update                 */
-   return;
+   outport( 0x03D4, 0x060A );       /* update cursor size / pointers */
+   POKE_BYTE( 0x40, 0x84, 42);      /* 42 rows number update */
 }
 
-
-void  vmode50x80( void )
+static void vmode50x80( void )
 {
    union REGS regs;
-   regs.x.ax = 0x1202;               /*  select 400 scan line mode           */
+   regs.x.ax = 0x1202;               /*  select 400 scan line mode */
    regs.h.bl = 0x30;
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
    regs.x.ax = 0x0003;               /* mode in AL, if bit 7 is on, No CLS */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
-   regs.x.bx = 0;                    /* load block 0 (BL = 0)                 */
+   regs.x.bx = 0;                    /* load block 0 (BL = 0) */
    regs.x.ax = 0x1112;               /* load 8x8 double dot char set into RAM */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
-   return;
 }
 
-
-USHORT hb_gt_GetDisplay( void )
-/*~**************************************************************************
+/***************************************************************************
  * Return the display combination: monitor + video card
  *
  * INT 10 - VIDEO - GET DISPLAY COMBINATION CODE (PS,VGA/MCGA)
@@ -1410,17 +1308,84 @@ USHORT hb_gt_GetDisplay( void )
  *  0Ah    MCGA w/ digital color display
  *  0Bh    MCGA w/ monochrome analog display
  *  0Ch    MCGA w/ color analog display
- *  FFh    unknown display type>
+ *  FFh    unknown display type
  ****************************************************************************/
-{
-   union  REGS inregs, outregs;
-   USHORT  uiDisplay;
-   inregs.x.ax = 0x1A00;
-   HB_DOS_INT86( INT_VIDEO, &inregs, &outregs);
 
-   if (outregs.h.al == 0x1A)
-       uiDisplay = outregs.h.bl;
+static USHORT hb_gt_GetDisplay( void )
+{
+   union REGS regs;
+
+   regs.x.ax = 0x1A00;
+   HB_DOS_INT86( INT_VIDEO, &regs, &regs);
+
+   return ( regs.h.al == 0x1A ) ? regs.h.bl : 0xFF;
+}
+
+BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
+{
+   /* hb_gt_IsColor() test for color card, we need to know if it is a VGA board...*/
+   BOOL bIsVGA     = ( hb_gt_GetDisplay() == 8 );
+   BOOL bIsVesa    = FALSE;
+   USHORT bSuccess = FALSE;
+
+   HB_TRACE( HB_TR_DEBUG, ("hb_gt_SetMode(%hu, %hu)", usRows, usCols) );
+
+   /* Available modes in B&N and color screens */
+   if( uiCols == 40 )
+   {
+      if( uiRows == 12 )
+          vmode12x40();
+
+      if( uiRows == 25 )
+          vmode25x40();
+
+      if( uiRows == 28 )
+          vmode28x40();
+
+      if( uiRows == 50 )
+          vmode50x40();
+   }
+
+   if( bIsVGA )
+   {
+      if( uiCols == 80)
+      {
+         if( uiRows == 12 )
+             vmode12x80();
+
+         if( uiRows == 25 )
+             vmode25x80();
+
+         if( uiRows == 28 )
+             vmode28x80();
+
+         if( uiRows == 43 )
+             vmode43x80();
+
+         if( uiRows == 50 )
+             vmode50x80();
+      }
+
+      if( uiCols > 80 && bIsVesa )
+      {
+         /* In development process
+          * return( hb_gt_Modevesa( nMode) );
+          */
+      }
+   }
+
+   /* Check for succesful */
+
+   if( ( hb_gtMaxRow() == uiRows - 1 ) &&
+       ( hb_gtMaxCol() == uiCols - 1 ) )
+   {
+      bSuccess = TRUE;
+   }
    else
-       uiDisplay = 0xFF;
-   return( uiDisplay );
+   {
+      vmode25x80();
+      bSuccess = FALSE;
+   }
+
+   return bSuccess;
 }

@@ -59,6 +59,8 @@
 #xtranslate HB_SETKEYSAVE( [<a>] )                        => ( {} )
 #xtranslate HB_SETKEYCHECK( <n>[, <x1>[, <x2>[, <x3>]]] ) => ( .F. )
 
+/* Strong typing */
+
 #translate AS ARRAY [OF <type>] =>
 
 #translate AS CHAR =>
@@ -85,8 +87,5 @@
 
 #translate AS VAR =>
 #translate AS VARIANT =>
-
-#command DECLARE <*x*> =>
-#command STRUCTURE <*x*> =>
 
 #endif

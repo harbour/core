@@ -276,7 +276,6 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\fieldbl.obj \
    $(OBJ_DIR)\getlist.obj \
    $(OBJ_DIR)\getsys.obj \
-   $(OBJ_DIR)\hbstruc.obj \
    $(OBJ_DIR)\input.obj \
    $(OBJ_DIR)\memoedit.obj \
    $(OBJ_DIR)\memvarbl.obj \
@@ -295,7 +294,10 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\tget.obj \
    $(OBJ_DIR)\tgetlist.obj \
    $(OBJ_DIR)\tlabel.obj \
+   $(OBJ_DIR)\tmenuitm.obj \
+   $(OBJ_DIR)\tpopup.obj \
    $(OBJ_DIR)\treport.obj \
+   $(OBJ_DIR)\ttopbar.obj \
    $(OBJ_DIR)\typefile.obj \
    $(OBJ_DIR)\wait.obj
 
@@ -434,10 +436,14 @@ VM_LIB_OBJS = \
    \
    $(OBJ_DIR)\borinit.obj \
    $(OBJ_DIR)\borsym.obj \
-   $(OBJ_DIR)\startup.obj \
    $(OBJ_DIR)\symbols.obj \
    \
    $(OBJ_DIR)\harbinit.obj
+
+!if !$d(B16)
+VM_LIB_OBJS = $(VM_LIB_OBJS) \
+   $(OBJ_DIR)\startup.obj
+!endif
 
 #
 # GTDOS.LIB rules
@@ -1154,13 +1160,6 @@ $(OBJ_DIR)\hardcr.obj : $(RTL_DIR)\hardcr.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\hbstruc.c : $(RTL_DIR)\hbstruc.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\hbstruc.obj : $(OBJ_DIR)\hbstruc.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
-
 $(OBJ_DIR)\inkey.obj : $(RTL_DIR)\inkey.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
@@ -1515,7 +1514,21 @@ $(OBJ_DIR)\tlabel.obj : $(OBJ_DIR)\tlabel.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\tmenuitm.c : $(RTL_DIR)\tmenuitm.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\tmenuitm.obj : $(OBJ_DIR)\tmenuitm.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\tone.obj : $(RTL_DIR)\tone.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\tpopup.c : $(RTL_DIR)\tpopup.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\tpopup.obj : $(OBJ_DIR)\tpopup.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
@@ -1535,6 +1548,13 @@ $(OBJ_DIR)\treport.obj : $(OBJ_DIR)\treport.c
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\trim.obj : $(RTL_DIR)\trim.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\ttopbar.c : $(RTL_DIR)\ttopbar.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\ttopbar.obj : $(OBJ_DIR)\ttopbar.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 

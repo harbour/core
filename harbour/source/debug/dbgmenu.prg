@@ -41,7 +41,7 @@
 #xcommand SEPARATOR => TDbMenu():AddItem( TDbMenuItem():New( "-" ) )
 #xcommand ENDMENU => ATail( TDbMenu():aMenus ):Build()
 
-function BuildMenu( oDebugger )  // Builds the debugger pulldown menu
+function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
 
    local oMenu
 

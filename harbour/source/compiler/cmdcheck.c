@@ -187,9 +187,6 @@ void hb_compChkEnvironVar( char * szSwitch )
          s++;
          switch( *s )
          {
-             case '?':
-                break;
-
              case 'a':
              case 'A':
                 hb_comp_bAutoMemvarAssume = TRUE;
@@ -324,6 +321,7 @@ void hb_compChkEnvironVar( char * szSwitch )
                */
              case 'h':
              case 'H':
+             case '?':
                 break;
 
                /* NOTE:

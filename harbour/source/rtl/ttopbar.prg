@@ -37,6 +37,10 @@
 #include "button.ch"
 #include "color.ch"
 #include "common.ch"
+#include "inkey.ch"
+#include "hbsetup.ch"
+
+#ifdef HB_COMPAT_C53
 
 #define HB_DEBUG_MENU_COLORS  "N/BG, W+/N, GR+/BG, GR+/N, N/BG, N/BG"
 
@@ -93,6 +97,7 @@ function TopBar( nRow, nLeft, nRight )
    endif
 
 return oClass:Instance()
+
 //--------------------------------------------------------------------------//
 static function AddItem( oItem )
 
@@ -109,6 +114,7 @@ static function AddItem( oItem )
    aAdd( ::aItems, oItem )
 
 return Self
+
 //--------------------------------------------------------------------------//
 static function DelItem( nPos )
 
@@ -120,6 +126,7 @@ static function DelItem( nPos )
    endif
 
 return Self
+
 //--------------------------------------------------------------------------//
 static function GetFirst()
 
@@ -133,6 +140,7 @@ static function GetFirst()
    next
 
 return 0
+
 //--------------------------------------------------------------------------//
 static function GetItem( nPos )
 
@@ -144,6 +152,7 @@ static function GetItem( nPos )
    endif
 
 return oItem
+
 //--------------------------------------------------------------------------//
 static function GetLast()
 
@@ -157,6 +166,7 @@ static function GetLast()
    next
 
 return 0
+
 //--------------------------------------------------------------------------//
 static function GetNext()
 
@@ -172,6 +182,7 @@ static function GetNext()
   endif
 
 return 0
+
 //--------------------------------------------------------------------------//
 static function GetPrev()
 
@@ -187,6 +198,7 @@ static function GetPrev()
    endif
 
 return 0
+
 //--------------------------------------------------------------------------//
 /* NOTE: This method corrects two bugs in Cl*pper:
          1) when two menuitems have the same key and the
@@ -197,7 +209,7 @@ static function GetAccel( nKey )
 
    LOCAL Self  := QSelf()
    LOCAL nAt   := 0
-   LOCAL cKey  := Upper( AltToKey_debugger( nKey ) ) /* By now */
+   LOCAL cKey  := Upper( __AltToKey( nKey ) ) /* By now */
    LOCAL n
 
    for n := 1 to ::itemCount
@@ -209,6 +221,7 @@ static function GetAccel( nKey )
    next
 
 return 0
+
 //--------------------------------------------------------------------------//
 /* NOTE: In my tests I can't get other values than HTNOWHERE or a value
          greather than 0 (selected item), althought the NG's says that
@@ -233,6 +246,7 @@ static function HitTest( nRow, nCol )
    endif
 
 return HTNOWHERE
+
 //--------------------------------------------------------------------------//
 static function InsItem( nPos, oItem )
 
@@ -253,6 +267,7 @@ static function InsItem( nPos, oItem )
    endif
 
 return Self
+
 //--------------------------------------------------------------------------//
 static function _Select( nPos )
 
@@ -273,6 +288,7 @@ static function _Select( nPos )
    endif
 
 return Self
+
 //--------------------------------------------------------------------------//
 static function SetItem( nPos, oItem )
 
@@ -283,6 +299,7 @@ static function SetItem( nPos, oItem )
    endif
 
 return Self
+
 //--------------------------------------------------------------------------//
 static function GetShortct( nKey )
 
@@ -296,6 +313,7 @@ static function GetShortct( nKey )
    next
 
 return 0
+
 //--------------------------------------------------------------------------//
 static function Display()
 
@@ -323,15 +341,15 @@ static function Display()
          ::row, ::aItems[ n ]:column, ;
          cPrompt, ;
          hb_ColorIndex( ::colorSpec, ;
-            if( ::aItems[ n ]:enabled, ;
-               if( n == ::current, CLR_ENHANCED, CLR_STANDARD ), ;
+            iif( ::aItems[ n ]:enabled, ;
+               iif( n == ::current, CLR_ENHANCED, CLR_STANDARD ), ;
                CLR_UNSELECTED ) ) )
 
       if nAt > 0
          DispOutAt( ::row, ::aItems[ n ]:column + nAt, ;
             SubStr( ::aItems[ n ]:caption, nAt + 1, 1 ), ;
             hb_ColorIndex( ::colorSpec, ;
-               if( n == ::current, CLR_BACKGROUND, CLR_BORDER ) ) )
+               iif( n == ::current, CLR_BACKGROUND, CLR_BORDER ) ) )
       endif
 
       if ::aItems[ n ]:isPopup()
@@ -354,3 +372,22 @@ static function Display()
 
 return Self
 //--------------------------------------------------------------------------//
+
+static function __AltToKey( nKey )
+
+   local nIndex := AScan( { K_ALT_A, K_ALT_B, K_ALT_C, K_ALT_D, K_ALT_E, K_ALT_F,;
+                            K_ALT_G, K_ALT_H, K_ALT_I, K_ALT_J, K_ALT_K, K_ALT_L,;
+                            K_ALT_M, K_ALT_N, K_ALT_O, K_ALT_P, K_ALT_Q, K_ALT_R,;
+                            K_ALT_S, K_ALT_T, K_ALT_U, K_ALT_V, K_ALT_W, K_ALT_X,;
+                            K_ALT_Y, K_ALT_Z }, nKey )
+   local cKey
+
+      if nIndex > 0
+         cKey := SubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ", nIndex, 1 )
+      else
+         cKey := ""
+      endif
+
+return cKey
+
+#endif

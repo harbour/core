@@ -96,7 +96,7 @@ HARBOUR_EXE  = $(BIN_DIR)\harbour.exe
 #
 
 LIBLIST = \
-   $(TOOLS_LIB) \
+   $(TOOLS_LIB)
 
 #
 # TOOLS.LIB rules

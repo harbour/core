@@ -65,7 +65,7 @@ static void hb_gt_Initialize_Terminal( void )
       int backg, foreg;
       /* NOTE: color order=
           DOS style    -> ncurses style
-	  --------------------------------
+          --------------------------------
           0 black         0-> COLOR_BLACK
           1 blue          4-> COLOR_RED
           2 green         2-> COLOR_GREEN
@@ -74,31 +74,31 @@ static void hb_gt_Initialize_Terminal( void )
           5 magenta       5-> COLOR_MAGENTA
           6 yellow        3-> COLOR_CYAN
           7 light gray    7-> COLOR_WHITE
-	  8 gray          0-> BOLD BLACK
-	  9 light blue    4-> BOLD RED
-	 10 light green   2-> BOLD GREEN
-	 11 light cyan    6-> BOLD YELLOW
-	 12 light red     1-> BOLD BLUE
-	 13 light magenta 5-> BOLD MAGENTA
-	 14 light yellow  3-> BOLD CYAN
-	 15 white         7-> BOLD WHITE
+          8 gray          0-> BOLD BLACK
+          9 light blue    4-> BOLD RED
+         10 light green   2-> BOLD GREEN
+         11 light cyan    6-> BOLD YELLOW
+         12 light red     1-> BOLD BLUE
+         13 light magenta 5-> BOLD MAGENTA
+         14 light yellow  3-> BOLD CYAN
+         15 white         7-> BOLD WHITE
       */
       static char color_map[] = { 0, 4, 2, 6, 1, 5, 3, 7 };
 
       start_color();
       for( backg=0; backg<COLORS; backg++ )
          for( foreg=0; foreg<COLORS; foreg++ )
-	       init_pair( backg*COLORS+foreg, color_map[foreg], color_map[backg] );
+               init_pair( backg*COLORS+foreg, color_map[foreg], color_map[backg] );
 
       for( i=0; i<256; i++  )
       {
          backg = ( i >> 4 ) & 0x07;    /* bits 4-6, bit 7 is blinking attribute */
-	       foreg = ( i & 0x07 );
-	       s_attribmap_table[ i ] = COLOR_PAIR( backg*COLORS + foreg );
-	       if( i & 0x08 )
-	           s_attribmap_table[ i ] |= A_BOLD;  /* 4-th bit is an intensity bit */
-	       if( i & 0x80 )
-	           s_attribmap_table[ i ] |= A_BLINK;  /* 7-th bit is blinking bit */
+               foreg = ( i & 0x07 );
+               s_attribmap_table[ i ] = COLOR_PAIR( backg*COLORS + foreg );
+               if( i & 0x08 )
+                   s_attribmap_table[ i ] |= A_BOLD;  /* 4-th bit is an intensity bit */
+               if( i & 0x80 )
+                   s_attribmap_table[ i ] |= A_BLINK;  /* 7-th bit is blinking bit */
       }
    }
 
@@ -383,7 +383,7 @@ void hb_gt_SetAttribute( USHORT uiTop,
           c &= (A_CHARTEXT | A_ALTCHARSET);
           /* set new attribute */
           c |= newAttr;
-          if (addch(c) == ERR)	/* Stop on error */
+          if (addch(c) == ERR)  /* Stop on error */
              return;
       }
       uiTop++;
@@ -611,13 +611,13 @@ USHORT hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
 
    if( s_under_xterm )
    {
-      /* enable temporarily for box drawing 
+      /* enable temporarily for box drawing
         NOTE: under xterm characcters with ASCII code 96 - 124 are
-        used for special characters 
+        used for special characters
       */
       s_alternate_char_set = A_ALTCHARSET;
    }
-       
+
    uiRow = uiTop;
    uiCol = uiLeft;
 
@@ -684,7 +684,7 @@ USHORT hb_gt_BoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
    if( s_under_xterm )
    {
       /* Under xterm use hard-coded box drawing characters */
-      pbyFrame = s_xTermBox; 
+      pbyFrame = s_xTermBox;
       s_alternate_char_set = A_ALTCHARSET;
    }
    hb_gt_Box( uiTop, uiLeft, uiBottom, uiRight, pbyFrame, byAttr );
@@ -700,7 +700,7 @@ USHORT hb_gt_BoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
    if( s_under_xterm )
    {
       /* Under xterm use hard-coded box drawing characters */
-      pbyFrame = s_xTermBox; 
+      pbyFrame = s_xTermBox;
       s_alternate_char_set = A_ALTCHARSET;
    }
    hb_gt_Box( uiTop, uiLeft, uiBottom, uiRight, pbyFrame, byAttr );
@@ -715,12 +715,12 @@ USHORT hb_gt_HorizLine( USHORT uiRow, USHORT uiLeft, USHORT uiRight, BYTE byChar
 {
    if( s_under_xterm )
       byChar = ACS_HLINE;
-      
+
    if( uiLeft < uiRight )
       mvhline( uiRow, uiLeft, byChar | A_ALTCHARSET | s_attribmap_table[ byAttr ],
                uiRight - uiLeft + 1 );
    else
-      mvhline( uiRow, uiRight, byChar | A_ALTCHARSET | s_attribmap_table[ byAttr ], 
+      mvhline( uiRow, uiRight, byChar | A_ALTCHARSET | s_attribmap_table[ byAttr ],
                uiLeft - uiRight + 1 );
    return 0;
 }
@@ -736,11 +736,11 @@ USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar,
       uRow = uiBottom;
       uiBottom = uiTop;
    }
-   
+
    if( s_under_xterm )
       byChar = ACS_VLINE;
    mvvline( uRow, uiCol, byChar | A_ALTCHARSET | s_attribmap_table[ byAttr ],
             uiBottom - uRow + 1 );
-   
+
    return 0;
 }
