@@ -30,7 +30,7 @@ function CheckDate( dDate )
    OutStd( "Week of year...:", woy( dDate ), cNewLine )
    OutStd( "Begin of year..:", boy( dDate ), cNewLine )
    OutStd( "End of year....:", eoy( dDate ), cNewLine )
-   OutStd( chr( 10 ), chr( 10 ) )
    __Accept( "Press ENTER to continue..." )
+   OutStd( chr( 10 ), chr( 10 ) )
 
 return nil

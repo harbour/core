@@ -202,7 +202,7 @@ HARBOUR HB_HB_RUN( void )
           */
          for( ul = 0; ul < ulSymbols; ul++ )    /* Check INIT functions     */
          {
-            if( (pSymRead[ ul ].cScope & FS_INITEXIT == FS_INITEXIT )
+            if( (pSymRead[ ul ].cScope & FS_INITEXIT) == FS_INITEXIT )
             {
                 hb_vmPushSymbol( pSymRead + ul );
                 hb_vmPushNil();

@@ -295,7 +295,9 @@ static void hb_outstd( char * fpStr, ULONG len )
    while( count-- ) printf( "%c", *fpPtr++ );
    fflush( stdout );
 #ifdef HARBOUR_USE_GTAPI
+ #ifndef __CYGWIN__
    if( isatty( fileno( stdout ) ) )
+ #endif
    {
       dev_row = hb_gt_Row();
       dev_col = hb_gt_Col();
@@ -314,7 +316,9 @@ static void hb_outerr( char * fpStr, ULONG len )
    while( count-- ) fprintf( stderr, "%c", *fpPtr++ );
    fflush( stderr );
 #ifdef HARBOUR_USE_GTAPI
-   if( isatty( fileno( stdout ) ) )
+ #ifndef __CYGWIN__
+   if( isatty( fileno( stderr ) ) )
+ #endif
    {
       dev_row = hb_gt_Row();
       dev_col = hb_gt_Col();

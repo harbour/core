@@ -1,3 +1,22 @@
+19990817-13:50 EDT David G. Holm <dholm@jsd-llc.com>
+  * config/dos/global.cf
+    + Added code to leave COMSPEC alone instead of changing '\' to
+      '/' for bcc31, because NT chokes on '/' when using the Cygwin
+      GNU Make System to build the Borland C 3.1 version of Harbour.
+  * source/rtl/console.c
+    + Surrounded 'if( isatty( fileno( stdout ) ) )' in hb_outstd()
+      with '#ifndef __CYGWIN__' and '#endif'.
+    ! Corrected 'if( isatty( fileno( stdout ) ) )' in hb_outerr()
+      to check stderr instead of stdout.
+    + Surrounded 'if( isatty( fileno( stderr ) ) )' in hb_outerr()
+      with #ifndef '__CYGWIN__' and '#endif'.
+  * source/runner/runner.c
+    ! Added ')' that was missing from a conditional test.
+  * tests/working/dates4.prg
+    * Moved output of extra CR/LF pair in CheckDate() subroutine to
+      after the __Accept() call, because __Accept() already outputs
+      a CR/LF pair before displaying the prompt.
+
 19990817-17:13 GMT+1 Antonio Linares <alinares@fivetech.com>
    + source/debug/tbrwtext.prg
      * Class TBrwText for browsing debugger source code

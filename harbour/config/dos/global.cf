@@ -15,7 +15,11 @@ MK := $(subst \,/,$(subst \~,~,$(MAKE)))
 ifeq ($(COMSPEC),) #location of command.com
   COMSPEC := command.com
 else
-  COMSPEC := $(subst \,/,$(COMSPEC))
+  ifeq ($(HB_COMPILER),bcc31)
+    #Use standard dos path, which is already set up.
+  else
+    COMSPEC := $(subst \,/,$(COMSPEC))
+  endif
 endif
 
 RM = del
