@@ -15,7 +15,7 @@ PROJECT: harbour.exe harbour.lib libs\b32\terminal.lib libs\win32\terminal.lib
 harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj dates.obj datesx.obj \
               debug.obj dynsym.obj environ.obj error.obj \
               errorapi.obj errorsys.obj extend.obj files.obj \
-              initsymb.obj itemapi.obj \
+              initsymb.obj itemapi.obj hb_f.obj\
               math.obj mathx.obj objfunc.obj set.obj symbols.obj strings.obj \
               stringp.obj \
               stringsx.obj strcmp.obj tclass.obj transfrm.obj
@@ -62,6 +62,7 @@ strings.obj  : strings.c  extend.h types.h
 stringsx.obj : stringsx.c extend.h types.h
 tclass.obj   : tclass.c   extend.h types.h
 transfrm.obj : transfrm.c extend.h types.h
+hb_f.obj     : hb_f.c     extend.h types.h
 
 asort.c      : asort.prg     harbour.exe
 error.c      : error.prg     harbour.exe
@@ -82,7 +83,7 @@ tclass.c     : tclass.prg    harbour.exe
   tlib .\libs\b32\harbour.lib -+$@,,
 
 harbour.exe : y_tab.c lexyy.c genobj32.obj harbour.obj compiler.h
-   echo -O2 > bld.b32
+   echo -O2 > bld.32
    echo -ebin\harbour.exe >> bld.32
    echo -Iinclude;source\compiler >> bld.32
    echo source\compiler\y_tab.c >> bld.32

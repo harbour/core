@@ -1,3 +1,22 @@
+19990528-21:00 WIB Andi Jahja <andij@aonlippo.co.id>
+  * makefile.b32
+    modified to include hb_f.c in harbour.lib
+
+  + source/tools/hb_f.c
+    nanforum ft_f*() clones
+    - hb_fuse
+    - hb_frecno
+    - hb_flastrec
+    - hb_fgotop
+    - hb_fgobottom
+    - hb_fgoto
+    - hb_feof
+    - hb_freadln
+    - hb_fskip
+
+  + tests/working/testhbf.prg
+    - Test program for hb_f*() routines
+
 19990527-22:06 EST Les Griffith
   * changed iotest.prg to work without and exit clause
 
