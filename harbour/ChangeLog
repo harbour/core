@@ -1,3 +1,19 @@
+2000-10-07 21:15 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+ *contrib/pdflib/pdfhbdoc.c
+   +code to handle Tables
+ *utils/hdboc/genpfdf1.prg
+   *Uncommented out Table handling code
+ *utils/hdboc/hbdoc.prg
+   *Fixed an small bug
+ *source/rtl/dummy.prg
+   -__DBAPP() and __DBCOPY() functions
+ *doc/funclist.txt
+   *update some function status
+ *contrib/rdd_ads/doc/en/adsfuncs.txt
+   *small formating
+
+
+
 2000-10-07 22:16 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * contrib/rdd_ads/ads1.c
      * Added methods adsEof() and adsBof() for fixing problem with relations,
