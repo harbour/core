@@ -1,12 +1,7 @@
 
 /*
-=======
- * $Id$
- */
-
-/*
  * Harbour Project source code:
- * HTML Support Code For FT_HELPC
+ * Norton Guide Support Code For FT_HELPC
  *
  * Copyright 2000 Luiz Rafael Culik Culik@sl.conex.net
  * www - http://www.harbour-project.org
@@ -35,120 +30,112 @@
  *
  */
 
-#include 'hbclass.ch'
-
 #define CRLF HB_OSNewLine()
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-*+    Class THTML
-*+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-CLASS THTML
+#include 'hbclass.ch'
 
-   DATA nHandle
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
+*+    Class TNortonGuide
+*+
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
+CLASS TNortonGuide
+
    DATA cFile
+   DATA nHandle
    METHOD New( cFile )
-   METHOD WriteTitle( cTitle )
+
    METHOD WritePar( cPar )
-   METHOD WriteParBold( cPar )
-   METHOD WriteLink( cLink )
+   METHOD WriteLink( clink )
    METHOD CLOSE()
-
+   METHOD WriteParBold( cPar )
+   METHOD WriteTitle(  cTopic , cTitle )
 ENDCLASS
-
-METHOD New( cFile ) CLASS THTML
+METHOD NEW( cFile ) CLASS TNortonGuide
 
    IF VALTYPE( cFile ) <> NIL .AND. VALTYPE( cFile ) == "C"
       Self:cFile   := LOWER( cFile )
       Self:nHandle := FCREATE( Self:cFile )
    ENDIF
 
-   FWRITE( Self:nHandle, "<HEAD>" + CRLF )
+RETURN Self
+
+METHOD WritePar( cPar ) CLASS TNortonGuide
+
+   FWRITE( Self:nHandle, ALLTRIM( cPar ) + CRLF )
 
 RETURN Self
 
-METHOD WriteTitle( cTitle ) CLASS THTML
+METHOD WriteParBold( cPar ) CLASS TNortonGuide
 
-   FWRITE( Self:nHandle, "<TITLE>" + CRLF + cTitle + CRLF + "</Title>" + CRLF + '<body bgcolor="#FFFFFF">' + CRLF )
-
-RETURN Self
-
-METHOD WritePar( cPar ) CLASS THTML
-
-   FWRITE( Self:nHandle, "<p>" + cPar + '</p>' + CRLF )
+   FWRITE( Self:nHandle, '^b' + ALLTRIM( cPar ) + '^b^' + CRLF )
 
 RETURN Self
 
-METHOD WriteParBold( cPar ) CLASS THTML
+METHOD WriteTitle( cTopic, cTitle ) CLASS TNortonGuide
 
-   FWRITE( Self:nHandle, "<p><b>" + cPar + '</b></p>' + CRLF )
+   LOCAL cTemp
+   LOCAL nPos
+   LOCAL cWrite
+
+   cTopic := ALLTRIM( cTopic )
+
+   FWRITE( Self:nHandle, "!Short: " + cTopic + CRLF )
+
+   Self:WriteParBold(cTitle )
 
 RETURN Self
 
-METHOD CLOSE() CLASS THTML
-
-   FWRITE( Self:nHandle, "</body>" + CRLF )
+METHOD CLOSE() CLASS TNortonGuide
 
    FCLOSE( Self:nHandle )
 
 RETURN Self
 
-METHOD WriteLink( cLink ) CLASS THTML
+METHOD WriteLink( cLink ) CLASS TNortonGuide
 
-   LOCAL nPos
-   LOCAL cTemp := ''
-
-   nPos := AT( "()", cLink )
-
-   IF nPos > 0
-      cTemp := SUBSTR( cLink, 1, nPos - 1 ) + '.html'
-      FWRITE( Self:nHandle, "<p><a href=" + cTemp + ">" + cLink + "</a></p>" + CRLF )
-   ELSE
-      cTemp := ALLTRIM( cLink ) + '.html'
-      FWRITE( Self:nHandle, "<p><a href=" + cTemp + ">" + cLink + "</a></p>" + CRLF )
-   ENDIF
+   FWRITE( Self:nHandle, cLink )
 
 RETURN Self
 
-*+ EOF: HTML.PRG
+*+ EOF: NG.PRG
 /*  $DOC$
  *  $FUNCNAME$
- *     THtml()
+ *     TNortonGuide()
  *  $CATEGORY$
  *     Harbour Tools
  *  $ONELINER$
- *     Html Class
+ *     Norton Guide Class
  *  $SYNTAX$
- *     oHtml:=THtml():New(<cFile>)
+ *     oNg:=TNortonGuide():New(<cFile>)
  *  $ARGUMENTS$
- *     <cFile> Name of the Html file to create
+ *     <cFile> Name of the Ng Source file to create
  *  $RETURNS$
- *     An  instance of the THtml Class
+ *     An  instance of the TNortonGuide Class
  *  $DESCRIPTION$
- *     THtml() is a class that create an .html file output of the same
- *     name you pass to the constructor.
+ *     TNortonGuide() is a class that create the Norton Guide Source
+ *     Code of the same name you pass to the constructor.
  *     The class methods are as follows:
  *        New(<cFile>) Create a new instance of the THtml class.
  *        Close() Close the create file
- *        WriteTitle(<cTitle>) Write the file title
+ *        WriteTitle(<cTopic>,<cTitle>) Write the file title
  *        WritePar(<cPar>)   Writes a paragrafer
  *        WriteParBold(<cPar>)   Same as WritePar(), but the text is bold style.
  *        WriteLink(<cLink>)  Write a link to another topic
  *  $EXAMPLES$
  *     FUNCTION MAIN()
  *
- *     LOCAL oHtm
+ *     LOCAL oNg
  *
- *     oHtm := THTML():New( "www\harbour.html" )
- *     oHtm:WriteTitle( "Harbour Reference Guide" )
- *     oHtm:WritePar( "HARBOUR" )
- *     oHtm:WriteLink( "OverView" )
- *     oHtm:WriteLink( "License" )
- *     oHtm:WriteLink( "http://www.gnu.org/copyleft/gpl" )
- *     oHtm:WritePar( "See the Links Above" )
- *     oHtm:Close()
+ *     oNg := TNortonGuide():New( "ngi\harbour.ngi" )
+ *     oNg:WriteTitle( "Harbour Reference Guide" )
+ *     oNg:WritePar( "HARBOUR" )
+ *     oNg:WriteLink( "OverView" )
+ *     oNg:WriteLink( "License" )
+ *     
+ *     oNg:WritePar( "See the Links Above" )
+ *     oNg:Close()
  *     RETURN Nil
  *
  *  $TESTS$

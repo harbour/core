@@ -1,0 +1,31 @@
+.path.c   = ngdoc
+.path.h   = include
+.path.exe = bin
+.path.lib = lib\b32
+.path.obj = obj;ngdoc
+.path.prg = ngdoc
+PROJECT: ft_helpc.exe
+
+ft_helpc.obj :   ft_helpc.c
+                
+ft_helpc.c   :   ft_helpc.prg
+
+.prg.c:
+  bin\harbour $< /n /ongdoc\ /iinclude /p /DNANFOR
+
+ft_helpc.exe: ft_helpc.obj
+   echo -v -O2 > bld.32
+   echo -engdoc\ft_helpc.exe >> bld.32
+   echo -Iinclude >> bld.32
+   echo ngdoc\ft_helpc.c >> bld.32
+   echo lib\b32\harbour.lib >> bld.32
+   echo lib\b32\terminal.lib >> bld.32
+   echo lib\b32\hbgt.lib >> bld.32
+   echo lib\b32\hbpp.lib >> bld.32
+   echo lib\b32\rdd.lib >> bld.32
+   echo lib\b32\common.lib >> bld.32
+   echo lib\b32\runner.lib >> bld.32
+   bcc32 @bld.32
+   del bld.32
+
+
