@@ -166,7 +166,7 @@ void Line( void );                      /* generates the pcode with the currentl
 void LineBody( void );                  /* generates the pcode with the currently compiled source code line */
 void Message( char * szMsgName );       /* sends a message to an object */
 void PopId( char * szVarName );         /* generates the pcode to pop a value from the virtual machine stack onto a variable */
-void PushDouble( double fNumber );      /* Pushes a number on the virtual machine stack */
+void PushDouble( double fNumber, BYTE bDec ); /* Pushes a number on the virtual machine stack */
 void PushId( char * szVarName );        /* generates the pcode to push a variable value to the virtual machine stack */
 void PushIdByRef( char * szVarName );   /* generates the pcode to push a variable by reference to the virtual machine stack */
 void PushInteger( int iNumber );        /* Pushes a integer number on the virtual machine stack */
@@ -375,7 +375,11 @@ PATHNAMES *_pIncludePath = NULL;
    char * string;       /* to hold a string returned by lex */
    int    iNumber;      /* to hold a number returned by lex */
    long   lNumber;      /* to hold a long number returned by lex */
-   double dNumber;      /* to hold a double number returned by lex */
+   struct
+   {
+      double dNumber;   /* to hold a double number returned by lex */
+      unsigned char bDec; /* to hold the number of decimal points in the value */
+   } dNum;
    void * pVoid;        /* to hold any memory structure we may need */
 };
 
@@ -414,8 +418,8 @@ PATHNAMES *_pIncludePath = NULL;
 /*the highest precedence*/
 
 %type <string>  IDENTIFIER LITERAL FunStart MethStart IdSend
-%type <dNumber> DOUBLE ObjectData
-%type <iNumber>  ArgList ElemList ExpList FunCall FunScope IncDec Logical Params ParamList
+%type <dNum>    DOUBLE ObjectData
+%type <iNumber> ArgList ElemList ExpList FunCall FunScope IncDec Logical Params ParamList
 %type <iNumber> INTEGER BlockExpList Argument IfBegin VarId VarList MethParams ObjFunCall
 %type <iNumber> MethCall BlockList FieldList
 %type <lNumber> INTLONG WhileBegin BlockBegin
@@ -561,7 +565,7 @@ ObjFunCall : FunCall ':'                      { Function( $1 ); $$ = $1; }
            ;
 
 Expression : NIL                              { PushNil(); }
-           | DOUBLE                           { PushDouble( $1 ); }
+           | DOUBLE                           { PushDouble( $1.dNumber,$1.bDec ); }
            | INTEGER                          { PushInteger( $1 ); }
            | INTLONG                          { PushLong( $1 ); }
            | LITERAL                          { PushString( $1 ); }
@@ -2213,11 +2217,12 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                     int i;
                     ++lPCodePos;
                     fprintf( yyc, "                _PUSHDOUBLE, " );
-                    for( i = 0; i < sizeof( double ); ++i )
+                    for( i = 0; i < sizeof( double ) + sizeof( BYTE ); ++i )
                        fprintf( yyc, "%i, ", ( ( BYTE * ) pFunc->pCode )[ lPCodePos + i ] );
-                    fprintf( yyc, "/* %f */\n",
+                    fprintf( yyc, "/* %.*f, %d */\n",
+                    *( ( BYTE * ) &( pFunc->pCode[ lPCodePos + sizeof( double ) ] ) ),
                     *( ( double * ) &( pFunc->pCode[ lPCodePos ] ) ) );
-                    lPCodePos += sizeof( double );
+                    lPCodePos += sizeof( double ) + sizeof( BYTE );
                  }
                  break;
 
@@ -2909,15 +2914,11 @@ void PushNil( void )
 }
 
 /* generates the pcode to push a double number on the virtual machine stack */
-void PushDouble( double dNumber )
+void PushDouble( double dNumber, BYTE bDec )
 {
-   if( dNumber )
-   {
-      GenPCode1( _PUSHDOUBLE );
-      GenPCodeN( ( BYTE * ) &dNumber, sizeof( double ) );
-   }
-   else
-     GenPCode1( _ZERO );
+   GenPCode1( _PUSHDOUBLE );
+   GenPCodeN( ( BYTE * ) &dNumber, sizeof( double ) );
+   GenPCode1( bDec );
 }
 
 /* generates the pcode to push a integer number on the virtual machine stack */

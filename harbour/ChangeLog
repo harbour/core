@@ -1,3 +1,12 @@
+19990520-19:35 EST David G. Holm <dholm@jsd-llc.com>
+  Thanks go to "Victor Szel" <info@szelvesz.hu>
+  * source/compiler/harbour.l
+    - Saves number of decimal places in double constants
+  * source/compiler/harbour.y
+    - Includes number of decimal places when creating pcode for _PUSHDOUBLE
+  * source/vm/hvm.c
+    - Pcode for _PUSHDOUBLE extracts number of decimal places
+
 Thu May 20 16:03:24 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* source/rtl/dates.c: 

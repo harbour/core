@@ -469,8 +469,8 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
               break;
 
          case _PUSHDOUBLE:
-              PushDouble( * ( double * ) ( &pCode[ w + 1 ] ), hb_set.HB_SET_DECIMALS );
-              w += 1 + sizeof( double );
+              PushDouble( * ( double * ) ( &pCode[ w + 1 ] ), ( WORD ) * ( BYTE * ) &pCode[ w + 1 + sizeof( double ) ] );
+              w += 1 + sizeof( double ) + 1;
               break;
 
          case _PUSHINT:

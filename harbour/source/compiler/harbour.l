@@ -717,25 +717,33 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 
 {InvalidNumber} GenError( ERR_NUMERIC_FORMAT, NULL, NULL );
 
-{Number}       { yylval.dNumber = atof( yytext );
-                 if( strchr( yytext, '.' ) )
+{Number}       { char * ptr;
+                 yylval.dNum.dNumber = atof( yytext );
+                 ptr = strchr( yytext, '.' );
+                 if( ptr )
+                 {
+                    yylval.dNum.bDec = strlen( ptr + 1 );
                     return DOUBLE;
+                 }
                  else
                  {
-                    if( ( double )SHRT_MIN <= yylval.dNumber &&
-                        yylval.dNumber <= ( double )SHRT_MAX )
+                    if( ( double )SHRT_MIN <= yylval.dNum.dNumber &&
+                        yylval.dNum.dNumber <= ( double )SHRT_MAX )
                     {
-                       yylval.iNumber = ( int ) yylval.dNumber;
+                       yylval.iNumber = ( int ) yylval.dNum.dNumber;
                        return INTEGER;
                     }
-                    else if( ( double )LONG_MIN <= yylval.dNumber &&
-                             yylval.dNumber <= ( double )LONG_MAX )
+                    else if( ( double )LONG_MIN <= yylval.dNum.dNumber &&
+                             yylval.dNum.dNumber <= ( double )LONG_MAX )
                     {
-                       yylval.lNumber = ( long ) yylval.dNumber;
+                       yylval.lNumber = ( long ) yylval.dNum.dNumber;
                        return INTLONG;
                     }
                     else
+                    {
+                       yylval.dNum.bDec = 0;
                        return DOUBLE;
+                    }
                  }
                }
 
@@ -755,7 +763,8 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                  }
                  else
                  {
-                    yylval.dNumber = lNumber;
+                    yylval.dNum.dNumber = lNumber;
+                    yylval.dNum.bDec = 0;
                     return DOUBLE;
                  }
               }
