@@ -1,3 +1,17 @@
+19991130-04:30 EST Paul Tucker <ptucker@sympatico.ca>
+  * makefile.vc
+    + source/rtl/break.c
+    + source/rtl/empty.c
+    + source/rtl/initexit.c
+    + source/rtl/len.c
+    + source/rtl/pcount.c
+    + source/rtl/proc.c
+    + source/rtl/pvalue.c
+    + source/rtl/type.c
+    + source/rtl/valtype.c
+    + source/rtl/word.c
+    + source/rtl/xhelp.c
+
 19991202-00:54 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/Makefile
     + New files added to the GNU make system.

@@ -71,6 +71,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\arrays.obj \
     $(OBJ_DIR)\asort.obj \
     $(OBJ_DIR)\binnum.obj \
+    $(OBJ_DIR)\break.obj \
     $(OBJ_DIR)\browdb.obj \
     $(OBJ_DIR)\browse.obj \
     $(OBJ_DIR)\classes.obj \
@@ -91,6 +92,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\do.obj \
     $(OBJ_DIR)\dummy.obj \
     $(OBJ_DIR)\dynsym.obj \
+    $(OBJ_DIR)\empty.obj \
     $(OBJ_DIR)\environ.obj \
     $(OBJ_DIR)\errorapi.obj \
     $(OBJ_DIR)\errorsys.obj \
@@ -104,12 +106,14 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\hbfsapi.obj \
     $(OBJ_DIR)\hbstr.obj \
     $(OBJ_DIR)\hvm.obj \
+    $(OBJ_DIR)\initexit.obj \
     $(OBJ_DIR)\initsymb.obj \
     $(OBJ_DIR)\inkey.obj \
     $(OBJ_DIR)\input.obj \
     $(OBJ_DIR)\isprint.obj \
     $(OBJ_DIR)\itemapi.obj \
     $(OBJ_DIR)\langapi.obj \
+    $(OBJ_DIR)\len.obj \
     $(OBJ_DIR)\main.obj \
     $(OBJ_DIR)\math.obj \
     $(OBJ_DIR)\memofile.obj \
@@ -125,6 +129,9 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\objfunc.obj \
     $(OBJ_DIR)\oldbox.obj \
     $(OBJ_DIR)\oldclear.obj \
+    $(OBJ_DIR)\pcount.obj \
+    $(OBJ_DIR)\proc.obj \
+    $(OBJ_DIR)\pvalue.obj \
     $(OBJ_DIR)\readkey.obj \
     $(OBJ_DIR)\readvar.obj \
     $(OBJ_DIR)\samples.obj \
@@ -144,8 +151,12 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\tget.obj \
     $(OBJ_DIR)\tgetlist.obj \
     $(OBJ_DIR)\tone.obj \
-    $(OBJ_DIR)\wait.obj \
     $(OBJ_DIR)\transfrm.obj \
+    $(OBJ_DIR)\type.obj \
+    $(OBJ_DIR)\valtype.obj \
+    $(OBJ_DIR)\wait.obj \
+    $(OBJ_DIR)\word.obj \
+    $(OBJ_DIR)\xhelp.obj \
     $(OBJ_DIR)\xsavescr.obj \
     $(RDD_OBJS)
 
@@ -422,6 +433,9 @@ $(OBJ_DIR)\asort.obj : $(RTL_DIR)\asort.c
 $(OBJ_DIR)\binnum.obj : $(RTL_DIR)\binnum.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(OBJ_DIR)\break.obj : $(RTL_DIR)\break.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(RTL_DIR)\browdb.c : $(RTL_DIR)\browdb.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
@@ -482,6 +496,9 @@ $(RTL_DIR)\dummy.c : $(RTL_DIR)\dummy.prg
 $(OBJ_DIR)\dummy.obj : $(RTL_DIR)\dummy.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(OBJ_DIR)\empty.obj : $(RTL_DIR)\empty.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(OBJ_DIR)\environ.obj : $(RTL_DIR)\environ.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
@@ -533,6 +550,9 @@ $(OBJ_DIR)\hbfsapi.obj : $(COMMON_DIR)\hbfsapi.c
 $(OBJ_DIR)\hbstr.obj : $(COMMON_DIR)\hbstr.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(OBJ_DIR)\initexit.obj : $(RTL_DIR)\initexit.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(OBJ_DIR)\inkey.obj : $(RTL_DIR)\inkey.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
@@ -549,6 +569,9 @@ $(OBJ_DIR)\itemapi.obj : $(RTL_DIR)\itemapi.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\langapi.obj : $(RTL_DIR)\langapi.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\len.obj : $(RTL_DIR)\len.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\math.obj : $(RTL_DIR)\math.c
@@ -600,6 +623,15 @@ $(OBJ_DIR)\oldbox.obj : $(RTL_DIR)\oldbox.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\oldclear.obj : $(RTL_DIR)\oldclear.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\pcount.obj : $(RTL_DIR)\pcount.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\proc.obj : $(RTL_DIR)\proc.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\pvalue.obj : $(RTL_DIR)\pvalue.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\readkey.c : $(RTL_DIR)\readkey.prg
@@ -698,10 +730,22 @@ $(OBJ_DIR)\tone.obj : $(RTL_DIR)\tone.c
 $(OBJ_DIR)\transfrm.obj : $(RTL_DIR)\transfrm.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(OBJ_DIR)\type.obj : $(RTL_DIR)\type.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\valtype.obj : $(RTL_DIR)\valtype.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(RTL_DIR)\wait.c : $(RTL_DIR)\wait.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\wait.obj : $(RTL_DIR)\wait.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\word.obj : $(RTL_DIR)\word.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\xhelp.obj : $(RTL_DIR)\xhelp.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\xsavescr.c : $(RTL_DIR)\xsavescr.prg
