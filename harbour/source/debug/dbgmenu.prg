@@ -90,7 +90,7 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
          MENUITEM " to ~Cursor         F7"  ACTION Alert( "Not implemented yet!" )
          MENUITEM " ~Next routine Ctrl-F5"  ACTION Alert( "Not implemented yet!" )
          SEPARATOR
-         MENUITEM " s~Peed..."              ACTION Alert( "Not implemented yet!" )
+         MENUITEM " s~Peed..."              ACTION oDebugger:Speed()
       ENDMENU
 
       MENUITEM " ~Point "
@@ -127,8 +127,8 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
          MENUITEM " ~Tab Width..."          ACTION oDebugger:TabWidth()
          MENUITEM " path for ~Files..."     ACTION oDebugger:PathForFiles()
          SEPARATOR
-         MENUITEM " ~Save Settings..."      ACTION Alert( "Not implemented yet!" )
-         MENUITEM " ~Restore Settings... "  ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Save Settings..."      ACTION oDebugger:SaveSettings()
+         MENUITEM " ~Restore Settings... "  ACTION oDebugger:RestoreSettings()
       ENDMENU
 
       MENUITEM " ~Window "
