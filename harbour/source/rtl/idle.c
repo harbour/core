@@ -98,7 +98,7 @@ static void hb_releaseCPU( void )
 
    /* TODO: Add code to release time slices on all platforms */
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN_32) || defined(__CYGWIN__)
    /* Forfeit the remainder of the current time slice. */
    Sleep( 20 );
 

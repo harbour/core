@@ -143,6 +143,8 @@ For gcc on Win95/WinNT with the Cygwin library:
   HB_COMPILER       gcc
   HB_GT_LIB         gtwin
   CYGWIN            noglob
+  C_USR             -mwin32
+  L_USR             -mwin32
 
 For gcc on Win95/WinNT with the Mingw32 library:
   HB_ARCHITECTURE   w32

@@ -1,3 +1,10 @@
+2001-10-04 17:10 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * doc/gmake.txt
+  * source/rtl/filesys.c
+  * source/rtl/idle.c
+  	! Cygwin fixes.
+
 2001-10-03 17:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * source/rtl/isprint.c

@@ -690,7 +690,8 @@ ULONG   hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 
    errno = 0;
 
-   #if defined(X__WIN32__){
+   #if defined(X__WIN32__)
+      {
       BOOL bError;
       bError=ReadFile( ( HANDLE ) hFileHandle, pBuff, ulCount, &ulRead, NULL );
       if (!bError)
