@@ -60,6 +60,7 @@ CLASS TMySQLRow
 
    METHOD   FieldLen(nNum)             // Length of field N
    METHOD   FieldDec(nNum)             // How many decimals in field N
+   METHOD   FieldType(nNum)            // Clipper type of field N
 
    METHOD   MakePrimaryKeyWhere()    // returns a WHERE x=y statement which uses primary key (if available)
 
@@ -172,6 +173,40 @@ METHOD FieldDec(nNum) CLASS TMySQLRow
    endif
 
 return ""
+
+
+METHOD FieldType(nNum) CLASS TMySQLRow
+
+   local cType := "U"
+
+   if nNum >=1 .AND. nNum <= Len(::aFieldStruct)
+      do case
+         case ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_TINY_TYPE
+            cType := "L"
+
+         case ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_SHORT_TYPE .OR.;
+              ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_LONG_TYPE .OR.;
+              ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_FLOAT_TYPE .OR.;
+              ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_DOUBLE_TYPE
+            cType := "N"
+
+         case ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_DATE_TYPE
+            cType := "D"
+
+         case ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_BLOB_TYPE
+            cType := "M"
+
+         case ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_VAR_STRING_TYPE .OR.;
+              ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_STRING_TYPE
+            cType := "C"
+
+         otherwise
+            cType := "U"
+
+      endcase
+   endif
+
+return cType
 
 
 // returns a WHERE x=y statement which uses primary key (if available)
@@ -366,38 +401,43 @@ METHOD GetRow(nRow) CLASS TMySQLQuery
          ::nCurRow++
       endif
 
-      aRow := sqlFetchR(::nResultHandle, ::nNumFields)
+      aRow := sqlFetchR(::nResultHandle)
 
       if aRow <> NIL
 
          // Convert answer from text field to correct clipper types
          for i := 1 to ::nNumFields
-             do case
-             case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_TINY_TYPE
-               aRow[i] := iif(Val(aRow[i]) == 0, .F., .T.)
+            do case
+               case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_TINY_TYPE
+                  aRow[i] := iif(Val(aRow[i]) == 0, .F., .T.)
 
-             case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_SHORT_TYPE .OR.;
-                  ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_LONG_TYPE
-               aRow[i] := Val(aRow[i])
+               case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_SHORT_TYPE .OR.;
+                    ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_LONG_TYPE
+                  aRow[i] := Val(aRow[i])
 
-             case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DOUBLE_TYPE .OR.;
-                  ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_FLOAT_TYPE
-               aRow[i] := Val(aRow[i])
+               case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DOUBLE_TYPE .OR.;
+                    ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_FLOAT_TYPE
+                  aRow[i] := Val(aRow[i])
 
-             case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DATE_TYPE
-               if Empty(aRow[i])
-                  aRow[i] := CToD("")
-               else
-                  // Date format YYYY-MM-DD
-                  aRow[i] := CToD(__StrToken(aRow[i], 2, ",") + "-" + __StrToken(aRow[i], 3, ",") + "-" + __StrToken(aRow[i], 1, ","))
-               endif
+               case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DATE_TYPE
+                  if Empty(aRow[i])
+                     aRow[i] := CToD("")
+                  else
+                     // Date format YYYY-MM-DD
+                     aRow[i] := CToD(SubStr(aRow[i], 6, 2) + "/" + Right(aRow[i], 2) + "/" + Left(aRow[i], 4))
+                  endif
 
-             case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_BLOB_TYPE
-               // Memo field
+               case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_BLOB_TYPE
+                  // Memo field
 
-             otherwise
+               case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_STRING_TYPE .OR.;
+                    ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_VAR_STRING_TYPE
+                  // char field
 
-             endcase
+               otherwise
+                  Alert("Unknown type from SQL Server" + Str(::aFieldStruct[i][MYSQL_FS_TYPE]))
+
+            endcase
          next
 
          oRow := TMySQLRow():New(aRow, ::aFieldStruct)
@@ -446,16 +486,11 @@ CLASS TMySQLTable FROM TMySQLQuery
 ENDCLASS
 
 
-/* TODO: change to reflect MySQL lack of _rowid field */
 METHOD New(nSocket, cQuery, cTableName) CLASS TMySQLTable
 
-   local cTrimmedQuery, nRes, i, aField
+   super:New(nSocket, AllTrim(cQuery))
 
-   ::cTable := cTableName
-
-   cTrimmedQuery := AllTrim(cQuery)
-
-   super:New(nSocket, cTrimmedQuery)
+   ::cTable := Lower(cTableName)
 
 return Self
 
@@ -578,7 +613,8 @@ METHOD GetBlankRow() CLASS TMySQLTable
 
       do case
       case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_STRING_TYPE .OR.;
-           ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_VAR_STRING_TYPE
+           ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_VAR_STRING_TYPE .OR.;
+           ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_BLOB_TYPE
          aRow[i] := ""
 
       case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_SHORT_TYPE .OR.;
@@ -678,7 +714,8 @@ return .F.
 // OS/2 case insensibility about names
 METHOD CreateTable(cTable, aStruct) CLASS TMySQLServer
 
-   local cCreateQuery := "CREATE TABLE " + cTable + " ("
+   /* NOTE: all table names are created with lower case */
+   local cCreateQuery := "CREATE TABLE " + Lower(cTable) + " ("
    local i
 
    // returns NOT NULL if extended structure has DBS_NOTNULL field to true
@@ -737,7 +774,7 @@ METHOD CreateIndex(cName, cTable, aFNames, lUnique) CLASS TMySQLServer
       cCreateQuery += "INDEX "
    endif
 
-   cCreateQuery += cName + " ON " + cTable + " ("
+   cCreateQuery += cName + " ON " + Lower(cTable) + " ("
 
    for i := 1 to Len(aFNames)
       cCreateQuery += aFNames[i] + ","
@@ -756,7 +793,7 @@ return .F.
 
 METHOD DeleteIndex(cName, cTable) CLASS TMySQLServer
 
-   local cDropQuery := "DROP INDEX " + cName + " FROM " + cTable
+   local cDropQuery := "DROP INDEX " + cName + " FROM " + Lower(cTable)
 
    if sqlQuery(::nSocket, cDropQuery) == 0
       return .T.
@@ -767,7 +804,7 @@ return .F.
 
 METHOD DeleteTable(cTable) CLASS TMySQLServer
 
-   local cDropQuery := "DROP TABLE " + cTable
+   local cDropQuery := "DROP TABLE " + Lower(cTable)
 
    if sqlQuery(::nSocket, cDropQuery) == 0
       return .T.
@@ -785,12 +822,12 @@ METHOD Query(cQuery) CLASS TMySQLServer
    i := 1
    nNumTables := 1
 
-   while __StrToken(cUpperQuery, i++, " ") <> "FROM"
+   while (cToken := __StrToken(cUpperQuery, i++, " ")) <> "FROM" .AND. !Empty(cToken)
    enddo
 
    // first token after "FROM" is a table name
    // NOTE: SubSelects ?
-   cTableName := __StrToken(cQuery, i++, " ")
+   cTableName := __StrToken(cUpperQuery, i++, " ")
 
    while (cToken := __StrToken(cUpperQuery, i++, " ")) <> "WHERE" .AND. !Empty(cToken)
       // do we have more than one table referenced ?

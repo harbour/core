@@ -1,3 +1,8 @@
+2000-10-27 18:05 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * contrib/mysql/tmysql.prg
+   * contrib/mysql/tsqlbrw.prg
+     * changes / fixes.
+
 2000-10-27 08:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
 
     * source/compiler/genc.c

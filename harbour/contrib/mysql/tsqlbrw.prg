@@ -81,32 +81,32 @@ METHOD New(cHeading, bBlock, oBrw) CLASS TBColumnSQL
 return Self
 
 
-METHOD Block(xNewValue) CLASS TBColumnSQL
+METHOD Block() CLASS TBColumnSQL
 
    local xValue := ::oBrw:oCurRow:FieldGet(::nFieldNum)
+   local xType := ::oBrw:oCurRow:FieldType(::nFieldNum)
 
    do case
-   case ValType(xValue) == "N"
-      xValue := Str(xValue, ::oBrw:oCurRow:FieldLen(::nFieldNum), ::oBrw:oCurRow:FieldDec(::nFieldNum))
+      case xType == "N"
+         xValue := Str(xValue, ::oBrw:oCurRow:FieldLen(::nFieldNum), ::oBrw:oCurRow:FieldDec(::nFieldNum))
 
-   case ValType(xValue) == "D"
-      xValue := DToC(xValue)
+      case xType == "D"
+         xValue :=  "'" + DToC(xValue) + "'"
 
-   case ValType(xValue) == "L"
-      xValue := iif(xValue, ".T.", ".F.")
+      case xType == "L"
+         xValue := iif(xValue, ".T.", ".F.")
 
-   case ValType(xValue) == "C"
-      // Chr(34) is a double quote
-      // That is: if there is a double quote inside text substitute it with a string
-      // which gets converted back to a double quote by macro operator. If not it would
-      // give an error because of unbalanced double quotes.
-      xValue := Chr(34) + StrTran(xValue, Chr(34), Chr(34) + "+Chr(34)+" + Chr(34)) + Chr(34)
+      case xType == "C"
+         // Chr(34) is a double quote
+         // That is: if there is a double quote inside text substitute it with a string
+         // which gets converted back to a double quote by macro operator. If not it would
+         // give an error because of unbalanced double quotes.
+         xValue := Chr(34) + StrTran(xValue, Chr(34), Chr(34) + "+Chr(34)+" + Chr(34)) + Chr(34)
 
-   case ValType(xValue) == "M"
-      xValue := "'<MEMO>'"
+      case xType == "M"
+         xValue := "' <MEMO> '"
 
-   otherwise
-
+      otherwise
    endcase
 
 return &("{||" + xValue + "}")
@@ -147,14 +147,14 @@ METHOD New(nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable) CLASS TBrowseS
 
    ::oQuery := oQuery
 
+   // Let's get a row to build needed columns
+   ::oCurRow := ::oQuery:GetRow()
+   ::oQuery:Skip(-1)
+
    // positioning blocks
    ::SkipBlock := {|n| ::oCurRow := Skipper(@n, ::oQuery), n }
    ::GoBottomBlock := {|| ::oCurRow := ::oQuery:GetRow(::oQuery:LastRec()), 1 }
    ::GoTopBlock := {|| ::oCurRow := ::oQuery:GetRow(1), 1 }
-
-   // Let's get a row to build needed columns
-   ::oCurRow := ::oQuery:GetRow()
-   ::oQuery:Skip(-1)
 
    // Add a column for each field
    for i := 1 to ::oQuery:FCount()
@@ -162,19 +162,22 @@ METHOD New(nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable) CLASS TBrowseS
       // No bBlock now since New() would use it to find column length, but column is not ready yet at this point
       oCol := TBColumnSQL():New(::oCurRow:FieldName(i),, Self)
 
-      oCol:Width := Max(::oCurRow:FieldLen(i), Len(oCol:Heading))
+      if ::oCurRow:FieldType(i) <> "M"
+         oCol:Width := Max(::oCurRow:FieldLen(i), Len(oCol:Heading))
+      else
+         oCol:Width := 10
+      endif
 
       // which field does this column display
       oCol:nFieldNum := i
 
       // Add a picture
       do case
-      case ISNUMBER(::oCurRow:FieldGet(i))
-          oCol:picture := replicate("9", oCol:Width)
+         case ::oCurRow:FieldType(i) == "N"
+            oCol:picture := replicate("9", oCol:Width)
 
-      case ISCHARACTER(::oCurRow:FieldGet(i))
-         oCol:picture := replicate("!", oCol:Width)
-
+         case ::oCurRow:FieldType(i) $ "CM"
+            oCol:picture := replicate("!", oCol:Width)
       endcase
 
       ::AddColumn(oCol)
@@ -223,69 +226,54 @@ return oQuery:GetRow(oQuery:RecNo())
 
 METHOD EditField() CLASS TBrowseSQL
 
-   LOCAL lFlag := TRUE
-   LOCAL oCol
-   LOCAL aGetList
-   LOCAL nKey
-   LOCAL nLen
-   LOCAL lAppend
-   LOCAL bSavIns
-   LOCAL nSavRecNo := recno()
-   LOCAL xNewKey
-   LOCAL xSavKey
-
-   LOCAL xGetValue
-
-   // If we're at EOF we're adding the first record, so turn on append mode
-   //if EOF()
-   //   lAppend := APP_MODE_ON( oBrowse )
-   //else
-   //   lAppend := APP_MODE_ACTIVE( oBrowse )
-   //endif
-
-   // Make sure screen is fully updated, dbf position is correct, etc.
-   //oBrowse:forceStable()
-
-   //if ( lAppend .and. ( recno() == lastrec() + 1 ) )
-   //   dbAppend()
-
-   //endif
-
-   // Save the current record's key value (or NIL)
-   //xSavKey := iif( empty( indexkey() ), NIL, &( indexkey() ) )
+   local oCol
+   local aGetList
+   local nKey
+   local xGetValue
+   local cMemoBuff, cMemo
 
    // Get the current column object from the browse
    oCol := ::getColumn(::colPos)
 
-   // Get picture len to force scrolling if var is larger than window
-   //nLen := ::colWidth(::colPos)
+   // Editing of a memo field requires a MemoEdit() window
+   if ::oCurRow:FieldType(oCol:nFieldNum) == "M"
 
-   //Alert(Str(::colWidth(::colPos)))
+      /* save, clear, and frame window for memoedit */
+   	cMemoBuff := SaveScreen(10, 10, 22, 69)
+   	
+		Scroll(10, 10, 22, 69, 0)
+		DispBox(10, 10, 22, 69)
 
-   // Create a corresponding GET
-   // NOTE: I need to use ::oCurRow:FieldPut(...) when changing values since message redirection doesn't work at present
-   //       time for write access to instance variables but only for reading them
-   aGetList := { getnew( row(), col(),    ;
-                        {|xValue| iif(xValue == nil, Eval(oCol:Block), ::oCurRow:FieldPut(oCol:nFieldNum, xValue))} ,;
-                        oCol:heading,     ;
-                        oCol:picture,     ;
-                        ::colorSpec ) }
+		/* use fieldspec for title */
+		//@ 10,((76 - Len(::oCurRow:FieldName(oCol:nFieldNum)) / 2) SAY "  " + (::oCurRow:FieldName(oCol:nFieldNum)) + "  "
 
-   // Set insert key to toggle insert mode and cursor shape
-   //bSavIns := setkey( K_INS, { || InsToggle() } )
+		/* edit the memo field */
+		cMemo := MemoEdit(::oCurRow:FieldGet(oCol:nFieldNum), 11, 11, 21, 68, .T., "xmemo")
+		
+		if Lastkey() == K_ALT_W
+         ::oCurRow:FieldPut(oCol:nFieldNum, cMemo)         					
+      endif
+		
+		RestScreen(10, 10, 22, 69, cMemoBuff)				
 
-   // Set initial cursor shape
-   //setcursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
-   ReadModal(aGetList)
-   //setcursor( SC_NONE )
-   //setkey( K_INS, bSavIns )
+   else
+      // Create a corresponding GET
+      // NOTE: I need to use ::oCurRow:FieldPut(...) when changing values since message redirection doesn't work at present
+      //       time for write access to instance variables but only for reading them
+      aGetList := { getnew( row(), col(),    ;
+                           {|xValue| iif(xValue == nil, Eval(oCol:Block), ::oCurRow:FieldPut(oCol:nFieldNum, xValue))} ,;
+                           oCol:heading,     ;
+                           oCol:picture,     ;
+                           ::colorSpec ) }
 
-   // For this demo, we turn append mode off after each new record
-   //APP_MODE_OFF( oBrowse )
+      // Set initial cursor shape
+      //setcursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
+      ReadModal(aGetList)
+      //setcursor( SC_NONE )
+   endif
 
-   // Get the record's key value (or NIL) after the GET
-   //xNewKey := if( empty( indexkey() ), NIL, &( indexkey() ) )
 
+   /* NOTE: To do in a better way */
    if !::oQuery:Update(::oCurRow)
       Alert(Left(::oQuery:Error(), 60))
    endif
@@ -297,22 +285,8 @@ METHOD EditField() CLASS TBrowseSQL
    ::inValidate()
    ::refreshAll():forceStable()
 
-   // if the key has changed (or if this is a new record)
-   /*if !( xNewKey == xSavKey ) .or. ( lAppend .and. xNewKey != NIL )
-
-      // do a complete refresh
-      oBrowse:refreshAll():forceStable()
-
-      // Make sure we're still on the right record after stabilizing
-      while &( indexkey() ) > xNewKey .and. !oBrowse:hitTop()
-         oBrowse:up():forceStable()
-
-      enddo
-
-   endif*/
-
    // Check exit key from get
-   nKey := lastkey()
+   nKey := LastKey()
    if nKey == K_UP   .or. nKey == K_DOWN .or. ;
       nKey == K_PGUP .or. nKey == K_PGDN
 
