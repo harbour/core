@@ -1,3 +1,22 @@
+2001-04-03 21:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * contrib/libmisc/fileread.prg
+    * Donated to the public domain.
+
+  * doc/hdr_tpl.txt
+  * source/rtl/devoutp.prg
+  * source/rtl/inkey.c
+  * source/rtl/maxrow.c
+  * source/rtl/round.c
+  * source/rtl/scroll.c
+  * source/rtl/set.c
+  * source/rtl/valtostr.c
+  * source/rtl/gtpca/gtpca.c
+    * Replaced the old license with a new license that is derived
+      from the Guile 1.4 license (the old license was based on an
+      older version of Guile) in the header template and in files
+      where I was listed as the primary or only copyright holder.
+
 2001-04-01 15:46 GMT+6 April White <awhite@mail.rosecom.ca>
    * doc/en/hb_api.txt
       ! removed duplicate copies of:
