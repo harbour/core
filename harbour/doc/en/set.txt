@@ -40,9 +40,9 @@
  * $SYNTAX$
  *      __SETCENTURY([<lFlag> | <cOnOff> ] ) --> lPreviousValue
  * $ARGUMENTS$
- *      optional <lFlag> or <cOnOff> (not case sensitive)   
- *              .T. or "ON" to enable the century setting (4-digit years)   
- *              .F. or "OFF" to disable the century setting (2-digit years)   
+ *      optional <lFlag> or <cOnOff> (not case sensitive)
+ *              .T. or "ON" to enable the century setting (4-digit years)
+ *              .F. or "OFF" to disable the century setting (2-digit years)
  * $RETURNS$
  *      Either the current or previous century setting as a logical value
  * $FILES$
@@ -60,13 +60,13 @@
  * $SYNTAX$
  *      Set(<nSet> [, <xNewSetting> [, <xOption> ] ] ) --> xPreviousSetting
  * $ARGUMENTS$
- *      <nSet> Set Number   
+ *      <nSet> Set Number
  *
- *      <xNewSetting> Any expression to assing a value to the seting   
+ *      <xNewSetting> Any expression to assing a value to the seting
  *
- *      <xOption> Logical expression   
+ *      <xOption> Logical expression
  *
- *                <nSet>            <xNewSetting>          <xOption>               
+ *                <nSet>            <xNewSetting>          <xOption>
  *
  *              _SET_ALTERNATE   <lFlag> | <cOnOff>
  *
@@ -161,7 +161,7 @@
  *                   When set to .t., pressing Alt+D activates the debugger.
  *                   When set to .f., which is the default, Alt+D can be read
  *                   by INKEY(). (Also affected by AltD(1) and AltD(0))
-
+ *
  *              _SET_DECIMALS    <nNumberOfDecimals>
  *
  *                   Sets the number of decimal digits to use when displaying
@@ -200,6 +200,15 @@
  *                   file set by _SET_PRINTFILE. When set to anything else,
  *                   all output is sent to the screen. Defaults to "SCREEN".
  *
+ *              _SET_EOF         <lFlag> | <cOnOff>
+ *
+ *                   Defaults to FALSE on UN*X, but defaults to TRUE on
+ *                   everything else. If set to FALSE, then CHR(26) does not
+ *                   get written when using COPY TO DELIMITED, COPY TO SDF,
+ *                   or when closing any of the various text files that are
+ *                   created using various SET values.
+ *                   [This is a Harbour extension]
+ *
  *              _SET_EPOCH       <nYear>
  *
  *                   Determines how to handle the conversion of 2-digit years
@@ -214,8 +223,8 @@
  *                   and 2-digit years in the range 00 to 49 get converted
  *                   to 20xx.
  *
- *              _SET_ESCAPE      <lFlag> | <cOnOff>   *
-
+ *              _SET_ESCAPE      <lFlag> | <cOnOff>
+ *
  *                   When enabled, which is the default, pressing Esc will
  *                   exit a READ. When disabled, pressing Esc during a READ
  *                   is ignored, unless the Esc key has been assigned to a
@@ -264,7 +273,7 @@
  *
  *              _SET_EXTRA       <lFlag> | <cOnOff>
  *
- *                   QUESTION: What is this for?   
+ *                   QUESTION: What is this for?
  *                   It does not affect _SET_EXTRAFILE in Clipper!
  *
  *              _SET_EXTRAFILE   <cFileName>             <lAdditive>
@@ -305,6 +314,7 @@
  *              _SET_LANGUAGE    <cLanguageID>
  *
  *                   Specifies the language to be used for Harbour messages.
+ *                   [This is a Harbour extension]
  *
  *              _SET_MARGIN      <nColumns>
  *
@@ -407,7 +417,7 @@
  *                   When enabled, lightbar menus can be navigated from the
  *                   last position to the first and from the first position
  *                   to the last. When disabled, which is the default, there
- *                   is a hard stop at the first and last positions.        
+ *                   is a hard stop at the first and last positions.
  * $RETURNS$
  *      SET() The current or previous setting
  * $FILES$
@@ -426,29 +436,29 @@
  *      __SetFunction( <nFunctionKey>, [<cString>] ) --> NIL
  *  $ARGUMENTS$
  *      <nFunctionKey> is a number in the range 1..40 that represent the
- *      function key to be assigned.   
+ *      function key to be assigned.
  *
  *      <cString> is a character string to set. If <cString> is not
  *      specified, the function key is going to be set to NIL releasing by
- *      that any previous __SetFunction() or SETKEY() for that function.   
+ *      that any previous __SetFunction() or SETKEY() for that function.
  *  $RETURNS$
- *      __SetFunction() always return NIL.   
+ *      __SetFunction() always return NIL.
  *  $DESCRIPTION$
  *      __SetFunction() assign a character string with a function key, when
  *      this function key is pressed, the keyboard is stuffed with this
  *      character string. __SetFunction() has the effect of clearing any
- *      SETKEY() previously set to the same function number and vice versa.   
+ *      SETKEY() previously set to the same function number and vice versa.
  *
- *      <table>    
- *      nFunctionKey    Key to be set   
+ *      <table>
+ *      nFunctionKey    Key to be set
  *
- *         1 .. 12      F1 .. F12   
- *        13 .. 20      Shift-F3 .. Shift-F10   
- *        21 .. 30      Ctrl-F1 .. Ctrl-F10   
- *        31 .. 40      Alt-F1 .. Alt-F10   
+ *         1 .. 12      F1 .. F12
+ *        13 .. 20      Shift-F3 .. Shift-F10
+ *        21 .. 30      Ctrl-F1 .. Ctrl-F10
+ *        31 .. 40      Alt-F1 .. Alt-F10
  *      </table>
  *      SET FUNCTION command is preprocessed into __SetFunction() function
- *      during compile time.   
+ *      during compile time.
  *  $EXAMPLES$
  *      // Set F1 with a string
  *      CLS
@@ -462,9 +472,9 @@
  *      R
  *  $COMPLIANCE$
  *      Harbour use 11 and 12 to represent F11 and F12, while CA-Clipper use
- *      11 and 12 to represent Shift-F1 and Shift-F2.   
+ *      11 and 12 to represent Shift-F1 and Shift-F2.
  *  $PLATFORMS$
- *      All   
+ *      All
  * $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -483,27 +493,27 @@
  *      SET FUNCTION <nFunctionKey> TO [<cString>]
  *  $ARGUMENTS$
  *      <nFunctionKey> is a number in the range 1..40 that represent the
- *      function key to be assigned.   
+ *      function key to be assigned.
  *
  *      <cString> is a character string to set. If <cString> is not
  *      specified, the function key is going to be set to NIL releasing by
- *      that any previous  Set Function or SETKEY() for that function.   
+ *      that any previous  Set Function or SETKEY() for that function.
  *  $DESCRIPTION$
  *        Set Function assign a character string with a function key, when
  *      this function key is pressed, the keyboard is stuffed with this
  *      character string. Set Function has the effect of clearing any
- *      SETKEY() previously set to the same function number and vice versa.   
+ *      SETKEY() previously set to the same function number and vice versa.
  *
  *      <table>
- *      nFunctionKey    Key to be set   
+ *      nFunctionKey    Key to be set
  *
- *         1 .. 12      F1 .. F12   
- *        13 .. 20      Shift-F3 .. Shift-F10   
- *        21 .. 30      Ctrl-F1 .. Ctrl-F10   
- *        31 .. 40      Alt-F1 .. Alt-F10   
+ *         1 .. 12      F1 .. F12
+ *        13 .. 20      Shift-F3 .. Shift-F10
+ *        21 .. 30      Ctrl-F1 .. Ctrl-F10
+ *        31 .. 40      Alt-F1 .. Alt-F10
  *      </table>
  *      SET FUNCTION command is preprocessed into __SetFunction() function
- *      during compile time.   
+ *      during compile time.
  *  $EXAMPLES$
  *      // Set F1 with a string
  *      CLS
@@ -517,9 +527,9 @@
  *      R
  *  $COMPLIANCE$
  *      Harbour use 11 and 12 to represent F11 and F12, while CA-Clipper use
- *      11 and 12 to represent Shift-F1 and Shift-F2.   
+ *      11 and 12 to represent Shift-F1 and Shift-F2.
  *  $PLATFORMS$
- *      All   
+ *      All
  *  $SEEALSO$
  *      INKEY(),SETKEY(),__Keyboard()
  *  $END$
@@ -535,20 +545,20 @@
  *  $SYNTAX$
  *      SETKEY( <anKey> [, <bAction> [, <bCondition> ] ] )
  *  $ARGUMENTS$
- *      <anKey> is either a numeric key value, or an array of such values   
+ *      <anKey> is either a numeric key value, or an array of such values
 
- *      <bAction> is an optional code-block to be assigned   
+ *      <bAction> is an optional code-block to be assigned
 
- *      <bCondition> is an optional condition code-block   
+ *      <bCondition> is an optional condition code-block
  *  $RETURNS$
- *      Current assigned action-block   
+ *      Current assigned action-block
  *  $DESCRIPTION$
  *      The SetKey() function returns the current code-block assigned to a
  *      key when called with only the key value.  If the action block (and
  *      optionally the condition block) are passed, the current block is
  *      returned, and the new code block and condition block are stored.
  *      A group of keys may be assigned the same code block/condition block
- *      by using an array of key values in place on the first parameter.   
+ *      by using an array of key values in place on the first parameter.
  *  $EXAMPLES$
  *      local bOldF10 := setKey( K_F10, {|| Yahoo() } )
  *      ... // some other processing
@@ -571,7 +581,7 @@
  *      SETKEY() is mostly CA-Clipper compliant. The only difference is the
  *      addition of the condition code-block parameter, allowing set-keys to
  *      be conditionally turned off or on.  This condition-block cannot be
- *      returned once set - see SetKeyGet()   
+ *      returned once set - see SetKeyGet()
  * $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -589,15 +599,15 @@
  *  $SYNTAX$
  *      HB_SETKEYGET( <nKey> [, <bConditionByRef> ] )
  *  $ARGUMENTS$
- *      <anKey> is an numeric key value   
+ *      <anKey> is an numeric key value
 
- *      <bConditionByRef> is an optional return-parameter   
+ *      <bConditionByRef> is an optional return-parameter
  *  $RETURNS$
- *      Current assigned action-block   
+ *      Current assigned action-block
  *  $DESCRIPTION$
  *      The HB_SetKeyGet() function returns the current code-block assigned to
  *      a key, and optionally assignes the condition-block to the
- *      return-parameter   
+ *      return-parameter
  *  $EXAMPLES$
  *      local bOldF10, bOldF10Cond
  *      bOldF10 := HB_SetKeyGet( K_F10, @bOldF10Cond )
@@ -610,7 +620,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      HB_SETKEYGET() is a new function and hence not CA-Clipper compliant.   
+ *      HB_SETKEYGET() is a new function and hence not CA-Clipper compliant.
  * $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -629,16 +639,16 @@
  *     HB_SETKEYSAVE( [ <OldKeys> ] )
  *  $ARGUMENTS$
  *     <OldKeys> is an optional set-key list from a previous call to
- *     HB_SetKeySave(), or NIL to clear current set-key list   
+ *     HB_SetKeySave(), or NIL to clear current set-key list
  *  $RETURNS$
- *     Current set-key list    
+ *     Current set-key list
  *  $DESCRIPTION$
  *     HB_SetKeySave() is designed to act like the set() function which
  *     returns the current state of an environment setting, and optionally
  *     assigning a new value.  In this case, the "environment setting" is the
  *     internal set-key list, and the optional new value is either a value
  *     returned from a previous call to SetKeySave() - to restore that list,
- *     or the value of NIL to clear the current list.   
+ *     or the value of NIL to clear the current list.
  *  $EXAMPLES$
  *     local aKeys := HB_SetKeySave( NIL )  // removes all current set=keys
  *     ... // some other processing
@@ -650,7 +660,7 @@
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *     HB_SETKEYSAVE() is new.    
+ *     HB_SETKEYSAVE() is new.
  * $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -668,22 +678,22 @@
  *  $SYNTAX$
  *      HB_SetKeyCheck( <nKey> [, <p1> ][, <p2> ][, <p3> ] )
  *  $ARGUMENTS$
- *      <nKey> is a numeric key value to be tested code-block, if executed   
+ *      <nKey> is a numeric key value to be tested code-block, if executed
 
- *      <p1>..<p3> are optional parameters that will be passed to the code-block   
+ *      <p1>..<p3> are optional parameters that will be passed to the code-block
  *  $RETURNS$
  *      True if there is a hot-key associated with <nKey> and it was executed;
- *      otherwise False   
- *      If there is a hot-key association (before checking any condition):   
- *      - if there is a condition-block, it is passed one parameter - <nKey>   
+ *      otherwise False
+ *      If there is a hot-key association (before checking any condition):
+ *      - if there is a condition-block, it is passed one parameter - <nKey>
  *      - when the hot-key code-block is called, it is passed 1 to 4 parameters,
  *      depending on the parameters passed to HB_SetKeyCheck().  Any
  *      parameters so passed are directly passed to the code-block, with an
- *      additional parameter being <nKey>   
+ *      additional parameter being <nKey>
  *  $DESCRIPTION$
  *      HB_SetKeyCheck() is intended as a common interface to the SetKey()
  *      functionality for such functions as ACHOICE(), DBEDIT(), MEMOEDIT(),
- *      ACCEPT, INPUT, READ, and WAIT   
+ *      ACCEPT, INPUT, READ, and WAIT
  *  $EXAMPLES$
  *      // within ReadModal()
  *      if HB_SetKeyCheck( K_ALT_X, GetActive() )
@@ -701,7 +711,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      HB_SETKEYCHECK() is new.   
+ *      HB_SETKEYCHECK() is new.
  * $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -719,11 +729,11 @@
  *  $SYNTAX$
  *      SET KEY   <anKey> to p<bAction>] [when  <bCondition> ]  )
  *  $ARGUMENTS$
- *      <anKey> is either a numeric key value, or an array of such values   
+ *      <anKey> is either a numeric key value, or an array of such values
 
- *      <bAction> is an optional code-block to be assigned   
+ *      <bAction> is an optional code-block to be assigned
 
- *      <bCondition> is an optional condition code-block   
+ *      <bCondition> is an optional condition code-block
  *  $DESCRIPTION$
  *      The Set Key Command function is translated to the SetKey() function
  *      witch returns the current code-block assigned to a
@@ -731,7 +741,7 @@
  *      optionally the condition block) are passed, the current block is
  *      returned, and the new code block and condition block are stored.
  *      A group of keys may be assigned the same code block/condition block
- *      by using an array of key values in place on the first parameter.   
+ *      by using an array of key values in place on the first parameter.
  *  $EXAMPLES$
  *      local bOldF10 := setKey( K_F10, {|| Yahoo() } )
  *      ... // some other processing
@@ -754,7 +764,7 @@
  *      SET KEY is mostly CA-Clipper compliant. The only difference is the
  *      addition of the condition code-block parameter, allowing set-keys to
  *      be conditionally turned off or on.  This condition-block cannot be
- *      returned once set - see SetKeyGet()   
+ *      returned once set - see SetKeyGet()
  *  $SEEALSO$
  *      HB_SETKEYSAVE()
  *  $END$
@@ -770,12 +780,12 @@
  *  $SYNTAX$
  *      SETTYPEAHEAD( <nSize> ) --> <nPreviousSize>
  *  $ARGUMENTS$
- *      <nSize> is a valid typeahead size.   
+ *      <nSize> is a valid typeahead size.
  *  $RETURNS$
- *      <nPreviousSize> The previous state of _SET_TYPEAHEAD   
+ *      <nPreviousSize> The previous state of _SET_TYPEAHEAD
  *  $DESCRIPTION$
  *      This function sets the typeahead buffer to a valid given size as is
- *      Set( _SET_TYPEAHEAD ) where used.   
+ *      Set( _SET_TYPEAHEAD ) where used.
  *  $EXAMPLES$
  *      // Sets typeahead to 12
  *      SetTypeahead( 12 )
@@ -783,7 +793,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      SETTYPEAHEAD() is fully CA-Clipper compliant.   
+ *      SETTYPEAHEAD() is fully CA-Clipper compliant.
  * $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -801,15 +811,15 @@
  *  $SYNTAX$
  *      __XHELP() --> <xValue>
  *  $ARGUMENTS$
- *      None   
+ *      None
  *  $RETURNS$
- *      This function returns aleatory values.   
+ *      This function returns aleatory values.
  *  $DESCRIPTION$
  *      This is an internal undocumented Clipper function, which will
  *      try to call the user defined function HELP() if it's defined
  *      in the current application. This is the default SetKey() handler
- *      for the F1 key.   
- *  $STATUS$   
+ *      for the F1 key.
+ *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      __XHELP() is fully CA-Clipper compliant.
@@ -828,19 +838,19 @@
  *  $SYNTAX$
  *      SET DEFAULT TO [<cPath>]
  *  $ARGUMENTS$
- *      <cPath> Drive and/or path.            
+ *      <cPath> Drive and/or path.
  *  $DESCRIPTION$
  *      This command changes the drive and directory used for reading and
  *      writting database,index,memory, and alternate files.Specifying no
  *      parameters with this command will default the operation to the
- *      current logged drive and directory.   
+ *      current logged drive and directory.
  *  $EXAMPLES$
  *      SET DEFAULT to c:\TEMP
  *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper Compliant.   
+ *      This command is Ca-Clipper Compliant.
  *  $SEEALSO$
  *      SET PATH,CURDIR(),SET()
  *  $END$
@@ -856,19 +866,19 @@
  *  $SYNTAX$
  *      SET WRAP on | OFF | (<lWrap>
  *  $ARGUMENTS$
- *      <lWrap> Logical expression for toggle   
+ *      <lWrap> Logical expression for toggle
  *  $DESCRIPTION$
  *      This command toggles the highlighted bars in a @...PROMPT command
  *      to wrap around in a bottom-to-top and top-to-bottom manner.If the
  *      value of the logical expression <lWrap> is a logical false (.F.),
- *      the wrapping mode is set OFF;otherwise,it is set ON.   
+ *      the wrapping mode is set OFF;otherwise,it is set ON.
  *  $EXAMPLES$
  *      See Tests/menutest.prg
  *   </fixed>
  *  $STATUS$
- *      R 
+ *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper Compliant.   
+ *      This command is Ca-Clipper Compliant.
  *  $SEEALSO$
  *      @...PROMPT,MENU TO
  *  $END$
@@ -882,14 +892,14 @@
  *  $ONELINER$
  *      Extablishes a message row for @...PROMPT command
  *  $SYNTAX$
- *      SET MESSAGE TO [<nRow> [CENTER]]   
+ *      SET MESSAGE TO [<nRow> [CENTER]]
  *  $ARGUMENTS$
- *      <nRow> Row number to display the message   
+ *      <nRow> Row number to display the message
  *  $DESCRIPTION$
  *      This command is designed to work in conjuntion with the MENU TO and
  *      @...PROMPT commands.With this command, a row number between 0 and
  *      MAXROW() may be specified in <nRow>.This establishes the row on
- *      witch any message associated with an @...PROMPT command will apear.   
+ *      witch any message associated with an @...PROMPT command will apear.
 
  *      If the value of <nRow> is 0,all messages will be supressed.
  *      All messaged will be left-justifies unless the CENTER clause is
@@ -897,18 +907,18 @@
  *      will be centered at the designated row (unless <nRow> is 0).All
  *      messages are independent;therefor,the screen area is cleared out
  *      by the centered message will vary based on the length of each
- *      individual message.   
+ *      individual message.
 
  *      Specifying no parameters with this command set the row value to 0,
- *      witch suppresses all messages output.   
- *      The British spelling of CENTRE is also supported.   
+ *      witch suppresses all messages output.
+ *      The British spelling of CENTRE is also supported.
  *  $EXAMPLES$
  *      See Tests/menutest.prg
  *      </fixed>
  *  $STATUS$
- *      R 
+ *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper Compliant.   
+ *      This command is Ca-Clipper Compliant.
  *  $SEEALSO$
  *      SET(),SET WRAP,@...PROMPT,MENU TO
  *  $END$
@@ -922,23 +932,23 @@
  *  $ONELINER$
  *      Specifies a search path for opening files
  *  $SYNTAX$
- *      SET PATH TO [<cPath>]  
+ *      SET PATH TO [<cPath>]
  *  $ARGUMENTS$
- *      <cPath> Search path for files   
+ *      <cPath> Search path for files
  *  $DESCRIPTION$
  *      This command specifies the search path for files required by most
  *      commands and functions not found in the current drive and directory.
  *      This pertains primarily,but not exclusively, to databases,indexes,
  *      and memo files,as well as to memory,labels,and reports files. The
  *      search hirarchy is: 1 Current drive and directory,2 The SET DEFAULT
- *      path;3 The SET PATH path.   
+ *      path;3 The SET PATH path.
  *  $EXAMPLES$
  *      SET PATH TO c:\Harbour\Test
- *      </fixed>   
+ *      </fixed>
  *  $STATUS$
- *      R 
+ *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper Compliant.   
+ *      This command is Ca-Clipper Compliant.
  *  $SEEALSO$
  *      SET DEFAULT,CURDIR(),SET()
  *  $END$
@@ -952,7 +962,7 @@
  *  $ONELINER$
  *      Toggles the enhaced display of PROMPT's and GETs.
  *  $SYNTAX$
- *      SET INTENSITY  ON | off | (<lInte>) 
+ *      SET INTENSITY  ON | off | (<lInte>)
  *  $ARGUMENTS$
  *      <lInte> Logical expression for toggle command
  *  $DESCRIPTION$
@@ -962,9 +972,9 @@
  *  $EXAMPLES$
  *      SET INTENSITY ON
  *  $STATUS$
- *      R 
+ *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper Compliant.   
+ *      This command is Ca-Clipper Compliant.
  *  $SEEALSO$
  *      @...GET,@...PROMPT,@...SAY,SET()
  *  $END$
@@ -983,7 +993,7 @@
  *  $ARGUMENTS$
  *      <cFile> Name of alternate file.
  *
- *      <lAlter> Logical expression for toggle   
+ *      <lAlter> Logical expression for toggle
  *  $DESCRIPTION$
  *      This command toggles and output console information to the alternate
  *      file <cFile>,provided that the command is toggled on or the condition
@@ -1008,9 +1018,9 @@
  *      SET ALTERNATE TO
  *      SET ALTERNATE OFF
  *  $STATUS$
- *      R 
+ *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper Compliant.   
+ *      This command is Ca-Clipper Compliant.
  *  $SEEALSO$
  *      CLOSE,SET PRINTER,SET CONSOLE,SET()
  *  $END$
@@ -1024,9 +1034,9 @@
  *  $ONELINER$
  *      Toggle the century digits in all dates display
  *  $SYNTAX$
- *      SET CENTURY on | OFF | (<lCent>)  
+ *      SET CENTURY on | OFF | (<lCent>)
  *  $ARGUMENTS$
- *      <lCent> Logical expression for toggle   
+ *      <lCent> Logical expression for toggle
  *  $DESCRIPTION$
  *      This command allows the input and display of dates with the century
  *      prefix.It will be in the standart MM/DD/YYYY format unless specified
@@ -1055,8 +1065,8 @@
  *      Assings a date format or chooses a predefined date data set.
  *  $SYNTAX$
  *      SET DATE FORMAT [TO] <cFormat>
- *      SET DATE [TO] [ ANSI / BRITISH / FRENCH / GERMAN / ITALIAN / JAPAN 
- *      / USA / AMERICAN]    
+ *      SET DATE [TO] [ ANSI / BRITISH / FRENCH / GERMAN / ITALIAN / JAPAN
+ *      / USA / AMERICAN]
  *  $ARGUMENTS$
  *      <cFormat> Keyword for date format
  *  $DESCRIPTION$
@@ -1066,7 +1076,7 @@
  *      is an AMERICAN date format;specifying no parameters will set the
  *      date format to AMERICAN.Below is a table of the varius predefined
  *      dates formats.
- *      
+ *
  *      <table>
  *       Syntax         Date Format
  *       ANSI           yy.mm.dd
@@ -1129,7 +1139,7 @@
  *  $SYNTAX$
  *      SET FIXED on | OFF | (<lFixed>)
  *  $ARGUMENTS$
- *      <lFixed> Logical expression for toggle   
+ *      <lFixed> Logical expression for toggle
  *  $DESCRIPTION$
  *      This command activates a system wide fixed placement of decimals
  *      places shown for all numeric outputs.If the value of <lFixed> is
@@ -1140,8 +1150,8 @@
  *      of decimal placed displayed.
  *
  *      <table>
- *       Addition         Same as operand with the greatest number of decimal digits  
- *       Subraction       Same as operand with the greatest number of decimal digits  
+ *       Addition         Same as operand with the greatest number of decimal digits
+ *       Subraction       Same as operand with the greatest number of decimal digits
  *       Multiplication   Sum of operand decimal digits
  *       Division         Determined by SET DECIMAL TO
  *       Exponential      Determined by SET DECIMAL TO

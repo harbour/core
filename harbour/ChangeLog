@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-07-30 08:28 UTC+0300 Chen Kedem <niki@actcom.co.il>
+  * doc/en/set.txt
+    + Added _SET_EOF text from the changelog entry written by
+      David G. Holm <dholm@jsd-llc.com> and mark it Harbour extension.
+
 2003-07-28 22:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * include/hbset.h
   * include/set.ch
