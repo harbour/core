@@ -1,14 +1,19 @@
+#define B_BOXLINES      "ÚÄ¿³ÙÄÀ³"
 Function Main()
-/*
-HB_ZIPFILE('test.zip','zip.h',,{|cFile| qout(cFile)})
-HB_ZIPFILE('test2.zip','zip.h')
-*/
-Hb_ZIPFILE('test12.zip',{'.\test.prg','.\zlib.h','.\zip.h','..\..\obj\b32\test.obj'},8,{|cfile| qout(cfile)})
-/*
-erase zip.h
-? 'unzipping file'
-hb_unzipfile('test.zip')
-*/
-hb_unzipfile('test12.zip',{|cFile| qout(cFile)})
+local aDir:=Directory("*.h")
+local afiles:={}
+Local x
+local nLen
+local aGauge
+CLS
+For x:=1 to len(aDir)
 
+    aadd(afiles,adir[x,1])
+
+next
+nLen=len(afiles)
+aGauge := GaugeNew( 5, 5, 7,40 , "W/B", "W+/B" ,'²')
+GaugeDisplay( aGauge )                                            
+Hb_ZIPFILE('test12.zip',afiles,8,{|nPos,cFile| GaugeUpdate(aGauge,nPos/nLen)})
+Hb_ZIPFILE('test22.zip',afiles,8,{|nPos,cFile| qout(cFile)})
 return nil

@@ -48,10 +48,14 @@
  *      IF HB_ZIPFILE( "TEST1.ZIP",{"TEST.PRG","c:\windows\win.ini"}) 
  *         qout("File was successly create")
  *      ENDIF
- *      IF HB_ZIPFILE( "TEST2.ZIP",{"TEST.PRG","c:\windows\win.ini"},8,{|cFile|,qout(cFile)}) 
+ *      IF HB_ZIPFILE( "TEST2.ZIP",{"TEST.PRG","c:\windows\win.ini"},8,{|nPos,cFile|,qout(cFile)}) 
  *         qout("File was successly create")
  *      ENDIF
- *
+ *      aFiles:={"TEST.PRG","c:\windows\win.ini"}
+ *      nLen=len(afiles)
+ *      aGauge := GaugeNew( 5, 5, 7,40 , "W/B", "W+/B" ,'²')
+ *      GaugeDisplay( aGauge )                                            
+ *      Hb_ZIPFILE('test33.zip',afiles,8,{|nPos,cFile| GaugeUpdate(aGauge,nPos/nLen)})
  *      Return Nil
  * $STATUS$
  *      R

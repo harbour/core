@@ -1,0 +1,94 @@
+#
+# $Id$
+#
+
+#
+# Makefile for Samples library for Borland C/C++ 3.x, 4.x, 5.x compilers
+#
+
+
+CC = bcc32
+IL = implib
+ID = impdef
+# NOTE: Using TASM for some reason, this should be normally TASM32.
+#       I'll leave it to TASM until a better solution is found
+AS = tasm
+
+BIN_DIR = ..\..\bin\b32
+OBJ_DIR = ..\..\obj\b32
+LIB_DIR = ..\..\lib\b32
+
+# This is needed, otherwise the libs may overflow when
+# debug info is requested with -v -y
+ARFLAGS = /P32
+
+
+!if !$d(BCC_NOOPTIM)
+CFLAGS = -O2 $(CFLAGS)
+!endif
+
+#
+# Directory macros. These should never have to change.
+#
+
+INCLUDE_DIR  = ..\..\include
+SAMPLES_DIR     = .
+CFLAGS         = -I$(INCLUDE_DIR) -d $(C_USR) $(CFLAGS)
+CLIBFLAGS  =$(CFLAGS)
+HARBOUR_EXE  = $(BIN_DIR)\harbour.exe
+HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
+LDFLAGS        = $(LDFLAGS)
+
+#
+# Macros to access our library names
+#
+
+SAMPLES_LIB   = $(LIB_DIR)\samples.lib
+SAMPLES_LIB_OBJS =  \
+    $(OBJ_DIR)\environ.obj \
+    $(OBJ_DIR)\date.obj   \
+    $(OBJ_DIR)\dbf.obj    \
+    $(OBJ_DIR)\gauge.obj  \
+    $(OBJ_DIR)\num.obj    \
+    $(OBJ_DIR)\stack.obj   \
+    $(OBJ_DIR)\status.obj \
+    $(OBJ_DIR)\time.obj
+
+all: \
+   $(SAMPLES_LIB) 
+
+$(SAMPLES_LIB) = $(SAMPLES_LIB_OBJS)
+
+$(SAMPLES_LIB) : $(SAMPLES_LIB_OBJS)
+
+$(OBJ_DIR)\environ.obj : $(SAMPLES_DIR)\environ.c
+   $(CC) -c $(CLIBFLAGS) -o$@ $**
+   tlib $(SAMPLES_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\date.obj : $(SAMPLES_DIR)\date.c
+   $(CC) -c $(CLIBFLAGS) -o$@ $**
+   tlib $(SAMPLES_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\dbf.obj : $(SAMPLES_DIR)\dbf.c
+   $(CC) -c $(CLIBFLAGS) -o$@ $**
+   tlib $(SAMPLES_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\gauge.obj : $(SAMPLES_DIR)\gauge.c
+   $(CC) -c $(CLIBFLAGS) -o$@ $**
+   tlib $(SAMPLES_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\num.obj : $(SAMPLES_DIR)\num.c
+   $(CC) -c $(CLIBFLAGS) -o$@ $**
+   tlib $(SAMPLES_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\stack.obj : $(SAMPLES_DIR)\stack.c
+   $(CC) -c $(CLIBFLAGS) -o$@ $**
+   tlib $(SAMPLES_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\status.obj : $(SAMPLES_DIR)\status.c
+   $(CC) -c $(CLIBFLAGS) -o$@ $**
+   tlib $(SAMPLES_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\time.obj : $(SAMPLES_DIR)\time.c
+   $(CC) -c $(CLIBFLAGS) -o$@ $**
+   tlib $(SAMPLES_LIB) $(ARFLAGS) -+$@,,

@@ -30,6 +30,7 @@ RDD_LIB      = $(LIB_DIR)\rdd.lib
 RTL_LIB      = $(LIB_DIR)\rtl.lib
 VM_LIB       = $(LIB_DIR)\vm.lib
 GTWIN_LIB    = $(LIB_DIR)\gtwin.lib
+SAMPLES_LIB  = $(LIB_DIR)\samples.lib
 HB_GT_LIB    = $(GTWIN_LIB)
 # This is needed, otherwise the libs may overflow when
 # debug info is requested with -v -y
@@ -109,9 +110,10 @@ $(ZLIB_BOR_LIB) : $(ZLIB_BOR_LIB_OBJ)
 $(ZLIB_EXE) : $(ZLIB_EXE_OBJS)
 
    echo. $(CFLAGS) > make.tmp
-   echo. -e$(ZLIB_EXE) >> make.tmp
+   echo. -M -e$(ZLIB_EXE) >> make.tmp
    echo. -I$(INCLUDE_DIR) >> make.tmp
-   echo. $(OBJ_DIR)\test.obj >> make.tmp
+   echo. $(OBJ_DIR)\test.obj >> make.tmp 
+   echo. $(SAMPLES_LIB) >> make.tmp
    echo. $(ZLIB_LIB) >> make.tmp
    echo. $(ZLIB_BOR_LIB) >> make.tmp
    echo. $(PP_LIB) >> make.tmp
