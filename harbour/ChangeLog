@@ -1,3 +1,8 @@
+19990820-16:25 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/gtapi.c
+     * account for nesting of gtPre/PostExt and for calling
+       DispBegin/End while Pre/Post in effect.
+
 19990820-14:24 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rdd/dbf1.c
      * casts on sztext

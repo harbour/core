@@ -229,8 +229,13 @@ int hb_gtColorSelect(USHORT uiColorIndex)
 int hb_gtDispBegin(void)
 {
 /* ptucker */
-    ++s_uiDispCount;
-    hb_gt_DispBegin();
+    if( s_uiPreCount == 0 )
+    {
+       ++s_uiDispCount;
+       hb_gt_DispBegin();
+    }
+    else
+       ++s_uiPreCount;
     return(0);
 }
 
@@ -242,8 +247,13 @@ USHORT hb_gtDispCount(void)
 int hb_gtDispEnd(void)
 {
 /* ptucker */
-    hb_gt_DispEnd();
-    --s_uiDispCount;
+    if( s_uiPreCount == 0 )
+    {
+       hb_gt_DispEnd();
+       --s_uiDispCount;
+    }
+    else
+       ++s_uiPreCount;
     return(0);
 }
 
@@ -253,10 +263,16 @@ int hb_gtPreExt(void)
    /* an external (printf...) write is about to take place */
    USHORT uidc;
 
-   uidc = s_uiPreCount = s_uiDispCount;
+   if( s_uiPreCount != 0 )
+   {
+      uidc = s_uiPreCount = s_uiDispCount;
 
-   while( uidc-- )
-     hb_gtDispEnd();
+      while( uidc-- )
+      {
+        hb_gt_DispEnd();
+        --s_uiDispCount;
+      }
+   }
 
    return 0;
 
@@ -268,7 +284,10 @@ int hb_gtPostExt(void)
    USHORT uidc = s_uiPreCount;
 
    while( uidc-- )
-     hb_gtDispBegin();
+   {
+     ++s_uiDispCount;
+     hb_gt_DispBegin();
+   }
 
    return 0;
 }
