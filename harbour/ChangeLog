@@ -1,3 +1,26 @@
+2000-01-13 19:45 GMT-5 David G. Holm <dholm@jsd-llc.com>
+
+   * ngdoc/bldfthe.bat
+     + Updated file provided by Luiz Rafael Culik
+
+   * ngdoc/ft_helpc.prg
+     + Updated file provided by Luiz Rafael Culik
+
+   * ngdoc/ha.lnk
+     + Updated file provided by Luiz Rafael Culik
+
+   * source/rtl/license.prg
+     + Updated file provided by Luiz Rafael Culik
+
+   * source/rtl/readme.prg
+     + Updated file provided by Luiz Rafael Culik
+
+   * source/tools/rtf.prg
+     + Updated file provided by Luiz Rafael Culik
+
+   * source/tools/html.prg
+     + Updated file provided by Luiz Rafael Culik
+
 2000-01-10 16:10 GMT-5 David G. Holm <dholm@jsd-llc.com>
 
    * ngdoc/ft_helpc.prg
