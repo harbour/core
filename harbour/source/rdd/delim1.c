@@ -54,9 +54,7 @@ HB_INIT_SYMBOLS_END( delim1__InitSymbols )
    #else
       #pragma data_seg( "XIY" )
    #endif
-   #pragma warning( disable: 4152 )
-   static void * hb_vm_auto_delim1__InitSymbols = &delim1__InitSymbols;
-   #pragma warning( default: 4152 )
+   static HB_$INITSYM hb_vm_auto_delim1__InitSymbols = delim1__InitSymbols;
    #pragma data_seg()
 #elif ! defined(__GNUC__)
    #pragma startup delim1__InitSymbols

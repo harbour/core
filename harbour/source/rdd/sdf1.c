@@ -54,9 +54,7 @@ HB_INIT_SYMBOLS_END( sdf1__InitSymbols )
    #else
       #pragma data_seg( "XIY" )
    #endif
-   #pragma warning( disable: 4152 )
-   static void * hb_vm_auto_sdf1__InitSymbols = &sdf1__InitSymbols;
-   #pragma warning( default: 4152 )
+   static HB_$INITSYM hb_vm_auto_sdf1__InitSymbols = sdf1__InitSymbols;
    #pragma data_seg()
 #elif ! defined(__GNUC__)
    #pragma startup sdf1__InitSymbols
@@ -87,3 +85,4 @@ HB_FUNC( SDF_GETFUNCTABLE )
    else
       hb_retni( FAILURE );
 }
+

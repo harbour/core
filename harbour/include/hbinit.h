@@ -111,6 +111,8 @@ extern void hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* stati
 
 #elif defined(_MSC_VER)
 
+   typedef int (* HB_$INTISYM)( void );
+
    #define HB_INIT_SYMBOLS_BEGIN( func ) \
       static HB_SYMB symbols[] = {
 

@@ -55,9 +55,7 @@ HB_INIT_SYMBOLS_END( dbfntx1__InitSymbols )
    #else
       #pragma data_seg( "XIY" )
    #endif
-   #pragma warning( disable: 4152 )
-   static void * hb_vm_auto_dbfntx1__InitSymbols = &dbfntx1__InitSymbols;
-   #pragma warning( default: 4152 )
+   static HB_$INITSYM hb_vm_auto_dbfntx1__InitSymbols = dbfntx1__InitSymbols;
    #pragma data_seg()
 #elif ! defined(__GNUC__)
    #pragma startup dbfntx1__InitSymbols
@@ -88,3 +86,4 @@ HB_FUNC( DBFNTX_GETFUNCTABLE )
    else
       hb_retni( FAILURE );
 }
+

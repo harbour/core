@@ -69,9 +69,7 @@ HB_INIT_SYMBOLS_END( ads1__InitSymbols )
    #else
       #pragma data_seg( "XIY" )
    #endif
-   #pragma warning( disable: 4152 )
-   static void * hb_vm_auto_ads1__InitSymbols = &ads1__InitSymbols;
-   #pragma warning( default: 4152 )
+   static HB_$INITSYM hb_vm_auto_ads1__InitSymbols = ads1__InitSymbols;
    #pragma data_seg()
 #elif ! defined(__GNUC__)
    #pragma startup ads1__InitSymbols
