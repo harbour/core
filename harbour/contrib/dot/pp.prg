@@ -3051,10 +3051,11 @@ STATIC FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
    LOCAL Counter, nRules, nRule, aMarkers, xMarker
    LOCAL aMP, nOptional := 0, sAnchor, cType, aList, nMarkerId, nKeyLen
    LOCAL sToken, sWorkLine, sNextAnchor, nMatch, nMatches
-   LOCAL sPad, asRevert := {}, bNext, sPreMatch, nLen, nBookMark
+   LOCAL sPad, asRevert := {}, bNext, sPreMatch, nLen
    LOCAL sPrimaryStopper, sPreStoppers, sStopper, sMultiStopper, nStopper, nStoppers
    LOCAL nSpaceAt, sStopLine, sNextStopper, nTemp
    LOCAL bRepeatableMatched
+   LOCAL aaRevertMarkers := {}
 
    nRules   := Len( aRules )
 
@@ -3174,6 +3175,7 @@ STATIC FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
 
                IF nOptional <> 0 .AND. aMP[2] < 0
                   sWorkLine := asRevert[Abs(nOptional)]
+                  aMarkers  := aaRevertMarkers[Abs(nOptional)]
 
                   IF bDbgMatch
                      ? "* Reverted: " + asRevert[Abs(nOptional)]
@@ -3213,56 +3215,35 @@ STATIC FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
             nMarkerId -= 1000
          ENDIF
 
-         /* Head of new optional group. */
-         IF aMP[2] > 0
+         /* Do we have to look for a stopper? */
+         IF cType != ':' .AND. sAnchor == NIL .AND. ValType( aList ) == 'A'
 
-            /* Do we have to look for a stopper? */
-            IF cType != ':' .AND. sAnchor == NIL .AND. ValType( aList ) == 'A'
+            sPreStoppers := sWorkLine
+            sPrimaryStopper := NextToken( @sWorkLine )
 
-               sPreStoppers := sWorkLine
-               sPrimaryStopper := NextToken( @sWorkLine )
+            IF sPrimaryStopper == NIL
 
-               IF sPrimaryStopper == NIL
+               //? "No primary", sPrimaryStopper
+               sWorkLine := sPreStoppers
 
-                  //? "No primary", sPrimaryStopper
-                  sWorkLine := sPreStoppers
+            ELSE
+               sPrimaryStopper := Upper( RTrim( sPrimaryStopper ) )
 
-               ELSE
-                  sPrimaryStopper := Upper( RTrim( sPrimaryStopper ) )
+               /* Is it a stopper (the anchor of another acceptable match) ? */
+               IF bDbgMatch
+                  ? "Stopper?: '" + sPrimaryStopper +"'"
+               ENDIF
 
-                  /* Is it a stopper (the anchor of another acceptable match) ? */
-                  IF bDbgMatch
-                     ? "Stopper?: '" + sPrimaryStopper +"'"
-                  ENDIF
+               nStoppers := Len( aList )
+               FOR nStopper := 1 TO nStoppers
 
-                  nStoppers := Len( aList )
-                  FOR nStopper := 1 TO nStoppers
+                  sStopLine := sWorkLine
+                  sToken    := sPrimaryStopper
+                  sStopper  := aList[ nStopper ]
 
-                     sStopLine := sWorkLine
-                     sToken    := sPrimaryStopper
-                     sStopper  := aList[ nStopper ]
-
-                     sMultiStopper := ''
-                     WHILE ( nSpaceAt := At( ' ', sStopper ) ) > 0
-                        sNextStopper := Left( sStopper, nSpaceAt - 1 )
-
-                        IF aRules[nRule][3]
-                           nLen := 64
-                        ELSE
-                           nLen := Max( 4, Len( sToken ) )
-                        ENDIF
-
-                        //? "Next Stopper: " + sNextStopper, sToken
-                        IF Left( sNextStopper, nLen ) == sToken
-                           sMultiStopper += sNextStopper
-                           sStopper      := SubStr( sStopper, nSpaceAt )
-                           sMultiStopper += ExtractLeadingWS( @sStopper )
-                           sToken        := NextToken( @sStopLine )
-                           sToken        := Upper( RTrim( sToken ) )
-                        ELSE
-                           EXIT
-                        ENDIF
-                     ENDDO
+                  sMultiStopper := ''
+                  WHILE ( nSpaceAt := At( ' ', sStopper ) ) > 0
+                     sNextStopper := Left( sStopper, nSpaceAt - 1 )
 
                      IF aRules[nRule][3]
                         nLen := 64
@@ -3270,74 +3251,91 @@ STATIC FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                         nLen := Max( 4, Len( sToken ) )
                      ENDIF
 
-                     IF Left( sStopper, nLen ) == sToken
-                        sMultiStopper += sStopper
+                     //? "Next Stopper: " + sNextStopper, sToken
+                     IF Left( sNextStopper, nLen ) == sToken
+                        sMultiStopper += sNextStopper
+                        sStopper      := SubStr( sStopper, nSpaceAt )
+                        sMultiStopper += ExtractLeadingWS( @sStopper )
+                        sToken        := NextToken( @sStopLine )
+                        sToken        := Upper( RTrim( sToken ) )
+                     ELSE
                         EXIT
                      ENDIF
-                  NEXT
+                  ENDDO
 
-                  IF nStopper <= nStoppers
-
-                     IF bDbgMatch
-                        ? "Found stopper: " + sMultiStopper
-                     ENDIF
-
-                     sWorkLine := sStopLine
-
-                     /* Rewind to beging of same level and then search for the stopper match */
-
-                     /* Current level */
-                     nOptional := aMP[2]
-
-                     IF nOptional < 0
-                        nOptional := Abs( nOptional )
-                     ENDIF
-
-                     WHILE nMatch > 1
-                        nMatch--
-                        IF aRules[nRule][2][nMatch][2] >= 0 .AND. aRules[nRule][2][nMatch][2] < nOPtional
-                           EXIT
-                        ENDIF
-                     ENDDO
-                     IF aRules[nRule][2][nMatch][2] >= 0 .AND. aRules[nRule][2][nMatch][2] < nOPtional
-                        nMatch++
-                     ENDIF
-
-                     /* Now search for the stopper. */
-                     WHILE nMatch < nMatches
-                        nMatch++
-                        aMP := aRules[nRule][2][nMatch]
-
-                        IF aMP[3] == NIL .AND. aMP[4] == ':'
-                           IF aScan( aMP[5], {|sWord| sWord == sMultiStopper } ) > 0
-                              EXIT
-                           ENDIF
-                        ELSE
-                           IF aMP[2] >= 0 .AND. aMP[2] <= nOptional .AND. aMP[3] == sMultiStopper
-                              EXIT
-                           ENDIF
-                        ENDIF
-                     ENDDO
-
-                     nOptional := 0
-                     LOOP
-
+                  IF aRules[nRule][3]
+                     nLen := 64
                   ELSE
-
-                     sWorkLine     := sPreStoppers
-                     sMultiStopper := NIL
-
-                     IF bDbgMatch
-                        ? sToken, "Not a stopper."
-                        ? "Reverted: ", sWorkLine
-                     ENDIF
-
+                     nLen := Max( 4, Len( sToken ) )
                   ENDIF
+
+                  IF Left( sStopper, nLen ) == sToken
+                     sMultiStopper += sStopper
+                     EXIT
+                  ENDIF
+               NEXT
+
+               IF nStopper <= nStoppers
 
                   IF bDbgMatch
-                     WAIT
+                     ? "Found stopper: " + sMultiStopper
                   ENDIF
 
+                  sWorkLine := sStopLine
+
+                  /* Current level */
+                  nOptional := aMP[2]
+                  IF nOptional < 0
+                     nOptional := Abs( nOptional )
+                  ENDIF
+
+                  /* Commented out 07-21-2001 Seems unneeded. */
+                  #ifdef WHY_REWIND
+                      /* Rewind to beging of same level and then search for the stopper match */
+                      WHILE nMatch > 1
+                         nMatch--
+                         IF aRules[nRule][2][nMatch][2] >= 0 .AND. aRules[nRule][2][nMatch][2] < nOPtional
+                            EXIT
+                         ENDIF
+                      ENDDO
+                      IF aRules[nRule][2][nMatch][2] >= 0 .AND. aRules[nRule][2][nMatch][2] < nOPtional
+                         nMatch++
+                      ENDIF
+                  #endif
+
+                  /* Now search for the stopper. */
+                  WHILE nMatch < nMatches
+                     nMatch++
+                     aMP := aRules[nRule][2][nMatch]
+
+                     IF aMP[3] == NIL .AND. aMP[4] == ':'
+                        IF aScan( aMP[5], {|sWord| sWord == sMultiStopper } ) > 0
+                           EXIT
+                        ENDIF
+                     ELSE
+                        IF aMP[2] >= 0 .AND. aMP[2] <= nOptional .AND. aMP[3] == sMultiStopper
+                           EXIT
+                        ENDIF
+                     ENDIF
+                  ENDDO
+
+                  nOptional := 0
+                  LOOP
+
+               ELSE
+
+                  sWorkLine     := sPreStoppers
+                  sMultiStopper := NIL
+
+                  IF bDbgMatch
+                     ? sToken, "Not a stopper."
+                     ? "Reverted: ", sWorkLine
+                  ENDIF
+
+               ENDIF
+
+               IF bDbgMatch
+                  WAIT
                ENDIF
 
             ENDIF
@@ -3391,6 +3389,54 @@ STATIC FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                DropTrailingWS( @xMarker )
             ENDIF
 
+            IF aMP[2] > 0 .AND. nOptional < 0
+
+               nOptional := aMP[2]
+
+               /* Save. */
+               aSize( asRevert, nOptional )
+               asRevert[nOptional] := sPreMatch
+               aSize( aaRevertMarkers, nOptional )
+               aaRevertMarkers[nOptional] := aClone( aMarkers )
+
+               IF bDbgMatch
+                  ? "*** Saved: " + asRevert[nOptional]
+                  WAIT
+               ENDIF
+
+            ELSEIF aMP[2] > 0 .AND. nOptional >= 0 .AND. aMP[2] >= nOptional
+
+               nOptional := aMP[2]
+
+               /* Save. */
+               aSize( asRevert, nOptional )
+               asRevert[nOptional] := sPreMatch
+               aSize( aaRevertMarkers, nOptional )
+               aaRevertMarkers[nOptional] := aClone( aMarkers )
+
+               IF bDbgMatch
+                  ? "*** Saved: " + asRevert[nOptional]
+                  WAIT
+               ENDIF
+
+            // Group started with nested optional, this is the 1st element in current level.
+            ELSEIF aMP[2] < 0 .AND. Len( asRevert ) >= - aMP[2] .AND. asRevert[ - aMP[2] ] == NIL
+
+               nOptional := - aMP[2]
+
+               /* Save. */
+               //aSize( asRevert, nOptional )
+               asRevert[nOptional] := sPreMatch
+               //aSize( aaRevertMarkers, nOptional )
+               aaRevertMarkers[nOptional] := aClone( aMarkers )
+
+               IF bDbgMatch
+                  ? "*** Saved: " + asRevert[nOptional]
+                  WAIT
+               ENDIF
+
+            ENDIF
+
             IF nMarkerId > 0
                /* Repeatable. */
                IF aMP[1] > 1000
@@ -3412,34 +3458,6 @@ STATIC FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                ENDIF
             ENDIF
 
-            IF aMP[2] > 0 .AND. nOptional < 0
-
-               nOptional := aMP[2]
-
-               /* Save. */
-               aSize( asRevert, nOptional )
-               asRevert[nOptional] := sPreMatch
-
-               IF bDbgMatch
-                  ? "*** Saved: " + asRevert[nOptional]
-                  WAIT
-               ENDIF
-
-            ELSEIF aMP[2] > 0 .AND. nOptional >= 0 .AND. aMP[2] >= nOptional
-
-               nOptional := aMP[2]
-
-               /* Save. */
-               aSize( asRevert, nOptional )
-               asRevert[nOptional] := sPreMatch
-
-               IF bDbgMatch
-                  ? "*** Saved: " + asRevert[nOptional]
-                  WAIT
-               ENDIF
-
-            ENDIF
-
             IF aMP[2] <> 0
                IF bDbgMatch
                   ? "Optional"
@@ -3449,8 +3467,22 @@ STATIC FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                IF nMatch == nMatches .OR. ( aRules[nRule][2][nMatch + 1][2] >= 0 .AND. aRules[nRule][2][nMatch + 1][2] <= Abs( aMP[2] ) ) .OR. ;
                                           ( aRules[nRule][2][nMatch + 1][2] < 0 .AND. abs( aRules[nRule][2][nMatch + 1][2] ) < Abs( aMP[2] ) )
 
+                  // EOL - Rule matched.
+                  IF Empty( sWorkLine )
+                     IF bDbgMatch
+                        ? "EOL exiting."
+                     ENDIF
+
+                     nMatch++
+                     sPreMatch := ""
+                     EXIT
+                  ENDIF
+
                   /* Current level */
                   nOptional := aMP[2]
+                  IF Len( asRevert ) >= Abs( nOptional )
+                     asRevert[ Abs( nOptional ) ] := NIL
+                  ENDIF
 
                   IF nOptional < 0
                      nOptional := Abs( nOptional )
@@ -3521,35 +3553,14 @@ STATIC FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
 
             IF aMP[2] <> 0
                /* Revert. */
-               IF nOptional <> 0 .AND. aMP[2] < 0
+               IF nOptional <> 0 .AND. aMP[2] < 0 .AND. asRevert[Abs(nOptional)] != NIL
                   sWorkLine := asRevert[Abs(nOptional)]
+                  aMarkers  := aaRevertMarkers[Abs(nOptional)]
 
                   IF bDbgMatch
                      ? "* Reverted: " + asRevert[Abs(nOptional)]
                      WAIT
                   ENDIF
-
-                  /* If repeatable we need to remove pushed repeatable value for preceding marker[s]. */
-                  nBookMark := nMatch
-                  nMatch--
-                  WHILE nMatch > 0
-                     aMP := aRules[nRule][2][nMatch]
-                     IF aMP[1] > 1000
-                        IF bDbgMatch
-                           ? "Removed repeatble: " + aTail( aMarkers[ aMP[1] - 1000 ] )
-                           WAIT
-                        ENDIF
-                        IF ValType( aMarkers[ aMP[1] - 1000 ] ) == 'A'
-                           aSize( aMarkers[ aMP[1] - 1000 ], Len( aMarkers[ aMP[1] - 1000 ] ) - 1 )
-                        ENDIF
-                     ENDIF
-                     IF aMP[2] > 0
-                        EXIT
-                     ENDIF
-                     nMatch--
-                  ENDDO
-                  nMatch := nBookMark
-                  aMP := aRules[nRule][2][nMatch]
                ELSE
                   sWorkLine := sPreMatch
                   IF bDbgMatch
@@ -3557,6 +3568,7 @@ STATIC FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                      WAIT
                   ENDIF
 
+                  /* Commented out 07-21-2001 - Seems wrong !
                   IF aMP[1] > 1000 .AND. xMarker != NIL
                      IF bDbgMatch
                         ? "Removed repeatble: " + aTail( aMarkers[ aMP[1] - 1000 ] )
@@ -3564,6 +3576,7 @@ STATIC FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                      ENDIF
                      aSize( aMarkers[ aMP[1] - 1000 ], Len( aMarkers[ aMP[1] - 1000 ] ) - 1 )
                   ENDIF
+                  */
                ENDIF
 
                /* Optional (last) didn't match - Rule can still match. */
@@ -3625,7 +3638,7 @@ STATIC FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                   ENDIF
 
                   /* Skip all same level optionals to next group. */
-                  nOptional         := aMP[2]
+                  nOptional          := aMP[2]
                   bRepeatableMatched := aMP[1] > 1000 .AND. aMarkers[ aMP[1] - 1000 ] != NIL //.AND. Len( aMarkers[ aMP[1] - 1000 ] ) > 0
                   WHILE nMatch < nMatches
                      nMatch++
@@ -3641,20 +3654,22 @@ STATIC FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                   // We should NOT consider this a failure, continue matching...
                   IF bRepeatableMatched
                      IF bDbgMatch
-                        ? "Skipped to", nMatch, "of", nMatches, aMP[2], aMP[3], nOptional
+                        ? "Repeatable Matched - Skipped to", nMatch, "of", nMatches, aMP[2], aMP[3], nOptional
                      ENDIF
 
                      nOptional := aMP[2]
                      LOOP
                   ELSE
                      IF bDbgMatch
-                        ? "Partial not allowed"
+                        ? "Partial not allowed - Skipped to", nMatch, "of", nMatches, aMP[2], aMP[3], nOptional
                      ENDIF
                   ENDIF
 
                   IF nMatch == nMatches
 
                      IF ( aMP[2] >= 0 ) .AND. ( aMP[2] <= Abs( nOptional ) )
+                        /* Ok. */
+                     ELSEIF ( aMP[2] < 0 ) .AND. ( Abs( aMP[2] ) < Abs( nOptional ) ) // Added 07-21-2001 ???
                         /* Ok. */
                      ELSE
                         IF bDbgMatch
@@ -3717,30 +3732,11 @@ STATIC FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
          IF aMP[2] <> 0
             IF nOptional <> 0 .AND. aMP[2] < 0
                sWorkLine := asRevert[Abs(nOptional)]
+               aMarkers  := aaRevertMarkers[Abs(nOptional)]
 
                IF bDbgMatch
                   ? "*** Reverted: " + asRevert[nOptional]
                ENDIF
-
-               /* If repeatable we need to remove pushed repeatable value for preceding marker[s]. */
-               nBookMark := nMatch
-               nMatch--
-               WHILE nMatch > 0
-                  aMP := aRules[nRule][2][nMatch]
-                  IF aMP[1] > 1000
-                     IF bDbgMatch
-                        ? "Removed repeatble: " + aTail( aMarkers[ aMP[1] - 1000 ] )
-                        WAIT
-                     ENDIF
-                     aSize( aMarkers[ aMP[1] - 1000 ], Len( aMarkers[ aMP[1] - 1000 ] ) - 1 )
-                  ENDIF
-                  IF aMP[2] > 0
-                     EXIT
-                  ENDIF
-                  nMatch--
-               ENDDO
-               nMatch := nBookMark
-               aMP := aRules[nRule][2][nMatch]
             ELSE
                sWorkLine := sPreMatch
 
@@ -3748,6 +3744,7 @@ STATIC FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                   ? "*** Reclaimed token/marker: " + sWorkLine
                ENDIF
 
+               /* Commented out 07-21-2001 - Seems wrong !
                IF aMP[1] > 1000 .AND. xMarker != NIL
                   IF bDbgMatch
                      ? "Removed repeatble: " + aTail( aMarkers[ aMP[1] - 1000 ] )
@@ -3755,6 +3752,7 @@ STATIC FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                   ENDIF
                   aSize( aMarkers[ aMP[1] - 1000 ], Len( aMarkers[ aMP[1] - 1000 ] ) - 1 )
                ENDIF
+               */
             ENDIF
 
             IF bDbgMatch
@@ -4744,8 +4742,9 @@ RETURN IIF( cType == 'A', aExp, sExp )
 
 STATIC FUNCTION PPOut( aResults, aMarkers )
 
-  LOCAL Counter, nResults, sResult := "", nMarker, nMatches, nMatch//, aMarkers := aResults[3]
-  LOCAL xValue, nRepeats := 0, nDependee, nGroupStart, sDumb, aBackUp
+  LOCAL Counter, nResults, sResult := "", nMarker, nMatches, nMatch
+  LOCAL xValue, nRepeats := 0, nDependee, nGroupStart, sDumb, aBackUp := aClone( aMarkers )
+  LOCAL nMarkers, anMarkers, bBuildList
 
   IF aResults[1] == NIL
      nResults := 0
@@ -4772,6 +4771,8 @@ STATIC FUNCTION PPOut( aResults, aMarkers )
               nRepeats := 0
            ELSE
               nRepeats := Len( aMarkers[ nDependee ] )
+              anMarkers := {}
+              bBuildList := .T.
            ENDIF
 
            IF bDbgPPO
@@ -4781,11 +4782,10 @@ STATIC FUNCTION PPOut( aResults, aMarkers )
 
            IF nRepeats > 0
               IF ValType( aResults[1][Counter][2] ) == 'N'
-                 //sResult += ' '
-                 aBackUp := aClone( aMarkers[ nDependee ] )
+                 IF bBuildList .AND. aScan( anMarkers, nDependee ) == 0
+                    aAdd( anMarkers, nDependee )
+                 ENDIF
                  xValue := aMarkers[ nDependee ][1] // For group head nDependee and nMaker _must_ be identical.
-                 aDel( aMarkers[ nDependee ], 1 )
-                 aSize( aMarkers[ nDependee ], nRepeats - 1 )
               ELSE
                  sResult += aResults[1][Counter][2]
                  LOOP
@@ -4805,7 +4805,7 @@ STATIC FUNCTION PPOut( aResults, aMarkers )
               LOOP
            ENDIF
 
-        ELSE
+        ELSE // IF nDependee > 0
 
            IF ValType( aResults[1][Counter][2] ) == 'N'
               xValue := aMarkers[ aResults[1][Counter][2] ]
@@ -4814,7 +4814,7 @@ STATIC FUNCTION PPOut( aResults, aMarkers )
               LOOP
            ENDIF
 
-        ENDIF
+        ENDIF // IF nDependee > 0
 
      ELSE /* Repeat mode. */
 
@@ -4822,43 +4822,32 @@ STATIC FUNCTION PPOut( aResults, aMarkers )
         IF aResults[1][Counter][1] == nDependee
 
            IF ValType( aResults[1][Counter][2] ) == 'N'
-              /*
-              IF Right( sResult, 1 ) != ' '
-                 sResult += ' '
-              ENDIF
-              */
-
-              /* Same repeatable result marker is used just following current repeat group. */
-              IF Len( aMarkers[ aResults[1][Counter][2] ] ) < nRepeats
-                 nRepeats--
-                 IF nRepeats == 0
-                    aMarkers[ nDependee ] := aBackup
-                    Counter--
-                 ELSE
-                    Counter := nGroupStart - 1 // LOOP will increase
+              //IF aMarkers[ aResults[1][Counter][2] ] != NIL
+                 IF bBuildList .AND. aScan( anMarkers, aResults[1][Counter][2] ) == 0
+                    aAdd( anMarkers, aResults[1][Counter][2] )
                  ENDIF
-                 LOOP
-              ENDIF
-
-              /*
-              IF Len( aMarkers[ aResults[1][Counter][2] ] ) == 0
-                 // Same repeatable marker was used again (after being consumed)!!!
-                 aMarkers[ nDependee ] := aBackup
-                 nRepeats := 0
-                 Counter--
-                 LOOP
-              ENDIF
-              */
-
-              xValue := aMarkers[ aResults[1][Counter][2] ][1]
-              aDel( aMarkers[ aResults[1][Counter][2] ], 1 )
-              aSize( aMarkers[ aResults[1][Counter][2] ], nRepeats - 1 )
+                 xValue := aMarkers[ aResults[1][Counter][2] ][1]
+                 //aDel( aMarkers[ aResults[1][Counter][2] ], 1 )
+                 //aSize( aMarkers[ aResults[1][Counter][2] ], nRepeats - 1 )
+              //ELSE
+              //   xValue := ""
+              //ENDIF
            ELSE
               sResult += aResults[1][Counter][2]
               LOOP
            ENDIF
         ELSE
            nRepeats--
+           bBuildList := .F.
+
+           nMarkers := Len( anMarkers )
+           FOR nMarker := 1 TO nMarkers
+              // Clipper does not remove optional nested repeatable which only has single value if main repeatable has more values.
+              IF Len( aBackup[ anMarkers[1] ] ) = 1 .OR. Len( aMarkers[ anMarkers[nMarker] ] ) > 1
+                 aDel( aMarkers[ anMarkers[nMarker] ], 1 )
+                 aSize( aMarkers[ anMarkers[nMarker] ], nRepeats )
+              ENDIF
+           NEXT
 
            IF nRepeats > 0
               IF bDbgPPO
@@ -4869,15 +4858,15 @@ STATIC FUNCTION PPOut( aResults, aMarkers )
               Counter := nGroupStart - 1 // LOOP will increase
               LOOP
            ELSE
-              // Incase the same repeatable marker will be used again (after being consumed)!!!
-              aMarkers[ nDependee ] := aBackup
-
               IF bDbgPPO
                  ? "Repeats Finished: "
                  WAIT
               ENDIF
 
-              /* Recheck this item in "normal" mode. */
+              // Restore for possible re-use.
+              aMarkers := aClone( aBackup )
+
+                 /* Recheck this item in "normal" mode. */
               Counter--
               LOOP
            ENDIF
@@ -4891,12 +4880,6 @@ STATIC FUNCTION PPOut( aResults, aMarkers )
         ? "Outputing:", Counter, nMarker, nGroupStart, nRepeats
         WAIT
      ENDIF
-
-     /* TODO: Add space rule compiler if no anchor.
-     IF ( ! sResult == "" ) .AND. Right( sResult, 1 ) != ' '
-        sResult += ' '
-     ENDIF
-     */
 
      DO CASE
         /* <-x-> Ommit. */
@@ -5105,7 +5088,7 @@ STATIC FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
    LOCAL nWord, nWords, cChar
    LOCAL nLen, s1, s2, s3
    LOCAL sRuleCopy := sRule
-
+   LOCAL nLastOptional, nPending
    /*
    nMarkerID
    nOPTIONAL
@@ -5493,7 +5476,7 @@ STATIC FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
    ENDIF
 
    IF nOptional <> 0
-      TraceLog( "ERROR Unclose Optiona group, nOptional = " + Str( nOptional, 3 ), aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5] )
+      TraceLog( "ERROR Unclose Optional group, nOptional = " + Str( nOptional, 3 ), aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5] )
       Alert( "ERROR! Unclosed Optional group, nOptional = " + Str( nOptional, 3 ) + " [" + Str( ProcLine(0), 4 ) + "]" )
       BREAK
    ENDIF
@@ -5508,7 +5491,7 @@ STATIC FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
    aLIST
    */
 
-   // *** Processing STOP Words below, because processing RP may discover repeatable rotted by non optional marker and correct it to optional!
+   // *** Processing STOP Words below, because processing RP may discover repeatable rooted by non optional marker and correct the root to optional!
 
    /*
    ? ''
@@ -5532,12 +5515,11 @@ STATIC FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
 
    //TraceLog( sResult )
 
-   nOptional  := 0
-   aModifiers := {}//Array( nId )
-   //aFill( aModifiers, 0 )
-   aValues    := Array( nId )
-   nId        := 0
-   sPad       := ''
+   nOptional     := 0
+   aModifiers    := {}
+   aValues       := Array( nId )
+   nId           := 0
+   sPad          := ''
 
    DO WHILE ! ( sResult == '' )
       nOffset := 0
@@ -5660,6 +5642,10 @@ STATIC FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
          IF nOptionalAt > 1
             sTemp := Left( sResult, nOptionalAt - 1 )
             aRP := { 0, sPad + sTemp }
+            aAdd( aResult, aRP )
+            aAdd( aModifiers, -1 )
+         ELSE
+            aRP := { 0, "" }
             aAdd( aResult, aRP )
             aAdd( aModifiers, -1 )
          ENDIF
@@ -5880,10 +5866,12 @@ STATIC FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
          ENDIF
 
       ELSE
+
          aRP := { 0, sPad + sResult }
          aAdd( aResult, aRP )
          aAdd( aModifiers, -1 )
          sResult := ''
+
       ENDIF
 
    ENDDO
@@ -5951,15 +5939,80 @@ STATIC FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
    //WAIT
 
    // Processing STOP words for NON Anchored optionals.
-   nMatches := Len( aRule[2] )
+   nLastOptional := 0
+   nPending      := 0
+   nMatches      := Len( aRule[2] )
+
    FOR Counter := 1 TO nMatches
       aMatch := aRule[2][Counter]
 
       /* Optional group start (marker), no anchor, and not a restricted pattern - have to build stop words list! */
       IF aMatch[1] > 0 .AND. aMatch[2] > 0 .AND. aMatch[3] == NIL .AND. aMatch[4] != ':'
 
-         aWords    := {}
-         nOptional := aMatch[2]
+         aWords        := {}
+         nOptional     := aMatch[2]
+         nLastOptional :=  nOptional
+
+         /*
+         nMP := Counter - 1
+         WHILE nMP > 0
+            aMatch := aRule[2][nMP]
+            IF aMatch[2] >= 0 .AND. aMatch[2] < nOptional
+               EXIT
+            ENDIF
+            IF aMatch[2] > 0 .AND. aMatch[2] == nOptional
+               IF aMatch[3] != NIL
+                  aAdd( aWords, Upper( aMatch[3] ) )
+               ELSEIF aMatch[4] == ':'
+                  nWords := Len( aMatch[5] )
+                  FOR nWord := 1 TO nWords
+                     aAdd( aWords, aMatch[5][nWord] )
+                  NEXT
+               ENDIF
+            ENDIF
+            nMP--
+         ENDDO
+         */
+
+         nMP := Counter + 1
+         WHILE nMP <= nMatches
+            aMatch := aRule[2][nMP]
+            IF aMatch[2] >= 0 .AND. aMatch[2] < nOptional
+               IF aMatch[3] != NIL
+                  aAdd( aWords, Upper( aMatch[3] ) )
+               ELSEIF aMatch[4] == ':'
+                  nWords := Len( aMatch[5] )
+                  FOR nWord := 1 TO nWords
+                     aAdd( aWords, aMatch[5][nWord] )
+                  NEXT
+               ENDIF
+               EXIT
+            ENDIF
+            IF aMatch[2] > 0 .AND. aMatch[2] == nOptional
+               IF aMatch[3] != NIL
+                  aAdd( aWords, Upper( aMatch[3] ) )
+               ELSEIF aMatch[4] == ':'
+                  nWords := Len( aMatch[5] )
+                  FOR nWord := 1 TO nWords
+                     aAdd( aWords, aMatch[5][nWord] )
+                  NEXT
+               ENDIF
+            ENDIF
+            nMP++
+         ENDDO
+
+         IF Len( aWords ) > 0
+            aRule[2][Counter][5] := aWords
+         ENDIF
+
+      ELSEIF aMatch[2] > 0 .AND. aMatch[2] - nLastOptional == 2 // Head of new group missing because nested optional is first element.
+         nPending := - ( aMatch[2] - 1 )
+
+      ELSEIF nPending != 0 .AND. aMatch[1] > 0 .AND. aMatch[2] == nPending .AND. aMatch[3] == NIL .AND. aMatch[4] != ':'
+         nPending      := 0
+         aWords        := {}
+         nOptional     := -aMatch[2]
+         nLastOptional :=  nOptional
 
          nMP := Counter - 1
          WHILE nMP > 0

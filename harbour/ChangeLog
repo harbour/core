@@ -1,3 +1,7 @@
+2001-07-23 04:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     ! Various refinments in matching and outputing due to new observations about Clipper.
+
 2001-07-23 04:15 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hbexprop.h
      + Added #define  HB_ET_MACRO_PARE    64
