@@ -1,3 +1,10 @@
+19990612-08:30 CET Jose Lalin / Eddie Runia
+   * tests/working/testcgi.prg
+     New version uploaded.
+     ER : Changed HB_File -> File and Functions.cfm -> Function.cfm
+   + tests/working/list.txt, function.cfm
+     Referenced files added
+
 19990612-08:00 CET Eddie Runia
    * tests/working/debugtst.prg, tests/working/clasinit.prg,
    * tests/working/funcarr.prg, tests/working/objarr.prg,

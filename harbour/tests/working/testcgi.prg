@@ -11,39 +11,110 @@
 *
 *  1999/05/31  Initial CGI functionality.
 *  1999/06/01  Translated %nn to correct chars.
+*  1999/06/02  Dynamic TAG matching routines (inspired on Delphi).
+*              First attempt to convert Delphi's ISAPI dll of WebSites'
+*              Function List
+*              (See http://www.flexsys-ci.com/harbour-project/functions.htm)
+*  1999/06/11  List can be viewed online at
+*              http://www.flexsys-ci.com/cgi-bin/testcgi.exe
 *
 **/
 
 #include "CGI.ch"
-#define NewLine chr(10)+chr(13)
+#define IF_BUFFER 65535
+#define NewLine   chr(10)+chr(13)
 
 FUNCTION Main()
 
    LOCAL oHTML := THTML():New()
-   LOCAL cName := ""
+   LOCAL hFile, nPos, cString, cBuf, i, cTable, cLine
 
-   cName := oHTML:QueryFields( "NAME" )
+   oHTML:SetHTMLFile( "function.cfm" )
 
-   oHTML:SetTitle( "Harbour CGI Scripting Demo" )
-   oHTML:AddHead( "Harbour CGI Scripting DEMO" )
-   oHTML:AddPara( "<UL>"	                                   + NewLine + ;
-                  "<LI>Name: "    + oHTML:QueryFields( "Name" )    + NewLine + ;
-		  "<LI>Phone: "   + oHTML:QueryFields( "Phone" )   + NewLine + ;
-		  "<LI>Address: " + oHTML:QueryFields( "Address" ) + NewLine + ;
-                  "</UL><P><HR><SMALL><CENTER>Copyright &copy 1999 by Harbour Project" + ;
-                  "<BR>Generated at: " + dtoc( date() ) + " - " + time(), "LEFT" )
+   hFile := fOpen( "list.txt", 0 )
+
+   cString := space( IF_BUFFER )
+   cBuf	   := ""
+   cTable  := ""
+
+   // Builds dynamic table replacement
+   WHILE (nPos := fRead( hFile, @cString, IF_BUFFER )) > 0
+      i := 1
+      DO WHILE i <= nPos 
+
+	 IF substr( cString, i, 1 ) = chr( 13 )
+            i := i + 1
+            cLine := cBuf
+  	    cBuf  := ""
+
+  	    IF left( cLine, 1 ) <> ';' 
+               cTable += '<TR>' + chr(10)+chr(13) + ;
+                 '<TD WIDTH="50%"><FONT SIZE="2" FACE="Tahoma">' +                 ;
+                 ParseString( cLine, ';', 1 ) + '</FONT></TD>' + chr(10)+chr(13) + ;
+                 '<TD WIDTH="16%">' +                                              ;
+                 if( ParseString( cLine, ';', 2 ) = 'R',                           ;
+                    '<CENTER><IMG SRC="images/purple-m.gif">',                     ;
+                    '&nbsp' ) +                                                    ;
+                 '</TD>' + chr(10)+chr(13) +                                       ;
+                 '<TD WIDTH="16%">' +                                              ;
+                 if( ParseString( cLine, ';', 2 ) = 'S',                           ;
+                    '<CENTER><IMG SRC="images/purple-m.gif">',                     ;
+                    '&nbsp' ) +                                                    ;
+                 '</TD>' + chr(10)+chr(13) +                                       ;
+                 '<TD WIDTH="16%">' +                                              ;
+                 if( ParseString( cLine, ';', 2 ) = 'N',                           ;
+                    '<CENTER><IMG SRC="images/purple-m.gif">',                     ;
+                    '&nbsp' ) +                                                    ;
+                 '</TD>' + chr(10)+chr(13) +                                       ;
+                 '</TR>'
+  	    ENDIF
+	 ELSE
+	    cBuf := cBuf + substr( cString, i, 1 )
+	 ENDIF
+
+	 i++
+      ENDDO
+   ENDDO
+
+   fClose( hFile )
+
+   oHTML:AddReplaceTag( "Functions", cTable )
    oHTML:Generate()
 
    // Uncomment the following if you don't have a Web Server to test
    // this sample
 
-   // oHTML:SaveToFile( "test.htm" )
+//   oHTML:SaveToFile( "test.htm" )
 
    // If the above is uncommented, you may comment this line:
 
    oHTML:ShowResult()
 
    RETURN( NIL )
+
+FUNCTION ParseString( cString, cDelim, nRet )
+
+   LOCAL cBuf, aElem, nPosFim, nSize, i
+
+   nSize := len( cString ) - len( StrTran( cString, cDelim, '' ) ) + 1
+   aElem := array( nSize )
+
+   cBuf := cString
+   i := 1
+   FOR i := 1 TO nSize
+      nPosFim := at( cDelim, cBuf )
+
+      IF nPosFim > 0 
+         aElem[i] := substr( cBuf, 1, nPosFim - 1 )
+      ELSE
+         aElem[i] := cBuf
+      ENDIF
+
+      cBuf := substr( cBuf, nPosFim + 1, len( cBuf ) )
+         
+   NEXT i
+
+   RETURN( aElem[ nRet ] )
 
 FUNCTION Hex2Dec( cHex )
 
@@ -91,6 +162,8 @@ FUNCTION THTML
 
       oClass:AddData( "aCGIContents" )
       oClass:AddData( "aQueryFields" )
+      oClass:AddData( "cHTMLFile" )
+      oClass:AddData( "aReplaceTags" )
 
       oClass:AddMethod( "New",        @New() )         // New Method
       oClass:AddMethod( "SetTitle",   @SetTitle() )    // Set Page Title
@@ -100,10 +173,12 @@ FUNCTION THTML
       oClass:AddMethod( "SaveToFile", @SaveToFile() )  // Saves Content to File
       oClass:AddMethod( "ShowResult", @ShowResult() )  // Show Result - SEE Fcn
       oClass:AddMethod( "Generate",   @Generate() )    // Generate HTML
+      oClass:AddMethod( "SetHTMLFile",@SetHTMLFile() ) // Sets source HTML file
 
-      oClass:AddMethod( "ProcessCGI",  @ProcessCGI() )
-      oClass:AddMethod( "GetCGIParam", @GetCGIParam() )
-      oClass:AddMethod( "QueryFields", @QueryFields() )
+      oClass:AddMethod( "ProcessCGI",    @ProcessCGI() )
+      oClass:AddMethod( "GetCGIParam",   @GetCGIParam() )
+      oClass:AddMethod( "QueryFields",   @QueryFields() )
+      oClass:AddMethod( "AddReplaceTag", @AddReplaceTag() )
 
       oClass:Create()
 
@@ -123,6 +198,8 @@ STATIC FUNCTION New()
    ::cBody        := ""
    ::aCGIContents := {}
    ::aQueryFields := {}
+   ::aReplaceTags := {}
+   ::cHTMLFile    := ""
 
    RETURN( Self )
 
@@ -170,14 +247,68 @@ STATIC FUNCTION AddPara( cPara, cAlign )
 STATIC FUNCTION Generate()
 
    LOCAL Self := QSelf()
+   LOCAL cFile, i, hFile, nPos, cRes
+   LOCAL lFlag := .f.
 
-   ::cContent :=                                                           ;
-      "<HTML><HEAD>"                                           + NewLine + ;
-      "<TITLE>" + ::cTitle + "</TITLE>"                        + NewLine + ;
-      "<BODY link='" + ::cLinkColor + "' " +                               ;
-      "vlink='" + ::cvLinkColor + "'>" +                       + NewLine + ;
-      ::cBody                                                  + NewLine + ;
-      "</BODY></HTML>"
+   // Is this a meta file or hand generated script?
+   IF empty( ::cHTMLFile )
+      ::cContent :=                                                        ;
+         "<HTML><HEAD>"                                        + NewLine + ;
+         "<TITLE>" + ::cTitle + "</TITLE>"                     + NewLine + ;
+         "<BODY link='" + ::cLinkColor + "' " +                            ;
+         "vlink='" + ::cvLinkColor + "'>" +                    + NewLine + ;
+         ::cBody                                               + NewLine + ;
+         "</BODY></HTML>"
+   ELSE
+      ::cContent := ""
+
+      // Does cHTMLFile exists?
+      IF !File( ::cHTMLFile )
+         ::cContent := "<H1>Server Error</H1><P><I>No such file: " + ;
+           ::cHTMLFile
+      ELSE
+         // Read from file
+         hFile := fOpen( ::cHTMLFile, 0 )
+         cFile := space( IF_BUFFER )
+         DO WHILE (nPos := fRead( hFile, @cFile, IF_BUFFER )) > 0
+
+            cFile := left( cFile, nPos )
+            cRes += cFile
+            cFile := space( IF_BUFFER )
+
+         ENDDO
+
+         fClose( hFile )
+
+         // Replace matched tags
+         i := 1
+         ::cContent := cRes
+         /* TODO: Replace this DO WHILE with FOR..NEXT */
+         DO WHILE i <= len( ::aReplaceTags )
+            ::cContent := strtran( ::cContent, ;
+               "<#" + ::aReplaceTags[i, 1] + ">", ::aReplaceTags[i, 2] )
+            i++
+         ENDDO
+
+         /* TODO: Clear remaining (not matched) tags */
+         /*
+         cRes := ""
+         FOR i := 1 TO len( ::cContent )
+            IF substr( ::cContent, i, 1 ) == "<" .AND. ;
+               substr( ::cContent, i + 1, 1 ) == "#"
+               lFlag := .t.
+            ELSEIF substr( ::cContent, i, 1 ) == ">" .AND. lFlag
+               lFlag := .f.
+            ELSEIF !lFlag
+               cRes += substr( ::cContent, i, 1 )
+            ENDIF
+         NEXT i
+
+         ::cContent := cRes
+         */
+
+      ENDIF
+   ENDIF
 
    RETURN( Self )
 
@@ -299,3 +430,19 @@ STATIC FUNCTION QueryFields( cQueryName )
    ENDIF
 
    RETURN( cRet )
+
+STATIC FUNCTION SetHTMLFile( cFile )
+
+   LOCAL Self := QSelf()
+
+   ::cHTMLFile := cFile
+
+   RETURN( Self )
+
+STATIC FUNCTION AddReplaceTag( cTag, cReplaceText )
+
+   LOCAL Self := QSelf()
+
+   aAdd( ::aReplaceTags, { cTag, cReplaceText } )
+
+   RETURN( Self )
