@@ -1,3 +1,9 @@
+20000501-23:21 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * ChangeLog
+     ! cvs server: warning: file `harbour/ChangeLog' seems to still contain conflict indicators
+       Removed conflict indicators.
+
 20000501-23:19 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * source/rtl/teditor.prg
@@ -117,15 +123,9 @@
       * some common parts moved into separate functions
 
     *include/hbcomp.h
-<<<<<<< ChangeLog
-   * changed 'BYTE iJumps' into 'ULONG iJumps' to stop reallocation
-   error mentioned by Victor
+      * changed 'BYTE iJumps' into 'ULONG iJumps' to stop reallocation
+        error mentioned by Victor
 
-=======
-   * changed 'BYTE iJumps' into 'ULONG iJumps' to stop reallocation
-   error mentioned by Victor
-
->>>>>>> 1.2098
 20000501-15:37 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/teditor.prg
