@@ -85,7 +85,7 @@ procedure __dbgEntry( uParam1, uParam2 )  // debugger entry point
       case ValType( uParam1 ) == "N"   // called from hvm.c hb_vmDebuggerShowLines()
            if s_oDebugger != nil
               if PCount() == 2 // called from hvm.c hb_vmLocalName()
-                 AAdd( s_oDebugger:aVars, { uParam2, uParam1, "Local" } )
+                 AAdd( s_oDebugger:aVars, { uParam2, uParam1, "Local", ProcName( 1 ) } )
                  if s_oDebugger:oBrwVars != nil
                     s_oDebugger:oBrwVars:RefreshAll()
                  endif
@@ -603,11 +603,16 @@ return nil
 
 static function GetVarInfo( aVar )
 
+   local nProcLevel := 1
+
    do case
       case aVar[ 3 ] == "Local"
+           while ProcName( nProcLevel ) != aVar[ 4 ]
+              nProcLevel++
+           end
            return aVar[ 1 ] + " <" + aVar[ 3 ] + ", " + ;
-                  ValType( __vmVarLGet( 8, aVar[ 2 ] ) ) + ;
-                  ">: " + ValToStr( __vmVarLGet( 8, aVar[ 2 ] ) )
+                  ValType( __vmVarLGet( nProcLevel, aVar[ 2 ] ) ) + ;
+                  ">: " + ValToStr( __vmVarLGet( nProcLevel, aVar[ 2 ] ) )
 
       case aVar[ 3 ] == "Public" .or. aVar[ 3 ] == "Private"
            return aVar[ 1 ] + " <" + aVar[ 3 ] + ", " + ValType( aVar[ 2 ] ) + ;
