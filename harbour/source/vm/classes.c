@@ -1718,7 +1718,7 @@ HB_FUNC( __CLSPARENT )
 HB_FUNC( __SENDER )
 {
    PHB_ITEM pBase = hb_stack.pBase;
-   PHB_ITEM oSender;
+   PHB_ITEM oSender = NULL;
    USHORT iLevel = 3;
 
    while( iLevel > 0 && pBase != hb_stack.pItems )
@@ -1726,11 +1726,11 @@ HB_FUNC( __SENDER )
       pBase = hb_stack.pItems + pBase->item.asSymbol.stackbase;
       oSender = pBase + 1;
 
-      if( ( iLevel-- == 2 && ( oSender )->type != HB_IT_BLOCK ) || ( oSender )->type == HB_IT_NIL )
+      if( ( iLevel-- == 2 && oSender->type != HB_IT_BLOCK ) || ( oSender )->type == HB_IT_NIL )
          break;
    }
 
-   if( iLevel == 0 && ( oSender )->type == HB_IT_OBJECT )
+   if( iLevel == 0 && oSender != NULL && oSender->type == HB_IT_OBJECT )
       hb_itemReturn( oSender );
 }
 

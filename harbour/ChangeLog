@@ -1,10 +1,18 @@
+2000-06-16 21:28 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/transfrm.c
+     ! Fixed GCC -O2 warnings.
+
+   * source/vm/classes.c
+     ! Fixed GCC -O2 warning in __SENDER()
+
 2000-06-16 10:55 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
    * source/pp/ppcore.c
      ! Removed 1 // comment.
 
 2000-06-16 18:45 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
-   * source/rtl/classes.c
+   * source/vm/classes.c
      ! Formatting, warnings fixed.
      * hb_itemCopy( &hb_stack.return, ... ) -> hb_itemReturn( ... )
 
@@ -51,6 +59,7 @@
 
    * makefile.bc
      % Removed some more redundant -I$(INCLUDE_DIR)s
+     % Removed redundant -I$(LANG_DIR)s
 
    * include/hbclass.ch
      ! Minor cleanups (#includes moved after the self-guards, nil->NIL,

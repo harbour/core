@@ -80,8 +80,8 @@ HB_FUNC( TRANSFORM )
       ULONG  ulPicLen = hb_itemGetCLen( pPic );
       USHORT uiPicFlags; /* Function flags */
 
-      ULONG  ulParamS;
-      BYTE   byParamL;
+      ULONG  ulParamS = 0; /* To avoid GCC -O2 warning */
+      BYTE   byParamL = '\0'; /* To avoid GCC -O2 warning */
 
       char * szResult;
       ULONG  ulResultPos;
@@ -529,6 +529,7 @@ HB_FUNC( TRANSFORM )
       else
       {
          szResult = NULL; /* To avoid GCC -O2 warning */
+         ulResultPos = 0; /* To avoid GCC -O2 warning */
          bError = TRUE;
       }
 
