@@ -21,6 +21,8 @@ function Main()
    local cWish := "Power   "
    local GetList := {}
 
+   CLS
+
    @ 2, 2 SAY "Enter your name:" GET cName
    @ 4, 2 SAY "Enter your wish:" GET cWish
    READ
