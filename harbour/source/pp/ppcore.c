@@ -1074,7 +1074,47 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
                 ptr = PrevSquare( ptr, strtopti, NULL );
                 if( ptr )
                     ptrmp = ptr;
+                /* Ron Pinkas added 2000-06-02 14:45 UTC-0800 */
+                else if( *ptrmp == '[' )
+                {
+                  ptr = strtopti+ipos;
+                  while ( ptr > strtopti && *(--ptr) != ']' ) ;
+
+                  {
+                    char * ptrTemp;
+
+                    ptrTemp = ++ptrmp;
+                    SkipOptional( &ptrmp );
+
+                    while( *(ptrmp + 2) == '[' && ptrmp != ptrTemp )
+                    {
+                      ptrmp += 3;
+                      SkipOptional( &ptrmp );
+                    }
+                  }
+                }
+                /* Ron Pinkas End */
               }
+            /* Ron Pinkas added 2000-06-02 14:45 UTC-0800 */
+            else if( ipos && *ptrmp == '[' )
+              {
+                ptr = strtopti+ipos;
+                while ( ptr > strtopti && *(--ptr) != ']' ) ;
+
+                {
+                  char * ptrTemp;
+
+                  ptrTemp = ++ptrmp;
+                  SkipOptional( &ptrmp );
+
+                  while( *(ptrmp + 2) == '[' && ptrmp != ptrTemp )
+                  {
+                    ptrmp += 3;
+                    SkipOptional( &ptrmp );
+                  }
+                }
+              }
+              /* Ron Pinkas End */
           }
         switch( *ptrmp ) {
         case '[':

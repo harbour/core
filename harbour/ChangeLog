@@ -1,16 +1,21 @@
+2000-06-02 14:45 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/pp/ppcore.c
+     ! Added logic to CommandStuff() to fix problem with Keyword or Match Marker are matched after non provided multiple optional patterns.
+
 2000-06-02 19:56 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
-   * utils/hbtest/hbtest.prg 
-   * utils/hbtest/make_xpp.bat 
-   * utils/hbtest/make_xpp.cmd 
+   * utils/hbtest/hbtest.prg
+   * utils/hbtest/make_xpp.bat
+   * utils/hbtest/make_xpp.cmd
      ! HBTEST was broken for Xbase++. Fixed.
 
-   * source/rtl/minmax.c 
-   * source/rtl/mlpos.c 
-   * source/rtl/mod.c 
-   * source/rtl/mouseapi.c 
-   * source/rtl/strmatch.c 
-   * source/rtl/strtran.c 
+   * source/rtl/minmax.c
+   * source/rtl/mlpos.c
+   * source/rtl/mod.c
+   * source/rtl/mouseapi.c
+   * source/rtl/strmatch.c
+   * source/rtl/strtran.c
      * Minor typos, formattings, optimizations.
 
 2000-06-02 15:39 UTC+0100 Victor Szakats <info@szelvesz.hu>
