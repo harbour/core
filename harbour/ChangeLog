@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-06-06 15:53 UTC+0200 Tomaz Zupan <tomaz.zupan@orpo.si>
+  * source/rtl/console.c
+    + Added a PRG-callable functions HB_GETSTDIN and HB_GETSTDOUT,
+      to get stdin and stdout file handle.
+
 2003-06-06 10:51 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * makefile.bc
   * makefile.vc
@@ -127,8 +132,8 @@
   * contrib/rdd_ads/adsfunc.c
   * contrib/rdd_ads/rddads.h
     + Added support for DBINFO(DBI_DB_VERSION), DBINFO(DBI_RDD_VERSION),
-  	  and ADSVERSION([<nType>]) (but only for nType == 0 and nType == 3
-  	  and without date and time information for nType == 3).
+      and ADSVERSION([<nType>]) (but only for nType == 0 and nType == 3
+      and without date and time information for nType == 3).
 
 2003-05-21 20:34 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/vm/hvm.c

@@ -129,8 +129,8 @@ void hb_conInit( void )
 
       if( iStderr < 0 )        /* //STDERR not used or invalid */
    #if defined(X__WIN32__)
-         s_iFilenoStderr = GetStdHandle( STD_ERROR_HANDLE );       
-   #else     
+         s_iFilenoStderr = GetStdHandle( STD_ERROR_HANDLE );
+   #else
          s_iFilenoStderr = fileno( stderr );
    #endif
       else if( iStderr == 0 )  /* //STDERR with no parameter or 0 */
@@ -140,8 +140,8 @@ void hb_conInit( void )
    }
 #else
    #if defined(X__WIN32__)
-   s_iFilenoStderr = GetStdHandle( STD_ERROR_HANDLE );       
-   #else     
+   s_iFilenoStderr = GetStdHandle( STD_ERROR_HANDLE );
+   #else
    s_iFilenoStderr = fileno( stderr );
    #endif
 #endif
@@ -553,4 +553,14 @@ HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position
    }
 }
 
+
+HB_FUNC( HB_GETSTDIN ) /* Return Handel for STDIN */
+{
+   hb_retni( s_iFilenoStdin );
+}
+
+HB_FUNC( HB_GETSTDOUT ) /* Return Handel for STDOUT */
+{
+   hb_retni( s_iFilenoStdout );
+}
 
