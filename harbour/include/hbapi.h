@@ -276,7 +276,6 @@ typedef USHORT ERRCODE;
 extern HB_SYMB  hb_symEval;
 
 /* Extend API */
-extern char HB_EXPORT * hb_filecase ( char * ); /* Convert string to environment case */
 extern char HB_EXPORT * hb_parc( int iParam, ... );  /* retrieve a string parameter */
 extern ULONG    HB_EXPORT hb_parclen( int iParam, ... ); /* retrieve a string parameter length */
 extern ULONG    HB_EXPORT hb_parcsiz( int iParam, ... ); /* retrieve a by-reference string parameter length, including terminator */

@@ -187,6 +187,7 @@ extern USHORT    hb_fsAttrFromRaw( ULONG raw_attr );
 extern ULONG     hb_fsAttrToRaw( USHORT uiAttr );
 extern USHORT    hb_fsAttrEncode( const char * szAttr );
 extern char *    hb_fsAttrDecode( USHORT uiAttr, char * szAttr );
+extern BYTE *    hb_filecase ( char * ); /* Convert string to environment case */
 
 #if defined(HB_EXTERN_C)
 }

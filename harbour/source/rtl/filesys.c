@@ -391,7 +391,7 @@ static void convert_create_flags_ex( USHORT uiAttr, USHORT uiFlags, int * result
 
 #endif
 
-char *hb_filecase(char *str) {
+BYTE * hb_filecase(char *str) {
    // Convert file and dir case. The allowed SET options are:
    // LOWER - Convert all caracters of file to lower
    // UPPER - Convert all caracters of file to upper
@@ -408,20 +408,33 @@ char *hb_filecase(char *str) {
    size_t dirlen;
 
    // Look for filename (Last "\" or DIRSEPARATOR)
-   if( hb_set.HB_SET_DIRSEPARATOR[0]!='\\') {
-      for(a=0;a<strlen(str);a++) if(str[a]=='\\') str[a]=hb_set.HB_SET_DIRSEPARATOR[0];
+   if( hb_set.HB_SET_DIRSEPARATOR != '\\' ) {
+      for(a=0;a<strlen(str);a++)
+         if( str[a] == '\\' )
+            str[a] = hb_set.HB_SET_DIRSEPARATOR;
    }
-   if((filename=strrchr( str, hb_set.HB_SET_DIRSEPARATOR[0] ))!=NULL) filename++; else filename=str;
+   if(( filename = strrchr( str, hb_set.HB_SET_DIRSEPARATOR )) != NULL)
+      filename++;
+   else
+      filename=str;
    dirlen=filename-str;
 
    // FILECASE
-   if( hb_stricmp( hb_set.HB_SET_FILECASE, "LOWER" ) == 0 ) hb_strLower(filename,strlen(filename));
-   else if( hb_stricmp( hb_set.HB_SET_FILECASE, "UPPER" ) == 0 ) hb_strUpper(filename,strlen(filename));
+   // if( hb_stricmp( hb_set.HB_SET_FILECASE, "LOWER" ) == 0 ) hb_strLower(filename,strlen(filename));
+   // else if( hb_stricmp( hb_set.HB_SET_FILECASE, "UPPER" ) == 0 ) hb_strUpper(filename,strlen(filename));
+   if( hb_set.HB_SET_FILECASE == HB_SET_CASE_LOWER )
+      hb_strLower( filename, strlen(filename) );
+   else if( hb_set.HB_SET_FILECASE == HB_SET_CASE_UPPER )
+      hb_strUpper( filename, strlen(filename) );
 
    // DIRCASE
-   if( hb_stricmp( hb_set.HB_SET_DIRCASE, "LOWER" ) == 0 ) hb_strLower(dirname,dirlen);
-   else if( hb_stricmp( hb_set.HB_SET_DIRCASE, "UPPER" ) == 0 ) hb_strUpper(dirname,dirlen);
-   return str;
+   // if( hb_stricmp( hb_set.HB_SET_DIRCASE, "LOWER" ) == 0 ) hb_strLower(dirname,dirlen);
+   // else if( hb_stricmp( hb_set.HB_SET_DIRCASE, "UPPER" ) == 0 ) hb_strUpper(dirname,dirlen);
+   if( hb_set.HB_SET_DIRCASE == HB_SET_CASE_LOWER )
+      hb_strLower(dirname,dirlen);
+   else if( hb_set.HB_SET_DIRCASE == HB_SET_CASE_UPPER )
+      hb_strUpper(dirname,dirlen);
+   return (( BYTE * ) str);
 }
 
 /*

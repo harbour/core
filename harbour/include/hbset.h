@@ -185,12 +185,16 @@ typedef struct
    BOOL    HB_SET_STRICTREAD;
    int     HB_SET_TYPEAHEAD;
    BOOL    HB_SET_UNIQUE;
-   char *  HB_SET_FILECASE;
-   char *  HB_SET_DIRCASE;
-   char *  HB_SET_DIRSEPARATOR;
+   int     HB_SET_FILECASE;
+   int     HB_SET_DIRCASE;
+   char    HB_SET_DIRSEPARATOR;
    int     HB_SET_VIDEOMODE;
    BOOL    HB_SET_WRAP;
 } HB_SET_STRUCT;
+
+#define HB_SET_CASE_MIXED  0
+#define HB_SET_CASE_LOWER  1
+#define HB_SET_CASE_UPPER  2
 
 extern HB_SET_STRUCT hb_set;
 
