@@ -5,5 +5,6 @@ OBJECT oForm3 AS TForm3
    ::Left    = 150
    ::Width   = 400
    ::Height  = 250
+   ::OnClick = "FormClick"
 
 ENDOBJECT
