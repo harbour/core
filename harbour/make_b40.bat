@@ -9,4 +9,5 @@ make -DB40 -fterminal.b32 >> make.err
 make -DB40 -fgt.b32 >> make.err
 make -DB40 -frdd.b32 >> make.err
 make -DB40 -frunner.b32 >> make.err
+make -DB40 -fregress.b32 >> make.err
 notepad make.err

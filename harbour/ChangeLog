@@ -1,3 +1,15 @@
+19991122-11:56 GMT+1 Victor Szel <info@szelvesz.hu>
+  + tests/regress/*
+  + regress.b32
+  - tests/rtl_test.prg
+  * tests/Makefile
+  * make_b32.bat
+  * make_b40.bat
+    + RTL_TEST split into multiple files, placed into a separate subdirectory.
+      Thanks go to Jose Lalin <dezac@corevia.com> for the splitting !
+    ; PP needs to be enhanced to support code in header files, in order to 
+      elminate duplicated code from the current version.
+
 19991122-11:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y

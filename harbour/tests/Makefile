@@ -23,7 +23,14 @@ LIBS=\
 ifeq ($(PM),)
   PM := $(pm)
 endif
+
 ifeq ($(PM),) # PM not defined = build all files
+
+DIRS=\
+        regress \
+
+include $(TOP)$(ROOT)config/dir.cf
+
 PRG_SOURCES=\
         ac_test.prg \
         adirtest.prg \
@@ -106,7 +113,6 @@ PRG_SOURCES=\
         returns.prg \
         round.prg \
         rtfclass.prg \
-        rtl_test.prg \
         say.prg \
         scroll.prg \
         seconds.prg \
