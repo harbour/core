@@ -7,6 +7,15 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+      default to "|lpr" when HB_OS_UNIX is defined.
+
+2002-03-19 12:30 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/set.c
+    ! Fixed bugs in setting the default SET PRINTER TO
+      device up to be "PRN".
+
+2002-03-19 11:30 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/set.c
     ! The default SET PRINTER TO device is supposed to be "PRN".
 
 2002-03-20 14:38 UTC-0300 Walter Negro <anegro@overnet.com.ar>
