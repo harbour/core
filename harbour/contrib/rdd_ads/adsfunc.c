@@ -557,36 +557,46 @@ HB_FUNC( ADSGETTABLEALIAS )
 HB_FUNC( ADSGETAOF )
 {
    ADSAREAP pArea;
-   UNSIGNED8 pucFilter[HARBOUR_MAX_RDD_FILTER_LENGTH+1];
+   UNSIGNED8  pucFilter[HARBOUR_MAX_RDD_FILTER_LENGTH+1];
+   UNSIGNED8 *pucFilter2;
    UNSIGNED16 pusLen = HARBOUR_MAX_RDD_FILTER_LENGTH;
    UNSIGNED32 ulRetVal = FAILURE;
 
+   hb_retc( "" );
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
    if( pArea )
+   {
       ulRetVal = AdsGetAOF( pArea->hTable, pucFilter, &pusLen );
+      if ( pusLen > HARBOUR_MAX_RDD_FILTER_LENGTH )
+      {
+         pucFilter2 = (UNSIGNED8*) hb_xgrab(pusLen + 1);
+         ulRetVal   = AdsGetAOF( pArea->hTable, pucFilter2, &pusLen );
+         if ( ulRetVal == AE_SUCCESS )
+            hb_retc( (char *) pucFilter2 );
+
+         hb_xfree( pucFilter2 );
+      }
+      else if ( ulRetVal == AE_SUCCESS )
+      {
+         hb_retc( (char *) pucFilter );
+      }
+
+   }
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSGETAOF" );
 
-   if ( ulRetVal == AE_SUCCESS )
-      hb_retc( ( char * ) pucFilter );
-   else
-      hb_retc( "" );
 }
 
 HB_FUNC( ADSGETAOFOPTLEVEL )
 {
-   ADSAREAP pArea;
+   ADSAREAP   pArea;
    UNSIGNED16 pusOptLevel;
-   UNSIGNED8 pucNonOpt[1];
-   UNSIGNED16 pusLen = 0;
    UNSIGNED32 ulRetVal;
 
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
    if( pArea )
    {
-      ulRetVal = AdsGetAOF( pArea->hTable, pucNonOpt, &pusLen );
-      if ( ulRetVal == AE_SUCCESS )
-         ulRetVal = AdsGetAOFOptLevel( pArea->hTable, &pusOptLevel, pucNonOpt, &pusLen );
+      ulRetVal = AdsGetAOFOptLevel( pArea->hTable, &pusOptLevel, NULL, NULL );
       hb_retni( ulRetVal == AE_SUCCESS  ? pusOptLevel : ADS_OPTIMIZED_NONE  );
    }
    else
@@ -595,16 +605,35 @@ HB_FUNC( ADSGETAOFOPTLEVEL )
 
 HB_FUNC( ADSGETAOFNOOPT )
 {
-   ADSAREAP pArea;
+   ADSAREAP   pArea;
    UNSIGNED16 pusOptLevel;
-   UNSIGNED8 pucNonOpt[HARBOUR_MAX_RDD_FILTER_LENGTH+1];
+   UNSIGNED8  pucNonOpt[HARBOUR_MAX_RDD_FILTER_LENGTH+1];
+   UNSIGNED8 *pucNonOpt2;
    UNSIGNED16 pusLen = HARBOUR_MAX_RDD_FILTER_LENGTH;
+   UNSIGNED32 ulRetVal;
 
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
    if( pArea )
    {
-      AdsGetAOFOptLevel( pArea->hTable, &pusOptLevel, pucNonOpt, &pusLen );
-      hb_retc( ( char * ) pucNonOpt );
+      ulRetVal = AdsGetAOFOptLevel( pArea->hTable, &pusOptLevel, pucNonOpt, &pusLen );
+
+      if ( pusLen > HARBOUR_MAX_RDD_FILTER_LENGTH )
+      {
+         pucNonOpt2 = (UNSIGNED8*) hb_xgrab(pusLen + 1);
+         ulRetVal   = AdsGetAOFOptLevel( pArea->hTable, &pusOptLevel, pucNonOpt2, &pusLen );
+         if ( ulRetVal == AE_SUCCESS )
+            hb_retc( (char *) pucNonOpt2 );
+         else
+            hb_retc( "" );
+
+         hb_xfree( pucNonOpt2 );
+      }
+      else if ( ulRetVal == AE_SUCCESS )
+         hb_retc( ( char * ) pucNonOpt );
+
+      else
+         hb_retc( "" );
+
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSGETAOFNOOPT" );

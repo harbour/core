@@ -8,6 +8,16 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-02 01:14 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * contrib/rdd_ads/adsfunc.c
+      * Fixed issues reported by Alex Schaft:
+         Since AdsGetAOFOptLevel() did not attempt to return the NoOpt string
+         by reference anyway, I just removed the NoOpt handling. This avoids
+         the overflow error and removes any string buffer limitations at all.
+
+         Fixed AdsGetAOF() AdsGetAOFNoOpt() to handle filters of any size
+            that ADS may return.
+
 2002-07-01 20:10 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * source/rtl/transfrm.c
     + Add @0 function.
@@ -105,7 +115,7 @@
 2002-06-28 10:43 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c
     ! Bug fixed in hb_ntxPageSplit() - the created page was not released.
-    
+
 2002-06-27 15:25 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/gtsln/gtsln.c
     ! HRBNATIONCHARS fix provided by Niko Mikkila <nm@phnet.fi>
