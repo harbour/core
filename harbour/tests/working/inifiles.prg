@@ -1,8 +1,8 @@
 #define IF_BUFFER 65535
 
 function Main(cFilename, cSection)
-   local oIni := TIniFile():New( Default( cFilename, "harbour.ini" ) )
-   local s, n := Val(Default( cSection, "1" ))
+   local oIni := TIniFile():New(Default( cFilename, "harbour.ini" ) )
+   local s, n := Val( Default( cSection, "1" ) )
 
    qout('')
    qout('Sections:')
@@ -13,34 +13,6 @@ function Main(cFilename, cSection)
    qout('[' + s[n] + ']')
    s := oIni:ReadSection(s[n])
    aeval(s, {|x| qout(x)})
-
-   /*
-   local i := TIniFile():New('harbour.ini')
-   local s
-
-   qout(i:readstring('test', 'hello', 'not found'))
-   qout(i:readstring('not', 'there', 'not found'))
-
-   i:writestring('not', 'there', 'there now!')
-   qout(i:readstring('not', 'there', 'not found'))
-
-   i:WriteString('', 'not', 'in section!')
-
-   qout('')
-   qout('Sections:')
-   s := i:ReadSections()
-   aeval(s, {|x| qout('[' + x + ']')})
-
-   qout('')
-   qout('[' + s[1] + ']')
-   s := i:ReadSection(s[1])
-   aeval(s, {|x| qout(x)})
-
-   i:DeleteKey('test', 'hello')
-
-   i:Filename := 'harbour.new'
-   i:Commit() // saves file
-   */
 return nil
 
 function TIniFile()
@@ -104,7 +76,7 @@ static function New(cFileName)
                if Left(cLine, 1) == '[' // new section
                   if (nPos := At(']', cLine)) > 1
                      cLine := substr(cLine, 2, nPos - 2);
-           
+
                   else
                      cLine := substr(cLine, 2)
                   endif
@@ -119,9 +91,9 @@ static function New(cFileName)
                   if (nPos := At('=', cLine)) > 0
                      cIdent := Left(cLine, nPos - 1)
                      cLine := SubStr(cLine, nPos + 1)
-                  
+
                      AAdd( CurrArray, { cIdent, cLine } )
-     
+
                   else
                      AAdd( CurrArray, { cLine, '' } )
                   endif
@@ -140,7 +112,7 @@ static function ReadString(cSection, cIdent, cDefault)
    local Self := QSelf()
    local cResult := cDefault
    local j, i := AScan( ::Contents, {|x| x[1] == cSection} )
-   
+
    if i > 0
       j := AScan( ::Contents[i][2], {|x| x[1] == cIdent} )
 
@@ -152,7 +124,7 @@ return cResult
 
 static procedure WriteString(cSection, cIdent, cString)
    local Self := QSelf()
-   local a, j, i
+   local j, i
 
    if Empty(cIdent)
       outerr('Must specify an identifier')
@@ -164,19 +136,13 @@ static procedure WriteString(cSection, cIdent, cString)
          ::Contents[j][2] := cString
 
       else
-         a := ::Contents
-
-         /* QUESTION: Doing this directly on ::Contents didn't work!
-                      Contents[1] ended up as NIL! Any ideas?
-         */
-         AAdd(a, nil)
-         AIns(a, 1)
-         a[1] := {cIdent, cString}
-
-         ::Contents := a
+         AAdd(::Contents, nil)
+         AIns(::Contents, 1)
+         ::Contents[1] := {cIdent, cString}
       endif
 
-   elseif (i := AScan( ::Contents, {|x| x[1] == cSection .and. ValType(x[2]) == 'A'})) > 0
+   elseif (i := AScan( ::Contents, {|x| x[1] == cSection .and. ;
+           ValType(x[2]) == 'A'})) > 0
       j := AScan( ::Contents[i][2], {|x| x[1] == cIdent} )
 
       if j > 0
@@ -189,12 +155,12 @@ static procedure WriteString(cSection, cIdent, cString)
    else
       AAdd( ::Contents, {cSection, {{cIdent, cString}}} )
    endif
-return 
+return
 
 static procedure DeleteKey(cSection, cIdent)
    local Self := QSelf()
    local j, i := AScan( ::Contents, {|x| x[1] == cSection} )
-   
+
    if i > 0
       j := AScan( ::Contents[i][2], {|x| x[1] == cIdent} )
 
@@ -210,7 +176,8 @@ static procedure EraseSection(cSection)
    if Empty(cSection)
       outerr('Must specify a section')
 
-   elseif (i := AScan( ::Contents, {|x| x[1] == cSection .and. ValType(x[2]) == 'A'})) > 0
+   elseif (i := AScan( ::Contents, {|x| x[1] == cSection .and. ;
+           ValType(x[2]) == 'A'})) > 0
       ADel( ::Contents, i )
       ASize( ::Contents, Len(::Contents) - 1 )
    endif
@@ -223,7 +190,8 @@ static function ReadSection(cSection)
    if Empty(cSection)
       outerr('Must specify a section')
 
-   elseif (i := AScan( ::Contents, {|x| x[1] == cSection .and. ValType(x[2]) == 'A'})) > 0
+   elseif (i := AScan( ::Contents, {|x| x[1] == cSection .and. ;
+           ValType(x[2]) == 'A'})) > 0
 
       for j := 1 to Len(::Contents[i][2])
 
@@ -264,15 +232,18 @@ static procedure Commit()
                fwrite(hFile, ::Contents[i][2][j][2] + Chr(13) + Chr(10))
 
             else
-               fwrite(hFile, ::Contents[i][2][j][1] + '=' + ::Contents[i][2][j][2] + Chr(13) + Chr(10))
+               fwrite(hFile, ::Contents[i][2][j][1] + '=' + ;
+                      ::Contents[i][2][j][2] + Chr(13) + Chr(10))
             endif
          next j
          fwrite(hFile, Chr(13) + Chr(10))
 
       elseif ValType(::Contents[i][2]) == 'C'
-         fwrite(hFile, ::Contents[i][1] + '=' + ::Contents[i][2] + Chr(13) + Chr(10))
+         fwrite(hFile, ::Contents[i][1] + '=' + ::Contents[i][2] + ;
+                       Chr(13) + Chr(10))
 
       endif
    next i
    fclose(hFile)
 return
+
