@@ -1205,7 +1205,7 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
 
                   /* Is it a stopper (the anchor of another acceptable match) ? */
                   IF bDbgMatch
-                     ? "Stopper?: " + sPrimaryStopper
+                     ? "Stopper?: '" + sPrimaryStopper +"'"
                   ENDIF
 
                   nStoppers := Len( aList )
@@ -2880,7 +2880,7 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
                nNext := At( ',', sRule )
                IF nNext > 0 .AND. nNext < At( '>', sRule )
                   //? "Added: " + Left( sRule, nNext - 1 )
-                  aAdd( aWords, Left( sRule, nNext - 1 ) )
+                  aAdd( aWords, Upper( RTrim( Left( sRule, nNext - 1 ) ) ) )
                   sRule := SubStr( sRule, nNext + 1 )
                   ExtractLeadingWS( @sRule )
                   LOOP
@@ -2888,7 +2888,7 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
                   nCloseAt := At( '>', sRule )
                   IF nCloseAt > 0
                      //? "Last: " + Left( sRule, nCloseAt - 1 )
-                     aAdd( aWords, Left( sRule, nCloseAt - 1 ) )
+                     aAdd( aWords, Upper( RTrim( Left( sRule, nCloseAt - 1 ) ) ) )
                      EXIT
                   ELSE
                      Alert( "ERROR! Unblanced MP: ''<,...' at: " + sRule )

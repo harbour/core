@@ -1,3 +1,7 @@
+2000-10-20 00:30 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     * Forced uppercase and trim of restricted words.
+
 2000-10-19 23:15 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      * Minor corrections.
