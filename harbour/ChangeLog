@@ -8,6 +8,73 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-01 02:10 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/rtl/transfrm.c
+    + Add @) template.
+
+    ! Fix @D with numeric expressions.
+
+    ! Fix bug with @D in string expressions.
+      eg: Transform( "1", "@D" )
+      This example generate an GPF or strange memory errors.
+
+    ! Better support for mask with initial comma, period or space.
+
+    ! Better support for later mask.
+
+    ! Replace comma, period or the correspondient space with an '*'
+      when previous character is '*' too.
+      eg: Transform( 99999, "9.999" ) -> Before: "* ***" Now: "*****"
+          Transform(    99, "*.***" ) -> Before: "* *99" Now: "***99"
+
+  * source/rtl/tgetlist.prg
+    * Detection of modification with direct access to the var get in
+      preval, postval and setkey functions.
+
+      Point of control: GetPreValidate(), GetPostValidate(),
+                        GUIGetPreValidate(), GUIGetPostValidate(),
+                        GetDoSetKey().
+
+  * source/rtl/tget.prg
+    + Add two protected methods. FirstEditable() and LastEditable().
+      Several change for use this methods.
+
+    ! Fix in ParsePict method
+      * @D function, overwrite the mask for SET DATE FORMAT
+      * @S without lenght parameter or @S0, they don't have effect.
+
+    ! Fix in Untransform method
+      * if ::lEdit is false, return ::VarGet() without evaluate
+        the buffer contained.
+      * Better detection of a negative, minimizing false detections.
+      * Improvement in the handling of mask.
+      * More compliant in @D, @E, @X, @C, @(, @) functions.
+      * In compliant with Clipper, the lenght of number (internal lenght)
+        corresponds to the applied picture.
+      ! Bug in conversion with date types and with @E function.
+
+    ! Fix in Overstrike and Insert method
+      * First it is evaluated if the input character is valid, before
+        cleaning the var.
+
+    ! Fix in Input method
+      * The minus sign can be writed in any place.
+      * Now work with '$' and '*' templates in numeric gets.
+
+    ! Fix in PutMask method
+      * More compliant in the handling of some get functions.
+      * When edit a get with @B, the number is editing right-justified.
+
+    ! Fix in Backspace method
+      * Permit delete a '(' symbol in a non-editable position, when
+        this symbol represent a negative number.
+
+    ! Fix in Delete method
+      ! When delete a negative symbol '(' or '-', turn the ::minus tu false
+
+    ! Fix in IsBadDate function
+      ! Evaluate crrectly a date with @E function.
+
 2002-06-28 10:43 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c
     ! Bug fixed in hb_ntxPageSplit() - the created page was not released.
