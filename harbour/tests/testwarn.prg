@@ -55,7 +55,7 @@ MEMVAR Var1 AS STRING
 
 STATIC lGlobal AS LOGICAL
 
-PROCEDURE THEMAIN( optional )
+PROCEDURE MAIN( optional )
 
   STATIC lStatic := 0, oMyObj As Class WrongClass
 

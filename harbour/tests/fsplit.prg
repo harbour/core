@@ -4,12 +4,16 @@
 
 #include "fileio.ch"
 
+procedure main( cSource, cSplit, nByte )
+   ? fsplit( cSource, cSplit, VAL( nByte ) )
+quit
+
 function fsplit ( csource, csplit, nbyte )
 
 local i                           // general counter
 local ccommand      := ""         // dos command for joining files
 local cexist        := ""         // batch file error checker
-local nbufsize      := 8          // 8k for buffer Read/Write
+local nbufsize      := 8          // default buffer Read/Write size
 local hsource       := 0          // file handle for source file
 local hdestination  := 0          // file handle for destination file
 local cbuffer       := ""         // buffer for read/write
@@ -42,7 +46,8 @@ endif
 csplit := if( csplit == nil, "split.", csplit + "." )
 
 // default size of each split file 360 x 1024 bytes
-nbyte := if( nbyte ==  nil, 368640, val( nbyte ) * 1024 )
+nbufsize := if( empty( nbyte ), 360, nbyte )
+nbyte := nbufsize * 1024
 
 // open the source file
 BEGIN SEQUENCE

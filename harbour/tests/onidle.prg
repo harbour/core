@@ -13,7 +13,7 @@ LOCAL nPrev:=SECONDS()
   CLS
   ? "   Time:        Memory used:                          Miliseconds elapsed"
   ?
-  ? "Can you see it ??? :) Press ESC or wait 5 seconds"
+  ? "Can you see it ??? :) Press any key or wait 30 seconds"
   ?
   ?
   @ 10,2 SAY "Memory before TEST() call" + STR( MEMORY(HB_MEM_USED) )
