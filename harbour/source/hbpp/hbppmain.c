@@ -26,11 +26,11 @@
  */
 
 #if defined(__DJGPP__) || defined(__GNUC__)
- #include <string.h>
 #else
  #include <alloc.h>
  #include <mem.h>
 #endif
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -50,7 +50,6 @@ extern char* strodup ( char * );
 extern int lInclude;
 extern int *aCondCompile, nCondCompile;
 extern int nline;
-extern DEFINES *aDefnew ;
 
 #define BUFF_SIZE 2048
 #define STR_SIZE 8192
@@ -70,8 +69,6 @@ char szFileName[ _POSIX_PATH_MAX ];
 char * szDefText;
 FILENAME *pFileName =NULL;
 int iArg = 1, i;
-
-   aDefnew = ( DEFINES * ) _xgrab( sizeof(DEFINES) * 50 );
 
    while( iArg < argc )
    {

@@ -79,7 +79,7 @@ void pp_rQuotes( char *, char ** );
 int pp_RdStr(FILE*,char *,int,int,char*,int*,int*);
 int pp_WrStr(FILE*,char *);
 int pp_strAt(char *, int, char*, int);
-int md_strAt(char *, int, char*);
+int md_strAt(char *, int, char*, int);
 int IsInStr ( char, char*);
 void pp_Stuff (char*, char*, int, int, int);
 int strocpy (char*, char* );
@@ -129,10 +129,8 @@ int Repeate;
 char groupchar;
 
 extern PATHNAMES *_pIncludePath;
-extern DEFINES aDefines[] ;
-extern int koldef;
-DEFINES *aDefnew ;
-int koldefines = 0, maxdefines = 50;
+
+extern DEFINES *topDefine;
 
 #define INITIAL_ACOM_SIZE 200
 extern COMMANDS aCommands[] ;
@@ -270,28 +268,19 @@ int ParseDefine( char* sLine)
 
 DEFINES* AddDefine ( char* defname, char* value )
 {
- DEFINES* stdef = DefSearch( defname );
+   DEFINES* stdef = DefSearch( defname );
 
- if ( stdef != NULL )
- {
-#if 0
-  if ( stdef->pars != NULL ) _xfree ( stdef->pars );
-  _xfree ( stdef->value );
-#endif
-   stdef->pars = NULL;
- }
- else
- {
-  if ( koldefines == maxdefines )      /* Add new entry to defines table */
-  {
-   maxdefines += 50;
-   aDefnew = (DEFINES *)_xrealloc( aDefnew, sizeof( DEFINES ) * maxdefines );
-  }
-  stdef = &aDefnew[koldefines++];
-  stdef->name = strodup ( defname );
- }
- stdef->value = ( value == NULL )? NULL : strodup ( value );
- return stdef;
+   if ( stdef != NULL )
+     stdef->pars = NULL;
+   else
+   {
+     stdef = ( DEFINES * ) _xgrab( sizeof( DEFINES ) );
+     stdef->last = topDefine;
+     topDefine = stdef;
+     stdef->name = strodup ( defname );
+   }
+   stdef->value = ( value == NULL )? NULL : strodup ( value );
+   return stdef;
 }
 
 int ParseUndef( char* sLine)
@@ -337,21 +326,17 @@ int ParseIfdef( char* sLine, int usl)
 
 DEFINES* DefSearch(char *defname)
 {
- int i,j;
- for ( i=koldefines-1; i>=0; i-- )
- {
-  for ( j=0; *(aDefnew[i].name+j)==*(defname+j) &&
-             *(aDefnew[i].name+j)!='\0'; j++ );
-  if ( *(aDefnew[i].name+j)==*(defname+j) ) return &aDefnew[i];
- }
+   int j;
+   DEFINES * stdef = topDefine;
 
- for ( i=koldef-1; i>=0; i-- )
- {
-  for ( j=0; *(aDefines[i].name+j)==*(defname+j) &&
-             *(aDefines[i].name+j)!='\0'; j++ );
-  if ( *(aDefines[i].name+j)==*(defname+j) ) return &aDefines[i];
- }
- return NULL;
+   while( stdef != NULL )
+   {
+     for ( j=0; *(stdef->name+j) == *(defname+j) &&
+             *(stdef->name+j) != '\0'; j++ );
+     if ( *(stdef->name+j) == *(defname+j) ) return stdef;
+     stdef = stdef->last;
+   }
+   return NULL;
 }
 
 int ComSearch(char *cmdname, int ncmd)
@@ -560,7 +545,7 @@ int ParseExpression( char* sLine, char* sOutLine )
     do
     {
       ptri = sLine + isdvig;
-      ipos = md_strAt( ";", 1, ptri );
+      ipos = md_strAt( ";", 1, ptri, FALSE );
       if ( ipos > 0 ) *(ptri+ipos-1) = '\0';
       SKIPTABSPACES( ptri );
       if ( *ptri == '#' )
@@ -625,7 +610,7 @@ int ParseExpression( char* sLine, char* sOutLine )
               if ( ipos > 0 )
               {
                 ipos += i - lens - lenToken;
-		*(sLine+isdvig+ipos-1) = '\0';
+                *(sLine+isdvig+ipos-1) = '\0';
               }
               ptri += i;
             }
@@ -936,7 +921,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, int nbr )
         *ptrtemp != '[' && *ptrtemp != ']' && *ptrtemp != '\0' )
   {
    lenreal = strincpy ( expreal, ptrtemp );
-   if ( (ipos = md_strAt( expreal, lenreal, *ptri )) > 0 )
+   if ( (ipos = md_strAt( expreal, lenreal, *ptri, TRUE )) > 0 )
    {
     if ( ptrtemp > *ptrmp )
     {
@@ -957,7 +942,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, int nbr )
     else
     {
       lenreal = stroncpy( expreal, *ptri, ipos-1 );
-      if ( isExpres ( expreal ) )
+      if ( ipos > 1 && isExpres ( expreal ) )
          *ptri += lenreal;
       else
       {
@@ -976,6 +961,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, int nbr )
        SearnRep( exppatt,"",0,ptro,lenres);
        return 0;
      }
+     else lenreal = 0;
    }
   }
 
@@ -1457,10 +1443,11 @@ int pp_strAt(char *szSub, int lSubLen, char *szText, int lLen)
       return 1;
 }
 
-int md_strAt(char *szSub, int lSubLen, char *szText)
+int md_strAt(char *szSub, int lSubLen, char *szText, int checkPrth)
 {
  int State = STATE_NORMAL;
  long lPos = 0, lSubPos = 0;
+ int kolPrth = 0;
 
    while( *(szText+lPos) != '\0' && lSubPos < lSubLen )
    {
@@ -1488,6 +1475,17 @@ int md_strAt(char *szSub, int lSubLen, char *szText)
          lPos++;
          continue;
        }
+       else if ( *(szText+lPos) == '(' )
+         kolPrth++;
+       else if ( *(szText+lPos) == ')' )
+         kolPrth--;
+       if( checkPrth && ( (kolPrth > 0) || (kolPrth == 0 && *(szText+lPos) == ')') ) )
+       {
+         lPos++;
+         lSubPos = 0;
+         continue;
+       }
+
        if( toupper(*(szText + lPos)) == toupper(*(szSub + lSubPos)) )
        {
          lSubPos++;

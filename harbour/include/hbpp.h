@@ -8,12 +8,14 @@
 #define HB_PP_H_
 
 /* ------------------------------------------ */
-typedef struct
+struct _DEFINES;
+typedef struct _DEFINES
 {
   char *name;
   char *pars;
   int npars;
   char *value;
+  struct _DEFINES *last;
 } DEFINES;
 
 typedef struct

@@ -67,7 +67,6 @@ extern int nline;
 #define STR_SIZE 8192
 #define INITIAL_ACOM_SIZE 200
 
-extern DEFINES *aDefnew ;
 extern COMMANDS *aCommnew ;
 extern TRANSLATES *aTranslates ;
 
@@ -80,7 +79,6 @@ void Hbpp_init ( void )
 {
   lenBuffer = 10; iBuffer = 10;
   aCondCompile = (int*) _xgrab( sizeof(int) * 5 );
-  aDefnew = ( DEFINES * ) _xgrab( sizeof(DEFINES) * 50 );
   aCommnew = ( COMMANDS * ) _xgrab( sizeof(COMMANDS) * INITIAL_ACOM_SIZE );
   aTranslates = ( TRANSLATES * ) _xgrab( sizeof(TRANSLATES) * 50 );
 }

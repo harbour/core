@@ -1,3 +1,12 @@
+19990728-10:22 Alexander Kresin
+  * source\hbpp\hbpp.c
+  * source\hbpp\hbppint.c
+  * source\hbpp\hbppmain.c
+  * source\hbpp\table.c
+  * include\hbpp.h
+    * Bug fixed for rtl_class.prg ( mentioned by Victor Szel )
+    * Linked list for defines instead or array
+
 19990728-01:10 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/gtapi.c
      * minor correction in case of inverted coordinates
