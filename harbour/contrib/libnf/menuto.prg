@@ -178,8 +178,8 @@
  *  $END$
  */
 
-#include "SETCURS.CH"
-#include "INKEY.CH"
+#include "setcurs.ch"
+#include "inkey.ch"
 
 #xcommand if <true> then <action> => ;
           if <true> ; <action> ; end
@@ -586,4 +586,5 @@ set( _SET_CURSOR, nCursor )
 eval( bGetSet, nActive )
 
 return nActive
+
 

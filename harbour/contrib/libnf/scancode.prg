@@ -71,7 +71,7 @@
  *  $END$
  */
 
-#include "FTINT86.CH"
+#include "ftint86.ch"
 
 #define KEYB       22
 
@@ -101,3 +101,4 @@ FUNCTION FT_SCANCODE()
   aRegs[ AX ] = MAKEHI( 0 )
   FT_INT86( KEYB, aRegs )
   RETURN ( chr(LOWBYTE( aRegs[AX] )) + chr(HIGHBYTE( aRegs[AX] )) )
+

@@ -54,7 +54,7 @@
  *  $END$
  */
 
-#include "FTINT86.CH"
+#include "ftint86.ch"
 
 #ifdef FT_TEST
   function main()
@@ -87,3 +87,4 @@ FUNCTION ft_isshare()
 RETURN lowbyte( aRegs[AX] )
   */
 RETURN   _ft_isshare()
+

@@ -73,7 +73,7 @@
  *  $END$
  */
 
-#include "FTINT86.CH"
+#include "ftint86.ch"
 
 #define DOS         33
 #define NW_LOG     227
@@ -121,5 +121,6 @@ FUNCTION FT_NWUID( nConn )
 
   FT_INT86( DOS, aRegs )
   RETURN alltrim( strtran( substr( aRegs[ ES ], 9, 48 ), chr(0) )  )
+
 
 

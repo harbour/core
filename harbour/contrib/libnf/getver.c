@@ -53,7 +53,9 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
+#if defined(HB_OS_DOS)
 #include "dos.h"
+#endif
 #include "string.h"
 #include "stdlib.h"
 

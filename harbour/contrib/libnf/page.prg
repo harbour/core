@@ -23,7 +23,7 @@
  *
  */
 
-#include "FTINT86.CH"
+#include "ftint86.ch"
 
 #define VIDEO      16
 
@@ -107,4 +107,5 @@ FUNCTION FT_GETVPG()
 
   RETURN ( HIGHBYTE( aRegs[ BX ] ) ) */
  Return _ft_getvpg()
+
 

@@ -22,7 +22,7 @@
  *
  */
 
-#include "FTINT86.CH"
+#include "ftint86.ch"
 
 #define DRVTABLE "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
@@ -98,3 +98,4 @@ FUNCTION FT_DSKFREE( cDrive )
 
 
 RETURN    DISKSPACE(nDrive,1)
+

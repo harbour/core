@@ -52,7 +52,9 @@
 */
 
 #include "extend.h"
+#if defined(HB_OS_DOS)
 #include "dos.h"
+#endif
 #include "hbapiitm.h"
 #include "hbapigt.h"
 
@@ -60,9 +62,7 @@ HB_FUNC(_MGET_PAGE)
 {
    int iPage;
 #if defined(HB_OS_DOS)
-
    {
-   
       union REGS regs;
       regs.HB_XREGS.ax=0x1E;
       HB_DOS_INT86(0x33,&regs,&regs);
@@ -75,9 +75,7 @@ HB_FUNC(_MGET_PAGE)
    {
       hb_retni(iPage);
    }
-
 }
-
 
 HB_FUNC(_MSET_PAGE)
 {
@@ -100,7 +98,6 @@ HB_FUNC(_MGET_MVERSION)
    int iMajor;
 
 #if defined(HB_OS_DOS)
-
    {
       union REGS regs;
       
@@ -112,16 +109,13 @@ HB_FUNC(_MGET_MVERSION)
       iIRQ = regs.h.cl;
       iMajor = regs.h.bh;
    }
-
 #else
-
    {
       iMinor = 0;
       iType = 0;
       iIRQ = 0;
       iMajor = 0;
    }
-
 #endif
 
    {   
@@ -146,10 +140,7 @@ HB_FUNC(_MGET_MVERSION)
 
       hb_itemRelease( pArray );
    }
-
-
 }
-
 
 HB_FUNC(_MGET_HORISPEED)
 {
@@ -567,5 +558,5 @@ int inButton;
       hb_itemRelease(pnX);
       hb_itemRelease(pnButton);
    }
-
 }
+

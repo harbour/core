@@ -56,7 +56,7 @@
  *  $END$
  */
 
-#include "FTINT86.CH"
+#include "ftint86.ch"
 
 #define DOS        33
 #define DOSVER     48
@@ -80,3 +80,4 @@ FUNCTION FT_DOSVER()
 */
 cResult:= _get_dosver()
 RETURN ( cResult )
+

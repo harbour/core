@@ -117,7 +117,7 @@
  */
 
 
-#include "INKEY.CH"
+#include "inkey.ch"
 
 // beginning of demo program
 #ifdef FT_TEST
@@ -331,3 +331,4 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    SETCOLOR( cOldColor )
    SETCURSOR( cOldCursor )
    RETURN xRtnVal
+

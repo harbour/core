@@ -78,7 +78,9 @@ End
 /* This is the New one Rewriten in C*/
  
 #include "extend.h"
+#if defined(HB_OS_DOS)
 #include "dos.h"
+#endif
 
 HB_FUNC( FT_CHDIR)
 {
@@ -98,4 +100,4 @@ HB_FUNC( FT_CHDIR)
     hb_retl(Status);
    }
 #endif
- }
+}

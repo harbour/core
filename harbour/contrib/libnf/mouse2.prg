@@ -62,7 +62,7 @@
 // and fixes that I've given him sole credit. -- G. Scott
 
 
-#include "FTINT86.CH"
+#include "ftint86.ch"
 
 static aReg[10]
 static lCrsState:=.F.
@@ -1001,3 +1001,4 @@ FUNCTION FT_MDEFCRS( nCurType, nScrMask, nCurMask )   // define text cursor type
 RETURN NIL              // no function output
 
 */
+

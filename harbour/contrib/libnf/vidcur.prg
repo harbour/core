@@ -24,7 +24,7 @@
  *
  */
 
-#include "FTINT86.CH"
+#include "ftint86.ch"
 
 #define VIDEO      16
 
@@ -134,3 +134,4 @@ FUNCTION FT_GETVCUR( nPage )
   FT_INT86( VIDEO, aRegs )
 
 RETURN ( { HIGHBYTE( aRegs[CX] ), LOWBYTE( aRegs[CX] ), HIGHBYTE( aRegs[DX] ), LOWBYTE( aRegs[DX] ) } )
+

@@ -24,7 +24,7 @@
  *
  */
 
-#include "FTINT86.CH"
+#include "ftint86.ch"
 
 #define VIDEO      16
 #define GETMODE    15
@@ -124,3 +124,4 @@ FUNCTION FT_GETMODE()
   RETURN ( LOWBYTE( aRegs[ AX ] ) )
 */
  RETURN _ft_getmode()  
+

@@ -67,7 +67,7 @@
  *  $END$
  */
 
-#include "FTINT86.CH"
+#include "ftint86.ch"
 
 #define DOS        33
 #define SETDATE    43
@@ -94,3 +94,4 @@ function FT_SETDATE( dDate )
   aregs[ DX ] = ( month( dDate ) * ( 2 ^ 8 ) )  + day( dDate )
 
 return( FT_INT86( DOS, aRegs ) )
+

@@ -80,25 +80,23 @@ End
 /* This is the New one Rewriten in C*/
 
 #include "extend.h"
+#if defined(HB_OS_DOS)
 #include "dos.h"
+#endif
 
 HB_FUNC(FT_RMDIR)
 {
 #if defined(HB_OS_DOS)
-   {
-
- int Status;
- char *path=hb_parc(1);
- union REGS regs;
- struct SREGS sregs;
- segread(&sregs);
- regs.h.ah=0x3A   ;
- sregs.ds=FP_SEG(path);
- regs.HB_XREGS.dx=FP_OFF(path);
- int86x(0x21,&regs,&regs,&sregs);
- Status=regs.HB_XREGS.ax;
- hb_retni(Status);
-}
+   int Status;
+   char *path=hb_parc(1);
+   union REGS regs;
+   struct SREGS sregs;
+   segread(&sregs);
+   regs.h.ah=0x3A   ;
+   sregs.ds=FP_SEG(path);
+   regs.HB_XREGS.dx=FP_OFF(path);
+   int86x(0x21,&regs,&regs,&sregs);
+   Status=regs.HB_XREGS.ax;
+   hb_retni(Status);
 #endif
- }
-
+}

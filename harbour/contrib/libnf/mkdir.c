@@ -81,13 +81,14 @@ End
 /* This is the New one Rewriten in C*/
 
 #include "hbapi.h"
+#if defined(HB_OS_DOS)
 #include "dos.h"
+#endif
 
 HB_FUNC(FT_MKDIR)
 {
 #if defined(HB_OS_DOS)
    {
-
     int Status;
     char *path=hb_parc(1);
     union REGS regs;
@@ -102,4 +103,3 @@ HB_FUNC(FT_MKDIR)
    }
 #endif
 }
-

@@ -65,7 +65,7 @@
  *  $END$
  */
 
-#include "FTINT86.CH"
+#include "ftint86.ch"
 
 #define DOS        33
 #define SETTIME    45
@@ -95,3 +95,4 @@ function FT_SETTIME( cTime )
   aRegs[ DX ] = SECS( cTime ) * ( 2 ^ 8 )
 
 return( FT_INT86( DOS, aRegs ) )
+

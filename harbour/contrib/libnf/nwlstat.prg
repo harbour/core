@@ -53,7 +53,7 @@
  *  $END$
  */
 
-#include "FTINT86.CH"
+#include "ftint86.ch"
 
 #define DOS         33
 #define STATNUM    220
@@ -77,3 +77,4 @@ FUNCTION FT_NWLSTAT()
   endif
 
   RETURN nStation
+

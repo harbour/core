@@ -114,7 +114,7 @@
 #endif
 
 
-#include "INKEY.CH"
+#include "inkey.ch"
 
 FUNCTION FT_CALENDAR (nRow, nCol, cColor, lShadow, lShowHelp)
 
@@ -227,3 +227,4 @@ FUNCTION FT_CALENDAR (nRow, nCol, cColor, lShadow, lShowHelp)
  RETURN ( VAL(SUBSTR(cString,nOffset,nChar)) )
 
 * end of calendar.prg
+

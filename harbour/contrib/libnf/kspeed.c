@@ -144,7 +144,9 @@ _NanFor    ENDS
 /* This is the New one Rewriten in C*/
 
 #include "extend.h"
+#if defined(HB_OS_DOS)
 #include "dos.h"
+#endif
 
 HB_FUNC( FT_SETRATE)
 {
@@ -172,6 +174,3 @@ HB_FUNC( FT_SETRATE)
    }
 #endif
 }
-
-
-   

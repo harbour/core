@@ -16,7 +16,7 @@
  * Initial revision.
  */
 
-#include "SET.CH"
+#include "set.ch"
 
 #define PV_ROW     1
 #define PV_COL     2
@@ -124,4 +124,5 @@ if nNewSize >= 0
 endif
 
 return len( aVideo )
+
 

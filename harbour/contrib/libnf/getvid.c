@@ -52,7 +52,9 @@
 */
 
 #include "hbapi.h"
+#if defined(HB_OS_DOS)
 #include "dos.h"
+#endif
 
 HB_FUNC(_FT_GETVPG)
 {
@@ -87,4 +89,3 @@ HB_FUNC(_V_SETVPG)
    }
 #endif
 }
-
