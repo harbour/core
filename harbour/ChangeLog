@@ -1,3 +1,7 @@
+19991112-18:45 GMT+3 Alexander Kresin
+  * source/pp/hbpp.c
+    * Fixed bug, related to memory leaks, reported by Victor Szel
+
 19991112-01:35 GMT+1 Victor Szel <info@szelvesz.hu>
    * config/w32/mingw32.cf
      - "-g" switch removed, so now no debug info will be included by default.

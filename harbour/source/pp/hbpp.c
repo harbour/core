@@ -81,7 +81,7 @@ int TestOptional( char*, char* );
 int CheckOptional( char*, char*, char*, int*, int, int );
 void SkipOptional( char** );
 
-DEFINES* DefSearch(char *);
+DEFINES* DefSearch(char *, int*);
 COMMANDS* ComSearch( char *, COMMANDS* );
 COMMANDS* TraSearch( char *, COMMANDS* );
 void SearnRep( char*,char*,int,char*,int*);
@@ -130,6 +130,7 @@ BOOL OpenInclude( char *, PATHNAMES *, FILE**, BOOL bStandardOnly, char * );
 #define IT_COMMA 3
 #define IT_ID_OR_EXPR 4
 
+int kolAddDefs = 0;
 int ParseState = 0;
 int lInclude = 0;
 int *aCondCompile, nCondCompile = 0, maxCondCompile = 5;
@@ -300,18 +301,26 @@ int ParseDefine( char* sLine)
 
 DEFINES* AddDefine ( char* defname, char* value )
 {
-  DEFINES* stdef = DefSearch( defname );
+  int isNew;
+  DEFINES* stdef = DefSearch( defname, &isNew );
 
   HB_TRACE(HB_TR_DEBUG, ("AddDefine(%s, %s)", defname, value));
 
   if ( stdef != NULL )
-    stdef->pars = NULL;
+  {
+    if( isNew )
+    {
+       if( stdef->pars ) hb_xfree( stdef->pars );
+       if( stdef->value ) hb_xfree( stdef->value );
+    }
+  }
   else
     {
       stdef = ( DEFINES * ) hb_xgrab( sizeof( DEFINES ) );
       stdef->last = topDefine;
       topDefine = stdef;
       stdef->name = strodup ( defname );
+      kolAddDefs++;
     }
   stdef->value = ( value == NULL )? NULL : strodup ( value );
   return stdef;
@@ -321,13 +330,22 @@ int ParseUndef( char* sLine)
 {
   char defname[MAX_NAME];
   DEFINES* stdef;
+  int isNew;
 
   HB_TRACE(HB_TR_DEBUG, ("ParseUndef(%s)", sLine));
 
   NextWord( &sLine, defname, FALSE );
 
-  if ( ( stdef = DefSearch(defname) ) != NULL )
+  if ( ( stdef = DefSearch(defname, &isNew ) ) != NULL )
+  {
+    if( isNew )
+    {
+       if( stdef->pars ) hb_xfree( stdef->pars );
+       if( stdef->value ) hb_xfree( stdef->value );
+       hb_xfree( stdef->name );
+    }
     stdef->name = NULL;
+  }
   return 0;
 }
 
@@ -351,7 +369,7 @@ int ParseIfdef( char* sLine, int usl)
     }
   if ( nCondCompile==0 || aCondCompile[nCondCompile-1])
     {
-      if ( ( (stdef = DefSearch(defname)) != NULL && usl )
+      if ( ( (stdef = DefSearch(defname,NULL)) != NULL && usl )
            || ( stdef == NULL && !usl ) ) aCondCompile[nCondCompile] = 1;
       else aCondCompile[nCondCompile] = 0;
     }
@@ -360,20 +378,25 @@ int ParseIfdef( char* sLine, int usl)
   return 0;
 }
 
-DEFINES* DefSearch(char *defname)
+DEFINES* DefSearch(char *defname, int *isNew)
 {
-  int j;
+  int kol = 0,j;
   DEFINES * stdef = topDefine;
 
   HB_TRACE(HB_TR_DEBUG, ("DefSearch(%s)", defname));
 
   while( stdef != NULL )
     {
+      kol++;
       if( stdef->name != NULL )
         {
           for ( j=0; *(stdef->name+j) == *(defname+j) &&
                   *(stdef->name+j) != '\0'; j++ );
-          if ( *(stdef->name+j) == *(defname+j) ) return stdef;
+          if ( *(stdef->name+j) == *(defname+j) )
+            {
+              if( isNew ) *isNew = ( kolAddDefs >= kol );
+              return stdef;
+            }
         }
       stdef = stdef->last;
     }
@@ -441,6 +464,7 @@ void ParseCommand( char* sLine, int com_or_xcom, int com_or_tra )
     stroncpy( mpatt, sLine, ipos-1 );
   else
     GenError( _szPErrors, 'P', ERR_COMMAND_DEFINITION, NULL, NULL );
+  RemoveSlash( mpatt );
   mlen = strotrim( mpatt );
 
   sLine += ipos + 1;
@@ -620,7 +644,7 @@ int ParseExpression( char* sLine, char* sOutLine )
           else
             {   /* Look for macros from #define      */
               while ( ( lenToken = NextName( &ptri, sToken ) ) > 0 )
-                if ( (stdef=DefSearch(sToken)) != NULL )
+                if ( (stdef=DefSearch(sToken,NULL)) != NULL )
                   {
                     ptrb = ptri - lenToken;
                     if ( ( i = WorkDefine ( &ptri, ptro, stdef ) ) >= 0 )
