@@ -1079,7 +1079,7 @@ METHOD DeleteAll() CLASS Get
    case ::type == "N"
       xValue := 0
    case ::type == "D"
-      xValue := DToC( "" )
+      xValue := CToD( "" )
    case ::type == "L"
       xValue := .f.
    endcase
