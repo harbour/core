@@ -1,3 +1,12 @@
+2000-08-09 07:10 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+  *doc/en/sayget.txt
+  *doc/en/file.txt
+     *small formating
+  *utils/hbdoc/genhtm.prg
+  *utils/hbdoc/genrtf.prg
+  *utils/hbdoc/hbdoc.prg
+      *small changes
+
 2000-08-08 12:11 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * source/common/hbver.c
      ! fixed a couple of new warning from last change ;-)
