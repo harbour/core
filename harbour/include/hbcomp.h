@@ -137,6 +137,8 @@ typedef struct _COMSYMBOL
    char * szName;               /* the name of the symbol */
    char   cScope;               /* the scope of the symbol */
    char   cType;
+   BYTE * cParamTypes;
+   int    iParamCount;
    struct _COMSYMBOL * pNext;   /* pointer to the next defined symbol */
 } COMSYMBOL, * PCOMSYMBOL;
 
@@ -349,6 +351,7 @@ extern USHORT      hb_comp_wWhileCounter;
 extern USHORT      hb_comp_wCaseCounter;
 
 extern BOOL        hb_comp_EOL;
+extern char *      hb_comp_szDeclaredFun;
 
 extern char *      hb_comp_szErrors[];
 extern char *      hb_comp_szWarnings[];

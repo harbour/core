@@ -116,6 +116,7 @@ BOOL        hb_comp_bSyntaxCheckOnly = FALSE;          /* syntax check only */
 int         hb_comp_iLanguage = LANG_C;                /* default Harbour generated output language */
 int         hb_comp_iJumpOptimize = 1;
 BOOL        hb_comp_EOL;
+char *      hb_comp_szDeclaredFun = NULL;
 
 typedef struct __EXTERN
 {
@@ -431,6 +432,25 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
    PVAR pVar, pLastVar;
    PFUNCTION pFunc = hb_comp_functions.pLast;
 
+   if ( hb_comp_iWarnings > 2 && hb_comp_szDeclaredFun )
+   {
+      PCOMSYMBOL pSym = hb_compSymbolFind( hb_comp_szDeclaredFun, NULL );
+
+      if ( pSym )
+      {
+         pSym->iParamCount++;
+
+         if ( pSym->cParamTypes )
+            pSym->cParamTypes = ( BYTE * ) hb_xrealloc( pSym->cParamTypes, pSym->iParamCount );
+         else
+            pSym->cParamTypes = ( BYTE * ) hb_xgrab( 1 );
+
+         pSym->cParamTypes[ pSym->iParamCount - 1 ] = hb_comp_cVarType;
+
+         return;
+      }
+   }
+
    HB_SYMBOL_UNUSED( cValueType );
    if( ! hb_comp_bStartProc && hb_comp_functions.iCount <= 1 && hb_comp_iVarScope == VS_LOCAL )
    {
@@ -643,7 +663,6 @@ BOOL hb_compVariableMacroCheck( char * szVarName )
    return bValid;
 }
 
-
 PCOMSYMBOL hb_compSymbolAdd( char * szSymbolName, USHORT * pwPos )
 {
    PCOMSYMBOL pSym;
@@ -659,6 +678,8 @@ PCOMSYMBOL hb_compSymbolAdd( char * szSymbolName, USHORT * pwPos )
       pSym->szName = szSymbolName;
       pSym->cScope = 0;
       pSym->cType = hb_comp_cVarType;
+      pSym->cParamTypes = NULL;
+      pSym->iParamCount = 0;
       pSym->pNext = NULL;
 
       if( ! hb_comp_symbols.iCount )

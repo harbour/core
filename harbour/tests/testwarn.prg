@@ -7,7 +7,7 @@
    #pragma -es0
 #endif
 
-DECLARE FUNCTION nMyFunc( ) AS NUMERIC
+DECLARE FUNCTION nMyFunc( cVar AS CHARACTER, nVar AS NUMERIC ) AS NUMERIC
 
 FUNCTION Main()
 
@@ -15,7 +15,7 @@ FUNCTION Main()
 
    n := &SomeFun( 2, 3 )
 
-   n := nMyFunc( .F., 'A' )
+   n := nMyFunc( a, cVar ) + 3
 
    n := &(cVar)
 

@@ -1,3 +1,35 @@
+20000501-01:0 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+    * include/hbcomp.h
+      + Added to COMSYMBOL :
+         BYTE * cParamTypes;
+         int    iParamCount;
+      + Added :
+        extern char * hb_comp_szDeclaredFun
+
+    * source/compiler/harbour.y
+      * Enhanced DECLARE FUNCTION parsing to properly maintain number and type of declared function parameters.
+
+    * source/compiler/harbour.c
+      + Added char * hb_comp_szDeclaredFun
+      * Modified hb_compVariableAdd() to support dummy parameter vars in Function Decleration.
+
+    * source/compiler/hbpcode.c
+      * Enhancements to hb_compStrongType() to support parameter checks of declared function.
+
+    * tests/testwarn.prg
+      + Added code to demonstrate more warnings.
+
+    * include/hberrors.h
+      + Added :
+        #define HB_COMP_PARAM_COUNT                     15
+        #define HB_COMP_PARAM_TYPE                      16
+
+    * source/compiler/hbgenerr.c
+      + added :
+        "3Invalid number of parameters: \'%s\' expected: \'%s\'"
+        "3Incompatible parameter # %s expected: \'%s\'"
+
 20000430-21:30 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
     * source/compiler/harbour.c
       - Removed refrence to pFunc->iFunctionIndex.
@@ -8,7 +40,7 @@
     * tests/testwarn.prg
       + Added code to demonstrate more warnings.
 
-    * include/hberrors.h
+    * include/hbcomp.h
       - Removed pFunctionCalls and iFunctionIndex members of _FUNC structure.
 
 20000430-22:15 GMT-8 Ron Pinkas <Ron@Profit-Master.com>

@@ -166,6 +166,9 @@ static BYTE s_pcode_len[] = {
    1         /* HB_P_ONE,                  */
 };
 
+static BYTE * cParamTypes = NULL;
+static int iParamCount = -1;
+
 void hb_compPCodeEval( PFUNCTION pFunc, HB_PCODE_FUNC_PTR * pFunctions, void * cargo )
 {
    ULONG ulPos = 0;
@@ -244,11 +247,41 @@ void hb_compStrongType( int iSize )
        /* TODO: Add support for Function Parameters Declaration. */
        wVar = pFunc->pCode[ ulPos + 1 ];
 
+       if ( iParamCount > -1 )
+       {
+         if( iParamCount == wVar )
+         {
+            BYTE iOffset = 0;
+
+            while ( iParamCount-- > 0 )
+            {
+               iOffset++;
+               if ( cParamTypes[ iParamCount ] != pFunc->pStack[ pFunc->iStackIndex - iOffset ] )
+               {
+                  sprintf( szType1, "%i", iParamCount + 1 );
+                  sprintf( szType2, "%c", cParamTypes[ iParamCount ] );
+                  hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_PARAM_TYPE, szType1, szType2 );
+               }
+            }
+         }
+         else
+         {
+            sprintf( szType1, "%i", wVar );
+            sprintf( szType2, "%i", iParamCount );
+            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_PARAM_COUNT, szType1, szType2 );
+         }
+       }
+
        /* Removing all the optional parameters. Rteurn type already pushed just prior to parameters */
        pFunc->iStackIndex -= wVar;
 
        /* Removing the NIL */
        pFunc->iStackIndex--;
+
+       /* Resetting */
+       cParamTypes = NULL;
+       iParamCount = -1;
+
        break;
 
      case HB_P_DO :
@@ -492,34 +525,36 @@ void hb_compStrongType( int iSize )
      /* Charcters */
      case HB_P_PUSHSTRSHORT :
      case HB_P_PUSHSTR :
-      pFunc->pStack[ pFunc->iStackIndex++ ] = 'C';
-      break;
+       pFunc->pStack[ pFunc->iStackIndex++ ] = 'C';
+       break;
 
      case HB_P_PUSHSYM :
      case HB_P_MPUSHSYM :
        pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256 );
 
-       if ( pSym )
+       if ( pSym && pSym->cType )
+       {
           pFunc->pStack[ pFunc->iStackIndex++ ] = pSym->cType;
+
+          /* Storing, will be checked by FUNCTION* */
+          cParamTypes = pSym->cParamTypes;
+          iParamCount = pSym->iParamCount;
+       }
        else
-          pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
+         pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
 
        break;
 
      case HB_P_PUSHSYMNEAR :
        pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] );
 
-       if ( pSym )
+       if ( pSym && pSym->cType )
        {
-          /* TODO: Check this!!!
-          if ( ( pSym->cScope & HB_FS_PUBLIC ) == HB_FS_PUBLIC ||
-               ( pSym->cScope & HB_FS_STATIC ) == HB_FS_STATIC ||
-               ( pSym->cScope & HB_FS_INIT   ) == HB_FS_INIT   ||
-               ( pSym->cScope & HB_FS_EXIT   ) == HB_FS_EXIT      )
-          */
-             /* Storing a Book Mark of the last pushed symbol so we know how many bytes to pop when encountering function call. */
-
           pFunc->pStack[ pFunc->iStackIndex++ ] = pSym->cType;
+
+          /* Storing, will be checked by FUNCTION* */
+          cParamTypes = pSym->cParamTypes;
+          iParamCount = pSym->iParamCount;
        }
        else
           pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';

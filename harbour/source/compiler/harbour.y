@@ -124,7 +124,6 @@ static PTR_LOOPEXIT hb_comp_pLoops = NULL;
 static HB_RTVAR_PTR hb_comp_rtvars = NULL;
 
 char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
-
 %}
 
 %union                  /* special structure used by lex and yacc to share info */
@@ -260,7 +259,7 @@ Line       : LINE NUM_INTEGER LITERAL Crlf
 
 Function   : FunScope FUNCTION  IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, 0 ); } Params Crlf {}
            | FunScope PROCEDURE IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, FUN_PROCEDURE ); } Params Crlf {}
-           | FunScope DECLARE_FUN IdentName Params AsType Crlf { hb_compSymbolAdd( $3, NULL ); }
+           | FunScope DECLARE_FUN IdentName { hb_compSymbolAdd( $3, NULL ); hb_comp_szDeclaredFun = $3 ; } Params AsType Crlf { hb_comp_symbols.pLast->cType = hb_comp_cVarType; hb_comp_szDeclaredFun = NULL; }
            ;
 
 FunScope   :                  { $$ = HB_FS_PUBLIC; }
