@@ -42,7 +42,7 @@ static BOOL hb_fsCopy( char * szSource, char * szDest )
    FHANDLE fhndSource;
    FHANDLE fhndDest;
 
-   while( ( fhndSource = hb_fsOpen( ( BYTE * ) szSource, FO_READ ) ) == F_ERROR )
+   while( ( fhndSource = hb_fsOpen( ( BYTE * ) szSource, FO_READ ) ) == FS_ERROR )
    {
       WORD wResult = hb_errRT_BASE_Ext1( EG_OPEN, 2012, NULL, szSource, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
 
@@ -50,9 +50,9 @@ static BOOL hb_fsCopy( char * szSource, char * szDest )
          break;
    }
 
-   if( fhndSource != F_ERROR )
+   if( fhndSource != FS_ERROR )
    {
-      while( ( fhndDest = hb_fsCreate( ( BYTE * ) szDest, FC_NORMAL ) ) == F_ERROR )
+      while( ( fhndDest = hb_fsCreate( ( BYTE * ) szDest, FC_NORMAL ) ) == FS_ERROR )
       {
          WORD wResult = hb_errRT_BASE_Ext1( EG_CREATE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
 
@@ -60,7 +60,7 @@ static BOOL hb_fsCopy( char * szSource, char * szDest )
             break;
       }
 
-      if( fhndDest != F_ERROR )
+      if( fhndDest != FS_ERROR )
       {
 #ifdef OS_UNIX_COMPATIBLE
          struct stat struFileInfo;

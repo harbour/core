@@ -337,8 +337,8 @@ FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
 
    #else
 
-      hFileHandle = F_ERROR;
-      s_uiErrorLast = F_ERROR;
+      hFileHandle = FS_ERROR;
+      s_uiErrorLast = FS_ERROR;
 
    #endif
 
@@ -370,8 +370,8 @@ FHANDLE hb_fsCreate( BYTE * pFilename, USHORT uiFlags )
 
 #else
 
-   hFileHandle = F_ERROR;
-   s_uiErrorLast = F_ERROR;
+   hFileHandle = FS_ERROR;
+   s_uiErrorLast = FS_ERROR;
 
 #endif
 
@@ -388,7 +388,7 @@ void    hb_fsClose( FHANDLE hFileHandle )
 
 #else
 
-   s_uiErrorLast = F_ERROR;
+   s_uiErrorLast = FS_ERROR;
 
 #endif
 
@@ -432,7 +432,7 @@ void    hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
 
 #else
 
-   s_uiErrorLast = F_ERROR;
+   s_uiErrorLast = FS_ERROR;
 
 #endif
 
@@ -453,7 +453,7 @@ USHORT  hb_fsRead( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 #else
 
    uiRead = 0;
-   s_uiErrorLast = F_ERROR;
+   s_uiErrorLast = FS_ERROR;
 
 #endif
 
@@ -475,7 +475,7 @@ USHORT  hb_fsWrite( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 #else
 
    uiWritten = 0;
-   s_uiErrorLast = F_ERROR;
+   s_uiErrorLast = FS_ERROR;
 
 #endif
 
@@ -506,7 +506,7 @@ ULONG   hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 
 #else
 
-   s_uiErrorLast = F_ERROR;
+   s_uiErrorLast = FS_ERROR;
 
 #endif
 
@@ -537,7 +537,7 @@ ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 
 #else
 
-   s_uiErrorLast = F_ERROR;
+   s_uiErrorLast = FS_ERROR;
 
 #endif
 
@@ -576,7 +576,7 @@ ULONG   hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
    #else
 
       ulPos = 0;
-      s_uiErrorLast = F_ERROR;
+      s_uiErrorLast = FS_ERROR;
 
    #endif
 
@@ -620,7 +620,7 @@ int     hb_fsDelete( BYTE * pFilename )
    #else
 
       iResult = -1;
-      s_uiErrorLast = F_ERROR;
+      s_uiErrorLast = FS_ERROR;
 
    #endif
 
@@ -642,7 +642,7 @@ int hb_fsRename( BYTE * pOldName, BYTE * pNewName )
 #else
 
    iResult = -1;
-   s_uiErrorLast = F_ERROR;
+   s_uiErrorLast = FS_ERROR;
 
 #endif
 
@@ -695,7 +695,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
 #else
 
    iResult = 1;
-   s_uiErrorLast = F_ERROR;
+   s_uiErrorLast = FS_ERROR;
 
 #endif
 
@@ -722,7 +722,7 @@ void    hb_fsCommit( FHANDLE hFileHandle )
 
 #else
 
-   s_uiErrorLast = F_ERROR;
+   s_uiErrorLast = FS_ERROR;
 
 #endif
 }
@@ -746,7 +746,7 @@ BOOL    hb_fsMkDir( BYTE * pDirname )
 #else
 
    iResult = 1;
-   s_uiErrorLast = F_ERROR;
+   s_uiErrorLast = FS_ERROR;
 
 #endif
 
@@ -766,7 +766,7 @@ BOOL    hb_fsChDir( BYTE * pDirname )
 #else
 
    iResult = 1;
-   s_uiErrorLast = F_ERROR;
+   s_uiErrorLast = FS_ERROR;
 
 #endif
 
@@ -786,7 +786,7 @@ BOOL    hb_fsRmDir( BYTE * pDirname )
 #else
 
    iResult = 1;
-   s_uiErrorLast = F_ERROR;
+   s_uiErrorLast = FS_ERROR;
 
 #endif
 
@@ -810,7 +810,7 @@ BYTE *  hb_fsCurDir( USHORT uiDrive )
 #else
 
    cwd_buff[ 0 ] = '\0';
-   s_uiErrorLast = F_ERROR;
+   s_uiErrorLast = FS_ERROR;
 
 #endif
 
@@ -834,13 +834,13 @@ USHORT  hb_fsChDrv( BYTE nDrive )
    else
    {
       _chdrive( uiSave );
-      s_uiErrorLast = F_ERROR;
+      s_uiErrorLast = FS_ERROR;
    }
 
 #else
 
    uiResult = 0;
-   s_uiErrorLast = F_ERROR;
+   s_uiErrorLast = FS_ERROR;
 
 #endif
 
@@ -860,7 +860,7 @@ BYTE    hb_fsCurDrv( void )
 #else
 
    uiResult = 0;
-   s_uiErrorLast = F_ERROR;
+   s_uiErrorLast = FS_ERROR;
 
 #endif
 
@@ -886,13 +886,13 @@ USHORT  hb_fsIsDrv( BYTE nDrive )
    {
       uiResult = 0;
       _chdrive( uiSave );
-      s_uiErrorLast = F_ERROR;
+      s_uiErrorLast = FS_ERROR;
    }
 
 #else
 
    uiResult = 0;
-   s_uiErrorLast = F_ERROR;
+   s_uiErrorLast = FS_ERROR;
 
 #endif
 
@@ -905,7 +905,7 @@ FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
                       USHORT uiFlags, BYTE * pPaths, PHB_ITEM pError )
 {
 
-   s_uiErrorLast = F_ERROR;
+   s_uiErrorLast = FS_ERROR;
 
    HB_SYMBOL_UNUSED( pFilename );
    HB_SYMBOL_UNUSED( pDefExt );
@@ -913,7 +913,7 @@ FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
    HB_SYMBOL_UNUSED( pPaths );
    HB_SYMBOL_UNUSED( pError );
 
-   return F_ERROR;
+   return FS_ERROR;
 }
 
 /*
@@ -937,7 +937,7 @@ HARBOUR HB_FCREATE( void )
       hFileHandle = hb_fsCreate( ( BYTE * ) hb_parc( 1 ),
                                  ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL );
    else
-      hFileHandle = F_ERROR;
+      hFileHandle = FS_ERROR;
 
    hb_retni( hFileHandle );
 }

@@ -1,3 +1,11 @@
+19990910-14:55 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rdd/dbcmd.c
+  * source/rdd/dbf1.c
+  * source/rtl/copyfile.c
+  * source/rtl/filesys.c
+  * source/rtl/set.c
+    * Changed F_ERROR back to FS_ERROR.
+
 19990910-14:40 EDT David G. Holm <dholm@jsd-llc.com>
   * source/compiler/harbour.y
     ! Changed DWORD return type for PackDateTime() to ULONG.
