@@ -198,6 +198,7 @@ void GenCCode( char *, char * );      /* generates the C language output */
 void GenJava( char *, char * );       /* generates the Java language output */
 void GenPascal( char *, char * );     /* generates the Pascal language output */
 void GenRC( char *, char * );         /* generates the RC language output */
+void GenPortObj( char *, char * );    /* generates the portable objects */
 #ifdef OBJ_GENERATION
 void GenObj32( char *, char * );      /* generates OBJ 32 bits */
 #endif
@@ -211,7 +212,8 @@ typedef enum
    LANG_C,                  /* C language (by default) <file.c> */
    LANG_JAVA,               /* Java <file.java> */
    LANG_PASCAL,             /* Pascal <file.pas> */
-   LANG_RESOURCES           /* Resources <file.rc> */
+   LANG_RESOURCES,          /* Resources <file.rc> */
+   LANG_PORT_OBJ            /* Portable objects <file.hrb> */
 } LANGUAGES;                /* supported Harbour output languages */
 
 extern int iLine;           /* currently compiled source code line */
@@ -1039,6 +1041,11 @@ int harbour_main( int argc, char * argv[] )
                             _iLanguage = LANG_RESOURCES;
                             break;
 
+                       case 'h':
+                       case 'H':
+                            _iLanguage = LANG_PORT_OBJ;
+                            break;
+
                        default:
                             printf( "\nUnsupported output language option\n" );
                             exit( 1 );
@@ -1199,6 +1206,12 @@ int harbour_main( int argc, char * argv[] )
                     pFileName->extension =".rc";
                     MakeFilename( szFileName, pFileName );
                     GenRC( szFileName, pFileName->name );
+                    break;
+
+               case LANG_PORT_OBJ:
+                    pFileName->extension =".hrb";
+                    MakeFilename( szFileName, pFileName );
+                    GenPortObj( szFileName, pFileName->name );
                     break;
             }
          }
@@ -3301,3 +3314,282 @@ char * strupr( char * p )
    return( p );
 }
 #endif
+
+#define SYM_NOLINK  0              /* Symbol does not have to be linked */
+#define SYM_FUNC    1              /* Defined function                  */
+#define SYM_EXTERN  2              /* Previously defined function       */
+
+void GenPortObj( char *szFileName, char *szName )
+{
+   PFUNCTION pFunc = functions.pFirst, pFTemp;
+   PCOMSYMBOL pSym = symbols.pFirst;
+   WORD w, wLen, wSym, wVar;
+   LONG lPCodePos;
+   LONG lPad;
+   LONG lSymbols;
+   char chr;
+   FILE * yyc;             /* file handle for C output */
+
+   if( ! ( yyc = fopen( szFileName, "wb" ) ) )
+   {
+     printf( "Error opening file %s\n", szFileName );
+     return;
+   }
+
+   if( ! _iQuiet )
+      printf( "\ngenerating portable object file...\n" );
+
+   /* writes the symbol table */
+
+   if( ! _iStartProc )
+      pSym = pSym->pNext; /* starting procedure is always the first symbol */
+
+   lSymbols = 0;                /* Count number of symbols */
+   while( pSym )
+   {
+      lSymbols++;
+      pSym = pSym->pNext;
+   }
+   fputc( (BYTE) ( ( lSymbols       ) & 255 ), yyc ); /* Write number symbols */
+   fputc( (BYTE) ( ( lSymbols >> 8  ) & 255 ), yyc );
+   fputc( (BYTE) ( ( lSymbols >> 16 ) & 255 ), yyc );
+   fputc( (BYTE) ( ( lSymbols >> 24 ) & 255 ), yyc );
+
+   pSym = symbols.pFirst;
+   if( ! _iStartProc )
+      pSym = pSym->pNext; /* starting procedure is always the first symbol */
+
+   while( pSym )
+   {
+      fputs( pSym->szName, yyc );
+      fputc( 0, yyc );
+      if( pSym->cScope != FS_MESSAGE )
+         fputc( pSym->cScope, yyc );
+      else
+         fputc( 0, yyc );
+
+      /* specify the function address if it is a defined function or a
+         external called function */
+      if( ( pFTemp = GetFunction( pSym->szName ) ) ) /* is it a defined function ? */
+      {
+         fputc( SYM_FUNC, yyc );
+      }
+      else
+      {
+         if( ( pFTemp = GetFuncall( pSym->szName ) ) )
+         {
+            fputc( SYM_EXTERN, yyc );
+         }
+         else
+         {
+            fputc( SYM_NOLINK, yyc );
+         }
+      }
+      pSym = pSym->pNext;
+   }
+
+   pFunc = functions.pFirst;
+   if( ! _iStartProc )
+      pFunc = pFunc->pNext;
+
+   lSymbols = 0;                /* Count number of symbols */
+   while( pFunc )
+   {
+      lSymbols++;
+      pFunc = pFunc->pNext;
+   }
+   fputc( (BYTE) ( ( lSymbols       ) & 255 ), yyc ); /* Write number symbols */
+   fputc( (BYTE) ( ( lSymbols >> 8  ) & 255 ), yyc );
+   fputc( (BYTE) ( ( lSymbols >> 16 ) & 255 ), yyc );
+   fputc( (BYTE) ( ( lSymbols >> 24 ) & 255 ), yyc );
+
+   /* Generate functions data
+    */
+   pFunc = functions.pFirst;
+   if( ! _iStartProc )
+     pFunc = pFunc->pNext; /* No implicit starting procedure */
+
+   while( pFunc )
+   {
+/*      if( pFunc->cScope != FS_PUBLIC )
+         fprintf( yyc, "static " ); */
+
+      fputs( pFunc->szName, yyc );
+      fputc( 0, yyc );
+      fputc( (BYTE) ( ( pFunc->lPCodePos       ) & 255 ), yyc ); /* Write size */
+      fputc( (BYTE) ( ( pFunc->lPCodePos >> 8  ) & 255 ), yyc );
+      fputc( (BYTE) ( ( pFunc->lPCodePos >> 16 ) & 255 ), yyc );
+      fputc( (BYTE) ( ( pFunc->lPCodePos >> 24 ) & 255 ), yyc );
+
+      printf( "Creating output for %s\n", pFunc->szName );
+
+      lPCodePos = 0;
+      lPad = 0;                         /* Number of bytes optimized */
+      while( lPCodePos < pFunc->lPCodePos )
+      {
+         switch( pFunc->pCode[ lPCodePos ] )
+         {
+            case AND_:
+            case _ARRAYAT:
+            case _ARRAYPUT:
+            case _DEC:
+            case _DIVIDE:
+            case _DUPLICATE:
+            case _EQUAL:
+            case _EXACTLYEQUAL:
+            case _FALSE:
+            case _FORTEST:
+            case _FUNCPTR:
+            case _GREATER:
+            case _GREATEREQUAL:
+            case _INC:
+            case _INSTRING:
+            case _LESS:
+            case _LESSEQUAL:
+            case _MINUS:
+            case _MODULUS:
+            case _MULT:
+            case _NEGATE:
+            case _NOT:
+            case _NOTEQUAL:
+            case OR_:
+            case _PLUS:
+            case _POP:
+            case _POWER:
+            case _PUSHNIL:
+            case _PUSHSELF:
+            case _RETVALUE:
+            case _TRUE:
+            case _ZERO:
+                 fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+                 break;
+
+            case _DIMARRAY:
+            case _DO:
+            case _ENDBLOCK:
+            case _FUNCTION:
+            case _GENARRAY:
+            case _JUMP:
+            case _JUMPFALSE:
+            case _JUMPTRUE:
+            case _LINE:
+            case _MESSAGE:
+            case _POPLOCAL:
+            case _POPMEMVAR:
+            case _POPSTATIC:
+            case _PUSHINT:
+            case _PUSHLOCAL:
+            case _PUSHLOCALREF:
+            case _PUSHMEMVAR:
+            case _PUSHMEMVARREF:
+            case _PUSHSTATIC:
+            case _PUSHSTATICREF:
+            case _PUSHSYM:
+                 fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+                 fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+                 fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+                 break;
+
+            case _FRAME:
+                 if( pFunc->pCode[ lPCodePos + 1 ] || pFunc->pCode[ lPCodePos + 2 ] )
+                 {
+                    fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
+                    fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
+                    fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
+                 }
+                 else
+                 {
+                    lPad += 3;
+                    lPCodePos += 3;
+                 }
+                 break;
+
+            case _PUSHBLOCK:
+                 wVar = * ( ( WORD *) &( pFunc->pCode [ lPCodePos + 5 ] ) );
+                 fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
+                 fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
+                 fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
+                 fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
+                 fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
+                 fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
+                 fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
+                 /* create the table of referenced local variables */
+                 while( wVar-- )
+                 {
+                    fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
+                    fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
+                 }
+                 break;
+
+            case _PUSHDOUBLE:
+                 {
+                    int i;
+                    fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+                    for( i = 0; i < sizeof( double ); ++i )
+                       fputc( ( ( BYTE * ) pFunc->pCode )[ lPCodePos + i ], yyc );
+                    lPCodePos += sizeof( double );
+                 }
+                 break;
+
+            case _PUSHLONG:
+                 fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+                 fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+                 fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+                 fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+                 fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+                 break;
+
+            case _PUSHSTR:
+                 wLen = pFunc->pCode[ lPCodePos + 1 ] +
+                        pFunc->pCode[ lPCodePos + 2 ] * 256;
+                 fputc( pFunc->pCode[ lPCodePos     ], yyc );
+                 fputc( pFunc->pCode[ lPCodePos + 1 ], yyc );
+                 fputc( pFunc->pCode[ lPCodePos + 2 ], yyc );
+                 lPCodePos +=3;
+                 while( wLen-- )
+                 {
+                    fputc( pFunc->pCode[ lPCodePos ++ ], yyc );
+                 }
+                 break;
+
+            case _SFRAME:
+                 /* we only generate it if there are statics used in this function */
+                 if( pFunc->bFlags & FUN_USES_STATICS )
+                 {
+                    w = GetSymbolPos( _pInitFunc->szName ) - ( _iStartProc ? 1: 2 );
+                    fputc( pFunc->pCode[ lPCodePos ], yyc );
+                    fputc( LOBYTE( w ), yyc );
+                    fputc( HIBYTE( w ), yyc );
+                 }
+                 else
+                    lPad += 3;
+                 lPCodePos += 3;
+                 break;
+
+            case _STATICS:
+                 w = GetSymbolPos( _pInitFunc->szName ) - ( _iStartProc ? 1: 2 );
+                 fputc( pFunc->pCode[ lPCodePos ], yyc );
+                 fputc( LOBYTE( w ), yyc );
+                 fputc( HIBYTE( w ), yyc );
+                 lPCodePos += 3;
+                 break;
+
+            default:
+                 printf( "Incorrect pcode value!\n" );
+                 lPCodePos = pFunc->lPCodePos;
+                 break;
+         }
+      }
+
+      fputc( _ENDPROC, yyc );
+      for( ; lPad; lPad-- )
+         fputc( 0, yyc );                       /* Pad optimalizations */
+      pFunc = pFunc->pNext;
+   }
+
+   fclose( yyc );
+
+   if( ! _iQuiet )
+      printf( "%s -> done!\n", szFileName );
+}
+

@@ -1,3 +1,14 @@
+19990518-23:40 CET Eddie Runia
+  * source/compiler/harbour.y
+    GenPortObj added. Can be accessed through /gHRB
+    generates portable object structure.
+  * tests/broken/hrb.bat
+    added. simple batch file for HRB compilation
+  * tests/broken/runner.c
+    added. runner program
+  * tests/broken/run_exp.h
+    added. runner include file containing 'exportable' functions.
+
 19990518-17:30 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/console.c
     - Use pItem->wLength and pItem->wDec when printing numbers.
