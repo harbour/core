@@ -30,7 +30,8 @@ harbour.lib : achoice.obj adir.obj alert.obj arrays.obj asort.obj \
               dir.obj do.obj dynsym.obj environ.obj terror.obj cmdarg.obj \
               errorapi.obj errorsys.obj harbinit.obj extend.obj fileread.obj filesys.obj fm.obj \
               hardcr.obj hb_f.obj hvm.obj initsymb.obj inkey.obj itemapi.obj \
-              langapi.obj mainstd.obj mainwin.obj math.obj mathx.obj memofile.obj memvars.obj menuto.obj mtran.obj msges.obj \
+              langapi.obj mainstd.obj mainwin.obj math.obj mathx.obj memofile.obj \
+              memvars.obj menuto.obj mlcount.obj mtran.obj msges.obj \
               objfunc.obj readvar.obj xsavescr.obj memvarbl.obj \
               set.obj setcolor.obj setkey.obj strfmt.obj strings.obj symbols.obj stringp.obj \
               stringsx.obj tbcolumn.obj tbrowse.obj tbrwtext.obj tclass.obj tget.obj tgetlist.obj tone.obj transfrm.obj
@@ -141,7 +142,7 @@ xsavescr.c   : xsavescr.prg  harbour.exe
 harbour.exe : harboury.c harbourl.c genc.obj genhrb.obj genjava.obj genrc.obj genpas.obj genobj32.obj harbour.obj compiler.h hbppint.c hbpp.c table.c
    echo $(BCC_OPT) > temp.bld
    echo -ebin\harbour.exe >> temp.bld
-   echo -Iinclude >> temp.bld
+   echo -Iinclude;source\compiler >> temp.bld
    echo source\compiler\harboury.c >> temp.bld
    echo source\compiler\harbourl.c >> temp.bld
    echo source\compiler\genobj32.obj >> temp.bld
@@ -190,5 +191,5 @@ genpas.obj : genpas.c
         source\compiler\genpas.c
 
 harbour.obj : harbour.c
-   bcc32 $(BCC_OPT) -c -Iinclude -osource\compiler\harbour.obj \
+   bcc32 $(BCC_OPT) -c -Iinclude;source\compiler -osource\compiler\harbour.obj \
         source\compiler\harbour.c
