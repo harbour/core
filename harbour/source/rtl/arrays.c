@@ -655,6 +655,9 @@ BOOL hb_arrayRelease( PHB_ITEM pArray )
       return FALSE;
 }
 
+/* NOTE: CA-Cl*pper 5.3a has a fix for the case when the starting position
+         is greater than the length of the array. */
+
 BOOL hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart,
                    ULONG * pulCount, ULONG * pulTarget )
 {
@@ -680,20 +683,31 @@ BOOL hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart,
       else
          ulTarget = 1;
 
+#ifdef HB_COMPAT_C53 /* From CA-Cl*pper 5.3a */
+      if( ulStart <= ulSrcLen )
+#else
       if( ulSrcLen > 0 )
+#endif
       {
+#ifndef HB_COMPAT_C53 /* From CA-Cl*pper 5.3a */
          if( ulStart > ulSrcLen )
             ulStart = ulSrcLen;
-
+#endif
          if( pulCount && ( *pulCount <= ulSrcLen - ulStart ) )
             ulCount = *pulCount;
          else
             ulCount = ulSrcLen - ulStart + 1;
 
+/* This is probably a bug, present in all versions of CA-Cl*pper. */
+#ifdef HB_FIX_ACOPY_BUG
+         if( ulTarget <= ulDstLen )
+         {
+#else
          if( ulDstLen > 0 )
          {
             if( ulTarget > ulDstLen )
                ulTarget = ulDstLen;
+#endif
 
             if( ulCount > ulDstLen - ulTarget )
                ulCount = ulDstLen - ulTarget + 1;
@@ -828,6 +842,9 @@ HARBOUR HB_AADD( void )
    }
 }
 
+/* NOTE: CA-Cl*pper 5.3 and older will return NIL on bad parameter, 5.3a,b
+         will throw a runtime error. */
+
 HARBOUR HB_ASIZE( void )
 {
    PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
@@ -840,6 +857,10 @@ HARBOUR HB_ASIZE( void )
 
       hb_itemReturn( pArray ); /* ASize() returns the array itself */
    }
+#ifdef HB_COMPAT_C53 /* From CA-Cl*pper 5.3a */
+   else
+      hb_errRT_BASE( EG_ARG, 2023, NULL, "ASIZE" );
+#endif
 }
 
 HARBOUR HB_ATAIL( void )

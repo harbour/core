@@ -1,3 +1,19 @@
+19991208-01:59 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/arrays.c
+    + Added C53 compatible error message to ASIZE()
+    ! Fixed a bug in ACOPY() which was also fixed in CA-Cl*pper 5.3a,
+      this was previously implemented then removed as STRICT mode. Note that
+      there's still a small anomaly left in ACOPY().
+  * tests/regress/rt_array.prg
+    ! Fixed the expected result for ASIZE() (w/o param)
+    * Changed expected results for some ACOPY() tests.
+  * source/rtl/errorsys.prg
+    + EG_OPEN and EG_APPENDLOCK errors are handled in the Clipper way.
+  * source/rtl/errorsys.prg
+    + ERRORSYS() documentation by Chen Kedem added
+  * source/rtl/fieldbl.prg
+    + FIELD*BLOCK() documentation by Chen Kedem added
+
 19991207-20:25 GMT+3 Alexander Kresin
   * source/pp/hbpp.c
     * some changes, related to '@ ... clear to ...' problem

@@ -214,7 +214,7 @@ FUNCTION Main_ARRAY()
    TEST_LINE( aTail( {} )                     , NIL                                        )
    TEST_LINE( aTail( { 1, 2 } )               , 2                                          )
    TEST_LINE( aTail( ErrorNew() )             , NIL                                        )
-   TEST_LINE( aSize()                         , NIL                                        )
+   TEST_LINE( aSize()                         , "E BASE 2023 Argument error ASIZE "        )
    TEST_LINE( aSize( NIL )                    , "E BASE 2023 Argument error ASIZE "        )
    TEST_LINE( aSize( {} )                     , "E BASE 2023 Argument error ASIZE "        )
    TEST_LINE( aSize( ErrorNew() )             , "E BASE 2023 Argument error ASIZE "        )
@@ -300,10 +300,10 @@ FUNCTION Main_ARRAY()
    TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3,  0    )) , ".........."     )
    TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3,  3    )) , "CDE......."     )
    TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3, 20    )) , "CDEFGHIJ.."     )
-   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21        )) , "J........."     ) /* Strange in CA-Cl*pper, it should return: ".........." */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21        )) , ".........."     ) /* Bug in CA-Cl*pper, it will return: "J.........", fixed in 5.3a */
    TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  0    )) , ".........."     )
-   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  3    )) , "J........."     ) /* Strange in CA-Cl*pper, it should return: ".........." */
-   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21, 20    )) , "J........."     ) /* Strange in CA-Cl*pper, it should return: ".........." */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  3    )) , ".........."     ) /* Bug in CA-Cl*pper, it will return: "J.........", fixed in 5.3a */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21, 20    )) , ".........."     ) /* Bug in CA-Cl*pper, it will return: "J.........", fixed in 5.3a */
    TEST_LINE( TAStr(aCopy(TARng(),TANew(),  1,NIL,  1)) , "ABCDEFGHIJ"     )
    TEST_LINE( TAStr(aCopy(TARng(),TANew(),  1,  0,  1)) , ".........."     )
    TEST_LINE( TAStr(aCopy(TARng(),TANew(),  1,  3,  0)) , "ABC......."     )
@@ -318,13 +318,13 @@ FUNCTION Main_ARRAY()
    TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3,  3,  8)) , ".......CDE"     )
    TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3,  3, 20)) , ".........C"     ) /* Strange in CA-Cl*pper, it should return: ".........." */
    TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3, 20,  3)) , "..CDEFGHIJ"     )
-   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,NIL, 21)) , ".........J"     ) /* Strange in CA-Cl*pper, it should return: ".........." */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,NIL, 21)) , ".........."     ) /* Bug in CA-Cl*pper, it will return: ".........J", fixed in 5.3a */
    TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  0, 21)) , ".........."     )
-   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  3,  0)) , "J........."     ) /* Strange in CA-Cl*pper, it should return: ".........." */
-   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  3,  2)) , ".J........"     ) /* Strange in CA-Cl*pper, it should return: ".........." */
-   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  3,  8)) , ".......J.."     ) /* Strange in CA-Cl*pper, it should return: ".........." */
-   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  3, 20)) , ".........J"     ) /* Strange in CA-Cl*pper, it should return: ".........." */
-   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21, 20, 21)) , ".........J"     ) /* Strange in CA-Cl*pper, it should return: ".........." */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  3,  0)) , ".........."     ) /* Bug in CA-Cl*pper, it will return: "J.........", fixed in 5.3a */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  3,  2)) , ".........."     ) /* Bug in CA-Cl*pper, it will return: ".J........", fixed in 5.3a */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  3,  8)) , ".........."     ) /* Bug in CA-Cl*pper, it will return: ".......J..", fixed in 5.3a */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  3, 20)) , ".........."     ) /* Bug in CA-Cl*pper, it will return: ".........J", fixed in 5.3a */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21, 20, 21)) , ".........."     ) /* Bug in CA-Cl*pper, it will return: ".........J", fixed in 5.3a */
 
    /* ASORT() */
 

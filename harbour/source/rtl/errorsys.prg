@@ -33,10 +33,47 @@
  *
  */
 
-// Standard Harbour ErrorSys system
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Chen Kedem <niki@actcom.co.il>
+ *    ERRORSYS() documentation
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
 
 #include "common.ch"
 #include "error.ch"
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ERRORSYS()
+ *  $CATEGORY$
+ *      Error recovery
+ *  $ONELINER$
+ *      Install default error handler
+ *  $SYNTAX$
+ *      ERRORSYS() --> NIL
+ *  $ARGUMENTS$
+ *      none.
+ *  $RETURNS$
+ *      ERRORSYS() always return NIL.
+ *  $DESCRIPTION$
+ *      ERRORSYS() is called upon startup by Harbour and install the default
+ *      error handler. Normally you should not call this function directly,
+ *      instead use ERRORBLOCK() to install your own error handler.
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      ERRORSYS() works exactly like CA-Clipper's ERRORSYS().
+ *  $SEEALSO$
+ *      ERRORBLOCK(), Error class
+ *  $END$
+ */
 
 PROCEDURE ErrorSys
 
@@ -57,21 +94,36 @@ STATIC FUNCTION DefError( oError )
       RETURN 0
    ENDIF
 
+   // Set NetErr() of there was a database open error
+   IF oError:genCode == EG_OPEN .AND. ;
+      oError:osCode == 32 .AND. ;
+      oError:canDefault
+      NetErr( .T. )
+      RETURN .F.
+   ENDIF
+
+   // Set NetErr() if there was a lock error on dbAppend()
+   IF oError:genCode == EG_APPENDLOCK .AND. ;
+      oError:canDefault
+      NetErr( .T. )
+      RETURN .F.
+   ENDIF
+
    cMessage := ErrorMessage( oError )
 
    // Build buttons
 
    aOptions := {}
 
-// aAdd( aOptions, "Break" )
-   aAdd( aOptions, "Quit" )
+// AAdd( aOptions, "Break" )
+   AAdd( aOptions, "Quit" )
 
    IF oError:canRetry
-      aAdd( aOptions, "Retry" )
+      AAdd( aOptions, "Retry" )
    ENDIF
 
    IF oError:canDefault
-      aAdd( aOptions, "Default" )
+      AAdd( aOptions, "Default" )
    ENDIF
 
    // Show alert box
@@ -118,7 +170,7 @@ STATIC FUNCTION DefError( oError )
 
 // [vszel]
 
-STATIC FUNCTION ErrorMessage(oError)
+STATIC FUNCTION ErrorMessage( oError )
    LOCAL cMessage
 
    // start error message
