@@ -239,16 +239,28 @@ void hb_compStrongType( int iSize )
        }
        break;
 
-     case HB_P_DO :
      case HB_P_DOSHORT :
-     case HB_P_FUNCTION :
      case HB_P_FUNCTIONSHORT :
-
        /* TODO: Add support for Function Parameters Declaration. */
+       wVar = pFunc->pCode[ ulPos + 1 ];
+
+       /* Removing all the optional parameters. Rteurn type already pushed just prior to parameters */
+       pFunc->iStackIndex -= wVar;
+
+       /* Removing the NIL */
+       pFunc->iStackIndex--;
+       break;
+
+     case HB_P_DO :
+     case HB_P_FUNCTION :
+       /* TODO: Add support for Function Parameters Declaration. */
+       wVar = pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256;
 
        /* Removing all the optional parameters. */
-       pFunc->iStackIndex = pFunc->pFunctionCalls[ pFunc->iFunctionIndex--] ;
-       /* Function Type already on stack at this position. */
+       pFunc->iStackIndex -= wVar;
+
+       /* Removing the NIL */
+       pFunc->iStackIndex--;
        break;
 
      case HB_P_DEC :
@@ -485,8 +497,6 @@ void hb_compStrongType( int iSize )
 
      case HB_P_PUSHSYM :
      case HB_P_MPUSHSYM :
-       pFunc->pFunctionCalls[ pFunc->iFunctionIndex++ ] = pFunc->iStackIndex;
-
        pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256 );
 
        if ( pSym )
@@ -508,7 +518,6 @@ void hb_compStrongType( int iSize )
                ( pSym->cScope & HB_FS_EXIT   ) == HB_FS_EXIT      )
           */
              /* Storing a Book Mark of the last pushed symbol so we know how many bytes to pop when encountering function call. */
-             pFunc->pFunctionCalls[ pFunc->iFunctionIndex++ ] = pFunc->iStackIndex;
 
           pFunc->pStack[ pFunc->iStackIndex++ ] = pSym->cType;
        }
@@ -646,15 +655,12 @@ void hb_compStrongType( int iSize )
      case HB_P_MACROPUSHALIASED :
      case HB_P_MACROPUSH :
        /* Replace the value of the macro expression with unknown result of expanded macro. */
-       pFunc->pStack[ pFunc->iStackIndex ] = ' ';
+       pFunc->pStack[ pFunc->iStackIndex - 1 ] = ' ';
        break;
 
      case HB_P_MACROSYMBOL :
        /* Replace Macro Variable Symbol Name type with unknown type of expanded macro Function Call */
-       pFunc->pStack[ pFunc->iStackIndex ] = ' ';
-
-       /* Storing a Book Mark of the last pushed symbol so we know how many bytes to pop when encountering function call. */
-       pFunc->pFunctionCalls[ pFunc->iFunctionIndex++ ] = pFunc->iStackIndex;
+       pFunc->pStack[ pFunc->iStackIndex - 1 ] = ' ';
        break;
 
      case HB_P_MACROTEXT :

@@ -15,6 +15,8 @@ FUNCTION Main()
 
    n := &SomeFun( 2, 3 )
 
+   n := nMyFunc( .F., 'A' )
+
    n := &(cVar)
 
    n := "&SomeVar"
@@ -34,8 +36,6 @@ FUNCTION Main()
    n := {1,2,3}
 
    n := a
-
-   n := nMyFunc()
 
    IIF( n, 2, 3 )
 

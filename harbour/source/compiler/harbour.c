@@ -710,7 +710,6 @@ static PFUNCTION hb_compFunctionNew( char * szName, HB_SYMBOLSCOPE cScope )
    pFunc->pNOOPs         = NULL;
    pFunc->pJumps         = NULL;
    pFunc->iStackIndex    = 0;
-   pFunc->iFunctionIndex = 0;
 
    return pFunc;
 }
@@ -1649,7 +1648,6 @@ void hb_compLinePush( void ) /* generates the pcode with the currently compiled 
 
    /* Resting Compile Time Stack */
    hb_comp_functions.pLast->iStackIndex = 0;
-   hb_comp_functions.pLast->iFunctionIndex = 0;
 }
 
 /* Generates the pcode with the currently compiled source code line

@@ -117,10 +117,8 @@ typedef struct __FUNC
    ULONG  * pJumps;                 /* pointer to the Jumps array */
    int    iNOOPs;                   /* NOOPs Counter */
    BYTE   iJumps;                   /* Jumps Counter */
-   BYTE   pStack[256];              /* Compile Time Stack */
+   BYTE   pStack[512];              /* Compile Time Stack */
    SHORT  iStackIndex;              /* Compile Time Stack Index */
-   BYTE   pFunctionCalls[256];      /* Array of Function Calls Compile Time Stack Postion */
-   SHORT  iFunctionIndex;           /* Index into Array of Function Calls Compile Time Stack Postion */
    struct __FUNC * pOwner;          /* pointer to the function/procedure that owns the codeblock */
    struct __FUNC * pNext;           /* pointer to the next defined function */
 } _FUNC, * PFUNCTION;
