@@ -211,7 +211,7 @@ HB_FUNC( TRANSFORM )
          /* Grab enough */
 
          /* Support date function for strings */
-         if( ( uiPicFlags & PF_DATE ) || 
+         if( ( uiPicFlags & PF_DATE ) ||
            ( ( uiPicFlags & PF_BRITISH ) && ( uiPicFlags & PF_REMAIN ) ) )
          {
             hb_dateFormat( "XXXXXXXX", szPicDate, hb_set.HB_SET_DATEFORMAT );
@@ -310,7 +310,7 @@ HB_FUNC( TRANSFORM )
                         szResult[ ulResultPos++ ] = *szPic;
                   }
                }
-                  
+
                szPic++;
                ulPicLen--;
             }
@@ -512,7 +512,7 @@ HB_FUNC( TRANSFORM )
 
                      if( uiPicFlags & PF_EXCHANG )  /* Exchange . and ,         */
                      {
-                        szResult[ i ] = ',';
+                        szResult[ i ] = '.';
                         iCount++;
                      }
                      else
@@ -543,16 +543,16 @@ HB_FUNC( TRANSFORM )
                      if( iCount && isdigit( ( int ) szStr[ iCount - 1 ] ) )
                      {                                /* May we place it     */
                         if( uiPicFlags & PF_EXCHANG )
-                           szResult[ i ] = '.';
+                          szResult[ i ] = '.';
                         else
                            szResult[ i ] = ',';
                      }
                      else
                      {
-                        if( i && szResult[ i - 1 ] == '*' ) 
+                        if( i && szResult[ i - 1 ] == '*' )
                            szResult[ i ] = '*';
                         else
-                           szResult[ i ] = ' ';
+                           szResult[ i ] = '0';
                      }
                   }
                   else
@@ -565,15 +565,15 @@ HB_FUNC( TRANSFORM )
             }
 
             if( ( uiPicFlags & PF_PARNEG ) && dValue < 0 && !( uiPicFlags & PF_PARNEGWOS ) )
-                              /* This is a behavior of Clipper, 
+                              /* This is a behavior of Clipper,
                                  if exist PF_PARNEG and PF_PARNEGWOS,
                                  PR_PARNEGWOS prevails. */
-       
+
             {
                for( iCount = 0; ( ULONG ) iCount < i; iCount++ )
                    /* Permit to detect overflow when picture init with mask */
                {
-                  if( isdigit( ( int ) szResult[ iCount ] ) && 
+                  if( isdigit( ( int ) szResult[ iCount ] ) &&
                        !( szResult[ iCount ] == '0' ) &&       /* if not PF_PADL */
                        ( iCount == 0 ||
                        !isdigit( ( int ) szPic[ iCount ] ) ) ) /* if not mask symbol */
@@ -602,7 +602,7 @@ HB_FUNC( TRANSFORM )
                for( iCount = 0; ( ULONG ) iCount < i; iCount++ )
                    /* Permit to detect overflow when picture init with mask */
                {
-                  if( isdigit( ( int ) szResult[ iCount ] ) && 
+                  if( isdigit( ( int ) szResult[ iCount ] ) &&
                        !( szResult[ iCount ] == '0' ) &&       /* if not PF_PADL */
                        ( iCount == 0 ||
                        !isdigit( ( int ) szPic[ iCount ] ) ) ) /* if not mask symbol */
@@ -787,7 +787,7 @@ HB_FUNC( TRANSFORM )
          /* Trim left and pad with spaces */
          if( uiPicFlags & PF_LEFT )
          {
-            
+
             ULONG ulFirstChar = ( ( ( uiPicFlags & PF_PARNEG ) && dValue < 0 && !( uiPicFlags & PF_PARNEGWOS ) ) ? 1: 0 );
 
             while( ulFirstChar < ulResultPos && szResult[ ulFirstChar ] == ' ' )
