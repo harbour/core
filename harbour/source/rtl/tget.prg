@@ -669,6 +669,10 @@ METHOD WordLeft() CLASS TGet
       nPos--
    Enddo
 
+   if nPos < 1
+      nPos := 1
+   endif
+
    if nPos > 0
       ::Pos := nPos
    endif
@@ -707,6 +711,10 @@ METHOD WordRight() CLASS TGet
       endif
       nPos++
    Enddo
+
+   if nPos > ::nMaxLen
+      nPos := ::nMaxLen
+   endif
 
    if nPos <= ::nMaxLen
       ::Pos := nPos
