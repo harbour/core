@@ -1,4 +1,45 @@
-3000-08-29 22:00 GMT+1 Bruno Cantero <bruno@issnet.net>
+2000-08-28 22:50 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * config/dos/global.cf
+   * config/linux/global.cf
+   * config/os2/global.cf
+   * config/w32/global.cf
+     + GTCGI added to the default list of GT drivers built for all platforms.
+
+   * bin/bld.sh
+     ! == changed to =
+
+   * include/Makefile 
+     + Added new header files.
+
+   * source/compiler/hbusage.c 
+     ! Made even more CA-Clipper like.
+
+   * source/rdd/dbsort.prg
+     % Minor opt.
+
+   * source/rtl/filesys.c 
+     ! Fixed hb_fsLock() for DJGPP
+
+   * utils/hbtest/rt_main.ch 
+     ! Fixed pp macro for FlagShip
+
+   * source/rdd/dbstrux.prg 
+   * source/rtl/objfunc.prg 
+   * source/rtl/tobject.prg 
+     * Formatting.
+
+   * source/rtl/console.c
+     * Fix in one comment.
+
+   * source/rtl/inkey.c
+     % One variable optimized out.
+     * Minor formatting.
+
+   * source/rtl/run.c
+     % Minor opt.
+
+2000-08-29 22:00 GMT+1 Bruno Cantero <bruno@issnet.net>
   * include/hbapirdd.h
     * Changed WORKAREA structure, 100% Clipper compatible.
     ! Uncommented disabled RDD methods.

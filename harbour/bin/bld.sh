@@ -83,56 +83,56 @@ else
 
    $HB_BIN_INSTALL/harbour $1.prg -n -i$HB_INC_INSTALL $2 $3 $HARBOURFLAGS
 
-   if [ "$HB_ARCHITECTURE" == "dos" ]; then
+   if [ "$HB_ARCHITECTURE" = "dos" ]; then
 
       if [ -z "$HB_GT_LIB" ]; then HB_GT_LIB=gtdos; fi
 
-      if [ "$HB_COMPILER" == "bcc16" ]; then
+      if [ "$HB_COMPILER" = "bcc16" ]; then
          bcc -O2 -mh -d $CFLAGS -I$HB_INC_INSTALL -L$HB_LIB_INSTALL $1.c debug.lib vm.lib rtl.lib $HB_GT_LIB.lib lang.lib rdd.lib macro.lib pp.lib dbfntx.lib dbfcdx.lib common.lib
-      elif [ "$HB_COMPILER" == "djgpp" ]; then
+      elif [ "$HB_COMPILER" = "djgpp" ]; then
          gcc $1.c -o$1.exe $CFLAGS -I$HB_INC_INSTALL -L$HB_LIB_INSTALL -ldebug -lvm -lrtl -l$HB_GT_LIB -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfnt -ldbfcd -lcommo
-      elif [ "$HB_COMPILER" == "rsx32" ]; then
+      elif [ "$HB_COMPILER" = "rsx32" ]; then
          gcc $1.c -Zrsx32 $CFLAGS -I$HB_INC_INSTALL -L$HB_LIB_INSTALL -ldebug -lvm -lrtl -l$HB_GT_LIB -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
       else
          echo Error: HB_COMPILER value is unsupported.
       fi
 
-   elif [ "$HB_ARCHITECTURE" == "w32" ]; then
+   elif [ "$HB_ARCHITECTURE" = "w32" ]; then
 
       if [ -z "$HB_GT_LIB" ]; then HB_GT_LIB=gtwin; fi
 
-      if [ "$HB_COMPILER" == "bcc32" ]; then
+      if [ "$HB_COMPILER" = "bcc32" ]; then
          bcc32 -O2 -d $CFLAGS -I$HB_INC_INSTALL -L$HB_LIB_INSTALL $1.c debug.lib vm.lib rtl.lib $HB_GT_LIB.lib lang.lib rdd.lib macro.lib pp.lib dbfntx.lib dbfcdx.lib common.lib
-      elif [ "$HB_COMPILER" == "gcc" ]; then
+      elif [ "$HB_COMPILER" = "gcc" ]; then
          gcc $1.c -o$1.exe $CFLAGS -I$HB_INC_INSTALL -L$HB_LIB_INSTALL -ldebug -lvm -lrtl -l$HB_GT_LIB -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
-      elif [ "$HB_COMPILER" == "mingw32" ]; then
+      elif [ "$HB_COMPILER" = "mingw32" ]; then
          gcc $1.c -o$1.exe $CFLAGS -mno-cygwin -I$HB_INC_INSTALL -L$HB_LIB_INSTALL -ldebug -lvm -lrtl -l$HB_GT_LIB -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
-      elif [ "$HB_COMPILER" == "rsxnt" ]; then
+      elif [ "$HB_COMPILER" = "rsxnt" ]; then
          gcc $1.c -Zwin32 $CFLAGS -I$HB_INC_INSTALL -L$HB_LIB_INSTALL -ldebug -lvm -lrtl -l$HB_GT_LIB -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
-      elif [ "$HB_COMPILER" == "msvc" ]; then
+      elif [ "$HB_COMPILER" = "msvc" ]; then
          cl -TP -W3 $CFLAGS -I$HB_INC_INSTALL $1.c /link /subsystem:CONSOLE $HB_LIB_INSTALL\debug.lib $HB_LIB_INSTALL\vm.lib $HB_LIB_INSTALL\rtl.lib $HB_LIB_INSTALL\$HB_GT_LIB.lib $HB_LIB_INSTALL\lang.lib $HB_LIB_INSTALL\rdd.lib $HB_LIB_INSTALL\macro.lib $HB_LIB_INSTALL\pp.lib $HB_LIB_INSTALL\dbfntx.lib $HB_LIB_INSTALL\dbfcdx.lib
          echo Ignore LNK4033 warning
       else
          echo Error: HB_COMPILER value is unsupported.
       fi
 
-   elif [ "$HB_ARCHITECTURE" == "os2" ]; then
+   elif [ "$HB_ARCHITECTURE" = "os2" ]; then
 
       if [ -z "$HB_GT_LIB" ]; then HB_GT_LIB=gtos2; fi
 
-      if [ "$HB_COMPILER" == "gcc" ]; then
+      if [ "$HB_COMPILER" = "gcc" ]; then
          gcc $1.c $CFLAGS -I$HB_INC_INSTALL -L$HB_LIB_INSTALL -ldebug -lvm -lrtl -l$HB_GT_LIB -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
-      elif [ "$HB_COMPILER" == "icc" ]; then
+      elif [ "$HB_COMPILER" = "icc" ]; then
          icc /Gs+ /W2 /Se /Sd+ /Ti+ /C- /Tp $CFLAGS -I$HB_INC_INSTALL $1.c $HB_LIB_INSTALL\debug.lib $HB_LIB_INSTALL\vm.lib $HB_LIB_INSTALL\rtl.lib $HB_LIB_INSTALL\$HB_GT_LIB.lib $HB_LIB_INSTALL\lang.lib $HB_LIB_INSTALL\rdd.lib $HB_LIB_INSTALL\rtl.lib $HB_LIB_INSTALL\vm.lib $HB_LIB_INSTALL\macro.lib $HB_LIB_INSTALL\pp.lib $HB_LIB_INSTALL\dbfntx.lib $HB_LIB_INSTALL\dbfcdx.lib
       else
          echo Error: HB_COMPILER value is unsupported.
       fi
 
-   elif [ "$HB_ARCHITECTURE" == "linux" ]; then
+   elif [ "$HB_ARCHITECTURE" = "linux" ]; then
 
       if [ -z "$HB_GT_LIB" ]; then HB_GT_LIB=gtstd; fi
 
-      if [ "$HB_COMPILER" == "gcc" ]; then
+      if [ "$HB_COMPILER" = "gcc" ]; then
          gcc $1.c $CFLAGS -I$HB_INC_INSTALL -L$HB_LIB_INSTALL -ldebug -lvm -lrtl -l$HB_GT_LIB -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
       else
          echo Error: HB_COMPILER value is unsupported.
