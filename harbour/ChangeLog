@@ -1,3 +1,11 @@
+Thu Nov 04 14:32:06 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* source/common/hbtrace.c: 
+	* doc/tracing.txt: 
+	Added the possibility to direct tracing output to a file by
+	specifying its name in the HB_TR_OUTPUT environment variable. The
+	default is stderr.
+
 Thu Nov 04 13:49:23 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* include/hbtrace.h: 

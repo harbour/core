@@ -20,7 +20,7 @@ The level specified for the HB_TRACE call affects harbour in two ways:
 compilation time and run time.
 
 
-Compilation Time
+COMPILATION TIME
 ================
 
 At compilation time, the macro checks whether the preprocessor
@@ -43,7 +43,7 @@ simply disappear, and there is no effect in the code performance
 thereafter.
 
 
-Run Time
+RUN TIME
 ========
 
 At run time, the user can set the environment variable HB_TR_LEVEL to
@@ -61,7 +61,7 @@ compiler and which have a level lower or equal to HB_TR_LEVEL will
 print its arguments on stderr.
 
 
-Examples
+EXAMPLES
 ========
 
 HB_TR_LEVEL    HB_TR_LEVEL    Description
@@ -99,7 +99,7 @@ the calls to the tracing function for the INFO level will be done
 anyway, so there will be a performance hit.
 
 
-Usage
+USAGE
 =====
 
 When Harbour is compiled/run with some level of tracing and then used
@@ -108,6 +108,16 @@ tracing information to stderr.  If you are using a sensible command
 shell (such as bash) you can redirect stderr to a file like this:
 
   my_app 2>trace.txt
+
+
+REDIRECTION
+===========
+
+The output generated while tracing goes to stderr by default. You can
+control this at run-time by setting the environment variable
+HB_TR_OUTPUT to the name of a file where you would like the tracing
+output to be directed. If there is any problem opening the file for
+writing, the output reverts to stderr.
 
 
 TRACING THE PREPROCESSOR AND COMPILER

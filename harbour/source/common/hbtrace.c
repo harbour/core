@@ -42,6 +42,7 @@ char * hb_tr_file_ = "";
 int    hb_tr_line_ = 0;
 int    hb_tr_level_ = 0;
 
+static FILE* hb_tr_fp_ = 0;
 static char* slevel[HB_TR_LAST] =
 {
   "HB_TR_ALWAYS",
@@ -76,20 +77,20 @@ void hb_tr_trace( char * fmt, ... )
   /*
    * Print file and line.
    */
-  fprintf(stderr, "%s:%d: %s ",
+  fprintf(hb_tr_fp_, "%s:%d: %s ",
 	  hb_tr_file_ + i, hb_tr_line_, slevel[hb_tr_level_]);
 
   /*
    * Print the name and arguments for the function.
    */
   va_start(ap, fmt);
-  vfprintf(stderr, fmt, ap);
+  vfprintf(hb_tr_fp_, fmt, ap);
   va_end(ap);
 
   /*
    * Print a new-line.
    */
-  fprintf(stderr, "\n");
+  fprintf(hb_tr_fp_, "\n");
 
   /*
    * Reset file and line.
@@ -104,23 +105,28 @@ int hb_tr_level(void)
   static int level = -1;
   int i;
   char* env;
+  char* out;
 
-  if (level != -1)
-  {
+  if (level != -1) {
     return level;
   }
 
+  hb_tr_fp_ = stderr;
+  out = getenv("HB_TR_OUTPUT");
+  if (out != 0 && out[0] != '\0') {
+    hb_tr_fp_ = fopen(out, "w");
+    if (hb_tr_fp_ == NULL) {
+      hb_tr_fp_ = stderr;
+    }
+  }
+
   env = getenv("HB_TR_LEVEL");
-  if (env == 0 || env[0] == '\0')
-  {
+  if (env == 0 || env[0] == '\0') {
     level = HB_TR_DEFAULT;
   }
-  else
-  {
-    for (i = 0; i < HB_TR_LAST; ++i)
-    {
-      if (strcmp(env, slevel[i]) == 0)
-      {
+  else {
+    for (i = 0; i < HB_TR_LAST; ++i) {
+      if (strcmp(env, slevel[i]) == 0) {
         level = i;
         break;
       }
