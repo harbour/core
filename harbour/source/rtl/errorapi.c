@@ -43,6 +43,14 @@
 #include "errorapi.h"
 #include "langapi.h"
 
+/* This is added to be able to detect a recursive error, and not let Harbour
+   go into an infinite loop, this is an emulated version of the Clipper
+   "Unrecoverable error 650: Processor stack fault" internal error, but
+   better shows what is really the problem */
+#define ERROR_LAUNCH_MAX 8
+
+static int s_iLaunchCount = 0;
+
 extern HARBOUR HB_ERRORNEW( void );
 
 /* NOTE: This is called via its symbol name, so we should make sure */
@@ -81,6 +89,13 @@ WORD hb_errLaunch( PHB_ITEM pError )
       if( ! IS_BLOCK( &errorBlock ) )
          hb_errInternal( 9999, "No ERRORBLOCK() for error", NULL, NULL );
 
+      /* Check if the error launcher was called too many times recursively */
+
+      if( s_iLaunchCount == ERROR_LAUNCH_MAX )
+         hb_errInternal( 9999, "Too many recursive error handler calls", NULL, NULL );
+
+      s_iLaunchCount++;
+
       /* Launch the error handler: "lResult := EVAL( ErrorBlock(), oError )" */
 
       pBlock = hb_itemNew( NULL );
@@ -94,6 +109,8 @@ WORD hb_errLaunch( PHB_ITEM pError )
 
       pResult = hb_evalLaunch( &eval );
       hb_evalRelease( &eval );
+
+      s_iLaunchCount--;
 
       /* Check results */
 
@@ -164,6 +181,13 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
       if( ! IS_BLOCK( &errorBlock ) )
          hb_errInternal( 9999, "No ERRORBLOCK() for error", NULL, NULL );
 
+      /* Check if the error launcher was called too many times recursively */
+
+      if( s_iLaunchCount == ERROR_LAUNCH_MAX )
+         hb_errInternal( 9999, "Too many recursive ERRORBLOCK() calls", NULL, NULL );
+
+      s_iLaunchCount++;
+
       /* Launch the error handler: "xResult := EVAL( ErrorBlock(), oError )" */
 
       pBlock = hb_itemNew( NULL );
@@ -177,6 +201,8 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
 
       pResult = hb_evalLaunch( &eval );
       hb_evalRelease( &eval );
+
+      s_iLaunchCount--;
 
       /* Check results */
 
@@ -461,6 +487,37 @@ static WORD hb_errRT_New
    return wRetVal;
 }
 
+static PHB_ITEM hb_errRT_New_Subst
+(
+   USHORT uiSeverity,
+   char * szSubSystem,
+   ULONG  ulGenCode,
+   ULONG  ulSubCode,
+   char * szDescription,
+   char * szOperation,
+   USHORT uiOsCode,
+   USHORT uiFlags
+)
+{
+   PHB_ITEM pError = hb_errNew();
+   PHB_ITEM pRetVal;
+
+   hb_errPutSeverity( pError, uiSeverity );
+   hb_errPutSubSystem( pError, szSubSystem );
+   hb_errPutGenCode( pError, ulGenCode );
+   hb_errPutSubCode( pError, ulSubCode );
+   hb_errPutDescription( pError, szDescription ? szDescription : hb_langDGetErrorDesc( ulGenCode ) );
+   hb_errPutOperation( pError, szOperation );
+   hb_errPutOsCode( pError, uiOsCode );
+   hb_errPutFlags( pError, uiFlags | EF_CANSUBSTITUTE );
+
+   pRetVal = hb_errLaunchSubst( pError );
+
+   hb_errRelease( pError );
+
+   return pRetVal;
+}
+
 HARBOUR HB___ERRRT_BASE( void )
 {
    hb_errRT_BASE( ( ULONG ) hb_parnl( 1 ),
@@ -477,6 +534,11 @@ void hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char
 WORD hb_errRT_BASE_Ext1( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags )
 {
    return hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, uiOsCode, uiFlags );
+}
+
+PHB_ITEM hb_errRT_BASE_Subst( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
+{
+   return hb_errRT_New_Subst( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
 }
 
 void hb_errRT_TERMINAL( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )

@@ -5852,6 +5852,7 @@ static FUNCINFO _StdFun[] = {
 { "LASTREC"   , 0, 0 },
 { "LEFT"      , 2, 2 },
 { "LEN"       , 1, 1 },
+{ "LOCK"      , 0, 0 },
 { "LOG"       , 1, 1 },
 { "LOWER"     , 1, 1 },
 { "LTRIM"     , 1, 1 },

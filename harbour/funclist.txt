@@ -235,7 +235,7 @@ USED                    ;R;
 VAL                     ;R;
 VALTYPE                 ;R;
 VERSION                 ;S;
-WORD                    ;N;
+WORD                    ;R;
 YEAR                    ;R;
 ; RDD DRIVER SYSTEM
 DBRLOCK                 ;R;

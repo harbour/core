@@ -908,6 +908,10 @@ HARBOUR HB_STUFF( void )
       hb_retc( "" );
 }
 
+/* TODO: Check for string overflow, Clipper can crash if the resulting
+         string is too large. Example: 
+         StrTran( "...", ".", Replicate( "A", 32000 ) ) */
+
 /* replaces lots of characters in a string */
 HARBOUR HB_STRTRAN( void )
 {
@@ -1037,10 +1041,10 @@ HARBOUR HB_STRTRAN( void )
             hb_retclen( szText, pText->item.asString.length );
       }
       else
-         hb_errRT_BASE( EG_ARG, 1126, NULL, "STRTRAN" );
+         hb_errRT_BASE( EG_ARG, 1126, NULL, "STRTRAN" ); /* NOTE: Undocumented but existing Clipper Run-time error */
    }
    else
-      hb_errRT_BASE( EG_ARG, 1126, NULL, "STRTRAN" );
+      hb_errRT_BASE( EG_ARG, 1126, NULL, "STRTRAN" ); /* NOTE: Undocumented but existing Clipper Run-time error */
 }
 
 /* returns the numeric value of a character string representation of a number  */

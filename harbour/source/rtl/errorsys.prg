@@ -47,8 +47,12 @@ static function DefError( oError )
    LOCAL aOptions
    LOCAL nChoice
 
-   LOCAL cInfo := ""
-   LOCAL n := 2
+   LOCAL n
+
+   // By default, division by zero results in zero
+   IF oError:genCode == EG_ZERODIV
+      RETURN 0
+   ENDIF
 
    cMessage := ErrorMessage( oError )
 
@@ -97,6 +101,7 @@ static function DefError( oError )
 
    QOut( cMessage )
 
+   n := 2
    DO WHILE ! Empty( ProcName( n ) )
       QOut("Called from " + ProcName( n ) + ;
                "(" + AllTrim( Str( ProcLine( n++ ) ) ) + ")")

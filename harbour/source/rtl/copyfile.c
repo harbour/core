@@ -73,16 +73,13 @@ static BOOL hb_fsCopy( char * szSource, char * szDest, ULONG * pulWrittenTotal )
 
          buffer = ( BYTE * ) hb_xgrab( BUFFER_SIZE );
 
-         /* QUESTION: Does Clipper throw an error on read or write operation ? */
-         /* QUESTION: What is the E_DEFAULT behaviour on that error ? */
-
          bRetVal = TRUE;
 
          while( ( usRead = hb_fsRead( fhndSource, buffer, BUFFER_SIZE ) ) != 0 )
          {
             while( ( usWritten = hb_fsWrite( fhndDest, buffer, usRead ) ) != usRead )
             {
-               if( hb_errRT_BASE_Ext1( EG_WRITE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT )
+               if( hb_errRT_BASE_Ext1( EG_WRITE, 2016, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT )
                {
                   bRetVal = FALSE;
                   break;
@@ -127,5 +124,5 @@ HARBOUR HB___COPYFILE( void )
 #endif
    }
    else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, "__COPYFILE" );
+      hb_errRT_BASE( EG_ARG, 2010, NULL, "__COPYFILE" ); /* NOTE: Undocumented but existing Clipper Run-time error */
 }

@@ -442,10 +442,15 @@ HARBOUR HB_DTOC( void )
 {
    if( hb_pcount() == 1 )
    {
-      char * szDate = hb_pards( 1 );
-      char szFormatted[ 11 ];
+      if( ISDATE( 1 ) )
+      {
+         char * szDate = hb_pards( 1 );
+         char szFormatted[ 11 ];
 
-      hb_retc( hb_dtoc( szDate, szFormatted, hb_set.HB_SET_DATEFORMAT ) );
+         hb_retc( hb_dtoc( szDate, szFormatted, hb_set.HB_SET_DATEFORMAT ) );
+      }
+      else
+         hb_errRT_BASE( EG_ARG, 1118, NULL, "DTOC" );
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "DTOC" ); /* NOTE: Clipper catches this at compile time! */

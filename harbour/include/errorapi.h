@@ -101,6 +101,7 @@ extern PHB_ITEM hb_errLaunchSubst       ( PHB_ITEM pError );
 
 extern void     hb_errRT_BASE           ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
 extern WORD     hb_errRT_BASE_Ext1      ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags );
+extern PHB_ITEM hb_errRT_BASE_Subst     ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
 extern void     hb_errRT_TERMINAL       ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
 extern void     hb_errRT_DBCMD          ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
 extern void     hb_errRT_TOOLS          ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );

@@ -61,8 +61,8 @@ static HB_SYMB symbols[] = {
    { "ABS"       , FS_PUBLIC, HB_ABS          , 0 },
    { "ASC"       , FS_PUBLIC, HB_ASC          , 0 },
    { "AT"        , FS_PUBLIC, HB_AT           , 0 },
-   { "BOF"       , FS_PUBLIC, NULL            , 0 },
-   { "BREAK"     , FS_PUBLIC, NULL            , 0 },
+   { "BOF"       , FS_PUBLIC, HB_BOF          , 0 },
+   { "BREAK"     , FS_PUBLIC, HB_BREAK        , 0 },
    { "CDOW"      , FS_PUBLIC, HB_CDOW         , 0 },
    { "CHR"       , FS_PUBLIC, HB_CHR          , 0 },
    { "CMONTH"    , FS_PUBLIC, HB_CMONTH       , 0 },
@@ -70,24 +70,24 @@ static HB_SYMB symbols[] = {
    { "CTOD"      , FS_PUBLIC, HB_CTOD         , 0 },
    { "DATE"      , FS_PUBLIC, HB_DATE         , 0 },
    { "DAY"       , FS_PUBLIC, HB_DAY          , 0 },
-   { "DELETED"   , FS_PUBLIC, NULL            , 0 },
+   { "DELETED"   , FS_PUBLIC, HB_DELETED      , 0 },
    { "DEVPOS"    , FS_PUBLIC, HB_DEVPOS       , 0 },
    { "DOW"       , FS_PUBLIC, HB_DOW          , 0 },
    { "DTOC"      , FS_PUBLIC, HB_DTOC         , 0 },
    { "DTOS"      , FS_PUBLIC, HB_DTOS         , 0 },
    { "EMPTY"     , FS_PUBLIC, HB_EMPTY        , 0 },
-   { "EOF"       , FS_PUBLIC, NULL            , 0 },
+   { "EOF"       , FS_PUBLIC, HB_EOF          , 0 },
    { "EXP"       , FS_PUBLIC, HB_EXP          , 0 },
-   { "FCOUNT"    , FS_PUBLIC, NULL            , 0 },
-   { "FIELDNAME" , FS_PUBLIC, NULL            , 0 },
-   { "FLOCK"     , FS_PUBLIC, NULL            , 0 },
-   { "FOUND"     , FS_PUBLIC, NULL            , 0 },
+   { "FCOUNT"    , FS_PUBLIC, HB_FCOUNT       , 0 },
+   { "FIELDNAME" , FS_PUBLIC, HB_FIELDNAME    , 0 },
+   { "FLOCK"     , FS_PUBLIC, HB_FLOCK        , 0 },
+   { "FOUND"     , FS_PUBLIC, HB_FOUND        , 0 },
    { "INKEY"     , FS_PUBLIC, HB_INKEY        , 0 },
    { "INT"       , FS_PUBLIC, HB_INT          , 0 },
-   { "LASTREC"   , FS_PUBLIC, NULL            , 0 },
+   { "LASTREC"   , FS_PUBLIC, HB_LASTREC      , 0 },
    { "LEFT"      , FS_PUBLIC, HB_LEFT         , 0 },
    { "LEN"       , FS_PUBLIC, HB_LEN          , 0 },
-   { "LOCK"      , FS_PUBLIC, NULL            , 0 },
+   { "LOCK"      , FS_PUBLIC, NULL            , 0 }, /* TODO: */
    { "LOG"       , FS_PUBLIC, HB_LOG          , 0 },
    { "LOWER"     , FS_PUBLIC, HB_LOWER        , 0 },
    { "LTRIM"     , FS_PUBLIC, HB_LTRIM        , 0 },
@@ -97,16 +97,16 @@ static HB_SYMB symbols[] = {
    { "PCOL"      , FS_PUBLIC, HB_PCOL         , 0 },
    { "PCOUNT"    , FS_PUBLIC, HB_PCOUNT       , 0 },
    { "PROW"      , FS_PUBLIC, HB_PROW         , 0 },
-   { "QSELF"     , FS_PUBLIC, NULL            , 0 },
-   { "RECCOUNT"  , FS_PUBLIC, NULL            , 0 },
-   { "RECNO"     , FS_PUBLIC, NULL            , 0 },
+   { "QSELF"     , FS_PUBLIC, NULL            , 0 }, /* TODO: ? */
+   { "RECCOUNT"  , FS_PUBLIC, HB_RECCOUNT     , 0 },
+   { "RECNO"     , FS_PUBLIC, HB_RECNO        , 0 },
    { "REPLICATE" , FS_PUBLIC, HB_REPLICATE    , 0 },
-   { "RLOCK"     , FS_PUBLIC, NULL            , 0 },
+   { "RLOCK"     , FS_PUBLIC, HB_RLOCK        , 0 },
    { "ROUND"     , FS_PUBLIC, HB_ROUND        , 0 },
    { "ROW"       , FS_PUBLIC, HB_ROW          , 0 },
    { "RTRIM"     , FS_PUBLIC, HB_RTRIM        , 0 },
    { "SECONDS"   , FS_PUBLIC, HB_SECONDS      , 0 },
-   { "SELECT"    , FS_PUBLIC, NULL            , 0 },
+   { "SELECT"    , FS_PUBLIC, HB_SELECT       , 0 },
    { "SETPOS"    , FS_PUBLIC, HB_SETPOS       , 0 },
    { "SPACE"     , FS_PUBLIC, HB_SPACE        , 0 },
    { "SQRT"      , FS_PUBLIC, HB_SQRT         , 0 },
@@ -115,16 +115,16 @@ static HB_SYMB symbols[] = {
    { "TIME"      , FS_PUBLIC, HB_TIME         , 0 },
    { "TRANSFORM" , FS_PUBLIC, HB_TRANSFORM    , 0 },
    { "TRIM"      , FS_PUBLIC, HB_TRIM         , 0 },
-   { "TYPE"      , FS_PUBLIC, NULL            , 0 },
+   { "TYPE"      , FS_PUBLIC, NULL            , 0 }, /* TODO: */
    { "UPPER"     , FS_PUBLIC, HB_UPPER        , 0 },
    { "VAL"       , FS_PUBLIC, HB_VAL          , 0 },
-   { "WORD"      , FS_PUBLIC, NULL            , 0 },
+   { "WORD"      , FS_PUBLIC, HB_WORD         , 0 },
    { "YEAR"      , FS_PUBLIC, HB_YEAR         , 0 }
 };
 
 /* Registers runtime support functions symbols */
 
-/* NOTE: The system symbol table with runtime functions HAVE TO be called 
+/* NOTE: The system symbol table with runtime functions HAVE TO be called
          last */
 
 void hb_vmSymbolInit_RT( void )

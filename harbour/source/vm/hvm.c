@@ -1007,10 +1007,14 @@ void hb_vmDivide( void )
       double d2 = hb_vmPopDouble( &wDec2 );
       double d1 = hb_vmPopDouble( &wDec1 );
 
-      /* TODO: Remove the if zero, return zero code once the proper
-               error handling for divide by zero has been added. */
       if( d2 == 0.0 )
-         hb_vmPushInteger( 0 );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ZERODIV, 1340, NULL, "/" );
+
+         hb_vmPush( pResult );
+
+         hb_itemRelease( pResult );
+      }
       else
          hb_vmPushNumber( d1 / d2, hb_set.HB_SET_DECIMALS );
    }
@@ -1197,8 +1201,12 @@ void hb_vmEqual( BOOL bExact )
       hb_vmOperatorCall( pItem1, pItem2, "==" );
 
    else if( pItem1->type != pItem2->type )
-      hb_errRT_BASE( EG_ARG, 1070, NULL, "==" );
-
+   {
+      if( bExact )
+         hb_errRT_BASE( EG_ARG, 1070, NULL, "==" );
+      else
+         hb_errRT_BASE( EG_ARG, 1071, NULL, "=" );
+   }
    else
       hb_vmPushLogical( FALSE );
 }
@@ -1515,6 +1523,9 @@ void hb_vmNegate( void )
 
    else if( IS_DOUBLE( stack.pPos - 1 ) )
       ( stack.pPos - 1 )->item.asDouble.value = -( stack.pPos - 1 )->item.asDouble.value;
+
+   else
+      hb_errRT_BASE( EG_ARG, 1080, NULL, "-" );
 }
 
 void hb_vmNot( void )
@@ -1652,9 +1663,18 @@ void hb_vmModulus( void )
       double d2 = hb_vmPopDouble( &wDec2 );
       double d1 = hb_vmPopDouble( &wDec1 );
 
-      /* NOTE: Clipper always returns the result of modulus
-               with the SET number of decimal places. */
-      hb_vmPushNumber( fmod( d1, d2 ), hb_set.HB_SET_DECIMALS );
+      if( d2 == 0.0 )
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ZERODIV, 1341, NULL, "%" );
+
+         hb_vmPush( pResult );
+
+         hb_itemRelease( pResult );
+      }
+      else
+         /* NOTE: Clipper always returns the result of modulus
+                  with the SET number of decimal places. */
+         hb_vmPushNumber( fmod( d1, d2 ), hb_set.HB_SET_DECIMALS );
    }
    else
       hb_errRT_BASE( EG_ARG, 1085, NULL, "%" );
@@ -2719,7 +2739,25 @@ HARBOUR HB_VALTYPE( void )
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "VALTYPE" ); /* NOTE: Clipper catches this at compile time! */
 }
 
-HARBOUR HB_ERRORBLOCK(void)
+/* INCOMPATIBILITY: The Clipper NG states that WORD() will only work when used
+                    in CALL commands parameter list, otherwise it will return
+                    NIL, in Harbour it will work anywhere. */
+
+HARBOUR HB_WORD( void )
+{
+   if( hb_pcount() == 1 )
+   {
+      if( ISNUM( 1 ) )
+         hb_retni( hb_parni( 1 ) );
+      else
+         hb_errRT_BASE( EG_ARG, 1091, NULL, "WORD" );
+   }
+   else
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "WORD" );
+
+}
+
+HARBOUR HB_ERRORBLOCK( void )
 {
    HB_ITEM oldError;
    PHB_ITEM pNewErrorBlock = hb_param( 1, IT_BLOCK );

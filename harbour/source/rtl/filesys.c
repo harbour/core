@@ -6,7 +6,7 @@
          set the file pointer to the passed negative value, and the subsequent
          hb_fsWrite() call will fail. In CA-Clipper hb_fsSeek() will fail,
          the pointer will not be moved, and thus the hb_fsWrite() call will
-         successfully write the buffer the current file position. [vszel]
+         successfully write the buffer to the current file position. [vszel]
 
    This has been corrected by ptucker
  */
@@ -363,31 +363,31 @@ ULONG   hb_fsSeek   ( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
       /* 'Seek Error' */
       s_uiErrorLast = 25;
 
-  #if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
+   #if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
       /* get current offset */
       errno = 0;
       ulPos = lseek( hFileHandle, 0, SEEK_CUR );
       if( errno != 0 )
          s_uiErrorLast = errno;
        
-  #endif
+   #endif
 
    }
    else
    {
 
-  #if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
+   #if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
 
       errno = 0;
       ulPos = lseek( hFileHandle, lOffset, Flags );
       s_uiErrorLast = errno;
 
-  #else
+   #else
 
       ulPos = 0;
       s_uiErrorLast = FS_ERROR;
 
-  #endif
+   #endif
 
       /* Convert 'Unknown Command' to 'Seek Error' */
       if( s_uiErrorLast == 22 )
@@ -700,8 +700,7 @@ HARBOUR HB_FOPEN( void )
       hb_retni( hb_fsOpen( ( BYTE * ) hb_parc( 1 ),
                            ISNUM( 2 ) ? hb_parni( 2 ) : FO_READ ) );
    else
-      /* NOTE: Undocumented but existing Clipper Run-time error */
-      hb_errRT_BASE( EG_ARG, 2021, NULL, "FOPEN" );
+      hb_errRT_BASE( EG_ARG, 2021, NULL, "FOPEN" ); /* NOTE: Undocumented but existing Clipper Run-time error */
 }
 
 HARBOUR HB_FCREATE( void )
@@ -1016,7 +1015,7 @@ PHB_FNAME hb_fsFNameSplit( char * szFilename )
    else if( iSlashPos > 0 )
    {
       /* If we are after a drive letter let's keep the following backslash */
-      if( IS_PATH_SEP( ':' ) && 
+      if( IS_PATH_SEP( ':' ) &&
          ( szFilename[ iSlashPos ] == ':' || szFilename[ iSlashPos - 1 ] == ':' ) )
       {
          /* path with separator -> d:\path\filename or d:path\filename */

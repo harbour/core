@@ -348,10 +348,9 @@ static char *NumPicture( char *szPic, ULONG ulPic, WORD wPicFlags, double dValue
       szRet[i]  = '\0';
    }
    else
-   {
       hb_errInternal( 9999, "NumPicture(): STR does not return string", NULL, NULL );
-   }
-   return(szRet);
+
+   return szRet;
 }
 
 /*
@@ -565,9 +564,7 @@ HARBOUR HB_TRANSFORM( void )
                break;
             }
             default:
-            {
-               hb_errRT_BASE(EG_ARG, 1122, NULL, "TRANSFORM");
-            }
+               hb_errRT_BASE( EG_ARG, 1122, NULL, "TRANSFORM" );
          }
       }
       else if ( ISCHAR( 2 ) || ISNIL( 2 ) )        /* No picture supplied      */
@@ -608,13 +605,11 @@ HARBOUR HB_TRANSFORM( void )
                break;
             }
             default:
-            {
-               hb_errRT_BASE(EG_ARG, 1122, NULL, "TRANSFORM");
-            }
+               hb_errRT_BASE( EG_ARG, 1122, NULL, "TRANSFORM" );
          }
       }
       else
-         hb_errRT_BASE(EG_ARG, 1122, NULL, "TRANSFORM");
+         hb_errRT_BASE( EG_ARG, 1122, NULL, "TRANSFORM");
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "TRANSFORM" ); /* NOTE: Clipper catches this at compile time! */

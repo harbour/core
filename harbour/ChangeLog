@@ -1,3 +1,55 @@
+19990830-10:40 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rtl/errorapi.c
+    include/errorapi.h
+    + Error launcher with substitution added.
+    + Added an emulation to the Clipper "Processor stack fault" error to 
+      indicate the situation where there is an error in the error handler 
+      itself, and thus infinite recursive calls are being executed. The 
+      Harbour error message gives a better idea about the problem than in 
+      Clipper.
+  * source/vm/hvm.c
+    ! hb_vmEqual() - Exact error message now depends on the bExact setting.
+      (1070 vs. 1071)
+  * source/vm/hvm.c
+    ! hb_vmNegate() - Throws a proper runtime error, instead of an internal 
+      error. (like Clipper)
+      ( -("1") )
+  * source/compiler/harbour.y
+    + Added compile time parameter check for LOCK() (BTW, there should be no 
+      parameter passed.)
+  * source/rtl/copyfile.c
+    ! Fixed one error code (2012 -> 2016).
+    ! Two QUESTION: removed.
+    ; __COPYFILE is now 100% Clipper compatible (tested).
+  * source/vm/initsymb.c
+    + Added function pointers to the RDD functions.
+    + TODO: added for the NULL pointers still there.
+      (there are only three of them)
+  * source/vm/hvm.c
+    source/vm/initsymb.c
+    funclist.txt
+    + WORD() function added.
+  * source/vm/hvm.c
+    source/rtl/errorsys.prg
+    + hb_vmDivide(), hb_vmModulus()
+      Zero divide error is now handled in the standard error handler, and
+      the zero divide runtime error is properly generated.
+  * source/rtl/dates.c
+    ! DTOC() now throws Clipper compatible runtime error 1118.
+      ( DTOC("1") )
+  * source/rtl/strings.c
+    + TODO: added to STRTRAN() (to check string overflow once)
+  * source/rtl/arrays.c
+    ! Fixed two error messages ("AEVAL" -> "(AEVAL() function)")
+  * source/rtl/filesys.c
+    source/rtl/strings.c
+    source/rtl/copyfile.c
+    + NOTE: added that the runtime errors are Clipper compatible, but 
+      undocumented (FOPEN(), STRTRAN(), __COPYFILE())
+  * source/rtl/transfrm.c
+    * Some reformatting.
+
 19990829-15:47 EDT Paul Tucker <ptucker@sympatico.ca>
    * include/filesys.h
      * hb_fsDelete and hb_fsRename now return int
@@ -23,7 +75,7 @@
 
 19990829-14:45 GMT+1 Victor Szel <info@szelvesz.hu>
 
-  * source/vm/hvm.c (hb_vmArrayPut())
+  * source/vm/hvm.c
     ! hb_vmArrayPut() - QUESTION: replaced with the proper runtime error 
       message. (like Clipper)
       ( array[ .T. ] := 1 )
