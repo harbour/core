@@ -1,0 +1,3152 @@
+20000131-15:09 GMT+1 Victor Szakats <info@szelvesz.hu>
+  * ft_helpc.b32 
+    ! Fixed CVS ID header.
+  * source/debug/debugger.prg
+    ! Some constants changed to manifest constants (SC_NONE,SC_NORMAL)
+    + NOTE readded.
+  * make_b40.bat 
+    + ft_helpc.b32 added.
+  * source/rdd/dbcmd.c
+    ! Doc formatting errors fixed.
+  * source/tools/*.prg
+    ! Email address separators added to some lic headers.
+
+20000131-10:00 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/debug/debugger.prg
+     + added _AltD(). Waiting for a Harbour fix to accept it as AltD()
+
+   * source/rtl/tgetlist.prg
+     + added functions: GetPreValidate(), GetPostValidate(), GetActive()
+     + added functions: ReadFormat(), ReadKill(), ReadUpdated(), Updated()
+     + added functions: GetDoSetKey()
+
+   * source/rtl/dummy.prg
+     - removed functions: GetPreValidate(), GetPostValidate(), GetActive()
+     - removed functions: ReadFormat(), ReadKill(), ReadUpdated(), Updated()
+     - removed functions: GetDoSetKey()
+
+   * doc/funclist.txt
+     * Updated
+
+20000131-01:29 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/harbinit.prg
+    ! CLIPPER530 is declared only when HB_COMPAT_53 is defined.
+  * source/debug/debugger.prg
+    ! SAYs converted to DispOutAt() calls. NOTE added about this.
+    % Unused variables removed.
+    % Minor optimization.
+  * tests/regress/rt_main.ch
+    ! Date used for testing changed (for accuracy only).
+  * source/vm/maindll.c
+    ! Fixed CVS ID header.
+  - source/tools/ha.lnk
+    - Removed.
+  * ngdoc/*.lnk
+    * Formatting.
+  * source/rtl/oemansi.c
+    source/rtl/pvalue.c
+    source/tools/troff.prg
+    source/tools/os2.prg
+    source/tools/rtf.prg
+    source/tools/html.prg
+    source/tools/ng.prg
+    * Formatting: some newlines added, minor fixes.
+
+20000131-00:05 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/environ.c
+    ! Fixed VERSION() for MINGW32 (it was generating a GPF).
+
+20000130-22:41 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/mlcount.c
+    source/rtl/memoline.c
+    source/rtl/mlpos.c
+    ! Fixed GPF when the first passed parameter was not a string.
+  * source/rtl/environ.c
+    ! Fixed VERSION() reporing service pack level on NT/2000.
+    ! Fixed minor doc formatting problem.
+
+20000130-17:05 GMT+3 Alexander Kresin
+  * source/pp/hbpp.c
+    * Bug fixed, noted by Ryszard Glab
+
+20000130-13:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.l
+	* fixed support for macro variables used in FOR statement
+
+    *source/vm/hvm.c
+	* private variables created during a macro evaluation are not
+	released after a macro evaluation. They have the function/procedure
+	scope.
+
+20000129-19:15 GMT+1 Victor Szel <info@szelvesz.hu>
+  * bin/bld_tpl.*
+    ! Added macro lib.
+    ! Fix for os2 platform.
+  * source/rtl/tget.prg
+    - Removed #include "set.ch" since it's included by default (via std.ch)
+  * source/rtl/Makefile
+    source/rtl/memoline.c
+    source/rtl/filesys.c
+    * Some minor formatting fixes.
+
+20000129-14:30  GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
+    *source/rtl/oemansi.c
+        *Added documentation to HB_oemtoansi() and Hb_ansitooem()
+    *source/rtl/strings.c
+         *Added documentation to AT(),RAT(),ISDIGIT(),ISALPHA(),ISLOWER(),ISUPPER()
+
+20000129-13:20 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbexpr.c
+    *source/compiler/expropt.c
+    *source/macro/macro.c
+        * empty list expression is not allowed now - this generates
+        syntax error:  funcall( ()->expression, () )
+
+    *source/compiler/harbour.l
+    *source/compiler/harbour.y
+        * fixed support for STEP and TO keywords
+	* fixed GPF (core dump) if field variable is used in a codeblock
+
+20000129-01:55 EST Paul Tucker <ptucker@sympatico.ca>
+  * makefile.vc
+    + source/rtl/oemansi.c
+
+20000128-20:15 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/macro/macro.l
+    *source/compiler/harbour.l
+	* any nonstandard characters (ASCII < 32 and ASCII > 127) are
+	passed to grammar analyser instead of printing on stdout
+
+    *include/hbexpr.c
+    *source/macro/macro.c
+    *source/compiler/expropt.c
+	* memory is released properly when more complex expression
+	is macro compiled eg. &( "1 + 2" ), &( ".T.:classname" )
+
+    *source/debugger/debugger.prg
+	* added 'LOCAL nKey' to suppress warnings
+
+20000128-20:3  GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
+   *source/rdd/dbcmd.c
+   *source/rtl/arrays.c
+        *Enhaced the Docs
+   *doc/whatnew.txt
+        *Description of the program that extract documention from source code forget the OS2 and TROFF output
+20000115-20:3  GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
+
+   * ngdoc/ft_helpc.prg
+       * Fixed some erros
+   * source/tools/rtf.prg
+   * source/tools/ng.prg
+   * source/tools/os2.prg
+   * source/tools/troff.prg
+       * Fixed the aligment of text on generating the source files
+
+
+20000127-12:54 GMT+1 Patrick Mast <harbour@PatrickMast.com>
+   * doc/whatsnew.txt
+     * updated for build 31
+   * include/hbver.c
+     * Changed day in date to 27
+
+20000126-23:59 EST Paul Tucker <ptucker@sympatico.ca>
+  * makefile.vc
+    + source/tools/ng.prg
+    + source/tools/os2.prg
+    + source/tools/html.prg
+    + source/tools/rtf.prg
+    + source/tools/troff.prg
+
+20000126-21:41 GMT+1 Patrick Mast <harbour@PatrickMast.com>
+   * include/hbver.c
+     * Bumped build to 31 and updated date
+
+20000126-12:50 GMT+1 Ignacio Ortiz <ignacio@fivetech.com>
+   * source/rtl/tget.prg
+     * Bug fixed on numeric gets with zero digits in his value
+
+2000-01-25 16:20 GMT-5 David G. Holm <dholm@ sd-llc.com>
+
+   * source/rtl/itemapi.c
+     ! Don't check for infinity when checking for numeric overflow and using
+       a Borland C compiler, because Borland C returns 0 for log(0), which is
+       what is being used to set infinity.
+
+2000-01-25 21:47 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/debug/debugger.prg
+     * Partial support for editing variables.
+
+   * source/rtl/tgetlist.prg
+     * Added support for non-modal GetLists management.
+
+20000125-10:05 GMT+2 Chen Kedem <niki@actcom.co.il>
+  * source/rtl/arrays.c
+    - remove documentation stolen from CA-Clipper 5.2 NG from the following
+      functions: ARRAY(), AADD(), ASIZE(), ATAIL(), AINS(), ADEL(), AFILL(),
+                 ASCAN()
+    - remove $EXAMPLES$ stolen from CA-Clipper 5.2 NG from the following
+      function: ACOPY(), ACLONE()
+    + ACLONE() : add $COMPLIANCE$ note
+
+2000-01-25 02:45 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/debug/debugger.prg
+     * Support for up and down arrows on command window
+       Still needs some fine tunning.
+
+2000-01-24 20:15 GMT-5 David G. Holm <dholm@ sd-llc.com>
+
+   * source/rtl/environ.c
+     % Due to careless use of the CVS repository, I had to redo the following:
+     ! Fixed bug in setting end of string for case VER_PLATFORM_WIN32_WINDOWS:
+     ! Put Windows support for MingW32 back in after accidentally removing it.
+
+20000123-17:35 GMT+1 Ignacio Ortiz <ignacio@fivetech.com>
+   * source/rtl/tget.prg
+     * Improved: cursor flickering removed
+
+2000-01-23 16:30 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/debug/debugger.prg
+     * Improved debugger.
+
+   * source/rtl/tgetlist.prg
+     * Improved METHOD ShowScoreBoard.
+
+   * source/vm/hvm.c
+     + New public BOOL variable hb_DebuggerIsWorking
+
+20000124-14:05 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/rtl/memoline.c
+	* fixed 'max' to 'HB_MAX_'
+
+    *source/rtl/mlpos.c
+	* added RCS ID
+
+    *source/rtl/Makefile
+	* added mlpos.c file
+
+20000124-13:30 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.y
+    *source/macro/macro.c
+	* fixed support for the syntax:
+	    DO &var
+	    DO &( expression_list )
+
+2000-01-23 22:03 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/debug/debugger.prg
+     * Improved debugger View Sets painting.
+
+2000-01-23 10:53 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/tbrowse.prg
+     * The newly retrieved data is passed as an argument to ColorBlock
+       (accordingly to Clipper ColorBlock documentation)
+
+   * source/debug/debugger.prg
+     * Improved debugger: View Sets is partially working.
+
+2000-01-22 20:03 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/debug/debugger.prg
+     * Improved debugger: Command window is starting working.
+
+2000-01-22 13:40 GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
+   * ngdoc/ft_helpc.prg
+      *Added support for OS2 IPF source code
+   +source/tools/os2.prg
+      Support class for FT_HELPC generate OS2 IPF files
+
+2000-01-22 10:22 GMT+1 Patrick Mast <harbour@PatrickMast.com>
+   * source/rtl/environ.c (From Jose Lalin)
+     ! Getenv accepts a default value to return when the envvar is not found
+     ! Updated function doc
+
+2000-01-21 14:05 GMT-5 David G. Holm <dholm@ sd-llc.com>
+
+   * source/rtl/environ.c
+     ! Fixed bug in setting end of string for case VER_PLATFORM_WIN32_WINDOWS:
+     ! Put Windows support for MingW32 back in after accidentally removing it.
+
+20000121-17:57 GMT+3 Alexander Kresin
+  * source/pp/hbpp.c
+    * now can be used truncated preprocessor directives ( #defi, #inclu, ... )
+
+20000121-12:50 GMT+1 Ignacio Ortiz <ignacio@fivetech.com>
+   + source/rtl/mlpos.c
+     * Added function MlPos()
+
+   * source/rtl/memoline.c
+     * Fixed little bug on empty lines
+
+   * source/rtl/tget.prg
+     * Multiple enhancements, class Tget is completed
+
+   * source/rtl/tgetlist.prg
+     * Fixed bug on date management reported by Kwon OhChul
+
+   * makefile.b32
+     * mlpos.c included (Please update other make files)
+
+20000121-09:40 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/debug/debugger.com
+     * Improved monitored variables containt support
+
+2000-01-20 14:15 GMT-5 David G. Holm <dholm@ sd-llc.com>
+
+   * source/rtl/dates.c
+     ! Corrected CTOD() to include 0 as a year subject to SET EPOCH
+       (the range had been accidentally set to 1 through 99 instead
+       of 0 through 99).
+
+20000119-21:21 GMT+3 Alexander Kresin
+  * source/pp/hbpp.c
+    * Few bugs fixed, reported by Matteo Baccan and Dave Pearson
+
+20000119-13:05 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/macro/macro.y
+        * fixed GPF when IIF()/IF() was used in macro expression
+        * support for TYPE() function was added
+
+    *include/macro.h
+    *source/macro/macro.c
+        * support for TYPE() function was added
+        * memory allocated for macro evaluation is properly released
+        when a runtime error occurs during evaluation
+
+    *source/rtl/type.c
+        * full implementation of TYPE() function was added
+
+    *include/extend.h
+        * new declaration for hb_macroGetType - called from TYPE()
+        * new declaration for hb_valtypeGet shared by VALTYPE and TYPE
+
+    *source/rtl/valtype.c
+        * new function hb_valtypeGet() used internally in Harbour
+
+    *source/rtl/errorapi.c
+    *include/errorapi.h
+        * new structure HB_ERROR_INFO for catching errors at C level
+        * new function hb_errorHandler() that sets/gets low-level
+        error handler.
+
+    *include/ctoharb.h
+    *source/vm/hvm.c
+        * added HB_ENDPROC_REQUEST and hb_vmRequestEndProc() which are used
+        to request immediately return from currently evaluated pcode buffer.
+        This is used to stop processing of macro compiled code.
+
+    *source/rtl/itemapi.c
+        * if parameter passed to hb_itemNew is not NULL then it is used to
+        initialize the new item (in other words it creates a copy of
+        passed item)
+
+    *source/rdd/rddcdx/dbfcdx1.c
+        * The macro structure is now self deallocating if hb_macroDelete()
+        is called - it must not call hb_xfree() after hb_macroDelete()
+        was used.
+
+    *doc/funclist.txt
+        * marked TYPE() as Ready :)
+
+2000-01-19 08:28 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/debug/debugger.prg
+     + fixed and improved to use Class TDbMenuItem METHOD Display
+       everytime a menuitem is displayed.
+   * source/compiler/genc.c
+     ! fixed a new bug that was providing wrong filenames to the
+       debugger.
+
+2000-01-18 22:20  GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
+    *ngdoc/ft_helpc.prg
+        Enhaced. Now Generate Norton Guide Source Code and TROFF Files
+    *source/tools/rtf.prg
+        Document the Files and Source code Formated
+    *source/tools/html.prg
+        Document the Files and Source code Formated
+    +ngdoc/harbour.lnk
+        Link file for Norton Guide. ha.lnk is needed for the other output files
+    +ngdoc/harbour.rsp
+        List of files to FT_helpc need to process
+    +ft_helpc.b32
+        Make file for FT_HELPC for Borland
+    +source/tools/ng.prg
+        Support class for FT_HELPC generate Norton Guide Source code
+    +source/tools/troff.prg
+        Support class for FT_HELPC generate TROFF files
+
+
+2000-01-17 18:55 GMT-5 David G. Holm <dholm@ sd-llc.com>
+
+   * source/environ.c
+     ! Corrected manifest constant _Windows to be _WINDOWS_
+
+2000-01-17 15:30 GMT-5 David G. Holm <dholm@ sd-llc.com>
+
+   * source/environ.c
+     ! Fixed problems in new Windows build version logic.
+
+20000117-22:09 GMT+3 Alexander Kresin
+  * source/pp/hbpp.c
+    * Few bugs fixed, reported by Matteo Baccan
+  * contrib/rdd_ads/ads.ch
+  * contrib/rdd_ads/ads1.c
+  * contrib/rdd_ads/adsfunc.c
+  * contrib/rdd_ads/rddads.h
+    Bug fixed in SET INDEX TO ... implementation
+    New commands added
+
+20000117-16:05 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/rdd/dbcmd.c
+        * fixed GPF in ORDBAGEXT()
+
+20000117-13:30 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/rtl/type.c
+        * added hb_retc( "U" ) for initial implementation of TYPE() function
+        (due to a very popular demand :)
+
+20000117-12:25 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/rtl/achoice.prg
+    *source/rtl/input.prg
+        * macro related code are active now
+
+    *source/compiler/harbour.y
+        * function that initializes static variables is generated
+        properly when ANNOUNCE statement is used
+
+
+20000116-20:30 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/rtl/harbinit.prg
+        * replaced ANNOUNCEd CLIPPER5xx with procedure definition
+
+
+20000116-15:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hberrors.h
+        * added WARN_DUPL_ANNOUNCE
+        * added ERR_FUNC_ANNOUNCE
+
+    *include/compiler.h
+        * added declaration of hb_compAnnounce( char * )
+        which creates an ANNOUNCEd procedure
+
+    *source/compiler/hbgenerr.c
+        * added warning when redundant ANNOUNCE statement is used
+        * added error message when ANNUNCEd procedure is declared STATIC
+
+    *source/compiler/harbour.y
+    *source/compiler/harbour.l
+    *source/compiler/harbour.c
+        * fixed support for ANNOUNCE statement
+        (static variables are no longer bound to ANNOUNCEd procedure)
+
+    *source/pp/table.c
+        * removed fixed translation of ANNOUNCE statement
+
+    *source/compiler/cmdcheck.c
+        * restored correct support for '-w' compiler switch
+
+20000115-20:3  GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
+    *source/rtl/arrays.c
+    *source/rtl/type.c
+    *source/rtl/text.prg
+    *source/rtl/inkey.c
+    *source/rtl/setkey.prg
+    *source/rtl/proc.c
+    *source/rtl/adir.prg
+    *source/rtl/dircmd.prg
+    *source/rtl/asort.prg
+    *source/rtl/achoice.prg
+    *source/rtl/alert.prg
+    *source/rtl/Objfunc.prg
+    *source/rdd/dbcmd.c
+        *Fixed some seealso's reference that was missing the comma separator
+    *Source/rtl/strings.c
+        *Added document to : SUBSTR(),LEFT(),RIGHT(),LTRIM functions
+   *Source/rtl/Environ.c
+        *Added document to : VERSION() and GETENV() function
+   *ngdoc/ft_helpc.prg
+        *Fixed a bug on  generating see alsos for HTML output
+   *Source/tools/rtf.prg
+        *All topics now start with the 'IDH_' prefix
+
+
+20000115-19:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/macro/macro.l
+        * corrected recognition of variable names which ends with numbers
+        e.g. X1, A123
+
+20000115-15:45 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/hbgenerr.c
+        * added missing comma separator in error messages list
+
+20000115-15:15 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/pcode.h
+        * added new pcodes:
+                HB_P_PUSHALIASEDVAR
+                HB_P_POPALIASEDVAR
+                HB_P_MPUSHALIASEDVAR
+                HB_P_MPOPALIASEDVAR
+
+NOTE: All sources HAVE TO be recompiled!!!
+
+    *include/macro.h
+        * added new constant:
+        HB_MACRO_GEN_PUSH     4   /* generate PUSH pcodes */
+        HB_MACRO_GEN_POP      8   /* generate POP pcodes */
+        HB_MACRO_GEN_ALIASED  16  /* force aliased variable */
+
+    *include/extend.h
+        * added declaration of
+        hb_macroPopAliasedValue
+        hb_macroPushAliasedValue
+
+    *source/macro/macro.c
+    *source/compiler/harbour.c
+        * corrected handling of aliased variables in case when an alias
+        is determined at runtime (the field variable was assumed previously
+        but now the virtual machine checks the value of passed alias and
+        used either a memvar or a field)
+        for example:
+        alias := "M"
+        ? ( alias )->var
+        The value of memvar named "var" should be printed
+
+    *include/hbexpr.c
+    *source/compiler/expropt.c
+        * finished support for aliased macro expressions
+
+    *source/macro/macro.c
+        * finished support for aliased macro expressions
+
+    *source/vm/hvm.c
+    *source/compiler/genc.c
+    *source/compiler/genhrb.c
+    *source/compiler/genjava.c
+        * added support for new pcodes:
+                HB_P_PUSHALIASEDVAR
+                HB_P_POPALIASEDVAR
+                HB_P_MPUSHALIASEDVAR
+                HB_P_MPOPALIASEDVAR
+
+    *source/compiler/harbour.y
+        * removed 'macro support' from the TODO list :)
+
+2000-01-14 12:20 GMT-5 David G. Holm <dholm@ sd-llc.com>
+
+   * ngdoc/ft_helpc.prg
+     + Updated file provided by Luiz Rafael Culik
+
+2000-01-13 19:45 GMT-5 David G. Holm <dholm@jsd-llc.com>
+
+   * ngdoc/bldfthe.bat
+     + Updated file provided by Luiz Rafael Culik
+
+   * ngdoc/ft_helpc.prg
+     + Updated file provided by Luiz Rafael Culik
+
+   * ngdoc/ha.lnk
+     + Updated file provided by Luiz Rafael Culik
+
+   * source/rtl/license.prg
+     + Updated file provided by Luiz Rafael Culik
+
+   * source/rtl/readme.prg
+     + Updated file provided by Luiz Rafael Culik
+
+   * source/tools/rtf.prg
+     + Updated file provided by Luiz Rafael Culik
+
+   * source/tools/html.prg
+     + Updated file provided by Luiz Rafael Culik
+
+2000-01-10 16:10 GMT-5 David G. Holm <dholm@jsd-llc.com>
+
+   * ngdoc/ft_helpc.prg
+     ! Renamed to lower case for Linux compatibility.
+
+   * ngdoc/ha.lnk
+     ! Renamed to lower case for Linux compatibility.
+
+   * source/tools/Makefile
+     + Added rtf.prg to list of PRG files.
+
+   * source/tools/rtf.prg
+     ! Renamed to lower case for Linux compatibility.
+
+2000-01-10 15:50 GMT-5 David G. Holm <dholm@jsd-llc.com>
+
+   * ngdoc/ft_helpc.prg
+     ! Renamed to lower case for Linux compatibility.
+     + Added CVS Id
+
+   * ngdoc/ha.lnk
+     ! Renamed to lower case for Linux compatibility.
+     ! Changed first menu from 'A-F' to 'A-D'
+
+   * source/compiler/hbusage.c
+     ! Corrected description of -10 command line option to refer to the
+       number of significant digits (per Dave Pearson).
+
+   * source/rtl/inkey.c
+     + Added blank line between documentation for INKEY() parameters
+
+   * source/tools/rtf.prg
+     ! Renamed to lower case for Linux compatibility.
+     + Added CVS Id
+
+20000109-14:25 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbexpr.c
+    *source/compiler/expropt.c
+    *source/compiler/harbour.y
+        * fixed STATIC var1[0], var2[3,4] initialization failure
+
+2000-01-07  GMT +3  Luiz Rafael Culik <Culik@sl.conex.net>
+     * gt.b32
+          ! Added RTF.prg
+     * source/rdd/dbcmd.c
+     * source/rtl/achoice.prg
+     * source/rtl/adir.prg
+     * source/rtl/alert.prg
+     * source/rtl/asort.prg
+     * source/rtl/browdb.prg
+     * source/rtl/browse.prg
+     * source/rtl/dbstrux.prg
+     * source/rtl/debugger.prg
+     * source/rtl/devoutp.prg
+     * source/rtl/dircmd.prg
+     * source/rtl/errorsys.prg
+     * source/rtl/fieldbl.prg
+     * source/rtl/fileread.prg
+     * source/rtl/harbinit.prg
+     * source/rtl/input.prg
+     * source/rtl/memvarbl.prg
+     * source/rtl/menuto.prg
+     * source/rtl/objfunc.prg
+     * source/rtl/readvar.prg
+     * source/rtl/readkey.prg
+     * source/rtl/setkey.prg
+     * source/rtl/setta.prg
+     * source/rtl/stringp.prg
+     * source/rtl/wait.prg
+     * source/rtl/xsavescr.prg
+     * source/rtl/arrays.c
+     * source/rtl/word.c
+     * source/rtl/type.c
+     * source/rtl/valtype.c
+     * source/rtl/tone.c
+     * source/rtl/strings.c
+     * source/rtl/proc.c
+     * source/rtl/mtran.c
+     * source/rtl/memvars.c
+     * source/rtl/len.c
+     * source/rtl/inkey.c
+     * source/rtl/hardcr.c
+     * source/rtl/Filesys.c
+     * source/rtl/empty.c
+     * source/rtl/descend.c
+          +Removed external reference for see also
+          +Formated see also between commas
+     + ngdoc/FT_helpc.prg
+          Source code for FT_HELPC  document  source Extriper
+     + ngdoc/ha.lnk
+          List of Functions categories to the FT_HELPC
+     + bldfthe.bat
+          Batch file to create the exe
+
+2000-01-03 18:25 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * source/rtl/inkey.c
+     !  Enable Unix-compatible keyboard input even when not using
+        ncurses or slang.
+
+20000103-19:48 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/expropt.h
+    *include/hbexpr.c
+        * renamed: hb_compExprNewSymbol() -> hb_compExprNewFunName()
+        * added new expression type: HB_ET_RTVAR and hb_compExprNewRTVar()
+        for PUBLIC and PRIVATE variable declarations
+
+    *source/compiler/expropt.c
+    *source/compiler/harbour.c
+    *source/compiler/harbour.y
+    *source/compiler/harbour.l
+        * added support for macro variables in PUBLIC and PRIVATE declarations
+        PRIVATE &var, &var.end
+        * optimization of PUBLIC/PRIVATE variables creation (there was a
+        single call __MVPUBLIC/__MVPRIVATE function for every variable,
+        there is a single call for a single statement now), for example:
+        PRIVATE var1, var2, var3
+        // 3 calls previously - only one call now
+
+    *source/macro/macro.y
+        * renamed: hb_compExprNewSymbol() -> hb_compExprNewFunName()
+        * fixed handling of &var.text syntax
+
+    *source/macro/macro.c
+        * fixed handling of &var.text syntax
+        * handling of text substitution is now Clipper compatible -
+        previously only substituted value was scanned for nested macro
+        operator - the whole text is rescanned now, for example:
+        PRIVATE a:='&', b:='b'
+        ? &a.b
+        will print a value of variable 'b' now instead of a generation
+        of a syntax error.
+
+    *include/extend.h
+        * added declaration for hb_macroTextSubst()
+        * added declaration for hb_macroIsIdent()
+
+20000102-14:27 EST Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/environ.c
+    * remove Borland check on define of VER_PLATFORM_WIN32_CE
+  * source/rtl/filesys.c
+    * removed duplicated comment lines.  (was missing /* anyway)
+  * source/rdd/dbcmd.c
+    * added missing close comment.
+
+20000102-17:10:00 GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
+* source/rtl/browdb.prg
+* source/rtl/text.prg
+* source/rtl/browse.prg
+* source/rtl/dbedit.prg
+* source/rtl/devoutp.prg
+* source/rtl/dircmd.prg
+* source/rtl/menuto.prg
+* source/rtl/xsavescr.prg
+* source/rtl/setkey.prg
+* source/rtl/inkey.c
+    +Fixed some see also references for the Norton Guide
+    +Added documentatio to KEYBOARD and SET FUNCTION and SET KEY COMMAND
+* source/rtl/fileysys.c
+* source/rtl/array.c
+   + Updated docs for FCLOSE() FCREATE() FERASE() FERROR() ACLONE()
+   ACOPY() AEVAL()
+* source/rtl/readkey.prg
+* source/rtl/readvar.prg
+* source/rtl/setfunc.prg
+     +Added the documentation to this functions since was accidentaly deleted
+
+20000101-22:50 GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
+* doc/funclist.txt
+   +Update some function status
+* source/rdd/dbcmd.c
+   +Added  to missing documentation of __dbzap() and OrdCondSet()
+* source/rtl/FileSys.c
+    + doc for  FOPEN()
+    + doc for  FCLOSE()
+    + doc for  FWRITE()
+    + doc for  FSEEK()
+    + doc for  FREAD()
+    + doc for  FILE()
+    + doc for  FREADSTR()
+    + doc for  FRENAME()
+    + doc for  FERROR()
+    + doc for  RENAME
+    + doc for  ERASE
+
+20000101-07:18 GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
+* source/rdd/dbcmd.c
+* source/rtl/alert.prg
+* source/rtl/browdb.prg
+* source/rtl/input.prg
+* source/rtl/asort.prg
+* source/rtl/text.prg
+* source/rtl/browse.prg
+* source/rtl/dbedit.prg
+* source/rtl/devoutp.prg
+* source/rtl/dircmd.prg
+* source/rtl/dummy.prg
+* source/rtl/errorsys.prg
+* source/rtl/fieldbl.prg
+* source/rtl/harbinit.prg
+* source/rtl/menuto.prg
+* source/rtl/xsavescr.prg
+* source/rtl/memvarbl.prg
+* source/rtl/objfunc.prg
+* source/rtl/readkey.prg
+* source/rtl/readvar.prg
+* source/rtl/setfunc.prg
+* source/rtl/setkey.prg
+* source/rtl/setta.prg
+* source/rtl/tbcolumn.prg
+* source/rtl/tbrowse.prg
+* source/rtl/tclass.prg
+* source/rtl/terror.prg
+* source/rtl/tget.prg
+* source/rtl/tgetlist.prg
+* source/rtl/wait.prg
+* source/rtl/adir.prg
+* source/rtl/achoice.prg
+* source/rtl/arrays.c
+* source/rtl/break.c
+* source/rtl/codebloc.c
+* source/rtl/console.c
+* source/rtl/descend.c
+* source/rtl/dir.c
+* source/rtl/do.c
+* source/rtl/empty.c
+* source/rtl/hardcr.c
+* source/rtl/initexit.c
+* source/rtl/inkey.c
+* source/rtl/len.c
+* source/rtl/memvars.c
+* source/rtl/mtran.c
+* source/rtl/natmsg.c
+* source/rtl/pcount.c
+* source/rtl/pvalue.c
+* source/rtl/set.c
+* source/rtl/tone.c
+* source/rtl/type.c
+* source/rtl/valtype.c
+* source/rtl/word.c
+* source/rtl/xhelp.c
+* source/tools/nconvert.prg
+* source/tools/io.c
+
+Fixed the documentation to make the ng linker happy and added docs for the arrays.c and dbcmd.c
+
+20000101-00:00 GMT+1 Patrick Mast <Harbour@PatrickMast.com>
+  - doc/harbour.ng
+    The NG files will be downloadable via the web site.
+
+19991231-13:00 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/rtl/memvars.c
+        * new function hb_memvarGetStrValuePtr() that return a value
+        of passed variable if this variable exists and if it contains
+        a string value (the function is called from macro text
+        substitution)
+
+    *include/extend.h
+        * added declaration for hb_memvarGetStrValuePtr()
+        * added declaration of hb_macroTextValue()
+
+    *source/vm/hvm.c
+        * added code to handle macro text substitution "text &macro"
+
+    *source/macro/macro.c
+        * added code to handle macro text substitution
+
+19991231-06:15 GMT+1 Antonio Linares <alinares@fivetech.com>
+  * source/rtl/gt/gtwin.c
+    * fix for a Win API wrong parameter call detected using NuMega BoundsChecker
+
+19991230-19:28 GMT+1 Patrick Mast <Harbour@PatrickMast.com>
+  + doc/harbour.ng (Luiz Rafael Culik)
+
+19991230-08:22 GMT+2 Chen Kedem <niki@actcom.co.il>
+  * source/rtl/text.prg
+    + doc for __TextSave()
+    + doc for __TextRestore()
+  * source/rtl/xsavescr.prg
+    + doc for __XSaveScreen()
+    + doc for __XRestScreen()
+  * doc/funclist.txt
+    * BROWSE() marked as S (not yet ready, missing EDIT mode)
+
+1999-12-29 19:00 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * doc/gmake.txt
+     + Added mention of -DHARBOUR_USE_CRS_GTAPI and
+       -DHARBOUR_USE_SLN_GTAPI for os2/gcc and linux/gcc.
+
+   * tests/boxtest.prg
+     ! Changed function name from test() to main(), because of
+       limitations with some versions of Harbour, such as MingW32.
+
+   * tests/Makefile
+     ! Moved tstprag.prg from PRG_SOURCES to BAD_PRG_SOURCES.
+
+   * tests/readhrb.prg
+     ! Added error checking after attempting to open the source HRB
+       file, because otherwise the program attempts to display a very
+       large random number of bytes from a file handle that doesn't
+       exist, resulting in what appears to be an infinite loop.
+
+   * tests/tstprag.prg
+     ! Added // NOTEST as first line in this test program that
+       won't compile.
+
+19991227-08:30 GMT+2 Chen Kedem <niki@actcom.co.il>
+  * source/rtl/readvar.prg
+    + doc for READVAR()
+  * source/rtl/setfunc.prg
+    + doc for __SetFunction()
+
+19991227-00:36 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * Updated tests/bld_b32w.bat
+
+1999122605:51 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * Updated makefile.b32
+     + Added hbfsapi and hbtrace modules
+
+19991223-16:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbexpr.c
+    *source/compiler/expropt.c
+    *source/compiler/harbour.y
+        * fixed compiler parse error on aliased macro expressions
+        M->&( expression )
+
+19991222-18:20 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbexpr.c
+    *source/compiler/expropt.c
+        * fixed generation of pcodes for aliased expressions used in
+        a statement context (the previously selected workarea is popped
+        from the eval stack instead of swapping)
+
+19991220-18:42 GMT+1 Chen Kedem <niki@actcom.co.il>
+  * source/rtl/menuto.prg
+    + doc for __AtPrompt()
+    + doc for __MenuTo()
+    I'm looking at v1.14 and the following are wrong:
+    ! __AtPrompt() : nCol <--> nRow (switch names, not places)
+    (Uploaded by Victor Szel)
+
+Mon Dec 20 13:49:01 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+        * source/rdd/dbcmd.c:
+        * source/rtl/classes.c:
+        Fixed two minor warnings.
+
+19991219-14:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.l
+        * fixed recognition of 'DO &var WITH' syntax
+
+19991219-15:55 GMT+3 Alexander Kresin
+  * source/pp/hbpp.c
+    * Bug fixed, reported by Victor Szel
+
+19991218-18:25 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbexpr.c
+        * static variables can be initialised with arrays that
+        contains parenthesized epressions e.g. STATIC a:={ (1) }
+        * fixed code that handles aliased macro expressions
+        e.g. FIELD->&var1 := var2
+
+19991218-10:35 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/objfunc.prg
+    source/rtl/readkey.prg
+    + Added documentation by Chen Kedem.
+  * source/compiler/cmdcheck.c
+    ! Fixed handling of the /q0 switch. (Provided by Jose)
+
+19991217-16:40 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * config/os2/icc.cf
+     + I added the /NOIGNORECASE option to both the librarian and the linker,
+       because C++ can't tell the difference between 'int hb_pcount( void )'
+       and 'HARBOUR HB_PCOUNT( void )' unless a case-sensitive link is used.
+       This requires rebuilding all of Harbour if you are using OS/2 and the
+       IBM C++ compiler (i.e., make -r clean).
+
+19991216-15:50 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * include/extend.h
+    + Added a new item type: IT_POINTER ( USHORT ) 0x0001
+    + Added two defines:
+      #define IS_POINTER( p )    IS_OF_TYPE( p, IT_POINTER )
+      #define ISPOINTER( n )     ( hb_param( n, IT_POINTER ) != NULL )
+    + Added two prototypes:
+      extern HB_MACRO_PTR hb_macroCompile( char * )
+      extern void hb_macroDelete( HB_MACRO_PTR )
+
+  * include/itemapi.h
+    + Added two prototypes for manipulate items (IT_POINTER):
+      extern void * hb_itemGetPtr( PHB_ITEM );
+      extern PHB_ITEM hb_itemPutPtr( PHB_ITEM pItem, void * pValue )
+
+  * source/rtl/itemapi.c
+    + Added two functions for manipulate items (IT_POINTER):
+      void * hb_itemGetPtr( PHB_ITEM );
+      PHB_ITEM hb_itemPutPtr( PHB_ITEM pItem, void * pValue )
+
+  * source/macro.c
+    * Removed static declaration from static void hb_macroDelete( HB_MACRO_PTR )
+
+  * include/rddapi.h
+    source/rdd/dbcmd.c
+    source/rdd/dbf1.c
+    source/rdd/dbfcdx/dbfcdx1.c
+    + Added code to OrdCreate() function.
+
+19991215-19:46 GMT+1 Antonio Linares <alinares@fivetech.com>
+  * source/rtl/classes.c
+    * Fixed inheritance of error handlers
+
+19991215-12:32 GMT+1 Antonio Linares <alinares@fivetech.com>
+  * source/rtl/classes.c
+    + Added a new function __GetMessage() to retrieve the message
+      name from a Class error handler.
+  * tests/testcls.prg
+    * enhanced showing the use of __GetMessge()
+
+19991215-12:09 GMT+1 Antonio Linares <alinares@fivetech.com>
+  + added common.b32 provided by Jose Lalin
+  * tests/bld_b32.bat
+    a %2 extra parameter is accepted. i.e.: bld_b32 hello /p
+
+19991215-13:35 GMT+3 Alexander Kresin
+  * source/pp/hbpp.c
+    * Bug fixed, reported by Victor Szel
+
+19991215-09:34 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * include/hbclass.ch
+     * ERROR HANDLER and ON ERROR METHODs defined (they are equivalent)
+   * include/hboo.ch
+     * new define HB_OO_ONERROR
+   * source/rtl/tclass.prg
+     * added new DATA nOnError
+     * added new METHOD SetOnError()
+   * source/rtl/classes.c
+     * added new struct CLASS member pFunError
+     * modified hb_objGetMethod() to return pFunError if defined and not msg found
+     * modified HB___CLSADDMSG() to support defined Class error handler if defined
+   + tests/testcls.prg
+     * new sample testing first ON ERROR working prototype
+
+19991214-14:55 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * config/dos/dir.cf
+   * config/linux/dir.cf
+   * config/os2/dir.cf
+   * config/w32/dir.cf
+     + Don't set up a directory rule if only compiling one module (for
+       (example, when using 'make -r PM=rtfclass' in the tests directory),
+       because that module should be in the current directory and there is
+       no need to compile some module with the same name in a subdirectory.
+
+   * tests/regress/Makefile
+     + Added a default setting for HB_MAIN = std, because the IBM C++
+       linker can't pull the 'main' module out of a library file.
+
+19991212-13:45 EST Paul Tucker <ptucker@sympatico.ca>
+  * tests/bld_vc.bat
+    + ..\lib\vc\macro.lib
+
+19991212-13:25 EST Paul Tucker <ptucker@sympatico.ca>
+  * makefile.vc
+    + source/macro/*
+
+19991212-16:28 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/runner/stdalone/Makefile
+    ! Fixed lib order.
+  * tests/regress/rt_hvm.prg
+    + Added some tests, commented out for Harbour.
+  * *.b32
+    make_b*.bat
+    tests/bld_b*.bat
+    ! New versions by Jose Lalin.
+
+19991212-13:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.c
+    *source/macro/macro.c
+        * removed duplicated check if a reserved name was used
+
+    *source/macro/macro.c
+    *include/hbexpr.c
+    *include/compiler.h
+        * removed 'IsFunction' parameter of hb_compGenPushSymbol
+        that is no longer needed. 'hb_compGenPushSymbol()' should push any
+        symbol without checking, the check for reserved function name is
+        done in hb_compGenPushFunCall()
+
+    *source/compiler/harbour.l
+    *source/macro/macro.l
+        * removed duplicated check if a reserved name was used
+        * restored support for &macro[ index ] syntax
+
+    *include/extend.h
+        * added missing declaration of hb_macroRun() function
+        * moved here the definition of HB_MACRO structure
+
+    *include/macro.h
+        * the definition of HB_MACRO structure moved to extend.h
+
+    *include/expropt.h
+        * the definition of HB_CBVAR structure moved to extend.h
+
+    *source/vm/hvm.c
+    *source/macro/macro.c
+    *include/extend.h
+        * added partial support for macro function call &var() or DO &var
+        (partial because a simple function name is allowed only -
+         there is no support for nested macros and complex macros)
+
+    *source/macro.y
+        * added #undef __GNUC__ as a workaround of bison.simple bug in
+        yyparse() declaration
+
+19991211-15:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbexpr.c
+        * this is expropt.c moved from source/compiler and renamed
+
+    *source/compiler/expropt.c
+        * dummy file that includes hbexpr.c file
+
+    *source/macro/macro.c
+        * includes "hbexpr.c" now instead of "../source/compiler/expropt.c"
+        * added hb_macroCompile( char * ) function for compilation of
+        passed string. It can be used together with hb_macroRun() in
+        database index key evaluation
+        * added support for macro-compiled codeblocks
+        * added tracing headers
+
+    *source/macro/macro.y
+    *source/vm/hvm.c
+    *source/rtl/codebloc.c
+        * added support for macro-compiled codeblocks
+        * restored %pure_parser option :)
+
+    *source/macro/macro.l
+        * added tracing headers
+
+    *include/extend.h
+        * changed declaration of hb_macroGetValue/hb_macroSetValue - there
+        is no need to pass a local symbol table pointer - macro compiled
+        code uses dynamic symbol table only.
+
+19991211-14:51 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/compiler/harbour.y
+    + Missing #include <malloc.h> added.
+  * source/vm/hvm.c
+    source/vm/cmdarg.c
+    include/extend.h
+    + Added //BUILD internal command line switch.
+    * Internal command line switch check moved to cmdarg.c from hvm.c.
+      Contribution by Jose Lalin <dezac@corevia.com>
+  * source/rtl/harbinit.prg
+    + Added documentation by Chen Kedem.
+  * source/compiler/cmdcheck.c
+    * Some functions put under a separate copyright holder (unkown BTW).
+  * source/common/reserved.c
+    * Reapplied some minor changes.
+  ( I could not test any of these, since I cannot build Harbour right now )
+
+19991211-12:47 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * updated makefile.b32 for reserved.c file.
+
+19991211-09:17 GMT+1 Antonio Linares <alinares@fivetech.com>
+   + new source/vm/maindll.c (entry point for Windows DLLs)
+      * hb_vmInit() call uses a FALSE parameter.
+   * source/vm/hvm.c
+      * hb_vmInit( BOOL bStartMainProc ) modification
+   * source/vm/mainstd.c
+      * hb_vmInit() call uses a TRUE parameter.
+   * source/vm/mainwin.c
+      * hb_vmInit() call uses a TRUE parameter.
+   * updated makefile.b32 for maindll.c file.
+   * include/ctoharb.h
+      * modified hb_vmInit() prototype.
+
+   Tested. Seems to work fine.
+
+19991209-23:04 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * updated makefile.b32
+   * updated hbclass.ch
+     (first step towards classes missing messages routing method)
+
+19991209-17:10 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *config/rules.cf
+        * YACC_FLAGS and LEX_FLAGS can be set in local Makefile - this
+        local settings will be added to the global ones
+
+    * include/compiler.h
+    * include/expropt.h
+        * moved declarations related to expression optimizer into expropt.h
+        which is used also at runtime library
+        * added support for macro generation
+
+    *source/compiler/harbour.c
+        * removed some functions that were no longer used
+        * fixed recognition of static and memvar variables for which
+        function-wide declaration owerwrites file-wide declaration
+        e.g.
+        STATIC myvar
+        FUNCTION MyTest()
+        MEMVAR myvar
+
+    *source/compiler/genc.c
+    *source/compiler/genhrb.c
+    *source/compiler/genjava.c
+        * updated to support new macro related opcodes
+
+    * include/hberrors.h
+    * source/compiler/hbgenerr.c
+        * added new errors
+                ERR_BAD_MACRO   (declared variable in macro)
+                ERR_INVALID_SEND    (macro operator with send operator)
+
+    *source/compiler/harbour.l
+        * '.' character is correctly passed to grammar analyzer
+        * moved here all rules for a macro variable use recognition
+
+    *source/common/Makefile
+    *source/common/reserved.c
+        * file with function and date used to check for reserved
+        functions name
+
+NOTE: All non GNU-Make scripts should be updated!
+
+    * include/ctoharb.h
+        * added declaration of hb_stackPop() function
+
+    *source/vm/hvm.c
+        * changed visibility of hb_stackPop() function (static -> global)
+        * added code related to macro generation and evaluation
+
+    *source/macro/
+    *source/macro/macro.c
+    *source/macro/macro.l
+    *source/macro/macro.y
+    *source/macro/Makefile
+    *include/macro.h
+        * new files used for macro generation and evaluation
+        * macro compiler supports now:
+            + macro variables:  &var1 := &var2
+        * not supported yet (there is a proper pcode generated only -
+        there are no actions in the virtual machine)
+            - text substitution: "text &macro"
+            - function calls: &macro()
+            - aliased macro variables: &macro->var and alias->&var
+            - macro-compiled codeblocks
+
+NOTE: All non GNU-Make scripts should be updated!
+
+NOTE: source/macro/macro.c file includes source/compiler/expropt.c
+  I didn't found other method of reusing the expropt.c. Unfortunately
+  the code in expropt.c differs a little if used from macro compiler
+  (it uses a local variable that holds the compilation state instead
+  of global variables)
+
+    *source/compiler/expropt.c
+        * added support for macro pcode generation and macro compilation
+        NOTE: this file is included by macro.c
+
+    *include/pcode.h
+        * added pcodes used in macro generation and macro evaluation
+
+    *source/runner/stdalone/Makefile
+    *tests/Makefile
+    *tests/regress/Makefile
+    *samples/cccppc/Makefile
+    *samples/guestbk/Makefile
+    *samples/hscript/Makefile
+    *samples/misc/Makefile
+    *samples/pe/Makefile
+        * 'macro' library added
+
+    *source/compiler/cmdcheck.c
+        * replaced strupr with hb_strupr
+
+NOTE: All PRG sources HAVE TO be recompiled!!!
+
+NOTE: Add macro.lib to all non-GNU make scripts or batch files.
+
+19991209-01:05 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/compiler/*
+    include/compiler.h
+    + Additional function renaming (prefixing with hb_comp), some functions
+      moved to other files. Declarations fixed, some static vars prefixed
+      with s_. Some functions made static, some declaration moved to
+      compiler.h.
+      hb_Chk*() -> hb_compChk*()
+      Print*() -> hb_compPrint*()
+      Gen*() -> hb_Gen*()
+      PCODE_CHUNK -> HB_PCODE_CHUNK
+      harbour_main() -> hb_compYACCMain()
+      Include() -> hb_compInclude()
+      hb_compCheckPaths() -> Moved to cmdcheck.c
+      AddSearchPath() - Moved to cmdcheck.c and made static.
+      etc...
+
+19991208-18:06 GMT+1 Victor Szel <info@szelvesz.hu>
+  * bin/bld_tpl.bat
+    bin/bld_tpl.cmd
+    ! common lib moved to the end of the cmdline.
+  * tests/db_brows.prg
+    + @ CLEAR TO uncommented.
+  * source/rtl/errorsys.prg
+    % Some optimizations made.
+  * source/compiler/Makefile
+    * Updated for compiler source split.
+
+19991208-18:06 GMT+1 Jose Lalin <dezac@corevia.com>
+  * include/compiler.h
+    + typedef enum LANGUAGES
+
+  + source/compiler/hbusage.c
+    + void PrintUsage()
+    + void PrintCredits()
+    + New function added
+      void PrintLogo()
+    ! Typo at www.harbour-project.com changed
+      to www.harbour-project.org
+
+  + source/compiler/hbpcode.c
+    + void hb_compGenPCode1()
+    + void hb_compGenPCode3()
+    + void hb_compGenPCodeN()
+
+  + source/compiler/hbfunchk.c
+    + struct FUNCINFO -> HB_FUNCINFO
+    + static FUNCINFO _StdFun -> hb_StdFunc[]
+    + void hb_compFunCallCheck()
+      Added a #if defined( HARBOUR_STRICT_CLIPPER_COMPATIBILITY )
+      to use the Cl*pper way of showing errors or the Harbour's one.
+
+  ! source/compiler/harbour.c
+    - Moved PackDateTime() to hbcmdchk.c
+    - Removed SwitchCmp()
+    - Errors/Warnings tables moved to hbgenerr.c
+    - hb_compGenError/Warning() moved to hbgenerr.c
+    - moved all HB_EXPR_PTR hb_compError...()
+      and HB_EXPR_PTR hb_compWarn...() to hbgenerr.c
+    ! Changed prototypes of Print...() functions to extern
+    + Some blocks changed into new functions:
+      + hb_compInitVars()
+      + hb_compGenOutput()
+      + hb_compCheckPaths();
+      + hb_compOutputFile();
+    + Added prototypes for the new functions
+    ! Some local variables made global:
+      ! s_pOutPath -> hb_comp_pOutPath
+      ! s_bCredits -> hb_comp_bCredits
+      ! s_bLogo    -> hb_comp_bLogo
+      ! s_bSyntaxCheckOnly -> hb_comp_bSyntaxCheckOnly
+      ! s_iLanguage -> hb_comp_iLanguage
+      This change make them visible to the new
+      module hbcmdchk.c and pragma directive.
+    ! Minor formatting
+    ! Some typos fixed
+    + Optimized two functions:
+      % hb_compGenPushLogical() and
+      % hb_compGenPushFunCall (NOTE: Check them, please)
+
+  + source/compiler/hbcmdchk.c
+    + Compiler command line checking
+      + hb_ChkCompilerSwitch()
+      + hb_ChkEnvironVar()
+      + hb_ChkCompileFileName()
+    + New HARBOURCMD/CLIPPERCMD environment support
+
+  + source/compiler/hbgenerr.c
+    + char * hb_comp_szErrors[]
+    + char * hb_comp_szWarnings[]
+    + void hb_compGenError()
+      void hb_compGenWarning()
+    + Added all HB_EXPR_PTR hb_compError...() functions
+    + Added all HB_EXPR_PTR hb_compWarn...() functions
+
+  * makefile.b32
+    + source/compiler/cmdcheck.c
+    + source/compiler/hbfunchk.c
+    + source/compiler/hbgenerr.c
+    + source/compiler/hbpcode.c
+    + source/compiler/hbusage.c
+    ! WARNING ! Update other makefiles and rebuild all
+
+    (Uploaded by Victor Szel)
+
+19991208-01:59 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/arrays.c
+    + Added C53 compatible error message to ASIZE()
+    ! Fixed a bug in ACOPY() which was also fixed in CA-Cl*pper 5.3a,
+      this was previously implemented then removed as STRICT mode. Note that
+      there's still a small anomaly left in ACOPY().
+  * tests/regress/rt_array.prg
+    ! Fixed the expected result for ASIZE() (w/o param)
+    * Changed expected results for some ACOPY() tests.
+  * source/rtl/errorsys.prg
+    + EG_OPEN and EG_APPENDLOCK errors are handled in the Clipper way.
+  * source/rtl/errorsys.prg
+    + ERRORSYS() documentation by Chen Kedem added
+  * source/rtl/fieldbl.prg
+    + FIELD*BLOCK() documentation by Chen Kedem added
+
+19991207-20:25 GMT+3 Alexander Kresin
+  * source/pp/hbpp.c
+    * some changes, related to '@ ... clear to ...' problem
+
+Tue Dec 07 12:42:30 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+        * source/rdd/dbcmd.c:
+        Got rid of two warnings about unused variables.
+
+19991207-16:29 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/regress/*
+    ! SQRT(3) expected result fixed.
+    ! Date() calls in test lines changed to constant dates.
+      (Both fix thanks to Plamen Ivanov <abrasoft@techno-link.com>)
+    + 19800101 changed to 19840325 to better test handling of date parts.
+  * doc/hdr_tpl.txt
+    + $FILES$ entry added.
+  * source/rtl/dbedit.prg
+    + DBEDIT() documentation by Chen Kedem added
+  * source/rtl/extend.c
+    ! Updated TRACE call for hb_pardsbuff()
+  * include/hbpp.h
+    - Removed two compiler variable declarations.
+  * source/common/hbstr.c
+    % Minor code cleanup.
+  * source/rtl/alert.prg
+    ! Chr(13)+Chr(10) changed to hb_OSNewLine().
+    ! Fix in the ALERT() $DESCRIPTION$.
+      (Both fix thanks to Chen Kedem)
+  * source/rtl/dircmd.prg
+    + __DIR() documentation by Chen Kedem added
+  * source/rtl/adir.prg
+    ! Fixed $EXAMPLE$, aSize( var, x ) would result in a RT error, since
+      var is NIL at this point, changed to var := Array( x ), $SEEALSO$
+      changed accordingly.
+
+19991205-14:22 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * include/rddapi.h
+    source/rdd/dbcmd.c
+    source/rdd/dbf1.c
+    source/rdd/dbfcdx/dbfcdx1.c
+    + Added dbSeek(), IndexOrd(), ordSetFocus(), ordFor(), ordKey(),
+      ordNumber(), ordName() and ordBagName() functions.
+  * source/rtl/dummy.prg
+    - Removed dbSeek(), IndexOrd(), ordSetFocus(), ordFor(), ordKey(),
+      ordNumber(), ordName() and ordBagName() functions.
+
+19991204-17:22 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * include/rddapi.h
+    source/rdd/dbcmd.c
+    source/rdd/dbf1.c
+    source/rdd/dbfcdx/dbfcdx1.c
+    + Added ordBagExt(), ordListAdd() functions.
+  * source/rtl/dummy.prg
+    - Removed ordBagExt(), ordListAdd() functions.
+
+19991204-13:15 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * include/rddapi.h
+    source/rdd/dbcmd.c
+    source/rdd/dbf1.c
+    source/rdd/dbfcdx/dbfcdx1.c
+    + Begining with ordCondSet(), ordCreate(), ordDestroy(), ordListClear() and
+      ordListRebuild().
+  * source/rtl/dummy.prg
+    - Removed ordCondSet(), ordCreate(), ordDestroy(), ordListClear() and
+      ordListRebuild() functions.
+
+19991203-15:18 GMT+1 Jose Lalin <dezac@corevia.com>
+  * source/pp/hbpp.c
+    ! Bug fixed in #error directive.
+      Changed 'F' for 'E' type in hb_compGenError call.
+      Now Harbour continues compilig when this directive is
+      found like CA-Cl*pper.
+    (Uploaded by Victor Szel)
+
+19991203-15:18 GMT+1 Victor Szel <info@szelvesz.hu>
+  * doc/hdr_tpl.txt
+    + $PLATFORMS$ entry added.
+
+19991203-15:11 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/regress/*
+    + Added functionality to test database/field stuff. Alias is w_TEST
+    + Added Len(), ValType(), Empty(), Str() tests for fields, all of them
+      pass.
+    - Removed NIL:classname tests temporarily.
+  * include/extend.h
+    ! IT_MEMO constant fixed (it was equal with IT_NIL).
+    + IS_MEMO() macro added.
+  * source/rtl/valtype.c
+    source/rtl/len.c
+    source/rtl/empty.c
+    ! Fixed case when no parameter was passed (via hb_vmDo() for example)
+    + Added an $EXAMPLE$ for LEN()
+    + Changed $SYNTAX$ for LEN()
+    + Added some $SEEALSO$ for LEN()
+    * Changed LEN() not to use internal ITEM access.
+
+19991203-02:25 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rdd/dbcmd.c
+    + DBEVAL() doc added from dbeval.prg
+    ! Error codes fixed in DBEVAL()
+    % Some optimization made in DBEVAL()
+  * source/rdd/Makefile
+  - source/rdd/dbeval.prg
+    rdd.b32
+    makefile.vc
+    - old bad_DBEVAL() removed
+  * include/hbextern.ch
+    source/runner/stdalone/external.prg
+    ! PVALUE -> HB_PVALUE
+
+19991202-18:00 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * source/rdd/dbeval.prg
+    * Function dbEval() renamed to Bad_dbEval()
+  * include/rddapi.h
+    source/rdd/dbcmd.c
+    source/rdd/dbf1.c
+    source/rdd/dbfcdx/dbfcdx1.c
+    doc/funclist.txt
+    + Added dbEval() function.
+
+19991202-01:45 EST Paul Tucker <ptucker@sympatico.ca>
+  * makefile.vc
+    + source/rtl/break.c
+    + source/rtl/empty.c
+    + source/rtl/initexit.c
+    + source/rtl/len.c
+    + source/rtl/pcount.c
+    + source/rtl/proc.c
+    + source/rtl/pvalue.c
+    + source/rtl/type.c
+    + source/rtl/valtype.c
+    + source/rtl/word.c
+    + source/rtl/xhelp.c
+
+19991202-00:54 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/Makefile
+    + New files added to the GNU make system.
+  * source/rtl/pvalue.c
+    tests/multiarg.prg
+    * HB_ prefix added to the PVALUE() function name.
+
+19991202-00:54 GMT+1 Jose Lalin <dezac@corevia.com>
+  * source/rdd/dbnubs.c
+    ! Warnings fixed.
+  * source/vm/hvm.c
+    - Removed all of this functions.
+  + source/rtl/break.c
+    + HARBOUR HB_BREAK( void )
+  + source/rtl/empty.c
+    + HARBOUR HB_EMPTY( void )
+    % Added support for MEMO type.
+  + source/rtl/initexit.c
+    + HARBOUR HB___QUIT( void )
+  + source/rtl/len.c
+    + HARBOUR HB_LEN( void )
+    % Added support for MEMO type.
+  + source/rtl/pcount.c
+    + HARBOUR HB_PCOUNT( void )
+  + source/rtl/proc.c
+    + HARBOUR HB_PROCNAME( void )
+    + HARBOUR HB_PROCLINE( void )
+    + HARBOUR HB_PROCFILE( void )
+  + source/rtl/pvalue.c
+    + HARBOUR HB_PVALUE( void )
+  + source/rtl/type.c
+    + HARBOUR HB_TYPE( void )
+  + source/rtl/valtype.c
+    + HARBOUR HB_VALTYPE( void )
+    % Added support for MEMO type.
+  + source/rtl/word.c
+    + HARBOUR HB_WORD( void )
+  + source/rtl/xhelp.c (it should go to harbinit.prg)
+    + HARBOUR HB___XHELP( void )
+  * All of them:
+    + Added License agreement.
+    + Added documentation.
+    + Formatting
+  * makefile.b32
+    + Updated with this new modules.
+    ! WARNING ! Remember to update other makefiles.
+  * rdd.b32
+    + Added dbeval.prg
+  * doc/pragma.txt
+    ! Some typos fixed.
+    ! Formatting.
+    (Uploaded by Victor Szel)
+
+19991130-04:30 EST Paul Tucker <ptucker@sympatico.ca>
+  * source/pp/hbpp.c
+    * added a cast on xgrab call.
+
+19991130-01:55 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/regress/rt_trans.prg
+    + ~200 TRANSFORM() regression tests added, 43 of them fail.
+
+19991130-01:28 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/regress/rt_str.prg
+    + More VAL() regression tests added, 15 of them fail.
+
+19991130-00:13 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/browse.prg
+    + Documentation by Chen Kedem added
+    ! Unused .ch files removed.
+
+19991129-22:22 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/compiler/harbour.c
+    include/compiler.h
+    * HB_EXITLEVEL_* constants moved to the central header file.
+  * source/rtl/alert.prg
+    source/rtl/asort.prg
+    ! Minor fixes.
+  * include/hbdefs.h
+    ! HB_HANDLE - LONG -> ULONG, to suppress Borland warning in memvars.c
+  * source/rtl/memvars.c
+    ! cast added to suppress Borland warning.
+  * source/pp/stdalone/hbpp.c
+    source/pp/hbpplib.c
+    + Dummy compiler flag variables added for #pragma support.
+  * source/rtl/trace.c
+    - Copyright removed.
+
+19991129-22:22 GMT+1 Jose Lalin <dezac@corevia.com>
+  * source/pp/hbpp.c
+    + Added support for #pragma directives
+      Now we can include compiler settings inside PRG's
+  * include/hberrors.h
+    + Added new #define ERR_PRAGMA_BAD_VALUE
+  + tests/tstprag.prg
+    tests/Makefile
+    + New test for pragma directives
+  + doc/pragma.txt
+    + a bit of info on Harbour pragmas implementation
+    (Uploaded by Victor Szel)
+
+Mon Nov 29 12:45:05 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+        * include/hbtrace.h:
+        * source/common/hbtrace.c:
+        * source/rtl/trace.c:
+        * doc/tracing.txt:
+        Modified the run-time trace interface functions, to simplify this
+        interface. Now there are just two C functions:
+
+          current_state = hb_tracestate(new_state);
+          current_level = hb_tracelevel(new_level);
+
+        and just two Clipper functions:
+
+          current_state := HB_TRACESTATE( [new_state] )
+          current_level := HB_TRACELEVEL( [new_level] )
+
+        Both check their argument, so passing a -1 to any of them will
+        return the appropriate current setting without modifying it.
+
+19991128-22:24 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/asort.prg
+    source/rtl/browdb.prg
+    + Documentation by Chen Kedem added
+  * include/extend.h
+    ! ISNIL() macro fixed.
+  * source/rtl/dbeval.prg
+    source/rtl/alert.prg
+    * Small corrections.
+
+19991127-15:57 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rdd/dbeval.prg
+    * ISNUM() -> ISNUMBER
+  * makefile.vc
+    + dbeval.prg
+
+19991127-15:57 EST Paul Tucker <ptucker@sympatico.ca>
+  * Clipper does _not_ quit if //noalert is specified and alert() is called.
+  * source/rtl/alert.prg
+    * if s_lNoAlert
+       RETURN NIL // Don't quit!
+    * updated comment in __NoNoAlert()
+  * source/rtl/errorsys.prg
+    * check for empty( nChoice ) in case alert returns nil.
+
+19991127-20:42 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/dummy.prg
+  + source/rdd/dbeval.prg
+    source/rdd/Makefile
+    + DBEVAL() function by Luiz Rafael Culik added.
+      ! WARNING ! Please add it to non-GNU makefiles.
+    ! Fixed next parameter handling for indexed tables.
+    ! Fixed nRecord = 1 situtation.
+    + Added Clipper compatible error handling.
+    + Added TODO (optimizing, C rewrite).
+    - Removed locking feature.
+    * Formatted.
+    % Slightly optimized.
+    - Extensions removed.
+  + tests/dbevalts.prg
+    tests/Makefile
+    + DBEVALTS.PRG added.
+  * source/rtl/copyfile.c
+    source/vm/hvm.c
+    source/vm/mainwin.c
+    source/tools/hb_f.c
+    ! Borland warnings fixed.
+
+19991127-17:25 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/alert.prg
+    + Documentation by Chen Kedem added
+    + Added SPACE key handling for GT mode.
+    ! Fixed autodelay after a LEFT/RIGHT key.
+    ! Fixed ENTER/LEFT/RIGHT key handling in console mode.
+    ! SAY/BOX converted to DispBox()/DispOutAt()
+  * source/rtl/adir.prg
+    + Documentation by Chen Kedem added
+  * source/pp/*
+    source/common/hbfsapi.c
+    ! Some Borland warnings fixed.
+
+19991126-12:00 WIB Andi Jahja <andij@aonlippo.co.id>
+  * tests
+    + hversion.prg - List version of Harbour source codes
+    + entries.ini -  File list for hversion.prg to work
+
+19991126-01:11 GMT+1 Jose Lalin <dezac@corevia.com>
+  * source/rtl/input.prg
+    + documented
+  * source/rtl/wait.prg
+    + documented
+  * source/rtl/setta.prg
+    + documented
+
+  There is an error in $STATUS$ in the following functions. They are
+  marked
+  as "C" but they should be marked as "R". Some typos fixed.
+
+  * source/rtl/console.c
+    ! HB_Osnewline
+  * source/rtl/descend.c
+  * source/rtl/hardcr.c
+  * source/rtl/inkey.c
+    ! __Keyboard, also bad name in $COMPLIANCES$
+    ! __Keyput
+    ! Nextkey, also bad name in $COMPLIANCES$
+    ! Lastkey, also bad name in $COMPLIANCES$
+  * source/rtl/mtran.c
+  * source/rtl/strings.c
+    ! HB_Valtostr
+  * source/rtl/natmsg.c
+    ! IsAffirm
+    ! IsNegative
+    ! NationMsg, also bad name in $COMPLIANCES$
+  * source/rtl/devoutp.prg
+  * source/rtl/setkey.prg
+    ! SetKey
+    ! SetKeyGet
+    ! SetKeySave
+    ! SetKeyCheck
+
+    (Uploaded by Victor Szel)
+
+19991126-01:06 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/gt/gtwin.c
+    % DispBegin()/DispEnd() switching code optimized. The only "stepback" is
+      that now the second screen buffer gets allocated right at the startup
+      and not at the first DispBegin() call.
+    ! DispBegin() now hides cursor as in Clipper.
+  * source/rtl/set.c
+    ! One value changed to BOOL.
+  * source/rtl/trace.c
+    + Added HB_ prefix to the nonstandard Clipper function names.
+    % Optimized one function.
+    ! Fixed indentation level.
+  * source/common/hbtrace.c
+    include/hbtrace.h
+    + Some new interface added (to query enabled state for example)
+    * Trace code variable scopes and code optimized.
+    * Variable naming and formatting.
+
+Wed Nov 24 12:45:36 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+        * include/hbtrace.h:
+        * source/common/hbtrace.c:
+        * source/rtl/trace.c:
+        * source/rtl/Makefile:
+        * doc/tracing.txt:
+        Implememted run-time tracing control; thanks to Jose Lalin
+        <dezac@corevia.com> for suggesting this. The interface is
+        described in doc/tracing.txt.
+
+        * source/rdd/dbf1.c:
+        Fixed a compilation error that only appeared with HB_TR_DEBUG.
+
+        * source/rtl/inkey.c:
+        Added a guard to avoid a compilation warning.
+
+        * tests/Makefile:
+        Changed the order of inclusion to make sure you can still do a
+        make 'PRG_SOURCES=foo.prg'.
+
+19991123-13:35 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * rt_misc.prg
+     + Corrected comments regarding Nation functions to specify if they
+       apply to the US or International editions of CA-Clipper 5.2e.
+
+19991123-01:09 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/math.c
+    + math error handler added for __BORLANDC__ and __MINGW32__
+      I could not find a way to test these error though.
+
+19991123-00:29 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/regress/*
+    + Split rt_str into rt_str + rt_trans.
+    ! Typo fixed in Clipper batch file.
+    ! Fixed another long function name (Main_STRINGS() -> Main_STR())
+  * make_b32.bat
+    make_b40.bat
+    makefile.b32
+    regress.b32
+    * Updates by Jose Lalin.
+
+19991122-23:43 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/regress/rt_hvm.prg
+    tests/regress/rt_misc.prg
+    + Enabled some tests which will make the VM die. (NIL:Classname)
+    ! Disabled some tests for Clipper which return trash.
+  * source/pp/hbpp.c
+    * Minor formatting (static declaration moved first).
+
+19991122-17:10 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * rt_misc.prg
+     + Added a comment that Nations functions don't exist in CA-Clipper 5.2e.
+     ! Added #infdef __CLIPPER__ around Nationmsg(200) test, which causes a
+       GPF with CA-Clipper 5.3b (with Exospace).
+     + Changed comments to indicate IsAffirm() and IsNegative() GPF with
+       CA-Clipper 5.3b (with Exospace) (they don't even exist in 5.2e).
+
+19991122-16:45 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * make_c5x.bat
+     ! Added optional parameter to create a protected mode version of
+       RT_MAIN (the absence of a parameter forces the use of RTLink,
+       while the presence of a parameter forces the use of Exospace).
+
+   * rt_main.prg
+   * rt_str.prg
+     % Changed Comp_STRINGS() to Comp_Str() and Exact_STRINGS()
+       to Exact_Str() in order to allow direct comparison of
+       Clipper and Harbour results (Clipper cuts names off after
+       10 characters).
+
+19991122-17:25 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+  * source/compiler/harbour.y
+      * fixed incorrect error generation if empty lines were placed between
+      DO CASE statement and the first CASE statement
+
+19991122-16:12 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/common/hbstr.c
+    include/extend.h
+    + hb_strdup() function added.
+    + hb_strupr() corrected to return a pointer.
+  * source/pp/hbpp.c
+    source/pp/stdalone/hbpp.c
+    include/hbpp.h
+    % hb_pp_strodup() -> hb_strdup()
+    - hb_pp_strodup() removed.
+  * source/compiler/harbour.*
+    source/compiler/genc.c
+    include/compiler.h
+    % yy_strupr() -> hb_strupr()
+    % yy_strdup() -> hb_strdup()
+    - Removed redundant function declarations (yy_*, hb_x*())
+    - yy_strdup(), yy_strupr() removed.
+
+19991122-15:03 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/pp/hbppint.c
+    ! .PPO file generation fixed (/p was not working since yesterday).
+  * include/hbpp.h
+    include/compiler.h
+    % Some redundant function declaration removed.
+  * include/hbpp.h
+    * Sorted out the inclusion of "compiler.h", to make things clearer.
+  * source/pp/hbpp.c
+    include/hbpp.h
+    * Some hb_comp_ variable usage better isolated.
+
+19991122-12:46 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/compiler/expropt.c
+    include/compiler.h
+    ! Fixed optimizatoin of: ( 1 / 0 )
+    * Some "unsigned char" types changed to BYTE
+  + tests/regress/make_c5x.bat
+    tests/regress/rt_main.prg
+    + Make file for Clipper 5.x added.
+    ! Fixed to compile with Clipper 5.x.
+  * tests/regress/rt_hvm.prg
+    + New optimization tests added.
+  * source/vm/hvm.c
+    ! Minor formatting.
+
+19991122-11:56 GMT+1 Victor Szel <info@szelvesz.hu>
+  + tests/regress/*
+  + regress.b32
+  - tests/rtl_test.prg
+  * tests/Makefile
+  * make_b32.bat
+  * make_b40.bat
+    + RTL_TEST split into multiple files, placed into a separate subdirectory.
+      Thanks go to Jose Lalin <dezac@corevia.com> for the splitting !
+    ; PP needs to be enhanced to support code in header files, in order to
+      elminate duplicated code from the current version.
+
+19991122-11:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.y
+        * fixed line numer generation in FOR/NEXT statement
+        * all expressions used in FOR/NEXT are correctly deleted
+
+    *source/compiler/expropt.c
+        * the alias symbol is correctly pushed in alias expressions
+        alias->( expression )
+
+    *include/extend.h
+    *source/compiler/expropt.c
+    *source/vm/hvm.c
+        * double values created during compile time divide optimization
+        uses unspecified number of decimal places (defined as
+        HB_DEFAULT_DECIMALS) - this value replaced at runtime by current
+        SET DECIMALS setting
+
+
+19991122-10:37 GMT+1 Antonio Linares
+   * makefile.b32 updated
+   * hbpp.b32 updated
+
+19991122-19:50 EDT Paul Tucker <ptucker@sympatico.ca>
+  * makefile.vc
+    + hbstr and hbfsapi
+
+19991122-01:33 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/hbpplib.c
+    ! Standard runtime error is launched from the library version of the
+      preprocessor.
+
+19991122-01:14 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/compiler/*
+    include/compiler.h
+    * Renamed two global variables
+      hb_comp_szCErrors   -> hb_comp_szErrors
+      hb_comp_szCWarnings -> hb_comp_szWarnings
+  * include/hbsetup.h
+    include/hbpp.h
+    * IS_OPT_SEP() macro renamed to HB_ISOPTSEP() and moved to the right place.
+  * source/pp/*
+    include/hbpp.h
+    source/compiler/harbour.l
+    source/compiler/harbour.c
+    * Variable renaming, prefixing, scope optimizing.
+    * Global functions prefixed with
+    * Some ints changed to BOOL.
+    ! Non-ANSI comment removed.
+    % stroupper() changed to hb_strupr(), stroupper() removed.
+    % strolen() changed to strlen(), strolen() removed.
+  + source/common/hbstr.c (added)
+    source/rtl/strings.c
+    * hb_strupr() moved to the common library.
+    % hb_strupr() Local variable optimized out.
+
+19991121-23:23 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/pp/*
+    include/hbpp.h
+    ! static variables and functions marked static (continued).
+    ! public pp variables prefixed with "hb_pp_".
+    % pp_strAt() removed and calls replaced with common hb_strAt() function.
+    * Cleaned up standard header file usage. (Please report any errors caused
+      by this.)
+    * static variables prefixed with "s_".
+  * source/compiler/harbour.c
+    source/compiler/harbour.y
+    include/compiler.h
+    source/pp/hbppint.c
+    * Two PPO related variable declarations moved to the compiler.
+
+19991121-22:38 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/pp/*
+    source/compiler/harbour.c
+    include/hbpp.h
+    ! static variables and functions marked static.
+    * Cleared up declarations, removed redundant declartions.
+    * Some formatting.
+  * source/pp/hbpp.c
+    ! Some corrections made to better handle where the code launcher
+      returns to the caller. This is a theoretical case, but it's more
+      elegant to handle this case, and it would also help to avoid a jmp_buf
+      trick in the library callable version of the PP.
+
+19991121-17:50 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * include/rddapi.h
+    source/rdd/dbcmd.c
+    source/rdd/dbf1.c
+    + Additional feature: __dbPack( [<bBlock>], [<nEvery>] )
+      executes <bBlock> every <nEvery> records.
+
+19991121-17:33 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/compiler/expropt.c
+    ! $ optimization fixed for strings containing Chr(0), now 4 more RTL_TESTs
+      pass.
+    ! "Fixed" CHR() to be bug compatible with Clipper for cases where param
+       % 256 = 0 but param != 0.
+    ! "Fixed" $ to be bug compatible with Clipper when an empty string is
+       searched in a string.
+  * tests/rtl_test.prg (not yet committed)
+    + Some failing VAL() tests added.
+    ! Corrected result for compiler optimized AT(), CHR() and $ operations.
+      They now test for bug compatibility.
+  + source/common/hbstr.c (added)
+    source/common/Makefile
+    source/rtl/strings.c
+    * hb_strAt() moved to the common library.
+      ! WARNING ! Please modify non-GNU make systems.
+  * source/vm/hvm.c
+    % Minor optimization in hb_vmInString()
+  * source/pp/*
+    ! Fixed some mistyped #undef statements related to tracing.
+
+19991121-16:10 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * include/rddapi.h
+    source/rdd/dbcmd.c
+    source/rdd/dbf1.c
+    * Optimization of RDD, mentioned by Matteo and Victor.
+
+19991121-03:19 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/compiler/harbour.c
+    source/compiler/harbour.y
+    ! hb_fsName*() functions and declarations removed (again).
+
+19991121-01:20 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * source/rdd/dbcmd.c
+    * dbUseArea(), fixed two bugs mentioned by Victor.
+
+19991120-17:28 EDT Paul Tucker <ptucker@sympatico.ca>
+  * makefile.vc
+   - hbfsapi for
+
+19991120-14:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.y
+        * fixed NOT operator precedence
+        * fixed the infinite loop when a duplicated variable error
+        was reported
+        * fixed '=' operator use (there was conflict between a compare
+        and assignment context)
+        * added new warning "Unreachable code'
+        * fatal errors (errors for which the compilation process should
+        terminate immediately should use 'F' prefix)
+        * corrected logic of handling errors (the compilation can be continued
+        with no GPF or core dump)
+
+    *source/compiler/expropt.c
+        * corrected to support 'DO procname' statement
+
+    *include/compiler.h
+    *source/compiler/harbour.y
+    *source/compiler/harbour.c
+    *source/compiler/expropt.c
+    *source/compiler/genc.c
+    *source/compiler/genhrb.c
+    *source/compiler/genjava.c
+    *source/compiler/genobj32.c
+        * finished uniform naming scheme hb_comp*
+        * cleared up declarations and visibility of functions and variables
+
+    *include/hberrors.h
+        * added new warning "Unreachable code'
+
+    *source/debug/debugger.prg
+        * removed one unreachable RETURN statement
+
+    *source/pp/hbpp.c
+        * all errors reported by the preprocesor are promoted to fatal
+        errors ('F' prefix)
+
+19991119-16:59 GMT+1 Antonio Linares
+  * updated makefile.b32
+  * updated hbpp.b32
+
+19991119-14:51 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rdd/dbf1.c
+    source/rdd/delim1.c
+    source/rdd/sdf1.c
+    source/rdd/dbfcdx/dbfcdx1.c
+    source/rdd/dbfntx/dbfntx1.c
+    ! Guard for #pragmas changed to avoid MSVC warning.
+
+19991119-10:02 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/common/hbfsapi.c
+    ! Fixes (tracing mainly), cleanups.
+  * source/rtl/gt/gtstd.c
+    * Minor change. (0/1 -> FALSE/TRUE)
+  * source/pp/hbpp.c
+    ! Fixed GPF when an #include file was not found.
+    + Added support for #include `hello.ch' (new filename delimiters)
+  * source/compiler/harbour.c
+    source/compiler/harbour.y
+    * Include() return type changed from int to BOOL.
+    * Some cleanups in Include()
+  * source/compiler/gen*.c
+    * Minor formatting.
+
+19991118-19:30 EDT David G. Holm <dholm@jsd-llc.com>
+
+   - tests/strings3.prg
+   * tests/Makefile
+     - Removed strings3.prg
+
+   * tests/rtl_test.prg
+     + Added massive string comparison tests that used to be in strings3.prg.
+       But don't feel sorry for me having to type all those lines in, because
+       I didn't. Instead, I wrote a program based on strings3.prg that created
+       each and every one of those TEST_LINE() lines in Comp_STRINGS() and in
+       Exact_STRINGS(). The only problem is that Clipper can't compile the
+       program anymore: RTL_TEST.PRG        Fatal C3023  Too many labels
+
+19991118-12:50 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    * source/vm/hvm.c
+        * corrected code in hb_vmPopAlias() - the stack pointer was
+        decreased before the call to hb_vmSelectWorkarea - later
+        the error recovery code was overwriting the alias item which
+        caused unreleased memory
+
+19991118-06:05 EDT Paul Tucker <ptucker@sympatico.ca>
+  * makefile.vc
+    + source\common\hbfsapi.c  (reported missing by Matteo)
+
+19991118-11:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/rtl/filesys.c
+        * corrected support for Watcom C/C++ compiler
+
+    *source/rtl/tone.c
+        * added support for Watcom C/C++ compiler
+
+    *source/rtl/gt/gtstd.c
+        * added missing return value in hb_gt_setPos()
+
+    *source/rtl/gt/gtdos.c
+        * added Ctrl-Break handler for Watcom C/C++ compiler
+        * changed USHORT - SHORT and (char *) to (unsigned char *)
+        to make happy C++ compilers in hb_gt_Scroll()
+
+    *source/compiler/expropt.c
+        * restored support for expression->( expressions_list ) syntax
+        * corrected bug in (expr .OR. .F.) and (expr .AND. .F.)
+        optimization
+        * corrected optimization of ( single_expr ) syntax
+
+    *source/rtl/classes.c
+    *source/rtl/arrays.c
+        * corrected assignment of NULL to an unsigned int type - some
+        compilers don't like it
+
+    *tests/rtl_test.prg
+        * added #ifdef __HARBOUR__ to suppres generation of errors that
+        are now reported at compile time (array[ 0 ], IIF( "str", ...) )
+
+19991118-07:25 GMT+1 Victor Szel <info@szelvesz.hu>
+  + source/common/hbfsapi.c
+  + include/hbfsapi.h
+    include/Makefile
+    include/compiler.h
+    include/hbpp.h
+    include/filesys.h
+    source/common/Makefile
+    source/rtl/filesys.c
+    source/compiler/harbour.c
+    source/compiler/harbour.y
+    source/pp/stdalone/hbpp.c
+    + Rewritten the filename splitting/merging functions, now they also support
+      drive letter (split only).
+    + hb_fsFName*() functions moved to the common directory, so that only one
+      copy of the functions exist (instead of three).
+      ! WARNING ! Non-GNU Make systems have to be updated.
+      ! WARNING ! All sources must be rebuilt.
+    ; Now ~100 more RTL_TESTs pass.
+  * tests/rtl_test.prg
+    + Some more filename split/merge tests added.
+  * include/hbundoc.api
+    ! Zero bytes removed from the text file.
+
+19991118-05:29 GMT+1 Victor Szel <info@szelvesz.hu>
+  - bin\buildexe*.*
+  + bin\bld_tpl.bat
+  + bin\bld_tpl.cmd
+    * New style build batch file templates added instead of the long-named
+      ones.
+  * make_tpl.*
+    + Copyright info added.
+  * include/filesys.h
+    + Indenting corrected.
+  - bin/empty
+    - Removed.
+
+19991117-13:05 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.y
+    *source/compiler/harbour.l
+    *source/compiler/harbour.c
+    *source/compiler/expropt.c
+        * corrected support for expression->identifier syntax
+        * corrected optimization for division operator
+
+    *include/compiler.h
+        * removed declaration no longer needed
+
+19991117-10:51 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/compiler/expropt.c
+    ! Fixed the compile-time calculation of numeric operations with results
+      larger than LONG.
+    % Compile-time calculation of numeric operations - Removed doubled
+      calculation code.
+
+19991117-03:15 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/vm/hvm.c
+    ! Added error substitution to hb_vmForTest(), now some more RTL_TESTs pass.
+  * source/compiler/harbour.y
+    source/vm/hvm.c
+    ! Changed the push order for the FOR/NEXT loops, so that it's now 100%
+      Clipper compatible, and ~15 more RTL_TESTs pass.
+      (step/counter/end -> counter/end/step)
+  * tests/rtl_test.prg
+    + Some $ tests added to test new compiler bug. ("X" $ Chr(0)+"X")
+
+19991117-01:37 GMT+1 Victor Szel <info@szelvesz.hu>
+  * config/w32/mingw32.cf
+    - Removed -DDEBUG preprocessor option.
+      If you want to compile with debug, add -DDEBUG to the
+      C_USR environment variable.
+  * tests/rtl_test.prg
+    + Some tests enabled which are now supported by the compiler.
+      (expr):CLASSNAME, (expr):CLASSH
+
+19991116-19:25 EDT David G. Holm <dholm@jsd-llc.com>
+
+    * config/dos/djgpp.cf
+    * config/os2/gcc.cf
+    * config/w32/gcc.cf
+      - Removed -g compiler option and -DDEBUG preprocessor option
+        If you want to compile with debug, add -g and -DDEBUG to the
+        C_USR environment variable.
+
+   * source/compiler/expropt.c
+     ! Corrected the division optimization to return 0 for any attempt
+       to divide by 0.
+     ! Corrected the division optimization to only return a long when the
+       result of dividing long values is a whole value instead of returning
+       a long when the result is within the range of a long (the result of
+       dividing a long by a long will always be within the range of a long).
+     % Changed the double results to return 2 decimal places after division
+       optimization, which still isn't correct (see the source code for
+       TODO: NOTE 1), but is more accurate than returning 0 decimal places.
+
+   * source/compiler/harbour.y
+     - Removed one of two occurrences of ExprEqual (on line 209).
+
+19991117-01:03 GMT+1 Victor Szel <info@szelvesz.hu>
+  * include/hbver.h
+    * Version number updated to reflect the deep changes.
+  * include/compiler.h
+    * Commented code removed
+
+19991116-21:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    * source/compiler/harbour.y
+    * source/compiler/harbour.l
+    * source/compiler/harbour.c
+    * source/compiler/expropt.c
+    * source/compiler/genc.c
+    * source/compiler/genhrb.c
+    * source/compiler/genobj32.c
+    * source/compiler/genjava.c
+        * new implementation of grammar rules - many new syntax supported
+        * new expression optimizer
+        * start of introducing new functions' naming scheme 'hb_comp'
+        * nonprintable characters (CR/LF/TAB, etc.) are inserted into
+
+        generated C code using hexdecimal numbers instead of quoted char
+
+        (they can appear as a result of expression optimization)
+
+    * source/pp/hbpp.c
+    * source/pp/hbppint.c
+    * source/pp/hblib.c
+    * source/pp/stdalone/hbpp.c
+        * changes to support new functions' naming scheme 'hb_comp'
+
+    *include/pcode.h
+
+        *HB_P_ARRAYAAT  -> HB_P_ARRAYPUSH
+
+         HB_P_ARRAYAPUT -> HB_P_ARRAYPOP - it removes value from the stack
+
+         This is compatible with the handling of usual variables
+
+
+     *source/debug/debugger.prg
+
+        * corrected the following syntax:
+
+                something <operator> other := another
+
+        for example:
+
+        ? 2 + a:=5 -1
+
+        This syntax is not allowed in Clipper and in new Harbour rules too
+
+        It should be used:
+
+        ? 2 + (a:=5) -1
+
+
+    * doc/compiler.txt
+        * added description of incompatibility with Clipper in object
+        handling
+
+    * include/compiler.h
+        * new structures related to expression optimizer
+
+    * include/hberrors.h
+        * new errors: Invalid type, invalid syntax, invalid alias
+        * new warning: meaningless expression
+
+    * source/vm/hvm.c
+        * change in handling of HB_P_FORTEST opcode used in FOR/NEXT loop
+        * Renamed ArrayAt -> ArrayPush
+        * Renamed ArrayPut -> ArrayPop - it removes the value from the
+            eval stack now
+
+
+19991116-15:05 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/memvars.c
+    ! __MSAVE() Modified to save MEMVARs with names longer than 10 chars, the
+      this way it's more Clipper compatible. But since only the first 10 chars
+      of the name can be stored in the .MEM file, the complete name cannot
+      be retrieved on RESTORE. One more issue: if you have multiple long name
+      which have the same first 10 chars, all these variables will be saved to
+      the .MEM file, with the same name.
+      So to be 100% Clipper compatible you should compile Harbour with
+      -DHB_SYMBOL_NAME_LEN=10.
+  * source/rtl/dates.c
+    ! Some HB_TRACE() types fixed.
+    % hb_dateStrGet() - strlen() call eliminated for speed.
+    * Some variable names standardized.
+  * source/rtl/devoutp.prg
+    source/rtl/text.prg
+    source/rtl/harbinit.prg
+    source/rtl/browse.prg
+    % Optimization. (FUNCTION/RETURN NIL->PROCEDURE)
+  * tests/memfile.prg
+    + Added tests for long variable names.
+    ! Make it possible to compile with CA-Cl*pper.
+  * tests/rtl_test.prg
+    + Long names variable added for future use.
+  * source/rtl/copyfile.c
+    source/rtl/dircmd.prg
+    * Minor cleanups (variable scopes, formatting)
+
+19991116-13:26 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/math.c
+    % MIN()/MAX()/SQRT()/hb_numRound() minor optimalizations, cleanups.
+    * static variable prefixed with "s_" (Watcom only)
+    % EXP() - Watcom specific error handling put between guards, Watcom
+      specific static variable moved inside guards.
+  * source/rtl/dummy.prg
+    + Clipper 5.3 specific dummy ord*() functions added.
+
+19991115-12:02 EDT Paul Tucker <ptucker@sympatico.ca>
+  * makefile.vc
+   + define COMMON_DIR
+
+19991115-17:21 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/transfrm.c
+    ! Direct item access changed to Item API calls.
+    % Optimized variable scopes.
+    % Optimized redundant code.
+    % Extend API calls changed to Item API.
+    ! Error substitution added.
+    ! Direct item access buffer fixed (with picture "@!")
+    ! Fixed to accept picture mask characters in lowercase (like in Clipper)
+    ! Fixed the interpretation of some mask characters for string expressions.
+    ! Fixed handling of "Y" mask for strings.
+    ! Fixed handling of @R for strings.
+    ! Fixed case when the picture template is wider than the string expression.
+    ! Fixed handling of @Z and @B for all types.
+    + Added support for @D, @DE for strings.
+    + Other enhancements.
+  * tests/rtl_test.prg
+    + New TRANSFORM() tests for special and error conditions added. Some of
+      these still fail.
+    ! Fixed one SPACE() test.
+  * include/extend.h
+    ! ISNIL() macro was not working, fixed. It was only used in TRANSFORM().
+  * source/vm/hvm.c
+    ! Mistyped STRICT_CLIPPER_COMP. macro name fixed.
+  * source/rtl/filesys.c
+    ! FREAD() is now always strictly compatible, option removed.
+  * include/simpleio.ch
+    include/assert.ch
+    ! Made platform independent using hb_OSNewLine() instead of the hard-
+      wired Chr(13)+Chr(10) newlines.
+  * include/box.ch
+    * Formatting.
+  * include/error.ch
+    - EG_ARGCOUNT removed.
+  * include/fileio.ch
+    * The hexa numbers changed to decimals for better cross compiler
+      compatibility, plus some minor cleanups.
+  * include/hbclip.ch
+    include/clipdefs.h
+    include/compiler.h
+    * Minor changes.
+
+19991113-13:49 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/arrays.c
+    source/rtl/console.c
+    source/rtl/dates.c
+    source/rtl/do.c
+    source/rtl/filesys.c
+    source/rtl/inkey.c
+    source/rtl/math.c
+    source/rtl/strings.c
+    source/rtl/transfrm.c
+    source/vm/hvm.c
+    doc/subcodes.txt
+    % Removed the runtime argument count checks.
+
+19991113-13:25 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/extend.c
+    include/extend.h
+    + hb_pardsbuff() Extend API function added, which does the same as
+      hb_pards(), but multi-thread friendly without any tricks, it will simply
+      accept a buffer for the return value.
+  * source/rtl/dates.c
+    source/rtl/math.c
+    source/rtl/strings.c
+    source/rtl/transform.c
+    * Changed to use hb_pardsbuff() instead of hb_pards()
+       DTOC(), DTOS(), MIN(), MAX(), TRANSFORM(), PAD*()
+  * tests/rtl_test.prg
+    + DTOC(), DTOS(), DAY(), MONTH(), YEAR(), DAY(), DOW(), CMONTH(), CDOW(),
+      TIME(), CTOD() regression tests added.
+  * source/rtl/dates.c
+    % Small optimalizations.
+    ! Error substitution added for all date functions.
+    + CTOD() - Added missing runtime error.
+    ! CDOW() - Fixed for empty and bad dates.
+  * source/vm/hvm.c
+    * hb_stack.szDate changed to local buffer.
+
+19991113-03:23 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/itemapi.c
+    % hb_evalNew(), hb_evalPutParam(), hb_evalRelease(), hb_itemRelease(),
+      hb_itemFreeC() - Variables and double initializations elimiated, faster,
+      simpler.
+  * source/rtl/dates.c
+    - DTOS() optimalization removed, it's now always 100% Clipper compatible,
+      STRICT option removed.
+    % hb_cmonth(), hb_cdow() optimalized.
+
+19991112-19:29 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/itemapi.c
+    source/rtl/strings.c
+    ! Moved the infinity support from strings.c to itemapi.c.
+    + The infinity support changed to not require the init on startup feature
+      of the compilers, it's now plain ANSI C.
+    + Removed the STRICT option from the infinity support, it's now turned on
+      all the time. Now one more RTL_TEST line will pass.
+
+19991112-11:40 EDT Paul Tucker <ptucker@sympatico.ca>
+  * makefile.vc
+    + source/rtl/dbedit
+    + source/common/hbtrace
+
+19991112-18:45 GMT+3 Alexander Kresin
+  * source/pp/hbpp.c
+    * Fixed bug, related to memory leaks, reported by Victor Szel
+
+19991112-01:35 GMT+1 Victor Szel <info@szelvesz.hu>
+   * config/w32/mingw32.cf
+     - "-g" switch removed, so now no debug info will be included by default.
+       This makes the generated binaries to be much smaller, and the make
+       process mych faster.
+       WARNING! If you need the debug functionality please use the C_USR=-g
+       envvar.
+     ! Fixed comment explaining why the USER32 lib is needed.
+   + source/rtl/natmsg/msgzhbig.c
+   + source/rtl/natmsg/msgzhgb.c
+   * source/rtl/msgxxx.c
+     + Chinese-GB and Chinese-BIG5 Language Modules added
+       Thanks to Dongming Wang <dongming@km169.net>
+
+19991111-22:52 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/vm/dymsym.c
+     % hb_dynsymGet(), hb_dynsymFindName() - Further optimized, toupper() calls
+       changed to local uppercase conversion code. One variable eliminated.
+
+19991111-11:19 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/vm/hvm.c
+     hb_stack.pItems initialized to NULL (required by fm.c module)
+   * makefile.b32
+     + some files added.
+     * Notice I have left -v as a bcc32.exe compiler option
+       to include debugging information.
+   * source/rtl/classes.c
+     Improved memory management.
+
+19991111-12:02 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/vm/dymsym.c
+    % hb_dynsymGet(), hb_dynsymFindName() - Optimized and fixed the uppercase
+      conversion, now it's really faster a bit. (tested)
+  * include/hbsetup.h
+    * Symbol name length changed to 63 from 128.
+
+19991111-10:45 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/fm.c
+    ! Two casts added to hb_xrealloc().
+
+19991111-06:02 GMT+1 Victor Szel <info@szelvesz.hu>
+  + source/rtl/dbedit.prg
+    source/rtl/dummy.prg
+    source/rtl/Makefile
+    doc/funclist.txt
+    + DBEDIT() function added.
+      Please update other makefiles.
+
+19991111-05:39 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/fm.c
+    ! hb_xalloc() chaining bug fixed.
+    ! hb_xrealloc() chaining bug fixed.
+    - Removed the faulty handling of the hb_xrealloc() call with zero size,
+      previously the memory block was considered freed but free() was never
+      called. I think that until a free() call is not issued for an allocated
+      block we should consider it allocated regardless of it's size. This way
+      it's also faster and cleaner.
+    % DeleteNode() moved to hb_xfree() since it's only used from one place now.
+    % Casts removed from the non-FM_STATISTICS branches.
+
+19991111-04:41 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/fm.c
+    ! hb_xrealloc() several things fixed (access to the pointer after
+      reallocating it, uneccessary structure initializations, access to NULL
+      pointers of failed or zero size realloc), RTL_TEST GPF fixed.
+    ! Simplified, optimized and fixed the dump part.
+    + TODO added about inconsistent hb_xrealloc() behaviour.
+    + Size is shown in the dump.
+    % strcpy( p, "" ) calls optimized.
+
+19991111-01:18 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/fm.c
+    ! hb_xrealloc() check for a passed NULL pointer.
+    ! hb_xrealloc() signature check moved before any MEMINFO usage.
+    ! Explicit \n changed to hb_consoleGetNewLine() call.
+    ! 256 buffer size for symbol names changed to HB_SYMBOL_NAME_LEN constant.
+    ! Now the hb_xrealloc() is returning a NULL pointer (instead of trash)
+      when the passed length is zero, and it's also freeing the pointer with
+      free().
+    % hb_xrealloc() - pResult variable optimized out.
+  * source/rtl/hbsetup.h
+    + HB_SYMBOL_NAME_LEN constant added to set the maximum handled symbol
+      name length in Harbour (both compiler/runtime), this can be set to any
+      value by specifying C_USR=-DHB_SYMBOL_NAME_LEN=10 in the make process.
+      TODO: Add support for the compiler to cut the symbols to this size on
+            compile. This way the /10 switch may be replaced by this #define,
+            since /10 works perfect when the RTL also "knows" about this limit,
+            and is compiled using this limit.
+  * include/hbtrace.h
+    ! Every macro names prefixed with HB_
+  * source/vm/hvm.c
+    ! Explicit buffer sizes are now determined using the HB_SYMBOL_NAME_LEN
+      constant. They can't overrun anymore.
+  * source/vm/dynsym.c
+    % hb_dynsymGet(), hb_dynsymFindName() - Using local stack for temp symbol
+      name buffer instead of hb_xgrab()/hb_xfree(). Some optimalizations.
+      Now they will cut the symbol name to the HB_SYMBOL_NAME_LEN size, so
+      by setting this to 10, we're 100% Cl*pper compatible from this respect.
+      These functions are now faster.
+
+19991110-23:20 GMT+1 Victor Szel <info@szelvesz.hu>
+  * include/hbtrace.h
+    % Excluded trace calls are converted to nohting instead of "do {} while 0"
+      since the latter was generating jumps for MINGW32. This is now violating
+      a -pedantic warning in GCC (duplicated ";"), so this may not be the
+      perfect solution, but at least it doesn't generate any code.
+  * source/rtl/fm.c
+    ! Casts added.
+    ! ulProcLine changed to USHORT.
+    + Added signature support.
+    + The whole mem tracing stuff can be excluded by a #define.
+    + The memory trace info level is HB_TR_ERROR now, so that it gets logged
+      by default.
+  * tests/Makefile
+    + fsplit.prg added.
+
+19991110-20:45 WIB Andi Jahja <andij@aonlippo.co.id>
+  * tests/fsplit.prg
+    * Harbour file splitter
+
+19991110-14:11 GMT+1 Victor Szel <info@szelvesz.hu>
+  * include/hbsetup.h
+    - Removed #defines which were previously moved to hbsetup.ch.
+  * include/hbextern.ch
+    source/runner/stdalone/external.prg
+    + __PREPROCESS added as EXTERNAL
+
+19991110-11:08 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * include/rddapi.h
+    source/rdd/dbcmd.c
+    source/rdd/dbf1.c
+    source/rdd/dbfcdx/dbfcdx1.c
+    * Added __dbPack() function
+
+  * tests/testdbf.prg
+    * Added a test for __dbPack() function
+
+  * source/rtl/dummy.prg
+    * Removed __dbPack() function
+
+19991109-17:20 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * source/rtl/filesys.c
+     % Replaced several #if tests of three or more manifest constants with
+       tests for new single manifest constants that are defined using just
+       one instance of the multiple tests. The new manifest constants are:
+       HB_FS_FILE_IO, HB_FS_SOPEN, and HB_FS_DRIVE_LETTER. This will lessen
+       the chances of missing one instance when other compilers are added.
+     % Replaced the use of PATH_MAX with _POSIX_PATH_MAX, which is always
+       defined, even for non-Posix compliant compilers, and eliminated the
+       PATH_MAX definition.
+
+Tue Nov 09 11:56:05 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+        * include/hbsetup.h:
+        * source/rtl/gt/gtsln.c:
+        * source/rtl/gtxxx.c:
+        * source/rtl/mousexxx.c:
+        Added an initial implementation of GT over S-lang.
+
+        * source/rtl/inkey.c:
+        Changed the order in which the #ifdef/#endif checks are done, to
+        make sure the curses and S-lang implementations are picked up
+        correctly.
+
+        * config/linux/gcc.cf:
+        * config/w32/gcc.cf:
+        * config/w32/mingw32.cf:
+        Added initial support for easily switching between curses and
+        slang. This could be vastly improved.
+
+        * tests/testbrw.prg:
+        Added a piece of code bound to K_TAB, just for the fun of it...
+
+19991109-01:58 GMT+1 Victor Szel <info@szelvesz.hu>
+  * samples/Makefile
+    samples/cccppc/*.*
+    + Fully CA-Clipper 5.x compatible PP written in Clipper added to the
+      samples directory. It also has a special object system (SmallTalk like
+      if I'm not mistaken), and it's a good test for the Harbour compiler.
+      Note that Harbour can't yet compile it, due to hangs in several .PRG.
+      (but it has an RMAKE makefile, so you can try it out)
+      The .PPO files produced by this program are exactly the same as the
+      ones produced by Clipper (with some really minor differences). Also note
+      that this version may have some bugs, since the project was later
+      rewritten and continued in C++, which is also Open Source, and you can
+      find it at http://www.nexus.hu/cccpp/
+
+      This great contribution was made by Levente Csisz r <lcsiszar@index.hu>
+
+19991109-01:09 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/filesys.c
+    ! tell() changed to lseek() for Posix (tell() is not a Posix function)
+
+19991108-23:41 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/filesys.c
+    % hb_fsWrite(), hb_fsReadLarge(), hb_fsWriteLarge() double var
+      assigments optimized.
+    * Some small cleanups.
+  * tests/rtl_test.prg
+    + Two new SOUNDEX() tests added.
+    + FWRITE() tests for the truncate feature.
+  * source/rtl/soundex.c
+    ! SOUNDEX() - Fixed handling of accented/national characters.
+
+19991108-09:25 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/classes.c
+     * hb_clsRelease() modified. Still there is a problem with CLASSDATA ... INIT
+
+19991108-07:38 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/classes.c
+     * Arrays used for DATA ... INIT values, properly initalized.
+
+19991107-19:24 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * source/rdd/dbcmd.c
+    * dbCreate(), fixed two bugs (mentioned by Victor).
+
+19991106-01:30 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * include/filesys.h
+   * source/rtl/filesys.c
+     ! Proper optimization implemented for hb_fsReadLarge() and
+       hb_fsWriteLarge(), as suggested by Victor Szel.
+
+19991105-23:30 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * source/rtl/filesys.c
+     ! Only truncate the file when the size of the write is zero bytes.
+
+19991105-21:20 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * config/os2/icc.cf
+     % Now that source/vm/main.c includes either mainstd.c or
+       mainwin.c, reference main.obj instead of main$(HB_MAIN).obj
+       when HB_MAIN is defined.
+
+   * include/filesys.h
+     ! Only use hb_fsReadLarge() and hb_fsWriteLarge() if the size
+       of a ULONG is different from the size of a UINT (was USHORT,
+       which is always going to be smaller than a ULONG).
+
+   * source/common/hbtrace.c
+     ! The hb_trace module uses strcmp(), which means that it
+       has to include <string.h> to keep C++ compilers happy.
+
+   * source/rtl/filesys.c
+     ! Only use hb_fsReadLarge() and hb_fsWriteLarge() if the size
+       of a ULONG is different from the size of a UINT (was USHORT,
+       which is always going to be smaller than a ULONG).
+
+   * source/runner/stdalone/Makefile
+     % IBM's Visual Age C++ compiler will not resolve main() from a
+       library, so it is necessary to set HB_MAIN, if it isn't already
+       set, so that icc.cf will know to include the main.obj module.
+
+19991105-14:07 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/rtl/codebloc.prg
+        * memory occupied by detached local variables is properly released now
+
+19991104-23:45 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/filesys.c
+    ! hb_fsSeek() now returns 0 instead of -1 on error, just like Clipper.
+    % hb_fsSeek() double assigments removed.
+    ! hb_fsLock() last error code handling fixed for some platforms.
+    % hb_fsCommit() small simplification, double assignment removed.
+
+19991104-14:30 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * source/pp/stdalone/hbpp.c
+     ! Added third parameter (char *) to Hp_Parse() so that the
+       Microsoft VC++ and IBM Visual Age C++ versions won't try
+       to link in the hbppint module from the pp library.
+
+   * source/rtl/mouse/mouseos2.c
+     ! Changed the type of the static mouse handle variable from
+       int to HMOU (for IBM Visual Age C++, but also works with GCC).
+
+Thu Nov 04 14:32:06 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+        * source/common/hbtrace.c:
+        * doc/tracing.txt:
+        Added the possibility to direct tracing output to a file by
+        specifying its name in the HB_TR_OUTPUT environment variable. The
+        default is stderr.
+
+Thu Nov 04 13:49:23 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+        * include/hbtrace.h:
+        * source/common/hbtrace.c:
+        * doc/tracing.txt:
+        Implemented a better way of tracing with support for several
+        levels (ALWAYS, FATAL, ERROR, WARNING, INFO and DEBUG), efficient
+        compile-out of unwanted levels and level control using an
+        environment variable at run-time. See doc/tracing.txt for detailed
+        information.
+
+        * source/pp/hbpp.c:
+        * source/pp/hbppint.c:
+        * source/pp/hbpplib.c:
+        * source/pp/stdalone/hbpp.c:
+        * source/rdd/dbcmd.c:
+        * source/rdd/dbf1.c:
+        * source/rdd/dbfcdx/dbfcdx1.c:
+        * source/rtl/arrays.c:
+        * source/rtl/classes.c:
+        * source/rtl/codebloc.c:
+        * source/rtl/console.c:
+        * source/rtl/copyfile.c:
+        * source/rtl/dates.c:
+        * source/rtl/descend.c:
+        * source/rtl/dir.c:
+        * source/rtl/environ.c:
+        * source/rtl/errorapi.c:
+        * source/rtl/extend.c:
+        * source/rtl/filesys.c:
+        * source/rtl/fm.c:
+        * source/rtl/gtapi.c:
+        * source/rtl/hardcr.c:
+        * source/rtl/inkey.c:
+        * source/rtl/itemapi.c:
+        * source/rtl/langapi.c:
+        * source/rtl/math.c:
+        * source/rtl/memvars.c:
+        * source/rtl/mouseapi.c:
+        * source/rtl/mtran.c:
+        * source/rtl/natmsg.c:
+        * source/rtl/samples.c:
+        * source/rtl/set.c:
+        * source/rtl/setcolor.c:
+        * source/rtl/strings.c:
+        * source/rtl/tone.c:
+        * source/rtl/transfrm.c:
+        * source/rtl/gt/gt_tpl.c:
+        * source/rtl/gt/gtcrs.c:
+        * source/rtl/gt/gtdos.c:
+        * source/rtl/gt/gtos2.c:
+        * source/rtl/gt/gtstd.c:
+        * source/rtl/gt/gtwin.c:
+        * source/runner/runlib.c:
+        * source/tools/dates2.c:
+        * source/tools/hb_f.c:
+        * source/tools/strasint.c:
+        * source/tools/stringsx.c:
+        * source/vm/cmdarg.c:
+        * source/vm/debug.c:
+        * source/vm/dynsym.c:
+        * source/vm/hvm.c:
+        * source/vm/initsymb.c:
+        * source/vm/mainstd.c:
+        * source/vm/mainwin.c:
+        Changed calls to HB_TRACE to incorporate the new level parameter.
+
+19991103-22:38 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/filesys.c
+     % Nested #ifs converted to #elifs (hb_fsDelete(), hb_fsFile())
+     % Double assigments optimalized
+       (convert_seek_flags(), hb_fsLock(), hb_fsFile())
+     * Code made more clear (hb_fsLock())
+     % Variable usage and assigments optimalized, made faster, smaller and
+       simpler. FCREATE(), FREAD(), FWRITE(), FERASE(), FRENAME(), FSEEK(),
+       FILE(), DIRCHANGE(), MAKEDIR(), DIRREMOVE()
+     ! FREAD(), FWRITE() now calls hb_fsReadLarge() and hb_fsWriteLarge()
+       instead of hb_fsRead() and hb_fsWrite().
+
+Wed Nov 03 18:38:03 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+        * tests/testbrdb.prg:
+        The test now restores the color setting and does a CLS before
+        exiting.
+
+        * tests/testbrw.prg:
+        The test now remembers its device position, cursor setting and
+        color and restores everything before exiting.
+
+19991103-07:28 GMT+1 Antonio Linares
+   * source/rtl/classes.c
+     * hb___msgSuper() simplied, faster and less memory consume.
+   * source/rtl/arrays.c
+     * bSuperCast is no longer checked.
+   * source/vm/hvm.c
+     * simpler after super casting process.
+   * include/extend.h
+     - BASEARRAY struct bSuperCast member removed.
+     - BASEARRAY struct uiPrevCls member removed.
+   + tests/clasinh.prg
+     * New test added proving Super access does not generate unreleased
+       memory blocks.
+
+19991102-16:33 GMT+1 Antonio Linares
+   * makefile.b32
+   * rdd.b32
+     * updated files provided by Jose Lalin
+
+19991102-04:05 GMT+1 Antonio Linares
+   * makefile.b32
+     * some files added. Alphabetical ordered.
+
+19991101-11:53 GMT+3 Alexander Kresin
+  * source/pp/hbpp.c
+    * Fixed bug
+
+19991101-10:10 GMT+3 Alexander Kresin
+  * source/pp/hbpp.c
+    * Fixed bug, reported by Antonio Linares
+
+19991030-03:24 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/rtl_test.prg
+    + Four new Pad*() tests added.
+  * source/rtl/samples.c
+    * Small optimalizations, formatting corrections.
+  * source/rtl/dynsym.c
+    % hb_strgreater() replaced with standard ANSI C function strcmp(), it's
+      now a bit faster.
+  * source/rtl/strings.c
+    include/extend.h
+    ! SUBSTR() bug fix in handling the error when the third parameter was not
+      a string. (reported by Andi Jahja)
+    - hb_strgreater() removed since it was same as strcmp()
+
+19991028-22:30 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * source/rtl/inkey.c
+   * source/rtl/gt/gtdos.c
+   * source/rtl/gt/gtwin.c
+     + Added Ctrl+Break support for DJGPP.
+     % Unified Ctrl+Break handling by modifying DOS (non-DJGPP) and
+       Windows GT API Ctrl+Break handlers to set a global flag that
+       hb_inkeyPoll() checks before checking for keyboard input.
+       Otherwise, if the program is in a keyboard input loop, a second
+       key may have to be pressed after the "Cancelled at:" message is
+       displayed before the program will actually quit. NOTE: The DOS
+       Ctrl+Break handling needs to be refined to handle Ctrl+Break and
+       Ctrl+C separately and to pass the Ctrl+C keyboard code on to the
+       Harbour application. This requires handling BIOS INT 1B for the
+       Ctrl+Break key and requires a lower level DOS INT 23 handler for
+       the Ctrl+C handling than is provided by the C setbrk() function.
+
+   * source/rtl/isprint.c
+     + Added support for Borland C REGS structure.
+
+   * source/rtl/samples.c
+     ! Changed 'if( ulLen >= 0)' to read 'if( ulLen >= 1)' so that the
+       string conversion for the hours value will only be done when
+       there is at least one character in the source string.
+
+   * tests/inkeytst.prg
+     + If the "skip" command line parameter is set to "BREAK", then
+       SETCANCEL() will be enabled, otherwise it will be disabled.
+
+19991028-14:12 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * source/rdd/dbcmd.c
+    source/rdd/dbf1.c
+    * dbCreate(), fixed a bug (mentioned by Victor).
+
+19991027-17:24 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/strings.c
+    source/rtl/descend.c
+    include/extend.h
+    % hb_strEmpty(), hb_str*cmp() a few optimalizations.
+    + Using const keyword for hb_str*() function parameters.
+    * Small formatting, some Hungarian notations adjusted.
+    + CHR() STRICT mode replaced with a comment, that the buggy Clipper
+      behaviour should (or should not) be implemented in the Harbour compiler
+      optimizer.
+  - tests/hardcr.prg
+  - tests/mtran.prg
+    tests/Makefile
+    + These test files has been removed, since they were moved to RTL_TEST
+  * tests/rtl_test.prg
+    * Some CHR() tests simplified, one added to show the buggy Clipper
+      behaviour.
+    + HARDCR(), MEMOTRAN() tests added.
+
+19991027-16:57 GMT+1 Antonio Linares
+   * source/vm/mainwin.c
+     * added missing #includes.
+
+19991027-13:55 GMT+3 Alexander Kresin
+  * source/pp/hbpp.c
+    * Fixed bugs, reported by Antonio Linares and Victor Szel
+    * ( increased size of expnew in Searnrep() and expreal in WorkMarkers() )
+    * Added HB_TRACE to the new function ( PrevSquare() )
+
+19991027-02:25 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/fm.c
+    ! Fixed to display negative unreleased memory properly.
+  * source/rtl/codebloc.c
+    * Removed newline chars from HB_TRACE() calls.
+
+19991026-19:55 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/gt/gtwin.c
+     * Added WINAPI to the handler func def.
+
+Tue Oct 26 17:16:43 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+        * source/common/hbtrace.c:
+        Now it is REALLY efficient; no copying, nothing.
+
+        * source/rtl/codebloc.c:
+        * source/rtl/dir.c:
+        * source/rtl/filesys.c:
+        * source/rtl/inkey.c:
+        * source/rtl/memvars.c:
+        * source/rtl/set.c:
+        * source/vm/hvm.c:
+        Got rid of other ways of tracing. Hopefully now HB_TRACE() is the
+        only, standard way used in Harbour.
+
+        * source/rtl/gt/gt_tpl.c:
+        * source/rtl/gt/gtdos.c:
+        * source/rtl/gt/gtos2.c:
+        * source/rtl/gt/gtstd.c:
+        * source/rtl/gt/gtwin.c:
+        Made sure all the GT implementations (including the template) have
+        proper HB_TRACE() calls.
+
+Tue Oct 26 13:20:46 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+        * source/runner/runlib.c:
+        Added HB_TRACE() calls to the RUNNER library.
+
+19991026-18:10 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/gt/gtwin.c
+    + Ctrl+Break handler added for Win32 console mode, now Ctrl+Break will not
+      break an application with SetCancel(.F.), and will terminate it with
+      the proper message with SetCancel(.T.).
+      INCOMPATIBILITY: With SetCancel(.F.) the inkey code 876 will be passed
+      to Harbour which should be ignored and not returned by Inkey().
+      David, could you check this ?
+  * source/rtl/gt/gtdos.c
+    + Ctrl+Break handler added for DOS character mode.
+      Please test this, since I could only test if it compiles.
+  * tests/tstalias.prg
+    + New alias related tests added.
+
+Tue Oct 26 13:11:19 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+        * source/tools/dates2.c:
+        * source/tools/hb_f.c:
+        * source/tools/strasint.c:
+        * source/tools/stringsx.c:
+        Added HB_TRACE() calls to the TOOLS library.
+
+Tue Oct 26 12:55:49 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+        * source/rdd/dbcmd.c:
+        * source/rdd/dbf1.c:
+        * source/rdd/dbfcdx/dbfcdx1.c:
+        Added HB_TRACE() calls to the RDD library.
+
+Tue Oct 26 12:15:01 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+        * source/vm/cmdarg.c:
+        * source/vm/debug.c:
+        * source/vm/dynsym.c:
+        * source/vm/hvm.c:
+        * source/vm/initsymb.c:
+        * source/vm/mainstd.c:
+        * source/vm/mainwin.c:
+        Added HB_TRACE() calls to the VM.
+
+19991026-14:07 GMT+1 Victor Szel <info@szelvesz.hu>
+  * include/itemapi.h
+    source/rtl/itemapi.c
+    source/rtl/strings.c
+    source/rtl/console.c
+    + hb_itemString() made thread safe, while keeping the speed of previous
+      non-thread safe version for most cases.
+  * source/rtl/dates.c
+    + NOTE added about the buffer size requirements of hb_dtoc()
+  * source/vm/hvm.c
+    + HB_TRACE() call added to the HB_P_LINE opcode.
+  * source/rtl/strings.c
+    ! hb_strncpyUpper() and hb_itemPadConv() HB_TRACE() calls now print the
+      address of a buffer instead of the (uninitialized) content.
+  * source/rtl/memvars.c
+    ! bScope is now showed as a number instead of a char in HB_TRACE() call.
+
+19991026-12:49 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * source/rdd/dbf1.c
+    tests/testdbf.prg
+    * __dbZap() function finished. Test added for this function.
+
+19991026-11:35 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/tget.prg
+    % New() will evaluate the setget only once instead of three times.
+    ! New() fixed the picture generation for numeric values, decimals are
+      detected for example.
+    ! ::ColorSpec now defaults to the proper color.
+    + ColorDisp() inline method added.
+    ! Display() changed back to hide cursor while displaying
+    ! Display() fixed to use ::ColorSpec instead of SetColor()
+    ! Display() is now selecting the proper colors from the ::ColorSpec
+    ! Display() color now depends on ::HasFocus
+    ! SetFocus(), KillFocus() fixed to call ::Display(), like in Clipper.
+    + Dummy methods added for not yet implemented ones, TODOs added.
+    - "Message" DATA removed
+    + Exported/Private MESSAGEs grouped.
+    ! ToDecPos() fixed to redisplay and reposition the cursor.
+    ! WordLeft(), WordRight() fixed to reposition the cursor.
+    + Some TODOs and TOFIXs added.
+  * source/rdd/dbstrux.prg
+    source/rtl/dummy.prg
+    + __FLEDIT() function added, guarded with STRICT, for collectors only ;)
+  * source/rtl/oemansi.c
+    - #include "winuser.h" removed, since I mitakenly left it there.
+  * tests/rtl_test.prg
+    + One line enabled, since the PP is processing it now without hang.
+
+19991026-09:43 GMT+3 Alexander Kresin
+  * source/pp/hbpp.c
+    * Fixed bugs, reported by Antonio Linares and Victor Szel
+
+19991025-23:35 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/filesys.c
+     * add casts on xgrab/free
+
+19991025-18:15 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * include/hbwinapi.h
+     - Removed '#define HARBOUR_USE_WIN', because includinging windows.h
+       causes _Windows to be defined, so HARBOUR_USE_WIN is redundant.
+
+   * harbour/source/pp/hbpp.c
+     % Changed "non directive" warning to level 3.
+
+   * harbour/source/pp/hbppint.c
+     + Added include file and include file line number to warning messages.
+
+   * harbour/source/rtl/inkey.c
+     ! Moved HB_TRACE() call in hb_releaseCPU() to bottom of function,
+       because variables are declared in #if blocks.
+     - Changed '#ifdef HARBOUR_USE_WIN' to '#if defined(_Windows) ||
+       defined(WINNT)' (see include/hbwinapi.h for reason why).
+
+   * harbour/source/rtl/oemansi.c
+     ! Only include winuser.h when compiling for Windows.
+
+19991025-23:12 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/achoice.prg
+    ! Fixed bound error on empty array.
+    % Small optimalization.
+  * source/rtl/filesys.c
+    include/filesys.h
+    ! CURDIR() was mistakenly marked a C53 function, but it was already there
+      in CA-Cl*pper 5.2e.
+    + hb_fsCurDirBuff() function added, which is thread safe.
+    * hb_fsCurDir() is now calling hb_fsCurDirBuff().
+    + CURDIR() is now using the thread safe hb_fsCurDirBuff() instead of
+      hb_fsCurDir().
+    + hb_fsCurDirBuff() now supports the "drive" parameter in WIN32/MINGW32.
+    + hb_fsCurDirBuff() now strips the leading and trailing slashes from the
+      directory, to be Clipper compatible.
+  * source/tools/ctchksum.c
+    * Small formatting.
+
+19991025-12:30 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/tools/ctchksum.c
+     * added a cast
+   * makefile.vc
+     + source/tools/ctchksum.c
+
+19991025-22:05 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * source/rtl/dummy.prg
+    - Removed __dbZap() function.
+
+  * include/rddapi.h
+    source/rdd/dbcmd.c
+    source/rdd/dbf1.c
+    source/rdd/dbfcdx/dbfcdx1.c
+    * dbUseArea() now show the "Default" option in the alert box.
+    + Added __dbZap() function (incomplete).
+
+19991025-19:46 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/filesys.c
+    ! DISKSPACE(): Added support for Win32 platform.
+  * ChangeLog
+  + ChangeLog.004
+    * Old ChangeLog renamed to ChangeLog.004
+    * New ChangeLog created.
