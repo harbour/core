@@ -439,8 +439,9 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
 
             case HB_P_MODULENAME:
                fprintf( yyc, "\tHB_P_MODULENAME," );
-               if( _bGenCVerbose ) fprintf( yyc, "\t/* %s */", ( char * ) pFunc->pCode + lPCodePos++ + 1 );
+               if( _bGenCVerbose ) fprintf( yyc, "\t/* %s */", ( char * ) pFunc->pCode + lPCodePos + 1 );
                fprintf( yyc, "\n" );
+               lPCodePos++;
                while( pFunc->pCode[ lPCodePos ] )
                {
                   chr = pFunc->pCode[ lPCodePos++ ];
