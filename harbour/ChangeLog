@@ -1,3 +1,18 @@
+2001-09-09 17:30 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+*makefile.bc
+ makefile.vc
+ source/rtl/Makefile
+  + Scrollbr.prg and Listbox.prg to dependecie list
++source/rtl/listbox.prg
+  * Ca-Clipper 5.3 compatible listbox Class
++source/rtl/scrollbr.prg
+   * Ca-Clipper 5.3 compatible scroll bar Class
+*source/rtl/checkbox.prg
+   *small change to isdefcolor function
+* Todo.txt
+   Remove the Ca-clipper 5.3 classes entried
+
+
 2001-09-09 21:00 MEST Martin Vogel <vogel@inttec.de>
 
    + contrib/libct/token2.c
