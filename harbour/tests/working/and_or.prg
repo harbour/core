@@ -4,7 +4,7 @@
 
 // Testing Harbour AND OR operators
 
-function And_Or()  // Main() is not required!
+function Main()
 
    QOut( "Testing logical shortcuts" )
 

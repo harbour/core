@@ -45,6 +45,8 @@ STATIC snFail := 0
 
 FUNCTION Main()
 
+     /* AT() */
+
      TEST_LINE( At("", "")                    , 1                )
      TEST_LINE( At("", "ABCDEF")              , 1                )
      TEST_LINE( At("ABCDEF", "")              , 0                )
@@ -61,6 +63,8 @@ FUNCTION Main()
      TEST_LINE( At("BCDEFG", "ABCDEF")        , 0                )
      TEST_LINE( At("ABCDEFG", "ABCDEF")       , 0                )
      TEST_LINE( At("FI", "ABCDEF")            , 0                )
+
+     /* SUBSTR() */
 
      TEST_LINE( SubStr("abcdef", 0, -1)       , ""               )
      TEST_LINE( SubStr("abcdef", 0, 0)        , ""               )
@@ -88,18 +92,27 @@ FUNCTION Main()
      TEST_LINE( SubStr("abcdef", -10, 7)      , "abcdef"         )
      TEST_LINE( SubStr("abcdef", -10, 15)     , "abcdef"         )
      TEST_LINE( SubStr("abcdef", -10)         , "abcdef"         )
+     TEST_LINE( SubStr("ab" + Chr(0) + "def", 2, 3) , "b" + Chr(0) + "d"   )
+
+     /* LEFT() */
 
      TEST_LINE( Left("abcdef", -10)           , ""               )
      TEST_LINE( Left("abcdef", -2)            , ""               )
      TEST_LINE( Left("abcdef", 0)             , ""               )
      TEST_LINE( Left("abcdef", 2)             , "ab"             )
      TEST_LINE( Left("abcdef", 10)            , "abcdef"         )
+     TEST_LINE( Left("ab" + Chr(0) + "def", 5)      , "ab" + Chr(0) + "de" )
+
+     /* RIGHT() */
 
      TEST_LINE( Right("abcdef", -10)          , ""               )
      TEST_LINE( Right("abcdef", -2)           , ""               )
      TEST_LINE( Right("abcdef", 0)            , ""               )
      TEST_LINE( Right("abcdef", 2)            , "ef"             )
      TEST_LINE( Right("abcdef", 10)           , "abcdef"         )
+     TEST_LINE( Right("ab" + Chr(0) + "def", 5)     , "b" + Chr(0) + "def" )
+
+     /* PADR() */
 
      TEST_LINE( PadR("abcdef", -5)            , ""               )
      TEST_LINE( PadR("abcdef", 0)             , ""               )
@@ -108,12 +121,16 @@ FUNCTION Main()
      TEST_LINE( PadR("abcdef", 10, "1")       , "abcdef1111"     )
      TEST_LINE( PadR("abcdef", 10, "12")      , "abcdef1111"     )
 
+     /* PADL() */
+
      TEST_LINE( PadL("abcdef", -5)            , ""               )
      TEST_LINE( PadL("abcdef", 0)             , ""               )
      TEST_LINE( PadL("abcdef", 5)             , "abcde"          ) /* QUESTION: CA-Cl*pper "bug", should return: "bcdef" ? */
      TEST_LINE( PadL("abcdef", 10)            , "    abcdef"     )
      TEST_LINE( PadL("abcdef", 10, "1")       , "1111abcdef"     )
      TEST_LINE( PadL("abcdef", 10, "12")      , "1111abcdef"     )
+
+     /* PADC() */
 
      TEST_LINE( PadC("abcdef", -5)            , ""               )
      TEST_LINE( PadC("abcdef", 0)             , ""               )
@@ -123,11 +140,44 @@ FUNCTION Main()
      TEST_LINE( PadC("abcdef", 10, "1")       , "11abcdef11"     )
      TEST_LINE( PadC("abcdef", 10, "12")      , "11abcdef11"     )
 
-     /* TODO: These could be more complete */
+     /* __COLORINDEX() */
 
-     TEST_LINE( SubStr("ab" + Chr(0) + "def", 2, 3) , "b" + Chr(0) + "d"   )
-     TEST_LINE( Left("ab" + Chr(0) + "def", 5)      , "ab" + Chr(0) + "de" )
-     TEST_LINE( Right("ab" + Chr(0) + "def", 5)     , "b" + Chr(0) + "def" )
+     TEST_LINE( __ColorIndex()                  , ""               )
+     TEST_LINE( __ColorIndex("", -1)            , ""               )
+     TEST_LINE( __ColorIndex("", 0)             , ""               )
+     TEST_LINE( __ColorIndex("W/R", -1)         , ""               )
+     TEST_LINE( __ColorIndex("W/R", 0)          , "W/R"            )
+     TEST_LINE( __ColorIndex("W/R", 1)          , ""               )
+     TEST_LINE( __ColorIndex("W/R", 2)          , ""               )
+     TEST_LINE( __ColorIndex("W/R,GR/0", 0)     , "W/R"            )
+     TEST_LINE( __ColorIndex("W/R,GR/0", 1)     , "GR/0"           )
+     TEST_LINE( __ColorIndex("W/R,GR/0", 2)     , ""               )
+     TEST_LINE( __ColorIndex("W/R,GR/0", 3)     , ""               )
+     TEST_LINE( __ColorIndex("W/R, GR/0", 0)    , "W/R"            )
+     TEST_LINE( __ColorIndex("W/R, GR/0", 1)    , "GR/0"           )
+     TEST_LINE( __ColorIndex("W/R, GR/0", 2)    , ""               )
+     TEST_LINE( __ColorIndex("W/R, GR/0", 3)    , ""               )
+     TEST_LINE( __ColorIndex("W/R,GR/0 ", 0)    , "W/R"            )
+     TEST_LINE( __ColorIndex("W/R,GR/0 ", 1)    , "GR/0"           )
+     TEST_LINE( __ColorIndex("W/R,GR/0 ", 2)    , ""               )
+     TEST_LINE( __ColorIndex("W/R, GR/0 ", 0)   , "W/R"            )
+     TEST_LINE( __ColorIndex("W/R, GR/0 ", 1)   , "GR/0"           )
+     TEST_LINE( __ColorIndex("W/R, GR/0 ", 2)   , ""               )
+     TEST_LINE( __ColorIndex("W/R, GR/0 ,", 0)  , "W/R"            )
+     TEST_LINE( __ColorIndex("W/R, GR/0 ,", 1)  , "GR/0"           )
+     TEST_LINE( __ColorIndex("W/R, GR/0 ,", 2)  , ""               )
+     TEST_LINE( __ColorIndex(" W/R, GR/0 ,", 0) , "W/R"            )
+     TEST_LINE( __ColorIndex(" W/R, GR/0 ,", 1) , "GR/0"           )
+     TEST_LINE( __ColorIndex(" W/R, GR/0 ,", 2) , ""               )
+     TEST_LINE( __ColorIndex(" W/R , GR/0 ,", 0), "W/R"            )
+     TEST_LINE( __ColorIndex(" W/R , GR/0 ,", 1), "GR/0"           )
+     TEST_LINE( __ColorIndex(" W/R , GR/0 ,", 2), ""               )
+     TEST_LINE( __ColorIndex(" W/R ,   ,", 1)   , ""               )
+     TEST_LINE( __ColorIndex(" W/R ,,", 1)      , ""               )
+     TEST_LINE( __ColorIndex(",,", 0)           , ""               )
+     TEST_LINE( __ColorIndex(",,", 1)           , ""               )
+     TEST_LINE( __ColorIndex(",,", 2)           , ""               )
+     TEST_LINE( __ColorIndex(",  ,", 2)         , ""               )
 
      /* Show results, return ERRORLEVEL and exit */
 

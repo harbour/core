@@ -18,7 +18,7 @@ inplementation of :
 tested with Borland 32bit only
 */
 
-function test_nanforlib_clone()
+function main()
 // open a text file here
 local handle
 if ( handle := hb_fuse( "testhbf.prg", 0 ) ) > 1

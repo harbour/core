@@ -1,3 +1,13 @@
+19990817-20:14 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/working/Makefile
+    tests/working/colorind.prg (moved to rtl_test.prg)
+    tests/working/rtl_test.prg
+    tests/working/testhbf.prg
+    tests/working/and_or.prg
+    ! Starting procedure name changed to Main() so Win32/GCC is also able to
+      run them.
+    * Some minor changes
+
 19990817-13:50 EDT David G. Holm <dholm@jsd-llc.com>
   * config/dos/global.cf
     + Added code to leave COMSPEC alone instead of changing '\' to
@@ -36,7 +46,7 @@
     source/rtl/fm.c
     source/rtl/itemapi.c
     source/rtl/transfrm.c
-    include/errors.ch
+    include/error.ch
     + printf()s changed to a call to hb_errInternal() instead.
     * hb_callStackShow() modified so that it uses the same format as
       the standard error handler.
@@ -118,7 +128,6 @@
     + browdb
     + tone
 
->>>>>>> 1.792
 19990816-15:30 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/errorapi.c
     ! Fixed hb_errLaunch() so that it will handle error handler return

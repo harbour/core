@@ -40,7 +40,6 @@ PRG_SOURCES=\
         cmphello.prg \
         codebl.prg \
         codebloc.prg \
-        colorind.prg \
         comments.prg \
         copyfile.prg \
         curdirt.prg \
