@@ -3409,7 +3409,7 @@ FUNCTION ConvertParams( cFile, aFile, p1, p2, p3, p4, p5, p6 )
     cParam := Strtran( cParam, "-r", "-R" )
     cParam := Strtran( cParam, "-l", "-L" )
 
-   If AT( "-EX" , cParam ) >0 .or. AT( "-EXL" , cParam )  >0
+   If AT( "-EX" , cParam ) >0 .or. AT( "-ELX" , cParam )  >0
 
        lEditMode:=.T.
 
