@@ -69,7 +69,7 @@
 BOOL hb_comp_bShortCuts = TRUE;
 
 /* various flags for macro compiler */
-static ULONG s_macroFlags = (HB_SM_SHORTCUTS | HB_SM_HARBOUR);
+static ULONG s_macroFlags = HB_SM_SHORTCUTS;
 
 static void hb_macroUseAliased( HB_ITEM_PTR, HB_ITEM_PTR, int );
 static void hb_compMemvarCheck( char * szVarName, HB_MACRO_DECL );

@@ -72,6 +72,7 @@
 #include "hbvm.h"
 #include "hbexprop.h"
 #include "hbpcode.h"
+#include "hbmsetup.h"
 
 #if defined(HB_EXTERN_C)
 extern "C" {
@@ -99,15 +100,6 @@ extern "C" {
 #define HB_MACRO_UDF          4   /* code uses UDF function (info used by TYPE function) */
 #define HB_MACRO_UNKN_SYM     8   /* requested symbol was not found in runtime symbol table */
 #define HB_MACRO_UNKN_VAR     16  /* requested variable doesn't exist */
-
-/* runtime settings for macro compiler */
-#define HB_SM_HARBOUR    1    /* extended Harbour features */
-#define HB_SM_XBASE      2    /* extended xbase compatibility */
-#define HB_SM_PREPROC    4    /* enable/disable commands preprocessing */
-#define HB_SM_SHORTCUTS  8    /* enable/disable sortcuts for logical operators */
-#define HB_SM_PARSER     128  /* address of macro parser (TODO) */
-
-
 
 /* Global functions
  */

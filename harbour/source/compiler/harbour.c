@@ -142,7 +142,8 @@ int           hb_comp_iLinePRG;
 INLINES       hb_comp_inlines;
 
 /* various compatibility flags (-k switch) */
-ULONG         hb_comp_Supported = HB_COMPFLAG_HARBOUR;
+ULONG         hb_comp_Supported;
+
 
 /* EXTERNAL statement can be placed into any place in a function - this flag is
  * used to suppress error report generation
@@ -184,6 +185,11 @@ int main( int argc, char * argv[] )
    BOOL bAnyFiles;
 
    hb_comp_pOutPath = NULL;
+
+   /* Activate Harbour extensions by default. */
+   hb_comp_Supported  = HB_COMPFLAG_HARBOUR;
+   hb_comp_Supported |= HB_COMPFLAG_XBASE;
+   hb_comp_Supported |= HB_COMPFLAG_HB_INLINE;
 
    /* First check the environment variables */
    hb_compChkCompilerSwitch( 0, NULL );
@@ -2235,7 +2241,7 @@ static void hb_compGenVariablePCode( BYTE bPCode, char * szVarName )
       bGenCode = hb_comp_bForceMemvars;    /* harbour compatibility */
    else
       bGenCode = ( hb_comp_bForceMemvars || bPCode == HB_P_POPVARIABLE );
-      
+
    if( bGenCode )
    {
       /* -v switch was used -> assume it is a memvar variable

@@ -29,6 +29,7 @@
 #include <assert.h>
 
 #include "hbcomp.h"
+#include "hbmsetup.h"
 
 static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc );
 static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc );
@@ -202,6 +203,10 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                     hb_comp_szPrefix, pFileName->szName,
                     hb_comp_szPrefix, pFileName->szName );
 
+
+      if( hb_comp_Supported )
+         fprintf( yyc, "\nextern ULONG hb_macroSetMacro( BOOL bSet, ULONG flag );\n" );
+
       /* Generate functions data
        */
       pFunc = hb_comp_functions.pFirst;
@@ -227,6 +232,22 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
             hb_compGenCReadable( pFunc, yyc );
 
          fprintf( yyc, "   };\n\n" );
+
+         if( hb_comp_Supported )
+         {
+            if( hb_comp_Supported & HB_COMPFLAG_HARBOUR )
+            {
+               fprintf( yyc, "   hb_macroSetMacro( TRUE, %i );\n\n", HB_SM_HARBOUR );
+            }
+
+            if( hb_comp_Supported & HB_COMPFLAG_XBASE )
+            {
+               fprintf( yyc, "   hb_macroSetMacro( TRUE, %i );\n\n", HB_SM_XBASE );
+            }
+
+            hb_comp_Supported = 0;
+         }
+
          fprintf( yyc, "   hb_vmExecute( pcode, symbols );\n}\n\n" );
          pFunc = pFunc->pNext;
       }
