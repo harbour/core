@@ -54,7 +54,7 @@
 
 FUNCTION TClass()
 
-   STATIC s_hClass := NIL
+   STATIC s_hClass
 
    IF s_hClass == NIL
       s_hClass := __clsNew( "TCLASS", 11 )

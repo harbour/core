@@ -364,6 +364,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
    LONG w = 0;
    BOOL bCanRecover = FALSE;
    ULONG ulPrivateBase;
+   LONG lOffset;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmExecute(%p, %p)", pCode, pSymbols));
 
@@ -611,7 +612,6 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          /* BEGIN SEQUENCE/RECOVER/END SEQUENCE */
 
          case HB_P_SEQBEGIN:
-         {
             /*
              * Create the SEQUENCE envelope
              * [ break return value      ]  -4
@@ -629,7 +629,12 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
              * 2) store the address of RECOVER or END opcode
              */
             hb_stack.pPos->type = HB_IT_LONG;
-            hb_stack.pPos->item.asLong.value = w + ( long ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 ) );
+
+            lOffset = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 );
+            if ( lOffset > 8388607L )
+               lOffset = ( lOffset - 16777216 );
+
+            hb_stack.pPos->item.asLong.value = w + lOffset;
             hb_stackPush();
             /*
              * 3) store current RECOVER base
@@ -654,10 +659,8 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             bCanRecover = TRUE;
             w += 4;
             break;
-         }
 
          case HB_P_SEQEND:
-         {
             /*
              * Remove the SEQUENCE envelope
              * This is executed either at the end of sequence or as the
@@ -687,9 +690,12 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             /*
              * skip outside of SEQUENCE structure
              */
-            w += ( long ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 ) );
+            lOffset = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 );
+            if ( lOffset > 8388607L )
+               lOffset = ( lOffset - 16777216 );
+
+            w += lOffset;
             break;
-         }
 
          case HB_P_SEQRECOVER:
             /*
@@ -722,55 +728,122 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          /* Jumps */
 
          case HB_P_JUMPSHORT:
-            w += ( char ) pCode[ w + 1 ];
+
+            lOffset = pCode[ w + 1 ];
+            if ( lOffset > 127 )
+               lOffset -= 256 ;
+            /*
+            if( lOffset )
+               w += lOffset;
+            else
+               w += 2;
+            */
+            w += lOffset;
             break;
 
          case HB_P_JUMP:
-            w += ( long ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+
+            lOffset = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+            if ( lOffset > SHRT_MAX )
+               lOffset -= 65536;
+            /*
+            if( lOffset )
+               w += lOffset;
+            else
+               w += 3;
+            */
+            w += lOffset;
             break;
 
          case HB_P_JUMPFAR:
-            w += ( long ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 ) );
+            lOffset = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 );
+            if ( lOffset > 8388607L )
+               lOffset -= 16777216L;
+
+            /*
+            if( lOffset )
+               w += lOffset;
+            else
+               w += 4;
+            */
+
+            w += lOffset;
             break;
 
          case HB_P_JUMPSHORTFALSE:
-            if( hb_vmPopLogical() )
-               w += 2;
+            if( ! hb_vmPopLogical() )
+            {
+               lOffset = pCode[ w + 1 ];
+               if ( lOffset > 127 )
+                  lOffset -= 256;
+
+               w += lOffset;
+            }
             else
-               w += ( char ) pCode[ w + 1 ];
+               w += 2;
             break;
 
          case HB_P_JUMPFALSE:
-            if( hb_vmPopLogical() )
-               w += 3;
+            if( ! hb_vmPopLogical() )
+            {
+               lOffset = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+               if ( lOffset > SHRT_MAX )
+                  lOffset -= 65536;
+
+               w += lOffset;
+            }
             else
-               w += ( long ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+               w += 3;
             break;
 
          case HB_P_JUMPFARFALSE:
-            if( hb_vmPopLogical() )
-               w += 4;
+            if( ! hb_vmPopLogical() )
+            {
+               lOffset = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 );
+               if ( lOffset > 8388607L )
+                  lOffset -= 16777216L;
+
+               w += lOffset;
+            }
             else
-               w += ( long ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 ) );
+               w += 4;
             break;
 
          case HB_P_JUMPSHORTTRUE:
             if( hb_vmPopLogical() )
-               w += ( char ) pCode[ w + 1 ];
+            {
+               lOffset = pCode[ w + 1 ];
+               if ( lOffset > 127 )
+                  lOffset -= 256;
+
+               w += lOffset;
+            }
             else
                w += 2;
             break;
 
          case HB_P_JUMPTRUE:
             if( hb_vmPopLogical() )
-               w += ( long ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+            {
+               lOffset = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+               if ( lOffset > SHRT_MAX )
+                  lOffset -= 65536;
+
+               w += lOffset;
+            }
             else
                w += 3;
             break;
 
          case HB_P_JUMPFARTRUE:
             if( hb_vmPopLogical() )
-               w += ( long ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 ) );
+            {
+               lOffset = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 );
+               if ( lOffset > 8388607L )
+                  lOffset -= 16777216L;
+
+               w += lOffset;
+            }
             else
                w += 4;
             break;
@@ -778,16 +851,12 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          /* Push */
 
          case HB_P_TRUE:
-            hb_stack.pPos->type = HB_IT_LOGICAL;
-            hb_stack.pPos->item.asLogical.value = TRUE;
-            hb_stackPush();
+            hb_vmPushLogical( TRUE );
             w++;
             break;
 
          case HB_P_FALSE:
-            hb_stack.pPos->type = HB_IT_LOGICAL;
-            hb_stack.pPos->item.asLogical.value = FALSE;
-            hb_stackPush();
+            hb_vmPushLogical( FALSE );
             w++;
             break;
 
@@ -845,12 +914,12 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_PUSHSTR:
-         {
-            USHORT uiSize = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-            hb_vmPushString( ( char * ) pCode + w + 3, ( ULONG ) uiSize );
-            w += ( 3 + uiSize );
+            {
+               USHORT uiSize = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+               hb_vmPushString( ( char * ) pCode + w + 3, ( ULONG ) uiSize );
+               w += ( 3 + uiSize );
+            }
             break;
-         }
 
          case HB_P_PUSHSTRSHORT:
             hb_vmPushString( ( char * ) pCode + w + 2, ( ULONG ) pCode[ w + 1 ] );
@@ -1087,134 +1156,133 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          /* macro compiled opcodes - we are using symbol address here */
 
          case HB_P_MMESSAGE:
-         {
-            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
-            hb_vmMessage( ( *pDynSym )->pSymbol );
-            w += sizeof( HB_DYNS_PTR ) + 1;
+            {
+               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
+               hb_vmMessage( ( *pDynSym )->pSymbol );
+               w += sizeof( HB_DYNS_PTR ) + 1;
+            }
             break;
-         }
 
          case HB_P_MPOPALIASEDFIELD:
-         {
-            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
-            hb_vmPopAliasedField( ( *pDynSym )->pSymbol );
-            w += sizeof( HB_DYNS_PTR ) + 1;
+            {
+               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
+               hb_vmPopAliasedField( ( *pDynSym )->pSymbol );
+               w += sizeof( HB_DYNS_PTR ) + 1;
+            }
             break;
-         }
 
          case HB_P_MPOPALIASEDVAR:
-         {
-            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
-            hb_vmPopAliasedVar( ( *pDynSym )->pSymbol );
-            w += sizeof( HB_DYNS_PTR ) + 1;
+            {
+               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
+               hb_vmPopAliasedVar( ( *pDynSym )->pSymbol );
+               w += sizeof( HB_DYNS_PTR ) + 1;
+            }
             break;
-         }
 
          case HB_P_MPOPFIELD:
-         {
-            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
-            /* Pops a value from the eval stack and uses it to set
-            * a new value of the given field
-            */
-            hb_stackDec();
-            hb_rddPutFieldValue( hb_stack.pPos, ( *pDynSym )->pSymbol );
-            hb_itemClear( hb_stack.pPos );
-            HB_TRACE(HB_TR_INFO, ("(hb_vmMPopField)"));
-            w += sizeof( HB_DYNS_PTR ) + 1;
+            {
+               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
+               /* Pops a value from the eval stack and uses it to set
+               * a new value of the given field
+               */
+               hb_stackDec();
+               hb_rddPutFieldValue( hb_stack.pPos, ( *pDynSym )->pSymbol );
+               hb_itemClear( hb_stack.pPos );
+               HB_TRACE(HB_TR_INFO, ("(hb_vmMPopField)"));
+               w += sizeof( HB_DYNS_PTR ) + 1;
+            }
             break;
-         }
 
          case HB_P_MPOPMEMVAR:
-         {
-            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
-            hb_stackDec();
-            hb_memvarSetValue( ( *pDynSym )->pSymbol, hb_stack.pPos );
-            hb_itemClear( hb_stack.pPos );
-            HB_TRACE(HB_TR_INFO, ("(hb_vmMPopMemvar)"));
-            w += sizeof( HB_DYNS_PTR ) + 1;
+            {
+               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
+               hb_stackDec();
+               hb_memvarSetValue( ( *pDynSym )->pSymbol, hb_stack.pPos );
+               hb_itemClear( hb_stack.pPos );
+               HB_TRACE(HB_TR_INFO, ("(hb_vmMPopMemvar)"));
+               w += sizeof( HB_DYNS_PTR ) + 1;
+            }
             break;
-         }
 
          case HB_P_MPUSHALIASEDFIELD:
-         {
-            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
-            hb_vmPushAliasedField( ( *pDynSym )->pSymbol );
-            w += sizeof( HB_DYNS_PTR ) + 1;
+            {
+               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
+               hb_vmPushAliasedField( ( *pDynSym )->pSymbol );
+               w += sizeof( HB_DYNS_PTR ) + 1;
+            }
             break;
-         }
 
          case HB_P_MPUSHALIASEDVAR:
-         {
-            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
-            hb_vmPushAliasedVar( ( *pDynSym )->pSymbol );
-            w += sizeof( HB_DYNS_PTR ) + 1;
+            {
+               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
+               hb_vmPushAliasedVar( ( *pDynSym )->pSymbol );
+               w += sizeof( HB_DYNS_PTR ) + 1;
+            }
             break;
-         }
 
          case HB_P_MPUSHBLOCK:
-         {
-            /*NOTE: the pcode is stored in dynamically allocated memory
-            * We need to handle it with more care than compile-time
-            * codeblocks
-            */
-
-            /* +0    -> _pushblock
-             * +1 +2 -> size of codeblock
-             * +3 +4 -> number of expected parameters
-             * +5    -> pcode bytes
-             */
-            hb_vmPushMacroBlock( ( BYTE * ) ( pCode + w ), pSymbols );
-            w += ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+            {
+               /*NOTE: the pcode is stored in dynamically allocated memory
+               * We need to handle it with more care than compile-time
+               * codeblocks
+               */
+                  /* +0    -> _pushblock
+                  * +1 +2 -> size of codeblock
+                  * +3 +4 -> number of expected parameters
+                  * +5    -> pcode bytes
+                  */
+               hb_vmPushMacroBlock( ( BYTE * ) ( pCode + w ), pSymbols );
+               w += ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+            }
             break;
-         }
 
          case HB_P_MPUSHFIELD:
-         {
-            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
-            /* It pushes the current value of the given field onto the eval stack
-            */
-            hb_rddGetFieldValue( hb_stack.pPos, ( *pDynSym )->pSymbol );
-            hb_stackPush();
-            HB_TRACE(HB_TR_INFO, ("(hb_vmMPushField)"));
-            w += sizeof( HB_DYNS_PTR ) + 1;
+            {
+               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
+               /* It pushes the current value of the given field onto the eval stack
+               */
+               hb_rddGetFieldValue( hb_stack.pPos, ( *pDynSym )->pSymbol );
+               hb_stackPush();
+               HB_TRACE(HB_TR_INFO, ("(hb_vmMPushField)"));
+               w += sizeof( HB_DYNS_PTR ) + 1;
+            }
             break;
-         }
 
          case HB_P_MPUSHMEMVAR:
-         {
-            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
-            hb_memvarGetValue( hb_stack.pPos, ( *pDynSym )->pSymbol );
-            hb_stackPush();
-            HB_TRACE(HB_TR_INFO, ("(hb_vmMPushMemvar)"));
-            w += sizeof( HB_DYNS_PTR ) + 1;
+            {
+               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
+               hb_memvarGetValue( hb_stack.pPos, ( *pDynSym )->pSymbol );
+               hb_stackPush();
+               HB_TRACE(HB_TR_INFO, ("(hb_vmMPushMemvar)"));
+               w += sizeof( HB_DYNS_PTR ) + 1;
+            }
             break;
-         }
 
          case HB_P_MPUSHMEMVARREF:
-         {
-            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
-            hb_memvarGetRefer( hb_stack.pPos, ( *pDynSym )->pSymbol );
-            hb_stackPush();
-            HB_TRACE(HB_TR_INFO, ("(hb_vmMPushMemvarRef)"));
-            w += sizeof( HB_DYNS_PTR ) + 1;
+            {
+               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
+               hb_memvarGetRefer( hb_stack.pPos, ( *pDynSym )->pSymbol );
+               hb_stackPush();
+               HB_TRACE(HB_TR_INFO, ("(hb_vmMPushMemvarRef)"));
+               w += sizeof( HB_DYNS_PTR ) + 1;
+            }
             break;
-         }
 
          case HB_P_MPUSHSYM:
-         {
-            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
-            hb_vmPushSymbol( ( *pDynSym )->pSymbol );
+            {
+               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
+               hb_vmPushSymbol( ( *pDynSym )->pSymbol );
+            }
             w += sizeof( HB_DYNS_PTR ) + 1;
             break;
-         }
 
          case HB_P_MPUSHVARIABLE:
-         {
-            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
-            hb_vmPushVariable( ( *pDynSym )->pSymbol );
+            {
+               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
+               hb_vmPushVariable( ( *pDynSym )->pSymbol );
+            }
             w += sizeof( HB_DYNS_PTR ) + 1;
             break;
-         }
 
          /* misc */
 
@@ -1247,7 +1315,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                /*
                 * reload the address of recovery code
                 */
-               w = hb_stack.pItems[ s_lRecoverBase + HB_RECOVER_ADDRESS ].item.asLong.value;
+               w = ( USHORT ) hb_stack.pItems[ s_lRecoverBase + HB_RECOVER_ADDRESS ].item.asLong.value;
                /*
                 * leave the SEQUENCE envelope on the stack - it will
                 * be popped either in RECOVER or END opcode

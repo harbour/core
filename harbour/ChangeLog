@@ -1,3 +1,12 @@
+20000423-14:23 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/alert.prg
+   * source/rtl/tclass.prg
+     % Minor optimization
+
+   * source/vm/hvm.c
+     ! Restored previous version, due to bugs.
+
 20000423-12:23 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    + contrib/libct/makefile.bc

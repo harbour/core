@@ -44,7 +44,7 @@
 /* NOTE: nDelay parameter is a Harbour extension. */
 
 #ifdef HB_C52_UNDOC
-STATIC s_lNoAlert := NIL
+STATIC s_lNoAlert
 #endif
 
 FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
