@@ -14,7 +14,7 @@
 
    * include/hberrors.h
    * source/compiler/hbgenerr.c
-     + Added: "Inline C requires C output generartion, use -gc[n]"
+     + Added: "Inline C requires C output generation, use -gc[n]"
 
 2001-01-10 22:30 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
 *utils/hbmake/hbmake.prg

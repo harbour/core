@@ -90,7 +90,7 @@ char * hb_comp_szErrors[] =
    "GET contains complex macro",
    "Unterminated inline block in function: \'%s\'",
    "Too many inline blocks",
-   "Inline C requires C output generartion, use -gc[n]"
+   "Inline C requires C output generation, use -gc[n]"
 };
 
 /* Table with parse warnings */
