@@ -8,6 +8,27 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-06-05 23:30 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+   * contrib
+     + btree/
+     + btree/hb_btree.api
+     + btree/hb_btree.c
+     + btree/hb_btree.ch
+     + btree/make_b32.bat
+     + btree/Makefile
+     + btree/makefile.bc
+     + btree/mktest.bat
+     + btree/tbtree.prg
+     + btree/test/
+     + btree/test/ctest.c
+     + btree/test/Makefile
+     + btree/test/test.prg
+     + btree/test/ttest.prg
+     + btree/doc
+     + btree/doc/hb_btree.txt
+       + btree library, contributed by April White <awhite@mail.rosecom.ca>
+         is uploaded to the contrib section.
+
 2002-06-05 12:10 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * source/source/rtl/tget.prg
     ! Fixed operation of picture "@Z"
