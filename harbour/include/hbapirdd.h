@@ -1057,6 +1057,7 @@ extern USHORT  hb_rddFieldType( USHORT extendType );
 typedef short (* WACALLBACK )( AREA *, int );
 extern ERRCODE hb_rddIterateWorkAreas ( WACALLBACK pCallBack, int data );
 USHORT hb_rddFieldIndex( AREAP pArea, char * szName);
+ERRCODE hb_rddGetTempAlias( char * szAliasTmp );
 
 #if defined(HB_EXTERN_C)
 }

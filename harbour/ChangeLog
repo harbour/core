@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-12-03 14:24 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
+  * include/hbapirdd.h
+  * source/rdd/dbcmd.c
+    ! Fixed dbCreate() bug that closed an open dbf with same name as newly created dbf in a different folder
+      reported by Giovi Verrua - borrowed from xharbour
+
 2003-12-02 15:57 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
   * bin/pack_src.sh
     + Added missing directories to script
@@ -137,11 +143,11 @@
   * source/rdd/dbfntx/dbfntx1.c
     ! Bug fixed, which appeared while conditional indexing of a parent file in relation.
 
-2003-10-22 13:26 UTC-0800 Luis Krause Mantilla <lkrausem@shaw.ca>
+2003-10-22 13:26 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
   * source/rdd/rddord.prg
     + ORDSETRELATION()
   * source/rtl/dummy.prg
-    + removed implemented functions
+    + removed implemented fzuns
      * Latest RDD changes, has been made by Przemyslaw Czerpak - synced with xHarbour.
 
 2003-11-06 11:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
@@ -398,7 +404,7 @@
   * source/rtl/strcase.c
     ! hb_strncpyUpper() and hb_strncpyUpperTrim() fixed.
 
-2003-10-22 9:49 UTC-0800 Luis Krause Mantilla <lkrausem@shaw.ca>
+2003-10-22 9:49 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
   * makefile.bc
     * $(OBJ_DIR)\msgsrwin.obj added to LANG.LIB dependencies section.
 
@@ -410,7 +416,7 @@
   * source/rdd/dbcmd.c
     ! Ordscope() fixed - first parameter is TOPSCOPE by default now.
 
-2003-10-21 10:23 UTC-0800 Luis Krause Mantilla <lkrausem@shaw.ca>
+2003-10-21 10:23 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
   * source/vm/codebloc.c
     ! Fixed detached local bug (borrowed from xharbour)
   * source/rdd/dbcmd.c
@@ -512,7 +518,7 @@
   + contrib/ole/Makefile
     + Makefile added.
 
-2003-09-29 16:12 UTC-0800 Luis Krause Mantilla <lkrausem@shaw.ca>
+2003-09-29 16:12 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
   * contrib/rdd_ads/adsfunc.c
   * contrib/rdd_ads/doc/en/adsfuncs.txt
     + Added 2 (ignored) & 3rd params to adsKeyNo() in order to perform
@@ -561,11 +567,11 @@
      ! Bug fixed in ntxSeek(), reported by Przemyslaw Czerpak -
        index unlocking wasn't present in some occasions.
 
-2003-09-22 17:07 UTC-0800 Luis Krause Mantilla <lkrausem@shaw.ca>
+2003-09-22 17:07 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
   * contrib/rdd_ads/adsfunc.c
     ! fixed parameter error handling in AdsSetAOF (borrowed from xHarbour)
 
-2003-09-18 16:33 UTC-0800 Luis Krause Mantilla <lkrausem@shaw.ca>
+2003-09-18 16:33 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
   * contrib/rdd_ads/ads1.c
     ! Fixed bug when passing a numeric to adsCustomizeAOF() (Nil and
       array worked ok).  Thanks to Brian Hays for the fix.
@@ -587,7 +593,7 @@
   * source/rdd/dbcmd.c
     ! fixed bug on hb_strncpyUpper() use from DbUseArea()
 
-2003-09-17 10:54 UTC-0800 Luis Krause Mantilla <lkrausem@shaw.ca>
+2003-09-17 10:54 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
   * source/rtl/tget.prg
     ! Fixed bug in unTransform() method that truncated
       trailing spaces in variable when using "@R" template

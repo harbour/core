@@ -57,6 +57,7 @@
  * ordKeyAdd()
  * ordKeyDel()
  * hb_rddIterateWorkAreas()
+ * hb_rddGetTempAlias
  *
  */
 
@@ -1220,6 +1221,7 @@ HB_FUNC( DBCREATE )
    char * szDriver, * szFileName;
    char cDriverBuffer[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ];
    char szAlias[ HARBOUR_MAX_RDD_ALIAS_LENGTH + 1 ];
+   char szAliasTmp[ HARBOUR_MAX_RDD_ALIAS_LENGTH + 1 ];
    char szSavedFileName[ _POSIX_PATH_MAX + 1 ];
    USHORT uiSize, uiLen, uiPrevArea;
    DBOPENINFO pInfo;
@@ -1312,6 +1314,13 @@ HB_FUNC( DBCREATE )
       }
    }
 
+   if ( hb_rddGetTempAlias( szAliasTmp ) )
+   {
+      hb_xfree( pFileName );
+      hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, "DBCREATE" );
+      return;
+   }
+
    /* Create a new WorkArea node */
    if( !hb_rddInsertAreaNode( szDriver ) )
    {
@@ -1330,10 +1339,10 @@ HB_FUNC( DBCREATE )
    {
       pFileExt = hb_itemPutC( NULL, "" );
       SELF_INFO( ( AREAP ) s_pCurrArea->pArea, DBI_TABLEEXT, pFileExt );
-      strncat( szFileName, hb_itemGetCPtr( pFileExt ), _POSIX_PATH_MAX -
-               strlen( szFileName ) );
+      strncat( szFileName, hb_itemGetCPtr( pFileExt ), _POSIX_PATH_MAX - strlen( szFileName ) );
       hb_itemRelease( pFileExt );
    }
+
    hb_xfree( pFileName );
 
    /* Save filename for later use */
@@ -1342,11 +1351,13 @@ HB_FUNC( DBCREATE )
    /* Fill pInfo structure */
    pInfo.uiArea = s_uiCurrArea;
    pInfo.abName = ( BYTE * ) szFileName;
-   pInfo.atomAlias = ( BYTE * ) szAlias;
+   // pInfo.atomAlias = ( BYTE * ) szAlias;
+   pInfo.atomAlias = ( BYTE * ) szAliasTmp;
    pInfo.fShared = FALSE;
    pInfo.fReadonly = FALSE;
 
-   ( ( AREAP ) s_pCurrArea->pArea )->atomAlias = hb_dynsymGet( ( char * ) szAlias );
+   // ( ( AREAP ) s_pCurrArea->pArea )->atomAlias = hb_dynsymGet( ( char * ) szAlias );
+   ( ( AREAP ) s_pCurrArea->pArea )->atomAlias = hb_dynsymGet( ( char * ) szAliasTmp );
    ( ( PHB_DYNS ) ( ( AREAP ) s_pCurrArea->pArea )->atomAlias )->hArea = s_uiCurrArea;
    ( ( AREAP ) s_pCurrArea->pArea )->uiArea = s_uiCurrArea;
 
@@ -1379,6 +1390,7 @@ HB_FUNC( DBCREATE )
 
       uiRddID = ( ( AREAP ) s_pCurrArea->pArea )->rddID;
       SELF_STRUCTSIZE( ( AREAP ) s_pCurrArea->pArea, &uiAreaSize );
+
       /* Close and release WorkArea */
       SELF_CLOSE( ( AREAP ) s_pCurrArea->pArea );
       SELF_RELEASE( ( AREAP ) s_pCurrArea->pArea );
@@ -1389,9 +1401,11 @@ HB_FUNC( DBCREATE )
       ( ( AREAP ) s_pCurrArea->pArea )->lprfsHost = lprfsHost;
       ( ( AREAP ) s_pCurrArea->pArea )->rddID = uiRddID;
       SELF_NEW( ( AREAP ) s_pCurrArea->pArea );
+
       //pInfo.abName = ( BYTE * )  hb_xgrab( _POSIX_PATH_MAX + 1 );
       szFileName = ( char * )  hb_xgrab( _POSIX_PATH_MAX + 1 );
       pInfo.abName = ( BYTE * ) szFileName;
+      pInfo.atomAlias = ( BYTE * ) szAlias;
       strcpy( ( char * ) pInfo.abName, szSavedFileName );
       pInfo.fShared = !hb_set.HB_SET_EXCLUSIVE;
       pInfo.cdpId = codePageId;
@@ -4061,4 +4075,30 @@ HB_FUNC( __DBCOPY )
                      hb_parl( 7 ),                /* Rest */ /* Defaults to zero on bad type */
                      ISCHAR( 8 ) ? hb_parc( 8 ) : NULL ); /* RDD */
   }
+}
+
+ERRCODE hb_rddGetTempAlias( char * szAliasTmp )
+{
+   int i;
+
+   // szAliasTmp[0] = '\0';
+   for ( i = 1 ; i < 1000 ; i++ )
+   {
+      sprintf( szAliasTmp, "HBTMP%3.3i", i);
+
+      if ( !hb_rddSelect( szAliasTmp ) )
+      {
+         break;
+      }
+   }
+
+   if ( i >= 1000 )
+   {
+      szAliasTmp[0] = '\0';
+      return FAILURE;
+   }
+   else
+   {
+      return SUCCESS;
+   }
 }
