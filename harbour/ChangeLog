@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-12-27 16:40 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+  + added doc/windll.txt as an introduction to Windows
+      32-bit dll creation with Harbour.
+
 2002-12-22 13:06 UTC+0200 Chen Kedem <niki@actcom.co.il>
   * doc/dirstruc.txt
     + Add a line about source/codepade
