@@ -26,6 +26,8 @@ Version 0.35 Build 35 (2000-08-15)
 - ADS RDD encryption/decryption functions added.
 - New GTCGI driver
 - Improved command line parsing
+- Alternate Lexer (SimpLex), utilizes less memory, smaller Harbour.exe
+  as well as smaller compiled applications (due to smaller macro compiler).
 
 Version 0.34 Build 34 (2000-06-02)
 
