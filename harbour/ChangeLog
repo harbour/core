@@ -1,3 +1,7 @@
+2000-11-30 10:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.slx
+     ! Commented out support for Self: as SELF, treat as any other Identifier, until we finalize SELF support.
+
 2000-11-30 07:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/pptable.c
      - Removed #ifdef SIMPLEX recently added by Ryszard, SimpLex was using same 5 paramters as Cliiper.

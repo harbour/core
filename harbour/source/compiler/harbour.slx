@@ -264,7 +264,7 @@ LANGUAGE_WORDS_ARE {
                      LEX_WORD( "NIL"             		) AS_TOKEN( NIL                + DONT_REDUCE ),
                      LEX_WORD( "OPTIONAL"        		) AS_TOKEN( OPTIONAL           ),
                      LEX_WORD( "QSELF"           		) AS_TOKEN( QSELF              ),
-                     LEX_WORD( "SELF"            		) AS_TOKEN( SELF               ),
+                  /* LEX_WORD( "SELF"            		) AS_TOKEN( SELF               ), */
                      LEX_WORD( "STEP"            		) AS_TOKEN( HB_STEP            ),
                      LEX_WORD( "TO"              		) AS_TOKEN( HB_TO              ),
                      LEX_WORD( "WITH"              		) AS_TOKEN( HB_WITH            ),
@@ -371,8 +371,8 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( FIELD       , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
 
-                    IF_SEQUENCE_IS( SELF        , ':'         , 0      , 0          ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( SELF        , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
+                 /* IF_SEQUENCE_IS( SELF        , ':'         , 0      , 0          ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( SELF        , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ), */
 
                     IF_SEQUENCE_IS( QSELF       , '('         , ')'    , 0          ) REDUCE_TO( SELF + DONT_REDUCE, 0             ),
                     IF_SEQUENCE_IS( QSELF       , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
