@@ -3,6 +3,16 @@
   * source/compiler/harbour.y
     + Added support for END to be used with FOR loops.
 
+   * include/hberrors.h
+     + Added : #define HB_COMP_WARN_CLASS_NOT_FOUND
+
+   * source/compiler/hbgenerr.c
+     + Added: 3Class \'%s\' not known in declaration of variable \'%s\'"
+
+   * source/compiler/harbour.c
+     - Remmmed a "debug" printf()
+     + Added warning when class not know when declaring an object FROM Class ...
+
 20000512-13:31 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    + source/rtl/stringsx.c
