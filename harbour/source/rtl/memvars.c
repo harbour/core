@@ -111,12 +111,19 @@ HB_VALUE_PTR *hb_MemvarValueBaseAddress( void )
  * This function creates new global value.
  *
  * pSource = item value that have to be stored or NULL
+ * iTrueMemvar = TRUE | FALSE
+ *    FALSE if function is called to create memvar variable for a codeblock
+ *       (to store detached local variable) - in this case we have to do
+ *       exact copy of passed item (without duplicating its value and
+ *       without reference decrementing)
+ *    TRUE if we are creating regular memvar variable (PUBLI or PRIVATE)
+ *       In this case we have to do normal item coping.
  *
  * Returns:
  *  handle to variable memory or fails
  *
 */
-HB_HANDLE hb_MemvarValueNew( HB_ITEM_PTR pSource )
+HB_HANDLE hb_MemvarValueNew( HB_ITEM_PTR pSource, int iTrueMemvar )
 {
    HB_VALUE_PTR pValue;
    HB_HANDLE hValue = 1;   /* handle 0 is reserved */
@@ -164,11 +171,16 @@ HB_HANDLE hb_MemvarValueNew( HB_ITEM_PTR pSource )
    }
 
    pValue =_globalTable + hValue;
+   pValue->counter =1;
    if( pSource )
-      memcpy( &pValue->item, pSource, sizeof(HB_ITEM) );
+   {
+      if( iTrueMemvar )
+         ItemCopy( &pValue->item, pSource );
+      else
+         memcpy( &pValue->item, pSource, sizeof(HB_ITEM) );
+   }
    else
       pValue->item.type =IT_NIL;
-   pValue->counter =1;
 
    #ifdef MEMVARDEBUG
       printf( "\n>>>>>Memvar item created with handle =%i", hValue );
@@ -176,6 +188,8 @@ HB_HANDLE hb_MemvarValueNew( HB_ITEM_PTR pSource )
 
    return hValue;
 }
+
+/*      memcpy( &pValue->item, pSource, sizeof(HB_ITEM) );*/
 
 
 /*
@@ -248,8 +262,6 @@ void hb_MemvarValueIncRef( HB_HANDLE hValue )
    }
    #endif
 
-   if( _globalTable[ hValue ].counter == 0 )
-      printf( "\n Attempt to access released item " );
    _globalTable[ hValue ].counter++;
 
    #ifdef MEMVARDEBUG
@@ -304,8 +316,14 @@ void hb_MemvarValueDecRef( HB_HANDLE hValue )
       #endif
       }
    }
+/* This can happen if for example PUBLIC variable holds a codeblock with
+ * detached variable. When hb_MemvarsRelease(0 is called then detached
+ * variable can be released before the codeblock. So if the codeblock
+ * will be released later then it will try to release again this detached
+ * variable.
    else
       printf( "\n Attempt to release released item " );
+ */
 }
 
 /*
@@ -324,6 +342,9 @@ void hb_MemvarSetValue( PSYMBOL pMemvarSymb, HB_ITEM_PTR pItem )
 
    if( pDyn )
    {
+      #ifdef MEMVARDEBUG
+         printf( "\n::::Memvar item (%i)(%s) assigned", pDyn->hMemvar, pMemvarSymb->szName );
+      #endif
       if( pDyn->hMemvar )
       {
          /* value is already created */
@@ -348,6 +369,9 @@ void hb_MemvarGetValue( HB_ITEM_PTR pItem, PSYMBOL pMemvarSymb )
 
    if( pDyn )
    {
+      #ifdef MEMVARDEBUG
+         printf( "\n????Memvar item (%i)(%s) queried", pDyn->hMemvar, pMemvarSymb->szName );
+      #endif
       if( pDyn->hMemvar )
       {
          /* value is already created */
@@ -368,6 +392,9 @@ void hb_MemvarGetRefer( HB_ITEM_PTR pItem, PSYMBOL pMemvarSymb )
 
    if( pDyn )
    {
+      #ifdef MEMVARDEBUG
+         printf( "\n@@@@Memvar item (%i)(%s) referenced", pDyn->hMemvar, pMemvarSymb->szName );
+      #endif
       if( pDyn->hMemvar )
       {
          pItem->type = IT_BYREF | IT_MEMVAR;
@@ -375,24 +402,13 @@ void hb_MemvarGetRefer( HB_ITEM_PTR pItem, PSYMBOL pMemvarSymb )
          pItem->item.asMemvar.value = pDyn->hMemvar;
          /* value is already created */
          pItem->item.asMemvar.itemsbase = &_globalTable;
+         ++_globalTable[ pDyn->hMemvar ].counter;
       }
       else
          hb_errorRT_BASE( EG_NOVAR, 1003, "Variable does not exist: ", pMemvarSymb->szName );
    }
    else
       hb_errorRT_BASE( EG_NOVAR, 1003, "Variable does not exist: ", pMemvarSymb->szName );
-}
-
-/*
- *
- * This function adds a passed symbol to the sorted list of memvar variables
- *
- */
-void hb_MemvarNewSymbol( PSYMBOL pSymbol )
-{
-   PDYNSYM pVar = hb_NewDynSym( pSymbol );
-   pVar->hMemvar = 0;
-   pVar->hArea   = 0;
 }
 
 /*
@@ -412,6 +428,7 @@ static void hb_MemvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pVa
 {
    PDYNSYM pDynVar;
 
+   /* find dynamic symbol or creeate one */
    if( IS_SYMBOL( pMemvar ) )
       pDynVar =hb_GetDynSym( pMemvar->item.asSymbol.value->szName );
    else if( IS_STRING( pMemvar ) )
@@ -432,7 +449,7 @@ static void hb_MemvarCreateFromDynSymbol( PDYNSYM pDynVar, BYTE bScope, PHB_ITEM
          */
       if( ! pDynVar->hMemvar )
       {
-         pDynVar->hMemvar = hb_MemvarValueNew( pValue );
+         pDynVar->hMemvar = hb_MemvarValueNew( pValue, TRUE );
          if( !pValue )
          {
             _globalTable[ pDynVar->hMemvar ].item.type =IT_LOGICAL;
@@ -448,11 +465,10 @@ static void hb_MemvarCreateFromDynSymbol( PDYNSYM pDynVar, BYTE bScope, PHB_ITEM
          */
       HB_HANDLE hCurrentValue =pDynVar->hMemvar;
 
-      pDynVar->hMemvar = hb_MemvarValueNew( pValue );
+      pDynVar->hMemvar = hb_MemvarValueNew( pValue, TRUE );
       _globalTable[ pDynVar->hMemvar ].hPrevMemvar =hCurrentValue;
       hb_MemvarAddPrivate( pDynVar );
    }
-   pDynVar->pSymbol->cScope =bScope;
 }
 
 /*
@@ -482,12 +498,13 @@ HARBOUR HB___PUBLIC( void )
                /* we are accepting an one-dimensional array of strings only
                 */
                ULONG j, ulLen = hb_arrayLen( pMemvar );
-               PHB_ITEM pItem;
+               HB_ITEM VarItem;
 
                for( j=1; j<=ulLen; j++ )
                {
-                  hb_arrayGet( pMemvar, j, pItem );
-                  hb_MemvarCreateFromItem( pItem, VS_PUBLIC, NULL );
+                  hb_arrayGet( pMemvar, j, &VarItem );
+                  hb_MemvarCreateFromItem( &VarItem, VS_PUBLIC, NULL );
+                  ItemRelease( &VarItem );
                }
             }
             else
@@ -514,7 +531,7 @@ HARBOUR HB___PRIVATE( void )
 
    if( iCount )
    {
-      /* We will create PRIVATE variables here then do not release then
+      /* We will create PRIVATE variables here then do not release them
        * on exit from this function
        */
       _privateReleaseIgnore =TRUE;
@@ -529,14 +546,14 @@ HARBOUR HB___PRIVATE( void )
                /* we are accepting an one-dimensional array of strings only
                 */
                ULONG j, ulLen = hb_arrayLen( pMemvar );
-               PHB_ITEM pItem;
+               HB_ITEM VarItem;
 
                for( j=1; j<=ulLen; j++ )
                {
-                  hb_arrayGet( pMemvar, j, pItem );
-                  hb_MemvarCreateFromItem( pItem, VS_PRIVATE, NULL );
+                  hb_arrayGet( pMemvar, j, &VarItem );
+                  hb_MemvarCreateFromItem( &VarItem, VS_PRIVATE, NULL );
+                  ItemRelease( &VarItem );
                }
-               ItemRelease( pItem );
             }
             else
                hb_MemvarCreateFromItem( pMemvar, VS_PRIVATE, NULL );

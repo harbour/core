@@ -32,12 +32,14 @@
 #include <hbdefs.h>
 #include <hbsetup.h>
 
+struct _DYNSYM;         /* forward declaration */
+
 typedef struct          /* symbol support structure */
 {
    char * szName;       /* the name of the symbol */
-   char   cScope;       /* the scope of the symbol */
+   SYMBOLSCOPE cScope;  /* the scope of the symbol */
    HARBOURFUNC pFunPtr; /* function address for function symbol table entries */
-   void * pDynSym;      /* pointer to its dynamic symbol if defined */
+   struct _DYNSYM * pDynSym;   /* pointer to its dynamic symbol if defined */
 } SYMBOL, * PSYMBOL;
 
 /* Harbour Functions scope */
@@ -205,7 +207,7 @@ typedef struct     /* stack managed by the virtual machine */
    char szDate[ 9 ]; /* last returned date from _pards() yyyymmdd format */
 } STACK;
 
-typedef struct
+typedef struct _DYNSYM
 {
    HB_HANDLE hArea;      /* Workarea number */
    HB_HANDLE hMemvar;    /* Index number into memvars ( publics & privates ) array */

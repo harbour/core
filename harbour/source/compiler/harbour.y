@@ -190,7 +190,7 @@ void FixElseIfs( void * pIfElseIfs ); /* implements the ElseIfs pcode fixups */
 void FixReturns( void ); /* fixes all last defined function returns jumps offsets */
 void Function( BYTE bParams ); /* generates the pcode to execute a Clipper function pushing its result */
 PFUNCTION FunctionNew( char *, char );  /* creates and initialises the _FUNC structure */
-void FunDef( char * szFunName, char cScope, int iType ); /* starts a new Clipper language function definition */
+void FunDef( char * szFunName, SYMBOLSCOPE cScope, int iType ); /* starts a new Clipper language function definition */
 void GenArray( WORD wElements ); /* instructs the virtual machine to build an array and load elemnst from the stack */
 void * GenElseIf( void * pFirstElseIf, WORD wOffset ); /* generates a support structure for elseifs pcode fixups */
 void GenExterns( void ); /* generates the symbols for the EXTERN names */
@@ -591,7 +591,7 @@ Statement  : ExecFlow Crlf        {}
            | RETURN Expression Crlf   { GenPCode1( HB_P_RETVALUE ); GenReturn( Jump ( 0 ) ); }
            | PUBLIC { iVarScope = VS_PUBLIC; } VarList Crlf
            | PRIVATE { iVarScope = VS_PRIVATE; } VarList Crlf
-           | PARAMETERS { iVarScope = (VS_PRIVATE | VS_PARAMETER); } MemvarList Crlf
+           | PARAMETERS { functions.pLast->wParamCount=0; iVarScope = (VS_PRIVATE | VS_PARAMETER); } MemvarList Crlf
            | EXITLOOP Crlf            { LoopExit(); }
            | LOOP Crlf                { LoopLoop(); }
            | DoProc Crlf
@@ -1734,6 +1734,8 @@ void AddVar( char * szVarName )
 
    if( iVarScope & VS_MEMVAR )
    {
+      PCOMSYMBOL pSym;
+
       if( ! pFunc->pMemvars )
           pFunc->pMemvars = pVar;
       else
@@ -1747,6 +1749,7 @@ void AddVar( char * szVarName )
       switch( iVarScope )
       {
           case VS_MEMVAR:
+            AddSymbol( yy_strdup(szVarName) );
             /* variable declared in MEMVAR statement */
             AddSymbol( yy_strdup(szVarName) );
             break;
@@ -1755,34 +1758,34 @@ void AddVar( char * szVarName )
                 WORD wPos;
 
                 ++functions.pLast->wParamCount;
-                symbols.pLast->cScope = VS_MEMVAR;
-                wPos =GetSymbolPos( szVarName );
-                if( ! wPos )
-                {
-                  PCOMSYMBOL pSym;
-
-                  pSym =AddSymbol( yy_strdup(szVarName) );
-                  pSym->cScope =VS_MEMVAR;
-                  wPos =GetSymbolPos( szVarName );
-                }
-                wPos -=( _iStartProc ? 1: 2 );
+                pSym =GetSymbol( szVarName );	/* check if symbol exists already */
+                if( ! pSym )
+                   pSym =AddSymbol( yy_strdup(szVarName) );
+                pSym->cScope |= VS_MEMVAR;
+                wPos =GetSymbolPos( szVarName ) - ( _iStartProc ? 1: 2 );
                 GenPCode3( HB_P_PARAMETER, LOBYTE(wPos), HIBYTE(wPos) );
                 GenPCode1( LOBYTE(functions.pLast->wParamCount) );
             }
             break;
           case VS_PRIVATE:
-            symbols.pLast->cScope = VS_MEMVAR;
-            PushSymbol(yy_strdup("__PRIVATE"), 1);
-            PushNil();
-            PushSymbol( yy_strdup(szVarName), 0 );
-            Do( 1 );
+            {
+                PushSymbol(yy_strdup("__PRIVATE"), 1);
+                PushNil();
+                PushSymbol( yy_strdup(szVarName), 0 );
+                Do( 1 );
+                pSym =GetSymbol( szVarName );
+                pSym->cScope |= VS_MEMVAR;
+            }
             break;
           case VS_PUBLIC:
-            symbols.pLast->cScope = VS_MEMVAR;
-            PushSymbol(yy_strdup("__PUBLIC"), 1);
-            PushNil();
-            PushSymbol( yy_strdup(szVarName), 0 );
-            Do( 1 );
+            {
+                PushSymbol(yy_strdup("__PUBLIC"), 1);
+                PushNil();
+                PushSymbol( yy_strdup(szVarName), 0 );
+                Do( 1 );
+                pSym =GetSymbol( szVarName );
+                pSym->cScope |= VS_MEMVAR;
+            }
             break;
       }
    }
@@ -1979,7 +1982,7 @@ void DupPCode( WORD wStart ) /* duplicates the current generated pcode from an o
 /*
  * This function creates and initialises the _FUNC structure
  */
-PFUNCTION FunctionNew( char *szName, char cScope )
+PFUNCTION FunctionNew( char *szName, SYMBOLSCOPE cScope )
 {
    PFUNCTION pFunc;
 
@@ -2008,7 +2011,7 @@ PFUNCTION FunctionNew( char *szName, char cScope )
  * cScope    - scope of a function
  * iType     - FUN_PROCEDURE if a procedure or 0
  */
-void FunDef( char * szFunName, char cScope, int iType )
+void FunDef( char * szFunName, SYMBOLSCOPE cScope, int iType )
 {
    PCOMSYMBOL   pSym;
    PFUNCTION pFunc;
@@ -2039,9 +2042,9 @@ void FunDef( char * szFunName, char cScope, int iType )
       /* there is not a symbol on the symbol table for this function name */
       pSym = AddSymbol( szFunName );
 
-   if( cScope == FS_PUBLIC )
-      pSym->cScope = FS_PUBLIC;
-   else
+   if( cScope != FS_PUBLIC )
+//      pSym->cScope = FS_PUBLIC;
+//   else
       pSym->cScope |= cScope; /* we may have a non public function and a object message */
 
    pFunc = FunctionNew( szFunName, cScope );
@@ -2156,28 +2159,25 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
       else if( pSym->cScope & FS_EXIT )
          fprintf( yyc, "FS_EXIT" );
 
-      else if( pSym->cScope & VS_MEMVAR )
-         fprintf( yyc, "VS_MEMVAR" );
-
       else
          fprintf( yyc, "FS_PUBLIC" );
 
       if( ( pSym->cScope != FS_MESSAGE ) && ( pSym->cScope & FS_MESSAGE ) ) /* only for non public symbols */
          fprintf( yyc, " | FS_MESSAGE" );
 
+      if( pSym->cScope & VS_MEMVAR )
+         fprintf( yyc, " | VS_MEMVAR" );
+
       /* specify the function address if it is a defined function or a
          external called function */
       pFTemp = GetFunction( pSym->szName );
-      if( pFTemp ) /* is it a defined function ? */
+      if( ! pFTemp ) /* if it is not a defined function */
+         pFTemp = GetFuncall( pSym->szName );  /* check if it is a function call */
+
+      if( pFTemp )
         fprintf( yyc, ", HB_%s, 0 }", pFTemp->szName );
       else
-      {
-	 pFTemp = GetFuncall( pSym->szName );
-         if( pFTemp )
-            fprintf( yyc, ", HB_%s, 0 }", pFTemp->szName );
-         else
-            fprintf( yyc, ", 0, 0 }" );
-      }
+        fprintf( yyc, ", 0, 0 }" );
 
       if( pSym != symbols.pLast )
          fprintf( yyc, ",\n" );
@@ -4776,6 +4776,11 @@ void GenPortObj( char *szFileName, char *szName )
    {
       fputs( pSym->szName, yyc );
       fputc( 0, yyc );
+
+      /*TODO: This assumes that scope is stored in one byte.
+       * Currently scope is stored in SYMBOLSCOPE type which is defined as char
+       * We may expand it for more bits.
+       */
       if( pSym->cScope != FS_MESSAGE )
          fputc( pSym->cScope, yyc );
       else

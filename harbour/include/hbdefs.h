@@ -17,7 +17,7 @@
      #define. Therefore, it is necessary to skip the Harbour
      definition section when using the IBMCPP compiiler, include
      the IBMCPP type definitions, and then add the definition for WORD
-     
+
      NOTE: This only applies to the common types that most C compilers
            define. Any new types, particulary those that start with
            HB_, must be placed AFTER the #endif __IBMCPP__ line!
@@ -89,7 +89,8 @@ typedef HARBOUR ( * HARBOURFUNC )( void );
    #define _POSIX_PATH_MAX    255
 #endif
 
-typedef USHORT HB_HANDLE;
+typedef LONG HB_HANDLE;     /* handle to memvar value */
+typedef char SYMBOLSCOPE;   /* stores symbol's scope */
 
 #define HB_SYMBOL_UNUSED(symbol) (void)symbol
 

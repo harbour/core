@@ -1,3 +1,37 @@
+19990723-02:45 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+        *source/compiler/harbour.y
+         * corrected generation of symbols for memvar variables
+         * PARAMETERS are handled now in the same way as in Clipper
+          (if PARAMETERS statement is repeated in the same function then
+          the first parameter listed is always equal to the first argument,
+          the second parameter is initialized with the second argumennt etc)
+
+        *source/rtl/memvars.c
+         * reference to variables are correctly updated
+         * item returned from hb_arrayGet() is of  proper type now and
+          is properly released
+
+        *source/rtl/codebloc.c
+         * changed to use second parameter of hb_MemvarValueNew()
+
+        *source/vm/dynsym.c
+         * symbols created dynamically are properly released now
+          (SYM_ALLOCATED is now type casted to new type SYMBOLSCOPE - the
+          scope value (char) was compared with (int) previously and it was
+          never true (char was extended to int -1)
+
+        *include/hbdefs.h
+         + added new SYMBOLSCOPE typedef
+
+        *include/extend.h
+         * changed to support new SYMBOLSCOPE typedef
+         * replaced void *pDynSym with struct _DYNSYM *pDynSym 
+
+        *tests/working/memvars.c
+         + added noew code to test memvars
+         * it shouldn't report the unreleased memory blocks now
+
 19990722-10:50 EDT Paul Tucker <ptucker@sympatico.ca>
     *source/rtl/dir.c
        * corrected hang when passing a second param to dirtest.

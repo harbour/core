@@ -17,6 +17,8 @@ PROCEDURE MAIN()
     Test6()
     __accept( "press Enter..." )
     Test7( 'value1', 2, .T. )
+    __accept( "press Enter..." )
+    Test8()
 
 RETURN
 
@@ -142,28 +144,28 @@ PROCEDURE TEST5()
 PUBLIC mempublic, public3:=3
 //PUBLIC public2[ 10 ]		//unsupported yet
 PRIVATE memprivate
-//PARAMETERS memparam		//unsupported yet
+PARAMETERS memparam
 
   Qout( "==Test for memvars passed by reference and __PUBLIC/__PRIVATE " )
-  Qout( "uninitialized PUBLIC=", mempublic )
+  Qout( "   uninitialized PUBLIC= ", mempublic )
 //  Qout( "uninitialized PUBLIC array (first item)=", public2[1] )
-  Qout( "initialized PUBLIC=", public3 )
-  Qout( "uninitialized PRIVATE=", memprivate )
-//  Qout( memparam )
+  Qout( "initialized PUBLIC= ", public3 )
+  Qout( "  uninitialized PRIVATE= ", memprivate )
+  Qout( "uninitialized PARAMETER= ", memparam )
 //  Qout( memnone )
 
   mempublic ='PUBLIC'
-  Qout( "PUBLIC with new value=", mempublic )
+  Qout( "   PUBLIC with new value= ", mempublic )
   memprivate ='PRIVATE'
-  Qout( "PRIVATE with new value=", memprivate )
-//  memparam =3
-//  Qout( memparam )
+  Qout( "  PRIVATE with new value= ", memprivate )
+  memparam ='PARAMETER'
+  Qout( "PARAMETER with new value= ", memparam )
 //  memnone =4
 //  Qout( memnone )
 
-  Qout( "PUBLIC after passing by reference=", Use( @mempublic ) )
-  Qout( "PRIVATE after passing by reference=", Use( @memprivate ) )
-//  Qout( Use( @memparam ) )
+  Qout( "   PUBLIC after passing by reference= ", UseVar( @mempublic ) )
+  Qout( "  PRIVATE after passing by reference= ", UseVar( @memprivate ) )
+  Qout( "PARAMETER after passing by reference= ", UseVar( @memparam ) )
 //  Qout( Use( @memnone ) )
 
   Qout( "PUBLIC created by __PUBLIC function=", public1 )
@@ -172,11 +174,12 @@ PRIVATE memprivate
 RETURN
 
 
-FUNCTION Use( value )
+FUNCTION UseVar( value )
 
   UseRef( @value )
 
-  __PUBLIC( "public1" )
+  __PUBLIC( "public1" )	//, "public21" )
+//  __PRIVATE( "private1", "private2", "private3" )
   __PRIVATE( {"private1", "private2", "private3"} )
   Qout( "undeclared PUBLIC created by __PUBLIC function=", public1 )
   Qout( "undeclared PRIVATE created by __PRIVATE function=", private1 )
@@ -184,6 +187,7 @@ FUNCTION Use( value )
   Qout( "undeclared PRIVATE created by __PRIVATE function=", private3 )
 
   public1 :='public created by __PUBLIC'
+
   Qout( "" )
 
 RETURN( value )
@@ -217,11 +221,63 @@ RETURN
 ////////////////////////////////////////////////////////////////////////
 
 PROCEDURE Test7( )
-PARAMETERS para1, para2
-PARAM para3
+PARAMETERS para1, para2, para3
+PARAM parameter1again
 
   Qout( "Parameter 1  =", para1 )
   Qout( "Parameter 2  =", para2 )
   Qout( "Parameter 3  =", para3 )
+  Qout( "Parameter 4  =", parameter1again )  
+
+RETURN
+
+/////////////////////////////////////////////////////////////////////////
+
+PROCEDURE Test8()
+PRIVATE private1:='PRIVATE1'
+
+  Qout( 'In Test8 before UsePriv' )
+  Qout( "Private1 = ", private1 )
+  UsePriv( private1 )
+  Qout( 'In Test8 after UsePriv' )
+  Qout( "Private1 = ", private1 )
+
+    __accept( "press Enter..." )
+
+  Qout( 'In Test8 before UsePriv with reference' )
+  Qout( "Private1 = ", private1 )
+  UsePriv( @private1 )
+  Qout( 'In Test8 after UsePriv with reference' )
+  Qout( "Private1 = ", private1 )
+
+
+RETURN
+
+PROCEDURE UsePriv()
+PARAMETERS param1
+
+  Qout( 'In UsePriv before UseParam' )
+  Qout( "Private1 = ", private1 )
+  Qout( "Param1   = ", param1 )
+  UseParam()
+  Qout( 'In UsePriv after UseParam' )
+  Qout( "Private1 = ", private1 )
+  Qout( "Param1   = ", param1 )
+
+RETURN
+
+PROCEDURE UseParam()
+PARAMETER param2
+
+  Qout( 'In UseParam before assignment' )
+  Qout( "Private1 = ", private1 )
+  Qout( "Param1   = ", param1 )
+  Qout( "Param2   = ", param2 )
+  param2 :='PARAM2'
+  param1 :="new value"
+  Qout( 'In UseParam after assignment' )
+  Qout( "Private1 = ", private1 )
+  Qout( "Param1   = ", param1 )
+  Qout( "Param2   = ", param2 )
 
 RETURN

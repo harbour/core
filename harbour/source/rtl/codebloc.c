@@ -45,7 +45,7 @@ extern STACK stack;
 
 /* functions for memvar variables
  */
-HB_HANDLE hb_MemvarValueNew( PHB_ITEM );
+HB_HANDLE hb_MemvarValueNew( PHB_ITEM, int );
 void hb_MemvarValueIncRef( HB_HANDLE );
 void hb_MemvarValueDecRef( HB_HANDLE );
 HB_VALUE_PTR * hb_MemvarValueBaseAddress( void );
@@ -107,7 +107,7 @@ HB_CODEBLOCK_PTR hb_CodeblockNew( BYTE * pBuffer,
           * pool so it can be shared by codeblocks
           */
 
-         hMemvar =hb_MemvarValueNew( pLocal );
+         hMemvar =hb_MemvarValueNew( pLocal, FALSE );
 
          pLocal->type =IT_BYREF | IT_MEMVAR;
          pLocal->item.asMemvar.itemsbase =hb_MemvarValueBaseAddress();

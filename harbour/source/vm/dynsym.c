@@ -230,7 +230,7 @@ void hb_ReleaseDynamicSymbols( void )
    for( w = 0; w < wDynSymbols; w++ )
    {
       /* it is a allocated symbol ? */
-      if( ( pDynItems + w )->pDynSym->pSymbol->cScope == SYM_ALLOCATED )
+      if( ( pDynItems + w )->pDynSym->pSymbol->cScope == (SYMBOLSCOPE)SYM_ALLOCATED )
       {
          hb_xfree( ( pDynItems + w )->pDynSym->pSymbol->szName );
          hb_xfree( ( pDynItems + w )->pDynSym->pSymbol );
