@@ -137,7 +137,7 @@ PROCEDURE SOMEPROC()
 
   PRIVATE TEST AS NUMERIC
 
-  M->TEST := 1		//incorrect warning is printed here
+  M->TEST := 1          
 
   FOR M->TEST := 1 TO M->TEST + 10
     ? "Incorrect warnings for FOR/NEXT"
@@ -145,7 +145,7 @@ PROCEDURE SOMEPROC()
 
   REPLACE a WITH 1
 
-  //M->public_var := 0    //core dumps (GPF) on Linux
+  M->public_var := 0    
 
   b := 0
 
@@ -274,4 +274,3 @@ return
 function extfun(one, two, three, four, five, six, seven, eight, nine, ten)
 return
 
-*/

@@ -528,7 +528,7 @@ int Reduce( int iToken, BOOL bReal );
       {\
          /* No more Tokens - Rule Match. */\
 \
-         if( aiRules[ aiProspects[iScan] ][ iMatched + 1 ] == 0 )\
+         if( iMatched == MAX_MATCH - 1 || aiRules[ aiProspects[iScan] ][ iMatched + 1 ] == 0 )\
          {\
             iFound++;\
             iReduce = aiProspects[iScan];\

@@ -1,3 +1,7 @@
+2000-07-14 09:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/simplex.c
+     ! Minor correction, to accept a match, if all rule's tokens used.
+
 2000-07-13 19:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.slx
      ! Removed excess characters at end of #undef directives.
