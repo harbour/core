@@ -138,7 +138,7 @@ void hb_releaseCPU( void )
     int86(0x2f, &regs, &regs);
 #endif
     regs.h.ah  = 0;
-    regs.h.al ^= 0x80;  /* xor */
+    regs.h.al ^= 0x80;
 #endif
 */
 }
