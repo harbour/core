@@ -86,7 +86,7 @@ HB_FUNC(FT_PROPER )
   int  iLen   =  hb_parclen(1);
   char *cStr;
 
-  int i, fCap = TRUE, iPos = 0;
+  int i, fCap = TRUE; /*, iPos = 0; */
 
   hb_storc( NULL, 1 );
   cStr = hb_parc(1);
