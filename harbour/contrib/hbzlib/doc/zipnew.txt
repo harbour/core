@@ -8,7 +8,7 @@
  *      Create a zip file
  * $SYNTAX$
  *      HB_ZIPFILE( <cFile> , <cFileToCompress> | <aFiles>, <nLevel> ,
- *      <bBlock>,<lOverWrite> ,<cPassword>,<lWithPath>,<lWithDrive>,<pFileProgress>) ---> lCompress
+ *      <bBlock>,<lOverWrite> ,<cPassword>,<lWithPath>,<lWithDrive>) ---> lCompress
  * $ARGUMENTS$
  *      <cFile>   Name of the zip file
  *
@@ -29,8 +29,6 @@
  *      <lWithPath> Toggle to store the path or not
  *
  *      <lWithDrive> Toggle to store the Drive letter and path or not
- *
- *      <pFileProgress> Code block for File Progress
  * $RETURNS$
  *      <lCompress>  .t. if file was create, otherwise .f.
  * $DESCRIPTION$
@@ -58,10 +56,6 @@
  *
  *      If <lWithDrive> is used, it tells thats the Drive and path should also be stored 
  *      with the file name. Default is false.
- *
- *      If <pFileProgress> is used, an Code block is evaluated, showing the total
- *      of that file has beeing processed.
- *      The codeblock must be defined as follow {|nPos,nTotal| GaugeUpdate(aGauge1,(nPos/nTotal))}
  *
  * $EXAMPLES$
  *      FUNCTION MAIN()
@@ -106,7 +100,7 @@
  *      Unzip a compressed file
  * $SYNTAX$
  *      HB_UNZIPFILE( <cFile> , <bBlock> , <lWithPath>) ,<cPassWord>,<cPath>,
- *      [<cFile>|<aFile>] ,<pFileProgress>) <---> lCompress
+ *      [<cFile>|<aFile>]  <---> lCompress
  * $ARGUMENTS$
  *      <cFile>   Name of the zip file
  *
@@ -119,8 +113,6 @@
  *      <cPath>    Path to extract the files.
  *
  *      <cFile>|<aFiles> An file or an Array of files to extract
- *
- *      <pFileProgress> Code block for File Progress
  * $RETURNS$
  *      <lCompress>  .t. if all file was successfuly restored, otherwise .f.
  * $DESCRIPTION$
@@ -133,10 +125,6 @@
  *
  *      The <cPath> is an obrogatory parameter. Set to ".\" to extract to the
  *      current dir
- *
- *      If <pFileProgress> is used, an Code block is evaluated, showing the total
- *      of that file has beeing processed.
- *      The codeblock must be defined as follow {|nPos,nTotal| GaugeUpdate(aGauge1,(nPos/nTotal))}
  * $EXAMPLES$
  *      FUNCTION MAIN()
  *
@@ -224,7 +212,7 @@
  *      Create a zip file
  * $SYNTAX$
  *      HB_ZIPFILEBYTDSPAN()( <cFile> , <cFileToCompress> | <aFiles>, <nLevel> ,
- *      <bBlock>,<lOverWrite> ,<cPassword>,<iSize>,<lWithPath>,<lWithDrive>,<pFileProgress>) ---> lCompress
+ *      <bBlock>,<lOverWrite> ,<cPassword>,<iSize>,<lWithPath>,<lWithDrive>) ---> lCompress
  * $ARGUMENTS$
  *      <cFile>   Name of the zip file
  *
@@ -247,8 +235,6 @@
  *      <lWithPath> Toggle to store the path or not
  *
  *      <lWithDrive> Toggle to store the Drive letter and path or not
- *
- *      <pFileProgress> Code block for File Progress
  * $RETURNS$
  *      <lCompress>  .t. if file was create, otherwise .f.
  * $DESCRIPTION$
@@ -274,9 +260,6 @@
  *      If <lWithDrive> is used, it tells thats the Drive and path should also be stored 
  *      with the file name. Default is false.
  *
- *      If <pFileProgress> is used, an Code block is evaluated, showing the total
- *      of that file has beeing processed.
- *      The codeblock must be defined as follow {|nPos,nTotal| GaugeUpdate(aGauge1,(nPos/nTotal))}
  * $EXAMPLES$
  *      FUNCTION MAIN()
  *
@@ -321,7 +304,7 @@
  *      Create a zip file on removable media
  * $SYNTAX$
  *      HB_ZIPFILEBYPKSPAN( <cFile> , <cFileToCompress> | <aFiles>, <nLevel> ,
- *      <bBlock>,<lOverWrite> ,<cPassword>,<lWithPath>,<lWithDrive>,<pFileProgress>) ---> lCompress
+ *      <bBlock>,<lOverWrite> ,<cPassword>,<lWithPath>,<lWithDrive>) ---> lCompress
  * $ARGUMENTS$
  *      <cFile>   Name of the zip file
  *
@@ -342,8 +325,6 @@
  *      <lWithPath> Toggle to store the path or not
  *
  *      <lWithDrive> Toggle to store the Drive letter and path or not
- *
- *      <pFileProgress> Code block for File Progress
  * $RETURNS$
  *      <lCompress>  .t. if file was create, otherwise .f.
  * $DESCRIPTION$
@@ -372,10 +353,6 @@
  *
  *      If <lWithDrive> is used, it tells thats the Drive and path should also be stored 
  *      with the file name. Default is false.
- *
- *      If <pFileProgress> is used, an Code block is evaluated, showing the total
- *      of that file has beeing processed.
- *      The codeblock must be defined as follow {|nPos,nTotal| GaugeUpdate(aGauge1,(nPos/nTotal))}
  *
  *      Before calling this function, Set an Changedisk codeblock by calling
  *      the HB_SETDISKZIP().
@@ -659,4 +636,73 @@
  *      Library is zlib.lib and zlib_bor.lib For Borland Compilers
  *      Library is zlib.lib zlib_ms.lib for MSVC compilers
  * $END$
- */ 
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      COMPRESSSTRING()
+ *  $CATEGORY$
+ *      Compression()
+ *  $ONELINER$
+ *      Compress an string
+ *  $SYNTAX$
+ *      CompressString(@<cString>,@<nSize>)
+ *  $ARGUMENTS$
+ *      <cString>  Buffer to compress, must be passed by reference.
+ *
+ *      <nSize>    The Lenght of the compression String
+ *  $RETURNS$
+ *      NIL
+ *  $DESCRIPTION$   
+ *      This function compress an string buffer and return the compression function
+ *      and the size of this compression function.
+ *      This size is required for uncompression the string
+ *  $EXAMPLES$
+ *      Local cTest:= memoread('tzipfile.prg')
+ *      ? 'String before compressing',cTest
+ *
+ *      COMPRESSSTRING(@cTest,@nSize)
+ *      ? "Size",nSize
+ *      ? " "
+ *      ? " "
+ *      ? 'String after compressing',cTest
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is a Harbour extension
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      UNCOMPRESSSTRING()
+ *  $END$
+ */
+/*  $DOC$
+ *  $FUNCNAME$
+ *      UNCOMPRESSSTRING()
+ *  $CATEGORY$
+ *      Compression
+ *  $ONELINER$
+ *      Uncompress an String
+ *  $SYNTAX$
+ *      UNCOMPRESSSTRING(<cBuffer>,<nSize>) ---> <cUncompressBuffer>
+ *  $ARGUMENTS$
+ *      <cBuffer>  The compressing string to uncompress
+ *
+ *      <nSize>    The saved size returned by compressionstring
+ *  $RETURNS$
+ *      <cUncompressBuffer>  The String uncompressed
+ *  $DESCRIPTION$
+ *
+ *  $EXAMPLES$
+ *      cOrig:=UNCOMPRESSSTRING(cTest,nSize)
+ *      ?'uncompressed String',cOrig
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is a Harbour extension
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      COMPRESSSTRING()
+ *  $END$
+ */

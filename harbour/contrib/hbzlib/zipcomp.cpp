@@ -164,7 +164,8 @@ int   hb_CompressFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBloc
     bReturn=false;
 	}
      catch(...){}
-   hb_itemRelease(pProgressInfo    );
+     if (HB_IS_BLOCK(pProgressInfo))
+        hb_itemRelease(pProgressInfo    );
     return bReturn;  /* to avoid warning */
 }
 
@@ -285,6 +286,9 @@ int   hb_CompressFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBloc
 	}
      catch(...){}
     pDiskStatus=NULL    ;
+     if (HB_IS_BLOCK(pProgressInfo))
+        hb_itemRelease(pProgressInfo    );
+
     return  bReturn;  /* to avoid warning */
 }
 /*
@@ -303,17 +307,14 @@ bool hb_SetProgressofTdSpan(DWORD , int iSoFar, void* pData){
 bool hb_SetProgressofTdSpan(DWORD a, int iSoFar, void* pData){
 
       int iReturn=1;
-/*      iSoFar+=iTotal;*/
-
       PHB_ITEM pDisk;
       PHB_ITEM pTotal =hb_itemPutNL(NULL,a);
+      HB_SYMBOL_UNUSED( pData );
       pDisk=  hb_itemPutNL(NULL,iSoFar);
-                 hb_vmEvalBlockV( pProgressInfo, 2,pDisk,pTotal);
-                   hb_itemRelease(pDisk);
-                   hb_itemRelease(pTotal);
-
+      hb_vmEvalBlockV( pProgressInfo, 2,pDisk,pTotal);
+      hb_itemRelease(pDisk);
+      hb_itemRelease(pTotal);
       return iReturn;    
-
 }
 
 int   hb_CompressFileStd(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_ITEM pBlock,BOOL bOverWrite,char *szPassWord,BOOL bPath,BOOL bDrive,PHB_ITEM pProgress)
@@ -407,16 +408,19 @@ int   hb_CompressFileStd(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_
     bReturn=false;
 	}
      catch(...){}
+     if (HB_IS_BLOCK(pProgressInfo))
+        hb_itemRelease(pProgressInfo    );
     
     return     bReturn;  /* to avoid warning */
 }
+
  int   hb_CmpTdSpanStd(char *szFile,char * szFiletoCompress,int iCompLevel,PHB_ITEM pBlock,BOOL bOverWrite,char *szPassWord,PHB_ITEM pDiskBlock,int iSpanSize,BOOL bPath,BOOL bDrive,PHB_ITEM pProgress)
 {
     uLong uiCount;
     char szNewFile[MAXFILENAME];
     CZipArchive szZip;    
     int iCause=0;
-    BOOL bTdSpan=FALSE;
+
     BOOL bReturn=true;
     DWORD dwSize=0;
     BOOL bFileExist=hb_fsFile((BYTE*)szFile);
@@ -506,6 +510,9 @@ int   hb_CompressFileStd(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_
 	}
     catch(...){}
     pDiskStatus=NULL    ;
+     if (HB_IS_BLOCK(pProgressInfo))
+        hb_itemRelease(pProgressInfo    );
+
     return true;  /* to avoid warning */
 }
 BOOL hb_CreateZipInMemory(char *szFileToCompress,char *szFile)
@@ -527,7 +534,7 @@ if (szFile  !=NULL)
 	f.Close();
 	// must free detached memory
 	free(b);
-   bReturn=TRUE;
+   bReturn=true;
    }
 }
 return bReturn;

@@ -51,7 +51,9 @@
 #include "fileio.ch"
 #include "common.ch"
 #include "radios.ch"
-#include "checks.ch"
+//#include "checks.ch"
+#include "hbgetcmt.ch"
+
 #ifdef __HARBOUR__
 #define EOL hb_osnewline()
 #define CRLF hb_osnewline()
@@ -97,6 +99,7 @@ Static lIgnoreErrors  :=.F.
 Static lExtended  := .F.
 Static lOs2      := .F.
 Static lRecurse  := .F.
+Static lEditMode := .F.
 Static aDir
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
@@ -111,264 +114,44 @@ Local aDef := {}
 Local cOs:=OS()
 Local allParam
 //__traceprgcalls(.t.)
+Local oProfile := HBProfile():new()
 Default p1 To ""
 Default p2 To ""
 Default p3 To ""
 Default p4 To ""
 Default p5 To ""
 Default p6 To ""
-
 if at("OS/2",cOs)>0
     lGcc:=.t.
     lLinux:=.t.
     lBcc:=.f.
 endif
 allParam:=p1 + p2 +p3+p4 + p5 +p6
-
-allparam:=strtran(allparam,"/","-")
-allparam:=strtran(allparam,"-elx","-ELX")
-allparam:=strtran(allparam,"-el","-EL")
-allparam:=strtran(allparam,"-ex","-EX")
-allparam:=strtran(allparam,"-e","-E")
-allparam:=strtran(allparam,"-i","-I")
-allparam:=strtran(allparam,"-p","-P")
-allparam:=strtran(allparam,"-b","-B")
-allparam:=strtran(allparam,"-gl","-GL")
-allparam:=strtran(allparam,"-g","-G")
-allparam:=strtran(allparam,"-v","-V")
-allparam:=strtran(allparam,"-f","-F")
-allparam:=strtran(allparam,"-r","-R")
+Allparam:=ConvertParams(AllParam) 
 If Pcount() == 0
-   ?? "Harbour Make Utility"
-   ? "Copyright 2000,2001 Luiz Rafael Culik <culik@sl.conex.net>"
-   ? ""
-   ? "Syntax:  hbmake cFile [options]"
-   ? ""
-   ? "Options:  /e[x]  Create a new Makefile. If /ex is"
-   ? "          used it creates a new make file in extended mode"
-   ? "          /el[x]  Create a new Makefile. If /elx is"
-   ? "          used it creates a new make file to build a library in extended mode"
-   ? "          /D  Define a macro"
-   ? "          /p  Print all commands and depencies"
-
-if at("OS/2",cOs)>0
-   ? "          /b  Use BCC as C compiler"
-   ? "          /g+ Use GCC as C compiler"
-else
-   ? "          /b+ Use BCC as C compiler"
-   ? "          /g  Use GCC as C compiler"
-endif
-   ? "          /gl Use GCC as C compiler in Linux"   
-   ? "          /v  Use MSVC as C compiler"
-   ? "          /f  Force recompiltion of all files"
-   ? "          /i  Ignore errors returned by command"
-   ? "          /r  Recurse Source Directory"
-
-   ? "          Note: /p and /D can be used together"
-   ? "          Note: /r and /e[x]/el[x] can be used together"
-   ? "          Options with + are the default values"
-   ? "          -D switch can accept multiple macros on the same line"
-   ? "          or use one macro per -D switch"
+   ShowHelp()
    Return NIL
 Endif
-If cFile == NIL
+If cFile == NIL .and. !lEditMode
    ? "File not Found"
    Return Nil
 Endif
-If Pcount() == 2
-   if at("-F",allparam)>0
-      lforce := .T.
-      allparam:=strtran(allparam,"-F","")
-   Endif
-
-   if at("-B",allparam)>0
-      lBcc := .T.
-      lGcc := .F.
-      lVcc := .F.
-      allparam:=strtran(allparam,"-B","")
-
-   Endif
-if at("-GL",allparam)>0
-      lBcc := .F.
-      lGcc := .T.
-      lVcc := .F.
-      lLinux := .T.
-      allparam:=strtran(allparam,"-GL","")
-
-   Endif
-
-if at("-G",allparam)>0
-      lBcc := .F.
-      lGcc := .T.
-      lVcc := .F.
-      allparam:=strtran(allparam,"-G","")
-
-   Endif
-   if at("-V",allparam)>0
-
-      lBcc := .F.
-      lGcc := .F.
-      lVcc := .T.
-      allparam:=strtran(allparam,"-V","")
-
-   Endif
-if at("-EL",allparam)>0 .or. at("-ELX",allparam)>0
-      if at("-ELX",allparam)>0
-         lExtended := .T.
-         allparam:=strtran(allparam,"-ELX","")
-      Else
-         allparam:=strtran(allparam,"-EL","")
-      endif
-      lLibrary:=.T.
-      crtlibmakfile( cFile )
-      Return nil
-   Endif
-
-if at("-E",allparam)>0 .or. at("-EX",allparam)>0
-      if at("-EX",allparam)>0
-         lExtended := .T.
-         allparam:=strtran(allparam,"-EX","")
-      else
-         allparam:=strtran(allparam,"-E","")
-      endif
-      crtmakfile( cFile )
-      Return nil
-   Endif
-
-if at("-I",allparam)>0
-
-      lIgnoreErrors := .T.
-      allparam:=strtran(allparam,"-I","")
-
-   Endif
-if at("-R",allparam)>0
-   lRecurse:=.T.
-      allparam:=strtran(allparam,"-R","")
-
-   Endif
-
-
-    if at("-P",allparam)>0
-      lPrint := .t.
-      allparam:=strtran(allparam,"-P","")
-
-
-   Endif
-    if at("-D",allparam)>0
-      allparam:="-D"+strtran(allparam,"-D",";")
-         allparam=strtran(allparam,"-D;","-D")
-
-      adef := listasarray2( alltrim(Substr( allparam, 3 )), ";" )
-      /*
-      For nPos := 1 To Len( aDef )
-         If At( "=", adef[ nPos ] ) > 0
-            GetParaDefines( aDef[ nPos ] )
-         Endif
-      Next
-      */
-      aeval(aDef,{|xDef| if(at('=',xDef)>0,GetParaDefines( xDef ),)})
-   Endif
+If Pcount() >= 1
+   ProcessParameters(AllParam)
 Endif
-If Pcount() > 2
-
-   if at("-F",allparam)>0
-      lforce := .T.
-      allparam:=strtran(allparam,"-F","")
-   Endif
-
-   if at("-B",allparam)>0
-      lBcc := .T.
-      lGcc := .F.
-      lVcc := .F.
-      allparam:=strtran(allparam,"-B","")
-
-   Endif
-if at("-GL",allparam)>0
-      lBcc := .F.
-      lGcc := .T.
-      lVcc := .F.
-      lLinux := .T.
-      allparam:=strtran(allparam,"-GL","")
-
-   Endif
-   
-if at("-G",allparam)>0
-      lBcc := .F.
-      lGcc := .T.
-      lVcc := .F.
-      allparam:=strtran(allparam,"-G","")
-
-
-   Endif
-   if at("-V",allparam)>0
-
-      lBcc := .F.
-      lGcc := .F.
-      lVcc := .T.
-      allparam:=strtran(allparam,"-V","")
-
-
-   Endif
-if at("-R",allparam)>0
-   lRecurse:=.T.
-      allparam:=strtran(allparam,"-R","")
-
-   Endif
-
-if at("-EL",allparam)>0 .or. at("-ELX",allparam)>0
-      if at("-ELX",allparam)>0
-         lExtended := .T.
-         allparam:=strtran(allparam,"-ELX","")
-      Else
-         allparam:=strtran(allparam,"-EL","")
-      endif
-      lLibrary:=.T.
+//if !file(cfile) 
+//   return nil
+//endif
+if lEditMode
+   if lLibrary
       crtlibmakfile( cFile )
-      Return nil
-   Endif
-
-
-if at("-E",allparam)>0
-      if at("-EX",allparam)>0
-         lExtended := .T.
-         allparam:=strtran(allparam,"-EX","")
-      else
-         allparam:=strtran(allparam,"-E","")
-      endif
+   else
       crtmakfile( cFile )
-      Return nil
-   Endif
+   endif
 
-    if at("-I",allparam)>0
-
-      lIgnoreErrors := .T.
-      allparam:=strtran(allparam,"-I","")
-
-   Endif
-
-    if at("-P",allparam)>0
-      lPrint := .t.
-      allparam:=strtran(allparam,"-P","")
-
-
-   Endif
-    if at("-D",allparam)>0
-      allparam:="-D"+strtran(allparam,"-D",";")
-         allparam=strtran(allparam,"-D;","-D")
-
-      adef := listasarray2( alltrim(Substr( allparam, 3 )), ";" )
-      aeval(aDef,{|xDef| if(at('=',xDef)>0,GetParaDefines( xDef ),)})
-/*      For nPos := 1 To Len( aDef )
-         If At( "=", adef[ nPos ] ) > 0
-            GetParaDefines( aDef[ nPos ] )
-         Endif
-      Next
-      */
-   Endif
-Endif
-if !file(cfile)
-   return nil
+Return nil
 endif
+cls
 parsemakfi( cFile )
 If lPrint
    PrintMacros()
@@ -380,6 +163,7 @@ CompUpdatedfiles()
 endif
 outstd(cLinkComm)
 ! ( cLinkcomm )
+
 Return nil
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
@@ -1099,7 +883,7 @@ Local cTopFile     := ""
 Local cDefBccLibs  := "lang.lib vm.lib rtl.lib rdd.lib macro.lib pp.lib dbfntx.lib dbfcdx.lib common.lib gtwin.lib"
 Local cDefGccLibs  := "-lvm -lrtl -lgtstd -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon"
 Local cgcclibsos2  := "-lvm -lrtl -lgtos2 -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon"
-Local cDeflibGccLibs := "-Wl,--start-group -lvm -lrtl -lgtstd -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon -lm -Wl,--end-group"
+Local cDeflibGccLibs := "-lvm -lrtl -lgtstd -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon -lm"
 
 local citem:=""
 Local cExt:=""
@@ -1110,20 +894,10 @@ Local cUserdef:=space(40)
 Local cUserInclude:=space(40)
 
 nLinkHandle := Fcreate( cFile )
-Fwrite( nLinkHandle, "#BCC" + CRLF )
-Fwrite( nLinkHandle, "VERSION=BCB.01" + CRLF )
-Fwrite( nLinkHandle, "!ifndef BCB" + CRLF )
-Fwrite( nLinkHandle, "BCB = $(MAKEDIR)" + CRLF )
-Fwrite( nLinkHandle, "!endif" + CRLF )
-Fwrite( nLinkHandle,  CRLF )
-Fwrite( nLinkHandle, "!ifndef BHC" + CRLF )
-Fwrite( nLinkHandle, "BHC = $(HMAKEDIR)" + CRLF )
-Fwrite( nLinkHandle, "!endif" + CRLF )
-Fwrite( nLinkHandle, " " + CRLF )
-
+WriteMakeFileHeader()
 
 Cls
-Setcolor( 'w/b+,w/b,w+/b,w/b+,w/b,w+/b' )
+Setcolor( 'w/b+,b+/w,w+/b,w/b+,w/b,w+/b' )
 @  0,  0, Maxrow(), Maxcol() Box( Chr( 201 ) + Chr( 205 ) + Chr( 187 ) + Chr( 186 ) + Chr( 188 ) + Chr( 205 ) + Chr( 200 ) + Chr( 186 ) + Space( 1 ) )
 ATTENTION( "Enviroment options", 0 )
 @  1,  1 Say "Select Os"
@@ -1131,11 +905,11 @@ ATTENTION( "Enviroment options", 0 )
 @  1, 23 Say "Select C Compiler"
 @  1, 40 Get cCompiler radio { "BCC", "MSVC", "GCC" } valid !empty(cCompiler)
 @  1, 48 Say "Graphic Library"
-@  1, 64 Get lFwh checkbox "Use FWH" when Cos=="Win32"
-@  2, 64 Get lcw checkbox "Use C4W"          when Cos=="Win32"
-@  3, 64 Get lRddads checkbox "Use RddAds"   when Cos=="Win32"
+@  1, 64 Get lFwh checkbox  caption "Use FWH" when Cos=="Win32"
+@  2, 64 Get lcw checkbox  caption "Use C4W"          when Cos=="Win32"
+@  3, 64 Get lRddads checkbox  caption "Use RddAds"   when Cos=="Win32"
 Read
-set cursor on
+//set cursor on
 If lFwh
    @  4,  1 Say "FWH path" Get cfwhpath
 Elseif lCw
@@ -1144,20 +918,20 @@ Endif
    @  4,40   Say "Obj Files Dir" get cObjDir
 ATTENTION( "Harbour Options", 5 )
 
-@  6,  1 Get lautomemvar checkbox "Automatic memvar declaration"
-@  6, 43 Get lvarismemvar checkbox "Variables are assumed M->"
-@  7,  1 Get lDebug checkbox "Debug info"
-@  7, 43 Get lSupressline checkbox "Suppress line number information"
-@  8,  1 Get lGenppo checkbox "Generate pre-processed output"
-@  8, 43 Get lCompMod checkbox "compile module only"
+@  6,  1 Get lautomemvar checkbox  caption  "Automatic memvar declaration"
+@  6, 43 Get lvarismemvar checkbox caption  "Variables are assumed M->"
+@  7,  1 Get lDebug checkbox caption  "Debug info"
+@  7, 43 Get lSupressline checkbox  caption "Suppress line number information"
+@  8,  1 Get lGenppo checkbox  caption "Generate pre-processed output"
+@  8, 43 Get lCompMod checkbox caption  "compile module only"
 @  9,  1 Say "User Defines " get cUserDef pict "@s20"
 @  9, 43 Say "User include Path" get cUserInclude pict "@s20"
 Read
 if !empty(cUserDef)
-      cDefHarOpts+= " -D"+cUserDef +" "
+      cDefHarOpts+= " -D"+alltrim(cUserDef) +" "
 endif
 if !empty(cUserInclude)
-      cDefHarOpts+= " -I"+cUserInclude +" "
+      cDefHarOpts+= " -I"+alltrim(cUserInclude)+" "
 endif
 lBcc := If( At( "BCC", cCompiler ) > 0, .t., .f. )
 lVcc := If( At( "MSVC", cCompiler ) > 0, .t., .f. )
@@ -1196,6 +970,10 @@ cDefHarOpts+=" -v "
 endif
 if ldebug
 cDefHarOpts+=" -b "
+ cDefBccLibs  += "debug.lib"
+ cDefGccLibs  += "-ldebug"
+ cgcclibsos2  += "-ldebug"
+ cDeflibGccLibs += "-ldebug"
 endif
 if lSupressline
 cDefHarOpts+=" -l "
@@ -1819,22 +1597,10 @@ local cLast:=''
 Local cUserdef:=space(40)
 Local cUserInclude:=space(40)
 nLinkHandle := Fcreate( cFile )
-Fwrite( nLinkHandle, "#BCC" + CRLF )
-Fwrite( nLinkHandle, "VERSION=BCB.01" + CRLF )
-Fwrite( nLinkHandle, "!ifndef BCB" + CRLF )
-Fwrite( nLinkHandle, "BCB = $(MAKEDIR)" + CRLF )
-Fwrite( nLinkHandle, "!endif" + CRLF )
-Fwrite( nLinkHandle,  CRLF )
-
-Fwrite( nLinkHandle, "!ifndef BHC" + CRLF )
-Fwrite( nLinkHandle, "BHC = $(HMAKEDIR)" + CRLF )
-Fwrite( nLinkHandle, "!endif" + CRLF )
-Fwrite( nLinkHandle, " " + CRLF )
-
-
+WriteMakeFileHeader()
 
 Cls
-Setcolor( 'w/b+,w/b,w+/b,w/b+,w/b,w+/b' )
+Setcolor( 'w/b+,b+/w,w+/b,w/b+,w/b,w+/b' )
 @  0,  0, Maxrow(), Maxcol() Box( Chr( 201 ) + Chr( 205 ) + Chr( 187 ) + Chr( 186 ) + Chr( 188 ) + Chr( 205 ) + Chr( 200 ) + Chr( 186 ) + Space( 1 ) )
 ATTENTION( "Enviroment options", 0 )
 @  1,  1 Say "Select Os"
@@ -1847,20 +1613,20 @@ set cursor on
    @  4,55   Say "Obj Files Dir" get cObjDir
 ATTENTION( "Harbour Options", 5 )
 
-@  6,  1 Get lautomemvar checkbox "Automatic memvar declaration"
-@  6, 43 Get lvarismemvar checkbox "Variables are assumed M->"
-@  7,  1 Get lDebug checkbox "Debug info"
-@  7, 43 Get lSupressline checkbox "Suppress line number information"
-@  8,  1 Get lGenppo checkbox "Generate pre-processed output"
-@  8, 43 Get lCompMod checkbox "compile module only"
+@  6,  1 Get lautomemvar   checkbox  caption "Automatic memvar declaration"
+@  6, 43 Get lvarismemvar checkbox  caption "Variables are assumed M->"
+@  7,  1 Get lDebug checkbox  caption "Debug info"
+@  7, 43 Get lSupressline checkbox  caption "Suppress line number information"
+@  8,  1 Get lGenppo checkbox  caption "Generate pre-processed output"
+@  8, 43 Get lCompMod checkbox  caption "compile module only"
 @  9,  1 Say "User Defines " get cUserDef pict "@s20"
 @  9, 43 Say "User include Path" get cUserInclude pict "@s20"
 Read
 if !empty(cUserDef)
-      cDefHarOpts+= " -D"+cUserDef +" "
+      cDefHarOpts+= " -D"+alltrim(cUserDef) +" "
 endif
 if !empty(cUserInclude)
-      cDefHarOpts+= " -I"+cUserInclude +" "
+      cDefHarOpts+= " -I"+alltrim(cUserInclude) +" "
 endif
 
 lBcc := If( At( "BCC", cCompiler ) > 0, .t., .f. )
@@ -2448,3 +2214,150 @@ else
     Next
 endif
 Return cPath
+Function ConvertParams(cParam) 
+   cParam:=strtran(cParam,"/","-")
+   cParam:=strtran(cParam,"-elx","-ELX")
+   cParam:=strtran(cParam,"-el","-ELX")
+   cParam:=strtran(cParam,"-ex","-EX")
+   cParam:=strtran(cParam,"-e","-EX")
+   cParam:=strtran(cParam,"-i","-I")
+   cParam:=strtran(cParam,"-p","-P")
+   cParam:=strtran(cParam,"-b","-B")
+   cParam:=strtran(cParam,"-gl","-GL")
+   cParam:=strtran(cParam,"-g","-G")
+   cParam:=strtran(cParam,"-v","-V")
+   cParam:=strtran(cParam,"-f","-F")
+   cParam:=strtran(cParam,"-r","-R")
+return cParam
+Function ShowHelp()
+   Local cOs:=OS()
+   ?? "Harbour Make Utility"
+   ? "Copyright 2000,2001 Luiz Rafael Culik <culik@sl.conex.net>"
+   ? ""
+   ? "Syntax:  hbmake cFile [options]"
+   ? ""
+   ? "Options:  /e[x]  Create a new Makefile. If /ex is"
+   ? "          used it creates a new make file in extended mode"
+   ? "          /el[x]  Create a new Makefile. If /elx is"
+   ? "          used it creates a new make file to build a library in extended mode"
+   ? "          /D  Define a macro"
+   ? "          /p  Print all commands and depencies"
+   if at("OS/2",cOs)>0
+      ? "          /b  Use BCC as C compiler"
+      ? "          /g+ Use GCC as C compiler"
+   else
+      ? "          /b+ Use BCC as C compiler"
+      ? "          /g  Use GCC as C compiler"
+   endif
+   ? "          /gl Use GCC as C compiler in Linux"   
+   ? "          /v  Use MSVC as C compiler"
+   ? "          /f  Force recompiltion of all files"
+   ? "          /i  Ignore errors returned by command"
+   ? "          /r  Recurse Source Directory"
+
+   ? "          Note: /p and /D can be used together"
+   ? "          Note: /r and /e[x]/el[x] can be used together"
+   ? "          Options with + are the default values"
+   ? "          -D switch can accept multiple macros on the same line"
+   ? "          or use one macro per -D switch"
+Return Nil
+Function ProcessParameters(cParams)
+   Local aDef
+   if at("-F",cParams)>0
+      lForce := .T.
+      cParams:=strtran(cParams,"-F","")
+   Endif
+
+   if at("-B",cParams)>0
+      lBcc := .T.
+      lGcc := .F.
+      lVcc := .F.
+      cParams:=strtran(cParams,"-B","")
+
+   Endif
+if at("-GL",cParams)>0
+      lBcc := .F.
+      lGcc := .T.
+      lVcc := .F.
+      lLinux := .T.
+      cParams:=strtran(cParams,"-GL","")
+
+   Endif
+
+if at("-G",cParams)>0
+      lBcc := .F.
+      lGcc := .T.
+      lVcc := .F.
+      cParams:=strtran(cParams,"-G","")
+
+   Endif
+   if at("-V",cParams)>0
+
+      lBcc := .F.
+      lGcc := .F.
+      lVcc := .T.
+      cParams:=strtran(cParams,"-V","")
+
+   Endif
+
+if at("-I",cParams)>0
+
+      lIgnoreErrors := .T.
+      cParams:=strtran(cParams,"-I","")
+
+   Endif
+if at("-R",cParams)>0
+   lRecurse:=.T.
+      cParams:=strtran(cParams,"-R","")
+
+   Endif
+
+    if at("-P",cParams)>0
+      lPrint := .t.
+      cParams:=strtran(cParams,"-P","")
+
+   Endif
+    if at("-D",cParams)>0
+      cParams:="-D"+strtran(cParams,"-D",";")
+         cParams=strtran(cParams,"-D;","-D")
+
+      adef := ListAsArray2( alltrim(Substr( cParams, 3 )), ";" )
+      aeval(aDef,{|xDef| if(at('=',xDef)>0,GetParaDefines( xDef ),)})
+   Endif
+if at("-EL",cParams)>0 .or. at("-ELX",cParams)>0
+      if at("-ELX",cParams)>0
+         lExtended := .T.
+         cParams:=strtran(cParams,"-ELX","")
+      Else
+         cParams:=strtran(cParams,"-EL","")
+      endif
+      lLibrary:=.T.
+      lEditMode:=.T.
+   Endif
+
+if at("-E",cParams)>0 .or. at("-EX",cParams)>0
+      if at("-EX",cParams)>0
+       
+         cParams:=strtran(cParams,"-EX","")
+      else
+         cParams:=strtran(cParams,"-E","")
+      endif
+         lExtended := .T.
+         lEditMode:=.T.
+   Endif
+
+Return Nil
+function WriteMakeFileHeader()
+Fwrite( nLinkHandle, "#BCC" + CRLF )
+Fwrite( nLinkHandle, "VERSION=BCB.01" + CRLF )
+Fwrite( nLinkHandle, "!ifndef BCB" + CRLF )
+Fwrite( nLinkHandle, "BCB = $(MAKEDIR)" + CRLF )
+Fwrite( nLinkHandle, "!endif" + CRLF )
+Fwrite( nLinkHandle,  CRLF )
+Fwrite( nLinkHandle, "!ifndef BHC" + CRLF )
+Fwrite( nLinkHandle, "BHC = $(HMAKEDIR)" + CRLF )
+Fwrite( nLinkHandle, "!endif" + CRLF )
+Fwrite( nLinkHandle, " " + CRLF )
+
+
+return nil
