@@ -1,3 +1,8 @@
+2000-07-29 03:16 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/gt*/gt*.c
+     ! Extended TRACE call for hb_gtSetPos() with iMethod.
+
 2000-07-29 03:08 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/oldclear.c

@@ -503,7 +503,7 @@ void hb_gt_SetPos( SHORT iRow, SHORT iCol, SHORT iMethod )
 {
    union REGS regs;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hd, %hd)", iRow, iCol));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hd, %hd, %hd)", iRow, iCol, iMethod));
 
    HB_SYMBOL_UNUSED( iMethod );
 

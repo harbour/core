@@ -146,14 +146,13 @@ USHORT hb_gt_GetScreenHeight( void )
 
 void hb_gt_SetPos( SHORT iRow, SHORT iCol, SHORT iMethod )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hd, %hd)", iRow, iCol));
-
-   HB_SYMBOL_UNUSED( iMethod );
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hd, %hd, %hd)", iRow, iCol, iMethod));
 
    /* TODO: How to reposition the cursor? */
 
    HB_SYMBOL_UNUSED( iRow );
    HB_SYMBOL_UNUSED( iCol );
+   HB_SYMBOL_UNUSED( iMethod );
 }
 
 SHORT hb_gt_Col( void )
