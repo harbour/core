@@ -7,10 +7,11 @@
 //
 // Should be compiled using /gHRB or stub.
 //
-function Main()
+function Main( cRun )
 
+   cRun := Default( cRun, "Spawn2.hrb" )
    QOut( "We are now in spawn" )
-   HB_Run( "Spawn2.hrb" )                // Load & Run Hello.hrb
+   HB_Run( cRun )                               // Load & Run program
    QOut( "We are back again" )
 return nil
 

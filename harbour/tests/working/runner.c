@@ -47,6 +47,7 @@ PASM_CALL CreateFun( PSYMBOL, PBYTE );   /* Create a dynamic function*/
 HARBOUR HB_RUN();
 void PushSymbol( PSYMBOL );
 void PushNil( void );
+void Push( PITEM );
 void Do( WORD );
 ULONG FindSymbol( char *, PDYNFUNC, ULONG );
 void SafeRead( char *, int, int, FILE * );
@@ -89,6 +90,8 @@ HARBOUR HB_RUN( void )                          /* HB_Run( <cFile> )        */
    ULONG ulFuncs;                               /* Number of functions      */
    ULONG ulSize;                                /* Size of function         */
    ULONG ul, ulPos;
+
+   int i;
 
    BYTE  bCont;
 
@@ -230,13 +233,18 @@ HARBOUR HB_RUN( void )                          /* HB_Run( <cFile> )        */
             {
                 PushSymbol( pSymRead + ul );
                 PushNil();
-                Do( 0 );                        /* Run init function        */
+                for( i = 0; i < (_pcount() - 1); i++ )
+                   Push( _param( i + 2, IT_ANY ) );
+                                                /* Push other cmdline params*/
+                Do( _pcount() - 1 );            /* Run init function        */
             }
          }
 
          PushSymbol( pSymRead );
          PushNil();
-         Do( 0 );                               /* Run the thing !!!        */
+         for( i = 0; i < (_pcount() - 1); i++ )
+            Push( _param( i + 2, IT_ANY ) );    /* Push other cmdline params*/
+         Do( _pcount() - 1 );                   /* Run the thing !!!        */
 
          for( ul = 0; ul < ulSymbols; ul++ )    /* Check EXIT functions     */
          {

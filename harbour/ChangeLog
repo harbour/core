@@ -1,3 +1,9 @@
+19990520-18:30 CET Eddie Runia
+  * tests/working/runner.c
+    command-line arguments passed to both init function and running program
+  * tests/working/spawn.prg
+    test program
+
 19990522-17:50 CET Eddie Runia
   * source/rtl/arrays.c, source/rtl/classes.c
     typical : if it works on one compiler, it will fail on another.
