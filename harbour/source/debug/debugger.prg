@@ -162,6 +162,7 @@ CLASS TDebugger
    METHOD ToggleBreakPoint()
    METHOD ViewSets()
    METHOD WndVarsLButtonDown( nMRow, nMCol )
+   METHOD LineNumbers()          // Toggles numbering of source code lines
 
 ENDCLASS
 
@@ -304,9 +305,10 @@ METHOD CommandWindowProcessKey( nKey ) CLASS TDebugger
            else
               cResult := "Command error"
 
+           endif
+
            ErrorBlock(bLastHandler)
 
-           endif
            DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1,;
               Space( ::oWndCommand:nRight - ::oWndCommand:nLeft - 1 ),;
               ::oWndCommand:cColor )
@@ -977,3 +979,11 @@ static function ValToStr( uVal )
    endcase
 
 return cResult
+
+
+METHOD LineNumbers() CLASS TDebugger
+
+   ::oBrwText:lLineNumbers := !::oBrwText:lLineNumbers
+   ::oBrwText:RefreshAll()
+
+return Self

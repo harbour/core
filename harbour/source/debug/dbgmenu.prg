@@ -109,7 +109,7 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
       MENUITEM " ~Options "
       MENU
          MENUITEM " ~Preprocessed Code"     ACTION Alert( "Not implemented yet!" )
-         MENUITEM " ~Line Numbers"          ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Line Numbers"          ACTION oDebugger:LineNumbers()
          MENUITEM " ~Exchange Screens"      ACTION Alert( "Not implemented yet!" )
          MENUITEM " swap on ~Input"         ACTION Alert( "Not implemented yet!" )
          MENUITEM " code~Block Trace"       ACTION Alert( "Not implemented yet!" )

@@ -52,6 +52,8 @@ CLASS TBrwText FROM TEditor
 
    DATA  aBreakPoints      // Array with line numbers of active Break Points
 
+   DATA  lLineNumbers      // If .T. source code lines are preceded by their number
+
    METHOD   New(nTop, nLeft, nBottom, nRight, cFileName, cCursorC, cBreakpC)
 
    METHOD   GoTop()           // Methods available on a standard TBrowse, needed to handle a TEditor like a TBrowse
@@ -91,6 +93,8 @@ METHOD New(nTop, nLeft, nBottom, nRight, cFileName, cCursorC, cBreakpC) CLASS TB
    ::cHiBreakpColor := hb_ColorIndex(::cBreakpColor, 2) + hb_ColorIndex(::cBreakpColor, 1)
 
    ::aBreakPoints := {}
+
+   ::lLineNumbers := .T.
 
    Super:New("", nTop, nLeft, nBottom, nRight, .T.)
    // Standard TEditor window drawing color
@@ -168,7 +172,7 @@ return Self
 
 METHOD GetLine(nRow) CLASS TBrwText
 
-return AllTrim(Str(nRow)) + ": " + Super:GetLine(nRow)
+return iif(::lLineNumbers, AllTrim(Str(nRow)) + ": ", "") + Super:GetLine(nRow)
 
 
 METHOD LineColor(nRow) CLASS TBrwText

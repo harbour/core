@@ -1,3 +1,11 @@
+2001-02-05 21:05 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
+   * source/debug/debugger.prg
+     + Added LineNumbers() method
+   * source/debug/tbrwtext.prg
+     + Added support for inclusion/exclusion of line numbering at runtime
+   * source/debug/dbgmenu.prg
+     + Added Menu item to activate line numbering
+
 2001-02-05 21:10 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * harbour/include/hbrddntx.h
    * harbour/source/rdd/dbfntx/dbfntx1.c
