@@ -1334,7 +1334,7 @@ ULONG hb_compGenJump( LONG lOffset )
    }
    else if( lOffset >= -128 && lOffset <= 127 )
    {
-      hb_compGenPCode4( HB_P_JUMPSHORT, HB_LOBYTE( lOffset ), HB_P_NOOP, HB_P_NOOP );
+      hb_compGenPCode4( HB_P_JUMPNEAR, HB_LOBYTE( lOffset ), HB_P_NOOP, HB_P_NOOP );
    }
    else if( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
    {
@@ -1359,11 +1359,11 @@ ULONG hb_compGenJumpFalse( LONG lOffset )
    /* Just a place holder, it might be a far jump...*/
    if( lOffset == 0 )
    {
-      hb_compGenPCode4( HB_P_JUMPFARFALSE, 0, 0, 0 );
+      hb_compGenPCode4( HB_P_JUMPFALSEFAR, 0, 0, 0 );
    }
    else if( lOffset >= -128 && lOffset <= 127 )
    {
-      hb_compGenPCode4( HB_P_JUMPSHORTFALSE, HB_LOBYTE( lOffset ), HB_P_NOOP, HB_P_NOOP );
+      hb_compGenPCode4( HB_P_JUMPFALSENEAR, HB_LOBYTE( lOffset ), HB_P_NOOP, HB_P_NOOP );
    }
    else if( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
    {
@@ -1371,7 +1371,7 @@ ULONG hb_compGenJumpFalse( LONG lOffset )
    }
    else if( lOffset >= (-8388608L) && lOffset <= 8388607L )
    {
-      hb_compGenPCode4( HB_P_JUMPFARFALSE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( ( USHORT ) ( lOffset ) >> 16 ) & 0xFF ) );
+      hb_compGenPCode4( HB_P_JUMPFALSEFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( ( USHORT ) ( lOffset ) >> 16 ) & 0xFF ) );
    }
    else
    {
@@ -1388,11 +1388,11 @@ ULONG hb_compGenJumpTrue( LONG lOffset )
    /* Just a place holder, it might be a far jump...*/
    if( lOffset == 0 )
    {
-      hb_compGenPCode4( HB_P_JUMPFARTRUE, 0, 0, 0 );
+      hb_compGenPCode4( HB_P_JUMPTRUEFAR, 0, 0, 0 );
    }
    else if( lOffset >= -128 && lOffset <= 127 )
    {
-      hb_compGenPCode4( HB_P_JUMPSHORTTRUE, HB_LOBYTE( lOffset ), HB_P_NOOP, HB_P_NOOP );
+      hb_compGenPCode4( HB_P_JUMPTRUENEAR, HB_LOBYTE( lOffset ), HB_P_NOOP, HB_P_NOOP );
    }
    else if( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
    {
@@ -1400,7 +1400,7 @@ ULONG hb_compGenJumpTrue( LONG lOffset )
    }
    else if( lOffset >= (-8388608L) && lOffset <= 8388607L )
    {
-      hb_compGenPCode4( HB_P_JUMPFARTRUE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( ( USHORT ) ( lOffset ) >> 16 ) & 0xFF ) );
+      hb_compGenPCode4( HB_P_JUMPTRUEFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( ( USHORT ) ( lOffset ) >> 16 ) & 0xFF ) );
    }
    else
    {

@@ -1,4 +1,8 @@
 20000425-07:30 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+   * source/compiler/harbour.c
+     * Resolved conflicts from my previous upload to dod witj change from JUMPSHORT TO JUMP*NEAR.
+
+20000425-07:30 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/harbour.c
      * Replaced sequential calls to hb_compGenPCode3() + hb_compGenPCode3() with 1 call to new hb_compGenPCode4()
