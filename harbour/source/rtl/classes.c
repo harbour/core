@@ -684,6 +684,8 @@ HARBOUR OCLONE( void )
     {
       PITEM pDstObject = hb_arrayClone( pSrcObject );
       ItemCopy( &stack.Return, pDstObject ); /* OClone() returns the new object */
+      ItemRelease( pDstArray );
+      _xfree( pDstArray );
     }
   else
     _ret();

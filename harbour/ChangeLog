@@ -1,3 +1,8 @@
+19990522-17:50 CET Eddie Runia
+  * source/rtl/arrays.c, source/rtl/classes.c
+    typical : if it works on one compiler, it will fail on another.
+    oClone also modified :-)
+
 19990522-17:25 CET Eddie Runia
   * source/vm/hvm.c
     'Array' bug possibly resolved.

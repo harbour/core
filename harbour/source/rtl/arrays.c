@@ -544,9 +544,9 @@ PITEM hb_arrayClone( PITEM pSrcArray )
       PITEM pSrcItem = pSrcBaseArray->pItems + ulCount;
 
 	  if ( pSrcItem->wType == IT_ARRAY )
-            hb_itemArrayPut( pDstArray, ulCount, hb_arrayClone( pSrcItem ) );
+            hb_itemArrayPut( pDstArray, ulCount + 1, hb_arrayClone( pSrcItem ) );
 	  else
-            hb_itemArrayPut( pDstArray, ulCount, pSrcItem );
+            hb_itemArrayPut( pDstArray, ulCount + 1, pSrcItem );
     }
       return pDstArray;
     }
@@ -687,6 +687,8 @@ HARBOUR ACLONE( void )
     {
       PITEM pDstArray = hb_arrayClone( pSrcArray );
       ItemCopy( &stack.Return, pDstArray ); /* AClone() returns the new array */
+      ItemRelease( pDstArray );
+      _xfree( pDstArray );
     }
   else
     _ret();
