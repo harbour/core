@@ -174,10 +174,14 @@ method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd ,cName,LenArr,aArray) class t
 
       case nKey == K_PGUP
            oBrwSets:PageUp()
+           oBrwSets:Cargo = ::ArrayIndex
+           oBrwSets:RefreshCurrent()
            oBrwSets:ForceStable()
 
       case nKey == K_PGDN
            oBrwSets:PageDown()
+           oBrwSets:Cargo = ::ArrayIndex
+           oBrwSets:RefreshCurrent()
            oBrwSets:ForceStable()
 
       Case nKey ==13
