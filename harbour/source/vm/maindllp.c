@@ -63,7 +63,7 @@
 typedef void ( * VM_PROCESS_DLL_SYMBOLS ) ( PHB_SYMB pModuleSymbols,
                                             USHORT uiModuleSymbols );
 
-typedef void ( * VM_EXECUTE ) ( const BYTE * pCode, PHB_SYMB pSymbols );
+typedef void ( * VM_DLL_EXECUTE ) ( const BYTE * pCode, PHB_SYMB pSymbols );
 
 
 #if defined(HB_OS_WIN_32)
@@ -108,10 +108,10 @@ void hb_vmProcessSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols )
 
 void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 {
-   FARPROC pExecute = GetProcAddress( GetModuleHandle( NULL ), "_hb_vmExecute" );
+   FARPROC pExecute = GetProcAddress( GetModuleHandle( NULL ), "_hb_vmDllExecute" );
 
    if( pExecute )
-      ( ( VM_EXECUTE ) pExecute ) ( pCode, pSymbols );
+      ( ( VM_DLL_EXECUTE ) pExecute ) ( pCode, pSymbols );
 
    /* else
     *    may we issue an error ? */
