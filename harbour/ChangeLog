@@ -1,3 +1,54 @@
+2001-05-06 20:30 CET Martin Vogel <vogel@inttec.de>
+
+   + contrib/libct/token1.c
+     ! ATTOKEN() function
+       ! New 4th parameter <nSkipWidth> !
+     ! TOKEN() function 
+       ! New 5th and 6th parameter <cPreTokenizer> and <cPostTokenizer>!
+     ! NUMTOKEN() function 
+     ! TOKENLOWER() function
+     ! TOKENUPPER() function
+     ! TOKENSEP() function
+
+   + contrib/libct/alt/
+     ! new subdirectory for alternate function implementation in pure Harbour,
+       needed for Harbour output formats that rely on a pure byte code !
+
+   - contrib/libct/cttoken.prg
+     ! moved to new alt/ subdir as token1.prg
+
+   + contrib/libct/alt/token1.prg
+     ! pure Harbour implementation of functions coded in ../token1.c,
+       still some work to do !
+
+   * contrib/libct/Makefile
+     + added token1.c
+     - removed cttoken.prg
+
+   * contrib/libct/makefile.bc
+     + added token1.c
+     - removed cttoken.prg
+
+   * contrib/libct/makefile.vc
+     + added token1.c
+     - removed cttoken.prg
+
+   * contrib/libct/readme.txt
+     ! enhancement list updated !
+
+   * contrib/libct/ctflist.txt
+     ! function status list updated !
+
+   + contrib/libct/tests/attoken.prg
+     ! test program for the ATTOKEN() function
+
+   + contrib/libct/tests/token.prg
+     ! test program for the TOKEN() function
+
+   * contrib/libct/tests/Makefile
+     + added attoken.prg
+     + added token.prg
+
 2001-05-06 12:00 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
    * source\rtl\inkey.c
      added cast in Lastkey

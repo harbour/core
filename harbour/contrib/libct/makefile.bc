@@ -106,9 +106,9 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctcolton.obj \
    $(OBJ_DIR)\ctcrypt.obj \
    $(OBJ_DIR)\ctposupp.obj \
+   $(OBJ_DIR)\token1.obj \
    \
    $(OBJ_DIR)\ctmisc.obj \
-   $(OBJ_DIR)\cttoken.obj \
 
 #
 # Our default target
@@ -191,17 +191,14 @@ $(OBJ_DIR)\ctposupp.obj : $(TOOLS_DIR)\ctposupp.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\token1.obj : $(TOOLS_DIR)\token1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\ctmisc.c : $(TOOLS_DIR)\ctmisc.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\ctmisc.obj : $(OBJ_DIR)\ctmisc.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\cttoken.c : $(TOOLS_DIR)\cttoken.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\cttoken.obj : $(OBJ_DIR)\cttoken.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 

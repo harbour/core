@@ -126,9 +126,9 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctcolton.obj \
    $(OBJ_DIR)\ctcrypt.obj \
    $(OBJ_DIR)\ctposupp.obj \
+   $(OBJ_DIR)\token1.obj \
    \
    $(OBJ_DIR)\ctmisc.obj \
-   $(OBJ_DIR)\cttoken.obj
 
 #
 # Our default target
@@ -155,8 +155,8 @@ CLEAN:
    -@if exist $(OBJ_DIR)\ctcolton.* del $(OBJ_DIR)\ctcolton.*
    -@if exist $(OBJ_DIR)\ctcrypt.* del $(OBJ_DIR)\ctcrypt.*
    -@if exist $(OBJ_DIR)\ctposupp.* del $(OBJ_DIR)\ctposupp.*
+   -@if exist $(OBJ_DIR)\token1.* del $(OBJ_DIR)\token1.*
    -@if exist $(OBJ_DIR)\ctmisc.* del $(OBJ_DIR)\ctmisc.*
-   -@if exist $(OBJ_DIR)\cttoken.* del $(OBJ_DIR)\cttoken.*
    -@if exist $(TOOLS_LIB) del $(TOOLS_LIB)
 
 #

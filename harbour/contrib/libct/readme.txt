@@ -19,6 +19,9 @@ Changes and Enhancements over the original CA-T**ls 3 Library
 
 * ATREPL()     New 6th parameter to specify characters to be ignored
 
+* ATTOKEN()    New 4th parameter to specify a skip width equal to the
+               TOKEN() function
+
 + CHARHIST     generates a character histogram of a string
 
 + CHARRLL      bitwise roll to the left operation on characters
@@ -36,5 +39,6 @@ Changes and Enhancements over the original CA-T**ls 3 Library
 * SETATLIKE()  2nd parameter can be passed by reference so that SETATLIKE
                can store the acutal wildcard character in it
 
-
+* TOKEN()      New 5th and 6th parameter there the function can store
+               the tokenizer before and after the extracted token.
 

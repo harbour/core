@@ -21,10 +21,10 @@ C_SOURCES=\
 	ctcolton.c \
 	ctcrypt.c \
 	ctposupp.c \
+	token1.c \
 
 PRG_SOURCES=\
 	ctmisc.prg \
-	cttoken.prg \
 
 LIBNAME=ct3
 

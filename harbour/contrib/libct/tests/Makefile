@@ -35,6 +35,7 @@ PRG_SOURCES=\
 	asciisum.prg \
 	ascpos.prg \
 	atadjust.prg \
+	attoken.prg \
 	atnum.prg \
 	atrepl.prg \
 	beforatn.prg \
@@ -56,7 +57,12 @@ PRG_SOURCES=\
 	charxor.prg \
 	csetref.prg \
 	csetatmu.prg \
+	numtoken.prg \
 	setatlik.prg \
+	token.prg \
+	tokenlower.prg \
+	tokensep.prg \
+	tokenupper.prg \
 	valpos.prg \
 	
 
