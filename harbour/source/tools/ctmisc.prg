@@ -75,7 +75,11 @@ FUNCTION CT_RESTGETS( aGetList )
    RETURN .T.
 
 FUNCTION CT_SAVEGETS()
-   RETURN GetList
+   LOCAL aGetList := GetList
+
+   GetList := {}
+
+   RETURN aGetList
 
 FUNCTION CT_SCREENMIX( c, a, row, col )
 

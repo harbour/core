@@ -414,14 +414,31 @@ USHORT hb_gtGetColorStr( char * pszColorString )
 
          if( j == 0 )
          {
+            /* NOTE: When STRICT is on, Harbour will put both the "*" and "+"
+                     chars to the first half of the colorspec (like "W+*/B"), 
+                     which is quite ugly, otherwise it will put the "+" to the 
+                     first half and the "*" to the second (like "W+/B*"), which
+                     is how it should be done. [vszakats] */
+
+#ifdef HB_C52_STRICT
             if( ( s_pColor[ uiColorIndex ] & 0x80 ) != 0 )
                pszColorString[ iPos++ ] = '*';
+#endif
 
             if( ( s_pColor[ uiColorIndex ] & 0x08 ) != 0 )
                pszColorString[ iPos++ ] = '+';
 
             pszColorString[ iPos++ ] = '/';
          }
+#ifndef HB_C52_STRICT
+         else
+         {
+            if( ( s_pColor[ uiColorIndex ] & 0x80 ) != 0 )
+               pszColorString[ iPos++ ] = '*';
+         }
+#endif
+
+         nColor = ( s_Color[ i ] >> 4 ) & 7;
 
          nColor = ( s_pColor[ uiColorIndex ] >> 4 ) & 7;
       }

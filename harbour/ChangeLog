@@ -1,3 +1,13 @@
+20000412-03:14 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/tools/ctmisc.prg
+     ! CT_SAVEGETS() fixed to empty GetList.
+
+   * source/rtl/gtapi.c
+     + hb_gtGetColorStr() readded the previous version of colorspec generation
+       and put the CA-Clipper compatible one between STRICT guards.
+       (Talking about the "W+*/GR" vs. "W+/GR*" issue.)
+
 20000411-20:30 GMT -3 Luiz Rafael Culik <culik@sl.conex.net
    +doc/class_tp.txt
      *Doc template for classes
