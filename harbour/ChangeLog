@@ -7,6 +7,13 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * contrib/libmisc/Makefile
+     * Some minor fixes to both edit mode
+
+2001-12-23 10:18 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/rtl/filesys.c
+     ! Fixed all return value checking for the Win32 API
        calls.
 
    * include/hbapi.h
