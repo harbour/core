@@ -1,3 +1,11 @@
+2000-06-14 23:37 UTC+0200 JfL&RaC <jfl@mafact.com> <rac@mafact.com>
+   * source/vm/classes.c
+     ! Temporary Fixed hb___msgsuper() to refer the good self value when accessing super
+     ! This has some side effect on Super:classname ... (this is work in progress)
+   * source/vm/classes.c
+     added the ability to use the message ::Class to access classData
+     keeping compatibility with the old method (this is work in progress)
+
 2000-06-14 15:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
    * source/rtl/gtwin/gtwin.c

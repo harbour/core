@@ -100,6 +100,14 @@
  *    Initialisation is now working correctly
  *    as with autoinit for Logical (.F.) and Numerical (0) from tClass.prg
  *
+ *    1.17 06/14/2000 JFL&RAC
+ *    temporary workAround for Self bad referenced when calling super object
+ *    hb___msgSuper() temporary modified
+ *    hb___msgClass() implemented to allow a better compatibility with classy
+ *    Now, calling Self:xClassDataVar is the same as Self:Class:xClassDataVar
+ *
+ *
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -152,6 +160,7 @@ static PHB_DYNS s_msgClassH    = NULL;
 static PHB_DYNS s_msgEval      = NULL;
 static PHB_DYNS s_msgClassSel  = NULL;
 static PHB_DYNS s_msgClsParent = NULL;
+static PHB_DYNS s_msgClass     = NULL;
 
 /* All functions contained in classes.c */
 
@@ -170,6 +179,7 @@ static void     hb_clsRelease( PCLASS );
 static HARBOUR  hb___msgClsH( void );
 static HARBOUR  hb___msgClsName( void );
 static HARBOUR  hb___msgClsSel( void );
+static HARBOUR  hb___msgClass( void );
 static HARBOUR  hb___msgSuper( void );
 static HARBOUR  hb___msgEvalInline( void );
 static HARBOUR  hb___msgClsParent( void );
@@ -540,6 +550,7 @@ PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
       s_msgClassSel  = hb_dynsymGet( "CLASSSEL" );
       s_msgEval      = hb_dynsymGet( "EVAL" );
       s_msgClsParent = hb_dynsymGet( "ISDERIVEDFROM" );
+      s_msgClass     = hb_dynsymGet( "CLASS" );
    }
 
    if( pMsg == s_msgClassName )
@@ -556,6 +567,9 @@ PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
 
    else if( pMsg == s_msgClsParent )
       return hb___msgClsParent;
+
+   else if( pMsg == s_msgClass )
+      return hb___msgClass;
 
    if( uiClass && uiClass <= s_uiClasses )
    {
@@ -1977,15 +1991,34 @@ static HARBOUR hb___msgSuper( void )
    PHB_ITEM pObject = hb_stack.pBase + 1;
    USHORT uiIndex = s_pMethod->uiData;
 
- if( ( s_pMethod->uiScope & HB_OO_CLSTP_SUPER ) == HB_OO_CLSTP_SUPER )
- {
-    PHB_ITEM pPtrNum;
-    pPtrNum = ( PHB_ITEM ) hb_arrayGetNL( pObject, uiIndex ); // ici j'ai l'adresse
 
-    hb_itemCopy( &hb_stack.Return , pPtrNum );
- }
- else
-    hb_itemCopy( &hb_stack.Return, hb_arrayGetItemPtr( pObject, s_pMethod->uiData ) );
+   pObject->item.asArray.value->uiPrevCls = pObject->item.asArray.value->uiClass; // backup of actual handel
+   pObject->item.asArray.value->uiClass   = s_pMethod->uiSprClass; // == superclass handel
+
+   hb_itemCopy( &hb_stack.Return, pObject );
+
+
+// if( ( s_pMethod->uiScope & HB_OO_CLSTP_SUPER ) == HB_OO_CLSTP_SUPER )
+// {
+//    PHB_ITEM pPtrNum;
+//    pPtrNum = ( PHB_ITEM ) hb_arrayGetNL( pObject, uiIndex ); // ici j'ai l'adresse
+//
+//    hb_itemCopy( &hb_stack.Return , pPtrNum );
+// }
+// else
+//    hb_itemCopy( &hb_stack.Return, hb_arrayGetItemPtr( pObject, s_pMethod->uiData ) );
+}
+
+/*
+ * __msgClass()
+ *
+ * Internal function to return Self at Self:Class call (classy compatibility)
+ */
+static HARBOUR hb___msgClass( void )
+{
+   PHB_ITEM pObject = hb_stack.pBase + 1;
+
+   hb_itemCopy( &hb_stack.Return, pObject );
 }
 
 /*
