@@ -1202,8 +1202,8 @@ return { | a | a[ 1 ] == Self:oBrwText:nRow }  // it was nLine
 
 METHOD ShowCode( cModuleName ) CLASS TDebugger
 
-   local cFunction := SubStr( cModuleName, At( ":", cModuleName ) + 1 )
-   local cPrgName  := SubStr( cModuleName, 1, At( ":", cModuleName ) - 1 )
+   local cFunction := SubStr( cModuleName, RAt( ":", cModuleName ) + 1 )
+   local cPrgName  := SubStr( cModuleName, 1, RAt( ":", cModuleName ) - 1 )
 
    ASize( ::aCallStack, Len( ::aCallStack ) + 1 )
    AIns( ::aCallStack, 1 )

@@ -1,3 +1,9 @@
+2001-11-20 23:59 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
+   * source/debug/debugger.prg
+     ! ::ShowCode() was using At( ":", cModuleName ) to divide procedure name from module name,
+       but this does not work if you have a source file on a different disk (at least on those
+       systems which use a letter and a colon to name volumes).
+
 2001-11-20 21:02 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/lang/Makefile
@@ -31,7 +37,7 @@
      * Applied fixes from Marek Paliwoda <paliwoda@inetia.pl> that lets
        the slang GT driver code build on different GNU/Linux distributions
        (and possibly other flavours of Un*x).
-	
+
 2001-11-20 05:20 GMT+0700 Andi Jahja <harbour@cbn.net.id>
    * source/compiler/harbour.y
      ! declare function prototype __yy_memcpy() to satisfy Borland
@@ -41,7 +47,7 @@
 2001-11-19 16:00 UTC-0500 David G. Holm <dholm@jsd-llc.com>
 
   * source/rdd/dbfcdx/dbfcdx1.c
-  	! Removed spurious (BYTE) overrides on dual assignments.
+   ! Removed spurious (BYTE) overrides on dual assignments.
 
 2001-11-19 17:20 GMT+1 Martin Vogel <vogel@inttec.de>
 
@@ -298,7 +304,7 @@
 2001-11-07 11:30 UTC-0500 David G. Holm <dholm@jsd-llc.com>
 
   * contrib/libct/files.c
-  	! Exclude Cygwin from the WIN32 build paths.
+   ! Exclude Cygwin from the WIN32 build paths.
 
 2001-11-07 14:55 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
@@ -449,7 +455,7 @@
 
   * config/w32/gcc.cf
   * source/rtl/isprint.c
-  	! Cygwin fixes.
+   ! Cygwin fixes.
 
 2001-11-05 20:35 GMT+0700 Andi Jahja <andijahja@cbn.net.id>
   * source/rdd/workarea.c
