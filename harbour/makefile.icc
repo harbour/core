@@ -59,6 +59,7 @@ $(path_lib)\hbtools.lib: \
                 $(path_obj)\chrcount.obj \
                 $(path_obj)\chrfirst.obj \
                 $(path_obj)\chrtotal.obj \
+                $(path_obj)\dates2.obj \
                 $(path_obj)\datesx.obj \
                 $(path_obj)\debug.obj \
                 $(path_obj)\hb_f.obj \
@@ -93,6 +94,7 @@ $(path_obj)\classes.obj  : {$(path_c)}classes.c  $(path_h)\extend.h $(path_h)\hb
 $(path_obj)\codebloc.obj : {$(path_c)}codebloc.c $(path_h)\extend.h $(path_h)\hbdefs.h $(path_h)\itemapi.h
 $(path_obj)\copyfile.obj : {$(path_c)}copyfile.c $(path_h)\extend.h $(path_h)\hbdefs.h $(path_h)\itemapi.h $(path_h)\errorapi.h $(path_h)\error.ch $(path_h)\filesys.h $(path_h)\fileio.ch $(path_h)\filesys.api
 $(path_obj)\dates.obj    : {$(path_c)}dates.c    $(path_h)\extend.h $(path_h)\hbdefs.h $(path_h)\dates.h $(path_h)\set.h $(path_h)\errorapi.h $(path_h)\error.ch
+$(path_obj)\dates2.obj   : {$(path_c)}dates2.c   $(path_h)\extend.h $(path_h)\hbdefs.h
 $(path_obj)\datesx.obj   : {$(path_c)}datesx.c   $(path_h)\extend.h $(path_h)\hbdefs.h
 $(path_obj)\debug.obj    : {$(path_c)}debug.c    $(path_h)\extend.h $(path_h)\hbdefs.h $(path_h)\itemapi.h $(path_h)\ctoharb.h
 $(path_obj)\descend.obj  : {$(path_c)}descend.c  $(path_h)\extend.h $(path_h)\hbdefs.h

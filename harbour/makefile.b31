@@ -22,7 +22,7 @@ harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj copyfile.obj \
               set.obj strings.obj strcmp.obj symbols.obj tclass.obj \
               transfrm.obj
 
-hbtools.lib : datesx.obj debug.obj hb_f.obj io.obj mathx.obj \
+hbtools.lib : dates2.obj datesx.obj debug.obj hb_f.obj io.obj mathx.obj \
               stringp.obj stringsx.obj \
               asciisum.obj ascpos.obj atdiff.obj \
               chareven.obj charmix.obj charodd.obj \
@@ -76,6 +76,7 @@ msguk.obj    : source\rtl\natmsg\msguk.c extend.h hbdefs.h
 dynsym.obj   : source\vm\dynsym.c   extend.h hbdefs.h
 initsymb.obj : source\vm\initsymb.c extend.h hbdefs.h
 
+dates2.obj   : source\tools\dates2.c    extend.h hbdefs.h
 datesx.obj   : source\tools\datesx.c    extend.h hbdefs.h
 debug.obj    : source\tools\debug.c     extend.h hbdefs.h ctoharb.h itemapi.h
 hb_f.obj     : source\tools\hb_f.c      extend.h hbdefs.h filesys.api filesys.h fileio.ch

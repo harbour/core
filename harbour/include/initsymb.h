@@ -9,6 +9,7 @@
   Console__InitSymbols();
   CopyFile__InitSymbols();
   Dates__InitSymbols();
+  Dates2__InitSymbols();
   Descend__InitSymbols();
   Dir__InitSymbols();
   Environ__InitSymbols();

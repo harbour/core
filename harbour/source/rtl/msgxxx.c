@@ -6,6 +6,8 @@
 #include "natmsg/msgbas.c"
 #elif defined(HARBOUR_LANGUAGE_DUT)
 #include "natmsg/msgdut.c"
+#elif defined(HARBOUR_LANGUAGE_EO)
+#include "natmsg/msgeo.c"
 #elif defined(HARBOUR_LANGUAGE_GAL)
 #include "natmsg/msggal.c"
 #elif defined(HARBOUR_LANGUAGE_GER)

@@ -1,3 +1,35 @@
+19990718-14:00 CET Eddie Runia <eddie@runia.com>
+  * build32.bat
+    bldhbpp.bat called
+  * makefile.b16; makefile.b31; makefile.b32; makefile.icc; makefile.vc
+    dates2 included
+  * makedos.env
+    very strange error. msgxxx could not include natmsg/msguk.c.
+    I haven't seen this error before, -Isource/rtl was added to resolve
+    the problem
+  * source/rtl/dates.c; source/rtl/descend.c; source/rtl/hardcr.c;
+    source/rtl/mtran.c
+    Copyright Jose Lalin added
+  * source/rtl/msgxxx.c
+    Esparanto added
+  + source/rtl/natmsg/msgeo.c
+    Esparanto added
+  + source/tools/dates2.c
+    File from Jose Lalin added.
+    The following modification have been made :
+    * Symbol table added
+    * Bug as reported by Andi resolved
+    * Casts added to eliminate warnings produced by DJGPP
+  * source/rtl/makefile
+    dates.c added
+  * include/initsymb.h; source/runner/runner.c; source/vm/initsymb.c
+    Dates2 added to file list.
+  + tests/working/dates4.prg
+    Test program tools/dates2 added
+  + tests/working/run_all.bat
+    Batch file for testbench added. Will run test_all.prg and subsequently
+    run all symbols
+
 19990716-20:00 EDT David G. Holm <dholm@jsd-llc.com>
   * config/rules.cf
     + Added ifeq section for BCC, which requires that the output

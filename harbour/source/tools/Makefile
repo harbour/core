@@ -14,6 +14,7 @@ C_SOURCES=\
 	chrcount.c \
 	chrfirst.c \
 	chrtotal.c \
+        dates2.c \
 	datesx.c \
 	debug.c \
 	hb_f.c \

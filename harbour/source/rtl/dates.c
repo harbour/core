@@ -27,6 +27,11 @@
  *  The following functions are Copyright 1999 David G. Holm  <dholm@jsd-llc.com>:
  *     HB_CTOD(), HB_DATE(), hb_dtoc().
  *  See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
+ *
+ *  The following functions are Copyright 1999 Jose Lalin <dezac@corevia.com>:
+ *     hb__seconds(), HB_SECONDS(), hb_cmonth(), HB_CMONTH(), 
+ *     hb_cdow(), HB_CDOW(), HB_DAY(), HB_MONTH(), HB_YEAR(),
+ *     hb_dow(), HB_DOW()
 */
 
 #include <hbsetup.h>

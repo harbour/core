@@ -332,6 +332,9 @@ $(OBJ_DIR)\chrfirst.obj : $(TOOLS_DIR)\chrfirst.c
 $(OBJ_DIR)\chrtotal.obj : $(TOOLS_DIR)\chrtotal.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(OBJ_DIR)\dates2.obj : $(TOOLS_DIR)\dates2.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(OBJ_DIR)\datesx.obj : $(TOOLS_DIR)\datesx.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 

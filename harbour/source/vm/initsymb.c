@@ -15,6 +15,7 @@ extern void Classes__InitSymbols( void );
 extern void Console__InitSymbols( void );
 extern void CopyFile__InitSymbols( void );
 extern void Dates__InitSymbols( void );
+extern void Dates2__InitSymbols( void );
 extern void Descend__InitSymbols( void );
 extern void Dir__InitSymbols( void );
 extern void Environ__InitSymbols( void );
