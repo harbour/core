@@ -1,0 +1,8 @@
+# makefile for Borland C/C++ 16 bits
+
+PROJECT: hbpp.exe
+
+hbpp.exe : hbpp.c harb.c
+   \borlandc\bin\bcc -ml hbpp.c harb.c
+   del hbpp.obj
+   del harb.obj
