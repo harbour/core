@@ -77,8 +77,11 @@
  * hb_ntxTagGoToBottomKey()
  * hb_ntxTagKeyGoTo()
  * hb_ntxPageRelease()
- * keysmove()
+ * hb_ntxKeysMove()
  * hb_ntxPageSplit()
+ * hb_ntxPageJoin()
+ * hb_ntxPageBalance()
+ * hb_ntxTagBalance()
  * hb_ntxPageKeyDel()
  * hb_ntxTagKeyAdd()
  * hb_ntxSwapPageSave()
@@ -191,21 +194,20 @@ static int hb_ntxItemCompare( char* s1, char* s2, int ilen1, int ilen2, BOOL Exa
 #define KEYPOINTER(P,N) ( (USHORT*)((P)->buffer+(N)*2+2) )
 #define hb_ntxKeyFree(K) hb_xfree(K)
 
-/*
 static int hb_ntxKeysInPage( ULONG ulRecCount, USHORT maxkeys )
 {
-  LONG ulSum = 0;
+  ULONG ulSum = 0;
   int iLevel = 0;
   double _maxkeys = (double) maxkeys;
 
   do
   {
-     ulSum += maxkeys * (LONG) pow( _maxkeys, (double)iLevel );
+     ulSum += maxkeys * (ULONG) pow( _maxkeys, (double)iLevel );
      iLevel ++;
   }
   while( ulSum < ulRecCount );
+  return iLevel;
 }
-*/
 
 static void commonError( NTXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode, char* filename, USHORT uiFlags )
 {
@@ -1373,7 +1375,7 @@ static LPPAGEINFO hb_ntxPageNew( LPTAGINFO pParentTag )
    return pPage;
 }
 
-static void keysmove( LPPAGEINFO pPageDest, LPPAGEINFO pPageSrc, USHORT iDest, USHORT iSrc, USHORT iKeys )
+static void hb_ntxKeysMove( LPPAGEINFO pPageDest, LPPAGEINFO pPageSrc, USHORT iDest, USHORT iSrc, USHORT iKeys )
 {
    int i, keyLength = pPageDest->TagParent->KeyLength + 8;
    for( i=0;i<iKeys;i++ )
@@ -1381,37 +1383,169 @@ static void keysmove( LPPAGEINFO pPageDest, LPPAGEINFO pPageSrc, USHORT iDest, U
         pPageSrc->buffer+ *((USHORT*)(pPageSrc->buffer+(i+iSrc)*2+2)), keyLength );
 }
 
-/*
-static void hb_ntxTagBalance( LPPAGEINFO pPage )
+static BOOL hb_ntxPageJoin( LPPAGEINFO pPageParent, LPPAGEINFO pPage1, LPPAGEINFO pPage2, SHORT ikey1, SHORT ikey2 )
 {
-   LPTAGINFO pTag = pPage->TagParent;
+   int i;
+   USHORT ntmp;
 
-   if( pTag->stackLevel )
+   KEYITEM( pPage1, pPage1->uiKeys )->rec_no = KEYITEM( pPageParent, ikey1 )->rec_no;
+   strcpy( KEYITEM( pPage1, pPage1->uiKeys )->key,KEYITEM( pPageParent, ikey1 )->key );
+   KEYITEM( pPageParent, ikey2 )->page = pPage1->Page;
+
+   hb_ntxKeysMove( pPage1, pPage2, pPage1->uiKeys+1, 0, pPage2->uiKeys+1 );
+
+   pPage1->uiKeys += pPage2->uiKeys + 1;
+   pPage1->Changed = TRUE;
+   pPage2->uiKeys = 0;
+   pPage2->Changed = TRUE;
+   KEYITEM( pPage2, 0 )->page = pPage2->TagParent->Owner->NextAvail;
+   pPage2->TagParent->Owner->NextAvail = pPage2->Page;
+   hb_ntxHeaderSave( pPage2->TagParent->Owner, FALSE );
+
+   hb_ntxPageRelease( pPage1 );
+   hb_ntxPageRelease( pPage2 );
+
+   ntmp = *KEYPOINTER( pPageParent,ikey1 );
+   for( i=ikey1; i<=pPageParent->uiKeys; i++ )
+      *KEYPOINTER( pPageParent,i ) = *KEYPOINTER( pPageParent,i+1 );
+   *KEYPOINTER( pPageParent,pPageParent->uiKeys ) = ntmp;
+   pPageParent->uiKeys--;
+   pPageParent->Changed = TRUE;
+   if( pPageParent->uiKeys < pPage2->TagParent->MaxKeys/2 )
+      return FALSE;
+
+   return TRUE;
+
+}
+
+static void hb_ntxPageBalance( LPPAGEINFO pPageParent, LPPAGEINFO pPage1, LPPAGEINFO pPage2, SHORT ikey1, SHORT ikey2 )
+{
+   int i;
+   USHORT ntmp;
+   int nKeys = ( pPage1->uiKeys + pPage2->uiKeys ) / 2 - pPage1->uiKeys;
+
+   if( ikey2 > ikey1 )
    {
-      USHORT thiskey,pairkey;
+      /* printf( "\nntxPageBalance - 10 %d %d %d ",pPage1->uiKeys,pPage2->uiKeys,nKeys ); */
+      KEYITEM( pPage1, pPage1->uiKeys )->rec_no = KEYITEM( pPageParent, ikey1 )->rec_no;
+      strcpy( KEYITEM( pPage1, pPage1->uiKeys )->key,KEYITEM( pPageParent, ikey1 )->key );
+
+      hb_ntxKeysMove( pPage1, pPage2, pPage1->uiKeys+1, 0, nKeys-1 );
+
+      KEYITEM( pPageParent, ikey1 )->rec_no = KEYITEM( pPage2, nKeys-1 )->rec_no;
+      strcpy( KEYITEM( pPageParent, ikey1 )->key, KEYITEM( pPage2, nKeys-1 )->key );
+      KEYITEM( pPage1, pPage1->uiKeys+nKeys )->page = KEYITEM( pPage2, nKeys-1 )->page;
+
+      pPage2->uiKeys -= nKeys;
+      for( i=0; i<=pPage2->uiKeys; i++ )
+      {
+         ntmp = *KEYPOINTER( pPage2,i );
+         *KEYPOINTER( pPage2,i ) = *KEYPOINTER( pPage2,i+nKeys );
+         *KEYPOINTER( pPage2,i+nKeys ) = ntmp;
+      }
+   }
+   else
+   {
+      /* printf( "\nntxPageBalance - 20 %d",nKeys ); */
+      for( i=pPage1->uiKeys; i>=0; i-- )
+      {
+         ntmp = *KEYPOINTER( pPage1,i+nKeys );
+         *KEYPOINTER( pPage1,i+nKeys ) = *KEYPOINTER( pPage1,i );
+         *KEYPOINTER( pPage1,i ) = ntmp;
+      }
+
+      KEYITEM( pPage1, nKeys-1 )->rec_no = KEYITEM( pPageParent, ikey2 )->rec_no;
+      strcpy( KEYITEM( pPage1, nKeys-1 )->key,KEYITEM( pPageParent, ikey2 )->key );
+      KEYITEM( pPage1, nKeys-1 )->page = KEYITEM( pPage2, pPage2->uiKeys )->page;
+
+      pPage2->uiKeys -= nKeys;
+      hb_ntxKeysMove( pPage1, pPage2, 0, pPage2->uiKeys+1, nKeys-1 );
+
+      KEYITEM( pPageParent, ikey2 )->rec_no = KEYITEM( pPage2, pPage2->uiKeys )->rec_no;
+      strcpy( KEYITEM( pPageParent, ikey2 )->key, KEYITEM( pPage2, pPage2->uiKeys )->key );
+   }
+   pPage1->uiKeys += nKeys;
+   pPage1->Changed = TRUE;
+   pPage2->Changed = TRUE;
+   pPageParent->Changed = TRUE;
+   hb_ntxPageRelease( pPage1 );
+   hb_ntxPageRelease( pPage2 );
+   hb_ntxPageRelease( pPageParent );
+}
+
+static void hb_ntxTagBalance( LPTAGINFO pTag, int level )
+{
+
+   if( pTag->stackLevel > level )
+   {
+      SHORT thiskey,pairkey;
       LPPAGEINFO pPagePair;
-      LPPAGEINFO pPageParent = hb_ntxPageLoad( pTag->Owner,
-                                      pTag->stack[1].page );
-      thiskey = pairkey = pTag->stack[1].ikey;
+      LPPAGEINFO pPage = hb_ntxPageLoad( pTag->Owner, pTag->stack[level].page );
+      LPPAGEINFO pPageParent = hb_ntxPageLoad( pTag->Owner, pTag->stack[level+1].page );
+
+      /* printf( "\nntxTagBalance - 0, %d %d %x %x",pTag->stackLevel,level,pPageParent->Page,pPage->Page ); */
+      thiskey = pairkey = pTag->stack[level+1].ikey;
       do
          pairkey ++;
       while( pairkey <= pPageParent->uiKeys && !KEYITEM( pPageParent, pairkey )->page );
-      if( pairkey > pPageParent->uiKeys )
+      if( pairkey > pPageParent->uiKeys && thiskey >= pPageParent->uiKeys-1 )
       {
         pairkey = thiskey;
         do
            pairkey --;
         while( pairkey >= 0 && !(KEYITEM( pPageParent, pairkey )->page) );
-        if( pairkey < 0 )
+        if( pairkey < 0 && thiskey == 0 )
         {
            hb_ntxPageRelease( pPageParent );
            return;
         }
-        pPagePair = hb_ntxPageLoad( pTag->Owner, pairkey );
+        if( thiskey - pairkey > 1 )
+        {
+           hb_ntxPageRelease( pPageParent );
+        }
+        else
+        {
+           pPagePair = hb_ntxPageLoad( pTag->Owner, KEYITEM( pPageParent, pairkey )->page );
+           if( pPagePair->uiKeys <= pTag->MaxKeys/2 )
+           {
+              /* printf( "\nntxTagBalance - 10, %d %d",thiskey,pairkey ); */
+              if( !hb_ntxPageJoin( pPageParent,pPagePair,pPage,pairkey,thiskey ) )
+                 hb_ntxTagBalance( pTag, level+1 );
+              hb_ntxPageRelease( pPageParent );
+           }
+           else
+           {
+              /* printf( "\nntxTagBalance - 20, %d %d",thiskey,pairkey ); */
+              hb_ntxPageBalance( pPageParent, pPage,pPagePair,thiskey,pairkey );
+           }
+        }
+      }
+      else
+      {
+         if( pairkey - thiskey > 1 )
+         {
+           hb_ntxPageRelease( pPageParent );
+         }
+         else
+         {
+           pPagePair = hb_ntxPageLoad( pTag->Owner, KEYITEM( pPageParent, pairkey )->page );
+           /* printf( "\nntxTagBalance - 3A %x %x %x %d",pPageParent->Page,pPage->Page,pPagePair->Page,pPagePair->uiKeys ); */
+           if( pPagePair->uiKeys <= pTag->MaxKeys/2 )
+           {
+              /* printf( "\nntxTagBalance - 30, %d %d",thiskey,pairkey ); */
+              if( !hb_ntxPageJoin( pPageParent,pPage,pPagePair,thiskey,pairkey ) )
+                 hb_ntxTagBalance( pTag, level+1 );
+              hb_ntxPageRelease( pPageParent );
+           }
+           else
+           {
+              /* printf( "\nntxTagBalance - 40, %d %d",thiskey,pairkey ); */
+              hb_ntxPageBalance( pPageParent, pPage,pPagePair,thiskey,pairkey );
+           }
+         }
       }
    }
 }
-*/
 
 static void hb_ntxPageKeyInsert( LPPAGEINFO pPage, LPKEYINFO pKey, int pos )
 {
@@ -1434,50 +1568,71 @@ static void hb_ntxPageKeyInsert( LPPAGEINFO pPage, LPKEYINFO pKey, int pos )
 
 static LPKEYINFO hb_ntxPageKeyDel( LPPAGEINFO pPage, SHORT pos, USHORT level )
 {
+   int i;
    LPKEYINFO pKey = NULL;
+   LPTAGINFO pTag = pPage->TagParent;
 
    if( KEYITEM( pPage, pos )->page )
    {
-      LPPAGEINFO pPageChild = hb_ntxPageLoad( pPage->TagParent->Owner,KEYITEM( pPage, pos )->page );
+      LPPAGEINFO pPageChild = hb_ntxPageLoad( pTag->Owner,KEYITEM( pPage, pos )->page );
       LPKEYINFO pKeyNew = NULL;
+      SHORT CurKey = ( KEYITEM( pPageChild, pPageChild->uiKeys )->page )? 
+                           pPageChild->uiKeys : pPageChild->uiKeys-1;
 
-      /* printf( "\nhb_ntxPageKeyDel-1 %d %d %d",level,pos,pPage->Page ); */
-      pKey = hb_ntxPageKeyDel( pPageChild, 
-              ( KEYITEM( pPageChild, pPageChild->uiKeys )->page )? 
-                   pPageChild->uiKeys : pPageChild->uiKeys-1, level + 1 );
+      /* printf( "\nhb_ntxPageKeyDel-1 %d %d %x",level,pos,pPage->Page ); */
+      for( i=pTag->stackLevel; i>=0; i-- )
+      {
+         pTag->stack[i+1].page = pTag->stack[i].page;
+         pTag->stack[i+1].ikey = pTag->stack[i].ikey;
+      }
+      if( ++(pTag->stackLevel) >= pTag->stackDepth )
+      {
+         pTag->stackDepth += 32;
+         pTag->stack = (LPTREESTACK) hb_xrealloc( pTag->stack,
+                sizeof(TREE_STACK) * pTag->stackDepth );
+      }
+      pTag->stack[0].page = pPageChild->Page;
+      pTag->stack[0].ikey = CurKey;
+
+      pKey = hb_ntxPageKeyDel( pPageChild, CurKey,level+1 );
       hb_ntxPageRelease( pPageChild );
       if( level > 1 )
       {
          if( pos == pPage->uiKeys )
+         {
+            pKey->Tag = pPage->Page;
+            /* printf( "\nhb_ntxPageKeyDel-A %d %x",pKey->Xtra,pPage->Page ); */
             return pKey;
+         }
          else
          {
-            pKeyNew = hb_ntxKeyNew( NULL,pPage->TagParent->KeyLength );
+            pKeyNew = hb_ntxKeyNew( NULL,pTag->KeyLength );
             strcpy( pKeyNew->key, KEYITEM( pPage, pos )->key );
             pKeyNew->Xtra = KEYITEM( pPage, pos )->rec_no;
             pKeyNew->Tag = pPage->Page;
+            /* printf( "\nhb_ntxPageKeyDel-B %d %x",pKeyNew->Xtra,pPage->Page ); */
          }
       }
       strcpy( KEYITEM( pPage, pos )->key, pKey->key );
       KEYITEM( pPage, pos )->page = pKey->Tag;
       KEYITEM( pPage, pos )->rec_no = pKey->Xtra;
+      /* printf( "\nhb_ntxPageKeyDel-C %d %x",pKey->Xtra,pKey->Tag ); */
       pPage->Changed = TRUE;
       hb_ntxKeyFree( pKey );
       return pKeyNew;
    }
    else
    {
-      /* printf( "\nhb_ntxPageKeyDel-2 %d %d %d",level,pos,pPage->Page ); */
+      /* printf( "\nhb_ntxPageKeyDel-2 %d %d %x",level,pos,pPage->Page ); */
       if( level > 1 )
       {
-         pKey = hb_ntxKeyNew( NULL,pPage->TagParent->KeyLength );
+         pKey = hb_ntxKeyNew( NULL,pTag->KeyLength );
          strcpy( pKey->key, KEYITEM( pPage, pos )->key );
          pKey->Xtra = KEYITEM( pPage, pos )->rec_no;
          pKey->Tag = pPage->Page;
       }
       else
       {
-         int i;
          USHORT ntmp = *KEYPOINTER( pPage,pos );
          for( i=pos; i<=pPage->uiKeys; i++ )
             *KEYPOINTER( pPage,i ) = *KEYPOINTER( pPage,i+1 );
@@ -1485,15 +1640,19 @@ static LPKEYINFO hb_ntxPageKeyDel( LPPAGEINFO pPage, SHORT pos, USHORT level )
       }
       pPage->uiKeys--;
       pPage->Changed = TRUE;
+      if( pPage->uiKeys < pTag->MaxKeys/2 )
+         pTag->stack[0].ikey = -1;
+      /*
       if( !pPage->uiKeys )
       {
          if( pKey )
             pKey->Tag = 0;
-         KEYITEM( pPage, 0 )->page = pPage->TagParent->Owner->NextAvail;
-         // pPage->pKeys->Tag = pPage->TagParent->Owner->NextAvail;
-         pPage->TagParent->Owner->NextAvail = pPage->Page;
-         hb_ntxHeaderSave( pPage->TagParent->Owner, FALSE );
+         KEYITEM( pPage, 0 )->page = pTag->Owner->NextAvail;
+         // pPage->pKeys->Tag = pTag->Owner->NextAvail;
+         pTag->Owner->NextAvail = pPage->Page;
+         hb_ntxHeaderSave( pTag->Owner, FALSE );
       }
+      */
       return pKey;
    }
 }
@@ -1510,7 +1669,7 @@ static LPKEYINFO hb_ntxPageSplit( LPPAGEINFO pPage, LPKEYINFO pKey, int pos )
    {
       /* Move to the new page the keys, less than inserted */
       if( pos )
-         keysmove( pNewPage, pPage, 0, 0, pos );
+         hb_ntxKeysMove( pNewPage, pPage, 0, 0, pos );
       if( pos < iHalf )
       {
          /* Copy the inserted key  */
@@ -1518,7 +1677,7 @@ static LPKEYINFO hb_ntxPageSplit( LPPAGEINFO pPage, LPKEYINFO pKey, int pos )
          strcpy( KEYITEM( pNewPage, pos )->key, pKey->key );
          KEYITEM( pNewPage, pos )->page = pKey->Tag;
          /* Move to the new page the keys, greater than inserted */
-         keysmove( pNewPage, pPage, pos+1, pos, iHalf-pos-1 );
+         hb_ntxKeysMove( pNewPage, pPage, pos+1, pos, iHalf-pos-1 );
          /* Create key for the parent page  */
          pKeyNew->Xtra = KEYITEM( pPage,iHalf-1 )->rec_no;
          pKeyNew->Tag = pNewPage->Page;
@@ -1548,7 +1707,7 @@ static LPKEYINFO hb_ntxPageSplit( LPPAGEINFO pPage, LPKEYINFO pKey, int pos )
    else
    {
       /* Move to the new page the first half */
-      keysmove( pNewPage, pPage, 0, 0, iHalf );
+      hb_ntxKeysMove( pNewPage, pPage, 0, 0, iHalf );
       /* Create key for the parent page  */
       pKeyNew->Xtra = KEYITEM( pPage,iHalf )->rec_no;
       pKeyNew->Tag = pNewPage->Page;
@@ -2906,10 +3065,9 @@ static ERRCODE ntxGoCold( NTXAREAP pArea )
                   pPage = hb_ntxPageLoad( pTag->Owner,pTag->CurKeyInfo->Tag );
                   pPage->CurKey =  hb_ntxPageFindCurrentKey( pPage,pTag->CurKeyInfo->Xtra ) - 1;
                   hb_ntxPageKeyDel( pPage, pPage->CurKey, 1 );
-                  /*
-                  if( pPage->uiKeys < pTag->MaxKeys/2 )
-                     hb_ntxTagBalance( pPage );
-                  */
+                  if( pTag->stack[0].ikey < 0 )
+                     hb_ntxTagBalance( pTag,0 );
+                  hb_ntxPageRelease( pPage );
                   if( !pArea->fShared && pTag->keyCount &&
                         hb_ntxInTopScope( pTag, pKeyOld->key ) &&
                         hb_ntxInBottomScope( pTag, pKeyOld->key ) )
