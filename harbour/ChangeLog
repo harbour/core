@@ -7,6 +7,19 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+    ! Bug fixed in ntxGoBottom(), reported by Lorenzo Fiorini
+2002-01-25 22:30 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+     * minor fixes related to strings sharing
+
+   * harbour/source/vm/hvm.c
+     + hb_vmPushStringPcode() implementation and use since HB_P_PUSHSTR
+       and HB_P_PUSHSTRSHORT.
+     * hb_vmPlus() and hb_vmMinus() adapted to strings sharing
+     * hb_vmPushString() adapted to strings sharing
+
+   * harbour/source/vm/itemapi.c
+     * hb_itemPutC(), hb_itemPutCL(), hb_itemPutCPtr(), hb_itemCopy(), hb_itemClear()
+       adapted to strings sharing and strings pcode based
 
    Based on an original idea from Ron Pinkas. Some little portions
    are borrowed from xHarbour.
