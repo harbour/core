@@ -569,6 +569,14 @@ void hb_verBuildInfo( void )
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
 
+   hb_conOutErr( "Memory tracing and statistics: ", 0 );
+#if defined( HB_FM_STATISTICS )
+   hb_conOutErr( "On", 0 );
+#else
+   hb_conOutErr( "Off", 0 );
+#endif
+   hb_conOutErr( hb_conNewLine(), 0 );
+
    {
       char buffer[ 64 ];
       sprintf( buffer, "Maximum symbol name length: %i", HB_SYMBOL_NAME_LEN );

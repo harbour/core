@@ -1,3 +1,12 @@
+2001-11-20 20:11 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * doc/howtomak.txt
+     * Changed the requirement to Bison 1.28
+
+   * source/common/hbver.c
+     + Displays the HB_FM_STATISTICS setting in the /BUILD or //BUILD
+       switches.
+
 2001-11-20 08:18 GMT Dave Pearson <davep@davep.org>
    * source/rtl/gtsln/Makefile
    * source/rtl/gtsln/gtsln.c
