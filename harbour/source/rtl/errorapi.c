@@ -59,16 +59,20 @@ WORD hb_errLaunch( PHB_ITEM pError )
          exit( 1 ); /* TODO: quit correctly */
       }
 
+      /* NOTE: This must be called before the hb_vm*() calls */
+      uiFlags = hb_errGetFlags( pError );
+
       hb_vmPushSymbol( &symEval );
       hb_vmPush( &errorBlock );
       hb_vmPush( pError );
       hb_vmDo( 1 );
 
+      /* NOTE: Don't make any hb_vm*() calls here, since they may screw up */
+      /*       the stack.return value */
+
       /* TODO: Detect these properly */
       bBreak = FALSE;
       nSequenceLevel = 0;
-
-      uiFlags = hb_errGetFlags( pError );
 
       if ( bBreak )
       {

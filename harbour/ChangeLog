@@ -1,3 +1,8 @@
+19990816-15:30 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/errorapi.c
+    ! Fixed hb_errLaunch() so that it will handle error handler return
+      values correctly. NOTEs added about this.
+
 19990816-13:30 CET Eddie Runia <eddie@runia.com>
   * source/compiler/harbour.y
     EndProc error resolved.
