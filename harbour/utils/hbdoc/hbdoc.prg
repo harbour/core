@@ -120,6 +120,7 @@ MEMVAR lRtf
 MEMVAR lNgi
 MEMVAR lOs2
 MEMVAR lWww
+MEMVAR lChm
 MEMVAR lNorton
 MEMVAR aWWW
 MEMVAR lTroff
@@ -148,6 +149,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    LOCAL cCompiler     // Compiler type
    LOCAL oHtm
    LOCAL oHtm1
+   LOCAL nPos
    LOCAL ppp
    LOCAL aMetaContents:={}
    PUBLIC theHandle
@@ -162,6 +164,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    PUBLIC lNgi        := .F.
    PUBLIC lOs2        := .F.
    PUBLIC lWww        := .F.
+   PUBLIC lChm        := .F.
    PUBLIC lNorton     := .F.
    PUBLIC aWWW        := {}
    PUBLIC lTroff      := .f.
@@ -196,6 +199,8 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
             lRtf := .T.
          ELSEIF cFlags = "HTM"
             lWww := .T.
+         ELSEIF cFlags = "CHM"
+            lChm := .T.
          ELSEIF cFlags = "TRF"
             lTroff := .t.
          ELSEIF cFlags = "DOC"
@@ -225,6 +230,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       ? "          /rtf Winhelp source code for Windows"
       ? "          /os2 OS/2 help source code For OS/2"
       ? "          /htm Generate HTML output"
+      ? "          /chm Generate HTML source files for Windows .CHM Help files"
       ? "          /trf Gerenate Linux TROFF code"
       ? "          /doc Create continuous ASCII file w/o author information"
       ? " "
@@ -249,8 +255,9 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    CLEAR SCREEN
    SET CURSOR OFF
    ReadLinkFile( cLinkName )
+   if lNgi
    cCompiler := fill_Link_info( cLinkName )
-
+   endif        
    //  See if ngi subdirectory is present
    IF lNorton
       IF EMPTY( DIRECTORY( "hdf.*", "D" ) )
@@ -264,6 +271,11 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       IF EMPTY( DIRECTORY( "htm.*", "D" ) )
          FT_MKDIR( "htm" )
       ENDIF
+   ELSEIF lChm
+      IF EMPTY( DIRECTORY( "chm.*", "D" ) )
+         FT_MKDIR( "chm" )
+      ENDIF
+
    ELSEIF lNgi
       IF EMPTY( DIRECTORY( "ngi.*", "D" ) )
          FT_MKDIR( "ngi" )
@@ -300,6 +312,8 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
                ProcessRtf()
             ELSEIF lWww
                ProcessWww()
+            ELSEIF lChm
+               ProcessChm()
             ELSEIF lNgi
                ProcessiNg()
             ELSEIF lTroff
@@ -326,6 +340,8 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
             ProcessRtf()
          ELSEIF lWww
             ProcessWww()
+         ELSEIF lChm
+            ProcessChm()
          ELSEIF lNgi
             ProcessiNg()
          ELSEIF lTroff
@@ -356,7 +372,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    ELSEIF lRTF
       @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "WINHELP" ) ;         
               + " input files"
-   ELSEIF lWww
+   ELSEIF lWww .or. lChm
       @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "Html" ) ;         
               + " input files"
    ELSEIF lNgi
@@ -421,12 +437,12 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       FWRITE( nHpj, 'TITLE='+cTitle + CRLF )
       FWRITE( nHpj, 'COPYRIGHT=Harbour (C) http://www.harbour-project.org' + CRLF )
       FWRITE( nHpj, 'HLP=.\'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hlp"+ CRLF )
-      FWRITE( nHpj, 'ROOT=' + CURDIR() + "\RTF" + CRLF )
+      FWRITE( nHpj, 'ROOT=\' + CURDIR() + "\RTF" + CRLF )
       FWRITE( nHpj, 'CNT=.\Harbour.cnt' + CRLF )
       FWRITE( nHpj, '[FILES]' + CRLF )
       FWRITE( nHpj, "harbour.rtf" + CRLF )
       FWRITE( nHpj, '[CONFIG]' + CRLF + 'contents()' + CRLF + 'prev()' + CRLF + 'next()' + CRLF + 'BrowseButtons()' + CRLF )
-      FWRITE( nHpj, '[WINDOWS]' + CRLF + 'Commands="Harbour Commands",(653,102,360,600),20736,(r14876671),(r12632256),f3' + CRLF + 'Error="Harbour Run Time Errors",(653,102,360,600),20736,(r14876671),(r12632256),f3' + CRLF + 'Tools="Harbour Tools",(653,102,360,600),20736,(r14876671),(r12632256),f3' + CRLF + 'Class="Harbour OOP Commands",(653,102,360,600),20736,(r14876671),(r12632256),f3' + CRLF + 'Funca="Harbour Run Time Functions A-M",(653,102,360,600),20736,(r14876671),(r12632256),f3' + CRLF + 'Funcn="Harbour Run Time Functions N-_",(653,102,360,600),20736,(r14876671),(r12632256),f3' + CRLF + 'Main="HARBOUR",(117,100,894,873),60672,(r14876671),(r12632256),f3' + CRLF )
+      FWRITE( nHpj, '[WINDOWS]' + CRLF + 'Commands="Harbour Commands",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Error="Harbour Run Time Errors",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Tools="Harbour Tools",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Class="Harbour OOP Commands",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Funca="Harbour Run Time Functions A-M",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Funcn="Harbour Run Time Functions N-_",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Main="HARBOUR",(117,100,894,873),60672,(r14876671),(r12632256),f2' + CRLF )
       FCLOSE( nHpj )
    ELSEIF lWWW
 
@@ -543,6 +559,26 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       oHtm:WriteText( "</ul>" )
       */
       oHtm:Close()
+   ELSEIF lChm
+      nHpj := FCREATE( 'chm\'+lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hhp" )
+
+      FWRITE( nHpj, '[OPTIONS]' + CRLF )
+      FWRITE( nHpj, 'Compatibility=1.1 or later'+CRLF)
+      FWRITE( nHpj, 'Language=0x416 Português (brasileiro)' + CRLF )
+      FWRITE( nHpj, 'compiled file=.\'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".chm"+ CRLF )
+      FWRITE( nHpj, 'Display compile progress=No'+CRLF)
+      nPos:=aScan(awww,{|x| Upper(x[1])="OVERVIEW"})
+      if nPos > 0
+         FWRITE( nHpj,'Default topic='+awww[npos,2]+CRLF)
+      Else
+         FWRITE( nHpj,'Default topic='+awww[1,2]+CRLF)
+      Endif
+      FWRITE( nHpj, '[FILES]' + CRLF )
+      For nPos:=1 to len(aWww)
+         FWRITE( nHpj, lower(awww[npos,2])+".htm" + CRLF )
+      Next
+      FCLOSE( nHpj )
+
    ELSEIF lNgi
       SET ALTERNATE TO "assembl.bat" ADDITIVE
       SET ALTERNATE ON

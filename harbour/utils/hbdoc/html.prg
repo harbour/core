@@ -4,7 +4,8 @@
 
 /*
  * Harbour Project source code:
- * HTML Support Code For FT_HELPC
+ * HTML Support Code For HBDOC
+ * HTML .CMH support code for HBDOC
  *
  * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -56,7 +57,12 @@ CLASS THTML
    METHOD WriteText( cText )
    METHOD WriteMetaTag(cTag,cDescription)
    METHOD CLOSE()
-
+   // The Follow methods is for html source files for .CHM help
+   METHOD NewChm( cFile ,aMetaContents,cFuncName)
+   METHOD ADDoBJECT(cType,cClassid)
+   METHOD ADDPARAM(cName,cValue)
+   METHOD EndOBJect()
+   METHOD NewContent(cFile)
 ENDCLASS
 
 METHOD New( cFile,aMetaContents ) CLASS THTML
@@ -84,7 +90,7 @@ RETURN Self
 
 METHOD WriteTitle( cTitle ) CLASS THTML
 
-   FWRITE( Self:nHandle, "<TITLE>" + CRLF + cTitle + CRLF + "</Title>" + CRLF + '</HEAD>' + CRLF + '<body bgcolor="#FFFFFF">' + CRLF )
+   FWRITE( Self:nHandle, "<TITLE>" + CRLF + cTitle + CRLF + "</Title>" + CRLF + '</HEAD>' + CRLF  )
 
 RETURN Self
 
@@ -156,4 +162,60 @@ METHOD WriteMetaTag(cTag,cDescription) Class THtml
     fWrite(Self:nHandle,'<META NAME="'+cTag+'" CONTENT="'+cDescription+'">'+CRLF)
 return Self
 
+/////////////////////Method for .CHM html source files support////////////////
+METHOD NewChm( cFile ,aMetaContents,cFuncName) CLASS THTML
+    
+   Local nCount
+   ? Valtype(aMetaContents)
+   IF Nx > 0
+      FCLOSE( NX )
+   ENDIF
+
+   IF VALTYPE( cFile ) <> NIL .AND. VALTYPE( cFile ) == "C"
+      Self:cFile   := LOWER( cFile )
+      Self:nHandle := FCREATE( Self:cFile )
+   ENDIF
+   nX := Self:nHandle
+   FWRITE( Self:nHandle, "<HTML>" + CRLF +"<HEAD>" +CRLF)
+   if Valtype(aMetaContents) <> NIL .and. Valtype(aMetaContents)=="A"
+   For nCount:=1 to len(aMetaContents)
+      Self:WriteMetaTag(aMetaContents[nCount,1],aMetaContents[nCount,2])
+   NEXT
+    Endif
+   ::WriteTitle(cFuncName)
+
+   FWRITE( Self:nHandle, '<BODY BGCOLOR="#FFFFFF" TEXT="#000000">' + CRLF )
+   ::AddObject("application/x-oleobject","clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e")
+   ::ADDPARAM("Keyword",cFuncName)
+   ::ENDOBJECT()
+RETURN Self
+
+method ADDOBJECT(cType,cClassId) Class THTML
+   IF VALTYPE(cClassId)<>NIL
+      FWRITE( Self:nHandle,'<OBJECT TYPE="'+cType+'" CLASSID="'+cClassId+'">'+CRLF)
+   ELSE
+      FWRITE( Self:nHandle,'<OBJECT TYPE="'+cType+'">'+CRLF)
+   ENDIF
+RETURN Self
+METHOD  ENDOBJECT() Class THTML
+   FWRITE( Self:nHandle,"</OBJECT>"+CRLF)
+RETURN Self
+METHOD ADDPARAM(cType,cValue) Class THTML
+   FWRITE( Self:nHandle,'<PARAM NAME="'+cType+ '" VALUE="'+cValue +'">'  +CRLF)
+RETURN Self
+
+METHOD NewContent( cFile ) CLASS THTML
+    
+   Local nCount
+   IF Nx > 0
+      FCLOSE( NX )
+   ENDIF
+
+   IF VALTYPE( cFile ) <> NIL .AND. VALTYPE( cFile ) == "C"
+      Self:cFile   := LOWER( cFile )
+      Self:nHandle := FCREATE( Self:cFile )
+   ENDIF
+   nX := Self:nHandle
+   FWRITE( Self:nHandle, "<HTML>" + CRLF )
+RETURN Self
 *+ EOF: HTML.PRG
