@@ -1,0 +1,77 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      Macro compiler
+ *  $CATEGORY$
+ *      Document
+ *  $ONELINER$
+ *      Macro compiler
+ *  $DESCRIPTION$
+ *
+ *      <b>Invoking the macro compiler:  </b> </par>
+ *      ==============================   </par>
+ *
+ *         &variable   </par>
+ *      or                                  </par>
+ *         &( expression ) <file[.prg]>   </par>
+ *      or   </par>
+ *         &variable.text   </par>
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      HB_SETMACRO()
+ *  $CATEGORY$
+ *      Macro compiler
+ *  $ONELINER$
+ *      Enable/disable the macro compiler runtime features.
+ *  $SYNTAX$
+ *      HB_SETMACRO(<nOption> [, <lOnOff>]) --> <lOldSetting>
+ *  $ARGUMENTS$
+ *      <nOption> A constant defined in set.ch.
+        <lOnOff> .T. to enable or .F. to disable a feature
+ *  $RETURNS$
+ *      <lOldSetting> The old state of requested feature.
+ *  $DESCRIPTION$
+ *      This function enables or disables some features of the macro 
+ *      compiler. The Harbour is extending the macro features compared
+ *      to an original set available in Clipper. Enabling/disabling
+ *      some of them allows to keep strict Clipper compatibility.
+ *
+ *      Available features are:
+ *      <b>HB_SM_HARBOUR</b> - enables harbour extensions: 
+ *            operators: ++, --, +=, -=, *=, /=, ^=
+ *            objects: assigments to an instance variable
+ *      <b>HB_SM_XBASE</b> - enables other xbase dialects extensions:
+ *            expanding of expresions lists
+ *      <b>HB_SM_SHORTCUTS</b> - enables optimized evaluation of
+ *            logical operators (.and., .or.)
+ *      <b>HB_SM_PREPROC</b> - enables preprocessing of commands
+ *            This is meaningfull if Harbour is compiled with
+ *            HB_MACRO_STATEMENTS flag
+ *
+ *  $EXAMPLES$
+ *      INIT PROCEDURE IWANTCLIPPER()
+ *        HB_SETMACRO( HB_SM_HARBOUR, .F. )
+ *        HB_SETMACRO( HB_SM_XBASE, .F. )
+ *      RETURN
+ *
+ *  </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is Harbour extension.
+ *  $PLATFORMS$
+ *      All
+ *  $FILES$
+ *      Library is macro
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+

@@ -80,6 +80,9 @@
    void hb_compExprUseAliasMacro( HB_EXPR_PTR, BYTE, HB_MACRO_DECL );
    void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_MACRO_DECL );
    ULONG hb_compExprReduceList( HB_EXPR_PTR, HB_MACRO_DECL );
+   
+   #define HB_SUPPORT_XBASE     ( HB_COMP_ISSUPPORTED(HB_SM_XBASE) )
+   #define HB_SUPPORT_HARBOUR   ( HB_COMP_ISSUPPORTED(HB_SM_HARBOUR) )
 #else
    void hb_compExprDelOperator( HB_EXPR_PTR );
    void hb_compExprUseOperEq( HB_EXPR_PTR, BYTE );
@@ -89,7 +92,11 @@
    void hb_compExprUseAliasMacro( HB_EXPR_PTR, BYTE );
    void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq );
    ULONG hb_compExprReduceList( HB_EXPR_PTR );
+   
+   #define HB_SUPPORT_XBASE     ( HB_COMP_ISSUPPORTED(HB_COMPFLAG_XBASE) )
+   #define HB_SUPPORT_HARBOUR   ( HB_COMP_ISSUPPORTED(HB_COMPFLAG_HARBOUR) )
 #endif
+
 
 HB_EXPR_PTR hb_compExprReduceMod( HB_EXPR_PTR pSelf, HB_MACRO_DECL );
 HB_EXPR_PTR hb_compExprReduceDiv( HB_EXPR_PTR pSelf, HB_MACRO_DECL );
@@ -396,6 +403,15 @@ static HB_EXPR_FUNC( hb_compExprUseCodeblock )
             pPrev = &pSelf->value.asList.pExprList;
             while( pExpr )
             {
+               if( pExpr->ExprType == HB_ET_MACRO )
+               {
+                  /* Clipper allows for list expressions in a codeblock 
+                   * macro := "1,2"
+                   * EVAL( {|| &macro} )
+                  */
+                  pExpr->value.asMacro.SubType |= HB_ET_MACRO_PARE;
+               }
+
                /* store next expression in case the current  will be reduced
                 * NOTE: During reduction the expression can be replaced by the
                 *    new one - this will break the linked list of expressions.
@@ -531,14 +547,17 @@ static HB_EXPR_FUNC( hb_compExprUseArray )
             BOOL bMacroList = FALSE;
 
             /* Find out if macro is used as on of the elements- if so generate a prefix HB_P_MACROLIST. */
-            while( pElem )
+            if( HB_SUPPORT_XBASE )
             {
-               if( pElem->ExprType == HB_ET_MACRO )
+               while( pElem )
                {
-                   pElem->value.asMacro.SubType |= HB_ET_MACRO_LIST;
-                   bMacroList = TRUE;
+                  if( pElem->ExprType == HB_ET_MACRO )
+                  {
+                      pElem->value.asMacro.SubType |= HB_ET_MACRO_LIST;
+                      bMacroList = TRUE;
+                  }
+                  pElem = pElem->pNext;
                }
-               pElem = pElem->pNext;
             }
 
             if( bMacroList )
@@ -738,11 +757,14 @@ static HB_EXPR_FUNC( hb_compExprUseList )
    {
       case HB_EA_REDUCE:
          {
-            if( hb_compExprListLen( pSelf ) == 1 )
+            if( HB_SUPPORT_XBASE )
             {
-               if( pSelf->value.asList.pExprList->ExprType == HB_ET_MACRO )
+               if( hb_compExprListLen( pSelf ) == 1 )
                {
-                  pSelf->value.asList.pExprList->value.asMacro.SubType |= HB_ET_MACRO_PARE;
+                  if( pSelf->value.asList.pExprList->ExprType == HB_ET_MACRO )
+                  {
+                     pSelf->value.asList.pExprList->value.asMacro.SubType |= HB_ET_MACRO_PARE;
+                  }
                }
             }
 
@@ -784,9 +806,12 @@ static HB_EXPR_FUNC( hb_compExprUseList )
             {
                while( pExpr )
                {
-                  if( pExpr->ExprType == HB_ET_MACRO )
+                  if( HB_SUPPORT_XBASE )
                   {
-                      pExpr->value.asMacro.SubType |= HB_ET_MACRO_PARE;
+                     if( pExpr->ExprType == HB_ET_MACRO )
+                     {
+                        pExpr->value.asMacro.SubType |= HB_ET_MACRO_PARE;
+                     }
                   }
 
                   if( pExpr->pNext )
@@ -809,9 +834,12 @@ static HB_EXPR_FUNC( hb_compExprUseList )
 
             while( pExpr )
             {
-               if( pExpr->ExprType == HB_ET_MACRO )
+               if( HB_SUPPORT_XBASE )
                {
-                   pExpr->value.asMacro.SubType |= HB_ET_MACRO_PARE;
+                  if( pExpr->ExprType == HB_ET_MACRO )
+                  {
+                      pExpr->value.asMacro.SubType |= HB_ET_MACRO_PARE;
+                  }
                }
 
                HB_EXPR_USE( pExpr, HB_EA_PUSH_POP );
@@ -968,9 +996,12 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
          {
             HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
 
-            if( pSelf->value.asList.pIndex->ExprType == HB_ET_MACRO )
+            if( HB_SUPPORT_XBASE )
             {
-                pSelf->value.asList.pIndex->value.asMacro.SubType |= HB_ET_MACRO_INDEX;
+               if( pSelf->value.asList.pIndex->ExprType == HB_ET_MACRO )
+               {
+                   pSelf->value.asList.pIndex->value.asMacro.SubType |= HB_ET_MACRO_INDEX;
+               }
             }
             HB_EXPR_USE( pSelf->value.asList.pIndex, HB_EA_PUSH_PCODE );
 
@@ -1051,23 +1082,32 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
             {
                if( pSelf->value.asMacro.SubType & HB_ET_MACRO_ARGLIST )
                {
+                  /* funCall( &macro ) 
+                  */
                   HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHARG );
                   HB_EXPR_USE( pSelf->value.asMacro.pFunCall->value.asFunCall.pFunName, HB_EA_PUSH_PCODE );
                }
                else if( pSelf->value.asMacro.SubType & HB_ET_MACRO_LIST )
                {
+                  /* { &macro }
+                  */
                   HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHLIST );
                }
                else if( pSelf->value.asMacro.SubType & HB_ET_MACRO_INDEX )
                {
+                  /* var[ &macro ] */
                   HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHINDEX );
                }
                else if( pSelf->value.asMacro.SubType & HB_ET_MACRO_PARE )
                {
+                  /* var := (somevalue, &macro) - in xbase compatibility mode
+                   * EVAL( {|| &macro} ) - in all cases
+                   */
                   HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHPARE );
                }
                else
                {
+                  /* usual &macro */
                   HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSH );
                }
             }
@@ -1171,16 +1211,19 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                   --usCount;
                if( usCount )
                {
-                  /* check if &macro is used as a function call argument */
-                  HB_EXPR_PTR pExpr = pSelf->value.asFunCall.pParms->value.asList.pExprList;
-                  while( pExpr )
+                  if( HB_SUPPORT_XBASE )
                   {
-                      if( pExpr->ExprType == HB_ET_MACRO )
-                      {
-                          pExpr->value.asMacro.SubType |= HB_ET_MACRO_ARGLIST;
-                          pExpr->value.asMacro.pFunCall = pSelf;
-                      }
-                      pExpr = pExpr->pNext;
+                     /* check if &macro is used as a function call argument */
+                     HB_EXPR_PTR pExpr = pSelf->value.asFunCall.pParms->value.asList.pExprList;
+                     while( pExpr )
+                     {
+                        if( pExpr->ExprType == HB_ET_MACRO )
+                        {
+                           pExpr->value.asMacro.SubType |= HB_ET_MACRO_ARGLIST;
+                           pExpr->value.asMacro.pFunCall = pSelf;
+                        }
+                        pExpr = pExpr->pNext;
+                     }
                   }
                   HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
                }
@@ -1213,17 +1256,20 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                   --usCount;
                if( usCount )
                {
-                  HB_EXPR_PTR pExpr = pSelf->value.asFunCall.pParms->value.asList.pExprList;
-                  /* check if &macro is used as a function call argument */
-                  while( pExpr )
+                  if( HB_SUPPORT_XBASE )
                   {
-                      if( pExpr->ExprType == HB_ET_MACRO )
-                      {
-                          /* &macro was passed - handle it differently then in a normal statement */
-                          pExpr->value.asMacro.SubType |= HB_ET_MACRO_ARGLIST;
-                          pExpr->value.asMacro.pFunCall = pSelf;
-                      }
-                      pExpr = pExpr->pNext;
+                     HB_EXPR_PTR pExpr = pSelf->value.asFunCall.pParms->value.asList.pExprList;
+                     /* check if &macro is used as a function call argument */
+                     while( pExpr )
+                     {
+                        if( pExpr->ExprType == HB_ET_MACRO )
+                        {
+                            /* &macro was passed - handle it differently then in a normal statement */
+                            pExpr->value.asMacro.SubType |= HB_ET_MACRO_ARGLIST;
+                            pExpr->value.asMacro.pFunCall = pSelf;
+                        }
+                        pExpr = pExpr->pNext;
+                     }
                   }
                   HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
                }
@@ -2140,16 +2186,19 @@ static HB_EXPR_FUNC( hb_compExprUseOr )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HB_C52_STRICT
-         HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
-#else
-         /* NOTE: This will not generate a runtime error if incompatible
-          * data type is used
-          */
-         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
-         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
-#endif
+         if( HB_SUPPORT_HARBOUR )
+         {
+            /* NOTE: This will not generate a runtime error if incompatible
+             * data type is used
+             */
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
+            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
+         }
+         else
+         {
+            HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
+         }
          break;
 
       case HB_EA_STATEMENT:
@@ -2209,16 +2258,19 @@ static HB_EXPR_FUNC( hb_compExprUseAnd )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HB_C52_STRICT
-         HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
-#else
-         /* NOTE: This will not generate a runtime error if incompatible
-          * data type is used
-          */
-         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
-         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
-#endif
+         if( HB_SUPPORT_HARBOUR )
+         {
+            /* NOTE: This will not generate a runtime error if incompatible
+             * data type is used
+             */
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
+            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
+         }
+         else
+         {
+            HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
+         }
          break;
 
       case HB_EA_STATEMENT:
@@ -2274,15 +2326,18 @@ static HB_EXPR_FUNC( hb_compExprUseNot )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HB_C52_STRICT
-         HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
-#else
-         /* NOTE: This will not generate a runtime error if incompatible
-          * data type is used
-          */
-         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
-#endif
+         if( HB_SUPPORT_HARBOUR )
+         {
+            /* NOTE: This will not generate a runtime error if incompatible
+             * data type is used
+             */
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
+         }
+         else
+         {
+            HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
+         }
          break;
 
       case HB_EA_STATEMENT:
@@ -2396,16 +2451,19 @@ static HB_EXPR_FUNC( hb_compExprUseEqual )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HB_C52_STRICT
-         HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
-#else
-         /* NOTE: This will not generate a runtime error if incompatible
-          * data type is used
-          */
-         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
-         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
-#endif
+         if( HB_SUPPORT_HARBOUR )
+         {
+            /* NOTE: This will not generate a runtime error if incompatible
+             * data type is used
+             */
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
+            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
+         }
+         else
+         {
+            HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
+         }
          break;
 
       case HB_EA_STATEMENT:
@@ -2473,16 +2531,19 @@ static HB_EXPR_FUNC( hb_compExprUseEQ )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HB_C52_STRICT
-         HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
-#else
-         /* NOTE: This will not generate a runtime error if incompatible
-          * data type is used
-          */
-         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
-         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
-#endif
+         if( HB_SUPPORT_HARBOUR )
+         {
+            /* NOTE: This will not generate a runtime error if incompatible
+             * data type is used
+             */
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
+            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
+         }
+         else
+         {
+            HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
+         }
          break;
 
       case HB_EA_STATEMENT:
@@ -2528,16 +2589,19 @@ static HB_EXPR_FUNC( hb_compExprUseLT )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HB_C52_STRICT
-         HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
-#else
-         /* NOTE: This will not generate a runtime error if incompatible
-          * data type is used
-          */
-         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
-         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
-#endif
+         if( HB_SUPPORT_HARBOUR )
+         {
+            /* NOTE: This will not generate a runtime error if incompatible
+             * data type is used
+             */
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
+            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
+         }
+         else
+         {
+             HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
+             HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
+         }
          break;
 
       case HB_EA_STATEMENT:
@@ -2583,16 +2647,19 @@ static HB_EXPR_FUNC( hb_compExprUseGT )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HB_C52_STRICT
-         HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
-#else
-         /* NOTE: This will not generate a runtime error if incompatible
-          * data type is used
-          */
-         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
-         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
-#endif
+         if( HB_SUPPORT_HARBOUR )
+         {
+            /* NOTE: This will not generate a runtime error if incompatible
+             * data type is used
+             */
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
+            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
+         }
+         else
+         {
+            HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
+         }
          break;
 
       case HB_EA_STATEMENT:
@@ -2639,16 +2706,19 @@ static HB_EXPR_FUNC( hb_compExprUseLE )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HB_C52_STRICT
-         HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
-#else
-         /* NOTE: This will not generate a runtime error if incompatible
-          * data type is used
-          */
-         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
-         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
-#endif
+         if( HB_SUPPORT_HARBOUR )
+         {
+            /* NOTE: This will not generate a runtime error if incompatible
+             * data type is used
+             */
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
+            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
+         }
+         else
+         {
+            HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
+         }
          break;
 
       case HB_EA_STATEMENT:
@@ -2695,16 +2765,19 @@ static HB_EXPR_FUNC( hb_compExprUseGE )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HB_C52_STRICT
-         HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
-#else
-         /* NOTE: This will not generate a runtime error if incompatible
-          * data type is used
-          */
-         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
-         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
-#endif
+         if( HB_SUPPORT_HARBOUR )
+         {
+            /* NOTE: This will not generate a runtime error if incompatible
+             * data type is used
+             */
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
+            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
+         }
+         else
+         {
+            HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
+         }
          break;
 
       case HB_EA_STATEMENT:
@@ -2751,16 +2824,19 @@ static HB_EXPR_FUNC( hb_compExprUseNE )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HB_C52_STRICT
-         HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
-#else
-         /* NOTE: This will not generate a runtime error if incompatible
-          * data type is used
-          */
-         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
-         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
-#endif
+         if( HB_SUPPORT_HARBOUR )
+         {
+            /* NOTE: This will not generate a runtime error if incompatible
+             * data type is used
+             */
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
+            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
+         }
+         else
+         {
+            HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
+         }
          break;
 
       case HB_EA_STATEMENT:
@@ -2808,16 +2884,19 @@ static HB_EXPR_FUNC( hb_compExprUseIN )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HB_C52_STRICT
-         HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
-#else
-         /* NOTE: This will not generate a runtime error if incompatible
-          * data type is used
-          */
-         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
-         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
-#endif
+         if( HB_SUPPORT_HARBOUR )
+         {
+            /* NOTE: This will not generate a runtime error if incompatible
+             * data type is used
+             */
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
+            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
+         }
+         else
+         {
+            HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
+         }
          break;
 
       case HB_EA_STATEMENT:
@@ -2863,16 +2942,19 @@ static HB_EXPR_FUNC( hb_compExprUsePlus )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HB_C52_STRICT
-         HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
-#else
-         /* NOTE: This will not generate a runtime error if incompatible
-          * data type is used
-          */
-         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
-         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
-#endif
+         if( HB_SUPPORT_HARBOUR )
+         {
+            /* NOTE: This will not generate a runtime error if incompatible
+             * data type is used
+             */
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
+            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
+         }
+         else
+         {
+            HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
+         }
          break;
 
       case HB_EA_STATEMENT:
@@ -2918,16 +3000,19 @@ static HB_EXPR_FUNC( hb_compExprUseMinus )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HB_C52_STRICT
-         HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
-#else
-         /* NOTE: This will not generate a runtime error if incompatible
-          * data type is used
-          */
-         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
-         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
-#endif
+         if( HB_SUPPORT_HARBOUR )
+         {
+            /* NOTE: This will not generate a runtime error if incompatible
+             * data type is used
+             */
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
+            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
+         }
+         else
+         {
+            HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
+         }
          break;
 
       case HB_EA_STATEMENT:
@@ -2973,16 +3058,19 @@ static HB_EXPR_FUNC( hb_compExprUseMult )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HB_C52_STRICT
-         HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
-#else
-         /* NOTE: This will not generate a runtime error if incompatible
-          * data type is used
-          */
-         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
-         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
-#endif
+         if( HB_SUPPORT_HARBOUR )
+         {
+            /* NOTE: This will not generate a runtime error if incompatible
+             * data type is used
+             */
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
+            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
+         }
+         else
+         {
+            HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
+         }
          break;
 
       case HB_EA_STATEMENT:
@@ -3028,16 +3116,19 @@ static HB_EXPR_FUNC( hb_compExprUseDiv )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HB_C52_STRICT
-         HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
-#else
-         /* NOTE: This will not generate a runtime error if incompatible
-          * data type is used
-          */
-         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
-         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
-#endif
+         if( HB_SUPPORT_HARBOUR )
+         {
+            /* NOTE: This will not generate a runtime error if incompatible
+             * data type is used
+             */
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
+            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
+         }
+         else
+         {
+            HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
+         }
          break;
 
       case HB_EA_STATEMENT:
@@ -3083,16 +3174,19 @@ static HB_EXPR_FUNC( hb_compExprUseMod )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HB_C52_STRICT
-         HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
-#else
-         /* NOTE: This will not generate a runtime error if incompatible
-          * data type is used
-          */
-         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
-         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
-#endif
+         if( HB_SUPPORT_HARBOUR )
+         {
+            /* NOTE: This will not generate a runtime error if incompatible
+             * data type is used
+             */
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
+            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
+         }
+         else
+         {
+            HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
+         }
          break;
 
       case HB_EA_STATEMENT:
@@ -3135,16 +3229,19 @@ static HB_EXPR_FUNC( hb_compExprUsePower )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HB_C52_STRICT
-         HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
-#else
+         if( HB_SUPPORT_HARBOUR )
+         {
          /* NOTE: This will not generate a runtime error if incompatible
           * data type is used
           */
-         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
-         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
-#endif
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
+            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
+         }
+         else
+         {
+            HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
+         }
          break;
 
       case HB_EA_STATEMENT:
@@ -3202,15 +3299,18 @@ static HB_EXPR_FUNC( hb_compExprUseNegate )
          break;
 
       case HB_EA_PUSH_POP:
-#ifdef HB_C52_STRICT
-         HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
-#else
+         if( HB_SUPPORT_HARBOUR )
+         {
          /* NOTE: This will not generate a runtime error if incompatible
           * data type is used
           */
-         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
-#endif
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
+         }
+         else
+         {
+            HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
+         }
          break;
 
       case HB_EA_STATEMENT:

@@ -287,6 +287,15 @@ void hb_compChkCompilerSwitch( int iArg, char * Args[] )
                        j = strlen( Args[i] );
                        continue;
 
+                     case 'k' :
+                     case 'K' :
+                       Args[i] += ( j - 1 ); 
+                       hb_compChkEnvironVar( Args[i] );
+
+                       /* Accept rest as part of #define and continue with next Args[]. */
+                       j = strlen( Args[i] );
+                       continue;
+
                      case 'o' :
                      case 'O' :
                        Args[i] += (j - 1);
@@ -564,6 +573,7 @@ void hb_compChkEnvironVar( char * szSwitch )
                       hb_comp_iLanguage = LANG_PORT_OBJ;
                       break;
 
+
                    case 'o':
                    case 'O':
                      hb_comp_iLanguage = LANG_OBJ_MODULE;
@@ -608,6 +618,45 @@ void hb_compChkEnvironVar( char * szSwitch )
                 }
                 break;
 
+             case 'k':
+             case 'K':
+                {
+                   int i = 1;
+                   while( s[ i ] )
+                   {
+                      switch( s[ i++ ] )
+                      {
+                         case '?':
+                            hb_compPrintLogo();
+                            hb_compPrintModes();
+                            hb_comp_bLogo = FALSE;
+                            hb_comp_bQuiet = TRUE;
+                            break;
+                       
+                         case 'h':
+                         case 'H':
+                            /* default Harbour mode */
+                            hb_comp_Supported |= HB_COMPFLAG_HARBOUR;
+                            break;
+                            
+                         case 'c':
+                         case 'C':
+                            hb_comp_Supported &= ~HB_COMPFLAG_HARBOUR;
+                            break;
+
+                         case 'x':
+                         case 'X':
+                            hb_comp_Supported |= HB_COMPFLAG_XBASE;
+                            break;
+
+                         default:
+                            hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
+                            break;
+                      }
+                   }
+                }
+                break;
+                
              case 'l':
              case 'L':
                 if( *( s + 1 ) == '-' )

@@ -54,24 +54,19 @@
  *          /es2        = all warnings are treated as errors and no output
  *                        file is created. The exit code is set to a non=zero
  *                        value.   
- *
- *      /g<type>         output type generated is <type>   </par>
- *      =================                                  </par>
- *
- *          /gc          output type: C source (.c) (default)   
- *
- *          /gf          output type: Windows/DOS OBJ32 (.obj)   
- *
- *          /gh          output type: Harbour Portable Object (.hrb)   
- *
- *          /gj          output type: Java source (.java)      
- *
- *          /gp          output type: Pascal source (.pas)     
- *
- *          /gr          output type: Windows resource (.rc)   
- *
  *      /i<path>         add #include file search path   </par>
  *      =================   </par>
+ *
+ *      /k<mode>         enable <mode> compatibility mode  </par>
+ *      =================                                  </par>
+ *
+ *          /kc          strict Clipper compatibility   
+ *
+ *          /kh          Harbour extensions (default)   
+ *
+ *          /kx          other xbase dialects extensions   
+ *
+ *          /k?          invoke help information      
  *
  *      /l               suppress line number information      </par>
  *      =================   </par>
@@ -193,7 +188,7 @@
  *
  *      NOTE:   </par>
  *
- *      If you want a 100% compatible compile and runtime libraries then
+ *      If you want a 100% compatible runtime libraries then
  *      you have to define HARBOUR_STRICT_CLIPPER_COMPATIBILITY. This
  *      option should be defined in the file include/hbsetup.h (in fact this
  *      option is placed in a comment by default = you need to remove the

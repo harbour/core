@@ -55,11 +55,15 @@
 
 #include <limits.h>
 
-/* Include settings common for .PRG and .C files */
+/* ***********************************************************************
+ * Include settings common for .PRG and .C files 
+*/
 #include "hbsetup.ch"
 
-/* NOTE: You can select the default language modul used by Harbour, by
-         defining this to a valid language modul identifier. */
+/* ***********************************************************************
+ * NOTE: You can select the default language modul used by Harbour, by
+ *       defining this to a valid language modul identifier. 
+*/
 
 #ifndef HB_LANG_DEFAULT
    #define HB_LANG_DEFAULT      EN
@@ -146,7 +150,6 @@
  *
  * By default this value is 63
 */
-
 #ifndef HB_SYMBOL_NAME_LEN
 /* NOTE: For complete CA-Cl*pper compatibility you can set the maximum
          symbol name to 10. Sometimes this can be useful for compiling legacy
@@ -162,8 +165,52 @@
 */
 #endif
 
-/* Detect GCC/OS2 */
+/* ***********************************************************************
+ * You can select here, if the preprocessor should be linked
+ * for commands preprocessing passed to the macro compiler.
+ * (Note, that if it is linked then commands preprocessing can be
+ * disabled/enabled at runtime using HB_SETMACRO() function
+ *
+ * By default we do not support commands in the macro compiler.
+*/
+/* #define HB_MACRO_STATEMENTS */
 
+
+/* ***********************************************************************
+ * This fixes a bug in Clipper that allowed for copy array elements
+ * beyond the destination array size
+ *
+ * By default we are 100% Clipper compatible
+*/
+/* #define HB_FIX_ACOPY_BUG */
+
+/* ***********************************************************************
+ * This controls an optimisation in ASORT() function
+ *
+ * If this is defined the item copying is optimized, in a way that
+ * instead of calling the official hb_itemCopy(), the item structures
+ * will be directly copied with memcpy(), this means that the related
+ * data areas (string space for example) will never be moved. This can be
+ * safely done here, because it's guaranteed by the nature of sorting
+ * that the set of items doesn't change (there're no deleted or new
+ * items, just swapping) in this functions.
+ * Using this option makes sorting *much* faster, but if you have a
+ * problem, or the low level stuff changes, turn it off. [vszakats] 
+*/
+#define HB_ASORT_OPT_ITEMCOPY
+
+/* ***********************************************************************
+ * You can select here faster but less secure behaviour of STOD() function
+ * There is no data validation if this is enabled.
+ *
+ * By default we are using secure method.
+*/
+/* #define HB_FAST_STOD */
+
+
+/* ***********************************************************************
+ *  Detect GCC/OS2 
+*/
 #if defined(__EMX__) && ! defined(__RSXNT__)
    #define HARBOUR_GCC_OS2
 #endif
@@ -260,6 +307,13 @@
       #define HB_OS_MAC
    #endif
 #endif
+
+/* ***********************************************************************
+ * See also the following files for task specific definitions/settings
+ *
+ * hbmath.h    - math errors handling
+*/
+
 
 /* ***********************************************************************
  * Extern "C" detection

@@ -103,6 +103,15 @@ extern void yyerror( char * ); /* parsing error management function */
       YYABORT; \
    }
 
+#define HB_MACRO_IFENABLED( pSet, pExpr, flag ) \
+   if( HB_MACRO_DATA->supported & (flag) ) \
+     { pSet = (pExpr); }\
+   else \
+   { \
+      hb_compExprDelete( (pExpr), HB_MACRO_PARAM ); \
+      YYABORT; \
+   }
+
 %}
 
 %union                  /* special structure used by lex and yacc to share info */
@@ -456,9 +465,9 @@ SimpleExpression :
            | ObjectMethod                     { $$ = $1; }
            | AliasExpr                        { $$ = $1; }
            | ExprAssign                       { $$ = $1; }
-           | ExprOperEq                       { $$ = $1; }
-           | ExprPostOp                       { $$ = $1; }
-           | ExprPreOp                        { $$ = $1; }
+           | ExprOperEq                       { HB_MACRO_IFENABLED( $$, $1, HB_SM_HARBOUR ); }
+           | ExprPostOp                       { HB_MACRO_IFENABLED( $$, $1, HB_SM_HARBOUR ); }
+           | ExprPreOp                        { HB_MACRO_IFENABLED( $$, $1, HB_SM_HARBOUR ); }
            | ExprUnary                        { $$ = $1; }
            | ExprMath                         { $$ = $1; }
            | ExprBool                         { $$ = $1; }
@@ -469,8 +478,8 @@ Expression : SimpleExpression                 { $$ = $1; HB_MACRO_CHECK( $$ ); }
            | PareExpList                      { $$ = $1; HB_MACRO_CHECK( $$ ); }
 ;
 
-RootParamList : EmptyExpression ',' { /* AsParamList only acceptable for HB_P_MACROPUSHARG in which case iListElements == 0 */
-                                      if( HB_MACRO_DATA->iListElements != 0 )
+RootParamList : EmptyExpression ',' { 
+                                      if( !(HB_MACRO_DATA->Flags & HB_MACRO_GEN_LIST) )
                                       {
                                          HB_TRACE(HB_TR_DEBUG, ("macro -> invalid expression: %s", HB_MACRO_DATA->string));
                                          hb_macroError( EG_SYNTAX, HB_MACRO_PARAM );
@@ -548,7 +557,7 @@ ExprAssign  : NumValue     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $
             | PareExpList  INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
             | IfInline     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
             | FunCall      INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
-            | ObjectData   INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
+            | ObjectData   INASSIGN Expression   { HB_MACRO_IFENABLED( $$, hb_compExprAssign( $1, $3 ), HB_SM_HARBOUR ); }
             | ObjectMethod INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
             ;
 

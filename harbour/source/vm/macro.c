@@ -63,10 +63,13 @@
   #include "hbpp.h"
 #endif
 
-/* TODO:
- * include this variable in SET subsystem ?
+/* .and. & .or. expressions shortcuts - the expression optimiser needs 
+ * a global variable
  */
-BOOL hb_comp_bShortCuts = TRUE;  /* .and. & .or. expressions shortcuts */
+BOOL hb_comp_bShortCuts = TRUE; 
+
+/* various flags for macro compiler */
+static ULONG s_macroFlags = (HB_SM_SHORTCUTS | HB_SM_HARBOUR);
 
 static void hb_macroUseAliased( HB_ITEM_PTR, HB_ITEM_PTR, int );
 static void hb_compMemvarCheck( char * szVarName, HB_MACRO_DECL );
@@ -83,10 +86,15 @@ static void hb_compMemvarCheck( char * szVarName, HB_MACRO_DECL );
  */
 static int hb_macroParse( HB_MACRO_PTR pMacro, char * szString )
 {
+   /* update the current status for logical shortcuts */
+   hb_comp_bShortCuts = s_macroFlags & HB_SM_SHORTCUTS;
+   
    /* initialize the input buffer - it will be scanned by lex */
    pMacro->string = szString;
    pMacro->length = strlen( szString );
    pMacro->pos    = 0;
+   pMacro->supported = s_macroFlags;
+   pMacro->bShortCuts = hb_comp_bShortCuts;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_macroParse(%p, %s)", pMacro, szString));
 
@@ -424,9 +432,20 @@ char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
  * placed on the right side of the assignment or when it is used as
  * a parameter.
  * PUSH operation
+ * iContext contains additional info when HB_SM_XBASE is enabled
+ *  = 0 - in Clipper strict compatibility mode
+ *  = HB_P_MACROPUSHARG - in xbase compatibility mode
+ *  = HB_P_MACROPUSHLIST
+ *  = HB_P_MACROPUSHINDEX
+ *  = HB_P_MACROPUSHPARE
+ *
+ * iContext contains HB_P_MACROPUSHPARE if a macro is used inside a codeblock
+ * EVAL( {|| &macro} )
+ * 
  */
 void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext )
 {
+   /* TODO: remove these externals */
    extern int hb_vm_aiExtraParams[HB_MAX_MACRO_ARGS], hb_vm_iExtraParamsIndex;
    extern int hb_vm_aiExtraElements[HB_MAX_MACRO_ARGS], hb_vm_iExtraElementsIndex;
    extern int hb_vm_iExtraIndex;
@@ -440,26 +459,46 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext )
       HB_MACRO struMacro;
       int iStatus;
       char * szString = pItem->item.asString.value;
-
-      #ifdef HB_MACRO_STATEMENTS
-         char * pText = ( char * ) hb_xgrab( HB_PP_STR_SIZE );
-         char * pOut = ( char * ) hb_xgrab( HB_PP_STR_SIZE );
-         char * ptr = pText;
-         int slen;
-      #endif
-
+#ifdef HB_MACRO_STATEMENTS
+      char * pText;
+      char * pOut;
+#endif
       struMacro.Flags         = HB_MACRO_GEN_PUSH;
-      struMacro.bShortCuts    = hb_comp_bShortCuts;
       struMacro.uiNameLen     = HB_SYMBOL_NAME_LEN;
       struMacro.status        = HB_MACRO_CONT;
-      struMacro.iListElements = ( iContext ? 0 : -1 );
+      struMacro.iListElements = 0;
 
-      if( iContext == HB_P_MACROPUSHPARE )
+      if( iContext != 0 )
       {
-         struMacro.Flags |= HB_MACRO_GEN_PARE;
+         /* 
+          * If compiled in xbase compatibility mode:
+          * macro := "1,2"
+          * funCall( &macro )  ==>  funCall( 1, 2 )
+          * { &macro }  ==>  { 1, 2 }
+          * var[ &macro ]  ==>  var[ 1, 2 ]
+          * var := (somevalue, &macro)  ==> var := 2
+          * 
+          * Always:
+          * macro := "1,2"
+          * EVAL( {|| &macro} )
+          *
+         */
+         struMacro.Flags |= HB_MACRO_GEN_LIST;
+         if( iContext == HB_P_MACROPUSHPARE )
+         {
+            struMacro.Flags |= HB_MACRO_GEN_PARE;
+         }
       }
 
-      #ifdef HB_MACRO_STATEMENTS
+#ifdef HB_MACRO_STATEMENTS
+      if( s_macroFlags & HB_SM_PREPROC )
+      {
+         char * ptr;
+         int slen;
+         
+         pText = ( char * ) hb_xgrab( HB_PP_STR_SIZE );
+         pOut = ( char * ) hb_xgrab( HB_PP_STR_SIZE );
+         ptr = pText;
          slen = HB_MIN( strlen( szString ), HB_PP_STR_SIZE - 1 );
          memcpy( pText, szString, slen );
          pText[ slen ] = 0;
@@ -474,7 +513,8 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext )
 
          hb_pp_ParseExpression( ptr, pOut );
          szString = pText;
-      #endif
+      }
+#endif
 
       iStatus = hb_macroParse( &struMacro, szString );
 
@@ -483,10 +523,13 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext )
          hb_macroSyntaxError( &struMacro );
       }
 
-      #ifdef HB_MACRO_STATEMENTS
+#ifdef HB_MACRO_STATEMENTS
+      if( s_macroFlags & HB_SM_PREPROC )
+      {
         hb_xfree( pText );
         hb_xfree( pOut );
-      #endif
+      }
+#endif
 
       hb_stackPop();    /* remove compiled string */
       if( iStatus == HB_MACRO_OK && ( struMacro.status & HB_MACRO_CONT ) )
@@ -495,7 +538,6 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext )
 
          if( iContext && struMacro.iListElements > 0 )
          {
-
             if( iContext == HB_P_MACROPUSHARG )
             {
                hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex] = struMacro.iListElements;
@@ -532,7 +574,6 @@ void hb_macroSetValue( HB_ITEM_PTR pItem )
       int iStatus;
 
       struMacro.Flags      = HB_MACRO_GEN_POP;
-      struMacro.bShortCuts = hb_comp_bShortCuts;
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
       struMacro.status     = HB_MACRO_CONT;
       iStatus = hb_macroParse( &struMacro, szString );
@@ -602,7 +643,6 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag 
       szString[ pAlias->item.asString.length + 2 + pVar->item.asString.length ] = '\0';
 
       struMacro.Flags      = iFlag;
-      struMacro.bShortCuts = hb_comp_bShortCuts;
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
       struMacro.status     = HB_MACRO_CONT;
       iStatus = hb_macroParse( &struMacro, szString );
@@ -629,7 +669,6 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag 
       char * szString = pVar->item.asString.value;
 
       struMacro.Flags      = iFlag | HB_MACRO_GEN_ALIASED;
-      struMacro.bShortCuts = hb_comp_bShortCuts;
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
       struMacro.status     = HB_MACRO_CONT;
       iStatus = hb_macroParse( &struMacro, szString );
@@ -676,7 +715,6 @@ HB_MACRO_PTR hb_macroCompile( char * szString )
 
    pMacro = ( HB_MACRO_PTR ) hb_xgrab( sizeof( HB_MACRO ) );
    pMacro->Flags = HB_MACRO_DEALLOCATE | HB_MACRO_GEN_PUSH;
-   pMacro->bShortCuts = hb_comp_bShortCuts;
    pMacro->uiNameLen  = HB_SYMBOL_NAME_LEN;
    pMacro->status     = HB_MACRO_CONT;
    iStatus = hb_macroParse( pMacro, szString );
@@ -774,7 +812,6 @@ char * hb_macroGetType( HB_ITEM_PTR pItem )
       char * szString = pItem->item.asString.value;
 
       struMacro.Flags      = HB_MACRO_GEN_PUSH | HB_MACRO_GEN_TYPE;
-      struMacro.bShortCuts = hb_comp_bShortCuts;
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
       struMacro.status     = HB_MACRO_CONT;
       iStatus = hb_macroParse( &struMacro, szString );
@@ -850,6 +887,78 @@ char * hb_macroGetType( HB_ITEM_PTR pItem )
    return szType;
 }
 
+/* 
+ * Set macro capabilities if flag > 0 or get current macro capabilities
+ * if flag == 0
+ */
+ULONG hb_macroSetMacro( BOOL bSet, ULONG flag )
+{
+   ULONG ulCurrentFlags = s_macroFlags;
+
+   if( flag > 0 )   
+   {
+      if( bSet )
+         s_macroFlags |= flag;
+      else
+         s_macroFlags &= ~flag;
+   }
+   
+   return ulCurrentFlags;
+}
+
+HB_FUNC( HB_SETMACRO )
+{
+   int iPrmCnt = hb_pcount();
+   
+   if( iPrmCnt > 0 )
+   {
+       ULONG ulFlags = ( ULONG ) hb_parnl( 1 );
+       PHB_ITEM pValue;
+
+       switch( ulFlags )
+       {
+          case HB_SM_HARBOUR:
+             /* enable/disable extended Harbour compatibility */
+             hb_retl( s_macroFlags & ulFlags );
+             pValue = hb_param( 2, HB_IT_LOGICAL );
+             if( pValue )
+                hb_macroSetMacro( hb_itemGetL( pValue ), ulFlags );
+             break;
+
+          case HB_SM_XBASE:
+             /* enable/disable extended xbase compatibility */
+             hb_retl( s_macroFlags & ulFlags );
+             pValue = hb_param( 2, HB_IT_LOGICAL );
+             if( pValue )
+                hb_macroSetMacro( hb_itemGetL( pValue ), ulFlags );
+             break;
+             
+          case HB_SM_PREPROC :
+             /* enable/disable preprocessing before compilation */
+             hb_retl( s_macroFlags & ulFlags );
+             pValue = hb_param( 2, HB_IT_LOGICAL );
+             if( pValue )
+                hb_macroSetMacro( hb_itemGetL( pValue ), ulFlags );
+             break;
+
+          case HB_SM_SHORTCUTS:
+             /* enable/disable support for shortcut logical operators */
+             hb_retl( s_macroFlags & ulFlags );
+             pValue = hb_param( 2, HB_IT_LOGICAL );
+             if( pValue )
+             {
+                hb_macroSetMacro( hb_itemGetL( pValue ), ulFlags );
+                hb_comp_bShortCuts = s_macroFlags & ulFlags;
+             }
+             break;
+
+          default:
+              /* do nothing */
+      }      
+   }
+   else
+      hb_ret();    /* return NIL */
+}
 
 /* ************************************************************************* */
 

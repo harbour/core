@@ -386,6 +386,7 @@ extern void hb_compChkDefines( int iArg, char * Args[] );
 extern void hb_compPrintUsage( char * );
 extern void hb_compPrintCredits( void );
 extern void hb_compPrintLogo( void );
+extern void hb_compPrintModes( void );
 
 extern int hb_compCompile( char * szPrg, int argc, char * argv[] );
 
@@ -490,6 +491,8 @@ extern INLINES       hb_comp_inlines;
 extern int           hb_comp_iLineINLINE;
 extern int           hb_comp_iLinePRG;
 
+extern ULONG         hb_comp_Supported;
+
 /* /GC command line setting types */
 #define HB_COMPGENC_COMPACT     0
 #define HB_COMPGENC_NORMAL      1
@@ -499,6 +502,18 @@ extern int           hb_comp_iLinePRG;
 #define HB_EXITLEVEL_DEFAULT    0
 #define HB_EXITLEVEL_SETEXIT    1
 #define HB_EXITLEVEL_DELTARGET  2
+
+/* /kx command line setting types - compatibility modes 
+ * (turn on a bit in ULONG word)
+*/
+#define HB_COMPFLAG_HARBOUR        1    /* -kh */
+#define HB_COMPFLAG_XBASE          2    /* -kx */
+
+#ifdef HB_MACRO_SUPPORT
+  #define HB_COMP_ISSUPPORTED(flag)    ( HB_MACRO_DATA->supported & (flag) )
+#else  
+  #define HB_COMP_ISSUPPORTED(flag)    ( hb_comp_Supported & (flag) )
+#endif
 
 #if defined(HB_EXTERN_C)
 }

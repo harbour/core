@@ -62,16 +62,7 @@
 #include "hbvm.h"
 #include "hbstack.h"
 
-/* NOTE: If this is defined the item copying is optimized, in a way that
-         instead of calling the official hb_itemCopy(), the item structures
-         will be directly copied with memcpy(), this means that the related
-         data areas (string space for example) will never be moved. This can be
-         safely done here, because it's guaranteed by the nature of sorting
-         that the set of items doesn't change (there're no deleted or new
-         items, just swapping) in this functions.
-         Using this option makes sorting *much* faster, but if you have a
-         problem, or the low level stuff changes, turn it off. [vszakats] */
-#define HB_ASORT_OPT_ITEMCOPY
+/* #define HB_ASORT_OPT_ITEMCOPY  - use hbsetup.h to enable/disable it*/
 
 static BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2 )
 {

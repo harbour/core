@@ -1,3 +1,69 @@
+2001-08-04 15:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    * doc/en/compiler.txt
+    * include/hbapi.h
+    * include/hbcomp.h
+    * include/hbexpra.c
+    * include/hbexprb.c
+    * include/hbmacro.h
+    * source/compiler/cmdcheck.c
+    * source/compiler/expropta.c
+    * source/compiler/exproptb.c
+    * source/compiler/harbour.c
+    * source/compiler/harbour.y
+    * source/compiler/hbfunchk.c
+    * source/compiler/hbusage.c
+        * added command line switch which controls a compilation
+          compatibility level -k<modes>
+          Currently supported modes (can be joined):
+          -kc  ==> 100% Clipper compatible (with some obvious bugs fixed)
+          -kh  ==> harbour extensions enabled (default)
+          -kx  ==> other xbase dialects extensions
+        * new macro HB_COMP_ISSUPPORTED(<mode>) to check if a feature
+          is enabled. Currently supported modes (defined in hbcomp.h):
+          HB_COMPFLAG_HARBOUR  ==> -kh
+          HB_COMPFLAG_XBASE    ==> -kx
+        * extended macro support for expression lists is disabled by
+          default (latest Ron's additions) - use -kx switch to enable
+
+    * include/set.ch
+    * source/vm/macro.c
+    * source/macro/macro.y
+    * source/macro/macroa.c
+    * source/macro/macrob.c
+        * added HB_SETMACRO() function to control various compatibility
+          issues at the runtime. 
+          HB_SETMACRO( <nFeature>, <lOnOff> )
+          This controls the macro compiler's features. The feature can 
+          be either enabled (.T.) or disabled (.F.)
+          Currently available features (defined in set.ch file)
+          HB_SM_HARBOUR => (enabled by default)
+              enable/disable harbour extensions 
+          HB_SM_XBASE => (disaled by default)
+              enable/disable xbase dialects extensions
+          HB_SM_SHORTCUTS => (enabled by default)
+              enable/disable shortcut evaluation of logical expressions
+          HB_SM_PREPROC => 
+              enable/disable preprocessing (if harbour is build with
+              HB_MACRO_STATEMENTS option)
+
+    * source/rdd/dblist.prg
+        * the array of expressions is scanned for extended macro lists
+          when xbase compatibility is enabled (see HB_SETMACRO())
+          
+    * source/vm/asort.c
+        * moved HB_ASORT_OPT_ITEMCOPY setting to hbsetup.h
+
+    * include/hbsetup.h
+        * updated/added descriptions of all #ifdef settings used
+          in the harbour code
+          (Please keep updated this file (and hbsetup.ch) if a new
+          setting is used)
+          
+    + doc/en/macro.txt
+        * initial documentation for macro compiler
+        * documentation of HB_SETMACRO() function
+
 2001-08-04 00:06 GMT Dave Pearson <davep@davep.org>
    * doc/whatsnew.txt
      * Brought the document up to date.

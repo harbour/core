@@ -141,6 +141,9 @@ int           hb_comp_iLineINLINE = 0;
 int           hb_comp_iLinePRG;
 INLINES       hb_comp_inlines;
 
+/* various compatibility flags (-k switch) */
+ULONG         hb_comp_Supported = HB_COMPFLAG_HARBOUR;
+
 /* EXTERNAL statement can be placed into any place in a function - this flag is
  * used to suppress error report generation
  */
@@ -243,7 +246,7 @@ int main( int argc, char * argv[] )
 
    hb_compIdentifierClose();
 
-   if( ! bAnyFiles )
+   if( (! bAnyFiles ) && (! hb_comp_bQuiet) )
    {
       hb_compPrintUsage( argv[ 0 ] );
       iStatus = EXIT_FAILURE;
@@ -2222,16 +2225,18 @@ void hb_compLinePushIfInside( void ) /* generates the pcode with the currently c
  */
 static void hb_compGenVariablePCode( BYTE bPCode, char * szVarName )
 {
+   BOOL bGenCode;
    /*
    * NOTE:
    * Clipper always assumes a memvar variable if undeclared variable
    * is popped (a value is asssigned to a variable).
    */
-#if defined( HB_C52_STRICT )
-   if( hb_comp_bForceMemvars || bPCode == HB_P_POPVARIABLE )
-#else
-   if( hb_comp_bForceMemvars )
-#endif
+   if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_HARBOUR ) )
+      bGenCode = hb_comp_bForceMemvars;    /* harbour compatibility */
+   else
+      bGenCode = ( hb_comp_bForceMemvars || bPCode == HB_P_POPVARIABLE );
+      
+   if( bGenCode )
    {
       /* -v switch was used -> assume it is a memvar variable
        */

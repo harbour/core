@@ -518,6 +518,7 @@ typedef struct HB_MACRO_    /* a macro compiled pcode container */
    ULONG  pos;             /* current position inside of compiled string */
    int    Flags;           /* some flags we may need */
    int    status;          /* status of compilation */
+   ULONG  supported;       /* various flags for supported capabilities */
    int    FlexState;       /* internal flex state during parsing */
    HB_PCODE_INFO_PTR pCodeInfo;  /* pointer to pcode buffer and info */
    void * pParseInfo;      /* data needed by the parser - it should be 'void *' to allow different implementation of macr compiler */

@@ -135,10 +135,8 @@ void hb_compFunCallCheck( char * szFuncCall, int iArgs )
    {
       if( iArgs < f[ iPos ].iMinParam || ( f[ iPos ].iMaxParam != -1 && iArgs > f[ iPos ].iMaxParam ) )
       {
-#if defined( HB_C52_STRICT )
-         /* Clipper way */
-         hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_CHECKING_ARGS, szFuncCall, NULL );
-#else
+        if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_HARBOUR ) )
+        {
          char szMsg[ 40 ];
 
          if( f[ iPos ].iMaxParam == -1 )
@@ -149,8 +147,13 @@ void hb_compFunCallCheck( char * szFuncCall, int iArgs )
             sprintf( szMsg, "\nPassed: %i, expected: %i - %i", iArgs, f[ iPos ].iMinParam, f[ iPos ].iMaxParam );
 
          hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_CHECKING_ARGS, szFuncCall, szMsg );
-#endif
-      }
+       }
+       else
+       {
+         /* Clipper way */
+         hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_CHECKING_ARGS, szFuncCall, NULL );
+       }
+     }
    }
 }
 

@@ -84,6 +84,7 @@ extern "C" {
 #define HB_MACRO_GEN_ALIASED  4   /* force aliased variable */
 #define HB_MACRO_GEN_TYPE     8   /* check the type of expression (from TYPE() function) */
 #define HB_MACRO_GEN_PARE     16  /* generate parentesized list */
+#define HB_MACRO_GEN_LIST     32  /* generate push operation for every comma separated expressions */
 #define HB_MACRO_DEALLOCATE   128 /* macro structure is allocated on the heap */
 
 /* values returned from compilation process
@@ -99,12 +100,20 @@ extern "C" {
 #define HB_MACRO_UNKN_SYM     8   /* requested symbol was not found in runtime symbol table */
 #define HB_MACRO_UNKN_VAR     16  /* requested variable doesn't exist */
 
+/* runtime settings for macro compiler */
+#define HB_SM_HARBOUR    1    /* extended Harbour features */
+#define HB_SM_XBASE      2    /* extended xbase compatibility */
+#define HB_SM_PREPROC    4    /* enable/disable commands preprocessing */
+#define HB_SM_SHORTCUTS  8    /* enable/disable sortcuts for logical operators */
+#define HB_SM_PARSER     128  /* address of macro parser (TODO) */
+
 
 
 /* Global functions
  */
 extern void hb_macroError( int iError, HB_BISON_PTR pMacro );
 extern int hb_macroYYParse( HB_MACRO_PTR pMacro );
+extern ULONG hb_macroSetMacro( BOOL bSet, ULONG ulFlag );
 
 extern void hb_compGenPCode1( BYTE byte, HB_BISON_PTR pMacro );
 extern void hb_compGenPCode2( BYTE byte1, BYTE byte2, HB_BISON_PTR pMacro );

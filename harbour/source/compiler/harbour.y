@@ -325,8 +325,16 @@ Statement  : ExecFlow   CrlfStmnt   { }
            | FunCall CrlfStmnt      { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
            | AliasExpr CrlfStmnt    { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
            | ObjectMethod CrlfStmnt { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
-           | MacroVar CrlfStmnt     { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
-           | MacroExpr CrlfStmnt    { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
+           | MacroVar CrlfStmnt     { if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_XBASE ) )
+                                         hb_compExprDelete( hb_compExprGenStatement( $1 ) );
+                                      else
+                                         hb_compExprDelete( hb_compErrorSyntax( $1 ) );
+                                     }
+           | MacroExpr CrlfStmnt    { if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_XBASE ) )
+                                         hb_compExprDelete( hb_compExprGenStatement( $1 ) );
+                                      else
+                                         hb_compExprDelete( hb_compErrorSyntax( $1 ) );
+                                     }
            | PareExpList CrlfStmnt  { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
            | ExprPreOp CrlfStmnt    { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
            | ExprPostOp CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }

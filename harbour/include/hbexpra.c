@@ -68,7 +68,6 @@
 #define  HB_XGRAB( size )  hb_xgrab( (size) )
 #define  HB_XFREE( pPtr )  hb_xfree( (void *)(pPtr) )
 
-
 /* Table with operators precedence
  * NOTE:
  *    HB_ET_NIL is used for an ordinary values and post- operators
@@ -329,7 +328,8 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
             HB_EXPR_PCODE1( hb_compExprDelete, pName );
          }
       }
-      else if( ( strcmp( "__DBLIST", pName->value.asSymbol ) == 0 ) && iCount >= 10 )
+      else if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_XBASE ) &&
+          (( strcmp( "__DBLIST", pName->value.asSymbol ) == 0 ) && iCount >= 10) )
       {
          HB_EXPR_PTR pArray = pParms->value.asList.pExprList->pNext;
 

@@ -71,6 +71,7 @@ void hb_compPrintUsage( char * szSelf )
            "\n          %cgh              output type: Harbour Portable Object (.hrb)",
            "\n          %cgj              output type: Java source (.java)",
            "\n          %ci<path>         #include file search path",
+           "\n          %ck               compilation mode (type -k? for more data)",
            "\n          %cl               suppress line number information",
            "\n          %cm               compile module only",
            "\n          %cn               no implicit starting procedure",
@@ -100,6 +101,27 @@ void hb_compPrintUsage( char * szSelf )
 
    for( iLine = 0; iLine < ( sizeof( szOptions ) / sizeof( char * ) ); iLine++ )
       printf( szOptions[ iLine ], OS_OPT_DELIMITER_LIST[ 0 ] );
+}
+
+/*
+ * List of compatybility/features modes 
+ */
+void hb_compPrintModes( void )
+{
+   static const char * szOptions [] =
+   {
+           "\nOptions:  c               strict Clipper mode",
+           "\n          h               Harbour mode (default)",
+           "\n          x               extended xbase mode",
+           "\n          ?               this info",
+           "\n"
+   };
+   int iLine;
+
+   printf( "\nCompatybility flags: -k[options]\n" );
+
+   for( iLine = 0; iLine < ( sizeof( szOptions ) / sizeof( char * ) ); iLine++ )
+      printf( szOptions[ iLine ] );
 }
 
 /*
