@@ -56,7 +56,7 @@
 #     a specific target as a parameter immediatley after compiling a given
 #     set of prg files.
 #      ie: Harbour $<
-#          nmake /fmakefile.vc obj\vc\rtl.lib2
+#          nmake /fmakefile.nt obj\vc\rtl.lib2
 #     which will simply get make to re-evaluate the dependancy list for the
 #     lib, and as a result, it will execute the C compiler using the .c.obj
 #     rule below to create the obj's for the prg's that were created just
@@ -262,7 +262,7 @@ LIBS2 = \
 
 {$(RTL_DIR)}.prg{$(OBJ_DIR)}.obj::
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(RTL_LIB)2
+   $(MAKE) -nologo /$(MK_FLAGS)f$(MK_FILE) $(RTL_LIB)2
 
 RTL_LIB_OBJS = \
    $(OBJ_DIR)\abs.obj \
@@ -519,7 +519,7 @@ MACRO_LIB_OBJS = \
 
 {$(RDD_DIR)}.prg{$(OBJ_DIR)}.obj::
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(RDD_LIB)2
+   $(MAKE) -nologo /$(MK_FLAGS)f$(MK_FILE) $(RDD_LIB)2
 
 RDD_LIB_OBJS = \
    $(OBJ_DIR)\dbcmd.obj \
@@ -551,7 +551,7 @@ RDD_LIB_OBJS = \
 
 {$(RDD_DIR)\nulsys}.prg{$(OBJ_DIR)}.obj::
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(NULSYS_LIB)2
+   $(MAKE) -nologo /$(MK_FLAGS)f$(MK_FILE) $(NULSYS_LIB)2
 
 NULSYS_LIB_OBJS = \
    $(OBJ_DIR)\nulsys.obj
@@ -565,7 +565,7 @@ NULSYS_LIB_OBJS = \
 
 {$(RDD_DIR)\dbfntx}.prg{$(OBJ_DIR)}.obj::
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(DBFNTX_LIB)2
+   $(MAKE) -nologo /$(MK_FLAGS)f$(MK_FILE) $(DBFNTX_LIB)2
 
 DBFNTX_LIB_OBJS = \
    $(OBJ_DIR)\dbfntx1.obj \
@@ -581,7 +581,7 @@ DBFNTX_LIB_OBJS = \
 
 {$(RDD_DIR)\dbfcdx}.prg{$(OBJ_DIR)}.obj::
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(DBFCDX_LIB)2
+   $(MAKE) -nologo /$(MK_FLAGS)f$(MK_FILE) $(DBFCDX_LIB)2
 
 DBFCDX_LIB_OBJS = \
    $(OBJ_DIR)\dbfcdx1.obj \
@@ -611,7 +611,7 @@ PP_LIB_OBJS = \
 
 {$(DEBUG_DIR)}.prg{$(OBJ_DIR)}.obj::
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(DEBUG_LIB)2
+   $(MAKE) -nologo /$(MK_FLAGS)f$(MK_FILE) $(DEBUG_LIB)2
 
 DEBUG_LIB_OBJS = \
    $(OBJ_DIR)\dbgmenu.obj \
@@ -654,7 +654,7 @@ COMMON_LIB_OBJS = \
 
 {$(VM_DIR)}.prg{$(OBJ_DIR)}.obj::
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(VM_LIB)2
+   $(MAKE) -nologo /$(MK_FLAGS)f$(MK_FILE) $(VM_LIB)2
 
 VM_LIB_OBJS = \
    $(OBJ_DIR)\arrays.obj \

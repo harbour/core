@@ -39,6 +39,7 @@
 #    OBJ lists for the appropriate library.
 #    NOTE: put .prg related obj's last in the lib list.
 #
+#   See makefile.nt for a batch mode (read: faster) version of this file.
 #
 
 # ---------------------------------------------------------------
@@ -226,7 +227,6 @@ LIBS2 = \
 {$(RTL_DIR)}.prg{$(OBJ_DIR)}.obj:
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $*.c
-
 
 RTL_LIB_OBJS = \
    $(OBJ_DIR)\abs.obj \
