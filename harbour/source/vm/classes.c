@@ -1745,8 +1745,14 @@ static HARBOUR hb___msgGetData( void )
  * Internal function to return a superobject
  */
 static HARBOUR hb___msgSuper( void )
-{
-   hb_itemReturn( s_pMethod->pInitValue );
+{  //hb_itemReturn( s_pMethod->pInitValue );
+   PHB_ITEM pObject = hb_stack.pBase + 1;
+
+   pObject->item.asArray.value->uiPrevCls = pObject->item.asArray.value->uiClass;
+   pObject->item.asArray.value->uiClass   = s_pMethod->uiData;
+
+   hb_itemCopy( &hb_stack.Return, pObject );
+
 }
 
 

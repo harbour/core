@@ -1,3 +1,16 @@
+20000531-22:15 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * contrib/msql/tmsql.prg
+     * type "C" values need to be encoded before sending them to mSQL (' -> \')
+   + contrib/msql/dbf2msql.prg
+     + added a little utility to import a .dbf file into a mSQL table
+   * contrib/msql/Makefile
+     + added dbf2msql.prg target
+   * contrib/msql/readme.txt
+     * reformatted.
+   * source/vm/classes.c
+     ! patch from JFl&RaC <jfl@mafact.com>,<rac@mafact.com> to fix super:X handling
+
 2000-05-31 13:53 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * include/hbapi.h
@@ -5,15 +18,15 @@
      + Added hb_retl() Extend API function.
      * HB_EXTEND_API_MACROS renamed to HB_API_MACROS
 
-   * include/hbdate.h 
+   * include/hbdate.h
    * source/rtl/dates.c
-   * source/rtl/dateshb.c 
+   * source/rtl/dateshb.c
      + Added hb_dateToday() and hb_dateTimeStr() functions.
 
    * source/rtl/trim.c
      % Some minor optimizations.
 
-   * source/vm/classes.c 
+   * source/vm/classes.c
      ! Fixed warning, adjusted variable scopes.
 
    * contrib/libmisc/dates2.c

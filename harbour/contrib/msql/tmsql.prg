@@ -105,7 +105,12 @@ METHOD FieldPut(nNum, Value) CLASS TmSQLRow
 
    if nNum > 0 .AND. nNum <= Len(::aRow)
       if Valtype(Value) == Valtype(::aRow[nNum]) .OR. Empty(::aRow[nNum])
-         ::aRow[nNum] := Value
+         // if it's a char field encode singole quotes
+         if ValType(Value) == "C"
+            ::aRow[nNum] := StrTran(Value, "'", "\'")
+         else
+            ::aRow[nNum] := Value
+         endif
          ::aDirty[nNum] := .T.
          return Value
       endif
@@ -729,7 +734,7 @@ METHOD Query(cQuery) CLASS TmSQLServer
 
    while __StrToken(cUpperQuery, i++, " ") <> "FROM"
    enddo
-   while (cToken := __StrToken(cUpperQuery, i++, " ")) <> "WHERE" .AND. !Empty(cToken)
+   while (cToken := __StrToken(cUpperQuery, i++, " ")) <> "WHERE" .AND. cToken <> "LIMIT" .AND. !Empty(cToken)
       cTableName := __StrToken(cQuery, i - 1, " ")
       nNumTables++
    enddo
