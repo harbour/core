@@ -223,6 +223,7 @@ extern void hb_compGenPushFunRef( char *, HB_MACRO_DECL );
 extern void hb_compGenPCode1( BYTE, HB_MACRO_DECL );             /* generates 1 byte of pcode */
 extern void hb_compGenPCode2( BYTE, BYTE, HB_MACRO_DECL ); /* generates 2 bytes of pcode */
 extern void hb_compGenPCode3( BYTE, BYTE, BYTE, HB_MACRO_DECL ); /* generates 3 bytes of pcode */
+extern void hb_compGenPCode4( BYTE, BYTE, BYTE, BYTE, HB_MACRO_DECL ); /* generates 4 bytes of pcode */
 extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, HB_MACRO_DECL );  /* copy bytes to a pcode buffer */
 
 /* Codeblocks */
@@ -272,6 +273,7 @@ extern void hb_compGenPushFunRef( char * );
 extern void hb_compGenPCode1( BYTE );             /* generates 1 byte of pcode */
 extern void hb_compGenPCode2( BYTE, BYTE );       /* generates 2 bytes of pcode */
 extern void hb_compGenPCode3( BYTE, BYTE, BYTE ); /* generates 3 bytes of pcode */
+extern void hb_compGenPCode4( BYTE, BYTE, BYTE, BYTE ); /* generates 4 bytes of pcode */
 extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize );  /* copy bytes to a pcode buffer */
 
 extern ULONG hb_compSequenceBegin( void );

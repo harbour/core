@@ -1,3 +1,17 @@
+20000425-07:30 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/harbour.c
+     * Replaced sequential calls to hb_compGenPCode3() + hb_compGenPCode3() with 1 call to new hb_compGenPCode4()
+
+   * source/compiler/hbpcode.c
+     + Added hb_compGenPCode4( BYTE, BYTE, BYTE, BYTE )
+
+   * include/hbcomp.h
+     + Added hb_compGenPCode4( BYTE, BYTE, BYTE, BYTE )
+
+   * source/vm/macro.c
+     + Added hb_compGenPCode4( BYTE, BYTE, BYTE, BYTE, HB_MACRO_DECL )
+
 20000425-15:05 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/hbpcode.c
@@ -17,10 +31,10 @@
 	NOTE: fix in ppcore.c needs Alexander to review it - anyway
 	empty lines cannot be buffered by a preprocessor (see
 	hb_pp_nEmptyStrings)
-	
+
     *source/rtl/gtstd/gtstd.c
 	* removed atexit() call when HB_OS_UNIX is defined
-	
+
     *source/vm/hvm.c
 	* <windows.h> can be included only if HB_OS_WIN_32 is defined
 
@@ -258,7 +272,7 @@
     *source/compiler/harbour.y
 	*fixed incorrect error when a public/private variable was
 	initialized with a codeblock using a local parameters
-	
+
 20000423-15:57 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/compiler/hbusage.c
@@ -269,7 +283,7 @@
    * doc/en/ht_*.txt -> contrib/libmisc/doc/en/hb_*.txt
      * Moved some CONTRIB docs to the CONTRIB dirs.
        ! PLEASE UPDATE THE DOC SCRIPTS !
-   
+
 20000423-14:35 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/pp/Makefile
@@ -302,9 +316,9 @@
    + contrib/libct/make_b32.bat
    + contrib/libct/make_vc.bat
    + contrib/libgt/make_b32.bat
-   + contrib/libgt/make_vc.bat 
+   + contrib/libgt/make_vc.bat
    + contrib/libmisc/make_b32.bat
-   + contrib/libmisc/make_vc.bat 
+   + contrib/libmisc/make_vc.bat
      + Added makefiles
 
    * contrib/libct/ctchrodd.c
@@ -329,8 +343,8 @@
    + utils/hbrun/external.prg
      * TOOLS dir moved to CONTRIB, and split into three parts. CT_ prefixed
        removed from the CT function names.
-     ; ! WARNING ! It's likely that some test program will fail now, because 
-       they are using functions from TOOLS. These tests should be removed or 
+     ; ! WARNING ! It's likely that some test program will fail now, because
+       they are using functions from TOOLS. These tests should be removed or
        corrected.
 
    * source/vm/hvm.c

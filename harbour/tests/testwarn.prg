@@ -25,19 +25,19 @@ FUNCTION Hex2Dec( lVar AS LOGICAL )
 
         nVar := 'A'
 
-   cVar := 2
+        cVar := 2
 
    cVar := 'B'
 
-   cVar := 2
+        cVar := 2
 
    lVar := .T.
 
-   lVar := nNoType
+     lVar := nNoType
 
-   cVar := nVar
+        cVar := nVar
 
-        NondDeclared := 2
+     NondDeclared := 2
 
    cVar := {|x,y,z| nMyFunc( 3 ) }
 

@@ -15,11 +15,11 @@ function Main()
    rddSetDefault( "DBFCDX" )
 
    FErase( "testcdx.cdx" )
-//   dbCreate( "testcdx", aStruct, "DBFCDX" )
+   dbCreate( "testcdx", aStruct, "DBFCDX" )
    dbUseArea( ,, "testcdx", "MYALIAS" )
    ordCreate( "testcdx", "1Tag ", "FIELD->Character", { || FIELD->Character }, .F. )
    ordCreate( "testcdx", "2Tag ", "FIELD->Character", { || FIELD->Character }, .F. )
-//   ? MYALIAS->CHARACTER
+   ? MYALIAS->CHARACTER
 
 return nil
 

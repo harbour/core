@@ -500,8 +500,7 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
                if( ! pSym )
                   pSym = hb_compSymbolAdd( hb_strdup( szVarName ), &wPos );
                pSym->cScope |= VS_MEMVAR;
-               hb_compGenPCode3( HB_P_PARAMETER, HB_LOBYTE( wPos ), HB_HIBYTE( wPos ) );
-               hb_compGenPCode1( HB_LOBYTE( hb_comp_functions.pLast->wParamNum ) );
+               hb_compGenPCode4( HB_P_PARAMETER, HB_LOBYTE( wPos ), HB_HIBYTE( wPos ), HB_LOBYTE( hb_comp_functions.pLast->wParamNum ) );
             }
             break;
          case VS_PRIVATE:
@@ -1331,23 +1330,19 @@ ULONG hb_compGenJump( LONG lOffset )
    /* Just a place holder, it might be a far jump...*/
    if( lOffset == 0 )
    {
-      hb_compGenPCode3( HB_P_JUMPFAR, 0, 0 );
-      hb_compGenPCode1( 0 );
+      hb_compGenPCode4( HB_P_JUMPFAR, 0, 0, 0 );
    }
    else if( lOffset >= -128 && lOffset <= 127 )
    {
-      hb_compGenPCode3( HB_P_JUMPNEAR, HB_LOBYTE( lOffset ), HB_P_NOOP );
-      hb_compGenPCode1( HB_P_NOOP );
+      hb_compGenPCode4( HB_P_JUMPSHORT, HB_LOBYTE( lOffset ), HB_P_NOOP, HB_P_NOOP );
    }
    else if( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
    {
-      hb_compGenPCode3( HB_P_JUMP, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
-      hb_compGenPCode1( HB_P_NOOP );
+      hb_compGenPCode4( HB_P_JUMP, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_P_NOOP );
    }
    else if( lOffset >= (-8388608L) && lOffset <= 8388607L )
    {
-      hb_compGenPCode3( HB_P_JUMPFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
-      hb_compGenPCode1( ( BYTE ) ( ( ( USHORT ) ( lOffset ) >> 16 ) & 0xFF ) );
+      hb_compGenPCode4( HB_P_JUMPFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( ( USHORT ) ( lOffset ) >> 16 ) & 0xFF ) );
    }
    else
    {
@@ -1364,23 +1359,19 @@ ULONG hb_compGenJumpFalse( LONG lOffset )
    /* Just a place holder, it might be a far jump...*/
    if( lOffset == 0 )
    {
-      hb_compGenPCode3( HB_P_JUMPFALSEFAR, 0, 0 );
-      hb_compGenPCode1( 0 );
+      hb_compGenPCode4( HB_P_JUMPFARFALSE, 0, 0, 0 );
    }
    else if( lOffset >= -128 && lOffset <= 127 )
    {
-      hb_compGenPCode3( HB_P_JUMPFALSENEAR, HB_LOBYTE( lOffset ), HB_P_NOOP );
-      hb_compGenPCode1( HB_P_NOOP );
+      hb_compGenPCode4( HB_P_JUMPSHORTFALSE, HB_LOBYTE( lOffset ), HB_P_NOOP, HB_P_NOOP );
    }
    else if( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
    {
-      hb_compGenPCode3( HB_P_JUMPFALSE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
-      hb_compGenPCode1( HB_P_NOOP );
+      hb_compGenPCode4( HB_P_JUMPFALSE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_P_NOOP );
    }
    else if( lOffset >= (-8388608L) && lOffset <= 8388607L )
    {
-      hb_compGenPCode3( HB_P_JUMPFALSEFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
-      hb_compGenPCode1( ( BYTE ) ( ( ( USHORT ) ( lOffset ) >> 16 ) & 0xFF ) );
+      hb_compGenPCode4( HB_P_JUMPFARFALSE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( ( USHORT ) ( lOffset ) >> 16 ) & 0xFF ) );
    }
    else
    {
@@ -1397,23 +1388,19 @@ ULONG hb_compGenJumpTrue( LONG lOffset )
    /* Just a place holder, it might be a far jump...*/
    if( lOffset == 0 )
    {
-      hb_compGenPCode3( HB_P_JUMPTRUEFAR, 0, 0 );
-      hb_compGenPCode1( 0 );
+      hb_compGenPCode4( HB_P_JUMPFARTRUE, 0, 0, 0 );
    }
    else if( lOffset >= -128 && lOffset <= 127 )
    {
-      hb_compGenPCode3( HB_P_JUMPTRUENEAR, HB_LOBYTE( lOffset ), HB_P_NOOP );
-      hb_compGenPCode1( HB_P_NOOP );
+      hb_compGenPCode4( HB_P_JUMPSHORTTRUE, HB_LOBYTE( lOffset ), HB_P_NOOP, HB_P_NOOP );
    }
    else if( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
    {
-      hb_compGenPCode3( HB_P_JUMPTRUE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
-      hb_compGenPCode1( HB_P_NOOP );
+      hb_compGenPCode4( HB_P_JUMPTRUE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_P_NOOP );
    }
    else if( lOffset >= (-8388608L) && lOffset <= 8388607L )
    {
-      hb_compGenPCode3( HB_P_JUMPTRUEFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
-      hb_compGenPCode1( ( BYTE ) ( ( ( USHORT ) ( lOffset ) >> 16 ) & 0xFF ) );
+      hb_compGenPCode4( HB_P_JUMPFARTRUE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( ( USHORT ) ( lOffset ) >> 16 ) & 0xFF ) );
    }
    else
    {
@@ -2225,30 +2212,6 @@ void hb_compGenPushFunCall( char * szFunName )
       hb_compGenPushSymbol( szFunName, 1 );
 }
 
-/* generates the pcode to push a integer number on the virtual machine stack */
-/*
-void hb_compGenPushInteger( int iNumber )
-{
-   if( lNumber == 0 )
-      hb_compGenPCode1( HB_P_ZERO );
-   else if( lNumber == 1 )
-      hb_compGenPCode1( HB_P_ONE );
-   else if( ( ( char * ) &lNumber )[ 2 ] == 0 && ( ( char * ) &lNumber )[ 3 ] == 0 )
-   {
-      if( ( ( char * ) &lNumber )[ 1 ] == 0 )
-         hb_compGenPCode2( HB_P_PUSHBYTE, ( ( char * ) &lNumber )[ 0 ] );
-      else
-         hb_compGenPCode3( HB_P_PUSHINT, ( ( char * ) &lNumber )[ 0 ], ( ( char * ) &lNumber )[ 1 ] );
-   }
-   else
-   {
-      hb_compGenPCode1( HB_P_PUSHLONG );
-      hb_compGenPCode2( ( ( char * ) &lNumber )[ 0 ], ( ( char * ) &lNumber )[ 1 ] );
-      hb_compGenPCode2( ( ( char * ) &lNumber )[ 2 ], ( ( char * ) &lNumber )[ 3 ] );
-   }
-}
-*/
-
 /* generates the pcode to push a long number on the virtual machine stack */
 void hb_compGenPushLong( long lNumber )
 {
@@ -2625,8 +2588,7 @@ static void hb_compOptimizeJumps( void )
  */
 ULONG hb_compSequenceBegin( void )
 {
-   hb_compGenPCode3( HB_P_SEQBEGIN, 0, 0 );
-   hb_compGenPCode1( 0 );
+   hb_compGenPCode4( HB_P_SEQBEGIN, 0, 0, 0 );
 
    hb_compPrepareOptimize();
 
@@ -2642,8 +2604,7 @@ ULONG hb_compSequenceBegin( void )
  */
 ULONG hb_compSequenceEnd( void )
 {
-   hb_compGenPCode3( HB_P_SEQEND, 0, 0 );
-   hb_compGenPCode1( 0 );
+   hb_compGenPCode4( HB_P_SEQEND, 0, 0, 0 );
 
    hb_compPrepareOptimize();
 
