@@ -137,6 +137,17 @@ PHB_LANG hb_langSelect( PHB_LANG lang )
    return langOld;
 }
 
+char * hb_langSelectID( char * pszID )
+{
+   char * pszIDOld = hb_langID();
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_langSelectID(%s)", pszID));
+
+   hb_langSelect( hb_langFind( pszID ) );
+
+   return pszIDOld;
+}
+
 void * hb_langDGetItem( int iIndex )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_langDGetItem(%i)", iIndex));
@@ -189,8 +200,7 @@ HB_FUNC( HB_LANGSELECT )
 {
    hb_retc( hb_langID() );
 
-   if( ISCHAR( 1 ) )
-      hb_langSelect( hb_langFind( hb_parc( 1 ) ) );
+   hb_langSelectID( hb_parc( 1 ) );
 }
 
 HB_FUNC( HB_LANGNAME )

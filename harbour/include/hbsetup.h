@@ -41,6 +41,13 @@
 /* Include settings common for .PRG and .C files */
 #include "hbsetup.ch"
 
+/* NOTE: You can select the default language modul used by Harbour, by
+         defining this to a valid language modul identifier. */
+
+#ifndef HB_LANG_DEFAULT
+   #define HB_LANG_DEFAULT      EN
+#endif
+
 /* ***********************************************************************
  * This symbol defines if Harbour is compiled using C compiler
  * that support strict ANSI C only

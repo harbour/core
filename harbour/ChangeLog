@@ -1,3 +1,18 @@
+20000415-18:23 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbapilng.h
+   * source/rtl/langapi.c
+     + hb_langSelectID() added
+
+   * include/hbsetup.ch
+   * include/hbsetup.h
+   * source/vm/harbinit.prg
+   * source/vm/hvm.c
+     ! Default language selection moved to C level.
+
+   * source/rdd/dbfcdx/dbfcdx1.c
+     - Commented out old includes removed.
+
 20000415-17:47 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * changelog

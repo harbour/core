@@ -37,29 +37,16 @@
 
 #include <time.h>
 #include <ctype.h>
+
 #include "hbapi.h"
 #include "hbapiitm.h"
-#include "hbinit.h"
 #include "hbapirdd.h"
-#include "rddsys.ch"
 #include "hbapierr.h"
-#include "hbdate.h"
 #include "hbapilng.h"
+#include "hbdate.h"
 #include "hbvm.h"
-
-/*
-#define SUPERTABLE ( &cdxSuper )
-
-#include <time.h>
-#include "extend.h"
-#include "init.h"
-#include "itemapi.h"
-#include "rddapi.h"
+#include "hbinit.h"
 #include "rddsys.ch"
-#include "errorapi.h"
-#include "ctoharb.h"
-#include "langapi.h"
-*/
 
 #define LOCK_START                                            0x40000000L
 #define LOCK_APPEND                                           0x7FFFFFFEL

@@ -265,6 +265,13 @@ void hb_vmInit( BOOL bStartMainProc )
 #endif
    hb_vmSymbolInit_RT();      /* initialize symbol table with runtime support functions */
 
+   /* Set the language to the default */
+
+   /* This trick is needed to stringify the macro value */
+   #define HB_LANG_SELECT_DEFAULT( id ) HB_LANG_SELECT_DEFAULT_( id )
+   #define HB_LANG_SELECT_DEFAULT_( id ) hb_langSelectID( #id )
+   HB_LANG_SELECT_DEFAULT( HB_LANG_DEFAULT );
+
    /* Check for some internal switches */
    hb_cmdargProcessVM();
 
