@@ -99,6 +99,6 @@ else
    # ---------------------------------------------------------------
    # Start the GNU make system
 
-   make $* > make_gnu.log
+   make $*
 
 fi

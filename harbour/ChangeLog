@@ -1,3 +1,15 @@
+20000505-02:03 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * make_gnu.*
+     - Removed output redirection.
+
+   * config/dos/bcc16.cf
+   * config/dos/djgpp.cf
+     ! echo -> echo.
+
+   * contrib/hbclip/*
+     + HB_ARGC(), HB_ARGV() added.
+
 20000505-00:27 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * source/rtl/teditor.prg
@@ -25,7 +37,6 @@
    *source/rdd/dbfntx/dbfntx1.c
       * changed to access pointers via hb_vmPushPointer/hb_itemGetPtr
       instead of passing them using values of long type
-
 
 20000504-04:05 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 

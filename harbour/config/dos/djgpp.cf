@@ -41,28 +41,28 @@ endif
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 # It causes that every echo command will be separated by LF
 define lib_object
-echo ADDMOD $(file) >> __lib__.tmp
+echo. ADDMOD $(file) >> __lib__.tmp
 
 endef
 
 # We have to use script to overcome the DOS limit of max 128 characters
 # in commmand line
 define create_library
-echo CREATE $@ > __lib__.tmp
+echo. CREATE $@ > __lib__.tmp
 $(foreach file, $^, $(lib_object))
-echo SAVE >> __lib__.tmp
-echo END >> __lib__.tmp
+echo. SAVE >> __lib__.tmp
+echo. END >> __lib__.tmp
 $(AR) -M < __lib__.tmp
 endef
 
 # NOTE: The empty line below HAVE TO exist!
 define link_file
-echo $(file) >> __link__.tmp
+echo. $(file) >> __link__.tmp
 
 endef
 
 define link_exe_file
-echo $(LDFLAGS) $(LD_OUT)$@ > __link__.tmp
+echo. $(LDFLAGS) $(LD_OUT)$@ > __link__.tmp
 $(foreach file, $^, $(link_file))
 $(foreach file, $(LINKPATHS), $(link_file))
 $(foreach file, $(LINKLIBS), $(link_file))

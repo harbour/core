@@ -52,8 +52,6 @@
 
 #xtranslate HB_ARGCHECK( <s> )                            => ( .F. )
 #xtranslate HB_ARGSTRING( <s> )                           => ""
-#xtranslate HB_ARGC()                                     => 0
-#xtranslate HB_ARGV( <n> )                                => ""
 #xtranslate HB_FNAMESPLIT( <s> )                          => NIL
 #xtranslate HB_FNAMEMERGE( <s1>[, <s2>[, <s3>[, <s4>]]] ) => ""
 #xtranslate HB_PVALUE( <n> )                              => NIL
@@ -61,46 +59,45 @@
 #xtranslate HB_SETKEYSAVE( [<a>] )                        => ( {} )
 #xtranslate HB_SETKEYCHECK( <n>[, <x1>[, <x2>[, <x3>]]] ) => ( .F. )
 
-#TRANSLATE AS CHAR ARRAY =>
-#TRANSLATE AS CHARACTER ARRAY  =>
-#TRANSLATE AS STRING ARRAY  =>
+#translate AS CHAR ARRAY =>
+#translate AS CHARACTER ARRAY  =>
+#translate AS STRING ARRAY  =>
 
-#TRANSLATE AS NUM ARRAY  =>
-#TRANSLATE AS NUMERIC ARRAY  =>
+#translate AS NUM ARRAY  =>
+#translate AS NUMERIC ARRAY  =>
 
-#TRANSLATE AS DATE ARRAY  =>
-#TRANSLATE AS ARRAY ARRAY  =>
-#TRANSLATE AS BLOCK ARRAY  =>
-#TRANSLATE AS OBJECT ARRAY  =>
+#translate AS DATE ARRAY  =>
+#translate AS ARRAY ARRAY  =>
+#translate AS BLOCK ARRAY  =>
+#translate AS OBJECT ARRAY  =>
 
-#TRANSLATE AS BOOL ARRAY  =>
-#TRANSLATE AS BOOLEAN ARRAY  =>
-#TRANSLATE AS LOGICAL ARRAY  =>
+#translate AS BOOL ARRAY  =>
+#translate AS BOOLEAN ARRAY  =>
+#translate AS LOGICAL ARRAY  =>
 
-#TRANSLATE AS VAR ARRAY =>
-#TRANSLATE AS VARIANT ARRAY =>
+#translate AS VAR ARRAY =>
+#translate AS VARIANT ARRAY =>
 
+#translate AS CHAR =>
+#translate AS CHARACTER =>
+#translate AS STRING =>
 
-#TRANSLATE AS CHAR =>
-#TRANSLATE AS CHARACTER =>
-#TRANSLATE AS STRING =>
+#translate AS NUM =>
+#translate AS NUMERIC =>
 
-#TRANSLATE AS NUM =>
-#TRANSLATE AS NUMERIC =>
+#translate AS DATE =>
+#translate AS ARRAY =>
+#translate AS BLOCK =>
+#translate AS OBJECT =>
 
-#TRANSLATE AS DATE =>
-#TRANSLATE AS ARRAY =>
-#TRANSLATE AS BLOCK =>
-#TRANSLATE AS OBJECT =>
+#translate AS BOOL =>
+#translate AS BOOLEAN =>
+#translate AS LOGICAL =>
 
-#TRANSLATE AS BOOL =>
-#TRANSLATE AS BOOLEAN =>
-#TRANSLATE AS LOGICAL =>
+#translate AS VAR =>
+#translate AS VARIANT =>
 
-#TRANSLATE AS VAR =>
-#TRANSLATE AS VARIANT =>
-
-#COMMAND DECLARE FUNCTION <*x*> =>
+#command DECLARE FUNCTION <*x*> =>
 
 #endif /* HB_CLIP_CH_ */
 

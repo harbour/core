@@ -29,13 +29,13 @@ CFLAGS = -O2 -mh -d
 
 #Note: The empty line below HAVE TO exist!
 define link_file
-echo $(file) >> __link__.tmp
+echo. $(file) >> __link__.tmp
 
 endef
 
 
 define link_exe_file
-echo $(LDFLAGS) -e$@ > __link__.tmp
+echo. $(LDFLAGS) -e$@ > __link__.tmp
 $(foreach file, $^, $(link_file))
 $(foreach file, $(LINKLIBS), $(link_file))
 -$(LD) @__link__.tmp
@@ -71,14 +71,14 @@ endif
 
 #Note: The empty line below HAVE TO exist!
 define lib_object
-echo -+$(file) &>> __lib__.tmp
+echo. -+$(file) &>> __lib__.tmp
 
 endef
 
 define create_library
-echo $@ &> __lib__.tmp
+echo. $@ &> __lib__.tmp
 $(foreach file, $^, $(lib_object))
-echo ,, >> __lib__.tmp
+echo. ,, >> __lib__.tmp
 $(AR) $(ARFLAGS) @__lib__.tmp
 del __lib__.tmp
 endef
