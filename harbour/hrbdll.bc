@@ -90,13 +90,16 @@ HARBOUR_DLL_OBJS = \
   $(OBJ_DIR)\alert.obj \
   $(OBJ_DIR)\altd.obj \
   $(OBJ_DIR)\ampm.obj \
+  $(OBJ_DIR)\array.obj \
   $(OBJ_DIR)\at.obj \
   $(OBJ_DIR)\binnum.obj \
   $(OBJ_DIR)\binnumx.obj \
+  $(OBJ_DIR)\block.obj \
   $(OBJ_DIR)\box.obj \
   $(OBJ_DIR)\browdb.obj \
   $(OBJ_DIR)\browdbx.obj \
   $(OBJ_DIR)\browse.obj \
+  $(OBJ_DIR)\characte.obj \
   $(OBJ_DIR)\cdpapi.obj \
   $(OBJ_DIR)\checkbox.obj \
   $(OBJ_DIR)\chrasc.obj \
@@ -104,6 +107,7 @@ HARBOUR_DLL_OBJS = \
   $(OBJ_DIR)\colorind.obj \
   $(OBJ_DIR)\console.obj \
   $(OBJ_DIR)\copyfile.obj \
+  $(OBJ_DIR)\date.obj \
   $(OBJ_DIR)\datec.obj \
   $(OBJ_DIR)\dates.obj \
   $(OBJ_DIR)\dateshb.obj \
@@ -152,6 +156,7 @@ HARBOUR_DLL_OBJS = \
   $(OBJ_DIR)\len.obj \
   $(OBJ_DIR)\lennum.obj \
   $(OBJ_DIR)\listbox.obj \
+  $(OBJ_DIR)\logical.obj \
   $(OBJ_DIR)\math.obj \
   $(OBJ_DIR)\maxrow.obj \
   $(OBJ_DIR)\memoedit.obj \
@@ -171,6 +176,8 @@ HARBOUR_DLL_OBJS = \
   $(OBJ_DIR)\mtran.obj \
   $(OBJ_DIR)\natmsg.obj \
   $(OBJ_DIR)\net.obj \
+  $(OBJ_DIR)\nil.obj \
+  $(OBJ_DIR)\numeric.obj \
   $(OBJ_DIR)\objfunc.obj \
   $(OBJ_DIR)\oemansi.obj \
   $(OBJ_DIR)\oldbox.obj \
@@ -1174,6 +1181,12 @@ $(OBJ_DIR)\altd.obj : $(OBJ_DIR)\altd.c
 $(OBJ_DIR)\ampm.obj : $(RTL_DIR)\ampm.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
+$(OBJ_DIR)\array.c : $(RTL_DIR)\array.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\array.obj : $(OBJ_DIR)\array.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
 $(OBJ_DIR)\at.obj : $(RTL_DIR)\at.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
@@ -1181,6 +1194,12 @@ $(OBJ_DIR)\binnum.obj : $(RTL_DIR)\binnum.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\binnumx.obj : $(RTL_DIR)\binnumx.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\block.c : $(RTL_DIR)\block.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\block.obj : $(OBJ_DIR)\block.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\box.obj : $(RTL_DIR)\box.c
@@ -1207,6 +1226,12 @@ $(OBJ_DIR)\browse.obj : $(OBJ_DIR)\browse.c
 $(OBJ_DIR)\cdpapi.obj : $(RTL_DIR)\cdpapi.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
+$(OBJ_DIR)\characte.c : $(RTL_DIR)\characte.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\characte.obj : $(OBJ_DIR)\characte.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
 $(OBJ_DIR)\checkbox.c : $(RTL_DIR)\checkbox.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
@@ -1229,6 +1254,12 @@ $(OBJ_DIR)\console.obj : $(RTL_DIR)\console.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\copyfile.obj : $(RTL_DIR)\copyfile.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\date.c : $(RTL_DIR)\date.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\date.obj : $(OBJ_DIR)\date.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\datec.obj : $(RTL_DIR)\datec.c
@@ -1411,6 +1442,12 @@ $(OBJ_DIR)\listbox.c : $(RTL_DIR)\listbox.prg
 $(OBJ_DIR)\listbox.obj : $(OBJ_DIR)\listbox.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
+$(OBJ_DIR)\logical.c : $(RTL_DIR)\logical.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\logical.obj : $(OBJ_DIR)\logical.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
 $(OBJ_DIR)\math.obj : $(RTL_DIR)\math.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
@@ -1478,6 +1515,18 @@ $(OBJ_DIR)\natmsg.obj : $(RTL_DIR)\natmsg.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\net.obj : $(RTL_DIR)\net.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\nil.c : $(RTL_DIR)\nil.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\nil.obj : $(OBJ_DIR)\nil.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\numeric.c : $(RTL_DIR)\numeric.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\numeric.obj : $(OBJ_DIR)\numeric.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\objfunc.c : $(RTL_DIR)\objfunc.prg

@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-07-27 10:50 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
+  * hrbdll.bc
+    + Added modules array.prg, block.prg, characte.prg, date.prg, 
+      logical.prg, nil.prg, numeric.prg.
+
 2004-07-27 11:49 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   + source/rtl/array.prg
   + source/rtl/block.prg
