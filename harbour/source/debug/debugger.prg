@@ -146,7 +146,7 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
                        ASize( s_oDebugger:aCallStack, Len( s_oDebugger:aCallStack ) + 1 )
                        AIns( s_oDebugger:aCallStack, 1 )
                        // nil means no line number stored yet
-                       s_oDebugger:aCallStack[ 1 ] := { cProcName, {}, nil }
+                       s_oDebugger:aCallStack[ 1 ] := { cProcName, {}, nil, nil }
                        s_oDebugger:lCodeblock := .T.
                     endif
                  endif
