@@ -1,3 +1,7 @@
+19990729-23:35 CET Victor Szel <info@szelvesz.hu>
+   ! source/rtl/objfunc.prg - Typo fixed.
+     "doesnt exists in class" -> "does not exist in class"
+
 19990729-23:00 GMT+1 Bruno Cantero <bruno@issnet.net>
    * makefile.env, makefile.dos,source/makefile.dos, source/rdd/makefile.dos
    + source/rdd/dbfntx/makefile.dos

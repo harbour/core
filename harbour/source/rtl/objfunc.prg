@@ -225,7 +225,7 @@ return oObj
 function oModMethod( oObj, cSymbol, nFuncPtr )
 
    if !IsMethod( oObj, cSymbol )
-      QOut( "OMODMETHOD: ", cSymbol, " does not exists in class." )
+      QOut( "OMODMETHOD: ", cSymbol, " does not exist in class." )
    elseif ValType( nFuncPtr ) != "N"
       QOut( "OMODMETHOD: Argument type error <nFuncPtr>" )
    elseif ValType( oObj ) != "O"
@@ -244,7 +244,7 @@ return oObj
 function oModInline( oObj, cSymbol, bInline )
 
    if !IsMethod( oObj, cSymbol )
-      QOut( "OMODINLINE: ", cSymbol, " does not exists in class." )
+      QOut( "OMODINLINE: ", cSymbol, " does not exist in class." )
    elseif ValType( bInline ) != "B"
       QOut( "OMODINLINE: Argument type error <bInline>" )
    elseif ValType( oObj ) != "O"
@@ -263,7 +263,7 @@ return oObj
 function oDelMethod( oObj, cSymbol )
 
    if !IsMethod( oObj, cSymbol )
-      QOut( "ODELMETHOD: ", cSymbol, " does not exists in class." )
+      QOut( "ODELMETHOD: ", cSymbol, " does not exist in class." )
    elseif ValType( oObj ) != "O"
       QOut( "ODELMETHOD: Argument type error <oObj>" )
    else
@@ -285,7 +285,7 @@ function oDelData( oObj, cSymbol )
    local nSeq
 
    if !IsData( oObj, cSymbol )
-      QOut( "ODELDATA: ", cSymbol, " does not exists in class." )
+      QOut( "ODELDATA: ", cSymbol, " does not exist in class." )
    elseif ValType( oObj ) != "O"
       QOut( "ODELDATA: Argument type error <oObj>" )
    else
