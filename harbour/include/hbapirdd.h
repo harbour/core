@@ -612,12 +612,9 @@ typedef USHORT ( * DBENTRYP_SVL  )( AREAP area, USHORT index, ULONG * param );
 typedef USHORT ( * DBENTRYP_SSI  )( AREAP area, USHORT p1, USHORT p2, PHB_ITEM p3 );
 typedef USHORT ( * DBENTRYP_ISI  )( AREAP area, PHB_ITEM p1, USHORT p2, PHB_ITEM p3 );
 typedef USHORT ( * DBENTRYP_BIB  )( AREAP area, BOOL p1, PHB_ITEM p2, BOOL p3 );
-
-#if 0
 typedef USHORT ( * DBENTRYP_VPL  )( AREAP area, void * p1, LONG p2);
-typedef USHORT ( * DBENTRYP_VPLP )( AREAP area, void * p1, LONGP p2);
-typedef USHORT ( * DBENTRYP_LSP  )( AREAP area, LONG p1, USHORTP p2);
-#endif
+typedef USHORT ( * DBENTRYP_VPLP )( AREAP area, void * p1, LONG * p2);
+typedef USHORT ( * DBENTRYP_LSP  )( AREAP area, LONG p1, USHORT * p2);
 
 
 /*--------------------* Virtual Method Table *----------------------*/
@@ -723,20 +720,14 @@ typedef struct _RDDFUNCS
 
    DBENTRYP_V    clearFilter;
    DBENTRYP_V    clearLocate;
-#if 0
    DBENTRYP_V    clearScope;
    DBENTRYP_VPLP countScope;
-#endif
    DBENTRYP_I    filterText;
-#if 0
    DBENTRYP_SI   scopeInfo;
-#endif
    DBENTRYP_VFI  setFilter;
    DBENTRYP_VLO  setLocate;
-#if 0
    DBENTRYP_VP   setScope;
    DBENTRYP_VPL  skipScope;
-#endif
 
 
    /* Miscellaneous */

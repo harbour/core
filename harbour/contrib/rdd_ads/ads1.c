@@ -1023,9 +1023,14 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
 
 #define  adsClearFilter           NULL
 #define  adsClearLocate           NULL
+#define  adsClearScope            NULL
+#define  adsCountScope            NULL
 #define  adsFilterText            NULL
+#define  adsScopeInfo             NULL
 #define  adsSetFilter             NULL
 #define  adsSetLocate             NULL
+#define  adsSetScope              NULL
+#define  adsSkipScope             NULL
 #define  adsCompile               NULL
 #define  adsError                 NULL
 #define  adsEvalBlock             NULL
@@ -1230,9 +1235,14 @@ static RDDFUNCS adsTable = {  adsBof,
                              ( DBENTRYP_OII ) adsOrderInfo,
                              adsClearFilter,
                              adsClearLocate,
+                             adsClearScope,
+                             adsCountScope,
                              adsFilterText,
+                             adsScopeInfo,
                              adsSetFilter,
                              adsSetLocate,
+                             adsSetScope,
+                             adsSkipScope,
                              adsCompile,
                              adsError,
                              adsEvalBlock,

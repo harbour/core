@@ -664,9 +664,14 @@ static RDDFUNCS dbfSuper = { 0 };
 #define dbfOrderInfo                            NULL
 #define dbfClearFilter                          NULL
 #define dbfClearLocate                          NULL
+#define dbfClearScope                           NULL
+#define dbfCountScope                           NULL
 #define dbfFilterText                           NULL
+#define dbfScopeInfo                            NULL
 #define dbfSetFilter                            NULL
 #define dbfSetLocate                            NULL
+#define dbfSetScope                             NULL
+#define dbfSkipScope                            NULL
 #define dbfCompile                              NULL
 #define dbfError                                NULL
 #define dbfEvalBlock                            NULL
@@ -2062,9 +2067,14 @@ static RDDFUNCS dbfTable = { dbfBof,
                              dbfOrderInfo,
                              dbfClearFilter,
                              dbfClearLocate,
+                             dbfClearScope,
+                             dbfCountScope,
                              dbfFilterText,
+                             dbfScopeInfo,
                              dbfSetFilter,
                              dbfSetLocate,
+                             dbfSetScope,
+                             dbfSkipScope,
                              dbfCompile,
                              dbfError,
                              dbfEvalBlock,
