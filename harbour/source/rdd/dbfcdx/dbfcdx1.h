@@ -52,31 +52,33 @@
  */
 
 
-//#define LOCK_START                                            0x40000000L
-//#define LOCK_APPEND                                           0x7FFFFFFEL
-//#define LOCK_FILE                                             0x3FFFFFFFL
-//#define MEMO_BLOCK                                                     64
-//#define CDX_MAX_KEY                                                   240
-//#define CDX_MAX_TAG_NAME_LEN                                           10
-//#define CDX_BLOCK_SIZE                                                512
-#define CDX_INTERNAL_SPACE                                            500
-#define CDX_EXTERNAL_SPACE                                            488
-#define CDX_MAX_REC_NUM                                       0x7FFFFFFFL
-#define CDX_IGNORE_REC_NUM                                             -1
-#define PAGE_ROOT                                                       1
-#define PAGE_NODE                                                       2
-#define PAGE_LEAF                                                       3
-#define TOP_RECORD                                                      1
-#define BTTM_RECORD                                                     2
-#define PREV_RECORD                                                     3
-#define NEXT_RECORD                                                     4
-#define SORT_CHUNK_LIMIT                                            16384
-#define SORT_ACTIVE_LIST                                                0
-#define SORT_END_OF_KEY                                                 1
-#define SORT_END_OF_WORD                                                2
-#define SORT_STACK_OF_CHAR                                              3
-#define SORT_NOT_KEY                                                 0x10
+/*
+#define LOCK_START                      0x40000000L
+#define LOCK_APPEND                     0x7FFFFFFEL
+#define LOCK_FILE                       0x3FFFFFFFL
+#define MEMO_BLOCK                      64
+#define CDX_MAX_KEY                     240
+#define CDX_MAX_TAG_NAME_LEN            10
+#define CDX_BLOCK_SIZE                  512
+*/
 
+#define CDX_INTERNAL_SPACE              500
+#define CDX_EXTERNAL_SPACE              488
+#define CDX_MAX_REC_NUM                 0x7FFFFFFFL
+#define CDX_IGNORE_REC_NUM              -1
+#define PAGE_ROOT                       1
+#define PAGE_NODE                       2
+#define PAGE_LEAF                       3
+#define TOP_RECORD                      1
+#define BTTM_RECORD                     2
+#define PREV_RECORD                     3
+#define NEXT_RECORD                     4
+#define SORT_CHUNK_LIMIT                16384
+#define SORT_ACTIVE_LIST                0
+#define SORT_END_OF_KEY                 1
+#define SORT_END_OF_WORD                2
+#define SORT_STACK_OF_CHAR              3
+#define SORT_NOT_KEY                    0x10
 
 #if (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
    #pragma option -a1 /* byte alignment */
@@ -100,10 +102,12 @@ typedef struct
    BYTE   ShortBytes;
    BYTE   ExtData[ CDX_EXTERNAL_SPACE ];
 } CDXEXTERNAL;
+
 typedef struct
 {
    BYTE   IntData[ CDX_INTERNAL_SPACE ];
 } CDXINTERNAL;
+
 typedef struct _CDXDATA
 {
    USHORT Node_Atr;
@@ -116,6 +120,7 @@ typedef struct _CDXDATA
       CDXINTERNAL Internal;
    } cdxu;
 } CDXDATA;
+
 #if (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
    #pragma option -a /* default alignment */
 #elif defined(__GNUC__)
@@ -125,6 +130,7 @@ typedef struct _CDXDATA
 #elif defined(__cplusplus)
    #pragma pack()
 #endif
+
 typedef CDXDATA * LPCDXDATA;
 
 typedef struct _KEYINFO
@@ -136,6 +142,7 @@ typedef struct _KEYINFO
    LONG     Xtra;
    struct  _KEYINFO * pNext;
 } KEYINFO;
+
 typedef KEYINFO * LPKEYINFO;
 
 struct _CDXTAG;    /* forward declaration */
@@ -167,6 +174,7 @@ typedef struct HB_PAGEINFO_STRU
    struct HB_PAGEINFO_STRU * Child;
    struct _CDXTAG * TagParent;
 } HB_PAGEINFO;
+
 typedef HB_PAGEINFO * LPPAGEINFO;
 
 
@@ -180,13 +188,11 @@ typedef struct
    USHORT LevelLink;
 } SORT_A;
 
-
 typedef struct
 {
    BYTE Fill03[ 4 ];
    BYTE ChrStack[ 4 ];
 } SORT_B;
-
 
 typedef struct
 {
@@ -194,12 +200,10 @@ typedef struct
    LONG ChrFill;
 } SORT_C;
 
-#define SORT_GET_NUSE(w)          ((w) & 0x07)
-#define SORT_SET_NUSE(w,n)        ((w) = ((w) & 0xF8) | (n) )
-#define SORT_GET_STACK_LEN(w)     ((w) >> 6)
-#define SORT_SET_STACK_LEN(w,n)   ((w) = ((w) & 0x3f) | ((n) << 6))
-
-
+#define SORT_GET_NUSE( w )              (( w ) & 0x07 )
+#define SORT_SET_NUSE( w, n )           (( w ) = ( ( w ) & 0xF8 ) | ( n ) )
+#define SORT_GET_STACK_LEN( w )         (( w ) >> 6 )
+#define SORT_SET_STACK_LEN( w, n )      (( w ) = ( ( w ) & 0x3F ) | ( ( n ) << 6 ) )
 
 typedef struct
 {

@@ -18,6 +18,9 @@ items (Clipper passes a pointer to the same
 allocated memory instead of creating
 string copies)
 
+Removed #pragma pack() tricks                ???
+from rdd .h files.
+
 Optimize out the need for the PUSHNIL        Ryszard Glab
 opcode before each function call.
 

@@ -8,6 +8,16 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-15 15:53 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/rdd/dbfcdx/dbfcdx1.c
+   * source/rdd/dbfcdx/dbfcdx1.h
+   * source/rdd/dbfcdx/dbfcdx2.h
+     * Some formatting.
+
+   * TODO
+     + Readded one item.
+
 2001-12-15 14:43 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * TODO
