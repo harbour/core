@@ -1,3 +1,7 @@
+19990820-12:50 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rdd/dbcmd.c
+    ! SELF_DELETE -> SELF_DELETED (missed from the previous ChangeLog entry)
+
 19990820-12:40 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/filesys.c
     include/filesys.h
