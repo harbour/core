@@ -126,7 +126,7 @@ memvarbl.c   : memvarbl.prg  harbour.exe
 harbour.exe : harboury.c harbourl.c genc.obj genhrb.obj genjava.obj genrc.obj genpas.obj genobj32.obj harbour.obj compiler.h hbppint.c hbpp.c table.c
    echo -O2 > bld.32
    echo -ebin\harbour.exe >> bld.32
-   echo -Iinclude >> bld.32
+   echo -Iinclude;source\compiler >> bld.32
    echo source\compiler\harboury.c >> bld.32
    echo source\compiler\harbourl.c >> bld.32
    echo source\compiler\genobj32.obj >> bld.32
