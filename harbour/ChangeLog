@@ -7,6 +7,25 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+  * doc/howtocvs.txt
+    ! I updated my "How I got SSH and CVS to work together" procedure
+      based on information that was provided by "Jorge A. Giraldo"
+      <jorgeagiraldo@emtelsa.multi.net.co>
+
+2002-02-19 21:55 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
+  * utils/hbmake/hbmake.prg
+    * Fixed remaining bug as reported by Chen
+
+2002-02-19 17:45 UTC+0100 Ignacio Ortiz <ignacio@fivetech.com>
+  * source/rtl/Tget.prg
+    * Fixed bug reported by Lorenzo Fiorini
+
+2002-02-19 10:40 UTC+0100 Ignacio Ortiz <ignacio@fivetech.com>
+  * source/rtl/Tget.prg
+  * source/rtl/Tgetlist.prg
+
+    * Minor modifications proposed by Walter Negro
     * Fixed bug on numeric fields with picture clause
 
 2002-02-19 10:22 UTC+0100 Antonio Linares <alinares@fivetech.com>
@@ -18,7 +37,7 @@
 
        #xcommand INIT[<c>] ;
                  =>;
-  + contrib/libct/tab.c 
+                 ::New( <c> )
 
        function Main()
 
