@@ -187,9 +187,12 @@ HB_FUNC( ADEL )
 
    if( pArray )
    {
-      if( ISNUM( 2 ) )
-         hb_arrayDel( pArray, hb_parnl( 2 ) );
+      long int ulPos = 1;
 
+      if( ISNUM( 2 ) )
+         ulPos = hb_parnl( 2 );
+
+      hb_arrayDel( pArray, ulPos );
       hb_itemReturn( pArray ); /* ADel() returns the array itself */
    }
 }

@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+       This allows that the string-number conversions are same for program
+       and for compilation.
+       ? ( val("1191.63") == 1191.63 ) -> TRUE
+
 2002-02-17 20:20 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
    *include/hbpcode.h
      *Added newline at the end to clear gcc warning
