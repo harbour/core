@@ -136,6 +136,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctcrypt.obj \
    $(OBJ_DIR)\finan.obj \
    $(OBJ_DIR)\justify.obj \
+   $(OBJ_DIR)\keyset.obj \
    $(OBJ_DIR)\math.obj \
    $(OBJ_DIR)\num1.obj \
    $(OBJ_DIR)\numat.obj \
@@ -143,6 +144,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\pos1.obj \
    $(OBJ_DIR)\pos2.obj \
    $(OBJ_DIR)\posdiff.obj \
+   $(OBJ_DIR)\print.obj \
    $(OBJ_DIR)\range.obj \
    $(OBJ_DIR)\relation.obj \
    $(OBJ_DIR)\remove.obj \
@@ -157,6 +159,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ct.obj \
    $(OBJ_DIR)\ctmisc.obj \
    $(OBJ_DIR)\datetime.obj \
+   $(OBJ_DIR)\numconv.obj \
 
 #
 # Our default target

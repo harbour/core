@@ -275,7 +275,7 @@ CELSIUS       ;R;
 CLEARBIT      ;N; 
 CTOBIT        ;N; 
 CTOF          ;N; 
-CTON          ;N; 
+CTON          ;S; 
 EXPONENT      ;N; 
 FAHRENHEIT    ;R; 
 FTOC          ;N; 
@@ -285,7 +285,7 @@ INTPOS        ;N;
 ISBIT         ;N; 
 LTON          ;N; 
 MANTISSA      ;N; 
-NTOC          ;N; 
+NTOC          ;S; 
 NUMAND        ;N; 
 NUMCOUNT      ;N; 
 NUMHIGH       ;N; 
@@ -426,11 +426,11 @@ VOLUME        ;N;
 NUMPRINTER    ;N; 
 PRINTFILE     ;N; 
 PRINTINIT     ;N; 
-PRINTREADY    ;N; 
+PRINTREADY    ;S;dos 
 PRINTSCR      ;N; 
 PRINTSCRX     ;N; 
 PRINTSEND     ;N; 
-PRINTSTAT     ;N; 
+PRINTSTAT     ;S;dos
 SPOOLACTIV    ;N; 
 SPOOLADD      ;N; 
 SPOOLCOUNT    ;N; 
@@ -522,10 +522,10 @@ CSETSOFT      ;N;
 CSETUNIQ      ;N;
 CSETWRAP      ;N;
 ISDEBUG       ;N;
-KSETCAPS      ;N; 
-KSETINS       ;N; 
-KSETNUM       ;N; 
-KSETSCROLL    ;N; 
+KSETCAPS      ;S;dos 
+KSETINS       ;S;dos 
+KSETNUM       ;S;dos 
+KSETSCROLL    ;S;dos 
 LASTKFUNC     ;N; 
 LASTKLINE     ;N; 
 LASTKPROC     ;N; 

@@ -114,9 +114,10 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctchksum.obj \
    $(OBJ_DIR)\ctcolton.obj \
    $(OBJ_DIR)\ctcrypt.obj \
-   $(OBJ_DIR)\finan.obj \
    $(OBJ_DIR)\files.obj \
+   $(OBJ_DIR)\finan.obj \
    $(OBJ_DIR)\justify.obj \
+   $(OBJ_DIR)\keyset.obj \
    $(OBJ_DIR)\math.obj \
    $(OBJ_DIR)\num1.obj \
    $(OBJ_DIR)\numat.obj \
@@ -124,6 +125,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\pos1.obj \
    $(OBJ_DIR)\pos2.obj \
    $(OBJ_DIR)\posdiff.obj \
+   $(OBJ_DIR)\print.obj \
    $(OBJ_DIR)\range.obj \
    $(OBJ_DIR)\relation.obj \
    $(OBJ_DIR)\remove.obj \
@@ -138,6 +140,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ct.obj \
    $(OBJ_DIR)\ctmisc.obj \
    $(OBJ_DIR)\datetime.obj \
+   $(OBJ_DIR)\numconv.obj \
 
 #
 # Our default target
@@ -252,15 +255,19 @@ $(OBJ_DIR)\ctcrypt.obj : $(TOOLS_DIR)\ctcrypt.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\finan.obj : $(TOOLS_DIR)\finan.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
 $(OBJ_DIR)\files.obj : $(TOOLS_DIR)\files.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\finan.obj : $(TOOLS_DIR)\finan.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\justify.obj : $(TOOLS_DIR)\justify.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\keyset.obj : $(TOOLS_DIR)\keyset.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
@@ -289,6 +296,10 @@ $(OBJ_DIR)\pos2.obj : $(TOOLS_DIR)\pos2.c
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\posdiff.obj : $(TOOLS_DIR)\posdiff.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\print.obj : $(TOOLS_DIR)\print.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
@@ -350,5 +361,12 @@ $(OBJ_DIR)\datetime.c : $(TOOLS_DIR)\datetime.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\datetime.obj : $(OBJ_DIR)\datetime.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\numconv.c : $(TOOLS_DIR)\numconv.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\numconv.obj : $(OBJ_DIR)\numconv.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,

@@ -29,9 +29,10 @@ C_SOURCES = \
         ctchksum.c \
         ctcolton.c \
         ctcrypt.c \
+	files.c \
         finan.c \
 	justify.c \
-	files.c \
+	keyset.c \
 	math.c \
 	num1.c \
 	numat.c \
@@ -39,6 +40,7 @@ C_SOURCES = \
 	pos1.c \
 	pos2.c \
 	posdiff.c \
+	print.c \
 	range.c \
 	relation.c \
 	remove.c \
@@ -54,6 +56,7 @@ PRG_SOURCES= \
 	ct.prg \
         ctmisc.prg \
 	datetime.prg \
+	numconv.prg \
 
 LIBNAME=libct
 
