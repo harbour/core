@@ -1,3 +1,7 @@
+19991007-09:16 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/tclass.prg
+     * Method SetType() defaults init value to .f. when AS LOGICAL is specified.
+
 19991007-01:02 EDT Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      + source/rtl/readkey
