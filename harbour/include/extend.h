@@ -172,19 +172,4 @@ PDYNSYM GetDynSym( char * szName );   /* finds and creates a dynamic symbol if n
 PDYNSYM NewDynSym( PSYMBOL pSymbol ); /* creates a new dynamic symbol based on a local one */
 PDYNSYM FindDynSym( char * szName );  /* finds a dynamic symbol */
 
-/* error API */
-PHB_ITEM _errNew( void );
-PHB_ITEM _errPutDescription( PHB_ITEM pError, char * szDescription );
-PHB_ITEM _errPutFileName( PHB_ITEM pError, char * szFileName );
-PHB_ITEM _errPutGenCode( PHB_ITEM pError, USHORT uiGenCode );
-PHB_ITEM _errPutOperation( PHB_ITEM pError, char * szOperation );
-PHB_ITEM _errPutOsCode( PHB_ITEM pError, USHORT uiOsCode );
-PHB_ITEM _errPutSeverity( PHB_ITEM pError, USHORT uiSeverity );
-PHB_ITEM _errPutSubCode( PHB_ITEM pError, USHORT uiSubCode );
-PHB_ITEM _errPutSubSystem( PHB_ITEM pError, char * szSubSystem );
-PHB_ITEM _errPutTries( PHB_ITEM pError, USHORT uiTries );
-WORD _errLaunch( PHB_ITEM pError );
-void _errRelease( PHB_ITEM pError );
-
 #endif
-
