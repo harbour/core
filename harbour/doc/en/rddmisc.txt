@@ -534,7 +534,9 @@
  *  $DESCRIPTION$
  *      This function returns the number of records present in the database
  *      in the selected or designated work area.If no records are present
- *      the value of this function will be 0.
+ *      the value of this function will be 0.Additionaly,if no database is
+ *      in use in the selected or designated work area,this function will
+ *      return a 0 value as well.
  *  $EXAMPLES$
  *      USE Tests NEW
  *      ? LASTREC(), RECCOUNT()
@@ -558,42 +560,24 @@
  *  $CATEGORY$
  *      Database
  *  $ONELINER$
- *      Return the last modification date of a (.dbf) file
+ *      Yields the date the database was last updated.
  *  $SYNTAX$
  *      LUPDATE() --> dModification
  *  $ARGUMENTS$
  *      None
  *  $RETURNS$
- *      <dModification>  the date of last change to the open database file in
- *      the current work area.  If there is no database file in USE, LUPDATE()
- *      returns a blank date.
+ *      <dModification>  The date of the last modification.
  *  $DESCRIPTION$
- *      LUPDATE() is a database function that determines the date the database
- *      file in the current work area was last modified and CLOSEd.  By default,
- *      LUPDATE() operates on the currently selected work area.  It will operate
- *      on an unselected work area if you specify it as part of an aliased
- *      expression as shown in the example below.
+ *      This function returns the date recorded by the OS when the selected
+ *      or designated database was last written to disk.This function will
+ *      only work for those database files in USE.
  *  $EXAMPLES$
- *      This example demonstrates that the modification date of
- *      database file is not changed until the database file is closed:
+ *      Function Main
  *
- *      ? DATE()                  // Result: 09/01/90
- *      USE Sales NEW
- *      ? LUPDATE()               // Result: 08/31/90
- *      //
- *      APPEND BLANK
- *      ? LUPDATE()               // Result: 08/31/90
- *      CLOSE DATABASES
- *      //
- *      USE Sales NEW
- *      ? LUPDATE()               // Result: 09/01/90
- *
- *      This example uses an aliased expression to access LUPDATE()
- *      for a database file open in an unselected work area:
- *
- *      USE Sales NEW
- *      USE Customer NEW
- *      ? LUPDATE(), Sales->(LUPDATE())
+ *      Use Tests New
+ *      ? Lupdate() // 04/25/2000
+ *      Use
+ *      Return Nil
  *  $TESTS$
  *  $STATUS$
  *      R
@@ -614,58 +598,40 @@
  *  $CATEGORY$
  *      Database
  *  $ONELINER$
- *      Determine if a network command has failed
+ *      Tests the success of a network function
  *  $SYNTAX$
  *      NETERR([<lNewError>]) --> lError
  *  $ARGUMENTS$
- *      <lNewError> if specified sets the value returned by NETERR() to the
- *      specified status.  <lNewError> can be either true (.T.) or false (.F.).
- *      Setting NETERR() to a specified value allows the runtime error handler
- *      to control the way certain file errors are handled.  For more
- *      information, refer to Errorsys.prg.
+ *      <lNewError> Is a logical Expression.
  *  $RETURNS$
- *      NETERR() returns true (.T.) if a USE or APPEND BLANK fails.  The initial
- *      value of NETERR() is false (.F.).  If the current process is not running
- *      under a network operating system, NETERR() always returns false (.F.).
+ *      <lError> A value based on the success of a network operation or
+ *      function.
  *  $DESCRIPTION$
- *      NETERR() is a network function.  It is a global flag set by USE,
- *      USE...EXCLUSIVE, and APPEND BLANK in a network environment.  It is used
- *      to test whether any of these commands have failed by returning true
- *      (.T.) in the following situations:
- *
- *      NETERR() Causes
- *      컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
- *      Command             Cause
- *      컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
- *      USE                 USE EXCLUSIVE by another process
- *      USE...EXCLUSIVE     USE EXCLUSIVE or USE by another process
- *      APPEND BLANK        FLOCK() or RLOCK() of LASTREC() + 1 by another user
- *      컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
- *
- *      NETERR() is generally applied in a program by testing it following a USE
- *      or APPEND BLANK command.  If it returns false (.F.), you can perform the
- *      next operation.  If the command is USE, you can open index files.  If it
- *      is APPEND BLANK, you can assign values to the new record with a REPLACE
- *      or @...GET command.  Otherwise, you must handle the error by either
- *      retrying the USE or APPEND BLANK, or terminating the current operation
- *      with a BREAK or RETURN.
+ *      This function return a logical true (.T.) is a USE,APPEND BLANK, or
+ *      a USE...EXCLUSIVE command is issue and fails in a network enviroment.
+ *      In the case of USE and USE...EXCLUSIVE commands,a NETERR() value
+ *      of .T. would be returned if another node of the network has the
+ *      exclusive use of a file.And the case of the APPEND BLANK command,
+ *      NETERR() will return a logical true (.T.) if the file or record
+ *      is locked by another node or the value of LASTREC() has been advanced
+ *      The value of NETERR() may be changed via the value of <lNewError>.
+ *      This allow the run-time error-handling system to control the way
+ *      certains errors are handled.
  *  $EXAMPLES$
- *      This example demonstrates typical usage of NETERR().  If the
- *      USE succeeds, the index files are opened and processing continues.
- *      If the USE fails, a message displays and control returns to the
- *      nearest BEGIN SEQUENCE construct:
- *
- *      USE Customer SHARED NEW
- *      IF !NETERR()
- *         SET INDEX TO CustNum, CustOrders, CustZip
- *      ELSE
- *         ? "File is in use by another"
- *         BREAK
- *      ENDIF
+ *      USE TEST NEW Index Test
+ *      If !NetErr()
+ *          Seek Test->Name="HARBOUR"
+ *          If Found()
+ *             ? Test->Name
+ *          Endif
+ *      Endif
+ *      USE
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This function is CA Clipper compliant
+ *  $FILES$
+ *      Library is rdd
  *  $SEEALSO$
  *      FLOCK(),RLOCK()
  *  $END$
@@ -677,51 +643,34 @@
  *  $CATEGORY$
  *      Database
  *  $ONELINER$
- *      Determine the number of records in the current (.dbf) file
+ *      Counts the number of records in a database.
  *  $SYNTAX$
  *      RECCOUNT()* | LASTREC() --> nRecords
  *  $ARGUMENTS$
- *
+ *      None.
  *  $RETURNS$
- *     RECCOUNT() returns the number of physical records in the current
- *   database file as an integer numeric value.  Filtering commands such as
- *   SET FILTER or SET DELETED have no effect on the return value.
- *   RECCOUNT() returns zero if there is no database file open in the current
- *   work area.
- *
+ *      <nRecords>  The number of records
  *  $DESCRIPTION$*
- *     RECCOUNT() is a database function that is a synonym for LASTREC().  By
- *   default, RECCOUNT() operates on the currently selected work area.  It
- *   will operate on an unselected work area if you specify it as part of an
- *   aliased expression (see example below).
+ *      This function returns the number of records present in the database
+ *      in the selected or designated work area.If no records are present
+ *      the value of this function will be 0.Additionaly,if no database is
+ *      in use in the selected or designated work area,this function will
+ *      return a 0 value as well.
  *  $EXAMPLES$
- *     This example illustrates the relationship between COUNT and
- *      RECCOUNT():
- *
- *      USE Sales NEW
- *      ? RECCOUNT()                      // Result: 84
- *      //
- *      SET FILTER TO Salesman = "1001"
- *      COUNT TO nRecords
- *      ? nRecords                        // Result: 14
- *      ? RECCOUNT()                      // Result: 84
- *
- *     This example uses an aliased expression to access the number
- *      of records in an unselected work area:
- *
- *      USE Sales NEW
- *      USE Customer NEW
- *      ? RECCOUNT(), Sales->(RECCOUNT())
+ *      Use Test NEW
+ *      USE Harbour NEW
+ *      ? Reccount()
+ *      ? Test->(RECCOUNT())
+ *      CLOSE ALL
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is CA-Clipper compliant
+ *  $FILES$
+ *      Library is rdd
  *  $SEEALSO$
- *      EOF(),LASTREC()
- *  $INCLUDE$
- *
+ *      EOF(),LASTREC(),RECNO(),DBGOBOTTOM(
  *  $END$
  */
 
@@ -731,44 +680,29 @@
  *  $CATEGORY$
  *      Database
  *  $ONELINER$
- *      Return the identity at the position of the record pointer
+ *      Returns the current record number or identity.
  *  $SYNTAX$
  *      RECNO() --> Identity
  *  $ARGUMENTS$
- *
+ *      None.
  *  $RETURNS$
- *     RECNO() returns the identity found at the position of the record
- *   pointer.
+ *     RECNO() The record number or indentity
  *  $DESCRIPTION$
- *     RECNO() is a database function that returns the identity found at the
- *   current position of the record pointer.  Identity is a unique value
- *   guaranteed by the structure of the data file to reference a specific
- *   record of data file.  The data file need not be a traditional Xbase
- *   file.  Therefore, unlike earlier versions of HARBOUR, the value
- *   returned need not be a numeric data type.
- *
- *     Under all RDDs, RECNO() returns the value at the position of the record
- *   pointer; the data type and other characteristics of this value are
- *   determined by the content of the accessed data and the RDD active in the
- *   current work area.  In an Xbase database this value is the record
- *   number.
  *  $EXAMPLES$
- *   USE Sales VIA "DBFNTX"
- *   .
- *   . < statements >
- *   .
- *   DBGOTOP()
- *   RECNO()            // Returns 1
+ *      USE Tests NEW
+ *      DBGOTOP()
+ *      RECNO()            // Returns 1
+ *      DBGOTO(50)
+ *      RECNO()            // Returns 50
  *  $TESTS$
- *
  *  $STATUS$
  *      R
- *  $COMPLIANCE$
- *
+ *  $COMPLIANCE$    
+ *      This function is Ca-Clipper compliant
+ *  $FILES$
+ *      Library is rdd
  *  $SEEALSO$
  *      DBGOTO()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -822,10 +756,10 @@
  *      R
  *  $COMPLIANCE$
  *
+ *  $FILES$
+ *      Library is rdd
  *  $SEEALSO$
- *  DISKSPACE(),FIELDNAME(),HEADER(),LASTREC()
- *  $INCLUDE$
- *
+ *      DISKSPACE(),FIELDNAME(),HEADER(),LASTREC()
  *  $END$
  */
 
@@ -913,10 +847,10 @@
  *      R
  *  $COMPLIANCE$
  *
+ *  $FILES$
+ *      Library is rdd
  *  $SEEALSO$
  *      FLOCK()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -965,10 +899,10 @@
  *      R
  *  $COMPLIANCE$
  *
+ *  $FILES$
+ *      Library is rdd
  *  $SEEALSO$
  *      ALIAS(),USED()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -1000,14 +934,13 @@
  *      CLOSE
  *      ? USED()              // Result: .F.
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *
+ *  $FILES$
+ *      Library is rdd
  *  $SEEALSO$
  *      ALIAS(),SELECT()
- *  $INCLUDE$
- *
  *  $END$
  */
