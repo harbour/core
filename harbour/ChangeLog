@@ -1,0 +1,101 @@
+19990814-20:40 GMT+1 Victor Szel <info@szelvesz.hu>
+  * include/hb_vmpub.h
+    source/vm/dynsym.c
+    ! FS_ declarations now included casts, to suppress some
+      pedantic warnings (Win32/GCC -ansi -pedantic).
+  * source/hbpp/hbpp.c
+    source/hbpp/table.c
+    ! Made them end with newline. (ANSI C req.)
+  * source/vm/hvm.c
+    include/rddapi.h
+    source/hbpp/hbpp.c
+    ! // comment changed to /**/ (ANSI C req.)
+  * include/init.h
+    include/run_exp.h
+    source/compiler/harbour.y
+    contrib/odbc/odbc.c
+    source/hbpp/hbpplib.c
+    source/rdd/dbfntx/dbfntx1.c
+    source/rdd/dbcmd.c
+    source/rdd/dbf1.c
+    source/rdd/delim1.c
+    source/rdd/sdf1.c
+    source/rtl/arrays.c
+    source/rtl/classes.c
+    source/rtl/console.c
+    source/rtl/copyfile.c
+    source/rtl/dates.c
+    source/rtl/descend.c
+    source/rtl/dir.c
+    source/rtl/environ.c
+    source/rtl/filesys.c
+    source/rtl/hardcr.c
+    source/rtl/inkey.c
+    source/rtl/math.c
+    source/rtl/mtran.c
+    source/rtl/set.c
+    source/rtl/setcolor.c
+    source/rtl/strings.c
+    source/rtl/tone.c
+    source/rtl/transfrm.c
+    source/tools/dates2.c
+    ! Corrected some HB_INIT_SYMBOLS_END() and HB_CALL_ON_STARTUP_END()
+      macro definitions to include the ending ";".
+    ! Removed the ";" after
+      HB_INIT_SYMBOLS_END() and HB_CALL_ON_STARTUP_END() macro references.
+      (ANSI C req.) (Win32/GCC complained about it with -ansi -pedantic:
+      "warning: ANSI C does not allow extra `;' outside of a function")
+
+19990814-19:55 GMT+1 Victor Szel <info@szelvesz.hu>
+  * ChangeLog
+    ChangeLog.002
+    * Old ChangeLog renamed to ChangeLog.002
+    * New ChangeLog created.
+   * source/pp/pragma.c
+   * contrib/dot/pp_harb.ch
+   * tests/inline_c.prg
+     * STOPDUMP renamed as ENDDUMP (with Ron permission)
+
+2001-12-21 08:40 UTC-0300 Luiz Rafael Culik <culik@sl.conex.net>
+   * utils/hbmake/hbmake.prg
+    * small fix
+
+2001-12-21 07:50 UTC-0300 Luiz Rafael Culik <culik@sl.conex.net>
+  * source/rtl/filesys.c
+    * hb_fsmkdir,hb_fsChdir,hb_fsRmdir,hb_fsDelete,hb_fsRename,hb_fsCurdirBuff()
+      now use Win32 API calls
+   * utils/hbmake/hbmake.prg
+     ! Disabled profile
+   * utils/hbmake/hbmutils.prg
+     * An small clean up
+   * ChangeLog
+     * Renamed to ChangeLog.012 and started an new one
+2006-02-15 13:50 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/hvm.c
+    ! fixed memory leak I introduced changing Ryszard modifications
+
+      need such functionality yet
+  + harbour/ChangeLog.015
+  * harbour/source/vm/debug.c
+
+  * harbour/harbour.spec
+  * harbour/bin/hb-func.sh
+    * some modification in xhb* scripts building - adding passing
+      predefined compiler and linker switches
+  * harbour/source/vm/hvm.c
+    * minor code cleanup
+
+2006-09-03 18:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapicls.h
+  * harbour/source/vm/classes.c
+  * harbour/source/vm/hvm.c
+  * harbour/tests/overload.prg
+    + added support for overloading [] in assignment operation
+
+2006-09-03 16:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/ChangeLog
+  + harbour/ChangeLog.016
+    * new ChangeLog file created
+  * harbour/include/hbver.h
+    * updated version number to 0.47.0
+  * tagged CVS as build47
