@@ -96,7 +96,7 @@ HB_MATH_HANDLERHANDLE hb_installMathHandler (HB_MATH_HANDLERPROC handlerproc)
   PHB_MATH_HANDLERCHAINELEMENT pChain, pNewChainelement;
 
   HB_TRACE(HB_TR_DEBUG, ("hb_installMathHandler (%p)", handlerproc));
-  pNewChainelement = hb_xgrab (sizeof (HB_MATH_HANDLERCHAINELEMENT));
+  pNewChainelement = (PHB_MATH_HANDLERCHAINELEMENT)hb_xgrab (sizeof (HB_MATH_HANDLERCHAINELEMENT));
   pNewChainelement->handlerproc = handlerproc;
   pNewChainelement->status      = HB_MATH_HANDLER_STATUS_ACTIVE;
                                   /* initially activated */

@@ -83,7 +83,7 @@ char *ct_at_exact_forward (char *pcString, size_t sStrLen,
   size_t sPos;
   
   HB_TRACE(HB_TR_DEBUG, ("ct_at_exact_forward (\"%s\", %u, \"%s\", %u, %p)",
-                          pcString, sStrlen, pcMatch, sMatchLen, psMatchStrLen));
+                          pcString, sStrLen, pcMatch, sMatchLen, psMatchStrLen));
   
   if ((sMatchLen == 0) || (sStrLen < sMatchLen))
     return (NULL);
@@ -228,7 +228,7 @@ char *ct_at_charset_forward (char *pcString, size_t sStrLen,
   char *pcRet, *pcSet, *pcStop1, *pcStop2;
 
   HB_TRACE(HB_TR_DEBUG, ("ct_at_charset_forward (\"%s\", %u, \"%s\", %u, %p)",
-                          pcString, sStrlen, pcCharSet, sCharSetLen, psMatchedCharPos));
+                          pcString, sStrLen, pcCharSet, sCharSetLen, psMatchedCharPos));
   
   *(psMatchedCharPos) = sCharSetLen;
                         
@@ -264,7 +264,7 @@ char *ct_at_charset_backward (char *pcString, size_t sStrLen,
   char *pcRet, *pcSet, *pcStop;
 
   HB_TRACE(HB_TR_DEBUG, ("ct_at_charset_backward (\"%s\", %u, \"%s\", %u, %p)",
-                          pcString, sStrlen, pcCharSet, sCharSetLen, psMatchedCharPos));
+                          pcString, sStrLen, pcCharSet, sCharSetLen, psMatchedCharPos));
   
   *(psMatchedCharPos) = sCharSetLen;
 
