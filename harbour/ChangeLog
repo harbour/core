@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-05-23 14:59 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+  * contrib/mysql/tmysql.prg
+    ! Change in CreateTable's mapping of the xBase N(dig,0) field
+      type into mySql's tinyint, smallint, mediumint, int, bigint
+      and real (if the number is too big to be an integer)
+
 2002-05-23 14:53 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
   * source/vm/estack.c
     ! All stack hb_stackxxx API functions are now included, no matter
