@@ -42,9 +42,9 @@ DECLARE cOtherFunc( ) AS CHAR
 
 DECLARE cOtherFunc( @cVar as char, optional nVar as num, optional other as variant ) AS CHAR
 
-DECLARE seconds() AS NUM
+DECLARE Seconds() AS NUM
 
-DECLARE int( n AS NUMERIC ) AS NUMERIC
+DECLARE Int( n AS NUMERIC ) AS NUMERIC
 
 DECLARE TEST() AS NUMERIC
 
@@ -101,23 +101,11 @@ PROCEDURE THEMAIN( optional )
   a := oB:aInstances[1]:oNext:cMyData2
   a := oB:aInstances[1]:oNext:cMyData
 
-  DO Optional WITH Var1
-  DO Optional WITH 1
-  DO Optional WITH "something"
-
-  FOR Counter := Optional TO 10
-    ? "For with End"
-  End
-
-  IF optional
-     ? 'Ok'
-  ENDIF
-
   x := cOtherFunc( 'A' )
   x := cOtherFunc( @Test )
   x := cOtherFunc( 'A', 'A', 'A' )
 
-  M->TEST := "TEST"   //OK - no warnings here
+  M->TEST := "TEST"
 
   a := 'A'
 
@@ -140,7 +128,7 @@ PROCEDURE SOMEPROC()
   M->TEST := 1
 
   FOR M->TEST := 1 TO M->TEST + 10
-    ? "Incorrect warnings for FOR/NEXT"
+    ? "Correct warnings for FOR/NEXT"
   NEXT
 
   REPLACE a WITH 1
@@ -152,9 +140,11 @@ PROCEDURE SOMEPROC()
   Var1 := 1
 
   if lGlobal = 0
+     ? 'lGlobal is NOT Numeric'
   endif
 
 RETURN
+
 PROC MAIN1()
 
   PRIVATE OTHER, TEST AS CHAR
@@ -166,23 +156,23 @@ PROC MAIN1()
   ? Var1 + 2
 
   M->TEST := 1
-  M->TEST  := "incorrect warning"
+  M->TEST := "No Warning"
 
-  Test[ 1 ][ 2 ] := "incorrect warning"
+  Test[ 1 ][ 2 ] := "Correct warning"
 
 RETURN
 
 Function Test()
-return .t.
+RETURN .T.
 
 Function Main2()
   Local n As Numeric, lVar AS LOGICAL
 
-  n := IIF( lVar, 'A', 3 )
+  n := IIF( lVar, 'A', 3 ) //IIF() needs to be completed.
   n := 2
   n := 'a'
-  n := seconds() + 2
-  n := int( seconds() + 2 )
+  n := Seconds() + 2
+  n := Int( seconds() + 2 )
 
 Return( NIL )
 
@@ -224,7 +214,7 @@ FUNCTION Main3()
 
    RETURN NIL
 
-FUNCTION Hex2Dec( lVar AS LOGICAL )
+FUNCTION SomeTest( lVar AS LOGICAL )
 
    LOCAL nVar AS NUMERIC, cVar AS CHARACTER, lVar2 AS LOGICAL, nNoType := 3
    PRIVATE cMemVar1 AS CHARACTER
@@ -261,3 +251,14 @@ FUNCTION Hex2Dec( lVar AS LOGICAL )
 
 RETURN NIL
 
+Function nMyFunc( cVar AS STRING, nVar AS NUMERIC )
+
+nVar := Val(cVar)
+
+RETURN nVar + 1
+
+Function cOtherFunc( )
+RETURN 'Hello'
+
+Function ExtFun()
+RETURN 1
