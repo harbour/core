@@ -1,3 +1,43 @@
+20000424 06:55 GMT -3 Luiz Rafael Culik <culik@sl.conex.net
+*doc/en/file.txt
+ doc/en/diskspac.txt
+   *Changed all categories names from Low level disk information and
+      Low level file handling To Low Level.
+*doc/en/string.txt
+   *Changed LOWER() function categorie from strings() to strings()
+   *STR() and STRZERO() functions categorie change from RUN-TIME LIBRARy,Strings
+   to Strings
+ *doc/en/*.txt
+    *The rest of the docs files change removed the ".lib" that was used in
+    the library name
+*contrib/libgt/doc/en/ht_gt.txt
+*contrib/libmisc/doc/en/ht*.*
+   *All categories now use the TOOLS as part of the Categorie name
+   This is to avoid crash between the RTL categories and the Tools categories
+
+*utils/hbdoc/hbdoc.prg
+   *Remove the generation to the author.txt file
+*utils/hbdoc/hrbtools.rsp
+   *Updated to reflect the docs dir changes
++contrib/libgt/doc/gendoc.bat
+   *Batch file to generate libgt docs
++contrib/libgt/doc/libgt.rps
+   *Response file for hbdoc
++contrib/libgt/doc/libgt.lnk
+   *link file for .NG format
++contrib/libmisc/doc/gendoc.bat
+   *Batch file to generate libmisc docs
++contrib/libmisc/doc/libmisc.rps
+   *Response file for hbdoc
++contrib/libmisc/doc/libmisc.lnk
+   *link file for .NG format
++contrib/rdd_ads/doc/gendoc.bat
+      *Batch file to generate rddads docs
++contrib/rdd_ads/doc/rddads.rps
+   *Response file for hbdoc
++contrib/rdd_ads/doc/rddads.lnk
+   *link file for .NG format
+
 20000424-02:35 DST Paul Tucker <ptucker@sympatico.ca>
    + contrib/libnf/makefile.vc
    + contrib/libnf/make_vc.bat
