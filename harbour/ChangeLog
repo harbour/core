@@ -1,3 +1,7 @@
+20000220-03:40 GMT-8 Brian Hays <bhays@abacuslaw.com>
+    * doc\gnulice.txt
+       * Removed extraneous headers and Table Of Contents
+
 20000220-23:05 GMT+3 Alexander Kresin
    * contrib/rdd_ads/ads1.c
      * memo handling changed - proposal of Brian Hays
