@@ -646,5 +646,103 @@ void hb_stornd( double dNumber, int iParam, ... )
    }
 }
 
+BOOL     hb_arrayNew( PHB_ITEM pItem, ULONG ulLen )  /* creates a new array */
+{
+   HB_ARRAYNEW  pArrayNew = GetProcAddress( GetModuleHandle( NULL ), "_hb_arrayNew" );
+   if (pArrayNew)
+      return pArrayNew( pItem, ulLen );
+   else
+      return FALSE;
+}
+
+ULONG    hb_arrayLen( PHB_ITEM pArray )  /* retrives the array len */
+{
+   HB_ARRAYLEN  pArrayLen = GetProcAddress( GetModuleHandle( NULL ), "_hb_arrayLen" );
+   if (pArrayLen)
+      return pArrayLen( pArray );
+   else
+      return 0;
+}
+
+BOOL     hb_arrayIsObject( PHB_ITEM pArray )  /* retrives if the array is an object */
+{
+   HB_ARRAYISOBJECT  pArrayIsObject = GetProcAddress( GetModuleHandle( NULL ), "_hb_arrayIsObject" );
+   if (pArrayIsObject)
+      return pArrayIsObject( pArray );
+   else
+      return FALSE;
+}
+
+BOOL     hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pItemValue )  /* add a new item to the end of an array item */
+{
+   HB_ARRAYADD  pArrayadd = GetProcAddress( GetModuleHandle( NULL ), "_hb_arrayAdd" );
+   if (pArrayAdd)
+      return pArrayAdd( pArray, pItemValue );
+   else
+      return FALSE;
+}
+
+BOOL     hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex )  /* insert a nil item into an array, without changing the length */
+{
+   HB_ARRAYINS  pArrayIns = GetProcAddress( GetModuleHandle( NULL ), "_hb_arrayIns" );
+   if (pArrayIns)
+      return pArrayIns( pArray, ulIndex );
+   else
+      return FALSE;
+}
+
+BOOL     hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex )  /* delete an array item, without changing length */
+{
+   HB_ARRAYDEL  pArrayDel = GetProcAddress( GetModuleHandle( NULL ), "_hb_arrayDel" );
+   if (pArrayDel)
+      return pArrayDel( pArray, ulIndex );
+   else
+      return FALSE;
+}
+
+BOOL     hb_arraySize( PHB_ITEM pArray, ULONG ulLen )  /* sets the array total length */
+{
+   HB_ARRAYSIZE  pArraySize = GetProcAddress( GetModuleHandle( NULL ), "_hb_arraySize" );
+   if (pArraySize)
+      return pArraySize( pArray, ulLen );
+   else
+      return FALSE;
+}
+
+BOOL     hb_arrayLast( PHB_ITEM pArray, PHB_ITEM pResult )  /* retrieve last item in an array */
+{
+   HB_ARRAYLAST  pArrayLast= GetProcAddress( GetModuleHandle( NULL ), "_hb_arrayLast" );
+   if (pArrayLast)
+      return pArrayLast( pArray, pResult );
+   else
+      return FALSE;
+}
+
+BOOL     hb_arrayRelease( PHB_ITEM pArray )  /* releases an array - don't call it - use ItemRelease() !!! */
+{
+   HB_ARRAYRELEASE  pArrayRelease = GetProcAddress( GetModuleHandle( NULL ), "_hb_arrayRelease" );
+   if (pArrayRelease)
+      return pArrayRelease( pArray );
+   else
+      return FALSE;
+}
+
+BOOL     hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )  /* sets an array element */
+{
+   HB_ARRAYSET  pArraySet = GetProcAddress( GetModuleHandle( NULL ), "_hb_arraySet" );
+   if (pArraySet)
+      return pArraySet( pArray, ulIndex, pItem);
+   else
+      return FALSE;
+}
+
+BOOL     hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )  /* retrieves an item */
+{
+   HB_ARRAYGET  pArrayGet = GetProcAddress( GetModuleHandle( NULL ), "_hb_arrayGet" );
+   if (pArrayGet)
+      return pArrayGet( pArray, ulIndex, pItem);
+   else
+      return FALSE;
+}
 
 #endif
