@@ -135,6 +135,7 @@ Separator     {SpaceTab}
                         (hb_comp_iState == ELSEIF) ||
                         (hb_comp_iState == CASE) ||
                         (hb_comp_iState == BREAK) ||
+                        (hb_comp_iState == RETURN) ||
                         (hb_comp_iState == WITH) ||
                         (hb_comp_iState == WHILE)
                       )
