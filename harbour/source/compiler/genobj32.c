@@ -291,7 +291,7 @@ static void GenerateExternals( FILE * hObjFile )
     }
   if( wExternals )
     {
-      externNames = ( char * * ) hb_xalloc( sizeof( char * ) * ( wExternals + 2 ) );
+      externNames = ( char * * ) hb_xgrab( sizeof( char * ) * ( wExternals + 2 ) );
       w = 1;
       externNames[ 0 ] = "_hb_vmExecute";
 

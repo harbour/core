@@ -122,7 +122,7 @@ Separator     {SpaceTab}
 %%
 
 
-"&"("'"|\"|\[) { printf( "\nSyntax error : '%s'\n", yytext ); exit(1); }
+"&"("'"|\"|\[) { GenError( _szCErrors, 'E', ERR_SYNTAX, yytext, NULL ); }
 
 '              BEGIN STRING1;
 \"             BEGIN STRING2;

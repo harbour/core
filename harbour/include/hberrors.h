@@ -65,6 +65,10 @@
 #define ERR_PARAMETERS_NOT_ALLOWED 24
 #define ERR_EXIT_IN_SEQUENCE       25
 #define ERR_UNTERM_ARRAY_INDEX     26
+#define ERR_MEMALLOC               27
+#define ERR_MEMREALLOC             28
+#define ERR_MEMFREE                29
+#define ERR_YACC                   30
 
 #define WARN_AMBIGUOUS_VAR         1
 #define WARN_MEMVAR_ASSUMED        2
@@ -92,6 +96,9 @@
 #define ERR_RECURSE                8
 #define ERR_WRONG_DIRECTIVE        9
 #define ERR_EXPLICIT               10
+#define ERR_PPMEMALLOC             11
+#define ERR_PPMEMREALLOC           12
+#define ERR_PPMEMFREE              13
 
 #define WARN_NONDIRECTIVE          1
 

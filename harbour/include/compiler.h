@@ -94,9 +94,8 @@ typedef struct _STACK_VAL_TYPE
 extern PFUNCTION GetFunction( char * szFunName ); /* locates a previously defined function */
 extern WORD GetFunctionPos( char * szSymbolName ); /* returns the index + 1 of a function on the functions defined list */
 
-extern void *   hb_xalloc( ULONG lSize );   /* allocates memory, returns NULL on failure */
 extern void *   hb_xgrab( ULONG lSize );   /* allocates memory, exists on failure */
-extern void     hb_xfree( void * pMem );    /* frees memory */
 extern void *   hb_xrealloc( void * pMem, ULONG lSize );   /* reallocates memory */
+extern void     hb_xfree( void * pMem );    /* frees memory */
 
 #endif /* HB_COMPILER_H_ */

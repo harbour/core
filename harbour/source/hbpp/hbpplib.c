@@ -79,19 +79,22 @@ HARBOUR HB___PREPROCESS(void)
 
 void GenError( char* _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
 {
-  char * szLine = ( char * ) hb_xgrab( 160 );      /*2 lines of text */
+  char szLine[ 160 ]; /* 2 lines of text */
+
   /* printf( "\r%s(%i) ", files.pLast->szFileName, iLine ); */
   printf( "Error %c%i  ", cPrefix, iError );
   sprintf( szLine, _szErrors[ iError - 1 ], szError1, szError2 );
   printf( "%s\n\n", szLine );
-  exit( 1 );
+
+  exit( EXIT_FAILURE );
 }
 
 void GenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2)
 {
     if( _bWarnings && iWarning < WARN_ASSIGN_SUSPECT ) /* TODO: add switch to set level */
     {
-        char * szLine = ( char * ) hb_xgrab( 160 );      /*2 lines of text */
+        char szLine[ 160 ]; /* 2 lines of text */
+
         /* printf( "\r%s(%i) ", files.pLast->szFileName, iLine ); */
         printf( "Warning %c%i  ", cPrefix, iWarning );
         sprintf( szLine, _szWarnings[ iWarning - 1 ], szWarning1, szWarning2 );

@@ -1,3 +1,52 @@
+19990825-23:30 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/compiler/harbour.y
+    source/compiler/harbour.l
+    source/compiler/genobj32.c
+    source/hbpp/stdalone/hbpp.c
+    source/hbpp/hbpplib.c
+    include/hbpp.h
+    include/compiler.h
+    include/hberrors.h
+
+    + Added standard error messages for memory management errors.
+    + Changed yyerror so that it calls the standard error launcher.
+    - hb_xalloc() functions removed, since it was not used anymore.
+    * hb_xalloc() changed to hb_xgrab(), it was not tested for the possible
+      NULL return value.
+    - One exit() after GenError() removed (source/hbpp/hbpp.c).
+    * exit( 1 ) -> exit( EXIT_FAILURE )
+    ! GenWarning(), GenError(), CheckArgs() was allocating memory which was not 
+      freed.Now the stack is used instead of calling memalloc functions, so 
+      they can be used to report memory errors, too.
+    ! The last printf() changed to GenError() in harbour.l
+
+  * source/tools/io.c
+    include/external.ch
+    source/runner/stdalone/external.prg
+
+    - RENFILE() removed since there is already a function with the exact same
+      functionality in the standard Harbour RTL, named FRENAME().
+    * Cleanup in io.c.
+    * Some __DOS__ guards changed to DOS. Some left since the code guarded
+      is compiler specific. Warning! This change could cause problems with some
+      other DOS compilers.
+    + TOFIX: added about a chdir call in RD() code.
+    + Code added to the non DOS branch.
+
+  * source/rtl/console.c
+
+    % SCROLL() - Some hb_pcount()s removed, parameter init optimed.
+    ! hb_out() - hb_parinfo() changed to pItem->type, since hb_parinfo()
+      can now contain the IT_BYREF flag, so if something would be passed
+      by reference, it would not be recognized as a valid type.
+
+  * source/rtl/do.c
+    * Small cleanup.
+
+  * gt.b32
+    ! Fixes by Luiz Rafael Culik <Culik@sl.conex.net> implemented.
+
 19990825-17:22 GMT+1 Bruno Cantero <bruno@issnet.net>
    * source/vm/hvm.c
      + Added support for FIELD symbols

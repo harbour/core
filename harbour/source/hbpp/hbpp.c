@@ -136,7 +136,10 @@ char * _szPErrors[] =
    "Error in pattern definition",
    "Cycled #define",
    "Wrong directive \"%s\"",
-   "#error: \'%s\'"
+   "#error: \'%s\'",
+   "Memory allocation error",
+   "Memory reallocation error",
+   "Freeing a NULL memory pointer"
 };
 
 /* Table with parse warnings */
@@ -227,7 +230,6 @@ int ParseDirective( char* sLine )
   else if ( i == 5 && memcmp ( sDirective, "ERROR", 5 ) == 0 )
   {                        /* --- #error  --- */
    GenError( _szPErrors, 'P', ERR_EXPLICIT, sLine, NULL );
-   exit(1);
   }
   else if ( i == 4 && memcmp ( sDirective, "LINE", 4 ) == 0 )
     return -1;

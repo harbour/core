@@ -1,6 +1,7 @@
 /*
  * $Id$
-    Harbour Project source code
+
+   Harbour Project source code
 
    This file is a part of Harbour Runtime Library and it contains code
    that defined DO function ussed in DO <proc> WITH statement.
@@ -83,14 +84,12 @@
  */
 HARBOUR HB_DO( void )
 {
-   PHB_ITEM pItem;
+   PHB_ITEM pItem = hb_param( 1, IT_ANY );
 
-   pItem =hb_param( 1, IT_ANY );
-   if( IS_STRING(pItem) )
+   if( IS_STRING( pItem ) )
    {
-      PHB_DYNS pDynSym;
+      PHB_DYNS pDynSym = hb_dynsymGet( pItem->item.asString.value );
 
-      pDynSym =hb_dynsymGet( pItem->item.asString.value );
       if( pDynSym )
       {
          int i;
@@ -104,7 +103,7 @@ HARBOUR HB_DO( void )
       else
          hb_errRT_BASE( EG_NOFUNC, 1001, NULL, pItem->item.asString.value );
    }
-   else if( IS_BLOCK(pItem) )
+   else if( IS_BLOCK( pItem ) )
    {
       int i;
 
@@ -114,7 +113,7 @@ HARBOUR HB_DO( void )
          hb_vmPush( hb_param( i, IT_ANY ) );
       hb_vmDo( hb_pcount() - 1 );
    }
-   else if( IS_SYMBOL(pItem) )
+   else if( IS_SYMBOL( pItem ) )
    {
       int i;
 

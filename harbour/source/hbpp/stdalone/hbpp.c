@@ -395,12 +395,12 @@ void AddSearchPath( char *szPath, PATHNAMES * *pSearchList )
   {
     while( pPath->pNext )
       pPath = pPath->pNext;
-    pPath->pNext = ( PATHNAMES * ) hb_xalloc( sizeof( PATHNAMES ) );
+    pPath->pNext = ( PATHNAMES * ) hb_xgrab( sizeof( PATHNAMES ) );
     pPath = pPath->pNext;
   }
   else
   {
-    *pSearchList =pPath =(PATHNAMES *)hb_xalloc( sizeof(PATHNAMES) );
+    *pSearchList =pPath =(PATHNAMES *)hb_xgrab( sizeof(PATHNAMES) );
   }
   pPath->pNext  = NULL;
   pPath->szPath = szPath;
@@ -408,19 +408,22 @@ void AddSearchPath( char *szPath, PATHNAMES * *pSearchList )
 
 void GenError( char* _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
 {
-  char * szLine = ( char * ) hb_xalloc( 160 );      /*2 lines of text */
+  char szLine[ 160 ]; /* 2 lines of text */
+
   /* printf( "\r%s(%i) ", files.pLast->szFileName, iLine ); */
   printf( "\tError %c%i  ", cPrefix, iError );
   sprintf( szLine, _szErrors[ iError - 1 ], szError1, szError2 );
   printf( "%s\n\n", szLine );
-  exit( 1 );
+
+  exit( EXIT_FAILURE );
 }
 
 void GenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2)
 {
     if( _bWarnings && iWarning < WARN_ASSIGN_SUSPECT ) /* TODO: add switch to set level */
     {
-        char * szLine = ( char * ) hb_xalloc( 160 );      /*2 lines of text */
+        char szLine[ 160 ]; /* 2 lines of text */
+
         /* printf( "\r%s(%i) ", files.pLast->szFileName, iLine ); */
         printf( "Warning %c%i  ", cPrefix, iWarning );
         sprintf( szLine, _szWarnings[ iWarning - 1 ], szWarning1, szWarning2 );
@@ -540,27 +543,12 @@ char * hb_fsFNameMerge( char *szFileName, PHB_FNAME pFileName )
   return szFileName;
 }
 
-void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL on failure */
-{
-   void * pMem = malloc( ulSize );
-
-   if( ! pMem )
-   {
-      printf( "\nhb_xalloc error: can't allocate memory!\n" );
-   }
-
-   return pMem;
-}
-
 void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on failure */
 {
    void * pMem = malloc( ulSize );
 
    if( ! pMem )
-   {
-      printf( "\nhb_xgrab error: can't allocate memory!\n" );
-      exit( 1 );
-   }
+      GenError( _szPErrors, 'P', ERR_PPMEMALLOC, NULL, NULL );
 
    return pMem;
 }
@@ -570,10 +558,7 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
    void * pResult = realloc( pMem, ulSize );
 
    if( ! pResult )
-   {
-      printf( "\nhb_xrealloc error: can't reallocate memory!\n" );
-      exit( 1 );
-   }
+      GenError( _szPErrors, 'P', ERR_PPMEMREALLOC, NULL, NULL );
 
    return pResult;
 }
@@ -583,9 +568,6 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
    if( pMem )
       free( pMem );
    else
-   {
-      printf( "\nhb_xfree error: freeing a NULL pointer!\n" );
-      exit( 1 );
-   }
+      GenError( _szPErrors, 'P', ERR_PPMEMFREE, NULL, NULL );
 }
 

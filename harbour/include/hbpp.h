@@ -80,10 +80,9 @@ typedef struct
 extern PHB_FNAME hb_fsFNameSplit ( char * szFilename ); /* Split given filename into path, name and extension */
 extern char *    hb_fsFNameMerge ( char * szFileName, PHB_FNAME pFileName ); /* This function joins path, name and extension into a string with a filename */
 
-extern void *   hb_xalloc( ULONG lSize );   /* allocates memory, returns NULL on failure */
 extern void *   hb_xgrab( ULONG lSize );   /* allocates memory, exists on failure */
-extern void     hb_xfree( void * pMem );    /* frees memory */
 extern void *   hb_xrealloc( void * pMem, ULONG lSize );   /* reallocates memory */
+extern void     hb_xfree( void * pMem );    /* frees memory */
 
 /* Needed support variables, but not contained in HBPP.C */
 

@@ -310,7 +310,11 @@ char * _szCErrors[] =
    "Invalid use of \'@\' (pass by reference): \'%s\'",
    "Formal parameters already declared",
    "Invalid %s from within of SEQUENCE code",
-   "Unterminated array index"
+   "Unterminated array index",
+   "Memory allocation error",
+   "Memory reallocation error",
+   "Freeing a NULL memory pointer",
+   "%s" /* YACC error messages */
 };
 
 /* Table with parse warnings */
@@ -1237,13 +1241,12 @@ Crlf       : '\n'
 
 void yyerror( char * s )
 {
-   printf( "\n%s at line %i\n", s, iLine );
-   exit( 1 );
+   GenError( _szCErrors, 'E', ERR_YACC, s, NULL );
 }
 
 void * GenElseIf( void * pFirst, WORD wOffset )
 {
-   PELSEIF pElseIf = ( PELSEIF ) hb_xalloc( sizeof( _ELSEIF ) ), pLast;
+   PELSEIF pElseIf = ( PELSEIF ) hb_xgrab( sizeof( _ELSEIF ) ), pLast;
 
    pElseIf->wOffset = wOffset;
    pElseIf->pNext   = 0;
@@ -1262,22 +1265,29 @@ void * GenElseIf( void * pFirst, WORD wOffset )
 
 void GenError( char* _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
 {
-  char * szLine = ( char * ) hb_xalloc( 160 );      /*2 lines of text */
-  printf( "\r%s(%i) ", files.pLast->szFileName, iLine );
+  char szLine[ 160 ]; /* 2 lines of text */
+
+  if( files.pLast->szFileName )
+     printf( "\r%s(%i) ", files.pLast->szFileName, iLine );
+  else
+     printf( "\rLine %i ", iLine );
   printf( "Error %c%i  ", cPrefix, iError );
-  sprintf( szLine, _szErrors[ iError - 1 ], szError1, szError2 );
+  sprintf( szLine, _szCErrors[ iError - 1 ], szError1, szError2 );
   printf( "%s\n\n", szLine );
-  exit( 1 );
+
+  exit( EXIT_FAILURE );
 }
 
 void GenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2)
 {
     if( _bWarnings && iWarning < WARN_ASSIGN_SUSPECT ) /* TODO: add switch to set level */
     {
-        char * szLine = ( char * ) hb_xalloc( 160 );      /*2 lines of text */
+        char szLine[ 160 ]; /* 2 lines of text */
+
         printf( "\r%s(%i) ", files.pLast->szFileName, iLine );
         printf( "Warning %c%i  ", cPrefix, iWarning );
         sprintf( szLine, _szWarnings[ iWarning - 1 ], szWarning1, szWarning2 );
+
         printf( "%s\n", szLine );
     }
 }
@@ -1386,7 +1396,7 @@ int harbour_main( int argc, char * argv[] )
 
                        default:
                             printf( "\nUnsupported output language option\n" );
-                            exit( 1 );
+                            exit( EXIT_FAILURE );
                     }
                     break;
 
@@ -1656,12 +1666,12 @@ void AddSearchPath( char *szPath, PATHNAMES * *pSearchList )
   {
     while( pPath->pNext )
       pPath = pPath->pNext;
-    pPath->pNext = ( PATHNAMES * ) hb_xalloc( sizeof( PATHNAMES ) );
+    pPath->pNext = ( PATHNAMES * ) hb_xgrab( sizeof( PATHNAMES ) );
     pPath = pPath->pNext;
   }
   else
   {
-    *pSearchList =pPath =(PATHNAMES *)hb_xalloc( sizeof(PATHNAMES) );
+    *pSearchList =pPath =(PATHNAMES *)hb_xgrab( sizeof(PATHNAMES) );
   }
   pPath->pNext  = NULL;
   pPath->szPath = szPath;
@@ -1699,7 +1709,7 @@ PFUNCTION AddFunCall( char * szFunctionName )
  */
 void AddExtern( char * szExternName ) /* defines a new extern name */
 {
-   PEXTERN pExtern = ( PEXTERN ) hb_xalloc( sizeof( _EXTERN ) ), pLast;
+   PEXTERN pExtern = ( PEXTERN ) hb_xgrab( sizeof( _EXTERN ) ), pLast;
 
    pExtern->szName = szExternName;
    pExtern->pNext  = 0;
@@ -1766,7 +1776,7 @@ void AddVar( char * szVarName )
      iVarScope =VS_PARAMETER;
    CheckDuplVars( pFunc->pLocals, szVarName, iVarScope );
 
-   pVar = ( PVAR ) hb_xalloc( sizeof( VAR ) );
+   pVar = ( PVAR ) hb_xgrab( sizeof( VAR ) );
    pVar->szName = szVarName;
    pVar->szAlias = NULL;
    pVar->cType = cVarType;
@@ -1824,7 +1834,7 @@ void AddVar( char * szVarName )
                  */
                 if( bNewParameter )
                 {
-                   pVar = ( PVAR ) hb_xalloc( sizeof( VAR ) );
+                   pVar = ( PVAR ) hb_xgrab( sizeof( VAR ) );
                    pVar->szName = yy_strdup( szVarName );
                    pVar->szAlias = NULL;
                    pVar->cType = cVarType;
@@ -1929,7 +1939,7 @@ void AddVar( char * szVarName )
 
 PCOMSYMBOL AddSymbol( char * szSymbolName, WORD *pwPos )
 {
-   PCOMSYMBOL pSym = ( PCOMSYMBOL ) hb_xalloc( sizeof( COMSYMBOL ) );
+   PCOMSYMBOL pSym = ( PCOMSYMBOL ) hb_xgrab( sizeof( COMSYMBOL ) );
 
    pSym->szName = szSymbolName;
    pSym->cScope = 0;
@@ -1977,7 +1987,7 @@ void AliasRemove( void )
  */
 void AliasAddInt( int iWorkarea )
 {
-   ALIASID_PTR pAlias = (ALIASID_PTR) hb_xalloc( sizeof( ALIASID ) );
+   ALIASID_PTR pAlias = (ALIASID_PTR) hb_xgrab( sizeof( ALIASID ) );
 
    pAlias->type =ALIAS_NUMBER;
    pAlias->alias.iAlias =iWorkarea;
@@ -1988,7 +1998,7 @@ void AliasAddInt( int iWorkarea )
  */
 void AliasAddExp( void )
 {
-   ALIASID_PTR pAlias = (ALIASID_PTR) hb_xalloc( sizeof( ALIASID ) );
+   ALIASID_PTR pAlias = (ALIASID_PTR) hb_xgrab( sizeof( ALIASID ) );
 
    pAlias->type =ALIAS_EVAL;
    AliasAdd( pAlias );
@@ -1998,7 +2008,7 @@ void AliasAddExp( void )
  */
 void AliasAddStr( char * szAlias )
 {
-   ALIASID_PTR pAlias = (ALIASID_PTR) hb_xalloc( sizeof( ALIASID ) );
+   ALIASID_PTR pAlias = (ALIASID_PTR) hb_xgrab( sizeof( ALIASID ) );
 
    pAlias->type =ALIAS_NAME;
    pAlias->alias.szAlias =szAlias;
@@ -2063,7 +2073,7 @@ int Include( char * szFileName, PATHNAMES *pSearch )
    if( ! _bQuiet )
       printf( "\nparsing file %s\n", szFileName );
 
-   pFile = ( PFILE ) hb_xalloc( sizeof( _FILE ) );
+   pFile = ( PFILE ) hb_xgrab( sizeof( _FILE ) );
    pFile->handle = yyin;
    pFile->szFileName = szFileName;
    pFile->pPrev = NULL;
@@ -2125,7 +2135,7 @@ void Duplicate( void )
    {
       PSTACK_VAL_TYPE pNewStackType;
 
-      pNewStackType = ( STACK_VAL_TYPE * )hb_xalloc( sizeof( STACK_VAL_TYPE ) );
+      pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
       pNewStackType->cType = pStackValType->cType;
       pNewStackType->pPrev = pStackValType;
 
@@ -2164,7 +2174,7 @@ PFUNCTION FunctionNew( char *szName, SYMBOLSCOPE cScope )
 {
    PFUNCTION pFunc;
 
-   pFunc = ( PFUNCTION ) hb_xalloc( sizeof( _FUNC ) );
+   pFunc = ( PFUNCTION ) hb_xgrab( sizeof( _FUNC ) );
    pFunc->szName       = szName;
    pFunc->cScope       = cScope;
    pFunc->pLocals      = 0;
@@ -3333,7 +3343,7 @@ WORD GetVarPos( PVAR pVars, char * szVarName ) /* returns the order + 1 of a var
 
             pVars->iUsed = 1;
 
-            pNewStackType = ( STACK_VAL_TYPE * )hb_xalloc( sizeof( STACK_VAL_TYPE ) );
+            pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
             pNewStackType->cType = pVars->cType;
             pNewStackType->pPrev = pStackValType;
 
@@ -3405,7 +3415,7 @@ int GetLocalVarPos( char * szVarName ) /* returns the order + 1 of a variable if
               /* this variable was not referenced yet - add it to the list */
               PVAR pVar;
 
-              pVar = (PVAR) hb_xalloc( sizeof(VAR) );
+              pVar = (PVAR) hb_xgrab( sizeof(VAR) );
               pVar->szName = szVarName;
               pVar->cType = ' ';
               pVar->iUsed = 0;
@@ -3862,7 +3872,7 @@ void Message( char * szMsgName )       /* sends a message to an object */
 
       cType = pSym->cType;
 
-      pNewStackType = ( STACK_VAL_TYPE * )hb_xalloc( sizeof( STACK_VAL_TYPE ) );
+      pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
       pNewStackType->cType = cType;
       pNewStackType->pPrev = pStackValType;
       pStackValType = pNewStackType;
@@ -4111,7 +4121,7 @@ void PushId( char * szVarName ) /* generates the pcode to push a variable value 
   {
         PSTACK_VAL_TYPE pNewStackType;
 
-        pNewStackType = ( STACK_VAL_TYPE * )hb_xalloc( sizeof( STACK_VAL_TYPE ) );
+        pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
         pNewStackType->cType = cVarType;
         pNewStackType->pPrev = pStackValType;
 
@@ -4161,7 +4171,7 @@ void PushLogical( int iTrueFalse ) /* pushes a logical value on the virtual mach
    {
       PSTACK_VAL_TYPE pNewStackType;
 
-      pNewStackType = ( STACK_VAL_TYPE * )hb_xalloc( sizeof( STACK_VAL_TYPE ) );
+      pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
       pNewStackType->cType = 'L';
       pNewStackType->pPrev = pStackValType;
 
@@ -4178,7 +4188,7 @@ void PushNil( void )
    {
       PSTACK_VAL_TYPE pNewStackType;
 
-      pNewStackType = ( STACK_VAL_TYPE * )hb_xalloc( sizeof( STACK_VAL_TYPE ) );
+      pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
       pNewStackType->cType = ' ' /*TODO maybe 'U'*/ ;
       pNewStackType->pPrev = pStackValType;
 
@@ -4198,7 +4208,7 @@ void PushDouble( double dNumber, BYTE bDec )
    {
       PSTACK_VAL_TYPE pNewStackType;
 
-      pNewStackType = ( STACK_VAL_TYPE * )hb_xalloc( sizeof( STACK_VAL_TYPE ) );
+      pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
       pNewStackType->cType = 'N';
       pNewStackType->pPrev = pStackValType;
 
@@ -4235,7 +4245,7 @@ void PushInteger( int iNumber )
    {
       PSTACK_VAL_TYPE pNewStackType;
 
-      pNewStackType = ( STACK_VAL_TYPE * )hb_xalloc( sizeof( STACK_VAL_TYPE ) );
+      pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
       pNewStackType->cType = 'N';
       pNewStackType->pPrev = pStackValType;
 
@@ -4262,7 +4272,7 @@ void PushLong( long lNumber )
    {
       PSTACK_VAL_TYPE pNewStackType;
 
-      pNewStackType = ( STACK_VAL_TYPE * )hb_xalloc( sizeof( STACK_VAL_TYPE ) );
+      pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
       pNewStackType->cType = 'N';
       pNewStackType->pPrev = pStackValType;
 
@@ -4283,7 +4293,7 @@ void PushString( char * szText )
    {
       PSTACK_VAL_TYPE pNewStackType;
 
-      pNewStackType = ( STACK_VAL_TYPE * )hb_xalloc( sizeof( STACK_VAL_TYPE ) );
+      pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
       pNewStackType->cType = 'C';
       pNewStackType->pPrev = pStackValType;
 
@@ -4334,7 +4344,7 @@ void PushSymbol( char * szSymbolName, int iIsFunction )
       else
         cType = cVarType;
 
-      pNewStackType = ( STACK_VAL_TYPE * )hb_xalloc( sizeof( STACK_VAL_TYPE ) );
+      pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
       pNewStackType->cType = cType;
       pNewStackType->pPrev = pStackValType;
 
@@ -4579,7 +4589,7 @@ void GenArray( WORD wElements )
       {
           PSTACK_VAL_TYPE pNewStackType;
 
-          pNewStackType = ( STACK_VAL_TYPE * )hb_xalloc( sizeof( STACK_VAL_TYPE ) );
+          pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
           pNewStackType->cType = 'A';
           pNewStackType->pPrev = pStackValType;
 
@@ -4606,7 +4616,7 @@ void GenPCode1( BYTE byte )
       {
          PSTACK_VAL_TYPE pNewStackType;
 
-         pNewStackType = ( STACK_VAL_TYPE * )hb_xalloc( sizeof( STACK_VAL_TYPE ) );
+         pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
          pNewStackType->cType = 'O';
          pNewStackType->pPrev = pStackValType;
 
@@ -4826,7 +4836,7 @@ void GenPCode1( BYTE byte )
 
    if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
    {
-      pFunc->pCode      = (BYTE *) hb_xalloc( PCODE_CHUNK );
+      pFunc->pCode      = (BYTE *) hb_xgrab( PCODE_CHUNK );
       pFunc->lPCodeSize = PCODE_CHUNK;
       pFunc->lPCodePos  = 0;
    }
@@ -4843,7 +4853,7 @@ void GenPCode3( BYTE byte1, BYTE byte2, BYTE byte3 )
 
    if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
    {
-      pFunc->pCode      = (BYTE *) hb_xalloc( PCODE_CHUNK );
+      pFunc->pCode      = (BYTE *) hb_xgrab( PCODE_CHUNK );
       pFunc->lPCodeSize = PCODE_CHUNK;
       pFunc->lPCodePos  = 0;
    }
@@ -4863,7 +4873,7 @@ void GenPCodeN( BYTE * pBuffer, WORD wSize )
    if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
    {
       pFunc->lPCodeSize = ((wSize / PCODE_CHUNK) +1) * PCODE_CHUNK;
-      pFunc->pCode      = (BYTE *) hb_xalloc( pFunc->lPCodeSize );
+      pFunc->pCode      = (BYTE *) hb_xgrab( pFunc->lPCodeSize );
       pFunc->lPCodePos  = 0;
    }
    else if( pFunc->lPCodePos + wSize > pFunc->lPCodeSize )
@@ -4879,7 +4889,7 @@ void GenPCodeN( BYTE * pBuffer, WORD wSize )
 
 char * SetData( char * szMsg ) /* generates an underscore-symbol name for a data assignment */
 {
-   char * szResult = ( char * ) hb_xalloc( strlen( szMsg ) + 2 );
+   char * szResult = ( char * ) hb_xgrab( strlen( szMsg ) + 2 );
 
    strcpy( szResult, "_" );
    strcat( szResult, szMsg );
@@ -5146,7 +5156,7 @@ void StaticAssign( void )
  */
 static void LoopStart( void )
 {
-  PTR_LOOPEXIT pLoop = ( PTR_LOOPEXIT ) hb_xalloc( sizeof(LOOPEXIT) );
+  PTR_LOOPEXIT pLoop = ( PTR_LOOPEXIT ) hb_xgrab( sizeof(LOOPEXIT) );
 
   if( pLoops )
   {
@@ -5181,7 +5191,7 @@ static void LoopLoop( void )
       GenError( _szCErrors, 'E', ERR_EXIT_IN_SEQUENCE, "LOOP", NULL );
   }
 
-  pLoop = (PTR_LOOPEXIT) hb_xalloc( sizeof( LOOPEXIT ) );
+  pLoop = (PTR_LOOPEXIT) hb_xgrab( sizeof( LOOPEXIT ) );
 
   pLoop->pLoopList =NULL;
   pLoop->wOffset =functions.pLast->lPCodePos;  /* store the position to fix */
@@ -5213,7 +5223,7 @@ static void LoopExit( void )
       GenError( _szCErrors, 'E', ERR_EXIT_IN_SEQUENCE, "EXIT", NULL );
   }
 
-  pLoop = (PTR_LOOPEXIT) hb_xalloc( sizeof( LOOPEXIT ) );
+  pLoop = (PTR_LOOPEXIT) hb_xgrab( sizeof( LOOPEXIT ) );
 
   pLoop->pExitList =NULL;
   pLoop->wOffset =functions.pLast->lPCodePos;  /* store the position to fix */
@@ -5390,26 +5400,12 @@ char * hb_fsFNameMerge( char *szFileName, PHB_FNAME pFileName )
   return szFileName;
 }
 
-void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL on failure */
-{
-   void * pMem = malloc( ulSize );
-
-   if( ! pMem )
-   {
-      yyerror( "\nhb_xalloc error: can't allocate memory!\n" );
-   }
-
-   return pMem;
-}
-
 void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on failure */
 {
    void * pMem = malloc( ulSize );
 
    if( ! pMem )
-   {
-      yyerror( "\nhb_xgrab error: can't allocate memory!\n" );
-   }
+      GenError( _szCErrors, 'E', ERR_MEMALLOC, NULL, NULL );
 
    return pMem;
 }
@@ -5419,9 +5415,7 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
    void * pResult = realloc( pMem, ulSize );
 
    if( ! pResult )
-   {
-      yyerror( "\nhb_xrealloc error: can't reallocate memory!\n" );
-   }
+      GenError( _szCErrors, 'E', ERR_MEMREALLOC, NULL, NULL );
 
    return pResult;
 }
@@ -5431,9 +5425,7 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
    if( pMem )
       free( pMem );
    else
-   {
-      yyerror( "\nhb_xfree error: freeing a NULL pointer!\n" );
-   }
+      GenError( _szCErrors, 'E', ERR_MEMFREE, NULL, NULL );
 }
 
 char * yy_strupr( char * p )
@@ -5451,7 +5443,7 @@ char * yy_strdup( char *p )
   int iLen;
 
   iLen = strlen( p ) +1;
-  pDup = (char *) hb_xalloc( iLen );
+  pDup = (char *) hb_xgrab( iLen );
   memcpy( pDup, p, iLen );
 
   return pDup;
@@ -5904,7 +5896,7 @@ void CheckArgs( char *cFuncCall, int iArgs )
    if( iPos >= 0 && ( f[iPos].iMinParam != -1 ) )
      if( iArgs < f[iPos].iMinParam || iArgs > f[iPos].iMaxParam )
      {
-        char *szMsg = ( char * ) hb_xalloc( 30 );
+        char szMsg[ 30 ];
 
         sprintf( szMsg, " Passed: %i Expected: %i", iArgs, f[iPos].iMinParam );
         GenError( _szCErrors, 'E', ERR_CHECKING_ARGS, cFuncCall, szMsg );

@@ -2,31 +2,13 @@
  * $Id$
  */
 
-#include <ctype.h>
 #include "extend.h"
 
-#ifdef __DOS__
+#ifdef DOS
 #include <dos.h>
 #include <dir.h>
 #include <bios.h>
 #endif
-
-HARBOUR HB_RENFILE(void)
-{
-#ifdef __DOS__
-  int ok;
-  PHB_ITEM arg1 = hb_param(1,IT_STRING);
-  PHB_ITEM arg2 = hb_param(2,IT_STRING);
-  if( arg1 && arg2)
-    {
-      ok=rename(hb_parc(1),hb_parc(2));
-      if(!ok)
-	_retl(TRUE);
-      else
-	_retl(FALSE);
-    }
-#endif
-}
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -34,32 +16,38 @@ HARBOUR HB_RENFILE(void)
  *  $CATEGORY$
  *     DOS
  *  $ONELINER$
- *
  *  $SYNTAX$
  *     CD(<NDIR>)
  *  $ARGUMENTS$
- *    <NDIR> DIR TO BE CHANGED
+ *     <NDIR> DIR TO BE CHANGED
  *  $RETURNS$
- *    .T. IF SUCEFUL
- *    .F. IF NOT
+ *     .T. IF SUCEFUL
+ *     .F. IF NOT
  *
  *  $DESCRIPTION$
- *    CHANGE THE CURRENT DIRECTORY
+ *     CHANGE THE CURRENT DIRECTORY
  *  $EXAMPLES$
- *  IF CD("OLA")
- *      RETURN(.T.)
- *  ELSE
- *      RETURN(.F.)
- *  ENDIF
+ *     IF CD("OLA")
+ *        RETURN(.T.)
+ *     ELSE
+ *        RETURN(.F.)
+ *     ENDIF
  *
  *  $SEEALSO$
  *
  *  $INCLUDE$
- * extend.h dos.h dir.h bios.h internal.h
+ *     extend.h dos.h dir.h bios.h
  *  $END$
  */
 
-
+HARBOUR HB_CD( void )
+{
+#ifdef __DOS__
+   hb_retni( ISCHAR( 1 ) ? chdir( hb_parc( 1 ) ) : 0 );
+#else
+   hb_retni( 0 );
+#endif
+}
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -88,9 +76,18 @@ HARBOUR HB_RENFILE(void)
  *  $SEEALSO$
  *
  *  $INCLUDE$
- * extend.h dos.h dir.h bios.h internal.h
+ *     extend.h dos.h dir.h bios.h
  *  $END$
  */
+
+HARBOUR HB_MD(void)
+{
+#ifdef __DOS__
+   hb_retni( ISCHAR( 1 ) ? mkdir( hb_parc( 1 ) ) : 0 );
+#else
+   hb_retni( 0 );
+#endif
+}
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -119,86 +116,67 @@ HARBOUR HB_RENFILE(void)
  *  $SEEALSO$
  *
  *  $INCLUDE$
- * extend.h dos.h dir.h bios.h internal.h
+ *     extend.h dos.h dir.h bios.h
  *  $END$
  */
 
-
-HARBOUR HB_CD(void)
+HARBOUR HB_RD( void )
 {
+   /* TOFIX: chdir() is wrong here */
 #ifdef __DOS__
-  PHB_ITEM MEUDIR = hb_param(1,IT_STRING);
-  if(MEUDIR)
-    {
-      hb_retni(chdir(hb_parc(1)));
-    }
+   hb_retni( ISCHAR( 1 ) ? chdir( hb_parc( 1 ) ) : 0 );
+#else
+   hb_retni( 0 );
 #endif
 }
 
-HARBOUR HB_MD(void)
+HARBOUR HB_DISKUSED( void )
 {
-#ifdef __DOS__
-  PHB_ITEM MEUDIR = hb_param(1,IT_STRING);
-  if(MEUDIR)
-    {
+#ifdef DOS
+   struct diskfree_t disk;
+   long bytsfree, bytsfull;
 
-      hb_retni(mkdir(hb_parc(1)));
-    }
+   _dos_getdiskfree( 0, &disk );
+
+   bytsfree = ( long ) disk.avail_clusters *
+              ( long ) disk.sectors_per_cluster *
+              ( long ) disk.bytes_per_sector;
+   bytsfull = ( long ) disk.total_clusters *
+              ( long ) disk.sectors_per_cluster *
+              ( long ) disk.bytes_per_sector;
+
+   hb_retnl( bytsfull - bytsfree );
+#else
+   hb_retnl( 0 );
 #endif
 }
 
-HARBOUR HB_RD(void)
+HARBOUR HB_DISKFREE( void )
 {
-#ifdef __DOS__
-  PHB_ITEM MEUDIR = hb_param(1,IT_STRING);
-  if(MEUDIR)
-    {
+#ifdef DOS
+   struct diskfree_t disk;
 
-      hb_retni(chdir(hb_parc(1)));
-    }
+   _dos_getdiskfree( 0, &disk );
+
+   hb_retnl( ( long ) disk.avail_clusters *
+             ( long ) disk.sectors_per_cluster *
+             ( long ) disk.bytes_per_sector );
+#else
+   hb_retnl( 0 );
 #endif
 }
 
-HARBOUR HB_DISKUSED(void)
+HARBOUR HB_DISKFULL( void )
 {
-#ifdef __DOS__
-  long bytsfree,bytsfull;
-  struct diskfree_t disk;
-  _dos_getdiskfree(0,&disk);
-  bytsfree = ((long) disk.avail_clusters *
-	      (long) disk.sectors_per_cluster *
-	      (long ) disk.bytes_per_sector);
-  bytsfull = ((long) disk.total_clusters *
-	      (long) disk.sectors_per_cluster *
-	      (long ) disk.bytes_per_sector);
-  hb_retnl(bytsfull-bytsfree);
-#endif
-}
+#ifdef DOS
+   struct diskfree_t disk;
 
-HARBOUR HB_DISKFREE(void)
-{
-#ifdef __DOS__
-  long bytsfree;
-  struct diskfree_t disk;
-  _dos_getdiskfree(0,&disk);
-  bytsfree = ((long) disk.avail_clusters *
-	      (long) disk.sectors_per_cluster *
-	      (long ) disk.bytes_per_sector);
+   _dos_getdiskfree( 0, &disk );
 
-  hb_retnl(bytsfree);
-#endif
-}
-
-HARBOUR HB_DISKFULL(void)
-{
-#ifdef __DOS__
-  long bytsfull;
-  struct diskfree_t disk;
-  _dos_getdiskfree(0,&disk);
-
-  bytsfull = ((long) disk.total_clusters *
-	      (long) disk.sectors_per_cluster *
-	      (long ) disk.bytes_per_sector);
-  hb_retnl(bytsfull);
+   hb_retnl( ( long ) disk.total_clusters *
+             ( long ) disk.sectors_per_cluster *
+             ( long ) disk.bytes_per_sector );
+#else
+   hb_retnl( 0 );
 #endif
 }
