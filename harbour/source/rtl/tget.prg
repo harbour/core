@@ -96,7 +96,7 @@ CLASS Get
    METHOD SetFocus()
    METHOD Undo()
    METHOD UnTransform()
-   METHOD UpdateBuffer() INLINE ::Assign(), Self
+   METHOD UpdateBuffer() INLINE  ::buffer := ::PutMask(), ::Assign(), Self
    METHOD VarGet()
    METHOD VarPut()
 
@@ -463,7 +463,7 @@ METHOD Untransform( cBuffer ) CLASS Get
       cBuffer := StrTran( cBuffer, "(", "" )
       cBuffer := StrTran( cBuffer, ")", "" )
       cBuffer := AllTrim( cBuffer )
-      xValue  := Val( cBuffer )
+      xValue  := 0 + Val( cBuffer )    // 0 + ... avoids setting the
       if ::minus
          xValue := -xValue
       endif

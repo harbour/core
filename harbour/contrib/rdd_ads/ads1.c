@@ -395,7 +395,7 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
          AdsSeekLast( pArea->hOrdCurrent, (UNSIGNED8*) hb_itemGetCPtr( pKey ),
                     (UNSIGNED16) hb_itemGetCLen( pKey ), ADS_STRINGKEY,
                     (UNSIGNED16*) &(pArea->fFound) );
-      else if(hb_itemType( pKey ) == HB_IT_NUMERIC )
+      else if(hb_itemType( pKey ) & HB_IT_NUMERIC )
       {
          double dTemp;
          dTemp = hb_itemGetND( pKey );
@@ -415,7 +415,7 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
       if( hb_itemType( pKey ) == HB_IT_STRING )
          AdsSeek( pArea->hOrdCurrent, (UNSIGNED8*) hb_itemGetCPtr( pKey ),
                    (UNSIGNED16) hb_itemGetCLen( pKey ), ADS_STRINGKEY, usSeekType, (UNSIGNED16*) &(pArea->fFound) );
-      else if(hb_itemType( pKey ) == HB_IT_NUMERIC )
+      else if(hb_itemType( pKey ) & HB_IT_NUMERIC )
       {
          double dTemp;
          dTemp = hb_itemGetND( pKey );

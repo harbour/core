@@ -1,3 +1,10 @@
+2001-02-16 23:40 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * source\rtl\tget.prg
+      * added Updating of Buffer to UpdateBuffer
+      * added 0+Value to avoid changing the display lengths of numerics
+   * contrib/rdd_ads/ads1.c
+      * the last final ultimate fix to numeric seeks.  really.
+
 2001-02-16 11:20 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * harbour/source/rdd/dbfntx/dbfntx1.c
      * fixes and improvements
