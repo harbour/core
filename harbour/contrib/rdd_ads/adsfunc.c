@@ -243,12 +243,14 @@ HB_FUNC( ADSSETCHARTYPE )
 
 HB_FUNC( ADSSETDEFAULT )
 {
-   AdsSetDefault( (UNSIGNED8*) hb_parc( 1 ) );
+   if( ISCHAR(1) )
+      AdsSetDefault( (UNSIGNED8*) hb_parc( 1 ) );
 }
 
 HB_FUNC( ADSSETSEARCHPATH )
 {
-   AdsSetSearchPath( (UNSIGNED8*) hb_parc( 1 ) );
+   if( ISCHAR(1) )
+      AdsSetSearchPath( (UNSIGNED8*) hb_parc( 1 ) );
 }
 
 HB_FUNC( ADSSETDELETED )
@@ -265,7 +267,8 @@ HB_FUNC( ADSBLOB2FILE )
 
    szFileName = hb_parc( 1 );
    szFieldName = hb_parc( 2 );
-   if( ( strlen( szFileName ) == 0 ) || ( strlen( szFieldName ) == 0 ) )
+   if( !szFileName || !szFieldName || ( strlen( szFileName ) == 0 ) || 
+            ( strlen( szFieldName ) == 0 ) )
    {
       hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSBLOB2FILE" );
       return;
@@ -288,7 +291,8 @@ HB_FUNC( ADSFILE2BLOB )
 
    szFileName = hb_parc( 1 );
    szFieldName = hb_parc( 2 );
-   if( ( strlen( szFileName ) == 0 ) || ( strlen( szFieldName ) == 0 ) )
+   if( !szFileName || !szFieldName || ( strlen( szFileName ) == 0 ) || 
+         ( strlen( szFieldName ) == 0 ) )
    {
       hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSFILE2BLOB" );
       return;
@@ -522,7 +526,7 @@ HB_FUNC( ADSEVALAOF )
    UNSIGNED16 pusOptLevel;
 
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
-   if( pArea )
+   if( pArea && ISCHAR(1) )
    {
       pucFilter = hb_parc( 1 );
 
@@ -560,7 +564,7 @@ HB_FUNC( ADSGETAOF )
    UNSIGNED8  pucFilter[HARBOUR_MAX_RDD_FILTER_LENGTH+1];
    UNSIGNED8 *pucFilter2;
    UNSIGNED16 pusLen = HARBOUR_MAX_RDD_FILTER_LENGTH;
-   UNSIGNED32 ulRetVal = FAILURE;
+   UNSIGNED32 ulRetVal;
 
    hb_retc( "" );
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
@@ -681,7 +685,7 @@ HB_FUNC( ADSSETAOF )
    UNSIGNED32 ulRetVal;
 
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
-   if( pArea )
+   if( pArea && ISCHAR(1) )
    {
       pucFilter = hb_parc( 1 );
       if( hb_pcount() > 1 )
@@ -744,7 +748,7 @@ HB_FUNC( ADSENABLEENCRYPTION )
    UNSIGNED32 ulRetVal;
    char * pucPassword = hb_parc( 1 );
 
-   if( strlen( pucPassword ) == 0 )
+   if( !pucPassword || ( strlen( pucPassword ) == 0 ) )
    {
       hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSENABLEENCRYPTION" );
       return;

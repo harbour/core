@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-21 10:20 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * contrib/rdd_ads/adsfunc.c
+    ! Few fixes - checking for hb_parc() return value
+
 2002-10-20 22:50 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/inkey.c
     ! reduce keyboard polling to <= once per tick.
