@@ -61,19 +61,19 @@
  *    hb_fsIsDevice()
  *    HB_FSETDEVMOD()
  *
- *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    FOPEN()    DOCUMENTATION
- *    FCLOSE()   DOCUMENTATION
- *    FWRITE()   DOCUMENTATION
- *    FSEEK()    DOCUMENTATION
- *    FREAD()    DOCUMENTATION
- *    FILE()     DOCUMENTATION
- *    FREADSTR() DOCUMENTATION
- *    FRENAME()  DOCUMENTATION
- *    FERROR()   DOCUMENTATION
- *    RENAME     DOCUMENTATION
- *    ERASE      DOCUMENTATION
+ *    FOPEN()    Documentation
+ *    FCLOSE()   Documentation
+ *    FWRITE()   Documentation
+ *    FSEEK()    Documentation
+ *    FREAD()    Documentation
+ *    FILE()     Documentation
+ *    FREADSTR() Documentation
+ *    FRENAME()  Documentation
+ *    FERROR()   Documentation
+ *    RENAME     Documentation
+ *    ERASE      Documentation
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -1355,7 +1355,7 @@ FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
  *
  *     The Sharing Modes determine how other processes may access the file.
  *
- *   FOPEN() Sharing Modes 
+ *   FOPEN() Sharing Modes
  *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
  *   Mode    Fileio.ch      Operation
  *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
@@ -1370,10 +1370,10 @@ FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
  *     The Access Modes in combination (+) with the Sharing modes determine the
  *   accessibility of the file in a network environment.
  *
- *  $RETURNS$     
+ *  $RETURNS$
  *     FOPEN() returns the file handle of the opened file in the range of zero
  *   to 65,535.  If an error occurs, FOPEN() returns -1.
- *  $DESCRIPTION$     
+ *  $DESCRIPTION$
  *     FOPEN() is a low-level file function that opens an existing binary file
  *   for reading and writing, depending on the <nMode> argument.  Whenever
  *   there is an open error, use FERROR() to return the DOS error number.
@@ -1439,10 +1439,10 @@ HARBOUR HB_FOPEN( void )
  *  $SYNTAX$
  *     FCREATE(<cFile>, [<nAttribute>]) --> nHandle
  *  $ARGUMENTS$
- *     <cFile> is the name of the file to create.  
+ *     <cFile> is the name of the file to create.
  *
  *     <nAttribute> Numeric code for the DOS file attribute
- *    
+ *
  *  $RETURNS$
  *     <nHandle>  Numeric expression
  *  $DESCRIPTION$
@@ -1460,7 +1460,7 @@ HARBOUR HB_FOPEN( void )
  *     this Function.
  *
  *      ^bValue of <nAttribute>     File Attribute
- *          0                       Normal/Default,Read/Write 
+ *          0                       Normal/Default,Read/Write
  *          1                       Read-only,Attemptinf to open for
  *                                  output returns an error
  *          2                       Hidden,Excluded from normal DIR
@@ -1490,7 +1490,7 @@ HARBOUR HB_FOPEN( void )
  *  $SEEALSO$
  *     FCLOSE(),FOPEN(),FWRITE(),FREAD(),FERROR()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -1512,10 +1512,10 @@ HARBOUR HB_FCREATE( void )
  *     Read characters from a binary file into a buffer variable
  *  $SYNTAX$
  *     FREAD(<nHandle>, @<cBufferVar>, <nBytes>) --> nBytes
- *  $ARGUMENTS$     
+ *  $ARGUMENTS$
  *     <nHandle> is the file handle obtained from FOPEN(), FCREATE(), or
  *   predefined by DOS.
- * 
+ *
  *     <cBufferVar> is the name of an existing and initialized character
  *   variable used to store data read from the specified file.  The length of
  *   this variable must be greater than or equal to <nBytes>.  <cBufferVar>
@@ -1523,11 +1523,11 @@ HARBOUR HB_FCREATE( void )
  *   pass-by-reference operator (@).
  *
  *     <nBytes> is the number of bytes to read into the buffer.
- *  $RETURNS$     
+ *  $RETURNS$
  *     FREAD() returns the number of bytes successfully read as an integer
  *   numeric value.  A return value less than <nBytes> or zero indicates end
  *   of file or some other read error.
- *  $DESCRIPTION$     
+ *  $DESCRIPTION$
  *     FREAD() is a low-level file function that reads characters from a binary
  *   file into an existing character variable.  It reads from the file
  *   starting at the current DOS file pointer position, advancing the file
@@ -1572,7 +1572,7 @@ HARBOUR HB_FCREATE( void )
  *  $SEEALSO$
  *     BIN2I(),BIN2L(),BIN2W(),FERROR(),FWRITE()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -1611,10 +1611,10 @@ HARBOUR HB_FREAD( void )
  *     Low Level
  *  $ONELINER$
  *     Write to an open binary file
- *  $SYNTAX$     
+ *  $SYNTAX$
  *     FWRITE(<nHandle>, <cBuffer>, [<nBytes>])
  *      --> nBytesWritten
- *  $ARGUMENTS$     
+ *  $ARGUMENTS$
  *     <nHandle> is the file handle obtained from FOPEN(), FCREATE(), or
  *   predefined by DOS.
  *
@@ -1623,12 +1623,12 @@ HARBOUR HB_FREAD( void )
  *     <nBytes> indicates the number of bytes to write beginning at the
  *   current file pointer position.  If omitted, the entire content of
  *   <cBuffer> is written.
- *  $RETURNS$     
+ *  $RETURNS$
  *     FWRITE() returns the number of bytes written as an integer numeric
  *   value.  If the value returned is equal to <nBytes>, the operation was
  *   successful.  If the return value is less than <nBytes> or zero, either
  *   the disk is full or another error has occurred.
- *  $DESCRIPTION$     
+ *  $DESCRIPTION$
  *     FWRITE() is a low-level file function that writes data to an open binary
  *   file from a character string buffer.  You can either write all or a
  *   portion of the buffer contents.  Writing begins at the current file
@@ -1642,7 +1642,7 @@ HARBOUR HB_FREAD( void )
  *   knowledge of the operating system
  *  $EXAMPLES$
  *   ^CFE  This example copies the contents of one file to another:
- * 
+ *
  *      #include "Fileio.ch"
  *      #define F_BLOCK   512
  *      //
@@ -1674,7 +1674,7 @@ HARBOUR HB_FREAD( void )
  *  $SEEALSO$
  *     FCLOSE(),FCREATE(),FERROR(),FOPEN(),I2BIN(),L2BIN()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -1698,7 +1698,7 @@ HARBOUR HB_FWRITE( void )
  *  $SYNTAX$
  *     FERROR() --> <nErrorCode>
  *  $ARGUMENTS$
- *     
+ *
  *  $RETURNS$
  *     <nErrorCode> Value of the DOS error last encountered by a
  *     low-level file function.
@@ -1733,7 +1733,7 @@ HARBOUR HB_FWRITE( void )
  *     of possibles values returned by the FERROR() function.
  *
  *   FERROR() Return Values
- *   Value   Reason 
+ *   Value   Reason
  *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
  *   0       Successful
  *   2       File not found
@@ -1770,7 +1770,7 @@ HARBOUR HB_FWRITE( void )
  *  $SEEALSO$
  *     FCLOSE(),FERASE(),FOPEN(),FWRITE()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -1808,7 +1808,7 @@ HARBOUR HB_FERROR( void )
  *  $SEEALSO$
  *     FOPEN(),FCREATE(),FREAD(),FWRITE(),FERROR()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -1836,7 +1836,7 @@ HARBOUR HB_FCLOSE( void )
  *     FERASE(<cFile>) --> nSuccess
  *  $ARGUMENTS$
  *     <cFile> Name of file to erase.
- *  $RETURNS$     
+ *  $RETURNS$
  *     <nSuccess> 0 if successful, -1 if not
  *  $DESCRIPTION$
  *     This function deletes the file specified in <cFile> from the disk.
@@ -1859,7 +1859,7 @@ HARBOUR HB_FCLOSE( void )
  *      #include "Directry.ch"
  *      AEVAL(DIRECTORY("*.BAK"), { |aFile| ;
  *         FERASE(aFile[F_NAME]) })
- * 
+ *
  *   ^CFE  This example erases a file and displays a message if the
  *      operation fails:
  *
@@ -1876,7 +1876,7 @@ HARBOUR HB_FCLOSE( void )
  *  $SEEALSO$
  *     FERROR(),FRENAME()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -1899,7 +1899,7 @@ HARBOUR HB_FERASE( void )
  *     Change the name of a file
  *  $SYNTAX$
  *     FRENAME(<cOldFile>, <cNewFile>) --> nSuccess
- *  $ARGUMENTS$     
+ *  $ARGUMENTS$
  *     <cOldFile> is the name of the file to rename, including the file
  *   extension.  A drive letter and/or path name may also be included as part
  *   of the filename.
@@ -1907,11 +1907,11 @@ HARBOUR HB_FERASE( void )
  *     <cNewFile> is the new name of the file, including the file
  *   extension.  A drive letter and/or path name may also be included as part
  *   of the name.
- *  $RETURNS$     
+ *  $RETURNS$
  *     FRENAME() returns -1 if the operation fails and zero if it succeeds.  In
  *   the case of a failure, FERROR() can be used to determine the nature of
  *   the error.
- *  $DESCRIPTION$     
+ *  $DESCRIPTION$
  *     FRENAME() is a file function that changes the name of a specified file
  *   to a new name and is identical to the RENAME command.
  *
@@ -1944,7 +1944,7 @@ HARBOUR HB_FERASE( void )
  *  $SEEALSO$
  *     ERASE,FERASE(),FERROR(),FILE(),RENAME
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -1967,7 +1967,7 @@ HARBOUR HB_FRENAME( void )
  *     Set a binary file pointer to a new position
  *  $SYNTAX$
  *     FSEEK(<nHandle>, <nOffset>, [<nOrigin>]) --> nPosition
- *  $ARGUMENTS$     
+ *  $ARGUMENTS$
  *     <nHandle> is the file handle obtained from FOPEN(), FCREATE(), or
  *   predefined by DOS.
  *
@@ -1989,11 +1989,11 @@ HARBOUR HB_FRENAME( void )
  *   1       FS_RELATIVE    Seek from the current pointer position
  *   2       FS_END         Seek from end of file
  *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
- *  $RETURNS$     
+ *  $RETURNS$
  *     FSEEK() returns the new position of the file pointer relative to the
  *   beginning of file (position 0) as an integer numeric value.  This value
  *   is without regard to the original position of the file pointer.
- *  $DESCRIPTION$     
+ *  $DESCRIPTION$
  *     FSEEK() is a low-level file function that moves the file pointer forward
  *   or backward in an open binary file without actually reading the contents
  *   of the specified file.  The beginning position and offset are specified
@@ -2105,15 +2105,15 @@ BOOL hb_fsFile( BYTE * pFilename )
  *     Tests for the existence of file(s)
  *  $SYNTAX$
  *     FILE(<cFilespec>) --> lExists
- *  $ARGUMENTS$     
+ *  $ARGUMENTS$
  *     <cFilespec> is in the current Harbour  default directory and path.
  *   It is a standard file specification that can include the wildcard
  *   characters * and ? as well as a drive and path reference.  Explicit
  *   references to a file must also include an extension.
- *  $RETURNS$     
+ *  $RETURNS$
  *     FILE() returns true (.T.) if there is a match for any file matching the
  *   <cFilespec> pattern; otherwise, it returns false (.F.).
- *  $DESCRIPTION$     
+ *  $DESCRIPTION$
  *     FILE() is an environment function that determines whether any file
  *   matching a file specification pattern is found.  FILE() searches the
  *   specified directory if a path is explicitly specified.
@@ -2143,9 +2143,9 @@ BOOL hb_fsFile( BYTE * pFilename )
  *  $COMPLIANCE$
  *     This function is CA-Clipper compatible
  *  $SEEALSO$
- *     
+ *
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -2163,17 +2163,17 @@ HARBOUR HB_FILE( void )
  *      Read characters from a binary file
  *  $SYNTAX$
  *      FREADSTR(<nHandle>, <nBytes>) --> cString
- *  $ARGUMENTS$     
+ *  $ARGUMENTS$
  *     <nHandle> is the file handle obtained from FOPEN(), FCREATE(), or
  *   predefined by DOS.
  *
  *     <nBytes> is the number of bytes to read, beginning at the current
  *   DOS file pointer position.
- *  $RETURNS$     
+ *  $RETURNS$
  *     FREADSTR() returns a character string with any size including
  *  strings greather then 64K. A return value ("") indicates an
  *  error or end of file.
- *  $DESCRIPTION$     
+ *  $DESCRIPTION$
  *     FREADSTR() is a low-level file function that reads characters from an
  *   open binary file beginning with the current DOS file pointer position.
  *   Characters are read up to <nBytes> or until a null character (CHR(0)) is
@@ -2210,7 +2210,7 @@ HARBOUR HB_FILE( void )
  *  $SEEALSO$
  *     BIN2I(),BIN2L(),BIN2W(),FERROR(),FREAD(),FSEEK()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -2480,7 +2480,7 @@ HARBOUR HB_FSETDEVMOD( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *     RENAME 
+ *     RENAME
  *  $CATEGORY$
  *     Command
  *  $ONELINER$
@@ -2538,7 +2538,7 @@ HARBOUR HB_FSETDEVMOD( void )
  *  $SEEALSO$
  *     CURDIR(),ERASE,FILE(),FERASE(),FRENAME()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -2571,7 +2571,7 @@ HARBOUR HB_FSETDEVMOD( void )
  *
  *     Warning!  Files must be CLOSEd before deleting them.
  *
- *  $EXAMPLES$ 
+ *  $EXAMPLES$
  *
  *   ^CFE  This example removes a specified file from disk then tests to
  *      see if the file was in fact removed:
@@ -2590,7 +2590,7 @@ HARBOUR HB_FSETDEVMOD( void )
  *  $SEEALSO$
  *     CURDIR(),FILE()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 

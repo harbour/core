@@ -178,7 +178,7 @@ STATIC FUNCTION Create()
    NEXT
 
    if ::nOnError != nil
-      __clsAddMsg( hClass, ::nOnError,, HB_OO_ONERROR )
+      __clsAddMsg( hClass, ::nOnError,, HB_OO_MSG_ONERROR )
    endif
 
    RETURN NIL

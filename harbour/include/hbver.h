@@ -58,7 +58,7 @@
  *                                      Added version history.
  *                                      Bumped revision code to "d" and
  *                                      updated date.
- * V 1.8    Victor Szel                 Change not documented.
+ * V 1.8    Victor Szakats              Change not documented.
  * V 1.7    David G. Holm               Bumped revision code to "c".
  * V 1.6    Patrick Mast                Bumped build to 27 and updated date
  *                                      for new public release.

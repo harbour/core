@@ -39,7 +39,7 @@
  * V 1.31   David G. Holm               Added missing Clipper 5.3 SETs.
  * V 1.25   Paul Tucker                 Converted HB_SET_DEBUG back to Logical.
  *                                      Clipper 5.3 docs are incorrect on this.
- * V 1.19   Victor Szel                 #include <x> changed to #include "x".
+ * V 1.19   Victor Szakats              #include <x> changed to #include "x".
  * V 1.18   David G. Holm               Added INKEY_EXTENDED to allow some
  *                                      platforms to select between normal
  *                                      and extended key codes.
@@ -60,9 +60,9 @@
  * V 1.12   David G. Holm               Added copyright and license header,
  *                                      along with a complete version history.
  * V 1.11   David G. Holm               Added hb_set_extrahan.
- * V 1.10   Victor Szel                 Renamed InitializeSets() to
+ * V 1.10   Victor Szakats              Renamed InitializeSets() to
  *                                      hb_setInitialize() and renamed
- * V 1.9    Victor Szel                 ReleaseSets() to hb_setRelease().
+ * V 1.9    Victor Szakats              ReleaseSets() to hb_setRelease().
  * V 1.8    David G. Holm               Changed HB_SET_DEBUG to numeric.
  * V 1.7    Gonzalo A. Diethelm         Made the #include guard ANSI compliant.
  * V 1.6    Gonzalo A. Diethelm         Ensured that all Harbour functions

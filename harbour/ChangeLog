@@ -1,3 +1,16 @@
+20000210-23:53 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * include/hboo.ch
+     source/rtl/classes.c
+     source/rtl/tclass.prg
+     ! HB_OO_ONERROR renamed to HB_OO_MSG_ONERROR
+   * source/rtl/tgetlist.prg
+     + Added READVAR() support for the GETs.
+   * include/*
+     source/rtl/readvar.prg
+     * My name changed to the real one.
+   * source/rtl/filesys.c
+     ! Minor formatting fix.  
+
 20000210-14:45 EST Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      * temporarily - not defining _Windows for tone.c and oemansi.c

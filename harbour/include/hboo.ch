@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Header file for low-level object engine
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -45,7 +45,7 @@
 #define HB_OO_MSG_INLINE        3
 #define HB_OO_MSG_VIRTUAL       4
 #define HB_OO_MSG_SUPER         5
-#define HB_OO_ONERROR           6
+#define HB_OO_MSG_ONERROR       6
 
 /* Data */
 #define HB_OO_DATA_SYMBOL       1
@@ -56,3 +56,4 @@
 #define HB_OO_CLSD_VALUE        2
 
 #endif /* HB_OO_CH_ */
+

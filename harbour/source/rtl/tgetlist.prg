@@ -594,6 +594,7 @@ METHOD ReadVar( cNewVarName ) CLASS TGetList
 
    if ISCHARACTER( cNewVarName )
       ::cVarName := cNewVarName
+      ReadVar( cNewVarName )
    endif
 
 return cOldName
@@ -631,3 +632,4 @@ function Updated()
    endif
 
 return .f.
+

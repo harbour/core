@@ -50,7 +50,7 @@
  *    __objHasMsg()
  *    __objSendMsg()
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    hb___msgEval()
  *    HB___CLASSNEW()
  *    HB___CLASSINSTANCE()
@@ -100,7 +100,7 @@ typedef struct
 
 static PCLASS   s_pClasses     = NULL;
 static USHORT   s_uiClasses    = 0;
-static PMETHOD  s_pMethod      = NULL; /* TOFIX: The object engine is not thread safe because of this. */
+static PMETHOD  s_pMethod      = NULL; /* TOFIX: The object engine is not thread safe because of this. [vszakats] */
 static PHB_DYNS s_msgClassName = NULL;
 static PHB_DYNS s_msgClassH    = NULL;
 static PHB_DYNS s_msgEval      = NULL;
@@ -498,7 +498,7 @@ HARBOUR HB___CLSADDMSG( void )
               pNewMeth->pFunction = hb___msgSuper;
               break;
 
-         case HB_OO_ONERROR:
+         case HB_OO_MSG_ONERROR:
               pClass->pFunError = ( PHB_FUNC ) hb_parnl( 2 );
               break;
 

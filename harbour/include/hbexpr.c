@@ -768,7 +768,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
             /* NOTE: CA-Cl*pper's compiler optimizer will be wrong for those
                      CHR() cases where the passed parameter is a constant which
                      can be divided by 256 but it's not zero, in this case it
-                     will return an empty string instead of a Chr(0). [vszel] */
+                     will return an empty string instead of a Chr(0). [vszakats] */
 
             pExpr = hb_compExprNew( HB_ET_STRING );
             pExpr->ValType = HB_EV_STRING;
@@ -4554,7 +4554,7 @@ static HB_EXPR_FUNC( hb_compExprUseIN )
                BOOL bResult;
 
                /* NOTE: CA-Cl*pper has a bug where the $ operator returns .T.
-                        when an empty string is searched [vszel] */
+                        when an empty string is searched [vszakats] */
 
                if( pSelf->value.asOperator.pLeft->ulLength == 0 )
                   bResult = TRUE;

@@ -38,11 +38,11 @@
  *
  * V 1.22   David G. Holm               Added FS_ERROR.
  * V 1.21   David G. Holm               Added hb_fsFile().
- * V 1.7    Victor Szel                 #include <x> changed to #include "x".
+ * V 1.7    Victor Szakats              #include <x> changed to #include "x".
  * V 1.6    David G. Holm               Added my email address.
  * V 1.5    David G. Holm               Added copyright and license header,
  *                                      along with a complete version history.
- * V 1.4    Victor Szel                 Undocumented change.
+ * V 1.4    Victor Szakats              Undocumented change.
  * V 1.3    Gonzalo A. Diethelm         Ensured that all Harbour functions
  *                                      are declared as HB_FUNCTION( void );
  * V 1.2    David G. Holm               Corrected RCS Id keyword.
