@@ -3,6 +3,6 @@ rem
 rem $Id$
 rem
 
-hbdoc /htm ha.lnk harbwww.rps
-cd www
+hbdoc -htm categ.lnk hrbtools.rsp
+cd htm
 start harbour.htm
