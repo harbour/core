@@ -1,3 +1,9 @@
+19991018-14:10 GMT+3 Alexander Kresin
+  * source/pp/hbpp.c
+    * Fixed bugs, reported by Antonio Linares
+  * source/rtl/tbrowse.prg
+    * Fixed some problems with Left(), Right() and logical fields.
+
 19991018-11:58 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/adir.prg
      + SET DEFAULT handling added.

@@ -242,17 +242,23 @@ return nil
 
 METHOD Left() CLASS TBrowse
 
+   local leftVis := ::leftVisible
+
    if ::ColPos > ::leftVisible .or. ( ::ColPos < ::leftVisible .and. ::ColPos > 1 ) ;
        .or. ( ::ColPos == ::leftVisible .and. ::Freeze > 0 .and. ::leftVisible  - ::Freeze == 1 )
       ::DeHilite()
       ::ColPos--
       ::Hilite()
    else
-      if ::ColPos > 1
-         ::rightVisible--
-         ::leftVisible = ::LeftDetermine()
-         ::ColPos--
-         ::RefreshAll()
+      if ::ColPos > 1 .and. ::leftVisible  - ::Freeze > 1
+         while leftVis == ::leftVisible
+            ::rightVisible--
+            ::leftVisible = ::LeftDetermine()
+            ::RefreshAll()
+         end
+         if --::ColPos < ::leftVisible
+            ::ColPos = ::rightVisible
+         endif
       endif
    endif
 
@@ -388,7 +394,7 @@ METHOD Right() CLASS TBrowse
       if ::ColPos < Len( ::aColumns )
          ::rightVisible++
          ::leftVisible = ::LeftDetermine()
-         ::ColPos = ::rightVisible
+         ::ColPos++
          ::RefreshAll()
       endif
    endif
@@ -400,10 +406,15 @@ METHOD DeHilite() CLASS TBrowse
    local nColor := If( ::aColumns[ ::ColPos ]:ColorBlock != nil,;
                        Eval( ::aColumns[ ::ColPos ]:ColorBlock )[ 1 ], 1 )
    local cColor := __ColorIndex( ::ColorSpec, nColor - 1 )
+   local ftmp := Eval( ::aColumns[ ::ColPos ]:block )
+
+   if valtype( ftmp ) == "L"
+      ftmp = PadC( If( ftmp, "T","F" ), ::aColumns[ ::ColPos ]:Width )
+   endif
 
    @ ::nTop + ::RowPos - If( ::lHeaders, 0, 1 ) + If( Empty(::HeadSep), 0, 1 ),;
      ::aColumns[ ::ColPos ]:ColPos ;
-     SAY PadR( Eval( ::aColumns[ ::ColPos ]:block ), ::aColumns[ ::ColPos ]:Width ) ;
+     SAY PadR( ftmp, ::aColumns[ ::ColPos ]:Width ) ;
      COLOR cColor
 
 return nil
@@ -420,11 +431,16 @@ METHOD Hilite() CLASS TBrowse
    local nColor := If( ::aColumns[ ::ColPos ]:ColorBlock != nil,;
                        Eval( ::aColumns[ ::ColPos ]:ColorBlock )[ 2 ], 2 )
    local cColor := __ColorIndex( ::ColorSpec, nColor - 1 )
+   local ftmp := Eval( ::aColumns[ ::ColPos ]:block )
+
+   if valtype( ftmp ) == "L"
+      ftmp = PadC( If( ftmp, "T","F" ), ::aColumns[ ::ColPos ]:Width )
+   endif
 
    if ::AutoLite
       @ ::nTop + ::RowPos - If( ::lHeaders, 0, 1 ) + If( Empty(::HeadSep), 0, 1 ),;
         ::aColumns[ ::ColPos ]:ColPos ;
-        SAY PadR( Eval( ::aColumns[ ::ColPos ]:block ), ::aColumns[ ::ColPos ]:Width ) ;
+        SAY PadR( ftmp, ::aColumns[ ::ColPos ]:Width ) ;
         COLOR cColor
    endif
 
@@ -439,6 +455,7 @@ METHOD Stabilize() CLASS TBrowse
    local lFooters := .f.                   // Are there column footers to paint ?
    local cColColor                         // Column color to use
    local oCol, oCol2
+   local ftmp
 
    if ::aRedraw == Nil .or. ! ::aRedraw[ 1 ]
       // Are there any column header to paint ?
@@ -613,8 +630,11 @@ METHOD Stabilize() CLASS TBrowse
                             __ColorIndex( ::ColorSpec,;
                             Eval( ::aColumns[ n ]:ColorBlock )[ 1 ] - 1 ),;
                             ::ColorSpec )
-            DevOut( PadR( Eval( ::aColumns[ n ]:block ),;
-                 ::aColumns[ n ]:Width ), cColColor )
+            ftmp = Eval( ::aColumns[ n ]:block )
+            if valtype( ftmp ) == "L"
+               ftmp = PadC( If( ftmp, "T","F" ), ::aColumns[ n ]:Width )
+            endif
+            DevOut( PadR( ftmp, ::aColumns[ n ]:Width ), cColColor )
          else
             DevOut( Space( ::aColumns[ n ]:Width ), ::ColorSpec )
          endif

@@ -444,82 +444,85 @@ void ConvertPatterns ( char *mpatt, int mlen, char *rpatt, int rlen )
 
    while ( *(mpatt+i) != '\0' )
    {
-     if ( *(mpatt+i) == '<' )
-     {  /* Drag match marker, determine it type */
-       explen = 0; ipos = i; i++; exptype = '0';
-       while( *(mpatt+i) == ' ' || *(mpatt+i) == '\t' ) i++;
-       if ( *(mpatt+i) == '*' )        /* Wild match marker */
-         { exptype = '3'; i++; }
-       else if ( *(mpatt+i) == '(' )   /* Extended expression match marker */
-         { exptype = '4'; i++; }
-       while ( *(mpatt+i) != '>' )
-       {
-         if ( *(mpatt+i) == ',' )      /* List match marker */
+      if ( *(mpatt+i) == '<' )
+      {  /* Drag match marker, determine it type */
+         explen = 0; ipos = i; i++; exptype = '0';
+         while( *(mpatt+i) == ' ' || *(mpatt+i) == '\t' ) i++;
+         if ( *(mpatt+i) == '*' )        /* Wild match marker */
+            { exptype = '3'; i++; }
+         else if ( *(mpatt+i) == '(' )   /* Extended expression match marker */
+            { exptype = '4'; i++; }
+         while ( *(mpatt+i) != '>' )
          {
-           exptype = '1';
-           while ( *(mpatt+i) != '>' ) i++;
-           break;
+            if ( *(mpatt+i) == ',' )      /* List match marker */
+            {
+               exptype = '1';
+               while ( *(mpatt+i) != '>' ) i++;
+               break;
+            }
+            else if ( *(mpatt+i) == ':' ) /* Restricted match marker */
+            {
+               exptype = '2';
+               *(mpatt+i--) = ' ';
+               break;
+            }
+            if( *(mpatt+i) != ' ' && *(mpatt+i) != '\t' )
+               *(exppatt+explen++) = *(mpatt+i);
+            i++;
          }
-         else if ( *(mpatt+i) == ':' ) /* Restricted match marker */
+         if ( exptype == '3' )
          {
-            exptype = '2';
-            *(mpatt+i--) = ' ';
-            break;
+            if ( *(exppatt+explen-1) == '*' ) explen--;
+            else
+               GenError( _szPErrors, 'P', ERR_PATTERN_DEFINITION, NULL, NULL );
          }
-         *(exppatt+explen++) = *(mpatt+i++);
-       }
-       if ( exptype == '3' )
-       {
-         if ( *(exppatt+explen-1) == '*' ) explen--;
-         else
-           GenError( _szPErrors, 'P', ERR_PATTERN_DEFINITION, NULL, NULL );
-       }
-       else if ( exptype == '4' )
-       {
-         if ( *(exppatt+explen-1) == ')' ) explen--;
-         else
-           GenError( _szPErrors, 'P', ERR_PATTERN_DEFINITION, NULL, NULL );
-       }
-       rmlen = i - ipos + 1;
+         else if ( exptype == '4' )
+         {
+            if ( *(exppatt+explen-1) == ')' ) explen--;
+            else
+               GenError( _szPErrors, 'P', ERR_PATTERN_DEFINITION, NULL, NULL );
+         }
+         rmlen = i - ipos + 1;
           /* Convert match marker into inner format */
-       lastchar = (char) ( (unsigned int)lastchar + 1 );
-       expreal[1] = lastchar;
-       expreal[2] = exptype;
-       pp_Stuff ( expreal, mpatt+ipos, 4, rmlen, mlen );
-       mlen += 4 - rmlen; i += 4 - rmlen;
+         lastchar = (char) ( (unsigned int)lastchar + 1 );
+         expreal[1] = lastchar;
+         expreal[2] = exptype;
+         pp_Stuff ( expreal, mpatt+ipos, 4, rmlen, mlen );
+         mlen += 4 - rmlen;
+         i += 4 - rmlen;
 
           /* Look for appropriate result markers */
-       ptr = rpatt;
-       while ( (ifou = pp_strAt( exppatt, explen, ptr, rlen-(ptr-rpatt) )) > 0 )
-       {
+         ptr = rpatt;
+         while ( (ifou = pp_strAt( exppatt, explen, ptr, rlen-(ptr-rpatt) )) > 0 )
+         {
           /* Convert result marker into inner format */
-         ptr += ifou;
-         if ( *(ptr-2) == '<' && *(ptr+explen-1) == '>' &&
+            ptr += ifou;
+            if ( *(ptr-2) == '<' && *(ptr+explen-1) == '>' &&
                *(ptr-3) != '\\'  && *(ptr+explen-2) != '\\' )  /* <...> */
-         {
-           if ( *(ptr-3) == '#' && *(ptr-4) != '\\' )          /* #<...> */
-             { exptype = '1'; ptr -= 3; rmlen = explen+3; }
-           else
-             { exptype = '0'; ptr -= 2; rmlen = explen+2; }
-         }
-         else if ( *(ptr-3) == '<' && *(ptr+explen) == '>' &&
+            {
+               if ( *(ptr-3) == '#' && *(ptr-4) != '\\' )          /* #<...> */
+                  { exptype = '1'; ptr -= 3; rmlen = explen+3; }
+               else
+                  { exptype = '0'; ptr -= 2; rmlen = explen+2; }
+            }
+            else if ( *(ptr-3) == '<' && *(ptr+explen) == '>' &&
                *(ptr-4) != '\\' && *(ptr+explen-1) != '\\' )   /* < ... > */
-         {
-           ptr -= 2;
-           if ( *ptr == '\"' ) exptype = '2';
-           else if ( *ptr == '(' ) exptype = '3';
-           else if ( *ptr == '{' ) exptype = '4';
-           else if ( *ptr == '.' ) exptype = '5';
-           ptr--;
-           rmlen = explen+4;
+            {
+               ptr -= 2;
+               if ( *ptr == '\"' ) exptype = '2';
+               else if ( *ptr == '(' ) exptype = '3';
+               else if ( *ptr == '{' ) exptype = '4';
+               else if ( *ptr == '.' ) exptype = '5';
+               ptr--;
+               rmlen = explen+4;
+            }
+            else continue;
+            expreal[2] = exptype;
+            pp_Stuff ( expreal, ptr, 4, rmlen, rlen );
+            rlen += 4 - rmlen;
          }
-         else continue;
-         expreal[2] = exptype;
-         pp_Stuff ( expreal, ptr, 4, rmlen, rlen );
-         rlen += 4 - rmlen;
-       }
-     }
-     i++;
+      }
+      i++;
    }
 }
 
@@ -1430,7 +1433,7 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
          if  ( *ptr == '\1' ) kolmarkers++;
          ptr--;
       }
-      if ( *ptr == '[' )
+      if ( *ptr == '[' && *(ptr-1) != '\\' )
       {
          if( Repeate ) aIsRepeate[ Repeate - 1 ]++;
          if( !lReplacePat ) return;
