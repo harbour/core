@@ -14,6 +14,10 @@
   #include <stdlib.h>
 #endif
 
+#if defined(__GNUC__) && !defined(__DJGPP__)
+  #include <sys/utsname.h>
+#endif
+
 #ifdef __WATCOMC__
   #include <i86.h>
   #if defined(__386__) && !defined(__WINDOWS_386__)
@@ -67,6 +71,20 @@ HARBOUR HB_OS(void)
 
 #if defined(__GNUC__) && !defined(__DJGPP__)
 
+   struct utsname un;
+
+   uname( &un );
+
+   sprintf( version, "%s %s", un.sysname, un.release );
+
+   /* DAP: Currently, OS() is coded with the expection that the operating
+      system plays the major/minor version number game. Not all operating
+      systems work like that. So, we do a little bit of mucking around
+      because we've managed to work out version[] on our own. */
+      
+   hb_os      = "";
+   hb_osmajor = -2;
+   
 #else
 
 /* TODO: add MSVC support but MSVC cannot detect any OS except Windows! */
@@ -179,6 +197,7 @@ HARBOUR HB_OS(void)
 
    if (!hb_os) strcpy (version, "Unknown");
    else if (hb_osmajor == -1) strcpy (version, hb_os);
+   else if (hb_osmajor == -2 ) { /* NOP */ }
    else sprintf (version, "%s %d.%02d%c", hb_os, hb_osmajor, hb_osminor, hb_osletter);
    hb_retc (version);
 }

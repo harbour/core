@@ -1,3 +1,16 @@
+19990621-19:09 CET Victor Szel <info@szelvesz.hu>
+  ! source/rtl/asort.prg
+    source/rtl/objfunc.prg
+    Got rid of the references to Default() 
+  + Added msgcz852.c, msgczkam.c, msgyu852.c to
+    source/rtl/natmsg/
+    source/rtl/msgxxx.c
+    posted by Davor Siklic <siki@uhkt.cz>
+  + Added cgi.ch to tests/working/hscript/, too.
+  + source/rtl/environ.c
+    Added patch posted by 
+    Dave Pearson <davep@hagbard.demon.co.uk>
+
 19990622-00:22 Ryszard Glab <rglab@imid.med.pl>
     * config/prg.cf
     * config/test.cf
@@ -19,7 +32,7 @@ Mon Jun 21 12:14:15 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 19990621-13:27 CET Victor Szel <info@szelvesz.hu>
   * source/compiler/harbour.y
-    GCC warning fixed.
+    GCC warnings fixed.
   * source/contrib/genobj.c removed, as
     suggested by "Antonio Linares" <alinares@fivetech.com>
 

@@ -9,11 +9,20 @@
 //
 function aSort( aIn, nStart, nCount, bBlock )
 
-   nStart := Default( nStart, 1 )
-   QuickSort( aIn,                                      ;
-              nStart,                                   ;
-              Default( nCount, Len(aIn) - nStart + 1 ), ;
-              Default( bBlock, {| x, y | x < y } ) )
+   IF !(ValType(nStart) == "N")
+        nStart := 1
+   ENDIF
+
+   IF !(ValType(nCount) == "N")
+        nCount := Len(aIn) - nStart + 1
+   ENDIF
+
+   IF !(ValType(bBlock) == "B")
+        bBlock := {| x, y | x < y }
+   ENDIF
+
+   QuickSort( aIn, nStart, nCount, bBlock )
+
 return aIn
 
 

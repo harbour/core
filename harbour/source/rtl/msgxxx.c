@@ -32,4 +32,10 @@
 #include "natmsg/msgita.c"
 #elif (HB_LANGUAGE == FRE)
 #include "natmsg/msgfre.c"
+#elif (HB_LANGUAGE == CZ852)
+#include "natmsg/msgcz852.c"
+#elif (HB_LANGUAGE == CZKAM)
+#include "natmsg/msgczkam.c"
+#elif (HB_LANGUAGE == YU852)
+#include "natmsg/msgyu852.c"
 #endif

@@ -46,7 +46,10 @@ function aOData( oObject, lDataMethod )
    local nLen   := Len( aInfo )
    local lFoundDM                               // Found DATA ?
 
-   lDataMethod  := Default( lDataMethod, .T. )
+   IF !(ValType(lDataMethod) == "L")
+        lDataMethod := .T.
+   ENDIF
+
    do while n <= nLen .and. Substr( aInfo[ n ], 1, 1 ) != "_"
 
 /* If in range and no set function found yet ( set functions begin with a   */
@@ -95,7 +98,10 @@ function aOGet( oObject, aExcept )
    local cSymbol
    local n
 
-   aExcept := Default( aExcept, {} )
+   IF !(ValType(aExcept) == "A")
+        aExcept := {}
+   ENDIF
+
    for n := 1 to nLen
       cSymbol := aDataSymbol[ n ]
       if Empty( aScan( aExcept, cSymbol ) )
