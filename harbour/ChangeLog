@@ -1,3 +1,9 @@
+19990709-20:00 Andi Jahja <andij@aonlippo.co.id>
+  + tests/broken/clasname.prg by Dave Pearson
+  + tests/broken/statics1.prg by Bruno Cantero
+  + tests/broken/statics2.prg by Bruno Cantero
+
+
 19990709-11:05 CET Eddie Runia <eddie@runia.com>
   * source/compiler/harbour.y
     Copyright portable objects added
