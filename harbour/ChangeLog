@@ -1,3 +1,7 @@
+20000418-17:35 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/compiler/genobj32.c
+     * Progressive fixes to support genc.c latest changes.
+
 20000419-05:30 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/hvm.c
