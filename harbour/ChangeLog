@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-07 13:22 UTC-0300 Gustavo Junior Alves <alves@coslinux.com.br>
+  * source/rtl/filesys.c
+    * Fix to compile on MSVC - Thanks to Andi Jahja <andijahja@harbour-id.net>
+
 2002-10-06 21:29 UTC-0300 Gustavo Junior Alves <alves@coslinux.com.br>
   * source/rtl/filesys.c
     * hb_filecase on hb_fsMkDir, hb_fsChDir and hb_fsRmDir
