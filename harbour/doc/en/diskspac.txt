@@ -57,20 +57,19 @@
  *  $EXAMPLES$
  *      ? "You can use : " +Str( DiskSpace() ) + " bytes " +;
  *        "Out of a total of " + Str( DiskSpace(0,HB_FS_TOTAL) )
- *      </fixed>
+ *
+ *      Note: See tests\tstdspac.prg for another example
  *  $STATUS$
- *      R
+ *      S
  *  $COMPLIANCE$
  *      CA-Clipper will return an integer value which limits it's usefulness to
  *      drives less than 2 gigabytes.  The Harbour version will return a
  *      floating point value with 0 decimals if the disk is > 2 gigabytes.
  *      <nType> is a Harbour extension.
  *  $PLATFORMS$
- *      Dos,Windows/OS/2 and Unix
+ *      Dos,Win32,OS/2,Unix
  *  $FILES$
- *      Library is Rtl.lib
- *      Header is Fileio.ch
- *  $SEEALSO$
- *      tests\tstdspac.prg
+ *      Library is rtl
+ *      Header is fileio.ch
  *  $END$
  */

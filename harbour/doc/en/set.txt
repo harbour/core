@@ -412,7 +412,6 @@
  *      SET() The current or previous setting
  * $FILES$
  *      Library is Rtl.lib
-
  * $END$
  */
 
@@ -855,8 +854,7 @@
  *  $ONELINER$
  *      Toggle wrapping the PROMPTs in a menu.
  *  $SYNTAX$
- *      SET WRAP ON/OFF
- *      SET WRAP (<lWrap>)
+ *      SET WRAP on | OFF | (<lWrap>
  *  $ARGUMENTS$
  *      <lWrap> Logical expression for toggle   
  *  $DESCRIPTION$
@@ -954,7 +952,7 @@
  *  $ONELINER$
  *      Toggles the enhaced display of PROMPT's and GETs.
  *  $SYNTAX$
- *      SET INTENSITY [ON / OFF] [(<lInte>)]
+ *      SET INTENSITY  ON | off | (<lInte>) 
  *  $ARGUMENTS$
  *      <lInte> Logical expression for toggle command
  *  $DESCRIPTION$
@@ -981,7 +979,7 @@
  *      Toggle and echos output to an alternate file
  *  $SYNTAX$
  *      SET ALTERNATE to <cFile> [ADDITIVE]
- *      SET ALTERNATE [ON / OFF] [(<lAlter>)]  
+ *      SET ALTERNATE  on | OFF | (<lAlter>)
  *  $ARGUMENTS$
  *      <cFile> Name of alternate file.
  *
@@ -1026,7 +1024,7 @@
  *  $ONELINER$
  *      Toggle the century digits in all dates display
  *  $SYNTAX$
- *      SET CENTURY [ON / OFF] [(<lCent>)]
+ *      SET CENTURY on | OFF | (<lCent>)  
  *  $ARGUMENTS$
  *      <lCent> Logical expression for toggle   
  *  $DESCRIPTION$
@@ -1120,7 +1118,7 @@
  *  $SEEALSO$
  *      SET DATE,SET CENTURY,CTOD(),DATE(),DTOC(),SET()
  *  $END$
-
+ */
 /*  $DOC$
  *  $COMMANDNAME$
  *      SET FIXED
@@ -1129,7 +1127,7 @@
  *  $ONELINER$
  *      Set the number of decimal position to be displayed
  *  $SYNTAX$
- *      SET FIXED [ON / OFF] [(<lFixed>)]
+ *      SET FIXED on | OFF | (<lFixed>)
  *  $ARGUMENTS$
  *      <lFixed> Logical expression for toggle   
  *  $DESCRIPTION$
@@ -1163,6 +1161,7 @@
  *  $SEEALSO$
  *      SET DECIMALS,EXP(),LOG(),SQRT(),VAL(),SET()
  *  $END$
+*/
 
 /*  $DOC$
  *  $COMMANDNAME$
@@ -1172,7 +1171,7 @@
  *  $ONELINER$
  *      Toggles the printer and controls the printer device
  *  $SYNTAX$
- *      SET FIXED ON / OFF
+ *      SET PRINTER on | OFF
  *      SET PRINTER (<lPrinter>)
  *      SET PRINTER TO [<cPrinter>] [ADDITIVE]
  *  $ARGUMENTS$
@@ -1214,6 +1213,7 @@
  *  $SEEALSO$
  *      SET DEVICE,SET CONSOLE,DEVOUT(),SET()
  *  $END$
+*/
 
 /*  $DOC$
  *  $COMMANDNAME$
@@ -1223,7 +1223,7 @@
  *  $ONELINER$
  *      Toggle the console display
  *  $SYNTAX$
- *      SET CONSOLE [ON / OFF] [(<lConsole>)]
+ *      SET CONSOLE ON | off | (<lConsole>)
  *  $ARGUMENTS$
  *      <lConsole> Logical expression for toggle command
  *  $DESCRIPTION$
@@ -1286,7 +1286,7 @@
  *  $ONELINER$
  *      Directs all @...SAY output to a device.
  *  $SYNTAX$
- *      SET DEVICE TO [PRINTER / SCREEN]
+ *      SET DEVICE TO [printer | SCREEN ]
  *  $ARGUMENTS$
  *      None.
  *  $DESCRIPTION$
