@@ -1,4 +1,4 @@
-2001-08-20 14:02 GMT Dave Pearson <davep@davep.org>
+2001-08-21 06:47 GMT Dave Pearson <davep@davep.org>
   * source/rtl/gtcrs/gtcrs.c
     * Fixed incorrectly named variable (Row -> uRow) in hb_gt_VertLine().
 	
