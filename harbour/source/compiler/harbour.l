@@ -150,7 +150,11 @@ Separator     {SpaceTab}
 ("!"|".not.")[ \t]*"["               { BEGIN STRING3;                    return NOT;      }
 (","|"{"|"<"|">"|"(")[ \t]*"["       { BEGIN STRING3; hb_comp_iState = OPERATOR; yyleng = 1; yytext[1] = 0; return yytext[ 0 ]; }
 ("retu"|"retur"|"return")[ \t]*"["   { BEGIN STRING3; hb_comp_iState = RETURN; return RETURN; }
-"if"[ \t]*"["                        { BEGIN STRING3;                    return IF;      }
+^[ \t]*"if"[ \t]*"["                 { BEGIN STRING3;                    return IF;       }
+^[ \t]*"elseif"[ \t]*"["             { BEGIN STRING3;                    return ELSEIF;   }
+^[ \t]*"case"[ \t]*"["               { BEGIN STRING3;                    return CASE;     }
+^[ \t]*"while"[ \t]*"["              { BEGIN STRING3;                    return WHILE;    }
+^[ \t]*"do"[ \t]*"while"[ \t]*"["    { BEGIN STRING3;                    return WHILE;    }
 <INITIAL>\[                          { BEGIN STRING3; }
 
 <STRING1>[^'^\n]*   { hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0; }
@@ -833,7 +837,7 @@ Separator     {SpaceTab}
                  hb_comp_iState =IIF;
                return hb_comp_iState;
              }
-<IF_>{Separator}*[\)\]\/\^\*\%\=\$\@] {
+<IF_>{Separator}*[\)\[\]\/\^\*\%\=\$\@] {
                hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX2, yytext, "IF" );
              }
 <IF_>{Separator}*"->" {

@@ -52,6 +52,10 @@
 static char s_szLine[ HB_PP_STR_SIZE ];
 static char s_szOutLine[ HB_PP_STR_SIZE ];
 
+/*
+BOOL bDebug = FALSE;
+*/
+
 int hb_pp_Internal( FILE * handl_o, char * sOut )
 {
   PFILE pFile;
@@ -63,6 +67,7 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
   HB_TRACE(HB_TR_DEBUG, ("hb_pp_Internal(%p, %s)", handl_o, sOut));
 
   hb_pp_nEmptyStrings = 0;
+
   while( TRUE )
   {
      pFile = hb_comp_files.pLast;
@@ -145,6 +150,7 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
                  }
                  else
                  {
+
                     if( hb_pp_nCondCompile == 0 || hb_pp_aCondCompile[ hb_pp_nCondCompile - 1 ] )
                     {
                        hb_pp_ParseExpression( ptr, s_szOutLine );
@@ -223,7 +229,7 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
   *( sOut + lens ) = '\0';
 
   hb_comp_files.pLast->iLine += hb_pp_nEmptyStrings;
-  hb_pp_nEmptyStrings = 0;
+  //hb_pp_nEmptyStrings = 0;
 
   if( handl_o )
      hb_pp_WrStr( handl_o, sOut );

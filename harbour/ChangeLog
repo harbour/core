@@ -1,8 +1,26 @@
+2000-06-19 13:38 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/hbgenerr.c
+   * source/pp/ppcomp.c
+     ! Fixed reporting of line numbers on erros.
+
+   * source/pp/ppcore.c
+     * More support for [] as string delimiters.
+
+   * source/compiler/harbour.l
+     + Added support for:
+        ELSIF [ some string ] ...
+        DO WHILE [ some string ] ...
+        WHILE [ some string ] ...
+        CASE [ some string ] ...
+
+     /* Strangly, Clipper chockes on elseif [...] */
+
 2000-06-19 23:05 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
    * utils/hbdoc/genhtm.prg
      utils/hbdoc/genchm.prg
      utils/hbdoc/html.pg
-     utils/hbdoc/genng.prg  
+     utils/hbdoc/genng.prg
    * utils/hbdoc/genos2.prg
      utils/hbdoc/os2.prg
      * Small Fixes

@@ -199,8 +199,14 @@ char * hb_pp_szWarnings[] =
    "1No directives in command definitions file"
 };
 
+/*
+extern BOOL bDebug;
+*/
+
 void hb_pp_SetRules( BOOL (*hb_compInclude)(char *, PATHNAMES * ), BOOL hb_comp_bQuiet )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_pp_SetRules()"));
+
    if( hb_pp_STD_CH )
    {
       if( *hb_pp_STD_CH > ' ' )
@@ -892,6 +898,7 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
           ptro = sOutLine;
           ptri = sLine + isdvig;
           ipos = md_strAt( ";", 1, ptri, TRUE, FALSE );
+
           if( ipos > 0 ) *(ptri+ipos-1) = '\0';
           HB_SKIPTABSPACES( ptri );
           if( *ptri == '#' )
@@ -909,21 +916,26 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
                 if( (stdef=DefSearch(sToken,NULL)) != NULL )
                   {
                     ptrb = ptri - lenToken;
+
                     if( ( i = WorkDefine( &ptri, ptro, stdef ) ) >= 0 )
                       {
                         rezDef++;
                         lens = strlen( ptrb );
+
                         if( ipos > 0 )
                           {
                             *(ptrb+lens) = ';';
                             lens += strlen( ptrb+lens+1 );
                           }
+
                         hb_pp_Stuff( ptro, ptrb, i, ptri-ptrb, lens+1 );
+
                         if( ipos > 0 )
                           {
                             ipos += i - (ptri-ptrb);
                             *(sLine + isdvig + ipos - 1) = '\0';
                           }
+
                         ptri += i - (ptri-ptrb);
                       }
                   }
@@ -1032,7 +1044,9 @@ static int WorkDefine( char ** ptri, char * ptro, DEFINES * stdef )
   HB_TRACE(HB_TR_DEBUG, ("WorkDefine(%p, %s, %p)", ptri, ptro, stdef));
 
   if( stdef->npars < 0 )
-    lens = hb_pp_strocpy( ptro,stdef->value );
+  {
+     lens = hb_pp_strocpy( ptro,stdef->value );
+  }
   else
     {
       HB_SKIPTABSPACES( *ptri );
@@ -1172,6 +1186,10 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
   int ipos;
   char * lastopti[ 3 ], * strtopti = NULL, * strtptri = NULL;
   char * ptri = inputLine, * ptr, tmpname[ MAX_NAME ];
+
+  /*
+  printf( "MP: >%s<\nIn: >%s<\n", ptrmp, ptri );
+  */
 
   HB_TRACE(HB_TR_DEBUG, ("CommandStuff(%s, %s, %s, %p, %d, %d)", ptrmp, inputLine, ptro, lenres, com_or_tra, com_or_xcom));
 
@@ -1364,10 +1382,15 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
         }
       while( *ptrmp != '\0' );
     }
-  SearnRep( "\1","",0,ptro,lenres);
 
+  //printf( "Line: >%s<\nOut: >%s<\nLen: %i Last: %c\n", inputLine, ptro, *lenres, ptro[(*lenres)-1] );
+
+  SearnRep( "\1","",0,ptro,lenres);
   *(ptro + *lenres) = '\0';
   *lenres = RemoveSlash( ptro );   /* Removing '\' from result string */
+
+  //printf( "*Line: >%s<\n*Out: >%s<\n*Len: %i Last: %c\n", inputLine, ptro, *lenres, ptro[(*lenres)-1] );
+
   if( com_or_tra ) return 1; else return (ptri-inputLine);
 }
 
@@ -1582,143 +1605,316 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
 
 static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez )
 {
-  int lens = 0;
-  char * sZnaki = "+-=><*/$.:#%!^";
-  int State;
-  int StBr1 = 0, StBr2 = 0, StBr3 = 0;
-  BOOL rez = FALSE;
+   int lens = 0;
+   char * sZnaki = "+-=><*/$.:#%!^";
+   int State;
+   int StBr1 = 0, StBr2 = 0, StBr3 = 0;
+   BOOL rez = FALSE;
 
-  /* Ron Pinkas Begin 2000-06-02 */
-  BOOL bMacro = FALSE;
-  /* Ron Pinkas End */
+   /* Ron Pinkas Begin 2000-06-02 */
+   BOOL bMacro = FALSE;
+   /* Ron Pinkas End */
 
-  HB_TRACE(HB_TR_DEBUG, ("getExpReal(%s, %p, %d, %d)", expreal, ptri, prlist, maxrez));
+   /* Ron Pinkas Begin 2000-06-17 */
+   char cLastChar = '\0';
+   /* Ron Pinkas End */
 
-  HB_SKIPTABSPACES( *ptri );
-  State = (**ptri=='\'' || **ptri=='\"')? STATE_EXPRES:STATE_ID;
-  while( **ptri != '\0' && !rez && lens < maxrez )
-    {
-      switch( State ) {
-      case STATE_QUOTE1:
-        if(**ptri=='\'')
-          State = (StBr1==0 && StBr2==0 && StBr3==0)? STATE_ID_END:STATE_BRACKET;
-        break;
-      case STATE_QUOTE2:
-        if(**ptri=='\"')
-          State = (StBr1==0 && StBr2==0 && StBr3==0)? STATE_ID_END:STATE_BRACKET;
-        break;
-      case STATE_BRACKET:
-        if( **ptri == '\'' ) State = STATE_QUOTE1;
-        else if( **ptri == '\"' ) State = STATE_QUOTE2;
-        else if( **ptri == '(' ) StBr1++;
-        else if( **ptri == '[' ) StBr2++;
-        else if( **ptri == '{' ) StBr3++;
-        else if( **ptri == ')' )
-          { StBr1--; if (StBr1==0 && StBr2==0 && StBr3==0) State = STATE_ID_END; }
-        else if( **ptri == ']' )
-          { StBr2--; if (StBr1==0 && StBr2==0 && StBr3==0) State = STATE_ID_END; }
-        else if( **ptri == '}' )
-          { StBr3--; if (StBr1==0 && StBr2==0 && StBr3==0) State = STATE_ID_END; }
-        break;
-      case STATE_ID:
-      case STATE_ID_END:
-        if( ( (ISNAME(**ptri) || **ptri=='\\' || **ptri=='&') && State == STATE_ID_END ) ||
-             **ptri==',' || **ptri=='\'' || **ptri=='\"' || **ptri==')' )
-          {
-            if( **ptri == ',' )
-              {
-                if( !prlist ) rez = TRUE;
-                State = STATE_EXPRES;
-              }
-            else rez = TRUE;
-          }
-        else if( IsInStr( **ptri, sZnaki ) )
-          {
+   HB_TRACE(HB_TR_DEBUG, ("getExpReal(%s, %p, %d, %d)", expreal, ptri, prlist, maxrez));
+
+   HB_SKIPTABSPACES( *ptri );
+
+   State = ( **ptri=='\'' || **ptri=='\"' || **ptri=='[' ) ? STATE_EXPRES: STATE_ID;
+
+   while( **ptri != '\0' && !rez && lens < maxrez )
+   {
+      switch( State )
+      {
+         case STATE_QUOTE1:
+         {
+            if( **ptri == '\'' )
+               State = ( StBr1==0 && StBr2==0 && StBr3==0 )? STATE_ID_END: STATE_BRACKET;
+
+            break;
+         }
+
+         case STATE_QUOTE2:
+         {
+            if( **ptri == '\"' )
+               State = ( StBr1==0 && StBr2==0 && StBr3==0 )? STATE_ID_END: STATE_BRACKET;
+
+            break;
+         }
+
+         case STATE_QUOTE3:
+         {
+            if( **ptri == ']' )
+               State = ( StBr1==0 && StBr2==0 && StBr3==0 )? STATE_ID_END: STATE_BRACKET;
+
+            break;
+         }
+
+         case STATE_BRACKET:
+         {
+            if( **ptri == '\'' )
+            {
+               State = STATE_QUOTE1;
+            }
+            else if( **ptri == '\"' )
+            {
+               State = STATE_QUOTE2;
+            }
+            else if( **ptri == '(' )
+            {
+               StBr1++;
+            }
+            else if( **ptri == '[' )
+            {
+               /* Ron Pinkas added 2000-06-17 */
+               if( ISNAME( cLastChar ) || cLastChar == ')' || cLastChar == ']' || cLastChar == '}' )
+               {
+                  StBr2++;
+               }
+               else
+               {
+                  State = STATE_QUOTE3;
+               }
+               /* Ron Pinkas added 2000-06-17 */
+
+               /* Ron Pinkas commented 2000-06-17
+               StBr2++;
+               */
+            }
+            else if( **ptri == '{' )
+            {
+               StBr3++;
+            }
+            else if( **ptri == ')' )
+            {
+               StBr1--;
+               if( StBr1==0 && StBr2==0 && StBr3==0 )
+               {
+                  State = STATE_ID_END;
+               }
+            }
+            else if( **ptri == ']' )
+            {
+               StBr2--;
+               if( StBr1==0 && StBr2==0 && StBr3==0 )
+               {
+                  State = STATE_ID_END;
+               }
+            }
+            else if( **ptri == '}' )
+            {
+               StBr3--;
+               if( StBr1==0 && StBr2==0 && StBr3==0 )
+               {
+                  State = STATE_ID_END;
+               }
+            }
+
+            break;
+         }
+
+         case STATE_ID:
+         case STATE_ID_END:
+         {
+            if( ( (ISNAME(**ptri) || **ptri=='\\' || **ptri=='&') && State == STATE_ID_END ) ||
+                **ptri==',' || **ptri=='\'' || **ptri=='\"' || **ptri==')' )
+            {
+               if( **ptri == ',' )
+               {
+                  if( ! prlist )
+                  {
+                     rez = TRUE;
+                  }
+                  State = STATE_EXPRES;
+               }
+               else
+               {
+                  rez = TRUE;
+               }
+            }
+            else if( IsInStr( **ptri, sZnaki ) )
+            {
+               /* Ron Pinkas Begin 2000-06-02 */
+               if( **ptri=='.' && bMacro )
+               {
+                  /* Macro terminator '.' */
+                  if( *(*ptri+1)==' ' )
+                     State = STATE_ID_END;
+
+                  bMacro = FALSE;
+               }
+               else
+               /* Ron Pinkas End */
+                  State = STATE_EXPRES;
+            }
+            else if( **ptri == '(' )
+            {
+               State = STATE_BRACKET;
+               StBr1 = 1;
+            }
+            else if( **ptri == '[' )
+            {
+               /* Ron Pinkas added 2000-06-17 */
+               if( ISNAME( cLastChar ) || cLastChar == ')' || cLastChar == ']' || cLastChar == '}' )
+               {
+                  StBr2++;
+                  State = STATE_BRACKET;
+               }
+               else
+               {
+                  State = STATE_QUOTE3;
+               }
+               /* Ron Pinkas end 2000-06-17 */
+
+               /* Ron Pinkas commented 2000-06-17
+               StBr2++;
+               State = STATE_BRACKET;
+               */
+            }
+            else if( **ptri == '{' )
+            {
+               State = STATE_BRACKET;
+               StBr3 = 1;
+            }
             /* Ron Pinkas Begin 2000-06-02 */
-            if( **ptri=='.' && bMacro )
-              {
-                /* Macro terminator '.' */
-                if( *(*ptri+1)==' ' ) State = STATE_ID_END;
-
-                bMacro = FALSE;
-              }
-            else
+            else if( **ptri == '&' )
+            {
+               bMacro = TRUE;
+            }
             /* Ron Pinkas End */
+            else if( **ptri == ' ' )
+            {
+               State = STATE_ID_END;
+               /* Ron Pinkas Begin 2000-06-02 */
+               bMacro = FALSE;
+               /* Ron Pinkas End */
+            }
+
+            break;
+         }
+
+         case STATE_EXPRES:
+         case STATE_EXPRES_ID:
+         {
+            if( **ptri == '\'' )
+            {
+               State = STATE_QUOTE1;
+            }
+            else if( **ptri == '\"' )
+            {
+               State = STATE_QUOTE2;
+            }
+            else if( **ptri == '[' )
+            {
+               /* Ron Pinkas added 2000-06-17 */
+               if( ISNAME( cLastChar ) || cLastChar == ')' || cLastChar == ']' || cLastChar == '}' )
+               {
+                  StBr2++;
+                  State = STATE_BRACKET;
+               }
+               else
+               {
+                  State = STATE_QUOTE3;
+               }
+               /* Ron Pinkas end 2000-06-17 */
+            }
+            else if( ISNAME(**ptri) )
+            {
+               State = STATE_EXPRES_ID;
+            }
+            else if( **ptri == ' ' )
+            {
+               if( State == STATE_EXPRES_ID )
+               {
+                  State = STATE_ID_END;
+               }
+               else if( lens > 2 && ( ( *(*ptri-2)=='+' && *(*ptri-1)=='+' ) ||
+                                    ( *(*ptri-2)=='-' && *(*ptri-1)=='-' ) ) )
+               {
+                  State = STATE_ID_END;
+               }
+            }
+            /* Ron Pinkas added 2000-06-14 */
+            else if( **ptri == ')' && StBr1 == 0 )
+            {
+               rez = TRUE;
+            }
+            /* Ron Pinkas End */
+            else if( **ptri == '(' )
+            {
+               StBr1++;
+               State = STATE_BRACKET;
+            }
+            /* Ron Pinkas commented (see few else if above... ) 2000-06-17
+            else if( **ptri == '[' )
+            {
+               StBr2++;
+               State = STATE_BRACKET;
+            }
+            /* Ron Pinkas end 2000-06-17 */
+            else if( **ptri == '{' )
+            {
+               StBr3++;
+               State = STATE_BRACKET;
+            }
+            else if( **ptri == ',' )
+            {
+               if( !prlist )
+               {
+                  rez = TRUE; State = STATE_EXPRES;
+               }
+            }
+            else if( **ptri == '.' && *(*ptri-2) == '.' &&
+                     ( *(*ptri-1) == 'T' || *(*ptri-1) == 'F' ||
+                     *(*ptri-1) == 't' || *(*ptri-1) == 'f' ) )
+            {
+               State = STATE_ID_END;
+            }
+            else
+            {
                State = STATE_EXPRES;
-          }
-        else if( **ptri == '(' )
-          {
-            State = STATE_BRACKET;
-            StBr1 = 1;
-          }
-        else if( **ptri == '[' )
-          {
-            State = STATE_BRACKET;
-            StBr2 = 1;
-          }
-        else if( **ptri == '{' )
-          {
-            State = STATE_BRACKET;
-            StBr3 = 1;
-          }
-        /* Ron Pinkas Begin 2000-06-02 */
-        else if( **ptri == '&' )
-          {
-             bMacro = TRUE;
-          }
-        /* Ron Pinkas End */
-        else if( **ptri == ' ' )
-          {
-             State = STATE_ID_END;
-             /* Ron Pinkas Begin 2000-06-02 */
-             bMacro = FALSE;
-             /* Ron Pinkas End */
-          }
-        break;
-      case STATE_EXPRES:
-      case STATE_EXPRES_ID:
-        if( **ptri == '\'' ) State = STATE_QUOTE1;
-        else if( **ptri == '\"' ) State = STATE_QUOTE2;
-        else if( ISNAME(**ptri) ) State = STATE_EXPRES_ID;
-        else if( **ptri == ' ' )
-          {
-            if( State == STATE_EXPRES_ID ) State = STATE_ID_END;
-            else if( lens > 2 && ( ( *(*ptri-2)=='+' && *(*ptri-1)=='+' ) ||
-                                   ( *(*ptri-2)=='-' && *(*ptri-1)=='-' ) ) )
-              State = STATE_ID_END;
-          }
-        /* Ron Pinkas added 2000-06-14 */
-        else if( **ptri == ')' && StBr1 == 0 ) rez = TRUE;
-        /* Ron Pinkas End */
-        else if( **ptri == '(' ) { StBr1++; State = STATE_BRACKET; }
-        else if( **ptri == '[' ) { StBr2++; State = STATE_BRACKET; }
-        else if( **ptri == '{' ) { StBr3++; State = STATE_BRACKET; }
-        else if( **ptri == ',' ) { if ( !prlist ) rez = TRUE; State = STATE_EXPRES; }
-        else if( **ptri == '.' && *(*ptri-2) == '.' &&
-                 ( *(*ptri-1) == 'T' || *(*ptri-1) == 'F' ||
-                   *(*ptri-1) == 't' || *(*ptri-1) == 'f' ) )
-          State = STATE_ID_END;
-        else State = STATE_EXPRES;
-        break;
+            }
+
+            break;
+         }
       }
+
       if( !rez )
-        {
-          if( expreal != NULL ) *expreal++ = **ptri;
-          (*ptri)++;
-          lens++;
-        }
-    }
-  if( expreal != NULL )
-    {
-      if( *(expreal-1) == ' ' ) { expreal--; lens--; };
+      {
+         /* Ron Pinkas added 2000-06-17 */
+         if( **ptri != ' ' && **ptri != '\t' )
+         {
+            cLastChar = **ptri;
+         }
+         /* Ron Pinkas end 2000-06-17 */
+
+         if( expreal != NULL )
+            *expreal++ = **ptri;
+
+         (*ptri)++;
+         lens++;
+      }
+   }
+
+   if( expreal != NULL )
+   {
+      if( *(expreal-1) == ' ' )
+      {
+         expreal--;
+         lens--;
+      }
 
       *expreal = '\0';
 
       /*
-      printf( "\nLen=%i \'%s\'\n", lens, expreal-lens);
+      printf( "\nLen=%i \'%s\'\n", lens, expreal-lens );
       */
-    }
-  return lens;
+   }
+
+   return lens;
 }
 
 static BOOL isExpres( char * stroka )
@@ -1738,10 +1934,10 @@ static BOOL isExpres( char * stroka )
   printf( "Len1: %i Len2: %i RealExp: >%s< Last: %c\n", l1, l2, stroka - l2, ( stroka - l2 )[l1-1] );
   */
 
-  /* Ron Pinkas modified 2000-06-17 Expression can't be valid if last charcter is one of these: ":*+/-%^=(<>"
+  /* Ron Pinkas modified 2000-06-17 Expression can't be valid if last charcter is one of these: ":/*+-%^=(<>"
   return ( l1 <= l2 );
   */
-  return ( l1 <= l2 && ! IsInStr( ( stroka - l2 )[l1-1], ":*+/-%^=(<>" ) );
+  return ( l1 <= l2 && ! IsInStr( ( stroka - l2 )[l1-1], ":/*+-%^=(<>[{" ) );
 }
 
 static BOOL TestOptional( char *ptr1, char *ptr2 )
@@ -1929,6 +2125,10 @@ static void SearnRep( char * exppatt, char * expreal, int lenreal, char * ptro, 
   if( *(exppatt+1) == '\0' ) *( ptro + *lenres ) = '\0';
   while( (ifou = md_strAt( exppatt, (*(exppatt+1))? 2:1, ptrOut, FALSE, FALSE )) > 0 )
     {
+      /*
+      printf( "Found: >%s< At: %i In: >%s<\n", exppatt, ifou, ptrOut );
+      */
+
       rezs = FALSE;
       ptr = ptrOut + ifou - 2;
       kolmarkers = 0;
@@ -2012,6 +2212,9 @@ static void SearnRep( char * exppatt, char * expreal, int lenreal, char * ptro, 
       else if( !s_bReplacePat ) isdvig += ifou;
       ptrOut = ptro + isdvig;
     }
+    /*
+    printf( "No: >%s< In: >%s<\n", exppatt, ptrOut );
+    */
 }
 
 static int ReplacePattern( char patttype, char * expreal, int lenreal, char * ptro, int lenres )
@@ -2176,6 +2379,10 @@ static void pp_rQuotes( char * expreal, char * sQuotes )
 
   HB_TRACE(HB_TR_DEBUG, ("pp_rQuotes(%s, %s)", expreal, sQuotes));
 
+  /*
+  printf( "String: >%s< Delim: %s\n", expreal, sQuotes );
+  */
+
   while( *expreal != '\0' )
     {
       if( *expreal == '\"' ) lQuote2 = TRUE;
@@ -2249,7 +2456,10 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
           default:
             switch( cha ) {
             case '[':
+              /* Ron Pinkas modified 2000-06-17
               if( ISNAME(s_prevchar) || s_prevchar == ']' )
+              */
+              if( ISNAME(s_prevchar) || s_prevchar == ']' || s_prevchar == ')' )
                  s_ParseState = STATE_BRACKET;
               else s_ParseState = STATE_QUOTE3;
               break;
