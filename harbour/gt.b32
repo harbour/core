@@ -1,0 +1,38 @@
+# makefile for Borland C/C++ 32 bits
+# porting gt.lib's string functions to harbour
+
+.path.c   = source\tools
+.path.h   = include
+.path.lib = libs\b32
+.path.obj = obj
+
+libs\b32\hbgt.lib : \
+   ascpos.obj atdiff.obj chareven.obj charodd.obj chrcount.obj \
+   chrtotal.obj charmix.obj asciisum.obj chrfirst.obj \
+   strasint.obj strcount.obj strcspn.obj strdiff.obj strexpan.obj \
+   strleft.obj strpbrk.obj strright.obj
+
+ascpos.obj   : ascpos.c    extend.h types.h
+atdiff.obj   : atdiff.c    extend.h types.h
+chareven.obj : chareven.c  extend.h types.h
+charodd.obj  : charodd.c   extend.h types.h
+chrcount.obj : chrcount.c  extend.h types.h
+chrtotal.obj : chrtotal.c  extend.h types.h
+charmix.obj  : charmix.c   extend.h types.h
+asciisum.obj : asciisum.c  extend.h types.h
+chrfirst.obj : chrfirst.c  extend.h types.h
+strasint.obj : strasint.c  extend.h types.h
+strcount.obj : strcount.c  extend.h types.h
+strcspn.obj  : strcspn.c   extend.h types.h
+strdiff.obj  : strdiff.c   extend.h types.h
+strexpan.obj : strexpan.c  extend.h types.h
+strleft.obj  : strleft.c   extend.h types.h
+strpbrk.obj  : strpbrk.c   extend.h types.h
+strright.obj : strright.c  extend.h types.h
+
+.prg.c:
+  bin\b32\harbour $< /n
+
+.c.obj:
+  bcc32  -c  -O2  -I.\include -o$@ $<
+  tlib .\libs\b32\hbgt.lib -+$@,,
