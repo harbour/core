@@ -72,14 +72,14 @@ static HB_LANG s_lang =
 {
    {
       /* Identification */
-   
+
       "PT",                        /* ID */
       "Portuguese",                /* Name (in English) */
       "Portugues",                 /* Name (in native language) */
       "PT",                        /* RFC ID */
       "850",                       /* Codepage */
       "$Revision$ $Date$",         /* Version */
-   
+
       /* Month names */
 
       "Janeiro",
@@ -94,7 +94,7 @@ static HB_LANG s_lang =
       "Outubro",
       "Novembro",
       "Dezembro",
-   
+
       /* Day names */
 
       "Domingo",
@@ -104,9 +104,9 @@ static HB_LANG s_lang =
       "Quinta-feira",
       "Sexta-feira",
       "S bado",
-   
+
       /* CA-Cl*pper compatible natmsg items */
-   
+
       "Banco de Dados    # Registro    Ult. Atuali.    Tam.",
       "Voce quer mais testes?",
       "Pagina No.",
@@ -120,9 +120,9 @@ static HB_LANG s_lang =
       " - ",
       "S/N",
       "EXPRESSÇO INVALIDA",
-   
+
       /* Error description names */
-   
+
       "Erro desconhecido",
       "Erro nos parƒmetros",
       "Erro de limite",
@@ -176,7 +176,7 @@ static HB_LANG s_lang =
       "condicional",
 
       /* Internal error names */
- 
+
       "Erro irrecuper vel %lu: ",
       "Erro na recupera‡ao do erro",
       "ERRORBLOCK() para erro ausente",
@@ -202,9 +202,10 @@ static HB_LANG s_lang =
       "Memory buffer overflow",
       "hb_xgrab requisitou para alocar zero bytes",
       "hb_xrealloc requisitor para redimensiorar para zero byte",
-       
+      "hb_xalloc requested to allocate zero bytes"
+
       /* Texts */
-   
+
       "DD/MM/YYYY",
       "S",
       "N"
@@ -219,4 +220,3 @@ HB_CALL_ON_STARTUP_END( hb_lang_Init_PT )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
    #pragma startup hb_lang_Init_PT
 #endif
-

@@ -188,8 +188,9 @@ static HB_LANG s_lang =
       "Item nie mo¾e by† skopiowany w %s",
       "W %s podano zˆy item jako memvar",
       "Zapis poza przydzielonym obszarem",
-      "hb_xgrab requested to allocate zero byte",
-      "hb_xrealloc requested to resize to zero byte",
+      "hb_xgrab requested to allocate zero bytes",
+      "hb_xrealloc requested to resize to zero bytes",
+      "hb_xalloc requested to allocate zero bytes"
 
       /* Texts */
 

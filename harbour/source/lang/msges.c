@@ -60,16 +60,16 @@ static HB_LANG s_lang =
 {
    {
       /* Identification */
-   
+
       "ES",                        /* ID */
       "Spanish",                   /* Name (in English) */
       "Espa¤ol",                   /* Name (in native language) */
       "ES",                        /* RFC ID */
       "850",                       /* Codepage */
       "$Revision$ $Date$",         /* Version */
-   
+
       /* Month names */
-   
+
       "Enero",
       "Febrero",
       "Marzo",
@@ -82,7 +82,7 @@ static HB_LANG s_lang =
       "Octubre",
       "Noviembre",
       "Diciembre",
-   
+
       /* Day names */
 
       "Domingo",
@@ -92,9 +92,9 @@ static HB_LANG s_lang =
       "Jueves",
       "Viernes",
       "S bado",
-   
+
       /* CA-Cl*pper compatible natmsg items */
-   
+
       "Bases de Datos    # Records    Last Update     Size",
       "Desea Ud. m s ejemplos?",
       "P gina N§.",
@@ -108,9 +108,9 @@ static HB_LANG s_lang =
       " - ",
       "S/N",
       "EXPRESION NO VALIDA",
-   
+
       /* Error description names */
-   
+
       "Error desconocido",
       "Error de argumento",
       "Error de rango",
@@ -162,9 +162,9 @@ static HB_LANG s_lang =
       "dimensi¢n del array",
       "no es un array",
       "conditional",
-   
+
       /* Internal error names */
-   
+
       "Error irrecuperable %lu: ",
       "Fallo en recuperaci¢n de error",
       "No hay ERRORBLOCK() para el error",
@@ -188,8 +188,9 @@ static HB_LANG s_lang =
       "Un item estaba siendo copiado sobre s¡ mismo desde %s",
       "S¡mbolo item no v lido pasado como memvar %s",
       "Memory buffer overflow",
-      "hb_xgrab requested to allocate zero byte",
-      "hb_xrealloc requested to resize to zero byte",
+      "hb_xgrab requested to allocate zero bytes",
+      "hb_xrealloc requested to resize to zero bytes",
+      "hb_xalloc requested to allocate zero bytes"
 
       /* Texts */
 

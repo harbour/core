@@ -60,14 +60,14 @@ static HB_LANG s_lang =
 {
    {
       /* Identification */
-   
+
       "GL",                        /* ID */
       "Galician",                  /* Name (in English) */
       "Galego",                    /* Name (in native language) */
       "GL",                        /* RFC ID */
       "850",                       /* Codepage */
       "$Revision$ $Date$",         /* Version */
-   
+
       /* Month names */
 
       "Xaneiro",
@@ -92,9 +92,9 @@ static HB_LANG s_lang =
       "Xoves",
       "Venres",
       "S bado",
-   
+
       /* CA-Cl*pper compatible natmsg items */
-   
+
       "Database Files    # Records    Last Update     Size",
       "Do you want more samples?",
       "Page No.",
@@ -108,9 +108,9 @@ static HB_LANG s_lang =
       " - ",
       "Y/N",
       "INVALID EXPRESSION",
-   
+
       /* Error description names */
-   
+
       "Erro desco¤ecido",
       "Erro de argumento",
       "Erro de rango",
@@ -159,40 +159,41 @@ static HB_LANG s_lang =
       "",
       "array access",
       "array assign",
-      "array dimension", 
+      "array dimension",
       "not an array",
       "conditional",
-   
+
       /* Internal error names */
-   
+
       "Unrecoverable error %lu: ",
       "Error recovery failure",
-      "No ERRORBLOCK() for error", 
-      "Too many recursive error handler calls", 
+      "No ERRORBLOCK() for error",
+      "Too many recursive error handler calls",
       "RDD invalid or failed to load",
-      "Invalid method type from %s", 
-      "hb_xgrab can't allocate memory", 
-      "hb_xrealloc called with a NULL pointer", 
-      "hb_xrealloc called with an invalid pointer", 
-      "hb_xrealloc can't reallocate memory", 
-      "hb_xfree called with an invalid pointer", 
-      "hb_xfree called with a NULL pointer", 
+      "Invalid method type from %s",
+      "hb_xgrab can't allocate memory",
+      "hb_xrealloc called with a NULL pointer",
+      "hb_xrealloc called with an invalid pointer",
+      "hb_xrealloc can't reallocate memory",
+      "hb_xfree called with an invalid pointer",
+      "hb_xfree called with a NULL pointer",
       "Can\'t locate the starting procedure: \'%s\'",
-      "No starting procedure", 
-      "Unsupported VM opcode", 
+      "No starting procedure",
+      "Unsupported VM opcode",
       "Symbol item expected from %s",
-      "Invalid symbol type for self from %s", 
-      "Codeblock expected from %s", 
+      "Invalid symbol type for self from %s",
+      "Codeblock expected from %s",
       "Incorrect item type on the stack trying to pop from %s",
-      "Stack underflow", 
-      "An item was going to be copied to itself from %s", 
+      "Stack underflow",
+      "An item was going to be copied to itself from %s",
       "Invalid symbol item passed as memvar %s",
       "Memory buffer overflow",
-      "hb_xgrab requested to allocate zero byte",
-      "hb_xrealloc requested to resize to zero byte",
-   
+      "hb_xgrab requested to allocate zero bytes",
+      "hb_xrealloc requested to resize to zero bytes",
+      "hb_xalloc requested to allocate zero bytes"
+
       /* Texts */
-   
+
       "DD/MM/YYYY",
       "S",
       "N"
