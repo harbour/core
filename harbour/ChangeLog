@@ -1,3 +1,9 @@
+20000312-04:55 EST Paul Tucker <ptucker@sympatico.ca>
+   * contrib/rdd_ads/ads1.c
+     added a couple of casts
+   * contrib/rdd_ads/make_vc.bat
+     copy the lib to ..\..\lib on success
+
 20000312-13:04 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/rtl/set.c
      source/rtl/memofile.c
