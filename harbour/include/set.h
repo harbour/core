@@ -2,8 +2,8 @@
  * $Id$
  */
 
-#ifndef _SET_H
-#define _SET_H
+#ifndef SET_H_
+#define SET_H_
 
 #include <types.h>
 
@@ -125,4 +125,4 @@ extern BOOL hb_set_fixed;
 extern int hb_set_althan;
 extern int hb_set_printhan;
 
-#endif
+#endif  /* SET_H_ */

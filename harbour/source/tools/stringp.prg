@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 #define DATA_SYMBOL 1
 #define DATA_VAL    2
 

@@ -1,31 +1,33 @@
 /*
  * $Id$
  */
-//      error.api
-//
-#ifndef _ERROR_H
-#define _ERROR_H
-//+
-//      Harbour project
-//
-//      99.04.25        initial posting.
-//                      compatible
-//-
+
+#ifndef ERRORAPI_H_
+#define ERRORAPI_H_
+
+/*
+ * +
+ *      Harbour project
+ *
+ *      99.04.25        initial posting.
+ *                      compatible
+ *-
+ */
 
 #include <extend.h>
 #include "error.ch"
 
 
-//
-//  error flag definations
-//
+/*
+ *  error flag definations
+ */
 
 #define EF_CANRETRY     1
 #define EF_CANDEFAULT   4
 
-//
-//  error codes (returned from _errLaunch())
-//
+/*
+ *  error codes (returned from _errLaunch())
+ */
 
 #define E_BREAK         0xffff
 #define E_RETRY         1
@@ -49,4 +51,4 @@ PHB_ITEM hb_errPutTries( PHB_ITEM pError, USHORT uiTries );
 WORD     hb_errLaunch( PHB_ITEM pError );
 void     hb_errRelease( PHB_ITEM pError );
 
-#endif
+#endif  /* ERRORAPI_H_ */

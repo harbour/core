@@ -1,6 +1,10 @@
 /*
  * $Id$
  */
+
+#ifndef COMPILER_H_
+#define COMPILER_H_
+
 /* compiler related declarations */
 
 typedef struct _VAR        /* locals, static, public variables support */
@@ -56,3 +60,4 @@ void * OurMalloc( LONG lSize ); /* our malloc with error control */
 void * OurRealloc( void * p, LONG lSize ); /* our malloc with error control */
 #define OurFree( p )    free( (p) );    /* just for symetry -we can expand it later */
 
+#endif  /* COMPILER_H_ */

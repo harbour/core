@@ -1,17 +1,20 @@
 /*
  * $Id$
+ */
 
-nanforum ft_f*() clones
-* hb_fuse
-* hb_frecno
-* hb_flastrec
-* hb_fgotop
-* hb_fgobottom
-* hb_fgoto
-* hb_feof
-* hb_freadln
-* hb_fskip
-*/
+/*
+ * nanforum ft_f*() clones:
+ *
+ *  hb_fuse
+ *  hb_frecno
+ *  hb_flastrec
+ *  hb_fgotop
+ *  hb_fgobottom
+ *  hb_fgoto
+ *  hb_feof
+ *  hb_freadln
+ *  hb_fskip
+ */
 
 #include <filesys.api>
 

@@ -2,8 +2,8 @@
  * $Id$
  */
 
-#ifndef _EXTEND_H
-#define _EXTEND_H
+#ifndef EXTEND_H_
+#define EXTEND_H_
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -172,4 +172,4 @@ PDYNSYM GetDynSym( char * szName );   /* finds and creates a dynamic symbol if n
 PDYNSYM NewDynSym( PSYMBOL pSymbol ); /* creates a new dynamic symbol based on a local one */
 PDYNSYM FindDynSym( char * szName );  /* finds a dynamic symbol */
 
-#endif
+#endif /* EXTEND_H_ */

@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 #include <dir.h>
 #include <errno.h>
 #include <fcntl.h>

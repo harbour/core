@@ -1,5 +1,8 @@
-/* $Id$
- *
+/*
+ * $Id$
+ */
+
+/*
  * The Harbour virtual machine
  */
 

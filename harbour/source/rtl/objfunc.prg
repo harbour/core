@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 #define MET_METHOD    0
 #define MET_DATA      1
 #define MET_CLASSDATA 2

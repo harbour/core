@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 /* $Doc$
  * $Description$  Debug functions.
  * $Requirement$  source\rtl\itemapi.c (1999/05/04)

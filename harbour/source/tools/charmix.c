@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * GT CLIPPER STANDARD HEADER
  *
  * File......: charmix.c
@@ -11,27 +15,6 @@
  *
  * This is an original work by Andy Leighton and is placed in the
  * public domain.
- *
- * Modification history:
- * ---------------------
- *
- * $Log$
- * Revision 1.5  1999/06/17 07:09:25  dholm
- * See ChangeLog entry 19990617-02:00 EDT David G. Holm <dholm@jsd-llc.com>
- *
- * Revision 1.4  1999/06/12 00:21:55  gdiet
- * ChangeLogTag:Fri Jun 11 19:14:22 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
- *
- * Revision 1.3  1999/06/09 18:06:04  dholm
- * See ChangeLog entry 19990609-12:55 EDT David G. Holm <dholm@jsd-llc.com>
- *
- * Revision 1.2  1999/06/02 19:53:28  dholm
- * See ChangeLog entry 19990602-14:50 EDT David G. Holm <dholm@jsd-llc.com>
- *
- * Revision 1.1  1999/06/02 06:49:38  ajahja
- * Adding GT Library
- *
- *
  */
 
 /*
@@ -79,7 +62,7 @@ HARBOUR HB_GT_CHARMIX( void )
     l2  = hb_parclen(2);
     pos = 0;
 
-    s3  = (char*)hb_xgrab(l1 + l2);   // grab us some mem to work with
+    s3  = (char*)hb_xgrab(l1 + l2);   /* grab us some mem to work with */
 
     for (i = 0; i < l1; i++) {
       s3[pos++] = s1[i];
@@ -94,8 +77,8 @@ HARBOUR HB_GT_CHARMIX( void )
 
     s3[pos] = '\0';
     hb_retc(s3);
-    hb_xfree(s3);                     // free alloc'ed mem
+    hb_xfree(s3);                     /* free alloc'ed mem */
   } else {
-    hb_retc((char *) NULL);           // parameter mismatch - error NullStr
+    hb_retc((char *) NULL);           /* parameter mismatch - error NullStr */
   }
 }

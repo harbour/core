@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 // Class error. We are keeping Clipper compatibility here, instead of using
 // TError():New() style and also avoiding hungarian notation.
 

@@ -2,6 +2,9 @@
  * $Id$
  */
 
+#ifndef GTAPI_H_
+#define GTAPI_H_
+
 /*
  *  GTAPI.H; Screen drawing, cursor and keyboard routines for text mode
  *           16-bit and 32-bit MS-DOS, 16-bit and 32-bit OS/2, and 32-bit
@@ -33,9 +36,6 @@
  *    - Symantec C/C++ (16-bit) for DOS 7.0
  *    - Zortech C/C++ (16-bit) for DOS 3.0r4
 */
-
-#ifndef _GTAPI_H
-#define _GTAPI_H
 
 #include <extend.h>
 
@@ -138,4 +138,4 @@ void gtPuts(char x, char y, char attr, char *str, int len);
 void gtGetText(char x1, char y1, char x2, char y2, char *dest);
 void gtPutText(char x1, char y1, char x2, char y2, char *srce);
 
-#endif /* _GTAPI_H */
+#endif /* GTAPI_H_ */

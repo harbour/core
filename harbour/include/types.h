@@ -2,8 +2,8 @@
  * $Id$
  */
 
-#ifndef _TYPES_H
-#define _TYPES_H
+#ifndef TYPES_H_
+#define TYPES_H_
 
 #include <limits.h>
 
@@ -96,4 +96,4 @@ typedef HARBOUR ( * HARBOURFUNC )( void );
 #define ISARRAY( n )       hb_param( n, IT_ARRAY )
 #define ALENGTH( n )       hb_parinfa( n, 0 ) /* TODO! */
 
-#endif
+#endif  /* TYPES_H_ */

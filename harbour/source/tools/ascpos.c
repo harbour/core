@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * GT CLIPPER STANDARD HEADER
  *
  * File......: ascpos.c
@@ -11,24 +15,6 @@
  *
  * This is an original work by Andy Leighton and is placed in the
  * public domain.
- *
- * Modification history:
- * ---------------------
- *
- * $Log$
- * Revision 1.4  1999/06/17 07:09:24  dholm
- * See ChangeLog entry 19990617-02:00 EDT David G. Holm <dholm@jsd-llc.com>
- *
- * Revision 1.3  1999/06/12 00:21:55  gdiet
- * ChangeLogTag:Fri Jun 11 19:14:22 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
- *
- * Revision 1.2  1999/06/09 18:06:03  dholm
- * See ChangeLog entry 19990609-12:55 EDT David G. Holm <dholm@jsd-llc.com>
- *
- * Revision 1.1  1999/06/02 06:21:33  ajahja
- * Adding GT Library
- *
- *
  */
 
 /*
@@ -74,15 +60,15 @@ HARBOUR HB_GT_ASCPOS( void )
   if (ISCHAR(1) && ISNUM(2)) {
     s = hb_parc(1);
     p = hb_parni(2);
-    p--;                            // decrement p to adjust for c strings
-                                    // starting at position 0
+    p--;                            /* decrement p to adjust for c strings */
+                                    /* starting at position 0 */
 
-    if (p > hb_parclen(1))            // oh oh p > length of passed string
-      hb_retni(-2);                   // error -2
+    if (p > hb_parclen(1))            /* oh oh p > length of passed string */
+      hb_retni(-2);                   /* error -2 */
     else
-      hb_retni((int) s[p]);           // return ascii code of appropriate
-                                    // character in string
+      hb_retni((int) s[p]);           /* return ascii code of appropriate */
+                                    /* character in string */
   } else {
-    hb_retni(-1);                     // parameter mismatch - error -1
+    hb_retni(-1);                     /* parameter mismatch - error -1 */
   }
 }

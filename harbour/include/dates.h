@@ -2,9 +2,9 @@
  * $Id$
  */
 
-#ifndef _DATES_H
-#define _DATES_H
+#ifndef DATES_H_
+#define DATES_H_
 
 char * hb_dtoc (char * szDate, char * szDateFormat);
 
-#endif
+#endif  /* DATES_H_ */

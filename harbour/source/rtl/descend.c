@@ -1,6 +1,7 @@
 /*
  * $Id$
  */
+
 #include <extend.h>
 #include <ctype.h>
 

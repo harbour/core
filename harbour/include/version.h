@@ -2,8 +2,8 @@
  * $Id$
  */
 
-#ifndef _VERSION_H
-#define _VERSION_H
+#ifndef VERSION_H_
+#define VERSION_H_
 
 /*
    extern int hb_major;
@@ -23,5 +23,4 @@
    #define hb_month 	6	/* Build month */
    #define hb_day       12	/* Build day */
 
-#endif
-
+#endif /* VERSION_H_ */

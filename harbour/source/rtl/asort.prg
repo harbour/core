@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 //
 // <aSorted> aSort( <aUnsorted>, [nStart], [nCount], [bBlock] )
 //

@@ -2,6 +2,9 @@
  * $Id$
  */
 
+#ifndef CTOHARB_H_
+#define CTOHARB_H_
+
 /* Calling Harbour from C code */
 
 /* executing Harbour code from C */
@@ -18,3 +21,5 @@ void PushSymbol( PSYMBOL );
 void Do( WORD wParams );         /* invokes the virtual machine */
 void Function( WORD wParams );         /* invokes the virtual machine */
 void StackShow( void );
+
+#endif  /* CTOHARB_H_ */

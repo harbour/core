@@ -1,7 +1,9 @@
 %{
 /*
  * $Id$
- *
+ */
+
+/*
  * Harbour lex rules.
  * Build 21: Spring 99
  * Usage: flex -i -8 -oyylex.c harbour.l

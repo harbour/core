@@ -2,6 +2,9 @@
  * $Id$
  */
 
+#ifndef INIT_H_
+#define INIT_H_
+
 /* Harbour local symbols initialization */
 
 void ProcessSymbols( SYMBOL * pSymbols, WORD wSymbols );
@@ -40,3 +43,5 @@ static int InitSymbols( void )
 }
 static int _STATIC_INT_INIT_SYMBOLS = InitSymbols();
 #endif
+
+#endif  /* INIT_H_ */

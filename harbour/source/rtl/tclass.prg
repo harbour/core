@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 // Harbour Class TClass to build classes
 
 #define MET_METHOD    0

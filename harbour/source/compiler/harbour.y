@@ -1,10 +1,13 @@
 %{
 /*
  * $Id$
- *
+ */
+
+/*
  * Harbour compiler (yacc rules and actions)
  * Build 26 proposal: spring 1999
- * Usage: bison -d -v harbour.y  You may find Bison at www.harbour.project.org
+ * Usage: bison -d -v harbour.y
+ * You may find Bison at www.harbour.project.org
  */
 
 #define BUILD         26    /* current harbour.y build */
@@ -1591,7 +1594,7 @@ void AddVar( char * szVarName )
    pVar = ( PVAR ) OurMalloc( sizeof( VAR ) );
    pVar->szName = szVarName;
    pVar->szAlias = NULL;
-   //pVar->cType = 'U';
+   /* pVar->cType = 'U'; */
    pVar->iUsed = 0;
    pVar->pNext = NULL;
 
@@ -2699,7 +2702,7 @@ int GetLocalVarPos( char * szVarName ) /* returns the order + 1 of a variable if
 
               pVar = (PVAR) OurMalloc( sizeof(VAR) );
               pVar->szName = szVarName;
-              //pVar->cType = 'U';
+              /* pVar->cType = 'U'; */
               pVar->iUsed = 0;
               pVar->pNext  = NULL;
               iVar = 1;  /* first variable */

@@ -2,6 +2,9 @@
  * $Id$
  */
 
+#ifndef ITEMAPI_H_
+#define ITEMAPI_H_
+
 #include <extend.h>
 
 typedef struct
@@ -40,3 +43,4 @@ PHB_ITEM hb_itemReturn( PHB_ITEM pItem );
 ULONG hb_itemSize( PHB_ITEM pItem );
 WORD hb_itemType( PHB_ITEM pItem );
 
+#endif  /* ITEMAPI_H_ */

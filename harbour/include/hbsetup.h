@@ -1,11 +1,13 @@
 /*
  * $Id$
- *
- * Harbour compiler and runtime configuration file
-*/
+ */
 
-#ifndef hbsetuph
-#define hbsetuph
+#ifndef HBSETUP_H_
+#define HBSETUP_H_
+
+/*
+ * Harbour compiler and runtime configuration file
+ */
 
 /* The name of starting procedure
  * Note: You have to define it in case when Harbour cannot find the proper
@@ -38,4 +40,4 @@
  */
 #define OS_PATH_LIST_SEPARATOR   ';'
 
-#endif
+#endif  /* HBSETUP_H_ */

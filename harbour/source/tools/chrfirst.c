@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * GT CLIPPER STANDARD HEADER
  *
  * File......: chrfirst.c
@@ -11,24 +15,6 @@
  *
  * This is an original work by Andy Leighton and is placed in the
  * public domain.
- *
- * Modification history:
- * ---------------------
- *
- * $Log$
- * Revision 1.4  1999/06/17 07:09:25  dholm
- * See ChangeLog entry 19990617-02:00 EDT David G. Holm <dholm@jsd-llc.com>
- *
- * Revision 1.3  1999/06/12 00:21:56  gdiet
- * ChangeLogTag:Fri Jun 11 19:14:22 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
- *
- * Revision 1.2  1999/06/09 18:06:04  dholm
- * See ChangeLog entry 19990609-12:55 EDT David G. Holm <dholm@jsd-llc.com>
- *
- * Revision 1.1  1999/06/02 06:49:38  ajahja
- * Adding GT Library
- *
- *
  */
 
 /*
@@ -87,6 +73,6 @@ HARBOUR HB_GT_CHRFIRST( void )
       hb_retni(0);
 
   } else {
-    hb_retni(-1);               // parameter mismatch - error NullStr
+    hb_retni(-1);               /* parameter mismatch - error NullStr */
   }
 }

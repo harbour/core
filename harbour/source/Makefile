@@ -5,8 +5,8 @@
 ROOT = ../
 
 DIRS=\
-	compiler \
 	hbpp \
+	compiler \
 	rtl \
 	vm \
 	rdd \

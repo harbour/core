@@ -1,8 +1,11 @@
 /*
  * $Id$
- *
- * Initiialization of runtime support symbols
  */
+
+/*
+ * Initialization of runtime support symbols
+ */
+
 #include "hbsetup.h"
 #include "extend.h"
 #include "types.h"

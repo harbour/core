@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 /*****************************************************************************
 * Function: _GT_Internal_StringAsInt()                                       *
 * Syntax..: int _GT_Internal_StringAsInt(char *String, int Start, int End)   *

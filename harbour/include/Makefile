@@ -8,10 +8,10 @@ C_HEADERS=\
 	compiler.h \
 	ctoharb.h \
 	dates.h \
+	errorapi.h \
 	extend.h \
 	filesys.h \
 	gtapi.h \
-	harbclip.h \
 	hberrors.h \
 	hbsetup.h \
 	init.h \
@@ -32,6 +32,10 @@ PRG_HEADERS=\
 
 API_HEADERS=\
 	error.api \
+	extend.api \
 	filesys.api \
+	fm.api \
+	gt.api \
+	item.api \
 
 include $(TOP)$(ROOT)config/header.cf

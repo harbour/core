@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * GT CLIPPER STANDARD HEADER
  *
  * File......: strexpan.c
@@ -11,27 +15,6 @@
  *
  * This is an original work by Andy Leighton and is placed in the
  * public domain.
- *
- * Modification history:
- * ---------------------
- *
- * $Log$
- * Revision 1.5  1999/06/17 07:09:27  dholm
- * See ChangeLog entry 19990617-02:00 EDT David G. Holm <dholm@jsd-llc.com>
- *
- * Revision 1.4  1999/06/12 00:21:58  gdiet
- * ChangeLogTag:Fri Jun 11 19:14:22 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
- *
- * Revision 1.3  1999/06/09 18:06:05  dholm
- * See ChangeLog entry 19990609-12:55 EDT David G. Holm <dholm@jsd-llc.com>
- *
- * Revision 1.2  1999/06/02 19:53:28  dholm
- * See ChangeLog entry 19990602-14:50 EDT David G. Holm <dholm@jsd-llc.com>
- *
- * Revision 1.1  1999/06/02 06:49:39  ajahja
- * Adding GT Library
- *
- *
  */
 
 /*
@@ -86,23 +69,23 @@ HARBOUR HB_GT_STREXPAND( void )
     if (ISCHAR(3))
       insert = hb_parc(3);
 
-    out = (char *)hb_xgrab(len * (nIns + 1));    // alloc us some memory
+    out = (char *)hb_xgrab(len * (nIns + 1));    /* alloc us some memory */
 
-    for (i = 0, p = 0; i < len; i++) { // loop thru input
-      out[p++] = in[i];                // insert a character from input
+    for (i = 0, p = 0; i < len; i++) { /* loop thru input */
+      out[p++] = in[i];                /* insert a character from input */
 
-      if (i < (len - 1)) {             // do not insert fill chars on last
-                                       // char of input
-         for (j = 1; j <= nIns; j++)   // insert the fill characters
+      if (i < (len - 1)) {             /* do not insert fill chars on last */
+                                       /* char of input */
+         for (j = 1; j <= nIns; j++)   /* insert the fill characters */
             out[p++] = insert[0];
       }
     }
-    out[p] = '\0';                     // Add terminating NUL
+    out[p] = '\0';                     /* Add terminating NUL */
 
     hb_retc(out);
-    hb_xfree(out);                       // free alloc'ed mem
+    hb_xfree(out);                       /* free alloc'ed mem */
   } else {
-    hb_retc((char *) NULL);              // parameter mismatch - error NullStr
+    hb_retc((char *) NULL);              /* parameter mismatch - error NullStr */
   }
 }
 

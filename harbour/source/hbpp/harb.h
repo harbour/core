@@ -2,6 +2,9 @@
  * $Id$
  */
 
+#ifndef HARB_H_
+#define HARB_H_
+
 /*  ---------------------------------------------
    Definitions, copied from Harbour.y and types.h    */
 
@@ -56,3 +59,5 @@ typedef struct
   char *mpatt;
   char *value;
 } COMMANDS, TRANSLATES;
+
+#endif  /* HARB_H_ */

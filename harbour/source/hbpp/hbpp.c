@@ -1,6 +1,7 @@
 /*
  * $Id$
  */
+
 /* Harbour Preprocessor , version 0.9
    author - Alexander Kresin             */
 
@@ -141,7 +142,7 @@ int ParseDirective( char* sLine )
    if ( *(sLine+i) != '\"' ) return 1000;
    *(sLine+i) = '\0';
 
-//   if ((handl_i = fopen(sLine, "r")) == NULL)
+   /*   if ((handl_i = fopen(sLine, "r")) == NULL) */
    if ( !OpenInclude( sLine, _pIncludePath, &handl_i ) )
     { printf("\nCan't open %s",sLine); return 1001; }
    lInclude++;
@@ -227,8 +228,10 @@ DEFINES* AddDefine ( char* defname, char* value )
 
  if ( stdef != NULL )
  {
-//  if ( stdef->pars != NULL ) _xfree ( stdef->pars );
-//  _xfree ( stdef->value );
+#if 0
+  if ( stdef->pars != NULL ) _xfree ( stdef->pars );
+  _xfree ( stdef->value );
+#endif
    stdef->pars = NULL;
  }
  else
@@ -254,11 +257,13 @@ int ParseUndef( char* sLine)
 
  if ( ( stdef = DefSearch(defname) ) >= 0 )
  {
-//  _xfree ( stdef->name );
-//  _xfree ( stdef->pars );
-//  _xfree ( stdef->value );
+#if 0
+  _xfree ( stdef->name );
+  _xfree ( stdef->pars );
+  _xfree ( stdef->value );
+#endif
   stdef->name = NULL;
-/*
+#if 0
   for ( ; i < koldefines-1; i++ )
   {
    aDefines[i].name = aDefines[i+1].name;
@@ -267,7 +272,7 @@ int ParseUndef( char* sLine)
    aDefines[i].npars = aDefines[i+1].npars;
   }
   koldefines--;
-*/
+#endif
  }
  return 0;
 }
