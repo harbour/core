@@ -1,3 +1,23 @@
+19990715-16:30 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.l
+     * added support for 
+         case ::variable
+	 while ::variable
+     * corrected line numbering in NEXT and END keywords
+     * changed ';' (line continuation logic)
+
+    *source/compiler/harbour.y
+     * corrected line numbering (opcode for line number is no longer placed
+       inside an expression)
+       
+    *tests/working/procline.prg
+     * corrected line numbering
+     
+    *config/linux/gcc.cf       
+    *config/linux/global.cf
+     * corrected to support the latest changes in GNU make system
+     
 19990715-09:50 CET Patrick Mast <harbour@PatrickMast.com>
    *makefile.vc
     * Changed output for PRG's that needed to be compiled with Harbour

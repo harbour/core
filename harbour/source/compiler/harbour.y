@@ -517,7 +517,7 @@ Source     : Crlf
            | Line
            | Source Crlf
            | Source Function
-           | Source Statement
+           | Source { LineBody(); } Statement
            | Source VarDefs
            | Source FieldsDef
            | Source MemvarDef
@@ -546,9 +546,9 @@ FunScope   :                  { $$ = FS_PUBLIC; }
            | EXIT             { $$ = FS_EXIT; }
            ;
 
-Params     :                                               { $$ = 0; _iState =LOOKUP; }
-           | '(' ')'                                       { $$ = 0; _iState =LOOKUP; }
-           | '(' { iVarScope = VS_PARAMETER; } ParamList ')'   { $$ = $3; _iState =LOOKUP; }
+Params     :                                               { $$ = 0; }
+           | '(' ')'                                       { $$ = 0; }
+           | '(' { iVarScope = VS_PARAMETER; } ParamList ')'   { $$ = $3; }
            ;
 
 ParamList  : IDENTIFIER                    { cVarType = ' '; AddVar( $1 ); $$ = 1; }
@@ -566,33 +566,33 @@ Statements : Statement
            | Statements { Line(); } Statement
            ;
 
-Statement  : ExecFlow { LineBody(); } Crlf        {}
-           | FunCall { LineBody(); } Crlf         { Do( $1 ); }
-           | AliasFunc { LineBody(); } Crlf       {}
-           | IfInline { LineBody(); } Crlf        { GenPCode1( HB_P_POP ); }
-           | ObjectMethod { LineBody(); } Crlf    { GenPCode1( HB_P_POP ); }
-           | VarUnary { LineBody(); } Crlf        { GenPCode1( HB_P_POP ); }
-           | VarAssign { LineBody(); } Crlf       { GenPCode1( HB_P_POP ); }
+Statement  : ExecFlow Crlf        {}
+           | FunCall Crlf         { Do( $1 ); }
+           | AliasFunc Crlf       {}
+           | IfInline Crlf        { GenPCode1( HB_P_POP ); }
+           | ObjectMethod Crlf    { GenPCode1( HB_P_POP ); }
+           | VarUnary Crlf        { GenPCode1( HB_P_POP ); }
+           | VarAssign Crlf       { GenPCode1( HB_P_POP ); }
 
-           | IDENTIFIER '=' Expression { LineBody(); } Crlf            { PopId( $1 ); }
-           | AliasExp '=' Expression { LineBody(); } Crlf              { /* TODO */ GenPCode1( HB_P_POP ); }
-           | VarId ArrayIndex '=' Expression { LineBody(); } Crlf      { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
-           | FunArrayCall '=' Expression { LineBody(); } Crlf          { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
-           | IdSend IDENTIFIER '='      { Message( SetData( $2 ) ); } Expression { LineBody(); } Crlf  { Function( 1 ); }
-           | ObjectData ArrayIndex '=' Expression { LineBody(); } Crlf    { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
-           | ObjectMethod ArrayIndex '=' Expression { LineBody(); } Crlf  { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
+           | IDENTIFIER '=' Expression Crlf            { PopId( $1 ); }
+           | AliasExp '=' Expression Crlf              { /* TODO */ GenPCode1( HB_P_POP ); }
+           | VarId ArrayIndex '=' Expression Crlf      { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
+           | FunArrayCall '=' Expression Crlf          { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
+           | IdSend IDENTIFIER '='      { Message( SetData( $2 ) ); } Expression Crlf  { Function( 1 ); }
+           | ObjectData ArrayIndex '=' Expression Crlf    { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
+           | ObjectMethod ArrayIndex '=' Expression Crlf  { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
 
-           | BREAK { LineBody(); } Crlf
-           | BREAK Expression { LineBody(); } Crlf
-           | RETURN { LineBody(); } Crlf              { GenReturn( Jump( 0 ) ); }
-           | RETURN Expression { LineBody(); } Crlf   { GenPCode1( HB_P_RETVALUE ); GenReturn( Jump ( 0 ) ); }
-           | PUBLIC { iVarScope = VS_MEMVAR; } VarList { LineBody(); } Crlf
-           | PRIVATE { iVarScope = VS_MEMVAR; } VarList { LineBody(); } Crlf
-           | PARAMETERS { iVarScope = VS_MEMVAR; } IdentList { LineBody(); } Crlf
-           | EXITLOOP { LineBody(); } Crlf            { LoopExit(); }
-           | LOOP { LineBody(); } Crlf                { LoopLoop(); }
-           | DoProc { LineBody(); } Crlf
-           | EXTERN ExtList { _iState =LOOKUP; } Crlf
+           | BREAK Crlf
+           | BREAK Expression Crlf
+           | RETURN Crlf              { GenReturn( Jump( 0 ) ); }
+           | RETURN Expression Crlf   { GenPCode1( HB_P_RETVALUE ); GenReturn( Jump ( 0 ) ); }
+           | PUBLIC { iVarScope = VS_MEMVAR; } VarList Crlf
+           | PRIVATE { iVarScope = VS_MEMVAR; } VarList Crlf
+           | PARAMETERS { iVarScope = VS_MEMVAR; } IdentList Crlf
+           | EXITLOOP Crlf            { LoopExit(); }
+           | LOOP Crlf                { LoopLoop(); }
+           | DoProc Crlf
+           | EXTERN ExtList Crlf
            ;
 
 ExtList    : IDENTIFIER                               { AddExtern( $1 ); }
@@ -899,8 +899,8 @@ ExpList    : Expression %prec POST                    { $$ = 1; }
            | ExpList { GenPCode1( HB_P_POP ); } ',' Expression %prec POST  { $$++; }
            ;
 
-VarDefs    : LOCAL { iVarScope = VS_LOCAL; Line(); } VarList { _iState =LOOKUP; } Crlf { cVarType = ' '; SetFrame(); }
-           | STATIC { StaticDefStart() } VarList { _iState =LOOKUP; } Crlf { StaticDefEnd( $<iNumber>3 ); }
+VarDefs    : LOCAL { iVarScope = VS_LOCAL; Line(); } VarList Crlf { cVarType = ' '; SetFrame(); }
+           | STATIC { StaticDefStart() } VarList Crlf { StaticDefEnd( $<iNumber>3 ); }
            ;
 
 VarList    : VarDef                                  { $$ = 1; }
@@ -927,7 +927,7 @@ VarDef     : IDENTIFIER                                   { cVarType = ' '; AddV
            | IDENTIFIER '[' ExpList ']' AS_ARRAY          { cVarType = 'A'; AddVar( $1 ); DimArray( $3 ); }
            ;
 
-FieldsDef  : FIELD { iVarScope =VS_FIELD; } FieldList { _iState =LOOKUP; } Crlf { LineBody(); }
+FieldsDef  : FIELD { iVarScope =VS_FIELD; } FieldList Crlf
            ;
 
 FieldList  : IDENTIFIER                            { cVarType = ' '; $$=FieldsCount(); AddVar( $1 ); }
@@ -942,7 +942,7 @@ FieldList  : IDENTIFIER                            { cVarType = ' '; $$=FieldsCo
            | FieldList IN IDENTIFIER { SetAlias( $3, $<iNumber>1 ); }
            ;
 
-MemvarDef  : MEMVAR { iVarScope = VS_MEMVAR; } MemvarList { _iState =LOOKUP; } Crlf { LineBody(); }
+MemvarDef  : MEMVAR { iVarScope = VS_MEMVAR; } MemvarList Crlf
            ;
 
 MemvarList : IDENTIFIER                            { AddVar( $1 ); }
@@ -966,23 +966,23 @@ IfEndif    : IfBegin EndIf                    { JumpHere( $1 ); }
            | IfBegin IfElseIf IfElse EndIf    { JumpHere( $1 ); FixElseIfs( $2 ); }
            ;
 
-IfBegin    : IF Expression { ++_wIfCounter; _iState =LOOKUP; } Crlf { $$ = JumpFalse( 0 ); }
+IfBegin    : IF Expression { ++_wIfCounter; } Crlf { $$ = JumpFalse( 0 ); }
                 IfStats
                 { $$ = Jump( 0 ); JumpHere( $<iNumber>5 ); }
            ;
 
-IfElse     : ELSE {  _iState =LOOKUP; } Crlf IfStats
+IfElse     : ELSE Crlf IfStats
            ;
 
-IfElseIf   : ELSEIF Expression { _iState =LOOKUP; } Crlf { $<iNumber>$ = JumpFalse( 0 ); }
-                IfStats { $$ = GenElseIf( 0, Jump( 0 ) ); JumpHere( $<iNumber>5 ); }
+IfElseIf   : ELSEIF Expression Crlf { $<iNumber>$ = JumpFalse( 0 ); }
+                IfStats { $$ = GenElseIf( 0, Jump( 0 ) ); JumpHere( $<iNumber>4 ); }
 
-           | IfElseIf ELSEIF Expression { _iState =LOOKUP; } Crlf { $<iNumber>$ = JumpFalse( 0 ); }
-                IfStats { $$ = GenElseIf( $1, Jump( 0 ) ); JumpHere( $<iNumber>6 ); }
+           | IfElseIf ELSEIF Expression Crlf { $<iNumber>$ = JumpFalse( 0 ); }
+                IfStats { $$ = GenElseIf( $1, Jump( 0 ) ); JumpHere( $<iNumber>5 ); }
            ;
 
-EndIf      : ENDIF                 { --_wIfCounter; _iState =LOOKUP; }
-           | END                   { --_wIfCounter; _iState =LOOKUP; }
+EndIf      : ENDIF                 { --_wIfCounter; }
+           | END                   { --_wIfCounter; }
            ;
 
 IfStats    : /* no statements */
@@ -1006,29 +1006,29 @@ DoCase     : DoCaseBegin
              EndCase                   { FixElseIfs( $2 ); }
            ;
 
-EndCase    : ENDCASE              { --_wCaseCounter; _iState =LOOKUP; }
-           | END                  { --_wCaseCounter; _iState =LOOKUP; }
+EndCase    : ENDCASE              { --_wCaseCounter; }
+           | END                  { --_wCaseCounter; }
            ;
 
-DoCaseBegin : DOCASE { ++_wCaseCounter; _iState =LOOKUP; } Crlf
+DoCaseBegin : DOCASE { ++_wCaseCounter; } Crlf
            ;
 
-Cases      : CASE Expression { _iState =LOOKUP; } Crlf { $<iNumber>$ = JumpFalse( 0 ); Line(); } CaseStmts { $$ = GenElseIf( 0, Jump( 0 ) ); JumpHere( $<iNumber>5 ); Line(); }
-           | Cases CASE Expression { _iState =LOOKUP; } Crlf { $<iNumber>$ = JumpFalse( 0 ); Line(); } CaseStmts { $$ = GenElseIf( $1, Jump( 0 ) ); JumpHere( $<iNumber>6 ); Line(); }
+Cases      : CASE Expression Crlf { $<iNumber>$ = JumpFalse( 0 ); Line(); } CaseStmts { $$ = GenElseIf( 0, Jump( 0 ) ); JumpHere( $<iNumber>4 ); Line(); }
+           | Cases CASE Expression Crlf { $<iNumber>$ = JumpFalse( 0 ); Line(); } CaseStmts { $$ = GenElseIf( $1, Jump( 0 ) ); JumpHere( $<iNumber>5 ); Line(); }
            ;
 
-Otherwise  : OTHERWISE { _iState =LOOKUP; } Crlf CaseStmts
+Otherwise  : OTHERWISE Crlf CaseStmts
            ;
 
 CaseStmts  : /* no statements */
            | Statements
            ;
 
-DoWhile    : WhileBegin WhileExpression Crlf { $<lNumber>$ = JumpFalse( 0 ); }
+DoWhile    : WhileBegin Expression Crlf { $<lNumber>$ = JumpFalse( 0 ); }
                 { Jump( $1 - functions.pLast->lPCodePos ); }
              EndWhile { JumpHere( $<lNumber>4 ); --_wWhileCounter; }
 
-           | WhileBegin WhileExpression Crlf { $<lNumber>$ = JumpFalse( 0 ); Line(); }
+           | WhileBegin Expression Crlf { $<lNumber>$ = JumpFalse( 0 ); Line(); }
                 WhileStatements { LoopHere(); Jump( $1 - functions.pLast->lPCodePos ); }
              EndWhile  { JumpHere( $<lNumber>4 ); --_wWhileCounter; LoopEnd(); }
            ;
@@ -1036,21 +1036,18 @@ DoWhile    : WhileBegin WhileExpression Crlf { $<lNumber>$ = JumpFalse( 0 ); }
 WhileBegin : WHILE    { $$ = functions.pLast->lPCodePos; ++_wWhileCounter; LoopStart(); }
            ;
 
-WhileExpression : Expression      { _iState =LOOKUP; }
-           ;
-
 WhileStatements : Statement
            | WhileStatements Statement        { Line(); }
            ;
 
-EndWhile   : END      { _iState =LOOKUP; }
-           | ENDDO    { _iState =LOOKUP; }
+EndWhile   : END      
+           | ENDDO    
            ;
 
 ForNext    : FOR IDENTIFIER ForAssign Expression { PopId( $2 ); $<iNumber>$ = functions.pLast->lPCodePos; ++_wForCounter; LoopStart(); }
              TO Expression                       { PushId( $2 ); }
-             StepExpr { _iState =LOOKUP; } Crlf  { GenPCode1( HB_P_FORTEST ); $<iNumber>$ = JumpTrue( 0 ); }
-             ForStatements                       { LoopHere(); PushId( $2 ); GenPCode1( HB_P_PLUS ); PopId( $2 ); Jump( $<iNumber>5 - functions.pLast->lPCodePos ); JumpHere( $<iNumber>12 ); LoopEnd(); }
+             StepExpr Crlf                       { GenPCode1( HB_P_FORTEST ); $<iNumber>$ = JumpTrue( 0 ); }
+             ForStatements                       { LoopHere(); PushId( $2 ); GenPCode1( HB_P_PLUS ); PopId( $2 ); Jump( $<iNumber>5 - functions.pLast->lPCodePos ); JumpHere( $<iNumber>11 ); LoopEnd(); }
            ;
 
 ForAssign  : '='
@@ -1061,16 +1058,16 @@ StepExpr   : /* default step expression */       { PushInteger( 1 ); }
            | STEP Expression
            ;
 
-ForStatements : ForStat NEXT                     { --_wForCounter; _iState =LOOKUP; }
-           | ForStat NEXT IDENTIFIER             { --_wForCounter; _iState =LOOKUP; }
-           | NEXT                                { --_wForCounter; _iState =LOOKUP; }
-           | NEXT IDENTIFIER                     { --_wForCounter; _iState =LOOKUP; }
+ForStatements : ForStat NEXT                     { --_wForCounter; }
+           | ForStat NEXT IDENTIFIER             { --_wForCounter; }
+           | NEXT                                { --_wForCounter; }
+           | NEXT IDENTIFIER                     { --_wForCounter; }
            ;
 
 ForStat    : Statements                          { Line(); }
            ;
 
-BeginSeq   : BEGINSEQ { ++_wSeqCounter; _iState =LOOKUP; } Crlf
+BeginSeq   : BEGINSEQ { ++_wSeqCounter; } Crlf
                 SeqStatms
                 RecoverSeq
              END           { --_wSeqCounter; }
@@ -1087,10 +1084,10 @@ RecoverSeq : /* no recover */
            | RecoverUsing Crlf Statements
            ;
 
-RecoverEmpty : RECOVER        { _iState =LOOKUP; }
+RecoverEmpty : RECOVER        
            ;
 
-RecoverUsing : RECOVER USING IDENTIFIER      { _iState =LOOKUP; }
+RecoverUsing : RECOVER USING IDENTIFIER      
            ;
 
 DoProc     : DO IDENTIFIER { PushSymbol( $2, 1 ); PushNil(); Do( 0 ); }
@@ -3249,14 +3246,18 @@ void Line( void ) /* generates the pcode with the currently compiled source code
 void LineBody( void ) /* generates the pcode with the currently compiled source code line */
 {
    /* This line can be placed inside a procedure or function only */
-   if( ! _iStartProc && functions.iCount <= 1 )
+   /* except EXTERNAL */
+   if( _iState != EXTERN )
    {
-     GenError( _szCErrors, 'E', ERR_OUTSIDE, NULL, NULL );
+      if( ! _iStartProc && functions.iCount <= 1 )
+      {
+         GenError( _szCErrors, 'E', ERR_OUTSIDE, NULL, NULL );
+      }
    }
-  _iState =LOOKUP;
-  functions.pLast->bFlags |= FUN_STATEMENTS;
-  if( _iLineNumbers )
-   GenPCode3( HB_P_LINE, LOBYTE( iLine ), HIBYTE( iLine ) );
+       
+   functions.pLast->bFlags |= FUN_STATEMENTS;
+   if( _iLineNumbers )
+      GenPCode3( HB_P_LINE, LOBYTE( iLine ), HIBYTE( iLine ) );
 }
 
 /*

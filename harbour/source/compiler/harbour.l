@@ -116,7 +116,6 @@ Separator     {SpaceTab}
 %x            STRING1 STRING2 STRING3
 %x            NEXT_ BREAK_ CASE_ DO_ WHILE_ WITH_ END_ EXIT_ EXTERNAL_ FIELD_
 %x            FOR_ FUNCTION_ IIF_ IF_ IN_ INIT_ LOCAL_ LOOP_
-%x            LINECONT_
 %s            INDEX
 
 %%
@@ -217,27 +216,7 @@ Separator     {SpaceTab}
 %{
 /* ************************************************************************ */
 %}
-[\;]+          BEGIN LINECONT_;
-<LINECONT_>{Separator}*\n {
-               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               ++iLine;
-               if( ! _iQuiet ) printf( "\rline: %i", iLine );
-               return ';';
-             }
-<LINECONT_>{Separator}*("("|")") {
-               GenError( _szCErrors, 'E', ERR_INCOMPLETE_STMT, yytext, NULL );
-             }
-<LINECONT_>";"        ; /*Ignore any repeated ';' */
-<LINECONT_>{Separator}*. {
-               unput( yytext[ yyleng-1 ] );
-               if( i_INDEX_STATE )
-                 BEGIN INDEX;
-               else
-               {
-                  BEGIN 0;
-                  return ';';
-               }
-             }
+;              _iState =LOOKUP; if( ! i_INDEX_STATE ) return ';';
 %{
 /* ************************************************************************ */
 %}
@@ -310,6 +289,13 @@ Separator     {SpaceTab}
                unput( yytext[ yyleng-2 ] );
                return IDENTIFIER;
              }
+<CASE_>{Separator}*("::") { /* send operators */
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+               unput( yytext[ yyleng-1 ] );
+               unput( yytext[ yyleng-2 ] );
+               _iState =CASE;
+               return CASE;
+             }	     
 <CASE_>{Separator}*(\n|.) { /* not operator */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                unput( yytext[ yyleng-1 ] );
@@ -439,8 +425,6 @@ Separator     {SpaceTab}
              }
 <END_>{Separator}*(.|\n) { /* not operator */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               if( yytext[ yyleng-1 ] == '\n' )
-                 --iLine;
                unput( yytext[ yyleng-1 ] );
                if( _iState == LOOKUP )
                { /* it is first item in the line */
@@ -798,7 +782,6 @@ Separator     {SpaceTab}
                }
                else
                { /* there is another item in line already */
-                 unput( yytext[ yyleng-1 ] );
                  yylval.string = yy_strdup( "NEXT" );
                  _iState =IDENTIFIER;
                  return IDENTIFIER;
@@ -897,6 +880,13 @@ Separator     {SpaceTab}
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
                return IDENTIFIER;
+             }
+<WHILE_>{Separator}*("::") { /* send operators */
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+               unput( yytext[ yyleng-1 ] );
+               unput( yytext[ yyleng-2 ] );
+	       _iState =WHILE;
+               return WHILE;
              }
 <WHILE_>{Separator}*.      { /* identifiers and literals */
                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
@@ -1095,11 +1085,6 @@ Separator     {SpaceTab}
                }
 
                unput( '[' );
-/*
-               yyleng = 1;
-               yytext[1] = 0;
-               yylval.string = yy_strdup( ")" );
-*/
                _iState = OPERATOR;
                --_iOpenBracket;
                return ')';
@@ -1116,11 +1101,6 @@ Separator     {SpaceTab}
                iIndexSets--;
 
                unput( '[' );
-/*
-               yyleng = 1;
-               yytext[1] = 0;
-               yylval.string = yy_strdup( "]" );
-*/
                _iState = OPERATOR;
                return ']';
             }
@@ -1132,6 +1112,7 @@ Separator     {SpaceTab}
                                  yyleng = 10;
                               }
                               yylval.string = yy_strupr( yy_strdup( yytext ) );
+			      _iState =IDENTIFIER;
                               return IDENTIFIER;
                            }
 

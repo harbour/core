@@ -4,17 +4,6 @@
 
 all : first
 
-
-ifeq ($(HB_INC_DIR),)
-  HB_INC_DIR = $(TOP)$(ROOT)include
-endif
-ifeq ($(HB_LIB_DIR),)
-  HB_LIB_DIR = $(TOP)$(ROOT)libs
-endif
-ifeq ($(HB_BIN_DIR),)
-  HB_BIN_DIR = $(TOP)$(ROOT)bin
-endif
-  
 ARCH_DIR = $(ARCH)/
 MK = $(MAKE)
 

@@ -9,6 +9,6 @@ local a
 
 ? "hello 2", ProcLine(), "Expected: ", 10
 
-? "hello 3", ProcLine(), "Expected: ", 13
+? "hello 3", ProcLine(), "Expected: ", 12
 
 RETURN NIL
