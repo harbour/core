@@ -111,12 +111,12 @@ CLASS HBGetList
    METHOD ShowScoreBoard()
    METHOD ReadUpdated( lUpdated )
    METHOD ReadVar( cNewVarName )
-   METHOD ReadExit( lNew ) INLINE Set( _SET_EXIT, lNew )
+   METHOD ReadExit( lNew ) INLINE IF( ISLOGICAL(lNew), Set( _SET_EXIT, lNew ), Set( _SET_EXIT ) )
    METHOD SetFocus()
    METHOD Updated() INLINE ::lUpdated
 #ifdef HB_COMPAT_C53
 
-   METHOD GUIReader(oget,getsys,a,b)
+   METHOD GUIReader(oGet,getsys,a,b)
    METHOD GUIApplyKey( oGUI, nKey )
    METHOD GUIPreValidate( oGUI )
    METHOD GUIPostValidate( oGUI )
