@@ -1,3 +1,21 @@
+20000213-15:50 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+    *makefile.bc
+        *added  the treport and tlabel to the makefile
+    *doc/funclist.txt
+        *update status of __reportform() and __labelform() functions
+    *include/rptdef.ch
+        *include file for TLabelForm and TReportForm
+    *source/rtl/tlabel.prg
+        +__labelform() function
+    *source/rtl/treport.prg
+        +__reportform() function
+    +tests/testlbl.prg
+        *test file for __labelform() function
+    +tests/testrpt.prg
+        *test file for __reportform() function
+    +tests/ee.frm
+    +tests/ee.lbl
+        *report and label files for the examples
 20000213-16:15 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
