@@ -1,3 +1,11 @@
+20000213-11:23 GMT+2 Chen Kedem <niki@actcom.co.il>
+   * doc/compiler.txt
+   * doc/readme.txt
+   * doc/statics.txt
+   * doc/whatsnew.txt
+     * Formating for 80 column (actually 76 like the NG standard)
+     + CVS ID added
+
 20000213-04:02 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/compiler/cmdcheck.c
      ! Fixed broken handling of the /x switch without parameter.
@@ -80,7 +88,7 @@
    * source/rtl/Makefile
      - readvar.prg removed.
    * doc/harbext.txt 
-     + CVD ID added
+     + CVS ID added
        !! Please remember to add this to every file CVS-d !!
    * tests/bld_b16.bat 
      tests/bld_b32.bat 

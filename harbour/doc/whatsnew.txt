@@ -1,14 +1,25 @@
+/*
+ * $Id:
+ */
+
+----------------------------------------------------------------------
+
 Build 0.31a 2000-02-02
-- Bugs fixed.
+
+- Bugs fixed
+
+----------------------------------------------------------------------
 
 Build #31 2000-01-27
+
 - Added macro support
 - Many changes, fixes, and enhancements to compiler internals
 - Many changes, fixes, and enhancements to RDD system
 - Many changes, fixes, and enhancements to the GT API system
 - Improved SETCURSOR() and SET( _SET_CURSOR )
 - Added FIELDBLOCK() and FIELDWBLOCK()
-- The Harbour '-w' command line option can set the maximal level of reported warnings. The following levels are supported currently:
+- The Harbour '-w' command line option can set the maximal level of reported
+  warnings. The following levels are supported currently:
    '-w0'         - no warnings
    '-w' or '-w1' - Clipper compatible warnings
    '-w2'         - some useful warnings missed in Clipper
@@ -17,13 +28,15 @@ Build #31 2000-01-27
 - The 'runner' program is now named 'hbrun'.
 - Some include files now have an 'hb' prefix in the name.
 - db_brows significantly enhanced.
-- Regression testing enhanced and expanded, replacing several standalone test modules. Now in tests/regress directory.
+- Regression testing enhanced and expanded, replacing several standalone
+  test modules. Now in tests/regress directory.
 - Added FSETDEVMOD()
 - Added READINSERT()
 - Added MEMOLINE()
 - Added undocumented DISPOUTAT()
 - Added DEFPATH() and __DEFPATH()
-- Enhanced VERSION() to optionally include the compiler version used to create Harbour
+- Enhanced VERSION() to optionally include the compiler version used to
+  create Harbour
 - Enhanced OS() to include more Windows version details
 - Added __INPUT(), __WAIT(), and SETTYPEAHEAD()
 - Added several undocumented __BOX*() functions
@@ -52,7 +65,8 @@ Build #31 2000-01-27
   ISAFFIRM(), ISNEGATIVE(), NATIONMSG(), _NATSORTVER(), _NATMSGVER()
 - Added Harbour compiler tracing (i.e., debug output)
 - Many changes, fixes, and enhancements to documentation
-- Program added to extract documentation from source code and create NG,HLP ,OS2 IPF and TROFF output files
+- Program added to extract documentation from source code and create NG,
+  HLP, OS2, IPF and TROFF output files
 - Compile time expression optimizer.
 - Some preprocessor fixes
 - Added ADS RDD
@@ -64,8 +78,10 @@ Build #31 2000-01-27
 - Enhanced Getenv() function
 - Added //BUILD command line to compiler
 
+----------------------------------------------------------------------
 
 Build #30 September 30 1999
+
 - RDD support
 - Support for MEM files
 - The debugger
@@ -94,7 +110,10 @@ Build #30 September 30 1999
 - Source code cleanup and formatting
 - Many new functions, samples and bug fixes
 
+----------------------------------------------------------------------
+
 Build #29 27 July 1999
+
 - Support for these compilers:
    C++ Builder
    DJGPP for Dos/Windows
@@ -114,6 +133,7 @@ Build #29 27 July 1999
 - Added support for concatenation operator "-"
 - Added support to generate runtime errors in functions
 
+----------------------------------------------------------------------
 
 Build #28 18 July 1999
 
@@ -158,5 +178,5 @@ Build #26 12 June 1999
 - Many resolved Bugs
 - Many new functions
 - New National language message files
-- New TestBank. It compiles ALL Harbour samples 
+- New TestBank. It compiles ALL Harbour samples
 - <object>:<data> := <value> can now be used inside expressions (codeblocks)
