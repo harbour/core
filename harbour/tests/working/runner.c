@@ -172,7 +172,6 @@ HARBOUR HB_RUN( void )                          /* HB_Run( <cFile> )        */
                else
                   bCont = FALSE;
             } while( bCont );
-            printf("\nLoading <%s>", szTemp );
             pDynFunc[ ul ].szName = (char *) _xgrab( szIdx - szTemp + 1);
             strcpy( pDynFunc[ ul ].szName, szTemp );
 

@@ -1,3 +1,22 @@
+19990522-14:10 CET Eddie Runia
+  Change from 11:43 committed
+  * tests/broken/instr.prg
+    removed
+  * include/hbsetup.h
+    #define HARBOUR_START_PROGRAM temporarily commented out, because of errors
+
+19990522-11:43 CET Eddie Runia
+  * source/vm/hvm.c
+    pItem bug in add changed
+    Instring operator added
+    'unreleased memory block' only get shown if memory block remain open
+  * tests/working/instr.prg
+    test program for instring added
+  * tests/working/runner.c
+    'Loading' messages removed
+  * source/compiler/harbour.y
+    'Debug' messages removed.
+
 19990521-21:45 CET Eddie Runia
   * tests/broken/instr.prg added. Contribution from Les Griffiths.
     formerly known as strcomp

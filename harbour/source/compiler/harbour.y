@@ -3459,9 +3459,6 @@ void GenPortObj( char *szFileName, char *szName )
 
    while( pFunc )
    {
-/*      if( pFunc->cScope != FS_PUBLIC )
-         fprintf( yyc, "static " ); */
-
       fputs( pFunc->szName, yyc );
       fputc( 0, yyc );
       fputc( (BYTE) ( ( pFunc->lPCodePos       ) & 255 ), yyc ); /* Write size */
@@ -3469,7 +3466,7 @@ void GenPortObj( char *szFileName, char *szName )
       fputc( (BYTE) ( ( pFunc->lPCodePos >> 16 ) & 255 ), yyc );
       fputc( (BYTE) ( ( pFunc->lPCodePos >> 24 ) & 255 ), yyc );
 
-      printf( "Creating output for %s\n", pFunc->szName );
+/*      printf( "Creating output for %s\n", pFunc->szName ); */
 
       lPCodePos = 0;
       lPad = 0;                         /* Number of bytes optimized */

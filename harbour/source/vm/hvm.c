@@ -50,6 +50,7 @@ void GenArray( WORD wElements ); /* generates a wElements Array and fills it fro
 void Greater( void );         /* checks if the latest - 1 value is greater than the latest, removes both and leaves result */
 void GreaterEqual( void );    /* checks if the latest - 1 value is greater than or equal the latest, removes both and leaves result */
 void Inc( void );             /* increment the latest numeric value on the stack */
+void Instring( void );        /* check whether string 1 is contained in string 2 */
 void ItemCopy( PITEM pDest, PITEM pSource ); /* copies an item to one place to another respecting its containts */
 void Less( void );            /* checks if the latest - 1 value is less than the latest, removes both and leaves result */
 void LessEqual( void );       /* checks if the latest - 1 value is less than or equal the latest, removes both and leaves result */
@@ -125,6 +126,7 @@ void InitSymbolTable( void );   /* initialization of runtime support symbols */
 static void ForceLink( void );
 
 ULONG hb_isMessage( PITEM, char * );
+ULONG hb_strAt( char *, long, char *, long );
 
 #define STACK_INITITEMS   100
 #define STACK_EXPANDITEMS  20
@@ -231,10 +233,13 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
    /* LogSymbols(); */
    HBDEBUG( "Done!\n" );
 
-   printf( "\n\ntotal memory blocks allocated: %lu\n", ulMemoryMaxBlocks );
-   printf( "memory maximum size consumed: %ld\n", ulMemoryMaxConsumed );
-   printf( "memory blocks not released: %ld\n", ulMemoryBlocks );
-   printf( "memory size not released: %ld\n", ulMemoryConsumed );
+   if( ulMemoryBlocks )
+   {
+      printf( "\n\ntotal memory blocks allocated: %lu\n", ulMemoryMaxBlocks );
+      printf( "memory maximum size consumed: %ld\n", ulMemoryMaxConsumed );
+      printf( "memory blocks not released: %ld\n", ulMemoryBlocks );
+      printf( "memory size not released: %ld\n", ulMemoryConsumed );
+   }
 
    return bErrorLevel;
 }
@@ -342,6 +347,11 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
 
          case _INC:
               Inc();
+              w++;
+              break;
+
+         case _INSTRING:
+              Instring();
               w++;
               break;
 
@@ -1043,6 +1053,31 @@ void ItemRelease( PITEM pItem )
    pItem->wType = IT_NIL;
 }
 
+void Instring( void )
+{
+   PITEM pItem1 = stack.pPos - 2;
+   PITEM pItem2 = stack.pPos - 1;
+   int   iResult;
+   ULONG ul;
+
+   if( IS_STRING( pItem1 ) && IS_STRING( pItem2 ) )
+   {
+      for( iResult = 0, ul = 0; !iResult && ul < (ULONG) pItem1->wLength; ul++ )
+         iResult = hb_strAt( pItem1->value.szText + ul, 1,
+                             pItem2->value.szText, pItem2->wLength );
+      StackPop();
+      StackPop();
+      PushLogical( iResult == 0 ? 0 : 1 );
+   }
+   else
+   {
+      PITEM pError = _errNew();
+
+      _errPutDescription( pError, "Error BASE/1109  Argument error: $" );
+      _errLaunch( pError );
+   }
+}
+
 void ItemCopy( PITEM pDest, PITEM pSource )
 {
    ItemRelease( pDest );
@@ -1382,7 +1417,7 @@ void Plus( void )
       PushDate( lDate1 + dNumber2 );
    }
 
-   else if( IS_OBJECT( pItem1 ) && hb_isMessage( pItem, "+" ) )
+   else if( IS_OBJECT( pItem1 ) && hb_isMessage( pItem2, "+" ) )
       OperatorCall( pItem1, pItem2, "+" );
 
    /* TODO: Generate an error if types don't match */
