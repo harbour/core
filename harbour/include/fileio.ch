@@ -1,6 +1,6 @@
 /*
-  $ Id: $
-*/
+ * $Id$
+ */
 
 #ifndef _FILEIO_CH
 #define _FILEIO_CH

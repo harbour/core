@@ -1,6 +1,6 @@
 /*
-  $ Id: $
-*/
+ * $Id$
+ */
 
 #ifndef _FILESYS_API
 #define _FILESYS_API
