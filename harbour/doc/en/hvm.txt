@@ -11,7 +11,7 @@
  *
  * Copyright 1999 Eddie Ruina
  *   Documentation for: __VMVARLGET()
- *  
+ *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
  *    Documentation for: CLIPINIT(), __SETHELPK()
  *
@@ -36,14 +36,14 @@
  *  $RETURNS$
  *      <cProcName> The name of the function that it is being executed.   </par>
  *  $DESCRIPTION$
- *      This function look at the top of the stack and gets the current
+ *      This function looks at the top of the stack and gets the current
  *      executed function if no arguments are passed. Otherwise it returns
  *      the name of the function or procedure at <nLevel>.   </par>
  *  $EXAMPLES$
  *      See Test
  *  </fixed>
  *  $TESTS$
- *      This test will show the functions and procedures in stack
+ *      This test will show the functions and procedures in stack.
  *      before executing it.
  *      function Test()
  *         LOCAL n := 1
@@ -69,7 +69,7 @@
  *  $CATEGORY$
  *      Misc
  *  $ONELINER$
- *      Gets the line number of the current function on the stack
+ *      Gets the line number of the current function on the stack.
  *  $SYNTAX$
  *      PROCLINE( <nLevel> ) --> <nLine>
  *  $ARGUMENTS$
@@ -77,8 +77,8 @@
  *  $RETURNS$
  *      <nLine> The line number of the function that it is being executed.   </par>
  *  $DESCRIPTION$
- *      This function look at the top of the stack and gets the current
- *      line number of executed function if no arguments are passed.
+ *      This function looks at the top of the stack and gets the current
+ *      line number of the executed function if no arguments are passed.
  *      Otherwise it returns the line number of the function or procedure
  *      at <nLevel>.   </par>
  *  $EXAMPLES$
@@ -115,8 +115,8 @@
  *  $RETURNS$
  *      <cEmptyString> Return an empty string   </par>
  *  $DESCRIPTION$
- *      This function is added to the RTL for full compatibility. It allways
- *      returns an empty string.   </par>
+ *      This function is added to the RTL for full compatibility. It
+ *      always returns an empty string.   </par>
  *  $EXAMPLES$
  *      ? ProcFile()
  *  </fixed>
@@ -183,7 +183,7 @@
  *  $ONELINER$
  *      Retrieves the number of arguments passed to a function.
  *  $SYNTAX$
- *      PCOUNT() --> <nArgs>   
+ *      PCOUNT() --> <nArgs>
  *  $ARGUMENTS$
  *      None   </par>
  *  $RETURNS$
@@ -268,14 +268,14 @@
  *  $DESCRIPTION$
  *      CLIPINIT() is one of the pre-defined INIT PROCEDURE and is executed
  *      at program startup. It declare an empty MEMVAR PUBLIC array called
- *      GetList that is going to be used by the Get system, It activate the
- *      default error handler, and (at least for the moment) call the
- *      function that set the default help key.   </par>
+ *      GetList that is going to be used by the Get system. It activates the
+ *      default error handler, and (at least for the moment) calls the
+ *      function that sets the default help key.   </par>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      It is said that CLIPINIT() should not call that function that set
- *      the default help key since CA-Clipper do it in some other place.   </par>
+ *      It is said that CLIPINIT() should not call the function that sets
+ *      the default help key since CA-Clipper does it in some other place.   </par>
  *  $PLATFORMS$
  *      All   </par>
  *  $SEEALSO$
@@ -293,7 +293,7 @@
  *  $SYNTAX$
  *      __SetHelpK() --> NIL
  *  $ARGUMENTS$
- *      none.   </par>
+ *      None.   </par>
  *  $RETURNS$
  *      __SetHelpK() always return NIL.   </par>
  *  $DESCRIPTION$
@@ -352,20 +352,20 @@
  *      DO( <xFuncProc> [, <xArguments...>] )
  *  $ARGUMENTS$
  *      <xFuncProc> = Either a string with a function/procedure name to be called
- *      or a codeblock to evaluate   </par>
+ *      or a codeblock to evaluate.   </par>
  *      <xArguments> = arguments passed to a called function/procedure or to
- *      a codeblock   </par>
+ *      a codeblock.   </par>
  *  $RETURNS$
- *      A value that was returned from called function   </par>
+ *      A value that was returned from called function.   </par>
  *  $DESCRIPTION$
  *      This function can be called either by the harbour compiler or by user.
  *      The compiler always passes the item of IT_SYMBOL type that stores the
  *      name of procedure specified in DO <proc> WITH ... statement.   </par>
- *      If called procedure/function doesn't exist then the runtime error
+ *      If called procedure/function doesn't exist then a runtime error
  *      is generated.   </par>
  *      This function can be used as replacement of macro operator.
  *      It is also used internally to implement DO <proc> WITH <args...>
- *      In this case <xFuncProc> is of type HB_SYMB   </par>
+ *      In this case <xFuncProc> is of type HB_SYMB.   </par>
  *  $EXAMPLES$
  *      cbCode ={|x| MyFunc( x )}
  *      DO( cbCode, 1 )

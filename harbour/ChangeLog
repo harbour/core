@@ -1,3 +1,10 @@
+20000424-11:42 GMT-8 Brian Hays <bhays@abacuslaw.com>
+   * doc/en/datetime.txt
+   * doc/en/dbstrux.txt
+   * doc/en/dir.txt
+   * doc/en/hvm.txt
+      % minor grammatical touch-ups
+
 20000425-05:42 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/compiler/hbfix.c
@@ -71,15 +78,15 @@
         * added hb_compPCodeEval() to evaluate pcodes
         * added assertion code to keep some tables in sync
           with available opcodes
-        * fixed bug when PARAMETER statement was used after 
+        * fixed bug when PARAMETER statement was used after
           LOCAL variables declaration
         * HB_P_PUSHLOCALNEAR/HB_P_POPLOCALNEAR occupies
-          3 bytes in the pcode buffer athough it uses 
+          3 bytes in the pcode buffer athough it uses
           the first two bytes only to store a value (these
           opcodes can be replaced with HB_P_(PUSH/POP)LOCAL
           after final fixing)
 
-    NOTE: When the PARAMETER statement is used then the 
+    NOTE: When the PARAMETER statement is used then the
           position of local variable is increased after the
           whole function/procedure is compiled (PARAMETERS
           is an usual executable statement that can be used
@@ -109,7 +116,7 @@
     *source/vm/itemapi.c
 	* reverted a change (items unreferencing) because it caused
 	  GPFs when an inlined method of an object was called
-	  (it requires more testing)  
+	  (it requires more testing)
 
 20000424-03:44 GMT+1 Victor Szakats <info@szelvesz.hu>
 
@@ -190,7 +197,7 @@
 	    a := 1
 	    CallProc( { @a } )
 	    ? a		//prints: 2
-	    
+
 	    PROC CallProc( x )
 	    LOCAL y:=x[ 1 ]
 		y++

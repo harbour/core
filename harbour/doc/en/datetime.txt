@@ -102,7 +102,7 @@
  *  $DESCRIPTION$
  *      This function returns the current system date.
  *  $EXAMPLES$
- *      ? Date()        
+ *      ? Date()
  *  $TESTS$
  *      ? "Today is ",Day(date())," of ",cMonth(date())," of ",Year(date())
  *  $STATUS$
@@ -113,7 +113,7 @@
  *      All
  *  $FILES$
  *      Library is rtl
- *  $SEEALSO$   
+ *  $SEEALSO$
  *      CTOD(),DTOS(),DTOC(),DAY(),MONTH(),CMONTH()
  *  $END$
  */
@@ -130,7 +130,7 @@
  *  $ARGUMENTS$
  *      <cDateString> A character date in format 'mm/dd/yy'
  *  $RETURNS$
- *      <dDate> A date expression 
+ *      <dDate> A date expression
  *  $DESCRIPTION$
  *      This function converts a date that has been entered as a character
  *      expression to a date expression.The character expression will be in
@@ -159,7 +159,7 @@
  *  $CATEGORY$
  *      Date
  *  $ONELINER$
- *      Return the numeric day of th month.
+ *      Return the numeric day of the month.
  *  $SYNTAX$
  *      DAY(<cDate>) --> nMonth
  *  $ARGUMENTS$
@@ -199,8 +199,8 @@
  *  $RETURNS$
  *      <nDay>  The number of days
  *  $DESCRIPTION$
- *      This function converst <nSecs> seconds to the equivalent number
- *      of days;86399 seconds represent one day,0 seconds being midnight.
+ *      This function converts <nSecs> seconds to the equivalent number
+ *      of days; 86399 seconds represents one day, 0 seconds being midnight.
  *  $EXAMPLES$
  *      ? DAYS(2434234)
  *      ? "Has been passed ",DAYS(63251),' since midnight'
@@ -263,9 +263,9 @@
  *  $RETURNS$
  *      <dDate> Character represention of date
  *  $DESCRIPTION$
- *      This function converts any date expression (a field or variable )
+ *      This function converts any date expression (a field or variable)
  *      expressed as <dDateString> to a character expression in the default
- *      format "MM/DD/YY".The date format is expressed by this function is
+ *      format "MM/DD/YY". The date format expressed by this function is
  *      controled in part by the date format specified in the SET DATE
  *      command
  *  $EXAMPLES$
@@ -298,8 +298,8 @@
  *      <dDate> String notation of the date
  *  $DESCRIPTION$
  *      This function returns the value of <dDateString> as a character
- *      string in the format of YYYYMMDD.If the value of <dDateString> is
- *      an empty date , this function will returbn eight blank spaces.
+ *      string in the format of YYYYMMDD. If the value of <dDateString> is
+ *      an empty date, this function will return eight blank spaces.
  *  $EXAMPLES$
  *      ? DTOS(Date())
  *  $STATUS$
@@ -323,7 +323,7 @@
  *  $ONELINER$
  *      Calculates elapted time.
  *  $SYNTAX$
- *      ELAPTIME(<cStartTime>,<cEndTime>) --> cDiference                                      
+ *      ELAPTIME(<cStartTime>,<cEndTime>) --> cDiference
  *  $ARGUMENTS$
  *      <cStartTime> Start in time as a string format
  *      <cEndTime>   End time as a string format
@@ -333,7 +333,7 @@
  *      This function returns a string that shows the difference between
  *      the starting time represented as <cStartTime> and the ending time
  *      as <cEndTime>. If the stating time is greater then the ending
- *      time,the function will assume that the date changed once.
+ *      time, the function will assume that the date changed once.
  *  $EXAMPLES$
  *      Static cStartTime
  *      Init Proc Startup
@@ -356,7 +356,7 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      MONTH()   
+ *      MONTH()
  *  $CATEGORY$
  *      Date
  *  $ONELINER$
@@ -369,7 +369,7 @@
  *     <nMonth> Corresponding number of the month in the year, ranging from
  *      0 to 12
  *  $DESCRIPTION$
- *      This function returns a number that representate the month of  given
+ *      This function returns a number that represents the month of a given
  *      date expression <dDate>. If a NULL date (CTOD('')) is passed to the
  *      function, the value of the function will be 0.
  *  $EXAMPLES$
@@ -430,13 +430,13 @@
  *      Return the number of seconds from the system date.
  *  $SYNTAX$
  *      SECS( <cTime> ) --> nSeconds
- *  $ARGUMENTS$ 
+ *  $ARGUMENTS$
  *      <cTime> Character expression in a time string format
  *  $RETURNS$
  *      <nSeconds> Number of seconds
  *  $DESCRIPTION$
  *      This function returns a numeric value that is a number of elapsed
- *      seconds from midnight base on a time string given as <cTime>.
+ *      seconds from midnight based on a time string given as <cTime>.
  *  $EXAMPLES$
  *      ? Secs(Time())
  *      ? Secs(time()-10)
@@ -503,7 +503,7 @@
  *      by the setting of the SET CENTURY and SET DATE commands. Addition
  *      ally, an empty date expression passed to this function will yield
  *      a zero value.
- *      
+ *
  *  $EXAMPLES$
  *      ? Year(date())
  *      ? year(CTOD("01/25/3251"))

@@ -79,7 +79,7 @@
  *  $ARGUMENTS$
  *      <b>TO <xcFileName></b> is the name of the new database file to
  *      create. (.dbf) is the default extension if none is given. It can be
- *      specified as literal file name or as a character expression
+ *      specified as a literal file name or as a character expression
  *      enclosed in parentheses.
  *
  *      <b>FIELDS <field,...></b> is an optional list of field names to copy
@@ -95,11 +95,11 @@
  *      COPY STRUCTURE command is preprocessed into __dbCopyStruct()
  *      function during compile time.
  *  $EXAMPLES$
- *     // Create a new file that contain the same structure
+ *     // Create a new file that contains the same structure
  *      USE TEST
  *      COPY STRUCTURE TO MyCopy
  *
- *      // Create a new file that contain part of the original structure
+ *      // Create a new file that contains part of the original structure
  *      USE TEST
  *      COPY STRUCTURE TO SomePart FIELDS name, address
  *  $STATUS$
@@ -142,7 +142,7 @@
  *       FIELD_DEC    N      3        0
  *       </table>
  *
- *      Each record in the new file contain information about one field in
+ *      Each record in the new file contains information about one field in
  *      the original file. CREATE FROM could be used to create a database
  *      from the structure extended file.
  *
@@ -199,9 +199,9 @@
  *  $SYNTAX$
  *      COPY STRUCTURE EXTENDED TO <xcFileName>
  *  $ARGUMENTS$
- *      <b>TO <xcFileName></b> is the name of target definition file to
+ *      <b>TO <xcFileName></b>  The name of the target definition file to
  *      create. (.dbf) is the default extension if none is given. It can be
- *      specified as literal file name or as a character expression
+ *      specified as a literal file name or as a character expression
  *      enclosed in parentheses.
  *  $DESCRIPTION$
  *      COPY STRUCTURE EXTENDED create a new database named <cFileName> with
@@ -216,7 +216,7 @@
  *       FIELD_DEC    N      3        0
  *       </table>
  *
- *      Each record in the new file contain information about one field in
+ *      Each record in the new file contains information about one field in
  *      the original file. CREATE FROM could be used to create a database
  *      from the structure extended file.
  *
@@ -281,22 +281,22 @@
  *      <cRDDName> is RDD name to create target with. If omitted, the
  *      default RDD is used.
  *
- *      <lNew> is an optional logical expression, (.T.) open the target file
- *      name <cFileName> in the next available unused work-area and making
- *      it the current work-area, (.F.) open the target file in current
+ *      <lNew> is an optional logical expression, (.T.) opens the target file
+ *      name <cFileName> in the next available unused work-area and makes
+ *      it the current work-area. (.F.) opens the target file in the current
  *      work-area. Default value is (.F.). The value of <lNew> is ignored if
  *      <cFileFrom> is not specified.
  *
  *      <cAlias> is an optional alias to USE the target file with. If not
  *      specified, alias is based on the root name of <cFileName>.
  *  $RETURNS$
- *      __dbCreate() return (.T.) if there is database in USED in the
+ *      __dbCreate() returns (.T.) if there is database USED in the
  *      current work-area (this might be the newly selected work-area), or
- *      (.F.) if there is no database in USED. Note that on success a (.T.)
- *      would be return, but on failure you are probably end up with a
+ *      (.F.) if there is no database USED. Note that on success a (.T.)
+ *      would be returned, but on failure you probably end up with a
  *      run-time error and not a (.F.) value.
  *  $DESCRIPTION$
- *      __dbCreate() works in two modes depend on the value of <cFileFrom>:
+ *      __dbCreate() works in two modes depending on the value of <cFileFrom>:
  *
  *      <b>1)</b> If <cFileFrom> is empty or not specified a new empty
  *      structure extended file with the name <cFileName> is created and
@@ -312,16 +312,16 @@
  *       FIELD_DEC    N      3        0
  *       </table>
  *
- *      CREATE command is preprocessed into __dbCopyStruct() function during
- *      compile time and use this mode.
+ *      The CREATE command is preprocessed into the __dbCopyStruct() function
+ *      during compile time and uses this mode.
  *
  *      <b>2)</b> If <cFileFrom> is specified, it is opened and assumed to
- *      be a structure extended file where each record contain at least the
+ *      be a structure extended file where each record contains at least the
  *      following fields (in no particular order): FIELD_NAME, FIELD_TYPE,
  *      FIELD_LEN and FIELD_DEC. Any other field is ignored. From this
- *      information the file <cFileName> is then create and opened in the
+ *      information the file <cFileName> is then created and opened in the
  *      current or new work-area (according to <lNew>), if this is a new
- *      work-area it become the current.
+ *      work-area it becomes the current.
  *
  *      For prehistoric compatibility reasons, structure extended file
  *      Character fields which are longer than 255 characters should be
@@ -478,8 +478,8 @@
  *      record contain at least the following fields (in no particular
  *      order): FIELD_NAME, FIELD_TYPE, FIELD_LEN and FIELD_DEC. Any other
  *      field is ignored. From this information the file <xcFileName> is
- *      then create and opened in the current or new work-area (according to
- *      the NEW clause), if this is a new work-area it become the current.
+ *      then created and opened in the current or new work-area (according to
+ *      the NEW clause), if this is a new work-area it becomes the current.
  *
  *      For prehistoric compatibility reasons, structure extended file
  *      Character fields which are longer than 255 characters should be
@@ -492,7 +492,7 @@
  *      </fixed>
  *
  *      CREATE FROM command is preprocessed into __dbCopyStruct() function
- *      during compile time and use this mode.
+ *      during compile time and uses this mode.
  *  $EXAMPLES$
  *      See example in the CREATE command
  *  $STATUS$
@@ -578,10 +578,10 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      CA-Clipper have internal undocumented function named __FLEDIT(),
- *      in Harbour we name it __dbStructFilter(). The new name give better
- *      description of what this function do. In Harbour __FLEDIT() simply
- *      call __dbStructFilter() and therefor the later is the recommended
+ *      CA-Clipper has internal undocumented function named __FLEDIT(),
+ *      in Harbour we name it __dbStructFilter(). The new name gives a better
+ *      description of what this function does. In Harbour __FLEDIT() simply
+ *      calls __dbStructFilter() and therefor the later is the recommended
  *      function to use.
  *
  *      This function is only visible if source/rdd/dbstrux.prg was compiled
@@ -632,7 +632,7 @@
  *      structure, based on a given field list.
  *
  *      Note that field names in <aStruct> MUST be specified in uppercase
- *      or else no match would found.
+ *      or else no match would be found.
  *
  *      SET EXACT has no effect on the return value.
  *  $EXAMPLES$
@@ -665,9 +665,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __dbStructFilter() is a Harbour extension, CA-Clipper have internal
- *      undocumented function named __FLEDIT() that does exactly the same.
- *      The new name give better description of what this function do.
+ *      __dbStructFilter() is a Harbour extension. CA-Clipper has an internal
+ *      undocumented function named __FLEDIT() that does exactly the same
+ *      thing. The new name gives a better description of what this function does.
  *  $PLATFORMS$
  *      All
  *  $FILES$
