@@ -356,11 +356,12 @@ void hb_vmQuit( void )
       hb_stackPop();
    hb_itemClear( &hb_stack.Return );
    hb_arrayRelease( &s_aStatics );
-   hb_memvarsRelease();
+   hb_memvarsRelease();    /* clear all PUBLIC variables */
 
    /* release all known garbage */
    hb_gcCollectAll();
    
+   hb_memvarsFree();    /* free memory allocated for memvars table */
    hb_stackFree();
 /* hb_dynsymLog(); */
    hb_xexit();

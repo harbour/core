@@ -439,7 +439,8 @@ extern void     hb_codeblockCopy( PHB_ITEM pDest, PHB_ITEM pSource ); /* copy a 
 extern HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar ); /* create a new global value */
 extern HB_VALUE_PTR * hb_memvarValueBaseAddress( void ); /* retrieve the base address of the values table */
 extern void     hb_memvarsInit( void ); /* initialize the memvar API system */
-extern void     hb_memvarsRelease( void ); /* release the memvar API system */
+extern void     hb_memvarsRelease( void ); /* clear all PUBLIC and PRIVATE variables */
+extern void     hb_memvarsFree( void ); /* release the memvar API system */
 extern void     hb_memvarValueIncRef( HB_HANDLE hValue ); /* increase the reference count of a global value */
 extern void     hb_memvarValueDecRef( HB_HANDLE hValue ); /* decrease the reference count of a global value */
 extern void     hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem ); /* copy an item into a symbol */

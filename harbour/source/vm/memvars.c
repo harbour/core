@@ -96,27 +96,33 @@ void hb_memvarsInit( void )
    s_privateStackCnt  = s_privateStackBase = 0;
 }
 
+/* clear all variables except the detached ones 
+ * Should be called at application exit only
+*/
 void hb_memvarsRelease( void )
 {
    ULONG ulCnt = s_globalLastFree;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_memvarsRelease()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarsClear()"));
 
    if( s_globalTable )
    {
       while( ulCnt )
       {
-         if( s_globalTable[ ulCnt ].counter )
+         if( s_globalTable[ ulCnt ].counter && s_globalTable[ ulCnt ].hPrevMemvar != ( HB_HANDLE )-1 )
          {
             hb_itemClear( &s_globalTable[ ulCnt ].item );
             s_globalTable[ ulCnt ].counter = 0;
          }
          --ulCnt;
       }
-
-      hb_xfree( s_globalTable );
-      s_globalTable = NULL;
    }
+}
+
+void hb_memvarsFree( void )
+{
+   if( s_globalTable )
+      hb_xfree( s_globalTable );
 
    if( s_privateStack )
       hb_xfree( s_privateStack );
