@@ -6,6 +6,10 @@
  *  GTAPI.C: Generic Terminal for Harbour
  *
  * Latest mods:
+ * 1.43   19990729   ptucker   Corrected a number of calls so params are
+ *                             in top,left,bottom,right or row,col order.
+ *                             removed call to gtrectsize in gtputtext.
+ *                             This should be handled by the caller.
  * 1.41   19990728   ptucker   Minor correction for inverted coords
  * 1.40   19990726   vszel     Allowing Top > Bottom and Right > Left
  *                             cases again. Clipper allows these, too.
@@ -73,7 +77,7 @@ void hb_gtInit(void)
     _Color = (int *)hb_xgrab(5*sizeof(int));
     _ColorCount = 5;
     gtInit();
-    hb_gtSetPos( gtWhereY(), gtWhereX() );
+    hb_gtSetPos( gtRow(), gtCol() );
     hb_gtSetColorStr( hb_set.HB_SET_COLOR );
 }
 
@@ -494,7 +498,7 @@ int hb_gtRectSize(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, 
         return(1);
     }
 
-    *uipBuffSize = (uiBottom - uiTop) * (uiRight - uiLeft) * 2;
+    *uipBuffSize = (uiBottom - uiTop+1) * (uiRight - uiLeft+1) * 2;
 
     return(0);
 }
@@ -516,23 +520,13 @@ int hb_gtRepChar(USHORT uiRow, USHORT uiCol, USHORT uiChar, USHORT uiCount)
 
 int hb_gtRest(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * vlpScrBuff)
 {
-    gtPutText(uiLeft, uiTop, uiRight, uiBottom, vlpScrBuff);
+    gtPutText( uiTop, uiLeft, uiBottom, uiRight, vlpScrBuff);
     return(0);
 }
 
 int hb_gtSave(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * vlpScrBuff)
 {
-    USHORT bufsiz;
-    int rc;
-
-    rc=hb_gtRectSize(uiTop, uiLeft, uiBottom, uiRight, &bufsiz);
-    if(rc != 0)
-    {
-        return(rc);
-    }
-
-    gtGetText(uiLeft, uiTop, uiRight, uiBottom, vlpScrBuff);
-
+    gtGetText( uiTop, uiLeft, uiBottom, uiRight, vlpScrBuff);
     return(0);
 }
 
@@ -565,13 +559,15 @@ int hb_gtSetMode(USHORT uiRows, USHORT uiCols)
 
 int hb_gtSetPos(USHORT uiRow, USHORT uiCol)
 {
+    /* TODO: in this situation Clipper just turns off the cursor */
+    /* any further writes would be accounted for by clipping */
     if(uiRow > hb_gtMaxRow() || uiCol > hb_gtMaxCol())
         return(1);
 
     s_uiCurrentRow = uiRow;
     s_uiCurrentCol = uiCol;
 
-    gtGotoXY(uiCol, uiRow);
+    gtSetPos( uiRow, uiCol );
 
     return(0);
 }
@@ -635,7 +631,7 @@ int hb_gtWrite(char * fpStr, ULONG length)
     else size = length;
 
     /* Now the text string can be displayed */
-    gtPuts(s_uiCurrentCol, s_uiCurrentRow, attr, fpPointer, size);
+    gtPuts( s_uiCurrentRow, s_uiCurrentCol, attr, fpPointer, size);
 
     /* Finally, save the new cursor position */
     hb_gtSetPos (iRow, iCol);
@@ -740,15 +736,15 @@ int hb_gtScroll(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SH
             int iRowPos = iCount + iRows;
             char attr=_Color[s_uiColorIndex] & 0xff;
             /* Blank the scroll region in the current row */
-            gtPuts (uiLeft, iCount, attr, fpBlank, iLength);
+            gtPuts ( iCount, uiLeft, attr, fpBlank, iLength);
 
             if ((iRows || iCols) && iRowPos <= uiBottom && iRowPos >= uiTop)
             {
                /* Read the text to be scrolled into the current row */
-               gtGetText (iColOld, iRowPos, iColOld + iColSize, iRowPos, fpBuff);
+               gtGetText( iRowPos, iColOld, iRowPos, iColOld + iColSize, fpBuff);
 
                /* Write the scrolled text to the current row */
-               gtPutText (iColNew, iCount, iColNew + iColSize, iCount, fpBuff);
+               gtPutText ( iCount, iColNew, iCount, iColNew + iColSize, fpBuff);
             }
          }
       }

@@ -48,19 +48,19 @@ char gtGetScreenHeight(void)
     return vi.row;
 }
 
-void gtGotoXY(char x, char y)
+void gtSetPos(char cRow, char cCol)
 {
-    VioSetCurPos((USHORT) y, (USHORT) x, 0);
+    VioSetCurPos((USHORT) cRow, (USHORT) cCol, 0);
 }
 
-char gtWhereX(void)
+char gtRow(void)
 {
     USHORT x, y;
     VioGetCurPos(&y, &x, 0);
     return x;
 }
 
-char gtWhereY()
+char gtCol(void)
 {
     USHORT x, y;
     VioGetCurPos(&y, &x, 0);
@@ -98,35 +98,35 @@ int gtGetCursorStyle(void)
     return(rc);
 }
 
-void gtPuts(char x, char y, char attr, char *str, int len)
+void gtPuts(char cRow, char cCol, char attr, char *str, int len)
 {
-    VioWrtCharStrAtt(str, (USHORT) len, (USHORT) y, (USHORT) x, (PBYTE) &attr, 0);
+    VioWrtCharStrAtt(str, (USHORT) len, (USHORT) cRow, (USHORT) cCol, (PBYTE) &attr, 0);
 }
 
-void gtGetText(char x1, char y1, char x2, char y2, char *dest)
+void gtGetText(char cTop, char cLeft, char cBottom, char cRight, char *dest)
 {
     USHORT width;
     char y;
-    width = (USHORT) ((x2 - x1 + 1) * 2);
-    for (y = y1; y <= y2; y++)
+    width = (USHORT) ((cRight - cLeft + 1) * 2);
+    for (y = cTop; y <= cBottom; y++)
     {
-        VioReadCellStr((PBYTE) dest, &width, (USHORT) y, (USHORT) x1, 0);
+        VioReadCellStr((PBYTE) dest, &width, (USHORT) cLeft, (USHORT) y, 0);
         dest += width;
     }
 }
 
-void gtPutText(char x1, char y1, char x2, char y2, char *srce)
+void gtPutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
 {
     USHORT width;
     char y;
-    width = (USHORT) ((x2 - x1 + 1) * 2);
-    for (y = y1; y <= y2; y++)
+    width = (USHORT) ((cRight - cLeft + 1) * 2);
+    for (y = cTop; y <= cBottom; y++)
     {
-        VioWrtCellStr((PBYTE) srce, width, (USHORT) y, (USHORT) x1, 0);
+        VioWrtCellStr((PBYTE) srce, width, (USHORT) cLeft, (USHORT) y, 0);
         srce += width;
     }
 }
 
-void gtSetAttribute( char x1, char y1, char x2, char y2, char attribute )
+void gtSetAttribute( char cTop, char cLeft, char cBottom, cRight, char attribute )
 {
 }

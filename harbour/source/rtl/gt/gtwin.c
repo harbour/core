@@ -86,13 +86,13 @@ char gtGetScreenHeight(void)
   return (char)csbi.dwSize.Y;
 }
 
-void gtGotoXY(char x, char y)
+void gtSetPos(char cRow, char cCol)
 {
   COORD dwCursorPosition;
 
   LOG("GotoXY");
-  dwCursorPosition.X = (SHORT) (x);
-  dwCursorPosition.Y = (SHORT) (y);
+  dwCursorPosition.X = (SHORT) (cCol);
+  dwCursorPosition.Y = (SHORT) (cRow);
   LOG(".. Calling SetConsoleCursorPosition()");
   SetConsoleCursorPosition(HOutput, dwCursorPosition);
   LOG("..  Called SetConsoleCursorPosition()");
@@ -146,9 +146,9 @@ int gtGetCursorStyle(void)
   LOG("GetCursorStyle");
   GetConsoleCursorInfo(HOutput, &cci);
 
-  if(cci.bVisible)
+  if(!cci.bVisible)
     {
-      rc=SC_NORMAL;
+      rc=SC_NONE;
     }
   else
     {
@@ -175,7 +175,7 @@ int gtGetCursorStyle(void)
   return(rc);
 }
 
-void gtPuts(char x, char y, char attr, char *str, int len)
+void gtPuts(char cRow, char cCol, char attr, char *str, int len)
 {
   DWORD i, dwlen;
   COORD coord;
@@ -187,18 +187,18 @@ void gtPuts(char x, char y, char attr, char *str, int len)
     {
       return;
     }
-  coord.X = (DWORD) (x);
-  coord.Y = (DWORD) (y);
+  coord.X = (DWORD) (cCol);
+  coord.Y = (DWORD) (cRow);
   for (i = 0; i < len; i++)
     {
-      *(pwattr + i) = attr;
+      *(pwattr + i) = (WORD)attr;
     }
   WriteConsoleOutputCharacterA(HOutput, str, (DWORD) len, coord, &dwlen);
   WriteConsoleOutputAttribute(HOutput, pwattr, (DWORD) len, coord, &dwlen);
   hb_xfree(pwattr);
 }
 
-void gtGetText(char x1, char y1, char x2, char y2, char *dest)
+void gtGetText(char cTop, char cLeft, char cBottom, char cRight, char *dest)
 {
   DWORD i, len, width;
   COORD coord;
@@ -206,7 +206,7 @@ void gtGetText(char x1, char y1, char x2, char y2, char *dest)
   char y, *pstr;
 
   LOG("GetText");
-  width = (x2 - x1 + 1);
+  width = (cRight - cLeft + 1);
   pwattr = (LPWORD) hb_xgrab(width * sizeof(*pwattr));
   if (!pwattr)
     {
@@ -218,9 +218,9 @@ void gtGetText(char x1, char y1, char x2, char y2, char *dest)
       hb_xfree(pwattr);
       return;
     }
-  for (y = y1; y <= y2; y++)
+  for (y = cTop; y <= cBottom; y++)
     {
-      coord.X = (DWORD) (x1);
+      coord.X = (DWORD) (cLeft);
       coord.Y = (DWORD) (y);
       ReadConsoleOutputCharacterA(HOutput, pstr, width, coord, &len);
       ReadConsoleOutputAttribute(HOutput, pwattr, width, coord, &len);
@@ -236,7 +236,7 @@ void gtGetText(char x1, char y1, char x2, char y2, char *dest)
   hb_xfree(pstr);
 }
 
-void gtPutText(char x1, char y1, char x2, char y2, char *srce)
+void gtPutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
 {
   DWORD i, len, width;
   COORD coord;
@@ -244,7 +244,7 @@ void gtPutText(char x1, char y1, char x2, char y2, char *srce)
   char y, *pstr;
 
   LOG("PutText");
-  width = (x2 - x1 + 1);
+  width = (cRight - cLeft + 1);
   pwattr = (LPWORD) hb_xgrab(width * sizeof(*pwattr));
   if (!pwattr)
     {
@@ -256,16 +256,16 @@ void gtPutText(char x1, char y1, char x2, char y2, char *srce)
       hb_xfree(pwattr);
       return;
     }
-  for (y = y1; y <= y2; y++)
+  for (y = cTop; y <= cBottom; y++)
     {
       for (i = 0; i < width; i++)
         {
 	  *(pstr + i) = *srce;
 	  srce++;
-	  *(pwattr + i) = *srce;
+	  *(pwattr + i) = (WORD)*srce;
 	  srce++;
         }
-      coord.X = (DWORD) (x1);
+      coord.X = (DWORD) (cLeft);
       coord.Y = (DWORD) (y);
       WriteConsoleOutputCharacterA(HOutput, pstr, width, coord, &len);
       WriteConsoleOutputAttribute(HOutput, pwattr, width, coord, &len);
@@ -274,35 +274,38 @@ void gtPutText(char x1, char y1, char x2, char y2, char *srce)
   hb_xfree(pstr);
 }
 
-void gtSetAttribute( char x1, char y1, char x2, char y2, char attribute )
+void gtSetAttribute( char cTop, char cLeft, char cBottom, char cRight, char attribute )
 {
 /* ptucker */
 
-  DWORD len, i, width;
+  DWORD len, y, width;
   COORD coord;
   LPWORD pwattr;
-  width = (y2 - y1 + 1);
+
+  width = (cRight - cLeft + 1);
 
   pwattr = (LPWORD) hb_xgrab(width * sizeof(*pwattr));
   if (!pwattr)
     return;
+
+  /* TODO: This needs to be adjusted */
   memset( pwattr, attribute, width *sizeof(*pwattr) );
 
-  coord.X = (DWORD) (y1); /* note */
-  coord.Y = (DWORD) (x2);
+  coord.X = (DWORD) (cLeft); /* note */
+  coord.Y = (DWORD) (cBottom);
   WriteConsoleOutputAttribute(HOutput, pwattr, width, coord, &len);
 
-  coord.X = (DWORD)( y2 );
-  for( i=x1;i<=x2;i++)
+  coord.X = (DWORD) (cRight);
+  for( y=cTop;y<=cBottom;y++)
   {
-     coord.Y = (DWORD) (i);
+     coord.Y = (DWORD) (y);
      WriteConsoleOutputAttribute(HOutput, pwattr, 1, coord, &len);
   }
 
   hb_xfree( pwattr );
 }
 
-char gtWhereX(void)
+char gtCol(void)
 {
   CONSOLE_SCREEN_BUFFER_INFO csbi;
 
@@ -311,7 +314,7 @@ char gtWhereX(void)
   return csbi.dwCursorPosition.X;
 }
 
-char gtWhereY(void)
+char gtRow(void)
 {
   CONSOLE_SCREEN_BUFFER_INFO csbi;
 

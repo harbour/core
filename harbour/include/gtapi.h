@@ -110,14 +110,14 @@ void gtInit(void);
 void gtDone(void);
 char gtGetScreenWidth(void);
 char gtGetScreenHeight(void);
-void gtGotoXY(char x, char y);
-char gtWhereX(void);
-char gtWhereY(void);
+void gtSetPos(char cRow, char cCol);
+char gtCol(void);
+char gtRow(void);
 void gtSetCursorStyle(int style);
 int  gtGetCursorStyle(void);
-void gtPuts(char x, char y, char attr, char *str, int len);
-void gtGetText(char x1, char y1, char x2, char y2, char *dest);
-void gtPutText(char x1, char y1, char x2, char y2, char *srce);
-void gtSetAttribute( char x1, char y1, char x2, char y2, char attribute );
+void gtPuts(char cRow, char cCol, char attr, char *str, int len);
+void gtGetText(char cTop, char cLeft, char cBottom, char cRight, char *dest);
+void gtPutText(char cTop, char cLeft, char cBottom, char cRight, char *srce);
+void gtSetAttribute( char cTop, char cLeft, char cBottom, char cRight, char attribute );
 
 #endif /* HB_GTAPI_H_ */

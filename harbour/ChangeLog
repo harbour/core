@@ -1,3 +1,17 @@
+19990729-19:40 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/console.c
+     source/rtl/gtapi.c
+     source/rtl/gt/gtwin.c
+     source/rtl/gt/gtdos.c
+     source/rtl/gt/gtos2.c
+       * Adjusted a number of functions to accept coordinates in Row, Col
+         order - some of them were reversed.
+   ! source/rtl/gt/gt*.c
+       renamed gtwhereX gtwhereY and gtGotoXY to
+       gtCol, gtRow and gtSetPos
+   * include/gtapi.h
+       adjusted gt decls to account for above changes
+
 19990729-23:35 CET Victor Szel <info@szelvesz.hu>
    ! source/rtl/objfunc.prg - Typo fixed.
      "doesnt exists in class" -> "does not exist in class"

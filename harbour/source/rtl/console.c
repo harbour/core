@@ -307,8 +307,8 @@ static void hb_outstd( char * fpStr, ULONG len )
 #ifdef HARBOUR_USE_GTAPI
    if( isatty( fileno( stdout ) ) )
    {
-      dev_row = gtWhereY();
-      dev_col = gtWhereX();
+      dev_row = gtRow();
+      dev_col = gtCol();
       hb_gtSetPos( dev_row, dev_col );
    }
 #else
@@ -326,8 +326,8 @@ static void hb_outerr( char * fpStr, ULONG len )
 #ifdef HARBOUR_USE_GTAPI
    if( isatty( fileno( stdout ) ) )
    {
-      dev_row = gtWhereY();
-      dev_col = gtWhereX();
+      dev_row = gtRow();
+      dev_col = gtCol();
       hb_gtSetPos( dev_row, dev_col );
    }
 #else
@@ -948,7 +948,7 @@ HARBOUR HB_DISPBEGIN (void)
 HARBOUR HB_DISPEND (void)
 {
 #ifdef HARBOUR_USE_GTAPI
-   hb_gtDispBegin();
+   hb_gtDispEnd();
 #endif
 }
 

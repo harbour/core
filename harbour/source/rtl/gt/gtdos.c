@@ -29,8 +29,8 @@
   ((void FAR *)(((unsigned long)(seg) << 16)|(unsigned)(off)))
 #endif
 
-static void gtxGetXY(char x, char y, char *attr, char *ch);
-static void gtxPutch(char x, char y, char attr, char ch);
+static void gtxGetXY(char cRow, char cCol, char *attr, char *ch);
+static void gtxPutch(char cRow, char cCol, char attr, char ch);
 
 static int gtIsColor(void);
 static char gtGetScreenMode(void);
@@ -52,7 +52,7 @@ static int gtIsColor(void)
 
 #if defined(__WATCOMC__) && defined(__386__)
 
-char *gtScreenPtr(char x, char y)
+char *gtScreenPtr(char cRow, char cCol)
 {
     char *ptr;
     if (gtIsColor())
@@ -63,12 +63,12 @@ char *gtScreenPtr(char x, char y)
     {
         ptr = (char *)(0xB000 << 4);
     }
-    return ptr + (y * gtGetScreenWidth() * 2) + (x * 2);
+    return ptr + (cRow * gtGetScreenWidth() * 2) + (cCol * 2);
 }
 
 #else
 
-char FAR *gtScreenPtr(char x, char y)
+char FAR *gtScreenPtr(char cRow, char cCol)
 {
     char FAR *ptr;
     if (gtIsColor())
@@ -79,7 +79,7 @@ char FAR *gtScreenPtr(char x, char y)
     {
         ptr = (char FAR *)MK_FP(0xB000, 0x0000);
     }
-    return ptr + (y * gtGetScreenWidth() * 2) + (x * 2);
+    return ptr + (cRow * gtGetScreenWidth() * 2) + (cCol * 2);
 }
 
 #endif
@@ -111,20 +111,20 @@ char gtGetScreenHeight(void)
 #endif
 }
 
-void gtGotoXY(char x, char y)
+void gtSetPos(char cRow, char cCol)
 {
 #if defined(__TURBOC__)
     _AH = 0x02;
     _BH = 0;
-    _DH = y;
-    _DL = x;
+    _DH = cRow
+    _DL = cCol
     geninterrupt(0x10);
 #else
     union REGS regs;
     regs.h.ah = 0x02;
     regs.h.bh = 0;
-    regs.h.dh = (unsigned char)(y);
-    regs.h.dl = (unsigned char)(x);
+    regs.h.dh = (unsigned char)(cRow);
+    regs.h.dl = (unsigned char)(cCol);
 #if defined(__WATCOMC__) && defined(__386__)
     int386(0x10, &regs, &regs);
 #else
@@ -155,6 +155,7 @@ static void gtSetCursorSize(char start, char end)
 
 static void gtGetCursorSize(char *start, char *end)
 {
+   char _ch,_cl;
 #if defined(__TURBOC__)
     _AH = 0x03;
     _BH = 0;
@@ -239,28 +240,28 @@ void gtSetCursorStyle(int style)
     }
 }
 
-static void gtxGetXY(char x, char y, char *attr, char *ch)
+static void gtxGetXY(char cRow, char cCol, char *attr, char *ch)
 {
     char FAR *p;
-    p = gtScreenPtr((char)(x), (char)(y));
+    p = gtScreenPtr(cRow, cCol);
     *ch = *p;
     *attr = *(p + 1);
 }
 
-void gtxPutch(char x, char y, char attr, char ch)
+void gtxPutch(char cRow, char cCol, char attr, char ch)
 {
     char FAR *p;
-    p = gtScreenPtr((char)(x), (char)(y));
+    p = gtScreenPtr(cRow, cCol);
     *p = ch;
     *(p + 1) = attr;
 }
 
-void gtPuts(char x, char y, char attr, char *str, int len)
+void gtPuts(char cRow, char cCol, char attr, char *str, int len)
 {
     char FAR *p;
     int i;
 
-    p = gtScreenPtr((char)(x), (char)(y));
+    p = gtScreenPtr( cRow, cCol );
     for(i=0; i<len; i++)
     {
         *p++ = *str++;
@@ -268,43 +269,44 @@ void gtPuts(char x, char y, char attr, char *str, int len)
     }
 }
 
-void gtGetText(char x1, char y1, char x2, char y2, char *dest)
+void gtGetText(char cTop, char cLeft, char cBottom, char right, char *dest)
 {
     char x, y;
-    for (y = y1; y <= y2; y++)
+    for (y = cTop; y <= cBottom, y++ )
     {
-        for (x = x1; x <= x2; x++)
+        for (x = cLeft; x <= cRight; x++)
         {
-            gtxGetXY(x, y, dest + 1, dest);
+            gtxGetXY(y, x, dest + 1, dest);
             dest += 2;
         }
     }
 }
 
-void gtPutText(char x1, char y1, char x2, char y2, char *srce)
+void gtPutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
 {
     char x, y;
-    for (y = y1; y <= y2; y++)
+    for (y = cTop; y <= cBottom; y++)
     {
-        for (x = x1; x <= x2; x++)
+        for (x = cLeft; x <= cRight; x++)
         {
-            gtxPutch(x, y, *(srce + 1), *srce);
+            gtxPutch(y, x, *(srce + 1), *srce);
             srce += 2;
         }
     }
 }
 
-void gtSetAttribute( char x1, char y1, char x2, char y2, char attribute )
+void gtSetAttribute( char cTop, char cLeft, char cBottom, char cRight, char attribute )
 {
 }
 
-char gtWhereX(void)
+  /* returns col */
+char gtCol(void)
 {
 #if defined(__TURBOC__)
     _AH = 0x03;
     _BH = 0;
     geninterrupt(0x10);
-    return _DL;
+    return _DH;
 #else
     union REGS regs;
     regs.h.ah = 0x02;
@@ -318,7 +320,8 @@ char gtWhereX(void)
 #endif
 }
 
-char gtWhereY(void)
+  /* returns row */
+char gtRow(void)
 {
 #if defined(__TURBOC__)
     _AH = 0x03;
