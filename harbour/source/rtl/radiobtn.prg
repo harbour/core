@@ -95,7 +95,7 @@ METHOD New(nRow,nCol,cCaption,xData) CLASS HBRadioButton
    ::Caption:= cCaption
    ::Cargo:=NIL
    ::Col:= nCol
-   if ( !isdefcolor() )
+   if ( isdefcolor() )
       ::ColorSpec:="W/N,W+/N,W+/N,N/W,W/N,W/N,W+/N"
    else
       cColor := SetColor()
@@ -157,18 +157,9 @@ METHOD DISPLAy()  CLASS HBRadioButton
    cCurStyle := ::Style
    dispbegin()
    if ( ::hasfocus )
-      cPairs3 := __guicolor(::ColorSpec, 3)
-      cPairs := __guicolor(::ColorSpec, 4)
-      cPairs4 := __guicolor(::ColorSpec, 7)
+      set color to (__guicolor(::colorspec, 2))
    else
-      cPairs3 := __guicolor(::ColorSpec, 1)
-      cPairs := __guicolor(::ColorSpec, 2)
-      cPairs4 := __guicolor(::ColorSpec, 6)
-   endif
-   if ( ::Buffer )
-      set color to (cPairs)
-   else
-      set color to (cPairs3)
+      set color to (__guicolor(::colorspec, 1))
    endif
    SetPos(::Row, ::Col)
    ?? Left(cCurStyle, 1)

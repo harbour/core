@@ -75,7 +75,7 @@ CLASS HBRadioGroup
    METHOD SetFocus()
    METHOD SetStyle(xItem)
    METHOD New(nTop, nLeft, nBottom, nRight )
-   METHOD GetColor(xColor)
+//   METHOD GetColor(xColor)
    DATA Bottom
 
    DATA Buffer init  NIL
@@ -114,8 +114,8 @@ CLASS HBRadioGroup
 
    DATA Value init 0
    DATA Color
-   ACCESS colorspec inline ::GetColor()
-   ASSIGN Colorspec(xColor) inline if(xColor!=Nil,::GetColor(xColor),)
+   Data colorspec init ""
+//   ASSIGN Colorspec(xColor) inline if(xColor!=Nil,::GetColor(xColor),)
 
 ENDCLASS
 
@@ -141,7 +141,7 @@ METHOD  ADDITEM( xItem ) CLASS HBRadioGroup
 
 
    if ( !( ISOBJECT( xItem ) ) )
-   elseif ( xItem:classname() == "RADIOBUTTN" )
+   elseif ( xItem:classname() == "RADIOBUTTO" )
       AAdd(::aItems, xItem)
       ::ItemCount++
    endif
@@ -422,14 +422,14 @@ METHOD  DELITEm( xItem ) CLASS HBRadioGroup
    endif
    return self
 
-METHOD GetColor(xColor)  CLASS HBRadioGroup
+/*METHOD GetColor(xColor)  CLASS HBRadioGroup
    if ( !( ISNIL( xColor ) ) )
       ::Color := iif( Valtype(xColor)=="C" .and. !Empty(__guicolor(xColor, 3)) .AND. ;
       Empty(__guicolor(xColor, 4)),xColor,)
 
    endif
    return ::Color
-
+*/
 static function  CHANGEBUTT( oItems, xVal, nPos )
 
 

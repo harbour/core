@@ -52,63 +52,75 @@
 
 #include "common.ch"
 #include "hbsetup.ch"
+#include "hbclass.ch"
 #ifdef HB_COMPAT_C53
 
-FUNCTION CHECKBOX(nRow,nCol,cCaption) 
+CLASS HBCHECKBOX
+Data Buffer  init .f. 
+Data Caption   
+Data CapRow    
+Data CapCol    
+Data Cargo 
+Data Col
+Data colorspec
+Data FBlock
+Data HasFocus  init  .f. 
+Data Message   init "" 
+Data Row       
+Data SBlock    
+Data Style     init "[û ]" 
+Data lCursor 
+Data Typeout init   .f.
+DATA ClassName init "CHECKBOX"
+METHOD New(nRow,nCol,cCaption)
+METHOD SetFocus() 
+MESSAGE Select()    METHOD _Select() 
+METHOD KillFocus() 
+METHOD DisPlay() 
+
+endclass
+
+METHOD  New(nRow,nCol,cCaption) 
 Local cColor:=''
-Local oClass
-   if ( ( ISNUMBER( nRow ) ) ) .and. ( ( ISNUMBER( nCol ) ) )
-      oClass:=HBClass():New("CHECKBOX")
-      if(!( ISCHARACTER( cCaption ) ) )
-         cCaption := ""
-     endif
+Local oCheck
       
-   oClass:AddData( "Buffer"    , .f. )
-   oClass:AddData( "Caption"   , cCaption )
-   oClass:AddData( "CapRow"    , nRow )
-   oClass:AddData( "CapCol"    , nCol+3+1 )
-   oClass:AddData( "Cargo" )
-   oClass:AddData( "Col"       , nCol )
-   if ( !isdefcolor() )
-      oClass:AddData( "ColorSpec" ,"W/N,W+/N,W/N,W+/N" )
+::Buffer    := .f. 
+::Caption   := cCaption 
+::CapRow    := nRow 
+::CapCol    := nCol+3+1 
+
+::Col       := nCol 
+   if ( isdefcolor() )
+      ::ColorSpec:="W/N,W+/N,W/N,W+/N" 
    else
       cColor := SetColor()
-      oClass:AddData( "ColorSpec" , __guicolor(cColor, 5) + "," + ;
+     ::ColorSpec:= __guicolor(cColor, 5) + "," + ;
       __guicolor(cColor, 2) + "," + __guicolor(cColor, 1) + ;
-     "," + __guicolor(cColor, 4))
+     "," + __guicolor(cColor, 4)
    endif
 
-   oClass:AddData( "FBlock" )
-   oClass:AddData( "HasFocus"  , .f. )
-   oClass:AddData( "Message"   , "" )
-   oClass:AddData( "Row"       , nRow )
-   oClass:AddData( "SBlock"    )
-   oClass:AddData( "Style"     , "[û ]" )
-   oClass:AddData( "lCursor" )
-   oClass:AddData( "Typeout"   , .f. )
+::HasFocus  := .f. 
+::Message   := "" 
+::Row       := nRow 
 
-   oClass:AddMethod( "SetFocus()"  , @SetFocus() )
-   oClass:AddMethod( "Select()"    , @_Select() )
-   oClass:AddMethod( "KillFocus()" , @KillFocus() )
-   oClass:AddMethod( "Display()"   , @DisPlay() )
-      oClass:Create()
-   else
-      return nil
-   endif
+::Style     := "[û ]" 
 
-return oClass:Instance()
+::Typeout   := .f. 
 
-STATIC Function SetFocus()
-   Local Self := QSelf()
+
+return Self
+
+METHOD  SetFocus() CLASS HBCHECKBOX
+
    if ( !::HasFocus .AND. ISBLOCK( ( ::lCursor := setcursor(0), ;
          ::HasFocus := .T., ::display(), ::FBlock ) ) )
       eval(::FBlock)
    endif
    RETURN Self
 
-STATIC Function _Select(lState) 
+Method _Select(lState)    CLASS HBCHECKBOX
 
-   Local Self := QSelf()
+
    local lStatus := ::Buffer
    if ( ISLOGICAL( lState ) )
       ::Buffer := lState
@@ -121,8 +133,8 @@ STATIC Function _Select(lState)
    endif
    RETURN Self
 
-STATIC Function KillFocus() 
-   Local Self := QSelf()
+Method KillFocus() CLASS HBCHECKBOX
+
    if ( ::HasFocus )
       ::HasFocus := .F.
       if ( ISBLOCK( ::FBlock ) )
@@ -134,9 +146,9 @@ STATIC Function KillFocus()
    RETURN Self
 
    
-STATIC Function Display()
+Method Display()   CLASS HBCHECKBOX
 
-   Local Self := QSelf()
+
    local cColor := SetColor(), nCurRow:= Row(), nCurCol:= Col(), ;
       cOldStyle := ::Style, cCaption, nPos 
 
@@ -190,11 +202,13 @@ return ccolor
 function _CHECKBOX_( Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7)
 LOCAL oCheck
 
-   oCheck := checkbox(Row(), Col(), Arg2)
+   oCheck := hbcheckbox():new(Row(), Col(), Arg2)
    if ( !( ISNIL( oCheck ) ) )
       oCheck:select(Arg1)
       oCheck:caption :=Arg2
+      if arg4!=nil
       oCheck:colorspec :=Arg4
+      endif
       oCheck:message:=Arg3
       if arg7 !=NIL
       oCheck:style:=Arg7
@@ -206,6 +220,7 @@ LOCAL oCheck
    return oCheck
 
 function IsDefColor()
-   Return (SETCOLOR() == "W/N,N/W,N/N,N/N,N/W")
+   local cColor:=SETCOLOR()
+   Return ( ccolor== "W/N,N/W,N/N,N/N,N/W")
 
 #endif
