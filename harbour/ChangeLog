@@ -1,3 +1,23 @@
+2001-05-27 02:19 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+
+   * source/rdd/dbcmd.c
+      * fixed ordListAdd pointer bug reported by JF
+
+   * contrib/rdd_ads/ads.ch
+      + added COMMIT command to call AdsWriteAllRecords
+         (our dbCommitAll() loops through all workareas. AdsWriteAllRecords
+         is an optimized single call to the server.)
+
+   * contrib/rdd_ads/ads1.c
+      * corrected commit to only flush current workarea
+      * fixed DBOI_ORDERCOUNT parameter handling
+
+   * contrib/rdd_ads/adsfunc.c
+      + added AdsWriteAllRecords()  &  AdsGetNumIndexes()
+
+   * contrib\rdd_ads\doc\en\readme.txt
+      *  minor edits
+
 2001-05-26 10:25 UTC-0800 Brian Hays <bhays@abacuslaw.com>
 
    * source/rdd/dbcmd.c

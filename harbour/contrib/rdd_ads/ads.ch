@@ -99,3 +99,4 @@
 #command SET DATE FORMAT [TO] <c>                                     ;
       => Set( _SET_DATEFORMAT, <c> ); AdsSetDateFormat( <c> )
 
+#command COMMIT                 => AdsWriteAllRecords()

@@ -870,6 +870,11 @@ HB_FUNC( ADSCLOSEALLTABLES )
    hb_retnl( AdsCloseAllTables() );
 }
 
+HB_FUNC( ADSWRITEALLRECORDS )
+{
+   hb_retnl( AdsWriteAllRecords() );
+}
+
 HB_FUNC( ADSCOPYTABLE )
 {
    ADSAREAP pArea;
@@ -1009,4 +1014,17 @@ HB_FUNC( ADSISEXPRVALID )               /* cExpr */
 
    hb_retl(bValidExpr);
 }
+
+HB_FUNC( ADSGETNUMINDEXES )               /* cExpr */
+{
+   ADSAREAP pArea;
+   UNSIGNED16 pusCnt = 0;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if(pArea )
+      AdsGetNumIndexes( pArea->hTable, &pusCnt );
+
+   hb_retni(pusCnt);
+}
+
 

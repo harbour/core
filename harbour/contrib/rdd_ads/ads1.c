@@ -98,7 +98,7 @@ static void DumpArea( ADSAREAP pArea )  /* For debugging: call this to dump ads 
 {
    UNSIGNED8  pucTemp[1025];
    UNSIGNED16 pusLen = 1024;
-   UNSIGNED32 ulRetVal = 0, ulRetAOF = 0, ulRetFilt = 0;
+   UNSIGNED32 ulRetVal, ulRetAOF, ulRetFilt;
    UNSIGNED8  pucFormat[16];
    UNSIGNED8  pucFilter[1025];
    UNSIGNED8  aucBuffer[MAX_STR_LEN + 1];
@@ -459,7 +459,7 @@ static ERRCODE adsGoToId( ADSAREAP pArea, PHB_ITEM pItem )
 
 static ERRCODE adsGoTop( ADSAREAP pArea )
 {
-   UNSIGNED32 ulRetVal = 0;
+   UNSIGNED32 ulRetVal;
    HB_TRACE(HB_TR_DEBUG, ("adsGoTop(%p)", pArea));
 
    pArea->fTop = TRUE;
@@ -699,7 +699,7 @@ static ERRCODE adsFlush( ADSAREAP pArea )
    HB_SYMBOL_UNUSED( pArea );
    HB_TRACE(HB_TR_DEBUG, ("adsFlush(%p)", pArea ));
 
-   AdsWriteAllRecords();
+   AdsWriteRecord( pArea->hTable );
    return SUCCESS;
 }
 
@@ -1568,7 +1568,8 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
 
    aucBuffer[0] = 0;
 
-   if( pOrderInfo->itmOrder && !HB_IS_NIL(pOrderInfo->itmOrder) )
+                  /* all others need an index handle */
+   if( uiIndex != DBOI_ORDERCOUNT && pOrderInfo->itmOrder && !HB_IS_NIL(pOrderInfo->itmOrder) )
    {
       if( HB_IS_NUMERIC( pOrderInfo->itmOrder ) )
          ulRetVal = AdsGetIndexHandleByOrder( pArea->hTable,
@@ -1576,6 +1577,7 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
       else if( HB_IS_STRING( pOrderInfo->itmOrder ) )
          ulRetVal = AdsGetIndexHandle( pArea->hTable,
             (UNSIGNED8*) hb_itemGetCPtr( pOrderInfo->itmOrder ), &phIndex );
+
       if( ulRetVal != AE_SUCCESS )
          return FAILURE;
    }

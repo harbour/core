@@ -2431,28 +2431,28 @@ HB_FUNC( ORDLISTADD )
 {
 
    DBORDERINFO pOrderInfo;
-   BOOL bFirst = FALSE;
+   BOOL bFirst;
 
    if( s_pCurrArea )
    {
       /*  determine if there are existing orders; if not, this becomes the controlling order
       */
-
+      pOrderInfo.atomBagName = NULL;
       pOrderInfo.itmResult = hb_itemPutNI( NULL, 0 );
       SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_ORDERCOUNT, &pOrderInfo );
       bFirst = ( pOrderInfo.itmResult->type & HB_IT_NUMERIC ) &&
-                  hb_itemGetNI( &pOrderInfo.itmResult ) != 0;
-      hb_itemRelease( pOrderInfo.itmResult );
+                  hb_itemGetNI( pOrderInfo.itmResult ) == 0;
 
 
       pOrderInfo.atomBagName = hb_param( 1, HB_IT_STRING );
-      pOrderInfo.itmOrder = hb_param( 2, HB_IT_STRING );
+      pOrderInfo.itmOrder  = hb_param( 2, HB_IT_STRING );
       if( !pOrderInfo.atomBagName )
       {
          hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, "ORDLISTADD" );
          return;
       }
       SELF_ORDLSTADD( ( AREAP ) s_pCurrArea->pArea, &pOrderInfo );
+      hb_itemRelease( pOrderInfo.itmResult );
       if ( bFirst )                     /* set as controlling order and go top */
       {
          pOrderInfo.itmOrder  = hb_itemPutNI( NULL, 1 );
