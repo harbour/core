@@ -200,6 +200,8 @@ struct hb_struString
 {
    ULONG length;
    char * value;
+   BOOL bPcode;         /* it is a string created from the pcode */
+   USHORT * puiHolders; /* number of holders of this string */
 };
 
 struct hb_struSymbol
