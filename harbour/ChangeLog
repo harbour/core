@@ -1,3 +1,30 @@
+19990825-01:15 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rtl/extend.c
+    ! hb_parinfo() fixed so that it will return proper type information for 
+      parameters passed by reference, like in Clipper.
+    ! hb_par*() functions accept zero parameter again to access self.
+      NOTE: added about this.
+
+  * tests/working/fileio.prg
+    source/rtl/filesys.c
+    ! FREAD() fixed, it now checks second parameter correctly using 
+      hb_parinfo().
+    + Some new tests added, one test put between 
+      HARBOUR_STRICT_CLIPPER_COMPATIBILITY guards, see next.
+    ! FREAD() uses hb_parcsiz() (hb_parclen()+1) as the maximum number of
+      bytes which could be read. Modified FREAD() but put between 
+      HARBOUR_STRICT_CLIPPER_COMPATIBILITY guards, since this is a rather 
+      unexpected behaviour, plus it can overwrite the terminating zero byte 
+      in the string buffer.
+    + NOTE: added about an incompatibility in hb_fsSeek()/hb_fsWrite() 
+      behaviour.
+
+  * contrib/odbc/odbc.c
+    - Removed symbol init code.
+  * source/rtl/math.c
+    * Ultra minor change.
+
 19990824-17:20 EDT David G. Holm <dholm@jsd-llc.com>
    * config/dos/bcc31.cf
      - Removed '-DHARBOUR_USE_GTAPI' from 'CPPFLAGS'.
@@ -47,16 +74,16 @@
     ! FWRITE() and hb_fsWrite() returns 0 instead of 65535 if the write failed.
     ! FOPEN() runtime error code fixed
     ! FERASE() return value fixed
-    ! FREAD() will check is the passed buffer size is smaller than the
+    ! FREAD() will check if the passed buffer size is smaller than the
       required read length.
     ! FREAD(): Added warning about the fact, that the buffer returned by
       hb_parc() will be directly modified. (this is strictly prohibited by 
       Clipper doc).
     ! hb_fsCreate() didn't reset the last error code on success.
-    ! hb_fsDelete(), bh_fsRename(), hb_fsLock(), hb_fsCommit() - the not
+    ! hb_fsDelete(), hb_fsRename(), hb_fsLock(), hb_fsCommit() - the not
       defined platform branch is now setting the last error code.
-    ! hb_fsExtOpen() is now setting the last code the FS_ERROR.
-    % FREADSTR() made much faster
+    ! hb_fsExtOpen() is now setting the last code to FS_ERROR.
+    % FREADSTR() made much faster for longer strings.
     ! FREADSTR() uses hb_fsRead() instead of read()
     ! hb_fsClose() didn't set the last error code.
     ! I2BIN(), L2BIN() was returning one more character than Clipper

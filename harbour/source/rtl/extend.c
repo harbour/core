@@ -27,11 +27,12 @@
 #include "set.h"
 #include "dates.h"
 
+/* NOTE: iParam == 0 can be used to access the SELF object. */
+
 PHB_ITEM hb_param( int iParam, WORD wMask )
 {
-   if( ( iParam > 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
-      PHB_ITEM pLocal;
       WORD wType;
 
       if( iParam == -1 )
@@ -41,6 +42,8 @@ PHB_ITEM hb_param( int iParam, WORD wMask )
 
       if( ( wType & wMask ) || ( wType == IT_NIL && wMask == IT_ANY ) )
       {
+         PHB_ITEM pLocal;
+
          if( iParam == -1 )
             pLocal = &stack.Return;
          else
@@ -58,7 +61,7 @@ PHB_ITEM hb_param( int iParam, WORD wMask )
 
 char * hb_parc( int iParam, ... )
 {
-   if( ( iParam > 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
       PHB_ITEM pItem;
 
@@ -92,7 +95,7 @@ char * hb_parc( int iParam, ... )
 
 ULONG hb_parclen( int iParam, ... )
 {
-   if( ( iParam > 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
       PHB_ITEM pItem;
 
@@ -106,6 +109,7 @@ ULONG hb_parclen( int iParam, ... )
 
       if( IS_STRING( pItem ) )
          return pItem->item.asString.length;
+
       else if( IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -128,7 +132,7 @@ ULONG hb_parclen( int iParam, ... )
 
 ULONG hb_parcsiz( int iParam, ... )
 {
-   if( ( iParam > 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
       PHB_ITEM pItem;
 
@@ -142,6 +146,7 @@ ULONG hb_parcsiz( int iParam, ... )
 
       if( IS_STRING( pItem ) )
          return pItem->item.asString.length + 1;
+
       else if( IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -161,7 +166,7 @@ ULONG hb_parcsiz( int iParam, ... )
 
 char * hb_pards( int iParam, ... )
 {
-   if( ( iParam > 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
       PHB_ITEM pItem;
 
@@ -210,7 +215,7 @@ char * hb_pards( int iParam, ... )
 
 int hb_parl( int iParam, ... )
 {
-   if( ( iParam > 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
       PHB_ITEM pItem;
 
@@ -253,7 +258,7 @@ int hb_parl( int iParam, ... )
 
 double hb_parnd( int iParam, ... )
 {
-   if( ( iParam > 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
       PHB_ITEM pItem;
 
@@ -293,7 +298,7 @@ double hb_parnd( int iParam, ... )
 
 int hb_parni( int iParam, ... )
 {
-   if( ( iParam > 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
       PHB_ITEM pItem;
 
@@ -333,7 +338,7 @@ int hb_parni( int iParam, ... )
 
 long hb_parnl( int iParam, ... )
 {
-   if( ( iParam > 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
       PHB_ITEM pItem;
 
@@ -397,10 +402,27 @@ WORD hb_parinfo( int iParam )
    {
       if( ( iParam > 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
       {
+         WORD wType;
+
          if( iParam == -1 )
-            return stack.Return.type;
+            wType = stack.Return.type;
          else
-            return ( stack.pBase + 1 + iParam )->type;
+            wType = ( stack.pBase + 1 + iParam )->type;
+
+         if( wType & IT_BYREF )
+         {
+            PHB_ITEM pItem;
+
+            if( iParam == -1 )
+               pItem = hb_itemUnRef( &stack.Return );
+            else
+               pItem = hb_itemUnRef( stack.pBase + 1 + iParam );
+
+            if( pItem )
+               wType |= pItem->type;
+         }
+
+         return wType;
       }
       else
          return 0;

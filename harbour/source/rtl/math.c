@@ -108,7 +108,7 @@ HARBOUR HB_MAX( void )
       PHB_ITEM p1 = hb_param( 1, IT_ANY );
       PHB_ITEM p2 = hb_param( 2, IT_ANY );
 
-      if ( IS_NUMERIC( p1 ) && IS_NUMERIC( p2 ) )
+      if( IS_NUMERIC( p1 ) && IS_NUMERIC( p2 ) )
       {
          WORD wType1 = p1->type;
          WORD wType2 = p1->type;

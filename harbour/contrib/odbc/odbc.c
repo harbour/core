@@ -40,40 +40,9 @@
 #include <ctype.h>
 #include "extend.h"
 #include "itemapi.h"
-#include "init.h"
 #include "harb.h"
 #include <sql.h>
 #include <sqlext.h>
-
-/* ODBC32 */
-HARBOUR HB_SQLALLOCEN( void );
-HARBOUR HB_SQLALLOCCO( void );
-HARBOUR HB_SQLDRIVERC( void );
-HARBOUR HB_SQLDISCONN( void );
-HARBOUR HB_SQLFREECON( void );
-HARBOUR HB_SQLFREEENV( void );
-HARBOUR HB_SQLALLOCST( void );
-HARBOUR HB_SQLFREESTM( void );
-HARBOUR HB_SQLEXECDIR( void );
-HARBOUR HB_SQLFETCH( void );
-HARBOUR HB_SQLGETDATA( void );
-
-HB_INIT_SYMBOLS_BEGIN( odbc__InitSymbols )
-{ "SQLALLOCEN",     FS_PUBLIC, HB_SQLALLOCEN    , 0 },
-{ "SQLALLOCCO",     FS_PUBLIC, HB_SQLALLOCCO    , 0 },
-{ "SQLDRIVERC",     FS_PUBLIC, HB_SQLDRIVERC    , 0 },
-{ "SQLDISCONN",     FS_PUBLIC, HB_SQLDISCONN    , 0 },
-{ "SQLFREECON",     FS_PUBLIC, HB_SQLFREECON    , 0 },
-{ "SQLFREEENV",     FS_PUBLIC, HB_SQLFREEENV    , 0 },
-{ "SQLALLOCST",     FS_PUBLIC, HB_SQLALLOCST    , 0 },
-{ "SQLFREESTM",     FS_PUBLIC, HB_SQLFREESTM    , 0 },
-{ "SQLEXECDIR",     FS_PUBLIC, HB_SQLEXECDIR    , 0 },
-{ "SQLFETCH",       FS_PUBLIC, HB_SQLFETCH      , 0 },
-{ "SQLGETDATA",     FS_PUBLIC, HB_SQLGETDATA    , 0 }
-HB_INIT_SYMBOLS_END( odbc__InitSymbols )
-#if ! defined(__GNUC__)
-#pragma startup odbc__InitSymbols
-#endif
 
 HARBOUR HB_SQLALLOCEN( void ) /* HB_SQLALLOCENV( @hEnv ) --> nRetCode */
 {

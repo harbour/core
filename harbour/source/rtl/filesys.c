@@ -2,6 +2,13 @@
  * $Id$
  */
 
+/* NOTE: In DOS/DJGPP under WinNT4 hb_fsSeek( fhnd, offset < 0, FS_SET) will 
+         set the file pointer to the passed negative value, and the subsequent
+         hb_fsWrite() call will fail. In CA-Clipper hb_fsSeek() will fail,
+         the pointer will not be moved, and thus the hb_fsWrite() call will
+         successfully write the buffer the current file position. [vszel]
+ */
+
 #include <ctype.h>
 #include "extend.h"
 #include "filesys.h"
@@ -718,16 +725,25 @@ HARBOUR HB_FREAD( void )
 {
    ULONG ulRead = 0;
 
-   if( ISNUM( 1 ) && ISCHAR( 2 ) && ISBYREF( 2 ) && ISNUM( 3 ) )
+   if( ISNUM( 1 ) && ( hb_parinfo( 2 ) & IT_STRING ) && ( hb_parinfo( 2 ) & IT_BYREF ) && ISNUM( 3 ) )
    {
       ULONG ulToRead = hb_parnl( 3 );
 
+#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+      /* CA-Clipper determines the maximum size by calling _parcsiz() instead */
+      /* of hb_parclen(), this means that the maximum read length will be one */
+      /* more then the length of the passed buffer, because the terminating */
+      /* zero could be used if needed */
+
+      if( ulToRead <= hb_parcsiz( 2 ) )
+#else
       if( ulToRead <= hb_parclen( 2 ) )
+#endif
       {
          /* NOTE: Warning, the read buffer will be directly modified ! */
 
          ulRead = hb_fsRead( hb_parni( 1 ),
-                             (unsigned char *)hb_parc( 2 ),
+                             ( BYTE * ) hb_parc( 2 ),
                              ulToRead );
       }
    }
@@ -855,7 +871,7 @@ HARBOUR HB_FREADSTR( void )
          buffer[ ulRead ] = '\0';
 
          /* NOTE: This is valid, Clipper will not return Chr(0) from FREADSTR() */
-         hb_retc( (char *)buffer );
+         hb_retc( ( char * ) buffer );
 
          hb_xfree( buffer );
       }
