@@ -118,6 +118,11 @@ BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
                      cdpage->s_upper[i] = toupper( (BYTE) i&255 );
                      cdpage->s_lower[i] = tolower( (BYTE) i&255 );
                   }
+                  if( strpbrk(cdpage->CharsUpper, "~.") != NULL )
+                  {
+                     ptrUpper = cdpage->CharsUpper = strdup(cdpage->CharsUpper);
+                     ptrLower = cdpage->CharsLower = strdup(cdpage->CharsLower);
+                  }
                   for( i=1; *ptrUpper; i++,ptrUpper++,ptrLower++ )
                   {
                      if( *ptrUpper == '~' )

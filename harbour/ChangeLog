@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-03-24 15:35 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbcmd.c
+    ! bug fixed with improper using of hb_strUpper() - reported by Lorenzo Fiorini
+  * source/rtl/cdpapi.c
+    ! fix, provided by Przemyslaw Czerpak
+
 2003-03-22 11:25 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/compiler/harbour.y
     * fix on recent If() changes

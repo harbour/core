@@ -3601,7 +3601,9 @@ static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName, BOOL creat
     if( pFields )
     {
        USHORT i;
+       int iLen;
        char *ptr;
+       char *szFieldName = hb_xgrab( ((AREAP) s_pCurrArea->pArea)->uiMaxFieldNameLength );
 
        uiFields = ( USHORT ) hb_arrayLen( pFields );
        for ( i=0; i<uiFields; i++ )
@@ -3612,10 +3614,13 @@ static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName, BOOL creat
              ptr ++;
           else
              ptr = (char *)pField->item.asString.value;
+          iLen = strlen( ptr );
+          hb_strncpyUpper( szFieldName, ptr, iLen );
           if( ( uiCount = hb_rddFieldIndex( (AREAP) s_pCurrArea->pArea,
-                           hb_strUpper( ptr,strlen(ptr)) ) ) != 0 )
+                           szFieldName ) ) != 0 )
              AddField( pFieldArray, pItem, pData, uiCount );
        }
+       hb_xfree( szFieldName );
     }
     else
        for( uiCount = 1; uiCount <= uiFields; uiCount++ )
