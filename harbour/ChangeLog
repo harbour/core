@@ -1,3 +1,7 @@
+2001-09-26 18:38 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
+  * source/rtl/dbedit.prg
+    * Fixed no-hilighting problem, sent by Wilson Velazquez      
+
 2001-09-24 08:45 GMT+1 Antonio Linares <alinares@fivetech.com>
    - contrib/hgf/gtk/tform.prg
    + contrib/hgf/gtk/form.prg
