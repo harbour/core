@@ -1,3 +1,12 @@
+19991217-16:40 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * config/os2/icc.cf
+     + I added the /NOIGNORECASE option to both the librarian and the linker,
+       because C++ can't tell the difference between 'int hb_pcount( void )'
+       and 'HARBOUR HB_PCOUNT( void )' unless a case-sensitive link is used.
+       This requires rebuilding all of Harbour if you are using OS/2 and the
+       IBM C++ compiler (i.e., make -r clean).
+
 19991216-15:50 GMT+1 Bruno Cantero <bruno@issnet.net>
   * include/extend.h
     + Added a new item type: IT_POINTER ( USHORT ) 0x0001

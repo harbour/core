@@ -17,7 +17,7 @@ CFLAGS = /Gs+ /W2 /Se /Sd+ /Ti+
 
 LD = icc
 LD_OUT = /Fe
-LDFLAGS = /C-
+LDFLAGS = /C- /B"/NOIgnoreCase"
 ifeq ($(HB_MAIN),)
 else
 LDFLAGS += $(TOP)$(ROOT)source/vm/$(ARCH)/main.obj
@@ -37,7 +37,7 @@ endif
 endif
 
 AR = ilib
-ARFLAGS = /NOE
+ARFLAGS = /NOE /NOIgnoreCase
 AROBJS = $(foreach file, $^, -+$(file))
 AR_RULE = $(AR) $(ARFLAGS) $@ $(AROBJS),,
 
