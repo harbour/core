@@ -27,9 +27,9 @@
     source/rtl/set.c
     InitializeSets() -> hb_setInitialize()
     ReleaseSets() -> hb_setRelease()
-  * types.h -> hb_types.h
+  * types.h -> hbdefs.h
     include\extend.h
-    include\hbtypes.h
+    include\hbdefs.h
     include\makefile
     include\set.h
     source\compiler\genobj32.c
