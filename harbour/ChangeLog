@@ -1,5 +1,55 @@
 19990919-17:14 GMT+1 Victor Szel <info@szelvesz.hu>
 
+  * source/rtl/errorapi.c
+    source/rtl/fm.c
+    source/vm/hvm.c
+
+    ! printf() calls changed to hb_outerr() calls, since Clipper is sending
+      these to STDERR, too. The other issues fixed are file buffering and 
+      console inconsistency.
+
+      In general one should not use printf(), fprintf(), or any f*() file 
+      functions to handle STDOUT/STDERR(), since this can cause anomalies due 
+      to both direct and buffered access to the same device, and also the 
+      internal cursor positions cannot be tracked that way. When using 
+      f*() functions from console.c an fflush() call must be issued after
+      them.
+
+  * source/rtl/console.c
+    include/extend.h
+    + hb_outerr(), hb_outstd() are now public functions.
+    + hb_outerr(), hb_outstd() now automatically determines the length 
+      if the length parameter is zero.
+    + hb_outerr(), hb_outstd() now don't call GT after hb_consoleRelease()
+      has been called. This is needed since these functions are used in such
+      situation, from hb_xexit() for example.
+    ! hb_consoleRelease() now sets back the CRLF buffer to match the BINARY
+      mode.
+    ! fflush() calls are added after fputc()/fputs() call groups.
+
+  * source/rtl/filesys.c
+    ! hb_fsFNameMerge() now checks for buffer overrun.
+  * source/rtl/gt/gtwin.c
+    ! Added come casts to make Visual C happy. (mentioned by Matteo)
+  * include/hbsetup.h
+    * HARBOUR_YYDEBUG is now turned off by default. It can be
+      turned on via the command line or C_USR. Please set your configuration
+      if you need this feature.
+  * include/rddsys.ch
+    + Comment line added.
+  * include/Makefile
+    ! Updated the list of header files.
+  * source/tools/hb_f.c
+    ! Missing static added.
+  * source/rtl/memofile.c
+    + Added one cast.
+  * source/rtl/itemapi.c
+    ! hb_itemPutC() and hb_itemPutCL() now handles when the szText parameter
+      is NULL. Clipper seems to handle this. GT_*() functions relies on this
+      feature so they will GPF now.
+
+19990919-17:14 GMT+1 Victor Szel <info@szelvesz.hu>
+
   * source/compiler/harbour.y
     + Added some new items to the new TODO list.
   * include/hbsetup.h

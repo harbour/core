@@ -670,10 +670,14 @@ USHORT hb_errRT_TOOLS( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, c
 
 void hb_errInternal( ULONG ulIntCode, char * szText, char * szPar1, char * szPar2 )
 {
-   printf( hb_consoleGetNewLine() );
-   printf( "Unrecoverable error %lu: ", ulIntCode );
-   printf( szText != NULL ? szText : hb_langDGetErrorIntr( ulIntCode ), szPar1, szPar2 );
-   printf( hb_consoleGetNewLine() );
+   char buffer[ 128 ];
+
+   hb_outerr( hb_consoleGetNewLine(), 0 );
+   sprintf( buffer, "Unrecoverable error %lu: ", ulIntCode );
+   hb_outerr( buffer, 0 );
+   sprintf( buffer, szText != NULL ? szText : hb_langDGetErrorIntr( ulIntCode ), szPar1, szPar2 );
+   hb_outerr( buffer, 0 );
+   hb_outerr( hb_consoleGetNewLine(), 0 );
 
    hb_stackDispCall();
 

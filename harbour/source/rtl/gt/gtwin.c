@@ -1,4 +1,4 @@
-/*
+	/*
  * $Id$
  */
 
@@ -262,7 +262,7 @@ void hb_gt_Puts( USHORT cRow, USHORT cCol, BYTE attr, BYTE *str, ULONG len )
    LOG( "Puts" );
    coord.X = ( DWORD ) cCol;
    coord.Y = ( DWORD ) cRow;
-   WriteConsoleOutputCharacterA( HOutput, str, ( DWORD ) len, coord, &dwlen );
+   WriteConsoleOutputCharacterA( HOutput, ( char * ) str, ( DWORD ) len, coord, &dwlen );
    FillConsoleOutputAttribute( HOutput, ( WORD )( attr & 0xFF ), ( DWORD ) len, coord, &dwlen );
 }
 
@@ -291,7 +291,7 @@ void hb_gt_GetText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
    {
       coord.X = ( DWORD ) usLeft;
       coord.Y = ( DWORD ) y;
-      ReadConsoleOutputCharacterA( HOutput, pstr, width, coord, &len );
+      ReadConsoleOutputCharacterA( HOutput, ( char * ) pstr, width, coord, &len );
       ReadConsoleOutputAttribute( HOutput, pwattr, width, coord, &len );
       for( i = 0; i < width; i++ )
       {
@@ -338,7 +338,7 @@ void hb_gt_PutText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
       coord.X = ( DWORD ) usLeft;
       coord.Y = ( DWORD ) y;
       WriteConsoleOutputAttribute( HOutput, pwattr, width, coord, &len );
-      WriteConsoleOutputCharacterA( HOutput, pstr, width, coord, &len );
+      WriteConsoleOutputCharacterA( HOutput, ( char * ) pstr, width, coord, &len );
    }
    hb_xfree( pwattr );
    hb_xfree( pstr );

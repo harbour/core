@@ -50,7 +50,7 @@ HARBOUR HB_MEMOREAD( void )
 
       if( fhnd != FS_ERROR )
       {
-         ULONG ulSize = hb_fsSeek( fhnd, -sizeof( BYTE ), FS_END ) + sizeof( BYTE );
+         ULONG ulSize = hb_fsSeek( fhnd, -( ( LONG ) sizeof( BYTE ) ), FS_END ) + sizeof( BYTE );
          BYTE * pbyBuffer;
 
          /* Don't read the file terminating EOF character */

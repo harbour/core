@@ -95,6 +95,7 @@
    #define CRLF_BUFFER_LEN 3     /*length of buffer for CR/LF characters */
 #endif
 
+static BOOL   s_bInit = FALSE;
 static USHORT s_uiDevRow;
 static USHORT s_uiDevCol;
 static USHORT s_uiPRow;
@@ -145,6 +146,8 @@ void hb_consoleInitialize( void )
    s_uiDevRow = 0;
    s_uiDevCol = 0;
 #endif
+
+   s_bInit = TRUE;
 }
 
 void hb_consoleRelease( void )
@@ -152,9 +155,15 @@ void hb_consoleRelease( void )
    hb_fsSetDevMode( s_iFilenoStdout, FM_TEXT );
    hb_fsSetDevMode( s_iFilenoStderr, FM_TEXT );
 
+   /* The is done by the OS from now on */
+   s_szCrLf[ 0 ] = HB_CHAR_LF;
+   s_szCrLf[ 1 ] = '\0';
+
 #ifdef HARBOUR_USE_GTAPI
    hb_gtExit();
 #endif
+
+   s_bInit = FALSE;
 }
 
 char * hb_consoleGetNewLine( void )
@@ -276,12 +285,16 @@ static void hb_out( USHORT uiParam, hb_out_func_typedef * hb_out_func )
 }
 
 /* Output an item to STDOUT */
-static void hb_outstd( BYTE * pStr, ULONG ulLen )
+void hb_outstd( BYTE * pStr, ULONG ulLen )
 {
    USHORT user_ferror;
 
+   if( ulLen == 0 )
+      ulLen = strlen( ( char * ) pStr );
+
 #ifdef HARBOUR_USE_GTAPI
-   hb_gtPreExt();
+   if( s_bInit )
+      hb_gtPreExt();
 #endif
 
    user_ferror = hb_fsError(); /* Save current user file error code */
@@ -289,27 +302,34 @@ static void hb_outstd( BYTE * pStr, ULONG ulLen )
    hb_fsSetError( user_ferror ); /* Restore last user file error code */
 
 #ifdef HARBOUR_USE_GTAPI
-   #ifndef __CYGWIN__
-   if( isatty( s_iFilenoStdout ) )
-   #endif
+   if( s_bInit )
    {
-      s_uiDevRow = hb_gt_Row();
-      s_uiDevCol = hb_gt_Col();
-      hb_gtSetPos( s_uiDevRow, s_uiDevCol );
+      #ifndef __CYGWIN__
+      if( isatty( s_iFilenoStdout ) )
+      #endif
+      {
+         s_uiDevRow = hb_gt_Row();
+         s_uiDevCol = hb_gt_Col();
+         hb_gtSetPos( s_uiDevRow, s_uiDevCol );
+      }
+      hb_gtPostExt();
    }
-   hb_gtPostExt();
 #else
    adjust_pos( pStr, ulLen, &s_uiDevRow, &s_uiDevCol, hb_max_row(), hb_max_col() );
 #endif
 }
 
 /* Output an item to STDERR */
-static void hb_outerr( BYTE * pStr, ULONG ulLen )
+void hb_outerr( BYTE * pStr, ULONG ulLen )
 {
    USHORT user_ferror;
 
+   if( ulLen == 0 )
+      ulLen = strlen( ( char * ) pStr );
+
 #ifdef HARBOUR_USE_GTAPI
-   hb_gtPreExt();
+   if( s_bInit )
+      hb_gtPreExt();
 #endif
 
    user_ferror = hb_fsError(); /* Save current user file error code */
@@ -317,15 +337,18 @@ static void hb_outerr( BYTE * pStr, ULONG ulLen )
    hb_fsSetError( user_ferror ); /* Restore last user file error code */
 
 #ifdef HARBOUR_USE_GTAPI
-   #ifndef __CYGWIN__
-   if( isatty( s_iFilenoStdout ) )
-   #endif
+   if( s_bInit )
    {
-      s_uiDevRow = hb_gt_Row();
-      s_uiDevCol = hb_gt_Col();
-      hb_gtSetPos( s_uiDevRow, s_uiDevCol );
+      #ifndef __CYGWIN__
+      if( isatty( s_iFilenoStdout ) )
+      #endif
+      {
+         s_uiDevRow = hb_gt_Row();
+         s_uiDevCol = hb_gt_Col();
+         hb_gtSetPos( s_uiDevRow, s_uiDevCol );
+      }
+      hb_gtPostExt();
    }
-   hb_gtPostExt();
 #else
    adjust_pos( pStr, ulLen, &s_uiDevRow, &s_uiDevCol, hb_max_row(), hb_max_col() );
 #endif
@@ -434,6 +457,7 @@ void hb_setpos( USHORT row, USHORT col )
       fputs( s_szCrLf, stdout );
    for( uiCount = s_uiDevCol; uiCount < col; uiCount++ )
       fputc( ' ', stdout );
+   fflush( stdout );
 #endif
 
    s_uiDevRow = row;
@@ -732,6 +756,7 @@ HARBOUR HB_SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
       s_uiDevRow = iMR;
       for( uiCount = 0; uiCount < s_uiDevRow ; uiCount++ )
          fputs( s_szCrLf, stdout );
+      fflush( stdout );
       s_uiDevRow = s_uiDevCol = 0;
    }
 #endif
@@ -907,6 +932,7 @@ HARBOUR HB_DISPBOX( void )
             fputc( Borders[ 5 ], stdout ); /* Bottom line */
          fputc( Borders[ 4 ], stdout );    /* Bottom right corner */
       }
+      fflush( stdout );
       hb_setpos( bottom + 1, right + 1 );
    }
 #endif
@@ -1111,6 +1137,7 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
                hb_gtWriteCon( ( BYTE * ) "\x8 \x8", 3L );
 #else
                fputs( "\x8 \x8", stdout );
+               fflush( stdout );
 #endif
             }
             break;

@@ -116,7 +116,7 @@ HARBOUR HB_HB_FSKIP( void )
 
 }
 
-long hb_hbfskip( int recs )
+static long hb_hbfskip( int recs )
 
 {
 

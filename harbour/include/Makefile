@@ -21,15 +21,12 @@ C_HEADERS=\
         hbver.h      \
         hb_vmpub.h   \
         init.h       \
-        initsymc.h   \
-        initsymd.h   \
         inkey.h      \
         itemapi.h    \
         langapi.h    \
         mouseapi.h   \
         pcode.h      \
         rddapi.h     \
-        run_exp.h    \
         set.h        \
 
 PRG_HEADERS=\
@@ -43,11 +40,13 @@ PRG_HEADERS=\
         dbstruct.ch  \
         directry.ch  \
         error.ch     \
+        external.ch  \
         fileio.ch    \
         getexit.ch   \
         hboo.ch      \
         inkey.ch     \
         memoedit.ch  \
+        memvars.ch   \
         rddsys.ch    \
         set.ch       \
         setcurs.ch   \

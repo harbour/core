@@ -183,8 +183,8 @@ int main( int argc, char * argv[] )
    {
       char * pszVersion = hb_version( 1 );
 
-      printf( pszVersion );
-      printf( hb_consoleGetNewLine() );
+      hb_outerr( ( BYTE * ) pszVersion, 0 );
+      hb_outerr( hb_consoleGetNewLine(), 0 );
 
       hb_xfree( pszVersion );
    }
@@ -2636,18 +2636,21 @@ void hb_stackDispCall( void )
 
    while( pBase != stack.pItems )
    {
+      char buffer[ 128 ];
+
       pBase = stack.pItems + pBase->item.asSymbol.stackbase;
 
       if( ( pBase + 1 )->type == IT_ARRAY )
-         printf( "Called from %s:%s(%i)", hb_objGetClsName( pBase + 1 ),
+         sprintf( buffer, "Called from %s:%s(%i)", hb_objGetClsName( pBase + 1 ),
                  pBase->item.asSymbol.value->szName,
                  pBase->item.asSymbol.lineno );
       else
-         printf( "Called from %s(%i)",
+         sprintf( buffer, "Called from %s(%i)",
                  pBase->item.asSymbol.value->szName,
                  pBase->item.asSymbol.lineno );
 
-      printf( hb_consoleGetNewLine() );
+      hb_outerr( ( BYTE * ) buffer, 0 );
+      hb_outerr( hb_consoleGetNewLine(), 0 );
    }
 }
 
@@ -3234,9 +3237,13 @@ void hb_vmRequestCancel( void )
 {
    if( hb_set.HB_SET_CANCEL )
    {
-      printf( hb_consoleGetNewLine() );
-      printf( "Cancelled at: %s (%i)", stack.pBase->item.asSymbol.value->szName, stack.pBase->item.asSymbol.lineno );
-      printf( hb_consoleGetNewLine() );
+      char buffer[ 128 ];
+
+      hb_outerr( hb_consoleGetNewLine(), 0 );
+      sprintf( buffer, "Cancelled at: %s (%i)", stack.pBase->item.asSymbol.value->szName, stack.pBase->item.asSymbol.lineno );
+      hb_outerr( ( BYTE * ) buffer, 0 );
+      hb_outerr( hb_consoleGetNewLine(), 0 );
+
       s_uiActionRequest = HB_QUIT_REQUESTED;
    }
 }

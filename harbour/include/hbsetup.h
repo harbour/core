@@ -66,7 +66,7 @@
  * By default this is turned on.
  * TODO: This should be disabled, when the parser has matured.
 */
-#define HARBOUR_YYDEBUG
+/*#define HARBOUR_YYDEBUG*/
 
 /* ***********************************************************************
  * This symbol defines if we are trying to compile using GCC for OS/2
@@ -185,6 +185,34 @@
 /* ***********************************************************************
  * Platform detection
  */
+
+/* New style (under testing) */
+
+#ifndef DOS
+   #if defined(_QC) || defined(__DOS__) || defined(MSDOS) || defined(__MSDOS__)
+      #define DOS
+   #endif
+#endif
+
+#ifndef OS2
+   #if defined(__OS2__) || defined(OS_2) || defined(HARBOUR_GCC_OS2)
+      #define OS2
+   #endif
+#endif
+
+#ifndef EMX
+   #if defined(__EMX__)
+      #define EMX
+   #endif
+#endif
+
+#ifndef WINNT
+   #if defined(__NT__)
+      #define WINNT
+   #endif
+#endif
+
+/* Old style */
 
 #ifndef DOS
    #if defined(_QC) || defined(__DOS__) || defined(MSDOS) || defined(__MSDOS__)

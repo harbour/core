@@ -38,6 +38,7 @@
 #ifndef _RDDSYS_CH
 #define _RDDSYS_CH
 
+/* rddRegister() types */
 #define RDT_FULL        1
 #define RDT_TRANSFER    2
 #define RDT_HIDDEN      255

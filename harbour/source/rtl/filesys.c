@@ -1507,7 +1507,7 @@ PHB_FNAME hb_fsFNameSplit( char * szFileName )
    return pFileName;
 }
 
-/* TOFIX: Add a check for buffer overrun sitiuations. */
+/* NOTE: szFileName buffer must be at least _POSIX_PATH_MAX long */
 
 /* This function joins path, name and extension into a string with a filename */
 char * hb_fsFNameMerge( char * szFileName, PHB_FNAME pFileName )
@@ -1517,7 +1517,8 @@ char * hb_fsFNameMerge( char * szFileName, PHB_FNAME pFileName )
       /* we have not empty path specified */
       int iLen = strlen( pFileName->szPath );
 
-      strcpy( szFileName, pFileName->szPath );
+      strncpy( szFileName, pFileName->szPath, _POSIX_PATH_MAX );
+      szFileName[ _POSIX_PATH_MAX - 1 ] = '\0';
 
       /* if the path is a root directory then we don't need to add path separator */
       if( !( IS_PATH_SEP( pFileName->szPath[ 0 ] ) && pFileName->szPath[ 0 ] == '\0' ) )
@@ -1526,32 +1527,41 @@ char * hb_fsFNameMerge( char * szFileName, PHB_FNAME pFileName )
           *  when a name doesn't start with it
           *  when the path doesn't end with it
           */
-         if( !( IS_PATH_SEP( pFileName->szName[ 0 ] ) || IS_PATH_SEP( pFileName->szPath[ iLen-1 ] ) ) )
+         if( iLen < _POSIX_PATH_MAX && !( IS_PATH_SEP( pFileName->szName[ 0 ] ) || IS_PATH_SEP( pFileName->szPath[ iLen - 1 ] ) ) )
          {
             szFileName[ iLen++ ] = OS_PATH_DELIMITER;
             szFileName[ iLen ] = '\0';
          }
       }
+
       if( pFileName->szName )
-         strcpy( szFileName + iLen, pFileName->szName );
+      {
+         strncpy( szFileName + iLen, pFileName->szName, _POSIX_PATH_MAX - iLen );
+         szFileName[ _POSIX_PATH_MAX - 1 ] = '\0';
+      }
    }
    else
    {
       if( pFileName->szName )
-         strcpy( szFileName, pFileName->szName );
+      {
+         strncpy( szFileName, pFileName->szName, _POSIX_PATH_MAX );
+         szFileName[ _POSIX_PATH_MAX - 1 ] = '\0';
+      }
    }
 
    if( pFileName->szExtension )
    {
       int iLen = strlen( szFileName );
 
-      if( !( pFileName->szExtension[ 0 ] == '.' || szFileName[ iLen - 1 ] == '.') )
+      if( iLen < _POSIX_PATH_MAX && !( pFileName->szExtension[ 0 ] == '.' || szFileName[ iLen - 1 ] == '.') )
       {
          /* add extension separator only when extansion doesn't contain it */
          szFileName[ iLen++ ] = '.';
          szFileName[ iLen ] = '\0';
       }
-      strcpy( szFileName + iLen, pFileName->szExtension );
+
+      strncpy( szFileName + iLen, pFileName->szExtension, _POSIX_PATH_MAX - iLen );
+      szFileName[ _POSIX_PATH_MAX - 1 ] = '\0';
    }
 
 /* DEBUG

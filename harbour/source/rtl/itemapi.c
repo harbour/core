@@ -371,6 +371,9 @@ PHB_ITEM hb_itemPutC( PHB_ITEM pItem, char * szText )
    else
       pItem = hb_itemNew( NULL );
 
+   if( szText == NULL )
+      szText = "";
+
    pItem->type = IT_STRING;
    pItem->item.asString.length = strlen( szText );
    pItem->item.asString.value = ( char * ) hb_xgrab( pItem->item.asString.length + 1 );
@@ -385,6 +388,15 @@ PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, char * szText, ULONG ulLen )
       hb_itemClear( pItem );
    else
       pItem = hb_itemNew( NULL );
+
+   /* CA-Clipper seems to be buggy here, it will return ulLen bytes of 
+      trash if the szText buffer is NULL, at least with hb_retclen(). */
+
+   if( szText == NULL )
+   {
+      szText = "";
+      ulLen = 0;
+   }
 
    pItem->type = IT_STRING;
    pItem->item.asString.length = ulLen;

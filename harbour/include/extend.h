@@ -384,6 +384,8 @@ extern void     hb_memvarSetPrivatesBase( ULONG );
 extern void     hb_consoleInitialize( void );
 extern void     hb_consoleRelease( void );
 extern char *   hb_consoleGetNewLine( void );
+extern void     hb_outstd( BYTE * pStr, ULONG ulLen );
+extern void     hb_outerr( BYTE * pStr, ULONG ulLen );
 
 extern void     hb_tone( double dFrequency, double dDuration );
 extern char *   hb_setColor( char * );
