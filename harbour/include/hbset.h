@@ -191,6 +191,17 @@ extern HB_SET_STRUCT hb_set;
 extern void hb_setInitialize( void );
 extern void hb_setRelease( void );
 
+typedef enum
+{
+   HB_SET_LISTENER_BEFORE,
+   HB_SET_LISTENER_AFTER
+} HB_set_listener_enum;
+typedef void HB_SET_LISTENER_CALLBACK( HB_set_enum, HB_set_listener_enum );
+
+extern int hb_setListenerAdd( HB_SET_LISTENER_CALLBACK * );
+extern void hb_setListenerNotify( HB_set_enum, HB_set_listener_enum );
+extern int hb_setListenerRemove( int );
+
 #if defined(HB_EXTERN_C)
 }
 #endif

@@ -62,6 +62,17 @@
 
 HB_SET_STRUCT hb_set;
 
+typedef struct HB_SET_LISTENER_
+{
+   int listener;
+   HB_SET_LISTENER_CALLBACK * callback;
+   struct HB_SET_LISTENER_ * next;
+} HB_SET_LISTENER, * PHB_SET_LISTENER;
+
+static PHB_SET_LISTENER sp_sl_first;
+static PHB_SET_LISTENER sp_sl_last;
+static int s_next_listener;
+
 static BOOL set_logical( PHB_ITEM pItem )
 {
    BOOL bLogical = FALSE;
@@ -343,6 +354,8 @@ HB_FUNC( SET )
    HB_set_enum set_specifier = ( args > 0 ) ? ( HB_set_enum ) hb_parni( 1 ) : HB_SET_INVALID_;
    PHB_ITEM pArg2 = ( args > 1 ) ? hb_param( 2, HB_IT_ANY ) : NULL;
    PHB_ITEM pArg3 = ( args > 2 ) ? hb_param( 3, HB_IT_ANY ) : NULL;
+
+   if( args > 1 ) hb_setListenerNotify( set_specifier, HB_SET_LISTENER_BEFORE );
 
    switch ( set_specifier )
    {
@@ -642,7 +655,15 @@ HB_FUNC( SET )
          /* Return NIL if called with invalid SET specifier */
          break;
    }
+   if( args > 1 ) hb_setListenerNotify( set_specifier, HB_SET_LISTENER_AFTER );
 }
+
+/* Listener test (1 of 2)
+static void test_callback( HB_set_enum set, HB_set_listener_enum when )
+{
+   printf("\ntest_callback( %d, %d )", set, when);
+}
+End listener test (1 of 2) */
 
 void hb_setInitialize( void )
 {
@@ -707,6 +728,22 @@ void hb_setInitialize( void )
    hb_set.HB_SET_UNIQUE = FALSE;
    hb_set.HB_SET_VIDEOMODE = 0;
    hb_set.HB_SET_WRAP = FALSE;
+
+   sp_sl_first = sp_sl_last = NULL;
+   s_next_listener = 1;
+
+   /* Listener test (2 of 2)
+   {
+      int temp = hb_setListenerAdd( test_callback );
+      printf("\nSet listener test handle is %d", temp);
+      {
+         int temp2 = hb_setListenerAdd( test_callback );
+         printf("\nSet listener test handle is %d", temp2);
+         temp2 = hb_setListenerRemove( temp2 );
+         printf("\nSet listener remove result is %d", temp2);
+      }
+   }
+   End listener test (2 of 2) */
 }
 
 void hb_setRelease( void )
@@ -728,4 +765,56 @@ void hb_setRelease( void )
    if( hb_set.HB_SET_PRINTFILE )  hb_xfree( hb_set.HB_SET_PRINTFILE );
 
    hb_set.HB_SET_TYPEAHEAD = -1; hb_inkeyReset( TRUE ); /* Free keyboard typeahead buffer */
+   
+   while( sp_sl_first )
+   {
+      /* Free all set listeners */
+      sp_sl_last = sp_sl_first->next;
+      hb_xfree( sp_sl_first );
+      sp_sl_first = sp_sl_last;
+   }
+}
+
+int hb_setListenerAdd( HB_SET_LISTENER_CALLBACK * callback )
+{
+   PHB_SET_LISTENER p_sl = (PHB_SET_LISTENER) hb_xgrab( sizeof( HB_SET_LISTENER ) );
+   p_sl->callback = callback;
+   p_sl->listener = s_next_listener++;
+   if( sp_sl_last ) sp_sl_last->next = p_sl;
+   else if( ! sp_sl_first ) sp_sl_first = p_sl;
+   sp_sl_last = p_sl;
+   return p_sl->listener;
+}
+
+void hb_setListenerNotify( HB_set_enum set, HB_set_listener_enum when )
+{
+   PHB_SET_LISTENER p_sl = sp_sl_first;
+   while( p_sl )
+   {
+      (* p_sl->callback)( set, when );
+      p_sl = p_sl->next;
+   }
+}
+
+int hb_setListenerRemove( int listener )
+{
+   PHB_SET_LISTENER p_sl = sp_sl_first;
+   PHB_SET_LISTENER p_sl_prev = NULL;
+   while( p_sl )
+   {
+      if( listener == p_sl->listener )
+      {
+         listener = -listener;
+         if( p_sl_prev ) p_sl_prev->next = p_sl->next;
+         else sp_sl_first = p_sl->next;
+         hb_xfree( p_sl );
+         p_sl = NULL;
+      }
+      if( p_sl )
+      {
+         p_sl_prev = p_sl;
+         p_sl = p_sl->next;
+      }
+   }
+   return listener;
 }

@@ -1,3 +1,10 @@
+2001-08-17 18:10 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * doc/en/hb_set.txt
+  * include/hbset.h
+  * source/rtl/set.h
+    + Added a primitive SET listener API.
+
 2001-08-18 00:11 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/tbrowse.prg
    * source/rtl/tbcolumn.prg
