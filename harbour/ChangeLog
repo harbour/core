@@ -1,3 +1,7 @@
+2001-08-04 11:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
+    * source/vm/macro.c
+      ! Added missing ; in line 956
+
 2001-08-04 15:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     * doc/en/compiler.txt
@@ -32,25 +36,25 @@
     * source/macro/macroa.c
     * source/macro/macrob.c
         * added HB_SETMACRO() function to control various compatibility
-          issues at the runtime. 
+          issues at the runtime.
           HB_SETMACRO( <nFeature>, <lOnOff> )
-          This controls the macro compiler's features. The feature can 
+          This controls the macro compiler's features. The feature can
           be either enabled (.T.) or disabled (.F.)
           Currently available features (defined in set.ch file)
           HB_SM_HARBOUR => (enabled by default)
-              enable/disable harbour extensions 
+              enable/disable harbour extensions
           HB_SM_XBASE => (disaled by default)
               enable/disable xbase dialects extensions
           HB_SM_SHORTCUTS => (enabled by default)
               enable/disable shortcut evaluation of logical expressions
-          HB_SM_PREPROC => 
+          HB_SM_PREPROC =>
               enable/disable preprocessing (if harbour is build with
               HB_MACRO_STATEMENTS option)
 
     * source/rdd/dblist.prg
         * the array of expressions is scanned for extended macro lists
           when xbase compatibility is enabled (see HB_SETMACRO())
-          
+
     * source/vm/asort.c
         * moved HB_ASORT_OPT_ITEMCOPY setting to hbsetup.h
 
@@ -59,7 +63,7 @@
           in the harbour code
           (Please keep updated this file (and hbsetup.ch) if a new
           setting is used)
-          
+
     + doc/en/macro.txt
         * initial documentation for macro compiler
         * documentation of HB_SETMACRO() function
@@ -67,7 +71,7 @@
 2001-08-04 00:06 GMT Dave Pearson <davep@davep.org>
    * doc/whatsnew.txt
      * Brought the document up to date.
-	
+
 2001-08-03 19:30 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
    *Changelog
       *renamed to Changelog.011 and started an new one
@@ -78,7 +82,7 @@
       +gl option to tell that the compiler is gcc under linux
       *fixes to the edit mode to be more compatible with linux
       *Now Setbuild() return the command line to gcc(Linux and Os/2) insted of an response file
-      
+
    * source/pp/pragma.c
    * contrib/dot/pp_harb.ch
    * tests/inline_c.prg

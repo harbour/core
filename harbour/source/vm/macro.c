@@ -63,10 +63,10 @@
   #include "hbpp.h"
 #endif
 
-/* .and. & .or. expressions shortcuts - the expression optimiser needs 
+/* .and. & .or. expressions shortcuts - the expression optimiser needs
  * a global variable
  */
-BOOL hb_comp_bShortCuts = TRUE; 
+BOOL hb_comp_bShortCuts = TRUE;
 
 /* various flags for macro compiler */
 static ULONG s_macroFlags = (HB_SM_SHORTCUTS | HB_SM_HARBOUR);
@@ -88,7 +88,7 @@ static int hb_macroParse( HB_MACRO_PTR pMacro, char * szString )
 {
    /* update the current status for logical shortcuts */
    hb_comp_bShortCuts = s_macroFlags & HB_SM_SHORTCUTS;
-   
+
    /* initialize the input buffer - it will be scanned by lex */
    pMacro->string = szString;
    pMacro->length = strlen( szString );
@@ -441,7 +441,7 @@ char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
  *
  * iContext contains HB_P_MACROPUSHPARE if a macro is used inside a codeblock
  * EVAL( {|| &macro} )
- * 
+ *
  */
 void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext )
 {
@@ -470,14 +470,14 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext )
 
       if( iContext != 0 )
       {
-         /* 
+         /*
           * If compiled in xbase compatibility mode:
           * macro := "1,2"
           * funCall( &macro )  ==>  funCall( 1, 2 )
           * { &macro }  ==>  { 1, 2 }
           * var[ &macro ]  ==>  var[ 1, 2 ]
           * var := (somevalue, &macro)  ==> var := 2
-          * 
+          *
           * Always:
           * macro := "1,2"
           * EVAL( {|| &macro} )
@@ -495,7 +495,7 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext )
       {
          char * ptr;
          int slen;
-         
+
          pText = ( char * ) hb_xgrab( HB_PP_STR_SIZE );
          pOut = ( char * ) hb_xgrab( HB_PP_STR_SIZE );
          ptr = pText;
@@ -887,7 +887,7 @@ char * hb_macroGetType( HB_ITEM_PTR pItem )
    return szType;
 }
 
-/* 
+/*
  * Set macro capabilities if flag > 0 or get current macro capabilities
  * if flag == 0
  */
@@ -895,21 +895,21 @@ ULONG hb_macroSetMacro( BOOL bSet, ULONG flag )
 {
    ULONG ulCurrentFlags = s_macroFlags;
 
-   if( flag > 0 )   
+   if( flag > 0 )
    {
       if( bSet )
          s_macroFlags |= flag;
       else
          s_macroFlags &= ~flag;
    }
-   
+
    return ulCurrentFlags;
 }
 
 HB_FUNC( HB_SETMACRO )
 {
    int iPrmCnt = hb_pcount();
-   
+
    if( iPrmCnt > 0 )
    {
        ULONG ulFlags = ( ULONG ) hb_parnl( 1 );
@@ -932,7 +932,7 @@ HB_FUNC( HB_SETMACRO )
              if( pValue )
                 hb_macroSetMacro( hb_itemGetL( pValue ), ulFlags );
              break;
-             
+
           case HB_SM_PREPROC :
              /* enable/disable preprocessing before compilation */
              hb_retl( s_macroFlags & ulFlags );
@@ -953,8 +953,8 @@ HB_FUNC( HB_SETMACRO )
              break;
 
           default:
-              /* do nothing */
-      }      
+              ;/* do nothing */
+      }
    }
    else
       hb_ret();    /* return NIL */
