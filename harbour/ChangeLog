@@ -1,3 +1,7 @@
+2001-02-20 01:50 GMT-3 Horacio Roldan <horacioroldan@usa.net>
+   * harbour/source/vm/asort.c
+     * Fixed bug in optimization test that prevented sorting some arrays.
+
 2001-02-19 11:15 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * harbour/include/hbrddntx.h
      * Forgot to upload last time

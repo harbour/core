@@ -237,6 +237,7 @@ BOOL hb_arraySort( PHB_ITEM pArray, ULONG * pulStart, ULONG * pulCount, PHB_ITEM
       ULONG ulLen = pBaseArray->ulLen;
       ULONG ulStart;
       ULONG ulCount;
+      ULONG ulEnd;
 
       if( pulStart && ( *pulStart >= 1 ) )
          ulStart = *pulStart;
@@ -253,11 +254,11 @@ BOOL hb_arraySort( PHB_ITEM pArray, ULONG * pulStart, ULONG * pulCount, PHB_ITEM
          if( ulStart + ulCount > ulLen )             /* check range */
             ulCount = ulLen - ulStart + 1;
       
-         ulCount += ulStart - 2;
+         ulEnd = ulCount + ulStart - 2;
       
          /* Optimize when only one or no element is to be sorted */
          if( ulCount > 1 )
-            hb_arraySortQuick( pBaseArray->pItems, ulStart - 1, ulCount, pBlock );
+            hb_arraySortQuick( pBaseArray->pItems, ulStart - 1, ulEnd, pBlock );
       }
 
       return TRUE;
