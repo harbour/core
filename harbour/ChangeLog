@@ -1,3 +1,15 @@
+19991122-15:03 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/pp/hbppint.c
+    ! .PPO file generation fixed (/p was not working since yesterday).
+  * include/hbpp.h
+    include/compiler.h
+    % Some redundant function declaration removed.
+  * include/hbpp.h
+    * Sorted out the inclusion of "compiler.h", to make things clearer.
+  * source/pp/hbpp.c
+    include/hbpp.h
+    * Some hb_comp_ variable usage better isolated.
+
 19991122-12:46 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/compiler/expropt.c
     include/compiler.h

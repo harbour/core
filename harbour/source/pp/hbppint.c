@@ -65,15 +65,13 @@ void hb_pp_Init( void )
 int hb_pp_Internal( FILE * handl_i, FILE * handl_o, char * sOut )
 {
   static char sBuffer[ HB_PP_BUFF_SIZE ];           /* File read buffer */
-  char *ptr, *ptrOut = sOut;
+  char * ptr, * ptrOut = sOut;
   int lContinue = 0;
   int lens = 0, rdlen;
   int rezParse;
   int nline = 0;
 
   HB_TRACE(HB_TR_DEBUG, ("PreProcess(%p, %p, %s)", handl_i, handl_o, sOut));
-
-  HB_SYMBOL_UNUSED( handl_o );
 
   while( ( rdlen = hb_pp_RdStr( handl_i, s_szLine + lens, HB_PP_STR_SIZE - lens, lContinue,
                                 sBuffer, &s_lenBuffer, &s_iBuffer ) ) >= 0 )
@@ -131,6 +129,9 @@ int hb_pp_Internal( FILE * handl_i, FILE * handl_o, char * sOut )
   lens = hb_pp_strocpy( ptrOut, s_szLine ) + ( ptrOut - sOut );
   *( sOut + lens++ ) = '\n';
   *( sOut + lens ) = '\0';
+
+  if( handl_o )
+    hb_pp_WrStr( handl_o, sOut );
 
   return lens;
 }

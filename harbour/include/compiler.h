@@ -182,10 +182,6 @@ typedef struct HB_EXPR_
 } HB_EXPR, *HB_EXPR_PTR;
 
 
-extern void *   hb_xgrab( ULONG lSize );   /* allocates memory, exists on failure */
-extern void *   hb_xrealloc( void * pMem, ULONG lSize );   /* reallocates memory */
-extern void     hb_xfree( void * pMem );    /* frees memory */
-
 char * yy_strdup( char * p );  /* this will exit if there is not enough memory */
 char * yy_strupr( char * p );
 

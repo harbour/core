@@ -40,6 +40,9 @@
 
 #include "hbdefs.h"
 #include "hbfsapi.h"
+#include "extend.h"
+#include "hberrors.h"
+#include "hbver.h"
 
 /* the list of pathnames to search with #include */
 typedef struct _PATHNAMES 
@@ -104,15 +107,9 @@ extern DEFINES *  hb_pp_topDefine;
 extern COMMANDS * hb_pp_topCommand;
 extern COMMANDS * hb_pp_topTranslate;
 
-/* Needed support modules, but not contained in HBPP.C */
+/* Imported from the compiler */
 
-extern void *   hb_xgrab( ULONG lSize );   /* allocates memory, exists on failure */
-extern void *   hb_xrealloc( void * pMem, ULONG lSize );   /* reallocates memory */
-extern void     hb_xfree( void * pMem );    /* frees memory */
-
-extern ULONG    hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen );
-extern void     hb_strupr( char * szText );
-
-#include "compiler.h"
+extern PATHNAMES * hb_comp_pIncludePath;
+extern PHB_FNAME   hb_comp_pFileName;
 
 #endif /* HB_PP_H_ */

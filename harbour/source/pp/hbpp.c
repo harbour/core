@@ -87,7 +87,7 @@ static int    strotrim( char * );
 static int    NextWord( char **, char *, BOOL );
 static int    NextName( char **, char * );
 static int    NextParm( char **, char * );
-static BOOL   OpenInclude( char *, PATHNAMES *, FILE**, BOOL bStandardOnly, char * );
+static BOOL   OpenInclude( char *, PATHNAMES *, PHB_FNAME, FILE **, BOOL bStandardOnly, char * );
 
 #define ISNAME( c )  ( isalnum( c ) || ( c ) == '_' || ( c ) > 0x7E )
 #define MAX_NAME 255
@@ -207,7 +207,7 @@ int hb_pp_ParseDirective( char * sLine )
           *(sLine+i) = '\0';
 
           /*   if((handl_i = fopen(sLine, "r")) == NULL) */
-          if( OpenInclude( sLine, hb_comp_pIncludePath, &handl_i, ( cDelimChar == '>' ), szInclude ) )
+          if( OpenInclude( sLine, hb_comp_pIncludePath, hb_comp_pFileName, &handl_i, ( cDelimChar == '>' ), szInclude ) )
           {
             hb_pp_lInclude++;
             hb_pp_Parse(handl_i, 0, szInclude );
@@ -2229,11 +2229,11 @@ static int NextParm( char ** sSource, char * sDest )
   return lenName;
 }
 
-static BOOL OpenInclude( char * szFileName, PATHNAMES *pSearch, FILE** fptr, BOOL bStandardOnly, char * szInclude )
+static BOOL OpenInclude( char * szFileName, PATHNAMES * pSearch, PHB_FNAME pMainFileName, FILE ** fptr, BOOL bStandardOnly, char * szInclude )
 {
   PHB_FNAME pFileName;
 
-  HB_TRACE(HB_TR_DEBUG, ("OpenInclude(%s, %p, %p, %d)", szFileName, pSearch, fptr, (int) bStandardOnly));
+  HB_TRACE(HB_TR_DEBUG, ("OpenInclude(%s, %p, %p, %p, %d)", szFileName, pSearch, pMainFileName, fptr, (int) bStandardOnly));
 
   if( bStandardOnly )
     {
@@ -2243,7 +2243,7 @@ static BOOL OpenInclude( char * szFileName, PATHNAMES *pSearch, FILE** fptr, BOO
   else
     {
       pFileName = hb_fsFNameSplit( szFileName );
-      pFileName->szPath = hb_comp_pFileName->szPath;
+      pFileName->szPath = pMainFileName->szPath;
       hb_fsFNameMerge( szInclude, pFileName );
       *fptr = fopen( szInclude, "r" );
       hb_xfree( pFileName );
