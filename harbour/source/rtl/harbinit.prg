@@ -33,18 +33,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
- *
- * Copyright 1999 Chen Kedem <niki@actcom.co.il>
- *    CLIPINIT() documentation
- *    __SETHELPK() documentation
- *
- * See doc/license.txt for licensing terms.
- *
- */
-
 #include "hbsetup.ch"
 #include "inkey.ch"
 
@@ -62,38 +50,6 @@ PROCEDURE CLIPPER530
 
 #endif
 
-/*  $DOC$
- *  $FUNCNAME$
- *      CLIPINIT()
- *  $CATEGORY$
- *      Internal
- *  $ONELINER$
- *      Initialize various Harbour sub-systems
- *  $SYNTAX$
- *      CLIPINIT() --> NIL
- *  $ARGUMENTS$
- *      none.
- *  $RETURNS$
- *      CLIPINIT() always return NIL.
- *  $DESCRIPTION$
- *      CLIPINIT() is one of the pre-defined INIT PROCEDURE and is executed
- *      at program startup. It declare an empty MEMVAR PUBLIC array called
- *      GetList that is going to be used by the Get system, It activate the
- *      default error handler, and (at least for the moment) call the
- *      function that set the default help key.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *  $COMPLIANCE$
- *      It is said that CLIPINIT() should not call that function that set
- *      the default help key since CA-Clipper do it in some other place.
- *  $PLATFORMS$
- *  $FILES$
- *  $SEEALSO$
- *       INIT PROCEDURE 
- *  $END$
- */
-
 INIT PROCEDURE ClipInit
 
    MEMVAR GetList
@@ -107,34 +63,6 @@ INIT PROCEDURE ClipInit
    __SetHelpK()
 
    RETURN
-
-/*  $DOC$
- *  $FUNCNAME$
- *      __SetHelpK()
- *  $CATEGORY$
- *      Internal
- *  $ONELINER$
- *      Set F1 as the default help key
- *  $SYNTAX$
- *      __SetHelpK() --> NIL
- *  $ARGUMENTS$
- *      none.
- *  $RETURNS$
- *      __SetHelpK() always return NIL.
- *  $DESCRIPTION$
- *      Set F1 to execute a function called HELP if such a function is
- *      linked into the program.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *  $COMPLIANCE$
- *      __SetHelpK() works exactly like CA-Clipper's __SetHelpK()
- *  $PLATFORMS$
- *  $FILES$
- *  $SEEALSO$
- *      __XHelp(),SET KEY,SETKEY()
- *  $END$
- */
 
 PROCEDURE __SetHelpK
 

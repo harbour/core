@@ -17,27 +17,6 @@
  * public domain.
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_ASCIISUM()
- *  $CATEGORY$
- *      String
- *  $ONELINER$
- *      Sum the ascii values in a string.
- *  $SYNTAX$
- *      GT_AsciiSum(<cStr>) --> nSum
- *  $ARGUMENTS$
- *      <cStr>  - The string to sum
- *  $RETURNS$
- *      nSum    - The sum of all ascii values in <cStr>.
- *  $DESCRIPTION$
- *      Sum the ascii value of every character in the passed string
- *      and return the result.
- *  $EXAMPLES$
- *  $END$
- */
-
 #include "extend.h"
 
 HARBOUR HB_GT_ASCIISUM( void )

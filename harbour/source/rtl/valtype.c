@@ -35,44 +35,6 @@
 
 #include "extend.h"
 
-/*  $DOC$
- *  $FUNCNAME$
- *      VALTYPE()
- *  $CATEGORY$
- *      Misc
- *  $ONELINER$
- *      Retrieves the data type of an expression
- *  $SYNTAX$
- *      VALTYPE( <xExp> ) --> <cReturnType>
- *  $ARGUMENTS$
- *      <xExp> is any valid expression.
- *  $RETURNS$
- *      Returns a character indicating the type of the passed expression.
- *  $DESCRIPTION$
- *      This function returns one character which represents the date type
- *      of the argument.
- *  $EXAMPLES$
- *      See Test
- *  $TESTS$
- *      function Test()
- *         ? ValType( Array( 1 ) )  --> "A"
- *         ? ValType( {|| 1 + 1 } ) --> "B"
- *         ? ValType( "HARBOUR" )   --> "C"
- *         ? ValType( Date() )      --> "D"
- *         ? ValType( .T. )         --> "L"
- *         ? ValType( 1 )           --> "N"
- *         ? ValType( TBrowse() )   --> "O"
- *         ? ValType( NIL )         --> "U"
- *      return nil
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      VALTYPE() is fully CA-Clipper compliant.
- *  $SEEALSO$
- *      TYPE()
- *  $END$
- */
-
 char * hb_valtypeGet( HB_ITEM_PTR pItem )
 {
    char * szType;
@@ -115,7 +77,6 @@ char * hb_valtypeGet( HB_ITEM_PTR pItem )
    }
    return szType;
 }
-
 
 HARBOUR HB_VALTYPE( void )
 {

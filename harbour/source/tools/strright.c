@@ -17,40 +17,7 @@
  * public domain.
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_STRRIGHT()
- *  $CATEGORY$
- *      String
- *  $ONELINER$
- *      Find length of a suffix of a string
- *  $SYNTAX$
- *      GT_StrRight(<cStr>, <cChars>) --> nLen
- *  $ARGUMENTS$
- *      <cStr>   - The input string
- *      <cChars> - The set of characters to find
- *  $RETURNS$
- *      nLen     - The length of the prefix found.
- *  $DESCRIPTION$
- *      Return the length of the trailing segment in the passed string
- *      <cStr> that consists solely of the characters in the character
- *      set <cChars>.
- *
- *      If no characters in the the search set are found, the function
- *      shall return 0
- *  $EXAMPLES$
- *
- *      ? GT_StrRight("this is a test", "teas ")       // prints 8
- *      ? GT_StrRight("this is a test", "tes h")       // prints 5
- *      ? GT_StrRight("this is a test", "zxy")         // prints 0
- *
- *  $END$
- */
-
-
 #include "extend.h"
-
 
 HARBOUR HB_GT_STRRIGHT( void )
 {

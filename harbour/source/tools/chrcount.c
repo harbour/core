@@ -17,34 +17,6 @@
  * public domain.
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_CHRCOUNT()
- *  $CATEGORY$
- *      String
- *  $ONELINER$
- *      Count the number of times a character appears in a string
- *  $SYNTAX$
- *      GT_ChrCount(<cChr>, <cStr>) --> nFreq
- *  $ARGUMENTS$
- *      <cChr>  - The character to find the frequence of
- *      <cStr>  - The string in which to find the character
- *  $RETURNS$
- *      nFreq   - The number of times <cChr> occurs in <cStr>
- *  $DESCRIPTION$
- *      GT_ChrCount() counts how many times a specified character
- *      appears in a string.
- *
- *      NOTE:
- *         invalid parameters will return -1
- *  $EXAMPLES$
- *
- *      ? GT_ChrCount("t", "the cat sat on the mat")      // prints 4
- *
- *  $END$
- */
-
 #include "extend.h"
 
 HARBOUR HB_GT_CHRCOUNT( void )

@@ -17,37 +17,6 @@
  * public domain.
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_STRDIFF()
- *  $CATEGORY$
- *      String
- *  $ONELINER$
- *      Return a string where it begins to differ from another
- *  $SYNTAX$
- *      GT_StrDiff(<cStr1>, <cStr2>) --> cRet
- *  $ARGUMENTS$
- *      <cStr1>  - A character string to compare
- *      <cStr2>  - The string to compare with
- *  $RETURNS$
- *      cRet     - A string beginning at the position in <cStr2> where
- *                 <cStr1> begins to differ from <cStr1>
- *  $DESCRIPTION$
- *      Return a string beginning at the position in <cStr2> where
- *      <cStr1> begins to differ from <cStr1>. If the two strings are
- *      identical (or identical upto the last character in <cStr2>)
- *      the function will return "".
- *
- *      NOTE:
- *         invalid parameters will return ""
- *  $EXAMPLES$
- *      ? gt_strDiff("the cat", "the rat")          // prints "rat"
- *      ? gt_strDiff("the cat", "the ")             // prints ""
- *
- *  $END$
- */
-
 #include "extend.h"
 
 HARBOUR HB_GT_STRDIFF( void )

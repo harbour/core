@@ -33,35 +33,5 @@
  *
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      SETTYPEAHEAD()
- *  $CATEGORY$
- *      Environment
- *  $ONELINER$
- *      Sets the typeahead buffer to given size.
- *  $SYNTAX$
- *      SETTYPEAHEAD( <nSize> ) --> <nPreviousSize>
- *  $ARGUMENTS$
- *      <nSize> is a valid typeahead size.
- *  $RETURNS$
- *      The previous state of _SET_TYPEAHEAD
- *  $DESCRIPTION$
- *      This function sets the typeahead buffer to a valid given size as is
- *      Set( _SET_TYPEAHEAD ) where used.
- *  $EXAMPLES$
- *      // Sets typeahead to 12
- *      SetTypeahead( 12 )
- *  $TESTS$
- *      
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      SETTYPEAHEAD() is fully CA-Clipper compliant.
- *  $SEEALSO$
- *      __ACCEPT(),__INPUT()
- *  $END$
- */
-
 FUNCTION SetTypeahead( nSize )
    RETURN Set( _SET_TYPEAHEAD, nSize )

@@ -17,38 +17,6 @@
  * public domain.
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_STRCOUNT()
- *  $CATEGORY$
- *      String
- *  $ONELINER$
- *      Count the number of times a substring appears in a string
- *  $SYNTAX$
- *      GT_StrCount(<cChrs>, <cStr>) --> nFreq
- *  $ARGUMENTS$
- *      <cChrs> - The substring to find the frequence of
- *      <cStr>  - The string in which to find the character
- *  $RETURNS$
- *      nFreq   - The number of times <cChrs> occurs in <cStr>
- *  $DESCRIPTION$
- *      GT_StrCount() counts how many times a specified substring
- *      appears in a string.
- *      If the substring does NOT appear in <cStr> this function
- *      will return 0.
- *      If the substring is a single character use GT_ChrCount() as
- *      it will be faster.
- *
- *      NOTE:
- *         invalid parameters will return -1
- *  $EXAMPLES$
- *
- *      ? GT_StrCount("the", "the cat sat on the mat")      // prints 2
- *
- *  $END$
- */
-
 #include "extend.h"
 
 HARBOUR HB_GT_STRCOUNT( void )

@@ -903,43 +903,8 @@ static HB_DYNS_PTR hb_memvarFindSymbol( HB_ITEM_PTR pName )
    return pDynSym;
 }
 
-
 /* ************************************************************************** */
 
-/* -------------------------------------------------------------------------- */
-/*  $DOC$
- *  $FUNCNAME$
- *    __MVPUBLIC()
- *  $CATEGORY$
- *    Variable Management
- *  $ONELINER$
- *    This function creates a PUBLIC variable
- *  $SYNTAX$
- *    __MVPUBLIC( <variable_name> )
- *  $ARGUMENTS$
- *    <variable_name> = either a string that contains the variable's name or
- *       an one-dimensional array of strings with variable names
- *       No skeleton are allowed here.
- *  $RETURNS$
- *    Nothing
- *  $DESCRIPTION$
- *    This function can be called either by the harbour compiler or by user.
- *    The compiler always passes the item of IT_SYMBOL type that stores the
- *    name of variable.
- *      If a variable with the same name exists already then the new
- *    variable is not created - the previous value remains unchanged.
- *      If it is first variable with this name then the  variable is
- *       initialized with .T. value.
- *
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *  $SEEALSO$
- *
- *  $END$
- */
 HARBOUR HB___MVPUBLIC( void )
 {
    int iCount = hb_pcount();
@@ -985,42 +950,6 @@ HARBOUR HB___QQPUB( void )
       hb_memvarCreateFromItem( pItem, VS_PUBLIC, NULL );
 }
 
-/* -------------------------------------------------------------------------- */
-/*  $DOC$
- *  $FUNCNAME$
- *    __MVPRIVATE()
- *  $CATEGORY$
- *    Variable Management
- *  $ONELINER$
- *    This function creates a PRIVATE variable
- *  $SYNTAX$
- *    __MVPRIVATE( <variable_name> )
- *  $ARGUMENTS$
- *    <variable_name> = either a string that contains the variable's name or
- *       an one-dimensional array of strings with variable names
- *       No skeleton are allowed here.
- *  $RETURNS$
- *    Nothing
- *  $DESCRIPTION$
- *    This function can be called either by the harbour compiler or by user.
- *    The compiler always passes the item of IT_SYMBOL type that stores the
- *    name of variable.
- *    If a variable with the same name exists already then the value of old
- *    variable is hidden until the new variable is  released. The new variable
- *    is always initialized to NIL value.
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $SEEALSO$
- *
- *  $END$
- */
 HARBOUR HB___MVPRIVATE( void )
 {
    int iCount = hb_pcount();
@@ -1056,67 +985,6 @@ HARBOUR HB___MVPRIVATE( void )
    }
 }
 
-/* -------------------------------------------------------------------------- */
-/*  $DOC$
- *  $FUNCNAME$
- *    __MVXRELEASE()
- *  $CATEGORY$
- *    Variable Management
- *  $ONELINER$
- *    This function releases value stored in PRIVATE or PUBLIC variable
- *  $SYNTAX$
- *    __MVXRELEASE( <variable_name> )
- *  $ARGUMENTS$
- *    <variable_name> = either a string that contains the variable's name or
- *       an one-dimensional array of strings with variable names
- *       No skeleton are allowed here.
- *  $RETURNS$
- *    Nothing
- *  $DESCRIPTION$
- *    This function releases values stored in memory variable. It shouldn't
- *    be called directly, rather it should be placed into RELEASE command.
- *      If the released variable is a PRIVATE variable then previously hidden
- *    variable with the same name becomes visible after exit from the
- *    procedure where released variable was created. If you access
- *    the released variable in the same function/procedure where it
- *    was created the the NIL value is returned. You can however assign
- *    a new value to released variable without any side effects.
- *
- *    It releases variable even if this variable was created in different
- *    procedure
- *  $EXAMPLES$
- *
- *    PROCEDURE MAIN()
- *    PRIVATE mPrivate
- *
- *       mPrivate :="PRIVATE from MAIN()"
- *       ? mPrivate     //PRIVATE from MAIN()
- *       Test()
- *       ? mPrivate     //PRIVATE from MAIN()
- *
- *    RETURN
- *
- *    PROCEDURE Test()
- *    PRIVATE mPrivate
- *
- *       mPrivate :="PRIVATE from Test()"
- *       ? mPrivate           //PRIVATE from TEST()
- *       RELEASE mPrivate
- *       ? mPrivate           //NIL
- *       mPrivate :="Again in Test()"
- *
- *    RETURN
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $SEEALSO$
- *
- *  $END$
- */
 HARBOUR HB___MVXRELEASE( void )
 {
    int iCount = hb_pcount();
@@ -1152,46 +1020,6 @@ HARBOUR HB___MVXRELEASE( void )
    }
 }
 
-/* -------------------------------------------------------------------------- */
-/*  $DOC$
- *  $FUNCNAME$
- *    __MVRELEASE()
- *  $CATEGORY$
- *    Variable Management
- *  $ONELINER$
- * This function releases PRIVATE variables 
- *  $SYNTAX$
- *    __MVRELEASE( <skeleton>, <include_exclude_flag> )
- *  $ARGUMENTS$
- *    <skeleton> = string that contains the wildcard mask for variables' names
- *       that will be released. Supported wildcards: '*' and '?'
- *    <include_exclude_flag> = logical value that specifies if variables
- *       that match passed skeleton should be either included in deletion
- *       (if .T.) or excluded from deletion (if .F.)
- *  $RETURNS$
- *    Nothing
- *  $DESCRIPTION$
- *    This function releases values stored in memory variables. It shouldn't
- *    be called directly, it should be placed into RELEASE ALL command.
- *      If the released variable is a PRIVATE variable then previously hidden
- *    variable with the same name becomes visible after exit from the
- *    procedure where released variable was created. If you access
- *    the released variable in the same function/procedure where it
- *    was created the the NIL value is returned. You can however assign
- *    a new value to released variable without any side effects.
- *      PUBLIC variables are not changed by this function.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $SEEALSO$
- *
- *  $END$
- */
 HARBOUR HB___MVRELEASE( void )
 {
    int iCount = hb_pcount();
@@ -1216,68 +1044,6 @@ HARBOUR HB___MVRELEASE( void )
    }
 }
 
-/* -------------------------------------------------------------------------- */
-/*  $DOC$
- *  $FUNCNAME$
- *    __MVSCOPE()
- *  $CATEGORY$
- *    Variable Management
- *  $ONELINER$
- *    If variable exists then returns its scope.
- *  $SYNTAX$
- *    __MVSCOPE( <cVarName> )
- *  $ARGUMENTS$
- *    <cVarName> = a string with a variable name to check
- *  $RETURNS$
- *    The symbolic values are defined in include/hbmemvar.ch
- *    HB_MV_NOT_FOUND     =variable is not declared (not found in symbol table)
- *    HB_MV_UNKNOWN       =if variable doesn't exist (but found in symbol table)
- *    HB_MV_ERROR         =if information cannot be obtained (memory error
- *       or argument error)
- *    HB_MV_PUBLIC         =for public variables
- *    HB_MV_PRIVATE_GLOBAL =for private variables declared outside of current
- *       function/procedure
- *    HB_MV_PRIVATE_LOCAL  =for private variables declared in current
- *       function/procedure
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *    PROCEDURE MAIN()
- *    PUBLIC mPublic
- *    PRIVATE mPrivateGlobal
- *
- *      CallProc()
- *       ? __mvScope( "mPrivateLocal" )      //HB_MV_UNKNOWN
- *
- *    RETURN
- *
- *    PROCEDURE CallProc()
- *    PRIVATE mPrivateLocal
- *
- *       ? __mvScope( "mPublic" )            //HB_MV_PUBLIC
- *       ? __mvScope( "mPrivateGlobal" )     //HB_MV_PRIVATE_GLOBAL
- *       ? __mvScope( "mPrivateLocal" )      //HB_MV_PRIVATE_LOCAL
- *       ? __mvScope( "mFindMe" )            //HB_MV_NOT_FOUND
- *
- *       IF( __mvScope( "mPublic" ) > HB_MV_ERROR )
- *          ? "Variable exists"
- *       ELSE
- *          ? "Variable not created yet"
- *       ENDIF
- *
- *    RETURN
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $SEEALSO$
- *    include/hbmemvar.ch
- *  $END$
- */
 HARBOUR HB___MVSCOPE( void )
 {
    int iMemvar = HB_MV_ERROR;
@@ -1293,156 +1059,11 @@ HARBOUR HB___MVSCOPE( void )
    hb_retni( iMemvar );
 }
 
-/* -------------------------------------------------------------------------- */
-/*  $DOC$
- *  $FUNCNAME$
- *    __MVCLEAR()
- *  $CATEGORY$
- *    Variable Management
- *  $ONELINER$
- *    This function releases all PRIVATE and PUBLIC variables
- *  $SYNTAX$
- *    __MVCLEAR()
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *    Nothing
- *  $DESCRIPTION$
- *      This function releases all PRIVATE and PUBLIC variables.
- *    It is used to implement CLEAR MEMORY statement.
- *    The memory occupied by all visible variables are released - any
- *    attempt to access the variable will result in a runtime error.
- *    You have to reuse PRIVATE or PUBLIC statement to create again
- *    the variable that was cleared by this function.
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $SEEALSO$
- *
- *  $END$
- */
 HARBOUR HB___MVCLEAR( void )
 {
    hb_dynsymEval( hb_memvarClear, NULL );
 }
 
-/* -------------------------------------------------------------------------- */
-/*  $DOC$
- *  $FUNCNAME$
- *    __MVDBGINFO()
- *  $CATEGORY$
- *    Variable Management
- *  $ONELINER$
- *    This function returns the information about the variables for debugger
- *  $SYNTAX$
- *    __MVDBGINFO( <nScope> [, <nPosition> [, @<cVarName>] ] )
- *  $ARGUMENTS$
- *     <nScope> = the scope of variables for which an information is asked
- *           Supported values (defined in hbmemvar.ch)
- *           HB_MV_PUBLIC
- *           HB_MV_PRIVATE (or any other value)
- *     <nPosition> = the position of asked variable on the list of variables
- *        with specified scope - it should start from position 1
- *     <cVarName> = the value is filled with a variable name if passed by
- *        reference and <nPosition> is specified
- *  $RETURNS$
- *     The return value depends on the number of arguments passed
- *  $DESCRIPTION$
- *      This function retrieves the information about memvar variables.
- *      It returns either the number of variables with given scope (when the
- *    first argument is passed only) or a value of variable identified by its
- *    position in the variables' list (when second argument is passed).
- *      It also returns the name of a variable if optional third argument
- *    is passed by reference.
- *
- *      If requested variable doesn't exist (requested position is 
- *    greater then the number of defined variables) then NIL value is 
- *    returned and variable name is set to "?"
- *
- *      The dynamic symbols table is used to find a PUBLIC variable then
- *    the PUBLIC variables are always sorted alphabetically. The PRIVATE
- *    variables are sorted in the creation order.
- *
- *    Note:
- *    Due to dynamic nature of memvar variables there is no guarantee that
- *    successive calls to retrieve the value of <Nth> PUBLIC variable will
- *    return the value of the same variable.
- *  $EXAMPLES$
- *
- *  #include <hbmemvar.ch>
- *
- *  LOCAL nCount, i, xValue, cName
- *
- *  nCount =_mvDBGINFO( HB_MV_PUBLIC )
- *  FOR i:=1 TO nCount
- *     xValue =__mvDBGINFO( HB_MV_PUBLIC, i, @cName )
- *     ? i, cName, xValue
- *  NEXT
- *
- *  $TESTS$
- *
- *  #include <hbmemvar.ch>
- *  PROCEDURE MAIN()
- *
- *    ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
- *    ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
- *
- *    PUBLIC cPublic:='cPublic in MAIN'
- *
- *    ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
- *    ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
- *
- *    PRIVATE cPrivate:='cPrivate in MAIN'
- *
- *    ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
- *    ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
- *
- *    CountMemvars()
- *
- *    ? 'Back in Main'
- *    ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
- *    ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
- *
- *
- *  RETURN
- *
- *  PROCEDURE CountMemvars()
- *  LOCAL i, nCnt, xVal, cName
- *  PUBLIC ccPublic:='ccPublic'
- *  PRIVATE ccPrivate:='ccPrivate'
- *
- *    ? 'In CountMemvars'
- *    ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
- *    ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
- *
- *    PRIVATE cPublic:='cPublic'
- *
- *    ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
- *    ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
- *
- *    nCnt =__mvDBGINFO( HB_MV_PRIVATE ) +1
- *    FOR i:=1 TO nCnt
- *        xVal =__mvDBGINFO( HB_MV_PRIVATE, i, @cName )
- *        ? i, '=', cName, xVal
- *    NEXT
- *
- *    nCnt =__mvDBGINFO( HB_MV_PUBLIC ) +1
- *    FOR i:=1 TO nCnt
- *        xVal =__mvDBGINFO( HB_MV_PUBLIC, i, @cName )
- *        ? i, '=', cName, xVal
- *    NEXT
- *
- *  RETURN
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *     This function should be called from the debugger only.
- *  $SEEALSO$
- *
- *  $END$
- */
 HARBOUR HB___MVDBGINFO( void )
 {
    int iCount = hb_pcount();
@@ -1494,36 +1115,6 @@ HARBOUR HB___MVDBGINFO( void )
    }
 }
 
-/* -------------------------------------------------------------------------- */
-/*  $DOC$
- *  $FUNCNAME$
- *    __MVGET()
- *  $CATEGORY$
- *    Variable Management
- *  $ONELINER$
- *    This function returns value of memory variable
- *  $SYNTAX$
- *    __MVGET( <cVarName> )
- *  $ARGUMENTS$
- *    <cVarName> - string that specifies the name of variable
- *  $RETURNS$
- *    The value of variable
- *  $DESCRIPTION$
- *      This function returns the value of PRIVATE or PUBLIC variable if
- *    this variable exists otherwise it generates a runtime error.
- *    The variable is specified by its name passed as the function parameter.
- *  $EXAMPLES$
- *    FUNCTION MEMVARBLOCK( cMemvar )
- *    RETURN {|x| IIF( PCOUNT()==0, __MVGET( cMemvar ),;
- *    __MVPUT( cMemvar, x ) ) }
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $SEEALSO$
- *    __MVPUT()
- *  $END$
- */
 HARBOUR HB___MVGET( void )
 {
    HB_ITEM_PTR pName = hb_param( 1, IT_STRING );
@@ -1588,40 +1179,6 @@ HARBOUR HB___MVGET( void )
    }
 }
 
-/* -------------------------------------------------------------------------- */
-/*  $DOC$
- *  $FUNCNAME$
- *    __MVPUT()
- *  $CATEGORY$
- *    Variable Management
- *  $ONELINER$
- *    This function set the value of memory variable
- *  $SYNTAX$
- *    __MVGET( <cVarName> [, <xValue>] )
- *  $ARGUMENTS$
- *    <cVarName> - string that specifies the name of variable
- *    <xValue>   - a value of any type that will be set - if it is not
- *      specified then NIL is assumed
- *  $RETURNS$
- *    A value assigned to the given variable.
- *  $DESCRIPTION$
- *      This function sets the value of PRIVATE or PUBLIC variable if
- *    this variable exists otherwise it generates a runtime error.
- *    The variable is specified by its name passed as the function
- *    parameter.
- *    If a value is not specified then the NIL is assumed
- *  $EXAMPLES$
- *    FUNCTION MEMVARBLOCK( cMemvar )
- *    RETURN {|x| IIF( PCOUNT()==0, __MVGET( cMemvar ),;
- *     __MVPUT( cMemvar, x ) ) }
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $SEEALSO$
- *    __MVPUT()
- *  $END$
- */
 HARBOUR HB___MVPUT( void )
 {
    HB_ITEM_PTR pName = hb_param( 1, IT_STRING );

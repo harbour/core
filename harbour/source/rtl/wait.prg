@@ -33,38 +33,6 @@
  *
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      __WAIT()
- *  $CATEGORY$
- *      Events
- *  $ONELINER$
- *      Stops the application until a key is pressed.
- *  $SYNTAX$
- *      __WAIT( <cMessage> ) --> <cKey>
- *  $ARGUMENTS$
- *      <cMessage> is a string.
- *  $RETURNS$
- *      Pressed key.
- *  $DESCRIPTION$
- *      This function stops the application until a key is pressed. The key
- *      must be in the range 32..255. Control keys are not processed.
- *  $EXAMPLES$
- *      // Wait for a key stroke
- *      __Wait( "Press a key to continue" )
- *  $TESTS$
- *      do while cKey != "Q"
- *        cKey := __Wait( "Press 'Q' to continue" )
- *      end do
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      __WAIT() is fully CA-Clipper compliant.
- *  $SEEALSO$
- *      __ACCEPT(),__INPUT()
- *  $END$
- */
-
 #include "inkey.ch"
 
 FUNCTION __Wait( cString )

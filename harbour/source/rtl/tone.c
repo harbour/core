@@ -86,54 +86,6 @@
    ULONG DosBeep( ULONG ulFrequency, ULONG ulDuration );
 #endif
 
-/*  $DOC$
- *  $FUNCNAME$
- *      TONE()
- *  $CATEGORY$
- *      Misc
- *  $ONELINER$
- *      Sound a tone with a specifies frequency and duration
- *  $SYNTAX$
- *      TONE( <nFrequency>, <nDuration> ) --> NIL
- *  $ARGUMENTS$
- *      <nFrequency> is a non-negative numeric value that specifies the
- *      frequency of the tone in hertz.
- *      <nDuration> is a positive numeric value which specifies the duration
- *      of the tone in 1/18 of a second units.
- *  $RETURNS$
- *      TONE() always return NIL.
- *  $DESCRIPTION$
- *      TONE() is a sound function that could be used to irritate the end
- *      user, his or her dog, and the surrounding neighborhood. The frequency
- *      is clamped to the range 0 to 32767 Hz.
- *  $EXAMPLES$
- *      If lOk   // Good Sound
- *         TONE(  500, 1 )
- *         TONE( 4000, 1 )
- *         TONE( 2500, 1 )
- *      Else     // Bad Sound
- *         TONE(  300, 1 )
- *         TONE(  499, 5 )
- *         TONE(  700, 5 )
- *      EndIf
- *  $TESTS$
- *      TONE( 800, 1 )                         // same as ? CHR(7)
- *      TONE( 32000, 200 )                     // any dogs around yet?
- *      TONE( 130.80, 1 )                      // musical note - C
- *      TONE( 400, 0 )                         // short beep
- *      TONE( 700 )                            // short beep
- *      TONE( 10, 18.2 )                       // 1 second delay
- *      TONE( -1 )                             // 1/18.2 second delay
- *      TONE( )                                // 1/18.2 second delay
- *  $STATUS$
- *      S
- *  $COMPLIANCE$
- *      TONE() works exactly like CA-Clipper's TONE().
- *  $SEEALSO$
- *      CHR(),SET BELL
- *  $END$
- */
-
 void hb_tone( double dFrequency, double dDuration )
 {
    /* platform specific code */

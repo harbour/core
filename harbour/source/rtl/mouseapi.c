@@ -38,7 +38,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    API interface proposal
+ *    API proposal
  *
  * See doc/license.txt for licensing terms.
  *
@@ -189,72 +189,10 @@ HARBOUR HB_MSETCURSOR( void )
       hb_mouseSetCursor( hb_parl( 1 ) );
 }
 
-/*  $DOC$
- *  $FUNCNAME$
- *      MROW()
- *  $CATEGORY$
- *      Console input
- *  $ONELINER$
- *      Returns the mouse cursor row position
- *  $SYNTAX$
- *      MRow() --> nMouseColumn
- *  $ARGUMENTS$
- *      None
- *  $RETURNS$
- *      The mouse cursor column position
- *  $DESCRIPTION$
- *  $EXAMPLES$
- *      local nKey
- *      nKey = InKey( 0 )
- *      do case
- *         case nKey ==
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      This function is a Harbour Specific
- *  $PLATFORMS$
- *      This function is Windows Specific
- *  $SEEALSO$
- *      MCOL()
- *  $END$
- */
-
 HARBOUR HB_MROW( void )
 {
    hb_retni( hb_mouseRow() );   
 }
-
-/*  $DOC$
- *  $FUNCNAME$
- *      MCOL()
- *  $CATEGORY$
- *      Console input
- *  $ONELINER$
- *      Returns the mouse cursor column position
- *  $SYNTAX$
- *      MCol() --> nMouseColumn
- *  $ARGUMENTS$
- *      None
- *  $RETURNS$
- *      The mouse cursor column position
- *  $DESCRIPTION$
- *  $EXAMPLES$
- *      local nKey
- *      nKey = InKey( 0 )
- *      do case
- *         case nKey ==
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      This function is a Harbour Specific
- *  $PLATFORMS$
- *      This function is Windows Specific
- *  $SEEALSO$
- *      MROW()
- *  $END$
- */
 
 HARBOUR HB_MCOL( void )
 {

@@ -17,38 +17,6 @@
  * public domain.
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_ASCPOS()
- *  $CATEGORY$
- *      String
- *  $ONELINER$
- *      Return the ascii value of a specified character in a string
- *  $SYNTAX$
- *      GT_Ascpos(<cStr>, <nPos>) --> nAscVal
- *  $ARGUMENTS$
- *      <cStr>  - The string
- *      <nPos>  - The position in <cStr>
- *  $RETURNS$
- *      nAscVal - The ascii value of substr(<cStr>, <nPos>, 1)
- *  $DESCRIPTION$
- *      Return the ascii value of a specified character in a string
- *      Equivalent (but much faster) to
- *          asc(substr(cStr, nPos, 1)
- *
- *      NOTE:
- *         invalid parameters will return -1
- *         nPos > len(cStr)   will return -2
- *
- *      This last behaviour is different to the Funcky function of the
- *      same name.  I changed the behaviour because some of the strings
- *      I process contain embedded NULs.
- *  $EXAMPLES$
- *       ? gt_ascpos("the cat sat on the mat", 3) // prints e
- *  $END$
- */
-
 #include "extend.h"
 
 HARBOUR HB_GT_ASCPOS( void )

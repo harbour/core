@@ -46,42 +46,6 @@
  *
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      DEVOUTPICT()
- *  $CATEGORY$
- *      Terminal
- *  $ONELINER$
- *      Displays a value to a device using a picture template
- *  $SYNTAX$
- *      DEVOUTPICT(<xExp>,<cPicture>[,<cColorString>]) --> NIL
- *  $ARGUMENTS$
- *      <xExp> is any valid expression.
- *      <cPicture> is any picture transformation that TRANSFORM() can use.
- *      <cColorString> is an optional string that specifies a screen color to
- *      use in place of the default color when the output goes to the screen.
- *  $RETURNS$
- *      NIL
- *  $DESCRIPTION$
- *      Outputs any expression using a picture transformation instead of
- *      using the default transformation for the type of expression.
- *  $EXAMPLES$
- *      // Output a negative dollar amount using debit notation.
- *      DEVOUTPICT( -1.25, "@D$ 99,999.99 )
- *  $TESTS$
- *      @ 3,1 SAY -1.25 PICTURE "@D$ 99,999.99"
- *      will display "$(     1.25)" starting on row four, column two of the
- *      current device (without the double quotation marks, of course).
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      DEVOUTPICT() is mostly CA-Clipper compliant. Any differences are due
- *      to enhancements in the Harbour TRANSFORM() over CA-Clipper.
- *  $SEEALSO$
- *      DEVOUT(),TRANSFORM()
- *  $END$
- */
-
 PROCEDURE DevOutPict( xValue, cPicture, cColor )
 
    DevOut( Transform( xValue, cPicture ), cColor )

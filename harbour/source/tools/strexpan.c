@@ -17,38 +17,6 @@
  * public domain.
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_STREXPAND()
- *  $CATEGORY$
- *      String
- *  $ONELINER$
- *      Insert fillers between characters in a passed string
- *  $SYNTAX$
- *      GT_StrExpand(<cStr>, [<nNum>], [<cChar>]) --> cRet
- *  $ARGUMENTS$
- *      <cStr1>  - A character string to insert chars into
- *      <nNum>   - The number of fill characters to insert (default 1)
- *      <cChar>  - The fill chararacter (default space)
- *  $RETURNS$
- *      cRet     - The input string with fill characters inserted between
- *                 every character in the original.
- *  $DESCRIPTION$
- *      Inserts fill characters into a string.
- *
- *      NOTE:
- *         invalid parameters will return ""
- *  $EXAMPLES$
- *
- *      ? gt_strexpand("abc")                    // prints "a b c"
- *      ? gt_strexpand("abc", 2)                 // prints "a  b  c"
- *      ? gt_strexpand("abc", 2, 'þ')            // prints "aþþbþþc"
- *
- *  $END$
- */
-
-
 #include "extend.h"
 
 HARBOUR HB_GT_STREXPAND( void )

@@ -17,33 +17,6 @@
  * public domain.
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_CHRFIRST()
- *  $CATEGORY$
- *      String
- *  $ONELINER$
- *      Find which character occurs first in a string
- *  $SYNTAX$
- *      GT_ChrFirst(<cChars>, <cStr>) --> nAsc
- *  $ARGUMENTS$
- *      <cChars> - The set of characters to find
- *      <cStr>   - The input string
- *  $RETURNS$
- *      nAsc     - The ASCII value of the first character in <cChars>
- *                 which appears first in <cStr>
- *  $DESCRIPTION$
- *      Return the ascii value of a character in <cChars>
- *      which appears first in <cStr>.
- *  $EXAMPLES$
- *
- *      ? chr(GT_ChrFirst("sa ", "This is a test"))  // prints "s"
- *      ? chr(GT_ChrFirst("et",  "This is a test"))   // prints "t"
- *
- *  $END$
- */
-
 #include "extend.h"
 
 HARBOUR HB_GT_CHRFIRST( void )

@@ -36,35 +36,6 @@
 #include "extend.h"
 #include "ctoharb.h"
 
-/*  $DOC$
- *  $FUNCNAME$
- *      __XHELP()
- *  $CATEGORY$
- *      Internal
- *  $ONELINER$
- *      Looks if a Help() user defined function exist.
- *  $SYNTAX$
- *      __XHELP() --> <xValue>
- *  $ARGUMENTS$
- *      None
- *  $RETURNS$
- *      This function returns aleatory values.
- *  $DESCRIPTION$
- *      This is an internal undocumented Clipper function, which will
- *      try to call the user defined function HELP() if it's defined
- *      in the current application. This is the default SetKey() handler
- *      for the F1 key.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      __XHELP() is fully CA-Clipper compliant.
- *  $SEEALSO$
- *      
- *  $END$
- */
-
 HARBOUR HB___XHELP( void )
 {
    PHB_DYNS pDynSym = hb_dynsymFind( "HELP" );

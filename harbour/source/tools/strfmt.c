@@ -35,52 +35,6 @@
 
 #include "extend.h"
 
-/*  $DOC$
- *  $FUNCNAME$
- *     StrFormat()
- *  $CATEGORY$
- *     String
- *  $ONELINER$
- *     ...
- *  $SYNTAX$
- *     StrFormat(<cMask>[, <cPar1>[, <cParn>[, ...]])
- *  $ARGUMENTS$
- *     <cMask> Holds the mask for the resulting string
- *     <cParn> Holds the strings to be inserted in the mask
- *             maximum 9 of them can be specified.
- *  $RETURNS$
- *     Return the mask with all the parameters inserted.
- *  $DESCRIPTION$
- *     String replacment, can be useful when writing international
- *     apps. You can separate the constant strings from the variable ones.
- *     Each %1 - %9 marks will be replaced with the appropriate parameter
- *     from the parameter list.
- *     Marks can be in any order, and can be duplicated.
- *     You can print "%" character with "%%".
- *  $EXAMPLES$
- *     StrFormat("Please insert disk %1 to drive %2", LTrim(Str(2)), "A:")
- *     StrFormat("This is %1 from %2", "Victor", "Hungary")
- *     StrFormat("%2 %1 %2", "Param1", "Param2")
- *  $TESTS$
- *     ? StrFormat("Please insert disk %1 to drive %2", LTrim(Str(2)), "A:")
- *     ? StrFormat("This is %1 from %2", "Victor", "Hungary")
- *     ? StrFormat("%2 %1 %2", "Param1", "Param2")
- *     ? StrFormat("Hello")
- *     ? StrFormat("%1 - %2", "one")
- *     ? StrFormat("%1 - %2", "one", "two")
- *     ? StrFormat("%2 - %1", "one", "two")
- *     ? StrFormat("%2 - %", "one", "two")
- *     ? StrFormat("%% - %", "one", "two")
- *     ? StrFormat("%9 - %", "one", "two")
- *  $STATUS$
- *     Done
- *  $COMPLIANCE$
- *     All platforms
- *  $SEEALSO$
- *
- *  $END$
- */
-
 #define HB_STRFORMAT_PARNUM_MAX_ 9
 
 HARBOUR HB_STRFORMAT (void) /* StrFormat() */

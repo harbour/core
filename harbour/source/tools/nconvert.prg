@@ -33,30 +33,6 @@
  *
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *   ISBIN()
- *  $CATEGORY$
- *     Conversion
- *  $ONELINER$
- *  Check if the value is a Binary  Number
- *  $SYNTAX$
- *   ISBIN(<CN>) -><CNR>
- *  $ARGUMENTS$
- *  <CN> STRING TO BE CHECKED
- *  $RETURNS$
- *     .T. IF THE STRING IS BYNARY
- *     .F. IF NOT
- *  $DESCRIPTION$
- *   check if the passed string is a bynary number or not
- *  $EXAMPLES$
- *  $SEEALSO$
- *    ISOCTAL(),ISDEC(),ISHEXA()
- *  $INCLUDE$
- *
- *  $END$
- */
-
 FUNCTION IsBin(cString)
    local nX,lFlag:=.t.
    cString:=AllTrim(cString)
@@ -67,30 +43,6 @@ FUNCTION IsBin(cString)
       ENDIF
    NEXT nX
    RETURN(lFlag)
-
-/*  $DOC$
- *  $FUNCNAME$
- *   ISOCTAL()
- *  $CATEGORY$
- *     Conversion
- *  $ONELINER$
- *   Check if the value is a Octal  Number
- *  $SYNTAX$
- *   ISOCTAL(<CN>) -><CNR>
- *  $ARGUMENTS$
- *  <CN> STRING TO BE CHECKED
- *  $RETURNS$
- *   .T. IF THE STRING IS OCTAL
- *   .F. IF NOT
- *  $DESCRIPTION$
- *   check if the passed string is a octal number or not
- *  $EXAMPLES$
- *  $SEEALSO$
- *  ISBIN(),ISDEC(),ISHEXA()
- *  $INCLUDE$
- *
- *  $END$
- */
 
 FUNCTION IsOctal(cString)
    local nX,lFlag:=.t.
@@ -103,30 +55,6 @@ FUNCTION IsOctal(cString)
    NEXT nX
    RETURN(lFlag)
 
-/*  $DOC$
- *  $FUNCNAME$
- *   ISDEC()
- *  $CATEGORY$
- *     Conversion
- *  $ONELINER$
- *   Check if the value is a Decimal  Number
- *  $SYNTAX$
- *   ISDEC(<CN>) -><CNR>
- *  $ARGUMENTS$
- *  <CN> STRING TO BE CHECKED
- *  $RETURNS$
- *   .T. IF THE STRING IS DECIMAL
- *   .F. IF NOT
- *  $DESCRIPTION$
- *   check if the passed string is a decimal number or not
- *  $EXAMPLES$
- *  $SEEALSO$
- *  ISOCTAL(),ISBIN(),ISHEXA()
- *  $INCLUDE$
- *
- *  $END$
- */
-
 FUNCTION IsDec(cString)
    local nX,lFlag:=.t.
    cString:=AllTrim(cString)
@@ -137,30 +65,6 @@ FUNCTION IsDec(cString)
       ENDIF
    NEXT nX
    RETURN(lFlag)
-
-/*  $DOC$
- *  $FUNCNAME$
- *   ISHEXA()
- *  $CATEGORY$
- *     Conversion
- *  $ONELINER$
- *   Check if the value is a Hexal  Number
- *  $SYNTAX$
- *   ISHEXA(<CN>) -><CNR>
- *  $ARGUMENTS$
- *  <CN> STRING TO BE CHECKED
- *  $RETURNS$
- *   .T. IF THE STRING IS HEXA
- *   .F. IF NOT
- *  $DESCRIPTION$
- *     check if the passed string is a hexa number or not
- *  $EXAMPLES$
- *  $SEEALSO$
- *  ISOCTAL(),ISDEC(),ISBIN()
- *  $INCLUDE$
- *
- *  $END$
- */
 
 FUNCTION IsHexa(cString)
    local nX,lFlag:=.t.
@@ -173,31 +77,6 @@ FUNCTION IsHexa(cString)
    NEXT nX
    RETURN(lFlag)
 
-/*  $DOC$
- *  $FUNCNAME$
- *   DECTOBIN()
- *  $CATEGORY$
- *     Conversion
- *  $ONELINER$
- *   Converts a Decimal Value to Binary
- *  $SYNTAX$
- *   DECTOBIN(<CN>) -><CNR>
- *  $ARGUMENTS$
- *  <CN> NUMBER TO BE CONVERTED
- *  $RETURNS$
- *  <CNR>  NUMBER CONVERTED
- *  $DESCRIPTION$
- *    This function converts a string <CN> from an decimal value
- *    to an binary value.
- *  $EXAMPLES$
- *
- *  $SEEALSO$
- *     Dectohexa(),dectooctal()
- *  $INCLUDE$
- *
- *  $END$
- */
-
 FUNCTION DecToBin(nNumber)
    local cNewString:=''
    local nTemp:=0
@@ -207,31 +86,6 @@ FUNCTION DecToBin(nNumber)
       nNumber:=Int((nNumber-nTemp)/2)
    ENDDO
    RETURN(cNewString)
-
-/*  $DOC$
- *  $FUNCNAME$
- *   DECTOOCTAL()
- *  $CATEGORY$
- *     Conversion
- *  $ONELINER$
- *   Converts a Decimal Value to Octal
- *  $SYNTAX$
- *   DECTOOCTAL(<CN>) -><CNR>
- *  $ARGUMENTS$
- *  <CN> NUMBER TO BE CONVERTED
- *  $RETURNS$
- *  <CNR>  NUMBER CONVERTED
- *  $DESCRIPTION$
- *    This function converts a string <CN> from an decimal value
- *    to an octal value.
- *  $EXAMPLES$
- *
- *  $SEEALSO$
- *  Dectohexa(),dectobin()
- *  $INCLUDE$
- *
- *  $END$
- */
 
 FUNCTION DecToOctal(nNumber)
    local cNewString:=''
@@ -243,31 +97,6 @@ FUNCTION DecToOctal(nNumber)
    ENDDO
    RETURN(cNewString)
 
-/*  $DOC$
- *  $FUNCNAME$
- *   DECTOHEXA()
- *  $CATEGORY$
- *     Conversion
- *  $ONELINER$
- *   Converts a Decimal Value to Hexa
- *  $SYNTAX$
- *   DECTOHEXA(<CN>) -><CNR>
- *  $ARGUMENTS$
- *  <CN> NUMBER TO BE CONVERTED
- *  $RETURNS$
- *  <CNR>  NUMBER CONVERTED
- *  $DESCRIPTION$
- *    This function converts a string <CN> from an decimal value
- *    to an hexadecimal value.
- *  $EXAMPLES$
- *
- *  $SEEALSO$
- *     Dectobin(),dectoctal()
- *  $INCLUDE$
- *
- *  $END$
- */
-
 FUNCTION DecToHexa(nNumber)
    local cNewString:=''
    local nTemp:=0
@@ -277,31 +106,6 @@ FUNCTION DecToHexa(nNumber)
       nNumber:=Int((nNumber-nTemp)/16)
    ENDDO
    RETURN(cNewString)
-
-/*  $DOC$
- *  $FUNCNAME$
- *   BIntODEC()
- *  $CATEGORY$
- *     Conversion
- *  $ONELINER$
- *   Converts a Binary Value to Decimal
- *  $SYNTAX$
- *   BIntODEC(<CN>) -><CNR>
- *  $ARGUMENTS$
- *  <CN> NUMBER TO BE CONVERTED
- *  $RETURNS$
- *  <CNR>  NUMBER CONVERTED
- *  $DESCRIPTION$
- *    This function converts a string <CN> from an binary value
- *    to a numeric decimal value.
- *  $EXAMPLES$
- *
- *  $SEEALSO$
- *     OctaltoDec(),HexatoDec()
- *  $INCLUDE$
- *
- *  $END$
- */
 
 FUNCTION BinToDec(cString)
    local nNumber:=0,nX:=0
@@ -313,31 +117,6 @@ FUNCTION BinToDec(cString)
    NEXT nX
    RETURN(nNumber)
 
-/*  $DOC$
- *  $FUNCNAME$
- *   OCTALTODEC()
- *  $CATEGORY$
- *     Conversion
- *  $ONELINER$
- *   Converts a Octal Value to Decimal
- *  $SYNTAX$
- *   OCTALTODEC(<CN>) -><CNR>
- *  $ARGUMENTS$
- *  <CN> NUMBER TO BE CONVERTED
- *  $RETURNS$
- *  <CNR>  NUMBER CONVERTED
- *  $DESCRIPTION$
- *     This function converts a string <CN> from an octal value
- *     to a numeric decimal value.
- *  $EXAMPLES$
- *
- *  $SEEALSO$
- *     BintoDec(),HexatoDec()
- *  $INCLUDE$
- *
- *  $END$
- */
-
 FUNCTION OctalToDec(cString)
    local nNumber:=0,nX:=0
    local cNewString:=AllTrim(cString)
@@ -347,32 +126,6 @@ FUNCTION OctalToDec(cString)
 	 (8**(nLen-nX))
    NEXT nX
    RETURN(nNumber)
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *     HEXATODEC()
- *  $CATEGORY$
- *     Conversion
- *  $ONELINER$
- *     Converts a Hexa Value to Decimal
- *  $SYNTAX$
- *     HEXATODEC(<CN>) -><CNR>
- *  $ARGUMENTS$
- *    <CN> NUMBER TO BE CONVERTED
- *  $RETURNS$
- *    <CNR>  NUMBER CONVERTED
- *  $DESCRIPTION$
- *    This function converts a string <CN> from an hexadecimal value
- *    to a numeric decimal value.
- *  $EXAMPLES$
- *
- *  $SEEALSO$
- *      OctaltoDec(),BintoDec()
- *  $INCLUDE$
- *
- *  $END$
- */
                         
 FUNCTION HexaToDec(cString)
    local nNumber:=0,nX:=0

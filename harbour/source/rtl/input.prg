@@ -33,37 +33,6 @@
  *
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      __INPUT()
- *  $CATEGORY$
- *      Data input and output
- *  $ONELINER$
- *      Stops application 
- *  $SYNTAX$
- *      __INPUT( <cMessage> ) --> <cString>
- *  $ARGUMENTS$
- *      <cMessage> is any valid expression.
- *  $RETURNS$
- *      Macroed <cString>
- *  $DESCRIPTION$
- *      This function waits for a console input and returns macroed
- *      expression entered.
- *  $EXAMPLES$
- *      
- *      
- *  $TESTS$
- *      
- *      
- *  $STATUS$
- *      S
- *  $COMPLIANCE$
- *      __INPUT() is fully CA-Clipper compliant.
- *  $SEEALSO$
- *      __WAIT(),__ACCEPT()
- *  $END$
- */
-
 FUNCTION __Input( cMessage )
    LOCAL cString := __Accept( cMessage )
 

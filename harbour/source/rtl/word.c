@@ -37,35 +37,6 @@
 #include "errorapi.h"
 #include "itemapi.h"
 
-/*  $DOC$
- *  $FUNCNAME$
- *      WORD()
- *  $CATEGORY$
- *      Conversion
- *  $ONELINER$
- *      Converts double to integer values.
- *  $SYNTAX$
- *      WORD( <nDouble> ) --> <nInteger>
- *  $ARGUMENTS$
- *      <nDouble> is a numeric double value.
- *  $RETURNS$
- *      An integer in the range +-32767
- *  $DESCRIPTION$
- *      This function converts double values to integers to use
- *      within the CALL command
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      The Clipper NG states that WORD() will only work when used in CALL
- *      commands parameter list, otherwise it will return NIL, in Harbour
- *      it will work anywhere.
- *  $SEEALSO$
- *       CALL
- *  $END$
- */
-
 /* NOTE: The Clipper NG states that WORD() will only work when used
          in CALL commands parameter list, otherwise it will return
          NIL, in Harbour it will work anywhere. */

@@ -33,18 +33,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
- *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    HB_OEMTOANSI() Documentation
- *    HB_ANSITOOEM() Documentation
- *
- * See doc/license.txt for licensing terms.
- *
- */
-
 /* NOTE: These are Win32 specific, for other platforms it will return the
          passed parameter unchanged. */
 
@@ -54,42 +42,6 @@
 
 #include "extend.h"
 #include "itemapi.h"
-
-/*  $DOC$
- *  $FUNCNAME$
- *      HB_ANSITOOEM()
- *  $CATEGORY$
- *      Strings
- *  $ONELINER$
- *      Convert a windows Character to a Dos based character
- *  $SYNTAX$
- *      HB_ANSITOOEM(<cString>)  -> cDosString
- *  $ARGUMENTS$
- *      <cString>  Windows ansi string to convert to DOS oem String
- *  $RETURNS$
- *      cDosString Dos based  string
- *  $DESCRIPTION$
- *      This function converts each character in <cString> to the corresponding
- *      character in the MS-DOS (OEM) character set.The character expression
- *      <cString> should contain characters from the ANSI character set.
- *      If a character in <cString> doesn't have a MS-DOS equivalent, the
- *      character is converted to a similar MS-DOS character.
- *  $EXAMPLES$
- *      ? HB_OEMTOANSI("Harbour")
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      This function is a Harbour extension
- *  $PLATFORMS$
- *      This functions work only on Windows Plataform
- *  $FILES$
- *
- *  $SEEALSO$
- *      HB_OEMTOANSI()
- *  $END$
- */
 
 HARBOUR HB_HB_ANSITOOEM( void )
 {
@@ -112,41 +64,6 @@ HARBOUR HB_HB_ANSITOOEM( void )
    else
       hb_retc( "" );
 }
-
-/*  $DOC$
- *  $FUNCNAME$
- *      HB_OEMTOANSI()
- *  $CATEGORY$
- *      Strings
- *  $ONELINER$
- *      Convert a DOS(OEM) Character to a WINDOWS (ANSI) based character
- *  $SYNTAX$
- *      HB_OEMTOANSI(<cString>)  -> cDosString
- *  $ARGUMENTS$
- *      <cString>  DOS (OEM)  string to convert to WINDOWS (ANSI) String
- *  $RETURNS$
- *      cDosString WINDOWS based  string
- *  $DESCRIPTION$
- *      This function converts each character in <cString> to the corresponding
- *      character in the Windows (ANSI) character set.The character expression
- *      <cString> should contain characters from the OEM character set.
- *      If a character in <cString> doesn't have a ANSI equivalent, the
- *      character is remais the same.
- *  $EXAMPLES$
- *      ? HB_OEMTOANSI("Harbour")
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      This function is a Harbour extension
- *  $PLATFORMS$
- *      This functions work only on Windows Plataform
- *  $FILES$
- *
- *  $SEEALSO$
- *      HB_ANSITOOEM()
- *  $END$
- */
            
 HARBOUR HB_HB_OEMTOANSI( void )
 {

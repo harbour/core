@@ -33,37 +33,6 @@
  *
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      DESCEND()
- *  $CATEGORY$
- *      Conversion
- *  $ONELINER$
- *      Inverts an expression of string, logical, date or numeric type.
- *  $SYNTAX$
- *      DESCEND( <xExp> ) --> <xExpInverted>
- *  $ARGUMENTS$
- *      <xExp> is any valid expression.
- *  $RETURNS$
- *      Inverted value of the same type as passed.
- *  $DESCRIPTION$
- *      This function converts an expression in his inverted form. It is
- *      useful to build descending indexes.
- *  $EXAMPLES$
- *      // Seek for Smith in a descending index
- *      SEEK DESCEND( "SMITH" )
- *  $TESTS$
- *      DATA->( DBSEEK( DESCEND( "SMITH" ) ) )
- *      will seek "SMITH" into a descending index.
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      DESCEND() is fully CA-Clipper compliant.
- *  $SEEALSO$
- *       INDEX,SEEK
- *  $END$
- */
-
 #include "extend.h"
 #include "itemapi.h"
 
@@ -75,7 +44,7 @@ void hb_strDescend( char * szStringTo, const char * szStringFrom, ULONG ulLen )
       szStringTo[ 0 ] = '\0';
    else
    {
-      for(; ulLen--; ++szStringTo, ++szStringFrom )
+      for(; ulLen--; szStringTo++, szStringFrom++ )
          *szStringTo = 256 - *szStringFrom;
    }
 }

@@ -35,42 +35,6 @@
 
 #include "extend.h"
 
-/*  $DOC$
- *  $FUNCNAME$
- *      PCOUNT()
- *  $CATEGORY$
- *      Parameter Checks
- *  $ONELINER$
- *      Retrieves the number of arguments passed to a function.
- *  $SYNTAX$
- *      PCOUNT() --> <nArgs>
- *  $ARGUMENTS$
- *      None
- *  $RETURNS$
- *      Returns a number that indicates the number of arguments
- *      passed to a function or procedure.
- *  $DESCRIPTION$
- *      This function is useful to check if a function or procedure
- *      has received the required number of arguments.
- *  $EXAMPLES$
- *      See Test
- *  $TESTS$
- *      function Test( xExp )
- *         if PCount() == 0
- *            ? "This function needs a parameter"
- *         else
- *            ? xExp
- *         endif
- *      return nil
-  *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      PCOUNT() is fully CA-Clipper compliant.
- *  $SEEALSO$
- *      HB_PVALUE()
- *  $END$
- */
-
 HARBOUR HB_PCOUNT( void )
 {
    /* Skip current function */

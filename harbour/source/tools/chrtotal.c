@@ -17,38 +17,6 @@
  * public domain.
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_CHRTOTAL()
- *  $CATEGORY$
- *      String
- *  $ONELINER$
- *      Find number of times a set of characters appears in a string
- *  $SYNTAX$
- *      GT_ChrTotal(<cChrs>, <cStr>) --> nTotOcc
- *  $ARGUMENTS$
- *      <cChrs> - The set of characters
- *      <cStr>  - The string to search
- *  $RETURNS$
- *      nTotOcc - The number of times the characters specified in
- *                <cChrs> appears in <cStr>
- *  $DESCRIPTION$
- *      Returns the numnber of occurrences of characters belonging
- *      to the set <cChrs> in the string <cStr>.  If no characters
- *      in <cChrs> appears in <cStr> GT_ChrTotal() will return 0.
- *
- *      NOTE:
- *         invalid parameters will return -1
- *  $EXAMPLES$
- *
- *       local cStr1 := "the cat sat on the mat"
- *
- *       ? GT_ChrTotal("tae", cStr1)            // prints 10
- *       ? GT_ChrTotal("zqw", cStr1)            // prints  0
- *  $END$
- */
-
 #include "extend.h"
 
 HARBOUR HB_GT_CHRTOTAL( void )

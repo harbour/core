@@ -17,33 +17,6 @@
  * public domain.
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_CHAREVEN()
- *  $CATEGORY$
- *      String
- *  $ONELINER$
- *      Return a string of all the characters in even positions
- *  $SYNTAX$
- *      GT_CharEven(<cStr>) --> cRet
- *  $ARGUMENTS$
- *      <cStr>   - A character string to extract chars from
- *  $RETURNS$
- *      cRet     - A string of all the chars in even positions
- *  $DESCRIPTION$
- *      Return a string consisting of all the characters in even
- *      positions in <cStr1>.
- *
- *      NOTE:
- *         invalid parameters will return ""
- *  $EXAMPLES$
- *
- *      ? gt_CharEven("abcdefghijklm")             // prints "bdfhjl"
- *
- *  $END$
- */
-
 #include "extend.h"
 
 HARBOUR HB_GT_CHAREVEN( void )

@@ -1,4 +1,4 @@
-/* 
+/*
  * $Id$
  */
 
@@ -33,14 +33,6 @@
  *
  */
 
-/*
- * ChangeLog:
- *
- * V 1.1    David G. Holm               Committed to CVS.
- * V 1.0    David G. Holm               Initial version.
- *
- */
-
 #include "fileio.ch"
 
 #define oF_ERROR_MIN          1
@@ -49,83 +41,10 @@
 #define oF_READ_FILE          3
 #define oF_CLOSE_FILE         4
 #define oF_ERROR_MAX          4
-#define oF_DEFAULT_READ_SIZE 4096
-
-/*  $DOC$
- *  $FUNCNAME$
- *      TFileRead()
- *  $CATEGORY$
- *      Harbour Tools
- *  $ONELINER$
- *      Read a file one line at a time
- *  $SYNTAX$
- *      oFile := TFileRead():New( <cFileName> [, <nReadSize> ] )
- *  $ARGUMENTS$
- *      cFileName is the required name of the file to be read.
- *      nReadSize is the optional size to use when reading from the file.
- *      The default value is 4096 and the allowed range is 1 through 65535.
- *      Any value outside of this range causes the default value to be used.
- *  $RETURNS$
- *      An instance of the File Reader class
- *  $DESCRIPTION$
- *      TFileRead() is used to access a file one line at a time. You must
- *      specify the name of the file when an instance of the class is created.
- *      The class data should be considered private to the class.
- *      The class methods are as follows:
- *         New()              Creates a new instance of the TFileRead class.
- *         Open([<nFlags>])   Opens the file for reading. The optional nFlags
- *                            parameter can use any of the FOPEN() flags from
- *                            fileio.ch. The default is FO_READ + FO_SHARED.
- *                            Calling this method when the file is already
- *                            open causes the next ReadLine() to start over
- *                            from the beginning of the file.
- *         Close()            Closes the file.
- *         ReadLine()         Returns one line from the file, stripping the
- *                            newline characters. The following sequences are
- *                            treated as one newline: 1) CR CR LF; 2) CR LF;
- *                            3) LF; and 4) CR. Note: LF CR is 2 newlines.
- *         Name()             Returns the name of the file.
- *         IsOpen()           Returns .T. if the file is open.
- *         MoreToRead()       Returns .T. if there are more lines to be read
- *                            (think of it as an inverse EOF function).
- *         Error()            Returns .T. if an error has occurred.
- *         ErrorNo()          Returns the current error code.
- *         ErrorMsg([<cPre>]) Returns a formatted error message.
- *  $EXAMPLES$
- *      #ifdef __HARBOUR__
- *       #define NEW_LINE CHR( 10 )
- *      #else
- *       #define NEW_LINE CHR( 13 ) + CHR( 10 )
- *      #endif
- *      #include "fileio.ch"
- *      
- *      PROCEDURE Main( cFile )
- *      LOCAL oFile := TFileRead():New( cFile )
- *      
- *         oFile:Open()
- *         IF oFile:Error()
- *            QOUT( oFile:ErrorMsg( "FileRead: " ) )
- *         ELSE
- *            WHILE oFile:MoreToRead()
- *               OUTSTD( oFile:ReadLine() )
- *               OUTSTD( NEW_LINE )
- *            END WHILE
- *            oFile:Close()
- *         END IF
- *      QUIT
- *  $TESTS$
- *      See Examples
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      This is a new Harbour Tools class
- *  $SEEALSO$
- *      TClass()
- *  $END$
- */
+#define oF_DEFAULT_READ_SIZE  4096
 
 FUNCTION TFileRead()
-STATIC s_oClass
+   STATIC s_oClass
 
    IF s_oClass == NIL
       s_oClass := TClass():New( "TFile" )  // New class
@@ -136,7 +55,7 @@ STATIC s_oClass
       s_oClass:AddClassData( "nLastOp" )   // The last operation done (for error messages)
       s_oClass:AddClassData( "cBuffer" )   // The readahead buffer
       s_oClass:AddClassData( "nReadSize" ) // How much to add to the readahead buffer on
-                                         // each read from the file
+                                           // each read from the file
 
       s_oClass:AddMethod( "New",        @f_new() )       // Create a new class instance
       s_oClass:AddMethod( "Open",       @f_open() )      // Open the file for reading
@@ -149,17 +68,19 @@ STATIC s_oClass
       s_oClass:AddMethod( "ErrorNo",    @f_error_no() )  // Returns current error code
       s_oClass:AddMethod( "ErrorMsg",   @f_error_msg() ) // Returns formatted error message
       s_oClass:Create()
-   END IF
+   ENDIF
 
-RETURN s_oClass:Instance()
+   RETURN s_oClass:Instance()
 
 STATIC FUNCTION f_new( cFile, nSize )
-LOCAL oSelf := Qself()
+   LOCAL oSelf := Qself()
+
    IF nSize == NIL .OR. nSize < 1
       // The readahead size can be set to as little as 1 byte, or as much as
       // 65535 bytes, but venturing out of bounds forces the default size.
       nSize := oF_DEFAULT_READ_SIZE
-   END IF
+   ENDIF
+
    oSelf:cFile     := cFile             // Save the file name
    oSelf:nHan      := -1                // It's not open yet
    oSelf:lEOF      := .T.               // So it must be at EOF
@@ -167,15 +88,17 @@ LOCAL oSelf := Qself()
    oSelf:nLastOp   := oF_CREATE_OBJECT  // Because we just created the class
    oSelf:cBuffer   := ""                // and nothing has been read yet
    oSelf:nReadSize := nSize             // But will be in this size chunks
-RETURN oSelf
+
+   RETURN oSelf
 
 STATIC FUNCTION f_open( nMode )
-LOCAL oSelf := Qself()
+   LOCAL oSelf := Qself()
+
    IF oSelf:nHan == -1
       // Only open the file if it isn't already open.
       IF nMode == NIL
          nMode := FO_READ + FO_SHARED   // Default to shared read-only mode
-      END IF
+      ENDIF
       oSelf:nLastOp := oF_OPEN_FILE
       oSelf:nHan := FOPEN( oSelf:cFile, nMode )   // Try to open the file
       IF oSelf:nHan == -1
@@ -184,23 +107,26 @@ LOCAL oSelf := Qself()
       ELSE
          oSelf:nError := 0              // It worked
          oSelf:lEOF   := .F.            // So clear EOF
-      END IF
+      ENDIF
    ELSE
       // The file is already open, so rewind to the beginning.
       IF FSEEK( oSelf:nHan, 0 ) == 0
          oSelf:lEOF := .F.              // Definitely not at EOF
       ELSE
          oSelf:nError := FERROR()       // Save error code if not at BOF
-      END IF
+      ENDIF
       oSelf:cBuffer := ""               // Clear the readahead buffer
-   END IF
-RETURN oSelf
+   ENDIF
+
+   RETURN oSelf
 
 STATIC FUNCTION f_read()
-LOCAL oSelf := Qself()
-LOCAL cLine := ""
-LOCAL nPos
+   LOCAL oSelf := Qself()
+   LOCAL cLine := ""
+   LOCAL nPos
+
    oSelf:nLastOp := oF_READ_FILE
+
    IF oSelf:nHan == -1
       oSelf:nError := -1                // Set unknown error if file not open
    ELSE
@@ -218,12 +144,12 @@ LOCAL nPos
             IF oSelf:nError == 0
                // Because the file is at EOF.
                oSelf:lEOF := .T.
-            END IF
+            ENDIF
          ELSE
             // Add what was read to the readahead buffer.
             oSelf:cBuffer += cLine
             cLine := ""
-         END IF
+         ENDIF
          // Is there a whole line in the readahead buffer yet?
          nPos := f_EOL_pos( oSelf )
       END WHILE
@@ -241,7 +167,7 @@ LOCAL nPos
          ELSE
             // No, so return an empty string.
             cLine := ""
-         END IF
+         ENDIF
          // Deal with multiple possible end of line conditions.
          DO CASE
             CASE SUBSTR( oSelf:cBuffer, nPos, 3 ) == CHR( 13 ) + CHR( 13 ) + CHR( 10 )
@@ -255,14 +181,16 @@ LOCAL nPos
             OTHERWISE
                // It's probably a Mac or Unix newline
                nPos++
-         END CASE
+         ENDCASE
          oSelf:cBuffer := SUBSTR( oSelf:cBuffer, nPos )
-      END IF
-   END IF
-RETURN cLine
+      ENDIF
+   ENDIF
+
+   RETURN cLine
 
 STATIC FUNCTION f_EOL_pos( oFile )
-LOCAL nCRpos, nLFpos, nPos
+   LOCAL nCRpos, nLFpos, nPos
+
    // Look for both CR and LF in the file read buffer.
    nCRpos := AT( CHR( 13 ), oFile:cBuffer )
    nLFpos := AT( CHR( 10 ), oFile:cBuffer )
@@ -276,11 +204,13 @@ LOCAL nCRpos, nLFpos, nPos
       OTHERWISE
          // If there's both a CR and an LF, use the position of the first one.
          nPos := MIN( nCRpos, nLFpos )
-   END CASE
-RETURN nPos
+   ENDCASE
+
+   RETURN nPos
 
 STATIC FUNCTION f_close()
-LOCAL oSelf := Qself()
+   LOCAL oSelf := Qself()
+
    oSelf:nLastOp := oF_CLOSE_FILE
    oSelf:lEOF := .T.
    // Is the file already closed.
@@ -293,39 +223,41 @@ LOCAL oSelf := Qself()
       oSelf:nError := FERROR()
       oSelf:nHan   := -1                // The file is no longer open
       oSelf:lEOF   := .T.               // So force an EOF condition
-   END IF
-RETURN oSelf
+   ENDIF
+
+   RETURN oSelf
 
 STATIC FUNCTION f_name()
-LOCAL oSelf := Qself()
-  // Returns the filename associated with this class instance.
-RETURN oSelf:cFile
+   LOCAL oSelf := Qself()
+   // Returns the filename associated with this class instance.
+   RETURN oSelf:cFile
 
 STATIC FUNCTION f_is_open()
-LOCAL oSelf := Qself()
-  // Returns .T. if the file is open.
-RETURN oSelf:nHan != -1
+   LOCAL oSelf := Qself()
+   // Returns .T. if the file is open.
+   RETURN oSelf:nHan != -1
 
 STATIC FUNCTION f_more()
-LOCAL oSelf := Qself()
-  // Returns .T. if there is more to be read from either the file or the
-  // readahead buffer. Only when both are exhausted is there no more to read.
-RETURN !oSelf:lEOF .OR. !EMPTY( oSelf:cBuffer )
+   LOCAL oSelf := Qself()
+   // Returns .T. if there is more to be read from either the file or the
+   // readahead buffer. Only when both are exhausted is there no more to read.
+   RETURN !oSelf:lEOF .OR. !EMPTY( oSelf:cBuffer )
 
 STATIC FUNCTION f_error()
-LOCAL oSelf := Qself()
-  // Retunrs .T. if an error was recorded.
-RETURN oSelf:nError != 0
+   LOCAL oSelf := Qself()
+   // Returns .T. if an error was recorded.
+   RETURN oSelf:nError != 0
 
 STATIC FUNCTION f_error_no()
-LOCAL oSelf := Qself()
-  // Returns the last error code that was recorded.
-RETURN oSelf:nError
+   LOCAL oSelf := Qself()
+   // Returns the last error code that was recorded.
+   RETURN oSelf:nError
 
 STATIC FUNCTION f_error_msg( cText )
-STATIC s_cAction := {"on", "creating object for", "opening", "reading from", "closing"}
-LOCAL oSelf := Qself()
-LOCAL cMessage, nTemp
+   STATIC s_cAction := {"on", "creating object for", "opening", "reading from", "closing"}
+   LOCAL oSelf := Qself()
+   LOCAL cMessage, nTemp
+
    // Has an error been recorded?
    IF oSelf:nError == 0
       // No, so report that.
@@ -336,7 +268,9 @@ LOCAL cMessage, nTemp
          nTemp := 1
       ELSE
          nTemp := oSelf:nLastOp + 1
-      END IF
+      ENDIF
       cMessage := IF( EMPTY( cText ), "", cText ) + "Error " + ALLTRIM( STR( oSelf:nError ) ) + " " + s_cAction[ nTemp ] + " " + oSelf:cFile
-   END IF
-RETURN cMessage
+   ENDIF
+
+   RETURN cMessage
+

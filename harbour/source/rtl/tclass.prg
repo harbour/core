@@ -41,9 +41,6 @@
  *    Support for inheritance
  *    Support for default DATA values
  *
- * Copyright 2000 Brian Hays <bhays@abacuslaw.com>
- *    Documentation
- *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -289,52 +286,3 @@ STATIC FUNCTION SetType( cType )
    RETURN NIL
 
 //----------------------------------------------------------------------------//
-
-/*  $DOC$
- *  $FUNCNAME$
- *     TClass()
- *  $CATEGORY$
- *     Classes
- *  $ONELINER$
- *     TClass() is used in the creation of all classes
- *  $SYNTAX$
- *     oClass := TClass():New("TMyClass")
- *        -or-
- *     TClass() is usually accessed by defining a class with the commands
- *     defined in hbclass.h:
- *        CLASS TGetList    // Calls TClass() to create the TGetList class
- *           ...
- *        ENDCLASS
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *     An instance of the TClass Class. This special object's :New()
- *     method can then create the classes you define.
- *  $DESCRIPTION$
- *     TClass is a class that ...
- *     The class methods are as follows:
- *        New()                 Create a new instance of the class
- *  $EXAMPLES$
- *     FUNCTION TestObject()
- *     local oObject
- *
- *     oObject := TClass():New("TMyClass")
- *     oObject:End()
- *
- *     RETURN Nil
- *  $STATUS$
- *     R
- *  $COMPLIANCE$
- *     Object Oriented syntax in Harbour is compatible with CA-CLIPPER.
- *     But Clipper only allowed creation of objects from a few standard
- *     classes, and did not let the programmer create new classes.
- *     In Harbour, you can create your own classes--complete with
- *     Methods, Instance Variables, Class Variables and Inheritance.
- *     Entire applications can be designed and coded in Object Oriented
- *     style.
- *  $PLATFORMS$
- *     All
- *  $SEEALSO$
- *     __objHasData(),Object Oriented Programming,CLASS
- *  $END$
- */

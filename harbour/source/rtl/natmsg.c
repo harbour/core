@@ -93,36 +93,6 @@ char * hb_nationGetMsg( USHORT uiMsg )
    return ( uiMsg >= 1 && uiMsg <= ( sizeof( s_szMessages ) / sizeof( char * ) ) ) ? s_szMessages[ uiMsg - 1 ] : "";
 }
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ISAFFIRM()
- *  $CATEGORY$
- *      NATION
- *  $ONELINER$
- *      Checks if passed char is an affirmation char
- *  $SYNTAX$
- *      ISAFFIRM( <cChar> ) --> <lTrueOrFalse>
- *  $ARGUMENTS$
- *      <cChar> is a char or string of chars
- *  $RETURNS$
- *      True if passed char is an affirmation char, false otherwise
- *  $DESCRIPTION$
- *      This function it is used to check if a user input is true or not
- *      regarding of the msgxxx module used.
- *  $EXAMPLES$
- *      // Wait until user enters Y
- *      DO WHILE !ISAFFIRM( cYesNo )
- *        ACCEPT "Sure: " TO cYesNo
- *      END DO
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      ISAFFIRM() is fully CA-Clipper compliant.
- *  $SEEALSO$
- *      ISNEGATIVE(),NATIONMSG()
- *  $END$
- */
-
 HARBOUR HB_ISAFFIRM( void )
 {
    PHB_ITEM pItem = hb_param( 1, IT_STRING );
@@ -130,74 +100,12 @@ HARBOUR HB_ISAFFIRM( void )
    hb_retl( pItem && hb_itemGetCLen( pItem ) >= 1 && toupper( hb_itemGetCPtr( pItem )[ 0 ] ) == s_szMessages[ _LF_YN - 1 ][ 0 ] );
 }
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ISNEGATIVE()
- *  $CATEGORY$
- *      NATION
- *  $ONELINER$
- *      Checks if passed char is a negation char
- *  $SYNTAX$
- *      ISNEGATIVE( <cChar> ) --> <lTrueOrFalse>
- *  $ARGUMENTS$
- *      <cChar> is a char or string of chars
- *  $RETURNS$
- *      True if passed char is a negation char, false otherwise
- *  $DESCRIPTION$
- *      This function it is used to check if a user input is true or not
- *      regarding of the msgxxx module used.
- *  $EXAMPLES$
- *      // Wait until user enters N
- *      DO WHILE !ISNEGATIVE( cYesNo )
- *        ACCEPT "Sure: " TO cYesNo
- *      END DO
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      ISNEGATIVE() is fully CA-Clipper compliant.
- *  $SEEALSO$
- *      ISAFFIRM(),NATIONMSG()
- *  $END$
- */
-
 HARBOUR HB_ISNEGATIVE( void )
 {
    PHB_ITEM pItem = hb_param( 1, IT_STRING );
 
    hb_retl( pItem && hb_itemGetCLen( pItem ) >= 1 && toupper( hb_itemGetCPtr( pItem )[ 0 ] ) == s_szMessages[ _LF_YN - 1 ][ 2 ] );
 }
-
-/*  $DOC$
- *  $FUNCNAME$
- *      NATIONMSG()
- *  $CATEGORY$
- *      NATION
- *  $ONELINER$
- *      Returns international strings messages.
- *  $SYNTAX$
- *      NATIONMSG( <nMsg> ) --> <cMessage>
- *  $ARGUMENTS$
- *      <nMsg> is the message number you want to get
- *  $RETURNS$
- *      If <nMsg> is a valid message selector return the message, if <nMsg>
- *      is nil returns "Invalid Argument" and if <nMsg> is any other type it
- *      returns an empty string.
- *  $DESCRIPTION$
- *      This functions returns international message descriptions.
- *  $EXAMPLES$
- *      // Displays "Sure Y/N: "  and waits until user enters Y
- *      // Y/N is the string for NATIONMSG( 12 ) with default natmsg module.
- *      DO WHILE !ISAFFIRM( cYesNo )
- *        ACCEPT "Sure " + NATIONMSG( 12 ) + ": " TO cYesNo
- *      END DO
- *  $STATUS$
- *      C
- *  $COMPLIANCE$
- *      NATIONMSG() is fully CA-Clipper compliant.
- *  $SEEALSO$
- *      ISAFFIRM(),ISNEGATIVE()
- *  $END$
- */
 
 HARBOUR HB_NATIONMSG( void )
 {
@@ -231,3 +139,4 @@ HARBOUR HB__NATMSGVER( void )
 
    hb_retc( "NATMSGS (Harbour)" );
 }
+

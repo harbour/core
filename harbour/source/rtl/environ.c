@@ -96,30 +96,6 @@
    #endif
 #endif
 
-/*  $DOC$
- *  $FUNCNAME$
- *      OS()
- * $ONELINER$
- *      Return the current  operating system
- *  $SYNTAX$
- *      OS()   -> <cOperatinSystem>
- *  $CATEGORY$
- *      DOS
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *     <cOperatinSystem>  -> The Current operating system
- *  $DESCRIPTION$
- *      This function will return the current operating system
- *  $EXAMPLES$
- *      ? OS()
- *
- *  $FILES$
- *      source/rtl/environ.c
- *  $SEEALSO$
- *  $END$
- */
-
 HARBOUR HB_OS( void )
 {
    char * cformat = "%s %d.%02d%c";
@@ -523,91 +499,12 @@ char * hb_version( USHORT uiMode )
    return pszVersion;
 }
 
-/*  $DOC$
- *  $FUNCNAME$
- *      VERSION()
- *  $CATEGORY$
- *      Environment
- *  $ONELINER$
- *      Returns the HARBOUR Version or the Harbour/Compiler Version
- *  $SYNTAX$
- *      VERSION([<xMode>]  --> <cReturn>
- *  $ARGUMENTS$
- *      [<xMode>]   Optional Parameter that enables the display
- *      of the C compiler version that HARBOUR was built with.
- *  $RETURNS$
- *      <cReturn>   String contining the Harbour Version or the Harbour
- *      and C compiler Version when the <nMode> parameter is used.
- *  $DESCRIPTION$
- *      This function returns the HARBOUR Version or the Harbour Version+C
- *      compiler Version used to create the Harbour runtime library 
- *  $EXAMPLES$
- *     ? QOUT(VERSION())    // Displays Harbour version only
- *     ? QOUT(VERSION(NIL)) // Displays Harbour and C Compiler versions
- *  $TESTS$
- *
- *  $STATUS$
- *     S
- *  $COMPLIANCE$
- *     This function is an enhanced version of the CA-Clipper VERSION function.
- *     The CA-Clipper version does not have a parameter and it only returns
- *     the Version of the CA-Clipper Compiler. The Harbour version returns
- *     only the Harbour Version if called without the <nMode> parameter, but
- *     returns both the Harbour Version and the Version of the C compiler used
- *     to build Harbour when the <nMode> parameter is present.
- *  $PLATFORMS$
- *
- *  $FILES$
- *    source/rtl/environ.c
- *  $SEEALSO$
- *    OS()
- *  $END$
- */
-
 HARBOUR HB_VERSION( void )
 {
    char * pszVersion = hb_version( hb_pcount() > 0 ? 1 : 0 );
    hb_retc( pszVersion );
    hb_xfree( pszVersion );
 }
-
-/*  $DOC$
- *  $FUNCNAME$
- *     GETENV()
- *  $CATEGORY$
- *      Environment
- *  $ONELINER$
- *      Obtains DOS system environmental settings
- *  $SYNTAX$
- *      GETENV(<cEnviroment>, <cDefaultValue> )  --> <cReturn>
- *  $ARGUMENTS$
- *      <cEnviroment> Enviromental variable to obtain
- *      <cDefaultValue> Optional value to return if <cEnvironment> is not found
- *  $RETURNS$
- *      <cReturn>     Value of the Variable
- *  $DESCRIPTION$
- *      This function yields a string that is the value of the
- *      environmental variable <cEnviroment>, witch is stored at the
- *      level with the Set command. If no environmental variable
- *      can be found, the value of the function will be a empty string.
- *  $EXAMPLES$
- *      ? QOUT(GETENV('PATH'))
- *      ? QOUT(GETENV('CONFIG'))
- *      ? QOUT(GETENV('HARBOURCMD', '-n -l -es2'))
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      This functions is CA-CLIPPER compliant
- *  $PLATFORMS$
- *
- *  $FILES$
- *     source/rtl/environ.c
- *  $SEEALSO$
- *
- *  $END$
- */
 
 HARBOUR HB_GETENV( void )
 {
@@ -643,38 +540,6 @@ HARBOUR HB_GETE( void )
    HB_GETENV();
 }
 
-/*  $DOC$
- *  $FUNCNAME$
- *      __RUN()
- *  $CATEGORY$
- *      DOS
- *  $ONELINER$
- *      Run a external program 
- *  $SYNTAX$
- *      __RUN( <cCommand> )
- *  $CATEGORY$
- *      DOS
- *  $ARGUMENTS$
- *      <cCommand> Command to execute
- *  $DESCRIPTION$
- *      This command runs an external program. Please make sure that you have
- *      enough free memory to be able to run the external program.
- *      Do not use it to run Terminate and Stay Resident programs
- *      (in case of DOS) since it cause several problems
- *
- *      Note: This function is what the RUN command preprocesses into.
- *            It is considered bad form to use this function directly.
- *            Use the RUN command instead.
- *  $EXAMPLES$
- *      __Run( "edit " + cMyTextFile )    // Runs an external editor
- *      __Run( "command" )                // Gives a DOS shell (DOS only)
- *  $FILES$
- *      source/rtl/environ.c
- *  $SEEALSO$
- *      RUN
- *  $END$
- */
-
 HARBOUR HB___RUN( void )
 {
 #if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(_MSC_VER) || defined(__IBMCPP__) || defined(__GNUC__)
@@ -684,3 +549,4 @@ HARBOUR HB___RUN( void )
    hb_errRT_BASE_Ext1( EG_UNSUPPORTED, 9999, NULL, "__RUN", 0, EF_CANDEFAULT );
 #endif
 }
+

@@ -177,45 +177,6 @@ char * hb_consoleGetNewLine( void )
    return s_szCrLf;
 }
 
-/*  $DOC$
- *  $FUNCNAME$
- *      HB_OSNEWLINE()
- *  $CATEGORY$
- *      Operating System Specific
- *  $ONELINER$
- *      Returns the newline character(s) to use with the current OS
- *  $SYNTAX$
- *      HB_OSNewLine() --> cString
- *  $ARGUMENTS$
- *  $RETURNS$
- *      A character string containing the character or characters required
- *      to move the screen cursor or print head to the start of a new line.
- *      The string will hold either CHR( 10 ) or CHR( 13 ) + CHR( 10 ).
- *  $DESCRIPTION$
- *      Returns a character string containing the character or characters
- *      required to move the screen cursor or print head to the start of a
- *      new line for the operating system that the program is running on
- *      (or thinks it is running on, if an OS emulator is being used).
- *  $EXAMPLES$
- *      // Get the newline character(s) for the current OS using defaults.
- *      STATIC s_cNewLine
- *      ...
- *      s_cNewLine := HB_OSNewLine()
- *      ...
- *      OutStd( "Hello World!" + s_cNewLine )
- *      ...
- *  $TESTS$
- *      valtype( HB_OSNewLine() ) == "C"
- *      LEN( HB_OSNewLine() ) == 1
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      This is an add-on Operating System Tool function.
- *  $SEEALSO$
- *      dos.ngo:OS(),OUTSTD(),OUTERR()
- *  $END$
- */
-
 HARBOUR HB_HB_OSNEWLINE( void )
 {
    hb_retc( s_szCrLf );
@@ -1114,43 +1075,9 @@ HARBOUR HB___ACCEPTSTR( void )
    hb_retc( s_szAcceptResult );
 }
 
-/* ------------------------------------------------- */
+/* --------------------------------------------------------- */
 /* Copyright (C) 1999-2000 Victor Szakats <info@szelvesz.hu> */
 /* --------------------------------------------------------- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *      hb_ColorIndex()
- *  $CATEGORY$
- *      GT
- *  $ONELINER$
- *      Extract one color from a full Clipper colorspec string.
- *  $SYNTAX$
- *      hb_ColorIndex( <cColorSpec>, <nIndex> )
- *  $ARGUMENTS$
- *      <cColorSpec> is a Clipper color list
- *      <nIndex> is the position of the color item to be extracted, the first
- *               position is the zero.
- *  $RETURNS$
- *      The selected color string, or if anything goes wrong, and empty
- *      string
- *  $DESCRIPTION$
- *      Clipper has a color spec string, which has more than one
- *      color in it, separated with commas. This function is able to extract
- *      a given item from this list. You may use the manifest constants
- *      defined in color.ch to extract common Clipper colors.
- *  $EXAMPLES$
- *      ? hb_ColorIndex( "W/N, N/W", CLR_ENHANCED ) // "N/W"
- *  $TESTS$
- *      see the regression test suit for comprehensive tests.
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Was not part of CA-Clipper.
- *  $SEEALSO$
- *      ColorSelect()
- *  $END$
- */
 
 HARBOUR HB_HB_COLORINDEX( void )
 {

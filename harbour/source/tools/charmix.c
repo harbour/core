@@ -17,37 +17,6 @@
  * public domain.
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_CHARMIX()
- *  $CATEGORY$
- *      String
- *  $ONELINER$
- *      Amalgamate two strings to form the return value
- *  $SYNTAX$
- *      GT_CharMix(<cStr1>, <cStr2>) --> cRet
- *  $ARGUMENTS$
- *      <cStr1>  - A character string to mix
- *      <cStr2>  - A character string to mix with
- *  $RETURNS$
- *      cRet     - A string consisting of all the characters in <cStr1>
- *                 mixed with all the characters in <cStr2>
- *  $DESCRIPTION$
- *      Return a string consisting of all the characters in <cStr1>
- *      mixed with the characters from <cStr2>.
- *
- *      NOTE:
- *         invalid parameters will return ""
- *  $EXAMPLES$
- *
- *      ? gt_CharMix("abc", "123")               // prints "a1b2c3"
- *      ? gt_CharMix("abcde", "123")             // prints "a1b2c3de"
- *      ? gt_CharMix("abc", "12345")             // prints "a1b2c345"
- *
- *  $END$
- */
-
 #include "extend.h"
 
 HARBOUR HB_GT_CHARMIX( void )

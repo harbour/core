@@ -19,9 +19,6 @@
  *    Changes for higher Clipper compatibility, console mode, extensions
  *    __NONOALERT()
  *
- * Copyright 1999 Chen Kedem <niki@actcom.co.il>
- *    Documentation
- *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -44,99 +41,6 @@
 // ; nDelay parameter is a Harbour extension.
 
 STATIC s_lNoAlert := NIL
-
-/*  $DOC$
- *  $FUNCNAME$
- *      ALERT()
- *  $CATEGORY$
- *      Data input and output
- *  $ONELINER$
- *      Display a dialog box with a message
- *  $SYNTAX$
- *      ALERT( <xMessage>, [<aOptions>], [<cColorNorm>],
- *             [<nDelay>] ) --> nChoice or NIL
- *  $ARGUMENTS$
- *      <xMessage> Message to display in the dialog box. <xMessage> can be
- *      of any Harbour type.
- *      If <xMessage> is an array of Character strings, each element would
- *      be displayed in a new line. If <xMessage> is a Character
- *      string, you could split the message to several lines by placing
- *      a semicolon (;) in the desired places.
- *
- *      <aOptions> Array with available response. Each element should be
- *      Character string. If omitted, default is { "Ok" }.
- *
- *      <cColorNorm> Color string to paint the dialog box with.
- *      If omitted, default color is "W+/R".
- *
- *      <nDelay> Number of seconds to wait to user response before abort.
- *      Default value is 0, that wait forever.
- *  $RETURNS$
- *      ALERT() return Numeric value representing option number chosen.
- *      If ESC was pressed, return value is zero. The return value is NIL
- *      if ALERT() is called with no parameters, or if <xMessage> type is
- *      not Character and HARBOUR_STRICT_CLIPPER_COMPATIBILITY option was
- *      used. If <nDelay> seconds had passed without user response, the
- *      return value is 1.
- *  $DESCRIPTION$
- *      ALERT() display simple dialog box on screen and let the user select
- *      one option. The user can move the highlight bar using arrow keys or
- *      TAB key. To select an option the user can press ENTER, SPACE or the
- *      first letter of the option.
- *
- *      If the program is executed with the //NOALERT command line switch,
- *      nothing is displayed and it simply returns NIL. This switch could
- *      be overridden with __NONOALERT().
- *
- *      If the GT system is linked in, ALERT() display the message using
- *      the full screen I/O system, if not, the information is printed to
- *      the standard output using OUTSTD().
- *  $EXAMPLES$
- *      LOCAL cMessage, aOptions, nChoice
- *
- *      // harmless message
- *      cMessage := "Major Database Corruption Detected!;" +  ;
- *                  "(deadline in few hours);;"             +  ;
- *                  "where DO you want to go today?"
- *
- *      // define response option
- *      aOptions := { "Ok", "www.jobs.com", "Oops" }
- *
- *      // show message and let end user select panic level
- *      nChoice := ALERT( cMessage, aOptions )
- *      DO CASE
- *         CASE nChoice == 0
- *              // do nothing, blame it on some one else
- *         CASE nChoice == 1
- *              ? "Please call home and tell them you're gonn'a be late"
- *         CASE nChoice == 2
- *              // make sure your resume is up to date
- *         CASE nChoice == 3
- *              ? "Oops mode is not working in this version"
- *      ENDCASE
- *  $TESTS$
- *  $STATUS$
- *  $COMPLIANCE$
- *      This function is sensitive to HARBOUR_STRICT_CLIPPER_COMPATIBILITY
- *      settings.
- *
- *      ON:  <xMessage> accept Character values only and return NIL if other
- *           types are passed,
- *      OFF: <xMessage> could be any type, and internally converted to
- *           Character string. If type is Array, multi-line message is
- *           displayed.
- *
- *      ON:  Only the first four valid <aOptions> are taken.
- *      OFF: <aOptions> could contain as many as needed options.
- *
- *      <cColorNorm> is a Harbour extension, or at least un-documented
- *      in Clipper 5.2 NG.
- *
- *      <nDelay> is a Harbour extension.
- *  $SEEALSO$
- *       @...PROMPT,MENU TO, STDOUT(),__NONOALERT()
- *  $END$
- */
 
 FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
    LOCAL nChoice
@@ -418,34 +322,6 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
    ENDIF
 
    RETURN nChoice
-
-/*  $DOC$
- *  $FUNCNAME$
- *      __NONOALERT()
- *  $CATEGORY$
- *      Data input and output
- *  $ONELINER$
- *      Override //NOALERT command line switch
- *  $SYNTAX$
- *      __NONOALERT() --> NIL
- *  $ARGUMENTS$
- *      This function takes no arguments.
- *  $RETURNS$
- *      __NONOALERT() always return NIL.
- *  $DESCRIPTION$
- *      The //NOALERT command line switch cause Clipper to ignore calls to
- *      the ALERT() function, this function override this behavior
- *      and always display ALERT() dialog box.
- *  $EXAMPLES$
- *      // make sure alert are been displayed
- *      __NONOALERT()
- *  $TESTS$
- *  $STATUS$
- *  $COMPLIANCE$
- *      __NONOALERT() is an undocumented CA-Clipper function
- *  $SEEALSO$
- *  $END$
- */
 
 PROCEDURE __NONOALERT()
 

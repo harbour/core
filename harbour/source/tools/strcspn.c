@@ -17,33 +17,6 @@
  * public domain.
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_STRCSPN()
- *  $CATEGORY$
- *      String
- *  $ONELINER$
- *      Return length of prefix in string of chars NOT in set.
- *  $SYNTAX$
- *      GT_strcspn(<cString>, <cSet>) --> nLength
- *  $ARGUMENTS$
- *      <cString> - The string to find the prefix in
- *      <cSet>    - The set of characters
- *  $RETURNS$
- *      nLength   - The length of a string upto a character in the set
- *  $DESCRIPTION$
- *      Return the number of characters in the leading segment of a
- *      string that consists solely of characters NOT in the set.
- *  $EXAMPLES$
- *
- *      ? GT_strcspn("this is a test", "as ")      // prints 3
- *      ? GT_strcspn("this is a test", "elnjpq")   // prints 11
- *
- *  $END$
- */
-
-
 #include "extend.h"
 
 HARBOUR HB_GT_STRCSPN( void )

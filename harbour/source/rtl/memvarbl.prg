@@ -37,46 +37,6 @@
 
 #include "common.ch"
 
-/*  $DOC$
- *  $FUNCNAME$
- *      MEMVARBLOCK()
- *  $CATEGORY$
- *      Variable Management
- *  $ONELINER$
- *      Returns a codeblock that sets/gets a value of memvar variable
- *  $SYNTAX$
- *	MEMVARBLOCK( <cMemvarName> )
- *  $ARGUMENTS$
- *	<cMemvarName> - a string that contains the name of variable
- *  $RETURNS$
- *	a codeblock that sets/get the value of variable
- *  $DESCRIPTION$
- *	This function returns a codeblock that sets/gets the value of
- *	PRIVATE or PUBLIC variable. When this codeblock is evaluated
- *	without any parameters passed then it returns the current value
- *	of given variable. If the second parameter is passed for
- *	the codeblock evaluation then its value is used to set the new
- *	value of given variable - the passed value is also returned
- *	as a value of the codeblock evaluation.
- *  $EXAMPLES$
- *	PROCEDURE MAIN()
- *	LOCAL cbSetGet
- *	PUBLIC xPublic
- *	
- *	cbSetGet = MEMVARBLOCK( "xPublic" )
- *	EVAL( cbSetGet, "new value" )
- *	? "Value of xPublic variable", EVAL( cbSetGet )
- *
- *	RETURN
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *  $SEEALSO$
- *      __MVGET(),__MVPUT()
- *  $END$
- */
-
 FUNCTION MEMVARBLOCK( cMemvar )
 
    IF ISCHARACTER( cMemvar ) .AND. __mvSCOPE( cMemvar ) > HB_MV_ERROR

@@ -36,40 +36,6 @@
 #include "extend.h"
 #include "itemapi.h"
 
-/*  $DOC$
- *  $FUNCNAME$
- *      EMPTY()
- *  $CATEGORY$
- *      Conversion
- *  $ONELINER$
- *      Checks if the passed argument is empty.
- *  $SYNTAX$
- *      EMPTY( <xExp> ) --> <lIsEmpty>
- *  $ARGUMENTS$
- *      <xExp> is any valid expression.
- *  $RETURNS$
- *      A logical value. It is true (.T.) if the passed argument is empty
- *      otherwise it is false (.F.).
- *  $DESCRIPTION$
- *      This function checks if an expression has empty value and returns a
- *      logical indicating whether it the expression is empty or not.
- *  $EXAMPLES$
- *      ? Empty( "I'm not empty" )
- *  $TESTS$
- *      function Test()
- *         ? Empty( 1 )       --> .f.
- *         ? Empty( Date() )  --> .f.
- *         ? Empty( .f. )     --> .t.
- *      return nil
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      EMPTY() is fully CA-Clipper compliant.
- *  $SEEALSO$
- *      LEN()
- *  $END$
- */
-
 HARBOUR HB_EMPTY( void )
 {
    PHB_ITEM pItem = hb_param( 1, IT_ANY );

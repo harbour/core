@@ -17,37 +17,6 @@
  * public domain.
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_ATDIFF()
- *  $CATEGORY$
- *      String
- *  $ONELINER$
- *      Return the position where two strings begin to differ
- *  $SYNTAX$
- *      GT_AtDiff(<cStr1>, <cStr2>) --> nPos
- *  $ARGUMENTS$
- *      <cStr1>  - A character string to compare
- *      <cStr2>  - The string to compare with
- *  $RETURNS$
- *      nPos     - The position in <cStr2> where <cStr1> begins to differ
- *  $DESCRIPTION$
- *      Return the position in <cStr2> where <cStr1> begins to differ.
- *      If the strings differ in the first character GT_AtDiff() will
- *      return 1.  If the two strings are identical (or identical upto
- *      the last character in <cStr2>) the function will return 0.
- *
- *      NOTE:
- *         invalid parameters will return -1
- *  $EXAMPLES$
- *      ? gt_atDiff("the cat", "the rat")          // prints 5
- *      ? gt_atDiff("the cat", "the ")             // prints 0
- *
- *  $END$
- */
-
-
 #include "extend.h"
 
 HARBOUR HB_GT_ATDIFF( void )

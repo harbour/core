@@ -37,39 +37,6 @@
 #include "errorapi.h"
 #include "itemapi.h"
 
-/*  $DOC$
- *  $FUNCNAME$
- *      HB_PVALUE()
- *  $CATEGORY$
- *      Parameter Checks
- *  $ONELINER$
- *      Retrieves the value of an argument.
- *  $SYNTAX$
- *      HB_PVALUE( <nArg> ) --> <xExp>
- *  $ARGUMENTS$
- *      A number that indicates the argument to check.
- *  $RETURNS$
- *      Returns the value stored by an argument.
- *  $DESCRIPTION$
- *      This function is useful to check the value stored in an argument.
- *  $EXAMPLES$
- *      See Test
- *  $TESTS$
- *      function Test( nValue, cString )
- *         if PCount() == 2
- *            ? hb_PValue( 1 ), nValue
- *            ? hb_PValue( 2 ), cString
- *         endif
- *      return nil
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      HB_PVALUE() is a new function and hence not CA-Clipper compliant.
- *  $SEEALSO$
- *      PCOUNT()
- *  $END$
- */
-
 HARBOUR HB_HB_PVALUE( void )
 {
    USHORT uiParam = hb_parni( 1 );

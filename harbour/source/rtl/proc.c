@@ -46,43 +46,6 @@
 
 #include "extend.h"
 
-/*  $DOC$
- *  $FUNCNAME$
- *      PROCNAME()
- *  $CATEGORY$
- *      Misc
- *  $ONELINER$
- *      Gets the name of the current function on the stack
- *  $SYNTAX$
- *      PROCNAME( <nLevel> ) --> <cProcName>
- *  $ARGUMENTS$
- *      <nLevel> is the function level required.
- *  $RETURNS$
- *      Return the name of the function that it is being executed.
- *  $DESCRIPTION$
- *      This function look at the top of the stack and gets the current
- *      executed function if no arguments are passed. Otherwise it returns
- *      the name of the function or procedure at <nLevel>.
- *  $EXAMPLES$
- *      See Test
- *  $TESTS$
- *      This test will show the functions and procedures in stack
- *      before executing it.
- *      function Test()
- *         LOCAL n := 1
- *         while !Empty( ProcName( n ) )
- *            ? ProcName( n++ )
- *         end do
- *      return nil
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      PROCNAME() is fully CA-Clipper compliant.
- *  $SEEALSO$
- *      PROCLINE(),PROCFILE()
- *  $END$
- */
-
 HARBOUR HB_PROCNAME( void )
 {
    int iLevel = hb_parni( 1 ) + 1;  /* we are already inside ProcName() */
@@ -112,40 +75,6 @@ HARBOUR HB_PROCNAME( void )
       hb_retc( "" );
 }
 
-/*  $DOC$
- *  $FUNCNAME$
- *      PROCLINE()
- *  $CATEGORY$
- *      Misc
- *  $ONELINER$
- *      Gets the line number of the current function on the stack
- *  $SYNTAX$
- *      PROCLINE( <nLevel> ) --> <nLine>
- *  $ARGUMENTS$
- *      <nLevel> is the function level required.
- *  $RETURNS$
- *      Return the line number of the function that it is being executed.
- *  $DESCRIPTION$
- *      This function look at the top of the stack and gets the current
- *      line number of executed function if no arguments are passed.
- *      Otherwise it returns the line number of the function or procedure
- *      at <nLevel>.
- *  $EXAMPLES$
- *      See Test
- *  $TESTS$
- *      function Test()
- *         ? ProcLine( 0 )
- *         ? ProcName( 2 )
- *      return nil
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      PROCLINE() is fully CA-Clipper compliant.
- *  $SEEALSO$
- *      PROCNAME(),PROCFILE()
- *  $END$
- */
-
 HARBOUR HB_PROCLINE( void )
 {
    int iLevel = hb_parni( 1 ) + 1;  /* we are already inside ProcName() */
@@ -159,39 +88,6 @@ HARBOUR HB_PROCLINE( void )
    else
       hb_retni( 0 );
 }
-
-/*  $DOC$
- *  $FUNCNAME$
- *      PROCFILE()
- *  $CATEGORY$
- *      Misc
- *  $ONELINER$
- *      This function allways returns an empty string.
- *  $SYNTAX$
- *      PROCFILE( <xExp> ) --> <cEmptyString>
- *  $ARGUMENTS$
- *      <xExp> is any valid type.
- *  $RETURNS$
- *      Return and empty string
- *  $DESCRIPTION$
- *      This function is added to the RTL for full compatibility. It allways
- *      returns an empty string.
- *  $EXAMPLES$
- *      ? ProcFile()
- *  $TESTS$
- *      function Test()
- *         ? ProcFile()
- *         ? ProcFile( NIL )
- *         ? ProcFile( 2 )
- *      return nil
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      PROCFILE() is fully CA-Clipper compliant.
- *  $SEEALSO$
- *      PROCNAME(),PROCLINE()
- *  $END$
- */
 
 /* NOTE: Clipper undocumented function, which always returns an empty
          string. [vszakats] */

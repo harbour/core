@@ -36,39 +36,6 @@
 #include "extend.h"
 #include "ctoharb.h"
 
-/*  $DOC$
- *  $FUNCNAME$
- *      __QUIT()
- *  $CATEGORY$
- *      Events
- *  $ONELINER$
- *      Terminates an application.
- *  $SYNTAX$
- *      __QUIT() --> NIL
- *  $ARGUMENTS$
- *      None
- *  $RETURNS$
- *      NIL
- *  $DESCRIPTION$
- *      This function terminates the current application and returns
- *      to the system.
- *  $EXAMPLES$
- *      See Test
- *  $TESTS$
- *      function EndApp( lYesNo )
- *         if lYesNo
- *            __Quit()
- *         endif
- *      return nil
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      __QUIT() is fully CA-Clipper compliant.
- *  $SEEALSO$
- *      QUIT 
- *  $END$
- */
-
 HARBOUR HB___QUIT( void )
 {
    hb_vmRequestQuit();

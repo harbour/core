@@ -17,33 +17,6 @@
  * public domain.
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_CHARODD()
- *  $CATEGORY$
- *      String
- *  $ONELINER$
- *      Return a string of all the characters in odd positions
- *  $SYNTAX$
- *      GT_CharOdd(<cStr>) --> cRet
- *  $ARGUMENTS$
- *      <cStr>   - A character string to extract chars from
- *  $RETURNS$
- *      cRet     - A string of all the chars in odd positions
- *  $DESCRIPTION$
- *      Return a string consisting of all the characters in odd
- *      positions in <cStr1>.
- *
- *      NOTE:
- *         invalid parameters will return ""
- *  $EXAMPLES$
- *
- *      ? gt_CharOdd("abcdefghijklm")             // prints "acegikm"
- *
- *  $END$
- */
-
 #include "extend.h"
 
 HARBOUR HB_GT_CHARODD( void )

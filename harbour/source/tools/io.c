@@ -10,37 +10,6 @@
 #include <bios.h>
 #endif
 
-/*  $DOC$
- *  $FUNCNAME$
- *     CD()
- *  $CATEGORY$
- *     DOS
- *  $ONELINER$
- *     Change the Current Directory
- *  $SYNTAX$
- *     CD(<NDIR>)
- *  $ARGUMENTS$
- *     <NDIR> DIR TO BE CHANGED
- *  $RETURNS$
- *     .T. IF SUCEFUL
- *     .F. IF NOT
- *
- *  $DESCRIPTION$
- *     CHANGE THE CURRENT DIRECTORY
- *  $EXAMPLES$
- *     IF CD("OLA")
- *        RETURN(.T.)
- *     ELSE
- *        RETURN(.F.)
- *     ENDIF
- *
- *  $SEEALSO$
- *      MD() RD()
- *  $INCLUDE$
- *     extend.h dos.h dir.h bios.h
- *  $END$
- */
-
 HARBOUR HB_CD( void )
 {
 #ifdef __DOS__
@@ -50,37 +19,6 @@ HARBOUR HB_CD( void )
 #endif
 }
 
-/*  $DOC$
- *  $FUNCNAME$
- *     MD()
- *  $CATEGORY$
- *     DOS
- *  $ONELINER$
- *     Creates a Directory
- *  $SYNTAX$
- *     MD(<NDIR>)
- *  $ARGUMENTS$
- *    <NDIR> DIRECTORY TO BE CREATED
- *  $RETURNS$
- *    .T. IF SUCEFUL
- *    .F. IF NOT
- *
- *  $DESCRIPTION$
- *    CREATE A  DIRECTORY
- *  $EXAMPLES$
- *  IF MD("OLA")
- *      RETURN(.T.)
- *  ELSE
- *      RETURN(.F.)
- *  ENDIF
- *
- *  $SEEALSO$
- *     CD() MD()
- *  $INCLUDE$
- *     extend.h dos.h dir.h bios.h
- *  $END$
- */
-
 HARBOUR HB_MD(void)
 {
 #ifdef __DOS__
@@ -89,37 +27,6 @@ HARBOUR HB_MD(void)
    hb_retni( 0 );
 #endif
 }
-
-/*  $DOC$
- *  $FUNCNAME$
- *     RD()
- *  $CATEGORY$
- *     DOS
- *  $ONELINER$
- *     Remove a Directory
- *  $SYNTAX$
- *     RD(<NDIR>)
- *  $ARGUMENTS$
- *    <NDIR> DIR TO BE DELETED
- *  $RETURNS$
- *    .T. IF SUCEFUL
- *    .F. IF NOT
- *
- *  $DESCRIPTION$
- *    REMOVE A  DIRECTORY
- *  $EXAMPLES$
- *  IF RD("OLA")
- *      RETURN(.T.)
- *  ELSE
- *      RETURN(.F.)
- *  ENDIF
- *
- *  $SEEALSO$
- *     CD() MD()
- *  $INCLUDE$
- *     extend.h dos.h dir.h bios.h
- *  $END$
- */
 
 HARBOUR HB_RD( void )
 {

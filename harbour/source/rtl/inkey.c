@@ -919,73 +919,6 @@ void hb_inkeyReset( BOOL allocate )     /* Reset the keyboard buffer */
    }
 }
 
-/*  $DOC$
- *  $FUNCNAME$
- *      INKEY()
- *  $CATEGORY$
- *      Console input
- *  $ONELINER$
- *      Extracts the next key code from the Harbour keyboard buffer
- *  $SYNTAX$
- *      INKEY( [<nTimeout>] [,<nEvents>] ) --> nKey
- *  $ARGUMENTS$
- *      <nTimeout> is an optional timeout value in seconds, with a granularity
- *      of 1/10th of a second. If omitted, INKEY() returns immediately. If set
- *      to 0, INKEY() waits until an input event occurs. If set to any other
- *      value, INKEY() will return either when an input event occurs or when
- *      the timeout period has elapsed. If only this parameter is specified
- *      and it is not numeric, it will be treated as if it were 0. But if both
- *      parameters are specified and this parameter is not numeric, it will be
- *      treated as if it were not present.
- *
- *      <nEvents> is an optional mask of input events that are to be enabled.
- *      If omitted, defaults to hb_set.HB_SET_EVENTMASK. Valid input maks are
- *      in inkey.ch and are explained below. It is recommended that the mask
- *      names be used rather than their numeric values, in case the numeric
- *      values change in future releases of Harbour. To allow more than one
- *      type of input event, simply add the various mask names together.
- *        INKEY_MOVE     = Mouse motion events are allowed
- *        INKEY_LDOWN    = The mouse left click down event is allowed
- *        INKEY_LUP      = The mouse left click up event is allowed
- *        INKEY_RDOWN    = The mouse right click down event is allowed
- *        INKEY_RUP      = The mouse right click up event is allowed
- *        INKEY_KEYBOARD = All keyboard events are allowed
- *        INKEY_ALL      = All mouse and keyboard events are allowed
- *      If the parameter is not numeric, it will be treated as if it were set
- *      to hb_set.HB_SET_EVENTMASK.
- *  $RETURNS$
- *      0 in case of timeout with no input event, otherwise returns a value
- *      in the range -39 to 386 for keyboard events or the range 1001 to 1007
- *      for mouse events. Mouse events and non-printable keyboard events are
- *      represented by the K_<event> values listed in inkey.ch. Keyboard
- *      event return codes in the range 32 through 127 are equivalent to the
- *      printable ASCII character set. Keyboard event return codes in the
- *      range 128 through 255 are assumed to be printable, but results may
- *      vary based on hardware and nationality.
- *  $DESCRIPTION$
- *      INKEY() can be used to detect input events, such as keypress, mouse
- *      movement, or mouse key clicks (up and/or down).
- *  $EXAMPLES$
- *      // Wait for the user to press the Esc key
- *      ? "Please press the ESC key."
- *      WHILE INKEY( 0.1 ) != K_ESC
- *      END
- *  $TESTS$
- *      KEYBOARD "AB"; ? INKEY(), INKEY() ==>   65   66
- *  $STATUS$
- *      S
- *  $COMPLIANCE$
- *      INKEY() is compliant with the Clipper 5.3 INKEY() function with one
- *      exceptions: The Harbour INKEY() function will raise an argument error
- *      if the first parameter is less than or equal to 0 and the second
- *      parameter (or the default mask) is not valid, because otherwise INKEY
- *      would never return, because it was, in effect, asked to wait forever
- *      for no events (Note: In Clipper, this also blocks SET KEY events).
- *  $SEEALSO$
- *      inkey.ch
- *  $END$
- */
-
 HARBOUR HB_INKEY( void )
 {
    int args = hb_pcount();
@@ -1028,43 +961,6 @@ HARBOUR HB_INKEY( void )
    }
    hb_retni( key );
 }
-
-/*  $DOC$
- *  $FUNCNAME$
- *      __KEYBOARD()
- *  $CATEGORY$
- *      Console input
- *  $ONELINER$
- *      DO NOT CALL THIS FUNCTION DIRECTLY!
- *  $SYNTAX$
- *      KEYBOARD <cString>
- *      CLEAR TYPEAHEAD
- *  $ARGUMENTS$
- *      <cString> is the optional string to stuff into the Harbour keyboard
- *      buffer after clearing it first. Note: The character ";" is converted
- *      to CHR(13) (this is an undocumented CA-Clipper feature).
- *  $RETURNS$
- *      There is no return value
- *  $DESCRIPTION$
- *      Clears the Harbour keyboard typeahead buffer and then inserts an
- *      optional string into it.
- *  $EXAMPLES$
- *      // Stuff an Enter key into the keyboard buffer
- *      KEYBOARD CHR(13)
- *      // Clear the keyboard buffer
- *      CLEAR TYPEAHEAD
- *  $TESTS$
- *      KEYBOARD CHR(13); ? INKEY() ==> 13
- *      KEYBOARD ";" ? INKEY() ==> 13
- *      KEYBOARD "HELLO"; CLEAR TYPEAHEAD; ? INKEY() ==> 0
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      __KEYBOARD() is compliant with CA-Clipper 5.3
- *  $SEEALSO$
- *    CLEAR TYPEAHEAD, KEYBOARD
- *  $END$
- */
 
 HARBOUR HB___KEYBOARD( void )
 {
@@ -1117,128 +1013,16 @@ void hb_inkeyPut( int ch )
    }
 }
 
-/*  $DOC$
- *  $FUNCNAME$
- *      __KEYPUT()
- *  $CATEGORY$
- *      Console input
- *  $ONELINER$
- *      Put an inkey code to the keyboard buffer
- *  $SYNTAX$
- *      __keyPut( <nInkeyCode> )
- *  $ARGUMENTS$
- *      <nInkeyCode> is the inkey code, which should be inserted into the
- *      keyboard buffer.
- *  $RETURNS$
- *      There is no return value
- *  $DESCRIPTION$
- *      Inserts an inkey code to the string buffer. The buffer is *not*
- *      cleared in this operation. This function allows to insert such
- *      inkey codes which are not in the range of 0 to 255. To insert more
- *      than one code, call the function repeatedly. The zero code cannot
- *      be inserted.
- *  $EXAMPLES$
- *      // Stuff an Alt+PgDn key into the keyboard buffer
- *      __keyPut( K_ALT_PGDN )
- *  $TESTS$
- *      __keyPut( K_ALT_PGDN ) ; ? INKEY() ==> 417
- *      __keyPut( K_F11 ) ; ? INKEY() ==> -40
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Was not part of Clipper
- *  $SEEALSO$
- *      KEYBOARD,CLEAR TYPEAHEAD,INKEY()
- *  $END$
- */
-
 HARBOUR HB___KEYPUT( void )
 {
    if( ISNUM( 1 ) )
       hb_inkeyPut( hb_parni( 1 ) );
 }
 
-/*  $DOC$
- *  $FUNCNAME$
- *      NEXTKEY()
- *  $CATEGORY$
- *      Console input
- *  $ONELINER$
- *      Returns the value of the next key in the Harbour keyboard buffer
- *  $SYNTAX$
- *      NEXTKEY() --> nKey
- *  $ARGUMENTS$
- *      None
- *  $RETURNS$
- *      There is no return value
- *  $DESCRIPTION$
- *      Returns the value of the next key in the Harbour keyboard buffer
- *      without extracting it.
- *  $EXAMPLES$
- *      // Use NEXTKEY() with INKEY() to change display character or by
- *      // itself to exit the loop, so that the caller can detect the Esc.
- *      LOCAL nKey, cChar := "+"
- *      WHILE TRUE
- *         ?? cChar
- *         nKey := NEXTKEY()
- *         IF nKey == K_ESC
- *            EXIT
- *         ELSE
- *            IF nKey != 0
- *               cChar := CHR( nKey )
- *            END IF
- *         END IF
- *      END WHILE
- *  $TESTS$
- *      KEYBOARD "AB"; ? NEXTKEY(), NEXTKEY() ==>   65   65
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NEXTKEY() is compliant with CA-Clipper 5.3
- *  $SEEALSO$
- *      INKEY(),LASTKEY()
- *  $END$
- */
-
 HARBOUR HB_NEXTKEY( void )
 {
    hb_retni( hb_inkeyNext() );
 }
-
-/*  $DOC$
- *  $FUNCNAME$
- *      LASTKEY()
- *  $CATEGORY$
- *      Console input
- *  $ONELINER$
- *      Returns the last key exttracted from the Harbour keyboard buffer
- *  $SYNTAX$
- *      LASTKEY() --> nKey
- *  $ARGUMENTS$
- *      None
- *  $RETURNS$
- *      There is no return value
- *  $DESCRIPTION$
- *      Returns the value of the last key exttracted from the Harbour
- *      keyboard buffer
- *  $EXAMPLES$
- *      // Continue looping unless the ESC key was pressed in MainFunc()
- *      WHILE TRUE
- *         MainFunc()
- *         IF LASTKEY() == K_ESC
- *            EXIT
- *         END IF
- *      END WHILE
- *  $TESTS$
- *      KEYBOARD "AB"; ? INKEY(), LASTKEY() ==>   65   65
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      LASTKEY() is compliant with CA-Clipper 5.3
- *  $SEEALSO$
- *      INKEY(),LASTKEY()
- *  $END$
- */
 
 HARBOUR HB_LASTKEY( void )
 {
@@ -1277,41 +1061,3 @@ HARBOUR HB_FKMAX( void )
    hb_retni( 40 ); /* IBM specific */
 }
 
-/*  $DOC$
- *  $FUNCNAME$
- *      KEYBOARD
- *  $CATEGORY$
- *      Command
- *  $ONELINER$
- *      Stuffs the keyboard with a string
- *  $SYNTAX$
- *      KEYBOARD <cString>
- *  $ARGUMENTS$
- *      <cString> String to be processed, one character at a time,
- *      by the Harbour keyboard processor
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      This command stuff the input buffer with <cString>. The
- *      number of character that can be stuffed into the keyboard
- *      buffer is controled by SET TYPEAHEAD command and may range
- *      from 0 to 32,622, with each character appearing in the ASCII
- *      range of 0 to 255. None of the extended keys may be stuffed
- *      in the keyboard buffer.
- *      Issuing a KEYBOARD " " will clear the keyboard buffer.
- *  $EXAMPLES$
- *      // Stuff an Enter key into the keyboard buffer
- *      KEYBOARD CHR(13)
- *      // Clear the keyboard buffer
- *      CLEAR TYPEAHEAD
- *  $TESTS$
- *      KEYBOARD CHR(13); ? INKEY() ==> 13
- *      KEYBOARD "HELLO"; CLEAR TYPEAHEAD; ? INKEY() ==> 0
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      __KEYBOARD() is compliant with CA-Clipper 5.3
- *  $SEEALSO$
- *       CLEAR TYPEAHEAD,__KEYBOARD()
- *  $END$
- */

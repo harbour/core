@@ -17,36 +17,7 @@
  * public domain.
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_STRPBRK()
- *  $CATEGORY$
- *      String
- *  $ONELINER$
- *      Return string after 1st char from a set
- *  $SYNTAX$
- *      GT_StrpBrk(<cStr>, <cSet>) --> cString
- *  $ARGUMENTS$
- *      <cStr>   - The input string
- *      <cSet>   - The set of characters to find
- *  $RETURNS$
- *      cString  - The input string after the first occurance of any
- *                 character from <cSet>
- *  $DESCRIPTION$
- *      Return a string after the first occurance of any character from
- *      the input set <cSet>.
- *  $EXAMPLES$
- *
- *      ? GT_Strpbrk("This is a test", "sa ")  // prints "s is a test"
- *      ? GT_Strpbrk("This is a test", "et")   // prints "test"
- *
- *  $END$
- */
-
-
 #include "extend.h"
-
 
 HARBOUR HB_GT_STRPBRK( void )
 {

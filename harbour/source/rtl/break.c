@@ -36,35 +36,6 @@
 #include "extend.h"
 #include "ctoharb.h"
 
-/*  $DOC$
- *  $FUNCNAME$
- *      BREAK()
- *  $CATEGORY$
- *      Error recovery
- *  $ONELINER$
- *      Exits from a BEGIN SEQUENCE block
- *  $SYNTAX$
- *      BREAK( <xExp> ) --> NIL
- *  $ARGUMENTS$
- *      <xExp> is any valid expression. It is always required.
- *      If do not want to pass any argument, just use NIL.
- *  $RETURNS$
- *      NIL
- *  $DESCRIPTION$
- *      This function passes control to the RECOVER statement in a
- *      BEGIN SEQUENCE block.
- *  $EXAMPLES$
- *      Break( NIL )
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      BREAK() is fully CA-Clipper compliant.
- *  $SEEALSO$
- *       BEGIN SEQUENCE
- *  $END$
- */
-
 /* NOTE: This function should normally have a parameter count check. But
          since in Harbour we cannot distinguish between BREAK() function and
          the BREAK statement, because both generate a BREAK() function
@@ -74,3 +45,4 @@ HARBOUR HB_BREAK( void )
 {
    hb_vmRequestBreak( hb_param( 1, IT_ANY ) );
 }
+

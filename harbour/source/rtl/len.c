@@ -37,42 +37,6 @@
 #include "errorapi.h"
 #include "itemapi.h"
 
-/*  $DOC$
- *  $FUNCNAME$
- *      LEN()
- *  $CATEGORY$
- *      Strings
- *  $ONELINER$
- *      Returns size of a string or size of an array.
- *  $SYNTAX$
- *      LEN( <cString> | <aArray> ) --> <nLength>
- *  $ARGUMENTS$
- *      <acString> is a character string or the array to check.
- *  $RETURNS$
- *      The length of the string or the number of elements that contains
- *      an array.
- *  $DESCRIPTION$
- *      This function returns the string length or the size of an array. If
- *      it is used with a multidimensional array it returns the size of the
- *      first dimension.
- *  $EXAMPLES$
- *      ? Len( "Harbour" ) --> 7
- *      ? Len( { "One", "Two" } ) --> 2
- *  $TESTS$
- *      function Test()
- *         LOCAL cName := ""
- *         ACCEPT "Enter your name: " TO cName
- *         ? Len( cName )
- *      return nil
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      LEN() is fully CA-Clipper compliant.
- *  $SEEALSO$
- *      EMPTY(),RTRIM(),LTRIM(),AADD(),ASIZE()
- *  $END$
- */
-
 HARBOUR HB_LEN( void )
 {
    PHB_ITEM pItem = hb_param( 1, IT_ANY );
