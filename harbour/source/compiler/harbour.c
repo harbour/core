@@ -296,7 +296,7 @@ int main( int argc, char * argv[] )
    return iStatus;
 }
 
-#if defined(__IBMCPP__) || defined(_MSC_VER)
+#if ( defined(__IBMCPP__) || defined(_MSC_VER) ) && !defined(__BORLANDC__)
 int isatty( int handle )
 {
    return ( handle < 4 ) ? 1 : 0;

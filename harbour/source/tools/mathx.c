@@ -2,11 +2,12 @@
  * $Id$
  */
 
-#include "hbapi.h"
 #include <math.h>
 
+#include "hbapi.h"
+
 #ifndef M_PI_2
-#define M_PI_2      1.57079632679489661923
+   #define M_PI_2      1.57079632679489661923
 #endif
 
 HB_FUNC( ACOS )
@@ -140,5 +141,32 @@ HB_FUNC( TANH )
 HB_FUNC( PI )
 {
    hb_retnd( 3.141592653589793 );
+}
+
+HB_FUNC( CEIL )
+{
+   if( ISNUM( 1 ) )
+      hb_retnd( ceil( hb_parnd( 1 ) ) );
+   else
+      /* TODO: Error or return NAN */
+      hb_retnd( 0 );
+}
+
+HB_FUNC( FLOOR )
+{
+   if( ISNUM( 1 ) )
+      hb_retnd( floor( hb_parnd( 1 ) ) );
+   else
+      /* TODO: Error or return NAN */
+      hb_retnd( 0 );
+}
+
+HB_FUNC( FRACTION )
+{
+   if( ISNUM( 1 ) )
+      hb_retnd( hb_parnd( 1 ) - hb_parnl( 1 ) );
+   else
+      /* TODO: Error or return NAN */
+      hb_retnd( 0 );
 }
 

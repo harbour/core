@@ -1,3 +1,16 @@
+20000328-03:35 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   + doc/c_std.txt
+     + A list of the keywords which are part of the ANSI C and/or Posix
+       standards.
+   * source/tools/mathx.c
+     + Added new functions by Jose Lalin.
+   * source/compiler/harbour.c
+     ! Fixed to not define isatty for __BORLANDC__
+   * config/dos/global/cf
+     ! Replaced "ECHO Y" with FOR command to make it work on non-English
+       systems.
+
 2000-03-27 19:15 GMT-5 David G. Holm <dholm@jsd-llc.com>
 
    * include\hbset.h
