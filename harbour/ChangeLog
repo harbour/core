@@ -6,6 +6,8 @@
      source/pp/*
      ! nEmptyString global variable prefixed with "hb_"
      ! nEmptyString declaration moved to the header file.
+   * utils/hbdoc/genhpc.prg
+     ! Fixed redefinition of #define.
 
 20000317-09:56 GMT+3 Alexander Kresin
    * source/pp/stdalone/hbpp.c
