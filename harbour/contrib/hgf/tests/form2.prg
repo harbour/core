@@ -1,19 +1,19 @@
 //
 // $Id$
 //
-// Inheriting from Class TForm sample
+// Inheriting from Class HBForm sample
 
 #include "hbclass.ch"
 
 function Main()
 
-   local oForm2 := TForm2():New()
+   local oForm2 := HBForm2():New()
 
    oForm2:ShowModal()
 
 return nil
 
-CLASS TForm2 FROM TForm
+CLASS HBForm2 FROM HBForm
 
    METHOD New()
 
@@ -22,7 +22,7 @@ CLASS TForm2 FROM TForm
 
 ENDCLASS
 
-METHOD New() CLASS TForm2
+METHOD New() CLASS HBForm2
 
    local oMenu, oMenuItem
 
@@ -30,15 +30,15 @@ METHOD New() CLASS TForm2
 
    ::Caption = "Harbour GUI demo"
 
-   oMenu = TMenu():New( Self )
+   oMenu = HBMenu():New( Self )
 
-   oMenuItem = TMenuItem():New( oMenu )
+   oMenuItem = HBMenuItem():New( oMenu )
    oMenuitem:Caption = "Test"
    oMenuitem:Name    = "Test"
    oMenuItem:OnClick  = "TestClick"  // The container method to execute
    oMenu:Add( oMenuItem )
 
-   oMenuItem = TMenuItem():New( oMenu )
+   oMenuItem = HBMenuItem():New( oMenu )
    oMenuitem:Caption = "Exit"
    oMenuitem:Name    = "Exit"
    oMenuItem:OnClick  = "ExitClick"  // The container method to execute
@@ -48,7 +48,7 @@ METHOD New() CLASS TForm2
 
 return Self
 
-METHOD TestClick( oSender ) CLASS TForm2
+METHOD TestClick( oSender ) CLASS HBForm2
 
    MsgInfo( "This event has been fired by a " + oSender:ClassName() + " object",;
             "Welcome to Harbour GUI power" )
