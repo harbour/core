@@ -1,0 +1,12 @@
+#
+# $Id$
+#
+
+all : first
+
+first clean install ::
+	@for d in $(DIRS); do \
+	  if [ -d $$d ]; then \
+	    $(MAKE) -C $$d $@; \
+	  fi \
+	done

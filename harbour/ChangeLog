@@ -1,14 +1,55 @@
+Wed May 05 15:30:49 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* source/harbour.y:
+	* source/compiler/harbour.c: 
+	Replaced main() with harbour_main(), and added a separate
+	harbour.c with just the main() function.
+
+	* makefile.b16: 
+	* makefile.b32: 
+	* makefile.vc: 
+	Updated these files to reflect the new source/compiler/harbour.c
+	file.
+
+	* .cvsignore: 
+	Added this file with the patterns CVS will ignore while
+	processing.
+	
+	* config/bin.cf: 
+	* config/c.cf: 
+	* config/dir.cf: 
+	* config/global.cf: 
+	* config/install.cf: 
+	* config/lib.cf: 
+	* config/prg.cf: 
+	* config/test.cf: 
+	* config/win32/gcc.cf: 
+	* config/win32/global.cf: 
+	* config/win32/msvc.cf: 
+	* config/win32/rules.cf: 
+	* Makefile: 
+	* source/Makefile: 
+	* source/compiler/Makefile: 
+	* source/rtl/Makefile: 
+	* source/vm/Makefile: 
+	* tests/Makefile: 
+	This is the GNU-make based build system.
+
 Wed May 05 09:24:22 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* Added back include/Set.ch, and tests/working/block2.PRG; they
-	can' be renamed through CVS, and the repository will have to be
-	updated by hand.
+	* include/Set.ch: 
+	* tests/working/block2.PRG: 
+	Added back these files. They can't be renamed through CVS on NT,
+	and the repository will have to be updated by some other means.
 
 Wed May 05 09:19:23 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* Removed include/Set.ch in preparation to move it to
-	include/set.ch; same thing for tests/working/block2.PRG.
-	* Added ChangeLog.
+	* include/Set.ch: 
+	* tests/working/block2.PRG: 
+	Removed these files in preparation to move them to lowercase.
+	
+	* ChangeLog: 
+	Added this file.
    * source/pp/pragma.c
    * contrib/dot/pp_harb.ch
    * tests/inline_c.prg

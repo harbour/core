@@ -1,0 +1,24 @@
+#
+# $Id$
+#
+
+include $(TOP)$(ROOT)config/c.cf
+
+EXE_NAME = $(C_MAIN:.c=$(EXE_EXT))
+EXE_ARCH = $(ARCH_DIR)$(EXE_NAME)
+
+first : dirbase descend
+
+descend :
+	@cd $(ARCH_DIR); \
+	$(MAKE) -f ../../Makefile 'TOP=../../' $(EXE_NAME); \
+	cd ../../
+
+$(EXE_NAME) : $(ALL_OBJS)
+	$(LD_RULE)
+
+
+INSTALL_OBJS = $(EXE_ARCH)
+INSTALL_DIR = $(BIN_DIR)
+
+include $(TOP)$(ROOT)config/install.cf

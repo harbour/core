@@ -867,7 +867,7 @@ void GenError( int iError, char * szError1, char * szError2 )
   exit( 1 );
 }
 
-int main( int argc, char * argv[] )
+int harbour_main( int argc, char * argv[] )
 {
    int iStatus = 0, iArg = 1;
    char szFileName[ _POSIX_PATH_MAX ];    /* filename to parse */

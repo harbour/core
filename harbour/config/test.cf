@@ -1,0 +1,12 @@
+#
+# $Id$
+#
+
+include $(TOP)$(ROOT)config/prg.cf
+
+first : dirbase descend
+
+descend :
+	@cd $(ARCH_DIR); \
+	$(MAKE) -f ../../Makefile 'TOP=../../' $(PRG_EXES); \
+	cd ../../

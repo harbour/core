@@ -1,0 +1,20 @@
+#
+# $Id$
+#
+
+install:: first
+	@if [ ! -d $(INSTALL_DIR) ]; \
+	then \
+	  echo "! Can't install, path not found:" $(INSTALL_DIR); \
+	else \
+	  for i in $(INSTALL_OBJS); \
+	  do \
+	    if [ -r $$i ]; \
+	    then \
+	      echo "! Installing $$i on $(INSTALL_DIR)"; \
+	      $(CP) $$i $(INSTALL_DIR); \
+	    else \
+	      echo "! Can't install $$i, not found"; \
+	    fi \
+	  done \
+	fi

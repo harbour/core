@@ -1,0 +1,24 @@
+#
+# $Id$
+#
+
+include $(TOP)$(ROOT)config/c.cf
+
+LIB_NAME = $(LIB_PREF)$(LIB)$(LIB_EXT)
+LIB_ARCH = $(ARCH_DIR)$(LIB_NAME)
+
+first : dirbase descend
+
+descend :
+	@cd $(ARCH_DIR); \
+	$(MAKE) -f ../../Makefile 'TOP=../../' $(LIB_NAME); \
+	cd ../../
+
+$(LIB_NAME) : $(ALL_OBJS)
+	$(AR_RULE)
+
+
+INSTALL_OBJS = $(LIB_ARCH)
+INSTALL_DIR = $(LIB_DIR)
+
+include $(TOP)$(ROOT)config/install.cf

@@ -1,0 +1,28 @@
+#
+# $Id$
+#
+
+include $(TOP)$(ROOT)config/$(ARCHITECTURE)/global.cf
+
+OBJ_EXT = .o
+EXE_EXT = .exe
+LIB_PREF = lib
+LIB_EXT = .a
+
+CC = gcc
+CC_OUT = -o
+CPPFLAGS = -DDEBUG -I. -I$(INCLUDE_DIR)
+CFLAGS = -Wall -g
+
+LD = gcc
+LD_OUT = -o
+ifdef LIB_DIR
+LDFLAGS = -L$(LIB_DIR)
+endif
+LINKLIBS = $(foreach lib, $(LIBS), -l$(lib))
+
+AR = ar
+ARFLAGS =
+AR_RULE = $(AR) $(ARFLAGS) r $@ $^ || $(RM) $@
+
+include $(TOP)$(ROOT)config/$(ARCHITECTURE)/rules.cf

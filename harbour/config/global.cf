@@ -1,0 +1,20 @@
+#
+# $Id$
+#
+
+all : first
+
+ARCH_DIR = $(ARCHITECTURE)/$(COMPILER)/
+
+include $(TOP)$(ROOT)config/$(ARCHITECTURE)/$(COMPILER).cf
+
+dirbase::
+	@if [ ! -d $(ARCHITECTURE) ]; then \
+	  $(MD) $(ARCHITECTURE); \
+	fi; \
+	if [ ! -d $(ARCH_DIR) ]; then \
+	  $(MD) $(ARCH_DIR); \
+	fi
+
+clean::
+	$(RM) -r $(ARCH_DIR)
