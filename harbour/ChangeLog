@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-05-31 15:45 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * source/rtl/tget.prg
+    ! Some fixes for PICTURE "9"
+
+    Now editing a character var does not allows to type "-". It allows
+    both "+" and "-" for numeric var. (Clipper compatibility).
+
 2003-05-30 12:39 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * contrib/rdd_ads/ads1.c
     ! managed 7008 open error
