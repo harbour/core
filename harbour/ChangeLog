@@ -1,3 +1,23 @@
+19991016-22:40 GMT+8 Ron Pinkas <Ron@Profit-Master.com>
+   * harbour.y
+	  + added support for _FIELD->Expression and _FIELD->ALIAS->Expression
+            "REPLACE Field WITH Exp" and "REPLACE ALIAS->Field WITH Exp" are supported
+            "REPLACE 1->Field WITH Exp" will compile but requires some more work by Ryszard.
+	  + added support for Aliased Variables in Push/Pop support.
+	  + added "Invalid alias expression" error to _szCERRORS.
+	  - Removed Todo # 9 support for _FIELD->Alias->Field.
+
+   * harbour.l
+          + added {Integer} definition - used by _Field->Area#-> rule
+	  + added MEMV->& and MEMVA&-> to MACROOP defeinition.
+	  + added rules for _FIELD->"{Integer}"->", _FIELD->"{Number}"->" (Error condition), _FIELD->"{Integer}"->" and _FIELD->"{Identifier}"->"
+
+   * Hberror.h
+          + added #define ERR_ALIASEXP               38
+
+   + /Tests/TstAlias.prg
+	  added new test to demonstrate support for aliased expression.
+
 19991016-18:40 GMT+8 Ron Pinkas <Ron@Profit-Master.com>
    * harbour.y
           * Corrected bug with Push/Pop optimizer and BlockList.

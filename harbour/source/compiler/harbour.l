@@ -105,6 +105,7 @@ int i_INDEX_STATE = 0;
 
 SpaceTab      [ \t]+
 Number        ([0-9]+)|([0-9]*\.[0-9]+)
+Integer       ([0-9]+)|([0-9]+)
 InvalidNumber [0-9]+\.
 HexNumber     0x[0-9A-F]+
 Identifier    (([a-zA-Z])|([_a-zA-Z][_a-zA-Z0-9]+))
@@ -1136,6 +1137,8 @@ Separator     {SpaceTab}
 "--"          		  { _iState =OPERATOR; return DEC;                                        }
 "->"          		  { _iState =OPERATOR; return ALIASOP;                                    }
 "M->&"        		  { _iState =OPERATOR; return MACROALIAS;                                 }
+"MEMV->&"   		  { _iState =OPERATOR; return MACROALIAS;                                 }
+"MEMVA->&"   		  { _iState =OPERATOR; return MACROALIAS;                                 }
 "MEMVAR->&"   		  { _iState =OPERATOR; return MACROALIAS;                                 }
 "&"           		  { _iState =OPERATOR; return MACROOP;                                    }
 "<="          		  { _iState =OPERATOR; return LE;                                         }
@@ -1170,6 +1173,31 @@ Separator     {SpaceTab}
                     return yy_ConvertNumber( yylval.string );
                  }
 
+"_FIELD->"{Integer}"->" {
+                              unput( yytext[ yyleng-1 ] );
+                              unput( yytext[ yyleng-2 ] );
+			      yytext[ yyleng - 2 ] = 0;
+
+                              if( _bRestrictSymbolLength && strlen( yytext ) > 20 )
+                              {
+                                 yytext[ 18 ] = 0;
+                                 yyleng = 10;
+                              }
+                              yylval.string = yy_strupr( yy_strdup( yytext + 8 ) );
+                              _iState = IDENTIFIER;
+                              return IDENTIFIER;
+                           }
+
+"_FIELD->"{Number}"->" { GenError( _szCErrors, 'E', ERR_ALIASEXP, yytext + 8, NULL ); }
+
+"_FIELD->"             {
+                              unput( yytext[ yyleng-1 ] );
+                              unput( yytext[ yyleng-2 ] );
+			      yytext[ yyleng - 2 ] = 0;
+                              yylval.string = yy_strupr( yy_strdup( yytext + 1 ) );
+                              _iState = IDENTIFIER;
+                              return IDENTIFIER;
+		       }
 
 {Number}       { return yy_ConvertNumber( yytext ); }
 
@@ -1266,6 +1294,21 @@ Separator     {SpaceTab}
                --_iOpenBracket;
                return '}';
             }
+
+"_FIELD->"{Identifier}"->" {
+                              unput( yytext[ yyleng-1 ] );
+                              unput( yytext[ yyleng-2 ] );
+			      yytext[ yyleng - 2 ] = 0;
+
+                              if( _bRestrictSymbolLength && strlen( yytext ) > 20 )
+                              {
+                                 yytext[ 18 ] = 0;
+                                 yyleng = 10;
+                              }
+                              yylval.string = yy_strupr( yy_strdup( yytext + 8 ) );
+                              _iState = IDENTIFIER;
+                              return IDENTIFIER;
+                           }
 
 {Identifier}               {
                               if( _bRestrictSymbolLength && strlen( yytext ) > 10 )
