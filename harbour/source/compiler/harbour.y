@@ -160,7 +160,7 @@ static void hb_compDebugStart( void ) { };
 %token MACROVAR MACROTEXT
 %token AS_ARRAY AS_BLOCK AS_CHARACTER AS_CLASS AS_DATE AS_LOGICAL AS_NUMERIC AS_OBJECT AS_VARIANT DECLARE OPTIONAL DECLARE_CLASS DECLARE_MEMBER
 %token AS_ARRAY_ARRAY AS_BLOCK_ARRAY AS_CHARACTER_ARRAY AS_CLASS_ARRAY AS_DATE_ARRAY AS_LOGICAL_ARRAY AS_NUMERIC_ARRAY AS_OBJECT_ARRAY
-%token PROCREQ
+%token PROCREQ GET
 
 /*the lowest precedence*/
 /*postincrement and postdecrement*/
@@ -245,6 +245,7 @@ Source     : Crlf
            | Statement
            | Line
            | ProcReq
+           | GET {/* Dummy - We need to use the GET token which is used by harbour.sly so both will generate same harboury.h */}
            | error  Crlf  { yyclearin; }
            | Source Crlf
            | Source VarDefs

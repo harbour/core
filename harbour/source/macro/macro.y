@@ -735,7 +735,7 @@ IfInline   : IIF '(' Expression ',' EmptyExpression ','
  ** ------------------------------------------------------------------------ **
  */
 
-int hb_compParse( HB_MACRO_PTR pMacro )
+int hb_macroYYParse( HB_MACRO_PTR pMacro )
 {
    int iResult;
    void * lexBuffer;

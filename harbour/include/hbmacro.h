@@ -86,7 +86,7 @@ extern "C" {
 /* Global functions
  */
 extern void hb_macroError( int iError, HB_BISON_PTR pMacro );
-extern int hb_compParse( HB_MACRO_PTR pMacro );
+extern int hb_macroYYParse( HB_MACRO_PTR pMacro );
 
 extern void hb_compGenPCode1( BYTE byte, HB_BISON_PTR pMacro );
 extern void hb_compGenPCode2( BYTE byte1, BYTE byte2, HB_BISON_PTR pMacro );

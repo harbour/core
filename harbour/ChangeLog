@@ -1,3 +1,19 @@
+2000-11-30 18:25 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbmacro.h
+   * source/macro/macro.y
+   * source/vm/macro.c
+     ! Renamed hb_compParse() to hb_macroYYParse(). We already have hb_macroParse() and hcompparse()
+
+   * source/compiler/harbour.y
+     * Added token GET (not used) just so that harboury.h is compatible with harbour.sly
+
+   * source/rtl/tgetint.prg
+     * Reverted to use _1 and == NIL to not break Clipper compatibility.
+
+     /* Ryszard, if you want to re-introduce PCount() and HB_PVALUE(), I'll ask (since I wrote this original code)
+        that you protect it with #ifdef FLEX etc. If you do I would suggest you further protect it with #ifdef STRICT...
+	becuase this will defintly break strict compatability. */
+
 2000-11-30 15:30 UTC-0500 David G. Holm <dholm@jsd-llc.com>
    * include/hbver.h
      % Bumped revision code to j and set date to 2000-11-30 for

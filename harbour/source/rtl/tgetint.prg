@@ -50,15 +50,11 @@ FUNCTION __GET( bSetGet, cVarName, cPicture, bValid, bWhen )
    LOCAL oGet
 
    IF( bSetGet == NIL )
-      //Alert( "No Block for: " + cVarName )
-
       IF __ISMV( cVarName )
-         bSetGet := {|_1| IIF( PCOUNT()==0,  __MVGET( cVarName ), __MVPUT( cVarName, _1 ) ) }
+         bSetGet := {|_1| IIF( _1 == NIL,  __MVGET( cVarName ), __MVPUT( cVarName, _1 ) ) }
       ELSE
-         //Alert( "Not MemVar: " + cVarName )
-
          /* "{|_1| IIF( _1 == NIL, &cVarName, &cVarName := _1 )" */
-         bSetGet := &( "{|| IIF( PCOUNT()==0, " + cVarName + ", " + cVarName + " := HB_PVALUE(1) ) }" )
+         bSetGet := &( "{|_1| IIF( _1 == NIL, " + cVarName + ", " + cVarName + " := _1 ) ) }" )
       ENDIF
    ENDIF
 

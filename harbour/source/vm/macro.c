@@ -82,7 +82,7 @@ static int hb_macroParse( HB_MACRO_PTR pMacro, char * szString )
     */
    pMacro->exprType = HB_ET_NONE;
 
-   return hb_compParse( pMacro );
+   return hb_macroYYParse( pMacro );
 }
 
 /* releases all memory allocated for macro evaluation
