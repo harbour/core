@@ -1979,9 +1979,10 @@ HB_FUNC( DBUSEAREA )
       hb_rddReleaseCurrentArea();
 
    hb_rddCheck();
-   if( ISCHAR(2) )
+   if( ISCHAR(2) && hb_parclen( 2 ) )
    {
-      hb_strncpyUpper( szDriverBuffer, hb_parc( 2 ), HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
+      hb_strncpyUpper( szDriverBuffer, hb_parc( 2 ),
+                       min( hb_parclen( 2 ), HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ) );
       szDriver = szDriverBuffer;
    }
    else
