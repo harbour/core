@@ -601,7 +601,10 @@ FUNCTION ProcessFile( sSource, sSwitch )
 
    FClose( hSource )
 
-   sLine += SubStr( sBuffer, nPosition )
+   //? sSource, nPosition, nMaxPos, nLen, SubStr( sLine, nPosition, 40 )
+   //WAIT
+
+   sLine += SubStr( sBuffer, nPosition, Max( 0, ( nMaxPos + 2 ) - nPosition ) )
    sLine := StrTran( sLine, Chr(09), '   ' )
    sLine := RTrim( sLine )
    sLine := StrTran( sLine, Chr(10), '' )
@@ -706,7 +709,28 @@ FUNCTION ProcessLine( sLine, aDefined, aTranslated, aCommanded, nLine, sSource )
             LOOP
          ENDIF
 
-         IF sDirective == "ELSE"
+         IF sDirective == Left( "IFDEF", nLen ) .AND. nIfDef > 0 .AND. ! abIfDef[ nIfDef ]
+
+            nIfDef++
+            aSize( abIfDef, nIfDef )
+            abIfDef[ nIfDef ] := .F.
+            sLine := ''
+            LOOP
+
+         ELSEIF sDirective == Left( "IFNDEF", nLen ) .AND. nIfDef > 0 .AND. ! abIfDef[ nIfDef ]
+
+            nIfDef++
+            aSize( abIfDef, nIfDef )
+            abIfDef[ nIfDef ] := .F.
+            sLine := ''
+            LOOP
+
+         ELSEIF sDirective == "ELSE" .AND. nIfDef > 0 .AND. ! abIfDef[ nIfDef ]
+
+            sLine := ''
+            LOOP
+
+         ELSEIF sDirective == "ELSE"
 
             abIfDef[ nIfDef ] := ! abIfDef[ nIfDef ]
             sLine := ''
