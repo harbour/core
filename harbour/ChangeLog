@@ -8,6 +8,18 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-02-16 15:52 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * src/rtl/set.c
+     ! Fixed an incompatibility in Set(_SET_EXIT) which caused 
+       ReadExit() to set the SET value even if called without 
+       a parameter. Similar incompatibility can exist with other 
+       sets, but I didn't chk them.
+       Now ReadExit() works as expected.
+
+   * src/rtl/tbrowse.prg
+     ! Typo.
+
 2004-02-16 10:52 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * src/rtl/tbrowse.prg

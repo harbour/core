@@ -625,7 +625,8 @@ HB_FUNC( SET )
          break;
       case HB_SET_EXIT       :
          hb_retl( hb_set.HB_SET_EXIT );
-         if( args > 1 ) hb_set.HB_SET_EXIT = set_logical( pArg2 );
+         /* NOTE: Otherwise ReadExit() will always set the value. [vszakats] */
+         if( pArg2 != NULL && !HB_IS_NIL( pArg2 ) ) hb_set.HB_SET_EXIT = set_logical( pArg2 );
          break;
       case HB_SET_EXTRA      :
          hb_retl( hb_set.HB_SET_EXTRA );

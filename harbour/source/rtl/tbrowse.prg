@@ -1303,7 +1303,7 @@ return Self
 
 METHOD ColorRect( aRect, aRectColor ) CLASS TBrowse
 
-   IF ISARRAY( aRect ) .AND. ISARRAY( aRecColor )
+   IF ISARRAY( aRect ) .AND. ISARRAY( aRectColor )
       ::aRect       := aRect
       ::aRectColor  := aRectColor
    ENDIF
