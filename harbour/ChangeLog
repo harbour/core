@@ -7,6 +7,23 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2002-04-26 14:08 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/rtl/getlist.prg
+    ! Fix bug when release last getlist
+      Reported by Alexander Kresin
+
+2002-04-25 08:10 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
+  * source/rtl/tbrowse.prg
+    * Method SetColumnWidth() now return the corrent Value(Clipper return the Greater value of either Heading;Data; or footer
+
+2002-04-26 15:15 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/rdd/dbstrux.prg
+   * contrib/rdd_ads/ads1.c
+     * Implemented using of extended data types in RDD ADS
+
+2002-04-25 10:55 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+   * source/rtl/getsys.prg
      ! Fix, lost the reference to the current oGetList with recursive
        execution of ReadModal.
 
