@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-12-02 15:23 UTC+0100 Lorenzo Fiorini <lorenzo_fiorini@tin.it>
+  * source/vm/hvm.c
+  * source/vm/mainwin.c
+  * bin/bld.bat
+  * config/dos/watcom.cf
+  + config/w32/watcom.cf
+    ! added support to OpenWatcom DOS/Win32 borrowed from xHarbour
+
 2003-11-24 18:32 UTC+0100 Lorenzo Fiorini <lorenzo_fiorini@tin.it>
   * source/compiler/gencobj.c
     ! fixed to allow = for the C compiler options

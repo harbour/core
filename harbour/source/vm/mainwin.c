@@ -116,6 +116,10 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    /* NOTE: This point is never reached */
 
    return 0;
-}
+} 
+
+#if defined(__WATCOMC__)
+void HB_EXPORT hb_froceLinkMain() {}
+#endif
 
 #endif

@@ -5181,3 +5181,11 @@ HB_FUNC( __OPGETPRF ) /* profiler: It returns an array with an opcode called and
       hb_stornl( hb_ulOpcodesTime[ ulOpcode ],  -1, 2 );
    }
 }
+
+#if defined(HB_OS_WIN_32) && defined(__WATCOMC__)
+extern void HB_EXPORT hb_froceLinkMain();
+void _hb_froceLinkMain()
+{
+   hb_froceLinkMain();
+}
+#endif
