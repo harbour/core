@@ -748,7 +748,7 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
                   HB_SKIPTABSPACES( ptri );
 
                   if( ( *ptri == '\0' || ( *ptri != '=' &&
-                                            (!IsInStr(*ptri,":/*+-") || *(ptri+1) != '=') &&
+                                            (!IsInStr(*ptri,":/*+-%^") || *(ptri+1) != '=') &&
                                             ( *ptri != '-' || *(ptri+1) != '>' ) ) )
                        && ( stcmd = ComSearch(sToken,NULL) ) != NULL )
                     {
