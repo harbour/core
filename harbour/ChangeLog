@@ -1,3 +1,7 @@
+2001-06-09 22:05 GMT+7 Andi Jahja <andijahja@cbn.net.id>
+   * harbour/source/compiler/hbusage.c
+     - Deleting my own name in "Credit", I do not deserve it!
+
 2001-06-09 09:35 UTC+1 JFL (mafact) <jfl@mafact.com>
    * harbour/source/vm/Classe.c
      * New scoping for rel. 0.37 !
