@@ -352,7 +352,7 @@ void hb_vmInit( BOOL bStartMainProc )
       }
 #else
 #ifndef HB_C52_STRICT
-      else if( ! s_pSymStart )
+      else if( bStartMainProc && ! s_pSymStart )
          hb_errInternal( HB_EI_VMNOSTARTUP, NULL, NULL, NULL );
 #endif
 #endif
