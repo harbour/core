@@ -65,19 +65,23 @@ CLASS TDbMenuItem
    DATA lChecked
    DATA Ident
 
-   METHOD New( cPrompt, bAction, lChecked )
+   ACCESS Checked() INLINE ::lChecked
+   ASSIGN Checked(lOnOff) INLINE ::lChecked:=lOnOff
+   
+   METHOD New( cPrompt, bAction, lChecked, xIdent )
    METHOD Display( cClrText, cClrHotKey )
    METHOD Toggle() INLINE ::lChecked := ! ::lChecked
 
 ENDCLASS
 
-METHOD New( cPrompt, bAction, lChecked, nIdent ) CLASS TDbMenuItem
+METHOD New( cPrompt, bAction, lChecked, xIdent ) CLASS TDbMenuItem
 
    DEFAULT lChecked TO .f.
 
    ::cPrompt  := cPrompt
    ::bAction  := bAction
    ::lChecked := lChecked
+   ::Ident    := xIdent
 
 return Self
 

@@ -3767,13 +3767,11 @@ static void hb_vmStaticName( BYTE bIsGlobal, USHORT uiStatic, char * szStaticNam
    hb_vmPushSymbol( hb_dynsymFind( "__DBGENTRY" )->pSymbol );
    hb_vmPushNil();
    hb_vmPushLongConst( HB_DBG_STATICNAME );
-   if( bIsGlobal )
-      hb_vmPushLongConst( hb_arrayLen( &s_aStatics ) - s_uiStatics );
-   else
-      hb_vmPushLongConst( hb_stack.iStatics + uiStatic );
+   hb_vmPushLongConst( hb_stack.iStatics );  /* current static frame */
+   hb_vmPushLongConst( uiStatic );  /* variable index */
    hb_vmPushString( szStaticName, strlen( szStaticName ) );
    s_bDebuggerIsWorking = TRUE;
-   hb_vmDo( 3 );
+   hb_vmDo( 4 );
    s_bDebuggerIsWorking = FALSE;
    s_bDebugShowLines = TRUE;
 }
@@ -5066,10 +5064,7 @@ HB_FUNC( HB_DBG_VMVARSLEN )
  * $End$ */
 HB_FUNC( HB_DBG_VMVARSGET )
 {
-   /* hb_itemReturn( s_aStatics.item.asArray.value->pItems +
-                  hb_stack.iStatics + hb_parni( 1 ) - 1 ); */
-
-   hb_itemReturn( s_aStatics.item.asArray.value->pItems + hb_parni( 1 ) - 1 );
+   hb_itemReturn( s_aStatics.item.asArray.value->pItems + hb_parni(1) + hb_parni(2) - 1 );
 }
 
 /* $Doc$
@@ -5078,8 +5073,8 @@ HB_FUNC( HB_DBG_VMVARSGET )
  * $End$ */
 HB_FUNC( HB_DBG_VMVARSSET )
 {
-   hb_itemCopy( s_aStatics.item.asArray.value->pItems + hb_parni( 1 ) - 1,
-                * ( hb_stack.pBase + 3 ) );
+   hb_itemCopy( s_aStatics.item.asArray.value->pItems + hb_parni(1) + hb_parni(2) - 1,
+                hb_itemParamPtr( 3, HB_IT_ANY ) );
 }
 
 HB_FUNC( HB_DBG_PROCLEVEL )

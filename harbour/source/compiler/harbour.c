@@ -3744,6 +3744,18 @@ void hb_compStaticDefStart( void )
       hb_compGenPCodeN( pBuffer, 5, 0 );
 
       hb_compGenPCode3( HB_P_SFRAME, 0, 0, ( BOOL ) 0 );     /* frame for statics variables */
+      
+      if( hb_comp_bDebugInfo )
+      {
+         BYTE * pBuffer;
+         int iFileLen = strlen( hb_comp_files.pLast->szFileName );
+
+         pBuffer = ( BYTE * ) hb_xgrab( 2 + iFileLen );
+         pBuffer[0] = HB_P_MODULENAME;
+         memcpy( ( BYTE * ) ( &( pBuffer[1] ) ), ( BYTE * ) hb_comp_files.pLast->szFileName, iFileLen+1 );
+         hb_compGenPCodeN( pBuffer, 2 + iFileLen, 0 );
+         hb_xfree( pBuffer );
+      }
    }
    else
    {

@@ -8,6 +8,24 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-01-27 16:10 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * source/compiler/harbour.c
+      * the compiler generates module name inside 
+      '(_INITSTATICS)' function if -B option is used
+      
+   * source/vm/hvm.c
+      * fixed hb_vmStaticName, hb_dbg_vmVarSGet, 
+      hb_dbg_varSSet to use the static variables frame
+      
+   * source/debug/dbgtmenu.prg
+   * source/debug/dbgtmitm.prg
+   * source/debug/debugger.prg
+      * fixed parsing of <var>:<name> in watchpoint
+      expressions
+      * fixed monitoring of static variables - the 
+      debugger displays now static variables defined
+      in the current debugged prg file
+
 2004-01-26 19:30 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbextern.ch
    * tests/debugtst.prg

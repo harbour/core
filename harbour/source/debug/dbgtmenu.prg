@@ -267,12 +267,19 @@ return 0
 
 METHOD GetItemByIdent( uIdent ) CLASS TDbMenu
 
-   local n
+   local n, oItem
 
    for n := 1 to Len( ::aItems )
-      if VALTYPE(::aItems[ n ]:Ident) == VALTYPE(uIdent) .AND.;
-         ::aItems[n]:Ident == uIdent
-         return ::aItems[ n ]
+      IF( VALTYPE(::aItems[n]:bAction) == 'O' )
+         oItem := ::aItems[n]:bAction:GetItemByIdent( uIdent )
+         IF( oItem != NIL )
+            RETURN oItem
+         ENDIF
+      ELSE
+         if VALTYPE(::aItems[ n ]:Ident) == VALTYPE(uIdent) .AND.;
+            ::aItems[n]:Ident == uIdent
+            return ::aItems[ n ]
+         ENDIF
       endif
    next
 
