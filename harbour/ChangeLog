@@ -8,6 +8,22 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-20 12:00 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * include/hbvm.h
+     * hb_vmInit(), hb_vmQuit(), hb_vmProcessSymbols(), hb_vmExecute()
+       declared as HB_EXPORT
+
+   * include/hbvmpub.h
+     * hb_vmProcessSymbols(), hb_vmExecute() declared as HB_EXPORT
+
+   * source/vm/hvm.c
+     * hb_vmInit(), hb_vmQuit(), hb_vmProcessSymbols(), hb_vmExecute()
+       declared as HB_EXPORT
+     - hb_vmDllExecute() removed as hb_vmExecute() is HB_EXPORT
+
+   * source/vm/maindllp.c
+     * hb_vmExecute() used instead hb_vmDllExecute()
+
 2001-12-20 11:35 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/vm/maindll.c
    * source/vm/maindllh.c
