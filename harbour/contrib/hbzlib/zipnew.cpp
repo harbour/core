@@ -251,7 +251,7 @@ if (iReturn) {
                     szTempString =(LPCTSTR)fh.GetFileName();                  
                     szFileNameInZip=(const char *)szTempString;
                     pItem=hb_itemPutC(NULL,(char *)szFileNameInZip);
-                    hb_itemArrayPut(pTempArray,filePos,pItem);
+                    hb_arraySet(pTempArray,filePos,pItem);
                     hb_itemRelease(pItem);
       #if defined(__WIN32__)
         szAttr[0] = uAttr & FILE_ATTRIBUTE_READONLY ? _T('r') : _T('-');
@@ -264,29 +264,29 @@ if (iReturn) {
                       if (fh.m_uUncomprSize>0) {
 
                         pItem=hb_itemPutNL(NULL,fh.m_uUncomprSize);
-                        hb_itemArrayPut(pTempArray,Lenght,pItem);
+                        hb_arraySet(pTempArray,Lenght,pItem);
                         hb_itemRelease(pItem);
                         pItem=hb_itemPutNL(NULL,fh.m_uComprSize);
-                        hb_itemArrayPut(pTempArray,Size,pItem);
+                        hb_arraySet(pTempArray,Size,pItem);
                         hb_itemRelease(pItem);
                         iRatio=100-((fh.m_uComprSize*100)/fh.m_uUncomprSize);
                         if (iRatio <0){
                             iRatio=0;
                             }
                         pItem=hb_itemPutNL(NULL,iRatio);
-                        hb_itemArrayPut(pTempArray,Ratio,pItem);
+                        hb_arraySet(pTempArray,Ratio,pItem);
                         hb_itemRelease(pItem);
                         }
                         else {
                         pItem=hb_itemPutNL(NULL,fh.m_uUncomprSize);
-                        hb_itemArrayPut(pTempArray,Lenght,pItem);
+                        hb_arraySet(pTempArray,Lenght,pItem);
                         hb_itemRelease(pItem);
                         pItem=hb_itemPutNL(NULL,fh.m_uComprSize);
-                        hb_itemArrayPut(pTempArray,Size,pItem);
+                        hb_arraySet(pTempArray,Size,pItem);
                         hb_itemRelease(pItem);
                         iRatio=0;
                         pItem=hb_itemPutNL(NULL,iRatio);
-                        hb_itemArrayPut(pTempArray,Ratio,pItem);
+                        hb_arraySet(pTempArray,Ratio,pItem);
                         hb_itemRelease(pItem);
                         }
 #if defined(__WIN32__)
@@ -310,18 +310,18 @@ if (iReturn) {
                   }
             }
                     pItem=hb_itemPutC(NULL,szMethod);
-                    hb_itemArrayPut(pTempArray,Method,pItem);
+                    hb_arraySet(pTempArray,Method,pItem);
                     hb_itemRelease(pItem);
             
                         sprintf(szCRC,"%8.8lx\n",(uLong)fh.m_uCrc32);
 
                         pItem=hb_itemPutCL(NULL,szCRC,8);
-                        hb_itemArrayPut(pTempArray,Crc32,pItem);
+                        hb_arraySet(pTempArray,Crc32,pItem);
                         hb_itemRelease(pItem);
 
                         pItem=hb_itemPutD(NULL,(long) (fh.m_uModDate >> 9) +1980 ,     (long)  ((fh.m_uModDate & ~0xFE00) >> 5) ,(long)fh.m_uModDate & ~0xFFE0);
                        /* (long)file_info.tmu_date.tm_year  ,(long)file_info.tmu_date.tm_mon + 1,(long)file_info.tmu_date.tm_mday);*/
-                        hb_itemArrayPut(pTempArray,Date,pItem);
+                        hb_arraySet(pTempArray,Date,pItem);
                         hb_itemRelease(pItem);
                         theTime=fh.GetTime();
                         SzTime= localtime(&theTime);
@@ -335,12 +335,12 @@ if (iReturn) {
                             }
                         }
                     pItem=hb_itemPutCL(NULL,szTime,5);
-                    hb_itemArrayPut(pTempArray,Time,pItem);
+                    hb_arraySet(pTempArray,Time,pItem);
                     hb_itemRelease(pItem);
                     pItem=hb_itemPutCL(NULL,szAttr,5);
-                    hb_itemArrayPut(pTempArray,Attr,pItem);
+                    hb_arraySet(pTempArray,Attr,pItem);
                     hb_itemRelease(pItem);
-               hb_itemArrayPut(pArray,uiCount+1,pTempArray);
+               hb_arraySet(pArray,uiCount+1,pTempArray);
                     hb_itemRelease(pTempArray);
                     
                 }   
@@ -349,7 +349,7 @@ if (iReturn) {
                     CZipString szTempString=(LPCTSTR)fh.GetFileName();
                     szFileNameInZip=(const char *)szTempString;
                 pItem=hb_itemPutC(NULL,(char *) szFileNameInZip);
-                hb_itemArrayPut(pArray,uiCount+1,pItem);
+                hb_arraySet(pArray,uiCount+1,pItem);
                 hb_itemRelease(pItem);
                 }
 }

@@ -69,11 +69,11 @@ int   hb_CompressFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBloc
     uLong uiCount;
     uLong uiPos;
     char szNewFile[MAXFILENAME];   
-    int iCause=0;
+    int iCause;
     BOOL bFileExist=hb_fsFile((BYTE*)szFile);
     CZipArchive szZip;
     BOOL bReturn = true;
-    DWORD dwSize=0;
+    DWORD dwSize;
     if (szPassWord != NULL){
         szZip.SetPassword(szPassWord);
      }
@@ -174,11 +174,11 @@ int   hb_CompressFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBloc
     uLong uiCount;
     char szNewFile[MAXFILENAME];
     CZipArchive szZip;    
-    int iCause=0;
+    int iCause;
     BOOL bReturn=true;
     uLong uiPos;
     BOOL bFileExist=hb_fsFile((BYTE*)szFile);
-    DWORD dwSize=0;
+    DWORD dwSize;
     if (pDiskBlock !=NULL){
         pDiskStatus=pDiskBlock;
         }
@@ -321,10 +321,10 @@ int   hb_CompressFileStd(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_
 {
     uLong uiCount;
     char szNewFile[MAXFILENAME];   
-    int iCause=0;
+    int iCause;
     BOOL bFileExist=hb_fsFile((BYTE*)szFile);
     BOOL    bReturn=true;
-    DWORD dwSize=0;
+    DWORD dwSize;
     CZipArchive szZip;
     if (szPassWord != NULL){
         szZip.SetPassword(szPassWord);
@@ -414,15 +414,15 @@ int   hb_CompressFileStd(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_
     return     bReturn;  /* to avoid warning */
 }
 
- int   hb_CmpTdSpanStd(char *szFile,char * szFiletoCompress,int iCompLevel,PHB_ITEM pBlock,BOOL bOverWrite,char *szPassWord,PHB_ITEM pDiskBlock,int iSpanSize,BOOL bPath,BOOL bDrive,PHB_ITEM pProgress)
+int   hb_CmpTdSpanStd(char *szFile,char * szFiletoCompress,int iCompLevel,PHB_ITEM pBlock,BOOL bOverWrite,char *szPassWord,PHB_ITEM pDiskBlock,int iSpanSize,BOOL bPath,BOOL bDrive,PHB_ITEM pProgress)
 {
     uLong uiCount;
     char szNewFile[MAXFILENAME];
     CZipArchive szZip;    
-    int iCause=0;
+    int iCause;
 
     BOOL bReturn=true;
-    DWORD dwSize=0;
+    DWORD dwSize;
     BOOL bFileExist=hb_fsFile((BYTE*)szFile);
     if (pDiskBlock !=NULL){
         pDiskStatus=pDiskBlock;
@@ -513,7 +513,7 @@ int   hb_CompressFileStd(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_
      if (pProgressInfo)
         hb_itemRelease(pProgressInfo    );
 
-    return true;  /* to avoid warning */
+    return bReturn;  /* to avoid warning */
 }
 BOOL hb_CreateZipInMemory(char *szFileToCompress,char *szFile)
 {
@@ -560,7 +560,7 @@ return bReturn;
 #if defined(HB_OS_WIN_32) || defined(__MINGW32__)
 DWORD GetCurrentFileSize(   LPCTSTR szFile)
 {
-   DWORD dwFileSize=0;
+
    DWORD dwFlags=FILE_ATTRIBUTE_ARCHIVE;
    HANDLE hFind;
    WIN32_FIND_DATA  hFilesFind;
