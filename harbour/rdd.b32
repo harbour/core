@@ -7,11 +7,14 @@
 .path.obj = obj
 .path.prg = source\rdd;source\rdd\dbfntx
 
-libs\b32\rdd.lib : rddsys.obj dbcmd.obj dbfntx1.obj dbfntx0.obj dbf0.obj dbf1.obj
+libs\b32\rdd.lib : rddsys.obj dbcmd.obj dbfntx1.obj dbfntx0.obj dbf0.obj dbf1.obj \
+                   delim0.obj delim1.obj sdf0.obj sdf1.obj
 
 dbf0.c      : dbf0.prg
 dbfntx0.c   : dbfntx0.prg
 rddsys.c    : rddsys.prg
+sdf0.c      : sdf0.prg
+delim0.c    : delim0.prg
 
 dbcmd.obj   : dbcmd.c
 rddsys.obj  : rddsys.c
@@ -19,6 +22,10 @@ dbfntx1.obj : dbfntx1.c
 dbfntx0.obj : dbfntx0.c
 dbf0.obj    : dbf0.c
 dbf1.obj    : dbf1.c
+sdf0.obj    : sdf0.c
+sdf1.obj    : sdf1.c
+delim0.obj  : delim0.c
+delim1.obj  : delim1.c
 
 .c.obj :
   bcc32 -c -O2 -I.\include;.\source\hbpp -o$@ -v $<
