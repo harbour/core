@@ -260,9 +260,6 @@ procedure __dbgEntry( nMode, uParam1, uParam2, uParam3 )  // debugger entry poin
          else
             AAdd( s_oDebugger:aVars, ATAIL( s_oDebugger:aCallStack[ 1 ][ CSTACK_LOCALS ] ) )
          endif
-//         if s_oDebugger:oBrwVars != nil
-//            s_oDebugger:oBrwVars:RefreshAll()
-//         endif
       endif
       
    case nMode == HB_DBG_STATICNAME
@@ -276,9 +273,7 @@ procedure __dbgEntry( nMode, uParam1, uParam2, uParam3 )  // debugger entry poin
          return  // We can not use s_oDebugger yet, so we return
       endif
            
-//      IF Len( s_oDebugger:aCallStack )>0 .AND. valtype( s_oDebugger:aCallStack[ 1, CSTACK_STATICS ])=='A'
-         AAdd( s_oDebugger:aCallStack[ 1 ][ CSTACK_STATICS ], { cVarName, nVarIndex, "Static",, nSFrame } )
-//      endif
+      AAdd( s_oDebugger:aCallStack[ 1 ][ CSTACK_STATICS ], { cVarName, nVarIndex, "Static",, nSFrame } )
 
       if s_oDebugger:lShowStatics
          if ( nAt := AScan( s_oDebugger:aVars,; // Is there another var with this name ?
@@ -287,9 +282,6 @@ procedure __dbgEntry( nMode, uParam1, uParam2, uParam3 )  // debugger entry poin
          else
             AAdd( s_oDebugger:aVars, ATAIL( s_oDebugger:aCallStack[ 1 ][ CSTACK_STATICS ] ) )
          endif
-//         if s_oDebugger:oBrwVars != nil
-//            s_oDebugger:oBrwVars:RefreshAll()
-//         endif
       endif
 
    case nMode == HB_DBG_ENDPROC   // called from hvm.c hb_vmDebuggerEndProc()
@@ -1635,7 +1627,10 @@ METHOD ShowVars() CLASS TDebugger
             ::oWndVars:Refresh()
          endif
       endif
-      if Len( ::aVars ) > 0
+      if lRepaint       //.AND. Len( ::aVars ) > 0
+         IF( ::oBrwVars:Cargo[1] > (::oBrwVars:nBottom - ::oBrwVars:nTop -1) )
+            ::oBrwVars:gotop()
+         ENDIF
          ::oBrwVars:RefreshAll()
          ::oBrwVars:ForceStable()
       endif
