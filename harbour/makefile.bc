@@ -336,12 +336,15 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\adir.obj \
    $(OBJ_DIR)\alert.obj \
    $(OBJ_DIR)\altd.obj \
+   $(OBJ_DIR)\array.obj \
+   $(OBJ_DIR)\block.obj \
    $(OBJ_DIR)\browdb.obj \
    $(OBJ_DIR)\browdbx.obj \
    $(OBJ_DIR)\browse.obj \
    $(OBJ_DIR)\characte.obj \
    $(OBJ_DIR)\checkbox.obj \
    $(OBJ_DIR)\color53.obj \
+   $(OBJ_DIR)\date.obj \
    $(OBJ_DIR)\dbedit.obj \
    $(OBJ_DIR)\dbdelim.obj \
    $(OBJ_DIR)\dbsdf.obj \
@@ -354,10 +357,13 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\getsys.obj \
    $(OBJ_DIR)\input.obj \
    $(OBJ_DIR)\listbox.obj \
+   $(OBJ_DIR)\logical.obj \
    $(OBJ_DIR)\memoedit.obj \
    $(OBJ_DIR)\memvarbl.obj \
    $(OBJ_DIR)\menuto.obj \
    $(OBJ_DIR)\mssgline.obj \
+   $(OBJ_DIR)\nil.obj \
+   $(OBJ_DIR)\numeric.obj \
    $(OBJ_DIR)\objfunc.obj \
    $(OBJ_DIR)\perfuncs.obj \
    $(OBJ_DIR)\persist.obj \
@@ -1297,11 +1303,25 @@ $(OBJ_DIR)\at.obj : $(RTL_DIR)\at.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\array.c : $(RTL_DIR)\array.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\array.obj : $(OBJ_DIR)\array.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\binnum.obj : $(RTL_DIR)\binnum.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\binnumx.obj : $(RTL_DIR)\binnumx.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\block.c : $(RTL_DIR)\block.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\block.obj : $(OBJ_DIR)\block.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
@@ -1368,6 +1388,13 @@ $(OBJ_DIR)\console.obj : $(RTL_DIR)\console.c
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\copyfile.obj : $(RTL_DIR)\copyfile.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\date.c : $(RTL_DIR)\date.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\date.obj : $(OBJ_DIR)\date.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
@@ -1603,6 +1630,13 @@ $(OBJ_DIR)\listbox.obj : $(OBJ_DIR)\listbox.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\logical.c : $(RTL_DIR)\logical.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\logical.obj : $(OBJ_DIR)\logical.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\math.obj : $(RTL_DIR)\math.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
@@ -1681,6 +1715,20 @@ $(OBJ_DIR)\natmsg.obj : $(RTL_DIR)\natmsg.c
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\net.obj : $(RTL_DIR)\net.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\nil.c : $(RTL_DIR)\nil.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\nil.obj : $(OBJ_DIR)\nil.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\numeric.c : $(RTL_DIR)\numeric.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\numeric.obj : $(OBJ_DIR)\numeric.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
