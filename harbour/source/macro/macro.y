@@ -79,7 +79,7 @@
 */
 
 #if !defined(__GNUC__) && !defined(__IBMCPP__)
-   void __yy_memcpy ( char*, char*, unsigned int ); /* to satisfy Borland compiler */
+   void __yy_memcpy ( char*, const char*, unsigned int ); /* to satisfy Borland compiler */
 #endif
 
 #ifdef __GNUC__

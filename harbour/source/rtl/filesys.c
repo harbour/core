@@ -1239,7 +1239,7 @@ void    hb_fsCommit( FHANDLE hFileHandle )
 
 #if defined(HB_OS_WIN_32)
 
-   bResult = FlushFileBuffers( ( HANDLE ) hFileHandle );
+   FlushFileBuffers( ( HANDLE ) hFileHandle );
    s_uiErrorLast = ( USHORT ) GetLastError();
 
 #elif defined(HB_OS_OS2)
