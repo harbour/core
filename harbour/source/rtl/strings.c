@@ -1143,7 +1143,7 @@ char * hb_str( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
          iWidth = 20;
       if( iDec > 9 )
          iDec = 9;
-      if( hb_set_fixed )
+      if( hb_set.HB_SET_FIXED )
          iDec = hb_set.HB_SET_DECIMALS;
 
       if( pWidth )

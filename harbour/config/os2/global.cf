@@ -1,0 +1,46 @@
+#
+# $Id$
+#
+
+all : first
+
+
+ifeq ($(SHLVL),) # An OS/2 command shell
+
+ARCH_DIR = $(ARCH)
+OS2_ARCH_DIR = $(subst /,\,$(ARCH)\)
+MK = $(subst /,\,$(subst \~,~,$(MAKE)))
+
+RM = del /n
+RD = rmdir
+CP = copy
+MV = move
+MD = md
+
+dirbase::
+	-CMD.EXE /c IF NOT EXIST $(HB_ARCHITECTURE) $(MD) $(HB_ARCHITECTURE)
+	-CMD.EXE /c IF NOT EXIST $(OS2_ARCH_DIR)    $(MD) $(OS2_ARCH_DIR)
+
+clean::
+	-CMD.EXE /c IF EXIST $(OS2_ARCH_DIR)\*.* $(RM) $(OS2_ARCH_DIR)\*.*
+	-CMD.EXE /c IF EXIST $(OS2_ARCH_DIR)     $(RD) $(OS2_ARCH_DIR)
+
+else  # bash
+
+ARCH_DIR = $(ARCH)/
+MK = $(MAKE)
+
+RM = rm -f
+RD = rm -f -r
+CP = cp -f
+MV = mv -f
+MD = mkdir
+
+dirbase::
+	@[ -d $(HB_ARCHITECTURE) ] || $(MD) $(HB_ARCHITECTURE); \
+	 [ -d $(ARCH) ] || $(MD) $(ARCH)
+
+clean::
+	-$(RD) $(ARCH_DIR)
+
+endif

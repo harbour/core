@@ -29,6 +29,10 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.43   David G. Holm               Removed the obsolete hb_set_fixed,
+                                        which I should have done when I took
+                                        HB_SETFIXED() out in V 1.27.
+   V 1.42   Ryszard Glab                Added guard around #pragma startup.
    V 1.41   David G. Holm               Added my email address.
    V 1.40   David G. Holm               Added header template and filled in
                                         complete version history by cross-
@@ -137,6 +141,7 @@
 
 #if defined(__GNUC__)
  #include <unistd.h>
+ #include <sys/types.h>
  #if defined(__DJGPP__)
    #include <io.h>
  #endif
@@ -160,7 +165,6 @@
 HB_set_struct hb_set;
 
 BOOL hb_set_century;
-BOOL hb_set_fixed;
 int hb_set_althan;
 int hb_set_extrahan;
 int hb_set_printhan;
@@ -873,7 +877,6 @@ HARBOUR HB_SET (void)
 void hb_setInitialize (void)
 {
    hb_set_century  = FALSE;
-   hb_set_fixed    = FALSE;
    hb_set_althan   = -1;
    hb_set_extrahan = -1;
    hb_set_printhan = -1;

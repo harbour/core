@@ -24,9 +24,9 @@
    their web site at http://www.gnu.org/).
  */
 
+#include <stdlib.h>
 #if defined(__GNUC__)
  #include <string.h>
- #include <stdlib.h>
  #include <unistd.h>
 #else
  #if (defined(_MSC_VER) || defined(__IBMCPP__))
@@ -87,7 +87,7 @@ int NextName ( char**, char*, char**);
 int Include( char *, PATHNAMES *, FILE** );
 int OpenInclude( char *, PATHNAMES *, FILE** );
 
-#define isname(c)  (isalnum(c) || c=='_' || (c) > 0x7e)
+#define isname(c)  (isalnum(c) || (c)=='_' || (c) > 0x7e)
 #define SKIPTABSPACES(sptr) while ( *sptr == ' ' || *sptr == '\t' ) (sptr)++
 #define MAX_NAME 255
 #define BUFF_SIZE 8192

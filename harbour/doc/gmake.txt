@@ -135,18 +135,27 @@ Then, you must set a couple of environment variables that indicate
 your architecture and compiler.
 
 For gcc on Win95/WinNT:
-
   HB_ARCHITECTURE   win32
   HB_COMPILER       gcc
 
 For MSVC on Win95/WinNT:
-
   HB_ARCHITECTURE   win32
   HB_COMPILER       msvc
 
 For GCC on Linux:
   HB_ARCHITECTURE   linux
   HB_COMPILER       gcc
+
+For GCC on OS/2:
+  Note: You must point C_INCLUDE_PATH to the EMX include directory and
+        you must also point LIBRARY_PATH to the EMX library directory.
+  HB_ARCHITECTURE   os2
+  HB_COMPILER       gcc
+
+For IBM Visual Age C++ on OS/2:
+  Note: You must create an empty unistd.h in the IBMCPP\INCLUDE directory.
+  HB_ARCHITECTURE   os2
+  HB_COMPILER       icc
 
 For DJGPP (GCC port for DOS)
   HB_ARCHITECTURE   dos
@@ -164,9 +173,9 @@ For Watcom C/C++ 10.x (default Makefile creates DOS4G extender executables)
 If you issue a "make install", it will try to install your header,
 executable and library files into directories given by
 
-  HB_BIN_DIR
-  HB_LIB_DIR
-  HB_INC_DIR
+  HB_BIN_INSTALL
+  HB_LIB_INSTALL
+  HB_INC_INSTALL
 
 You can set those as environment variables too.
 
@@ -177,24 +186,21 @@ The most used targets are these:
 
 * clean: Clean up everything made by make.
 
-* install: Install stuff into the appropriate directory.
+* install: Install stuff into the appropriate directories.
 
 
 NOTES
 =====
 In order to get a clean build after making source changes or after
-receiving updated source files, you must use the following three steps:
+receiving updated source files, you must use the following two steps:
 
 1) make -r clean
-2) make -r install
 3) make -r
 
-Without the first step, changes to the Harbour compiler will not be
-reflected in any object modules created from Harbour source code.
+Without the first step, changes to the Harbour compiler and/or various
+include files will not be reflected in any object modules created from
+Harbour source code.
 
-Without the second step, you can't build the Harbour compiler, because
-it requires that the HBPP library be installed.
-
-The third step is optional if all you want is an updated Harbour compiler,
-because what it does is rebuild the working test programs (which won't
-happen if you omit the first step).
+The -r option isn't strictly necessary, but it does signficantly reduce
+the number of rules that make has to evaluate otherwise, which may give
+a big performance boost on a slow system.

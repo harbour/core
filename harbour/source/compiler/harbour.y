@@ -1312,7 +1312,7 @@ int harbour_main( int argc, char * argv[] )
 
                default:
                     printf( "Invalid command line option: %s\n",
-                            &argv[ iArg ][ 1 ] );
+                            &argv[ iArg ][ 0 ] );
                     break;
             }
          }
@@ -2139,7 +2139,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
    }
 /*   fprintf( yyc, " };\n\n" ); */
    fprintf( yyc, "\nHB_INIT_SYMBOLS_END( %s__InitSymbols );\n", symbols.pFirst->szName );
-   fprintf( yyc, "#pragma startup %s__InitSymbols\n\n", symbols.pFirst->szName );
+   fprintf( yyc, "#if ! defined(__GNUC__)\n#pragma startup %s__InitSymbols\n#endif\n", symbols.pFirst->szName );
 
    /* Generate functions data
     */

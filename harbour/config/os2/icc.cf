@@ -1,0 +1,32 @@
+#
+# $Id$
+#
+
+include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
+
+OBJ_EXT = .obj
+EXE_EXT = .exe
+LIB_PREF =
+LIB_EXT = .lib
+
+CC = icc
+CC_IN = /C+ /Tp
+CC_OUT = /Fo
+CPPFLAGS = /I$(GRANDP) /I$(HB_INC_COMPILE) /DHARBOUR_USE_GTAPI /DHARBOUR_USE_OS2_GTAPI
+CFLAGS = /W2 /Se /Sd+ /Ti+
+
+LD = icc
+LD_OUT = /Fe
+LDFLAGS = /C-
+ifeq ($(HB_LIB_COMPILE),)
+LINKLIBS = $(foreach lib, $(LIBS), $(TOP)$(ROOT)source/$(lib)/$(ARCH)/$(lib)$(LIB_EXT))
+else
+LINKLIBS = $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
+endif
+
+AR = ilib
+ARFLAGS =
+AROBJS = $(foreach file, $^, -+$(file))
+AR_RULE = $(AR) $(ARFLAGS) $@ $(AROBJS),,
+
+include $(TOP)$(ROOT)config/rules.cf

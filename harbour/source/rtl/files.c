@@ -214,7 +214,7 @@ static void convert_create_flags( int flags, int *result_flags, unsigned *result
         /* by default FC_NORMAL is set */
 
         *result_flags = O_BINARY | O_CREAT | O_TRUNC | O_RDWR;
-        *result_pmode = S_IRWXU;
+        *result_pmode = S_IRUSR | S_IWUSR;
 
         if( flags & FC_READONLY )
                 *result_pmode = S_IRUSR;

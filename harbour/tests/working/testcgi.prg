@@ -38,7 +38,7 @@ FUNCTION Main()
    hFile := fOpen( "list.txt", 0 )
 
    cString := space( IF_BUFFER )
-   cBuf	   := ""
+   cBuf    := ""
    cTable  := ""
 
    // Builds dynamic table replacement
@@ -46,12 +46,12 @@ FUNCTION Main()
       i := 1
       DO WHILE i <= nPos
 
-	 IF substr( cString, i, 1 ) = chr( 13 )
+         IF substr( cString, i, 1 ) = chr( 13 )
             i := i + 1
             cLine := cBuf
-  	    cBuf  := ""
+            cBuf  := ""
 
-  	    IF left( cLine, 1 ) <> ';'
+            IF left( cLine, 1 ) <> ';'
                cTable += '<TR>' + chr(10)+chr(13) + ;
                  '<TD WIDTH="50%"><FONT SIZE="2" FACE="Tahoma">' +                 ;
                  ParseString( cLine, ';', 1 ) + '</FONT></TD>' + chr(10)+chr(13) + ;
@@ -71,12 +71,12 @@ FUNCTION Main()
                     '&nbsp' ) +                                                    ;
                  '</TD>' + chr(10)+chr(13) +                                       ;
                  '</TR>'
-  	    ENDIF
-	 ELSE
-	    cBuf := cBuf + substr( cString, i, 1 )
-	 ENDIF
+            ENDIF
+         ELSE
+            cBuf := cBuf + substr( cString, i, 1 )
+         ENDIF
 
-	 i++
+         i++
       ENDDO
    ENDDO
 
@@ -251,7 +251,7 @@ STATIC FUNCTION AddPara( cPara, cAlign )
 STATIC FUNCTION Generate()
 
    LOCAL Self := QSelf()
-   LOCAL cFile, i, hFile, nPos, cRes
+   LOCAL cFile, i, hFile, nPos, cRes := ""
    LOCAL lFlag := .f.
 
    // Is this a meta file or hand generated script?

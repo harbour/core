@@ -4,12 +4,11 @@
 
 
 FUNCTION Main()
+local a
+? "hello 1", ProcLine(), "Expected: ", 8
 
-? "hello 1", ProcLine(), "Expected: ", 4
+? "hello 2", ProcLine(), "Expected: ", 10
 
-? "hello 2", ProcLine(), "Expected: ", 6
-
-
-? "hello 3", ProcLine(), "Expected: ", 9
+? "hello 3", ProcLine(), "Expected: ", 13
 
 RETURN NIL

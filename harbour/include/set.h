@@ -29,6 +29,10 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.14   David G. Holm               Removed the obsolete hb_set_fixed
+                                        and HB_SETFIXED(), which I should
+                                        have done when I took HB_SETFIXED()
+                                        out of source/rtl/set.c in V 1.27.
    V 1.13   David G. Holm               Added my email address.
    V 1.12   David G. Holm               Added copyright and license header,
                                         along with a complete version history.
@@ -58,7 +62,6 @@
 
 HARBOUR HB_SET (void);
 HARBOUR HB_SETCENTURY (void);
-HARBOUR HB_SETFIXED (void);
 void hb_setInitialize (void);
 void hb_setRelease (void);
 
@@ -170,7 +173,6 @@ typedef struct
 
 extern HB_set_struct hb_set;
 extern BOOL hb_set_century;
-extern BOOL hb_set_fixed;
 extern int hb_set_althan;
 extern int hb_set_extrahan;
 extern int hb_set_printhan;

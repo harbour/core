@@ -3,7 +3,7 @@
 */
 /*
     Harbour Project source code
-    
+
     Harbour compiler and runtime configuration file
 
    Copyright 1999  Ryszard Glab
@@ -55,6 +55,13 @@
 /*#define HARBOUR_STRICT_ANSI_C */
 
 /* ***********************************************************************
+ * This symbol defines if we are trying to compile using GCC for OS/2
+ *
+ * By default it is disabled (symbol is not defined)
+*/
+/*#define HARBOUR_GCC_OS2*/
+
+/* ***********************************************************************
  * The name of starting procedure
  * Note: You have to define it in case when Harbour cannot find the proper
  * starting procedure (due to incorrect order of static data initialization)
@@ -66,7 +73,7 @@
  * By default we are using automatic lookup (symbol not defined)
 */
 #if defined(__WATCOMC__) || defined(__GNUC__)
-  #if !defined(__DJGPP__)
+  #if !defined(__DJGPP__) && !defined(HARBOUR_GCC_OS2)
     #define HARBOUR_START_PROCEDURE "MAIN"
   #endif
 #endif
@@ -96,18 +103,22 @@
 /*#define HARBOUR_STRICT_CLIPPER_COMPATIBILITY*/
 
 /* ***********************************************************************
- * This symbol defines if we want to use the GT API
+ * These symbols defines if we want to use the GT API (and which platform
+ * to build the GT API for, if using the GNU Make System).
  *
- * By default it is disabled (symbol is not defined)
+ * By default they are disabled (symbols are not defined)
 */
 /*#define HARBOUR_USE_GTAPI*/
+/*#define HARBOUR_USE_DOS_GTAPI*/
+/*#define HARBOUR_USE_OS2_GTAPI*/
+/*#define HARBOUR_USE_WIN_GTAPI*/
 
 /* ***********************************************************************
  * Operating system specific definitions
  */
 #ifdef __GNUC__
   /* The GNU C compiler is used */
-  #ifdef __DJGPP__
+  #if defined(__DJGPP__) || defined(HARBOUR_GCC_OS2)
     /* The DJGPP port of GNU C is used - for DOS platform */
     #define OS_PATH_LIST_SEPARATOR   ';'
     #define OS_PATH_DELIMITER '\\'

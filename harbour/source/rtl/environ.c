@@ -84,12 +84,11 @@ HARBOUR HB_OS(void)
 
    uname( &un );
 
-   sprintf( version, "%s %s", un.sysname, un.release );
-
-   /* DAP: Currently, OS() is coded with the expection that the operating
-      system plays the major/minor version number game. Not all operating
-      systems work like that. So, we do a little bit of mucking around
-      because we've managed to work out version[] on our own. */
+   #if defined(HARBOUR_GCC_OS2)
+      sprintf( version, "%s %s", un.sysname, un.version );
+   #else
+      sprintf( version, "%s %s", un.sysname, un.release );
+   #endif
 
    hb_os      = "";
    hb_osmajor = -2;

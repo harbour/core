@@ -23,7 +23,7 @@ function Main()
    d ="with access to local variables"
 
    a ={ |b,c| OutStd( "I am a second codeblock " +d +b +;
-	IIF(c==NIL, ' empty second parameter ', c)), OutStd(crlf), "WITH return value" }
+        IIF(c==NIL, ' empty second parameter ', c)), OutStd(crlf), "WITH return value" }
    EVAL( a, ", codeblock parameters" )
    OutStd( crlf )
 
@@ -54,16 +54,16 @@ function Main()
 
    yy :=5
    x  :={|xx| OutStd(LTRIM(STR(xx))), OutStd("+"), OutStd(LTRIM(STR(yy))), OutStd("="), xx + yy }
-   OutStd( EVAL( x, 1 ) )	//this is OK
+   OutStd( EVAL( x, 1 ) )       //this is OK
    OutStd( CRLF )
-   OutStd( EVAL( x, 1, 2 ) )	//this should ignore unnecesary parameters
+   OutStd( EVAL( x, 1, 2 ) )    //this should ignore unnecesary parameters
 
    QOut( EVAL( RetBlock(), 5 ) )
 
 //   BugToFix()
    OutStd( crlf )
 
-   OutStd( "Traying to use detached variable ..." )
+   OutStd( "Trying to use detached variable ..." )
    OutStd( crlf )
    x1 :=5
    x2 :=6

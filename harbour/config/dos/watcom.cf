@@ -17,7 +17,7 @@ CC = wpp386
 CC_IN =
 CC_OUT = -fo=
 CPPFLAGS = -d2 -w2 -5r -zq -zt0 -bt=DOS4G
-CFLAGS := -i$(subst \,\\,$(WATCOM))\\h -i$(subst /,\\,$(HB_INC_DIR)) -i.
+CFLAGS := -i$(subst \,\\,$(WATCOM))\\h -i$(subst /,\\,$(HB_INC_COMPILE)) -i.
 
 # Note: The empty line directly before 'endef' HAVE TO exist!
 # It causes that the 'echo' command is separated by LF
@@ -36,7 +36,11 @@ endef
 
 LD = wlink
 LDFLAGS = debug all OP osn=DOS4G OP stack=65536
-LINKLIBS := LIBP $(subst /,\,$(HB_LIB_DIR)) $(foreach lib, $(LIBS), LIB $(lib))
+ifeq ($(HB_LIB_COMPILE),)
+LINKLIBS = $(foreach lib, $(LIBS), LIB $(subst /,\,$(TOP)$(ROOT)source/$(lib)/$(ARCH)/$(lib)))
+else
+LINKLIBS := LIBP $(subst /,\,$(HB_LIB_COMPILE)) $(foreach lib, $(LIBS), LIB $(lib))
+endif
 LD_RULE = $(link_exe_file)
 
 #Note: The empty line below HAVE TO exist!
