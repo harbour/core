@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
    * source/rtl/Makefile
+2001-12-21 08:46 UTC+0000 Dave Pearson <davep@davep.org>
+   * ERRATA
+     * Added a note about and a pointer to harbour's bug reporting page.
+	
 2001-12-21 00:48 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * source/rtl/persist.prg
       * added type test to SaveToText() to avoid errors on
