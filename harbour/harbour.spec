@@ -13,13 +13,10 @@
 ######################################################################
 ## Definitions.
 ######################################################################
-%define is_not_mandrake %(test ! -e /etc/mandrake-release && echo 1 || echo 0)
 
-%if %is_not_mandrake
-%define platform %(release="`rpm -q --queryformat='.%{VERSION}' redhat-re
-lease 2>/dev/null`" ; if test $? != 0 ; then release="" ; fi ; echo "$release")
-%else
-%define platform mdk
+%define platform %(release=$(rpm -q --queryformat='.%{VERSION}' mandrake-release 2>/dev/null) && echo "mdk$release"|tr -d ".")
+%if "%{platform}" == ""
+  %define platform %(release=$(rpm -q --queryformat='.%{VERSION}' redhat-release 2>/dev/null) && echo "rh$release"|tr -d ".")
 %endif
 
 %define name     harbour

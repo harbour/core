@@ -10,6 +10,13 @@
 # See doc/license.txt for licensing terms.
 # ---------------------------------------------------------------
 
+# please add your distro suffix if it not belong to the one recognized below
+# and remember that order checking can be important
+hb_platform=`rel=$(rpm -q --queryformat='.%{VERSION}' mandrake-release 2>/dev/null) && echo "mdk$rel"|tr -d "."`
+[ "${hb_platform}" = "" ] && hb_platform=`rel=$(rpm -q --queryformat='.%{VERSION}' redhat-release 2>/dev/null) && echo "rh$rel"|tr -d "."`
+
+[ "${hb_platform}" = "" ] || hb_platform="-${hb_platform}"
+
 name="harbour"
 hb_ver="0.42.0"
 hb_lnkso="yes"
@@ -404,5 +411,5 @@ then
     done
 fi
 
-tar -czvf ${name}-${hb_ver}.bin.tar.gz --owner=root --group=root -C "${HB_INST_PREF}" .
+tar -czvf ${name}-${hb_ver}${hb_platform}.bin.tar.gz --owner=root --group=root -C "${HB_INST_PREF}" .
 rm -fR "${HB_INST_PREF}"
