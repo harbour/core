@@ -1,3 +1,15 @@
+2001-08-22 01:25 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/gtos2.c
+     + Driver tries to set codepage 437 on startup. Needed by box drawing functions
+     * hb_gt_isColor(), hb_gt_GetScreenWidth(), hb_gt_GetScreenHeight(),
+       hb_gt_GetCellSize() now are faster since use a static VIDEOMODEINFO variable
+       and this variable should be tilable.
+     ! hb_gt_xPutch(), hb_gt_Replicate() and hb_gt_Box() were simply broken
+
+     NOTE: Never call hb_gt_DispBegin()/hb_gt_DispEnd() from inside gtos2.c
+           if you do you'll slow down everything and you will not respect harbour level
+           DispBegin()/DispEnd() calls.
+
 2001-08-21 16:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * source/rtl/gtcgi/gtcgi.c
@@ -22,7 +34,7 @@
       * Fixed bugs 453424 (compiler core dumps on GNU/Linux when no
       harbour.cfg can be found) and 45325 (an empty harbour.cfg fails to
       correctly report that no compiler command has been specified.
-	
+
 2001-08-21 01:30 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * contrib/libgt/bitflags.c
       added the cvs header
@@ -179,7 +191,7 @@
    * contrib/libct/Makefile
    * contrib/libct/makefile.bc
    * contrib/libct/makefile.vc
-     + numat.c, pad.c, range.c, remove.c, replace.c, 
+     + numat.c, pad.c, range.c, remove.c, replace.c,
        strswap.c and wordtoch.c added
 
    * contrib/libct/ctflist.txt

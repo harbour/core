@@ -135,12 +135,22 @@ static PKBDKEYINFO s_key;
 /* keyboard handle, 0 == default */
 static PHKBD s_hk;
 
+/* Code page ID of active codepage at the time harbour program was start */
+static USHORT s_usOldCodePage;
+
+/* Instead of calling VioGetMode() every time I need MaxRow() or MaxCol() I
+   use this static which contains active mode info */
+static VIOMODEINFO s_vi;
+
 
 void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 {
    APIRET rc;           /* return code from DosXXX api call */
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
+
+   s_vi.cb = sizeof( VIOMODEINFO );
+   VioGetMode( &s_vi, 0 );        /* fill structure with current video mode settings */
 
    s_uiDispCount = 0;
 
@@ -179,7 +189,20 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
                chars are "wrong". So we need to set code page of
                box drawing chars. (Maurilio Longo - maurilio.longo@libero.it)
    */
+
+   /* 21/08/2001 - <maurilio.longo@libero.it>
+      NOTE: Box drawing characters need page 437 to show correctly, so, in your config.sys you
+            need to have a CODEPAGE=x,y statement where x or y is equal to 437
+   */
+
+   VioGetCp(0, &s_usOldCodePage, 0);
+
+   /* If I could not set codepage 437 I reset previous codepage, maybe I do not need to do this */
+   if (VioSetCp(0, 437, 0) != NO_ERROR) {
+      VioSetCp(0, s_usOldCodePage, 0);
+   }
 }
+
 
 void hb_gt_Exit( void )
 {
@@ -189,8 +212,11 @@ void hb_gt_Exit( void )
    DosFreeMem(s_hk);
 
    hb_mouse_Exit();
+   VioSetCp(0, s_usOldCodePage, 0);
+
    /* TODO: */
 }
+
 
 BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
 {
@@ -207,10 +233,12 @@ BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
    return TRUE;
 }
 
+
 int hb_gt_ExtendedKeySupport()
 {
    return 0;
 }
+
 
 int hb_gt_ReadKey( HB_inkey_enum eventmask )
 {
@@ -225,7 +253,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
    KbdCharIn(s_key, IO_NOWAIT, (HKBD) * s_hk);
 
    /* extended key codes have 00h or E0h as chChar */
-   if ((s_key->fbStatus & KBDTRF_EXTENDED_CODE) && (s_key->chChar == 0x00 || s_key->chChar == 0xE0))	{
+   if ((s_key->fbStatus & KBDTRF_EXTENDED_CODE) && (s_key->chChar == 0x00 || s_key->chChar == 0xE0))  {
 
       /* It was an extended function key lead-in code, so read the actual function key and then offset it by 256,
          unless extended keyboard events are allowed, in which case offset it by 512 */
@@ -359,36 +387,27 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
 
 BOOL hb_gt_IsColor( void )
 {
-   VIOMODEINFO vi;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_IsColor()"));
 
-   vi.cb = sizeof( VIOMODEINFO );
-   VioGetMode( &vi, 0 );
-   return vi.fbType != 0;        /* 0 = monochrom-compatible mode */
+   return s_vi.fbType != 0;        /* 0 = monochrom-compatible mode */
 }
+
 
 USHORT hb_gt_GetScreenWidth( void )
 {
-   VIOMODEINFO vi;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenWidth()"));
 
-   vi.cb = sizeof( VIOMODEINFO );
-   VioGetMode( &vi, 0 );
-   return vi.col;
+   return s_vi.col;
 }
+
 
 USHORT hb_gt_GetScreenHeight( void )
 {
-   VIOMODEINFO vi;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenHeight()"));
 
-   vi.cb = sizeof( VIOMODEINFO );
-   VioGetMode( &vi, 0 );
-   return vi.row;
+   return s_vi.row;
 }
+
 
 void hb_gt_SetPos( SHORT iRow, SHORT iCol, SHORT iMethod )
 {
@@ -399,6 +418,7 @@ void hb_gt_SetPos( SHORT iRow, SHORT iCol, SHORT iMethod )
    VioSetCurPos( ( USHORT ) iRow, ( USHORT ) iCol, 0 );
 }
 
+
 SHORT hb_gt_Row( void )
 {
    USHORT x, y;
@@ -408,6 +428,7 @@ SHORT hb_gt_Row( void )
    VioGetCurPos( &y, &x, 0 );
    return ( SHORT ) y;
 }
+
 
 SHORT hb_gt_Col( void )
 {
@@ -494,17 +515,21 @@ void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight,
 
       bCell [ 0 ] = ' ';
       bCell [ 1 ] = attr;
+
       if( ( sVert | sHoriz ) == 0 )             /* both zero, clear region */
-      VioScrollUp ( usTop, usLeft, usBottom, usRight, 0xFFFF, bCell, 0 );
+         VioScrollUp ( usTop, usLeft, usBottom, usRight, 0xFFFF, bCell, 0 );
+
       else
       {
          if( sVert > 0 )                        /* scroll up */
             VioScrollUp ( usTop, usLeft, usBottom, usRight, sVert, bCell, 0 );
+
          else if( sVert < 0 )                   /* scroll down */
             VioScrollDn ( usTop, usLeft, usBottom, usRight, -sVert, bCell, 0 );
 
          if( sHoriz > 0 )                       /* scroll left */
             VioScrollLf ( usTop, usLeft, usBottom, usRight, sHoriz, bCell, 0 );
+
          else if( sHoriz < 0 )                  /* scroll right */
             VioScrollRt ( usTop, usLeft, usBottom, usRight, -sHoriz, bCell, 0 );
       }
@@ -528,6 +553,7 @@ static void hb_gt_GetCursorSize( char * start, char * end )
 }
 */
 
+
 static void hb_gt_SetCursorSize( char start, char end, int visible )
 {
    VIOCURSORINFO vi;
@@ -541,18 +567,14 @@ static void hb_gt_SetCursorSize( char start, char end, int visible )
    VioSetCurType( &vi, 0 );
 }
 
+
 static char hb_gt_GetCellSize()
 {
-   char rc ;
-   VIOMODEINFO vi;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetCellSize()"));
 
-   vi.cb = sizeof( VIOMODEINFO );
-   VioGetMode( &vi, 0 );
-   rc = ( char )( vi.row ? ( vi.vres / vi.row ) - 1 : 0 );
-   return rc;
+   return ( char )( s_vi.row ? ( s_vi.vres / s_vi.row ) - 1 : 0 );
 }
+
 
 USHORT hb_gt_GetCursorStyle( void )
 {
@@ -591,6 +613,7 @@ USHORT hb_gt_GetCursorStyle( void )
 
    return rc;
 }
+
 
 void hb_gt_SetCursorStyle( USHORT style )
 {
@@ -635,6 +658,10 @@ static char * hb_gt_ScreenPtr( USHORT cRow, USHORT cCol )
 }
 
 
+/* TODO: 21/08/2001 - <maurilio.longo@libero.it>
+         This function works even if a DispBegin() has been issued, but should be corrected
+         to use VioXXX calls if not
+*/
 static void hb_gt_xGetXY( USHORT cRow, USHORT cCol, BYTE * attr, BYTE * ch )
 {
    char * p;
@@ -651,9 +678,13 @@ static void hb_gt_xPutch( USHORT cRow, USHORT cCol, BYTE attr, BYTE ch )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_xPutch(%hu, %hu, %d, %d", cRow, cCol, (int) attr, (int) ch));
 
-   {
-      USHORT FAR * p = (USHORT FAR *) hb_gt_ScreenPtr( cRow, cCol );
+   if (s_uiDispCount > 0) {
+      USHORT * p = (USHORT *) hb_gt_ScreenPtr( cRow, cCol );
       *p = (attr << 8) + ch;
+
+   } else {
+      USHORT Cell = (attr << 8) + ch;
+      VioWrtNCell((PBYTE) &Cell, 1, cRow, cCol, 0);
    }
 }
 
@@ -662,30 +693,34 @@ void hb_gt_Puts( USHORT usRow, USHORT usCol, BYTE attr, BYTE * str, ULONG len )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Puts(%hu, %hu, %d, %p, %lu)", usRow, usCol, (int) attr, str, len));
 
-   if(s_uiDispCount > 0) {
-      USHORT FAR *p;
+   if (s_uiDispCount > 0) {
+      USHORT *p;
       register USHORT byAttr = attr << 8;
 
-      p = (USHORT FAR *) hb_gt_ScreenPtr( usRow, usCol );
+      p = (USHORT *) hb_gt_ScreenPtr( usRow, usCol );
       while( len-- )
       {
          *p++ = byAttr + (*str++);
       }
+
    } else {
       VioWrtCharStrAtt( ( char * ) str, ( USHORT ) len, usRow, usCol, ( BYTE * ) &attr, 0 );
+
    }
 }
+
 
 int hb_gt_RectSize( USHORT rows, USHORT cols )
 {
    return rows * cols * 2;
 }
 
+
 void hb_gt_GetText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE *dest )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetText(%hu, %hu, %hu, %hu, %p)", usTop, usLeft, usBottom, usRight, dest));
 
-   if(s_uiDispCount > 0) {
+   if (s_uiDispCount > 0) {
       USHORT x, y;
 
       for( y = usTop; y <= usBottom; y++ ) {
@@ -694,6 +729,7 @@ void hb_gt_GetText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
             dest += 2;
          }
       }
+
    } else {
       USHORT width, y;
 
@@ -706,11 +742,12 @@ void hb_gt_GetText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
    }
 }
 
+
 void hb_gt_PutText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE *srce )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutText(%hu, %hu, %hu, %hu, %p)", usTop, usLeft, usBottom, usRight, srce));
 
-   if(s_uiDispCount > 0) {
+   if (s_uiDispCount > 0) {
       USHORT x, y;
 
       for( y = usTop; y <= usBottom; y++ ) {
@@ -719,6 +756,7 @@ void hb_gt_PutText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
             srce += 2;
          }
       }
+
    } else {
       USHORT width, y;
 
@@ -729,6 +767,7 @@ void hb_gt_PutText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
       }
    }
 }
+
 
 void hb_gt_SetAttribute( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE attr )
 {
@@ -763,21 +802,26 @@ void hb_gt_SetAttribute( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT us
    }
 }
 
+
+/* NOTE: 21/08/2001 - <maurilio.longo@libero.it>
+         If you need to call this function from inside gtos2.c then there is
+         something WRONG with your code :-)
+*/
 void hb_gt_DispBegin( void )
 {
-   /* 02/04/2000 - maurilio.longo@libero.it
-      added support for DispBegin() and DispEnd() functions.
-      OS/2 has an off screen buffer for every vio session. When a program calls DispBegin()
-      every function dealing with screen writes/reads uses this buffer. DispEnd() resyncronizes
-      off screen buffer with screen
+   /* NOTE: 02/04/2000 - <maurilio.longo@libero.it>
+            added support for DispBegin() and DispEnd() functions.
+            OS/2 has an off screen buffer for every vio session. When a program calls DispBegin()
+            every function dealing with screen writes/reads uses this buffer. DispEnd() resyncronizes
+            off screen buffer with screen
    */
-
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispBegin()"));
 
    /* pointer to the only one available screen buffer is set on startup,
       we only need to keep track of nesting */
    ++s_uiDispCount;
 }
+
 
 void hb_gt_DispEnd( void )
 {
@@ -788,18 +832,18 @@ void hb_gt_DispEnd( void )
    }
 }
 
+
 BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
 {
-   VIOMODEINFO vi;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetMode(%hu, %hu)", uiRows, uiCols));
 
-   vi.cb = sizeof( VIOMODEINFO );
-   VioGetMode( &vi, 0 );        /* fill structure with current settings */
-   vi.row = uiRows;
-   vi.col = uiCols;
-   return ! ( BOOL ) VioSetMode( &vi, 0 );   /* 0 = Ok, other = Fail */
+   s_vi.cb = sizeof( VIOMODEINFO );
+   VioGetMode( &s_vi, 0 );        /* fill structure with current settings */
+   s_vi.row = uiRows;
+   s_vi.col = uiCols;
+   return ! ( BOOL ) VioSetMode( &s_vi, 0 );   /* 0 = Ok, other = Fail */
 }
+
 
 BOOL hb_gt_GetBlink()
 {
@@ -813,6 +857,7 @@ BOOL hb_gt_GetBlink()
    return ( vi.fs == 0 );               /* 0 = blink, 1 = intens      */
 }
 
+
 void hb_gt_SetBlink( BOOL bBlink )
 {
    VIOINTENSITY vi;
@@ -824,6 +869,7 @@ void hb_gt_SetBlink( BOOL bBlink )
    vi.fs   = ( bBlink ? 0 : 1 );        /* 0 = blink, 1 = intens      */
    VioSetState( &vi, 0 );
 }
+
 
 void hb_gt_Tone( double dFrequency, double dDuration )
 {
@@ -853,33 +899,41 @@ void hb_gt_Tone( double dFrequency, double dDuration )
    }
 }
 
+
 char * hb_gt_Version( void )
 {
    return "Harbour Terminal: OS/2 console";
 }
+
 
 USHORT hb_gt_DispCount()
 {
    return s_uiDispCount;
 }
 
+
 void hb_gt_Replicate( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar, ULONG nLength )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%hu, %hu, %i, %i, %lu)", uiRow, uiCol, byAttr, byChar, nLength));
-   {
-      USHORT FAR *p;
-      USHORT byte = (byAttr << 8) + byChar;
+   USHORT byte = (byAttr << 8) + byChar;
 
-      p = (USHORT FAR *) hb_gt_ScreenPtr( uiRow, uiCol );
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%hu, %hu, %i, %i, %lu)", uiRow, uiCol, byAttr, byChar, nLength));
+
+   if (s_uiDispCount > 0) {
+      register USHORT *p;
+
+      p = (USHORT *) hb_gt_ScreenPtr( uiRow, uiCol );
       while( nLength-- )
       {
          *p++ = byte;
       }
+
+   } else {
+      VioWrtNCell((PBYTE) &byte, nLength, uiRow, uiCol, 0);
+
    }
 }
 
-USHORT hb_gt_Box( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right,
-                  BYTE * szBox, BYTE byAttr )
+USHORT hb_gt_Box( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * szBox, BYTE byAttr )
 {
    USHORT ret = 1;
    SHORT Row;
@@ -888,9 +942,9 @@ USHORT hb_gt_Box( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right,
    SHORT Width;
 
    if( Left >= 0 || Left < hb_gt_GetScreenWidth()
-   || Right >= 0 || Right < hb_gt_GetScreenWidth()
-   || Top >= 0 || Top < hb_gt_GetScreenHeight()
-   || Bottom >= 0 || Bottom < hb_gt_GetScreenHeight() )
+       || Right >= 0 || Right < hb_gt_GetScreenWidth()
+       || Top >= 0 || Top < hb_gt_GetScreenHeight()
+       || Bottom >= 0 || Bottom < hb_gt_GetScreenHeight() )
    {
 
       /* Ensure that box is drawn from top left to bottom right. */
@@ -910,8 +964,6 @@ USHORT hb_gt_Box( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right,
       /* Draw the box or line as specified */
       Height = Bottom - Top + 1;
       Width  = Right - Left + 1;
-
-      hb_gt_DispBegin();
 
       if( Height > 1 && Width > 1 && Top >= 0 && Top < hb_gt_GetScreenHeight() && Left >= 0 && Left < hb_gt_GetScreenWidth() )
          hb_gt_xPutch( Top, Left, byAttr, szBox[ 0 ] ); /* Upper left corner */
@@ -979,22 +1031,24 @@ USHORT hb_gt_Box( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right,
          if( Right < hb_gt_GetScreenWidth() && Bottom < hb_gt_GetScreenHeight() )
             hb_gt_xPutch( Bottom, Right, byAttr, szBox[ 4 ] ); /* Bottom right corner */
       }
-      hb_gt_DispEnd();
       ret = 0;
    }
 
    return ret;
 }
 
+
 USHORT hb_gt_BoxD( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * pbyFrame, BYTE byAttr )
 {
    return hb_gt_Box( Top, Left, Bottom, Right, pbyFrame, byAttr );
 }
 
+
 USHORT hb_gt_BoxS( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * pbyFrame, BYTE byAttr )
 {
    return hb_gt_Box( Top, Left, Bottom, Right, pbyFrame, byAttr );
 }
+
 
 USHORT hb_gt_HorizLine( SHORT Row, SHORT Left, SHORT Right, BYTE byChar, BYTE byAttr )
 {
@@ -1005,7 +1059,7 @@ USHORT hb_gt_HorizLine( SHORT Row, SHORT Left, SHORT Right, BYTE byChar, BYTE by
          Left = 0;
       else if( Left >= hb_gt_GetScreenWidth() )
          Left = hb_gt_GetScreenWidth() - 1;
-   
+
       if( Right < 0 )
          Right = 0;
       else if( Right >= hb_gt_GetScreenWidth() )
@@ -1019,6 +1073,7 @@ USHORT hb_gt_HorizLine( SHORT Row, SHORT Left, SHORT Right, BYTE byChar, BYTE by
    }
    return ret;
 }
+
 
 USHORT hb_gt_VertLine( SHORT Col, SHORT Top, SHORT Bottom, BYTE byChar, BYTE byAttr )
 {
@@ -1051,20 +1106,24 @@ USHORT hb_gt_VertLine( SHORT Col, SHORT Top, SHORT Bottom, BYTE byChar, BYTE byA
    return ret;
 }
 
+
 BOOL hb_gt_PreExt()
 {
    return TRUE;
 }
+
 
 BOOL hb_gt_PostExt()
 {
    return TRUE;
 }
 
+
 BOOL hb_gt_Suspend()
 {
    return TRUE;
 }
+
 
 BOOL hb_gt_Resume()
 {
