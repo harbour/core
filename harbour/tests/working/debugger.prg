@@ -80,12 +80,15 @@ CLASS TDbMenu  /* debugger menu */
    METHOD Build()
    METHOD ClosePopup()
    METHOD Close() INLINE ::ClosePopup( ::nOpenPopup ), ::nOpenPopup := 0
+   METHOD DeHilite()
    METHOD Display()
    METHOD EvalAction()
    METHOD GetHotKeyPos( nKey )
+   METHOD GoBottom()
    METHOD GoDown() INLINE ::aItems[ ::nOpenPopup ]:bAction:GoRight()
    METHOD GoLeft()
    METHOD GoRight()
+   METHOD GoTop()
    METHOD GoUp() INLINE ::aItems[ ::nOpenPopup ]:bAction:GoLeft()
    METHOD IsOpen() INLINE ::nOpenPopup != 0
    METHOD ProcessKey( nKey )
@@ -192,6 +195,14 @@ METHOD ClosePopup( nPopup ) CLASS TDbMenu
 
 return nil
 
+METHOD DeHilite() CLASS TDbMenu
+
+   local oMenuItem := ::aItems[ ::nOpenPopup ]
+
+   oMenuItem:Display( ::cClrPopup, ::cClrHotKey )
+
+return nil
+
 METHOD Display() CLASS TDbMenu
 
    local n, nAt
@@ -251,6 +262,18 @@ METHOD GetHotKeyPos( cKey ) CLASS TDbMenu
 return 0
 
 return .f.
+
+METHOD GoBottom() CLASS TDbMenu
+
+   local oPopup
+
+   if ::IsOpen()
+      oPopup = ::aItems[ ::nOpenPopup ]:bAction
+      oPopup:DeHilite()
+      oPopup:ShowPopup( Len( oPopup:aItems ) )
+   endif
+
+return nil
 
 METHOD GoLeft() CLASS TDbMenu
 
@@ -313,6 +336,18 @@ METHOD GoRight() CLASS TDbMenu
 
 return nil
 
+METHOD GoTop() CLASS TDbMenu
+
+   local oPopup
+
+   if ::IsOpen()
+      oPopup = ::aItems[ ::nOpenPopup ]:bAction
+      oPopup:DeHilite()
+      oPopup:ShowPopup( 1 )
+   endif
+
+return nil
+
 METHOD ShowPopup( nPopup ) CLASS TDbMenu
 
    local nAt, oPopup, oMenuItem
@@ -365,6 +400,12 @@ METHOD ProcessKey( nKey ) CLASS TDbMenu
       case nKey == K_ENTER
            ::EvalAction()
 
+      case nKey == K_HOME
+           ::GoTop()
+
+      case nKey == K_END
+           ::GoBottom()
+
       otherwise
          if ( nPopup := ::GetHotKeyPos( AltToKey( nKey ) ) ) != 0
             ::Close()
@@ -381,6 +422,7 @@ CLASS TDbMenuItem
    DATA  bAction
 
    METHOD New( cPrompt, bAction )
+   METHOD Display( cClrText, cClrHotKey )
 
 ENDCLASS
 
@@ -390,6 +432,17 @@ METHOD New( cPrompt, bAction ) CLASS TDbMenuItem
    ::bAction = bAction
 
 return Self
+
+METHOD Display( cClrText, cClrHotKey ) CLASS TDbMenuItem
+
+   @ ::nRow, ::nCol SAY ;
+      StrTran( ::cPrompt, "&", "" ) COLOR cClrText
+
+   @ ::nRow, ::nCol + nAt := ;
+      At( "&", ::cPrompt ) - 1 SAY ;
+      SubStr( ::cPrompt, nAt + 2, 1 ) COLOR cClrHotKey
+
+return nil
 
 static function AltToKey( nKey )
 
