@@ -91,6 +91,7 @@ PCOMDECLARED  hb_comp_pReleaseDeclared;
 
 PCOMCLASS     hb_comp_pFirstClass;
 PCOMCLASS     hb_comp_pLastClass;
+PCOMCLASS     hb_comp_pReleaseClass;
 char *        hb_comp_szFromClass;
 PCOMDECLARED  hb_comp_pLastMethod;
 
@@ -215,7 +216,9 @@ int main( int argc, char * argv[] )
 
    /* Load standard Declarations. */
    if ( hb_comp_iWarnings >= 3 )
+   {
 	  hb_compDeclaredInit();
+   }
 
    /* Process all files passed via the command line. */
 
@@ -862,9 +865,9 @@ PCOMDECLARED hb_compMethodAdd( PCOMCLASS pClass, char * szMethodName )
    if ( pClass->pMethod == NULL )
       pClass->pMethod = pMethod;
    else
-      pClass->pLast->pNext = pMethod;
+      pClass->pLastMethod->pNext = pMethod;
 
-   pClass->pLast = pMethod;
+   pClass->pLastMethod = pMethod;
 
    hb_comp_pLastMethod = pMethod;
 
@@ -899,30 +902,85 @@ void hb_compDeclaredInit( void )
     \x5c -> ByRef    (+60)             '-'  -> NIL
     \x7a -> Optional (+90)             'U'  -> Undefined
 
-	' '  -> AnyType                    'A'  -> Array                     'B'  -> Array
-	'A'  -> Array of AnyType           'a'  -> Array of Arrays           'b'  -> Array of Blocks
+    ' '  -> AnyType                    'A'  -> Array                     'B'  -> Array
+    'A'  -> Array of AnyType           'a'  -> Array of Arrays           'b'  -> Array of Blocks
     \x7a -> Optional AnyType           \x9b -> Optional Array            \x9c -> Optional Block
     \x94 -> Optional Array of AnyType  \xb5 -> Optional Array of Arrays  \xb6 -> Optional Array of Blocks
 
-	'C'  -> Character/String           'D'  -> Date                      'L'  -> Logical
-	'c'  -> Array of Strings           'd'  -> Array of Dates            'l'  -> Array of Logicals
+    'C'  -> Character/String           'D'  -> Date                      'L'  -> Logical
+    'c'  -> Array of Strings           'd'  -> Array of Dates            'l'  -> Array of Logicals
     \x9d -> Optional Character         \x9e -> Optional Date             \xa6 -> Optional Logical
     \xb7 -> Optional Array of Strings  \xb8 -> Optional Array of Dates   \xc0 -> Optional Array of Logicals
 
-	'N'  -> Numeric                    'O'  -> Object                    'S'  -> Class
-	'n'  -> Array of Numerics          'o'  -> Array of Objects          's'  -> Array of Classes
+    'N'  -> Numeric                    'O'  -> Object                    'S'  -> Class
+    'n'  -> Array of Numerics          'o'  -> Array of Objects          's'  -> Array of Classes
     \xa8 -> Optional Numeric           \xa9 -> Optional Object           \xad -> Optional Class
     \xc2 -> Optional Array of Numerics \xc3 -> Optional Array of Objects \xc7 -> Optional Array of Classes
+   */
 
-                                Name        Ret  Param Types              # of Prams  Class  Param Classes  Next
+   /* ------------------------------------------------- Standard Functions -------------------------------------------------- */
+
+   /*                           Name        Ret  Param Types              # of Prams  Class  Param Classes  Next
                                 ----------  ---  -----------------------  ----------  -----  -------------  ------ */
    static COMDECLARED s_001 = { "AADD"    , ' ', "A "                   , 2         , NULL , NULL         , NULL   };
    static COMDECLARED s_002 = { "ABS"     , 'N', "N"                    , 1         , NULL , NULL         , &s_001 };
    static COMDECLARED s_003 = { "ACHOICE" , 'N', "NNNNc\x7a\x9d\xa8\xa8", 9         , NULL , NULL         , &s_002 };
 
-   hb_comp_pFirstDeclared   = &s_003; /* Change to BOTTOM item. */
+   /* TODO: Add all functions. */
+
+   /* ------------------------------------------------- Standard Classes -------------------------------------------------- */
+
+   static COMCLASS    s_ERROR    = { "ERROR"   , NULL, NULL, NULL };
+   static COMCLASS    s_GET      = { "GET"     , NULL, NULL, NULL };
+   static COMCLASS    s_TBCOLUMN = { "TBCOLUMN", NULL, NULL, NULL };
+   static COMCLASS    s_TBROWSE  = { "TBROWSE" , NULL, NULL, NULL };
+
+  /*                                     Name            Ret  Param Types              # of Prams  Class   Param Classes  Next
+                                         --------------  ---  -----------------------  ----------  ------  -------------  ------------   */
+   static COMDECLARED s_ERROR_01    = { "ARGS"         , 'A', NULL                   , 0         , NULL  , NULL         , NULL           };
+   static COMDECLARED s_ERROR_02    = { "CANDEFAULT"   , 'B', NULL                   , 0         , NULL  , NULL         , &s_ERROR_01    };
+   static COMDECLARED s_ERROR_03    = { "CANRETRY"     , 'B', NULL                   , 0         , NULL  , NULL         , &s_ERROR_02    };
+   static COMDECLARED s_ERROR_04    = { "CANSUBSTITUTE", 'B', NULL                   , 0         , NULL  , NULL         , &s_ERROR_03    };
+   static COMDECLARED s_ERROR_05    = { "CARGO"        , ' ', NULL                   , 0         , NULL  , NULL         , &s_ERROR_04    };
+   static COMDECLARED s_ERROR_06    = { "DESCRIPTION"  , 'S', NULL                   , 0         , NULL  , NULL         , &s_ERROR_05    };
+   static COMDECLARED s_ERROR_07    = { "FILENAME"     , 'S', NULL                   , 0         , NULL  , NULL         , &s_ERROR_06    };
+   static COMDECLARED s_ERROR_08    = { "GENCODE"      , 'N', NULL                   , 0         , NULL  , NULL         , &s_ERROR_07    };
+   static COMDECLARED s_ERROR_09    = { "OPERATION"    , 'S', NULL                   , 0         , NULL  , NULL         , &s_ERROR_08    };
+   static COMDECLARED s_ERROR_10    = { "OSCODE"       , 'N', NULL                   , 0         , NULL  , NULL         , &s_ERROR_09    };
+   static COMDECLARED s_ERROR_11    = { "SEVERITY"     , 'N', NULL                   , 0         , NULL  , NULL         , &s_ERROR_10    };
+   static COMDECLARED s_ERROR_12    = { "SUBCODE"      , 'N', NULL                   , 0         , NULL  , NULL         , &s_ERROR_11    };
+   static COMDECLARED s_ERROR_13    = { "SUBSYSTEM"    , 'S', NULL                   , 0         , NULL  , NULL         , &s_ERROR_12    };
+   static COMDECLARED s_ERROR_14    = { "TRIES"        , 'N', NULL                   , 0         , NULL  , NULL         , &s_ERROR_13    };
+
+
+  /*                                     Name        Ret  Param Types              # of Prams  Class   Param Classes  Next
+                                         ----------  ---  -----------------------  ----------  ------  -------------  --------- */
+   static COMDECLARED s_GET_01      = { "ASSIGN"   , ' ', NULL                   , 0         , NULL  , NULL         , NULL      };
+   static COMDECLARED s_GET_02      = { "COLORDISP", 'S', "\x9d"                 , 1         , &s_GET, NULL         , &s_GET_01 };
+
+   /* ------- */
+
+   /* First (bottom) Method */
+   s_ERROR.pMethod     = &s_ERROR_14;
+   /* Last (top) Method. */
+   s_ERROR.pLastMethod = &s_ERROR_01;
+
+   /* ------- */
+
+   /* First (bottom) Method */
+   s_GET.pMethod     = &s_GET_02; /* Change to BOTTOM Method. */
+   /* Last (top) Method. */
+   s_GET.pLastMethod = &s_GET_01;
+
+   /* ------- */
+
+   hb_comp_pFirstDeclared   = &s_003; /* Change to BOTTOM Function. */
    hb_comp_pLastDeclared    = &s_001;
    hb_comp_pReleaseDeclared = &s_001;
+
+   hb_comp_pFirstClass      = &s_TBROWSE;
+   hb_comp_pLastClass       = &s_ERROR;
+   hb_comp_pReleaseClass    = &s_ERROR;
 }
 
 PCOMDECLARED hb_compDeclaredAdd( char * szDeclaredName )

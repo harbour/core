@@ -104,8 +104,8 @@ typedef struct _COMCLASS
 {
    char             * szName;
    PCOMDECLARED       pMethod;
+   PCOMDECLARED       pLastMethod;
    struct _COMCLASS * pNext;
-   PCOMDECLARED       pLast;
 } COMCLASS, * PCOMCLASS;
 
 /* locals, static, public variables support */
@@ -410,6 +410,7 @@ extern PCOMDECLARED  hb_comp_pLastDeclared;
 extern PCOMDECLARED  hb_comp_pReleaseDeclared;
 extern PCOMCLASS     hb_comp_pFirstClass;
 extern PCOMCLASS     hb_comp_pLastClass;
+extern PCOMCLASS     hb_comp_pReleaseClass;
 extern char *        hb_comp_szFromClass;
 extern PCOMDECLARED  hb_comp_pLastMethod;
 extern PATHNAMES *   hb_comp_pIncludePath;

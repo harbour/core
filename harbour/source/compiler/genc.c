@@ -51,6 +51,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    PFUNCTION pFunc = hb_comp_functions.pFirst, pFTemp;
    PCOMSYMBOL pSym = hb_comp_symbols.pFirst;
    PCOMDECLARED pDeclared;
+   PCOMCLASS    pClass;
    FILE * yyc; /* file handle for C output */
    PINLINE pInline = hb_comp_inlines.pFirst;
 
@@ -282,16 +283,32 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       pInline = hb_comp_inlines.pFirst;
    }
 
-   if ( hb_comp_pReleaseDeclared )
-      pDeclared = hb_comp_pReleaseDeclared->pNext;
-   else
-      pDeclared = NULL;
-
-   while( pDeclared )
+   if ( hb_comp_iWarnings >= 3 )
    {
-      hb_comp_pFirstDeclared = pDeclared->pNext;
-      hb_xfree( ( void * ) pDeclared );
-      pDeclared = hb_comp_pFirstDeclared;
+      pDeclared = hb_comp_pReleaseDeclared->pNext;
+      while( pDeclared )
+      {
+         hb_comp_pFirstDeclared = pDeclared->pNext;
+         hb_xfree( ( void * ) pDeclared );
+         pDeclared = hb_comp_pFirstDeclared;
+      }
+
+      pClass = hb_comp_pReleaseClass->pNext;
+      while( pClass )
+      {
+         hb_comp_pFirstClass = pClass->pNext;
+
+         pDeclared = pClass->pMethod;
+         while ( pDeclared )
+         {
+            hb_comp_pFirstDeclared = pDeclared->pNext;
+            hb_xfree( ( void * ) pDeclared );
+            pDeclared = hb_comp_pFirstDeclared;
+         }
+
+         hb_xfree( ( void * ) pClass );
+         pClass = hb_comp_pFirstClass;
+      }
    }
 
    pSym = hb_comp_symbols.pFirst;

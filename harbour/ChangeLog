@@ -1,3 +1,20 @@
+2001-04-09 22:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/hbgenerr.c
+     * Corrected spelling for suspicious.
+
+   * source/compiler/hbpcode.c
+     * Commented one debung printf()
+
+   * include/hbcomp.h
+     + Added extern PCOMCLASS hb_comp_pReleaseClass
+
+   * source/compiler/genc.c
+     + Added logic to release declared classes after compilation.
+
+   * source/compiler/harbour.c
+     + Added logic for standard classes declaration to hb_compDeclaredInit()
+     + Added ERROR class declaration and started GET class declaration
+
 2001-04-09 02:20 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * source/compiler/genc.c
      * Posted a fix from Ron to pDeclared handling
@@ -6,11 +23,10 @@
    * contrib/rdd_ads/ads1.c
       * added scope optimization to DBOI_KEYCOUNT
 
-
 2001-04-09 11:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hberrors.h
    * source/compiler/hbgenerr.c
-     + Added #define HB_COMP_WARN_PARAM_SUSPECT 18 -> "4Suspecious parameter: %s expected: \'%s\'"
+     + Added #define HB_COMP_WARN_PARAM_SUSPECT 18 -> "4Suspicious parameter: %s expected: \'%s\'"
 
    * include/hbcomp.h
      + Added extern PCOMDECLARED  hb_comp_pReleaseDeclared;

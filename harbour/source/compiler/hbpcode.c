@@ -690,7 +690,9 @@ void hb_compStrongType( int iSize )
 
            iParamCount = hb_comp_iParamCount;
 
+           /*
            printf( "\nExec Method: %s of Class: %s Parameters: %i\n", pFunc->pStackFunctions[ pFunc->iStackFunctions ]->szName, pFunc->pStackClasses[ pFunc->iStackClasses - 1 ]->szName, pFunc->pStackFunctions[ pFunc->iStackFunctions ]->iParamCount );
+           */
 
            /* First, find how many optionals. */
            while ( --iParamCount >= 0 )
