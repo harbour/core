@@ -65,7 +65,7 @@
 #define SELTOFLAT(ptr) (void *)(((((ULONG)(ptr))>>19)<<16)|(0xFFFF&((ULONG)(ptr))))
 
 #if defined(HARBOUR_GCC_OS2)
-	/* 25/03/2000 - maurilio.longo@libero.it
+   /* 25/03/2000 - maurilio.longo@libero.it
    OS/2 GCC hasn't got ToolKit headers available */
    #include <stdlib.h>
 #else
@@ -100,11 +100,11 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 
    s_uiDispCount = 0;
 
-   if (VioGetBuf(LVBptr, &LVBlength, 0) == NO_ERROR) {
-   	LVBptr = SELTOFLAT(LVBptr);
-	} else {
-		LVBptr = NULL;
-	}   	
+   if(VioGetBuf(&LVBptr, &LVBlength, 0) == NO_ERROR) {
+      LVBptr = SELTOFLAT(LVBptr);
+   } else {
+      LVBptr = NULL;
+   }
 
    /* TODO: Is anything required to initialize the video subsystem?
             I (Maurilio Longo) think that we should set correct codepage
@@ -514,11 +514,11 @@ static char * hb_gt_ScreenPtr( USHORT cRow, USHORT cCol )
 
 static void hb_gt_xGetXY( USHORT cRow, USHORT cCol, BYTE * attr, BYTE * ch )
 {
-	char * p;
-	
+   char * p;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_xGetXY(%hu, %hu, %p, %p", cRow, cCol, ch, attr));
-	
-	p = hb_gt_ScreenPtr( cRow, cCol );
+
+   p = hb_gt_ScreenPtr( cRow, cCol );
    *ch = *p;
    *attr = *( p + 1 );
 }
@@ -526,10 +526,10 @@ static void hb_gt_xGetXY( USHORT cRow, USHORT cCol, BYTE * attr, BYTE * ch )
 
 void hb_gt_xPutch( USHORT cRow, USHORT cCol, BYTE attr, BYTE ch )
 {
-	char * p;
-	
+   char * p;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_xPutch(%hu, %hu, %d, %d", cRow, cCol, (int) attr, (int) ch));
-	
+
    p = hb_gt_ScreenPtr( cRow, cCol );
    *p = ch;
    *( p + 1 ) = attr;
@@ -539,18 +539,18 @@ void hb_gt_xPutch( USHORT cRow, USHORT cCol, BYTE attr, BYTE ch )
 void hb_gt_Puts( USHORT usRow, USHORT usCol, BYTE attr, BYTE * str, ULONG len )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Puts(%hu, %hu, %d, %p, %lu)", usRow, usCol, (int) attr, str, len));
-	
-	if(s_uiDispCount > 0) {
-		char *p;
-     	int i;
 
-     	p = hb_gt_ScreenPtr( usRow, usCol );
-     	for( i = 0; i < len; i++ ) {
-	    	*p++ = *str++;
-    		*p++ = attr;
-     	}
-	} else {
-   	VioWrtCharStrAtt( ( char * ) str, ( USHORT ) len, usRow, usCol, ( BYTE * ) &attr, 0 );
+   if(s_uiDispCount > 0) {
+      char *p;
+      int i;
+
+      p = hb_gt_ScreenPtr( usRow, usCol );
+      for( i = 0; i < len; i++ ) {
+         *p++ = *str++;
+         *p++ = attr;
+      }
+   } else {
+      VioWrtCharStrAtt( ( char * ) str, ( USHORT ) len, usRow, usCol, ( BYTE * ) &attr, 0 );
    }
 }
 
@@ -559,23 +559,23 @@ void hb_gt_GetText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetText(%hu, %hu, %hu, %hu, %p)", usTop, usLeft, usBottom, usRigth, dest));
 
    if(s_uiDispCount > 0) {
-		USHORT x, y;
-		
-		for( y = usTop; y <= usBottom; y++ ) {
-			for( x = usLeft; x <= usRight; x++ ) {
-        		hb_gt_xGetXY( y, x, dest + 1, dest );
-        		dest += 2;
-      	}
+      USHORT x, y;
+
+      for( y = usTop; y <= usBottom; y++ ) {
+         for( x = usLeft; x <= usRight; x++ ) {
+            hb_gt_xGetXY( y, x, dest + 1, dest );
+            dest += 2;
+         }
       }
    } else {
-		USHORT width, y;
-		
-   	width = ( USHORT ) ( ( usRight - usLeft + 1 ) * 2 );
-   	for( y = usTop; y <= usBottom; y++ )
-   	{
-      	VioReadCellStr( dest, &width, y, usLeft, 0 );
-      	dest += width;
-   	}
+      USHORT width, y;
+
+      width = ( USHORT ) ( ( usRight - usLeft + 1 ) * 2 );
+      for( y = usTop; y <= usBottom; y++ )
+      {
+         VioReadCellStr( dest, &width, y, usLeft, 0 );
+         dest += width;
+      }
    }
 }
 
@@ -583,23 +583,23 @@ void hb_gt_PutText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutText(%hu, %hu, %hu, %hu, %p)", usTop, usLeft, usBottom, usRigth, srce));
 
-	if(s_uiDispCount > 0) {
-   	USHORT x, y;
-		
-		for( y = usTop; y <= usBottom; y++ ) {
-    		for( x = usLeft; x <= usRight; x++ ) {
-        		hb_gt_xPutch( y, x, *( srce + 1 ), *srce );
-        		srce += 2;
-      	}
-   	}
+   if(s_uiDispCount > 0) {
+      USHORT x, y;
+
+      for( y = usTop; y <= usBottom; y++ ) {
+         for( x = usLeft; x <= usRight; x++ ) {
+            hb_gt_xPutch( y, x, *( srce + 1 ), *srce );
+            srce += 2;
+         }
+      }
    } else {
-		USHORT width, y;
-		
-   	width = ( USHORT ) ( ( usRight - usLeft + 1 ) * 2 );
-   	for( y = usTop; y <= usBottom; y++ ) {
-      	VioWrtCellStr( srce, width, y, usLeft, 0 );
-      	srce += width;
-   	}
+      USHORT width, y;
+
+      width = ( USHORT ) ( ( usRight - usLeft + 1 ) * 2 );
+      for( y = usTop; y <= usBottom; y++ ) {
+         VioWrtCellStr( srce, width, y, usLeft, 0 );
+         srce += width;
+      }
    }
 }
 
@@ -612,47 +612,47 @@ void hb_gt_SetAttribute( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT us
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d)", usTop, usLeft, usBottom, usRigth, (int) attr));
 
-	if(s_uiDispCount > 0) {
-		
-		USHORT x, y;
-		
-		for( y = usTop; y <= usBottom; y++ ) {
-      	
-      	BYTE scratchattr;
-      	BYTE ch;
+   if(s_uiDispCount > 0) {
 
-      	for( x = usLeft; x <= usRight; x++ ) {
-         	hb_gt_xGetXY( y, x, &scratchattr, &ch );
-         	hb_gt_xPutch( y, x, attr, ch );
-      	}
-   	}
-	} else {
-   	
-   	USHORT width, y;
+      USHORT x, y;
 
-   	/*
-      	assume top level check that coordinate are all valid and fall
-      	within visible screen, else if width cannot be fit on current line
-      	it is going to warp to the next line
-   	*/
-   	width = ( USHORT ) ( usRight - usLeft + 1 );
-   	for( y = usTop; y <= usBottom; y++ )
-      	VioWrtNAttr( &attr, width, y, usLeft, 0 );
-	}
+      for( y = usTop; y <= usBottom; y++ ) {
+
+         BYTE scratchattr;
+         BYTE ch;
+
+         for( x = usLeft; x <= usRight; x++ ) {
+            hb_gt_xGetXY( y, x, &scratchattr, &ch );
+            hb_gt_xPutch( y, x, attr, ch );
+         }
+      }
+   } else {
+
+      USHORT width, y;
+
+      /*
+         assume top level check that coordinate are all valid and fall
+         within visible screen, else if width cannot be fit on current line
+         it is going to warp to the next line
+      */
+      width = ( USHORT ) ( usRight - usLeft + 1 );
+      for( y = usTop; y <= usBottom; y++ )
+         VioWrtNAttr( &attr, width, y, usLeft, 0 );
+   }
 }
 
 void hb_gt_DispBegin( void )
 {
    /* 02/04/2000 - maurilio.longo@libero.it
- 		added support for DispBegin() and DispEnd() functions.
- 		OS/2 has an off screen buffer for every vio session. When a program calls DispBegin()
- 		every function dealing with screen writes/reads uses this buffer. DispEnd() resyncronizes
- 		off screen buffer with screen
- 	*/
+      added support for DispBegin() and DispEnd() functions.
+      OS/2 has an off screen buffer for every vio session. When a program calls DispBegin()
+      every function dealing with screen writes/reads uses this buffer. DispEnd() resyncronizes
+      off screen buffer with screen
+   */
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispBegin()"));
-	
-	/* pointer to the only one available screen buffer is set on startup,
+
+   /* pointer to the only one available screen buffer is set on startup,
       we only need to keep track of nesting */
    ++s_uiDispCount;
 }
@@ -662,7 +662,7 @@ void hb_gt_DispEnd( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispEnd()"));
 
    if (--s_uiDispCount == 0) {
-   	VioShowBuf(0, LVBlength, 0);   /* refresh everything */
+      VioShowBuf(0, LVBlength, 0);   /* refresh everything */
    }
 }
 

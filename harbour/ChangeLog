@@ -1,6 +1,13 @@
+20000402-23:44 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * source/rtl/gtos2/gtos2.c
+     ! There was a missing & operator causing a trap D at program start.
+       There are other problems (display is somewhat corrupted) which need to be addressed
+
 20000402-19:00 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
    *utils/hbdoc/genhtm.prg
      *Fixed a small bug
+
 20000402-22:32 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * utils/hbtest/rt_hvm.prg
@@ -42,11 +49,11 @@
 
    * utils/hbdoc/MakeFile
      ! gnu make error (missing tab)
-	* source/common/hbver.c
-	  ! failing under OS/2 GCC
-	* source/rtl/gtos2/gtos2.c
-	  + added DispBegin() and DispEnd() support. It should work with VA C++ also
-	
+   * source/common/hbver.c
+     ! failing under OS/2 GCC
+   * source/rtl/gtos2/gtos2.c
+     + added DispBegin() and DispEnd() support. It should work with VA C++ also
+
 20000402-20:01 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * utils/hbtest/hbtest.prg
