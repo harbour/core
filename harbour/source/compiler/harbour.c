@@ -207,10 +207,13 @@ int main( int argc, char * argv[] )
                {
                   BOOL bSkipGen;
 
-                  if( hb_comp_bPPO )
-                     printf( "Compiling '%s' and generating preprocessed output to '%s'...\n", szFileName, szPpoName );
-                  else
-                     printf( "Compiling '%s'...\n", szFileName );
+                  if( ! hb_comp_bQuiet )
+                  {
+                     if( hb_comp_bPPO )
+                        printf( "Compiling '%s' and generating preprocessed output to '%s'...\n", szFileName, szPpoName );
+                     else
+                        printf( "Compiling '%s'...\n", szFileName );
+                  }
 
                   /* Start processing */
                   hb_compYACCMain( hb_comp_pFileName->szName );

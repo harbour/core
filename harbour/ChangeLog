@@ -1,3 +1,13 @@
+20000313-21:00 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/compiler/harbour.c
+     ! Fixed not to display a newly added message when -q is specified.
+   * makefile.bc
+     % Macro names synchronized with makefile.vc. Note that BCC_OPT has changed 
+       to CFLAGS.
+     % Made more compact and robust.
+   * makefile.vc
+     * Minor changed.
+
 20000313-15:57 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/compiler/cmdcheck.c
      source/compiler/harbour.c
