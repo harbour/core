@@ -1,3 +1,8 @@
+19991016-00:10 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * doc/gmake.txt
+     + Documented C_USR and -DHARBOUR_USE_<platform>_GTAPI were missing.
+
 19991016-00:00 EDT David G. Holm <dholm@jsd-llc.com>
 
    * source/rtl/set.c

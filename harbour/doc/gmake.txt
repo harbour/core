@@ -137,10 +137,12 @@ your architecture and compiler.
 For gcc on Win95/WinNT with the Cygwin library:
   HB_ARCHITECTURE   win32
   HB_COMPILER       gcc
+  C_USR             -DHARBOUR_USE_WIN_GTAPI
 
 For gcc on Win95/WinNT with the Mingw32 library:
   HB_ARCHITECTURE   win32
   HB_COMPILER       mingw32
+  C_USR             -DHARBOUR_USE_WIN_GTAPI
 
 For MSVC on Win95/WinNT:
   Notes: You must create an empty unistd.h in the include directory.
@@ -169,14 +171,17 @@ For IBM Visual Age C++ on OS/2:
   Note: You must create an empty unistd.h in the IBMCPP\INCLUDE directory.
   HB_ARCHITECTURE   os2
   HB_COMPILER       icc
+  C_USR             -DHARBOUR_USE_OS2_GTAPI
 
 For Borland C++ 3.1
   HB_ARCHITECTURE   dos
   HB_COMPILER       bcc31
+  C_USR             -DHARBOUR_USE_DOS_GTAPI
 
 For DJGPP (GCC port for DOS)
   HB_ARCHITECTURE   dos
   HB_COMPILER       djgpp
+  C_USR             -DHARBOUR_USE_DOS_GTAPI
 
 For Watcom C/C++ 10.x (default Makefile creates DOS4G extender executables)
   HB_ARCHITECTURE   dos
