@@ -429,7 +429,7 @@ METHOD Stabilize() CLASS TBrowse
    local nColsVisible := 0                 // Number of columns that fit on the browse width
    local lFooters := .f.                   // Are there column footers to paint ?
    local cColColor                         // Column color to use
-   local oCol
+   local oCol, oCol2
 
    if ::aRedraw == Nil .or. ! ::aRedraw[ 1 ]
       // Are there any column header to paint ?
@@ -479,10 +479,10 @@ METHOD Stabilize() CLASS TBrowse
          AFill( ::aRedraw, .F. )
       endif
    else
-      oCol = ::aColumns[ ::rightVisible ]
+      oCol = ::aColumns[ If( ::rightVisible != 0, ::rightVisible, 1 ) ]
+      oCol2 = ::aColumns[ If( ::Freeze > 0, 1, ::leftVisible ) ]
       nColsWidth = If( oCol != nil, oCol:ColPos, 0 ) +  ;
-        If( oCol != nil, oCol:Width, 0 ) - ;
-        ::aColumns[ If( ::Freeze > 0, 1, ::leftVisible ) ]:ColPos
+        If( oCol != nil, oCol:Width, 0 ) - oCol2:ColPos
       lFooters = ( ::RowCount != ::nBottom - ::nTop + 1 - If( ::lHeaders, 1, 0 ) - ;
                 - If( Empty(::HeadSep), 0, 1 ) - If( Empty(::FootSep), 0, 1 ) )
    endif

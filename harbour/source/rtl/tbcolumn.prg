@@ -47,6 +47,7 @@ METHOD New() CLASS TBColumn
 
    ::DefColor = { 1, 2 }
    ::FootSep  = ""
+   ::ColPos   = 1
 
 return Self
 

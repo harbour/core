@@ -25,6 +25,7 @@
 #include "box.ch"
 #include "classes.ch"
 #include "inkey.ch"
+#include "memvars.ch"
 
 #xcommand DEFAULT <uVar1> := <uVal1> ;
                [, <uVarN> := <uValN> ] => ;
@@ -40,23 +41,30 @@
 static oDebugger
 static lExit := .F.
 
-function __dbgEntry( uParam )  // debugger entry point
+function __dbgEntry( uParam1, uParam2 )  // debugger entry point
 
    do case
-      case ValType( uParam ) == "C"   // called from hvm.c hb_vmModuleName()
+      case ValType( uParam1 ) == "C"   // called from hvm.c hb_vmModuleName()
            if ! lExit
               if oDebugger == nil
                  oDebugger = TDebugger():New()
-                 oDebugger:Activate( uParam )
+                 oDebugger:Activate( uParam1 )
               else
-                 oDebugger:ShowCode( uParam )
+                 oDebugger:ShowCode( uParam1 )
               endif
            endif
 
-      case ValType( uParam ) == "N"   // called from hvm.c hb_vmDebuggerShowLines()
+      case ValType( uParam1 ) == "N"   // called from hvm.c hb_vmDebuggerShowLines()
            if oDebugger != nil
+              if PCount() == 2 // called from hvm.c hb_vmDebuggerLocalName()
+                 AAdd( oDebugger:aVars, uParam2 )
+                 if oDebugger:oBrwVars != nil
+                    oDebugger:oBrwVars:Stable = .f.
+                 endif
+                 return nil
+              endif
               if oDebugger:lGo
-                 oDebugger:lGo = ! oDebugger:IsBreakPoint( uParam )
+                 oDebugger:lGo = ! oDebugger:IsBreakPoint( uParam1 )
               endif
               if oDebugger:lGo
                  DispBegin()
@@ -67,7 +75,7 @@ function __dbgEntry( uParam )  // debugger entry point
                  DispEnd()
               else
                  oDebugger:SaveAppStatus()
-                 oDebugger:GoToLine( uParam )
+                 oDebugger:GoToLine( uParam1 )
                  oDebugger:HandleEvent()
               endif
            endif
@@ -84,8 +92,8 @@ CLASS TDebugger
 
    DATA   aWindows, nCurrentWindow
    DATA   oPullDown
-   DATA   oWndCode, oWndCommand, oWndStack
-   DATA   oBar, oBrwText, cPrgName, oBrwStack
+   DATA   oWndCode, oWndCommand, oWndStack, oWndVars
+   DATA   oBar, oBrwText, cPrgName, oBrwStack, oBrwVars, aVars
    DATA   cImage
    DATA   lEnd
    DATA   cAppImage, nAppRow, nAppCol, cAppColors, nAppCursor
@@ -111,6 +119,7 @@ CLASS TDebugger
    METHOD ShowAppScreen()
    METHOD ShowCallStack()
    METHOD ShowCode( cModuleName )
+   METHOD ShowVars()
    METHOD ToggleBreakPoint()
 
 ENDCLASS
@@ -127,6 +136,7 @@ METHOD New() CLASS TDebugger
    ::aBreakPoints   = {}
    ::aCallStack     = {}
    ::lGo            = .f.
+   ::aVars          = {}
 
    AAdd( ::aWindows, ::oWndCode )
    AAdd( ::aWindows, ::oWndCommand )
@@ -138,6 +148,7 @@ METHOD Activate( cModuleName ) CLASS TDebugger
    ::Show()
    ::ShowCode( cModuleName )
    ::ShowCallStack()
+   ::ShowVars()
    ::RestoreAppStatus()
 
 return nil
@@ -326,6 +337,47 @@ METHOD ShowCallStack() CLASS TDebugger
 
 return nil
 
+METHOD ShowVars() CLASS TDebugger
+
+   local n := 1
+   local nWidth
+   local nCount, i, xValue, cName
+
+   if ::oWndVars == nil
+      ::oWndCode:nTop += 4
+      ::oBrwText:nTop += 4
+      ::oBrwText:RefreshAll()
+      ::oWndCode:SetFocus( .t. )
+      ::oWndVars = TDbWindow():New( 1, 0, 4,;
+         MaxCol() - If( ::oWndStack != nil, ::oWndStack:nWidth(), 0 ),;
+         "Monitor", "BG+/B" )
+      ::oWndVars:Show( .f. )
+      AAdd( ::aWindows, ::oWndVars )
+
+      nCount = __mvDBGINFO( MV_PUBLIC )
+      for i = 1 to nCount
+         xValue = __mvDBGINFO( MV_PUBLIC, i, @cName )
+         AAdd( ::aVars, { cName, "Public" } )
+      next
+
+      ::oBrwVars = TBrowseNew( 2, 1, 3, MaxCol() - If( ::oWndStack != nil,;
+                               ::oWndStack:nWidth(), 0 ) - 1 )
+      ::oBrwVars:ColorSpec = "BG+/B, N/BG"
+      ::oBrwVars:GoTopBlock = { || n := 1 }
+      ::oBrwVars:GoBottomBlock = { || n := Len( ::aVars ) }
+      ::oBrwVars:SkipBlock = { | nSkip, nPos | nPos := n,;
+                             n := If( nSkip > 0, Min( Len( ::aVars ), n + nSkip ),;
+                             Max( 1, n + nSkip )), n - nPos }
+
+      nWidth = ::oWndVars:nWidth() - 1
+      ::oBrwVars:AddColumn( TBColumnNew( "",  { || AllTrim( Str( n ) ) + ") " + ;
+         PadR( ::aVars[ n ][ 1 ] + " <" + ::aVars[ n ][ 2 ] + ", >:",;
+         ::oWndVars:nWidth() - 5 ) } ) )
+      ::oBrwVars:ForceStable()
+   endif
+
+return nil
+
 static function CompareLine( Self )
 
 return { | a | a[ 1 ] == Self:oBrwText:nLine }
@@ -401,6 +453,10 @@ METHOD GotoLine( nLine ) CLASS TDebugger
 
    ::oBrwText:GotoLine( nLine )
 
+   if ::oBrwVars != nil .and. ! ::oBrwVars:Stable
+      ::oBrwVars:ForceStable()
+   endif
+
    if ::oBrwStack != nil .and. ! ::oBrwStack:Stable
       ::oBrwStack:ForceStable()
    endif
@@ -456,6 +512,7 @@ CLASS TDbWindow  // Debugger windows
    DATA   lFocused, bGotFocus
 
    METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor )
+   METHOD nWidth() INLINE ::nRight - ::nLeft + 1
    METHOD SetCaption( cCaption )
    METHOD SetFocus( lOnOff )
    METHOD Show( lFocused )
@@ -1024,10 +1081,10 @@ function BuildMenu( oDebugger )  // Builds the debugger pulldown menu
 
       MENUITEM " &Monitor "
       MENU
-         MENUITEM " &Public"                ACTION Alert( "Not implemented yet!" )
-         MENUITEM " Pri&vate "              ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Static"                ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Local"                 ACTION Alert( "Not implemented yet!" )
+         MENUITEM " &Public"                ACTION oDebugger:ShowVars()
+         MENUITEM " Pri&vate "              ACTION oDebugger:ShowVars()
+         MENUITEM " &Static"                ACTION oDebugger:ShowVars()
+         MENUITEM " &Local"                 ACTION oDebugger:ShowVars()
          SEPARATOR
          MENUITEM " &All"                   ACTION Alert( "Not implemented yet!" )
          MENUITEM " S&ort"                  ACTION Alert( "Not implemented yet!" )
