@@ -941,7 +941,7 @@ ATTENTION( "Harbour Options", 5 )
 @  8, 40 Get lCompMod checkbox caption  "compile module only"
 @  9,  1 Say "User Defines " get cUserDef pict "@s15"
 @  9, 40 Say "User include Path" get cUserInclude pict "@s15"
-@  10,1  get lExternalLib checkbox "Use External Libs" 
+@  10,1  get lExternalLib checkbox caption "Use External Libs" 
 Read
 if !empty(cUserDef)
       cDefHarOpts+= " -D"+alltrim(cUserDef) +" "
@@ -1274,12 +1274,14 @@ endif
                 else
                     cLibs+="-l"+strtran(aLibsout[npos],'.a',"")+" "+cDefGccLibs
                 endif
+
                 adel(alibsout,nPos)
                 asize(alibsout,len(alibsout)-1)
+           endif
                 aeval(alibsout,{ |cLib| cLibs+=" -l"+strtran(cLib,'.a',"")})
                 if  cOs=="Linux"
                     clibs+= " "+cDeflibGccLibs
-                    cDeflibGccLibs:=cLibc
+                    cDeflibGccLibs:=cLibs
                 elseif cOs=="OS/2"
                     clibs+= " "+cgcclibsos2
                     cgcclibsos2:=cLibs
