@@ -2816,7 +2816,7 @@ void Message( char * szMsgName )       /* sends a message to an object */
       AddSymbol( szMsgName );
       wSym = symbols.iCount;
    }
-   GetSymbolOrd( wSym - 1 )->cScope = FS_MESSAGE;
+   GetSymbolOrd( wSym - 1 )->cScope |= FS_MESSAGE;
    wSym -= _iStartProc ? 1: 2;
    GenPCode3( _MESSAGE, LOBYTE( wSym ), HIBYTE( wSym ) );
 }
@@ -2986,7 +2986,7 @@ void PushSymbol( char * szSymbolName, int iIsFunction )
    wSym -= _iStartProc ? 1: 2;
 
    if( ! iIsFunction )
-      GetSymbolOrd( wSym )->cScope = FS_MESSAGE;
+      GetSymbolOrd( wSym )->cScope |= FS_MESSAGE;
 
    GenPCode3( _PUSHSYM, LOBYTE( wSym ), HIBYTE( wSym ) );
 }
