@@ -149,6 +149,7 @@ PRG_SOURCES=\
         testrdd.prg \
         testvars.prg \
         testwarn.prg \
+        tstalias.prg \
         tstcolor.prg \
         val.prg \
         version.prg \
