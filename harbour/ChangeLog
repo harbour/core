@@ -1,3 +1,8 @@
+2001-11-05 22:35 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * harbour/source/vm/dynsym.c
+      * added "trimming" to new symbols, should fix bugs
+        related to dbUseArea called with space-padded alias
+
 2001-11-05 19:25 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * config/w32/gcc.cf
@@ -16,7 +21,7 @@
 
    * utils/hbtest/hbtest.prg
      + Enhanced the display of errors, now the correct and incorrect
-       results are below each other, so it's much easier to spot the 
+       results are below each other, so it's much easier to spot the
        difference.
 
    * source/common/hbver.c
@@ -32,7 +37,7 @@
      ! Added winspool lib...
 
    * makefile.bc
-     - Removed -M switch from hbmake. Please use set CFLAGS= to add 
+     - Removed -M switch from hbmake. Please use set CFLAGS= to add
        optional switches.
 
    * source/rtl/gtwin/gtwin.c
@@ -42,15 +47,15 @@
 
 2001-11-04 18:34 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
-   * source/compiler/cmdcheck.c 
-   * source/compiler/gencobj.c 
+   * source/compiler/cmdcheck.c
+   * source/compiler/gencobj.c
    * source/compiler/hbpcode.c
-   * source/rtl/filesys.c 
+   * source/rtl/filesys.c
    * source/rtl/idle.c
-   * source/vm/classes.c 
-   * source/vm/hvm.c 
+   * source/vm/classes.c
+   * source/vm/hvm.c
      ! Non-ansi comments fixed.
-       Note that RDD files has lots of // comments, if you're the author 
+       Note that RDD files has lots of // comments, if you're the author
        of some those files and seeing this, please check your code. Thx.
 
 2001-11-04 18:14 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
@@ -61,7 +66,7 @@
    * source/rtl/isprint.c
    * source/vm/classes.c
    * source/vm/hvm.c
-     ! Fixed BCC551 warnings. (One more warning is left, due to some 
+     ! Fixed BCC551 warnings. (One more warning is left, due to some
        define messes)
      ! Non-ansi comments fixed.
 

@@ -174,7 +174,21 @@ PHB_DYNS hb_dynsymGet( char * szName )  /* finds and creates a symbol if not fou
       while( iLen-- )
       {
          char cChar = *szName++;
-         *pDest++ = ( cChar >= 'a' && cChar <= 'z' ) ? cChar - ( 'a' - 'A' ) : cChar;
+
+         if( cChar >= 'a' && cChar <= 'z' )
+         {
+            *pDest++ = cChar - ( 'a' - 'A' );
+         }
+         else if( cChar == ' ' || cChar == '\t' )
+         {
+            *pDest = '\0';
+            break;
+         }
+         else
+         {
+            *pDest++ = cChar;
+         }
+
       }
    }
 
