@@ -1743,12 +1743,12 @@ void AddVar( char * szVarName )
             pLastVar = pLastVar->pNext;
           pLastVar->pNext = pVar;
       }
-      AddSymbol( szVarName );
 
       switch( iVarScope )
       {
           case VS_MEMVAR:
             /* variable declared in MEMVAR statement */
+            AddSymbol( yy_strdup(szVarName) );
             break;
           case (VS_PARAMETER | VS_PRIVATE):
             {
@@ -1761,7 +1761,7 @@ void AddVar( char * szVarName )
                 {
                   PCOMSYMBOL pSym;
 
-                  pSym =AddSymbol( szVarName );
+                  pSym =AddSymbol( yy_strdup(szVarName) );
                   pSym->cScope =VS_MEMVAR;
                   wPos =GetSymbolPos( szVarName );
                 }
@@ -1774,14 +1774,14 @@ void AddVar( char * szVarName )
             symbols.pLast->cScope = VS_MEMVAR;
             PushSymbol(yy_strdup("__PRIVATE"), 1);
             PushNil();
-            PushSymbol( szVarName, 0 );
+            PushSymbol( yy_strdup(szVarName), 0 );
             Do( 1 );
             break;
           case VS_PUBLIC:
             symbols.pLast->cScope = VS_MEMVAR;
             PushSymbol(yy_strdup("__PUBLIC"), 1);
             PushNil();
-            PushSymbol( szVarName, 0 );
+            PushSymbol( yy_strdup(szVarName), 0 );
             Do( 1 );
             break;
       }

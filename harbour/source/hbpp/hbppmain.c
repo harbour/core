@@ -401,4 +401,3 @@ void GenError( char* _szErrors[], char cPrefix, int iError, char * szError1, cha
   sprintf( szLine, _szErrors[ iError - 1 ], szError1, szError2 );
   printf( "%s\n\n", szLine );
   exit( 1 );
-}

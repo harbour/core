@@ -86,7 +86,7 @@ HARBOUR HB_PREPROCESS(void)
 
 void GenError( char* _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
 {
-  /*char * szLine = ( char * ) OurMalloc( 160 );      /*2 lines of text */
+  /*char * szLine = ( char * ) OurMalloc( 160 );*/      /*2 lines of text */
   char * szLine = ( char * ) _xgrab( 160 );      /*2 lines of text */
   /* printf( "\r%s(%i) ", files.pLast->szFileName, iLine ); */
   printf( "Error %c%i  ", cPrefix, iError );

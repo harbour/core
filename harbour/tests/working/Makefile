@@ -87,8 +87,6 @@ PRG_SOURCES=\
 	set_test.prg \
 	statfun.prg \
 	statics.prg \
-	statics1.prg \
-	statics2.prg \
 	strcmp.prg \
 	strdelim.prg \
 	strings.prg \
@@ -109,7 +107,6 @@ PRG_SOURCES=\
 	testhtml.prg \
 	testinc.prg \
 	testmem.prg \
-	testpre.prg \
 	teststr.prg \
 	testtok.prg \
 	testvars.prg \

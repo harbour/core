@@ -1,3 +1,28 @@
+19990722-16:30 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.y
+	* symbol names are no longer released for the second time
+	 (it caused that DJGPP hanged in 'free' function)
+	 
+    *source/hbpp/makefile
+	+ added preproc.c
+	
+    *source/hbpp/harb.h
+	- changed to definie LONG and ULONG typedefs if there is no 
+	 HB_DEFS_H_ defined (these typedefs are defined in hbdefs.h)
+	 
+    *source/hbpp/preproc.c
+	- removed nested /* */
+
+    *tests/working/Makefile
+	- removed statics1.prg and statics2.prg because these file have to
+	 be linked together into an executable (we should change Makefile
+	 architecture to support it)
+	- removed testpre.prg (it requires hbpp library however this library
+	 cannot be linked because of duplicated symbol 'hb_strAt' defined
+	 in rtl library also) -the changes in source/hbpp/*.c was an attempt
+	 to get it working.
+	 
 19990722-14:30 CET Matthew Hamilton
   * tests/working/inifiles.prg
     cFile -> @cFile in fRead statement

@@ -11,12 +11,11 @@
 /*
  * Note: I don't think it is such a great idea to undef LONG...
  */
-#if defined(LONG)
-#undef LONG                            /* 4 bytes unsigned */
-#endif
-
+#if ! defined(HB_DEFS_H_)
 typedef long LONG;
 typedef unsigned long ULONG;
+#endif
+
 #define PATH_DELIMITER  "/\\"
 #define IS_PATH_SEP( c ) (strchr(PATH_DELIMITER, (c))!=NULL)
 #define OPT_DELIMITER  "/-"
