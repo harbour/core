@@ -369,7 +369,7 @@ METHOD Display( lForced ) CLASS Get
       ::picture := ::cPicture
    endif
 
-   xBuffer := ::PutMask( ::VarGet(), .f. )
+   xBuffer := ::buffer     //::PutMask( ::VarGet(), .f. )
 
    if ! ::lMinusPrinted .and. ! Empty( ::DecPos ) .and. ::minus .and. substr( xBuffer, ::DecPos-1, 1 ) == "0"
       xBuffer := substr( xBuffer, 1, ::DecPos - 2 ) + "-." + substr( xBuffer, ::DecPos + 1 )

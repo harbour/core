@@ -3327,7 +3327,7 @@ void HB_EXPORT hb_vmDo( USHORT uiParams )
               uiClass=pSelfBase->uiClass;
 
               pRealSelf = hb_itemNew( NULL ) ;
-              hb_itemCopy(pRealSelf ,pSelf->item.asArray.value->pItems) ;  // hb_arrayGetItemPtr(pSelf,1) ;
+              hb_itemCopy(pRealSelf ,pSelf->item.asArray.value->pItems) ;  /* hb_arrayGetItemPtr(pSelf,1) ; */
               /* and take back the good pSelfBase */
               pSelfBase = pRealSelf->item.asArray.value;
               /* Now I should exchnage it with the current stacked value */
@@ -3494,7 +3494,7 @@ void HB_EXPORT hb_vmSend( USHORT uiParams )
    bDebugPrevState = s_bDebugging;
    s_bDebugging = FALSE;
 
-   //printf( "Symbol: '%s'\n", pSym->szName );
+   /* printf( "Symbol: '%s'\n", pSym->szName ); */
 
    if( HB_IS_NIL( pSelf ) ) /* are we sending a message ? */
    {
@@ -3583,7 +3583,7 @@ void HB_EXPORT hb_vmSend( USHORT uiParams )
             uiClass = pSelfBase->uiClass;
 
             pRealSelf = hb_itemNew( NULL ) ;
-            hb_itemCopy( pRealSelf, pSelf->item.asArray.value->pItems ) ;  // hb_arrayGetItemPtr(pSelf,1) ;
+            hb_itemCopy( pRealSelf, pSelf->item.asArray.value->pItems ) ;  /* hb_arrayGetItemPtr(pSelf,1) ; */
             /* and take back the good pSelfBase */
             pSelfBase = pRealSelf->item.asArray.value;
             /* Now I should exchnage it with the current stacked value */

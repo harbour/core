@@ -1611,7 +1611,7 @@ static PHB_ITEM hb_clsInst( USHORT uiClass )
             HB_ITEM init;
             PHB_ITEM pInit;
 
-            ( &init )->type = HB_IT_NIL; // hb_itemInit( &init );
+            ( &init )->type = HB_IT_NIL; /* hb_itemInit( &init ); */
 
             hb_arrayGet( pClass->pClassDatas, pMeth->uiData, &init );
 
@@ -1925,7 +1925,7 @@ HB_FUNC( __CLSINSTSUPER )
          hb_vmPushNil();
          hb_vmFunction( 0 );                         /* Execute super class      */
 
-         if( HB_IS_OBJECT( hb_stackItemFromTop( -1 ) ) )  // &hb_stack.Return
+         if( HB_IS_OBJECT( hb_stackItemFromTop( -1 ) ) )  /* &hb_stack.Return */
          {
             for( uiClass = 0; ! bFound && uiClass < s_uiClasses; uiClass++ )
             {                                      /* Locate the entry         */
@@ -2322,7 +2322,7 @@ static HARBOUR hb___msgEvalInline( void )
    USHORT uiParam;
    USHORT uiPCount=hb_pcount();
 
-   ( &block )->type = HB_IT_NIL; // hb_itemInit( &block );
+   ( &block )->type = HB_IT_NIL; /* hb_itemInit( &block ); */
 
    hb_arrayGet( s_pClasses[ uiClass - 1 ].pInlines, s_pMethod->uiData, &block );
 
@@ -2369,20 +2369,22 @@ static HARBOUR hb___msgEval( void )
  *
  * Internal function to return a superobject
  */
-//static HARBOUR hb___msgSuper( void )
-//{
-//   PHB_ITEM pObject = hb_stackSelfItem();
-//
-//   pObject->item.asArray.value->uiPrevCls  = pObject->item.asArray.value->uiClass; /* backup of actual handel */
-//   pObject->item.asArray.value->uiClass    = s_pMethod->uiSprClass;                /* superclass handel casting */
-//
-//   hb_itemReturn( pObject );
-//}
+/*
+static HARBOUR hb___msgSuper( void )
+{
+   PHB_ITEM pObject = hb_stackSelfItem();
+
+   pObject->item.asArray.value->uiPrevCls  = pObject->item.asArray.value->uiClass; / * backup of actual handel * /
+   pObject->item.asArray.value->uiClass    = s_pMethod->uiSprClass;                / * superclass handel casting * /
+
+   hb_itemReturn( pObject );
+}
+*/
 
 static HARBOUR hb___msgSuper( void )
 {
    PHB_ITEM pObject = hb_stackSelfItem();
-   //ULONG ulLen = pObject->item.asArray.value->ulLen;
+   /*ULONG ulLen = pObject->item.asArray.value->ulLen; */
    PHB_ITEM pCopy = hb_itemArrayNew(1);
 
    /* Now save the Self object as the 1st elem. */

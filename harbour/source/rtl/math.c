@@ -173,7 +173,7 @@ int matherr (struct exception * err)
       }; break;
    }
 
-   s_hb_exc.funcname = (char *)err->name;  // (char *) Avoid warning in DJGPP
+   s_hb_exc.funcname = (char *)err->name;  /* (char *) Avoid warning in DJGPP */
    s_hb_exc.arg1 = err->arg1;
    s_hb_exc.arg2 = err->arg2;
    s_hb_exc.retval = err->retval;
