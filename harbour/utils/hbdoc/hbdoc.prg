@@ -1169,7 +1169,6 @@ STATIC FUNCTION ReadLinkFile( cFile )
     nH:=fcreate(cfile)
         for nPos:=1 to len(aLocdoc)
             cLine:=alocdoc[nPos]
-            ? cLine
             if at("%HB_VERSION%",cLine)>0
                 cLine:=strtran(cLine,'%HB_VERSION%',cVer)
             endif
