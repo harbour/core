@@ -1,3 +1,7 @@
+19990612 08:30 CET Matthew Hamilton
+  * tests/working/inifiles.prg
+    with ReadBool and WriteBool
+
 19990612 10:57 PST Ron Pinkas
    * source/compiler/harbour.y
         Added check on non used variables to be done at the end of source file so last function will be tested too.

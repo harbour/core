@@ -15,6 +15,8 @@ function Main(cFilename, cSection)
    aeval(s, {|x| qout(x)})
 
    oIni:WriteDate('Date Test', 'Today', Date() )
+   oIni:WriteBool('Bool Test', 'True', .t.)
+   qout( oIni:ReadBool('Bool Test', 'True', .f.) )
 
    oIni:UpdateFile()
 return nil
@@ -35,6 +37,8 @@ function TIniFile()
       oClass:AddMethod( "WriteNumber", @WriteNumber() )
       oClass:AddMethod( "ReadDate", @ReadDate() )
       oClass:AddMethod( "WriteDate", @WriteDate() )
+      oClass:AddMethod( "ReadBool", @ReadBool() )
+      oClass:AddMethod( "WriteBool", @WriteBool() )
       oClass:AddMethod( "ReadSection", @ReadSection() )
       oClass:AddMethod( "ReadSections", @ReadSections() )
       oClass:AddMethod( "DeleteKey", @DeleteKey() )
@@ -182,6 +186,18 @@ static procedure WriteDate(cSection, cIdent, dDate)
    local Self := QSelf()
 
    ::WriteString( cSection, cIdent, DToS(dDate) )
+return
+
+static function ReadBool(cSection, cIdent, lDefault)
+   local Self := QSelf()
+   local cDefault := Iif( lDefault, '.t.', '.f.' )
+
+return ::ReadString(cSection, cIdent, cDefault) == '.t.'
+
+static procedure WriteBool(cSection, cIdent, lBool)
+   local Self := QSelf()
+
+   ::WriteString( cSection, cIdent, Iif(lBool, '.t.', '.f.') )
 return
 
 static procedure DeleteKey(cSection, cIdent)
