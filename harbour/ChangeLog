@@ -1,3 +1,17 @@
+19990706-22:40 EDT David G. Holm <dholm@jsd-llc.com>
+  * doc/hdr_tpl.txt
+    - Removed "(C)" from Copyright notice
+    + Put author's name rather than date
+       next to each version number, because
+       the RCS tracks dates, but only tracks
+       CVS user names, not author names.
+    + Added version comment for Victor Szel's change
+  * source/compiler/fixflex.c
+    + Placed under GPL
+  * source/rtl/devoutp.prg
+    - Removed "(C)" from Copyright
+    * Updated previous version comments
+
 19990707-03:48 CET Victor Szel <info@szelvesz.hu>
  * doc/hdr_tpl.txt
    * Description line changed to be a template, too.

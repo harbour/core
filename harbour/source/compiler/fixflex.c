@@ -1,6 +1,43 @@
-/*
- * $Id$
- */
+/* $Id$
+
+   Harbour Project source code
+
+   This file contains an external program that splits the Harbour Flex and
+   Bison generated source code into multiple modules so that they can be
+   compiled by 16-bit C compilers with a 64KB per module data size limit.
+
+   Copyright 1999  David G. Holm
+   www - http://www.harbour-project.org
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
+   their web site at http://www.gnu.org/).
+
+   V 1.5    David G. Holm               Switched from using a series of if
+                                        statements for the smaller large files
+                                        to using an array of table names and a
+                                        for loop and removed yy_acclist, which
+                                        is no longer used
+   V 1.4    Gonzalo A. Diethelm         Added RCS Id keyword
+   V 1.3    David G. Holm               Split the two largest tables into
+                                        separate modules and the four next
+                                        largest tables into a third module
+   V 1.2    David G. Holm               Modified to work with both C and
+                                        C++ compilers
+   V 1.1    David G. Holm               Submitted to the Harbor Project
+   V 1.0    David G. Holm               Original Version
+*/
 
 #include <dir.h>
 #include <errno.h>
