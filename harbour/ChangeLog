@@ -8,6 +8,18 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-08-21 12:37 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+   * source/rtl/teditor.prg
+     ! Modified to allow inherited classes to properly manage K_ESC
+   * source/rtl/memoedit.prg
+     ! K_ESC and CTRL-W Clipper compatible management
+
+   MemoEdit() bugs described by David Macias, already fixed.
+
+   The only difference there is with Clipper is that Clipper does not shows
+   the message "Abort Edit? (Y/N)" if the text has not been modified, but
+   Class HBEditor does not provides a DATA lModified by now.
+
 2003-08-21 11:29 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
    * contrib/samples/environ.c
      ! Fixed GPF on missing dot for FileExt() use
