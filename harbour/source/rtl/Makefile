@@ -55,6 +55,7 @@ PRG_SOURCES=\
 	menuto.prg \
         objfunc.prg \
         readvar.prg \
+        rddord.prg \
         setfunc.prg \
         setkey.prg \
         tclass.prg \

@@ -1,3 +1,17 @@
+19991005-18:20 GMT+1 Victor Szel <info@szelvesz.hu>
+  + source/rtl/rddord.prg
+    source/rtl/Makefile
+    + dbCreateIndex()
+      dbSetIndex()
+      dbClearIndex()
+      dbReindex()
+      dbSetOrder()
+      IndexExt()
+      IndexKey()
+      These will not work yet, since they are simple wrapper to the ord*()
+      functions. Just like in Clipper.
+      !! WARNING !! Please modify non-GNU make files.
+
 19991005-18:02 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/rtl_test.prg
     + Added more complete tests for <,>,<=,>=,!= operators.
