@@ -167,6 +167,7 @@ DECLARE TClass ;
      [ ; #translate Super( <SuperClass1> ) : => ::<SuperClass1>: ] ;
      [ ; #translate Super() : => ::<SuperClass1>: ] ;
      [ ; #translate Super : => ::<SuperClass1>: ] ;
+     [ ; #translate ::Super : => ::<SuperClass1>: ] ;
      [ ; REQUEST <SuperClass1> ] [ ,<SuperClassN> ]
 
 #else
@@ -187,6 +188,7 @@ DECLARE TClass ;
      [ ; #translate Super( <SuperClass1> ) : => ::<SuperClass1>: ] ;
      [ ; #translate Super() : => ::<SuperClass1>: ] ;
      [ ; #translate Super : => ::<SuperClass1>: ] ;
+     [ ; #translate ::Super : => ::<SuperClass1>: ] ;
      [ ; REQUEST <SuperClass1> ] [ ,<SuperClassN> ]
 
 #endif /* HB_SHORTNAMES */

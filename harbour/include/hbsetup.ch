@@ -79,8 +79,8 @@
    #define HB_SHORTNAMES
 #endif
 
-#define HB_CLS_MASKHIDDEN         /* Disallow heritence of hidden variables */
-//#define HB_CLS_ENFORCERO        /* Activate the RO checking on OO DATA    */
+/*#define HB_CLS_ENFORCERO */     /* Activate the RO checking on OO DATA    */
+                                  /* when not called from a constructor     */
 
 #endif /* HB_SETUP_CH_ */
 

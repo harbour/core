@@ -1,3 +1,12 @@
+2001-06-15 23:35 UTC+1 JFL (mafact) <jfl@mafact.com>
+   * harbour/source/vm/Classe.c
+     * Hb_ClsScope finally working :-(
+   * harbour/include/hbsetup.ch
+     - removed not more needed #define about Hidden
+       (was causing a 'message not found' when heriting hidden var)
+   * harbour/include/hbclass.ch
+     + added the support of calling ::Super from a method
+
 2001-06-15 14:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * source\rtl\dir.c
