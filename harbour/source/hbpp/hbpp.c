@@ -582,13 +582,13 @@ int ParseExpression( char* sLine, char* sOutLine )
             if ( ipos > 0 )
             {
               *(ptri+lens) = ';';
-              lens += strolen( ptri+ipos );
+              lens += strolen( ptri+ipos ) + 1;
             }
-            pp_Stuff ( sOutLine, ptri, ptro - sOutLine + 1, (ipos)? ipos-1:lens, lens );
-            if ( ipos > 0 )
+            pp_Stuff ( sOutLine, ptri, ptro - sOutLine, (ipos)? ipos-1:lens, lens );
+	    if ( ipos > 0 )
             {
-              ipos = strolen( ptri );
-              *(ptri+ipos) = '\0';
+              ipos = ptro - sOutLine + 1;
+              *(ptri + ipos - 1) = '\0';
             }
           }
           else
@@ -795,9 +795,9 @@ int WorkTranslate ( char* sToken, char* ptri, char* ptro, int ndef, int *lens )
   groupchar = '@';
   rez = CommandStuff ( ptrmp, ptri, ptro, &lenres, FALSE );
 
-  if ( rez < 0 ) ndef = TraSearch(sToken,ndef-1);
+  if ( rez < 0 && ndef > 0 ) ndef = TraSearch(sToken,ndef-1);
  }
- while ( rez < 0 && ndef >= 0 );
+ while ( rez < 0 && ndef > 0 );
 
  *(ptro+lenres) = '\0';
  if ( rez >= 0 )
@@ -1479,11 +1479,11 @@ int md_strAt(char *szSub, int lSubLen, char *szText, int checkPrth)
          kolPrth++;
        else if ( *(szText+lPos) == ')' )
          kolPrth--;
-       if( checkPrth && ( (kolPrth > 0) || (kolPrth == 0 && *(szText+lPos) == ')') ) )
+       if( !lSubPos && checkPrth && ( (kolPrth > 1) ||
+	   (kolPrth == 1 && *(szText+lPos) != '(') || (kolPrth == 0 && *(szText+lPos) == ')')) )
        {
-         lPos++;
-         lSubPos = 0;
-         continue;
+	 lPos++;
+	 continue;
        }
 
        if( toupper(*(szText + lPos)) == toupper(*(szSub + lSubPos)) )
