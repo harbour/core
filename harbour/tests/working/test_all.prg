@@ -3,7 +3,7 @@
 // Patrick Mast
 // For 32 bits Borland Compiler.
 
-// Sorry, only clipper compile (I want this thing Compiled in Harbour!<g>, So give me Directory() Please)
+// Sorry, only clipper compile (I want this thing Compiled in Harbour!<g>, So give me Directory() Please...)
 
 Function Main( cOption )
 LOCAL aDir,f,o,cRead
