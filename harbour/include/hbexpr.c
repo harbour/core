@@ -125,6 +125,7 @@ typedef enum
 #define  HB_ET_MACRO_VAR      0   /* &variable */
 #define  HB_ET_MACRO_SYMBOL   1   /* &fimcall() */
 #define  HB_ET_MACRO_ALIASED  2   /* &alias->&variable */
+#define  HB_ET_MACRO_EXPR     4   /* &( expr ) */
 
 /* types of expressions
  * NOTE: the order of these definition is important - change it carefully
@@ -935,6 +936,7 @@ HB_EXPR_PTR hb_compExprNewMacro( HB_EXPR_PTR pMacroExpr, unsigned char cMacroOp,
       pExpr = hb_compExprNew( HB_ET_MACRO );
       pExpr->value.asMacro.pExprList = pMacroExpr;
       pExpr->value.asMacro.szMacro   = NULL; /* this is used to distinguish &(...) from &ident */
+      pExpr->value.asMacro.SubType   = HB_ET_MACRO_EXPR;
    }
 
    return pExpr;

@@ -1,3 +1,14 @@
+20000214-19:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/expropt.c
+    *source/macro/macro.c
+    *include/hbexpr.c
+	* fixed generation of incorrect HB_P_MACROSYMBOL pcode when
+	&( expression ) syntax was used
+	
+    *tests/tstmacro.prg
+	* cleared to allow Clipper compatible syntax only
+
 20000214-17:10 GMT+1 Victor Szakats <info@szelvesz.hu>
    * config/w32/bcc32.cf
      ! Fixed so that it doesn't require the non-standard HARBOURDIR envvar

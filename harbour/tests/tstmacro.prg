@@ -6,7 +6,7 @@
 
 Function Main( )
 
-	LOCAL cStr := 'cVar', cStr_1 := 'cVar_1', aVar := { 'cVar_1' }, oVar
+	PRIVATE cStr := 'cVar', cStr_1 := 'cVar_1', aVar := { 'cVar_1' }, oVar
 
 	PRIVATE cVar_1, cMainPrivate := 'cVar_1', GlobalPrivate := 'BornInRunTimeVar'
 
@@ -30,12 +30,12 @@ Function Main( )
 	&cStr._1 = 'Concatenated Macro (String)'
 	? M->cVar_1
 
-	&aVar[1] := 'Array Macro'
+	&( aVar[1] ) := 'Array Macro'
 	? M->cVar_1
 
 	oVar := TValue():New()
 	oVar:cVal := 'cVar_1'
-	&oVar:cVal := 'Class Macro'
+	&( oVar:cVal ) := 'Class Macro'
 	? M->cVar_1
 
 	SubFun()
@@ -74,7 +74,8 @@ Function SubFun()
 
 	// Testing conflict with KEY WORDS
 	PRIVATE PRIVATE := 'I am a Var named PRIVATE ', &cMainPrivate, SomeVar, OtherVar := 1, &GlobalPrivate := 'I was born in Run Time'
-	PUBLIC PUBLIC := 'My Name is PUBLIC', &( 'NewPublicVar' ) := 'Test Inline Assignment'
+	PUBLIC PUBLIC := 'NewPublicVar'
+	PUBLIC &PUBLIC
 
 	? M->NewPublicVar
 
@@ -89,4 +90,4 @@ Function SubFun()
 
 	? '"cVar_1" = [' + M->cVar_1 + '] in SubFun() PRIVATE'
 
-RETURN
+RETURN NIL
