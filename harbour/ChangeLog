@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-05 12:00 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/philes.c
+     * added some missing #include
+
 2002-07-05 11:35 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/rtl/philes.c
      * FRead() fixed bug on constant strings use
