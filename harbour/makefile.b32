@@ -12,7 +12,7 @@
 !endif
 
 .path.asm = source\vm
-.path.c   = source\compiler;source\vm;source\macro;source\rtl;source\tools;source\rtl\gt;source\rtl\natmsg;source\pp;source\rdd
+.path.c   = source\common;source\compiler;source\vm;source\macro;source\rtl;source\tools;source\rtl\gt;source\rtl\natmsg;source\pp;source\rdd
 .path.h   = include;source\macro
 .path.l   = source\compiler;source\macro
 .path.y   = source\compiler;source\macro
@@ -33,7 +33,7 @@ harbour.lib : achoice.obj adir.obj alert.obj arrays.obj \
               errorapi.obj errorsys.obj extend.obj \
               fieldbl.obj fileread.obj filesys.obj fm.obj \
               harbinit.obj hardcr.obj \
-              hb_f.obj hvm.obj initexit.obj \
+              hbfsapi.obj hbtrace.obj hb_f.obj hvm.obj initexit.obj \
               initsymb.obj inkey.obj input.obj isprint.obj itemapi.obj \
               langapi.obj len.obj \
               macroy.obj macrol.obj macro.obj \
@@ -92,6 +92,8 @@ filesys.obj  : filesys.c  extend.h hbdefs.h
 fm.obj       : fm.c       extend.h hbdefs.h
 harbinit.obj : harbinit.c extend.h hbdefs.h
 hardcr.obj   : hardcr.c   extend.h hbdefs.h
+hbfsapi.obj  : hbfsapi.c  extend.h hbdefs.h
+hbtrace.obj  : hbtrace.c  extend.h hbdefs.h
 hb_f.obj     : hb_f.c     extend.h hbdefs.h
 hvm.obj      : hvm.c      extend.h hbdefs.h
 initexit.obj : initexit.c extend.h hbdefs.h
