@@ -1,3 +1,6 @@
+19990527-22:06 EST Les Griffith
+  * changed iotest.prg to work without and exit clause
+
 19990527-21:57 EST Les Griffith
   * fix to gtwin.c for duplicate function gtwherex 2nd one should be
     gtwherey
