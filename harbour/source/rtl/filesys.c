@@ -46,6 +46,7 @@
  *    HB_DIRCHANGE()
  *    HB_MAKEDIR()
  *    HB_DIRREMOVE()
+ *    HB_ISDISK()
  *    HB_DISKCHANGE()
  *    HB_DISKNAME()
  *    HB_DISKSPACE() (parts by Luiz Rafael Culik <Culik@sl.conex.net>)
@@ -928,14 +929,16 @@ USHORT  hb_fsChDrv( BYTE nDrive )
    USHORT uiSave = _getdrive();
 
    errno = 0;
-   uiResult = _chdrive( nDrive );
+   _chdrive( nDrive );
    if( nDrive == _getdrive() )
    {
+      uiResult = 0;
       s_uiErrorLast = errno;
    }
    else
    {
       _chdrive( uiSave );
+      uiResult = FS_ERROR;
       s_uiErrorLast = FS_ERROR;
    }
 
@@ -949,20 +952,77 @@ USHORT  hb_fsChDrv( BYTE nDrive )
     */
    _dos_getdrive( &uiSave );
 
-   s_uiErrorLast = 0;
-   uiResult = 1;
    _dos_setdrive( nDrive, &uiTotal );
    _dos_getdrive( &uiTotal );
-   if( nDrive != uiTotal )
+   if( nDrive == uiTotal )
+   {
+      uiResult = 0;
+      s_uiErrorLast = 0;
+   }
+   else
    {
       _dos_setdrive( uiSave, &uiTotal );
+      uiResult = FS_ERROR;
       s_uiErrorLast = FS_ERROR;
-      uiResult = 0;
    }
 
 #else
 
+   uiResult = FS_ERROR;
+   s_uiErrorLast = FS_ERROR;
+
+#endif
+
+   return uiResult;
+}
+
+USHORT  hb_fsIsDrv( BYTE nDrive )
+{
+   USHORT uiResult;
+
+#if defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) || defined(__MINGW32__) ) && ! defined(__CYGWIN__)
+
+   USHORT uiSave = _getdrive();
+
+   errno = 0;
+   _chdrive( nDrive );
+   if( nDrive == _getdrive() )
+   {
+      uiResult = 0;
+      s_uiErrorLast = errno;
+   }
+   else
+   {
+      uiResult = FS_ERROR;
+      s_uiErrorLast = FS_ERROR;
+   }
+
+   _chdrive( uiSave );
+
+#elif defined( __WATCOMC__ )
+
+   unsigned uiSave;
+   unsigned uiTotal;
+
+   /* 1=  A:, 2 = B:, 3 = C:, etc
+    * _dos_*() functions don't set 'errno'
+    */
+   _dos_getdrive( &uiSave );
+
+   s_uiErrorLast = 0;
    uiResult = 0;
+   _dos_setdrive( nDrive, &uiTotal );
+   _dos_getdrive( &uiTotal );
+   if( nDrive != uiTotal )
+   {
+      s_uiErrorLast = FS_ERROR;
+      uiResult = FS_ERROR;
+   }
+   _dos_setdrive( uiSave, &uiTotal );
+
+#else
+
+   uiResult = FS_ERROR;
    s_uiErrorLast = FS_ERROR;
 
 #endif
@@ -993,60 +1053,6 @@ BYTE    hb_fsCurDrv( void )
    _dos_getdrive( &uiDrive );
    s_uiErrorLast = 0;
    uiResult = ( USHORT ) uiDrive;
-
-#else
-
-   uiResult = 0;
-   s_uiErrorLast = FS_ERROR;
-
-#endif
-
-   return uiResult;
-}
-
-USHORT  hb_fsIsDrv( BYTE nDrive )
-{
-   USHORT uiResult;
-
-#if defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) || defined(__MINGW32__) ) && ! defined(__CYGWIN__)
-
-   USHORT uiSave = _getdrive();
-
-   errno = 0;
-   _chdrive( nDrive );
-   if( nDrive == _getdrive() )
-   {
-      uiResult = 1;
-      s_uiErrorLast = errno;
-   }
-   else
-   {
-      uiResult = 0;
-      s_uiErrorLast = FS_ERROR;
-   }
-
-   _chdrive( uiSave );
-
-#elif defined( __WATCOMC__ )
-
-   unsigned uiSave;
-   unsigned uiTotal;
-
-   /* 1=  A:, 2 = B:, 3 = C:, etc
-    * _dos_*() functions don't set 'errno'
-    */
-   _dos_getdrive( &uiSave );
-
-   s_uiErrorLast = 0;
-   uiResult = 1;
-   _dos_setdrive( nDrive, &uiTotal );
-   _dos_getdrive( &uiTotal );
-   if( nDrive != uiTotal )
-   {
-      s_uiErrorLast = FS_ERROR;
-      uiResult = 0;
-   }
-   _dos_setdrive( uiSave, &uiTotal );
 
 #else
 
@@ -1285,7 +1291,7 @@ HARBOUR HB_FREADSTR( void )
 
 HARBOUR HB_CURDIR( void )
 {
-   int uiErrorOld = s_uiErrorLast;
+   USHORT uiErrorOld = s_uiErrorLast;
 
    hb_retc( ( char * ) hb_fsCurDir( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
       ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0 ) );
@@ -1297,7 +1303,7 @@ HARBOUR HB_CURDIR( void )
 
 HARBOUR HB_DIRCHANGE( void )
 {
-   int uiErrorOld = s_uiErrorLast;
+   USHORT uiErrorOld = s_uiErrorLast;
    int iResult;
 
    if( ISCHAR( 1 ) )
@@ -1321,7 +1327,7 @@ HARBOUR HB_DIRCHANGE( void )
 
 HARBOUR HB_MAKEDIR( void )
 {
-   int uiErrorOld = s_uiErrorLast;
+   USHORT uiErrorOld = s_uiErrorLast;
    int iResult;
 
    if( ISCHAR( 1 ) )
@@ -1343,7 +1349,7 @@ HARBOUR HB_MAKEDIR( void )
 
 HARBOUR HB_DIRREMOVE( void )
 {
-   int uiErrorOld = s_uiErrorLast;
+   USHORT uiErrorOld = s_uiErrorLast;
    int iResult;
 
    if( ISCHAR( 1 ) )
@@ -1392,12 +1398,25 @@ HARBOUR HB_DISKSPACE( void )
    hb_retnl( ( LONG ) ulSpaceFree );
 }
 
-HARBOUR HB_DISKCHANGE( void )
+/* NOTE: Clipper 5.3 undocumented */
+
+HARBOUR HB_ISDISK()
 {
-   int uiErrorOld = s_uiErrorLast;
+   USHORT uiErrorOld = s_uiErrorLast;
 
    hb_retl( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
-            hb_fsChDrv( ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) ) == 0 :
+            hb_fsIsDrv( ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' ) ) == 0 :
+            FALSE );
+
+   s_uiErrorLast = uiErrorOld;
+}
+
+HARBOUR HB_DISKCHANGE( void )
+{
+   USHORT uiErrorOld = s_uiErrorLast;
+
+   hb_retl( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
+            hb_fsChDrv( ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' ) ) == 0 :
             FALSE );
 
    s_uiErrorLast = uiErrorOld;
@@ -1405,7 +1424,7 @@ HARBOUR HB_DISKCHANGE( void )
 
 HARBOUR HB_DISKNAME( void )
 {
-   int uiErrorOld = s_uiErrorLast;
+   USHORT uiErrorOld = s_uiErrorLast;
    char szDrive[ 1 ];
 
    szDrive[ 0 ] = ( ( char ) hb_fsCurDrv() ) + 'A';

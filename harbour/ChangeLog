@@ -1,3 +1,11 @@
+19991010-15:05 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/filesys.c
+     + ISDISK() undocumented Clipper 5.3 function added.
+     ! DISKCHANGE() fixed to call hb_fsChDrv() with the right parameter.
+     ! hb_fsIsDrv(), hb_fsChDrv() return value fixed, since it returned the
+       reverse of the proper value.
+     * int types converted to USHORT for uiErrorOld variables.
+
 19991010-14:03 GMT+1 Victor Szel <info@szelvesz.hu>
    * bin/*.bat
      + dbfcdx lib added.
