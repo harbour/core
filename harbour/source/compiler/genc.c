@@ -158,7 +158,12 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
             fprintf( yyc, "{ \"%s\", ", pSym->szName );
 
             if( pSym->cScope & HB_FS_STATIC )
+            {
                fprintf( yyc, "HB_FS_STATIC" );
+
+               if( pSym->cScope & HB_FS_PUBLIC )
+                  fprintf( yyc, " | HB_FS_PUBLIC" );
+            }
 
             else if( pSym->cScope & HB_FS_INIT )
                fprintf( yyc, "HB_FS_INIT" );

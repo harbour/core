@@ -93,7 +93,7 @@ typedef struct _HB_DYNS
 typedef HB_DYNS_FUNC( PHB_DYNS_FUNC );
 
 /* Harbour Functions scope ( HB_SYMBOLSCOPE ) */
-#define HB_FS_PUBLIC   ( ( HB_SYMBOLSCOPE ) 0x00 )
+#define HB_FS_PUBLIC   ( ( HB_SYMBOLSCOPE ) 0x01 )
 #define HB_FS_STATIC   ( ( HB_SYMBOLSCOPE ) 0x02 )
 #define HB_FS_FIRST    ( ( HB_SYMBOLSCOPE ) 0x04 )
 #define HB_FS_INIT     ( ( HB_SYMBOLSCOPE ) 0x08 )

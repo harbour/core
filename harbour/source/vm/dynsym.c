@@ -100,9 +100,10 @@ PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymNew(%p)", pSymbol));
 
    pDynSym = hb_dynsymFind( pSymbol->szName ); /* Find position */
+
    if( pDynSym )            /* If name exists */
    {
-      if( ! ( pSymbol->cScope & ( HB_FS_STATIC | HB_FS_INIT | HB_FS_EXIT ) ) ) /* only for HB_FS_PUBLIC */
+      if( pSymbol->cScope & HB_FS_PUBLIC ) /* only for HB_FS_PUBLIC */
       {
          if( ( ! pDynSym->pFunPtr ) && pSymbol->pFunPtr ) /* The DynSym existed */
          {
@@ -144,7 +145,7 @@ PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
    pDynSym->ulTime  = 0; /* profiler support */
    pDynSym->ulRecurse = 0;
 
-   if( ! ( pSymbol->cScope & ( HB_FS_STATIC | HB_FS_INIT | HB_FS_EXIT ) ) ) /* only for HB_FS_PUBLIC */
+   if( pSymbol->cScope & HB_FS_PUBLIC ) /* only for HB_FS_PUBLIC */
    {
       if( pDynSym->pFunPtr != pSymbol->pFunPtr ) /* it contains a function pointer */
          pDynSym->pFunPtr = pSymbol->pFunPtr;    /* place the function at DynSym */

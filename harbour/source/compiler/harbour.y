@@ -57,7 +57,7 @@ extern void yy_delete_buffer( void * ); /* yacc functions to manage multiple fil
 /* lex & yacc related prototypes */
 #if !defined(__GNUC__) && !defined(__IBMCPP__)
    #if 0
-      /* This makes BCC 551 fail with Bison 1.30, even with the 
+      /* This makes BCC 551 fail with Bison 1.30, even with the
          supplied harbour.simple file, which makes Bison 1.30 blow.
          [vszakats] */
       void __yy_memcpy ( char*, const char*, unsigned int ); /* to satisfy Borland compiler */
@@ -2011,7 +2011,7 @@ static void hb_compRTVariableGen( char * szCreateFun )
    HB_RTVAR_PTR pDel;
 
    /* generate the function call frame */
-   hb_compGenPushSymbol( hb_strdup( szCreateFun ), 1);
+   hb_compGenPushSymbol( hb_strdup( szCreateFun ), TRUE, FALSE );
    hb_compGenPushNil();
 
    /* push variable names to create */

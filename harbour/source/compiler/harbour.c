@@ -88,18 +88,18 @@ SYMBOLS        hb_comp_symbols;
 PCOMDECLARED   hb_comp_pFirstDeclared;
 PCOMDECLARED   hb_comp_pLastDeclared;
 PCOMDECLARED   hb_comp_pReleaseDeclared;
-               
+
 PCOMCLASS      hb_comp_pFirstClass;
 PCOMCLASS      hb_comp_pLastClass;
 PCOMCLASS      hb_comp_pReleaseClass;
 char *         hb_comp_szFromClass;
 PCOMDECLARED   hb_comp_pLastMethod;
-               
+
 int            hb_comp_iLine;                             /* currently processed line number (globaly) */
 char *         hb_comp_szFile;                            /* File Name of last compiled line */
 PFUNCTION      hb_comp_pInitFunc;
 PHB_FNAME      hb_comp_pFileName = NULL;
-               
+
 BOOL           hb_comp_bPPO = FALSE;                      /* flag indicating, is ppo output needed */
 FILE *         hb_comp_yyppo = NULL;                      /* output .ppo file */
 BOOL           hb_comp_bStartProc = TRUE;                 /* holds if we need to create the starting procedure */
@@ -940,7 +940,7 @@ void hb_compDeclaredInit( void )
    _DECL s_006 = { "ADEL"            , 'A', 2 , (BYTE*)"AN"                                                   , NULL     , NULL , &s_005};
    _DECL s_007 = { "ADIR"            , 'N', 6 , (BYTE*)"\x9d\x9b\x9b\x9b\x9b\x9b"                             , NULL     , NULL , &s_006};
    _DECL s_008 = { "AEVAL"           , 'A', 4 , (BYTE*)"AB\xa8\xa8"                                           , NULL     , NULL , &s_007};
-   _DECL s_009 = { "AFIELDS"         , 'N', 4 , (BYTE*)"A\x9b\x9b\x9b"                                        , NULL     , NULL , &s_008};           
+   _DECL s_009 = { "AFIELDS"         , 'N', 4 , (BYTE*)"A\x9b\x9b\x9b"                                        , NULL     , NULL , &s_008};
    _DECL s_010 = { "AFILL"           , 'A', 4 , (BYTE*)"A \xa8\xa8"                                           , NULL     , NULL , &s_009};
    _DECL s_011 = { "AINS"            , 'A', 2 , (BYTE*)"AN"                                                   , NULL     , NULL , &s_010};
    _DECL s_012 = { "ALERT"           , 'N', 4 , (BYTE*)"C\x9b\x9d\xa8"                                        , NULL     , NULL , &s_011};
@@ -1375,7 +1375,7 @@ PCOMSYMBOL hb_compSymbolAdd( char * szSymbolName, USHORT * pwPos )
       pSym = ( PCOMSYMBOL ) hb_xgrab( sizeof( COMSYMBOL ) );
 
       pSym->szName = szSymbolName;
-      pSym->cScope = 0;
+      pSym->cScope = HB_FS_PUBLIC;
       pSym->cType = hb_comp_cVarType;
       pSym->pNext = NULL;
 
@@ -1690,7 +1690,7 @@ PCOMSYMBOL hb_compSymbolKill( PCOMSYMBOL pSym )
 
 void hb_compGenBreak( void )
 {
-   hb_compGenPushSymbol( hb_strdup("BREAK"), 1 );
+   hb_compGenPushSymbol( hb_strdup("BREAK"), TRUE, FALSE );
    hb_compGenPushNil();
 }
 
@@ -2558,7 +2558,7 @@ void hb_compGenFieldPCode( BYTE bPCode, int wVar, char * szVarName, PFUNCTION pF
       else if( bPCode == HB_P_PUSHFIELD )
          bPCode = HB_P_PUSHALIASEDFIELD;
 
-      hb_compGenPushSymbol( hb_strdup( pField->szAlias ), 0 );
+      hb_compGenPushSymbol( hb_strdup( pField->szAlias ), FALSE, TRUE );
    }
    hb_compGenVarPCode( bPCode, szVarName );
 }
@@ -2760,7 +2760,7 @@ void hb_compGenPopAliasedVar( char * szVarName,
                }
                else
                {  /* database alias */
-                  hb_compGenPushSymbol( hb_strdup( szAlias ), 0 );
+                  hb_compGenPushSymbol( hb_strdup( szAlias ), FALSE, TRUE );
                   hb_compGenVarPCode( HB_P_POPALIASEDFIELD, szVarName );
                }
             }
@@ -3001,7 +3001,7 @@ void hb_compGenPushAliasedVar( char * szVarName,
                }
                else
                {  /* database alias */
-                  hb_compGenPushSymbol( hb_strdup( szAlias ), 0 );
+                  hb_compGenPushSymbol( hb_strdup( szAlias ), FALSE, TRUE );
                   hb_compGenVarPCode( HB_P_PUSHALIASEDFIELD, szVarName );
                }
             }
@@ -3055,10 +3055,10 @@ void hb_compGenPushFunCall( char * szFunName )
    {
       /* Abbreviated function name was used - change it for whole name
        */
-      hb_compGenPushSymbol( hb_compIdentifierNew( szFunction, TRUE ), 1 );
+      hb_compGenPushSymbol( hb_compIdentifierNew( szFunction, TRUE ), TRUE, FALSE );
    }
    else
-      hb_compGenPushSymbol( szFunName, 1 );
+      hb_compGenPushSymbol( szFunName, TRUE, FALSE );
 }
 
 /* generates the pcode to push a long number on the virtual machine stack */
@@ -3122,19 +3122,24 @@ void hb_compGenPushString( char * szText, ULONG ulStrLen )
 }
 
 /* generates the pcode to push a symbol on the virtual machine stack */
-void hb_compGenPushSymbol( char * szSymbolName, int iIsFunction )
+void hb_compGenPushSymbol( char * szSymbolName, BOOL bFunction, BOOL bAlias )
 {
+   PCOMSYMBOL pSym;
    USHORT wSym;
 
-   if( ! hb_compSymbolFind( szSymbolName, &wSym ) )  /* the symbol was not found on the symbol table */
+   if( ( pSym = hb_compSymbolFind( szSymbolName, &wSym ) ) != NULL )  /* the symbol was found on the symbol table */
    {
-      hb_compSymbolAdd( szSymbolName, &wSym );
-      if( iIsFunction )
+      if( bFunction && ! hb_compFunCallFind( szSymbolName ) )
          hb_compFunCallAdd( szSymbolName );
+
+      if( bAlias )
+         pSym->cScope |= HB_FS_PUBLIC;
    }
    else
    {
-      if( iIsFunction && ! hb_compFunCallFind( szSymbolName ) )
+      hb_compSymbolAdd( szSymbolName, &wSym );
+
+      if( bFunction )
          hb_compFunCallAdd( szSymbolName );
    }
 
@@ -3143,7 +3148,6 @@ void hb_compGenPushSymbol( char * szSymbolName, int iIsFunction )
    else
       hb_compGenPCode2( HB_P_PUSHSYMNEAR, ( BYTE ) wSym, ( BOOL ) 1 );
 }
-
 
 static void hb_compCheckDuplVars( PVAR pVar, char * szVarName )
 {
@@ -3574,11 +3578,11 @@ void hb_compSequenceFinish( ULONG ulStartPos, int bUsualStmts )
 void hb_compFieldSetAlias( char * szAlias, int iField )
 {
    PVAR pVar;
-   
+
    pVar = hb_comp_functions.pLast->pFields;
    while( iField-- && pVar )
       pVar = pVar->pNext;
-   
+
    while( pVar )
    {
       pVar->szAlias = szAlias;

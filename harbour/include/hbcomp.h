@@ -342,7 +342,7 @@ extern void hb_compGenPushLogical( int iTrueFalse );     /* pushes a logical val
 extern void hb_compGenPushLong( long lNumber );          /* Pushes a long number on the virtual machine stack */
 extern void hb_compGenPushNil( void );                   /* Pushes nil on the virtual machine stack */
 extern void hb_compGenPushString( char * szText, ULONG ulLen );       /* Pushes a string on the virtual machine stack */
-extern void hb_compGenPushSymbol( char * szSymbolName, int iIsFunction ); /* Pushes a symbol on to the Virtual machine stack */
+extern void hb_compGenPushSymbol( char * szSymbolName, BOOL bFunction, BOOL bAlias ); /* Pushes a symbol on to the Virtual machine stack */
 extern void hb_compGenPushAliasedVar( char *, BOOL, char *, long );
 extern void hb_compGenPopAliasedVar( char *, BOOL, char *, long );
 extern void hb_compGenPushFunRef( char * );
@@ -462,9 +462,9 @@ extern BOOL           hb_comp_bDontGenLineNum;
 extern FILES          hb_comp_files;
 extern int            hb_comp_iStaticCnt;
 extern int            hb_comp_iErrorCount;
-                      
+
 extern char *         hb_comp_szAnnounce;
-                      
+
 extern PHB_FNAME      hb_comp_pOutPath;
 extern BOOL           hb_comp_bCredits;
 extern BOOL           hb_comp_bBuildInfo;
@@ -475,13 +475,13 @@ extern BOOL           hb_comp_bFileVersionInfo;
 extern BOOL           hb_comp_bLogo;
 extern BOOL           hb_comp_bSyntaxCheckOnly;
 extern int            hb_comp_iLanguage;
-                      
+
 extern USHORT         hb_comp_wSeqCounter;
 extern USHORT         hb_comp_wForCounter;
 extern USHORT         hb_comp_wIfCounter;
 extern USHORT         hb_comp_wWhileCounter;
 extern USHORT         hb_comp_wCaseCounter;
-                      
+
 extern char *         hb_comp_szDeclaredFun;
 
 extern char *         hb_comp_szLastMethod;
@@ -529,4 +529,3 @@ extern ULONG          hb_comp_Supported;
 #endif
 
 #endif /* HB_COMP_H_ */
-
