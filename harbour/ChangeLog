@@ -8,9 +8,9 @@
   * source/rtl/gtsln/gtsln.c
   * source/rtl/gtstd/gtstd.c
   * source/rtl/gtwin/gtwin.c
-    ! Bug fix for clipping at right screen edge.
-    + Minor optimizations for detecting clipping at right and bottom
-      screen edges.
+    ! Bug fix for box clipping at right screen edge.
+    + Minor optimizations for detecting box clipping at right and
+      bottom screen edges.
 
 2001-08-21 14:35 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/gtcrs/gtcrs.c
