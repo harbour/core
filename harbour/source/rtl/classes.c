@@ -567,7 +567,7 @@ HARBOUR HB___CLSNEW( void )
             pNewCls->pMethods[ ui ].pInitValue = pInitValue;
          }
       }
-      pNewCls->pFunError = NULL;
+      pNewCls->pFunError = pSprCls->pFunError;
    }
    else
    {
@@ -579,6 +579,7 @@ HARBOUR HB___CLSNEW( void )
 
       pNewCls->pClassDatas = hb_itemArrayNew( 0 );
       pNewCls->pInlines    = hb_itemArrayNew( 0 );
+      pNewCls->pFunError   = NULL;
 
       memset( pNewCls->pMethods, 0, BASE_METHODS * sizeof( METHOD ) );
    }
