@@ -1,3 +1,17 @@
+19990709-16:25 Eddie Runia
+  * build32.bat; source/runner/runner.c; source/runner/run_exp.h;
+    tests/working/hb32.bat; tests/working/runrdos.bat
+  - tests/working/runner.c; tests/working/run_exp.h
+    runner moved to /source/runner
+  * source/vm/initsymb.c; include/init.h
+    init symbols no longer worked both on Borland C++ Builder as well as
+    DJGPP
+  + source/compiler/harbour.l
+    include bug for DJGPP resolved
+  * tests/working/ainstest.prg
+    copy error resolved
+
+
 19990709-20:00 Andi Jahja <andij@aonlippo.co.id>
   + tests/broken/clasname.prg by Dave Pearson
   + tests/broken/statics1.prg by Bruno Cantero

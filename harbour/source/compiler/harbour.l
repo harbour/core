@@ -35,7 +35,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
-#include "harboury.h"
+#if __DJGPP__
+   #include "./harboury.h"
+#else
+   #include "harboury.h"
+#endif
 #include "hbsetup.h"    /* main configuration file */
 #include "hberrors.h"
 #include "hbdefs.h"

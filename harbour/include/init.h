@@ -50,14 +50,14 @@ static SYMBOL symbols[] = {
   static SYMBOL symbols[] = {
 
 #define HB_INIT_SYMBOLS_END( func )  }; \
-  static void __attribute__ ((constructor)) func( void ) \
+  void __attribute__ ((constructor)) func( void ) \
   { \
      ProcessSymbols( symbols, sizeof( symbols ) / sizeof( SYMBOL ) ); \
   }
 
 
 #define HB_CALL_ON_STARTUP_BEGIN( func ) \
-  static void __attribute__ ((constructor)) func( void ) {
+  void __attribute__ ((constructor)) func( void ) {
 
 #define HB_CALL_ON_STARTUP_END( func ) }
 #endif
@@ -68,13 +68,13 @@ static SYMBOL symbols[] = {
   static SYMBOL symbols[] = {
 
 #define HB_INIT_SYMBOLS_END( func )  }; \
-  static void func( void ) \
+  void func( void ) \
   { \
     ProcessSymbols( symbols, sizeof( symbols ) / sizeof( SYMBOL ) ); \
   }
 
 #define HB_CALL_ON_STARTUP_BEGIN( func ) \
- static void func( void ) {
+  void func( void ) {
 
 #define HB_CALL_ON_STARTUP_END( func ) }
 #endif
@@ -84,37 +84,37 @@ static SYMBOL symbols[] = {
   static SYMBOL symbols[] = {
 
 #define HB_INIT_SYMBOLS_END( func ) }; \
-  static int func( void ) \
+  int func( void ) \
   { \
      ProcessSymbols( symbols, sizeof( symbols ) / sizeof( SYMBOL ) ); \
      return 1; \
   }; \
-  static int static_int_##func = func()
+  int static_int_##func = func()
 
 #define HB_CALL_ON_STARTUP_BEGIN( func ) \
-static int func( void ) {
+int func( void ) {
 
 #define HB_CALL_ON_STARTUP_END( func ) return 1; } \
-  static int static_int_##func = func()
+  int static_int_##func = func()
 #endif
 
 #ifdef __WATCOMC__
 #define HB_INIT_SYMBOLS_BEGIN( func ) \
-  static SYMBOL symbols[] = {
+  SYMBOL symbols[] = {
 
 #define HB_INIT_SYMBOLS_END( func ) }; \
-  static int func( void ) \
+  int func( void ) \
   { \
      ProcessSymbols( symbols, sizeof( symbols ) / sizeof( SYMBOL ) ); \
      return 1; \
   }; \
-  static int static_int_##func = func()
+  int static_int_##func = func()
 
 #define HB_CALL_ON_STARTUP_BEGIN( func ) \
-  static int func( void ) {
+  int func( void ) {
 
 #define HB_CALL_ON_STARTUP_END( func ) return 1; }; \
-  static int static_int_##func = func()
+  int static_int_##func = func()
 #endif
 
 #endif /*HARBOUR_STRICT_ANSI_C */

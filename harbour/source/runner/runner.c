@@ -1,35 +1,8 @@
-/*
- * Runner - Dynamic Library load routine
- *
- * Copyright (C) 1999 Eddie Runia (eddie@runia.com)
- * Part of the Harbour Project www.harbour-project.org
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version, with one exception:
- *
- * The exception is that if you link the Harbour Runtime Library (HRL)
- * and/or the Harbour Virtual Machine (HVM) with other files to produce
- * an executable, this does not by itself cause the resulting executable
- * to be covered by the GNU General Public License. Your use of that
- * executable is in no way restricted on account of linking the HRL
- * and/or HVM code into it.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at http://www.gnu.org/).
- */
+#include "pcode.h"
 
-
-#define FILE _FILE
+#include <errorapi.h>
 #include <stdio.h>
+#include <init.h>
 
 /* #if INTEL32 */
 static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00,
@@ -74,19 +47,19 @@ typedef struct
 #define SYM_NOT_FOUND 0xFFFFFFFF                /* Symbol not found.
                                                    FindSymbol               */
 
-PASM_CALL CreateFun( PSYMBOL, PBYTE );          /* Create a dynamic function*/
-void      Do( WORD );
-ULONG     FindSymbol( char *, PDYNFUNC, ULONG );
-HARBOUR   HB_HB_RUN(void);
-void      HRB_FileClose( _FILE * );
-void      HRB_FileRead ( char *, int, int, _FILE * );
-_FILE    *HRB_FileOpen ( char * );
-void      Push( PITEM );
-void      PushNil( void );
-void      PushSymbol( PSYMBOL );
-BYTE      ReadByte( _FILE * );
-char     *ReadId  ( _FILE * );
-long      ReadLong( _FILE * );
+static PASM_CALL CreateFun( PSYMBOL, PBYTE );   /* Create a dynamic function*/
+       void      Do( WORD );
+static ULONG     FindSymbol( char *, PDYNFUNC, ULONG );
+       HARBOUR   HB_HB_RUN();
+static void      HRB_FileClose( FILE * );
+static void      HRB_FileRead ( char *, int, int, FILE * );
+static FILE     *HRB_FileOpen ( char * );
+       void      Push( PHB_ITEM );
+       void      PushNil( void );
+       void      PushSymbol( PSYMBOL );
+       BYTE      ReadByte( FILE * );
+       char     *ReadId  ( FILE * );
+       long      ReadLong( FILE * );
 
 #include "run_exp.h"
 
@@ -99,8 +72,6 @@ long      ReadLong( _FILE * );
  * If the discussion has finished, it can be removed from here.
  *
  */
-
-#include <init.h>
 
 ULONG ulSymEntry = 0;                           /* Link enhancement         */
 
@@ -139,13 +110,13 @@ HARBOUR HB_HB_RUN( void )
       if( file )
       {
          ulSymbols = ReadLong( file );
-         pSymRead = hb_xgrab( ulSymbols * sizeof( SYMBOL ) );
+         pSymRead = ( PSYMBOL )hb_xgrab( ulSymbols * sizeof( SYMBOL ) );
 
          for( ul=0; ul < ulSymbols; ul++)       /* Read symbols in .HRB     */
          {
             pSymRead[ ul ].szName  = ReadId( file );
             pSymRead[ ul ].cScope  = ReadByte( file );
-            pSymRead[ ul ].pFunPtr = (void *) ReadByte( file );
+            pSymRead[ ul ].pFunPtr = ( HARBOURFUNC ) ReadByte( file );
             pSymRead[ ul ].pDynSym = NULL;
          }
 
@@ -156,7 +127,7 @@ HARBOUR HB_HB_RUN( void )
             pDynFunc[ ul ].szName = ReadId( file );
 
             ulSize = ReadLong( file ) + 1;      /* Read size of function    */
-            pDynFunc[ ul ].pCode = hb_xgrab( ulSize );
+            pDynFunc[ ul ].pCode = ( PBYTE )hb_xgrab( ulSize );
             HRB_FileRead( pDynFunc[ ul ].pCode, 1, ulSize, file );
                                                 /* Read the block           */
 
@@ -184,7 +155,7 @@ HARBOUR HB_HB_RUN( void )
                   pSymRead[ ul ].pFunPtr = pDynFunc[ ulPos ].pAsmCall->pFunPtr;
                }
                else
-                  pSymRead[ ul ].pFunPtr = (void *) SYM_EXTERN;
+                  pSymRead[ ul ].pFunPtr = ( HARBOURFUNC ) SYM_EXTERN;
             }
             if( ( (ULONG) pSymRead[ ul ].pFunPtr ) == SYM_EXTERN )
             {                                   /* External function        */
@@ -288,14 +259,13 @@ static ULONG FindSymbol( char *szName, PDYNFUNC pDynFunc, ULONG ulLoaded )
    Read the next (zero terminated) identifier */
 char *ReadId( FILE *file )
 {
-   char *szFileName;
    char *szTemp;                                /* Temporary buffer         */
    char *szIdx;
    char *szRet;
 
    BYTE  bCont = TRUE;
 
-   szTemp = hb_xgrab( 256 );
+   szTemp = ( char * )hb_xgrab( 256 );
    szIdx  = szTemp;
    do
    {
@@ -331,7 +301,7 @@ long ReadLong( FILE *file )
 
    if( cLong[3] )                               /* Convert to long if ok    */
    {
-      PITEM pError = hb_errNew();
+      PHB_ITEM pError = hb_errNew();
       hb_errPutDescription(pError, "Error reading .HRB file");
       hb_errLaunch(pError);
       hb_errRelease(pError);
@@ -351,7 +321,7 @@ static void HRB_FileRead( char *cBuffer, int iSize, int iCount, FILE *fStream )
 {
    if( iCount != (int) fread( cBuffer, iSize, iCount, fStream ) )
    {                                            /* Read error               */
-      PITEM pError = hb_errNew();
+      PHB_ITEM pError = hb_errNew();
       hb_errPutDescription(pError, "Error reading .HRB file");
       hb_errLaunch(pError);
       hb_errRelease(pError);
