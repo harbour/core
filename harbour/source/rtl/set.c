@@ -263,30 +263,43 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
 
    /* QUESTION: What sharing mode does Clipper use ? [vszel] */
 
-   while( ( handle = ( bAppend ? hb_fsOpen( (BYTE *)path, FO_WRITE | FO_DENYWRITE ) :
-                                 hb_fsCreate( (BYTE *)path, FC_NORMAL ) ) ) == FS_ERROR )
+   handle = FS_ERROR;
+   while( handle == FS_ERROR )
    {
+      BOOL bCreate = FALSE;
       WORD wResult;
 
-      /* NOTE: using switch() here will result in a compiler warning */
+      if( bAppend )
+      {  /* Append mode */
+	 if( hb_fsFile( (BYTE *)path ) )
+	 {  /* If the file already exists, open it... */
+            handle = hb_fsOpen( (BYTE *)path, FO_WRITE | FO_DENYWRITE );
+            if( handle != FS_ERROR )
+               hb_fsSeek( handle, 0, FS_END ); /* ... then go to EOF to append. */
+         }
+         else bCreate = TRUE; /* Otherwise create a new file. */
+      }
+      else bCreate = TRUE; /* Always create a new file for overwrite mode. */
 
-      if( set_specifier == HB_SET_ALTFILE )
-         wResult = hb_errRT_TERM( EG_CREATE, 2013, NULL, path, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
-      else if( set_specifier == HB_SET_PRINTFILE )
-         wResult = hb_errRT_TERM( EG_CREATE, 2014, NULL, path, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
-      else if( set_specifier == HB_SET_EXTRAFILE )
-         wResult = hb_errRT_TERM( EG_CREATE, 2015, NULL, path, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
-      else
-         wResult = E_DEFAULT;
+      if( bCreate )
+         handle = hb_fsCreate( (BYTE *)path, FC_NORMAL );
 
-      if( wResult == E_DEFAULT || wResult == E_BREAK )
-         break;
+      if( handle == FS_ERROR )
+      {
+         /* NOTE: using switch() here will result in a compiler warning */
+         if( set_specifier == HB_SET_ALTFILE )
+            wResult = hb_errRT_TERM( EG_CREATE, 2013, NULL, path, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
+         else if( set_specifier == HB_SET_PRINTFILE )
+            wResult = hb_errRT_TERM( EG_CREATE, 2014, NULL, path, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
+         else if( set_specifier == HB_SET_EXTRAFILE )
+            wResult = hb_errRT_TERM( EG_CREATE, 2015, NULL, path, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
+         else
+            wResult = E_DEFAULT;
+   
+         if( wResult == E_DEFAULT || wResult == E_BREAK )
+            break;
+      }
    }
-
-   /* If append mode, set the file pointer to EOF */
-   if( handle != FS_ERROR )
-      hb_fsSeek( handle, 0, FS_END );
-
    return handle;
 }
 

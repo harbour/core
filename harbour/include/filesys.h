@@ -32,6 +32,7 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.21   David G. Holm               Added hb_fsFile().
    V 1.7    Victor Szel                 #include <x> changed to #include "x".
    V 1.6    David G. Holm               Added my email address.
    V 1.5    David G. Holm               Added copyright and license header,
@@ -70,7 +71,7 @@ extern BYTE *   hb_fsCurDir     ( USHORT uiDrive );
 extern BYTE     hb_fsCurDrv     ( void );
 extern int      hb_fsDelete     ( BYTE * pFilename );
 extern USHORT   hb_fsError      ( void );
-extern void     hb_fsSetError   ( USHORT uiError );
+extern BOOL     hb_fsFile       ( BYTE * pFilename );
 extern FHANDLE  hb_fsExtOpen    ( BYTE * pFilename, BYTE * pDefExt,
                                   USHORT uiFlags, BYTE * pPaths, PHB_ITEM pError );
 extern USHORT   hb_fsIsDrv      ( BYTE nDrive );
@@ -84,6 +85,7 @@ extern BOOL     hb_fsRmDir      ( BYTE * pDirName );
 extern int      hb_fsRename     ( BYTE * pOldName, BYTE * pNewName );
 extern ULONG    hb_fsSeek       ( FHANDLE hFileHandle, LONG lOffset, USHORT uiMode );
 extern void     hb_fsSetDevMode ( FHANDLE hFileHandle, USHORT uiDevMode );
+extern void     hb_fsSetError   ( USHORT uiError );
 extern USHORT   hb_fsWrite      ( FHANDLE hFileHandle, BYTE * pBuff, USHORT ulCount );
 extern ULONG    hb_fsWriteLarge ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount );
 

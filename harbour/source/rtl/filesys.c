@@ -173,45 +173,88 @@ extern int rename( const char *, const char * );
 
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
 
+#ifdef __CYGWIN__
+/* TODO: Get Cygwin fixed so that this bug fix won't be needed */
+static inline int FixCygwinIOflags( int flags )
+{
+   /* Starting with O_CREAT, the Cygwin I/O flags are 1 bit too high */
+   return ( ( flags & 0x1FF00 ) >> 1 ) | ( flags & 0xFF );
+}
+#endif
+
 static int convert_open_flags( USHORT uiFlags )
 {
    /* by default FO_READ + FO_COMPAT is set */
    int result_flags = 0;
 
    result_flags |= O_BINARY;
+/* DEBUG: printf("\nconvert_open_flags: O_BINARY"); */
 
 #if defined( _MSC_VER )
    if( uiFlags == 0 )
+   {
       result_flags |= O_RDONLY;
+/* DEBUG: printf(" O_RDONLY"); */
+   }
 #else
 
    if( uiFlags == 0 )
+   {
       result_flags |= ( O_RDONLY | SH_COMPAT );
+/* DEBUG: printf(" O_RDONLY SH_COMPAT"); */
+   }
 #endif
 
    /* read & write flags */
    if( uiFlags & FO_WRITE )
+   {
       result_flags |= O_WRONLY;
+/* DEBUG: printf(" O_WRONLY"); */
+   }
 
    if( uiFlags & FO_READWRITE )
+   {
       result_flags |= O_RDWR;
+/* DEBUG: printf(" O_RDWR"); */
+   }
 
 #if ! defined(_MSC_VER)
    /* shared flags */
    if( ( uiFlags & FO_DENYREAD ) == FO_DENYREAD )
+   {
       result_flags |= SH_DENYRD;
+/* DEBUG: printf(" SH_DENYRD"); */
+   }
 
    else if( uiFlags & FO_EXCLUSIVE )
+   {
       result_flags |= SH_DENYRW;
+/* DEBUG: printf(" SH_DENYRW"); */
+   }
 
    else if( uiFlags & FO_DENYWRITE )
+   {
       result_flags |= SH_DENYWR;
+/* DEBUG: printf(" SH_DENYWR"); */
+   }
 
    if( uiFlags & FO_DENYNONE )
+   {
       result_flags |= SH_DENYNO;
+/* DEBUG: printf(" SH_DENYNO"); */
+   }
 
    if( uiFlags & FO_SHARED )
+   {
       result_flags |= SH_DENYNO;
+/* DEBUG: printf(" SH_DENYNO"); */
+   }
+/* DEBUG: printf(" 0x%04x\n", result_flags); */
+#ifdef __CYGWIN__
+/* TODO: Get Cygwin fixed so that this bug fix won't be needed */
+   result_flags = FixCygwinIOflags( result_flags );
+/* DEBUG: printf(" Cygwin fix: 0x%04x\n", result_flags); */
+#endif
 #endif
 
    return result_flags;
@@ -241,13 +284,22 @@ static void convert_create_flags( USHORT uiFlags, int * result_flags, unsigned *
    *result_pmode = S_IRUSR | S_IWUSR;
 
    if( uiFlags & FC_READONLY )
+   {
       *result_pmode = S_IRUSR;
+/* DEBUG: printf(" S_IRUSR"); */
+   }
 
    if( uiFlags & FC_HIDDEN )
       *result_flags |= 0;
 
    if( uiFlags & FC_SYSTEM )
       *result_flags |= 0;
+/* DEBUG: printf(" 0x%04x, 0x%04x\n", *result_flags, *result_pmode); */
+#ifdef __CYGWIN__
+/* TODO: Get Cygwin fixed so that this bug fix won't be needed */
+   *result_flags = FixCygwinIOflags( *result_flags );
+/* DEBUG: printf(" Cygwin fix: 0x%04x\n", *result_flags); */
+#endif
 }
 
 #endif
@@ -997,17 +1049,13 @@ HARBOUR HB_FSEEK( void )
    hb_retnl( ulPos );
 }
 
-HARBOUR HB_FILE( void )
+BOOL hb_fsFile ( BYTE * pFilename )
 {
-   if( hb_pcount() == 1 )
-   {
-      if( ISCHAR( 1 ) )
-      {
-
+   BOOL is_file = FALSE;
 /* TODO: Check if F_OK is defined in all compilers */
 #ifdef OS_UNIX_COMPATIBLE
 
-         hb_retl( access( hb_parc( 1 ), F_OK ) == 0 );
+         is_file = ( access( pFilename, F_OK ) == 0 );
 
 #else
 
@@ -1015,22 +1063,30 @@ HARBOUR HB_FILE( void )
 
          int hFileHandle;
 
-         if( ( hFileHandle = open( hb_parc( 1 ), O_RDONLY ) ) >= 0 )
+         if( ( hFileHandle = open( pFilename, O_RDONLY ) ) >= 0 )
          {
             close( hFileHandle );
-            hb_retl( TRUE );
+            is_file = TRUE;
          }
-         else
-            hb_retl( FALSE );
 
    #else
 
-         hb_retl( access( hb_parc( 1 ), 0 ) == 0 );
+         is_file = ( access( pFilename, 0 ) == 0 );
 
    #endif
 
 #endif
 
+   return is_file;
+}
+
+HARBOUR HB_FILE( void )
+{
+   if( hb_pcount() == 1 )
+   {
+      if( ISCHAR( 1 ) )
+      {
+         hb_retl( hb_fsFile( hb_parc( 1 ) ) );
       }
       else
          hb_retl( FALSE );

@@ -1,3 +1,16 @@
+19990904-20:35 EDT David G. Holm <dholm@jsd-llc.com>
+  * include/filesys.h
+    + Added hb_fsFile().
+  * source/rtl/filesys.c
+    + The guts of HB_FILE() are now in hb_fsFile(), so that
+      C RTL functions can check for the existence of a file.
+    ! Added temporary bug fix for Cygwin I/O flags (starting
+      with O_CREATE, they are one bit position too high).
+    + I left in the debug statements that I used to track down
+      the Cygwin I/O flag bug, but I commented them out. */
+  * source/rtl/set.c
+    ! Corrected the file open/create handling in open_handle().
+
 19990904-18:35 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/tone.c
     ! Added missing '&& ! defined(_Windows)' checks to the
