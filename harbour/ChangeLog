@@ -1,3 +1,7 @@
+20000504-12:07 GMT+3 Chen Kedem <niki@actcom.co.il>
+   * doc/en/array.txt
+     ! Change ASORT() $COMPLIANCE$ as suggested by Victor Szakats
+
 20000504-09:12 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * contrib/hbclip/hbclip.ch 
