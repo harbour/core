@@ -64,7 +64,8 @@ endef
 define link_exe_file
 echo $(LDFLAGS) $(LD_OUT)$@ > __link__.tmp
 $(foreach file, $^, $(link_file))
-echo $(LINKPATHS) $(LINKLIBS) >> __link__.tmp
+$(foreach file, $(LINKPATHS), $(link_file))
+$(foreach file, $(LINKLIBS), $(link_file))
 -$(LD) @__link__.tmp
 endef
 

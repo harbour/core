@@ -1,3 +1,14 @@
+2000-04-17 21:00 GMT-4 David G. Holm <dholm@jsd-llc.com>
+
+  * config/dos/djgpp.cf
+    ! Each LINKPATH entry must be written to the response file separately,
+      because otherwise the DOS command line length is exceeded. It is not
+      necessary to do the same for LINKLIBS at this time, but why tempt
+      fate? So each LINKLIBS entry is also written separately.
+
+  * source/common/hbtrace.c
+    ! Added #include "hbapi.h"
+
 2000-04-17 20:30 GMT-4 David G. Holm <dholm@jsd-llc.com>
   * source/common/hbstr.c
   * source/common/hbtrace.c

@@ -38,6 +38,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "hbapi.h"
 #include "hbtrace.h"
 
 char * hb_tr_file_ = "";
