@@ -43,14 +43,14 @@
  */
 static USHORT s_uiDispCount;
 
-static void gt_GetMaxRC(int* r, int* c);
-static void gt_GetRC(int* r, int* c);
-static void gt_SetRC(int r, int c);
+static void gt_GetMaxRC( int * r, int * c );
+static void gt_GetRC( int * r, int * c );
+static void gt_SetRC( int r, int c );
 
 static unsigned s_attribmap_table[ 256 ]; /* mapping from DOS style attributes */
 static BOOL s_under_xterm;
 static int s_alternate_char_set;
-static  char s_xTermBox[ 10 ] = "lqkxjqmx ";
+static char s_xTermBox[ 10 ] = "lqkxjqmx ";
 
 extern void hb_gt_Initialize_Mouse( void );
 extern void hb_gt_Initialize_Keyboard( void );
@@ -87,19 +87,21 @@ static void hb_gt_Initialize_Terminal( void )
       static char color_map[] = { 0, 4, 2, 6, 1, 5, 3, 7 };
 
       start_color();
-      for( backg=0; backg<COLORS; backg++ )
-         for( foreg=0; foreg<COLORS; foreg++ )
-               init_pair( backg*COLORS+foreg, color_map[foreg], color_map[backg] );
+      for( backg = 0; backg < COLORS; backg++ )
+      {
+         for( foreg = 0; foreg < COLORS; foreg++ )
+            init_pair( backg * COLORS + foreg, color_map[ foreg ], color_map[ backg ] );
+      }
 
-      for( i=0; i<256; i++  )
+      for( i = 0; i < 256; i++  )
       {
          backg = ( i >> 4 ) & 0x07;    /* bits 4-6, bit 7 is blinking attribute */
-               foreg = ( i & 0x07 );
-               s_attribmap_table[ i ] = COLOR_PAIR( backg*COLORS + foreg );
-               if( i & 0x08 )
-                   s_attribmap_table[ i ] |= A_BOLD;  /* 4-th bit is an intensity bit */
-               if( i & 0x80 )
-                   s_attribmap_table[ i ] |= A_BLINK;  /* 7-th bit is blinking bit */
+         foreg = ( i & 0x07 );
+         s_attribmap_table[ i ] = COLOR_PAIR( backg * COLORS + foreg );
+         if( i & 0x08 )
+            s_attribmap_table[ i ] |= A_BOLD;  /* 4-th bit is an intensity bit */
+         if( i & 0x80 )
+            s_attribmap_table[ i ] |= A_BLINK;  /* 7-th bit is blinking bit */
       }
    }
 
@@ -109,24 +111,23 @@ static void hb_gt_Initialize_Terminal( void )
    nodelay( stdscr, TRUE );
    keypad( stdscr, FALSE );
 
-   s_under_xterm = !strncmp( getenv("TERM"), "xterm", 5 );
-    if( s_under_xterm )
-    {
-      /* Alternate characters set will be enabled only by request because
-       * it changes character mapping under xterm
-       */
-       s_alternate_char_set = 0;
-    }
-    else
-    {
-      /* If running under Linux console enable alternate character set
-       * by default
-       */
-       s_alternate_char_set = A_ALTCHARSET;
-    }
+   s_under_xterm = ( strncmp( getenv( "TERM" ), "xterm", 5 ) == 0 );
+   if( s_under_xterm )
+   {
+     /* Alternate characters set will be enabled only by request because
+      * it changes character mapping under xterm
+      */
+      s_alternate_char_set = 0;
+   }
+   else
+   {
+     /* If running under Linux console enable alternate character set
+      * by default
+      */
+      s_alternate_char_set = A_ALTCHARSET;
+   }
    bkgdset( ' ' );
    ripoffline( 0, NULL );
-
 }
 
 static void hb_gt_Exit_Terminal( void )
@@ -146,7 +147,6 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
    /* Mouse sub-sytem have to be initialized after ncurses initialization */
    hb_gt_Initialize_Mouse();
    hb_gt_Initialize_Keyboard();
-
 }
 
 void hb_gt_Exit( void )
@@ -223,7 +223,7 @@ USHORT hb_gt_GetScreenWidth( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenWidth()"));
 
-   gt_GetMaxRC(&r, &c);
+   gt_GetMaxRC( &r, &c );
    return c;
 }
 
@@ -233,7 +233,7 @@ USHORT hb_gt_GetScreenHeight( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenHeight()"));
 
-   gt_GetMaxRC(&r, &c);
+   gt_GetMaxRC( &r, &c );
    return r;
 }
 
@@ -241,7 +241,7 @@ void hb_gt_SetPos( SHORT iRow, SHORT iCol )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hd, %hd)", iRow, iCol));
 
-   gt_SetRC(iRow, iCol);
+   gt_SetRC( iRow, iCol );
 }
 
 SHORT hb_gt_Col( void )
@@ -250,7 +250,7 @@ SHORT hb_gt_Col( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Col()"));
 
-   gt_GetRC(&r, &c);
+   gt_GetRC( &r, &c );
    return c;
 }
 
@@ -260,7 +260,7 @@ SHORT hb_gt_Row( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Row()"));
 
-   gt_GetRC(&r, &c);
+   gt_GetRC( &r, &c );
    return r;
 }
 
@@ -291,7 +291,9 @@ static void hb_gt_xPutch( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_xPutch(%hu, %hu, %d, %i)", uiRow, uiCol, (int) byAttr, byChar));
 
    move( uiRow, uiCol );
+
    addch( byChar | s_alternate_char_set | s_attribmap_table[ byAttr ] );
+
    if( s_uiDispCount == 0 )
       refresh();
 }
@@ -309,8 +311,10 @@ void hb_gt_Puts( USHORT uiRow,
 
    attr = s_alternate_char_set | s_attribmap_table[ byAttr ];
    move( uiRow, uiCol );
+
    for( i = 0; i < ulLen; ++i )
       addch( pbyStr[ i ] | attr );
+
    if( s_uiDispCount == 0 )
       refresh();
 }
@@ -327,7 +331,7 @@ void hb_gt_GetText( USHORT uiTop,
                     BYTE * pbyDst )
 {
    int i;
-   chtype *pBuffer = (chtype *)pbyDst;
+   chtype * pBuffer = ( chtype * ) pbyDst;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, pbyDst));
 
@@ -336,7 +340,7 @@ void hb_gt_GetText( USHORT uiTop,
 
    while( uiTop <= uiBottom )
    {
-    for( i=uiLeft; i<=uiRight; i++, pBuffer++ )
+      for( i = uiLeft; i <= uiRight; i++, pBuffer++ )
         *pBuffer = mvinch( uiTop, i );
       ++uiTop;
    }
@@ -349,7 +353,7 @@ void hb_gt_PutText( USHORT uiTop,
                     BYTE * pbySrc )
 {
    int Cols;
-   chtype *pBuffer = (chtype *)pbySrc;
+   chtype * pBuffer = ( chtype * ) pbySrc;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, pbySrc));
 
@@ -357,9 +361,10 @@ void hb_gt_PutText( USHORT uiTop,
    while( uiTop <= uiBottom )
    {
       mvaddchnstr( uiTop, uiLeft, pBuffer, Cols );
-      pBuffer +=Cols;
+      pBuffer += Cols;
       ++uiTop;
    }
+
    if( s_uiDispCount == 0 )
       refresh();
 }
@@ -380,15 +385,15 @@ void hb_gt_SetAttribute( USHORT uiTop,
 
    while( uiTop <= uiBottom )
    {
-      for ( dx=uiLeft; dx<=uiRight; dx++ )
+      for( dx = uiLeft; dx <= uiRight; dx++ )
       {
-          c = mvinch( uiTop, dx );
-          /* extract character only (remember about alternate chars) */
-          c &= (A_CHARTEXT | A_ALTCHARSET);
-          /* set new attribute */
-          c |= newAttr;
-          if (addch(c) == ERR)  /* Stop on error */
-             return;
+         c = mvinch( uiTop, dx );
+         /* extract character only (remember about alternate chars) */
+         c &= ( A_CHARTEXT | A_ALTCHARSET );
+         /* set new attribute */
+         c |= newAttr;
+         if( addch( c ) == ERR )  /* Stop on error */
+            return;
       }
       uiTop++;
    }
@@ -410,9 +415,9 @@ void hb_gt_Scroll( USHORT uiTop,
    if( iRows == 0 && iCols == 0 )
    {
       /* Clear the specified rectangle */
-      WINDOW *subw;
+      WINDOW * subw;
 
-      subw = subwin( stdscr, uiBottom-uiTop+1, uiRight-uiLeft+1, uiTop, uiLeft );
+      subw = subwin( stdscr, uiBottom - uiTop + 1, uiRight - uiLeft + 1, uiTop, uiLeft );
       wbkgdset( subw, ' ' | s_attribmap_table[ byAttr ] );
       wclear( subw );
       touchwin( stdscr );
@@ -423,9 +428,9 @@ void hb_gt_Scroll( USHORT uiTop,
    {
       if( iRows != 0 )
       {
-         WINDOW *subw;
+         WINDOW * subw;
 
-         subw = subwin( stdscr, uiBottom-uiTop+1, uiRight-uiLeft+1, uiTop, uiLeft );
+         subw = subwin( stdscr, uiBottom - uiTop + 1, uiRight - uiLeft + 1, uiTop, uiLeft );
          wbkgdset( subw, ' ' | s_attribmap_table[ byAttr ] );
          scrollok( subw, TRUE );
          wscrl( subw, iRows );
@@ -434,7 +439,7 @@ void hb_gt_Scroll( USHORT uiTop,
 
       if( iCols != 0 )
       {
-         chtype *pScreen, *pTmp;
+         chtype * pScreen, * pTmp;
          int memsize;
          int RowCount, ColCount;
          int i, j;
@@ -447,37 +452,37 @@ void hb_gt_Scroll( USHORT uiTop,
          newAttr  = ' ' | s_attribmap_table[ byAttr ];
 
          memsize = hb_gt_RectSize( RowCount, ColCount );
-         pScreen = (chtype *) hb_xgrab( memsize );
-         hb_gt_GetText( uiTop, uiLeft, uiBottom, uiRight, (BYTE *)pScreen );
+         pScreen = ( chtype * ) hb_xgrab( memsize );
+         hb_gt_GetText( uiTop, uiLeft, uiBottom, uiRight, ( BYTE * ) pScreen );
 
          if( iCols > 0 )
          {
             pTmp = pScreen;
-            for( i=0; i<RowCount; i++ )
+            for( i = 0; i < RowCount; i++ )
             {
-               for( j=ColCount - 1; j>=iCols; j-- )
-                  pTmp[ j ] = pTmp[ j-1 ];
-               for( j=0; j<iCols; j++ )
+               for( j = ColCount - 1; j >= iCols; j-- )
+                  pTmp[ j ] = pTmp[ j - 1 ];
+               for( j = 0; j < iCols; j++ )
                   pTmp[ j ] = newAttr;
                pTmp += ColCount;
             }
          }
          else
          {
-            int ColMove  = ColCount + iCols;
+            int ColMove = ColCount + iCols;
 
             pTmp = pScreen;
-            for( i=0; i<RowCount; i++ )
+            for( i = 0; i < RowCount; i++ )
             {
-               for( j=0; j<ColMove; j++ )
-                  pTmp[ j ] = pTmp[ j-iCols ];
-               for( j=ColMove; j<ColCount; j++ )
+               for( j = 0; j < ColMove; j++ )
+                  pTmp[ j ] = pTmp[ j - iCols ];
+               for( j = ColMove; j < ColCount; j++ )
                   pTmp[ j ] = newAttr;
                pTmp += ColCount;
             }
          }
-         hb_gt_PutText( uiTop, uiLeft, uiBottom, uiRight, (BYTE *)pScreen );
-         hb_xfree( (BYTE *)pScreen );
+         hb_gt_PutText( uiTop, uiLeft, uiBottom, uiRight, ( BYTE * ) pScreen );
+         hb_xfree( ( BYTE * ) pScreen );
       }
    }
    if( s_uiDispCount == 0 )
@@ -510,7 +515,7 @@ BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
    {
       BOOL success;
       hb_gt_Exit_Terminal();
-      success = ( ( resizeterm( uiRows, uiCols) == OK) ? TRUE : FALSE );
+      success = ( resizeterm( uiRows, uiCols ) == OK );
       hb_gt_Initialize_Terminal();
       return success;
    }
@@ -554,7 +559,7 @@ void hb_gt_Tone( double dFrequency, double dDuration )
 static void gt_GetMaxRC(int* r, int* c)
 {
    int y, x;
-   getmaxyx(stdscr, y, x);
+   getmaxyx( stdscr, y, x );
    *r = y;
    *c = x;
 }
@@ -562,14 +567,14 @@ static void gt_GetMaxRC(int* r, int* c)
 static void gt_GetRC(int* r, int* c)
 {
    int y, x;
-   getyx(stdscr, y, x);
+   getyx( stdscr, y, x );
    *r = y;
    *c = x;
 }
 
 static void gt_SetRC(int r, int c)
 {
-   move(r, c);
+   move( r, c );
    if( s_uiDispCount == 0 )
       refresh();
 }
@@ -588,10 +593,8 @@ void hb_gt_Replicate( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar, ULON
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%hu, %hu, %i, %i, %lu)", uiRow, uiCol, byAttr, byChar, nLength));
 
-   {
-      while( nLength-- )
-         hb_gt_xPutch( uiRow, uiCol++, byAttr, byChar );
-   }
+   while( nLength-- )
+      hb_gt_xPutch( uiRow, uiCol++, byAttr, byChar );
 }
 
 USHORT hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
@@ -680,9 +683,8 @@ USHORT hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
    hb_gt_DispEnd();
 
    if( s_under_xterm )
-   {
       s_alternate_char_set = 0;   /* restore default setting */
-   }
+
    return 0;
 }
 
@@ -694,11 +696,12 @@ USHORT hb_gt_BoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
       pbyFrame = s_xTermBox;
       s_alternate_char_set = A_ALTCHARSET;
    }
+
    hb_gt_Box( uiTop, uiLeft, uiBottom, uiRight, pbyFrame, byAttr );
+
    if( s_under_xterm )
-   {
       s_alternate_char_set = 0;   /* restore default setting */
-   }
+
    return 0;
 }
 
@@ -710,11 +713,12 @@ USHORT hb_gt_BoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
       pbyFrame = s_xTermBox;
       s_alternate_char_set = A_ALTCHARSET;
    }
+
    hb_gt_Box( uiTop, uiLeft, uiBottom, uiRight, pbyFrame, byAttr );
+
    if( s_under_xterm )
-   {
       s_alternate_char_set = 0;   /* restore default setting */
-   }
+
    return 0;
 }
 
@@ -729,6 +733,7 @@ USHORT hb_gt_HorizLine( USHORT uiRow, USHORT uiLeft, USHORT uiRight, BYTE byChar
    else
       mvhline( uiRow, uiRight, byChar | A_ALTCHARSET | s_attribmap_table[ byAttr ],
                uiLeft - uiRight + 1 );
+
    return 0;
 }
 
@@ -746,6 +751,7 @@ USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar,
 
    if( s_under_xterm )
       byChar = ACS_VLINE;
+
    mvvline( uRow, uiCol, byChar | A_ALTCHARSET | s_attribmap_table[ byAttr ],
             uiBottom - uRow + 1 );
 

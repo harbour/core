@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * Harbour Project source code:
  * Video subsystem based on Slang screen library.
  *

@@ -219,11 +219,13 @@ BOOL hb_mouse_IsButtonPressed( int iButton )
       USHORT uKey;
       USHORT i;
       
-      uKey = (iButton == 1) ? INKEY_LDOWN : INKEY_RDOWN;
+      uKey = ( iButton == 1 ) ? INKEY_LDOWN : INKEY_RDOWN;
       i = 0;
       while( i <= s_last_event )
+      {
          if( s_event_queue[ i++ ].key & uKey )
             return TRUE;
+      }
    }
    return FALSE;
 }
@@ -245,10 +247,10 @@ void hb_mouse_GetBounds( int * piTop, int * piLeft, int * piBottom, int * piRigh
 {
    int r, c;
 
-   getmaxyx(stdscr, r, c);
+   getmaxyx( stdscr, r, c );
 
    *piTop = *piLeft = 0;
    *piBottom = r;
-   *piRight  = c;
+   *piRight = c;
 }
 

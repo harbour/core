@@ -1,3 +1,18 @@
+2000-06-18 18:38 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * source/lang/msgde.c
+     * Updated, Thanks to Torsten.
+
+   * source/rtl/gtcrs/*
+     * Some formatting
+
+   * source/rtl/gtsln/*
+     * Some formatting, variables renamed.
+     ! Added CVS IDs
+
+   WARNING! Please try to compile the SLANG and NCURSES GTs and report any 
+   errors, since I could not test them.
+
 2000-06-18 20:16 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * source/pp/ppcore.c
         *fixed some problems with [ ... ] in pp, reported by Brian Hays
