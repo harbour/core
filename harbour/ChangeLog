@@ -1,3 +1,7 @@
+20000331-10:45 EST Paul Tucker <ptucker@sympatico.ca>
+   * contrib/rdd_ads/ads1.c
+     * updated initSymbols handling
+
 20000331-09:50 EST Paul Tucker <ptucker@sympatico.ca>
    * source/rdd/dbf1.c
    * source/rdd/sdf1.c
