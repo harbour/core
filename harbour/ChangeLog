@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-12-18 14:00 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/set.c
+    ! In the set_string function, when then item parameter is NIL use a
+      zero-length string (bug fix for SET PATH TO and SET DEFAULT TO).
 
 2002-12-17 10:50 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * contrib/rdd_ads/ads.ch
