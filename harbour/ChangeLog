@@ -1,3 +1,7 @@
+2001-10-24 09:50 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+  ! source/rdd/dbfntx1.c
+     ! bug fixed in ntxZap
+
 2001-10-23 22:03 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      * add missing $(OBJ_DIR)\hbmutils.c per <rhaley@onebox.com>

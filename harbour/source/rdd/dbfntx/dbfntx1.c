@@ -2382,6 +2382,9 @@ static ERRCODE ntxZap( NTXAREAP pArea )
       lpIndexTmp = pArea->lpCurIndex;
       while( lpIndex )
       {
+         if( lpIndex->CompoundTag->RootPage > 0 )
+            hb_ntxPageFree( lpIndex->CompoundTag->RootPage,TRUE );
+         lpIndex->CompoundTag->RootPage = NULL;
          lpIndex->CompoundTag->RootBlock = NTXBLOCKSIZE;
          hb_ntxHeaderSave( lpIndex );
 
