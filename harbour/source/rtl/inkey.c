@@ -1145,10 +1145,14 @@ HARBOUR HB___KEYPUT( void )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
+ *      This function is a Harbour Specific
+ *  $PLATFORMS$
+ *      This function is Windows Specific
  *  $SEEALSO$
  *      MROW()
  *  $END$
  */
+
 
 HARBOUR HB_MCOL( void )
 {
@@ -1186,6 +1190,9 @@ HARBOUR HB_MCOL( void )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
+ *      This function is a Harbour Specific
+ *  $PLATFORMS$
+ *      This function is Windows Specific
  *  $SEEALSO$
  *      MCOL()
  *  $END$
