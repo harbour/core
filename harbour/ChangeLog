@@ -1,3 +1,8 @@
+19990623-23:25 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/console.c
+    - The non-GT API version of DISPBOX() was creating boxes that
+      were one column and one row to small.
+
 19990623-23:00 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/copyfile.c
     - Renamed _fsCopy to hb_fsCopy(), in case we decide to make

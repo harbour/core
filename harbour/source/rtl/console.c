@@ -1,4 +1,3 @@
-
 /*
  * $Id$
  */
@@ -717,20 +716,20 @@ HARBOUR HB_DISPBOX (void)
       /* Draw the box */
       hb_setpos( top, left );
       printf( "%c", Borders[ 0 ] );       /* Upper left corner */
-      for( size = left + 1; size < right - 1; size++ )
+      for( size = left + 1; size < right; size++ )
          printf( "%c", Borders[ 1 ] );    /* Top line */
       printf( "%c", Borders[ 2 ] );       /* Upper right corner */
       hb_setpos( top + 1, left );
-      for( count = top + 1; count < bottom - 1; count++ )
+      for( count = top + 1; count < bottom; count++ )
       {
          printf( "%c", Borders[ 3 ] );    /* Left side */
-         for( size = left + 1; size < right - 1; size++ )
+         for( size = left + 1; size < right; size++ )
             printf( "%c", Borders[ 8 ] ); /* Fill */
          printf( "%c", Borders[ 7 ] );    /* Right side */
          hb_setpos( count + 1, left );
       }
       printf( "%c", Borders[ 6 ] );       /* Bottom left corner */
-      for( size = left + 1; size < right - 1; size++ )
+      for( size = left + 1; size < right; size++ )
          printf( "%c", Borders[ 5 ] );    /* Bottom line */
       printf( "%c", Borders[ 4 ] );       /* Bottom right corner */
       dev_col += (right - left);
