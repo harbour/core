@@ -161,6 +161,9 @@
       #if defined(__MINGW32__) && !defined(_LK_UNLCK)
          #define _LK_UNLCK _LK_UNLOCK
       #endif
+      #if defined(_MSC_VER) && !defined(HAVE_POSIX_IO)
+         #define HAVE_POSIX_IO
+      #endif
    #else
       #define ftruncate chsize
       #if !defined(HAVE_POSIX_IO)
@@ -235,7 +238,7 @@ static USHORT s_uiErrorLast = 0;
    #define HB_FS_SOPEN
 #endif
 
-#if ( defined(HAVE_POSIX_IO) && ( defined(HB_OS_OS2) || defined(HB_OS_DOS) || defined(_Windows) || defined(_WIN32) ) && ! defined(__CYGWIN__) ) || defined(__MINGW32__)
+#if ( defined(HAVE_POSIX_IO) && ( defined(HB_OS_OS2) || defined(HB_OS_DOS) || defined(HB_OS_WIN_32) ) && ! defined(__CYGWIN__) ) || defined(__MINGW32__)
 /* These platforms and/or compilers have common drive letter support */
    #define HB_FS_DRIVE_LETTER
 #endif
@@ -547,7 +550,7 @@ FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
          dwFlags |= GENERIC_READ;
          break;
       }
-      
+
 
       /* shared flags */
       switch (uiFlags & ( FO_DENYREAD | FO_DENYWRITE | FO_EXCLUSIVE | FO_DENYNONE ) )
@@ -567,7 +570,7 @@ FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
             dwShare = 0;
             break;
 
-      }       
+      }
       errno = 0;
 
       hFile = ( HANDLE ) CreateFile( ( char * ) pFilename, dwFlags,
@@ -764,7 +767,7 @@ void    hb_fsClose( FHANDLE hFileHandle )
             errno=WintoDosError(GetLastError());
          #else
             __NTerror();
-         #endif        
+         #endif
 
    #else
       close( hFileHandle );
@@ -837,14 +840,14 @@ USHORT  hb_fsRead( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 
    #if defined(X__WIN32__)
       {
-      
+
          DWORD dwRead ;
-         BOOL bError;     
+         BOOL bError;
          bError=ReadFile( DostoWinHandle(hFileHandle), pBuff, (DWORD)uiCount, &dwRead, NULL );
          if (!bError)
             errno = GetLastError();
          uiRead = ( USHORT ) dwRead;
-    
+
       }
    #else
       uiRead = read( hFileHandle, pBuff, uiCount );
@@ -1000,7 +1003,7 @@ ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
       bError=WriteFile( DostoWinHandle( hFileHandle), pBuff, ulCount, &ulWritten, NULL );
       if (!bError)
          errno = GetLastError();
-      
+
       }
    #else
       if( ulCount )
