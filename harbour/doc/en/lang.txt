@@ -45,6 +45,7 @@
  *      French                850            FR
  *      Galician              850            GL
  *      German                850            DE
+ *      German ANSI           ANSI           DEWIN
  *      Hebrew                862            HE862
  *      Hebrew                Windows-1255   HEWIN
  *      Hungarian             852            HU852
@@ -57,6 +58,7 @@
  *      Polish                852            PL852
  *      Polish                ISO-8859-1     PLISO
  *      Polish                Mozowia        PLMAZ
+ *      Polish                Windows-1250   PLWIN
  *      Portuguese            850            PT
  *      Romanian              852            RO
  *      Russian               866            RU866
@@ -64,7 +66,11 @@
  *      Russian               Windows-1251   RUWIN
  *      Serbian               852            SR852
  *      Serbian               ISO-8859-2     SRISO
+ *      Slovenian             852            SL852
+ *      Slovenian             ISO-8859-2     SLISO
+ *      Slovenian             Windows-1250   SLWIN
  *      Spanish               850            ES
+ *      Spanish ANSI          ANSI           ESWIN
  *      </table>
  *  $RETURNS$
  *      <cOldLang>   The old language indentifier

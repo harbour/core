@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-06-17 09:08 UTC+0300 Chen Kedem <niki@actcom.co.il>
+  * doc/en/lang.txt
+    + Added the following to HB_LANGSELECT() list of supported ID's:
+      German ANSI, Spanish ANSI, Polish Windows-1250, Slovenian 852,
+      Slovenian ISO-8859-2, Slovenian Windows-1250
+
 2003-06-16 21:16 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rtl/cdpapi.c
     ! Bug fixed in hb_cdpTranslate() and hb_cdpnTranslate()
