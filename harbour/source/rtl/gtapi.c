@@ -6,6 +6,8 @@
  *  GTAPI.C: Generic Terminal for Harbour
  *
  * Latest mods:
+ * 1.65   19990830   ptucker   Handle nesting of gtPre/PostExt - corrected
+ *                             s_uiPreCount handling in gtDispEnd
  * 1.63   19990811   ptucker   Implimented gtPre and PostExt to be used when
  *                             writing to screen via printf.
  * 1.58   19990811   ptucker   changes to gtWriteCon and gtWrite to improve
@@ -67,6 +69,7 @@ static USHORT s_uiCurrentRow = 0;
 static USHORT s_uiCurrentCol = 0;
 static USHORT s_uiDispCount  = 0;
 static USHORT s_uiPreCount   = 0;
+static USHORT s_uiPreCNest   = 0;
 static USHORT s_uiColorIndex = 0;
 static USHORT s_uiMaxCol;
 static USHORT s_uiMaxRow;
@@ -236,6 +239,7 @@ int hb_gtDispBegin(void)
     }
     else
        ++s_uiPreCount;
+
     return(0);
 }
 
@@ -253,7 +257,8 @@ int hb_gtDispEnd(void)
        --s_uiDispCount;
     }
     else
-       ++s_uiPreCount;
+       --s_uiPreCount;
+
     return(0);
 }
 
@@ -261,18 +266,25 @@ int hb_gtPreExt(void)
 {
 /* ptucker */
    /* an external (printf...) write is about to take place */
-   USHORT uidc;
 
-   if( s_uiPreCount != 0 )
+   if( s_uiPreCNest == 0 )
    {
-      uidc = s_uiPreCount = s_uiDispCount;
-
-      while( uidc-- )
+      if( s_uiPreCount == 0 )
       {
-        hb_gt_DispEnd();
-        --s_uiDispCount;
+         USHORT uidc;
+
+         uidc = s_uiPreCount = s_uiDispCount;
+
+         while( uidc-- )
+         {
+            hb_gt_DispEnd();
+            --s_uiDispCount;
+         }
       }
+      s_uiPreCNest = 1;
    }
+   else
+      ++s_uiPreCNest;
 
    return 0;
 
@@ -281,13 +293,21 @@ int hb_gtPreExt(void)
 int hb_gtPostExt(void)
 {
 /* ptucker */
-   USHORT uidc = s_uiPreCount;
 
-   while( uidc-- )
+   if( s_uiPreCNest == 1 )
    {
-     ++s_uiDispCount;
-     hb_gt_DispBegin();
+      USHORT uidc = s_uiPreCount;
+
+      while( uidc-- )
+      {
+         ++s_uiDispCount;
+         hb_gt_DispBegin();
+      }
+      s_uiPreCount = 0;
+      s_uiPreCNest = 0;
    }
+   else
+      --s_uiPreCNest;
 
    return 0;
 }

@@ -1,3 +1,8 @@
+19990830-12:49 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/gtapi.c
+     * Handle nesting of gtPre/PostExt 
+     * corrected s_uiPreCount handling in gtDispEnd
+
 19990830-14:25 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * tests/working/rtl_test.prg
