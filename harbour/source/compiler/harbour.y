@@ -957,8 +957,8 @@ VarDef     : IDENTIFIER                                   { cVarType = ' '; AddV
            | IDENTIFIER AS_ARRAY     INASSIGN Expression  { cVarType = 'A'; AddVar( $1 ); PopId( $1 ); }
            | IDENTIFIER AS_BLOCK     INASSIGN Expression  { cVarType = 'B'; AddVar( $1 ); PopId( $1 ); }
            | IDENTIFIER AS_OBJECT    INASSIGN Expression  { cVarType = 'O'; AddVar( $1 ); PopId( $1 ); }
-           | IDENTIFIER '[' ExpList ']'                   { cVarType = ' '; AddVar( $1 ); DimArray( $3 ); }
-           | IDENTIFIER '[' ExpList ']' AS_ARRAY          { cVarType = 'A'; AddVar( $1 ); DimArray( $3 ); }
+           | IDENTIFIER '[' ExpList ']'                   { cVarType = ' '; AddVar( $1 ); DimArray( $3 ); PopId( $1 ); }
+           | IDENTIFIER '[' ExpList ']' AS_ARRAY          { cVarType = 'A'; AddVar( $1 ); DimArray( $3 ); PopId( $1 ); }
            ;
 
 FieldsDef  : FIELD { iVarScope =VS_FIELD; } FieldList Crlf
