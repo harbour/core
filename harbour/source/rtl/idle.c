@@ -51,6 +51,7 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
+#include "hbset.h"
 #include "hbvm.h"
 #include "error.ch"
 #if defined(HB_OS_UNIX)
@@ -71,11 +72,6 @@ static USHORT s_uiIdleMaxTask = 0;
 
 /* flag to indicate GarbageCollection should be done in idle state. */
 BOOL hb_vm_bCollectGarbage = TRUE;
-
-/* Allow repeated processing of Idle Tasks by default */
-BOOL hb_vm_bIdleRepeat = TRUE;
-
-int hb_inkeyNext( void );      /* Return the next key without extracting it */
 
 static void hb_releaseCPU( void )
 {
@@ -151,7 +147,7 @@ void hb_idleState( void )
          return;
       }
 
-      if( hb_vm_bIdleRepeat && s_uiIdleTask == s_uiIdleMaxTask )
+      if( hb_set.HB_SET_IDLEREPEAT && s_uiIdleTask == s_uiIdleMaxTask )
       {
          s_uiIdleTask = 0;
          hb_vm_bCollectGarbage = TRUE;

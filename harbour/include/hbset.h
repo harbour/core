@@ -108,60 +108,65 @@ typedef enum
    /* Harbour SET extensions start at 100 */
    HB_SET_LANGUAGE      = 100,
    HB_SET_IDLEREPEAT    = 101
+
 } HB_set_enum;
 
 typedef struct
 {
-   BOOL    HB_SET_EXACT;
-   BOOL    HB_SET_FIXED;
+   /* Lower case members are indirectly related to a SET */
+   FHANDLE hb_set_althan;
    BOOL    hb_set_century;
-   int     HB_SET_DECIMALS;
-   char *  HB_SET_DATEFORMAT;
-   int     HB_SET_EPOCH;
-   char *  HB_SET_PATH;
-   char *  HB_SET_DEFAULT;
-   BOOL    HB_SET_EXCLUSIVE;
-   BOOL    HB_SET_SOFTSEEK;
-   BOOL    HB_SET_UNIQUE;
-   BOOL    HB_SET_DELETED;
-   BOOL    HB_SET_CANCEL;
-   BOOL    HB_SET_DEBUG;
-   int     HB_SET_TYPEAHEAD;
-   char    HB_SET_COLOR[ CLR_STRLEN ];
-   BOOL    HB_SET_CONSOLE;
+   FHANDLE hb_set_extrahan;
+   FHANDLE hb_set_printhan;
+
+   /* Upper case members are directly related to a SET */
    BOOL    HB_SET_ALTERNATE;
    char *  HB_SET_ALTFILE;
-   FHANDLE hb_set_althan;
-   char *  HB_SET_DEVICE;
-   BOOL    HB_SET_EXTRA;
-   char *  HB_SET_EXTRAFILE;
-   FHANDLE hb_set_extrahan;
-   BOOL    HB_SET_PRINTER;
-   char *  HB_SET_PRINTFILE;
-   FHANDLE hb_set_printhan;
-   int     HB_SET_MARGIN;
-   BOOL    HB_SET_BELL;
-   BOOL    HB_SET_CONFIRM;
-   BOOL    HB_SET_ESCAPE;
-   BOOL    HB_SET_INSERT;
-   BOOL    HB_SET_EXIT;
-   BOOL    HB_SET_INTENSITY;
-   BOOL    HB_SET_SCOREBOARD;
-   char *  HB_SET_DELIMCHARS;
-   BOOL    HB_SET_DELIMITERS;
-   BOOL    HB_SET_WRAP;
-   int     HB_SET_MESSAGE;
-   BOOL    HB_SET_MCENTER;
-   BOOL    HB_SET_SCROLLBREAK;
-   HB_inkey_enum HB_SET_EVENTMASK;
-   int     HB_SET_MBLOCKSIZE;
-   char *  HB_SET_MFILEEXT;
-   BOOL    HB_SET_STRICTREAD;
-   BOOL    HB_SET_OPTIMIZE;
    BOOL    HB_SET_AUTOPEN;
    BOOL    HB_SET_AUTORDER;
    int     HB_SET_AUTOSHARE;
+   BOOL    HB_SET_BELL;
+   BOOL    HB_SET_CANCEL;
+   char    HB_SET_COLOR[ CLR_STRLEN ];
+   BOOL    HB_SET_CONFIRM;
+   BOOL    HB_SET_CONSOLE;
+   char *  HB_SET_DATEFORMAT;
+   BOOL    HB_SET_DEBUG;
+   int     HB_SET_DECIMALS;
+   char *  HB_SET_DEFAULT;
+   BOOL    HB_SET_DELETED;
+   char *  HB_SET_DELIMCHARS;
+   BOOL    HB_SET_DELIMITERS;
+   char *  HB_SET_DEVICE;
+   int     HB_SET_EPOCH;
+   BOOL    HB_SET_ESCAPE;
+   HB_inkey_enum  HB_SET_EVENTMASK;
+   BOOL    HB_SET_EXACT;
+   BOOL    HB_SET_EXCLUSIVE;
+   BOOL    HB_SET_EXIT;
+   BOOL    HB_SET_EXTRA;
+   char *  HB_SET_EXTRAFILE;
+   BOOL    HB_SET_FIXED;
+   BOOL    HB_SET_IDLEREPEAT;
+   BOOL    HB_SET_INSERT;
+   BOOL    HB_SET_INTENSITY;
+   char *  HB_SET_PATH;
+   int     HB_SET_MARGIN;
+   int     HB_SET_MBLOCKSIZE;
+   BOOL    HB_SET_MCENTER;
+   int     HB_SET_MESSAGE;
+   char *  HB_SET_MFILEEXT;
+   BOOL    HB_SET_OPTIMIZE;
+   BOOL    HB_SET_PRINTER;
+   char *  HB_SET_PRINTFILE;
+   BOOL    HB_SET_SCOREBOARD;
+   BOOL    HB_SET_SCROLLBREAK;
+   BOOL    HB_SET_SOFTSEEK;
+   BOOL    HB_SET_STRICTREAD;
+   int     HB_SET_TYPEAHEAD;
+   BOOL    HB_SET_UNIQUE;
    int     HB_SET_VIDEOMODE;
+   BOOL    HB_SET_WRAP;
 } HB_SET_STRUCT;
 
 extern HB_SET_STRUCT hb_set;

@@ -43,8 +43,6 @@
 #include "hbapilng.h"
 #include "hbset.h"
 
-extern hb_vm_bIdleRepeat;
-
 HB_SET_STRUCT hb_set;
 
 static BOOL set_logical( PHB_ITEM pItem )
@@ -620,8 +618,8 @@ HB_FUNC( SET )
          }
          break;
       case HB_SET_IDLEREPEAT :
-         hb_retl( hb_vm_bIdleRepeat );
-         if( args > 1 ) hb_vm_bIdleRepeat = set_logical( pArg2 );
+         hb_retl( hb_set.HB_SET_IDLEREPEAT );
+         if( args > 1 ) hb_set.HB_SET_IDLEREPEAT = set_logical( pArg2 );
          break;
       default                :
          /* Return NIL if called with invalid SET specifier */
@@ -668,6 +666,7 @@ void hb_setInitialize( void )
    hb_set.HB_SET_EXTRAFILE = NULL;
    hb_set.hb_set_extrahan = FS_ERROR;
    hb_set.HB_SET_FIXED = FALSE;
+   hb_set.HB_SET_IDLEREPEAT = TRUE;
    hb_set.HB_SET_INSERT = FALSE;
    hb_set.HB_SET_INTENSITY = TRUE;
    hb_set.HB_SET_MARGIN = 0;
