@@ -1,3 +1,9 @@
+2000-08-01 21:03 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * source/common/hbver.c
+     + Added CPP info to the build info page.
+     + Added 16bit vs 32bit to the Borland compiler info.
+
 20000801-19:28 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * source/common/hbver.c
      ! fixed sprintf() warnings for OS/2 and removed revision number since it is always 0.

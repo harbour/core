@@ -161,7 +161,7 @@ char * hb_verPlatform( void )
       if( rc == 0 )
          sprintf( pszPlatform, "OS/2 %ld.%02ld",
             aulQSV[ QSV_VERSION_MAJOR ] / 10,
-            aulQSV[ QSV_VERSION_MINOR ]);
+            aulQSV[ QSV_VERSION_MINOR ] );
       else
          sprintf( pszPlatform, "OS/2" );
    }
@@ -373,6 +373,20 @@ char * hb_verCompiler( void )
       strcat( pszCompiler, szSub );
    }
 
+#elif defined(__BORLANDC__)
+
+   {
+      switch( sizeof( int ) )
+      {
+      case 2:
+         strcat( pszCompiler, " (16 bit)" );
+         break;
+      case 4:
+         strcat( pszCompiler, " (32 bit)" );
+         break;
+      }
+   }
+
 #endif
 
    return pszCompiler;
@@ -512,6 +526,14 @@ void hb_verBuildInfo( void )
    hb_conOutErr( "Strict", 0 );
 #else
    hb_conOutErr( "Non strict", 0 );
+#endif
+   hb_conOutErr( hb_conNewLine(), 0 );
+
+   hb_conOutErr( "C++ mode: ", 0 );
+#if defined(__cplusplus)
+   hb_conOutErr( "On", 0 );
+#else
+   hb_conOutErr( "Off", 0 );
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
 
