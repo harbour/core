@@ -55,7 +55,7 @@ void hb_compGenJava( PHB_FNAME pFileName )
    PFUNCTION pFunc /*= hb_comp_functions.pFirst */;
    PCOMSYMBOL pSym = hb_comp_symbols.pFirst;
    USHORT w, wLen, wVar;
-   LONG lPCodePos;
+   ULONG lPCodePos;
    LONG lPad;
    LONG lSymbols;
    BOOL bEndProcReq;
@@ -447,7 +447,7 @@ static void hb_fputc( BYTE b, FILE * yyc )
 
 static void hb_fputs( char * szName, FILE * yyc )
 {
-   int nPos = 0;
+   unsigned int nPos = 0;
    while( nPos < strlen( szName ) )
       hb_fputc( szName[ nPos++ ], yyc );
 }

@@ -70,6 +70,12 @@ RDD_OBJS          = $(OBJ_DIR)\dbcmd.obj \
                     $(OBJ_DIR)\rddord.obj \
                     $(OBJ_DIR)\rddsys.obj
 
+TERMINAL_LIB      = $(LIB_DIR)\terminal.lib
+TERMINAL_LIB_OBJS = $(OBJ_DIR)\gtapi.obj \
+                    $(OBJ_DIR)\gtxxx.obj \
+                    $(OBJ_DIR)\mouseapi.obj \
+                    $(OBJ_DIR)\mousexxx.obj
+
 HARBOUR_LIB       = $(LIB_DIR)\harbour.lib
 HARBOUR_LIB_OBJS  = $(OBJ_DIR)\achoice.obj \
                     $(OBJ_DIR)\adir.obj \
@@ -208,11 +214,8 @@ MACRO_LIB_OBJS    = $(OBJ_DIR)\macroy.obj \
                     $(OBJ_DIR)\macrol.obj \
                     $(OBJ_DIR)\macro.obj
 
-TERMINAL_LIB      = $(LIB_DIR)\terminal.lib
-TERMINAL_LIB_OBJS = $(OBJ_DIR)\gtapi.obj \
-                    $(OBJ_DIR)\gtxxx.obj \
-                    $(OBJ_DIR)\mouseapi.obj \
-                    $(OBJ_DIR)\mousexxx.obj
+NULSYS_LIB        = $(LIB_DIR)\nulsys.lib
+NULSYS_LIB_OBJS   = $(OBJ_DIR)\nulsys.obj
 
 DBFNTX_LIB        = $(LIB_DIR)\dbfntx.lib
 DBFNTX_LIB_OBJS   = $(OBJ_DIR)\dbfntx0.obj \
@@ -231,26 +234,26 @@ DEBUG_LIB         = $(LIB_DIR)\debug.lib
 DEBUG_LIB_OBJS    = $(OBJ_DIR)\debugger.obj \
                     $(OBJ_DIR)\tbrwtext.obj
 
-REGRESS_EXE       = $(REGRESS_DIR)\rt_main.exe
-REGRESS_EXE_OBJS  = $(REGRESS_DIR)\rt_main.obj \
-                    $(REGRESS_DIR)\rt_hvm.obj \
-                    $(REGRESS_DIR)\rt_math.obj \
-                    $(REGRESS_DIR)\rt_date.obj \
-                    $(REGRESS_DIR)\rt_str.obj \
-                    $(REGRESS_DIR)\rt_trans.obj \
-                    $(REGRESS_DIR)\rt_array.obj \
-                    $(REGRESS_DIR)\rt_file.obj \
-                    $(REGRESS_DIR)\rt_misc.obj
+REGRESS_EXE       = $(BIN_DIR)\rt_main.exe
+REGRESS_EXE_OBJS  = $(OBJ_DIR)\rt_main.obj \
+                    $(OBJ_DIR)\rt_hvm.obj \
+                    $(OBJ_DIR)\rt_math.obj \
+                    $(OBJ_DIR)\rt_date.obj \
+                    $(OBJ_DIR)\rt_str.obj \
+                    $(OBJ_DIR)\rt_trans.obj \
+                    $(OBJ_DIR)\rt_array.obj \
+                    $(OBJ_DIR)\rt_file.obj \
+                    $(OBJ_DIR)\rt_misc.obj
 
-HBDOC_EXE         = $(HBDOC_DIR)\hbdoc.exe
-HBDOC_EXE_OBJS    = $(HBDOC_DIR)\hbdoc.obj \
-                    $(HBDOC_DIR)\genos2.obj \ 
-                    $(HBDOC_DIR)\gentrf.obj \
-                    $(HBDOC_DIR)\genng.obj  \
-                    $(HBDOC_DIR)\genhtm.obj \
-                    $(HBDOC_DIR)\genrtf.obj \
-                    $(HBDOC_DIR)\genhpc.obj \
-                    $(HBDOC_DIR)\genasc.obj 
+HBDOC_EXE         = $(BIN_DIR)\hbdoc.exe
+HBDOC_EXE_OBJS    = $(OBJ_DIR)\hbdoc.obj \
+                    $(OBJ_DIR)\genasc.obj \
+                    $(OBJ_DIR)\genhpc.obj \
+                    $(OBJ_DIR)\genhtm.obj \
+                    $(OBJ_DIR)\genng.obj \
+                    $(OBJ_DIR)\genos2.obj \
+                    $(OBJ_DIR)\genrtf.obj \
+                    $(OBJ_DIR)\gentrf.obj
 
 PROJECT: $(COMMON_LIB) \
          $(PP_LIB) \
@@ -261,6 +264,7 @@ PROJECT: $(COMMON_LIB) \
          $(TOOLS_LIB) \
          $(MACRO_LIB) \
          $(TERMINAL_LIB) \
+         $(NULSYS_LIB) \
          $(DBFNTX_LIB) \
          $(DBFCDX_LIB) \
          $(RUNNER_LIB) \
@@ -340,16 +344,16 @@ $(HARBOUR_EXE) : $(HARBOUR_EXE_OBJS)
 $(OBJ_DIR)\harbour.obj : $(COMPILER_DIR)\harbour.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
-$(COMPILER_DIR)\harboury.c : $(COMPILER_DIR)\harbour.y
+$(OBJ_DIR)\harboury.c : $(COMPILER_DIR)\harbour.y
    bison -d -v -y $** -o$@
 
-$(OBJ_DIR)\harboury.obj : $(COMPILER_DIR)\harboury.c
+$(OBJ_DIR)\harboury.obj : $(OBJ_DIR)\harboury.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
-$(COMPILER_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
+$(OBJ_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
    flex -i -8 -o$@ $**
 
-$(OBJ_DIR)\harbourl.obj : $(COMPILER_DIR)\harbourl.c
+$(OBJ_DIR)\harbourl.obj : $(OBJ_DIR)\harbourl.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\cmdcheck.obj : $(COMPILER_DIR)\cmdcheck.c
@@ -390,10 +394,11 @@ $(OBJ_DIR)\hbfunchk.obj : $(COMPILER_DIR)\hbfunchk.c
 #
 $(PP_EXE) : $(PP_LIB_OBJS) $(COMMON_LIB_OBJS)
 
+   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$(OBJ_DIR)\hbpp.obj $(PP_DIR)\stdalone\hbpp.c
    echo $(BCC_OPT) > temp.bld
    echo -e$(PP_EXE) >> temp.bld
    echo -I$(INCLUDE_DIR) >> temp.bld
-   echo $(PP_DIR)\stdalone\hbpp.c >> temp.bld
+   echo $(OBJ_DIR)\hbpp.obj >> temp.bld
    echo $(COMMON_LIB) $(PP_LIB) >> temp.bld
    bcc32 @temp.bld
    del temp.bld
@@ -403,24 +408,24 @@ $(PP_EXE) : $(PP_LIB_OBJS) $(COMMON_LIB_OBJS)
 #
 $(HARBOUR_LIB) : $(HARBOUR_LIB_OBJS)
 
-$(RTL_DIR)\achoice.c : $(RTL_DIR)\achoice.prg
+$(OBJ_DIR)\achoice.c : $(RTL_DIR)\achoice.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\achoice.obj : $(RTL_DIR)\achoice.c
+$(OBJ_DIR)\achoice.obj : $(OBJ_DIR)\achoice.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\adir.c : $(RTL_DIR)\adir.prg
+$(OBJ_DIR)\adir.c : $(RTL_DIR)\adir.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\adir.obj : $(RTL_DIR)\adir.c
+$(OBJ_DIR)\adir.obj : $(OBJ_DIR)\adir.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\alert.c : $(RTL_DIR)\alert.prg
+$(OBJ_DIR)\alert.c : $(RTL_DIR)\alert.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\alert.obj : $(RTL_DIR)\alert.c
+$(OBJ_DIR)\alert.obj : $(OBJ_DIR)\alert.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -428,10 +433,10 @@ $(OBJ_DIR)\arrays.obj : $(RTL_DIR)\arrays.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\asort.c : $(RTL_DIR)\asort.prg
+$(OBJ_DIR)\asort.c : $(RTL_DIR)\asort.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\asort.obj : $(RTL_DIR)\asort.c
+$(OBJ_DIR)\asort.obj : $(OBJ_DIR)\asort.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -443,17 +448,17 @@ $(OBJ_DIR)\break.obj : $(RTL_DIR)\break.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\browdb.c : $(RTL_DIR)\browdb.prg
+$(OBJ_DIR)\browdb.c : $(RTL_DIR)\browdb.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\browdb.obj : $(RTL_DIR)\browdb.c
+$(OBJ_DIR)\browdb.obj : $(OBJ_DIR)\browdb.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\browse.c : $(RTL_DIR)\browse.prg
+$(OBJ_DIR)\browse.c : $(RTL_DIR)\browse.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\browse.obj : $(RTL_DIR)\browse.c
+$(OBJ_DIR)\browse.obj : $(OBJ_DIR)\browse.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -493,10 +498,10 @@ $(OBJ_DIR)\dates.obj : $(RTL_DIR)\dates.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\dbedit.c : $(RTL_DIR)\dbedit.prg
+$(OBJ_DIR)\dbedit.c : $(RTL_DIR)\dbedit.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\dbedit.obj : $(RTL_DIR)\dbedit.c
+$(OBJ_DIR)\dbedit.obj : $(OBJ_DIR)\dbedit.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -508,10 +513,10 @@ $(OBJ_DIR)\descend.obj : $(RTL_DIR)\descend.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\devoutp.c : $(RTL_DIR)\devoutp.prg
+$(OBJ_DIR)\devoutp.c : $(RTL_DIR)\devoutp.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\devoutp.obj : $(RTL_DIR)\devoutp.c
+$(OBJ_DIR)\devoutp.obj : $(OBJ_DIR)\devoutp.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -519,10 +524,10 @@ $(OBJ_DIR)\dir.obj : $(RTL_DIR)\dir.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\dircmd.c : $(RTL_DIR)\dircmd.prg
+$(OBJ_DIR)\dircmd.c : $(RTL_DIR)\dircmd.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\dircmd.obj : $(RTL_DIR)\dircmd.c
+$(OBJ_DIR)\dircmd.obj : $(OBJ_DIR)\dircmd.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -530,10 +535,10 @@ $(OBJ_DIR)\do.obj : $(RTL_DIR)\do.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\dummy.c : $(RTL_DIR)\dummy.prg
+$(OBJ_DIR)\dummy.c : $(RTL_DIR)\dummy.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\dummy.obj : $(RTL_DIR)\dummy.c
+$(OBJ_DIR)\dummy.obj : $(OBJ_DIR)\dummy.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -553,10 +558,10 @@ $(OBJ_DIR)\errorapi.obj : $(RTL_DIR)\errorapi.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\errorsys.c : $(RTL_DIR)\errorsys.prg
+$(OBJ_DIR)\errorsys.c : $(RTL_DIR)\errorsys.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\errorsys.obj : $(RTL_DIR)\errorsys.c
+$(OBJ_DIR)\errorsys.obj : $(OBJ_DIR)\errorsys.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -564,10 +569,10 @@ $(OBJ_DIR)\extend.obj : $(RTL_DIR)\extend.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\fieldbl.c : $(RTL_DIR)\fieldbl.prg
+$(OBJ_DIR)\fieldbl.c : $(RTL_DIR)\fieldbl.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\fieldbl.obj : $(RTL_DIR)\fieldbl.c
+$(OBJ_DIR)\fieldbl.obj : $(OBJ_DIR)\fieldbl.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -579,10 +584,10 @@ $(OBJ_DIR)\fm.obj : $(RTL_DIR)\fm.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\harbinit.c : $(RTL_DIR)\harbinit.prg
+$(OBJ_DIR)\harbinit.c : $(RTL_DIR)\harbinit.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\harbinit.obj : $(RTL_DIR)\harbinit.c
+$(OBJ_DIR)\harbinit.obj : $(OBJ_DIR)\harbinit.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -606,10 +611,10 @@ $(OBJ_DIR)\inkey.obj : $(RTL_DIR)\inkey.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\input.c : $(RTL_DIR)\input.prg
+$(OBJ_DIR)\input.c : $(RTL_DIR)\input.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\input.obj : $(RTL_DIR)\input.c
+$(OBJ_DIR)\input.obj : $(OBJ_DIR)\input.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -653,10 +658,10 @@ $(OBJ_DIR)\memoline.obj : $(RTL_DIR)\memoline.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\memvarbl.c : $(RTL_DIR)\memvarbl.prg
+$(OBJ_DIR)\memvarbl.c : $(RTL_DIR)\memvarbl.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\memvarbl.obj : $(RTL_DIR)\memvarbl.c
+$(OBJ_DIR)\memvarbl.obj : $(OBJ_DIR)\memvarbl.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -664,10 +669,10 @@ $(OBJ_DIR)\memvars.obj : $(RTL_DIR)\memvars.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\menuto.c : $(RTL_DIR)\menuto.prg
+$(OBJ_DIR)\menuto.c : $(RTL_DIR)\menuto.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\menuto.obj : $(RTL_DIR)\menuto.c
+$(OBJ_DIR)\menuto.obj : $(OBJ_DIR)\menuto.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -695,10 +700,10 @@ $(OBJ_DIR)\net.obj : $(RTL_DIR)\net.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\objfunc.c : $(RTL_DIR)\objfunc.prg
+$(OBJ_DIR)\objfunc.c : $(RTL_DIR)\objfunc.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\objfunc.obj : $(RTL_DIR)\objfunc.c
+$(OBJ_DIR)\objfunc.obj : $(OBJ_DIR)\objfunc.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -726,17 +731,17 @@ $(OBJ_DIR)\pvalue.obj : $(RTL_DIR)\pvalue.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\readkey.c : $(RTL_DIR)\readkey.prg
+$(OBJ_DIR)\readkey.c : $(RTL_DIR)\readkey.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\readkey.obj : $(RTL_DIR)\readkey.c
+$(OBJ_DIR)\readkey.obj : $(OBJ_DIR)\readkey.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\readvar.c : $(RTL_DIR)\readvar.prg
+$(OBJ_DIR)\readvar.c : $(RTL_DIR)\readvar.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\readvar.obj : $(RTL_DIR)\readvar.c
+$(OBJ_DIR)\readvar.obj : $(OBJ_DIR)\readvar.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -752,24 +757,24 @@ $(OBJ_DIR)\setcolor.obj : $(RTL_DIR)\setcolor.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\setfunc.c : $(RTL_DIR)\setfunc.prg
+$(OBJ_DIR)\setfunc.c : $(RTL_DIR)\setfunc.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\setfunc.obj : $(RTL_DIR)\setfunc.c
+$(OBJ_DIR)\setfunc.obj : $(OBJ_DIR)\setfunc.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\setkey.c : $(RTL_DIR)\setkey.prg
+$(OBJ_DIR)\setkey.c : $(RTL_DIR)\setkey.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\setkey.obj : $(RTL_DIR)\setkey.c
+$(OBJ_DIR)\setkey.obj : $(OBJ_DIR)\setkey.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\setta.c : $(RTL_DIR)\setta.prg
+$(OBJ_DIR)\setta.c : $(RTL_DIR)\setta.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\setta.obj : $(RTL_DIR)\setta.c
+$(OBJ_DIR)\setta.obj : $(OBJ_DIR)\setta.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -785,52 +790,52 @@ $(OBJ_DIR)\symbols.obj : $(VM_DIR)\symbols.asm
    tasm32 $**, $@
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\tbcolumn.c : $(RTL_DIR)\tbcolumn.prg
+$(OBJ_DIR)\tbcolumn.c : $(RTL_DIR)\tbcolumn.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\tbcolumn.obj : $(RTL_DIR)\tbcolumn.c
+$(OBJ_DIR)\tbcolumn.obj : $(OBJ_DIR)\tbcolumn.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\tbrowse.c : $(RTL_DIR)\tbrowse.prg
+$(OBJ_DIR)\tbrowse.c : $(RTL_DIR)\tbrowse.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\tbrowse.obj : $(RTL_DIR)\tbrowse.c
+$(OBJ_DIR)\tbrowse.obj : $(OBJ_DIR)\tbrowse.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\tclass.c : $(RTL_DIR)\tclass.prg
+$(OBJ_DIR)\tclass.c : $(RTL_DIR)\tclass.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\tclass.obj : $(RTL_DIR)\tclass.c
+$(OBJ_DIR)\tclass.obj : $(OBJ_DIR)\tclass.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\terror.c : $(RTL_DIR)\terror.prg
+$(OBJ_DIR)\terror.c : $(RTL_DIR)\terror.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\terror.obj : $(RTL_DIR)\terror.c
+$(OBJ_DIR)\terror.obj : $(OBJ_DIR)\terror.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\text.c : $(RTL_DIR)\text.prg
+$(OBJ_DIR)\text.c : $(RTL_DIR)\text.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\text.obj : $(RTL_DIR)\text.c
+$(OBJ_DIR)\text.obj : $(OBJ_DIR)\text.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\tget.c : $(RTL_DIR)\tget.prg
+$(OBJ_DIR)\tget.c : $(RTL_DIR)\tget.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\tget.obj : $(RTL_DIR)\tget.c
+$(OBJ_DIR)\tget.obj : $(OBJ_DIR)\tget.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\tgetlist.c : $(RTL_DIR)\tgetlist.prg
+$(OBJ_DIR)\tgetlist.c : $(RTL_DIR)\tgetlist.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\tgetlist.obj : $(RTL_DIR)\tgetlist.c
+$(OBJ_DIR)\tgetlist.obj : $(OBJ_DIR)\tgetlist.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -850,10 +855,10 @@ $(OBJ_DIR)\valtype.obj : $(RTL_DIR)\valtype.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\wait.c : $(RTL_DIR)\wait.prg
+$(OBJ_DIR)\wait.c : $(RTL_DIR)\wait.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\wait.obj : $(RTL_DIR)\wait.c
+$(OBJ_DIR)\wait.obj : $(OBJ_DIR)\wait.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -865,10 +870,10 @@ $(OBJ_DIR)\xhelp.obj : $(RTL_DIR)\xhelp.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RTL_DIR)\xsavescr.c : $(RTL_DIR)\xsavescr.prg
+$(OBJ_DIR)\xsavescr.c : $(RTL_DIR)\xsavescr.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\xsavescr.obj : $(RTL_DIR)\xsavescr.c
+$(OBJ_DIR)\xsavescr.obj : $(OBJ_DIR)\xsavescr.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -876,10 +881,10 @@ $(OBJ_DIR)\dbcmd.obj : $(RDD_DIR)\dbcmd.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RDD_DIR)\dbf0.c : $(RDD_DIR)\dbf0.prg
+$(OBJ_DIR)\dbf0.c : $(RDD_DIR)\dbf0.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\dbf0.obj : $(RDD_DIR)\dbf0.c
+$(OBJ_DIR)\dbf0.obj : $(OBJ_DIR)\dbf0.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -891,17 +896,17 @@ $(OBJ_DIR)\dbnubs.obj : $(RDD_DIR)\dbnubs.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RDD_DIR)\dbstrux.c : $(RDD_DIR)\dbstrux.prg
+$(OBJ_DIR)\dbstrux.c : $(RDD_DIR)\dbstrux.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\dbstrux.obj : $(RDD_DIR)\dbstrux.c
+$(OBJ_DIR)\dbstrux.obj : $(OBJ_DIR)\dbstrux.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RDD_DIR)\sdf0.c : $(RDD_DIR)\sdf0.prg
+$(OBJ_DIR)\sdf0.c : $(RDD_DIR)\sdf0.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\sdf0.obj : $(RDD_DIR)\sdf0.c
+$(OBJ_DIR)\sdf0.obj : $(OBJ_DIR)\sdf0.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -909,10 +914,10 @@ $(OBJ_DIR)\sdf1.obj : $(RDD_DIR)\sdf1.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RDD_DIR)\delim0.c : $(RDD_DIR)\delim0.prg
+$(OBJ_DIR)\delim0.c : $(RDD_DIR)\delim0.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\delim0.obj : $(RDD_DIR)\delim0.c
+$(OBJ_DIR)\delim0.obj : $(OBJ_DIR)\delim0.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -920,17 +925,17 @@ $(OBJ_DIR)\delim1.obj : $(RDD_DIR)\delim1.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RDD_DIR)\rddord.c : $(RDD_DIR)\rddord.prg
+$(OBJ_DIR)\rddord.c : $(RDD_DIR)\rddord.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\rddord.obj : $(RDD_DIR)\rddord.c
+$(OBJ_DIR)\rddord.obj : $(OBJ_DIR)\rddord.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(RDD_DIR)\rddsys.c : $(RDD_DIR)\rddsys.prg
+$(OBJ_DIR)\rddsys.c : $(RDD_DIR)\rddsys.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\rddsys.obj : $(RDD_DIR)\rddsys.c
+$(OBJ_DIR)\rddsys.obj : $(OBJ_DIR)\rddsys.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -983,10 +988,10 @@ $(OBJ_DIR)\datesx.obj : $(TOOLS_DIR)\datesx.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
-$(TOOLS_DIR)\fileread.c : $(TOOLS_DIR)\fileread.prg
+$(OBJ_DIR)\fileread.c : $(TOOLS_DIR)\fileread.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\fileread.obj : $(TOOLS_DIR)\fileread.c
+$(OBJ_DIR)\fileread.obj : $(OBJ_DIR)\fileread.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
@@ -994,10 +999,10 @@ $(OBJ_DIR)\hb_f.obj : $(TOOLS_DIR)\hb_f.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
-$(TOOLS_DIR)\html.c : $(TOOLS_DIR)\html.prg
+$(OBJ_DIR)\html.c : $(TOOLS_DIR)\html.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\html.obj : $(TOOLS_DIR)\html.c
+$(OBJ_DIR)\html.obj : $(OBJ_DIR)\html.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
@@ -1009,45 +1014,45 @@ $(OBJ_DIR)\mathx.obj : $(TOOLS_DIR)\mathx.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
-$(TOOLS_DIR)\nconvert.c : $(TOOLS_DIR)\nconvert.prg
+$(OBJ_DIR)\nconvert.c : $(TOOLS_DIR)\nconvert.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\nconvert.obj : $(TOOLS_DIR)\nconvert.c
+$(OBJ_DIR)\nconvert.obj : $(OBJ_DIR)\nconvert.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
-$(TOOLS_DIR)\ng.c : $(TOOLS_DIR)\ng.prg
+$(OBJ_DIR)\ng.c : $(TOOLS_DIR)\ng.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\ng.obj : $(TOOLS_DIR)\ng.c
+$(OBJ_DIR)\ng.obj : $(OBJ_DIR)\ng.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
-$(TOOLS_DIR)\numtxten.c : $(TOOLS_DIR)\numtxten.prg
+$(OBJ_DIR)\numtxten.c : $(TOOLS_DIR)\numtxten.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\numtxten.obj : $(TOOLS_DIR)\numtxten.c
+$(OBJ_DIR)\numtxten.obj : $(OBJ_DIR)\numtxten.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
-$(TOOLS_DIR)\numtxthu.c : $(TOOLS_DIR)\numtxthu.prg
+$(OBJ_DIR)\numtxthu.c : $(TOOLS_DIR)\numtxthu.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\numtxthu.obj : $(TOOLS_DIR)\numtxthu.c
+$(OBJ_DIR)\numtxthu.obj : $(OBJ_DIR)\numtxthu.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
-$(TOOLS_DIR)\os2.c : $(TOOLS_DIR)\os2.prg
+$(OBJ_DIR)\os2.c : $(TOOLS_DIR)\os2.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\os2.obj : $(TOOLS_DIR)\os2.c
+$(OBJ_DIR)\os2.obj : $(OBJ_DIR)\os2.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
-$(TOOLS_DIR)\rtf.c : $(TOOLS_DIR)\rtf.prg
+$(OBJ_DIR)\rtf.c : $(TOOLS_DIR)\rtf.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\rtf.obj : $(TOOLS_DIR)\rtf.c
+$(OBJ_DIR)\rtf.obj : $(OBJ_DIR)\rtf.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
@@ -1075,10 +1080,10 @@ $(OBJ_DIR)\strfmt.obj : $(TOOLS_DIR)\strfmt.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
-$(TOOLS_DIR)\stringp.c : $(TOOLS_DIR)\stringp.prg
+$(OBJ_DIR)\stringp.c : $(TOOLS_DIR)\stringp.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\stringp.obj : $(TOOLS_DIR)\stringp.c
+$(OBJ_DIR)\stringp.obj : $(OBJ_DIR)\stringp.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
@@ -1098,10 +1103,10 @@ $(OBJ_DIR)\strright.obj : $(TOOLS_DIR)\strright.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
-$(TOOLS_DIR)\troff.c : $(TOOLS_DIR)\troff.prg
+$(OBJ_DIR)\troff.c : $(TOOLS_DIR)\troff.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\troff.obj : $(TOOLS_DIR)\troff.c
+$(OBJ_DIR)\troff.obj : $(OBJ_DIR)\troff.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
@@ -1110,18 +1115,18 @@ $(OBJ_DIR)\troff.obj : $(TOOLS_DIR)\troff.c
 #
 $(MACRO_LIB) : $(MACRO_LIB_OBJS)
 
-$(MACRO_DIR)\macroy.c : $(MACRO_DIR)\macro.y
+$(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
    bison -d -v -y $** -o$@
 
-$(OBJ_DIR)\macroy.obj : $(MACRO_DIR)\macroy.c
+$(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(MACRO_LIB) -+$@,,
 
-$(MACRO_DIR)\macrol.c : $(MACRO_DIR)\macro.l
+$(OBJ_DIR)\macrol.c : $(MACRO_DIR)\macro.l
    flex -i -8 -o$@ $**
 
-$(OBJ_DIR)\macrol.obj : $(MACRO_DIR)\macrol.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR);$(MACRO_DIR) -o$@ $**
+$(OBJ_DIR)\macrol.obj : $(OBJ_DIR)\macrol.c
+   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR);$(OBJ_DIR) -o$@ $**
    tlib $(MACRO_LIB) -+$@,,
 
 $(OBJ_DIR)\macro.obj : $(MACRO_DIR)\macro.c
@@ -1150,14 +1155,26 @@ $(OBJ_DIR)\mousexxx.obj : $(RTL_DIR)\mousexxx.c
    tlib $(TERMINAL_LIB) -+$@,,
 
 #
+# nulsys.lib
+#
+$(NULSYS_LIB) : $(NULSYS_LIB_OBJS)
+
+$(OBJ_DIR)\nulsys.c : $(RDD_DIR)\nulsys\nulsys.prg
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+
+$(OBJ_DIR)\nulsys.obj : $(OBJ_DIR)\nulsys.c
+   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   tlib $(DBFNTX_LIB) -+$@,,
+
+#
 # dbfntx.lib
 #
 $(DBFNTX_LIB) : $(DBFNTX_LIB_OBJS)
 
-$(RDD_DIR)\dbfntx\dbfntx0.c : $(RDD_DIR)\dbfntx\dbfntx0.prg
+$(OBJ_DIR)\dbfntx0.c : $(RDD_DIR)\dbfntx\dbfntx0.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\dbfntx0.obj : $(RDD_DIR)\dbfntx\dbfntx0.c
+$(OBJ_DIR)\dbfntx0.obj : $(OBJ_DIR)\dbfntx0.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(DBFNTX_LIB) -+$@,,
 
@@ -1170,10 +1187,10 @@ $(OBJ_DIR)\dbfntx1.obj : $(RDD_DIR)\dbfntx\dbfntx1.c
 #
 $(DBFCDX_LIB) : $(DBFCDX_LIB_OBJS)
 
-$(RDD_DIR)\dbfcdx\dbfcdx0.c : $(RDD_DIR)\dbfcdx\dbfcdx0.prg
+$(OBJ_DIR)\dbfcdx0.c : $(RDD_DIR)\dbfcdx\dbfcdx0.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\dbfcdx0.obj : $(RDD_DIR)\dbfcdx\dbfcdx0.c
+$(OBJ_DIR)\dbfcdx0.obj : $(OBJ_DIR)\dbfcdx0.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(DBFCDX_LIB) -+$@,,
 
@@ -1196,13 +1213,16 @@ $(OBJ_DIR)\runlib.obj : $(RUNNER_DIR)\runlib.c
 $(RUNNER_EXE) : $(RUNNER_DIR)\stdalone\external.prg \
                 $(RUNNER_DIR)\stdalone\hbrun.prg
 
-   $(HARBOUR_EXE) -i$(INCLUDE_DIR) -n -q -o$(RUNNER_DIR)\stdalone\ $(RUNNER_DIR)\stdalone\external.prg
-   $(HARBOUR_EXE) -i$(INCLUDE_DIR) -i$(RUNNER_DIR)\stdalone -n -q -o$(RUNNER_DIR)\stdalone\ $(RUNNER_DIR)\stdalone\hbrun.prg
+   $(HARBOUR_EXE) -i$(INCLUDE_DIR) -n -q -o$(OBJ_DIR)\ $(RUNNER_DIR)\stdalone\external.prg
+   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$(OBJ_DIR)\external.obj $(OBJ_DIR)\external.c
+   $(HARBOUR_EXE) -i$(INCLUDE_DIR) -i$(RUNNER_DIR)\stdalone -n -q -o$(OBJ_DIR)\ $(RUNNER_DIR)\stdalone\hbrun.prg
+   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$(OBJ_DIR)\hbrun.obj $(OBJ_DIR)\hbrun.c
+
    echo $(BCC_OPT) > temp.bld
    echo -e$(RUNNER_EXE) >> temp.bld
    echo -I$(INCLUDE_DIR) >> temp.bld
-   echo $(RUNNER_DIR)\stdalone\hbrun.c >> temp.bld
-   echo $(RUNNER_DIR)\stdalone\external.c >> temp.bld
+   echo $(OBJ_DIR)\hbrun.obj >> temp.bld
+   echo $(OBJ_DIR)\external.obj >> temp.bld
    echo $(HARBOUR_LIB) >> temp.bld
    echo $(PP_LIB) >> temp.bld
    echo $(COMMON_LIB) >> temp.bld
@@ -1220,17 +1240,17 @@ $(RUNNER_EXE) : $(RUNNER_DIR)\stdalone\external.prg \
 #
 $(DEBUG_LIB) : $(DEBUG_LIB_OBJS)
 
-$(DEBUG_DIR)\debugger.c : $(DEBUG_DIR)\debugger.prg
+$(OBJ_DIR)\debugger.c : $(DEBUG_DIR)\debugger.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\debugger.obj : $(DEBUG_DIR)\debugger.c
+$(OBJ_DIR)\debugger.obj : $(OBJ_DIR)\debugger.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(DEBUG_LIB) -+$@,,
 
-$(DEBUG_DIR)\tbrwtext.c : $(DEBUG_DIR)\tbrwtext.prg
+$(OBJ_DIR)\tbrwtext.c : $(DEBUG_DIR)\tbrwtext.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(OBJ_DIR)\tbrwtext.obj : $(DEBUG_DIR)\tbrwtext.c
+$(OBJ_DIR)\tbrwtext.obj : $(OBJ_DIR)\tbrwtext.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(DEBUG_LIB) -+$@,,
 
@@ -1240,17 +1260,17 @@ $(OBJ_DIR)\tbrwtext.obj : $(DEBUG_DIR)\tbrwtext.c
 $(REGRESS_EXE) : $(REGRESS_EXE_OBJS)
 
    echo $(BCC_OPT) > temp.bld
-   echo -e$(REGRESS_DIR)\rt_main.exe >> temp.bld
+   echo -e$(BIN_DIR)\rt_main.exe >> temp.bld
    echo -I$(INCLUDE_DIR) >> temp.bld
-   echo $(REGRESS_DIR)\rt_main.obj >> temp.bld
-   echo $(REGRESS_DIR)\rt_hvm.obj >> temp.bld
-   echo $(REGRESS_DIR)\rt_math.obj >> temp.bld
-   echo $(REGRESS_DIR)\rt_date.obj >> temp.bld
-   echo $(REGRESS_DIR)\rt_str.obj >> temp.bld
-   echo $(REGRESS_DIR)\rt_trans.obj >> temp.bld
-   echo $(REGRESS_DIR)\rt_array.obj >> temp.bld
-   echo $(REGRESS_DIR)\rt_file.obj >> temp.bld
-   echo $(REGRESS_DIR)\rt_misc.obj >> temp.bld
+   echo $(OBJ_DIR)\rt_main.obj >> temp.bld
+   echo $(OBJ_DIR)\rt_hvm.obj >> temp.bld
+   echo $(OBJ_DIR)\rt_math.obj >> temp.bld
+   echo $(OBJ_DIR)\rt_date.obj >> temp.bld
+   echo $(OBJ_DIR)\rt_str.obj >> temp.bld
+   echo $(OBJ_DIR)\rt_trans.obj >> temp.bld
+   echo $(OBJ_DIR)\rt_array.obj >> temp.bld
+   echo $(OBJ_DIR)\rt_file.obj >> temp.bld
+   echo $(OBJ_DIR)\rt_misc.obj >> temp.bld
    echo $(HARBOUR_LIB) >> temp.bld
    echo $(PP_LIB) >> temp.bld
    echo $(COMMON_LIB) >> temp.bld
@@ -1262,77 +1282,76 @@ $(REGRESS_EXE) : $(REGRESS_EXE_OBJS)
    bcc32 @temp.bld
    del temp.bld
 
-$(REGRESS_DIR)\rt_main.c : $(REGRESS_DIR)\rt_main.prg
+$(OBJ_DIR)\rt_main.c : $(REGRESS_DIR)\rt_main.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(REGRESS_DIR)\rt_main.obj : $(REGRESS_DIR)\rt_main.c
+$(OBJ_DIR)\rt_main.obj : $(OBJ_DIR)\rt_main.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
-$(REGRESS_DIR)\rt_hvm.c : $(REGRESS_DIR)\rt_hvm.prg
+$(OBJ_DIR)\rt_hvm.c : $(REGRESS_DIR)\rt_hvm.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(REGRESS_DIR)\rt_hvm.obj : $(REGRESS_DIR)\rt_hvm.c
+$(OBJ_DIR)\rt_hvm.obj : $(OBJ_DIR)\rt_hvm.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
-$(REGRESS_DIR)\rt_math.c : $(REGRESS_DIR)\rt_math.prg
+$(OBJ_DIR)\rt_math.c : $(REGRESS_DIR)\rt_math.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(REGRESS_DIR)\rt_math.obj : $(REGRESS_DIR)\rt_math.c
+$(OBJ_DIR)\rt_math.obj : $(OBJ_DIR)\rt_math.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
-$(REGRESS_DIR)\rt_date.c : $(REGRESS_DIR)\rt_date.prg
+$(OBJ_DIR)\rt_date.c : $(REGRESS_DIR)\rt_date.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(REGRESS_DIR)\rt_date.obj : $(REGRESS_DIR)\rt_date.c
+$(OBJ_DIR)\rt_date.obj : $(OBJ_DIR)\rt_date.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
-$(REGRESS_DIR)\rt_str.c : $(REGRESS_DIR)\rt_str.prg
+$(OBJ_DIR)\rt_str.c : $(REGRESS_DIR)\rt_str.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(REGRESS_DIR)\rt_str.obj : $(REGRESS_DIR)\rt_str.c
+$(OBJ_DIR)\rt_str.obj : $(OBJ_DIR)\rt_str.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
-$(REGRESS_DIR)\rt_trans.c : $(REGRESS_DIR)\rt_trans.prg
+$(OBJ_DIR)\rt_trans.c : $(REGRESS_DIR)\rt_trans.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(REGRESS_DIR)\rt_trans.obj : $(REGRESS_DIR)\rt_trans.c
+$(OBJ_DIR)\rt_trans.obj : $(OBJ_DIR)\rt_trans.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
-$(REGRESS_DIR)\rt_array.c : $(REGRESS_DIR)\rt_array.prg
+$(OBJ_DIR)\rt_array.c : $(REGRESS_DIR)\rt_array.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(REGRESS_DIR)\rt_array.obj : $(REGRESS_DIR)\rt_array.c
+$(OBJ_DIR)\rt_array.obj : $(OBJ_DIR)\rt_array.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
-$(REGRESS_DIR)\rt_file.c : $(REGRESS_DIR)\rt_file.prg
+$(OBJ_DIR)\rt_file.c : $(REGRESS_DIR)\rt_file.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(REGRESS_DIR)\rt_file.obj : $(REGRESS_DIR)\rt_file.c
+$(OBJ_DIR)\rt_file.obj : $(OBJ_DIR)\rt_file.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
-$(REGRESS_DIR)\rt_misc.c : $(REGRESS_DIR)\rt_misc.prg
+$(OBJ_DIR)\rt_misc.c : $(REGRESS_DIR)\rt_misc.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(REGRESS_DIR)\rt_misc.obj : $(REGRESS_DIR)\rt_misc.c
+$(OBJ_DIR)\rt_misc.obj : $(OBJ_DIR)\rt_misc.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 #
 # hbdoc.exe
 #
-
 $(HBDOC_EXE) : $(HBDOC_EXE_OBJS)
 
    echo $(BCC_OPT) > temp.bld
-   echo -e$(HBDOC_DIR)\hbdoc.exe >> temp.bld
+   echo -e$(BIN_DIR)\hbdoc.exe >> temp.bld
    echo -I$(INCLUDE_DIR) >> temp.bld
-   echo $(HBDOC_DIR)\hbdoc.obj >> temp.bld
-   echo $(HBDOC_DIR)\genos2.obj >> temp.bld
-   echo $(HBDOC_DIR)\gentrf.obj >> temp.bld
-   echo $(HBDOC_DIR)\genng.obj  >> temp.bld
-   echo $(HBDOC_DIR)\genhtm.obj >> temp.bld
-   echo $(HBDOC_DIR)\genrtf.obj >> temp.bld
-   echo $(HBDOC_DIR)\genhpc.obj >> temp.bld
-   echo $(HBDOC_DIR)\genasc.obj >> temp.bld
+   echo $(OBJ_DIR)\hbdoc.obj >> temp.bld
+   echo $(OBJ_DIR)\genasc.obj >> temp.bld
+   echo $(OBJ_DIR)\genhpc.obj >> temp.bld
+   echo $(OBJ_DIR)\genhtm.obj >> temp.bld
+   echo $(OBJ_DIR)\genng.obj >> temp.bld
+   echo $(OBJ_DIR)\genos2.obj >> temp.bld
+   echo $(OBJ_DIR)\genrtf.obj >> temp.bld
+   echo $(OBJ_DIR)\gentrf.obj >> temp.bld
    echo $(HARBOUR_LIB) >> temp.bld
    echo $(PP_LIB) >> temp.bld
    echo $(COMMON_LIB) >> temp.bld
@@ -1344,53 +1363,51 @@ $(HBDOC_EXE) : $(HBDOC_EXE_OBJS)
    bcc32 @temp.bld
    del temp.bld
 
-$(HBDOC_DIR)\hbdoc.c : $(HBDOC_DIR)\hbdoc.prg
+$(OBJ_DIR)\hbdoc.c : $(HBDOC_DIR)\hbdoc.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(HBDOC_DIR)\hbdoc.obj : $(HBDOC_DIR)\hbdoc.c
+$(OBJ_DIR)\hbdoc.obj : $(OBJ_DIR)\hbdoc.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
-$(HBDOC_DIR)\genos2.obj : $(HBDOC_DIR)\genos2.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
-
-$(HBDOC_DIR)\genos2.c : $(HBDOC_DIR)\genos2.prg
+$(OBJ_DIR)\genasc.c : $(HBDOC_DIR)\genasc.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(HBDOC_DIR)\genng.c : $(HBDOC_DIR)\genng.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
-
-$(HBDOC_DIR)\genng.obj : $(HBDOC_DIR)\genng.c
+$(OBJ_DIR)\genasc.obj : $(OBJ_DIR)\genasc.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
-$(HBDOC_DIR)\genhtm.c : $(HBDOC_DIR)\genhtm.prg
+$(OBJ_DIR)\genhpc.c : $(HBDOC_DIR)\genhpc.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(HBDOC_DIR)\genhtm.obj : $(HBDOC_DIR)\genhtm.c
+$(OBJ_DIR)\genhpc.obj : $(OBJ_DIR)\genhpc.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
-$(HBDOC_DIR)\gentrf.c : $(HBDOC_DIR)\gentrf.prg
+$(OBJ_DIR)\genhtm.c : $(HBDOC_DIR)\genhtm.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(HBDOC_DIR)\gentrf.obj : $(HBDOC_DIR)\gentrf.c
+$(OBJ_DIR)\genhtm.obj : $(OBJ_DIR)\genhtm.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
-$(HBDOC_DIR)\genasc.c : $(HBDOC_DIR)\genasc.prg
+$(OBJ_DIR)\genng.c : $(HBDOC_DIR)\genng.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(HBDOC_DIR)\genasc.obj : $(HBDOC_DIR)\genasc.c
+$(OBJ_DIR)\genng.obj : $(OBJ_DIR)\genng.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
-$(HBDOC_DIR)\genhpc.c : $(HBDOC_DIR)\genhpc.prg
+$(OBJ_DIR)\genos2.c : $(HBDOC_DIR)\genos2.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(HBDOC_DIR)\genhpc.obj : $(HBDOC_DIR)\genhpc.c
+$(OBJ_DIR)\genos2.obj : $(OBJ_DIR)\genos2.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
-$(HBDOC_DIR)\genrtf.c : $(HBDOC_DIR)\genrtf.prg
+$(OBJ_DIR)\genrtf.c : $(HBDOC_DIR)\genrtf.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
-$(HBDOC_DIR)\genrtf.obj : $(HBDOC_DIR)\genrtf.c
+$(OBJ_DIR)\genrtf.obj : $(OBJ_DIR)\genrtf.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
+$(OBJ_DIR)\gentrf.c : $(HBDOC_DIR)\gentrf.prg
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
+$(OBJ_DIR)\gentrf.obj : $(OBJ_DIR)\gentrf.c
+   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 

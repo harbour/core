@@ -933,7 +933,7 @@ USHORT hb_compVariableGetPos( PVAR pVars, char * szVarName ) /* returns the orde
 
 static int hb_compLocalGetPos( char * szVarName ) /* returns the order + 1 of a variable if defined or zero */
 {
-   int iVar = 0;
+   int iVar;
    PFUNCTION pFunc = hb_comp_functions.pLast;
 
    if( pFunc->szName )

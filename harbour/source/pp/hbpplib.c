@@ -97,6 +97,8 @@ HARBOUR HB___PREPROCESS( void )
 
          if( ( resParse = hb_pp_ParseExpression( ptr, pOut ) ) > 0 )
          {
+            HB_SYMBOL_UNUSED( resParse );
+
             /* Some error here? */
          }
 

@@ -1,3 +1,26 @@
+20000210-03:24 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * makefile.b32
+     ! Modified to generate all the intermediate .c/.y/.l files in the obj dir
+       instead of the original files' dir, since this way the make process
+       is not conflicting with the GNU-make system, so they can be used in
+       parallel.
+     * HBDOC and RT_MAIN are also generated in the BIN directory.
+     + Added nulsys.lib
+   * source/pp/hbpplib.c
+     include/hbexpr.c
+     source/compiler/harbour.c
+     source/compiler/genhrb.c
+     source/compiler/genjava.c
+     source/rtl/gtapi.c
+     source/rtl/mouseapi.c
+     source/macro/macro.c
+     source/tools/strasint.c
+     source/tools/strcount.c
+     source/tools/strleft.c
+     source/tools/strright.c
+     source/tools/ascpos.c
+     ! Borland warnings fixed.
+
 20000209-21:10 EST Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
     +utils/hbdoc/genos2.prg

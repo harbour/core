@@ -54,7 +54,7 @@
 HARBOUR HB_GT_ASCPOS( void )
 {
   char *s;
-  int  p;
+  ULONG p;
 
   if (ISCHAR(1) && ISNUM(2)) {
     s = hb_parc(1);

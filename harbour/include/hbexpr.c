@@ -5842,7 +5842,7 @@ static BOOL hb_compExprCheckMacroVar( char * szText )
    char * pTmp = szText;
    BOOL bTextSubst = FALSE;
 
-   while( ( pTmp = strchr( pTmp, '&' ) ) )
+   while( ( pTmp = strchr( pTmp, '&' ) ) != NULL )
    {
       /* Check if macro operator is used inside a string
        * Macro operator is ignored if it is the last char or

@@ -55,7 +55,7 @@ HARBOUR HB_GT_STRCOUNT( void )
 {
   char *s1, *s2;
   int count, p1, p2, l1, l2;
-  int match = 1;
+  int match;
 
   if (ISCHAR(1) && ISCHAR(2)) {
     s1  = hb_parc(1);
@@ -66,13 +66,16 @@ HARBOUR HB_GT_STRCOUNT( void )
     /* loop through s2 matching passed character (s1) with
        each character of s1 */
 
-    for (count = 0, p2 = 0; p2 <= (l2 - l1); p2++) {
+    for (count = 0, p2 = 0; p2 <= (l2 - l1); p2++)
+    {
       match = 1;
 
-      for (p1 = 0; p1 < l1; p1++) {
+      for (p1 = 0; p1 < l1; p1++)
+      {
         if (s1[p1] != s2[p2 + p1])
           match = 0;
       }
+
       if (match)
         count++;
     }

@@ -365,7 +365,7 @@ char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
       }
       ulCharsLeft = ulResStrLen - ( pHead - szResult );
    }
-   while( ulCharsLeft && ( pHead = (char *) memchr( (void *)pHead, '&', ulCharsLeft ) ) );
+   while( ulCharsLeft && ( pHead = (char *) memchr( (void *)pHead, '&', ulCharsLeft ) ) != NULL );
 
    if( ulResStrLen < ulResBufLen )
    {

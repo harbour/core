@@ -10,13 +10,13 @@ ROOT = ../../
 
 PRG_SOURCES=\
         hbdoc.prg  \
-         genos2.prg \
-         gentrf.prg \
-         genng.prg  \
-         genhtm.prg \
-         genrtf.prg \
-         genhpc.prg \
-         genasc.prg
+        genos2.prg \
+        gentrf.prg \
+        genng.prg  \
+        genhtm.prg \
+        genrtf.prg \
+        genhpc.prg \
+        genasc.prg \
 
 PRG_MAIN=hbdoc.prg
 

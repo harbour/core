@@ -64,7 +64,6 @@ HARBOUR HB_GT_STRRIGHT( void )
     cset   = hb_parc(2);
     l1     = hb_parclen(1);
     l2     = hb_parclen(2);
-    p1     = p2 = 0;
 
     for (p1 = l1 - 1; p1 >= 0; p1--) {
       for (p2 = 0; p2 < l2 && cset[p2] != string[p1]; p2++)

@@ -451,7 +451,8 @@ USHORT hb_gtGetColorStr( char * fpColorString )
       if( i + 1 < s_ColorCount )
          sColors[ k++ ] = ',';
    }
-   sColors[ k++ ] = '\0';
+
+   sColors[ k ] = '\0';
 
    strcpy( fpColorString, sColors );
    hb_xfree( sColors );
@@ -832,7 +833,7 @@ USHORT hb_gtWrite( BYTE * fpStr, ULONG length )
       && s_iCurrentRow >= 0 && s_iCurrentRow <= iMaxRow )
    {
       /* Truncate the text if the cursor will end up off the right edge */
-      if( s_iCurrentCol + size > iMaxCol + 1 ) size = iMaxCol - s_iCurrentCol + 1;
+      if( s_iCurrentCol + ( SHORT ) size > iMaxCol + 1 ) size = iMaxCol - s_iCurrentCol + 1;
       hb_gt_Puts( s_iCurrentRow, s_iCurrentCol, attr, fpStr, size );
    }
    /* Finally, save the new cursor position, even if off-screen */

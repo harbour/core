@@ -45,7 +45,7 @@ void hb_compGenPortObj( PHB_FNAME pFileName )
    PFUNCTION pFunc /*= hb_comp_functions.pFirst */;
    PCOMSYMBOL pSym = hb_comp_symbols.pFirst;
    USHORT w, wLen, wVar;
-   LONG lPCodePos;
+   ULONG lPCodePos;
    LONG lPad;
    LONG lSymbols;
    BOOL bEndProcReq;

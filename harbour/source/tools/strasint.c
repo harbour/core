@@ -16,7 +16,7 @@
 int _GT_Internal_StringAsInt(char *String, int Start, int End)
 {
    int  Decimal = 1;
-   int  Digit   = End;
+   int  Digit;
    int  Value   = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("_GT_Internal_StringAsInt(%s, %d, %d)", String, Start, End));

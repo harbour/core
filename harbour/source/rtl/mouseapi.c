@@ -325,11 +325,11 @@ HARBOUR HB_MSAVESTATE( void )
 
 HARBOUR HB_MRESTSTATE( void )
 {
-   USHORT uiLen = sizeof( int ) * 2 + 
-                  sizeof( BOOL ) +
-                  sizeof( int ) * 4;
+   ULONG ulLen = sizeof( int ) * 2 +
+                 sizeof( BOOL ) +
+                 sizeof( int ) * 4;
 
-   if( ISCHAR( 1 ) && hb_parclen( 1 ) == uiLen )
+   if( ISCHAR( 1 ) && hb_parclen( 1 ) == ulLen )
    {
       int iRow, iCol;
       int iTop, iLeft, iBottom, iRight;
