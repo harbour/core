@@ -46,7 +46,7 @@
 #define MODULELINE   12
 #define LINELINE     14
 #define ERRORLINE    20
-#define LONGLINE     78
+#define LONGLINE     600
 #define LONGONELINE  66
 MEMVAR aDirlist,aDocInfo
 STATIC aAlso
@@ -511,19 +511,13 @@ FUNCTION ProcessiNg()
                                      LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
-                     if AT("<par>",cBuffer)>0
-                      nPos:=At("->",cBuffer)
-                      if nPos>0
-                      nPosend:=AT("</par>",cBuffer)
-                              
-                      cBuffend:=Substr(cBuffer,nPos+2,nPosend-2)
-                      cBuffEnd:=Strtran(cBuffend,"</par>","")
-                      cBuffer:=SubStr(cBuffer,1,nPos+2)
-
-                      cBuffer:=cBuffer+'<color:aqua> '+cBuffend+'</color> </par>'
-                      endif
-                      Endif
-                      procngdesc(cbuffer,oNgi,"Syntax")  
+                     if At("<par>",cBuffer)>0
+                     strtran(cBuffer,"<par>",'')
+                     strtran(cBuffer,"</par>",'')
+                     cBuffer:=Alltrim(cBuffer)
+                     cbuFfer:='<par><b>'+cBuffer+'</b></par>'
+                     endif
+                     procngdesc(cbuffer,oNgi,"Syntax")  
                   ELSEIF nMode = D_ARG
                      IF LEN( cBuffer ) > LONGLINE
                         write_error( "Arguments", cBuffer, nLineCnt, ;

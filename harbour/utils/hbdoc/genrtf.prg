@@ -49,7 +49,7 @@
 #define MODULELINE   12
 #define LINELINE     14
 #define ERRORLINE    20
-#define LONGLINE     100
+#define LONGLINE     600
 #define LONGONELINE  86
 MEMVAR aDirList,aDocinfo
 STATIC aFiTable := {}
@@ -344,9 +344,9 @@ FUNCTION ProcessRtf()
                Elseif lMethod
                     oRtf:WriteJumpTitle( left(cFilename,At('.',cFilename)-1)+cFuncName, "Method " +cFuncName )
                Else
-               oRtf:WriteTitle( PAD( cFuncName, 21 ), cFuncName )
-               oRtf:WriteParBold( cOneLine,.t. )
-               oRtf:WriteParBox(  cBar  )
+               oRtf:WriteTitle( PAD( cFuncName, 21 ), cFuncName ,cOneLine)
+//               oRtf:WriteParBold( cOneLine )
+//               oRtf:WriteParBox(  cBar  )
                ENDIF
                //  4) all other stuff
 
@@ -544,17 +544,11 @@ FUNCTION ProcessRtf()
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
                      if At("<par>",cBuffer)>0
-                      nPos:=At("->",cBuffer)
-                      if nPos>0
-                      nPosend:=AT("</par>",cBuffer)
-                              
-                      cBuffend:=Substr(cBuffer,nPos+2,nPosend-2)
-                      cBuffEnd:=Strtran(cBuffend,"</par>","")
-                      cBuffer:=SubStr(cBuffer,1,nPos+2)
-
-                      cBuffer:=cBuffer+'<b><color:navy>'+cBuffend+'</b></color> </par>'
-                      endif
-                      endif
+                     strtran(cBuffer,"<par>",'')
+                     strtran(cBuffer,"</par>",'')
+                     cBuffer:=Alltrim(cBuffer)
+                     cbuFfer:='<par><b>'+cBuffer+'</b></par>'
+                     endif
                       procrtfdesc(cbuffer,oRtf,"Syntax")  
 //                      oRtf:WritePar('') //:endpar()
                   ELSEIF nMode = D_RETURN
@@ -830,8 +824,9 @@ If AT('<par>',cBuffer)>0 .and. AT('</par>',cBuffer)>0
              cBuffer:=strtran(cBuffer,"</par>","")
           endif
           if  !empty(cBuffer)
-             cBuffer:=SUBSTR(cBuffer,2)
-             oRtf:WritePar(cBuffer,'\fi-710\li710 ')
+//             cBuffer:=SUBSTR(cBuffer,2)
+             cBuffeR:=Alltrim(cBuffer)
+             oRtf:WritePar("       "+cBuffer,'\fi-426\li426 ')
           endif
 
       ELSEIf cStyle=="Arguments"
@@ -840,8 +835,8 @@ If AT('<par>',cBuffer)>0 .and. AT('</par>',cBuffer)>0
             cBuffer:=strtran(cBuffer,"</par>","")
          endif
          if  !empty(cBuffer)
-                   cBuffer:=SUBSTR(cBuffer,2)
-            oRtf:WritePar(cBuffer,'\fi-2272\li2272 ')
+                      cBuffeR:=Alltrim(cBuffer)
+             oRtf:WritePar("       "+cBuffer,'\fi-2272\li2272 ')
          endif
 
       ELSEIf cStyle=="Syntax"
@@ -849,8 +844,9 @@ If AT('<par>',cBuffer)>0 .and. AT('</par>',cBuffer)>0
              cBuffer:=strtran(cBuffer,"</par>","")
           endif
           if  !empty(cBuffer)
-                    cBuffer:=SUBSTR(cBuffer,2)
-             oRtf:WritePar(cBuffer,'\fi-710\li710 ')
+//                    cBuffer:=SUBSTR(cBuffer,2)
+                                 cBuffeR:=Alltrim(cBuffer)
+             oRtf:WritePar(cBuffer,'\fi-426\li426  ')
           endif
 
 Elseif cStyle=="Default"
@@ -858,8 +854,9 @@ Elseif cStyle=="Default"
              cBuffer:=strtran(cBuffer,"</par>","")
           endif
           if  !empty(cBuffer)
-                    cBuffer:=SUBSTR(cBuffer,2)
-             oRtf:WritePar(cBuffer,'\fi-710\li710 ')
+  //                  cBuffer:=SUBSTR(cBuffer,2)
+             cBuffeR:=Alltrim(cBuffer)
+             oRtf:WritePar("       "+cBuffer,'\fi-426\li426 ')
           endif
 
 
@@ -867,7 +864,7 @@ endif
 endif
 If AT('<fixed>',cBuffer)>0 .or. cStyle="Example"
          if at('<fixed>',cBuffer)=0
-            ortf:WritePar(cBuffer)
+            ortf:WriteParFixed(cBuffer)
          endif                
     do while !lendFixed
                 cBuffer :=  TRIM(SUBSTR( ReadLN( @lEof ), nCommentLen ) )
@@ -875,7 +872,7 @@ If AT('<fixed>',cBuffer)>0 .or. cStyle="Example"
           lendfixed:=.t.
         else
 
-        oRtf:WritePar(cBuffer)
+        oRtf:WriteParFixed(cBuffer)
     endif
     enddo
 end
@@ -948,11 +945,11 @@ LOCAL aLensSItem:={}
  nPos2:=ascan(alensfitem,{|x| x==nPos})  
 
 
-oRtf:WriteParBox(" "+repl('4',80))
+oRtf:WriteParBox("       "+repl(chr(196),80))
 FOR x:=1 to len(afiTable)
-  ortf:WritePar(IF(at("|",afiTable[x])>0,Strtran(afiTable[x],"|"," "),afiTable[x]),'\fi-710\li710')
+  ortf:WriteParFixed(IF(at("|",afiTable[x])>0,Strtran(afiTable[x],"|"," "),afiTable[x]),'\fi-426\li426')
 Next
-oRtf:WriteParBox(" "+repl('4',80))
+oRtf:WriteParBox("       "+repl(chr(196),80))
  oRtf:WritePar("")
 afiTable:={}
 
@@ -1044,14 +1041,12 @@ LOCAL nPos,nPosEnd
     cReturn:='<par>'+cReturn+' </par>'
   ELSEIF cStyle=='Syntax'
       nPos:=AT("-->",cBuffer)
-
+         cReturn:=Alltrim(cReturn)
       IF nPos>0
-         cBuffend:=Substr(cReturn,nPos+3)
-         cReturn:=SubStr(cReturn,1,nPos+3)
-         cReturn:=cReturn+'<b><color:navy>'+cBuffend+' </color></b>'
-         cReturn:='<par>'+cReturn+' </par>'
+         cReturn:='<par><b>'+cReturn+' </b></par>'
     ELSE
-         cReturn:='<par>'+cReturn+' </par>'
+         cReturn:=Alltrim(cReturn)
+         cReturn:='<par> <b>'+cReturn+' </b></par>'
       ENDIF
   ELSEIF cStyle=='Arguments'
   nPos:=0

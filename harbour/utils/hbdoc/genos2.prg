@@ -48,7 +48,7 @@
 #define MODULELINE   12
 #define LINELINE     14
 #define ERRORLINE    20
-#define LONGLINE     100
+#define LONGLINE     600
 #define LONGONELINE  86
 MEMVAR aDirlist,aDocInfo
 STATIC aAlso
