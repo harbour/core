@@ -1011,10 +1011,10 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                {
                   LoopStart();
                   $<lNumber>$ = hb_comp_functions.pLast->lPCodePos;  /* 9 */
-                  if( $<asExpr>8 )
-                     hb_compExprGenPush( $<asExpr>8 );   /* step */
                   hb_compExprGenPush( $2 );              /* counter */
                   hb_compExprGenPush( $7 );              /* end */
+                  if( $<asExpr>8 )
+                     hb_compExprGenPush( $<asExpr>8 );   /* step */
                }
              Crlf                                     /* 10 */
                {

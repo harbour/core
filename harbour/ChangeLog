@@ -1,3 +1,14 @@
+19991117-03:15 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/vm/hvm.c
+    ! Added error substitution to hb_vmForTest(), now some more RTL_TESTs pass.
+  * source/compiler/harbour.y
+    source/vm/hvm.c
+    ! Changed the push order for the FOR/NEXT loops, so that it's now 100%
+      Clipper compatible, and ~15 more RTL_TESTs pass.
+      (step/counter/end -> counter/end/step)
+  * tests/rtl_test.prg
+    + Some $ tests added to test new compiler bug. ("X" $ Chr(0)+"X")
+
 19991117-01:37 GMT+1 Victor Szel <info@szelvesz.hu>
   * config/w32/mingw32.cf
     - Removed -DDEBUG preprocessor option.

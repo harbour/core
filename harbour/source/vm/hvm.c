@@ -1817,40 +1817,74 @@ static void hb_vmInstring( void )
 }
 
 /* At this moment the eval stack should store:
- * -3 -> <step value>
- * -2 -> <current counter value>
- * -1 -> <end value>
+ * -3 -> <current counter value>
+ * -2 -> <end value>
+ * -1 -> <step value>
  */
 static void hb_vmForTest( void )        /* Test to check the end point of the FOR */
 {
+   int iDec;
+   double dStep;
+   double dEnd;
+   double dCurrent;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_vmForTest()"));
-   
-   if( IS_NUMERIC( hb_stack.pPos - 1 ) )
+
+   while( ! IS_NUMERIC( hb_stack.pPos - 1 ) )
    {
-      int iDec;
-      double dCurrent, dEnd, dStep;
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1073, NULL, "<" );
 
-      dEnd = hb_vmPopDouble( &iDec );
-      if( IS_NUMERIC( hb_stack.pPos - 1 ) )
+      if( pResult )
       {
-         dCurrent = hb_vmPopDouble( &iDec );
-         if( IS_NUMERIC( hb_stack.pPos - 1 ) )
-         {
-            dStep = hb_vmPopDouble( &iDec );
-
-            if( dStep > 0 )           /* Positive loop. Use LESS */
-               hb_vmPushLogical( dCurrent <= dEnd );
-            else if( dStep < 0 )      /* Negative loop. Use GREATER */
-               hb_vmPushLogical( dCurrent >= dEnd );
-         }
-         else
-            hb_errRT_BASE( EG_ARG, 1073, NULL, "<" );
+         hb_stackPop();
+         hb_vmPush( pResult );
+         hb_itemRelease( pResult );
       }
       else
-         hb_errRT_BASE( EG_ARG, 1073, NULL, "<" );
+         /* NOTE: Return from the inside. */
+         return;
    }
-   else
-      hb_errRT_BASE( EG_ARG, 1073, NULL, "<" );
+
+   dStep = hb_vmPopDouble( &iDec );
+
+   while( ! IS_NUMERIC( hb_stack.pPos - 1 ) )
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1073, NULL, "<" );
+
+      if( pResult )
+      {
+         hb_stackPop();
+         hb_vmPush( pResult );
+         hb_itemRelease( pResult );
+      }
+      else
+         /* NOTE: Return from the inside. */
+         return;
+   }
+
+   dEnd = hb_vmPopDouble( &iDec );
+
+   while( ! IS_NUMERIC( hb_stack.pPos - 1 ) )
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1073, NULL, "<" );
+
+      if( pResult )
+      {
+         hb_stackPop();
+         hb_vmPush( pResult );
+         hb_itemRelease( pResult );
+      }
+      else
+         /* NOTE: Return from the inside. */
+         return;
+   }
+
+   dCurrent = hb_vmPopDouble( &iDec );
+
+   if( dStep > 0 )           /* Positive loop. Use LESS */
+      hb_vmPushLogical( dCurrent <= dEnd );
+   else if( dStep < 0 )      /* Negative loop. Use GREATER */
+      hb_vmPushLogical( dCurrent >= dEnd );
 }
 
 /* ------------------------------- */
