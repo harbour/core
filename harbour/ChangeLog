@@ -1,8 +1,8 @@
-2000-06-19 13:38 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+2000-06-19 23:35 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/hbgenerr.c
    * source/pp/ppcomp.c
-     ! Fixed reporting of line numbers on erros.
+     ! Fixed reporting of line numbers on errors.
 
    * source/pp/ppcore.c
      * More support for [] as string delimiters.
@@ -14,7 +14,7 @@
         WHILE [ some string ] ...
         CASE [ some string ] ...
 
-     /* Strangly, Clipper chockes on elseif [...] */
+     /* Strangley, Clipper chockes on elseif [...] */
 
 2000-06-19 23:05 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
    * utils/hbdoc/genhtm.prg
