@@ -76,19 +76,18 @@ ENDCLASS
 METHOD New(cHeading, bBlock, oBrw) CLASS TBColumnSQL
 
    super:New(cHeading, bBlock)
-
    ::oBrw := oBrw
 
 return Self
 
 
-METHOD Block() CLASS TBColumnSQL
+METHOD Block(xNewValue) CLASS TBColumnSQL
 
    local xValue := ::oBrw:oCurRow:FieldGet(::nFieldNum)
 
    do case
    case ValType(xValue) == "N"
-      xValue := Str(xValue)
+      xValue := Str(xValue, ::oBrw:oCurRow:FieldLen(::nFieldNum), ::oBrw:oCurRow:FieldDec(::nFieldNum))
 
    case ValType(xValue) == "D"
       xValue := DToC(xValue)
@@ -106,7 +105,7 @@ METHOD Block() CLASS TBColumnSQL
    otherwise
    endcase
 
-return &("{|| " + xValue + "}")
+return &("{||" + xValue + "}")
 
 
 /*--------------------------------------------------------------------------------------------------*/
@@ -134,23 +133,7 @@ METHOD New(nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable) CLASS TBrowseS
 
    local i, oCol
 
-   super:New()
-
-   if nTop != NIL
-      ::nTop := nTop
-   endif
-
-   if nLeft != NIL
-      ::nLeft := nLeft
-   endif
-
-   if nBottom != NIL
-      ::nBottom := nBottom
-   endif
-
-   if nRight != NIL
-      ::nRight := nRight
-   endif
+   super:New(nTop, nLeft, nBottom, nRight)
 
    ::oQuery := oQuery
 
@@ -169,9 +152,7 @@ METHOD New(nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable) CLASS TBrowseS
       // No bBlock now since New() would use it to find column length, but column is not ready yet at this point
       oCol := TBColumnSQL():New(::oCurRow:FieldName(i),, Self)
 
-      oCol:Width := Max(::oCurRow:aFieldStruct[i][MYSQL_FS_LENGTH], Len(oCol:Heading))
-
-      //Alert(Str(oCol:Width))
+      oCol:Width := Max(::oCurRow:FieldLen(i), Len(oCol:Heading))
 
       // which field does this column display
       oCol:nFieldNum := i
@@ -179,10 +160,10 @@ METHOD New(nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable) CLASS TBrowseS
       // Add a picture
       do case
       case ISNUMBER(::oCurRow:FieldGet(i))
-          oCol:picture := replicate("9", ::oCurRow:aFieldStruct[i][MYSQL_FS_LENGTH])
+          oCol:picture := replicate("9", oCol:Width)
 
       case ISCHARACTER(::oCurRow:FieldGet(i))
-         oCol:picture := replicate("!", ::oCurRow:aFieldStruct[i][MYSQL_FS_LENGTH])
+         oCol:picture := replicate("!", oCol:Width)
 
       endcase
 
@@ -272,8 +253,10 @@ METHOD EditField() CLASS TBrowseSQL
    //Alert(Str(::colWidth(::colPos)))
 
    // Create a corresponding GET
+   // NOTE: I need to use ::oCurRow:FieldPut(...) when changing values since message redirection doesn't work at present
+   //       time for write access to instance variables but only for reading them
    aGetList := { getnew( row(), col(),    ;
-                        {|xValue| iif(xValue == nil, ::oCurRow:FieldGet(oCol:nFieldNum), ::oCurRow:FieldPut(oCol:nFieldNum, xValue))} ,;
+                        {|xValue| iif(xValue == nil, Eval(oCol:Block), ::oCurRow:FieldPut(oCol:nFieldNum, xValue))} ,;
                         oCol:heading,     ;
                         oCol:picture,     ;
                         ::colorSpec ) }
@@ -294,7 +277,7 @@ METHOD EditField() CLASS TBrowseSQL
    //xNewKey := if( empty( indexkey() ), NIL, &( indexkey() ) )
 
    if !::oQuery:Update(::oCurRow)
-      Alert(::oQuery:Error())
+      Alert(Left(::oQuery:Error(), 60))
    endif
 
    if !::oQuery:Refresh()

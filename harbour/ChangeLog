@@ -1,3 +1,11 @@
+2000-10-17 18:21 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/tbrowse.prg
+      ! ::DispCell() was using Lef(Str(xValue)) when xValue was a Numeric one, this is
+        wrong since ends up showing nothing if column width is less than number width (10 for Str())
+   * contrib/mysql/tmysql.prg
+   * contrib/mysql/tsqlbrw.prg
+      ! various fixes and changes.
+
 2000-10-17 11:10 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm/codeblock.c

@@ -85,8 +85,11 @@ CLASS TMySQLRow
 
    METHOD   FieldGet(nNum)             // Same as clipper ones
    METHOD   FieldPut(nNum, Value)
-   METHOD   FieldName(nPosition)
+   METHOD   FieldName(nNum)
    METHOD   FieldPos(cFieldName)
+
+   METHOD   FieldLen(nNum)             // Length of field N
+   METHOD   FieldDec(nNum)             // How many decimals in field N
 
    METHOD   MakePrimaryKeyWhere()    // returns a WHERE x=y statement which uses primary key (if available)
 
@@ -174,10 +177,28 @@ return nPos
 
 
 // Returns name of field N
-METHOD FieldName(nPosition) CLASS TMySQLRow
+METHOD FieldName(nNum) CLASS TMySQLRow
 
-   if nPosition >=1 .AND. nPosition <= Len(::aFieldStruct)
-      return ::aFieldStruct[nPosition][MYSQL_FS_NAME]
+   if nNum >=1 .AND. nNum <= Len(::aFieldStruct)
+      return ::aFieldStruct[nNum][MYSQL_FS_NAME]
+   endif
+
+return ""
+
+
+METHOD FieldLen(nNum) CLASS TMySQLRow
+
+   if nNum >=1 .AND. nNum <= Len(::aFieldStruct)
+      return ::aFieldStruct[nNum][MYSQL_FS_LENGTH]
+   endif
+
+return ""
+
+
+METHOD FieldDec(nNum) CLASS TMySQLRow
+
+   if nNum >=1 .AND. nNum <= Len(::aFieldStruct)
+      return ::aFieldStruct[nNum][MYSQL_FS_DECIMALS]
    endif
 
 return ""

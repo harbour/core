@@ -863,13 +863,17 @@ METHOD DispCell( nColumn, cColor ) CLASS TBrowse
    do case
    case valtype( ftmp ) $ "CM"
       DispOut( Left( ftmp, ::aColumns[ nColumn ]:Width ), cColor )
+
    case valtype( ftmp ) == "N"
-      DispOut( Left( Str( ftmp ), ::aColumns[ nColumn ]:Width ), cColor )
+      DispOut( Right( Str( ftmp ), ::aColumns[ nColumn ]:Width ), cColor )
+
    case valtype( ftmp ) == "D"
       DispOut( Right( DToC( ftmp ), ::aColumns[ nColumn ]:Width ), cColor )
+
    case valtype( ftmp ) == "L"
       DispOut( Space( ::aColumns[ nColumn ]:Width / 2 ), ::ColorSpec )
       DispOut( iif( ftmp, "T","F" ), cColor )
+
    endcase
 
    DispOut( Space( nCol + ::aColumns[ nColumn ]:Width - Col() ), ::ColorSpec )
