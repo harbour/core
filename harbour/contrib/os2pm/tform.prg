@@ -13,9 +13,12 @@ CLASS TForm
 
    CLASSDATA lRegistered
 
-   METHOD    New()
+   METHOD   New()
+   METHOD   ShowModal()
+   METHOD   cCaption() INLINE WinGetText( ::hWnd )
 
-   METHOD    ShowModal()
+   METHOD   _cCaption( cNewCaption ) INLINE ;
+               WinSetWindowText( ::hWnd, cNewCaption )
 
 ENDCLASS
 

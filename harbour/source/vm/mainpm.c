@@ -58,11 +58,12 @@
 #include "hbapi.h"
 #include "hbvm.h"
 
-static HAB  hab;         /* Anchor Block handle */
-static HMQ  hmq;         /* Message Queue handle */
 
 int main( int argc, char * argv[] )
 {
+   HAB  hab;         /* Anchor Block handle */
+   HMQ  hmq;         /* Message Queue handle */
+
    hab = WinInitialize( 0 );
    hmq = WinCreateMsgQueue( hab, 0 );
 
@@ -75,29 +76,6 @@ int main( int argc, char * argv[] )
    hb_vmQuit();
 
    return 0;
-}
-
-
-/* NOTE: We don't need to have global HAB and HMQ */
-HAB hb_pm_GetHab( void ) {
-   return hab;
-}
-
-
-HB_FUNC( GETHAB )
-{
-   hb_retnl( ( LONG ) hb_pm_GetHab() );
-}
-
-
-/* NOTE: Just a test, to remove */
-HB_FUNC( MSGINFO )
-{
-   HWND hWnd = WinQueryActiveWindow( HWND_DESKTOP);
-   PSZ szCaption = ( hb_pcount() > 1 && ISCHAR( 2 ) ? hb_parc( 2 ) : "Information");
-
-   hb_retnl( WinMessageBox( HWND_DESKTOP, hWnd, hb_parc( 1 ), szCaption,
-             0, MB_INFORMATION | MB_OK | MB_MOVEABLE | MB_APPLMODAL ) );
 }
 
 

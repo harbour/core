@@ -66,3 +66,45 @@ HB_FUNC( NOR )
 
    hb_retnl( lRet );
 }
+
+
+HB_FUNC( WINSETWINDOWTEXT )
+{
+   hb_retl( WinSetWindowText( ( HWND ) hb_parnl( 1 ), hb_parc( 2 ) ) );
+}
+
+
+HB_FUNC( WINGETTEXT )
+{
+   BYTE bBuffer[ 255 ];
+
+   WinQueryWindowText( ( HWND ) hb_parnl( 1 ), 254, bBuffer );
+   hb_retc( bBuffer );
+}
+
+
+HB_FUNC( MSGINFO )
+{
+   HWND hWnd = WinQueryActiveWindow( HWND_DESKTOP);
+   PSZ szCaption = ( hb_pcount() > 1 && ISCHAR( 2 ) ? hb_parc( 2 ) : "Information");
+
+   hb_retnl( WinMessageBox( HWND_DESKTOP, hWnd, hb_parc( 1 ), szCaption,
+             0, MB_INFORMATION | MB_OK | MB_MOVEABLE | MB_APPLMODAL ) );
+}
+
+
+HAB hb_pm_GetHab() {
+
+   HWND hWnd = WinQueryActiveWindow( HWND_DESKTOP);
+   return WinQueryAnchorBlock(hWnd);
+
+}
+
+
+HB_FUNC( GETHAB )
+{
+   hb_retnl( ( LONG ) hb_pm_GetHab() );
+}
+
+
+
