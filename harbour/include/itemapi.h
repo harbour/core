@@ -34,7 +34,7 @@
 typedef struct
 {
    PHB_ITEM pItems[ HB_EVAL_PARAM_MAX_ + 1 ];
-} EVALINFO, * PEVALINFO;
+} EVALINFO, * PEVALINFO, * EVALINFO_PTR;
 
 extern PHB_ITEM hb_evalLaunch   ( PEVALINFO pEvalInfo );
 extern BOOL     hb_evalNew      ( PEVALINFO pEvalInfo, PHB_ITEM pItem );

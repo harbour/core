@@ -664,7 +664,7 @@ HARBOUR HB_ASC(void)
       if( pText )
       {
          if( pText->item.asString.length > 0 )
-            hb_retni(*(pText->item.asString.value));
+            hb_retni((BYTE)*(pText->item.asString.value));
          else
             hb_retni(0);
       }

@@ -42,7 +42,8 @@
 
 struct _DYNSYM;         /* forward declaration */
 
-typedef struct          /* symbol support structure */
+/* symbol support structure */
+typedef struct
 {
    char*       szName;  /* the name of the symbol */
    SYMBOLSCOPE cScope;  /* the scope of the symbol */
@@ -307,6 +308,7 @@ extern void     hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pItemValue );
 
 extern int      hb_stricmp( const char *s1, const char *s2 );
 extern BOOL     hb_strempty( char * szText, ULONG ulLen );
+extern char *   hb_strdescend( char * szText, ULONG ulLen );
 extern WORD     hb_strgreater( char * sz1, char * sz2 );
 extern void     hb_strupr( char * szText );
 extern BOOL     hb_strMatchRegExp( char * szString, char * szMask );
@@ -333,7 +335,7 @@ extern PHB_ITEM hb_CodeblockGetRef( PHB_ITEM, PHB_ITEM );
 extern void     hb_CodeblockEvaluate( PHB_ITEM );
 extern void     hb_CodeblockCopy( PHB_ITEM, PHB_ITEM );
 
-/* Initialisation and closing memvars subsystem */
+/* memvars subsystem */
 extern HB_HANDLE hb_MemvarValueNew( PHB_ITEM, int );
 extern HB_VALUE_PTR * hb_MemvarValueBaseAddress( void );
 extern void     hb_MemvarsInit( void );

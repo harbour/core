@@ -35,7 +35,7 @@
  *  $FUNCNAME$
  *      DESCEND
  *  $CATEGORY$
- *      
+ *
  *  $ONELINER$
  *      Inverts an expression of string, logical, date or numeric type.
  *  $SYNTAX$
@@ -74,17 +74,18 @@ HB_INIT_SYMBOLS_END( Descend__InitSymbols );
 #if ! defined(__GNUC__)
 #pragma Descend__InitSymbols
 #endif
-                            
-char *hb_strdescend( char *string )
-{
-   char *s;
 
-   if( string )
+char * hb_strdescend( char * szText, ULONG ulLen )
+{
+   if (!(ulLen == 1 && szText[0] == 0))
    {
-      for( s = string; *s; ++s )
+      char *s;
+
+      for( s = szText; ulLen--; ++s )
          *s = 256 - *s;
    }
-   return string;
+
+   return szText;
 }
 
 HARBOUR HB_DESCEND( void )
@@ -96,18 +97,22 @@ HARBOUR HB_DESCEND( void )
       if( pItem )
       {
          if( IS_STRING( pItem ) )
-            hb_retc( hb_strdescend( pItem->item.asString.value ) );
+            hb_retclen( hb_strdescend( pItem->item.asString.value, pItem->item.asString.length ), pItem->item.asString.length );
          else if( IS_DATE( pItem ) )
             hb_retnl( 5231808 - pItem->item.asDate.value );
-         else if( IS_INTEGER( pItem ) )
-            hb_retni( -1 * pItem->item.asInteger.value );
-         else if( IS_LONG( pItem ) )
-            hb_retnl( -1 * pItem->item.asLong.value );
-         else if( IS_DOUBLE( pItem ) )
+         else if( IS_NUMERIC( pItem ) )
          {
             PHB_ITEM pReturn;
+            double dValue;
 
-            pReturn = hb_itemPutND( NULL, -1 * pItem->item.asDouble.value );
+            if ( IS_DOUBLE( pItem ) )
+               dValue = (double)pItem->item.asDouble.value;
+            else if( IS_INTEGER( pItem ) )
+               dValue = (double)pItem->item.asInteger.value;
+            else if( IS_LONG( pItem ) )
+               dValue = pItem->item.asLong.value;
+
+            pReturn = hb_itemPutND( NULL, -1 * dValue );
             hb_itemReturn( pReturn );
             hb_itemRelease( pReturn );
 
@@ -117,8 +122,6 @@ HARBOUR HB_DESCEND( void )
          }
          else if( IS_LOGICAL( pItem ) )
             hb_retl( !pItem->item.asLogical.value );
-         else
-            hb_retc( "NIL" );
       }
    }
 }

@@ -180,15 +180,8 @@ BYTE     bErrorLevel = 0;  /* application exit errorlevel */
 
 /* application entry point */
 
-#ifdef WINDOWS
-   int __stdcall WinMain( long hIns, long hPrev, char * szCmds, int iCmdShow )
-   {
-      int argc = 1;
-      char * argv[] = { "Test" };
-#else
-   int main( int argc, char * argv[] )
-   {
-#endif
+int main( int argc, char * argv[] )
+{
    int i;
    void ( * DontDiscardForceLink )( void ) = &ForceLink;
 

@@ -18,5 +18,5 @@ gtwin.obj    : gtwin.c    extend.h hbdefs.h
   bcc32 -wmsg -c -O2 -DHARBOUR_USE_GTAPI -I.\include -v -o$@ $<
   tlib .\libs\b32\terminal.lib -+$@,,
   del obj\console.obj
-  bcc32 -wmsg -c -O2 -DWINDOWS -I.\include -v -o$@ $<
+  bcc32 -wmsg -c -O2 -I.\include -v -o$@ $<
   tlib .\libs\win32\terminal.lib -+$@,,

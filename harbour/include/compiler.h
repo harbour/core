@@ -29,7 +29,8 @@
 
 /* compiler related declarations */
 
-typedef struct _VAR        /* locals, static, public variables support */
+/* locals, static, public variables support */
+typedef struct _VAR
 {
    char *szName;           /* variable name */
    char *szAlias;          /* variable alias namespace */
@@ -38,6 +39,7 @@ typedef struct _VAR        /* locals, static, public variables support */
    struct _VAR * pNext;    /* pointer to next defined variable */
 } VAR, * PVAR;
 
+/* structure to hold a Clipper defined function */
 typedef struct __FUNC      /* functions definition support */
 {
    char * szName;          /* name of a defined Clipper function */
@@ -54,16 +56,18 @@ typedef struct __FUNC      /* functions definition support */
    WORD   wStaticsBase;    /* base for this function statics */
    struct __FUNC * pOwner; /* pointer to the function/procedure that owns the codeblock */
    struct __FUNC * pNext;  /* pointer to the next defined function */
-} _FUNC, * PFUNCTION;  /* structure to hold a Clipper defined function */
+} _FUNC, * PFUNCTION;
 
+/* structure to control all Clipper defined functions */
 typedef struct
 {
    PFUNCTION pFirst;       /* pointer to the first defined funtion */
    PFUNCTION pLast;        /* pointer to the last defined function */
    int      iCount;        /* number of defined functions */
-} FUNCTIONS;               /* structure to control all Clipper defined functions */
+} FUNCTIONS;
 
-typedef struct _COMSYMBOL  /* compiler symbol support structure */
+/* compiler symbol support structure */
+typedef struct _COMSYMBOL
 {
    char * szName;              /* the name of the symbol */
    char   cScope;              /* the scope of the symbol */
@@ -71,14 +75,16 @@ typedef struct _COMSYMBOL  /* compiler symbol support structure */
    struct _COMSYMBOL * pNext;  /* pointer to the next defined symbol */
 } COMSYMBOL, * PCOMSYMBOL;
 
-typedef struct             /* symbol table support structures */
+/* symbol table support structures */
+typedef struct
 {
    PCOMSYMBOL pFirst;      /* pointer to the first defined symbol */
    PCOMSYMBOL pLast;       /* pointer to the last defined symbol */
    int    iCount;          /* number of defined symbols */
 } SYMBOLS;
 
-typedef struct _STACK_VAL_TYPE        /* locals, static, public variables support */
+/* locals, static, public variables support */
+typedef struct _STACK_VAL_TYPE
 {
    char cType;                      /* type of stack value */
    struct _STACK_VAL_TYPE * pPrev;    /* pointer to previous stack value's type */

@@ -82,7 +82,7 @@ typedef void * FARP;
 
 #define DBI_USER           1000 /* Start of user definable DBI_ values */
 
-/* codes for SELF_RECINFO() */
+/* Codes for SELF_RECINFO() */
 
 #define DBRI_DELETED       1
 #define DBRI_LOCKED        2
@@ -91,14 +91,14 @@ typedef void * FARP;
 #define DBRI_UPDATED       5
 
 
-/* codes for SELF_FIELDINFO() */
+/* Codes for SELF_FIELDINFO() */
 
 #define DBS_NAME           1
 #define DBS_TYPE           2
 #define DBS_LEN            3
 #define DBS_DEC            4
 
-/* codes for RawLock types */
+/* Codes for RawLock types */
 
 #define FILE_LOCK          1
 #define FILE_UNLOCK        2
@@ -160,7 +160,7 @@ typedef DBOPENINFO * LPDBOPENINFO;
 /*
 *  DBORDERCONDINFO
 *  ---------------
-*  La estructura de creaci¢n condicional de orden
+*  The Create Order conditional Info structure
 */
 
 #ifdef 0
@@ -196,22 +196,21 @@ typedef DBORDERCONDINFO * LPDBORDERCONDINFO;
 /*
 *  DBORDERCREATE
 *  -------------
-*  La estructura de creaci¢n de orden
+*  The Create Order Info structure
 */
 
 #ifdef 0
 typedef struct
 {
-   LPDBORDERCONDINFO lpdbOrdCondInfo; /* Informaci¢n condicional */
-   BYTEP             abBagName;       /* Nombre del contenedor de ¢rdenes */
-   BYTEP             atomBagName;
+   LPDBORDERCONDINFO lpdbOrdCondInfo; /* Conditional information */
+   BYTEP             abBagName;       /* Name of the Order bag */
+   BYTEP             atomBagName;     /* Name of the Order */
    PHB_ITEM          itmOrder;
-   BOOL              fUnique;         /* Indicador que determina si todas */
+   BOOL              fUnique;         /* Flag to determine if all keys are unique */
                                       /* las claves con £nicas */
 
-   PHB_ITEM          itmCobExpr;      /* Bloque de c¢digo conteniendo la */
-                                      /* expresi¢n clave */
-   PHB_ITEM          abExpr;          /* Cadena conteniendo la expresi¢n clave */
+   PHB_ITEM          itmCobExpr;      /* Code block containing the KEY expression */
+   PHB_ITEM          abExpr;          /* String containing the KEY expression */
 } DBORDERCREATEINFO;
 
 typedef DBORDERCREATEINFO * LPDBORDERCREATEINFO;
@@ -222,18 +221,18 @@ typedef DBORDERCREATEINFO * LPDBORDERCREATEINFO;
 /*
 *  DBORDERINFO
 *  -----------
-*  La estructura de Set Index
+*  The Set Index Info structure
 */
 
 #ifdef 0
 typedef struct
 {
-   PHB_ITEM atomBagName;  /* Nombre del contenedor de ¢rdenes */
-   PHB_ITEM itmOrder;     /* Nombre o n£mero de la orden */
+   PHB_ITEM atomBagName;  /* Name of the Order Bag */
+   PHB_ITEM itmOrder;     /* Name or Number of the Order */
 
-   PHB_ITEM itmCobExpr;   /* Bloque de c¢digo conteniendo la expresi¢n clave */
+   PHB_ITEM itmCobExpr;   /* Code block containing the KEY expression */
 
-   PHB_ITEM itmResult;    /* Resultado de la operaci¢n */
+   PHB_ITEM itmResult;    /* Operation result */
 
    BOOL     fAllTags;     /* Indicador de todos los tags a abrir */
 
@@ -247,19 +246,19 @@ typedef DBORDERINFO * LPDBORDERINFO;
 /*
 *  DBSCOPEINFO
 *  -----------
-*  La estructura de  mbito
+*  The Scope Info structure
 */
 
 #ifdef 0
 typedef struct
 {
-   PHB_ITEM itmCobFor;   /* Bloque de c¢digo representaci¢n de una cl usula FOR */
-   PHB_ITEM lpstrFor;    /* Cadena representaci¢n de una cl usula FOR */
-   PHB_ITEM itmCobWhile; /* Bloque de c¢digo representaci¢n de una cl usula WHILE */
-   PHB_ITEM lpstrWhile;  /* Cadena representaci¢n de una cl usula WHILE */
-   PHB_ITEM lNext;
+   PHB_ITEM itmCobFor;   /* Code Block representation of a FOR clause */
+   PHB_ITEM lpstrFor;    /* String representation of a FOR clause */
+   PHB_ITEM itmCobWhile; /* Code Block representation of a WHILE clause */
+   PHB_ITEM lpstrWhile;  /* String representation of a WHILE clause */
+   PHB_ITEM lNext;       /* NEXT record */
    PHB_ITEM itmRecID;
-   PHB_ITEM fRest;       /* TRUE si se empieza desde el registro actual */
+   PHB_ITEM fRest;       /* TRUE if start from the current record */
 
    BOOL     fIgnoreFilter;
    BOOL     fIncludeDeleted;
@@ -276,14 +275,14 @@ typedef DBSCOPEINFO * LPDBSCOPEINFO;
 /*
 *  DBFILTERINFO
 *  ------------
-*  La estructura de filtro
+*  The Filter Info structure
 */
 
 #ifdef 0
 typedef struct
 {
-   PHB_ITEM itmCobExpr;       /* Bloque representaci¢n de la expresi¢n FILTER */
-   PHB_ITEM abFilterText;     /* Cadena representaci¢n de la expresi¢n FILTER */
+   PHB_ITEM itmCobExpr;       /* Block representation of the FILTER expression */
+   PHB_ITEM abFilterText;     /* String representation of FILTER expression */
    BOOL     fFilter;
 } DBFILTERINFO;
 
@@ -295,19 +294,19 @@ typedef DBFILTERINFO * LPDBFILTERINFO;
 /*
 *  DBRELINFO
 *  ------------
-*  La estrurcura de relaciones
+*  The Relationship Info structure
 */
 
 #ifdef 0
 typedef struct _DBRELINFO
 {
-   PHB_ITEM           itmCobExpr;   /* Bloque representaci¢n de la clave relacional SEEK */
-   PHB_ITEM           abKey;        /* Cadena representaci¢n de la clave relacional SEEK */
+   PHB_ITEM           itmCobExpr;   /* Block representation of the relational SEEK key */
+   PHB_ITEM           abKey;        /* String representation of the relational SEEK key */
 
-   struct _AREA      *lpaParent;    /* El padre de esta relaci¢n */
-   struct _AREA      *lpaChild;     /* Los hijos del padre */
+   struct _AREA      *lpaParent;    /* The parent of this relation */
+   struct _AREA      *lpaChild;     /* The parents children */
 
-   struct _DBRELINFO *lpdbriNext;   /* Siguiente hijo o padre */
+   struct _DBRELINFO *lpdbriNext;   /* Next child or parent */
 
 } DBRELINFO;
 
@@ -319,17 +318,17 @@ typedef DBRELINFO * LPDBRELINFO;
 /*
 *  DBEVALINFO
 *  ------------
-*  La estructura de evaluaci¢n
+*  The Evaluation Info structure
 *
-*  Contiene la informaci¢n necesaria para la evaluaci¢n de un bloque
-*  en cada registro del  rea de trabajo
+*  Contains information necessary for a block evaluation
+*  on each record of the workarea
 */
 
 #ifdef 0
 typedef struct
 {
-   PHB_ITEM    itmBlock;  /* El bloque a evaluar */
-   DBSCOPEINFO dbsci;     /* Ambito que limita la evaluaci¢n */
+   PHB_ITEM    itmBlock;  /* The block to be evaluated */
+   DBSCOPEINFO dbsci;     /* Scope info that limits the evaluation */
 } DBEVALINFO;
 
 typedef DBEVALINFO * LPDBEVALINFO;
@@ -339,17 +338,17 @@ typedef DBEVALINFO * LPDBEVALINFO;
 /*
 *  DBTRANSITEM
 *  ------------
-*  La estructura de transferencia
+*  The Transfer Item structure
 *
-*  Define un elemento de transferencia simple (normalmente un campo)
-*  de una base de datos a otra; utilizada por DBTRANSINFO
+*  Defines a single transfer item (usually a field) from
+*  one database to another; used by DBTRANSINFO
 */
 
 #ifdef 0
 typedef struct
 {
-   USHORT uiSource;       /* N£mero de ¡ndice de campo del fuente */
-   USHORT uiDest;         /* N£mero de ¡ndice de campo del destino */
+   USHORT uiSource;       /* Field index number from the source */
+   USHORT uiDest;         /* Destination field index number */
 } DBTRANSITEM;
 
 typedef DBTRANSITEM * LPDBTRANSITEM;
@@ -359,23 +358,23 @@ typedef DBTRANSITEM * LPDBTRANSITEM;
 /*
 *  DBTRANSINFO
 *  ------------
-*  La estructura de transferenciaz
+*  The Transfer Info structure
 *
-*  Define una transferencia de elementos de datos global de un
-*   rea de trabajo a otra
+*  Defines a global transfer of data items from on workarea
+*  to another
 */
 
 #ifdef 0
 typedef struct
 {
-   struct _AREA *lpaSource;     /* Puntero al  rea de trabajo fuente */
-   struct _AREA *lpaDest;       /* Puntero al  rea de trabajo destino */
-   DBSCOPEINFO   dbsci;         /* Ambito de limitaci¢n de transferencia */
+   struct _AREA *lpaSource;     /* Pointer to source work area */
+   struct _AREA *lpaDest;       /* Pointer to dest work area */
+   DBSCOPEINFO   dbsci;         /* Scope to limit transfer */
 
-   USHORT        uiFlags;       /* Atributos de transferencia */
+   USHORT        uiFlags;       /* Transfer attributes */
 
-   USHORT        uiItemCount;   /* Contador de elementos */
-   LPDBTRANSITEM lpTransItems;  /* Matriz de elementos */
+   USHORT        uiItemCount;   /* Number of items below */
+   LPDBTRANSITEM lpTransItems;  /* Array of items */
 } DBTRANSINFO;
 
 typedef DBTRANSINFO * LPDBTRANSINFO;
@@ -385,25 +384,24 @@ typedef DBTRANSINFO * LPDBTRANSINFO;
 /*
 *  DBSORTITEM
 *  ----------
-*  La estructura de ordenaci¢n
+*  The Sort Item Structure
 *
-*  Una matriz de elementos que, juntos, indican el valor clave a
-*  utilizar al ordenar datos. El orden de la matriz determina el
-*  orden de la ordenaci¢n.
+*  An array of items that, together, indicate the key value to
+*  use while sorting data. The order of the array determines the
+*  order of the sorting.
 */
 
 #ifdef 0
 typedef struct
 {
-   USHORT uiField;        /* Indice dentro de la estructura */
-                          /*  rea-de-trabajo->campos */
-   USHORT uiFlags;        /* Indicadores de ordenaci¢n */
+   USHORT uiField;        /* Index into the workarea->fields structure */
+   USHORT uiFlags;        /* Sort flags */
 } DBSORTITEM;
 
 typedef DBSORTITEM * LPDBSORTITEM;
 #endif
 
-/* Indicadores para DBSORTITEM */
+/* Flags for DBSORTITEM */
 #define SF_ASCEND       1
 #define SF_CASE         2
 #define SF_DESCEND      4
@@ -416,19 +414,18 @@ typedef DBSORTITEM * LPDBSORTITEM;
 /*
 *  DBSORTINFO
 *  ----------
-*  La estructura de ordenaci¢n
+*  The Sort Info Structure
 *
-*  Informaci¢n para la ordenaci¢n f¡sica en un  rea de trabajo
+*  Information for a physical sort on the workarea
 */
 
 #ifdef 0
 typedef struct
 {
-   DBTRANSINFO   dbtri;        /* Informaci¢n de transferencia del  rea de */
-                               /* trabajo destino */
-   LPDBSORTITEM  lpdbsItem;    /* Campos que componen los valores claves en */
-                               /* la ordenaci¢n */
-   USHORT        uiItemCount;  /* Contador de elementos */
+   DBTRANSINFO   dbtri;        /* Destination workarea transfer information */
+
+   LPDBSORTITEM  lpdbsItem;    /* Fields which compose the key values for the sort */
+   USHORT        uiItemCount;  /* The number of fields above */
 
 } DBSORTINFO;
 
@@ -439,9 +436,9 @@ typedef DBSORTINFO * LPDBSORTINFO;
 /*
 *  DBLOCKINFO
 *  ----------
-*  La estructura de bloqueo
+*  The Lock Info Structure
 *
-*  Contiene informaci¢n de bloqueos de registro o fichero
+*  Information for a record or file lock
 */
 
 #ifdef 0
@@ -859,11 +856,11 @@ typedef RDDFUNCS * PRDDFUNCS;
 #define SELF_TABLEEXT(w, fp)            ((*(w)->lprfsHost->info)(w, DBI_TABLEEXT, fp))
 
 
-/*--------------------* M‚todos SUPER *------------------------*/
+/*--------------------* SUPER Methods *------------------------*/
 
 #ifdef 0
 
-/* M‚todos de movimiento y posicionamiento */
+/* Movement and positioning methods */
 
 #define SUPER_BOF(w, sp)                ((*(SUPERTABLE)->bof)(w, sp))
 #define SUPER_EOF(w, sp)                ((*(SUPERTABLE)->eof)(w, sp))
@@ -878,7 +875,7 @@ typedef RDDFUNCS * PRDDFUNCS;
 #define SUPER_SKIPRAW(w, l)             ((*(SUPERTABLE)->skipRaw)(w, l))
 
 
-/* Manejo de datos */
+/* Data management */
 
 #define SUPER_ADDFIELD(w, ip)           ((*(SUPERTABLE)->addField)(w, ip))
 #define SUPER_APPEND(w,l)               ((*(SUPERTABLE)->append)(w,l))
@@ -904,7 +901,7 @@ typedef RDDFUNCS * PRDDFUNCS;
 #define SUPER_SETFIELDEXTENT(w, s)      ((*(SUPERTABLE)->setFieldExtent)(w, s))
 
 
-/* Manejo de  reas de trabajo/bases de datos */
+/* WorkArea/Database management */
 
 #define SUPER_ALIAS(w, bp)              ((*(SUPERTABLE)->alias)(w, bp))
 #define SUPER_CLOSE(w)                  ((*(SUPERTABLE)->close)(w))
@@ -924,7 +921,7 @@ typedef RDDFUNCS * PRDDFUNCS;
 #define SUPER_ZAP(w)                    ((*(SUPERTABLE)->zap)(w))
 
 
-/* M‚todos relacionales */
+/* Relational Methods */
 
 #define SUPER_CHILDEND(w, ip)           ((*(SUPERTABLE)->childEnd)(w, ip))
 #define SUPER_CHILDSTART(w, ip)         ((*(SUPERTABLE)->childStart)(w, ip))
@@ -938,7 +935,7 @@ typedef RDDFUNCS * PRDDFUNCS;
 #define SUPER_SETREL(w, ip)             ((*(SUPERTABLE)->setRel)(w, ip))
 
 
-/* Manejo de ¢rdenes */
+/* Order Management */
 
 #define SUPER_ORDLSTADD(w, lp)          ((*(SUPERTABLE)->orderListAdd)(w, lp))
 #define SUPER_ORDLSTDELETE(w, lp)       ((*(SUPERTABLE)->orderListDelete)(w, lp))
@@ -960,7 +957,7 @@ typedef RDDFUNCS * PRDDFUNCS;
 #define SUPER_ORDBAGEXT(w,  p)          ((*(SUPERTABLE)->orderInfo)(w, DBOI_BAGEXT,     p))
 
 
-/* Establecimiento de filtros y  mbitos */
+/* Filters and Scope Settings */
 
 #define SUPER_CLEARFILTER(w)            ((*(SUPERTABLE)->clearFilter)(w))
 #define SUPER_CLEARLOCATE(w)            ((*(SUPERTABLE)->clearLocate)(w))
@@ -974,14 +971,14 @@ typedef RDDFUNCS * PRDDFUNCS;
 #define SUPER_SKIPSCOPE(w, bp, l)       ((*(SUPERTABLE)->skipScope)(w, bp, l))
 
 
-/* Diversos */
+/* Miscellaneous */
 
 #define SUPER_COMPILE(w, bp)            ((*(SUPERTABLE)->compile)(w, bp))
 #define SUPER_ERROR(w, ip)              ((*(SUPERTABLE)->error)(w, ip))
 #define SUPER_EVALBLOCK(w, v)           ((*(SUPERTABLE)->evalBlock)(w, v))
 
 
-/* Operaciones de red */
+/* Network operations */
 
 #define SUPER_GETLOCKS(w, g)            ((*(SUPERTABLE)->info)(w, DBI_GETLOCKARRAY, g))
 #define SUPER_RAWLOCK(w, i, l)          ((*(SUPERTABLE)->rawlock)(w, i, l))
@@ -989,7 +986,7 @@ typedef RDDFUNCS * PRDDFUNCS;
 #define SUPER_UNLOCK(w)                 ((*(SUPERTABLE)->unlock)(w))
 
 
-/* Funciones de ficheros memo */
+/* Memofile functions */
 
 #define SUPER_CLOSEMEMFILE(w)           ((*(SUPERTABLE)->closeMemFile)(w))
 #define SUPER_CREATEMEMFILE(w,bp)       ((*(SUPERTABLE)->createMemFile)(w,bp))
@@ -998,13 +995,13 @@ typedef RDDFUNCS * PRDDFUNCS;
 #define SUPER_PUTVALUEFILE(w,i,bp)      ((*(SUPERTABLE)->putValueFile)(w,i,bp))
 
 
-/* Manejo de cabeceras de ficheros de base de datos */
+/* Database file header handling */
 
 #define SUPER_READDBHEADER(w)           ((*(SUPERTABLE)->readDBHeader)(w))
 #define SUPER_WRITEDBHEADER(w)          ((*(SUPERTABLE)->writeDBHeader)(w))
 
 
-/* Operaciones Info */
+/* Info operations */
 
 #define SUPER_RECSIZE(w, lp)          ((*(SUPERTABLE)->info)(w, DBI_GETRECSIZE, lp))
 #define SUPER_HEADERSIZE(w, fp)       ((*(SUPERTABLE)->info)(w, DBI_GETHEADERSIZE, fp))

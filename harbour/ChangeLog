@@ -1,3 +1,31 @@
+19990803-14:55 GMT+1 Victor Szel <info@szelvesz.hu>
+  ! source/rtl/strings.c - ASC() fixed. It could return negative values
+    since a typecase (BYTE) was missing.
+  ! source/rtl/descend.c
+    * Fixed so that it's returning NIL type
+      on bad parameter type, and not "NIL" as a string.
+    * Fixed Chr(0) handling in the middle of the string.
+    * Fixed so that it returns DOUBLE type even when an integer
+      is passed, just like in Clipper.
+  + tests/working/descend.prg - Output to STD, plus some new tests.
+  ! source/rtl/console.c
+    makefile.b16
+    makefile.b31
+    terminal.b32
+    WINDOWS define check removed. QOUT() will no longer
+    throw a MessageBox() when compiled wit -DWINDOWS
+    Since this by no means expected behaviour.
+    To throw a MessageBox() one should call a user function
+    to do this.
+  - source/vm/hvm.c
+    WINDOWS define check removed, since it was never defined,
+    in any current build system.
+  * include/rddapi.h
+    "Translated" to English.
+  + include/extend.h - Added hb_strdescend() function extern.
+  + include/itemapi.h - Added type EVALINFO_PTR
+  ! include/Makefile - Completed file lists.
+
 19990803-12:22 GMT+1 Victor Szel <info@szelvesz.hu>
    ! include/rddapi.h
      ITEM -> PHB_ITEM

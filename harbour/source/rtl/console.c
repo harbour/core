@@ -38,10 +38,6 @@
    See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
 */
 
-#ifdef WINDOWS
-   #include <windows.h>
-#endif
-
 #include "hbsetup.h"
 #include "extend.h"
 #include "itemapi.h"
@@ -536,20 +532,16 @@ HARBOUR HB_QQOUT( void ) /* writes a list of values to the current device (scree
 
 HARBOUR HB_QOUT( void )
 {
-   #ifdef WINDOWS
-      MessageBox( 0, hb_parc( 1 ), "Harbour", 0 );
-   #else
-      WORD count;
-      hb_altout( CrLf, CRLF_BUFFER_LEN-1 );
-      if( hb_set.HB_SET_PRINTER && hb_set_printhan >= 0 )
-      {
-         p_row++;
-         p_col = hb_set.HB_SET_MARGIN;
-         count = p_col;
-         while( count-- > 0 ) write( hb_set_printhan, " ", 1 );
-      }
-      HB_QQOUT();
-   #endif
+   WORD count;
+   hb_altout( CrLf, CRLF_BUFFER_LEN-1 );
+   if( hb_set.HB_SET_PRINTER && hb_set_printhan >= 0 )
+   {
+      p_row++;
+      p_col = hb_set.HB_SET_MARGIN;
+      count = p_col;
+      while( count-- > 0 ) write( hb_set_printhan, " ", 1 );
+   }
+   HB_QQOUT();
 }
 
 HARBOUR HB_SETPOS( void ) /* Sets the screen position */

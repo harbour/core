@@ -5,45 +5,58 @@
 ROOT = ../
 
 C_HEADERS=\
-	box.h \
-	compiler.h \
-	ctoharb.h \
-	dates.h \
-	errorapi.h \
-	extend.h \
-	filesys.h \
-	gtapi.h \
-	hbdefs.h \
-	hberrors.h \
-	hbpp.h \
-	hbsetup.h \
-	hbver.h \
-	init.h \
-	initsymb.h \
-	inkey.h \
-	itemapi.h \
-	pcode.h \
-	run_exp.h \
-	set.h \
+        box.h        \
+        clipdefs.h   \
+        compiler.h   \
+        ctoharb.h    \
+        dates.h      \
+        errorapi.h   \
+        extend.h     \
+        filesys.h    \
+        gtapi.h      \
+        hbdefs.h     \
+        hberrors.h   \
+        hbpp.h       \
+        hbsetup.h    \
+        hbver.h      \
+        init.h       \
+        initsymb.h   \
+        inkey.h      \
+        itemapi.h    \
+        pcode.h      \
+        rddapi.h     \
+        run_exp.h    \
+        set.h        \
 
 PRG_HEADERS=\
-	box.ch \
-	classes.ch \
-	color.ch \
-	error.ch \
-	fileio.ch \
-	inkey.ch \
-	rddsys.ch \
-	set.ch \
-	setcurs.ch \
+        achoice.ch   \
+        assert.ch    \
+        box.ch       \
+        classes.ch   \
+        color.ch     \
+        common.ch    \
+        dbedit.ch    \
+        dbstruct.ch  \
+        directry.ch  \
+        error.ch     \
+        fileio.ch    \
+        getexit.ch   \
+        inkey.ch     \
+        memoedit.ch  \
+        rddsys.ch    \
+        set.ch       \
+        setcurs.ch   \
+        simpleio.ch  \
 
 API_HEADERS=\
-	error.api \
-	extend.api \
-	filesys.api \
-	fm.api \
-	gt.api \
-	item.api \
-	rdd.api \
+        caundoc.api  \
+        error.api    \
+        extend.api   \
+        filesys.api  \
+        fm.api       \
+        gt.api       \
+        item.api     \
+        rdd.api      \
+        vm.api       \
 
 include $(TOP)$(ROOT)config/header.cf
