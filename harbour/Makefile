@@ -5,6 +5,7 @@
 ROOT = ./
 
 DIRS=\
+	doc \
 	include \
 	source \
 	utils \

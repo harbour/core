@@ -8,6 +8,19 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-05-09 20:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+  * Makefile
+  + config/doc.cf
+  + doc/Makefile
+  * doc/gmake.txt
+  + doc/en/Makefile
+  + doc/es/Makefile
+    + Added the ability to install files from doc directory using
+      the new environment variable HB_DOC_INSTALL, which is left
+      undefined by default. All files from doc, doc/en, and doc/es
+      are installed if the HB_DOC_INSTALL variable is defined when
+      you run 'make install'.
+
 2003-05-09 17:20 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/idle.c
     + Added a PRG-callable function wrapper for hb_releaseCPU() and
