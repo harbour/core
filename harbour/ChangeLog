@@ -1,3 +1,7 @@
+2000-10-10 16:12 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   *contrib/rdd_ads/ads1.c
+     * fixed bug with creating compound indexes, reported by Antonio Linares
+
 2000-10-10 14:50 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * source/rdd/workarea.c
      * fixed bug, related to fields handling

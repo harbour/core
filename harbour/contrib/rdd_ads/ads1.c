@@ -1283,10 +1283,7 @@ static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
       ulOptions = ADS_COMPOUND;
    else
    {
-      int slen = strlen( pArea->szDataFileName );
-      char * ptr = pArea->szDataFileName + slen - 4;
-      if( strcmpNoCase( ( char * ) pOrderInfo->abBagName, ( char * ) pArea->szDataFileName,
-            ( slen >= 4 && strcmpNoCase( ".dbf", ptr, 0 ) ) ? slen-4:0 ) )
+      if( pOrderInfo->atomBagName && *(pOrderInfo->atomBagName) != '\0' )
          ulOptions = ADS_COMPOUND;
    }
 
