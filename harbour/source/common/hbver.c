@@ -159,10 +159,9 @@ char * hb_verPlatform( void )
       APIRET rc = DosQuerySysInfo( 1L, QSV_MAX, ( void * ) aulQSV, sizeof( ULONG ) * QSV_MAX );
 
       if( rc == 0 )
-         sprintf( pszPlatform, "OS/2 %d.%02d%c",
+         sprintf( pszPlatform, "OS/2 %ld.%02ld",
             aulQSV[ QSV_VERSION_MAJOR ] / 10,
-            aulQSV[ QSV_VERSION_MINOR ],
-            ( aulQSV[ QSV_VERSION_REVISION ] > 0 && aulQSV[ QSV_VERSION_REVISION ] < 26 ) ? '@' + aulQSV[ QSV_VERSION_REVISION ] : 0 );
+            aulQSV[ QSV_VERSION_MINOR ]);
       else
          sprintf( pszPlatform, "OS/2" );
    }

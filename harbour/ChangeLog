@@ -1,21 +1,25 @@
+20000801-19:28 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * source/common/hbver.c
+     ! fixed sprintf() warnings for OS/2 and removed revision number since it is always 0.
+
 2000-08-01 18:20 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbapi.h
         * modified HB_MACRO structure
 
     *source/macro/macro.l
-        * optimized support for array index 
-        
+        * optimized support for array index
+
     *source/compiler/harbour.c
     *source/compiler/harbour.y
         *fixed some unreleased memory blocks reported by CodeGuard
-        
+
     *source/compiler/hbident.c
         *changed size of hash table to 509
 
     *source/macro/Makefile
         * removed CR characters
-        
+
 NOTE:
   All sources HAVE TO be rebuild !!!
 
