@@ -9,9 +9,9 @@ YACC_FLAGS = -p hb_comp
 YACC_SOURCE=macro.y
 
 YACC_HEADERS=\
-	macro.h \
+	hbmacro.h \
 	hbsetup.h \
-	pcode.h \
+	hbpcode.h \
 	hbdefs.h \
 
 #NOTE: You can pass additional parameters that control the speed/size
@@ -31,7 +31,7 @@ LEX_HEADERS=\
 	hbsetup.h \
 	hberrors.h \
 	hbdefs.h \
-	macro.h \
+	hbmacro.h \
 
 C_SOURCES=macro.c \
 
