@@ -81,7 +81,7 @@ static void hb_releaseCPU( void )
 
 #if defined(HB_OS_WIN_32)
    /* Forfeit the remainder of the current time slice. */
-   Sleep( 0 );
+   Sleep( 20 );
 
 #elif defined(HB_OS_OS2)
    /* 23/nov/2000 - maurilio.longo@libero.it
@@ -117,7 +117,7 @@ static void hb_releaseCPU( void )
 #elif defined(HB_OS_UNIX)
   {
      static struct timespec nanosecs = { 0, 1000 };
-     /* NOTE: it will sleep at least 10 miliseconds (forced by kernel) */     
+     /* NOTE: it will sleep at least 10 miliseconds (forced by kernel) */
      nanosleep( &nanosecs, NULL );
   }
 #else
