@@ -62,7 +62,8 @@ METHOD New() CLASS TBColumn
 
 return Self
 
-/* NOFIX: In Clipper the column width are not determined at this point. */
+/* TOFIX: In Clipper the column widths are not determined at this point. 
+          [vszakats] */
 
 function TBColumnNew( cHeading, bBlock )
 
@@ -91,7 +92,7 @@ function TBColumnNew( cHeading, bBlock )
             nWidth := 0
       endcase
 
-      oCol:Width := If( cHeading != nil, Max( Len( cHeading ), nWidth ), nWidth )
+      oCol:Width := iif( cHeading != nil, Max( Len( cHeading ), nWidth ), nWidth )
 
    endif
 

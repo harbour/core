@@ -23,4 +23,4 @@ Here's how to upload you changes to the CVS server
 14.) Send the email message containing the changes
 15.) Go offline
 
-Victor Szel
+Victor Szakats

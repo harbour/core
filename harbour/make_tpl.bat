@@ -12,7 +12,7 @@ rem
 rem For further information about the GNU make system please
 rem check doc/gmake.txt
 rem
-rem Copyright 1999 Victor Szel <info@szelvesz.hu>
+rem Copyright 1999 Victor Szakats <info@szelvesz.hu>
 rem See doc/license.txt for licensing terms.
 rem ---------------------------------------------------------------
 

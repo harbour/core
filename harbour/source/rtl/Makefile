@@ -82,7 +82,6 @@ PRG_SOURCES=\
         menuto.prg   \
         objfunc.prg  \
         readkey.prg  \
-        readvar.prg  \
         setfunc.prg  \
         setkey.prg   \
         setta.prg    \

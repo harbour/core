@@ -1,3 +1,21 @@
+20000211-19:11 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/rtl/Makefile
+     - readvar.prg removed.
+   * tests/bld_b16.bat 
+     tests/bld_b32.bat 
+     tests/bld_b32o.bat
+     tests/bld_b32w.bat
+     tests/bld_vc.bat  
+     * Files moved to the bin\ directory.
+   - tests/test_all.lnk
+     - Blinker specific, probably obsolete file removed.
+   * doc/cvshowto.txt
+     bin/bld_tpl.*
+     make_tpl.*
+     * My name changed to the real one.
+   * source/rtl/tbcolumn.prg
+     ! NOFIX: -> TOFIX:
+
 20000211-09:33 GMT+1 Patrick Mast <harbour@PatrickMast.com>
    + doc/harbext.txt
      * This contains the Language and RTL extensions of Harbour
