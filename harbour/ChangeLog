@@ -1,3 +1,13 @@
+20000430-17:45 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbcomp.h
+    *include/hbexprop.h
+    *include/hbmacro.h
+    *source/vm/macro.c
+	* removed redundancy in extern declarations
+	* removed unused bStackAffected parameter used for
+	  strong typing
+
 20000430-13:50 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.c

@@ -755,7 +755,7 @@ ULONG hb_compGenJump( LONG lOffset, HB_MACRO_DECL )
    if( lOffset < ( LONG ) SHRT_MIN || lOffset > ( LONG ) SHRT_MAX )
       hb_macroError( HB_MACRO_TOO_COMPLEX, HB_MACRO_PARAM );
 
-   hb_compGenPCode3( HB_P_JUMP, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BOOL ) 0, HB_MACRO_PARAM );
+   hb_compGenPCode3( HB_P_JUMP, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_MACRO_PARAM );
 
    return HB_PCODE_DATA->lPCodePos - 2;
 }
@@ -767,7 +767,7 @@ ULONG hb_compGenJumpFalse( LONG lOffset, HB_MACRO_DECL )
    if( lOffset < ( LONG ) SHRT_MIN || lOffset > ( LONG ) SHRT_MAX )
       hb_macroError( HB_MACRO_TOO_COMPLEX, HB_MACRO_PARAM );
 
-   hb_compGenPCode3( HB_P_JUMPFALSE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BOOL ) 1, HB_MACRO_PARAM );
+   hb_compGenPCode3( HB_P_JUMPFALSE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_MACRO_PARAM );
 
    return HB_PCODE_DATA->lPCodePos - 2;
 }
@@ -798,7 +798,7 @@ ULONG hb_compGenJumpTrue( LONG lOffset, HB_MACRO_DECL )
    if( lOffset < ( LONG ) SHRT_MIN || lOffset > ( LONG ) SHRT_MAX )
       hb_macroError( HB_MACRO_TOO_COMPLEX, HB_MACRO_PARAM );
 
-   hb_compGenPCode3( HB_P_JUMPTRUE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BOOL ) 1, HB_MACRO_PARAM );
+   hb_compGenPCode3( HB_P_JUMPTRUE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_MACRO_PARAM );
 
    return HB_PCODE_DATA->lPCodePos - 2;
 }
@@ -833,7 +833,7 @@ void hb_compMemvarGenPCode( BYTE bPCode, char * szVarName, HB_MACRO_DECL )
       pSym = hb_dynsymGet( szVarName );
    }
    hb_compGenPCode1( bPCode, HB_MACRO_PARAM );
-   hb_compGenPCodeN( ( BYTE * )( &pSym ), sizeof( pSym ), ( BOOL ) 0, HB_MACRO_PARAM );
+   hb_compGenPCodeN( ( BYTE * )( &pSym ), sizeof( pSym ), HB_MACRO_PARAM );
 }
 
 /* generates the pcode to push a symbol on the virtual machine stack */
@@ -861,7 +861,7 @@ void hb_compGenPushSymbol( char * szSymbolName, int isFunction, HB_MACRO_DECL )
       pSym = hb_dynsymGet( szSymbolName );
 
    hb_compGenPCode1( HB_P_MPUSHSYM, HB_MACRO_PARAM );
-   hb_compGenPCodeN( ( BYTE * ) &pSym, sizeof( pSym ), ( BOOL ) 0, HB_MACRO_PARAM );
+   hb_compGenPCodeN( ( BYTE * ) &pSym, sizeof( pSym ), HB_MACRO_PARAM );
 }
 
 /* generates the pcode to push a long number on the virtual machine stack */
@@ -888,7 +888,7 @@ void hb_compGenMessage( char * szMsgName, HB_MACRO_DECL )
    HB_DYNS_PTR pSym = hb_dynsymGet( szMsgName );
 
    hb_compGenPCode1( HB_P_MMESSAGE, HB_MACRO_PARAM );
-   hb_compGenPCodeN( ( BYTE * ) &pSym, sizeof( pSym ), ( BOOL ) 0, HB_MACRO_PARAM );
+   hb_compGenPCodeN( ( BYTE * ) &pSym, sizeof( pSym ), HB_MACRO_PARAM );
 }
 
 /* generates an underscore-symbol name for a data assignment */
@@ -915,7 +915,7 @@ void hb_compGenPopVar( char * szVarName, HB_MACRO_DECL )
    if( iVar )
    {
       /* this is a codeblock parameter */
-      hb_compGenPCode3( HB_P_POPLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), ( BOOL ) 1, HB_MACRO_PARAM );
+      hb_compGenPCode3( HB_P_POPLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), HB_MACRO_PARAM );
    }
    else
    {
@@ -996,7 +996,7 @@ void hb_compGenPushVar( char * szVarName, HB_MACRO_DECL )
    if( iVar )
    {
       /* this is a codeblock parameter */
-      hb_compGenPCode3( HB_P_PUSHLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), ( BOOL ) 1, HB_MACRO_PARAM );
+      hb_compGenPCode3( HB_P_PUSHLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), HB_MACRO_PARAM );
    }
    else
    {
@@ -1015,7 +1015,7 @@ void hb_compGenPushVarRef( char * szVarName, HB_MACRO_DECL )
 
    iVar = hb_compLocalVarGetPos( szVarName, HB_MACRO_PARAM );
    if( iVar )
-      hb_compGenPCode3( HB_P_PUSHLOCALREF, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), ( BOOL ) 1, HB_MACRO_PARAM );
+      hb_compGenPCode3( HB_P_PUSHLOCALREF, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), HB_MACRO_PARAM );
    else
    {
       hb_compMemvarGenPCode( HB_P_MPUSHMEMVARREF, szVarName, HB_MACRO_PARAM );
@@ -1097,7 +1097,7 @@ void hb_compGenPushLogical( int iTrueFalse, HB_MACRO_DECL )
 void hb_compGenPushDouble( double dNumber, BYTE bDec, HB_MACRO_DECL )
 {
    hb_compGenPCode1( HB_P_PUSHDOUBLE, HB_MACRO_PARAM );
-   hb_compGenPCodeN( ( BYTE * ) &dNumber, sizeof( double ), ( BOOL ) 0, HB_MACRO_PARAM );
+   hb_compGenPCodeN( ( BYTE * ) &dNumber, sizeof( double ), HB_MACRO_PARAM );
    hb_compGenPCode1( bDec, HB_MACRO_PARAM );
 }
 
@@ -1122,8 +1122,8 @@ void hb_compGenPushFunCall( char * szFunName, HB_MACRO_DECL )
 /* generates the pcode to push a string on the virtual machine stack */
 void hb_compGenPushString( char * szText, ULONG ulStrLen, HB_MACRO_DECL )
 {
-   hb_compGenPCode3( HB_P_PUSHSTR, HB_LOBYTE( ulStrLen ), HB_HIBYTE( ulStrLen ), ( BOOL ) 1, HB_MACRO_PARAM );
-   hb_compGenPCodeN( ( BYTE * ) szText, ulStrLen, ( BOOL ) 0, HB_MACRO_PARAM );
+   hb_compGenPCode3( HB_P_PUSHSTR, HB_LOBYTE( ulStrLen ), HB_HIBYTE( ulStrLen ), HB_MACRO_PARAM );
+   hb_compGenPCodeN( ( BYTE * ) szText, ulStrLen, HB_MACRO_PARAM );
 }
 
 
@@ -1137,7 +1137,7 @@ void hb_compGenPCode1( BYTE byte, HB_MACRO_DECL )
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte;
 }
 
-void hb_compGenPCode2( BYTE byte1, BYTE byte2, BOOL bStackAffected, HB_MACRO_DECL )
+void hb_compGenPCode2( BYTE byte1, BYTE byte2, HB_MACRO_DECL )
 {
    HB_PCODE_INFO_PTR pFunc = HB_PCODE_DATA;
 
@@ -1148,7 +1148,7 @@ void hb_compGenPCode2( BYTE byte1, BYTE byte2, BOOL bStackAffected, HB_MACRO_DEC
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte2;
 }
 
-void hb_compGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3, BOOL bStackAffected, HB_MACRO_DECL )
+void hb_compGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3, HB_MACRO_DECL )
 {
    HB_PCODE_INFO_PTR pFunc = HB_PCODE_DATA;
 
@@ -1160,7 +1160,7 @@ void hb_compGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3, BOOL bStackAffected, 
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte3;
 }
 
-void hb_compGenPCode4( BYTE byte1, BYTE byte2, BYTE byte3, BYTE byte4, BOOL bStackAffected, HB_MACRO_DECL )
+void hb_compGenPCode4( BYTE byte1, BYTE byte2, BYTE byte3, BYTE byte4, HB_MACRO_DECL )
 {
    HB_PCODE_INFO_PTR pFunc = HB_PCODE_DATA;
 
@@ -1173,7 +1173,7 @@ void hb_compGenPCode4( BYTE byte1, BYTE byte2, BYTE byte3, BYTE byte4, BOOL bSta
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte4;
 }
 
-void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, BOOL bStackAffected, HB_MACRO_DECL )
+void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, HB_MACRO_DECL )
 {
    HB_PCODE_INFO_PTR pFunc = HB_PCODE_DATA;
 
@@ -1260,12 +1260,12 @@ void hb_compCodeBlockEnd( HB_MACRO_DECL )
    /*NOTE: HB_P_MPUSHBLOCK differs from HB_P_PUSHBLOCK - the pcode
     * is stored in dynamic memory pool instead of static memory
     */
-   hb_compGenPCode3( HB_P_MPUSHBLOCK, HB_LOBYTE( wSize ), HB_HIBYTE( wSize ), ( BOOL ) 1, HB_MACRO_PARAM );
+   hb_compGenPCode3( HB_P_MPUSHBLOCK, HB_LOBYTE( wSize ), HB_HIBYTE( wSize ), HB_MACRO_PARAM );
    hb_compGenPCode1( HB_LOBYTE( wParms ), HB_MACRO_PARAM );
    hb_compGenPCode1( HB_HIBYTE( wParms ), HB_MACRO_PARAM );
 
    /* copy a codeblock pcode buffer */
-   hb_compGenPCodeN( pCodeblock->pCode, pCodeblock->lPCodePos, ( BOOL ) 1, HB_MACRO_PARAM );
+   hb_compGenPCodeN( pCodeblock->pCode, pCodeblock->lPCodePos, HB_MACRO_PARAM );
    hb_compGenPCode1( HB_P_ENDBLOCK, HB_MACRO_PARAM ); /* finish the codeblock */
 
    /* free memory allocated for a codeblock */

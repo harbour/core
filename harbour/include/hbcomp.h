@@ -202,39 +202,6 @@ extern void hb_compExternAdd( char * szExternName ); /* defines a new extern nam
 
 #ifdef HB_MACRO_SUPPORT
 
-extern BOOL hb_compVariableMacroCheck( char *, HB_MACRO_DECL ); /* checks if passed variable can be used in macro */
-
-extern ULONG hb_compGenJump( LONG, HB_MACRO_DECL );              /* generates the pcode to jump to a specific offset */
-extern ULONG hb_compGenJumpFalse( LONG, HB_MACRO_DECL );         /* generates the pcode to jump if false */
-extern ULONG hb_compGenJumpTrue( LONG, HB_MACRO_DECL );          /* generates the pcode to jump if true */
-extern void hb_compGenJumpHere( ULONG, HB_MACRO_DECL );          /* returns the pcode pos where to set a jump offset */
-extern void hb_compGenJumpThere( ULONG, ULONG, HB_MACRO_DECL );  /* sets a jump offset */
-
-extern void hb_compGenMessage( char *, HB_MACRO_DECL );       /* sends a message to an object */
-extern void hb_compGenMessageData( char *, HB_MACRO_DECL );     /* generates an underscore-symbol name for a data assignment */
-extern void hb_compGenPopVar( char *, HB_MACRO_DECL );         /* generates the pcode to pop a value from the virtual machine stack onto a variable */
-extern void hb_compGenPushDouble( double , BYTE, HB_MACRO_DECL ); /* Pushes a number on the virtual machine stack */
-extern void hb_compGenPushFunCall( char *, HB_MACRO_DECL );             /* generates the pcode to push function's call */
-extern void hb_compGenPushVar( char *, HB_MACRO_DECL );        /* generates the pcode to push a variable value to the virtual machine stack */
-extern void hb_compGenPushVarRef( char *, HB_MACRO_DECL );    /* generates the pcode to push a variable by reference to the virtual machine stack */
-extern void hb_compGenPushLogical( int, HB_MACRO_DECL );     /* pushes a logical value on the virtual machine stack */
-extern void hb_compGenPushLong( long, HB_MACRO_DECL );          /* Pushes a long number on the virtual machine stack */
-extern void hb_compGenPushNil( HB_MACRO_DECL );                   /* Pushes nil on the virtual machine stack */
-extern void hb_compGenPushString( char *, ULONG, HB_MACRO_DECL );       /* Pushes a string on the virtual machine stack */
-extern void hb_compGenPushSymbol( char *, int, HB_MACRO_DECL ); /* Pushes a symbol on to the Virtual machine stack */
-extern void hb_compGenPushAliasedVar( char *, BOOL, char *, long, HB_MACRO_DECL );
-extern void hb_compGenPopAliasedVar( char *, BOOL, char *, long, HB_MACRO_DECL );
-extern void hb_compGenPushFunRef( char *, HB_MACRO_DECL );
-extern void hb_compGenPCode1( BYTE, HB_MACRO_DECL );             /* generates 1 byte of pcode */
-extern void hb_compGenPCode2( BYTE, BYTE, BOOL, HB_MACRO_DECL ); /* generates 2 bytes of pcode */
-extern void hb_compGenPCode3( BYTE, BYTE, BYTE, BOOL, HB_MACRO_DECL ); /* generates 3 bytes of pcode */
-extern void hb_compGenPCode4( BYTE, BYTE, BYTE, BYTE, BOOL, HB_MACRO_DECL ); /* generates 4 bytes of pcode */
-extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, BOOL, HB_MACRO_DECL );  /* copy bytes to a pcode buffer */
-
-/* Codeblocks */
-extern void hb_compCodeBlockStart( HB_MACRO_DECL ); /* starts a codeblock creation */
-extern void hb_compCodeBlockEnd( HB_MACRO_DECL );   /* end of codeblock creation */
-
 #define hb_compErrorType( p )    hb_macroError( EG_ARG, HB_MACRO_PARAM )
 #define hb_compErrorIndex( p )   hb_macroError( EG_BOUND, HB_MACRO_PARAM )
 #define hb_compErrorSyntax( p )  hb_macroError( EG_SYNTAX, HB_MACRO_PARAM )
