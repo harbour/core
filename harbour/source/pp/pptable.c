@@ -204,7 +204,7 @@ void hb_pp_Table( void )
    static COMMANDS sC___92 = {0,"SET","DELIMITERS TO \1A00","Set( _SET_DELIMCHARS, \1A00 )",&sC___91 };
    static COMMANDS sC___93 = {0,"SET","DELIMITERS TO DEFAULT","Set( _SET_DELIMCHARS, '::' )",&sC___92 };
    static COMMANDS sC___94 = {0,"SET","DELIMITERS TO","Set( _SET_DELIMCHARS, '::' )",&sC___93 };
-   static COMMANDS sC___95 = {0,"SET","FORMAT TO \1A00","_ProcReq_( \1A30 + '.FMT' ) ; __SetFormat( {|| \1A00()} )",&sC___94 };
+   static COMMANDS sC___95 = {0,"SET","FORMAT TO \1A00","_ProcReq_( \1A30 + '.fmt' ) ; __SetFormat( {|| \1A00()} )",&sC___94 };
    static COMMANDS sC___96 = {0,"SET","FORMAT TO \1A00.\1B00",
        "_ProcReq_( \1A30 + '.' + \1B30 ) ; __SetFormat( {|| \1A00()} )",&sC___95 };
    static COMMANDS sC___97 = {0,"SET","FORMAT TO \1A20&>",

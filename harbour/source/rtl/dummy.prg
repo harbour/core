@@ -60,9 +60,6 @@ FUNCTION dbRecordInfo()    ; RETURN NIL
 FUNCTION dbFieldInfo()     ; RETURN NIL
 #endif
 
-FUNCTION dbSetRelation()   ; RETURN NIL
-FUNCTION dbClearRelation() ; RETURN NIL
-
 FUNCTION MLCToPos()        ; RETURN 0
 FUNCTION MPosToLC()        ; RETURN 0
 

@@ -520,8 +520,7 @@ HARBOUR_EXE_OBJS = \
    $(OBJ_DIR)\exproptb.obj \
    $(OBJ_DIR)\exproptc.obj \
    $(OBJ_DIR)\hbfunchk.obj \
-   $(OBJ_DIR)\ppcore.obj \
-   $(OBJ_DIR)\ppcomp.obj
+   $(PP_LIB)
 
 #
 # HBRUN.EXE rules

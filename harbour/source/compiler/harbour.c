@@ -144,26 +144,6 @@ static int hb_compAutoOpen( char * szPrg, BOOL * bSkipGen );
 
 /* -m Support */
 static BOOL hb_compAutoOpenFind( char * szName );
-#ifdef HB_NESTED_COMPILE
-   static void hb_compSaveVars( PHARBVARS, int );
-   static void hb_compRestoreVars( PHARBVARS, int );
-
-   /* In Harbour.l */
-   extern void * hb_compGet_YY_CURRENT_BUFFER( void );
-   extern void hb_compSet_YY_CURRENT_BUFFER( void * );
-   extern int hb_compGet_yy_init( void );
-   extern void hb_compSet_yy_init( int i );
-   extern int hb_compGet_yy_start( void );
-   extern void hb_compSet_yy_start( int i );
-   extern int hb_compGet_yy_did_buffer_switch_on_eof( void );
-   extern void hb_compSet_yy_did_buffer_switch_on_eof( int );
-
-   /* In Harbour.y */
-   extern void * hb_compGet_pLoops( void );
-   extern void hb_compSet_pLoops( void * pLoops );
-   extern void * hb_compGet_rtvars( void );
-   extern void hb_compSet_rtvars( void * rtvars );
-#endif
 
 extern int yyparse( void );    /* main yacc parsing function */
 
@@ -3359,23 +3339,6 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
    int iStatus = EXIT_SUCCESS;
    PHB_FNAME pFileName;
 
-   /* Code to support nested compile excluded - other support code is #if defed out later in this file as well as in Harbour.l and Harbour.y */
-   #ifdef HB_NESTED_COMPILE
-      BOOL bNested = ( argc == 0 );
-      HARBVARS HarbourVars ;
-   #else
-      /* Note: the nested compile is almost completle, known issue when resuming compilation of main file, the immediate next line is skipped. */
-      #define hb_compSaveVars( p, i)
-      #define hb_compRestoreVars( p, i )
-   #endif
-
-   #ifdef HB_NESTED_COMPILE
-   if( bNested )
-   {
-      pFileName = hb_comp_pFileName;
-   }
-   #endif
-
    hb_comp_pFileName = hb_fsFNameSplit( szPrg );
 
    if( hb_comp_pFileName->szName )
@@ -3402,51 +3365,15 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
 
       if( iStatus == EXIT_SUCCESS )
       {
-         #ifdef HB_NESTED_COMPILE
-         if( bNested )
-         {
-            /* Minimal Save. */
-            hb_compSaveVars( &HarbourVars, 1 );
+         /* Add /D command line or envvar defines */
+         hb_compChkDefines( argc, argv );
 
-            /* Minimal Init for hb_compInclude() */
-            hb_comp_files.pLast  = NULL           ;
-            hb_comp_files.iFiles = 0              ;
-            hb_comp_iLine        = 1              ;
-            hb_comp_iLine        = 1              ;
-         }
-         else
-         #endif
-         {
-            /* Add /D command line or envvar defines */
-            hb_compChkDefines( argc, argv );
-
-            /* Initialize support variables */
-            hb_compInitVars();
-         }
+         /* Initialize support variables */
+         hb_compInitVars();
 
          if( hb_compInclude( szFileName, NULL ) )
          {
             BOOL bSkipGen = FALSE ;
-            #ifdef HB_NESTED_COMPILE
-            if( bNested )
-            {
-              FILES tmpFiles ;
-
-               /* Complementary Save */
-               hb_compSaveVars( &HarbourVars, 2 );
-
-               tmpFiles = hb_comp_files ;
-
-               /* Full init. */
-               hb_compInitVars();
-
-               /* Must restore the recently opened file*/
-               hb_comp_files = tmpFiles ;
-
-               hb_comp_pExterns = NULL;
-               hb_comp_bExternal = FALSE;
-            }
-            #endif
 
             hb_comp_szFile = szFileName;
 
@@ -3457,13 +3384,6 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
                else
                   printf( "Compiling '%s'...\n", szFileName );
             }
-
-            #ifdef HB_NESTED_COMPILE
-            if( bNested )
-            {
-               yyrestart( yyin );
-            }
-            #endif
 
             /* Generate the starting procedure frame */
             if( hb_comp_bStartProc )
@@ -3605,22 +3525,7 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
          }
          else
          {
-            #ifdef HB_NESTED_COMPILE
-            if( bNested )
-            {
-               printf( "Cannot open %s, assumed external\n", szFileName );
-
-               /* Minimal Restore. */
-               hb_compRestoreVars( &HarbourVars, 1 );
-
-               /* To avoid full restore down below. */
-               HarbourVars.yyin  = NULL;
-            }
-            else
-            #endif
-            {
-               printf( "Cannot open input file: %s\n", szFileName );
-            }
+            printf( "Cannot open input file: %s\n", szFileName );
 
             /* printf( "No code generated\n" ); */
             iStatus = EXIT_FAILURE;
@@ -3655,26 +3560,6 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
       hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADFILENAME, szPrg, NULL );
       iStatus = EXIT_FAILURE;
    }
-
-   #ifdef HB_NESTED_COMPILE
-   if( bNested )
-   {
-      /* Only if needed. */
-      if( HarbourVars.yyin )
-      {
-         yyrestart( HarbourVars.yyin );
-
-         /* Full Restore */
-         hb_compRestoreVars( &HarbourVars, 3 );
-      }
-
-      if( pFileName )
-      {
-         hb_xfree( ( void * ) hb_comp_pFileName );
-         hb_comp_pFileName = pFileName;
-      }
-   }
-   #endif
 
    return iStatus;
 }
@@ -3820,105 +3705,3 @@ int hb_compAutoOpen( char * szPrg, BOOL * pbSkipGen )
    return iStatus;
 }
 
-#ifdef HB_NESTED_COMPILE
-void hb_compSaveVars( PHARBVARS pHarbourVars, int iScope )
-{
-   if( iScope == 1 || iScope == 3 )
-   {
-      pHarbourVars->Files         = hb_comp_files                 ;
-      pHarbourVars->iLine         = hb_comp_iLine                 ;
-      pHarbourVars->yyin          = yyin                          ;
-   }
-
-   if( iScope == 2 || iScope == 3 )
-   {
-      pHarbourVars->Functions     = hb_comp_functions             ;
-      pHarbourVars->Funcalls      = hb_comp_funcalls              ;
-      pHarbourVars->Symbols       = hb_comp_symbols               ;
-      pHarbourVars->pInitFunc     = hb_comp_pInitFunc             ;
-      pHarbourVars->pExterns      = hb_comp_pExterns              ;
-
-      pHarbourVars->bExternal     = hb_comp_bExternal             ;
-      pHarbourVars->szAnnounce    = hb_comp_szAnnounce            ;
-      pHarbourVars->bAnyWarning   = hb_comp_bAnyWarning           ;
-
-      pHarbourVars->iFunctionCnt  = hb_comp_iFunctionCnt          ;
-      pHarbourVars->iErrorCount   = hb_comp_iErrorCount           ;
-      pHarbourVars->cVarType      = hb_comp_cVarType              ;
-      pHarbourVars->ulLastLinePos = hb_comp_ulLastLinePos         ;
-      pHarbourVars->iStaticCnt    = hb_comp_iStaticCnt            ;
-      pHarbourVars->iVarScope     = hb_comp_iVarScope             ;
-      pHarbourVars->EOL           = hb_comp_EOL                   ;
-      pHarbourVars->pFileName     = hb_comp_pFileName             ;
-      pHarbourVars->buffer        = hb_comp_buffer                ;
-
-      pHarbourVars->yyout         = yyout                         ;
-      pHarbourVars->yytext        = yytext                        ;
-      pHarbourVars->yyleng        = yyleng                        ;
-
-      pHarbourVars->yychar        = yychar                        ;
-      pHarbourVars->yylval        = yylval                        ;
-   #ifdef YYLSP_NEEDED
-      pHarbourVars->yylloc        = yylloc                        ;
-   #endif
-      pHarbourVars->yynerrs       = yynerrs                       ;
-
-      pHarbourVars->yy_buffer     = hb_compGet_YY_CURRENT_BUFFER();
-      pHarbourVars->yy_start      = hb_compGet_yy_start()         ;
-      pHarbourVars->yy_init       = hb_compGet_yy_init()          ;
-
-      pHarbourVars->pLoops        = hb_compGet_pLoops()           ;
-      pHarbourVars->rtvars        = hb_compGet_rtvars()           ;
-   }
-}
-
-void hb_compRestoreVars( PHARBVARS pHarbourVars, int iScope )
-{
-   if( iScope == 1 || iScope == 3 )
-   {
-      hb_comp_files         = pHarbourVars->Files         ;
-      hb_comp_iLine         = pHarbourVars->iLine         ;
-      yyin                  = pHarbourVars->yyin          ;
-   }
-
-   if( iScope == 2 || iScope == 3 )
-   {
-      hb_comp_functions     = pHarbourVars->Functions     ;
-      hb_comp_funcalls      = pHarbourVars->Funcalls      ;
-      hb_comp_symbols       = pHarbourVars->Symbols       ;
-      hb_comp_pExterns      = pHarbourVars->pExterns      ;
-      hb_comp_pInitFunc     = pHarbourVars->pInitFunc     ;
-      hb_comp_bExternal     = pHarbourVars->bExternal     ;
-
-      hb_comp_szAnnounce    = pHarbourVars->szAnnounce    ;
-      hb_comp_bAnyWarning   = pHarbourVars->bAnyWarning   ;
-      hb_comp_iFunctionCnt  = pHarbourVars->iFunctionCnt  ;
-      hb_comp_iErrorCount   = pHarbourVars->iErrorCount   ;
-      hb_comp_cVarType      = pHarbourVars->cVarType      ;
-      hb_comp_ulLastLinePos = pHarbourVars->ulLastLinePos ;
-      hb_comp_iStaticCnt    = pHarbourVars->iStaticCnt    ;
-      hb_comp_iVarScope     = pHarbourVars->iVarScope     ;
-      hb_comp_EOL           = pHarbourVars->EOL           ;
-      hb_comp_pFileName     = pHarbourVars->pFileName     ;
-      hb_comp_buffer        = pHarbourVars->buffer        ;
-
-      yyout                 = pHarbourVars->yyout         ;
-      yytext                = pHarbourVars->yytext        ;
-      yyleng                = pHarbourVars->yyleng        ;
-
-      yychar                = pHarbourVars->yychar        ;
-      yylval                = pHarbourVars->yylval        ;
-   #ifdef YYLSP_NEEDED
-      yylloc                = pHarbourVars->yylloc        ;
-   #endif
-      yynerrs               = pHarbourVars->yynerrs       ;
-
-      hb_compSet_YY_CURRENT_BUFFER( pHarbourVars->yy_buffer  ) ;
-      hb_compSet_yy_start( pHarbourVars->yy_start )            ;
-      hb_compSet_yy_init( pHarbourVars->yy_init )              ;
-
-      hb_compSet_pLoops( pHarbourVars->pLoops )                ;
-      hb_compSet_rtvars( pHarbourVars->rtvars )                ;
-   }
-}
-#endif

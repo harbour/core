@@ -362,7 +362,7 @@ static ERRCODE defEvalBlock( AREAP pArea, PHB_ITEM pBlock )
 
    HB_TRACE(HB_TR_DEBUG, ("defEvalBlock(%p, %p)", pArea, pBlock));
 
-   if( !pBlock || !HB_IS_BLOCK( pBlock ) )
+   if( ! pBlock || ! HB_IS_BLOCK( pBlock ) )
    {
       PHB_ITEM pError;
 
@@ -375,7 +375,7 @@ static ERRCODE defEvalBlock( AREAP pArea, PHB_ITEM pBlock )
    }
 
    pResult = hb_vmEvalBlock( pBlock );
-   if( !pArea->valResult )
+   if( ! pArea->valResult )
       pArea->valResult = hb_itemNew( NULL );
    hb_itemCopy( pArea->valResult, pResult );
 
@@ -384,8 +384,8 @@ static ERRCODE defEvalBlock( AREAP pArea, PHB_ITEM pBlock )
 
 static ERRCODE defclearRel( AREAP pArea )
 {
-   LPDBRELINFO  lpdbRelations = pArea->lpdbRelations;
-   LPDBRELINFO  lpdbRelPrev;
+   LPDBRELINFO lpdbRelations = pArea->lpdbRelations;
+   LPDBRELINFO lpdbRelPrev;
 
    HB_TRACE(HB_TR_DEBUG, ("defclearRel(%p)", pArea ));
 
@@ -393,7 +393,7 @@ static ERRCODE defclearRel( AREAP pArea )
    {
       do
       {
-         ( ( AREAP ) lpdbRelations->lpaChild )->uiParents --;
+         ( ( AREAP ) lpdbRelations->lpaChild )->uiParents--;
          lpdbRelPrev = lpdbRelations;
          lpdbRelations = lpdbRelations->lpdbriNext;
          hb_xfree( lpdbRelPrev );
@@ -403,33 +403,38 @@ static ERRCODE defclearRel( AREAP pArea )
    return SUCCESS;
 }
 
-static ERRCODE defsetRel( AREAP pArea, LPDBRELINFO  lpdbRelInf )
+static ERRCODE defsetRel( AREAP pArea, LPDBRELINFO lpdbRelInf )
 {
-      LPDBRELINFO  lpdbRelations;
+   LPDBRELINFO lpdbRelations;
 
-      ( (AREAP) lpdbRelInf->lpaChild )->uiParents ++;
+   ( ( AREAP ) lpdbRelInf->lpaChild )->uiParents++;
+   lpdbRelations = pArea->lpdbRelations;
+   if( ! lpdbRelations )
+   {
+      pArea->lpdbRelations = ( LPDBRELINFO ) hb_xgrab( sizeof( DBRELINFO ) );
       lpdbRelations = pArea->lpdbRelations;
-      if( !lpdbRelations )
-      {
-         pArea->lpdbRelations = ( LPDBRELINFO ) hb_xgrab( sizeof( DBRELINFO ) );
-         lpdbRelations = pArea->lpdbRelations;
-      }
-      else
-      {
-         while( !lpdbRelations->lpdbriNext )
-            lpdbRelations = lpdbRelations->lpdbriNext;
-         lpdbRelations->lpdbriNext = ( LPDBRELINFO ) hb_xgrab( sizeof( DBRELINFO ) );
+   }
+   else
+   {
+      while( ! lpdbRelations->lpdbriNext )
          lpdbRelations = lpdbRelations->lpdbriNext;
-      }
-      lpdbRelations->lpaChild = lpdbRelInf->lpaChild;
-      lpdbRelations->itmCobExpr = lpdbRelInf->itmCobExpr;
-      lpdbRelations->abKey = lpdbRelInf->abKey;
-      lpdbRelations->lpdbriNext = lpdbRelInf->lpdbriNext;
-      return SUCCESS;
+      lpdbRelations->lpdbriNext = ( LPDBRELINFO ) hb_xgrab( sizeof( DBRELINFO ) );
+      lpdbRelations = lpdbRelations->lpdbriNext;
+   }
+   lpdbRelations->lpaChild = lpdbRelInf->lpaChild;
+   lpdbRelations->itmCobExpr = lpdbRelInf->itmCobExpr;
+   lpdbRelations->abKey = lpdbRelInf->abKey;
+   lpdbRelations->lpdbriNext = lpdbRelInf->lpdbriNext;
+
+   return SUCCESS;
 }
 
-static ERRCODE defrelText( AREAP pArea, USHORT relNum, char* cExpr )
+static ERRCODE defrelText( AREAP pArea, USHORT relNum, char * cExpr )
 {
+   HB_SYMBOL_UNUSED( pArea );
+   HB_SYMBOL_UNUSED( relNum );
+   HB_SYMBOL_UNUSED( cExpr );
+
    return SUCCESS;
 }
 
@@ -437,7 +442,8 @@ static ERRCODE defFieldCount( AREAP pArea, USHORT * uiFields )
 {
    HB_TRACE(HB_TR_DEBUG, ("defFieldCount(%p, %p)", pArea, uiFields));
 
-   * uiFields = pArea->uiFieldCount;
+   *uiFields = pArea->uiFieldCount;
+
    return SUCCESS;
 }
 

@@ -66,9 +66,9 @@ PROCEDURE MAIN()
          FWRITE( nOutput, hb_OSNewLine() )
          FWRITE( nOutput, "//" )
          FWRITE( nOutput, hb_OSNewLine() )
-         aFiles =DIRECTORY( aDirs[i] +PATH_SEPARATOR +"*.c" )
+         aFiles := DIRECTORY( aDirs[i] +PATH_SEPARATOR +"*.c" )
          ProcessDir( nOutput, aFiles, aDirs[ i ] )
-         aFiles =DIRECTORY( aDirs[i] +PATH_SEPARATOR +"*.prg" )
+         aFiles := DIRECTORY( aDirs[i] +PATH_SEPARATOR +"*.prg" )
          ProcessDir( nOutput, aFiles, aDirs[ i ] )
          FWRITE( nOutput, "//" )
          FWRITE( nOutput, REPLICATE( "-", 60) )
@@ -84,8 +84,8 @@ PROCEDURE ProcessDir( nOutput, aFiles, cDir )
    LOCAL i, nLen
 
    ? "Files from ", cDir
-   nLen =LEN( aFiles )
-   FOR i:=1 TO nLen
+   nLen := LEN( aFiles )
+   FOR i := 1 TO nLen
       FWRITE( nOutput, "//" )
       FWRITE( nOutput, hb_OSNewLine() )
       FWRITE( nOutput, "//symbols from file: " +Lower(cDir+ PATH_SEPARATOR +aFiles[i][ 1 ] ))
@@ -102,7 +102,7 @@ PROCEDURE ProcessFile( nOut, cFile )
 
    ? cFile
    IF( AT( "INITSYMB.C", UPPER(cFile) ) == 0 )
-      nH =FOPEN( cFile )
+      nH := FOPEN( cFile )
       IF( nH > 0 )
          FILEEVAL( nH, 255, hb_OSNewLine(), {|c| Processline(nOut, c)} )
          FCLOSE( nH )
@@ -114,22 +114,22 @@ PROCEDURE ProcessFile( nOut, cFile )
 PROCEDURE ProcessLine( nOut, cLine )
    LOCAL nPos
 
-   nPos =AT( "//", cLine )
+   nPos := AT( "//", cLine )
    IF nPos > 0 .AND. nPos < 7
       RETURN
    ELSE
-      nPos =AT( "*", cLine )
+      nPos := AT( "*", cLine )
       IF nPos > 0 .AND. nPos < 7
          RETURN
       ENDIF
    ENDIF
 
-   nPos =AT( "HB_FUNC(", cLine )
+   nPos := AT( "HB_FUNC(", cLine )
    IF nPos > 0
-      cLine = LTRIM( SUBSTR( cLine, nPos + Len("HB_FUNC(") ) )
-      nPos =AT( ")", cLine )
+      cLine := LTRIM( SUBSTR( cLine, nPos + Len("HB_FUNC(") ) )
+      nPos := AT( ")", cLine )
       IF nPos > 0
-         cLine :=ALLTRIM( Left( cLine, nPos - 1 ) )
+         cLine := ALLTRIM( Left( cLine, nPos - 1 ) )
          ? cLine
          IF (ISALPHA(cLine) .OR. cLine="_") .AND. ASCAN( aNames, {|c|c==cLine} ) == 0
             AADD( aNames, cLine )
@@ -137,14 +137,14 @@ PROCEDURE ProcessLine( nOut, cLine )
          ENDIF
       ENDIF
    ELSE
-      cLine =UPPER( cLine )
-      nPos =AT( "FUNCTION", cLine )
+      cLine := UPPER( cLine )
+      nPos := AT( "FUNCTION", cLine )
       IF nPos > 0
          IF( AT( "STATIC", cLine ) ==  0 )
-            cLine = LTRIM( SUBSTR( cLine, nPos+8 ) )
-            nPos =AT( "(", cLine )
+            cLine := LTRIM( SUBSTR( cLine, nPos+8 ) )
+            nPos := AT( "(", cLine )
             IF nPos > 0
-               cLine :=ALLTRIM( LEFT( cLine, nPos-1 ) )
+               cLine := ALLTRIM( LEFT( cLine, nPos-1 ) )
                ? cLine
                IF (ISALPHA(cLine) .OR. cLine="_") .AND. !(" " $ cLine) .AND. ASCAN( aNames, {|c|c==cLine} ) == 0
                   AADD( aNames, cLine )
@@ -153,11 +153,11 @@ PROCEDURE ProcessLine( nOut, cLine )
             ENDIF
          ENDIF
       ELSE
-         nPos =AT( "PROCEDURE", cLine )
+         nPos := AT( "PROCEDURE", cLine )
          IF nPos > 0
             IF AT( "STATIC", cLine ) ==  0
-               cLine = LTRIM( SUBSTR( cLine, nPos+9 ) )
-               nPos =AT( "(", cLine )
+               cLine := LTRIM( SUBSTR( cLine, nPos+9 ) )
+               nPos := AT( "(", cLine )
                IF nPos > 0
                   cLine :=ALLTRIM( LEFT( cLine, nPos-1 ) )
                   ? cLine

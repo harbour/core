@@ -4,6 +4,23 @@
 
 ----------------------------------------------------------------------
 
+- Added HB_IDLE*() idle state handling functions.
+- Watcom C++ fixes.
+- SET RELATION support for RDDADS
+- New language modules: IT, DE
+- Slang support enhanced
+- MemoEdit()/TEditor enhancements
+- .NTX support started (creation now works)
+- HBDOC .CHM output
+- Garbage collector added
+- Compiler -u, -m support, support for automatically compiled files for 
+  DO, SET FORMAT TO, etc., memory usage optimizations
+- Added HB_DISKSPACE(), __DBLIST(), __DBAPPEND()
+- Fixes: Line numbering, PP, macro compiler, RTL (Extend API, Item API, 
+  TRANSFORM(), DISKSPACE(), CURDIR(), __GET()), HBDOC, 
+  HBTEST (for Xbase++ and Linux), Documentation, Class engine
+- HBZLIB enhancements
+
 Version 0.34 Build 34 (2000-06-02)
 
 - OO engine enhanced (multiple inheritance, scoping, forwarding and delegating)

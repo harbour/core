@@ -46,7 +46,7 @@
 #include "hbapifs.h"
 
 #if defined( HB_OS_UNIX )
-  #include <sys/vfs.h>
+   #include <sys/vfs.h>
 #endif
 
 #ifdef HB_EXTENSION

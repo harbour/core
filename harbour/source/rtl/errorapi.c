@@ -149,7 +149,7 @@ void hb_errInit( void )
     * NOTE: hb_itemClear() cannot be used to initialize an item because 
     * memory occupied by the item can contain garbage bits
    */
-   hb_itemInit( &s_errorBlock );	
+   hb_itemInit( &s_errorBlock );
 }
 
 void hb_errExit( void )

@@ -367,7 +367,7 @@ METHOD SetFocus() CLASS TGet
    ::lEdit      := .f.
 
    if ::type == "N"
-      ::decpos := At( iif( ::lDecRev .or. "E"$::cPicFunc, ",", "." ), ::buffer )
+      ::decpos := At( iif( ::lDecRev .or. "E" $ ::cPicFunc, ",", "." ), ::buffer )
       ::minus  := ( "-" $ ::buffer .or. "(" $ ::buffer )
    else
       ::decpos := NIL

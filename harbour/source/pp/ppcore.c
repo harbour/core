@@ -1396,13 +1396,9 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
       while( *ptrmp != '\0' );
     }
 
-  //printf( "Line: >%s<\nOut: >%s<\nLen: %i Last: %c\n", inputLine, ptro, *lenres, ptro[(*lenres)-1] );
-
   SearnRep( "\1","",0,ptro,lenres);
   *(ptro + *lenres) = '\0';
   *lenres = RemoveSlash( ptro );   /* Removing '\' from result string */
-
-  //printf( "*Line: >%s<\n*Out: >%s<\n*Len: %i Last: %c\n", inputLine, ptro, *lenres, ptro[(*lenres)-1] );
 
   if( com_or_tra ) return 1; else return (ptri-inputLine);
 }

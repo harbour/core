@@ -232,7 +232,6 @@ static int hb_ntxItemCompare( PHB_ITEM pKey1, PHB_ITEM pKey2 )
 
          if( iResult == 0 )
          {
-            EndPos += 1;
             iResult = pKey1->item.asString.length -
                       pKey2->item.asString.length;
          }
@@ -283,8 +282,6 @@ static ERRCODE hb_ntxPageAddPageKeyAdd( LPPAGEINFO pPage, PHB_ITEM pKey, int lev
    pPage->pKeys[nEnd].Tag = pNewPage->Page;
    memmove( pPage->pKeys + nBegin , pPage->pKeys + nEnd,
          ( pPage->uiKeys - nEnd ) * sizeof( KEYINFO ) + sizeof( pPage->pKeys->Tag ) );
-   //memset( pPage->pKeys + nBegin + nCount, 0 ,
-         //( pPage->uiKeys - nEnd ) * sizeof( KEYINFO ) + sizeof( pPage->pKeys->Tag ) );
    pPage->uiKeys -= nCount;
    pNewPage->uiKeys = nCount + 1;
    pPage->Changed = TRUE;
@@ -335,7 +332,7 @@ static ERRCODE hb_ntxPageKeyAdd( LPPAGEINFO pPage, PHB_ITEM pKey, int level)
             pLoadedPage = hb_ntxPageLoad( pPage, pPage->pKeys[i].Tag );
             if( pLoadedPage == NULL )
             {
-               // TODO : Error recovery ???
+               /* TODO : Error recovery ??? */
                return FAILURE;
             }
             hb_ntxPageKeyAdd( pLoadedPage, pKey, level+1 );
@@ -357,7 +354,7 @@ static ERRCODE hb_ntxPageKeyAdd( LPPAGEINFO pPage, PHB_ITEM pKey, int level)
       pLoadedPage = hb_ntxPageLoad( pPage, pPage->pKeys[i].Tag );
       if( pLoadedPage == NULL )
       {
-         // TODO : Error recovery ???
+         /* TODO : Error recovery ??? */
          return FAILURE;
       }
       hb_ntxPageKeyAdd( pLoadedPage, pKey, level+1 );
@@ -755,9 +752,9 @@ static ERRCODE hb_ntxHeaderLoad( LPINDEXINFO pIndex , char *ITN)
    pTag->KeyExpr = (char *) hb_xgrab( NTX_MAX_KEY );
    strcpy( pTag->KeyExpr, Header.key_expr );
    pTag->pKeyItem = pExpr;
-   pTag->AscendKey = 1;//fAscendKey;
+   pTag->AscendKey = 1; /* fAscendKey; */
    pTag->UniqueKey = Header.unique;
-   pTag->KeyType = 'C';//bKeyType;
+   pTag->KeyType = 'C'; /* bKeyType; */
    pTag->KeyLength = Header.key_size;
    pTag->Owner = pIndex;
    pTag->MaxKeys = Header.max_item;
@@ -798,9 +795,9 @@ static ERRCODE ntxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    PHB_ITEM pExpr, pResult, pError;
    PHB_ITEM pKeyExp, pForExp;
    HB_MACRO_PTR pExpMacro, pForMacro;
-   USHORT uiType, uiLen = 0;
+   USHORT uiType, uiLen;
    char * szFileName, * szTagName;
-   LPINDEXINFO pIndex, pOldIndex;
+   LPINDEXINFO pIndex;
    LPTAGINFO pTag;
    PHB_FNAME pFileName;
    DBORDERINFO pExtInfo;
@@ -982,7 +979,6 @@ static ERRCODE ntxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 
    pIndex = hb_ntxIndexNew( pArea );
    pIndex->IndexName = szFileName;
-   pOldIndex = pArea->lpIndexInfo;
    pArea->lpIndexInfo = pIndex;
    pTag = hb_ntxTagNew( pIndex, szTagName, pOrderInfo->abExpr->item.asString.value,
                         pKeyExp, bType, uiLen, (char *) ( pArea->lpdbOrdCondInfo ? pArea->lpdbOrdCondInfo->abFor : NULL ),
@@ -1053,7 +1049,7 @@ static ERRCODE ntxOrderInfo( AREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo )
                return SUCCESS;
             }
          }
-         //TODO: Raise recoverable error
+         /* TODO: Raise recoverable error */
          break;
       case DBOI_BAGNAME:  
          if( pArea->lpIndexInfo )

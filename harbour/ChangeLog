@@ -1,3 +1,44 @@
+2000-07-12 08:46 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * doc/whatsnew.txt
+     + Added some new items.
+
+   * source/pp/pptable.c
+     ! .FMT -> .fmt (to be multiplatform friendly)
+
+   * makefile.bc
+     ! Fixed PP dependency for HARBOUR.EXE
+
+   * source/pp/ppcore.c
+   * source/rdd/dbfntx/dbfntx1.c 
+     - Removed // comments
+
+   * source/rdd/dbfntx/dbfntx1.c 
+     ! Fixed some BCC warnings.
+
+   * source/rdd/dbcmd.c
+   * source/rtl/disksphb.c
+   * source/rtl/errorapi.c 
+   * source/rtl/tget.prg
+     * Formatting
+
+   * utils/hbdoc/Makefile
+     ! Fixed TAB
+
+   * utils/hbextern/hbextern.prg 
+   * utils/hbtest/rt_misc.prg 
+     * = assigments -> :=
+
+   * include/hbcomp.h
+   * source/compiler/harbour.c
+   * source/compiler/harbour.l
+   * source/compiler/harbour.y
+     - Removed HB_NESTED_COMPILE.
+
+   - include/hbstruc.ch
+   - source/rtl/hbstruc.prg 
+     - Removed.
+
 2000-07-11 09:30 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * hb_slex.bc
      * Updated to match makefile.bc
@@ -314,7 +355,6 @@
     *source/vm/garbage.c
         *the garbage collector is now aware of all items stored internally
         in class related structures
-
 
 2000-06-27-22:45 Luiz Rafael Culik <culik@sl.conex.net>
   *Changelog

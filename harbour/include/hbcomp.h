@@ -195,51 +195,11 @@ typedef struct _AUTOOPEN
    struct _AUTOOPEN * pNext;
 } AUTOOPEN, * PAUTOOPEN;      /* support structure for extern symbols */
 
-#ifdef HB_NESTED_COMPILE
-typedef struct _HARBVARS
-{
-   FILES        Files            ;
-   FUNCTIONS    Functions        ;
-   FUNCTIONS    Funcalls         ;
-   SYMBOLS      Symbols          ;
-   PFUNCTION    pInitFunc        ;
-   PEXTERN      pExterns         ;
-   BOOL         bExternal        ;
-   char *       szAnnounce       ;
-   BOOL         bAnyWarning      ;
-   int          iLine            ;
-   int          iFunctionCnt     ;
-   int          iErrorCount      ;
-   char         cVarType         ;
-   ULONG        ulLastLinePos    ;
-   int          iStaticCnt       ;
-   int          iVarScope        ;
-   BOOL         EOL              ;
-   PHB_FNAME    pFileName        ;
-   char *       buffer           ;
-   FILE *       yyin             ;
-   FILE *       yyout            ;
-   char *       yytext           ;
-   int          yyleng           ;
-   void *       yy_buffer        ;
-   int          yy_init          ;
-   int          yy_start         ;
-   int          yychar           ;
-   void *       yylval           ;
-#ifdef YYLSP_NEEDED
-   void *       yylloc           ;
-#endif
-   int          yynerrs          ;
-   void *       pLoops           ;
-   void *       rtvars           ;
-} HARBVARS, * PHARBVARS;
-#endif
-
 /* definitions for hb_compPCodeEval() support */
-typedef void *HB_VOID_PTR;
+typedef void * HB_VOID_PTR;
 #define HB_PCODE_FUNC( func, type ) USHORT func( PFUNCTION pFunc, ULONG lPCodePos, type cargo )
 typedef  HB_PCODE_FUNC( HB_PCODE_FUNC_, HB_VOID_PTR );
-typedef  HB_PCODE_FUNC_ *HB_PCODE_FUNC_PTR;
+typedef  HB_PCODE_FUNC_ * HB_PCODE_FUNC_PTR;
 
 void hb_compPCodeEval( PFUNCTION, HB_PCODE_FUNC_PTR *, void * );
 

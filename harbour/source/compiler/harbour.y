@@ -2042,24 +2042,3 @@ static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue )
   }
 }
 
-#ifdef HB_NESTED_COMPILE
-void * hb_compGet_pLoops( void )
-{
-   return (void *) hb_comp_pLoops;
-}
-
-void hb_compSet_pLoops( void * pLoops )
-{
-   hb_comp_pLoops = (PTR_LOOPEXIT) pLoops;
-}
-
-void * hb_compGet_rtvars( void )
-{
-   return (void *) hb_comp_rtvars;
-}
-
-void hb_compSet_rtvars( void * rtvars )
-{
-   hb_comp_rtvars = (HB_RTVAR_PTR) rtvars;
-}
-#endif

@@ -45,7 +45,7 @@ FUNCTION Main_MISC()
 
    oError := ErrorNew()
    TEST_LINE( oError:ClassName()              , "ERROR"                   )
-   oError:Description = "Its description"
+   oError:Description := "Its description"
    TEST_LINE( oError:Description              , "Its description"         )
 #ifdef __CLIPPER__
    TEST_LINE( Len( oError )                   , 7                         )
