@@ -1,3 +1,7 @@
+20000426-02:12 DST Paul Tucker <ptucker@sympatico.ca>
+   * contrib/libmisc/make_vc.bat
+     * correct lib name.
+
 20000425-22:00 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/harbour.c
