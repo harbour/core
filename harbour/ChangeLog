@@ -1,3 +1,10 @@
+19990823-19:37 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/tbrowse.prg
+      * Added Class TbColumn DATA ColorBlock support.
+   * source/debug/debugger.prg
+      * Added support for setting breakpoints.
+      (they don't work yet, but you may set them pressing F9)
+
 19990823-17:00 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/debug/debugger.prg
       * improved application colors and cursor management.

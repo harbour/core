@@ -68,36 +68,42 @@ return nil
 
 CLASS TDebugger
 
+   DATA   aWindows
    DATA   oPullDown
    DATA   oWndCode, oWndCommand
-   DATA   oBar, oBrwText
+   DATA   oBar, oBrwText, cPrgName
    DATA   cImage
    DATA   lEnd
    DATA   cAppImage, nAppRow, nAppCol, cAppColors, nAppCursor
+   DATA   aBreakPoints
 
    METHOD New()
    METHOD Activate( cModuleName )
+   METHOD Exit() INLINE ::lEnd := .t.
+   METHOD GoToLine( nLine )
+   METHOD HandleEvent()
+   METHOD Hide()
+   METHOD InputBox( cMsg, uValue )
+   METHOD Open()
    METHOD Show()
    METHOD ShowAppScreen()
    METHOD ShowCode( cModuleName )
-   METHOD HandleEvent()
-   METHOD Hide()
-
-   METHOD Open()
-   METHOD InputBox( cMsg, uValue )
-   METHOD Exit() INLINE ::lEnd := .t.
-
-   METHOD GoToLine( nLine )
+   METHOD ToggleBreakPoint( cModule, nLine )
 
 ENDCLASS
 
 METHOD New() CLASS TDebugger
 
-   ::oPullDown   = BuildMenu( Self )
-   ::oWndCode    = TDbWindow():New( 1, 0, MaxRow() - 6, MaxCol(),, "BG+/B" )
-   ::oWndCommand = TDbWindow():New( MaxRow() - 5, 0, MaxRow() - 1, MaxCol(),;
+   ::aWindows     = {}
+   ::oPullDown    = BuildMenu( Self )
+   ::oWndCode     = TDbWindow():New( 1, 0, MaxRow() - 6, MaxCol(),, "BG+/B" )
+   ::oWndCommand  = TDbWindow():New( MaxRow() - 5, 0, MaxRow() - 1, MaxCol(),;
                                     " Command ", "BG+/B" )
-   ::lEnd        = .f.
+   ::lEnd         = .f.
+   ::aBreakPoints = {}
+
+   AAdd( ::aWindows, ::oWndCode )
+   AAdd( ::aWindows, ::oWndCommand )
 
 return Self
 
@@ -165,6 +171,9 @@ METHOD HandleEvent() CLASS TDebugger
               SetCursor( ::nAppCursor )
               ::Exit()
 
+         case nKey == K_F9
+              ::ToggleBreakPoint()
+
          otherwise
               if ( nPopup := ::oPullDown:GetHotKeyPos( AltToKey( nKey ) ) ) != 0
                  ::oPullDown:ShowPopup( nPopup )
@@ -219,17 +228,24 @@ METHOD ShowAppScreen() CLASS TDebugger
 
 return nil
 
+static function CompareLine( Self )
+
+return { | a | a[ 1 ] == Self:oBrwText:nLine }
+
 METHOD ShowCode( cModuleName ) CLASS TDebugger
 
-   local cPrgName := SubStr( cModuleName, 1, At( ":", cModuleName ) - 1 )
-
+   ::cPrgName := SubStr( cModuleName, 1, At( ":", cModuleName ) - 1 )
    ::oBrwText = TBrwText():New( ::oWndCode:nTop + 1, ::oWndCode:nLeft + 1,;
-                ::oWndCode:nBottom - 1, ::oWndCode:nRight - 1, cPrgName, "BG+/B, N/BG" )
+                ::oWndCode:nBottom - 1, ::oWndCode:nRight - 1, ::cPrgName, "BG+/B, N/BG, W+/R, W+/BG" )
+
+   ::oBrwText:aColumns[ 1 ]:ColorBlock = { || If( AScan( ::aBreakPoints,;
+      CompareLine( Self ) ) != 0, { 3, 4 }, { 1, 2 } ) }
+      // { | aBreak | aBreak[ 1 ] == ::nLine }
 
    ::oBrwText:ForceStable()
 
    @ ::oWndCode:nTop, ( ( ::oWndCode:nRight - ::oWndCode:nLeft ) / 2 ) - ;
-     ( Len( cPrgName ) + 2 ) / 2 SAY " " + cPrgName + " "
+     ( Len( ::cPrgName ) + 2 ) / 2 SAY " " + ::cPrgName + " "
 
 return nil
 
@@ -268,6 +284,22 @@ return If( LastKey() != K_ESC, uTemp, uValue )
 METHOD GotoLine( nLine ) CLASS TDebugger
 
    ::oBrwText:GotoLine( nLine )
+
+return nil
+
+METHOD ToggleBreakPoint( cModule, nLine ) CLASS TDebugger
+
+   local nAt := AScan( ::aBreakPoints, { | aBreak, n | aBreak[ 1 ] == nLine } )
+
+   if nAt == 0
+      AAdd( ::aBreakPoints, { ::oBrwText:nLine, ::cPrgName } )
+   else
+      ADel( ::aBreakPoints, nAt )
+      ASize( ::aBreakPoints, Len( ::aBreakPoints ) - 1 )
+   endif
+
+   ::oBrwText:RefreshCurrent()
+   ::oBrwText:ForceStable()
 
 return nil
 
