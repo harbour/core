@@ -830,9 +830,9 @@ static ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
          case 'S':
             if( !hb_stricmp( szFieldType,"shortdate" ) )
             {
-               pFieldInfo.uiType = HB_IT_MEMO;
+               pFieldInfo.uiType = HB_IT_DATE;
                pFieldInfo.uiTypeExtended = ADS_COMPACTDATE;
-               pFieldInfo.uiLen = (adsFileType == ADS_ADT)? 9:10;
+               pFieldInfo.uiLen = 4;
             }
             else if( !hb_stricmp( szFieldType,"shortint" ) &&
                      adsFileType == ADS_ADT )
@@ -1154,7 +1154,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    LPFIELD pField;
    USHORT uiCount;
-   BYTE * szText, szEndChar;
+   BYTE * szText;
    BOOL bError;
    long lDay, lMonth, lYear;
    UNSIGNED8 szName[ HARBOUR_MAX_RDD_FIELDNAME_LENGTH + 1 ];
@@ -1224,10 +1224,8 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          {
             AdsGetDateFormat  ( pucFormat, &pusLen );
             AdsSetDateFormat  ( (UNSIGNED8*)"YYYYMMDD" );
-            szEndChar = * ( szText + pField->uiLen );
             hb_dateDecode( hb_itemGetDL( pItem ), &lYear, &lMonth, &lDay );
             hb_dateStrPut( ( char * ) szText, lYear, lMonth, lDay );
-            * ( szText + pField->uiLen ) = szEndChar;
             AdsSetDate( pArea->hTable, szName, szText, 8 );
             AdsSetDateFormat  ( pucFormat );
             bError = FALSE;
@@ -1428,6 +1426,7 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo)
      strcat((char*)ucfieldDefs, (char*)ucBuffer);
      pField++;
    }
+   /* printf( "\n%s",(char*)ucfieldDefs ); */
    uRetVal = AdsCreateTable( 0, pCreateInfo->abName, NULL, adsFileType, adsCharType,
                     adsLockType, adsRights,
                     hb_set.HB_SET_MBLOCKSIZE,

@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-06-09 14:29 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * contrib/rddads/ads1.c
+    ! Few fixes for "ShortDate" data type
+
 2002-06-08 16:15 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * include/hbrddcdx.h
    * source/rdd/dbfcdx/dbfcdx2.h
