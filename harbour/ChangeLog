@@ -1,3 +1,7 @@
+19990514-23:45 CET Eddie Runia
+  * source/rtl/set.c
+    IS_STRING and IS_LOGICAL called without checking for empty pItem.
+
 19990514-22:15 CET Eddie Runia
   * tests/working/set.ch
     added

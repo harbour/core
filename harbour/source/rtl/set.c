@@ -55,8 +55,8 @@ HARBOUR HB_SETCENTURY (void)
     * Then change the setting if the parameter is a logical value, or is
     * either "ON" or "OFF" (regardless of case)
     */
-   if (IS_LOGICAL (pItem)) hb_set_century = pItem->value.iLogical;
-   else if (IS_STRING (pItem))
+   if ( pItem && IS_LOGICAL (pItem)) hb_set_century = pItem->value.iLogical;
+   else if ( pItem && IS_STRING (pItem))
    {
       if (pItem->wLength == 2 && toupper (pItem->value.szText [0]) == 'O'
       && toupper (pItem->value.szText [1]) == 'N')
