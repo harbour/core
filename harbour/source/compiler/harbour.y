@@ -224,6 +224,7 @@ int iVarScope = 0;          /* holds the scope for next variables to be defined 
 #define ERR_STRING_TERMINATOR   7
 #define ERR_FUNC_RESERVED       8
 #define ERR_ILLEGAL_INIT        9
+#define ERR_CANT_OPEN_INCLUDE   10
 
 /* Table with parse errors */
 char * _szErrors[] = { "Statement not allowed outside of procedure or function",
@@ -234,7 +235,8 @@ char * _szErrors[] = { "Statement not allowed outside of procedure or function",
                        "Invalid numeric format '.'",
                        "Unterminated string: \'%s\'",
                        "Redefinition of predefined function %s: \'%s\'",
-                       "Illegal initializer: \'%s\'"
+                       "Illegal initializer: \'%s\'",
+                       "Can't open #include file: \'%s\'"
                      };
 
 /* Table with reserved functions names
@@ -423,7 +425,9 @@ Source     : Crlf
            | Source MEMVAR IdentList
            ;
 
-Include    : NE1 INCLUDE LITERAL { Include( $3 ); } Crlf
+Include    : NE1 INCLUDE LITERAL { if( ! Include( $3 ) )
+                                      GenError( ERR_CANT_OPEN_INCLUDE, $3, NULL );
+                                 } Crlf
            ;
 
 Extern     : EXTERN ExtList Crlf
