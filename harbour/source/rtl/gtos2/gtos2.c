@@ -61,7 +61,7 @@
 #define INCL_NOPMAPI
 #include <os2.h>
 
-/* convert 16:16 adress to 0:32 */
+/* convert 16:16 address to 0:32 */
 #define SELTOFLAT(ptr) (void *)(((((ULONG)(ptr))>>19)<<16)|(0xFFFF&((ULONG)(ptr))))
 
 #if defined(HARBOUR_GCC_OS2)
@@ -78,7 +78,6 @@
 
 
 static char hb_gt_GetCellSize( void );
-
 static char * hb_gt_ScreenPtr( USHORT cRow, USHORT cCol );
 static void hb_gt_xGetXY( USHORT cRow, USHORT cCol, BYTE * attr, BYTE * ch );
 static void hb_gt_xPutch( USHORT cRow, USHORT cCol, BYTE attr, BYTE ch );
@@ -87,12 +86,15 @@ static void hb_gt_xPutch( USHORT cRow, USHORT cCol, BYTE attr, BYTE ch );
 static void hb_gt_GetCursorSize( char * start, char * end );
 */
 
+/* how many nested BeginDisp() */
 static USHORT s_uiDispCount;
 
 /* pointer to offscreen video buffer */
-static PULONG LVBptr;
+static ULONG s_ulLVBptr;
+
 /* length of video buffer */
-static USHORT LVBlength;
+static USHORT s_usLVBlength;
+
 
 void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 {
@@ -100,10 +102,10 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 
    s_uiDispCount = 0;
 
-   if(VioGetBuf(&LVBptr, &LVBlength, 0) == NO_ERROR) {
-      LVBptr = SELTOFLAT(LVBptr);
+   if(VioGetBuf(&s_ulLVBptr, &s_usLVBlength, 0) == NO_ERROR) {
+      s_ulLVBptr = (ULONG) SELTOFLAT(s_ulLVBptr);
    } else {
-      LVBptr = NULL;
+      s_ulLVBptr = (ULONG) NULL;
    }
 
    /* TODO: Is anything required to initialize the video subsystem?
@@ -361,25 +363,90 @@ void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight,
 {
 /* Chen Kedem <niki@actcom.co.il> */
 
-   BYTE bCell[ 2 ];                            /* character/attribute pair */
+	HB_TRACE(HB_TR_DEBUG, ("hb_gt_Scroll(%hu, %hu, %hu, %hu, %d, %hd, %hd)", usTop, usLeft, usBottom, usRigth, (int) attr, sVert, sHoriz));
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Scroll(%hu, %hu, %hu, %hu, %d, %hd, %hd)", usTop, usLeft, usBottom, usRigth, (int) attr, sVert, sHoriz));
+   if(s_uiDispCount > 0) {
+   	int iRows = sVert, iCols = sHoriz;
 
-   bCell [ 0 ] = ' ';
-   bCell [ 1 ] = attr;
-   if( ( sVert | sHoriz ) == 0 )               /* both zero, clear region */
-      VioScrollUp ( usTop, usLeft, usBottom, usRight, 0xFFFF, bCell, 0 );
-   else
-   {
-      if( sVert > 0 )                        /* scroll up */
-         VioScrollUp ( usTop, usLeft, usBottom, usRight, sVert, bCell, 0 );
-      else if( sVert < 0 )                   /* scroll down */
-         VioScrollDn ( usTop, usLeft, usBottom, usRight, -sVert, bCell, 0 );
+   	/* NOTE: 'SHORT' is used intentionally to correctly compile
+   	*  with C++ compilers
+   	*/
+   	SHORT usRow, usCol;
+   	USHORT uiSize;   /* gtRectSize returns int */
+   	int iLength = ( usRight - usLeft ) + 1;
+   	int iCount, iColOld, iColNew, iColSize;
 
-      if( sHoriz > 0 )                       /* scroll left */
-         VioScrollLf ( usTop, usLeft, usBottom, usRight, sHoriz, bCell, 0 );
-      else if( sHoriz < 0 )                  /* scroll right */
-         VioScrollRt ( usTop, usLeft, usBottom, usRight, -sHoriz, bCell, 0 );
+   	hb_gtGetPos( &usRow, &usCol );
+
+   	if( hb_gtRectSize( usTop, usLeft, usBottom, usRight, &uiSize ) == 0 )
+   	{
+      	/* NOTE: 'unsigned' is used intentionally to correctly compile
+       	* with C++ compilers
+       	*/
+      	unsigned char * fpBlank = ( unsigned char * ) hb_xgrab( iLength );
+      	unsigned char * fpBuff = ( unsigned char * ) hb_xgrab( iLength * 2 );
+
+      	memset( fpBlank, ' ', iLength );
+
+      	iColOld = iColNew = usLeft;
+      	if( iCols >= 0 )
+      	{
+         	iColOld += iCols;
+         	iColSize = ( int ) ( usRight - usLeft );
+         	iColSize -= iCols;
+      	}
+      	else
+      	{
+         	iColNew -= iCols;
+         	iColSize = ( int ) ( usRight - usLeft );
+         	iColSize += iCols;
+      	}
+
+      	for( iCount = ( iRows >= 0 ? usTop : usBottom );
+         	  ( iRows >= 0 ? iCount <= usBottom : iCount >= usTop );
+           	  ( iRows >= 0 ? iCount++ : iCount-- ) )
+      	{
+         	int iRowPos = iCount + iRows;
+
+         	/* Blank the scroll region in the current row */
+         	hb_gt_Puts( iCount, usLeft, attr, fpBlank, iLength );
+
+         	if( ( iRows || iCols ) && iRowPos <= usBottom && iRowPos >= usTop )
+         	{
+	            /* Read the text to be scrolled into the current row */
+   	         hb_gt_GetText( iRowPos, iColOld, iRowPos, iColOld + iColSize, fpBuff );
+
+      	      /* Write the scrolled text to the current row */
+         	   hb_gt_PutText( iCount, iColNew, iCount, iColNew + iColSize, fpBuff );
+         	}
+      	}
+
+      	hb_xfree( fpBlank );
+      	hb_xfree( fpBuff );
+	   }
+
+   	hb_gtSetPos( usRow, usCol );
+
+   } else {
+
+   	BYTE bCell[ 2 ];                            /* character/attribute pair */
+
+   	bCell [ 0 ] = ' ';
+   	bCell [ 1 ] = attr;
+   	if( ( sVert | sHoriz ) == 0 )               /* both zero, clear region */
+      	VioScrollUp ( usTop, usLeft, usBottom, usRight, 0xFFFF, bCell, 0 );
+   	else
+   	{
+      	if( sVert > 0 )                        /* scroll up */
+         	VioScrollUp ( usTop, usLeft, usBottom, usRight, sVert, bCell, 0 );
+      	else if( sVert < 0 )                   /* scroll down */
+         	VioScrollDn ( usTop, usLeft, usBottom, usRight, -sVert, bCell, 0 );
+
+      	if( sHoriz > 0 )                       /* scroll left */
+         	VioScrollLf ( usTop, usLeft, usBottom, usRight, sHoriz, bCell, 0 );
+      	else if( sHoriz < 0 )                  /* scroll right */
+         	VioScrollRt ( usTop, usLeft, usBottom, usRight, -sHoriz, bCell, 0 );
+   	}
    }
 }
 
@@ -508,7 +575,7 @@ static char * hb_gt_ScreenPtr( USHORT cRow, USHORT cCol )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_ScreenPtr(%hu, %hu)", cRow, cCol));
 
-   return (char *) (LVBptr + ( cRow * hb_gt_GetScreenWidth() * 2 ) + ( cCol * 2 ));
+   return (char *) (s_ulLVBptr + ( cRow * hb_gt_GetScreenWidth() * 2 ) + ( cCol * 2 ));
 }
 
 
@@ -612,7 +679,7 @@ void hb_gt_SetAttribute( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT us
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d)", usTop, usLeft, usBottom, usRigth, (int) attr));
 
-   if(s_uiDispCount > 0) {
+   if(s_uiDispCount >0) {
 
       USHORT x, y;
 
@@ -662,7 +729,7 @@ void hb_gt_DispEnd( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispEnd()"));
 
    if (--s_uiDispCount == 0) {
-      VioShowBuf(0, LVBlength, 0);   /* refresh everything */
+      VioShowBuf(0, s_usLVBlength, 0);   /* refresh everything */
    }
 }
 

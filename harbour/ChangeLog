@@ -1,10 +1,16 @@
+20000403-23:40 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * source/rtl/gtos2/gtos2.c
+     ! Should work now and provide DispBegin() and DispEnd() support
+     ! statics are named following harbour naming conventions
+
 20000403-22:20 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/pp/stdalone/hbpp.c
    * source/compiler/cmdcheck.c
    * source/compiler/harbour.c
    * include/hbcomp.h
-     ! Fixed handling of the /D switch, it broke when introducing the 
+     ! Fixed handling of the /D switch, it broke when introducing the
        multiple filenames at the command line feature.
 
 20000403-21:08 GMT+1 Victor Szakats <info@szelvesz.hu>
@@ -106,13 +112,13 @@
    * source/vm/hvm.c
      ! hb_itemPutND(), hb_itemPutNLen(), hb_itemPutNDLen(), hb_vmNegate(),
        hb_vmPushDouble()
-       Fixed handling of double number widths. Negative numbers taken into 
+       Fixed handling of double number widths. Negative numbers taken into
        account. Limits fixed. Checked against CA-Cl*pper.
      + hb_vmPushLongConst() added to push a long constant (pcode) long value.
      + hb_vmPushDoubleConst() added to push a constant (pcode) double value.
      * hb_vmPushDouble() restored to previous version.
      ! hb_vmPushDoubleConst() fixed to count the width of the double just like
-       CA-Cl*pper, note that this is an ugly hack, and as a next step the 
+       CA-Cl*pper, note that this is an ugly hack, and as a next step the
        HB_P_PUSHDOUBLE pcode should be modified to fix this. ( !! TODO !! )
      ; After these the decimal handling seems to be completely CA-Cl*pper
        compatible, the failing tests are due to floating point precision
@@ -151,21 +157,21 @@
    * include/hbapilng.h
    * include/hbvmpub.h
    * source/rdd/dbf1.c
-   * source/rtl/gtdos/gtdos.c 
-   * source/rtl/gtsln/gtsln.c 
+   * source/rtl/gtdos/gtdos.c
+   * source/rtl/gtsln/gtsln.c
    * source/rtl/tget.prg
-   * source/tools/asciisum.c 
-   * source/tools/strasint.c 
+   * source/tools/asciisum.c
+   * source/tools/strasint.c
    * source/tools/stringsx.c
    * source/tools/nconvert.prg
-   * source/vm/hvm.c 
+   * source/vm/hvm.c
    * source/vm/macro.c
-   * source/vm/memvars.c 
+   * source/vm/memvars.c
    * tests/memvar.prg
    * tests/testwarn.prg
    * tests/tstmacro.prg
      ! Tabs converted to spaces.
-       Please don't use tabs in the sources, because the formatting may be 
+       Please don't use tabs in the sources, because the formatting may be
        much different when using another editor.
 
    * source/tools/Makefile
