@@ -73,6 +73,9 @@ CLASS TEditor
               nRight, lEditMode, cUdF, nLineLength,;
               nTabSize)
 
+   METHOD LoadFile(cFileName)                               // Load cFileName into active editor
+   METHOD SaveFile()                                        // Save active file (not for MemoEdit() emulation)
+
    METHOD AddLine(cLine, lSoftCR)                           // Add a new Line of text at end of current text
    METHOD InsertLine(cLine, lSoftCR, nRow)                  // Insert a line of text at a defined row
    METHOD RemoveLine(nRow)                                  // Remove a line of text
@@ -129,7 +132,7 @@ STATIC function Text2Array(cString, nWordWrapCol)
    nTokNum := 1
    aArray := {}
 
-   cEOL := WhichEOL(@cString)
+   cEOL := WhichEOL(cString)
    nEOLLen := Len(cEOL)
 
    nRetLen := 0
@@ -202,7 +205,7 @@ return cString
 
 METHOD New(cString, nTop, nLeft, nBottom, nRight, lEditMode, cUdF, nLineLength, nTabSize) CLASS TEditor
 
-   ::aText := Text2Array(@cString, nLineLength)
+   ::aText := Text2Array(cString, nLineLength)
    ::naTextLen := Len(::aText)
 
    if ::naTextLen == 0
@@ -245,6 +248,21 @@ METHOD New(cString, nTop, nLeft, nBottom, nRight, lEditMode, cUdF, nLineLength, 
 
    // Set cursor upper left corner
    SetPos(::nTop, ::nLeft)
+
+return Self
+
+
+METHOD LoadFile(cFileName) CLASS TEditor
+
+   local cString
+
+   ::cFile := cFileName
+   cString := MemoRead(cFileName)
+
+return Self
+
+
+METHOD SaveFile() CLASS TEditor
 
 return Self
 

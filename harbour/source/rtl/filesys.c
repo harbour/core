@@ -685,6 +685,37 @@ ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
    return ulWritten;
 }
 
+
+#if defined(HB_OS_OS2)
+/* 19/06/2000 - maurilio.longo@libero.it */
+ULONG   hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
+{
+   ULONG ulPos;
+   USHORT Flags;
+   APIRET ret;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsSeek(%p, %ld, %hu)", hFileHandle, lOffset, uiFlags));
+
+   Flags = convert_seek_flags( uiFlags );
+
+   if( lOffset < 0 && Flags == SEEK_SET ) {
+      ret = DosSetFilePtr(hFileHandle, 0, SEEK_CUR, &ulPos);
+
+   } else {
+      ret = DosSetFilePtr(hFileHandle, lOffset, Flags, &ulPos);
+
+   }
+
+   if( ret != 0 ) {
+      ulPos = 0;
+      s_uiErrorLast = ret;
+   }
+
+   return ulPos;
+}
+
+#else
+
 ULONG   hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
 {
    ULONG ulPos;
@@ -743,6 +774,7 @@ ULONG   hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
 
    return ulPos;
 }
+#endif
 
 ULONG   hb_fsTell( FHANDLE hFileHandle )
 {

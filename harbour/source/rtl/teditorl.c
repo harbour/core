@@ -126,7 +126,7 @@ HB_FUNC( __STRTKPTR )
                           &ulLen );
 
    /* return position to start next search from */
-   hb_stornl( pszText - pszString + ulPos + ulLen + 1, 2 );
+   hb_stornl( pszText - pszString + ulPos + ulLen, 2 );
 
    /* return token */
    hb_retclen( pszText, ulLen );

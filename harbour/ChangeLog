@@ -1,3 +1,14 @@
+20000619-21:44 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * harbour/source/rtl/filesys.c
+     % rewritten hb_fsSeek() to use native OS/2 api call (DosSetFilePtr()); This change is not needed, I've made it
+       while hunting a bug and could (should ?, will ?) be an initial effort to move file apis from EMX/GCC or icc
+       runtime to native system calls.
+   * harbour/source/rtl/teditor.prg
+     + added a couple unfinished methods, will complete them later
+   * harbour/source/rtl/teditorl.c
+     ! fixed a bug inside __StrTkPtr(), I really don't understand why it didn't show up before :-)
+
 2000-06-19 10:11 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * include/hbapigt.h
@@ -7,11 +18,11 @@
    * makefile.bc
    * makefile.vc
      + Added all the missing undocumented GT API calls found in CA-Clipper 5.x.
-       The implementation is still missing, but now there's a dummy skeleton 
+       The implementation is still missing, but now there's a dummy skeleton
        for them.
 
    * source/compiler/harbour.c
-     ! Fixed a bug, where the status returned from hb_compCompile() was 
+     ! Fixed a bug, where the status returned from hb_compCompile() was
        ignored.
      * The PP reinitialization turned on even on non-STRICT mode, to be 100%
        Clipper compatible.
@@ -46,7 +57,7 @@
      * Some formatting, variables renamed.
      ! Added CVS IDs
 
-   WARNING! Please try to compile the SLANG and NCURSES GTs and report any 
+   WARNING! Please try to compile the SLANG and NCURSES GTs and report any
    errors, since I could not test them.
 
 2000-06-18 20:16 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
