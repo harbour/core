@@ -1,3 +1,8 @@
+Tue Dec 07 12:42:30 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* source/rdd/dbcmd.c: 
+	Got rid of two warnings about unused variables.
+
 19991207-16:29 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/regress/*
     ! SQRT(3) expected result fixed.

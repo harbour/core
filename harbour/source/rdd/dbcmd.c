@@ -3104,7 +3104,6 @@ HARBOUR HB_ORDCONDSET( void )
 HARBOUR HB_ORDCREATE( void )
 {
    DBORDERCREATEINFO pOrderInfo;
-   char * szKeyExpr;
 
    if( pCurrArea )
    {
@@ -3194,7 +3193,6 @@ HARBOUR HB_ORDKEY( void )
 HARBOUR HB_ORDLISTADD( void )
 {
    DBORDERINFO pOrderInfo;
-   char * szKeyExpr;
 
    if( pCurrArea )
    {
