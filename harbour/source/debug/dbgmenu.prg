@@ -85,7 +85,7 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
       MENU
          MENUITEM " ~Animate"               ACTION oDebugger:Animate()
          MENUITEM " ~Step              F8 " ACTION oDebugger:Step()
-         MENUITEM " ~Trace            F10"  ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Trace            F10"  ACTION oDebugger:Trace()
          MENUITEM " ~Go                F5"  ACTION oDebugger:Go()
          MENUITEM " to ~Cursor         F7"  ACTION Alert( "Not implemented yet!" )
          MENUITEM " ~Next routine Ctrl-F5"  ACTION Alert( "Not implemented yet!" )
