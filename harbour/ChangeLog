@@ -1,3 +1,25 @@
+20000420-22:00 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
++contrib/nflib/cpmi/farcall.asm
+ contrib/nflib/cpmi/alias.asm
+ contrib/nflib/cpmi/freesel.asm
+ contrib/nflib/cpmi/cpmi.h
+ contrib/nflib/cpmi/isprot.asm
+ contrib/nflib/cpmi/rmptr.asm
+ contrib/nflib/cpmi/seg2sel.asm
+ contrib/nflib/cpmi/setlimit.asm
+ contrib/nflib/cpmi/allocdos.asm
+ contrib/nflib/cpmi/allocsel.asm
+ contrib/nflib/cpmi/freedos.asm
+ contrib/nflib/cpmi/getbase.asm
+ contrib/nflib/cpmi/getlimit.asm
+ contrib/nflib/cpmi/int86.asm
+ contrib/nflib/cpmi/pmptr.asm
+ contrib/nflib/cpmi/resizdos.asm
+ contrib/nflib/cpmi/setbase.asm
+ contrib/nflib/cpmi/willgpf.asm
+   +CPMI library. some nanfor functions need this library
+   The other files will be upload in few hours
+
 20000421-00:54 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbapi.h
