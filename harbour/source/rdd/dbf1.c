@@ -703,9 +703,19 @@ ERRCODE hb_dbfGoTo( DBFAREAP pArea, ULONG ulRecNo )
    else /* Out of space */
    {
       pArea->ulRecNo = pArea->ulRecCount + 1;
-      /* pArea->fBof = pArea->fEof = pArea->fValidBuffer = TRUE; */
-      pArea->fBof = (pArea->ulRecCount == 0);
-      pArea->fEof = pArea->fValidBuffer = TRUE;
+      if( pArea->ulRecCount == 0 )
+      {
+         pArea->fBof = pArea->fEof = pArea->fValidBuffer = TRUE;
+      } else if(ulRecNo == 0)
+      {
+         pArea->fBof = pArea->fValidBuffer = TRUE;
+         pArea->fEof = FALSE;
+      } else
+      {
+         pArea->fBof = FALSE;
+         pArea->fEof = pArea->fValidBuffer = TRUE;
+      }
+
       pArea->fPositioned = pArea->fDeleted = FALSE;
 
       /* Clear buffer */
