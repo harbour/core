@@ -1,3 +1,11 @@
+20000102-14:27 EST Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/environ.c
+    * remove Borland check on define of VER_PLATFORM_WIN32_CE
+  * source/rtl/filesys.c
+    * removed duplicated comment lines.  (was missing /* anyway)
+  * source/rdd/dbcmd.c
+    * added missing close comment.
+
 20000102-17:10:00 GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
 * source/rtl/browdb.prg
 * source/rtl/text.prg

@@ -78,10 +78,6 @@
  *
  */
 
- * See doc/license.txt for licensing terms.
- *
- */
-
 /* NOTE: In DOS/DJGPP under WinNT4 hb_fsSeek( fhnd, offset < 0, FS_SET) will
          set the file pointer to the passed negative value, and the subsequent
          hb_fsWrite() call will fail. In CA-Clipper hb_fsSeek() will fail,

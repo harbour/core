@@ -7607,6 +7607,7 @@ HARBOUR HB_USED( void )
  *  $INCLUDE$
  *     
  *  $END$
+ */
 
 HARBOUR HB___RDDSETDEFAULT( void )
 {
@@ -7624,4 +7625,3 @@ HARBOUR HB___RDDSETDEFAULT( void )
       strcpy( szDefDriver, cDriverBuffer );
    }
 }
-

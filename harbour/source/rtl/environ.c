@@ -63,7 +63,7 @@
    #define VER_PLATFORM_WIN32_WINDOWS 1
 #endif
 
-#if defined(__BORLANDC__) && defined(_WINDOWS_) && ! defined(VER_PLATFORM_WIN32_CE)
+#if defined(_WINDOWS_) && ! defined(VER_PLATFORM_WIN32_CE)
    #define VER_PLATFORM_WIN32_CE 3
 #endif
 
