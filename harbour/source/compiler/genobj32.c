@@ -79,6 +79,7 @@ static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00, 0x68, 0x00, 0x00, 0x
 
 static char * * externNames = 0;
 static USHORT wExternals = 1; /* _hb_vmExecute is always added */
+static char * szPrefix = "_HB_FUN_";
 
 void hb_compGenObj32( PHB_FNAME pFileName )
 {
@@ -437,7 +438,12 @@ static void ExternalNames( FILE * hObjFile, char * szNames[] )
   BYTE bChk = 0;
 
   while( szNames[ b ] )
-    wTotalLen += strlen( szNames[ b++ ] ) + 1;
+  {
+    if( b == 0 )
+       wTotalLen += strlen( szNames[ b++ ] ) + 1;
+    else
+       wTotalLen += strlen( szPrefix ) + strlen( szNames[ b++ ] ) + 1;
+  }
   wTotalLen += 2 + b - 1;
 
   putbyte( 0x8C, hObjFile );
@@ -450,10 +456,28 @@ static void ExternalNames( FILE * hObjFile, char * szNames[] )
   b = 0;
   while( szNames[ b ] )
     {
-      putbyte( strlen( szNames[ b ] ), hObjFile );
-      bChk += strlen( szNames[ b ] );
+      if( b == 0 )
+      {
+         putbyte( strlen( szNames[ b ] ), hObjFile );
+         bChk += strlen( szNames[ b ] );
+      }
+      else
+      {
+         putbyte( strlen( szPrefix ) + strlen( szNames[ b ] ), hObjFile );
+         bChk += strlen( szPrefix ) + strlen( szNames[ b ] );
+      }
 
       c = 0;
+
+      if( b > 0 )
+      {
+         while( szPrefix[ c ] )
+         {
+            putbyte( szPrefix[ c ], hObjFile );
+            bChk += szPrefix[ c++ ];
+         }
+         c = 0;
+      }
 
       while( szNames[ b ][ c ] )
         {
@@ -617,7 +641,8 @@ static void PubDef( FILE * hObjFile, char * szName, USHORT wSegment, USHORT wOff
 {
   BYTE bChk = 0;
   BYTE bChar;
-  USHORT wLen = 2 + 2 + strlen( szName ) + 2 + 1;
+  USHORT wLen = 2 + 2 + strlen( szPrefix ) + strlen( szName ) + 2 + 1;
+  char * szTemp;
 
   putbyte( 0x90, hObjFile );
   bChk += 0x90;
@@ -630,10 +655,17 @@ static void PubDef( FILE * hObjFile, char * szName, USHORT wSegment, USHORT wOff
   putbyte( wSegment, hObjFile );
   bChk += wSegment;
 
-  putbyte( strlen( szName ), hObjFile );
-  bChk += strlen( szName );
+  putbyte( strlen( szPrefix ) + strlen( szName ), hObjFile );
+  bChk += strlen( szPrefix ) + strlen( szName );
 
-  while( (bChar = * szName++) )
+  szTemp = szPrefix;
+  while( ( bChar = * szTemp++ ) )
+  {
+     putbyte( bChar, hObjFile );
+     bChk += bChar;
+  }
+
+  while( ( bChar = * szName++ ) )
     {
       putbyte( bChar, hObjFile );
       bChk += bChar;
