@@ -181,10 +181,10 @@ Method New( nTop, nLeft, nBottom, nRigth, lDrop )
      ::itemCount := 0
 
      ::message := ""
-::nSaveTop:= nTop + 1
-::nSaveLeft:=nLeft
-::nSaveBottom:=nBottom
-::nSaveRight:=nRight
+     ::nSaveTop:= nTop + 1
+     ::nSaveLeft:=nLeft
+     ::nSaveBottom:=nBottom
+     ::nSaveRight:=nRigth
 
      ::cScreen := Savescreen( nTop + 1, nleft, nBottom, nRigth )
      ::isopen := !lDrop
@@ -270,10 +270,6 @@ Return Self
 Method Close() Class HBListBox
 
      If ( ::isOpen )
-        ::nSaveTop:= nTop + 1
-        ::nSaveLeft:=nLeft
-        ::nSaveBottom:=nBottom
-        ::nSaveRight:=nRight
 
         Restscreen( ::nSaveTop, ;
                      ::nSaveLeft, ;
@@ -765,7 +761,7 @@ Return self
 
 Method HITTEST( nMouseRow, nMouseCol ) Class HBListBox
 
-     Local nRet
+     Local nRet,ntop
      Local nHit := 0
      Local cColor
      If ( !::isopen )

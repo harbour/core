@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * source/rdd/dbfntx/dbfntx1.c
+    * Some changes, needed for custom indexes support
+
+2002-04-30 01:11 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/rtl/memoedit.prg
     ! Add support for Set Key defined Keys.
       From xHarbour by Luiz Culik
     ! Fix minor bug related with this.
