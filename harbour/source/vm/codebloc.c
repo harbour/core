@@ -110,6 +110,11 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
           */
          pLocal = hb_stackItemFromBase( *pLocalPosTable++ );
 
+         if( HB_IS_BYREF( pLocal ) )
+         {
+            pLocal = hb_itemUnRef( pLocal );
+         }
+
          if( ! HB_IS_MEMVAR( pLocal ) )
          {
             /* Change the value only if this variable is not referenced

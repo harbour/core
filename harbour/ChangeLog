@@ -8,10 +8,16 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-10-21 10:23 UTC-0800 Luis Krause Mantilla <lkrausem@shaw.ca>
+  * source/vm/codebloc.c
+    ! Fixed detached local bug (borrowed from xharbour)
+  * source/rdd/dbcmd.c
+    ! Fixed bug in __dbLocate with When clause (borrowed from xharbour)
+
 2003-10-20 13:45 UTC+0100 Ryszard Glab <rglab@przesiew.imid.med.pl>
     * .cvsignore
 	* Restored previous version
-	
+
     * include/hbexpra.c
     * include/hbexprb.c
     * include/hbexprc.c
@@ -21,19 +27,19 @@
     * source/compiler/exproptc.c
     * source/compiler/harbour.sly
 	* fixed declaration mismatch in Simplex version
-	* fixed generation of string's pcode 
+	* fixed generation of string's pcode
 	  (introduced with my previous changes)
-    
+
     * source/pp/ppcore.c
 	* fixed support for stringify match markers <""> and <()> in Flex
 	  version (for example &var.1 have to be expanded into "&var.1"
 	  instead of var.1 since this is not a valid Clipper expression)
 	  NOTICE! In Simplex version this is not fixed because it is
-	  used as a hack to correctly support macro variables in GET 
+	  used as a hack to correctly support macro variables in GET
 	  command.
-    
+
     * tests/testget.prg
-	* MEMVAR declaration was added 
+	* MEMVAR declaration was added
 
 2003-10-20 11:37 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
     * include/hbapi.h
