@@ -10,12 +10,98 @@
  *    Documentation for: HB_LANGNAME(), HB_LANGSELECT()
  *
  * Copyright 2004 Chen Kedem <niki@actcom.co.il>
- *    Documentation for: HB_SETCODEPAGE()
+ *    Documentation for: HB_LANGERRMSG(),HB_LANGMESSAGE(),HB_SETCODEPAGE(),
+ *                       HB_TRANSLATE()
  *
  * See doc/license.txt for licensing terms.
  *
  */
 
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      HB_LANGERRMSG()
+ *  $CATEGORY$
+ *      Nation
+ *  $ONELINER$
+ *      Description of an error code using current language
+ *  $SYNTAX$
+ *      HB_LANGERRMSG( <nErrorCode> ) --> cErrorMessage
+ *  $ARGUMENTS$
+ *      <nErrorCode> is one of the generic error codes (EG_...) defined
+ *      in include/error.ch
+ *  $RETURNS$
+ *      HB_LANGERRMSG() return the error message string represented by
+ *      the code <nErrorCode>.
+ *  $DESCRIPTION$
+ *      This function return the error message associated with an error
+ *      code using the current language selected.
+ *  $EXAMPLES$
+ *      #include "error.ch"
+ *      REQUEST HB_LANG_ES
+ *      FUNCTION Main()
+ *      // English: Argument error
+ *      ? "English:", HB_LANGERRMSG( EG_ARG )
+ *      HB_LANGSELECT( "ES" )
+ *      // Spanish: Error de argumento
+ *      ? "Spanish:", HB_LANGERRMSG( EG_ARG )
+ *      RETURN NIL
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is a Harbour Extension
+ *  $PLATFORMS$
+ *      All
+ *  $FILES$
+ *      Library are rtl, lang
+ *      Header is error.ch
+ *  $SEEALSO$
+ *      HB_LANGSELECT(),NATIONMSG()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      HB_LANGMESSAGE()
+ *  $CATEGORY$
+ *      Nation
+ *  $ONELINER$
+ *      Returns international strings messages and errors
+ *  $SYNTAX$
+ *      HB_LANGMESSAGE( <nMsg> ) --> cMessage
+ *  $ARGUMENTS$
+ *      <nMsg> is the message number to get.
+ *  $RETURNS$
+ *      HB_LANGMESSAGE() return the text associated with the code <nMsg>.
+ *  $DESCRIPTION$
+ *      HB_LANGMESSAGE() is similar to NATIONMSG() but give access to the
+ *      whole list of language messages: Day and month names, generic error
+ *      messages, internal errors, and others...
+ *
+ *      Use the header file hblang.ch for a list of base values for <nMsg>.
+ *  $EXAMPLES$
+ *      #include "hblang.ch"
+ *      REQUEST HB_LANG_ES
+ *      FUNCTION Main()
+ *      // English: Monday
+ *      ? "English:", HB_LANGMESSAGE( HB_LANG_ITEM_BASE_DAY + 1 )
+ *      HB_LANGSELECT( "ES" )
+ *      // Spanish: Lunes
+ *      ? "Spanish:", HB_LANGMESSAGE( HB_LANG_ITEM_BASE_DAY + 1 )
+ *      RETURN NIL
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is a Harbour Extension
+ *  $PLATFORMS$
+ *      All
+ *  $FILES$
+ *      Library are rtl, lang
+ *      Header is hblang.ch
+ *  $SEEALSO$
+ *      HB_LANGSELECT(),NATIONMSG(),REQUEST
+ *  $END$
+ */
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -56,9 +142,9 @@
  *  $COMPLIANCE$
  *      This function is a Harbour Extension
  *  $PLATFORMS$
- *      Dos,Win32,OS/2
+ *      All
  *  $FILES$
- *      Library is rtl, lang
+ *      Library are rtl, lang
  *  $SEEALSO$
  *      HB_LANGSELECT(),NATIONMSG()
  *  $END$
@@ -97,6 +183,8 @@
  *      Galician              850            GL
  *      German                850            DE
  *      German ANSI           ANSI           DEWIN
+ *      Greek                 737            EL
+ *      Greek ANSI            Windows-1253   ELWIN
  *      Hebrew                862            HE862
  *      Hebrew                Windows-1255   HEWIN
  *      Hungarian             852            HU852
@@ -133,6 +221,10 @@
  *      Lang ID is selected all messages will be output with the current
  *      language selected until another one is selected or the program ends.
  *      The default language is English (cLang == "EN").
+ *
+ *      NOTE: You must REQUEST every language module you intend to use.
+ *      For example: to use the Russian RU866 language you must add the
+ *      following to your program: REQUEST HB_LANG_RU866
  *  $EXAMPLES$
  *      REQUEST HB_LANG_PT
  *      REQUEST HB_LANG_RO
@@ -155,11 +247,11 @@
  *  $COMPLIANCE$
  *      This function is a Harbour Extension.
  *  $PLATFORMS$
- *      Dos,Win32,OS/2
+ *      All
  *  $FILES$
- *      Libraty is rtl, lang
+ *      Libraty are rtl, lang
  *  $SEEALSO$
- *      HB_LANGNAME(),NATIONMSG(),HB_SETCODEPAGE()
+ *      HB_LANGNAME(),HB_SETCODEPAGE(),NATIONMSG(),REQUEST
  *  $END$
  */
 
@@ -183,6 +275,8 @@
  *      English               437            EN
  *      German                850            DE
  *      German ANSI           ANSI           DEWIN
+ *      Greek                 737            EL
+ *      Greek ANSI            Windows-1253   ELWIN
  *      Hungarian             852            HU852
  *      Hungarian             Windows-1      HUWIN
  *      Polish                852            PL852
@@ -208,6 +302,10 @@
  *      HB_SETCODEPAGE() set the active code page use by Harbour for
  *      sorting and comparing strings. The default code page use ASCII
  *      order (cLang == "EN").
+ *
+ *      NOTE: You must REQUEST every code page module you intend to use.
+ *      For example: to use the Russian RU866 code page you must add the
+ *      following to your program: REQUEST HB_CODEPAGE_RU866
  *  $EXAMPLES$
  *      REQUEST HB_CODEPAGE_HU852
  *      FUNCTION Main()
@@ -223,12 +321,73 @@
  *      R
  *  $COMPLIANCE$
  *      This function is a Harbour Extension.
+ *
+ *      This function is only visible if source/rtl/cdpapi.c was compiled
+ *      without the HB_CDP_SUPPORT_OFF flag.
  *  $PLATFORMS$
- *      Dos,Win32,OS/2
+ *      All
  *  $FILES$
- *      Libraty is rtl, codepage
+ *      Libraty are rtl, codepage
  *  $SEEALSO$
- *      HB_LANGNAME(),HB_LANGSELECT(),NATIONMSG()
+ *      HB_LANGNAME(),HB_LANGSELECT(),HB_TRANSLATE(),NATIONMSG(),REQUEST
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      HB_TRANSLATE()
+ *  $CATEGORY$
+ *      Nation
+ *  $ONELINER$
+ *      Translate a string from one code page to the other
+ *  $SYNTAX$
+ *      HB_TRANSLATE( <cSrcText>, [<cPageFrom>], [<cPageTo>] ) --> cDstText
+ *  $ARGUMENTS$
+ *      <cSrcText> Is the source string to translate.
+ *
+ *      <cPageFrom> Is the optional character code page ID of the source
+ *      string. If not specified, the default code page is used.
+ *
+ *      <cPageTo> Is the optional character code page ID of the destination
+ *      string. If not specified, the default code page is used.
+ *  $RETURNS$
+ *      HB_TRANSLATE() return destination string converted from the source
+ *      string.
+ *  $DESCRIPTION$
+ *      HB_TRANSLATE() try to convert a source string from one code page
+ *      into the other. If a code page ID is not recognized, or not linked
+ *      in, the default code page is used. HB_TRANSLATE() is used usually
+ *      to convert between the Dos and the Windows code pages of the same
+ *      language.
+ *
+ *      NOTE: If the source code page and target code page does not have
+ *      the same number of characters, a translation can not be done and
+ *      the destination string is a copy of the source string.
+ *
+ *      NOTE: You must REQUEST every code page module you intend to use.
+ *      For example: to use the Russian RU866 code page you must add the
+ *      following to your program: REQUEST HB_CODEPAGE_RU866
+ *  $EXAMPLES$
+ *      REQUEST HB_CODEPAGE_DE
+ *      REQUEST HB_CODEPAGE_DEWIN
+ *      FUNCTION Main()
+ *      LOCAL cTxt := "A" + CHR( 142 ) + "BC"
+ *      ? "German 850  text:", cTxt
+ *      ? "German ANSI text:", HB_TRANSLATE( cTxt, "DE", "DEWIN" )
+ *      RETURN NIL
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is a Harbour Extension.
+ *
+ *      This function is only visible if source/rtl/cdpapi.c was compiled
+ *      without the HB_CDP_SUPPORT_OFF flag.
+ *  $PLATFORMS$
+ *      All
+ *  $FILES$
+ *      Libraty are rtl, codepage
+ *  $SEEALSO$
+ *      HB_LANGSELECT(),HB_SETCODEPAGE(),NATIONMSG(),REQUEST
  *  $END$
  */
 
