@@ -208,6 +208,12 @@ static USHORT s_uiErrorLast = 0;
    #define PATH_MAX 256
 #endif
 
+#if UINT_MAX == ULONG_MAX
+   #define HB_FS_LARGE_OPTIMIZED
+#else
+   #define LARGE_MAX ( UINT_MAX - 1L )
+#endif
+
 extern int rename( const char *, const char * );
 
 /* Convert HARBOUR flags to IO subsystem flags */
@@ -558,23 +564,24 @@ USHORT  hb_fsWrite( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
    return uiWritten;
 }
 
-#if UINT_MAX != ULONG_MAX
-
-#define LARGE_MAX ( UINT_MAX - 1L )
-
 ULONG   hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 {
    ULONG ulRead = 0;
+#if ! defined(HB_FS_LARGE_OPTIMIZED)
    ULONG ulLeftToRead = ulCount;
    USHORT uiToRead;
    USHORT uiRead;
    BYTE * pPtr = pBuff;
+#endif
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsReadLarge(%p, %p, %lu)", hFileHandle, pBuff, ulCount));
 
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
    errno = 0;
+ #if defined(HB_FS_LARGE_OPTIMIZED)
+   ulRead = read( hFileHandle, pBuff, ulCount );
+ #else
    while( ulLeftToRead )
    {
       /* Determine how much to read this time */
@@ -598,6 +605,7 @@ ULONG   hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
       ulRead += ( ULONG ) uiRead;
       pPtr += uiRead;
    }
+  #endif
    s_uiErrorLast = errno;
 
 #else
@@ -612,17 +620,23 @@ ULONG   hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 {
    ULONG ulWritten = 0;
+#if ! defined(HB_FS_LARGE_OPTIMIZED)
    ULONG ulLeftToWrite = ulCount;
    USHORT uiToWrite;
    USHORT uiWritten;
    BYTE * pPtr = pBuff;
+#endif
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsWriteLarge(%p, %p, %lu)", hFileHandle, pBuff, ulCount));
 
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
    errno = 0;
-   if( ulCount ) while( ulLeftToWrite )
+   if( ulCount )
+  #if defined(HB_FS_LARGE_OPTIMIZED)
+   ulWritten = write( hFileHandle, pBuff, ulCount );
+  #else
+   while( ulLeftToWrite )
    {
       /* Determine how much to write this time */
       if( ulLeftToWrite > ( ULONG ) INT_MAX )
@@ -645,6 +659,7 @@ ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
       ulWritten += ( ULONG ) uiWritten;
       pPtr += uiWritten;
    }
+  #endif
    else ftruncate( hFileHandle, tell( hFileHandle ) );
    s_uiErrorLast = errno;
 
@@ -656,8 +671,6 @@ ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 
    return ulWritten;
 }
-
-#endif
 
 ULONG   hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
 {

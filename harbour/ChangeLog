@@ -1,3 +1,10 @@
+19991106-01:30 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * include/filesys.h
+   * source/rtl/filesys.c
+     ! Proper optimization implemented for hb_fsReadLarge() and
+       hb_fsWriteLarge(), as suggested by Victor Szel.
+
 19991105-23:30 EDT David G. Holm <dholm@jsd-llc.com>
 
    * source/rtl/filesys.c
