@@ -1335,7 +1335,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
                hb_xfree( aExtraItems );
 
-               w++; // To force skip the HB_P_ARRAYPUSH (was already processed above).
+               w++; /* To force skip the HB_P_ARRAYPUSH (was already processed above). */
             }
 
             w++;

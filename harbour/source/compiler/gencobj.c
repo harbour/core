@@ -36,7 +36,8 @@ static char * hb_searchpath( const char *, char *, char * );
 
 /* QUESTION: Allocate buffer dynamically ? */
 #define HB_CFG_LINE_LEN    100
-//--------------------------------------------------------------------------//
+
+/*--------------------------------------------------------------------------*/
 
 /* Builds platform dependant object module from Harbour C output */
 void hb_compGenCObj( PHB_FNAME pFileName )
@@ -201,7 +202,6 @@ void hb_compGenCObj( PHB_FNAME pFileName )
          sprintf( szCommandLine, "%s %s %s %s > /dev/null", szCompiler, szOptions, szOutPath, szFileName );
 #endif
       }
-      //printf( "\n\nLine:[%s]\n", szCommandLine );
 
       /* Compile it! */
       iSuccess = ( system( szCommandLine ) != -1 );

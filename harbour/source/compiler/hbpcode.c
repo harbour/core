@@ -1457,66 +1457,60 @@ void hb_compStrongType( int iSize )
        pFunc->iStackIndex--;
 
        if( ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == '-' + VT_OFFSET_VARIANT ) || pFunc->pStack[ pFunc->iStackIndex - 1 ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
-	   {
+       {
           cSubType1 = ( pFunc->pStack[ pFunc->iStackIndex - 1 ] -= VT_OFFSET_VARIANT );
-		  //printf( "\n Op1 = Variant: %c\n", cSubType1 );
-	   }
-
+       }
        if( cSubType1 && cSubType1 == '-' )
-	   {
+       {
           sprintf( ( char * ) szType1, "AnyType.SubType[NIL]" );
-	   }
+       }
        else if( cSubType1 )
-	   {
+       {
           sprintf( ( char * ) szType1, "AnyType.SubType[%c]", cSubType1 );
-	   }
+       }
        else if( pFunc->pStack[ pFunc->iStackIndex - 1 ] == '-' )
-	   {
+       {
           strcpy( ( char * ) szType1, "NIL");
-	   }
+       }
        else
-	   {
+       {
           sprintf( ( char * ) szType1, "%c", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
-	   }
+       }
 
-	   /*---*/
+       /*---*/
 
        if( ( pFunc->pStack[ pFunc->iStackIndex ] == '-' + VT_OFFSET_VARIANT ) || pFunc->pStack[ pFunc->iStackIndex ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
-	   {
+       {
           cSubType2 = ( pFunc->pStack[ pFunc->iStackIndex ] -= VT_OFFSET_VARIANT );
-		  //printf( "\n Op2 = Variant: %c\n", cSubType1 );
-	   }
-
+       }
        if( cSubType2 && cSubType2 == '-' )
-	   {
+       {
           strcpy( ( char * ) szType2, "AnyType.SubType[NIL]" );
-	   }
+       }
        else if( cSubType2 )
-	   {
+       {
           sprintf( ( char * ) szType2, "AnyType.SubType[%c]", cSubType2 );
-	   }
+       }
        else if( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
-	   {
+       {
           strcpy( ( char * ) szType2, "NIL" );
-	   }
+       }
        else
-	   {
+       {
           sprintf( ( char * ) szType2, "%c", pFunc->pStack[ pFunc->iStackIndex ] );
-	   }
+       }
 
-	   /*---*/
+       /*---*/
 
-	   if( ! cSubType1 )
-	   {
+       if( ! cSubType1 )
+       {
           cSubType1 = pFunc->pStack[ pFunc->iStackIndex - 1 ];
-		  //printf( "\n Op1 = %c (%i)\n", cSubType1, cSubType1 );
-	   }
+       }
 
-	   if( ! cSubType2 )
-	   {
+       if( ! cSubType2 )
+       {
           cSubType2 = pFunc->pStack[ pFunc->iStackIndex ];
-		  //printf( "\n Op2 = %c (%i)\n", cSubType2, cSubType2 );
-	   }
+       }
 
        if( cSubType1 == '-' || cSubType2 == '-' )
        {

@@ -72,7 +72,7 @@
 #include "hbvm.h"
 #include "error.ch"
 #if defined(HB_OS_UNIX)
-  #include <time.h>
+   #include <time.h>
 #endif
 
 /* list of background tasks 
@@ -140,6 +140,9 @@ static void hb_releaseCPU( void )
      nanosleep( &nanosecs, NULL );
   }
 #else
+
+  /* Do nothing */
+
 #endif
 }
 
@@ -269,8 +272,10 @@ HB_FUNC( HB_IDLEDEL )
              if( s_uiIdleMaxTask )
              {
                 if( iTask != s_uiIdleMaxTask )
+                {
                    memcpy( &s_pIdleTasks[ iTask ], &s_pIdleTasks[ iTask + 1 ],
-                           sizeof( HB_ITEM_PTR ) * (s_uiIdleMaxTask - iTask) );
+                           sizeof( HB_ITEM_PTR ) * ( s_uiIdleMaxTask - iTask ) );
+                }
                 s_pIdleTasks = ( HB_ITEM_PTR * ) hb_xrealloc( s_pIdleTasks, sizeof( HB_ITEM_PTR ) * s_uiIdleMaxTask );
              }
              else

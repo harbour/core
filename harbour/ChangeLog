@@ -1,3 +1,16 @@
+2001-11-04 18:34 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/compiler/cmdcheck.c 
+   * source/compiler/gencobj.c 
+   * source/compiler/hbpcode.c
+   * source/rtl/filesys.c 
+   * source/rtl/idle.c
+   * source/vm/classes.c 
+   * source/vm/hvm.c 
+     ! Non-ansi comments fixed.
+       Note that RDD files has lots of // comments, if you're the author 
+       of some those files and seeing this, please check your code. Thx.
+
 2001-11-04 18:14 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * include/hbexpra.c

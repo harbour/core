@@ -631,7 +631,7 @@ char * hb_objGetRealClsName( PHB_ITEM pObject, char * szName )
          szClassName = "ARRAY";
       else
        {
-         PHB_DYNS pMsg    = hb_dynsymFindName( szName );
+         PHB_DYNS pMsg = hb_dynsymFindName( szName );
          USHORT uiClass;
          USHORT uiCurCls;
          USHORT uiClsTree;
@@ -847,11 +847,6 @@ PMETHOD hb_objGetpMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
          if( pClass->pMethods[ uiAt ].pMessage == pMsg )
            return (pClass->pMethods + uiAt) ;
 
-
-
-
-
-
          uiAt++;
          if( uiAt == uiMask )
             uiAt = 0;
@@ -879,7 +874,7 @@ ULONG hb_objHasMsg( PHB_ITEM pObject, char *szString )
       return ( ULONG ) hb_objGetMthd( pObject, pDynSym->pSymbol, FALSE );
    else
       return 0;
-}                                                /* Get funcptr of message   */
+}
 
 
 /* ================================================ */
@@ -1439,10 +1434,10 @@ static PHB_ITEM hb_clsInst( USHORT uiClass )
 
       pSelf->item.asArray.value->puiClsTree   = NULL;
 
-      //pSelf->item.asArray.value->puiClsTree   = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
-      //pSelf->item.asArray.value->puiClsTree[0]=0;
+      /* pSelf->item.asArray.value->puiClsTree   = ( USHORT * ) hb_xgrab( sizeof( USHORT ) ); */
+      /* pSelf->item.asArray.value->puiClsTree[0]=0; */
 
-      /* Initialise value if initialisation was requested                      */
+      /* Initialise value if initialisation was requested */
       pMeth = pClass->pMethods;
       for( uiAt = 0; uiAt < uiLimit; uiAt++, pMeth++ )
       {
@@ -1643,8 +1638,8 @@ HB_FUNC( __OBJCLONE )
       pDstObject= hb_arrayClone( pSrcObject, NULL ) ;
 
       pDstObject->item.asArray.value->puiClsTree = NULL;
-      //pDstObject->item.asArray.value->puiClsTree = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
-      //pDstObject->item.asArray.value->puiClsTree[0]=0;
+      /* pDstObject->item.asArray.value->puiClsTree = ( USHORT * ) hb_xgrab( sizeof( USHORT ) ); */
+      /* pDstObject->item.asArray.value->puiClsTree[0]=0; */
 
       hb_itemRelease( hb_itemReturn( pDstObject ) );
     }
@@ -1663,7 +1658,7 @@ HB_FUNC( __OBJSENDMSG )
    PHB_ITEM pObject  = hb_param( 1, HB_IT_OBJECT );
    USHORT uiPCount = hb_pcount();
 
-   if( uiPCount>=2 && pObject )    /* Object & message passed      */
+   if( uiPCount>=2 && pObject )    /* Object & message passed */
    {
                     /*hb_dynsymFindName( hb_parc(2) );*/
       PHB_DYNS pMsg = hb_dynsymGet( hb_parc(2) );
@@ -1672,14 +1667,14 @@ HB_FUNC( __OBJSENDMSG )
       {
          USHORT uiParam;
 
-         hb_vmPush( pObject );               /* Push object                  */
+         hb_vmPush( pObject );               /* Push object */
 
          hb_vmMessage( pMsg->pSymbol );      /* Push char symbol as message  */
 
-         for( uiParam = 3; uiParam <= uiPCount; uiParam++ )   /* Push arguments on stack      */
+         for( uiParam = 3; uiParam <= uiPCount; uiParam++ )   /* Push arguments on stack */
             hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
 
-         hb_vmDo( ( USHORT ) ( uiPCount - 2 ) );             /* Execute message              */
+         hb_vmDo( ( USHORT ) ( uiPCount - 2 ) );             /* Execute message */
       }
    }
    else
@@ -2412,3 +2407,4 @@ HB_FUNC( __CLSGETPROPERTIES )
 
    hb_itemRelease( hb_itemReturn( pReturn ) );
 }
+

@@ -369,14 +369,14 @@ FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
       DWORD dwShare = FILE_SHARE_READ | FILE_SHARE_WRITE;
       HANDLE hFile;
 
-      // read & write flags
+      /* read & write flags */
       if( uiFlags & FO_WRITE )
          dwFlags |= GENERIC_WRITE;
 
       if( uiFlags & FO_READWRITE )
          dwFlags |= GENERIC_READ;
 
-      // shared flags
+      /* shared flags */
       if( ( uiFlags & FO_DENYREAD ) == FO_DENYREAD )
          dwShare = FILE_SHARE_WRITE;
 
