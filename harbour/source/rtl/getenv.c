@@ -57,24 +57,40 @@ HARBOUR HB_GETENV( void )
 
    if( pName )
    {
-      char * szName = hb_itemGetCPtr( pName );
-      ULONG ulName = hb_itemGetCLen( pName );
+      char * pszName = hb_itemGetC( pName );
+      ULONG ulName = strlen( pszName );
+      ULONG ulPos;
 
-      while( ulName && szName[ ulName - 1 ] == '=' )
+      /* strip the '=' or else it will clear the variable! */
+
+      for( ulPos = 0; ulPos < ulName; ulPos++ )
       {
-         /* strip the '=' or else it will clear the variable! */
-         szName[ ulName - 1 ] = '\0';
-         ulName--;
+         if( pszName[ ulPos ] == '=' )
+         {
+            pszName[ ulPos ] = '\0';
+            break;
+         }
       }
 
-      if( ulName )
+      if( pszName[ 0 ] != '\0' )
       {
-         char * szValue = getenv( szName );
+         char * szValue;
+
+         /* NOTE: Convert the envvar name to uppercase. This is required for
+                  DOS and OS/2 systems. [vszakats] */
+
+         #if defined(HB_OS_DOS) || defined(HB_OS_OS2)
+            hb_strupr( pszName );
+         #endif
+
+         szValue = getenv( pszName );
 
          hb_retc( szValue ? szValue : ( ( ISCHAR( 2 ) ? hb_parc( 2 ) : "" ) ) );
       }
       else
          hb_retc( "" );
+
+      hb_itemFreeC( pszName );
    }
    else
       hb_retc( "" );

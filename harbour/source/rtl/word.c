@@ -35,7 +35,6 @@
 
 #include "hbapi.h"
 #include "hbapierr.h"
-#include "hbapiitm.h"
 
 /* NOTE: The Clipper NG states that WORD() will only work when used
          in CALL commands parameter list, otherwise it will return

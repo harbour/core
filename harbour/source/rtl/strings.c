@@ -51,8 +51,6 @@
 #include <ctype.h>
 
 #include "hbapi.h"
-#include "hbapiitm.h"
-#include "hbapierr.h"
 
 BOOL hb_strEmpty( const char * szText, ULONG ulLen )
 {

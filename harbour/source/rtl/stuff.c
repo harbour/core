@@ -34,7 +34,6 @@
  */
 
 #include "hbapi.h"
-#include "hbapiitm.h"
 
 /* replaces characters in a string */
 HARBOUR HB_STUFF( void )

@@ -50,6 +50,7 @@
 
 #include "hbapi.h"
 #include "hbapierr.h"
+#include "hbapifs.h"
 
 #if defined(DOS) || defined(__WATCOMC__)
    #include <dos.h>
@@ -88,6 +89,9 @@ HARBOUR HB_DISKSPACE( void )
       DWORD dwBytesPerSector;
       DWORD dwNumberOfFreeClusters;
       DWORD dwTotalNumberOfClusters;
+
+      if( uiDrive == 0 )
+         uiDrive = hb_fsCurDrv() + 1;
 
       szPath[ 0 ] = uiDrive + 'A' - 1;
       szPath[ 1 ] = ':';

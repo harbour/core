@@ -1,3 +1,22 @@
+20000321-01:10 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/gtapi.c
+     ! hb_gtBox() bottom/left corner draw bug fixed. Introduced around today.
+
+   * source/rtl/diskspac.c
+     ! Fixed the default case for Win32.
+
+   * source/rtl/getenv.c
+     ! Fixed to not modify the item buffer directly.
+     ! Fixed to convert the envvar name to uppercase on DOS and OS/2 platforms.
+     ! Consistent handling of \0 char in the envvar name.
+     ! Fixed stripping of the '=' character.
+
+   * source/rtl/strings.c
+     source/rtl/stuff.c
+     source/rtl/word.c
+     - Superfluous #includes removed.
+
 20000320-22:30 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * samples/guestbk/bld_b32.bat

@@ -244,7 +244,7 @@ USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, B
 
    if( height > 1 && width > 1 )
    {
-      hb_gtWriteAt( uiBottom, uiCol  , pszBox + 6, sizeof( BYTE ) ); /* Bottom left corner */
+      hb_gtWriteAt( uiBottom, uiLeft, pszBox + 6, sizeof( BYTE ) ); /* Bottom left corner */
 
       uiCol = ( height > 1 ? uiLeft + 1 : uiLeft );
 
