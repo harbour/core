@@ -1588,6 +1588,8 @@ ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    /* Create memo file */
    if( bHasMemo )
    {
+      char *tmp;
+      ERRCODE result;
       pArea->szMemoFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
       pFileName = hb_fsFNameSplit( ( char * ) pCreateInfo->abName );
       pArea->szMemoFileName[ 0 ] = 0;
@@ -1600,8 +1602,11 @@ ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
       strncat( pArea->szMemoFileName, hb_itemGetCPtr( pFileExt ),
                _POSIX_PATH_MAX - strlen( pArea->szMemoFileName ) );
       hb_itemRelease( pFileExt );
+      tmp = pCreateInfo->abName;
       pCreateInfo->abName = ( BYTE * ) pArea->szMemoFileName;
-      return SELF_CREATEMEMFILE( ( AREAP ) pArea, pCreateInfo );
+      result = SELF_CREATEMEMFILE( ( AREAP ) pArea, pCreateInfo );
+      pCreateInfo->abName = tmp;
+      return result;
    }
    else
       return SUCCESS;
@@ -1689,6 +1694,7 @@ ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    pArea->szDataFileName = (char *) hb_xgrab( strlen( (char * ) pOpenInfo->abName)+1 );
    strcpy( pArea->szDataFileName, ( char * ) pOpenInfo->abName );
    pArea->atomAlias = hb_dynsymGet( ( char * ) pOpenInfo->atomAlias );
+
    if( ( ( PHB_DYNS ) pArea->atomAlias )->hArea )
    {
       hb_errRT_DBCMD( EG_DUPALIAS, EDBCMD_DUPALIAS, NULL, ( char * ) pOpenInfo->atomAlias );
