@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 // Harbour Class TBrowse and TBColumn sample
 
 function Main()

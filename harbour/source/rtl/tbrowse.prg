@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * Harbour Class TBrowse
  * Copyright(C) 1999 by Antonio Linares <alinares@fivetech.com>
  *
@@ -168,7 +172,9 @@ METHOD Stabilize() CLASS TBrowse
       SetPos( ::nTop + nRow, ::nLeft )
       DevOut( Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
       for n = 1 to nColsVisible
-         ::aColumns[ n ]:ColPos = Col()
+         if nRow == 1
+            ::aColumns[ n ]:ColPos = Col()
+         endif
          if lDisplay
             DevOut( PadR( Eval( ::aColumns[ n ]:block ),;
                     ::aColumns[ n ]:Width ), ::ColorSpec )
@@ -184,9 +190,11 @@ METHOD Stabilize() CLASS TBrowse
    next
 
    Eval( ::SkipBlock, -( ::nBottom - ::nTop + If( lHeaders, 1, 0 ) ) )
-   @ ::nTop + ::RowPos - If( lHeaders, 0, 1 ), ::aColumns[ ::ColPos ]:ColPos ;
-      SAY PadR( Eval( ::aColumns[ ::ColPos ]:block ), ::aColumns[ ::ColPos ]:Width ) ;
-      COLOR __ColorIndex( ::ColorSpec, CLR_ENHANCED )
+   if ::AutoLite
+      @ ::nTop + ::RowPos - If( lHeaders, 0, 1 ), ::aColumns[ ::ColPos ]:ColPos ;
+        SAY PadR( Eval( ::aColumns[ ::ColPos ]:block ), ::aColumns[ ::ColPos ]:Width ) ;
+        COLOR __ColorIndex( ::ColorSpec, CLR_ENHANCED )
+   endif
 
 return .t.
 

@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * Harbour Class TBColumn
  * Copyright(C) 1999 by Antonio Linares <alinares@fivetech.com>
  *
