@@ -326,9 +326,12 @@ METHOD New() CLASS TDebugger
    ::oPullDown      := __dbgBuildMenu( Self )
 
    ::oWndCode       := TDbWindow():New( 1, 0, MaxRow() - 6, MaxCol() )
+   ::oWndCode:Cargo       := { ::oWndCode:nTop, ::oWndCode:nLeft }
    ::oWndCode:bKeyPressed := { | nKey | ::CodeWindowProcessKey( nKey ) }
-   ::oWndCode:bGotFocus   := { || ::oGetListCommand:SetFocus(), SetCursor( SC_SPECIAL1 ) }
-   ::oWndCode:bLostFocus  := { || SetCursor( SC_NONE ) }
+   ::oWndCode:bGotFocus   := { || ::oGetListCommand:SetFocus(), SetCursor( SC_SPECIAL1 ), ;
+                              SetPos( ::oWndCode:Cargo[1],::oWndCode:Cargo[2] ) }
+   ::oWndCode:bLostFocus  := { || ::oWndCode:Cargo[1] := Row(), ::oWndCode:Cargo[2] := Col(), ;
+                              SetCursor( SC_NONE ) }
    ::oWndCode:bPainted = { || ::oBrwText:SetColor( __DbgColors()[ 2 ] + "," + ;
                               __DbgColors()[ 5 ] + "," + __DbgColors()[ 3 ] + "," + ;
                               __DbgColors()[ 6 ] ),;
@@ -1412,7 +1415,7 @@ METHOD SaveAppStatus() CLASS TDebugger
    ::cAppColors := SetColor()
    ::nAppCursor := SetCursor()
    RestScreen( 0, 0, MaxRow(), MaxCol(), ::cImage )
-   SetCursor( SC_NONE )
+   // SetCursor( SC_NONE )
    DispEnd()
 
 return nil

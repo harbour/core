@@ -1,3 +1,7 @@
+2001-06-21 13:20 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/debug/debugger.prg
+     * partially fixed cursor appearance on debug screen
+
 2001-06-21 10:25 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * source/rtl/inkey.c
      + added static variable s_altdPressed, which is set after pressing Alt-D
