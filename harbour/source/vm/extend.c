@@ -707,6 +707,7 @@ void hb_storni( int iValue, int iParam, ... )
          hb_itemRelease( pItemNew );
       }
       else if( iByRef || iParam == -1 )
+      {
          hb_itemPutNI( pItem, iValue );
       }
    }
