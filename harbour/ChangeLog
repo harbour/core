@@ -1,3 +1,10 @@
+19990811-09:01 GMT+3 Alexander Kresin
+  * source/hbpp/hbpp.c
+    * fixed some bugs
+    *changed logic of #translates scan, so it is possible now use
+     #translate with non alphabetical definitions ( such as '::', for
+     example ).
+
 19990811-18:00 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/gt/gtwin.c
     * hb_gt_getRow/Col were using the wrong screen handle.

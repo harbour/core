@@ -61,8 +61,8 @@ COMMANDS* AddTranslate ( char * );              /* Add new #translate to an arra
 int ParseExpression( char*, char* );            /* Parsing a line ( without preprocessor directive ) */
 int WorkDefine ( char**, char*, DEFINES * );    /* Replace fragment of code with a #defined result text */
 int WorkPseudoF ( char**, char*, DEFINES*);     /* Replace pseudofunction with a #defined result text */
-int WorkCommand ( char*, char*, char*, COMMANDS* );
-int WorkTranslate ( char*, char*, char*, COMMANDS*, int* );
+int WorkCommand ( char*, char*, COMMANDS* );
+int WorkTranslate ( char*, char*, COMMANDS*, int* );
 int CommandStuff ( char *, char *, char *, int*, int );
 int RemoveSlash( char * );
 int WorkMarkers( char**, char**, char*, int* );
@@ -518,133 +518,149 @@ COMMANDS* AddTranslate ( char *traname )
 
 int ParseExpression( char* sLine, char* sOutLine )
 {
-  char sToken[MAX_NAME];
-  char *ptri, *ptro, *ptrb;
-  int lenToken, i, ipos, isdvig, lens;
-  int rezDef, rezTra, rezCom, kolpass = 0;
-  DEFINES *stdef;
-  COMMANDS *stcmd;
+   char sToken[MAX_NAME];
+   char *ptri, *ptro, *ptrb;
+   int lenToken, i, ipos, isdvig, lens;
+   int ifou;
+   int rezDef, rezTra, rezCom, kolpass = 0;
+   DEFINES *stdef;
+   COMMANDS *stcmd;
 
-  do
-  {
-    strotrim ( sLine );
-    rezDef = 0; rezTra = 0; rezCom = 0;
-    isdvig = 0;
-    do
-    {
-      ptro = sOutLine;
-      ptri = sLine + isdvig;
-      ipos = md_strAt( ";", 1, ptri, FALSE );
-      if ( ipos > 0 ) *(ptri+ipos-1) = '\0';
-      SKIPTABSPACES( ptri );
-      if ( *ptri == '#' )
+   do
+   {
+      strotrim ( sLine );
+      rezDef = 0; rezTra = 0; rezCom = 0;
+      isdvig = 0;
+      do
       {
-        ParseDirective( ptri+1 );
-        lens = strolen( sLine+isdvig );
-        pp_Stuff ( "", sLine+isdvig, 0, (ipos)? ipos-1:lens, lens );
-      }
-      else
-      {
-         /* Look for macros from #define      */
-        while ( ( lenToken = NextName( &ptri, sToken, NULL ) ) > 0 )
-        if ( (stdef=DefSearch(sToken)) != NULL )
-        {
-          ptrb = ptri - lenToken;
-          if ( ( i = WorkDefine ( &ptri, ptro, stdef ) ) >= 0 )
-          {
-            rezDef++;
-            lens = strolen( ptrb );
-            if ( ipos > 0 )
+         ptro = sOutLine;
+         ptri = sLine + isdvig;
+         ipos = md_strAt( ";", 1, ptri, FALSE );
+         if ( ipos > 0 ) *(ptri+ipos-1) = '\0';
+         SKIPTABSPACES( ptri );
+         if ( *ptri == '#' )
+         {
+            ParseDirective( ptri+1 );
+            lens = strolen( sLine+isdvig );
+            pp_Stuff ( "", sLine+isdvig, 0, (ipos)? ipos-1:lens, lens );
+         }
+         else
+         {   /* Look for macros from #define      */
+            while ( ( lenToken = NextName( &ptri, sToken, NULL ) ) > 0 )
+            if ( (stdef=DefSearch(sToken)) != NULL )
             {
-              *(ptrb+lens) = ';';
-              lens += strolen( ptrb+lens+1 );
+               ptrb = ptri - lenToken;
+               if ( ( i = WorkDefine ( &ptri, ptro, stdef ) ) >= 0 )
+               {
+                  rezDef++;
+                  lens = strolen( ptrb );
+                  if ( ipos > 0 )
+                  {
+                     *(ptrb+lens) = ';';
+                     lens += strolen( ptrb+lens+1 );
+                  }
+                  pp_Stuff ( ptro, ptrb, i, ptri-ptrb, lens+1 );
+                  if ( ipos > 0 )
+                  {
+                     ipos += i - (ptri-ptrb);
+                     *(sLine + isdvig + ipos - 1) = '\0';
+                  }
+                  ptri += i - (ptri-ptrb);
+               }
             }
-            pp_Stuff ( ptro, ptrb, i, ptri-ptrb, lens+1 );
-            if ( ipos > 0 )
-            {
-              ipos += i - (ptri-ptrb);
-              *(sLine + isdvig + ipos - 1) = '\0';
-            }
-            ptri += i - (ptri-ptrb);
-          }
-        }
 
           /* Look for definitions from #translate    */
-        ptri = sLine + isdvig;
-        while ( ( lenToken = NextName(&ptri, sToken, NULL) ) > 0 )
-          if ( (stcmd = TraSearch(sToken,NULL)) != NULL )
-          {
-            if( (i = WorkTranslate( sToken, ptri, ptro, stcmd, &lens )) >= 0 )
+            stcmd = topTranslate;
+            while( stcmd != NULL )
             {
-              while ( lens > 0 && (*(ptri+lens-1)==' ' || *(ptri+lens-1)=='\t') )
-                lens--;
-              ptri -= lenToken;
-              if ( ipos > 0 )  *(sLine+isdvig+ipos-1) = ';';
-              pp_Stuff( ptro, ptri, i, lens+lenToken, strolen(ptri) );
-              rezTra = 1;
-              if ( ipos > 0 )
-              {
-                ipos += i - lens - lenToken;
-                *(sLine+isdvig+ipos-1) = '\0';
-              }
-              ptri += i;
+               ptri = sLine + isdvig;
+               lenToken = strolen(stcmd->name);
+               while( ( ifou = md_strAt( stcmd->name, lenToken,
+                                                 ptri, 0 )) > 0 )
+               {
+                  ptri += ifou -1;
+                  if( (i = WorkTranslate( ptri+lenToken, ptro, stcmd, &lens )) >= 0 )
+                  {
+                     lens += lenToken;
+                     while ( lens > 0 &&
+                             (*(ptri+lens-1)==' ' || *(ptri+lens-1)=='\t') )
+                        lens--;
+                     if ( ipos > 0 )  *(sLine+isdvig+ipos-1) = ';';
+                     pp_Stuff( ptro, ptri, i, lens, strolen(ptri) );
+                     rezTra = 1;
+                     if ( ipos > 0 )
+                     {
+                        ipos += i - lens;
+                        *(sLine+isdvig+ipos-1) = '\0';
+                     }
+                     ptri += i;
+                  }
+                  else
+                     ptri += lenToken;
+               }
+               stcmd = stcmd->last;
             }
-          }
 
-          /* Look for definitions from #command      */
-        if ( kolpass < 3 )
-        {
-          ptri = sLine + isdvig;
-          SKIPTABSPACES( ptri );
-          if ( ISNAME(*ptri) )
-            NextName( &ptri, sToken, NULL);
-          else
-          {
-            i = 0;
-            while ( *ptri != ' ' && *ptri != '\t' && *ptri != '\0' &&
-              *ptri != '\"' && *ptri != '\'' && *ptri != '(' && !ISNAME(*ptri) )
+               /* Look for definitions from #command      */
+            if ( kolpass < 3 )
             {
-              *(sToken+i) = *ptri++;
-              i++;
-            }
-            *(sToken+i) = '\0';
-          }
-          SKIPTABSPACES( ptri );
+               ptri = sLine + isdvig;
+               SKIPTABSPACES( ptri );
+               if ( ISNAME(*ptri) )
+                  NextName( &ptri, sToken, NULL);
+               else
+               {
+                  i = 0;
+                  while ( *ptri != ' ' && *ptri != '\t' && *ptri != '\0' &&
+                        *ptri != '\"' && *ptri != '\'' && *ptri != '(' &&
+                        !ISNAME(*ptri) )
+                  {
+                     *(sToken+i) = *ptri++;
+                     i++;
+                  }
+                  *(sToken+i) = '\0';
+               }
+               SKIPTABSPACES( ptri );
 
-          if ( ( *ptri == '\0' || ( *ptri != '=' && (ISNAME(*ptri) || *(ptri+1) != '=') ) )
-              && ( stcmd = ComSearch(sToken,NULL) ) != NULL )
-          {
-            ptro = sOutLine;
-            i = WorkCommand( sToken, ptri, ptro, stcmd );
-            ptri = sLine + isdvig;
-            if ( ipos > 0 ) *(ptri+ipos-1) = ';';
-            if ( i >= 0 )
-            {
-              if ( isdvig + ipos > 0 )
-              {
-                lens = strolen( sLine+isdvig );
-                pp_Stuff ( ptro, sLine+isdvig, i, (ipos)? ipos-1:lens, lens );
-                if( ipos > 0 ) ipos = i + 1;
-              }
-              else
-                memcpy ( sLine, sOutLine, i+1);
+               if ( ( *ptri == '\0' || ( *ptri != '=' &&
+                  (!IsInStr(*ptri,":/*+-") || *(ptri+1) != '=') &&
+                  ( *ptri != '+' || *(ptri+1) != '+' ) &&
+                  ( *ptri != '-' || *(ptri+1) != '-' ) &&
+                  ( *ptri != '-' || *(ptri+1) != '>' ) ) )
+                  && ( stcmd = ComSearch(sToken,NULL) ) != NULL )
+               {
+                  ptro = sOutLine;
+                  i = WorkCommand( ptri, ptro, stcmd );
+                  ptri = sLine + isdvig;
+                  if ( ipos > 0 ) *(ptri+ipos-1) = ';';
+                  if ( i >= 0 )
+                  {
+                     if ( isdvig + ipos > 0 )
+                     {
+                        lens = strolen( sLine+isdvig );
+                        pp_Stuff ( ptro, sLine+isdvig, i, (ipos)? ipos-1:lens, lens );
+                        if( ipos > 0 ) ipos = i + 1;
+                     }
+                     else
+                        memcpy ( sLine, sOutLine, i+1);
+                  }
+                  rezCom = 1;
+               }
+               else if ( ipos > 0 ) *(sLine+isdvig+ipos-1) = ';';
             }
-            rezCom = 1;
-          }
-          else if ( ipos > 0 ) *(sLine+isdvig+ipos-1) = ';';
-        }
-        else if ( ipos > 0 ) *(sLine+isdvig+ipos-1) = ';';
+            else if ( ipos > 0 )
+               *(sLine+isdvig+ipos-1) = ';';
+         }
+         isdvig += ipos;
       }
-      isdvig += ipos;
-    }
-    while ( ipos != 0 );
-    kolpass++;
-    if( kolpass > 20 && rezDef )
-       GenError( _szPErrors, 'P', ERR_RECURSE, NULL, NULL );
-  }
-  while ( rezDef || rezTra || rezCom );
+      while ( ipos != 0 );
+      kolpass++;
+      if( kolpass > 20 && rezDef )
+         GenError( _szPErrors, 'P', ERR_RECURSE, NULL, NULL );
+   }
+   while ( rezDef || rezTra || rezCom );
 
- return 0;
+   return 0;
 }
 
 int WorkDefine ( char** ptri, char* ptro, DEFINES *stdef )
@@ -725,11 +741,12 @@ int WorkPseudoF ( char** ptri, char* ptro, DEFINES *stdef )
    return lenres;
 }
 
-int WorkCommand ( char* sToken, char* ptri, char* ptro, COMMANDS *stcmd )
+int WorkCommand ( char* ptri, char* ptro, COMMANDS *stcmd )
 {
    int rez;
    int lenres;
    char *ptrmp;
+   char *sToken = stcmd->name;
 
    do
    {
@@ -749,11 +766,12 @@ int WorkCommand ( char* sToken, char* ptri, char* ptro, COMMANDS *stcmd )
    return -1;
 }
 
-int WorkTranslate ( char* sToken, char* ptri, char* ptro, COMMANDS *sttra, int *lens )
+int WorkTranslate ( char* ptri, char* ptro, COMMANDS *sttra, int *lens )
 {
    int rez;
    int lenres;
    char *ptrmp;
+   char *sToken = sttra->name;
 
    do
    {
@@ -1065,7 +1083,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres )
 int getExpReal ( char *expreal, char **ptri, int prlist, int maxrez )
 {
  int lens = 0;
- char *sZnaki = "+-=><*/$.&:#%";
+ char *sZnaki = "+-=><*/$.&:#%!";
  int State;
  int StBr1 = 0, StBr2 = 0, StBr3 = 0;
  int rez = 0;
@@ -1472,62 +1490,81 @@ void pp_rQuotes( char *expreal, char *sQuotes )
 
 int pp_RdStr(FILE* handl_i,char *buffer,int maxlen,int lDropSpaces,char* sBuffer, int* lenBuffer, int* iBuffer)
 {
-int readed = 0;
-int State = 0;
-char cha,cLast='\0';
-  if ( *lenBuffer == 0 ) return -1;
-  while(1)
-  {
-   if ( *iBuffer == *lenBuffer )
+   int readed = 0;
+   int State = 0;
+   char cha,cLast='\0';
+
+   if ( *lenBuffer == 0 ) return -1;
+   while(1)
    {
-    if ( (*lenBuffer = fread(sBuffer,1,BUFF_SIZE,handl_i)) < 1 ) sBuffer[0] = '\n';
-    *iBuffer = 0;
+      if ( *iBuffer == *lenBuffer )
+      {
+         if ( (*lenBuffer = fread(sBuffer,1,BUFF_SIZE,handl_i)) < 1 )
+            sBuffer[0] = '\n';
+         *iBuffer = 0;
+      }
+      cha = sBuffer[*iBuffer];
+      (*iBuffer)++;
+      if( cha == '\n' )  break;
+      if ( maxlen > 0 )
+      {
+         switch ( ParseState ) {
+         case STATE_COMMENT:
+            if ( cha == '/' && cLast == '*' )
+            {
+               ParseState = STATE_NORMAL;
+               cha = ' ';
+            }
+            cLast = cha;
+            break;
+         case STATE_QUOTE1: if(cha=='\'') ParseState = STATE_NORMAL; break;
+         case STATE_QUOTE2: if(cha=='\"') ParseState = STATE_NORMAL; break;
+         default:
+            switch ( cha ) {
+            case '[': ParseState = STATE_BRACKET; break;
+            case ']': ParseState = STATE_NORMAL; break;
+            case '\"':
+               if( ParseState != STATE_BRACKET ) ParseState = STATE_QUOTE2;
+               break;
+            case '\'':
+               if( ParseState != STATE_BRACKET ) ParseState = STATE_QUOTE1;
+               break;
+            case '&':
+               if ( readed>0 && buffer[readed-1] == '&' ) { maxlen = 0; readed--; }
+               break;
+            case '/':
+               if ( readed>0 && buffer[readed-1] == '/' ) { maxlen = 0; readed--; }
+               break;
+            case '*':
+               if ( readed > 0 && buffer[readed-1] == '/' )
+               {
+                  ParseState = STATE_COMMENT;
+                  readed--;
+               }
+               else if ( !State ) maxlen = readed = 0;
+               break;
+            }
+         }
+         if ( cha != ' ' && cha != '\t' ) State = 1;
+         if( lDropSpaces && State ) lDropSpaces = 0;
+         if( readed<maxlen && (!lDropSpaces || readed==0) &&
+                         ParseState != STATE_COMMENT )
+             buffer[readed++]=cha;
+      }
    }
-   cha = sBuffer[*iBuffer];
-   (*iBuffer)++;
-   if( cha == '\n' )  break;
-   if ( maxlen > 0 )
-   {
-    switch ( ParseState ) {
-      case STATE_COMMENT:
-       if ( cha == '/' && cLast == '*' )
-        { ParseState = STATE_NORMAL; cha = ' '; }
-       cLast = cha;
-       break;
-      case STATE_QUOTE1: if(cha=='\'') ParseState = STATE_NORMAL; break;
-      case STATE_QUOTE2: if(cha=='\"') ParseState = STATE_NORMAL; break;
-      default:
-       switch ( cha ) {
-        case '\"': ParseState = STATE_QUOTE2; break;
-        case '\'': ParseState = STATE_QUOTE1; break;
-        case '&': if ( readed>0 && buffer[readed-1] == '&' ) { maxlen = 0; readed--; } break;
-        case '/': if ( readed>0 && buffer[readed-1] == '/' ) { maxlen = 0; readed--; } break;
-        case '*':
-         if ( readed > 0 && buffer[readed-1] == '/' )
-          { ParseState = STATE_COMMENT; readed--; }
-         else if ( !State ) maxlen = readed = 0;
-         break;
-       }
-    }
-    if ( cha != ' ' && cha != '\t' ) State = 1;
-    if( lDropSpaces && State ) lDropSpaces = 0;
-    if( readed<maxlen && (!lDropSpaces || readed==0) &&
-       ParseState != STATE_COMMENT )
-     buffer[readed++]=cha;
-   }
-  }
-  while(--readed >= 0 && ( buffer[readed] == ' ' || buffer[readed] == '\t') );
-  readed++;
-  buffer[readed]='\0';
-  return readed;
+   while(--readed >= 0 && ( buffer[readed] == ' ' || buffer[readed] == '\t') );
+   readed++;
+   buffer[readed]='\0';
+   return readed;
 }
 
 int pp_WrStr(FILE* handl_o,char *buffer)
 {
- int lens = strolen(buffer);
- fwrite(buffer,lens,1,handl_o);
- if ( *(buffer+lens-1) != '\n' ) fwrite("\n",1,1,handl_o);
- return 0;
+   int lens = strolen(buffer);
+   fwrite(buffer,lens,1,handl_o);
+   if ( *(buffer+lens-1) != '\n' )
+      fwrite("\n",1,1,handl_o);
+   return 0;
 }
 
 /* locates a substring in a string */
