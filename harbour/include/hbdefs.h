@@ -197,8 +197,11 @@ typedef PHB_FUNC HB_FUNC_PTR;
 #elif defined( __GNUC__ )
    #define HB_EXPORT __attribute__ (( dllexport ))
 
+#elif defined( __BORLANDC__ )
+   #define HB_EXPORT _declspec( dllexport )
+
 #elif defined( WIN32 ) && !defined( ASANT )
-   #define HB_EXPORT _declspec( dllexport )    /* as BCC admits it */
+   #define HB_EXPORT _declspec( dllexport )
 
 #elif defined( ASANLM ) || defined( ASANT )
    #define HB_EXPORT
