@@ -345,7 +345,6 @@ void hb_compGenPortObj( PHB_FNAME pFileName )
                fputc( pFunc->pCode[ lPCodePos++ ], yyc );
                fputc( pFunc->pCode[ lPCodePos++ ], yyc );
                fputc( pFunc->pCode[ lPCodePos++ ], yyc );
-               lPCodePos += 5;
                break;
 
             default:

@@ -1,3 +1,10 @@
+20000420-23:58 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/compiler/genc.c
+     ! STATICS and SFRAME fixed with -gc0 mode.
+
+   * source/compiler/genhrb.c
+     ! STATICS fixed. (please check)
+
 20000420-23:33 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * tests/Makefile

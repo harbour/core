@@ -1429,21 +1429,22 @@ static void hb_compGenCCompact( PFUNCTION pFunc )
             /* we only generate it if there are statics used in this function */
             if( pFunc->bFlags & FUN_USES_STATICS )
             {
-                hb_fputc( pFunc->pCode[ lPCodePos++ ] );
-                hb_fputc( pFunc->pCode[ lPCodePos++ ] );
-                hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+               hb_compSymbolFind( hb_comp_pInitFunc->szName, &w );
+               hb_fputc( pFunc->pCode[ lPCodePos ] );
+               hb_fputc( HB_LOBYTE( w ) );
+               hb_fputc( HB_HIBYTE( w ) );
             }
-            else
-               lPCodePos += 3;
-
+            lPCodePos += 3;
             break;
 
          case HB_P_STATICS:
-            hb_fputc( pFunc->pCode[ lPCodePos++ ] );
-            hb_fputc( pFunc->pCode[ lPCodePos++ ] );
-            hb_fputc( pFunc->pCode[ lPCodePos++ ] );
-            hb_fputc( pFunc->pCode[ lPCodePos++ ] );
-            hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+            hb_compSymbolFind( hb_comp_pInitFunc->szName, &w );
+            hb_fputc( pFunc->pCode[ lPCodePos ] );
+            hb_fputc( HB_LOBYTE( w ) );
+            hb_fputc( HB_HIBYTE( w ) );
+            hb_fputc( pFunc->pCode[ lPCodePos + 3 ] );
+            hb_fputc( pFunc->pCode[ lPCodePos + 4 ] );
+            lPCodePos += 5;
             break;
 
          default:
