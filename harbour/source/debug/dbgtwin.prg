@@ -72,6 +72,8 @@ ENDCLASS
 
 METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor ) CLASS TDbWindow
 
+   DEFAULT cColor TO __DbgColors()[ 1 ]
+
    ::nTop     := nTop
    ::nLeft    := nLeft
    ::nBottom  := nBottom
@@ -185,7 +187,7 @@ METHOD ShowModal() CLASS TDbWindow
               lExit := .t.
 
          case nKey == K_LBUTTONDOWN
-              if MRow() == ::nTop .and. MCol() == ::nLeft + 3
+              if MRow() == ::nTop .and. MCol() == ::nLeft + 2
                  lExit = .t.
               endif
       endcase
