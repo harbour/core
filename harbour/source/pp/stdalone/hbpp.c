@@ -91,8 +91,8 @@ int main( int argc, char * argv[] )
 
   HB_TRACE(HB_TR_DEBUG, ("main(%d, %p)", argc, argv));
 
-  printf( "Harbour Preprocessor, Build %i%s (%04d.%02d.%02d)\n",
-     HB_VER_BUILD, HB_VER_REVISION, HB_VER_YEAR, HB_VER_MONTH, HB_VER_DAY );
+  printf( "Harbour Preprocessor %d.%d%s (Build %d) (%04d.%02d.%02d)\n",
+    HB_VER_MAJOR, HB_VER_MINOR, HB_VER_REVISION, HB_VER_BUILD, HB_VER_YEAR, HB_VER_MONTH, HB_VER_DAY );
   printf( "Copyright 1999-2000, http://www.harbour-project.org\n" );
 
   while( iArg < argc )

@@ -132,7 +132,8 @@ void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, char * 
 
    if( ( szText[ 0 ] - '0' ) <= hb_comp_iWarnings )
    {
-      printf( "\r%s(%i) ", hb_comp_files.pLast->szFileName, hb_comp_iLine );
+      if( hb_comp_files.pLast != NULL && hb_comp_files.pLast->szFileName != NULL )
+         printf( "\r%s(%i) ", hb_comp_files.pLast->szFileName, hb_comp_iLine );
       printf( "Warning %c%04i  ", cPrefix, iWarning );
       printf( szText + 1, szWarning1, szWarning2 );
       printf( "\n" );

@@ -143,15 +143,15 @@ static BOOL s_bTracePragma = FALSE;
 #define IT_COMMA      3
 #define IT_ID_OR_EXPR 4
 
-static int  s_kolAddDefs = 0;
-static int  s_ParseState = 0;
-static int  s_maxCondCompile = 5;
+static int  s_kolAddDefs;
+static int  s_ParseState;
+static int  s_maxCondCompile;
 static int  s_aIsRepeate[ 5 ];
 static int  s_Repeate;
-static BOOL s_bReplacePat = TRUE;
+static BOOL s_bReplacePat;
 static int  s_numBrackets;
 static char s_groupchar;
-static char s_prevchar = 'A';
+static char s_prevchar;
 
 extern int hb_comp_iLine;       /* currently parsed file line number */
 int *      hb_pp_aCondCompile;
@@ -176,11 +176,26 @@ char * hb_pp_szErrors[] =
    "Value out of range in #pragma directive"
 };
 
+/* Table with warnings */
+char * hb_pp_szWarnings[] =
+{
+   "1Redefinition or duplicate definition of #define %s"
+};
+
 void hb_pp_Init( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_pp_Init()"));
 
+   /* TOFIX: The tables in PPTABLE.C should also be reinitialized */
+
+   s_kolAddDefs = 0;
+   s_ParseState = 0;
+   s_maxCondCompile = 5;
+   s_bReplacePat = TRUE;
+   s_prevchar = 'A';
+
    hb_pp_aCondCompile = ( int * ) hb_xgrab( sizeof( int ) * 5 );
+   hb_pp_nCondCompile = 0;
 
    {
       char szResult[ 5 ];
@@ -355,12 +370,18 @@ static int ParseDefine( char * sLine )
 DEFINES * hb_pp_AddDefine( char * defname, char * value )
 {
   BOOL isNew;
-  DEFINES * stdef = DefSearch( defname, &isNew );
+  DEFINES * stdef;
 
   HB_TRACE(HB_TR_DEBUG, ("hb_pp_AddDefine(%s, %s)", defname, value));
 
+  stdef = DefSearch( defname, &isNew );
+
   if( stdef != NULL )
   {
+/*
+    hb_compGenWarning( hb_pp_szWarnings, 'I', HB_PP_WARN_DEFINE_REDEF, defname, NULL );
+*/
+
     if( isNew )
     {
        if( stdef->pars ) hb_xfree( stdef->pars );

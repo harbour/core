@@ -121,6 +121,8 @@
 #define HB_PP_ERR_MEMFREE                       13
 #define HB_PP_ERR_PRAGMA_BAD_VALUE              14
 
+#define HB_PP_WARN_DEFINE_REDEF                 1
+
 extern void hb_compGenError( char * _szErrors[], char, int, char *, char * ); /* generic parsing error management function */
 extern void hb_compGenWarning( char * _szWarnings[], char, int, char *, char * ); /* generic parsing warning management function */
 

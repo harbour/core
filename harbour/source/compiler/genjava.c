@@ -77,8 +77,8 @@ void hb_compGenJava( PHB_FNAME pFileName )
 
    s_nChar = 0;
 
-   fprintf( yyc, "/*\n * Harbour Compiler, Build %i%s (%04d.%02d.%02d)\n",
-         HB_VER_BUILD, HB_VER_REVISION, HB_VER_YEAR, HB_VER_MONTH, HB_VER_DAY );
+   fprintf( yyc, "/*\n * Harbour Compiler, %d.%d%s (Build %d) (%04d.%02d.%02d)\n",
+      HB_VER_MAJOR, HB_VER_MINOR, HB_VER_REVISION, HB_VER_BUILD, HB_VER_YEAR, HB_VER_MONTH, HB_VER_DAY );
    fprintf( yyc, " * Generated JAVA source code\n */\n\n" );
 
    fprintf( yyc, "public class %s\n", pFileName->szName );
@@ -447,3 +447,4 @@ static void hb_fputs( char * szName, FILE * yyc )
    while( nPos < strlen( szName ) )
       hb_fputc( szName[ nPos++ ], yyc );
 }
+

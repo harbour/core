@@ -76,8 +76,8 @@
 #define HB_VER_H_
 
 #define HB_VER_MAJOR    0       /* Major version number */
-#define HB_VER_MINOR    0       /* Minor version number */
-#define HB_VER_REVISION ""      /* Revision letter */
+#define HB_VER_MINOR    32      /* Minor version number */
+#define HB_VER_REVISION "a"     /* Revision letter */
 #define HB_VER_BUILD    32      /* Build number */
 #define HB_VER_YEAR     2000    /* Build year */
 #define HB_VER_MONTH    03      /* Build month */
