@@ -51,16 +51,18 @@ function __dbgEntry( uParam )  // debugger entry point
 
       case ValType( uParam ) == "N"   // called from hvm.c hb_vmDebugShowLines()
            if oDebugger != nil
-              oDebugger:cAppImage  = SaveScreen()
-              oDebugger:nAppRow    = Row()
-              oDebugger:nAppCol    = Col()
-              oDebugger:cAppColors = SetColor()
-              oDebugger:nAppCursor = SetCursor()
-              RestScreen( 0, 0, MaxRow(), MaxCol(), oDebugger:cImage )
-              SetCursor( 0 )
-              DispEnd()
-              oDebugger:GoToLine( uParam )
-              oDebugger:HandleEvent()
+              oDebugger:SaveAppStatus()
+              if ! oDebugger:lGo
+                 oDebugger:GoToLine( uParam )
+                 oDebugger:HandleEvent()
+              else
+                 oDebugger:cImage = SaveScreen()
+                 DispBegin()
+                 RestScreen( 0, 0, MaxRow(), MaxCol(), oDebugger:cAppImage )
+                 SetPos( oDebugger:nAppRow, oDebugger:nAppCol )
+                 SetColor( oDebugger:cAppColors )
+                 SetCursor( oDebugger:nAppCursor )
+              endif
            endif
    endcase
 
@@ -76,19 +78,23 @@ CLASS TDebugger
    DATA   lEnd
    DATA   cAppImage, nAppRow, nAppCol, cAppColors, nAppCursor
    DATA   aBreakPoints
+   DATA   lGo
 
    METHOD New()
    METHOD Activate( cModuleName )
    METHOD Exit() INLINE ::lEnd := .t.
+   METHOD Go() INLINE ::RestoreAppStatus(), ::lGo := .t., ::Exit()
    METHOD GoToLine( nLine )
    METHOD HandleEvent()
    METHOD Hide()
    METHOD InputBox( cMsg, uValue )
    METHOD Open()
+   METHOD RestoreAppStatus()
+   METHOD SaveAppStatus()
    METHOD Show()
    METHOD ShowAppScreen()
    METHOD ShowCode( cModuleName )
-   METHOD ToggleBreakPoint( cModule, nLine )
+   METHOD ToggleBreakPoint()
 
 ENDCLASS
 
@@ -101,6 +107,7 @@ METHOD New() CLASS TDebugger
                                     " Command ", "BG+/B" )
    ::lEnd         = .f.
    ::aBreakPoints = {}
+   ::lGo          = .f.
 
    AAdd( ::aWindows, ::oWndCode )
    AAdd( ::aWindows, ::oWndCommand )
@@ -135,10 +142,7 @@ METHOD HandleEvent() CLASS TDebugger
               ::oPullDown:ProcessKey( nKey )
 
          case nKey == K_ESC
-              RestScreen( 0, 0, MaxRow(), MaxCol(), ::cAppImage )
-              SetPos( ::nAppRow, ::nAppCol )
-              SetColor( ::cAppColors )
-              SetCursor( ::nAppCursor )
+              ::RestoreAppStatus()
               oDebugger := nil
               lExit := .T.
               ::Exit()
@@ -162,13 +166,11 @@ METHOD HandleEvent() CLASS TDebugger
          case nKey == K_F4
               ::ShowAppScreen()
 
+         case nKey == K_F5
+              ::Go()
+
          case nKey == K_F8
-              ::cImage = SaveScreen()
-              DispBegin()
-              RestScreen( 0, 0, MaxRow(), MaxCol(), ::cAppImage )
-              SetPos( ::nAppRow, ::nAppCol )
-              SetColor( ::cAppColors )
-              SetCursor( ::nAppCursor )
+              ::RestoreAppStatus()
               ::Exit()
 
          case nKey == K_F9
@@ -287,7 +289,31 @@ METHOD GotoLine( nLine ) CLASS TDebugger
 
 return nil
 
-METHOD ToggleBreakPoint( cModule, nLine ) CLASS TDebugger
+METHOD RestoreAppStatus() CLASS TDebugger
+
+   ::cImage = SaveScreen()
+   DispBegin()
+   RestScreen( 0, 0, MaxRow(), MaxCol(), ::cAppImage )
+   SetPos( ::nAppRow, ::nAppCol )
+   SetColor( ::cAppColors )
+   SetCursor( ::nAppCursor )
+
+return nil
+
+METHOD SaveAppStatus() CLASS TDebugger
+
+   ::cAppImage  = SaveScreen()
+   ::nAppRow    = Row()
+   ::nAppCol    = Col()
+   ::cAppColors = SetColor()
+   ::nAppCursor = SetCursor()
+   RestScreen( 0, 0, MaxRow(), MaxCol(), ::cImage )
+   SetCursor( 0 )
+   DispEnd()
+
+return nil
+
+METHOD ToggleBreakPoint() CLASS TDebugger
 
    local nAt := AScan( ::aBreakPoints, { | aBreak, n | aBreak[ 1 ] == ;
                        ::oBrwText:nLine } )
@@ -834,7 +860,7 @@ function BuildMenu( oDebugger )  // Builds the debugger pulldown menu
          MENUITEM " &Animate"         ACTION Alert( "Not implemented yet!" )
          MENUITEM " &Step              F8 " ACTION Alert( "Not implemented yet!" )
          MENUITEM " &Trace            F10"  ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Go                F5"  ACTION Alert( "Not implemented yet!" )
+         MENUITEM " &Go                F5"  ACTION oDebugger:Go()
          MENUITEM " to &Cursor         F7"  ACTION Alert( "Not implemented yet!" )
          MENUITEM " &Next routine Ctrl-F5"  ACTION Alert( "Not implemented yet!" )
          SEPARATOR
@@ -845,7 +871,7 @@ function BuildMenu( oDebugger )  // Builds the debugger pulldown menu
       MENU
          MENUITEM " &Watchpoint..."         ACTION Alert( "Not implemented yet!" )
          MENUITEM " &Tracepoint..."         ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Breakpoint F9 "        ACTION Alert( "Not implemented yet!" )
+         MENUITEM " &Breakpoint F9 "        ACTION oDebugger:ToggleBreakPoint()
          MENUITEM " &Delete..."             ACTION Alert( "Not implemented yet!" )
       ENDMENU
 
