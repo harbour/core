@@ -32,6 +32,11 @@ void gtDone(void)
 {
 }
 
+int gtIsColor(void)
+{
+    return TRUE;
+}
+
 char gtGetScreenWidth(void)
 {
     VIOMODEINFO vi;
@@ -128,5 +133,9 @@ void gtPutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
 }
 
 void gtSetAttribute( char cTop, char cLeft, char cBottom, cRight, char attribute )
+{
+}
+
+void gtDrawShadow( char cTop, char cLeft, char cBottom, cRight, char attribute )
 {
 }

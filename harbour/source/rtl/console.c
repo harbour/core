@@ -991,7 +991,7 @@ HARBOUR HB_SHADOW (void)
       uiAttr = hb_parni(5);
    
    if( hb_pcount() > 3 )
-      gtSetAttribute(hb_parni(1)+1,hb_parni(2)+1,hb_parni(3)+1,hb_parni(4)+1,uiAttr);
+      gtDrawShadow(hb_parni(1)+1,hb_parni(2)+1,hb_parni(3)+1,hb_parni(4)+1,uiAttr);
 #endif
 }
 

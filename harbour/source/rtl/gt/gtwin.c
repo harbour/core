@@ -68,6 +68,12 @@ void gtDone(void)
   LOG("Ending");
 }
 
+int gtIsColor(void)
+{
+   /* TODO: need to call something to do this instead of returning TRUE */
+   return TRUE;
+}
+
 char gtGetScreenWidth(void)
 {
   CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -179,23 +185,12 @@ void gtPuts(char cRow, char cCol, char attr, char *str, int len)
 {
   DWORD i, dwlen;
   COORD coord;
-  LPWORD pwattr;
 
   LOG("Puts");
-  pwattr = (LPWORD) hb_xgrab(len * sizeof(*pwattr));
-  if (!pwattr)
-    {
-      return;
-    }
   coord.X = (DWORD) (cCol);
   coord.Y = (DWORD) (cRow);
-  for (i = 0; i < len; i++)
-    {
-      *(pwattr + i) = (WORD)attr;
-    }
   WriteConsoleOutputCharacterA(HOutput, str, (DWORD) len, coord, &dwlen);
-  WriteConsoleOutputAttribute(HOutput, pwattr, (DWORD) len, coord, &dwlen);
-  hb_xfree(pwattr);
+  FillConsoleOutputAttribute(HOutput, (WORD)attr, (DWORD)len, coord, &dwlen);
 }
 
 void gtGetText(char cTop, char cLeft, char cBottom, char cRight, char *dest)
@@ -280,29 +275,38 @@ void gtSetAttribute( char cTop, char cLeft, char cBottom, char cRight, char attr
 
   DWORD len, y, width;
   COORD coord;
-  LPWORD pwattr;
-
   width = (cRight - cLeft + 1);
 
-  pwattr = (LPWORD) hb_xgrab(width * sizeof(*pwattr));
-  if (!pwattr)
-    return;
+  coord.X = (DWORD) (cLeft);
 
-  /* TODO: This needs to be adjusted */
-  memset( pwattr, attribute, width *sizeof(*pwattr) );
+  for( y=cTop;y<=cBottom;y++)
+  {
+     coord.Y = y;
+     FillConsoleOutputAttribute(HOutput, (WORD)attribute, width, coord, &len);
+  }
 
-  coord.X = (DWORD) (cLeft); /* note */
+}
+
+void gtDrawShadow( char cTop, char cLeft, char cBottom, char cRight, char attribute )
+{
+/* ptucker */
+
+  DWORD len, y, width;
+  COORD coord;
+  width = (cRight - cLeft + 1);
+
+  coord.X = (DWORD) (cLeft);
   coord.Y = (DWORD) (cBottom);
-  WriteConsoleOutputAttribute(HOutput, pwattr, width, coord, &len);
+
+  FillConsoleOutputAttribute(HOutput, (WORD)attribute, width, coord, &len);
 
   coord.X = (DWORD) (cRight);
   for( y=cTop;y<=cBottom;y++)
   {
-     coord.Y = (DWORD) (y);
-     WriteConsoleOutputAttribute(HOutput, pwattr, 1, coord, &len);
+     coord.Y = y;
+     FillConsoleOutputAttribute(HOutput, (WORD)attribute, 1, coord, &len);
   }
 
-  hb_xfree( pwattr );
 }
 
 char gtCol(void)

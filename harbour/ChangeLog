@@ -1,4 +1,23 @@
-19990730-13:00 EDT Paul Tucker <ptucker@sympatico.ca>
+19990730-12:30 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/gt/gtwin.c
+     * simplified gtputs and gtSetAttribute
+     * corrected gtGetCursorStyle for !cci.bVisible return SC_NONE
+       other cases should be handled by the switch that follows.
+   * source/rtl/gt/gtdos.c source/rtl/gt/gtwin.c source/rtl/gt/gtos2.c
+     ! renamed gtSetAttribute gtDrawShadow
+       (currently active only in gtwin)
+     + created new gtSetAttribute that will recolor a region.
+       (currently not used)
+   * source/rtl/gtapi.c
+     * modified most internal calls to hb_gtMaxRow/Col to use Static vars.
+     * gtScroll - fill scrolled region with spaces, not nulls
+   * source/rtl/console.c
+     * HB_SHADOW - call gtDrawShadow
+     * HB_ISCOLOR now active when using gtdos
+   * include/gtapi.h
+     + added decl for gtDrawShadow
+
+19990730-12:00 EDT Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      + added inkey to harbour.lib
      * as submitted by Matteo Baccan

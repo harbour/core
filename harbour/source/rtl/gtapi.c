@@ -6,6 +6,12 @@
  *  GTAPI.C: Generic Terminal for Harbour
  *
  * Latest mods:
+ * 1.44   19990730   ptucker   simplified gtputs and gtSetAttribute
+ *                             corrected gtGetCursorStyle for !cci.bVisible
+ *                             return SC_NONE - other cases should be handled
+ *                             by the switch that follows.
+ *                             changed 'case 8:' in gtWriteCon to check
+ *                             against uiCol instead of uiRow
  * 1.43   19990729   ptucker   Corrected a number of calls so params are
  *                             in top,left,bottom,right or row,col order.
  *                             removed call to gtrectsize in gtputtext.
@@ -60,6 +66,8 @@ static USHORT s_uiCurrentRow = 0;
 static USHORT s_uiCurrentCol = 0;
 static USHORT s_uiDispCount  = 0;
 static USHORT s_uiColorIndex = 0;
+static USHORT s_uiMaxCol;
+static USHORT s_uiMaxRow;
 
 int *_Color;           /* masks: 0x0007     Background
                                  0x0070     Foreground
@@ -77,6 +85,8 @@ void hb_gtInit(void)
     _Color = (int *)hb_xgrab(5*sizeof(int));
     _ColorCount = 5;
     gtInit();
+    s_uiMaxCol = hb_gtMaxCol();
+    s_uiMaxRow = hb_gtMaxRow();
     hb_gtSetPos( gtRow(), gtCol() );
     hb_gtSetColorStr( hb_set.HB_SET_COLOR );
 }
@@ -99,8 +109,8 @@ int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
     USHORT uiTopBak = uiTop;
     USHORT uiLeftBak = uiLeft;
 
-    USHORT uiMRow = hb_gtMaxRow();
-    USHORT uiMCol = hb_gtMaxCol();
+    USHORT uiMRow = s_uiMaxRow;
+    USHORT uiMCol = s_uiMaxCol;
 
     /* TODO: Would be better to support these cases, Clipper implementation */
     /*       was quite messy for these cases, which can be considered as */
@@ -462,8 +472,7 @@ int hb_gtGetPos(USHORT * uipRow, USHORT * uipCol)
 
 BOOL hb_gtIsColor(void)
 {
-    /* TODO: need to call something to do this instead of returning TRUE */
-    return(TRUE);
+    return gtIsColor();
 }
 
 USHORT hb_gtMaxCol(void)
@@ -488,8 +497,8 @@ int hb_gtPreExt(void)
 
 int hb_gtRectSize(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, USHORT * uipBuffSize)
 {
-    USHORT uiMRow = hb_gtMaxRow();
-    USHORT uiMCol = hb_gtMaxCol();
+    USHORT uiMRow = s_uiMaxRow;
+    USHORT uiMCol = s_uiMaxCol;
 
     if( uiTop  > uiMRow   || uiBottom > uiMRow ||
         uiLeft > uiMCol   || uiRight  > uiMCol ||
@@ -532,8 +541,8 @@ int hb_gtSave(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
 
 int hb_gtScrDim(USHORT * uipHeight, USHORT * uipWidth)
 {
-    *uipHeight = hb_gtMaxRow();
-    *uipWidth = hb_gtMaxCol();
+    *uipHeight = s_uiMaxRow;
+    *uipWidth = s_uiMaxCol;
 
     return(0);
 }
@@ -554,6 +563,8 @@ int hb_gtSetMode(USHORT uiRows, USHORT uiCols)
 {
    HB_SYMBOL_UNUSED( uiRows );
    HB_SYMBOL_UNUSED( uiCols );
+    s_uiMaxCol = hb_gtMaxCol();
+    s_uiMaxRow = hb_gtMaxRow();
     return(0);
 }
 
@@ -561,7 +572,7 @@ int hb_gtSetPos(USHORT uiRow, USHORT uiCol)
 {
     /* TODO: in this situation Clipper just turns off the cursor */
     /* any further writes would be accounted for by clipping */
-    if(uiRow > hb_gtMaxRow() || uiCol > hb_gtMaxCol())
+    if(uiRow > s_uiMaxRow || uiCol > s_uiMaxCol)
         return(1);
 
     s_uiCurrentRow = uiRow;
@@ -588,8 +599,8 @@ int hb_gtWrite(char * fpStr, ULONG length)
     /* Determine where the cursor is going to end up */
     iRow = s_uiCurrentRow;
     iCol = s_uiCurrentCol;
-    iMaxCol = hb_gtMaxCol();
-    iMaxRow = hb_gtMaxRow();
+    iMaxRow = s_uiMaxRow;
+    iMaxCol = s_uiMaxCol;
     size = length;
     if (iCol + size > iMaxCol)
     {
@@ -666,24 +677,24 @@ int hb_gtWriteCon(char * fpStr, ULONG length)
           case 7:
              break;
           case 8:
-             if(uiRow > 0) uiCol--;
+             if(uiCol > 0) uiCol--;
              else if(uiRow > 0)
              {
                 uiRow--;
-                uiCol=hb_gtMaxCol();
+                uiCol=s_uiMaxCol;
              }
              else
              {
-                hb_gtScroll(0, 0, hb_gtMaxRow(), hb_gtMaxCol(), -1, 0);
-                uiCol=hb_gtMaxCol();
+                hb_gtScroll(0, 0, s_uiMaxRow, s_uiMaxCol, -1, 0);
+                uiCol=s_uiMaxCol;
              }
              hb_gtSetPos (uiRow, uiCol);
              break;
           case 10:
-             if(uiRow < hb_gtMaxRow()) uiRow++;
+             if(uiRow < s_uiMaxRow) uiRow++;
              else
              {
-                hb_gtScroll(0, 0, hb_gtMaxRow(), hb_gtMaxCol(), 1, 0);
+                hb_gtScroll(0, 0, s_uiMaxRow, s_uiMaxCol, 1, 0);
              }
              hb_gtSetPos (uiRow, uiCol);
              break;
@@ -713,28 +724,30 @@ int hb_gtScroll(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SH
       char * fpBuff = (char *)hb_xgrab (iLength * 2);
       if (fpBlank && fpBuff)
       {
-         for (iCount = 0; iCount < iLength; iCount++)
-            fpBlank [iCount] = 0;
+         memset( fpBlank, ' ', iLength );
+
+         iColOld = iColNew = uiLeft;
          if (iCols >= 0)
          {
-            iColOld = iColNew = uiLeft;
             iColOld += iCols;
             iColSize = uiRight - uiLeft;
             iColSize -= iCols;
          }
          else
          {
-            iColOld = iColNew = uiLeft;
             iColNew -= iCols;
             iColSize = uiRight - uiLeft;
             iColSize += iCols;
          }
+
+
+         char attr = _Color[s_uiColorIndex] & 0xff;
          for (iCount = (iRows >= 0 ? uiTop : uiBottom);
               (iRows >= 0 ? iCount <= uiBottom : iCount >= uiTop);
               (iRows >= 0 ? iCount++ : iCount--))
          {
             int iRowPos = iCount + iRows;
-            char attr=_Color[s_uiColorIndex] & 0xff;
+
             /* Blank the scroll region in the current row */
             gtPuts ( iCount, uiLeft, attr, fpBlank, iLength);
 

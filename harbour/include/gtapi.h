@@ -107,6 +107,7 @@ int    hb_gtWriteCon(char * fpStr, ULONG length);
 /* private interface listed below. these are common to all platforms */
 
 void gtInit(void);
+int  gtIsColor(void);
 void gtDone(void);
 char gtGetScreenWidth(void);
 char gtGetScreenHeight(void);
@@ -119,5 +120,6 @@ void gtPuts(char cRow, char cCol, char attr, char *str, int len);
 void gtGetText(char cTop, char cLeft, char cBottom, char cRight, char *dest);
 void gtPutText(char cTop, char cLeft, char cBottom, char cRight, char *srce);
 void gtSetAttribute( char cTop, char cLeft, char cBottom, char cRight, char attribute );
+void gtDrawShadow( char cTop, char cLeft, char cBottom, char cRight, char attribute );
 
 #endif /* HB_GTAPI_H_ */

@@ -32,7 +32,7 @@
 static void gtxGetXY(char cRow, char cCol, char *attr, char *ch);
 static void gtxPutch(char cRow, char cCol, char attr, char ch);
 
-static int gtIsColor(void);
+int gtIsColor(void);
 static char gtGetScreenMode(void);
 static void gtSetCursorSize(char start, char end);
 static void gtGetCursorSize(char *start, char *end);
@@ -45,7 +45,7 @@ void gtDone(void)
 {
 }
 
-static int gtIsColor(void)
+int gtIsColor(void)
 {
     return gtGetScreenMode() != 7;
 }
@@ -296,6 +296,10 @@ void gtPutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
 }
 
 void gtSetAttribute( char cTop, char cLeft, char cBottom, char cRight, char attribute )
+{
+}
+
+void gtDrawShadow( char cTop, char cLeft, char cBottom, char cRight, char attribute )
 {
 }
 
