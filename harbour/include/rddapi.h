@@ -85,7 +85,7 @@ extern void hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
 #define DBI_LOCKOFFSET     35   /* New locking offset */
 #define DBI_SHARED         36   /* Gets/Sets the shared flag */
 
-#define DBI_MEMOEXT        37   /* Gets/Sets the shared flag */
+#define DBI_MEMOEXT        37   /* String:  Get memo file extension */
 #define DBI_MEMOHANDLE     38   /* Dos handle for memo file */
 #define DBI_MEMOBLOCKSIZE  39   /* Blocksize in memo files */
 
@@ -708,7 +708,9 @@ typedef struct _RDDFUNCS
 
 #if 0
    DBENTRYP_V    closeMemFile;
+#endif
    DBENTRYP_VP   createMemFile;
+#if 0
    DBENTRYP_SVPB getValueFile;
    DBENTRYP_VP   openMemFile;
    DBENTRYP_SVP  putValueFile;

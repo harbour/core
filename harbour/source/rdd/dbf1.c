@@ -51,6 +51,13 @@ typedef struct
 
 typedef DBFHEADER * LPDBFHEADER;
 
+typedef struct
+{
+   LONG  lNextBlock;
+} MEMOHEADER;
+
+typedef MEMOHEADER * LPMEMOHEADER;
+
 
 typedef struct
 {
@@ -79,6 +86,7 @@ HB_INIT_SYMBOLS_END( dbf1__InitSymbols )
 
 #define LOCK_START   0x40000000L
 #define LOCK_FILE    0x3FFFFFFFL
+#define MEMO_BLOCK   512
 
 static BOOL hb_nltoa( LONG lValue, char * szBuffer, USHORT uiLen )
 {
@@ -466,6 +474,34 @@ static ERRCODE Create( AREAP pArea, LPDBOPENINFO pCreateInfo )
    return SUCCESS;
 }
 
+static ERRCODE CreateMemFile( AREAP pArea, LPDBOPENINFO pCreateInfo )
+{
+   LPFILEINFO lpMemInfo;
+   LPMEMOHEADER pMemoHeader;
+   BOOL bError = FALSE;
+
+   lpMemInfo = ( LPFILEINFO ) hb_xgrab( sizeof( FILEINFO ) );
+   memset( lpMemInfo, 0, sizeof( FILEINFO ) );
+   lpMemInfo->hFile = FS_ERROR;
+   pArea->lpFileInfo->pNext = lpMemInfo;
+   lpMemInfo->hFile = hb_fsCreate( pCreateInfo->abName, FC_NORMAL );
+   if( lpMemInfo->hFile == FS_ERROR )
+      return FAILURE;
+
+   pMemoHeader = ( LPMEMOHEADER ) hb_xgrab( MEMO_BLOCK + 1 );
+   memset( pMemoHeader, 0, MEMO_BLOCK + 1 );
+   pMemoHeader->lNextBlock = 1;
+   bError = ( hb_fsWrite( lpMemInfo->hFile, ( BYTE * ) pMemoHeader,
+                   MEMO_BLOCK + 1 ) != MEMO_BLOCK + 1 );
+   hb_xfree( pMemoHeader );
+   hb_fsClose( lpMemInfo->hFile );
+   lpMemInfo->hFile = FS_ERROR;
+   if( bError )
+      return FAILURE;
+   else
+      return SUCCESS;
+}
+
 static ERRCODE Deleted( AREAP pArea, BOOL * pDeleted )
 {
    * pDeleted = ( pArea->lpExtendInfo->bRecord[ 0 ] ==  '*' );
@@ -650,6 +686,10 @@ static ERRCODE Info( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    {
       case DBI_TABLEEXT:
          hb_itemPutC( pItem, ".DBF" );
+         break;
+
+      case DBI_MEMOEXT:
+         hb_itemPutC( pItem, ".DBT" );
          break;
 
       case DBI_GETLOCKARRAY:
@@ -920,7 +960,7 @@ static ERRCODE ReadDBHeader( AREAP pArea )
          {
             pFieldInfo.uiLen = ( USHORT ) pDBField->bLen;
             if( pFieldInfo.uiType == 'M' )
-               pArea->lpExtendInfo->fHasMemo = 1;
+               pArea->lpExtendInfo->fHasMemo = TRUE;
          }
          else if( pFieldInfo.uiType == 'C' )
          {
@@ -1024,6 +1064,7 @@ static ERRCODE WriteDBHeader( AREAP pArea )
          case 'M':
             pHeader.uiRecordLen += 10;
             pHeader.bVersion = 0x83;
+            pArea->lpExtendInfo->fHasMemo = TRUE;
             break;
 
          case 'D':
@@ -1133,6 +1174,8 @@ static RDDFUNCS dbfTable = { 0,               /* Super Bof */
                              RawLock,
                              Lock,
                              UnLock,
+                             CreateMemFile,
+                             /*0, */              /* Super OpenMemFile */
                              ReadDBHeader,
                              WriteDBHeader
                            };
