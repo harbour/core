@@ -240,7 +240,7 @@ void hb_gt_Puts(char cRow, char cCol, char attr, char *str, int len)
   coord.X = (DWORD) (cCol);
   coord.Y = (DWORD) (cRow);
   WriteConsoleOutputCharacterA(HOutput, str, (DWORD)len, coord, &dwlen);
-  FillConsoleOutputAttribute(HOutput, (WORD)((unsigned char)attr&0xff)|0x8000, (DWORD)len, coord, &dwlen);
+  FillConsoleOutputAttribute(HOutput, (WORD)((unsigned char)attr&0xff), (DWORD)len, coord, &dwlen);
 }
 
 void hb_gt_GetText(char cTop, char cLeft, char cBottom, char cRight, char *dest)
@@ -307,8 +307,7 @@ void hb_gt_PutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
         {
           *(pstr + i) = *srce;
           srce++;
-          *(pwattr + i) = ((WORD)((unsigned char)*srce)&0xff) | 0x8000;
-          *pwattr |= 0x8000;
+          *(pwattr + i) = ((WORD)((unsigned char)*srce)&0xff);
           srce++;
         }
       coord.X = (DWORD) (cLeft);
