@@ -314,11 +314,6 @@ METHOD New() CLASS TDebugger
    ::lMonoDisplay   := .f.
    s_oDebugger := Self
 
-   ::cSettingsFileName := "init.cld"
-   if File( "init.cld" )
-      ::LoadSettings()
-   endif
-
    ::aWindows       := {}
    ::nCurrentWindow := 1
    ::oPullDown      := __dbgBuildMenu( Self )
@@ -360,13 +355,20 @@ METHOD New() CLASS TDebugger
    ::lShowLocals       := .f.
    ::lAll              := .f.
    ::lSortVars         := .f.
+
+   ::cSettingsFileName := "init.cld"
+   if File( ::cSettingsFileName )
+      ::LoadSettings()
+   endif
+
 return Self
 
 METHOD Activate( cModuleName ) CLASS TDebugger
 
-   ::Show()
+   ::Show(.t.)
    ::ShowCode( cModuleName )
    ::ShowCallStack()
+   ::ShowVars()
    ::RestoreAppStatus()
 
 return nil
@@ -1033,6 +1035,20 @@ METHOD LoadSettings() CLASS TDebugger
                endif
                nColor++
             end
+         case Upper( SubStr( cLine, 1, 11 ) ) == "OPTIONS TAB"
+            cLine := SubStr( cLine, 12, 3)
+            ::nTabWidth := val(cLine)
+         case Upper( SubStr( cLine, 1, 12 ) ) == "OPTIONS PATH"
+            cLine := SubStr( cLine, 13, 120)
+            ::cPathForFiles := alltrim( cLine )
+         case Upper( SubStr( cLine, 1, 14 ) ) == "MONITOR STATIC"
+            ::lShowStatics := .t.
+         case Upper( SubStr( cLine, 1, 14 ) ) == "MONITOR PUBLIC"
+            ::lShowPublics := .t.
+         case Upper( SubStr( cLine, 1, 13 ) ) == "MONITOR LOCAL"
+            ::lShowLocals := .t.
+         case Upper( SubStr( cLine, 1, 15 ) ) == "MONITOR PRIVATE"
+            ::lShowPrivates := .t.		
       endcase
    next
 
@@ -1262,7 +1278,7 @@ METHOD OSShell() CLASS TDebugger
    local cImage := SaveScreen()
    local cColors := SetColor()
    local cOs    := Upper( OS() )
-   local cShell := GetEnv("COMSPEC")
+   local cShell 
    local bLastHandler := ErrorBlock({ |objErr| BREAK (objErr) })
    local oE
 
@@ -1272,8 +1288,11 @@ METHOD OSShell() CLASS TDebugger
 
    begin sequence
       if At("WINDOWS", cOs) != 0 .OR. At("DOS", cOs) != 0 .OR. At("OS/2", cOs) != 0
+         cShell := GetEnv("COMSPEC")  
          RUN ( cShell )
-
+      elseif At("LINUX", cOs) != 0
+         cShell := GetEnv("SHELL")
+         RUN ( cShell )
       else
          Alert( "Not implemented yet!" )
 
@@ -1316,7 +1335,7 @@ METHOD InputBox( cMsg, uValue, bValid ) CLASS TDebugger
                                        ::oPullDown:cClrPopup )
 
    oWndInput:lShadow := .t.
-   oWndInput:Show()
+   oWndInput:Show(.t.)
 
    if bValid == nil
       @ nTop + 1, nLeft + 1 GET uTemp COLOR "," + __DbgColors()[ 5 ]
@@ -1423,13 +1442,13 @@ METHOD RestoreSettings() CLASS TDebugger
       ::oPullDown:LoadColors()
       ::oPullDown:Refresh()
       ::BarDisplay()
-
+      ::ShowVars()
       for n := 1 to Len( ::aWindows )
         ::aWindows[ n ]:LoadColors()
         ::aWindows[ n ]:Refresh()
       next
    endif
-
+  
 return nil
 
 METHOD SaveAppStatus() CLASS TDebugger
@@ -1486,7 +1505,23 @@ METHOD SaveSettings() CLASS TDebugger
       if ::nTabWidth != 4
          cInfo += "Options Tab " + AllTrim( Str( ::nTabWidth ) ) + HB_OsNewLine()
       endif
+	        
+      if ::lShowStatics
+         cInfo += "Monitor Static" + HB_OsNewLine()
+      endif
 
+      if ::lShowPublics
+         cInfo += "Monitor Public" + HB_OsNewLine()
+      endif
+		
+      if ::lShowLocals
+         cInfo += "Monitor Local" + HB_OsNewLine()
+      endif
+
+      if ::lShowPrivates
+         cInfo += "Monitor Private" + HB_OsNewLine()
+      endif
+		
       MemoWrit( ::cSettingsFileName, cInfo )
    endif
 
