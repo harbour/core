@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-03-24 22:10 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbfcdx/dbfcdx1.c
+  * source/rdd/dbfcdx/dbfcdx1.h
+  * include/dbinfo.ch
+  * include/hbrddcdx.h
+    ! Some DBFCDX fixes, made by Przemyslaw Czerpak - borrowed from xHarbour.
+
 2004-03-24 10:08 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
    * source/rtl/tbcolumn.prg
      ! fixed typo in comment
