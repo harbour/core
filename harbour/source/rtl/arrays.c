@@ -415,7 +415,9 @@ ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCou
          {
             PHB_ITEM pItem = pBaseArray->pItems + ulStart;
 
-            if( IS_STRING( pItem ) && hb_itemStrCmp( pValue, pItem, FALSE ) == 0 )
+            /* NOTE: The order of the pItem and pValue parameters passed to
+                     hb_itemStrCmp() is significant, please don't change it. */
+            if( IS_STRING( pItem ) && hb_itemStrCmp( pItem, pValue, FALSE ) == 0 )
                return ulStart + 1;
          }
       }

@@ -1,3 +1,11 @@
+19990908-03:14 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/working/rtl_test.prg
+    + Some ==/= tests added for strings.
+  * source/rtl/arrays.c
+    ! hb_arrayScan(). Fixed a string comparison bug.
+  * source/rtl/transform.c
+    + TOFIX added about a directly modified item string buffer.
+
 19990908-02:30 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/math.c
     source/rtl/strings.c

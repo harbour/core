@@ -36,6 +36,8 @@
 
 /* TODO: Getting rid of calling back HARBOUR HB_STR() function */
 /*       and #include "ctoharb.h" */
+/* TOFIX: TRANSFORM() is directly modifying an item string buffer. 
+          This is dangerous, and should be fixed. */
 
 #include <ctype.h>
 #include "extend.h"
