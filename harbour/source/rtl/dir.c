@@ -6,8 +6,6 @@
 #include <string.h>
 #include <itemapi.h>
 
-#define HB_CHARUPPER(c)    ((c)>='a'&&(c)<='z'?(c)-32:(c))
-
 #if defined(__GNUC__) || defined(__DJGPP__)
   #include <sys/types.h>
   #include <sys/stat.h>
@@ -309,10 +307,11 @@ HARBOUR DIRECTORY( void )
 
          /* TODO: attribute match rtn */
          pos = 0;
-         if( arg2_it )
+         if( arg2_it && _parclen(2) >= 1)
          {
             strcpy(string, _parc(2));
-            pos = strchr(HB_CHARUPPER(string),*aatrib);
+            while (string[pos]) string[pos] = toupper(string[pos]);
+            pos = strchr(string,*aatrib);
          }
          else
             pos = 1;
@@ -368,12 +367,12 @@ static  BOOL  hb_strMatchDOS (char *pszString, char *pszMask)
                pszString++;
             else
             {
-               while (HB_CHARUPPER(pszString) != HB_CHARUPPER(pszMask))
+               while (toupper(*pszString) != toupper(*pszMask))
                {
                   if (!(*(++pszString)))
                      return (FALSE);
                }
-               while (HB_CHARUPPER(pszString) == HB_CHARUPPER(pszMask))
+               while (toupper(*pszString) == toupper(*pszMask))
                {
                   if (!(*(++pszString)))
                      break;
@@ -382,7 +381,7 @@ static  BOOL  hb_strMatchDOS (char *pszString, char *pszMask)
             }
       }
       else
-         if (HB_CHARUPPER(pszMask) != HB_CHARUPPER(pszString) && *pszMask != '?')
+         if (toupper(*pszMask) != toupper(*pszString) && *pszMask != '?')
             return (FALSE);
          else
          {
