@@ -1,3 +1,20 @@
+2000-10-15 12:45 UTC+0800 Brian Hays <bhays@abacuslaw.com>
+   * source/rdd/dbcmd.c
+      * fixed ordKey (and therefore IndexKey() ) to accept a NIL parameter
+   * contrib/rdd_ads/ads1.c
+      * Changed SetFilter to see if the server can evaluate the filter.
+      If not, we don't pass it to the server and let the super level
+      filter the records locally.
+      This means UDFs and public memvar references will still work,
+      although you lose the benefits of having a remote server
+      when doing this.
+   * contrib/rdd_ads/doc/en/readme.txt
+      + Added Compliance section
+         ALL USERS NOTICE:
+         ACE will always automatically open a structural index (with the same
+         name as the data file).  There is no way to turn this feature off.
+
+
 2000-10-13 11:50 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * source/rdd/dbcmd.c
    * source/rdd/dbfcdx/dbfcdx1.c

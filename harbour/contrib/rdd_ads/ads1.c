@@ -1450,9 +1450,19 @@ static ERRCODE adsScopeInfo( ADSAREAP pArea, USHORT nScope, PHB_ITEM pItem )
 
 static ERRCODE adsSetFilter( ADSAREAP pArea, LPDBFILTERINFO pFilterInfo )
 {
+   BOOL bValidExpr = FALSE;
    HB_TRACE(HB_TR_DEBUG, ("adsSetFilter(%p, %p)", pArea, pFilterInfo));
 
-   AdsSetFilter( pArea->hTable, (UNSIGNED8*) hb_itemGetCPtr( pFilterInfo->abFilterText ) );
+   /* ----------------- Brian Hays ------------------
+      See if the server can evaluate the filter.
+      If not, don't pass it to the server; let the super level
+      filter the records locally.
+    --------------------------------------------------*/
+
+   AdsIsExprValid( pArea->hTable, (UNSIGNED8*) hb_itemGetCPtr( pFilterInfo->abFilterText), (UNSIGNED16*) &bValidExpr );
+   if ( bValidExpr )
+      AdsSetFilter( pArea->hTable, (UNSIGNED8*) hb_itemGetCPtr( pFilterInfo->abFilterText ) );
+
    return SUPER_SETFILTER( ( AREAP ) pArea, pFilterInfo );
 }
 
