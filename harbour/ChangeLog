@@ -7,6 +7,18 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * include/hbrddntx.h
+  * source/rdd/dbfntx/dbfntx1.c
+    * Lot of code is changed to avoid using of PHB_ITEM in internal functions,
+      some other optimizations.
+      DBFNTX became much faster now ( still not so fast as Clipper ).
+
+2002-03-27 02:26 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * include/hbset.h
+   * source/rtl/set.c
+     ! changed definition of HB_SET_AUTORDER from BOOL into int.
+
+2002-03-25 21:53 UTC-0300 Walter Negro <anegro@overnet.com.ar>
    * source/rtl/tget.prg
      ! Fix minor bug with initial spaces in PICTURE
 

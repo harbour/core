@@ -31,8 +31,8 @@
  *      Language            Codepage     <cNewLang>
  *      Basque              850          EU
  *      Catalan             850          CA
- *      Chinese Simplified  936          ZH_GB
- *      Chinese Traditional 950          ZH_BIG5
+ *      Chinese Simplified  936          ZHGB
+ *      Chinese Traditional 950          ZHB5
  *      Croatian            852          HR852
  *      Croatian            ISO-8859-2   HRISO
  *      Czech               852          CS852

@@ -51,14 +51,12 @@
  *
  */
 
-/* Language name: Chinese */
-/* ISO language code (2 chars):ZH */
-/* Codepage: 936 for ZH,ZH-CN,ZH-SG (Chinese Simplified)  */
-/* Codepage: 950 for ZH-HK,ZH-TW    (Chinese Traditional) */
+/* Language name: Chinese Simplified */
+/* ISO language code (2 chars): ZH   */
+/* Codepage: 936 for ZH,ZH-CN,ZH-SG  */
 
 #include "hbapilng.h"
 
-/* Chinese Simplified: Codepage: 936 for ZH,ZH-CN,ZH-SG ,this is for chinese-gb code */
 static HB_LANG s_lang =
 {
    {
@@ -84,7 +82,7 @@ static HB_LANG s_lang =
       "九月",
       "十月",
       "十一月",
-      "十二月"
+      "十二月",
 
       /* Day names */
 
@@ -94,23 +92,23 @@ static HB_LANG s_lang =
       "星期三",
       "星期四",
       "星期五",
-      "星期六"
+      "星期六",
 
       /* CA-Cl*pper compatible natmsg items */
 
-      "Database Files    # Records    Last Update     Size",
-      "Do you want more samples?",
-      "Page No.",
-      "** Subtotal **",
-      "* Subsubtotal *",
-      "*** Total ***",
-      "Ins",
-      "   ",
-      "Invalid date",
-      "Range: ",
+      "数据库文件        # 记录       最后更新        大小",
+      "需要更多的例子吗?",
+      "页码:",
+      "** 小计 **",
+      "* 子小计 *",
+      "*** 合计 ***",
+      "插入",
+      "    ",
+      "日期非法",
+      "范围: ",
       " - ",
       "Y/N",
-      "INVALID EXPRESSION",
+      "非法表达式",
 
       /* Error description names */
 
