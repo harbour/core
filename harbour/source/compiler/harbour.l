@@ -1084,7 +1084,7 @@ Separator     {SpaceTab}
                   yylval.string = hb_strupr( hb_strdup( yytext ) );
                   BEGIN RETURN_;
                 }
-<RETURN_>{Separator}+[\[\"\'\.\!\&\{\;_a-zA-Z0-9]   { /* an identifier after RETURN, macro, or .NOT., or string, or EOL */
+<RETURN_>{Separator}+[\[\"\'\.\!\&\{\;\:_a-zA-Z0-9]   { /* an identifier after RETURN, macro, or .NOT., or string, or EOL */
                  unput( yytext[ yyleng-1 ] );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  if( hb_comp_iState == LOOKUP )
