@@ -131,6 +131,7 @@ static HB_LANG langEN =
       "Incorrect number of arguments",
       "array access",
       "array assign",
+      "array dimension",
       "not an array",
       "conditional"
    },

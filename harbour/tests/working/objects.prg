@@ -5,11 +5,7 @@
 // Testing Harbour classes and objects management
 // be aware Harbour provides a much simpler way using Class TClass (source\rtl\class.prg)
 
-#define MET_METHOD    0 // these defines should be declared with these specific values
-#define MET_DATA      1 // as Harbour Classes building modules uses them
-#define MET_CLASSDATA 2
-#define MET_INLINE    3
-#define MET_VIRTUAL   4
+#include "hboo.ch"
 
 function Main()
 
@@ -35,17 +31,17 @@ function TAny()         /* builds a class */
    static hClass
 
    if hClass == nil
-      hClass = ClassCreate( "TANY", 3 )              // cClassName, nDatas
-      ClassAdd( hClass, "cName",      1, MET_DATA )  // retrieve data
-      ClassAdd( hClass, "_cName",     1, MET_DATA )  // assign data. Note the '_'
-      ClassAdd( hClass, "New",   @New(), MET_METHOD )
-      ClassAdd( hClass, "Test", @Test(), MET_METHOD )
-      ClassAdd( hClass, "DoNothing",  0, MET_VIRTUAL )
+      hClass = __clsNew( "TANY", 3 )                 // cClassName, nDatas
+      __clsAddMsg( hClass, "cName",      1, MET_DATA )  // retrieve data
+      __clsAddMsg( hClass, "_cName",     1, MET_DATA )  // assign data. Note the '_'
+      __clsAddMsg( hClass, "New",   @New(), MET_METHOD )
+      __clsAddMsg( hClass, "Test", @Test(), MET_METHOD )
+      __clsAddMsg( hClass, "DoNothing",  0, MET_VIRTUAL )
    endif
 
    /* warning: we are not defining datas names and methods yet */
 
-return ClassInstance( hClass )  // creates an object of this class
+return __clsInst( hClass )  // creates an object of this class
 
 static function New()
 

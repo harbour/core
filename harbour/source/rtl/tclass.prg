@@ -31,15 +31,7 @@
  *       Support for default DATA values
  */
 
-#define MET_METHOD    0
-#define MET_DATA      1
-#define MET_CLASSDATA 2
-#define MET_INLINE    3
-#define MET_VIRTUAL   4
-#define MET_SUPER     5
-
-#define DAT_SYMBOL    1
-#define DAT_INITVAL   2
+#include "hboo.ch"
 
 //----------------------------------------------------------------------------//
 
@@ -48,36 +40,36 @@ function TClass()
    static hClass := 0
 
    if hClass == 0
-      hClass = ClassCreate( "TCLASS", 8 )
+      hClass = __clsNew( "TCLASS", 8 )
 
-      ClassAdd( hClass, "New",          @New(),          MET_METHOD )
-      ClassAdd( hClass, "Create",       @Create(),       MET_METHOD )
-      ClassAdd( hClass, "AddData",      @AddData(),      MET_METHOD )
-      ClassAdd( hClass, "AddClassData", @AddClassData(), MET_METHOD )
-      ClassAdd( hClass, "AddInline",    @AddInline(),    MET_METHOD )
-      ClassAdd( hClass, "AddMethod",    @AddMethod(),    MET_METHOD )
-      ClassAdd( hClass, "AddVirtual",   @AddVirtual(),   MET_METHOD )
-      ClassAdd( hClass, "Instance",     @Instance(),     MET_METHOD )
+      __clsAddMsg( hClass, "New",          @New(),          MET_METHOD )
+      __clsAddMsg( hClass, "Create",       @Create(),       MET_METHOD )
+      __clsAddMsg( hClass, "AddData",      @AddData(),      MET_METHOD )
+      __clsAddMsg( hClass, "AddClassData", @AddClassData(), MET_METHOD )
+      __clsAddMsg( hClass, "AddInline",    @AddInline(),    MET_METHOD )
+      __clsAddMsg( hClass, "AddMethod",    @AddMethod(),    MET_METHOD )
+      __clsAddMsg( hClass, "AddVirtual",   @AddVirtual(),   MET_METHOD )
+      __clsAddMsg( hClass, "Instance",     @Instance(),     MET_METHOD )
 
-      ClassAdd( hClass, "hClass",     1, MET_DATA )
-      ClassAdd( hClass, "_hClass",    1, MET_DATA )
-      ClassAdd( hClass, "cName",      2, MET_DATA )
-      ClassAdd( hClass, "_cName",     2, MET_DATA )
-      ClassAdd( hClass, "aDatas",     3, MET_DATA )
-      ClassAdd( hClass, "_aDatas",    3, MET_DATA )
-      ClassAdd( hClass, "aMethods",   4, MET_DATA )
-      ClassAdd( hClass, "_aMethods",  4, MET_DATA )
-      ClassAdd( hClass, "aClsDatas",  5, MET_DATA )
-      ClassAdd( hClass, "_aClsDatas", 5, MET_DATA )
-      ClassAdd( hClass, "aInlines",   6, MET_DATA )
-      ClassAdd( hClass, "_aInlines",  6, MET_DATA )
-      ClassAdd( hClass, "aVirtuals",  7, MET_DATA )
-      ClassAdd( hClass, "_aVirtuals", 7, MET_DATA )
-      ClassAdd( hClass, "cSuper",     8, MET_DATA )
-      ClassAdd( hClass, "_cSuper",    8, MET_DATA )
+      __clsAddMsg( hClass, "hClass",     1, MET_DATA )
+      __clsAddMsg( hClass, "_hClass",    1, MET_DATA )
+      __clsAddMsg( hClass, "cName",      2, MET_DATA )
+      __clsAddMsg( hClass, "_cName",     2, MET_DATA )
+      __clsAddMsg( hClass, "aDatas",     3, MET_DATA )
+      __clsAddMsg( hClass, "_aDatas",    3, MET_DATA )
+      __clsAddMsg( hClass, "aMethods",   4, MET_DATA )
+      __clsAddMsg( hClass, "_aMethods",  4, MET_DATA )
+      __clsAddMsg( hClass, "aClsDatas",  5, MET_DATA )
+      __clsAddMsg( hClass, "_aClsDatas", 5, MET_DATA )
+      __clsAddMsg( hClass, "aInlines",   6, MET_DATA )
+      __clsAddMsg( hClass, "_aInlines",  6, MET_DATA )
+      __clsAddMsg( hClass, "aVirtuals",  7, MET_DATA )
+      __clsAddMsg( hClass, "_aVirtuals", 7, MET_DATA )
+      __clsAddMsg( hClass, "cSuper",     8, MET_DATA )
+      __clsAddMsg( hClass, "_cSuper",    8, MET_DATA )
    endif
 
-return ClassInstance( hClass )
+return __clsInst( hClass )
 
 //----------------------------------------------------------------------------//
 
@@ -112,48 +104,48 @@ static function Create()
    local ahSuper := {}
 
    if ::cSuper == NIL
-      hClass := ClassCreate( ::cName, nLenDatas )
+      hClass := __clsNew( ::cName, nLenDatas )
 
    else                                         // Single inheritance
-      hSuper := __InstSuper( Upper( ::cSuper ) )
-      hClass := ClassCreate( ::cName, nLenDatas, hSuper )
+      hSuper := __clsInstSuper( Upper( ::cSuper ) )
+      hClass := __clsNew( ::cName, nLenDatas, hSuper )
                                                 // Add class casts
-      ClassAdd( hClass, Upper( ::cSuper ), hSuper, MET_SUPER )
-      ClassAdd( hClass, "__SUPER", hSuper, MET_SUPER )
+      __clsAddMsg( hClass, Upper( ::cSuper ), hSuper, MET_SUPER )
+      __clsAddMsg( hClass, "__SUPER", hSuper, MET_SUPER )
 
-      nDataBegin := __WDatas( hSuper )          // Get offset for new DATAs
-      nClassBegin := __WClsDatas( hSuper )      // Get offset for new ClassData
+      nDataBegin := __cls_CntData( hSuper )          // Get offset for new DATAs
+      nClassBegin := __cls_CntClsData( hSuper )      // Get offset for new ClassData
    endif
 
    ::hClass = hClass
 
    for n = 1 to nLenDatas
-      ClassAdd( hClass, ::aDatas[ n ][ DAT_SYMBOL ], n + nDataBegin, MET_DATA, ;
-                        ::aDatas[ n ][ DAT_INITVAL ] )
-      ClassAdd( hClass, "_" + ::aDatas[ n ][ DAT_SYMBOL ], n + nDataBegin, MET_DATA )
+      __clsAddMsg( hClass, ::aDatas[ n ][ DATA_SYMBOL ], n + nDataBegin, MET_DATA, ;
+                           ::aDatas[ n ][ DATA_VAL ] )
+      __clsAddMsg( hClass, "_" + ::aDatas[ n ][ DATA_SYMBOL ], n + nDataBegin, MET_DATA )
    next
 
    nLen = Len( ::aMethods )
    for n = 1 to nLen
-      ClassAdd( hClass, ::aMethods[ n ][ 1 ], ::aMethods[ n ][ 2 ], MET_METHOD )
+      __clsAddMsg( hClass, ::aMethods[ n ][ 1 ], ::aMethods[ n ][ 2 ], MET_METHOD )
    next
 
    nLen = Len( ::aClsDatas )
    for n = 1 to nLen
-      ClassAdd( hClass, ::aClsDatas[ n ], n + nClassBegin, MET_CLASSDATA )
-      ClassAdd( hClass, "_" + ::aClsDatas[ n ], n + nClassBegin, MET_CLASSDATA )
+      __clsAddMsg( hClass, ::aClsDatas[ n ], n + nClassBegin, MET_CLASSDATA )
+      __clsAddMsg( hClass, "_" + ::aClsDatas[ n ], n + nClassBegin, MET_CLASSDATA )
    next
 
    nLen = Len( ::aInlines )
    for n = 1 to nLen
-      ClassAdd( hClass, ::aInlines[ n ][ 1 ], ::aInlines[ n ][ 2 ],;
+      __clsAddMsg( hClass, ::aInlines[ n ][ 1 ], ::aInlines[ n ][ 2 ],;
                 MET_INLINE )
    next
-//   ClassAdd( hClass, Upper( ::cName ), {|self|self}, MET_INLINE ) // Useful?
+//    __clsAddMsg( hClass, Upper( ::cName ), {|self|self}, MET_INLINE ) // Useful?
 
    nLen = Len( ::aVirtuals )
    for n = 1 to nLen
-      ClassAdd( hClass, ::aVirtuals[ n ], n, MET_VIRTUAL )
+      __clsAddMsg( hClass, ::aVirtuals[ n ], n, MET_VIRTUAL )
    next
 
 return nil
@@ -164,7 +156,7 @@ static function Instance()
 
    local Self := QSelf()
 
-return ClassInstance( ::hClass )
+return __clsInst( ::hClass )
 
 //----------------------------------------------------------------------------//
 

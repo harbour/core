@@ -2,11 +2,7 @@
 // $Id$
 //
 
-#define MET_METHOD    0
-#define MET_DATA      1
-#define MET_CLASSDATA 2
-#define MET_INLINE    3
-#define MET_VIRTUAL   4
+#include "hboo.ch"
 
 //
 // DynObj

@@ -28,18 +28,17 @@
  *
  * Partial Copyright (C) 1999 Eddie Runia ( eddie@runia.com )
  *   partial copyright regarding the following functions :
- *      CLASSDEL
- *      CLASSMOD
  *      :CLASSSEL()
- *      ISMESSAGE
- *      OCLONE
- *      OSEND
- *      SELECTSUPER
- *      __INSTSUPER
- *      __WCLSDATAS
- *      __WDATAS
- *      __WDATADEC
- *      __WDATAINC
+ *      __clsDelMsg()
+ *      __clsModMsg()
+ *      __clsInstSuper()
+ *      __cls_CntClsData()
+ *      __cls_CntData()
+ *      __cls_DecData()
+ *      __cls_IncData()
+ *      __objClone()
+ *      __objHasMsg()
+ *      __objSendMsg()
  */
 
 #include "extend.h"
@@ -47,13 +46,7 @@
 #include "itemapi.h"
 #include "ctoharb.h"
 #include "init.h"
-
-#define MET_METHOD    0
-#define MET_DATA      1
-#define MET_CLASSDATA 2
-#define MET_INLINE    3
-#define MET_VIRTUAL   4
-#define MET_SUPER     5
+#include "hboo.ch"
 
 typedef struct
 {
@@ -80,97 +73,105 @@ typedef struct
 #define BUCKET        4
 #define HASH_KEY      (BASE_METHODS / BUCKET)
 
-PCLASS   pClasses     = 0;
-WORD     wClasses     = 0;
-PMETHOD  pMethod      = 0;
-PHB_DYNS msgClassName = 0;
-PHB_DYNS msgClassH    = 0;
-PHB_DYNS msgEval      = 0;
-PHB_DYNS msgClassSel  = 0;
+static PCLASS   pClasses     = 0;
+static WORD     wClasses     = 0;
+static PMETHOD  pMethod      = 0;
+static PHB_DYNS msgClassName = 0;
+static PHB_DYNS msgClassH    = 0;
+static PHB_DYNS msgEval      = 0;
+static PHB_DYNS msgClassSel  = 0;
 
 /* All functions contained in classes.c */
 
-       HARBOUR  HB_CLASSADD( void );
-       HARBOUR  HB_CLASSCREATE( void );
-       HARBOUR  HB_CLASSDEL( void );
-static HARBOUR  ClassH( void );
-       HARBOUR  HB_CLASSINSTANCE( void );
-       HARBOUR  HB_CLASSMOD( void );
-static HARBOUR  ClassName( void );
-       HARBOUR  HB_CLASSNAME( void );
-static HARBOUR  ClassSel( void );
-static void     DictRealloc( PCLASS );
-static HARBOUR  EvalInline( void );
-       char *   hb_GetClassName( PHB_ITEM pObject );
-static HARBOUR  GetClassData( void );
-static HARBOUR  GetData( void );
-       PHB_FUNC hb_GetMethod( PHB_ITEM, PHB_SYMB );
-       ULONG    hb_isMessage( PHB_ITEM, char *);
-       HARBOUR  HB_ISMESSAGE( void );
-       HARBOUR  HB_OCLONE( void );
-       HARBOUR  HB_OSEND( void );
-       void     ReleaseClass( PCLASS );
-       void     ReleaseClasses( void );
-static HARBOUR  SelectSuper( void );
-static HARBOUR  SetClassData( void );
-static HARBOUR  SetData( void );
-static HARBOUR  Virtual( void );
-       HARBOUR  HB___INSTSUPER( void );
-       HARBOUR  HB___WCLSDATAS(void);
-       HARBOUR  HB___WDATAS( void );
-       HARBOUR  HB___WDATADEC( void );
-       HARBOUR  HB___WDATAINC( void );
+static HARBOUR  __msgClsH( void );
+static HARBOUR  __msgClsName( void );
+static HARBOUR  __msgClsSel( void );
+static HARBOUR  __msgSuper( void );
+static HARBOUR  __msgEvalInline( void );
+static HARBOUR  __msgVirtual( void );
+static HARBOUR  __msgGetClsData( void );
+static HARBOUR  __msgSetClsData( void );
+static HARBOUR  __msgGetData( void );
+static HARBOUR  __msgSetData( void );
+
+static void     hb_clsDictRealloc( PCLASS pClass );
+static void     hb_clsRelease( PCLASS );
+       void     hb_clsReleaseAll( void );
+
+       char *   hb_objGetClsName( PHB_ITEM pObject );
+       PHB_FUNC hb_objGetMethod( PHB_ITEM, PHB_SYMB );
+       ULONG    hb_objHasMsg( PHB_ITEM pObject, char *szString );
+
+       HARBOUR  HB___CLSNEW( void );
+       HARBOUR  HB___CLSINST( void );
+       HARBOUR  HB___CLSINSTSUPER( void );
+       HARBOUR  HB___CLSADDMSG( void );
+       HARBOUR  HB___CLSDELMSG( void );
+       HARBOUR  HB___CLSMODMSG( void );
+       HARBOUR  HB___CLS_CNTCLSDATA(void);
+       HARBOUR  HB___CLS_CNTDATA( void );
+       HARBOUR  HB___CLS_DECDATA( void );
+       HARBOUR  HB___CLS_INCDATA( void );
+       HARBOUR  HB___OBJGETCLSNAME( void );
+       HARBOUR  HB___OBJCLONE( void );
+       HARBOUR  HB___OBJHASMSG( void );
+       HARBOUR  HB___OBJSENDMSG( void );
 
 /* All function contained in matching objfunc.prg */
 
-HARBOUR HB_AODATA( void );
-HARBOUR HB_AOGET( void );
-HARBOUR HB_AOMETHOD( void );
-HARBOUR HB_AOSET( void );
-HARBOUR HB_ISDATA( void );
-HARBOUR HB_ISMETHOD( void );
-HARBOUR HB_OADDDATA( void );
-HARBOUR HB_OADDINLINE( void );
-HARBOUR HB_OADDMETHOD( void );
-HARBOUR HB_ODELDATA( void );
-HARBOUR HB_ODELINLINE( void );
-HARBOUR HB_ODELMETHOD( void );
-HARBOUR HB_OMODINLINE( void );
-HARBOUR HB_OMODMETHOD( void );
+extern HARBOUR HB___OBJGETMSGLIST( void );
+extern HARBOUR HB___OBJGETMETHODLIST( void );
+extern HARBOUR HB___OBJGETVALUELIST( void );
+extern HARBOUR HB___OBJSETVALUELIST( void );
+extern HARBOUR HB___OBJHASDATA( void );
+extern HARBOUR HB___OBJHASMETHOD( void );
+extern HARBOUR HB___OBJADDDATA( void );
+extern HARBOUR HB___OBJADDINLINE( void );
+extern HARBOUR HB___OBJADDMETHOD( void );
+extern HARBOUR HB___OBJDELDATA( void );
+extern HARBOUR HB___OBJDELINLINE( void );
+extern HARBOUR HB___OBJDELMETHOD( void );
+extern HARBOUR HB___OBJMODINLINE( void );
+extern HARBOUR HB___OBJMODMETHOD( void );
 
 /* Exported symbols of both classes.c and objfunc.prg */
 
 HB_INIT_SYMBOLS_BEGIN( Classes__InitSymbols )
-{ "AODATA"        , FS_PUBLIC, HB_AODATA         , 0 },
-{ "AOGET"         , FS_PUBLIC, HB_AOGET          , 0 },
-{ "AOMETHOD"      , FS_PUBLIC, HB_AOMETHOD       , 0 },
-{ "AOSET"         , FS_PUBLIC, HB_AOSET          , 0 },
-{ "CLASSADD"      , FS_PUBLIC, HB_CLASSADD       , 0 },
-{ "CLASSCREATE"   , FS_PUBLIC, HB_CLASSCREATE    , 0 },
-{ "CLASSDEL"      , FS_PUBLIC, HB_CLASSDEL       , 0 },
-{ "CLASSINSTANCE" , FS_PUBLIC, HB_CLASSINSTANCE  , 0 },
-{ "CLASSMOD"      , FS_PUBLIC, HB_CLASSMOD       , 0 },
-{ "CLASSNAME"     , FS_PUBLIC, HB_CLASSNAME      , 0 },
-{ "ISDATA"        , FS_PUBLIC, HB_ISDATA         , 0 },
-{ "ISMESSAGE"     , FS_PUBLIC, HB_ISMESSAGE      , 0 },
-{ "ISMETHOD"      , FS_PUBLIC, HB_ISMETHOD       , 0 },
-{ "OADDDATA"      , FS_PUBLIC, HB_OADDDATA       , 0 },
-{ "OADDINLINE"    , FS_PUBLIC, HB_OADDINLINE     , 0 },
-{ "OADDMETHOD"    , FS_PUBLIC, HB_OADDMETHOD     , 0 },
-{ "OCLONE"        , FS_PUBLIC, HB_OCLONE         , 0 },
-{ "ODELDATA"      , FS_PUBLIC, HB_ODELDATA       , 0 },
-{ "ODELINLINE"    , FS_PUBLIC, HB_ODELINLINE     , 0 },
-{ "ODELMETHOD"    , FS_PUBLIC, HB_ODELMETHOD     , 0 },
-{ "OMODINLINE"    , FS_PUBLIC, HB_OMODINLINE     , 0 },
-{ "OMODMETHOD"    , FS_PUBLIC, HB_OMODMETHOD     , 0 },
-{ "OSEND"         , FS_PUBLIC, HB_OSEND          , 0 }
+{ "__CLSNEW"           , FS_PUBLIC, HB___CLSNEW           , 0 },
+{ "__CLSINST"          , FS_PUBLIC, HB___CLSINST          , 0 },
+{ "__CLSINSTSUPER"     , FS_PUBLIC, HB___CLSINSTSUPER     , 0 },
+{ "__CLSADDMSG"        , FS_PUBLIC, HB___CLSADDMSG        , 0 },
+{ "__CLSDELMSG"        , FS_PUBLIC, HB___CLSDELMSG        , 0 },
+{ "__CLSMODMSG"        , FS_PUBLIC, HB___CLSMODMSG        , 0 },
+{ "__CLS_CNTCLSDATA"   , FS_PUBLIC, HB___CLS_CNTCLSDATA   , 0 },
+{ "__CLS_CNTDATA"      , FS_PUBLIC, HB___CLS_CNTDATA      , 0 },
+{ "__CLS_DECDATA"      , FS_PUBLIC, HB___CLS_DECDATA      , 0 },
+{ "__CLS_INCDATA"      , FS_PUBLIC, HB___CLS_INCDATA      , 0 },
+{ "__OBJGETCLSNAME"    , FS_PUBLIC, HB___OBJGETCLSNAME    , 0 },
+{ "__OBJCLONE"         , FS_PUBLIC, HB___OBJCLONE         , 0 },
+{ "__OBJHASMSG"        , FS_PUBLIC, HB___OBJHASMSG        , 0 },
+{ "__OBJSENDMSG"       , FS_PUBLIC, HB___OBJSENDMSG       , 0 },
+{ "__OBJGETMSGLIST"    , FS_PUBLIC, HB___OBJGETMSGLIST    , 0 },
+{ "__OBJGETMETHODLIST" , FS_PUBLIC, HB___OBJGETMETHODLIST , 0 },
+{ "__OBJGETVALUELIST"  , FS_PUBLIC, HB___OBJGETVALUELIST  , 0 },
+{ "__OBJSETVALUELIST"  , FS_PUBLIC, HB___OBJSETVALUELIST  , 0 },
+{ "__OBJHASDATA"       , FS_PUBLIC, HB___OBJHASDATA       , 0 },
+{ "__OBJHASMETHOD"     , FS_PUBLIC, HB___OBJHASMETHOD     , 0 },
+{ "__OBJADDDATA"       , FS_PUBLIC, HB___OBJADDDATA       , 0 },
+{ "__OBJADDINLINE"     , FS_PUBLIC, HB___OBJADDINLINE     , 0 },
+{ "__OBJADDMETHOD"     , FS_PUBLIC, HB___OBJADDMETHOD     , 0 },
+{ "__OBJDELDATA"       , FS_PUBLIC, HB___OBJDELDATA       , 0 },
+{ "__OBJDELINLINE"     , FS_PUBLIC, HB___OBJDELINLINE     , 0 },
+{ "__OBJDELMETHOD"     , FS_PUBLIC, HB___OBJDELMETHOD     , 0 },
+{ "__OBJMODINLINE"     , FS_PUBLIC, HB___OBJMODINLINE     , 0 },
+{ "__OBJMODMETHOD"     , FS_PUBLIC, HB___OBJMODMETHOD     , 0 }
 HB_INIT_SYMBOLS_END( Classes__InitSymbols )
 #if ! defined(__GNUC__)
 #pragma startup Classes__InitSymbols
 #endif
 
 /*
- * ClassAdd( <hClass>, <cMessage>, <pFunction>, <nType>, [xInit] )
+ * __clsAddMsg( <hClass>, <cMessage>, <pFunction>, <nType>, [xInit] )
  *
  * Add a message to the class.
  *
@@ -184,7 +185,7 @@ HB_INIT_SYMBOLS_END( Classes__InitSymbols )
  * <nType>     see MET_*
  * <xInit>     Optional initializer for DATA
  */
-HARBOUR HB_CLASSADD(void)
+HARBOUR HB___CLSADDMSG(void)
 {
    WORD     wClass = hb_parnl( 1 );
    WORD     wType  = hb_parni( 4 );
@@ -203,7 +204,7 @@ HARBOUR HB_CLASSADD(void)
       wMask    = pClass->wHashKey * BUCKET;
 
       if( pClass->wMethods > ( pClass->wHashKey * BUCKET * 2/3 ) )
-         DictRealloc( pClass );
+         hb_clsDictRealloc( pClass );
 
       /* Find either the existing message or an open spot for a new message */
 
@@ -227,10 +228,10 @@ HARBOUR HB_CLASSADD(void)
          case MET_DATA:
               pNewMeth->wData = hb_parnl( 3 );
               if( pMessage->pSymbol->szName[ 0 ] == '_' )
-                 pNewMeth->pFunction = SetData;
+                 pNewMeth->pFunction = __msgSetData;
               else
               {
-                 pNewMeth->pFunction  = GetData;
+                 pNewMeth->pFunction  = __msgGetData;
                  if( pInit && !IS_NIL( pInit )) /* Initializer found        */
                  {
                     pNewMeth->pInitValue = hb_itemNew( NULL );
@@ -245,9 +246,9 @@ HARBOUR HB_CLASSADD(void)
                  hb_arraySize( pClass->pClassDatas, hb_parnl( 3 ) );
 
               if( pMessage->pSymbol->szName[ 0 ] == '_' )
-                 pNewMeth->pFunction = SetClassData;
+                 pNewMeth->pFunction = __msgSetClsData;
               else
-                 pNewMeth->pFunction = GetClassData;
+                 pNewMeth->pFunction = __msgGetClsData;
               break;
 
          case MET_INLINE:
@@ -255,20 +256,20 @@ HARBOUR HB_CLASSADD(void)
               hb_arraySize( pClass->pInlines, pNewMeth->wData );
               hb_arraySet(  pClass->pInlines, pNewMeth->wData,
                             hb_param( 3, IT_BLOCK ) );
-              pNewMeth->pFunction = EvalInline;
+              pNewMeth->pFunction = __msgEvalInline;
               break;
 
          case MET_VIRTUAL:
-              pNewMeth->pFunction = Virtual;
+              pNewMeth->pFunction = __msgVirtual;
               break;
 
          case MET_SUPER:
               pNewMeth->wData     = hb_parnl( 3 );
-              pNewMeth->pFunction = SelectSuper;
+              pNewMeth->pFunction = __msgSuper;
               break;
 
          default:
-              printf( "Invalid method type from ClassAdd\n" );
+              printf( "Invalid method type from __clsAddMsg\n" );
               exit( 1 );
               break;
       }
@@ -277,7 +278,7 @@ HARBOUR HB_CLASSADD(void)
 
 
 /*
- * <hClass> := ClassCreate( <cClassName>, <nDatas>, [hSuper] )
+ * <hClass> := __clsNew( <cClassName>, <nDatas>, [hSuper] )
  *
  * Create a new class
  *
@@ -285,7 +286,7 @@ HARBOUR HB_CLASSADD(void)
  * <nDatas>     Number of DATAs in the class
  * <hSuper>     Optional handle of superclass
  */
-HARBOUR HB_CLASSCREATE(void)
+HARBOUR HB___CLSNEW(void)
 {
    WORD   wSuper = hb_parni( 3 );               /* Super class present      */
    WORD   wSize;
@@ -337,14 +338,14 @@ HARBOUR HB_CLASSCREATE(void)
 
 
 /*
- * ClassDel( <oObj>, <cMessage> )
+ * __clsDelMsg( <oObj>, <cMessage> )
  *
  * Delete message (only for INLINE and METHOD)
  *
  * <oObj>     Object
  * <cMessage> Message
  */
-HARBOUR HB_CLASSDEL(void)
+HARBOUR HB___CLSDELMSG(void)
 {
    PHB_ITEM pString  = hb_param( 2, IT_STRING );
    PHB_SYMB pMessage = hb_dynsymGet( pString->item.asString.value )->pSymbol;
@@ -377,7 +378,7 @@ HARBOUR HB_CLASSDEL(void)
       if( wAt != wLimit )
       {                                         /* Requested method found   */
          pFunc = pClass->pMethods[ wAt ].pFunction;
-         if( pFunc == EvalInline )              /* INLINE method deleted    */
+         if( pFunc == __msgEvalInline )         /* INLINE method deleted    */
          {
             hb_arrayDel( pClass->pInlines, pClass->pMethods[ wAt ].wData );
                                                 /* Delete INLINE block      */
@@ -406,18 +407,18 @@ HARBOUR HB_CLASSDEL(void)
  *
  * Returns class handle of <obj>
  */
-static HARBOUR ClassH( void )
+static HARBOUR __msgClsH( void )
 {
    hb_retni( ( stack.pBase + 1 )->item.asArray.value->wClass );
 }
 
 
 /*
- * <oNewObject> := ClassInstance( <hClass> )
+ * <oNewObject> := __clsInst( <hClass> )
  *
  * Create a new object from class definition <hClass>
  */
-HARBOUR HB_CLASSINSTANCE(void)
+HARBOUR HB___CLSINST(void)
 {
    WORD    wClass = hb_parni( 1 );
    WORD    wAt, wLimit;
@@ -441,11 +442,11 @@ HARBOUR HB_CLASSINSTANCE(void)
 }
 
 /*
- * ClassMod( <oObj>, <cMessage>, <pFunc> )
+ * __clsModMsg( <oObj>, <cMessage>, <pFunc> )
  *
  * Modify message (only for INLINE and METHOD)
  */
-HARBOUR HB_CLASSMOD(void)
+HARBOUR HB___CLSMODMSG(void)
 {
    PHB_ITEM pString  = hb_param( 2, IT_STRING );
    PHB_SYMB pMessage = hb_dynsymGet( pString->item.asString.value )->pSymbol;
@@ -478,13 +479,13 @@ HARBOUR HB_CLASSMOD(void)
       if( wAt != wLimit )
       {                                         /* Requested method found   */
          pFunc = pClass->pMethods[ wAt ].pFunction;
-         if( pFunc == EvalInline )              /* INLINE method changed    */
+         if( pFunc == __msgEvalInline )         /* INLINE method changed    */
             hb_arraySet( pClass->pInlines, pClass->pMethods[ wAt ].wData,
                          hb_param( 3, IT_BLOCK ) );
-         else if( ( pFunc == SetData ) || ( pFunc == GetData ) )
+         else if( ( pFunc == __msgSetData ) || ( pFunc == __msgGetData ) )
          {                                      /* Not allowed for DATA     */
-            /*hb_errPutDescription(pError, "CLASSMOD: Cannot modify a DATA item");*/
-            hb_errorRT_BASE(EG_ARG, 3004, NULL, "CLASSMOD");
+            /*hb_errPutDescription(pError, "__clsModMsg: Cannot modify a DATA item");*/
+            hb_errorRT_BASE(EG_ARG, 3004, NULL, "__CLSMODMSG");
          }
          else                                   /* Modify METHOD            */
             pClass->pMethods[ wAt ].pFunction = ( PHB_FUNC ) hb_parnl( 3 );
@@ -498,7 +499,7 @@ HARBOUR HB_CLASSMOD(void)
  *
  * Return class name of <obj>. Can also be used for all types.
  */
-static HARBOUR ClassName( void )
+static HARBOUR __msgClsName( void )
 {
    PHB_ITEM pItemRef;
 
@@ -507,7 +508,7 @@ static HARBOUR ClassName( void )
    else
       pItemRef = stack.pBase + 1;
 
-   hb_retc( hb_GetClassName( pItemRef ) );
+   hb_retc( hb_objGetClsName( pItemRef ) );
 }
 
 
@@ -516,7 +517,7 @@ static HARBOUR ClassName( void )
  *
  * Returns class name of <hClass>
  */
-HARBOUR HB_CLASSNAME(void)
+HARBOUR HB___OBJGETCLSNAME(void)
 {
    PHB_ITEM pObject = hb_param( 0, IT_OBJECT );
    WORD     wClass;
@@ -542,7 +543,7 @@ HARBOUR HB_CLASSNAME(void)
  *
  * Returns all the messages in <obj>
  */
-static HARBOUR ClassSel(void)
+static HARBOUR __msgClsSel(void)
 {
    WORD     wClass = IS_ARRAY( stack.pBase + 1 ) ?
                      ( stack.pBase + 1 )->item.asArray.value->wClass : 0;
@@ -588,27 +589,27 @@ static HARBOUR ClassSel(void)
 
 
 /*
- * DictRealloc( PCLASS )
+ * hb_clsDictRealloc( PCLASS )
  *
  * Realloc (widen) class
  */
-static void DictRealloc( PCLASS pClass )
+static void hb_clsDictRealloc( PCLASS pClass )
 {
    /* TODO: Implement it for very large classes */
    if( pClass )
    {
-      printf( "classes.c DictRealloc not implemented yet\n" );
+      printf( "classes.c hb_clsDictRealloc() not implemented yet\n" );
       exit( 1 );
    }
 }
 
 
 /*
- * EvalInline()
+ * __msgEvalInline()
  *
  * Internal function executed for inline methods
  */
-static HARBOUR EvalInline( void )
+static HARBOUR __msgEvalInline( void )
 {
    HB_ITEM block;
    WORD    wClass = ( stack.pBase + 1 )->item.asArray.value->wClass;
@@ -628,12 +629,12 @@ static HARBOUR EvalInline( void )
 
 
 /*
- * <szName> = hb_GetClassName( pObject )
+ * <szName> = hb_objGetClsName( pObject )
  *
  * Get the class name of an object
  *
  */
-char * hb_GetClassName( PHB_ITEM pObject )
+char * hb_objGetClsName( PHB_ITEM pObject )
 {
    char * szClassName;
 
@@ -688,11 +689,11 @@ char * hb_GetClassName( PHB_ITEM pObject )
 }
 
 /*
- * GetClassData()
+ * __msgGetClsData()
  *
  * Internal function to return a CLASSDATA
  */
-static HARBOUR GetClassData( void )
+static HARBOUR __msgGetClsData( void )
 {
    WORD wClass = ( stack.pBase + 1 )->item.asArray.value->wClass;
    WORD wIndex = pMethod->wData;
@@ -704,11 +705,11 @@ static HARBOUR GetClassData( void )
 
 
 /*
- * GetData()
+ * __msgGetData()
  *
  * Internal function to return a DATA
  */
-static HARBOUR GetData( void )
+static HARBOUR __msgGetData( void )
 {
    PHB_ITEM pObject = stack.pBase + 1;
    WORD     wIndex  = pMethod->wData;
@@ -721,11 +722,11 @@ static HARBOUR GetData( void )
 
 
 /*
- * <pFunc> = hb_GetMethod( <pObject>, <pMessage> )
+ * <pFunc> = hb_objGetMethod( <pObject>, <pMessage> )
  *
  * Internal function to the function pointer of a message of an object
  */
-PHB_FUNC hb_GetMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
+PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
 {
    WORD     wAt, wLimit, wMask;
    WORD     wClass;
@@ -767,60 +768,60 @@ PHB_FUNC hb_GetMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
       }
    }
    if( pMsg == msgClassName )
-      return ClassName;
+      return __msgClsName;
 
    else if( pMsg == msgClassH )
-      return ClassH;
+      return __msgClsH;
 
    else if( pMsg == msgClassSel )
-      return ClassSel;
+      return __msgClsSel;
 
    else if( pMsg == msgEval )
-      return EvalInline;
+      return __msgEvalInline;
 
    return 0;
 }
 
 
 /*
- * <uPtr> = hb_isMessage( <pObject>, <szString> )
+ * <uPtr> = hb_objHasMsg( <pObject>, <szString> )
  *
  * Check whether <szString> is an existing message for object.
  *
  * <uPtr> should be read as a boolean
  */
-ULONG hb_isMessage( PHB_ITEM pObject, char *szString )
+ULONG hb_objHasMsg( PHB_ITEM pObject, char *szString )
 {
    PHB_SYMB pMessage = hb_dynsymGet( szString )->pSymbol;
-   return( (ULONG) hb_GetMethod( pObject, pMessage ) );
+   return( (ULONG) hb_objGetMethod( pObject, pMessage ) );
 }                                                /* Get funcptr of message   */
 
 
 /*
- * <lRet> := IsMessage( <oObj>, <cSymbol> )
+ * <lRet> := __objHasMsg( <oObj>, <cSymbol> )
  *
  * Is <cSymbol> a valid message for the <oObj>
  */
-HARBOUR HB_ISMESSAGE(void)
+HARBOUR HB___OBJHASMSG(void)
 {
    PHB_ITEM   pObject  = hb_param( 1, IT_OBJECT );
    PHB_ITEM   pString  = hb_param( 2, IT_STRING );
 
    if( pObject && pString )
-      hb_retl( hb_isMessage( pObject, pString->item.asString.value ) != 0 );
+      hb_retl( hb_objHasMsg( pObject, pString->item.asString.value ) != 0 );
    else
    {
-      hb_errorRT_BASE(EG_ARG, 3000, NULL, "ISMESSAGE");
+      hb_errorRT_BASE(EG_ARG, 3000, NULL, "__OBJHASMSG");
    }
 }
 
 
 /*
- * <oNew> := oClone( <oOld> )
+ * <oNew> := __objClone( <oOld> )
  *
  * Clone an object. Note the similarity with aClone ;-)
  */
-HARBOUR HB_OCLONE( void )
+HARBOUR HB___OBJCLONE( void )
 {
    PHB_ITEM pSrcObject  = hb_param( 1, IT_OBJECT );
 
@@ -833,17 +834,17 @@ HARBOUR HB_OCLONE( void )
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 3001, NULL, "OCLONE");
+      hb_errorRT_BASE(EG_ARG, 3001, NULL, "__OBJCLONE");
    }
 }
 
 
 /*
- * <xRet> = oSend( <oObj>, <cSymbol>, <xArg,..>
+ * <xRet> = __objSendMsg( <oObj>, <cSymbol>, <xArg,..>
  *
  * Send a message to an object
  */
-HARBOUR HB_OSEND(void)
+HARBOUR HB___OBJSENDMSG(void)
 {
    PHB_ITEM pObject  = hb_param( 1, IT_OBJECT );
    PHB_ITEM pMessage = hb_param( 2, IT_STRING );
@@ -860,17 +861,17 @@ HARBOUR HB_OSEND(void)
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 3000, NULL, "OSEND");
+      hb_errorRT_BASE(EG_ARG, 3000, NULL, "__OBJSENDMSG");
    }
 }
 
 
 /*
- * ReleaseClass( <pClass> )
+ * hb_clsRelease( <pClass> )
  *
  * Release a class from memory
  */
-void ReleaseClass( PCLASS pClass )
+static void hb_clsRelease( PCLASS pClass )
 {
    WORD    wAt;
    WORD    wLimit;
@@ -891,16 +892,16 @@ void ReleaseClass( PCLASS pClass )
 
 
 /*
- * ReleaseClasses()
+ * hb_clsReleaseAll()
  *
  * Release all classes
  */
-void ReleaseClasses( void )
+void hb_clsReleaseAll( void )
 {
    WORD w;
 
    for( w = 0; w < wClasses; w++ )
-      ReleaseClass( pClasses + w );
+      hb_clsRelease( pClasses + w );
 
    if( pClasses )
       hb_xfree( pClasses );
@@ -908,11 +909,11 @@ void ReleaseClasses( void )
 
 
 /*
- * SelectSuper()
+ * __msgSuper()
  *
  * Internal function to cast to a super method
  */
-static HARBOUR SelectSuper( void )
+static HARBOUR __msgSuper( void )
 {
    PHB_ITEM   pObject   = stack.pBase + 1;
    PHB_ITEM   pSuper    = (PHB_ITEM) hb_xgrab( sizeof( HB_ITEM ) );
@@ -935,11 +936,11 @@ static HARBOUR SelectSuper( void )
 
 
 /*
- * SetClassData()
+ * __msgSetClsData()
  *
  * Internal function to set a CLASSDATA
  */
-static HARBOUR SetClassData( void )
+static HARBOUR __msgSetClsData( void )
 {
    WORD     wClass  = ( stack.pBase + 1 )->item.asArray.value->wClass;
    PHB_ITEM pReturn = stack.pBase + 2;
@@ -954,11 +955,11 @@ static HARBOUR SetClassData( void )
 
 
 /*
- * SetData()
+ * __msgSetData()
  *
  * Internal function to set a DATA
  */
-static HARBOUR SetData( void )
+static HARBOUR __msgSetData( void )
 {
    PHB_ITEM pObject = stack.pBase + 1;
    PHB_ITEM pReturn = stack.pBase + 2;
@@ -973,18 +974,18 @@ static HARBOUR SetData( void )
 
 
 /* No comment :-) */
-static HARBOUR Virtual( void )
+static HARBOUR __msgVirtual( void )
 {
    hb_ret();
 }
 
 
 /*
- * <hClass> := hb__InstSuper( <cName> )
+ * <hClass> := __clsInstSuper( <cName> )
  *
  * Instance super class and return class handle
  */
-HARBOUR HB___INSTSUPER( void )
+HARBOUR HB___CLSINSTSUPER( void )
 {
    PHB_ITEM pString = hb_param( 1, IT_STRING );
    PHB_DYNS pDynSym;
@@ -1003,14 +1004,14 @@ HARBOUR HB___INSTSUPER( void )
          if( !IS_OBJECT( &stack.Return ) )
          {
             /* hb_errPutDescription(pError, "INSTSUPER : Super class does not return an object"); */
-            hb_errorRT_BASE(EG_ARG, 3002, NULL, "__INSTSUPER");
+            hb_errorRT_BASE(EG_ARG, 3002, NULL, "__CLSINSTSUPER");
          }
 
          for( w = 0; !bFound && w < wClasses; w++ )
          {                                      /* Locate the entry         */
             if( !hb_stricmp( pString->item.asString.value, pClasses[ w ].szName ) )
             {
-               hb_retni( w + 1 );               /* Entry + 1 = ClassH       */
+               hb_retni( w + 1 );               /* Entry + 1 = __msgClsH    */
                bFound = TRUE;
             }
          }
@@ -1018,7 +1019,7 @@ HARBOUR HB___INSTSUPER( void )
       else
       {
          /* hb_errPutDescription(pError, "INSTSUPER : Cannot find super class"); */
-         hb_errorRT_BASE(EG_ARG, 3003, NULL, "__INSTSUPER");
+         hb_errorRT_BASE(EG_ARG, 3003, NULL, "__CLSINSTSUPER");
       }
    }
    if( !bFound )
@@ -1027,28 +1028,42 @@ HARBOUR HB___INSTSUPER( void )
 
 
 /*
- * <nSeq> = hb__wClsDatas( <hClass> )
+ * <nSeq> = __cls_CntClsData( <hClass> )
  *
  * Return number of class datas
  */
-HARBOUR HB___WCLSDATAS(void)
+HARBOUR HB___CLS_CNTCLSDATA(void)
 {
    WORD   wClass = hb_parnl( 1 );
-   PCLASS pClass;
 
    if( wClass )
    {
-      pClass = &pClasses[ wClass - 1 ];
+      PCLASS pClass = &pClasses[ wClass - 1 ];
       hb_retni( hb_arrayLen( pClass->pClassDatas ) );
    }
 }
 
 /*
- * <nSeq> = hb__wDataDec( <hClass> )
+ * <nSeq> = __cls_CntData( <hClass> )
+ *
+ * Return number of datas
+ */
+HARBOUR HB___CLS_CNTDATA(void)
+{
+   WORD wClass = hb_parnl( 1 );
+
+   if( wClass )
+   {
+      hb_retni( pClasses[ wClass - 1 ].wDatas );
+   }
+}
+
+/*
+ * <nSeq> = __cls_DecData( <hClass> )
  *
  * Return number of datas and decrease
  */
-HARBOUR HB___WDATADEC(void)
+HARBOUR HB___CLS_DECDATA(void)
 {
    WORD wClass = hb_parnl( 1 );
 
@@ -1058,29 +1073,15 @@ HARBOUR HB___WDATADEC(void)
 
 
 /*
- * <nSeq> = hb__wDataInc( <hClass> )
+ * <nSeq> = __cls_IncData( <hClass> )
  *
  * Return number of datas and decrease
  */
-HARBOUR HB___WDATAINC(void)
+HARBOUR HB___CLS_INCDATA(void)
 {
    WORD wClass = hb_parnl( 1 );
 
    if( wClass )
       hb_retni( ++pClasses[ wClass - 1 ].wDatas );
-}
-
-
-/*
- * <nSeq> = hb__wDatas( <hClass> )
- *
- * Return number of datas
- */
-HARBOUR HB___WDATAS(void)
-{
-   WORD wClass = hb_parnl( 1 );
-
-   if( wClass )
-      hb_retni( pClasses[ wClass - 1 ].wDatas );
 }
 

@@ -14,8 +14,8 @@
 //
 // Placed in the public domain
 //
-#define DATA_SYMBOL 1
-#define DATA_VAL    2
+
+#include "hboo.ch"
 
 function Main()
 
@@ -23,27 +23,27 @@ function Main()
    local nSeq
 
    QOut( "What methods are in the class :" )
-   Debug( aoMethod( oForm ) )
+   Debug( __objGetMethodList( oForm ) )
 
 /* Let's add an inline at run-time. Should already be possible */
 
    QOut( "Let's add inline 'CalcArea' at run-time to an already instanced class" )
 
-   oAddInline( oForm, "CalcArea", ;
+   __objAddInline( oForm, "CalcArea", ;
       {|self| ( ::nRight  - ::nLeft ) * ( ::nBottom - ::nTop ) } )
 
    QOut( "What methods are in the class :" )
-   Debug( aoMethod( oForm ) )
+   Debug( __objGetMethodList( oForm ) )
 
    QOut( "What is the Form area ?" )
    QOut( oForm:CalcArea() )
 
    QOut( "Let's add method 'Smile' at run-time to an already instanced class" )
 
-   oAddMethod( oForm, "Smile", @Smile() )
+   __objAddMethod( oForm, "Smile", @Smile() )
 
    QOut( "What methods are in the class :" )
-   Debug( aoMethod( oForm ) )
+   Debug( __objGetMethodList( oForm ) )
 
    QOut( "Smile please " )
    oForm:Smile()
@@ -55,7 +55,7 @@ function Main()
 
    QOut( "Let's add an additional data item" )
 
-   oAddData( oForm, "cHelp" )
+   __objAddData( oForm, "cHelp" )
    
    oForm:cHelp := "This is a real tricky test"
 
@@ -66,33 +66,33 @@ function Main()
 
    QOut( "Let's attach a bigger smile" )
 
-   oModMethod( oForm, "Smile", @BigSmile() )
+   __objModMethod( oForm, "Smile", @BigSmile() )
 
    QOut( "Let's smile" )
    oForm:Smile()
 
    QOut( "And CalcArea() will now give a result in square inches" )
 
-   oModInline( oForm, "CalcArea", ;
+   __objModInline( oForm, "CalcArea", ;
       {|self| ( ::nRight  - ::nLeft ) * ( ::nBottom - ::nTop ) / (2.54*2.54) } )
 
    QOut( "What is the Form area ?" )
    QOut( oForm:CalcArea() )
 
    QOut( "What methods are in the class :" )
-   Debug( aoMethod( oForm ) )
+   Debug( __objGetMethodList( oForm ) )
 
    QOut( "Delete CalcArea" )
-   oDelInline( oForm, "CalcArea" )
+   __objDelInline( oForm, "CalcArea" )
 
    QOut( "What methods are in the class :" )
-   Debug( aoMethod( oForm ) )
+   Debug( __objGetMethodList( oForm ) )
 
    QOut( "Delete Smile" )
-   oDelMethod( oForm, "Smile" )
+   __objDelMethod( oForm, "Smile" )
 
    QOut( "What methods are in the class :" )
-   Debug( aoMethod( oForm ) )
+   Debug( __objGetMethodList( oForm ) )
 
    Pause()
 
@@ -101,7 +101,7 @@ function Main()
 
    QOut( "Let's delete cHelp" )
 
-   oDelData( oForm, "cHelp" )
+   __objDelData( oForm, "cHelp" )
    
    QOut( "Data items after" )
    Debug( oForm )

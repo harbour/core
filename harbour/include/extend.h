@@ -290,9 +290,12 @@ extern char *   hb_strUpper( char * szText, long lLen );
 extern char *   hb_strLower( char * szText, long lLen );
 
 /* class management */
-extern PHB_FUNC hb_GetMethod( PHB_ITEM pObject, PHB_SYMB pSymMsg ); /* returns the method pointer of a object class */
-extern char *   hb_GetClassName( PHB_ITEM pObject ); /* retrieves an object class name */
-extern ULONG    hb_isMessage( PHB_ITEM, char * );
+extern void     hb_clsReleaseAll( void );    /* releases all defined classes */
+
+/* object management */
+extern char *   hb_objGetClsName( PHB_ITEM pObject ); /* retrieves an object class name */
+extern PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pSymMsg ); /* returns the method pointer of a object class */
+extern ULONG    hb_objHasMsg( PHB_ITEM pObject, char *szString );
 
 /* dynamic symbol table management */
 extern PHB_DYNS hb_dynsymGet( char * szName );    /* finds and creates a dynamic symbol if not found */

@@ -31,8 +31,7 @@
  * their web site at http://www.gnu.org/).
  */
 
-#define DATA_SYMBOL 1
-#define DATA_VAL    2
+#include "hboo.ch"
 
 /* $Doc$
  * $FuncName$     <xRet> Default( <xArg>, <xDefault> )
@@ -123,7 +122,7 @@ function ToChar( xTxt, cSeparator, lDebug )
       case cValTxt=="O"                         // Object
          if lDebug
             cOut  := xTxt:ClassName() + "(#" + ToChar( xTxt:ClassH() ) + "):{"
-            aData := aoGet( xTxt )
+            aData := __objGetValueList( xTxt )
             nLen  := Len( aData )
             for n := 1 to nLen                     // For each item : Recurse !
                cOut += aData[n][DATA_SYMBOL] + ":" + ;

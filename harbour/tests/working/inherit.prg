@@ -31,11 +31,11 @@ function Main()
    oTo   := TTextFile():New( "hello.out", "W" )
 
    QOut( "What's in oFrom" )
-   Debug( { oFrom, aoMethod( oFrom ) } )
+   Debug( { oFrom, __objGetMethodList( oFrom ) } )
 
    QOut()
    QOut( "What's in oFrom:TEmpty" )
-   Debug( { oFrom:TEmpty, aoMethod( oFrom:TEmpty ) } )
+   Debug( { oFrom:TEmpty, __objGetMethodList( oFrom:TEmpty ) } )
 
    QOut()
    QOut( "Let's call Run() from TEmpty : " )
@@ -91,7 +91,7 @@ function TOnTop()
 
    if oOnTop == NIL
       oOnTop := TClass():New( "TOnTop", "TTextFile" )
-      oOnTop:AddInline( "Say", {|self, cArg| QOut( oSend(self, cArg) ) } )
+      oOnTop:AddInline( "Say", {|self, cArg| QOut( __objSendMsg(self, cArg) ) } )
       oOnTop:Create()
    endif
 return oOnTop:Instance()

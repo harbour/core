@@ -395,10 +395,6 @@ void hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex )
 
           hb_itemClear( pBaseArray->pItems + ( ulLen - 1 ) );
         }
-      else
-        {
-          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_langDGetErrorDesc(EG_ARRACCESS));
-        }
     }
   else
     {
@@ -422,10 +418,6 @@ void hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex )
             hb_itemCopy( pBaseArray->pItems + ulLen, pBaseArray->pItems + ( ulLen - 1 ) );
 
           hb_itemClear( pBaseArray->pItems + ulLen );
-        }
-      else
-        {
-          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_langDGetErrorDesc(EG_ARRACCESS));
         }
     }
   else
@@ -649,33 +641,76 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
 /*
  * HARBOUR
  */
+
+/* TODO: Support multiple dimensions */
+
 HARBOUR HB_ARRAY( void )
 {
-  hb_arrayNew( &stack.Return, hb_parnl( 1 ) );
+  int iParCount = hb_pcount();
+
+  if ( iParCount > 0 )
+  {
+    int tmp;
+    BOOL lError = FALSE;
+
+    for ( tmp = 1; tmp <= iParCount; tmp++ )
+    {
+      if ( !ISNUM( tmp ) )
+      {
+        lError = TRUE;
+        break;
+      }
+
+      if ( hb_parnl( tmp ) < 0 )
+      {
+        hb_errorRT_BASE( EG_BOUND, 1131, NULL, hb_langDGetErrorDesc( EG_ARRDIMENSION ) );
+      }
+    }
+
+    if ( lError )
+      hb_ret();
+    else
+      hb_arrayNew( &stack.Return, hb_parnl( 1 ) );
+  }
+  else
+    hb_ret();
 }
 
 HARBOUR HB_AADD( void )
 {
-  PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
-  PHB_ITEM pValue = hb_param( 2, IT_ANY );
+  if ( hb_pcount() == 2 )
+  {
+    if ( ISARRAY( 1 ) )
+    {
+      PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
+      PHB_ITEM pValue = hb_param( 2, IT_ANY );
 
-  if ( pArray )
-    hb_arrayAdd( pArray, pValue );
+      hb_arrayAdd( pArray, pValue );
 
-  hb_itemCopy( &stack.Return, pValue );
+      hb_itemCopy( &stack.Return, pValue );
+    }
+    else
+      hb_errorRT_BASE( EG_ARG, 1123, NULL, "AADD" );
+  }
+  else
+    /* QUESTION: Clipper catches this at compile time! */
+    hb_errorRT_BASE( EG_ARGCOUNT, 3000, NULL, "AADD" );
 }
 
 HARBOUR HB_ASIZE( void )
 {
   PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
 
-  if ( pArray )
-    {
-      hb_arraySize( pArray, hb_parnl( 2 ) );
-      hb_itemCopy( &stack.Return, pArray );  /* ASize() returns the array itself */
-    }
+  if ( pArray && ISNUM( 2 ) )
+  {
+    LONG lSize = hb_parnl( 2 );
+
+    hb_arraySize( pArray, MAX( lSize, 0 ) );
+
+    hb_itemCopy( &stack.Return, pArray );  /* ASize() returns the array itself */
+  }
   else
-    hb_ret();    /* QUESTION: Should we raise an error here ? */
+    hb_ret();
 }
 
 HARBOUR HB_ATAIL( void )
@@ -685,7 +720,7 @@ HARBOUR HB_ATAIL( void )
   if ( pArray )
     hb_arrayLast( pArray, &stack.Return );
   else
-    hb_ret();  /* QUESTION: Should we raise an error here ? */
+    hb_ret();
 }
 
 HARBOUR HB_AINS( void )
@@ -693,10 +728,12 @@ HARBOUR HB_AINS( void )
   PHB_ITEM pArray  = hb_param( 1, IT_ARRAY );
 
   if ( pArray )
-    {
+  {
+    if ( ISNUM( 2 ) )
       hb_arrayIns( pArray, hb_parnl( 2 ) );
-      hb_itemCopy( &stack.Return, pArray );  /* AIns() returns the array itself */
-    }
+
+    hb_itemCopy( &stack.Return, pArray );  /* AIns() returns the array itself */
+  }
   else
     hb_ret();
 }
@@ -706,13 +743,17 @@ HARBOUR HB_ADEL( void )
   PHB_ITEM pArray  = hb_param( 1, IT_ARRAY );
 
   if ( pArray )
-    {
+  {
+    if ( ISNUM( 2 ) )
       hb_arrayDel( pArray, hb_parnl( 2 ) );
-      hb_itemCopy( &stack.Return, pArray ); /* ADel() returns the array itself */
-    }
+
+    hb_itemCopy( &stack.Return, pArray ); /* ADel() returns the array itself */
+  }
   else
     hb_ret();
 }
+
+/* TOFIX: nCount parameter == zero is incompatible. */
 
 HARBOUR HB_AFILL( void )
 {
@@ -727,6 +768,8 @@ HARBOUR HB_AFILL( void )
     hb_ret();
 }
 
+/* TOFIX: nCount parameter == zero is incompatible. */
+
 HARBOUR HB_ASCAN( void )
 {
   PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
@@ -736,6 +779,8 @@ HARBOUR HB_ASCAN( void )
   else
     hb_retnl( 0 );
 }
+
+/* TOFIX: nCount parameter == zero is incompatible. */
 
 HARBOUR HB_AEVAL( void )
 {
@@ -750,6 +795,8 @@ HARBOUR HB_AEVAL( void )
   else
     hb_ret();
 }
+
+/* TOFIX: nCount parameter == zero is incompatible. */
 
 HARBOUR HB_ACOPY( void )
 {

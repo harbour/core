@@ -33,46 +33,39 @@
  * their web site at http://www.gnu.org/).
  *
  * Partial Copyright Antonio Linares (alinares@fivetech.com)
- *    partial copyright regarding function : aoData
+ *    partial copyright regarding function : __objGetMsgList
  */
 
-#define MET_METHOD    0
-#define MET_DATA      1
-#define MET_CLASSDATA 2
-#define MET_INLINE    3
-#define MET_VIRTUAL   4
-
-#define DATA_SYMBOL 1
-#define DATA_VAL    2
+#include "hboo.ch"
 
 //
-// <lRet> := IsData( <oObject>, <cSymbol> )
+// <lRet> := __objHasData( <oObject>, <cSymbol> )
 //
 // Is the symbol present in the object as DATA ?
 //
-function IsData( oObject, cSymbol )
+function __objHasData( oObject, cSymbol )
 
-return IsMessage( oObject, cSymbol ) .and. IsMessage( oObject, "_" + cSymbol )
+return __objHasMsg( oObject, cSymbol ) .and. __objHasMsg( oObject, "_" + cSymbol )
 
 
 //
-// <lRet> := IsMethod( <oObject>, <cSymbol> )
+// <lRet> := __objHasMethod( <oObject>, <cSymbol> )
 //
 // Is the symbol present in the object as METHOD ?
 //
-function IsMethod( oObject, cSymbol )
+function __objHasMethod( oObject, cSymbol )
 
-return IsMessage( oObject, cSymbol ) .and. !IsMessage( oObject, "_" + cSymbol )
+return __objHasMsg( oObject, cSymbol ) .and. !__objHasMsg( oObject, "_" + cSymbol )
 
 //
-// <aData> aOData( <oObject>, [lDataMethod] )
+// <aData> __objGetMsgList( <oObject>, [lDataMethod] )
 //
 // Return an array containing the names of all the data items of oObject.
 //
 // lDataMethod = .T. (default) Return all DATAs
 //               .F.           Return all METHODs
 //
-function aOData( oObject, lDataMethod )
+function __objGetMsgList( oObject, lDataMethod )
 
    local aInfo  := aSort( oObject:ClassSel() )
    local aData  := {}
@@ -104,19 +97,19 @@ return aData
 
 
 //
-// aData aOMethod( oObject )
+// aData __objGetMethodList( oObject )
 //
 // Return an array containing the names of all the method of oObject.
 //
-function aOMethod( oObject )
+function __objGetMethodList( oObject )
 
-return aOData( oObject, .F. )
+return __objGetMsgList( oObject, .F. )
 
 
 //
-// <aData> aOGet( <oObject>, [<aExcept>] )
+// <aData> __objGetValueList( <oObject>, [<aExcept>] )
 //
-// Basically the same as aOData except that it returns a 2D array
+// Basically the same as __objGetMsgList except that it returns a 2D array
 // containing :
 //
 // [x][1]  Symbol name
@@ -124,9 +117,9 @@ return aOData( oObject, .F. )
 //
 // aExcept is an optional list of DATA you do not want to collect
 //
-function aOGet( oObject, aExcept )
+function __objGetValueList( oObject, aExcept )
 
-   local aDataSymbol := aoData( oObject )
+   local aDataSymbol := __objGetMsgList( oObject )
    local nLen        := Len( aDataSymbol )
    local aData       := {}
    local cSymbol
@@ -139,160 +132,160 @@ function aOGet( oObject, aExcept )
    for n := 1 to nLen
       cSymbol := aDataSymbol[ n ]
       if Empty( aScan( aExcept, cSymbol ) )
-         aAdd( aData, { cSymbol, oSend( oObject, cSymbol ) } )
+         aAdd( aData, { cSymbol, __objSendMsg( oObject, cSymbol ) } )
       endif
    next n
 return aData
 
 
 //
-// aOSet( <oObject>, <aData> )
+// __objSetValueList( <oObject>, <aData> )
 //
-// The reverse of aOGet. It puts an 2D array of DATA into an object.
+// The reverse of __objGetValueList. 
+// It puts an 2D array of DATA into an object.
 //
-function aOSet( oObject, aData )
+function __objSetValueList( oObject, aData )
 
    aEval( aData, ;
-        {|aItem| oSend( oObject, "_"+aItem[DATA_SYMBOL], aItem[DATA_VAL] ) } )
+        {|aItem| __objSendMsg( oObject, "_"+aItem[DATA_SYMBOL], aItem[DATA_VAL] ) } )
 
 return oObject
 
 
 //
-// <oObj> := oAddMethod( <oObj>, <cSymbol>, <nFuncPtr> )
+// <oObj> := __objAddMethod( <oObj>, <cSymbol>, <nFuncPtr> )
 //
 // Add a method to an already existing class
 //
-function oAddMethod( oObj, cSymbol, nFuncPtr )
+function __objAddMethod( oObj, cSymbol, nFuncPtr )
 
-   if IsMessage( oObj, cSymbol )
-      QOut( "OADDMETHOD: ", cSymbol, " already exists in class." )
+   if __objHasMsg( oObj, cSymbol )
+      QOut( "__objAddMethod: ", cSymbol, " already exists in class." )
    elseif ValType( nFuncPtr ) != "N"
-      QOut( "OADDMETHOD: Argument type error <nFuncPtr>" )
+      QOut( "__objAddMethod: Argument type error <nFuncPtr>" )
    elseif ValType( oObj ) != "O"
-      QOut( "OADDMETHOD: Argument type error <oObj>" )
+      QOut( "__objAddMethod: Argument type error <oObj>" )
    else
-      ClassAdd( oObj:ClassH, cSymbol, nFuncPtr, MET_METHOD )
+      __clsAddMsg( oObj:ClassH, cSymbol, nFuncPtr, MET_METHOD )
    endif
 return oObj
 
 
 //
-// <oObj> := oAddInline( <oObj>, <cSymbol>, <bInline> )
+// <oObj> := __objAddInline( <oObj>, <cSymbol>, <bInline> )
 //
 // Add an INLINE to an already existing class
 //
-function oAddInline( oObj, cSymbol, bInline )
+function __objAddInline( oObj, cSymbol, bInline )
 
-   if IsMessage( oObj, cSymbol )
-      QOut( "OADDINLINE: ", cSymbol, " already exists in class." )
+   if __objHasMsg( oObj, cSymbol )
+      QOut( "__objAddInline: ", cSymbol, " already exists in class." )
    elseif ValType( bInline ) != "B"
-      QOut( "OADDINLINE: Argument type error <bInline>" )
+      QOut( "__objAddInline: Argument type error <bInline>" )
    elseif ValType( oObj ) != "O"
-      QOut( "OADDINLINE: Argument type error <oObj>" )
+      QOut( "__objAddInline: Argument type error <oObj>" )
    else
-      ClassAdd( oObj:ClassH, cSymbol, bInline, MET_INLINE )
+      __clsAddMsg( oObj:ClassH, cSymbol, bInline, MET_INLINE )
    endif
 return oObj
 
 
 //
-// <oObj> := oAddData( <oObj>, <cSymbol> )
+// <oObj> := __objAddData( <oObj>, <cSymbol> )
 //
 // Add a DATA to an already existing class
 //
-function oAddData( oObj, cSymbol )
+function __objAddData( oObj, cSymbol )
 
    local nSeq
 
-   if IsMessage( oObj, cSymbol ) .or. IsMessage( oObj, "_" + cSymbol )
-      QOut( "OADDDATA: ", cSymbol, " already exists in class." )
+   if __objHasMsg( oObj, cSymbol ) .or. __objHasMsg( oObj, "_" + cSymbol )
+      QOut( "__objAddData: ", cSymbol, " already exists in class." )
    elseif ValType( oObj ) != "O"
-      QOut( "OADDDATA: Argument type error <oObj>" )
+      QOut( "__objAddData: Argument type error <oObj>" )
    else
-      nSeq := __wDataInc( oObj:ClassH )         // Allocate new Seq#
-      ClassAdd( oObj:ClassH, cSymbol,       nSeq, MET_DATA )
-      ClassAdd( oObj:ClassH, "_" + cSymbol, nSeq, MET_DATA )
+      nSeq := __cls_IncData( oObj:ClassH )         // Allocate new Seq#
+      __clsAddMsg( oObj:ClassH, cSymbol,       nSeq, MET_DATA )
+      __clsAddMsg( oObj:ClassH, "_" + cSymbol, nSeq, MET_DATA )
    endif
 return oObj
 
 
 //
-// <oObj> := oModMethod( <oObj>, <cSymbol>, <nFuncPtr> )
+// <oObj> := __objModMethod( <oObj>, <cSymbol>, <nFuncPtr> )
 //
 // Modify a method to an already existing class
 //
-function oModMethod( oObj, cSymbol, nFuncPtr )
+function __objModMethod( oObj, cSymbol, nFuncPtr )
 
-   if !IsMethod( oObj, cSymbol )
-      QOut( "OMODMETHOD: ", cSymbol, " does not exist in class." )
+   if !__objHasMethod( oObj, cSymbol )
+      QOut( "__objModMethod: ", cSymbol, " does not exist in class." )
    elseif ValType( nFuncPtr ) != "N"
-      QOut( "OMODMETHOD: Argument type error <nFuncPtr>" )
+      QOut( "__objModMethod: Argument type error <nFuncPtr>" )
    elseif ValType( oObj ) != "O"
-      QOut( "OMODMETHOD: Argument type error <oObj>" )
+      QOut( "__objModMethod: Argument type error <oObj>" )
    else
-      ClassMod( oObj:ClassH, cSymbol, nFuncPtr )
+      __clsModMsg( oObj:ClassH, cSymbol, nFuncPtr )
    endif
 return oObj
 
 
 //
-// <oObj> := oModInline( <oObj>, <cSymbol>, <bInline> )
+// <oObj> := __objModInline( <oObj>, <cSymbol>, <bInline> )
 //
 // Modify an INLINE to an already existing class
 //
-function oModInline( oObj, cSymbol, bInline )
+function __objModInline( oObj, cSymbol, bInline )
 
-   if !IsMethod( oObj, cSymbol )
-      QOut( "OMODINLINE: ", cSymbol, " does not exist in class." )
+   if !__objHasMethod( oObj, cSymbol )
+      QOut( "__objModInline: ", cSymbol, " does not exist in class." )
    elseif ValType( bInline ) != "B"
-      QOut( "OMODINLINE: Argument type error <bInline>" )
+      QOut( "__objModInline: Argument type error <bInline>" )
    elseif ValType( oObj ) != "O"
-      QOut( "OMODINLINE: Argument type error <oObj>" )
+      QOut( "__objModInline: Argument type error <oObj>" )
    else
-      ClassMod( oObj:ClassH, cSymbol, bInline )
+      __clsModMsg( oObj:ClassH, cSymbol, bInline )
    endif
 return oObj
 
 
 //
-// <oObj> := oDelMethod( <oObj>, <cSymbol> )
+// <oObj> := __objDelMethod( <oObj>, <cSymbol> )
 //
 // Delete a method from an already existing class
 //
-function oDelMethod( oObj, cSymbol )
+function __objDelMethod( oObj, cSymbol )
 
-   if !IsMethod( oObj, cSymbol )
-      QOut( "ODELMETHOD: ", cSymbol, " does not exist in class." )
+   if !__objHasMethod( oObj, cSymbol )
+      QOut( "__objDelMethod: ", cSymbol, " does not exist in class." )
    elseif ValType( oObj ) != "O"
-      QOut( "ODELMETHOD: Argument type error <oObj>" )
+      QOut( "__objDelMethod: Argument type error <oObj>" )
    else
-      ClassDel( oObj:ClassH, cSymbol )
+      __clsDelMsg( oObj:ClassH, cSymbol )
    endif
 return oObj
 
-function oDelInline( oObj, cSymbol )
-return oDelMethod( oObj, cSymbol )              // Same story
+function __objDelInline( oObj, cSymbol )
+return __objDelMethod( oObj, cSymbol )              // Same story
 
 
 //
-// <oObj> := oDelData( <oObj>, <cSymbol> )
+// <oObj> := __objDelData( <oObj>, <cSymbol> )
 //
 // Delete a DATA from an already existing class
 //
-function oDelData( oObj, cSymbol )
+function __objDelData( oObj, cSymbol )
 
    local nSeq
 
-   if !IsData( oObj, cSymbol )
-      QOut( "ODELDATA: ", cSymbol, " does not exist in class." )
+   if !__objHasData( oObj, cSymbol )
+      QOut( "__objDelData: ", cSymbol, " does not exist in class." )
    elseif ValType( oObj ) != "O"
-      QOut( "ODELDATA: Argument type error <oObj>" )
+      QOut( "__objDelData: Argument type error <oObj>" )
    else
-      ClassDel( oObj:ClassH, cSymbol,      )
-      ClassDel( oObj:ClassH, "_" + cSymbol )
-      nSeq := __wDataDec( oObj:ClassH )         // Decrease wData
+      __clsDelMsg( oObj:ClassH, cSymbol,      )
+      __clsDelMsg( oObj:ClassH, "_" + cSymbol )
+      nSeq := __cls_DecData( oObj:ClassH )         // Decrease wData
    endif
 return oObj
-
 

@@ -99,11 +99,11 @@ extern void     hb_errRelease           ( PHB_ITEM pError );
 
 extern void     hb_errorInternal        ( ULONG ulIntCode, char * szText, char * szModul, WORD wLine, char * szPar1, char * szPar2, char * szPar3 );
 
-extern WORD     hb_errorRT_BASE         ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
+extern void     hb_errorRT_BASE         ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
 extern WORD     hb_errorRT_BASE_Ext1    ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags );
-extern WORD     hb_errorRT_TERMINAL     ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
-extern WORD     hb_errorRT_DBCMD        ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
-extern WORD     hb_errorRT_TOOLS        ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
+extern void     hb_errorRT_TERMINAL     ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
+extern void     hb_errorRT_DBCMD        ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
+extern void     hb_errorRT_TOOLS        ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
 
 extern char *   hb_errorNatDescription  ( ULONG ulGenCode ); /* Reads error description in national language */
 extern char *   hb_errorNatInternal     ( ULONG ulIntCode ); /* Reads internal error description in national language */

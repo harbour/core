@@ -36,10 +36,10 @@ function Main( cFrom, cTo )
    cTo   := Default( cTo,   "strip.out" )
 
    oFrom := TTextFile()
-//   Debug( aoMethod( oFrom ) )
+//   Debug( __objGetMethodList( oFrom ) )
    oFrom:New( cFrom, "R" )
    oTo   := TTextFile()
-//   Debug( aoMethod( oTo ) )
+//   Debug( __objGetMethodList( oTo ) )
    oTo:New( cTo  , "W" )
 
    do while !oFrom:EoF()

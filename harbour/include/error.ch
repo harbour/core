@@ -56,7 +56,8 @@
 #define EG_ARGCOUNT     45	/* Harbour special */
 #define EG_ARRACCESS    46      /* Harbour special */
 #define EG_ARRASSIGN    47      /* Harbour special */
-#define EG_NOTARRAY     48      /* Harbour special */
-#define EG_CONDITION    49      /* Harbour special */
+#define EG_ARRDIMENSION 48      /* Harbour special */
+#define EG_NOTARRAY     49      /* Harbour special */
+#define EG_CONDITION    50      /* Harbour special */
 
 #endif /* _ERROR_CH */

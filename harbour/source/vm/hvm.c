@@ -46,7 +46,6 @@
 
 extern void hb_consoleInitialize( void );
 extern void hb_consoleRelease( void );
-extern void ReleaseClasses( void );    /* releases all defined classes */
 extern void InitSymbolTable( void );   /* initialization of runtime support symbols */
 
 typedef struct _SYMBOLS
@@ -181,7 +180,7 @@ int main( int argc, char * argv[] )
    hb_itemClear( &stack.Return );
    hb_arrayRelease( &aStatics );
    hb_itemClear( &errorBlock );
-   ReleaseClasses();
+   hb_clsReleaseAll();
    hb_vmReleaseLocalSymbols();  /* releases the local modules linked list */
    hb_dynsymRelease();          /* releases the dynamic symbol table */
    hb_consoleRelease();         /* releases Console */
@@ -849,12 +848,12 @@ void hb_vmDo( WORD wParams )
       if( pSym == &( symEval ) && IS_BLOCK( pSelf ) )
          pFunc = pSym->pFunPtr;                 /* __EVAL method = function */
       else
-         pFunc = hb_GetMethod( pSelf, pSym );
+         pFunc = hb_objGetMethod( pSelf, pSym );
 
       if( ! pFunc )
       {
          printf( "error: message %s not implemented for class %s in line %i\n",
-         pSym->szName, hb_GetClassName( pSelf ), wLineNo );
+         pSym->szName, hb_objGetClsName( pSelf ), wLineNo );
          exit( 1 );
       }
       pFunc();
@@ -988,7 +987,7 @@ void hb_vmEqual( BOOL bExact )
    else if( IS_NUMERIC( pItem1 ) && IS_NUMERIC( pItem2 ) )
       hb_vmPushLogical( hb_vmPopDouble(&wDec) == hb_vmPopDouble(&wDec) );
 
-   else if( IS_OBJECT( pItem1 ) && hb_isMessage( pItem1, "==" ) )
+   else if( IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "==" ) )
       hb_vmOperatorCall( pItem1, pItem2, "==" );
 
    else if( pItem1->type != pItem2->type )
@@ -1116,7 +1115,7 @@ void hb_vmGreater( void )
    }
 
    else if( IS_OBJECT( stack.pPos - 2 ) &&
-            hb_isMessage( stack.pPos - 2, ">" ) )
+            hb_objHasMsg( stack.pPos - 2, ">" ) )
       hb_vmOperatorCall( stack.pPos - 2, stack.pPos - 1, ">" );
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
@@ -1161,7 +1160,7 @@ void hb_vmGreaterEqual( void )
    }
 
    else if( IS_OBJECT( stack.pPos - 2 ) &&
-            hb_isMessage( stack.pPos - 2, ">=" ) )
+            hb_objHasMsg( stack.pPos - 2, ">=" ) )
       hb_vmOperatorCall( stack.pPos - 2, stack.pPos - 1, ">=" );
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
@@ -1248,7 +1247,7 @@ void hb_vmLess( void )
    }
 
    else if( IS_OBJECT( stack.pPos - 2 ) &&
-            hb_isMessage( stack.pPos - 2, "<" ) )
+            hb_objHasMsg( stack.pPos - 2, "<" ) )
       hb_vmOperatorCall( stack.pPos - 2, stack.pPos - 1, "<" );
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
@@ -1293,7 +1292,7 @@ void hb_vmLessEqual( void )
    }
 
    else if( IS_OBJECT( stack.pPos - 2 ) &&
-            hb_isMessage( stack.pPos - 2, "<=" ) )
+            hb_objHasMsg( stack.pPos - 2, "<=" ) )
       hb_vmOperatorCall( stack.pPos - 2, stack.pPos - 1, "<=" );
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
@@ -1374,7 +1373,7 @@ void hb_vmNotEqual( void )
    else if( IS_LOGICAL( pItem1 ) && IS_LOGICAL( pItem2 ) )
       hb_vmPushLogical( hb_vmPopLogical() != hb_vmPopLogical() );
 
-   else if( IS_OBJECT( pItem1 ) && hb_isMessage( pItem1, "!=" ) )
+   else if( IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "!=" ) )
       hb_vmOperatorCall( pItem1, pItem2, "!=" );
 
    else if( pItem1->type != pItem2->type )
@@ -1438,7 +1437,7 @@ void hb_vmMinus( void )
       hb_stackPop();
       return;
    }
-   else if( IS_OBJECT( stack.pPos - 2 ) && hb_isMessage( stack.pPos - 2, "-" ) )
+   else if( IS_OBJECT( stack.pPos - 2 ) && hb_objHasMsg( stack.pPos - 2, "-" ) )
       hb_vmOperatorCall( stack.pPos - 2, stack.pPos - 1, "-" );
    else
       hb_errorRT_BASE(EG_ARG, 1082, NULL, "-");
@@ -1546,7 +1545,7 @@ void hb_vmPlus( void )
       hb_vmPushDate( lDate1 + dNumber2 );
    }
 
-   else if( IS_OBJECT( pItem1 ) && hb_isMessage( pItem2, "+" ) )
+   else if( IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem2, "+" ) )
       hb_vmOperatorCall( pItem1, pItem2, "+" );
 
    else

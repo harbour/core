@@ -87,13 +87,7 @@ HB_INIT_SYMBOLS_END( Transfrm__InitSymbols )
 #define DF_YMD 2
 #define DF_EOT 3                                /* End of table for Century */
 
-/* Multiplication factors for different formats. */
-
-long lFactDay  [] = { 10000,   100,     1, 1000000,   10000,       1 };
-long lFactMonth[] = {   100, 10000,   100,   10000, 1000000,     100 };
-long lFactYear [] = {     1,     1, 10000,       1,       1,   10000 };
-
-char *szBritish[]  = { "DD/MM/YY", "DD/MM/YYYY" }; /* For @E                */
+static char *szBritish[] = { "DD/MM/YY", "DD/MM/YYYY" }; /* For @E                */
 
 /*
    PictFunc -> Analyze function flags and return binary flags bits
@@ -101,9 +95,9 @@ char *szBritish[]  = { "DD/MM/YY", "DD/MM/YYYY" }; /* For @E                */
    szPict  : Pointer to the picture
    lPicLen : Pointer to the length.  Changed during execution.
 */
-int PictFunc( char **szPict, long *lPicLen )
+static int PictFunc( char **szPict, long *lPicLen )
 {
-   int  bDone     = FALSE;
+   BOOL bDone     = FALSE;
    int  iPicFlags = 0;
 
    char *szPic    = *szPict;
@@ -165,8 +159,8 @@ int PictFunc( char **szPict, long *lPicLen )
     iOrigWidth  : Original width
     iOrigDec    : Original decimals
 */
-char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
-                  long *lRetSize, int iOrigWidth, int iOrigDec )
+static char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
+                         long *lRetSize, int iOrigWidth, int iOrigDec )
 {
    int      iWidth;                             /* Width of string          */
    int      iDecimals;                          /* Number of decimals       */
@@ -179,8 +173,8 @@ char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
 
    PHB_ITEM pItem;
 
-   BYTE     bFound = FALSE;
-   BYTE     bEmpty;                             /* Suppress empty string    */
+   BOOL     bFound = FALSE;
+   BOOL     bEmpty;                             /* Suppress empty string    */
 
    double   dPush;
 
@@ -352,7 +346,7 @@ char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
    else
    {
       printf( "\nNUMPICTURE: STR does not return string" );
-      _exit(1);
+      exit(1);
    }
    return(szRet);
 }
@@ -365,7 +359,7 @@ char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
     szResult    : Buffer of at least size 11 to hold formatted date
     lRetSize    : The size of the returned string is passed here !
 */
-char *DatePicture( char * szDate, int iPicFlags, char * szResult, long *lRetSize )
+static char *DatePicture( char * szDate, int iPicFlags, char * szResult, long *lRetSize )
 {
    char * szDateFormat;
 
@@ -400,7 +394,7 @@ HARBOUR HB_TRANSFORM( void )
    int     iPicFlags  = 0;                      /* Function flags           */
    int     n;
 
-   BYTE    bDone      = FALSE;
+   BOOL    bDone      = FALSE;
 
    if( lPic )
    {

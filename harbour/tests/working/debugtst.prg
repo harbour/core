@@ -31,15 +31,15 @@ function Main()
    QOut( "What is in oForm ? " )
    Debug( oForm:Transfer() )
 
-   QOut( "Does transfer exists ? ", IsMessage( oForm, "Transfer" ) )
-   QOut( "Is   transfer DATA   ? ", IsData   ( oForm, "Transfer" ) )
-   QOut( "Is   transfer METHOD ? ", IsMethod ( oForm, "Transfer" ) )
-   QOut( "Does nLeft    exists ? ", IsMessage( oForm, "nLeft"    ) )
-   QOut( "Is   nLeft    DATA   ? ", IsData   ( oForm, "nLeft"    ) )
-   QOut( "Is   nLeft    METHOD ? ", IsMethod ( oForm, "nLeft"    ) )
-   QOut( "Does unknown  exists ? ", IsMessage( oForm, "Unknown"  ) )
-   QOut( "Is   unknown  DATA   ? ", IsData   ( oForm, "Unknown"  ) )
-   QOut( "Is   unknown  METHOD ? ", IsMethod ( oForm, "Unknown"  ) )
+   QOut( "Does transfer exists ? ", __objHasMsg   ( oForm, "Transfer" ) )
+   QOut( "Is   transfer DATA   ? ", __objHasData  ( oForm, "Transfer" ) )
+   QOut( "Is   transfer METHOD ? ", __objHasMethod( oForm, "Transfer" ) )
+   QOut( "Does nLeft    exists ? ", __objHasMsg   ( oForm, "nLeft"    ) )
+   QOut( "Is   nLeft    DATA   ? ", __objHasData  ( oForm, "nLeft"    ) )
+   QOut( "Is   nLeft    METHOD ? ", __objHasMethod( oForm, "nLeft"    ) )
+   QOut( "Does unknown  exists ? ", __objHasMsg   ( oForm, "Unknown"  ) )
+   QOut( "Is   unknown  DATA   ? ", __objHasData  ( oForm, "Unknown"  ) )
+   QOut( "Is   unknown  METHOD ? ", __objHasMethod( oForm, "Unknown"  ) )
 
    QOut( "Set nLeft to 50 and nRight to 100" )
    oForm:Transfer( {"nLeft", 50}, {"nRight", 100} )
@@ -186,7 +186,7 @@ return nil
 //                                      one class to another
 //
 // If <xArg> is not present, the current object will be returned as an array
-// for description see aoSet / aoGet.
+// for description see __objSetValueList / __objGetValueList.
 //
 // The method aExcept() is called to determine the DATA which should not
 // be returned. Eg. hWnd ( do not copy this DATA from external source )
@@ -195,11 +195,11 @@ return nil
 //
 // oTarget:Transfer( oSource )
 //
-// If we do not want 'cName' duplicated we have to use aoGet :
+// If we do not want 'cName' duplicated we have to use __objGetValueList :
 //
 // aNewExcept := aClone( oSource:aExcept() )
 // aAdd( aNewExcept, "cName" )  /* Add cName to exception list               */
-// oTarget:Transfer( aoGet( oSource, aNewExcept ) )
+// oTarget:Transfer( __objGetValueList( oSource, aNewExcept ) )
 //                              /* Get DATA from oSource with new exceptions */
 //                              /* Transfer DATA to oTarget                  */
 //
@@ -233,7 +233,7 @@ static function Transfer( x1,x2,x3,x4,x5,x6,x7,x8,x9,x10 /* etc */ )
    local n
 
    if nLen == 0
-      xRet := aOGet( self, ::aExcept() )
+      xRet := __objGetValueList( self, ::aExcept() )
    else
       for n := 1 to nLen
 
@@ -241,9 +241,9 @@ static function Transfer( x1,x2,x3,x4,x5,x6,x7,x8,x9,x10 /* etc */ )
          if ValType( xData ) == "A"
 
             if ValType( xData[1] ) == "A"       // 2D array passed
-               xRet := aOSet( self, xData )
+               xRet := __objSetValueList( self, xData )
             else                                // 1D array passed
-               xRet := aOSet( self, {xData} )
+               xRet := __objSetValueList( self, {xData} )
             endif
 
          elseif ValType( xData ) == "O"         // Object passed

@@ -1,3 +1,112 @@
+19990816-02:45 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * include/extend.h
+    source/rtl/classes.c
+    source/rtl/objfunc.prg
+    source/rtl/tclass.prg
+    source/vm/hvm.c
+    source/tools/stringp.prg
+    tests/working/dynobj.prg
+    tests/working/debugtst.prg
+    tests/working/inherit.prg
+    tests/working/strip.prg
+    tests/working/objects.prg
+
+    % Some variables and functions made static in classes.c
+    ! Completed init symbol list.
+
+    * Names changed to standard ones (they should also work in 10 chars mode):
+
+      ClassCreate     -> __clsNew
+      ClassInstance   -> __clsInst
+      __InstSuper     -> __clsInstSuper
+      ClassAdd        -> __clsAddMsg
+      ClassDel        -> __clsDelMsg
+      ClassMod        -> __clsModMsg
+      WClsDatas       -> __cls_CntClsData
+      __wDatas        -> __cls_CntData
+      __wDataDec      -> __cls_DecData
+      __wDataInc      -> __cls_IncData
+
+      aOMethod        -> __objGetMethodList
+      aOData          -> __objGetMsgList
+      aOGet           -> __objGetValueList
+      aOSet           -> __objSetValueList
+      oClone          -> __objClone
+      ClassName       -> __objGetClsName
+      oSend           -> __objSendMsg
+      isMessage       -> __objHasMsg
+      IsData          -> __objHasData
+      IsMethod        -> __objHasMethod
+      oAddMethod      -> __objAddMethod
+      oAddInline      -> __objAddInLine
+      oAddData        -> __objAddData
+      oModMethod      -> __objModMethod
+      oModInline      -> __objModInLine
+      oDelMethod      -> __objDelMethod
+      oDelInline      -> __objDelInLine
+      oDelData        -> __objDelData
+
+      ClassH          -> __msgClsH
+      ClassName       -> __msgClsName
+      ClassSel        -> __msgClsSel
+      SelectSuper     -> __msgSuper
+      EvalInline      -> __msgEvalInline
+      GetClassData    -> __msgGetClsData
+      SetClassData    -> __msgSetClsData
+      GetData         -> __msgGetData
+      SetData         -> __msgSetData
+      Virtual         -> __msgVirtual
+
+      DictRealloc     -> hb_clsDictRealloc
+      ReleaseClass    -> hb_clsRelease
+      ReleaseClasses  -> hb_clsReleaseAll
+      hb_GetClassName -> hb_objGetClsName
+      hb_GetMethod    -> hb_objGetMethod
+      hb_isMessage    -> hb_objHasMsg
+
+  * include/hboo.ch
+    source/rtl/classes.c
+    source/rtl/objfunc.prg
+    source/rtl/tclass.prg
+    source/tools/stringp.prg
+    tests/working/dynobj.prg
+    tests/working/objects.prg
+    tests/working/overload.prg
+    tests/working/objects.prg
+
+    + MET_ and DATA_ declaration moved to one place (hboo.ch).
+
+  * source/rtl/errorapi.c
+    include/errorapi.h
+
+    % hb_error*() functions are returning void instead of WORD, except for
+      hb_errorRT_BASE_Ext1().
+
+  * include/error.ch
+    include/langapi.h
+    source/rtl/langapi.c
+
+    + New error code EG_ARRDIMENSION added
+
+  * source/rtl/arrays.c
+
+    ! ARRAY() now properly checks the passed parameters (Clipper compatible).
+    + ARRAY() TODO: added (to support multiple dimensions)
+    ! AADD() Fixed parameter handling, throws errors like Clipper.
+    ! ASIZE() Fixed parameter handling.
+    ! hb_arrayIns() removed one error to be Clipper compatible.
+    ! hb_arrayDel() removed one error to be Clipper compatible.
+    + AFILL(), ASCAN(), AEVAL(), ACOPY() TOFIX: added.
+
+  * source/rtl/transform.c
+
+    ! _exit -> exit (_exit had no prototype, and that was the only place
+      where it was used)
+    ! Some BYTE and int changed to BOOL at obviouse place.
+    ! Some functions made static.
+    ! Some unused variables removed (lFact*)
+
 19990815-18:45 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/hvm.c
@@ -35,7 +144,7 @@
     * added functionality - some methods implemented, added support of
       footing, head separator, footer separator, freeze.
       Now it seems almost complete.
-    
+
 19990815-17:40 GMT+1 Victor Szel <info@szelvesz.hu>
   * bldodbc.bat
     hbodbc.b32

@@ -41,7 +41,7 @@
 #define HB_LANG_TEXT_NOCHAR     2
 #define HB_LANG_TEXT_MAX_	3
 
-#define HB_LANG_ED_MAX_		50
+#define HB_LANG_ED_MAX_		51
 #define HB_LANG_EI_MAX_		6
 
 /* ; */
