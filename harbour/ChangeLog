@@ -1,3 +1,10 @@
+2001-11-20 16:36 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * source/rdd/dbfcdx/dbfcdx1.c
+     + added support for AUTO OPEN
+     ! fixed ordListAdd() if the index has no path, try first the
+       path of the dbf.
+     ! fixed ordBagName(), now returns full pathname
+
 2001-11-20 20:11 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * doc/howtomak.txt
