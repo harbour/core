@@ -55,6 +55,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    PCOMCLASS    pClass;
    FILE * yyc; /* file handle for C output */
    PINLINE pInline = hb_comp_inlines.pFirst;
+   BOOL bSyncMacro = TRUE;
 
    if( ! pFileName->szExtension )
       pFileName->szExtension = ".c";
@@ -204,8 +205,8 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                     hb_comp_szPrefix, pFileName->szName );
 
 
-      if( hb_comp_Supported )
-         fprintf( yyc, "\nextern ULONG hb_macroSetMacro( BOOL bSet, ULONG flag );\n" );
+      fprintf( yyc, "extern ULONG hb_macroSetMacro( BOOL bSet, ULONG flag );\n"
+                    "static BOOL hb_bSetMacroLevel = TRUE;\n\n" );
 
       /* Generate functions data
        */
@@ -231,21 +232,18 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
          else
             hb_compGenCReadable( pFunc, yyc );
 
-         fprintf( yyc, "   };\n\n" );
+        fprintf( yyc, "   };\n\n" );
 
-         if( hb_comp_Supported )
+         if( bSyncMacro )
          {
-            if( hb_comp_Supported & HB_COMPFLAG_HARBOUR )
-            {
-               fprintf( yyc, "   hb_macroSetMacro( TRUE, %i );\n\n", HB_SM_HARBOUR );
-            }
+            fprintf( yyc, "   if( hb_bSetMacroLevel )\n"
+                          "   {\n" );
+            fprintf( yyc, "      hb_macroSetMacro( %i, %i );\n", ( hb_comp_Supported & HB_COMPFLAG_HARBOUR ), HB_SM_HARBOUR );
+            fprintf( yyc, "      hb_macroSetMacro( %i, %i );\n", ( hb_comp_Supported & HB_COMPFLAG_XBASE ), HB_SM_XBASE );
+            fprintf( yyc, "      hb_bSetMacroLevel = FALSE;\n" );
+            fprintf( yyc, "   };\n\n" );
 
-            if( hb_comp_Supported & HB_COMPFLAG_XBASE )
-            {
-               fprintf( yyc, "   hb_macroSetMacro( TRUE, %i );\n\n", HB_SM_XBASE );
-            }
-
-            hb_comp_Supported = 0;
+            bSyncMacro = FALSE;
          }
 
          fprintf( yyc, "   hb_vmExecute( pcode, symbols );\n}\n\n" );
