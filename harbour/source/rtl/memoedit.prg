@@ -70,6 +70,8 @@ CLASS TMemoEditor FROM HBEditor
    METHOD HandleUserKey(nKey, nUserKey)   // Handles keys returned to MemoEdit() by user function
    METHOD xDo(nStatus)                    // Calls xUserFunction saving and restoring cursor position and shape
 
+   METHOD MoveCursor( nKey )              // Redefined to properly managed CTRL-W
+
 ENDCLASS
 
 
@@ -152,7 +154,21 @@ return Self
 // if there is an user function I leave to it its handling
 METHOD KeyboardHook(nKey) CLASS TMemoEditor
 
-   local nUserKey
+   local nUserKey, nYesNoKey, cBackScr, nRow, nCol
+
+   if nKey == K_ESC
+      cBackScr = SaveScreen( ::nTop, ::nRight - 18, ::nTop, ::nRight )
+      nRow = Row()
+      nCol = Col()
+      @ ::nTop, ::nRight - 18 SAY "Abort Edit? (Y/N)"
+      nYesNoKey = InKey( 0 )
+      RestScreen( ::nTop, ::nRight - 18, ::nTop, ::nRight, cBackScr )
+      SetPos( nRow, nCol )
+      if Upper( Chr( nYesNoKey ) ) == "Y"
+         ::lSaved := .F.
+         ::lExitEdit := .T.
+      endif
+   endif
 
    if ISCHARACTER(::xUserFunction)
 
@@ -235,6 +251,16 @@ METHOD xDo(nStatus) CLASS TMemoEditor
 
 return xRes
 
+METHOD MoveCursor(nKey) CLASS TMemoEditor
+
+   if nKey == K_CTRL_END // same value as CTRL-W
+      ::lSaved = .t.
+      ::lExitEdit := .T.
+   else
+      return Super:MoveCursor( nKey )
+   endif
+
+return .f.
 
 /*----------------------------------------------------------------------------------------*/
 
