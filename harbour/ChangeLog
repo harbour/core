@@ -1,13 +1,17 @@
+2000-07-25 22:35 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.slx
+     * Converted CUSTOM_ACTION() macro to a function (hb_lex_CustomAction()).
+
 2000-07-25 19:00 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *doc/garbage.txt
     *doc/idle.txt
         * added documentation for the garbage collector and idle states
-        
+
     *include/hbapigt.h
         * added declaration of hb_gtSuspend(), hb_gtResume()
         and hb_gt_Suspend(), hb_gt_Resume()
-        
+
     *source/vm/classes.c
     *source/pp/ppcomp.c
         * removed unused variable warnings reported by GCC
@@ -32,16 +36,16 @@
         to ommit problems with initialization order using some drivers
         * added prototypes for hb_gt_Suspend() and hb_gt_Resume() that
         are called before and after spawning to the shell
-        NOTE: 
+        NOTE:
         Please add appopriate code for drivers that require it
 
 2000-07-25 09:30 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * hb_slex.bc
-     * Sinchronized with recent changes to makefile.bc
+     * Synchronized with recent changes to makefile.bc
      + Added ;source\compiler to $(INCLUDE)
 
    * source/compiler/harbour.slx
-     + Added logic to support 2 imediately following identifiers as needed by: DECLARE ClassName ClassVar ...
+     + Added logic to support 2 immediately following identifiers as needed by: DECLARE ClassName ClassVar ...
 
    + contrib/hb_struc
    + contrib/hb_struc/hbstruc.ch
