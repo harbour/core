@@ -11,7 +11,7 @@
 2003-05-28 13:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * contrib/rdd_ads/ads1.c
   * contrib/rdd_ads/adsfunc.c
-  	! Minor changes to minimize MSVC++ type overrides.
+    ! Minor changes to minimize MSVC++ type overrides.
     ! Added MSVC++ type overrides to the ADS version functions.
 
 2003-05-26 18:40 UTC+0200 Przemyslaw Czerpak <druzus@polbox.com>
@@ -57,7 +57,7 @@
   * contrib/rdd_ads/ads1.c
   * contrib/rdd_ads/adsfunc.c
   * contrib/rdd_ads/rddads.h
-  	+ Added support for DBINFO(DBI_DB_VERSION), DBINFO(DBI_RDD_VERSION),
+    + Added support for DBINFO(DBI_DB_VERSION), DBINFO(DBI_RDD_VERSION),
   	  and ADSVERSION([<nType>]) (but only for nType == 0 and nType == 3
   	  and without date and time information for nType == 3).
 
