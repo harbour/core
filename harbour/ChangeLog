@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-08-05 23:38 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * source/rdd/dbcmd.c
+        ! fix GPF in dbCloseAll, reported by Jorge Mason
+
 2002-08-05 09:33 UTC+0100 Dave Pearson <davep@davep.org>
   * source/compiler/genc.c
     * Corrected misspelling of "Alpha".
