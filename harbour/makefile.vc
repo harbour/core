@@ -268,10 +268,10 @@ RUNNER_LIB_OBJS = \
 #
 
 PP_LIB_OBJS = \
-    $(OBJ_DIR)\hbpp.obj \
-    $(OBJ_DIR)\hbppint.obj \
-    $(OBJ_DIR)\hbpplib.obj \
-    $(OBJ_DIR)\table.obj
+    $(OBJ_DIR)\ppcore.obj \
+    $(OBJ_DIR)\ppcomp.obj \
+    $(OBJ_DIR)\pplib.obj \
+    $(OBJ_DIR)\pptable.obj
 
 #
 # OBJ list for debug.lib. Add new ones as needed
@@ -436,9 +436,9 @@ $(HARBOUR_EXE) : \
     $(COMMON_DIR)\reserved.c \
     $(COMMON_DIR)\hbfsapi.c \
     $(COMMON_DIR)\hbstr.c \
-    $(PP_DIR)\hbpp.c \
-    $(PP_DIR)\hbppint.c \
-    $(PP_DIR)\table.c
+    $(PP_DIR)\ppcore.c \
+    $(PP_DIR)\ppcomp.c \
+    $(PP_DIR)\pptable.c
     $(CC) $(CFLAGS) -w $** -o $(HARBOUR_EXE)
     -del harbour.obj
     -del harboury.obj
@@ -458,9 +458,9 @@ $(HARBOUR_EXE) : \
     -del expropt.obj
     -del hbfsapi.obj
     -del hbstr.obj
-    -del hbpp.obj
-    -del hbppint.obj
-    -del table.obj
+    -del ppcore.obj
+    -del ppcomp.obj
+    -del pptable.obj
 
 #
 # Library dependencies and build rules
@@ -535,16 +535,16 @@ $(OBJ_DIR)\macro.obj : $(MACRO_DIR)\macro.c
 # PP source dependencies below. Add as needed
 #
 
-$(OBJ_DIR)\hbpplib.obj : $(PP_DIR)\hbpplib.c
+$(OBJ_DIR)\pplib.obj : $(PP_DIR)\pplib.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\hbpp.obj : $(PP_DIR)\hbpp.c
+$(OBJ_DIR)\ppcore.obj : $(PP_DIR)\ppcore.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\hbppint.obj : $(PP_DIR)\hbppint.c
+$(OBJ_DIR)\ppcomp.obj : $(PP_DIR)\ppcomp.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\table.obj : $(PP_DIR)\table.c
+$(OBJ_DIR)\pptable.obj : $(PP_DIR)\pptable.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 

@@ -8,8 +8,7 @@ rem Flavour: OS/2 command file
 rem ---------------------------------------------------------------
 rem Template to build a final Harbour executable, using Harbour
 rem with the C code generation feature, then calling the proper C
-rem linker/compiler. This file will only work if Harbour was built
-rem using the GNU-make system.
+rem linker/compiler.
 rem
 rem Copyright 1999 Victor Szakats <info@szelvesz.hu>
 rem See doc/license.txt for licensing terms.

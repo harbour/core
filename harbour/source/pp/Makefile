@@ -5,10 +5,10 @@
 ROOT = ../../
 
 C_SOURCES=\
-        hbpp.c \
-        hbppint.c \
-        hbpplib.c \
-        table.c \
+        ppcore.c \
+        ppcomp.c \
+        pplib.c \
+        pptable.c \
 
 LIBNAME=pp
 

@@ -1,3 +1,24 @@
+20000307-12:35 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/pp/hbpp.c    -> ppcore.c
+     source/pp/hbppint.c -> ppcomp.c
+     source/pp/hbpplib.c -> pplib.c
+     source/pp/table.c   -> pptable.c
+     source/pp/Makefile
+     makefile.bc
+     makefile.vc
+     * Renamed to avoid collision with other files in the make process
+       (currently the standalone hbpp.c)
+   * bin\bld_vc.bat
+     - Removed -DDEBUG and -DHARBOUR_USE_WIN_GTAPI, they are not needed to
+       compile a generated C output.
+   * makefile.bc
+     bin\bld_*.bat
+     + Changed names of libraries. Now they are compatible with the GNU-make
+       library names.
+     ; NOTE: Since now Harbour has a common library naming system, which is 
+       used in all make systems. Documentation can refer to them in the 
+       $FILES$ section.
+
 20000307-03:45 EST Paul Tucker <ptucker@sympatico.ca>
    * doc/gmake.txt
      - removed note about unistd.h for msvc
