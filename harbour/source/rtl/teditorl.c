@@ -35,70 +35,68 @@
 
 #include "hbapi.h"
 
-char *hb_strtoken(char *szText,
-                  long lText,
-                  long lIndex,
-                  char cDelimiter,
-                  long *lLen)
+static char * hb_strToken( char * szText, long lText,
+                           long lIndex,
+                           char cDelimiter,
+                           long * plLen )
 {
-  long wStart;
-  long wEnd = 0;
-  long wCounter = 0;
-
-  HB_TRACE(HB_TR_DEBUG, ("hb_strtoken(%s, %ld, %ld, %d, %p)", szText, lText, lIndex, (int) cDelimiter, lLen));
-
-  do
-    {
-      wStart = wEnd;
-
+   long lStart;
+   long lEnd = 0;
+   long lCounter = 0;
+  
+   HB_TRACE(HB_TR_DEBUG, ("hb_strToken(%s, %ld, %ld, %d, %p)", szText, lText, lIndex, (int) cDelimiter, plLen));
+  
+   do
+   {
+      lStart = lEnd;
+  
       if( cDelimiter != ' ' )
-        {
-          if( szText[wStart] == cDelimiter )
-            wStart++;
-        }
+      {
+         if( szText[ lStart ] == cDelimiter )
+            lStart++;
+      }
       else
-        {
-          while( wStart < lText && szText[wStart] == cDelimiter )
-            wStart++;
-        }
-
-      if( wStart < lText && szText[wStart] != cDelimiter )
-        {
-          wEnd = wStart + 1;
-
-          while( wEnd < lText && szText[wEnd] != cDelimiter )
-            wEnd++;
-        }
+      {
+         while( lStart < lText && szText[ lStart ] == cDelimiter )
+            lStart++;
+      }
+  
+      if( lStart < lText && szText[ lStart ] != cDelimiter )
+      {
+         lEnd = lStart + 1;
+  
+         while( lEnd < lText && szText[lEnd] != cDelimiter )
+            lEnd++;
+      }
       else
-        wEnd = wStart;
-    } while( wCounter++ < lIndex - 1 && wEnd < lText );
+         lEnd = lStart;
 
-  if( wCounter < lIndex )
-    {
-      *lLen = 0;
+   }
+   while( lCounter++ < lIndex - 1 && lEnd < lText );
+  
+   if( lCounter < lIndex )
+   {
+      *plLen = 0;
       return "";
-    }
-  else
-    {
-      *lLen = wEnd - wStart;
-      return szText + wStart;
-    }
+   }
+   else
+   {
+      *plLen = lEnd - lStart;
+      return szText + lStart;
+   }
 }
 
 /* returns the nth occurence of a substring within a token-delimited string */
 HB_FUNC( __STRTOKEN )
 {
-  char *szText;
-  long lIndex = hb_parnl(2);
-  char cDelimiter = *hb_parc(3);
-  long lLen;
-
-  if( !cDelimiter )
-    cDelimiter = ' ';
-
-  szText = hb_strtoken(hb_parc(1), hb_parclen(1), lIndex, cDelimiter, &lLen);
-
-  hb_stornl(lLen, 4);
-  hb_retclen(szText, lLen);
+   char * pszText;
+   long lLen;
+  
+   pszText = hb_strToken( hb_parc( 1 ), hb_parclen( 1 ), 
+                          hb_parnl( 2 ), 
+                          ISCHAR( 3 ) ? *hb_parc( 3 ) : ' ', 
+                          &lLen );
+  
+   hb_retclen( pszText, lLen );
 }
 

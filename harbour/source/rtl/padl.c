@@ -56,12 +56,10 @@ HB_FUNC( PADL )
 
          hb_xmemcpy( szResult + lPos, szText, ( long ) ulSize );
 
-         cPad = ( ISCHAR( 3 ) ? *( hb_parc( 3 ) ) : ' ');
+         cPad = ( ISCHAR( 3 ) ? *( hb_parc( 3 ) ) : ' ' );
 
          for(; lPos > 0; lPos-- )
-         {
             szResult[ lPos - 1 ] = cPad;
-         }
 
          hb_retclen( szResult, lLen );
          hb_xfree( szResult );

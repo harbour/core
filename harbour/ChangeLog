@@ -1,3 +1,8 @@
+20000515-23:05 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/rtl/teditorl.c
+   * source/rtl/padl.c
+     % Minor optimizations and formatting.
+
 20000515-22:47 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/compiler/hbusage.c
      ! Removed conditional OBJ generation branch.
