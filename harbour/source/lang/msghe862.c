@@ -157,6 +157,7 @@ static HB_LANG s_lang =
       "",
       "",
       "",
+      "",
       "‰˜ˆ˜” Œ™ ‰…‚™ ˜”‘",
       "Š˜’Œ „™‰‚",
       "array assign",

@@ -139,6 +139,7 @@ static HB_LANG s_lang =
       "",
       "",
       "",
+      "",
       "array access",
       "array assign",
       "array dimension",

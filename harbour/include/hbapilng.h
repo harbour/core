@@ -57,19 +57,11 @@
 #include "hbvmpub.h"
 #include "hbinit.h"
 
+#include "hblang.ch" /* Base values for the unified language item table */
+
 #if defined(HB_EXTERN_C)
 extern "C" {
 #endif
-
-/* Base values for the unified language item table */
-#define HB_LANG_ITEM_BASE_ID            0
-#define HB_LANG_ITEM_BASE_MONTH         6
-#define HB_LANG_ITEM_BASE_DAY           18
-#define HB_LANG_ITEM_BASE_NATMSG        25
-#define HB_LANG_ITEM_BASE_ERRDESC       38
-#define HB_LANG_ITEM_BASE_ERRINTR       89
-#define HB_LANG_ITEM_BASE_TEXT          114
-#define HB_LANG_ITEM_MAX_               117
 
 /* This hack is needed to force preprocessing if id is also a macro */
 #define HB_LANG_REQUEST( id )           HB_LANG_REQUEST_( id )

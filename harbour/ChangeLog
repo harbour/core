@@ -8,6 +8,60 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-06-18 00:10 UTC+0200 Przemyslaw Czerpak <druzus@polbox.com>
+  * harbour/include/hbapilng.h
+  * harbour/include/hblang.ch
+  * harbour/source/lang/Makefile
+  * harbour/source/lang/msg_tpl.c
+  * harbour/source/lang/msgca.c
+  * harbour/source/lang/msgcs852.c
+  * harbour/source/lang/msgcsiso.c
+  * harbour/source/lang/msgcskam.c
+  * harbour/source/lang/msgcswin.c
+  * harbour/source/lang/msgde.c
+  * harbour/source/lang/msgdewin.c
+  * harbour/source/lang/msgen.c
+  * harbour/source/lang/msgeo.c
+  * harbour/source/lang/msges.c
+  * harbour/source/lang/msgeswin.c
+  * harbour/source/lang/msgeu.c
+  * harbour/source/lang/msgfr.c
+  * harbour/source/lang/msggl.c
+  * harbour/source/lang/msghe862.c
+  * harbour/source/lang/msghewin.c
+  * harbour/source/lang/msghr852.c
+  * harbour/source/lang/msghriso.c
+  * harbour/source/lang/msghu852.c
+  * harbour/source/lang/msghucwi.c
+  * harbour/source/lang/msghuwin.c
+  * harbour/source/lang/msgid.c
+  * harbour/source/lang/msgis850.c
+  * harbour/source/lang/msgit.c
+  * harbour/source/lang/msgko.c
+  * harbour/source/lang/msgpl852.c
+  * harbour/source/lang/msgpliso.c
+  * harbour/source/lang/msgplmaz.c
+  * harbour/source/lang/msgplwin.c
+  * harbour/source/lang/msgpt.c
+  * harbour/source/lang/msgro.c
+  * harbour/source/lang/msgru866.c
+  * harbour/source/lang/msgrukoi.c
+  * harbour/source/lang/msgruwin.c
+  * harbour/source/lang/msgsl852.c
+  * harbour/source/lang/msgsliso.c
+  * harbour/source/lang/msgslwin.c
+  * harbour/source/lang/msgsr852.c
+  * harbour/source/lang/msgsriso.c
+  * harbour/source/lang/msgzhb5.c
+  * harbour/source/lang/msgzhgb.c
+  + harbour/source/lang/msgsrwin.c
+    ! bug fixed in national msg system and new localization added
+      (borrowed from xHarbour)
+
+  + harbour/tests/langmsg.prg
+    * simple test program for national messages
+      I have to ask developpers to run it and check their national messages
+
 2003-06-17 21:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rtl/cdpapi.c
     ! Bug fixed in hb_cdpTranslate() and hb_cdpnTranslate()

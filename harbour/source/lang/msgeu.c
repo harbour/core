@@ -139,6 +139,7 @@ static HB_LANG s_lang =
       "",
       "",
       "",
+      "",
       "taula-atzipena",
       "yaula-esleipen",
       "array dimension",

@@ -156,6 +156,7 @@ static HB_LANG s_lang =
       "",
       "",
       "",
+      "",
       "t”mbelem hozz f‚r‚s",
       "t”mbelem ‚rt‚kad s",
       "t”mbelem dimenzi¢",

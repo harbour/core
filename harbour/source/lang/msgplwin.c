@@ -156,6 +156,7 @@ static HB_LANG s_lang =
       "",
       "",
       "",
+      "",
        "Nieprawid³owa liczba argumentów",
        "pobranie elementu tablicy",
        "zmiana wartoœci elementu tablicy",

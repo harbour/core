@@ -59,9 +59,11 @@
 #define HB_LANG_ITEM_BASE_NATMSG        25
 #define HB_LANG_ITEM_BASE_ERRDESC       38
 #define HB_LANG_ITEM_BASE_ERRINTR       89
-#define HB_LANG_ITEM_BASE_TEXT          114
-#define HB_LANG_ITEM_MAX_               117
+#define HB_LANG_ITEM_BASE_TEXT          115
+#define HB_LANG_ITEM_MAX_               118
 
-#translate HB_LANG_REQUEST <id>    =>   REQUEST HB_LANG_<id>
+#ifndef HB_APILNG_H_
+   #translate HB_LANG_REQUEST <id>    =>   REQUEST HB_LANG_<id>
+#endif
 
 #endif /* HB_LANG_CH_ */

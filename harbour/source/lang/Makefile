@@ -15,7 +15,7 @@ C_SOURCES=\
 	msgen.c      \
 	msgeo.c      \
 	msges.c      \
-        msgeswin.c   \
+	msgeswin.c   \
 	msgeu.c      \
 	msgfr.c      \
 	msggl.c      \
@@ -44,6 +44,7 @@ C_SOURCES=\
 	msgslwin.c   \
 	msgsr852.c   \
 	msgsriso.c   \
+	msgsrwin.c   \
 	msgzhb5.c    \
 	msgzhgb.c    \
 	
