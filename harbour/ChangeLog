@@ -1,3 +1,7 @@
+19990529-15:00 CET Eddie Runia
+  * source/rtl/set.c
+    small correction in ReleaseSets()
+
 19990528-14:30 EST David G. Holm <dholm@jsd-llc.com>
   * source/rtl/console.c
     - NIL ouptuts "NIL", just like it used to before I removed it after

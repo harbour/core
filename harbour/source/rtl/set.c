@@ -464,8 +464,8 @@ void InitializeSets (void)
 
 void ReleaseSets (void)
 {
-   if (hb_set_althan) close_text (hb_set_althan);
-   if (hb_set_printhan) close (hb_set_printhan);
+   if (hb_set_althan != -1) close_text (hb_set_althan);
+   if (hb_set_printhan != -1) close (hb_set_printhan);
 
    if (hb_set.HB_SET_ALTFILE)
       _xfree (hb_set.HB_SET_ALTFILE);
@@ -482,5 +482,5 @@ void ReleaseSets (void)
    if (hb_set.HB_SET_PATH)
       _xfree (hb_set.HB_SET_PATH);
    if (hb_set.HB_SET_PRINTFILE)
-      _xfree (hb_set.HB_SET_PATH);
+      _xfree (hb_set.HB_SET_PRINTFILE);
 }
