@@ -61,9 +61,12 @@
            aiReturn[ iReturn++ ] = LITERAL;
 
 static int iTexts = 0;
-static char * aTexts[1024];
-static int iIdentifier = 0;
+static char * aTexts[512];
 static char* sIdOnHold;
+
+/*
+static int iIdentifier = 0;
+*/
 
 long hb_lex_Hex2L( char* sHex );
 
@@ -137,7 +140,9 @@ SELF_CONTAINED_WORDS_ARE {
 #define HB_FOR     -1011
 
 /* When 2 identifiers are correct syntax like in class declaration, we have to temporarily store the 2nd identifier. */
+/*
 #define HB_ID_ON_HOLD -1012
+*/
 
 #define HB_MACRO_ERR  -1013
 
@@ -746,10 +751,12 @@ LANGUAGE_RULES_ARE {
    #undef INTERCEPT_ACTION
    	#define INTERCEPT_ACTION(x) \
 	\
+/*\
       	if( x == IDENTIFIER ) \
 	{ \
 	   iIdentifier--; \
 	} \
+*/\
         \
       	if( x == IDENTIFIER ) \
          	printf( "   IDENTIFIER = \"%s\"\n", yylval.string  ); \
@@ -772,6 +779,7 @@ LANGUAGE_RULES_ARE {
             	printf( "   DELIMITER = \"%c\"\n", x  ); \
       	else \
           	printf( "   TOKEN = %i\n", x  );
+/*
 #else
    #undef INTERCEPT_ACTION
    	#define INTERCEPT_ACTION(x) \
@@ -780,7 +788,7 @@ LANGUAGE_RULES_ARE {
 	{ \
 	   iIdentifier--; \
 	}
-
+*/
 #endif
 
 /* Support Functions implemented as macros for speed. */
@@ -859,14 +867,18 @@ LANGUAGE_RULES_ARE {
                yyleng = HB_SYMBOL_NAME_LEN;\
             }\
 \
+/*\
 	    if( iIdentifier )\
 	    {\
 	       sIdOnHold = hb_compIdentifierNew( yytext, TRUE );\
 	       iRet = HB_ID_ON_HOLD;\
 	    }\
 	    else\
+*/\
 	    {\
+/*
 	       iIdentifier++;\
+*/\
                yylval.string = hb_compIdentifierNew( yytext, TRUE );\
       	       iRet = IDENTIFIER;\
 	    }\
@@ -1015,12 +1027,10 @@ long hb_lex_Hex2L( char* sHex )
 int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_SIZE], int *ptr_iHold, BOOL *ptr_bIgnoreWords, int iLastToken )
 {
    BOOL bRestored = FALSE;
-   char * sIdentifier;
+   static char sIdentifier[11];
 
    DEBUG_INFO( printf( "Custom Action for %i\n", x ) );
 
-   /* Resetting (prepairing). */
-   sIdentifier = (char*) hb_xgrab( iWordLen + 1 );
    sIdentifier[0] = '\0';
 
    switch ( x )
@@ -1148,274 +1158,274 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
 	 }
 	 else
 	 {
-            strcpy( sIdentifier, "IN" );
+            strcpy( (char*) sIdentifier, "IN" );
             x = IDENTIFIER;
 	 }
 	 break;
 
       case HB_EXTERN_ID :
-         strncpy( sIdentifier, "EXTERNAL", iWordLen );
+         strncpy( (char*) sIdentifier, "EXTERNAL", iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_WHILE_ID :
-         strncpy( sIdentifier, "WHILE", iWordLen );
+         strncpy( (char*) sIdentifier, "WHILE", iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_ARRAY_ID :
-         strncpy( sIdentifier, "ARRAY" , iWordLen );
+         strncpy( (char*) sIdentifier, "ARRAY" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_AS_ID :
-         strcpy( sIdentifier, "AS" );
+         strcpy( (char*) sIdentifier, "AS" );
          x = IDENTIFIER;
          break;
 
       case HB_OF_ID :
-         strcpy( sIdentifier, "OF" );
+         strcpy( (char*) sIdentifier, "OF" );
          x = IDENTIFIER;
          break;
 
       case HB_VARIANT_ID :
-         strncpy( sIdentifier, "ANYTYPE" , iWordLen );
+         strncpy( (char*) sIdentifier, "ANYTYPE" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_BLOCK_ID :
-         strncpy( sIdentifier, "BLOCK" , iWordLen );
+         strncpy( (char*) sIdentifier, "BLOCK" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_STRING_ID :
-         strncpy( sIdentifier, "STRING" , iWordLen );
+         strncpy( (char*) sIdentifier, "STRING" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_CLASS_ID :
-         strncpy( sIdentifier, "CLASS" , iWordLen );
+         strncpy( (char*) sIdentifier, "CLASS" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_DATE_ID :
-         strncpy( sIdentifier, "DATE" , iWordLen );
+         strncpy( (char*) sIdentifier, "DATE" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_LOGICAL_ID :
-         strncpy( sIdentifier, "LOGICAL" , iWordLen );
+         strncpy( (char*) sIdentifier, "LOGICAL" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_NUMEIC_ID :
-         strncpy( sIdentifier, "NUMERIC" , iWordLen );
+         strncpy( (char*) sIdentifier, "NUMERIC" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_OBJECT_ID :
-         strncpy( sIdentifier, "OBJECT" , iWordLen );
+         strncpy( (char*) sIdentifier, "OBJECT" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_PUBLIC_ID :
-         strncpy( sIdentifier, "PUBLIC" , iWordLen );
+         strncpy( (char*) sIdentifier, "PUBLIC" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_OTHERWISE_ID :
-         strncpy( sIdentifier, "OTHERWISE" , iWordLen );
+         strncpy( (char*) sIdentifier, "OTHERWISE" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_MEMVAR_ID :
-         strncpy( sIdentifier, "MEMVAR" , iWordLen );
+         strncpy( (char*) sIdentifier, "MEMVAR" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_LOOP_ID :
-         strcpy( sIdentifier, "LOOP" );
+         strcpy( (char*) sIdentifier, "LOOP" );
          x = IDENTIFIER;
          break;
 
       case HB_FOR_ID :
-         strcpy( sIdentifier, "FOR" );
+         strcpy( (char*) sIdentifier, "FOR" );
          x = IDENTIFIER;
          break;
 
       case HB_NEXT_ID :
-         strcpy( sIdentifier, "NEXT" );
+         strcpy( (char*) sIdentifier, "NEXT" );
          x = IDENTIFIER;
          break;
 
       case HB_FIELD_ID :
-         strncpy( sIdentifier, "FIELD" , iWordLen );
+         strncpy( (char*) sIdentifier, "FIELD" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB__FIELD_ID :
-         strncpy( sIdentifier, "_FIELD" , iWordLen );
+         strncpy( (char*) sIdentifier, "_FIELD" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_PARAMETERS_ID :
-         strncpy( sIdentifier, "PARAMETERS" , iWordLen );
+         strncpy( (char*) sIdentifier, "PARAMETERS" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_PRIVATE_ID :
-         strncpy( sIdentifier, "PRIVATE" , iWordLen );
+         strncpy( (char*) sIdentifier, "PRIVATE" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_EXIT_ID :
-         strcpy( sIdentifier, "EXIT" );
+         strcpy( (char*) sIdentifier, "EXIT" );
          x = IDENTIFIER;
          break;
 
       case HB_BEGIN_ID :
-         strncpy( sIdentifier, "BEGIN" , iWordLen );
+         strncpy( (char*) sIdentifier, "BEGIN" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_SEQUENCE_ID :
-         strncpy( sIdentifier, "SEQUENCE" , iWordLen );
+         strncpy( (char*) sIdentifier, "SEQUENCE" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_BREAK_ID :
-         strncpy( sIdentifier, "BREAK" , iWordLen );
+         strncpy( (char*) sIdentifier, "BREAK" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_RECOVER_ID :
-         strncpy( sIdentifier, "RECOVER" , iWordLen );
+         strncpy( (char*) sIdentifier, "RECOVER" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_USING_ID :
-         strncpy( sIdentifier, "USING" , iWordLen );
+         strncpy( (char*) sIdentifier, "USING" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_CASE_ID :
-         strcpy( sIdentifier, "CASE" );
+         strcpy( (char*) sIdentifier, "CASE" );
          x = IDENTIFIER;
          break;
 
       case HB_DO_ID :
-         strcpy( sIdentifier, "DO" );
+         strcpy( (char*) sIdentifier, "DO" );
          x = IDENTIFIER;
          break;
 
       case HB_WITH_ID :
-         strcpy( sIdentifier, "WITH" );
+         strcpy( (char*) sIdentifier, "WITH" );
          x = IDENTIFIER;
          break;
 
       case HB_DECLARE_ID :
-         strncpy( sIdentifier, "DECLARE" , iWordLen );
+         strncpy( (char*) sIdentifier, "DECLARE" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_PROCREQ_ID :
-         strncpy( sIdentifier, "PROCREQ" , iWordLen );
+         strncpy( (char*) sIdentifier, "PROCREQ" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_SELF_ID :
-         strcpy( sIdentifier, "SELF" );
+         strcpy( (char*) sIdentifier, "SELF" );
          x = IDENTIFIER;
          break;
 
       case HB_IF_ID :
-         strcpy( sIdentifier, "IF" );
+         strcpy( (char*) sIdentifier, "IF" );
          x = IDENTIFIER;
          break;
 
       case HB_IIF_ID :
-         strcpy( sIdentifier, "IIF" );
+         strcpy( (char*) sIdentifier, "IIF" );
          x = IDENTIFIER;
          break;
 
       case HB_OPTIONAL_ID :
-         strncpy( sIdentifier, "OPTIONAL" , iWordLen );
+         strncpy( (char*) sIdentifier, "OPTIONAL" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_IN_ID :
-         strcpy( sIdentifier, "IN" );
+         strcpy( (char*) sIdentifier, "IN" );
          x = IDENTIFIER;
          break;
 
       case HB_LINE_ID :
-         strcpy( sIdentifier, "LINE" );
+         strcpy( (char*) sIdentifier, "LINE" );
          x = IDENTIFIER;
          break;
 
       case HB_INIT_ID :
-         strcpy( sIdentifier, "INIT" );
+         strcpy( (char*) sIdentifier, "INIT" );
          x = IDENTIFIER;
          break;
 
       case HB_PROCEDURE_ID :
-         strncpy( sIdentifier, "PROCEDURE" , iWordLen );
+         strncpy( (char*) sIdentifier, "PROCEDURE" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_FUNCTION_ID :
-         strncpy( sIdentifier, "FUNCTION" , iWordLen );
+         strncpy( (char*) sIdentifier, "FUNCTION" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_STATIC_ID :
-         strncpy( sIdentifier, "STATIC" , iWordLen );
+         strncpy( (char*) sIdentifier, "STATIC" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_LOCAL_ID :
-         strncpy( sIdentifier, "LOCAL" , iWordLen );
+         strncpy( (char*) sIdentifier, "LOCAL" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_RETURN_ID :
-         strncpy( sIdentifier, "RETURN" , iWordLen );
+         strncpy( (char*) sIdentifier, "RETURN" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
       case HB_END_ID :
-         strcpy( sIdentifier, "END" );
+         strcpy( (char*) sIdentifier, "END" );
          x = IDENTIFIER;
          break;
 
@@ -1424,32 +1434,31 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
          x = 0;
          break;
 
+/*
       case HB_ID_ON_HOLD :
 	 bRestored = TRUE;
          yylval.string = sIdOnHold;
 	 iIdentifier++;
          x = IDENTIFIER;
          break;
-
+*/
       default:
          printf( "No Handler for Custom Action %i\n", x );
    }
 
    if( x == IDENTIFIER && ! bRestored )
    {
-      yylval.string = hb_compIdentifierNew( sIdentifier, TRUE );
+      yylval.string = hb_compIdentifierNew( (char*) sIdentifier, TRUE );
 
+/*
       iIdentifier++;
-
+*/
       /* Equivalent of PUSH_TOKEN(x). */
       aiHold[ (*ptr_iHold)++ ] = x;
       strcpy( asHold[ (*ptr_iHold) - 1 ], yylval.string );
 
       x = 0;
    }
-
-   /* No longer needed. */
-   hb_xfree( sIdentifier );
 
    return x;
 }
