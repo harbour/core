@@ -472,8 +472,6 @@ int  HB_EXPORT hb_parinfo( int iParam )
    }
 }
 
-#ifndef HB_API_MACROS
-
 int  HB_EXPORT hb_pcount( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_pcount()"));
@@ -608,8 +606,6 @@ void HB_EXPORT hb_retnllen( long lNumber, int iWidth )
 
    hb_itemPutNLLen( &hb_stack.Return, lNumber, iWidth );
 }
-
-#endif
 
 void HB_EXPORT hb_storc( char * szText, int iParam, ... )
 {
