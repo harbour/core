@@ -1,3 +1,9 @@
+19991227-08:30 GMT+2 Chen Kedem <niki@actcom.co.il>
+  * source/rtl/readvar.prg
+    + doc for READVAR()
+  * source/rtl/setfunc.prg
+    + doc for __SetFunction()
+
 19991227-00:36 GMT+1 Antonio Linares <alinares@fivetech.com>
    * Updated tests/bld_b32w.bat
 
