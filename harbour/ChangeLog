@@ -1,3 +1,8 @@
+20000503-22:43 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/filesys.c
+     ! Cast added for MSVC.
+
 20000503-01:45 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * include/hberrors.h

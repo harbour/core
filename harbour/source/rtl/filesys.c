@@ -1181,7 +1181,7 @@ USHORT  hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen )
    /* Strip the trailing (back)slash if there's one */
 
    {
-      ULONG ulLen = strlen( pbyBuffer );
+      ULONG ulLen = strlen( ( char * ) pbyBuffer );
 
       if( strchr( OS_PATH_DELIMITER_LIST, pbyBuffer[ ulLen - 1 ] ) )
          pbyBuffer[ ulLen - 1 ] = '\0';
