@@ -3,11 +3,11 @@
  * $Id$
  *
  * Harbour compiler (yacc rules and actions)
- * Build 21 proposal: spring 1999
+ * Build 26 proposal: spring 1999
  * Usage: bison -d -v harbour.y  You may find Bison at www.harbour.project.org
  */
 
-#define BUILD         21    /* current harbour.y build */
+#define BUILD         26    /* current harbour.y build */
 
 #include <stdio.h>
 #include <stdlib.h>
