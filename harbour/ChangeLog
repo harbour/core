@@ -1,3 +1,18 @@
+19990809-07:40 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/odbc moved to contrib/odbc
+   * source/rtl/console.c
+     + #include "io.h" added for __CYGWIN__
+   * tests/working/block2.PRG removed.
+   * tests/working/transdef.prg
+     tests/working/testrdd.prg
+     tests/working/testpre.prg
+     tests/working/testdbf.prg
+     tests/working/strsub.prg
+     tests/working/dates4.prg
+     ! CVS tag added.
+   * source/rtl/mtran.c
+     ! Small typo.
+
 19990809-06:23 GMT+1 Victor Szel <info@szelvesz.hu>
    * include/memvars.ch
      ! #ifdef _MEMVARS_CH guard added.

@@ -1,3 +1,6 @@
+/*
+ * $Id$
+ */
 
 // Testing strings concat
 

@@ -83,7 +83,7 @@ HB_INIT_SYMBOLS_END( Memotran__InitSymbols );
 #pragma startup Memotran__InitSymbols
 #endif
 
-/* Note: pszResult must have an allocated buffer of at least */
+/* NOTE: pszResult must have an allocated buffer of at least */
 /*       ulStringLen */
 
 void hb_memotran( char *pszResult, ULONG *ulResultLen, char *pszString, ULONG ulStringLen, char cHardcr, char cSoftcr )

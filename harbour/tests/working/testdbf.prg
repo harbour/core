@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 function main()
 
    local aStruct := { { "CHARACTER", "C", 25, 0 }, ;

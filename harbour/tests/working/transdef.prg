@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 procedure main
 local a := 1, b := 5.22
    qout( "[" + transform( 1, "@B" ) + "]" )

@@ -59,6 +59,9 @@
 #else
   #include <io.h>
 #endif
+#if defined(__CYGWIN__)
+  #include <io.h>
+#endif
 #include <fcntl.h>
 #include "gtapi.h"            /* HARBOUR_USE_GTAPI is checked inside gtapi.h, so that
                                  we can always get the border styles */
