@@ -149,7 +149,10 @@ HB_FUNC( DIRECTORY )
 
    if( pAttributes && hb_itemGetCLen( pAttributes ) > 0 )
       if ( ( uiMask |= hb_fsAttrEncode( hb_itemGetCPtr( pAttributes ) ) ) & HB_FA_LABEL )
+      {
+         /* NOTE: This is Clipper Doc compatible. (not operationally) */
          uiMask = HB_FA_LABEL;
+      }
 
    /* Get the file list */
 
