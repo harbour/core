@@ -161,7 +161,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                  "#if defined(_MSC_VER)\n"
                  "   #if _MSC_VER >= 1010\n"
                  /* [pt] First version of MSC I have that supports this */
-                 /* is msvc4.1 (msc 10.10) */
+                 /* is msvc4.1 (which is msc 10.10) */
                  "      #pragma data_seg( \".CRT$XIY\" )\n"
                  "      #pragma comment( linker, \"/Merge:.CRT=.data\" )\n"
                  "   #else\n"
