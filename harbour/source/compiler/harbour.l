@@ -97,7 +97,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 
 %x            COMMENT3 DEFINE DEFINE_PARAMS DEFINE_EXPR
 %x            IFDEF IFNDEF STRING1 STRING2 STRING3
-%x            NEXT_ BREAK_ CASE_ DO_ WHILE_ WITH_ END_
+%x            NEXT_ BREAK_ CASE_ DO_ WHILE_ WITH_ END_ EXIT_
 %s            INDEX
 
 %%
@@ -305,7 +305,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                 else
                 { /* there is another item in line already */
                   yylval.string = strdup( "DO" );
-                _iState =IDENTIFIER;
+                  _iState =IDENTIFIER;
                   return IDENTIFIER;
                 }
               }
@@ -339,6 +339,9 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                    GenError( ERR_ENDIF, NULL, NULL );
                  return END;
                }
+%{
+/* ************************************************************************ */
+%}
 "end"          { BEGIN END_; }
 <END_>{Separator}*[\[\(] { /* array, function call */
                yy_lex_count_lf();
@@ -395,7 +398,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 %}
 "endif"|"endi" { /* ENDIF can be used in one context only */
                  if( _wIfCounter == 0 )
-                   GenError( ERR_ENDIF, NULL, NULL ); 
+                   GenError( ERR_ENDIF, NULL, NULL );
                  return ENDIF;
                }
 "endc"("ase"|"as"|"a")? { /* ENDCASE can be used in one context only */
@@ -408,8 +411,56 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                    GenError( ERR_ENDDO, NULL, NULL );
                  return ENDDO;
                }
-"exit"/[\n\;]  return EXITLOOP;
-"exit"         return EXIT;
+%{
+/* ************************************************************************ */
+%}
+"exit"         { BEGIN EXIT_; }
+<EXIT_>{Separator}*[\n]    { /* EXIT last item in the line */
+                 yy_lex_count_lf();
+                 --iLine;
+                 unput( yytext[ yyleng-1 ] );
+                 BEGIN 0;
+                 if( _iState == LOOKUP )
+                 { /* it is first item in the line */
+                   if( _wForCounter == 0 && _wWhileCounter == 0 )
+                     GenError( ERR_UNMATCHED_EXIT, NULL, NULL );
+                   _iState =EXITLOOP;
+                   return EXITLOOP;
+                 }
+                 else
+                 { /* there is another item in line already */
+                   yylval.string = strdup( "EXIT" );
+                   _iState =IDENTIFIER;
+                   return IDENTIFIER;
+                 }
+               }
+<EXIT_>{Separator}+[_a-zA-Z] { /* an identifier after the EXIT */
+                 yy_lex_count_lf();
+                 unput( yytext[ yyleng-1 ] );
+                 BEGIN 0;
+                 if( _iState == LOOKUP )
+                 { /* it is first item in the line */
+                   _iState =EXIT;
+                   return EXIT;
+                 }
+                 else
+                 { /* there is another item in line already */
+                   yylval.string = strdup( "EXIT" );
+                   _iState =IDENTIFIER;
+                   return IDENTIFIER;
+                 }
+               }
+<EXIT_>{Separator}*. { /* any character (not identifier) after EXIT */
+                 yy_lex_count_lf();
+                 unput( yytext[ yyleng-1 ] );
+                 yylval.string = strdup( "EXIT" );
+                 BEGIN 0;
+                 _iState =IDENTIFIER;
+                 return IDENTIFIER;
+               }
+%{
+/* ************************************************************************ */
+%}
 "extern"|"external" _iState =EXTERN; return EXTERN;
 "field"/[^(]   _iState =FIELD; return FIELD;
 "for"          _iState = FOR; return FOR;
@@ -633,7 +684,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 ".or."         return OR;
 "!"|".not."    return NOT;
 "::"           unput( ':' ); unput( 'f' ); unput( 'l' ); unput( 'e' ); unput( 'S' );
-[,\;\{\}\|\#\&\:\<\>\[\]\(\)\@] return yytext[ 0 ];
+[,\;\{\}\|\#\&\:\<\>\[\]\(\)\@] _iState =OPERATOR; return yytext[ 0 ];
 
 {InvalidNumber} GenError( ERR_NUMERIC_FORMAT, NULL, NULL );
 

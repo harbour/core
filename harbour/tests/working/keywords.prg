@@ -4,7 +4,7 @@
 //DO NOT RUN THIS PROGRAM - ITS PURPOSE IS THE SYNTAX CHECK ONLY!
 
 EXTERNAL __case, __begin
-STATIC nExt, bEgin, bReak, cAse, do, wHile, wIth
+STATIC nExt, bEgin, bReak, cAse, do, wHile, wIth, eXit
 
 Function Main()
 
@@ -38,6 +38,8 @@ Function Main()
    ENDDO_()     //see above
 
    END_()    //END? surprise :) it works in some cases!
+
+   EXIT( eXit )
 
 RETURN nil
 
@@ -279,16 +281,16 @@ LOCAL with
   do->do :=do->do +1
   ( do )->( do() )
   do[ 1 ] :=do
-  do[ do ] :=do[ do ][ do ]
+////////  do[ do ] :=do[ do ][ do ]
 
   DO do WITH do
   DO do WITH do()
-  DO do 
+  DO do
 
   DO while;
    while
    while :=while()
-  ENDDO 
+  ENDDO
 
   while while
 //   while++	//incomplete statement or unbalanced delimiter
@@ -298,8 +300,8 @@ LOCAL with
    while->while :=while() +while->while
   enddo
 
-  while[ 1 ] :=while
-  while[ 2 ] +=2
+//  while[ 1 ] :=while
+//  while[ 2 ] +=2
 //  while( while )
 //  while( while[1] )
 //  while[ while ] :=while[ 1 ]	//in Clipper: syntax error ' 1 '
@@ -413,3 +415,44 @@ RETURN end
 
 FUNCTION end( end )
 RETURN end * end
+
+/*====================================================================
+* Test for EXIT
+*/
+EXIT FUNCTION EXIT( exit )
+//LOCAL exit
+
+  exit++
+  ++exit
+
+  exit[ 1 ] :=1
+  exit :=exit[ 1 ]
+  exit->exit :=exit->exit +1
+  ( exit )->exit :=exit
+  DO exit WITH exit
+
+  exit()
+  exit( exit )
+
+//  EXIT	//EXIT statement with no loop in sight
+
+  FOR exit:=1 TO 10
+    exit++
+    DO exit
+    EXIT
+  NEXT
+
+  WHILE !exit
+    exit +=1
+    EXIT
+  ENDDO
+
+  DO CASE
+  CASE exit
+//    EXIT	//EXIT statement with no loop in sight
+  CASE !exit
+    exit()
+  ENDCASE
+
+RETURN exit
+

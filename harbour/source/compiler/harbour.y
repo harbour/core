@@ -30,8 +30,7 @@
 #endif
 
 /* TODO: #define this for various platforms */
-#define PATH_DELIMITER  "/\\"
-#define IS_PATH_SEP( c ) (strchr(PATH_DELIMITER, (c))!=NULL)
+#define IS_PATH_SEP( c ) ( (c) == OS_PATH_DELIMITER )
 
 #define OPT_DELIMITER  "/-"
 #define IS_OPT_SEP( c ) (strchr(OPT_DELIMITER, (c))!=NULL)
@@ -200,7 +199,7 @@ void GenJava( char *, char * );       /* generates the Java language output */
 void GenPascal( char *, char * );     /* generates the Pascal language output */
 void GenRC( char *, char * );         /* generates the RC language output */
 void GenPortObj( char *, char * );    /* generates the portable objects */
-#ifdef OBJ_GENERATION
+#ifdef HARBOUR_OBJ_GENERATION
 void GenObj32( char *, char * );      /* generates OBJ 32 bits */
 #endif
 
@@ -244,7 +243,8 @@ char * _szErrors[] = { "Statement not allowed outside of procedure or function",
                        "ELSE does not match IF",
                        "ELSEIF does not match IF",
                        "Syntax error: \'%s\'",
-                       "Unclosed control structures"
+                       "Unclosed control structures",
+                       "EXIT statement with no loop in sight"
                      };
 
 /* Table with reserved functions names
@@ -359,7 +359,7 @@ WORD _wForCounter   = 0;
 WORD _wIfCounter    = 0;
 WORD _wWhileCounter = 0;
 WORD _wCaseCounter  = 0;
-#ifdef OBJ_GENERATION
+#ifdef HARBOUR_OBJ_GENERATION
 int _iObj32 = 0;           /* generate OBJ 32 bits */
 #endif
 WORD _wStatics = 0;        /* number of defined statics variables on the PRG */
@@ -837,7 +837,7 @@ EndCase    : ENDCASE              { --_wCaseCounter; }
            | END                  { --_wCaseCounter; }
            ;
 
-DoCaseBegin : DOCASE Crlf         { ++_wCaseCounter; }
+DoCaseBegin : DOCASE { ++_wCaseCounter; } Crlf         
            ;
 
 Cases      : CASE Expression Crlf { $<iNumber>$ = JumpFalse( 0 ); Line(); } CaseStmts { $$ = GenElseIf( 0, Jump( 0 ) ); JumpHere( $<iNumber>4 ); Line(); }
@@ -871,9 +871,9 @@ EndWhile   : END
            | ENDDO
            ;
 
-ForNext    : FOR IDENTIFIER ForAssign Expression { PopId( $2 ); $<iNumber>$ = functions.pLast->lPCodePos; ++_wForCounter;}
+ForNext    : FOR IDENTIFIER ForAssign Expression { PopId( $2 ); $<iNumber>$ = functions.pLast->lPCodePos; ++_wForCounter; }
              TO Expression                       { PushId( $2 ); }
-             StepExpr Crlf                       { GenPCode1( _FORTEST ); $<iNumber>$ = JumpTrue( 0 ); PushId( $2 ) }
+             StepExpr Crlf                       { GenPCode1( _FORTEST ); $<iNumber>$ = JumpTrue( 0 ); PushId( $2 ); }
              ForStatements                       { GenPCode1( _PLUS ); PopId( $2 ); Jump( $<iNumber>5 - functions.pLast->lPCodePos ); JumpHere( $<iNumber>11 ); }
            ;
 
@@ -1009,7 +1009,7 @@ int harbour_main( int argc, char * argv[] )
                        free( szDefText );
                     }
                     break;
-#ifdef OBJ_GENERATION
+#ifdef HARBOUR_OBJ_GENERATION
                case 'f':
                case 'F':
                     {
@@ -1152,12 +1152,13 @@ int harbour_main( int argc, char * argv[] )
           char * pDelim;
 
           pPath = szInclude = strdup( szInclude );
-          while( (pDelim = strchr( pPath, ';' )) != NULL )
+          while( (pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR )) != NULL )
           {
             *pDelim ='\0';
             AddSearchPath( pPath, &_pIncludePath );
             pPath =pDelim + 1;
           }
+          AddSearchPath( pPath, &_pIncludePath );
          }
 
          FunDef( strupr( strdup( pFileName->name ) ), FS_PUBLIC, FUN_PROCEDURE );
@@ -1167,7 +1168,7 @@ int harbour_main( int argc, char * argv[] )
          fclose( yyin );
          files.pLast =NULL;
 
-#ifdef OBJ_GENERATION
+#ifdef HARBOUR_OBJ_GENERATION
          if( ! _iSyntaxCheckOnly && ! _iObj32 )
 #else
          if( ! _iSyntaxCheckOnly )
@@ -1223,7 +1224,7 @@ int harbour_main( int argc, char * argv[] )
                     break;
             }
          }
-#ifdef OBJ_GENERATION
+#ifdef HARBOUR_OBJ_GENERATION
          if( _iObj32 )
          {
             pFileName->extension = ".obj";
@@ -1253,7 +1254,7 @@ void PrintUsage( char * szSelf )
   printf( "Syntax: %s <file.prg> [options]\n"
           "\nOptions: \n"
           "\t/d<id>[=<val>]\t#define <id>\n"
-#ifdef OBJ_GENERATION
+#ifdef HARBOUR_OBJ_GENERATION
           "\t/f\t\tgenerated object file\n"
           "\t\t\t /fobj32 --> Windows/Dos 32 bits OBJ\n"
 #endif
@@ -1294,7 +1295,7 @@ FILENAME *SplitFilename( char *szFilename )
   if( iSlashPos == 0 )
   {
     /* root path ->  \filename */
-    pName->_buffer[ 0 ] =PATH_DELIMITER[ 0 ];
+    pName->_buffer[ 0 ] =OS_PATH_DELIMITER;
     pName->_buffer[ 1 ] ='\x0';
     pName->path =pName->_buffer;
     iPos =2;  /* first free position after the slash */
@@ -1368,7 +1369,7 @@ char *MakeFilename( char *szFileName, FILENAME *pFileName )
        */
       if( !( IS_PATH_SEP(pFileName->name[ 0 ]) || IS_PATH_SEP(pFileName->path[ iLen-1 ]) ) )
       {
-        szFileName[ iLen++ ] =PATH_DELIMITER[ 0 ];
+        szFileName[ iLen++ ] =OS_PATH_DELIMITER;
         szFileName[ iLen ] ='\x0';
       }
     }
@@ -3365,11 +3366,10 @@ void GenPortObj( char *szFileName, char *szName )
 {
    PFUNCTION pFunc = functions.pFirst;
    PCOMSYMBOL pSym = symbols.pFirst;
-   WORD w, wLen, wSym, wVar;
+   WORD w, wLen, wVar;
    LONG lPCodePos;
    LONG lPad;
    LONG lSymbols;
-   char chr;
    FILE * yyc;             /* file handle for C output */
 
    szName = szName;
@@ -3378,6 +3378,8 @@ void GenPortObj( char *szFileName, char *szName )
      printf( "Error opening file %s\n", szFileName );
      return;
    }
+
+   szName = szName;
 
    if( ! _iQuiet )
       printf( "\ngenerating portable object file...\n" );

@@ -21,5 +21,6 @@
 #define ERR_UNMATCHED_ELSEIF    16
 #define ERR_SYNTAX              17
 #define ERR_UNCLOSED_STRU       18
+#define ERR_UNMATCHED_EXIT      19
 
 void GenError( int, char*, char * );      /* generic parsing error management function */

@@ -1,6 +1,6 @@
 /* $Id$
  *
- * The Harbour virtual machine 
+ * The Harbour virtual machine
  */
 
 /* Please note the following comments we may use everywhere
@@ -134,7 +134,7 @@ extern ULONG ulMemoryMaxBlocks;   /* maximum number of used memory blocks */
 extern ULONG ulMemoryConsumed;    /* memory size consumed */
 extern ULONG ulMemoryMaxConsumed; /* memory max size consumed */
 
-#ifdef OBJ_GENERATION
+#ifdef HARBOUR_OBJ_GENERATION
 void ProcessObjSymbols ( void ); /* process Harbour generated OBJ symbols */
 
 typedef struct
@@ -187,7 +187,7 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
    StackInit();
    NewDynSym( &symEval );  /* initialize dynamic symbol for evaluating codeblocks */
    InitializeSets(); /* initialize Sets */
-#ifdef OBJ_GENERATION
+#ifdef HARBOUR_OBJ_GENERATION
    ProcessObjSymbols(); /* initialize Harbour generated OBJs symbols */
 #endif
 
@@ -196,14 +196,14 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
 
    DoInitFunctions( argc, argv ); /* process defined INIT functions */
 
-#ifdef HARBOUR_MAIN
+#ifdef HARBOUR_START_PROCEDURE
    {
-     PDYNSYM pDynSym =FindDynSym( HARBOUR_MAIN );
+     PDYNSYM pDynSym =FindDynSym( HARBOUR_START_PROCEDURE );
      if( pDynSym )
        pSymStart =pDynSym->pSymbol;
      else
      {
-       printf( "Can\'t locate the starting procedure: \'%s\'", HARBOUR_MAIN );
+       printf( "Can\'t locate the starting procedure: \'%s\'", HARBOUR_START_PROCEDURE );
        exit(1);
     }
    }
@@ -1826,7 +1826,7 @@ void ProcessSymbols( PSYMBOL pModuleSymbols, WORD wModuleSymbols ) /* module sym
 {
    PSYMBOLS pNewSymbols, pLastSymbols;
    WORD w;
-#ifdef OBJ_GENERATION
+#ifdef HARBOUR_OBJ_GENERATION
    static int iObjChecked = 0;
 
    if( ! iObjChecked )
@@ -1862,7 +1862,7 @@ void ProcessSymbols( PSYMBOL pModuleSymbols, WORD wModuleSymbols ) /* module sym
    }
 }
 
-#ifdef OBJ_GENERATION
+#ifdef HARBOUR_OBJ_GENERATION
 void ProcessObjSymbols( void )
 {
    POBJSYMBOLS pObjSymbols = ( POBJSYMBOLS ) &HB_FIRSTSYMBOL;

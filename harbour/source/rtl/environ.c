@@ -14,6 +14,17 @@
 
 #ifdef __WATCOMC__
   #include <i86.h>
+  #if defined(__386__) && !defined(__WINDOWS_386__)
+    #define INT_86 int386
+  #else
+    #define INT_86 int86
+  #endif
+#else
+  #if defined(__EMX__)
+    #define INT_86 _int86
+  #else
+    #define INT_86 int86
+  #endif
 #endif
 
 HARBOUR OS()
@@ -101,22 +112,7 @@ HARBOUR OS()
    /* detect OS/2 */
    regs.h.ah = 0x30;
 
-#if defined(__WATCOMC__) && defined(__386__)
-
-   int386(0x21, &regs, &regs);
-
-#else
-
-#if defined(__EMX__)
-
-   _int86(0x21, &regs, &regs);
-
-#else
-
-   int86(0x21, &regs, &regs);
-
-#endif /* __EMX__ */
-#endif /* WATCOMC */
+   INT_86( 0x21, &regs, &regs );
 
    if(regs.h.al >= 10)
    {
@@ -139,28 +135,13 @@ HARBOUR OS()
       hb_osminor  = _osminor;
       regs.w.ax = 0x160A;
 
-#if defined(__WATCOMC__) && defined(__386__)
+      INT_86( 0x2F, &regs, &regs );
 
-      int386(0x2F, &regs, &regs);
-
-#else
-
-#if defined(__EMX__)
-
-      _int86(0x2F, &regs, &regs);
-
-#else
-
-      int86(0x2F, &regs, &regs);
-
-#endif /* EMX */
-#endif /* WATCOMC */
-
-      if(regs.x.ax == 0)
+      if( regs.w.ax == 0)
       {
          hb_os = "Windows";
-         hb_osmajor  = regs.x.bx / 256;
-         hb_osminor  = regs.x.bx % 256;
+         hb_osmajor  = regs.w.bx / 256;
+         hb_osminor  = regs.w.bx % 256;
          hb_osletter = 0;
       }
       else

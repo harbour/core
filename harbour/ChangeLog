@@ -1,3 +1,35 @@
+19990520-01:40 Ryszard Glab <rglab@imid.med.pl>
+
+    * source/compiler/harbour.y
+	-corrected support for INCLUDE environment variable (the last path
+        was ignored)
+	-definition of path delimiter and path list separator was moved to
+        hbsetup.h file. OS_PATH_DELIMITER and OS_PATH_LIST_SEPARATOR are
+	now defined.
+        -changed #define from OBJ_GENERATION to HARBOUR_OBJ_GENERATION
+
+    * source/compiler/harbour.l
+	-EXIT keyword is now properly supported
+
+    * source/vm/hvm.c
+	-changed #define from OBJ_GENERATION to HARBOUR_OBJ_GENERATION
+        -changed #define from HARBOUR_MAIN to HARBOUR_START_PROCEDURE
+
+    * include/hbsetup.h
+	-changed #define from OBJ_GENERATION to HARBOUR_OBJ_GENERATION
+        -changed #define from HARBOUR_MAIN to HARBOUR_START_PROCEDURE
+        -added #define OS_PATH_DELIMITER
+        -added #define OS_PATH_LIST_SEPARATOR
+
+    * include/hberrors.h
+	-added #define ERR_UNMATCHED_EXIT
+
+    * source/rtl/environ.c
+	-corrected support for Watcom C/C++ compiler
+
+    * tests/working/keywords.prg
+	-added test code for EXIT keyword
+
 19990519-21:22 CET Eddie Runia
   * makefile.b16
     Patrick patch (command-line too long entered)
