@@ -200,7 +200,7 @@ static void GenerateLocalNames( FILE * hObjFile )
 
 static void GenerateSymbolsSegment( FILE * hObjFile )
 {
-  BYTE symbolsData[]   = { 0, 0, 0, 0, 0, 0 };
+  BYTE symbolsData[]   = { 0, 0, 0, 0, 0, 0, 0, 0 };
   BYTE groupDGroup[]   = { 2, 3, 4, 0 }; /* segments defined order for DGROUP */
   BYTE groupSymGroup[] = { 5, 6, 7, 0 }; /* segments defined order for SYMGROUP */
   BYTE groupInitData[] = { 8, 9, 10, 0 }; /* segments defined order for INITDATA */
@@ -210,7 +210,7 @@ static void GenerateSymbolsSegment( FILE * hObjFile )
                             0 ); /* segment length */
   DefineSegment( hObjFile, 11,   /* HB_SYMBOLS position + 1 into localNames */
                             6,   /* "DATA" position + 1 into localNames */
-                            6 ); /* segment length */
+                            8 ); /* segment length */
   DefineSegment( hObjFile, 12,   /* HB_ENDSYMBOLS position + 1 into localNames */
                             6,   /* "DATA" position + 1 into localNames */
                             0 ); /* segment length */
@@ -233,7 +233,7 @@ static void GenerateSymbolsSegment( FILE * hObjFile )
 
   EnumeratedData( hObjFile, 6, symbolsData, sizeof( symbolsData ), 0 ); /* HB_SYMBOLS defined order segment */
 
-  Fixup( hObjFile, 0xE4, 2, /* offset into HB_SYMBOLS segment */
+  Fixup( hObjFile, 0xE4, 4, /* offset into HB_SYMBOLS segment */
                       0x54,
                          4 ); /* DATA segment defined order */
 }
@@ -275,13 +275,13 @@ static void GenerateDataSegment( FILE * hObjFile )
       if( IsExternal( ul ) )
         {
           if( ! ( pSymbol->cScope & HB_FS_MESSAGE ) )
-            Fixup( hObjFile, 0xE4, ( ul * sizeof( HB_SYMB ) ) + 5, 0x56,
+            Fixup( hObjFile, 0xE4, ( ul * sizeof( HB_SYMB ) ) + 8, 0x56,
                    GetExternalPos( GetSymbolName( ul ) ) + 1 );
         }
       else
         {
           /* if( ! ( pSymbol->cScope & HB_FS_MESSAGE ) ) */
-          Fixup( hObjFile, 0xE4, ( ul * sizeof( HB_SYMB ) ) + 5, 0x54, 1 ); /* function address location */
+          Fixup( hObjFile, 0xE4, ( ul * sizeof( HB_SYMB ) ) + 8, 0x54, 1 ); /* function address location */
         }
       pSymbol = pSymbol->pNext;
     }
