@@ -39,7 +39,7 @@
 #define _RDD_API
 
 #include "clipdefs.h"
-#include "rddapi.h"
+#include "hbapirdd.h"
 #include "item.api"
 
 #endif /* _RDD_API */

@@ -39,7 +39,7 @@
 #define _ERROR_API
 
 #include "clipdefs.h"
-#include "errorapi.h"
+#include "hbapierr.h"
 
 typedef PHB_ITEM  ERRORP;
 

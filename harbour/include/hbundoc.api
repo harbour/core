@@ -39,7 +39,7 @@
 #define HB_UNDOC_API_
 
 #include "clipdefs.h"
-#include "filesys.h"
+#include "hbapifs.h"
 
 /* Undocumented CA-Cl*pper Extend API */
 

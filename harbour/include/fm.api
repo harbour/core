@@ -39,7 +39,7 @@
 #define _FM_API
 
 #include "clipdefs.h"
-#include "extend.h"
+#include "hbapi.h"
 
 /* Functions */
 

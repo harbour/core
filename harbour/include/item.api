@@ -38,7 +38,7 @@
 #ifndef _ITEM_API
 #define _ITEM_API
 
-#include "itemapi.h"
+#include "hbapiitm.h"
 
 typedef PEVALINFO EVALINFOP;
 

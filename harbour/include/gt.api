@@ -39,7 +39,7 @@
 #define _GT_API
 
 #include "clipdefs.h"
-#include "gtapi.h"
+#include "hbapigt.h"
 
 #define _gtBox          hb_gtBox
 #define _gtBoxD         hb_gtBoxD

@@ -1,3 +1,7 @@
+20000303-20:50 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * include/*.api
+     ! Changed header filenames to the new ones.
+
 20000303-02:06 GMT+1 Victor Szakats <info@szelvesz.hu>
    + tests/regress/rt_init.ch
    + tests/regress/rt_vars.ch

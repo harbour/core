@@ -53,7 +53,7 @@
 #define _FILESYS_API
 
 #include "clipdefs.h"
-#include "filesys.h"
+#include "hbapifs.h"
 #include "error.api"
 
 /* Compatible types */

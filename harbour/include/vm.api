@@ -39,7 +39,7 @@
 #define _VM_API
 
 #include "clipdefs.h"
-#include "extend.h"
+#include "hbapi.h"
 
 /* Standard */
 #define _xvalloc( size, flags )      hb_xalloc( size )
