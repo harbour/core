@@ -350,8 +350,10 @@ static ERRCODE hb_dbfLockRecord( DBFAREAP pArea, ULONG ulRecNo, BOOL * pResult,
       * pResult = TRUE;
       if( !pArea->fPositioned )
          hb_dbfGoTo( pArea, pArea->ulRecNo );
+      /*
       else
          pArea->fValidBuffer = FALSE;
+      */
    }
    else
       * pResult = FALSE;

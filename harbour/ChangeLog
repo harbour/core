@@ -1,3 +1,7 @@
+2001-05-15 20:50 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/rdd/dbf1.c
+     * bug fixed, reported by Antonio Linares, related to record locking
+
 2001-05-15 15:02 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * contrib/hbclip/hbarg.c 
