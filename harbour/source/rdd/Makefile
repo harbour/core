@@ -15,6 +15,7 @@ C_SOURCES=\
 
 PRG_SOURCES=\
 	dbf0.prg \
+   dbfuncs.prg \
 	dblist.prg \
 	dbsort.prg \
 	dbstrux.prg \

@@ -438,6 +438,7 @@ RDD_LIB_OBJS = \
    \
    $(OBJ_DIR)\dbf0.obj \
    $(OBJ_DIR)\dblist.obj \
+   $(OBJ_DIR)\dbfuncs.obj \
    $(OBJ_DIR)\dbsort.obj \
    $(OBJ_DIR)\hbdbsort.obj \
    $(OBJ_DIR)\dbstrux.obj \

@@ -1,3 +1,16 @@
+2001-08-19 10:40 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   +source/rdd/dbfuncs.prg
+     * Code for Ca-Clipper MApper DB function to 10 characters
+     The follow functions were mapped:
+     DBCLEARFIL(),DBSETDRIVE(),DBSETRELAT(),DBRLOCKLIS(),DBCLOSEARE()
+     RDDSETDEFA(),DBSELECTAR(),DBUNLOCKAL(),DBCLEARREL(),DBSETFILTE()
+     DBFIELDINF(),DBORDERINF(),DBRECORDIN()
+   *makefile.bc
+    makefile.vc
+    hb_slex.bc
+    hbslex.vc
+    source/rdd/Makefile
+      * Added dbfuncs.prg to depedence list
 2001-08-18 17:00 MEST Martin Vogel <vogel@inttec.de>
 
    * contrib/libct/range.c

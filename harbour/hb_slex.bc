@@ -391,6 +391,7 @@ RDD_LIB_OBJS = \
    \
    $(OBJ_DIR)\dbf0.obj \
    $(OBJ_DIR)\dblist.obj \
+   $(OBJ_DIR)\dbfuncs.obj \
    $(OBJ_DIR)\dbsort.obj \
    $(OBJ_DIR)\hbdbsort.obj \
    $(OBJ_DIR)\dbstrux.obj \
@@ -852,6 +853,14 @@ $(OBJ_DIR)\dblist.c : $(RDD_DIR)\dblist.prg
 $(OBJ_DIR)\dblist.obj : $(OBJ_DIR)\dblist.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RDD_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\dbfuncs.c : $(RDD_DIR)\dbfuncs.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dbfuncs.obj : $(OBJ_DIR)\dbfuncs.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RDD_LIB) $(ARFLAGS) -+$@,,
+
 
 $(OBJ_DIR)\dbsort.c : $(RDD_DIR)\dbsort.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@

@@ -73,7 +73,7 @@
  *      Header file is set.ch
  *      Library is macro
  *  $SEEALSO$
- *
+ *      Macro compiler
  *  $END$
  */
 
