@@ -363,7 +363,7 @@ extern ULONG    hb_strAt( const char * szSub, ULONG ulSubLen, const char * szTex
 extern char *   hb_strUpper( char * szText, ULONG ulLen );
 extern char *   hb_strLower( char * szText, ULONG ulLen );
 extern char *   hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen );
-extern double   hb_strVal( const char * szText );
+extern double   hb_strVal( const char * szText, ULONG ulLen );
 extern char *   hb_strLTrim( const char * szText, ULONG * ulLen );
 extern ULONG    hb_strRTrimLen( const char * szText, ULONG ulLen, BOOL bAnySpace );
 

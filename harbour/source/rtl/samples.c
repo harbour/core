@@ -69,13 +69,13 @@ static ULONG hb_TimeStrToSec( char * pszTime )
    ulLen = strlen( pszTime );
 
    if( ulLen >= 1 )
-      ulTime += ( ULONG ) hb_strVal( pszTime ) * 3600;
+      ulTime += ( ULONG ) hb_strVal( pszTime, ulLen ) * 3600;
 
    if( ulLen >= 4 )
-      ulTime += ( ULONG ) hb_strVal( pszTime + 3 ) * 60;
+      ulTime += ( ULONG ) hb_strVal( pszTime + 3, ulLen - 3 ) * 60;
 
    if( ulLen >= 7 )
-      ulTime += ( ULONG ) hb_strVal( pszTime + 6 );
+      ulTime += ( ULONG ) hb_strVal( pszTime + 6, ulLen - 6 );
 
    return ulTime;
 }

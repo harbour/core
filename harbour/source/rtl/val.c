@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * VAL() function
  *
- * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,16 +33,61 @@
  *
  */
 
+#include <math.h>
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-/* returns the numeric value of a character string representation of a number  */
-double hb_strVal( const char * szText )
+/* returns the numeric value of a character string representation of a number */
+double hb_strVal( const char * szText, ULONG ulLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_strVal(%s)", szText));
+   double dValue = 0.0;
+   ULONG ulPos;
+   ULONG ulDecPos = 0;
+   BOOL bNegative = FALSE;
 
-   return atof( szText );
+   HB_TRACE(HB_TR_DEBUG, ("hb_strVal(%s, %d)", szText, ulLen));
+
+   /* Look for sign */
+
+   for( ulPos = 0; ulPos < ulLen; ulPos++ )
+   {
+      if( szText[ ulPos ] == '-' )
+      {
+         bNegative = TRUE;
+         ulPos++;
+         break;
+      }
+      else if( szText[ ulPos ] == '+' )
+      {
+         ulPos++;
+         break;
+      }
+      else if( ! HB_ISSPACE( szText[ ulPos ] ) )
+         break;
+   }
+
+   /* Build the number */
+
+   for(; ulPos < ulLen; ulPos++ )
+   {
+      if( szText[ ulPos ] == '.' && ulDecPos == 0 )
+      {
+         ulDecPos++;
+      }
+      else if( szText[ ulPos ] >= '0' && szText[ ulPos ] <= '9' )
+      {
+         if( ulDecPos )
+            dValue += ( ( double ) ( szText[ ulPos ] - '0' ) ) / pow( 10.0, ( double ) ulDecPos++ );
+         else
+            dValue = ( dValue * 10 ) + ( ( double ) ( szText[ ulPos ] - '0' ) );
+      }
+      else
+         break;
+   }
+
+   return bNegative && dValue != 0.0 ? -dValue : dValue;
 }
 
 /* returns the numeric value of a character string representation of a number  */
@@ -52,22 +97,29 @@ HB_FUNC( VAL )
 
    if( pText )
    {
-      int iWidth;
+      char * szText = hb_itemGetCPtr( pText );
+      int iWidth = ( int ) hb_itemGetCLen( pText );
       int iDec;
-      char * ptr = strchr( hb_itemGetCPtr( pText ), '.' );
+      double dValue = hb_strVal( szText, hb_itemGetCLen( pText ) );
 
-      if( ptr )
-      {
-         iWidth = ptr - hb_itemGetCPtr( pText );
-         iDec = strlen( ptr + 1 );
-      }
+      for( iDec = 0; iDec < iWidth && szText[ iDec ] != '.'; iDec++ );
+
+      if( iDec >= iWidth - 1 )
+         hb_retnlen( dValue, iWidth, 0 );
       else
       {
-         iWidth = strlen( hb_itemGetCPtr( pText ) );
-         iDec = 0;
-      }
+         /* NOTE: Kludge Warning! This condition:
+                  "|| ( iDec == 1 && szText[ 0 ] == '-' && dValue != 0.0 )" 
+                  may not be the generic way to handle the width of this "-.1" 
+                  string. I could not find a matching case which
+                  fails for the same reason, nor a better way to handle it.
+                  The problem is that in this case only, the width is 
+                  calculated upon conditions which can only be discovered by 
+                  parsing the string, but the parsing is made by a lower level
+                  generic function. [vszakats] */
 
-      hb_retndlen( hb_strVal( hb_itemGetCPtr( pText ) ), iWidth, iDec );
+         hb_retnlen( dValue, iDec + ( iDec == 0 || ( iDec == 1 && szText[ 0 ] == '-' && dValue != 0.0 ) ? 1 : 0 ), iWidth - iDec - 1 );
+      }
    }
    else
    {
@@ -80,4 +132,3 @@ HB_FUNC( VAL )
       }
    }
 }
-

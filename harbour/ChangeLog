@@ -1,3 +1,16 @@
+20000329-16:33 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbapi.h
+   * source/rtl/val.c
+   * source/rtl/ampm.c
+   * source/rtl/sample.c
+     ! hb_strVal() and VAL() made completely CA-Cl*pper compatible.
+       Now 21 less test failures in HBTEST. atof() is no longer used.
+
+   * utils/hbtest/rt_str.prg
+   * utils/hbtest/rt_math.prg
+     + Added some VAL() related tests.
+
 20000328-23:04 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * config/dos/global.cf
