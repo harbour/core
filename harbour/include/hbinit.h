@@ -173,6 +173,10 @@ extern void HB_EXPORT hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols )
 
 #endif
 
+#if ! defined(__GNUC__) && ! defined(_MSC_VER)
+  #define HB_PRAGMA_STARTUP  
+#endif
+
 #if defined(HB_EXTERN_C)
 }
 #endif

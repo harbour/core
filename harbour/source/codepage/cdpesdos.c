@@ -32,8 +32,9 @@
 #define ACCENTED_INTERLEAVED   0    
 
 //-----------------------------------------------------------------------------
+// Documentation: see cdp_tpl.c
 
-static HB_CODEPAGE s_codepage = 
+static HB_CODEPAGE s_codepage =        
 { 
   "ES", 
   NUMBER_OF_CHARACTERS,
@@ -55,7 +56,7 @@ static HB_CODEPAGE s_codepage =
 
 HB_CODEPAGE_INIT( ES );
 
-#ifdef HB_USE_PRAGMA_STARTUP
+#ifdef HB_PRAGMA_STARTUP
    #pragma startup hb_codepage_Init_ES
 #endif
 
