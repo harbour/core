@@ -68,7 +68,6 @@
  *    hb_errRT_BASE()
  *    hb_errRT_BASE_Ext1()
  *    hb_errRT_BASE_Subst()
- *    hb_errInternal()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -723,7 +722,7 @@ PHB_ITEM hb_errRT_New_Subst(
    hb_errPutOsCode( pError, uiOsCode );
    hb_errPutFlags( pError, uiFlags | EF_CANSUBSTITUTE );
 
-   return( pError );
+   return pError;
 }
 
 HB_FUNC( __ERRRT_BASE )
@@ -973,25 +972,3 @@ USHORT hb_errRT_TOOLS( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, c
 
    return uiAction;
 }
-
-/* NOTE: Use as minimal calls from here, as possible.
-         Don't allocate memory from this function. [vszakats] */
-
-void hb_errInternal( ULONG ulIntCode, char * szText, char * szPar1, char * szPar2 )
-{
-   char buffer[ 128 ];
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_errInternal(%lu, %s, %s, %s)", ulIntCode, szText, szPar1, szPar2));
-
-   hb_conOutErr( hb_conNewLine(), 0 );
-   sprintf( buffer, ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR ), ulIntCode );
-   hb_conOutErr( buffer, 0 );
-   sprintf( buffer, szText != NULL ? szText : ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR + ulIntCode - 9000 ), szPar1, szPar2 );
-   hb_conOutErr( buffer, 0 );
-   hb_conOutErr( hb_conNewLine(), 0 );
-
-   hb_stackDispCall();
-
-   exit( EXIT_FAILURE );
-}
-

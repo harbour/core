@@ -8,6 +8,23 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-02-13 23:57 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   + source/codepage/cdphu852.c
+   + source/codepage/cdphuwin.c
+   * source/codepage/Makefile
+     + Added Hungarian 852 and Windows sorting codepages.
+
+   * source/rtl/errorapi.c
+   + source/rtl/errorint.c
+   * source/rtl/Makefile
+   * makefile.bc
+   * makefile.nt
+   * makefile.vc
+     + hb_errInternal() put in a separate source file, to ease 
+       replacing/override it in link-time, this may be useful 
+       for GUI apps, logging or something like this.
+
 2004-02-13 23:36 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/vm/hvm.c

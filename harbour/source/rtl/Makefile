@@ -30,6 +30,7 @@ C_SOURCES=\
     do.c         \
     empty.c      \
     errorapi.c   \
+    errorint.c   \
     file.c       \
     filehb.c     \
     filesys.c    \
