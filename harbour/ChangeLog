@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-09-25 20:00 GMT+0100 Martin Vogel <vogel@inttec.de>
+  * contrib/libct/color.prg
+    ! fixed initialization bug reported by Marek Horodyski<homar@altkom.com.pl>
+
 2002-09-25 13:15 UTC+0300 Gustavo Junior Alves <alves@coslinux.com.br>
   * source/rtl/file.c
   * source/rtl/filesys.c

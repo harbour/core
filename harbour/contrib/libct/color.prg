@@ -214,7 +214,7 @@ FUNCTION COLORTON( cColor )
 
   local cColorFore, cColorBack
   local nColorFore, nColorBack
-  local lHiColor, lBlinking
+  local lHiColor := .f., lBlinking := .f.
   local nSep
 
   if valtype( cColor ) == "N"
