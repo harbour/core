@@ -99,6 +99,10 @@ static int last_error = 0;
 #define FS_RELATIVE     1
 #define FS_END          2
 
+/* FLAGS TO LOCK  */
+#define FL_LOCK         0
+#define FL_UNLOCK       1
+
 /*
  * NOTE: for avoid include stdio.h,
  * this include define as an 'struct FILE'
@@ -266,8 +270,21 @@ int _fsLock( int handle, long start, long length, long mode )
         int result=0;
 
 #if defined(HAVE_POSIX_IO)
-/* TODO: I'm thinking about this :) */
+        if (mode == FL_LOCK)
+        {
+           last_error = 0;
+           result = lock(handle, start, length);
+           last_error = errno;
+        }
+        if (mode == FL_UNLOCK)
+        {
+           last_error = 0;
+           result = unlock(handle, start, length);
+           last_error = errno;
+        }
+        result = (last_error=0?1:0);
 #endif
+
         return result;
 }
 
