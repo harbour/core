@@ -8,6 +8,17 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-08-27 17:15 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * include/fileio.ch
+   * source/rtl/filesys.c
+   * source/rtl/fstemp.c
+     + added FO_EXCL for exclusive create
+     + added convert_create_flags_ex
+     ! fixed warning in hb_fsPOpen
+     ! fixed hb_fsCreateEx(), HB_FCREATE(),
+       hb_fsCreateTemp(), HB_FTEMPCREATE().
+       These functions were not working.
+
 2002-08-25 17:40 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
   * source/common/hbffind.c
     * fixed an problem on hb_fsFindFirst() and hb_fsFindNext() apis (Windows Section)
