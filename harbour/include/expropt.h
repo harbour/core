@@ -47,6 +47,11 @@ typedef struct HB_EXPR_
       BOOL asLogical;      /* logical value */
       struct
       {
+        struct HB_EXPR_ *pMacro;  /* macro variable */
+        char *szName;             /* variable name  */
+      } asRTVar;      /* PUBLIC or PRIVATE variable declaration */
+      struct
+      {
          long lVal;           /* long value */
          double dVal;         /* double value */
          unsigned char bDec;  /* unsigned char used intentionally */
@@ -134,7 +139,8 @@ HB_EXPR_PTR hb_compExprNewVar( char * );
 HB_EXPR_PTR hb_compExprNewAliasVar( HB_EXPR_PTR, HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprNewAliasExpr( HB_EXPR_PTR, HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprNewMacro( HB_EXPR_PTR, unsigned char, char * );
-HB_EXPR_PTR hb_compExprNewSymbol( char * );
+HB_EXPR_PTR hb_compExprNewFunName( char * );
+HB_EXPR_PTR hb_compExprNewRTVar( char *, HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprNewAlias( char * );
 HB_EXPR_PTR hb_compExprNewEQ( HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprNewNE( HB_EXPR_PTR );

@@ -137,7 +137,8 @@ static void hb_macroSyntaxError( HB_MACRO_PTR pMacro )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_macroSyntaxError(%p)", pMacro));
 
-   hb_macroDelete( pMacro );   /* TODO: use pMacro->status for more detailed error messagess */
+   if( pMacro )
+      hb_macroDelete( pMacro );   /* TODO: use pMacro->status for more detailed error messagess */
 
    pResult = hb_errRT_BASE_Subst( EG_SYNTAX, 1449, NULL, "&" );
 
@@ -148,9 +149,9 @@ static void hb_macroSyntaxError( HB_MACRO_PTR pMacro )
    }
 }
 
-/* Check if passed string is a valid function name
+/* Check if passed string is a valid function or variable name
  */
-static BOOL hb_macroIsIdent( char * szString )
+BOOL hb_macroIsIdent( char * szString )
 {
    char * pTmp = szString;
    BOOL bIsIdent = FALSE;
@@ -191,13 +192,21 @@ static BOOL hb_macroIsIdent( char * szString )
  *    string if there was no macro operator in it or a pointer to a new
  *    allocated memory with expanded string if there was a macro operator
  *    in passed string.
+ * NOTE:
+ *    Clipper restarts scanning of the text from the beginning of
+ *    inserted text after macro expansion, for example:
+ *    PRIVATE a:='&', b:='c'
+ *    PRIVATE &a.b   // this will create 'c' variable
+ *
+ *    PRIVATE a:=0, b:='b', ab:='c'
+ *    PRIVATE &a&b   //this will cause syntax error '&'
+ *
  */
-static char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
+char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
 {
    char * szResult;
-   ULONG ulCopy;
-   ULONG ulResLen;
-   ULONG ulResPos;
+   ULONG ulResStrLen;
+   ULONG ulResBufLen;
    ULONG ulCharsLeft;
    char * pHead;
    char * pTail;
@@ -208,29 +217,28 @@ static char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
    if( pHead == NULL )
       return szString;  /* no more processing is required */
 
+   /* initial length of the string and the result buffer (it can contain null bytes) */
+   ulResBufLen = ulResStrLen = *pulStringLen;
    /* initial buffer for return value */
-   szResult = (char *) hb_xgrab( *pulStringLen + 1 );
-   /* copy initial length of the string (it can contain null bytes) */
-   ulResLen  = ulCharsLeft = *pulStringLen;
-   /* current position within the buffer where byte will be copied */
-   ulResPos  = 0;
+   szResult = (char *) hb_xgrab( ulResBufLen + 1 );
 
-   pTail = szString;
+   /* copy the input string with trailing zero byte
+    */
+   memcpy( szResult, szString, ulResStrLen + 1 );
+   /* switch the pointer so it will point into the result buffer
+    */
+   pHead = szResult + ( pHead - szString );
+
    do
    {
-      ulCopy = pHead - pTail;
-      if( ulCopy )
-      {
-         /* copy bytes located before '&' character */
-         memcpy( szResult + ulResPos, pTail, ulCopy );
-         ulResPos += ulCopy;
-         pTail = pHead;
-      }
-
+      /* store the position where '&' was found so we can restart scanning
+       * from this point after macro expansion
+       */
+      pTail = pHead;
       /* check if the next character can start a valid identifier
       * (only _a-zA-Z are allowed)
       */
-      ++pHead;
+      ++pHead;    /* skip '&' character */
       if( *pHead == '_' || (*pHead >= 'A' && *pHead <= 'Z') || (*pHead >= 'a' && *pHead <= 'z') )
       {
          /* extract a variable name */
@@ -266,74 +274,64 @@ static char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
             szValPtr = hb_memvarGetStrValuePtr( pName, &ulValLen );
             if( szValPtr )
             {
-               char * szValSubst;
-
                if( *pHead == '.' )
                {
                   /* we have stopped at the macro terminator '.' - skip it */
                   ++pHead;
                   ++ulNameLen;
                }
+               ++ulNameLen;   /* count also the '&' character */
 
-               /* Check if returned string contains nested macro operators
-                * and expand them if they exist
-                */
-               szValSubst = hb_macroTextSubst( szValPtr, &ulValLen );
+               /* number of characters left on the right side of a variable name */
+               ulCharsLeft = ulResStrLen - ( pHead - szResult );
 
-               /* expand the result buffer if the substituted value is too
-                * long to be stored in the current buffer
+               /* NOTE: 
+                * if a replacement string is shorter then the variable
+                * name then we don't have to reallocate the result buffer:
+                * 'ulResStrLen' stores the current length of a string in the buffer
+                * 'ulResBufLen' stores the length of the buffer
                 */
-               if( (ulResPos + ulValLen) >= ulResLen )
+               if( ulValLen > ulNameLen )
                {
-                  ulResLen = ulResPos + ulValLen;
-                  szResult = ( char * ) hb_xrealloc( szResult, ulResLen + 1 );
+                  ulResStrLen += ( ulValLen - ulNameLen );
+                  if( ulResStrLen > ulResBufLen )
+                  {
+                     ulResBufLen = ulResStrLen;
+                     szResult = ( char * ) hb_xrealloc( szResult, ulResBufLen + 1 );
+                  }
                }
-               memcpy( szResult + ulResPos, szValSubst, ulValLen );
-               ulResPos += ulValLen;
-               if( szValSubst != szValPtr )
-               {
-                  /* a new pointer was created in hb_macroTextSubst
-                   * (if a macro operator was expanded) - we should release it
-                   */
-                  hb_xfree( szValSubst );
-               }
-               /* move a pointer to the characters processed so far -
-                * replaced characters shouldn't be copied
+               else
+                  ulResStrLen -= ( ulNameLen - ulValLen );
+
+               /* move bytes located on the right side of a variable name */
+               memmove( pTail + ulValLen, pHead, ulCharsLeft + 1 );
+               /* copy substituted value */
+               memcpy( pTail, szValPtr, ulValLen );
+               /* restart scanning from the beginning of replaced string */
+               /* NOTE: This causes that the following code:
+                *    a := '&a'
+                *    var := '&a.b'
+                * is the same as:
+                *    var := '&ab'
                 */
-               pTail = pHead;
+               pHead = pTail;
             }
-
          }
       }
-      /* copy characters that were not a valid identifier */
-      ulCopy = pHead - pTail;
-      if( ulCopy )
-      {
-         memcpy( szResult + ulResPos, pTail, ulCopy );
-         ulResPos += ulCopy;
-         pTail = pHead;
-      }
-      ulCharsLeft = *pulStringLen - ( pTail - szString );
+      ulCharsLeft = ulResStrLen - ( pHead - szResult );
    }
-   while( ulCharsLeft && ( pHead = (char *) memchr( (void *)pTail, '&', ulCharsLeft ) ) );
+   while( ulCharsLeft && ( pHead = (char *) memchr( (void *)pHead, '&', ulCharsLeft ) ) );
 
-   if( ulCharsLeft )
-   {
-      /* copy trailing characters */
-      memcpy( szResult + ulResPos, pTail, ulCharsLeft );
-      ulResPos += ulCharsLeft;
-   }
-
-   if( ulResPos < ulResLen )
+   if( ulResStrLen < ulResBufLen )
    {
       /* result string is shorter then allocated buffer -
        * cut it to a required length
        */
-      szResult = ( char * ) hb_xrealloc( szResult, ulResPos + 1 );
+      szResult = ( char * ) hb_xrealloc( szResult, ulResStrLen + 1 );
    }
-   szResult[ ulResPos ] = 0;  /* place terminating null character */
+   szResult[ ulResStrLen ] = 0;  /* place terminating null character */
    /* return a length of result string */
-   *pulStringLen = ulResPos;
+   *pulStringLen = ulResStrLen;
 
    return szResult;   /* a new memory buffer was allocated */
 }
@@ -379,9 +377,9 @@ void hb_macroSetValue( HB_ITEM_PTR pItem )
 
    if( hb_macroCheckParam( pItem ) )
    {
+      char * szString = pItem->item.asString.value;
       HB_MACRO struMacro;
       int iStatus;
-      char * szString = pItem->item.asString.value;
 
       struMacro.bShortCuts = hb_comp_bShortCuts;
       struMacro.bName10    = hb_comp_bUseName10;
@@ -434,7 +432,6 @@ void hb_macroPushSymbol( HB_ITEM_PTR pItem )
 
    if( hb_macroCheckParam( pItem ) )
    {
-      HB_MACRO struMacro;
       char * szString;
       BOOL bNewBuffer;
       ULONG ulLength = pItem->item.asString.length;
@@ -460,7 +457,7 @@ void hb_macroPushSymbol( HB_ITEM_PTR pItem )
       {
          if( bNewBuffer )
             hb_xfree( szString );   /* free space allocated in hb_macroTextSubst */
-         hb_macroSyntaxError( &struMacro );
+         hb_macroSyntaxError( NULL );
       }
    }
 }

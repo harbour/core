@@ -1,3 +1,41 @@
+20000103-19:48 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/expropt.h
+    *include/hbexpr.c
+        * renamed: hb_compExprNewSymbol() -> hb_compExprNewFunName()
+        * added new expression type: HB_ET_RTVAR and hb_compExprNewRTVar()
+        for PUBLIC and PRIVATE variable declarations
+
+    *source/compiler/expropt.c
+    *source/compiler/harbour.c
+    *source/compiler/harbour.y
+    *source/compiler/harbour.l
+        * added support for macro variables in PUBLIC and PRIVATE declarations
+	PRIVATE &var, &var.end
+	* optimization of PUBLIC/PRIVATE variables creation (there was a 
+	single call __MVPUBLIC/__MVPRIVATE function for every variable,
+	there is a single call for a single statement now), for example:
+	PRIVATE var1, var2, var3
+	// 3 calls previously - only one call now
+
+    *source/macro/macro.y
+        * renamed: hb_compExprNewSymbol() -> hb_compExprNewFunName()
+        * fixed handling of &var.text syntax
+
+    *source/macro/macro.c
+        * fixed handling of &var.text syntax
+        * handling of text substitution is now Clipper compatible -
+	previously only substituted value was scanned for nested macro
+	operator - the whole text is rescanned now, for example:
+	PRIVATE a:='&', b:='b'
+	? &a.b
+	will print a value of variable 'b' now instead of a generation
+	of a syntax error.
+
+    *include/extend.h
+        * added declaration for hb_macroTextSubst()
+        * added declaration for hb_macroIsIdent()
+
 20000102-14:27 EST Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/environ.c
     * remove Borland check on define of VER_PLATFORM_WIN32_CE

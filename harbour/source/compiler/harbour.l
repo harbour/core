@@ -947,7 +947,7 @@ Separator     {SpaceTab}
 "priv"("ate"|"at"|"a")? { BEGIN PRIVATE_;
                   yylval.string = hb_strupr( hb_strdup( yytext ) );
                 }
-<PRIVATE_>{Separator}+[_a-zA-Z] { /* an Identifier after PRIVATE */
+<PRIVATE_>{Separator}+[_a-zA-Z\&] { /* an Identifier after PRIVATE */
                  unput( yytext[ yyleng-1 ] );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  if( hb_comp_iState == LOOKUP )
@@ -963,7 +963,6 @@ Separator     {SpaceTab}
                  }
                }
 <PRIVATE_>{Separator}*[^a-zA-Z] { /* any character (not identifier) after PRIVATE */
-                /* TODO: add support for macro operator */
                  unput( yytext[ yyleng-1 ] );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  hb_comp_iState =IDENTIFIER;
@@ -979,7 +978,7 @@ Separator     {SpaceTab}
 "publ"("ic"|"i")? { BEGIN PUBLIC_;
                   yylval.string = hb_strupr( hb_strdup( yytext ) );
                 }
-<PUBLIC_>{Separator}+[_a-zA-Z]   { /* an identifier after PUBLIC */
+<PUBLIC_>{Separator}+[_a-zA-Z\&]   { /* an identifier after PUBLIC */
                  unput( yytext[ yyleng-1 ] );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  if( hb_comp_iState == LOOKUP )
@@ -995,7 +994,6 @@ Separator     {SpaceTab}
                  }
                }
 <PUBLIC_>{Separator}*[^a-zA-Z] { /* any character (not identifier) after PUBLIC */
-                /* TODO: add support for macro operator */
                  unput( yytext[ yyleng-1 ] );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  hb_comp_iState =IDENTIFIER;
@@ -1097,10 +1095,10 @@ Separator     {SpaceTab}
 <WITH_>{Separator}*.            {
                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                 unput( yytext[ yyleng-1 ] );
-                if( hb_comp_iState == WHILE || 
-		    hb_comp_iState == DO || 
-		    hb_comp_iState == MACROVAR || 
-		    hb_comp_iState == MACROTEXT || 
+                if( hb_comp_iState == WHILE ||
+		    hb_comp_iState == DO ||
+		    hb_comp_iState == MACROVAR ||
+		    hb_comp_iState == MACROTEXT ||
 		    hb_comp_iState == IDENTIFIER )
                 { /* DO <ident> WITH <arg> */
                   hb_comp_iState =WITH;

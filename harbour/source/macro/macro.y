@@ -57,7 +57,7 @@
 #define malloc  hb_xgrab
 #undef free
 #define free hb_xfree
-/* This is workaround of yyparse() declaration bug in bison.simple 
+/* This is workaround of yyparse() declaration bug in bison.simple
 */
 #ifdef __GNUC__
 #undef __GNUC__
@@ -253,8 +253,21 @@ VarAlias    : IDENTIFIER ALIASOP      { $$ = hb_compExprNewAlias( $1 ); }
 MacroVar    : MACROVAR        { $$ = hb_compExprNewMacro( NULL, '&', $1 );
                                 HB_MACRO_CHECK( $$ );
                               }
-            | MACROTEXT       { $$ = hb_compExprNewMacro( NULL, 0, $1 );
-                                HB_MACRO_CHECK( $$ );
+            | MACROTEXT       {  ULONG ulLen = strlen( $1 );
+                                 char * szVarName = hb_macroTextSubst( $1, &ulLen );
+                                 if( hb_macroIsIdent( szVarName ) )
+                                 {
+                                    $$ = hb_compExprNewVar( szVarName );
+                                    hb_xfree( $1 );
+                                    HB_MACRO_CHECK( $$ );
+                                 }
+                                 else
+                                 {
+                                    /* invalid variable name
+                                     */
+                                    hb_xfree( $1 );
+                                    YYABORT;
+                                 }
                               }
 ;
 
@@ -333,7 +346,7 @@ VariableAt  : NilValue      ArrayIndex    { $$ = $2; }
 
 /* Function call
  */
-FunCall    : IDENTIFIER '(' ArgList ')'   { $$ = hb_compExprNewFunCall( hb_compExprNewSymbol( $1 ), $3, HB_MACRO_PARAM );
+FunCall    : IDENTIFIER '(' ArgList ')'   { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( $1 ), $3, HB_MACRO_PARAM );
                                             HB_MACRO_CHECK( $$ );
                                           }
            | MacroVar '(' ArgList ')'     { $$ = hb_compExprNewFunCall( $1, $3, HB_MACRO_PARAM );

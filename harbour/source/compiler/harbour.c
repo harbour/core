@@ -479,21 +479,17 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
             break;
          case VS_PRIVATE:
             {
-               hb_compGenPushSymbol( hb_strdup( "__MVPRIVATE" ), 1);
-               hb_compGenPushNil();
-               hb_compGenPushSymbol( hb_strdup( szVarName ), 0 );
-               hb_compGenPCode3( HB_P_DO, 1, 0 );
-               pSym = hb_compSymbolFind( szVarName, NULL );
+               pSym = hb_compSymbolFind( szVarName, &wPos ); /* check if symbol exists already */
+               if( ! pSym )
+                  pSym = hb_compSymbolAdd( hb_strdup( szVarName ), &wPos );
                pSym->cScope |= VS_MEMVAR;
             }
             break;
          case VS_PUBLIC:
             {
-               hb_compGenPushSymbol( hb_strdup( "__MVPUBLIC" ), 1);
-               hb_compGenPushNil();
-               hb_compGenPushSymbol( hb_strdup( szVarName ), 0 );
-               hb_compGenPCode3( HB_P_DO, 1, 0 );
-               pSym = hb_compSymbolFind( szVarName, NULL );
+               pSym = hb_compSymbolFind( szVarName, &wPos ); /* check if symbol exists already */
+               if( ! pSym )
+                  pSym = hb_compSymbolAdd( hb_strdup( szVarName ), &wPos );
                pSym->cScope |= VS_MEMVAR;
             }
             break;

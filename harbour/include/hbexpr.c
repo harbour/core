@@ -123,7 +123,7 @@ typedef enum
 /* additional definitions used to distinguish macro expressions
  */
 #define  HB_ET_MACRO_VAR      0   /* &variable */
-#define  HB_ET_MACRO_FUNCALL  1   /* &fimcall() */
+#define  HB_ET_MACRO_SYMBOL   1   /* &fimcall() */
 #define  HB_ET_MACRO_ALIASED  2   /* &alias->&variable */
 
 /* types of expressions
@@ -153,8 +153,9 @@ typedef enum
    HB_ET_ALIASVAR,
    HB_ET_ALIASEXPR,
    HB_ET_SEND,
-   HB_ET_SYMBOL,
+   HB_ET_FUNNAME,
    HB_ET_ALIAS,
+   HB_ET_RTVAR,      /* PRIVATE or PUBLIC declaration of variable */
    HB_ET_VARIABLE,
    HB_EO_POSTINC,    /* post-operators -> lowest precedence */
    HB_EO_POSTDEC,
@@ -208,8 +209,9 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall );
 static HB_EXPR_FUNC( hb_compExprUseAliasVar );
 static HB_EXPR_FUNC( hb_compExprUseAliasExpr );
 static HB_EXPR_FUNC( hb_compExprUseSend );
-static HB_EXPR_FUNC( hb_compExprUseSymbol );
+static HB_EXPR_FUNC( hb_compExprUseFunName );
 static HB_EXPR_FUNC( hb_compExprUseAlias );
+static HB_EXPR_FUNC( hb_compExprUseRTVariable );
 static HB_EXPR_FUNC( hb_compExprUseVariable );
 static HB_EXPR_FUNC( hb_compExprUseAssign );
 static HB_EXPR_FUNC( hb_compExprUseEqual );
@@ -261,8 +263,9 @@ static HB_EXPR_FUNC_PTR s_ExprTable[] = {
    hb_compExprUseAliasVar,
    hb_compExprUseAliasExpr,
    hb_compExprUseSend,
-   hb_compExprUseSymbol,
+   hb_compExprUseFunName,
    hb_compExprUseAlias,
+   hb_compExprUseRTVariable,
    hb_compExprUseVariable,
    hb_compExprUsePostInc,      /* post-operators -> lowest precedence */
    hb_compExprUsePostDec,
@@ -320,8 +323,9 @@ static BYTE s_PrecedTable[] = {
    HB_ET_NIL,                 /*   HB_ET_ALIASVAR,    */
    HB_ET_NIL,                 /*   HB_ET_ALIASEXPR,   */
    HB_ET_NIL,                 /*   HB_ET_SEND,        */
-   HB_ET_NIL,                 /*   HB_ET_SYMBOL,      */
-   HB_ET_NIL,                 /*   HB_ET_ALIAS,      */
+   HB_ET_NIL,                 /*   HB_ET_FUNNAME,     */
+   HB_ET_NIL,                 /*   HB_ET_ALIAS,       */
+   HB_ET_NIL,                 /*   HB_ET_RTVARIABLE,  */
    HB_ET_NIL,                 /*   HB_ET_VARIABLE,    */
    HB_ET_NIL,                 /*   HB_EO_POSTINC,     post-operators */
    HB_ET_NIL,                 /*   HB_EO_POSTDEC,     */
@@ -376,6 +380,7 @@ static char * s_OperTable[] = {
    ":",
    "",      /* symbol */
    "",      /* alias */
+   "",      /* RunTime variable */
    "",      /* variable */
    "++",      /* post-operators -> lowest precedence */
    "--",
@@ -718,7 +723,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
 {
    HB_EXPR_PTR pExpr = NULL;
 
-   if( pName->ExprType == HB_ET_SYMBOL )
+   if( pName->ExprType == HB_ET_FUNNAME )
    {
       /* The name of a function is specified at compile time
        * e.g. MyFunc()
@@ -800,7 +805,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
       /* Signal that macro compiler have to generate a pcode that will
        * return function name as symbol instead of usual value
        */
-      pName->value.asMacro.SubType = HB_ET_MACRO_FUNCALL;
+      pName->value.asMacro.SubType = HB_ET_MACRO_SYMBOL;
 
       HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewFunCall(&)"));
    }
@@ -1044,11 +1049,27 @@ HB_EXPR_PTR hb_compExprNewVar( char * szName )
    return pExpr;
 }
 
+/* Create a new declaration of PUBLIC or PRIVATE variable.
+ * 
+ * szName is a string with variable name if 'PUBLIC varname' context
+ * pMacroVar is a macro expression if 'PUBLIC &varname' context
+ */
+HB_EXPR_PTR hb_compExprNewRTVar( char * szName, HB_EXPR_PTR pMacroVar )
+{
+   HB_EXPR_PTR pExpr = hb_compExprNew( HB_ET_RTVAR );
+
+   pExpr->value.asRTVar.szName = szName;
+   pExpr->value.asRTVar.pMacro = pMacroVar;
+   if( pMacroVar )
+      pMacroVar->value.asMacro.SubType = HB_ET_MACRO_SYMBOL;
+   return pExpr;
+}
+
 /* Create a new symbol used in function calls
  */
-HB_EXPR_PTR hb_compExprNewSymbol( char * szName )
+HB_EXPR_PTR hb_compExprNewFunName( char * szName )
 {
-   HB_EXPR_PTR pExpr = hb_compExprNew( HB_ET_SYMBOL );
+   HB_EXPR_PTR pExpr = hb_compExprNew( HB_ET_FUNNAME );
    pExpr->value.asSymbol = szName;
    return pExpr;
 }
@@ -1331,7 +1352,7 @@ HB_EXPR_PTR hb_compExprAssign( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightExpr )
 /* It initializes static variable.
  *    It is called in the following context:
  * STATIC sVar := expression
- * 
+ *
  * pLeftExpr - is a variable name
  * pRightExpr - can be an expression of any type
  */
@@ -2346,7 +2367,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
             }
             /* compile & run - leave a result on the eval stack
              */
-            if( pSelf->value.asMacro.SubType == HB_ET_MACRO_FUNCALL )
+            if( pSelf->value.asMacro.SubType == HB_ET_MACRO_SYMBOL )
                hb_compGenPCode1( HB_P_MACROSYMBOL );
             else if( pSelf->value.asMacro.SubType != HB_ET_MACRO_ALIASED )
                hb_compGenPCode1( HB_P_MACROPUSH );
@@ -2723,7 +2744,7 @@ static HB_EXPR_FUNC( hb_compExprUseAlias )
    return pSelf;
 }
 
-static HB_EXPR_FUNC( hb_compExprUseSymbol )
+static HB_EXPR_FUNC( hb_compExprUseFunName )
 {
    switch( iMessage )
    {
@@ -2746,6 +2767,41 @@ static HB_EXPR_FUNC( hb_compExprUseSymbol )
    }
    return pSelf;
 }
+
+static HB_EXPR_FUNC( hb_compExprUseRTVariable )
+{
+   switch( iMessage )
+   {
+      case HB_EA_REDUCE:
+      case HB_EA_ARRAY_AT:
+      case HB_EA_ARRAY_INDEX:
+      case HB_EA_LVALUE:
+         break;
+      case HB_EA_PUSH_PCODE:
+         if( pSelf->value.asRTVar.szName )
+#ifndef HB_MACRO_SUPPORT
+            hb_compGenPushSymbol( pSelf->value.asRTVar.szName, 0 );  /* this is not a function name */
+#else
+            hb_compGenPushSymbol( pSelf->value.asRTVar.szName );
+#endif
+         else
+            HB_EXPR_USE( pSelf->value.asRTVar.pMacro, HB_EA_PUSH_PCODE );
+         break;
+      case HB_EA_POP_PCODE:
+         if( pSelf->value.asRTVar.szName )
+            hb_compGenPopVar( pSelf->value.asRTVar.szName );
+         else
+            HB_EXPR_USE( pSelf->value.asRTVar.pMacro, HB_EA_POP_PCODE );
+         break;
+
+      case HB_EA_PUSH_POP:
+      case HB_EA_STATEMENT:
+      case HB_EA_DELETE:
+         break;
+   }
+   return pSelf;
+}
+
 
 static HB_EXPR_FUNC( hb_compExprUseVariable )
 {

@@ -81,6 +81,9 @@ static void hb_compLoopHere( void );
 static void * hb_compElseIfGen( void * pFirstElseIf, ULONG ulOffset ); /* generates a support structure for elseifs pcode fixups */
 static void hb_compElseIfFix( void * pIfElseIfs ); /* implements the ElseIfs pcode fixups */
 
+static void hb_compRTVariableAdd( HB_EXPR_PTR, BOOL );
+static void hb_compRTVariableGen( char * );
+
 /* Misc functions defined in harbour.c */
 extern void hb_compGenError( char* _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 );
 extern void hb_compGenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2);
@@ -106,13 +109,22 @@ typedef struct _LOOPEXIT
    struct _LOOPEXIT * pNext;
 } LOOPEXIT, * PTR_LOOPEXIT;  /* support structure for EXIT and LOOP statements */
 
+typedef struct HB_RTVAR_
+{
+   HB_EXPR_PTR pVar;
+   BOOL bPopValue;
+   struct HB_RTVAR_ *pNext;
+   struct HB_RTVAR_ *pPrev;
+} HB_RTVAR, *HB_RTVAR_PTR; /* support structure for PUBLIC and PRIVATE statements */
+
 USHORT hb_comp_wSeqCounter   = 0;
 USHORT hb_comp_wForCounter   = 0;
 USHORT hb_comp_wIfCounter    = 0;
 USHORT hb_comp_wWhileCounter = 0;
 USHORT hb_comp_wCaseCounter  = 0;
 
-PTR_LOOPEXIT hb_comp_pLoops = NULL;
+static PTR_LOOPEXIT hb_comp_pLoops = NULL;
+static HB_RTVAR_PTR hb_comp_rtvars = NULL;
 
 %}
 
@@ -183,7 +195,7 @@ PTR_LOOPEXIT hb_comp_pLoops = NULL;
 %type <valLong>    NUM_LONG
 %type <iNumber> FunScope AsType
 %type <iNumber> Params ParamList
-%type <iNumber> IfBegin VarList
+%type <iNumber> IfBegin VarList ExtVarList
 %type <iNumber> FieldList
 %type <lNumber> WhileBegin
 %type <pVoid>   IfElseIf Cases
@@ -326,8 +338,10 @@ Statement  : ExecFlow   CrlfStmnt   { }
                         hb_comp_bDontGenLineNum = TRUE;
                         hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE;
                      }
-           | PUBLIC { hb_comp_iVarScope = VS_PUBLIC; } VarList CrlfStmnt
-           | PRIVATE { hb_comp_iVarScope = VS_PRIVATE; } VarList CrlfStmnt
+           | PUBLIC { hb_comp_iVarScope = VS_PUBLIC; } ExtVarList
+                    { hb_compRTVariableGen( "__MVPUBLIC" ); } CrlfStmnt
+           | PRIVATE { hb_comp_iVarScope = VS_PRIVATE; } ExtVarList
+                    { hb_compRTVariableGen( "__MVPRIVATE" ); } CrlfStmnt
 
            | EXITLOOP  CrlfStmnt            { hb_compLoopExit(); hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
            | LOOP  CrlfStmnt                { hb_compLoopLoop(); hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
@@ -529,7 +543,7 @@ VariableAtAlias : VariableAt ALIASOP      { $$ = $1; }
 
 /* Function call
  */
-FunCall    : IDENTIFIER '(' ArgList ')'   { $$ = hb_compExprNewFunCall( hb_compExprNewSymbol( $1 ), $3 ); }
+FunCall    : IDENTIFIER '(' ArgList ')'   { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( $1 ), $3 ); }
            | MacroVar '(' ArgList ')'     { $$ = hb_compExprNewFunCall( $1, $3 ); }
 ;
 
@@ -977,6 +991,38 @@ VarList    : VarDef                                  { $$ = 1; }
            | VarList ',' VarDef                      { $$++; }
            ;
 
+ExtVarList : ExtVarDef                               { $$ = 1; }
+           | ExtVarList ',' ExtVarDef                { $$++; }
+           ;
+
+/* NOTE: if STATIC or LOCAL variables are declared and initialized then we can
+ * assign a value immediately - however for PRIVATE and PUBLIC variables
+ * initialization have to be delayed because we have to create these variables
+ * first.
+ */
+ExtVarDef  : VarDef
+           | MacroVar AsType
+               { hb_compRTVariableAdd( hb_compExprNewRTVar( NULL, $1 ), FALSE ); }
+           | MacroVar AsType INASSIGN Expression
+               { hb_compExprDelete( hb_compExprGenPush( $4 ) );
+                 hb_compRTVariableAdd( hb_compExprNewRTVar( NULL, $1 ), TRUE );
+               }
+           | MacroVar DimList
+               {
+                  USHORT uCount = hb_compExprListLen( $2 );
+                  hb_compExprDelete( hb_compExprGenPush( $2 ) );
+                  hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ) );
+                  hb_compRTVariableAdd( hb_compExprNewRTVar( NULL, $1 ), TRUE );
+               }
+           | MacroVar DimList AS_ARRAY
+               {
+                  USHORT uCount = hb_compExprListLen( $2 );
+                  hb_compExprDelete( hb_compExprGenPush( $2 ) );
+                  hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ) );
+                  hb_compRTVariableAdd( hb_compExprNewRTVar( NULL, $1 ), TRUE );
+               }
+           ;
+
 VarDef     : IDENTIFIER AsType
                {
                   if( hb_comp_iVarScope == VS_STATIC )
@@ -984,6 +1030,11 @@ VarDef     : IDENTIFIER AsType
                      hb_compStaticDefStart();   /* switch to statics pcode buffer */
                      hb_compVariableAdd( $1, $2 );
                      hb_compStaticDefEnd();
+                  }
+                  else if( hb_comp_iVarScope == VS_PUBLIC || hb_comp_iVarScope == VS_PRIVATE )
+                  {
+                     hb_compVariableAdd( $1, $2 );
+                     hb_compRTVariableAdd( hb_compExprNewRTVar( $1, NULL ), FALSE );
                   }
                   else
                      hb_compVariableAdd( $1, $2 );
@@ -998,6 +1049,12 @@ VarDef     : IDENTIFIER AsType
                      hb_compExprDelete( hb_compExprGenStatement( hb_compExprAssignStatic( hb_compExprNewVar( $1 ), $4 ) ) );
                      hb_compStaticDefEnd();
                   }
+                  else if( hb_comp_iVarScope == VS_PUBLIC || hb_comp_iVarScope == VS_PRIVATE )
+                  {
+                     hb_compExprDelete( hb_compExprGenPush( $4 ) );
+                     hb_compVariableAdd( $1, $2 );
+                     hb_compRTVariableAdd( hb_compExprNewRTVar( $1, NULL ), TRUE );
+                  }
                   else
                   {
                      hb_compVariableAdd( $1, $2 );
@@ -1007,19 +1064,41 @@ VarDef     : IDENTIFIER AsType
 
            | IDENTIFIER DimList
                {
-                  USHORT uCount = hb_compExprListLen( $2 );
-                  hb_compVariableAdd( $1, 'A' );
-                  hb_compExprDelete( hb_compExprGenPush( $2 ) );
-                  hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ) );
-                  hb_compExprDelete( hb_compExprGenPop( hb_compExprNewVar( $1 ) ) );
+                  if( hb_comp_iVarScope == VS_PUBLIC || hb_comp_iVarScope == VS_PRIVATE )
+                  {
+                     USHORT uCount = hb_compExprListLen( $2 );
+                     hb_compVariableAdd( $1, 'A' );
+                     hb_compExprDelete( hb_compExprGenPush( $2 ) );
+                     hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ) );
+                     hb_compRTVariableAdd( hb_compExprNewRTVar( $1, NULL ), TRUE );
+                  }
+                  else
+                  {
+                     USHORT uCount = hb_compExprListLen( $2 );
+                     hb_compVariableAdd( $1, 'A' );
+                     hb_compExprDelete( hb_compExprGenPush( $2 ) );
+                     hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ) );
+                     hb_compExprDelete( hb_compExprGenPop( hb_compExprNewVar( $1 ) ) );
+                  }
                }
            | IDENTIFIER DimList AS_ARRAY
                {
-                  USHORT uCount = hb_compExprListLen( $2 );
-                  hb_compVariableAdd( $1, 'A' );
-                  hb_compExprDelete( hb_compExprGenPush( $2 ) );
-                  hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ) );
-                  hb_compExprDelete( hb_compExprGenPop( hb_compExprNewVar( $1 ) ) );
+                  if( hb_comp_iVarScope == VS_PUBLIC || hb_comp_iVarScope == VS_PRIVATE )
+                  {
+                     USHORT uCount = hb_compExprListLen( $2 );
+                     hb_compVariableAdd( $1, 'A' );
+                     hb_compExprDelete( hb_compExprGenPush( $2 ) );
+                     hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ) );
+                     hb_compRTVariableAdd( hb_compExprNewRTVar( $1, NULL ), TRUE );
+                  }
+                  else
+                  {
+                     USHORT uCount = hb_compExprListLen( $2 );
+                     hb_compVariableAdd( $1, 'A' );
+                     hb_compExprDelete( hb_compExprGenPush( $2 ) );
+                     hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ) );
+                     hb_compExprDelete( hb_compExprGenPop( hb_compExprNewVar( $1 ) ) );
+                  }
                }
            ;
 
@@ -1321,7 +1400,7 @@ RecoverUsing : RECOVER USING IDENTIFIER
  * DO .. WITH ++variable
  * will pass the value of variable not a reference
  */
-DoName     : IDENTIFIER       { $$ = hb_compExprNewSymbol( $1 ); }
+DoName     : IDENTIFIER       { $$ = hb_compExprNewFunName( $1 ); }
            | MacroVar         { $$ = $1; }
            ;
 
@@ -1330,7 +1409,7 @@ DoProc     : DO DoName
            | DO DoName WITH DoArgList
                { $$ = hb_compExprNewFunCall( $2, $4 ); }
            | WHILE WITH DoArgList
-               { $$ = hb_compExprNewFunCall( hb_compExprNewSymbol( hb_strdup("WHILE") ), $3 ); }
+               { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("WHILE") ), $3 ); }
            ;
 
 DoArgList  : ','                       { $$ = hb_compExprAddListExpr( hb_compExprNewArgList( hb_compExprNewNil() ), hb_compExprNewNil() ); }
@@ -1692,3 +1771,60 @@ static void hb_compElseIfFix( void * pFixElseIfs )
    }
 }
 
+static void hb_compRTVariableAdd( HB_EXPR_PTR pVar, BOOL bPopInitValue )
+{
+   HB_RTVAR_PTR pRTvar = ( HB_RTVAR_PTR ) hb_xgrab( sizeof( HB_RTVAR ) );
+
+   pRTvar->pVar = pVar;
+   pRTvar->bPopValue = bPopInitValue;
+   pRTvar->pNext = NULL;
+   pRTvar->pPrev = NULL;
+
+   if( hb_comp_rtvars )
+   {
+      HB_RTVAR_PTR pLast = hb_comp_rtvars;
+      while( pLast->pNext )
+         pLast = pLast->pNext;
+      pLast->pNext = pRTvar;
+      pRTvar->pPrev = pLast;
+   }
+   else
+      hb_comp_rtvars = pRTvar;
+}
+
+static void hb_compRTVariableGen( char * szCreateFun )
+{
+   USHORT usCount = 0;
+   HB_RTVAR_PTR pVar = hb_comp_rtvars;
+   HB_RTVAR_PTR pDel;
+
+   /* generate the function call frame */
+   hb_compGenPushSymbol( hb_strdup( szCreateFun ), 1);
+   hb_compGenPushNil();
+
+   /* push variable names to create */
+   while( pVar->pNext )
+   {
+      hb_compExprGenPush( pVar->pVar );
+      pVar = pVar->pNext;
+      ++usCount;
+   }
+   hb_compExprGenPush( pVar->pVar );
+   ++usCount;
+
+   /* call function that will create either PUBLIC or PRIVATE variables */
+   hb_compGenPCode3( HB_P_DO, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ) );
+
+   /* pop initial values */
+   while( pVar )
+   {
+      if( pVar->bPopValue )
+         hb_compExprDelete( hb_compExprGenPop( pVar->pVar ) );
+      else
+         hb_compExprDelete( pVar->pVar );
+      pDel = pVar;
+      pVar = pVar->pPrev;
+      hb_xfree( pDel );
+   }
+   hb_comp_rtvars = NULL;
+}
