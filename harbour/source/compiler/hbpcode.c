@@ -232,8 +232,7 @@ void hb_compStrongType( int iSize )
      case HB_P_RETVALUE :
        pFunc->iStackIndex--;
 
-       if ( ! pFunc->pOwner )
-          pSym = hb_compSymbolFind( pFunc->szName, NULL );
+       pSym = hb_compSymbolFind( pFunc->szName, NULL );
 
        /* The function was declared, but return value doesn't match the declaration */
        if ( pSym && pSym->cType != ' ' && pSym->cType != pFunc->pStack[ pFunc->iStackIndex ] )
@@ -619,7 +618,7 @@ void hb_compStrongType( int iSize )
           while ( pTmp->pOwner )
             pTmp = pTmp->pOwner;
 
-          pVar = hb_compVariableFind( pTmp->pLocals, -iVar );
+          pVar = hb_compVariableFind( pTmp->pLocals, -wVar );
        }
        else
           pVar = hb_compVariableFind( pFunc->pLocals, wVar );
@@ -812,7 +811,7 @@ void hb_compStrongType( int iSize )
 
        pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] );
 
-       if ( pSym->cType != ' ' )
+       if ( pSym && pSym->cType != ' ' )
        {
          char szType[2];
          sprintf( szType, "%c", pSym->cType );
@@ -839,7 +838,7 @@ void hb_compStrongType( int iSize )
 
        pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256 );
 
-       if ( pSym->cType != ' ' )
+       if ( pSym && pSym->cType != ' ' )
        {
          char szType[2];
          sprintf( szType, "%c", pSym->cType );
@@ -871,12 +870,12 @@ void hb_compStrongType( int iSize )
          while ( pTmp->pOwner )
             pTmp = pTmp->pOwner;
 
-         pVar = hb_compVariableFind( pTmp->pLocals, -iVar );
+         pVar = hb_compVariableFind( pTmp->pLocals, -wVar );
        }
        else
-         pVar = hb_compVariableFind( pFunc->pLocals, iVar );
+         pVar = hb_compVariableFind( pFunc->pLocals, wVar );
 
-       if ( pVar->cType != ' ' )
+       if ( pVar && pVar->cType != ' ' )
        {
          char szType[2];
          sprintf( szType, "%c", pVar->cType );
@@ -913,7 +912,7 @@ void hb_compStrongType( int iSize )
        else
          pVar = hb_compVariableFind( pFunc->pLocals, iVar );
 
-       if ( pVar->cType != ' ' )
+       if ( pVar && pVar->cType != ' ' )
        {
          char szType[2];
          sprintf( szType, "%c", pVar->cType );
@@ -941,7 +940,7 @@ void hb_compStrongType( int iSize )
 
        pVar = hb_compVariableFind( pTmp->pStatics, wVar - pTmp->iStaticsBase );
 
-       if ( pVar->cType != ' '  )
+       if ( pVar && pVar->cType != ' '  )
        {
          char szType[2];
          sprintf( szType, "%c", pVar->cType );

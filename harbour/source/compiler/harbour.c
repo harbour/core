@@ -2591,7 +2591,7 @@ static void hb_compOptimizeJumps( void )
    ULONG * pJumps    = hb_comp_functions.pLast->pJumps;
    ULONG ulOptimized = 0;
    ULONG ulNextByte  = 0;
-   int * piShifts;
+   int * piShifts    = NULL;
    ULONG iNOOP;
    ULONG ulOffset;
    ULONG ulBytes2Copy;

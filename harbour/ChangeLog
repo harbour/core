@@ -1,3 +1,11 @@
+20000502-01:30 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+    * source/compiler/harbour.c
+      * Correction compiler warning about piShifts in hb_compOptimizeJumps().
+
+    * source/compiler/hbpcode.c
+      * Correction compiler warning about pSym in hb_compStrongType().
+
 20000502-09:30 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * utils/hbtest/rt_hvma.prg
