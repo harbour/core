@@ -80,15 +80,13 @@ HB_FUNC(HB_GETFILESINZIP)
         hb_itemRelease(pArray);
 }
 }
-/*
-HB_FUNC(HB_ZIPGETPASSWORD)
+
+HB_FUNC(HB_ZIPWITHPASSWORD)
 {
-char *szName=hb_parc(1);
-char *szPassWord;
-    szPassWord=hb_getPassWord(szName);
-hb_retc(szPassWord);
+
+hb_retl(hb_IsPassWord(hb_parc(1)));
 }
-*/
+
 HB_FUNC(HB_GETUNZIPFILE)
 {
     if( ISCHAR(1)  ){
@@ -166,7 +164,13 @@ HB_FUNC(HB_ZIPDELETEFILES)
         char szFile[_POSIX_PATH_MAX];
         strcpy(szFile,hb_parc(1));
         hb_retl(hb_DeleteSel(hb___CheckFile(szFile),hb_param(2,HB_IT_ARRAY),ISLOG(3) ? hb_parl(3) : 0));
-}
+   }
+    if (ISCHAR(1)&&ISNUM(2)) {
+        char szFile[_POSIX_PATH_MAX];
+        strcpy(szFile,hb_parc(1));
+        hb_retl(hb_DeleteOneIndex(hb___CheckFile(szFile),hb_parni(2)));
+   }
+
 }
 HB_FUNC(HB_ZIPTESTPK)
 {
@@ -187,3 +191,29 @@ HB_FUNC(HB_GETZIPCOMMENT)
     {
     hb_retc(hb_GetZipComment(hb_parc(1)));
 }
+HB_FUNC(HB_UNZIPFILEINDEX)
+
+{
+    if( ISCHAR(1) && ISNUM(6) ){
+        char szFile[_POSIX_PATH_MAX];
+        strcpy(szFile,hb_parc(1));
+
+        hb_retl(hb_UnzipOneIndex(hb___CheckFile(szFile),hb_param( 2, HB_IT_BLOCK),ISLOG(3) ? hb_parl(3) : 0 ,hb_parc(4),hb_parc(5),hb_parni(6),hb_itemParam(7)));
+            }
+    if( ISCHAR(1) && ISARRAY(6) ){
+        char szFile[_POSIX_PATH_MAX];
+        strcpy(szFile,hb_parc(1));
+
+        hb_retl(hb_UnzipSelIndex(hb___CheckFile(szFile),hb_param( 2, HB_IT_BLOCK),ISLOG(3) ? hb_parl(3) : 0 ,hb_parc(4),hb_parc(5),hb_param(6,HB_IT_ARRAY),hb_itemParam(7)));
+       }
+
+}
+HB_FUNC(HB_ZIPINMEMORY)
+{
+   hb_retl(hb_CreateZipInMemory(hb_parc(1),hb_parc(2)));
+}
+/*HB_FUNC(HB_SAVEZIPFROMMEMORY)
+{
+   hb_retl(hb_SaveZipFileFromMemory());
+}
+  */

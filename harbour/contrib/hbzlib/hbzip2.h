@@ -108,14 +108,20 @@ extern int      hb_CmpTdSpanStd(char *szFile,char * szFiletoCompress,int iCompLe
 extern int      hb_UnzipAll(char *szFile,PHB_ITEM pBlock,BOOL bWithPath,char *szPassWord,char *szPath,PHB_ITEM pDiskBlock,PHB_ITEM pProgress);
 extern int      hb_UnzipOne(char *szFile,PHB_ITEM pBlock,BOOL bWithPath,char *szPassWord,char *szPath,char *szFiletoExtract,PHB_ITEM pProgress);
 extern int      hb_UnzipSel(char *szFile,PHB_ITEM pBlock,BOOL bWithPath,char *szPassWord,char *szPath,PHB_ITEM pArray,PHB_ITEM pProgress);
-
+extern int      hb_UnzipOneIndex(char *szFile,PHB_ITEM pBlock,BOOL bWithPath,char *szPassWord,char *szPath,int uiCount,PHB_ITEM pProgress);
+extern int      hb_UnzipSelIndex(char *szFile,PHB_ITEM pBlock,BOOL bWithPath,char *szPassWord,char *szPath,PHB_ITEM pSelArray,PHB_ITEM pProgress);
 extern int      hb_DeleteOne(char *szFile,char *szFiletoDelete);
 extern int      hb_DeleteSel(char *szFile,PHB_ITEM pArray,BOOL bCase);
+extern int      hb_DeleteOneIndex(char *szFile,int uiCount);
 extern int      hb_TestForPKS(char *szFile);
 extern void     hb_SetZipBuff(int a,int b,int c);
 extern void     hb_SetZipComment(char *szComment);
 extern char     *hb_GetZipComment(char *szFile);
+extern BOOL     hb_IsPassWord(char *szName);
 extern unsigned long    GetCurrentFileSize(   LPCTSTR szFile);
+extern BOOL     hb_SaveZipFileFromMemory(char *szFile);
+extern BOOL     hb_CreateZipInMemory(char *szFileToCompress,char *szFile);
+
 #ifdef __cplusplus
 }
 #endif

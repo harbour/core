@@ -1,3 +1,4 @@
+
 /*
  * $Id$
  */
@@ -56,7 +57,7 @@ extern PHB_ITEM pArray;
 PHB_ITEM pDiskStatus=NULL;
 PHB_ITEM pProgressInfo=NULL;
 int iTotal=0;
-
+CZipMemFile mf;
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -98,8 +99,8 @@ int   hb_CompressFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBloc
     bReturn=false;
 	}
      catch(...){}
-     if (pProgress != NULL)
-     pProgressInfo=pProgress;
+     if (HB_IS_BLOCK(pProgress))
+        pProgressInfo=pProgress;
         for (uiCount=1;(uiCount<= hb_arrayLen(pArray)) ;uiCount++)
         {
                 const char *szDummy = (char *)hb_arrayGetCPtr(pArray,uiCount) ;
@@ -112,7 +113,7 @@ int   hb_CompressFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBloc
                      }
                      if (uiPos== hb_arrayLen(pArray))
                                 iTotal+=dwSize;
-                     if (pProgress == NULL)
+                     if (!HB_IS_BLOCK(pProgress))
                      {
                      #if defined(HB_OS_WIN_32) || defined(__MINGW32__)
                         if (bDrive)
@@ -212,7 +213,7 @@ int   hb_CompressFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBloc
     bReturn=false;
 	}
      catch(...){}
-     if (pProgress != NULL)
+     if (HB_IS_BLOCK(pProgress))
      pProgressInfo=pProgress;
         
         for (uiCount=1;(uiCount<= hb_arrayLen(pArray)) ;uiCount++)
@@ -227,7 +228,7 @@ int   hb_CompressFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBloc
                      if (uiPos== hb_arrayLen(pArray))
                                 iTotal+=dwSize;
 
-                     if (pProgress == NULL)
+                     if (!HB_IS_BLOCK(pProgress))
                      {
 
                      #if defined(HB_OS_WIN_32) || defined(__MINGW32__)
@@ -343,7 +344,7 @@ int   hb_CompressFileStd(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_
     iCause=e->m_iCause       ;
     bReturn=false;
 	}
-     if (pProgress != NULL)
+     if (HB_IS_BLOCK(pProgress))
      pProgressInfo=pProgress;
 
                 try {
@@ -351,7 +352,7 @@ int   hb_CompressFileStd(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_
                     if (szPassWord != NULL){
                         szZip.SetPassword(szPassWord);
                      }
-                     if (pProgress == NULL)
+                     if (!HB_IS_BLOCK(pProgress))
                      {
 
                      #if defined(HB_OS_WIN_32) || defined(__MINGW32__)
@@ -439,7 +440,7 @@ int   hb_CompressFileStd(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_
         iCause=e.m_iCause       ;
 	}
     catch(...){}
-     if (pProgress != NULL)
+     if (HB_IS_BLOCK(pProgress))
      pProgressInfo=pProgress;
 
     try {
@@ -447,7 +448,7 @@ int   hb_CompressFileStd(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_
             szZip.SetPassword(szPassWord);
         }
                      dwSize=GetCurrentFileSize(szFiletoCompress);
-                     if (pProgress == NULL)
+                     if (!HB_IS_BLOCK(pProgress))
                      {
 
                      #if defined(HB_OS_WIN_32) || defined(__MINGW32__)
@@ -490,6 +491,48 @@ int   hb_CompressFileStd(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_
     catch(...){}
     pDiskStatus=NULL    ;
     return true;  /* to avoid warning */
+}
+BOOL hb_CreateZipInMemory(char *szFileToCompress,char *szFile)
+{
+BOOL bReturn=FALSE;
+CZipArchive zip;
+CZipMemFile mf1;
+CZipFile f;
+zip.Open(mf1, CZipArchive::zipCreate);
+zip.AddNewFile(szFileToCompress, 8, true,NULL,NULL,65536);
+zip.Close();
+if (szFile  !=NULL)
+   {
+   if (f.Open(szFile, CZipFile::modeWrite|CZipFile::modeCreate, false))
+   {
+   int iLen = mf1.GetLength();
+   BYTE* b = mf1.Detach();
+	f.Write(b, iLen);
+	f.Close();
+	// must free detached memory
+	free(b);
+   bReturn=TRUE;
+   }
+}
+return bReturn;
+}
+
+BOOL hb_SaveZipFileFromMemory(char *szFile)
+{
+CZipArchive zip;
+CZipFile f;
+BOOL bReturn=FALSE;
+if (f.Open(szFile, CZipFile::modeWrite|CZipFile::modeCreate, false))
+{
+   int iLen = mf.GetLength();
+   BYTE* b = mf.Detach();
+	f.Write(b, iLen);
+	f.Close();
+	// must free detached memory
+	free(b);
+   bReturn=TRUE;
+}
+return bReturn;
 }
 #if defined(HB_OS_WIN_32) || defined(__MINGW32__)
 DWORD GetCurrentFileSize(   LPCTSTR szFile)
