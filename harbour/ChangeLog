@@ -1,3 +1,11 @@
+2001-08-04 13:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.l
+   * source/compiler/harbour.slx
+     * Added inline c support for hb_comp_iLanguage == LANG_OBJ_MODULE
+
+   * source/compiler/harbour.sly
+     * Added support for HB_COMP_ISSUPPORTED( HB_COMPFLAG_XBASE ) in Statement : ( MacroVar and MacroExpr ) to sync with harbour.y
+
 2001-08-04 11:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
     * source/vm/macro.c
       ! Added missing ; in line 956

@@ -101,7 +101,7 @@ Identifier    (([a-zA-Z])|([_a-zA-Z][_a-zA-Z0-9]+))
 MacroVar      \&{Identifier}[\.]?
 MacroEnd      \&{Identifier}\.([_a-zA-Z0-9]*)
 %{
-/* 
+/*
 MacroId       ({Identifier}\&(({Identifier}[\.]?)|({Identifier}\.([_a-zA-Z0-9]*))))
 */
 %}
@@ -906,7 +906,7 @@ Separator     {SpaceTab}
 	    }
 	    else
 	    {
-	       if( hb_comp_iLanguage != LANG_C )
+               if( hb_comp_iLanguage != LANG_C && hb_comp_iLanguage != LANG_OBJ_MODULE )
 	       {
                   hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_REQUIRES_C, NULL, NULL );
                   hb_xfree( ( void * ) pInline->pCode );
