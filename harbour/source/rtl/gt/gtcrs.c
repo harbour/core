@@ -44,20 +44,20 @@ static void gt_SetRC(int r, int c);
 
 void hb_gt_Init( void )
 {
-  HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
 
-  initscr();
-  cbreak();
-  noecho();
-  nodelay(stdscr, 1);
+   initscr();
+   cbreak();
+   noecho();
+   nodelay(stdscr, 1);
 }
 
 void hb_gt_Done( void )
 {
-  HB_TRACE(HB_TR_DEBUG, ("hb_gt_Done()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Done()"));
 
-  refresh();
-  endwin();
+   refresh();
+   endwin();
 }
 
 int hb_gt_ReadKey( void )
@@ -76,72 +76,72 @@ int hb_gt_ReadKey( void )
 
 BOOL hb_gt_IsColor( void )
 {
-  HB_TRACE(HB_TR_DEBUG, ("hb_gt_IsColor()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_IsColor()"));
 
-  /* TODO: How to detect this? */
-  return TRUE;
+   /* TODO: How to detect this? */
+   return TRUE;
 }
 
 USHORT hb_gt_GetScreenWidth( void )
 {
-  int r, c;
-
-  HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenWidth()"));
-
-  gt_GetMaxRC(&r, &c);
-  return c;
+   int r, c;
+  
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenWidth()"));
+  
+   gt_GetMaxRC(&r, &c);
+   return c;
 }
 
 USHORT hb_gt_GetScreenHeight( void )
 {
-  int r, c;
-
-  HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenHeight()"));
-
-  gt_GetMaxRC(&r, &c);
-  return r;
+   int r, c;
+  
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenHeight()"));
+  
+   gt_GetMaxRC(&r, &c);
+   return r;
 }
 
-void hb_gt_SetPos( USHORT uiRow, USHORT uiCol )
+void hb_gt_SetPos( SHORT iRow, SHORT iCol )
 {
-  HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hu, %hu)", uiRow, uiCol));
-
-  gt_SetRC(uiRow, uiCol);
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hd, %hd)", iRow, iCol));
+  
+   gt_SetRC(iRow, iCol);
 }
 
-USHORT hb_gt_Col( void )
+SHORT hb_gt_Col( void )
 {
-  int r, c;
-
-  HB_TRACE(HB_TR_DEBUG, ("hb_gt_Col()"));
-
-  gt_GetRC(&r, &c);
-  return c;
+   int r, c;
+  
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Col()"));
+  
+   gt_GetRC(&r, &c);
+   return c;
 }
 
-USHORT hb_gt_Row( void )
+SHORT hb_gt_Row( void )
 {
-  int r, c;
-
-  HB_TRACE(HB_TR_DEBUG, ("hb_gt_Row()"));
-
-  gt_GetRC(&r, &c);
-  return r;
+   int r, c;
+  
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Row()"));
+  
+   gt_GetRC(&r, &c);
+   return r;
 }
 
 USHORT hb_gt_GetCursorStyle( void )
 {
-  HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetCursorStyle()"));
-
-  /* TODO: What shape is the cursor? */
-  return 0;
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetCursorStyle()"));
+  
+   /* TODO: What shape is the cursor? */
+   return 0;
 }
 
 void hb_gt_SetCursorStyle( USHORT uiStyle )
 {
-  HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetCursorStyle(%hu)", uiStyle));
-
-  /* TODO: How to set the cursor shape? */
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetCursorStyle(%hu)", uiStyle));
+  
+   /* TODO: How to set the cursor shape? */
 }
 
 void hb_gt_Puts( USHORT uiRow,
@@ -150,14 +150,13 @@ void hb_gt_Puts( USHORT uiRow,
 		 BYTE * pbyStr,
 		 ULONG ulLen )
 {
-  ULONG i;
-
-  HB_TRACE(HB_TR_DEBUG, ("hb_gt_Puts(%hu, %hu, %d, %p, %lu)", uiRow, uiCol, (int) byAttr, pbyStr, ulLen));
-
-  move(uiRow, uiCol);
-  for (i = 0; i < ulLen; ++i) {
-    addch(pbyStr[i]);
-  }
+   ULONG i;
+  
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Puts(%hu, %hu, %d, %p, %lu)", uiRow, uiCol, (int) byAttr, pbyStr, ulLen));
+  
+   move( uiRow, uiCol );
+   for( i = 0; i < ulLen; ++i )
+      addch( pbyStr[ i ] );
 }
 
 void hb_gt_GetText( USHORT uiTop,
@@ -166,9 +165,9 @@ void hb_gt_GetText( USHORT uiTop,
 		    USHORT uiRight,
 		    BYTE * pbyDst )
 {
-  HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, pbyDst));
-
-  /* TODO */
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, pbyDst));
+  
+   /* TODO */
 }
 
 void hb_gt_PutText( USHORT uiTop,
@@ -177,9 +176,9 @@ void hb_gt_PutText( USHORT uiTop,
 		    USHORT uiRight,
 		    BYTE * pbySrc )
 {
-  HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, pbySrc));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, pbySrc));
 
-  /* TODO */
+   /* TODO */
 }
 
 void hb_gt_SetAttribute( USHORT uiTop,
@@ -188,12 +187,12 @@ void hb_gt_SetAttribute( USHORT uiTop,
 			 USHORT uiRight,
 			 BYTE byAttr )
 {
-  HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d)", uiTop, uiLeft, uiBottom, uiRight, (int) byAttr));
-
-  /* TODO: we want to take a screen that is say bright white on blue,
-     and change the attributes only for a section of the screen
-     to white on black.
-  */
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d)", uiTop, uiLeft, uiBottom, uiRight, (int) byAttr));
+  
+   /* TODO: we want to take a screen that is say bright white on blue,
+      and change the attributes only for a section of the screen
+      to white on black.
+   */
 }
 
 void hb_gt_Scroll( USHORT uiTop,
@@ -204,86 +203,86 @@ void hb_gt_Scroll( USHORT uiTop,
 		   SHORT iRows,
 		   SHORT iCols )
 {
-  HB_TRACE(HB_TR_DEBUG, ("hb_gt_Scroll(%hu, %hu, %hu, %hu, %d, %hd, %hd)", uiTop, uiLeft, uiBottom, uiRight, (int) byAttr, iRows, iCols));
-
-  /* TODO */
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Scroll(%hu, %hu, %hu, %hu, %d, %hd, %hd)", uiTop, uiLeft, uiBottom, uiRight, (int) byAttr, iRows, iCols));
+  
+   /* TODO */
 }
 
 void hb_gt_DispBegin( void )
 {
-  HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispBegin()"));
-
-  /* TODO: Is there a way to change screen buffers?
-     ie: can we write somewhere without it going to the screen
-     and then update the screen from this buffer at a later time?
-     We will initially want to copy the current screen to this buffer.
-  */
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispBegin()"));
+  
+   /* TODO: Is there a way to change screen buffers?
+      ie: can we write somewhere without it going to the screen
+      and then update the screen from this buffer at a later time?
+      We will initially want to copy the current screen to this buffer.
+   */
 }
 
 void hb_gt_DispEnd()
 {
-  HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispEnd()"));
-
-  /* TODO: here we flush the buffer, and restore normal screen writes */
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispEnd()"));
+  
+   /* TODO: here we flush the buffer, and restore normal screen writes */
 }
 
 BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
 {
-  HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetMode(%hu, %hu)", uiRows, uiCols));
-
-  /* TODO: How to change the size of the screen? */
-  return TRUE;
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetMode(%hu, %hu)", uiRows, uiCols));
+  
+   /* TODO: How to change the size of the screen? */
+   return TRUE;
 }
 
 void hb_gt_Replicate( BYTE byChar, ULONG ulLen )
 {
-  HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%d, %lu)", (int) byChar, ulLen));
-
-  /* TODO: this will write character c nlength times to the screen.
-     Note that it is not used yet
-     If there is no native function that supports this, it is
-     already handled in a generic way by higher level functions.
-  */
-
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%d, %lu)", (int) byChar, ulLen));
+  
+   /* TODO: this will write character c nlength times to the screen.
+      Note that it is not used yet
+      If there is no native function that supports this, it is
+      already handled in a generic way by higher level functions.
+   */
+  
 }
 
 BOOL hb_gt_GetBlink()
 {
-  HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetBlink()"));
-
-  /* TODO: under dos, the background 'intensity' bit can be switched
-     from intensity to 'blinking'
-     does this work under your platform?
-  */
-  return FALSE;
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetBlink()"));
+  
+   /* TODO: under dos, the background 'intensity' bit can be switched
+      from intensity to 'blinking'
+      does this work under your platform?
+   */
+   return FALSE;
 }
 
 void hb_gt_SetBlink( BOOL bBlink )
 {
-  HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetBlink(%d)", (int) bBlink));
-
-  /* TODO: set the bit if it's supported */
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetBlink(%d)", (int) bBlink));
+  
+   /* TODO: set the bit if it's supported */
 }
 
 
 static void gt_GetMaxRC(int* r, int* c)
 {
-  int y, x;
-  getmaxyx(stdscr, y, x);
-  *r = y;
-  *c = x;
+   int y, x;
+   getmaxyx(stdscr, y, x);
+   *r = y;
+   *c = x;
 }
 
 static void gt_GetRC(int* r, int* c)
 {
-  int y, x;
-  getyx(stdscr, y, x);
-  *r = y;
-  *c = x;
+   int y, x;
+   getyx(stdscr, y, x);
+   *r = y;
+   *c = x;
 }
 
 static void gt_SetRC(int r, int c)
 {
-  move(r, c);
-  refresh();
+   move(r, c);
+   refresh();
 }

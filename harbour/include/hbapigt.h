@@ -37,9 +37,8 @@
 #define HB_APIGT_H_
 
 #include "hbapi.h"
+
 #include "color.ch"
-#include "hbcursor.h"
-#include "hbbox.h"
 
 /* NOTE: The declaration of hb_gtSetPos(), hb_gtGetPos(), hb_gtWrite(), 
          hb_gtWriteAt(), hb_gtRepChar() differs in parameter types from the 
@@ -47,6 +46,24 @@
 
 /* maximum length of color string */
 #define CLR_STRLEN      64
+
+/* strings for borders (same as box.ch, but defined for use by C) */
+                               /*01234567*/
+#define _B_SINGLE              "ÚÄ¿³ÙÄÀ³"
+#define _B_DOUBLE              "ÉÍ»º¼ÍÈº"
+#define _B_SINGLE_DOUBLE       "ÖÄ·º½ÄÓº"
+#define _B_DOUBLE_SINGLE       "ÕÍ¸³¾ÍÔ³"
+
+/* Cursor style constants */
+
+typedef enum
+{
+   SC_NONE              = 0,    /* None */
+   SC_NORMAL            = 1,    /* Underline */
+   SC_INSERT            = 2,    /* Lower half block */
+   SC_SPECIAL1          = 3,    /* Full block */
+   SC_SPECIAL2          = 4     /* Upper half block */
+} HB_cursor_enum;
 
 /* Public interface. These should never change, only be added to. */
 
@@ -94,9 +111,9 @@ extern void   hb_gt_Done( void );
 extern int    hb_gt_ReadKey( void );
 extern USHORT hb_gt_GetScreenWidth( void );
 extern USHORT hb_gt_GetScreenHeight( void );
-extern void   hb_gt_SetPos( USHORT uiRow, USHORT uiCol );
-extern USHORT hb_gt_Col( void );
-extern USHORT hb_gt_Row( void );
+extern void   hb_gt_SetPos( SHORT iRow, SHORT iCol );
+extern SHORT  hb_gt_Col( void );
+extern SHORT  hb_gt_Row( void );
 extern void   hb_gt_Scroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr, SHORT iRows, SHORT iCols );
 extern void   hb_gt_SetCursorStyle( USHORT uiCursorShape );
 extern USHORT hb_gt_GetCursorStyle( void );

@@ -92,21 +92,21 @@ USHORT hb_gt_GetScreenHeight( void )
    return SLtt_Screen_Rows;
 }
 
-void hb_gt_SetPos( USHORT uiRow, USHORT uiCol )
+void hb_gt_SetPos( SHORT iRow, SHORT iCol )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hu, %hu)", uiRow, uiCol));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hd, %hd)", iRow, iCol));
 
-   SLsmg_gotorc(uiRow, uiCol);
+   SLsmg_gotorc(iRow, iCol);
 }
 
-USHORT hb_gt_Col( void )
+SHORT hb_gt_Col( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Col()"));
 
    return SLsmg_get_column();
 }
 
-USHORT hb_gt_Row( void )
+SHORT hb_gt_Row( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Row()"));
 

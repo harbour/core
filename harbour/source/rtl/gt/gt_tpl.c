@@ -86,17 +86,17 @@ USHORT hb_gt_GetScreenHeight( void )
    return 0;
 }
 
-void hb_gt_SetPos( USHORT uiRow, USHORT uiCol )
+void hb_gt_SetPos( SHORT iRow, SHORT iCol )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hu, %hu)", uiRow, uiCol));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hd, %hd)", iRow, iCol));
 
    /* TODO: How to reposition the cursor? */
 
-   HB_SYMBOL_UNUSED( uiRow );
-   HB_SYMBOL_UNUSED( uiCol );
+   HB_SYMBOL_UNUSED( iRow );
+   HB_SYMBOL_UNUSED( iCol );
 }
 
-USHORT hb_gt_Col( void )
+SHORT hb_gt_Col( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Col()"));
 
@@ -104,7 +104,7 @@ USHORT hb_gt_Col( void )
    return 0;
 }
 
-USHORT hb_gt_Row( void )
+SHORT hb_gt_Row( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Row()"));
 

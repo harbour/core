@@ -37,6 +37,7 @@
 
 /* TODO: include any standard headers here */
 
+#include "hbapifs.h"
 #include "hbapigt.h"
 
 static SHORT  s_iRow;
@@ -45,6 +46,8 @@ static USHORT s_uiMaxRow;
 static USHORT s_uiMaxCol;
 static USHORT s_uiCursorStyle;
 static BOOL   s_bBlink;
+static int    s_iFilenoStdout;
+static int    s_iFilenoStderr;
 
 void hb_gt_Init( void )
 {
@@ -60,6 +63,8 @@ void hb_gt_Init( void )
    s_uiMaxCol = 80;
    s_uiCursorStyle = SC_NORMAL;
    s_bBlink = FALSE;
+   s_iFilenoStdout = fileno( stdout );
+   hb_fsSetDevMode( s_iFilenoStdout, FD_BINARY );
 }
 
 void hb_gt_Done( void )
@@ -97,22 +102,44 @@ USHORT hb_gt_GetScreenHeight( void )
    return s_uiMaxRow;
 }
 
-void hb_gt_SetPos( USHORT uiRow, USHORT uiCol )
+void hb_gt_SetPos( SHORT iRow, SHORT iCol )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hu, %hu)", uiRow, uiCol));
+   SHORT iCount;
+   SHORT iDevRow = s_iRow;
+   SHORT iDevCol = s_iCol;
 
-   s_iCol = ( SHORT ) uiCol;
-   s_iRow = ( SHORT ) uiRow;
+   char * szCrLf = hb_consoleGetNewLine();
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hd, %hd)", iRow, iCol));
+
+   if( iRow < iDevRow || iCol < iDevCol )
+   {
+      fputs( hb_consoleGetNewLine(), stdout );
+      iDevCol = 0;
+      iDevRow++;
+   }
+   else if( iRow > iDevRow ) 
+      iDevCol = 0;
+
+   for( iCount = iDevRow; iCount < iRow; iCount++ )
+      fputs( hb_consoleGetNewLine(), stdout );
+   for( iCount = iDevCol; iCount < iCol; iCount++ )
+      fputc( ' ', stdout );
+
+   fflush( stdout );
+
+   s_iRow = iRow;
+   s_iCol = iCol;
 }
 
-USHORT hb_gt_Col( void )
+SHORT hb_gt_Col( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Col()"));
 
    return s_iCol;
 }
 
-USHORT hb_gt_Row( void )
+SHORT hb_gt_Row( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Row()"));
 

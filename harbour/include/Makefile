@@ -15,9 +15,7 @@ C_HEADERS=\
         hbapilng.h   \
         hbapimou.h   \
         hbapirdd.h   \
-        hbbox.h      \
         hbcomp.h     \
-        hbcursor.h   \
         hbdate.h     \
         hbdefs.h     \
         hberrors.h   \

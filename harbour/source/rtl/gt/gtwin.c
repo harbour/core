@@ -257,14 +257,14 @@ USHORT hb_gt_GetScreenHeight( void )
    return max( csbi.dwSize.Y, 25 );
 }
 
-void hb_gt_SetPos( USHORT uiRow, USHORT uiCol )
+void hb_gt_SetPos( SHORT iRow, SHORT iCol )
 {
    COORD dwCursorPosition;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hu, %hu)", uiRow, uiCol));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hd, %hd)", iRow, iCol));
 
-   dwCursorPosition.X = ( SHORT ) uiCol;
-   dwCursorPosition.Y = ( SHORT ) uiRow;
+   dwCursorPosition.X = iCol;
+   dwCursorPosition.Y = iRow;
 
    SetConsoleCursorPosition( s_HActive, dwCursorPosition );
 }
@@ -459,7 +459,7 @@ void hb_gt_SetAttribute( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT ui
    }
 }
 
-USHORT hb_gt_Col( void )
+SHORT hb_gt_Col( void )
 {
    CONSOLE_SCREEN_BUFFER_INFO csbi;
 
@@ -470,7 +470,7 @@ USHORT hb_gt_Col( void )
    return csbi.dwCursorPosition.X;
 }
 
-USHORT hb_gt_Row( void )
+SHORT hb_gt_Row( void )
 {
    CONSOLE_SCREEN_BUFFER_INFO csbi;
 

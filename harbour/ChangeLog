@@ -1,3 +1,32 @@
+20000311-17:54 GMT+1 Victor Szakats <info@szelvesz.hu>
+   - include/hbcursor.h
+   - include/hbbox.h
+   * include/hbapigt.h
+     include/Makefile
+     source/rtl/console.c
+     source/rtl/gtapi.c
+     * Two header files merged to the mainstream GT header.
+     ! B_* box #defines renamed to _B_* to be CA-Cl*pper compatible.
+   * include/hbapigt.h
+     source/rtl/gt/*.c
+     * Low-level hb_gt_SetPos(), hb_gt_Row(), hb_gt_Col() uses SHORT instead
+       of USHORT, to be in sync with the GT API.
+       WARNING! Please test the different API drivers. GTWIN was the only
+       one tested.
+   * source/rtl/console.c
+     source/rtl/gt/gtstd.c
+     * hb_setpos() removed, non-GT API functionality moved to gtstd.c, all
+       hb_setpos() calls changed to hb_gtSetPos().
+   * source/rtl/console.c
+     % QOUT() small optim., variable scope adjusted.
+     ! __EJECT() fixed to always reset PROW() and PCOL()
+     + TOFIX added for __EJECT() since in Clipper it always prints a eject,
+       regardless of the SET DEVICE setting.
+     % SAVESCREEN() optimized.
+     ! RESTSCREEM() fixed to check the fifth parameter, like in CA-Cl*pper.
+   * source/rtl/console.c
+     % hb_gtSetPos() small optim.
+  
 20000311-19:16 GMT+3 Alexander Kresin
    + contrib/rdd_ads/make_vc.bat
    + contrib/rdd_ads/makefile.vc

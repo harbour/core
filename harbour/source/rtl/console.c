@@ -44,7 +44,7 @@
  *    adjust_pos(), hb_altout(), hb_devout(), HB_DEVOUT(), hb_devpos(),
  *    HB_DEVPOS(), hb_dispout(), HB___EJECT(), HB_MAXCOL(),
  *    HB_MAXROW(), hb_out(), hb_outerr(), HB_OUTERR(),
- *    hb_outstd(), HB_OUTSTD(), HB_PCOL(), HB_PROW(), hb_setpos(),
+ *    hb_outstd(), HB_OUTSTD(), HB_PCOL(), HB_PROW(),
  *    HB_SETPOS(), HB_SETPRC(), HB_SCROLL(), and hb_consoleInitialize()
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
@@ -409,41 +409,6 @@ static void hb_dispout( char * pStr, ULONG ulLen )
 #endif
 }
 
-void hb_setpos( SHORT row, SHORT col )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_setpos(%hd, %hd)", row, col));
-
-#ifndef HARBOUR_USE_GTAPI
-   {
-      SHORT iCount;
-      /* TOFIX: Violation of API calling rules! */
-      SHORT iDevRow = hb_gt_Row();
-      SHORT iDevCol = hb_gt_Col();
-
-      if( row < iDevRow || col < iDevCol )
-      {
-         fputs( s_szCrLf, stdout );
-         iDevCol = 0;
-         iDevRow++;
-      }
-      else if( row > iDevRow ) 
-         iDevCol = 0;
-
-      for( iCount = iDevRow; iCount < row; iCount++ )
-         fputs( s_szCrLf, stdout );
-      for( iCount = iDevCol; iCount < col; iCount++ )
-         fputc( ' ', stdout );
-
-      fflush( stdout );
-
-      row = iDevRow;
-      col = iDevCol;
-   }
-#endif
-
-   hb_gtSetPos( row, col );
-}
-
 void hb_devpos( SHORT row, SHORT col )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_devpos(%hd, %hd)", row, col));
@@ -454,6 +419,7 @@ void hb_devpos( SHORT row, SHORT col )
    {
       USHORT uiCount, uiProw = ( USHORT ) row, uiPcol = ( USHORT ) col;
       USHORT user_ferror = hb_fsError(); /* Save current user file error code */
+
       if( uiProw < s_uiPRow )
       {
          hb_fsWrite( hb_set.hb_set_printhan, ( BYTE * ) "\x0C\x0D", 2 );
@@ -474,12 +440,27 @@ void hb_devpos( SHORT row, SHORT col )
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
    }
    else
-      hb_setpos( row, col );
+      hb_gtSetPos( row, col );
+}
+
+/* NOTE: This should be placed after the hb_devpos() definition. */
+
+HARBOUR HB_DEVPOS( void ) /* Sets the screen and/or printer position */
+{
+   if( ISNUM( 1 ) && ISNUM( 2 ) )
+      hb_devpos( hb_parni( 1 ), hb_parni( 2 ) );
+}
+
+HARBOUR HB_SETPOS( void ) /* Sets the screen position */
+{
+   if( ISNUM( 1 ) && ISNUM( 2 ) )
+      hb_gtSetPos( hb_parni( 1 ), hb_parni( 2 ) );
 }
 
 HARBOUR HB_OUTSTD( void ) /* writes a list of values to the standard output device */
 {
-   USHORT uiParam, uiPCount = hb_pcount();
+   USHORT uiPCount = hb_pcount();
+   USHORT uiParam;
 
    for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
    {
@@ -491,7 +472,8 @@ HARBOUR HB_OUTSTD( void ) /* writes a list of values to the standard output devi
 
 HARBOUR HB_OUTERR( void ) /* writes a list of values to the standard error device */
 {
-   USHORT uiParam, uiPCount = hb_pcount();
+   USHORT uiPCount = hb_pcount();
+   USHORT uiParam;
 
    for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
    {
@@ -503,7 +485,8 @@ HARBOUR HB_OUTERR( void ) /* writes a list of values to the standard error devic
 
 HARBOUR HB_QQOUT( void ) /* writes a list of values to the current device (screen or printer) and is affected by SET ALTERNATE */
 {
-   USHORT uiParam, uiPCount = hb_pcount();
+   USHORT uiPCount = hb_pcount();
+   USHORT uiParam;
 
    for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
    {
@@ -515,28 +498,22 @@ HARBOUR HB_QQOUT( void ) /* writes a list of values to the current device (scree
 
 HARBOUR HB_QOUT( void )
 {
-   USHORT uiCount;
-
    hb_altout( s_szCrLf, CRLF_BUFFER_LEN - 1 );
 
    if( hb_set.HB_SET_PRINTER && hb_set.hb_set_printhan != FS_ERROR )
    {
       USHORT user_ferror = hb_fsError(); /* Save current user file error code */
+      USHORT uiCount;
+
       s_uiPRow++;
-      s_uiPCol = hb_set.HB_SET_MARGIN;
-      uiCount = s_uiPCol;
+      uiCount = s_uiPCol = hb_set.HB_SET_MARGIN;
       while( uiCount-- > 0 )
          hb_fsWrite( hb_set.hb_set_printhan, ( BYTE * ) " ", 1 );
+
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
    }
 
    HB_QQOUT();
-}
-
-HARBOUR HB_SETPOS( void ) /* Sets the screen position */
-{
-   if( ISNUM( 1 ) && ISNUM( 2 ) )
-      hb_setpos( hb_parni( 1 ), hb_parni( 2 ) );
 }
 
 /* Move the screen position to the right by one column */
@@ -548,12 +525,6 @@ HARBOUR HB_SETPOSBS( void )
             [vszakats] */
    hb_gtGetPos( &iRow, &iCol );
    hb_gtSetPos( iRow, iCol + 1 );
-}
-
-HARBOUR HB_DEVPOS( void ) /* Sets the screen and/or printer position */
-{
-   if( ISNUM( 1 ) && ISNUM( 2 ) )
-      hb_devpos( hb_parni( 1 ), hb_parni( 2 ) );
 }
 
 HARBOUR HB_DEVOUT( void ) /* writes a single value to the current device (screen or printer), but is not affected by SET ALTERNATE */
@@ -603,7 +574,7 @@ HARBOUR HB_DISPOUTAT( void ) /* writes a single value to the screen at speficic 
    if( hb_pcount() >= 3 )
    {
       /* NOTE: Clipper does no checks here. [vszakats] */
-      hb_setpos( hb_parni( 1 ), hb_parni( 2 ) );
+      hb_gtSetPos( hb_parni( 1 ), hb_parni( 2 ) );
 
       if( ISCHAR( 4 ) )
       {
@@ -621,15 +592,18 @@ HARBOUR HB_DISPOUTAT( void ) /* writes a single value to the screen at speficic 
    }
 }
 
+/* TOFIX: CA-Cl*pper will print an eject even if SET DEVICE=SCREEN */
+
 HARBOUR HB___EJECT( void ) /* Ejects the current page from the printer */
 {
    if( hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set.hb_set_printhan != FS_ERROR )
    {
       USHORT user_ferror = hb_fsError(); /* Save current user file error code */
       hb_fsWrite( hb_set.hb_set_printhan, ( BYTE * ) "\x0C\x0D", 2 );
-      s_uiPRow = s_uiPCol = 0;
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
    }
+
+   s_uiPRow = s_uiPCol = 0;
 }
 
 HARBOUR HB_PROW( void ) /* Returns the current printer row position */
@@ -738,12 +712,12 @@ HARBOUR HB_DISPBOX( void )
 #else
    if( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) && ISNUM( 4 ) )
    {
-      char * szBorderStyle = B_SINGLE;
+      char * szBorderStyle = _B_SINGLE;
       int i_top = hb_parni( 1 );
       int i_left = hb_parni( 2 );
       int i_bottom = hb_parni( 3 );
       int i_right = hb_parni( 4 );
-      USHORT top, left, bottom, right, size = strlen( B_SINGLE );
+      USHORT top, left, bottom, right, size = strlen( _B_SINGLE );
       USHORT row, col, width, height;
       char Borders[ 9 ];
 
@@ -786,16 +760,16 @@ HARBOUR HB_DISPBOX( void )
          switch( hb_parni( 5 ) )
          {
             case 2:
-               szBorderStyle = B_DOUBLE;
+               szBorderStyle = _B_DOUBLE;
                break;
             case 3:
-               szBorderStyle = B_SINGLE_DOUBLE;
+               szBorderStyle = _B_SINGLE_DOUBLE;
                break;
             case 4:
-               szBorderStyle = B_DOUBLE_SINGLE;
+               szBorderStyle = _B_DOUBLE_SINGLE;
                break;
             default:
-               szBorderStyle = B_SINGLE;
+               szBorderStyle = _B_SINGLE;
          }
           size = strlen( szBorderStyle );
       }
@@ -820,7 +794,7 @@ HARBOUR HB_DISPBOX( void )
          Borders[ 8 ] = ' ';
 
       /* Draw the box */
-      hb_setpos( top, left );
+      hb_gtSetPos( top, left );
       if( height > 1 && width > 1 )
          fputc( Borders[ 0 ], stdout );   /* Upper left corner */
       for( col = ( height > 1 ? left + 1 : left ); col < ( height > 1 ? right : right + 1 ); col++ )
@@ -829,7 +803,7 @@ HARBOUR HB_DISPBOX( void )
          fputc( Borders[ 2 ], stdout );   /* Upper right corner */
       for( row = ( height > 1 ? top + 1 : top ); row < ( width > 1 ? bottom : bottom + 1 ); row++ )
       {
-         hb_setpos( row, left );
+         hb_gtSetPos( row, left );
          if( height > 1 )
             fputc( Borders[ 3 ], stdout ); /* Left side */
          if( height > 1 && width > 1 ) for( col = left + 1; col < right; col++ )
@@ -839,7 +813,7 @@ HARBOUR HB_DISPBOX( void )
       }
       if( height > 1 && width > 1 )
       {
-         hb_setpos( bottom, left );
+         hb_gtSetPos( bottom, left );
          col = left;
          fputc( Borders[ 6 ], stdout );    /* Bottom left corner */
          for( col = left + 1; col < right; col++ )
@@ -847,7 +821,7 @@ HARBOUR HB_DISPBOX( void )
          fputc( Borders[ 4 ], stdout );    /* Bottom right corner */
       }
       fflush( stdout );
-      hb_setpos( bottom + 1, right + 1 );
+      hb_gtSetPos( bottom + 1, right + 1 );
    }
 #endif
 }
@@ -901,14 +875,10 @@ HARBOUR HB_SAVESCREEN( void )
    USHORT uiCoords[ 4 ];
    void * pBuffer;
 
-   uiCoords[ 0 ] = 0;
-   uiCoords[ 1 ] = 0;
-   uiCoords[ 2 ] = hb_gtMaxRow();
-   uiCoords[ 3 ] = hb_gtMaxCol();
-
-   for( uiX = 1; uiX <= 4; uiX++ )
-      if( ISNUM( uiX ) )
-         uiCoords[ uiX - 1 ] = hb_parni( uiX );
+   uiCoords[ 0 ] = ISNUM( 1 ) ? hb_parni( 1 ) : 0;
+   uiCoords[ 1 ] = ISNUM( 2 ) ? hb_parni( 2 ) : 0;
+   uiCoords[ 2 ] = ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow();
+   uiCoords[ 3 ] = ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol();
 
    hb_gtRectSize( uiCoords[ 0 ], uiCoords[ 1 ], uiCoords[ 2 ], uiCoords[ 3 ], &uiX );
    pBuffer = hb_xgrab( uiX );
@@ -919,21 +889,12 @@ HARBOUR HB_SAVESCREEN( void )
 
 HARBOUR HB_RESTSCREEN( void )
 {
-   if( hb_pcount() >= 5 )
+   if( ISCHAR( 5 ) )
    {
-      USHORT uiX;
-      USHORT uiCoords[ 4 ];
-
-      uiCoords[ 0 ] = 0;
-      uiCoords[ 1 ] = 0;
-      uiCoords[ 2 ] = hb_gtMaxRow();
-      uiCoords[ 3 ] = hb_gtMaxCol();
-
-      for( uiX = 1; uiX < 5; uiX++ )
-         if( ISNUM( uiX ) )
-            uiCoords[ uiX - 1 ] = hb_parni( uiX );
-
-      hb_gtRest( uiCoords[ 0 ], uiCoords[ 1 ], uiCoords[ 2 ], uiCoords[ 3 ],
+      hb_gtRest( ISNUM( 1 ) ? hb_parni( 1 ) : 0,            
+                 ISNUM( 2 ) ? hb_parni( 2 ) : 0,            
+                 ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow(),
+                 ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol(),
                  ( void * ) hb_parc( 5 ) );
    }
 }
@@ -1033,16 +994,16 @@ HARBOUR HB_HB_COLORINDEX( void )
 {
    if( ISCHAR( 1 ) && ISNUM( 2 ) )
    {
-      char * szColor = hb_parc( 1 );
+      char * pszColor = hb_parc( 1 );
       ULONG ulColorPos;
       ULONG ulColorLen;
       USHORT uiColorIndex = ( USHORT ) hb_parni( 2 );
 
       /* Skip the given number of commas */
 
-      for( ulColorPos = 0 ; szColor[ ulColorPos ] != '\0' && uiColorIndex > 0 ; ulColorPos++ )
+      for( ulColorPos = 0 ; pszColor[ ulColorPos ] != '\0' && uiColorIndex > 0 ; ulColorPos++ )
       {
-         if( szColor[ ulColorPos ] == ',' )
+         if( pszColor[ ulColorPos ] == ',' )
             uiColorIndex--;
       }
 
@@ -1052,23 +1013,23 @@ HARBOUR HB_HB_COLORINDEX( void )
       {
          /* Skip the spaces after the comma */
 
-         while( szColor[ ulColorPos ] == ' ' ) ulColorPos++;
+         while( pszColor[ ulColorPos ] == ' ' ) ulColorPos++;
 
          /* Search for next comma or end of string */
 
          ulColorLen = 0;
 
-         while( szColor[ ulColorPos + ulColorLen ] != '\0' &&
-                szColor[ ulColorPos + ulColorLen ] != ',' ) ulColorLen++;
+         while( pszColor[ ulColorPos + ulColorLen ] != '\0' &&
+                pszColor[ ulColorPos + ulColorLen ] != ',' ) ulColorLen++;
 
          /* Skip the trailing spaces */
 
          while( ulColorLen > 0 &&
-                szColor[ ulColorPos + ulColorLen - 1 ] == ' ' ) ulColorLen--;
+                pszColor[ ulColorPos + ulColorLen - 1 ] == ' ' ) ulColorLen--;
 
          /* Return the string */
 
-         hb_retclen( szColor + ulColorPos, ulColorLen );
+         hb_retclen( pszColor + ulColorPos, ulColorLen );
       }
       else
          hb_retc( "" );

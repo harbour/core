@@ -264,15 +264,15 @@ USHORT hb_gt_GetScreenHeight( void )
 #endif
 }
 
-void hb_gt_SetPos( USHORT usRow, USHORT usCol )
+void hb_gt_SetPos( SHORT iRow, SHORT iCol )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hu, %hu)", usRow, usCol));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hd, %hd)", iRow, iCol));
 
 #if defined(__TURBOC__)
    {
      BYTE cRow, cCol;
-     cRow = ( BYTE ) usRow;
-     cCol = ( BYTE ) usCol;
+     cRow = ( BYTE ) iRow;
+     cCol = ( BYTE ) iCol;
 
      _AH = 0x02;
      _BH = 0;
@@ -285,8 +285,8 @@ void hb_gt_SetPos( USHORT usRow, USHORT usCol )
      union REGS regs;
      regs.h.ah = 0x02;
      regs.h.bh = 0;
-     regs.h.dh = ( BYTE ) usRow;
-     regs.h.dl = ( BYTE ) usCol;
+     regs.h.dh = ( BYTE ) iRow;
+     regs.h.dl = ( BYTE ) iCol;
 #if defined(__WATCOMC__) && defined(__386__)
      int386( 0x10, &regs, &regs );
 #else
@@ -578,7 +578,7 @@ void hb_gt_SetAttribute( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT us
    }
 }
 
-USHORT hb_gt_Col( void )
+SHORT hb_gt_Col( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Col()"));
 
@@ -604,7 +604,7 @@ USHORT hb_gt_Col( void )
 #endif
 }
 
-USHORT hb_gt_Row( void )
+SHORT hb_gt_Row( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Row()"));
 

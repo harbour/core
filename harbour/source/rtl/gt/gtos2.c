@@ -110,31 +110,31 @@ USHORT hb_gt_GetScreenHeight( void )
    return vi.row;
 }
 
-void hb_gt_SetPos( USHORT uiRow, USHORT uiCol )
+void hb_gt_SetPos( SHORT iRow, SHORT iCol )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hu, %hu)", uiRow, uiCol));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hd, %hd)", iRow, iCol));
 
-   VioSetCurPos( uiRow, uiCol, 0 );
+   VioSetCurPos( ( USHORT ) iRow, ( USHORT ) iCol, 0 );
 }
 
-USHORT hb_gt_Row( void )
+SHORT hb_gt_Row( void )
 {
    USHORT x, y;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Row()"));
 
    VioGetCurPos( &y, &x, 0 );
-   return y;
+   return ( SHORT ) y;
 }
 
-USHORT hb_gt_Col( void )
+SHORT hb_gt_Col( void )
 {
    USHORT x, y;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Col()"));
 
    VioGetCurPos( &y, &x, 0 );
-   return x;
+   return ( SHORT ) x;
 }
 
 

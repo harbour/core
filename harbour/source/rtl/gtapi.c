@@ -34,9 +34,8 @@
  */
 
 /*
- *  GTAPI.C: Generic Terminal for Harbour
+ * ChangeLog:
  *
- * Latest mods:
  * 1.83   19991006   ptucker   Enable dispbegin/end calls in gtBox
  * 1.81   19991005   dholm     Made the hb_gtWrite(), hb_gtWriteAt(), and
  *                             hb_gtWriteCon() functions and the cursor
@@ -153,6 +152,7 @@ void hb_gtInit( void )
 
    hb_gt_Init();
    hb_gtSetColorStr( hb_set.HB_SET_COLOR );
+
    s_iCurrentRow = hb_gt_Row();
    s_iCurrentCol = hb_gt_Col();
 }
@@ -285,12 +285,12 @@ USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, B
 
 USHORT hb_gtBoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight )
 {
-   return hb_gtBox( uiTop, uiLeft, uiBottom, uiRight, ( BYTE * ) B_DOUBLE );
+   return hb_gtBox( uiTop, uiLeft, uiBottom, uiRight, ( BYTE * ) _B_DOUBLE );
 }
 
 USHORT hb_gtBoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight )
 {
-   return hb_gtBox( uiTop, uiLeft, uiBottom, uiRight, ( BYTE * ) B_SINGLE );
+   return hb_gtBox( uiTop, uiLeft, uiBottom, uiRight, ( BYTE * ) _B_SINGLE );
 }
 
 USHORT hb_gtColorSelect( USHORT uiColorIndex )
@@ -670,7 +670,7 @@ USHORT hb_gtGetPos( SHORT * piRow, SHORT * piCol )
 
 USHORT hb_gtSetPos( SHORT iRow, SHORT iCol )
 {
-   BOOL set_cursor = TRUE;
+   BOOL set_cursor;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gtSetPos(%hd, %hd)", iRow, iCol));
 
@@ -681,6 +681,8 @@ USHORT hb_gtSetPos( SHORT iRow, SHORT iCol )
       hb_gt_SetCursorStyle( SC_NONE );
       set_cursor = FALSE;
    }
+   else
+      set_cursor = TRUE;
 
    if( set_cursor ) hb_gt_SetPos( iRow, iCol );
 
@@ -805,7 +807,7 @@ USHORT hb_gtSetSnowFlag( BOOL bNoSnow )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gtSetSnowFlag(%d)", (int) bNoSnow));
 
-   /* COMMENT: This is a compatibility function.
+   /* NOTE: This is a compatibility function.
       If you're running on a CGA and snow is a problem
       speak up!
    */
