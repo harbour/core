@@ -671,14 +671,14 @@ VarAssign  : IDENTIFIER INASSIGN Expression { PopId( $1 ); PushId( $1 ); }
            | ObjectData DIVEQ    Expression                 {}
            | ObjectData EXPEQ    Expression                 {}
            | ObjectData MODEQ    Expression                 {}
-           | ObjectData ArrayIndex INASSIGN Expression      {}
+           | ObjectData ArrayIndex INASSIGN Expression      { GenPCode1( _ARRAYPUT ); }
            | ObjectData ArrayIndex PLUSEQ   Expression      {}
            | ObjectData ArrayIndex MINUSEQ  Expression      {}
            | ObjectData ArrayIndex MULTEQ   Expression      {}
            | ObjectData ArrayIndex DIVEQ    Expression      {}
            | ObjectData ArrayIndex EXPEQ    Expression      {}
            | ObjectData ArrayIndex MODEQ    Expression      {}
-           | ObjectMethod ArrayIndex INASSIGN Expression    {}
+           | ObjectMethod ArrayIndex INASSIGN Expression    { GenPCode1( _ARRAYPUT ); }
            | ObjectMethod ArrayIndex PLUSEQ   Expression    {}
            | ObjectMethod ArrayIndex MINUSEQ  Expression    {}
            | ObjectMethod ArrayIndex MULTEQ   Expression    {}

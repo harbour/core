@@ -1,3 +1,9 @@
+19990603-11:40 CET Eddie Runia
+  * source/compiler/harbour.y
+    <obj>:<meth>[<index>] := <value> syntax added
+  * build32
+    runner build from batch file
+
 19990603-00:00 PST Ron Pinkas
   * hvm.c
     - Changed VitualMachine() to use direct dynamic call for processing pcodes rather tha the switch loop.
