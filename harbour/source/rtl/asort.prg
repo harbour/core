@@ -25,7 +25,7 @@ function QuickSort( aSort, nLeft, nRight, bOrder )
 
    local nUp     := nLeft
    local nDown   := nRight
-   local xMiddle := aSort[ ( nLeft + nRight ) / 2 ]
+   local xMiddle := aSort[ int ( ( nLeft + nRight ) / 2 ) ]
    local xTemp
    local lOk     := .T.
 

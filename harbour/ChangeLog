@@ -1,3 +1,7 @@
+19990610-09:30 CET Patrick Mast (Changes made by Jose Lalin)
+  * source/rtl/asort.prg
+    Resloved bug (Changed line 28 )
+
 19990610-10:30 Alexander Kresin ( files posted by Marek Horodyski )
   + source/rtl/natmsg/msgpl852.c
   + source/rtl/natmsg/msgplmaz.c
