@@ -83,8 +83,9 @@ extern BOOL     hb_fsChDir      ( BYTE * pszDirName ); /* change working directo
 extern USHORT   hb_fsChDrv      ( BYTE nDrive ); /* change working drive */
 extern void     hb_fsClose      ( FHANDLE hFileHandle ); /* close a file */
 extern void     hb_fsCommit     ( FHANDLE hFileHandle ); /* commit updates of a file */
-extern FHANDLE  hb_fsCreate     ( BYTE * pszFileName, USHORT uiAttribute ); /* create a file */
-extern FHANDLE  hb_fsCreateTemp ( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiAttribute ); /* create a temporary file from components */
+extern FHANDLE  hb_fsCreate     ( BYTE * pszFileName, USHORT uiAttr ); /* create a file */
+extern FHANDLE  hb_fsCreateEx   ( BYTE * pszFilename, USHORT uiAttr, USHORT uiFlags ); /* create a file, with specific open mode */
+extern FHANDLE  hb_fsCreateTemp ( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiAttr, BYTE * pszName ); /* create a temporary file from components */
 extern BYTE *   hb_fsCurDir     ( USHORT uiDrive ); /* retrieve a static pointer containing current directory for specified drive */
 extern USHORT   hb_fsCurDirBuff ( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen ); /* copy current directory for given drive into a buffer */
 extern BYTE     hb_fsCurDrv     ( void ); /* retrieve current drive number */

@@ -71,6 +71,20 @@ HB_FUNC( FCREATE )
       hb_retni( FS_ERROR );
 }
 
+#ifdef HB_EXTENSION
+
+HB_FUNC( HB_FCREATE )
+{
+   if( ISCHAR( 1 ) )
+      hb_retni( hb_fsCreateEx( ( BYTE * ) hb_parc( 1 ),
+                               ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL,
+                               ISNUM( 3 ) ? hb_parni( 3 ) : FO_COMPAT ) );
+   else
+      hb_retni( FS_ERROR );
+}
+
+#endif
+
 HB_FUNC( FREAD )
 {
    ULONG ulRead;

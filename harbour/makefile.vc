@@ -411,6 +411,7 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgcswin.obj \
    $(OBJ_DIR)\msgde.obj \
    $(OBJ_DIR)\msgen.obj \
+   $(OBJ_DIR)\msgeo.obj \
    $(OBJ_DIR)\msges.obj \
    $(OBJ_DIR)\msgeu.obj \
    $(OBJ_DIR)\msgfr.obj \

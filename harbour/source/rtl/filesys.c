@@ -250,7 +250,6 @@ static int convert_open_flags( USHORT uiFlags )
       HB_TRACE(HB_TR_INFO, ("convert_open_flags: added O_RDONLY\n"));
    }
 #else
-
    if( ( uiFlags & ( FO_WRITE | FO_READWRITE ) ) == FO_READ )
    {
       result_flags |= ( O_RDONLY | SH_COMPAT );
@@ -457,13 +456,13 @@ FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
    return hFileHandle;
 }
 
-FHANDLE hb_fsCreate( BYTE * pFilename, USHORT uiFlags )
+FHANDLE hb_fsCreate( BYTE * pFilename, USHORT uiAttr )
 {
    FHANDLE hFileHandle;
    int oflag;
    unsigned pmode;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsCreate(%p, %hu)", pFilename, uiFlags));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsCreate(%p, %hu)", pFilename, uiAttr));
 
    s_uiErrorLast = 0;
 
@@ -472,13 +471,13 @@ FHANDLE hb_fsCreate( BYTE * pFilename, USHORT uiFlags )
    {
       DWORD dwFlags = FILE_ATTRIBUTE_ARCHIVE;
       HANDLE hFile;
-      if( uiFlags & FC_READONLY )
+      if( uiAttr & FC_READONLY )
          dwFlags |= FILE_ATTRIBUTE_READONLY;
 
-      if( uiFlags & FC_HIDDEN )
+      if( uiAttr & FC_HIDDEN )
          dwFlags |= FILE_ATTRIBUTE_HIDDEN;
 
-      if( uiFlags & FC_SYSTEM )
+      if( uiAttr & FC_SYSTEM )
          dwFlags |= FILE_ATTRIBUTE_SYSTEM;
 
       errno = 0;
@@ -496,8 +495,47 @@ FHANDLE hb_fsCreate( BYTE * pFilename, USHORT uiFlags )
 #elif defined(HB_FS_FILE_IO)
 
    errno = 0;
-   convert_create_flags( uiFlags, &oflag, &pmode );
+   convert_create_flags( uiAttr, &oflag, &pmode );
    hFileHandle = open( ( char * ) pFilename, oflag, pmode );
+   if( hFileHandle == -1 )
+   {
+      /* This if block is required, because errno will be set
+         if the file did not exist and had to be created, even
+         when the create is successful! */
+      s_uiErrorLast = errno;
+   }
+
+#else
+
+   hFileHandle = FS_ERROR;
+   s_uiErrorLast = FS_ERROR;
+
+#endif
+
+   return hFileHandle;
+}
+
+/* Derived from hb_fsCreate() 
+
+   NOTE: The default opening mode differs from the one used in hb_fsCreate() 
+         [vszakats]
+ */
+
+FHANDLE hb_fsCreateEx( BYTE * pFilename, USHORT uiAttr, USHORT uiFlags )
+{
+   FHANDLE hFileHandle;
+   int oflag;
+   unsigned pmode;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsCreateEx(%p, %hu, %hu)", pFilename, uiAttr, uiFlags));
+
+   s_uiErrorLast = 0;
+
+#if defined(HB_FS_FILE_IO)
+
+   errno = 0;
+   convert_create_flags( uiAttr, &oflag, &pmode );
+   hFileHandle = open( ( char * ) pFilename, convert_open_flags( uiFlags ), pmode );
    if( hFileHandle == -1 )
    {
       /* This if block is required, because errno will be set

@@ -16,6 +16,7 @@ C_HEADERS=\
 	hbapirdd.h   \
 	hbcomp.h     \
 	hbdate.h     \
+	hbdbf.h      \
 	hbdbsort.h   \
 	hbdefs.h     \
 	hberrors.h   \
@@ -23,14 +24,19 @@ C_HEADERS=\
 	hbhash.h     \
 	hbinit.h     \
 	hbmacro.h    \
+	hbmath.h     \
+	hbmsetup.h   \
 	hbpcode.h    \
 	hbpp.h       \
+	hbrddcdx.h   \
 	hbrdddbf.h   \
 	hbrdddel.h   \
+	hbrddntx.h   \
 	hbrddsdf.h   \
 	hbrddwrk.h   \
 	hbset.h      \
 	hbsetup.h    \
+	hbstack.h    \
 	hbtrace.h    \
 	hbver.h      \
 	hbvm.h       \
@@ -41,6 +47,7 @@ PRG_HEADERS=\
 	achoice.ch   \
 	assert.ch    \
 	box.ch       \
+	button.ch    \
 	color.ch     \
 	common.ch    \
 	dbedit.ch    \
@@ -49,15 +56,18 @@ PRG_HEADERS=\
 	error.ch     \
 	fileio.ch    \
 	getexit.ch   \
-	harbour.ch   \
-	hboo.ch      \
 	hbclass.ch   \
 	hbextern.ch  \
+	hbgetcmt.ch  \
+	hbinkey.ch   \
 	hbmemory.ch  \
 	hbmemvar.ch  \
+	hboo.ch      \
+	hbpers.ch    \
 	hbsetup.ch   \
 	inkey.ch     \
 	memoedit.ch  \
+	ord.ch       \
 	rddsys.ch    \
 	reserved.ch  \
 	set.ch       \

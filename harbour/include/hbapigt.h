@@ -76,8 +76,9 @@ extern "C" {
 #endif
 
 /* NOTE: The declaration of hb_gtSetPos(), hb_gtGetPos(), hb_gtWrite(),
-         hb_gtWriteAt(), hb_gtRepChar() differs in parameter types from the
-         original CA-Cl*pper versions. [vszakats] */
+         hb_gtWriteAt(), hb_gtRepChar(), hb_gtBox(), hb_gtBoxS(), hb_gtBoxD() 
+         hb_gtInit() differs in parameter types from the original CA-Cl*pper 
+         versions. [vszakats] */
 
 /* maximum length of color string */
 #define CLR_STRLEN              64
@@ -106,14 +107,14 @@ extern "C" {
 #define HB_B_DOUBLE_V          'º'
 #define HB_B_DOUBLE_H          'Í'
 */
-#define _B_SINGLE              "\xda\xc4\xbf\xb3\xd9\xc4\xc0\xb3"
-#define _B_DOUBLE              "\xc9\xcd\xbb\xba\xbc\xcd\xc8\xba"
-#define _B_SINGLE_DOUBLE       "\xd6\xc4\xb7\xba\xbd\xc4\xd3\xba"
-#define _B_DOUBLE_SINGLE       "\xd5\xcd\xb8\xb3\xbe\xcd\xd4\xb3"
-#define HB_B_SINGLE_V          '\xb3'
-#define HB_B_SINGLE_H          '\xc4'
-#define HB_B_DOUBLE_V          '\xb3'
-#define HB_B_DOUBLE_H          '\xc4'
+#define _B_SINGLE              "\xDA\xC4\xBF\xB3\xD9\xC4\xC0\xB3"
+#define _B_DOUBLE              "\xC9\xCD\xBB\xBA\xBC\xCD\xC8\xBA"
+#define _B_SINGLE_DOUBLE       "\xD6\xC4\xB7\xBA\xBD\xC4\xD3\xBA"
+#define _B_DOUBLE_SINGLE       "\xD5\xCD\xB8\xB3\xBE\xCD\xD4\xB3"
+#define HB_B_SINGLE_V          '\xB3'
+#define HB_B_SINGLE_H          '\xC4'
+#define HB_B_DOUBLE_V          '\xB3'
+#define HB_B_DOUBLE_H          '\xC4'
 
 /* Used to tell hb_gt_SetPos() when the cursor position
    is being set. Before or after text is or was displayed.

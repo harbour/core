@@ -1,4 +1,3 @@
-
 /*
  * $Id$
  */
@@ -65,9 +64,6 @@
  * Copyright 2000 Jose Lalin <dezac@corevia.com>
  *    hb_retd()
  *
- * Modifications to hb_stor functions by Ricardo Ramirez R.
- * <rramirez@crownlitometal.com>
- *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -105,12 +101,12 @@ PHB_ITEM hb_param( int iParam, int iMask )
 PHB_ITEM hb_paramError( int iParam )
 {
    static HB_ITEM s_NIL;
-   PHB_ITEM pParam = hb_param( iParam, HB_IT_ANY );
 
-   hb_itemClear( &s_NIL );
+   PHB_ITEM pParam = hb_param( iParam, HB_IT_ANY );
 
    if( pParam == NULL )
    {
+      hb_itemClear( &s_NIL );
       pParam = &s_NIL;
    }
 
@@ -707,9 +703,7 @@ void hb_storni( int iValue, int iParam, ... )
          hb_itemRelease( pItemNew );
       }
       else if( iByRef || iParam == -1 )
-      {
          hb_itemPutNI( pItem, iValue );
-      }
    }
 }
 

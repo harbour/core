@@ -12,6 +12,7 @@ C_SOURCES=\
 	msgcswin.c   \
 	msgde.c      \
 	msgen.c      \
+	msgeo.c      \
 	msges.c      \
 	msgeu.c      \
 	msgfr.c      \
@@ -27,11 +28,14 @@ C_SOURCES=\
 	msgis850.c   \
 	msgit.c      \
 	msgko.c      \
+	msgpl852.c   \
+	msgpliso.c   \
+	msgplmaz.c   \
 	msgpt.c      \
 	msgro.c      \
 	msgsr852.c   \
 	msgsriso.c   \
-
+	
 LIBNAME=lang
 
 include $(TOP)$(ROOT)config/lib.cf

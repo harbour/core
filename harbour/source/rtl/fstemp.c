@@ -72,16 +72,16 @@ void hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * pszPrefi
    tmpnam( ( char * ) pszBuffer );
 }
 
-FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiAttribute )
-{
-   BYTE szName[ _POSIX_PATH_MAX + 1 ];
+/* NOTE: The buffer must be at least _POSIX_PATH_MAX chars long */
 
-   hb_fsTempName( szName, pszDir, pszPrefix );
+FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiAttr, BYTE * pszName )
+{
+   hb_fsTempName( pszName, pszDir, pszPrefix );
 
    errno = 0;
 
-   if( szName[ 0 ] )
-      return hb_fsCreate( szName, uiAttribute );
+   if( pszName[ 0 ] != '\0' )
+      return hb_fsCreateEx( pszName, uiAttr, FO_EXCLUSIVE );
 
    hb_fsSetError( FS_ERROR );
    return FS_ERROR;
@@ -100,9 +100,12 @@ HB_FUNC( HB_FTEMPNAME )
 
 HB_FUNC( HB_FTEMPCREATE )
 {
+   BYTE szName[ _POSIX_PATH_MAX + 1 ];
+
    hb_retni( hb_fsCreateTemp( ( BYTE * ) hb_parc( 1 ),
                               ( BYTE * ) hb_parc( 2 ),
-                              ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL ) );
+                              ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL,
+                              &szName ) );
 }
 
 #endif

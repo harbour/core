@@ -74,7 +74,7 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HARBOURDIR%/include
    echo       - When HB_ARCHITECTURE=w32
    echo         - bcc32   (Borland C++ 4.x, 5.x, Windows 32-bit)
    echo         - gcc     (Cygnus/Cygwin GNU C, Windows 32-bit)
-   echo         - mingw32 (Cygnus/Mingw32 GNU C, Windows 32-bit)
+   echo         - mingw32 (Cygnus/MinGW GNU C, Windows 32-bit)
    echo         - rxsnt   (EMX/RSXNT/Win32 GNU C, Windows 32-bit)
    echo         - icc     (IBM Visual Age C++, Windows 32-bit)
    echo         - msvc    (Microsoft Visual C++, Windows 32-bit)

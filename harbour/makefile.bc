@@ -372,6 +372,7 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgcswin.obj \
    $(OBJ_DIR)\msgde.obj \
    $(OBJ_DIR)\msgen.obj \
+   $(OBJ_DIR)\msgeo.obj \
    $(OBJ_DIR)\msges.obj \
    $(OBJ_DIR)\msgeu.obj \
    $(OBJ_DIR)\msgfr.obj \
@@ -1974,6 +1975,10 @@ $(OBJ_DIR)\msgde.obj : $(LANG_DIR)\msgde.c
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msgen.obj : $(LANG_DIR)\msgen.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\msgeo.obj : $(LANG_DIR)\msgeo.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 

@@ -1,5 +1,5 @@
 /*
- * $Id: 
+ * $Id$
  */
 
 /*
@@ -51,6 +51,7 @@
  */
 
 #include <gtk/gtk.h>
+
 #include "hbapi.h"
 #include "hbvm.h"
 
@@ -67,9 +68,11 @@ int main( int argc, char * argv[] )
       hb_vmQuit();
       /* uncoment the next line if hb_vmQuit() returns */
       /* return 0; */
-    }
-    else
-       fprintf( stderr, "%s\n", "Could not initialize GTK++ subsystem" );
+   }
+   else
+   {
+      fprintf( stderr, "%s\n", "Could not initialize GTK++ subsystem" );
+   }
 
-    return( 1 );
+   return 1;
 }

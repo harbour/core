@@ -55,8 +55,7 @@
 BOOL hb_dbQSortInit( LPDBQUICKSORT pQuickSort, LPDBSORTINFO pSortInfo, USHORT uiRecordLen )
 {
    /* Create temp file */
-   hb_fsTempName( pQuickSort->szTempName, NULL, NULL );
-   pQuickSort->hFile = hb_fsCreate( ( BYTE * ) pQuickSort->szTempName, FC_NORMAL );
+   pQuickSort->hFile = hb_fsCreateTemp( NULL, NULL, FC_NORMAL, pQuickSort->szTempName );
    if( pQuickSort->hFile == FS_ERROR )
       return FALSE;
 

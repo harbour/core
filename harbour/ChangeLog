@@ -1,3 +1,46 @@
+2001-11-07 00:11 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * include/hbapifs.h 
+   * source/rtl/filesys.c
+     + Added hb_fsCreateEx() function which is similar to hb_fsCreate() 
+       with the plus that the opening mode can be also specified.
+
+   * include/hbextern.ch 
+   * source/rtl/philes.c
+     + Added HB_FCREATE() where you can specifiy the opening mode using 
+       the FO_* contants.
+
+   * source/lang/Makefile
+   * makefile.bc
+   * makefile.vc
+     + Added some new language files.
+
+   * include/Makefile
+     ! Synced with the actual list of header files. This fixes the 
+       installation with the GNU-make system.
+
+   * source/rtl/fstemp.c
+   * include/hbapifs.h
+     * Changed to make use of hb_fsCreateEx(), and open the temp file 
+       in exclusive mode.
+
+   * source/rdd/hbdbsort.c
+     * Now uses hb_fsCreateTemp()
+
+   * make_gnu.bat
+   * bin/bld.bat
+     ! MinGW name change.
+
+   * include/hbapigt.h
+     + Added some functions which have incompatible prototypes with 
+       CA-Clipper Extend System.
+
+   * source/vm/extend.c
+     * Some formatting.
+
+   * source/vm/mainlgtk.c 
+     ! Fixed CVS header.
+
 2001-11-06 19:28 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * source/rdd/dbfcdx/dbfcdx2.h
    * source/rdd/dbfcdx/dbfcdx1.c
@@ -8,7 +51,7 @@
    * tests/Makefile
       * testprof.prg was missing. Added.
 	
-2001-11-06 06:20 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
+2001-11-06 06:20 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    * source/debug/dbgtarr.prg
       * Some enhacementes . Now you can use Page up/Page Down keys for movement
    * source/rtl/gtwin/gtwin.c
