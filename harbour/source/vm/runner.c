@@ -273,7 +273,7 @@ HB_FUNC( __HRBDOFU )
          for( i = 0; i < argc-1; i++ ) /* Push other  params  */
             hb_vmPush( hb_param( i + 2, HB_IT_ANY ) );
 
-         hb_vmSend( argc-1 );          /* Run function        */
+         hb_vmDo( argc-1 );            /* Run function        */
       }
       else
          hb_errRT_BASE( EG_ARG, 9999, NULL, "__HRBDOFU", 0 );
@@ -442,7 +442,7 @@ void hb_hrbDo( PHRB_BODY pHrbBody, int argc, char * argv[] )
          for( i = 0; i < argc; i++ ) /* Push other cmdline params*/
             hb_vmPushString( argv[i],strlen(argv[i]) );
 
-         hb_vmSend( argc );          /* Run init function        */
+         hb_vmDo( argc );            /* Run init function        */
       }
    }
 
@@ -453,7 +453,7 @@ void hb_hrbDo( PHRB_BODY pHrbBody, int argc, char * argv[] )
        hb_vmPushNil();
        for( i = 0; i < ( hb_pcount() - 1 ); i++ )
           hb_vmPush( hb_param( i + 2, HB_IT_ANY ) ); /* Push other cmdline params*/
-       hb_vmSend( hb_pcount() - 1 );                 /* Run the thing !!!        */
+       hb_vmDo( hb_pcount() - 1 );                   /* Run the thing !!!        */
 
        pRetVal = hb_itemNew( NULL );
        hb_itemCopy( pRetVal, &hb_stack.Return );
@@ -465,7 +465,7 @@ void hb_hrbDo( PHRB_BODY pHrbBody, int argc, char * argv[] )
       {
          hb_vmPushSymbol( pHrbBody->pSymRead + ul );
          hb_vmPushNil();
-         hb_vmSend( 0 );                        /* Run exit function        */
+         hb_vmDo( 0 );                   /* Run exit function        */
          pHrbBody->pSymRead[ ul ].cScope = pHrbBody->pSymRead[ ul ].cScope & ( ~HB_FS_EXIT );
                                          /* Exit function cannot be
                                             handled by main in hvm.c */

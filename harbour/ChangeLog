@@ -7,6 +7,14 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+    * Updated version numbers to Alpha 39 release
+  * Tagged Repository With BUILD39
+
+2002-03-08 07:30 UTC-0300 Luiz Rafael Culik<culikr@uol.com.br>
+  * utils/hbmake/hbmake.prg
+    * Minor fix for Library names on linux section
+
+2002-03-07 14:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rtl/dbsdf.prg
      * bug fixed, reported by Mikhail Malyh
   * doc/en/compiler.txt
