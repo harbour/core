@@ -413,11 +413,15 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgpl852.obj \
    $(OBJ_DIR)\msgpliso.obj \
    $(OBJ_DIR)\msgplmaz.obj \
+   $(OBJ_DIR)\msgplwin.obj \
    $(OBJ_DIR)\msgpt.obj \
    $(OBJ_DIR)\msgro.obj \
    $(OBJ_DIR)\msgru866.obj \
    $(OBJ_DIR)\msgruwin.obj \
    $(OBJ_DIR)\msgrukoi.obj \
+   $(OBJ_DIR)\msgsl852.obj \
+   $(OBJ_DIR)\msgsliso.obj \
+   $(OBJ_DIR)\msgslwin.obj \
    $(OBJ_DIR)\msgsr852.obj \
    $(OBJ_DIR)\msgsriso.obj \
    $(OBJ_DIR)\msgzhgb.obj \
@@ -432,9 +436,13 @@ CODEPAGE_LIB_OBJS = \
    $(OBJ_DIR)\cdppl852.obj \
    $(OBJ_DIR)\cdppliso.obj \
    $(OBJ_DIR)\cdpplmaz.obj \
+   $(OBJ_DIR)\cdpplwin.obj \
    $(OBJ_DIR)\cdpru866.obj \
    $(OBJ_DIR)\cdpruwin.obj \
-   $(OBJ_DIR)\cdprukoi.obj
+   $(OBJ_DIR)\cdprukoi.obj \
+   $(OBJ_DIR)\cdpsl852.obj \
+   $(OBJ_DIR)\cdpsliso.obj \
+   $(OBJ_DIR)\cdpslwin.obj
 
 #
 # MACRO.LIB rules
@@ -2140,6 +2148,10 @@ $(OBJ_DIR)\msgplmaz.obj : $(LANG_DIR)\msgplmaz.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\msgplwin.obj : $(LANG_DIR)\msgplwin.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\msgpt.obj : $(LANG_DIR)\msgpt.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
@@ -2157,6 +2169,18 @@ $(OBJ_DIR)\msgruwin.obj : $(LANG_DIR)\msgruwin.c
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msgrukoi.obj : $(LANG_DIR)\msgrukoi.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\msgsl852.obj : $(LANG_DIR)\msgsl852.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\msgsliso.obj : $(LANG_DIR)\msgsliso.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\msgslwin.obj : $(LANG_DIR)\msgslwin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
@@ -2211,6 +2235,10 @@ $(OBJ_DIR)\cdpplmaz.obj : $(CODEPAGE_DIR)\cdpplmaz.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\cdpplwin.obj : $(CODEPAGE_DIR)\cdpplwin.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\cdpru866.obj : $(CODEPAGE_DIR)\cdpru866.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
@@ -2220,6 +2248,18 @@ $(OBJ_DIR)\cdpruwin.obj : $(CODEPAGE_DIR)\cdpruwin.c
    tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\cdprukoi.obj : $(CODEPAGE_DIR)\cdprukoi.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\cdpsl852.obj : $(CODEPAGE_DIR)\cdpsl852.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\cdpsliso.obj : $(CODEPAGE_DIR)\cdpsliso.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\cdpslwin.obj : $(CODEPAGE_DIR)\cdpslwin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
 

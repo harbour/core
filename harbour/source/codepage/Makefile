@@ -16,7 +16,10 @@ C_SOURCES=\
 	cdpplwin.c    \
 	cdpru866.c    \
 	cdprukoi.c    \
-	cdpruwin.c
+	cdpruwin.c    \
+	cdpsl852.c    \
+	cdpsliso.c    \
+	cdpslwin.c
 
 LIBNAME=codepage
 

@@ -8,6 +8,57 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-06-16 21:16 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rtl/cdpapi.c
+    ! Bug fixed in hb_cdpTranslate() and hb_cdpnTranslate()
+  * source/lang/msg_tpl.c
+  * source/lang/msgca.c
+  * source/lang/msgcs852.c
+  * source/lang/msgcsiso.c
+  * source/lang/msgcskam.c
+  * source/lang/msgcswin.c
+  * source/lang/msgde.c
+  * source/lang/msgdewin.c
+  * source/lang/msgeo.c
+  * source/lang/msges.c
+  * source/lang/msgeswin.c
+  * source/lang/msgeu.c
+  * source/lang/msgfr.c
+  * source/lang/msggl.c
+  * source/lang/msghe862.c
+  * source/lang/msghewin.c
+  * source/lang/msghr852.c
+  * source/lang/msghriso.c
+  * source/lang/msghu852.c
+  * source/lang/msghucwi.c
+  * source/lang/msghuwin.c
+  * source/lang/msgid.c
+  * source/lang/msgis850.c
+  * source/lang/msgit.c
+  * source/lang/msgko.c
+  * source/lang/msgpt.c
+  * source/lang/msgro.c
+  * source/lang/msgsr852.c
+  * source/lang/msgsr852.c
+  * source/lang/msgzhb5.c
+  * source/lang/msgzhgb.c
+    ! Missing comma inserted.
+  + source/lang/msgsl852.c
+  + source/lang/msgsliso.c
+  + source/lang/msgslwin.c
+    + Slovenian language files added, provided by Mitja Podgornik <Mitja.Podgornik@zgs.gov.si>
+  + source/codepage/cdpsl852.c
+  + source/codepage/cdpsliso.c
+  + source/codepage/cdpslwin.c
+    + Slovenian codepage files added, provided by Mitja Podgornik <Mitja.Podgornik@zgs.gov.si>
+      Collating sequences are also valid for Croatian, Macedonian and Serbian (latin) language.
+  * source/codepage/Makefile
+  * source/lang/Makefile
+  * makefile.bc
+  * makefile.nt
+  * makefile.vc
+    * Makefiles are changed to compile new lang and codepage files.
+
 2003-06-15 14:20 UTC+0200 Przemyslaw Czerpak <druzus@polbox.com>
   * harbour/source/lang/msgen.c
   * harbour/source/lang/msgpl852.c

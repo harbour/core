@@ -33,11 +33,15 @@ C_SOURCES=\
 	msgpl852.c   \
 	msgpliso.c   \
 	msgplmaz.c   \
+	msgplwin.c   \
 	msgpt.c      \
 	msgro.c      \
 	msgru866.c   \
 	msgrukoi.c   \
 	msgruwin.c   \
+	msgsl852.c   \
+	msgsliso.c   \
+	msgslwin.c   \
 	msgsr852.c   \
 	msgsriso.c   \
 	msgzhb5.c    \

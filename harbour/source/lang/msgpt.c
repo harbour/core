@@ -168,7 +168,6 @@ static HB_LANG s_lang =
       "",
       "",
       "",
-      "",
       "acesso de array",
       "array assign",
       ""
@@ -202,7 +201,7 @@ static HB_LANG s_lang =
       "Memory buffer overflow",
       "hb_xgrab requisitou para alocar zero bytes",
       "hb_xrealloc requisitou para redimensiorar para zero byte",
-      "hb_xalloc requisitou para alocar zero bytes"
+      "hb_xalloc requisitou para alocar zero bytes",
 
       /* Texts */
 

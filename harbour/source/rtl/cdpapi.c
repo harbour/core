@@ -272,7 +272,7 @@ void hb_cdpTranslate( char* psz, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
          {
             n--;
             *psz = ( n>=cdpOut->nChars )? 
-                        cdpOut->CharsLower[n-cdpOut->nChars]:cdpOut->CharsUpper[n];
+                        cdpOut->CharsLower[n-cdpOut->nChars-((cdpIn->lLatin)? 6:0)]:cdpOut->CharsUpper[n];
          }
       }
    }
@@ -290,7 +290,7 @@ void hb_cdpnTranslate( char* psz, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut, unsig
          {
             n--;
             *psz = ( n>=cdpOut->nChars )? 
-                        cdpOut->CharsLower[n-cdpOut->nChars]:cdpOut->CharsUpper[n];
+                        cdpOut->CharsLower[n-cdpOut->nChars-((cdpIn->lLatin)? 6:0)]:cdpOut->CharsUpper[n];
          }
       }
 }
