@@ -53,6 +53,9 @@
 #include "error.ch"
 #include "fileio.ch"
 
+/* Don't change the order or place of this #include. */
+#include "rt_vars.ch"
+
 STATIC s_nPass
 STATIC s_nFail
 STATIC s_cFileName
@@ -64,57 +67,6 @@ STATIC s_lShortcut
 STATIC s_aSkipList
 STATIC s_nStartTime
 STATIC s_nEndTime
-
-STATIC scString
-STATIC scStringM
-STATIC scStringE
-STATIC scStringZ
-STATIC scStringW
-STATIC snIntZ
-STATIC snDoubleZ
-STATIC snIntP
-STATIC snIntP1
-STATIC snLongP
-STATIC snDoubleP
-STATIC snIntN
-STATIC snLongN
-STATIC snDoubleN
-STATIC snDoubleI
-STATIC sdDate
-STATIC sdDateE
-STATIC slFalse
-STATIC slTrue
-STATIC soObject
-STATIC suNIL
-STATIC sbBlock
-STATIC sbBlockC
-STATIC saArray
-STATIC saAllTypes
-
-MEMVAR mxNotHere /* Please don't declare this variable, since it's used to test undeclared MEMVAR situations. */
-MEMVAR mcLongerNameThen10Chars
-MEMVAR mcString
-MEMVAR mcStringE
-MEMVAR mcStringZ
-MEMVAR mcStringW
-MEMVAR mnIntZ
-MEMVAR mnDoubleZ
-MEMVAR mnIntP
-MEMVAR mnLongP
-MEMVAR mnDoubleP
-MEMVAR mnDoubleI
-MEMVAR mnIntN
-MEMVAR mnLongN
-MEMVAR mnDoubleN
-MEMVAR mdDate
-MEMVAR mdDateE
-MEMVAR mlFalse
-MEMVAR mlTrue
-MEMVAR moObject
-MEMVAR muNIL
-MEMVAR mbBlock
-MEMVAR mbBlockC
-MEMVAR maArray
 
 FUNCTION Main( cPar1, cPar2 )
 
@@ -537,57 +489,5 @@ FUNCTION SToD( cDate )
 #endif
 #endif
 
-INIT PROCEDURE RT_InitStatics()
-
-   /* NOTE: Some basic values we may need for some tests.
-            ( passing by reference, avoid preprocessor bugs, etc. ) */
-
-   scString  := "HELLO"
-   scStringM := "Hello"
-   scStringE := ""
-   scStringZ := "A" + Chr( 0 ) + "B"
-   scStringW := Chr(13)+Chr(10)+Chr(141)+Chr(10)+Chr(9)
-   snIntZ    := 0
-   snDoubleZ := 0.0
-   snIntP    := 10
-   snIntP1   := 65
-   snLongP   := 100000
-   snDoubleP := 10.567 /* Use different number of decimals than the default */
-   snIntN    := -10
-   snLongN   := -100000
-   snDoubleN := -10.567 /* Use different number of decimals than the default */
-   snDoubleI := 0       // Log( 0 )
-   sdDate    := SToD( "19840325" )
-   sdDateE   := SToD( "" )
-   slFalse   := .F.
-   slTrue    := .T.
-   soObject  := ErrorNew()
-   suNIL     := NIL
-   sbBlock   := {|| NIL }
-   sbBlockC  := {|| "(string)" }
-   saArray   := { 9898 }
-
-   saAllTypes := {;
-      scString  ,;
-      scStringE ,;
-      scStringZ ,;
-      snIntZ    ,;
-      snDoubleZ ,;
-      snIntP    ,;
-      snLongP   ,;
-      snDoubleP ,;
-      snIntN    ,;
-      snLongN   ,;
-      snDoubleN ,;
-      snDoubleI ,;
-      sdDateE   ,;
-      slFalse   ,;
-      slTrue    ,;
-      soObject  ,;
-      suNIL     ,;
-      sbBlock   ,;
-      sbBlockC  ,;
-      saArray   }
-
-   RETURN
-
+/* Don't change the order or place of this #include. */
+#include "rt_init.ch"

@@ -1166,7 +1166,7 @@ static ERRCODE dbfGoToId( AREAP pArea, PHB_ITEM pItem )
 
    HB_TRACE(HB_TR_DEBUG, ("dbfGoToId(%p, %p)", pArea, pItem));
 
-   if( pItem->type & IT_NUMERIC )
+   if( IS_NUMERIC( pItem ) )
    {
       ulRecNo = hb_itemGetNL( pItem );
       if( ulRecNo == 0 )
@@ -1222,11 +1222,9 @@ static ERRCODE dbfInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case DBI_LASTUPDATE:
-         hb_itemClear( pItem );
-         pItem->type = IT_DATE;
-         pItem->item.asDate.value = hb_dateEncode( pArea->lpExtendInfo->bDay,
-                                                   pArea->lpExtendInfo->bMonth,
-                                                   pArea->lpExtendInfo->bYear );
+         hb_itemPutDL( pItem, hb_dateEncode( pArea->lpExtendInfo->bDay,
+                                             pArea->lpExtendInfo->bMonth,
+                                             pArea->lpExtendInfo->bYear ) );
          break;
 
       case DBI_GETRECSIZE:
@@ -1319,7 +1317,7 @@ static ERRCODE dbfOpen( AREAP pArea, LPDBOPENINFO pOpenInfo )
       if( pFileName->szPath )
          strcat( szFileName, pFileName->szPath );
       strcat( szFileName, pFileName->szName );
-      strcat( szFileName, pFileExt->item.asString.value );
+      strcat( szFileName, hb_itemGetCPtr( pFileExt ) );
       pOpenInfo->abName = ( BYTE * ) szFileName;
       hb_itemRelease( pFileExt );
       hb_xfree( pFileName );
@@ -1507,19 +1505,19 @@ static ERRCODE dbfPutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    switch( pField->uiType )
    {
       case 'C':
-         if( pItem->type & IT_STRING )
+         if( IS_STRING( pItem ) )
          {
-            uiCount = pItem->item.asString.length;
+            uiCount = hb_itemGetCLen( pItem );
             if( uiCount > pField->uiLen )
                uiCount = pField->uiLen;
-            memcpy( szText, pItem->item.asString.value, uiCount );
+            memcpy( szText, hb_itemGetCPtr( pItem ), uiCount );
             memset( szText + uiCount, ' ', pField->uiLen - uiCount );
             bError = FALSE;
          }
          break;
 
       case 'N':
-         if( pItem->type & IT_NUMERIC )
+         if( IS_NUMERIC( pItem ) )
          {
             if( pField->uiDec )
                bError = !hb_ndtoa( hb_itemGetND( pItem ), ( char * ) szText,
@@ -1541,10 +1539,10 @@ static ERRCODE dbfPutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case 'D':
-         if( pItem->type & IT_DATE )
+         if( IS_DATE( pItem ) )
          {
             szEndChar = * ( szText + pField->uiLen );
-            hb_dateDecode( pItem->item.asDate.value, &lDay, &lMonth, &lYear );
+            hb_dateDecode( hb_itemGetDL( pItem ), &lDay, &lMonth, &lYear );
             hb_dateStrPut( ( char * ) szText, lDay, lMonth, lYear );
             * ( szText + pField->uiLen ) = szEndChar;
             bError = FALSE;
@@ -1552,20 +1550,17 @@ static ERRCODE dbfPutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case 'L':
-         if( pItem->type & IT_LOGICAL )
+         if( IS_LOGICAL( pItem ) )
          {
-            if( pItem->item.asLogical.value )
-               *szText = 'T';
-            else
-               *szText = 'F';
+            *szText = hb_itemGetL( pItem ) ? 'T' : 'F';
             bError = FALSE;
          }
          break;
 
       case 'M':
-         if( pItem->type & IT_STRING )
+         if( IS_STRING( pItem ) )
          {
-            uiCount = pItem->item.asString.length;
+            uiCount = hb_itemGetCLen( pItem );
             if( ( ( LPDBFMEMO ) pField->memo )->uiLen < uiCount )
             {
                if( ( ( LPDBFMEMO ) pField->memo )->pData )
@@ -1579,7 +1574,7 @@ static ERRCODE dbfPutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             ( ( LPDBFMEMO ) pField->memo )->uiLen = uiCount;
             if( uiCount > 0 )
             {
-               memcpy( ( ( LPDBFMEMO ) pField->memo )->pData, pItem->item.asString.value, uiCount );
+               memcpy( ( ( LPDBFMEMO ) pField->memo )->pData, hb_itemGetCPtr( pItem ), uiCount );
                ( ( LPDBFMEMO ) pField->memo )->pData[ uiCount ] = 0;
             }
             else

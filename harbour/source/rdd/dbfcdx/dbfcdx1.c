@@ -484,7 +484,7 @@ static ERRCODE cdxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
       pExpr = pOrderInfo->itmCobExpr;
    else /* Otherwise, try compiling the key expression string */
    {
-      if( SELF_COMPILE( pArea, ( BYTE * ) pOrderInfo->abExpr->item.asString.value ) == FAILURE )
+      if( SELF_COMPILE( pArea, ( BYTE * ) hb_itemGetCPtr( pOrderInfo->abExpr ) ) == FAILURE )
          return FAILURE;
       pExpr = pArea->valResult;
       pArea->valResult = NULL;
@@ -527,8 +527,8 @@ static ERRCODE cdxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
          break;
 
       case IT_STRING:
-         uiLen = pResult->item.asString.length > CDX_MAX_KEY ? CDX_MAX_KEY :
-                 pResult->item.asString.length;
+         uiLen = hb_itemGetCLen( pResult ) > CDX_MAX_KEY ? CDX_MAX_KEY :
+                 hb_itemGetCLen( pResult );
          break;
    }
 
@@ -598,7 +598,7 @@ static ERRCODE cdxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
       strcat( szFileName, pFileName->szName );
       pExtInfo.itmResult = hb_itemPutC( NULL, "" );
       SELF_ORDINFO( pArea, DBOI_BAGEXT, &pExtInfo );
-      strcat( szFileName, pExtInfo.itmResult->item.asString.value );
+      strcat( szFileName, hb_itemGetCPtr( pExtInfo.itmResult ) );
       hb_itemRelease( pExtInfo.itmResult );
    }
    else
@@ -609,7 +609,7 @@ static ERRCODE cdxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
       {
          pExtInfo.itmResult = hb_itemPutC( NULL, "" );
          SELF_ORDINFO( pArea, DBOI_BAGEXT, &pExtInfo );
-         strcat( szFileName, pExtInfo.itmResult->item.asString.value );
+         strcat( szFileName, hb_itemGetCPtr( pExtInfo.itmResult ) );
          hb_itemRelease( pExtInfo.itmResult );
       }
    }

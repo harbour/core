@@ -333,6 +333,7 @@ extern int      hb_arrayGetNI( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves th
 extern long     hb_arrayGetNL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the long numeric value contained on an array element */
 extern double   hb_arrayGetND( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the double value contained on an array element */
 extern char *   hb_arrayGetDS( PHB_ITEM pArray, ULONG ulIndex, char * szDate ); /* retrieves the date value contained on an array element */
+extern long     hb_arrayGetDL( PHB_ITEM pArray, ULONG ulIndex );
 extern USHORT   hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex );
 extern BOOL     hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount );
 extern ULONG    hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount );

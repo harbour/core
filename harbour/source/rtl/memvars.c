@@ -1330,7 +1330,7 @@ HARBOUR HB___MVSAVE( void )
                   }
                   else if( IS_DATE( pItem ) )
                   {
-                     double dNumber = ( double ) hb_itemGetNL( pItem );
+                     double dNumber = ( double ) hb_itemGetDL( pItem );
 
                      buffer[ 11 ] = 'D' + 128;
                      buffer[ 16 ] = 1;

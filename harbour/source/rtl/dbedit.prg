@@ -40,14 +40,6 @@
 
 #define HB_DBEMPTY() ( LastRec() == 0 .OR. ( ( Eof() .OR. RecNo() == LastRec() + 1 ) .AND. Bof() ) )
 
-/* TODO: put more comprehensive $EXAMPLES$.
-         DBEDIT() is a complex function, the doc I had made cover all the
-         parameters but probably not good enough for a new user that does
-         not know what this function is all about and how to use it. I am
-         not that good with the English language (and I did not want to
-         COPY the NG text) I suggest later some one should add to this
-         text. [chkedem] */
-
 /* NOTE: Extension: Harbour supports codeblocks as the xUserFunc parameter 
          [vszakats] */
 /* NOTE: Clipper is buggy and will throw an error if the number of

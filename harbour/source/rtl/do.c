@@ -58,7 +58,7 @@ HARBOUR HB_DO( void )
          hb_vmDo( uiPCount - 1 );
       }
       else
-         hb_errRT_BASE( EG_NOFUNC, 1001, NULL, pItem->item.asString.value );
+         hb_errRT_BASE( EG_NOFUNC, 1001, NULL, hb_itemGetCPtr( pItem ) );
    }
    else if( IS_BLOCK( pItem ) )
    {

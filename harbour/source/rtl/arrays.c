@@ -303,6 +303,18 @@ char * hb_arrayGetDS( PHB_ITEM pArray, ULONG ulIndex, char * szDate )
    return szDate;
 }
 
+long hb_arrayGetDL( PHB_ITEM pArray, ULONG ulIndex )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetDL(%p, %lu)", pArray, ulIndex ));
+
+   if( IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      return hb_itemGetDL( pArray->item.asArray.value->pItems + ulIndex - 1 );
+   else
+      /* NOTE: Intentionally calling it with a bad parameter in order to get
+               the default value from hb_itemGetDS(). [vszakats] */
+      return hb_itemGetDL( NULL );
+}
+
 BOOL hb_arrayGetBool( PHB_ITEM pArray, ULONG ulIndex )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetBool(%p, %lu)", pArray, ulIndex));
@@ -547,14 +559,13 @@ ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * 
          }
          else if( IS_DATE( pValue ) )
          {
-            /* NOTE: This is correct: Get the date as a long value. [vszakats] */
-            LONG lValue = hb_itemGetNL( pValue );
+            LONG lValue = hb_itemGetDL( pValue );
 
             for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
             {
                PHB_ITEM pItem = pBaseArray->pItems + ulStart;
 
-               if( IS_DATE( pItem ) && hb_itemGetNL( pItem ) == lValue )
+               if( IS_DATE( pItem ) && hb_itemGetDL( pItem ) == lValue )
                   return ulStart + 1;
             }
          }

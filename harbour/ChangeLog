@@ -1,11 +1,52 @@
+20000302-17:45 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * tests/regress/*
+     % Modified to take advantage of the code inclusion feature of the PP.
+   * source/rdd/dbcmd.c
+     ! All direct item accesses changed to Item API calls.
+     ! Fixed direct item string buffer access in DBSETDRIVER()
+     % Variable scopes and some other minor thing optimized.
+     + Static variables prefixed with "s_"
+     % LASTREC() is now the same speed as RECCOUNT() (minor enh.)
+     ! DBSETDRIVER(), RDDSETDEFAULT(), __RDDSETDEFAULT() synchronized.
+     ! DBSETDRIVER(), RDDSETDEFAULT(), __RDDSETDEFAULT(), RDDREGISTER(),
+       DBCREATE()
+       Fixed potential GPF on very large driver names.
+   * source/rtl/itemapi.c
+     include/hbapiitm.h
+     + Added hb_itemGetDL( PHB_ITEM pItem ) to easily retrieve the julian
+       date from a date item.
+   * source/rtl/arrays.c
+     include/hbapi.h
+     + Added hb_arrayGetDL( PHB_ITEM pArray, ULONG ulIndex )
+   * source/rtl/arrays.c
+     source/rtl/descend.c
+     source/rtl/empty.c
+     source/rtl/memvars.c
+     source/rtl/math.c
+     ! hb_itemGetNL() calls changed to hb_itemGetDL() calls for date items.
+   * source/rdd/dbf1.c
+     source/rdd/dbfcdx1.c
+     source/tools/dates2.c
+     source/rtl/dates.c
+     ! All direct item accesses changed to Item API calls.
+   * source/rtl/do.c
+     ! One direct item accesses changed to Item API calls.
+   * doc/en/misc.txt
+     ! One copyright fixed.
+   * source/rtl/alert.prg
+     ! Comments changed to standard NOTE/TOFIX format.
+   * source/compiler/genc.c
+     + Small alignment in the .C output format.
+   * .cvsignore
+     + Added b32/, b16/ and vc/ dirs
+       (Committed in the previous session)
+
 20000302-11:21 GMT+1 Victor Szakats <info@szelvesz.hu>
    * config/rules.cf
      makefile.bc
      makefile.vc
      + -es2 added as a default Harbour switch.
        WARNING! HBDOC will not compile, since it has warnings.
-   * .cvsignore
-     + Added b32/, b16/ and vc/ dirs
    * contrib/*
      include/*
      doc/*

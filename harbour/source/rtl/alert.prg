@@ -30,15 +30,18 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-// ; TOFIX: Clipper defines a clipped window for Alert() [vszakats]
-// ; Clipper will return NIL if the first parameter is not a string, but
-//   this is not documented. This implementation converts the first parameter
-//   to a string if another type was passed. You can switch back to
-//   Clipper compatible mode by defining constant
-//   HARBOUR_STRICT_CLIPPER_COMPATIBILITY. [vszakats]
-// ; Clipper handles these buttons { "Ok", "", "Cancel" } in a buggy way.
-//   This is fixed. [vszakats]
-// ; nDelay parameter is a Harbour extension.
+/* TOFIX: Clipper defines a clipped window for Alert() [vszakats] */
+
+/* NOTE: Clipper will return NIL if the first parameter is not a string, but
+         this is not documented. This implementation converts the first 
+         parameter to a string if another type was passed. You can switch back 
+         to Clipper compatible mode by defining constant
+         HARBOUR_STRICT_CLIPPER_COMPATIBILITY. [vszakats] */
+
+/* NOTE: Clipper handles these buttons { "Ok", "", "Cancel" } in a buggy way.
+         This is fixed. [vszakats] */
+
+/* NOTE: nDelay parameter is a Harbour extension. */
 
 STATIC s_lNoAlert := NIL
 
@@ -58,8 +61,8 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
 
    LOCAL nMRow, nMCol
 
-   /* TOFIX: Clipper decides at runtime, whether the GT is linked in, */
-   /*        if it is not, the console mode is choosen here. [vszakats] */
+   /* TOFIX: Clipper decides at runtime, whether the GT is linked in,
+             if it is not, the console mode is choosen here. [vszakats] */
    LOCAL lConsole := .F.
 
    DEFAULT s_lNoAlert TO __argCheck( "NOALERT" )
@@ -149,7 +152,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
    IF Len( aOptionsOK ) == 0
       aOptionsOK := { 'Ok' }
 #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
-   // ; Clipper allows only four options [vszakats]
+   /* NOTE: Clipper allows only four options [vszakats] */
    ELSEIF Len( aOptionsOK ) > 4
       aSize( aOptionsOK, 4 )
 #endif

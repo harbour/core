@@ -306,7 +306,7 @@ HARBOUR HB_MAX( void )
    {
       char szDate[ 9 ];
 
-      hb_retds( hb_itemGetNL( p1 ) >= hb_itemGetNL( p2 ) ? hb_pardsbuff( szDate, 1 ) : hb_pardsbuff( szDate, 2 ) );
+      hb_retds( hb_itemGetDL( p1 ) >= hb_itemGetDL( p2 ) ? hb_pardsbuff( szDate, 1 ) : hb_pardsbuff( szDate, 2 ) );
    }
    else
    {
@@ -366,7 +366,7 @@ HARBOUR HB_MIN( void )
    {
       char szDate[ 9 ];
 
-      hb_retds( hb_itemGetNL( p1 ) <= hb_itemGetNL( p2 ) ? hb_pardsbuff( szDate, 1 ) : hb_pardsbuff( szDate, 2 ) );
+      hb_retds( hb_itemGetDL( p1 ) <= hb_itemGetDL( p2 ) ? hb_pardsbuff( szDate, 1 ) : hb_pardsbuff( szDate, 2 ) );
    }
    else
    {

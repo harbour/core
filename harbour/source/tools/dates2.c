@@ -149,7 +149,7 @@ HARBOUR HB_ISLEAPYEAR( void )
       PHB_ITEM pDate = hb_param( 1, IT_DATE );
       long lDay, lMonth, lYear;
 
-      hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
       hb_retl( hb_isleapyear( lYear ) );
    }
    else
@@ -165,7 +165,7 @@ HARBOUR HB_DAYSINMONTH( void )
       PHB_ITEM pDate = hb_param( 1, IT_DATE );
       long lDay, lMonth, lYear;
 
-      hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
       hb_retni( hb_daysinmonth( lMonth, lYear ) );
    }
    else
@@ -180,7 +180,7 @@ HARBOUR HB_EOM( void )
       long lDay, lMonth, lYear;
       char szDateFormat[ 9 ];
 
-      hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
       lDay = hb_daysinmonth( lMonth, lYear );
       sprintf( szDateFormat, "%04i%02i%02i", (int) lYear, (int) lMonth, (int) lDay );
       hb_retds( szDateFormat );
@@ -197,7 +197,7 @@ HARBOUR HB_BOM( void )
       long lDay, lMonth, lYear;
       char szDateFormat[ 9 ];
 
-      hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
       sprintf( szDateFormat, "%04i%02i%02i", (int) lYear, (int) lMonth, 1 );
       hb_retds( szDateFormat );
    }
@@ -212,7 +212,7 @@ HARBOUR HB_WOM( void )
       PHB_ITEM pDate = hb_param( 1, IT_DATE );
       long lDay, lMonth, lYear;
 
-      hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
       hb_retni( hb_wom( lDay, lMonth, lYear ) );
    }
    else
@@ -226,7 +226,7 @@ HARBOUR HB_DOY( void )
       PHB_ITEM pDate = hb_param( 1, IT_DATE );
       long lDay, lMonth, lYear;
 
-      hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
       hb_retni( hb_doy( lDay, lMonth, lYear ) );
    }
    else
@@ -242,7 +242,7 @@ HARBOUR HB_WOY( void )
       PHB_ITEM pDate = hb_param( 1, IT_DATE );
       long lDay, lMonth, lYear;
 
-      hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
       hb_retni( hb_woy( lDay, lMonth, lYear, ISLOG( 2 ) ? hb_parl( 2 ) : TRUE ) );
    }
    else
@@ -257,7 +257,7 @@ HARBOUR HB_EOY( void )
       long lDay, lMonth, lYear;
       char szDateFormat[ 9 ];
 
-      hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
       sprintf( szDateFormat, "%04i%02i%02i", (int) lYear, 12, 31 );
       hb_retds( szDateFormat );
    }
@@ -273,7 +273,7 @@ HARBOUR HB_BOY( void )
       long lDay, lMonth, lYear;
       char szDateFormat[ 9 ];
 
-      hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
       sprintf( szDateFormat, "%04i%02i%02i", (int) lYear, 1, 1 );
       hb_retds( szDateFormat );
    }

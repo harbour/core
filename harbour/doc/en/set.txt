@@ -18,8 +18,6 @@
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  *    Documentation for: SETTYPEAHEAD()
- *
- * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    Documentation for: __XHELP()
  *
  * See doc/license.txt for licensing terms.

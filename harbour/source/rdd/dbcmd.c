@@ -34,15 +34,17 @@
  */
 
 #include <ctype.h>
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbapirdd.h"
+#include "hbapilng.h"
 #include "hbset.h"
 #include "hbvm.h"
+
 #include "rddsys.ch"
 #include "set.ch"
-#include "hbapilng.h"
 
 #define HARBOUR_MAX_RDD_DRIVERNAME_LENGTH       32
 #define HARBOUR_MAX_RDD_ALIAS_LENGTH            32
@@ -73,90 +75,13 @@ extern HARBOUR HB__SDF( void );
 extern HARBOUR HB__DELIM( void );
 extern HARBOUR HB_RDDSYS( void );
 
-HARBOUR HB_AFIELDS( void );
-HARBOUR HB_ALIAS( void );
-HARBOUR HB_BOF( void );
-HARBOUR HB_DBAPPEND( void );
-HARBOUR HB_DBCLEARFILTER( void );
-HARBOUR HB_DBCLOSEALL( void );
-HARBOUR HB_DBCLOSEAREA( void );
-HARBOUR HB_DBCOMMIT( void );
-HARBOUR HB_DBCOMMITALL( void );
-HARBOUR HB___DBCONTINUE( void );
-HARBOUR HB_DBCREATE( void );
-HARBOUR HB_DBDELETE( void );
-HARBOUR HB_DBEVAL( void );
-HARBOUR HB_DBF( void );
-HARBOUR HB_DBFILTER( void );
-HARBOUR HB_DBGOBOTTOM( void );
-HARBOUR HB_DBGOTO( void );
-HARBOUR HB_DBGOTOP( void );
-HARBOUR HB___DBLOCATE( void );
-HARBOUR HB___DBPACK( void );
-HARBOUR HB_DBRECALL( void );
-HARBOUR HB_DBRLOCK( void );
-HARBOUR HB_DBRLOCKLIST( void );
-HARBOUR HB_DBRUNLOCK( void );
-HARBOUR HB_DBSEEK( void );
-HARBOUR HB_DBSELECTAREA( void );
-HARBOUR HB_DBSETDRIVER( void );
-HARBOUR HB_DBSETFILTER( void );
-HARBOUR HB___DBSETFOUND( void );
-HARBOUR HB___DBSETLOCATE( void );
-HARBOUR HB_DBSKIP( void );
-HARBOUR HB_DBSTRUCT( void );
-HARBOUR HB_DBTABLEEXT( void );
-HARBOUR HB_DBUNLOCK( void );
-HARBOUR HB_DBUNLOCKALL( void );
-HARBOUR HB_DBUSEAREA( void );
-HARBOUR HB___DBZAP( void );
-HARBOUR HB_DELETED( void );
-HARBOUR HB_EOF( void );
-HARBOUR HB_FCOUNT( void );
-HARBOUR HB_FIELDGET( void );
-HARBOUR HB_FIELDNAME( void );
-HARBOUR HB_FIELDPOS( void );
-HARBOUR HB_FIELDPUT( void );
-HARBOUR HB_FLOCK( void );
-HARBOUR HB_FOUND( void );
-HARBOUR HB_HEADER( void );
-HARBOUR HB_INDEXORD( void );
-HARBOUR HB_LASTREC( void );
-HARBOUR HB_LOCK( void );
-HARBOUR HB_LUPDATE( void );
-HARBOUR HB_NETERR( void );
-HARBOUR HB_ORDBAGEXT( void );
-HARBOUR HB_ORDBAGNAME( void );
-HARBOUR HB_ORDCONDSET( void );
-HARBOUR HB_ORDCREATE( void );
-HARBOUR HB_ORDDESTROY( void );
-HARBOUR HB_ORDFOR( void );
-HARBOUR HB_ORDKEY( void );
-HARBOUR HB_ORDLISTADD( void );
-HARBOUR HB_ORDLISTCLEAR( void );
-HARBOUR HB_ORDLISTREBUILD( void );
-HARBOUR HB_ORDNAME( void );
-HARBOUR HB_ORDNUMBER( void );
-HARBOUR HB_ORDSETFOCUS( void );
-HARBOUR HB_RDDLIST( void );
-HARBOUR HB_RDDNAME( void );
-HARBOUR HB_RDDREGISTER( void );
-HARBOUR HB_RDDSETDEFAULT( void );
-HARBOUR HB_RECCOUNT( void );
-HARBOUR HB_RECNO( void );
-HARBOUR HB_RECSIZE( void );
-HARBOUR HB_RLOCK( void );
-HARBOUR HB_SELECT( void );
-HARBOUR HB_USED( void );
-HARBOUR HB___RDDSETDEFAULT( void );
+static char * s_szDefDriver = NULL;    /* Default RDD name */
+static USHORT s_uiCurrArea = 1;        /* Selectd area */
+static LPRDDNODE s_pRddList = NULL;    /* Registered RDD's */
+static BOOL s_bNetError = FALSE;       /* Error on Networked environments */
 
-static char * szDefDriver = NULL;    /* Default RDD name */
-static USHORT uiCurrArea = 1;        /* Selectd area */
-static LPRDDNODE pRddList = NULL;    /* Registered RDD's */
-static BOOL bNetError = FALSE;       /* Error on Networked environments */
-
-static LPAREANODE pWorkAreas = NULL; /* WorkAreas */
-static LPAREANODE pCurrArea = NULL;  /* Pointer to a selectd and valid area */
+static LPAREANODE s_pWorkAreas = NULL; /* WorkAreas */
+static LPAREANODE s_pCurrArea = NULL;  /* Pointer to a selectd and valid area */
 
 /*
  * -- BASIC RDD METHODS --
@@ -303,10 +228,9 @@ static ERRCODE defCompile( AREAP pArea, BYTE * szExpr )
 
 static ERRCODE defCreateFields( AREAP pArea, PHB_ITEM pStruct )
 {
-   USHORT uiCount, uiItems;
-   PHB_ITEM pFieldDesc;
    DBFIELDINFO pFieldInfo;
-   long lLong;
+   USHORT uiCount;
+   USHORT uiItems;
 
    HB_TRACE(HB_TR_DEBUG, ("defCreateFields(%p, %p)", pArea, pStruct));
 
@@ -315,6 +239,9 @@ static ERRCODE defCreateFields( AREAP pArea, PHB_ITEM pStruct )
    pFieldInfo.typeExtended = 0;
    for( uiCount = 0; uiCount < uiItems; uiCount++ )
    {
+      PHB_ITEM pFieldDesc;
+      long lLong;
+
       pFieldDesc = hb_arrayGetItemPtr( pStruct, uiCount + 1 );
       pFieldInfo.uiType = toupper( hb_arrayGetCPtr( pFieldDesc, 2 )[ 0 ] );
       pFieldInfo.atomName = ( BYTE * ) hb_arrayGetCPtr( pFieldDesc, 1 );
@@ -446,12 +373,12 @@ static ERRCODE defEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
 
 static ERRCODE defEvalBlock( AREAP pArea, PHB_ITEM pBlock )
 {
-   PHB_ITEM pError;
-
    HB_TRACE(HB_TR_DEBUG, ("defEvalBlock(%p, %p)", pArea, pBlock));
 
    if( !pBlock && !IS_BLOCK( pBlock ) )
    {
+      PHB_ITEM pError;
+
       pError = hb_errNew();
       hb_errPutGenCode( pError, EG_NOMETHOD );
       hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_NOMETHOD ) );
@@ -600,8 +527,6 @@ static ERRCODE defOrderCondition( AREAP pArea, LPDBORDERCONDINFO pOrderInfo )
 
 static ERRCODE defRelease( AREAP pArea )
 {
-   LPFILEINFO pFileInfo;
-
    HB_TRACE(HB_TR_DEBUG, ("defRelease(%p)", pArea));
 
    SELF_ORDSETCOND( pArea, NULL );
@@ -617,6 +542,8 @@ static ERRCODE defRelease( AREAP pArea )
 
    while( pArea->lpDataInfo )
    {
+      LPFILEINFO pFileInfo;
+
       pFileInfo = pArea->lpDataInfo;
       pArea->lpDataInfo = pArea->lpDataInfo->pNext;
       if( pFileInfo->szFileName )
@@ -744,7 +671,7 @@ static ERRCODE defSkipFilter( AREAP pArea, LONG lUpDown )
 
    if( lUpDown > 0 )
    {
-      while( 1 )
+      while( TRUE )
       {
          SELF_EOF( pArea, &bExit );
          if( bExit )
@@ -768,7 +695,7 @@ static ERRCODE defSkipFilter( AREAP pArea, LONG lUpDown )
             hb_vmPush( pArea->dbfi.itmCobExpr );
             hb_vmDo( 0 );
             if( IS_LOGICAL( &hb_stack.Return ) &&
-                !hb_stack.Return.item.asLogical.value )
+                !hb_itemGetL( &hb_stack.Return ) )
             {
                SELF_SKIPRAW( pArea, 1 );
                continue;
@@ -779,7 +706,7 @@ static ERRCODE defSkipFilter( AREAP pArea, LONG lUpDown )
    }
    else if( lUpDown < 0 )
    {
-      while( 1 )
+      while( TRUE )
       {
          SELF_BOF( pArea, &bExit );
          if( bExit )
@@ -803,7 +730,7 @@ static ERRCODE defSkipFilter( AREAP pArea, LONG lUpDown )
             hb_vmPush( pArea->dbfi.itmCobExpr );
             hb_vmDo( 0 );
             if( IS_LOGICAL( &hb_stack.Return ) &&
-                !hb_stack.Return.item.asLogical.value )
+                !hb_itemGetL( &hb_stack.Return ) )
             {
                SELF_SKIPRAW( pArea, 1 );
                continue;
@@ -839,7 +766,7 @@ static ERRCODE defSysName( AREAP pArea, BYTE * pBuffer )
 
    HB_TRACE(HB_TR_DEBUG, ("defSysName(%p, %p)", pArea, pBuffer));
 
-   pRddNode = pRddList;
+   pRddNode = s_pRddList;
    for( uiCount = 0; uiCount < pArea->rddID; uiCount++ )
       pRddNode = pRddNode->pNext;
    strncpy( ( char * ) pBuffer, pRddNode->szName, HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
@@ -941,10 +868,10 @@ static void hb_rddCheck( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_rddCheck()"));
 
-   if( !szDefDriver )
+   if( !s_szDefDriver )
    {
-      szDefDriver = ( char * ) hb_xgrab( 1 );
-      szDefDriver[ 0 ] = '\0';
+      s_szDefDriver = ( char * ) hb_xgrab( 1 );
+      s_szDefDriver[ 0 ] = '\0';
 
       /* Force link the built-in RDD's */
       HB__DBF();
@@ -958,19 +885,19 @@ static void hb_rddCloseAll( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_rddCloseAll()"));
 
-   pCurrArea = pWorkAreas;
-   while( pWorkAreas )
+   s_pCurrArea = s_pWorkAreas;
+   while( s_pWorkAreas )
    {
-      pCurrArea = pWorkAreas;
-      pWorkAreas = pWorkAreas->pNext;
-      SELF_CLOSE( ( AREAP ) pCurrArea->pArea );
-      SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
-      hb_xfree( pCurrArea->pArea );
-      hb_xfree( pCurrArea );
+      s_pCurrArea = s_pWorkAreas;
+      s_pWorkAreas = s_pWorkAreas->pNext;
+      SELF_CLOSE( ( AREAP ) s_pCurrArea->pArea );
+      SELF_RELEASE( ( AREAP ) s_pCurrArea->pArea );
+      hb_xfree( s_pCurrArea->pArea );
+      hb_xfree( s_pCurrArea );
    }
-   uiCurrArea = 1;
-   pCurrArea = NULL;
-   pWorkAreas = NULL;
+   s_uiCurrArea = 1;
+   s_pCurrArea = NULL;
+   s_pWorkAreas = NULL;
 }
 
 static LPRDDNODE hb_rddFindNode( char * szDriver, USHORT * uiIndex )
@@ -981,7 +908,7 @@ static LPRDDNODE hb_rddFindNode( char * szDriver, USHORT * uiIndex )
    HB_TRACE(HB_TR_DEBUG, ("hb_rddFindNode(%s, %p)", szDriver, uiIndex));
 
    uiCount = 0;
-   pRddNode = pRddList;
+   pRddNode = s_pRddList;
    while( pRddNode )
    {
       if( strcmp( pRddNode->szName, szDriver ) == 0 ) /* Matched RDD */
@@ -1038,11 +965,11 @@ static int hb_rddRegister( char * szDriver, USHORT uiType )
       return 3;                        /* Invalid FUNCTABLE */
    }
 
-   if( !pRddList )                     /* First RDD node */
-      pRddList = pRddNewNode;
+   if( !s_pRddList )                     /* First RDD node */
+      s_pRddList = pRddNewNode;
    else
    {
-      pRddNode = pRddList;
+      pRddNode = s_pRddList;
       while( pRddNode->pNext )
          pRddNode = pRddNode->pNext;   /* Locate the last RDD node */
       pRddNode->pNext = pRddNewNode;   /* Add the new RDD node */
@@ -1069,22 +996,21 @@ static void hb_rddSelectFirstAvailable( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_rddSelectFirstAvailable()"));
 
-   uiCurrArea = 1;
-   pAreaNode = pWorkAreas;
+   s_uiCurrArea = 1;
+   pAreaNode = s_pWorkAreas;
    while( pAreaNode )
    {
-      if( ( ( AREAP ) pAreaNode->pArea )->uiArea > uiCurrArea )
+      if( ( ( AREAP ) pAreaNode->pArea )->uiArea > s_uiCurrArea )
          break;
-      else if( ( ( AREAP ) pAreaNode->pArea )->uiArea == uiCurrArea )
-         uiCurrArea++;
+      else if( ( ( AREAP ) pAreaNode->pArea )->uiArea == s_uiCurrArea )
+         s_uiCurrArea++;
       pAreaNode = pAreaNode->pNext;
    }
-   pCurrArea = NULL;   /* Selected WorkArea must be created */
+   s_pCurrArea = NULL;   /* Selected WorkArea must be created */
 }
 
 ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTable, BYTE * szDrvName )
 {
-   char * szSuperName;
    LPRDDNODE pRddNode;
    USHORT uiCount;
    DBENTRYP_V * pFunction, * pSubFunction;
@@ -1102,6 +1028,8 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
    }
    else
    {
+      char * szSuperName;
+
       szSuperName = ( char * ) hb_xgrab( uiCount + 1 );
       hb_strncpyUpper( szSuperName, ( char * ) szDrvName, uiCount );
       pRddNode = hb_rddFindNode( szSuperName, 0 );
@@ -1135,7 +1063,7 @@ void * hb_rddGetCurrentWorkAreaPointer( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_rddGetCurrentWorkAreaPointer()"));
 
-   return pCurrArea->pArea;
+   return s_pCurrArea->pArea;
 }
 
 /*
@@ -1146,7 +1074,7 @@ int  hb_rddGetCurrentWorkAreaNumber( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_rddGetCurrentWorkAreaNumber()"));
 
-   return uiCurrArea;
+   return s_uiCurrArea;
 }
 
 ERRCODE hb_rddSelectWorkAreaNumber( int iArea )
@@ -1155,19 +1083,19 @@ ERRCODE hb_rddSelectWorkAreaNumber( int iArea )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_rddSelectWorkAreaNumber(%d)", iArea));
 
-   uiCurrArea = iArea;
+   s_uiCurrArea = iArea;
 
-   pAreaNode = pWorkAreas;
+   pAreaNode = s_pWorkAreas;
    while( pAreaNode )
    {
-      if( ( ( AREAP ) pAreaNode->pArea )->uiArea == uiCurrArea )
+      if( ( ( AREAP ) pAreaNode->pArea )->uiArea == s_uiCurrArea )
       {
-         pCurrArea = pAreaNode; /* Select a valid WorkArea */
+         s_pCurrArea = pAreaNode; /* Select a valid WorkArea */
          return SUCCESS;
       }
       pAreaNode = pAreaNode->pNext;
    }
-   pCurrArea = NULL;               /* Selected WorkArea is closed */
+   s_pCurrArea = NULL;               /* Selected WorkArea is closed */
    return FAILURE;
 }
 
@@ -1332,20 +1260,20 @@ ERRCODE hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 
 ERRCODE hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 {
-   LPFIELD pField;
-   USHORT uiField;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_rddFieldPut(%p, %p)", pItem, pFieldSymbol));
 
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
+      LPFIELD pField;
+      USHORT uiField;
+
       uiField = 1;
-      pField = ( ( AREAP ) pCurrArea->pArea )->lpFields;
+      pField = ( ( AREAP ) s_pCurrArea->pArea )->lpFields;
       while( pField )
       {
          if( ( PHB_DYNS ) pField->sym == pFieldSymbol->pDynSym )
          {
-            SELF_PUTVALUE( ( AREAP ) pCurrArea->pArea, uiField, pItem );
+            SELF_PUTVALUE( ( AREAP ) s_pCurrArea->pArea, uiField, pItem );
             return SUCCESS;
          }
          pField = pField->lpfNext;
@@ -1357,20 +1285,20 @@ ERRCODE hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 
 ERRCODE hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 {
-   LPFIELD pField;
-   USHORT uiField;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_rddFieldGet(%p, %p)", pItem, pFieldSymbol));
 
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
+      LPFIELD pField;
+      USHORT uiField;
+
       uiField = 1;
-      pField = ( ( AREAP ) pCurrArea->pArea )->lpFields;
+      pField = ( ( AREAP ) s_pCurrArea->pArea )->lpFields;
       while( pField )
       {
          if( ( PHB_DYNS ) pField->sym == pFieldSymbol->pDynSym )
          {
-            SELF_GETVALUE( ( AREAP ) pCurrArea->pArea, uiField, pItem );
+            SELF_GETVALUE( ( AREAP ) s_pCurrArea->pArea, uiField, pItem );
             return SUCCESS;
          }
          pField = pField->lpfNext;
@@ -1382,17 +1310,18 @@ ERRCODE hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 
 void hb_rddShutDown( void )
 {
-   LPRDDNODE pRddNode;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_rddShutDown()"));
 
    hb_rddCloseAll();
-   if( szDefDriver )
-      hb_xfree( szDefDriver );
-   while( pRddList )
+   if( s_szDefDriver )
+      hb_xfree( s_szDefDriver );
+
+   while( s_pRddList )
    {
-      pRddNode = pRddList;
-      pRddList = pRddList->pNext;
+      LPRDDNODE pRddNode;
+
+      pRddNode = s_pRddList;
+      s_pRddList = s_pRddList->pNext;
       hb_xfree( pRddNode );
    }
 }
@@ -1406,7 +1335,7 @@ HARBOUR HB_AFIELDS( void )
    PHB_ITEM pName, pType, pLen, pDec, pItem;
    USHORT uiFields, uiArrayLen, uiCount;
 
-   if( !pCurrArea )
+   if( !s_pCurrArea )
    {
       hb_retni( 0 );
       return;
@@ -1423,7 +1352,7 @@ HARBOUR HB_AFIELDS( void )
    }
 
    pItem = hb_itemNew( NULL );
-   SELF_FIELDCOUNT( ( AREAP ) pCurrArea->pArea, &uiFields );
+   SELF_FIELDCOUNT( ( AREAP ) s_pCurrArea->pArea, &uiFields );
    if( pName )
    {
       uiArrayLen = hb_arrayLen( pName );
@@ -1431,7 +1360,7 @@ HARBOUR HB_AFIELDS( void )
          uiArrayLen = uiFields;
       for( uiCount = 1; uiCount <= uiArrayLen; uiCount++ )
       {
-         SELF_FIELDINFO( ( AREAP ) pCurrArea->pArea, uiCount, DBS_NAME, pItem );
+         SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_NAME, pItem );
          hb_arraySet( pName, uiCount, pItem );
       }
    }
@@ -1442,7 +1371,7 @@ HARBOUR HB_AFIELDS( void )
          uiArrayLen = uiFields;
       for( uiCount = 1; uiCount <= uiArrayLen; uiCount++ )
       {
-         SELF_FIELDINFO( ( AREAP ) pCurrArea->pArea, uiCount, DBS_TYPE, pItem );
+         SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_TYPE, pItem );
          hb_arraySet( pType, uiCount, pItem );
       }
    }
@@ -1453,7 +1382,7 @@ HARBOUR HB_AFIELDS( void )
          uiArrayLen = uiFields;
       for( uiCount = 1; uiCount <= uiArrayLen; uiCount++ )
       {
-         SELF_FIELDINFO( ( AREAP ) pCurrArea->pArea, uiCount, DBS_LEN, pItem );
+         SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_LEN, pItem );
          hb_arraySet( pLen, uiCount, pItem );
       }
    }
@@ -1464,7 +1393,7 @@ HARBOUR HB_AFIELDS( void )
          uiArrayLen = uiFields;
       for( uiCount = 1; uiCount <= uiArrayLen; uiCount++ )
       {
-         SELF_FIELDINFO( ( AREAP ) pCurrArea->pArea, uiCount, DBS_DEC, pItem );
+         SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_DEC, pItem );
          hb_arraySet( pDec, uiCount, pItem );
       }
    }
@@ -1480,8 +1409,8 @@ HARBOUR HB_ALIAS( void )
    char * szAlias;
 
    uiArea = hb_parni( 1 );
-   uiArea = uiArea ? uiArea : uiCurrArea;
-   pAreaNode = pWorkAreas;
+   uiArea = uiArea ? uiArea : s_uiCurrArea;
+   pAreaNode = s_pWorkAreas;
    while( pAreaNode )
    {
       if( ( ( AREAP ) pAreaNode->pArea )->uiArea == uiArea )
@@ -1504,7 +1433,7 @@ HARBOUR HB_ALIAS( void )
 
 HARBOUR HB_DBEVAL( void )
 {
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
       DBEVALINFO pEvalInfo;
 
@@ -1565,7 +1494,7 @@ HARBOUR HB_DBEVAL( void )
          }
       }
 
-      SELF_DBEVAL( ( AREAP ) pCurrArea->pArea, &pEvalInfo );
+      SELF_DBEVAL( ( AREAP ) s_pCurrArea->pArea, &pEvalInfo );
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBEVAL" );
@@ -1573,11 +1502,11 @@ HARBOUR HB_DBEVAL( void )
 
 HARBOUR HB_DBF( void )
 {
-   LPAREANODE pAreaNode = pWorkAreas;
+   LPAREANODE pAreaNode = s_pWorkAreas;
 
    while( pAreaNode )
    {
-      if( ( ( AREAP ) pAreaNode->pArea )->uiArea == uiCurrArea )
+      if( ( ( AREAP ) pAreaNode->pArea )->uiArea == s_uiCurrArea )
       {
          if( ( ( AREAP ) pAreaNode->pArea )->atomAlias &&
              ( ( PHB_DYNS ) ( ( AREAP ) pAreaNode->pArea )->atomAlias )->hArea )
@@ -1599,21 +1528,18 @@ HARBOUR HB_BOF( void )
 {
    BOOL bBof = TRUE;
 
-   if( pCurrArea )
-      SELF_BOF( ( AREAP ) pCurrArea->pArea, &bBof );
+   if( s_pCurrArea )
+      SELF_BOF( ( AREAP ) s_pCurrArea->pArea, &bBof );
    hb_retl( bBof );
 }
 
 HARBOUR HB_DBAPPEND( void )
 {
-   BOOL bUnLockAll = TRUE;
-
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
-      bNetError = FALSE;
-      if( ISLOG( 1 ) )
-         bUnLockAll = hb_parl( 1 );
-      bNetError = ( SELF_APPEND( ( AREAP ) pCurrArea->pArea, bUnLockAll ) == FAILURE );
+      BOOL bUnLockAll = ISLOG( 1 ) ? hb_parl( 1 ) : TRUE;
+
+      s_bNetError = ( SELF_APPEND( ( AREAP ) s_pCurrArea->pArea, bUnLockAll ) == FAILURE );
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBAPPEND" );
@@ -1621,8 +1547,8 @@ HARBOUR HB_DBAPPEND( void )
 
 HARBOUR HB_DBCLEARFILTER( void )
 {
-   if( pCurrArea )
-      SELF_CLEARFILTER( ( AREAP ) pCurrArea->pArea );
+   if( s_pCurrArea )
+      SELF_CLEARFILTER( ( AREAP ) s_pCurrArea->pArea );
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBCLEARFILTER" );
 }
@@ -1634,35 +1560,35 @@ HARBOUR HB_DBCLOSEALL( void )
 
 HARBOUR HB_DBCLOSEAREA( void )
 {
-   if( !pCurrArea )
+   if( !s_pCurrArea )
       return;
 
-   SELF_CLOSE( ( AREAP ) pCurrArea->pArea );
-   SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
+   SELF_CLOSE( ( AREAP ) s_pCurrArea->pArea );
+   SELF_RELEASE( ( AREAP ) s_pCurrArea->pArea );
 
-   if( pWorkAreas == pCurrArea )
+   if( s_pWorkAreas == s_pCurrArea )
    {
-      pWorkAreas = pCurrArea->pNext;
-      if( pWorkAreas )
-         pWorkAreas->pPrev = NULL;
+      s_pWorkAreas = s_pCurrArea->pNext;
+      if( s_pWorkAreas )
+         s_pWorkAreas->pPrev = NULL;
    }
    else
    {
-      if( pCurrArea->pPrev )
-         pCurrArea->pPrev->pNext = pCurrArea->pNext;
-      if( pCurrArea->pNext )
-         pCurrArea->pNext->pPrev = pCurrArea->pPrev;
+      if( s_pCurrArea->pPrev )
+         s_pCurrArea->pPrev->pNext = s_pCurrArea->pNext;
+      if( s_pCurrArea->pNext )
+         s_pCurrArea->pNext->pPrev = s_pCurrArea->pPrev;
    }
 
-   hb_xfree( pCurrArea->pArea );
-   hb_xfree( pCurrArea );
-   pCurrArea = NULL;
+   hb_xfree( s_pCurrArea->pArea );
+   hb_xfree( s_pCurrArea );
+   s_pCurrArea = NULL;
 }
 
 HARBOUR HB_DBCOMMIT( void )
 {
-   if( pCurrArea )
-      SELF_FLUSH( ( AREAP ) pCurrArea->pArea );
+   if( s_pCurrArea )
+      SELF_FLUSH( ( AREAP ) s_pCurrArea->pArea );
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBCOMMIT" );
 }
@@ -1671,7 +1597,7 @@ HARBOUR HB_DBCOMMITALL( void )
 {
    LPAREANODE pAreaNode;
 
-   pAreaNode = pWorkAreas;
+   pAreaNode = s_pWorkAreas;
    while( pAreaNode )
    {
       SELF_FLUSH( ( AREAP ) pAreaNode->pArea );
@@ -1683,31 +1609,31 @@ HARBOUR HB___DBCONTINUE()
 {
    BOOL bEof;
 
-   if( !pCurrArea )
+   if( !s_pCurrArea )
    {
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBCONTINUE" );
       return;
    }
 
-   if( !( ( AREAP ) pCurrArea->pArea )->dbsi.itmCobFor )
+   if( !( ( AREAP ) s_pCurrArea->pArea )->dbsi.itmCobFor )
       return;
-   ( ( AREAP ) pCurrArea->pArea )->fFound = FALSE;
-   SELF_SKIP( ( AREAP ) pCurrArea->pArea, 1 );
-   SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
+   ( ( AREAP ) s_pCurrArea->pArea )->fFound = FALSE;
+   SELF_SKIP( ( AREAP ) s_pCurrArea->pArea, 1 );
+   SELF_EOF( ( AREAP ) s_pCurrArea->pArea, &bEof );
    if( bEof )
       return;
    hb_vmPushSymbol( &hb_symEval );
-   hb_vmPush( ( ( AREAP ) pCurrArea->pArea )->dbsi.itmCobFor );
+   hb_vmPush( ( ( AREAP ) s_pCurrArea->pArea )->dbsi.itmCobFor );
    hb_vmDo( 0 );
-   ( ( AREAP ) pCurrArea->pArea )->fFound = hb_itemGetL( &hb_stack.Return );
-   while( !bEof && !( ( AREAP ) pCurrArea->pArea )->fFound )
+   ( ( AREAP ) s_pCurrArea->pArea )->fFound = hb_itemGetL( &hb_stack.Return );
+   while( !bEof && !( ( AREAP ) s_pCurrArea->pArea )->fFound )
    {
-      SELF_SKIP( ( AREAP ) pCurrArea->pArea, 1 );
-      SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
+      SELF_SKIP( ( AREAP ) s_pCurrArea->pArea, 1 );
+      SELF_EOF( ( AREAP ) s_pCurrArea->pArea, &bEof );
       hb_vmPushSymbol( &hb_symEval );
-      hb_vmPush( ( ( AREAP ) pCurrArea->pArea )->dbsi.itmCobFor );
+      hb_vmPush( ( ( AREAP ) s_pCurrArea->pArea )->dbsi.itmCobFor );
       hb_vmDo( 0 );
-      ( ( AREAP ) pCurrArea->pArea )->fFound = hb_itemGetL( &hb_stack.Return );
+      ( ( AREAP ) s_pCurrArea->pArea )->fFound = hb_itemGetL( &hb_stack.Return );
    }
 }
 
@@ -1758,11 +1684,14 @@ HARBOUR HB_DBCREATE( void )
    uiLen = hb_parclen( 3 );
    if( uiLen > 0 )
    {
+      if( uiLen > HARBOUR_MAX_RDD_DRIVERNAME_LENGTH )
+         uiLen = HARBOUR_MAX_RDD_DRIVERNAME_LENGTH;
+
       hb_strncpyUpper( cDriverBuffer, hb_parc( 3 ), uiLen );
       szDriver = cDriverBuffer;
    }
    else
-      szDriver = szDefDriver;
+      szDriver = s_szDefDriver;
 
    uiRddID = 0;
    pRddNode = hb_rddFindNode( szDriver, &uiRddID ) ;
@@ -1778,68 +1707,68 @@ HARBOUR HB_DBCREATE( void )
    {
       if( hb_parl( 4 ) )
          hb_rddSelectFirstAvailable();
-      else if( pCurrArea )  /* If current WorkArea is in use then close it */
+      else if( s_pCurrArea )  /* If current WorkArea is in use then close it */
       {
-         SELF_CLOSE( ( AREAP ) pCurrArea->pArea );
-         SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
+         SELF_CLOSE( ( AREAP ) s_pCurrArea->pArea );
+         SELF_RELEASE( ( AREAP ) s_pCurrArea->pArea );
 
-         if( pWorkAreas == pCurrArea )
+         if( s_pWorkAreas == s_pCurrArea )
          {
-            pWorkAreas = pCurrArea->pNext;
-            if( pWorkAreas )
-               pWorkAreas->pPrev = NULL;
+            s_pWorkAreas = s_pCurrArea->pNext;
+            if( s_pWorkAreas )
+               s_pWorkAreas->pPrev = NULL;
          }
          else
          {
-            if( pCurrArea->pPrev )
-               pCurrArea->pPrev->pNext = pCurrArea->pNext;
-            if( pCurrArea->pNext )
-               pCurrArea->pNext->pPrev = pCurrArea->pPrev;
+            if( s_pCurrArea->pPrev )
+               s_pCurrArea->pPrev->pNext = s_pCurrArea->pNext;
+            if( s_pCurrArea->pNext )
+               s_pCurrArea->pNext->pPrev = s_pCurrArea->pPrev;
          }
 
-         hb_xfree( pCurrArea->pArea );
-         hb_xfree( pCurrArea );
-         pCurrArea = NULL;
+         hb_xfree( s_pCurrArea->pArea );
+         hb_xfree( s_pCurrArea );
+         s_pCurrArea = NULL;
       }
    }
 
    /* Create a new WorkArea node */
 
-   pCurrArea = ( LPAREANODE ) hb_xgrab( sizeof( AREANODE ) );
+   s_pCurrArea = ( LPAREANODE ) hb_xgrab( sizeof( AREANODE ) );
 
    if( pRddNode->uiAreaSize == 0 ) /* Calculate the size of WorkArea */
    {
       uiSize = sizeof( AREA );    /* Default Size Area */
-      pCurrArea->pArea = ( AREAP ) hb_xgrab( uiSize );
-      memset( pCurrArea->pArea, 0, uiSize );
-            ( ( AREAP ) pCurrArea->pArea )->lprfsHost = &pRddNode->pTable;
+      s_pCurrArea->pArea = ( AREAP ) hb_xgrab( uiSize );
+      memset( s_pCurrArea->pArea, 0, uiSize );
+            ( ( AREAP ) s_pCurrArea->pArea )->lprfsHost = &pRddNode->pTable;
 
       /* Need more space? */
-      SELF_STRUCTSIZE( ( AREAP ) pCurrArea->pArea, &uiSize );
+      SELF_STRUCTSIZE( ( AREAP ) s_pCurrArea->pArea, &uiSize );
       if( uiSize > sizeof( AREA ) )   /* Size of Area changed */
-         pCurrArea->pArea = ( AREAP ) hb_xrealloc( pCurrArea->pArea, uiSize );
+         s_pCurrArea->pArea = ( AREAP ) hb_xrealloc( s_pCurrArea->pArea, uiSize );
 
       pRddNode->uiAreaSize = uiSize;  /* Update the size of WorkArea */
    }
    else
    {
-      pCurrArea->pArea = ( AREAP ) hb_xgrab( pRddNode->uiAreaSize );
-      memset( pCurrArea->pArea, 0, pRddNode->uiAreaSize );
-              ( ( AREAP ) pCurrArea->pArea )->lprfsHost = &pRddNode->pTable;
+      s_pCurrArea->pArea = ( AREAP ) hb_xgrab( pRddNode->uiAreaSize );
+      memset( s_pCurrArea->pArea, 0, pRddNode->uiAreaSize );
+              ( ( AREAP ) s_pCurrArea->pArea )->lprfsHost = &pRddNode->pTable;
    }
 
-   ( ( AREAP ) pCurrArea->pArea )->rddID = uiRddID;
+   ( ( AREAP ) s_pCurrArea->pArea )->rddID = uiRddID;
 
-   pCurrArea->pPrev = NULL;
-   pCurrArea->pNext = NULL;
+   s_pCurrArea->pPrev = NULL;
+   s_pCurrArea->pNext = NULL;
 
-   SELF_NEW( ( AREAP ) pCurrArea->pArea );
-   if( SELF_CREATEFIELDS( ( AREAP ) pCurrArea->pArea, pStruct ) == FAILURE )
+   SELF_NEW( ( AREAP ) s_pCurrArea->pArea );
+   if( SELF_CREATEFIELDS( ( AREAP ) s_pCurrArea->pArea, pStruct ) == FAILURE )
    {
-      SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
-      hb_xfree( pCurrArea->pArea );
-      hb_xfree( pCurrArea );
-      pCurrArea = NULL;
+      SELF_RELEASE( ( AREAP ) s_pCurrArea->pArea );
+      hb_xfree( s_pCurrArea->pArea );
+      hb_xfree( s_pCurrArea );
+      s_pCurrArea = NULL;
       hb_errRT_DBCMD( EG_ARG, 1014, NULL, "DBCREATE" );
       return;
    }
@@ -1850,36 +1779,36 @@ HARBOUR HB_DBCREATE( void )
    if( !pFileName->szExtension )
    {
       pFileExt = hb_itemPutC( NULL, "" );
-      SELF_INFO( ( AREAP ) pCurrArea->pArea, DBI_TABLEEXT, pFileExt );
-      strcat( szFileName, pFileExt->item.asString.value );
+      SELF_INFO( ( AREAP ) s_pCurrArea->pArea, DBI_TABLEEXT, pFileExt );
+      strcat( szFileName, hb_itemGetCPtr( pFileExt ) );
       hb_itemRelease( pFileExt );
    }
    hb_xfree( pFileName );
    pInfo.abName = ( BYTE * ) szFileName;
    pInfo.atomAlias = ( BYTE * ) hb_parc( 5 );
-   pInfo.uiArea = uiCurrArea;
+   pInfo.uiArea = s_uiCurrArea;
 
-   ( ( AREAP ) pCurrArea->pArea )->uiArea = uiCurrArea;
+   ( ( AREAP ) s_pCurrArea->pArea )->uiArea = s_uiCurrArea;
 
    /* Insert the new WorkArea node */
 
-   if( !pWorkAreas )
-      pWorkAreas = pCurrArea;  /* The new WorkArea node is the first */
+   if( !s_pWorkAreas )
+      s_pWorkAreas = s_pCurrArea;  /* The new WorkArea node is the first */
    else
    {
-      pAreaNode = pWorkAreas;
+      pAreaNode = s_pWorkAreas;
       while( pAreaNode )
       {
-         if( ( ( AREAP ) pAreaNode->pArea )->uiArea > uiCurrArea )
+         if( ( ( AREAP ) pAreaNode->pArea )->uiArea > s_uiCurrArea )
          {
             /* Insert the new WorkArea node */
-            pCurrArea->pPrev = pAreaNode->pPrev;
-            pCurrArea->pNext = pAreaNode;
-            pAreaNode->pPrev = pCurrArea;
-            if( pCurrArea->pPrev )
-               pCurrArea->pPrev->pNext = pCurrArea;
+            s_pCurrArea->pPrev = pAreaNode->pPrev;
+            s_pCurrArea->pNext = pAreaNode;
+            pAreaNode->pPrev = s_pCurrArea;
+            if( s_pCurrArea->pPrev )
+               s_pCurrArea->pPrev->pNext = s_pCurrArea;
             else
-               pWorkAreas = pCurrArea;
+               s_pWorkAreas = s_pCurrArea;
             break;
          }
          if( pAreaNode->pNext )
@@ -1887,31 +1816,31 @@ HARBOUR HB_DBCREATE( void )
          else
          {
             /* Append the new WorkArea node */
-            pAreaNode->pNext = pCurrArea;
-            pCurrArea->pPrev = pAreaNode;
+            pAreaNode->pNext = s_pCurrArea;
+            s_pCurrArea->pPrev = pAreaNode;
             break;
          }
       }
    }
 
-   ( ( AREAP ) pCurrArea->pArea )->lpDataInfo->szFileName = szFileName;
-   ( ( AREAP ) pCurrArea->pArea )->atomAlias = hb_dynsymGet( ( char * ) pInfo.atomAlias );
-   if( ( ( PHB_DYNS ) ( ( AREAP ) pCurrArea->pArea )->atomAlias )->hArea )
+   ( ( AREAP ) s_pCurrArea->pArea )->lpDataInfo->szFileName = szFileName;
+   ( ( AREAP ) s_pCurrArea->pArea )->atomAlias = hb_dynsymGet( ( char * ) pInfo.atomAlias );
+   if( ( ( PHB_DYNS ) ( ( AREAP ) s_pCurrArea->pArea )->atomAlias )->hArea )
    {
       hb_errRT_DBCMD( EG_DUPALIAS, 1011, NULL, ( char * ) pInfo.atomAlias );
       bError = TRUE;
    }
 
    if( !bError )
-      bError = ( SELF_CREATE( ( AREAP ) pCurrArea->pArea, &pInfo ) == FAILURE );
+      bError = ( SELF_CREATE( ( AREAP ) s_pCurrArea->pArea, &pInfo ) == FAILURE );
 
    if( !bError )
-      ( ( PHB_DYNS ) ( ( AREAP ) pCurrArea->pArea )->atomAlias )->hArea = pInfo.uiArea;
+      ( ( PHB_DYNS ) ( ( AREAP ) s_pCurrArea->pArea )->atomAlias )->hArea = pInfo.uiArea;
 
-   if( !bError && ( ( AREAP ) pCurrArea->pArea )->lpExtendInfo->fHasMemo )
+   if( !bError && ( ( AREAP ) s_pCurrArea->pArea )->lpExtendInfo->fHasMemo )
    {
       pFileExt = hb_itemPutC( NULL, "" );
-      SELF_INFO( ( AREAP ) pCurrArea->pArea, DBI_MEMOEXT, pFileExt );
+      SELF_INFO( ( AREAP ) s_pCurrArea->pArea, DBI_MEMOEXT, pFileExt );
       pFileName = hb_fsFNameSplit( ( char * ) pInfo.abName );
       szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 3 );
       szFileName[ 0 ] = '\0';
@@ -1920,44 +1849,44 @@ HARBOUR HB_DBCREATE( void )
       if( pFileName->szPath )
          strcat( szFileName, pFileName->szPath );
       strcat( szFileName, pFileName->szName );
-      strcat( szFileName, pFileExt->item.asString.value );
+      strcat( szFileName, hb_itemGetCPtr( pFileExt ) );
       pInfo.abName = ( BYTE * ) szFileName;
       hb_xfree( pFileName );
       hb_itemRelease( pFileExt );
-      ( ( AREAP ) pCurrArea->pArea )->lpDataInfo->pNext =
+      ( ( AREAP ) s_pCurrArea->pArea )->lpDataInfo->pNext =
                               ( LPFILEINFO ) hb_xgrab( sizeof( FILEINFO ) );
-      memset( ( ( AREAP ) pCurrArea->pArea )->lpDataInfo->pNext, 0,
+      memset( ( ( AREAP ) s_pCurrArea->pArea )->lpDataInfo->pNext, 0,
               sizeof( FILEINFO ) );
-      ( ( AREAP ) pCurrArea->pArea )->lpDataInfo->pNext->hFile = FS_ERROR;
-      ( ( AREAP ) pCurrArea->pArea )->lpDataInfo->pNext->szFileName = szFileName;
-      bError = ( SELF_CREATEMEMFILE( ( AREAP ) pCurrArea->pArea, &pInfo ) == FAILURE );
+      ( ( AREAP ) s_pCurrArea->pArea )->lpDataInfo->pNext->hFile = FS_ERROR;
+      ( ( AREAP ) s_pCurrArea->pArea )->lpDataInfo->pNext->szFileName = szFileName;
+      bError = ( SELF_CREATEMEMFILE( ( AREAP ) s_pCurrArea->pArea, &pInfo ) == FAILURE );
    }
 
-   ( ( PHB_DYNS ) ( ( AREAP ) pCurrArea->pArea )->atomAlias )->hArea = 0;
-   SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
+   ( ( PHB_DYNS ) ( ( AREAP ) s_pCurrArea->pArea )->atomAlias )->hArea = 0;
+   SELF_RELEASE( ( AREAP ) s_pCurrArea->pArea );
    if( !ISLOG( 4 ) || bError )
    {
-      if( pWorkAreas == pCurrArea )
+      if( s_pWorkAreas == s_pCurrArea )
       {
-         pWorkAreas = pCurrArea->pNext;
-         if( pWorkAreas )
-            pWorkAreas->pPrev = NULL;
+         s_pWorkAreas = s_pCurrArea->pNext;
+         if( s_pWorkAreas )
+            s_pWorkAreas->pPrev = NULL;
       }
       else
       {
-         if( pCurrArea->pPrev )
-            pCurrArea->pPrev->pNext = pCurrArea->pNext;
-         if( pCurrArea->pNext )
-            pCurrArea->pNext->pPrev = pCurrArea->pPrev;
+         if( s_pCurrArea->pPrev )
+            s_pCurrArea->pPrev->pNext = s_pCurrArea->pNext;
+         if( s_pCurrArea->pNext )
+            s_pCurrArea->pNext->pPrev = s_pCurrArea->pPrev;
       }
 
-      hb_xfree( pCurrArea->pArea );
-      hb_xfree( pCurrArea );
-      pCurrArea = NULL;
+      hb_xfree( s_pCurrArea->pArea );
+      hb_xfree( s_pCurrArea );
+      s_pCurrArea = NULL;
    }
    else
    {
-      SELF_NEW( ( AREAP ) pCurrArea->pArea );
+      SELF_NEW( ( AREAP ) s_pCurrArea->pArea );
       szFileName = hb_parc( 1 );
       pFileName = hb_fsFNameSplit( szFileName );
       szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 3 );
@@ -1965,45 +1894,45 @@ HARBOUR HB_DBCREATE( void )
       if( !pFileName->szExtension )
       {
          pFileExt = hb_itemPutC( NULL, "" );
-         SELF_INFO( ( AREAP ) pCurrArea->pArea, DBI_TABLEEXT, pFileExt );
-         strcat( szFileName, pFileExt->item.asString.value );
+         SELF_INFO( ( AREAP ) s_pCurrArea->pArea, DBI_TABLEEXT, pFileExt );
+         strcat( szFileName, hb_itemGetCPtr( pFileExt ) );
           hb_itemRelease( pFileExt );
       }
       hb_xfree( pFileName );
       pInfo.abName = ( BYTE * ) szFileName;
       pInfo.fShared = !hb_set.HB_SET_EXCLUSIVE;
       pInfo.fReadonly = FALSE;
-      ( ( AREAP ) pCurrArea->pArea )->uiArea = uiCurrArea;
-      ( ( AREAP ) pCurrArea->pArea )->lpDataInfo->szFileName = szFileName;
-      if( SELF_OPEN( ( AREAP ) pCurrArea->pArea, &pInfo ) == FAILURE )
+      ( ( AREAP ) s_pCurrArea->pArea )->uiArea = s_uiCurrArea;
+      ( ( AREAP ) s_pCurrArea->pArea )->lpDataInfo->szFileName = szFileName;
+      if( SELF_OPEN( ( AREAP ) s_pCurrArea->pArea, &pInfo ) == FAILURE )
       {
-         SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
-         hb_xfree( pCurrArea->pArea );
-         hb_xfree( pCurrArea );
-         pCurrArea = NULL;
+         SELF_RELEASE( ( AREAP ) s_pCurrArea->pArea );
+         hb_xfree( s_pCurrArea->pArea );
+         hb_xfree( s_pCurrArea );
+         s_pCurrArea = NULL;
       }
-      SELF_RECCOUNT( ( AREAP ) pCurrArea->pArea, &ulRecCount );
-      ( ( AREAP ) pCurrArea->pArea )->lpExtendInfo->ulRecCount = ulRecCount;
+      SELF_RECCOUNT( ( AREAP ) s_pCurrArea->pArea, &ulRecCount );
+      ( ( AREAP ) s_pCurrArea->pArea )->lpExtendInfo->ulRecCount = ulRecCount;
    }
 }
 
 HARBOUR HB_DBDELETE( void )
 {
-   if( pCurrArea )
-      SELF_DELETE( ( AREAP ) pCurrArea->pArea );
+   if( s_pCurrArea )
+      SELF_DELETE( ( AREAP ) s_pCurrArea->pArea );
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBDELETE" );
 }
 
 HARBOUR HB_DBFILTER( void )
 {
-   PHB_ITEM pFilter;
-
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
+      PHB_ITEM pFilter;
+
       pFilter = hb_itemPutC( NULL, "" );
-      SELF_FILTERTEXT( ( AREAP ) pCurrArea->pArea, pFilter );
-      hb_retc( pFilter->item.asString.value );
+      SELF_FILTERTEXT( ( AREAP ) s_pCurrArea->pArea, pFilter );
+      hb_retc( hb_itemGetCPtr( pFilter ) );
       hb_itemRelease( pFilter );
    }
    else
@@ -2012,8 +1941,8 @@ HARBOUR HB_DBFILTER( void )
 
 HARBOUR HB_DBGOBOTTOM( void )
 {
-   if( pCurrArea )
-      SELF_GOBOTTOM( ( AREAP ) pCurrArea->pArea );
+   if( s_pCurrArea )
+      SELF_GOBOTTOM( ( AREAP ) s_pCurrArea->pArea );
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBGOBOTTOM" );
 }
@@ -2022,7 +1951,7 @@ HARBOUR HB_DBGOTO( void )
 {
    PHB_ITEM pItem;
 
-   if( !pCurrArea )
+   if( !s_pCurrArea )
    {
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBGOTO" );
       return;
@@ -2032,13 +1961,13 @@ HARBOUR HB_DBGOTO( void )
    if( !pItem )
       hb_errRT_DBCMD( EG_ARG, 1003, NULL, "DBGOTO" );
    else
-      SELF_GOTOID( ( AREAP ) pCurrArea->pArea, pItem );
+      SELF_GOTOID( ( AREAP ) s_pCurrArea->pArea, pItem );
 }
 
 HARBOUR HB_DBGOTOP( void )
 {
-   if( pCurrArea )
-      SELF_GOTOP( ( AREAP ) pCurrArea->pArea );
+   if( s_pCurrArea )
+      SELF_GOTOP( ( AREAP ) s_pCurrArea->pArea );
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBGOTOP" );
 }
@@ -2050,7 +1979,7 @@ HARBOUR HB___DBLOCATE()
    ULONG lNext;
    BOOL bEof, bFor, bWhile;
 
-   if( !pCurrArea )
+   if( !s_pCurrArea )
    {
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBSETFILTER" );
       return;
@@ -2085,12 +2014,12 @@ HARBOUR HB___DBLOCATE()
       pScopeInfo.fRest = pRest;
    }
    pScopeInfo.itmCobFor = pFor;
-   SELF_SETLOCATE( ( AREAP ) pCurrArea->pArea, &pScopeInfo );
-   ( ( AREAP ) pCurrArea->pArea )->fFound = FALSE;
+   SELF_SETLOCATE( ( AREAP ) s_pCurrArea->pArea, &pScopeInfo );
+   ( ( AREAP ) s_pCurrArea->pArea )->fFound = FALSE;
    if( pRecord )
    {
-      SELF_GOTOID( ( AREAP ) pCurrArea->pArea, pRecord );
-      SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
+      SELF_GOTOID( ( AREAP ) s_pCurrArea->pArea, pRecord );
+      SELF_EOF( ( AREAP ) s_pCurrArea->pArea, &bEof );
       if( bEof )
          return;
       if( hb_itemType( pWhile ) == IT_BLOCK )
@@ -2108,14 +2037,14 @@ HARBOUR HB___DBLOCATE()
          hb_vmPush( pFor );
          hb_vmDo( 0 );
          bFor = hb_itemGetL( &hb_stack.Return );
-         ( ( AREAP ) pCurrArea->pArea )->fFound = ( bWhile && bFor );
+         ( ( AREAP ) s_pCurrArea->pArea )->fFound = ( bWhile && bFor );
       }
       else
-         ( ( AREAP ) pCurrArea->pArea )->fFound = ( bWhile && hb_itemGetL( pFor ) );
+         ( ( AREAP ) s_pCurrArea->pArea )->fFound = ( bWhile && hb_itemGetL( pFor ) );
    }
    else if( pNext )
    {
-      SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
+      SELF_EOF( ( AREAP ) s_pCurrArea->pArea, &bEof );
       lNext = hb_parnl( 3 );
       if( bEof || lNext <= 0 )
          return;
@@ -2139,8 +2068,8 @@ HARBOUR HB___DBLOCATE()
          bFor = hb_itemGetL( pFor );
       while( !bEof && lNext-- > 0 && bWhile && !bFor )
       {
-         SELF_SKIP( ( AREAP ) pCurrArea->pArea, 1 );
-         SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
+         SELF_SKIP( ( AREAP ) s_pCurrArea->pArea, 1 );
+         SELF_EOF( ( AREAP ) s_pCurrArea->pArea, &bEof );
          if( hb_itemType( pWhile ) == IT_BLOCK )
          {
             hb_vmPushSymbol( &hb_symEval );
@@ -2160,11 +2089,11 @@ HARBOUR HB___DBLOCATE()
          else
             bFor = hb_itemGetL( pFor );
       }
-      ( ( AREAP ) pCurrArea->pArea )->fFound = bFor;
+      ( ( AREAP ) s_pCurrArea->pArea )->fFound = bFor;
    }
    else if( hb_itemGetL( pRest ) )
    {
-      SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
+      SELF_EOF( ( AREAP ) s_pCurrArea->pArea, &bEof );
       if( bEof )
          return;
       if( hb_itemType( pWhile ) == IT_BLOCK )
@@ -2187,8 +2116,8 @@ HARBOUR HB___DBLOCATE()
          bFor = hb_itemGetL( pFor );
       while( !bEof && bWhile && !bFor )
       {
-         SELF_SKIP( ( AREAP ) pCurrArea->pArea, 1 );
-         SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
+         SELF_SKIP( ( AREAP ) s_pCurrArea->pArea, 1 );
+         SELF_EOF( ( AREAP ) s_pCurrArea->pArea, &bEof );
          if( hb_itemType( pWhile ) == IT_BLOCK )
          {
             hb_vmPushSymbol( &hb_symEval );
@@ -2208,12 +2137,12 @@ HARBOUR HB___DBLOCATE()
          else
             bFor = hb_itemGetL( pFor );
       }
-      ( ( AREAP ) pCurrArea->pArea )->fFound = bFor;
+      ( ( AREAP ) s_pCurrArea->pArea )->fFound = bFor;
    }
    else
    {
-      SELF_GOTOP( ( AREAP ) pCurrArea->pArea );
-      SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
+      SELF_GOTOP( ( AREAP ) s_pCurrArea->pArea );
+      SELF_EOF( ( AREAP ) s_pCurrArea->pArea, &bEof );
       if( bEof )
          return;
       if( hb_itemType( pFor ) == IT_BLOCK )
@@ -2227,8 +2156,8 @@ HARBOUR HB___DBLOCATE()
          bFor = hb_itemGetL( pFor );
       while( !bEof && !bFor )
       {
-         SELF_SKIP( ( AREAP ) pCurrArea->pArea, 1 );
-         SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
+         SELF_SKIP( ( AREAP ) s_pCurrArea->pArea, 1 );
+         SELF_EOF( ( AREAP ) s_pCurrArea->pArea, &bEof );
          if( hb_itemType( pFor ) == IT_BLOCK )
          {
             hb_vmPushSymbol( &hb_symEval );
@@ -2239,41 +2168,42 @@ HARBOUR HB___DBLOCATE()
          else
             bFor = hb_itemGetL( pFor );
       }
-      ( ( AREAP ) pCurrArea->pArea )->fFound = bFor;
+      ( ( AREAP ) s_pCurrArea->pArea )->fFound = bFor;
    }
 }
 
 HARBOUR HB___DBSETLOCATE( void )
 {
-   PHB_ITEM pLocate, pFor;
-   DBSCOPEINFO pScopeInfo;
-
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
-      pLocate = hb_param( 1, IT_BLOCK );
+      PHB_ITEM pLocate = hb_param( 1, IT_BLOCK );
+
       if( pLocate )
       {
+         PHB_ITEM pFor;
+         DBSCOPEINFO pScopeInfo;
+
          pFor = hb_itemNew( NULL );
          hb_itemCopy( pFor, pLocate );
          memset( &pScopeInfo, 0, sizeof( DBSCOPEINFO ) );
          pScopeInfo.itmCobFor = pFor;
-         SELF_SETLOCATE( ( AREAP ) pCurrArea->pArea, &pScopeInfo );
+         SELF_SETLOCATE( ( AREAP ) s_pCurrArea->pArea, &pScopeInfo );
       }
    }
 }
 
 HARBOUR HB___DBPACK( void )
 {
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
       /* Additional feature: __dbPack( [<bBlock>, [<nEvery>] )
          Code Block to execute for every record. */
-      ( ( AREAP ) pCurrArea->pArea )->lpExtendInfo->itmEval = hb_param( 1, IT_BLOCK );
-      ( ( AREAP ) pCurrArea->pArea )->lpExtendInfo->ulEvery = hb_parnl( 2 );
-      if( !( ( AREAP ) pCurrArea->pArea )->lpExtendInfo->ulEvery )
-         ( ( AREAP ) pCurrArea->pArea )->lpExtendInfo->ulEvery = 1;
-      SELF_PACK( ( AREAP ) pCurrArea->pArea );
-      ( ( AREAP ) pCurrArea->pArea )->lpExtendInfo->itmEval = NULL;
+      ( ( AREAP ) s_pCurrArea->pArea )->lpExtendInfo->itmEval = hb_param( 1, IT_BLOCK );
+      ( ( AREAP ) s_pCurrArea->pArea )->lpExtendInfo->ulEvery = hb_parnl( 2 );
+      if( !( ( AREAP ) s_pCurrArea->pArea )->lpExtendInfo->ulEvery )
+         ( ( AREAP ) s_pCurrArea->pArea )->lpExtendInfo->ulEvery = 1;
+      SELF_PACK( ( AREAP ) s_pCurrArea->pArea );
+      ( ( AREAP ) s_pCurrArea->pArea )->lpExtendInfo->itmEval = NULL;
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "__DBPACK" );
@@ -2281,8 +2211,8 @@ HARBOUR HB___DBPACK( void )
 
 HARBOUR HB_DBRECALL( void )
 {
-   if( pCurrArea )
-      SELF_RECALL( ( AREAP ) pCurrArea->pArea );
+   if( s_pCurrArea )
+      SELF_RECALL( ( AREAP ) s_pCurrArea->pArea );
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBRECALL" );
 }
@@ -2292,11 +2222,11 @@ HARBOUR HB_DBRLOCK( void )
    DBLOCKINFO pLockInfo;
 
    pLockInfo.fResult = FALSE;
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
       pLockInfo.itmRecID = hb_parnl( 1 );
       pLockInfo.uiMethod = REC_LOCK;
-      SELF_LOCK( ( AREAP ) pCurrArea->pArea, &pLockInfo );
+      SELF_LOCK( ( AREAP ) s_pCurrArea->pArea, &pLockInfo );
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBRLOCK" );
@@ -2309,8 +2239,8 @@ HARBOUR HB_DBRLOCKLIST( void )
    PHB_ITEM pList;
 
    pList = hb_itemArrayNew( 0 );
-   if( pCurrArea )
-      SELF_INFO( ( AREAP ) pCurrArea->pArea, DBI_GETLOCKARRAY, pList );
+   if( s_pCurrArea )
+      SELF_INFO( ( AREAP ) s_pCurrArea->pArea, DBI_GETLOCKARRAY, pList );
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBRLOCKLIST" );
 
@@ -2320,27 +2250,27 @@ HARBOUR HB_DBRLOCKLIST( void )
 
 HARBOUR HB_DBRUNLOCK( void )
 {
-   if( pCurrArea )
-      SELF_UNLOCK( ( AREAP ) pCurrArea->pArea, hb_parnl( 1 ) );
+   if( s_pCurrArea )
+      SELF_UNLOCK( ( AREAP ) s_pCurrArea->pArea, hb_parnl( 1 ) );
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBRUNLOCK" );
 }
 
 HARBOUR HB_DBSEEK( void )
 {
-   PHB_ITEM pKey;
-   BOOL bSoftSeek, bFindLast;
-
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
       if( !ISNIL( 1 ) )
       {
+         PHB_ITEM pKey;
+         BOOL bSoftSeek, bFindLast;
+
          pKey = hb_param( 1, IT_ANY );
          bSoftSeek = ISLOG( 2 ) ? hb_parl( 2 ) : hb_set.HB_SET_SOFTSEEK;
          bFindLast = ISLOG( 3 ) ? hb_parl( 3 ) : FALSE;
-         if( SELF_SEEK( ( AREAP ) pCurrArea->pArea, bSoftSeek, pKey, bFindLast ) == SUCCESS )
+         if( SELF_SEEK( ( AREAP ) s_pCurrArea->pArea, bSoftSeek, pKey, bFindLast ) == SUCCESS )
          {
-            hb_retl( ( ( AREAP ) pCurrArea->pArea )->fFound );
+            hb_retl( ( ( AREAP ) s_pCurrArea->pArea )->fFound );
             return;
          }
       }
@@ -2385,87 +2315,57 @@ HARBOUR HB_DBSELECTAREA( void )
    if( uiNewArea == 0 )
       hb_rddSelectFirstAvailable();
    else
-      uiCurrArea = uiNewArea;
+      s_uiCurrArea = uiNewArea;
 
-   pAreaNode = pWorkAreas;
+   pAreaNode = s_pWorkAreas;
    while( pAreaNode )
    {
-      if( ( ( AREAP ) pAreaNode->pArea )->uiArea == uiCurrArea )
+      if( ( ( AREAP ) pAreaNode->pArea )->uiArea == s_uiCurrArea )
       {
-         pCurrArea = pAreaNode; /* Select a valid WorkArea */
+         s_pCurrArea = pAreaNode; /* Select a valid WorkArea */
          return;
       }
       pAreaNode = pAreaNode->pNext;
    }
-   pCurrArea = NULL; /* Selected WorkArea is closed */
-}
-
-HARBOUR HB_DBSETDRIVER( void )
-{
-   char * szNewDriver;
-   USHORT uiLen;
-
-   hb_rddCheck();
-   hb_retc( szDefDriver );
-   szNewDriver = hb_parc( 1 );
-   if( ( uiLen = strlen( szNewDriver ) ) > 0 )
-   {
-      hb_strUpper( szNewDriver, uiLen ); /* TOFIX: Direct access to hb_parc() buffer ! */
-
-      if( !hb_rddFindNode( szNewDriver, NULL ) )
-      {
-         hb_errRT_DBCMD( EG_ARG, 1015, NULL, "DBSETDRIVER" );
-         return;
-      }
-
-      szDefDriver = ( char * ) hb_xrealloc( szDefDriver, uiLen + 1 );
-      strcpy( szDefDriver, szNewDriver );
-   }
+   s_pCurrArea = NULL; /* Selected WorkArea is closed */
 }
 
 HARBOUR HB___DBSETFOUND( void )
 {
-   PHB_ITEM pFound;
-
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
-      pFound = hb_param( 1, IT_LOGICAL );
+      PHB_ITEM pFound = hb_param( 1, IT_LOGICAL );
+
       if( pFound )
-         ( ( AREAP ) pCurrArea->pArea )->fFound = hb_itemGetL( pFound );
+         ( ( AREAP ) s_pCurrArea->pArea )->fFound = hb_itemGetL( pFound );
    }
 }
 
 HARBOUR HB_DBSKIP( void )
 {
-   LONG lToSkip = 1;
-
-   if( pCurrArea )
-   {
-      if( ISNUM( 1 ) )
-         lToSkip = hb_parnl( 1 );
-      SELF_SKIP( ( AREAP ) pCurrArea->pArea, lToSkip );
-   }
+   if( s_pCurrArea )
+      SELF_SKIP( ( AREAP ) s_pCurrArea->pArea, ISNUM( 1 ) ? hb_parnl( 1 ) : 1 );
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBSKIP" );
 }
 
 HARBOUR HB_DBSETFILTER( void )
 {
-   PHB_ITEM pBlock, pText;
-   DBFILTERINFO pFilterInfo;
-
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
-      pBlock = hb_param( 1, IT_BLOCK );
+      PHB_ITEM pBlock = hb_param( 1, IT_BLOCK );
+
       if( pBlock )
       {
-         pText = hb_param( 2, IT_STRING );
+         DBFILTERINFO pFilterInfo;
+         PHB_ITEM pText = hb_param( 2, IT_STRING );
+
          pFilterInfo.itmCobExpr = pBlock;
          if( pText )
             pFilterInfo.abFilterText = pText;
          else
             pFilterInfo.abFilterText = hb_itemPutC( NULL, "" );
-         SELF_SETFILTER( ( AREAP ) pCurrArea->pArea, &pFilterInfo );
+         SELF_SETFILTER( ( AREAP ) s_pCurrArea->pArea, &pFilterInfo );
          if( !pText )
             hb_itemRelease( pFilterInfo.abFilterText );
       }
@@ -2476,26 +2376,26 @@ HARBOUR HB_DBSETFILTER( void )
 
 HARBOUR HB_DBSTRUCT( void )
 {
-   PHB_ITEM pItem, pData;
-   USHORT uiFields, uiCount;
-
    hb_arrayNew( &hb_stack.Return, 0 );
 
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
-      SELF_FIELDCOUNT( ( AREAP ) pCurrArea->pArea, &uiFields );
+      PHB_ITEM pItem, pData;
+      USHORT uiFields, uiCount;
+
+      SELF_FIELDCOUNT( ( AREAP ) s_pCurrArea->pArea, &uiFields );
       pData = hb_itemNew( NULL );
       pItem = hb_itemNew( NULL );
       for( uiCount = 1; uiCount <= uiFields; uiCount++ )
       {
          hb_arrayNew( pItem, 4 );
-         SELF_FIELDINFO( ( AREAP ) pCurrArea->pArea, uiCount, DBS_NAME, pData );
+         SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_NAME, pData );
          hb_arraySet( pItem, 1, pData );
-         SELF_FIELDINFO( ( AREAP ) pCurrArea->pArea, uiCount, DBS_TYPE, pData );
+         SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_TYPE, pData );
          hb_arraySet( pItem, 2, pData );
-         SELF_FIELDINFO( ( AREAP ) pCurrArea->pArea, uiCount, DBS_LEN, pData );
+         SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_LEN, pData );
          hb_arraySet( pItem, 3, pData );
-         SELF_FIELDINFO( ( AREAP ) pCurrArea->pArea, uiCount, DBS_DEC, pData );
+         SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_DEC, pData );
          hb_arraySet( pItem, 4, pData );
          hb_arrayAdd( &hb_stack.Return, pItem );
       }
@@ -2506,16 +2406,17 @@ HARBOUR HB_DBSTRUCT( void )
 
 HARBOUR HB_DBTABLEEXT( void )
 {
-   LPRDDNODE pRddNode;
-   AREAP pTempArea;
-   USHORT uiSize, uiRddID;
    PHB_ITEM pItem;
 
-   if( !pCurrArea )
+   if( !s_pCurrArea )
    {
+      LPRDDNODE pRddNode;
+      AREAP pTempArea;
+      USHORT uiSize, uiRddID;
+
       hb_rddCheck();
       uiRddID = 0;
-      pRddNode = hb_rddFindNode( szDefDriver, &uiRddID );
+      pRddNode = hb_rddFindNode( s_szDefDriver, &uiRddID );
       if( !pRddNode )
       {
          hb_retc( "" );
@@ -2540,7 +2441,7 @@ HARBOUR HB_DBTABLEEXT( void )
       {
          pItem = hb_itemPutC( NULL, "" );
          SELF_INFO( ( AREAP ) pTempArea, DBI_TABLEEXT, pItem );
-         hb_retc( pItem->item.asString.value );
+         hb_retc( hb_itemGetCPtr( pItem ) );
          hb_itemRelease( pItem );
          SELF_RELEASE( ( AREAP ) pTempArea );
       }
@@ -2549,16 +2450,16 @@ HARBOUR HB_DBTABLEEXT( void )
    else
    {
       pItem = hb_itemPutC( NULL, "" );
-      SELF_INFO( ( AREAP ) pCurrArea->pArea, DBI_TABLEEXT, pItem );
-      hb_retc( pItem->item.asString.value );
+      SELF_INFO( ( AREAP ) s_pCurrArea->pArea, DBI_TABLEEXT, pItem );
+      hb_retc( hb_itemGetCPtr( pItem ) );
       hb_itemRelease( pItem );
    }
 }
 
 HARBOUR HB_DBUNLOCK( void )
 {
-   if( pCurrArea )
-      SELF_RAWLOCK( ( AREAP ) pCurrArea->pArea, FILE_UNLOCK, 0 );
+   if( s_pCurrArea )
+      SELF_RAWLOCK( ( AREAP ) s_pCurrArea->pArea, FILE_UNLOCK, 0 );
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBUNLOCK" );
 }
@@ -2567,7 +2468,7 @@ HARBOUR HB_DBUNLOCKALL( void )
 {
    LPAREANODE pTempArea;
 
-   pTempArea = pWorkAreas;
+   pTempArea = s_pWorkAreas;
    while( pTempArea )
    {
       SELF_RAWLOCK( ( AREAP ) pTempArea->pArea, FILE_UNLOCK, 0 );
@@ -2588,32 +2489,32 @@ HARBOUR HB_DBUSEAREA( void )
    char szDriverBuffer[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 ];
    char szAlias[ HARBOUR_MAX_RDD_ALIAS_LENGTH + 1 ];
 
-   bNetError = FALSE;
+   s_bNetError = FALSE;
 
    if( hb_parl( 1 ) )
       hb_rddSelectFirstAvailable();
-   else if( pCurrArea )  /* If current WorkArea is in use then close it */
+   else if( s_pCurrArea )  /* If current WorkArea is in use then close it */
    {
-      SELF_CLOSE( ( AREAP ) pCurrArea->pArea );
-      SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
+      SELF_CLOSE( ( AREAP ) s_pCurrArea->pArea );
+      SELF_RELEASE( ( AREAP ) s_pCurrArea->pArea );
 
-      if( pWorkAreas == pCurrArea )
+      if( s_pWorkAreas == s_pCurrArea )
       {
-         pWorkAreas = pCurrArea->pNext;
-         if( pWorkAreas )
-            pWorkAreas->pPrev = NULL;
+         s_pWorkAreas = s_pCurrArea->pNext;
+         if( s_pWorkAreas )
+            s_pWorkAreas->pPrev = NULL;
       }
       else
       {
-         if( pCurrArea->pPrev )
-            pCurrArea->pPrev->pNext = pCurrArea->pNext;
-         if( pCurrArea->pNext )
-            pCurrArea->pNext->pPrev = pCurrArea->pPrev;
+         if( s_pCurrArea->pPrev )
+            s_pCurrArea->pPrev->pNext = s_pCurrArea->pNext;
+         if( s_pCurrArea->pNext )
+            s_pCurrArea->pNext->pPrev = s_pCurrArea->pPrev;
       }
 
-      hb_xfree( pCurrArea->pArea );
-      hb_xfree( pCurrArea );
-      pCurrArea = NULL;
+      hb_xfree( s_pCurrArea->pArea );
+      hb_xfree( s_pCurrArea );
+      s_pCurrArea = NULL;
    }
 
    hb_rddCheck();
@@ -2622,11 +2523,12 @@ HARBOUR HB_DBUSEAREA( void )
    {
       if( uiLen > HARBOUR_MAX_RDD_DRIVERNAME_LENGTH )
          uiLen = HARBOUR_MAX_RDD_DRIVERNAME_LENGTH;
+
       hb_strncpyUpper( szDriverBuffer, hb_parc( 2 ), uiLen );
       szDriver = szDriverBuffer;
    }
    else
-      szDriver = szDefDriver;
+      szDriver = s_szDefDriver;
 
    uiRddID = 0;
    pRddNode = hb_rddFindNode( szDriver, &uiRddID );
@@ -2661,73 +2563,73 @@ HARBOUR HB_DBUSEAREA( void )
 
    /* Create a new WorkArea node */
 
-   pCurrArea = ( LPAREANODE ) hb_xgrab( sizeof( AREANODE ) );
+   s_pCurrArea = ( LPAREANODE ) hb_xgrab( sizeof( AREANODE ) );
 
    if( pRddNode->uiAreaSize == 0 ) /* Calculate the size of WorkArea */
    {
       uiSize = sizeof( AREA );    /* Default Size Area */
-      pCurrArea->pArea = ( AREAP ) hb_xgrab( uiSize );
-      memset( pCurrArea->pArea, 0, uiSize );
-      ( ( AREAP ) pCurrArea->pArea )->lprfsHost = &pRddNode->pTable;
+      s_pCurrArea->pArea = ( AREAP ) hb_xgrab( uiSize );
+      memset( s_pCurrArea->pArea, 0, uiSize );
+      ( ( AREAP ) s_pCurrArea->pArea )->lprfsHost = &pRddNode->pTable;
 
       /* Need more space? */
-      SELF_STRUCTSIZE( ( AREAP ) pCurrArea->pArea, &uiSize );
+      SELF_STRUCTSIZE( ( AREAP ) s_pCurrArea->pArea, &uiSize );
       if( uiSize > sizeof( AREA ) )   /* Size of Area changed */
-         pCurrArea->pArea = ( AREAP ) hb_xrealloc( pCurrArea->pArea, uiSize );
+         s_pCurrArea->pArea = ( AREAP ) hb_xrealloc( s_pCurrArea->pArea, uiSize );
 
       pRddNode->uiAreaSize = uiSize;  /* Update the size of WorkArea */
    }
    else
    {
-      pCurrArea->pArea = ( AREAP ) hb_xgrab( pRddNode->uiAreaSize );
-      memset( pCurrArea->pArea, 0, pRddNode->uiAreaSize );
-      ( ( AREAP ) pCurrArea->pArea )->lprfsHost = &pRddNode->pTable;
+      s_pCurrArea->pArea = ( AREAP ) hb_xgrab( pRddNode->uiAreaSize );
+      memset( s_pCurrArea->pArea, 0, pRddNode->uiAreaSize );
+      ( ( AREAP ) s_pCurrArea->pArea )->lprfsHost = &pRddNode->pTable;
    }
 
-   ( ( AREAP ) pCurrArea->pArea )->rddID = uiRddID;
+   ( ( AREAP ) s_pCurrArea->pArea )->rddID = uiRddID;
 
-   pCurrArea->pPrev = NULL;
-   pCurrArea->pNext = NULL;
+   s_pCurrArea->pPrev = NULL;
+   s_pCurrArea->pNext = NULL;
 
-   SELF_NEW( ( AREAP ) pCurrArea->pArea );
+   SELF_NEW( ( AREAP ) s_pCurrArea->pArea );
 
    szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 3 );
    strcpy( szFileName, hb_parc( 3 ) );
    if( !pFileName->szExtension )
    {
       pFileExt = hb_itemPutC( NULL, "" );
-      SELF_INFO( ( AREAP ) pCurrArea->pArea, DBI_TABLEEXT, pFileExt );
-      strcat( szFileName, pFileExt->item.asString.value );
+      SELF_INFO( ( AREAP ) s_pCurrArea->pArea, DBI_TABLEEXT, pFileExt );
+      strcat( szFileName, hb_itemGetCPtr( pFileExt ) );
       hb_itemRelease( pFileExt );
    }
    hb_xfree( pFileName );
-   pInfo.uiArea = uiCurrArea;
+   pInfo.uiArea = s_uiCurrArea;
    pInfo.abName = ( BYTE * ) szFileName;
    pInfo.atomAlias = ( BYTE * ) szAlias;
    pInfo.fShared = ISLOG( 5 ) ? hb_parl( 5 ) : !hb_set.HB_SET_EXCLUSIVE;
    pInfo.fReadonly = ISLOG( 6 ) ? hb_parl( 6 ) : FALSE;
 
-   ( ( AREAP ) pCurrArea->pArea )->uiArea = uiCurrArea;
+   ( ( AREAP ) s_pCurrArea->pArea )->uiArea = s_uiCurrArea;
 
    /* Insert the new WorkArea node */
 
-   if( !pWorkAreas )
-      pWorkAreas = pCurrArea;  /* The new WorkArea node is the first */
+   if( !s_pWorkAreas )
+      s_pWorkAreas = s_pCurrArea;  /* The new WorkArea node is the first */
    else
    {
-      pAreaNode = pWorkAreas;
+      pAreaNode = s_pWorkAreas;
       while( pAreaNode )
       {
-         if( ( ( AREAP ) pAreaNode->pArea )->uiArea > uiCurrArea )
+         if( ( ( AREAP ) pAreaNode->pArea )->uiArea > s_uiCurrArea )
          {
             /* Insert the new WorkArea node */
-            pCurrArea->pPrev = pAreaNode->pPrev;
-            pCurrArea->pNext = pAreaNode;
-            pAreaNode->pPrev = pCurrArea;
-            if( pCurrArea->pPrev )
-               pCurrArea->pPrev->pNext = pCurrArea;
+            s_pCurrArea->pPrev = pAreaNode->pPrev;
+            s_pCurrArea->pNext = pAreaNode;
+            pAreaNode->pPrev = s_pCurrArea;
+            if( s_pCurrArea->pPrev )
+               s_pCurrArea->pPrev->pNext = s_pCurrArea;
             else
-               pWorkAreas = pCurrArea;
+               s_pWorkAreas = s_pCurrArea;
             break;
          }
          if( pAreaNode->pNext )
@@ -2735,45 +2637,45 @@ HARBOUR HB_DBUSEAREA( void )
          else
          {
             /* Append the new WorkArea node */
-            pAreaNode->pNext = pCurrArea;
-            pCurrArea->pPrev = pAreaNode;
+            pAreaNode->pNext = s_pCurrArea;
+            s_pCurrArea->pPrev = pAreaNode;
             break;
          }
       }
    }
 
-   ( ( AREAP ) pCurrArea->pArea )->lpDataInfo->szFileName = szFileName;
-   if( SELF_OPEN( ( AREAP ) pCurrArea->pArea, &pInfo ) == FAILURE )
+   ( ( AREAP ) s_pCurrArea->pArea )->lpDataInfo->szFileName = szFileName;
+   if( SELF_OPEN( ( AREAP ) s_pCurrArea->pArea, &pInfo ) == FAILURE )
    {
-      SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
+      SELF_RELEASE( ( AREAP ) s_pCurrArea->pArea );
 
-      if( pWorkAreas == pCurrArea )
+      if( s_pWorkAreas == s_pCurrArea )
       {
-         pWorkAreas = pCurrArea->pNext;
-         if( pWorkAreas )
-            pWorkAreas->pPrev = NULL;
+         s_pWorkAreas = s_pCurrArea->pNext;
+         if( s_pWorkAreas )
+            s_pWorkAreas->pPrev = NULL;
       }
       else
       {
-         if( pCurrArea->pPrev )
-            pCurrArea->pPrev->pNext = pCurrArea->pNext;
-         if( pCurrArea->pNext )
-            pCurrArea->pNext->pPrev = pCurrArea->pPrev;
+         if( s_pCurrArea->pPrev )
+            s_pCurrArea->pPrev->pNext = s_pCurrArea->pNext;
+         if( s_pCurrArea->pNext )
+            s_pCurrArea->pNext->pPrev = s_pCurrArea->pPrev;
       }
 
-      hb_xfree( pCurrArea->pArea );
-      hb_xfree( pCurrArea );
-      pCurrArea = NULL;
+      hb_xfree( s_pCurrArea->pArea );
+      hb_xfree( s_pCurrArea );
+      s_pCurrArea = NULL;
       return;
    }
-   SELF_RECCOUNT( ( AREAP ) pCurrArea->pArea, &ulLen );
-   ( ( AREAP ) pCurrArea->pArea )->lpExtendInfo->ulRecCount = ulLen;
+   SELF_RECCOUNT( ( AREAP ) s_pCurrArea->pArea, &ulLen );
+   ( ( AREAP ) s_pCurrArea->pArea )->lpExtendInfo->ulRecCount = ulLen;
 }
 
 HARBOUR HB___DBZAP( void )
 {
-   if( pCurrArea )
-      SELF_ZAP( ( AREAP ) pCurrArea->pArea );
+   if( s_pCurrArea )
+      SELF_ZAP( ( AREAP ) s_pCurrArea->pArea );
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "__DBZAP" );
 }
@@ -2782,8 +2684,8 @@ HARBOUR HB_DELETED( void )
 {
    BOOL bDeleted = FALSE;
 
-   if( pCurrArea )
-      SELF_DELETED( ( AREAP ) pCurrArea->pArea, &bDeleted );
+   if( s_pCurrArea )
+      SELF_DELETED( ( AREAP ) s_pCurrArea->pArea, &bDeleted );
    hb_retl( bDeleted );
 }
 
@@ -2791,8 +2693,8 @@ HARBOUR HB_EOF( void )
 {
    BOOL bEof = TRUE;
 
-   if( pCurrArea )
-      SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
+   if( s_pCurrArea )
+      SELF_EOF( ( AREAP ) s_pCurrArea->pArea, &bEof );
    hb_retl( bEof );
 }
 
@@ -2800,8 +2702,8 @@ HARBOUR HB_FCOUNT( void )
 {
    USHORT uiFields = 0;
 
-   if( pCurrArea )
-      SELF_FIELDCOUNT( ( AREAP ) pCurrArea->pArea, &uiFields );
+   if( s_pCurrArea )
+      SELF_FIELDCOUNT( ( AREAP ) s_pCurrArea->pArea, &uiFields );
    hb_retni( uiFields );
 }
 
@@ -2813,8 +2715,8 @@ HARBOUR HB_FIELDGET( void )
    pItem = hb_itemNew( NULL );
    uiField = hb_parni( 1 );
 
-   if( pCurrArea && uiField )
-      SELF_GETVALUE( ( AREAP ) pCurrArea->pArea, uiField, pItem );
+   if( s_pCurrArea && uiField )
+      SELF_GETVALUE( ( AREAP ) s_pCurrArea->pArea, uiField, pItem );
 
    hb_itemReturn( pItem );
    hb_itemRelease( pItem );
@@ -2822,18 +2724,19 @@ HARBOUR HB_FIELDGET( void )
 
 HARBOUR HB_FIELDNAME( void )
 {
-   USHORT uiFields, uiIndex;
-   char * szName;
-
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
+      USHORT uiFields, uiIndex;
+
       uiIndex = hb_parni( 1 );
-      if( SELF_FIELDCOUNT( ( AREAP ) pCurrArea->pArea, &uiFields ) == SUCCESS )
+      if( SELF_FIELDCOUNT( ( AREAP ) s_pCurrArea->pArea, &uiFields ) == SUCCESS )
       {
          if( uiIndex > 0 && uiIndex <= uiFields )
          {
+            char * szName;
+
             szName = ( char * ) hb_xgrab( HARBOUR_MAX_RDD_FIELDNAME_LENGTH + 1 );
-            SELF_FIELDNAME( ( AREAP ) pCurrArea->pArea, hb_parni( 1 ), szName );
+            SELF_FIELDNAME( ( AREAP ) s_pCurrArea->pArea, hb_parni( 1 ), szName );
             hb_retc( szName );
             hb_xfree( szName );
             return;
@@ -2846,16 +2749,16 @@ HARBOUR HB_FIELDNAME( void )
 
 HARBOUR HB_FIELDPOS( void )
 {
-   USHORT uiCount;
-   LPFIELD pField;
-
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
+      USHORT uiCount;
+      LPFIELD pField;
+
       char szName[ HARBOUR_MAX_RDD_FIELDNAME_LENGTH ];
 
       hb_strncpyUpper( szName, hb_parc( 1 ), hb_parclen( 1 ) );
       uiCount = 0;
-      pField = ( ( AREAP ) pCurrArea->pArea )->lpFields;
+      pField = ( ( AREAP ) s_pCurrArea->pArea )->lpFields;
       while( pField )
       {
          ++uiCount;
@@ -2873,13 +2776,14 @@ HARBOUR HB_FIELDPOS( void )
 HARBOUR HB_FIELDPUT( void )
 {
    USHORT uiIndex;
-   PHB_ITEM pItem;
 
    uiIndex = hb_parni( 1 );
-   if( pCurrArea && uiIndex )
+   if( s_pCurrArea && uiIndex )
    {
+      PHB_ITEM pItem;
+
       pItem = hb_param( 2, IT_ANY );
-      if( SELF_PUTVALUE( ( AREAP ) pCurrArea->pArea, uiIndex, pItem ) == SUCCESS )
+      if( SELF_PUTVALUE( ( AREAP ) s_pCurrArea->pArea, uiIndex, pItem ) == SUCCESS )
       {
          hb_itemReturn( pItem );
          return;
@@ -2893,11 +2797,11 @@ HARBOUR HB_FLOCK( void )
    DBLOCKINFO pLockInfo;
 
    pLockInfo.fResult = FALSE;
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
       pLockInfo.itmRecID = 0;
       pLockInfo.uiMethod = FILE_LOCK;
-      SELF_LOCK( ( AREAP ) pCurrArea->pArea, &pLockInfo );
+      SELF_LOCK( ( AREAP ) s_pCurrArea->pArea, &pLockInfo );
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "FLOCK" );
@@ -2909,21 +2813,21 @@ HARBOUR HB_FOUND( void )
 {
    BOOL bFound = FALSE;
 
-   if( pCurrArea )
-      SELF_FOUND( ( AREAP ) pCurrArea->pArea, &bFound );
+   if( s_pCurrArea )
+      SELF_FOUND( ( AREAP ) s_pCurrArea->pArea, &bFound );
    hb_retl( bFound );
 }
 
 HARBOUR HB_HEADER( void )
 {
-   PHB_ITEM pRecSize;
-
-   if( !pCurrArea )
+   if( !s_pCurrArea )
       hb_retni( 0 );
    else
    {
+      PHB_ITEM pRecSize;
+
       pRecSize = hb_itemNew( NULL );
-      SELF_INFO( ( AREAP ) pCurrArea->pArea, DBI_GETHEADERSIZE, pRecSize );
+      SELF_INFO( ( AREAP ) s_pCurrArea->pArea, DBI_GETHEADERSIZE, pRecSize );
       hb_itemReturn( pRecSize );
       hb_itemRelease( pRecSize );
    }
@@ -2931,13 +2835,13 @@ HARBOUR HB_HEADER( void )
 
 HARBOUR HB_INDEXORD( void )
 {
-   DBORDERINFO pInfo;
-
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
+      DBORDERINFO pInfo;
+
       pInfo.itmResult = hb_itemPutNI( NULL, 0 );
       pInfo.itmOrder = NULL;
-      SELF_ORDINFO( ( AREAP ) pCurrArea->pArea, DBOI_NUMBER, &pInfo );
+      SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_NUMBER, &pInfo );
       hb_retni( hb_itemGetNI( pInfo.itmResult ) );
       hb_itemRelease( pInfo.itmResult );
    }
@@ -2945,9 +2849,18 @@ HARBOUR HB_INDEXORD( void )
       hb_retni( 0 );
 }
 
+/* Same as RECCOUNT() */
+
 HARBOUR HB_LASTREC( void )
 {
-   HB_RECCOUNT();
+   ULONG ulRecCount = 0;
+
+   if( s_pCurrArea )
+   {
+      SELF_RECCOUNT( ( AREAP ) s_pCurrArea->pArea, &ulRecCount );
+      ( ( AREAP ) s_pCurrArea->pArea )->lpExtendInfo->ulRecCount = ulRecCount;
+   }
+   hb_retnl( ulRecCount );
 }
 
 HARBOUR HB_LOCK( void )
@@ -2955,11 +2868,11 @@ HARBOUR HB_LOCK( void )
    DBLOCKINFO pLockInfo;
 
    pLockInfo.fResult = FALSE;
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
       pLockInfo.itmRecID = 0;
       pLockInfo.uiMethod = FILE_LOCK;
-      SELF_LOCK( ( AREAP ) pCurrArea->pArea, &pLockInfo );
+      SELF_LOCK( ( AREAP ) s_pCurrArea->pArea, &pLockInfo );
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "LOCK" );
@@ -2969,32 +2882,35 @@ HARBOUR HB_LOCK( void )
 
 HARBOUR HB_LUPDATE( void )
 {
-   if( !pCurrArea )
+   if( !s_pCurrArea )
       hb_itemPutDS( &hb_stack.Return, "" );
    else
-      SELF_INFO( ( AREAP ) pCurrArea->pArea, DBI_LASTUPDATE, &hb_stack.Return );
+      SELF_INFO( ( AREAP ) s_pCurrArea->pArea, DBI_LASTUPDATE, &hb_stack.Return );
 }
 
 HARBOUR HB_NETERR( void )
 {
    if( ISLOG( 1 ) )
-      bNetError = hb_parl( 1 );
+      s_bNetError = hb_parl( 1 );
 
-   hb_retl( bNetError );
+   hb_retl( s_bNetError );
 }
 
 HARBOUR HB_ORDBAGEXT( void )
 {
-   LPRDDNODE pRddNode;
-   AREAP pTempArea;
-   USHORT uiSize, uiRddID;
    DBORDERINFO pInfo;
+
    pInfo.itmOrder = NULL;
-   if( !pCurrArea )
+
+   if( !s_pCurrArea )
    {
+      LPRDDNODE pRddNode;
+      AREAP pTempArea;
+      USHORT uiSize, uiRddID;
+
       hb_rddCheck();
       uiRddID = 0;
-      pRddNode = hb_rddFindNode( szDefDriver, &uiRddID );
+      pRddNode = hb_rddFindNode( s_szDefDriver, &uiRddID );
       if( !pRddNode )
       {
          hb_retc( "" );
@@ -3019,7 +2935,7 @@ HARBOUR HB_ORDBAGEXT( void )
       {
          pInfo.itmResult = hb_itemPutC( NULL, "" );
          SELF_ORDINFO( pTempArea, DBOI_BAGEXT, &pInfo );
-         hb_retc( pInfo.itmResult->item.asString.value );
+         hb_retc( hb_itemGetCPtr( pInfo.itmResult ) );
          hb_itemRelease( pInfo.itmResult );
          SELF_RELEASE( ( AREAP ) pTempArea );
       }
@@ -3028,18 +2944,18 @@ HARBOUR HB_ORDBAGEXT( void )
    else
    {
       pInfo.itmResult = hb_itemPutC( NULL, "" );
-      SELF_ORDINFO( ( AREAP ) pCurrArea->pArea, DBOI_BAGEXT, &pInfo );
-      hb_retc( pInfo.itmResult->item.asString.value );
+      SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_BAGEXT, &pInfo );
+      hb_retc( hb_itemGetCPtr( pInfo.itmResult ) );
       hb_itemRelease( pInfo.itmResult );
    }
 }
 
 HARBOUR HB_ORDBAGNAME( void )
 {
-   DBORDERINFO pOrderInfo;
-
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
+      DBORDERINFO pOrderInfo;
+
       pOrderInfo.itmOrder = hb_param( 1, IT_STRING );
       if( !pOrderInfo.itmOrder )
          pOrderInfo.itmOrder = hb_param( 1, IT_NUMERIC );
@@ -3049,8 +2965,8 @@ HARBOUR HB_ORDBAGNAME( void )
          return;
       }
       pOrderInfo.itmResult = hb_itemPutC( NULL, "" );
-      SELF_ORDINFO( ( AREAP ) pCurrArea->pArea, DBOI_BAGNAME, &pOrderInfo );
-      hb_retc( pOrderInfo.itmResult->item.asString.value );
+      SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_BAGNAME, &pOrderInfo );
+      hb_retc( hb_itemGetCPtr( pOrderInfo.itmResult ) );
       hb_itemRelease( pOrderInfo.itmResult );
    }
    else
@@ -3059,13 +2975,13 @@ HARBOUR HB_ORDBAGNAME( void )
 
 HARBOUR HB_ORDCONDSET( void )
 {
-   LPDBORDERCONDINFO pOrderCondInfo;
-   char * szFor;
-   ULONG ulLen;
-   PHB_ITEM pItem;
-
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
+      LPDBORDERCONDINFO pOrderCondInfo;
+      char * szFor;
+      ULONG ulLen;
+      PHB_ITEM pItem;
+
       pOrderCondInfo = ( LPDBORDERCONDINFO ) hb_xgrab( sizeof( DBORDERCONDINFO ) );
       szFor = hb_parc( 1 );
       ulLen = strlen( szFor );
@@ -3118,7 +3034,7 @@ HARBOUR HB_ORDCONDSET( void )
          pOrderCondInfo->fRest = TRUE;
       if( pOrderCondInfo->lNextCount || pOrderCondInfo->lRecno || pOrderCondInfo->fRest )
          pOrderCondInfo->fAll = FALSE;
-      hb_retl( SELF_ORDSETCOND( ( AREAP ) pCurrArea->pArea, pOrderCondInfo ) == SUCCESS );
+      hb_retl( SELF_ORDSETCOND( ( AREAP ) s_pCurrArea->pArea, pOrderCondInfo ) == SUCCESS );
    }
    else
       hb_retl( FALSE );
@@ -3126,10 +3042,10 @@ HARBOUR HB_ORDCONDSET( void )
 
 HARBOUR HB_ORDCREATE( void )
 {
-   DBORDERCREATEINFO pOrderInfo;
-
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
+      DBORDERCREATEINFO pOrderInfo;
+
       pOrderInfo.abBagName = ( BYTE * ) hb_parc( 1 );
       pOrderInfo.atomBagName = ( BYTE * ) hb_parc( 2 );
       pOrderInfo.abExpr = hb_param( 3, IT_STRING );
@@ -3145,7 +3061,7 @@ HARBOUR HB_ORDCREATE( void )
          pOrderInfo.fUnique = hb_parl( 5 );
       else
          pOrderInfo.fUnique = hb_set.HB_SET_UNIQUE;
-      SELF_ORDCREATE( ( AREAP ) pCurrArea->pArea, &pOrderInfo );
+      SELF_ORDCREATE( ( AREAP ) s_pCurrArea->pArea, &pOrderInfo );
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ORDCREATE" );
@@ -3153,24 +3069,24 @@ HARBOUR HB_ORDCREATE( void )
 
 HARBOUR HB_ORDDESTROY( void )
 {
-   DBORDERINFO pOrderInfo;
-
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
+      DBORDERINFO pOrderInfo;
+
       pOrderInfo.itmOrder = hb_param( 1, IT_STRING );
       if( !pOrderInfo.itmOrder )
          pOrderInfo.itmOrder = hb_param( 1, IT_NUMERIC );
       pOrderInfo.atomBagName = hb_param( 2, IT_STRING );
-      SELF_ORDDESTROY( ( AREAP ) pCurrArea->pArea, &pOrderInfo );
+      SELF_ORDDESTROY( ( AREAP ) s_pCurrArea->pArea, &pOrderInfo );
    }
 }
 
 HARBOUR HB_ORDFOR( void )
 {
-   DBORDERINFO pOrderInfo;
-
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
+      DBORDERINFO pOrderInfo;
+
       pOrderInfo.itmOrder = hb_param( 1, IT_STRING );
       if( !pOrderInfo.itmOrder )
          pOrderInfo.itmOrder = hb_param( 1, IT_NUMERIC );
@@ -3181,8 +3097,8 @@ HARBOUR HB_ORDFOR( void )
          return;
       }
       pOrderInfo.itmResult = hb_itemPutC( NULL, "" );
-      SELF_ORDINFO( ( AREAP ) pCurrArea->pArea, DBOI_CONDITION, &pOrderInfo );
-      hb_retc( pOrderInfo.itmResult->item.asString.value );
+      SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_CONDITION, &pOrderInfo );
+      hb_retc( hb_itemGetCPtr( pOrderInfo.itmResult ) );
       hb_itemRelease( pOrderInfo.itmResult );
    }
    else
@@ -3191,10 +3107,10 @@ HARBOUR HB_ORDFOR( void )
 
 HARBOUR HB_ORDKEY( void )
 {
-   DBORDERINFO pOrderInfo;
-
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
+      DBORDERINFO pOrderInfo;
+
       pOrderInfo.itmOrder = hb_param( 1, IT_STRING );
       if( !pOrderInfo.itmOrder )
          pOrderInfo.itmOrder = hb_param( 1, IT_NUMERIC );
@@ -3205,8 +3121,8 @@ HARBOUR HB_ORDKEY( void )
          return;
       }
       pOrderInfo.itmResult = hb_itemPutC( NULL, "" );
-      SELF_ORDINFO( ( AREAP ) pCurrArea->pArea, DBOI_EXPRESSION, &pOrderInfo );
-      hb_retc( pOrderInfo.itmResult->item.asString.value );
+      SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_EXPRESSION, &pOrderInfo );
+      hb_retc( hb_itemGetCPtr( pOrderInfo.itmResult ) );
       hb_itemRelease( pOrderInfo.itmResult );
    }
    else
@@ -3215,10 +3131,10 @@ HARBOUR HB_ORDKEY( void )
 
 HARBOUR HB_ORDLISTADD( void )
 {
-   DBORDERINFO pOrderInfo;
-
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
+      DBORDERINFO pOrderInfo;
+
       pOrderInfo.atomBagName = hb_param( 1, IT_STRING );
       pOrderInfo.itmOrder = hb_param( 2, IT_STRING );
       if( !pOrderInfo.atomBagName )
@@ -3226,7 +3142,7 @@ HARBOUR HB_ORDLISTADD( void )
          hb_errRT_DBCMD( EG_ARG, 1006, NULL, "ORDLISTADD" );
          return;
       }
-      SELF_ORDLSTADD( ( AREAP ) pCurrArea->pArea, &pOrderInfo );
+      SELF_ORDLSTADD( ( AREAP ) s_pCurrArea->pArea, &pOrderInfo );
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ORDLISTADD" );
@@ -3234,26 +3150,26 @@ HARBOUR HB_ORDLISTADD( void )
 
 HARBOUR HB_ORDLISTCLEAR( void )
 {
-   if( pCurrArea )
-      SELF_ORDLSTCLEAR( ( AREAP ) pCurrArea->pArea );
+   if( s_pCurrArea )
+      SELF_ORDLSTCLEAR( ( AREAP ) s_pCurrArea->pArea );
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ORDLISTCLEAR" );
 }
 
 HARBOUR HB_ORDLISTREBUILD( void )
 {
-   if( pCurrArea )
-      SELF_ORDLSTREBUILD( ( AREAP ) pCurrArea->pArea );
+   if( s_pCurrArea )
+      SELF_ORDLSTREBUILD( ( AREAP ) s_pCurrArea->pArea );
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ORDLISTCLEAR" );
 }
 
 HARBOUR HB_ORDNAME( void )
 {
-   DBORDERINFO pOrderInfo;
-
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
+      DBORDERINFO pOrderInfo;
+
       pOrderInfo.itmOrder = hb_param( 1, IT_NUMERIC );
       pOrderInfo.atomBagName = hb_param( 2, IT_STRING );
       if( !pOrderInfo.itmOrder )
@@ -3262,8 +3178,8 @@ HARBOUR HB_ORDNAME( void )
          return;
       }
       pOrderInfo.itmResult = hb_itemPutC( NULL, "" );
-      SELF_ORDINFO( ( AREAP ) pCurrArea->pArea, DBOI_NAME, &pOrderInfo );
-      hb_retc( pOrderInfo.itmResult->item.asString.value );
+      SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_NAME, &pOrderInfo );
+      hb_retc( hb_itemGetCPtr( pOrderInfo.itmResult ) );
       hb_itemRelease( pOrderInfo.itmResult );
    }
    else
@@ -3272,10 +3188,10 @@ HARBOUR HB_ORDNAME( void )
 
 HARBOUR HB_ORDNUMBER( void )
 {
-   DBORDERINFO pOrderInfo;
-
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
+      DBORDERINFO pOrderInfo;
+
       pOrderInfo.itmOrder = hb_param( 1, IT_STRING );
       pOrderInfo.atomBagName = hb_param( 2, IT_STRING );
       if( !pOrderInfo.itmOrder )
@@ -3284,7 +3200,7 @@ HARBOUR HB_ORDNUMBER( void )
          return;
       }
       pOrderInfo.itmResult = hb_itemPutNI( NULL, 0 );
-      SELF_ORDINFO( ( AREAP ) pCurrArea->pArea, DBOI_NUMBER, &pOrderInfo );
+      SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_NUMBER, &pOrderInfo );
       hb_retni( hb_itemGetNI( pOrderInfo.itmResult ) );
       hb_itemRelease( pOrderInfo.itmResult );
    }
@@ -3294,17 +3210,17 @@ HARBOUR HB_ORDNUMBER( void )
 
 HARBOUR HB_ORDSETFOCUS( void )
 {
-   DBORDERINFO pInfo;
-
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
+      DBORDERINFO pInfo;
+
       pInfo.itmOrder = hb_param( 1, IT_STRING );
       if( !pInfo.itmOrder )
          pInfo.itmOrder = hb_param( 1, IT_NUMERIC );
       pInfo.atomBagName = hb_param( 2, IT_STRING );
       pInfo.itmResult = hb_itemPutC( NULL, "" );
-      SELF_ORDLSTFOCUS( ( AREAP ) pCurrArea->pArea, &pInfo );
-      hb_retc( pInfo.itmResult->item.asString.value );
+      SELF_ORDLSTFOCUS( ( AREAP ) s_pCurrArea->pArea, &pInfo );
+      hb_retc( hb_itemGetCPtr( pInfo.itmResult ) );
       hb_itemRelease( pInfo.itmResult );
    }
    else
@@ -3320,7 +3236,7 @@ HARBOUR HB_RDDLIST( void )
    hb_rddCheck();
    hb_arrayNew( &hb_stack.Return, 0 );
    pName = hb_itemNew( NULL );
-   pRddNode = pRddList;
+   pRddNode = s_pRddList;
    uiType = hb_parni( 1 );       /* 0 all types of RDD's */
    while( pRddNode )
    {
@@ -3333,13 +3249,13 @@ HARBOUR HB_RDDLIST( void )
 
 HARBOUR HB_RDDNAME( void )
 {
-   char * pBuffer;
-
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
+      char * pBuffer;
+
       pBuffer = ( char * ) hb_xgrab( HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 );
       pBuffer[ 0 ] = '\0';
-      SELF_SYSNAME( ( AREAP ) pCurrArea->pArea, ( BYTE * ) pBuffer );
+      SELF_SYSNAME( ( AREAP ) s_pCurrArea->pArea, ( BYTE * ) pBuffer );
       hb_retc( pBuffer );
       hb_xfree( pBuffer );
    }
@@ -3352,13 +3268,18 @@ HARBOUR HB_RDDNAME( void )
 
 HARBOUR HB_RDDREGISTER( void )
 {
-   char szDriver[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ];
    USHORT uiLen;
 
    hb_rddCheck();
+
    uiLen = hb_parclen( 1 );
    if( uiLen > 0 )
    {
+      char szDriver[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ];
+
+      if( uiLen > HARBOUR_MAX_RDD_DRIVERNAME_LENGTH )
+         uiLen = HARBOUR_MAX_RDD_DRIVERNAME_LENGTH;
+
       hb_strncpyUpper( szDriver, hb_parc( 1 ), uiLen );
       /*
        * hb_rddRegister returns:
@@ -3367,44 +3288,21 @@ HARBOUR HB_RDDREGISTER( void )
        * 1: RDD already registerd
        * > 1: error
        */
-      if( hb_rddRegister( szDriver, hb_parni( 2 ) ) <= 1 )
-         return;
-      hb_errInternal( 9002, "", "", "" );
+      if( hb_rddRegister( szDriver, hb_parni( 2 ) ) > 1 )
+         hb_errInternal( 9002, "", "", "" );
    }
 }
 
-HARBOUR HB_RDDSETDEFAULT( void )
-{
-   char szNewDriver[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ];
-   USHORT uiLen;
-
-   hb_rddCheck();
-   hb_retc( szDefDriver );
-
-   uiLen = hb_parclen( 1 );
-   if( uiLen > 0 )
-   {
-      hb_strncpyUpper( szNewDriver, hb_parc( 1 ), uiLen );
-
-      if( !hb_rddFindNode( szNewDriver, NULL ) )
-      {
-         hb_errRT_DBCMD( EG_ARG, 1015, NULL, "RDDSETDEFAULT" );
-         return;
-      }
-
-      szDefDriver = ( char * ) hb_xrealloc( szDefDriver, uiLen + 1 );
-      strcpy( szDefDriver, szNewDriver );
-   }
-}
+/* Same as LASTREC() */
 
 HARBOUR HB_RECCOUNT( void )
 {
    ULONG ulRecCount = 0;
 
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
-      SELF_RECCOUNT( ( AREAP ) pCurrArea->pArea, &ulRecCount );
-      ( ( AREAP ) pCurrArea->pArea )->lpExtendInfo->ulRecCount = ulRecCount;
+      SELF_RECCOUNT( ( AREAP ) s_pCurrArea->pArea, &ulRecCount );
+      ( ( AREAP ) s_pCurrArea->pArea )->lpExtendInfo->ulRecCount = ulRecCount;
    }
    hb_retnl( ulRecCount );
 }
@@ -3414,40 +3312,41 @@ HARBOUR HB_RECNO( void )
    PHB_ITEM pRecNo;
 
    pRecNo = hb_itemPutNL( NULL, 0 );
-   if( pCurrArea )
-      SELF_RECNO( ( AREAP ) pCurrArea->pArea, pRecNo );
+   if( s_pCurrArea )
+      SELF_RECNO( ( AREAP ) s_pCurrArea->pArea, pRecNo );
    hb_itemReturn( pRecNo );
    hb_itemRelease( pRecNo );
 }
 
 HARBOUR HB_RECSIZE( void )
 {
-   PHB_ITEM pRecSize;
-
-   if( !pCurrArea )
-      hb_retni( 0 );
-   else
+   if( s_pCurrArea )
    {
+      PHB_ITEM pRecSize;
+
       pRecSize = hb_itemNew( NULL );
-      SELF_INFO( ( AREAP ) pCurrArea->pArea, DBI_GETRECSIZE, pRecSize );
+      SELF_INFO( ( AREAP ) s_pCurrArea->pArea, DBI_GETRECSIZE, pRecSize );
       hb_itemReturn( pRecSize );
       hb_itemRelease( pRecSize );
    }
+   else
+      hb_retni( 0 );
 }
 
 HARBOUR HB_RLOCK( void )
 {
    DBLOCKINFO pLockInfo;
-   PHB_ITEM pRecNo;
 
    pLockInfo.fResult = FALSE;
-   if( pCurrArea )
+   if( s_pCurrArea )
    {
+      PHB_ITEM pRecNo;
+
       pRecNo = hb_itemPutNL( NULL, 0 );
-      SELF_RECNO( ( AREAP ) pCurrArea->pArea, pRecNo );
-      pLockInfo.itmRecID = pRecNo->item.asLong.value;
+      SELF_RECNO( ( AREAP ) s_pCurrArea->pArea, pRecNo );
+      pLockInfo.itmRecID = hb_itemGetNL( pRecNo );
       pLockInfo.uiMethod = REC_LOCK;
-      SELF_LOCK( ( AREAP ) pCurrArea->pArea, &pLockInfo );
+      SELF_LOCK( ( AREAP ) s_pCurrArea->pArea, &pLockInfo );
       hb_itemRelease( pRecNo );
    }
    else
@@ -3469,12 +3368,12 @@ HARBOUR HB_SELECT( void )
    else if( ulLen > 0 )
       hb_retni( hb_rddSelect( szAlias ) );
    else
-      hb_retni( uiCurrArea );
+      hb_retni( s_uiCurrArea );
 }
 
 HARBOUR HB_USED( void )
 {
-   hb_retl( pCurrArea != NULL );
+   hb_retl( s_pCurrArea != NULL );
 }
 
 /* NOTE: Same as dbSetDriver() and rddSetDefault(), but doesn't
@@ -3484,18 +3383,75 @@ HARBOUR HB_USED( void )
 
 HARBOUR HB___RDDSETDEFAULT( void )
 {
-   char * szNewDriver;
    USHORT uiLen;
-   char cDriverBuffer[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ];
 
    hb_rddCheck();
-   hb_retc( szDefDriver );
-   szNewDriver = hb_parc( 1 );
-   if( ( uiLen = strlen( szNewDriver ) ) > 0 )
+   hb_retc( s_szDefDriver );
+
+   uiLen = hb_parclen( 1 );
+   if( uiLen > 0 )
    {
-      hb_strncpyUpper( cDriverBuffer, szNewDriver, uiLen );
-      szDefDriver = ( char * ) hb_xrealloc( szDefDriver, uiLen + 1 );
-      strcpy( szDefDriver, cDriverBuffer );
+      if( uiLen > HARBOUR_MAX_RDD_DRIVERNAME_LENGTH )
+         uiLen = HARBOUR_MAX_RDD_DRIVERNAME_LENGTH;
+
+      s_szDefDriver = ( char * ) hb_xrealloc( s_szDefDriver, uiLen + 1 );
+      hb_strncpyUpper( s_szDefDriver, hb_parc( 1 ), uiLen );
+   }
+}
+
+HARBOUR HB_RDDSETDEFAULT( void )
+{
+   USHORT uiLen;
+
+   hb_rddCheck();
+   hb_retc( s_szDefDriver );
+
+   uiLen = hb_parclen( 1 );
+   if( uiLen > 0 )
+   {
+      char szNewDriver[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ];
+
+      if( uiLen > HARBOUR_MAX_RDD_DRIVERNAME_LENGTH )
+         uiLen = HARBOUR_MAX_RDD_DRIVERNAME_LENGTH;
+
+      hb_strncpyUpper( szNewDriver, hb_parc( 1 ), uiLen );
+
+      if( !hb_rddFindNode( szNewDriver, NULL ) )
+      {
+         hb_errRT_DBCMD( EG_ARG, 1015, NULL, "RDDSETDEFAULT" );
+         return;
+      }
+
+      s_szDefDriver = ( char * ) hb_xrealloc( s_szDefDriver, uiLen + 1 );
+      strcpy( s_szDefDriver, szNewDriver );
+   }
+}
+
+HARBOUR HB_DBSETDRIVER( void )
+{
+   USHORT uiLen;
+
+   hb_rddCheck();
+   hb_retc( s_szDefDriver );
+
+   uiLen = hb_parclen( 1 );
+   if( uiLen > 0 )
+   {
+      char szNewDriver[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ];
+
+      if( uiLen > HARBOUR_MAX_RDD_DRIVERNAME_LENGTH )
+         uiLen = HARBOUR_MAX_RDD_DRIVERNAME_LENGTH;
+
+      hb_strncpyUpper( szNewDriver, hb_parc( 1 ), uiLen );
+
+      if( !hb_rddFindNode( szNewDriver, NULL ) )
+      {
+         hb_errRT_DBCMD( EG_ARG, 1015, NULL, "DBSETDRIVER" );
+         return;
+      }
+
+      s_szDefDriver = ( char * ) hb_xrealloc( s_szDefDriver, uiLen + 1 );
+      strcpy( s_szDefDriver, szNewDriver );
    }
 }
 

@@ -63,6 +63,7 @@ extern char *   hb_itemGetC     ( PHB_ITEM pItem );
 extern char *   hb_itemGetCPtr  ( PHB_ITEM pItem );
 extern ULONG    hb_itemGetCLen  ( PHB_ITEM pItem );
 extern char *   hb_itemGetDS    ( PHB_ITEM pItem, char * szDate );
+extern long     hb_itemGetDL    ( PHB_ITEM pItem );
 extern BOOL     hb_itemGetL     ( PHB_ITEM pItem );
 extern double   hb_itemGetND    ( PHB_ITEM pItem );
 extern int      hb_itemGetNI    ( PHB_ITEM pItem );

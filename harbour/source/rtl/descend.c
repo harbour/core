@@ -64,7 +64,7 @@ HARBOUR HB_DESCEND( void )
          hb_xfree( szBuffer );
       }
       else if( IS_DATE( pItem ) )
-         hb_retnl( 5231808 - hb_itemGetNL( pItem ) );
+         hb_retnl( 5231808 - hb_itemGetDL( pItem ) );
       else if( IS_NUMERIC( pItem ) )
          hb_retnd( -1 * hb_itemGetND( pItem ) );
       else if( IS_LOGICAL( pItem ) )

@@ -583,7 +583,7 @@ HARBOUR HB_YEAR( void )
    {
       long lDay, lMonth, lYear;
 
-      hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
 
       hb_retnllen( lYear, 5 );
    }
@@ -607,7 +607,7 @@ HARBOUR HB_MONTH( void )
    {
       long lDay, lMonth, lYear;
 
-      hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
 
       hb_retnllen( lMonth, 3 );
    }
@@ -631,7 +631,7 @@ HARBOUR HB_DAY( void )
    {
       long lDay, lMonth, lYear;
 
-      hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
 
       hb_retnllen( lDay, 3 );
    }
@@ -709,11 +709,13 @@ HARBOUR HB_DOW( void )
 
    if( pDate )
    {
-      if( pDate->item.asDate.value )
+      long lDate = hb_itemGetDL( pDate );
+
+      if( lDate )
       {
          long lDay, lMonth, lYear;
 
-         hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
+         hb_dateDecode( lDate, &lDay, &lMonth, &lYear );
 
          hb_retnllen( hb_dow( lDay, lMonth, lYear ), 3 );
       }
@@ -740,7 +742,7 @@ HARBOUR HB_CMONTH( void )
    {
       long lDay, lMonth, lYear;
 
-      hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
       hb_retc( hb_cmonth( lMonth ) );
    }
    else
@@ -761,11 +763,13 @@ HARBOUR HB_CDOW( void )
 
    if( pDate )
    {
-      if( pDate->item.asDate.value )
+      long lDate = hb_itemGetDL( pDate );
+
+      if( lDate )
       {
          long lDay, lMonth, lYear;
 
-         hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
+         hb_dateDecode( lDate, &lDay, &lMonth, &lYear );
          hb_retc( hb_cdow( hb_dow( lDay, lMonth, lYear ) ) );
       }
       else

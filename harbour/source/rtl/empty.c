@@ -70,8 +70,7 @@ HARBOUR HB_EMPTY( void )
             break;
 
          case IT_DATE:
-            /* NOTE: This is correct ! Get the date as long value. [vszakats] */
-            hb_retl( hb_itemGetNL( pItem ) == 0 );
+            hb_retl( hb_itemGetDL( pItem ) == 0 );
             break;
 
          case IT_LOGICAL:

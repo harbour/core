@@ -80,6 +80,8 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    {
       if( pFunc->cScope & FS_STATIC || pFunc->cScope & FS_INIT || pFunc->cScope & FS_EXIT )
          fprintf( yyc, "static " );
+      else
+         fprintf( yyc, "       " );
 
       if( pFunc == hb_comp_pInitFunc )
          fprintf( yyc, "HARBOUR hb_INITSTATICS( void );\n" ); /* NOTE: hb_ intentionally in lower case */

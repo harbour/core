@@ -45,6 +45,7 @@
  *    hb_itemDoC() ( based on HB_DO() by Ryszard Glab )
  *    hb_itemPutDL()
  *    hb_itemPutNI()
+ *    hb_itemGetDL()
  *    hb_itemGetNI()
  *    hb_itemGetCPtr()
  *    hb_itemGetCLen()
@@ -556,6 +557,13 @@ char * hb_itemGetDS( PHB_ITEM pItem, char * szDate )
       hb_dateDecStr( szDate, 0 );
 
    return szDate;
+}
+
+long hb_itemGetDL( PHB_ITEM pItem )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemGetDL(%p)", pItem));
+
+   return ( pItem && IS_DATE( pItem ) ) ? pItem->item.asDate.value : 0;
 }
 
 BOOL hb_itemGetL( PHB_ITEM pItem )
