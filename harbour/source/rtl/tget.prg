@@ -1054,17 +1054,15 @@ METHOD Input( cChar ) CLASS Get
    case ::type == "N"
 
       do case
-      case cChar == "-"
-         ::minus := .t.
-               /* The minus symbol can be write in any place */
+         case cChar == "-"
+              ::minus := .t.  /* The minus symbol can be write in any place */
 
-      case cChar $ ".,"
-         ::toDecPos()
-         return ""
+         case cChar $ ".,"
+              ::toDecPos()
+              return ""
 
-      case !( cChar $ "0123456789" )
-         return ""
-
+         case ! ( cChar $ "0123456789+" )
+              return ""
       endcase
 
    case ::type == "D"
@@ -1096,33 +1094,42 @@ METHOD Input( cChar ) CLASS Get
          if ! IsAlpha( cChar )
             cChar := ""
          endif
+
       case cPic == "N"
          if ! IsAlpha( cChar ) .and. ! IsDigit( cChar )
             cChar := ""
          endif
+
       case cPic == "9"
-         if ! IsDigit( cChar ) .and. cChar != "-"
+         if ! IsDigit( cChar ) .and. ! cChar $ "-+"
             cChar := ""
          endif
+         if ::type != "N" .and. cChar $ "-+"
+            cChar := ""
+         endif
+
       case cPic == "#"
          if ! IsDigit( cChar ) .and. !( cChar == " " ) .and. !( cChar $ ".+-" )
             cChar := ""
          endif
+
       case cPic == "L"
          if !( Upper( cChar ) $ "YNTF" + ;
                                 hb_langmessage( HB_LANG_ITEM_BASE_TEXT + 1 ) + ;
                                 hb_langmessage( HB_LANG_ITEM_BASE_TEXT + 2 ) )
             cChar := ""
          endif
+
       case cPic == "Y"
          if !( Upper( cChar ) $ "YN" )
             cChar := ""
          endif
+
       case ( cPic == "$" .or. cPic == "*" ) .and. ::type == "N"
          if ! IsDigit( cChar ) .and. cChar != "-"
             cChar := ""
          endif
-      other
+      otherwise
          cChar := Transform( cChar, cPic )
       end case
    endif
