@@ -83,11 +83,10 @@ static ULONG s_privateStackBase = 0;
 static ULONG s_globalTableSize = 0;
 static ULONG s_globalFirstFree = 0;
 static ULONG s_globalLastFree  = 0;
-static ULONG s_globalFreeCnt   = 0;
 static HB_VALUE_PTR s_globalTable = NULL;
 
-#define TABLE_INITHB_VALUE   100
-#define TABLE_EXPANDHB_VALUE  50
+#define TABLE_INITHB_VALUE   1   //00
+#define TABLE_EXPANDHB_VALUE  2  //50
 
 struct mv_PUBLIC_var_info
 {
@@ -106,8 +105,8 @@ void hb_memvarsInit( void )
 
    s_globalTable = ( HB_VALUE_PTR ) hb_xgrab( sizeof( HB_VALUE ) * TABLE_INITHB_VALUE );
    s_globalTableSize = TABLE_INITHB_VALUE;
-   s_globalFreeCnt   = 0;
-   s_globalFirstFree = s_globalLastFree = 1;
+   s_globalFirstFree = 0;
+   s_globalLastFree  = 1;
 
    s_privateStack = ( PHB_DYNS * ) hb_xgrab( sizeof( PHB_DYNS ) * TABLE_INITHB_VALUE );
    s_privateStackSize = TABLE_INITHB_VALUE;
@@ -178,48 +177,32 @@ HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarValueNew(%p, %d)", pSource, (int) bTrueMemvar));
 
-   if( s_globalFreeCnt )
+   if( s_globalFirstFree )
    {
-      /* There are holes in the table
-         * Get a first available hole
-         */
+      /* There are holes in the table - get a first available one
+       */
       hValue = s_globalFirstFree;
-      --s_globalFreeCnt;
-
-      /* Now find the next hole
-         */
-      if( s_globalFreeCnt )
-      {
-         ++s_globalFirstFree;
-         while( s_globalTable[ s_globalFirstFree ].counter )
-            ++s_globalFirstFree;
-      }
-      else
-         /* No more holes
-            */
-         s_globalFirstFree = s_globalLastFree;
+      s_globalFirstFree = s_globalTable[ hValue ].hPrevMemvar;
    }
    else
    {
       /* Allocate the value from the end of table
-         */
-      if( s_globalFirstFree < s_globalTableSize )
+       */
+      if( s_globalLastFree < s_globalTableSize )
       {
-         hValue = s_globalFirstFree;
-         s_globalFirstFree = ++s_globalLastFree;
+         hValue = s_globalLastFree++;
       }
       else
       {
          /* No more free values in the table - expand the table
-            */
+          */
          hValue = s_globalTableSize;
-         s_globalFirstFree = s_globalLastFree = s_globalTableSize + 1;
+         s_globalLastFree = s_globalTableSize + 1;
          s_globalTableSize += TABLE_EXPANDHB_VALUE;
          s_globalTable = ( HB_VALUE_PTR ) hb_xrealloc( s_globalTable, sizeof( HB_VALUE ) * s_globalTableSize );
       }
-
    }
-
+   
    pValue = s_globalTable + hValue;
    pValue->pVarItem = ( HB_ITEM_PTR ) hb_xgrab( sizeof( HB_ITEM ) );
    pValue->counter = 1;
@@ -352,24 +335,19 @@ void hb_memvarValueIncRef( HB_HANDLE hValue )
 
 static void hb_memvarRecycle( HB_HANDLE hValue )
 {
-   if( s_globalFirstFree > hValue )
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarRecycle(%lu)", hValue));
+   
+   if( s_globalFirstFree )
    {
-      if( ( s_globalLastFree - hValue ) == 1 )
-         s_globalFirstFree = s_globalLastFree = hValue;     /* last item */
-      else
-      {
-         s_globalFirstFree = hValue;
-         ++s_globalFreeCnt;             /* middle item */
-      }
-   }
-   else if( ( s_globalLastFree - hValue ) == 1 )
-   {
-      s_globalLastFree = hValue;         /* last item */
-      if( s_globalLastFree == s_globalFirstFree )
-         s_globalFreeCnt = 0;
+      s_globalTable[ hValue ].hPrevMemvar = s_globalFirstFree;
+      s_globalFirstFree = hValue;
    }
    else
-      ++s_globalFreeCnt;
+   {
+      /* first free value in the list */
+      s_globalFirstFree = hValue;
+      s_globalTable[ hValue ].hPrevMemvar = 0;
+   }      
 }
 /*
  * This function decreases the number of references to passed global value.

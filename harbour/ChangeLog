@@ -8,6 +8,24 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-12-27 10:37 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * source/vm/memvars.c
+      * changed algorithm for recycling of unused memvar values
+        - thanks to Przemek
+        
+2004-12-24 07:47 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * include/hbapi.h
+   * source/vm/codebloc.c
+   * source/vm/itemapi.c
+   * source/vm/memvars.c
+      * fixed memvars and detached locals handling related to reallocation
+      of memvar's buffer and detaching of locals in a loop 
+      - thanks to Przemek
+      
+   * source/vm/debug.c
+      *removed diagnostic hb_dbgstop()
+
+
 2004-12-24 07:47 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbapi.h
    * source/vm/codebloc.c
