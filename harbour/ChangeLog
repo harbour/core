@@ -1,3 +1,7 @@
+19990806-18:00 WIB Andi Jahja
+   * source\rt;\menuto.prg
+     - added error checker
+
 19990806-10:48 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/classes.c
      ! One cast added back.
