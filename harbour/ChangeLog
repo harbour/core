@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-12 18:58 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/debug/debugger.prg
+    ! A bug fixed in commands evaluation
+
 2002-07-11 14:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * config/dos/djgpp.cf
   	+ Added the -lm option to LDFLAGS to enable math error handling.
