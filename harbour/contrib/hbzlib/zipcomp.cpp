@@ -67,6 +67,7 @@ int   hb_CompressFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBloc
     int iCause=0;
     BOOL bFileExist=hb_fsFile(szFile);
     CZipArchive szZip;
+    BOOL bReturn = true;
     if (szPassWord != NULL){
         szZip.SetPassword(szPassWord);
      }
@@ -89,7 +90,7 @@ int   hb_CompressFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBloc
     catch (CZipException* e)
 	{
     iCause=e->m_iCause       ;
-
+    bReturn=false;
 	}
      catch(...){}
         for (uiCount=1;(uiCount<= hb_arrayLen(pArray)) ;uiCount++)
@@ -123,11 +124,11 @@ int   hb_CompressFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBloc
     catch (CZipException* e)
 	{
     iCause=e->m_iCause       ;
-
+    bReturn=false;
 	}
      catch(...){}
     
-    return iCause;  /* to avoid warning */
+    return bReturn;  /* to avoid warning */
 }
 
  int   hb_CmpTdSpan(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBlock,BOOL bOverWrite,char *szPassWord,PHB_ITEM pDiskBlock,int iSpanSize,BOOL bPath,BOOL bDrive)
@@ -136,7 +137,7 @@ int   hb_CompressFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBloc
     char szNewFile[MAXFILENAME];
     CZipArchive szZip;    
     int iCause=0;
-
+    BOOL bReturn=true;
     BOOL bFileExist=hb_fsFile(szFile);
     if (pDiskBlock !=NULL){
         pDiskStatus=pDiskBlock;
@@ -165,14 +166,15 @@ int   hb_CompressFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBloc
              }
              else {
              iCause=0;
-             return iCause;
+             bReturn=false;
+             return bReturn;
             }
         }
 }
     catch (CZipException* e)
 	{
     iCause=e->m_iCause       ;
-
+    bReturn=false;
 	}
      catch(...){}
         
@@ -208,11 +210,11 @@ int   hb_CompressFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBloc
     catch (CZipException* e)
 	{
     iCause=e->m_iCause       ;
-
+    bReturn=false;
 	}
      catch(...){}
     pDiskStatus=NULL    ;
-    return iCause;  /* to avoid warning */
+    return  bReturn;  /* to avoid warning */
 }
 /*
 bool hb_SetProgressofTdSpan(DWORD , int iSoFar, void* pData){
@@ -242,6 +244,7 @@ int   hb_CompressFileStd(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_
     char szNewFile[MAXFILENAME];   
     int iCause=0;
     BOOL bFileExist=hb_fsFile(szFile);
+    BOOL    bReturn=true;
     CZipArchive szZip;
     if (szPassWord != NULL){
         szZip.SetPassword(szPassWord);
@@ -266,7 +269,7 @@ int   hb_CompressFileStd(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_
     catch (CZipException* e)
 	{
     iCause=e->m_iCause       ;
-
+    bReturn=false;
 	}
                 try {
                     if (szPassWord != NULL){
@@ -295,11 +298,11 @@ int   hb_CompressFileStd(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_
     catch (CZipException* e)
 	{
     iCause=e->m_iCause       ;
-
+    bReturn=false;
 	}
      catch(...){}
     
-    return iCause;  /* to avoid warning */
+    return     bReturn;  /* to avoid warning */
 }
  int   hb_CmpTdSpanStd(char *szFile,char * szFiletoCompress,int iCompLevel,PHB_ITEM pBlock,BOOL bOverWrite,char *szPassWord,PHB_ITEM pDiskBlock,int iSpanSize,BOOL bPath,BOOL bDrive)
 {
@@ -308,6 +311,7 @@ int   hb_CompressFileStd(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_
     CZipArchive szZip;    
     int iCause=0;
     BOOL bTdSpan=FALSE;
+    BOOL bReturn=true;
     BOOL bFileExist=hb_fsFile(szFile);
     if (pDiskBlock !=NULL){
         pDiskStatus=pDiskBlock;
@@ -331,7 +335,7 @@ int   hb_CompressFileStd(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_
             }
             else {
                 iCause=0;
-                return iCause;
+                return false;
             }
         }
     }
@@ -364,10 +368,11 @@ int   hb_CompressFileStd(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_
     catch (CZipException& e)
 	{
         iCause=e.m_iCause       ;
+         bReturn=false;
 	}
     catch(...){}
     pDiskStatus=NULL    ;
-    return iCause;  /* to avoid warning */
+    return true;  /* to avoid warning */
 }
 
 #ifdef __cplusplus

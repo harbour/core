@@ -1,3 +1,9 @@
+2001-05-20 19:15 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   * contrib/hbzlib/zip.c
+     contrib/hbzlib/zipcomp.cpp
+     contrib/hbzlib/zipnew.cpp
+     * Fixed some bugs reported by Patrick Mast
+
 2001-05-20 23:15 UTC+1 JFL (mafact) <jfl@mafact.com>
    * harbour/source/vm/classes.c
      + hb_objGetRealClsName(object, szmsg )
