@@ -1,3 +1,16 @@
+2001-02-02 16:48 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/vm/debug.c
+     + New function __vmVarLSet() added.
+       Purpose: It sets the contents of a local variable placed
+                at nProcLevel stack deep.
+       Syntax:  __vmVarLSet( <nProcLevel>, <nLocalIndex>, <uNewValue> ) --> nil
+
+   * source/debug/debugger.prg
+     * Improved METHOD EditVar() for local variables
+       (it uses the new __vmVarLSet() function).
+
+     * Improved GetVarInfo() static function.
+
 2001-02-02 15:40 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/compiler/harbour.c
      * HB_P_LOCALNAME local index fixed.
