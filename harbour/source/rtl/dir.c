@@ -206,9 +206,9 @@
 #endif
 /* these work under NT but are otherwise used as placeholders for
    non MS o/s support */
-#if !defined(FA_ENCRYPTED)
+#if !defined(FA_DEVICE)
    #define FA_DEVICE          64   /* I */
-   #define FA_NORMAL         128   /* N */  // ignored
+/*   #define FA_NORMAL         128 */  /* N */  /* ignored */ /* Exists in BORLANDC */
    #define FA_TEMPORARY      256   /* T */
    #define FA_SPARSE         512   /* P */
    #define FA_REPARSE       1024   /* L */
@@ -253,8 +253,8 @@ static USHORT osToHarbourMask( USHORT usMask )
          usRetMask |= FA_DIREC;
       if( usMask & FILE_HIDDEN )
          usRetMask |= FA_HIDDEN;
-      if( usMask & FILE_RDONLY )
-         usRetMask |= FA_READONLY;
+      if( usMask & FILE_READONLY )
+         usRetMask |= FA_RDONLY;
       if( usMask & FILE_SYSTEM )
          usRetMask |= FA_SYSTEM;
    #endif
@@ -301,8 +301,8 @@ static USHORT HarbourToOsMask( USHORT usMask )
          usRetMask |= FILE_DIRECTORY;
       if( usMask & FA_HIDDEN )
          usRetMask |= FILE_HIDDEN;
-      if( usMask & FA_READONLY )
-         usRetMask |= FILE_RDONLY;
+      if( usMask & FA_RDONLY )
+         usRetMask |= FILE_READONLY;
       if( usMask & FA_SYSTEM )
          usRetMask |= FILE_SYSTEM;
    #endif

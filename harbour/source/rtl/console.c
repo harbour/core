@@ -1044,7 +1044,7 @@ HARBOUR HB_SAVESCREEN( void )
          uiCoords[ uiX - 1 ] = hb_parni( uiX );
 
    hb_gtRectSize( uiCoords[ 0 ], uiCoords[ 1 ], uiCoords[ 2 ], uiCoords[ 3 ], &uiX );
-   pBuffer = hb_xgrab( uiX );
+   pBuffer = (char *) hb_xgrab( uiX );
    hb_gtSave( uiCoords[ 0 ], uiCoords[ 1 ], uiCoords[ 2 ], uiCoords[ 3 ], pBuffer );
    hb_retclen( pBuffer, uiX );
    hb_xfree( pBuffer );

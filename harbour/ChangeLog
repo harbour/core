@@ -1,3 +1,46 @@
+19990916-19:35 EDT David G. Holm <dholm@jsd-llc.com>
+
+  * doc/gmake.txt
+    + Added gcc/mingw32.
+    + Updated the BUILD.BAT paragraph.
+
+  * source/rtl/console.c
+    ! Added missing type override to hb_xgrab() call in SAVESCREEN().
+
+  * source/rtl/dir.c
+    ! Changed FA_READONLY to FA_RDONLY
+    ! Changed FILE_RDONLY to FILE_READONLY
+
+  * source/rtl/environ.c
+    ! Added conditional definition of a Windows define
+      that is missing from some versions of Borland C.
+      Thanks to Jose Lalin.
+    + Added compiler identification to VERSION(), but
+      only if called with a parameter (any parameter)
+      based on an idea by Victor Szel.
+
+  * source/rtl/filesys.c
+    ! Added '#include <dos.h>' for Borland C in order
+      to eliminate a warning regarding '_getdrive()'.
+
+  * source/rtl/inkey.c
+    ! Restored Unix-style keyboard input, because it is
+      non-blocking under Linux/GCC.
+    + Added separate __CYGWIN__ Unix-style keyboard input,
+      because it is blocking under Win32/GCC.
+    + Actually added the Borland C Windows #elif code block
+      supplied by Jose Lalin this time.
+
+  * tests/working/inkeytst.prg
+    * Modified warning text to refer only to Cygwin.
+
+  * tests/working/version.prg
+    * Changed 'QOUT( VERSION() )' to '? VERSION()'.
+    + Added '? VERSION( .T. )' to display the compiler that
+      was used to build Harbour.exe (which does not have to
+      be the same compiler used to build the Harbour program).
+
+
 19990917-00:50 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/hardcr.c

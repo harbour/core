@@ -121,6 +121,7 @@
    #include <direct.h>
    #if defined(__BORLANDC__)
       #include <dir.h>
+      #include <dos.h>
    #endif
 
    #if defined(_MSC_VER) || defined(__MINGW32__)

@@ -36,6 +36,13 @@
 /*
  * ChangeLog:
  *
+ * V 1.39   David G. Holm               Added Borland Windows support.
+ *                                      Restored Unix support to what
+ *                                      it was in version 1.34.
+ *                                      Added separate Cygwin support and
+ *                                      set it up to cooperate between the
+ *                                      hb_inkeyGet() and hb_inkeyNext()
+ *                                      functions (but it still blocks).
  * V 1.36   David G. Holm               Added __MINGW32__ support
  * V 1.35   David G. Holm               Changed the __CYGWIN__ build to use
  *                                      the Unix keyboard input method and
@@ -78,7 +85,7 @@
 #include "inkey.h"
 #include "init.h"
 
-#if defined(__TURBOC__) || defined(__BORLANDC__) || defined(__MSC__) || defined(_MSC_VER) || defined(__MINGW32__)
+#if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__MINGW32__)
    #include <conio.h>
    #include <dos.h>
 #elif  defined(__DJGPP__)
@@ -199,9 +206,6 @@ int hb_inkey( double seconds, HB_inkey_enum event_mask, BOOL wait, BOOL forever 
    if( wait ) end_clock = clock() + seconds * CLOCKS_PER_SEC;
    s_inkeyPoll = TRUE;                         /* Force polling */
    
-/* As soon as a non-blocking way to do Unix input is implemented,
-   the #if test can be eliminated, (leaving the code intact) */
-#if ! defined(OS_UINX_COMPATIBLE) && ! defined(__CYGWIN__)
    while( wait && hb_inkeyNext() == 0 )
    {
       /* Release the CPU between checks */
@@ -211,7 +215,6 @@ int hb_inkey( double seconds, HB_inkey_enum event_mask, BOOL wait, BOOL forever 
       if( !forever && clock() >= end_clock ) wait = FALSE;
    }
    /* Get the current input event or 0 */
-#endif
    key = hb_inkeyGet();
    s_inkeyPoll = FALSE;                        /* Stop forced polling */
    s_eventmask = hb_set.HB_SET_EVENTMASK;      /* Restore original input event mask */
@@ -221,14 +224,6 @@ int hb_inkey( double seconds, HB_inkey_enum event_mask, BOOL wait, BOOL forever 
 int hb_inkeyGet( void )       /* Extract the next key from the keyboard buffer */
 {
    int key;
-#if defined(OS_UNIX_COMPATIBLE) || defined(__CYGWIN__)
-   /* This part of the #if block is temporary and needs to be removed when
-      non-blocking Unix-style keyboard input is implemented */
-   char ch;
-   read( STDIN_FILENO, &ch, 1 );
-   if( ch == '\n' ) key = '\r';
-   else key = ch;
-#else
    hb_inkeyPoll();
    if( hb_set.HB_SET_TYPEAHEAD )
    {
@@ -246,7 +241,6 @@ int hb_inkeyGet( void )       /* Extract the next key from the keyboard buffer *
    }
    else key = s_inkeyLast = s_inkeyForce; /* Typeahead support is disabled */
    s_inkeyForce = 0;
-#endif
    return key;
 }
 
@@ -263,8 +257,8 @@ int hb_inkeyNext( void )      /* Return the next key without extracting it */
    if( hb_set.HB_SET_TYPEAHEAD )
    {
       /* Proper typeahead support is enabled */
-      if( s_inkeyHead == s_inkeyTail ) key = 0;
-      else key = s_inkeyBuffer[ s_inkeyTail ];
+      if( s_inkeyHead == s_inkeyTail ) key = 0;   /* No key */
+      else key = s_inkeyBuffer[ s_inkeyTail ];    /* Next key */
    }
    else key = s_inkeyForce; /* Typeahead support is disabled */
    return key;
@@ -297,6 +291,10 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
       #if defined(__DJGPP__)
          if( s_eventmask & INKEY_EXTENDED ) ch = getxkey();
          else ch = getkey();
+      #elif defined(__BORLANDC__) && ( defined(_Windows) || defined(_WIN32) )
+         ch = getch();
+         if( !ch ) /* Is a extended key */
+         ch = getch() + 256;
       #else
          /* A key code is available in the BIOS keyboard buffer */
          ch = getch();                  /* Get the key code */
@@ -427,9 +425,22 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
          case 396:  /* Alt + F12 */
             ch = 349 - ch;
       }
-#elif defined(OS_UNIX_COMPATIBLE) || defined(__CYGWIN__)
+#elif defined(OS_UNIX_COMPATIBLE)
       /* TODO: */
-      /* NOTE: The blocking Unix support has been moved to hb_inkeyGet() */
+      if( ! read( STDIN_FILENO, &ch, 1 ) )
+         return;
+#elif defined(__CYGWIN__)
+      /* TODO: */
+      /* NOTE: Cygwin needs the Unix support, but for some reason it
+               is blocking when used in Cygwin, so it has to be handled
+               separately from the Unix support. */
+      if( s_inkeyPoll && s_inkeyHead == s_inkeyTail )
+      {
+         /* Only read keyboard input here if not called
+            from the HVM and the typeahead buffer is empty. */
+         read( STDIN_FILENO, &ch, 1 );            /* Read a key */
+         if( ch == '\n' ) ch = '\r';              /* Convert LF to CR */
+      }
 #else
       /* TODO: Support for other platforms, such as Mac */
 #endif

@@ -65,11 +65,15 @@
    #endif
 #endif
 
+#if defined(__BORLANDC__) && defined(_Windows) && ! defined(VER_PLATFORM_WIN32_WINDOWS)
+   #define VER_PLATFORM_WIN32_WINDOWS 1
+#endif
+
 #include "extend.h"
 #include "errorapi.h"
 #include "hbver.h"
 
-#if defined(__TURBOC__) || defined(__BORLANDC__) || defined(__MSC__) || defined(_MSC_VER) || defined(__DJGPP__) || defined(__MINGW32__)
+#if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__DJGPP__) || defined(__MINGW32__)
    #include <dos.h>
    #include <stdlib.h>
 #endif
@@ -136,7 +140,7 @@ HARBOUR HB_OS( void )
 #else
 
 /* TODO: add MSVC support but MSVC cannot detect any OS except Windows! */
-#if defined(__TURBOC__) || defined(__BORLANDC__) || defined(__MSC__) || defined(_MSC_VER) || defined(__MINGW32__)
+#if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__MINGW32__)
 
 #if defined(_Windows) || defined(_WIN32) || defined(__MINGW32__)
 
@@ -176,7 +180,7 @@ HARBOUR HB_OS( void )
       cformat = "%s %d.%02d.%04d";
    }
 #else
-#if defined(__MSC__) || defined(_MSC_VER)
+#if defined(_MSC_VER)
       if( _osmode == _WIN_MODE )
       {
          hb_os = "Windows";
@@ -195,7 +199,7 @@ HARBOUR HB_OS( void )
          hb_osletter = 0;
          hb_os = "Windows";
       }
-#endif /* __MSC__ */
+#endif /* _MSC_VER */
       else
       {
          hb_os = "DOS";
@@ -251,7 +255,7 @@ HARBOUR HB_OS( void )
          hb_osletter = 0;
       }
    }
-#endif /* __TURBOC__ or __BORLANDC__ or __MSC__ 0r __DJGPP__ */
+#endif /* __TURBOC__ or __BORLANDC__ or _MSC_VER 0r __DJGPP__ */
 #ifdef __DJGPP__
    hb_os = hb_xgrab( strlen( _os_flavor ) + 1 );
    strcpy( hb_os, _os_flavor );
@@ -283,6 +287,59 @@ HARBOUR HB_VERSION( void )
 
    sprintf( hb_ver, "Harbour %d.%d Intl. (Build %d%s)  (%04d.%02d.%02d)",
       hb_major, hb_minor, hb_build, hb_revision, hb_year, hb_month, hb_day );
+
+   if( hb_pcount() == 1 )
+   {
+      /* Optionally include the Compiler name and version, if available. */
+      char * compiler = (char *) 0;
+      int version = 0;
+
+   #if defined(__IBMCPP__)
+      compiler = "IBM C++";
+      version = __IBMCPP__;
+   #elif defined(__BORLANDC__)
+      compiler = "Borland C";
+      version = __BORLANDC__;
+   #elif defined(__TURBOC__)
+      compiler = "Turbo C";
+      version = __TURBOC__;
+   #elif defined(_MSC_VER)
+      compiler = "Microsoft C";
+      version = _MSC_VER;
+   #elif defined(__MPW__)
+      compiler = "MPW C";
+      version = __MPW__;
+   #elif defined(__WATCOMC_)
+      compiler = "Watcom C";
+      version = __WATCOMC__;
+   #elif defined(__DJGPP__)
+      compiler = "Delorie GCC";
+      version = __DJGPP__;
+   #elif defined(__CYGWIN__)
+      compiler = "Cygnus GCC (cygwin)";
+      version = __CYGWIN__;
+   #elif defined(__MINGW32__)
+      compiler = "Cygnus GCC (mingw32)";
+      version = __MINGW32__;
+   #elif defined(__GNUC__)
+      compiler = "GNU C";
+      version = __GNUC__;
+   #endif
+      if( compiler )
+      {
+         strncat( hb_ver, " (", sizeof( hb_ver ) );
+         strncat( hb_ver, compiler, sizeof( hb_ver ) );
+         if( version )
+         {
+            char buf[ 40 ];
+            sprintf( buf, "(%d)", version );
+            strncat( hb_ver, " ", sizeof( hb_ver ) );
+            strncat( hb_ver, buf, sizeof( hb_ver ) );
+         }
+         strncat( hb_ver, ")", sizeof( hb_ver ) );
+         hb_ver[ sizeof( hb_ver ) - 1 ] = '\0';
+      }
+   }
 
    hb_retc( hb_ver );
 }
@@ -336,7 +393,7 @@ HARBOUR HB_GETENV( void )
 
 HARBOUR HB___RUN( void )
 {
-#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__) || defined(__MSC__) || defined(_MSC_VER) || defined(__IBMCPP__) || defined(HARBOUR_GCC_OS2) || defined(__CYGWIN__) || defined(__MINGW32__)
+#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__) || defined(_MSC_VER) || defined(__IBMCPP__) || defined(HARBOUR_GCC_OS2) || defined(__CYGWIN__) || defined(__MINGW32__)
    if( ISCHAR( 1 ) )
       system( hb_parc( 1 ) );
 #else

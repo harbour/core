@@ -134,9 +134,13 @@ system. To check this, type "make -v"; you should see
 Then, you must set a couple of environment variables that indicate
 your architecture and compiler.
 
-For gcc on Win95/WinNT:
+For gcc on Win95/WinNT with the Cygwin library:
   HB_ARCHITECTURE   win32
   HB_COMPILER       gcc
+
+For gcc on Win95/WinNT with the Mingw32 library:
+  HB_ARCHITECTURE   win32
+  HB_COMPILER       mingw32
 
 For MSVC on Win95/WinNT:
   HB_ARCHITECTURE   win32
@@ -218,5 +222,8 @@ test programs, change to the 'test' directory.
 
 If you are using a DOS-based operating system, then you can build any
 program in tests/working by using the build batch file. For example,
-'build scroll' will rebuild the scroll.prg module. This can also be used
-for modules that aren't in the Makefile.
+'build scroll' will rebuild the scroll.prg program and then run it. This
+can also be used for modules that aren't in the Makefile. You can also
+pass parameters to the program. For example, 'build readfile harbour.ini'
+will rebuild the readfile.prg program and run it with 'harbour.ini' as a
+command line parameter.

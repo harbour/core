@@ -10,6 +10,7 @@
 
 function Main()
 
-   QOUT( VERSION() )
+   ? VERSION()
+   ? VERSION(.T.)
 
 return nil

@@ -17,10 +17,10 @@ LOCAL nKey, nMask, cText
    /* NOTE: When non-blocking Unix-style keyboard input is implemented,
             remove the next few lines... */
    ?
-   ? "Note: All but the last test will fail for Harbour builds with Unix-style"
-   ? "      keyboard input. The TYPEAHEAD tests will enter an infinite loop."
-   ? "      To run only the last test, break out of this program and run it"
-   ? "      again with any parameter (for example, INKEYTST X)."
+   ? "Note: If you are using a Cygnus CYGWIN build of Harbour, some of the"
+   ? "      keyboard tests will not give the correct results, you will have"
+   ? "      to press a key even when the prompt indicates a timeout, and you"
+   ? "      may have to press an extra key in order to get the test results."
 
    ?
    ? "Testing the KEYBOARD and CLEAR TYPEAHEAD commands and the"
