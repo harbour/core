@@ -1,3 +1,9 @@
+19990601-09:50 CET Eddie Runia
+   * include/cgi.ch, tests/working/testcgi.prg
+     CGI test program added
+   * tests/working/run_exp.h
+     GetEnv() added
+
 19990531-23:05 CET Eddie Runia
    * source/compiler/harbour.y
      determination of symbol scope now correct.

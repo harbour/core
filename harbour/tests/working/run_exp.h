@@ -129,6 +129,7 @@ HARBOUR HB_FGOTO();
 HARBOUR HB_FEOF();
 HARBOUR HB_FREADLN();
 HARBOUR HB_FSKIP();
+HARBOUR GETENV();
 
 /* Same story.
 
@@ -260,7 +261,8 @@ static SYMBOL symbols[] = {
 { "HB_FGOTO",       FS_PUBLIC, HB_FGOTO      , 0 },
 { "HB_FEOF",        FS_PUBLIC, HB_FEOF       , 0 },
 { "HB_FREADLN",     FS_PUBLIC, HB_FREADLN    , 0 },
-{ "HB_FSKIP",       FS_PUBLIC, HB_FSKIP      , 0 }
+{ "HB_FSKIP",       FS_PUBLIC, HB_FSKIP      , 0 },
+{ "GETENV",         FS_PUBLIC, GETENV        , 0 }
 };
 
 
