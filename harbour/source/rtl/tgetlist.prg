@@ -300,7 +300,7 @@ METHOD GetPostValidate() CLASS TGetList
    endif
 
    if oGet:BadDate()
-      oGet:Home()
+      oGet:SetFocus()
       ::DateMsg()
       ::ShowScoreboard()
       return .f.
@@ -522,4 +522,3 @@ FUNCTION ReadExit( lExit )
 
 FUNCTION ReadInsert( lInsert )
    RETURN Set( _SET_INSERT, lInsert )
-

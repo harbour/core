@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Get Class
  *
@@ -37,11 +33,9 @@
 #include "color.ch"
 #include "common.ch"
 #include "setcurs.ch"
-
-/* TODO: Scrolling buffer support. */
-/* TOFIX: Handling of date. */
-/* TODO: Missing methods. */
-/* TOFIX: WordLeft(), WordRight() methods */
+#include "getexit.ch"
+#include "inkey.ch"
+#include "set.ch"
 
 #define GET_CLR_UNSELECTED	0
 #define GET_CLR_ENHANCED        1
@@ -113,11 +107,15 @@ CLASS TGet
    // Protected
 
    DATA cPicMask, cPicFunc, nMaxLen, lEdit, lDecRev, lPicComplex
+   DATA nDispLen, nDispPos, nOldPos
 
    METHOD DeleteAll()
    METHOD IsEditable( nPos )
    METHOD Input( cChar )
    METHOD PutMask( cBuffer, lEdit )
+
+   METHOD HasScroll() INLINE ( ::nDispLen != ::nMaxLen )
+   METHOD SetPos()    INLINE SetPos( ::Row, ::Col + ::Pos - ::nDispPos  )
 
 ENDCLASS
 
@@ -129,6 +127,8 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS TGet
    local nAt
    local nFor
    local cNum
+
+   cNum := ""
 
    DEFAULT nRow       TO Row()
    DEFAULT nCol       TO Col()
@@ -158,6 +158,8 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS TGet
    ::SubScript  := Nil
    ::Type       := Valtype( ::Original )
    ::TypeOut    := .f.
+   ::nDispPos   := 1
+   ::nOldPos    := 0
 
    // Existe function en picture
 
@@ -174,8 +176,11 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS TGet
          for nFor := nAt + 1 to Len( ::cPicFunc )
             if !IsDigit( SubStr( ::cPicFunc, nFor, 1 ) )
                exit
+            else
+               cNum += SubStr( ::cPicFunc, nFor, 1 )
             endif
          next
+         ::nDispLen := Val(cNum)
          ::cPicFunc := SubStr( ::cPicFunc, 1, nAt - 1 ) + SubStr( ::cPicFunc, nFor )
          if ::cPicFunc == "@"
             ::cPicFunc := ""
@@ -199,8 +204,11 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS TGet
 
          ::cPicMask := Set( _SET_DATEFORMAT )
          ::cPicMask := StrTran( ::cPicmask, "y", "9" )
+         ::cPicMask := StrTran( ::cPicmask, "Y", "9" )
          ::cPicMask := StrTran( ::cPicmask, "m", "9" )
+         ::cPicMask := StrTran( ::cPicmask, "M", "9" )
          ::cPicMask := StrTran( ::cPicmask, "d", "9" )
+         ::cPicMask := StrTran( ::cPicmask, "D", "9" )
 
       case ::type == "N"
 
@@ -230,18 +238,34 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS TGet
       Next
    endif
 
-   ::buffer := ::PutMask( ::Original, .f. )
+   ::buffer  := ::PutMask( ::Original, .f. )
+   ::nMaxLen := len(::buffer)
+
+   if ::nDispLen == Nil
+      ::nDispLen := ::nMaxLen
+   endif
 
 return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD Display() CLASS TGet
+METHOD Display(lForced) CLASS TGet
 
    local nOldCursor := SetCursor( SC_NONE )
 
-   DispOutAt( ::Row, ::Col,;
-      ::buffer, hb_ColorIndex( ::ColorSpec, iif( ::HasFocus, GET_CLR_ENHANCED, GET_CLR_UNSELECTED ) ) )
+   DEFAULT lForced TO .t.
+
+   if ::HasScroll() .and. ::Pos != Nil
+      ::nDispPos := Max( 1, Min( ::Pos - Int( ::nDispLen / 2 ), ::nMaxLen - ::nDispLen + 1 ) )
+   endif
+
+   if lForced .or. (::nDispPos != ::nOldPos)
+      DispOutAt( ::Row, ::Col,;
+                 Substr(::buffer, ::nDispPos, ::nDispLen), ;
+                 hb_ColorIndex( ::ColorSpec, iif( ::HasFocus, GET_CLR_ENHANCED, GET_CLR_UNSELECTED ) ) )
+   endif
+
+   ::nOldPos := ::nDispPos
 
    SetCursor( nOldCursor )
 
@@ -261,7 +285,8 @@ METHOD End() CLASS TGet
          ::Pos := ::nMaxLen
       endif
       ::Clear := .f.
-      SetPos( ::Row, ::Col + ::Pos - 1 )
+      ::Display(.f.)
+      ::SetPos()
    endif
 
 return nil
@@ -273,7 +298,9 @@ METHOD Home() CLASS TGet
    if ::HasFocus
       ::Pos := 1
       ::Clear := .f.
-      SetPos( ::Row, ::Col + ::Pos - 1 )
+      //SetPos( ::Row, ::Col + ::Pos - 1 )
+      ::Display(.f.)
+      ::SetPos()
    endif
 
 return nil
@@ -323,13 +350,13 @@ METHOD SetFocus() CLASS TGet
    endif
 
    if ::type == "D"
-      ::BadDate := ( At( "  ", DToC( CToD( ::buffer ) ) ) != 0 )
+      ::BadDate := ( Dtoc( Ctod( ::buffer ) ) != ::buffer )
    else
       ::BadDate := .f.
    endif
 
    ::Display()
-   SetPos( ::Row, ::Col + ::Pos - 1 )
+   ::SetPos()
 
 return Self
 
@@ -423,7 +450,7 @@ return xValue
 METHOD overstrike( cChar ) CLASS TGet
 
    if ::type == "N" .and. !::lEdit
-      ::pos := 1
+      ::pos      := 1
    endif
 
    if ::Clear .and. ::pos == 1
@@ -433,18 +460,16 @@ METHOD overstrike( cChar ) CLASS TGet
    endif
 
    if !::lEdit
-
       ::buffer := ::PutMask( ::VarGet(), .t. )
       ::lEdit := .t.
+   endif
 
-      do while !::IsEditable( ::pos ) .and. ::pos <= ::nMaxLen
-         ::pos++
-      enddo
+   do while !::IsEditable( ::pos ) .and. ::pos <= ::nMaxLen
+      ::pos++
+   enddo
 
-      if ::pos > ::nMaxLen
-         ::pos := 1
-      endif
-
+   if ::pos > ::nMaxLen
+      ::pos := 1
    endif
 
    cChar := ::Input( cChar )
@@ -460,19 +485,23 @@ METHOD overstrike( cChar ) CLASS TGet
    ::Right()
 
    if ::type == "D"
-      ::BadDate := ( At("  ", DToC( CToD( ::buffer ) ) ) != 0 )
+      ::BadDate := ( Dtoc( Ctod( ::buffer ) ) != ::buffer )
    else
       ::BadDate := .f.
    endif
 
    ::Display()
-   SetPos( ::Row, ::Col + iif( ::Pos != nil, ::Pos - 1, 0 ) )
+   ::SetPos()
 
 return Self
 
 //---------------------------------------------------------------------------//
 
 METHOD Insert( cChar ) CLASS TGet
+
+   local cOver
+   local cTmp
+   local nPos
 
    if ::type == "N" .and. !::lEdit
       ::pos := 1
@@ -489,26 +518,48 @@ METHOD Insert( cChar ) CLASS TGet
       ::lEdit := .t.
    endif
 
+   do while !::IsEditable( ::pos ) .and. ::pos <= ::nMaxLen
+      ::pos++
+   enddo
+
+   if ::pos > ::nMaxLen
+      ::pos := 1
+   endif
+
    cChar := ::Input(cChar)
 
    if cChar == ""
       ::Rejected := .t.
       return Self
+   else
+      ::Rejected := .f.
    endif
 
-   ::buffer  := Left( SubStr( ::buffer, 1, ::Pos - 1 ) + cChar + SubStr( ::buffer, ::Pos ), ::nMaxLen )
+   cOver    := Substr( ::buffer, ::Pos, 1 )
+   ::buffer := Substr( ::buffer, 1, ::Pos-1 ) + cChar + Substr( ::buffer, ::Pos+1 )
+   nPos     := ::Pos + 1
+
+   do while nPos <= ::nMaxLen
+      if ::IsEditable( nPos )
+         cTmp     := Substr( ::buffer, nPos, 1 )
+         ::buffer := Substr( ::buffer, 1, nPos - 1 ) + cOver + Substr( ::buffer, nPos + 1 )
+         cOver    := cTmp
+      endif
+      nPos++
+   enddo
+
    ::Changed := ( ::unTransform() != ::Original )
    ::Assign()
    ::Right()
 
    if ::type == "D"
-      ::BadDate := ( At( "  ", DToC( CToD( ::buffer ) ) ) != 0 )
+      ::BadDate := ( Dtoc( Ctod( ::buffer ) ) != ::buffer )
    else
       ::BadDate := .f.
    endif
 
    ::Display()  // Kwon,Oh-Chul
-   SetPos( ::Row, ::Col + iif( ::Pos != nil, ::Pos - 1, 0 ) )
+   ::SetPos()
 
 return Self
 
@@ -542,7 +593,8 @@ METHOD _Right() CLASS TGet
       ::TypeOut := .t.
    endif
 
-   SetPos( ::Row, ::Col + ::Pos - 1 )
+   ::Display(.f.)
+   ::SetPos()
 
 return Self
 
@@ -576,7 +628,8 @@ METHOD _Left() CLASS TGet
       ::TypeOut := .t.
    endif
 
-   SetPos( ::Row, ::Col + ::Pos - 1 )
+   ::Display(.f.)
+   ::SetPos()
 
 return Self
 
@@ -600,7 +653,19 @@ METHOD WordLeft() CLASS TGet
 
    nPos := ::Pos - 1
 
-   do while SubStr( ::buffer, nPos, 1 ) != " " .and. nPos > 0
+   do while nPos > 0
+      if SubStr( ::buffer, nPos, 1 ) == " "
+         do while nPos > 0 .and. SubStr( ::buffer, nPos, 1 ) == " "
+            nPos--
+         Enddo
+         do while nPos > 0 .and. SubStr( ::buffer, nPos, 1 ) != " "
+            nPos--
+         Enddo
+         if nPos > 0
+            nPos++
+         endif
+         Exit
+      endif
       nPos--
    Enddo
 
@@ -608,7 +673,8 @@ METHOD WordLeft() CLASS TGet
       ::Pos := nPos
    endif
 
-   SetPos( ::Row, ::Col + ::Pos - 1 )
+   ::Display(.f.)
+   ::SetPos()
 
 return Self
 
@@ -632,7 +698,13 @@ METHOD WordRight() CLASS TGet
 
    nPos := ::Pos + 1
 
-   do while SubStr( ::buffer, nPos, 1 ) != " " .and. nPos <= ::nMaxLen
+   do while nPos <= ::nMaxLen
+      if SubStr( ::buffer, nPos, 1 ) == " "
+         do while nPos <= ::nMaxLen .and. SubStr( ::buffer, nPos, 1 ) == " "
+            nPos++
+         Enddo
+         Exit
+      endif
       nPos++
    Enddo
 
@@ -640,7 +712,8 @@ METHOD WordRight() CLASS TGet
       ::Pos := nPos
    endif
 
-   SetPos( ::Row, ::Col + ::Pos - 1 )
+   ::Display(.f.)
+   ::SetPos()
 
 return Self
 
@@ -656,8 +729,8 @@ METHOD ToDecPos() CLASS TGet
    ::buffer := ::PutMask( ::UnTransform(), .t. )
    ::pos    := ::DecPos + 1
 
-   ::Display()
-   SetPos( ::Row, ::Col + ::Pos - 1 )
+   ::Display(.f.)
+   ::SetPos()
 
 return .t.
 
@@ -693,6 +766,8 @@ return .f.
 //---------------------------------------------------------------------------//
 
 METHOD Input( cChar ) CLASS TGet
+
+   local cPic
 
    do case
    case ::type == "N"
@@ -731,8 +806,29 @@ METHOD Input( cChar ) CLASS TGet
       cChar := Transform( cChar, ::cPicFunc )
    endif
 
+
    if !Empty( ::cPicMask )
-      cChar := Transform( cChar, SubStr( ::cPicMask, ::pos, 1 ) )
+      cPic  := Substr( ::cPicMask, ::pos, 1 )
+
+      cChar := Transform( cChar, cPic )
+      do case
+      case cPic == "A"
+         if !IsAlpha( cChar )
+            cChar := ""
+         endif
+      case cPic == "N"
+         if !IsAlpha( cChar ) .and. !IsDigit( cChar )
+            cChar := ""
+         endif
+      case cPic == "9"
+         if !IsDigit( cChar )
+            cChar := ""
+         endif
+      case cPic == "#"
+         if !IsDigit( cChar ) .and. cChar != " " .and.  !( cChar$"+-" )
+            cChar := ""
+         endif
+      end case
    endif
 
 return cChar
@@ -750,6 +846,10 @@ METHOD PutMask( xValue, lEdit ) CLASS TGet
 
    DEFAULT xValue TO ::VarGet()
    DEFAULT lEdit  TO ::HasFocus
+
+   if xValue == Nil
+      return ""
+   endif
 
    cBuffer := Transform( xValue, Alltrim( ::cPicFunc + " " + ::cPicMask ) )
 
@@ -775,21 +875,25 @@ return cBuffer
 
 //---------------------------------------------------------------------------//
 
-METHOD BackSpace() CLASS TGet
+METHOD BackSpace( lDisplay ) CLASS TGet
 
    local nPos := ::Pos
+
+   DEFAULT lDisplay TO .t.
 
    ::Left()
 
    if ::Pos < nPos
-      ::Delete()
+      ::Delete( lDisplay )
    endif
 
 return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD _Delete() CLASS TGet
+METHOD _Delete( lDisplay ) CLASS TGet
+
+   DEFAULT lDisplay TO .t.
 
    do case
    case ::type == "C"
@@ -818,8 +922,11 @@ METHOD _Delete() CLASS TGet
    endcase
 
    ::Assign()
-   ::Display()
-   SetPos( ::Row, ::Col + iif( ::Pos != nil, ::Pos - 1, 0 ) )
+
+   if lDisplay
+      ::Display()
+      ::SetPos()
+   endif
 
 return Self
 
@@ -850,31 +957,99 @@ return Self
 
 METHOD DelEnd() CLASS TGet
 
-   /* TODO: Implement DelEnd() */
+   local nPos := ::Pos
+
+   if !::hasfocus
+      return Self
+   endif
+
+   ::Pos := ::nMaxLen
+
+   do while ::Pos > nPos
+      ::BackSpace(.f.)
+   enddo
+
+   ::Display()
+   ::SetPos()
 
 return Self
+
+//---------------------------------------------------------------------------//
 
 METHOD DelLeft() CLASS TGet
 
-   /* TODO: Implement DelLeft() */
+   ::Left()
+   ::Delete()
+   ::Right()
 
 return Self
+
+//---------------------------------------------------------------------------//
 
 METHOD DelRight() CLASS TGet
 
-   /* TODO: Implement DelRight() */
+   ::Right()
+   ::Delete()
+   ::Left()
 
 return Self
+
+//---------------------------------------------------------------------------//
 
 METHOD DelWordLeft() CLASS TGet
 
-   /* TODO: Implement DelWordLeft() */
+   if !::hasfocus
+      return Self
+   endif
+
+   if SubStr( ::buffer, ::Pos, 1 ) != " "
+      if  SubStr( ::buffer, ::Pos - 1 , 1 ) == " "
+         ::BackSpace(.f.)
+      else
+         ::WordRight()
+         ::Left()
+      endif
+   endif
+
+   if SubStr( ::buffer, ::Pos, 1 ) == " "
+      ::Delete(.f.)
+   endif
+
+   do while ::Pos > 1 .and. SubStr( ::buffer, ::Pos - 1, 1 ) != " "
+      ::BackSpace(.f.)
+   Enddo
+
+   ::Display()
+   ::SetPos()
 
 return Self
 
+//---------------------------------------------------------------------------//
+
 METHOD DelWordRight() CLASS TGet
 
-   /* TODO: Implement DelWordRight() */
+   if !::hasfocus
+      return Self
+   endif
+
+   ::TypeOut := .f.
+   ::Clear   := .f.
+
+   if ::pos == ::nMaxLen
+      ::TypeOut := .t.
+      return Self
+   endif
+
+   do while ::Pos <= ::nMaxLen .and. SubStr( ::buffer, ::Pos, 1 ) != " "
+      ::Delete(.f.)
+   Enddo
+
+   if ::Pos <= ::nMaxLen
+      ::Delete(.f.)
+   endif
+
+   ::Display()
+   ::SetPos()
 
 return Self
 
@@ -898,5 +1073,3 @@ function _GET_( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
    oGet:PostBlock := bValid
 
    return oGet
-
-//---------------------------------------------------------------------------//
