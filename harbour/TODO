@@ -11,8 +11,6 @@ _______________________________________________________________________
           Topic                              Responsible developer(s)
 ===================================          =========================
 
-Mlctopos() and Mpostolc()                    Ignacio Ortiz
-
 SET listener API                             David Holm
 
 DBFCDX support                               Ryszard Glab
@@ -25,21 +23,13 @@ string copies)
 Map Harbour functions 10 chars to be         Luiz Rafael Culik
 compatible with Caclipper
 
-Optimize out the need for the PUSHNIL        ???
+Optimize out the need for the PUSHNIL        Ryszard Glab
 opcode before each function call.
-
-Eliminate the "#pragma pack" type of hacks   ???
-from the code (especially RDD), to make it
-more multiplatform. This mostly involves
-changing the direct writing of structures
-to the disk.
 
 OO system                                    Jean-Francois Lefebvre (JFL)
    Adding Class Method
    Adding Multiple Constructor
    Adding Class init Support
-
-
 
 Integrate floating point methods to          ???
 avoid inequalities at 13 or more

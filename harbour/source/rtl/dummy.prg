@@ -61,7 +61,6 @@ FUNCTION ordIsUnique()     ; RETURN .F.
 FUNCTION ordKeyAdd()       ; RETURN .F.
 FUNCTION ordKeyDel()       ; RETURN .F.
 FUNCTION ordKeyGoto()      ; RETURN .F.
-/*FUNCTION ordKeyVal()       ; RETURN NIL */
 FUNCTION ordSetRelation()  ; RETURN NIL
 FUNCTION ordSkipUnique()   ; RETURN .F.
 #endif

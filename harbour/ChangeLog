@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-15 12:32 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * TODO
+     * Updated
+
+   * source/rtl/dummy.prg
+     - Removed commented line.
+
 2001-12-15 12:24 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * include/hbver.h
