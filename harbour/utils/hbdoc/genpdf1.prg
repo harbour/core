@@ -173,7 +173,7 @@ local hhh
    hb_pdfnewpage("Harbour Guide",'Harbour Guide')
    hb_pdfendpage()
    else
-   ? 'im here'
+//   ? 'im here'
    HB_PDFNEW("pdf\harbour.pdf")
    hb_pdfnewpage("Harbour Guide",'Harbour Guide')
    hb_pdfinitbook(aResult)
@@ -210,17 +210,21 @@ local hhh
          //  Read a line
          cBuffer:=ReadLN( @lEof )
          if !lmemory
-            ? valtype(cBuffer)
-            ? cBuffer
+//            ? valtype(cBuffer)
+//            ? cBuffer
             fWrite(hhh,cBuffer+hb_osnewline())
 //            cBuffer:=" "
          Endif
-         if !lmemory
-         cBuffer := TRIM( SUBSTR( cBuffer, nCommentLen ) )
+         if len(cBuffer)<nCommentLen
+            cBuffer:="    "
          else
-         cBuffer :=  SUBSTR( cBuffer, nCommentLen )
+         if lmemory
+            cBuffer :=  SUBSTR( cBuffer, nCommentLen )
+         else
+            cBuffer := TRIM( SUBSTR( cBuffer, nCommentLen ) )
          endif
-         cBuffer := STRTRAN( cBuffer, CHR( 10 ), "" )
+            cBuffer := STRTRAN( cBuffer, CHR( 10 ), "" )
+         endif
          nLineCnt ++
 //         IF nLineCnt % 10 = 0
             @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )         
@@ -257,10 +261,10 @@ local hhh
                ENDIF
                AADD( aDocInfo, { cCategory, cFuncName, cOneLine, cFileName } )
                if lMemory
-               nPos := ascan(aResult,{|a| UPPER(a) == UPPER(cCategory)})
-               if nPos==0
-                  aadd(aResult,cCategory)
-               endif
+                  nPos := ascan(aResult,{|a| UPPER(a) == UPPER(cCategory)})
+                     if nPos==0
+                        aadd(aResult,cCategory)
+                  endif
                endif
                //  Now close down this little piece
                lDoc := .F.
@@ -408,6 +412,9 @@ local hhh
                   else
 //                  oPdf:WriteTitle( PAD( cFuncName, 40 ), cFuncName ,cCategory,.t.)
                   HB_PDFNEWPAGE( PAD( cFuncName, 40 ), cFuncName)
+                  if empty(cCategory)
+                     cCategory                     := "Dos"
+                  endif
                   HB_PDFBOOKMARK(  cCategory,cFuncName,{|x| UPPER(x[1])==UPPER(cCategory )} )
 //                  HB_PDFINITBOOK(awww)
                   endif
@@ -698,8 +705,8 @@ local hhh
 HB_PDFCLOSE()
    if lmemory
 //      ferase('pdf\temp.pdf')
-fclose(hhh)
    endif
+fclose(hhh)
 
 RETURN Nil
 

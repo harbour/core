@@ -381,6 +381,11 @@ If Len( aCs ) > 0
          cTemp := Strtran( acs[ nPos ], ".c", ".prg" )
          If File( cTemp )
             Aadd( aPrgs, Strtran( acs[ nPos ], ".c", ".prg" ) )
+         else
+            cTemp := Strtran( acs[ nPos ], ".C", ".PRG" )
+               If File( cTemp )
+                  Aadd( aPrgs, Strtran( acs[ nPos ], ".C", ".PRG" ) )
+            endif
          Endif
       Endif
    Next
@@ -752,6 +757,13 @@ For nCount := 1 To Len( aOrder )
       If nPos > 0
          cComm := aCommands[ nPos, 2 ]
          cOld  := cComm
+      else
+         nPos := Ascan( aCommands, { | x, y | x[ 1 ] == ".PRG.C:" } )
+            If nPos > 0
+            cComm := aCommands[ nPos, 2 ]
+            cOld  := cComm
+         endif
+
       Endif
       For nFiles := 1 To Len( aPrgs )
          
@@ -767,13 +779,28 @@ For nCount := 1 To Len( aOrder )
    Endif
    If aOrder[ nCount ] == "$(OBJFILES)"
       If lGcc
-         nPos := Ascan( aCommands, { | x, y | x[ 1 ] == ".c.o:" } )
+         nPos := Ascan( aCommands, { | x, y | x[ 1 ] == ".c.o:" } )       
       Else
          nPos := Ascan( aCommands, { | x, y | x[ 1 ] == ".c.obj:" } )
       Endif
       If nPos > 0
          cComm := aCommands[ nPos, 2 ]
          cOld  := ccomm
+      else
+         if lGcc
+            nPos := Ascan( aCommands, { | x, y | x[ 1 ] == ".C.O:" } )
+            If nPos > 0
+               cComm := aCommands[ nPos, 2 ]
+               cOld  := cComm
+            endif
+         else
+         nPos := Ascan( aCommands, { | x, y | x[ 1 ] == ".C.OBJ:" } )
+            If nPos > 0
+            cComm := aCommands[ nPos, 2 ]
+            cOld  := cComm
+         endif
+
+      endif
       Endif
       For nFiles := 1 To Len( aCs )
 /*         if at("$",acs[nFiles])>0
@@ -1298,6 +1325,12 @@ For nCount := 1 To Len( aOrder )
       If nPos > 0
          cComm := aCommands[ nPos, 2 ]
          cOld  := cComm
+      else
+         nPos := Ascan( aCommands, { | x, y | x[ 1 ] == ".PRG.C:" } )
+            If nPos > 0
+            cComm := aCommands[ nPos, 2 ]
+            cOld  := cComm
+         endif
       Endif
       For nFiles := 1 To Len( aPrgs )
          nPos := Ascan( aCs, { | x | Left( x, At( ".", x ) ) == Left( aPrgs[ nFiles ], At( ".", aPrgs[ nFiles ] ) ) } )
@@ -1322,6 +1355,12 @@ For nCount := 1 To Len( aOrder )
       If nPos > 0
          cComm := aCommands[ nPos, 2 ]
          cOld  := ccomm
+      else
+         If lGcc
+            nPos := Ascan( aCommands, { | x, y | x[ 1 ] == ".C.O:" } )
+         Else
+            nPos := Ascan( aCommands, { | x, y | x[ 1 ] == ".C.OBJ:" } )
+         endif
       Endif
       For nFiles := 1 To Len( aCtocompile )
          nPos := Ascan( aObjs, { | x | Left( x, At( ".", x ) ) == Left( aCtocompile[ nFiles ], At( ".", aCtocompile[ nFiles ] ) ) } )

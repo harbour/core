@@ -299,7 +299,7 @@ For nPos:=1 to nSize
     endif
 next
 cItem:=Alltrim(cItem)
-   FWRITE( Self:nHandle, '\par \pard\cf1\fs20       {\f6\uldb Related Topic }'+'{\v\f6 !ALink(" '+cItem + '", 2) }'+ CRLF )
+   FWRITE( Self:nHandle, '\par \pard\cf1\fs20       \{button , ALink('+cItem + ', 2) \}{\f6\uldb Related Topic }'+'{\v\f6 %!ALink(" '+cItem + '", 2) }'+ CRLF )
 else
 For nPos:=1 to nSize
     FWRITE( Self:nHandle, '\par \pard\cf1\fs20       {\f6\uldb '+aLink[nPos] +' }{\v\f6 !KLink(" '+UPPERLOWER(aLink[nPos]) + '", 2) }'+ CRLF )
