@@ -1,3 +1,9 @@
+19990530-21:30 CET Eddie Runia
+   * source/rtl/classes.c; source/rtl/tclass.prg
+     initializer and release ready for inheritance
+   * tests/working/inherit.prg
+     init test added
+
 19990530-12:12 EST Les. Griffith
    * added logic for hb_file in files.c
    * added test filexist.prg to test hb_file() in tests working

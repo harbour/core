@@ -30,6 +30,7 @@ typedef struct
 {
    char *  szName;
    WORD    wDatas;
+   WORD    wDataFirst;   /* First wData from this class */
    PMETHOD pMethods;
    WORD    wMethods;
    WORD    wHashKey;
@@ -60,12 +61,12 @@ HARBOUR CLASSCREATE() /* cClassName, nDatas, hSuper --> hClass */
    pClasses[ wClasses ].szName = ( char * ) _xgrab( _parclen( 1 ) + 1 );
    strcpy( pClasses[ wClasses ].szName, _parc( 1 ) );
 
-
    if( hSuper )
    {
       hSuper--;
-      pClasses[ wClasses ].wDatas   = pClasses[ hSuper ].wDatas;
-      pClasses[ wClasses ].wMethods = pClasses[ hSuper ].wMethods;
+      pClasses[ wClasses ].wDataFirst = pClasses[ hSuper ].wDatas;
+      pClasses[ wClasses ].wDatas     = pClasses[ hSuper ].wDatas + _parni(2);
+      pClasses[ wClasses ].wMethods   = pClasses[ hSuper ].wMethods;
       pClasses[ wClasses ].pClassDatas =
          hb_arrayClone( pClasses[ hSuper ].pClassDatas );
       pClasses[ wClasses ].pInlines =
@@ -79,7 +80,8 @@ HARBOUR CLASSCREATE() /* cClassName, nDatas, hSuper --> hClass */
    }
    else
    {
-      pClasses[ wClasses ].wDatas   = _parni( 2 );
+      pClasses[ wClasses ].wDatas = _parni( 2 );
+      pClasses[ wClasses ].wDataFirst = 0;
       pClasses[ wClasses ].pMethods = ( PMETHOD ) _xgrab( 100 * sizeof( METHOD ) );
       pClasses[ wClasses ].wMethods = 0;
       pClasses[ wClasses ].wHashKey = 25; /* BUCKET = 4 repetitions */
@@ -444,7 +446,7 @@ HARBOUR CLASSINSTANCE() /* hClass --> oNewObject */
       wLimit = pClass->wHashKey * BUCKET;
       for( wAt = 0; wAt < wLimit; wAt++ )
       {
-         if( pClass->pMethods[ wAt ].pInitValue )
+         if(  pClass->pMethods[ wAt ].pInitValue )
          {
             hb_itemArrayPut( &stack.Return,
                              pClass->pMethods[ wAt ].wData,
@@ -537,7 +539,8 @@ void ReleaseClass( PCLASS pClass )
 
    wLimit   = pClass->wHashKey * BUCKET;
    for( wAt = 0; wAt < wLimit; wAt++ )          /* Release initializers     */
-      if( pClass->pMethods[ wAt ].pInitValue )
+      if( pClass->pMethods[ wAt ].pInitValue &&
+          pClass->pMethods[ wAt ].wData > pClass->wDataFirst )
          hb_itemRelease( pClass->pMethods[ wAt ].pInitValue );
 
    _xfree( pClass->szName );
@@ -589,6 +592,15 @@ HARBOUR OSEND()             /* <xRet> = oSend( <oObj>, <cSymbol>, <xArg,..> */
 }
 
 
+HARBOUR __WDATAS()           /* <nSeq> = __wDatas( <hClass> )  */
+{
+   WORD  wClass   = _parnl( 1 );
+
+   if( wClass )
+      _retni( pClasses[ wClass - 1 ].wDatas );  /* Return number of DATAs  */
+}
+
+
 HARBOUR __WDATAINC()         /* <nSeq> = __wDataInc( <hClass> )*/
 {
    WORD  wClass   = _parnl( 1 );
@@ -602,7 +614,7 @@ HARBOUR __WDATADEC()         /* <nSeq> = __wDataDec( <hClass> )*/
    WORD  wClass   = _parnl( 1 );
 
    if( wClass )
-      _retni( ++pClasses[ wClass - 1 ].wDatas ); /* Return and decrease     */
+      _retni( pClasses[ wClass - 1 ].wDatas-- ); /* Return and decrease     */
 }                                                /* number of DATAs         */
 
 HARBOUR CLASSMOD()      /* Modify message (only for INLINE and METHOD)      */

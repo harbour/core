@@ -21,14 +21,13 @@ function Main( cFrom, cTo )
    cTo   := Default( cTo,   "strip.out" )
 
    oFrom := TTextFile()
-   HBDebug( { aoMethod( oFrom ), aoData( oFrom ) } )
+   HBDebug( { oFrom, aoMethod( oFrom ) } )
 //   oFrom:Super:Run()
    oFrom:Set( "DoIt !" )
    QOut( oFrom:Out )
    oFrom:New( cFrom, "R" )
-   oTo   := TTextFile()
-//   HBDebug( aoMethod( oTo ) )
-   oTo:New( cTo  , "W" )
+   oTo   := TTextFile():New( cTo, "W" )
+   HBDebug( { oTo, aoMethod( oTo ) } )
 
    do while !oFrom:lEoF
       cOut := oFrom:Run()
@@ -55,7 +54,7 @@ function TEmpty()
       oEmpty:AddInline( "Run", {||QOut( "Run!" ) } ) // Test command
 //      oEmpty:AddInline( "Set", {|self,xParam|::Out := xParam } )
       oEmpty:AddInline( "Set", {|self,xParam| oSend(self,"_Out",xParam) } )
-      oEmpty:AddData( "Out" )
+      oEmpty:AddData( "Out", 1 )
                                                      // Test command
       oEmpty:AddVirtual( "Dispose" )                 // Clean up code
 

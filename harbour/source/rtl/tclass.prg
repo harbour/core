@@ -70,13 +70,16 @@ static function Create()
    local Self    := QSelf()
    local n, nLen := Len( ::aDatas )
    local hClass  := ClassCreate( ::cName, nLen, ::hSuper )
+   local nDataBegin := If( !Empty( ::hSuper ), __WDatas( ::hSuper ), 0 )
 
    ::hClass = hClass
 
+
+
    for n = 1 to nLen
-      ClassAdd( hClass, ::aDatas[ n ][ DAT_SYMBOL ], n, MET_DATA, ;
+      ClassAdd( hClass, ::aDatas[ n ][ DAT_SYMBOL ], n + nDataBegin, MET_DATA, ;
                         ::aDatas[ n ][ DAT_INITVAL ] )
-      ClassAdd( hClass, "_" + ::aDatas[ n ][ DAT_SYMBOL ], n, MET_DATA )
+      ClassAdd( hClass, "_" + ::aDatas[ n ][ DAT_SYMBOL ], n + nDataBegin, MET_DATA )
    next
 
    nLen = Len( ::aMethods )
