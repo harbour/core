@@ -2,8 +2,9 @@
  * $Description$  Debug function tests.
  *                Based on classes.prg
  * $Requirement$  source\tools\debug.c
+ *                source\rtl\classes.c (1999/05/97)
  *                source\rtl\itemapi.c (1999/05/04)
- * $Date$         1999/05/06
+ * $Date$
  * $End$ */
 
 //
@@ -26,8 +27,7 @@ function Main()
    Debug( oForm:Transfer() )
 
    oForm:Transfer( {"nLeft", 50}, {"nRight", 100} )
-                                                // 2 memory blocks get lost
-                                                // somewhere. {} maybe ??
+
    QOut( "-Statics-" )
    Debug( __aStatic() )
 
@@ -110,12 +110,10 @@ return if( ValType(xArg) != ValType(xDef), xDef, xArg )
  * {<el1>, <el2>, ...}          Array
  * NIL                          NIL
  * .T. / .F.                    Boolean
- * <ClassName>(<ClassH>):{ <val1>, <val2> ... | <DataSymbol1>, ... }
+ * <ClassName>(<ClassH>):{<DataSymbol1>:<val1>, ... }
  *                              Object
  *
  *
- * TODO : <ClassName>(<ClassH>):{<DataSymbol1>:<val1>, ... }
- * Requirement : oSend( <object>, <Symbol>, <args,..> )
  * $End$ */
 function ToChar( xTxt, cSeparator, lDebug )
 
@@ -364,8 +362,14 @@ return aData
 //
 function aOSet( oObject, aData )
 
-  aEval( aData, ;
-       {|aItem| oSend( oObject, "_"+aItem[DATA_SYMBOL], aItem[DATA_VAL] ) } )
+   local n
+   local nLen := Len( aData )
+//  aEval( aData, ;                             // aEval looses memory blocks
+//       {|aItem| oSend( oObject, "_"+aItem[DATA_SYMBOL], aItem[DATA_VAL] ) } )
+
+   for n:= 1 to nLen
+      oSend( oObject, "_"+aData[n][DATA_SYMBOL], aData[n][DATA_VAL] )
+   next n
 
 return oObject
 
