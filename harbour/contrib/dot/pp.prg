@@ -725,7 +725,7 @@ FUNCTION ProcessLine( sLine, aDefined, aTranslated, aCommanded, nLine, sSource )
             sLine := ''
             LOOP
 
-         ELSEIF sDirective == "ELSE" .AND. nIfDef > 0 .AND. ! abIfDef[ nIfDef ]
+         ELSEIF sDirective == "ELSE" .AND. nIfDef > 1 .AND. ! abIfDef[ nIfDef - 1 ]
 
             sLine := ''
             LOOP
