@@ -1,3 +1,16 @@
+2001-11-08 23:42 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * source/rtl/dummy.prg
+     - removed dummy ordKeyVal()
+   * source/rdd/dbcmd.c
+     + added ordKeyVal() (need support by specifics RDDs)
+   * source/rdd/dbfcdx/dbfcdx1.c
+     + added support for ordBagName()
+     + added support for ordKeyVal()
+     ! fixed hb_cdxSorttoND, numeric key conversion
+     ! fixed hb_cdxKeyGetItem(), for numeric & date keys
+   * source/rdd/dbfcdx/dbfcdx2.h
+     + added declaration for hb_cdxKeyGetItem
+
 2001-11-08 22:40 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
    * utils/hbmake/hbmake.prg
      utils/hbmake/hbmake.prg
