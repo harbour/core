@@ -59,12 +59,13 @@
          be ahead of any other #include statements! */
 #include "hbwinapi.h"
 
-#if defined(__BORLANDC__) && defined(_WINDOWS_) && ! defined(VER_PLATFORM_WIN32_WINDOWS)
+#if defined(HARBOUR_USE_WIN_GTAPI) || defined(WINNT)
+#if ! defined(VER_PLATFORM_WIN32_WINDOWS)
    #define VER_PLATFORM_WIN32_WINDOWS 1
 #endif
-
-#if defined(_WINDOWS_) && ! defined(VER_PLATFORM_WIN32_CE)
+#if ! defined(VER_PLATFORM_WIN32_CE)
    #define VER_PLATFORM_WIN32_CE 3
+#endif
 #endif
 
 #include "extend.h"
@@ -164,7 +165,7 @@ HARBOUR HB_OS( void )
 /* TODO: add MSVC support but MSVC cannot detect any OS except Windows! */
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__MINGW32__)
 
-#if defined(_WINDOWS_) || defined(WINNT) || defined(__BORLANDC__)
+#if defined(_Windows) || defined(WINNT)
 
 /* NOTE:
     Support for determining the window version by Luiz Rafael Culik
@@ -174,9 +175,12 @@ HARBOUR HB_OS( void )
     dezac@corevia.com
 */
 
+#define HB_OS_VERSION_WINDOWS
    OSVERSIONINFO osVer; /* for GetVersionEx() */
+   char szBuild[ 128 ] = "";
    LONG lVersion;
 
+   cformat = "%s%s %d.%02d.%04d";
    osVer.dwOSVersionInfoSize = sizeof( osVer );
 
    if( GetVersionEx( &osVer ) )
@@ -206,17 +210,8 @@ HARBOUR HB_OS( void )
                hb_os = "Windows 98 SE";
             else
                hb_os = "Windows";
-
-            /* TODO: Can you fix it, please ?
-               strcat( hb_os, osVer.szCSDVersion );
-
-               I don't know why in each call this code returns:
-               - Windows 95 OSR2 B ...
-               - Windows 95 OSR2 B B ...
-               - Windows 95 OSR2 B B B ...
-
-               Add this info in the NT section too.
-            */
+            strncpy( szBuild, osVer.szCSDVersion, sizeof( szBuild ) );
+            szBuild[ sizeof( szBuild ) ] = '\0';
             break;
 
          case VER_PLATFORM_WIN32_NT:
@@ -237,21 +232,17 @@ HARBOUR HB_OS( void )
             else
                hb_os = "Windows NT";
 
-            /* TODO: szCSDVersion should contain the service pack installed
             if( osVer.szCSDVersion )
             {
                int i = 0;
                WORD wServicePack;
-               char szBuffer[ 128 ];
 
                while( osVer.szCSDVersion[ i ] != '\0' && !isdigit( osVer.szCSDVersion[ i ] ) )
                   i++;
                wServicePack = (WORD)( atoi( &osVer.szCSDVersion[ i ] ) );
 
-               sprintf( szBuffer, "%s %i", hb_os, wServicePack );
-               strcopy( hb_os, szBuffer );
+               sprintf( szBuild, "%i", wServicePack );
             }
-            */
             /* TODO: Add support for:
                       * NT Stand Alone Server
                       * NT Enterprise Edition
@@ -279,7 +270,6 @@ HARBOUR HB_OS( void )
             hb_os = "Windows CE";
             break;
       }
-      cformat = "%s %d.%02d.%04d";
    }
 #else
 #if defined(_MSC_VER)
@@ -374,7 +364,11 @@ HARBOUR HB_OS( void )
    if( ! hb_os ) strcpy( version, "Unknown" );
    else if( hb_osmajor == -1 ) strcpy( version, hb_os );
    else if( hb_osmajor == -2 ) { /* NOP */ }
+#ifdef HB_OS_VERSION_WINDOWS
+   else sprintf( version, cformat, hb_os, szBuild, hb_osmajor, hb_osminor, hb_osletter );
+#else
    else sprintf( version, cformat, hb_os, hb_osmajor, hb_osminor, hb_osletter );
+#endif
    hb_retc( version );
 #ifdef __DJGPP__
    hb_xfree( hb_os );
