@@ -314,9 +314,6 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
             /* Save the keyboard state and ASCII key code */
             DWORD dwState = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState;
             ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar;
-printf( "\n\nhb_gt_ReadKey: The keyboard state is 0x%04X, the character code is %d", dwState, ch );
-printf( ", the virtual key code is %d", s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode );
-printf( ", the virtual scan code is %d", s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode );
             if( ch == 224 )
             {
                /* Strip extended key lead-in codes */
@@ -663,7 +660,6 @@ printf( ", the virtual scan code is %d", s_irInBuf[ s_cNumIndex ].Event.KeyEvent
       s_cNumIndex++;
    }
 
-if( ch ) printf( ", and the return code is %d", ch );
    return ch;
 }
 
