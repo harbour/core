@@ -559,6 +559,10 @@ Separator     {SpaceTab}
 %{
 /* ************************************************************************ */
 %}
+"_fie"|"_fiel"|"_field" { BEGIN FIELD_;
+                   yylval.string = yy_strupr( yy_strdup( yytext ) );
+                 }
+
 "fiel"|"field"   { BEGIN FIELD_;
                    yylval.string = yy_strupr( yy_strdup( yytext ) );
                  }

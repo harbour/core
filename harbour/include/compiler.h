@@ -219,23 +219,6 @@ extern PCOMSYMBOL KillSymbol( PCOMSYMBOL );    /* releases all memory allocated 
 #define FUN_USES_LOCAL_PARAMS 16 /* parameters are declared using () */
 #define FUN_WITH_RETURN       32  /* there was RETURN statement in previous line */
 
-/* Support for aliased expressions
- */
-typedef struct _ALIASID
-{
-   char type;
-   union
-   {
-      int iAlias;
-      char * szAlias;
-   } alias;
-   struct _ALIASID * pPrev;
-} ALIASID, *ALIASID_PTR;
-
-#define  ALIAS_NUMBER   1
-#define  ALIAS_NAME     2
-#define  ALIAS_EVAL     3
-
 typedef struct __EXTERN
 {
    char * szName;
@@ -260,32 +243,8 @@ typedef struct __ELSEIF
    struct __ELSEIF * pNext;
 } _ELSEIF, * PELSEIF;      /* support structure for else if pcode fixups */
 
-/* Support for parenthesized expressions
+/* TODO: clear the functions name space
  */
-typedef struct _EXPLIST
-{
-   BYTE * prevPCode;        /* pcode buffer used at the start of expression */
-   ULONG prevSize;
-   ULONG prevPos;
-   BYTE * exprPCode;        /* pcode buffer for current expression */
-   ULONG exprSize;
-   struct _EXPLIST *pPrev;  /* previous expression in the list */
-   struct _EXPLIST *pNext;  /* next expression in the list */
-} EXPLIST, *EXPLIST_PTR;
-
-/* production related functions */
-void AliasAddInt( int );
-void AliasAddExp( void );
-void AliasAddStr( char * );
-void AliasPush( void );
-void AliasPop( void );
-void AliasSwap( void );
-void AliasAdd( ALIASID_PTR );
-void AliasRemove( void );
-
-void ExpListPush( void );  /* pushes the new expression on the stack */
-void ExpListPop( int );    /* pops previous N expressions */
-
 PFUNCTION hb_compAddFunCall( char * szFuntionName );
 void hb_compAddExtern( char * szExternName ); /* defines a new extern name */
 void hb_compAddVar( char * szVarName, char cType ); /* add a new param, local, static variable to a function definition or a public or private */
@@ -334,6 +293,8 @@ void hb_compGenPushLong( long lNumber );          /* Pushes a long number on the
 void hb_compGenPushNil( void );                   /* Pushes nil on the virtual machine stack */
 void hb_compGenPushString( char * szText, ULONG ulLen );       /* Pushes a string on the virtual machine stack */
 void hb_compPushSymbol( char * szSymbolName, int iIsFunction ); /* Pushes a symbol on to the Virtual machine stack */
+void hb_compGenPushAliasedVar( char *, BOOL, char *, long );
+void hb_compGenPopAliasedVar( char *, BOOL, char *, long );
 
 /* Codeblocks */
 void hb_compCodeBlockStart( void );        /* starts a codeblock creation */

@@ -1755,16 +1755,20 @@ static HB_EXPR_FUNC( hb_compExprUseList )
             ULONG ulCount;
 
             ulCount = hb_compExprListReduce( pSelf );
+/*
             if( ulCount == 1 && pSelf->value.asList.pExprList->ExprType <= HB_ET_VARIABLE )
             {
+ */
                /* replace the list with a simple expression
                 */
+/*
                HB_EXPR_PTR pExpr = pSelf;
 
                pSelf = pSelf->value.asList.pExprList;
                pExpr->value.asList.pExprList = NULL;
                hb_compExprDelete( pExpr );
             }
+ */ 
          }
          break;
 
@@ -1774,7 +1778,12 @@ static HB_EXPR_FUNC( hb_compExprUseList )
 
       case HB_EA_LVALUE:
          if( hb_compExprListLen( pSelf ) == 1 )
+         {
+            /* For example:
+             * ( a ) := 4
+             */
             hb_compErrorLValue( pSelf->value.asList.pExprList );
+         }
          else
             hb_compErrorLValue( pSelf );
          break;
@@ -2082,12 +2091,114 @@ static HB_EXPR_FUNC( hb_compExprUseAliasVar )
       case HB_EA_ARRAY_AT:
       case HB_EA_ARRAY_INDEX:
       case HB_EA_LVALUE:
+         break;
+
       case HB_EA_PUSH_PCODE:
+         {
+            HB_EXPR_PTR pAlias = pSelf->value.asAlias.pAlias;
+            BOOL bReduced = FALSE;
+
+            if( pAlias->ExprType == HB_ET_LIST )
+            {
+               pSelf->value.asAlias.pAlias = HB_EXPR_USE( pSelf->value.asAlias.pAlias, HB_EA_REDUCE );
+               bReduced = TRUE;
+            }
+
+            if( pAlias->ExprType == HB_ET_SYMBOL )
+            {
+               /*
+                * myalias->var
+                * FIELD->var
+                * MEMVAR->var
+                *
+                * NOTE: TRUE = push also alias
+                */
+               hb_compGenPushAliasedVar( pSelf->value.asAlias.szVarName, TRUE, pAlias->value.asSymbol, 0 );
+            }
+            else if( pAlias->ExprType == HB_ET_NUMERIC )
+            {
+               /* numeric alias
+                * 2->var
+                *
+                * NOTE: only integer (long) values are allowed
+                */
+               if( pAlias->value.asNum.NumType == HB_ET_LONG )
+                  hb_compGenPushAliasedVar( pSelf->value.asAlias.szVarName, TRUE, NULL, pAlias->value.asNum.lVal );
+               else
+                  hb_compErrorAlias( pAlias );
+            }
+            else if( bReduced )
+            {
+               /*
+                * ( expression )->var
+                *
+                * NOTE: FALSE = don't push alias value
+                */
+               HB_EXPR_USE( pAlias, HB_EA_PUSH_PCODE );
+               hb_compGenPushAliasedVar( pSelf->value.asAlias.szVarName, FALSE, NULL, 0 );
+            }
+            else
+               hb_compErrorAlias( pAlias );
+         }
+         break;
+
       case HB_EA_POP_PCODE:
+         {
+            HB_EXPR_PTR pAlias = pSelf->value.asAlias.pAlias;
+            BOOL bReduced = FALSE;
+
+            if( pAlias->ExprType == HB_ET_LIST )
+            {
+               pSelf->value.asAlias.pAlias = HB_EXPR_USE( pSelf->value.asAlias.pAlias, HB_EA_REDUCE );
+               bReduced = TRUE;
+            }
+
+            if( pAlias->ExprType == HB_ET_SYMBOL )
+            {
+               /*
+                * myalias->var
+                * FIELD->var
+                * MEMVAR->var
+                */
+               hb_compGenPopAliasedVar( pSelf->value.asAlias.szVarName, TRUE, pAlias->value.asSymbol, 0 );
+            }
+            else if( pAlias->ExprType == HB_ET_NUMERIC )
+            {
+               /* numeric alias
+                * 2->var
+                *
+                * NOTE: only integer (long) values are allowed
+                */
+               if( pAlias->value.asNum.NumType == HB_ET_LONG )
+                  hb_compGenPopAliasedVar( pSelf->value.asAlias.szVarName, TRUE, NULL, pAlias->value.asNum.lVal );
+               else
+                  hb_compErrorAlias( pAlias );
+            }
+            else if( bReduced )
+            {
+               /*
+                * ( expression )->var
+                *
+                * NOTE: FALSE = don't push alias value
+                */
+               HB_EXPR_USE( pAlias, HB_EA_PUSH_PCODE );
+               hb_compGenPopAliasedVar( pSelf->value.asAlias.szVarName, FALSE, NULL, 0 );
+            }
+            else
+               hb_compErrorAlias( pAlias );
+         }
+         break;
+
+
       case HB_EA_PUSH_POP:
       case HB_EA_STATEMENT:
-         hb_compWarnMeaningless( pSelf );
+         HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
+         hb_compGenPCode1( HB_P_POP );
+         break;
+
       case HB_EA_DELETE:
+         hb_compExprDelete( pSelf->value.asAlias.pAlias );
+         /* NOTE: variable name is not released now */
          break;
    }
    return pSelf;
@@ -4322,6 +4433,7 @@ static HB_EXPR_FUNC( hb_compExprUseDiv )
                         pSelf->value.asNum.bDec = 2; /* TODO: See NOTE 1 */
                         pSelf->value.asNum.NumType = HB_ET_DOUBLE;
                      }
+		     pSelf->ExprType = HB_ET_NUMERIC;
                   }
                   break;
 
@@ -4332,6 +4444,7 @@ static HB_EXPR_FUNC( hb_compExprUseDiv )
                      pSelf->value.asNum.dVal = dVal;
                      pSelf->value.asNum.NumType = HB_ET_DOUBLE;
                      pSelf->value.asNum.bDec = 2; /* TODO: See NOTE 1 */
+		     pSelf->ExprType = HB_ET_NUMERIC;
                   }
                   break;
 
@@ -4350,8 +4463,10 @@ static HB_EXPR_FUNC( hb_compExprUseDiv )
                            dVal = ( double ) pLeft->value.asNum.lVal / pRight->value.asNum.dVal;
                         pSelf->value.asNum.dVal = dVal;
                         pSelf->value.asNum.bDec = 2; /* TODO: See NOTE 1 */
+			
                      }
                      pSelf->value.asNum.NumType = HB_ET_DOUBLE;
+		     pSelf->ExprType = HB_ET_NUMERIC;
                   }
                   /* TODO: NOTE 1
                      Clipper manages to print the default number of decimal
@@ -4362,11 +4477,14 @@ static HB_EXPR_FUNC( hb_compExprUseDiv )
                      for HB_DEC_DEFAULT when formatting numbers and print
                      the current default number of decimal digits.
                   */
-               }
-               pSelf->ExprType = HB_ET_NUMERIC;
-               pSelf->ValType  = HB_EV_NUMERIC;
-               HB_EXPR_USE( pLeft,  HB_EA_DELETE );
-               HB_EXPR_USE( pRight, HB_EA_DELETE );
+               } /* switch bType*/
+		  if( pSelf->ExprType == HB_ET_NUMERIC )
+		  {
+		     /* The expression was reduced - delete old components */
+		     pSelf->ValType = HB_EV_NUMERIC;
+		     hb_compExprDelete( pLeft );
+		     hb_compExprDelete( pRight );
+		  }
             }
             else
             {

@@ -118,12 +118,10 @@ BOOL hb_comp_bDontGenLineNum = FALSE;   /* suppress line number generation */
 LONG hb_comp_lLastPushPos = -1; /* position of last push pcode */
 ULONG hb_comp_ulLastLinePos = 0;    /* position of last opcode with line number */
 ULONG hb_comp_ulMessageFix = 0;  /* Position of the message which needs to be changed */
-ALIASID_PTR hb_comp_pAliasId = NULL;
 int hb_comp_iStaticCnt = 0;       /* number of defined statics variables on the PRG */
 BOOL hb_comp_bExternal = FALSE;
 PTR_LOOPEXIT hb_comp_pLoops = NULL;
 PEXTERN hb_comp_pExterns = NULL;
-EXPLIST_PTR hb_comp_pExprList = NULL;    /* stack used for parenthesized expressions */
 int hb_comp_iVarScope = VS_LOCAL;   /* holds the scope for next variables to be defined */
                             /* different values for hb_comp_iVarScope */
 
@@ -1575,79 +1573,6 @@ PCOMSYMBOL hb_compAddSymbol( char * szSymbolName, USHORT * pwPos )
    return pSym;
 }
 
-/* Adds new alias to the alias stack
- */
-void AliasAdd( ALIASID_PTR pAlias )
-{
-   pAlias->pPrev = hb_comp_pAliasId;
-   hb_comp_pAliasId = pAlias;
-}
-
-/* Restores previously selected alias
- */
-void AliasRemove( void )
-{
-   ALIASID_PTR pAlias = hb_comp_pAliasId;
-
-   hb_comp_pAliasId = hb_comp_pAliasId->pPrev;
-   hb_xfree( pAlias );
-}
-
-/* Adds an integer workarea number into alias stack
- */
-void AliasAddInt( int iWorkarea )
-{
-   ALIASID_PTR pAlias = ( ALIASID_PTR ) hb_xgrab( sizeof( ALIASID ) );
-
-   pAlias->type = ALIAS_NUMBER;
-   pAlias->alias.iAlias = iWorkarea;
-   AliasAdd( pAlias );
-}
-
-/* Adds an expression into alias stack
- */
-void AliasAddExp( void )
-{
-   ALIASID_PTR pAlias = ( ALIASID_PTR ) hb_xgrab( sizeof( ALIASID ) );
-
-   pAlias->type = ALIAS_EVAL;
-   AliasAdd( pAlias );
-}
-
-/* Adds an alias name into alias stack
- */
-void AliasAddStr( char * szAlias )
-{
-   ALIASID_PTR pAlias = ( ALIASID_PTR ) hb_xgrab( sizeof( ALIASID ) );
-
-   pAlias->type = ALIAS_NAME;
-   pAlias->alias.szAlias = szAlias;
-   AliasAdd( pAlias );
-}
-
-/* Generates pcodes to store the current workarea number
- */
-void AliasPush( void )
-{
-   hb_compGenPCode1( HB_P_PUSHALIAS );
-}
-
-/* Generates pcodes to select the workarea number using current value
- * from the eval stack
- */
-void AliasPop( void )
-{
-   hb_compGenPCode1( HB_P_POPALIAS );
-}
-
-/* Generates pcodes to swap two last items from the eval stack.
- * Last item (after swaping) is next popped as current workarea
- */
-void AliasSwap( void )
-{
-   hb_compGenPCode1( HB_P_SWAPALIAS );
-}
-
 void Duplicate( void )
 {
    hb_compGenPCode1( HB_P_DUPLICATE );
@@ -1660,98 +1585,6 @@ void DupPCode( ULONG ulStart ) /* duplicates the current generated pcode from an
    for( w = 0; w < wEnd; w++ )
       hb_compGenPCode1( hb_comp_functions.pLast->pCode[ ulStart + w ] );
 }
-
-/*
- * Starts a new expression in the parenthesized epressions list
- */
-void ExpListPush( void )
-{
-   EXPLIST_PTR pExp = ( EXPLIST_PTR ) hb_xgrab( sizeof( EXPLIST ) );
-
-   pExp->pNext = pExp->pPrev = NULL;
-
-   /* Store the previous state on the stack */
-   if( hb_comp_pExprList )
-   {
-      hb_comp_pExprList->pNext = pExp;
-      pExp->pPrev = hb_comp_pExprList;
-      /* save currently used pcode buffer */
-      hb_comp_pExprList->exprSize  = hb_comp_functions.pLast->lPCodePos;
-      hb_comp_pExprList->exprPCode = hb_comp_functions.pLast->pCode;
-   }
-   hb_comp_pExprList   = pExp;
-
-   /* store current pcode buffer */
-   pExp->prevPCode = hb_comp_functions.pLast->pCode;
-   pExp->prevSize  = hb_comp_functions.pLast->lPCodeSize;
-   pExp->prevPos   = hb_comp_functions.pLast->lPCodePos;
-
-   /* and create the new one */
-   hb_comp_functions.pLast->pCode = ( BYTE * ) hb_xgrab( PCODE_CHUNK );
-   hb_comp_functions.pLast->lPCodeSize = PCODE_CHUNK;
-   hb_comp_functions.pLast->lPCodePos  = 0;
-
-   pExp->exprPCode = hb_comp_functions.pLast->pCode;
-}
-
-/*
- * Pops specified number of expressions from the stack
- */
-void ExpListPop( int iExpCount )
-{
-   EXPLIST_PTR pExp, pDel;
-
-   /* save currently used pcode buffer */
-   hb_comp_pExprList->exprSize  = hb_comp_functions.pLast->lPCodePos;
-   hb_comp_pExprList->exprPCode = hb_comp_functions.pLast->pCode;
-
-   /* find the first expression in the list */
-   while( --iExpCount )
-      hb_comp_pExprList = hb_comp_pExprList->pPrev;
-
-   /* return to the original pcode buffer */
-   hb_comp_functions.pLast->pCode      = hb_comp_pExprList->prevPCode;
-   hb_comp_functions.pLast->lPCodeSize = hb_comp_pExprList->prevSize;
-   hb_comp_functions.pLast->lPCodePos  = hb_comp_pExprList->prevPos;
-
-   pExp = hb_comp_pExprList;
-   if( hb_comp_pExprList->pPrev )
-   {
-      hb_comp_pExprList = hb_comp_pExprList->pPrev;
-      hb_comp_pExprList->pNext = NULL;
-   }
-   else
-      hb_comp_pExprList = NULL;
-
-   while( pExp )
-   {
-      if( pExp->exprSize )
-      {
-         hb_compGenPCodeN( pExp->exprPCode, pExp->exprSize );
-         if( pExp->pNext )
-            hb_compGenPCode1( HB_P_POP );
-      }
-      else
-      {
-         /* exprN, , exprN1
-          * in this context empty expression is not allowed
-          *
-          * NOTE:
-          * We don't have to generate this error - it is safe to continue
-          * pcode generation - in this case an empty expression will not
-          * generate any opcode
-          */
-         hb_compGenError( hb_comp_szCErrors, 'E', ERR_SYNTAX, ")", NULL );
-      }
-
-      hb_xfree( pExp->exprPCode );
-
-      pDel = pExp;
-      pExp = pExp->pNext;
-      hb_xfree( pDel );
-   }
-}
-
 
 /*
  * Function generates passed pcode for passed database field
@@ -1993,118 +1826,6 @@ void hb_compGenExterns( void ) /* generates the symbols for the EXTERN names */
       hb_xfree( ( void * ) pDelete );
    }
 }
-
-/* This function generates pcodes for IIF( expr1, expr2, expr3 )
- * or IF( expr1, expr2, expr3 )
- *
- * NOTE:
- *   'IF' followed by parenthesized expression containing 3 expressions
- * is always interpreted as IF inlined - it is not possible to distinguish
- * it from IF( expr1, expr2, expr3 ); ENDIF syntax
- * (This behaviour is Clipper compatible)
- */
-void GenIfInline( void )
-{
-   EXPLIST_PTR pExp, pDel;
-   int iExpCount = 3;   /* We are expecting 3 expressions here */
-   BOOL bhb_compGenPCode;
-
-   /* save currently used pcode buffer */
-   hb_comp_pExprList->exprSize  = hb_comp_functions.pLast->lPCodePos;
-   hb_comp_pExprList->exprPCode = hb_comp_functions.pLast->pCode;
-
-   /* find the first expression in the list */
-   while( --iExpCount )
-      hb_comp_pExprList = hb_comp_pExprList->pPrev;
-
-   /* return to the original pcode buffer */
-   hb_comp_functions.pLast->pCode      = hb_comp_pExprList->prevPCode;
-   hb_comp_functions.pLast->lPCodeSize = hb_comp_pExprList->prevSize;
-   hb_comp_functions.pLast->lPCodePos  = hb_comp_pExprList->prevPos;
-
-   /* Update the pointer for nested or next expressions */
-   pExp = hb_comp_pExprList;
-   if( hb_comp_pExprList->pPrev )
-   {
-      hb_comp_pExprList = hb_comp_pExprList->pPrev;
-      hb_comp_pExprList->pNext = NULL;
-   }
-   else
-      hb_comp_pExprList = NULL;
-
-   bhb_compGenPCode = TRUE;
-   pDel = pExp;    /* save it for later use */
-
-   /* pExp points now to pcode buffer for logical condition
-    */
-   if( pExp->exprSize == 0 )
-   {
-      /* The logical condition have to be specified.
-       * If it is empty then generate the syntax error
-       */
-      hb_compGenError( hb_comp_szCErrors, 'E', ERR_SYNTAX, ",", NULL );
-   }
-   else if( pExp->exprSize == 1 )
-   {
-      /* one byte opcode for logical condition - check if it is TRUE or FALSE
-       */
-      if( pExp->exprPCode[ 0 ] == HB_P_TRUE )
-      {
-         /* move to the second expression */
-         pExp = pExp->pNext;
-         if( pExp->exprSize )
-            hb_compGenPCodeN( pExp->exprPCode, pExp->exprSize );
-         else
-            hb_compGenPushNil();     /* IIF have to return some value */
-         bhb_compGenPCode = FALSE;
-      }
-      else if( pExp->exprPCode[ 0 ] == HB_P_FALSE )
-      {
-         /* move to the third expression */
-         pExp = pExp->pNext;
-         pExp = pExp->pNext;
-         if( pExp->exprSize )
-            hb_compGenPCodeN( pExp->exprPCode, pExp->exprSize );
-         else
-            hb_compGenPushNil();     /* IIF have to return some value */
-         bhb_compGenPCode = FALSE;
-      }
-   }
-
-   if( bhb_compGenPCode )
-   {
-      /* generate pcodes for all expressions
-       */
-      LONG lPosFalse, lPosEnd;
-
-      hb_compGenPCodeN( pExp->exprPCode, pExp->exprSize );
-      lPosFalse = hb_compGenJumpFalse( 0 );
-
-      pExp = pExp->pNext;
-      if( pExp->exprSize )
-         hb_compGenPCodeN( pExp->exprPCode, pExp->exprSize );
-      else
-         hb_compGenPushNil();     /* IIF have to return some value */
-      lPosEnd = hb_compGenJump( 0 );
-      hb_compGenJumpHere( lPosFalse );
-
-      pExp = pExp->pNext;
-      if( pExp->exprSize )
-         hb_compGenPCodeN( pExp->exprPCode, pExp->exprSize );
-      else
-         hb_compGenPushNil();     /* IIF have to return some value */
-      hb_compGenJumpHere( lPosEnd );
-   }
-
-   while( pDel )
-   {
-      pExp = pDel;
-      pDel = pDel->pNext;
-      hb_xfree( pExp->exprPCode );
-      hb_xfree( pExp );
-   }
-}
-
 
 PFUNCTION GetFuncall( char * szFunctionName ) /* returns a previously called defined function */
 {
@@ -2689,135 +2410,99 @@ void hb_compGenPopVar( char * szVarName ) /* generates the pcode to pop a value 
 {
    int iVar;
 
-   if( hb_comp_pAliasId == NULL )
-   {
-      iVar = GetLocalVarPos( szVarName );
-      if( iVar )
-         hb_compGenPCode3( HB_P_POPLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
-      else
-      {
-         iVar = GetStaticVarPos( szVarName );
-         if( iVar )
-         {
-            hb_compGenPCode3( HB_P_POPSTATIC, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
-            hb_comp_functions.pLast->bFlags |= FUN_USES_STATICS;
-         }
-         else
-         {
-            VariablePCode( HB_P_POPVARIABLE, szVarName );
-         }
-      }
-   }
+   iVar = GetLocalVarPos( szVarName );
+   if( iVar )
+      hb_compGenPCode3( HB_P_POPLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
    else
    {
-      if( hb_comp_pAliasId->type == ALIAS_NAME )
+      iVar = GetStaticVarPos( szVarName );
+      if( iVar )
       {
-         if( hb_comp_pAliasId->alias.szAlias[ 0 ] == 'M' && hb_comp_pAliasId->alias.szAlias[ 1 ] == '\0' )
+         hb_compGenPCode3( HB_P_POPSTATIC, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
+         hb_comp_functions.pLast->bFlags |= FUN_USES_STATICS;
+      }
+      else
+      {
+         VariablePCode( HB_P_POPVARIABLE, szVarName );
+      }
+   }
+}
+
+/* generates the pcode to pop a value from the virtual machine stack onto
+ * an aliased variable
+ */
+void hb_compGenPopAliasedVar( char * szVarName,
+                              BOOL bPushAliasValue,
+                              char * szAlias,
+                              long lWorkarea )
+{
+   if( bPushAliasValue )
+   {
+      if( szAlias )
+      {
+         if( szAlias[ 0 ] == 'M' && szAlias[ 1 ] == '\0' )
          {  /* M->variable */
             MemvarPCode( HB_P_POPMEMVAR, szVarName );
          }
          else
          {
-            int iCmp = strncmp( hb_comp_pAliasId->alias.szAlias, "MEMVAR", 4 );
+            int iCmp = strncmp( szAlias, "MEMVAR", 4 );
             if( iCmp == 0 )
-                  iCmp = strncmp( hb_comp_pAliasId->alias.szAlias, "MEMVAR", strlen( hb_comp_pAliasId->alias.szAlias ) );
+                  iCmp = strncmp( szAlias, "MEMVAR", strlen( szAlias ) );
             if( iCmp == 0 )
             {  /* MEMVAR-> or MEMVA-> or MEMV-> */
                MemvarPCode( HB_P_POPMEMVAR, szVarName );
             }
             else
             {  /* field variable */
-               iCmp = strncmp( hb_comp_pAliasId->alias.szAlias, "FIELD", 4 );
+               iCmp = strncmp( szAlias, "FIELD", 4 );
                if( iCmp == 0 )
-                  iCmp = strncmp( hb_comp_pAliasId->alias.szAlias, "FIELD", strlen( hb_comp_pAliasId->alias.szAlias ) );
+                  iCmp = strncmp( szAlias, "FIELD", strlen( szAlias ) );
                if( iCmp == 0 )
                {  /* FIELD-> */
                   FieldPCode( HB_P_POPFIELD, szVarName );
                }
                else
                {  /* database alias */
-                  hb_compPushSymbol( yy_strdup( hb_comp_pAliasId->alias.szAlias ), 0 );
+                  hb_compPushSymbol( yy_strdup( szAlias ), 0 );
                   FieldPCode( HB_P_POPALIASEDFIELD, szVarName );
                }
             }
          }
       }
-      else if( hb_comp_pAliasId->type == ALIAS_NUMBER )
-      {
-         hb_compGenPushInteger( hb_comp_pAliasId->alias.iAlias );
-         FieldPCode( HB_P_POPALIASEDFIELD, szVarName );
-      }
-      else
-         /* Alias is already placed on stack */
-         FieldPCode( HB_P_POPALIASEDFIELD, szVarName );
-   }
-}
-
-void hb_compGenPushVar( char * szVarName ) /* generates the pcode to push a variable value to the virtual machine stack */
-{
-   int iVar;
-
-   if( hb_comp_pAliasId == NULL )
-   {
-      iVar = GetLocalVarPos( szVarName );
-      if( iVar )
-         hb_compGenPCode3( HB_P_PUSHLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
       else
       {
-         iVar = GetStaticVarPos( szVarName );
-         if( iVar )
-         {
-            hb_compGenPCode3( HB_P_PUSHSTATIC, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
-            hb_comp_functions.pLast->bFlags |= FUN_USES_STATICS;
-         }
-         else
-         {
-            VariablePCode( HB_P_PUSHVARIABLE, szVarName );
-         }
+         hb_compGenPushLong( lWorkarea );
+         FieldPCode( HB_P_POPALIASEDFIELD, szVarName );
       }
    }
    else
+      /* Alias is already placed on stack */
+      FieldPCode( HB_P_POPALIASEDFIELD, szVarName );
+}
+
+/* generates the pcode to push a nonaliased variable value to the virtual
+ * machine stack
+ */
+void hb_compGenPushVar( char * szVarName )
+{
+   int iVar;
+
+   iVar = GetLocalVarPos( szVarName );
+   if( iVar )
+      hb_compGenPCode3( HB_P_PUSHLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
+   else
    {
-      if( hb_comp_pAliasId->type == ALIAS_NAME )
+      iVar = GetStaticVarPos( szVarName );
+      if( iVar )
       {
-         if( hb_comp_pAliasId->alias.szAlias[ 0 ] == 'M' && hb_comp_pAliasId->alias.szAlias[ 1 ] == '\0' )
-         {  /* M->variable */
-            MemvarPCode( HB_P_PUSHMEMVAR, szVarName );
-         }
-         else
-         {
-            int iCmp = strncmp( hb_comp_pAliasId->alias.szAlias, "MEMVAR", 4 );
-            if( iCmp == 0 )
-                  iCmp = strncmp( hb_comp_pAliasId->alias.szAlias, "MEMVAR", strlen( hb_comp_pAliasId->alias.szAlias ) );
-            if( iCmp == 0 )
-            {  /* MEMVAR-> or MEMVA-> or MEMV-> */
-               MemvarPCode( HB_P_PUSHMEMVAR, szVarName );
-            }
-            else
-            {  /* field variable */
-               iCmp = strncmp( hb_comp_pAliasId->alias.szAlias, "FIELD", 4 );
-               if( iCmp == 0 )
-                  iCmp = strncmp( hb_comp_pAliasId->alias.szAlias, "FIELD", strlen( hb_comp_pAliasId->alias.szAlias ) );
-               if( iCmp == 0 )
-               {  /* FIELD-> */
-                  FieldPCode( HB_P_PUSHFIELD, szVarName );
-               }
-               else
-               {  /* database alias */
-                  hb_compPushSymbol( yy_strdup( hb_comp_pAliasId->alias.szAlias ), 0 );
-                  FieldPCode( HB_P_PUSHALIASEDFIELD, szVarName );
-               }
-            }
-         }
-      }
-      else if( hb_comp_pAliasId->type == ALIAS_NUMBER )
-      {
-         hb_compGenPushInteger( hb_comp_pAliasId->alias.iAlias );
-         FieldPCode( HB_P_PUSHALIASEDFIELD, szVarName );
+         hb_compGenPCode3( HB_P_PUSHSTATIC, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
+         hb_comp_functions.pLast->bFlags |= FUN_USES_STATICS;
       }
       else
-         /* Alias is already placed on stack */
-         FieldPCode( HB_P_PUSHALIASEDFIELD, szVarName );
+      {
+         VariablePCode( HB_P_PUSHVARIABLE, szVarName );
+      }
    }
 }
 
@@ -2845,6 +2530,63 @@ void hb_compGenPushVarRef( char * szVarName ) /* generates the pcode to push a v
          VariablePCode( HB_P_PUSHMEMVARREF, szVarName );
       }
    }
+}
+
+ /* generates the pcode to push an aliased variable value to the virtual
+  * machine stack
+  */
+void hb_compGenPushAliasedVar( char * szVarName,
+                               BOOL bPushAliasValue,
+                               char * szAlias,
+                               long lWorkarea )
+{
+   if( bPushAliasValue )
+   {
+      if( szAlias )
+      {
+         /* myalias->var
+         * FIELD->var
+         * MEMVAR->var
+         */
+         if( szAlias[ 0 ] == 'M' && szAlias[ 1 ] == '\0' )
+         {  /* M->variable */
+            MemvarPCode( HB_P_PUSHMEMVAR, szVarName );
+         }
+         else
+         {
+            int iCmp = strncmp( szAlias, "MEMVAR", 4 );
+            if( iCmp == 0 )
+                  iCmp = strncmp( szAlias, "MEMVAR", strlen( szAlias ) );
+            if( iCmp == 0 )
+            {  /* MEMVAR-> or MEMVA-> or MEMV-> */
+               MemvarPCode( HB_P_PUSHMEMVAR, szVarName );
+            }
+            else
+            {  /* field variable */
+               iCmp = strncmp( szAlias, "FIELD", 4 );
+               if( iCmp == 0 )
+                  iCmp = strncmp( szAlias, "FIELD", strlen( szAlias ) );
+               if( iCmp == 0 )
+               {  /* FIELD-> */
+                  FieldPCode( HB_P_PUSHFIELD, szVarName );
+               }
+               else
+               {  /* database alias */
+                  hb_compPushSymbol( yy_strdup( szAlias ), 0 );
+                  FieldPCode( HB_P_PUSHALIASEDFIELD, szVarName );
+               }
+            }
+         }
+      }
+      else
+      {
+         hb_compGenPushLong( lWorkarea );
+         FieldPCode( HB_P_PUSHALIASEDFIELD, szVarName );
+      }
+   }
+   else
+      /* Alias is already placed on stack */
+      FieldPCode( HB_P_PUSHALIASEDFIELD, szVarName );
 }
 
 void hb_compGenPushLogical( int iTrueFalse ) /* pushes a logical value on the virtual machine stack */

@@ -1,3 +1,15 @@
+19991117-13:05 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.y
+    *source/compiler/harbour.l
+    *source/compiler/harbour.c
+    *source/compiler/expropt.c
+	* corrected support for expression->identifier syntax
+	* corrected optimization for division operator
+	
+    *include/compiler.h
+	* removed declaration no longer needed
+	
 19991117-10:51 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/compiler/expropt.c
     ! Fixed the compile-time calculation of numeric operations with results
