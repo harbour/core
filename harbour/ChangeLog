@@ -1,6 +1,7 @@
 2000-07-30 14:32 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * source/compiler/harbour.l
+   * source/compiler/hbpcode.c
    * tests/testdecl.prg
    * tests/testwarn.prg
    * contrib/hbclip/hbclip.ch

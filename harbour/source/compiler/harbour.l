@@ -36,6 +36,11 @@
 
 /* Compile using: flex -i -8 -oyylex.c harbour.l */
 
+/* TODO: 4 character abbreviation for strong typing keywords should be added 
+         to be VO compatible [vszakats] */
+/* TODO: VOID strong typing keyword should be added as a new type for NIL. 
+         [vszakats] */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1377,11 +1382,6 @@ Separator     {SpaceTab}
                   return IDENTIFIER;
                 }
               }
-
-/* TODO: 4 character abbreviation should be added to be VO compatible 
-         [vszakats] */
-
-/* TODO: VOID should be added as a new type for NIL. [vszakats] */
 
 "as array"           { return AS_ARRAY; }
 "as codeblock"       { return AS_BLOCK; }
