@@ -3,11 +3,10 @@ rem
 rem $Id$
 rem 
 
-make -fhbpplib.b32  > build40.err
-make -fmakefile.b40 >> build40.err
-make -fterminal.b32 >> build40.err
-make -fgt.b32 >> build40.err
-make -frdd.b32 >> build40.err
-rem make -fhbpp.b32 >> build40.err
-make -frunner.b32 >> build40.err
-Notepad build40.err
+make -DB40 -fhbpp.b32 >> make.err
+make -DB40 -fmakefile.b32 >> make.err
+make -DB40 -fterminal.b32 >> make.err
+make -DB40 -fgt.b32 >> make.err
+make -DB40 -frdd.b32 >> make.err
+make -DB40 -frunner.b32 >> make.err
+notepad make.err

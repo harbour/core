@@ -39,10 +39,10 @@ FUNCTION Main( cHRBFile, cPar1, cPar2, cPar3, cPar4, cPar5, cPar6, cPar7, cPar8,
    LOCAL xRetVal
 
    IF Empty( cHRBFile )
-      ?? "Harbour Runner"
-      ? "Copyright 1999, http://www.harbour-project.org"
-      ?
-      ? "Syntax:  hbrun <hrbfile[.hrb]> [parameters]"
+      OutStd( "Harbour Runner" + HB_OSNewLine() +;
+              "Copyright 1999, http://www.harbour-project.org" + HB_OSNewLine() +;
+              HB_OSNewLine() +;
+              "Syntax:  hbrun <hrbfile[.hrb]> [parameters]" + HB_OSNewLine() )
    ELSE
       xRetVal := __hrbRun( cHRBFile, cPar1, cPar2, cPar3, cPar4, cPar5, cPar6, cPar7, cPar8, cPar9 )
    ENDIF

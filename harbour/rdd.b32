@@ -32,8 +32,8 @@ delim0.obj  : delim0.c
 delim1.obj  : delim1.c
 
 .c.obj :
-  bcc32 -c -O2 -I.\include -o$@ -v $<
-  tlib .\lib\b32\rdd.lib -+$@,,
+  bcc32 -c -O2 -Iinclude -o$@ -v $<
+  tlib lib\b32\rdd.lib -+$@,,
 
 .prg.c:
   bin\harbour $< /n /osource\rdd\ /iinclude

@@ -24,8 +24,8 @@ external.c   : external.prg
   bin\harbour $< /n /osource\runner\stdalone\ /iinclude /p
 
 .c.obj:
-  bcc32 -c -O2 -I.\include -v -o$@ -DHARBOUR_USE_WIN_GTAPI $<
-  tlib .\lib\b32\runner.lib -+$@,,
+  bcc32 -c -O2 -Iinclude -v -o$@ -DHARBOUR_USE_WIN_GTAPI $<
+  tlib lib\b32\runner.lib -+$@,,
 
 hbrun.exe : hbrun.c external.c runlib.c
    echo -v -O2 > bld.32

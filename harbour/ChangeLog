@@ -1,3 +1,32 @@
+19991005-08:36 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/vm/main*.c
+    source/vm/Makefile
+    include/ctoharb.h
+    ! Some cleanup on the new main() functions.
+      (using header file, fixed CVS headers, added copyright header, removed a TODO, 
+      TO DO -> TODO, Hungarian notation, global var name, 0 -> NULL, 
+      added to GNU makefile, std main return value missing.)
+  * makefile.b40 (removed)
+    makefile.b32
+    make_b40.bat
+    + makefile.b40 removed, since from now on makefile.b32 provides
+      the same functionality when B40 macro is defined. See make_b40.bat.
+  * *.bat
+    *.b??
+    hbpplib.b32 (removed)
+    + Further uniformized.
+    + hbpp.exe make process uncommented from make_b16.bat. 
+      We will see how it works.
+    + hbpplib.b32 incorporated into hbpp.b32
+  - hbpp.b16 (removed)
+    makefile.b16
+    make_b16.bat
+    - hbpp.b16 removed, since it was not used, and is now incorporated to
+      makefile.b16.
+  * source/runner/stdalone/hbrun.prg
+    + Using OutStd() instead of QOUT() to enable output redirecting like in
+      other command line utilites.
+
 19991005-07:55 GMT+1 Antonio Linares <alinares@fivetech.com>
   + New file source/vm/mainstd.c   (entry point for std applications)
   + New file source/vm/mainwin.c   (entry point for win appplications)

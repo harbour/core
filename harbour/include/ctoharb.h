@@ -69,6 +69,10 @@
 
 #include "extend.h"
 
+/* Harbour virtual machine init/exit functions */
+extern void    hb_vmInit( void );
+extern void    hb_vmQuit( void );
+
 /* Harbour virtual machine functions */
 extern void    hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
 extern void    hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* statics symbols initialization */

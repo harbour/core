@@ -18,7 +18,7 @@ gtapi.obj    : gtapi.c    extend.h hbdefs.h
 gtwin.obj    : gtwin.c    extend.h hbdefs.h
 
 .c.obj:
-  bcc32 -wmsg -c -O2 -DHARBOUR_USE_WIN_GTAPI -I.\include -v -o$@ $<
-  tlib .\lib\b32\terminal.lib -+$@,,
-  bcc32 -wmsg -c -O2 -I.\include -v -o$@ $<
-  tlib .\lib\b32\termwin.lib -+$@,,
+  bcc32 -wmsg -c -O2 -DHARBOUR_USE_WIN_GTAPI -Iinclude -v -o$@ $<
+  tlib lib\b32\terminal.lib -+$@,,
+  bcc32 -wmsg -c -O2 -Iinclude -v -o$@ $<
+  tlib lib\b32\termwin.lib -+$@,,

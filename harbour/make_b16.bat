@@ -3,5 +3,5 @@ rem
 rem $Id$
 rem 
 
-make -fmakefile.b16
-rem make -fhbpp.b16
+make -fmakefile.b16 > make.err
+edit make.err

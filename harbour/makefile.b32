@@ -4,7 +4,14 @@
 
 # makefile for Borland C/C++ 32 bits
 
-.path.asm = source\compiler
+# avoid optimizer bug, when using compiler version 4.0
+!if $d(B40)
+   BCC_OPT = 
+!else
+   BCC_OPT = -O2
+!endif
+
+.path.asm = source\vm
 .path.c   = source\compiler;source\vm;source\rtl;source\tools;source\rtl\gt;source\rtl\natmsg;source\pp;source\rdd
 .path.h   = include
 .path.l   = source\compiler
@@ -27,6 +34,8 @@ harbour.lib : achoice.obj adir.obj alert.obj arrays.obj asort.obj \
               objfunc.obj readvar.obj xsavescr.obj memvarbl.obj \
               set.obj setcolor.obj setkey.obj strfmt.obj strings.obj symbols.obj stringp.obj \
               stringsx.obj tbcolumn.obj tbrowse.obj tbrwtext.obj tclass.obj tget.obj tgetlist.obj tone.obj transfrm.obj
+
+symbols.obj  : symbols.asm
 
 achoice.obj  : achoice.c  extend.h hbdefs.h
 adir.obj     : adir.c     extend.h hbdefs.h
@@ -70,9 +79,10 @@ mainwin.obj  : mainwin.c  extend.h hbdefs.h
 math.obj     : math.c     extend.h hbdefs.h
 mathx.obj    : mathx.c    extend.h hbdefs.h
 memofile.obj : memofile.c extend.h hbdefs.h
+memvarbl.obj : memvarbl.c extend.h hbdefs.h
 memvars.obj  : memvars.c  extend.h hbdefs.h
 menuto.obj   : menuto.c   extend.h hbdefs.h
-msges.obj    : msges.c    extend.h hbdefs.h
+msgen.obj    : msgen.c    extend.h hbdefs.h
 mtran.obj    : mtran.c    extend.h hbdefs.h
 objfunc.obj  : objfunc.c  extend.h hbdefs.h
 set.obj      : set.c      extend.h hbdefs.h
@@ -92,7 +102,6 @@ tone.obj     : tone.c     extend.h init.h inkey.h
 transfrm.obj : transfrm.c extend.h hbdefs.h
 readvar.obj  : readvar.c  extend.h hbdefs.h
 xsavescr.obj : xsavescr.c extend.h hbdefs.h
-memvarbl.obj : memvarbl.c extend.h hbdefs.h
 
 achoice.c    : achoice.prg   harbour.exe
 adir.c       : adir.prg      harbour.exe
@@ -105,6 +114,7 @@ terror.c     : terror.prg    harbour.exe
 errorsys.c   : errorsys.prg  harbour.exe
 fileread.c   : fileread.prg  harbour.exe
 harbinit.c   : harbinit.prg  harbour.exe
+memvarbl.c   : memvarbl.prg  harbour.exe
 menuto.c     : menuto.prg    harbour.exe
 objfunc.c    : objfunc.prg   harbour.exe
 setkey.c     : setkey.prg    harbour.exe
@@ -116,19 +126,22 @@ tget.c       : tget.prg      harbour.exe
 tgetlist.c   : tgetlist.prg  harbour.exe
 readvar.c    : readvar.prg   harbour.exe
 xsavescr.c   : xsavescr.prg  harbour.exe
-memvarbl.c   : memvarbl.prg  harbour.exe
+
+.asm.obj:
+  tasm32 $<, $@
+  tlib lib\b32\harbour.lib -+$@,,
 
 .prg.c:
   bin\harbour $< /n /osource\rtl\ /iinclude
 
 .c.obj:
-  bcc32 -c -O2 -I.\include -o$@ -DHARBOUR_USE_WIN_GTAPI $<
-  tlib .\lib\b32\harbour.lib -+$@,,
+  bcc32 $(BCC_OPT) -c -Iinclude -o$@ -DHARBOUR_USE_WIN_GTAPI $<
+  tlib lib\b32\harbour.lib -+$@,,
 
 harbour.exe : harboury.c harbourl.c genc.obj genhrb.obj genjava.obj genrc.obj genpas.obj genobj32.obj harbour.obj compiler.h hbppint.c hbpp.c table.c
-   echo -O2 > bld.32
+   echo $(BCC_OPT) > bld.32
    echo -ebin\harbour.exe >> bld.32
-   echo -Iinclude;source\compiler >> bld.32
+   echo -Iinclude >> bld.32
    echo source\compiler\harboury.c >> bld.32
    echo source\compiler\harbourl.c >> bld.32
    echo source\compiler\genobj32.obj >> bld.32
@@ -143,6 +156,8 @@ harbour.exe : harboury.c harbourl.c genc.obj genhrb.obj genjava.obj genrc.obj ge
    echo source\pp\table.c >> bld.32
    bcc32 @bld.32
    del bld.32
+   del harboury.obj
+   del harbourl.obj
 
 harboury.c : harbour.y
    bison -d -v -y -osource\compiler\harboury.c source\compiler\harbour.y
@@ -151,29 +166,29 @@ harbourl.c : harbour.l
    flex -i -8 -osource\compiler\harbourl.c source\compiler\harbour.l
 
 genobj32.obj : genobj32.c
-   bcc32 -c -O2 -I.\include -osource\compiler\genobj32.obj \
+   bcc32 $(BCC_OPT) -c -Iinclude -osource\compiler\genobj32.obj \
         source\compiler\genobj32.c
 
 genc.obj : genc.c
-   bcc32 -c -O2 -I.\include -osource\compiler\genc.obj \
+   bcc32 $(BCC_OPT) -c -Iinclude -osource\compiler\genc.obj \
         source\compiler\genc.c
 
 genhrb.obj : genhrb.c
-   bcc32 -c -O2 -I.\include -osource\compiler\genhrb.obj \
+   bcc32 $(BCC_OPT) -c -Iinclude -osource\compiler\genhrb.obj \
         source\compiler\genhrb.c
 
 genrc.obj : genrc.c
-   bcc32 -c -O2 -I.\include -osource\compiler\genrc.obj \
+   bcc32 $(BCC_OPT) -c -Iinclude -osource\compiler\genrc.obj \
         source\compiler\genrc.c
 
 genjava.obj : genjava.c
-   bcc32 -c -O2 -I.\include -osource\compiler\genjava.obj \
+   bcc32 $(BCC_OPT) -c -Iinclude -osource\compiler\genjava.obj \
         source\compiler\genjava.c
 
 genpas.obj : genpas.c
-   bcc32 -c -O2 -I.\include -osource\compiler\genpas.obj \
+   bcc32 $(BCC_OPT) -c -Iinclude -osource\compiler\genpas.obj \
         source\compiler\genpas.c
 
 harbour.obj : harbour.c
-   bcc32 -c -O2 -I.\include -osource\compiler\harbour.obj \
+   bcc32 $(BCC_OPT) -c -Iinclude -osource\compiler\harbour.obj \
         source\compiler\harbour.c

@@ -4,8 +4,24 @@
 
 # makefile for Borland C/C++ 32 bits
 
-PROJECT: hbpp.exe
+.path.c   = source\pp
+.path.h   = include
+.path.lib = lib\b32
+.path.obj = obj
+
+PROJECT: lib\b32\hbpp.lib hbpp.exe
+
+lib\b32\hbpp.lib : hbppint.obj hbpp.obj table.obj hbpplib.obj
+
+hbppint.obj : hbppint.c
+hbpp.obj    : hbpp.c
+table.obj   : table.c
+hbpplib.obj : hbpplib.c
+
+.c.obj :
+   bcc32 -c -O2 -Iinclude -o$@ $<
+   tlib lib\b32\hbpp.lib -+$@,,
 
 hbpp.exe : source\pp\stdalone\hbpp.c
-   bcc32  -O2 -ebin\hbpp.exe -Iinclude source\pp\stdalone\hbpp.c lib\b32\hbpp.lib
+   bcc32 -O2 -ebin\hbpp.exe -Iinclude source\pp\stdalone\hbpp.c lib\b32\hbpp.lib
    del source\pp\stdalone\hbpp.obj

@@ -48,5 +48,5 @@ numtxten.c   : numtxten.prg harbour.exe
   bin\harbour $< /n /osource\tools\ /iinclude
 
 .c.obj:
-  bcc32  -c  -O2  -I.\include -o$@ $<
-  tlib .\lib\b32\hbgt.lib -+$@,,
+  bcc32 -c -O2 -Iinclude -o$@ $<
+  tlib lib\b32\hbgt.lib -+$@,,
