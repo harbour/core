@@ -1,3 +1,12 @@
+19991013-11:00 GMT+8 Ron Pinkas <Ron@Profit-Master.com>
+   * harbour.y
+          + added TOKEN DOT and rules to support concatenation of Var and constant in macro variables assignments (like &cVar.PlusFix).
+	  + added rules to support PRIVATE/PUBLIC &cVar
+   * harbour.l
+          + added rules to support new TOKEN DOT and yylval.string to have the string value when parsing DOUBLE.
+   * tests/tstmacro.prg
+	  added many tests to demonstrate working capabilities og macro.
+
 19991013-13:52 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/inkey.c
      + borland c 4.5 fixes as reported by Felipe

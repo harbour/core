@@ -1,19 +1,76 @@
-Function nMyFunc( )
+#INCLUDE "HBCLASS.CH"
 
-	LOCAL n := 'cVar1'
+Function Main( )
 
-	PRIVATE cVar1
+	LOCAL cStr := 'cVar', cStr_1 := 'cVar_1', aVar := { 'cVar_1' }, oVar
 
-	&n = 'Simple '
-	? M->cVar1
+	PRIVATE cVar_1, cMainPrivate := 'cVar_1'
 
-	&( 'cVar' + '1' ) := 'Macro'
-	?? M->cVar1
+	&cStr_1 = 'Simple '
+	? M->cVar_1
 
-	M->&n = 'Aliased'
-	? M->cVar1
+	&( 'cVar' + '_1' ) := 'Macro'
+	?? M->cVar_1
 
-	MEMVAR->&( 'cVar' + '1' ) := ' Macro'
-	?? M->cVar1
+	M->&cStr_1 = 'Aliased'
+	? M->cVar_1
 
-return NIL
+	MEMVAR->&( 'cVar' + '_1' ) := ' Macro'
+	?? M->cVar_1
+
+	cStr := 'cVar_'
+	&cStr.1 = 'Concatenated Macro (Numeric)'
+	? M->cVar_1
+
+	cStr := 'cVar'
+	&cStr._1 = 'Concatenated Macro (String)'
+	? M->cVar_1
+
+	&aVar[1] := 'Array Macro'
+	? M->cVar_1
+
+	oVar := TValue():New()
+	oVar:cVal := 'cVar_1'
+	&oVar:cVal := 'Class Macro'
+	? M->cVar_1
+
+	SubFun()
+
+	? '"cVar_1" = [' + M->cVar_1 + '] AFTER SubFun() PRIVATE'
+
+RETURN NIL
+
+FUNCTION TValue
+
+   STATIC oClass
+
+   IF oClass == NIL
+      oClass = TClass():New( "TValue" )
+
+      oClass:AddData( "cVal" )
+      oClass:AddMethod( "New",        @New() )         // New Method
+
+		oClass:Create()
+
+   ENDIF
+
+RETURN( oClass:Instance() )
+
+
+STATIC FUNCTION New()
+
+   LOCAL Self := QSelf()
+
+RETURN Self
+
+Function SubFun()
+
+	? '"cVar_1" = [' + M->cVar_1 + '] BEFORE SubFun() PRIVATE'
+
+	PRIVATE M->&cMainPrivate
+
+	&cMainPrivate := 'In SubFun()'
+
+	? '"cVar_1" = [' + M->cVar_1 + '] in SubFun() PRIVATE'
+
+RETURN

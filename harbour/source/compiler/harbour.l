@@ -1136,8 +1136,8 @@ Separator     {SpaceTab}
 "++"           _iState =OPERATOR; return INC;
 "--"           _iState =OPERATOR; return DEC;
 "->"           _iState =OPERATOR; return ALIASOP;
-"M->&"          _iState =OPERATOR; return MACROALIAS;
-"MEMVAR->&"     _iState =OPERATOR; return MACROALIAS;
+"M->&"         _iState =OPERATOR; return MACROALIAS;
+"MEMVAR->&"    _iState =OPERATOR; return MACROALIAS;
 "<="           _iState =OPERATOR; return LE;
 ">="           _iState =OPERATOR; return GE;
 "+="           _iState =OPERATOR; return PLUSEQ;
@@ -1152,6 +1152,7 @@ Separator     {SpaceTab}
 ".and."        _iState =OPERATOR; return AND;
 ".or."         _iState =OPERATOR; return OR;
 "!"|".not."    _iState =OPERATOR; return NOT;
+"."            _iState =OPERATOR; return DOT;
 "::"           unput( ':' ); unput( 'f' ); unput( 'l' ); unput( 'e' ); unput( 'S' );
 [,\{\}\|\#\&\:\<\>\[\]\@] _iState =OPERATOR; return yytext[ 0 ];
 [\(]           ++_iOpenBracket; _iState =SEPARATOR; return yytext[ 0 ];
@@ -1298,6 +1299,8 @@ static int yy_ConvertNumber( char * szBuffer )
    char * ptr;
 
    yylval.dNum.dNumber = atof( szBuffer );
+   yylval.string = yy_strdup( yytext );
+
    ptr = strchr( szBuffer, '.' );
    if( ptr )
    {

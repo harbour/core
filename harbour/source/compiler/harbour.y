@@ -199,6 +199,7 @@ PFUNCTION AddFunCall( char * szFuntionName );
 void AddExtern( char * szExternName ); /* defines a new extern name */
 void AddSearchPath( char *, PATHNAMES * * ); /* add pathname to a search list */
 void AddVar( char * szVarName ); /* add a new param, local, static variable to a function definition or a public or private */
+void SetVarMacro( void ); /* Set the stack for the creation of a MACRO variable */
 PCOMSYMBOL AddSymbol( char *, USHORT * );
 void CheckDuplVars( PVAR pVars, char * szVarName, int iVarScope ); /*checks for duplicate variables definitions */
 void Dec( void );                  /* generates the pcode to decrement the latest value on the virtual machine stack */
@@ -540,6 +541,7 @@ extern int _iState;     /* current parser state (defined in harbour.l */
 %token PLUSEQ MINUSEQ MULTEQ DIVEQ POWER EXPEQ MODEQ EXITLOOP
 %token PRIVATE BEGINSEQ BREAK RECOVER USING DO WITH SELF LINE
 %token AS_NUMERIC AS_CHARACTER AS_LOGICAL AS_DATE AS_ARRAY AS_BLOCK AS_OBJECT DECLARE_FUN
+%token DOT
 
 /*the lowest precedence*/
 /*postincrement and postdecrement*/
@@ -638,15 +640,6 @@ ParamList  : IDENTIFIER AsType                { AddVar( $1 ); $$ = 1; }
            | ParamList ',' IDENTIFIER AsType  { AddVar( $3 ); $$++; }
            ;
 
-MacroAssign: INASSIGN
-	   | '='
-
-VarMacro   : ExpMacro
-
-ExpMacro   : '&' IDENTIFIER             { PushId( $2 ); }
-	   | MACROALIAS IDENTIFIER      { PushId( $2 ); }
-	   | Macro
-
 Statement  : ExecFlow Crlf        {}
            | FunCall Crlf         { Do( $1 ); }
            | AliasFunc Crlf       {}
@@ -696,12 +689,29 @@ Statement  : ExecFlow Crlf        {}
                      } Crlf
            | PUBLIC { iVarScope = VS_PUBLIC; } VarList Crlf
            | PRIVATE { iVarScope = VS_PRIVATE; } VarList Crlf
+           | PUBLIC { iVarScope = VS_PUBLIC; } VarMacroList Crlf
+           | PRIVATE { iVarScope = VS_PRIVATE; } VarMacroList Crlf
 
            | EXITLOOP  Crlf            { LoopExit(); }
            | LOOP  Crlf                { LoopLoop(); }
            | DoProc Crlf
            | EXTERN ExtList Crlf
            ;
+
+VarMacroList : { SetVarMacro(); } VarMacro { Do( 1 ); }
+             | VarMacroList ',' { SetVarMacro(); } VarMacro { Do( 1 ); }
+	     ;
+
+VarMacro   : '&' IDENTIFIER           { PushId( $2 ); }
+	   | MACROALIAS IDENTIFIER    { PushId( $2 ); }
+	   | Macro
+	   | VarMacro DOT IDENTIFIER { PushString( $3 ); GenPlusPCode( HB_P_PLUS ); }
+	   | VarMacro NUM_DOUBLE { PushString( yy_strdup( yylval.string + 1 ) ); GenPlusPCode( HB_P_PLUS ); }
+	   ;
+
+MacroAssign : INASSIGN
+	    | '='
+	    ;
 
 LineStat   : Crlf          { $<lNumber>$ = 0; }
            | Statement     { $<lNumber>$ = 1; }
@@ -755,13 +765,13 @@ ObjectData : IdSend IDENTIFIER                     { $$ = $2; _ulMessageFix = fu
            ;
 
 ObjectMethod : IdSend IDENTIFIER { Message( $2 ); } '(' MethParams ')' { Function( $5 ); }
-           | VarAtSend MethCall { Function( $2 ); }
-           | ObjFunCall MethCall                   { Function( $2 ); }
-           | ObjFunArray  ':' MethCall             { Function( $3 ); }
-           | ObjectData   ':' MethCall             { Function( $3 ); }
-           | ObjectArr MethCall                    { Function( $2 ); }
-           | ObjectMethod ':' MethCall             { Function( $3 ); }
-           ;
+             | VarAtSend MethCall { Function( $2 ); }
+             | ObjFunCall MethCall                   { Function( $2 ); }
+             | ObjFunArray  ':' MethCall             { Function( $3 ); }
+             | ObjectData   ':' MethCall             { Function( $3 ); }
+             | ObjectArr MethCall                    { Function( $2 ); }
+             | ObjectMethod ':' MethCall             { Function( $3 ); }
+             ;
 
 VarAtSend  : VarAt ':'                             { ArrayAt(); }
            | ArrayAt ':'                           { ArrayAt(); }
@@ -777,44 +787,44 @@ ObjFunCall : FunCall ':'                      { Function( $1 ); $$ = $1; }
            ;
 
 FunCallArray : FunCall { Function( $1 ); } ArrayIndex
-           ;
+             ;
 
 ObjFunArray : FunCallArray ':' { ArrayAt(); }
-           ;
+            ;
 
 NumExpression : NUM_DOUBLE                    { PushDouble( $1.dNumber,$1.bDec ); }
-           | NUM_INTEGER                      { PushInteger( $1 ); ValTypePush( 'N' ); }
-           | NUM_LONG                         { PushLong( $1 ); }
-           ;
+              | NUM_INTEGER                      { PushInteger( $1 ); ValTypePush( 'N' ); }
+              | NUM_LONG                         { PushLong( $1 ); }
+              ;
 
 ConExpression : NIL                           { PushNil(); }
-           | LITERAL                          { PushString( $1 ); }
-           | CodeBlock                        {}
-           | Logical                          { PushLogical( $1 ); }
-           | SELF                             { GenPCode1( HB_P_PUSHSELF ); ValTypePush( 'O' ); }
-           ;
+              | LITERAL                          { PushString( $1 ); }
+              | CodeBlock                        {}
+              | Logical                          { PushLogical( $1 ); }
+              | SELF                             { GenPCode1( HB_P_PUSHSELF ); ValTypePush( 'O' ); }
+              ;
 
 DynExpression : Variable
-           | VarUnary
-           | Operators                        {}
-           | FunCall                          { Function( $1 ); }
-           | IfInline                         {}
-           | Array                            {}
-           | ObjectMethod                     {}
-           | Macro                            {}
-           | AliasVar                         { PushId( $1 ); AliasRemove(); }
-           | AliasFunc                        {}
-           ;
+              | VarUnary
+              | Operators                        {}
+              | FunCall                          { Function( $1 ); }
+              | IfInline                         {}
+              | Array                            {}
+              | ObjectMethod                     {}
+              | Macro                            {}
+              | AliasVar                         { PushId( $1 ); AliasRemove(); }
+              | AliasFunc                        {}
+              ;
 
 /* NOTE: We have to distinguish IDENTIFIER here because it is repeated
  * in DoExpression (a part of DO <proc> WITH .. statement)
  * where it generates different action.
  */
 SimpleExpression : IDENTIFIER  { PushId( $1 ); }
-           | NumExpression
-           | ConExpression
-           | DynExpression
-           ;
+                 | NumExpression
+                 | ConExpression
+                 | DynExpression
+                 ;
 
 Expression : SimpleExpression       {}
            | PareExpList            {}
@@ -877,7 +887,6 @@ Variable   : VarAt                     { ArrayAt(); }
            | ObjectData ArrayIndex     { ArrayAt(); }
            | ObjectMethod ArrayIndex   { ArrayAt(); }
            ;
-
 
 VarAt      : IDENTIFIER { $<iNumber>$ = functions.pLast->lPCodePos; PushId( $1 ); } ArrayIndex { $$ =$<iNumber>2;  }
            ;
@@ -2045,6 +2054,16 @@ void AddExtern( char * szExternName ) /* defines a new extern name */
          pLast = pLast->pNext;
       pLast->pNext = pExtern;
    }
+}
+
+void SetVarMacro( void )
+{
+   if( iVarScope == VS_PRIVATE )
+       PushSymbol( yy_strdup( "__MVPRIVATE" ), 1);
+   else
+       PushSymbol( yy_strdup( "__MVPUBLIC" ), 1);
+
+   PushNil();
 }
 
 void AddVar( char * szVarName )
