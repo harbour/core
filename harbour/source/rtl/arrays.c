@@ -76,7 +76,7 @@ BOOL hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array */
    pBaseArray->ulLen      = ulLen;
    pBaseArray->uiHolders  = 1;
    pBaseArray->uiClass    = 0;
-   pBaseArray->uiPrevCls  = NULL;
+   pBaseArray->uiPrevCls  = 0;
 
    for( ulPos = 0; ulPos < ulLen; ulPos++ )
       ( pBaseArray->pItems + ulPos )->type = IT_NIL;

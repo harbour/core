@@ -1,3 +1,34 @@
+19991118-11:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/rtl/filesys.c
+        * corrected support for Watcom C/C++ compiler
+
+    *source/rtl/tone.c
+        * added support for Watcom C/C++ compiler
+
+    *source/rtl/gt/gtstd.c
+        * added missing return value in hb_gt_setPos()
+
+    *source/rtl/gt/gtdos.c
+        * added Ctrl-Break handler for Watcom C/C++ compiler
+        * changed USHORT - SHORT and (char *) to (unsigned char *)
+        to make happy C++ compilers in hb_gt_Scroll()
+
+    *source/compiler/expropt.c
+        * restored support for expression->( expressions_list ) syntax
+        * corrected bug in (expr .OR. .F.) and (expr .AND. .F.)
+        optimization
+        * corrected optimization of ( single_expr ) syntax
+
+    *source/rtl/classes.c
+    *source/rtl/arrays.c
+	* corrected assignment of NULL to an unsigned int type - some 
+	compilers don't like it
+	
+    *tests/rtl_test.prg
+	* added #ifdef __HARBOUR__ to suppres generation of errors that
+	are now reported at compile time (array[ 0 ], IIF( "str", ...) )
+	
 19991118-07:25 GMT+1 Victor Szel <info@szelvesz.hu>
   + source/common/hbfsapi.c
   + include/hbfsapi.h

@@ -809,7 +809,10 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( .NOT. .F.                       , .T.                                       )
    TEST_LINE( .NOT. 1                         , "E BASE 1077 Argument error .NOT. F:S"    )
 
+#ifndef __HARBOUR__
+   // this error is reported at compile time
    TEST_LINE( iif( "A", ":T:", ":F:" )        , "E BASE 1066 Argument error conditional " )
+#endif
    TEST_LINE( iif( .T., ":T:", ":F:" )        , ":T:"                                     )
    TEST_LINE( iif( .F., ":T:", ":F:" )        , ":F:"                                     )
 
@@ -824,14 +827,20 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( &mxNotHere.                     , "E BASE 1003 Variable does not exist MXUNDECL F:R" )
 #endif
 
+#ifndef __HARBOUR__
+   // this error is reported at compile time
    TEST_LINE( saArray[ 0 ]                    , "E BASE 1132 Bound error array access "           )
    TEST_LINE( saArray[ 0 ] := 1               , "E BASE 1133 Bound error array assign "           )
+#endif
    TEST_LINE( saArray[ 1000 ]                 , "E BASE 1132 Bound error array access "           )
    TEST_LINE( saArray[ 1000 ] := 1            , "E BASE 1133 Bound error array assign "           )
+#ifndef __HARBOUR__
+   // this error is reported at compile time
    TEST_LINE( saArray[ -1 ]                   , "E BASE 1132 Bound error array access "           )
    TEST_LINE( saArray[ -1 ] := 1              , "E BASE 1133 Bound error array assign "           )
    TEST_LINE( saArray[ "1" ]                  , "E BASE 1068 Argument error array access F:S"     )
    TEST_LINE( saArray[ "1" ] := 1             , "E BASE 1069 Argument error array assign "        )
+#endif
 
    /* Alias */
 

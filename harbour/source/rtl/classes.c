@@ -654,7 +654,7 @@ HARBOUR HB___CLSINST( void )
 
       hb_arrayNew( &hb_stack.Return, pClass->uiDatas );
       hb_stack.Return.item.asArray.value->uiClass   = uiClass;
-      hb_stack.Return.item.asArray.value->uiPrevCls = NULL;
+      hb_stack.Return.item.asArray.value->uiPrevCls = 0;
 
       for( uiAt = 0; uiAt < uiLimit; uiAt++, pMeth++ )
       {

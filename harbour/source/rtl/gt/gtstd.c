@@ -182,6 +182,7 @@ void hb_gt_Scroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
    HB_SYMBOL_UNUSED( uiLeft );
    HB_SYMBOL_UNUSED( uiBottom );
    HB_SYMBOL_UNUSED( uiRight );
+   HB_SYMBOL_UNUSED( byAttr );
    HB_SYMBOL_UNUSED( iRows );
    HB_SYMBOL_UNUSED( iCols );
 }
@@ -206,6 +207,8 @@ BOOL hb_gt_SetMode( USHORT uiMaxRow, USHORT uiMaxCol )
 
    s_uiMaxRow = uiMaxRow;
    s_uiMaxCol = uiMaxCol;
+
+   return 0;
 }
 
 void hb_gt_Replicate( BYTE byChar, ULONG ulLen )

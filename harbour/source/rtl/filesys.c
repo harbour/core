@@ -123,6 +123,7 @@
    #if !defined(HAVE_POSIX_IO)
       #define HAVE_POSIX_IO
    #endif
+   #define ftruncate chsize
 #endif
 
 #if defined(__BORLANDC__) || defined(__IBMCPP__) || defined(_MSC_VER) || defined(__MINGW32__)
@@ -1055,7 +1056,7 @@ USHORT  hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen )
 #if defined(HAVE_POSIX_IO)
 
    errno = 0;
-   getcwd( pbyBuffer, ulLen );
+   getcwd( ( char * ) pbyBuffer, ulLen );
    s_uiErrorLast = errno;
 
 #elif defined(__MINGW32__)
@@ -1120,8 +1121,10 @@ USHORT  hb_fsChDrv( BYTE nDrive )
 #elif defined( __WATCOMC__ )
 
    {
-      USHORT uiSave = _getdrive();
-      USHORT uiTotal;
+      /* 'unsigned int' _have to_ be used in Watcom
+       */
+      unsigned int uiSave = _getdrive();
+      unsigned int uiTotal;
 
       /* 1 = A:, 2 = B:, 3 = C:, etc
        * _dos_*() functions don't set 'errno'
@@ -1190,8 +1193,10 @@ USHORT  hb_fsIsDrv( BYTE nDrive )
 #elif defined( __WATCOMC__ )
 
    {
-      USHORT uiSave;
-      USHORT uiTotal;
+      /* 'unsigned int' _have to_ be used in Watcom
+       */
+      unsigned int uiSave;
+      unsigned int uiTotal;
 
       /* 1=  A:, 2 = B:, 3 = C:, etc
        * _dos_*() functions don't set 'errno'
@@ -1236,6 +1241,7 @@ BOOL    hb_fsIsDevice( FHANDLE hFileHandle )
 
    bResult = FALSE;
    s_uiErrorLast = FS_ERROR;
+   HB_SYMBOL_UNUSED( hFileHandle );
 
 #endif
 
@@ -1262,12 +1268,16 @@ BYTE    hb_fsCurDrv( void )
 #elif defined( __WATCOMC__ )
 
    {
+      /* 'unsigned int' _have to_ be used in Watcom
+       */
+      unsigned uiDrive;
+
       /* 1 = A:, 2 = B:, 3 = C:, etc
        * _dos_*() functions don't set 'errno'
        */
-      _dos_getdrive( &uiResult );
+      _dos_getdrive( &uiDrive );
       s_uiErrorLast = 0;
-      uiResult--;
+      uiResult = ( USHORT ) uiDrive -1;
    }
 
 #else

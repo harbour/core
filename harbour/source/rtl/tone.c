@@ -74,6 +74,9 @@
    #include <Windows32/Structures.h>
    #include <Windows32/CommonFunctions.h>
    #define HB_DONT_DEFINE_BASIC_TYPES
+#elif defined( __WATCOMC__ )
+   #include <i86.h>
+   #include <time.h>
 #endif
 
 #include "extend.h"
@@ -145,7 +148,7 @@ void hb_tone( double dFrequency, double dDuration )
    ULONG temp;
 #elif defined(OS2) || defined(__MINGW32__)
    USHORT temp;
-#elif defined(__DJGPP__) || defined(__BORLANDC__)
+#elif defined(__DJGPP__) || defined(__BORLANDC__) || defined(__WATCOMC__)
    USHORT temp; /* Use USHORT, because this variable gets added to clock()
                    to form end_clock and we want to minimize overflow risk */
    clock_t end_clock;
@@ -164,7 +167,7 @@ void hb_tone( double dFrequency, double dDuration )
    dFrequency = HB_MIN_( HB_MAX_( 0.0, dFrequency ), 32767.0 );
    dDuration = dDuration * CLOCKS_PER_SEC / 18.2 ; /* clocks */
 #endif
-#if defined(__BORLANDC__) && ! defined(_Windows) && ! defined(WINNT)
+#if ( defined(__BORLANDC__) && ! defined(_Windows) && ! defined(WINNT) )  || defined(__WATCOMC__)
    sound( ( unsigned ) dFrequency );
 #elif defined(__DJGPP__)
    sound( ( int ) dFrequency );
@@ -173,7 +176,7 @@ void hb_tone( double dFrequency, double dDuration )
    {
 #if defined(HARBOUR_GCC_OS2) || defined(_Windows) || defined(__CYGWIN__) || defined(WINNT)
       temp = HB_MIN_( HB_MAX_( 0, dDuration ), ULONG_MAX );
-#elif defined(OS2) || defined(__BORLANDC__) || defined(__DJGPP__) || defined(__MINGW32__)
+#elif defined(OS2) || defined(__BORLANDC__) || defined(__DJGPP__) || defined(__MINGW32__) || defined(__WATCOMC__)
       temp = HB_MIN_( HB_MAX_( 0, dDuration ), USHRT_MAX );
 #endif
       dDuration -= temp;
@@ -198,7 +201,7 @@ void hb_tone( double dFrequency, double dDuration )
             both parameters and either generates the default sound
             event or the standard system beep. */
          Beep( ( ULONG ) dFrequency, temp );
-#elif defined(__DJGPP__) || ( defined(__BORLANDC__) && ! defined(_Windows) )
+#elif defined(__DJGPP__) || ( defined(__BORLANDC__) && ! defined(_Windows) ) || defined(__WATCOMC__)
          /* Note: delay() in <dos.h> for DJGPP does not work and
                   delay() in <dos.h> for BORLANDC is not multi-
                   tasking friendly. */
@@ -208,7 +211,7 @@ void hb_tone( double dFrequency, double dDuration )
 #endif
        }
    }
-#if defined(__BORLANDC__) && ! defined(_Windows)
+#if ( defined(__BORLANDC__) && ! defined(_Windows) ) || defined(__WATCOMC__)
    nosound();
 #elif defined(__DJGPP__)
    sound( 0 );

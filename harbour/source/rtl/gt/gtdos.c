@@ -85,8 +85,11 @@ static char hb_gt_GetScreenMode( void );
 static void hb_gt_SetCursorSize( char start, char end );
 static void hb_gt_GetCursorSize( char * start, char * end );
 
-#if defined(__WATCOMC__) && defined(__386__)
-   #define FAR
+#if defined(__WATCOMC__)
+   #if defined(__386__)
+      #define FAR
+   #endif
+   #include <signal.h>
 #endif
 #ifndef __DJGPP__
    static char FAR * scrnPtr;
@@ -96,6 +99,16 @@ static void hb_gt_GetCursorSize( char * start, char * end );
 
 #ifndef __DJGPP__
 BOOL hb_gtBreak = FALSE; /* Used to signal Ctrl+Break to hb_inkeyPoll() */
+#if defined(__WATCOMC__)
+static void hb_gt_Watcom_CtrlBreak_Handler( int iSignal )
+{
+   /* Ctrl-Break was pressed */
+   /* NOTE: the layout of this function is forced by the Watcom compiler
+    */
+   HB_SYMBOL_UNUSED( iSignal );
+   hb_gtBreak = TRUE;
+}
+#else
 static int s_iOldCtrlBreak = 0;
 
 static int hb_gt_CtrlBrkHandler( void )
@@ -104,11 +117,16 @@ static int hb_gt_CtrlBrkHandler( void )
    hb_gtBreak = TRUE;
    return 1;
 }
+#endif
 
 static void hb_gt_CtrlBrkRestore( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_CtrlBrkRestore()"));
-   setcbrk( s_iOldCtrlBreak );
+   #if defined(__WATCOMC__)
+      signal( SIGBREAK, SIG_DFL);
+   #else
+      setcbrk( s_iOldCtrlBreak );
+   #endif
 }
 #endif
 
@@ -121,12 +139,17 @@ void hb_gt_Init( void )
    __djgpp_hwint_flags |= 2;     /* Count Ctrl+Break instead of killing program */
    __djgpp_set_ctrl_c( 0 );      /* Disable Ctrl+C */
    __djgpp_set_sigquit_key( 0 ); /* Disable Ctrl+\ */
+
 #else
    /* Set the Ctrl+Break handler [vszel] */
 
-   ctrlbrk( hb_gt_CtrlBrkHandler );
-   s_iOldCtrlBreak = getcbrk();
-   setcbrk( 1 );
+   #if defined(__WATCOMC__)
+      signal( SIGBREAK, hb_gt_Watcom_CtrlBreak_Handler );
+   #else
+      ctrlbrk( hb_gt_CtrlBrkHandler );
+      s_iOldCtrlBreak = getcbrk();
+      setcbrk( 1 );
+   #endif
    atexit( hb_gt_CtrlBrkRestore );
 
    /* */
@@ -236,7 +259,7 @@ void hb_gt_SetPos( USHORT usRow, USHORT usCol )
      BYTE cRow, cCol;
      cRow = ( BYTE ) usRow;
      cCol = ( BYTE ) usCol;
-     
+
      _AH = 0x02;
      _BH = 0;
      _DH = cRow;
@@ -394,7 +417,7 @@ static void hb_gt_xGetXY( USHORT cRow, USHORT cCol, BYTE * attr, BYTE * ch )
    }
 #endif
 }
- 
+
 void hb_gt_xPutch( USHORT cRow, USHORT cCol, BYTE attr, BYTE ch )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_xPutch(%hu, %hu, %d, %d", cRow, cCol, (int) attr, (int) ch));
@@ -426,7 +449,7 @@ void hb_gt_Puts( USHORT cRow, USHORT cCol, BYTE attr, BYTE *str, ULONG len )
      int width;
      BYTE * ch_attr;
      BYTE * ptr;
-     
+
      i = ( int ) len;
      left = cCol;
      top = cRow;
@@ -445,7 +468,7 @@ void hb_gt_Puts( USHORT cRow, USHORT cCol, BYTE attr, BYTE *str, ULONG len )
 	 /*
 	  * Calculate end row position and the remainder size for the
 	  * end column adjust.
-	  */ 
+	  */
 	 bottom += ( i / width );
 	 i = i % width;
        }
@@ -485,7 +508,7 @@ void hb_gt_GetText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
 #else
    {
      USHORT x, y;
-     
+
      for( y = usTop; y <= usBottom; y++ )
        {
 	 for( x = usLeft; x <= usRight; x++ )
@@ -509,7 +532,7 @@ void hb_gt_PutText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
 #else
    {
      USHORT x, y;
-     
+
      for( y = usTop; y <= usBottom; y++ )
        {
 	 for( x = usLeft; x <= usRight; x++ )
@@ -597,7 +620,10 @@ void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight,
 {
    int iRows = sVert, iCols = sHoriz;
 
-   USHORT usRow, usCol;
+   /* NOTE: 'SHORT' is used intentionally to correctly compile
+   *  with C++ compilers
+   */
+   SHORT usRow, usCol;
    USHORT uiSize;   /* gtRectSize returns int */
    int iLength = ( usRight - usLeft ) + 1;
    int iCount, iColOld, iColNew, iColSize;
@@ -608,8 +634,11 @@ void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight,
 
    if( hb_gtRectSize( usTop, usLeft, usBottom, usRight, &uiSize ) == 0 )
    {
-      char * fpBlank = ( char * ) hb_xgrab( iLength );
-      char * fpBuff = ( char * ) hb_xgrab( iLength * 2 );
+      /* NOTE: 'unsigned' is used intentionally to correctly compile
+       * with C++ compilers
+       */
+      unsigned char * fpBlank = ( unsigned char * ) hb_xgrab( iLength );
+      unsigned char * fpBuff = ( unsigned char * ) hb_xgrab( iLength * 2 );
 
       memset( fpBlank, ' ', iLength );
 

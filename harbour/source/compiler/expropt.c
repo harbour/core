@@ -386,6 +386,7 @@ static char * s_OperTable[] = {
 static void hb_compExprDelOperator( HB_EXPR_PTR );
 
 static ULONG hb_compExprListReduce( HB_EXPR_PTR );
+static HB_EXPR_PTR hb_compExprListStrip( HB_EXPR_PTR );
 static void hb_compExprPushOperEq( HB_EXPR_PTR, BYTE );
 static void hb_compExprUseOperEq( HB_EXPR_PTR, BYTE );
 static void hb_compExprPushPreOp( HB_EXPR_PTR, BYTE );
@@ -1752,23 +1753,11 @@ static HB_EXPR_FUNC( hb_compExprUseList )
    {
       case HB_EA_REDUCE:
          {
-            ULONG ulCount;
-
-            ulCount = hb_compExprListReduce( pSelf );
-/*
-            if( ulCount == 1 && pSelf->value.asList.pExprList->ExprType <= HB_ET_VARIABLE )
-            {
- */
-               /* replace the list with a simple expression
-                */
-/*
-               HB_EXPR_PTR pExpr = pSelf;
-
-               pSelf = pSelf->value.asList.pExprList;
-               pExpr->value.asList.pExprList = NULL;
-               hb_compExprDelete( pExpr );
-            }
- */ 
+            hb_compExprListReduce( pSelf );
+            /* NOTE: if the list contains a single expression then the list
+             * is not reduced to this expression - if you need that reduction
+             * then call hb_compExprListStrip() additionaly
+             */
          }
          break;
 
@@ -2083,6 +2072,8 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
    return pSelf;
 }
 
+/* handler for expression->identifier syntax
+ */
 static HB_EXPR_FUNC( hb_compExprUseAliasVar )
 {
    switch( iMessage )
@@ -2204,6 +2195,8 @@ static HB_EXPR_FUNC( hb_compExprUseAliasVar )
    return pSelf;
 }
 
+/* handler for expression->( exression, ... ) syntax
+ */
 static HB_EXPR_FUNC( hb_compExprUseAliasExpr )
 {
    switch( iMessage )
@@ -2211,13 +2204,61 @@ static HB_EXPR_FUNC( hb_compExprUseAliasExpr )
       case HB_EA_REDUCE:
       case HB_EA_ARRAY_AT:
       case HB_EA_ARRAY_INDEX:
+         break;
       case HB_EA_LVALUE:
+         hb_compErrorLValue( pSelf );
+         break;
       case HB_EA_PUSH_PCODE:
+         {
+            /* save currently selected workarea
+             */
+            hb_compGenPCode1( HB_P_PUSHALIAS );
+            /* push the expression that will return a new workarea
+             */
+            HB_EXPR_USE( pSelf->value.asAlias.pAlias, HB_EA_PUSH_PCODE );
+            /* pop the value from the stack and select it as current workarea
+             */
+            hb_compGenPCode1( HB_P_POPALIAS );
+            /* evaluate any expression
+             */
+            HB_EXPR_USE( pSelf->value.asAlias.pExpList, HB_EA_PUSH_PCODE );
+            /* swap the two last items on the eval stack: one item is a
+             * value returned by evaluated expression and the second item
+             * is previously selected workarea. After swaping select again
+             * the restored workarea.
+             */
+            hb_compGenPCode1( HB_P_SWAPALIAS );
+         }
+         break;
+
       case HB_EA_POP_PCODE:
+         hb_compErrorLValue( pSelf );
+         break;
+
       case HB_EA_PUSH_POP:
       case HB_EA_STATEMENT:
-         hb_compWarnMeaningless( pSelf );
+         {
+            /* save currently selected workarea
+             */
+            hb_compGenPCode1( HB_P_PUSHALIAS );
+            /* push the expression that will return a new workarea
+             */
+            HB_EXPR_USE( pSelf->value.asAlias.pAlias, HB_EA_PUSH_PCODE );
+            /* pop the value from the stack and select it as current workarea
+             */
+            hb_compGenPCode1( HB_P_POPALIAS );
+            /* evaluate any expression - it will not leave any return
+             * value on the eval stack
+             */
+            HB_EXPR_USE( pSelf->value.asAlias.pExpList, HB_EA_PUSH_POP );
+            /* Pop and select again the restored workarea.
+             */
+            hb_compGenPCode1( HB_P_SWAPALIAS );
+         }
+         break;
       case HB_EA_DELETE:
+         hb_compExprDelete( pSelf->value.asAlias.pAlias );
+         hb_compExprDelete( pSelf->value.asAlias.pExpList );
          break;
    }
    return pSelf;
@@ -2276,7 +2317,7 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
    {
       case HB_EA_REDUCE:
          {
-            pSelf->value.asMessage.pObject = HB_EXPR_USE( pSelf->value.asMessage.pObject, HB_EA_REDUCE );
+            pSelf->value.asMessage.pObject = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asMessage.pObject, HB_EA_REDUCE ) );
             if( pSelf->value.asMessage.pParms )  /* Is it a method call ? */
                pSelf->value.asMessage.pParms = HB_EXPR_USE( pSelf->value.asMessage.pParms, HB_EA_REDUCE );
          }
@@ -2350,7 +2391,7 @@ static HB_EXPR_FUNC( hb_compExprUsePostInc )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
-         pSelf->value.asOperator.pLeft = HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE );
+         pSelf->value.asOperator.pLeft = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE ) );
          HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_LVALUE );
          break;
       case HB_EA_ARRAY_AT:
@@ -2386,7 +2427,7 @@ static HB_EXPR_FUNC( hb_compExprUsePostDec )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
-         pSelf->value.asOperator.pLeft = HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE );
+         pSelf->value.asOperator.pLeft = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE ) );
          HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_LVALUE );
          break;
       case HB_EA_ARRAY_AT:
@@ -2420,9 +2461,9 @@ static HB_EXPR_FUNC( hb_compExprUseAssign )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
-         pSelf->value.asOperator.pLeft  = HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE );
+         pSelf->value.asOperator.pLeft  = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE ) );
+         pSelf->value.asOperator.pRight = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_REDUCE ) );
          HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_LVALUE );
-         pSelf->value.asOperator.pRight = HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_REDUCE );
          break;
 
       case HB_EA_ARRAY_AT:
@@ -2491,8 +2532,8 @@ static HB_EXPR_FUNC( hb_compExprUsePlusEq )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
-         pSelf->value.asOperator.pLeft  = HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE );
-         pSelf->value.asOperator.pRight = HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_REDUCE );
+         pSelf->value.asOperator.pLeft  = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE ) );
+         pSelf->value.asOperator.pRight = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_REDUCE ) );
          HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_LVALUE );
          break;
 
@@ -2533,8 +2574,8 @@ static HB_EXPR_FUNC( hb_compExprUseMinusEq )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
-         pSelf->value.asOperator.pLeft  = HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE );
-         pSelf->value.asOperator.pRight = HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_REDUCE );
+         pSelf->value.asOperator.pLeft  = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE ) );
+         pSelf->value.asOperator.pRight = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_REDUCE ) );
          HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_LVALUE );
          break;
 
@@ -2575,8 +2616,8 @@ static HB_EXPR_FUNC( hb_compExprUseMultEq )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
-         pSelf->value.asOperator.pLeft  = HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE );
-         pSelf->value.asOperator.pRight = HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_REDUCE );
+         pSelf->value.asOperator.pLeft  = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE ) );
+         pSelf->value.asOperator.pRight = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_REDUCE ) );
          HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_LVALUE );
          break;
 
@@ -2617,8 +2658,8 @@ static HB_EXPR_FUNC( hb_compExprUseDivEq )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
-         pSelf->value.asOperator.pLeft  = HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE );
-         pSelf->value.asOperator.pRight = HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_REDUCE );
+         pSelf->value.asOperator.pLeft  = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE ) );
+         pSelf->value.asOperator.pRight = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_REDUCE ) );
          HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_LVALUE );
          break;
 
@@ -2659,8 +2700,8 @@ static HB_EXPR_FUNC( hb_compExprUseModEq )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
-         pSelf->value.asOperator.pLeft  = HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE );
-         pSelf->value.asOperator.pRight = HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_REDUCE );
+         pSelf->value.asOperator.pLeft  = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE ) );
+         pSelf->value.asOperator.pRight = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_REDUCE ) );
          HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_LVALUE );
          break;
 
@@ -2701,8 +2742,8 @@ static HB_EXPR_FUNC( hb_compExprUseExpEq )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
-         pSelf->value.asOperator.pLeft  = HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE );
-         pSelf->value.asOperator.pRight = HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_REDUCE );
+         pSelf->value.asOperator.pLeft  = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE ) );
+         pSelf->value.asOperator.pRight = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_REDUCE ) );
          HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_LVALUE );
          break;
 
@@ -2746,8 +2787,8 @@ static HB_EXPR_FUNC( hb_compExprUseOr )
          {
             HB_EXPR_PTR pLeft, pRight;
 
-            pSelf->value.asOperator.pLeft = HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE );
-            pSelf->value.asOperator.pRight = HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE );
+            pSelf->value.asOperator.pLeft  = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE ) );
+            pSelf->value.asOperator.pRight = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE ) );
             pLeft  = pSelf->value.asOperator.pLeft;
             pRight = pSelf->value.asOperator.pRight;
 
@@ -2786,7 +2827,7 @@ static HB_EXPR_FUNC( hb_compExprUseOr )
             }
             else if( pRight->ExprType == HB_ET_LOGICAL )
             {
-               if( pLeft->value.asLogical )
+               if( pRight->value.asLogical )
                {
                   /* expr .OR. .T. => .T.
                    */
@@ -2878,8 +2919,8 @@ static HB_EXPR_FUNC( hb_compExprUseAnd )
          {
             HB_EXPR_PTR pLeft, pRight;
 
-            pSelf->value.asOperator.pLeft = HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE );
-            pSelf->value.asOperator.pRight = HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE );
+            pSelf->value.asOperator.pLeft  = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE ) );
+            pSelf->value.asOperator.pRight = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE ) );
             pLeft  = pSelf->value.asOperator.pLeft;
             pRight = pSelf->value.asOperator.pRight;
 
@@ -2918,7 +2959,7 @@ static HB_EXPR_FUNC( hb_compExprUseAnd )
             }
             else if( pRight->ExprType == HB_ET_LOGICAL )
             {
-               if( pLeft->value.asLogical )
+               if( pRight->value.asLogical )
                {
                   /* expr .AND. .T. => expr
                    */
@@ -3009,7 +3050,7 @@ static HB_EXPR_FUNC( hb_compExprUseNot )
          {
             HB_EXPR_PTR pExpr;
 
-            pSelf->value.asOperator.pLeft = HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE );
+            pSelf->value.asOperator.pLeft = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE ) );
             pExpr = pSelf->value.asOperator.pLeft;
 
             if( pExpr->ExprType == HB_ET_LOGICAL )
@@ -3071,8 +3112,8 @@ static HB_EXPR_FUNC( hb_compExprUseEqual )
    {
       case HB_EA_REDUCE:
          {
-            pSelf->value.asOperator.pLeft = HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE );
-            pSelf->value.asOperator.pRight = HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE );
+            pSelf->value.asOperator.pLeft  = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE ) );
+            pSelf->value.asOperator.pRight = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE ) );
          }
          break;
 
@@ -3218,8 +3259,8 @@ static HB_EXPR_FUNC( hb_compExprUseEQ )
          {
             HB_EXPR_PTR pLeft, pRight;
 
-            pSelf->value.asOperator.pLeft = HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE );
-            pSelf->value.asOperator.pRight = HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE );
+            pSelf->value.asOperator.pLeft  = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE ) );
+            pSelf->value.asOperator.pRight = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE ) );
             pLeft  = pSelf->value.asOperator.pLeft;
             pRight = pSelf->value.asOperator.pRight;
 
@@ -3343,8 +3384,8 @@ static HB_EXPR_FUNC( hb_compExprUseLT )
          {
             HB_EXPR_PTR pLeft, pRight;
 
-            pSelf->value.asOperator.pLeft = HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE );
-            pSelf->value.asOperator.pRight = HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE );
+            pSelf->value.asOperator.pLeft  = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE ) );
+            pSelf->value.asOperator.pRight = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE ) );
             pLeft  = pSelf->value.asOperator.pLeft;
             pRight = pSelf->value.asOperator.pRight;
 
@@ -3460,8 +3501,8 @@ static HB_EXPR_FUNC( hb_compExprUseGT )
          {
             HB_EXPR_PTR pLeft, pRight;
 
-            pSelf->value.asOperator.pLeft = HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE );
-            pSelf->value.asOperator.pRight = HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE );
+            pSelf->value.asOperator.pLeft  = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE ) );
+            pSelf->value.asOperator.pRight = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE ) );
             pLeft  = pSelf->value.asOperator.pLeft;
             pRight = pSelf->value.asOperator.pRight;
 
@@ -3575,8 +3616,8 @@ static HB_EXPR_FUNC( hb_compExprUseLE )
          {
             HB_EXPR_PTR pLeft, pRight;
 
-            pSelf->value.asOperator.pLeft = HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE );
-            pSelf->value.asOperator.pRight = HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE );
+            pSelf->value.asOperator.pLeft  = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE ) );
+            pSelf->value.asOperator.pRight = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE ) );
             pLeft  = pSelf->value.asOperator.pLeft;
             pRight = pSelf->value.asOperator.pRight;
 
@@ -3691,8 +3732,8 @@ static HB_EXPR_FUNC( hb_compExprUseGE )
          {
             HB_EXPR_PTR pLeft, pRight;
 
-            pSelf->value.asOperator.pLeft = HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE );
-            pSelf->value.asOperator.pRight = HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE );
+            pSelf->value.asOperator.pLeft  = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE ) );
+            pSelf->value.asOperator.pRight = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE ) );
             pLeft  = pSelf->value.asOperator.pLeft;
             pRight = pSelf->value.asOperator.pRight;
 
@@ -3807,8 +3848,8 @@ static HB_EXPR_FUNC( hb_compExprUseNE )
          {
             HB_EXPR_PTR pLeft, pRight;
 
-            pSelf->value.asOperator.pLeft = HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE );
-            pSelf->value.asOperator.pRight = HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE );
+            pSelf->value.asOperator.pLeft  = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE ) );
+            pSelf->value.asOperator.pRight = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE ) );
             pLeft  = pSelf->value.asOperator.pLeft;
             pRight = pSelf->value.asOperator.pRight;
 
@@ -3931,8 +3972,8 @@ static HB_EXPR_FUNC( hb_compExprUseIN )
    {
       case HB_EA_REDUCE:
          {
-            pSelf->value.asOperator.pLeft = HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE );
-            pSelf->value.asOperator.pRight = HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE );
+            pSelf->value.asOperator.pLeft  = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE ) );
+            pSelf->value.asOperator.pRight = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE ) );
 
             if( ( pSelf->value.asOperator.pLeft->ExprType == pSelf->value.asOperator.pRight->ExprType ) && pSelf->value.asOperator.pLeft->ExprType == HB_ET_STRING )
             {
@@ -4009,8 +4050,8 @@ static HB_EXPR_FUNC( hb_compExprUsePlus )
          {
             HB_EXPR_PTR pLeft, pRight;
 
-            pSelf->value.asOperator.pLeft = HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE );
-            pSelf->value.asOperator.pRight = HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE );
+            pSelf->value.asOperator.pLeft  = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE ) );
+            pSelf->value.asOperator.pRight = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE ) );
             pLeft  = pSelf->value.asOperator.pLeft;
             pRight = pSelf->value.asOperator.pRight;
 
@@ -4156,8 +4197,8 @@ static HB_EXPR_FUNC( hb_compExprUseMinus )
          {
             HB_EXPR_PTR pLeft, pRight;
 
-            pSelf->value.asOperator.pLeft = HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE );
-            pSelf->value.asOperator.pRight = HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE );
+            pSelf->value.asOperator.pLeft  = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE ) );
+            pSelf->value.asOperator.pRight = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE ) );
             pLeft  = pSelf->value.asOperator.pLeft;
             pRight = pSelf->value.asOperator.pRight;
 
@@ -4283,8 +4324,8 @@ static HB_EXPR_FUNC( hb_compExprUseMult )
          {
             HB_EXPR_PTR pLeft, pRight;
 
-            pSelf->value.asOperator.pLeft = HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE );
-            pSelf->value.asOperator.pRight = HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE );
+            pSelf->value.asOperator.pLeft  = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE ) );
+            pSelf->value.asOperator.pRight = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE ) );
             pLeft  = pSelf->value.asOperator.pLeft;
             pRight = pSelf->value.asOperator.pRight;
 
@@ -4402,8 +4443,8 @@ static HB_EXPR_FUNC( hb_compExprUseDiv )
          {
             HB_EXPR_PTR pLeft, pRight;
 
-            pSelf->value.asOperator.pLeft = HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE );
-            pSelf->value.asOperator.pRight = HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE );
+            pSelf->value.asOperator.pLeft  = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE ) );
+            pSelf->value.asOperator.pRight = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE ) );
             pLeft  = pSelf->value.asOperator.pLeft;
             pRight = pSelf->value.asOperator.pRight;
 
@@ -4463,7 +4504,7 @@ static HB_EXPR_FUNC( hb_compExprUseDiv )
                            dVal = ( double ) pLeft->value.asNum.lVal / pRight->value.asNum.dVal;
                         pSelf->value.asNum.dVal = dVal;
                         pSelf->value.asNum.bDec = 2; /* TODO: See NOTE 1 */
-			
+
                      }
                      pSelf->value.asNum.NumType = HB_ET_DOUBLE;
 		     pSelf->ExprType = HB_ET_NUMERIC;
@@ -4547,8 +4588,8 @@ static HB_EXPR_FUNC( hb_compExprUseMod )
          {
             HB_EXPR_PTR pLeft, pRight;
 
-            pSelf->value.asOperator.pLeft = HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE );
-            pSelf->value.asOperator.pRight = HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE );
+            pSelf->value.asOperator.pLeft  = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE ) );
+            pSelf->value.asOperator.pRight = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE ) );
             pLeft  = pSelf->value.asOperator.pLeft;
             pRight = pSelf->value.asOperator.pRight;
 
@@ -4693,7 +4734,7 @@ static HB_EXPR_FUNC( hb_compExprUseNegate )
          {
             HB_EXPR_PTR pExpr;
 
-            pSelf->value.asOperator.pLeft = HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE );
+            pSelf->value.asOperator.pLeft = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE ) );
             pExpr = pSelf->value.asOperator.pLeft;
 
             if( pExpr->ExprType == HB_ET_NUMERIC )
@@ -4758,6 +4799,7 @@ static HB_EXPR_FUNC( hb_compExprUsePreInc )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
+         pSelf->value.asOperator.pLeft = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE ) );
          HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_LVALUE );
          break;
 
@@ -4797,6 +4839,7 @@ static HB_EXPR_FUNC( hb_compExprUsePreDec )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
+         pSelf->value.asOperator.pLeft = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE ) );
          HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_LVALUE );
          break;
 
@@ -4869,6 +4912,29 @@ static ULONG hb_compExprListReduce( HB_EXPR_PTR pExpr )
    }
    return ulCnt;
 }
+
+static HB_EXPR_PTR hb_compExprListStrip( HB_EXPR_PTR pSelf )
+{
+
+   if( pSelf->ExprType == HB_ET_LIST )
+   {
+      ULONG ulCount = hb_compExprListLen( pSelf );
+
+      if( ulCount == 1 && pSelf->value.asList.pExprList->ExprType <= HB_ET_VARIABLE )
+      {
+         /* replace the list with a simple expression
+          *  ( EXPR ) -> EXPR
+         */
+         HB_EXPR_PTR pExpr = pSelf;
+
+         pSelf = pSelf->value.asList.pExprList;
+         pExpr->value.asList.pExprList = NULL;
+         hb_compExprDelete( pExpr );
+      }
+   }
+   return pSelf;
+}
+
 
 /* Generates pcodes for compound operators    += -= *= /= %= ^=
  *
