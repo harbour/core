@@ -8,6 +8,23 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-10-12 01:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbdefs.h
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/workarea.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+   * foramting some // replaced by /*  */
+
+  * harbour/source/vm/maindllp.c
+   * fixed Windows compilation
+   The BCC and MSC make fiels have to be updated to the folowing changes:
+     - harbour/contrib/libct/invertwin.prg
+     + harbour/contrib/libct/invrtwin.prg
+     - harbour/source/common/hbffind.c
+     + harbour/source/common/hbverdsp.c
+     - harbour/source/rdd/dbfcdx/dbfcdx1.h
+     + harbour/source/rtl/hbffind.c
+
 2004-10-11 21:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/Makefile
   + harbour/make_bsd.sh

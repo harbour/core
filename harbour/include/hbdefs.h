@@ -63,8 +63,8 @@
 
 /*
 #define HB_CLIPPER_INT_ITEMS
-*/
 #define HB_LONG_LONG_OFF
+*/
 
 #if defined( HB_OS_WIN_32 )
    #if !defined( HB_WIN32_IO_OFF ) 

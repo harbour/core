@@ -185,11 +185,11 @@ void hb_retds( char * szDate )  /* returns a date, must use yyyymmdd format */
       ((HB_RETDS)pRetds)(szDate);
 }
 
-void hb_retd( long lYear, long lMonth, long lDay ) /* returns a date */
+void hb_retd( int iYear, int iMonth, int iDay ) /* returns a date */
 {
    FARPROC pRetd=GetProcAddress(GetModuleHandle( NULL ), "_hb_retd" );
    if (pRetd)
-      ((HB_RETD)pRetd)(lYear,lMonth,lDay);
+      ((HB_RETD)pRetd)(iYear,iMonth,iDay);
 }
 
 void hb_retdl( long lJulian )   /* returns a long value as a julian date */

@@ -4224,7 +4224,6 @@ static BOOL hb_cdxTagKeyDel( LPCDXTAG pTag, LPCDXKEY pKey )
    if ( hb_cdxTagKeyFind( pTag, pKey ) != 0 )
    {
       hb_cdxPageKeyRemove( pTag->RootPage );
-      //pTag->rawKeyCount--;
       pTag->curKeyState &= ~( CDX_CURKEY_RAWPOS | CDX_CURKEY_LOGPOS |
                               CDX_CURKEY_RAWCNT | CDX_CURKEY_LOGCNT );
       pTag->CurKey->rec = 0;

@@ -147,7 +147,7 @@ ERRCODE hb_waSkip( AREAP pArea, LONG lToSkip )
  */
 ERRCODE hb_waSkipFilter( AREAP pArea, LONG lUpDown )
 {
-   BOOL fTop, fBottom, fOutOfRange, fDeleted;
+   BOOL fBottom, fDeleted;
    PHB_ITEM pResult;
    ERRCODE uiError;
 
@@ -161,19 +161,11 @@ ERRCODE hb_waSkipFilter( AREAP pArea, LONG lUpDown )
       The implied purpose of hb_waSkipFilter is to get off of a "bad" record
       after a skip was performed, NOT to skip lToSkip filtered records.
    */
-   lUpDown = ( lUpDown > 0  ?  1 : -1 );
+   lUpDown = ( lUpDown < 0  ? -1 : 1 );
 
-   fTop = pArea->fTop;
    fBottom = pArea->fBottom;
-   fOutOfRange = FALSE;
-   while( TRUE )
+   while ( !pArea->fBof && !pArea->fEof )
    {
-      if( pArea->fBof || pArea->fEof )
-      {
-         fOutOfRange = TRUE;
-         break;
-      }
-
       /* SET FILTER TO */
       if( pArea->dbfi.itmCobExpr )
       {
@@ -200,43 +192,23 @@ ERRCODE hb_waSkipFilter( AREAP pArea, LONG lUpDown )
       break;
    }
 
-#if 0
-   if( fOutOfRange )
+   /*
+    * The only one situation when we should repos is backward skipping
+    * if we are at BOTTOM position (it's SKIPFILTER called from GOBOTTOM)
+    * then GOEOF() if not then GOTOP()
+    */
+   if( pArea->fBof && lUpDown < 0 )
    {
-      /*
-         TODO: these calls to SELF_GOTO are redundant; in most cases
-         we are already at EOF from the skips above, and GO 0 is not necessary.
-         We should take a closer look at these. --BH
-      */
-
-      if( fTop && lUpDown > 0 )
-         uiError = SELF_GOTO( pArea, 0 );
-      else if( fBottom && lUpDown < 0 )
-         uiError = SELF_GOTO( pArea, 0 );
-      else if( lUpDown < 0 )
+      if ( fBottom )
       {
-         pArea->fEof = FALSE;
-         uiError = SELF_GOTOP( pArea );
-         pArea->fBof = TRUE;
+         uiError = SELF_GOTO( pArea, 0 );
       }
       else
       {
-         uiError = SELF_GOTO( pArea, 0 );
-         pArea->fBof = FALSE;
+         uiError = SELF_GOTOP( pArea );
+         pArea->fBof = TRUE;
       }
    }
-#else
-   /*
-    * The only one situation when we should repos is backward skipping
-    * if we are not on BOTTOM position (it's not SKIPFILTER called
-    * from GOBOTTOM).
-    */
-   if( pArea->fBof && lUpDown < 0 && !fBottom )
-   {
-      uiError = SELF_GOTOP( pArea );
-      pArea->fBof = TRUE;
-   }
-#endif
    else
    {
       uiError = SUCCESS;
@@ -311,7 +283,11 @@ ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
       {
          case 'C':
             pFieldInfo.uiType = HB_IT_STRING;
+#ifdef HB_C52_STRICT
+            pFieldInfo.uiLen = uiLen;
+#else
             pFieldInfo.uiLen = uiLen + uiDec * 256;
+#endif
             break;
 
          case 'L':
@@ -321,15 +297,34 @@ ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
 
          case 'M':
             pFieldInfo.uiType = HB_IT_MEMO;
-            pFieldInfo.uiLen = 10;
+            pFieldInfo.uiLen = (uiLen == 4) ? 4 : 10;
             break;
 
          case 'D':
             pFieldInfo.uiType = HB_IT_DATE;
+            pFieldInfo.uiLen = ( uiLen == 3 ) ? 3 : 8;
+            break;
+
+         case 'I':
+            pFieldInfo.uiType = HB_IT_INTEGER;
+            pFieldInfo.uiLen = ( uiLen == 2 || uiLen == 8 ) ? uiLen : 4;
+            break;
+
+         case '2':
+         case '4':
+            pFieldInfo.uiType = HB_IT_INTEGER;
+            pFieldInfo.uiLen = iData - '0';
+            break;
+
+         case 'B':
+         case '8':
+            pFieldInfo.uiType = HB_IT_DOUBLE;
             pFieldInfo.uiLen = 8;
+            pFieldInfo.uiDec = uiDec;
             break;
 
          case 'N':
+         case 'F':
             pFieldInfo.uiType = HB_IT_LONG;
             /* DBASE documentation defines maximum numeric field size as 20
              * but Clipper alows to create longer fileds so I remove this
@@ -407,6 +402,14 @@ ERRCODE hb_waFieldInfo( AREAP pArea, USHORT uiIndex, USHORT uiType, PHB_ITEM pIt
                hb_itemPutC( pItem, "N" );
                break;
 
+            case HB_IT_INTEGER:
+               hb_itemPutC( pItem, "I" );
+               break;
+
+            case HB_IT_DOUBLE:
+               hb_itemPutC( pItem, "B" );
+               break;
+
             default:
                hb_itemPutC( pItem, "U" );
                break;
@@ -474,9 +477,11 @@ ERRCODE hb_waAlias( AREAP pArea, BYTE * szAlias )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_waAlias(%p, %p)", pArea, szAlias));
 
-   szAlias[0] = '\0';
-   strncat( ( char * ) szAlias, ( ( PHB_DYNS ) pArea->atomAlias )->pSymbol->szName,
-            HARBOUR_MAX_RDD_ALIAS_LENGTH );
+   hb_strncpy( ( char * ) szAlias,
+               ( pArea->atomAlias && ( ( PHB_DYNS ) pArea->atomAlias )->hArea )
+               ? ( ( PHB_DYNS ) pArea->atomAlias )->pSymbol->szName : "",
+               HARBOUR_MAX_RDD_ALIAS_LENGTH );
+
    return SUCCESS;
 }
 
@@ -553,13 +558,64 @@ ERRCODE hb_waInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    HB_TRACE(HB_TR_DEBUG, ("hb_waInfo(%p, %hu, %p)", pArea, uiIndex, pItem));
    HB_SYMBOL_UNUSED( pArea );
 
-   if( uiIndex == DBI_ISDBF || uiIndex == DBI_CANPUTREC )
+   switch ( uiIndex )
    {
-      hb_itemPutL( pItem, FALSE );
-      return SUCCESS;
+      case DBI_ISDBF:
+      case DBI_CANPUTREC:
+         hb_itemPutL( pItem, FALSE );
+         break;
+
+      case DBI_CHILDCOUNT:
+      {
+         LPDBRELINFO lpdbRelations = pArea->lpdbRelations;
+         USHORT uiCount = 0;
+         while( lpdbRelations )
+         {
+            uiCount++;
+            lpdbRelations = lpdbRelations->lpdbriNext;
+         }
+         hb_itemPutNI( pItem, uiCount );
+         break;
+      }
+
+      case DBI_BOF:
+         hb_itemPutL( pItem, pArea->fBof );
+         break;
+
+      case DBI_EOF:
+         hb_itemPutL( pItem, pArea->fEof );
+         break;
+
+      case DBI_DBFILTER:
+         if ( pArea->dbfi.abFilterText )
+            hb_itemCopy( pItem, pArea->dbfi.abFilterText );
+         else
+            hb_itemPutC( pItem, "" );
+         break;
+
+      case DBI_FOUND:
+         hb_itemPutL( pItem, pArea->fFound );
+         break;
+
+      case DBI_FCOUNT:
+         hb_itemPutL( pItem, pArea->uiFieldCount );
+         break;
+
+      case DBI_ALIAS:
+      {
+         char szAlias[ HARBOUR_MAX_RDD_ALIAS_LENGTH + 1 ];
+         if ( SELF_ALIAS( pArea, ( BYTE * ) szAlias ) != SUCCESS )
+         {
+            return FAILURE;
+         }
+         hb_itemPutC( pItem, szAlias );
+         break;
+      }
+
+      default:
+         return FAILURE;
    }
-   else
-      return FAILURE;
+   return SUCCESS;
 }
 
 /*
@@ -706,24 +762,19 @@ ERRCODE hb_waEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
 
    if( !pEvalInfo->dbsci.lNext || lNext > 0 )
    {
+      bFor = TRUE;
       while( !pArea->fEof )
       {
-
-        if( pEvalInfo->dbsci.itmCobWhile )
-        {
-            bWhile = hb_itemGetL( hb_vmEvalBlock( pEvalInfo->dbsci.itmCobWhile ) );
-            if( !bWhile )
+         if( pEvalInfo->dbsci.itmCobWhile )
+         {
+            if ( ! hb_itemGetL( hb_vmEvalBlock( pEvalInfo->dbsci.itmCobWhile ) ) )
                break;
          }
-         else
-            bWhile = TRUE;
 
          if( pEvalInfo->dbsci.itmCobFor )
             bFor = hb_itemGetL( hb_vmEvalBlock( pEvalInfo->dbsci.itmCobFor ) );
-         else
-            bFor = TRUE;
 
-         if( bFor && bWhile )
+         if( bFor )
             hb_vmEvalBlock( pEvalInfo->itmBlock );
 
          if( pEvalInfo->dbsci.lNext && --lNext < 1 )
@@ -1005,6 +1056,7 @@ ERRCODE hb_waClearFilter( AREAP pArea )
       hb_itemRelease( pArea->dbfi.abFilterText );
       pArea->dbfi.abFilterText = NULL;
    }
+   pArea->dbfi.fFilter = FALSE;
 
    return SUCCESS;
 }
@@ -1083,9 +1135,11 @@ ERRCODE hb_waSetFilter( AREAP pArea, LPDBFILTERINFO pFilterInfo )
    {
       pArea->dbfi.itmCobExpr = hb_itemNew( pFilterInfo->itmCobExpr );
    }
-
    if( pFilterInfo->abFilterText )
+   {
       pArea->dbfi.abFilterText = hb_itemNew( pFilterInfo->abFilterText );
+   }
+   pArea->dbfi.fFilter = TRUE;
 
    return SUCCESS;
 }

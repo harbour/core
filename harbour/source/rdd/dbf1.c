@@ -1529,7 +1529,7 @@ static ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       SELF_ERROR( ( AREAP ) pArea, pError );
       hb_itemRelease( pError );
       return SUCCESS;
-   //   return FAILURE;
+      /* return FAILURE; */
    }
 
    /* Update deleted flag */
