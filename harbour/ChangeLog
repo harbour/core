@@ -1,3 +1,21 @@
+2000-02-18 17:30 GMT-5 David G. Holm <dholm@ sd-llc.com>
+
+   + doc/cvs_ssh.txt
+     + New file with information on how to get CVS to work with SSH.
+
+   * source/rtl/environ.c
+     ! Corrected the VERSION() documentation to describe how the function
+       actually works (the use of any parameter returns both the Harbour
+       and C compiler versions).
+     % Removed explicit tests for DJGPP, CYGWIN, MINGW32, and OS/2 GCC
+       for the __RUN() function and replaced them with a test for GNUC,
+       so that all Gnu C versions of Harbour can use the RUN command.
+
+   * tests/version.prg
+     % Changed the second call to VERSION to use a NIL parameter to show
+       that the use of any parameter will cause both the Harbour and C
+       compiler versions to be printed, regardless of the parameter value.
+
 20000218-21:32 GMT+3 Alexander Kresin
    * source/pp/stdalone/hbpp.c
      * corrected accordingly last changes

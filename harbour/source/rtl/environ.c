@@ -116,7 +116,6 @@
  *
  *  $FILES$
  *      source/rtl/environ.c
- *      Run an external program
  *  $SEEALSO$
  *  $END$
  */
@@ -532,33 +531,30 @@ char * hb_version( USHORT uiMode )
  *  $ONELINER$
  *      Returns the HARBOUR Version or the Harbour/Compiler Version
  *  $SYNTAX$
- *      VERSION([<nMode>]  --> <cReturn>
+ *      VERSION([<xMode>]  --> <cReturn>
  *  $ARGUMENTS$
- *      [<nMode>]   Optional Parameter that toggle to the display
- *      of the C compiler version that HARBOUR was Build. Default is 0
- *
- *      [<nMode>]              Returns
- *        0                  Harbour Version
- *        1                  Harbour Version+C compiler Version
+ *      [<xMode>]   Optional Parameter that enables the display
+ *      of the C compiler version that HARBOUR was built with.
  *  $RETURNS$
- *      <cReturn>   String contining the Harbour Version or the
- *      Harbour Version+C compiler Version when the <nMode> parameter is
- *      defined.
+ *      <cReturn>   String contining the Harbour Version or the Harbour
+ *      and C compiler Version when the <nMode> parameter is used.
  *  $DESCRIPTION$
  *      This function returns the HARBOUR Version or the Harbour Version+C
  *      compiler Version used to create the Harbour runtime library 
  *  $EXAMPLES$
- *     ? QOUT(VERSION())
- *     ? OOUT(VERSION(1))
+ *     ? QOUT(VERSION())    // Displays Harbour version only
+ *     ? QOUT(VERSION(NIL)) // Displays Harbour and C Compiler versions
  *  $TESTS$
  *
  *  $STATUS$
  *     S
  *  $COMPLIANCE$
- *      This function isn't compatible with CA CLIPPER.
- *      CA  Clipper only returns the Version of the Clipper Compiler
- *      Harbour returns the Harbour Version or the Harbour Version+C compiler Version
- *     when the <nMode> parameter is set to 1
+ *     This function is an enhanced version of the CA-Clipper VERSION function.
+ *     The CA-Clipper version does not have a parameter and it only returns
+ *     the Version of the CA-Clipper Compiler. The Harbour version returns
+ *     only the Harbour Version if called without the <nMode> parameter, but
+ *     returns both the Harbour Version and the Version of the C compiler used
+ *     to build Harbour when the <nMode> parameter is present.
  *  $PLATFORMS$
  *
  *  $FILES$
@@ -661,19 +657,23 @@ HARBOUR HB_GETE( void )
  *      enough free memory to be able to run the external program.
  *      Do not use it to run Terminate and Stay Resident programs
  *      (in case of DOS) since it cause several problems
+ *
+ *      Note: This function is what the RUN command preprocesses into.
+ *            It is considered bad form to use this function directly.
+ *            Use the RUN command instead.
  *  $EXAMPLES$
  *      __Run( "edit " + cMyTextFile )    // Runs an external editor
  *      __Run( "command" )                // Gives a DOS shell (DOS only)
  *  $FILES$
  *      source/rtl/environ.c
- *      Run an external program
  *  $SEEALSO$
+ *      RUN
  *  $END$
  */
 
 HARBOUR HB___RUN( void )
 {
-#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__) || defined(_MSC_VER) || defined(__IBMCPP__) || defined(HARBOUR_GCC_OS2) || defined(__CYGWIN__) || defined(__MINGW32__)
+#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(_MSC_VER) || defined(__IBMCPP__) || defined(__GNUC__)
    if( ISCHAR( 1 ) )
       system( hb_parc( 1 ) );
 #else

@@ -11,6 +11,6 @@
 function Main()
 
    ? VERSION()
-   ? VERSION(.T.)
+   ? VERSION(NIL)
 
 return nil
