@@ -28,6 +28,7 @@ C_SOURCES=\
         genobj32.c \
         genpas.c \
         genrc.c \
+	expropt.c \
 
 C_MAIN=harbour.c
 

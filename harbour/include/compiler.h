@@ -95,13 +95,6 @@ typedef struct
    int        iCount;      /* number of defined symbols */
 } SYMBOLS;
 
-/* locals, static, public variables support */
-typedef struct _STACK_VAL_TYPE
-{
-   char cType;                      /* type of stack value */
-   struct _STACK_VAL_TYPE * pPrev;    /* pointer to previous stack value's type */
-} STACK_VAL_TYPE, * PSTACK_VAL_TYPE;
-
 extern PFUNCTION GetFunction( char * szFunName ); /* locates a previously defined function */
 extern USHORT      GetFunctionPos( char * szSymbolName ); /* returns the index + 1 of a function on the functions defined list */
 

@@ -1,3 +1,29 @@
+19991007-17:00 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.y
+    *source/coompiler/expropt.c
+    *include/compiler.h
+	* moved all code related to checking of expressions value type
+	into th enew expropt.c file - it should be a good starting
+	point for the expressions optimalizer
+	* many coorections (rtl_test.prg doesn't GPF now when compiled
+	with -w option) - however this type checking didn't worked correctly
+	and it still doesn't work
+	* moved PSTACK_VAL_TYPE stucture into expropt.c
+
+    *source/compiler/harbour.y
+	* applied changes posted by Eddie Runia to correct compile
+	a:b[ 1 ]:c syntax
+	
+    *source/compiler/Makefile
+    *makefile.b32
+    *makefile.vc
+	* added expropt.c (not tested)
+
+    *source/rtl/dates.c
+	* change in #include (error in Linux)
+	<sys\timeb.h> -> <sys/timeb.h>	
+	
 19991007-09:16 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/rtl/tclass.prg
      * Method SetType() defaults init value to .f. when AS LOGICAL is specified.

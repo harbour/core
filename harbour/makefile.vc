@@ -258,11 +258,12 @@ $(HARBOUR_EXE) : \
     $(COMPILER_DIR)\genrc.c \
     $(COMPILER_DIR)\genjava.c \
     $(COMPILER_DIR)\genpas.c \
+    $(COMPILER_DIR)\expropt.c \
     $(COMPILER_DIR)\harbour.c \
     $(PP_DIR)\hbpp.c \
     $(PP_DIR)\hbppint.c \
     $(PP_DIR)\table.c
-    $(CC) $(CFLAGS) -DHARBOUR_OBJ_GENERATION $(COMPILER_DIR)\harboury.c $(COMPILER_DIR)\harbourl.c $(COMPILER_DIR)\harbour.c $(COMPILER_DIR)\genobj32.c $(COMPILER_DIR)\genc.c $(COMPILER_DIR)\genhrb.c $(COMPILER_DIR)\genrc.c $(COMPILER_DIR)\genjava.c $(COMPILER_DIR)\genpas.c $(PP_DIR)\hbppint.c $(PP_DIR)\hbpp.c $(PP_DIR)\table.c -o $(BIN_DIR)\harbour
+    $(CC) $(CFLAGS) -DHARBOUR_OBJ_GENERATION $(COMPILER_DIR)\harboury.c $(COMPILER_DIR)\harbourl.c $(COMPILER_DIR)\harbour.c $(COMPILER_DIR)\genobj32.c $(COMPILER_DIR)\genc.c $(COMPILER_DIR)\genhrb.c $(COMPILER_DIR)\genrc.c $(COMPILER_DIR)\genjava.c $(COMPILER_DIR)\genpas.c $(COMPILER_DIR)\expropt.c $(PP_DIR)\hbppint.c $(PP_DIR)\hbpp.c $(PP_DIR)\table.c -o $(BIN_DIR)\harbour
     @Echo :	Ignore Lnk4033 warning
     -del harboury.obj
     -del harbourl.obj
@@ -276,6 +277,7 @@ $(HARBOUR_EXE) : \
     -del genrc.obj
     -del genjava.obj
     -del genpas.obj
+    -del expropt.obj
 
 #
 # Library dependencies and build rules

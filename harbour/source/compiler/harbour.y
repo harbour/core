@@ -191,6 +191,10 @@ int yywrap( void );     /* manages the EOF of current processed file */
 void Hbpp_init ( void );
 
 /* production related functions */
+static void ArrayAt( void );
+static void ArrayPut( void );
+void ArrayDim( int iDimensions ); /* instructs the virtual machine to build an array with wDimensions */
+
 PFUNCTION AddFunCall( char * szFuntionName );
 void AddExtern( char * szExternName ); /* defines a new extern name */
 void AddSearchPath( char *, PATHNAMES * * ); /* add pathname to a search list */
@@ -198,7 +202,6 @@ void AddVar( char * szVarName ); /* add a new param, local, static variable to a
 PCOMSYMBOL AddSymbol( char *, USHORT * );
 void CheckDuplVars( PVAR pVars, char * szVarName, int iVarScope ); /*checks for duplicate variables definitions */
 void Dec( void );                  /* generates the pcode to decrement the latest value on the virtual machine stack */
-void ArrayDim( int iDimensions ); /* instructs the virtual machine to build an array with wDimensions */
 void Do( BYTE bParams );      /* generates the pcode to execute a Clipper function discarding its result */
 void Duplicate( void ); /* duplicates the virtual machine latest stack latest value and places it on the stack */
 void DupPCode( ULONG ulStart ); /* duplicates the current generated pcode from an offset */
@@ -242,13 +245,34 @@ void PushLong( long lNumber );          /* Pushes a long number on the virtual m
 void PushNil( void );                   /* Pushes nil on the virtual machine stack */
 void PushString( char * szText );       /* Pushes a string on the virtual machine stack */
 void PushSymbol( char * szSymbolName, int iIsFunction ); /* Pushes a symbol on to the Virtual machine stack */
-void GenPCode1( BYTE );             /* generates 1 byte of pcode */
-void GenPCode3( BYTE, BYTE, BYTE ); /* generates 3 bytes of pcode */
-void GenPCodeN( BYTE * pBuffer, ULONG ulSize );  /* copy bytes to a pcode buffer */
 char * SetData( char * szMsg );     /* generates an underscore-symbol name for a data assignment */
+
+static void GenPlusPCode( BYTE );    /* Generates opcode for plus/minus operands */
+static void GenNumPCode( BYTE );     /* Generates opcode for numerical operands */
+static void GenRelPCode( BYTE );     /* Generates opcode for relational operands */
+static void GenNotPCode( void );     /* Generates HB_P_NOT opcode */
+static void GenNegatePCode( void );  /* Generates HB_P_NEGATE opcode */
+static void GenPopPCode( void );     /* Generates HB_P_POP opcode */
+
+static void GenPCode1( BYTE );             /* generates 1 byte of pcode */
+static void GenPCode3( BYTE, BYTE, BYTE ); /* generates 3 bytes of pcode */
+static void GenPCodeN( BYTE * pBuffer, ULONG ulSize );  /* copy bytes to a pcode buffer */
+
 ULONG SequenceBegin( void );
 ULONG SequenceEnd( void );
 void SequenceFinish( ULONG, int );
+
+/* Managing value type */
+extern void ValTypePush( char cType );     /* Pushes the type of expression (used with -w3 option */
+extern void ValTypePop( int );
+extern void ValTypePlus( void );
+extern void ValTypeRelational( void );
+extern void ValTypeCheck( char, int, int );
+extern void ValTypeCheck2( char, int, int );
+extern char ValTypeGet( void );
+extern void ValTypePut( char );
+extern void ValTypeAssign( char * );
+extern void ValTypeReset( void );
 
 /* support for FIELD declaration */
 void FieldsSetAlias( char *, int );
@@ -484,8 +508,7 @@ BOOL _bDontGenLineNum = FALSE;   /* suppress line number generation */
 
 EXPLIST_PTR _pExpList = NULL;    /* stack used for parenthesized expressions */
 
-PSTACK_VAL_TYPE pStackValType = NULL; /* compile time stack values linked list */
-char cVarType = ' ';               /* current declared variable type */
+char _cVarType = ' ';               /* current declared variable type */
 
 #define LOOKUP 0
 extern int _iState;     /* current parser state (defined in harbour.l */
@@ -581,16 +604,9 @@ Line       : LINE NUM_INTEGER LITERAL Crlf
            | LINE NUM_INTEGER LITERAL '@' LITERAL Crlf   /* XBase++ style */
            ;
 
-Function   : FunScope FUNCTION  IDENTIFIER { cVarType = ' '; FunDef( $3, ( SYMBOLSCOPE ) $1, 0 ); } Params Crlf {}
-           | FunScope PROCEDURE IDENTIFIER { cVarType = ' '; FunDef( $3, ( SYMBOLSCOPE ) $1, FUN_PROCEDURE ); } Params Crlf {}
-           | FunScope DECLARE_FUN IDENTIFIER Params              Crlf { cVarType = ' '; AddSymbol( $3, NULL ); }
-           | FunScope DECLARE_FUN IDENTIFIER Params AS_NUMERIC   Crlf { cVarType = 'N'; AddSymbol( $3, NULL ); }
-           | FunScope DECLARE_FUN IDENTIFIER Params AS_CHARACTER Crlf { cVarType = 'C'; AddSymbol( $3, NULL ); }
-           | FunScope DECLARE_FUN IDENTIFIER Params AS_DATE      Crlf { cVarType = 'D'; AddSymbol( $3, NULL ); }
-           | FunScope DECLARE_FUN IDENTIFIER Params AS_LOGICAL   Crlf { cVarType = 'L'; AddSymbol( $3, NULL ); }
-           | FunScope DECLARE_FUN IDENTIFIER Params AS_ARRAY     Crlf { cVarType = 'A'; AddSymbol( $3, NULL ); }
-           | FunScope DECLARE_FUN IDENTIFIER Params AS_OBJECT    Crlf { cVarType = 'O'; AddSymbol( $3, NULL ); }
-           | FunScope DECLARE_FUN IDENTIFIER Params AS_BLOCK     Crlf { cVarType = 'B'; AddSymbol( $3, NULL ); }
+Function   : FunScope FUNCTION  IDENTIFIER { _cVarType = ' '; FunDef( $3, ( SYMBOLSCOPE ) $1, 0 ); } Params Crlf {}
+           | FunScope PROCEDURE IDENTIFIER { _cVarType = ' '; FunDef( $3, ( SYMBOLSCOPE ) $1, FUN_PROCEDURE ); } Params Crlf {}
+           | FunScope DECLARE_FUN IDENTIFIER Params AsType Crlf { AddSymbol( $3, NULL ); }
            ;
 
 FunScope   :                  { $$ = FS_PUBLIC; }
@@ -604,33 +620,36 @@ Params     :                                               { $$ = 0; }
            | '(' { iVarScope = VS_PARAMETER; } ParamList ')'   { $$ = $3; }
            ;
 
-ParamList  : IDENTIFIER                    { cVarType = ' '; AddVar( $1 ); $$ = 1; }
-           | IDENTIFIER AS_NUMERIC         { cVarType = 'N'; AddVar( $1 ); $$ = 1; }
-           | IDENTIFIER AS_CHARACTER       { cVarType = 'C'; AddVar( $1 ); $$ = 1; }
-           | IDENTIFIER AS_DATE            { cVarType = 'D'; AddVar( $1 ); $$ = 1; }
-           | IDENTIFIER AS_LOGICAL         { cVarType = 'L'; AddVar( $1 ); $$ = 1; }
-           | IDENTIFIER AS_ARRAY           { cVarType = 'A'; AddVar( $1 ); $$ = 1; }
-           | IDENTIFIER AS_BLOCK           { cVarType = 'B'; AddVar( $1 ); $$ = 1; }
-           | IDENTIFIER AS_OBJECT          { cVarType = 'O'; AddVar( $1 ); $$ = 1; }
-           | ParamList ',' IDENTIFIER      { AddVar( $3 ); $$++; }
+AsType     : /* unknown */                 { _cVarType = ' '; }
+           | AS_NUMERIC                    { _cVarType = 'N'; }
+           | AS_CHARACTER                  { _cVarType = 'C'; }
+           | AS_DATE                       { _cVarType = 'D'; }
+           | AS_LOGICAL                    { _cVarType = 'L'; }
+           | AS_ARRAY                      { _cVarType = 'A'; }
+           | AS_BLOCK                      { _cVarType = 'B'; }
+           | AS_OBJECT                     { _cVarType = 'O'; }
+           ;
+
+ParamList  : IDENTIFIER AsType                { AddVar( $1 ); $$ = 1; }
+           | ParamList ',' IDENTIFIER AsType  { AddVar( $3 ); $$++; }
            ;
 
 Statement  : ExecFlow Crlf        {}
            | FunCall Crlf         { Do( $1 ); }
            | AliasFunc Crlf       {}
-           | IfInline Crlf        { GenPCode1( HB_P_POP ); }
-           | ObjectMethod Crlf    { GenPCode1( HB_P_POP ); }
-           | VarUnary Crlf        { GenPCode1( HB_P_POP ); }
-           | VarAssign Crlf       { GenPCode1( HB_P_POP ); }
+           | IfInline Crlf        { GenPopPCode(); }
+           | ObjectMethod Crlf    { GenPopPCode(); }
+           | VarUnary Crlf        { GenPopPCode(); }
+           | VarAssign Crlf       { GenPopPCode(); }
 
            | IDENTIFIER '=' Expression { PopId( $1 ); } Crlf
            | AliasVar '=' { $<pVoid>$=( void * )pAliasId; pAliasId = NULL; } Expression { pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); AliasRemove(); } Crlf
            | AliasFunc '=' Expression             { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); } Crlf
-           | VarAt '=' Expression                 { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); } Crlf
-           | FunCallArray '=' Expression          { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); } Crlf
-           | ObjectData '=' { MessageFix( SetData( $1 ) ); } Expression { Function( 1 ); GenPCode1( HB_P_POP ); } Crlf
-           | ObjectData ArrayIndex '=' Expression    { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); } Crlf
-           | ObjectMethod ArrayIndex '=' Expression  { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); } Crlf
+           | VarAt '=' Expression                 { ArrayPut(); GenPopPCode(); } Crlf
+           | FunCallArray '=' Expression          { ArrayPut(); GenPopPCode(); } Crlf
+           | ObjectData '=' { MessageFix( SetData( $1 ) ); } Expression { Function( 1 ); GenPopPCode(); } Crlf
+           | ObjectData ArrayIndex '=' Expression    { ArrayPut(); GenPopPCode(); } Crlf
+           | ObjectMethod ArrayIndex '=' Expression  { ArrayPut(); GenPopPCode(); } Crlf
 
            | BREAK { GenBreak(); } Crlf               { Do( 0 ); }
            | BREAK { GenBreak(); } Expression Crlf    { Do( 1 ); }
@@ -652,6 +671,7 @@ Statement  : ExecFlow Crlf        {}
                            GenError( _szCErrors, 'E', ERR_EXIT_IN_SEQUENCE, "RETURN", NULL );
                         }
                         GenPCode1( HB_P_RETVALUE ); GenPCode1( HB_P_ENDPROC );
+                        ValTypePop( 1 );  /* TODO: check if return value agree with declared value */
                         if( functions.pLast->bFlags & FUN_PROCEDURE )
                         { /* procedure returns a value */
                            GenWarning( _szCWarnings, 'W', WARN_PROC_RETURN_VALUE, NULL, NULL );
@@ -710,21 +730,24 @@ MethParams : /* empty */                       { $$ = 0; }
            ;
 
 ObjectData : IdSend IDENTIFIER                     { $$ = $2; _ulMessageFix = functions.pLast->lPCodePos; Message( $2 ); Function( 0 ); }
-           | VarAt ':' IDENTIFIER                  { GenPCode1( HB_P_ARRAYAT ); $$ = $3; _ulMessageFix = functions.pLast->lPCodePos; Message( $3 ); Function( 0 ); }
+           | VarAt ':' IDENTIFIER                  { ArrayAt(); $$ = $3; _ulMessageFix = functions.pLast->lPCodePos; Message( $3 ); Function( 0 ); }
            | ObjFunCall IDENTIFIER                 { $$ = $2; _ulMessageFix = functions.pLast->lPCodePos; Message( $2 ); Function( 0 ); }
            | ObjFunArray  ':' IDENTIFIER           { $$ = $3; _ulMessageFix = functions.pLast->lPCodePos; Message( $3 ); Function( 0 ); }
            | ObjectMethod ':' IDENTIFIER           { $$ = $3; _ulMessageFix = functions.pLast->lPCodePos; Message( $3 ); Function( 0 ); }
            | ObjectData   ':' IDENTIFIER           { $$ = $3; _ulMessageFix = functions.pLast->lPCodePos; Message( $3 ); Function( 0 ); }
-           | ObjectData ArrayIndex ':' IDENTIFIER  { GenPCode1( HB_P_ARRAYAT ); $$ = $4; _ulMessageFix = functions.pLast->lPCodePos; Message( $4 ); Function( 0 ); }
+           | ObjectArr IDENTIFIER                  { $$ = $2; _ulMessageFix = functions.pLast->lPCodePos; Message( $2 ); Function( 0 ); }
            ;
 
 ObjectMethod : IdSend IDENTIFIER { Message( $2 ); } '(' MethParams ')' { Function( $5 ); }
-           | VarAt ':' MethCall { Function( $3 ); GenPCode1( HB_P_ARRAYAT ); }
+           | VarAt ':' MethCall { Function( $3 ); ArrayAt(); }
            | ObjFunCall MethCall                   { Function( $2 ); }
            | ObjFunArray  ':' MethCall             { Function( $3 ); }
            | ObjectData   ':' MethCall             { Function( $3 ); }
-           | ObjectData ArrayIndex ':' MethCall { Function( $4 ); { GenPCode1( HB_P_ARRAYAT ); } }
+	   | ObjectArr MethCall                    { Function( $2 ); }
            | ObjectMethod ':' MethCall             { Function( $3 ); }
+           ;
+
+ObjectArr  : ObjectData ArrayIndex ':'              { ArrayAt(); }
            ;
 
 IdSend     : IDENTIFIER ':'                       { PushId( $1 ); $$ = $1; }
@@ -736,11 +759,11 @@ ObjFunCall : FunCall ':'                      { Function( $1 ); $$ = $1; }
 FunCallArray : FunCall { Function( $1 ); } ArrayIndex
            ;
 
-ObjFunArray : FunCallArray ':' { GenPCode1( HB_P_ARRAYAT ); }
+ObjFunArray : FunCallArray ':' { ArrayAt(); }
            ;
 
 NumExpression : NUM_DOUBLE                    { PushDouble( $1.dNumber,$1.bDec ); }
-           | NUM_INTEGER                      { PushInteger( $1 ); }
+           | NUM_INTEGER                      { PushInteger( $1 ); ValTypePush( 'N' ); }
            | NUM_LONG                         { PushLong( $1 ); }
            ;
 
@@ -748,7 +771,7 @@ ConExpression : NIL                           { PushNil(); }
            | LITERAL                          { PushString( $1 ); }
            | CodeBlock                        {}
            | Logical                          { PushLogical( $1 ); }
-           | SELF                             { GenPCode1( HB_P_PUSHSELF ); }
+           | SELF                             { GenPCode1( HB_P_PUSHSELF ); ValTypePush( 'O' ); }
            ;
 
 DynExpression : Variable
@@ -765,7 +788,7 @@ DynExpression : Variable
 
 /* NOTE: We have to distinguish IDENTIFIER here because it is repeated
  * in DoExpression (a part of DO <proc> WITH .. statement)
- * where it generates different action. 
+ * where it generates different action.
  */
 SimpleExpression : IDENTIFIER  { PushId( $1 ); }
            | NumExpression
@@ -805,16 +828,16 @@ AliasFunc  : NUM_INTEGER ALIASOP { AliasPush(); PushInteger( $1 ); AliasPop(); }
 
 VarUnary   : IDENTIFIER IncDec %prec POST    { PushId( $1 ); Duplicate(); $2 ? Inc(): Dec(); PopId( $1 ); }
            | IncDec IDENTIFIER %prec PRE     { PushId( $2 ); $1 ? Inc(): Dec(); Duplicate(); PopId( $2 ); }
-           | VarAt IncDec %prec POST { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); $2 ? Inc(): Dec(); GenPCode1( HB_P_ARRAYPUT ); $2 ? Dec(): Inc(); }
-           | IncDec VarAt %prec PRE  { DupPCode( $2 ); GenPCode1( HB_P_ARRAYAT ); $1 ? Inc(): Dec(); GenPCode1( HB_P_ARRAYPUT ); }
-           | FunCallArray IncDec %prec POST { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); $2 ? Inc(): Dec(); GenPCode1( HB_P_ARRAYPUT ); $2 ? Dec(): Inc(); }
-           | IncDec FunCallArray %prec PRE  { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); $1 ? Inc(): Dec(); GenPCode1( HB_P_ARRAYPUT ); }
+           | VarAt IncDec %prec POST { DupPCode( $1 ); ArrayAt(); $2 ? Inc(): Dec(); ArrayPut(); $2 ? Dec(): Inc(); }
+           | IncDec VarAt %prec PRE  { DupPCode( $2 ); ArrayAt(); $1 ? Inc(): Dec(); ArrayPut(); }
+           | FunCallArray IncDec %prec POST { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); $2 ? Inc(): Dec(); ArrayPut(); $2 ? Dec(): Inc(); }
+           | IncDec FunCallArray %prec PRE  { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); $1 ? Inc(): Dec(); ArrayPut(); }
            | ObjectData IncDec %prec POST   { MessageDupl( SetData( $1 ) ); Function( 0 ); $2 ? Inc(): Dec(); Function( 1 ); $2 ? Dec(): Inc(); }
            | IncDec ObjectData %prec PRE    { MessageDupl( SetData( $2 ) ); Function( 0 ); $1 ? Inc(): Dec(); Function( 1 ); }
-           | ObjectData ArrayIndex IncDec %prec POST { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); $3 ? Inc(): Dec(); GenPCode1( HB_P_ARRAYPUT ); $3 ? Dec(): Inc(); }
-           | IncDec ObjectData ArrayIndex %prec PRE  { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); $1 ? Inc(): Dec(); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectMethod ArrayIndex IncDec %prec POST { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); $3 ? Inc(): Dec(); GenPCode1( HB_P_ARRAYPUT ); $3 ? Dec(): Inc(); }
-           | IncDec ObjectMethod ArrayIndex %prec PRE  { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); $1 ? Inc(): Dec(); GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectData ArrayIndex IncDec %prec POST { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); $3 ? Inc(): Dec(); ArrayPut(); $3 ? Dec(): Inc(); }
+           | IncDec ObjectData ArrayIndex %prec PRE  { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); $1 ? Inc(): Dec(); ArrayPut(); }
+           | ObjectMethod ArrayIndex IncDec %prec POST { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); $3 ? Inc(): Dec(); ArrayPut(); $3 ? Dec(): Inc(); }
+           | IncDec ObjectMethod ArrayIndex %prec PRE  { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); $1 ? Inc(): Dec(); ArrayPut(); }
            | AliasVar IncDec %prec POST    { PushId( $1 ); Duplicate(); $2 ? Inc(): Dec(); PopId( $1 ); AliasRemove(); }
            | IncDec AliasVar %prec PRE     { PushId( $2 ); $1 ? Inc(): Dec(); Duplicate(); PopId( $2 ); AliasRemove(); }
            ;
@@ -823,12 +846,12 @@ IncDec     : INC                             { $$ = 1; }
            | DEC                             { $$ = 0; }
            ;
 
-Variable   : VarAt                     { GenPCode1( HB_P_ARRAYAT ); }
-           | Array ArrayIndex          { GenPCode1( HB_P_ARRAYAT ); }
-           | FunCallArray              { GenPCode1( HB_P_ARRAYAT ); }
+Variable   : VarAt                     { ArrayAt(); }
+           | Array ArrayIndex          { ArrayAt(); }
+           | FunCallArray              { ArrayAt(); }
            | ObjectData                {}
-           | ObjectData ArrayIndex     { GenPCode1( HB_P_ARRAYAT ); }
-           | ObjectMethod ArrayIndex   { GenPCode1( HB_P_ARRAYAT ); }
+           | ObjectData ArrayIndex     { ArrayAt(); }
+           | ObjectMethod ArrayIndex   { ArrayAt(); }
            ;
 
 
@@ -836,62 +859,62 @@ VarAt      : IDENTIFIER { $<iNumber>$ = functions.pLast->lPCodePos; PushId( $1 )
            ;
 
 ArrayIndex : '[' IndexList ']'
-           | ArrayIndex { GenPCode1( HB_P_ARRAYAT ); } '[' IndexList ']'
+           | ArrayIndex { ArrayAt(); } '[' IndexList ']'
            ;
 
 IndexList  : Expression
-           | IndexList { GenPCode1( HB_P_ARRAYAT ); } ',' Expression
+           | IndexList { ArrayAt(); } ',' Expression
            ;
 
 VarAssign  : IDENTIFIER INASSIGN Expression { PopId( $1 ); PushId( $1 ); }
-           | IDENTIFIER PLUSEQ   { PushId( $1 ); } Expression { GenPCode1( HB_P_PLUS    ); PopId( $1 ); PushId( $1 ); }
-           | IDENTIFIER MINUSEQ  { PushId( $1 ); } Expression { GenPCode1( HB_P_MINUS   ); PopId( $1 ); PushId( $1 ); }
-           | IDENTIFIER MULTEQ   { PushId( $1 ); } Expression { GenPCode1( HB_P_MULT    ); PopId( $1 ); PushId( $1 ); }
-           | IDENTIFIER DIVEQ    { PushId( $1 ); } Expression { GenPCode1( HB_P_DIVIDE  ); PopId( $1 ); PushId( $1 ); }
-           | IDENTIFIER EXPEQ    { PushId( $1 ); } Expression { GenPCode1( HB_P_POWER   ); PopId( $1 ); PushId( $1 ); }
-           | IDENTIFIER MODEQ    { PushId( $1 ); } Expression { GenPCode1( HB_P_MODULUS ); PopId( $1 ); PushId( $1 ); }
-           | VarAt INASSIGN Expression { GenPCode1( HB_P_ARRAYPUT ); }
-           | VarAt PLUSEQ   { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_PLUS    ); GenPCode1( HB_P_ARRAYPUT ); }
-           | VarAt MINUSEQ  { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MINUS   ); GenPCode1( HB_P_ARRAYPUT ); }
-           | VarAt MULTEQ   { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MULT    ); GenPCode1( HB_P_ARRAYPUT ); }
-           | VarAt DIVEQ    { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_DIVIDE  ); GenPCode1( HB_P_ARRAYPUT ); }
-           | VarAt EXPEQ    { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_POWER   ); GenPCode1( HB_P_ARRAYPUT ); }
-           | VarAt MODEQ    { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MODULUS ); GenPCode1( HB_P_ARRAYPUT ); }
-           | FunCallArray INASSIGN Expression { GenPCode1( HB_P_ARRAYPUT ); }
-           | FunCallArray PLUSEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); }  Expression { GenPCode1( HB_P_PLUS    ); GenPCode1( HB_P_ARRAYPUT ); }
-           | FunCallArray MINUSEQ  { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); }  Expression { GenPCode1( HB_P_MINUS   ); GenPCode1( HB_P_ARRAYPUT ); }
-           | FunCallArray MULTEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); }  Expression { GenPCode1( HB_P_MULT    ); GenPCode1( HB_P_ARRAYPUT ); }
-           | FunCallArray DIVEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); }  Expression { GenPCode1( HB_P_DIVIDE  ); GenPCode1( HB_P_ARRAYPUT ); }
-           | FunCallArray EXPEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); }  Expression { GenPCode1( HB_P_POWER   ); GenPCode1( HB_P_ARRAYPUT ); }
-           | FunCallArray MODEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); }  Expression { GenPCode1( HB_P_MODULUS ); GenPCode1( HB_P_ARRAYPUT ); }
+           | IDENTIFIER PLUSEQ   { PushId( $1 ); } Expression { GenPlusPCode( HB_P_PLUS ); PopId( $1 ); PushId( $1 ); }
+           | IDENTIFIER MINUSEQ  { PushId( $1 ); } Expression { GenPlusPCode( HB_P_MINUS ); PopId( $1 ); PushId( $1 ); }
+           | IDENTIFIER MULTEQ   { PushId( $1 ); } Expression { GenNumPCode( HB_P_MULT    ); PopId( $1 ); PushId( $1 ); }
+           | IDENTIFIER DIVEQ    { PushId( $1 ); } Expression { GenNumPCode( HB_P_DIVIDE  ); PopId( $1 ); PushId( $1 ); }
+           | IDENTIFIER EXPEQ    { PushId( $1 ); } Expression { GenNumPCode( HB_P_POWER   ); PopId( $1 ); PushId( $1 ); }
+           | IDENTIFIER MODEQ    { PushId( $1 ); } Expression { GenNumPCode( HB_P_MODULUS ); PopId( $1 ); PushId( $1 ); }
+           | VarAt INASSIGN Expression { ArrayPut(); }
+           | VarAt PLUSEQ   { DupPCode( $1 ); ArrayAt(); } Expression { GenPlusPCode( HB_P_PLUS ); ArrayPut(); }
+           | VarAt MINUSEQ  { DupPCode( $1 ); ArrayAt(); } Expression { GenPlusPCode( HB_P_MINUS ); ArrayPut(); }
+           | VarAt MULTEQ   { DupPCode( $1 ); ArrayAt(); } Expression { GenNumPCode( HB_P_MULT    ); ArrayPut(); }
+           | VarAt DIVEQ    { DupPCode( $1 ); ArrayAt(); } Expression { GenNumPCode( HB_P_DIVIDE  ); ArrayPut(); }
+           | VarAt EXPEQ    { DupPCode( $1 ); ArrayAt(); } Expression { GenNumPCode( HB_P_POWER   ); ArrayPut(); }
+           | VarAt MODEQ    { DupPCode( $1 ); ArrayAt(); } Expression { GenNumPCode( HB_P_MODULUS ); ArrayPut(); }
+           | FunCallArray INASSIGN Expression { ArrayPut(); }
+           | FunCallArray PLUSEQ   { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); }  Expression { GenPlusPCode( HB_P_PLUS ); ArrayPut(); }
+           | FunCallArray MINUSEQ  { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); }  Expression { GenPlusPCode( HB_P_MINUS ); ArrayPut(); }
+           | FunCallArray MULTEQ   { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); }  Expression { GenNumPCode( HB_P_MULT    ); ArrayPut(); }
+           | FunCallArray DIVEQ    { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); }  Expression { GenNumPCode( HB_P_DIVIDE  ); ArrayPut(); }
+           | FunCallArray EXPEQ    { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); }  Expression { GenNumPCode( HB_P_POWER   ); ArrayPut(); }
+           | FunCallArray MODEQ    { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); }  Expression { GenNumPCode( HB_P_MODULUS ); ArrayPut(); }
            | ObjectData INASSIGN { MessageFix ( SetData( $1 ) ); } Expression { Function( 1 ); }
-           | ObjectData PLUSEQ   { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPCode1( HB_P_PLUS );    Function( 1 ); }
-           | ObjectData MINUSEQ  { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPCode1( HB_P_MINUS );   Function( 1 ); }
-           | ObjectData MULTEQ   { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPCode1( HB_P_MULT );    Function( 1 ); }
-           | ObjectData DIVEQ    { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPCode1( HB_P_DIVIDE );  Function( 1 ); }
-           | ObjectData EXPEQ    { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPCode1( HB_P_POWER );   Function( 1 ); }
-           | ObjectData MODEQ    { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPCode1( HB_P_MODULUS ); Function( 1 ); }
-           | ObjectData ArrayIndex INASSIGN Expression      { GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectData ArrayIndex PLUSEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_PLUS    ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectData ArrayIndex MINUSEQ  { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MINUS   ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectData ArrayIndex MULTEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MULT    ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectData ArrayIndex DIVEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_DIVIDE  ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectData ArrayIndex EXPEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_POWER   ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectData ArrayIndex MODEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MODULUS ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectMethod ArrayIndex INASSIGN Expression    { GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectMethod ArrayIndex PLUSEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_PLUS    ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectMethod ArrayIndex MINUSEQ  { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MINUS   ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectMethod ArrayIndex MULTEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MULT    ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectMethod ArrayIndex DIVEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_DIVIDE  ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectMethod ArrayIndex EXPEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_POWER   ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectMethod ArrayIndex MODEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MODULUS ); GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectData PLUSEQ   { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPlusPCode( HB_P_PLUS );    Function( 1 ); }
+           | ObjectData MINUSEQ  { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPlusPCode( HB_P_MINUS );   Function( 1 ); }
+           | ObjectData MULTEQ   { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenNumPCode( HB_P_MULT );    Function( 1 ); }
+           | ObjectData DIVEQ    { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenNumPCode( HB_P_DIVIDE );  Function( 1 ); }
+           | ObjectData EXPEQ    { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenNumPCode( HB_P_POWER );   Function( 1 ); }
+           | ObjectData MODEQ    { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenNumPCode( HB_P_MODULUS ); Function( 1 ); }
+           | ObjectData ArrayIndex INASSIGN Expression      { ArrayPut(); }
+           | ObjectData ArrayIndex PLUSEQ   { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenPlusPCode( HB_P_PLUS ); ArrayPut(); }
+           | ObjectData ArrayIndex MINUSEQ  { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenPlusPCode( HB_P_MINUS ); ArrayPut(); }
+           | ObjectData ArrayIndex MULTEQ   { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenNumPCode( HB_P_MULT    ); ArrayPut(); }
+           | ObjectData ArrayIndex DIVEQ    { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenNumPCode( HB_P_DIVIDE  ); ArrayPut(); }
+           | ObjectData ArrayIndex EXPEQ    { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenNumPCode( HB_P_POWER   ); ArrayPut(); }
+           | ObjectData ArrayIndex MODEQ    { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenNumPCode( HB_P_MODULUS ); ArrayPut(); }
+           | ObjectMethod ArrayIndex INASSIGN Expression    { ArrayPut(); }
+           | ObjectMethod ArrayIndex PLUSEQ   { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenPlusPCode( HB_P_PLUS ); ArrayPut(); }
+           | ObjectMethod ArrayIndex MINUSEQ  { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenPlusPCode( HB_P_MINUS ); ArrayPut(); }
+           | ObjectMethod ArrayIndex MULTEQ   { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenNumPCode( HB_P_MULT    ); ArrayPut(); }
+           | ObjectMethod ArrayIndex DIVEQ    { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenNumPCode( HB_P_DIVIDE  ); ArrayPut(); }
+           | ObjectMethod ArrayIndex EXPEQ    { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenNumPCode( HB_P_POWER   ); ArrayPut(); }
+           | ObjectMethod ArrayIndex MODEQ    { GenPCode1( HB_P_DUPLTWO ); ArrayAt(); } Expression { GenNumPCode( HB_P_MODULUS ); ArrayPut(); }
            | AliasVar INASSIGN { $<pVoid>$=( void * ) pAliasId; pAliasId = NULL; } Expression { pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
-           | AliasVar PLUSEQ   { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenPCode1( HB_P_PLUS    ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
-           | AliasVar MINUSEQ  { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenPCode1( HB_P_MINUS   ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
-           | AliasVar MULTEQ   { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenPCode1( HB_P_MULT    ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
-           | AliasVar DIVEQ    { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenPCode1( HB_P_DIVIDE  ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
-           | AliasVar EXPEQ    { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenPCode1( HB_P_POWER   ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
-           | AliasVar MODEQ    { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenPCode1( HB_P_MODULUS ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
+           | AliasVar PLUSEQ   { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenPlusPCode( HB_P_PLUS ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
+           | AliasVar MINUSEQ  { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenPlusPCode( HB_P_MINUS ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
+           | AliasVar MULTEQ   { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenNumPCode( HB_P_MULT    ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
+           | AliasVar DIVEQ    { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenNumPCode( HB_P_DIVIDE  ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
+           | AliasVar EXPEQ    { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenNumPCode( HB_P_POWER   ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
+           | AliasVar MODEQ    { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenNumPCode( HB_P_MODULUS ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
            | AliasFunc INASSIGN Expression { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
            | AliasFunc PLUSEQ   Expression { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
            | AliasFunc MINUSEQ  Expression { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
@@ -902,27 +925,27 @@ VarAssign  : IDENTIFIER INASSIGN Expression { PopId( $1 ); PushId( $1 ); }
            ;
 
 
-Operators  : Expression '='    Expression   { GenPCode1( HB_P_EQUAL ); } /* compare */
-           | Expression '+'    Expression   { GenPCode1( HB_P_PLUS ); }
-           | Expression '-'    Expression   { GenPCode1( HB_P_MINUS ); }
-           | Expression '*'    Expression   { GenPCode1( HB_P_MULT ); }
-           | Expression '/'    Expression   { GenPCode1( HB_P_DIVIDE ); }
-           | Expression '<'    Expression   { GenPCode1( HB_P_LESS ); }
-           | Expression '>'    Expression   { GenPCode1( HB_P_GREATER ); }
-           | Expression '$'    Expression   { GenPCode1( HB_P_INSTRING ); }
-           | Expression '%'    Expression   { GenPCode1( HB_P_MODULUS ); }
-           | Expression LE     Expression   { GenPCode1( HB_P_LESSEQUAL ); }
-           | Expression GE     Expression   { GenPCode1( HB_P_GREATEREQUAL ); }
+Operators  : Expression '='    Expression   { GenRelPCode( HB_P_EQUAL ); } /* compare */
+           | Expression '+'    Expression   { GenPlusPCode( HB_P_PLUS ); }
+           | Expression '-'    Expression   { GenPlusPCode( HB_P_MINUS ); }
+           | Expression '*'    Expression   { GenNumPCode( HB_P_MULT ); }
+           | Expression '/'    Expression   { GenNumPCode( HB_P_DIVIDE ); }
+           | Expression '<'    Expression   { GenRelPCode( HB_P_LESS ); }
+           | Expression '>'    Expression   { GenRelPCode( HB_P_GREATER ); }
+           | Expression '$'    Expression   { GenRelPCode( HB_P_INSTRING ); }
+           | Expression '%'    Expression   { GenNumPCode( HB_P_MODULUS ); }
+           | Expression LE     Expression   { GenRelPCode( HB_P_LESSEQUAL ); }
+           | Expression GE     Expression   { GenRelPCode( HB_P_GREATEREQUAL ); }
            | Expression AND { if( _bShortCuts ){ Duplicate(); $<iNumber>$ = JumpFalse( 0 ); } }
                        Expression { GenPCode1( HB_P_AND ); if( _bShortCuts ) JumpHere( $<iNumber>3 ); }
            | Expression OR { if( _bShortCuts ){ Duplicate(); $<iNumber>$ = JumpTrue( 0 ); } }
                        Expression { GenPCode1( HB_P_OR ); if( _bShortCuts ) JumpHere( $<iNumber>3 ); }
-           | Expression EQ     Expression   { GenPCode1( HB_P_EXACTLYEQUAL ); }
-           | Expression NE1    Expression   { GenPCode1( HB_P_NOTEQUAL ); }
-           | Expression NE2    Expression   { GenPCode1( HB_P_NOTEQUAL ); }
-           | Expression POWER  Expression   { GenPCode1( HB_P_POWER ); }
-           | NOT Expression                 { GenPCode1( HB_P_NOT ); }
-           | '-' Expression %prec UNARY     { GenPCode1( HB_P_NEGATE ); }
+           | Expression EQ     Expression   { GenRelPCode( HB_P_EXACTLYEQUAL ); }
+           | Expression NE1    Expression   { GenRelPCode( HB_P_NOTEQUAL ); }
+           | Expression NE2    Expression   { GenRelPCode( HB_P_NOTEQUAL ); }
+           | Expression POWER  Expression   { GenNumPCode( HB_P_POWER ); }
+           | NOT Expression                 { GenNotPCode( ); }
+           | '-' Expression %prec UNARY     { GenNegatePCode( ); }
            | '+' Expression %prec UNARY
            | VarAssign                      { }
            ;
@@ -954,27 +977,21 @@ ElemList   : /*empty array*/                        { $$ = 0; }
            ;
 
 CodeBlock  : BlockBegin '|' BlockExpList '}'           { CodeBlockEnd(); }
-           | BlockBegin BlockList '|' BlockExpList '}' { CodeBlockEnd(); }
+           | BlockBegin { $<iNumber>$=iVarScope; iVarScope=VS_LOCAL; } BlockList '|'
+               BlockExpList '}' { CodeBlockEnd(); iVarScope=$<iNumber>2; }
            ;
 
 BlockBegin : '{' '|'  { CodeBlockStart(); }
            ;
 
 BlockExpList : Expression                            { $$ = 1; }
-           | ','                            { PushNil(); GenPCode1( HB_P_POP ); PushNil(); $$ = 2; }
-           | BlockExpList ','                        { GenPCode1( HB_P_POP ); PushNil(); $$++; }
-           | BlockExpList ',' { GenPCode1( HB_P_POP ); } Expression  { $$++; }
+           | ','                            { PushNil(); GenPopPCode(); PushNil(); $$ = 2; }
+           | BlockExpList ','                        { GenPopPCode(); PushNil(); $$++; }
+           | BlockExpList ',' { GenPopPCode(); } Expression  { $$++; }
            ;
 
-BlockList  : IDENTIFIER                            { cVarType = ' '; AddVar( $1 ); $$ = 1; }
-           | IDENTIFIER AS_NUMERIC                 { cVarType = 'N'; AddVar( $1 ); $$ = 1; }
-           | IDENTIFIER AS_CHARACTER               { cVarType = 'C'; AddVar( $1 ); $$ = 1; }
-           | IDENTIFIER AS_DATE                    { cVarType = 'D'; AddVar( $1 ); $$ = 1; }
-           | IDENTIFIER AS_LOGICAL                 { cVarType = 'L'; AddVar( $1 ); $$ = 1; }
-           | IDENTIFIER AS_ARRAY                   { cVarType = 'A'; AddVar( $1 ); $$ = 1; }
-           | IDENTIFIER AS_BLOCK                   { cVarType = 'B'; AddVar( $1 ); $$ = 1; }
-           | IDENTIFIER AS_OBJECT                  { cVarType = 'O'; AddVar( $1 ); $$ = 1; }
-           | BlockList ',' IDENTIFIER             { AddVar( $3 ); $$++; }
+BlockList  : IDENTIFIER AsType                { AddVar( $1 ); $$ = 1; }
+           | BlockList ',' IDENTIFIER AsType  { AddVar( $3 ); $$++; }
            ;
 
 /* There is a conflict between the use of IF( Expr1, Expr2, Expr3 )
@@ -1015,7 +1032,7 @@ ExpList    : ExpList3 { ExpListPush(); } ',' EmptyExpression { $$ = 4; }
            | ExpList  { ExpListPush(); } ',' EmptyExpression { $$++;   }
            ;
 
-VarDefs    : LOCAL { iVarScope = VS_LOCAL; Line(); } VarList Crlf { cVarType = ' '; }
+VarDefs    : LOCAL { iVarScope = VS_LOCAL; Line(); } VarList Crlf { _cVarType = ' '; }
            | STATIC { StaticDefStart() } VarList Crlf { StaticDefEnd( $<iNumber>3 ); }
            | PARAMETERS { if( functions.pLast->bFlags & FUN_USES_LOCAL_PARAMS )
                              GenError( _szCErrors, 'E', ERR_PARAMETERS_NOT_ALLOWED, NULL, NULL );
@@ -1028,24 +1045,10 @@ VarList    : VarDef                                  { $$ = 1; }
            | VarList ',' VarDef                      { $$++; }
            ;
 
-VarDef     : IDENTIFIER                                   { cVarType = ' '; AddVar( $1 ); }
-           | IDENTIFIER AS_NUMERIC                        { cVarType = 'N'; AddVar( $1 ); }
-           | IDENTIFIER AS_CHARACTER                      { cVarType = 'C'; AddVar( $1 ); }
-           | IDENTIFIER AS_LOGICAL                        { cVarType = 'L'; AddVar( $1 ); }
-           | IDENTIFIER AS_DATE                           { cVarType = 'D'; AddVar( $1 ); }
-           | IDENTIFIER AS_ARRAY                          { cVarType = 'A'; AddVar( $1 ); }
-           | IDENTIFIER AS_BLOCK                          { cVarType = 'B'; AddVar( $1 ); }
-           | IDENTIFIER AS_OBJECT                         { cVarType = 'O'; AddVar( $1 ); }
-           | IDENTIFIER              INASSIGN { cVarType = ' '; AddVar( $1 ); } Expression  { PopId( $1 ); }
-           | IDENTIFIER AS_NUMERIC   INASSIGN { cVarType = 'N'; AddVar( $1 ); } Expression  { PopId( $1 ); }
-           | IDENTIFIER AS_CHARACTER INASSIGN { cVarType = 'C'; AddVar( $1 ); } Expression  { PopId( $1 ); }
-           | IDENTIFIER AS_LOGICAL   INASSIGN { cVarType = 'L'; AddVar( $1 ); } Expression  { PopId( $1 ); }
-           | IDENTIFIER AS_DATE      INASSIGN { cVarType = 'D'; AddVar( $1 ); } Expression  { PopId( $1 ); }
-           | IDENTIFIER AS_ARRAY     INASSIGN { cVarType = 'A'; AddVar( $1 ); } Expression  { PopId( $1 ); }
-           | IDENTIFIER AS_BLOCK     INASSIGN { cVarType = 'B'; AddVar( $1 ); } Expression  { PopId( $1 ); }
-           | IDENTIFIER AS_OBJECT    INASSIGN { cVarType = 'O'; AddVar( $1 ); } Expression  { PopId( $1 ); }
-           | IDENTIFIER ArrExpList ']'                { cVarType = ' '; AddVar( $1 ); ArrayDim( $2 ); PopId( $1 ); }
-           | IDENTIFIER ArrExpList ']' AS_ARRAY       { cVarType = 'A'; AddVar( $1 ); ArrayDim( $2 ); PopId( $1 ); }
+VarDef     : IDENTIFIER AsType       { AddVar( $1 ); }
+           | IDENTIFIER AsType       INASSIGN { AddVar( $1 ); } Expression  { PopId( $1 ); }
+           | IDENTIFIER ArrExpList ']'                { _cVarType = 'A'; AddVar( $1 ); ArrayDim( $2 ); PopId( $1 ); }
+           | IDENTIFIER ArrExpList ']' AS_ARRAY       { _cVarType = 'A'; AddVar( $1 ); ArrayDim( $2 ); PopId( $1 ); }
            ;
 
 ArrExpList : '[' Expression                { $$ = 1; }
@@ -1056,15 +1059,8 @@ ArrExpList : '[' Expression                { $$ = 1; }
 FieldsDef  : FIELD { iVarScope = VS_FIELD; } FieldList Crlf
            ;
 
-FieldList  : IDENTIFIER                            { cVarType = ' '; $$=FieldsCount(); AddVar( $1 ); }
-           | IDENTIFIER AS_NUMERIC                 { cVarType = 'N'; $$=FieldsCount(); AddVar( $1 ); }
-           | IDENTIFIER AS_CHARACTER               { cVarType = 'C'; $$=FieldsCount(); AddVar( $1 ); }
-           | IDENTIFIER AS_DATE                    { cVarType = 'D'; $$=FieldsCount(); AddVar( $1 ); }
-           | IDENTIFIER AS_LOGICAL                 { cVarType = 'L'; $$=FieldsCount(); AddVar( $1 ); }
-           | IDENTIFIER AS_ARRAY                   { cVarType = 'A'; $$=FieldsCount(); AddVar( $1 ); }
-           | IDENTIFIER AS_BLOCK                   { cVarType = 'B'; $$=FieldsCount(); AddVar( $1 ); }
-           | IDENTIFIER AS_OBJECT                  { cVarType = 'O'; $$=FieldsCount(); AddVar( $1 ); }
-           | FieldList ',' IDENTIFIER                { AddVar( $3 ); }
+FieldList  : IDENTIFIER AsType               { $$=FieldsCount(); AddVar( $1 ); }
+           | FieldList ',' IDENTIFIER AsType { AddVar( $3 ); }
            | FieldList IN IDENTIFIER { FieldsSetAlias( $3, $<iNumber>1 ); }
            ;
 
@@ -1219,6 +1215,7 @@ ForNext    : FOR IDENTIFIER ForAssign Expression { PopId( $2 ); $<iNumber>$ = fu
                                                       GenPCode1( HB_P_FORTEST );
                                                    else
                                                       GenPCode1( HB_P_LESS );
+                                                   ValTypePop( 1 ); /* TODO: check for proper type of loop variable */
                                                    $<iNumber>$ = JumpTrue( 0 );
                                                    Line();
                                                  }
@@ -1233,7 +1230,7 @@ ForNext    : FOR IDENTIFIER ForAssign Expression { PopId( $2 ); $<iNumber>$ = fu
                                                    JumpHere( $<iNumber>11 );
                                                    LoopEnd();
                                                    if( $<lNumber>9 )
-                                                      GenPCode1( HB_P_POP );
+                                                      GenPopPCode();
                                                    functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
                                                  }
            ;
@@ -1294,7 +1291,7 @@ RecoverEmpty : RECOVER
                   $<lNumber>$ = functions.pLast->lPCodePos;
                   --_wSeqCounter;
                   GenPCode1( HB_P_SEQRECOVER );
-                  GenPCode1( HB_P_POP );
+                  GenPopPCode();
                }
            ;
 
@@ -2049,7 +2046,7 @@ void AddVar( char * szVarName )
    pVar = ( PVAR ) hb_xgrab( sizeof( VAR ) );
    pVar->szName = szVarName;
    pVar->szAlias = NULL;
-   pVar->cType = cVarType;
+   pVar->cType = _cVarType;
    pVar->iUsed = 0;
    pVar->pNext = NULL;
 
@@ -2107,7 +2104,7 @@ void AddVar( char * szVarName )
                   pVar = ( PVAR ) hb_xgrab( sizeof( VAR ) );
                   pVar->szName = yy_strdup( szVarName );
                   pVar->szAlias = NULL;
-                  pVar->cType = cVarType;
+                  pVar->cType = _cVarType;
                   pVar->iUsed = 0;
                   pVar->pNext = NULL;
                   pVar->szName[ 0 ] ='!';
@@ -2214,7 +2211,7 @@ PCOMSYMBOL AddSymbol( char * szSymbolName, USHORT * pwPos )
 
    pSym->szName = szSymbolName;
    pSym->cScope = 0;
-   pSym->cType = cVarType;
+   pSym->cType = _cVarType;
    pSym->pNext = NULL;
 
    if( ! symbols.iCount )
@@ -2232,7 +2229,7 @@ PCOMSYMBOL AddSymbol( char * szSymbolName, USHORT * pwPos )
    if( pwPos )
       *pwPos = symbols.iCount;
 
-   /*if( cVarType != ' ') printf("\nDeclared %s as type %c at symbol %i\n", szSymbolName, cVarType, symbols.iCount );*/
+   /*if( _cVarType != ' ') printf("\nDeclared %s as type %c at symbol %i\n", szSymbolName, _cVarType, symbols.iCount );*/
    return pSym;
 }
 
@@ -2308,6 +2305,29 @@ void AliasSwap( void )
 {
    GenPCode1( HB_P_SWAPALIAS );
 }
+
+/* Generates pcodes to access an array element
+ */
+static void ArrayAt( void )
+{
+   GenPCode1( HB_P_ARRAYAT );
+
+   ValTypeCheck( 'N', WARN_NUMERIC_TYPE, WARN_NUMERIC_SUSPECT );
+   ValTypePop( 1 );
+}
+
+/* Generates pcodes to assign a value to an array element
+ */
+static void ArrayPut( void )
+{
+   GenPCode1( HB_P_ARRAYPUT );
+
+   /* Pop a value and a last array index
+    * - rest of array indexes were popped in ArrayAt()
+    */
+   ValTypePop( 2 );
+}
+
 
 int Include( char * szFileName, PATHNAMES * pSearch )
 {
@@ -2402,17 +2422,7 @@ void Duplicate( void )
 {
    GenPCode1( HB_P_DUPLICATE );
 
-   if( _iWarnings )
-   {
-      PSTACK_VAL_TYPE pNewStackType;
-
-      pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
-      pNewStackType->cType = pStackValType->cType;
-      pNewStackType->pPrev = pStackValType;
-
-      pStackValType = pNewStackType;
-      /*debug_msg( "\n* *Duplicate()\n ", NULL );*/
-   }
+   ValTypePush( ValTypeGet() );
 }
 
 void DupPCode( ULONG ulStart ) /* duplicates the current generated pcode from an offset */
@@ -2491,7 +2501,7 @@ void ExpListPop( int iExpCount )
       {
          GenPCodeN( pExp->exprPCode, pExp->exprSize );
          if( pExp->pNext )
-            GenPCode1( HB_P_POP );
+            GenPopPCode();
       }
       else
       {
@@ -2840,21 +2850,7 @@ void GenIfInline( void )
       hb_xfree( pExp );
    }
 
-   if( _iWarnings )
-   {
-      PSTACK_VAL_TYPE pFree;
-
-      if( pStackValType )
-      {
-         pFree = pStackValType;
-         debug_msg( "\n***---IIF()\n", NULL );
-
-         pStackValType = pStackValType->pPrev;
-         hb_xfree( ( void * )pFree );
-      }
-      else
-         debug_msg( "\n***IIF() Compile time stack overflow\n", NULL );
-   }
+   ValTypePop( 1 );
 }
 
 
@@ -2914,19 +2910,11 @@ USHORT GetVarPos( PVAR pVars, char * szVarName ) /* returns the order + 1 of a v
    {
       if( pVars->szName && ! strcmp( pVars->szName, szVarName ) )
       {
-         if( _iWarnings )
-         {
-            PSTACK_VAL_TYPE pNewStackType;
-
-            pVars->iUsed = 1;
-
-            pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
-            pNewStackType->cType = pVars->cType;
-            pNewStackType->pPrev = pStackValType;
-
-            pStackValType = pNewStackType;
-            debug_msg( "\n* *GetVarPos()\n", NULL );
-         }
+         /* TODO: This is not the best place to push the variable type
+          * in some cases it will be called two times for the same variable
+          */
+         ValTypePush( pVars->cType );
+         pVars->iUsed = 1;
          return wVar;
       }
       else
@@ -3087,16 +3075,6 @@ int GetFieldVarPos( char * szVarName, PFUNCTION pFunc )
          pFunc = pFunc->pOwner;
       iVar = GetVarPos( pFunc->pFields, szVarName );
    }
-   /* If not found on the list declared in current function then check
-    * the global list (only if there will be no starting procedure)
-    */
-/*
-   if( ! iVar && ! _bStartProc )
-   {
-      pFunc = functions.pFirst;
-      iVar = GetVarPos( pFunc->pFields, szVarName );
-   }
-*/
    return iVar;
 }
 
@@ -3119,13 +3097,6 @@ int GetMemvarPos( char * szVarName, PFUNCTION pFunc )
          pFunc = pFunc->pOwner;
       iVar = GetVarPos( pFunc->pMemvars, szVarName );
    }
-   /* if not found on the list declared in current function then check
-    * the global list (only if there will be no starting procedure)
-    */
-/*
-   if( ! iVar && ! _bStartProc )
-      iVar = GetVarPos( functions.pFirst->pMemvars, szVarName );
-*/
    return iVar;
 }
 
@@ -3205,25 +3176,7 @@ void Inc( void )
 {
    GenPCode1( HB_P_INC );
 
-   if( _iWarnings )
-   {
-      if( pStackValType )
-      {
-         if(  pStackValType->cType == ' ' )
-            GenWarning( _szCWarnings, 'W', WARN_NUMERIC_SUSPECT, NULL, NULL );
-         else if( pStackValType->cType != 'N' )
-         {
-            char sType[ 2 ];
-
-            sType[ 0 ] = pStackValType->cType;
-            sType[ 1 ] = '\0';
-
-            GenWarning( _szCWarnings, 'W', WARN_NUMERIC_TYPE, sType, NULL );
-         }
-      }
-      else
-         debug_msg( "\n* *Inc() Compile time stack overflow\n", NULL );
-   }
+   ValTypeCheck( 'N', WARN_NUMERIC_TYPE, WARN_NUMERIC_SUSPECT );
 }
 
 ULONG Jump( LONG lOffset )
@@ -3247,39 +3200,8 @@ ULONG JumpFalse( LONG lOffset )
 
    GenPCode3( HB_P_JUMPFALSE, LOBYTE( lOffset ), HIBYTE( lOffset ) );
 
-   if( _iWarnings )
-   {
-      PSTACK_VAL_TYPE pFree;
-      char sType[ 2 ];
-
-      if( pStackValType )
-      {
-         sType[ 0 ] = pStackValType->cType;
-         sType[ 1 ] = '\0';
-      }
-      else
-         debug_msg( "\n* *HB_P_JUMPFALSE Compile time stack overflow\n", NULL );
-
-      /* compile time Operand value */
-      if( pStackValType && pStackValType->cType == ' ' )
-         GenWarning( _szCWarnings, 'W', WARN_LOGICAL_SUSPECT, NULL, NULL );
-      else if( pStackValType && pStackValType->cType != 'L')
-         GenWarning( _szCWarnings, 'W', WARN_LOGICAL_TYPE, sType, NULL );
-
-      /* compile time assignment value has to be released */
-      pFree = pStackValType;
-      debug_msg( "\n* *---JampFalse()\n", NULL );
-
-      if( pStackValType )
-      {
-         pStackValType = pStackValType->pPrev;
-      }
-
-      if( pFree )
-      {
-         hb_xfree( ( void * ) pFree );
-      }
-   }
+   ValTypeCheck( 'L', WARN_LOGICAL_TYPE, WARN_LOGICAL_SUSPECT );
+   ValTypePop( 1 );
 
    return functions.pLast->lPCodePos - 2;
 }
@@ -3311,39 +3233,8 @@ ULONG JumpTrue( LONG lOffset )
       GenError( _szCErrors, 'E', ERR_JUMP_TOO_LONG, NULL, NULL );
    GenPCode3( HB_P_JUMPTRUE, LOBYTE( lOffset ), HIBYTE( lOffset ) );
 
-   if( _iWarnings )
-   {
-      PSTACK_VAL_TYPE pFree;
-      char sType[ 2 ];
-
-      if( pStackValType )
-      {
-         sType[ 0 ] = pStackValType->cType;
-         sType[ 1 ] = '\0';
-      }
-      else
-         debug_msg( "\n* *HB_P_JUMPTRUE Compile time stack overflow\n", NULL );
-
-      /* compile time Operand value */
-      if( pStackValType && pStackValType->cType == ' ' )
-         GenWarning( _szCWarnings, 'W', WARN_LOGICAL_SUSPECT, NULL, NULL );
-      else if( pStackValType && pStackValType->cType != 'L')
-         GenWarning( _szCWarnings, 'W', WARN_LOGICAL_TYPE, sType, NULL );
-
-      /* compile time assignment value has to be released */
-      pFree = pStackValType;
-      debug_msg( "\n* *---JampTrue() \n", NULL );
-
-      if( pStackValType )
-      {
-         pStackValType = pStackValType->pPrev;
-      }
-
-      if( pFree )
-      {
-         hb_xfree( ( void * ) pFree );
-      }
-   }
+   ValTypeCheck( 'L', WARN_LOGICAL_TYPE, WARN_LOGICAL_SUSPECT );
+   ValTypePop( 1 );
 
    return functions.pLast->lPCodePos - 2;
 }
@@ -3538,21 +3429,7 @@ void Message( char * szMsgName )       /* sends a message to an object */
    pSym->cScope |= FS_MESSAGE;
    GenPCode3( HB_P_MESSAGE, LOBYTE( wSym ), HIBYTE( wSym ) );
 
-   if( _iWarnings )
-   {
-      PSTACK_VAL_TYPE pNewStackType;
-      char cType;
-
-      cType = pSym->cType;
-
-      pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
-      pNewStackType->cType = cType;
-      pNewStackType->pPrev = pStackValType;
-      pStackValType = pNewStackType;
-
-      pStackValType->cType = cType;
-      debug_msg( "\n***Message()\n", NULL );
-   }
+   ValTypePush( pSym->cType );
 }
 
 void MessageDupl( char * szMsgName )  /* fix a generated message and duplicate to an object */
@@ -3662,57 +3539,7 @@ void PopId( char * szVarName ) /* generates the pcode to pop a value from the vi
          FieldPCode( HB_P_POPALIASEDFIELD, szVarName );
    }
 
-
-   if( _iWarnings )
-   {
-      PSTACK_VAL_TYPE pVarType, pFree;
-      char sType[ 2 ];
-
-      /* Just pushed by Get...Pos() */
-      pVarType = pStackValType;
-
-      if( pVarType )
-      {
-         sType[ 0 ] = pVarType->cType;
-         sType[ 1 ] = '\0';
-
-         /* skip back to the assigned value */
-         pStackValType = pStackValType->pPrev;
-      }
-      else
-         debug_msg( "\n***PopId() Compile time stack overflow\n", NULL );
-
-      if( pVarType && pStackValType && pVarType->cType != ' ' && pStackValType->cType == ' ' )
-         GenWarning( _szCWarnings, 'W', WARN_ASSIGN_SUSPECT, szVarName, sType );
-      else if( pVarType && pStackValType && pVarType->cType != ' ' && pVarType->cType != pStackValType->cType )
-         GenWarning( _szCWarnings, 'W', WARN_ASSIGN_TYPE, szVarName, sType );
-
-      /* compile time variable has to be released */
-      if( pVarType )
-      {
-         hb_xfree( ( void * ) pVarType );
-      }
-
-      debug_msg( "\n***--- Var at PopId()\n", NULL );
-
-      /* compile time assignment value has to be released */
-      pFree = pStackValType;
-      debug_msg( "\n***--- Value at PopId()\n", NULL );
-
-      if( pStackValType )
-      {
-         pStackValType = pStackValType->pPrev;
-      }
-      else
-      {
-         debug_msg( "\n***PopId() Compile time stack overflow\n", NULL );
-      }
-
-      if( pFree )
-      {
-         hb_xfree( ( void * ) pFree );
-      }
-   }
+   ValTypeAssign( szVarName );
 }
 
 void PushId( char * szVarName ) /* generates the pcode to push a variable value to the virtual machine stack */
@@ -3789,18 +3616,6 @@ void PushId( char * szVarName ) /* generates the pcode to push a variable value 
          /* Alias is already placed on stack */
          FieldPCode( HB_P_PUSHALIASEDFIELD, szVarName );
    }
-
-   if( _iWarnings )
-   {
-      PSTACK_VAL_TYPE pNewStackType;
-
-      pNewStackType = ( STACK_VAL_TYPE * ) hb_xgrab( sizeof( STACK_VAL_TYPE ) );
-      pNewStackType->cType = cVarType;
-      pNewStackType->pPrev = pStackValType;
-
-      pStackValType = pNewStackType;
-      debug_msg( "\n***HB_P_PUSHMEMVAR\n ", NULL );
-   }
 }
 
 void PushIdByRef( char * szVarName ) /* generates the pcode to push a variable by reference to the virtual machine stack */
@@ -3844,34 +3659,14 @@ void PushLogical( int iTrueFalse ) /* pushes a logical value on the virtual mach
    else
       GenPCode1( HB_P_FALSE );
 
-   if( _iWarnings )
-   {
-      PSTACK_VAL_TYPE pNewStackType;
-
-      pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
-      pNewStackType->cType = 'L';
-      pNewStackType->pPrev = pStackValType;
-
-      pStackValType = pNewStackType;
-      debug_msg( "\n***PushLogical()\n", NULL );
-   }
+   ValTypePush( 'L' );
 }
 
 void PushNil( void )
 {
    GenPCode1( HB_P_PUSHNIL );
 
-   if( _iWarnings )
-   {
-      PSTACK_VAL_TYPE pNewStackType;
-
-      pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
-      pNewStackType->cType = ' ' /*TODO maybe 'U'*/ ;
-      pNewStackType->pPrev = pStackValType;
-
-      pStackValType = pNewStackType;
-      debug_msg( "\n***PushNil()\n", NULL );
-   }
+   ValTypePush( ' ' );		/*TODO maybe 'U'*/
 }
 
 /* generates the pcode to push a double number on the virtual machine stack */
@@ -3881,17 +3676,7 @@ void PushDouble( double dNumber, BYTE bDec )
    GenPCodeN( ( BYTE * ) &dNumber, sizeof( double ) );
    GenPCode1( bDec );
 
-   if( _iWarnings )
-   {
-      PSTACK_VAL_TYPE pNewStackType;
-
-      pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
-      pNewStackType->cType = 'N';
-      pNewStackType->pPrev = pStackValType;
-
-      pStackValType = pNewStackType;
-      debug_msg( "\n***PushDouble()\n", NULL );
-   }
+   ValTypePush( 'N' );
 }
 
 void PushFunCall( char * szFunName )
@@ -3907,7 +3692,8 @@ void PushFunCall( char * szFunName )
    }
    else
       PushSymbol( szFunName, 1 );
-   PushNil();
+
+   GenPCode1( HB_P_PUSHNIL );
 }
 
 /* generates the pcode to push a integer number on the virtual machine stack */
@@ -3917,18 +3703,6 @@ void PushInteger( int iNumber )
       GenPCode3( HB_P_PUSHINT, LOBYTE( ( USHORT ) iNumber ), HIBYTE( ( USHORT ) iNumber ) );
    else
       GenPCode1( HB_P_ZERO );
-
-   if( _iWarnings )
-   {
-      PSTACK_VAL_TYPE pNewStackType;
-
-      pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
-      pNewStackType->cType = 'N';
-      pNewStackType->pPrev = pStackValType;
-
-      pStackValType = pNewStackType;
-      debug_msg( "\n***PushInteger() %i\n ", iNumber );
-   }
 }
 
 /* generates the pcode to push a long number on the virtual machine stack */
@@ -3945,17 +3719,7 @@ void PushLong( long lNumber )
    else
       GenPCode1( HB_P_ZERO );
 
-   if( _iWarnings )
-   {
-      PSTACK_VAL_TYPE pNewStackType;
-
-      pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
-      pNewStackType->cType = 'N';
-      pNewStackType->pPrev = pStackValType;
-
-      pStackValType = pNewStackType;
-      debug_msg( "\n***PushLong()\n", NULL );
-   }
+   ValTypePush( 'N' );
 }
 
 /* generates the pcode to push a string on the virtual machine stack */
@@ -3966,17 +3730,7 @@ void PushString( char * szText )
    GenPCode3( HB_P_PUSHSTR, LOBYTE( iStrLen ), HIBYTE( iStrLen ) );
    GenPCodeN( ( BYTE * ) szText, iStrLen );
 
-   if( _iWarnings )
-   {
-      PSTACK_VAL_TYPE pNewStackType;
-
-      pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
-      pNewStackType->cType = 'C';
-      pNewStackType->pPrev = pStackValType;
-
-      pStackValType = pNewStackType;
-      debug_msg( "\n***PushString()\n", NULL );
-   }
+   ValTypePush( 'C' );
 }
 
 /* generates the pcode to push a symbol on the virtual machine stack */
@@ -4011,24 +3765,9 @@ void PushSymbol( char * szSymbolName, int iIsFunction )
    }
    GenPCode3( HB_P_PUSHSYM, LOBYTE( wSym ), HIBYTE( wSym ) );
 
-   if( _iWarnings )
-   {
-      PSTACK_VAL_TYPE pNewStackType;
-      char cType;
-
-      if( iIsFunction )
-         cType = pSym->cType;
-      else
-         cType = cVarType;
-
-      pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
-      pNewStackType->cType = cType;
-      pNewStackType->pPrev = pStackValType;
-
-      pStackValType = pNewStackType;
-      debug_msg( "\n***PushSymbol()\n", NULL );
-   }
+   ValTypePush( iIsFunction ? pSym->cType : _cVarType );
 }
+
 
 void CheckDuplVars( PVAR pVar, char * szVarName, int iVarScope )
 {
@@ -4049,25 +3788,7 @@ void Dec( void )
 {
    GenPCode1( HB_P_DEC );
 
-   if( _iWarnings )
-   {
-      if( pStackValType )
-      {
-         if( pStackValType->cType == ' ' )
-            GenWarning( _szCWarnings, 'W', WARN_NUMERIC_SUSPECT, NULL, NULL );
-         else if( pStackValType->cType != 'N' )
-         {
-            char sType[ 2 ];
-
-            sType[ 0 ] = pStackValType->cType;
-            sType[ 1 ] = '\0';
-
-            GenWarning( _szCWarnings, 'W', WARN_NUMERIC_TYPE, sType, NULL );
-         }
-      }
-      else
-         debug_msg( "\n***Dec() Compile time stack overflow\n", NULL );
-   }
+   ValTypeCheck( 'N', WARN_NUMERIC_TYPE, WARN_NUMERIC_SUSPECT );
 }
 
 void ArrayDim( int iDimensions )
@@ -4079,55 +3800,7 @@ void Do( BYTE bParams )
 {
    GenPCode3( HB_P_DO, bParams, 0 );
 
-   if( _iWarnings )
-   {
-      PSTACK_VAL_TYPE pFree;
-      int i;
-
-      /* Releasing the compile time stack items used as parameters to the function. */
-      for( i = abs( bParams ); i > 0; i-- )
-      {
-         pFree = pStackValType;
-         debug_msg( "\n***---Do() \n", NULL );
-
-         if( pStackValType )
-            pStackValType = pStackValType->pPrev;
-         else
-            debug_msg( "\n***Do() Compile time stack overflow\n", NULL );
-
-         if( pFree )
-         {
-            hb_xfree( ( void * ) pFree );
-         }
-      }
-
-      /* releasing the compile time Nil symbol terminator */
-      pFree = pStackValType;
-      debug_msg( "\n***---Do()\n", NULL );
-      if( pStackValType )
-         pStackValType = pStackValType->pPrev;
-      else
-         debug_msg( "\n***Do(2) Compile time stack overflow\n", NULL );
-
-      if( pFree )
-      {
-         hb_xfree( ( void * ) pFree );
-      }
-
-      /* releasing the compile time procedure value */
-      pFree = pStackValType;
-      debug_msg( "\n***---Do() \n", NULL );
-
-      if( pStackValType )
-      {
-         pStackValType = pStackValType->pPrev;
-      }
-
-      if( pFree )
-      {
-         hb_xfree( ( void * ) pFree );
-      }
-   }
+   ValTypePop( bParams + 1 ); /* pop all arguments and symbol type */
 }
 
 void FixElseIfs( void * pFixElseIfs )
@@ -4165,18 +3838,7 @@ void FixReturns( void ) /* fixes all last defined function returns jumps offsets
          pVar = pVar->pNext;
       }
 
-      /* Clear the compile time stack values (should be empty at this point) */
-      while( pStackValType )
-      {
-         PSTACK_VAL_TYPE pFree;
-
-         debug_msg( "\n***Compile time stack underflow - type: %c\n", pStackValType->cType );
-         pFree = pStackValType;
-         pStackValType = pStackValType->pPrev;
-         hb_xfree( ( void * ) pFree );
-      }
-      pStackValType = NULL;
-
+      ValTypeReset( );
 
       /* Check if the function returned some value
        */
@@ -4205,318 +3867,60 @@ void Function( BYTE bParams )
 {
    GenPCode3( HB_P_FUNCTION, bParams, 0 );
 
-   if( _iWarnings )
-   {
-      PSTACK_VAL_TYPE pFree;
-      int i;
-
-      /* Releasing the compile time stack items used as parameters to the function. */
-      for( i = abs( bParams ); i > 0; i-- )
-      {
-         pFree = pStackValType;
-         debug_msg( "\n***---Function() parameter %i \n", i );
-
-         if( pStackValType )
-            pStackValType = pStackValType->pPrev;
-         else
-            debug_msg( "\n***Function() parameter %i Compile time stack overflow\n", i );
-
-         if( pFree )
-         {
-            hb_xfree( ( void * ) pFree );
-         }
-      }
-
-      /* releasing the compile time Nil symbol terminator */
-      pFree = pStackValType;
-      debug_msg( "\n***---NIL at Function()\n", NULL );
-
-      if( pStackValType )
-      {
-         pStackValType = pStackValType->pPrev;
-      }
-
-      if( pFree )
-      {
-         hb_xfree( ( void * ) pFree );
-      }
-   }
+   ValTypePop( bParams + 1 ); /* pop all arguments and symbol type */
 }
 
 void GenArray( int iElements )
 {
    GenPCode3( HB_P_ARRAYGEN, LOBYTE( iElements ), HIBYTE( iElements ) );
 
-   if( _iWarnings )
-   {
-      PSTACK_VAL_TYPE pFree;
-      int iIndex;
-
-      /* Releasing the stack items used by the HB_P_ARRAYGEN (other than the 1st element). */
-      for( iIndex = iElements; iIndex > 1; iIndex-- )
-      {
-         pFree = pStackValType;
-         debug_msg( "\n***---element %i at GenArray()\n", wIndex );
-
-         if( pStackValType )
-            pStackValType = pStackValType->pPrev;
-         else
-            debug_msg( "\n***GenArray() Compile time stack overflow\n", NULL );
-
-         if( pFree )
-         {
-            hb_xfree( ( void * ) pFree );
-         }
-      }
-
-      if( iElements == 0 )
-      {
-         PSTACK_VAL_TYPE pNewStackType;
-
-         pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
-         pNewStackType->cType = 'A';
-         pNewStackType->pPrev = pStackValType;
-
-         pStackValType = pNewStackType;
-         debug_msg( "\n***empty array in GenArray()\n ", NULL );
-      }
-
-      /* Using the either remaining 1st element place holder or a new item if empty array. */
-      if( pStackValType )
-         pStackValType->cType = 'A';
-      else
-         debug_msg( "\n***ArrrayGen() Compile time stack overflow\n", NULL );
-   }
+   ValTypePop( iElements );	/* pop all items of the array */
+   ValTypePush( 'A' );
 }
 
-void GenPCode1( BYTE byte )
+static void GenPlusPCode( BYTE opcode )
+{
+   GenPCode1( opcode );
+   ValTypePlus();
+}
+
+static void GenNumPCode( BYTE opcode )
+{
+   GenPCode1( opcode );
+   ValTypeCheck2( 'N', WARN_NUMERIC_TYPE, WARN_NUMERIC_SUSPECT );
+   ValTypePop( 2 );
+   ValTypePush( 'N' );
+}
+
+static void GenRelPCode( BYTE opcode )
+{
+   GenPCode1( opcode );
+   ValTypeRelational();
+}
+
+static void GenNotPCode( void )
+{
+   GenPCode1( HB_P_NOT );
+   ValTypeCheck( 'L', WARN_LOGICAL_TYPE, WARN_LOGICAL_SUSPECT );
+   /* Leave the original type on the stack */
+}
+
+static void GenNegatePCode( void )
+{
+   GenPCode1( HB_P_NEGATE );
+   ValTypeCheck( 'N', WARN_NUMERIC_TYPE, WARN_NUMERIC_SUSPECT );
+   /* Leave the original type on the stack */
+}
+
+static void GenPopPCode( void )
+{
+   GenPCode1( HB_P_POP );
+   ValTypePop( 1 );
+}
+
+static void GenPCode1( BYTE byte )
 {
    PFUNCTION pFunc = functions.pLast;   /* get the currently defined Clipper function */
-
-   /* Releasing value consumed by HB_P_ARRAYPUT */
-   if( _iWarnings )
-   {
-      if( byte == HB_P_PUSHSELF )
-      {
-         PSTACK_VAL_TYPE pNewStackType;
-
-         pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
-         pNewStackType->cType = 'O';
-         pNewStackType->pPrev = pStackValType;
-
-         pStackValType = pNewStackType;
-         debug_msg( "\n***HB_P_PUSHSELF\n", NULL );
-      }
-      else if( byte == HB_P_ARRAYPUT )
-      {
-         PSTACK_VAL_TYPE pFree;
-
-         /* Releasing compile time assignment value */
-         pFree = pStackValType;
-         debug_msg( "\n***---ArrayPut()\n", NULL );
-
-         if( pStackValType )
-            pStackValType = pStackValType->pPrev;
-         else
-            debug_msg( "\n***HB_P_ARRAYPUT Compile time stack overflow\n", NULL );
-
-         if( pFree )
-         {
-            hb_xfree( ( void * ) pFree );
-         }
-
-         /* Releasing compile time array element index value */
-         pFree = pStackValType;
-         debug_msg( "\n***---HB_P_ARRAYPUT\n", NULL );
-
-         if( pStackValType )
-            pStackValType = pStackValType->pPrev;
-         else
-            debug_msg( "\n***HB_P_ARRAYPUT2 Compile time stack overflow\n", NULL );
-
-         if( pFree )
-         {
-            hb_xfree( ( void * ) pFree );
-         }
-      }
-      else if( byte == HB_P_POP || byte == HB_P_RETVALUE || byte == HB_P_FORTEST || byte == HB_P_ARRAYAT )
-      {
-         PSTACK_VAL_TYPE pFree;
-
-         pFree = pStackValType;
-         debug_msg( "\n***---HB_P_POP / HB_P_RETVALUE / HB_P_FORTEST / HB_P_ARRAYAT pCode: %i\n", byte );
-
-         if( pStackValType )
-            pStackValType = pStackValType->pPrev;
-         else
-            debug_msg( "\n***pCode: %i Compile time stack overflow\n", byte );
-
-         if( pFree )
-         {
-            hb_xfree( ( void * ) pFree );
-         }
-      }
-      else if( byte == HB_P_MULT || byte == HB_P_DIVIDE || byte == HB_P_MODULUS || byte == HB_P_POWER || byte == HB_P_NEGATE )
-      {
-         PSTACK_VAL_TYPE pOperand1 = NULL, pOperand2;
-         char sType1[ 2 ], sType2[ 2 ];
-
-         /* 2nd. Operand (stack top)*/
-         pOperand2 = pStackValType;
-
-         /* skip back to the 1st. operand */
-         if( pOperand2 )
-         {
-            pOperand1 = pOperand2->pPrev;
-            sType2[ 0 ] = pOperand1->cType;
-            sType2[ 1 ] = '\0';
-         }
-         else
-            debug_msg( "\n***HB_P_MULT pCode: %i Compile time stack overflow\n", byte );
-
-         /* skip back to the 1st. operand */
-         if( pOperand1 )
-         {
-            sType1[ 0 ] = pOperand1->cType;
-            sType1[ 1 ] = '\0';
-         }
-         else
-            debug_msg( "\n***HB_P_MULT2 pCode: %i Compile time stack overflow\n", byte );
-
-         if( pOperand1 && pOperand1->cType != 'N' && pOperand1->cType != ' ' )
-            GenWarning( _szCWarnings, 'W', WARN_NUMERIC_TYPE, sType1, NULL );
-         else if( pOperand1 && pOperand1->cType == ' ' )
-            GenWarning( _szCWarnings, 'W', WARN_NUMERIC_SUSPECT, NULL, NULL );
-
-         if( pOperand2 && pOperand2->cType != 'N' && pOperand2->cType != ' ' )
-            GenWarning( _szCWarnings, 'W', WARN_NUMERIC_TYPE, sType2, NULL );
-         else if( pOperand2 && pOperand2->cType == ' ' )
-            GenWarning( _szCWarnings, 'W', WARN_NUMERIC_SUSPECT, NULL, NULL );
-
-         /* compile time 2nd. operand has to be released */
-         if( pOperand2 )
-         {
-            hb_xfree( ( void * ) pOperand2 );
-         }
-
-         /* compile time 1st. operand has to be released *but* result will be pushed and assumed numeric type */
-         pStackValType = pOperand1;
-         pStackValType->cType = 'N';
-      }
-      else if( byte == HB_P_PLUS || byte == HB_P_MINUS )
-      {
-         PSTACK_VAL_TYPE pOperand1 = NULL, pOperand2;
-         char sType1[ 2 ], sType2[ 2 ], cType = ' ';
-
-         /* 2nd. Operand (stack top)*/
-         pOperand2 = pStackValType;
-
-         /* skip back to the 1st. operand */
-         if( pOperand2 )
-         {
-            pOperand1 = pOperand2->pPrev;
-            sType2[ 0 ] = pOperand2->cType;
-            sType2[ 1 ] = '\0';
-         }
-         else
-            debug_msg( "\n***HB_P_PLUS / HB_P_MINUS Compile time stack overflow\n", NULL );
-
-         if( pOperand1 )
-         {
-            sType1[ 0 ] = pOperand1->cType;
-            sType1[ 1 ] = '\0';
-         }
-         else
-            debug_msg( "\n***HB_P_PLUS / HB_P_MINUS2 Compile time stack overflow\n", NULL );
-
-         if( pOperand1 && pOperand2 && pOperand1->cType != ' ' && pOperand2->cType != ' ' && pOperand1->cType != pOperand2->cType )
-            GenWarning( _szCWarnings, 'W', WARN_OPERANDS_INCOMPATBLE, sType1, sType2 );
-         else if( pOperand1 && pOperand2 && pOperand2->cType != ' ' && pOperand1->cType == ' ' )
-            GenWarning( _szCWarnings, 'W', WARN_OPERAND_SUSPECT, sType2, NULL );
-         else if( pOperand1 && pOperand2 && pOperand1->cType != ' ' && pOperand2->cType == ' ' )
-            GenWarning( _szCWarnings, 'W', WARN_OPERAND_SUSPECT, sType1, NULL );
-         else
-            cType = pOperand1->cType;
-
-         /* compile time 2nd. operand has to be released */
-         if( pOperand2 )
-         {
-            hb_xfree( ( void * ) pOperand2 );
-         }
-
-         /* compile time 1st. operand has to be released *but* result will be pushed and type as calculated */
-         /* Resetting */
-         pStackValType = pOperand1;
-         pStackValType->cType = cType;
-      }
-      else if( byte == HB_P_EQUAL || byte == HB_P_LESS ||  byte == HB_P_GREATER || byte == HB_P_INSTRING || byte == HB_P_LESSEQUAL || byte == HB_P_GREATEREQUAL || byte == HB_P_EXACTLYEQUAL || byte == HB_P_NOTEQUAL )
-      {
-         PSTACK_VAL_TYPE pOperand1 = NULL, pOperand2;
-         char sType1[ 2 ], sType2[ 2 ];
-
-         /* 2nd. Operand (stack top)*/
-         pOperand2 = pStackValType;
-
-         /* skip back to the 1st. operand */
-         if( pOperand2 )
-         {
-            pOperand1 = pOperand2->pPrev;
-            sType2[ 0 ] = pOperand2->cType;
-            sType2[ 1 ] = '\0';
-         }
-         else
-            debug_msg( "\n***HB_P_EQUAL pCode: %i Compile time stack overflow\n", byte );
-
-         if( pOperand1 )
-         {
-            sType1[ 0 ] = pOperand1->cType;
-            sType1[ 1 ] = '\0';
-         }
-         else
-            debug_msg( "\n***HB_P_EQUAL2 pCode: %i Compile time stack overflow\n", byte );
-
-         if( pOperand1 && pOperand2 && pOperand1->cType != ' ' && pOperand2->cType != ' ' && pOperand1->cType != pOperand2->cType )
-            GenWarning( _szCWarnings, 'W', WARN_OPERANDS_INCOMPATBLE, sType1, sType2 );
-         else if( pOperand1 && pOperand2 && pOperand2->cType != ' ' && pOperand1->cType == ' ' )
-            GenWarning( _szCWarnings, 'W', WARN_OPERAND_SUSPECT, sType2, NULL );
-         else if( pOperand1 && pOperand2 && pOperand1->cType != ' ' && pOperand2->cType == ' ' )
-            GenWarning( _szCWarnings, 'W', WARN_OPERAND_SUSPECT, sType1, NULL );
-
-         /* compile time 2nd. operand has to be released */
-         if( pOperand2 )
-         {
-            hb_xfree( ( void * ) pOperand2 );
-         }
-
-         /* compile time 1st. operand has to be released *but* result will be pushed and of type logical */
-         if( pOperand1 )
-            pOperand1->cType = 'L';
-
-         /* Resetting */
-         pStackValType = pOperand1;
-      }
-      else if( byte == HB_P_NOT )
-      {
-         char sType[ 2 ];
-
-         if( pStackValType )
-         {
-            sType[ 0 ] = pStackValType->cType;
-            sType[ 1 ] = '\0';
-         }
-         else
-            debug_msg( "\n***HB_P_NOT Compile time stack overflow\n", NULL );
-
-         if( pStackValType && pStackValType->cType == ' ' )
-            GenWarning( _szCWarnings, 'W', WARN_LOGICAL_SUSPECT, NULL, NULL );
-         else if( pStackValType && pStackValType->cType != 'L' )
-            GenWarning( _szCWarnings, 'W', WARN_LOGICAL_TYPE, sType, NULL );
-
-         /* compile time 1st. operand has to be released *but* result will be pushed and assumed logical */
-         if( pStackValType )
-            pStackValType->cType = 'L';
-      }
-   }
 
    if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
    {
@@ -4531,7 +3935,7 @@ void GenPCode1( BYTE byte )
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte;
 }
 
-void GenPCode3( BYTE byte1, BYTE byte2, BYTE byte3 )
+static void GenPCode3( BYTE byte1, BYTE byte2, BYTE byte3 )
 {
    PFUNCTION pFunc = functions.pLast;   /* get the currently defined Clipper function */
 
@@ -4550,7 +3954,7 @@ void GenPCode3( BYTE byte1, BYTE byte2, BYTE byte3 )
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte3;
 }
 
-void GenPCodeN( BYTE * pBuffer, ULONG ulSize )
+static void GenPCodeN( BYTE * pBuffer, ULONG ulSize )
 {
    PFUNCTION pFunc = functions.pLast;   /* get the currently defined Clipper function */
 
@@ -4716,14 +4120,7 @@ void CodeBlockEnd()
    }
    hb_xfree( ( void * ) pCodeblock );
 
-   if( _iWarnings )
-   {
-      if( pStackValType )
-         /* reusing the place holder of the result value */
-         pStackValType->cType = 'B';
-      else
-         debug_msg( "\n***CodeBlockEnd() Compile time stack overflow\n", NULL );
-   }
+   ValTypePut( 'B' );
 }
 
 /* Set the name of an alias for the list of previously declared FIELDs
@@ -4805,22 +4202,6 @@ void StaticDefEnd( int iCount )
    _pInitFunc->pOwner = NULL;
    _iStatics += iCount;
    iVarScope = VS_LOCAL;
-
-   if( _iWarnings )
-   {
-      PSTACK_VAL_TYPE pFree;
-
-      if( pStackValType )
-      {
-         pFree = pStackValType;
-         debug_msg( "\n***---%i in StaticeDefEnd()\n", _iStatics );
-
-         pStackValType = pStackValType->pPrev;
-         hb_xfree( ( void * ) pFree );
-      }
-      else
-         debug_msg( "\n***StaticDefEnd() Compile time stack overflow\n", NULL );
-   }
 }
 
 /*
@@ -5399,4 +4780,3 @@ static BOOL SwitchCmp( char * szString, char * szSwitch )
 
    return FALSE;
 }
-
