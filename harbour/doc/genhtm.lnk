@@ -1,19 +1,14 @@
-!name: Harbour Reference Guide
-!credits: Harbour (c) http://www.harbour-project.org
-        2000/04/09 build by Luiz Rafael Culik
+!name: Harbour Version %HB_VERSION% (c) reference Guide
+!credits: Harbour Version %HB_VERSION% (c) http://www.harbour-project.org
+        %HB_BLDDATE% build By Luiz Rafael Culik
         Functions Documented by:
-        Chen Kedem, Luiz Rafael Culik, Brian Hays
+        Chen Kedem, Luiz Rafael Culik,Brian Hays
+
 !menu: Reference
-Functions A-M     funcam.ngo
-Functions N-_     funcn_.ngo
+Functions         funcam.ngo
 Command           comm.ngo
 Tools             Tools.ngo
 OOP Commands      oopcom.ngo
 !menu: Harbour
-Compiler Options  Compil~1.ngo
-GNU License       gnulic~1.ngo
-GNU License P2    gnulic~2.ngo
-License           license.ngo
-Readme            overview.ngo
-Harbour Extension harbou~1.ngo
-
+Information       informat.ngo
+Runtime Error     Error.ngo

@@ -104,8 +104,8 @@
  *      and is the equivalent of one field. Each row is equivalent of one
  *      database record.   
 
- *      Following are active keys that handled by DBEDIT():      
- *      ---------------------------------------------------
+ *      Following are active keys that handled by DBEDIT():       </par>
+ *      ---------------------------------------------------  
 
  *     <table>
  *       Key              Meaning
@@ -139,8 +139,8 @@
  *      is omitted, the index number is the FIELD() number of the open
  *      database structure.   
 
- *      DBEDIT() nMode could be one of the following:   
- *      ---------------------------------------------
+ *      DBEDIT() nMode could be one of the following:    </par>
+ *      ---------------------------------------------   
 
  *      <table>
  *       Dbedit.ch      Meaning
@@ -154,8 +154,8 @@
  *      The user define function or code block must return a value that tell
  *      DBEDIT() what to do next.     
 
- *      User function return codes:   
- *      ---------------------------
+ *      User function return codes:    </par>
+ *      ---------------------------   
 
  *      <table>
  *       Dbedit.ch    Value   Meaning
