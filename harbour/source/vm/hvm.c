@@ -1324,7 +1324,13 @@ void PopLocal( SHORT iLocal )
       /* local variable or local parameter */
       pLocal = stack.pBase + 1 + iLocal;
       if( IS_BYREF( pLocal ) )
+      {
+        if( pLocal->value.iNumber >= 0)
           ItemCopy( stack.pItems + pLocal->value.wItem, stack.pPos );
+        else
+          /* local variable referenced in a codeblock */
+          ItemCopy( CodeblockGetVar( stack.pItems +pLocal->wBase +1, pLocal->value.wItem ), stack.pPos );
+      }
       else
           ItemCopy( pLocal, stack.pPos );
     }
@@ -1426,7 +1432,13 @@ void PushLocal( SHORT iLocal )
       /* local variable or local parameter */
       pLocal = stack.pBase + 1 + iLocal;
       if( IS_BYREF( pLocal ) )
+      {
+        if( pLocal->value.iNumber >= 0 )
          ItemCopy( stack.pPos, stack.pItems + pLocal->value.wItem );
+        else
+         /* local variable referenced in a codeblock */
+         ItemCopy( stack.pPos, CodeblockGetVar( stack.pItems + pLocal->wBase +1, pLocal->value.wItem ) );
+      }
       else
          ItemCopy( stack.pPos, pLocal );
    }
@@ -1446,8 +1458,11 @@ void PushLocalByRef( SHORT iLocal )
       /* local variable or local parameter */
       stack.pPos->value.wItem = stack.pBase + 1 + iLocal - stack.pItems;
    else
+   {
       /* local variable referenced in a codeblock */
-      stack.pPos->value.wItem = iLocal;
+      stack.pPos->value.iNumber = iLocal;
+      stack.pPos->wBase = stack.pBase - stack.pItems;
+   }
 
    StackPush();
    HBDEBUG2( "PushLocalByRef %i\n", iLocal );

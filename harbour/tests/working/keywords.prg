@@ -4,9 +4,11 @@
 */
 //DO NOT RUN THIS PROGRAM - ITS PURPOSE IS THE SYNTAX CHECK ONLY!
 
+#include "keywords.ch"  //INCLUDE test
+
 EXTERNAL __case, __begin
 STATIC nExt, bEgin, bReak, cAse, do, wHile, wIth, eXit, eXternal, fIeld
-STATIC for
+STATIC for, in, include, init, loop, local
 
 Function Main()
 
@@ -48,6 +50,16 @@ Function Main()
    _FIELD( fIeld )
 
    for :=FOR( for )
+
+   in( in )
+
+   include( include )
+
+   Init( init )
+
+   LOCAL( local )
+
+   LOOP( loop )
 
 RETURN nil
 
@@ -103,28 +115,26 @@ RETURN( nExt * /*next*/ nExt )
 **/
 FUNCTION BEGIN( BEGIN_BEGIN )
 LOCAL bEgin
-LOCAL xbEgin
-LOCAL bEginBEGIN
 //LOCAL bEgin0, /* BEGIN OF BEGIN */ ;    /* in Clipper: Incomplete statement */
 //	bEgin1
-LOCAL xbEginBEGIN := 100
 
 BEGIN SEQUENCE
-    bEgin0 :=0
+    bEgin :=0
     FOR bEgin:=1 TO 10
       QOUT( bEgin )
-      xbEgin :=bEgin
-      bEginBEGIN :=xbEgin * 10
-      bEgin0 +=bEginBEGIN
-      --xbEginBEGIN
+      bEgin :=bEgin[ 1 ]
+      bEgin[ 1 ] :=bEgin
+      bEgin :=bEgin * 10
       bEgin++
       --bEgin
       ( begin )->( begin () )
     NEXT bEgin
 
+    bEgin :=begin->begin
+
 //    begin->begin :=begin->begin +; /************************/
 //	begin->begin
-    bEgin :=BEGIN( xbegin +bEgin +bEginBEGIN -bEgin0 * xbEginBEGIN ) +;
+    bEgin :=BEGIN( begin +bEgin ) +;
             bEgin[ bEgin ]
 
 END SEQUENCE
@@ -307,6 +317,8 @@ LOCAL with
    while +=while
    while->while :=while() +while->while
   enddo
+
+  do->do :=while->while
 
 //  while[ 1 ] :=while
 //  while[ 2 ] +=2
@@ -548,6 +560,9 @@ FUNCTION FOR( for )
   for :=for()
   for :=for( for( for ) )
 
+  for :={|for| for}
+  EVAL( {|for| for}, for )
+
   for->for :=for
   for :=for->for
   for->for :=for->for
@@ -560,3 +575,175 @@ FUNCTION FOR( for )
   ENDDO
 
 RETURN for
+
+/*====================================================================
+* Test for IN
+*/
+FUNCTION IN( _in )
+FIELD begin IN begin
+FIELD break IN break
+FIELD case IN case
+FIELD do IN do
+FIELD for IN for
+FIELD in IN in
+FIELD next IN next
+FIELD while IN while
+FIELD end IN end
+FIELD with IN with
+FIELD exit IN exit
+FIELD external IN external
+FIELD field IN field
+
+  IN( in )
+  in++
+  --in
+  in->in :=in
+  in[ 1 ] :=1
+  in[ in ] :=in[ in ]
+  ( in )->in :=in
+
+  in :={|in| in}
+  EVAL( {|in| in}, in )
+
+  DO in
+  DO in WITH in
+
+RETURN in
+
+/*====================================================================
+* Test for INCLUDE
+*/
+FUNCTION include( include )
+
+  FOR include:=1 TO 10
+    include++
+    --include
+  NEXT include
+
+  WHILE include
+  ENDDO
+
+  include[ 1 ] :=1
+  include := include[ include ]
+
+  include :={|include| include}
+  EVAL( {|include| include}, include )
+
+  DO include
+  DO include WITH include
+
+  include->include :=1
+  include->include :=include->include +1
+  ( include )->include :=INCLUDE( include->include )
+
+RETURN include
+
+/*====================================================================
+* Test for INIT
+*/
+INIT fUNCTION Init( init )
+
+  FOR init:=1 TO 10
+    init++
+    --init
+  NEXT init
+
+  WHILE init
+    init :=!init
+  END
+
+  init[ 1 ] :=1
+  init :=init[ init ]
+
+  init->init :=init->init +1
+  ( init )->init :=INIT( init[ init->init ] )
+
+  init :={|init| init}
+  EVAL( {|init| init}, init )
+
+  DO INIT WITH init
+  DO INIT
+
+RETURN init
+
+
+/*====================================================================
+* Test for LOCAL
+*/
+FUNCTION local( _local )
+LOCAL local
+
+  FOR local:=1 TO 10
+    local++
+    --local
+  NEXT local
+
+  local :={|local| local}
+  EVAL( {|local| local}, local )
+
+  WHILE local
+  ENDDO
+
+  local[ 1 ] :=1
+  local :=local[ local ]
+
+  local->local :=local->local
+  ( local )->local :=LOCAL( local[ local->local ] )
+
+  DO local
+  DO local WITH local
+
+RETURN local
+
+/*====================================================================
+* Test for LOOP
+*/
+FUNCTION loop( loop )
+
+  FOR loop:=1 TO 10
+    loop++
+    --loop
+    QOut( loop )
+    IF( loop == 5 )
+      Qout( "LOOP to begginig" )
+      loop
+    ENDIF
+    IF( loop == 9 )
+      Qout( "EXIT from FOR statement" )
+      EXIT
+    ENDIF
+  NEXT loop
+  Qout( "After ", loop, "loops" )
+
+
+//  LOOP
+
+  loop :={|loop| loop}
+  EVAL( {|loop| loop}, loop )
+
+  loop =1
+  WHILE loop <= 10
+    Qout( loop )
+    IF( loop == 5 )
+        Qout( "LOOP to 7" )
+        loop :=7
+        LOOP
+    ENDIF
+    IF( loop == 9 )
+      Qout( "EXIT form while" )
+      EXIT
+    ENDIF
+    ++loop
+  ENDDO
+  Qout( "After ", loop, " loops" )
+
+  loop[ 1 ] :=1
+  loop :=loop[ loop ]
+
+  loop->loop :=loop->loop
+  ( loop )->loop :=loop( loop[ loop->loop ] )
+
+  DO loop
+  DO loop WITH loop
+
+RETURN loop

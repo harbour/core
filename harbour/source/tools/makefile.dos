@@ -3,18 +3,17 @@
 #
 include ../../makedos.env
 
+SRCPRG:= $(wildcard *.prg)
+CPRG=$(SRCPRG:.prg=.c)
+OBJPRG=$(CPRG:.c=.o)
+
 SRCC:= $(wildcard *.c)
 OBJC=$(SRCC:.c=.o)
 
 all:	$(HARBOURLIB) 
 
-$(HARBOURLIB): ${OBJC} ${OBJPRG}
-	ar r $(HARBOURLIB) ${OBJC}
-
-prg:
-	../../bin/harbour -n error.prg
-	../../bin/harbour -n errorsys.prg
-	../../bin/harbour -n tclass.prg
+$(HARBOURLIB): ${OBJPRG} $(OBJC)
+	ar r $(HARBOURLIB) ${OBJC} ${OBJPRG}
 
 clean:
 	-del *.o

@@ -1,0 +1,75 @@
+The Harbour implementation of codeblocks.
+Ryszard Glab <rglab@imid.med.pl>
+
+
+The compilation of a codeblock.
+  During compile the codeblock is stored in the following form:
+- the header
+- the stream of pcode bytes
+
+  The header stores information about referenced local variables.
++0: the pcode byte for _PUSHBLOCK
++1: the number of bytes that defines a codeblock 
++3: number of codeblock parameters (declared between || in a codeblock)
++5: number of used local variables declared in procedure/function where
+    the codeblock is created
++7: the list of procedure/function local variables positions on the the eval
+    stack of procedure/function. Every local variable used in a codeblock
+    occupies 2 bytes in this list.
++x:  The stream of pcode bytes follows the header. 
++y: the pcode byte for _ENDBLOCK
+
+
+The evaluation of a codeblock.
+  Before a codeblock evaluation the virtual machine creates the eval stack
+where all codeblock parameters are stored (just like function parameters).
+When a codeblock parameter is referenced then its position on the eval stack
+is used. When a procedure local variable is referenced then the index into 
+the table of local variables positions (copied from the header) is used. 
+The negative value is used as an index to distinguish it from the reference
+to a codeblock parameter. The table of local variables positions is created
+during creation of a codeblock (in PushBlock() function). 
+
+
+Detached locals.
+  If the codeblock is returned from a function and this codeblock refers to
+local variables defined in that function then the position of local variable
+stored in a codeblock is replaced with the current value of the variable.
+In this way the value of local variable can be accessed even outside of the
+function where the variable was declared. This proccess is also called 
+'detaching local variables'
+
+
+Incompatbility with the Clipper.
+  There is a little difference between the handling of variables passed by 
+the reference in a codeblock.
+The following code explains it (thanks to David G. Holm)
+
+Function Main()
+Local nTest
+Local bBlock1 := MakeBlock()
+Local bBlock2 := {|| DoThing( @nTest ), qout("From Main: ", nTest ) }
+
+   eval( bBlock1 )
+   eval( bBlock2 )
+
+Return( NIL )
+
+Function MakeBlock()
+Local nTest
+Return( {|| DoThing( @nTest ), qout("From MakeBlock: ", nTest ) } )
+
+Function DoThing( n )
+
+   n := 42
+
+Return( NIL )
+
+
+  In Clipper it produces:
+From MakeBlock: NIL
+From Main: 42
+
+  In Harbour it produces (it is the correct output, IMHO)
+From MakeBlock: 42
+From Main: 42

@@ -85,6 +85,20 @@ typedef struct __RETURN
    struct __RETURN * pNext;
 } _RETURN, * PRETURN;      /* support structure for multiple returns from a function */
 
+typedef struct _LOOPEXIT
+{
+  WORD wOffset;
+  WORD wLine;
+  struct _LOOPEXIT *pLoopList;
+  struct _LOOPEXIT *pExitList;
+  struct _LOOPEXIT *pNext;
+} LOOPEXIT, * PLOOPEXIT;  /* support structure for EXIT and LOOP statements */
+static void LoopStart( void );
+static void LoopEnd( void );
+static void LoopLoop( void );
+static void LoopExit( void );
+static void LoopHere( void );
+
 typedef struct             /* support for filenames */
 {
   char _buffer[ _POSIX_PATH_MAX+3 ];
@@ -244,8 +258,9 @@ char * _szErrors[] = { "Statement not allowed outside of procedure or function",
                        "ELSE does not match IF",
                        "ELSEIF does not match IF",
                        "Syntax error: \'%s\'",
-                       "Unclosed control structures",
-                       "EXIT statement with no loop in sight"
+                       "Unclosed control structures at line: %i",
+                       "%s statement with no loop in sight",
+                       "Syntax error: \'%s\' in: \'%s\'"
                      };
 
 /* Table with reserved functions names
@@ -366,6 +381,7 @@ int _iObj32 = 0;           /* generate OBJ 32 bits */
 WORD _wStatics = 0;        /* number of defined statics variables on the PRG */
 PRETURN pReturns = 0;      /* list of multiple returns from a function */
 PEXTERN pExterns = 0;
+PLOOPEXIT pLoops = 0;
 PATHNAMES *_pIncludePath = NULL;
 
 %}
@@ -384,7 +400,7 @@ PATHNAMES *_pIncludePath = NULL;
 };
 
 %token FUNCTION PROCEDURE IDENTIFIER RETURN NIL DOUBLE INASSIGN INTEGER INTLONG
-%token LOCAL STATIC IF ELSE ELSEIF END ENDIF LITERAL TRUEVALUE FALSEVALUE
+%token LOCAL STATIC IIF IF ELSE ELSEIF END ENDIF LITERAL TRUEVALUE FALSEVALUE
 %token INCLUDE EXTERN INIT EXIT AND OR NOT PUBLIC EQ NE1 NE2
 %token INC DEC ALIAS DOCASE CASE OTHERWISE ENDCASE ENDDO MEMVAR
 %token WHILE EXIT LOOP END FOR NEXT TO STEP LE GE FIELD IN PARAMETERS
@@ -506,8 +522,8 @@ Statement  : ExecFlow Crlf                             {}
            | PUBLIC VarList Crlf
            | PRIVATE VarList Crlf
            | PARAMETERS IdentList Crlf
-           | EXITLOOP Crlf
-           | LOOP Crlf
+           | EXITLOOP Crlf            { LoopExit(); }
+           | LOOP Crlf                { LoopLoop(); }
            | DoProc Crlf
            ;
 
@@ -591,7 +607,11 @@ Expression : NIL                              { PushNil(); }
            | SELF                             { GenPCode1( _PUSHSELF ); }
            ;
 
-IfInline   : IF '(' Expression ',' { $<iNumber>$ = JumpFalse( 0 ); }
+IfInline   : IIF '(' Expression ',' { $<iNumber>$ = JumpFalse( 0 ); }
+                IfInlExp ',' { $<iNumber>$ = Jump( 0 ); JumpHere( $<iNumber>5 ); }
+                IfInlExp ')' { JumpHere( $<iNumber>8 ); }
+
+           | IF '(' Expression ',' { $<iNumber>$ = JumpFalse( 0 ); }
                 IfInlExp ',' { $<iNumber>$ = Jump( 0 ); JumpHere( $<iNumber>5 ); }
                 IfInlExp ')' { JumpHere( $<iNumber>8 ); }
            ;
@@ -867,11 +887,11 @@ DoWhile    : WhileBegin Expression Crlf { $<lNumber>$ = JumpFalse( 0 ); }
              EndWhile { JumpHere( $<lNumber>4 ); --_wWhileCounter; }
 
            | WhileBegin Expression Crlf { $<lNumber>$ = JumpFalse( 0 ); Line(); }
-                WhileStatements { Jump( $1 - functions.pLast->lPCodePos ); }
-             EndWhile  { JumpHere( $<lNumber>4 ); --_wWhileCounter; }
+                WhileStatements { LoopHere(); Jump( $1 - functions.pLast->lPCodePos ); }
+             EndWhile  { JumpHere( $<lNumber>4 ); --_wWhileCounter; LoopEnd(); }
            ;
 
-WhileBegin : WHILE    { $$ = functions.pLast->lPCodePos; ++_wWhileCounter; }
+WhileBegin : WHILE    { $$ = functions.pLast->lPCodePos; ++_wWhileCounter; LoopStart(); }
            ;
 
 WhileStatements : Statement
@@ -882,10 +902,10 @@ EndWhile   : END
            | ENDDO
            ;
 
-ForNext    : FOR IDENTIFIER ForAssign Expression { PopId( $2 ); $<iNumber>$ = functions.pLast->lPCodePos; ++_wForCounter; }
+ForNext    : FOR IDENTIFIER ForAssign Expression { PopId( $2 ); $<iNumber>$ = functions.pLast->lPCodePos; ++_wForCounter; LoopStart(); }
              TO Expression                       { PushId( $2 ); }
              StepExpr Crlf                       { GenPCode1( _FORTEST ); $<iNumber>$ = JumpTrue( 0 ); /*PushId( $2 )*/; }
-             ForStatements                       { PushId( $2 ); GenPCode1( _PLUS ); PopId( $2 ); Jump( $<iNumber>5 - functions.pLast->lPCodePos ); JumpHere( $<iNumber>11 ); }
+             ForStatements                       { LoopHere(); PushId( $2 ); GenPCode1( _PLUS ); PopId( $2 ); Jump( $<iNumber>5 - functions.pLast->lPCodePos ); JumpHere( $<iNumber>11 ); LoopEnd(); }
            ;
 
 ForAssign  : '='
@@ -905,14 +925,14 @@ ForStatements : ForStat NEXT                     { --_wForCounter; }
 ForStat    : Statements                          { Line(); }
            ;
 
-BeginSeq   : BEGINSEQ Crlf { ++_wSeqCounter; }
+BeginSeq   : BEGINSEQ { ++_wSeqCounter; } Crlf
+                SeqStatms
                 RecoverSeq
              END           { --_wSeqCounter; }
+           ;
 
-           | BEGINSEQ Crlf { ++_wSeqCounter; }
-                Statements
-                RecoverSeq
-             END           { --_wSeqCounter; }
+SeqStatms  : /* empty */
+           | Statements
            ;
 
 RecoverSeq : /* no recover */
@@ -3060,9 +3080,19 @@ void FixReturns( void ) /* fixes all last defined function returns jumps offsets
       }
       pReturns = 0;
    }
+/* TODO: check why it triggers this error in keywords.prg
+   if( pLoops )
+   {
+     PLOOPEXIT pLoop = pLoops;
+     char cLine[ 64 ];
 
-   if( (_wSeqCounter + _wWhileCounter + _wIfCounter + _wCaseCounter + _wForCounter) > 0 )
-     GenError( ERR_UNCLOSED_STRU, NULL, NULL );
+     while( pLoop->pNext )
+        pLoop =pLoop->pNext;
+
+     itoa( pLoop->wLine, cLine, 10 );
+     GenError( ERR_UNCLOSED_STRU, cLine, NULL );
+   }
+*/
 }
 
 void Function( BYTE bParams )
@@ -3336,6 +3366,125 @@ void StaticAssign( void )
   if( iVarScope == VS_STATIC )
     _pInitFunc->bFlags |= FUN_ILLEGAL_INIT;
 }
+
+/*
+ * This function stores the position in pcode buffer where the FOR/WHILE
+ * loop starts. It will be used to fix any LOOP/EXIT statements
+ */
+static void LoopStart( void )
+{
+  PLOOPEXIT pLoop = OurMalloc( sizeof(LOOPEXIT) );
+
+  if( pLoops )
+  {
+    PLOOPEXIT pLast =pLoops;
+
+    while( pLast->pNext )
+      pLast =pLast->pNext;
+    pLast->pNext =pLoop;
+  }
+  else
+    pLoops = pLoop;
+
+  pLoop->pNext       =NULL;
+  pLoop->pExitList   =NULL;
+  pLoop->pLoopList   =NULL;
+  pLoop->wOffset =functions.pLast->lPCodePos;  /* store the start position */
+  pLoop->wLine   =iLine;
+}
+
+/*
+ * Stores the position of LOOP statement to fix it later at the end of loop
+ */
+static void LoopLoop( void )
+{
+  PLOOPEXIT pLast, pLoop = (PLOOPEXIT) OurMalloc( sizeof( LOOPEXIT ) );
+
+  pLoop->pLoopList =NULL;
+  pLoop->wOffset =functions.pLast->lPCodePos;  /* store the position to fix */
+
+  pLast =pLoops;
+  while( pLast->pNext )
+    pLast =pLast->pNext;
+
+  while( pLast->pLoopList )
+    pLast =pLast->pLoopList;
+
+  pLast->pLoopList =pLoop;
+
+  Jump( 0 );
+}
+
+/*
+ * Stores the position of EXIT statement to fix it later at the end of loop
+ */
+static void LoopExit( void )
+{
+  PLOOPEXIT pLast, pLoop = (PLOOPEXIT) OurMalloc( sizeof( LOOPEXIT ) );
+
+  pLoop->pExitList =NULL;
+  pLoop->wOffset =functions.pLast->lPCodePos;  /* store the position to fix */
+
+  pLast =pLoops;
+  while( pLast->pNext )
+    pLast =pLast->pNext;
+
+  while( pLast->pExitList )
+    pLast =pLast->pExitList;
+
+  pLast->pExitList =pLoop;
+
+  Jump( 0 );
+}
+
+/*
+ * Fixes the LOOP statement
+ */
+static void LoopHere( void )
+{
+  PLOOPEXIT pLoop = pLoops, pFree;
+
+  while( pLoop->pNext )
+    pLoop = pLoop->pNext;
+
+  pLoop =pLoop->pLoopList;
+  while( pLoop )
+  {
+    JumpHere( pLoop->wOffset +1 );
+    pFree = pLoop;
+    pLoop = pLoop->pLoopList;
+    OurFree( pFree );
+  }
+}
+
+/*
+ * Fixes the EXIT statements and releases memory allocated for current loop
+ */
+static void LoopEnd( void )
+{
+  PLOOPEXIT pExit, pLoop = pLoops, pLast = pLoops, pFree;
+
+  while( pLoop->pNext )
+  {
+    pLast = pLoop;
+    pLoop = pLoop->pNext;
+  }
+
+  pExit =pLoop->pExitList;
+  while( pExit )
+  {
+    JumpHere( pExit->wOffset +1 );
+    pFree = pExit;
+    pExit = pExit->pExitList;
+    OurFree( pFree );
+  }
+
+  pLast->pNext = NULL;
+  if( pLoop == pLoops )
+    pLoops = NULL;
+  OurFree( pLoop );
+}
+
 
 void * OurMalloc( LONG lSize )
 {
