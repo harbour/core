@@ -1,3 +1,15 @@
+20000404-13:00 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rdd/dbstrux.prg
+     % Some more optimization. Thanks to Chen Kedem.
+
+   * source/rtl/getsys.prg
+     % __GetListActive() calls optimized out.
+
+   * source/vm/cmdarg.c
+     * Change wording to "compatible" when talking about the other commercial
+       products.
+
 20000404-12:13 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/pp/ppcore.c

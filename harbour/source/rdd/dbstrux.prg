@@ -89,7 +89,7 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDDName, lNew, cAlias )
 
    DEFAULT lNew TO .F.
 
-   IF Used() .AND. !lNew
+   IF Used() .AND. ! lNew
       dbCloseArea()
    ENDIF
 
@@ -106,11 +106,8 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDDName, lNew, cAlias )
 
       ELSE
 
-         IF lNew
-            USE ( cFileFrom ) NEW
-         ELSE
-            USE ( cFileFrom )
-         ENDIF
+         dbUseArea( lNew,, cFileFrom ) 
+
          dbEval( {|| aAdd( aStruct, { FIELD->FIELD_NAME ,;
                                       FIELD->FIELD_TYPE ,;
                                       FIELD->FIELD_LEN ,;

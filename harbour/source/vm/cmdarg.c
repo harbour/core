@@ -323,7 +323,7 @@ void hb_cmdargProcessVM( void )
 #endif
       hb_conOutErr( hb_conNewLine(), 0 );
 
-      hb_conOutErr( "CA-Clipper 5.3x extensions: ", 0 );
+      hb_conOutErr( "CA-Clipper 5.3x compatible extensions: ", 0 );
 #if defined( HB_COMPAT_C53 )
       hb_conOutErr( "Yes", 0 );
 #else
@@ -331,7 +331,7 @@ void hb_cmdargProcessVM( void )
 #endif
       hb_conOutErr( hb_conNewLine(), 0 );
 
-      hb_conOutErr( "Alaska Xbase++ extensions: ", 0 );
+      hb_conOutErr( "Alaska Xbase++ compatible extensions: ", 0 );
 #if defined( HB_COMPAT_XPP )
       hb_conOutErr( "Yes", 0 );
 #else
@@ -339,7 +339,7 @@ void hb_cmdargProcessVM( void )
 #endif
       hb_conOutErr( hb_conNewLine(), 0 );
 
-      hb_conOutErr( "CA-Visual Objects extensions: ", 0 );
+      hb_conOutErr( "CA-Visual Objects compatible extensions: ", 0 );
 #if defined( HB_COMPAT_VO )
       hb_conOutErr( "Yes", 0 );
 #else

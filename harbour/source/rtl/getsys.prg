@@ -36,7 +36,6 @@
 #include "common.ch"
 
 FUNCTION ReadModal( GetList, nPos )
-
    LOCAL oGetList
 
    IF Empty( GetList )
@@ -80,57 +79,62 @@ PROCEDURE GetReader( oGet )
    RETURN
 
 FUNCTION GetActive( oGet )
+   LOCAL oGetList := __GetListActive()
 
-   IF __GetListActive() != NIL
-      IF PCount() > 0
-         RETURN __GetListActive():GetActive( oGet )
+   IF oGetList != NIL
+      IF PCount() >= 1
+         RETURN oGetList:GetActive( oGet )
       ELSE
-         RETURN __GetListActive():GetActive()
+         RETURN oGetList:GetActive()
       ENDIF
    ENDIF
 
    RETURN NIL
 
 PROCEDURE GetDoSetKey( keyBlock, oGet )
+   LOCAL oGetList := __GetListActive()
 
-   IF __GetListActive() != NIL
+   IF oGetList != NIL
       IF oGet != NIL
-         __GetListActive():oGet := oGet
+         oGetList:oGet := oGet
       ENDIF
-      __GetListActive():GetDoSetKey( keyBlock )
+      oGetList:GetDoSetKey( keyBlock )
    ENDIF
 
    RETURN
 
 PROCEDURE GetApplyKey( oGet, nKey )
+   LOCAL oGetList := __GetListActive()
 
-   IF __GetListActive() != NIL
-      __GetListActive():oGet := oGet
-      __GetListActive():GetApplyKey( nKey )
+   IF oGetList != NIL
+      oGetList:oGet := oGet
+      oGetList:GetApplyKey( nKey )
    ENDIF
 
    RETURN
 
 FUNCTION GetPreValidate( oGet )
+   LOCAL oGetList := __GetListActive()
 
-   IF __GetListActive() != NIL
+   IF oGetList != NIL
       IF oGet != NIL
-         __GetListActive():oGet := oGet
+         oGetList:oGet := oGet
       ENDIF
 
-      RETURN __GetListActive():GetPreValidate()
+      RETURN oGetList:GetPreValidate()
    ENDIF
 
    RETURN .F.
 
 FUNCTION GetPostValidate( oGet )
+   LOCAL oGetList := __GetListActive()
 
-   IF __GetListActive() != NIL
+   IF oGetList != NIL
       IF oGet != NIL
-         __GetListActive():oGet := oGet
+         oGetList:oGet := oGet
       ENDIF
       
-      RETURN __GetListActive():GetPostValidate()
+      RETURN oGetList:GetPostValidate()
    ENDIF
 
    RETURN .F.
@@ -142,64 +146,70 @@ FUNCTION ReadInsert( lInsert )
    RETURN Set( _SET_INSERT, lInsert )
 
 FUNCTION ReadUpdated( lUpdated )
+   LOCAL oGetList := __GetListActive()
 
-   IF __GetListActive() != NIL
-      IF PCount() > 0
-         RETURN __GetListActive():ReadUpdated( lUpdated )
+   IF oGetList != NIL
+      IF PCount() >= 1
+         RETURN oGetList:ReadUpdated( lUpdated )
       ELSE
-         RETURN __GetListActive():ReadUpdated()
+         RETURN oGetList:ReadUpdated()
       ENDIF
    ENDIF
 
    RETURN .F.
 
 FUNCTION Updated()
+   LOCAL oGetList := __GetListActive()
 
-   IF __GetListActive() != NIL
-      RETURN __GetListActive():lUpdated
+   IF oGetList != NIL
+      RETURN oGetList:lUpdated
    ENDIF
 
    RETURN .F.
 
 FUNCTION ReadKill( lKill )
+   LOCAL oGetList := __GetListActive()
 
-   IF __GetListActive() != NIL
-      IF PCount() > 0
-         RETURN __GetListActive():KillRead( lKill )
+   IF oGetList != NIL
+      IF PCount() >= 1
+         RETURN oGetList:KillRead( lKill )
       ELSE
-         RETURN __GetListActive():KillRead()
+         RETURN oGetList:KillRead()
       ENDIF
    ENDIF
 
    RETURN .F.
 
 PROCEDURE __KillRead()
+   LOCAL oGetList := __GetListActive()
 
-   IF __GetListActive() != NIL
-      __GetListActive():KillRead( .T. )
+   IF oGetList != NIL
+      oGetList:KillRead( .T. )
    ENDIF
 
    RETURN
 
 PROCEDURE __SetFormat( bFormat )
+   LOCAL oGetList := __GetListActive()
 
-   IF __GetListActive() != NIL
+   IF oGetList != NIL
       IF ISBLOCK( bFormat )
-         __GetListActive():SetFormat( bFormat )
+         oGetList:SetFormat( bFormat )
       ELSE
-         __GetListActive():SetFormat()
+         oGetList:SetFormat()
       ENDIF
    ENDIF
 
    RETURN
 
 FUNCTION ReadFormat( bFormat )
+   LOCAL oGetList := __GetListActive()
 
-   IF __GetListActive() != NIL
-      IF PCount() > 0
-         RETURN __GetListActive():SetFormat( bFormat )
+   IF oGetList != NIL
+      IF PCount() >= 1
+         RETURN oGetList:SetFormat( bFormat )
       ELSE
-         RETURN __GetListActive():SetFormat()
+         RETURN oGetList:SetFormat()
       ENDIF
    ENDIF
 
