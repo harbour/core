@@ -549,9 +549,19 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
                }
                if( hb_comp_bDebugInfo )
                {
-                  hb_compGenPCode3( HB_P_LOCALNAME, HB_LOBYTE( wLocal ), HB_HIBYTE( wLocal ) );
-                  hb_compGenPCodeN( ( BYTE * )szVarName, strlen( szVarName ) );
-                  hb_compGenPCode1( 0 );
+                  BYTE * pBuffer;
+
+                  pBuffer = hb_xgrab( strlen( szVarName ) + 4 );
+
+                  pBuffer[0] = HB_P_LOCALNAME;
+                  pBuffer[1] = HB_LOBYTE( wLocal );
+                  pBuffer[2] = HB_HIBYTE( wLocal );
+
+                  memcpy( ( BYTE * ) ( & ( pBuffer[3] ) ), szVarName, strlen( szVarName ) + 1 );
+
+                  hb_compGenPCodeN( pBuffer, strlen( szVarName ) + 4 );
+
+                  hb_xfree( pBuffer );
                }
             }
             break;
@@ -753,11 +763,21 @@ void hb_compFunctionAdd( char * szFunName, HB_SYMBOLSCOPE cScope, int iType )
 
    if( hb_comp_bDebugInfo )
    {
-      hb_compGenPCode1( HB_P_MODULENAME );
-      hb_compGenPCodeN( ( BYTE * )hb_comp_files.pLast->szFileName, strlen( hb_comp_files.pLast->szFileName ) );
-      hb_compGenPCode1( ':' );
-      hb_compGenPCodeN( ( BYTE * )szFunName, strlen( szFunName ) );
-      hb_compGenPCode1( 0 );
+      BYTE * pBuffer;
+
+      pBuffer = hb_xgrab( 3 + strlen( hb_comp_files.pLast->szFileName ) + strlen( szFunName ) );
+
+      pBuffer[0] = HB_P_MODULENAME;
+
+      memcpy( ( BYTE * ) ( &( pBuffer[1] ) ), ( BYTE * ) hb_comp_files.pLast->szFileName, strlen( hb_comp_files.pLast->szFileName ) );
+
+      pBuffer[ strlen( hb_comp_files.pLast->szFileName ) + 1 ] = ':';
+
+      memcpy( ( BYTE * ) ( &( pBuffer[ strlen( hb_comp_files.pLast->szFileName ) + 2 ] ) ), ( BYTE * ) szFunName, strlen( szFunName ) + 1 );
+
+      hb_compGenPCodeN( pBuffer, 3 + strlen( hb_comp_files.pLast->szFileName ) + strlen( szFunName ) );
+
+      hb_xfree( pBuffer );
    }
 }
 
@@ -2192,9 +2212,15 @@ void hb_compGenPushNil( void )
 /* generates the pcode to push a double number on the virtual machine stack */
 void hb_compGenPushDouble( double dNumber, BYTE bDec )
 {
-   hb_compGenPCode1( HB_P_PUSHDOUBLE );
-   hb_compGenPCodeN( ( BYTE * ) &dNumber, sizeof( double ) );
-   hb_compGenPCode1( bDec );
+   BYTE pBuffer[ sizeof( double ) + 2 ];
+
+   pBuffer[0] = HB_P_PUSHDOUBLE;
+
+   memcpy( ( BYTE * )&(pBuffer[1]), ( BYTE * ) &dNumber, sizeof( double ) );
+
+   pBuffer[ sizeof( double ) + 1 ] = bDec;
+
+   hb_compGenPCodeN( pBuffer, sizeof( double ) + 2 );
 }
 
 void hb_compGenPushFunCall( char * szFunName )
@@ -2228,20 +2254,48 @@ void hb_compGenPushLong( long lNumber )
    }
    else
    {
-      hb_compGenPCode1( HB_P_PUSHLONG );
-      hb_compGenPCode2( ( ( char * ) &lNumber )[ 0 ], ( ( char * ) &lNumber )[ 1 ] );
-      hb_compGenPCode2( ( ( char * ) &lNumber )[ 2 ], ( ( char * ) &lNumber )[ 3 ] );
+      BYTE pBuffer[5];
+
+      pBuffer[0] = HB_P_PUSHLONG;
+      pBuffer[1] = ( ( BYTE * ) &lNumber )[0];
+      pBuffer[2] = ( ( BYTE * ) &lNumber )[1];
+      pBuffer[3] = ( ( BYTE * ) &lNumber )[2];
+      pBuffer[4] = ( ( BYTE * ) &lNumber )[3];
+
+      hb_compGenPCodeN( pBuffer, 5 );
    }
 }
 
 /* generates the pcode to push a string on the virtual machine stack */
 void hb_compGenPushString( char * szText, ULONG ulStrLen )
 {
+   BYTE * pBuffer;
+
    if( ulStrLen > 255 )
-      hb_compGenPCode3( HB_P_PUSHSTR, HB_LOBYTE( ulStrLen ), HB_HIBYTE( ulStrLen ) );
+   {
+      pBuffer = hb_xgrab( ulStrLen + 3 );
+
+      pBuffer[0] = HB_P_PUSHSTR;
+      pBuffer[1] = HB_LOBYTE( ulStrLen );
+      pBuffer[2] = HB_HIBYTE( ulStrLen );
+
+      memcpy( ( BYTE *)( &( pBuffer[3] ) ), ( BYTE * ) szText, ulStrLen );
+
+      hb_compGenPCodeN( pBuffer, ulStrLen + 3 );
+   }
    else
-      hb_compGenPCode2( HB_P_PUSHSTRSHORT, ( BYTE ) ulStrLen );
-   hb_compGenPCodeN( ( BYTE * ) szText, ulStrLen );
+   {
+      pBuffer = hb_xgrab( ulStrLen + 3 );
+
+      pBuffer[0] = HB_P_PUSHSTRSHORT;
+      pBuffer[1] = ( BYTE ) ulStrLen;
+
+      memcpy( ( BYTE *)( &( pBuffer[2] ) ), ( BYTE * ) szText, ulStrLen );
+
+      hb_compGenPCodeN( pBuffer, ulStrLen + 2 );
+   }
+
+   hb_xfree( pBuffer );
 }
 
 /* generates the pcode to push a symbol on the virtual machine stack */
@@ -2694,7 +2748,9 @@ void hb_compStaticDefStart( void )
       pBuffer[ 2 ] = 0;
       pBuffer[ 3 ] = 1; /* the number of static variables is unknown now */
       pBuffer[ 4 ] = 0;
+
       hb_compGenPCodeN( pBuffer, 5 );
+
       hb_compGenPCode3( HB_P_SFRAME, 0, 0 );     /* frame for statics variables */
    }
    else
@@ -2737,6 +2793,8 @@ void hb_compCodeBlockEnd( void )
    USHORT wLocals = 0;   /* number of referenced local variables */
    USHORT wPos;
    PVAR pVar, pFree;
+   BYTE * pBuffer;
+   USHORT iOffset = 0;
 
    if( hb_comp_iJumpOptimize &&
        hb_comp_functions.pLast &&
@@ -2754,6 +2812,7 @@ void hb_compCodeBlockEnd( void )
    pFunc = pCodeblock->pOwner;
    while( pFunc->pOwner )
       pFunc = pFunc->pOwner;
+
    pFunc->bFlags |= ( pCodeblock->bFlags & FUN_USES_STATICS );
 
    /* generate a proper codeblock frame with a codeblock size and with
@@ -2774,19 +2833,24 @@ void hb_compCodeBlockEnd( void )
    /* NOTE: 8 = HB_P_PUSHBLOCK + USHORT( size ) + USHORT( wParams ) + USHORT( wLocals ) + _ENDBLOCK */
    wSize = ( USHORT ) pCodeblock->lPCodePos + 8 + wLocals * 2;
 
-   hb_compGenPCode3( HB_P_PUSHBLOCK, HB_LOBYTE( wSize ), HB_HIBYTE( wSize ) );
-   hb_compGenPCode1( HB_LOBYTE( pCodeblock->wParamCount ) );
-   hb_compGenPCode1( HB_HIBYTE( pCodeblock->wParamCount ) );
-   hb_compGenPCode1( HB_LOBYTE( wLocals ) );
-   hb_compGenPCode1( HB_HIBYTE( wLocals ) );
+   pBuffer = hb_xgrab( wSize );
+
+   pBuffer[0] = HB_P_PUSHBLOCK;
+   pBuffer[1] = HB_LOBYTE( wSize );
+   pBuffer[2] = HB_HIBYTE( wSize );
+   pBuffer[3] = HB_LOBYTE( pCodeblock->wParamCount );
+   pBuffer[4] = HB_HIBYTE( pCodeblock->wParamCount );
+   pBuffer[5] = HB_LOBYTE( wLocals );
+   pBuffer[6] = HB_HIBYTE( wLocals );
 
    /* generate the table of referenced local variables */
    pVar = pCodeblock->pStatics;
    while( wLocals-- )
    {
       wPos = hb_compVariableGetPos( pFunc->pLocals, pVar->szName );
-      hb_compGenPCode1( HB_LOBYTE( wPos ) );
-      hb_compGenPCode1( HB_HIBYTE( wPos ) );
+
+      pBuffer[ 7 + iOffset++ ] = HB_LOBYTE( wPos );
+      pBuffer[ 7 + iOffset++ ] = HB_HIBYTE( wPos );
 
       pFree = pVar;
       hb_xfree( ( void * ) pFree->szName );
@@ -2794,8 +2858,12 @@ void hb_compCodeBlockEnd( void )
       hb_xfree( ( void * ) pFree );
    }
 
-   hb_compGenPCodeN( pCodeblock->pCode, pCodeblock->lPCodePos );
-   hb_compGenPCode1( HB_P_ENDBLOCK ); /* finish the codeblock */
+   memcpy( ( BYTE * )( &( pBuffer[ 7 + iOffset ] ) ), pCodeblock->pCode, pCodeblock->lPCodePos );
+   pBuffer[ wSize - 1 ] = HB_P_ENDBLOCK;
+
+   hb_compGenPCodeN( pBuffer, wSize );
+
+   hb_xfree( ( void * ) pBuffer );
 
    /* this fake-function is no longer needed */
    hb_xfree( ( void * ) pCodeblock->pCode );
@@ -2811,6 +2879,7 @@ void hb_compCodeBlockEnd( void )
       pVar = pVar->pNext;
       hb_xfree( ( void * ) pFree );
    }
+
    /* Release the NOOP array. */
    if( pCodeblock->pNOOPs )
       hb_xfree( ( void * ) pCodeblock->pNOOPs );

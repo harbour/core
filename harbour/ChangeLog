@@ -1,3 +1,8 @@
+20000425-22:00 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/harbour.c
+     * Consolidated all hb_compGenPCodeX() belonging to 1 logical operation into just one hb_compGenPCodeN().
+
 20000426-00:22 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/xsavescr.c
@@ -31,8 +36,9 @@
 	* added lang library
 
 20000425-07:30 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
    * source/compiler/harbour.c
-     * Resolved conflicts from my previous upload to dod witj change from JUMPSHORT TO JUMP*NEAR.
+     * Resolved conflicts from my previous upload with Victor's change from JUMPSHORT TO JUMP*NEAR.
 
 20000425-07:30 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
