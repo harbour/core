@@ -1,3 +1,9 @@
+2000-11-10 22:40 UTC+0100 JFL (mafact) <jfl@mafact.com>
+   * source/vm/classes.c
+     Just a test with hb_parc() wich I recall just after vmPush()
+     to be sure to have a good pointer. if it work, we should have
+     some brain storming about hb_parxx function and the stack !
+
 2000-11-10 22:50 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/teditor.prg
       ! error in cursor handling when K_CTRL_PGDN or K_CTRL_END key was pressed.

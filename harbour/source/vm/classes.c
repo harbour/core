@@ -1617,6 +1617,8 @@ HB_FUNC( __CLSINSTSUPER )
          hb_vmPushNil();
          hb_vmFunction( 0 );                         /* Execute super class      */
 
+         cString=hb_parc(1);                         /* in case of change */
+
          if( HB_IS_OBJECT( &hb_stack.Return ) )
          {
             for( uiClass = 0; ! bFound && uiClass < s_uiClasses; uiClass++ )
