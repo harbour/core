@@ -1,3 +1,16 @@
+2001-06-06 14:50 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * contrib/rdd_ads/ads.ch
+  * contrib/rdd_ads/rddads.h
+  * include/hbpp.h
+  * include/hbrddntx.h
+  * source/pp/ppcore.c
+    * Replaced the old Harbour License and Exception with the
+      new Harbour License and Exception, with permission from
+      Alexander S.Kresin <alex@belacy.belgorod.su> (I somehow
+      managed to overlook these files in my earlier update).
+
+
 2001-06-04 17:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * contrib/libmisc/dbftools.c
