@@ -4,12 +4,6 @@
 // Written by : E.Runia
 // Date       : 22/4/99
 //
-// Requirements :
-//
-// The last RTL from Antonio and the string.c from Matthew.
-//
-// Please run the attached DIFs as well
-//
 // My first application (big word) written in Harbour
 //
 

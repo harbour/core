@@ -39,7 +39,6 @@ function Main()
    QOut( "Smile please " )
    oForm:Smile()
 
-   QOut( "The next code can _not_ be used in the offical classes.c" )
    Pause()
 
    QOut( "Data items before" )

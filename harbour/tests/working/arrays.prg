@@ -19,7 +19,7 @@ function Main()
    QOut( ATail( a ) )
 
    a[ 3 ] = { "this", { "seems", "to", { "work", "so", "well" } } }
-*   QOut( a[ 3 ][ 2 ][ 3 ][ 1 ] ) // "work"
+   QOut( a[ 3 ][ 2 ][ 3 ][ 1 ] ) // "work"
 
    a[ 3, 2 ][ 3, 1 ] := "Harbour power!"  // different ways to specify the indexes
    QOut( a[ 3, 2, 3, 1 ] )

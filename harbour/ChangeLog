@@ -1,3 +1,9 @@
+19990524-16:40 CET Eddie Runia
+  * include/hbsetup.h
+    WATCOM if added
+  * tests/working/*.prg
+    minor updates
+
 19990524-14:30 CET Eddie Runia
   * source/vm/hvm.c
     <xArg> := PValue(<nArg>) added
