@@ -1,3 +1,7 @@
+19990916-13:07 GMT+3 Alexander Kresin
+  * source/hbpp/hbpp.c
+    * fixed  bug with Release ( noted by David G. Holm )
+
 19990916-10:37 GMT+1 Antonio Linares <alinares@fivetech.com>
   * source/compiler/harbour.y
     * Added support for multiple include paths using /I compiler flag

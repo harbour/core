@@ -1406,7 +1406,7 @@ int ReplacePattern ( char patttype, char *expreal, int lenreal, char *ptro, int 
                   {
                      if( ifou ) lenitem++;
                      pp_Stuff ( (*expreal=='&')? expreal+1:expreal, ptro,
-                             (*expreal=='&')? lenitem-1:lenitem, 4, lenres );
+                             (*expreal=='&')? lenitem-1:lenitem, 0, lenres );
                   }
                   else
                   {
