@@ -1,3 +1,15 @@
+19990527-18:00 EST David G. Holm <dholm@jsd-llc.com>
+  * makefile.icc
+    - Added missing modules
+    - Modified to build console with USE_GTAPI
+    - Modified to put console and gtos2 into terminal library
+  * source/rtl/console.c
+    - Had row,col and y,x reversed in InitializeConsole()
+  * source/rtl/gt/gtdos.c
+    - Had row,col and y,x reversed in gtWhereX() and gtWhereY()
+  * tests/working/biccexe.cmd
+    - Include new terminal library
+
 19990527-17:25 EST David G. Holm <dholm@jsd-llc.com>
   * makefile.b31
     - Added -DUSE_GTAPI as standard compiler option
@@ -112,7 +124,7 @@
 19990527-00:40 Ryszard Glab <rglab@imid.med.pl>
     * the support for following keywords are now 100% compatible with Clipper
       EXTERNAL, FIELD, FOR, FUNCTION
-  
+
 19990526-13:30 EST David G. Holm <dholm@jsd-llc.com>
   * source/rtl/dates.c
     - Added hb_dow and HARBOUR DOW() supplied by Jose Lalin <dezac@corevia.com>
@@ -360,43 +372,43 @@
 
 Thu May 20 16:03:24 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/rtl/dates.c:
-	Nasty bug: using '&' instead of '&&'.
+        * source/rtl/dates.c:
+        Nasty bug: using '&' instead of '&&'.
 
-	* config/header.cf:
-	* include/Makefile:
-	* Makefile:
-	Added rules to deal with include files (they are just installed
-	into INC_DIR). Now the top level Makefile traverses include before
-	source.
+        * config/header.cf:
+        * include/Makefile:
+        * Makefile:
+        Added rules to deal with include files (they are just installed
+        into INC_DIR). Now the top level Makefile traverses include before
+        source.
 
-	* config/win32/gcc.cf:
-	* config/win32/msvc.cf:
-	* config/win32/global.cf:
-	The include directory is now given by INC_DIR.
+        * config/win32/gcc.cf:
+        * config/win32/msvc.cf:
+        * config/win32/global.cf:
+        The include directory is now given by INC_DIR.
 
-	* config/win32/rules.cf:
-	Harbour now uses -I to find include files.
+        * config/win32/rules.cf:
+        Harbour now uses -I to find include files.
 
-	* include/hbsetup.h: 
-	Moved OS_PATH_DELIMITER back to harbour.y, as PATH_DELIMITER; it
-	is now a string that contains "/\\".
-	
-	* source/compiler/harbour.y: 
-	Deal with '/' as path separator ('\\' still works).
-	Make sure -q is really quiet.
-	
-	* source/rtl/Makefile: 
-	* source/tools/Makefile: 
-	Used tabs instead of spaces.
-	
-	* source/rtl/gtapi.c: 
-	* source/tools/io.c: 
-	Made sure these two compile in non-DOS platforms (don't do much
-	though).
-	
-	* source/vm/hvm.c: 
-	Fixed a warning about using %i instead of %li.
+        * include/hbsetup.h:
+        Moved OS_PATH_DELIMITER back to harbour.y, as PATH_DELIMITER; it
+        is now a string that contains "/\\".
+
+        * source/compiler/harbour.y:
+        Deal with '/' as path separator ('\\' still works).
+        Make sure -q is really quiet.
+
+        * source/rtl/Makefile:
+        * source/tools/Makefile:
+        Used tabs instead of spaces.
+
+        * source/rtl/gtapi.c:
+        * source/tools/io.c:
+        Made sure these two compile in non-DOS platforms (don't do much
+        though).
+
+        * source/vm/hvm.c:
+        Fixed a warning about using %i instead of %li.
 
 19990520-07:10 MST Bil Simser (bsimser@home.com)
   * makefile.vc
@@ -485,34 +497,34 @@ Thu May 20 16:03:24 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 19990520-01:40 Ryszard Glab <rglab@imid.med.pl>
 
     * source/compiler/harbour.y
-	-corrected support for INCLUDE environment variable (the last path
+        -corrected support for INCLUDE environment variable (the last path
         was ignored)
-	-definition of path delimiter and path list separator was moved to
+        -definition of path delimiter and path list separator was moved to
         hbsetup.h file. OS_PATH_DELIMITER and OS_PATH_LIST_SEPARATOR are
-	now defined.
+        now defined.
         -changed #define from OBJ_GENERATION to HARBOUR_OBJ_GENERATION
 
     * source/compiler/harbour.l
-	-EXIT keyword is now properly supported
+        -EXIT keyword is now properly supported
 
     * source/vm/hvm.c
-	-changed #define from OBJ_GENERATION to HARBOUR_OBJ_GENERATION
+        -changed #define from OBJ_GENERATION to HARBOUR_OBJ_GENERATION
         -changed #define from HARBOUR_MAIN to HARBOUR_START_PROCEDURE
 
     * include/hbsetup.h
-	-changed #define from OBJ_GENERATION to HARBOUR_OBJ_GENERATION
+        -changed #define from OBJ_GENERATION to HARBOUR_OBJ_GENERATION
         -changed #define from HARBOUR_MAIN to HARBOUR_START_PROCEDURE
         -added #define OS_PATH_DELIMITER
         -added #define OS_PATH_LIST_SEPARATOR
 
     * include/hberrors.h
-	-added #define ERR_UNMATCHED_EXIT
+        -added #define ERR_UNMATCHED_EXIT
 
     * source/rtl/environ.c
-	-corrected support for Watcom C/C++ compiler
+        -corrected support for Watcom C/C++ compiler
 
     * tests/working/keywords.prg
-	-added test code for EXIT keyword
+        -added test code for EXIT keyword
 
 19990519-21:22 CET Eddie Runia
   * makefile.b16
@@ -562,14 +574,14 @@ Thu May 20 16:03:24 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     When this option is used then the Harbour generates C code for a function
     <modulename>__InitSymbols that have to be called in order to properly
     initialize the global symbol table. You should use this option if you
-    want to generate the C code output and your C compiler doesn't allow 
+    want to generate the C code output and your C compiler doesn't allow
     to call any function before the 'main'.
 
 * surce/vm/initsymb.c
-    - added new file that registers a symbols table with runtime support 
-    functions. This file can be edited to add calls for application specific 
+    - added new file that registers a symbols table with runtime support
+    functions. This file can be edited to add calls for application specific
     functions that registers local symbols tables used in application modules.
-    The Harbour compiler can create <modulename>__InitSymbols functions 
+    The Harbour compiler can create <modulename>__InitSymbols functions
     when you use '-t' option.
 
 * source/vm/hvm.c
@@ -897,33 +909,33 @@ Tue May 11 18:53:43 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 >>>>>>> 1.78
 
 <<<<<<< ChangeLog
-	* Makefile: 
-	Added obj to the list of directories.
-	
-	* source/Makefile: 
-	Added rdd to the list of directories.
+        * Makefile:
+        Added obj to the list of directories.
 
-	* source/rtl/Makefile: 
-	Added gtapi.c to the list of C sources.
-	
-	* source/rtl/gtapi.c: 
-	Got rid of two warnings with gcc.
-	
-	* source/rtl/environ.c: 
-	Made sure it compiles with gcc.
-	There was a missing #endif.
-	
-	* source/tools/stringp.prg: 
-	* tests/working/debugtst.prg: 
-	Replaced Debug() with HBDebug(), otherwise the generated C source
-	collides with the macro DEBUG.
-	
- 	* source/vm/hvm.c:
-	Corrected a comment.
-	
-	* source/rdd/Makefile: 
-	* obj/Makefile: 
-	Added these two Makefiles.
+        * source/Makefile:
+        Added rdd to the list of directories.
+
+        * source/rtl/Makefile:
+        Added gtapi.c to the list of C sources.
+
+        * source/rtl/gtapi.c:
+        Got rid of two warnings with gcc.
+
+        * source/rtl/environ.c:
+        Made sure it compiles with gcc.
+        There was a missing #endif.
+
+        * source/tools/stringp.prg:
+        * tests/working/debugtst.prg:
+        Replaced Debug() with HBDebug(), otherwise the generated C source
+        collides with the macro DEBUG.
+
+        * source/vm/hvm.c:
+        Corrected a comment.
+
+        * source/rdd/Makefile:
+        * obj/Makefile:
+        Added these two Makefiles.
 
 =======
         * source/Makefile:

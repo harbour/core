@@ -21,8 +21,8 @@ static unsigned short dev_col = 0;
 void InitializeConsole( void )
 {
 #ifdef USE_GTAPI
-   dev_row = gtWhereX();
-   dev_col = gtWhereY();
+   dev_row = gtWhereY();
+   dev_col = gtWhereX();
    _gtSetPos( dev_row, dev_col );
 #else
    dev_row = 0;

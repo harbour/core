@@ -2,7 +2,7 @@
 
 .SUFFIXES : .prg .c
 
-path_c   = source\compiler;source\vm;source\rtl;source\tools
+path_c   = source\compiler;source\vm;source\rtl;source\rtl\gt;source\tools
 path_h   = include
 path_l   = source\compiler
 path_y   = source\compiler
@@ -11,7 +11,7 @@ path_lib = libs\icc
 path_obj = obj
 path_prg = source\rtl
 
-c_opt = /W2 /Se /Sd+ /I.\include /Ti+
+c_opt = /DUSE_GTAPI /W2 /Se /Sd+ /I.\include /Ti+
 
 all: $(path_exe)\harbour.exe $(path_lib)\harbour.lib $(path_lib)\hbtools.lib $(path_lib)\terminal.lib
 
@@ -26,6 +26,7 @@ $(path_lib)\harbour.lib :       $(path_obj)\arrays.obj \
                 $(path_obj)\errorapi.obj \
                 $(path_obj)\errorsys.obj \
                 $(path_obj)\extend.obj \
+                $(path_obj)\gtapi.obj \
                 $(path_obj)\initsymb.obj \
                 $(path_obj)\itemapi.obj \
                 $(path_obj)\math.obj \
@@ -44,12 +45,17 @@ $(path_lib)\hbtools.lib: \
                 #(path_obj)\datesx.obj
         @echo HBtools.lib
 
-$(path_lib)\terminal.lib :$(path_obj)\console.obj
+$(path_lib)\terminal.lib :$(path_obj)\console.obj \
+                $(path_obj)\gtos2.obj
         @echo terminal.lib
 
-$(path_obj)\console.obj  : {$(path_c)}console.c  $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\console.obj  : {$(path_c)}console.c  $(path_h)\extend.h $(path_h)\types.h $(path_h)\gtapi.h
   icc /C+ $(c_opt) /Fo$@ /Tpsource\rtl\console.c
-  ilib .\libs\icc\harbour.lib -+$@,,
+  ilib .\libs\icc\terminal.lib -+$@,,
+
+$(path_obj)\gtos2.obj  : {$(path_c)}gtos2.c  $(path_h)\extend.h $(path_h)\types.h $(path_h)\gtapi.h
+  icc /C+ $(c_opt) /Fo$@ /Tpsource\rtl\gt\gtos2.c
+  ilib .\libs\icc\terminal.lib -+$@,,
 
 $(path_obj)\arrays.obj   : {$(path_c)}arrays.c   $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\classes.obj  : {$(path_c)}classes.c  $(path_h)\extend.h $(path_h)\types.h
@@ -59,7 +65,8 @@ $(path_obj)\datesx.obj   : {$(path_c)}datesx.c   $(path_h)\extend.h $(path_h)\ty
 $(path_obj)\environ.obj  : {$(path_c)}environ.c  $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\errorapi.obj : {$(path_c)}errorapi.c $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\extend.obj   : {$(path_c)}extend.c   $(path_h)\extend.h $(path_h)\types.h
-#$(path_obj)\files.obj    : {$(path_c)}extend.c   $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\files.obj    : {$(path_c)}extend.c   $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\gtapi.obj    : {$(path_c)}gtapi.c    $(path_h)\extend.h $(path_h)\types.h $(path_h)\gtapi.h
 $(path_obj)\initsymb.obj : {$(path_c)}initsymb.c $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\itemapi.obj  : {$(path_c)}itemapi.c  $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\math.obj     : {$(path_c)}math.c     $(path_h)\extend.h $(path_h)\types.h
@@ -90,6 +97,10 @@ $(path_obj)\tclass.obj   : $(path_prg)\tclass.prg $(path_h)\init.h  $(path_h)\ex
  ilib .\libs\icc\harbour.lib -+$@,,
 
 {source\rtl}.c{$(path_obj)}.obj:
+  icc /C+ $(c_opt) /Fo$@ /Tp$<
+  ilib .\libs\icc\harbour.lib -+$@,,
+
+{source\vm}.c{$(path_obj)}.obj:
   icc /C+ $(c_opt) /Fo$@ /Tp$<
   ilib .\libs\icc\harbour.lib -+$@,,
 

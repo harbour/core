@@ -3,11 +3,11 @@
 IF A%1 == A GOTO :SINTAX
 IF A%2 == A GOTO :NOOUTPUT
 
-icc /Ti+ /W2 /Se /Sd+ /I..\..\include /Fe%2.exe /fohvm.obj /Tp..\..\source\vm\hvm.c /fo%1.obj /Tp%1.c ..\..\libs\icc\harbour.lib ..\..\libs\icc\hbtools.lib
+icc /Ti+ /W2 /Se /Sd+ /I..\..\include /Fe%2.exe /fohvm.obj /Tp..\..\source\vm\hvm.c /fo%1.obj /Tp%1.c ..\..\libs\icc\harbour.lib ..\..\libs\icc\hbtools.lib ..\..\libs\icc\terminal.lib
 GOTO :END
 
 :NOOUTPUT
-icc /Ti+ /W2 /Se /Sd+ /I..\..\include /Fe%1.exe /fohvm.obj /Tp..\..\source\vm\hvm.c /fo%1.obj /Tp%1.c ..\..\libs\icc\harbour.lib ..\..\libs\icc\hbtools.lib
+icc /Ti+ /W2 /Se /Sd+ /I..\..\include /Fe%1.exe /fohvm.obj /Tp..\..\source\vm\hvm.c /fo%1.obj /Tp%1.c ..\..\libs\icc\harbour.lib ..\..\libs\icc\hbtools.lib ..\..\libs\icc\terminal.lib
 GOTO :END
 
 :SINTAX

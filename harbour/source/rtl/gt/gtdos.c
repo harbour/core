@@ -300,26 +300,6 @@ char gtWhereX(void)
     _AH = 0x03;
     _BH = 0;
     geninterrupt(0x10);
-    return _DH;
-#else
-    union REGS regs;
-    regs.h.ah = 0x02;
-    regs.h.bh = 0;
-#if defined(__WATCOMC__) && defined(__386__)
-    int386(0x10, &regs, &regs);
-#else
-    int86(0x10, &regs, &regs);
-#endif
-    return regs.h.dh;
-#endif
-}
-
-char gtWhereY(void)
-{
-#if defined(__TURBOC__)
-    _AH = 0x03;
-    _BH = 0;
-    geninterrupt(0x10);
     return _DL;
 #else
     union REGS regs;
@@ -331,5 +311,25 @@ char gtWhereY(void)
     int86(0x10, &regs, &regs);
 #endif
     return regs.h.dl;
+#endif
+}
+
+char gtWhereY(void)
+{
+#if defined(__TURBOC__)
+    _AH = 0x03;
+    _BH = 0;
+    geninterrupt(0x10);
+    return _DH;
+#else
+    union REGS regs;
+    regs.h.ah = 0x02;
+    regs.h.bh = 0;
+#if defined(__WATCOMC__) && defined(__386__)
+    int386(0x10, &regs, &regs);
+#else
+    int86(0x10, &regs, &regs);
+#endif
+    return regs.h.dh;
 #endif
 }
