@@ -625,7 +625,7 @@ METHOD MoveCursor(nKey) CLASS TEditor
          ::nCol := Max(::LineLen(::nRow), 1)
          ::nFirstRow := Max(::naTextLen - ::nNumRows + 1, 1)
          ::nFirstCol := Max(::nCol - ::nNumCols + 1, 1)
-         ::SetPos(Min(::nBottom, ::naTextLen), Min(::nLeft + ::nCol - 1, ::nRight))
+         ::SetPos(Min(::nTop + ::naTextLen - 1, ::nBottom), Min(::nLeft + ::nCol - 1, ::nRight))
          ::RefreshWindow()
 
       case nKey == K_UP
@@ -739,7 +739,7 @@ METHOD MoveCursor(nKey) CLASS TEditor
          endif
          ::nCol := Max(::LineLen(::nRow), 1)
          ::nFirstCol := Max(::nCol - ::nNumCols + 1, 1)
-         ::SetPos(Min(::nBottom, ::naTextLen), Min(::nLeft + ::nCol - 1, ::nRight))
+         ::SetPos(Min(::nTop + ::naTextLen - 1, ::nBottom), Min(::nLeft + ::nCol - 1, ::nRight))
          ::RefreshWindow()
 
       otherwise

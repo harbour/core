@@ -1,3 +1,7 @@
+2000-11-10 22:50 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/teditor.prg
+      ! error in cursor handling when K_CTRL_PGDN or K_CTRL_END key was pressed.
+
 2000-11-10 11:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.sly
      + Added support for early macro of expansion declared symbol for simple macro expression within CodeBlock (Like Clipper).
