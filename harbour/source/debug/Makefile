@@ -10,6 +10,8 @@ PRG_SOURCES=\
 	dbgtmitm.prg \
 	dbgtwin.prg \
 	debugger.prg \
+   dbgtarr.prg \
+   dbgtobj.prg \
 	tbrwtext.prg \
 
 LIBNAME=debug
