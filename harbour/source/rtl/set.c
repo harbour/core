@@ -411,10 +411,24 @@ HB_FUNC( SET )
       case HB_SET_ALTFILE    :
          if( hb_set.HB_SET_ALTFILE ) hb_retc( hb_set.HB_SET_ALTFILE );
          else hb_retc( NULL );
-         if( args > 1 && ! HB_IS_NIL( pArg2 ) ) hb_set.HB_SET_ALTFILE = set_string( pArg2, hb_set.HB_SET_ALTFILE );
+         if( args > 1 )
+         {
+            if( HB_IS_NIL( pArg2 ) )
+            {
+               if( hb_set.HB_SET_ALTFILE )
+               {
+                  hb_xfree( hb_set.HB_SET_ALTFILE );
+                  hb_set.HB_SET_ALTFILE = NULL;
+               }
+            }
+            else
+            {
+               hb_set.HB_SET_ALTFILE = set_string( pArg2, hb_set.HB_SET_ALTFILE );
+            }
+         }
          if( args > 2 ) bFlag = set_logical( pArg3 );
          else bFlag = FALSE;
-         if( args > 1 && ! HB_IS_NIL( pArg2 ) )
+         if( args > 1 )
          {
             close_text( hb_set.hb_set_althan );
             if( hb_set.HB_SET_ALTFILE && strlen( hb_set.HB_SET_ALTFILE ) > 0 )
@@ -584,7 +598,21 @@ HB_FUNC( SET )
       case HB_SET_EXTRAFILE  :
          if( hb_set.HB_SET_EXTRAFILE ) hb_retc( hb_set.HB_SET_EXTRAFILE );
          else hb_retc( NULL );
-         if( args > 1 && ! HB_IS_NIL( pArg2 ) ) hb_set.HB_SET_EXTRAFILE = set_string( pArg2, hb_set.HB_SET_EXTRAFILE );
+         if( args > 1 )
+         {
+            if( HB_IS_NIL( pArg2 ) )
+            {
+               if( hb_set.HB_SET_EXTRAFILE )
+               {
+                  hb_xfree( hb_set.HB_SET_EXTRAFILE );
+                  hb_set.HB_SET_EXTRAFILE = NULL;
+               }
+            }
+            else
+            {
+               hb_set.HB_SET_EXTRAFILE = set_string( pArg2, hb_set.HB_SET_EXTRAFILE );
+            }
+         }
          if( args > 2 ) bFlag = set_logical( pArg3 );
          else bFlag = FALSE;
          if( args > 1 && ! HB_IS_NIL( pArg2 ) )
