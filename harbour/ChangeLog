@@ -1,3 +1,18 @@
+2001-07-23 21:29 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/rtl/tbrowse.prg
+     + TOFIX added, about missing AutoLite support (needed for dbEdit())
+
+   * source/rtl/net.c
+     * Cleaned up platform branching.
+     ! Fixed redefined constant for DJGPP (reported by Dave Pearson)
+
+     I could not test this change, so please test it, and report any 
+     bugs, especially under OS/2 (GCC or ICC) and DJGPP. Thanks.
+
+     Also note that OS/2 support with ICC is/was probably broken, so a 
+     native OS/2 solution would be better here.
+
 2001-07-23 22:30 MEST Martin Vogel <vogel@inttec.de>
 
    - contrib/libct/ctposupp.c

@@ -9,9 +9,6 @@
  * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
  *
- * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net>
- *  Support for DJGPP/GCC/OS2 for netname
- *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
@@ -53,18 +50,41 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net>
+ *    Support for DJGPP/GCC/OS2 for netname
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
 #define HB_OS_WIN_32_USED
 
 #include "hbapi.h"
-#include "hb_io.h"
 
-#if defined(__EMX__)
-   #include <emx/syscalls.h>
-#define gethostname __gethostname
-#elif defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__) && ! defined(HB_OS_OS2) && !defined(__MINGW32__)
-   #include <sys/param.h>
+#if defined(HB_OS_OS2)
+
+   #include "hb_io.h"
+
+   #if defined(__EMX__)
+      #include <emx/syscalls.h>
+      #define gethostname __gethostname
+   #endif
+
+   #define MAXGETHOSTNAME 256      /* should be enough for a host name */
+
+#elif defined(HB_OS_DOS)
+
+   #if defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__)
+      #include "hb_io.h"
+      #include <sys/param.h>
+   #endif
+
 #endif
-#define MAXGETHOSTNAME  256      /* should be enough for a host name */
+
 /* NOTE: Clipper will only return a maximum of 15 bytes from this function.
          And it will be padded with spaces. Harbour does the same in the
          DOS platform.
@@ -72,36 +92,52 @@
 
 HB_FUNC( NETNAME )
 {
-#if defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__) && !defined(__MINGW32__)
+#if defined(HB_OS_OS2)
+
    {
-     char * pszValue = (char *) hb_xgrab(MAXGETHOSTNAME+1);
-     pszValue[ 0 ] = '\0';
-
-     gethostname (pszValue, MAXGETHOSTNAME);
-
-     hb_retc( pszValue );
-     hb_xfree( pszValue );
+      char * pszValue = ( char * ) hb_xgrab( MAXGETHOSTNAME + 1 );
+      pszValue[ 0 ] = '\0';
+     
+      gethostname( pszValue, MAXGETHOSTNAME );
+     
+      hb_retc( pszValue );
+      hb_xfree( pszValue );
    }
 
 #elif defined(HB_OS_DOS)
-   {
-      char szValue[ 16 ];
-      union REGS regs;
 
-      regs.HB_XREGS.ax = 0x5E00;
-
+   #if defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__)
       {
-         struct SREGS sregs;
-
-         regs.HB_XREGS.dx = FP_OFF( szValue );
-         sregs.ds = FP_SEG( szValue );
-
-         HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
+         char * pszValue = ( char * ) hb_xgrab( MAXGETHOSTNAME + 1 );
+         pszValue[ 0 ] = '\0';
+        
+         gethostname( pszValue, MAXGETHOSTNAME );
+        
+         hb_retc( pszValue );
+         hb_xfree( pszValue );
       }
+   #else
+      {
+         char szValue[ 16 ];
+         union REGS regs;
+      
+         regs.HB_XREGS.ax = 0x5E00;
+      
+         {
+            struct SREGS sregs;
+      
+            regs.HB_XREGS.dx = FP_OFF( szValue );
+            sregs.ds = FP_SEG( szValue );
+      
+            HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
+         }
+      
+         hb_retc( regs.h.ch == 0 ? "" : szValue );
+      }
+   #endif
 
-      hb_retc( regs.h.ch == 0 ? "" : szValue );
-   }
 #elif defined(HB_OS_WIN_32)
+
    {
       DWORD ulLen = MAX_COMPUTERNAME_LENGTH + 1;
       char * pszValue = ( char * ) hb_xgrab( ulLen );
@@ -113,7 +149,10 @@ HB_FUNC( NETNAME )
       hb_retc( pszValue );
       hb_xfree( pszValue );
    }
+
 #else
+
    hb_retc( "" );
+
 #endif
 }

@@ -65,6 +65,9 @@
 /* NOTE: Don't use SAY in this module, use DispOut(), DispOutAt() instead,
          otherwise it will not be CA-Cl*pper compatible. [vszakats] */
 
+/* TODO: Fix TBrowse when AutoLite = .F. 
+         This is also needed to make dbEdit() work correctly. [vszakats] */
+
 /* TODO: :firstScrCol() --> nScreenCol
          Determines screen column where the first table column is displayed.
          Xbase++ compatible method */
