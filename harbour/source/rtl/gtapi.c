@@ -6,7 +6,8 @@
  *  GTAPI.C: Generic Terminal for Harbour
  *
  * Latest mods:
- * 1.35   19990723   ptucker   Modifed some if statments to test for != 0
+ * 1.35   19990726   ptucker   Much improved box drawing speed
+ *                             Modifed some if statments to test for != 0
  * 1.34   19990721   ptucker   Corrected _Color mask descriptions
  * 1.33   19990721   ptucker   Improved Clipper color compatibility
  * 1.31   19990720   ptucker   Implimented color selection in gtWrite and
@@ -83,8 +84,11 @@ int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
     USHORT uiCol = uiLeft;
     USHORT height, width, tmp;
 
-    if (uiTop > hb_gtMaxRow() || uiBottom > hb_gtMaxRow() ||
-       uiLeft > hb_gtMaxCol() || uiRight > hb_gtMaxCol() ||
+    USHORT uMRow = hb_gtMaxRow();
+    USHORT uMCol = hb_gtMaxCol();
+
+    if (uiTop > uMRow || uiBottom > uMRow ||
+       uiLeft > uMCol || uiRight > uMCol ||
        uiTop > uiBottom || uiLeft > uiRight)
     {
         return 1;
@@ -118,26 +122,35 @@ int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
 
     if( height > 1 && width > 1 )
     {
-       hb_gtWriteAt(uiRow, uiCol, pszBox + 0, sizeof(BYTE));
-       hb_gtWriteAt(uiRow, uiRight, pszBox + 2, sizeof(BYTE));
-       hb_gtWriteAt(uiBottom, uiCol, pszBox + 6, sizeof(BYTE));
+       hb_gtWriteAt(uiRow,      uiCol, pszBox + 0, sizeof(BYTE));
+       hb_gtWriteAt(uiRow,    uiRight, pszBox + 2, sizeof(BYTE));
+       hb_gtWriteAt(uiBottom,   uiCol, pszBox + 6, sizeof(BYTE));
        hb_gtWriteAt(uiBottom, uiRight, pszBox + 4, sizeof(BYTE));
     }
 
-    for (uiCol = (height > 1 ? uiLeft + 1 : uiLeft); uiCol < (height > 1 ? uiRight : uiRight + 1 ); uiCol++)
+    uiCol = (height > 1 ? uiLeft + 1 : uiLeft);
+//  for (uiCol = (height > 1 ? uiLeft + 1 : uiLeft); uiCol < (height > 1 ? uiRight : uiRight - 1 ); uiCol++)
+//  {
+//        hb_gtWriteAt(uiRow, uiCol, pszBox + 1, sizeof(BYTE));
+//        if( height > 1 ) hb_gtWriteAt(uiBottom, uiCol, pszBox + 5, sizeof(BYTE));
+    if( uiCol <= (height > 1 ? uiRight : uiRight -1 ) )
     {
-        hb_gtWriteAt(uiRow, uiCol, pszBox + 1, sizeof(BYTE));
-        if( height > 1 ) hb_gtWriteAt(uiBottom, uiCol, pszBox + 5, sizeof(BYTE));
+       hb_gtRepChar( uiRow, uiCol, pszBox[1], uiRight - uiLeft + (height > 1 ? -1: 1 ));
+       if( height > 1 )
+           hb_gtRepChar( uiBottom, uiCol, pszBox[5], uiRight - uiLeft + (height > 1 ? -1: 1) );
     }
+//  }
 
     if( pszBox[8] && height > 2 && width > 2 )
     {
         for (uiRow = uiTop + 1; uiRow < uiBottom; uiRow++)
         {
             uiCol = uiLeft;
-            hb_gtWriteAt(uiRow, uiCol++, pszBox + 7, sizeof(BYTE));
-            while (uiCol < uiRight) hb_gtWriteAt(uiRow, uiCol++, pszBox + 8, sizeof(BYTE));
-            hb_gtWriteAt(uiRow, uiCol, pszBox + 3, sizeof(BYTE));
+            hb_gtWriteAt(uiRow, uiCol++,  pszBox + 7, sizeof(BYTE));
+//            while (uiCol < uiRight)
+//                hb_gtWriteAt(uiRow, uiCol++, pszBox + 8, sizeof(BYTE));
+            hb_gtRepChar( uiRow, uiCol,   pszBox[8], uiRight - uiLeft - 1 );
+            hb_gtWriteAt( uiRow, uiRight, pszBox + 3, sizeof(BYTE));
         }
     }
     else
@@ -145,7 +158,8 @@ int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
         for( uiRow = (width > 1 ? uiTop + 1 : uiTop); uiRow < (width > 1 ? uiBottom : uiBottom + 1); uiRow++ )
         {
             hb_gtWriteAt(uiRow, uiLeft, pszBox + 7, sizeof(BYTE));
-            if( width > 1 ) hb_gtWriteAt(uiRow, uiRight, pszBox + 3, sizeof(BYTE));
+            if( width > 1 )
+                hb_gtWriteAt(uiRow, uiRight, pszBox + 3, sizeof(BYTE));
         }
     }
 
@@ -461,9 +475,12 @@ int hb_gtPreExt(void)
 
 int hb_gtRectSize(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, USHORT * uipBuffSize)
 {
-    if(uiTop > hb_gtMaxRow() || uiBottom > hb_gtMaxRow() ||
-        uiLeft > hb_gtMaxCol() || uiRight > hb_gtMaxCol() ||
-        uiTop > uiBottom || uiLeft > uiRight)
+    USHORT uMRow = hb_gtMaxRow();
+    USHORT uMCol = hb_gtMaxCol();
+
+    if( uiTop  > uMRow    || uiBottom > uMRow ||
+        uiLeft > uMCol    || uiRight  > uMCol ||
+        uiTop  > uiBottom || uiLeft   > uiRight )
     {
         return(1);
     }

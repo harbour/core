@@ -1,9 +1,14 @@
+19990726-05:20 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/gtapi.c
+     * much improved box drawing speed.
+   * source/rtl/msgita.c from Matteo Baccan
+   * source/rtl/msgpor.c from Felipe Coury
+
 19990725-09:50 CET Felipe Coury
    + tests/working/hscript/guestbk.ini; tests/working/hscript/guestbk.htm;
      tests/working/hscript/guestbk.prg; tests/working/hscript/guestbk.txt;
      tests/working/hscript/bldguest.bat;
      Harbour guestbook added
-
 
 19990725-09:45 CET Eddie Runia <eddie@runia.com>
    * source/runner/runner.c
