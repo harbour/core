@@ -823,6 +823,7 @@ static void ConvertPatterns( char * mpatt, int mlen, char * rpatt, int rlen )
                   else if( *ptr == '(' ) exptype = '3';
                   else if( *ptr == '{' ) exptype = '4';
                   else if( *ptr == '.' ) exptype = '5';
+                  else if( *ptr == '-' ) exptype = '6';
                   ptr--;
                   rmlen = explen+4;
                 }
@@ -2392,6 +2393,10 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
       }
     else
       hb_pp_Stuff( ".T.", ptro, 3, 4, lenres );
+    break;
+  case '6':  /* Ommit result marker  */
+    rmlen = 0;
+    hb_pp_Stuff( " ", ptro, 1, 4, lenres );
     break;
   }
   return rmlen - 4;

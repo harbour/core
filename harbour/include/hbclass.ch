@@ -52,10 +52,10 @@ DECLARE TClass ;
 	New( cName AS STRING, OPTIONAL SuperParams ) AS CLASS TClass ;
 	Create() AS OBJECT;
 	Instance() AS OBJECT ;
-	AddClsMthds( cName AS STRING, @Method(), nScope AS NUMERIC, n2 AS NUMERIC, n3 AS NUMERIC );
+	AddClsMthds( cName AS STRING, @MethodName(), nScope AS NUMERIC, n2 AS NUMERIC, n3 AS NUMERIC );
 	AddMultiClsData( cType AS STRING, uVal, nScope AS NUMERIC, aDatas AS ARRAY OF STRING );
 	AddMultiData( cType AS STRING, uVal, nScope AS NUMERIC, aDatas AS ARRAY OF STRING );
-	AddMethod( cName AS STRING, @Method(), nScope AS NUMERIC );
+	AddMethod( cName AS STRING, @MethodName(), nScope AS NUMERIC );
 	AddInLine( cName AS STRING, bBlock AS CODEBLOCK, nScope AS NUMERIC );
 	AddVirtual( cName AS STRING )
 
