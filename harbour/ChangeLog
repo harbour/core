@@ -1,3 +1,30 @@
+2000-11-29 13:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.c
+     * Exported: hb_compFieldGetPos() and hb_compMemvarGetPos()
+
+   * source/compiler/harbour.sly
+     ! Changed __GET() support to be parameter compatible with Clipper
+
+   * include/hberrors.h
+   * source/compiler/hbgenerr.c
+     + Added Error: "GET contains complex macro"
+
+   * source/pp/pptable.c
+     - Removed bSetGet from rule of GET, PP output now Clipper compatible.
+
+   * source/vm/memvars.c
+     + Added HB_FUNC( __ISMV ) // Return .T. if passed string as a Memory Variable.
+
+   * source/rtl/tgetint.prg
+     ! Fixed __GET() to be 100% parameter compatible with Clipper.
+     ! When 1st parameter (bSetGet) is NIL the bSetGet will be built internaly,
+       not using macro in most cases, even if the Get Variable itslef is a macro :-)
+
+   /* Ryszard, this will further break Flex support for GET, but makes __GET() 100% Clipper compatible as you suggested.
+      Please note, that Clipper does *NOT* pass a bSetGet *only* when the Get Var is a *simple* *non* declared Variable.
+      Declared Variables in this context are: MEMVAR, FIELD, LOCAL, and STATIC. For all of those, bSetGet *is* generated!
+      Clipper also generates bSetGet for "Complex Variables", i.e. Aliased Variables, Object Data, etc.! */
+
 2000-11-28 17:15 UTC-0400 David G. Holm <dholm@jsd-llc.com>
    * include/hbapigt.h
      + Added non-DOS definitions of box drawing characters and strings.

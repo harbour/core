@@ -1090,6 +1090,20 @@ HB_FUNC( __MVDBGINFO )
    }
 }
 
+HB_FUNC( __ISMV )
+{
+   HB_ITEM_PTR pName = hb_param( 1, HB_IT_STRING );
+
+   if( pName )
+   {
+      hb_retl( hb_memvarFindSymbol( pName ) ? 1 : 0 );
+   }
+   else
+   {
+      hb_retl( 0 );
+   }
+}
+
 HB_FUNC( __MVGET )
 {
    HB_ITEM_PTR pName = hb_param( 1, HB_IT_STRING );
@@ -1126,7 +1140,7 @@ HB_FUNC( __MVGET )
                if( pDynVar )
                {
                   HB_ITEM retValue;
-                  
+
                   hb_itemInit( &retValue );
                   hb_memvarGetValue( &retValue, pDynVar->pSymbol );
                   hb_itemClear( hb_itemReturn( &retValue ) );

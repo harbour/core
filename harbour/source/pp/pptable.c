@@ -212,11 +212,7 @@ void hb_pp_Table( void )
        "if ( Empty(\1A30) ) ;   SET FORMAT TO ; else ;   __SetFormat( &('{||' + \1A30 + '()}') ) ; end",&sC___96 };
    static COMMANDS sC___98 = {0,"SET","FORMAT TO","__SetFormat()",&sC___97 };
    static COMMANDS sC___99 = {0,"@","\1A00, \1B00 GET \1C00 [PICTURE \1D00] [VALID \1E00] [WHEN \1F00] [SEND \1G00]",
-#ifdef SIMPLEX
-       "SetPos( \1A00, \1B00 ) ; AAdd( GetList, _GET_( \1C00, \1C20, \1D00, \1E40, \1F40,{|_1| If( PCount()==0,\1C00,\1C00:=_1 )} ):display() ) [; ATail(GetList):\1G00]",&sC___98 };
-#else
        "SetPos( \1A00, \1B00 ) ; AAdd( GetList, _GET_( \1C00, \1C20, \1D00, \1E40, \1F40, ):display() ) [; ATail(GetList):\1G00]",&sC___98 };
-#endif
    static COMMANDS sC___100 = {0,"@","\1A00, \1B00 SAY \1C00 [\1D10] GET \1E00 [\1F10]",
        "@ \1A00, \1B00 SAY \1C00 [\1D00] ; @ Row(), Col()+1 GET \1E00 [\1F00]",&sC___99 };
    static COMMANDS sC___101 = {0,"@","\1A00, \1B00 GET \1C00 [\1D10] RANGE \1E00, \1F00 [\1G10]",

@@ -45,19 +45,25 @@ return Get():New( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
 
 //---------------------------------------------------------------------------//
 
-FUNCTION __GET( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
+FUNCTION __GET( bSetGet, cVarName, cPicture, bValid, bWhen )
 
    LOCAL oGet
 
    IF( bSetGet == NIL )
-       IF( uVar == NIL )
-           bSetGet := &( "{|xValue| IIF( PCOUNT()==0, " + cVarName + "," + cVarname + ":=xValue)}" )
-       ELSE
-           bSetGet := {|xValue| IIF( PCOUNT()==0, uVar, uVar:=xValue)}
-       ENDIF
+      //Alert( "No Block for: " + cVarName )
+
+      IF __ISMV( cVarName )
+
+         bSetGet := {|_1| IIF( _1 == NIL,  __MVGET( cVarName ), __MVPUT( cVarName, _1 ) ) }
+      ELSE
+         //Alert( "Not MemVar: " + cVarName )
+
+         /* "{|_1| IIF( _1 == NIL, &cVarName, &cVarName := _1 )" */
+         bSetGet := &( "{|_1| IIF( _1 == NIL, " + cVarName + ", " + cVarName + " := _1)}" )
+      ENDIF
    ENDIF
 
-   oGet := Get():New(,, bSetGet, cVarName, cPicture )
+   oGet := Get():New( , ,bSetGet, cVarName, cPicture )
 
    oGet:PreBlock := bWhen
    oGet:PostBlock := bValid
@@ -75,7 +81,7 @@ FUNCTION __GETA( aVar, cVarName, cPicture, bValid, bWhen, aIndex )
    NEXT
    bSetGet := {|xValue| IIF( PCOUNT() == 0, aGetVar[aIndex[Counter]], aGetVar[aIndex[Counter]] := xValue )}
 
-   oGet := Get():New(,, bSetGet, cVarName, cPicture )
+   oGet := Get():New( , ,bSetGet, cVarName, cPicture )
    oGet:SubScript := aIndex
 
    oGet:PreBlock := bWhen

@@ -59,10 +59,10 @@ static void hb_compInitVars( void );
 static void hb_compGenOutput( int );
 static void hb_compOutputFile( void );
 
-int hb_compLocalGetPos( char * szVarName ); /* returns the order + 1 of a local variable */
-int hb_compStaticGetPos( char *, PFUNCTION );   /* return if passed name is a static variable */
-static int hb_compFieldGetPos( char *, PFUNCTION );   /* return if passed name is a field variable */
-static int hb_compMemvarGetPos( char *, PFUNCTION );   /* return if passed name is a memvar variable */
+int hb_compLocalGetPos( char * szVarName );   /* returns the order + 1 of a local variable */
+int hb_compStaticGetPos( char *, PFUNCTION ); /* return if passed name is a static variable */
+int hb_compFieldGetPos( char *, PFUNCTION );  /* return if passed name is a field variable */
+int hb_compMemvarGetPos( char *, PFUNCTION ); /* return if passed name is a memvar variable */
 
 static void hb_compGenFieldPCode( BYTE , int, char *, PFUNCTION );      /* generates the pcode for database field */
 static void hb_compGenVariablePCode( BYTE , char * );    /* generates the pcode for undeclared variable */
@@ -1460,7 +1460,7 @@ int hb_compStaticGetPos( char * szVarName, PFUNCTION pFunc )
 /* Checks if passed variable name is declared as FIELD
  * Returns 0 if not found in FIELD list or its position in this list if found
  */
-static int hb_compFieldGetPos( char * szVarName, PFUNCTION pFunc )
+int hb_compFieldGetPos( char * szVarName, PFUNCTION pFunc )
 {
    int iVar;
 
@@ -1482,7 +1482,7 @@ static int hb_compFieldGetPos( char * szVarName, PFUNCTION pFunc )
 /* Checks if passed variable name is declared as MEMVAR
  * Returns 0 if not found in MEMVAR list or its position in this list if found
  */
-static int hb_compMemvarGetPos( char * szVarName, PFUNCTION pFunc )
+int hb_compMemvarGetPos( char * szVarName, PFUNCTION pFunc )
 {
    int iVar;
 
