@@ -1,3 +1,21 @@
+20000312-03:40 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * include/hbdefs.h
+     include/hbinit.h
+     include/hbsetup.h
+     source/rtl/gt/gtdos.c
+     source/rtl/mouse/mousewin.c
+     source/rtl/copyfile.c
+     source/rtl/environ.c
+     source/rtl/filesys.c
+     source/rtl/inkey.c
+     source/rtl/isprint.c
+     source/tools/io.c
+     source/vm/itemapi.c
+     source/vm/maindll.c
+     source/vm/mainwin.c
+     * Platform/compiler related #ifdef-s changed to #if defined() for easy 
+       GREP.
+
 20000311-23:00 GMT+3 Alexander Kresin
    * contrib/rdd_ads/ads1.c
    * include/hbapirdd.h

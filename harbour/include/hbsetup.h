@@ -171,7 +171,7 @@
 /* ***********************************************************************
  * Operating system specific definitions
  */
-#ifdef __GNUC__
+#if defined(__GNUC__)
    /* The GNU C compiler is used */
    #if defined(__DJGPP__) || defined(HARBOUR_GCC_OS2) || defined(_Windows) || defined(_WIN32)
       /* The DJGPP port of GNU C is used - for DOS platform */

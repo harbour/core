@@ -1191,7 +1191,7 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
             #endif
 
             if( pNumber->item.asDouble.length == 99
-            #ifdef __BORLANDC__
+            #if defined(__BORLANDC__)
                /* No more checks for Borland C, which returns 0 for log( 0 ),
                   and is therefore unable to test for infinity */
             #else

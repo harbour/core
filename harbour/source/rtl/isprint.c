@@ -44,7 +44,7 @@
    #include <dos.h>
 #endif
 
-#ifdef __WATCOMC__
+#if defined(__WATCOMC__)
    #include <i86.h>
    #if defined(__386__) && !defined(__WINDOWS_386__)
       #define INT_86 int386
@@ -74,7 +74,7 @@ HARBOUR HB_ISPRINTER( void )
    USHORT uiPort = atoi( pszDOSPort + 3 );
    BOOL bIsPrinter = FALSE;
 
-#ifdef HB_LOCAL_DOS
+#if defined(HB_LOCAL_DOS)
 
    /* NOTE: DOS specific solution, using BIOS interrupt */
 
@@ -83,7 +83,7 @@ HARBOUR HB_ISPRINTER( void )
       union REGS regs;
 
       regs.h.ah = 2;
-   #ifdef __BORLANDC__
+   #if defined(__BORLANDC__)
       regs.x.dx = uiPort - 1;
    #else
       regs.w.dx = uiPort - 1;

@@ -33,7 +33,7 @@
  *
  */
 
-#ifdef _Windows
+#if defined(_Windows)
 
 #include <windows.h>
 #include "hbapi.h"

@@ -51,7 +51,7 @@
          be ahead of any and all #include statements!
 */
 
-#ifdef __IBMCPP__
+#if defined(__IBMCPP__)
    #define INCL_DOSMISC
 #endif
 
@@ -81,7 +81,7 @@
    #include <sys/utsname.h>
 #endif
 
-#ifdef __WATCOMC__
+#if defined(__WATCOMC__)
    #include <i86.h>
    #if defined(__386__) && !defined(__WINDOWS_386__)
       #define INT_86 int386
@@ -100,14 +100,14 @@ HARBOUR HB_OS( void )
 {
    char * cformat = "%s %d.%02d%c";
 
-#ifdef __MPW__
+#if defined(__MPW__)
 /* TODO: not implemented yet */
    hb_retc( "MacOS" );
 #else
    int hb_osmajor = -1, hb_osminor = -1, hb_osletter = -1;
    char * hb_os = NULL;
    char version[ 128 ];
-#ifdef __IBMCPP__
+#if defined(__IBMCPP__)
 
    unsigned long aulQSV[ QSV_MAX ] = { 0 };
    APIRET rc = DosQuerySysInfo( 1L, QSV_MAX, ( void * ) aulQSV, sizeof( ULONG ) * QSV_MAX );
@@ -326,7 +326,7 @@ HARBOUR HB_OS( void )
       }
    }
 #endif /* __TURBOC__ or __BORLANDC__ or _MSC_VER 0r __DJGPP__ */
-#ifdef __DJGPP__
+#if defined(__DJGPP__)
    hb_os = hb_xgrab( strlen( _os_flavor ) + 1 );
    strcpy( hb_os, _os_flavor );
    hb_osmajor = _osmajor;
@@ -348,7 +348,7 @@ HARBOUR HB_OS( void )
    else sprintf( version, cformat, hb_os, hb_osmajor, hb_osminor, hb_osletter );
 #endif
    hb_retc( version );
-#ifdef __DJGPP__
+#if defined(__DJGPP__)
    hb_xfree( hb_os );
 #endif
 
@@ -460,7 +460,7 @@ char * hb_version( USHORT uiMode )
 
    #elif defined(__GNUC__)
 
-      #ifdef __EMX__
+      #if defined(__EMX__)
          compiler = "GNU C/EMX C";
       #else
          compiler = "GNU C";

@@ -55,10 +55,8 @@
    #endif
 #endif
 
-#if ! defined(__GNUC__)
-#ifdef __CYGWIN__
-typedef WORD far * LPWORD;
-#endif
+#if ! defined(__GNUC__) && defined(__CYGWIN__)
+   typedef WORD far * LPWORD;
 #endif /* __GNUC__ */
 
 int hb_mouse_iCol;

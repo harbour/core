@@ -82,7 +82,7 @@
          of any and all #include statements and requires that
          Harbour includes are ahead of platform includes.
 */
-#ifdef __IBMCPP__
+#if defined(__IBMCPP__)
    #define INCL_DOSPROCESS
    #define INCL_NOPMAPI
 #endif
@@ -131,7 +131,7 @@
 #endif
 #include <time.h>
 
-#ifdef __WATCOMC__
+#if defined(__WATCOMC__)
    #include <conio.h>
    #include <i86.h>
    #if defined(__386__) && !defined(__WINDOWS__386__)

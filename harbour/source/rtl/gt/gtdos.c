@@ -67,7 +67,7 @@
    #define FAR
 #endif
 
-#ifdef __DJGPP__
+#if defined(__DJGPP__)
    #include <conio.h>
    #include <sys/farptr.h>
    #include <sys/exceptn.h>
@@ -134,7 +134,7 @@ void hb_gt_Init( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
 
-#ifdef __DJGPP__
+#if defined(__DJGPP__)
    gppconio_init();
    __djgpp_hwint_flags |= 2;     /* Count Ctrl+Break instead of killing program */
    __djgpp_set_ctrl_c( 0 );      /* Disable Ctrl+C */
@@ -415,7 +415,7 @@ static void hb_gt_xGetXY( USHORT cRow, USHORT cCol, BYTE * attr, BYTE * ch )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_xGetXY(%hu, %hu, %p, %p", cRow, cCol, ch, attr));
 
-#ifdef __DJGPP__
+#if defined(__DJGPP__)
    {
      short ch_attr;
      gettext( cCol + 1, cRow + 1, cCol + 1, cRow + 1, &ch_attr );
@@ -436,7 +436,7 @@ void hb_gt_xPutch( USHORT cRow, USHORT cCol, BYTE attr, BYTE ch )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_xPutch(%hu, %hu, %d, %d", cRow, cCol, (int) attr, (int) ch));
 
-#ifdef __DJGPP__
+#if defined(__DJGPP__)
    {
      long ch_attr;
      ch_attr = ( ch << 8 ) | attr;
@@ -456,7 +456,7 @@ void hb_gt_Puts( USHORT cRow, USHORT cCol, BYTE attr, BYTE *str, ULONG len )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Puts(%hu, %hu, %d, %p, %lu", cRow, cCol, (int) attr, str, len));
 
-#ifdef __DJGPP__
+#if defined(__DJGPP__)
    {
      int i;
      int bottom, left, right, top;
@@ -515,7 +515,7 @@ void hb_gt_GetText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetText(%hu, %hu, %hu, %hu, %p", usTop, usLeft, usBottom, usRight, dest));
 
-#ifdef __DJGPP__
+#if defined(__DJGPP__)
    {
      gettext( usLeft + 1, usTop + 1, usRight + 1, usBottom + 1, dest );
    }
@@ -539,7 +539,7 @@ void hb_gt_PutText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutText(%hu, %hu, %hu, %hu, %p", usTop, usLeft, usBottom, usRight, srce));
 
-#ifdef __DJGPP__
+#if defined(__DJGPP__)
    {
      puttext( usLeft + 1, usTop + 1, usRight + 1, usBottom + 1, srce );
    }

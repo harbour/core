@@ -111,15 +111,15 @@ typedef unsigned long ULONG;
 
 #define HB_SYMBOL_UNUSED( symbol ) ( void ) symbol
 
-#ifdef __GNUC__
+#if defined(__GNUC__)
    #define pascal __attribute__ ((stdcall))
 #endif
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER)
    #define HARBOUR void
    #define EXTERNAL_LINKAGE
 #else
-   #ifdef __IBMCPP__
+   #if defined(__IBMCPP__)
       #define HARBOUR void
       #define EXTERNAL_LINKAGE _LNK_CONV
    #else

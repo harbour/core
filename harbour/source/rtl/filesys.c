@@ -151,11 +151,11 @@
    #include <errno.h>
 #endif
 
-#ifdef __MPW__
+#if defined(__MPW__)
    #include <fcntl.h>
 #endif
 
-#ifdef DOS
+#if defined(DOS)
    #include <dos.h>
 #endif
 
@@ -1419,7 +1419,7 @@ BOOL hb_fsFile( BYTE * pFilename )
    HB_TRACE(HB_TR_DEBUG, ("hb_fsFile(%s)", (char*) pFilename));
 
 /* TODO: Check if F_OK is defined in all compilers */
-#ifdef OS_UNIX_COMPATIBLE
+#if defined(OS_UNIX_COMPATIBLE)
 
    bIsFile = ( access( ( const char * ) pFilename, F_OK ) == 0 );
 

@@ -54,7 +54,7 @@ extern void hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* stati
 
 #else /* HARBOUR_STRICT_ANSI_C */
 
-#ifdef __GNUC__
+#if defined(__GNUC__)
 #define HB_INIT_SYMBOLS_BEGIN( func ) \
    static HB_SYMB symbols[] = {
 
@@ -72,7 +72,7 @@ extern void hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* stati
 #endif
 
 
-#ifdef __BORLANDC__
+#if defined(__BORLANDC__)
 #define HB_INIT_SYMBOLS_BEGIN( func ) \
    static HB_SYMB symbols[] = {
 
@@ -107,7 +107,7 @@ extern void hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* stati
    static int static_int_##func = func();
 #endif
 
-#ifdef __WATCOMC__
+#if defined(__WATCOMC__)
 #define HB_INIT_SYMBOLS_BEGIN( func ) \
    static HB_SYMB symbols[] = {
 
