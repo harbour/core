@@ -334,7 +334,8 @@ extern PHB_ITEM hb_arrayClone( PHB_ITEM pArray );
 
 extern int      hb_stricmp( const char * s1, const char * s2 );
 extern int      hb_strnicmp( const char * s1, const char * s2, ULONG ulLen );
-extern void     hb_strupr( char * szText );
+extern char *   hb_strupr( char * pszText );
+extern char *   hb_strdup( const char * pszText );
 extern BOOL     hb_strMatchRegExp( const char * szString, const char * szMask );
 extern BOOL     hb_strEmpty( const char * szText, ULONG ulLen );
 extern void     hb_strDescend( char * szStringTo, const char * szStringFrom, ULONG ulLen );

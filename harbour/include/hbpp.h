@@ -47,28 +47,28 @@
 /* the list of pathnames to search with #include */
 typedef struct _PATHNAMES 
 {
-  char * szPath;
-  struct _PATHNAMES *pNext;
+   char * szPath;
+   struct _PATHNAMES *pNext;
 } PATHNAMES;
 
 struct _DEFINES;
 typedef struct _DEFINES
 {
-  char * name;
-  char * pars;
-  int    npars;
-  char * value;
-  struct _DEFINES * last;
+   char * name;
+   char * pars;
+   int    npars;
+   char * value;
+   struct _DEFINES * last;
 } DEFINES;
 
 struct _COMMANDS;
 typedef struct _COMMANDS
 {
-  int com_or_xcom;
-  char * name;
-  char * mpatt;
-  char * value;
-  struct _COMMANDS * last;
+   int com_or_xcom;
+   char * name;
+   char * mpatt;
+   char * value;
+   struct _COMMANDS * last;
 } COMMANDS;
 
 #define HB_PP_STR_SIZE  8192
@@ -85,7 +85,6 @@ extern int    hb_pp_WrStr( FILE *, char * );
 extern int    hb_pp_RdStr( FILE *, char *, int, BOOL, char *, int *, int * );
 extern void   hb_pp_Stuff( char *, char *, int, int, int );
 extern int    hb_pp_strocpy( char *, char * );
-extern char * hb_pp_strodup( char * );
 extern DEFINES * hb_pp_AddDefine( char *, char * );         /* Add new #define to a linked list */
 
 /* HBPPINT.C exported functions */

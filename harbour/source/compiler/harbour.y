@@ -80,11 +80,6 @@ static void * hb_compElseIfGen( void * pFirstElseIf, ULONG ulOffset ); /* genera
 static void hb_compElseIfFix( void * pIfElseIfs ); /* implements the ElseIfs pcode fixups */
 
 /* Misc functions defined in harbour.c */
-extern void * hb_xgrab( ULONG ulSize );         /* allocates fixed memory, exits on failure */
-extern void * hb_xrealloc( void * pMem, ULONG ulSize );       /* reallocates memory */
-extern void hb_xfree( void * pMem );            /* frees fixed memory */
-extern char * yy_strupr( char * p );
-extern char * yy_strdup( char * p );
 extern void hb_compGenError( char* _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 );
 extern void hb_compGenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2);
 
@@ -1322,7 +1317,7 @@ DoProc     : DO IDENTIFIER
            | DO IDENTIFIER WITH DoArgList
                { $$ = hb_compExprNewFunCall( $2, $4 ); }
            | WHILE WITH DoArgList
-               { $$ = hb_compExprNewFunCall( yy_strdup("WHILE"), $3 ); }
+               { $$ = hb_compExprNewFunCall( hb_strdup("WHILE"), $3 ); }
            ;
 
 DoArgList  : ','                       { $$ = hb_compExprAddListExpr( hb_compExprNewArgList( hb_compExprNewNil() ), hb_compExprNewNil() ); }
@@ -1353,13 +1348,13 @@ int harbour_main( char * szName )
    /* Generate the starting procedure frame
       */
    if( hb_comp_bStartProc )
-      hb_compFunctionAdd( yy_strupr( yy_strdup( szName ) ), FS_PUBLIC, FUN_PROCEDURE );
+      hb_compFunctionAdd( hb_strupr( hb_strdup( szName ) ), FS_PUBLIC, FUN_PROCEDURE );
    else
          /* Don't pass the name of module if the code for starting procedure
          * will be not generated. The name cannot be placed as first symbol
          * because this symbol can be used as function call or memvar's name.
          */
-      hb_compFunctionAdd( yy_strupr( yy_strdup( "" ) ), FS_PUBLIC, FUN_PROCEDURE );
+      hb_compFunctionAdd( hb_strupr( hb_strdup( "" ) ), FS_PUBLIC, FUN_PROCEDURE );
 
    yyparse();
 

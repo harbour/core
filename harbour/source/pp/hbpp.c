@@ -280,7 +280,7 @@ static int ParseDefine( char * sLine )
       lastdef = hb_pp_AddDefine( defname, ( *sLine == '\0' )? NULL : sLine );
 
       lastdef->npars = npars;
-      lastdef->pars = ( npars <= 0 )? NULL : hb_pp_strodup( pars );
+      lastdef->pars = ( npars <= 0 )? NULL : hb_strdup( pars );
     }
   else
     hb_compGenError( hb_pp_szErrors, 'F', ERR_DEFINE_ABSENT, NULL, NULL );
@@ -307,10 +307,10 @@ DEFINES * hb_pp_AddDefine( char * defname, char * value )
       stdef = ( DEFINES * ) hb_xgrab( sizeof( DEFINES ) );
       stdef->last = hb_pp_topDefine;
       hb_pp_topDefine = stdef;
-      stdef->name = hb_pp_strodup( defname );
+      stdef->name = hb_strdup( defname );
       s_kolAddDefs++;
     }
-  stdef->value = ( value == NULL )? NULL : hb_pp_strodup( value );
+  stdef->value = ( value == NULL )? NULL : hb_strdup( value );
   return stdef;
 }
 
@@ -473,8 +473,8 @@ static void ParseCommand( char * sLine, BOOL com_or_xcom, BOOL com_or_tra )
       stcmd = AddTranslate( cmdname );
 
     stcmd->com_or_xcom = com_or_xcom;
-    stcmd->mpatt = hb_pp_strodup( mpatt );
-    stcmd->value = ( rlen > 0 ) ? hb_pp_strodup( rpatt ) : NULL;
+    stcmd->mpatt = hb_strdup( mpatt );
+    stcmd->value = ( rlen > 0 ) ? hb_strdup( rpatt ) : NULL;
   }
   else
     hb_compGenError( hb_pp_szErrors, 'F', ERR_COMMAND_DEFINITION, NULL, NULL );
@@ -589,7 +589,7 @@ static COMMANDS * AddCommand( char * cmdname )
   stcmd = ( COMMANDS * ) hb_xgrab( sizeof( COMMANDS ) );
   stcmd->last = hb_pp_topCommand;
   hb_pp_topCommand = stcmd;
-  stcmd->name = hb_pp_strodup( cmdname );
+  stcmd->name = hb_strdup( cmdname );
   return stcmd;
 }
 
@@ -602,7 +602,7 @@ static COMMANDS* AddTranslate( char * traname )
   sttra = ( COMMANDS * ) hb_xgrab( sizeof( COMMANDS ) );
   sttra->last = hb_pp_topTranslate;
   hb_pp_topTranslate = sttra;
-  sttra->name = hb_pp_strodup( traname );
+  sttra->name = hb_strdup( traname );
   return sttra;
 }
 
@@ -2104,20 +2104,6 @@ static int strincpy( char * ptro, char * ptri )
          *ptri != '\1' && *ptri != '\0'; ptro++, ptri++, lens++ )
     *ptro = *ptri;
   return lens;
-}
-
-char * hb_pp_strodup( char * stroka )
-{
-  char *ptr;
-  int lens = 0;
-
-  HB_TRACE(HB_TR_DEBUG, ("hb_pp_strodup(%s)", stroka));
-
-  while( *(stroka+lens) != '\0' ) lens++;
-  ptr = ( char * ) hb_xgrab( lens + 1 );
-  memcpy( ptr,  stroka, lens+1 );
-  *(ptr+lens) = '\0';
-  return ptr;
 }
 
 static int strotrim( char * stroka )

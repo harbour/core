@@ -364,7 +364,7 @@ int main( int argc, char * argv[] )
                case 'D':   /* defines a Lex #define from the command line */
                   {
                      unsigned int i = 0;
-                     char * szDefText = yy_strdup( argv[ iArg ] + 2 );
+                     char * szDefText = hb_strdup( argv[ iArg ] + 2 );
                      while( i < strlen( szDefText ) && szDefText[ i ] != '=' )
                         i++;
                      if( szDefText[ i ] != '=' )
@@ -469,7 +469,7 @@ int main( int argc, char * argv[] )
                      char * pDelim;
                      char * szInclude;
 
-                     pPath = szInclude = yy_strdup( argv[ iArg ] + 2 );
+                     pPath = szInclude = hb_strdup( argv[ iArg ] + 2 );
                      while( ( pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR ) ) != NULL )
                      {
                         * pDelim = '\0';
@@ -650,7 +650,7 @@ int main( int argc, char * argv[] )
             char * pPath;
             char * pDelim;
 
-            pPath = szInclude = yy_strdup( szInclude );
+            pPath = szInclude = hb_strdup( szInclude );
             while( ( pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR ) ) != NULL )
             {
                *pDelim = '\0';
@@ -955,28 +955,6 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
       free( pMem );
    else
       hb_compGenError( hb_comp_szErrors, 'F', ERR_MEMFREE, NULL, NULL );
-}
-
-char * yy_strupr( char * p )
-{
-   char * p1;
-
-   for( p1 = p; * p1; p1++ )
-      * p1 = toupper( * p1 );
-
-   return p;
-}
-
-char * yy_strdup( char * p )
-{
-   char * pDup;
-   int iLen;
-
-   iLen = strlen( p ) + 1;
-   pDup = ( char * ) hb_xgrab( iLen );
-   memcpy( pDup, p, iLen );
-
-   return pDup;
 }
 
 /* ------------------------------------------------------------------------- */
@@ -1301,7 +1279,7 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
 
                pSym = hb_compSymbolFind( szVarName, &wPos ); /* check if symbol exists already */
                if( ! pSym )
-                  pSym = hb_compSymbolAdd( yy_strdup( szVarName ), &wPos );
+                  pSym = hb_compSymbolAdd( hb_strdup( szVarName ), &wPos );
                pSym->cScope |= VS_MEMVAR;
                hb_compGenPCode3( HB_P_PARAMETER, HB_LOBYTE( wPos ), HB_HIBYTE( wPos ) );
                hb_compGenPCode1( HB_LOBYTE( hb_comp_functions.pLast->wParamNum ) );
@@ -1316,7 +1294,7 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
                if( bNewParameter )
                {
                   pVar = ( PVAR ) hb_xgrab( sizeof( VAR ) );
-                  pVar->szName = yy_strdup( szVarName );
+                  pVar->szName = hb_strdup( szVarName );
                   pVar->szAlias = NULL;
                   pVar->cType = cValueType;
                   pVar->iUsed = 0;
@@ -1336,9 +1314,9 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
             break;
          case VS_PRIVATE:
             {
-               hb_compGenPushSymbol( yy_strdup( "__MVPRIVATE" ), 1);
+               hb_compGenPushSymbol( hb_strdup( "__MVPRIVATE" ), 1);
                hb_compGenPushNil();
-               hb_compGenPushSymbol( yy_strdup( szVarName ), 0 );
+               hb_compGenPushSymbol( hb_strdup( szVarName ), 0 );
                hb_compGenPCode3( HB_P_DO, 1, 0 );
                pSym = hb_compSymbolFind( szVarName, NULL );
                pSym->cScope |= VS_MEMVAR;
@@ -1346,9 +1324,9 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
             break;
          case VS_PUBLIC:
             {
-               hb_compGenPushSymbol( yy_strdup( "__MVPUBLIC" ), 1);
+               hb_compGenPushSymbol( hb_strdup( "__MVPUBLIC" ), 1);
                hb_compGenPushNil();
-               hb_compGenPushSymbol( yy_strdup( szVarName ), 0 );
+               hb_compGenPushSymbol( hb_strdup( szVarName ), 0 );
                hb_compGenPCode3( HB_P_DO, 1, 0 );
                pSym = hb_compSymbolFind( szVarName, NULL );
                pSym->cScope |= VS_MEMVAR;
@@ -1638,7 +1616,7 @@ PCOMSYMBOL hb_compSymbolKill( PCOMSYMBOL pSym )
 
 void hb_compGenBreak( void )
 {
-   hb_compGenPushSymbol( yy_strdup("BREAK"), 1 );
+   hb_compGenPushSymbol( hb_strdup("BREAK"), 1 );
    hb_compGenPushNil();
 }
 
@@ -1647,7 +1625,7 @@ void hb_compExternGen( void ) /* generates the symbols for the EXTERN names */
    PEXTERN pDelete;
 
    if( hb_comp_bDebugInfo )
-      hb_compExternAdd( yy_strdup( "__DBGENTRY" ) );
+      hb_compExternAdd( hb_strdup( "__DBGENTRY" ) );
 
    while( hb_comp_pExterns )
    {
@@ -2188,7 +2166,7 @@ static void hb_compVariableGenPCode( BYTE bPCode, char * szVarName )
          /*
           * Push alias symbol before the field symbol
           */
-         hb_compGenPushSymbol( yy_strdup( pField->szAlias ), 0 );
+         hb_compGenPushSymbol( hb_strdup( pField->szAlias ), 0 );
       }
       else
       {  /* this is unaliased field */
@@ -2315,7 +2293,7 @@ void hb_compGenPopAliasedVar( char * szVarName,
                }
                else
                {  /* database alias */
-                  hb_compGenPushSymbol( yy_strdup( szAlias ), 0 );
+                  hb_compGenPushSymbol( hb_strdup( szAlias ), 0 );
                   hb_compFieldGenPCode( HB_P_POPALIASEDFIELD, szVarName );
                }
             }
@@ -2423,7 +2401,7 @@ void hb_compGenPushAliasedVar( char * szVarName,
                }
                else
                {  /* database alias */
-                  hb_compGenPushSymbol( yy_strdup( szAlias ), 0 );
+                  hb_compGenPushSymbol( hb_strdup( szAlias ), 0 );
                   hb_compFieldGenPCode( HB_P_PUSHALIASEDFIELD, szVarName );
                }
             }
@@ -2470,7 +2448,7 @@ void hb_compGenPushFunCall( char * szFunName )
    {
       /* Abbreviated function name was used - change it for whole name
        */
-      hb_compGenPushSymbol( yy_strdup( szFunction ), 1 );
+      hb_compGenPushSymbol( hb_strdup( szFunction ), 1 );
    }
    else
       hb_compGenPushSymbol( szFunName, 1 );
@@ -2741,7 +2719,7 @@ void hb_compStaticDefStart( void )
    {
       BYTE pBuffer[ 5 ];
 
-      hb_comp_pInitFunc = hb_compFunctionNew( yy_strdup("(_INITSTATICS)"), FS_INIT );
+      hb_comp_pInitFunc = hb_compFunctionNew( hb_strdup("(_INITSTATICS)"), FS_INIT );
       hb_comp_pInitFunc->pOwner = hb_comp_functions.pLast;
       hb_comp_pInitFunc->bFlags = FUN_USES_STATICS | FUN_PROCEDURE;
       hb_comp_pInitFunc->cScope = FS_INIT | FS_EXIT;

@@ -46,11 +46,6 @@
 #include "hberrors.h"
 #include "hbdefs.h"
 
-/* Functions defined in harbour.y */
-char * yy_strupr( char * p );
-char * yy_strdup( char * p );
-extern void     hb_xfree( void * pMem );    /* frees memory */
-
 /* helper functions */
 static int yy_ConvertNumber( char * szBuffer );
 
@@ -160,7 +155,7 @@ Separator     {SpaceTab}
 
                     yyleng--;
                     yytext[yyleng] = 0;
-                    yylval.string = yy_strdup( yytext );
+                    yylval.string = hb_strdup( yytext );
                     /*printf( "\nLITERAL = %s\n", yylval.string );*/
                     return LITERAL;
                   }
@@ -172,7 +167,7 @@ Separator     {SpaceTab}
 
                     yyleng--;
                     yytext[yyleng] = 0;
-                    yylval.string = yy_strdup( yytext );
+                    yylval.string = hb_strdup( yytext );
                     /*printf( "\nLITERAL = %s\n", yylval.string );*/
                     return LITERAL;
                   }
@@ -184,7 +179,7 @@ Separator     {SpaceTab}
 
                     yyleng--;
                     yytext[yyleng] = 0;
-                    yylval.string = yy_strdup( yytext );
+                    yylval.string = hb_strdup( yytext );
                     /*printf( "\nLITERAL = %s\n", yylval.string );*/
                     return LITERAL;
                   }
@@ -241,7 +236,7 @@ Separator     {SpaceTab}
                     BEGIN BREAK_;
                  else
                  {
-                    yylval.string = yy_strupr( yy_strdup( yytext ) );
+                    yylval.string = hb_strupr( hb_strdup( yytext ) );
                     hb_comp_iState =IDENTIFIER;
                     return IDENTIFIER;
                  }
@@ -264,7 +259,7 @@ Separator     {SpaceTab}
 %}
 <BREAK_>{Separator}*(":="|"+="|"-="|"->"|"*="|"/="|"^="|"==") { /* operators */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               yylval.string = yy_strdup( "BREAK" );
+               yylval.string = hb_strdup( "BREAK" );
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
                hb_comp_iState =IDENTIFIER;
@@ -276,7 +271,7 @@ Separator     {SpaceTab}
                 * For this reason we are allowing the BREAK statement only
                 */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               yylval.string = yy_strdup( "BREAK" );
+               yylval.string = hb_strdup( "BREAK" );
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
                hb_comp_iState =BREAK;
@@ -284,7 +279,7 @@ Separator     {SpaceTab}
              }
 <BREAK_>{Separator}*[\=\(] { /* operators = ( */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               yylval.string = yy_strdup( "BREAK" );
+               yylval.string = hb_strdup( "BREAK" );
                unput( yytext[ yyleng-1 ] );
                hb_comp_iState =IDENTIFIER;
                return IDENTIFIER;
@@ -303,7 +298,7 @@ Separator     {SpaceTab}
 "case"         BEGIN CASE_;
 <CASE_>{Separator}*[\:\=\|\$\%\*\,\/\]\)\}\^] { /* there is an operator after "case" */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               yylval.string = yy_strdup( "CASE" );
+               yylval.string = hb_strdup( "CASE" );
                hb_comp_iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
@@ -315,7 +310,7 @@ Separator     {SpaceTab}
              }
 <CASE_>{Separator}*("+="|"-="|"->") { /* operators */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               yylval.string = yy_strdup( "CASE" );
+               yylval.string = hb_strdup( "CASE" );
                hb_comp_iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
@@ -338,7 +333,7 @@ Separator     {SpaceTab}
                }
                else
                { /* there is another item in line already */
-                 yylval.string = yy_strdup( "CASE" );
+                 yylval.string = hb_strdup( "CASE" );
                  hb_comp_iState =IDENTIFIER;
                  return IDENTIFIER;
                }
@@ -347,7 +342,7 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "decl"("are"|"ar"|"a")? { BEGIN PRIVATE_;
-                  yylval.string = yy_strupr( yy_strdup( yytext ) );
+                  yylval.string = hb_strupr( hb_strdup( yytext ) );
                 }
 %{
 /* ************************************************************************ */
@@ -376,7 +371,7 @@ Separator     {SpaceTab}
                 }
                 else
                 { /* there is another item in line already */
-                  yylval.string = yy_strdup( "DO" );
+                  yylval.string = hb_strdup( "DO" );
                   hb_comp_iState =IDENTIFIER;
                   return IDENTIFIER;
                 }
@@ -384,7 +379,7 @@ Separator     {SpaceTab}
 <DO_>{Separator}*(.|\n)         { /* end of line or any operator */
                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                 unput( yytext[ yyleng-1 ] );
-                yylval.string = yy_strdup( "DO" );
+                yylval.string = hb_strdup( "DO" );
                 hb_comp_iState =IDENTIFIER;
                 return IDENTIFIER;
               }
@@ -437,7 +432,7 @@ Separator     {SpaceTab}
                { /* Clipper does not like end[] & end() at the begining of line */
                  hb_compGenError( hb_comp_szErrors, 'E', ERR_ENDIF, NULL, NULL );
                }
-               yylval.string = yy_strdup( "END" );
+               yylval.string = hb_strdup( "END" );
                hb_comp_iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
@@ -448,7 +443,7 @@ Separator     {SpaceTab}
                { /* Clipper does not like end-> & end++ at the begining of line */
                  hb_compGenError( hb_comp_szErrors, 'E', ERR_ENDIF, NULL, NULL );
                }
-               yylval.string = yy_strdup( "END" );
+               yylval.string = hb_strdup( "END" );
                hb_comp_iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
@@ -456,7 +451,7 @@ Separator     {SpaceTab}
              }
 <END_>{Separator}*[\+\-\:\=\|\$\%\*\,\/\[\]\)\}\^] { /* there is an operator after "end" */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               yylval.string = yy_strdup( "END" );
+               yylval.string = hb_strdup( "END" );
                hb_comp_iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
@@ -471,7 +466,7 @@ Separator     {SpaceTab}
                }
                else
                { /* there is another item in line already */
-                 yylval.string = yy_strdup( "END" );
+                 yylval.string = hb_strdup( "END" );
                  hb_comp_iState =IDENTIFIER;
                  return IDENTIFIER;
                }
@@ -493,7 +488,7 @@ Separator     {SpaceTab}
                  }
                  else
                  { /* there is another item in line already */
-                   yylval.string = yy_strdup( "EXIT" );
+                   yylval.string = hb_strdup( "EXIT" );
                    hb_comp_iState =IDENTIFIER;
                    return IDENTIFIER;
                  }
@@ -508,14 +503,14 @@ Separator     {SpaceTab}
                  }
                  else
                  { /* there is another item in line already */
-                   yylval.string = yy_strdup( "EXIT" );
+                   yylval.string = hb_strdup( "EXIT" );
                    hb_comp_iState =IDENTIFIER;
                    return IDENTIFIER;
                  }
                }
 <EXIT_>{Separator}*. { /* any character (not identifier) after EXIT */
                  unput( yytext[ yyleng-1 ] );
-                 yylval.string = yy_strdup( "EXIT" );
+                 yylval.string = hb_strdup( "EXIT" );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  hb_comp_iState =IDENTIFIER;
                  return IDENTIFIER;
@@ -524,7 +519,7 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "exte"|"exter"|"extern"|"externa"|"external" { BEGIN EXTERNAL_;
-                   yylval.string = yy_strupr( yy_strdup( yytext ) );
+                   yylval.string = hb_strupr( hb_strdup( yytext ) );
                  }
 <EXTERNAL_>{Separator}+[_a-zA-Z] { /* an identifier after the EXTERNAL */
                  unput( yytext[ yyleng-1 ] );
@@ -552,11 +547,11 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "_fie"|"_fiel"|"_field" { BEGIN FIELD_;
-                   yylval.string = yy_strupr( yy_strdup( yytext ) );
+                   yylval.string = hb_strupr( hb_strdup( yytext ) );
                  }
 
 "fiel"|"field"   { BEGIN FIELD_;
-                   yylval.string = yy_strupr( yy_strdup( yytext ) );
+                   yylval.string = hb_strupr( hb_strdup( yytext ) );
                  }
 <FIELD_>{Separator}+[_a-zA-Z] { /* an identifier after the FIELD */
                  unput( yytext[ yyleng-1 ] );
@@ -602,7 +597,7 @@ Separator     {SpaceTab}
                  }
                  else
                  { /* for example: DO for WITH variable */
-                   yylval.string = yy_strdup( "FOR" );
+                   yylval.string = hb_strdup( "FOR" );
                    hb_comp_iState =IDENTIFIER;
                    return IDENTIFIER;
                  }
@@ -613,14 +608,14 @@ Separator     {SpaceTab}
                { /* Clipper does not like FOR() at the begining of line */
                  hb_compGenError( hb_comp_szErrors, 'E', ERR_SYNTAX, yytext, NULL );
                }
-               yylval.string = yy_strdup( "FOR" );
+               yylval.string = hb_strdup( "FOR" );
                hb_comp_iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
              }
 <FOR_>{Separator}*[^_a-zA-Z] { /* there is no identifier after "FOR" */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               yylval.string = yy_strdup( "FOR" );
+               yylval.string = hb_strdup( "FOR" );
                unput( yytext[ yyleng-1 ] );
                hb_comp_iState =IDENTIFIER;
                return IDENTIFIER;
@@ -709,7 +704,7 @@ Separator     {SpaceTab}
                    return IN;
                  else
                  {
-                   yylval.string =yy_strdup( "IN" );
+                   yylval.string =hb_strdup( "IN" );
                    hb_comp_iState =IDENTIFIER;
                    return IDENTIFIER;
                  }
@@ -717,7 +712,7 @@ Separator     {SpaceTab}
 <IN_>{Separator}*\n     {
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                unput( yytext[ yyleng-1 ] );
-               yylval.string =yy_strdup( "IN" );
+               yylval.string =hb_strdup( "IN" );
                hb_comp_iState =IDENTIFIER;
                return IDENTIFIER;
              }
@@ -727,7 +722,7 @@ Separator     {SpaceTab}
 <IN_>{Separator}*.      {
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                unput( yytext[ yyleng-1 ] );
-               yylval.string =yy_strdup( "IN" );
+               yylval.string =hb_strdup( "IN" );
                hb_comp_iState =IDENTIFIER;
                return IDENTIFIER;
              }
@@ -745,14 +740,14 @@ Separator     {SpaceTab}
                  }
                  else
                  { /* there is another item in line already */
-                   yylval.string = yy_strdup( "INIT" );
+                   yylval.string = hb_strdup( "INIT" );
                    hb_comp_iState =IDENTIFIER;
                    return IDENTIFIER;
                  }
                }
 <INIT_>{Separator}*[^fFpP] { /* any character (not identifier) after EXIT */
                  unput( yytext[ yyleng-1 ] );
-                 yylval.string = yy_strdup( "INIT" );
+                 yylval.string = hb_strdup( "INIT" );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  hb_comp_iState =IDENTIFIER;
                  return IDENTIFIER;
@@ -762,7 +757,7 @@ Separator     {SpaceTab}
 %}
 "#"{Separator}*"line"  return LINE;
 "loca"|"local"  { BEGIN LOCAL_;
-                  yylval.string = yy_strupr( yy_strdup( yytext ) );
+                  yylval.string = hb_strupr( hb_strdup( yytext ) );
                 }
 <LOCAL_>{Separator}+[_a-zA-Z]   { /* an identifier after LOCAL */
                  unput( yytext[ yyleng-1 ] );
@@ -801,14 +796,14 @@ Separator     {SpaceTab}
                  }
                  else
                  { /* there is another item in line already */
-                   yylval.string = yy_strdup( "LOOP" );
+                   yylval.string = hb_strdup( "LOOP" );
                    hb_comp_iState =IDENTIFIER;
                    return IDENTIFIER;
                  }
                }
 <LOOP_>{Separator}*. { /* any character (not LF) after LOOP */
                  unput( yytext[ yyleng-1 ] );
-                 yylval.string = yy_strdup( "LOOP" );
+                 yylval.string = hb_strdup( "LOOP" );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  hb_comp_iState =IDENTIFIER;
                  return IDENTIFIER;
@@ -817,7 +812,7 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "memv"|"memva"|"memvar" { BEGIN MEMVAR_;
-                  yylval.string = yy_strupr( yy_strdup( yytext ) );
+                  yylval.string = hb_strupr( hb_strdup( yytext ) );
                 }
 <MEMVAR_>{Separator}+[_a-zA-Z]   { /* an identifier after MEMVAR */
                  unput( yytext[ yyleng-1 ] );
@@ -856,7 +851,7 @@ Separator     {SpaceTab}
                }
                else
                { /* there is another item in line already */
-                 yylval.string = yy_strdup( "NEXT" );
+                 yylval.string = hb_strdup( "NEXT" );
                  hb_comp_iState =IDENTIFIER;
                  return IDENTIFIER;
                }
@@ -867,7 +862,7 @@ Separator     {SpaceTab}
                { /* Clipper does not like NEXT[] & NEXT() at the begining of line */
                  hb_compGenError( hb_comp_szErrors, 'E', ERR_NEXTFOR, NULL, NULL );
                }
-               yylval.string = yy_strdup( "NEXT" );
+               yylval.string = hb_strdup( "NEXT" );
                hb_comp_iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
@@ -878,7 +873,7 @@ Separator     {SpaceTab}
                { /* Clipper does not like next-> & next++ at the begining of line */
                  hb_compGenError( hb_comp_szErrors, 'E', ERR_NEXTFOR, NULL, NULL );
                }
-               yylval.string = yy_strdup( "NEXT" );
+               yylval.string = hb_strdup( "NEXT" );
                hb_comp_iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
@@ -886,7 +881,7 @@ Separator     {SpaceTab}
              }
 <NEXT_>{Separator}*[^_a-zA-Z] { /* there is no identifier after "next" */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               yylval.string = yy_strdup( "NEXT" );
+               yylval.string = hb_strdup( "NEXT" );
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
              }
@@ -902,7 +897,7 @@ Separator     {SpaceTab}
                }
                else
                {
-                 yylval.string = yy_strdup( "NEXT" );
+                 yylval.string = hb_strdup( "NEXT" );
                  hb_comp_iState =IDENTIFIER;
                  return IDENTIFIER;
                }
@@ -917,7 +912,7 @@ Separator     {SpaceTab}
 %}
 "para"|"param"|"parame"|"paramet"|"paramete"|"parameter"|"parameters"   {
                   BEGIN PARAM_;
-                  yylval.string = yy_strupr( yy_strdup( yytext ) );
+                  yylval.string = hb_strupr( hb_strdup( yytext ) );
                 }
 <PARAM_>{Separator}+[_a-zA-Z]   { /* an identifier after PARAMETERS */
                  unput( yytext[ yyleng-1 ] );
@@ -944,7 +939,7 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "priv"("ate"|"at"|"a")? { BEGIN PRIVATE_;
-                  yylval.string = yy_strupr( yy_strdup( yytext ) );
+                  yylval.string = hb_strupr( hb_strdup( yytext ) );
                 }
 <PRIVATE_>{Separator}+[_a-zA-Z] { /* an Identifier after PRIVATE */
                  unput( yytext[ yyleng-1 ] );
@@ -976,7 +971,7 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "publ"("ic"|"i")? { BEGIN PUBLIC_;
-                  yylval.string = yy_strupr( yy_strdup( yytext ) );
+                  yylval.string = hb_strupr( hb_strdup( yytext ) );
                 }
 <PUBLIC_>{Separator}+[_a-zA-Z]   { /* an identifier after PUBLIC */
                  unput( yytext[ yyleng-1 ] );
@@ -1021,7 +1016,7 @@ Separator     {SpaceTab}
                 { /* we have DO while - replace it with while() */
                   unput( ')' ); unput( '(' );
                 }
-                yylval.string = yy_strdup( "WHILE" );
+                yylval.string = hb_strdup( "WHILE" );
                 return IDENTIFIER;
               }
 <WHILE_>{Separator}*[\[] { /* array */
@@ -1031,13 +1026,13 @@ Separator     {SpaceTab}
              }
 <WHILE_>{Separator}*[\:\=\|\$\%\*\,\/\]\)\}\^] { /* there is an operator after "case" */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               yylval.string = yy_strdup( "WHILE" );
+               yylval.string = hb_strdup( "WHILE" );
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
              }
 <WHILE_>{Separator}*("+="|"-="|"->") { /* operators */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               yylval.string = yy_strdup( "WHILE" );
+               yylval.string = hb_strdup( "WHILE" );
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
                return IDENTIFIER;
@@ -1059,7 +1054,7 @@ Separator     {SpaceTab}
                 }
                 else
                 { /* there is another item in line already */
-                  yylval.string = yy_strdup( "WHILE" );
+                  yylval.string = hb_strdup( "WHILE" );
                   hb_comp_iState =IDENTIFIER;
                   return IDENTIFIER;
                 }
@@ -1071,7 +1066,7 @@ Separator     {SpaceTab}
 <WITH_>{Separator}*\n           { /* at the end of line */
                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                 unput( '\n' );
-                yylval.string = yy_strdup( "WITH" );
+                yylval.string = hb_strdup( "WITH" );
                 return IDENTIFIER;
               }
 <WITH_>{Separator}*"with"       {
@@ -1080,7 +1075,7 @@ Separator     {SpaceTab}
                 if( hb_comp_iState == DO )
                 { /* DO with */
                   hb_comp_iState =IDENTIFIER;
-                  yylval.string = yy_strdup( "WITH" );
+                  yylval.string = hb_strdup( "WITH" );
                   return IDENTIFIER;
                 }
                 else
@@ -1103,7 +1098,7 @@ Separator     {SpaceTab}
                 }
                 else
                 {
-                  yylval.string = yy_strdup( "WITH" );
+                  yylval.string = hb_strdup( "WITH" );
                   hb_comp_iState =IDENTIFIER;
                   return IDENTIFIER;
                 }
@@ -1152,7 +1147,7 @@ Separator     {SpaceTab}
 [\(]           ++_iOpenBracket; hb_comp_iState =SEPARATOR; return yytext[ 0 ];
 [\)]           --_iOpenBracket; hb_comp_iState =SEPARATOR; return yytext[ 0 ];
 
-{InvalidNumber} BEGIN INVALIDNUM_; yylval.string = yy_strupr( yy_strdup( yytext ) );
+{InvalidNumber} BEGIN INVALIDNUM_; yylval.string = hb_strupr( hb_strdup( yytext ) );
 <INVALIDNUM_>("."|{Separator}+) {
                    hb_compGenError( hb_comp_szErrors, 'E', ERR_NUMERIC_FORMAT, NULL, NULL );
                  }
@@ -1167,7 +1162,7 @@ Separator     {SpaceTab}
 
 {Number}       { return yy_ConvertNumber( yytext ); }
 
-{HexNumber}   {  
+{HexNumber}   {
                 long lNumber = 0;
 
                  sscanf( yytext, "%lxI", &lNumber );
@@ -1220,8 +1215,8 @@ Separator     {SpaceTab}
                      yytext[ 10 ] = 0;
                      yyleng = 10;
                   }
-                  yylval.string = yy_strupr( yy_strdup( yytext ) );
-                  /*printf( "\nIdentifier = '%s'\n", yy_strupr( yy_strdup( yytext ) ) );*/
+                  yylval.string = hb_strupr( hb_strdup( yytext ) );
+                  /*printf( "\nIdentifier = '%s'\n", hb_strupr( hb_strdup( yytext ) ) );*/
                   hb_comp_iState = IDENTIFIER;
                   return IDENTIFIER;
                }
@@ -1276,7 +1271,7 @@ Separator     {SpaceTab}
                                  yytext[ 10 ] = 0;
                                  yyleng = 10;
                               }
-                              yylval.string = yy_strupr( yy_strdup( yytext ) );
+                              yylval.string = hb_strupr( hb_strdup( yytext ) );
                               hb_comp_iState =IDENTIFIER;
                               return IDENTIFIER;
                            }

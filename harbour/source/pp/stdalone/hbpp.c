@@ -89,7 +89,7 @@ int main( int argc, char * argv[] )
             case 'D':   /* defines a #define from the command line */
               {
                 i = 0;
-                szDefText = hb_pp_strodup( argv[ iArg ] + 2 );
+                szDefText = hb_strdup( argv[ iArg ] + 2 );
                 while( i < strlen( szDefText ) && szDefText[ i ] != '=' )
                   i++;
                 if( szDefText[ i ] != '=' )
@@ -182,7 +182,7 @@ int main( int argc, char * argv[] )
         char * pPath;
         char * pDelim;
 
-        pPath = szInclude = hb_pp_strodup( szInclude );
+        pPath = szInclude = hb_strdup( szInclude );
         while( ( pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR ) ) != NULL )
           {
             *pDelim = '\0';

@@ -182,10 +182,6 @@ typedef struct HB_EXPR_
 } HB_EXPR, *HB_EXPR_PTR;
 
 
-char * yy_strdup( char * p );  /* this will exit if there is not enough memory */
-char * yy_strupr( char * p );
-
-
 #define VS_LOCAL      1
 #define VS_STATIC     2
 #define VS_FIELD      4

@@ -1,3 +1,21 @@
+19991122-16:12 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/common/hbstr.c
+    include/extend.h
+    + hb_strdup() function added.
+    + hb_strupr() corrected to return a pointer.
+  * source/pp/hbpp.c
+    source/pp/stdalone/hbpp.c
+    include/hbpp.h
+    % hb_pp_strodup() -> hb_strdup()
+    - hb_pp_strodup() removed.
+  * source/compiler/harbour.*
+    source/compiler/genc.c
+    include/compiler.h
+    % yy_strupr() -> hb_strupr()
+    % yy_strdup() -> hb_strdup()
+    - Removed redundant function declarations (yy_*, hb_x*())
+    - yy_strdup(), yy_strupr() removed.
+
 19991122-15:03 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/pp/hbppint.c
     ! .PPO file generation fixed (/p was not working since yesterday).

@@ -105,7 +105,7 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
    /* writes the symbol table */
    /* Generate the wrapper that will initialize local symbol table
     */
-   yy_strupr( pFileName->szName );
+   hb_strupr( pFileName->szName );
    fprintf( yyc, "\n\nHB_INIT_SYMBOLS_BEGIN( hb_vm_SymbolInit_%s%s )\n", hb_comp_szPrefix, pFileName->szName );
 
    if( ! hb_comp_bStartProc )

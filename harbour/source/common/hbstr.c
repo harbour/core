@@ -63,10 +63,28 @@ ULONG hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG u
       return 0;
 }
 
-void hb_strupr( char * szText )
+char * hb_strupr( char * pszText )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_strupr(%s)", szText));
+   char * pszPos;
 
-   for(; *szText; szText++ )
-      *szText = toupper( *szText );
+   HB_TRACE(HB_TR_DEBUG, ("hb_strupr(%s)", pszText));
+
+   for( pszPos = pszText; *pszPos; pszPos++ )
+      *pszPos = toupper( *pszPos );
+
+   return pszText;
+}
+
+char * hb_strdup( const char * pszText )
+{
+   char * pszDup;
+   int iLen;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_strdup(%s)", pszText));
+
+   iLen = strlen( pszText ) + 1;
+   pszDup = ( char * ) hb_xgrab( iLen );
+   memcpy( pszDup, pszText, iLen );
+
+   return pszDup;
 }
