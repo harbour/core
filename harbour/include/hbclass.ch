@@ -571,12 +571,17 @@ DECLARE TClass ;
 #ifndef HB_SHORTNAMES
 
 #xcommand METHOD <MethodName>                   => METHOD <MethodName>                       _CLASS_MODE_
-#xcommand METHOD <MethodName> CLASS <ClassName> => METHOD <MethodName> DECLCLASS <ClassName> _CLASS_IMPLEMENTATION_
 
-#ifdef NO_OO_ERR
+#ifdef HB_CLS_NO_OO_ERR
+
+   #xcommand METHOD <MethodName> CLASS <ClassName> => METHOD <MethodName>     CLASS <ClassName> _CLASS_IMPLEMENTATION_
+
    #xcommand METHOD <MethodName>                      _CLASS_IMPLEMENTATION_ => DECLARED METHOD _CLASS_NAME_ <MethodName>
    #xcommand METHOD <MethodName> CLASS <ClassName>    _CLASS_IMPLEMENTATION_ => DECLARED METHOD <ClassName> <MethodName>
 #else
+
+   #xcommand METHOD <MethodName> CLASS <ClassName> => METHOD <MethodName> DECLCLASS <ClassName> _CLASS_IMPLEMENTATION_
+
    //#define STRICT_OO
    #ifdef STRICT_OO
       #xcommand METHOD <MethodName>                   _CLASS_IMPLEMENTATION_ => __ERR(Method <"MethodName"> not declared or declaration mismatch in class: _CLASS_NAME_) ; function <MethodName> ; local self := QSelf()
