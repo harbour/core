@@ -3895,6 +3895,7 @@ void hb_vmPushString( char * szText, ULONG length )
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushString(%s, %lu)", szText, length));
 
    pStackTopItem->type = HB_IT_STRING;
+   pStackTopItem->item.asString.length = length;
    if( length < sizeof(USHORT*) )
    {
       ULONG i = 0;
@@ -3910,7 +3911,6 @@ void hb_vmPushString( char * szText, ULONG length )
       hb_xmemcpy( szTemp, szText, length );
       szTemp[ length ] = '\0';
 
-      pStackTopItem->item.asString.length = length;
       pStackTopItem->item.asString.value  = szTemp;
       pStackTopItem->item.asString.bStatic = 0;
       pStackTopItem->item.asString.u.puiHolders = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
