@@ -358,7 +358,6 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 #ifdef HB_FM_STATISTICS
    if( s_lMemoryBlocks || hb_cmdargCheck( "INFO" ) )
    {
-      PHB_MEMINFO pMemBlock = s_pFirstBlock;
       char buffer[ 100 ];
 
       hb_outerr( hb_consoleGetNewLine(), 0 );
@@ -374,8 +373,9 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
          hb_outerr( buffer, 0 );
       }
 
-      if( pMemBlock )
+      if( s_pFirstBlock )
       {
+         PHB_MEMINFO pMemBlock = s_pFirstBlock;
          USHORT ui = 1;
 
          do
