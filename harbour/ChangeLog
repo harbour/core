@@ -8,6 +8,24 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-09-19 00:35 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * source/rdd/dbfcdx/dbfcdx2.h
+   * source/rdd/dbfcdx/dbfcdx1.c
+        + added function hb_cdxGetTagNumber
+        ! fixed some castings and warnings reported by
+          Larry Sevilla, Luiz and Andy.
+        ! fixed controlling order after ordCreate()
+        ! fixed controlling order after ordListAdd()
+          This fixes the controlling order after:
+          USE name INDEX name
+          SET INDEX TO name
+          INDEX ON key TAG tagname
+   * source/rdd/dbcmd.c
+        ! fix gpf in pack, reported by Jorge Mason.
+   * source/rdd/dbf1.c
+        + added support for DBI_FULLPATH and DBI_SHARED,
+          sent by Gianluca Piemonte.
+
 2002-09-18 16:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * source/rdd/dbfcdx/dbfcdx1.c
     ! Replaced non-existent _SORTSWAPPAGE used in hb_xgrab() type
