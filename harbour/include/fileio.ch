@@ -80,13 +80,13 @@
 #define FS_END        0x0002   /* Seek from end of file          */
 
 /* File mode flags */
-#define FD_BINARY          1   /* Binary mode (raw)  */
-#define FD_RAW             1
-#define FD_COOKED          2   /* Test mode (cooked) */
-#define FD_TEXT            2
-#define FD_ASCII           2
+#define FD_BINARY     1        /* Binary mode (raw)  */
+#define FD_RAW        1
+#define FD_TEXT       2        /* Text mode (cooked) */
+#define FD_COOKED     2
+#define FD_ASCII      2
 
 /* File system error codes */
-#define F_ERROR      ( -1 )   /* Unspecified error */
+#define F_ERROR       ( -1 )   /* Unspecified error */
 
 #endif /* _FILEIO_CH */
