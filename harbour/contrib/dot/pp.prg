@@ -157,7 +157,7 @@ STATIC nIfDef := 0, abIfDef := {}
 
 STATIC hPP := NIL
 
-STATIC asPaths := {}
+STATIC s_asPaths := {}
 
 STATIC s_cLastChar := ' '
 
@@ -174,13 +174,15 @@ PROCEDURE Main( sSource, sSwitch )
       IF ! ( Right( sPath, 1 ) $ '\/' )
          sPath += '\'
       ENDIF
-      aAdd( asPaths, sPath )
+      aAdd( s_asPaths, sPath )
       sIncludePath := SubStr( sIncludePath, nNext + 1 )
    ENDDO
-   IF ! ( Right( sIncludePath, 1 ) $ '\/' )
-      sIncludePath += '\'
+   IF ! ( sIncludePath == '' )
+      IF ! ( Right( sIncludePath, 1 ) $ '\/' )
+         sIncludePath += '\'
+      ENDIF
+      aAdd( s_asPaths, sIncludePath )
    ENDIF
-   aAdd( asPaths, sIncludePath )
 
    IF sSwitch == NIL
       sSwitch := ''
@@ -236,7 +238,9 @@ PROCEDURE RP_Dot()
       SET CURSOR ON
       READ
 
-      sPPed := ProcessLine( DropTrailingWS( StrTran( sLine,  Chr(9), "    " ) ), 1, '' )
+      sLine := StrTran( sLine,  Chr(9), "  " )
+
+      sPPed := ProcessLine( sLine, 1, '' )
 
       ExtractLeadingWS( @sPPed )
       DropTrailingWS( @sPPed )
@@ -278,7 +282,7 @@ PROCEDURE RP_Dot()
 
             bBlock := &( "{|| " + sBlock + " }" )
             Eval( bBlock )
-            sTemp  := DropTrailingWS( SubStr( sTemp, nNext + 1 ) )
+            sTemp  := RTrim( SubStr( sTemp, nNext + 1 ) )
             ExtractLeadingWS( @sTemp )
          ENDDO
 
@@ -325,18 +329,18 @@ PROCEDURE RP_Dot()
 
 RETURN
 
-FUNCTION RP_Dot_Err()
+PROCEDURE RP_Dot_Err()
 
    Alert( "Sorry, could not execute last request." )
    BREAK
 
-RETURN NIL
+//RETURN // Unreacable code
 
 FUNCTION ProcessFile( sSource, sSwitch )
 
-   LOCAL hSource, sBuffer, sLine, nPosition, nNewLineAt, sExt, cPrev
+   LOCAL hSource, sBuffer, sLine, nPosition, sExt, cPrev
    LOCAL nLen, nMaxPos, cChar := '', nClose, nBase, nNext, nLine := 0
-   LOCAL sRight, nPath := 0, nPaths := Len( asPaths ), nNewLine, bBlanks := .T.
+   LOCAL sRight, nPath := 0, nPaths := Len( s_asPaths ), nNewLine, bBlanks := .T.
    LOCAL sPath := "", cError
 
    IF At( '.', sSource ) == 0
@@ -344,10 +348,10 @@ FUNCTION ProcessFile( sSource, sSwitch )
    ENDIF
 
    hSource := FOpen( sSource, 0 )
-   IF hPP != NIL
+   IF hSource == -1
       nPath := 1
       WHILE hSource == -1 .AND. nPath <= nPaths
-          hSource := FOpen( asPaths[nPath] + sSource, 0 )
+          hSource := FOpen( s_asPaths[nPath] + sSource, 0 )
           nPath++
       ENDDO
    ENDIF
@@ -358,7 +362,7 @@ FUNCTION ProcessFile( sSource, sSwitch )
    ENDIF
 
    IF nPath > 1
-      sPath := asPaths[nPath - 1]
+      sPath := s_asPaths[ nPath - 1 ]
    ENDIF
 
    IF hPP == NIL .AND. ProcName(1) == "MAIN"
@@ -772,8 +776,8 @@ FUNCTION ProcessFile( sSource, sSwitch )
    //WAIT
 
    sLine += SubStr( sBuffer, nPosition, Max( 0, ( nMaxPos + 2 ) - nPosition ) )
-   sLine := StrTran( sLine, Chr(09), '   ' )
-   sLine := RTrim( sLine )
+   sLine := StrTran( sLine, Chr(09), "   " )
+   DropTrailingWS( @sLine )
    sLine := StrTran( sLine, Chr(10), '' )
    sLine := StrTran( sLine, Chr(13), '' )
    sLine := StrTran( sLine, Chr(28), '' )
@@ -819,10 +823,9 @@ RETURN .T.
 FUNCTION ProcessLine( sLine, nLine, sSource )
 
    LOCAL sDirective, bX, sToken, nRule
-   LOCAL nNewLineAt, aLines, nLines, Counter
-   LOCAL sLeft, sPassed := '', asOutLines := {}, sOut := ''
-   LOCAL cChar, cFirstChar, cLastChar
-   LOCAL bString, nLen, iCycles, aDefined := {}, aTranslated := {}, aCommanded := {}
+   LOCAL nNewLineAt, nLines, Counter
+   LOCAL sLeft, sPassed := '', asOutLines := {}, sOut := '', cChar
+   LOCAL nLen, iCycles, aDefined := {}, aTranslated := {}, aCommanded := {}
 
    WHILE .T.
 
@@ -831,7 +834,7 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
       //WAIT
 
       IF ! sPassed == ''
-         aAdd( asOutLines, ( sLeft + DropTrailingWS( sPassed ) ) )
+         aAdd( asOutLines, ( sLeft + RTrim( sPassed ) ) )
          sPassed := ''
          //? "Pending Out: '" + aTail( asOutLines ) + "'"
          //WAIT
@@ -952,6 +955,9 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
 
             ExtractLeadingWS( @sLine )
             DropTrailingWS( @sLine )
+
+            // Strip the ""
+            sLine := SubStr( sLine, 2, Len( sLine ) - 2 )
 
             ProcessFile( sLine ) // Intentionally not using s_sIncludeFile
 
@@ -1187,9 +1193,9 @@ RETURN sOut
 
 FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
 
-   LOCAL Counter, nRules, sCommand, nRule, aMarkers, xMarker
+   LOCAL Counter, nRules, nRule, aMarkers, xMarker
    LOCAL aMP, nOptional := 0, sAnchor, cType, aList, nMarkerId, nKeyLen
-   LOCAL sToken, sWorkLine, sNextExp, sNextAnchor, nMatch, nMatches
+   LOCAL sToken, sWorkLine, sNextAnchor, nMatch, nMatches
    LOCAL sPad, asRevert := {}, bNext, sPreMatch, nLen, nBookMark
    LOCAL sPrimaryStopper, sPreStoppers, sStopper, sMultiStopper, nStopper, nStoppers
    LOCAL nSpaceAt, sStopLine, sNextStopper, nTemp
@@ -1203,10 +1209,9 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
    nRule    := nRules + 1
    sPad     := ''
 
+   DropTrailingWS( @sKey, @sPad )
    IF bUpper
-      sKey  := Upper( DropTrailingWS( sKey, @sPad ) )
-   ELSE
-      DropTrailingWS( @sKey, @sPad )
+      sKey  := Upper( sKey )
    ENDIF
 
    IF bDbgMatch
@@ -1355,7 +1360,7 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                   sWorkLine := sPreStoppers
 
                ELSE
-                  sPrimaryStopper := Upper( DropTrailingWS( sPrimaryStopper ) )
+                  sPrimaryStopper := Upper( RTrim( sPrimaryStopper ) )
 
                   /* Is it a stopper (the anchor of another acceptable match) ? */
                   IF bDbgMatch
@@ -1385,7 +1390,7 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                            sStopper      := SubStr( sStopper, nSpaceAt )
                            sMultiStopper += ExtractLeadingWS( @sStopper )
                            sToken        := NextToken( @sStopLine, .F. )
-                           sToken        := Upper( DropTrailingWS( sToken ) )
+                           sToken        := Upper( RTrim( sToken ) )
                         ELSE
                            EXIT
                         ENDIF
@@ -1888,7 +1893,7 @@ RETURN 0
 
 FUNCTION NextToken( sLine, bCheckRules )
 
-  LOCAL  sReturn := NIL, cChar, Counter, nLen, sPad, nClose, sLeft2Chars := Left( sLine, 2 )
+  LOCAL  sReturn := NIL, cChar, Counter, nLen, nClose, sLeft2Chars := Left( sLine, 2 )
 
   //? bCheckRules, "Called from: " + ProcName(1) + " Line: " + Str( ProcLine(1) ) + " Scaning: " + sLine
 
@@ -2114,7 +2119,7 @@ RETURN sReturn
 
 FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
 
-  LOCAL sExp, nClose, cChar, sTemp, Counter, sWorkLine, sPad, sToken, sGrabber
+  LOCAL sExp, cChar, sTemp, Counter, sWorkLine, sPad, sToken, sGrabber
 
   //? ProcName(1), ProcLine(1), cType, sLine
 
@@ -2909,7 +2914,7 @@ RETURN sResult
 FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
 
    LOCAL nNext, sKey, sAnchor := NIL, nOptional := 0, cType := NIL, nId := 0, aRule := NIL, aMatch, aWords := NIL
-   LOCAL aTemp, nOptionalAt, nMarkerAt, aMarkers := {}, Counter, nType, aResult := {}, sTemp, aModifiers, aValues
+   LOCAL nOptionalAt, nMarkerAt, aMarkers := {}, Counter, nType, aResult := {}, sTemp, aModifiers, aValues
    LOCAL aRP, nAt, sResult, nCloseAt, sMarker, nCloseOptionalAt, sPad, nResults, nMarker, nMP, nMatches, nOffset
    LOCAL nWord, nWords, cChar
 
@@ -3216,7 +3221,7 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
             cType   := NIL
          ENDIF
 
-         sAnchor := Upper( DropTrailingWS( NextToken( @sRule, .F. ) ) )
+         sAnchor := Upper( RTrim( NextToken( @sRule, .F. ) ) )
          LOOP
 
       ELSE
@@ -3968,7 +3973,7 @@ RETURN nId
 FUNCTION CompileDefine( sRule )
 
    LOCAL sKey, sResult, aRule, nCloseAt, nId, sMarker, nCommaAt, aMP
-   LOCAL nNext, sToken, aRPs, sAnchor, aMarkers := {}, aResult, nMarkers
+   LOCAL sToken, aRPs, sAnchor, aMarkers := {}, aResult
 
    ExtractLeadingWS( @sRule )
 
@@ -4170,7 +4175,8 @@ FUNCTION DropExtraTrailingWS( sLine )
 
    //? "Before Extra: '" + sLine + "'"
 
-   WHILE nLen > 2 .AND. ( SubStr( sLine, nLen, 1 ) == ' ' /* $ ( ' ' + Chr(9) ) */ ) .AND. ( SubStr( sLine, nLen - 1, 1 ) == ' ' ) //$ ( ' ' + Chr(9) ) )
+   WHILE nLen > 2 .AND. ( SubStr( sLine, nLen, 1 ) == ' ' /* $ ( ' ' + Chr(9) ) */ ) .AND. ;
+                        ( SubStr( sLine, nLen - 1, 1 ) == ' ' ) //$ ( ' ' + Chr(9) ) )
       nLen--
    ENDDO
 

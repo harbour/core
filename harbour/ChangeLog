@@ -1,18 +1,23 @@
+2001-01-09 10:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     * Fixed bug with #include and INCLUDE Env Var processing.
+     % Removed some unused vars.
+
 2001-01-09 16:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rdd/workarea.c
         *codeblocks used in SET LOCATE are properly locked/unlocked
-        to prevent deallocation by the GC 
+        to prevent deallocation by the GC
         (thanks to shashkov@orel.ru)
-        
+
     *source/vm/macro.c
         *fixed bug in hb_macroTextSubst() (result buffer reallocation)
         (thanks to shashkov@orel.ru)
-        
+
     *source/vm/memvars.c
         *fixed access of uninitialized memvar values
         (thanks to shashkov@orel.ru)
-    
+
 
 2001-01-08 17:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/ppcore.c
