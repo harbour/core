@@ -59,14 +59,14 @@ static void GenerateSymbolsSegment( FILE * hObjFile );
 static void GenerateDataSegment( FILE * hObjFile );
 static void GenerateCodeSegment( FILE * hObjFile );
 static void GenerateExternals( FILE * hObjFile );
-static void putbyte( BYTE b, FILE * hObjFile );
-static void putword( USHORT w, FILE * hObjFile );
+static void putbyte( BYTE b, FILE * hObjFile, BYTE * pbChecksum );
+static void putword( USHORT w, FILE * hObjFile, BYTE * pbChecksum );
 static void CompiledFileName( FILE * hObjFile, char * szFileName );
 static void CompilerVersion( FILE * hObjFile, char * szVersion );
 static void LocalNames( FILE * hObjFile, char * szNames[] );
 static void ExternalNames( FILE * hObjFile, char * szNames[] );
 static void CodeSegment( FILE * hObjFile, BYTE * prgCode, ULONG ulPrgLen, USHORT wFunctions );
-static void DataSegment( FILE * hObjFile, BYTE * symbol, USHORT wSymLen, USHORT wSymbols, ULONG ulTotalSize );
+static void DataSegment( FILE * hObjFile, BYTE * symbol, ULONG wSymLen, ULONG wSymbols, ULONG ulTotalSize );
 static void DefineSegment( FILE * hObjFile, BYTE bName, BYTE bClass, USHORT wLen );
 static void PubDef( FILE * hObjFile, char * szName, USHORT wSegment, USHORT wOffset );
 static void Fixup( FILE * hObjFile, BYTE bType, USHORT wOffset, BYTE bFlags, BYTE bSymbol );
@@ -90,7 +90,7 @@ void hb_compGenObj32( PHB_FNAME pFileName )
     pFileName->szExtension = ".obj";
   hb_fsFNameMerge( szFileName, pFileName );
 
-  if( ! ( hObjFile = fopen( szFileName, "wb" ) ) )
+  if( ( hObjFile = fopen( szFileName, "wb" ) ) == NULL )
     {
       hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_CREATE_OUTPUT, szFileName, NULL );
       return;
@@ -332,7 +332,7 @@ static void GenerateExternals( FILE * hObjFile )
   pFunc = hb_comp_funcalls.pFirst;
   while( pFunc )
     {
-      if( ! ( pFTemp = hb_compFunctionFind( pFunc->szName ) ) || pFTemp == hb_comp_functions.pFirst )
+      if( ( pFTemp = hb_compFunctionFind( pFunc->szName ) ) == NULL || pFTemp == hb_comp_functions.pFirst )
         wExternals++;
       pFunc = pFunc->pNext;
     }
@@ -345,7 +345,7 @@ static void GenerateExternals( FILE * hObjFile )
       pFunc = hb_comp_funcalls.pFirst;
       while( pFunc )
         {
-          if( ! ( pFTemp = hb_compFunctionFind( pFunc->szName ) ) || pFTemp == hb_comp_functions.pFirst )
+          if( ( pFTemp = hb_compFunctionFind( pFunc->szName ) ) == NULL || pFTemp == hb_comp_functions.pFirst )
             externNames[ w++ ] = pFunc->szName;
           pFunc = pFunc->pNext;
         }
@@ -354,15 +354,16 @@ static void GenerateExternals( FILE * hObjFile )
     }
 }
 
-static void putbyte( BYTE b, FILE * hObjFile )
+static void putbyte( BYTE b, FILE * hObjFile, BYTE * pbChecksum )
 {
   fputc( b, hObjFile );
+  * pbChecksum += b;
 }
 
-static void putword( USHORT w, FILE * hObjFile )
+static void putword( USHORT w, FILE * hObjFile, BYTE * pbChecksum )
 {
-  putbyte( HB_LOBYTE( w ), hObjFile );
-  putbyte( HB_HIBYTE( w ), hObjFile );
+  putbyte( HB_LOBYTE( w ), hObjFile, pbChecksum );
+  putbyte( HB_HIBYTE( w ), hObjFile, pbChecksum );
 }
 
 static void CompiledFileName( FILE * hObjFile, char * szFileName )
@@ -371,23 +372,16 @@ static void CompiledFileName( FILE * hObjFile, char * szFileName )
   BYTE bChk = 0; /* this is a checksum the linker will check to asure OBJ integrity */
   BYTE bChar;
 
-  putbyte( 0x80, hObjFile );  /* this tells the linker the kind of OBJ record this is */
-  bChk += 0x80;
+  putbyte( 0x80, hObjFile, &bChk );  /* this tells the linker the kind of OBJ record this is */
+  putbyte( 1 + 1 + wLen, hObjFile, &bChk ); /* now it comes the total length of this OBJ record */
+  putbyte( 0, hObjFile, &bChk );
 
-  putbyte( 1 + 1 + wLen, hObjFile ); /* now it comes the total length of this OBJ record */
-  bChk += ( 1 + 1 + wLen );
-  putbyte( 0, hObjFile );
-
-  putbyte( wLen, hObjFile );     /* szFileName length */
-  bChk += wLen;
+  putbyte( wLen, hObjFile, &bChk );     /* szFileName length */
 
   while( (bChar = * szFileName++) )
-    {
-      putbyte( bChar, hObjFile );   /* each of the szFileName characters */
-      bChk += bChar;
-    }
+      putbyte( bChar, hObjFile, &bChk );   /* each of the szFileName characters */
 
-  putbyte( 256 - bChk, hObjFile ); /* a checksum that will be recalculated by the linker */
+  putbyte( 256 - bChk, hObjFile, &bChk ); /* a checksum that will be recalculated by the linker */
 }
 
 static void CompilerVersion( FILE * hObjFile, char * szVersion )
@@ -396,22 +390,14 @@ static void CompilerVersion( FILE * hObjFile, char * szVersion )
   BYTE bChk = 0; /* this is a checksum the linker will check to asure OBJ integrity */
   BYTE bChar;
 
-  putbyte( 0x88, hObjFile );  /* this tells the linker the kind of OBJ record this is */
-  bChk += 0x88;
+  putbyte( 0x88, hObjFile, &bChk );  /* this tells the linker the kind of OBJ record this is */
+  putword( 3 + wLen, hObjFile, &bChk ); /* now it comes the total length of this OBJ record */
+  putword( 0, hObjFile, &bChk );
 
-  putword( 3 + wLen, hObjFile ); /* now it comes the total length of this OBJ record */
-  bChk += HB_LOBYTE( 3 + wLen );
-  bChk += HB_HIBYTE( 3 + wLen );
+  while( ( bChar = * szVersion++ ) )
+      putbyte( bChar, hObjFile, &bChk );   /* each of the szFileName characters */
 
-  putword( 0, hObjFile );
-
-  while( (bChar = * szVersion++) )
-    {
-      putbyte( bChar, hObjFile );   /* each of the szFileName characters */
-      bChk += bChar;
-    }
-
-  putbyte( 256 - bChk, hObjFile ); /* a checksum that will be recalculated by the linker */
+  putbyte( 256 - bChk, hObjFile, &bChk ); /* a checksum that will be recalculated by the linker */
 }
 
 static void LocalNames( FILE * hObjFile, char * szNames[] )
@@ -424,31 +410,21 @@ static void LocalNames( FILE * hObjFile, char * szNames[] )
     wTotalLen += strlen( szNames[ b++ ] );
   wTotalLen += 2 + b;
 
-  putbyte( 0x96, hObjFile );
-  bChk += 0x96;
-
-  putbyte( HB_LOBYTE( wTotalLen ), hObjFile );
-  bChk += HB_LOBYTE( wTotalLen );
-  putbyte( HB_HIBYTE( wTotalLen ), hObjFile );
-  bChk += HB_HIBYTE( wTotalLen );
-
-  putbyte( 0, hObjFile );
+  putbyte( 0x96, hObjFile, &bChk );
+  putword( wTotalLen, hObjFile, &bChk );
+  putbyte( 0, hObjFile, &bChk );
 
   b = 0;
   while( szNames[ b ] )
     {
-      putbyte( strlen( szNames[ b ] ), hObjFile );
-      bChk += strlen( szNames[ b ] );
+      putbyte( strlen( szNames[ b ] ), hObjFile, &bChk );
 
       c = 0;
       while( szNames[ b ][ c ] )
-        {
-          putbyte( szNames[ b ][ c ], hObjFile );
-          bChk += szNames[ b ][ c++ ];
-        }
+          putbyte( szNames[ b ][ c++ ], hObjFile, &bChk );
       b++;
     }
-  putbyte( 256 - bChk, hObjFile );
+  putbyte( 256 - bChk, hObjFile, &bChk );
 }
 
 static void ExternalNames( FILE * hObjFile, char * szNames[] )
@@ -466,53 +442,37 @@ static void ExternalNames( FILE * hObjFile, char * szNames[] )
   }
   wTotalLen += 2 + b - 1;
 
-  putbyte( 0x8C, hObjFile );
-  bChk += 0x8C;
-
-  putword( wTotalLen, hObjFile );
-  bChk += HB_LOBYTE( wTotalLen );
-  bChk += HB_HIBYTE( wTotalLen );
+  putbyte( 0x8C, hObjFile, &bChk );
+  putword( wTotalLen, hObjFile, &bChk );
 
   b = 0;
   while( szNames[ b ] )
     {
       if( b == 0 )
-      {
-         putbyte( strlen( szNames[ b ] ), hObjFile );
-         bChk += strlen( szNames[ b ] );
-      }
+         putbyte( strlen( szNames[ b ] ), hObjFile, &bChk );
       else
-      {
-         putbyte( strlen( szPrefix ) + strlen( szNames[ b ] ), hObjFile );
-         bChk += strlen( szPrefix ) + strlen( szNames[ b ] );
-      }
+         putbyte( strlen( szPrefix ) + strlen( szNames[ b ] ), hObjFile, &bChk );
 
       c = 0;
 
       if( b > 0 )
       {
          while( szPrefix[ c ] )
-         {
-            putbyte( szPrefix[ c ], hObjFile );
-            bChk += szPrefix[ c++ ];
-         }
+            putbyte( szPrefix[ c++ ], hObjFile, &bChk );
          c = 0;
       }
 
       while( szNames[ b ][ c ] )
-        {
-          putbyte( szNames[ b ][ c ], hObjFile );
-          bChk += szNames[ b ][ c++ ];
-        }
-      putbyte( 0, hObjFile );
+          putbyte( szNames[ b ][ c++ ], hObjFile, &bChk );
+      putbyte( 0, hObjFile, &bChk );
       b++;
     }
-  putbyte( 256 - bChk, hObjFile );
+  putbyte( 256 - bChk, hObjFile, &bChk );
 }
 
 static void CodeSegment( FILE * hObjFile, BYTE * prgCode, ULONG ulPrgLen, USHORT wFunctions )
 {
-  BYTE bCheckSum = 0;
+  BYTE bChk = 0;
   USHORT y;
   USHORT wTotalLen = ( ulPrgLen * wFunctions ) + 4;
   ULONG ul;
@@ -522,26 +482,16 @@ static void CodeSegment( FILE * hObjFile, BYTE * prgCode, ULONG ulPrgLen, USHORT
   if( ! hb_comp_bStartProc )
     pFunction = pFunction->pNext;
 
-  putbyte( 0xA0, hObjFile );
-  bCheckSum += 0xA0;
-
-  putword( wTotalLen, hObjFile );
-  bCheckSum += HB_LOBYTE( wTotalLen );
-  bCheckSum += HB_HIBYTE( wTotalLen );
-
-  putbyte( 1, hObjFile ); /* 1 = _TEXT segment */
-  bCheckSum += 1;
-
-  putword( 0, hObjFile ); /* 0 = offset */
+  putbyte( 0xA0, hObjFile, &bChk );
+  putword( wTotalLen, hObjFile, &bChk );
+  putbyte( 1, hObjFile, &bChk ); /* 1 = _TEXT segment */
+  putword( 0, hObjFile, &bChk ); /* 0 = offset */
 
   for( y = 0; y < wFunctions; y++ )
     {
       * ( ULONG * ) &prgCode[ 6 ] = ulPCodeOffset; /* function pcode offset */
       for( ul = 0; ul < ulPrgLen; ul++ )
-        {
-          putbyte( * ( prgCode + ul ), hObjFile );
-          bCheckSum += * ( prgCode + ul );
-        }
+          putbyte( * ( prgCode + ul ), hObjFile, &bChk );
       ulPCodeOffset += pFunction->lPCodePos; //  + 1; /* HB_P_ENDPROC !!! */
 
       if( ! ( GetFunctionLocalsCount( pFunction ) || pFunction->wParamCount ) )
@@ -553,14 +503,14 @@ static void CodeSegment( FILE * hObjFile, BYTE * prgCode, ULONG ulPrgLen, USHORT
       pFunction = pFunction->pNext;
     }
 
-  putbyte( 256 - bCheckSum, hObjFile );
+  putbyte( 256 - bChk, hObjFile, &bChk );
 }
 
-static void DataSegment( FILE * hObjFile, BYTE * symbol, USHORT wSymLen, USHORT wSymbols,
+static void DataSegment( FILE * hObjFile, BYTE * symbol, ULONG wSymLen, ULONG wSymbols,
                          ULONG ulSize )
 {
-  BYTE bCheckSum = 0;
-  USHORT w, y;
+  BYTE bChk = 0;
+  ULONG w, y;
   USHORT wTotalLen = 4 + ulSize;
   PCOMSYMBOL pSymbol = GetFirstSymbol();
   PFUNCTION pFunction = hb_comp_functions.pFirst;
@@ -570,17 +520,10 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, USHORT wSymLen, USHORT 
   if( ! hb_comp_bStartProc )
     pFunction = pFunction->pNext;
 
-  putbyte( 0xA0, hObjFile );
-  bCheckSum += 0xA0;
-
-  putword( wTotalLen, hObjFile );
-  bCheckSum += HB_LOBYTE( wTotalLen );
-  bCheckSum += HB_HIBYTE( wTotalLen );
-
-  putbyte( 2, hObjFile ); /* 2 = _DATA segment */
-  bCheckSum += 2;
-
-  putword( 0, hObjFile ); /* 0 = offset */
+  putbyte( 0xA0, hObjFile, &bChk );
+  putword( wTotalLen, hObjFile, &bChk );
+  putbyte( 2, hObjFile, &bChk ); /* 2 = _DATA segment */
+  putword( 0, hObjFile, &bChk ); /* 0 = offset */
 
   for( y = 0; y < wSymbols; y++ )
     {
@@ -601,10 +544,7 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, USHORT wSymLen, USHORT 
         symbol[ 4 ] = pSymbol->cScope;
 
       for( w = 0; w < wSymLen; w++ )
-        {
-          putbyte( * ( symbol + w ), hObjFile );
-          bCheckSum += * ( symbol + w );
-        }
+         putbyte( * ( symbol + w ), hObjFile, &bChk );
 
       ulSymbolNameOffset += strlen( pSymbol->szName ) + 1;
       pSymbol = pSymbol->pNext;
@@ -634,12 +574,9 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, USHORT wSymLen, USHORT 
               case HB_P_PUSHSTATIC:
               case HB_P_PUSHSTATICREF:
               {
-                 putbyte( pFunction->pCode[ w ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w ];
-                 putbyte( pFunction->pCode[ w + 1 ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w + 1 ];
-                 putbyte( pFunction->pCode[ w + 2 ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w + 2 ];
+                 putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w + 1 ], hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w + 2 ], hObjFile, &bChk );
                  w += 2;
               }
               break;
@@ -650,30 +587,21 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, USHORT wSymLen, USHORT 
               case HB_P_SEQBEGIN:
               case HB_P_SEQEND:
               {
-                 putbyte( pFunction->pCode[ w ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w ];
-                 putbyte( pFunction->pCode[ w + 1 ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w + 1 ];
-                 putbyte( pFunction->pCode[ w + 2 ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w + 2 ];
-                 putbyte( pFunction->pCode[ w + 3 ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w + 3 ];
+                 putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w + 1 ], hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w + 2 ], hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w + 3 ], hObjFile, &bChk );
                  w += 3;
               }
               break;
 
               case HB_P_PUSHLONG:
               {
-                 putbyte( pFunction->pCode[ w ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w ];
-                 putbyte( pFunction->pCode[ w + 1 ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w + 1 ];
-                 putbyte( pFunction->pCode[ w + 2 ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w + 2 ];
-                 putbyte( pFunction->pCode[ w + 3 ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w + 3 ];
-                 putbyte( pFunction->pCode[ w + 4 ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w + 4 ];
+                 putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w + 1 ], hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w + 2 ], hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w + 3 ], hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w + 4 ], hObjFile, &bChk );
                  w += 4;
               }
               break;
@@ -684,12 +612,9 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, USHORT wSymLen, USHORT 
 
                  if( bLocals || pFunction->wParamCount )
                  {
-                    putbyte( HB_P_FRAME, hObjFile );
-                    bCheckSum += HB_P_FRAME;
-                    putbyte( bLocals - pFunction->wParamCount, hObjFile );
-                    bCheckSum += bLocals - pFunction->wParamCount;
-                    putbyte( pFunction->wParamCount, hObjFile );
-                    bCheckSum += pFunction->wParamCount;
+                    putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
+                    putbyte( bLocals - pFunction->wParamCount, hObjFile, &bChk );
+                    putbyte( pFunction->wParamCount, hObjFile, &bChk );
                  }
                  w += 2;
               }
@@ -702,12 +627,8 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, USHORT wSymLen, USHORT 
                     USHORT wPos;
                     hb_compSymbolFind( hb_comp_pInitFunc->szName, &wPos );
                     wPos = hb_compSymbolFixPos( wPos );
-                    putbyte( HB_P_SFRAME, hObjFile );
-                    bCheckSum += HB_P_SFRAME;
-                    putbyte( HB_LOBYTE( wPos ), hObjFile );
-                    bCheckSum += HB_LOBYTE( wPos );
-                    putbyte( HB_HIBYTE( wPos ), hObjFile );
-                    bCheckSum += HB_HIBYTE( wPos );
+                    putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
+                    putword( wPos, hObjFile, &bChk );
                  }
                  w += 2;
               }
@@ -717,8 +638,7 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, USHORT wSymLen, USHORT 
               {
                  if( w + 1 == pFunction->lPCodePos )
                     bEndProcRequired = FALSE;
-                 putbyte( HB_P_ENDPROC, hObjFile );
-                 bCheckSum += HB_P_ENDPROC;
+                 putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
               }
               break;
 
@@ -739,12 +659,8 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, USHORT wSymLen, USHORT 
                  USHORT wPos = pFunction->pCode[ w + 1 ] +
                                pFunction->pCode[ w + 2 ] * 256;
                  wPos = hb_compSymbolFixPos( wPos );
-                 putbyte( pFunction->pCode[ w ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w ];
-                 putbyte( HB_LOBYTE( wPos ), hObjFile );
-                 bCheckSum += HB_LOBYTE( wPos );
-                 putbyte( HB_HIBYTE( wPos ), hObjFile );
-                 bCheckSum += HB_HIBYTE( wPos );
+                 putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
+                 putword( wPos, hObjFile, &bChk );
                  w += 2;
               }
               break;
@@ -754,16 +670,10 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, USHORT wSymLen, USHORT 
                  USHORT wPos = pFunction->pCode[ w + 1 ] +
                                pFunction->pCode[ w + 2 ] * 256;
                  wPos = hb_compSymbolFixPos( wPos );
-                 putbyte( pFunction->pCode[ w ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w ];
-                 putbyte( HB_LOBYTE( wPos ), hObjFile );
-                 bCheckSum += HB_LOBYTE( wPos );
-                 putbyte( HB_HIBYTE( wPos ), hObjFile );
-                 bCheckSum += HB_HIBYTE( wPos );
-                 putbyte( pFunction->pCode[ w + 3 ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w + 3 ];
-                 putbyte( pFunction->pCode[ w + 4 ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w + 4 ];
+                 putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
+                 putword( wPos, hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w + 3 ], hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w + 4 ], hObjFile, &bChk );
                  w += 4;
               }
               break;
@@ -772,12 +682,8 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, USHORT wSymLen, USHORT 
               {
                  USHORT uLen = pFunction->pCode[ w + 1 ] +
                                pFunction->pCode[ w + 2 ] * 256;
-                 putbyte( HB_P_PUSHSTR, hObjFile );
-                 bCheckSum += HB_P_PUSHSTR;
-                 putbyte( pFunction->pCode[ w + 1 ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w + 1 ];
-                 putbyte( pFunction->pCode[ w + 2 ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w + 2 ];
+                 putbyte( HB_P_PUSHSTR, hObjFile, &bChk );
+                 putword( uLen, hObjFile, &bChk );
                  w += 2;
 
                  if( uLen > 0 )
@@ -785,49 +691,35 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, USHORT wSymLen, USHORT 
                     USHORT u = 0;
 
                     while( u++ < uLen )
-                    {
-                       w++;
-                       putbyte( pFunction->pCode[ w ], hObjFile );
-                       bCheckSum += pFunction->pCode[ w ];
-                    }
+                       putbyte( pFunction->pCode[ ++w ], hObjFile, &bChk );
                  }
               }
               break;
 
               case HB_P_LOCALNAME:
               {
-                 putbyte( HB_P_LOCALNAME, hObjFile );
-                 bCheckSum += HB_P_LOCALNAME;
-                 putbyte( pFunction->pCode[ w + 1 ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w + 1 ];
-                 putbyte( pFunction->pCode[ w + 2 ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w + 2 ];
+                 putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w + 1 ], hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w + 2 ], hObjFile, &bChk );
                  w += 2;
 
                  while( pFunction->pCode[ w + 1 ] )
-                 {
-                    w++;
-                    putbyte( pFunction->pCode[ w ], hObjFile );
-                    bCheckSum += pFunction->pCode[ w ];
-                 }
+                    putbyte( pFunction->pCode[ ++w ], hObjFile, &bChk );
+
                  w++;
-                 putbyte( 0, hObjFile );
+                 putbyte( 0, hObjFile, &bChk );
               }
               break;
 
               case HB_P_MODULENAME:
               {
-                 putbyte( HB_P_MODULENAME, hObjFile );
-                 bCheckSum += HB_P_MODULENAME;
+                 putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
 
                  while( pFunction->pCode[ w + 1 ] )
-                 {
-                    w++;
-                    putbyte( pFunction->pCode[ w ], hObjFile );
-                    bCheckSum += pFunction->pCode[ w ];
-                 }
+                    putbyte( pFunction->pCode[ ++w ], hObjFile, &bChk );
+
                  w++;
-                 putbyte( 0, hObjFile );
+                 putbyte( 0, hObjFile, &bChk );
               }
               break;
 
@@ -836,14 +728,9 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, USHORT wSymLen, USHORT 
                  USHORT wPos = pFunction->pCode[ w + 1 ] +
                                pFunction->pCode[ w + 2 ] * 256;
                  wPos = hb_compSymbolFixPos( wPos );
-                 putbyte( pFunction->pCode[ w ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w ];
-                 putbyte( HB_LOBYTE( wPos ), hObjFile );
-                 bCheckSum += HB_LOBYTE( wPos );
-                 putbyte( HB_HIBYTE( wPos ), hObjFile );
-                 bCheckSum += HB_HIBYTE( wPos );
-                 putbyte( pFunction->pCode[ w + 3 ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w + 3 ];
+                 putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
+                 putword( wPos, hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w + 3 ], hObjFile, &bChk );
                  w += 3;
               }
               break;
@@ -852,29 +739,17 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, USHORT wSymLen, USHORT 
               {
                  USHORT uVars = pFunction->pCode[ w + 5 ] +
                                 pFunction->pCode[ w + 6 ] * 256;
-                 putbyte( pFunction->pCode[ w ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w ];
-                 putbyte( pFunction->pCode[ w + 1 ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w + 1 ];
-                 putbyte( pFunction->pCode[ w + 2 ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w + 2 ];
-                 putbyte( pFunction->pCode[ w + 3 ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w + 3 ];
-                 putbyte( pFunction->pCode[ w + 4 ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w + 4 ];
-                 putbyte( pFunction->pCode[ w + 5 ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w + 5 ];
-                 putbyte( pFunction->pCode[ w + 6 ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w + 6 ];
+                 putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w + 1 ], hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w + 2 ], hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w + 3 ], hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w + 4 ], hObjFile, &bChk );
+                 putword( uVars, hObjFile, &bChk );
                  w += 6;
                  while( uVars-- )
                  {
-                    w++;
-                    putbyte( pFunction->pCode[ w ], hObjFile );
-                    bCheckSum += pFunction->pCode[ w ];
-                    w++;
-                    putbyte( pFunction->pCode[ w ], hObjFile );
-                    bCheckSum += pFunction->pCode[ w ];
+                    putbyte( pFunction->pCode[ ++w ], hObjFile, &bChk );
+                    putbyte( pFunction->pCode[ ++w ], hObjFile, &bChk );
                  }
               }
               break;
@@ -882,73 +757,51 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, USHORT wSymLen, USHORT 
               case HB_P_PUSHDOUBLE:
               {
                  int i = 0;
-                 putbyte( pFunction->pCode[ w ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w ];
+                 putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
                  while( i++ < sizeof( double ) + sizeof( BYTE ) )
-                 {
-                    w++;
-                    putbyte( pFunction->pCode[ w ], hObjFile );
-                    bCheckSum += pFunction->pCode[ w ];
-                 }
+                    putbyte( pFunction->pCode[ ++w ], hObjFile, &bChk );
               }
               break;
 
               default:
-              {
-                 putbyte( pFunction->pCode[ w ], hObjFile );
-                 bCheckSum += pFunction->pCode[ w ];
-              }
+                 putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
            }
         }
       if( bEndProcRequired )
-      {
-         putbyte( HB_P_ENDPROC, hObjFile );
-         bCheckSum += HB_P_ENDPROC;
-      }
+         putbyte( HB_P_ENDPROC, hObjFile, &bChk );
+
       pFunction = pFunction->pNext;
-      bEndProcRequired = TRUE;
     }
 
   pSymbol = GetFirstSymbol();
 
   while( pSymbol )
     {
-      for( w = 0; w < ( USHORT ) strlen( pSymbol->szName ); w++ )
-        {
-          putbyte( pSymbol->szName[ w ], hObjFile );
-          bCheckSum += pSymbol->szName[ w ];
-        }
-      putbyte( 0, hObjFile );
+      for( w = 0; w < strlen( pSymbol->szName ); w++ )
+          putbyte( pSymbol->szName[ w ], hObjFile, &bChk );
+
+      putbyte( 0, hObjFile, &bChk );
       pSymbol = pSymbol->pNext;
     }
 
-  putbyte( 256 - bCheckSum, hObjFile );
+  putbyte( 256 - bChk, hObjFile, &bChk );
 }
 
 static void DefineSegment( FILE * hObjFile, BYTE bName, BYTE bClass, USHORT wLen )
 {
-  BYTE bCheckSum = 0;
+  BYTE bChk = 0;
 
-  putbyte( 0x98, hObjFile );
-  bCheckSum += 0x98;
-  putbyte( 7, hObjFile );         /* SegDef records have always this length */
-  bCheckSum += 7;
-  putbyte( 0, hObjFile );
+  putbyte( 0x98, hObjFile, &bChk );
+  putbyte( 7, hObjFile, &bChk );      /* SegDef records have always this length */
+  putbyte( 0, hObjFile, &bChk );
 
-  putbyte( 0xA9, hObjFile );
-  bCheckSum += 0xA9;
+  putbyte( 0xA9, hObjFile, &bChk );
+  putword( wLen, hObjFile, &bChk );
+  putbyte( bName, hObjFile, &bChk );
+  putbyte( bClass, hObjFile, &bChk );
+  putbyte( 0, hObjFile, &bChk );
 
-  putword( wLen, hObjFile );
-  bCheckSum += HB_LOBYTE( wLen );
-  bCheckSum += HB_HIBYTE( wLen );
-
-  putbyte( bName, hObjFile );
-  bCheckSum += bName;
-  putbyte( bClass, hObjFile );
-  bCheckSum += bClass;
-  putbyte( 0, hObjFile );
-
-  putbyte( 256 - bCheckSum, hObjFile );
+  putbyte( 256 - bChk, hObjFile, &bChk );
 }
 
 static void PubDef( FILE * hObjFile, char * szName, USHORT wSegment, USHORT wOffset )
@@ -958,132 +811,87 @@ static void PubDef( FILE * hObjFile, char * szName, USHORT wSegment, USHORT wOff
   USHORT wLen = 2 + 2 + strlen( szPrefix ) + strlen( szName ) + 2 + 1;
   char * szTemp;
 
-  putbyte( 0x90, hObjFile );
-  bChk += 0x90;
-
-  putword( wLen, hObjFile );
-  bChk += HB_LOBYTE( wLen );
-  bChk += HB_HIBYTE( wLen );
-
-  putbyte( 0x00, hObjFile );
-  putbyte( wSegment, hObjFile );
-  bChk += wSegment;
-
-  putbyte( strlen( szPrefix ) + strlen( szName ), hObjFile );
-  bChk += strlen( szPrefix ) + strlen( szName );
+  putbyte( 0x90, hObjFile, &bChk );
+  putword( wLen, hObjFile, &bChk );
+  putbyte( 0x00, hObjFile, &bChk );
+  putbyte( wSegment, hObjFile, &bChk );
+  putbyte( strlen( szPrefix ) + strlen( szName ), hObjFile, &bChk );
 
   szTemp = szPrefix;
   while( ( bChar = * szTemp++ ) )
-  {
-     putbyte( bChar, hObjFile );
-     bChk += bChar;
-  }
+     putbyte( bChar, hObjFile, &bChk );
 
   while( ( bChar = * szName++ ) )
-    {
-      putbyte( bChar, hObjFile );
-      bChk += bChar;
-    }
+     putbyte( bChar, hObjFile, &bChk );
 
-  putword( wOffset, hObjFile);
-  bChk += HB_LOBYTE( wOffset );
-  bChk += HB_HIBYTE( wOffset );
-  putbyte( 0x00, hObjFile );
+  putword( wOffset, hObjFile, &bChk );
+  putbyte( 0x00, hObjFile, &bChk );
 
-  putbyte( 256 - bChk, hObjFile );
+  putbyte( 256 - bChk, hObjFile, &bChk );
 }
 
 static void Fixup( FILE * hObjFile, BYTE bType, USHORT wOffset, BYTE bFlags, BYTE bSymbol )
 {
-  BYTE bCheckSum = 0;
+  BYTE bChk = 0;
 
-  putbyte( 0x9D, hObjFile ); bCheckSum += 0x9D;
+  putbyte( 0x9D, hObjFile, &bChk );
+  putword( 5, hObjFile, &bChk );
+  putbyte( bType + HB_HIBYTE( wOffset ), hObjFile, &bChk );
+  putbyte( HB_LOBYTE( wOffset ), hObjFile, &bChk );
+  putbyte( bFlags, hObjFile, &bChk );
+  putbyte( bSymbol, hObjFile, &bChk );
 
-  putword( 5, hObjFile ); bCheckSum += 5;
-
-  putbyte( bType + HB_HIBYTE( wOffset ), hObjFile );
-  bCheckSum += bType + HB_HIBYTE( wOffset );
-
-  putbyte( HB_LOBYTE( wOffset ), hObjFile );
-  bCheckSum += HB_LOBYTE( wOffset );
-
-  putbyte( bFlags, hObjFile );  bCheckSum += bFlags;
-  putbyte( bSymbol, hObjFile ); bCheckSum += bSymbol;
-
-  putbyte( 256 - bCheckSum, hObjFile );
+  putbyte( 256 - bChk, hObjFile, &bChk );
 }
 
 static void EnumeratedData( FILE * hObjFile, BYTE bSegment, BYTE * pData, USHORT wLen, USHORT wOffset )
 {
-  BYTE bCheckSum = 0;
+  BYTE bChk = 0;
   USHORT w;
 
-  putbyte( 0xA0, hObjFile );
-  bCheckSum += 0xA0;
-
-  putword( ( USHORT ) ( wLen + 4 ), hObjFile );
-  bCheckSum += HB_LOBYTE( wLen + 4 );
-  bCheckSum += HB_HIBYTE( wLen + 4 );
-
-  putbyte( bSegment, hObjFile );
-  bCheckSum += bSegment;
-
-  putword( wOffset, hObjFile );
-  bCheckSum += wOffset;
+  putbyte( 0xA0, hObjFile, &bChk );
+  putword( ( USHORT ) ( wLen + 4 ), hObjFile, &bChk );
+  putbyte( bSegment, hObjFile, &bChk );
+  putword( wOffset, hObjFile, &bChk );
 
   for( w = 0; w < wLen; w++ )
-    {
-      putbyte( * ( pData + w ), hObjFile );
-      bCheckSum += * ( pData + w );
-    }
+     putbyte( * ( pData + w ), hObjFile, &bChk );
 
-  putbyte( 256 - bCheckSum, hObjFile );
+  putbyte( 256 - bChk, hObjFile, &bChk );
 }
 
 static void End( FILE * hObjFile )
 {
   BYTE bChk = 0;
 
-  putbyte( 0x8A, hObjFile );  bChk += 0x8A;
-
-  putbyte( 0x02, hObjFile );   bChk += 0x02;
-  putbyte( 0x00, hObjFile );
-
-  putbyte( 0x00, hObjFile );    bChk += 0x00;
-
-  putbyte( 256 - bChk, hObjFile );
+  putbyte( 0x8A, hObjFile, &bChk );
+  putbyte( 0x02, hObjFile, &bChk );
+  putbyte( 0x00, hObjFile, &bChk );
+  putbyte( 0x00, hObjFile, &bChk );
+  putbyte( 256 - bChk, hObjFile, &bChk );
 }
 
 static void GroupDef( FILE * hObjFile, BYTE bName, BYTE * aSegs )
 {
-  BYTE bCheckSum = 0;
-  USHORT wRecLen   = 2;
-  USHORT w         = 0;
+  BYTE bChk = 0;
+  USHORT wRecLen = 2;
+  USHORT w       = 0;
 
   while( aSegs[ w++ ] )
     wRecLen += 2;
 
-  putbyte( 0x9A, hObjFile );
-  bCheckSum += 0x9A;
-
-  putword( wRecLen, hObjFile );
-  bCheckSum += HB_LOBYTE( wRecLen );
-  bCheckSum += HB_HIBYTE( wRecLen );
-
-  putbyte( bName + 1, hObjFile );
-  bCheckSum += bName + 1;
+  putbyte( 0x9A, hObjFile, &bChk );
+  putword( wRecLen, hObjFile, &bChk );
+  putbyte( bName + 1, hObjFile, &bChk );
 
   w = 0;
   while( aSegs[ w ] )
-    {
-      putbyte( 0xFF, hObjFile );
-      bCheckSum += 0xFF;
-      putbyte( aSegs[ w ], hObjFile );
-      bCheckSum += aSegs[ w ];
-      w++;
-    }
+  {
+      putbyte( 0xFF, hObjFile, &bChk );
+      putbyte( aSegs[ w++ ], hObjFile, &bChk );
+  }
 
-  putbyte( 256 - bCheckSum, hObjFile );
+  putbyte( 256 - bChk, hObjFile, &bChk );
 }
 
 #endif /* HARBOUR_OBJ_GENERATION */
