@@ -7,6 +7,13 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2002-03-02 20:00 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source\rtl\tget.prg
+    * METHOD _Delete()
+     * modification to be more Clip*r compliant and behaviour.
+      * changes in the logic of the function.
+        before, the function only erased the character under the cursor.
         now it drags the other characters.
         dragging is limited by the non editable characters.
     * METHOD Insert()
