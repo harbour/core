@@ -38,6 +38,7 @@ PRG_SOURCES=\
         nconvert.prg \
         numtxthu.prg \
         numtxten.prg \
+        rtf.prg \
 	stringp.prg \
 
 LIBNAME=tools
