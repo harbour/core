@@ -1,3 +1,7 @@
+19990812-08:32 GMT+1 Antonio Linares <alinares@fivetech.com>
+  * source/rtl/tbrowse.prg
+    * enhanced
+
 19990812-01:45 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/gt/gtwin.c
     * corrections to window sizing between dispbegin buffers - this part
@@ -100,12 +104,12 @@
 
 Mon Aug 09 11:53:18 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/Makefile: 
+	* source/Makefile:
 	Moved the debug directory after rdd.
-	
-	* source/hbpp/hbpp.c: 
-	* source/rtl/filesys.c: 
-	* source/runner/runner.c: 
+
+	* source/hbpp/hbpp.c:
+	* source/rtl/filesys.c:
+	* source/runner/runner.c:
 	Got rid of several warnings.
 
 199908.09-15:24 GMT+3 Alexander Kresin
@@ -128,7 +132,7 @@ Mon Aug 09 11:53:18 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
        (Don't recall the exact rules for DECLARE)
 
 19990809-03:23 EDT Paul Tucker <ptucker@sympatico.ca>
-   * source/rtl/filesys.c"source/rtl/filesys" 
+   * source/rtl/filesys.c"source/rtl/filesys"
      * hb_fsLock implimented for msvc
 
 19990809-07:40 GMT+1 Victor Szel <info@szelvesz.hu>
@@ -205,7 +209,7 @@ Mon Aug 09 11:53:18 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     *include/langapi.h
 	- removed declaration of extern langDef (Watcom reported error)
 	 see TODO comment in this file
-	
+
     *include/pcode.h
         - removed unused HB_P_PUSHWORD
         + added opcodes:
