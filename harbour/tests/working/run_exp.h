@@ -43,7 +43,6 @@ HARBOUR STOD();
 HARBOUR HB_SETCENTURY();
 HARBOUR SET();
 HARBOUR OS();
-HARBOUR ERRORNEW();
 HARBOUR FOPEN();
 HARBOUR FCREATE();
 HARBOUR FREAD();
@@ -97,7 +96,6 @@ HARBOUR RIGHT();
 HARBOUR SPACE();
 HARBOUR STUFF();
 HARBOUR STRTRAN();
-HARBOUR TCLASS();
 HARBOUR TRANSFORM();
 HARBOUR DATETIME();
 HARBOUR DOW();
@@ -176,7 +174,6 @@ static SYMBOL symbols[] = {
 { "HB_SETCENTURY",  FS_PUBLIC, HB_SETCENTURY , 0 },
 { "SET",            FS_PUBLIC, SET           , 0 },
 { "OS",             FS_PUBLIC, OS            , 0 },
-{ "ERRORNEW",       FS_PUBLIC, ERRORNEW      , 0 },
 { "FOPEN",          FS_PUBLIC, FOPEN         , 0 },
 { "FCREATE",        FS_PUBLIC, FCREATE       , 0 },
 { "FREAD",          FS_PUBLIC, FREAD         , 0 },
@@ -186,7 +183,7 @@ static SYMBOL symbols[] = {
 { "FERASE",         FS_PUBLIC, FERASE        , 0 },
 { "FRENAME",        FS_PUBLIC, FRENAME       , 0 },
 { "FSEEK",          FS_PUBLIC, FSEEK         , 0 },
-{ "FILE",           FS_PUBLIC, HB_FILE       , 0 },
+{ "HB_FILE",        FS_PUBLIC, HB_FILE       , 0 },
 { "FREADSTR",       FS_PUBLIC, FREADSTR      , 0 },
 { "BIN2I",          FS_PUBLIC, BIN2I         , 0 },
 { "BIN2L",          FS_PUBLIC, BIN2L         , 0 },
@@ -230,7 +227,7 @@ static SYMBOL symbols[] = {
 { "SPACE",          FS_PUBLIC, SPACE         , 0 },
 { "STUFF",          FS_PUBLIC, STUFF         , 0 },
 { "STRTRAN",        FS_PUBLIC, STRTRAN       , 0 },
-{ "TCLASS",         FS_PUBLIC, TCLASS        , 0 },
+/* { "TCLASS",         FS_PUBLIC, TCLASS        , 0 }, */
 { "TRANSFORM",      FS_PUBLIC, TRANSFORM     , 0 },
 { "DATETIME",       FS_PUBLIC, DATETIME      , 0 },
 { "DOW",            FS_PUBLIC, DOW           , 0 },
