@@ -71,6 +71,7 @@ void    And( void );             /* performs the logical AND on the latest two v
 void    ArrayAt( void );         /* pushes an array element to the stack, removing the array and the index from the stack */
 void    ArrayPut( void );        /* sets an array value and pushes the value on to the stack */
 void    Dec( void );             /* decrements the latest numeric value on the stack */
+void    DimArray( WORD wDimensions ); /* generates a wDimensions Array and initialize those dimensions from the stack values */
 void    Div( void );             /* divides the latest two values on the stack, removes them and leaves the result */
 void    Do( WORD WParams );      /* invoke the virtual machine */
 HARBOUR DoBlock( void );         /* executes a codeblock */
@@ -293,6 +294,11 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
          case HB_P_DEC:
               Dec();
               w++;
+              break;
+
+         case HB_P_DIMARRAY:
+              DimArray( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+              w += 3;
               break;
 
          case HB_P_DIVIDE:
@@ -696,6 +702,32 @@ void Dec( void )
    /* TODO: Should we check other types here and issue an error ? */
 }
 
+void DimArray( WORD wDimensions ) /* generates a wDimensions Array and initialize those dimensions from the stack values */
+{
+   HB_ITEM itArray;
+   WORD w; // , wElements;
+
+   itArray.type = IT_NIL;
+   hb_arrayNew( &itArray, ( stack.pPos - wDimensions )->item.asLong.value );
+
+   if( wDimensions > 1 )
+   {
+      printf( "HVM.c DimArray() does not supports multiple dimensions yet!" );
+      exit( 1 );
+   }
+
+   // for( w = 0; w < wElements; w++ )
+   //   hb_itemCopy( itArray.item.asArray.value->pItems + w,
+   //             stack.pPos - wElements + w );
+
+   for( w = 0; w < wDimensions; w++ )
+      StackPop();
+
+   hb_itemCopy( stack.pPos, &itArray );
+   hb_itemClear( &itArray );
+   StackPush();
+}
+
 void Div( void )
 {
    WORD wDec1, wDec2;
@@ -716,6 +748,7 @@ void Do( WORD wParams )
    PHB_ITEM pSelf = stack.pPos - wParams - 1;   /* NIL, OBJECT or BLOCK */
    PHB_FUNC pFunc;
    int iStatics = stack.iStatics;              /* Return iStatics position */
+   LONG lLineNo = stack.pBase->item.asSymbol.lineno;
 
    if( ! IS_SYMBOL( pItem ) )
    {
@@ -747,8 +780,8 @@ void Do( WORD wParams )
 
       if( ! pFunc )
       {
-         printf( "error: message %s not implemented for class %s\n",
-                 pSym->szName, hb_GetClassName( pSelf ) );
+         printf( "error: message %s not implemented for class %s in line %i\n",
+         pSym->szName, hb_GetClassName( pSelf ), lLineNo );
          exit( 1 );
       }
       pFunc();
