@@ -306,8 +306,16 @@ return nil
 
 METHOD EditVar( nVar ) CLASS TDebugger
 
-   local cVarName  := ::aVars[ nVar ][ 1 ]
-   local uVarValue := ::aVars[ nVar ][ 2 ]
+   local cVarName   := ::aVars[ nVar ][ 1 ]
+   local uVarValue  := ::aVars[ nVar ][ 2 ]
+   local nProcLevel := 1
+
+   if ::aVars[ nVar ][ 3 ] == "Local"
+      while ProcName( nProcLevel ) != ::aVars[ nVar ][ 4 ]
+         nProcLevel++
+      end
+      uVarValue = __vmVarLGet( nProcLevel, ::aVars[ nVar ][ 2 ] )
+   endif
 
    uVarValue := ::InputBox( cVarName, ValToStr( uVarValue ) )
 
