@@ -228,6 +228,7 @@ DECLARE TClass ;
    s_oClass:AddInline( "_" + <(DataName1)>, {|Self, param| Self:<oObject>:<DataName2> := param }, HB_OO_CLSTP_EXPORTED )
 
 #xtranslate    EXPORTED:       =>      nScope := HB_OO_CLSTP_EXPORTED
+#xtranslate    EXPORT:         =>      nScope := HB_OO_CLSTP_EXPORTED
 #xtranslate    VISIBLE:        =>      nScope := HB_OO_CLSTP_EXPORTED
 #xtranslate    HIDDEN:         =>      nScope := HB_OO_CLSTP_HIDDEN
 #xtranslate    PROTECTED:      =>      nScope := HB_OO_CLSTP_PROTECTED

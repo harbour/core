@@ -119,9 +119,9 @@ by Victor Szakats <info@szelvesz.hu>
 by David G. Holm <Harbour@SpaceMoose.com>
 
 1) Change your CVSROOT variable from
-      :pserver:anonymous@cvs.Harbour-project.sourceforge.net:/cvsroot/Harbour-project
+      :pserver:anonymous@cvs.Harbour-project.sourceforge.net:/cvsroot/harbour-project
    to
-      :ext:your_source_forge_ID_in_lower_case@cvs.Harbour-project.sourceforge.net:/cvsroot/Harbour-project
+      :ext:your_source_forge_ID_in_lower_case@cvs.Harbour-project.sourceforge.net:/cvsroot/harbour-project
 
 2) Set up CVS to use SSH (see cvs_ssh.txt for details).
 
@@ -203,7 +203,7 @@ Next I set up CVS, using the following steps:
       @echo off
       SET HOMEDRIVE=E:
       SET HOMEPATH=/hb-dev/
-      SET CVSROOT=:ext:dholm@cvs.Harbour-project.sourceforge.net:/cvsroot/Harbour-project
+      SET CVSROOT=:ext:dholm@cvs.Harbour-project.sourceforge.net:/cvsroot/harbour-project
       SET CVS_RSH=ssh
       cvs co harbour
 6) I ran the CHECKOUT batch file and was prompted for my SourceForge
