@@ -118,7 +118,7 @@ int hb_inkey( BOOL bWait, double dSeconds, HB_inkey_enum event_mask )
       if( ( dSeconds * CLOCKS_PER_SEC ) < 1 )  /* Wait forever ? */
       {
          /* There is no point in waiting forever for no input events! */
-         if( ( event_mask & ( INKEY_ALL + INKEY_EXTENDED ) ) != 0 )
+         if( ( event_mask & ( INKEY_ALL + INKEY_RAW ) ) != 0 )
          {
             while( hb_inkeyNext() == 0 )
                hb_releaseCPU();

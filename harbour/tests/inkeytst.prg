@@ -14,7 +14,7 @@
 
 #include "inkey.ch"
 
-PROCEDURE main( cSkip, cExtended )
+PROCEDURE main( cSkip, cRaw )
 
 IF EMPTY( cSkip )
 
@@ -38,7 +38,7 @@ IF EMPTY( cSkip )
    NextTest()
 ENDIF
 
-   TEST7( cSkip, cExtended )
+   TEST7( cSkip, cRaw )
    ?
 QUIT
 
@@ -191,7 +191,7 @@ RETURN
 
 
 
-PROCEDURE TEST7( cSkip, cExtended )
+PROCEDURE TEST7( cSkip, cRaw )
 LOCAL nKey, nMask, cText
    CLS
    ? "For the last test, a loop is started and all keyboard and mouse"
@@ -202,8 +202,8 @@ LOCAL nKey, nMask, cText
    ? "Press any key."
    nMask := INKEY_ALL
 
-   IF ! EMPTY( cExtended )
-       nMask += INKEY_EXTENDED
+   IF ! EMPTY( cRaw )
+       nMask += INKEY_RAW
    END IF
 
    SET(_SET_EVENTMASK, nMask)

@@ -50,7 +50,7 @@
 #define INKEY_RUP               16
 #define INKEY_KEYBOARD          128
 #define INKEY_ALL               159
-#define INKEY_EXTENDED          256
+#define INKEY_RAW               256
 
 /* Mouse events */
 

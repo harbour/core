@@ -39,7 +39,7 @@
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_conOutAlt(), hb_conOutDev(), DEVOUT(), hb_conDevPos(),
- *    DEVPOS(), hb_conOutDisp(), __EJECT(), 
+ *    DEVPOS(), __EJECT(), 
  *    hb_conOut(), hb_conOutErr(), OUTERR(),
  *    hb_conOutStd(), OUTSTD(), PCOL(), PROW(),
  *    SETPRC(), and hb_conInit()
@@ -159,15 +159,13 @@ typedef void hb_out_func_typedef( char *, ULONG );
 /* Format items for output, then call specified output function */
 static void hb_conOut( USHORT uiParam, hb_out_func_typedef * pOutFunc )
 {
-   PHB_ITEM pItem;
    char * pszString;
    ULONG ulLen;
    BOOL bFreeReq;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_conOut(%hu, %p)", uiParam, pOutFunc));
 
-   pItem = hb_param( uiParam, HB_IT_ANY );
-   pszString = hb_itemString( pItem, &ulLen, &bFreeReq );
+   pszString = hb_itemString( hb_param( uiParam, HB_IT_ANY ), &ulLen, &bFreeReq );
 
    pOutFunc( pszString, ulLen );
 
@@ -271,18 +269,8 @@ static void hb_conOutDev( char * pStr, ULONG ulLen )
       s_uiPCol += ( USHORT ) ulLen;
    }
    else
-   {
       /* Otherwise, display to console */
       hb_gtWrite( ( BYTE * ) pStr, ulLen );
-   }
-}
-
-/* Output an item to the screen */
-static void hb_conOutDisp( char * pStr, ULONG ulLen )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_conOutDisp(%s, %lu)", pStr, ulLen));
-
-   hb_gtWrite( ( BYTE * ) pStr, ulLen );
 }
 
 HB_FUNC( OUTSTD ) /* writes a list of values to the standard output device */
@@ -445,6 +433,10 @@ HB_FUNC( DEVOUT ) /* writes a single value to the current device (screen or prin
 
 HB_FUNC( DISPOUT ) /* writes a single value to the screen, but is not affected by SET ALTERNATE */
 {
+   char * pszString;
+   ULONG ulLen;
+   BOOL bFreeReq;
+
    if( ISCHAR( 2 ) )
    {
       char szOldColor[ CLR_STRLEN ];
@@ -452,20 +444,35 @@ HB_FUNC( DISPOUT ) /* writes a single value to the screen, but is not affected b
       hb_gtGetColorStr( szOldColor );
       hb_gtSetColorStr( hb_parc( 2 ) );
 
-      hb_conOut( 1, hb_conOutDisp );
+      pszString = hb_itemString( hb_param( 1, HB_IT_ANY ), &ulLen, &bFreeReq );
+      
+      hb_gtWrite( ( BYTE * ) pszString, ulLen );
+      
+      if( bFreeReq )
+         hb_xfree( pszString );
 
       hb_gtSetColorStr( szOldColor );
    }
    else if( hb_pcount() >= 1 )
-      hb_conOut( 1, hb_conOutDisp );
+   {
+      pszString = hb_itemString( hb_param( 1, HB_IT_ANY ), &ulLen, &bFreeReq );
+      
+      hb_gtWrite( ( BYTE * ) pszString, ulLen );
+      
+      if( bFreeReq )
+         hb_xfree( pszString );
+   }
 }
 
 /* Undocumented Clipper function */
 
+/* NOTE: Clipper does no checks about the screen positions. [vszakats] */
+
 HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position, but is not affected by SET ALTERNATE */
 {
-   /* NOTE: Clipper does no checks here. [vszakats] */
-   hb_gtSetPos( hb_parni( 1 ), hb_parni( 2 ) );
+   char * pszString;
+   ULONG ulLen;
+   BOOL bFreeReq;
 
    if( ISCHAR( 4 ) )
    {
@@ -473,12 +480,23 @@ HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position
 
       hb_gtGetColorStr( szOldColor );
       hb_gtSetColorStr( hb_parc( 4 ) );
-
-      hb_conOut( 3, hb_conOutDisp );
+      
+      pszString = hb_itemString( hb_param( 3, HB_IT_ANY ), &ulLen, &bFreeReq );
+      
+      hb_gtWriteAt( hb_parni( 1 ), hb_parni( 2 ), ( BYTE * ) pszString, ulLen );
+      
+      if( bFreeReq )
+         hb_xfree( pszString );
 
       hb_gtSetColorStr( szOldColor );
    }
    else if( hb_pcount() >= 3 )
-      hb_conOut( 3, hb_conOutDisp );
+   {
+      pszString = hb_itemString( hb_param( 3, HB_IT_ANY ), &ulLen, &bFreeReq );
+      
+      hb_gtWriteAt( hb_parni( 1 ), hb_parni( 2 ), ( BYTE * ) pszString, ulLen );
+      
+      if( bFreeReq )
+         hb_xfree( pszString );
+   }
 }
-

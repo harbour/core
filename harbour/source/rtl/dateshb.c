@@ -301,18 +301,22 @@ HB_FUNC( TIME )
 {
    char szResult[ 9 ];
 
-   #if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN_32)
+   {
       SYSTEMTIME st;
       GetLocalTime( &st );
       sprintf( szResult, "%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond );
-   #else
+   }
+#else
+   {
       time_t t;
       struct tm * oTime;
 
       time( &t );
       oTime = localtime( &t );
       sprintf( szResult, "%02d:%02d:%02d", oTime->tm_hour, oTime->tm_min, oTime->tm_sec );
-   #endif
+   }
+#endif
 
    hb_retclen( szResult, 8 );
 }
@@ -321,18 +325,22 @@ HB_FUNC( DATE )
 {
    char szResult[ 9 ];
 
-   #if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN_32)
+   {
       SYSTEMTIME st;
       GetLocalTime( &st );
       sprintf( szResult, "%04d%02d%02d", st.wYear, st.wMonth, st.wDay );
-   #else
+   }
+#else
+   {
       time_t t;
       struct tm * oTime;
 
       time( &t );
       oTime = localtime( &t );
       sprintf( szResult, "%04d%02d%02d", oTime->tm_year + 1900, oTime->tm_mon + 1, oTime->tm_mday );
-   #endif
+   }
+#endif
 
    hb_retds( szResult );
 }

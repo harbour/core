@@ -328,12 +328,12 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
             {
                /* Process non-ASCII key codes */
                WORD wKey;
-               if( eventmask & INKEY_EXTENDED )
+               if( eventmask & INKEY_RAW )
                   wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode;
                else
                   wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode;
                /* Discard standalone state key presses for normal mode only */
-               if( ( eventmask & INKEY_EXTENDED ) == 0 ) switch( wKey )
+               if( ( eventmask & INKEY_RAW ) == 0 ) switch( wKey )
                {
                   /* Virtual scan codes to ignore */
                   case 29: /* Ctrl */
@@ -347,7 +347,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                if( wKey == 0 ) ch = 0;
                else
                {
-                  if( eventmask & INKEY_EXTENDED )
+                  if( eventmask & INKEY_RAW )
                   {
                      /* Pass along all virtual key codes with all
                         enhanced and state indicators accounted for */
@@ -599,7 +599,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
             else
             {
                WORD wKey;
-               if( eventmask & INKEY_EXTENDED )
+               if( eventmask & INKEY_RAW )
                   wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode;
                else
                   wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode;
@@ -608,7 +608,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
 #endif
          }
       }
-      else if( eventmask & ~( INKEY_KEYBOARD | INKEY_EXTENDED )
+      else if( eventmask & ~( INKEY_KEYBOARD | INKEY_RAW )
                            && s_irInBuf[ s_cNumIndex ].EventType == MOUSE_EVENT )
       {
 

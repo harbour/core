@@ -1,7 +1,25 @@
+20000412-10:06 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * include/inkey.ch
+   * source/rtl/inkey.c
+   * source/rtl/gtdos/gtdos.c
+   * source/rtl/gtos2/gtos2.c
+   * source/rtl/gtwin/gtwin.c
+   * tests/inkeytst.prg
+     * INKEY_EXTENDED renamed to INKEY_RAW to better show its purpose.
+
+   * source/rtl/console.c
+     % hb_conOut() one variable removed.
+     % DISPOUT(), DISPOUTAT() optimized for speed, they got larger though.
+       hb_conOutDisp() removed.
+
+   * source/rtl/dateshb.c
+     * Some code put in blocks.
+
 20000412-04:39 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/gtapi.c
-     + hb_gtGetColorStr() fixed.
+     ! hb_gtGetColorStr() fixed.
 
 20000412-03:14 GMT+1 Victor Szakats <info@szelvesz.hu>
 

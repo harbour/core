@@ -245,7 +245,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
    {
       /* A key code is available in the BIOS keyboard buffer, so read it */
 #if defined(__DJGPP__)
-      if( eventmask & INKEY_EXTENDED ) ch = getxkey();
+      if( eventmask & INKEY_RAW ) ch = getxkey();
       else ch = getkey();
       if( ch == 256 )
          /* Ignore Ctrl+Break, because it is being handled as soon as it
@@ -267,7 +267,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
             the actual function key and then offset it by 256,
             unless extended keyboard events are allowed, in which
             case offset it by 512 */
-         if( eventmask & INKEY_EXTENDED ) ch = getch() + 512;
+         if( eventmask & INKEY_RAW ) ch = getch() + 512;
          else ch = getch() + 256;
       }
 #endif

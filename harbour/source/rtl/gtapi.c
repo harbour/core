@@ -279,8 +279,6 @@ USHORT hb_gtColorSelect( USHORT uiColorIndex )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gtColorSelect(%hu)", uiColorIndex));
 
-   /* NOTE: CA-Cl*pper is not checking the limits here. [vszakats] */
-
    if( uiColorIndex <= s_uiColorCount )
    {
       s_uiColorIndex = uiColorIndex;
