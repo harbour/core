@@ -8,6 +8,17 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-02-16 10:52 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * src/rtl/tbrowse.prg
+     + :ColorRect() partial support added. The missing part is 
+       that in C52 :ColorRect() will update the screen probably 
+       using some internal buffers for the data, because 
+       the skipblock for example is not evaluated.
+
+   * src/rtl/filesys.c
+     * Some cleanup, optim, comments, added static.
+
 2004-02-15 14:02 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
    * hrbdll.bc
       + added references to cdphu852.c cdphuwin.c and errorint.c

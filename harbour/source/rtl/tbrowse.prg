@@ -71,8 +71,6 @@
          ADDITION: Same goes for DevPos(), always use SetPod() instead.
          [vszakats] */
 
-/* TODO: :ColorRect() support */
-
 /* TODO: :firstScrCol() --> nScreenCol
          Determines screen column where the first table column is displayed.
          Xbase++ compatible method */
@@ -180,7 +178,7 @@ CLASS TBrowse
 
    METHOD PosCursor()                     // Positions the cursor to the beginning of the call, used only when autolite==.F.
    METHOD LeftDetermine()                 // Determine leftmost unfrozen column in display
-   METHOD DispCell(nColumn, nMode)        // Displays a single cell and returns cell type as a single letter like Valtype()
+   METHOD DispCell( nRow, nCol, nMode )   // Displays a single cell and returns cell type as a single letter like Valtype()
    METHOD HowManyCol(nWidth)              // Counts how many cols can be displayed
    METHOD RedrawHeaders(nWidth)           // Repaints TBrowse Headers
    METHOD Moved()                         // Every time a movement key is issued I need to reset certain properties
@@ -266,23 +264,24 @@ METHOD New(nTop, nLeft, nBottom, nRight) CLASS TBrowse
    ::nBottom         := nBottom
    ::nRight          := nRight
 
- #ifdef HB_COMPAT_C53
-   ::mColPos         := 0
-   ::mRowPos         := 0
-   ::rect            :={nTop,nLeft,nBottom,nRight}
-   ::aVisibleCols    :={}
-   ::message         :=''
-   ::nRow            := 0
-   ::nCol            := 0
-   ::aSetStyle       := ARRAY( 4096 )
+   #ifdef HB_COMPAT_C53
 
-   ::aSetStyle[ TBR_APPEND ]    := .f.
-   ::aSetStyle[ TBR_APPENDING ] := .f.
-   ::aSetStyle[ TBR_MODIFY ]    := .f.
-   ::aSetStyle[ TBR_MOVE ]      := .f.
-   ::aSetStyle[ TBR_SIZE ]      := .f.
+      ::mColPos         := 0
+      ::mRowPos         := 0
+      ::rect            :={nTop,nLeft,nBottom,nRight}
+      ::aVisibleCols    :={}
+      ::message         :=''
+      ::nRow            := 0
+      ::nCol            := 0
+      ::aSetStyle       := ARRAY( 4096 )
+    
+      ::aSetStyle[ TBR_APPEND ]    := .f.
+      ::aSetStyle[ TBR_APPENDING ] := .f.
+      ::aSetStyle[ TBR_MODIFY ]    := .f.
+      ::aSetStyle[ TBR_MOVE ]      := .f.
+      ::aSetStyle[ TBR_SIZE ]      := .f.
 
- #endif
+   #endif
 
 return Self
 
@@ -787,7 +786,7 @@ METHOD DeHilite() CLASS TBrowse
 
    SetPos( nRow, ::aColumns[ ::ColPos ]:ColPos )
 
-   cType := ::DispCell(::ColPos, _DISPCELL_CLR_UNSELECTED)
+   cType := ::DispCell( ::RowPos, ::ColPos, _DISPCELL_CLR_UNSELECTED )
 
    SetPos(nRow, ::aColumns[ ::ColPos ]:ColPos + iif(cType == "L", ::aColsWidth[::ColPos] / 2, 0 ))
 
@@ -813,16 +812,16 @@ METHOD Hilite() CLASS TBrowse
    // Start of cell
    SetPos( nRow, nCol)
 
-   cType := ::DispCell(::ColPos, _DISPCELL_CLR_SELECTED)
+   cType := ::DispCell( ::RowPos, ::ColPos, _DISPCELL_CLR_SELECTED )
    nCol  += iif(cType == "L", ::aColsWidth[::ColPos] / 2, 0 )
 
    // Put cursor back on first char of cell value
    SetPos(nRow, nCol)
 
- #ifdef HB_COMPAT_C53
-   ::nRow := nRow
-   ::nCol := nCol
- #endif
+   #ifdef HB_COMPAT_C53
+      ::nRow := nRow
+      ::nCol := nCol
+   #endif
 
 return Self
 
@@ -838,10 +837,10 @@ METHOD PosCursor() CLASS TBrowse
    // Put cursor on first char of cell value
    SetPos(nRow, nCol)
 
- #ifdef HB_COMPAT_C53
-   ::nRow := nRow
-   ::nCol := nCol
- #endif
+   #ifdef HB_COMPAT_C53
+      ::nRow := nRow
+      ::nCol := nCol
+   #endif
 
 return Self
 
@@ -1204,7 +1203,7 @@ METHOD Stabilize() CLASS TBrowse
                endif
 
                if lDisplay
-                  ::DispCell(n, _DISPCELL_CLR_UNSELECTED)
+                  ::DispCell(nRow, n, _DISPCELL_CLR_UNSELECTED)
                else
                   // Clear cell
                   DispOut( Space( ::aColsWidth[ n ] ), hb_ColorIndex(::ColorSpec, ::aColumns[ n ]:defColor[ _DISPCELL_CLR_UNSELECTED ] - 1) )
@@ -1296,26 +1295,44 @@ METHOD Moved() CLASS TBrowse
 
 return Self
 
+/* NOTE: Incompatibility: In C5x this function will refresh the 
+         screen if a non-empty aRect was passed. It does this 
+         without skipping/reloading all the records, so I suspect 
+         some internal buffering. For now I left out this feature, 
+         so caller has to refresh manually. [vszakats] */
 
 METHOD ColorRect( aRect, aRectColor ) CLASS TBrowse
 
-   ::aRect       := aRect
-   ::aRectColor  := aRectColor
+   IF ISARRAY( aRect ) .AND. ISARRAY( aRecColor )
+      ::aRect       := aRect
+      ::aRectColor  := aRectColor
+   ENDIF
 
 return Self
 
 
-METHOD DispCell( nColumn, nMode ) CLASS TBrowse
+METHOD DispCell( nRow, nCol, nMode ) CLASS TBrowse
 
-   LOCAL oCol   := ::aColumns[nColumn]
-   LOCAL nWidth := ::aColsWidth[nColumn]
-   LOCAL ftmp   := Eval(oCol:block)
+   LOCAL oCol   := ::aColumns[ nCol ]
+   LOCAL nWidth := ::aColsWidth[ nCol ]
+   LOCAL ftmp   := Eval( oCol:block )
    LOCAL cType  := ValType( ftmp )
-   LOCAL cPict  := iif(Empty(oCol:Picture), "", oCol:Picture)
+   LOCAL cPict  := iif( Empty( oCol:Picture ), "", oCol:Picture )
 
    LOCAL tmp
 
-   LOCAL cColor := hb_ColorIndex(::ColorSpec, iif( oCol:ColorBlock == NIL, oCol:defColor[ nMode ], Eval(oCol:ColorBlock, ftmp)[ nMode ]) - 1)
+   LOCAL cColor
+
+   IF !Empty( ::aRect ) .AND. ;
+      nCol >= ::aRect[ 2 ] .AND. ;
+      nCol <= ::aRect[ 4 ] .AND. ;
+      nRow >= ::aRect[ 1 ] .AND. ;
+      nRow <= ::aRect[ 3 ] .AND. ;
+      !Empty( ::aRectColor )
+      cColor := hb_ColorIndex(::ColorSpec, ::aRectColor[ nMode ] - 1)
+   ELSE
+      cColor := hb_ColorIndex(::ColorSpec, iif( oCol:ColorBlock == NIL, oCol:defColor[ nMode ], Eval( oCol:ColorBlock, ftmp )[ nMode ] ) - 1)
+   ENDIF
 
    do case
    case cType $ "CM"

@@ -251,20 +251,22 @@ static USHORT s_uiErrorLast = 0;
 
 #if defined(X__WIN32__)
    #if !defined(__BORLANDC__)
-      extern int WintoDosError(DWORD dwError);
+      extern int WintoDosError( DWORD dwError );
    #else
-      extern int __IOerror(int dosErr);
-      extern int __NTerror     (void);
+      extern int __IOerror( int dosErr );
+      extern int __NTerror( void );
    #endif
 
-   HANDLE DostoWinHandle( FHANDLE fHandle);
+   static HANDLE DostoWinHandle( FHANDLE fHandle );
 
 #endif
 
 /* Convert HARBOUR flags to IO subsystem flags */
 
 #if defined(HB_FS_FILE_IO)
+
 extern char **environ;
+
 static int convert_open_flags( USHORT uiFlags )
 {
    /* by default FO_READ + FO_COMPAT is set */
@@ -408,53 +410,62 @@ static void convert_create_flags_ex( USHORT uiAttr, USHORT uiFlags, int * result
    HB_TRACE(HB_TR_INFO, ("convert_create_flags: 0x%04x, 0x%04x\n", *result_flags, *result_pmode));
 }
 
-
 #endif
 
-BYTE * hb_filecase(char *str) {
-   // Convert file and dir case. The allowed SET options are:
-   // LOWER - Convert all caracters of file to lower
-   // UPPER - Convert all caracters of file to upper
-   // MIXED - Leave as is
+/* 
+   Convert file and dir case. The allowed SET options are:
+   LOWER - Convert all caracters of file to lower
+   UPPER - Convert all caracters of file to upper
+   MIXED - Leave as is
 
-   // The allowed environment options are:
-   // FILECASE - define the case of file
-   // DIRCASE - define the case of path
-   // DIRSEPARATOR - define separator of path (Ex. "/")
+   The allowed environment options are:
+   FILECASE - define the case of file
+   DIRCASE - define the case of path
+   DIRSEPARATOR - define separator of path (Ex. "/")
+*/
 
-   size_t a;
-   char *filename;
-   char *dirname=str;
+BYTE * hb_filecase( char * str )
+{
+   char * filename;
+   char * dirname = str;
    size_t dirlen;
 
-   // Look for filename (Last "\" or DIRSEPARATOR)
-   if( hb_set.HB_SET_DIRSEPARATOR != '\\' ) {
-      for(a=0;a<strlen(str);a++)
-         if( str[a] == '\\' )
-            str[a] = hb_set.HB_SET_DIRSEPARATOR;
+   /* Look for filename (Last "\" or DIRSEPARATOR) */
+   if( hb_set.HB_SET_DIRSEPARATOR != '\\' )
+   {
+      char * strbak = str;
+
+      while( *strbak )
+      {
+         if( *strbak == '\\' )
+            *strbak = hb_set.HB_SET_DIRSEPARATOR;
+
+         strbak++;
+      }
    }
-   if(( filename = strrchr( str, hb_set.HB_SET_DIRSEPARATOR )) != NULL)
+
+   if( ( filename = strrchr( str, hb_set.HB_SET_DIRSEPARATOR ) ) != NULL )
       filename++;
    else
-      filename=str;
-   dirlen=filename-str;
+      filename = str;
 
-   // FILECASE
-   // if( hb_stricmp( hb_set.HB_SET_FILECASE, "LOWER" ) == 0 ) hb_strLower(filename,strlen(filename));
-   // else if( hb_stricmp( hb_set.HB_SET_FILECASE, "UPPER" ) == 0 ) hb_strUpper(filename,strlen(filename));
+   dirlen = filename - str;
+
+   /* FILECASE */
+
    if( hb_set.HB_SET_FILECASE == HB_SET_CASE_LOWER )
-      hb_strLower( filename, strlen(filename) );
+      hb_strLower( filename, strlen( filename ) );
    else if( hb_set.HB_SET_FILECASE == HB_SET_CASE_UPPER )
-      hb_strUpper( filename, strlen(filename) );
+      hb_strUpper( filename, strlen( filename ) );
 
-   // DIRCASE
-   // if( hb_stricmp( hb_set.HB_SET_DIRCASE, "LOWER" ) == 0 ) hb_strLower(dirname,dirlen);
-   // else if( hb_stricmp( hb_set.HB_SET_DIRCASE, "UPPER" ) == 0 ) hb_strUpper(dirname,dirlen);
+   /* DIRCASE */
+
    if( hb_set.HB_SET_DIRCASE == HB_SET_CASE_LOWER )
-      hb_strLower(dirname,dirlen);
+      hb_strLower( dirname, dirlen );
    else if( hb_set.HB_SET_DIRCASE == HB_SET_CASE_UPPER )
-      hb_strUpper(dirname,dirlen);
-   return (( BYTE * ) str);
+      hb_strUpper( dirname, dirlen );
+
+   return ( BYTE * ) str;
 }
 
 /*
@@ -663,6 +674,7 @@ FHANDLE hb_fsCreate( BYTE * pFilename, USHORT uiAttr )
    {
       DWORD dwFlags = FILE_ATTRIBUTE_ARCHIVE;
       HANDLE hFile;
+
       if( uiAttr & FC_READONLY )
          dwFlags |= FILE_ATTRIBUTE_READONLY;
 
@@ -760,12 +772,14 @@ void    hb_fsClose( FHANDLE hFileHandle )
 
    #if defined(X__WIN32__)
 
-      if  (!CloseHandle( DostoWinHandle (hFileHandle )))
+      if( ! CloseHandle( DostoWinHandle( hFileHandle ) ) )
+      {
          #if !defined(__BORLANDC__)
-            errno=WintoDosError(GetLastError());
+            errno = WintoDosError( GetLastError() );
          #else
             __NTerror();
          #endif
+      }
 
    #else
       close( hFileHandle );
@@ -848,11 +862,8 @@ USHORT  hb_fsRead( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 
    #if defined(X__WIN32__)
       {
-
-         DWORD dwRead ;
-         BOOL bError;
-         bError=ReadFile( DostoWinHandle(hFileHandle), pBuff, (DWORD)uiCount, &dwRead, NULL );
-         if (!bError)
+         DWORD dwRead = 0;
+         if( ! ReadFile( DostoWinHandle( hFileHandle ), pBuff, ( DWORD ) uiCount, &dwRead, NULL ) )
             errno = GetLastError();
          uiRead = ( USHORT ) dwRead;
 
@@ -888,12 +899,9 @@ USHORT  hb_fsWrite( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
    #if defined(X__WIN32__)
       {
          DWORD dwWritten = 0;
-         BOOL bError;
-         bError=WriteFile( DostoWinHandle(hFileHandle), pBuff, uiCount, &dwWritten, NULL );
-         if (!bError)
+         if( ! WriteFile( DostoWinHandle( hFileHandle ), pBuff, uiCount, &dwWritten, NULL ) )
             errno = GetLastError();
          uiWritten = ( USHORT ) dwWritten;
-
       }
    #else
 
@@ -934,10 +942,8 @@ ULONG   hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 
    #if defined(X__WIN32__)
       {
-      BOOL bError;
-      bError=ReadFile( DostoWinHandle(hFileHandle), pBuff, ulCount, &ulRead, NULL );
-      if (!bError)
-         errno = GetLastError();
+         if( ! ReadFile( DostoWinHandle( hFileHandle ), pBuff, ulCount, &ulRead, NULL ) )
+            errno = GetLastError();
       }
    #elif defined(HB_FS_LARGE_OPTIMIZED)
       ulRead = read( hFileHandle, pBuff, ulCount );
@@ -1006,12 +1012,9 @@ ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
    errno = 0;
 
    #if defined(X__WIN32__)
-   {
-      BOOL bError;
-      bError=WriteFile( DostoWinHandle( hFileHandle), pBuff, ulCount, &ulWritten, NULL );
-      if (!bError)
-         errno = GetLastError();
-
+      {
+         if( ! WriteFile( DostoWinHandle( hFileHandle), pBuff, ulCount, &ulWritten, NULL ) )
+            errno = GetLastError();
       }
    #else
       if( ulCount )
@@ -1110,10 +1113,9 @@ ULONG   hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
       /* get current offset */
       errno = 0;
       #if defined(X__WIN32__)
-
-         ulPos = SetFilePointer(  DostoWinHandle(hFileHandle), 0, NULL, FILE_CURRENT );
-            if ((DWORD)ulPos == 0xFFFFFFFF)
-               errno=GetLastError();
+         ulPos = SetFilePointer( DostoWinHandle( hFileHandle ), 0, NULL, FILE_CURRENT );
+         if( ( DWORD ) ulPos == 0xFFFFFFFF )
+            errno = GetLastError();
       #else
          ulPos = lseek( hFileHandle, 0, SEEK_CUR );
       #endif
@@ -1152,10 +1154,9 @@ ULONG   hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
 
       errno = 0;
       #if defined(X__WIN32__)
-         ulPos = SetFilePointer(  DostoWinHandle(hFileHandle), lOffset, NULL, (DWORD)Flags );
-            if ((DWORD)ulPos == 0xFFFFFFFF)
-               errno=GetLastError();
-
+         ulPos = SetFilePointer( DostoWinHandle( hFileHandle ), lOffset, NULL, ( DWORD ) Flags );
+         if( ( DWORD ) ulPos == 0xFFFFFFFF )
+            errno = GetLastError();
       #else
          ulPos = lseek( hFileHandle, lOffset, Flags );
       #endif
@@ -1188,10 +1189,9 @@ ULONG   hb_fsTell( FHANDLE hFileHandle )
 
    errno = 0;
    #if defined(X__WIN32__)
-      ulPos = SetFilePointer( DostoWinHandle(hFileHandle), 0, NULL, FILE_CURRENT );
-      if ((DWORD)ulPos == 0xFFFFFFFF)
-         errno=GetLastError();
-
+      ulPos = SetFilePointer( DostoWinHandle( hFileHandle ), 0, NULL, FILE_CURRENT );
+      if( ( DWORD ) ulPos == 0xFFFFFFFF )
+         errno = GetLastError();
    #else
       ulPos = lseek( hFileHandle, 0L, SEEK_CUR );
    #endif
@@ -1229,12 +1229,14 @@ BOOL hb_fsDelete( BYTE * pFilename )
 
 #if defined(X__WIN32__)
 
-   if ((bResult = DeleteFile( ( char * ) pFilename ))==0)
+   if( ( bResult = DeleteFile( ( char * ) pFilename ) ) == 0 )
+   {
       #if !defined(__BORLANDC__)
-         errno=WintoDosError(GetLastError());
+         errno = WintoDosError( GetLastError() );
       #else
          __NTerror();
       #endif
+   }
    s_uiErrorLast = errno;
 
 #elif defined(HAVE_POSIX_IO)
@@ -1267,13 +1269,15 @@ BOOL hb_fsRename( BYTE * pOldName, BYTE * pNewName )
 
 #if defined(X__WIN32__)
 
-   errno=0;
-   if ((bResult = MoveFile( ( char * ) pOldName, ( char * ) pNewName ))==0)
+   errno = 0;
+   if( ( bResult = MoveFile( ( char * ) pOldName, ( char * ) pNewName ) ) == 0 )
+   {
       #if !defined(__BORLANDC__)
-         errno=WintoDosError(GetLastError());
+         errno = WintoDosError( GetLastError() );
       #else
          __NTerror();
       #endif
+   }
    s_uiErrorLast = errno;
 
 #elif defined(HB_FS_FILE_IO)
@@ -1298,25 +1302,27 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
    BOOL bResult;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsLock(%p, %lu, %lu, %hu)", hFileHandle, ulStart, ulLength, uiMode));
+
 #if defined(X__WIN32__)
-{
-   errno = 0;
-   switch( uiMode & FL_MASK )
+
    {
-      case FL_LOCK:
-         bResult = ( LockFile( DostoWinHandle(hFileHandle), ulStart,0, ulLength,0 ) == 0 );
-         break;
-
-      case FL_UNLOCK:
-         bResult = ( UnlockFile( DostoWinHandle(hFileHandle), ulStart,0, ulLength,0 ) == 0 );
-         break;
-
-      default:
-         bResult = FALSE;
+      errno = 0;
+      switch( uiMode & FL_MASK )
+      {
+         case FL_LOCK:
+            bResult = ( LockFile( DostoWinHandle(hFileHandle), ulStart,0, ulLength,0 ) == 0 );
+            break;
+   
+         case FL_UNLOCK:
+            bResult = ( UnlockFile( DostoWinHandle(hFileHandle), ulStart,0, ulLength,0 ) == 0 );
+            break;
+   
+         default:
+            bResult = FALSE;
+      }
+      s_uiErrorLast = errno;
    }
-   s_uiErrorLast = errno;
 
-}
 #elif defined(HB_OS_OS2)
 
    {
@@ -1477,7 +1483,7 @@ void    hb_fsCommit( FHANDLE hFileHandle )
 
 #if defined(X__WIN32__)
 
-   FlushFileBuffers( ( HANDLE ) DostoWinHandle(hFileHandle) );
+   FlushFileBuffers( ( HANDLE ) DostoWinHandle( hFileHandle ) );
    s_uiErrorLast = ( USHORT ) GetLastError();
 
 #elif defined(HB_OS_OS2)
@@ -1980,11 +1986,12 @@ BOOL hb_fsEof( FHANDLE hFileHandle )
    return eof( hFileHandle ) != 0;
 #endif
 }
+
 #if defined(X__WIN32__)
-HANDLE DostoWinHandle( FHANDLE fHandle)
+
+static HANDLE DostoWinHandle( FHANDLE fHandle)
 {
-   HANDLE hHandle=LongToHandle(fHandle);
-   switch (fHandle)
+   switch( fHandle )
    {
    case 0:
       return GetStdHandle(STD_INPUT_HANDLE);
@@ -1993,7 +2000,8 @@ HANDLE DostoWinHandle( FHANDLE fHandle)
    case 2:
       return GetStdHandle(STD_ERROR_HANDLE);
    default :
-      return hHandle;
+      return LongToHandle( fHandle );
    }
 }
+
 #endif
