@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-01-26 13:03 UTC+0100 Patrick Mast <email@patrickmast.com>
+       zipplatform.cpp zipplatformcomm.cpp zipstorage.cpp stdafx.h zipabstractfile.h ziparchive.h zipautobuffer.h zipbaseexception.h zipcentraldir.h zipcollections.h zipcompatibility.h zipexception.h zipfile.h zipfileheader.h zipfilemapping.h zipinternalinfo.h zipmemfile.h zippathcomponent.h zipplatform.h zipstorage.h zipstring.h clickout adler32.c compress.c crc32.c deflate.c gvmat32c.c infblock.c infcodes.c inffast.c inflate.c inftrees.c infutil.c maketree.c trees.c uncompr.c zutil.c gzio.c deflate.h infblock.h infcodes.h inffast.h inffixed.h inftrees.h infutil.h trees.h zlib.h zutil.h zconf.h ziparchivemt.mak ziparchive2.mak
+    +contrib/hbzlib/ziparchivemt.mak
+    +contrib/hbzlib/ziparchive2.mak
+      *makefile file for ziparchive.lib(MT and standartone
     *contrib/hbzlib/zipnew.cpp
       * All calls to hb_itemArrayPut() replaced with hb_arraySet()
 
