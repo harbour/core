@@ -297,7 +297,7 @@ char * hb_arrayGetDS( PHB_ITEM pArray, ULONG ulIndex, char * szDate )
       hb_itemGetDS( pArray->item.asArray.value->pItems + ulIndex - 1, szDate );
    else
       /* NOTE: Intentionally calling it with a bad parameter in order to get
-               the default value from hb_itemGetDS(). */
+               the default value from hb_itemGetDS(). [vszel] */
       hb_itemGetDS( NULL, szDate );
 
    return szDate;
@@ -528,7 +528,7 @@ ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * 
                PHB_ITEM pItem = pBaseArray->pItems + ulStart;
 
                /* NOTE: The order of the pItem and pValue parameters passed to
-                        hb_itemStrCmp() is significant, please don't change it. */
+                        hb_itemStrCmp() is significant, please don't change it. [vszel] */
                if( IS_STRING( pItem ) && hb_itemStrCmp( pItem, pValue, FALSE ) == 0 )
                   return ulStart + 1;
             }
@@ -547,7 +547,7 @@ ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * 
          }
          else if( IS_DATE( pValue ) )
          {
-            /* NOTE: This is correct: Get the date as a long value. */
+            /* NOTE: This is correct: Get the date as a long value. [vszel] */
             LONG lValue = hb_itemGetNL( pValue );
 
             for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
@@ -560,7 +560,7 @@ ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * 
          }
          else if( IS_LOGICAL( pValue ) )
          {
-            BOOL bValue = hb_itemGetL( pValue ); /* NOTE: This is correct: Get the date as a long value. */
+            BOOL bValue = hb_itemGetL( pValue ); /* NOTE: This is correct: Get the date as a long value. [vszel] */
 
             for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
             {
@@ -656,7 +656,7 @@ BOOL hb_arrayRelease( PHB_ITEM pArray )
 }
 
 /* NOTE: CA-Cl*pper 5.3a has a fix for the case when the starting position
-         is greater than the length of the array. */
+         is greater than the length of the array. [vszel] */
 
 BOOL hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart,
                    ULONG * pulCount, ULONG * pulTarget )
@@ -843,7 +843,7 @@ HARBOUR HB_AADD( void )
 }
 
 /* NOTE: CA-Cl*pper 5.3 and older will return NIL on bad parameter, 5.3a,b
-         will throw a runtime error. */
+         will throw a runtime error. [vszel] */
 
 HARBOUR HB_ASIZE( void )
 {
@@ -985,7 +985,7 @@ HARBOUR HB_ACOPY( void )
    }
 }
 
-/* NOTE: Clipper will return NIL if the parameter is not an array */
+/* NOTE: Clipper will return NIL if the parameter is not an array. [vszel] */
 
 HARBOUR HB_ACLONE( void )
 {
