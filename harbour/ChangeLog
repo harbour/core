@@ -1,3 +1,9 @@
+2001-11-22 04:45 GMT+0700 Andi Jahja <harbour@cbn.net.id>
+   * contrib/libnf/getvid.c
+     ! HB_FUNC(_V_SETVPG), use int iPage only if HB_OS_DOS is defined
+   * source/common/hbfsapi.c
+     ! undefine _NFILE_ before redefining (was defined in BCC's _nfile.h)
+
 2001-11-21 16:40 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * source/rdd/dbfcdx/dbfcdx1.c
      ! fixed eof() bug

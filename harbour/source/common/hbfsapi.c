@@ -55,6 +55,9 @@
 
 #if defined(__BORLANDC__)
 #define ___NFILE_H
+#ifdef _NFILE_
+  #undef _NFILE_
+#endif
 #define _NFILE_ 600
 
 #include <fcntl.h>

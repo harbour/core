@@ -76,9 +76,9 @@ HB_FUNC(_FT_GETVPG)
 
 HB_FUNC(_V_SETVPG)
 {
-   int iPage;
 #if defined(HB_OS_DOS)
    {
+      int iPage;
       union REGS registers;
       iPage=hb_parni(1);
       regs.h.ah=0x05;
