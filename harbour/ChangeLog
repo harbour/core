@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * doc/en/string.txt
+2002-01-31 08:40 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+      no HB_C52_STRICT used.
+  * source/rtl/Tget.prg
     * Minor modification on VarPut() method proposed by Walter Negro
 
 2002-02-04 13:12 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
