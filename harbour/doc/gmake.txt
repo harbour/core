@@ -109,11 +109,11 @@ Now. let's take a look at the rules themselves. They all live in the
 config/ directory, with the following structure:
 
   config/: The generic configuration files.
-  config/win32: Configuration files for win32 platforms.
+  config/w32: Configuration files for win32 platforms.
 
 
 Finally, you will notice one thing: the build system compiles
-everything into a subdirectory (for example, win32/gcc for WIN32 files
+everything into a subdirectory (for example, w32/gcc for WIN32 files
 compiled with gcc). This has two advantages:
 
 1. It allows you to compile for multiple platforms/compilers at the
@@ -135,12 +135,12 @@ Then, you must set a couple of environment variables that indicate
 your architecture and compiler.
 
 For gcc on Win95/WinNT with the Cygwin library:
-  HB_ARCHITECTURE   win32
+  HB_ARCHITECTURE   w32
   HB_COMPILER       gcc
   C_USR             -DHARBOUR_USE_WIN_GTAPI
 
 For gcc on Win95/WinNT with the Mingw32 library:
-  HB_ARCHITECTURE   win32
+  HB_ARCHITECTURE   w32
   HB_COMPILER       mingw32
   C_USR             -DHARBOUR_USE_WIN_GTAPI
 
@@ -154,7 +154,7 @@ For MSVC on Win95/WinNT:
 
          For best results, in your copy of make_tpl.bat, also set:
   C_USR=-DHARBOUR_USE_WIN_GTAPI -TP
-  HB_ARCHITECTURE   win32
+  HB_ARCHITECTURE   w32
   HB_COMPILER       msvc
 
 For GCC on Linux:

@@ -1,3 +1,7 @@
+19991018-09:28 GMT+1 Victor Szel <info@szelvesz.hu>
+   * doc/gmake.txt
+     ! win32 changed to w32.
+
 19991018-09:21 GMT+1 Victor Szel <info@szelvesz.hu>
    + source/rtl/soundex.c
      source/rtl/Makefile
