@@ -1,3 +1,21 @@
+19991007-17:37 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rdd/rddsys.prg
+     ! Now using __rddSetDefault() instead of rddSetDefault(). This is
+       required because at this point the requested RDD may not be 
+       registered and __rddSetDefault() will count with this.
+   * source/rdd/dbcmd.c
+     ! dbSetDriver() now throws the same error as Clipper.
+     + __rddSetDefault(), alternate version of rddSetDefault() added
+       which will not make any errors.
+   * source/compiler/expropt.c
+     + Small formatting fixes, file description fixed.
+   * include/gtapi.h
+     source/rtl/gtapi.c
+     source/rtl/console.c
+     * short -> SHORT
+   + doc/cvshowto.txt
+     + Text file describing the CVS update process.
+
 19991007-17:55 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/coompiler/expropt.c
@@ -10,6 +28,7 @@
      * removed symbols.obj from compiler - I thought it needed it, but not so.
      * shortened filelist for Harbour.exe to $**
 
+>>>>>>> 1.1163
 19991007-17:00 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y

@@ -98,8 +98,8 @@
 #endif
 
 static BOOL   s_bInit = FALSE;
-static short  s_iDevRow;
-static short  s_iDevCol;
+static SHORT  s_iDevRow;
+static SHORT  s_iDevCol;
 static USHORT s_uiPRow;
 static USHORT s_uiPCol;
 static char   s_szCrLf[ CRLF_BUFFER_LEN ];
@@ -484,12 +484,12 @@ static void hb_dispout( char * pStr, ULONG ulLen )
 #endif
 }
 
-void hb_setpos( short row, short col )
+void hb_setpos( SHORT row, SHORT col )
 {
 #ifdef HARBOUR_USE_GTAPI
    hb_gtSetPos( row, col );
 #else
-   short iCount;
+   SHORT iCount;
 
    if( row < s_iDevRow || col < s_iDevCol )
    {
@@ -509,7 +509,7 @@ void hb_setpos( short row, short col )
    s_iDevCol = col;
 }
 
-void hb_devpos( short row, short col )
+void hb_devpos( SHORT row, SHORT col )
 {
    /* Position printer if SET DEVICE TO PRINTER and valid printer file
       otherwise position console */
@@ -616,7 +616,7 @@ HARBOUR HB_SETPOSBS( void )
    if( hb_pcount() == 0 )
    {
 #ifdef HARBOUR_USE_GTAPI
-      short iRow, iCol;
+      SHORT iRow, iCol;
 
       /* NOTE: Clipper does no checks about reaching the border or anything */
       hb_gtGetPos( &iRow, &iCol );

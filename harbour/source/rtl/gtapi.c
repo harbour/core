@@ -103,8 +103,8 @@
 #include "set.h"
 #include "gtapi.h"
 
-static short  s_iCurrentRow = 0;
-static short  s_iCurrentCol = 0;
+static SHORT  s_iCurrentRow = 0;
+static SHORT  s_iCurrentCol = 0;
 static USHORT s_uiDispCount = 0;
 static USHORT s_uiPreCount = 0;
 static USHORT s_uiPreCNest = 0;
@@ -596,7 +596,7 @@ USHORT hb_gtSetCursor( USHORT uiCursorShape )
    return 0;
 }
 
-USHORT hb_gtGetPos( short * ipRow, short * ipCol )
+USHORT hb_gtGetPos( SHORT * piRow, SHORT * piCol )
 {
    if( s_iCurrentRow >= 0 && s_iCurrentRow <=  hb_gtMaxRow()
       && s_iCurrentCol >= 0 && s_iCurrentCol <= hb_gtMaxCol() )
@@ -606,13 +606,13 @@ USHORT hb_gtGetPos( short * ipRow, short * ipCol )
       s_iCurrentRow = hb_gt_Row();
       s_iCurrentCol = hb_gt_Col();
    }
-   *ipRow = s_iCurrentRow;
-   *ipCol = s_iCurrentCol;
+   *piRow = s_iCurrentRow;
+   *piCol = s_iCurrentCol;
 
    return 0;
 }
 
-USHORT hb_gtSetPos( short iRow, short iCol )
+USHORT hb_gtSetPos( SHORT iRow, SHORT iCol )
 {
    BOOL set_cursor = TRUE;
 
@@ -735,7 +735,7 @@ USHORT hb_gtSetSnowFlag( BOOL bNoSnow )
 
 USHORT hb_gtWrite( BYTE * fpStr, ULONG length )
 {
-   short iMaxCol, iMaxRow;
+   SHORT iMaxCol, iMaxRow;
    ULONG size = length;
    BYTE attr = s_Color[ s_uiColorIndex ] & 0xFF;
 
@@ -744,7 +744,7 @@ USHORT hb_gtWrite( BYTE * fpStr, ULONG length )
    iMaxCol = hb_gtMaxCol();
 
    /* Display the text if the cursor is on screen */
-   if( s_iCurrentCol >= 0 && s_iCurrentCol <= iMaxCol 
+   if( s_iCurrentCol >= 0 && s_iCurrentCol <= iMaxCol
       && s_iCurrentRow >= 0 && s_iCurrentRow <= iMaxRow )
    {
       /* Truncate the text if the cursor will end up off the right edge */
@@ -768,9 +768,9 @@ USHORT hb_gtWriteCon( BYTE * fpStr, ULONG length )
    int rc = 0, nLen = 0;
    BOOL ldisp = FALSE;
    BOOL lnewline = FALSE;
-   short iRow = s_iCurrentRow, iCol = s_iCurrentCol;
-   short iMaxRow = hb_gtMaxRow();
-   short iMaxCol = hb_gtMaxCol();
+   SHORT iRow = s_iCurrentRow, iCol = s_iCurrentCol;
+   SHORT iMaxRow = hb_gtMaxRow();
+   SHORT iMaxCol = hb_gtMaxCol();
    BYTE ch;
    BYTE * fpPtr = fpStr;
    #define STRNG_SIZE 500

@@ -123,6 +123,7 @@ HARBOUR HB_RECSIZE( void );
 HARBOUR HB_RLOCK( void );
 HARBOUR HB_SELECT( void );
 HARBOUR HB_USED( void );
+HARBOUR HB___RDDSETDEFAULT( void );
 
 static char * szDefDriver = NULL;    /* Default RDD name */
 static USHORT uiCurrArea = 1;        /* Selectd area */
@@ -1281,7 +1282,25 @@ HARBOUR HB_DBSELECTAREA( void )
 
 HARBOUR HB_DBSETDRIVER( void )
 {
-   HB_RDDSETDEFAULT();
+   char * szNewDriver;
+   USHORT uiLen;
+
+   hb_rddCheck();
+   hb_retc( szDefDriver );
+   szNewDriver = hb_parc( 1 );
+   if( ( uiLen = strlen( szNewDriver ) ) > 0 )
+   {
+      hb_strUpper( szNewDriver, uiLen ); /* TOFIX: Direct access to hb_parc() buffer ! */
+
+      if( !hb_rddFindNode( szNewDriver, NULL ) )
+      {
+         hb_errRT_DBCMD( EG_ARG, 1015, NULL, "DBSETDRIVER" );
+         return;
+      }
+
+      szDefDriver = ( char * ) hb_xrealloc( szDefDriver, uiLen + 1 );
+      strcpy( szDefDriver, szNewDriver );
+   }
 }
 
 HARBOUR HB_DBSKIP( void )
@@ -1935,3 +1954,23 @@ HARBOUR HB_USED( void )
    hb_retl( pCurrArea != NULL );
 }
 
+/* NOTE: Same as dbSetDriver() and rddSetDefault(), but doesn't
+         throw any error if the driver doesn't exist, this is 
+         required in the RDDSYS INIT function, since it's not guaranteed
+         that the RDD is already registered at that point. */
+
+HARBOUR HB___RDDSETDEFAULT( void )
+{
+   char * szNewDriver;
+   USHORT uiLen;
+
+   hb_rddCheck();
+   hb_retc( szDefDriver );
+   szNewDriver = hb_parc( 1 );
+   if( ( uiLen = strlen( szNewDriver ) ) > 0 )
+   {
+      hb_strUpper( szNewDriver, uiLen ); /* TOFIX: Direct access to hb_parc() buffer ! */
+      szDefDriver = ( char * ) hb_xrealloc( szDefDriver, uiLen + 1 );
+      strcpy( szDefDriver, szNewDriver );
+   }
+}

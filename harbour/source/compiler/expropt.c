@@ -1,10 +1,10 @@
 /*
  * $Id$
-*/
+ */
 
 /*
  * Harbour Project source code:
- * Flex/Bison generated source code splitter for 16-bit compilers
+ * Compiler Expression Optimizer
  *
  * Copyright 1999 Ron Pinkas
  * www - http://www.harbour-project.org
@@ -41,7 +41,7 @@
 #include "hberrors.h"
 
 extern int _iWarnings;
-extern char *_szCWarnings[];
+extern char * _szCWarnings[];
 
 typedef struct
 {
@@ -64,13 +64,13 @@ void ValTypePush( char cType )
    {
       if( pStackValType == NULL )
       {
-         lStackTop =1;     /* start from the one */
-         lStackLen =64;
-         pStackValType =(PSTACK_VAL_TYPE)hb_xgrab( sizeof( STACK_VAL_TYPE ) * lStackLen );
+         lStackTop = 1;     /* start from the one */
+         lStackLen = 64;
+         pStackValType = ( PSTACK_VAL_TYPE ) hb_xgrab( sizeof( STACK_VAL_TYPE ) * lStackLen );
       }
       else if( lStackTop == lStackLen )
       {
-         lStackLen +=64;
+         lStackLen += 64;
          pStackValType = ( PSTACK_VAL_TYPE ) hb_xrealloc( pStackValType, sizeof( STACK_VAL_TYPE ) * lStackLen );
       }
 
@@ -233,9 +233,9 @@ void ValTypeCheck2( char cExpected, int iExpWarning, int iSuspWarning )
 }
 
 
-char ValTypeGet( )
+char ValTypeGet( void )
 {
-   return  (lStackTop > 1) ? pStackValType[ lStackTop - 1 ].cType : 0;
+   return ( lStackTop > 1 ) ? pStackValType[ lStackTop - 1 ].cType : 0;
 }
 
 void ValTypePut( char cType )
@@ -256,7 +256,7 @@ void ValTypeAssign( char *szVarName )
    {
       if( lStackTop > 2 )  /* at least two expressions are required */
       {
-         PSTACK_VAL_TYPE pLeft= NULL, pRight;
+         PSTACK_VAL_TYPE pLeft = NULL, pRight;
          char sType1[ 2 ], sType2[ 2 ];
 
          /* 2nd. Operand (stack top)*/
@@ -286,5 +286,5 @@ void ValTypeReset( void )
    /* Clear the compile time stack values (should be empty at this point) */
    if( lStackTop > 1 )
       debug_msg2( "\n* *Compile time stack overflow: %i\n", lStackTop );
-   lStackTop =1;  /* first position to store a value */
+   lStackTop = 1;  /* first position to store a value */
 }
