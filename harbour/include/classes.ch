@@ -32,7 +32,9 @@
    function <ClassName>() ;;
       static oClass ;;
       if oClass == nil ;;
-         oClass = TClass():New( <(ClassName)> [,<(SuperClass)>] ) ;
+         oClass = TClass():New( <(ClassName)> [,<(SuperClass)>] ) ;;
+     #define _CLASS_NAME_ <ClassName> ;;
+     #translate CLSMETH <ClassName> <MethodName>() => @<ClassName>_<MethodName>() ;
      [ ; #define _Super_ <(SuperClass)> ]
 
 #xcommand DATA <DataName1> [,<DataNameN>] => ;
@@ -42,7 +44,7 @@
    oClass:AddClassData( <(DataName1)> ) [; oClass:AddClassData( <(DataNameN)> ) ]
 
 #xcommand METHOD <MethodName>( [<params,...>] ) => ;
-   oClass:AddMethod( <(MethodName)>, @<MethodName>() )
+   oClass:AddMethod( <(MethodName)>, CLSMETH _CLASS_NAME_ <MethodName>() )
 
 #xcommand METHOD <MethodName>( [<params,...>] ) CONSTRUCTOR => ;
    oClass:AddInline( <(MethodName)>, {|Self [,<params>] | <MethodName>(Self [,<params>] ), Self } )
@@ -54,13 +56,14 @@
    oClass:AddVirtual( <(MethodName)> )
 
 #xcommand MESSAGE <MessageName> METHOD <MethodName>( [<params,...>] ) => ;
-   oClass:AddMethod( <(MessageName)>, @<MethodName>() )
+   oClass:AddMethod( <(MessageName)>, CLSMETH _CLASS_NAME_ <MethodName>() )
 
 #xcommand ENDCLASS => oClass:Create() ;;
                       endif ;;
                       return oClass:Instance()
 
-#xcommand METHOD <MethodName>([<params,...>]) CLASS <ClassName> => ;
-          static function <MethodName>( [<params>] ) ; local Self := QSelf()
+#xcommand METHOD <MethodName>( [<params,...>] ) CLASS <ClassName> => ;
+          static function <ClassName>_<MethodName>( [<params>] ) ;;
+          local Self := QSelf()
 
 #endif /* _CLASSES_CH */
