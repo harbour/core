@@ -1,3 +1,32 @@
+Build #30 September 30 1999
+- RDD support
+- Support for MEM files
+- The debugger
+- Support for BEGIN/END/RECOVER/BREAK statements
+- The preprocessor supports changed order of keywords in xcommand/xtranslate
+- Error handler supports retry/substitute operations
+- Support for aliased expressions
+- Support for FIELD variables
+- Support for canceling the application by pressing Alt-C
+- Enhanced ITEM API
+- Support for internal command line options '//'
+- Severe speed improvement
+- Better Directory() compatibility
+- Redirected output works now
+- Even more Preprocessor compatibility
+- Set HARBOUR= in environment to override Set CLIPPER= settings
+- Rudimentary Unix keyboard support added
+- Tone support added
+- SET KEY support was added
+- Extensive regression test suite added (RTL_TEST).
+- Array handling fixed and made Clipper compatible
+- Ragged array declaration and initialization support added
+- FileSys API extensions, more C5.3 compatible functions added
+- Compiler command line compatibility enhanced
+- Internal errors made uniform
+- Source code cleanup and formatting
+- Many new functions, samples and bug fixes
+
 Build #29 27 July 1999
 - Support for these compilers:
    C++ Builder
