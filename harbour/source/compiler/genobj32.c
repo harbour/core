@@ -143,6 +143,19 @@ static char * GetSymbolName( ULONG ulPos )
   return pSymbol->szName;
 }
 
+static BYTE GetFunctionLocalsCount( PFUNCTION pFunction )
+{
+   PVAR pLocal = pFunction->pLocals;
+   BYTE bLocals = 0;
+
+   while( pLocal )
+   {
+      pLocal = pLocal->pNext;
+      bLocals++;
+   }
+   return bLocals;
+}
+
 static ULONG GetPCodesSize( void )
 {
   ULONG ulTotal = 0;
@@ -153,7 +166,14 @@ static ULONG GetPCodesSize( void )
 
   while( pFunction )
     {
-      ulTotal += pFunction->lPCodePos + 1; /* HB_P_ENDPROC !!! */
+      ulTotal += pFunction->lPCodePos; //  + 1; /* HB_P_ENDPROC !!! */
+
+      if( ! ( GetFunctionLocalsCount( pFunction ) || pFunction->wParamCount ) )
+         ulTotal -= 3; /* remove frame 3 bytes pcode */
+
+      if( ! ( pFunction->bFlags & FUN_USES_STATICS ) )
+         ulTotal -= 3; /* remove statics frame */
+
       pFunction = pFunction->pNext;
     }
   return ulTotal;
@@ -522,7 +542,14 @@ static void CodeSegment( FILE * hObjFile, BYTE * prgCode, ULONG ulPrgLen, USHORT
           putbyte( * ( prgCode + ul ), hObjFile );
           bCheckSum += * ( prgCode + ul );
         }
-      ulPCodeOffset += pFunction->lPCodePos + 1; /* HB_P_ENDPROC !!! */
+      ulPCodeOffset += pFunction->lPCodePos; //  + 1; /* HB_P_ENDPROC !!! */
+
+      if( ! ( GetFunctionLocalsCount( pFunction ) || pFunction->wParamCount ) )
+         ulPCodeOffset -= 3; /* remove frame 3 bytes pcode */
+
+      if( ! ( pFunction->bFlags & FUN_USES_STATICS ) )
+         ulPCodeOffset -= 3; /* remove statics frame */
+
       pFunction = pFunction->pNext;
     }
 
@@ -585,14 +612,123 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, USHORT wSymLen, USHORT 
 
   while( pFunction )
     {
+      BOOL bEndProcRequired = TRUE;
+
       for( w = 0; w < pFunction->lPCodePos; w++ )
         {
-          putbyte( pFunction->pCode[ w ], hObjFile );
-          bCheckSum += pFunction->pCode[ w ];
+           switch( pFunction->pCode[ w ] )
+           {
+              case HB_P_FRAME:
+              {
+                 BYTE bLocals = GetFunctionLocalsCount( pFunction );
+
+                 if( bLocals || pFunction->wParamCount )
+                 {
+                    putbyte( HB_P_FRAME, hObjFile );
+                    bCheckSum += HB_P_FRAME;
+                    putbyte( bLocals - pFunction->wParamCount, hObjFile );
+                    bCheckSum += bLocals - pFunction->wParamCount;
+                    putbyte( pFunction->wParamCount, hObjFile );
+                    bCheckSum += pFunction->wParamCount;
+                 }
+                 w += 2;
+              }
+              break;
+
+              case HB_P_LINE:
+              {
+                 putbyte( HB_P_LINE, hObjFile );
+                 bCheckSum += HB_P_LINE;
+                 putbyte( pFunction->pCode[ w + 1 ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w + 1 ];
+                 putbyte( pFunction->pCode[ w + 2 ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w + 2 ];
+                 w += 2;
+              }
+              break;
+
+              case HB_P_SFRAME:
+              {
+                 if( pFunction->bFlags & FUN_USES_STATICS )
+                 {
+                    USHORT wPos;
+                    hb_compSymbolFind( hb_comp_pInitFunc->szName, &wPos );
+                    wPos = hb_compSymbolFixPos( wPos );
+                    putbyte( HB_P_SFRAME, hObjFile );
+                    bCheckSum += HB_P_SFRAME;
+                    putbyte( HB_LOBYTE( wPos ), hObjFile );
+                    bCheckSum += HB_LOBYTE( wPos );
+                    putbyte( HB_HIBYTE( wPos ), hObjFile );
+                    bCheckSum += HB_HIBYTE( wPos );
+                 }
+                 w += 2;
+              }
+              break;
+
+              case HB_P_ENDPROC:
+              {
+                 if( w + 1 == pFunction->lPCodePos )
+                    bEndProcRequired = FALSE;
+                 putbyte( HB_P_ENDPROC, hObjFile );
+                 bCheckSum += HB_P_ENDPROC;
+              }
+              break;
+
+              case HB_P_PUSHSYM:
+              {
+                 USHORT wFixPos = pFunction->pCode[ w + 1 ] +
+                                  pFunction->pCode[ w + 2 ] * 256;
+                 wFixPos = hb_compSymbolFixPos( wFixPos );
+                 putbyte( HB_P_PUSHSYM, hObjFile );
+                 bCheckSum += HB_P_PUSHSYM;
+                 putbyte( HB_LOBYTE( wFixPos ), hObjFile );
+                 bCheckSum += HB_LOBYTE( wFixPos );
+                 putbyte( HB_HIBYTE( wFixPos ), hObjFile );
+                 bCheckSum += HB_HIBYTE( wFixPos );
+                 w += 2;
+              }
+              break;
+
+              case HB_P_PUSHSTR:
+              {
+                 USHORT uLen = pFunction->pCode[ w + 1 ] +
+                               pFunction->pCode[ w + 2 ] * 256;
+                 putbyte( HB_P_PUSHSTR, hObjFile );
+                 bCheckSum += HB_P_PUSHSTR;
+                 putbyte( pFunction->pCode[ w + 1 ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w + 1 ];
+                 putbyte( pFunction->pCode[ w + 2 ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w + 2 ];
+                 w += 2;
+
+                 if( uLen > 0 )
+                 {
+                    USHORT u = 0;
+
+                    while( u++ < uLen )
+                    {
+                       w++;
+                       putbyte( pFunction->pCode[ w ], hObjFile );
+                       bCheckSum += pFunction->pCode[ w ];
+                    }
+                 }
+              }
+              break;
+
+              default:
+              {
+                 putbyte( pFunction->pCode[ w ], hObjFile );
+                 bCheckSum += pFunction->pCode[ w ];
+              }
+           }
         }
-      putbyte( HB_P_ENDPROC, hObjFile );
-      bCheckSum += HB_P_ENDPROC;
+      if( bEndProcRequired )
+      {
+         putbyte( HB_P_ENDPROC, hObjFile );
+         bCheckSum += HB_P_ENDPROC;
+      }
       pFunction = pFunction->pNext;
+      bEndProcRequired = TRUE;
     }
 
   pSymbol = GetFirstSymbol();
@@ -773,4 +909,3 @@ static void GroupDef( FILE * hObjFile, BYTE bName, BYTE * aSegs )
 }
 
 #endif /* HARBOUR_OBJ_GENERATION */
-
