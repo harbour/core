@@ -1,3 +1,10 @@
+2000-05-04 18:00 GMT-4 David G. Holm <dholm@jsd-llc.com>
+
+  * contrib/rdd_ads/ads1.c
+    ! The adsGoBottom() function was not using the current index order.
+    % Minor formatting changes (added missing space in front of ? and on
+      both sides of : in several ?: expressions)
+
 20000504-17:10 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
    *include/hbvm.h

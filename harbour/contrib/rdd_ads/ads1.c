@@ -201,7 +201,7 @@ static ERRCODE hb_adsCheckBofEof( ADSAREAP pArea )
    AdsAtEOF( pArea->hTable, (UNSIGNED16 *)&(pArea->fEof) );
 
   if( pArea->fBof && !pArea->fEof )
-     AdsSkip  ( (pArea->hOrdCurrent)? pArea->hOrdCurrent:pArea->hTable, 1 );
+     AdsSkip  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent:pArea->hTable, 1 );
    return SUPER_SKIPFILTER( (AREAP)pArea, 1 );
 }
 
@@ -237,7 +237,7 @@ static ERRCODE adsGoBottom( ADSAREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("adsGoBottom(%p)", pArea));
 
-   AdsGotoBottom  ( pArea->hTable );
+   AdsGotoBottom  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable );
    hb_adsCheckBofEof( pArea );
    return SUPER_SKIPFILTER( (AREAP)pArea, -1 );
 }
@@ -286,14 +286,14 @@ static ERRCODE adsGoTop( ADSAREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("adsGoTop(%p)", pArea));
 
-   AdsGotoTop  ( (pArea->hOrdCurrent)? pArea->hOrdCurrent:pArea->hTable );
+   AdsGotoTop  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable );
    hb_adsCheckBofEof( pArea );
    return SUPER_SKIPFILTER( (AREAP)pArea, 1 );
 }
 
 static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLast )
 {
-   UNSIGNED16 usSeekType = ( bSoftSeek )? ADS_SOFTSEEK:ADS_HARDSEEK;
+   UNSIGNED16 usSeekType = ( bSoftSeek ) ? ADS_SOFTSEEK : ADS_HARDSEEK;
    HB_TRACE(HB_TR_DEBUG, ("adsSeek(%p, %d, %p, %d)", pArea, bSoftSeek, pKey, bFindLast));
 
    if( bFindLast )
@@ -323,7 +323,7 @@ static ERRCODE adsSkipRaw( ADSAREAP pArea, LONG toSkip )
 
    HB_TRACE(HB_TR_DEBUG, ("adsSkipRaw(%p)", pArea));
 
-   ulRetVal = AdsSkip  ( (pArea->hOrdCurrent)? pArea->hOrdCurrent:pArea->hTable, toSkip );
+   ulRetVal = AdsSkip  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable, toSkip );
    hb_adsCheckBofEof( pArea );
    if ( ulRetVal == AE_SUCCESS )
       return SUCCESS;
@@ -802,8 +802,8 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    ulRetVal = AdsOpenTable  ( 0, pOpenInfo->abName, NULL,
                   adsFileType, adsCharType, adsLockType, adsRights,
-                  ( (pOpenInfo->fShared)? ADS_SHARED:ADS_EXCLUSIVE ) |
-                  ( (pOpenInfo->fReadonly)? ADS_READONLY:ADS_DEFAULT ),
+                  ( (pOpenInfo->fShared) ? ADS_SHARED : ADS_EXCLUSIVE ) |
+                  ( (pOpenInfo->fReadonly) ? ADS_READONLY : ADS_DEFAULT ),
                    &hTable);
    if( ulRetVal != AE_SUCCESS )
    {
@@ -1004,7 +1004,7 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
    {
       case DBOI_BAGEXT:
          hb_itemPutC( pOrderInfo->itmResult,
-                ((adsFileType==ADS_ADT) ? ".adi" : (adsFileType==ADS_CDX)? ".cdx" : ".ntx") );
+                ((adsFileType==ADS_ADT) ? ".adi" : (adsFileType==ADS_CDX) ? ".cdx" : ".ntx") );
          break;
       case DBOI_EXPRESSION:
          AdsGetIndexExpr( phIndex, aucBuffer, &pusLen);
