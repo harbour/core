@@ -54,6 +54,6 @@ HB_FUNC( __RUN )
       }
    }
 #else
-   hb_errRT_BASE_Ext1( EG_UNSUPPORTED, 9999, NULL, "__RUN", 0, EF_CANDEFAULT );
+   hb_errRT_BASE_Ext1( EG_UNSUPPORTED, 9999, NULL, "__RUN", 0, EF_CANDEFAULT, 0 );
 #endif
 }

@@ -209,7 +209,7 @@ JNIEXPORT jlong JNICALL Java_Harbour_Run( JNIEnv *env,
          pDynSym = hb_dynsymFind( pSymRead[ ul ].szName );
          if( !pDynSym )
          {
-            hb_errRT_BASE( EG_ARG, 9999, "Unknown or unregistered symbol", pSymRead[ ul ].szName );
+            hb_errRT_BASE( EG_ARG, 9999, "Unknown or unregistered symbol", pSymRead[ ul ].szName, 0 );
             bError = TRUE;
             break;
          }

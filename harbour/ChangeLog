@@ -1,3 +1,14 @@
+2001-03-22 13:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/runjava/runjava.c
+     + Added support for Argument Errors
+
+   * source/rtl/len.c
+   * source/rtl/minmax.c
+   * source/rtl/run.c
+   * source/vm/arrayshb.c
+   * source/vm/memvars.c
+     * Corrected to always use hb_paramError() when calling hb_errRT_BASE*()
+
 2001-03-22 11:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
 
    * hb_slex.vc

@@ -86,7 +86,7 @@ HB_FUNC( MAX )
       hb_retds( hb_itemGetDL( p1 ) >= hb_itemGetDL( p2 ) ? hb_pardsbuff( szDate, 1 ) : hb_pardsbuff( szDate, 2 ) );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1093, NULL, "MAX", 2, p1, p2 );
+      hb_errRT_BASE_SubstR( EG_ARG, 1093, NULL, "MAX", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
 }
 
 /* returns the minimum of two date or numerics */
@@ -138,6 +138,6 @@ HB_FUNC( MIN )
       hb_retds( hb_itemGetDL( p1 ) <= hb_itemGetDL( p2 ) ? hb_pardsbuff( szDate, 1 ) : hb_pardsbuff( szDate, 2 ) );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1092, NULL, "MIN", 2, p1, p2 );
+      hb_errRT_BASE_SubstR( EG_ARG, 1092, NULL, "MIN", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
 }
 

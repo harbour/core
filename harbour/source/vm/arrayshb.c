@@ -81,7 +81,7 @@ HB_FUNC( ARRAY )
 
          if( hb_parnl( iParam ) < 0 ) /* || hb_parnl( iParam ) <= 4096 */
          {
-            hb_errRT_BASE( EG_BOUND, 1131, NULL, hb_langDGetErrorDesc( EG_ARRDIMENSION ), 1, hb_param( iParam, HB_IT_ANY ) );
+            hb_errRT_BASE( EG_BOUND, 1131, NULL, hb_langDGetErrorDesc( EG_ARRDIMENSION ), 1, hb_paramError( 1 ) );
             bError = TRUE;
             break;
          }
@@ -103,7 +103,7 @@ HB_FUNC( AADD )
       if( pValue && hb_arrayAdd( pArray, pValue ) )
          hb_itemReturn( pValue );
       else
-         hb_errRT_BASE( EG_BOUND, 1187, NULL, "AADD", 2, pArray, hb_paramError( 2 ) );
+         hb_errRT_BASE( EG_BOUND, 1187, NULL, "AADD", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1123, NULL, "AADD", 2, hb_paramError(1), hb_paramError( 2 ) );

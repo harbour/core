@@ -59,5 +59,5 @@ HB_FUNC( LEN )
       }
    }
 
-   hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, "LEN", 1, pItem );
+   hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, "LEN", 1, hb_paramError( 1 ) );
 }
