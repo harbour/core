@@ -106,8 +106,9 @@ Identifier    (([a-zA-Z])|([_a-zA-Z][_a-zA-Z0-9]+))
 
 MacroVar      \&{Identifier}[\.]?
 MacroEnd      \&{Identifier}\.({Identifier})|([0-9]+)
-MacroId       {Identifier}({MacroVar}|{MacroEnd})
+MacroId       ({Identifier}\&(({Identifier}[\.]?)|({Identifier}\.({Identifier})|([0-9]+))))
 MacroTxt      ({MacroVar}|{MacroEnd}|{MacroId})+
+
 
 Array         {Identifier}[ \t]*"["
 MacroVarArray {MacroVar}[ \t]*"["
