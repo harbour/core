@@ -1,3 +1,7 @@
+2001-10-22 07:20 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
+   *makefile.bc
+     * removed -b option from hbmake
+
 2001-10-22 13:42 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * source/rdd/dbfcdx/dbfcdx1.c
      + added support for DBOI_NUMBER, for indexord() support

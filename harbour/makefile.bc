@@ -2602,12 +2602,11 @@ $(HBMAKE_EXE) : $(HBMAKE_EXE_OBJS)
    $(ECHO) $(MACRO_LIB) >> make.tmp
    $(ECHO) $(DBFNTX_LIB) >> make.tmp
    $(ECHO) $(DBFCDX_LIB) >> make.tmp
-   $(ECHO) $(DEBUG_LIB) >> make.tmp
    $(CC) @make.tmp
    $(DEL) make.tmp
 
 $(OBJ_DIR)\hbmake.c : $(HBMAKE_DIR)\hbmake.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) -b $** -o$@
+   $(HARBOUR_EXE) $(HARBOURFLAGS)  $** -o$@
 
 $(OBJ_DIR)\hbmake.obj : $(OBJ_DIR)\hbmake.c
    $(CC) $(CLIBFLAGS) -o$@ $**
