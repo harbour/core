@@ -101,6 +101,7 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 
    if(VioGetBuf(&s_ulLVBptr, &s_usLVBlength, 0) == NO_ERROR) {
       s_ulLVBptr = (ULONG) SELTOFLAT(s_ulLVBptr);
+      VioShowBuf(0, s_usLVBlength, 0);
    } else {
       s_ulLVBptr = (ULONG) NULL;
    }

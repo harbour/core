@@ -1,6 +1,13 @@
 20000416-15:23 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
       * config/os2/gcc.cf
+        % changed again
+      * source/rtl/gtos2/gtos2.c
+        % little change to Init procedure
+
+20000416-15:23 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+      * config/os2/gcc.cf
         ! fixed an error in ar rule ;-)
       * config/os2/install.cf
         % changed install rule to test existance of install dir

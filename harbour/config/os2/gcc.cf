@@ -52,10 +52,7 @@ endef
 
 # We have to use a script to overcome the AR limit of max 850 characters
 # in commmand line
-# CLEAR command empties old .a file before creating new one. 
-# Without it libary is not refreshed if needed
 define create_library
-echo CLEAR $@ > __lib__.tmp
 echo CREATE $@ > __lib__.tmp
 $(foreach file, $^, $(lib_object))
 echo SAVE >> __lib__.tmp
@@ -66,6 +63,6 @@ endef
 # Under OS/2 || isn't a command separator (inside a shell, that is); correct separator is & 
 AR = ar
 ARFLAGS =
-AR_RULE = $(create_library) & $(RM) __lib__.tmp
+AR_RULE = $(RM) $@ & $(create_library) & $(RM) __lib__.tmp
 
 include $(TOP)$(ROOT)config/rules.cf
