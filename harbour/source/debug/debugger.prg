@@ -1259,6 +1259,11 @@ if !::lGo
    endif
 
    if cPrgName != ::cPrgName
+      if ! File( cPrgName ) .and. ! Empty( ::cPathForFiles )
+         if File( ::cPathForFiles + cPrgName )
+            cPrgName = ::cPathForFiles + cPrgName
+         endif
+      endif
       ::cPrgName := cPrgName
       ::oBrwText := TBrwText():New( ::oWndCode:nTop + 1, ::oWndCode:nLeft + 1,;
                    ::oWndCode:nBottom - 1, ::oWndCode:nRight - 1, ::cPrgName,;
@@ -1281,7 +1286,7 @@ METHOD OSShell() CLASS TDebugger
    local cImage := SaveScreen()
    local cColors := SetColor()
    local cOs    := Upper( OS() )
-   local cShell 
+   local cShell
    local bLastHandler := ErrorBlock({ |objErr| BREAK (objErr) })
    local oE
 
@@ -1291,7 +1296,7 @@ METHOD OSShell() CLASS TDebugger
 
    begin sequence
       if At("WINDOWS", cOs) != 0 .OR. At("DOS", cOs) != 0 .OR. At("OS/2", cOs) != 0
-         cShell := GetEnv("COMSPEC")  
+         cShell := GetEnv("COMSPEC")
          RUN ( cShell )
       elseif At("LINUX", cOs) != 0
          cShell := GetEnv("SHELL")
@@ -1451,7 +1456,7 @@ METHOD RestoreSettings() CLASS TDebugger
         ::aWindows[ n ]:Refresh()
       next
    endif
-  
+
 return nil
 
 METHOD SaveAppStatus() CLASS TDebugger
@@ -1508,7 +1513,7 @@ METHOD SaveSettings() CLASS TDebugger
       if ::nTabWidth != 4
          cInfo += "Options Tab " + AllTrim( Str( ::nTabWidth ) ) + HB_OsNewLine()
       endif
-	        
+
       if ::lShowStatics
          cInfo += "Monitor Static" + HB_OsNewLine()
       endif
@@ -1516,7 +1521,7 @@ METHOD SaveSettings() CLASS TDebugger
       if ::lShowPublics
          cInfo += "Monitor Public" + HB_OsNewLine()
       endif
-		
+
       if ::lShowLocals
          cInfo += "Monitor Local" + HB_OsNewLine()
       endif
@@ -1524,7 +1529,7 @@ METHOD SaveSettings() CLASS TDebugger
       if ::lShowPrivates
          cInfo += "Monitor Private" + HB_OsNewLine()
       endif
-		
+
       MemoWrit( ::cSettingsFileName, cInfo )
    endif
 
