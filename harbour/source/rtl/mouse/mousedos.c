@@ -255,13 +255,13 @@ void hb_mouse_GetBounds( int * piTop, int * piLeft, int * piBottom, int * piRigh
 
       regs.x.ax = 7;
       int86( MOUSE_INTERRUPT, &regs, &regs );
-      piLeft = regs.x.cx / 8;
-      piRight = regs.x.dx / 8;
+      *piLeft = regs.x.cx / 8;
+      *piRight = regs.x.dx / 8;
 
       regs.x.ax = 8;
       int86( MOUSE_INTERRUPT, &regs, &regs );
-      piTop = regs.x.cx / 8;
-      piBottom = regs.x.dx / 8;
+      *piTop = regs.x.cx / 8;
+      *piBottom = regs.x.dx / 8;
 #endif
    }
 }

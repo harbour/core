@@ -1,3 +1,21 @@
+20000214-06:32 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * *.bat
+     + .LOG file is only shown when there was some error.
+   * source/rtl/itemapi.c
+     ! hb_itemStr() fixed for 16bit Borland compilers. Log(0) was causing
+       a domain error.
+   * source/rtl/gtdos.c
+     ! Borland warnings fixed.
+   * source/rtl/mousedos.c
+     ! Fixed hb_mouse_GetBounds().
+       (Have this function been ever tested/compiled ??)
+
+   ; COMMENT: Borland 16 bit support is still broken. Large symbol tables and 
+     strings makes the final .EXE exit without any messages. HBDOC works, 
+     HBRUN not, RT_MAIN not (but it can work if larger parts are removed).
+     xmemset() and xmemcpy() crashes for larger values (like 100000),
+     and the symbol processing used to fail right on startup.
+
 20000214-03:50 GMT+1 Victor Szakats <info@szelvesz.hu>
    * bin/bld_b*.bat
      bin/bld_vc.bat

@@ -9,15 +9,16 @@ if "%1" == "CLEAN" goto CLEAN
 :BUILD
 
    make -fmakefile.bc %1 %2 %3 > make_b32.log
-   notepad make_b32.log
+   if errorlevel 1 notepad make_b32.log
    goto EXIT
 
 :CLEAN
 
-   echo Y | del bin\*.exe > NUL
-   echo Y | del bin\*.tds > NUL
-   echo Y | del obj\b32\*.* > NUL
-   echo Y | del lib\b32\*.* > NUL
+   echo Y | del bin\*.exe > nul
+   echo Y | del bin\*.tds > nul
+   echo Y | del obj\b32\*.* > nul
+   echo Y | del lib\b32\*.* > nul
    goto EXIT
 
 :EXIT
+

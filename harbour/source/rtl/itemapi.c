@@ -37,7 +37,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    hb_itemPCount()
  *    hb_itemParamPtr()
  *    hb_itemReturnPtr()
@@ -93,7 +93,7 @@ BOOL hb_evalNew( PEVALINFO pEvalInfo, PHB_ITEM pItem )
 }
 
 /* NOTE: CA-Cl*pper is buggy and will not check if more parameters are
-         added than the maximum (9). */
+         added than the maximum (9). [vszakats] */
 
 BOOL hb_evalPutParam( PEVALINFO pEvalInfo, PHB_ITEM pItem )
 {
@@ -176,6 +176,7 @@ BOOL hb_evalRelease( PEVALINFO pEvalInfo )
          It can be used to call symbols, functions names, or blocks, the items
          don't need to be duplicated when passed as argument, one line is
          enough to initiate a call, the number of parameters is not limited.
+         [vszakats]
 
    NOTE: When calling hb_itemDo() with no arguments for the Harbour item being
          evaluated, you must use '(PHB_ITEM *) 0' as the third parameter.
@@ -256,7 +257,7 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, USHORT uiPCount, PHB_ITEM pItemArg1, ... )
 }
 
 /* NOTE: Same as hb_itemDo(), but even simpler, since the function name can be
-         directly passed as a zero terminated string.
+         directly passed as a zero terminated string. [vszakats]
 
    NOTE: When calling hb_itemDoC() with no arguments for the Harbour function
          being called, you must use '(PHB_ITEM *) 0' as the third parameter.
@@ -484,7 +485,8 @@ char * hb_itemGetC( PHB_ITEM pItem )
       return NULL;
 }
 
-/* NOTE: Caller should not modify the buffer returned by this function */
+/* NOTE: Caller should not modify the buffer returned by this function.
+         [vszakats] */
 
 char * hb_itemGetCPtr( PHB_ITEM pItem )
 {
@@ -540,7 +542,8 @@ BOOL hb_itemFreeC( char * szText )
 /* NOTE: Clipper is buggy and will not append a trailing zero, although
          the NG says that it will. Check your buffers, since what may have
          worked with Clipper could overrun the buffer with Harbour.
-         The correct buffer size is 9 bytes: char szDate[ 9 ] */
+         The correct buffer size is 9 bytes: char szDate[ 9 ] 
+         [vszakats] */
 
 char * hb_itemGetDS( PHB_ITEM pItem, char * szDate )
 {
@@ -1165,16 +1168,19 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
 
          if( IS_DOUBLE( pNumber ) || iDec != 0 )
          {
+            double dNumber = hb_itemGetND( pNumber );
+
+            #ifndef __BORLANDC__
             static double s_dInfinity = 0;
             static double s_bInfinityInit = FALSE;
-
-            double dNumber = hb_itemGetND( pNumber );
 
             if( ! s_bInfinityInit )
             {
                s_dInfinity = -log( 0 );
                s_bInfinityInit = TRUE;
             }
+            #endif
+
             if( pNumber->item.asDouble.length == 99
             #ifdef __BORLANDC__
                /* No more checks for Borland C, which returns 0 for log( 0 ),
@@ -1231,7 +1237,7 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
          TRUE, this trick is required to stay thread safe, while minimize
          memory allocation and buffer copying.
          As a side effect the caller should never modify the returned buffer
-         since it may point to a constant value. [vszel] */
+         since it may point to a constant value. [vszakats] */
 
 char * hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
 {
@@ -1314,3 +1320,4 @@ PHB_ITEM hb_itemValToStr( PHB_ITEM pItem )
 
    return pResult;
 }
+

@@ -746,8 +746,8 @@ void hb_gt_Replicate( BYTE c, ULONG nLength )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%d, %lu)", (int) c, nLength));
 
-   c = ' ';
-   nLength = 0;
+   HB_SYMBOL_UNUSED( c );
+   HB_SYMBOL_UNUSED( nLength );
 }
 
 BOOL hb_gt_GetBlink()
