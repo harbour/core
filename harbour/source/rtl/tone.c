@@ -63,7 +63,6 @@
 #elif defined(_Windows) || defined(_WIN32)
    #if defined(_MSC_VER)
       #define HB_OS_WIN_32_USED
-      #include "hbdefs.h"
    #endif
 #elif defined(__MINGW32__)
    #include <stdlib.h>

@@ -47,6 +47,7 @@
 #include "hbpp.h"
 #include "hbver.h"
 #include "hbexprop.h"
+#include "hbpcode.h"
 
 /* compiler related declarations */
 

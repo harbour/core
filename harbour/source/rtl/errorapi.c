@@ -57,10 +57,10 @@
  */
 
 #include "hbapi.h"
-#include "hbvm.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbapilng.h"
+#include "hbvm.h"
 
 /* This is added to be able to detect a recursive error, and not let Harbour
    go into an infinite loop, this is an emulated version of the Clipper

@@ -34,8 +34,8 @@
  */
 
 #include "hbapi.h"
-#include "hbset.h"
 #include "hbapigt.h"
+#include "hbset.h"
 
 char * hb_setColor( char * szColor )
 {

@@ -69,8 +69,8 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
-#include "hbvm.h"
 #include "hbapierr.h"
+#include "hbvm.h"
 #include "hbdate.h"
 #include "hbset.h"
 

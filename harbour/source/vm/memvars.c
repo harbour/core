@@ -54,8 +54,8 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
-#include "hbdate.h" /* for __MVSAVE()/__MVRESTORE() */
 #include "hbapifs.h" /* for __MVSAVE()/__MVRESTORE() */
+#include "hbdate.h" /* for __MVSAVE()/__MVRESTORE() */
 #include "error.ch"
 #include "hbmemvar.ch"
 

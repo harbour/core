@@ -90,10 +90,10 @@
 #define HB_OS_WIN_32_USED
 
 #include "hbapi.h"
-#include "hbvm.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
 #include "hbapigt.h"
+#include "hbvm.h"
 #include "hbset.h"
 #include "inkey.ch"
 #include "hbinit.h"

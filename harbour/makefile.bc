@@ -53,11 +53,10 @@ HBDOC_DIR    = utils\hbdoc
 # C compiler definition and C flags. These should never have to change.
 #
 
-CFLAGS = $(CFLAGS) -d -I$(INCLUDE_DIR)
-CLIBFLAGS = $(CFLAGS) -c
+CFLAGS         = $(CFLAGS) -d -I$(INCLUDE_DIR)
+CLIBFLAGS      = $(CFLAGS) -c
 CLIBFLAGSDEBUG = $(CLIBFLAGS) -v
-
-HARBOURFLAGS = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0
+HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0
 
 #
 # Macros to access our library names

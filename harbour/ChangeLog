@@ -1,3 +1,16 @@
+20000315-14:28 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * include/hbvmpub.h
+     include/hbcomp.h
+     include/hbmacro.h
+     source/compiler/genc.c
+     % From now on hbpcode.h is not included in every file, to save compile
+       time. !! WARNING !! All .PRG must be rebuilt.
+   * source/*
+     % Removed some superfluous #include "" directives, to save compile time.
+       The whole inclusion system checked.
+   * tests/test.frm
+     ! Re-uploaded in binary mode.
+
 20000315-08:08 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/rtl/filesys.c
      source/rtl/console.c

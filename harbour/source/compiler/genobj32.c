@@ -33,10 +33,7 @@
  *
  */
 
-#include "hbapi.h"
 #include "hbcomp.h"
-#include "hbpcode.h"
-#include "hberrors.h"
 
 #ifndef HARBOUR_OBJ_GENERATION
 

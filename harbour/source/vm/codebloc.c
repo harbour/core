@@ -36,8 +36,8 @@
 /* The Harbour implementation of codeblocks */
 
 #include "hbapi.h"
-#include "hbvm.h"
 #include "hbapiitm.h"
+#include "hbvm.h"
 
 /* Creates the codeblock structure
  *

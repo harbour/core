@@ -49,8 +49,6 @@
 #include <malloc.h>     /* required for allocating and freeing memory */
 
 #include "hbpp.h"
-#include "hberrors.h"
-#include "hbver.h"
 #include "hbcomp.h"
 
 static int hb_pp_Parse( FILE * handl_o );

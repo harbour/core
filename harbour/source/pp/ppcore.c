@@ -64,7 +64,6 @@
 #include <time.h>
 
 #include "hbpp.h"
-#include "hberrors.h"
 #include "hbcomp.h"
 
 #if defined( OS_UNIX_COMPATIBLE )

@@ -45,8 +45,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "hbpp.h"
-#include "hberrors.h"
 #include "hbcomp.h"
 
 extern FILES       hb_comp_files;

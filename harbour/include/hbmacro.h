@@ -53,6 +53,7 @@
 #include "hbapierr.h"
 #include "hbvm.h"
 #include "hbexprop.h"
+#include "hbpcode.h"
 
 /* flags for compilation process
  */

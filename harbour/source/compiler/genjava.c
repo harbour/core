@@ -34,11 +34,7 @@
  *
  */
 
-#include "hbapi.h"
 #include "hbcomp.h"
-#include "hbpcode.h"
-#include "hberrors.h"
-#include "hbver.h"
 
 #define SYM_NOLINK  0              /* Symbol does not have to be linked */
 #define SYM_FUNC    1              /* Defined function                  */

@@ -51,12 +51,12 @@
 #include <math.h>
 
 #include "hbapi.h"
-#include "hbvm.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
 #include "hbapilng.h"
 #include "hbapirdd.h"
 #include "hbapigt.h"
+#include "hbvm.h"
 #include "hbpcode.h"
 #include "hbset.h"
 

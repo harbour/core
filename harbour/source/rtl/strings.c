@@ -53,10 +53,10 @@
 #include <ctype.h>
 
 #include "hbapi.h"
-#include "hbdate.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbset.h"
+#include "hbdate.h"
 
 #define HB_ISSPACE( c ) ( ( c ) == ' ' || \
                           ( c ) == HB_CHAR_HT || \

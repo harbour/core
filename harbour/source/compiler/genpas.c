@@ -33,10 +33,7 @@
  *
  */
 
-#include "hbapi.h"
 #include "hbcomp.h"
-#include "hbpcode.h"
-#include "hberrors.h"
 
 void hb_compGenPascal( PHB_FNAME pFileName )
 {

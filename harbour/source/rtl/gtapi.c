@@ -121,8 +121,9 @@
  */
 
 #include <ctype.h>
-#include "hbset.h"
+
 #include "hbapigt.h"
+#include "hbset.h"
 
 static SHORT  s_iCurrentRow = 0;
 static SHORT  s_iCurrentCol = 0;

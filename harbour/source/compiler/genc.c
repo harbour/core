@@ -70,6 +70,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    fprintf( yyc, " * Generated C source code\n */\n\n" );
 
    fprintf( yyc, "#include \"hbvmpub.h\"\n" );
+   fprintf( yyc, "#include \"hbpcode.h\"\n" );
    fprintf( yyc, "#include \"hbinit.h\"\n\n\n" );
 
    if( ! hb_comp_bStartProc )
