@@ -1,4 +1,4 @@
-/*
+ /*
  * $Id$
  */
 
@@ -235,6 +235,12 @@ METHOD FieldType(nNum) CLASS TMySQLRow
          case ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_VAR_STRING_TYPE .OR.;
               ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_STRING_TYPE
             cType := "C"
+
+         case ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_INT24_TYPE
+            cType := "I"
+
+         case ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_MEDIUM_BLOB_TYPE
+            cType := "B"
 
          otherwise
             cType := "U"
@@ -705,13 +711,13 @@ CLASS TMySQLServer
    DATA  cUser                   // user accessing db
    DATA  cPassword               // his/her password
    DATA  lError                  // .T. if occurred an error
-
+   DATA  cCreateQuery
    METHOD   New(cServer, cUser, cPassword)   // Opens connection to a server, returns a server object
    METHOD   Destroy()                        // Closes connection to server
 
    METHOD   SelectDB(cDBName)    // Which data base I will use for subsequent queries
 
-   METHOD   CreateTable(cTable, aStruct)  // Create new table using the same syntax of dbCreate()
+   METHOD   CreateTable(cTable, aStruct,cPrimaryKey,cUniqueKey,cAuto)  // Create new table using the same syntax of dbCreate()
    METHOD   DeleteTable(cTable)           // delete table
    METHOD   TableStruct(cTable)           // returns a structure array compatible with clipper's dbStruct() ones
    METHOD   CreateIndex(cName, cTable, aFNames, lUnique) // Create an index (unique) on field name(s) passed as an array of strings aFNames
@@ -764,47 +770,59 @@ return .F.
 // NOTE: OS/2 port of MySQL is picky about table names, that is if you create a table with
 // an upper case name you cannot alter it (for example) using a lower case name, this violates
 // OS/2 case insensibility about names
-METHOD CreateTable(cTable, aStruct) CLASS TMySQLServer
+METHOD CreateTable(cTable, aStruct,cPrimaryKey,cUniqueKey,cAuto) CLASS TMySQLServer
 
    /* NOTE: all table names are created with lower case */
-   local cCreateQuery := "CREATE TABLE " + Lower(cTable) + " ("
+
    local i
 
    // returns NOT NULL if extended structure has DBS_NOTNULL field to true
    local cNN := {|aArr| iif(Len(aArr) > DBS_DEC, iif(aArr[DBS_NOTNULL], " NOT NULL ", ""), "")}
-
+   ::cCreateQuery := "CREATE TABLE " + Lower(cTable) + " ("
    for i := 1 to Len(aStruct)
       do case
       case aStruct[i][DBS_TYPE] == "C"
-         cCreateQuery += aStruct[i][DBS_NAME] + " char(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")" + Eval(cNN, aStruct[i]) + ","
+         ::cCreateQuery += aStruct[i][DBS_NAME] + " char(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")" + Eval(cNN, aStruct[i])+ if(aStruct[i][DBS_NAME]==cPrimaryKey," NOT NULL ",'' )+ ","
 
       case aStruct[i][DBS_TYPE] == "M"
-         cCreateQuery += aStruct[i][DBS_NAME] + " text" + Eval(cNN, aStruct[i]) + ","
+         ::cCreateQuery += aStruct[i][DBS_NAME] + " text" + Eval(cNN, aStruct[i]) + ","
 
       case aStruct[i][DBS_TYPE] == "N"
          if aStruct[i][DBS_DEC] == 0
-            cCreateQuery += aStruct[i][DBS_NAME] + " int(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")" + Eval(cNN, aStruct[i]) + ","
+            ::cCreateQuery += aStruct[i][DBS_NAME] + " int(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")" + Eval(cNN, aStruct[i]) + if(aStruct[i][DBS_NAME]==cPrimaryKey," NOT NULL ",'' )+ if(aStruct[i][DBS_NAME]==cAuto," auto_increment ",'' ) + ","
          else
-            cCreateQuery += aStruct[i][DBS_NAME] + " real(" + AllTrim(Str(aStruct[i][DBS_LEN])) + "," + AllTrim(Str(aStruct[i][DBS_DEC])) + ")" + Eval(cNN, aStruct[i]) + ","
+            ::cCreateQuery += aStruct[i][DBS_NAME] + " real(" + AllTrim(Str(aStruct[i][DBS_LEN])) + "," + AllTrim(Str(aStruct[i][DBS_DEC])) + ")" + Eval(cNN, aStruct[i]) + ","
          endif
 
       case aStruct[i][DBS_TYPE] == "D"
-         cCreateQuery += aStruct[i][DBS_NAME] + " date " + Eval(cNN, aStruct[i]) + ","
+         ::cCreateQuery += aStruct[i][DBS_NAME] + " date " + Eval(cNN, aStruct[i]) + ","
 
       case aStruct[i][DBS_TYPE] == "L"
-         cCreateQuery += aStruct[i][DBS_NAME] + " tinyint "  + Eval(cNN, aStruct[i]) + ","
+         ::cCreateQuery += aStruct[i][DBS_NAME] + " tinyint "  + Eval(cNN, aStruct[i]) + ","
 
+      case aStruct[i][DBS_TYPE] == "B"
+         ::cCreateQuery += aStruct[i][DBS_NAME] + " mediumblob "  + Eval(cNN, aStruct[i]) + ","
+
+      case aStruct[i][DBS_TYPE] == "I"
+         ::cCreateQuery += aStruct[i][DBS_NAME] + " mediumint " + Eval(cNN, aStruct[i]) + "," 
+      
       otherwise
-         cCreateQuery += aStruct[i][DBS_NAME] + " char(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")" + Eval(cNN, aStruct[i]) + ","
+         ::cCreateQuery += aStruct[i][DBS_NAME] + " char(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")" + Eval(cNN, aStruct[i]) + ","
 
       endcase
 
    next
+   if cPrimarykey != NIL
+        ::cCreateQuery += ' PRIMARY KEY ('+cPrimaryKey+'),'
+   endif
+   if cUniquekey != NIL
+        ::cCreateQuery += ' UNIQUE '+cUniquekey +' ('+cUniqueKey+'),'
+   endif
+        
 
    // remove last comma from list
-   cCreateQuery := Left(cCreateQuery, Len(cCreateQuery) -1) + ")"
-
-   if sqlQuery(::nSocket, cCreateQuery) == 0
+   ::cCreateQuery := Left(::cCreateQuery, Len(::cCreateQuery) -1) + ");"
+   if sqlQuery(::nSocket, ::cCreateQuery) == 0
       return .T.
    else
       ::lError := .T.
@@ -974,6 +992,14 @@ METHOD TableStruct(cTable) CLASS TMySQLServer
                aSField[DBS_LEN] := 12
                aSFIeld[DBS_DEC] := 8
 
+            case aField[MSQL_FS_TYPE] == MYSQL_MEDIUM_BLOB_TYPE
+               aSField[DBS_TYPE] := "B"
+               aSField[DBS_LEN] := aField[MSQL_FS_LENGTH]
+              
+            case aField[MSQL_FS_TYPE] == FIELD_TYPE_INT24
+               aSField[DBS_TYPE] := "I"
+               aSField[DBS_LEN] := aField[MSQL_FS_LENGTH]
+               aSFIeld[DBS_DEC] := aField[MYSQL_FS_DECIMALS]
             otherwise
 
             endcase
@@ -1007,7 +1033,9 @@ static function ClipValue2SQL(Value)
          endif
 
       case Valtype(Value) $ "CM"
-         cValue := "'" + StrTran(Value, "'", "\'") + "'"
+         cValue := "'"
+         Value:=DATATOSQL(value)
+         cValue+= value+ "'"
 
       case Valtype(Value) == "L"
          cValue := AllTrim(Str(iif(Value == .F., 0, 1)))

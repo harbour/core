@@ -88,3 +88,17 @@ Excuse my poor english and happy selecting :-)
 
 Maurilio Longo - <maurilio.longo@libero.it>
 
+New Enhacemets
+
+Added support to mediumint and mediumblob type on the follow classes
+TMySqlRow:FieldType() will Return an "B" for mediumblob and an "I" Mediumint field
+TMySQLServer:CreateTable(cTable, aStruct,cPrimaryKey,cUniqueKey,cAuto) Added tree new parameters
+     Cprimarykey tell to use the field defined as an primaty key.
+     CUniqueKey  tell that this field has unique values
+     cAuto       Tell that this field should be auto_increment
+     Also to create an Table with mediumint and mediumblob field types use
+     {{"Data","B",1,0},{"Ammount","I",9,0}} in the astructure array
+     To save an File to an mediumblob field use
+     cBuffer:=FILETOSQLBINARY(cFile) . this will read up the file and return an string formated to mysql requeriments
+
+Luiz Rafael Culik - <culik@sl.conex.net>

@@ -2,7 +2,6 @@
  * $Id$
  */
 
-
 /*
  * Harbour Project source code:
  * MySQL DBMS low level (client api) interface code.
@@ -51,6 +50,17 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net>
+ *    DATATOSQL(),FILETOSQLBINARY()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
 
 /* NOTE: we need this to prevent base types redefinition */
 #define _CLIPDEFS_H
@@ -61,6 +71,9 @@
 #include "extend.api"
 #include "item.api"
 #include "mysql.h"
+#include <stdio.h>
+#include <hb_io.h>
+#include <fcntl.h>
 
 
 /* NOTE: OS/2 EMX port of MySQL needs libmysqlclient.a from 3.21.33b build which has st and mt
@@ -326,4 +339,51 @@ HB_FUNC(SQLHOSTINFO)
 HB_FUNC(SQLSRVINFO)
 {
    _retc( mysql_get_server_info( (MYSQL *)_parnl(1) ) );
+}
+
+char *filetoBuff(char *f,char *s)
+{
+   int i=0;
+   int fh= hb_fsOpen(s,2);
+   i=hb_fsReadLarge(fh,f,filelength(fh));
+   f[ i ] = '\0';
+   hb_fsClose(fh);
+   return f   ;
+}
+
+HB_FUNC(DATATOSQL)
+{
+   const char *from;
+   int iSize;
+   int iLen;
+   char *buffer;
+   from=hb_parc(1);
+   iLen=hb_parclen(1)*2;
+   iSize=strlen(from);
+   buffer=hb_xgrab(iLen);
+   mysql_escape_string(buffer,from,iSize);
+   hb_retc((char*)buffer);
+   hb_xfree(buffer);
+}
+
+HB_FUNC(FILETOSQLBINARY)
+{
+   char *szFile=hb_parc(1);
+   const char *from;
+   int fh;
+   int iSize;
+   int iLen;
+   char *buffer;
+   char *FromBuffer;
+   fh=hb_fsOpen(szFile,2);
+   iSize=filelength(fh);
+   iLen=iSize*2;
+   FromBuffer=hb_xgrab(iSize+1);
+   hb_fsClose(fh);
+   from=(char*)filetoBuff(FromBuffer,szFile);
+   buffer=hb_xgrab(iLen);
+   mysql_escape_string(buffer,from,iSize);
+   hb_retc((char*)buffer);
+   hb_xfree(buffer);
+   hb_xfree(FromBuffer);
 }
