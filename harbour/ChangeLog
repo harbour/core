@@ -1,3 +1,12 @@
+19991013-13:46 GMT+8 Ron Pinkas <Ron@Profit-Master.com>
+   * harbour.y
+          + added MACROOP (last session also added MACROALIAS)
+	  + added rules to complete support for PRIVATE/PUBLIC &cVar - it now supports any mix of variables and macros.
+   * harbour.l
+          + added rules to support new TOKEN MACROOP and completed support for macro in MODES PRIVATE and PUBLIC_ (Ryszard TODO removed).
+   * tests/tstmacro.prg
+	  added even more tests to demonstrate working capabilities og macro.
+
 19991013-17:45 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/oldbox.c
      * Add parens so cast applies to entire expression

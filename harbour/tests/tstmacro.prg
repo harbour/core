@@ -4,7 +4,7 @@ Function Main( )
 
 	LOCAL cStr := 'cVar', cStr_1 := 'cVar_1', aVar := { 'cVar_1' }, oVar
 
-	PRIVATE cVar_1, cMainPrivate := 'cVar_1'
+	PRIVATE cVar_1, cMainPrivate := 'cVar_1', GlobalPrivate := 'BornInRunTimeVar'
 
 	&cStr_1 = 'Simple '
 	? M->cVar_1
@@ -38,6 +38,8 @@ Function Main( )
 
 	? '"cVar_1" = [' + M->cVar_1 + '] AFTER SubFun() PRIVATE'
 
+	? M->NewPublicVar
+
 RETURN NIL
 
 FUNCTION TValue
@@ -56,7 +58,6 @@ FUNCTION TValue
 
 RETURN( oClass:Instance() )
 
-
 STATIC FUNCTION New()
 
    LOCAL Self := QSelf()
@@ -67,7 +68,16 @@ Function SubFun()
 
 	? '"cVar_1" = [' + M->cVar_1 + '] BEFORE SubFun() PRIVATE'
 
-	PRIVATE M->&cMainPrivate
+	// Testing conflict with KEY WORD
+	PRIVATE PRIVATE := 'I am a Var named PRIVATE ', &cMainPrivate, SomeVar, OtherVar := 1, &GlobalPrivate
+	PUBLIC PUBLIC := 'My Name is PUBLIC', &( 'NewPublicVar' )
+
+	M->NewPublicVar := 'Still Alive because I am PUBLIC'
+
+	? M->PRIVATE + PRIVATE
+	? PRIVATE + M->PRIVATE
+
+	? BornInRunTimeVar
 
 	&cMainPrivate := 'In SubFun()'
 

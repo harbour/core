@@ -947,13 +947,13 @@ Separator     {SpaceTab}
 "priv"("ate"|"at"|"a")? { BEGIN PRIVATE_;
                   yylval.string = yy_strupr( yy_strdup( yytext ) );
                 }
-<PRIVATE_>{Separator}+[_a-zA-Z] { /* an Identifier after PRIVATE */
+<PRIVATE_>{Separator}+["&"|_a-zA-Z] { /* an Identifier after PRIVATE */
                  unput( yytext[ yyleng-1 ] );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  if( _iState == LOOKUP )
                  { /* it is first item in the line */
                    hb_xfree( (void *) yylval.string );
-                   _iState =PRIVATE;
+                   _iState = PRIVATE;
                    return PRIVATE;
                  }
                  else
@@ -962,11 +962,11 @@ Separator     {SpaceTab}
                    return IDENTIFIER;
                  }
                }
-<PRIVATE_>{Separator}*[^a-zA-Z] { /* any character (not identifier) after PRIVATE */
-                /* TODO: add support for macro operator */
+
+<PRIVATE_>{Separator}*[^a-zA-Z] { /* any character (not identifier or macro operator) after PRIVATE */
                  unput( yytext[ yyleng-1 ] );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-                 _iState =IDENTIFIER;
+                 _iState = IDENTIFIER;
                  return IDENTIFIER;
                }
 %{
@@ -979,7 +979,7 @@ Separator     {SpaceTab}
 "publ"("ic"|"i")? { BEGIN PUBLIC_;
                   yylval.string = yy_strupr( yy_strdup( yytext ) );
                 }
-<PUBLIC_>{Separator}+[_a-zA-Z]   { /* an identifier after PUBLIC */
+<PUBLIC_>{Separator}+["&"|_a-zA-Z]   { /* an identifier after PUBLIC */
                  unput( yytext[ yyleng-1 ] );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  if( _iState == LOOKUP )
@@ -994,8 +994,7 @@ Separator     {SpaceTab}
                    return IDENTIFIER;
                  }
                }
-<PUBLIC_>{Separator}*[^a-zA-Z] { /* any character (not identifier) after PUBLIC */
-                /* TODO: add support for macro operator */
+<PUBLIC_>{Separator}*[^a-zA-Z] { /* any character (not identifier or macro) after PUBLIC */
                  unput( yytext[ yyleng-1 ] );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  _iState =IDENTIFIER;
@@ -1122,41 +1121,42 @@ Separator     {SpaceTab}
 %{
 /* ************************************************************************ */
 %}
-"#"            _iState =OPERATOR; return NE1;
-"="            _iState =OPERATOR; return yytext[ 0 ];
-"+"            _iState =OPERATOR; return yytext[ 0 ];
-"-"            _iState =OPERATOR; return yytext[ 0 ];
-"*"            _iState =OPERATOR; return yytext[ 0 ];
-[\/]           _iState =OPERATOR; return yytext[ 0 ];
-"%"            _iState =OPERATOR; return yytext[ 0 ];
-"$"            _iState =OPERATOR; return yytext[ 0 ];
-"<>"|"!="      _iState =OPERATOR; return NE2;
-":="           _iState =OPERATOR; return INASSIGN;
-"=="           _iState =OPERATOR; return EQ;
-"++"           _iState =OPERATOR; return INC;
-"--"           _iState =OPERATOR; return DEC;
-"->"           _iState =OPERATOR; return ALIASOP;
-"M->&"         _iState =OPERATOR; return MACROALIAS;
-"MEMVAR->&"    _iState =OPERATOR; return MACROALIAS;
-"<="           _iState =OPERATOR; return LE;
-">="           _iState =OPERATOR; return GE;
-"+="           _iState =OPERATOR; return PLUSEQ;
-"-="           _iState =OPERATOR; return MINUSEQ;
-"*="           _iState =OPERATOR; return MULTEQ;
-"/="           _iState =OPERATOR; return DIVEQ;
-"^="           _iState =OPERATOR; return EXPEQ;
-"%="           _iState =OPERATOR; return MODEQ;
-"**"|"^"       _iState =OPERATOR; return POWER;
-"."[t|y]"."    _iState =SEPARATOR; return TRUEVALUE;
-"."[f|n]"."    _iState =SEPARATOR; return FALSEVALUE;
-".and."        _iState =OPERATOR; return AND;
-".or."         _iState =OPERATOR; return OR;
-"!"|".not."    _iState =OPERATOR; return NOT;
-"."            _iState =OPERATOR; return DOT;
-"::"           unput( ':' ); unput( 'f' ); unput( 'l' ); unput( 'e' ); unput( 'S' );
-[,\{\}\|\#\&\:\<\>\[\]\@] _iState =OPERATOR; return yytext[ 0 ];
-[\(]           ++_iOpenBracket; _iState =SEPARATOR; return yytext[ 0 ];
-[\)]           --_iOpenBracket; _iState =SEPARATOR; return yytext[ 0 ];
+"#"           		  { _iState =OPERATOR; return NE1;                                        }
+"="           		  { _iState =OPERATOR; return yytext[ 0 ];                                }
+"+"           		  { _iState =OPERATOR; return yytext[ 0 ];                                }
+"-"           		  { _iState =OPERATOR; return yytext[ 0 ];                                }
+"*"           		  { _iState =OPERATOR; return yytext[ 0 ];                                }
+[\/]          		  { _iState =OPERATOR; return yytext[ 0 ];                                }
+"%"           		  { _iState =OPERATOR; return yytext[ 0 ];                                }
+"$"           		  { _iState =OPERATOR; return yytext[ 0 ];                                }
+"<>"|"!="     		  { _iState =OPERATOR; return NE2;                                        }
+":="          		  { _iState =OPERATOR; return INASSIGN;                                   }
+"=="          		  { _iState =OPERATOR; return EQ;                                         }
+"++"          		  { _iState =OPERATOR; return INC;                                        }
+"--"          		  { _iState =OPERATOR; return DEC;                                        }
+"->"          		  { _iState =OPERATOR; return ALIASOP;                                    }
+"M->&"        		  { _iState =OPERATOR; return MACROALIAS;                                 }
+"MEMVAR->&"   		  { _iState =OPERATOR; return MACROALIAS;                                 }
+"&"           		  { _iState =OPERATOR; return MACROOP;                                    }
+"<="          		  { _iState =OPERATOR; return LE;                                         }
+">="          		  { _iState =OPERATOR; return GE;                                         }
+"+="          		  { _iState =OPERATOR; return PLUSEQ;                                     }
+"-="          		  { _iState =OPERATOR; return MINUSEQ;                                    }
+"*="          		  { _iState =OPERATOR; return MULTEQ;                                     }
+"/="          		  { _iState =OPERATOR; return DIVEQ;                                      }
+"^="          		  { _iState =OPERATOR; return EXPEQ;                                      }
+"%="          		  { _iState =OPERATOR; return MODEQ;                                      }
+"**"|"^"      		  { _iState =OPERATOR; return POWER;                                      }
+"."[t|y]"."   		  { _iState =SEPARATOR; return TRUEVALUE;                                 }
+"."[f|n]"."   		  { _iState =SEPARATOR; return FALSEVALUE;                                }
+".and."       		  { _iState =OPERATOR; return AND;                                        }
+".or."        		  { _iState =OPERATOR; return OR;                                         }
+"!"|".not."   		  { _iState =OPERATOR; return NOT;                                        }
+"."           		  { _iState =OPERATOR; return DOT;                                        }
+"::"          		  { unput( ':' ); unput( 'f' ); unput( 'l' ); unput( 'e' ); unput( 'S' ); }
+[,\{\}\|\#\&\:\<\>\[\]\@] { _iState =OPERATOR; return yytext[ 0 ];                                }
+[\(]                      { ++_iOpenBracket; _iState =SEPARATOR; return yytext[ 0 ];              }
+[\)]                      { --_iOpenBracket; _iState =SEPARATOR; return yytext[ 0 ];              }
 
 {InvalidNumber} BEGIN INVALIDNUM_; yylval.string = yy_strupr( yy_strdup( yytext ) );
 <INVALIDNUM_>("."|{Separator}+) {

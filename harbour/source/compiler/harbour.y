@@ -536,12 +536,12 @@ extern int _iState;     /* current parser state (defined in harbour.l */
 %token FUNCTION PROCEDURE IDENTIFIER RETURN NIL NUM_DOUBLE INASSIGN NUM_INTEGER NUM_LONG
 %token LOCAL STATIC IIF IF ELSE ELSEIF END ENDIF LITERAL TRUEVALUE FALSEVALUE
 %token EXTERN INIT EXIT AND OR NOT PUBLIC EQ NE1 NE2
-%token INC DEC ALIASOP MACROALIAS DOCASE CASE OTHERWISE ENDCASE ENDDO MEMVAR
+%token INC DEC ALIASOP DOCASE CASE OTHERWISE ENDCASE ENDDO MEMVAR
 %token WHILE EXIT LOOP END FOR NEXT TO STEP LE GE FIELD IN PARAMETERS
 %token PLUSEQ MINUSEQ MULTEQ DIVEQ POWER EXPEQ MODEQ EXITLOOP
 %token PRIVATE BEGINSEQ BREAK RECOVER USING DO WITH SELF LINE
 %token AS_NUMERIC AS_CHARACTER AS_LOGICAL AS_DATE AS_ARRAY AS_BLOCK AS_OBJECT DECLARE_FUN
-%token DOT
+%token DOT MACROALIAS MACROOP
 
 /*the lowest precedence*/
 /*postincrement and postdecrement*/
@@ -565,7 +565,7 @@ extern int _iState;     /* current parser state (defined in harbour.l */
 /*preincrement and predecrement*/
 %left  PRE
 /*special operators*/
-%left  ALIASOP '&' '@' ')'
+%left  ALIASOP MACROOP '@' ')'
 %right '\n' ';' ','
 /*the highest precedence*/
 
@@ -573,7 +573,7 @@ extern int _iState;     /* current parser state (defined in harbour.l */
 %type <dNum>    NUM_DOUBLE
 %type <iNumber> ArgList ElemList PareExpList ExpList FunCall FunScope IncDec
 %type <iNumber> Params ParamList Logical ArrExpList
-%type <iNumber> NUM_INTEGER BlockExpList Argument IfBegin VarList MethParams ObjFunCall
+%type <iNumber> NUM_INTEGER BlockExpList Argument IfBegin VarList MethParams ObjFunCall, ExtVarList
 %type <iNumber> MethCall BlockList FieldList DoArgList VarAt
 %type <lNumber> NUM_LONG WhileBegin BlockBegin
 %type <pVoid>   IfElseIf Cases
@@ -687,10 +687,8 @@ Statement  : ExecFlow Crlf        {}
                         }
                         functions.pLast->bFlags |= FUN_WITH_RETURN;
                      } Crlf
-           | PUBLIC { iVarScope = VS_PUBLIC; } VarList Crlf
-           | PRIVATE { iVarScope = VS_PRIVATE; } VarList Crlf
-           | PUBLIC { iVarScope = VS_PUBLIC; } VarMacroList Crlf
-           | PRIVATE { iVarScope = VS_PRIVATE; } VarMacroList Crlf
+           | PUBLIC { iVarScope = VS_PUBLIC; } ExtVarList Crlf
+           | PRIVATE { iVarScope = VS_PRIVATE; } ExtVarList Crlf
 
            | EXITLOOP  Crlf            { LoopExit(); }
            | LOOP  Crlf                { LoopLoop(); }
@@ -698,11 +696,7 @@ Statement  : ExecFlow Crlf        {}
            | EXTERN ExtList Crlf
            ;
 
-VarMacroList : { SetVarMacro(); } VarMacro { Do( 1 ); }
-             | VarMacroList ',' { SetVarMacro(); } VarMacro { Do( 1 ); }
-	     ;
-
-VarMacro   : '&' IDENTIFIER           { PushId( $2 ); }
+VarMacro   : MACROOP IDENTIFIER           { PushId( $2 ); }
 	   | MACROALIAS IDENTIFIER    { PushId( $2 ); }
 	   | Macro
 	   | VarMacro DOT IDENTIFIER { PushString( $3 ); GenPlusPCode( HB_P_PLUS ); }
@@ -838,8 +832,8 @@ IfInline   : IIF PareExpList3       { GenIfInline(); }
            | IF  PareExpList3       { GenIfInline(); }
            ;
 
-Macro      : '&' Variable
-           | '&' '(' Expression ')'
+Macro      : MACROOP Variable
+           | MACROOP '(' Expression ')'
 	   | MACROALIAS Variable
            | MACROALIAS '(' Expression ')'
            ;
@@ -1088,6 +1082,12 @@ VarDefs    : LOCAL { iVarScope = VS_LOCAL; Line(); } VarList Crlf { _cVarType = 
                              functions.pLast->wParamNum=0; iVarScope = ( VS_PRIVATE | VS_PARAMETER ); }
                              MemvarList Crlf
            ;
+
+ExtVarList : VarDef                                  { $$ = 1; }
+           | ExtVarList ',' VarDef                      { $$++; }
+           | { SetVarMacro(); } VarMacro { Do( 1 ); }
+           | ExtVarList ',' { SetVarMacro(); } VarMacro { Do( 1 ); }
+	   ;
 
 VarList    : VarDef                                  { $$ = 1; }
            | VarList ',' VarDef                      { $$++; }
