@@ -49,10 +49,6 @@
  *
  */
 
-/* TODO: hb_xrealloc() is not completely consistent now, since it will
-         destroy the pointer when called with a zero parameter, and return NULL.
-         But will not accept NULL pointer as a parameter. [vszel] */
-
 /* NOTE: If you turn this on, the memory subsystem will collect information
          about several statistical data about memory management, it will show
          these on exit if memory seem to have leaked.
@@ -114,15 +110,15 @@ void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL
 
    if( ! s_pFirstBlock )
    {
-      s_pFirstBlock = ( PHB_MEMINFO ) pMem;
-      s_pLastBlock  = ( PHB_MEMINFO ) pMem;
       ( ( PHB_MEMINFO ) pMem )->pPrevBlock = NULL;
+      s_pFirstBlock = ( PHB_MEMINFO ) pMem;
    }
    else
    {
       ( ( PHB_MEMINFO ) pMem )->pPrevBlock = s_pLastBlock;
-      s_pLastBlock = ( PHB_MEMINFO ) pMem;
+      s_pLastBlock->pNextBlock = ( PHB_MEMINFO ) pMem;
    }
+   s_pLastBlock = ( PHB_MEMINFO ) pMem;
    ( ( PHB_MEMINFO ) pMem )->pNextBlock = NULL;
 
    ( ( PHB_MEMINFO ) pMem )->ulSignature = HB_MEMINFO_SIGNATURE;
@@ -152,7 +148,7 @@ void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xalloc(%lu)", ulSize));
 
-   return ( char * ) malloc( ulSize );
+   return malloc( ulSize );
 
 #endif
 }
@@ -172,16 +168,15 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
 
    if( ! s_pFirstBlock )
    {
-      s_pFirstBlock = ( PHB_MEMINFO ) pMem;
-      s_pLastBlock  = ( PHB_MEMINFO ) pMem;
       ( ( PHB_MEMINFO ) pMem )->pPrevBlock = NULL;
+      s_pFirstBlock = ( PHB_MEMINFO ) pMem;
    }
    else
    {
       ( ( PHB_MEMINFO ) pMem )->pPrevBlock = s_pLastBlock;
       s_pLastBlock->pNextBlock = ( PHB_MEMINFO ) pMem;
-      s_pLastBlock = ( PHB_MEMINFO ) pMem;
    }
+   s_pLastBlock = ( PHB_MEMINFO ) pMem;
    ( ( PHB_MEMINFO ) pMem )->pNextBlock = NULL;
 
    ( ( PHB_MEMINFO ) pMem )->ulSignature = HB_MEMINFO_SIGNATURE;
@@ -214,33 +209,17 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
    if( ! pMem )
       hb_errInternal( 9999, "hb_xgrab can't allocate memory", NULL, NULL );
 
-   return ( char * ) pMem;
+   return pMem;
 
 #endif
 }
-
-#ifdef HB_FM_STATISTICS
-
-static void DeleteNode( PHB_MEMINFO pMemBlock )
-{
-   if( pMemBlock->pPrevBlock )
-      pMemBlock->pPrevBlock->pNextBlock = pMemBlock->pNextBlock;
-   else
-      s_pFirstBlock = pMemBlock->pNextBlock;
-
-   if( pMemBlock->pNextBlock )
-      pMemBlock->pNextBlock->pPrevBlock = pMemBlock->pPrevBlock;
-   else
-      s_pLastBlock = pMemBlock->pPrevBlock;
-}
-
-#endif
 
 void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
 {
 #ifdef HB_FM_STATISTICS
 
    PHB_MEMINFO pMemBlock;
+   ULONG ulMemSize;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xrealloc(%p, %lu)", pMem, ulSize));
 
@@ -252,34 +231,27 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
    if( pMemBlock->ulSignature != HB_MEMINFO_SIGNATURE )
       hb_errInternal( 9999, "hb_xrealloc called with an invalid pointer", NULL, NULL );
 
-   if( ulSize == 0 )
-   {
-      s_lMemoryConsumed -= pMemBlock->ulSize;
-      s_lMemoryBlocks--;
+   ulMemSize = pMemBlock->ulSize;
 
-      DeleteNode( pMemBlock );
-      free( ( void * ) pMem );
-      pMem = NULL;
-   }
-   else
-   {
-      ULONG ulMemSize = pMemBlock->ulSize;
+   pMem = realloc( pMemBlock, ulSize + sizeof( HB_MEMINFO ) );
 
-      pMem = realloc( pMemBlock, ulSize + sizeof( HB_MEMINFO ) );
+   s_lMemoryConsumed += ( ulSize - ulMemSize );
+   if( s_lMemoryMaxConsumed < s_lMemoryConsumed )
+      s_lMemoryMaxConsumed = s_lMemoryConsumed;
 
-      s_lMemoryConsumed += ( ulSize - ulMemSize );
-      if( s_lMemoryMaxConsumed < s_lMemoryConsumed )
-         s_lMemoryMaxConsumed = s_lMemoryConsumed;
+   if( ! pMem )
+      hb_errInternal( 9999, "hb_xrealloc can't reallocate memory", NULL, NULL );
 
-      if( ! pMem )
-         hb_errInternal( 9999, "hb_xrealloc can't reallocate memory", NULL, NULL );
+   ( ( PHB_MEMINFO ) pMem )->ulSize = ulSize;  /* size of the memory block */
+   if( ( ( PHB_MEMINFO ) pMem )->pPrevBlock )
+      ( ( PHB_MEMINFO ) pMem )->pPrevBlock->pNextBlock = ( PHB_MEMINFO ) pMem;
+   if( ( ( PHB_MEMINFO ) pMem )->pNextBlock )
+      ( ( PHB_MEMINFO ) pMem )->pNextBlock->pPrevBlock = ( PHB_MEMINFO ) pMem;
 
-      ( ( PHB_MEMINFO ) pMem )->ulSize = ulSize;  /* size of the memory block */
-      if( ( ( PHB_MEMINFO ) pMem )->pPrevBlock )
-         ( ( PHB_MEMINFO ) pMem )->pPrevBlock->pNextBlock = ( PHB_MEMINFO ) pMem;
-      if( ( ( PHB_MEMINFO ) pMem )->pNextBlock )
-         ( ( PHB_MEMINFO ) pMem )->pNextBlock->pPrevBlock = ( PHB_MEMINFO ) pMem;
-   }
+   if( s_pFirstBlock == pMemBlock )
+      s_pFirstBlock = pMem;
+   if( s_pLastBlock == pMemBlock )
+      s_pLastBlock = pMem;
 
    return ( char * ) pMem + sizeof( HB_MEMINFO );
 
@@ -290,20 +262,12 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
    if( ! pMem )
       hb_errInternal( 9999, "hb_xrealloc called with a NULL pointer", NULL, NULL );
 
-   if( ulSize == 0 )
-   {
-      free( ( void * ) pMem );
-      pMem = NULL;
-   }
-   else
-   {
-      pMem = realloc( ( char * ) pMem, ulSize );
+   pMem = realloc( pMem, ulSize );
 
-      if( ! pMem )
-         hb_errInternal( 9999, "hb_xrealloc can't reallocate memory", NULL, NULL );
-   }
+   if( ! pMem )
+      hb_errInternal( 9999, "hb_xrealloc can't reallocate memory", NULL, NULL );
 
-   return ( char * ) pMem;
+   return pMem;
 
 #endif
 }
@@ -326,9 +290,17 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
       s_lMemoryConsumed -= pMemBlock->ulSize;
       s_lMemoryBlocks--;
 
-      DeleteNode( pMemBlock );
-      if( pMemBlock )
-         free( ( void * ) pMemBlock );
+      if( pMemBlock->pPrevBlock )
+         pMemBlock->pPrevBlock->pNextBlock = pMemBlock->pNextBlock;
+      else
+         s_pFirstBlock = pMemBlock->pNextBlock;
+
+      if( pMemBlock->pNextBlock )
+         pMemBlock->pNextBlock->pPrevBlock = pMemBlock->pPrevBlock;
+      else
+         s_pLastBlock = pMemBlock->pPrevBlock;
+
+      free( ( void * ) pMemBlock );
    }
    else
       hb_errInternal( 9999, "hb_xfree called with a NULL pointer", NULL, NULL );
@@ -338,7 +310,7 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
    HB_TRACE(HB_TR_DEBUG, ("hb_xfree(%p)", pMem));
 
    if( pMem )
-      free( ( char * ) pMem );
+      free( pMem );
    else
       hb_errInternal( 9999, "hb_xfree called with a NULL pointer", NULL, NULL );
 
@@ -391,8 +363,8 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       hb_outerr( hb_consoleGetNewLine(), 0 );
 
       for( ui = 1, pMemBlock = s_pFirstBlock; pMemBlock; pMemBlock = pMemBlock->pNextBlock )
-         HB_TRACE( HB_TR_ERROR, ( "block %i: size: %lu %s line %i", 
-            ui++, 
+         HB_TRACE( HB_TR_ERROR, ( "block %i: size: %lu %s line %i",
+            ui++,
             pMemBlock->ulSize,
             pMemBlock->szProcName,
             pMemBlock->uiProcLine ) );

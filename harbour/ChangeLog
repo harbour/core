@@ -1,3 +1,15 @@
+19991111-05:39 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/fm.c
+    ! hb_xalloc() chaining bug fixed.
+    ! hb_xrealloc() chaining bug fixed.
+    - Removed the faulty handling of the hb_xrealloc() call with zero size,
+      previously the memory block was considered freed but free() was never 
+      called. I think that until a free() call is not issued for an allocated 
+      block we should consider it allocated regardless of it's size. This way 
+      it's also faster and cleaner.
+    % DeleteNode() moved to hb_xfree() since it's only used from one place now.
+    % Casts removed from the non-FM_STATISTICS branches.
+
 19991111-04:41 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/fm.c
     ! hb_xrealloc() several things fixed (access to the pointer after 
