@@ -1,8 +1,10 @@
+2000-02-19 01:10 Brian Hays <bhays@abacuslaw.com>
+   + doc/harbext.txt
+     + Added usage of @<Function>()
+
 20000219-07:02 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
     * source/rtl/environ.c
       ! Added missing $ONELINER$ token to the __run() function
-Ps: the line below wasn't me
-Added usage of @<Function>()
 
 2000-02-18 17:30 GMT-5 David G. Holm <dholm@ sd-llc.com>
 
