@@ -86,7 +86,6 @@ procedure __dbgEntry( uParam1, uParam2 )  // debugger entry point
            if s_oDebugger != nil
               if PCount() == 2 // called from hvm.c hb_vmLocalName()
                  AAdd( s_oDebugger:aVars, { uParam2, uParam1, "Local" } )
-                 Alert( uParam1 )
                  if s_oDebugger:oBrwVars != nil
                     s_oDebugger:oBrwVars:RefreshAll()
                  endif
