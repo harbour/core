@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-12-10 18:20 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+
+  * utils/hbver/hbverfix.c
+    ! Fixes for problems found after testing on FreeBSD.
+
 2003-12-10 17:30 UTC-0500 David G. Holm <dholm@jsd-llc.com>
 
   * source/compiler/harbour.c

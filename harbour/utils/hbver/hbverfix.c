@@ -176,10 +176,10 @@ int main( int argc, char * argv[] )
    {
       fprintf( stderr, "\nSyntax:  %s [options]"
               "\n"
-              "\nOptions:  /d[level]   set debug level (-1 == none, 0 == minimal*, 1 == verbose)"
-              "\n          /iv         increment major version number+"
-              "\n          /im         increment minor version number+"
-              "\n          /ir         increment cszRevision number+"
+              "\nOptions:  -d[level]   set debug level (-1 == none, 0 == minimal*, 1 == verbose)"
+              "\n          -iv         increment major version number+"
+              "\n          -im         increment minor version number+"
+              "\n          -ir         increment revision number+"
               "\n"
               "\nAn * indicates a default option. A + indicates mutually exclusive options"
               "\n(the last one that is present on the command line will be being used)."
@@ -197,9 +197,9 @@ int main( int argc, char * argv[] )
       const char * cszChangeLogName = "ChangeLog";
       const char * cszVersionName = "include/hbver.h";
       const char * cszRewriteName = "include/hbver.rw";
-      char szInputBuffer[ MAX_BUF_LEN ];
-      char szNewID[ MAX_BUF_LEN ];
-      char szNewLog[ MAX_BUF_LEN ];
+      char szInputBuffer[ MAX_BUF_LEN + 16 ];
+      char szNewID[ MAX_BUF_LEN + 8 ];
+      char szNewLog[ MAX_BUF_LEN + 8 ];
       BOOL bFoundID = FALSE;
       BOOL bFoundLog = FALSE;
       FILE * fhChangeLog;
