@@ -69,7 +69,9 @@ CLASS TGet
    METHOD Input(cChar)
    METHOD PutMask(cBuffer, lEdit)
 
-   METHOD Display() INLINE DevPos( ::Row, ::Col + If( ::Pos != nil, ::Pos, 0 ) ), DevOut( ::buffer ), Self
+   METHOD Display() INLINE DevPos( ::Row, ::Col ), DevOut( ::buffer ),;
+                           DevPos( ::Row, ::Col + If( ::Pos != nil, ::Pos - 1, 0 ) ),;
+                           Self
 
 //   METHOD ColorDisp(cColorSpec)  VIRTUAL
 //   METHOD hitTest(nRow, nCol)    VIRTUAL
@@ -232,6 +234,8 @@ METHOD SetFocus() CLASS tGet
       ::BadDate := .f.
    endif
 
+   DevPos( ::Row, ::Col + ::Pos - 1 )
+
 return Self
 
 //---------------------------------------------------------------------------//
@@ -364,6 +368,8 @@ METHOD overstrike(cChar) CLASS tGet
    else
       ::BadDate := .f.
    endif
+
+   ::Display()
 
 return Self
 
