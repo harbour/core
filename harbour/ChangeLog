@@ -12,6 +12,8 @@
 	  STATIC stavar:={ || locvar }
 	  Notice that Clipper is compiling it however it generates a runtime
 	  error if such codeblock is evaluated.
+	* fixed also a bug in warning generation when function with no
+	return value is defined
 
 20000131-21:20 GMT+1 Victor Szakats <info@szelvesz.hu>
   * include/hbextern.ch
