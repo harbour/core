@@ -1452,6 +1452,20 @@ static HB_GENC_FUNC( hb_p_retvalue )
    return 1;
 }
 
+static HB_GENC_FUNC( hb_p_send )
+{
+   fprintf( cargo->yyc, "\tHB_P_SEND, %i, %i,\n",
+            pFunc->pCode[ lPCodePos + 1 ],
+            pFunc->pCode[ lPCodePos + 2 ] );
+   return 3;
+}
+
+static HB_GENC_FUNC( hb_p_sendshort )
+{
+   fprintf( cargo->yyc, "\tHB_P_SENDSHORT, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
+   return 2;
+}
+
 static HB_GENC_FUNC( hb_p_seqbegin )
 {
    fprintf( cargo->yyc, "\tHB_P_SEQBEGIN, %i, %i, %i,",
@@ -1681,6 +1695,8 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_pushsymnear,
    hb_p_pushvariable,
    hb_p_retvalue,
+   hb_p_send,
+   hb_p_sendshort,
    hb_p_seqbegin,
    hb_p_seqend,
    hb_p_seqrecover,

@@ -1,3 +1,20 @@
+20000502-10:41 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbpcode.h
+   * include/hbexprb.c
+   * include/hbexprc.c
+   * include/hbvm.h
+   * source/compiler/hbpcode.c
+   * source/compiler/hbfix.c
+   * source/compiler/genc.c
+   * source/vm/hvm.c
+     + HB_P_SEND and HB_P_SENDSHORT pcodes added. At this moment they are 
+       exactly the same as HB_P_FUNCTION[SHORT]. More work is needed to 
+       optimize the stack usage for SEND/DO/FUNCTION.
+     + hb_vmSend() function added.
+
+     ! WARNING ! All sources must be recompiled.
+
 20000502-01:30 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
     * source/compiler/harbour.c

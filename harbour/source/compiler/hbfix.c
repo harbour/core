@@ -330,6 +330,8 @@ static HB_FIX_FUNC_PTR s_fixlocals_table[] =
    NULL,                       /* HB_P_PUSHSYMNEAR,          */
    NULL,                       /* HB_P_PUSHVARIABLE,         */
    NULL,                       /* HB_P_RETVALUE,             */
+   NULL,                       /* HB_P_SEND,                 */
+   NULL,                       /* HB_P_SENDSHORT,            */
    NULL,                       /* HB_P_SEQBEGIN,             */
    NULL,                       /* HB_P_SEQEND,               */
    NULL,                       /* HB_P_SEQRECOVER,           */

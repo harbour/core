@@ -158,6 +158,8 @@ static BYTE s_pcode_len[] = {
    2,        /* HB_P_PUSHSYMNEAR,          */
    3,        /* HB_P_PUSHVARIABLE,         */
    1,        /* HB_P_RETVALUE,             */
+   3,        /* HB_P_SEND,                 */
+   2,        /* HB_P_SENDSHORT,            */
    4,        /* HB_P_SEQBEGIN,             */
    4,        /* HB_P_SEQEND,               */
    1,        /* HB_P_SEQRECOVER,           */

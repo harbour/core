@@ -153,6 +153,8 @@ typedef enum
    HB_P_PUSHSYMNEAR,           /* places a symbol on the virtual machine stack */
    HB_P_PUSHVARIABLE,          /* pushes the contains of an undeclared variable to the virtual machine stack */
    HB_P_RETVALUE,              /* instructs the virtual machine to return the latest stack value */
+   HB_P_SEND,                  /* send operator */
+   HB_P_SENDSHORT,             /* send operator */
    HB_P_SEQBEGIN,              /* BEGIN SEQUENCE */
    HB_P_SEQEND,                /* END SEQUENCE */
    HB_P_SEQRECOVER,            /* RECOVER statement */

@@ -131,6 +131,7 @@ static void    hb_vmSFrame( PHB_SYMB pSym );     /* sets the statics frame for a
 static void    hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ); /* increases the the global statics array to hold a PRG statics */
 static void    hb_vmEndBlock( void );            /* copies the last codeblock pushed value into the return value */
 static void    hb_vmRetValue( void );            /* pops the latest stack value into stack.Return */
+static void    hb_vmSendFunc( USHORT uiParams );
 static void    hb_vmDebuggerShowLine( USHORT uiLine ); /* makes the debugger shows a specific source code line */
 static void    hb_vmDebuggerEndProc( void );     /* notifies the debugger for an endproc */
 
@@ -557,6 +558,16 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_FUNCTIONSHORT:
             hb_vmFunction( pCode[ w + 1 ] );
+            w += 2;
+            break;
+
+         case HB_P_SEND:
+            hb_vmSendFunc( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+            w += 3;
+            break;
+
+         case HB_P_SENDSHORT:
+            hb_vmSendFunc( pCode[ w + 1 ] );
             w += 2;
             break;
 
@@ -2798,6 +2809,113 @@ void hb_vmDo( USHORT uiParams )
    s_bDebugging = bDebugPrevState;
 }
 
+void hb_vmSend( USHORT uiParams )
+{
+   PHB_ITEM pItem;
+   PHB_SYMB pSym;
+   LONG wStackBase;
+   LONG wItemIndex;
+   PHB_ITEM pSelf;
+   PHB_BASEARRAY pSelfBase;
+   PHB_FUNC pFunc;
+   int iStatics;
+   BOOL bDebugPrevState;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmSend(%hu)", uiParams));
+
+   pItem = hb_stack.pPos - uiParams - 2;   /* procedure name */
+   pSym = pItem->item.asSymbol.value;
+   wStackBase = hb_stack.pBase - hb_stack.pItems; /* as the stack memory block could change */
+   wItemIndex = pItem - hb_stack.pItems;
+   pSelf = hb_stack.pPos - uiParams - 1;   /* NIL, OBJECT or BLOCK */
+   iStatics = hb_stack.iStatics;              /* Return iStatics position */
+   bDebugPrevState = s_bDebugging;
+   s_bDebugging = FALSE;
+
+   if( ! HB_IS_SYMBOL( pItem ) )
+   {
+      /* QUESTION: Is this call needed ? [vszakats] */
+      hb_stackDispLocal();
+      hb_errInternal( IE_VMNOTSYMBOL, NULL, "hb_vmSend()", NULL );
+   }
+
+#if 0
+   if( ! HB_IS_NIL( pSelf ) )
+   {
+      /* QUESTION: Is this call needed ? [vszakats] */
+      hb_stackDispLocal();
+      hb_errInternal( IE_VMINVSYMBOL, NULL, "hb_vmSend()", NULL );
+   }
+#endif
+
+   pItem->item.asSymbol.lineno = 0;
+   pItem->item.asSymbol.paramcnt = uiParams;
+   hb_stack.pBase = hb_stack.pItems + pItem->item.asSymbol.stackbase;
+   pItem->item.asSymbol.stackbase = wStackBase;
+
+   if( ! HB_IS_NIL( pSelf ) ) /* are we sending a message ? */
+   {
+      if( pSym == &( hb_symEval ) && HB_IS_BLOCK( pSelf ) )
+         pFunc = pSym->pFunPtr;                 /* __EVAL method = function */
+      else
+      {
+         pFunc = hb_objGetMethod( pSelf, pSym );
+         if( HB_IS_OBJECT( pSelf ) )               /* Object passed            */
+         {
+            pSelfBase = pSelf->item.asArray.value;
+            if( pSelfBase->uiPrevCls ) /* Is is a Super cast ? */
+            {
+              pSelfBase->uiClass   = pSelfBase->uiPrevCls;
+              pSelfBase->uiPrevCls = 0;
+            }
+         }
+      }
+
+      if( pFunc )
+         pFunc();
+      else
+      {
+         PHB_ITEM pResult;
+
+         if( pSym->szName[ 0 ] == '_' )
+            pResult = hb_errRT_BASE_Subst( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1 );
+         else
+            pResult = hb_errRT_BASE_Subst( EG_NOMETHOD, 1004, NULL, pSym->szName );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
+   }
+   else                     /* it is a function */
+   {
+      pFunc = pSym->pFunPtr;
+
+      if( pFunc )
+         pFunc();
+      else
+      {
+         /* Attempt to call an undefined function
+          *  - generate unrecoverable runtime error
+          */
+         hb_errRT_BASE( EG_NOFUNC, 1001, NULL, pSym->szName );
+      }
+   }
+
+   while( hb_stack.pPos > hb_stack.pItems + wItemIndex )
+      hb_stackPop();
+
+   hb_stack.pBase = hb_stack.pItems + wStackBase;
+   hb_stack.iStatics = iStatics;
+
+   if( s_bDebugging )
+      hb_vmDebuggerEndProc();
+
+   s_bDebugging = bDebugPrevState;
+}
+
 static HARBOUR hb_vmDoBlock( void )
 {
    PHB_ITEM pBlock;
@@ -2877,6 +2995,16 @@ void hb_vmFunction( USHORT uiParams )
 
    hb_itemClear( &hb_stack.Return );
    hb_vmDo( uiParams );
+   hb_itemCopy( hb_stack.pPos, &hb_stack.Return );
+   hb_stackPush();
+}
+
+static void hb_vmSendFunc( USHORT uiParams )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmSendFunc(%hu)", uiParams));
+
+   hb_itemClear( &hb_stack.Return );
+   hb_vmSend( uiParams );
    hb_itemCopy( hb_stack.pPos, &hb_stack.Return );
    hb_stackPush();
 }

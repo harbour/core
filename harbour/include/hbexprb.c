@@ -1526,16 +1526,16 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
                   HB_EXPR_USE( pSelf->value.asMessage.pParms, HB_EA_PUSH_PCODE );
 
                if( iParms > 255 )
-                  HB_EXPR_GENPCODE3( hb_compGenPCode3, HB_P_FUNCTION, HB_LOBYTE( iParms ), HB_HIBYTE( iParms ), ( BOOL ) 1 );
+                  HB_EXPR_GENPCODE3( hb_compGenPCode3, HB_P_SEND, HB_LOBYTE( iParms ), HB_HIBYTE( iParms ), ( BOOL ) 1 );
                else
-                  HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, ( BYTE ) iParms, ( BOOL ) 1 );
+                  HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_SENDSHORT, ( BYTE ) iParms, ( BOOL ) 1 );
             }
             else
             {
                /* acces to instance variable */
                HB_EXPR_USE( pSelf->value.asMessage.pObject, HB_EA_PUSH_PCODE );
                HB_EXPR_PCODE1( hb_compGenMessage, pSelf->value.asMessage.szMessage );
-               HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, 0, ( BOOL ) 1 );
+               HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 0, ( BOOL ) 1 );
             }
          }
          break;
@@ -1548,7 +1548,7 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
             HB_EXPR_USE( pSelf->value.asMessage.pObject, HB_EA_PUSH_PCODE );
             HB_EXPR_PCODE1( hb_compGenMessageData, pSelf->value.asMessage.szMessage );
             HB_EXPR_USE( pSelf->value.asMessage.pParms, HB_EA_PUSH_PCODE );
-            HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, 1, ( BOOL ) 1 );
+            HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 1, ( BOOL ) 1 );
          }
          break;
 
