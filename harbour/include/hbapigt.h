@@ -136,6 +136,7 @@ extern USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiR
 extern USHORT hb_gtBoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight );
 extern USHORT hb_gtBoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight );
 extern USHORT hb_gtColorSelect( USHORT uiColorIndex );
+extern USHORT hb_gtColorToN( char * szColorString );
 extern USHORT hb_gtDispBegin( void );
 extern USHORT hb_gtDispCount( void );
 extern USHORT hb_gtDispEnd( void );
