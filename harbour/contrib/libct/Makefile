@@ -9,6 +9,7 @@ C_SOURCES=\
 	atadjust.c \
 	atnum.c \
 	charevod.c \
+	charop.c \
 	ctset.c \
 	ctstr.c \
 	ctchksum.c \

@@ -35,8 +35,18 @@ PRG_SOURCES=\
 	atadjust.prg \
 	atnum.prg \
 	beforatn.prg \
+	charadd.prg \
+	charand.prg \
 	chareven.prg \
+	charnot.prg \
 	charodd.prg \
+	charor.prg \
+	charrll.prg \
+	charrlr.prg \
+	charshl.prg \
+	charshr.prg \
+	charsub.prg \
+	charxor.prg \
 	csetref.prg \
 	csetatmu.prg \
 	setatlik.prg \

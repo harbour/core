@@ -1,3 +1,48 @@
+2001-04-20 16:30 CET Martin Vogel <vogel@inttec.de>
+
+  + contrib/libct/charop.c
+    + charadd(), charand(), charor(), charxor(), charnot() and 
+      (NEW!) charsub(), charshl(), charshr(), charrll() and charrlr() functions
+
+  * contrib/libct/Makefile
+    + added contrib/libct/charop.c
+
+  * contrib/libct/makefile.bc
+    + added contrib/libct/charop.c
+
+  * contrib/libct/makefile.vc
+    + added contrib/libct/charop.c
+ 
+  * contrib/libct/ctflist.txt
+    * changed status of functions mentioned above
+
+  * contrib/libct/readme.txt
+    + added comments for new functions
+
+  + contrib/libct/tests/charadd.prg
+  + contrib/libct/tests/charand.prg
+  + contrib/libct/tests/charor.prg
+  + contrib/libct/tests/charnot.prg
+  + contrib/libct/tests/charxor.prg
+  + contrib/libct/tests/charsub.prg
+  + contrib/libct/tests/charshl.prg
+  + contrib/libct/tests/charshr.prg
+  + contrib/libct/tests/charrll.prg
+  + contrib/libct/tests/charrlr.prg
+    ! small test programs for new functions 
+
+  * contrib/libct/tests/Makefile
+    + added contrib/libct/tests/charadd.prg
+    + added contrib/libct/tests/charand.prg
+    + added contrib/libct/tests/charor.prg
+    + added contrib/libct/tests/charnot.prg
+    + added contrib/libct/tests/charxor.prg
+    + added contrib/libct/tests/charsub.prg
+    + added contrib/libct/tests/charshl.prg
+    + added contrib/libct/tests/charshr.prg
+    + added contrib/libct/tests/charrll.prg
+    + added contrib/libct/tests/charrlr.prg
+
 2001-04-20 15:04 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/memoedit.prg
       * simplified handling of keys and prevented infinite recursion when a key not

@@ -169,8 +169,8 @@ ATREPL        ;N;
 ATTOKEN       ;N; 
 BEFORATNUM    ;R; 
 CENTER        ;R; 
-CHARADD       ;N; 
-CHARAND       ;N; 
+CHARADD       ;R; 
+CHARAND       ;R; 
 CHAREVEN      ;R;
 CHARLIST      ;N; 
 CHARMIRR      ;N; 
@@ -180,17 +180,22 @@ CHARNOT       ;N;
 CHARODD       ;R;
 CHARONE       ;N; 
 CHARONLY      ;N; 
-CHAROR        ;N; 
+CHAROR        ;R; 
 CHARPACK      ;N; 
 CHARRELA      ;N; 
 CHARRELREP    ;N; 
 CHARREM       ;N; 
 CHARREPL      ;N; 
+CHARRLL       ;R;   !NEW!
+CHARRLR       ;R;   !NEW!
+CHARSHL       ;R;   !NEW!
+CHARSHR       ;R;   !NEW!
 CHARSORT      ;N; 
 CHARSPREAD    ;N; 
+CHARSUB       ;R;   !NEW!
 CHARSWAP      ;N; 
 CHARUNPACK    ;N; 
-CHARXOR       ;N; 
+CHARXOR       ;R; 
 CHECKSUM      ;R;
 COUNTLEFT     ;N;
 COUNTRIGHT    ;N;

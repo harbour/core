@@ -20,4 +20,13 @@ Changes and Enhancements over the original CA-T**ls 3 Library
 * SETATLIKE()  2nd parameter can be passed by reference so that SETATLIKE
                can store the acutal wildcard character in it
 
++ CHARSUB      subtracts corresponding ASCII values
+
++ CHARSHL      bitwise shift left operation on characters
+
++ CHARSHR      bitwise shift right operation on characters
+
++ CHARRLL      bitwise roll to the left operation on characters
+
++ CHARRLR      bitwise roll to the right operation on characters
 
