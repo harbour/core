@@ -65,6 +65,7 @@
   * source/rtl/Makefile
   * source/rtl/dbdelim.prg
   + source/rtl/dbsdf.prg
+  * source/rtl/dummy.prg
   * tests/Makefile
   + tests/sdf_test.prg
     + Added __dbSDF() with support for COPY TO SDF.

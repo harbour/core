@@ -57,7 +57,7 @@ FUNCTION MPosToLC()        ; RETURN 0
 //FUNCTION __dbCopy()        ; RETURN NIL
 //FUNCTION __dbDelim()       ; RETURN NIL
 FUNCTION __dbJoin()        ; RETURN NIL
-FUNCTION __dbSDF()         ; RETURN NIL
+//FUNCTION __dbSDF()         ; RETURN NIL
 FUNCTION __dbTotal()       ; RETURN NIL
 
 /* NOTE: Internal functions */
