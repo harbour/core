@@ -69,7 +69,6 @@
 #include "hbvm.h"
 #include "hbset.h"
 #include "hbrddcdx.h"
-#include "regex.h"
 
 #define __PRG_SOURCE__ __FILE__
 #ifndef __XHARBOUR__
