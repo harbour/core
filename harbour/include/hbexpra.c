@@ -144,6 +144,7 @@ void hb_compExprErrorType( HB_EXPR_PTR pExpr, HB_MACRO_DECL )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_compExprErrorType()"));
    hb_compErrorType( pExpr );
+   HB_SYMBOL_UNUSED( pExpr );
    HB_SYMBOL_UNUSED( HB_MACRO_VARNAME );
 }
 

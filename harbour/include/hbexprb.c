@@ -1355,7 +1355,7 @@ static HB_EXPR_FUNC( hb_compExprUseAlias )
       case HB_EA_LVALUE:
          break;
       case HB_EA_PUSH_PCODE:
-         HB_EXPR_PCODE2( hb_compGenPushSymbol, pSelf->value.asSymbol, FALSE );
+         HB_EXPR_PCODE2( hb_compGenPushSymbol, pSelf->value.asSymbol, 0 );
          break;
       case HB_EA_POP_PCODE:
       case HB_EA_PUSH_POP:

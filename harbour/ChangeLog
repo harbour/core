@@ -1,3 +1,21 @@
+20000320-13:10 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.y
+	* fixed compilation of empty files
+	
+    *include/hbexpra.c
+    *include/hbexprb.c
+    *source/macro/macro.c
+	*fixed passing of the second parameter in hb_compGenPushSymbol
+	
+    *source/rtl/gt/gtstd.c
+	*fixed to get a clean compile on Linux
+
+    *source/rtl/gt/gtcrs.c
+	*matching #endif added
+	*inkey.ch added again - we need these definitions to define the
+	 keys translation table - TOFIX
+
 20000319-01:35 EST Paul Tucker <ptucker@sympatico.ca>
    * source/pp/ppcore.c
      from  20000319-01:30 that didn't get posted.

@@ -40,6 +40,10 @@
 #include "hbapifs.h"
 #include "hbapigt.h"
 
+#if defined( OS_UNIX_COMPATIBLE )
+  #include <unistd.h>	/* read() function requires it */
+#endif
+
 static SHORT  s_iRow;
 static SHORT  s_iCol;
 static USHORT s_uiMaxRow;
@@ -73,6 +77,8 @@ void hb_gt_Done( void )
 
 int hb_gt_ReadKey( HB_inkey_enum eventmask )
 {
+   int ch;
+   
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) event_mask));
 
    HB_SYMBOL_UNUSED( eventmask );
@@ -80,11 +86,13 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
 #if defined(OS_UNIX_COMPATIBLE)
    if( ! read( STDIN_FILENO, &ch, 1 ) )
       ch = 0;
+#else
+    ch = 0;
 #endif
 
    /* TODO: */
 
-   return 0;
+   return ch;
 }
 
 BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
@@ -344,116 +352,4 @@ void hb_gt_Tone( double dFrequency, double dDuration )
    HB_SYMBOL_UNUSED( dFrequency );
    HB_SYMBOL_UNUSED( dDuration );
 }
-
-/*
-      BYTE pszBox[ 10 ];
-
-      USHORT uiRow;
-      USHORT uiCol;
-      USHORT width, height, tmp;
-
-      USHORT top, left, bottom, right, size = strlen( _B_SINGLE );
-
-      /* TODO: Would be better to support these cases, Clipper implementation */
-      /*       was quite messy for these cases, which can be considered as */
-      /*       a bug there. */
-
-      if( uiTop  > uiMaxRow || uiBottom > uiMaxRow ||
-          uiLeft > uiMaxCol || uiRight  > uiMaxCol )
-      {
-         return 1;
-      }
-
-      /* Force the box to be drawn from top left to bottom right */
-      if( top > bottom )
-      {
-         tmp = top;
-         top = bottom;
-         bottom = tmp;
-      }
-      if( left > right )
-      {
-         tmp = right;
-         right = left;
-         left = tmp;
-      }
-      width = right - left + 1;
-      height = bottom - top + 1;
-
-      /* Determine the box style */
-      if( ISCHAR( 5 ) )
-      {
-         pbyFrame = hb_parc( 5 );
-         size = hb_parclen( 5 );
-      }
-      else if( ISNUM( 5 ) )
-      {
-         switch( hb_parni( 5 ) )
-         {
-            case 2:
-               pbyFrame = _B_DOUBLE;
-               break;
-            case 3:
-               pbyFrame = _B_SINGLE_DOUBLE;
-               break;
-            case 4:
-               pbyFrame = _B_DOUBLE_SINGLE;
-               break;
-            default:
-               pbyFrame = _B_SINGLE;
-         }
-          size = strlen( pbyFrame );
-      }
-      /* We only need 9 characters from the source string */
-      if( size > 9 ) size = 9;
-      /* If we have at least one character... */
-      if( size )
-         /* ...copy the source string */
-         memcpy( pszBox, pbyFrame, size );
-      else
-         /* If not, set the first character to a space */
-         pszBox[ size++ ] = ' ';
-      /* If there were less than 8 characters in the source... */
-      for( ; size < 8; size++ )
-      {
-         /* ...copy the last character into the remaining 8 border positions */
-         pszBox[ size ] = pszBox[ size - 1 ];
-      }
-      /* If there were less than 9 characters in the source... */
-      if( size < 9 )
-         /* ...set the fill character to space */
-         pszBox[ 8 ] = ' ';
-
-      /* Draw the box */
-      hb_gtSetPos( top, left );
-      if( height > 1 && width > 1 )
-         fputc( pszBox[ 0 ], stdout );   /* Upper left corner */
-      for( uiCol = ( height > 1 ? left + 1 : left ); uiCol < ( height > 1 ? right : right + 1 ); uiCol++ )
-         fputc( pszBox[ 1 ], stdout );   /* Top line */
-      if( height > 1 && width > 1 )
-         fputc( pszBox[ 2 ], stdout );   /* Upper right corner */
-      for( uiRow = ( height > 1 ? top + 1 : top ); uiRow < ( width > 1 ? bottom : bottom + 1 ); uiRow++ )
-      {
-         hb_gtSetPos( uiRow, left );
-         if( height > 1 )
-            fputc( pszBox[ 3 ], stdout ); /* Left side */
-         if( height > 1 && width > 1 ) for( uiCol = left + 1; uiCol < right; uiCol++ )
-            fputc( pszBox[ 8 ], stdout ); /* Fill */
-         if( height > 1 && width > 1 )
-            fputc( pszBox[ 7 ], stdout ); /* Right side */
-      }
-      if( height > 1 && width > 1 )
-      {
-         hb_gtSetPos( bottom, left );
-         uiCol = left;
-         fputc( pszBox[ 6 ], stdout );    /* Bottom left corner */
-         for( uiCol = left + 1; uiCol < right; uiCol++ )
-            fputc( pszBox[ 5 ], stdout ); /* Bottom line */
-         fputc( pszBox[ 4 ], stdout );    /* Bottom right corner */
-      }
-      fflush( stdout );
-      hb_gtSetPos( bottom + 1, right + 1 );
-
-*/
-
 

@@ -241,6 +241,8 @@ char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
 %%
 
 Main       : { hb_compLinePush(); } Source       { }
+           | /* empty file */
+	   ;
 
 Source     : Crlf
            | VarDefs
