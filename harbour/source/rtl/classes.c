@@ -189,10 +189,14 @@ static void hb_clsRelease( PCLASS pClass )
    {
       if( pMeth->pInitValue )
       {
-         // if( pMeth->pFunction == hb___msgGetClsData )  /* is it a ClassData initializer ? */
-         //   hb_itemRelease( pMeth->pInitValue );
-         // else
-          if( pMeth->uiData > pClass->uiDataFirst )
+         if( pMeth->pFunction == hb___msgGetClsData )  /* is it a ClassData initializer ? */
+         {
+            if( IS_ARRAY( pMeth->pInitValue ) )
+               hb_itemClear( pMeth->pInitValue ); /* Don't release it as it may be shared by inherited classes */
+            else
+               hb_itemRelease( pMeth->pInitValue );
+         }
+         else if( pMeth->uiData > pClass->uiDataFirst )
             hb_itemRelease( pMeth->pInitValue );
       }
    }
