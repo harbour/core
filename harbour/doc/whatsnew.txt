@@ -5,10 +5,21 @@
 ----------------------------------------------------------------------
 
 - Final cleanups on global macro and symbol names.
+  (date*(), console*(), HB_FUNC())
 - DISKSPACE() enhancements
 - Microsoft C++ 8.x compiler support started
 - 10 character symbol support finalized
 - VAL() made fully compatible
+- New functions HB_COMPILER(), HB_FSIZE(), HB_FTEMPNAME(), HB_FTEMPCREATE()
+- PP bug fixes.
+- More functions documented.
+- Fixed to compile with Borland C++ in C++ mode.
+- Handling of double/long number widths and decimals made completely CA-Cl*pper
+  compatible.
+- Some new CA-Tools compatible functions added.
+- MEMO type support.
+- OS/2 DispBegin()/DispEnd() support
+- #pragma fixes and enhancements. (better XPP compatibility)
 - Source files split to several smaller files
 - GT API selection is now at link time instead of compile time
 - Make and build files further cleaned up, enhanced, optimized, synchronized

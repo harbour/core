@@ -1,3 +1,11 @@
+20000407-03:26 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbver.h
+     + Version bumped.
+
+   * doc/whatsnew.txt
+     + Some new items.
+
 2000-04-06 21:30 GMT-4 David G. Holm <dholm@jsd-llc.com>
   * doc/gmake.txt
     % Change to os2/gcc documentation to show gtos2 for HT_GT_LIB,
@@ -192,7 +200,7 @@
        #pragma Shortcut= ON or #pragma Shortcut( ON )
      ! Fixed some DebugPragma() calls.
      ! Fixed DebugPragma() to display zero as a value.
-     % Code simplified, variables elminitated.
+     % Code simplified, variables eliminated.
      ! AUTOMEMVAR check fixed.
 
    * source/rtl/tget.prg
@@ -264,7 +272,7 @@
        interface between TGETLIST and GETSYS.
      + The active getlist holder moved to a separate file GETLIST.
      + READVAR() moved back into separate file.
-     + RANGECHECK() function added to GETSYS. Now the namespace of GETLIST is
+     + RANGECHECK() function added to GETSYS. Now the namespace of GETLIST
        is equivalent to CA-Cl*pper.
      + TGetList class separated from the GETSYS procedural (compatibility)
        interface. This way it's possible to override the GETSYS, READVAR or
@@ -299,7 +307,7 @@
 
    * source/rtl/philesx.c
      ! CURDRIVE() error handling made more like Xbase++. Retry is allowed,
-       and the error text is the same. (not tested)
+       and the error text is the same.
 
 20000403-13:07 GMT+1 Victor Szakats <info@szelvesz.hu>
 
