@@ -1,3 +1,50 @@
+19990914-11:40 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/runner/stdalone/external.prg
+    include/external.ch
+    * Regenerated.
+  * source/runner/runlib.c
+    ! Made some steps to release memory blocks when an undeclared symbol error 
+      occurs, seemingly with few success. This needs some more work.
+    + TODO added about a possible direction for further development.
+      The idea would be to replicate the Blinker DLL functionality.
+  * source/compiler/harbour.y
+    source/compiler/harbour.l
+    source/compiler/gen*.c
+    * Only every 100th line number is shown on the counter while parsing,
+      this way it's more Clipper like. In theory it should also be faster,
+      but due to the stdout buffering, it's approx. the same speed. Though it 
+      could be faster in some platform/compiler/screen output combinations.
+    + The "syntax ok" message is now replaced with the total number of 
+      functions and the total number of lines. Similar to Clipper, but not
+      so specific to the generated output.
+    + /q0 switch no suppresses the "Harbour Compiler" header.
+    + The "Generating ... output" line format changed, it's now more
+      compact.
+  * tests/working/rtl_test.prg
+    + A new VAL() test added to test the huge value problem.
+    ! One failure eliminated by hiding a filename generating difference in
+      __COPYFILE(), NOTE added about this.
+  * source/rtl/strings.c
+    + HB_VAL() now uses hb_retnlen().
+    ! HB_VAL() was incompatible for huge integer values (5000000000). This
+      is fixed.
+  * source/rtl/memvars.c
+    * __MVRESTORE() is now using hb_itemPutNLen()
+  * source/rtl/extend.c
+    include/extend.h
+    + hb_retnlen() Extend API function added, which is a wrapper for
+      hb_itemPutNLen().
+  * source/rtl/itemapi.c
+    include/itemapi.h
+    + hb_itemPutNLen() generic function added to assign a number to an item, 
+      the low-level type of the number is automatically selected, based on the
+      magnitude and presence of decimal places. Similar to hb_vmPushNumber().
+    + hb_itemPutN?Len() functions will now accept any negative width/dec
+      parameters as a request for the default. So:
+      For iDec now any negative number will do the same as -1 before.
+      For iWidth now any negative number will do the same as 0 before.
+      This way the interface is more fool proof and consistent.
+
 19990914-01:00 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/vm/hvm.c
     include/ctoharb.h

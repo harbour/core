@@ -927,6 +927,8 @@ STATIC FUNCTION Main_MATH()
    TEST_LINE( Str(Val("15.00")            )   , "15.00"                        )
    TEST_LINE( Str(Val("15.000")           )   , "15.000"                       )
    TEST_LINE( Str(Val("15.001 ")          )   , "15.0010"                      )
+   TEST_LINE( Str(Val("100000000")        )   , "100000000"                    )
+   TEST_LINE( Str(Val("5000000000")       )   , "5000000000"                   )
    TEST_LINE( Str(Year(SToD("19990905"))  )   , " 1999"                        )
    TEST_LINE( Str(Month(SToD("19990905")) )   , "  9"                          )
    TEST_LINE( Str(Day(SToD("19990905"))   )   , "  5"                          )
@@ -1667,11 +1669,14 @@ STATIC FUNCTION Main_MISC()
 
    /* NOTE: Cannot yet test the return value of the function on a DEFAULT-ed
             failure. */
+   /* NOTE: The dot in the "*INVALID*." filename is intentional and serves
+            to hide different path handling, since Harbour is platform
+            independent. */
 
    TEST_LINE( __copyfile("$$COPYFR.TMP")                 , "E BASE 2010 Argument error __COPYFILE "   )
    TEST_LINE( __copyfile("$$COPYFR.TMP", "$$COPYTO.TMP") , NIL                                        )
    TEST_LINE( __copyfile("_NOTHERE.$$$", "$$COPYTO.TMP") , "E BASE 2012 Open error _NOTHERE.$$$ F:DR" )
-   TEST_LINE( __copyfile("$$COPYFR.TMP", "*INVALID*")    , "E BASE 2012 Create error *INVALID*. F:DR" )
+   TEST_LINE( __copyfile("$$COPYFR.TMP", "*INVALID*.")   , "E BASE 2012 Create error *INVALID*. F:DR" )
 
    FErase("$$COPYFR.TMP")
    FErase("$$COPYTO.TMP")

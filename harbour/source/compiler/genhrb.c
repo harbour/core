@@ -64,7 +64,7 @@ void GenPortObj( char * szFileName, char * szName )
    }
 
    if( ! _bQuiet )
-      printf( "\nGenerating portable object...\n" );
+      printf( "\nGenerating portable object output to \'%s\'... ", szFileName );
 
    /* writes the symbol table */
 
@@ -380,5 +380,5 @@ void GenPortObj( char * szFileName, char * szName )
    fclose( yyc );
 
    if( ! _bQuiet )
-      printf( "%s -> done!\n", szFileName );
+      printf( "Done.\n" );
 }

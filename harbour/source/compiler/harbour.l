@@ -218,11 +218,27 @@ Separator     {SpaceTab}
 
 {SpaceTab}     ;
 
-\n.*           _iState=LOOKUP; yyless( 1 ); ++iLine; if( ! _bQuiet ) printf( "\rline: %i", iLine ); return '\n';
+\n.*         {
+                _iState = LOOKUP;
+                yyless( 1 );
+                ++iLine;
+#if 0
+                if( ! _bQuiet )
+                {
+                   printf( "\r%i", iLine );
+                }
+#endif
+                if( ! _bQuiet && ( iLine % 100 ) == 0 )
+                {
+                   printf( "\r%i", iLine );
+                   fflush( stdout );
+                }
+                return '\n';
+             }
 %{
 /* ************************************************************************ */
 %}
-;              _iState =LOOKUP; if( ! i_INDEX_STATE ) return ';';
+;              _iState = LOOKUP; if( ! i_INDEX_STATE ) return ';';
 %{
 /* ************************************************************************ */
 %}

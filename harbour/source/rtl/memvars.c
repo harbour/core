@@ -48,7 +48,6 @@
    See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
 */
 
-#include <limits.h> /* for __MVSAVE()/__MVRESTORE() */
 #include <ctype.h> /* for toupper() function */
 
 #include "extend.h"
@@ -1787,21 +1786,7 @@ HARBOUR HB___MVRESTORE( void )
                   BYTE pbyNumber[ HB_MEM_NUM_LEN ];
 
                   if( hb_fsRead( fhnd, pbyNumber, HB_MEM_NUM_LEN ) == HB_MEM_NUM_LEN )
-                  {
-                     double dNumber = * ( double * ) &pbyNumber;
-
-                     if( uiWidth >= 1 && uiDec )
-                        pItem = hb_itemPutNDLen( NULL, dNumber, uiWidth - uiDec - 1, uiDec );
-
-                     else if( SHRT_MIN <= dNumber && dNumber <= SHRT_MAX )
-                        pItem = hb_itemPutNILen( NULL, ( int ) dNumber, uiWidth );
-
-                     else if( LONG_MIN <= dNumber && dNumber <= LONG_MAX )
-                        pItem = hb_itemPutNLLen( NULL, ( long ) dNumber, uiWidth );
-
-                     else
-                        pItem = hb_itemPutNDLen( NULL, dNumber, uiWidth, 0 );
-                  }
+                     pItem = hb_itemPutNLen( NULL, * ( double * ) &pbyNumber, uiWidth - ( uiDec ? ( uiDec + 1 ) : 0 ), uiDec );
 
                   break;
                }

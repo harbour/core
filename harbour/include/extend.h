@@ -256,6 +256,7 @@ extern void     hb_retl( int iTrueFalse );  /* returns a logical integer */
 extern void     hb_retnd( double dNumber ); /* returns a double */
 extern void     hb_retni( int iNumber );    /* returns a integer number */
 extern void     hb_retnl( long lNumber );   /* returns a long number */
+extern void     hb_retnlen( double dNumber, int iWidth, int iDec ); /* returns a double, with specific width and decimals */
 extern void     hb_retndlen( double dNumber, int iWidth, int iDec ); /* returns a double, with specific width and decimals */
 extern void     hb_retnilen( int iNumber, int iWidth ); /* returns a integer number, with specific width */
 extern void     hb_retnllen( long lNumber, int iWidth ); /* returns a long number, with specific width */

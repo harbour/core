@@ -1125,7 +1125,6 @@ HARBOUR HB_VAL( void )
       {
          int iWidth;
          int iDec;
-         double dNumber = hb_strVal( pText->item.asString.value );
          char * ptr = strchr( pText->item.asString.value, '.' );
 
          if( ptr )
@@ -1139,17 +1138,7 @@ HARBOUR HB_VAL( void )
             iDec = 0;
          }
 
-         if( iDec )
-            hb_retndlen( dNumber, iWidth, iDec );
-
-         else if( SHRT_MIN <= dNumber && dNumber <= SHRT_MAX )
-            hb_retnilen( ( int ) dNumber, iWidth );
-
-         else if( LONG_MIN <= dNumber && dNumber <= LONG_MAX )
-            hb_retnllen( ( long ) dNumber, iWidth );
-
-         else
-            hb_retndlen( dNumber, iWidth, -1 );
+         hb_retnlen( hb_strVal( pText->item.asString.value ), iWidth, iDec );
       }
       else
          hb_errRT_BASE( EG_ARG, 1098, NULL, "VAL" );

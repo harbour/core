@@ -37,6 +37,7 @@
    http://www.Harbour-Project.org/
 
    The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
+      hb_retnlen()
       hb_retnilen()
       hb_retnllen()
       hb_retndlen()
@@ -482,6 +483,11 @@ void hb_retni( int iNumber )
 void hb_retnl( long lNumber )
 {
    hb_itemPutNL( &stack.Return, lNumber );
+}
+
+void hb_retnlen( double dNumber, int iWidth, int iDec )
+{
+   hb_itemPutNLen( &stack.Return, dNumber, iWidth, iDec );
 }
 
 void hb_retndlen( double dNumber, int iWidth, int iDec )

@@ -77,7 +77,7 @@ void GenObj32( char * szObjFileName, char * szFileName )
     }
 
   if( ! _bQuiet )
-    printf( "\nGenerating Windows/Dos OBJ 32 bits..." );
+    printf( "\nGenerating Windows/DOS OBJ 32 bits language output to \'%s\'... ", szObjFileName );
 
   CompiledFileName( hObjFile, szFileName );
   CompilerVersion( hObjFile, "Harbour" );
@@ -91,7 +91,7 @@ void GenObj32( char * szObjFileName, char * szFileName )
   fclose( hObjFile );
 
   if( ! _bQuiet )
-    printf( "\n%s -> done!\n", szObjFileName );
+    printf( "Done.\n" );
 }
 
 static ULONG GetSymbolsSize( void )

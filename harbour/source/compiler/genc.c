@@ -60,7 +60,7 @@ void GenCCode( char * szFileName, char * szName )       /* generates the C langu
    }
 
    if( ! _bQuiet )
-      printf( "\nGenerating C language output...\n" );
+      printf( "\nGenerating C language output to \'%s\'... ", szFileName );
 
    fprintf( yyc, "/* Harbour compiler generated code */\n\n" );
    fprintf( yyc, "#include \"hb_vmpub.h\"\n" );
@@ -935,5 +935,5 @@ void GenCCode( char * szFileName, char * szName )       /* generates the C langu
       pSym = KillSymbol( pSym );
 
    if( ! _bQuiet )
-      printf( "%s -> done!\n", szFileName );
+      printf( "Done.\n" );
 }

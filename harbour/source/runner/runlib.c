@@ -30,6 +30,20 @@
 #include "ctoharb.h"
 #include "pcode.h"
 
+/* TODO: Separate the loading/unloading and the caller functions,
+         this way we could also call a specific function name from the
+         .HRB file. This way we have basically reproduced the DLL
+         functionality of Blinker.
+
+         hnd := __hrbLoad( "MYHRB.HRB" )
+         IF hnd != 0
+            __hrbDo( hnd, "MYINITFUNC", par1, par2 )
+            funhnd := __hrbGetHnd( hnd, "MYINITFUNC" )
+            __hrbDoHnd( funhnd, par1, par2 )
+            __hrbUnLoad( hnd )
+         ENDIF
+
+         */
 /* TODO: Fill the error codes with valid ones (instead of 9999) */
 /* TOFIX: Change this assembler hack to something standard and portable */
 /* TODO: Change the fopen()/fread()/fclose() calls to hb_fs*() */
@@ -106,6 +120,7 @@ HARBOUR HB___HRBRUN( void )
    {
       char * szFileName = hb_parc( 1 );
       FILE * file;
+      BOOL bError = FALSE;
 
       /* Open as binary */
 
@@ -127,8 +142,6 @@ HARBOUR HB___HRBRUN( void )
          PHB_SYMB pSymRead;                           /* Symbols read             */
          PHB_DYNF pDynFunc;                           /* Functions read           */
          PHB_DYNS pDynSym;
-
-         PHB_ITEM pRetVal;
 
          int i;
 
@@ -173,7 +186,8 @@ HARBOUR HB___HRBRUN( void )
                       !( pSymRead[ ul ].cScope & FS_STATIC ) )
                   {
                      hb_errRT_BASE( EG_ARG, 9999, "Duplicate symbol", pSymRead[ ul ].szName );
-                     return;
+                     bError = TRUE;
+                     break;
                   }
 */
                   pSymRead[ ul ].pFunPtr = pDynFunc[ ulPos ].pAsmCall->pFunPtr;
@@ -187,61 +201,70 @@ HARBOUR HB___HRBRUN( void )
                if( !pDynSym )
                {
                   hb_errRT_BASE( EG_ARG, 9999, "Unknown or unregistered symbol", pSymRead[ ul ].szName );
-                  return;
+                  bError = TRUE;
+                  break;
                }
                pSymRead[ ul ].pFunPtr = pDynSym->pFunPtr;
             }
          }
 
-         hb_vmProcessSymbols( pSymRead, ulSymbols );
-
-         /* Initialize static variables first
-          */
-         for( ul = 0; ul < ulSymbols; ul++ )    /* Check INIT functions     */
+         if( ! bError )
          {
-            if( ( pSymRead[ ul ].cScope & FS_INITEXIT ) == FS_INITEXIT )
-            {
-               /* call (_INITSTATICS) function. This function assigns
-                * literal values to static variables only. There is no need
-                * to pass any parameters to this function because they
-                * cannot be used to initialize static variable.
-                */
-               pSymRead[ ul ].pFunPtr();
-            }
-         }
-         for( ul = 0; ul < ulSymbols; ul++ )    /* Check INIT functions     */
-         {
-            if( ( pSymRead[ ul ].cScope & FS_INITEXIT ) == FS_INIT )
-            {
-               hb_vmPushSymbol( pSymRead + ul );
-               hb_vmPushNil();
-               for( i = 0; i < ( hb_pcount() - 1 ); i++ )
-                  hb_vmPush( hb_param( i + 2, IT_ANY ) );
-                                               /* Push other cmdline params*/
-               hb_vmDo( hb_pcount() - 1 );            /* Run init function        */
-            }
-         }
+            PHB_ITEM pRetVal;
 
-         hb_vmPushSymbol( pSymRead );
-         hb_vmPushNil();
-         for( i = 0; i < ( hb_pcount() - 1 ); i++ )
-            hb_vmPush( hb_param( i + 2, IT_ANY ) );    /* Push other cmdline params*/
-         hb_vmDo( hb_pcount() - 1 );                   /* Run the thing !!!        */
+            hb_vmProcessSymbols( pSymRead, ulSymbols );
 
-         pRetVal = hb_itemNew( NULL );
-         hb_itemCopy( pRetVal, &stack.Return );
-
-         for( ul = 0; ul < ulSymbols; ul++ )    /* Check EXIT functions     */
-         {
-            if( ( pSymRead[ ul ].cScope & FS_INITEXIT ) == FS_EXIT )
+            /* Initialize static variables first
+             */
+            for( ul = 0; ul < ulSymbols; ul++ )    /* Check INIT functions     */
             {
-               hb_vmPushSymbol( pSymRead + ul );
-               hb_vmPushNil();
-               hb_vmDo( 0 );                        /* Run exit function        */
-               pSymRead[ ul ].cScope = pSymRead[ ul ].cScope & ( ~FS_EXIT );
-                                               /* Exit function cannot be
-                                                  handled by main in hvm.c */
+               if( ( pSymRead[ ul ].cScope & FS_INITEXIT ) == FS_INITEXIT )
+               {
+                  /* call (_INITSTATICS) function. This function assigns
+                   * literal values to static variables only. There is no need
+                   * to pass any parameters to this function because they
+                   * cannot be used to initialize static variable.
+                   */
+                  pSymRead[ ul ].pFunPtr();
+               }
             }
+            for( ul = 0; ul < ulSymbols; ul++ )    /* Check INIT functions     */
+            {
+               if( ( pSymRead[ ul ].cScope & FS_INITEXIT ) == FS_INIT )
+               {
+                  hb_vmPushSymbol( pSymRead + ul );
+                  hb_vmPushNil();
+                  for( i = 0; i < ( hb_pcount() - 1 ); i++ )
+                     hb_vmPush( hb_param( i + 2, IT_ANY ) );
+                                                  /* Push other cmdline params*/
+                  hb_vmDo( hb_pcount() - 1 );            /* Run init function        */
+               }
+            }
+
+            hb_vmPushSymbol( pSymRead );
+            hb_vmPushNil();
+            for( i = 0; i < ( hb_pcount() - 1 ); i++ )
+               hb_vmPush( hb_param( i + 2, IT_ANY ) );    /* Push other cmdline params*/
+            hb_vmDo( hb_pcount() - 1 );                   /* Run the thing !!!        */
+
+            pRetVal = hb_itemNew( NULL );
+            hb_itemCopy( pRetVal, &stack.Return );
+
+            for( ul = 0; ul < ulSymbols; ul++ )    /* Check EXIT functions     */
+            {
+               if( ( pSymRead[ ul ].cScope & FS_INITEXIT ) == FS_EXIT )
+               {
+                  hb_vmPushSymbol( pSymRead + ul );
+                  hb_vmPushNil();
+                  hb_vmDo( 0 );                        /* Run exit function        */
+                  pSymRead[ ul ].cScope = pSymRead[ ul ].cScope & ( ~FS_EXIT );
+                                                  /* Exit function cannot be
+                                                     handled by main in hvm.c */
+               }
+            }
+
+            hb_itemReturn( pRetVal );
+            hb_itemRelease( pRetVal );
          }
 
          for( ul = 0; ul < ulFuncs; ul++ )
@@ -258,9 +281,6 @@ HARBOUR HB___HRBRUN( void )
          hb_xfree( pDynFunc );
          hb_xfree( pSymRead );
          hb_hrbFileClose( file );
-
-         hb_itemReturn( pRetVal );
-         hb_itemRelease( pRetVal );
       }
    }
    else

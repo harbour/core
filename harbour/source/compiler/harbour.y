@@ -422,8 +422,11 @@ SYMBOLS symbols;
 #define HB_EXITLEVEL_SETEXIT    1
 #define HB_EXITLEVEL_DELTARGET  2
 
+int iFunctions = 0;
+
 BOOL _bStartProc = TRUE;                 /* holds if we need to create the starting procedure */
 BOOL _bLineNumbers = TRUE;               /* holds if we need pcodes with line numbers */
+BOOL _bLogo = TRUE;                      /* print logo */
 BOOL _bQuiet = FALSE;                    /* quiet mode */
 BOOL _bSyntaxCheckOnly = FALSE;          /* syntax check only */
 int  _iLanguage = LANG_C;                /* default Harbour generated output language */
@@ -539,7 +542,8 @@ extern int _iState;     /* current parser state (defined in harbour.l */
 
 Main       : { Line(); } Source       {
                                          FixReturns();       /* fix all previous function returns offsets */
-                                         if( ! _bQuiet ) printf( "\nsyntax ok\n" );
+                                         if( ! _bQuiet )
+                                            printf( "\rLines %i, Functions %i\n", iLine, iFunctions );
                                       }
 
 Source     : Crlf
@@ -1338,12 +1342,29 @@ void EXTERNAL_LINKAGE close_on_exit( void )
 
 int harbour_main( int argc, char * argv[] )
 {
-   int iStatus = 0, iArg = 1;
+   int iStatus = 0;
+   int iArg;
    BOOL bSkipGen;
 
-   printf( "Harbour Compiler, Build %i%s (%04d.%02d.%02d)\n",
-      hb_build, hb_revision, hb_year, hb_month, hb_day );
-   printf( "Copyright 1999, http://www.harbour-project.org\n" );
+   /* Check for the nologo switch /q0 before everything else. */
+
+   for( iArg = 1; iArg < argc; iArg++ )
+   {
+      if( IS_OPT_SEP( argv[ iArg ][ 0 ] ) &&
+          ( argv[ iArg ][ 1 ] == 'q' || argv[ iArg ][ 1 ] == 'Q' ) &&
+            argv[ iArg ][ 2 ] == '0' )
+      {
+         _bLogo = FALSE;
+         break;
+      }
+   }
+
+   if( _bLogo )
+   {
+      printf( "Harbour Compiler, Build %i%s (%04d.%02d.%02d)\n",
+         hb_build, hb_revision, hb_year, hb_month, hb_day );
+      printf( "Copyright 1999, http://www.harbour-project.org\n" );
+   }
 
    if( argc > 1 )
    {
@@ -1353,7 +1374,7 @@ int harbour_main( int argc, char * argv[] )
 
       Hbpp_init();  /* Initialization of preprocessor arrays */
       /* Command line options */
-      while( iArg < argc )
+      for( iArg = 1; iArg < argc; iArg++ )
       {
          if( IS_OPT_SEP( argv[ iArg ][ 0 ] ) )
          {
@@ -1575,8 +1596,6 @@ int harbour_main( int argc, char * argv[] )
             printf( "Not yet supported command line option: %s\n", &argv[ iArg ][ 0 ] );
          else
             _pFileName = hb_fsFNameSplit( argv[ iArg ] );
-
-         iArg++;
       }
 
       if( _pFileName )
@@ -2231,7 +2250,7 @@ int Include( char * szFileName, PATHNAMES * pSearch )
    }
 
    if( ! _bQuiet )
-      printf( "\nCompiling %s\n", szFileName );
+      printf( "\nCompiling \'%s\'\n", szFileName );
 
    pFile = ( PFILE ) hb_xgrab( sizeof( _FILE ) );
    pFile->handle = yyin;
@@ -2474,6 +2493,8 @@ void FunDef( char * szFunName, SYMBOLSCOPE cScope, int iType )
        */
       GenError( _szCErrors, 'E', ERR_FUNC_RESERVED, szFunction, szFunName );
    }
+
+   iFunctions++;
 
    FixReturns();    /* fix all previous function returns offsets */
 

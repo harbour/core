@@ -48,6 +48,7 @@
       hb_itemGetCPtr()
       hb_itemGetCLen()
       hb_itemGetNLen()
+      hb_itemPutNLen()
       hb_itemPutNDLen()
       hb_itemPutNILen()
       hb_itemPutNLLen()
@@ -633,6 +634,26 @@ PHB_ITEM hb_itemPutNL( PHB_ITEM pItem, long lNumber )
    return pItem;
 }
 
+PHB_ITEM hb_itemPutNLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
+{
+   if( iWidth <= 0 || iWidth > 99 )
+      iWidth = ( dNumber > 10000000000.0 ) ? 20 : 10;
+
+   if( iDec < 0 )
+      iDec = hb_set.HB_SET_DECIMALS;
+
+   if( iDec > 0 )
+      pItem = hb_itemPutNDLen( pItem, dNumber, iWidth, iDec );
+   else if( SHRT_MIN <= dNumber && dNumber <= SHRT_MAX )
+      pItem = hb_itemPutNILen( pItem, ( int ) dNumber, iWidth );
+   else if( LONG_MIN <= dNumber && dNumber <= LONG_MAX )
+      pItem = hb_itemPutNLLen( pItem, ( long ) dNumber, iWidth );
+   else
+      pItem = hb_itemPutNDLen( pItem, dNumber, iWidth, 0 );
+
+   return pItem;
+}
+
 PHB_ITEM hb_itemPutNDLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
 {
    if( pItem )
@@ -640,10 +661,10 @@ PHB_ITEM hb_itemPutNDLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
    else
       pItem = hb_itemNew( NULL );
 
-   if( iWidth == 0 || iWidth > 99 )
+   if( iWidth <= 0 || iWidth > 99 )
       iWidth = ( dNumber > 10000000000.0 ) ? 20 : 10;
 
-   if( iDec == -1 )
+   if( iDec < 0 )
       iDec = hb_set.HB_SET_DECIMALS;
 
    pItem->type = IT_DOUBLE;
@@ -661,7 +682,7 @@ PHB_ITEM hb_itemPutNILen( PHB_ITEM pItem, int iNumber, int iWidth )
    else
       pItem = hb_itemNew( NULL );
 
-   if( iWidth == 0 || iWidth > 99 )
+   if( iWidth <= 0 || iWidth > 99 )
       iWidth = 10;
 
    pItem->type = IT_INTEGER;
@@ -678,7 +699,7 @@ PHB_ITEM hb_itemPutNLLen( PHB_ITEM pItem, long lNumber, int iWidth )
    else
       pItem = hb_itemNew( NULL );
 
-   if( iWidth == 0 || iWidth > 99 )
+   if( iWidth <= 0 || iWidth > 99 )
       iWidth = 10;
 
    pItem->type = IT_LONG;

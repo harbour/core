@@ -36,6 +36,17 @@
 // Files from: vm
 //
 //
+//symbols from file: vm\debug.c
+//
+EXTERNAL __ASTATIC
+EXTERNAL __STATIC
+EXTERNAL __GLOBALSTACKLEN
+EXTERNAL __AGLOBALSTACK
+EXTERNAL __STACKLEN
+EXTERNAL __ASTACK
+EXTERNAL __APARAM
+EXTERNAL __GETLOCAL
+//
 //symbols from file: vm\dynsym.c
 //
 EXTERNAL __DYNSCOUNT
@@ -49,6 +60,7 @@ EXTERNAL ERRORNEW
 EXTERNAL LEN
 EXTERNAL EMPTY
 EXTERNAL VALTYPE
+EXTERNAL TYPE
 EXTERNAL WORD
 EXTERNAL PROCNAME
 EXTERNAL PROCLINE
@@ -57,6 +69,9 @@ EXTERNAL ERRORLEVEL
 EXTERNAL PCOUNT
 EXTERNAL PVALUE
 EXTERNAL BREAK
+//
+//symbols from file: vm\hvm_.c
+//
 //
 //symbols from file: vm\initsymb.c
 //
@@ -130,6 +145,7 @@ EXTERNAL SAVESCREEN
 EXTERNAL RESTSCREEN
 EXTERNAL SETCURSOR
 EXTERNAL SETBLINK
+EXTERNAL SETMODE
 EXTERNAL __ACCEPT
 EXTERNAL __COLORINDEX
 //
@@ -229,6 +245,8 @@ EXTERNAL __KEYBOARD
 EXTERNAL __KEYPUT
 EXTERNAL NEXTKEY
 EXTERNAL LASTKEY
+EXTERNAL FKLABEL
+EXTERNAL FKMAX
 //
 //symbols from file: rtl\itemapi.c
 //
@@ -248,10 +266,6 @@ EXTERNAL MOD
 EXTERNAL ROUND
 EXTERNAL SQRT
 //
-//symbols from file: rtl\memvarbl.prg
-//
-EXTERNAL MEMVARBLOCK
-//
 //symbols from file: rtl\memvars.c
 //
 EXTERNAL __MVPUBLIC
@@ -263,6 +277,13 @@ EXTERNAL __MVCLEAR
 EXTERNAL __MVDBGINFO
 EXTERNAL __MVGET
 EXTERNAL __MVPUT
+EXTERNAL __MVSAVE
+EXTERNAL __MVRESTORE
+EXTERNAL __MCLEAR
+EXTERNAL __MRELEASE
+EXTERNAL __MXRELEASE
+EXTERNAL __MSAVE
+EXTERNAL __MRESTORE
 //
 //symbols from file: rtl\mouseapi.c
 //
@@ -354,6 +375,10 @@ EXTERNAL DEVOUTPICT
 //symbols from file: rtl\errorsys.prg
 //
 //
+//symbols from file: rtl\memvarbl.prg
+//
+EXTERNAL MEMVARBLOCK
+//
 //symbols from file: rtl\menuto.prg
 //
 EXTERNAL __ATPROMPT
@@ -401,6 +426,7 @@ EXTERNAL TCLASS
 //
 //symbols from file: rtl\terror.prg
 //
+EXTERNAL ERRORNEW
 //
 //symbols from file: rtl\tget.prg
 //
@@ -576,16 +602,6 @@ EXTERNAL BOY
 //symbols from file: tools\datesx.c
 //
 EXTERNAL DATETIME
-//
-//symbols from file: tools\debug.c
-//
-EXTERNAL __ASTATIC
-EXTERNAL __STATIC
-EXTERNAL __GLOBALSTACKLEN
-EXTERNAL __AGLOBALSTACK
-EXTERNAL __STACKLEN
-EXTERNAL __ASTACK
-EXTERNAL __APARAM
 //
 //symbols from file: tools\hb_f.c
 //
