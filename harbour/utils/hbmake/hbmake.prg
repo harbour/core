@@ -1744,7 +1744,7 @@ FUNC crtmakfile( cFile )
     IF lRddads
 
         cDefBccLibs += " rddads.lib ace32.lib"
-
+        cDeflibGccLibs += " -lrddads -ladsloc"
     ENDIF
 
     IF Len( alibsout ) > 0 .and. lExternalLib
