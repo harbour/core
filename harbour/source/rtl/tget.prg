@@ -690,6 +690,10 @@ METHOD overstrike( cChar ) CLASS Get
       ::buffer := ::PutMask( ::VarGet(), .t. )
    endif
 
+   if ::pos == 0
+      ::pos = 1
+   endif
+
    do while ! ::IsEditable( ::pos ) .and. ::pos <= ::nMaxEdit
       ::pos++
    enddo
@@ -749,6 +753,10 @@ METHOD Insert( cChar ) CLASS Get
    if ! ::lEdit
       ::lEdit  := .t.
       ::buffer := ::PutMask( ::VarGet(), .t. )
+   endif
+
+   if ::pos == 0
+      ::pos = 1
    endif
 
    do while ! ::IsEditable( ::pos ) .and. ::pos <= ::nMaxEdit
@@ -1573,4 +1581,3 @@ STATIC FUNCTION IsBadDate( cBuffer, cPicFunc )
    Next
 
  return .f.
-
