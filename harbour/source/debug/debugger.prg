@@ -50,7 +50,7 @@
 static s_oDebugger
 static s_lExit := .F.
 
-function AltD( nAction )
+procedure AltD( nAction )
    static s_lEnabled := .t.
 
    do case
@@ -67,9 +67,9 @@ function AltD( nAction )
            s_lEnabled := .t.
    endcase
 
-return nil
+return
 
-function __dbgEntry( uParam1, uParam2 )  // debugger entry point
+procedure __dbgEntry( uParam1, uParam2 )  // debugger entry point
 
    do case
       case ValType( uParam1 ) == "C"   // called from hvm.c hb_vmModuleName()
@@ -89,7 +89,7 @@ function __dbgEntry( uParam1, uParam2 )  // debugger entry point
                  if s_oDebugger:oBrwVars != nil
                     s_oDebugger:oBrwVars:RefreshAll()
                  endif
-                 return nil
+                 return
               endif
               if s_oDebugger:lGo
                  s_oDebugger:lGo := ! s_oDebugger:IsBreakPoint( uParam1 )
@@ -114,7 +114,7 @@ function __dbgEntry( uParam1, uParam2 )  // debugger entry point
          endif
    endcase
 
-return nil
+return
 
 CLASS TDebugger
 
@@ -786,7 +786,7 @@ METHOD ViewSets() CLASS TDebugger
 
 return nil
 
-static function SetsKeyPressed( nKey, oBrwSets, nSets, oWnd )
+static procedure SetsKeyPressed( nKey, oBrwSets, nSets, oWnd )
 
    local nSet := oBrwSets:Cargo
 
@@ -825,9 +825,9 @@ static function SetsKeyPressed( nKey, oBrwSets, nSets, oWnd )
                        "..47]" )
    endif
 
-return nil
+return
 
-static function SetsUp( oBrw )
+static procedure SetsUp( oBrw )
 
    local nRow := oBrw:RowPos
    local nSetPos
@@ -847,9 +847,9 @@ static function SetsUp( oBrw )
    endif
    oBrw:ForceStable()
 
-return nil
+return
 
-static function SetsDown( oBrw )
+static procedure SetsDown( oBrw )
 
    local nRow := oBrw:RowPos
    local nSetPos
@@ -869,7 +869,7 @@ static function SetsDown( oBrw )
    endif
    oBrw:ForceStable()
 
-return nil
+return
 
 static function ValToStr( uVal )
 

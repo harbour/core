@@ -100,7 +100,7 @@ METHOD GotoLine( nLine ) CLASS TBrwText
 
    RETURN NIL
 
-STATIC FUNCTION GoFirstLine( oBrw )
+STATIC PROCEDURE GoFirstLine( oBrw )
 
    LOCAL cLine
 
@@ -110,9 +110,9 @@ STATIC FUNCTION GoFirstLine( oBrw )
    oBrw:nLine := 1
    FSeek( oBrw:nHandle, 0, FS_SET )
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION GoLastLine( oBrw )
+STATIC PROCEDURE GoLastLine( oBrw )
 
    LOCAL cLine := oBrw:cLine
 
@@ -120,7 +120,7 @@ STATIC FUNCTION GoLastLine( oBrw )
    GoPrevLine( oBrw:nHandle, @cLine, oBrw:nFileSize )
    oBrw:cLine := cLine
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION Skipper( oBrw, nLines )
 
