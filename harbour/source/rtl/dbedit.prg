@@ -57,7 +57,7 @@
 
 #define HB_DBEMPTY() ( LastRec() == 0 .OR. ( ( Eof() .OR. RecNo() == LastRec() + 1 ) .AND. Bof() ) )
 
-/* NOTE: Extension: Harbour supports codeblocks as the xUserFunc parameter 
+/* NOTE: Extension: Harbour supports codeblocks as the xUserFunc parameter
          [vszakats] */
 /* NOTE: Clipper is buggy and will throw an error if the number of
          columns is zero. (Check: dbEdit(0,0,20,20,{})) [vszakats] */
@@ -65,7 +65,7 @@
 /* NOTE: The NG says that the return value is NIL, but it's not. [vszakats] */
 /* NOTE: There's an undocumented result code in Clipper (3), which is not
          supported in Harbour. [vszakats] */
-/* NOTE: Harbour is multithreading ready/reentrant, Clipper is not. 
+/* NOTE: Harbour is multithreading ready/reentrant, Clipper is not.
          [vszakats] */
 
 FUNCTION dbEdit(;
@@ -146,9 +146,28 @@ FUNCTION dbEdit(;
    ENDIF
 
    // Generate the TBrowse columns
-
    FOR nPos := 1 TO nColCount
 
+      /* 09/02/2002 <maurilio.longo@libero.it>
+         NOTE: I've removed all code which was here trying to guess content of acColumns[nPos], it
+               was not needed and it was not working.
+               Clipper dbEdit() requires fully qualified field names if there are columns from more than
+               one file or throws an error
+               Clipper dbEdit() is not able to change field values
+
+         EXAMPLE: a.dbf has a single field named a
+                  b.dbf has a single field named b
+
+                  use a alias "filea" new
+                  use b alias "fileb" new
+
+                  aF := { "field->a", "field->b" }
+                  dbEdit(,,,, aF)
+
+                  throws an error with Clipper 5.2
+      */
+
+      // Column Header
       IF ISARRAY( acColumns )
          IF ( nAliasPos := At( "->", acColumns[ nPos ] ) ) > 0
             cAlias := SubStr( acColumns[ nPos ], 1, nAliasPos - 1 )
@@ -157,34 +176,14 @@ FUNCTION dbEdit(;
          ELSE
             cHeading := acColumns[ nPos ]
          ENDIF
-         cBlock := acColumns[ nPos ]
       ELSE
-         cBlock := FieldName( nPos )
-         cHeading := cBlock
+         cHeading := FieldName( nPos )
       ENDIF
 
-      IF Type( cBlock ) == "M"
+      bBlock := &( "{||" + acColumns[ nPos ] + "}" )
 
+      IF ValType(Eval(bBlock)) == "M"
          bBlock := {|| "  <Memo>  " }
-
-      ELSEIF "->" $ cBlock
-
-         IF Upper( cAlias ) == "M"
-            bBlock := MemvarBlock( cBlock )
-         ELSEIF Upper( cAlias ) == "FIELD"
-            bBlock := FieldWBlock( cFieldName, Select() )
-         ELSE
-            bBlock := FieldWBlock( cFieldName, Select( cAlias ) )
-         ENDIF
-
-      ELSEIF !Empty( FieldPos( cBlock ) )
-         bBlock := FieldWBlock( cBlock, Select() )
-      ELSE
-         bBlock := NIL
-      ENDIF
-
-      IF bBlock == NIL
-         bBlock := &( "{||" + cBlock + "}" )
       ENDIF
 
       IF ISARRAY( xColumnHeaders ) .AND. Len( xColumnHeaders ) >= nPos .AND. ISCHARACTER( xColumnHeaders[ nPos ] )
@@ -192,8 +191,6 @@ FUNCTION dbEdit(;
       ELSEIF ISCHARACTER( xColumnHeaders )
          cHeading := xColumnHeaders
       ENDIF
-
-      //
 
       oColumn := TBColumnNew( cHeading, bBlock )
 
