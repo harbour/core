@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Conversion Funtions
  *
- * Copyright 1999 Luiz Rafael Culik
+ * Copyright 1999 Luiz Rafael Culik <Culik@sl.conex.net>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

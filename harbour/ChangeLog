@@ -1,3 +1,16 @@
+20000131-15:09 GMT+1 Victor Szakats <info@szelvesz.hu>
+  * ft_helpc.b32 
+    ! Fixed CVS ID header.
+  * source/debug/debugger.prg
+    ! Some constants changed to manifest constants (SC_NONE,SC_NORMAL)
+    + NOTE readded.
+  * make_b40.bat 
+    + ft_helpc.b32 added.
+  * source/rdd/dbcmd.c
+    ! Doc formatting errors fixed.
+  * source/tools/*.prg
+    ! Email address separators added to some lic headers.
+
 20000131-10:00 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/debug/debugger.prg
      + added _AltD(). Waiting for a Harbour fix to accept it as AltD()

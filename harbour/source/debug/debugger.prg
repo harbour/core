@@ -33,11 +33,16 @@
  *
  */
 
+/* NOTE: Don't use SAY/DevOut()/DevPos() for screen output, otherwise
+         the debugger output may interfere with the applications output
+         redirection, and is also slower. [vszel] */
+
 #include "hbclass.ch"
 #include "hbmemvar.ch"
 #include "box.ch"
 #include "inkey.ch"
 #include "common.ch"
+#include "setcurs.ch"
 
 #xcommand MENU [<oMenu>] => [ <oMenu> := ] TDbMenu():New()
 #xcommand MENUITEM <cPrompt> [ ACTION <uAction,...> ] => ;
@@ -199,8 +204,8 @@ METHOD BuildCommandWindow() CLASS TDebugger
 
    ::oWndCommand = TDbWindow():New( MaxRow() - 5, 0, MaxRow() - 1, MaxCol(),;
                                     "Command", "BG+/B" )
-   ::oWndCommand:bGotFocus   = { || ::oGetListCommand:SetFocus(), SetCursor( 1 ) }
-   ::oWndCommand:bLostFocus  = { || SetCursor( 0 ) }
+   ::oWndCommand:bGotFocus   = { || ::oGetListCommand:SetFocus(), SetCursor( SC_NORMAL ) }
+   ::oWndCommand:bLostFocus  = { || SetCursor( SC_NONE ) }
    ::oWndCommand:bKeyPressed = { | nKey | ::CommandWindowProcessKey( nKey ) }
    ::oWndCommand:bPainted    = { || DispOutAt( ::oWndCommand:nBottom - 1,;
                              ::oWndCommand:nLeft + 1, "> ", ::oWndCommand:cColor ) }
@@ -393,7 +398,7 @@ METHOD HandleEvent() CLASS TDebugger
 
          otherwise
               if ( nPopup := ::oPullDown:GetHotKeyPos( AltToKey( nKey ) ) ) != 0
-                 SetCursor( 0 )
+                 SetCursor( SC_NONE )
                  ::oPullDown:ShowPopup( nPopup )
               endif
       endcase
@@ -448,7 +453,7 @@ METHOD Show() CLASS TDebugger
    ::nAppRow    = Row()
    ::nAppCol    = Col()
    ::cAppColors = SetColor()
-   ::nAppCursor = SetCursor( 0 )
+   ::nAppCursor = SetCursor( SC_NONE )
 
    ::oPullDown:Display()
    ::oWndCode:Show( .t. )
@@ -645,7 +650,7 @@ METHOD InputBox( cMsg, uValue, bValid ) CLASS TDebugger
       @ nTop + 1, nLeft + 1 GET uTemp VALID bValid
    endif
 
-   nOldCursor = SetCursor( 1 )
+   nOldCursor = SetCursor( SC_NORMAL )
    READ
    SetCursor( nOldCursor )
    oWndInput:Hide()
@@ -692,7 +697,7 @@ METHOD SaveAppStatus() CLASS TDebugger
    ::cAppColors = SetColor()
    ::nAppCursor = SetCursor()
    RestScreen( 0, 0, MaxRow(), MaxCol(), ::cImage )
-   SetCursor( 0 )
+   SetCursor( SC_NONE )
    DispEnd()
 
 return nil

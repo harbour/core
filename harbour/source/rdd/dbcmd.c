@@ -32,12 +32,13 @@
  * their web site at http://www.gnu.org/).
  *
  */
+
 /*
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
- *    DB* () documentation
+ *    DB*() documentation
  *    ORD*() documentation
  *    RDD*() documentation
  * See doc/license.txt for licensing terms.
@@ -1397,6 +1398,7 @@ void hb_rddShutDown( void )
 /*
  * -- HARBOUR FUNCTIONS --
  */
+
 /*  $DOC$
  *  $FUNCNAME$
  *     AFIELDS()
@@ -1816,6 +1818,7 @@ HARBOUR HB_BOF( void )
       SELF_BOF( ( AREAP ) pCurrArea->pArea, &bBof );
    hb_retl( bBof );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *     DBAPPEND()
@@ -1879,6 +1882,7 @@ HARBOUR HB_DBAPPEND( void )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBAPPEND" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *     DBCLEARFILTER()
@@ -1925,6 +1929,7 @@ HARBOUR HB_DBCLEARFILTER( void )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBCLEARFILTER" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *     DBCLOSEALL()
@@ -1971,6 +1976,7 @@ HARBOUR HB_DBCLOSEALL( void )
 {
    hb_rddCloseAll();
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *     DBCLOSEAREA()
@@ -2034,6 +2040,7 @@ HARBOUR HB_DBCLOSEAREA( void )
    hb_xfree( pCurrArea );
    pCurrArea = NULL;
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      DBCOMMIT()
@@ -2088,6 +2095,7 @@ HARBOUR HB_DBCOMMIT( void )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBCOMMIT" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *     DBCOMMITALL()
@@ -2187,7 +2195,7 @@ HARBOUR HB_DBCOMMITALL( void )
  *  $EXAMPLES$
  *     This example scans records in Sales.dbf for a particular
  *      salesman and displays a running total sales amounts:
-
+ *
  *      LOCAL nRunTotal := 0
  *      USE Sales NEW
  *      LOCATE FOR Sales->Salesman = "1002"
@@ -2195,10 +2203,10 @@ HARBOUR HB_DBCOMMITALL( void )
  *         ? Sales->Salesname, nRunTotal += Sales->Amount
  *         __DBCONTINUE()
  *      ENDDO
-
+ *
  *     This example demonstrates how to continue if the pending
  *      LOCATE scope contains a WHILE condition:
-
+ *
  *      LOCAL nRunTotal := 0
  *      USE Sales INDEX Salesman NEW
  *      SEEK "1002"
@@ -2217,7 +2225,7 @@ HARBOUR HB_DBCOMMITALL( void )
  *     R
  *  $COMPLIANCE$
  *
-
+ *
  *  $SEEALSO$
  *     EOF(),FOUND()
  *  $INCLUDE$
@@ -2272,11 +2280,11 @@ HARBOUR HB___DBCONTINUE()
  *     <cDatabase> is the name of the new database file, with an optional
  *     drive and directory, specified as a character string.  If specified
  *     without an extension (.dbf) is assumed.
-
+ *
  *     <aStruct> is an array that contains the structure of <cDatabase> as
  *     a series of subarrays, one per field.  Each subarray contains the
  *     definition of each field's attributes and has the following structure:
-
+ *
  *     Field Definition Subarray
  *     컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
  *     Position     Metasymbol     Dbstruct.ch
@@ -2286,7 +2294,7 @@ HARBOUR HB___DBCONTINUE()
  *     3            nLength        DBS_LEN
  *     4            nDecimals      DBS_DEC
  *     컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
-
+ *
  *     <cDriver> specifies the replaceable database driver (RDD) to use to
  *     process the current work area.  <cDriver> is name of the RDD specified
  *     as a character expression.  If you specify <cDriver> as a literal value,
@@ -2295,34 +2303,34 @@ HARBOUR HB___DBCONTINUE()
  *  $RETURNS$
  *     DBCREATE() always returns NIL.
  *  $DESCRIPTION$
-       DBCREATE() is a database function that creates a database file from an
+ *     DBCREATE() is a database function that creates a database file from an
  *   array containing the structure of the file.  You may create the array
  *   programmatically or by using DBSTRUCT().  DBCREATE() is similar to the
  *   CREATE FROM command which creates a new database file structure from a
  *   structure extended file.  Use CREATE or COPY STRUCTURE EXTENDED commands
  *   to create a structure extended file.
-
+ *
  *   Before using DBCREATE(), you must first create the <aStruct> array and
  *   fill it with the field definition arrays according to the structure in
  *   Field Definition Subarray table (above).  There are some specific rules
  *   for creating a field definition array, including:
-
+ *
  *     Specify all field attributes with a value of the proper data
  *      type for the attribute.  The decimals attribute must be
  *      specified--even for non-numeric fields.  If the field does not have a
  *      decimals attribute, specify zero.
-
+ *
  *     Specify the type attribute using the first letter of the data
  *      type as a minimum.  Use longer and more descriptive terms for
  *      readability.  For example, both "C" and "Character" can be specified
  *      as the type attribute for character fields.
-
+ *
  *     In CA-Clipper, character fields contain up to 64,000
  *      characters.  Unlike the CREATE FROM command, DBCREATE() does not use
  *      the decimals attribute to specify the high-order part of the field
  *      length.  Specify the field length directly, regardless of its
  *      magnitude.
-
+ *
  *   To make references to the various elements of the field definition
  *   subarray more readable, the header file called Dbstruct.ch is supplied
  *   which contains the #defines to assign a name to the array position for
@@ -2333,19 +2341,19 @@ HARBOUR HB___DBCONTINUE()
  *      definition subarrays using the AADD() function before creating
  *      People.dbf.  You might use this technique to add field definitions to
  *      your structure array dynamically:
-
+ *
  *      aDbf := {}
  *      AADD(aDbf, { "Name", "C", 25, 0 })
  *      AADD(aDbf, { "Address", "C", 1024, 0 })
  *      AADD(aDbf, { "Phone", "N", 13, 0 })
  *      //
  *      DBCREATE("People", aDbf)
-
+ *
  *     This example performs the same types of actions but declares
  *      the structure array as a two-dimensional array, and then uses
  *      subscript addressing to specify the field definitions.  It will be
  *      created using the DBFMDX RDD:
-
+ *
  *      #include "Dbstruct.ch"
  *      //
  *      LOCAL aDbf[1][4]
@@ -2643,6 +2651,7 @@ HARBOUR HB_DBCREATE( void )
       ( ( AREAP ) pCurrArea->pArea )->lpExtendInfo->ulRecCount = ulRecCount;
    }
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *     DBDELETE()
@@ -2690,6 +2699,7 @@ HARBOUR HB_DBDELETE( void )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBDELETE" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      DBFILTER()
@@ -2741,6 +2751,7 @@ HARBOUR HB_DBFILTER( void )
    else
       hb_retc( "" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      DBGOBOTTOM()
@@ -2785,6 +2796,7 @@ HARBOUR HB_DBGOBOTTOM( void )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBGOBOTTOM" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      DBGOTO()
@@ -2851,6 +2863,7 @@ HARBOUR HB_DBGOTO( void )
    else
       SELF_GOTOID( ( AREAP ) pCurrArea->pArea, pItem );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      DBGOTOP()
@@ -3130,6 +3143,7 @@ HARBOUR HB___DBPACK( void )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "__DBPACK" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      DBRECALL()
@@ -3176,6 +3190,7 @@ HARBOUR HB_DBRECALL( void )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBRECALL" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      DBRLOCK()
@@ -3261,6 +3276,7 @@ HARBOUR HB_DBRLOCK( void )
 
    hb_retl( pLockInfo.fResult );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      DBRLOCKLIST()
@@ -3325,6 +3341,7 @@ HARBOUR HB_DBRLOCKLIST( void )
    hb_itemReturn( pList );
    hb_itemRelease( pList );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      DBRUNLOCK()
@@ -3378,6 +3395,7 @@ HARBOUR HB_DBRUNLOCK( void )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBRUNLOCK" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      DBSEEK()
@@ -3483,6 +3501,7 @@ HARBOUR HB_DBSEEK( void )
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBSEEK" );
    hb_retl( FALSE );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      DBSELECTAREA()
@@ -3602,6 +3621,7 @@ HARBOUR HB_DBSELECTAREA( void )
    }
    pCurrArea = NULL; /* Selected WorkArea is closed */
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      DBSETDRIVER()
@@ -3678,6 +3698,7 @@ HARBOUR HB___DBSETFOUND( void )
          ( ( AREAP ) pCurrArea->pArea )->fFound = hb_itemGetL( pFound );
    }
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      DBSKIP()
@@ -3755,6 +3776,7 @@ HARBOUR HB_DBSKIP( void )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBSKIP" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      DBSETFILTER()
@@ -3767,7 +3789,7 @@ HARBOUR HB_DBSKIP( void )
  *  $ARGUMENTS$
  *      <bCondition> is a code block that expresses the filter condition in
  *   executable form.
-
+ *
  *      <cCondition> is an optional character value that expresses the
  *   filter condition in textual form.  If <cCondition> is omitted, the
  *   DBSETFILTER() function will return an empty string for the work area.
@@ -3779,16 +3801,16 @@ HARBOUR HB_DBSKIP( void )
  *   When a filter is set, records which do not meet the filter condition are
  *   not logically visible.  That is, database operations which act on
  *   logical records will not consider these records.
-
+ *
  *      The filter expression supplied to DBSETFILTER() evaluates to true (.T.)
  *   if the current record meets the filter condition; otherwise, it should
  *   evaluate to false (.F.).
-
+ *
  *      The filter expression may be a code block (<bCondition>) or both a code
  *   block and equivalent text (<cCondition>).  If both versions are
  *   supplied, they must express the same condition.  If the text version is
  *   omitted, DBFILTER() will return an empty string for the work area.
-
+ *
  *      DBSETFILTER() performs the same function as the standard SET FILTER
  *   command.  For more information, refer to the SET FILTER command.
  *
@@ -3811,7 +3833,7 @@ HARBOUR HB_DBSKIP( void )
  *      the associated work area is automatically selected as the current
  *      work area before the evaluation; the previously selected work area is
  *      automatically restored afterward.
-
+ *
  *  $EXAMPLES$
  *      This example limits data access to records in which the Age
  *      field value is less than 40:
@@ -3857,6 +3879,7 @@ HARBOUR HB_DBSETFILTER( void )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBSETFILTER" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      DBSTRUCT()
@@ -3873,7 +3896,7 @@ HARBOUR HB_DBSETFILTER( void )
  *   array whose length is equal to the number of fields in the database
  *   file.  Each element of the array is a subarray containing information
  *   for one field.  The subarrays have the following format:
-
+ *
  *      DBSTRUCT() Return Array
  *      컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
  *      Position *   Metasymbol *   Dbstruct.ch
@@ -3883,7 +3906,7 @@ HARBOUR HB_DBSETFILTER( void )
  *      3 *    *      nLength *      DBS_LEN
  *      4 *    *      nDecimals *    DBS_DEC
  *      컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
-
+ *
  *      If there is no database file in USE in the current work area, DBSTRUCT()
  *   returns an empty array ({}).
  *      
@@ -3892,11 +3915,11 @@ HARBOUR HB_DBSETFILTER( void )
  *   EXTENDED by creating an array of structure information rather than a
  *   database file of structure information.  There is another function,
  *   DBCREATE(), that can create a database file from the structure array.
-
+ *
  *    By default, DBSTRUCT() operates on the currently selected work area.  It
  *   will operate on an unselected work area if you specify it as part of an
  *   aliased expression as shown below.
-
+ *
  *      Note, a header file, Dbstruct.ch, located in \HARBOUR\INCLUDE contains
  *   a series of manifest constants for each field attribute.
  *      
@@ -3904,7 +3927,7 @@ HARBOUR HB_DBSETFILTER( void )
  *      This example opens two database files then creates an array
  *      containing the database structure using DBSTRUCT() within an aliased
  *      expression.  The field names are then listed using AEVAL():
-
+ *
  *      #include "Dbstruct.ch"
  *      //
  *      LOCAL aStruct
@@ -4007,6 +4030,7 @@ HARBOUR HB_DBTABLEEXT( void )
       hb_itemRelease( pItem );
    }
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      DBUNLOCK()
@@ -4024,19 +4048,19 @@ HARBOUR HB_DBTABLEEXT( void )
  *      DBUNLOCK() releases any record or file locks obtained by the current
  *   process for the current work area.  DBUNLOCK() is only meaningful on a
  *   shared database in a network environment.
-
+ *
  *      DBUNLOCK() performs the same function as the standard UNLOCK command.
  *   For more information, refer to the UNLOCK command.
-
+ *
  *   Notes
-
+ *
  *      Network environment: Releasing locks may cause updates to the
  *      database to become visible to other processes.  
  *      
  *  $EXAMPLES$
  *      The following example illustrates a basic use of the
  *      DBUNLOCK() function:
-
+ *
  *      cLast := "Winston"
  *      USE Sales SHARED NEW VIA "DBFNTX"
  *      DBSETINDEX( "LASTNAME" )
@@ -4073,6 +4097,7 @@ HARBOUR HB_DBUNLOCK( void )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBUNLOCK" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      DBUNLOCKALL()
@@ -4091,7 +4116,7 @@ HARBOUR HB_DBUNLOCK( void )
  *   process for any work area.  DBUNLOCKALL() is only meaningful on a shared
  *   database in a network environment.  It is equivalent to calling
  *   DBUNLOCK() on every occupied work area.
-
+ *
  *      DBUNLOCKALL() performs the same function as the UNLOCK ALL command.  For
  *   more information, refer to the UNLOCK ALL command.
  *      
@@ -4099,7 +4124,7 @@ HARBOUR HB_DBUNLOCK( void )
  *      The following example marks a record for deletion if an
  *      RLOCK() attempt is successful, then clears all locks in all work
  *      areas:
-
+ *
  *      cLast := "Winston"
  *      USE Sales SHARED NEW VIA "DBFNTX"
  *      DBSETINDEX( "SALEFNAM" )
@@ -4148,6 +4173,7 @@ HARBOUR HB_DBUNLOCKALL( void )
       pTempArea = pTempArea->pNext;
    }
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      DBUSEAREA()
@@ -4164,14 +4190,14 @@ HARBOUR HB_DBUNLOCKALL( void )
  *   area before the use operation.  If <lNewArea> is false (.F.) or omitted,
  *   the current work area is used; if the work area is occupied, it is
  *   closed first.
-
+ *
  *      <cDriver> is an optional character value.  If present, it specifies
  *   the name of the database driver which will service the work area.  If
  *   <cDriver> is omitted, the current default driver is used (see note
  *   below).
-
+ *
  *      <cName> specifies the name of the database (.dbf) file to be opened.
-
+ *
  *      <xcAlias> is an optional character value.  If present, it specifies
  *   the alias to be associated with the work area.  The alias must
  *   constitute a valid HARBOUR identifier.  A valid <xcAlias> may be any
@@ -4180,7 +4206,7 @@ HARBOUR HB_DBUNLOCKALL( void )
  *   Within a single application, HARBOUR will not accept duplicate
  *   aliases.  If <xcAlias> is omitted, a default alias is constructed from
  *      <cName>.
-
+ *
  *      <lShared> is an optional logical value.  If present, it specifies
  *   whether the database (.dbf) file should be accessible to other processes
  *   on a network.  A value of true (.T.) specifies that other processes
@@ -4188,7 +4214,7 @@ HARBOUR HB_DBUNLOCKALL( void )
  *   current process is to have exclusive access.  If <lShared> is omitted,
  *   the current global _SET_EXCLUSIVE setting determines whether shared
  *   access is allowed.
-
+ *
  *      <lReadonly> is an optional logical value that specifies whether
  *   updates to the work area are prohibited.  A value of true (.T.)
  *   prohibits updates; a value of false (.F.) permits updates.  A value of
@@ -4200,12 +4226,12 @@ HARBOUR HB_DBUNLOCKALL( void )
  *  $DESCRIPTION$
  *      DBUSEAREA() associates the specified database (.dbf) file with the
  *   current work area.
-
+ *
  *      DBUSEAREA() performs the same function as the standard USE command.  For
  *   more information, refer to the USE command.
-
+ *
  *      Notes
-
+ *
  *      Current driver: If no driver is specified in the call to
  *      DBUSEAREA() the default driver is used.  If more than one driver is
  *      available to the application, the default driver is the driver
@@ -4214,7 +4240,7 @@ HARBOUR HB_DBUNLOCKALL( void )
  *      
  *  $EXAMPLES$
  *      This example is a typical use of the DBUSEAREA() function:
-
+ *
  *      DBUSEAREA(.T., "DBFNDX", "Employees")
  *
  *  $TESTS$
@@ -4425,6 +4451,7 @@ HARBOUR HB_DBUSEAREA( void )
    SELF_RECCOUNT( ( AREAP ) pCurrArea->pArea, &ulLen );
    ( ( AREAP ) pCurrArea->pArea )->lpExtendInfo->ulRecCount = ulLen;
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      __DBZAP()
@@ -4474,6 +4501,7 @@ HARBOUR HB_DBUSEAREA( void )
  *      
  *  $END$
  */
+
 /*  $DOC$
  *  $COMMANDNAME$
  *      ZAP
@@ -4531,6 +4559,7 @@ HARBOUR HB___DBZAP( void )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "__DBZAP" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      DELETED()
@@ -4546,36 +4575,36 @@ HARBOUR HB___DBZAP( void )
  *      DELETED() returns true (.T.) if the current record is marked for
  *   deletion; otherwise, it returns false (.F.).  If there is no database
  *   file in USE in the current work area, DELETED() returns false (.F.).
-     
+ *   
  *  $DESCRIPTION$
  *      DELETED() is a database function that determines if the current record
  *   in the active work area is marked for deletion.  Since each work area
  *   with an open database file can have a current record, each work area has
  *   its own DELETED() value.
-
+ *
  *      By default, DELETED() operates on the currently selected work area.  It
  *   will operate on an unselected work area if you specify it as part of an
  *   aliased expression (see example below).
-
+ *
  *      In applications, DELETED() is generally used to query the deleted status
  *   as a part of record processing conditions, or to display the deleted
  *   status as a part of screens and reports.
-     
+ *   
  *  $EXAMPLES$
  *      This example uses DELETED() in the current and in an
  *      unselected work area:
-
+ *
  *      USE Customer NEW
-
+ *
  *      USE Sales NEW
  *      ? DELETED() // Result: .F.
  *      DELETE
  *      ? DELETED()  // Result: .T.
  *      ? Customer->(DELETED())       // Result: .F.
-
+ *
  *      This example uses DELETED() to display a record's deleted
  *      status in screens and reports:
-
+ *
  *      @ 1, 65 SAY IF(DELETED(), "Inactive", "Active")
  *
  *  $TESTS$
@@ -4618,54 +4647,54 @@ HARBOUR HB_DELETED( void )
  *   returns false (.F.).  If there is no database file open in the current
  *   work area, EOF() returns false (.F.).  If the current database file
  *   contains no records, EOF() returns true (.T.).
-
+ *
  *  $DESCRIPTION$
-
+ *
  *      EOF() is a database function used to test for an end of file boundary
  *   condition when the record pointer is moving forward through a database
  *   file.  Any command that can move the record pointer can set EOF().
-
+ *
  *      The most typical application is as a part of the <lCondition> argument
  *   of a DO WHILE construct that sequentially processes records in a
  *   database file.  Here <lCondition> would include a test for .NOT. EOF(),
  *   forcing the DO WHILE loop to terminate when EOF() returns true (.T.).
-
+ *
  *      EOF() and FOUND() are often used interchangeably to test whether a SEEK,
  *   FIND, or LOCATE command failed.  With these commands, however, FOUND()
  *   is preferred.
-
+ *
  *      When EOF() returns true (.T.), the record pointer is positioned at
  *   LASTREC() + 1 regardless of whether there is an active SET FILTER or SET
  *   DELETED is ON.  Further attempts to move the record pointer forward
  *   return the same result without error.  Once EOF() is set to true (.T.),
  *   it retains its value until there is another attempt to move the record
  *   pointer.
-
+ *
  *      By default, EOF() operates on the currently selected work area.  It can
  *   be made to operate on an unselected work area by specifying it within an
  *   aliased expression (see example below).
-
+ *
  *  $EXAMPLES$
  *      This example demonstrates EOF() by deliberately moving the
  *      record pointer beyond the last record:
-
+ *
  *      USE Sales
  *      GO BOTTOM
  *      ? EOF()            // Result: .F.
  *      SKIP
  *      ? EOF()            // Result: .T.
-
+ *
  *      This example uses aliased expressions to query the value of
  *      EOF() in unselected work areas:
-
+ *
  *      USE Sales NEW
  *      USE Customer NEW
  *      ? Sales->(EOF())
  *      ? Customer->(EOF())
-
+ *
  *      This example illustrates how EOF() can be used as part of a
  *      condition for sequential database file operations:
-
+ *
  *      USE Sales INDEX CustNum NEW
  *      DO WHILE !EOF()
  *         nOldCust := Sales->CustNum
@@ -4696,6 +4725,7 @@ HARBOUR HB_EOF( void )
       SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
    hb_retl( bEof );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      FCOUNT()
@@ -4717,26 +4747,26 @@ HARBOUR HB_EOF( void )
  *   file.  These include generalized import/export and reporting programs.
  *   Typically, you use FCOUNT() to establish the upper limit of a FOR...NEXT
  *   or DO WHILE loop that processes a single field at a time.
-
+ *
  *      By default, FCOUNT() operates on the currently selected work area.     
  *  $EXAMPLES$
  *      This example illustrates FCOUNT(), returning the number of
  *      fields in the current and an unselected work area:
-
+ *
  *      USE Sales NEW
  *      USE Customer NEW
  *      ? FCOUNT()                     // Result: 5
  *      ? Sales->(FCOUNT())            // Result: 8
-
+ *
  *      This example uses FCOUNT() to DECLARE an array with field
  *      information:
-
+ *
  *      LOCAL aFields := ARRAY(FCOUNT())
  *      AFIELDS(aFields)
-
+ *
  *      This example uses FCOUNT() as the upper boundary of a FOR loop
  *      that processes the list of current work area fields:
-
+ *
  *      LOCAL nField
  *      USE Sales NEW
  *      FOR nField := 1 TO FCOUNT()
@@ -4764,6 +4794,7 @@ HARBOUR HB_FCOUNT( void )
       SELF_FIELDCOUNT( ( AREAP ) pCurrArea->pArea, &uiFields );
    hb_retni( uiFields );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      FIELDGET()
@@ -4789,7 +4820,7 @@ HARBOUR HB_FCOUNT( void )
  *  $EXAMPLES$
  *      This example compares FIELDGET() to functionally equivalent
  *      code that uses the macro operator to retrieve the value of a field:
-
+ *
  *      LOCAL nField := 1, FName, FVal
  *      USE Customer NEW
  *      //
@@ -4825,6 +4856,7 @@ HARBOUR HB_FIELDGET( void )
    hb_itemReturn( pItem );
    hb_itemRelease( pItem );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      FIELDNAME()
@@ -4849,39 +4881,39 @@ HARBOUR HB_FIELDGET( void )
  *   information for more than one field is required, use AFIELDS() to create
  *   an array of field information or COPY STRUCTURE EXTENDED to create a
  *   database of field information.
-
+ *
  *      If you need additional database file structure information, use TYPE()
  *   and LEN().  To obtain the number of decimal places for a numeric field,
  *   use the following expression:
-
+ *
  *   LEN(SUBSTR(STR(<idField>), RAT(".", ;
  *          STR(<idField>)) + 1))
-
+ *
  *      By default, FIELDNAME() operates on the currently selected work area as
  *   shown in the example below.
  *      
  *  $EXAMPLES$
  *      These examples illustrate FIELDNAME() used with several other
  *      functions:
-
+ *
  *      USE Sales
  *      ? FIELDNAME(1)       // Result: BRANCH
  *      ? FCOUNT()                // Result: 5
  *      ? LEN(FIELDNAME(0))        // Result: 0
  *      ? LEN(FIELDNAME(40))       // Result: 0
-
+ *
  *      This example uses FIELDNAME() to list the name and type of
  *      each field in Customer.dbf:
-
+ *
  *      USE Customer NEW
  *      FOR nField := 1 TO FCOUNT()
  *         ? PADR(FIELDNAME(nField), 10),;
  *          VALTYPE(&(FIELDNAME(nField)))
  *      NEXT
-
+ *
  *      This example accesses fields in unselected work areas using
  *      aliased expressions:
-
+ *
  *      USE Sales NEW
  *      USE Customer NEW
  *      USE Invoices NEW
@@ -4926,6 +4958,7 @@ HARBOUR HB_FIELDNAME( void )
    }
    hb_retc( "" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      FIELDPOS()
@@ -4947,21 +4980,21 @@ HARBOUR HB_FIELDNAME( void )
  *      FIELDPOS() is a database function that is the inverse of the FIELDNAME()
  *   function.  FIELDPOS() is most often used with the FIELDPUT() and
  *   FIELDGET() functions.
-
+ *
  *      FIELDPOS() return the names of fields in any unselected work area by
  *   referring to the function using an aliased expression.  See the example
  *   below.
  *  $EXAMPLES$
  *      This example demonstrates a typical specification of the
  *      FIELDPOS() function:
-
+ *
  *      USE Customer NEW
  *      ? FIELDPOS("Name") *    *    *    *    // Result: 1
  *      ? FIELDGET(FIELDPOS("Name")) *    *    // Result: Kate
-
+ *
  *      This example uses FIELDPOS() to return the position of a
  *      specified field in a unselected work area:
-
+ *
  *      USE Customer NEW
  *      USE Invoices NEW
  *      ? Customer->(FIELDPOS("Name")) *       // Result: 1
@@ -5004,6 +5037,7 @@ HARBOUR HB_FIELDPOS( void )
    }
    hb_retni( 0 );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      FIELDPUT()
@@ -5016,7 +5050,7 @@ HARBOUR HB_FIELDPOS( void )
  *  $ARGUMENTS$
  *    <nField> is the ordinal position of the field in the current
  *   database file.
-
+ *
  *      <expAssign> is the value to assign to the given field.  The data
  *   type of this expression must match the data type of the designated field
  *   variable.
@@ -5034,7 +5068,7 @@ HARBOUR HB_FIELDPOS( void )
  *  $EXAMPLES$
  *      This example compares FIELDPUT() to functionally equivalent
  *      code that uses the macro operator to set the value of a field:
-
+ *
  *      // Using macro operator
  *      FName := FIELD(nField)         // Get field name
  *      FIELD->&FName := FVal          // Set field value
@@ -5070,6 +5104,7 @@ HARBOUR HB_FIELDPUT( void )
    }
    hb_ret();
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      FLOCK()
@@ -5181,6 +5216,7 @@ HARBOUR HB_FLOCK( void )
 
    hb_retl( pLockInfo.fResult );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      FOUND()
@@ -5278,6 +5314,7 @@ HARBOUR HB_FOUND( void )
       SELF_FOUND( ( AREAP ) pCurrArea->pArea, &bFound );
    hb_retl( bFound );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      HEADER()
@@ -5290,35 +5327,35 @@ HARBOUR HB_FOUND( void )
  *  $ARGUMENTS$
  *      
  *  $RETURNS$
-       HEADER() returns the number of bytes in the header of the current
-     database file as an integer numeric value.  If no database file is in
-     use, HEADER() returns a zero (0).    
+ *     HEADER() returns the number of bytes in the header of the current
+ *   database file as an integer numeric value.  If no database file is in
+ *   use, HEADER() returns a zero (0).    
  *  $DESCRIPTION$      
-       HEADER() is a database function that is used with LASTREC(), RECSIZE(),
-     and DISKSPACE() to create procedures for backing up files.
-
-       By default, HEADER() operates on the currently selected work area.  It
-     will operate on an unselected work area if you specify it as part of an
-     aliased expression (see example below).
+ *     HEADER() is a database function that is used with LASTREC(), RECSIZE(),
+ *   and DISKSPACE() to create procedures for backing up files.
+ *
+ *     By default, HEADER() operates on the currently selected work area.  It
+ *   will operate on an unselected work area if you specify it as part of an
+ *   aliased expression (see example below).
  *  $EXAMPLES$
-       This example determines the header size of the Sales.dbf:
-
-        USE Sales NEW
-        ? HEADER()            // Result: 258
-
-       This example defines a pseudofunction, DbfSize(), that uses
-        HEADER() with RECSIZE() and LASTREC() to calculate the size of the
-        current database file in bytes:
-
-        #define DbfSize()   ((RECSIZE() * LASTREC()) + ;
-              HEADER() + 1)
-
-        Later you can use DbfSize() as you would any function:
-
-        USE Sales NEW
-        USE Customer NEW
-        ? DbfSize()
-        ? Sales->(DbfSize())
+ *     This example determines the header size of the Sales.dbf:
+ *
+ *      USE Sales NEW
+ *      ? HEADER()            // Result: 258
+ *
+ *     This example defines a pseudofunction, DbfSize(), that uses
+ *      HEADER() with RECSIZE() and LASTREC() to calculate the size of the
+ *      current database file in bytes:
+ *
+ *      #define DbfSize()   ((RECSIZE() * LASTREC()) + ;
+ *            HEADER() + 1)
+ *
+ *      Later you can use DbfSize() as you would any function:
+ *
+ *      USE Sales NEW
+ *      USE Customer NEW
+ *      ? DbfSize()
+ *      ? Sales->(DbfSize())
  *  $TESTS$
  *
  *  $STATUS$
@@ -5346,6 +5383,7 @@ HARBOUR HB_HEADER( void )
       hb_itemRelease( pRecSize );
    }
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      INDEXORD()
@@ -5358,38 +5396,38 @@ HARBOUR HB_HEADER( void )
  *  $ARGUMENTS$
  *      
  *  $RETURNS$
-       INDEXORD() returns an integer numeric value.  The value returned is
-     equal to the position of the controlling index in the list of open
-     indexes for the current work area.  A value of zero indicates that there
-     is no controlling index and records are being accessed in natural order.
-     If no database file is open, INDEXORD() will also return a zero.
+ *     INDEXORD() returns an integer numeric value.  The value returned is
+ *   equal to the position of the controlling index in the list of open
+ *   indexes for the current work area.  A value of zero indicates that there
+ *   is no controlling index and records are being accessed in natural order.
+ *   If no database file is open, INDEXORD() will also return a zero.
  *  $DESCRIPTION$      
-       INDEXORD() is a database function that determines the position of the
-     controlling index in the list of index files opened by the last
-     USE...INDEX or SET INDEX TO in the current work area.  It is often
-     useful to save the last controlling index so it can be restored later.
-
-       By default, INDEXORD() operates on the currently selected work area.  It
-     will operate on an unselected work area if you specify it as part of an
-     aliased expression (see example below).
+ *     INDEXORD() is a database function that determines the position of the
+ *   controlling index in the list of index files opened by the last
+ *   USE...INDEX or SET INDEX TO in the current work area.  It is often
+ *   useful to save the last controlling index so it can be restored later.
+ *
+ *     By default, INDEXORD() operates on the currently selected work area.  It
+ *   will operate on an unselected work area if you specify it as part of an
+ *   aliased expression (see example below).
  *  $EXAMPLES$ 
-       This example uses INDEXORD() to save the current order.  After
-        changing to a new order, it uses the saved value to restore the
-        original order:
-
-        USE Customer INDEX Name, Serial NEW
-        nOrder := INDEXORD()                  // Result: 1
-        SET ORDER TO 2
-        ? INDEXORD()                          // Result: 2
-        SET ORDER TO nOrder
-        ? INDEXORD()                          // Result: 1
-
-       This example uses an aliased expression to determine the order
-        number of the controlling index in an unselected work area:
-
-        USE Sales INDEX Salesman, CustNum NEW
-        USE Customer INDEX Name, Serial NEW
-        ? Sales->(INDEXORD())                 // Result: 1
+ *     This example uses INDEXORD() to save the current order.  After
+ *      changing to a new order, it uses the saved value to restore the
+ *      original order:
+ *
+ *      USE Customer INDEX Name, Serial NEW
+ *      nOrder := INDEXORD()                  // Result: 1
+ *      SET ORDER TO 2
+ *      ? INDEXORD()                          // Result: 2
+ *      SET ORDER TO nOrder
+ *      ? INDEXORD()                          // Result: 1
+ *
+ *     This example uses an aliased expression to determine the order
+ *      number of the controlling index in an unselected work area:
+ *
+ *      USE Sales INDEX Salesman, CustNum NEW
+ *      USE Customer INDEX Name, Serial NEW
+ *      ? Sales->(INDEXORD())                 // Result: 1
  *  $TESTS$
  *
  *  $STATUS$
@@ -5417,6 +5455,7 @@ HARBOUR HB_INDEXORD( void )
    else
       hb_retni( 0 );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      LASTREC()
@@ -5429,35 +5468,35 @@ HARBOUR HB_INDEXORD( void )
  *  $ARGUMENTS$
  *      
  *  $RETURNS$     
-       LASTREC() returns the number of physical records in the current database
-     file as an integer numeric value.  Filtering commands such as SET FILTER
-     or SET DELETED have no effect on the return value.  LASTREC() returns
-     zero if there is no database file in USE in the current work area.
+ *     LASTREC() returns the number of physical records in the current database
+ *   file as an integer numeric value.  Filtering commands such as SET FILTER
+ *   or SET DELETED have no effect on the return value.  LASTREC() returns
+ *   zero if there is no database file in USE in the current work area.
  *  $DESCRIPTION$     
-       LASTREC() is a database function that determines the number of physical
-     records in the current database file.  LASTREC() is identical to
-     RECCOUNT() which is supplied as a compatibility function.
-
-       By default, LASTREC() operates on the currently selected work area.  It
-     will operate on an unselected work area if you specify it as part of an
-     aliased expression (see example below).
+ *     LASTREC() is a database function that determines the number of physical
+ *   records in the current database file.  LASTREC() is identical to
+ *   RECCOUNT() which is supplied as a compatibility function.
+ *
+ *     By default, LASTREC() operates on the currently selected work area.  It
+ *   will operate on an unselected work area if you specify it as part of an
+ *   aliased expression (see example below).
  *  $EXAMPLES$
-       This example illustrates the relationship between LASTREC(),
-        RECCOUNT(), and COUNT:
-
-        USE Sales NEW
-        ? LASTREC(), RECCOUNT()          // Result: 84 84
-        //
-        SET FILTER TO Salesman = "1001"
-        COUNT TO nRecords
-        ? nRecords, LASTREC()            // Result: 14 84
-
-       This example uses an aliased expression to access the number
-        of records in a open database file in an unselected work area:
-
-        USE Sales NEW
-        USE Customer NEW
-        ? LASTREC(), Sales->(LASTREC())
+ *     This example illustrates the relationship between LASTREC(),
+ *      RECCOUNT(), and COUNT:
+ *
+ *      USE Sales NEW
+ *      ? LASTREC(), RECCOUNT()          // Result: 84 84
+ *      //
+ *      SET FILTER TO Salesman = "1001"
+ *      COUNT TO nRecords
+ *      ? nRecords, LASTREC()            // Result: 14 84
+ *
+ *     This example uses an aliased expression to access the number
+ *      of records in a open database file in an unselected work area:
+ *
+ *      USE Sales NEW
+ *      USE Customer NEW
+ *      ? LASTREC(), Sales->(LASTREC())
  *  $TESTS$
  *
  *  $STATUS$
@@ -5492,6 +5531,7 @@ HARBOUR HB_LOCK( void )
 
    hb_retl( pLockInfo.fResult );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      LUPDATE()
@@ -5504,37 +5544,37 @@ HARBOUR HB_LOCK( void )
  *  $ARGUMENTS$
  *      
  *  $RETURNS$
-       LUPDATE() returns the date of last change to the open database file in
-     the current work area.  If there is no database file in USE, LUPDATE()
-     returns a blank date.
+ *     LUPDATE() returns the date of last change to the open database file in
+ *   the current work area.  If there is no database file in USE, LUPDATE()
+ *   returns a blank date.
  *      
  *  $DESCRIPTION$     
-       LUPDATE() is a database function that determines the date the database
-     file in the current work area was last modified and CLOSEd.  By default,
-     LUPDATE() operates on the currently selected work area.  It will operate
-     on an unselected work area if you specify it as part of an aliased
-     expression as shown in the example below.
+ *     LUPDATE() is a database function that determines the date the database
+ *   file in the current work area was last modified and CLOSEd.  By default,
+ *   LUPDATE() operates on the currently selected work area.  It will operate
+ *   on an unselected work area if you specify it as part of an aliased
+ *   expression as shown in the example below.
  *  $EXAMPLES$
-       This example demonstrates that the modification date of
-        database file is not changed until the database file is closed:
-
-        ? DATE()                  // Result: 09/01/90
-        USE Sales NEW
-        ? LUPDATE()               // Result: 08/31/90
-        //
-        APPEND BLANK
-        ? LUPDATE()               // Result: 08/31/90
-        CLOSE DATABASES
-        //
-        USE Sales NEW
-        ? LUPDATE()               // Result: 09/01/90
-
-       This example uses an aliased expression to access LUPDATE()
-        for a database file open in an unselected work area:
-
-        USE Sales NEW
-        USE Customer NEW
-        ? LUPDATE(), Sales->(LUPDATE())
+ *     This example demonstrates that the modification date of
+ *      database file is not changed until the database file is closed:
+ *
+ *      ? DATE()                  // Result: 09/01/90
+ *      USE Sales NEW
+ *      ? LUPDATE()               // Result: 08/31/90
+ *      //
+ *      APPEND BLANK
+ *      ? LUPDATE()               // Result: 08/31/90
+ *      CLOSE DATABASES
+ *      //
+ *      USE Sales NEW
+ *      ? LUPDATE()               // Result: 09/01/90
+ *
+ *     This example uses an aliased expression to access LUPDATE()
+ *      for a database file open in an unselected work area:
+ *
+ *      USE Sales NEW
+ *      USE Customer NEW
+ *      ? LUPDATE(), Sales->(LUPDATE())
  *  $TESTS$
  *
  *  $STATUS$
@@ -5555,6 +5595,7 @@ HARBOUR HB_LUPDATE( void )
    else
       SELF_INFO( ( AREAP ) pCurrArea->pArea, DBI_LASTUPDATE, &hb_stack.Return );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      NETERR()
@@ -5565,51 +5606,51 @@ HARBOUR HB_LUPDATE( void )
  *  $SYNTAX$
  *      NETERR([<lNewError>]) --> lError
  *  $ARGUMENTS$
-       <lNewError> if specified sets the value returned by NETERR() to the
-     specified status.  <lNewError> can be either true (.T.) or false (.F.).
-     Setting NETERR() to a specified value allows the runtime error handler
-     to control the way certain file errors are handled.  For more
-     information, refer to Errorsys.prg.
+ *     <lNewError> if specified sets the value returned by NETERR() to the
+ *   specified status.  <lNewError> can be either true (.T.) or false (.F.).
+ *   Setting NETERR() to a specified value allows the runtime error handler
+ *   to control the way certain file errors are handled.  For more
+ *   information, refer to Errorsys.prg.
  *      
  *  $RETURNS$     
-       NETERR() returns true (.T.) if a USE or APPEND BLANK fails.  The initial
-     value of NETERR() is false (.F.).  If the current process is not running
-     under a network operating system, NETERR() always returns false (.F.).
+ *     NETERR() returns true (.T.) if a USE or APPEND BLANK fails.  The initial
+ *   value of NETERR() is false (.F.).  If the current process is not running
+ *   under a network operating system, NETERR() always returns false (.F.).
  *  $DESCRIPTION$   
-       NETERR() is a network function.  It is a global flag set by USE,
-     USE...EXCLUSIVE, and APPEND BLANK in a network environment.  It is used
-     to test whether any of these commands have failed by returning true
-     (.T.) in the following situations:
-
-     NETERR() Causes
-     컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
-     Command             Cause
-     컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
-     USE                 USE EXCLUSIVE by another process
-     USE...EXCLUSIVE     USE EXCLUSIVE or USE by another process
-     APPEND BLANK        FLOCK() or RLOCK() of LASTREC() + 1 by another user
-     컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
-
-       NETERR() is generally applied in a program by testing it following a USE
-     or APPEND BLANK command.  If it returns false (.F.), you can perform the
-     next operation.  If the command is USE, you can open index files.  If it
-     is APPEND BLANK, you can assign values to the new record with a REPLACE
-     or @...GET command.  Otherwise, you must handle the error by either
-     retrying the USE or APPEND BLANK, or terminating the current operation
-     with a BREAK or RETURN.
+ *     NETERR() is a network function.  It is a global flag set by USE,
+ *   USE...EXCLUSIVE, and APPEND BLANK in a network environment.  It is used
+ *   to test whether any of these commands have failed by returning true
+ *   (.T.) in the following situations:
+ *
+ *   NETERR() Causes
+ *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+ *   Command             Cause
+ *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+ *   USE                 USE EXCLUSIVE by another process
+ *   USE...EXCLUSIVE     USE EXCLUSIVE or USE by another process
+ *   APPEND BLANK        FLOCK() or RLOCK() of LASTREC() + 1 by another user
+ *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+ *
+ *     NETERR() is generally applied in a program by testing it following a USE
+ *   or APPEND BLANK command.  If it returns false (.F.), you can perform the
+ *   next operation.  If the command is USE, you can open index files.  If it
+ *   is APPEND BLANK, you can assign values to the new record with a REPLACE
+ *   or @...GET command.  Otherwise, you must handle the error by either
+ *   retrying the USE or APPEND BLANK, or terminating the current operation
+ *   with a BREAK or RETURN.
  *  $EXAMPLES$
-       This example demonstrates typical usage of NETERR().  If the
-        USE succeeds, the index files are opened and processing continues.
-        If the USE fails, a message displays and control returns to the
-        nearest BEGIN SEQUENCE construct:
-
-        USE Customer SHARED NEW
-        IF !NETERR()
-           SET INDEX TO CustNum, CustOrders, CustZip
-        ELSE
-           ? "File is in use by another"
-           BREAK
-        ENDIF
+ *     This example demonstrates typical usage of NETERR().  If the
+ *      USE succeeds, the index files are opened and processing continues.
+ *      If the USE fails, a message displays and control returns to the
+ *      nearest BEGIN SEQUENCE construct:
+ *
+ *      USE Customer SHARED NEW
+ *      IF !NETERR()
+ *         SET INDEX TO CustNum, CustOrders, CustZip
+ *      ELSE
+ *         ? "File is in use by another"
+ *         BREAK
+ *      ENDIF
  *  $TESTS$
  *
  *  $STATUS$
@@ -5630,6 +5671,7 @@ HARBOUR HB_NETERR( void )
 
    hb_retl( bNetError );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      ORDBAGEXT()
@@ -5644,16 +5686,16 @@ HARBOUR HB_NETERR( void )
  *  $RETURNS$
  *      ORDBAGEXT() returns a character expression.
  *  $DESCRIPTION$
-       ORDBAGEXT() is an Order management function that returns a character
-     expression that is the default Order Bag extension of the current or
-     aliased work area.  cBagExt is determined by the RDD active in the
-     current work area.
-
-       ORDBAGEXT() supersedes the INDEXEXT() and is not recommended.
+ *     ORDBAGEXT() is an Order management function that returns a character
+ *   expression that is the default Order Bag extension of the current or
+ *   aliased work area.  cBagExt is determined by the RDD active in the
+ *   current work area.
+ *
+ *     ORDBAGEXT() supersedes the INDEXEXT() and is not recommended.
  *      
  *  $EXAMPLES$
-       USE sample VIA "DBFNTX"
-       ? ORDBAGEXT()      //  Returns .ntx
+ *     USE sample VIA "DBFNTX"
+ *     ? ORDBAGEXT()      //  Returns .ntx
  *
  *  $TESTS$
  *
@@ -5718,6 +5760,7 @@ HARBOUR HB_ORDBAGEXT( void )
       hb_itemRelease( pInfo.itmResult );
    }
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      ORDBAGNAME()
@@ -5728,40 +5771,40 @@ HARBOUR HB_ORDBAGEXT( void )
  *  $SYNTAX$
  *      ORDBAGNAME(<nOrder> | <cOrderName>) --> cOrderBagName
  *  $ARGUMENTS$
-       <nOrder> is an integer that identifies the position in the Order
-     List of the target Order whose Order Bag name is sought.
-
-       <cOrderName> is a character string that represents the name of the
-     target Order whose Order Bag name is sought.
+ *     <nOrder> is an integer that identifies the position in the Order
+ *   List of the target Order whose Order Bag name is sought.
+ *
+ *     <cOrderName> is a character string that represents the name of the
+ *   target Order whose Order Bag name is sought.
  *      
  *  $RETURNS$    
-       ORDBAGNAME() returns a character string, the Order Bag name of the
-     specific Order.
+ *     ORDBAGNAME() returns a character string, the Order Bag name of the
+ *   specific Order.
  *  $DESCRIPTION$     
-       ORDBAGNAME() is an Order management function that lets you access the
-     name of the Order Bag in which <cOrderName> resides.  You may identify
-     the Order as a character string or with an integer that represents its
-     position in the Order List.  In case of duplicate names, ORDBAGNAME()
-     only recognizes the first matching name.
+ *     ORDBAGNAME() is an Order management function that lets you access the
+ *   name of the Order Bag in which <cOrderName> resides.  You may identify
+ *   the Order as a character string or with an integer that represents its
+ *   position in the Order List.  In case of duplicate names, ORDBAGNAME()
+ *   only recognizes the first matching name.
  *  $EXAMPLES$
-       The following example uses ORDBAGNAME() with the default
-        DBFNTX driver:
-
-        USE Customer VIA "DBFNTX" NEW
-        SET INDEX TO CuAcct, CuName, CuZip
-        ORDBAGNAME( 2 )               // Returns: CuName
-        ORDBAGNAME( 1 )               // Returns: CuAcct
-        ORDBAGNAME( 3 )               // Returns: CuZip
-
-
-       In this example, Customer.cdx contains three orders named
-        CuAcct, CuName, CuZip:
-
-        USE Customer VIA "DBFCDX" NEW
-        SET INDEX TO Customer
-        ORDBAGNAME( "CuAcct" )        // Returns: Customer
-        ORDBAGNAME( "CuName" )        // Returns: Customer
-        ORDBAGNAME( "CuZip" )         // Returns: Customer
+ *     The following example uses ORDBAGNAME() with the default
+ *      DBFNTX driver:
+ *
+ *      USE Customer VIA "DBFNTX" NEW
+ *      SET INDEX TO CuAcct, CuName, CuZip
+ *      ORDBAGNAME( 2 )               // Returns: CuName
+ *      ORDBAGNAME( 1 )               // Returns: CuAcct
+ *      ORDBAGNAME( 3 )               // Returns: CuZip
+ *
+ *
+ *     In this example, Customer.cdx contains three orders named
+ *      CuAcct, CuName, CuZip:
+ *
+ *      USE Customer VIA "DBFCDX" NEW
+ *      SET INDEX TO Customer
+ *      ORDBAGNAME( "CuAcct" )        // Returns: Customer
+ *      ORDBAGNAME( "CuName" )        // Returns: Customer
+ *      ORDBAGNAME( "CuZip" )         // Returns: Customer
  *  $TESTS$
  *
  *  $STATUS$
@@ -5797,6 +5840,7 @@ HARBOUR HB_ORDBAGNAME( void )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ORDBAGNAME" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      ORDCONDSET()
@@ -5806,28 +5850,28 @@ HARBOUR HB_ORDBAGNAME( void )
  *      Set the Condition and scope for an order
  *  $SYNTAX$
  *      ORDCONSET([<cForCondition>],
-          [<bForCondition>],
-          [<lAll>],
-          [<bWhileCondition>],
-          [<bEval>],
-          [<nInterval>],
-          [<nStart>],
-          [<nNext>],
-          [<nRecord>],
-          [<lRest>],
-          [<lDescend>],
-          [<lAdditive>],
-          [<lCurrent>],
-          [<lCustom>],
-          [<lNoOptimize>])
+ *        [<bForCondition>],
+ *        [<lAll>],
+ *        [<bWhileCondition>],
+ *        [<bEval>],
+ *        [<nInterval>],
+ *        [<nStart>],
+ *        [<nNext>],
+ *        [<nRecord>],
+ *        [<lRest>],
+ *        [<lDescend>],
+ *        [<lAdditive>],
+ *        [<lCurrent>],
+ *        [<lCustom>],
+ *        [<lNoOptimize>])
  *  $ARGUMENTS$
  *      <cForCondition> is a string that specifies the FOR condition for the
-     order.
-       <bForCondition> is a code block that defines a FOR condition that
-     each record within the scope must meet in order to be processed. If
-     a record does not meet the specified condition,it is ignored and the
-     next  record is processed.Duplicate keys values are not added to the
-     index file when a FOR condition is Used.
+ *   order.
+ *     <bForCondition> is a code block that defines a FOR condition that
+ *   each record within the scope must meet in order to be processed. If
+ *   a record does not meet the specified condition,it is ignored and the
+ *   next  record is processed.Duplicate keys values are not added to the
+ *   index file when a FOR condition is Used.
  *  $RETURNS$
  *      
  *  $DESCRIPTION$
@@ -5913,6 +5957,7 @@ HARBOUR HB_ORDCONDSET( void )
    else
       hb_retl( FALSE );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      ORDCREATE()
@@ -5921,92 +5966,92 @@ HARBOUR HB_ORDCONDSET( void )
  *  $ONELINER$
  *      Create an Order in an Order Bag
  *  $SYNTAX$
-       ORDCREATE(<cOrderBagName>,[<cOrderName>],    <cExpKey>,
-        [<bExpKey>], [<lUnique>]) --> NIL
+ *     ORDCREATE(<cOrderBagName>,[<cOrderName>],    <cExpKey>,
+ *      [<bExpKey>], [<lUnique>]) --> NIL
  *  $ARGUMENTS$    
-       <cOrderBagName> is the name of a disk file containing one or more
-     Orders.  You may specify <cOrderBagName> as the filename with or without
-     the pathname or extension.  If you do not include the extension as part
-     of <cOrderBagName> HARBOUR uses the default extension of the current
-     RDD.
-
-       <cOrderName> is the name of the Order to be created.
-
-       Note: Although both <cOrderBagName> and <cOrderName> are both
-     optional, at least one of them must be specified.
-
-       <cExpKey> is an expression that returns the key value to place in
-     the Order for each record in the current work area.  <cExpKey> can
-     represent a character, date, logical, or numeric data type.  The maximum
-     length of the index key expression is determined by the database driver.
-
-       <bExpKey> is a code block that evaluates to a key value that is
-     placed in the Order for each record in the current work area.  If you do
-     not supply <bExpKey>, it is macro-compiled from <cExpKey>.
-
-       <lUnique> is an optional logical value that specifies whether a
-     unique Order is to be created.  If <lUnique> is omitted, the current
-     global _SET_UNIQUE setting is used.
+ *     <cOrderBagName> is the name of a disk file containing one or more
+ *   Orders.  You may specify <cOrderBagName> as the filename with or without
+ *   the pathname or extension.  If you do not include the extension as part
+ *   of <cOrderBagName> HARBOUR uses the default extension of the current
+ *   RDD.
+ *
+ *     <cOrderName> is the name of the Order to be created.
+ *
+ *     Note: Although both <cOrderBagName> and <cOrderName> are both
+ *   optional, at least one of them must be specified.
+ *
+ *     <cExpKey> is an expression that returns the key value to place in
+ *   the Order for each record in the current work area.  <cExpKey> can
+ *   represent a character, date, logical, or numeric data type.  The maximum
+ *   length of the index key expression is determined by the database driver.
+ *
+ *     <bExpKey> is a code block that evaluates to a key value that is
+ *   placed in the Order for each record in the current work area.  If you do
+ *   not supply <bExpKey>, it is macro-compiled from <cExpKey>.
+ *
+ *     <lUnique> is an optional logical value that specifies whether a
+ *   unique Order is to be created.  If <lUnique> is omitted, the current
+ *   global _SET_UNIQUE setting is used.
  *  $RETURNS$
  *      ORDCREATE() always returns NIL.
  *  $DESCRIPTION$     
-       ORDCREATE() is an Order management function that creates an Order in the
-     current work area.  It works like DBCREATEINDEX() except that it lets
-     you create Orders in RDDs that recognize multiple-Order Bags.
-     ORDCREATE() supersedes the DBCREATEINDEX() function because of this
-     capability, and is the preferred function.
-
-       The active RDD determines the Order capacity of an Order Bag.  The
-     default  DBFNTX and the DBFNDX drivers only support single-Order Bags,
-     while other RDDs may support multiple-Order Bags (e.g., the DBFCDX and
-     DBFMDX drivers).
-
-       In RDDs that support production or structural indexes (e.g., DBFCDX,
-     DBFMDX), if you specify a Tag but do not specify an Order Bag, the Tag is
-     created and added to the index.  If no production or structural index
-     exists, it will be created and the Tag will be added to it.  When using
-     RDDs that support multiple Order Bags, you must explicitly SET ORDER (or
-     ORDSETFOCUS()) to the desired controlling Order.  If you do not specify
-     a controlling Order, the data file will be viewed in natural Order.
-
-       If <cOrderBagName> does not exist, it is created in accordance with the
-     RDD in the current or specified work area.
-
-      If <cOrderBagName> exists and the RDD specifies that Order Bags can only
-     contain a single Order, <cOrderBagName> is erased and the new Order is
-     added to the Order List in the current or specified work area.
-
-       If <cOrderBagName> exists and the RDD specifies that Order Bags can
-     contain multiple Tags, <cOrderName> is created if it does not already
-     exist, otherwise <cOrderName> is replaced in <cOrderBagName> and the
-     Order is added to the Order List in the current or specified work area.
+ *     ORDCREATE() is an Order management function that creates an Order in the
+ *   current work area.  It works like DBCREATEINDEX() except that it lets
+ *   you create Orders in RDDs that recognize multiple-Order Bags.
+ *   ORDCREATE() supersedes the DBCREATEINDEX() function because of this
+ *   capability, and is the preferred function.
+ *
+ *     The active RDD determines the Order capacity of an Order Bag.  The
+ *   default  DBFNTX and the DBFNDX drivers only support single-Order Bags,
+ *   while other RDDs may support multiple-Order Bags (e.g., the DBFCDX and
+ *   DBFMDX drivers).
+ *
+ *     In RDDs that support production or structural indexes (e.g., DBFCDX,
+ *   DBFMDX), if you specify a Tag but do not specify an Order Bag, the Tag is
+ *   created and added to the index.  If no production or structural index
+ *   exists, it will be created and the Tag will be added to it.  When using
+ *   RDDs that support multiple Order Bags, you must explicitly SET ORDER (or
+ *   ORDSETFOCUS()) to the desired controlling Order.  If you do not specify
+ *   a controlling Order, the data file will be viewed in natural Order.
+ *
+ *     If <cOrderBagName> does not exist, it is created in accordance with the
+ *   RDD in the current or specified work area.
+ *
+ *    If <cOrderBagName> exists and the RDD specifies that Order Bags can only
+ *   contain a single Order, <cOrderBagName> is erased and the new Order is
+ *   added to the Order List in the current or specified work area.
+ *
+ *     If <cOrderBagName> exists and the RDD specifies that Order Bags can
+ *   contain multiple Tags, <cOrderName> is created if it does not already
+ *   exist, otherwise <cOrderName> is replaced in <cOrderBagName> and the
+ *   Order is added to the Order List in the current or specified work area.
  *  $EXAMPLES$
-       The following example demonstrates ORDCREATE() with the DBFNDX
-        driver:
-
-        USE Customer VIA "DBFNDX" NEW
-        ORDCREATE( "CuAcct",, "Customer->Acct" )
-
-
-       The following example demonstrates ORDCREATE() with the
-        default DBFNTX driver:
-
-        USE Customer VIA "DBFNTX" NEW
-        ORDCREATE( "CuAcct", "CuAcct", "Customer->Acct", ;
-              {|| Customer->Acct } )
-
-       The following example demonstrates ORDCREATE() with the FoxPro
-        driver, DBFCDX:
-
-        USE Customer VIA "DBFCDX" NEW
-        ORDCREATE( "Customer", "CuAcct", "Customer->Acct" )
-
-       This example creates the Order "CuAcct" and adds it to the
-        production index (Order Bag) "Customer".  The production index , will
-        be created if it doesn't exist:
-
-        USE Customer VIA "DBFMDX" NEW
-        ORDCREATE( , "CuAcct", "Customer->Acct" )
+ *     The following example demonstrates ORDCREATE() with the DBFNDX
+ *      driver:
+ *
+ *      USE Customer VIA "DBFNDX" NEW
+ *      ORDCREATE( "CuAcct",, "Customer->Acct" )
+ *
+ *
+ *     The following example demonstrates ORDCREATE() with the
+ *      default DBFNTX driver:
+ *
+ *      USE Customer VIA "DBFNTX" NEW
+ *      ORDCREATE( "CuAcct", "CuAcct", "Customer->Acct", ;
+ *            {|| Customer->Acct } )
+ *
+ *     The following example demonstrates ORDCREATE() with the FoxPro
+ *      driver, DBFCDX:
+ *
+ *      USE Customer VIA "DBFCDX" NEW
+ *      ORDCREATE( "Customer", "CuAcct", "Customer->Acct" )
+ *
+ *     This example creates the Order "CuAcct" and adds it to the
+ *      production index (Order Bag) "Customer".  The production index , will
+ *      be created if it doesn't exist:
+ *
+ *      USE Customer VIA "DBFMDX" NEW
+ *      ORDCREATE( , "CuAcct", "Customer->Acct" )
  *  $TESTS$
  *
  *  $STATUS$
@@ -6046,6 +6091,7 @@ HARBOUR HB_ORDCREATE( void )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ORDCREATE" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      ORDDESTROY()
@@ -6056,35 +6102,35 @@ HARBOUR HB_ORDCREATE( void )
  *  $SYNTAX$
  *          ORDDESTROY(<cOrderName> [, <cOrderBagName> ]) --> NIL
  *  $ARGUMENTS$
-       <cOrderName> is the name of the Order to be removed from the current
-     or specified work area.
-
-       <cOrderBagName> is the name of a disk file containing one or more
-     Orders.  You may specify <cOrderBagName> as the filename with or without
-     the pathname or appropriate extension.  If you do not include the
-     extension as part of <cOrderBagName> HARBOUR uses the default
-     extension of the current RDD.    
+ *     <cOrderName> is the name of the Order to be removed from the current
+ *   or specified work area.
+ *
+ *     <cOrderBagName> is the name of a disk file containing one or more
+ *   Orders.  You may specify <cOrderBagName> as the filename with or without
+ *   the pathname or appropriate extension.  If you do not include the
+ *   extension as part of <cOrderBagName> HARBOUR uses the default
+ *   extension of the current RDD.    
  *  $RETURNS$     
  *      ORDDESTROY() always returns NIL.
  *  $DESCRIPTION$
-       ORDDESTROY() is an Order management function that removes a specified
-     Order from multiple-Order Bags.
-
-       The active RDD determines the Order capacity of an Order Bag.  The
-     default DBFNTX and the DBFNDX drivers only support single-Order Bags,
-     while other RDDs may support multiple-Order Bags (e.g., the DBFCDX and
-     DBPX drivers).
-
-       Note:  RDD suppliers may define specific behaviors for this command.
-
-       Warning!  ORDDESTROY() is not supported for DBFNDX and DBFNTX.
+ *     ORDDESTROY() is an Order management function that removes a specified
+ *   Order from multiple-Order Bags.
+ *
+ *     The active RDD determines the Order capacity of an Order Bag.  The
+ *   default DBFNTX and the DBFNDX drivers only support single-Order Bags,
+ *   while other RDDs may support multiple-Order Bags (e.g., the DBFCDX and
+ *   DBPX drivers).
+ *
+ *     Note:  RDD suppliers may define specific behaviors for this command.
+ *
+ *     Warning!  ORDDESTROY() is not supported for DBFNDX and DBFNTX.
  *  $EXAMPLES$
-       This example demonstrates ORDDESTROY() with the FoxPro driver,
-        DBFCDX:
-
-        USE Customer VIA "DBFCDX" NEW
-        SET INDEX TO Customer, CustTemp
-        ORDDESTROY( "CuAcct", "Customer" )
+ *     This example demonstrates ORDDESTROY() with the FoxPro driver,
+ *      DBFCDX:
+ *
+ *      USE Customer VIA "DBFCDX" NEW
+ *      SET INDEX TO Customer, CustTemp
+ *      ORDDESTROY( "CuAcct", "Customer" )
  *  $TESTS$
  *
  *  $STATUS$
@@ -6111,6 +6157,7 @@ HARBOUR HB_ORDDESTROY( void )
       SELF_ORDDESTROY( ( AREAP ) pCurrArea->pArea, &pOrderInfo );
    }
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      ORDFOR()
@@ -6119,41 +6166,41 @@ HARBOUR HB_ORDDESTROY( void )
  *  $ONELINER$
  *      Return the FOR expression of an Order
  *  $SYNTAX$
-       ORDFOR(<cOrderName> | <nOrder>
-        [, <cOrderBagName>]) --> cForExp
+ *     ORDFOR(<cOrderName> | <nOrder>
+ *      [, <cOrderBagName>]) --> cForExp
  *      
  *  $ARGUMENTS$     
-       <cOrderName> is the name of the target Order, whose cForExp is
-     sought.
-
-       <nOrder> is an integer that identifies the position in the Order
-     List of the target Order whose cForExp is sought.
-
-       <cOrderBagName> is the name of an Order Bag containing one or more
-     Orders.  You may specify <cOrderBagName> as the filename with or without
-     the pathname or appropriate extension.  If you do not include the
-     extension as part of <cOrderBagName> HARBOUR uses the default
-     extension of the current RDD.
+ *     <cOrderName> is the name of the target Order, whose cForExp is
+ *   sought.
+ *
+ *     <nOrder> is an integer that identifies the position in the Order
+ *   List of the target Order whose cForExp is sought.
+ *
+ *     <cOrderBagName> is the name of an Order Bag containing one or more
+ *   Orders.  You may specify <cOrderBagName> as the filename with or without
+ *   the pathname or appropriate extension.  If you do not include the
+ *   extension as part of <cOrderBagName> HARBOUR uses the default
+ *   extension of the current RDD.
  *  $RETURNS$     
-       ORDFOR() returns a character expression, cForExp, that represents the
-     FOR condition of the specified Order.  If the Order was not created
-     using the FOR clause the return value will be an empty string ("").  If
-     the database driver does not support the FOR condition, it may either
-     return an empty string ("") or raise an "unsupported function" error,
-     depending on the driver.
+ *     ORDFOR() returns a character expression, cForExp, that represents the
+ *   FOR condition of the specified Order.  If the Order was not created
+ *   using the FOR clause the return value will be an empty string ("").  If
+ *   the database driver does not support the FOR condition, it may either
+ *   return an empty string ("") or raise an "unsupported function" error,
+ *   depending on the driver.
  *  $DESCRIPTION$     
-       ORDFOR() is an Order management function that returns the character
-     string, cForExp, that represents the logical FOR condition of the Order,
-     <cOrderName> or <nOrder>.
+ *     ORDFOR() is an Order management function that returns the character
+ *   string, cForExp, that represents the logical FOR condition of the Order,
+ *   <cOrderName> or <nOrder>.
  *  $EXAMPLES$
-       This example retrieves the FOR condition from an Order:
-
-        USE Customer NEW
-        INDEX ON  Customer->Acct ;
-           TO  Customer          ;
-           FOR Customer->Acct > "AZZZZZ"
-
-        ORDFOR( "Customer" )      // Returns: Customer->Acct > "AZZZZZ"
+ *     This example retrieves the FOR condition from an Order:
+ *
+ *      USE Customer NEW
+ *      INDEX ON  Customer->Acct ;
+ *         TO  Customer          ;
+ *         FOR Customer->Acct > "AZZZZZ"
+ *
+ *      ORDFOR( "Customer" )      // Returns: Customer->Acct > "AZZZZZ"
  *  $TESTS$
  *
  *  $STATUS$
@@ -6190,6 +6237,7 @@ HARBOUR HB_ORDFOR( void )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ORDFOR" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      ORDKEY()
@@ -6198,44 +6246,44 @@ HARBOUR HB_ORDFOR( void )
  *  $ONELINER$
  *      Return the key expression of an Order
  *  $SYNTAX$     
-       ORDKEY(<cOrderName> | <nOrder>
-        [, <cOrderBagName>]) --> cExpKey
+ *     ORDKEY(<cOrderName> | <nOrder>
+ *      [, <cOrderBagName>]) --> cExpKey
  *  $ARGUMENTS$     
-       <cOrderName> is the name of an Order, a logical ordering of a
-     database.
-
-       <nOrder> is an integer that identifies the position in the Order
-     List of the target Order whose cExpKey is sought.
-
-       <cOrderBagName> is the name of a disk file containing one or more
-     Orders.  You may specify <cOrderBagName> as the filename with or without
-     the pathname or appropriate extension.  If you do not include the
-     extension as part of <cOrderBagName> HARBOUR uses the default
-     extension of the current RDD.
+ *     <cOrderName> is the name of an Order, a logical ordering of a
+ *   database.
+ *
+ *     <nOrder> is an integer that identifies the position in the Order
+ *   List of the target Order whose cExpKey is sought.
+ *
+ *     <cOrderBagName> is the name of a disk file containing one or more
+ *   Orders.  You may specify <cOrderBagName> as the filename with or without
+ *   the pathname or appropriate extension.  If you do not include the
+ *   extension as part of <cOrderBagName> HARBOUR uses the default
+ *   extension of the current RDD.
  *  $RETURNS$     
  *      Returns a character string, cExpKey.
  *  $DESCRIPTION$
-       ORDKEY() is an Order management function that returns a character
-     expression, cExpKey, that represents the key expression of the specified
-     Order.
-
-       You may specify the Order by name or with a number that represents its
-     position in the Order List.  Using the Order name is the preferred
-     method.
-
-       The active RDD determines the Order capacity of an Order Bag.  The
-     default DBFNTX and the DBFNDX drivers only support single-Order Bags,
-     while other RDDs may support multiple-Order Bags (e.g., the DBFCDX and
-     DBFMDX drivers).
+ *     ORDKEY() is an Order management function that returns a character
+ *   expression, cExpKey, that represents the key expression of the specified
+ *   Order.
+ *
+ *     You may specify the Order by name or with a number that represents its
+ *   position in the Order List.  Using the Order name is the preferred
+ *   method.
+ *
+ *     The active RDD determines the Order capacity of an Order Bag.  The
+ *   default DBFNTX and the DBFNDX drivers only support single-Order Bags,
+ *   while other RDDs may support multiple-Order Bags (e.g., the DBFCDX and
+ *   DBFMDX drivers).
  *  $EXAMPLES$
-       This example retrieves the index expression from an Order:
-
-        USE Customer NEW
-        INDEX ON  Customer->Acct  ;
-           TO  Customer           ;
-           FOR Customer->Acct > "AZZZZZ"
-
-        ORDKEY( "Customer" )      // Returns: Customer->Acct
+ *     This example retrieves the index expression from an Order:
+ *
+ *      USE Customer NEW
+ *      INDEX ON  Customer->Acct  ;
+ *         TO  Customer           ;
+ *         FOR Customer->Acct > "AZZZZZ"
+ *
+ *      ORDKEY( "Customer" )      // Returns: Customer->Acct
  *  $TESTS$
  *
  *  $STATUS$
@@ -6272,6 +6320,7 @@ HARBOUR HB_ORDKEY( void )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ORDKEY" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      ORDLISTADD()
@@ -6280,55 +6329,55 @@ HARBOUR HB_ORDKEY( void )
  *  $ONELINER$
  *      Add Orders to the Order List
  *  $SYNTAX$     
-       ORDLISTADD(<cOrderBagName>
-        [, <cOrderName>]) --> NIL
+ *     ORDLISTADD(<cOrderBagName>
+ *      [, <cOrderName>]) --> NIL
  *  $ARGUMENTS$     
-       <cOrderBagName> is the name of a disk file containing one or more
-     Orders.  You may specify <cOrderBagName> as the filename with or without
-     the pathname or appropriate extension.  If you do not include the
-     extension as part of <cOrderBagName> HARBOUR uses the default
-     extension of the current RDD.
-
-       <cOrderName> the name of the specific Order from the Order Bag to be
-     added to the Order List of the current work area.  If you do not specify
-     <cOrderName>, all orders in the Order Bag are added to the Order List of
-     the current work area.
+ *     <cOrderBagName> is the name of a disk file containing one or more
+ *   Orders.  You may specify <cOrderBagName> as the filename with or without
+ *   the pathname or appropriate extension.  If you do not include the
+ *   extension as part of <cOrderBagName> HARBOUR uses the default
+ *   extension of the current RDD.
+ *
+ *     <cOrderName> the name of the specific Order from the Order Bag to be
+ *   added to the Order List of the current work area.  If you do not specify
+ *   <cOrderName>, all orders in the Order Bag are added to the Order List of
+ *   the current work area.
  *  $RETURNS$     
  *      ORDLISTADD() always returns NIL.
  *  $DESCRIPTION$
-       ORDLISTADD() is an Order management function that adds the contents of
-     an Order Bag , or a single Order in an Order Bag, to the Order List.
-     This function lets you extend the Order List without issuing a SET INDEX
-     command that, first, clears all the active Orders from the Order List.
-   
-       Any Orders already associated with the work area continue to be active.
-     If the newly opened Order Bag contains the only Order associated with
-     the work area, it becomes the controlling Order; otherwise, the
-     controlling Order remains unchanged.
-
-       After the new Orders are opened, the work area is positioned to the
-     first logical record in the controlling Order.
-
-       ORDLISTADD() is similar to the SET INDEX command or the INDEX clause of
-     the USE command, except that it does not clear the Order List prior to
-     adding the new order(s).
-
-       ORDLISTADD() supersedes the DBSETINDEX() function.
-
-       The active RDD determines the Order capacity of an Order Bag.  The
-     default  DBFNTX and the DBFNDX drivers only support single-Order Bags,
-     while other RDDs may support multiple-Order Bags (e.g., the DBFCDX and
-     DBPX drivers).  When using RDDs that support multiple Order Bags, you
-     must explicitly SET ORDER (or ORDSETFOCUS()) to the desired controlling
-     Order.  If you do not specify a controlling Order, the data file will be
-     viewed in natural Order.
+ *     ORDLISTADD() is an Order management function that adds the contents of
+ *   an Order Bag , or a single Order in an Order Bag, to the Order List.
+ *   This function lets you extend the Order List without issuing a SET INDEX
+ *   command that, first, clears all the active Orders from the Order List.
+ * 
+ *     Any Orders already associated with the work area continue to be active.
+ *   If the newly opened Order Bag contains the only Order associated with
+ *   the work area, it becomes the controlling Order; otherwise, the
+ *   controlling Order remains unchanged.
+ *
+ *     After the new Orders are opened, the work area is positioned to the
+ *   first logical record in the controlling Order.
+ *
+ *     ORDLISTADD() is similar to the SET INDEX command or the INDEX clause of
+ *   the USE command, except that it does not clear the Order List prior to
+ *   adding the new order(s).
+ *
+ *     ORDLISTADD() supersedes the DBSETINDEX() function.
+ *
+ *     The active RDD determines the Order capacity of an Order Bag.  The
+ *   default  DBFNTX and the DBFNDX drivers only support single-Order Bags,
+ *   while other RDDs may support multiple-Order Bags (e.g., the DBFCDX and
+ *   DBPX drivers).  When using RDDs that support multiple Order Bags, you
+ *   must explicitly SET ORDER (or ORDSETFOCUS()) to the desired controlling
+ *   Order.  If you do not specify a controlling Order, the data file will be
+ *   viewed in natural Order.
  *  $EXAMPLES$
-       In this example Customer.cdx contains three orders, CuAcct,
-        CuName, and CuZip.  ORDLISTADD() opens Customer.cdx but only uses the
-        order named CuAcct:
-
-        USE Customer VIA "DBFCDX" NEW
-        ORDLISTADD( "Customer", "CuAcct" )
+ *     In this example Customer.cdx contains three orders, CuAcct,
+ *      CuName, and CuZip.  ORDLISTADD() opens Customer.cdx but only uses the
+ *      order named CuAcct:
+ *
+ *      USE Customer VIA "DBFCDX" NEW
+ *      ORDLISTADD( "Customer", "CuAcct" )
  *  $TESTS$
  *
  *  $STATUS$
@@ -6360,6 +6409,7 @@ HARBOUR HB_ORDLISTADD( void )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ORDLISTADD" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      ORDLISTCLEAR()
@@ -6374,19 +6424,19 @@ HARBOUR HB_ORDLISTADD( void )
  *  $RETURNS$
  *      ORDLISTCLEAR() always returns NIL.
  *  $DESCRIPTION$
-       ORDLISTCLEAR() is an Order management function that removes all Orders
-     from the Order List for the current or aliased work area.  When you are
-     done, the Order List is empty.
-
-      This function supersedes the function DBCLEARINDEX().
+ *     ORDLISTCLEAR() is an Order management function that removes all Orders
+ *   from the Order List for the current or aliased work area.  When you are
+ *   done, the Order List is empty.
+ *
+ *    This function supersedes the function DBCLEARINDEX().
  *      
  *  $EXAMPLES$
-     USE Sales NEW
-     SET INDEX TO SaRegion, SaRep, SaCode
-     .
-     . < statements >
-     .
-     ORDLISTCLEAR()      // Closes all the current indexes
+ *   USE Sales NEW
+ *   SET INDEX TO SaRegion, SaRep, SaCode
+ *   .
+ *   . < statements >
+ *   .
+ *   ORDLISTCLEAR()      // Closes all the current indexes
  *  $TESTS$
  *
  *  $STATUS$
@@ -6399,7 +6449,7 @@ HARBOUR HB_ORDLISTADD( void )
  *      
  *  $END$
  */
-
+ 
 HARBOUR HB_ORDLISTCLEAR( void )
 {
    if( pCurrArea )
@@ -6407,6 +6457,7 @@ HARBOUR HB_ORDLISTCLEAR( void )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ORDLISTCLEAR" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      ORDLISTREBUILD()
@@ -6421,20 +6472,20 @@ HARBOUR HB_ORDLISTCLEAR( void )
  *  $RETURNS$
  *      ORDLISTREBUILD() always returns NIL.
  *  $DESCRIPTION$
-       ORDLISTREBUILD() is an Order management function that rebuilds all the
-     orders in the current or aliased Order List.
-
-       To only rebuild a single Order use the function ORDCREATE().
-
-       Unlike ORDCREATE(), this function rebuilds all Orders in the Order List.
-     It is equivalent to REINDEX.
+ *     ORDLISTREBUILD() is an Order management function that rebuilds all the
+ *   orders in the current or aliased Order List.
+ *
+ *     To only rebuild a single Order use the function ORDCREATE().
+ *
+ *     Unlike ORDCREATE(), this function rebuilds all Orders in the Order List.
+ *   It is equivalent to REINDEX.
  *      
  *  $EXAMPLES$
-     USE Customer NEW
-     SET INDEX TO CuAcct, CuName, CuZip
-     ORDLISTREBUILD()     // Causes CuAcct, CuName, CuZip to
-                          // be rebuilt
-
+ *   USE Customer NEW
+ *   SET INDEX TO CuAcct, CuName, CuZip
+ *   ORDLISTREBUILD()     // Causes CuAcct, CuName, CuZip to
+ *                        // be rebuilt
+ *
  *  $TESTS$
  *
  *  $STATUS$
@@ -6455,6 +6506,7 @@ HARBOUR HB_ORDLISTREBUILD( void )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ORDLISTCLEAR" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      ORDNAME()
@@ -6464,46 +6516,46 @@ HARBOUR HB_ORDLISTREBUILD( void )
  *      Return the name of an Order in the Order List
  *  $SYNTAX$
  *      ORDNAME(<nOrder>[,<cOrderBagName>])
-        --> cOrderName
+ *      --> cOrderName
  *  $ARGUMENTS$     
-       <nOrder> is an integer that identifies the position in the Order
-     List of the target Order whose database name is sought.
-
-       <cOrderBagName> is the name of a disk file containing one or more
-     Orders.  You may specify <cOrderBagName> as the filename with or without
-     the pathname or appropriate extension.  If you do not include the
-     extension as part of <xcOrderBagName> HARBOUR uses the default
-     extension of the current RDD.
+ *     <nOrder> is an integer that identifies the position in the Order
+ *   List of the target Order whose database name is sought.
+ *
+ *     <cOrderBagName> is the name of a disk file containing one or more
+ *   Orders.  You may specify <cOrderBagName> as the filename with or without
+ *   the pathname or appropriate extension.  If you do not include the
+ *   extension as part of <xcOrderBagName> HARBOUR uses the default
+ *   extension of the current RDD.
  *  $RETURNS$     
-       ORDNAME() returns the name of the specified Order in the current Order
-     List or the specified Order Bag if opened in the Current Order list.
+ *     ORDNAME() returns the name of the specified Order in the current Order
+ *   List or the specified Order Bag if opened in the Current Order list.
  *  $DESCRIPTION$     
-       ORDNAME() is an Order management function that returns the name of the
-     specified Order in the current Order List.
-
-       If <cOrderBagName> is an Order Bag that has been emptied into the
-     current Order List, only those Orders in the Order List that correspond
-     to <cOrderBagName> Order Bag are searched.
-
-       The active RDD determines the Order capacity of an Order Bag.  The
-     default DBFNTX and the DBFNDX drivers only support single-Order Bags,
-     while other RDDs may support multiple-Order Bags (e.g., the DBFCDX and
-     DBPX drivers).
+ *     ORDNAME() is an Order management function that returns the name of the
+ *   specified Order in the current Order List.
+ *
+ *     If <cOrderBagName> is an Order Bag that has been emptied into the
+ *   current Order List, only those Orders in the Order List that correspond
+ *   to <cOrderBagName> Order Bag are searched.
+ *
+ *     The active RDD determines the Order capacity of an Order Bag.  The
+ *   default DBFNTX and the DBFNDX drivers only support single-Order Bags,
+ *   while other RDDs may support multiple-Order Bags (e.g., the DBFCDX and
+ *   DBPX drivers).
  *  $EXAMPLES$
-       This example retrieves the name of an Order using its position
-        in the order list:
-
-        USE Customer NEW
-        SET INDEX TO CuAcct, CuName, CuZip
-        ORDNAME( 2 )                        // Returns: CuName
-
-       This example retrieves the name of an Order given its position
-        within a specific Order Bag in the Order List:
-
-        USE Customer NEW
-        SET INDEX TO Temp, Customer
-        // Assume Customer contains CuAcct, CuName, CuZip
-        ORDNAME( 2, "Customer" )            // Returns: CuName
+ *     This example retrieves the name of an Order using its position
+ *      in the order list:
+ *
+ *      USE Customer NEW
+ *      SET INDEX TO CuAcct, CuName, CuZip
+ *      ORDNAME( 2 )                        // Returns: CuName
+ *
+ *     This example retrieves the name of an Order given its position
+ *      within a specific Order Bag in the Order List:
+ *
+ *      USE Customer NEW
+ *      SET INDEX TO Temp, Customer
+ *      // Assume Customer contains CuAcct, CuName, CuZip
+ *      ORDNAME( 2, "Customer" )            // Returns: CuName
  *  $TESTS$
  *
  *  $STATUS$
@@ -6538,6 +6590,7 @@ HARBOUR HB_ORDNAME( void )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ORDNAME" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      ORDNUMBER()
@@ -6546,39 +6599,39 @@ HARBOUR HB_ORDNAME( void )
  *  $ONELINER$
  *      Return the position of an Order in the current Order List
  *  $SYNTAX$
-       ORDNUMBER(<cOrderName>
-        [, <cOrderBagName>]) --> nOrderNo     
+ *     ORDNUMBER(<cOrderName>
+ *      [, <cOrderBagName>]) --> nOrderNo     
  *  $ARGUMENTS$     
-       <cOrderName> the name of the specific Order whose position in the
-     Order List is sought.
-
-       <cOrderBagName> is the name of a disk file containing one or more
-     Orders.  You may specify <cOrderBagName> as the filename with or without
-     the pathname or appropriate extension.  If you do not include the
-     extension as part of <cOrderBagName> HARBOUR uses the default
-     extension of the current RDD.
+ *     <cOrderName> the name of the specific Order whose position in the
+ *   Order List is sought.
+ *
+ *     <cOrderBagName> is the name of a disk file containing one or more
+ *   Orders.  You may specify <cOrderBagName> as the filename with or without
+ *   the pathname or appropriate extension.  If you do not include the
+ *   extension as part of <cOrderBagName> HARBOUR uses the default
+ *   extension of the current RDD.
  *  $RETURNS$     
-       Returns nOrderNo, an integer that represents the position of the
-     specified Order in the Order List.
+ *     Returns nOrderNo, an integer that represents the position of the
+ *   specified Order in the Order List.
  *  $DESCRIPTION$     
-       ORDNUMBER() is an Order management function that lets you determine the
-     position in the current Order List of the specified Order.  ORDNUMBER()
-     searches the Order List in the current work area and returns the
-     position of the first Order that matches <cOrderName>.    If
-     <cOrderBagName> is the name of an Order Bag newly emptied into the
-     current Order List, only those orders in the Order List that have been
-     emptied from <cOrderBagName> are searched.
-
-       If <cOrderName> is not found ORDNUMBER() raises a recoverable runtime
-     error.
-
-       The active RDD determines the Order capacity of an Order Bag.  The
-     default DBFNTX driver only supports single-Order Bags, while other RDDs
-     may support multiple-Order Bags (e.g., the DBFCDX and DBPX drivers).
+ *     ORDNUMBER() is an Order management function that lets you determine the
+ *   position in the current Order List of the specified Order.  ORDNUMBER()
+ *   searches the Order List in the current work area and returns the
+ *   position of the first Order that matches <cOrderName>.    If
+ *   <cOrderBagName> is the name of an Order Bag newly emptied into the
+ *   current Order List, only those orders in the Order List that have been
+ *   emptied from <cOrderBagName> are searched.
+ *
+ *     If <cOrderName> is not found ORDNUMBER() raises a recoverable runtime
+ *   error.
+ *
+ *     The active RDD determines the Order capacity of an Order Bag.  The
+ *   default DBFNTX driver only supports single-Order Bags, while other RDDs
+ *   may support multiple-Order Bags (e.g., the DBFCDX and DBPX drivers).
  *  $EXAMPLES$
-     USE Customer VIA "DBFNTX" NEW
-     SET INDEX TO CuAcct, CuName, CuZip
-     ORDNUMBER( "CuName" )            // Returns: 2
+ *   USE Customer VIA "DBFNTX" NEW
+ *   SET INDEX TO CuAcct, CuName, CuZip
+ *   ORDNUMBER( "CuName" )            // Returns: 2
  *  $TESTS$
  *
  *  $STATUS$
@@ -6613,6 +6666,7 @@ HARBOUR HB_ORDNUMBER( void )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ORDNUMBER" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      ORDSETFOCUS()
@@ -6621,48 +6675,48 @@ HARBOUR HB_ORDNUMBER( void )
  *  $ONELINER$
  *      Set focus to an Order in an Order List
  *  $SYNTAX$
-       ORDSETFOCUS([<cOrderName> | <nOrder>]
-        [,<cOrderBagName>]) --> cPrevOrderNameInFocus
+ *     ORDSETFOCUS([<cOrderName> | <nOrder>]
+ *      [,<cOrderBagName>]) --> cPrevOrderNameInFocus
  *      
  *  $ARGUMENTS$    
-       <cOrderName> is the name of the selected Order, a logical ordering
-     of a database.  ORDSETFOCUS() ignores any invalid values of
-     <cOrderName>.
-
-       <nOrder> is a number representing the position in the Order List of
-     the selected Order.
-
-       <cOrderBagName> is the name of a disk file containing one or more
-     Orders.  You may specify <cOrderBagName> as the filename with or without
-     the pathname or appropriate extension.  If you do not include the
-     extension as part of <cOrderBagName> HARBOUR uses the default
-     extension of the current RDD.
+ *     <cOrderName> is the name of the selected Order, a logical ordering
+ *   of a database.  ORDSETFOCUS() ignores any invalid values of
+ *   <cOrderName>.
+ *
+ *     <nOrder> is a number representing the position in the Order List of
+ *   the selected Order.
+ *
+ *     <cOrderBagName> is the name of a disk file containing one or more
+ *   Orders.  You may specify <cOrderBagName> as the filename with or without
+ *   the pathname or appropriate extension.  If you do not include the
+ *   extension as part of <cOrderBagName> HARBOUR uses the default
+ *   extension of the current RDD.
  *  $RETURNS$
  *      ORDSETFOCUS() returns the Order Name of the previous controlling Order.
  *  $DESCRIPTION$     
-       ORDSETFOCUS() is an Order management function that returns the Order
-     Name of the previous controlling Order and optionally sets the focus to
-     an new Order.
-
-       If you do not specify <cOrderName> or <nOrder>, the name of the
-     currently controlling order is returned and the controlling order
-     remains unchanged.
-
-       All Orders in an Order List are properly updated no matter what
-     <cOrderName> is the controlling Order.  After a change of controlling
-     Orders, the record pointer still points to the same record.
-
-       The active RDD determines the Order capacity of an Order Bag.  The
-     default DBFNTX driver only supports single-Order Bags, while other RDDs
-     may support multiple-Order Bags (e.g., the DBFCDX and DBPX drivers).
-
-       ORDSETFOCUS() supersedes INDEXORD().
+ *     ORDSETFOCUS() is an Order management function that returns the Order
+ *   Name of the previous controlling Order and optionally sets the focus to
+ *   an new Order.
+ *
+ *     If you do not specify <cOrderName> or <nOrder>, the name of the
+ *   currently controlling order is returned and the controlling order
+ *   remains unchanged.
+ *
+ *     All Orders in an Order List are properly updated no matter what
+ *   <cOrderName> is the controlling Order.  After a change of controlling
+ *   Orders, the record pointer still points to the same record.
+ *
+ *     The active RDD determines the Order capacity of an Order Bag.  The
+ *   default DBFNTX driver only supports single-Order Bags, while other RDDs
+ *   may support multiple-Order Bags (e.g., the DBFCDX and DBPX drivers).
+ *
+ *     ORDSETFOCUS() supersedes INDEXORD().
  *  $EXAMPLES$
-
-     USE Customer VIA "DBFNTX" NEW
-     SET INDEX TO CuAcct, CuName, CuZip
-     ? ORDSETFOCUS( "CuName" )        // Displays: "CuAcct"
-     ? ORDSETFOCUS()                  // Displays: "CuName"
+ *
+ *   USE Customer VIA "DBFNTX" NEW
+ *   SET INDEX TO CuAcct, CuName, CuZip
+ *   ? ORDSETFOCUS( "CuName" )        // Displays: "CuAcct"
+ *   ? ORDSETFOCUS()                  // Displays: "CuName"
  *  $TESTS$
  *
  *  $STATUS$
@@ -6694,6 +6748,7 @@ HARBOUR HB_ORDSETFOCUS( void )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ORDSETFOCUS" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      RDDLIST()
@@ -6704,58 +6759,58 @@ HARBOUR HB_ORDSETFOCUS( void )
  *  $SYNTAX$
  *      RDDLIST([<nRDDType>]) --> aRDDList
  *  $ARGUMENTS$    
-       <nRDDType> is an integer that represents the type of the RDD you
-     wish to list.  The constants RDT_FULL and RDT_TRANSFER represent the two
-     types of RDDs currently available.
-
-     RDDType Summary
-     컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
-     Constant       Value     Meaning
-     컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
-     RDT_FULL       1         Full RDD implementation
-     RDT_TRANSFER   2         Import/Export only driver
-     컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
-
-       RDT_FULL identifies full-featured RDDs that have all the capabilities
-     associated with an RDD.
-
-       RDT_TRANSFER identifies RDDs of limited capability.  They can only
-     transfer records between files.  You cannot use these limited RDD
-     drivers to open a file in a work area.  The SDF and DELIM drivers are
-     examples of this type of RDD.  They are only used in the implementation
-     of APPEND FROM and COPY TO with SDF or DELIMITED files.
+ *     <nRDDType> is an integer that represents the type of the RDD you
+ *   wish to list.  The constants RDT_FULL and RDT_TRANSFER represent the two
+ *   types of RDDs currently available.
+ *
+ *   RDDType Summary
+ *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+ *   Constant       Value     Meaning
+ *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+ *   RDT_FULL       1         Full RDD implementation
+ *   RDT_TRANSFER   2         Import/Export only driver
+ *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+ *
+ *     RDT_FULL identifies full-featured RDDs that have all the capabilities
+ *   associated with an RDD.
+ *
+ *     RDT_TRANSFER identifies RDDs of limited capability.  They can only
+ *   transfer records between files.  You cannot use these limited RDD
+ *   drivers to open a file in a work area.  The SDF and DELIM drivers are
+ *   examples of this type of RDD.  They are only used in the implementation
+ *   of APPEND FROM and COPY TO with SDF or DELIMITED files.
  *  $RETURNS$    
-       RDDLIST() returns a one-dimensional array of the RDD names registered
-     with the application as <nRDDType>.
+ *     RDDLIST() returns a one-dimensional array of the RDD names registered
+ *   with the application as <nRDDType>.
  *  $DESCRIPTION$     
-       RDDLIST() is an RDD function that returns a one-dimensional array that
-     lists the available RDDs.
-
-       If you do not supply <nRDDType>, all available RDDs, regardless of type,
-     are returned.
+ *     RDDLIST() is an RDD function that returns a one-dimensional array that
+ *   lists the available RDDs.
+ *
+ *     If you do not supply <nRDDType>, all available RDDs, regardless of type,
+ *   are returned.
  *  $EXAMPLES$
-       In this example RDDLIST() returns an array containing the
-        character strings, "DBF", "SDF", "DELIM", "DBFCDX", and "DBFNTX":
-
-        REQUEST DBFCDX
-
-        .
-        . < statements >
-        .
-
-        aRDDs := RDDLIST()
-
-              // Returns {"DBF", SDF", "DELIM", "DBFCDX", "DBFNTX" }
-
-       In this example, RDDLIST() returns an array containing the
-        character strings, "SDF" and "DELIM":
-
-        #include "rddsys.ch"
-        .
-        . < statements >
-        .
-        aImpExp := RDDLIST( RDT TRANSFER )
-
+ *     In this example RDDLIST() returns an array containing the
+ *      character strings, "DBF", "SDF", "DELIM", "DBFCDX", and "DBFNTX":
+ *
+ *      REQUEST DBFCDX
+ *
+ *      .
+ *      . < statements >
+ *      .
+ *
+ *      aRDDs := RDDLIST()
+ *
+ *            // Returns {"DBF", SDF", "DELIM", "DBFCDX", "DBFNTX" }
+ *
+ *     In this example, RDDLIST() returns an array containing the
+ *      character strings, "SDF" and "DELIM":
+ *
+ *      #include "rddsys.ch"
+ *      .
+ *      . < statements >
+ *      .
+ *      aImpExp := RDDLIST( RDT TRANSFER )
+ *
  *  $TESTS$
  *
  *  $STATUS$
@@ -6788,6 +6843,7 @@ HARBOUR HB_RDDLIST( void )
    }
    hb_itemRelease( pName );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      RDDNAME()
@@ -6869,6 +6925,7 @@ HARBOUR HB_RDDREGISTER( void )
       hb_errInternal( 9002, "", "", "" );
    }
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      RDDSETDEFAULT()
@@ -6938,6 +6995,7 @@ HARBOUR HB_RDDSETDEFAULT( void )
       strcpy( szDefDriver, szNewDriver );
    }
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      RECCOUNT()
@@ -6950,35 +7008,35 @@ HARBOUR HB_RDDSETDEFAULT( void )
  *  $ARGUMENTS$
  *      
  *  $RETURNS$
-       RECCOUNT() returns the number of physical records in the current
-     database file as an integer numeric value.  Filtering commands such as
-     SET FILTER or SET DELETED have no effect on the return value.
-     RECCOUNT() returns zero if there is no database file open in the current
-     work area.
+ *     RECCOUNT() returns the number of physical records in the current
+ *   database file as an integer numeric value.  Filtering commands such as
+ *   SET FILTER or SET DELETED have no effect on the return value.
+ *   RECCOUNT() returns zero if there is no database file open in the current
+ *   work area.
  *      
  *  $DESCRIPTION$*     
-       RECCOUNT() is a database function that is a synonym for LASTREC().  By
-     default, RECCOUNT() operates on the currently selected work area.  It
-     will operate on an unselected work area if you specify it as part of an
-     aliased expression (see example below).
+ *     RECCOUNT() is a database function that is a synonym for LASTREC().  By
+ *   default, RECCOUNT() operates on the currently selected work area.  It
+ *   will operate on an unselected work area if you specify it as part of an
+ *   aliased expression (see example below).
  *  $EXAMPLES$
-       This example illustrates the relationship between COUNT and
-        RECCOUNT():
-
-        USE Sales NEW
-        ? RECCOUNT()                      // Result: 84
-        //
-        SET FILTER TO Salesman = "1001"
-        COUNT TO nRecords
-        ? nRecords                        // Result: 14
-        ? RECCOUNT()                      // Result: 84
-
-       This example uses an aliased expression to access the number
-        of records in an unselected work area:
-
-        USE Sales NEW
-        USE Customer NEW
-        ? RECCOUNT(), Sales->(RECCOUNT())
+ *     This example illustrates the relationship between COUNT and
+ *      RECCOUNT():
+ *
+ *      USE Sales NEW
+ *      ? RECCOUNT()                      // Result: 84
+ *      //
+ *      SET FILTER TO Salesman = "1001"
+ *      COUNT TO nRecords
+ *      ? nRecords                        // Result: 14
+ *      ? RECCOUNT()                      // Result: 84
+ *
+ *     This example uses an aliased expression to access the number
+ *      of records in an unselected work area:
+ *
+ *      USE Sales NEW
+ *      USE Customer NEW
+ *      ? RECCOUNT(), Sales->(RECCOUNT())
  *  $TESTS$
  *
  *  $STATUS$
@@ -7003,6 +7061,7 @@ HARBOUR HB_RECCOUNT( void )
    }
    hb_retnl( ulRecCount );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      RECNO()
@@ -7015,28 +7074,28 @@ HARBOUR HB_RECCOUNT( void )
  *  $ARGUMENTS$
  *      
  *  $RETURNS$     
-       RECNO() returns the identity found at the position of the record
-     pointer.
+ *     RECNO() returns the identity found at the position of the record
+ *   pointer.
  *  $DESCRIPTION$     
-       RECNO() is a database function that returns the identity found at the
-     current position of the record pointer.  Identity is a unique value
-     guaranteed by the structure of the data file to reference a specific
-     record of data file.  The data file need not be a traditional Xbase
-     file.  Therefore, unlike earlier versions of HARBOUR, the value
-     returned need not be a numeric data type.
-
-       Under all RDDs, RECNO() returns the value at the position of the record
-     pointer; the data type and other characteristics of this value are
-     determined by the content of the accessed data and the RDD active in the
-     current work area.  In an Xbase database this value is the record
-     number.
+ *     RECNO() is a database function that returns the identity found at the
+ *   current position of the record pointer.  Identity is a unique value
+ *   guaranteed by the structure of the data file to reference a specific
+ *   record of data file.  The data file need not be a traditional Xbase
+ *   file.  Therefore, unlike earlier versions of HARBOUR, the value
+ *   returned need not be a numeric data type.
+ *
+ *     Under all RDDs, RECNO() returns the value at the position of the record
+ *   pointer; the data type and other characteristics of this value are
+ *   determined by the content of the accessed data and the RDD active in the
+ *   current work area.  In an Xbase database this value is the record
+ *   number.
  *  $EXAMPLES$
-     USE Sales VIA "DBFNTX"
-     .
-     . < statements >
-     .
-     DBGOTOP()
-     RECNO()            // Returns 1
+ *   USE Sales VIA "DBFNTX"
+ *   .
+ *   . < statements >
+ *   .
+ *   DBGOTOP()
+ *   RECNO()            // Returns 1
  *  $TESTS$
  *
  *  $STATUS$
@@ -7060,6 +7119,7 @@ HARBOUR HB_RECNO( void )
    hb_itemReturn( pRecNo );
    hb_itemRelease( pRecNo );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      RECSIZE()
@@ -7072,38 +7132,38 @@ HARBOUR HB_RECNO( void )
  *  $ARGUMENTS$
  *      
  *  $RETURNS$     
-       RECSIZE() returns, as a numeric value, the record length, in bytes, of
-     the database file open in the current work area.  RECSIZE() returns zero
-     if no database file is open.
+ *     RECSIZE() returns, as a numeric value, the record length, in bytes, of
+ *   the database file open in the current work area.  RECSIZE() returns zero
+ *   if no database file is open.
  *  $DESCRIPTION$    
-       RECSIZE() is a database function that determines the length of a record
-     by summing the lengths of each field then adding one for the DELETED()
-     status flag.  When this value is multiplied by LASTREC(), the product is
-     the amount of space occupied by the file's records.
-
-       RECSIZE() is useful in programs that perform automatic file backup.
-     When used in conjunction with DISKSPACE(), the RECSIZE() function can
-     assist in ensuring that sufficient free space exists on the disk before a
-     file is stored.
-
-       By default, RECSIZE() operates on the currently selected work area.  It
-     will operate on an unselected work area if you specify it as part of an
-     aliased expression (see example below).
+ *     RECSIZE() is a database function that determines the length of a record
+ *   by summing the lengths of each field then adding one for the DELETED()
+ *   status flag.  When this value is multiplied by LASTREC(), the product is
+ *   the amount of space occupied by the file's records.
+ *
+ *     RECSIZE() is useful in programs that perform automatic file backup.
+ *   When used in conjunction with DISKSPACE(), the RECSIZE() function can
+ *   assist in ensuring that sufficient free space exists on the disk before a
+ *   file is stored.
+ *
+ *     By default, RECSIZE() operates on the currently selected work area.  It
+ *   will operate on an unselected work area if you specify it as part of an
+ *   aliased expression (see example below).
  *  $EXAMPLES$
-       The following user-defined function, DbfSize(), uses RECSIZE()
-        to calculate the size of the current database file:
-
-        FUNCTION DbfSize
-           RETURN ((RECSIZE() * LASTREC()) + HEADER() + 1)
-
-       This example illustrates the use of RECSIZE() to determine the
-        record length of database files open in unselected work areas:
-
-        USE Customer NEW
-        USE Sales NEW
-        //
-        ? RECSIZE(), Customer->(RECSIZE())
-        ? DbfSize(), Customer->(DbfSize())
+ *     The following user-defined function, DbfSize(), uses RECSIZE()
+ *      to calculate the size of the current database file:
+ *
+ *      FUNCTION DbfSize
+ *         RETURN ((RECSIZE() * LASTREC()) + HEADER() + 1)
+ *
+ *     This example illustrates the use of RECSIZE() to determine the
+ *      record length of database files open in unselected work areas:
+ *
+ *      USE Customer NEW
+ *      USE Sales NEW
+ *      //
+ *      ? RECSIZE(), Customer->(RECSIZE())
+ *      ? DbfSize(), Customer->(DbfSize())
  *  $TESTS$
  *
  *  $STATUS$
@@ -7131,6 +7191,7 @@ HARBOUR HB_RECSIZE( void )
       hb_itemRelease( pRecSize );
    }
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      RLOCK()
@@ -7143,49 +7204,49 @@ HARBOUR HB_RECSIZE( void )
  *  $ARGUMENTS$
  *      
  *  $RETURNS$     
-       RLOCK() returns true (.T.) if the record lock is obtained; otherwise, it
-     returns false (.F.).
+ *     RLOCK() returns true (.T.) if the record lock is obtained; otherwise, it
+ *   returns false (.F.).
  *  $DESCRIPTION$     
-       RLOCK() is a network function that locks the current record, preventing
-        other users from updating the record until the lock is released.
-        RLOCK() provides a shared lock, allowing other users read-only access to
-        the locked record while allowing only the current user to modify it.  A
-        record lock remains until another record is locked, an UNLOCK is
-        executed, the current database file is closed, or an FLOCK() is obtained
-        on the current database file.
-
-        For each invocation of RLOCK(), there is one attempt to lock the current
-        record, and the result is returned as a logical value.  An attempt to
-        obtain a record lock fails if another user currently has a file or
-        record lock, or EXCLUSIVE USE of the database file.  An attempt to
+ *     RLOCK() is a network function that locks the current record, preventing
+ *      other users from updating the record until the lock is released.
+ *      RLOCK() provides a shared lock, allowing other users read-only access to
+ *      the locked record while allowing only the current user to modify it.  A
+ *      record lock remains until another record is locked, an UNLOCK is
+ *      executed, the current database file is closed, or an FLOCK() is obtained
+ *      on the current database file.
+ *
+ *      For each invocation of RLOCK(), there is one attempt to lock the current
+ *      record, and the result is returned as a logical value.  An attempt to
+ *      obtain a record lock fails if another user currently has a file or
+ *      record lock, or EXCLUSIVE USE of the database file.  An attempt to
  *      RLOCK() in an empty database returns true (.T.).
-
+ *
  *      By default, RLOCK() operates on the currently selected work area.  It
  *      will operate on an unselected work area if you specify it as part of an
  *      aliased expression (see example below).  This feature is useful since
  *      RLOCK() does not automatically attempt a record lock for related files.
-
+ *
  *      As a general rule, RLOCK() operates solely on the current record.  This
  *      includes the following commands:
-
+ *
  *      @...GET
-
+ *
  *      DELETE (single record)
-
+ *
  *      RECALL (single record)
-
+ *
  *      REPLACE (single record)
-
-
+ *
+ *
  *      Notes
-
+ *
  *      SET RELATION: HARBOUR does not automatically lock all
  *      records in the relation chain when you lock the current work area
  *      record.  Also, an UNLOCK has no effect on related work areas.
  *  $EXAMPLES$
-       This example deletes a record in a network environment, using
+ *     This example deletes a record in a network environment, using
  *      RLOCK():
-
+ *
  *      USE Customer INDEX CustName SHARED NEW
  *      SEEK "Smith"
  *      IF FOUND()
@@ -7199,10 +7260,10 @@ HARBOUR HB_RECSIZE( void )
  *         ? "Smith not in Customer file"
  *      ENDIF
  *      CLOSE
-
+ *
  *      This example specifies RLOCK() as an aliased expression to
  *      lock a record in an unselected work area:
-
+ *
  *      USE Sales SHARED NEW
  *      USE Customer SHARED NEW
  *      //
@@ -7242,6 +7303,7 @@ HARBOUR HB_RLOCK( void )
 
    hb_retl( pLockInfo.fResult );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      SELECT()
@@ -7261,22 +7323,22 @@ HARBOUR HB_RLOCK( void )
  *      an alias.  The number returned can range from zero to 250.  If <cAlias>
  *      is not specified, the current work area number is returned.  If <cAlias>
  *      is specified and the alias does not exist, SELECT() returns zero.
-
+ *
  *      Note:  The SELECT() function and SELECT command specified with an
  *      extended expression argument look somewhat alike.  This shouldn't be a
  *      problem since the SELECT() function is not very useful on a line by
  *      itself
  *  $EXAMPLES$
-       This example uses SELECT() to determine which work area
+ *     This example uses SELECT() to determine which work area
  *      USE...NEW selected:
-
+ *
  *      USE Sales NEW
  *      SELECT 1
  *      ? SELECT("Sales")          // Result: 4
-
+ *
  *      To reselect the value returned from the SELECT() function, use
  *      the SELECT command with the syntax, SELECT (<idMemvar>), like this:
-
+ *
  *      USE Sales NEW
  *      nWorkArea:= SELECT()
  *      USE Customer NEW
@@ -7309,6 +7371,7 @@ HARBOUR HB_SELECT( void )
    else
       hb_retni( uiCurrArea );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      USED()
@@ -7331,7 +7394,7 @@ HARBOUR HB_SELECT( void )
  *  $EXAMPLES$
  *      This example determines whether a database file is in USE in
  *      the current work area:
-
+ *
  *      USE Customer NEW
  *      ? USED()              // Result: .T.
  *      CLOSE
@@ -7384,11 +7447,11 @@ HARBOUR HB_USED( void )
  *      the new RDD driver specified by cNewDefaultRDD.  If <cNewDefaultDriver>
  *      is not specified, the current default driver name is returned and
  *      continues to be the current default driver.
-
+ *
  *      This function replaces the DBSETDRIVER() function.
  *  $EXAMPLES$
  *      // If the default driver is not DBFNTX, make it the default
-
+ *
  *      IF ( __RDDSETDEFAULT() != "DBFNTX" )
  *           cOldRdd := __RDDSETDEFAULT( "DBFNTX" )
  *      ENDIF
