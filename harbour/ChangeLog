@@ -1,3 +1,22 @@
+2000-06-16 22:10 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+   * utils/hbdoc/hbdoc.prg
+     * Some small enhacements when generating the Windows HTML HELP project
+   * utils/hbdoc/genhtm.prg
+     utils/hbdoc/genchm.prg
+     utils/hbdoc/html.pg
+     * Small enhacements
+     * Some fixed for Errors Reported by April White
+   * utils/hbdoc/genrtf.prg
+     * small changes
+   * utils/hbdoc/genos2.prg
+     utils/hbdoc/os2.prg
+     % Many optimizations
+     ! Many compile error now are fixed(most was the 255 character line lenght)
+     % Better Table support, Now it generate true Tables
+     * Many thanks for Maurilio Longo.With out his help this changes was not
+       possible
+    
+
 2000-06-16 21:28 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/transfrm.c
