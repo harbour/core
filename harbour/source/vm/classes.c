@@ -760,7 +760,7 @@ PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc 
          {
             pMethod = pClass->pMethods + uiAt;
             pFunction = pMethod->pFunction;
-            hb_clsScope( pObject, pMethod );
+            /*hb_clsScope( pObject, pMethod );*/
             s_pMethod = pMethod ;
             return pFunction;
          }
