@@ -211,12 +211,14 @@ ULONG hb_fsAttrToRaw( USHORT uiAttr )
 #elif defined(HB_OS_WIN_32)
 
    raw_attr = 0;
+
    if( uiAttr & HB_FA_ARCHIVE )   raw_attr |= FILE_ATTRIBUTE_ARCHIVE;
    if( uiAttr & HB_FA_DIRECTORY ) raw_attr |= FILE_ATTRIBUTE_DIRECTORY;
    if( uiAttr & HB_FA_HIDDEN )    raw_attr |= FILE_ATTRIBUTE_HIDDEN;
    if( uiAttr & HB_FA_READONLY )  raw_attr |= FILE_ATTRIBUTE_READONLY;
    if( uiAttr & HB_FA_SYSTEM )    raw_attr |= FILE_ATTRIBUTE_SYSTEM;
    if( uiAttr & HB_FA_NORMAL )    raw_attr |= FILE_ATTRIBUTE_NORMAL;
+   
 #elif defined(HB_OS_UNIX)
 
    raw_attr = 0;
@@ -296,6 +298,7 @@ char * hb_fsAttrDecode( USHORT uiAttr, char * szAttr )
    if( uiAttr & HB_FA_LABEL      ) *ptr++ = 'V';
    if( uiAttr & HB_FA_DIRECTORY  ) *ptr++ = 'D';
    if( uiAttr & HB_FA_ARCHIVE    ) *ptr++ = 'A';
+   if( uiAttr & HB_FA_NORMAL     ) *ptr++ = ' ';
 #ifdef HB_EXTENSION
    if( uiAttr & HB_FA_DEVICE     ) *ptr++ = 'I';
    if( uiAttr & HB_FA_TEMPORARY  ) *ptr++ = 'T';
@@ -561,7 +564,7 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
 
       if( info->hFindFile != INVALID_HANDLE_VALUE )
       {
-         if( info->dwAttr == 0 || ( info->dwAttr & info->pFindFileData.dwFileAttributes ) )
+         if( info->dwAttr == 0 || ( info->dwAttr & info->pFindFileData.dwFileAttributes ) || ( info->dwAttr & HB_FA_NORMAL ))
          {
             bFound = TRUE;
          }
@@ -571,7 +574,7 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
   
             while( FindNextFile( info->hFindFile, &info->pFindFileData ) )
             {
-               if( info->dwAttr == 0 || ( info->dwAttr & info->pFindFileData.dwFileAttributes ) )
+               if( info->dwAttr == 0 || ( info->dwAttr & info->pFindFileData.dwFileAttributes ) || ( info->dwAttr & HB_FA_NORMAL ) )
                {
                   bFound = TRUE;
                   break;
@@ -666,7 +669,7 @@ BOOL hb_fsFindNext( PHB_FFIND ffind )
 
       while( FindNextFile( info->hFindFile, &info->pFindFileData ) )
       {
-         if( info->dwAttr == 0 || ( info->dwAttr & info->pFindFileData.dwFileAttributes ) )
+         if( info->dwAttr == 0 || ( info->dwAttr & info->pFindFileData.dwFileAttributes ) || ( info->dwAttr & HB_FA_NORMAL ))
          {
             bFound = TRUE;
             break;

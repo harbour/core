@@ -7,6 +7,12 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+      just include -DHB_EOL_CRLF in the C_USR environment variable and
+      rebuild Harbour.
+
+2002-01-08 17:10 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/isprint.c
+    ! Added a missing __RSXNT__ guard on an HB_OS_WIN_32 check.
 
 2002-01-08 09:52 UTC+0100 Patrick Mast <email@patrickmast.com>
    * source/compiler/genc.c
