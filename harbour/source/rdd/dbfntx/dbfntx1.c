@@ -287,23 +287,32 @@ static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LONG lBlock, LPKEYINFO pKe
    pPage->CurKey = 0;
    if( pPage->uiKeys > 0 )
    {
-      while( k > 0 && pPage->CurKey < pPage->uiKeys )
+      while( k > 0 && pPage->CurKey <= pPage->uiKeys )
       {
          p =  pPage->pKeys + pPage->CurKey;
-         k = hb_ntxItemCompare( pKey->pItem, p->pItem, bExact );
-         // k > 0 : pKey->pItem > p->pItem
-         if( !pPage->TagParent->AscendKey )
-            k = -k;
-         if( k == 0 && lBlock == NTX_MAX_REC_NUM )
-            k = 1;
-         if( k == 0 && lBlock != NTX_IGNORE_REC_NUM )
+         if( pPage->CurKey == pPage->uiKeys )
          {
-            if( lBlock > p->Xtra )
-               k = 1;
-            else if( lBlock < p->Xtra )
-               k = -1;
+            if( !p->Tag )
+               break;
+            k = -1;
          }
-         if( k <= 0 || pPage->CurKey == pPage->uiKeys - 1 ||
+         else
+         {
+            k = hb_ntxItemCompare( pKey->pItem, p->pItem, bExact );
+            /* k > 0 : pKey->pItem > p->pItem */
+            if( !pPage->TagParent->AscendKey )
+               k = -k;
+            if( k == 0 && lBlock == NTX_MAX_REC_NUM )
+               k = 1;
+            if( k == 0 && lBlock != NTX_IGNORE_REC_NUM )
+            {
+               if( lBlock > p->Xtra )
+                  k = 1;
+               else if( lBlock < p->Xtra )
+                  k = -1;
+            }
+         }
+         if( k <= 0 ||
              ( k == 0 && p->Xtra != pPage->TagParent->Owner->Owner->ulRecNo ) )
          /* pKey <= p */
          {
@@ -468,7 +477,8 @@ static BOOL hb_ntxPageReadNextKey( LPTAGINFO pTag )
       pPage->CurKey =  hb_ntxPageFindCurrentKey( pPage,pTag->CurKeyInfo->Xtra );
       if( pPage->CurKey )
       {
-         if( pPage->CurKey < pPage->uiKeys )
+         if( pPage->CurKey < pPage->uiKeys || 
+                ( pPage->CurKey == pPage->uiKeys && ( pPage->pKeys+pPage->CurKey )->Tag ) )
          {
             while( ( pPage->pKeys+pPage->CurKey )->Tag )
             {
