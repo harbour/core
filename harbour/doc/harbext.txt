@@ -1,0 +1,28 @@
+Language extensions:
+--------------------
+
+* Classes generation and management (Clipper never provided this)
+* @<FunctionName>()  --> returns the pointer (address) to a function
+* Class TGetList  --> object oriented support for GetLists management
+* ProcName() support for methods names.
+* Memory() new returned values.
+* Optional Compile Time STRONG TYPE declaration (and compile time TYPE
+  MISMATCH warnings) Ex.: LOCAL/STATIC Var AS ...
+* The Harbour debugger provides new interesting classes:
+  - Class TDbWindow could be the foundation for a generic multiplatform
+  - Class TForm
+  - Class TDbMenu implement both pulldown and popup menus.
+
+
+
+RTL enhanced functionality:
+---------------------------
+
+- Directory( <cMask>, <cFlags>, <lEightDotThree> )
+  The 3rd parameter is a Harbour (optional) parameter and indicates that on
+  those platforms that support long filenames, that you wish to receive what
+  would be considered the dos equivalant 8.3 name.
+  Could affect Adir() and Dir if they were modified to take advantage
+  of it - currently, they will return long names if the os supports it.
+
+
