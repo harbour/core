@@ -301,7 +301,7 @@ static BOOL hb_dbfWriteMemo( AREAP pArea, LPDBFMEMO pMemo, ULONG * lNewRecNo )
 
 static BOOL hb_dbfUpdateRecord( AREAP pArea, ULONG ulRecNo )
 {
-   ULONG ulRecCount = 0;
+   ULONG ulRecCount = pArea->lpExtendInfo->ulRecCount;
    USHORT uiCount;
    LPFIELD pField;
    BYTE pBuffer[ 1 ];

@@ -1,3 +1,8 @@
+2000-07-12 16:08 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+    * source/rdd/dbf1.c
+      * fixed a bug in dbfUpdateRecord() which caused problems with
+      * FieldPut(), noted by Luiz Rafael Culik
+
 2000-07-12-06:50 Luiz Rafael Culik <culik@sl.conex.net>
  +doc/en/stontype.txt
     *information of Harbour strong type feature
