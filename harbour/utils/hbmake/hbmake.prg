@@ -774,7 +774,10 @@ FUNCTION Compfiles()
     LOCAL lEnd     := .f.
     LOCAL xItem
     LOCAL lLinux   := At( 'linux', Lower( Os() ) ) > 0
+    Local nFile := 1
+    Local aGauge := GaugeNew( 5, 5, 7,40 , "W/B", "W+/B" ,'²')
 
+    @ 4, 5 Say "Compiling :"
     FOR nCount := 1 TO Len( aOrder )
 
         IF !lExtended
@@ -813,11 +816,11 @@ FUNCTION Compfiles()
                         cComm := Strtran( cComm, "o$*", "o" + aCs[ nPos ] )
                         cComm := Strtran( cComm, "$**", aPrgs[ nFiles ] )
 
-                        cComm += " > test.out"
+                        cComm += " > Test.out"
                         Outstd( cComm )
                         Outstd( hb_osnewline() )
                         ! ( cComm )
-                        cErrText := Memoread( 'test.out' )
+                        cErrText := Memoread( 'Test.out' )
                         lEnd     := 'C2006' $ cErrText .or. 'No code generated' $ cErrText
 
                         IF !lIgnoreErrors .and. lEnd
@@ -826,7 +829,7 @@ FUNCTION Compfiles()
 
                         ELSE
 
-                            Ferase( 'test.out' )
+                            Ferase( 'Test.out' )
 
                         ENDIF
 
@@ -948,8 +951,12 @@ FUNCTION Compfiles()
                 ENDIF
 
                 IF Len( acs ) > 0
+                GaugeDisplay( aGauge )
+                nFile:=1
+
 
                     FOR nFiles := 1 TO Len( acs )
+                      @ 4,16 Say space(50)
 
                         xItem := Substr( acs[ nFiles ], Rat( If( lgcc, '/', '\' ), ;
                                          acs[ nFiles ] ) + 1 )
@@ -969,20 +976,25 @@ FUNCTION Compfiles()
                             ENDIF
 
                             cComm := Strtran( cComm, "$**", acs[ nFiles ] )
-                            cComm += " > test.out"
-                            Outstd( cComm )
-                            Outstd( hb_osnewline() )
+                            cComm += " > Test.out"
+                        @ 4,16 Say acs[nFiles]
+                        GaugeUpdate(aGauge,nFile/Len( aprgs ))
+
+//                            Outstd( cComm )
+//                            Outstd( hb_osnewline() )
                             ! ( cComm )
-                            cErrText := Memoread( 'test.out' )
+                            nFile++
+                            cErrText := Memoread( 'Test.out' )
                             lEnd     := 'Error' $ cErrText
 
                             IF !lIgnoreErrors .and. lEnd
+                                if(at("LINUX",upper(OS()))>0,__run("mcedit Test.out"),__run("Notepad Test.out"))
 
                                 QUIT
 
                             ELSE
 
-                                Ferase( 'test.out' )
+                                Ferase( 'Test.out' )
 
                             ENDIF
 
@@ -1026,6 +1038,8 @@ FUNCTION Compfiles()
                     ENDIF
 
                 ENDIF
+                GaugeDisplay( aGauge )
+                nFile:=1
 
                 FOR nFiles := 1 TO Len( aprgs )
 
@@ -1047,22 +1061,27 @@ FUNCTION Compfiles()
                         ENDIF
 
                         cComm := Strtran( cComm, "$**", aprgs[ nFiles ] )
-                        cComm += " > test.out"
-                        Outstd( " " )
+                        cComm += " > Test.out"
+//                        Outstd( " " )
 
-                        Outstd( cComm )
-                        Outstd( hb_osnewline() )
+//                        Outstd( cComm )
+//                        Outstd( hb_osnewline() )
+                        @ 4,16 Say cPrg
+                        GaugeUpdate(aGauge,nFile/Len( aprgs ))
+//                        Outstd( hb_osnewline() )
+    nFile++
+
                         ! ( cComm )
-                        cErrText := Memoread( 'test.out' )
+                        cErrText := Memoread( 'Test.out' )
                         lEnd     := 'C2006' $ cErrText .or. 'No code generated' $ cErrText
 
                         IF !lIgnoreErrors .and. lEnd
-
+                                if(at("LINUX",upper(OS()))>0,__run("mcedit Test.out"),__run("Notepad Test.out"))
                             QUIT
 
                         ELSE
 
-                            Ferase( 'test.out' )
+                            Ferase( 'Test.out' )
 
                         ENDIF
 
@@ -1992,7 +2011,7 @@ FUNCTION CompUpdatedfiles()
                             Outstd( cComm )
                             Outstd( hb_osnewline() )
                             ! ( cComm )
-                            cErrText := Memoread( 'test.out' )
+                            cErrText := Memoread( 'Test.out' )
                             lEnd     := 'C2006' $ cErrText .or. 'No code generated' $ cErrText
 
                             IF !lIgnoreErrors .and. lEnd
@@ -2001,7 +2020,7 @@ FUNCTION CompUpdatedfiles()
 
                             ELSE
 
-                                Ferase( 'test.out' )
+                                Ferase( 'Test.out' )
 
                             ENDIF
 
@@ -2107,11 +2126,11 @@ FUNCTION CompUpdatedfiles()
 
                             cComm := Strtran( cComm, "o$*", "o" + aobjsc[ nPos ] )
                             cComm := Strtran( cComm, "$**", acs[ nFiles ] )
-                            cComm += " > test.out"
+                            cComm += " > Test.out"
                             Outstd( cComm )
                             Outstd( hb_osnewline() )
                             ! ( cComm )
-                            cErrText := Memoread( 'test.out' )
+                            cErrText := Memoread( 'Test.out' )
                             lEnd     := 'Error' $ cErrText
 
                             IF !lIgnoreErrors .and. lEnd
@@ -2120,7 +2139,7 @@ FUNCTION CompUpdatedfiles()
 
                             ELSE
 
-                                Ferase( 'test.out' )
+                                Ferase( 'Test.out' )
 
                             ENDIF
 
@@ -2175,12 +2194,12 @@ FUNCTION CompUpdatedfiles()
 
                             cComm := Strtran( cComm, "o$*", "o" + aObjs[ nPos ] )
                             cComm := Strtran( cComm, "$**", aprgs[ nFiles ] )
-                            cComm += " > test.out"
+                            cComm += " > Test.out"
                             Outstd( " " )
                             Outstd( cComm )
                             Outstd( hb_osnewline() )
                             ! ( cComm )
-                            cErrText := Memoread( 'test.out' )
+                            cErrText := Memoread( 'Test.out' )
                             lEnd     := 'C2006' $ cErrText .or. 'No code generated' $ cErrText
 
                             IF !lIgnoreErrors .and. lEnd
@@ -2189,7 +2208,7 @@ FUNCTION CompUpdatedfiles()
 
                             ELSE
 
-                                Ferase( 'test.out' )
+                                Ferase( 'Test.out' )
 
                             ENDIF
 
@@ -3644,6 +3663,8 @@ FUNCTION WriteMakeFileHeader()
     Fwrite( nLinkHandle, "!ifndef BHC" + CRLF )
     Fwrite( nLinkHandle, "BHC = $(HMAKEDIR)" + CRLF )
     Fwrite( nLinkHandle, "!endif" + CRLF )
+    Fwrite( nLinkHandle, " " + CRLF )
+    Fwrite( nLinkHandle, "RECURSE="+if(lRecurse," YES "," NO ") + CRLF )    
     Fwrite( nLinkHandle, " " + CRLF )
 
 RETURN nil
