@@ -33,7 +33,7 @@
  *      FOPEN( <cFile>, [<nMode>] ) --> nHandle
  *  $ARGUMENTS$
  *      <cFile> Name of file to open.
-
+ * 
  *      <nMode> Dos file open mode.
  *  $RETURNS$
  *      <nHandle> A file handle.
@@ -52,18 +52,19 @@
  *       16      FO_EXCLUSIVE   Exclusive read only
  *       32      FO_DENYWRITE   Prevent others from writing
  *       48      FO_DENYREAD    Deny read only
- *       64      FO_DENYNONE    Share read only
+ *       64      FO_DENYNONE    Not deny, Let to others Read / Write
+ *       64      FO_SHARED      same as FO_DENYNONE
  *  </table>
  *      If there is an error in opening a file, a -1 will be returned by
  *      the function. Files handles may be in the range of 0 to 65535. The
  *      status of the SET DEFAULT TO and SET PATH TO commands has no effect
  *      on this function. Directory names and paths must be specified along
  *      with the file that is to be opened.
-
+ *
  *      If an error has occured, see the returns values from FERROR() for
  *      possible reasons for the error.
  *  $EXAMPLES$
-
+ *
  *      IF (nH:=FOPEN('X.TXT',66) < 0
  *         ? 'File can't be opened'
  *      ENDIF
@@ -112,7 +113,7 @@
  *      this function.
  *
  *  <table>
- *       <nAttribute>   fileio.ch     Attribute
+ *       <nAttribute>   fileio.ch     Meaning
  *
  *       0              FC_NORMAL     Normal/Default,Read/Write
  *       1              FC_READONLY   Read-only file attribute is set
@@ -148,7 +149,7 @@
  *  $ARGUMENTS$
  *      <nHandle>     Dos file handle
 
- *      <cBufferVar>  Character expression passed by reference.
+ *      <cBuffer>  Character expression passed by reference.
 
  *      <nBytes>      Number of bytes to read.
  *  $RETURNS$
@@ -179,7 +180,7 @@
  *  $EXAMPLES$
  *      cBuffer:=SPACE(500)
  *      IF (nH:=FOPEN('X.TXT))>0
- *         FREAD(Hh,@cBuffer,500)
+ *         FREAD(nH,@cBuffer,500)
  *         ? cbuffer
  *      ENDIF
  *      FCLOSE(nH)
@@ -329,7 +330,7 @@
  *     or FOPEN() function.
  *  $EXAMPLES$
  *     nHandle:=FOPEN('x.txt')
- *     ? FSEEK(nHandle0,2)
+ *     ? FSEEK(nHandle, 0, 2)
  *     FCLOSE(nHandle)
  *     </fixed>
  *  $STATUS$
@@ -845,7 +846,7 @@
  *  $SYNTAX$
  *      CURDIR( [<cDrive>] )  --> cPath
  *  $ARGUMENTS$
- *      <cDir> OS drive letter
+ *      <cDrive> OS drive letter
  *  $RETURNS$
  *      <cPath> Name of directory
  *  $DESCRIPTION$
@@ -1032,7 +1033,7 @@
  *  $ARGUMENTS$
  *      <cDirectory>  The name of the directory you want to create.
  *  $RETURNS$
- *      <nError> 0 if directory was successfully changed, otherwise
+ *      <nError> 0 if directory was successfully created, otherwise
  *      the number of the last error.
  *  $DESCRIPTION$
  *      This function attempt to create a new directory with the name contained

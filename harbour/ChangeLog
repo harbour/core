@@ -9,6 +9,34 @@
 */
 
 
+2004-06-02 05:30 UTC-0400 Alejandro de Garate <alex_degarate@hotmail.com>
+
+  * doc\en\file.txt
+    * function FOPEN()
+    ! Fixed the meaning of FO_DENYNONE 
+    + Added FO_SHARED definition to the table
+   
+    * function FCREATE()
+    ! Fixed table title name, changed Atribute for Meaning
+
+    * function FREAD()
+    ! Fixed typo at $ARGUMENTS$ section
+    ! Removed typo <nHandle> from $RETURNS$ section
+    ! Fixed typo at $EXAMPLES$ section
+
+    * function FCLOSE()
+    ! Fixed typo at $EXAMPLES$ section
+
+    * function CURDIR()
+    ! Fixed typo at $ARGUMENTS$ section
+
+    * function MAKEDIR()
+    ! Fixed typo at $RETURNS$ section
+
+  + doc\es\file.txt
+    + Added file's operations document 
+
+
 2004-05-27 14:35 UTC-0400 Alejandro de Garate <alex_degarate@hotmail.com>
 
   + doc/es/codestyl.txt
