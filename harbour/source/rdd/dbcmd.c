@@ -2477,6 +2477,22 @@ HB_FUNC( ORDKEYNO )
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "ORDKEYNO" );
 
 }
+
+HB_FUNC( ORDKEYVAL )
+{
+   DBORDERINFO pOrderInfo;
+
+   if( s_pCurrArea )
+   {
+      pOrderInfo.itmOrder  = NULL;
+      pOrderInfo.itmResult = hb_itemNew( NULL );
+      SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_KEYVAL, &pOrderInfo );
+      hb_itemReturn( pOrderInfo.itmResult );
+      hb_itemRelease( pOrderInfo.itmResult );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "ORDKEYVAL" );
+}
 #endif
 
 HB_FUNC( ORDLISTADD )
@@ -3657,4 +3673,3 @@ HB_FUNC( __DBCOPY )
                      ISCHAR( 8 ) ? hb_parc( 8 ) : NULL ); /* RDD */
   }
 }
-
