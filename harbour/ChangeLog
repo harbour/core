@@ -1,3 +1,23 @@
+2001-09-05 09:00 GMT+1 Antonio Linares <alinares@fivetech.com>
+
+   + harbour/include/hbpers.ch
+     Harbour persistence commands
+
+   + harbour/source/rtl/perfuncs.prg
+     Harbour persistence commands support functions
+
+   * harbour/source/rtl/persist.prg
+     HB_DToS() replaced by DToS()
+
+   * harbour/makefile.bc
+     perfuncs.prg module added
+
+   + harbour/contrib/hgf/tests/form3.prg
+     Sample of use of persistence files to build a form
+
+   + harbour/contrib/hgf/tests/form3.hbf
+     HGF form persistence file sample
+
 2001-09-05 07:37 GMT+1 Antonio Linares <alinares@fivetech.com>
    * harbour/source/rtl/persist.prg
      HB_STOD() and HB_DTOS() use for dates management
