@@ -162,7 +162,7 @@ static RDDFUNCS ntxSuper = { 0 };
 
 /* Internal functions */
 static LPKEYINFO hb_ntxKeyNew( LPKEYINFO pKeyFrom, int keylen );
-static LONG hb_ntxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey, int keylen, BOOL* result );
+static LONG hb_ntxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey, int keylen, BOOL* result, BOOL bSoftSeek );
 static BOOL hb_ntxIsRecBad( NTXAREAP pArea, LONG ulRecNo );
 static int hb_ntxTagFindCurrentKey( LPTAGINFO pTag, LPPAGEINFO pPage, LPKEYINFO pKey, int keylen, BOOL bExact, BOOL lSeek );
 static USHORT hb_ntxPageFindCurrentKey( LPPAGEINFO pPage, ULONG ulRecno );
@@ -632,13 +632,13 @@ static LPKEYINFO hb_ntxKeyNew( LPKEYINFO pKeyFrom, int keylen )
    return pKey;
 }
 
-static LONG hb_ntxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey, int keylen, BOOL * result )
+static LONG hb_ntxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey, int keylen, BOOL * result, BOOL bSoftSeek )
 {
    int K;
 
    pTag->CurKeyInfo->Tag = pTag->CurKeyInfo->Xtra = 0;
    pTag->TagBOF = pTag->TagEOF = *result = FALSE;
-   K = hb_ntxTagFindCurrentKey( pTag, hb_ntxPageLoad( pTag,0 ), pKey, keylen, FALSE, TRUE );
+   K = hb_ntxTagFindCurrentKey( pTag, hb_ntxPageLoad( pTag,0 ), pKey, keylen, FALSE, (bSoftSeek)? 2:1 );
    if( K == 0 )
    {
       *result = TRUE;
@@ -723,7 +723,7 @@ static int hb_ntxTagFindCurrentKey( LPTAGINFO pTag, LPPAGEINFO pPage, LPKEYINFO 
          {
             kChild = hb_ntxTagFindCurrentKey( pTag, hb_ntxPageLoad(
                      pTag,p->page ), pKey, keylen, bExact, lSeek );
-            if( kChild == 0 )
+            if( kChild == 0 || ( lSeek==2 && kChild < 0 ) )
                k = kChild;
 
             if( k <= 0 )
@@ -3111,14 +3111,14 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
         while( !hb_fsLock( pArea->lpCurTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_LOCK ) );
         pArea->lpCurTag->Owner->Locked = TRUE;
      }
-     lRecno = hb_ntxTagKeyFind( pTag, pKey2, keylen, &result );
+     lRecno = hb_ntxTagKeyFind( pTag, pKey2, keylen, &result, bSoftSeek );
      if( bFindLast && lRecno > 0 && result )
      {
         LONG lRecnoLast;
 
         pArea->fEof = pArea->fBof = FALSE;
         hb_IncString( pArea, pKey2->key, keylen );
-        lRecnoLast = hb_ntxTagKeyFind( pTag, pKey2, keylen, &result );
+        lRecnoLast = hb_ntxTagKeyFind( pTag, pKey2, keylen, &result, 0 );
         hb_ntxKeyFree( pKey2 );
         if( lRecnoLast > 0 )
         {
