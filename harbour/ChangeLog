@@ -7,6 +7,17 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * source/rtl/tget.prg
+     ! Fix minor bug with initial spaces in PICTURE
+
+2002-03-25 15:33 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+   * source/rtl/tget.prg
+     ! Fix bug in picture "999,999.99" and "999.999,99".
+     ! Fix bug in picture with initial spaces.
+
+2002-03-25 08:45 UTC+0200 Chen Kedem <niki@actcom.co.il>
+
+   * doc/en/lang.txt
      ! Change ZH_GB --> ZHGB, ZH_BIG5 --> ZHB5
 
    * source/lang/msgzhb5.c
