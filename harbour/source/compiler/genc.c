@@ -55,6 +55,11 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    FILE * yyc; /* file handle for C output */
    PINLINE pInline = hb_comp_inlines.pFirst;
 
+   BOOL bIsPublicFunction ;
+   BOOL bIsInitFunction   ;
+   BOOL bIsExitFunction   ;
+   BOOL bIsStaticVariable ;
+
    if( ! pFileName->szExtension )
       pFileName->szExtension = ".c";
    hb_fsFNameMerge( szFileName, pFileName );
@@ -89,12 +94,26 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       /* write functions prototypes for PRG defined functions */
       while( pFunc )
       {
-         if( pFunc == hb_comp_pInitFunc )
-            fprintf( yyc, "static HARBOUR hb_INITSTATICS( void );\n" ); /* NOTE: hb_ intentionally in lower case */
-         else if( pFunc->cScope & HB_FS_STATIC || pFunc->cScope & HB_FS_INIT || pFunc->cScope & HB_FS_EXIT )
-            fprintf( yyc, "HB_FUNC_STATIC( %s );\n", pFunc->szName );
-         else
+         bIsInitFunction   = ( pFunc->cScope & HB_FS_INIT ) ;
+         bIsExitFunction   = ( pFunc->cScope & HB_FS_EXIT ) ;
+         bIsStaticVariable = ( pFunc == hb_comp_pInitFunc ) ;
+         bIsPublicFunction = ( pFunc->cScope == HB_FS_PUBLIC ) ;
+
+         /* Is it a PUBLIC FUNCTION/PROCEDURE */
+         if ( bIsPublicFunction )
             fprintf( yyc, "HB_FUNC( %s );\n", pFunc->szName );
+         /* Is it a STATIC$ */
+         else if ( bIsStaticVariable )
+            fprintf( yyc, "static HARBOUR hb_INITSTATICS( void );\n" ); /* NOTE: hb_ intentionally in lower case */
+         /* Is it an INIT FUNCTION/PROCEDURE */
+         else if ( bIsInitFunction )
+            fprintf( yyc, "HB_FUNC_INIT( %s );\n", pFunc->szName );
+         /* Is it an EXIT FUNCTION/PROCEDURE */
+         else if ( bIsExitFunction )
+            fprintf( yyc, "HB_FUNC_EXIT( %s );\n", pFunc->szName );
+         /* Then it must be a STATIC FUNCTION/PROCEDURE */
+         else
+            fprintf( yyc, "HB_FUNC_STATIC( %s );\n", pFunc->szName );
 
          pFunc = pFunc->pNext;
       }
@@ -204,22 +223,26 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
       while( pFunc )
       {
-         if( pFunc == hb_comp_pInitFunc )        /* Is it STATICS$ */
-            fprintf( yyc, "static HARBOUR hb_INITSTATICS( void )" ); /* NOTE: hb_ intentionally in lower case */
-         else if( pFunc->cScope & HB_FS_STATIC || pFunc->cScope & HB_FS_INIT || pFunc->cScope & HB_FS_EXIT )
-         {
-            fprintf( yyc, "HB_FUNC_STATIC( %s )", pFunc->szName );
+         bIsInitFunction   = ( pFunc->cScope & HB_FS_INIT ) ;
+         bIsExitFunction   = ( pFunc->cScope & HB_FS_EXIT ) ;
+         bIsStaticVariable = ( pFunc == hb_comp_pInitFunc ) ;
+         bIsPublicFunction = ( pFunc->cScope == HB_FS_PUBLIC ) ;
 
-            if( hb_comp_iGenCOutput != HB_COMPGENC_COMPACT )
-            {
-               if( pFunc->cScope & HB_FS_INIT )
-                  fprintf( yyc, " /* INIT */" );
-               if( pFunc->cScope & HB_FS_EXIT )
-                  fprintf( yyc, " /* EXIT */" );
-            }
-         }
-         else
+         /* Is it a PUBLIC FUNCTION/PROCEDURE */
+         if ( bIsPublicFunction )
             fprintf( yyc, "HB_FUNC( %s )", pFunc->szName );
+         /* Is it STATICS$ */
+         else if( bIsStaticVariable )
+            fprintf( yyc, "static HARBOUR hb_INITSTATICS( void )" ); /* NOTE: hb_ intentionally in lower case */
+         /* Is it an INIT FUNCTION/PROCEDURE */
+         else if ( bIsInitFunction )
+            fprintf( yyc, "HB_FUNC_INIT( %s )", pFunc->szName );
+         /* Is it an EXIT FUNCTION/PROCEDURE */
+         else if ( bIsExitFunction )
+            fprintf( yyc, "HB_FUNC_EXIT( %s )", pFunc->szName );
+         /* Then it must be a STATIC FUNCTION/PROCEDURE */
+         else
+            fprintf( yyc, "HB_FUNC_STATIC( %s )", pFunc->szName );
 
          fprintf( yyc, "\n{\n   static const BYTE pcode[] =\n   {\n" );
 
