@@ -109,7 +109,6 @@ extern void yyerror( char * ); /* parsing error management function */
 #define  HB_MACRO_CHECK( pExpr ) \
    if( ! ( HB_MACRO_DATA->status & HB_MACRO_CONT ) ) \
    { \
-      hb_compExprDelete( pExpr, HB_MACRO_PARAM ); \
       YYABORT; \
    }
 
@@ -118,7 +117,6 @@ extern void yyerror( char * ); /* parsing error management function */
      { pSet = (pExpr); }\
    else \
    { \
-      hb_compExprDelete( (pExpr), HB_MACRO_PARAM ); \
       YYABORT; \
    }
 
@@ -227,38 +225,37 @@ int yylex( YYSTYPE *, HB_MACRO_PTR );
 Main : Expression '\n' {
                            HB_MACRO_DATA->exprType = hb_compExprType( $1 );
                            if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
-                              hb_compExprDelete( hb_compExprGenPush( $1, HB_MACRO_PARAM ), HB_MACRO_PARAM );
+                              hb_compExprGenPush( $1, HB_MACRO_PARAM );
                            else
-                              hb_compExprDelete( hb_compExprGenPop( $1, HB_MACRO_PARAM ), HB_MACRO_PARAM );
+                              hb_compExprGenPop( $1, HB_MACRO_PARAM );
                            hb_compGenPCode1( HB_P_ENDPROC, HB_MACRO_PARAM );
                         }
 
      | Expression      {
                            HB_MACRO_DATA->exprType = hb_compExprType( $1 );
                            if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
-                              hb_compExprDelete( hb_compExprGenPush( $1, HB_MACRO_PARAM ), HB_MACRO_PARAM );
+                              hb_compExprGenPush( $1, HB_MACRO_PARAM );
                            else
-                              hb_compExprDelete( hb_compExprGenPop( $1, HB_MACRO_PARAM ), HB_MACRO_PARAM );
+                              hb_compExprGenPop( $1, HB_MACRO_PARAM );
                            hb_compGenPCode1( HB_P_ENDPROC, HB_MACRO_PARAM );
                         }
      | AsParamList      {
                            HB_MACRO_DATA->exprType = hb_compExprType( $1 );
                            if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
-                              hb_compExprDelete( hb_compExprGenPush( $1, HB_MACRO_PARAM ), HB_MACRO_PARAM );
+                              hb_compExprGenPush( $1, HB_MACRO_PARAM );
                            else
-                              hb_compExprDelete( hb_compExprGenPop( $1, HB_MACRO_PARAM ), HB_MACRO_PARAM );
+                              hb_compExprGenPop( $1, HB_MACRO_PARAM );
                            hb_compGenPCode1( HB_P_ENDPROC, HB_MACRO_PARAM );
                         }
      | Expression error   {
                  HB_TRACE(HB_TR_DEBUG, ("macro -> invalid expression: %s", HB_MACRO_DATA->string));
                  hb_macroError( EG_SYNTAX, HB_MACRO_PARAM );
-		 hb_compExprDelete( $1, HB_MACRO_PARAM );
-		 YYABORT;
+		           YYABORT;
 	       }
      | error   {
                  HB_TRACE(HB_TR_DEBUG, ("macro -> invalid syntax: %s", HB_MACRO_DATA->string));
                  hb_macroError( EG_SYNTAX, HB_MACRO_PARAM );
-		 YYABORT;
+		           YYABORT;
 	       }
 ;
 
@@ -356,11 +353,11 @@ FieldAlias  : FIELD ALIASOP               { $$ = hb_compExprNewAlias( hb_strdup(
 
 /* ignore _FIELD-> or FIELD-> if a real alias is specified
  */
-FieldVarAlias  : FieldAlias VarAlias            { hb_compExprDelete( $1, HB_MACRO_PARAM ); $$ = $2; }
-               | FieldAlias NumAlias            { hb_compExprDelete( $1, HB_MACRO_PARAM ); $$ = $2; }
-               | FieldAlias PareExpListAlias    { hb_compExprDelete( $1, HB_MACRO_PARAM ); $$ = $2; }
-               | FieldAlias MacroVarAlias       { hb_compExprDelete( $1, HB_MACRO_PARAM ); $$ = $2; }
-               | FieldAlias MacroExprAlias      { hb_compExprDelete( $1, HB_MACRO_PARAM ); $$ = $2; }
+FieldVarAlias  : FieldAlias VarAlias            { $$ = $2; }
+               | FieldAlias NumAlias            { $$ = $2; }
+               | FieldAlias PareExpListAlias    { $$ = $2; }
+               | FieldAlias MacroVarAlias       { $$ = $2; }
+               | FieldAlias MacroExprAlias      { $$ = $2; }
                ;
 
 AliasId     : IDENTIFIER      { $$ = hb_compExprNewVar( $1 ); }
@@ -494,7 +491,6 @@ RootParamList : EmptyExpression ',' {
                                       {
                                          HB_TRACE(HB_TR_DEBUG, ("macro -> invalid expression: %s", HB_MACRO_DATA->string));
                                          hb_macroError( EG_SYNTAX, HB_MACRO_PARAM );
-                                         hb_compExprDelete( $1, HB_MACRO_PARAM );
                                          YYABORT;
                                       }
                                     }

@@ -68,11 +68,40 @@
  */
 BOOL hb_comp_bShortCuts = TRUE;
 
+typedef struct HB_MEXPR_ {
+   HB_EXPR Expression;
+   struct HB_MEXPR_ *pPrev;
+} HB_MEXPR, *HB_MEXPR_PTR;
+
 /* various flags for macro compiler */
 static ULONG s_macroFlags = HB_SM_SHORTCUTS;
+static HB_MEXPR_PTR s_macroAlloc = NULL;
 
 static void hb_macroUseAliased( HB_ITEM_PTR, HB_ITEM_PTR, int, BYTE );
 static void hb_compMemvarCheck( char * szVarName, HB_MACRO_DECL );
+
+/* ************************************************************************* */
+
+/* Allocates memory for Expression holder structure and stores it
+ * on the linked list
+*/
+HB_EXPR_PTR hb_macroExprNew()
+{
+   HB_MEXPR_PTR pMExpr;
+   
+   pMExpr = (HB_MEXPR_PTR) hb_xgrab( sizeof( HB_MEXPR ) );
+   if( s_macroAlloc == NULL )
+   {
+      s_macroAlloc = pMExpr;
+      pMExpr->pPrev = NULL;
+   }
+   else
+   {
+      pMExpr->pPrev = s_macroAlloc;
+      s_macroAlloc = pMExpr;
+   }
+   return &s_macroAlloc->Expression;
+}
 
 /* ************************************************************************* */
 
@@ -86,6 +115,9 @@ static void hb_compMemvarCheck( char * szVarName, HB_MACRO_DECL );
  */
 static int hb_macroParse( HB_MACRO_PTR pMacro, char * szString )
 {
+   int iResult;
+   HB_MEXPR_PTR pMacroExprList;
+   
    /* update the current status for logical shortcuts */
    hb_comp_bShortCuts = pMacro->supported & HB_SM_SHORTCUTS;
 
@@ -112,7 +144,25 @@ static int hb_macroParse( HB_MACRO_PTR pMacro, char * szString )
     */
    pMacro->exprType = HB_ET_NONE;
 
-   return hb_macroYYParse( pMacro );
+   /* Deallocate all memory used by expression optimizer */
+   pMacroExprList = s_macroAlloc; /* save current list for recurse entry */
+   s_macroAlloc = NULL;
+   iResult = hb_macroYYParse( pMacro );
+   if( s_macroAlloc )
+   {
+      HB_MEXPR_PTR pMExpr;
+      do
+      {
+         hb_compExprKill( &s_macroAlloc->Expression, pMacro );
+         pMExpr = s_macroAlloc->pPrev;
+         hb_xfree( s_macroAlloc );
+         s_macroAlloc = pMExpr;
+      }
+      while( s_macroAlloc );
+   }
+   s_macroAlloc = pMacroExprList;
+   
+   return iResult;
 }
 
 /* releases all memory allocated for macro evaluation

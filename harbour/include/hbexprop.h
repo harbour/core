@@ -274,6 +274,7 @@ typedef  HB_EXPR_PTR HB_EXPR_ACTION( HB_EXPR_PTR pSelf, int iMessage, void * pMa
 
 #define HB_MACRO_VARNAME pMacro
 
+extern  HB_EXPR_PTR hb_macroExprNew( void );
 #else
 
 #define  HB_EXPR_FUNC( proc )  HB_EXPR_PTR proc( HB_EXPR_PTR pSelf, int iMessage )
@@ -388,6 +389,7 @@ BOOL hb_compExprIsValidMacro( char *, BOOL *, HB_MACRO_DECL );
 
 #ifdef HB_MACRO_SUPPORT
 
+void hb_compExprKill( HB_EXPR_PTR, HB_MACRO_DECL );
 HB_EXPR_PTR hb_compExprNewArrayAt( HB_EXPR_PTR, HB_EXPR_PTR, HB_MACRO_DECL );
 HB_EXPR_PTR hb_compExprSetOperand( HB_EXPR_PTR, HB_EXPR_PTR, HB_MACRO_DECL );
 HB_EXPR_PTR hb_compExprGenPop( HB_EXPR_PTR, HB_MACRO_DECL );

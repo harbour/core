@@ -133,6 +133,46 @@ static HB_CBVAR_PTR hb_compExprCBVarNew( char *, BYTE );
 
 /* ************************************************************************ */
 
+HB_EXPR_PTR hb_compExprNew( int iType )
+{
+   HB_EXPR_PTR pExpr;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNew(%i)", iType));
+
+#if defined( HB_MACRO_SUPPORT )
+   pExpr = hb_macroExprNew();
+#else
+   pExpr = ( HB_EXPR_PTR ) HB_XGRAB( sizeof( HB_EXPR ) );
+#endif
+   pExpr->ExprType = iType;
+   pExpr->pNext    = NULL;
+   pExpr->ValType  = HB_EV_UNKNOWN;
+   pExpr->Counter  = 1;
+
+   return pExpr;
+}
+
+/* Delete self - all components will be deleted somewhere else
+ */
+void hb_compExprClear( HB_EXPR_PTR pExpr )
+{
+#if defined( HB_MACRO_SUPPORT )
+   HB_SYMBOL_UNUSED( pExpr );
+#else
+   if( --pExpr->Counter == 0 )
+      HB_XFREE( pExpr );
+#endif
+}
+
+#if defined( HB_MACRO_SUPPORT )
+void hb_compExprKill( HB_EXPR_PTR pExpr, HB_MACRO_DECL )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprKill()"));
+   if( pExpr->ExprType != HB_ET_NONE )
+      HB_EXPR_USE( pExpr, HB_EA_DELETE );
+}
+#endif
+
 /* Delete all components and delete self
  */
 #if defined( HB_MACRO_SUPPORT )
@@ -145,7 +185,11 @@ void hb_compExprDelete( HB_EXPR_PTR pExpr )
    if( --pExpr->Counter == 0 )
    {
       HB_EXPR_USE( pExpr, HB_EA_DELETE );
+#if defined( HB_MACRO_SUPPORT )
+      pExpr->ExprType = HB_ET_NONE;
+#else
       HB_XFREE( pExpr );
+#endif
    }
 }
 
@@ -157,7 +201,11 @@ void hb_compExprFree( HB_EXPR_PTR pExpr, HB_MACRO_DECL )
    if( --pExpr->Counter == 0 )
    {
       HB_EXPR_USE( pExpr, HB_EA_DELETE );
+#if defined( HB_MACRO_SUPPORT )
+      pExpr->ExprType = HB_ET_NONE;
+#else
       HB_XFREE( pExpr );
+#endif
    }
    HB_SYMBOL_UNUSED( HB_MACRO_VARNAME );
 }

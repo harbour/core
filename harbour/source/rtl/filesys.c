@@ -2021,8 +2021,7 @@ BYTE HB_EXPORT * hb_fileNameConv(char *str) {
    char *filename;
    char *dirname=str;
    size_t dirlen;
-   char * szFileTrim =str;
-   ULONG ulPos;
+   /* char * szFileTrim =str; */
 
    // Look for filename (Last "\" or DIRSEPARATOR)
    if( hb_set.HB_SET_DIRSEPARATOR != '\\' ) {

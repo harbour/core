@@ -130,30 +130,6 @@ static char * s_OperTable[] = {
 
 /* ************************************************************************* */
 
-HB_EXPR_PTR hb_compExprNew( int iType )
-{
-   HB_EXPR_PTR pExpr;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNew(%i)", iType));
-
-   pExpr = ( HB_EXPR_PTR ) HB_XGRAB( sizeof( HB_EXPR ) );
-
-   pExpr->ExprType = iType;
-   pExpr->pNext    = NULL;
-   pExpr->ValType  = HB_EV_UNKNOWN;
-   pExpr->Counter  = 1;
-
-   return pExpr;
-}
-
-/* Delete self - all components will be deleted somewhere else
- */
-void hb_compExprClear( HB_EXPR_PTR pExpr )
-{
-   if( --pExpr->Counter == 0 )
-      HB_XFREE( pExpr );
-}
-
 /* Increase a reference counter (this allows to share the same expression
  * in more then one context)
  */

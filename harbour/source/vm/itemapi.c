@@ -1139,7 +1139,7 @@ BOOL hb_itemStrBuf( char *szResult, PHB_ITEM pNumber, int iSize, int iDec )
          hb_mathSetHandler (fOldMathHandler); 
          s_bInfinityInit = TRUE;
       }
-      #elif defined(_MSC_VER) || defined(__DJGPP__) || defined(__MINGW32__) || defined(__RSXNT__) || defined(__EMX__) || (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
+      #elif defined(_MSC_VER) || defined(__DJGPP__) || defined(__GNUC__)|| defined(__MINGW32__) || defined(__RSXNT__) || defined(__EMX__) || (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
       /* Nothing to do here, because these platforms have a function
          that returns 0 if the value is not a finite number */
       #else
@@ -1169,7 +1169,7 @@ BOOL hb_itemStrBuf( char *szResult, PHB_ITEM pNumber, int iSize, int iDec )
          || !_finite( dNumber )
       #elif defined(_MSC_VER) || (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
          || !_finite(dNumber)
-      #elif defined(__DJGPP__) || defined(__MINGW32__)
+      #elif defined(__DJGPP__) || defined(__MINGW32__) || defined(__GNUC__)
          || !finite( dNumber )
       #elif defined(__RSXNT__) || defined(__EMX__)
          || !isfinite( dNumber )
