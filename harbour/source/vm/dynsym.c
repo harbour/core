@@ -258,7 +258,12 @@ HARBOUR HB___DYNSCOUNT( void ) /* How much symbols do we have: dsCount = __dynsy
 
 HARBOUR HB___DYNSGETNAME( void ) /* Get name of symbol: cSymbol = __dynsymGetName( dsIndex ) */
 {
-   hb_retc( s_pDynItems[ hb_parnl( 1 ) - 1 ].pDynSym->pSymbol->szName );
+   LONG lIndex = hb_parnl( 1 ); /* NOTE: This will return zero if the parameter is not numeric */
+
+   if( lIndex >= 1 && lIndex <= s_uiDynSymbols )
+      hb_retc( s_pDynItems[ lIndex - 1 ].pDynSym->pSymbol->szName );
+   else
+      hb_retc( "" );
 }
 
 HARBOUR HB___DYNSGETINDEX( void ) /* Gimme index number of symbol: dsIndex = __dynsymGetIndex( cSymbol ) */
@@ -269,5 +274,5 @@ HARBOUR HB___DYNSGETINDEX( void ) /* Gimme index number of symbol: dsIndex = __d
       hb_retnl( ( LONG ) ( s_uiClosestDynSym + 1 ) );
    else
       hb_retnl( 0L );
-
 }
+

@@ -14,5 +14,9 @@ FUNCTION Main()
    ? "MAIN", nPos
 
    ? __dynsGetName( nPos )
+   ? __dynsGetName()
+   ? __dynsGetName( 0 )
+   ? __dynsGetName( 100000 )
+   ? __dynsGetName( __dynsGetIndex( "HB_THISDOESNTEXIST_" ) )
    
    RETURN NIL
