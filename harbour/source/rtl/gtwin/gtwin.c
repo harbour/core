@@ -6,7 +6,8 @@
  * Harbour Project source code:
  * Video subsystem for Win32 compilers
  *
- * Copyright 1999 Paul Tucker <ptucker@sympatico.ca> (functions marked ptucker)
+ * Copyright 1999-2000 Paul Tucker <ptucker@sympatico.ca>
+ * (for functions marked ptucker)
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -85,9 +86,9 @@
 #endif
 
 #if 0
-static HANDLE s_HOsave;
-#endif
+static HANDLE s_HOsave;   /* work in progress */
 static HANDLE s_HDOutput;
+#endif
 static HANDLE s_HOriginal;
 static HANDLE s_HOutput;
 static HANDLE s_HActive;
@@ -143,7 +144,10 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
    HB_SYMBOL_UNUSED( iFilenoStdout );
    HB_SYMBOL_UNUSED( iFilenoStderr );
 
+#if 0
+   s_HOsave     =
    s_HDOutput   = INVALID_HANDLE_VALUE;
+#endif
 
    s_cNumRead = 0;
    s_cNumIndex = 0;
@@ -180,7 +184,13 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 
    {
       CONSOLE_SCREEN_BUFFER_INFO csbi;
-      SMALL_RECT srWin;
+
+      GetConsoleScreenBufferInfo( s_HOriginal, &csbi );
+      csbi.dwSize.Y = min( csbi.dwSize.Y, 50 );
+      csbi.srWindow.Bottom = min( csbi.srWindow.Bottom, 49 );
+
+      SetConsoleWindowInfo( s_HOriginal, TRUE,  &csbi.srWindow );
+      SetConsoleScreenBufferSize( s_HOriginal, csbi.dwSize );
 
       s_HInactive = CreateConsoleScreenBuffer(
                  GENERIC_READ    | GENERIC_WRITE,    /* Access flag        */
@@ -189,16 +199,10 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
                  CONSOLE_TEXTMODE_BUFFER,            /* Type of buffer     */
                  NULL );                             /* reserved           */
 
-      GetConsoleScreenBufferInfo( s_HOriginal, &csbi );
 
-      /* new console window size and scroll position */
-      srWin.Top    = srWin.Left = 0;
-      srWin.Bottom = csbi.dwSize.Y - 1;
-      srWin.Right  = csbi.dwSize.X - 1;
-
-      SetConsoleScreenBufferSize( s_HInactive, csbi.dwSize );
       SetConsoleWindowInfo( s_HInactive, TRUE,  &csbi.srWindow );
-      SetConsoleWindowInfo( s_HInactive, FALSE, &srWin );
+      SetConsoleScreenBufferSize( s_HInactive, csbi.dwSize );
+
    }
 
 /*
@@ -1018,8 +1022,12 @@ BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
    CONSOLE_SCREEN_BUFFER_INFO csbi;
    SMALL_RECT srWin;
    COORD coBuf;
+   USHORT uiDispCount = s_uiDispCount;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetMode(%hu, %hu)", uiRows, uiCols));
+
+   while( s_uiDispCount )
+      hb_gt_DispEnd();
 
    GetConsoleScreenBufferInfo( s_HOutput, &csbi );
    coBuf = GetLargestConsoleWindowSize( s_HOutput );
@@ -1057,6 +1065,9 @@ BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
           !SetConsoleWindowInfo( s_HOutput, TRUE, &srWin ) )
          bRetVal = FALSE;
    }
+
+   while( s_uiDispCount < uiDispCount )
+      hb_gt_DispBegin();
 
    return bRetVal;
 }

@@ -1,3 +1,19 @@
+20000326-03:42 EST Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/gtwin/gtwin.c
+     * This is an old problem:
+       Because Windows allows you to set the size of the window to something
+       like 100x300 (for example) you then get scroll bars on the window.
+       I've been toying with the various conditions and oddities that might
+       arise from this situation.  This includes switching from a window
+       to full screen where the max visible is typically 50x80, yet the system
+       can still give you access to the full 100x300.  Writing to the extra
+       screen space is simple enough, but using it becomes annoying, since
+       the system will move the buffer around to keep the cursor in view.
+       Rather than fight it, gt_init, now caps the screen size to 50x80.
+       If you want a bigger size, then it is assumed you know what you are
+       going to do with the extra real eastate, and thus you can call
+       SetMode(100,300).
+
 20000326-08:06 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbdefs.h
