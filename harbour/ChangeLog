@@ -1,3 +1,9 @@
+2001-11-07 03:00 GMT +7 Andi Jahja <harbour@cbn.net.id>
+   * utils/hbmake/hbmutils.prg
+     ! some clean ups to enable compilation under MsVC
+       To Luiz: Please use the standard " for include rather
+       than ' eg. #include "foo.ch" instead of #include 'foo.ch'
+
 2001-11-08 14:53 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * source/rdd/dbfcdx/dbfcdx1.c
      + added support for ordFor()
