@@ -81,7 +81,7 @@ PROCEDURE Main( sSource, sSwitch )
       ENDIF
    ENDIF
 
-   ProcessLine( "#DEFINE __HARBOUR__  1", {}, {}, {}, 0, '' )
+   //ProcessLine( "#DEFINE __HARBOUR__  1", {}, {}, {}, 0, '' )
 
    IF bLoadRules
       InitRules()
@@ -1008,8 +1008,8 @@ RETURN sOut
 
 FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
 
-   LOCAL Counter, nRules, sCommand, nRule, aMarkers, xMarker
-   LOCAL aMP, nOptional := 0, sAnchor, cType, aList, nMarkerId
+   LOCAL Counter, nRules, sCommand, nRule, aMarkers, xMarker, bPartialOk
+   LOCAL aMP, nOptional := 0, sAnchor, cType, aList, nMarkerId, nKeyLen
    LOCAL sToken, sWorkLine, sNextExp, sNextAnchor, nMatch, nMatches
    LOCAL sPad, asRevert := {}, bNext, sPreMatch, sTemp, nLen, nBookMark
 
@@ -1033,7 +1033,7 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
       WAIT
    ENDIF
 
-   nLen := Max( Len( sKey ), 4 )
+   nKeyLen := Max( Len( sKey ), 4 )
 
    WHILE .T.
 
@@ -1045,7 +1045,7 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                EXIT
             ENDIF
          ELSE
-            IF Left( aRules[ Counter ][1], nLen ) == sKey
+            IF Left( aRules[ Counter ][1], nKeyLen ) == sKey
                EXIT
             ENDIF
          ENDIF
@@ -1116,14 +1116,30 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                   WAIT
                ENDIF
 
-               IF nMatch < nMatches
-                  nMatch++
+               IF aMP[2] > 0 .AND. nMatch < nMatches
+                  /* Skip all same level optionals to next group. */
+                  nOptional := aMP[2]
+                  WHILE nMatch < nMatches
+                     nMatch++
+                     aMP := aRules[nRule][2][nMatch]
+                     IF ( aMP[2] >= 0 ) .AND. ( aMP[2] <= Abs( nOptional ) )
+                        EXIT
+                     ENDIF
+                  ENDDO
+                  IF bDbgMatch
+                     ? "Skipped to", nMatch, "of", nMatches, aMP[2], aMP[3], nOptional
+                  ENDIF
                   LOOP
                ELSE
-                  EXIT
+                  IF nMatch < nMatches
+                     nMatch++
+                     LOOP
+                  ELSE
+                     EXIT
+                  ENDIF
                ENDIF
             ENDIF
-         ELSEIF nMarkerId > 1000
+         ELSEIF nMarkerId >= 1000
             nMarkerId -= 1000
          ENDIF
 
@@ -1253,6 +1269,9 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                      ? nMarkerId, "Repetable added: ", xMarker, Len( aMarkers[nMarkerId] )
                   ENDIF
                ELSE
+                  IF ValType( aMarkers ) != 'A' .OR. nMarkerId > Len( aMarkers )
+                     ? "Oops", nRule, sKey, nMarkerId, ValType( aMarkers ), IIF( ValType( aMarkers ) == 'A', Len( aMarkers ) , "No array" )
+                  ENDIF
                   aMarkers[nMarkerId] := xMarker
                ENDIF
             ENDIF
@@ -1327,11 +1346,10 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                         EXIT
                      ENDIF
                   ENDDO
-                  IF aRules[nRule][2][nMatch][2] >= 0 .AND. aRules[nRule][2][nMatch][2] < nOPtional
+                  IF nMatch == 0 .OR. ( aRules[nRule][2][nMatch][2] >= 0 .AND. aRules[nRule][2][nMatch][2] < nOPtional )
                      nMatch++
                   ENDIF
 
-                  /* Continue matching at top of current group. */
                   nOptional := 0
 
                   IF bDbgMatch
@@ -1371,7 +1389,9 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                nMatch++
                LOOP
             ENDIF
-         ELSE
+
+         ELSE /* Match failed. */
+
             IF bDbgMatch
                ? "NO MATCH:", nMatch, "of", nMatches, sAnchor, sToken, nMarkerId, xMarker, nOptional, aMP[2]
             ENDIF
@@ -1382,7 +1402,7 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                   sWorkLine := asRevert[Abs(nOptional)]
 
                   IF bDbgMatch
-                     ? "* Reverted: " + asRevert[nOptional]
+                     ? "* Reverted: " + asRevert[Abs(nOptional)]
                      WAIT
                   ENDIF
 
@@ -1439,24 +1459,58 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                ELSE
                   /* Skip all same level optionals to next group. */
                   nOptional := aMP[2]
+                  bPartialOk := .T. /* */
                   WHILE nMatch < nMatches
                      nMatch++
                      aMP := aRules[nRule][2][nMatch]
+                     IF ( aMP[2] < 0 ) .AND. ( Abs( aMP[2] ) < Abs( nOptional ) )
+                        IF bDbgMatch
+                           ? "Partial not allowed"
+                        ENDIF
+                        bPartialOk := .F.
+                        EXIT
+                     ENDIF
                      IF ( aMP[2] >= 0 ) .AND. ( aMP[2] <= Abs( nOptional ) )
                         EXIT
                      ENDIF
                   ENDDO
 
+                  /* Partial match was acceptable, rewind to top of same level optionals. */
+                  IF bPartialOk .AND. ( nOptional := Abs( nOptional ) ) > 1
+                     nOptional--
+
+                     WHILE nMatch > 1
+                        nMatch--
+                        IF aRules[nRule][2][nMatch][2] >= 0 .AND. aRules[nRule][2][nMatch][2] < nOPtional
+                           EXIT
+                        ENDIF
+                     ENDDO
+                     IF nMatch == 0 .OR. ( aRules[nRule][2][nMatch][2] >= 0 .AND. aRules[nRule][2][nMatch][2] < nOPtional )
+                        nMatch++
+                     ENDIF
+
+                     nOptional := 0
+
+                     IF bDbgMatch
+                        ? "Rewinded to:", nMatch
+                     ENDIF
+
+                     LOOP
+                  ENDIF
+
+                  IF nMatch == nMatches .AND. Abs( aMP[2] ) == nOptional /* reached EOR and still same group */
+                     IF bDbgMatch
+                        ? "Reached End of Rule"
+                     ENDIF
+                     EXIT
+                  ENDIF
+
                   IF bDbgMatch
                      ? "Skipped to", nMatch, "of", nMatches, aMP[2], aMP[3], nOptional
                   ENDIF
 
-                  IF ( aMP[2] >= 0 ) .AND. ( aMP[2] <= Abs( nOptional ) )
-                     nOptional := 0
-                     LOOP
-                  ELSE
-                     EXIT
-                  ENDIF
+                  nOptional := aMP[2]
+                  LOOP
                ENDIF
             ELSE
                IF bDbgMatch
@@ -1874,7 +1928,7 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
      sExp  += ExtractLeadingWS( @sLine )
 
      IF sNextAnchor != '->'
-        sTemp := NextExp( @sLine, ',', NIL, NIL, sNextAnchor )
+        sTemp := NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
         IF sTemp == NIL
            Alert( "ERROR! orphan '->'" )
         ELSE
@@ -1888,7 +1942,21 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
      sExp  += ExtractLeadingWS( @sLine )
 
      IF sNextAnchor != ':='
-        sTemp := NextExp( @sLine, ',', NIL, NIL, sNextAnchor )
+        sTemp := NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
+        IF sTemp == NIL
+           Alert( "ERROR! orphan ':='" )
+        ELSE
+           sExp +=  sTemp
+        ENDIF
+     ENDIF
+
+  ELSEIF Left( sToken, 1 ) == '!'
+
+     sExp  := sToken
+     sExp  += ExtractLeadingWS( @sLine )
+
+     IF sNextAnchor != '!'
+        sTemp := NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
         IF sTemp == NIL
            Alert( "ERROR! orphan ':='" )
         ELSE
@@ -2104,10 +2172,13 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
          aAdd( aExp, sExp )
 
          //sExp  += ','
-         sLine := SubStr( sLine, 2 )
-         //sExp  += ExtractLeadingWS( @sLine )
+         sLine   := SubStr( sLine, 2 )
+         ExtractLeadingWS( @sLine, @sPad )
+         //sExp  += sPad
 
-         NextExp( @sLine, 'A', NIL, aExp, sNextAnchor )
+         IF ! Left( sLine, 1 ) == ')'
+            NextExp( @sLine, 'A', NIL, aExp, sNextAnchor )
+         ENDIF
          /* aExp already done. */
 
          sExp := NIL
@@ -2120,12 +2191,14 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
          sLine := SubStr( sLine, 2 )
          sExp  += ExtractLeadingWS( @sLine )
 
-         sTemp := NextExp( @sLine, ',', NIL, NIL, sNextAnchor )
-         IF sTemp == NIL
-            //? "???"
-            //sExp += "NIL"
-         ELSE
-            sExp += sTemp
+         IF ! Left( sLine, 1 ) == ')'
+            sTemp := NextExp( @sLine, ',', NIL, NIL, sNextAnchor )
+            IF sTemp == NIL
+               //? "???"
+               //sExp += "NIL"
+            ELSE
+               sExp += sTemp
+            ENDIF
          ENDIF
 
          EXIT
@@ -2162,7 +2235,7 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
 
          LOOP
 
-      ELSEIF Left( sLine, 1 ) $ "+-*/:=^!><" .AND. ( sNextAnchor == NIL .OR. ( ! ( sNextAnchor $ "+-*/:=^!<>" ) ) )
+      ELSEIF Left( sLine, 1 ) $ "+-*/:=^!><!" .AND. ( sNextAnchor == NIL .OR. ( ! ( sNextAnchor $ "+-*/:=^!<>" ) ) )
 
          sExp  += Left( sLine, 1 )
 
@@ -2753,10 +2826,6 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
             //? "ORPHAN ANCHOR: " + sAnchor
 
             aMatch := { 0, nOptional, sAnchor, NIL, NIL }
-            /* Next dependant optional will be marked as trailing. */
-            IF nOptional > 0
-               nOptional := ( -nOptional )
-            ENDIF
             //? aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5]
 
             aAdd( aRule[2], aMatch )
@@ -2777,8 +2846,22 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
 
       ELSEIF Left( sRule, 1 ) == ']'
 
+         IF ! ( sAnchor == NIL )
+            //? "ORPHAN ANCHOR: " + sAnchor
+
+            aMatch := { 0, nOptional, sAnchor, NIL, NIL }
+            //? aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5]
+
+            aAdd( aRule[2], aMatch )
+
+            sAnchor := NIL
+            aWords  := NIL
+            cType   := NIL
+         ENDIF
+
          IF nOptional > 0
             nOptional--
+            nOptional := -nOptional // won't affect -0
          ELSE
             nOptional++
          ENDIF
@@ -3966,6 +4049,9 @@ FUNCTION InitRules()
 
 /* Defines */
 aDefRules := {}
+#ifdef __HARBOUR__
+   aAdd( aDefRules, { '__HARBOUR__' ,  , .T. } )
+#endif
 aAdd( aDefRules, { '_SET_EXACT' ,  , .T. } )
 aAdd( aDefRules, { '_SET_FIXED' ,  , .T. } )
 aAdd( aDefRules, { '_SET_DECIMALS' ,  , .T. } )
@@ -4076,7 +4162,7 @@ aAdd( aCommRules, { 'SET' , { {    0,   0, 'COLOUR', NIL, NIL }, {    0,   0, 'T
 aAdd( aCommRules, { 'SET' , { {    1,   0, 'CURSOR', ':', { 'ON', 'OFF', '&' } } } , .F. } )
 aAdd( aCommRules, { 'SET' , { {    0,   0, 'CURSOR', NIL, NIL }, {    1,   0, '(', '<', NIL }, {    0,   0, ')', NIL, NIL } } , .F. } )
 aAdd( aCommRules, { '?' , { {    1,   1, NIL, 'A', NIL } } , .F. } )
-aAdd( aCommRules, { '??' , { {    1,   1, NIL, 'A', NIL } } , .F. } )
+aAdd( aCommRules, { '?' , { {    0,   0, '?', NIL, NIL }, {    1,   1, NIL, 'A', NIL } } , .F. } )
 aAdd( aCommRules, { 'EJECT' ,  , .F. } )
 aAdd( aCommRules, { 'TEXT' ,  , .F. } )
 aAdd( aCommRules, { 'TEXT' , { {    0,   0, 'TO', NIL, NIL }, {    1,   0, 'FILE', '(', NIL } } , .F. } )
@@ -4205,7 +4291,7 @@ aAdd( aCommRules, { 'SET' , { {    0,   0, 'RELATION', NIL, NIL }, {    1,   1, 
 aAdd( aCommRules, { 'SET' , { {    0,   0, 'FILTER', NIL, NIL }, {    0,   0, 'TO', NIL, NIL } } , .F. } )
 aAdd( aCommRules, { 'SET' , { {    0,   0, 'FILTER', NIL, NIL }, {    1,   0, 'TO', '<', NIL } } , .F. } )
 aAdd( aCommRules, { 'SET' , { {    0,   0, 'FILTER', NIL, NIL }, {    1,   0, 'TO', ':', { '&' } } } , .F. } )
-aAdd( aCommRules, { 'REPLACE' , { {    1,   1, NIL, '<', { 'FOR', 'WHILE', 'NEXT', 'RECORD', 'ALL' } }, {    2,  -1, 'WITH', '<', NIL }, { 1003,   2, ',', '<', NIL }, { 1004,  -2, 'WITH', '<', NIL }, {    5,   1, 'FOR', '<', NIL }, {    6,   1, 'WHILE', '<', NIL }, {    7,   1, 'NEXT', '<', NIL }, {    8,   1, 'RECORD', '<', NIL }, {    9,   1, NIL, ':', { 'REST' } }, {    0,   1, 'ALL', NIL, NIL } } , .F. } )
+aAdd( aCommRules, { 'REPLACE' , { {    1,   1, NIL, '<', { 'FOR', 'WHILE', 'NEXT', 'RECORD', 'REST', 'ALL' } }, {    2,  -1, 'WITH', '<', NIL }, { 1003,   2, ',', '<', NIL }, { 1004,  -2, 'WITH', '<', NIL }, {    5,   1, 'FOR', '<', NIL }, {    6,   1, 'WHILE', '<', NIL }, {    7,   1, 'NEXT', '<', NIL }, {    8,   1, 'RECORD', '<', NIL }, {    9,   1, NIL, ':', { 'REST' } }, {    0,   1, 'ALL', NIL, NIL } } , .F. } )
 aAdd( aCommRules, { 'REPLACE' , { {    1,   0, NIL, '<', NIL }, {    2,   0, 'WITH', '<', NIL }, { 1003,   1, ',', '<', NIL }, { 1004,  -1, 'WITH', '<', NIL } } , .F. } )
 aAdd( aCommRules, { 'DELETE' , { {    1,   1, 'FOR', '<', NIL }, {    2,   1, 'WHILE', '<', NIL }, {    3,   1, 'NEXT', '<', NIL }, {    4,   1, 'RECORD', '<', NIL }, {    5,   1, NIL, ':', { 'REST' } }, {    0,   1, 'ALL', NIL, NIL } } , .F. } )
 aAdd( aCommRules, { 'RECALL' , { {    1,   1, 'FOR', '<', NIL }, {    2,   1, 'WHILE', '<', NIL }, {    3,   1, 'NEXT', '<', NIL }, {    4,   1, 'RECORD', '<', NIL }, {    5,   1, NIL, ':', { 'REST' } }, {    0,   1, 'ALL', NIL, NIL } } , .F. } )
@@ -4225,10 +4311,10 @@ aAdd( aCommRules, { 'TOTAL' , { {    1,   1, 'TO', '(', NIL }, {    2,   1, 'ON'
 aAdd( aCommRules, { 'UPDATE' , { {    1,   1, 'FROM', '(', NIL }, {    2,   1, 'ON', '<', NIL }, {    3,   1, 'REPLACE', '<', NIL }, {    4,  -1, 'WITH', '<', NIL }, { 1005,   2, ',', '<', NIL }, { 1006,  -2, 'WITH', '<', NIL }, {    7,   1, NIL, ':', { 'RANDOM' } } } , .F. } )
 aAdd( aCommRules, { 'JOIN' , { {    1,   1, 'WITH', '(', NIL }, {    2,   1, 'TO', '<', NIL }, {    3,   1, 'FIELDS', 'A', NIL }, {    4,   1, 'FOR', '<', NIL } } , .F. } )
 aAdd( aCommRules, { 'COUNT' , { {    1,   1, 'TO', '<', NIL }, {    2,   1, 'FOR', '<', NIL }, {    3,   1, 'WHILE', '<', NIL }, {    4,   1, 'NEXT', '<', NIL }, {    5,   1, 'RECORD', '<', NIL }, {    6,   1, NIL, ':', { 'REST' } }, {    0,   1, 'ALL', NIL, NIL } } , .F. } )
-aAdd( aCommRules, { 'SUM' , { {    1,   1, NIL, '<', { 'FOR', 'WHILE', 'NEXT', 'RECORD', 'ALL' } }, { 1002,   2, ',', '<', NIL }, {    3,  -1, 'TO', '<', NIL }, { 1004,   2, ',', '<', NIL }, {    5,   1, 'FOR', '<', NIL }, {    6,   1, 'WHILE', '<', NIL }, {    7,   1, 'NEXT', '<', NIL }, {    8,   1, 'RECORD', '<', NIL }, {    9,   1, NIL, ':', { 'REST' } }, {    0,   1, 'ALL', NIL, NIL } } , .F. } )
-aAdd( aCommRules, { 'AVERAGE' , { {    1,   1, NIL, '<', { 'FOR', 'WHILE', 'NEXT', 'RECORD', 'ALL' } }, { 1002,   2, ',', '<', NIL }, {    3,  -1, 'TO', '<', NIL }, { 1004,   2, ',', '<', NIL }, {    5,   1, 'FOR', '<', NIL }, {    6,   1, 'WHILE', '<', NIL }, {    7,   1, 'NEXT', '<', NIL }, {    8,   1, 'RECORD', '<', NIL }, {    9,   1, NIL, ':', { 'REST' } }, {    0,   1, 'ALL', NIL, NIL } } , .F. } )
-aAdd( aCommRules, { 'LIST' , { {    1,   1, NIL, 'A', { 'TO', 'FOR', 'WHILE', 'NEXT', 'RECORD', 'ALL' } }, {    2,   1, NIL, ':', { 'OFF' } }, {    3,   1, NIL, ':', { 'TO PRINTER' } }, {    0,   1, 'TO', NIL, NIL }, {    4,  -1, 'FILE', '(', NIL }, {    5,   1, 'FOR', '<', NIL }, {    6,   1, 'WHILE', '<', NIL }, {    7,   1, 'NEXT', '<', NIL }, {    8,   1, 'RECORD', '<', NIL }, {    9,   1, NIL, ':', { 'REST' } }, {    0,   1, 'ALL', NIL, NIL } } , .F. } )
-aAdd( aCommRules, { 'DISPLAY' , { {    1,   1, NIL, 'A', { 'TO', 'FOR', 'WHILE', 'NEXT', 'RECORD' } }, {    2,   1, NIL, ':', { 'OFF' } }, {    3,   1, NIL, ':', { 'TO PRINTER' } }, {    0,   1, 'TO', NIL, NIL }, {    4,  -1, 'FILE', '(', NIL }, {    5,   1, 'FOR', '<', NIL }, {    6,   1, 'WHILE', '<', NIL }, {    7,   1, 'NEXT', '<', NIL }, {    8,   1, 'RECORD', '<', NIL }, {    9,   1, NIL, ':', { 'REST' } }, {   10,   1, NIL, ':', { 'ALL' } } } , .F. } )
+aAdd( aCommRules, { 'SUM' , { {    1,   1, NIL, '<', { 'FOR', 'WHILE', 'NEXT', 'RECORD', 'REST', 'ALL' } }, { 1002,   2, ',', '<', NIL }, {    3,  -1, 'TO', '<', NIL }, { 1004,   2, ',', '<', NIL }, {    5,   1, 'FOR', '<', NIL }, {    6,   1, 'WHILE', '<', NIL }, {    7,   1, 'NEXT', '<', NIL }, {    8,   1, 'RECORD', '<', NIL }, {    9,   1, NIL, ':', { 'REST' } }, {    0,   1, 'ALL', NIL, NIL } } , .F. } )
+aAdd( aCommRules, { 'AVERAGE' , { {    1,   1, NIL, '<', { 'FOR', 'WHILE', 'NEXT', 'RECORD', 'REST', 'ALL' } }, { 1002,   2, ',', '<', NIL }, {    3,  -1, 'TO', '<', NIL }, { 1004,   2, ',', '<', NIL }, {    5,   1, 'FOR', '<', NIL }, {    6,   1, 'WHILE', '<', NIL }, {    7,   1, 'NEXT', '<', NIL }, {    8,   1, 'RECORD', '<', NIL }, {    9,   1, NIL, ':', { 'REST' } }, {    0,   1, 'ALL', NIL, NIL } } , .F. } )
+aAdd( aCommRules, { 'LIST' , { {    1,   1, NIL, 'A', { 'OFF', 'TO PRINTER', 'TO', 'FOR', 'WHILE', 'NEXT', 'RECORD', 'REST', 'ALL' } }, {    2,   1, NIL, ':', { 'OFF' } }, {    3,   1, NIL, ':', { 'TO PRINTER' } }, {    0,   1, 'TO', NIL, NIL }, {    4,  -1, 'FILE', '(', NIL }, {    5,   1, 'FOR', '<', NIL }, {    6,   1, 'WHILE', '<', NIL }, {    7,   1, 'NEXT', '<', NIL }, {    8,   1, 'RECORD', '<', NIL }, {    9,   1, NIL, ':', { 'REST' } }, {    0,   1, 'ALL', NIL, NIL } } , .F. } )
+aAdd( aCommRules, { 'DISPLAY' , { {    1,   1, NIL, 'A', { 'OFF', 'TO PRINTER', 'TO', 'FOR', 'WHILE', 'NEXT', 'RECORD', 'REST', 'ALL' } }, {    2,   1, NIL, ':', { 'OFF' } }, {    3,   1, NIL, ':', { 'TO PRINTER' } }, {    0,   1, 'TO', NIL, NIL }, {    4,  -1, 'FILE', '(', NIL }, {    5,   1, 'FOR', '<', NIL }, {    6,   1, 'WHILE', '<', NIL }, {    7,   1, 'NEXT', '<', NIL }, {    8,   1, 'RECORD', '<', NIL }, {    9,   1, NIL, ':', { 'REST' } }, {   10,   1, NIL, ':', { 'ALL' } } } , .F. } )
 aAdd( aCommRules, { 'REPORT' , { {    1,   0, 'FORM', '<', NIL }, {    2,   1, 'HEADING', '<', NIL }, {    3,   1, NIL, ':', { 'PLAIN' } }, {    4,   1, NIL, ':', { 'NOEJECT' } }, {    5,   1, NIL, ':', { 'SUMMARY' } }, {    6,   1, NIL, ':', { 'NOCONSOLE' } }, {    7,   1, NIL, ':', { 'TO PRINTER' } }, {    0,   1, 'TO', NIL, NIL }, {    8,  -1, 'FILE', '(', NIL }, {    9,   1, 'FOR', '<', NIL }, {   10,   1, 'WHILE', '<', NIL }, {   11,   1, 'NEXT', '<', NIL }, {   12,   1, 'RECORD', '<', NIL }, {   13,   1, NIL, ':', { 'REST' } }, {    0,   1, 'ALL', NIL, NIL } } , .F. } )
 aAdd( aCommRules, { 'LABEL' , { {    1,   0, 'FORM', '<', NIL }, {    2,   1, NIL, ':', { 'SAMPLE' } }, {    3,   1, NIL, ':', { 'NOCONSOLE' } }, {    4,   1, NIL, ':', { 'TO PRINTER' } }, {    0,   1, 'TO', NIL, NIL }, {    5,  -1, 'FILE', '(', NIL }, {    6,   1, 'FOR', '<', NIL }, {    7,   1, 'WHILE', '<', NIL }, {    8,   1, 'NEXT', '<', NIL }, {    9,   1, 'RECORD', '<', NIL }, {   10,   1, NIL, ':', { 'REST' } }, {    0,   1, 'ALL', NIL, NIL } } , .F. } )
 aAdd( aCommRules, { 'CLOSE' , { {    1,   0, NIL, '<', NIL } } , .F. } )
@@ -4247,7 +4333,7 @@ aAdd( aCommRules, { 'INDEX' , { {    1,   0, 'ON', '<', NIL }, {    2,   0, 'TO'
 aAdd( aCommRules, { 'DELETE' , { {    1,   0, 'TAG', '(', NIL }, {    2,   1, 'IN', '(', NIL }, { 1003,   1, ',', '(', NIL }, { 1004,   2, 'IN', '(', NIL } } , .F. } )
 aAdd( aCommRules, { 'REINDEX' , { {    1,   1, 'EVAL', '<', NIL }, {    2,   1, 'EVERY', '<', NIL } } , .F. } )
 aAdd( aCommRules, { 'REINDEX' ,  , .F. } )
-aAdd( aCommRules, { 'SET' , { {    0,   0, 'INDEX', NIL, NIL }, {    0,   0, 'TO', NIL, NIL }, { 1001,   1, NIL, '(', NIL }, { 1002,   2, ',', '(', NIL }, {    3,   1, NIL, ':', { 'ADDITIVE' } } } , .F. } )
+aAdd( aCommRules, { 'SET' , { {    0,   0, 'INDEX', NIL, NIL }, {    0,   0, 'TO', NIL, NIL }, { 1001,   1, NIL, '(', { 'ADDITIVE' } }, { 1002,   2, ',', '(', NIL }, {    3,   1, NIL, ':', { 'ADDITIVE' } } } , .F. } )
 aAdd( aCommRules, { 'SET' , { {    0,   0, 'ORDER', NIL, NIL }, {    1,   0, 'TO', '<', NIL }, { 1002,   1, 'IN', '(', NIL } } , .F. } )
 aAdd( aCommRules, { 'SET' , { {    0,   0, 'ORDER', NIL, NIL }, {    0,   0, 'TO', NIL, NIL }, {    1,   0, 'TAG', '(', NIL }, { 1002,   1, 'IN', '(', NIL } } , .F. } )
 aAdd( aCommRules, { 'SET' , { {    0,   0, 'ORDER', NIL, NIL }, {    0,   0, 'TO', NIL, NIL } } , .F. } )
@@ -4258,6 +4344,9 @@ FUNCTION InitResults()
 
 /* Defines Results*/
 aDefResults := {}
+#ifdef __HARBOUR__
+aAdd( aDefResults, { { {   0, '1' } }, { -1} , { }  } )
+#endif
 aAdd( aDefResults, { { {   0, '1' } }, { -1} , { }  } )
 aAdd( aDefResults, { { {   0, '2' } }, { -1} , { }  } )
 aAdd( aDefResults, { { {   0, '3' } }, { -1} , { }  } )
@@ -4531,10 +4620,10 @@ aAdd( aCommResults, { { {   0, '__SetFormat(NIL)' } }, { -1} , { }  } )
 aAdd( aCommResults, { { {   0, 'dbClearIndex()' } }, { -1} , { }  } )
 aAdd( aCommResults, { , ,  } )
 aAdd( aCommResults, { { {   0, 'CLOSE DATABASES ; SELECT 1 ; CLOSE FORMAT' } }, { -1} , { }  } )
-aAdd( aCommResults, { { {   0, 'CLEAR SCREEN ; CLEAR GETS ' } }, { -1} , { }  } )
+aAdd( aCommResults, { { {   0, 'CLEAR SCREEN ; CLEAR GETS' } }, { -1} , { }  } )
 aAdd( aCommResults, { { {   0, 'CLOSE DATABASES ; CLOSE FORMAT ; CLEAR MEMORY ; CLEAR GETS ; SET ALTERNATE OFF ; SET ALTERNATE TO' } }, { -1} , { }  } )
 aAdd( aCommResults, { { {   0, 'ordCondSet( ' }, {   0,   4 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   5,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ', RECNO(), ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   9,   9 }, {   0, ', ' }, {  14,  14 }, {   0, ' ) ;  ordCreate(' }, {   0,   3 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   1 }, {   0, ', ' }, {   0,   1 }, {   0, ', ' }, {  12,  12 }, {   0, '    )' } }, { -1,  3, -1,  5, -1,  6, -1,  5, -1,  5, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  4, -1,  4, -1,  3, -1,  5, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-aAdd( aCommResults, { { {   0, 'ordCondSet( ' }, {   0,   4 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   5,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ',     RECNO(), ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   9,   9 }, {   0, ', ' }, {  14,  14 }, {   0, ' ) ;  ordCreate(' }, {   0,   3 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   1 }, {   0, ', ' }, {   0,   1 }, {   0, ', ' }, {  12,  12 }, {   0, '    )' } }, { -1,  3, -1,  5, -1,  6, -1,  5, -1,  5, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  4, -1,  4, -1,  3, -1,  5, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
+aAdd( aCommResults, { { {   0, 'ordCondSet( ' }, {   0,   4 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   5,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ',   RECNO(), ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   9,   9 }, {   0, ', ' }, {  14,  14 }, {   0, ' ) ;  ordCreate(' }, {   0,   3 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   1 }, {   0, ', ' }, {   0,   1 }, {   0, ', ' }, {  12,  12 }, {   0, '    )' } }, { -1,  3, -1,  5, -1,  6, -1,  5, -1,  5, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  4, -1,  4, -1,  3, -1,  5, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
 aAdd( aCommResults, { { {   0, 'dbCreateIndex( ' }, {   0,   2 }, {   0, ', ' }, {   0,   1 }, {   0, ', ' }, {   0,   1 }, {   0, ', if( ' }, {   0,   3 }, {   0, ', .t., NIL ) )' } }, { -1,  4, -1,  3, -1,  5, -1,  6, -1} , { NIL, NIL, NIL}  } )
 aAdd( aCommResults, { { {   0, 'ordDestroy( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ' ) ' }, {   3, ' ; ordDestroy( ' }, {   3,   3 }, {   3, ', ' }, {   3,   4 }, {   3, ' ) ' } }, { -1,  4, -1,  4, -1, -1,  4, -1,  4, -1} , { NIL, NIL, NIL, NIL}  } )
 aAdd( aCommResults, { { {   0, 'ordCondSet(,,,, ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ',,,,,,,) ;  ordListRebuild()' } }, { -1,  5, -1,  1, -1} , { NIL, NIL}  } )
