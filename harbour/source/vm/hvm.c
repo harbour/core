@@ -2402,7 +2402,7 @@ static void hb_vmArrayPush( void )
       {
          if( pArray->item.asArray.value->uiHolders > 1 )
 	 {
-	    /* this is a temporary copy of an array - we can overwrite 
+	    /* this is a temporary copy of an array - we can overwrite
 	     * it with no problem
 	    */
             hb_arrayGet( pArray, ulIndex, pArray );
@@ -4067,7 +4067,7 @@ void hb_vmProcessSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols ) /* m
 
       hSymScope = ( pModuleSymbols + ui )->cScope;
       pNewSymbols->hScope |= hSymScope;
-      if( ( ! s_pSymStart ) && ( hSymScope == HB_FS_PUBLIC ) )
+      if( ( ! s_pSymStart ) && ( hSymScope & HB_FS_FIRST ) )
          s_pSymStart = pModuleSymbols + ui;  /* first public defined symbol to start execution */
 
       if( ( hSymScope == HB_FS_PUBLIC ) || ( hSymScope & ( HB_FS_MESSAGE | HB_FS_MEMVAR ) ) )

@@ -153,6 +153,15 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
             if( ( pSym->cScope != HB_FS_MESSAGE ) && ( pSym->cScope & HB_FS_MESSAGE ) ) /* only for non public symbols */
                fprintf( yyc, " | HB_FS_MESSAGE" );
 
+            if( hb_comp_bStartProc )
+            {
+               if( strcmp( pSym->szName, hb_comp_functions.pFirst->szName ) == 0 )
+                  fprintf( yyc, " | HB_FS_FIRST" );
+            }
+            else if( hb_comp_functions.pFirst->pNext )
+               if( strcmp( pSym->szName, hb_comp_functions.pFirst->pNext->szName ) == 0 )
+                  fprintf( yyc, " | HB_FS_FIRST" );
+
             /* specify the function address if it is a defined function or an
                external called function */
             if( hb_compFunctionFind( pSym->szName ) ) /* is it a function defined in this module */

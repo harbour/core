@@ -37,16 +37,19 @@
    #TRANSLATE AS DATE =>
    #TRANSLATE AS ARRAY =>
    #TRANSLATE AS BLOCK =>
+
+   #TRANSLATE AS OBJ =>
    #TRANSLATE AS OBJECT =>
 
    #TRANSLATE AS BOOL =>
    #TRANSLATE AS BOOLEAN =>
+   #TRANSLATE AS LOG =>
    #TRANSLATE AS LOGICAL =>
 
    #TRANSLATE AS VAR =>
    #TRANSLATE AS VARIANT =>
 
-   #COMMAND DECLARE FUNCTION <*x*> =>
+   #COMMAND DECLARE <*x*> =>
 #endif
 
 //DECLARE Function nMyFunc AS NUMERIC
@@ -70,15 +73,15 @@ DECLARE MyClass                              ;
         nMyFunc( nVal As Num ) As Num ;
         nMyFunc( nVal As Num ) As Num ;
         cMyData    ;
-        aInstances AS Array Of Object FROM CLASS MyClass ;
-        oNext( oInstance AS Object FROM CLASS MyClass ) As Object FROM CLASS MyClass
+        aInstances AS Array Of Object MyClass ;
+        oNext( oInstance AS Object MyClass ) As Object MyClass
 
 DECLARE OtherClass                              ;
         nMyFunc( nVal As Num ) As Num ;
         nMyFunc( nVal As Num ) As Num ;
         cMyData    ;
-        aInstances AS Array Of Object FROM CLASS MyClass ;
-        oNext( oInstance AS Object FROM CLASS OtherClass ) As Object FROM CLASS MyClass
+        aInstances AS Array Of Object MyClass ;
+        oNext( oInstance AS Object OtherClass ) As Object MyClass
 
 FIELD a AS CHAR
 FIELD b AS CHAR
@@ -89,11 +92,11 @@ STATIC lGlobal AS LOGICAL
 
 PROCEDURE THEMAIN( optional )
 
-  STATIC lStatic := 0, oMyObj As Object From CLASS WrongClass
+  STATIC lStatic := 0, oMyObj As Object WrongClass
 
   LOCAL cVar AS CHAR := [declare function]
 
-  LOCAL a As Char, ob AS Object FROM CLASS MyClass, c AS Char, d AS Object FROM CLASS OtherClass
+  LOCAL a As Char, ob AS Object MyClass, c AS Char, d AS Object OtherClass
 
   FIELD b AS NUM
   USE TEMP

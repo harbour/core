@@ -1,3 +1,21 @@
+20000520-21:30 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * include/hbvmpub.h
+     + Added: #define HB_FS_FIRST    ( ( HB_SYMBOLSCOPE ) 0x40 )
+
+   * source/compiler/genc.c
+     + Added logic to add | HB_FS_FIRST to first defined symbol in a prg.
+
+   * source/vm/hvm.c
+     * Modified hb_vmProcessSymbols() to llok for HB_FS_FIRST for startup procedure instead of any first symbol.
+
+   * source/compiler/harbour.y
+     * Minor consilidation in AsType
+       *** I am aware of 6 reduce conflicts resulting from previous removal of FROM_CLASS, and am looking into it. ***
+
+   * tests/testwarn.prg
+     ! Corrected the #translate to reflect latest syntax
+
 20000521-00:37 DST Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/setkey.c
      + include "hbgtapi.h" - needed for proper c++ support

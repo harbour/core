@@ -286,14 +286,7 @@ AsType     : /* not specified */           { hb_comp_cVarType = ' '; }
            | AS_OBJECT                     { hb_comp_cVarType = 'O'; }
            | AS_OBJECT IdentName 	   { hb_comp_cVarType = 'S'; hb_comp_szFromClass = $2 }
            | AS_VARIANT                    { hb_comp_cVarType = ' '; }
-           | AS_NUMERIC_ARRAY              { hb_comp_cVarType = 'n'; }
-           | AS_CHARACTER_ARRAY            { hb_comp_cVarType = 'c'; }
-           | AS_DATE_ARRAY                 { hb_comp_cVarType = 'd'; }
-           | AS_LOGICAL_ARRAY              { hb_comp_cVarType = 'l'; }
-           | AS_ARRAY_ARRAY                { hb_comp_cVarType = 'a'; }
-           | AS_BLOCK_ARRAY                { hb_comp_cVarType = 'b'; }
-           | AS_OBJECT_ARRAY               { hb_comp_cVarType = 'o'; }
-           | AS_OBJECT_ARRAY IdentName     { hb_comp_cVarType = 's'; hb_comp_szFromClass = $2 }
+	   | AsArray
            ;
 
 AsArray    : AS_ARRAY                      { hb_comp_cVarType = 'A'; }
@@ -304,6 +297,7 @@ AsArray    : AS_ARRAY                      { hb_comp_cVarType = 'A'; }
            | AS_ARRAY_ARRAY                { hb_comp_cVarType = 'a'; }
            | AS_BLOCK_ARRAY                { hb_comp_cVarType = 'b'; }
            | AS_OBJECT_ARRAY               { hb_comp_cVarType = 'o'; }
+           | AS_OBJECT_ARRAY IdentName     { hb_comp_cVarType = 's'; hb_comp_szFromClass = $2 }
            ;
 
 ParamList  : IdentName AsType                { hb_compVariableAdd( $1, hb_comp_cVarType ); $$ = 1; }
