@@ -70,18 +70,27 @@
 
 HB_FUNC(SQLCONNECT) // MYSQL *mysql_real_connect(MYSQL*, char * host, char * user, char * password, char * db, uint port, char *, uint flags)
 {
-   MYSQL * mysql = NULL;
+   MYSQL * mysql;
 
 #if MYSQL_VERSION_ID > 32200
       /* from 3.22.x of MySQL there is a new parameter in mysql_real_connect() call, that is char * db
          which is not used here */
-  if ( (mysql = mysql_init((MYSQL*) 0)) )
-      mysql_real_connect( mysql, _parc(1), _parc(2), _parc(3), NULL, 0, NULL, 0);
+   if ( (mysql = mysql_init((MYSQL*) 0)) )
+   {
+      if( mysql_real_connect( mysql, _parc(1), _parc(2), _parc(3), NULL, 0, NULL, 0) )
+        _retnl((long) mysql);
+      else
+      {
+         mysql_close( mysql );
+         _retnl( 0 );
+      }
+   }
+   else
+      _retnl( 0 );
 #else
-      mysql = mysql_real_connect(NULL, _parc(1), _parc(2), _parc(3), 0, NULL, 0);
-#endif
-
+   mysql = mysql_real_connect(NULL, _parc(1), _parc(2), _parc(3), 0, NULL, 0);
    _retnl((long) mysql);
+#endif
 }
 
 
@@ -220,6 +229,10 @@ HB_FUNC(SQLNUMFI) // unsigned int mysql_num_fields(MYSQL_RES *)
    _retnl(mysql_num_fields(((MYSQL_RES *)_parnl(1))));
 }
 
+HB_FUNC(SQLFICOU) // unsigned int mysql_num_fields(MYSQL_RES *)
+{
+   _retnl(mysql_field_count(((MYSQL *)_parnl(1))));
+}
 
 HB_FUNC(SQLLISTF) // MYSQL_RES *mysql_list_fields(MYSQL *, char *);
 {
@@ -294,3 +307,7 @@ HB_FUNC(SQLAND)
    _retnl(_parnl(1) & _parnl(2));
 }
 
+HB_FUNC(SQLAFFROWS)
+{
+   _retnl( mysql_affected_rows( (MYSQL *)_parnl(1) ) );
+}

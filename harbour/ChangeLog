@@ -1,3 +1,14 @@
+2001-04-20 19:00 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * contrib/libmisc/dbftools.c
+     * fieldtype() fixed accordingly to RDD changes
+   * contrib/mysql/mysql.c
+     * sqlConnect() fixed for version older than 3.22.34
+     + added support for mysql_affected_rows() and mysql_field_count()
+   * tests/db_brows.ch
+   * tests/db_brows.prg
+     * some improvements
+
+
 2001-04-20 16:30 CET Martin Vogel <vogel@inttec.de>
 
   + contrib/libct/charop.c

@@ -46,7 +46,24 @@ HB_FUNC( FIELDTYPE )
    pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
    pField = pArea->lpFields + uiField - 1;
 
-   hb_retc( ( char * ) &( pField->uiType ) );
+   switch( pField->uiType )
+   {
+      case HB_IT_STRING:
+         hb_retc( "C" );
+         break;
+      case HB_IT_LONG:
+         hb_retc( "N" );
+         break;
+      case HB_IT_DATE:
+         hb_retc( "D" );
+         break;
+      case HB_IT_LOGICAL:
+         hb_retc( "L" );
+         break;
+      case HB_IT_MEMO:
+         hb_retc( "M" );
+         break;
+   }
 }
 
 HB_FUNC( FIELDSIZE )
