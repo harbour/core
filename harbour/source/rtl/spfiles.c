@@ -60,10 +60,10 @@ static BOOL FindFile( BYTE * pFilename, BYTE * path )
 
    HB_TRACE(HB_TR_DEBUG, ("FindFile(%s, %p)", (char*) pFilename, path));
 
-   pFilepath = hb_fsFNameSplit( pFilename );
+   pFilepath = hb_fsFNameSplit( (char*) pFilename );
    if( pFilepath->szPath )
    {
-      hb_fsFNameMerge( path, pFilepath );
+      hb_fsFNameMerge( (char*) path, pFilepath );
       bIsFile = hb_fsFile( path );
    }
    else
@@ -71,7 +71,7 @@ static BOOL FindFile( BYTE * pFilename, BYTE * path )
       if( hb_set.HB_SET_DEFAULT )
       {
          pFilepath->szPath = hb_set.HB_SET_DEFAULT;
-         hb_fsFNameMerge( path, pFilepath );
+         hb_fsFNameMerge( (char*) path, pFilepath );
          bIsFile = hb_fsFile( path );
       }
 
@@ -81,7 +81,7 @@ static BOOL FindFile( BYTE * pFilename, BYTE * path )
          while( !bIsFile && nextPath )
          {
             pFilepath->szPath = nextPath->szPath;
-            hb_fsFNameMerge( path, pFilepath );
+            hb_fsFNameMerge( (char*) path, pFilepath );
             bIsFile = hb_fsFile( path );
             nextPath = nextPath->pNext;
          }
@@ -132,12 +132,12 @@ FHANDLE hb_spCreate( BYTE * pFilename, USHORT uiAttr )
    if( ISCHAR( 1 ) )
    {
       BYTE path[ _POSIX_PATH_MAX + 1 ];
-      PHB_FNAME pFilepath = hb_fsFNameSplit( pFilename );
+      PHB_FNAME pFilepath = hb_fsFNameSplit( (char*) pFilename );
 
       if( ! pFilepath->szPath && hb_set.HB_SET_DEFAULT )
          pFilepath->szPath = hb_set.HB_SET_DEFAULT;
 
-      hb_fsFNameMerge( path, pFilepath );
+      hb_fsFNameMerge( (char*) path, pFilepath );
       hb_xfree( pFilepath );
 
       hFileHandle = hb_fsCreate( path, uiAttr );
@@ -155,12 +155,12 @@ FHANDLE hb_spCreateEx( BYTE * pFilename, USHORT uiAttr, USHORT uiFlags )
    if( ISCHAR( 1 ) )
    {
       BYTE path[ _POSIX_PATH_MAX + 1 ];
-      PHB_FNAME pFilepath = hb_fsFNameSplit( pFilename );
+      PHB_FNAME pFilepath = hb_fsFNameSplit( (char*) pFilename );
 
       if( ! pFilepath->szPath && hb_set.HB_SET_DEFAULT )
          pFilepath->szPath = hb_set.HB_SET_DEFAULT;
 
-      hb_fsFNameMerge( path, pFilepath );
+      hb_fsFNameMerge( (char*) path, pFilepath );
       hb_xfree( pFilepath );
 
       hFileHandle = hb_fsCreateEx( path, uiAttr, uiFlags );
