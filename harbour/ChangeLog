@@ -1,3 +1,21 @@
+19990729-18:50 GMT+1 Bruno Cantero <bruno@issnet.net>
+   + source/rdd/dbf0.prg, source/rdd/dbf1.c
+     Added RDD DBF
+   * source/rdd/rddsys.prg
+     Prepared for use ANNOUNCE/REQUEST keywords
+   * source/rdd/dbcmd.c
+     Added more functions and now the RDD system is a tree of RDD's
+   * tests/working/testrdd.prg
+     Changed for test two RDD's
+   * makedos.env
+     Added DBFNTXLIB=$(HARBOURDIR)/libs/libdbfntx.a
+   * source/rdd/makefile.dos
+     Changed to create $(HARBOURLIB) and $(DBFNTXLIB)
+     dbcmd.o, rddsys.o, dbf0.o and dbf1.o now in lharblib.a
+     dbfntx0.o and dbfntx1.o now in ldbfntxlib.a
+   * tests/working/makefile.dos
+     Added ldbfntxlib.a to link
+
 19990729-18:40 GMT+1 Bruno Cantero <bruno@issnet.net>
    * source/vm/hvm.c
      Remove all RDD references. Now it isn't necesary.

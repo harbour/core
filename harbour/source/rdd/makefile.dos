@@ -10,10 +10,12 @@ OBJPRG=$(CPRG:.c=.o)
 SRCC:= $(wildcard *.c)
 OBJC=$(SRCC:.c=.o)
 
-all:	$(HARBOURLIB) 
+all:	$(HARBOURLIB) $(DBFNTXLIB) 
 
 $(HARBOURLIB): ${OBJPRG} $(OBJC)
-	ar r $(HARBOURLIB) ${OBJC} ${OBJPRG}
+	ar r $(HARBOURLIB) dbcmd.o rddsys.o dbf0.o dbf1.o
+$(DBFNTXLIB): ${OBJPRG} $(OBJC)
+	ar r $(DBFNTXLIB) dbfntx0.o dbfntx1.o
 
 clean:
 	-del *.o

@@ -28,6 +28,7 @@
 #include "errorapi.h"
 #include "set.h"
 #include "rdd.api"
+#include "rddsys.ch"
 #include "ctoharb.h"
 #include "set.ch"
 
@@ -50,7 +51,8 @@ typedef struct _AREANODE
    struct _AREANODE * pNext;   /* Next WorkArea in the list */
 } AREANODE, * PAREANODE;
 
-void MyError( char * szError, char * szParam )
+/* TODO: must be changed to a hb_errorRT... */
+static void MyError( char * szError, char * szParam )
 {
    printf( "\n%s %s\n\7", szError, szParam );
 }
@@ -71,6 +73,8 @@ HARBOUR HB_FOUND( void );
 HARBOUR HB_RDDLIST( void );
 HARBOUR HB_RDDREGISTER( void );
 HARBOUR HB_RDDSETDEFAULT( void );
+HARBOUR HB_RDDSHUTDOWN( void );
+HARBOUR HB_RDDSYS( void );
 
 HB_INIT_SYMBOLS_BEGIN( dbCmd__InitSymbols )
 { "BOF",           FS_PUBLIC, HB_BOF,           0 },
@@ -88,45 +92,38 @@ HB_INIT_SYMBOLS_BEGIN( dbCmd__InitSymbols )
 { "FOUND",         FS_PUBLIC, HB_FOUND,         0 },
 { "RDDLIST",       FS_PUBLIC, HB_RDDLIST,       0 },
 { "RDDREGISTER",   FS_PUBLIC, HB_RDDREGISTER,   0 },
-{ "RDDSETDEFAULT", FS_PUBLIC, HB_RDDSETDEFAULT, 0 }
+{ "RDDSETDEFAULT", FS_PUBLIC, HB_RDDSETDEFAULT, 0 },
+{ "RDDSHUTDOWN",   FS_PUBLIC, HB_RDDSHUTDOWN,   0 }
 HB_INIT_SYMBOLS_END( dbCmd__InitSymbols );
 #if ! defined(__GNUC__)
 #pragma startup dbCmd__InitSymbols
 #endif
 
-static char * szDefDriver;      /* Default RDD name */
-static USHORT uiCurrArea;       /* Selectd area */
-static PRDDNODE pRDDList;       /* Registered RDD's */
-static USHORT uiNetError;       /* Error on Networked environments */
+extern STACK stack;
 
-static PAREANODE pWorkAreas;    /* WorkAreas */
-static PAREANODE pCurrArea;     /* Pointer to a selectd and valid area */
+static char * szDefDriver = 0;      /* Default RDD name */
+static USHORT uiCurrArea = 1;       /* Selectd area */
+static PRDDNODE pRddList = 0;       /* Registered RDD's */
+static USHORT uiNetError = 0;       /* Error on Networked environments */
 
-static void hb_CloseAll( void );
+static PAREANODE pWorkAreas = 0;    /* WorkAreas */
+static PAREANODE pCurrArea = 0;     /* Pointer to a selectd and valid area */
 
-void hb_rddInitialize( void )
+/* From strings.c */
+char * hb_strUpper( char * szText, long lLen );
+
+static void LinkRddSys( void )    /* Never must be called */
 {
-   szDefDriver = ( char * ) hb_xgrab( 1 );
-   szDefDriver[ 0 ] = '\0';
-   pRDDList = 0;
-   pWorkAreas = 0;
-   pCurrArea = 0;
-   uiCurrArea = 1;
-   uiNetError = 0;
+   HB_RDDSYS();
+   LinkRddSys();       /* just to keep compiler silent */
 }
 
-void hb_rddRelease( void )
+static void hb_CheckRdd( void )
 {
-   PRDDNODE pRDDNode;
-
-   hb_CloseAll();
-   hb_xfree( szDefDriver );
-
-   while( pRDDList )
+   if( !szDefDriver )
    {
-      pRDDNode = pRDDList;
-      pRDDList = pRDDList->pNext;
-      hb_xfree( pRDDNode );
+      szDefDriver = ( char * ) hb_xgrab( 1 );
+      szDefDriver[ 0 ] = '\0';
    }
 }
 
@@ -155,27 +152,27 @@ static void hb_CloseAll( void )
    pWorkAreas = 0;
 }
 
-static PRDDNODE hb_FindRDDNode( char * szDriver )
+static PRDDNODE hb_FindRddNode( char * szDriver )
 {
-   PRDDNODE pRDDNode;
+   PRDDNODE pRddNode;
 
-   pRDDNode = pRDDList;
-   while( pRDDNode )
+   pRddNode = pRddList;
+   while( pRddNode )
    {
-      if( strcmp( pRDDNode->szName, szDriver ) == 0 ) /* Matched RDD */
-	 return pRDDNode;
-      pRDDNode = pRDDNode->pNext;
+      if( strcmp( pRddNode->szName, szDriver ) == 0 ) /* Matched RDD */
+	 return pRddNode;
+      pRddNode = pRddNode->pNext;
    }
    return 0;
 }
 
 static BOOL hb_rddRegister( char * szDriver, USHORT uiType )
 {
-   PRDDNODE pRDDNode, pRDDNewNode;
+   PRDDNODE pRddNode, pRddNewNode;
    PDYNSYM pGetFuncTable;
    char * szGetFuncTable;
 
-   if( hb_FindRDDNode( szDriver ) )    /* Duplicated RDD */
+   if( hb_FindRddNode( szDriver ) )    /* Duplicated RDD */
       return FALSE;
 
    szGetFuncTable = ( char * ) hb_xgrab( strlen( szDriver ) + 14 );
@@ -187,32 +184,33 @@ static BOOL hb_rddRegister( char * szDriver, USHORT uiType )
       return FALSE;              /* Not valid RDD */
 
    /* Create a new RDD node */
-   pRDDNewNode = ( PRDDNODE ) hb_xgrab( sizeof( RDDNODE ) );
-   memset( pRDDNewNode, 0, sizeof( RDDNODE ) );
+   pRddNewNode = ( PRDDNODE ) hb_xgrab( sizeof( RDDNODE ) );
+   memset( pRddNewNode, 0, sizeof( RDDNODE ) );
 
    /* Fill the new RDD node */
-   strncpy( pRDDNewNode->szName, szDriver, HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
-   pRDDNewNode->uiType = uiType;
+   strncpy( pRddNewNode->szName, szDriver, HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
+   pRddNewNode->uiType = uiType;
 
-   PushSymbol( pGetFuncTable->pSymbol );  /* Call <szDriver>_GETFUNCTABLE() */
+   /* Call <szDriver>_GETFUNCTABLE() */
+   PushSymbol( pGetFuncTable->pSymbol );
    PushNil();
-   PushLong( ( long ) &pRDDNewNode->uiFunctions );
-   PushLong( ( long ) &pRDDNewNode->pTable );
+   PushLong( ( long ) &pRddNewNode->uiFunctions );
+   PushLong( ( long ) &pRddNewNode->pTable );
    Do( 2 );
    if ( hb_parni( -1 ) != SUCCESS )
    {
-      hb_xfree( pRDDNewNode );         /* Delete de new RDD node */
+      hb_xfree( pRddNewNode );         /* Delete de new RDD node */
       return FALSE;
    }
 
-   if( !pRDDList )
-      pRDDList = pRDDNewNode;          /* First RDD node */
+   if( !pRddList )                  /* First RDD node */
+      pRddList = pRddNewNode;
    else
    {
-      pRDDNode = pRDDList;
-      while( pRDDNode->pNext )
-	 pRDDNode = pRDDNode->pNext;   /* Locate the last RDD node */
-      pRDDNode->pNext = pRDDNewNode;   /* Add the new RDD node */
+      pRddNode = pRddList;
+      while( pRddNode->pNext )
+	 pRddNode = pRddNode->pNext;   /* Locate the last RDD node */
+      pRddNode->pNext = pRddNewNode;   /* Add the new RDD node */
    }
    return TRUE;
 }
@@ -239,8 +237,94 @@ static void hb_SelectFirstAvailable( void )
    pCurrArea = 0;   /* Selected WorkArea must be created */
 }
 
+ERRCODE defUnSupported_V( AREAP pArea )
+{
+   printf( "Calling defUnSupported()\n" );
+   return SUCCESS;
+}
+
+ERRCODE defUnSupported_L( AREAP pArea, LONG lLong )
+{
+   printf( "Calling defUnSupported()\n" );
+   return SUCCESS;
+}
+
+ERRCODE defBof( AREAP pArea, BOOL * pBof )
+{
+   printf( "Calling defBof()\n" );
+   return SUCCESS;
+}
+
+ERRCODE defEof( AREAP pArea, BOOL * pEof )
+{
+   printf( "Calling defEof()\n" );
+   return SUCCESS;
+}
+
+ERRCODE defFound( AREAP pArea, BOOL * pFound )
+{
+   printf( "Calling defFound()\n" );
+   return SUCCESS;
+}
+
+ERRCODE defGoBottom( AREAP pArea )
+{
+   printf( "Calling defGoBottom()\n" );
+   return SUCCESS;
+}
+
+ERRCODE defGoTo( AREAP pArea, LONG lRecNo )
+{
+   printf( "Calling defGoTo()\n" );
+   return SUCCESS;
+}
+
+ERRCODE defGoTop( AREAP pArea )
+{
+   printf( "Calling defGoTop()\n" );
+   return SUCCESS;
+}
+
+ERRCODE defSkip( AREAP pArea, LONG lToSkip )
+{
+   printf( "Calling defSkip()\n" );
+   return SUCCESS;
+}
+
+ERRCODE defClose( AREAP pArea )
+{
+   printf( "Calling defClose()\n" );
+   return SUCCESS;
+}
+
+ERRCODE defOpen( AREAP pArea, DBOPENINFOP pOpenInfo )
+{
+   printf( "Calling defOpen()\n" );
+   return SUCCESS;
+}
+
+ERRCODE defStructSize( AREAP pArea, USHORT * uiSize )
+{
+   printf( "Calling defStructSize()\n" );
+   return SUCCESS;
+}
+
+static RDDFUNCS defTable = { defBof,
+			     defEof,
+			     defFound,
+			     defUnSupported_V,
+			     defUnSupported_L,
+			     defUnSupported_V,
+			     defSkip,
+			     defClose,
+			     defOpen, /* Not defCreate */
+			     defOpen,
+			     defStructSize
+			   };
+
 ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTable, PBYTE szDrvName )
 {
+   PRDDNODE pRddNode;
    USHORT uiCount;
    DBENTRYP_V * pFunction, * pSubFunction;
 
@@ -248,7 +332,15 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
       return FAILURE;
 
    /* Copy the pSuperTable into pTable */
-   memcpy( pTable, pSuperTable, sizeof( RDDFUNCS ) );
+   if( !szDrvName )
+      memcpy( pTable, &defTable, sizeof( RDDFUNCS ) );
+   else
+   {
+      szDrvName = hb_strUpper( szDrvName, strlen( szDrvName ) );
+      if( !( pRddNode = hb_FindRddNode( szDrvName ) ) )
+	 return FAILURE;
+      memcpy( pTable, &pRddNode->pTable, sizeof( RDDFUNCS ) );
+   }
 
    /* Copy the non NULL entries from pSubTable into pTable */
    pFunction = ( DBENTRYP_V * ) pTable;
@@ -298,13 +390,15 @@ HARBOUR HB_DBCLOSEAREA( void )
 	 MyError( "Internal error ", "9xxxx" );
    }
 
-   if( pCurrArea->pPrev )
-      pCurrArea->pPrev->pNext = pCurrArea->pNext;
-   if( pCurrArea->pNext )
-      pCurrArea->pNext->pPrev = pCurrArea->pPrev;
-
    if( pWorkAreas == pCurrArea )  /* Empty list */
       pWorkAreas = 0;
+   else
+   {
+      if( pCurrArea->pPrev )
+	 pCurrArea->pPrev->pNext = pCurrArea->pNext;
+      if( pCurrArea->pNext )
+	 pCurrArea->pNext->pPrev = pCurrArea->pPrev;
+   }
 
    hb_xfree( pCurrArea->pArea );
    hb_xfree( pCurrArea );
@@ -316,7 +410,7 @@ HARBOUR HB_DBCREATE( void )
    char * szFileName, * szDriver;
    PHB_ITEM pStruct;
    WORD wLen;
-   PRDDNODE pRDDNode;
+   PRDDNODE pRddNode;
    DBENTRYP_SP pFunction1;
    DBENTRYP_VP pFunction2;
    AREAP pTempArea;
@@ -331,20 +425,21 @@ HARBOUR HB_DBCREATE( void )
       return;
    }
 
+   hb_CheckRdd();
    szDriver = hb_parc( 3 );
    if( ( wLen = strlen( szDriver ) ) > 0 )
       szDriver = hb_strUpper( szDriver, strlen( szDriver ) );
    else
       szDriver = szDefDriver;
 
-   if( !( pRDDNode = hb_FindRDDNode( szDriver ) ) )
+   if( !( pRddNode = hb_FindRddNode( szDriver ) ) )
    {
       MyError( "DBCMD/1015 Argument error", "DBCREATE" );
       return;
    }
 
-   pFunction1 = pRDDNode->pTable.structSize;
-   pFunction2 = pRDDNode->pTable.create;
+   pFunction1 = pRddNode->pTable.structSize;
+   pFunction2 = pRddNode->pTable.create;
    if( ! pFunction1 || ! pFunction2 )
    {
       MyError( "Internal error ", "9xxxx" );
@@ -363,7 +458,7 @@ HARBOUR HB_DBCREATE( void )
    if( uiSize != sizeof( AREA ) )   /* Size of Area changed */
       pTempArea = ( AREAP ) hb_xrealloc( pTempArea, uiSize );
 
-   pRDDNode->uiAreaSize = uiSize; /* Update the size of WorkArea */
+   pRddNode->uiAreaSize = uiSize; /* Update the size of WorkArea */
 
    pInfo.abName = ( PBYTE ) szFileName;
    if( ( * pFunction2 )( pTempArea, &pInfo ) != SUCCESS )
@@ -523,7 +618,7 @@ HARBOUR HB_DBUSEAREA( void )
 {
    char * szDriver, * szFileName, * szAlias;
    WORD wLen;
-   PRDDNODE pRDDNode;
+   PRDDNODE pRddNode;
    PAREANODE pAreaNode;
    USHORT uiSize;
    DBENTRYP_V pFunction1;
@@ -543,10 +638,17 @@ HARBOUR HB_DBUSEAREA( void )
 	 MyError( "Internal error ", "9xxxx" );
 	 return;
       }
-      if( pCurrArea->pPrev )
-	 pCurrArea->pPrev->pNext = pCurrArea->pNext;
-      if( pCurrArea->pNext )
-	 pCurrArea->pPrev = pCurrArea->pPrev;
+
+      if( pWorkAreas == pCurrArea )  /* Empty list */
+	 pWorkAreas = 0;
+      else
+      {
+	 if( pCurrArea->pPrev )
+	    pCurrArea->pPrev->pNext = pCurrArea->pNext;
+	 if( pCurrArea->pNext )
+	    pCurrArea->pNext->pPrev = pCurrArea->pPrev;
+      }
+
       hb_xfree( pCurrArea->pArea );
       hb_xfree( pCurrArea );
       pCurrArea = 0;
@@ -558,7 +660,7 @@ HARBOUR HB_DBUSEAREA( void )
    else
       szDriver = szDefDriver;
 
-   if( !( pRDDNode = hb_FindRDDNode( szDriver ) ) )
+   if( !( pRddNode = hb_FindRddNode( szDriver ) ) )
    {
       MyError( "DBCMD/1015 Argument error", "DBCREATE" );
       return;
@@ -580,11 +682,11 @@ HARBOUR HB_DBUSEAREA( void )
 
    pCurrArea = ( PAREANODE ) hb_xgrab( sizeof( AREANODE ) );
 
-   if( pRDDNode->uiAreaSize == 0 ) /* Calculate the size of WorkArea */
+   if( pRddNode->uiAreaSize == 0 ) /* Calculate the size of WorkArea */
    {
       uiSize = sizeof( AREA );    /* Default Size Area */
       pCurrArea->pArea = hb_xgrab( uiSize );
-      pFunction2 = pRDDNode->pTable.structSize;
+      pFunction2 = pRddNode->pTable.structSize;
 
       /* Need more space? */
       if( !pFunction2 || ( * pFunction2 )( ( AREAP ) pCurrArea->pArea, &uiSize ) != SUCCESS )
@@ -599,12 +701,12 @@ HARBOUR HB_DBUSEAREA( void )
       if( uiSize != sizeof( AREA ) )   /* Size of Area changed */
 	 pCurrArea->pArea = hb_xrealloc( pCurrArea->pArea, uiSize );
 
-      pRDDNode->uiAreaSize = uiSize; /* Update the size of WorkArea */
+      pRddNode->uiAreaSize = uiSize; /* Update the size of WorkArea */
    }
    else
-      pCurrArea->pArea = hb_xgrab( pRDDNode->uiAreaSize );
+      pCurrArea->pArea = hb_xgrab( pRddNode->uiAreaSize );
 
-   ( ( AREAP ) pCurrArea->pArea )->lprfsHost = &pRDDNode->pTable;
+   ( ( AREAP ) pCurrArea->pArea )->lprfsHost = &pRddNode->pTable;
 
    if( !( ( AREAP ) pCurrArea->pArea )->lprfsHost )
    {
@@ -621,7 +723,7 @@ HARBOUR HB_DBUSEAREA( void )
    pInfo.fShared = ISLOG( 5 ) ? hb_parl( 5 ) : !hb_set.HB_SET_EXCLUSIVE;
    pInfo.fReadonly = ISLOG( 6 ) ? hb_parl( 6 ) : FALSE;
 
-   pFunction3 = pRDDNode->pTable.open;
+   pFunction3 = pRddNode->pTable.open;
    if( !pFunction3 || ( * pFunction3 )( ( AREAP ) pCurrArea->pArea, &pInfo ) != SUCCESS )
    {
       hb_xfree( pCurrArea->pArea );
@@ -698,28 +800,21 @@ HARBOUR HB_FOUND( void )
 HARBOUR HB_RDDLIST( void )
 {
    USHORT uiType;
-   PHB_ITEM pSubArray, pName, pType;
-   PRDDNODE pRDDNode;
+   PHB_ITEM pName;
+   PRDDNODE pRddNode;
 
-   uiType = hb_parni( 1 );       /* 0 all types of RDD's */
+   hb_CheckRdd();
    hb_arrayNew( &stack.Return, 0 );
-   pSubArray = hb_itemArrayNew( 2 );
    pName = hb_itemNew( 0 );
-   pType = hb_itemNew( 0 );
-   pRDDNode = pRDDList;
-   while( pRDDNode )
+   pRddNode = pRddList;
+   uiType = hb_parni( 1 );       /* 0 all types of RDD's */
+   while( pRddNode )
    {
-      if( ( uiType == 0 ) || ( pRDDNode->uiType == uiType ) )
-      {
-	 hb_arraySet( pSubArray, 1, hb_itemPutC( pName, pRDDNode->szName ) );
-	 hb_arraySet( pSubArray, 2, hb_itemPutNL( pType, pRDDNode->uiType ) );
-	 hb_arrayAdd( &stack.Return, pSubArray );
-      }
-      pRDDNode = pRDDNode->pNext;
+      if( ( uiType == 0 ) || ( pRddNode->uiType == uiType ) )
+	 hb_arrayAdd( &stack.Return, hb_itemPutC( pName, pRddNode->szName ) );
+      pRddNode = pRddNode->pNext;
    }
    hb_itemRelease( pName );
-   hb_itemRelease( pType );
-   hb_itemRelease( pSubArray );
 }
 
 HARBOUR HB_RDDREGISTER( void )
@@ -730,6 +825,7 @@ HARBOUR HB_RDDREGISTER( void )
    szDriver = hb_parc( 1 );
    if( ( wLen = strlen( szDriver ) ) > 0 )
    {
+      hb_CheckRdd();
       szDriver = hb_strUpper( szDriver, wLen );
       if( hb_rddRegister( szDriver, hb_parni( 2 ) ) )
 	 return;
@@ -742,6 +838,7 @@ HARBOUR HB_RDDSETDEFAULT( void )
    char * szNewDriver;
    WORD wLen;
 
+   hb_CheckRdd();
    hb_retc( szDefDriver );
    szNewDriver = hb_parc( 1 );
    if( ( wLen = strlen( szNewDriver ) ) > 0 )
@@ -750,6 +847,18 @@ HARBOUR HB_RDDSETDEFAULT( void )
       szDefDriver = ( char * ) hb_xrealloc( szDefDriver, wLen + 1 );
       strcpy( szDefDriver, szNewDriver );
    }
-   else
-      MyError( "Argument error", "RDDSETDEFAULT" );
+}
+
+HARBOUR HB_RDDSHUTDOWN( void )
+{
+   PRDDNODE pRddNode;
+
+   hb_CloseAll();
+   hb_xfree( szDefDriver );
+   while( pRddList )
+   {
+      pRddNode = pRddList;
+      pRddList = pRddList->pNext;
+      hb_xfree( pRddNode );
+   }
 }

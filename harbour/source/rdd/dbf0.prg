@@ -22,22 +22,15 @@
    You can contact me at: bruno@issnet.net
  */
 
-// Standard Harbour RDDSys system
+#include "rddsys.ch"
 
-//ANNOUNCE RDDSYS
-proc RDDSYS; return
+//ANNOUNCE DBF
+proc DBF; return
 
-init procedure RddInit
+init procedure DBFInit
 
-   REQUEST DBF
-   REQUEST DBFNTX
+   REQUEST _DBF
 
-   rddSetDefault( "DBFNTX" )
-
-return
-
-exit procedure RddExit
-
-   rddShutdown()
+   rddRegister( "DBF", RDT_FULL )
 
 return
