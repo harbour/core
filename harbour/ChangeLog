@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-06-08 02:25 UTC+0300 Phil Krylov <phil@newstar.rinet.ru>
+  * source/debug/debugger.prg
+    + Added preliminary CLD-compatible scripting capabilities.
+
 2004-06-07 18:15 UTC+0300 Phil Krylov <phil@newstar.rinet.ru>
   * source/debug/dbgmenu.prg
   * source/debug/debugger.prg
