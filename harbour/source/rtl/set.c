@@ -99,13 +99,16 @@ HARBOUR HB_SETCENTURY (void)
       else size += 2;
       /* Create the new date format */
       szNewFormat = (char*)_xgrab (size + 1);
-      if (y_start > 0) memcpy (szNewFormat, szDateFormat, y_start);
-      szNewFormat [y_start] = 0;
-      strcat (szNewFormat, "YY");
-      if (hb_set_century) strcat (szNewFormat, "YY");
-      strcat (szNewFormat, szDateFormat + y_stop);
-      _xfree (szDateFormat);
-      hb_set.HB_SET_DATEFORMAT = szNewFormat;
+      if (szNewFormat)
+      {
+         if (y_start > 0) memcpy (szNewFormat, szDateFormat, y_start);
+         szNewFormat [y_start] = 0;
+         strcat (szNewFormat, "YY");
+         if (hb_set_century) strcat (szNewFormat, "YY");
+         if (y_stop < strlen (szDateFormat)) strcat (szNewFormat, szDateFormat + y_stop);
+         _xfree (szDateFormat);
+         hb_set.HB_SET_DATEFORMAT = szNewFormat;
+      }
    }
 }
 
@@ -339,10 +342,16 @@ void InitializeSets (void)
 
 void ReleaseSets (void)
 {
-   _xfree (hb_set.HB_SET_COLOR);
-   _xfree (hb_set.HB_SET_DATEFORMAT);
-   _xfree (hb_set.HB_SET_DEFAULT);
-   _xfree (hb_set.HB_SET_DELIMCHARS);
-   _xfree (hb_set.HB_SET_DEVICE);
-   _xfree (hb_set.HB_SET_PATH);
+   if (hb_set.HB_SET_COLOR)
+      _xfree (hb_set.HB_SET_COLOR);
+   if (hb_set.HB_SET_DATEFORMAT)
+      _xfree (hb_set.HB_SET_DATEFORMAT);
+   if (hb_set.HB_SET_DEFAULT)
+      _xfree (hb_set.HB_SET_DEFAULT);
+   if (hb_set.HB_SET_DELIMCHARS)
+      _xfree (hb_set.HB_SET_DELIMCHARS);
+   if (hb_set.HB_SET_DEVICE)
+      _xfree (hb_set.HB_SET_DEVICE);
+   if (hb_set.HB_SET_PATH)
+      _xfree (hb_set.HB_SET_PATH);
 }
