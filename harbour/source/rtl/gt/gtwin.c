@@ -77,7 +77,7 @@ static HANDLE HOsave;
 /* static HANDLE HSsave; */
 static HANDLE HDOutput  = INVALID_HANDLE_VALUE;
 /* static HANDLE HDStealth = INVALID_HANDLE_VALUE; */
-static HANDLE HInput    = INVALID_HANDLE_VALUE;
+HANDLE HInput    = INVALID_HANDLE_VALUE;
 static HANDLE HOutput   = INVALID_HANDLE_VALUE;
 static HANDLE HStealth  = INVALID_HANDLE_VALUE; /* DispBegin buffer */
 static HANDLE HOriginal;                      /* used to restore before quit */
@@ -110,6 +110,7 @@ void hb_gt_Init( void )
 {
    LOG( "Initializing" );
    HInput = GetStdHandle( STD_INPUT_HANDLE );
+   SetConsoleMode( HInput, 0 );
    /* ptucker */
    HOriginal = HOutput = HCursor = CreateFile( "CONOUT$",     /* filename    */
                        GENERIC_READ    | GENERIC_WRITE,       /* Access flag */

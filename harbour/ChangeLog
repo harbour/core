@@ -1,3 +1,31 @@
+19991015-22:00 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * source/rtl/inkey.c
+     - Removed Windows #ifdefs from DOS-style keyboard input.
+     - Removed special handling for Borland C when used with Windows.
+     - Removed Cygwin from Unix-like keyboard input support.
+     + Windows keyboard input now uses Windows Console Mode functions
+       GetNumberOfConsoleInputEvents() and ReadConsoleInput() and a
+       whole lot of key code translation. NOTE 1: If INKEY_EXTENDED
+       is used, then device-independent key codes are used instead of
+       keyboard scan codes and no attempt is made to map extended keys
+       to their Clipper equivalents. All key codes have 256 added to
+       them. Enhanced adds 512, Shift adds 1024, Left Ctrl adds 2048,
+       Right Ctrl adds 4096, Left Alt adds 8192, and Right Alt adds
+       16,384. Normal keys are in the range 0 to 255. A value that
+       is larger than 255 represents an extended key. All state keys
+       generate key codes. Use the test program INKEYTST with two 
+       parameters (such as S and X) to display the codes. NOTE 2: This
+       is just an experiment to see if allowing Harbour to get all
+       key codes when run under Windows is a good idea. NOTE 3: If
+       INKEY_EXTENDED is not used, then keyboard scan codes are used
+       and extended codes are translated to Clipper codes( and state
+       keys do not generate key codes).
+
+   * source/rtl/gt/gtwin.c
+     % Removed 'static' declaration from 'HANDLE HInput;', so that
+       hb_inkeyPoll() doesn't have to duplicate the initialization.
+
 Fri Oct 15 16:42:30 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* config/lib.cf: 
