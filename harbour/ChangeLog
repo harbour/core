@@ -7,6 +7,21 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     * fix of a bug in RANGEREPL() and RANGEREM(): return string too long,
+       reported by Guenther Steiner <byte-one@aon.at>
+	
+
+2002-05-04 17:47 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * source\rdd\dbcmd.c
+     ! fixed return value of dbGoTo()
+     + added support of 4th value of dbOrderInfo
+
+   * include\hbrddcdx.h
+   * source\rdd\dbfcdx\dbfcdx2.h
+   * source\rdd\dbfcdx\dbfcdx1.c
+     + fixed support for dbSeek(last)
+     + added scope support: ordScope, dbOrderInfo(..scope..),
+         ordKeyCount, ordKeyNo.
      ! fixed found() flag when last record in order must be
        filtered (eg: deleted), bug reported by Lorenzo Fiorini.
      + added dummy handler for DBOI_CUSTOM.
