@@ -20,11 +20,11 @@ function Main()
    oTo   := TTextFile():New( "hello.out", "W" )
 
    QOut( "What's in oFrom" )
-   HBDebug( { oFrom, aoMethod( oFrom ) } )
+   Debug( { oFrom, aoMethod( oFrom ) } )
 
    QOut()
    QOut( "What's in oFrom:TEmpty" )
-   HBDebug( { oFrom:TEmpty, aoMethod( oFrom:TEmpty ) } )
+   Debug( { oFrom:TEmpty, aoMethod( oFrom:TEmpty ) } )
 
    QOut()
    QOut( "Let's call Run() from TEmpty : " )
@@ -45,7 +45,7 @@ function Main()
    oFrom:Dispose()
    oTo:Dispose()
 
-//   HBDebug( __aGlobalStack() )  // Stack is OK!
+//   Debug( __aGlobalStack() )  // Stack is OK!
 
 return nil
 

@@ -25,13 +25,13 @@ function Main( cFrom, cTo )
    cTo   := Default( cTo,   "strip.out" )
 
    oFrom := TTextFile()
-//   HBDebug( aoMethod( oFrom ) )
+//   Debug( aoMethod( oFrom ) )
    oFrom:New( cFrom, "R" )
    oTo   := TTextFile()
-//   HBDebug( aoMethod( oTo ) )
+//   Debug( aoMethod( oTo ) )
    oTo:New( cTo  , "W" )
 
-   do while !oFrom:lEoF
+   do while !oFrom:EoF()
       cOut := oFrom:Run()
       if alltrim(cOut) != ""
          oTo:Run( cOut )
@@ -64,14 +64,17 @@ function TTextFile()                            // Parameter = dirty
                                                 // R = read, W = write
 
       oFile:AddMethod( "New"    , @New()     )  // Constructor
-      oFile:AddMethod( "Run"    , @Run()     )  // Get/set data
       oFile:AddMethod( "Dispose", @Dispose() )  // Clean up code
       oFile:AddMethod( "Read"   , @Read()    )  // Read line
       oFile:AddMethod( "WriteLn", @WriteLn() )  // Write line
-      oFile:AddMethod( "Write"  , @Write()   )  // Write without CR
-//      oFile:AddMethod( "EoF"    , @EoF()     )  // End of file as function
       oFile:AddMethod( "Goto"   , @Goto()    )  // Go to line
 
+      oFile:AddInline( "Run"    , ;             // Get/set data
+      {|self,xTxt,lCRLF|If( ::cMode == "R",::Read(),::WriteLn(xTxt, lCRLF)) } )
+      oFile:AddInline( "Write"  , {|self, xTxt|::WriteLn( xTxt, .F. ) } )
+                                                // Write without CR
+      oFile:AddInline( "EoF"    , {|self|::lEoF} )
+                                                // End of file as function
       oFile:Create()
    endif
 return  oFile:Instance()
@@ -110,19 +113,6 @@ function New( cFileName, cMode, nBlock )
    ::nBlockSize := Default( nBlock, 4096 )
 
 return self
-
-
-function Run( xTxt, lCRLF )
-
-   local self := QSelf()
-   local xRet
-
-   if ::cMode == "R"
-      xRet := ::Read()
-   else
-      xRet := ::WriteLn( xTxt, lCRLF )
-   endif
-return xRet
 
 
 //
@@ -226,19 +216,6 @@ function WriteLn( xTxt, lCRLF )
       ::nLine := ::nLine + 1
    endif
 return self
-
-
-function Write( xTxt )
-
-   local self := QSelf()
-
-return ::WriteLn( xTxt, .F. )
-
-
-//function EoF()
-//
-//   local self := QSelf()
-//return ::lEoF
 
 
 //

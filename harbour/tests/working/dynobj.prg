@@ -14,7 +14,7 @@ function Main()
    local nSeq
 
    QOut( "What methods are in the class :" )
-   HBDebug( aoMethod( oForm ) )
+   Debug( aoMethod( oForm ) )
 
 /* Let's add an inline at run-time. Should already be possible */
 
@@ -24,7 +24,7 @@ function Main()
       {|self| ( ::nRight  - ::nLeft ) * ( ::nBottom - ::nTop ) } )
 
    QOut( "What methods are in the class :" )
-   HBDebug( aoMethod( oForm ) )
+   Debug( aoMethod( oForm ) )
 
    QOut( "What is the Form area ?" )
    QOut( oForm:CalcArea() )
@@ -34,7 +34,7 @@ function Main()
    oAddMethod( oForm, "Smile", @Smile() )
 
    QOut( "What methods are in the class :" )
-   HBDebug( aoMethod( oForm ) )
+   Debug( aoMethod( oForm ) )
 
    QOut( "Smile please " )
    oForm:Smile()
@@ -42,7 +42,7 @@ function Main()
    Pause()
 
    QOut( "Data items before" )
-   HBDebug( oForm )
+   Debug( oForm )
 
    QOut( "Let's add an additional data item" )
 
@@ -51,7 +51,7 @@ function Main()
    oForm:cHelp := "This is a real tricky test"
 
    QOut( "Data items after" )
-   HBDebug( oForm )
+   Debug( oForm )
 
    Pause()
 
@@ -71,31 +71,31 @@ function Main()
    QOut( oForm:CalcArea() )
 
    QOut( "What methods are in the class :" )
-   HBDebug( aoMethod( oForm ) )
+   Debug( aoMethod( oForm ) )
 
    QOut( "Delete CalcArea" )
    oDelInline( oForm, "CalcArea" )
 
    QOut( "What methods are in the class :" )
-   HBDebug( aoMethod( oForm ) )
+   Debug( aoMethod( oForm ) )
 
    QOut( "Delete Smile" )
    oDelMethod( oForm, "Smile" )
 
    QOut( "What methods are in the class :" )
-   HBDebug( aoMethod( oForm ) )
+   Debug( aoMethod( oForm ) )
 
    Pause()
 
    QOut( "Data items before" )
-   HBDebug( oForm )
+   Debug( oForm )
 
    QOut( "Let's delete cHelp" )
 
    oDelData( oForm, "cHelp" )
    
    QOut( "Data items after" )
-   HBDebug( oForm )
+   Debug( oForm )
 
 /*   oForm:cHelp := "Please crash" */
 

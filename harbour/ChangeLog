@@ -1,3 +1,8 @@
+19990613 16:35 CET Eddie Runia
+  * tests/working/strip.prg; tests/working/inherit.prg;
+    tests/working/dynobj.prg
+    Were also not transmitted.
+
 19990613 15:30 CET Eddie Runia
   * source/tools/debug.c; source/tools/stringp.prg
     Changes 1990612 08:00 were reverted ??
