@@ -898,16 +898,6 @@ RETURN ( REPLICATE( "0", KOLZN - LEN( LTRIM( STR( NOM ) ) ) ) + LTRIM( STR( NOM 
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
-*+    Function readexit()
-*+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-FUNCTION readexit
-
-RETURN .t.
-
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
 *+    Function updated()
 *+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北

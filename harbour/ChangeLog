@@ -1,3 +1,7 @@
+19991004-22:34 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/db_brows.prg
+    - READEXIT() removed since it's now part of the RTL.
+
 19991004-21:34 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/*.bat
     ! Reworked, standardized, simplified. Please test them.
