@@ -21,7 +21,7 @@ LOCAL nPrev:=SECONDS()
   nH3 = HB_IDLEADD( {|| DEVPOS(0,41), IIF(n=4,n:=1,n++),DEVOUT(aSign[n]) } )
   nH4 = HB_IDLEADD( {|| DEVPOS(0,61), DEVOUT( 1000*(SECONDS()-nPrev) ), nPrev:=SECONDS()} )
   
-  INKEY( 10 )
+  INKEY( 5 )
   HB_IDLEDEL( nH3 )
   HB_IDLEDEL( nH2 )
   HB_IDLEDEL( nH1 )
@@ -40,7 +40,7 @@ LOCAL cb
   b[1] :=b
   b[2] :=a
   
-  cb := {|x| IIF( x>10, IIF(x=0,0,EVAL(cb,x-1)), DEVOUT(x))}
+//  cb := {|x| IIF( x>10, IIF(x=0,0,EVAL(cb,x-1)), DEVOUT(x))}
 //  EVAL( cb, 20 )
 //  INKEY( .5 )
   

@@ -110,7 +110,7 @@ void hb_gcFree( void *pBlock )
          pAlloc->pNext->pPrev = pAlloc->pPrev;
          if( s_pCurrBlock == pAlloc )
             s_pCurrBlock = pAlloc->pNext;
-         if( pAlloc->pNext == pAlloc->pPrev )
+         if( pAlloc->pPrev == pAlloc->pPrev && pAlloc == s_pCurrBlock )
             s_pCurrBlock = NULL;    /* this was the last block */
          HB_GARBAGE_FREE( pAlloc );
       }

@@ -59,6 +59,8 @@ static HB_ITEM_PTR s_pIdleTasks = NULL;
 static USHORT s_uiIdleTask = 0;
 /* number of tasks in the list */
 static USHORT s_uiIdleMaxTask = 0;
+/* flag to prevent recursive calls of hb_idleState() */
+static BOOL s_bIamIdle = FALSE;
 
 static void hb_releaseCPU( void )
 {
@@ -101,14 +103,19 @@ static void hb_releaseCPU( void )
 /* performs all tasks defined for idle state */
 void hb_idleState( void )
 {
-   hb_releaseCPU();
-   hb_gcCollect();
-   
-   if( s_pIdleTasks )
+   if( ! s_bIamIdle )
    {
-       hb_vmEvalBlock( s_pIdleTasks + s_uiIdleTask );
-       if( ++s_uiIdleTask == s_uiIdleMaxTask )
-           s_uiIdleTask = 0;
+      s_bIamIdle = TRUE;
+      hb_releaseCPU();
+      hb_gcCollect();
+   
+      if( s_pIdleTasks )
+      {
+         hb_vmEvalBlock( s_pIdleTasks + s_uiIdleTask );
+         if( ++s_uiIdleTask == s_uiIdleMaxTask )
+            s_uiIdleTask = 0;
+      }
+      s_bIamIdle = FALSE;
    }
 }
 
