@@ -80,7 +80,7 @@
 
 #if !defined(__GNUC__) && !defined(__IBMCPP__)
    #if 0
-      /* This makes BCC 551 fail with Bison 1.30, even with the 
+      /* This makes BCC 551 fail with Bison 1.30, even with the
          supplied harbour.simple file, which makes Bison 1.30 blow.
          [vszakats] */
       void __yy_memcpy ( char*, const char*, unsigned int ); /* to satisfy Borland compiler */
@@ -488,7 +488,7 @@ Expression : SimpleExpression                 { $$ = $1; HB_MACRO_CHECK( $$ ); }
            | PareExpList                      { $$ = $1; HB_MACRO_CHECK( $$ ); }
 ;
 
-RootParamList : EmptyExpression ',' { 
+RootParamList : EmptyExpression ',' {
                                       if( !(HB_MACRO_DATA->Flags & HB_MACRO_GEN_LIST) )
                                       {
                                          HB_TRACE(HB_TR_DEBUG, ("macro -> invalid expression: %s", HB_MACRO_DATA->string));
@@ -501,6 +501,7 @@ RootParamList : EmptyExpression ',' {
                                       HB_MACRO_DATA->iListElements = 1;
                                       $$ = hb_compExprAddListExpr( ( HB_MACRO_DATA->Flags & HB_MACRO_GEN_PARE ) ? hb_compExprNewList( $1 ) : hb_compExprNewArgList( $1 ), $4 );
                                     }
+              ;
 
 AsParamList  : RootParamList                    { $$ = $1; }
              | AsParamList ',' EmptyExpression  { HB_MACRO_DATA->iListElements++; $$ = hb_compExprAddListExpr( $1, $3 ); }

@@ -7,6 +7,15 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2002-06-05 20:52 UTC-0800 Ron Pinkas <ron@ronpinkas.com>
+  * make_b32.bat
+    - Commented SET BISON_SIMPLE line as it causes incompatibility with current version of Bison.
+
+  * source/compiler/harbour.sly
+  * source/macro/macro.y
+    + Added missing ; as per Bison 1.35 warnings.
+
 2002-06-05 18:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/gtwin/gtwin.c
     ! Fixed Esc key translation problem that only occurred in some
