@@ -1,3 +1,11 @@
+2000-07-10 13:05 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+    * source/rdd/dbcmd.c
+      * modified: hb_rddCloseAll()
+      + added: virtual methods defclearRel(), defsetRel()
+      + added: functions dbSetRelation(), dbClearRelation()
+    * contrib/rdd_ads/ads1.c
+      + added: virtual methods adsclearRel(), adssetRel()
+
 2000-07-10 11:10 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbcomp.h
@@ -29,6 +37,7 @@
         * during sweep phase the items are checked only once to prevent
         recursive loops
 
+>>>>>>> 1.2397
 2000-07-09 01:02 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * include/hbcomp.h
      + Added: external BOOL hb_comp_bSimpLex

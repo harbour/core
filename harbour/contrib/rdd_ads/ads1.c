@@ -216,7 +216,7 @@ static BOOL strcmpNoCase( char* s1, char* s2, int n )
       s2++;
    }
    return ( !*s1 && !*s2 ) || ( n && i == n );
-     
+
 }
 
 /*
@@ -554,6 +554,13 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 
    HB_TRACE(HB_TR_DEBUG, ("adsPutValue(%p, %hu, %p)", pArea, uiIndex, pItem));
 
+   if( pArea->uiParents )
+   {
+//      AdsGetRecordNum( pArea->hTable, ADS_IGNOREFILTERS,
+//         (UNSIGNED32 *)&(pArea->lpExtendInfo->ulRecNo) );
+      hb_adsCheckBofEof( pArea );
+   }
+
    if( uiIndex > pArea->uiFieldCount || pArea->fEof )
       return FAILURE;
 
@@ -876,12 +883,38 @@ static ERRCODE adsZap( ADSAREAP pArea )
 #define adschildStart                           NULL
 #define adschildSync                            NULL
 #define adssyncChildren                         NULL
-#define adsclearRel                             NULL
+
+static ERRCODE adsclearRel( ADSAREAP pArea )
+{
+   HB_TRACE(HB_TR_DEBUG, ("adsclearRel(%p)", pArea ));
+   SUPER_CLEARREL( ( AREAP ) pArea );
+   AdsClearRelation( pArea->hTable );
+   return SUCCESS;
+}
+
 #define adsforceRel                             NULL
 #define adsrelArea                              NULL
 #define adsrelEval                              NULL
 #define adsrelText                              NULL
-#define adssetRel                               NULL
+
+static ERRCODE adssetRel( ADSAREAP pArea, LPDBRELINFO  lpdbRelations )
+{
+   ADSHANDLE hIndex;
+   UNSIGNED32 ulRetVal;
+
+   HB_TRACE(HB_TR_DEBUG, ("adssetRel(%p, %p)", pArea, lpdbRelations));
+
+   SUPER_SETREL( ( AREAP ) pArea, lpdbRelations );
+   if( !( hIndex = ( (ADSAREAP)lpdbRelations->lpaChild )->hOrdCurrent ) )
+      return FAILURE;
+   if( !lpdbRelations->abKey )
+      return FAILURE;
+   ulRetVal = AdsSetRelation( pArea->hTable, hIndex,
+          (UNSIGNED8*) hb_itemGetCPtr( lpdbRelations->abKey ) );
+   if ( ulRetVal != AE_SUCCESS )
+      return FAILURE;
+   return SUCCESS;
+}
 
 static ERRCODE adsOrderListAdd( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
 {
@@ -1392,4 +1425,3 @@ HB_FUNC( ADS_GETFUNCTABLE )
    else
       hb_retni( FAILURE );
 }
-
