@@ -582,6 +582,14 @@ extern void   hb_verBuildInfo( void ); /* display harbour, compiler, and platfor
 /* WARNING: This returned pointer must be freed using hb_xfree( ( void * ) ptr ); */
 extern char * hb_getenv( const char * name );
 
+/* Version tracking related things */
+
+#ifdef HB_FILE_VER_STATIC
+   #define HB_FILE_VER( id ) static char s_hb_file_ver[] = id;
+#else
+   #define HB_FILE_VER( id )
+#endif
+
 /* Translation related things */
 
 /* Dummy define for start */

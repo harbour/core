@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Header file for runtime configuration, common for Harbour and C level.
+ * Common header file for the source of Harbour itself.
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 2001-2002 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,39 +50,16 @@
  *
  */
 
-/* NOTE: This file is also used by C code. */
+#ifndef HB_HBCOMMON_CH_
+#define HB_HBCOMMON_CH_
 
-#ifndef HB_SETUP_CH_
-#define HB_SETUP_CH_
+#include "hbsetup.ch"
 
-/* NOTE: You can select here, which features you want to include of the
-         different Clipper implementations. */
-
-#define HB_EXTENSION              /* Enable Harbour extensions */
-
-#define HB_C52_UNDOC              /* Enable CA-Cl*pper 5.2e undocumented features */
-/* #define HB_C52_STRICT */       /* Enable CA-Cl*pper 5.2e strict compatibility */
-
-#define HB_COMPAT_C53             /* Enable CA-Cl*pper 5.3x extensions */
-#define HB_COMPAT_XPP             /* Enable Alaska Xbase++ extensions */
-/* #define HB_COMPAT_VO */        /* Enable CA-VO extensions */
-/* #define HB_COMPAT_FLAGSHIP */  /* Enable Flagship extensions */
-/* #define HB_COMPAT_FOXPRO */    /* Enable FoxPro extensions */
-/* #define HB_COMPAT_DBASE */     /* Enable dBase extensions */
-
-/* NOTE: HB_SHORTNAMES must be defined manually if the symbol name length is
-         set to 10 explicitly and not through the HB_C52_STRICT option
-         [vszakats] */
-
-/* Turn on short names support for the class engine */
-#ifdef HB_C52_STRICT
-   #define HB_SHORTNAMES
+#ifdef HB_FILE_VER_STATIC
+   #define HB_FILE_VER( id ) STATIC s_hb_file_ver := id
+#else
+   #define HB_FILE_VER( id )
 #endif
 
-/* #define HB_FILE_VER_STATIC */  /* Enable inclusion of file version strings */
-
-/*#define HB_CLS_ENFORCERO */     /* Activate the RO checking on OO DATA    */
-                                  /* when not called from a constructor     */
-
-#endif /* HB_SETUP_CH_ */
+#endif /* HB_HBCOMMON_CH_ */
 

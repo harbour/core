@@ -64,6 +64,8 @@
 #include "hbdate.h"
 #include "hb_io.h"
 
+HB_FILE_VER( "$Id$" )
+
 /* ------------------------------------------------------------- */
 
 #include <ctype.h>
@@ -80,7 +82,6 @@
 
    typedef struct
    {
-      void *          dta;
       struct ffblk    entry;
    } HB_FFIND_INFO, * PHB_FFIND_INFO;
 

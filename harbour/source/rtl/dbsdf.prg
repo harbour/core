@@ -7,7 +7,7 @@
  * Copies the contents of a database to an SDF text file.
  * Appends the contents of an SDF text file to a database.
  *
- * Copyright 2001 David G. Holm <dholm@jsd-llc.com>
+ * Copyright 2001-2002 David G. Holm <dholm@jsd-llc.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -51,72 +51,16 @@
  *
  */
 
-#include <fileio.ch>
-#include <hbclass.ch>
-#include <error.ch>
+#include "hbcommon.ch"
+#include "fileio.ch"
+#include "error.ch"
 
-/*  $DOC$
- *  $FUNCNAME$
- *      __dbSDF()
- *  $CATEGORY$
- *      Conversion
- *  $ONELINER$
- *      Copies the contents of a database to an SDF text file or
- *      appends the contents of an SDF text file to a database.
- *  $SYNTAX$
- *      __dbSDF( <lExport>, <xcFile>, [<aFields>],
- *      [<bFor>], [<bWhile>], [<nNext>], [<nRecord>], <lRest>  ) --> NIL
- *  $ARGUMENTS$
- *      <lExport> If set to .T., copies records to an SDF file.
- *      If set to .F., append records from an SDF file.
- *      <xcFile> The name of the text file to copy to or append from.
- *      If a file extension is not specified, ".txt" is used by default.
- *      <aFields> An aray of field names to limit the processint to. If
- *      not specified, or if empty, then all fields are processed.
- *      <bFor> An optional code block containing a FOR expression that
- *      will reduce the number of records to be processed.
- *      <bWhile> An optional code block containing a WHILE expression
- *      that will reduce the number of records to be processed.
- *      <nNext> If present, but nRecord is not present, specifies to
- *      process this number of records, starting with the current record.
- *      A value of 0 means to process no records.
- *      <nRecord> If present, specifies the only record to process. A
- *      value of 0 means to process no records. Overrides nNext and lRest.
- *      <lRest> If lExport is .T., then if set to .T. and there are no
- *      nRecord, nNext, or bWhile arguments, processes all records from
- *      current to last.
- *  $RETURNS$
- *      NIL
- *  $DESCRIPTION$
- *      __dbSDF() copies all or selected contents of a database table
- *      to an SDF text file or appends all or selected contents of an
- *      SDF text file to a database table.
- *  $EXAMPLES$
- *      // Copy delinquent accounts into an SDF text file.
- *      USE ACCOUNTS NEW
- *      COPY TO overdue SDF FOR !EMPTY( accounts->duedate ) ;
- *      .AND. DATE() - accounts->duedate > 30
- *      // Import new customer records.
- *      USE CUSTOMER NEW
- *      APPEND FROM customer SDF
- *  $TESTS$
- *      
- *  $STATUS$
- *      S
- *  $COMPLIANCE$
- *      __dbSDF() is intended to be fully compliant with CA-Clipper's
- *      function of the same name and is the underlying implementation
- *      of the APPEND FROM SDF and COPY TO SDF commands.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *
- *  $SEEALSO$
- *      __dbDelim(), APPEND FROM, COPY TO
- *  $END$
- */
+HB_FILE_VER( "$Id$" )
 
-FUNCTION __dbSDF( lExport, cFile, aFields, bFor, bWhile, nNext, nRecord, lRest )
+#define AppendEOL( handle ) FWRITE( handle, CHR( 13 ) + CHR( 10 ) )
+#define AppendEOF( handle ) FWRITE( handle, CHR( 26 ) )
+
+PROCEDURE __dbSDF( lExport, cFile, aFields, bFor, bWhile, nNext, nRecord, lRest )
    LOCAL index, handle, cFileName := cFile, nStart, nCount, oErr
 
    // Process the file name argument.
@@ -246,31 +190,20 @@ FUNCTION __dbSDF( lExport, cFile, aFields, bFor, bWhile, nNext, nRecord, lRest )
       END IF
       */
    END IF
-RETURN NIL
+RETURN
 
 STATIC FUNCTION ExportFixed( handle, xField )
-   LOCAL cText := "", lWrite := .F.
    DO CASE
       CASE VALTYPE( xField ) == "C"
-         cText := xField
-         lWrite := .T.
+         FWRITE( handle, xField )
       CASE VALTYPE( xField ) == "D"
-         cText := DTOS( xField )
-         lWrite := .T.
+         FWRITE( handle, DTOS( xField ) )
       CASE VALTYPE( xField ) == "L"
-         cText := IF( xField, "T", "F" )
-         lWrite := .T.
+         FWRITE( handle, iif( xField, "T", "F" ) )
       CASE VALTYPE( xField ) == "N"
-         cText := STR( xField )
-         lWrite := .T.
+         FWRITE( handle, STR( xField ) )
+      OTHERWISE
+         RETURN .F.
    END CASE
-   FWRITE( handle, cText )
-RETURN lWrite
+RETURN .T.
 
-STATIC FUNCTION AppendEOL( handle )
-   STATIC cEOL := CHR( 13 ) + CHR( 10 )
-RETURN FWRITE( handle, cEOL )
-
-STATIC FUNCTION AppendEOF( handle )
-   STATIC cEOF := CHR( 26 )
-RETURN FWRITE( handle, cEOF )

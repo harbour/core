@@ -8,6 +8,31 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-18 21:47 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * include/hbapi.h
+   * include/hbsetup.ch
+   + include/hbcommon.ch
+   * include/Makefile
+     + Added HB_FILE_VER( id ) for Harbour and C 
+       sources. Note that in order to work in 
+       .prg files, HB_FILE_VER() should come after 
+       the #includes and the file should #include "hbcommon.ch"
+       which will automatically include "hbsetup.ch" too.
+     + Added HB_FILE_VER_STATIC define which will 
+       enable the inclusion of HB_FILE_VER info.
+
+   * source/common/hbffind.c
+   * source/rtl/dbdelim.prg
+   * source/rtl/dbsdf.prg
+     + Added experimental HB_FILE_VER() lines.
+
+   * doc/genhtm.rsp
+   + doc/en/dbdelim.txt
+   + doc/en/dbsdf.txt
+     % Some small optimization for speed.
+     * Separated documentation from the source.
+
 2001-12-18 20:15 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
    * tests/db_brows.prg
      Some changes to eliminate using of functions from libmisc.
@@ -18,7 +43,6 @@
      Replaced the call to hb_gcCollectAll() in hvm.c line 389 with new
      hb_gcReleaseAll() will increase cleanup speed (on app termination),
      and will result in a more complete cleanup in certain situations.
-
 
 2001-12-18 10:03 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 

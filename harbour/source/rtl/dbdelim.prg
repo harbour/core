@@ -7,7 +7,7 @@
  * Copies the contents of a database to a delimited text file.
  * Appends the contents of a delimited text file to a database.
  *
- * Copyright 2001 David G. Holm <dholm@jsd-llc.com>
+ * Copyright 2001-2002 David G. Holm <dholm@jsd-llc.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -51,76 +51,17 @@
  *
  */
 
-#include <fileio.ch>
-#include <hbclass.ch>
-#include <error.ch>
+#include "hbcommon.ch"
+#include "fileio.ch"
+#include "error.ch"
 
-/*  $DOC$
- *  $FUNCNAME$
- *      __dbDelim()
- *  $CATEGORY$
- *      Conversion
- *  $ONELINER$
- *      Copies the contents of a database to a delimited text file or
- *      appends the contents of a delimited text file to a database.
- *  $SYNTAX$
- *      __dbDelim( <lExport>, <xcFile>, [<xcDelim>], [<aFields>],
- *      [<bFor>], [<bWhile>], [<nNext>], [<nRecord>], <lRest>  ) --> NIL
- *  $ARGUMENTS$
- *      <lExport> If set to .T., copies records to a delimited file.
- *      If set to .F., append records from a delimited file.
- *      <xcFile> The name of the text file to copy to or append from.
- *      If a file extension is not specified, ".txt" is used by default.
- *      <xcDelim> Either the character to use as the character field
- *      delimiter (only the first character is used). or "BLANK" (not case
- *      sensitive), which eliminates the character field delimiters and
- *      sets the field separator to a single space instead of a comma.
- *      <aFields> An aray of field names to limit the processint to. If
- *      not specified, or if empty, then all fields are processed.
- *      <bFor> An optional code block containing a FOR expression that
- *      will reduce the number of records to be processed.
- *      <bWhile> An optional code block containing a WHILE expression
- *      that will reduce the number of records to be processed.
- *      <nNext> If present, but nRecord is not present, specifies to
- *      process this number of records, starting with the current record.
- *      A value of 0 means to process no records.
- *      <nRecord> If present, specifies the only record to process. A
- *      value of 0 means to process no records. Overrides nNext and lRest.
- *      <lRest> If lExport is .T., then if set to .T. and there are no
- *      nRecord, nNext, or bWhile arguments, processes all records from
- *      current to last.
- *  $RETURNS$
- *      NIL
- *  $DESCRIPTION$
- *      __dbDelim() copies all or selected contents of a database table
- *      to an SDF text file or appends all or selected contents of an SDF
- *      text file to a database table.
- *  $EXAMPLES$
- *      // Copy delinquent accounts into a delimited text file.
- *      USE ACCOUNTS NEW
- *      COPY TO overdue DELIMITED FOR !EMPTY( accounts->duedate ) ;
- *      .AND. DATE() - accounts->duedate > 30
- *      // Import new customer records.
- *      USE CUSTOMER NEW
- *      APPEND FROM customer DELIMITED
- *  $TESTS$
- *      
- *  $STATUS$
- *      S
- *  $COMPLIANCE$
- *      __dbDelim() is intended to be fully compliant with CA-Clipper's
- *      function of the same name and is the underlying implementation
- *      of the APPEND FROM DELIMITED and COPY TO DELIMITED commands.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *
- *  $SEEALSO$
- *      __dbSDF(), APPEND FROM, COPY TO
- *  $END$
- */
+HB_FILE_VER( "$Id$" )
 
-FUNCTION __dbDelim( lExport, cFile, cDelimArg, aFields, bFor, bWhile, nNext, nRecord, lRest )
+#define AppendEOL( handle )       FWRITE( handle, CHR( 13 ) + CHR( 10 ) )
+#define AppendEOF( handle )       FWRITE( handle, CHR( 26 ) )
+#define AppendSep( handle, cSep ) FWRITE( handle, cSep )
+
+PROCEDURE __dbDelim( lExport, cFile, cDelimArg, aFields, bFor, bWhile, nNext, nRecord, lRest )
    LOCAL index, handle, lWriteSep, cFileName := cFile, nStart, nCount, oErr
    LOCAL cSeparator := ",", cDelim := CHR( 34 )
 
@@ -270,34 +211,19 @@ FUNCTION __dbDelim( lExport, cFile, cDelimArg, aFields, bFor, bWhile, nNext, nRe
       END IF
       */
    END IF
-RETURN NIL
+RETURN
 
 STATIC FUNCTION ExportVar( handle, xField, cDelim )
-   LOCAL cText := "", lWrite := .F.
    DO CASE
       CASE VALTYPE( xField ) == "C"
-         cText := cDelim + TRIM( xField ) + cDelim
-         lWrite := .T.
+         FWRITE( handle, cDelim + TRIM( xField ) + cDelim )
       CASE VALTYPE( xField ) == "D"
-         cText := DTOS( xField )
-         lWrite := .T.
+         FWRITE( handle, DTOS( xField ) )
       CASE VALTYPE( xField ) == "L"
-         cText := IF( xField, "T", "F" )
-         lWrite := .T.
+         FWRITE( handle, iif( xField, "T", "F" ) )
       CASE VALTYPE( xField ) == "N"
-         cText := LTRIM( STR( xField ) )
-         lWrite := .T.
+         FWRITE( handle, LTRIM( STR( xField ) ) )
+      OTHERWISE
+         RETURN .F.
    END CASE
-   FWRITE( handle, cText )
-RETURN lWrite
-
-STATIC FUNCTION AppendEOL( handle )
-   STATIC cEOL := CHR( 13 ) + CHR( 10 )
-RETURN FWRITE( handle, cEOL )
-
-STATIC FUNCTION AppendEOF( handle )
-   STATIC cEOF := CHR( 26 )
-RETURN FWRITE( handle, cEOF )
-
-STATIC FUNCTION AppendSep( handle, cSep )
-RETURN FWRITE( handle, cSep )
+RETURN .T.
