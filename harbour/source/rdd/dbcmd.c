@@ -2127,13 +2127,21 @@ HB_FUNC( FIELDPOS )
 {
    /* char szName[ HARBOUR_MAX_RDD_FIELDNAME_LENGTH ]; */
    char * szName;
+   size_t uiMax;
+   size_t uiLen;
 
    if( s_pCurrArea )
    {
-      if ( hb_parc( 1 ) && ( (int) hb_parclen( 1 ) <= (int) ( ( AREAP ) s_pCurrArea->pArea)->uiMaxFieldNameLength ) )
+      if ( hb_parc( 1 ) )
       {
-         szName = ( char * ) hb_xgrab( ( ( AREAP ) s_pCurrArea->pArea)->uiMaxFieldNameLength + 1 );
-         hb_strncpyUpperTrim( szName, hb_parc( 1 ), hb_parclen( 1 ) );
+         uiMax = ( ( AREAP ) s_pCurrArea->pArea)->uiMaxFieldNameLength;
+         uiLen = hb_parclen( 1 );
+         if( uiLen > uiMax )
+         {
+            uiLen = uiMax;
+         }
+         szName = ( char * ) hb_xgrab( uiLen + 1 );
+         hb_strncpyUpperTrim( szName, hb_parc( 1 ), uiLen );
          hb_retni( hb_rddFieldIndex( ( AREAP ) s_pCurrArea->pArea, szName ) );
          hb_xfree( szName );
       }

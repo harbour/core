@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-05-09 14:40 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+  * source/rdd/dbcmd.c
+    ! Fixed the FIELDPOS function to truncate long field names,
+      instead of ignoring them.
+
 2003-05-08 15:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * source/compiler/harbour.sly
     ! Fixed $<lNumber>3 in EmptyStatements to read $<lNumber>2.
