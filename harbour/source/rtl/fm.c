@@ -67,6 +67,15 @@
 #include "errorapi.h"
 #include "hbmemory.ch"
 
+typedef struct _HB_MEMINFO
+{
+   ULONG ulSize;
+   ULONG ulProcLine;
+   char  szProcName[ 256 ];
+   struct _HB_MEMINFO * pPrevBlock;
+   struct _HB_MEMINFO * pNextBlock;
+} HB_MEMINFO, * PHB_MEMINFO;
+
 #ifdef HB_FM_STATISTICS
 static LONG s_lMemoryBlocks = 0;      /* memory blocks used */
 static LONG s_lMemoryMaxBlocks = 0;   /* maximum number of used memory blocks */
@@ -74,18 +83,44 @@ static LONG s_lMemoryMaxConsumed = 0; /* memory size consumed */
 static LONG s_lMemoryConsumed = 0;    /* memory max size consumed */
 #endif
 
+static PHB_MEMINFO pFirstBlock = NULL, pLastBlock = NULL;
+
 void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL on failure */
 {
    void * pMem;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xalloc(%lu)", ulSize));
 
-   pMem = malloc( ulSize + sizeof( ULONG ) );
+   pMem = malloc( ulSize + sizeof( HB_MEMINFO ) );
 
    if( ! pMem )
       return pMem;
 
-   * ( ( ULONG * ) pMem ) = ulSize;  /* we store the block size into it */
+   if( ! pFirstBlock )
+   {
+      pFirstBlock = pMem;
+      pLastBlock  = pMem;
+      ( ( PHB_MEMINFO ) pMem )->pPrevBlock = NULL;
+   }
+   else
+   {
+      ( ( PHB_MEMINFO ) pMem )->pPrevBlock = pLastBlock;
+      pLastBlock = pMem;
+   }
+   ( ( PHB_MEMINFO ) pMem )->pNextBlock = NULL;
+
+   ( ( PHB_MEMINFO ) pMem )->ulSize = ulSize;  /* size of the memory block */
+   if( hb_stack.pItems && ( hb_stack.pBase != hb_stack.pItems ) )
+   {
+      ( ( PHB_MEMINFO ) pMem )->ulProcLine = hb_stack.pBase->item.asSymbol.lineno; /* PRG line number */
+      strcpy( ( ( PHB_MEMINFO ) pMem )->szProcName,
+              hb_stack.pBase->item.asSymbol.value->szName ); /* PRG ProcName */
+   }
+   else
+   {
+      ( ( PHB_MEMINFO ) pMem )->ulProcLine = 0; /* PRG line number */
+      strcpy( ( ( PHB_MEMINFO ) pMem )->szProcName, "" ); /* PRG ProcName */
+   }
 
 #ifdef HB_FM_STATISTICS
    s_lMemoryConsumed    += ulSize;
@@ -96,7 +131,7 @@ void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL
       s_lMemoryMaxBlocks = s_lMemoryBlocks;
 #endif
 
-   return ( char * ) pMem + sizeof( ULONG );
+   return ( char * ) pMem + sizeof( HB_MEMINFO );
 }
 
 void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on failure */
@@ -105,12 +140,37 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xgrab(%lu)", ulSize));
 
-   pMem = malloc( ulSize + sizeof( ULONG ) );
+   pMem = malloc( ulSize + sizeof( HB_MEMINFO ) );
 
    if( ! pMem )
       hb_errInternal( 9999, "hb_xgrab can't allocate memory", NULL, NULL );
 
-   * ( ( ULONG * ) pMem ) = ulSize;  /* we store the block size into it */
+   if( ! pFirstBlock )
+   {
+      pFirstBlock = pMem;
+      pLastBlock  = pMem;
+      ( ( PHB_MEMINFO ) pMem )->pPrevBlock = NULL;
+   }
+   else
+   {
+      ( ( PHB_MEMINFO ) pMem )->pPrevBlock = pLastBlock;
+      pLastBlock->pNextBlock = pMem;
+      pLastBlock = pMem;
+   }
+   ( ( PHB_MEMINFO ) pMem )->pNextBlock = NULL;
+
+   ( ( PHB_MEMINFO ) pMem )->ulSize = ulSize;  /* size of the memory block */
+   if( hb_stack.pItems && ( hb_stack.pBase != hb_stack.pItems ) )
+   {
+      ( ( PHB_MEMINFO ) pMem )->ulProcLine = hb_stack.pBase->item.asSymbol.lineno; /* PRG line number */
+      strcpy( ( ( PHB_MEMINFO ) pMem )->szProcName,
+              hb_stack.pBase->item.asSymbol.value->szName ); /* PRG ProcName */
+   }
+   else
+   {
+      ( ( PHB_MEMINFO ) pMem )->ulProcLine = 0; /* PRG line number */
+      strcpy( ( ( PHB_MEMINFO ) pMem )->szProcName, "" ); /* PRG ProcName */
+   }
 
 #ifdef HB_FM_STATISTICS
    s_lMemoryConsumed    += ulSize;
@@ -121,11 +181,25 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
       s_lMemoryMaxBlocks = s_lMemoryBlocks;
 #endif
 
-   return ( char * ) pMem + sizeof( ULONG );
+   return ( char * ) pMem + sizeof( HB_MEMINFO );
+}
+
+static void DeleteNode( PHB_MEMINFO pMemBlock )
+{
+   if( pMemBlock->pPrevBlock )
+     pMemBlock->pPrevBlock->pNextBlock = pMemBlock->pNextBlock;
+   else
+     pFirstBlock = pMemBlock->pNextBlock;
+
+   if( pMemBlock->pNextBlock )
+      pMemBlock->pNextBlock->pPrevBlock = pMemBlock->pPrevBlock;
+   else
+      pLastBlock = pMemBlock->pPrevBlock;
 }
 
 void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
 {
+   PHB_MEMINFO pMemBlock;
 #ifdef HB_FM_STATISTICS
    ULONG ulMemSize;
 #endif
@@ -133,15 +207,33 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xrealloc(%p, %lu)", pMem, ulSize));
 
+   pMemBlock = ( PHB_MEMINFO ) ( ( char * ) pMem - sizeof( HB_MEMINFO ) );
+
 #ifdef HB_FM_STATISTICS
-   ulMemSize = * ( ULONG * ) ( ( char * ) pMem - sizeof( ULONG ) );
+   ulMemSize = pMemBlock->ulSize;
 #endif
-   pResult = realloc( ( char * ) pMem - sizeof( ULONG ), ulSize + sizeof( ULONG ) );
+
+   if( ulSize == 0 )
+      DeleteNode( pMemBlock );
+   else
+   {
+      pResult = realloc( pMemBlock, ulSize + sizeof( HB_MEMINFO ) );
+
+      if( pResult )
+      {
+         ( ( PHB_MEMINFO ) pResult )->pPrevBlock = pMemBlock->pPrevBlock;
+         ( ( PHB_MEMINFO ) pResult )->pNextBlock = pMemBlock->pNextBlock;
+         if( pMemBlock->pPrevBlock )
+            ( ( PHB_MEMINFO ) pResult )->pPrevBlock->pNextBlock = pResult;
+         if( ( ( PHB_MEMINFO ) pResult )->pNextBlock )
+            ( ( PHB_MEMINFO ) pResult )->pNextBlock->pPrevBlock = pResult;
+      }
+   }
 
    if( ! pResult )
       hb_errInternal( 9999, "hb_xrealloc can't reallocate memory", NULL, NULL );
 
-   * ( ( ULONG * ) pResult ) = ulSize;  /* we store the block size into it */
+   ( ( PHB_MEMINFO ) pResult )->ulSize = ulSize;  /* size of the memory block */
 
 #ifdef HB_FM_STATISTICS
    if( ! ulSize )
@@ -152,21 +244,26 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
       s_lMemoryMaxConsumed = s_lMemoryConsumed;
 #endif
 
-   return ( char * ) pResult + sizeof( ULONG );
+   return ( char * ) pResult + sizeof( HB_MEMINFO );
 }
 
 void hb_xfree( void * pMem )            /* frees fixed memory */
 {
+   PHB_MEMINFO pMemBlock;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_xfree(%p)", pMem));
 
    if( pMem )
    {
 #ifdef HB_FM_STATISTICS
-      s_lMemoryConsumed -= * ( ULONG * ) ( ( char * ) pMem - sizeof( ULONG ) );
+      s_lMemoryConsumed -= ( ( PHB_MEMINFO ) ( ( char * ) pMem - sizeof( HB_MEMINFO ) ) )->ulSize;
       s_lMemoryBlocks--;
 #endif
 
-      free( ( char * ) pMem - sizeof( ULONG ) );
+      pMemBlock = ( PHB_MEMINFO ) ( ( char * ) pMem - sizeof( HB_MEMINFO ) );
+      DeleteNode( pMemBlock );
+      if( pMemBlock )
+         free( ( void * ) pMemBlock );
    }
    else
       hb_errInternal( 9999, "hb_xfree called with a null pointer", NULL, NULL );
@@ -176,7 +273,7 @@ ULONG hb_xsize( void * pMem ) /* returns the size of an allocated memory block *
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xsize(%p)", pMem));
 
-   return * ( ULONG * ) ( ( char * ) pMem - sizeof( ULONG ) );
+   return ( ( PHB_MEMINFO ) ( ( char * ) pMem - sizeof( HB_MEMINFO ) ) )->ulSize;
 }
 
 void hb_xinit( void ) /* Initialize fixed memory subsystem */
@@ -186,6 +283,8 @@ void hb_xinit( void ) /* Initialize fixed memory subsystem */
 
 void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 {
+   PHB_MEMINFO pMemBlock = pFirstBlock;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_xexit()"));
 
 #ifdef HB_FM_STATISTICS
@@ -204,6 +303,19 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
          hb_outerr( hb_consoleGetNewLine(), 0 );
          sprintf( buffer, "WARNING! Memory allocated but not released: %li bytes (%li blocks)", s_lMemoryConsumed, s_lMemoryBlocks );
          hb_outerr( buffer, 0 );
+      }
+
+      if( pMemBlock )
+      {
+         unsigned int ui = 1;
+
+         do
+         {
+            sprintf( buffer, "\nblock %i: %s line %i", ui++, pMemBlock->szProcName,
+                     pMemBlock->ulProcLine );
+            HB_TRACE( HB_TR_DEBUG, (buffer));
+            pMemBlock = pMemBlock->pNextBlock;
+         } while( pMemBlock );
       }
    }
 #endif
@@ -424,4 +536,3 @@ HARBOUR HB_MEMORY( void )
 {
    hb_retnl( hb_xquery( hb_parni( 1 ) ) );
 }
-
