@@ -1,3 +1,8 @@
+20000419-11:36 GMT+1 Victor Szakats <info@szelvesz.hu>
+   - tests/test.prg
+     ! Removed file added without any ChangeLog info, and also 
+       breaking the build process for GNU-make.
+
 20000419-10:37 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * ChangeLog
