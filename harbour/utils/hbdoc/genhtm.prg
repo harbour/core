@@ -52,7 +52,7 @@
 #define LONGONELINE  86
 MEMVAR aDirList
 MEMVAR aDocInfo
-MEMVAR aWww
+MEMVAR aWww,aResult
 
 STATIC aAlso
 STATIC aFiTable       := {}
@@ -269,6 +269,13 @@ FUNCTION ProcessWww()
                   cFuncName := "Unknown"
                ENDIF
                AADD( aDocInfo, { cCategory, cFuncName, cOneLine, cFileName } )
+               nPos := ascan(aResult,{|a| UPPER(a) == UPPER(cCategory)})
+               if nPos==0
+                  if cCategory<>"Document"  
+                    aadd(aResult,cCategory)
+                  endif
+               endif
+
                //  Now close down this little piece
                IF .NOT. EMPTY( cSeeAlso )
 

@@ -480,7 +480,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 
       FWRITE( nHpj, '1 Harbour Runtime functions Category'+CRLF)
       asort(aWww,,,{|x,y| x[3]<y[3]})
-        SET CONSOLE ON
+//        SET CONSOLE ON
       nItem := len(aResult)
       asort(aResult,,,{|x,y| x<y})
       for ppp:=1 to nItem
@@ -568,24 +568,16 @@ set console off
       oHtm1:WriteText( "<H2>Alphabetical list of functions by Categorie</H2>" )
       ohtm1:writetext('<ul>')
 
-        do  while .t.
-          citem:=alltrim(rtrim(ltrim(adocinfo[1,1])))
-  //          citem:=strtran(adocinfo[1,1]," ","")
-        ohtm1:WriteLink('hb'+strtran(adocinfo[1,1]," ","")+'.htm',cItem)
-        for ppp:=1 to len(adocinfo)
+      nItem := len(aResult)
+      asort(aResult,,,{|x,y| x<y})
+      for ppp:=1 to nItem
 
-          if citem<>adocinfo[ppp,1]  .and. cItem <>"Document"
-                              citem:=alltrim(rtrim(ltrim(adocinfo[ppp,1])))
-                    ohtm1:WriteLink('hb'+strtran(adocinfo[ppp,1]," ","")+'.htm',cItem)
+        cLast:=GetNextContent(ppp)
+        if cLast<>'Run Time Errors' .and. cLast <>"Document"  .and. cLast <>"The garbage collector"  .and. cLast <>"OOP Command" .and. cLast <>"Command"  .and. cLast <>"The idle states"
+            ohtm1:WriteLink('hb'+strtran(aResult[ppp]," ","")+'.htm',aResult[ppp])
 
-//            citem:=strtran(adocinfo[ppp,1]," ","")
-          endif
-          next
-        if ppp>len(adocinfo)
-        exit
         endif
-      enddo
-            
+      Next
       ohtm1:writetext('</ul>')        
         ohtm1:close()
 
@@ -1410,10 +1402,18 @@ asort(aTemp,,,{|x,y| x[1]<y[1]})
 for nCount:=1 to Len(aTemp)
           oHtm:ListItem()
           oHtm:AddObject("text/sitemap")
-          oHtm:AddParam("Name",aTemp[nCount,2])
-          oHtm:AddParam("Local",aTemp[nCount,3])
-          oHtm:EndObject()
-          OHTM:WriteChmLink(aTemp[nCount,3],aTemp[nCount,2])
+          if at("GNU LI",aTemp[nCount,2])==0
+              oHtm:AddParam("Name",aTemp[nCount,2])
+              oHtm:AddParam("Local",aTemp[nCount,3])
+              oHtm:EndObject()
+              OHTM:WriteChmLink(aTemp[nCount,3],aTemp[nCount,2])
+         Else
+              oHtm:AddParam("Name","Gnu License")
+              oHtm:AddParam("Local","http://www.gnu.org/copyleft/gpl.html")
+              oHtm:EndObject()
+              OHTM:WriteChmLink("http://www.gnu.org/copyleft/gpl.html","Gnu License")
+
+         Endif
 next
 return nil
     
