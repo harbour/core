@@ -1,5 +1,7 @@
-This document attempts to describes the features separating Harbour
-from Clipper.
+$Id$
+
+This document attempts to describe the features separating Harbour from
+Clipper.
 
 /* TODO: @FunPointer(), and all other Harbour extensions. */
 
