@@ -15,6 +15,7 @@ HARBOUR_OPT = $(HARBOUR_OPT) -q0 -w -es2 -gc0
 BCC_EXE = bcc
 BCC_OPT = $(BCC_OPT) -DHARBOUR_USE_DOS_GTAPI -mh
 TASM_EXE = tasm
+BIN_DIR = bin\b16
 OBJ_DIR = obj\b16
 LIB_DIR = lib\b16
 BCC_OPT = $(BCC_OPT) -O2
@@ -25,6 +26,7 @@ BCC_OPT = $(BCC_OPT) -O2
 BCC_EXE = bcc32
 BCC_OPT = $(BCC_OPT) -DHARBOUR_USE_WIN_GTAPI
 TASM_EXE = tasm32
+BIN_DIR = bin\b32
 OBJ_DIR = obj\b32
 LIB_DIR = lib\b32
 
@@ -45,7 +47,6 @@ MACRO_DIR         = source\macro
 RDD_DIR           = source\rdd
 RUNNER_DIR        = source\runner
 DEBUG_DIR         = source\debug
-BIN_DIR           = bin
 HBTEST_DIR        = utils\hbtest
 HBDOC_DIR         = utils\hbdoc
 

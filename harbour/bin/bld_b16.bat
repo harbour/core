@@ -4,7 +4,7 @@ rem $Id$
 rem
 
 ..\bin\harbour %1 %2 %3 /n /i..\include
-echo -O2 -mh -I..\include -L..\lib\b16 > build.tmp
+echo -O2 -mh -I..\include -L..\lib > build.tmp
 echo -e%1.exe %1.c >> build.tmp
 echo tools.lib >> build.tmp
 echo debug.lib >> build.tmp

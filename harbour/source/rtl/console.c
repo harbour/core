@@ -694,22 +694,22 @@ HARBOUR HB_MAXCOL( void ) /* Return the maximum screen column number (zero origi
 
 HARBOUR HB_ROW( void ) /* Return the current screen row position (zero origin) */
 {
-   USHORT uiRow;
-   USHORT uiCol;
+   SHORT iRow;
+   SHORT iCol;
 
-   hb_gtGetPos( &uiRow, &uiCol );
+   hb_gtGetPos( &iRow, &iCol );
 
-   hb_retni( uiRow );
+   hb_retni( iRow );
 }
 
 HARBOUR HB_COL( void ) /* Return the current screen column position (zero origin) */
 {
-   USHORT uiRow;
-   USHORT uiCol;
+   SHORT iRow;
+   SHORT iCol;
 
-   hb_gtGetPos( &uiRow, &uiCol );
+   hb_gtGetPos( &iRow, &iCol );
 
-   hb_retni( uiCol );
+   hb_retni( iCol );
 }
 
 HARBOUR HB_DISPBOX( void )

@@ -1,3 +1,30 @@
+20000307-17:34 GMT+1 Victor Szakats <info@szelvesz.hu>
+   ; Now the non-GNU make process reorganization can be considered done.
+   * make_b16.bat
+     make_b32.bat
+     make_vc.bat
+     contrib/rdd_ads/make_rdd.bat
+     + After a successful make process they will now copy all executables and
+       libraries to their final directory bin/ and lib/.
+   * bin/bld_b16.bat
+     bin/bld_b32*.bat
+     bin/bld_vc.bat
+     * Now they all look for the libraries directly in the lib/ directory, this
+       way these batch files are compatible with the GNU-make system.
+   + bin/b16/empty
+   + bin/b32/empty
+   + bin/vc/empty
+     makefile.bc
+     makefile.vc
+     + The Borland and MSVC build process changed to generate the executables
+       in different bin directories to completely separate them and to be 
+       compatible with the GNU-make system.
+   * Makefile
+   - obj/Makefile
+     - obj dir removed from the GNU-make process.
+   * source/rtl/console.c
+     ! USHORT changed to SHORT for MSVC.
+
 20000307-16:36 GMT+1 Victor Szakats <info@szelvesz.hu>
    * bin/bld*.*
      - "-5" options removed (again).
