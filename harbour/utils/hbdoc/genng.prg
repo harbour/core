@@ -1530,6 +1530,7 @@ FUNCTION ProcNGDesc( cBuffer, oNgi, cStyle )
       ENDDO
       IF lEndTable
          GenNgTable( oNgi )
+         LFstTableItem:=.T.
       ENDIF
    ENDIF
    //      If cStyle=="Description" .or. cStyle=="Compliance"

@@ -1137,6 +1137,7 @@ FUNCTION ProchtmDesc( cBuffer, oHtm, cStyle )
 
       IF lEndTable
          GenhtmTable( oHtm )
+        LFstTableItem := .T.
       ENDIF
    ENDIF
 RETURN nil
@@ -1235,8 +1236,8 @@ RETURN Nil
 FUNCTION GenhtmTable( oHtm )
 
    LOCAL x
-   oHtm:WriteText( "<br>" )
-   oHtm:WriteText( "<br>" )
+/*   oHtm:WriteText( "<br>" )
+   oHtm:WriteText( "<br>" )*/
    oHtm:WriteText( '<table border=1>' )                     //-4
 
    FOR x := 1 TO LEN( asitable )
