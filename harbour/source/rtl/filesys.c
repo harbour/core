@@ -1030,8 +1030,8 @@ BOOL hb_fsDelete( BYTE * pFilename )
 
 #if defined(HB_OS_WIN_32)
 
-   bResult = ( DeleteFile( ( char * ) pFilename ) == 0 );
-   s_uiErrorLast = (USHORT) GetLastError();
+   bResult = DeleteFile( ( char * ) pFilename );
+   s_uiErrorLast = ( USHORT ) GetLastError();
 
 #elif defined(HAVE_POSIX_IO)
 
@@ -1063,8 +1063,8 @@ BOOL hb_fsRename( BYTE * pOldName, BYTE * pNewName )
 
 #if defined(HB_OS_WIN_32)
 
-   bResult = ( MoveFile( ( char * ) pOldName, ( char * ) pNewName ) == 0 );
-   s_uiErrorLast = (USHORT) GetLastError();
+   bResult = MoveFile( ( char * ) pOldName, ( char * ) pNewName );
+   s_uiErrorLast = ( USHORT ) GetLastError();
 
 #elif defined(HB_FS_FILE_IO)
 
@@ -1306,8 +1306,8 @@ BOOL    hb_fsMkDir( BYTE * pDirname )
 
 #if defined(HB_OS_WIN_32)
 
-   bResult = ( CreateDirectory( ( char * ) pDirname, NULL ) == 0 );
-   s_uiErrorLast = (USHORT) GetLastError();
+   bResult = CreateDirectory( ( char * ) pDirname, NULL );
+   s_uiErrorLast = ( USHORT ) GetLastError();
 
 #elif defined(HAVE_POSIX_IO) || defined(__MINGW32__)
 
@@ -1339,8 +1339,8 @@ BOOL    hb_fsChDir( BYTE * pDirname )
 
 #if defined(HB_OS_WIN_32)
 
-   bResult = ( SetCurrentDirectory( ( char * ) pDirname ) == 0 );
-   s_uiErrorLast = (USHORT) GetLastError();
+   bResult = SetCurrentDirectory( ( char * ) pDirname );
+   s_uiErrorLast = ( USHORT ) GetLastError();
 
 #elif defined(HAVE_POSIX_IO) || defined(__MINGW32__)
 
@@ -1366,8 +1366,8 @@ BOOL    hb_fsRmDir( BYTE * pDirname )
 
 #if defined(HB_OS_WIN_32)
 
-   bResult = ( RemoveDirectory( ( char * ) pDirname ) == 0 );
-   s_uiErrorLast = (USHORT) GetLastError();
+   bResult = RemoveDirectory( ( char * ) pDirname );
+   s_uiErrorLast = ( USHORT ) GetLastError();
 
 #elif defined(HAVE_POSIX_IO) || defined(__MINGW32__)
 
@@ -1413,7 +1413,7 @@ USHORT  hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen )
 #if defined(HB_OS_WIN_32)
 
    GetCurrentDirectory( ulLen, ( char * ) pbyBuffer );
-   s_uiErrorLast = (USHORT) GetLastError();
+   s_uiErrorLast = ( USHORT ) GetLastError();
 
 #elif defined(HAVE_POSIX_IO)
 

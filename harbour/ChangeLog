@@ -8,6 +8,16 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
    * contrib/libmisc/Makefile
+     contrib/libgt/Make_b32.bat
+    * Added the Lib prefix from library name
+    + contrib/htmllib/*.prg
+     ! Fixed all return value checking for the Win32 API 
+      contrib/htmllib/Makefile.bc
+      contrib/htmllib/Makefile
+      * Sources and neccessary files to build htmllib-harbour cgi library
+   * include/hbcommon.api
+2001-12-25 11:45 UTC+0700 Andi Jahja <harbour@cbn.net.id>
+   + source/compiler/harbour.simple
      add a derivative copy of bison.simple v 1.28 which will be used as
      the standard bison skeleton output parser for the purpose of Harbour
      project in order to have a uniform parser code. Developers are expected
@@ -26,7 +36,6 @@
    * include/hbapi.h
    * include/hbundoc.api
      * Some compatibility #defines moved to its place.
-
 
 2001-12-22 11:30 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/vm/dynlibhb.c

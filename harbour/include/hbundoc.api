@@ -68,6 +68,11 @@
 #define _cEval0         hb_evalBlock0
 #define _cEval1         hb_evalBlock1
 
+/* Undocumented CA-Cl*pper misc functions */
+
+#define _getGrip        hb_gcGripGet
+#define _getDrop        hb_gcGripDrop
+
 /* Undocumented CA-Cl*pper TSupport API */
 
 #define _tchdir         hb_fsChDir
