@@ -61,6 +61,7 @@
 char * hb_getenv( const char * name )
 {
    char * pszBuffer = ( char * ) hb_xgrab( 255 );
+   char * pszTemp;
 
    #ifdef HB_OS_WIN_32
       DWORD nSize;
@@ -69,7 +70,11 @@ char * hb_getenv( const char * name )
       if( nSize == 0 )
          pszBuffer[ 0 ] = '\0';
    #else
-      strcpy( pszBuffer, getenv( name ) );
+      pszTemp = getenv( name );
+      if( pszTemp != NULL )
+         strcpy( pszBuffer, pszTemp );
+      else
+         pszBuffer[ 0 ] = '\0';
    #endif
 
    return pszBuffer;
