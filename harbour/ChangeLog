@@ -1,3 +1,16 @@
+19990824-19:05 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rtl/math.c
+    ! MIN(), MAX() code fixed to behave exactly like Clipper, it will now
+      return a DOUBLE if any parameter is DOUBLE, it will return LONG if
+      any parameter is LONG, otherwise it will return INT, the HB_ITEM
+      decimals now are only accessed for DOUBLE types (and of course only set 
+      for DOUBLE return types). The bug could be observed by running AC_TEST
+      pressing PgDn at the bottom of the list then pressing Up button, the
+      index display was showed with decimals in it.
+    % MIN(), MAX() code optimalized.
+    * Some direct hb_param() calls changed to macros.
+
 19990824-18:05 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/extend.c

@@ -82,17 +82,17 @@ HARBOUR HB_INT( void )
 {
    if( hb_pcount() == 1 )
    {
-      if( hb_param(1, IT_NUMERIC) )
+      if( ISNUM( 1 ) )
          hb_retnl( hb_parnd( 1 ) );
       else
       {
-         hb_errRT_BASE(EG_ARG, 1090, NULL, "INT");
+         hb_errRT_BASE( EG_ARG, 1090, NULL, "INT" );
       }
    }
    else
    {
       /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "INT");
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "INT" );
    }
 }
 
@@ -127,31 +127,60 @@ HARBOUR HB_MAX( void )
 {
    if( hb_pcount() == 2 )
    {
-      PHB_ITEM p1 = hb_param(1, IT_ANY), p2 = hb_param(2, IT_ANY);
+      PHB_ITEM p1 = hb_param( 1, IT_ANY );
+      PHB_ITEM p2 = hb_param( 2, IT_ANY );
 
-      if( ( IS_NUMERIC( p1 ) && IS_NUMERIC( p2 ) ) || ( IS_DATE( p1 ) && IS_DATE( p2 ) ) )
+      if ( IS_NUMERIC( p1 ) && IS_NUMERIC( p2 ) )
       {
-         if( p1->type == IT_DATE )
+         WORD wType1 = p1->type;
+         WORD wType2 = p1->type;
+
+         /* NOTE: The order of these if() branches is significant, */
+         /*       Don't change it */
+
+         if( wType1 == IT_DOUBLE || wType2 == IT_DOUBLE )
          {
-            long l1 = p1->item.asDate.value, l2 = p2->item.asDate.value;
-            hb_retds(l1 >= l2? hb_pards(1): hb_pards(2));
+            double d1 = hb_parnd( 1 );
+            double d2 = hb_parnd( 2 );
+
+            int iDec1 = ( wType1 == IT_DOUBLE ) ? p1->item.asDouble.decimal : 0;
+            int iDec2 = ( wType2 == IT_DOUBLE ) ? p2->item.asDouble.decimal : 0;
+
+            hb_retnd( d1 >= d2 ? d1 : d2 );
+
+            stack.Return.item.asDouble.decimal = ( d1 >= d2 ? iDec1 : iDec2 );
+         }
+         else if( wType1 == IT_LONG || wType2 == IT_LONG )
+         {
+            long l1 = hb_parnl( 1 );
+            long l2 = hb_parnl( 2 );
+
+            hb_retnl( l1 >= l2 ? l1 : l2 );
          }
          else
          {
-            double d1 = hb_parnd(1), d2 = hb_parnd(2);
-            hb_retnd(d1 >= d2? d1: d2);
-            stack.Return.item.asDouble.decimal = (d1 >= d2? p1->item.asDouble.decimal : p2->item.asDouble.decimal);
+            int i1 = hb_parni( 1 );
+            int i2 = hb_parni( 2 );
+
+            hb_retni( i1 >= i2 ? i1 : i2 );
          }
+      }
+      else if( IS_DATE( p1 ) && IS_DATE( p2 ) )
+      {
+         long l1 = p1->item.asDate.value;
+         long l2 = p2->item.asDate.value;
+
+         hb_retds( l1 >= l2 ? hb_pards( 1 ) : hb_pards( 2 ) );
       }
       else
       {
-         hb_errRT_BASE(EG_ARG, 1093, NULL, "MAX");
+         hb_errRT_BASE( EG_ARG, 1093, NULL, "MAX" );
       }
    }
    else
    {
       /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "MAX");
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "MAX" );
    }
 }
 
@@ -160,31 +189,60 @@ HARBOUR HB_MIN( void )
 {
    if( hb_pcount() == 2 )
    {
-      PHB_ITEM p1 = hb_param(1, IT_ANY), p2 = hb_param(2, IT_ANY);
+      PHB_ITEM p1 = hb_param( 1, IT_ANY );
+      PHB_ITEM p2 = hb_param( 2, IT_ANY );
 
-      if( ( IS_NUMERIC( p1 ) && IS_NUMERIC( p2 ) ) || ( IS_DATE( p1 ) && IS_DATE( p2 ) ) )
+      if( IS_NUMERIC( p1 ) && IS_NUMERIC( p2 ) )
       {
-         if( p1->type == IT_DATE )
+         WORD wType1 = p1->type;
+         WORD wType2 = p1->type;
+
+         /* NOTE: The order of these if() branches is significant, */
+         /*       Don't change it */
+
+         if( wType1 == IT_DOUBLE || wType2 == IT_DOUBLE )
          {
-            long l1 = p1->item.asDate.value, l2 = p2->item.asDate.value;
-            hb_retds(l1 <= l2? hb_pards(1): hb_pards(2));
+            double d1 = hb_parnd( 1 );
+            double d2 = hb_parnd( 2 );
+
+            int iDec1 = ( wType1 == IT_DOUBLE ) ? p1->item.asDouble.decimal : 0;
+            int iDec2 = ( wType2 == IT_DOUBLE ) ? p2->item.asDouble.decimal : 0;
+
+            hb_retnd( d1 <= d2 ? d1 : d2 );
+
+            stack.Return.item.asDouble.decimal = ( d1 <= d2 ? iDec1 : iDec2 );
+         }
+         else if( wType1 == IT_LONG || wType2 == IT_LONG )
+         {
+            long l1 = hb_parnl( 1 );
+            long l2 = hb_parnl( 2 );
+
+            hb_retnl( l1 <= l2 ? l1 : l2 );
          }
          else
          {
-            double d1 = hb_parnd(1), d2 = hb_parnd(2);
-            hb_retnd(d1 <= d2? d1: d2);
-            stack.Return.item.asDouble.decimal = (d1 <= d2? p1->item.asDouble.decimal : p2->item.asDouble.decimal);
+            int i1 = hb_parni( 1 );
+            int i2 = hb_parni( 2 );
+
+            hb_retni( i1 <= i2 ? i1 : i2 );
          }
+      }
+      else if( IS_DATE( p1 ) && IS_DATE( p2 ) )
+      {
+         long l1 = p1->item.asDate.value;
+         long l2 = p2->item.asDate.value;
+
+         hb_retds( l1 <= l2 ? hb_pards( 1 ) : hb_pards( 2 ) );
       }
       else
       {
-         hb_errRT_BASE(EG_ARG, 1092, NULL, "MIN");
+         hb_errRT_BASE( EG_ARG, 1092, NULL, "MIN" );
       }
    }
    else
    {
       /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "MIN");
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "MIN" );
    }
 }
 
@@ -208,8 +266,8 @@ FUNCTION MOD(cl_num, cl_base)
 
    if( pNumber && ISNUM( 2 ) )
    {
-      double dNumber = hb_parnd(1);
-      double dBase = hb_parnd(2); /* dBase! Cool! */
+      double dNumber = hb_parnd( 1 );
+      double dBase = hb_parnd( 2 ); /* dBase! Cool! */
       double dResult;
 
       if( dBase )
@@ -278,7 +336,7 @@ HARBOUR HB_ROUND( void )
 {
    if( hb_pcount() == 2 )
    {
-      if( hb_param(1, IT_NUMERIC) && hb_param( 2, IT_NUMERIC ) )
+      if( ISNUM( 1 ) && ISNUM( 2 ) )
       {
          int iDec = hb_parni( 2 );
 
@@ -287,13 +345,13 @@ HARBOUR HB_ROUND( void )
       }
       else
       {
-         hb_errRT_BASE(EG_ARG, 1094, NULL, "ROUND");
+         hb_errRT_BASE( EG_ARG, 1094, NULL, "ROUND" );
       }
    }
    else
    {
       /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "ROUND");
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "ROUND" );
    }
 }
 
