@@ -1,3 +1,9 @@
+19990807-9:19 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/compiler/harbour.y
+     * Debugger() symbol requested when compiling using /b
+   * source/vm/hvm.c
+     * ModuleName() automatically invokes Debugger() if module compiled using /b
+
 19990807-8:39 GMT+1 Antonio Linares <alinares@fivetech.com>
    + source/rtl/tbcolumn.prg
      * Harbour Class TBColumn first outline

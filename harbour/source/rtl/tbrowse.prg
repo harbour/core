@@ -1,6 +1,6 @@
 /*
  * Harbour Class TBrowse
- * Copyright(C) 1999 by Antonio Linares.
+ * Copyright(C) 1999 by Antonio Linares <alinares@fivetech.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
@@ -17,8 +17,6 @@
  *
  * The Free Software Foundation, Inc.,
  * 675 Mass Ave, Cambridge, MA 02139, USA.
- *
- * You can contact me at: alinares@fivetech.com
  */
 
 #include "classes.ch"
@@ -65,7 +63,9 @@ CLASS TBrowse
    METHOD PanRight()       VIRTUAL // Pans right without changing the cursor position
    METHOD Right()          VIRTUAL // Moves the cursor right one column
    METHOD Up()             VIRTUAL // Moves the cursor up one row
-   METHOD AddColumn()      VIRTUAL // Adds a TBColumn object to the TBrowse object
+
+   METHOD AddColumn( oCol ) INLINE AAdd( ::aColumns, oCol ) // Adds a TBColumn object to the TBrowse object
+
    METHOD ColorRect()      VIRTUAL // Alters the color of a rectangular group of cells
    METHOD ColWidth()       VIRTUAL // Returns the display width of a particular column
    METHOD Configure()      VIRTUAL // Reconfigures the internal settings of the TBrowse object
@@ -73,7 +73,7 @@ CLASS TBrowse
    METHOD DelColumn()      VIRTUAL // Delete a column object from a browse
    METHOD ForceStable()    VIRTUAL // Performs a full stabilization                             ê
 
-   METHOD GetColumn( nColumn ) INLINE If( 0 > nColumn .and. nColumn <= Len( ::aColumns ),;
+   METHOD GetColumn( nColumn ) INLINE If( 0 < nColumn .and. nColumn <= Len( ::aColumns ),;
                                           ::aColumns[ nColumn ], nil ) // Gets a specific TBColumn object
 
    METHOD Hilite()         VIRTUAL // Highlights the current cell
@@ -81,7 +81,10 @@ CLASS TBrowse
    METHOD Invalidate()     VIRTUAL // Forces redraw during next stabilization
    METHOD RefreshAll()     VIRTUAL // Causes all data to be refreshed during the next stabilize
    METHOD RefreshCurrent() VIRTUAL // Causes the current row to be refreshed on next stabilize
-   METHOD SetColumn()      VIRTUAL // Replaces one TBColumn object with another
+
+   METHOD SetColumn( nColumn, oCol ) INLINE If( 0 < nColumn .and. nColumn <= Len( ::aColumns ),;
+                                                ::aColumns[ nColumn ] := oCol, nil ), oCol // Replaces one TBColumn object with another
+
    METHOD Stabilize()      VIRTUAL // Performs incremental stabilization
 
 ENDCLASS
