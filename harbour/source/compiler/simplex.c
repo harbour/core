@@ -233,7 +233,7 @@ static void GenTrees( void );
 #define IF_TOKEN_READY()  if( iReturn )
 #define IF_TOKEN_ON_HOLD()  if( iHold )
 #define REDUCE( x ) Reduce( (x), TRUE )
-#define RESET_LEX() { iLen = 0; iMatched = 0; iHold = 0; iReturn = 0; bNewLine = TRUE; bStart = TRUE; }
+#define RESET_LEX() { iLen = 0; iMatched = 0; iProspects = 0; iHold = 0; iReturn = 0; bNewLine = TRUE; bStart = TRUE; }
 #define FORCE_REDUCE() Reduce( 0, TRUE )
 
 #define HOLD_TOKEN(x) \
@@ -517,12 +517,14 @@ static void GenTrees( void );
                   aiReturn[ iReturn++ ] = aiMatched[ iMatch ]; \
                   iMatch++; \
                } \
-               iMatched = 0;\
+               /* Resetting */ \
+               iLen = 0; iMatched = 0; iProspects = 0; iHold = 0; bNewLine = TRUE; bStart = TRUE; \
                goto Start;\
             } \
             else if( iRet == -1 ) \
             { \
                RESET_LEX();\
+               DEBUG_INFO( printf(  "Returning: <EOF>\n" ) ); \
                return -1; \
             }\
             else if( iRet < 256 )\
@@ -931,21 +933,22 @@ YY_DECL
        {
           if( iMatched )
           {
-              /* Returning Pending Rule Match Tokens without further tests. */ \
-              iMatch = 0; \
-              while( iMatch < iMatched ) \
-              { \
-                 DEBUG_INFO( printf(  "Returning Pending Match Tokens at: <EOF>\n" ) ); \
-                 \
-                 aiReturn[ iReturn++ ] = aiMatched[ iMatch ]; \
-                 iMatch++; \
-              } \
-              iMatched = 0;\
-              goto Start;\
+              /* Returning Pending Rule Match Tokens without further tests. */
+              iMatch = 0;
+              while( iMatch < iMatched )
+              {
+                 DEBUG_INFO( printf(  "Returning Pending Match Tokens at: <EOF>\n" ) );
+
+                 aiReturn[ iReturn++ ] = aiMatched[ iMatch ];
+                 iMatch++;
+              }
+              /* Resetting */
+              iLen = 0; iMatched = 0; iProspects = 0; iHold = 0; bNewLine = TRUE; bStart = TRUE;
+              goto Start;
           }
 
+          RESET_LEX();
           DEBUG_INFO( printf(  "Returning: <EOF>\n" ) );
-
           return -1;
        }
     }
@@ -1237,7 +1240,7 @@ YY_DECL
 
                i = aKeyNodes[ sToken[0] ].iMin;
                iMax = aKeyNodes[ sToken[0] ].iMax + 1;
-               DEBUG_INFO( printf(  "Scanning %i Keys for Token: %s\n", iMax - i, (char*) sToken ) );
+               DEBUG_INFO( printf(  "Scanning Keys for Token: %s at Positions: %i-%i\n", (char*) sToken, i, iMax -1 ) );
 
                while ( i < iMax )
                {
@@ -1297,7 +1300,7 @@ YY_DECL
 
                i = aWordNodes[ sToken[0] ].iMin;
                iMax = aWordNodes[ sToken[0] ].iMax + 1;
-               DEBUG_INFO( printf(  "Scanning %i Words for Token: %s\n", iMax - i, (char*) sToken ) );
+               DEBUG_INFO( printf(  "Scanning Words for Token: %s at Positions: %i-%i\n", (char*) sToken, i, iMax - 1 ) );
 
                while ( i < iMax )
                {
@@ -1473,6 +1476,14 @@ void * yy_bytes_buffer( char * pBuffer, int iBufSize )
 {
    s_szBuffer = pBuffer;
    iSize = iBufSize;
+
+   if( bStart )
+   {
+      bStart = FALSE;
+      GenTrees()
+      INIT_ACTION();
+   }
+
    return s_szBuffer;
 }
 
