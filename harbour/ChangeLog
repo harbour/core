@@ -1,3 +1,8 @@
+2001-06-03 09:35 UTC+1 JFL (mafact) <jfl@mafact.com>
+   * harbour/source/vm/Classe.c
+     * Temporary disabled scoping for rel. 0.37 !
+
+
 2001-06-01 10:30 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      + PP_RunArray( asLines, aParams )
