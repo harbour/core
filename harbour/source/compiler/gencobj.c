@@ -50,6 +50,11 @@ void hb_compGenCObj( PHB_FNAME pFileName )
    char szOutPath[ _POSIX_PATH_MAX ] = "\0";
 #if defined( OS_UNIX_COMPATIBLE )
    char szDefaultUnixPath[ _POSIX_PATH_MAX ] = "/etc:/usr/local/etc";
+   #define HB_NULL_STR " > /dev/null"
+   #define HB_ACCESS_FLAG F_OK
+#elif defined( OS_DOS_COMPATIBLE )
+   #define HB_NULL_STR " >nul"      
+   #define HB_ACCESS_FLAG 0
 #endif
    FILE * yyc;
    char * pszCfg;
@@ -68,7 +73,7 @@ void hb_compGenCObj( PHB_FNAME pFileName )
    /* Begin second pass */
 
    /* Set up things  */
-#if defined(__MSDOS__) || defined(__WIN32__) || defined(_Windows)
+#if defined( OS_DOS_COMPATIBLE ) 
    pszEnv = hb_getenv( "PATH" );
 #elif defined( OS_UNIX_COMPATIBLE )
    pszEnv = szDefaultUnixPath;
@@ -113,52 +118,46 @@ void hb_compGenCObj( PHB_FNAME pFileName )
          szStr[ ulLen ] = '\0';
          /* TODO: Check for comments within macros, i.e: CC=bcc32 #comment */
 
-         if( szStr )
-         {
-            szToken = strtok( szStr, "=" );
-
-            if( szToken )
+         if( *szStr )
             {
-               /* Checks compiler name */
-               if( ! hb_stricmp( szToken, "CC" ) )
+               szToken = strchr( szStr, '=' );
+            
+               if( szToken )
                {
-                  szToken = strtok( NULL, "=" );
-                  if( szToken ) /* If empty, preserve last value */
-                     sprintf( szCompiler, "%s", szToken );
+                  *szToken++ = '\0';
+                  if ( *szToken )
+                  {
+                     /* Checks compiler name */
+                     if( ! hb_stricmp( szStr, "CC" ) )
+                     {
+                        sprintf( szCompiler, "%s", szToken );
+                     }
+                     /* Checks optional switches */
+                     else if( ! hb_stricmp( szStr, "CFLAGS" ) )
+                     {
+                        sprintf( szOptions, "%s", szToken );
+                     }
+                     /* Wanna see C compiler output ? */
+                     else if( ! hb_stricmp( szStr, "VERBOSE" ) )
+                     {
+                        if( ! hb_stricmp( szToken, "YES" ) )
+                           bVerbose = TRUE;
+                     }
+                     /* Delete intermediate C file ? */
+                     else if( ! hb_stricmp( szStr, "DELTMP" ) )
+                     {
+                        if( ! hb_stricmp( szToken, "NO" ) )
+                           bDelTmp = FALSE;
+                     }
+                  }
                }
-
-               /* Checks optional switches */
-               if( szToken && ! hb_stricmp( szToken, "CFLAGS" ) )
-               {
-                  szToken = strtok( NULL, "=" );
-                  if( szToken )
-                     sprintf( szOptions, "%s", szToken );
-               }
-
-               /* Wanna see C compiler output ? */
-               if( szToken && ! hb_stricmp( szToken, "VERBOSE" ) )
-               {
-                  szToken = strtok( NULL, "=" );
-                  if( szToken && ! hb_stricmp( szToken, "YES" ) )
-                     bVerbose = TRUE;
-               }
-
-               /* Delete intermediate C file ? */
-               if( szToken && ! hb_stricmp( szToken, "DELTMP" ) )
-               {
-                  szToken = strtok( NULL, "=" );
-                  if( szToken && ! hb_stricmp( szToken, "NO" ) )
-                     bDelTmp = FALSE;
-               }
-
             }
-         }
       }
 
       fclose( yyc );
    }
 
-   #if defined(__MSDOS__) || defined(__WIN32__) || defined(_Windows)
+   #if defined( OS_DOS_COMPATIBLE ) 
    {
       if( pszEnv )
          hb_xfree( ( void * ) pszEnv );
@@ -181,7 +180,7 @@ void hb_compGenCObj( PHB_FNAME pFileName )
       if( hb_comp_pOutPath->szPath )
          pOut->szPath = hb_comp_pOutPath->szPath;
 
-#if defined(__BORLANDC__) || defined(_MSC_VER)
+#if defined(__BORLANDC__) || defined(_MSC_VER) || defined(__WATCOMC__)
       pOut->szExtension = ".obj";
 #else
       pOut->szExtension = ".o";  /* Don't know if we can hardcode it for Un*x */
@@ -190,6 +189,8 @@ void hb_compGenCObj( PHB_FNAME pFileName )
 
 #if defined(_MSC_VER)
       strcat( szOutPath, "-Fo" );
+#elif defined(__WATCOMC__)
+      strcat( szOutPath, "-fo=" );      
 #else
       strcat( szOutPath, "-o" );
 #endif
@@ -201,19 +202,15 @@ void hb_compGenCObj( PHB_FNAME pFileName )
 
    if( *szCompiler )
    {
+      sprintf( szCommandLine, "%s %s %s %s", szCompiler, szOptions, szOutPath, szFileName );
+      
       if( bVerbose )
       {
-         printf( "\n" ) ;
-         sprintf( szCommandLine, "%s %s %s %s", szCompiler, szOptions, szOutPath, szFileName );
-         printf( "\n" ) ;
+         printf( "\n%s\n", szCommandLine ) ;
       }
       else
       {
-#if defined(__MSDOS__) || defined(__WIN32__) || defined(_Windows)
-         sprintf( szCommandLine, "%s %s %s %s > nul", szCompiler, szOptions, szOutPath, szFileName );
-#elif defined( OS_UNIX_COMPATIBLE )
-         sprintf( szCommandLine, "%s %s %s %s > /dev/null", szCompiler, szOptions, szOutPath, szFileName );
-#endif
+         strcat( szCommandLine, HB_NULL_STR );
       }
 
       /* Compile it! */
@@ -248,11 +245,7 @@ static char * hb_searchpath( const char * pszFile, char * pszEnv, char * pszCfg 
    BOOL bFound = FALSE;
 
    /* Check current dir first  */
-#if defined( OS_UNIX_COMPATIBLE )
-   if( access( ( const char * ) pszFile, F_OK ) == 0 )
-#else
-   if( access( ( const char * ) pszFile, 0 ) == 0 )
-#endif
+   if( access( ( const char * ) pszFile, HB_ACCESS_FLAG ) == 0 )
    {
       sprintf( pszCfg, "%s", pszFile );
       return ( char * ) pszFile;
@@ -266,11 +259,7 @@ static char * hb_searchpath( const char * pszFile, char * pszEnv, char * pszCfg 
          while( pszPath )
          {
             sprintf( pszCfg, "%s%c%s", pszPath, OS_PATH_DELIMITER, pszFile );
-#if defined( OS_UNIX_COMPATIBLE )
-            if( access( ( const char * ) pszCfg, F_OK ) == 0 )
-#else
-            if( access( ( const char * ) pszCfg, 0 ) == 0 )
-#endif
+            if( access( ( const char * ) pszCfg, HB_ACCESS_FLAG ) == 0 )
             {
                bFound = TRUE;
                break;

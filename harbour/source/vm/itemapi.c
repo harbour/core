@@ -86,7 +86,7 @@
 #if !defined(__DJGPP__)
 #include <math.h> /* For log() */
 #endif
-#if defined(_MSC_VER) || defined(__IBMCPP__) || (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
+#if defined(_MSC_VER) || defined(__IBMCPP__) || (__BORLANDC__ > 1040) || defined(__WATCOMC__) /* Use this only above Borland C++ 3.1 */
 #include <float.h>  /* for _finite() and _isnan() */
 #endif
 
@@ -1237,6 +1237,7 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
             #endif
             if( pNumber->item.asDouble.length == 99
             #if defined(__WATCOMC__)
+               || !_finite( dNumber )
             #elif defined(_MSC_VER) || (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
                || !_finite(dNumber)
             #elif defined(__DJGPP__) || defined(__MINGW32__)

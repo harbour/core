@@ -130,10 +130,11 @@ typedef struct _SORTSWAPPAGE
    ULONG       keysLeft;
    ULONG       tmpRecNo;  /* to speed up access */
    BYTE        tmpKeyLen;
-   char *      tmpKeyVal;
-   char        page[ 512 ];
+   BYTE *      tmpKeyVal;
+   BYTE        page[ 512 ];
 } SORTSWAPPAGE;
 typedef SORTSWAPPAGE * LPSORTSWAPPAGE;
+
 
 typedef struct _SORTSWAPITEM
 {

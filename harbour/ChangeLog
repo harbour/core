@@ -8,6 +8,18 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-11-24 18:32 UTC+0100 Lorenzo Fiorini <lorenzo_fiorini@tin.it>
+  * source/compiler/gencobj.c
+    ! fixed to allow = for the C compiler options
+    ( suggested by Przemyslaw Czerpak )
+    ! added support of OpenWatcom C
+    ! cleaned the verbose option
+  * source/rdd/dbfcdx/dbfcdx1.h
+    ! changed to allow OpenWatcom C build 
+    ( suggested by Przemyslaw Czerpak )
+  * source/vm/itemapi.c
+    ! added support of OpenWatcom C
+
 2003-11-14 16:45 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbmath.h
       * fixed to compile under OpenWatcom
