@@ -620,7 +620,66 @@ static ERRCODE adsClose( ADSAREAP pArea )
    return SUPER_CLOSE( (AREAP)pArea );
 }
 
-#define  adsCreate                NULL
+//#define  adsCreate                NULL
+static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo)
+{
+   ADSHANDLE hTable;
+   UNSIGNED32 uRetVal;
+   UNSIGNED8 *ucfieldDefs;
+   UNSIGNED8 ucBuffer[MAX_STR_LEN+1], ucField[HARBOUR_MAX_RDD_FIELDNAME_LENGTH+1];
+   USHORT uiCount, uiLen;
+   LPFIELD pField;
+
+   HB_TRACE(HB_TR_DEBUG, ("adsCreate(%p, %p)", pArea, pCreateInfo));
+
+   uiLen = (pArea->uiFieldCount * 22) + 1;
+   ucfieldDefs = (UNSIGNED8 *) hb_xgrab( uiLen );
+   ucfieldDefs[0]='\0';
+   pField = pArea->lpFields;
+   for( uiCount = 0; uiCount < pArea->uiFieldCount; uiCount++ )
+   {
+     switch ( pField->uiType )
+     {
+        case 'D' :
+        case 'L' :
+        case 'M' :
+            if(strlen((( PHB_DYNS ) pField->sym )->pSymbol->szName) > HARBOUR_MAX_RDD_FIELDNAME_LENGTH )
+            {
+                ucField[0]='\0';
+                strncat(ucField, (( PHB_DYNS ) pField->sym )->pSymbol->szName,
+                                    HARBOUR_MAX_RDD_FIELDNAME_LENGTH);
+                sprintf(ucBuffer,"%s,%c;", ucField, pField->uiType );
+            }
+            else
+                sprintf(ucBuffer,"%s,%c;", ( ( PHB_DYNS ) pField->sym )->pSymbol->szName,
+                           pField->uiType );
+            break;
+        default :
+            if(strlen((( PHB_DYNS ) pField->sym )->pSymbol->szName) > HARBOUR_MAX_RDD_FIELDNAME_LENGTH )
+            {
+                ucField[0]='\0';
+                strncat(ucField, (( PHB_DYNS ) pField->sym )->pSymbol->szName,
+                                    HARBOUR_MAX_RDD_FIELDNAME_LENGTH);
+                sprintf(ucBuffer,"%s,%c,%d,%d;", ucField, pField->uiType, pField->uiLen, pField->uiDec );
+            }
+            else
+                sprintf(ucBuffer,"%s,%c,%d,%d;", (( PHB_DYNS ) pField->sym )->pSymbol->szName,
+                        pField->uiType, pField->uiLen, pField->uiDec );
+            break;
+     }
+     strcat(ucfieldDefs, ucBuffer);
+     pField++;
+   }
+   pArea->lpDataInfo->hFile = FS_ERROR;
+   uRetVal = AdsCreateTable( 0, pCreateInfo->abName, NULL, adsFileType, adsCharType,
+                    adsLockType, adsRights, ADS_DEFAULT, ucfieldDefs, &hTable);
+
+   hb_xfree(ucfieldDefs);
+   if( uRetVal != AE_SUCCESS )
+      return FAILURE;
+   AdsCloseTable(hTable);
+   return SUCCESS;
+}
 
 static ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {

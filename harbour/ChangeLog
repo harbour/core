@@ -1,3 +1,7 @@
+20000212-12:22 GMT+1 Philip Joseph <philjo@writeme.com>
+   * contrib/rdd_ads/ads1.c
+     + Added adsCreate function for creating ads tables. It also supports 
+       adt tables with short names.	 	
 20000212-02:30 GMT+1 Victor Szakats <info@szelvesz.hu>
    * include/gtapi.h
      + NOTE: added about incompatibilities between Harbour and CA-Cl*pper
