@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+      New functions added:
+       __HRBLOAD(), __HRBDO(), __HRBUNLOAD(),
+       __HRBGETFU(), HRBDOFU()
+      Now it became possible to use hrb files like pcode DLLs:
          hrbLib :=  __hrbLoad( "Mylib.hrb" )
          hFu1   :=  __hrbGetFu( hrbLib,"fu1" )
          __hrbDoFu( hFu1 )
