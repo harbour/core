@@ -1,3 +1,7 @@
+19991212-13:45 EST Paul Tucker <ptucker@sympatico.ca>
+  * tests/bld_vc.bat
+    + ..\lib\vc\macro.lib
+
 19991212-13:25 EST Paul Tucker <ptucker@sympatico.ca>
   * makefile.vc
     + source/macro/*
