@@ -115,7 +115,7 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
                         lLine = 0;
 
                         pFile->iLine += ( 1 + hb_pp_nEmptyStrings );
-                        sprintf( s_szLine+strlen(s_szLine), "#line 1 \"%s\"\n", hb_comp_files.pLast->szFileName );
+                        sprintf( s_szLine+strlen(s_szLine), "#line 1 \"%s\"", hb_comp_files.pLast->szFileName );
                         hb_pp_nEmptyStrings = 0;
                      }
                      else

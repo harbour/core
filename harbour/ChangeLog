@@ -1,3 +1,8 @@
+2000-06-13 08:08 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/pp/ppcomp.c
+     ! Minor correction - There should be no empty lines between #line directive any more.
+
 2000-06-13 03:00 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
 
    * makefile.bc
@@ -8,7 +13,7 @@
      ! Corrected initialization of pFile->iLine to 1
 
    * source/pp/ppcomp.c
-     ! Fixed redundnant empty lines generation and line numbering.
+     ! Fixed redundant empty lines generation and line numbering.
 
 2000-06-12 20:25 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
