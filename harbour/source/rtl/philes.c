@@ -235,4 +235,28 @@ HB_FUNC( HB_F_EOF )
    }
 }
 
+HB_FUNC( HB_OSPATHSEPARATOR )
+{
+   char ret[2];
+   ret[1] = 0;
+   ret[0] = OS_PATH_DELIMITER;
+
+   hb_retc( ret );
+}
+
+HB_FUNC( HB_OSPATHLISTSEPARATOR )
+{
+   char ret[2];
+   ret[1] = 0;
+   ret[0] = OS_PATH_LIST_SEPARATOR;
+
+   hb_retc( ret );
+}
+
+HB_FUNC( HB_OSPATHDELIMITERS )
+{
+   hb_retc( OS_PATH_DELIMITER_LIST );
+}
+
+
 #endif
