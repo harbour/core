@@ -92,6 +92,7 @@
 
 #define HB_OS_WIN_32_USED
 
+#include <string.h>
 #include <ctype.h>
 
 #include "hbapi.h"
@@ -401,16 +402,16 @@ char *hb_filecase(char *str) {
    // DIRCASE - define the case of path
    // DIRSEPARATOR - define separator of path (Ex. "/")
 
-   int a;
+   size_t a;
    char *filename;
    char *dirname=str;
-   int dirlen;
+   size_t dirlen;
 
    // Look for filename (Last "\" or DIRSEPARATOR)
    if( hb_set.HB_SET_DIRSEPARATOR[0]!='\\') {
       for(a=0;a<strlen(str);a++) if(str[a]=='\\') str[a]=hb_set.HB_SET_DIRSEPARATOR[0];
    }
-   if((filename=rindex( str, hb_set.HB_SET_DIRSEPARATOR[0] ))!=NULL) filename++; else filename=str;
+   if((filename=strrchr( str, hb_set.HB_SET_DIRSEPARATOR[0] ))!=NULL) filename++; else filename=str;
    dirlen=filename-str;
 
    // FILECASE
@@ -492,7 +493,7 @@ FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsOpen(%p, %hu)", pFilename, uiFlags));
 
-   pFilename=hb_filecase(strdup(pFilename));
+   pFilename=hb_filecase(hb_strdup(pFilename));
 
 #if defined(X__WIN32__)
 
@@ -598,7 +599,7 @@ FHANDLE hb_fsCreate( BYTE * pFilename, USHORT uiAttr )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsCreate(%p, %hu)", pFilename, uiAttr));
 
-   pFilename=hb_filecase(strdup(pFilename));
+   pFilename=hb_filecase(hb_strdup(pFilename));
    s_uiErrorLast = 0;
 
 #if defined(X__WIN32__)
@@ -665,7 +666,7 @@ FHANDLE hb_fsCreateEx( BYTE * pFilename, USHORT uiAttr, USHORT uiFlags )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsCreateEx(%p, %hu, %hu)", pFilename, uiAttr, uiFlags));
 
-   pFilename=hb_filecase(strdup(pFilename));
+   pFilename=hb_filecase(hb_strdup(pFilename));
 
    s_uiErrorLast = 0;
 
