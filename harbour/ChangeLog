@@ -1,3 +1,23 @@
+2000-04-04 20:00 GMT-4 David G. Holm <dholm@jsd-llc.com>
+
+   * source/rtl/dir.c
+   * source/rtl/inkey.c
+   * source/rtl/set.c
+   * source/rtl/gtos2/mouseos2.c
+     - Removed the local ChangeLog.
+
+   * source/rtl/gtos2/gtos2.c
+     + Put #include <os2.h> back in for compilers other than GCC,
+       because that's where they get the basic variable types, etc.
+     ! Changed 'unsigned char *' to 'BYTE *' for fpBlank and fpBuff
+       in hb_gt_Scroll(), because hb_gt_Puts(), hb_gt_GetText(), and
+       hb_gt_PutText() take 'BYTE *' parameters and passing 'char *'
+       variables confuses the IBM VisualAge C++ compiler.
+     % Reformatted hb_gt_Scroll() to eliminate TAB characters.
+
+   * source/rtl/gtpca/gtpca.c
+     + Added HB_SYMBOL_UNUSED() for all unused function arguments.
+
 20000404-08:00 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
    *doc/en/dbstrux.txt
         *Small reformating

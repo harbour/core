@@ -33,17 +33,6 @@
  *
  */
 
-/*
- * ChangeLog:
- *
- * V 1.3    Chen Kedem                  hb_mouse_Hide() now work in any text
- *                                      screen mode by calling VioGetMode.
- *                                      hb_mouse_IsButtonPressed() now return
- *                                      TRUE if any button was pressed.
- * V 1.0    Chen Kedem                  Initial version.
- *
- */
-
 #define INCL_MOU
 #define INCL_VIO             /* needed only for VioGetMode/VIOMODEINFO    */
 #define INCL_NOPMAPI         /* exclude Presentation Manager Include File */

@@ -241,6 +241,7 @@ SHORT hb_gt_Col( void )
 void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE attr, SHORT sVert, SHORT sHoriz )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Scroll(%hu, %hu, %hu, %hu, %d, %hd, %hd)", usTop, usLeft, usBottom, usRight, (int) attr, sVert, sHoriz));
+   HB_SYMBOL_UNUSED( attr );
    if( sVert == 0 && sHoriz == 0 )
    {
       /* Clear */
@@ -292,6 +293,7 @@ USHORT hb_gt_GetCursorStyle( void )
 void hb_gt_SetCursorStyle( USHORT style )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetCursorStyle(%hu)", style));
+   HB_SYMBOL_UNUSED( style );
 }
 
 void hb_gt_Puts( USHORT usRow, USHORT usCol, BYTE attr, BYTE * str, ULONG len )
@@ -317,18 +319,33 @@ void hb_gt_Puts( USHORT usRow, USHORT usCol, BYTE attr, BYTE * str, ULONG len )
 void hb_gt_GetText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE *dest )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetText(%hu, %hu, %hu, %hu, %p)", usTop, usLeft, usBottom, usRight, dest));
+   HB_SYMBOL_UNUSED( usTop );
+   HB_SYMBOL_UNUSED( usLeft );
+   HB_SYMBOL_UNUSED( usBottom );
+   HB_SYMBOL_UNUSED( usRight );
+   HB_SYMBOL_UNUSED( dest );
    /* TODO: */
 }
 
-void hb_gt_PutText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE *srce )
+void hb_gt_PutText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE *src )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutText(%hu, %hu, %hu, %hu, %p)", usTop, usLeft, usBottom, usRight, srce));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutText(%hu, %hu, %hu, %hu, %p)", usTop, usLeft, usBottom, usRight, srce) );
+   HB_SYMBOL_UNUSED( usTop );
+   HB_SYMBOL_UNUSED( usLeft );
+   HB_SYMBOL_UNUSED( usBottom );
+   HB_SYMBOL_UNUSED( usRight );
+   HB_SYMBOL_UNUSED( src );
    /* TODO: */
 }
 
 void hb_gt_SetAttribute( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE attr )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d)", usTop, usLeft, usBottom, usRight, (int) attr));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d)", usTop, usLeft, usBottom, usRight, (int) attr) );
+   HB_SYMBOL_UNUSED( usTop );
+   HB_SYMBOL_UNUSED( usLeft );
+   HB_SYMBOL_UNUSED( usBottom );
+   HB_SYMBOL_UNUSED( usRight );
+   HB_SYMBOL_UNUSED( attr );
    /* TODO: */
    s_iAttribute = attr;
 }
@@ -353,14 +370,18 @@ void hb_gt_DispEnd( void )
 
 BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetMode(%hu, %hu)", uiRows, uiCols));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetMode(%hu, %hu)", uiRows, uiCols) );
+   HB_SYMBOL_UNUSED( uiRows );
+   HB_SYMBOL_UNUSED( uiCols );
    /* TODO: */
    return 0;   /* 0 = Ok, other = Fail */
 }
 
 void hb_gt_Replicate( BYTE c, ULONG ulLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%d, %lu)", (int) c, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%d, %lu)", (int) c, ulLen) );
+   HB_SYMBOL_UNUSED( c );
+   HB_SYMBOL_UNUSED( ulLen );
   /* TODO: this will write character c nlength times to the screen.
            Note that it is not used yet
            If there is no native function that supports this, it is
@@ -377,7 +398,8 @@ BOOL hb_gt_GetBlink()
 
 void hb_gt_SetBlink( BOOL bBlink )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetBlink(%d)", (int) bBlink));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetBlink(%d)", (int) bBlink) );
+   HB_SYMBOL_UNUSED( bBlink );
    /* TODO: */
 }
 

@@ -34,40 +34,6 @@
  */
 
 /*
- * ChangeLog:
- *
- * V 1.63   David G. Holm               Enable Unix-compatible keyboard input
- *                                      even when not using ncurses or slang.
- * V 1.55   David G. Holm               Added _SET_CANCEL support for
- *                                      Ctrl+Break, returning no key code
- *                                      when _SET_CANCEL is off.
- * V 1.45   David G. Holm               Removed Borland Windows support.
- *                                      Removed DOS-like Windows support.
- *                                      Removed Cygwin from Unix-like support.
- *                                      Added Console Mode Windows support.
- * V 1.39   David G. Holm               Added Borland Windows support.
- *                                      Restored Unix support to what
- *                                      it was in version 1.34.
- *                                      Added separate Cygwin support and
- *                                      set it up to cooperate between the
- *                                      hb_inkeyGet() and hb_inkeyNext()
- *                                      functions (but it still blocks).
- * V 1.36   David G. Holm               Added __MINGW32__ support
- * V 1.35   David G. Holm               Changed the __CYGWIN__ build to use
- *                                      the Unix keyboard input method and
- *                                      modified it to not block the VM.
- * V 1.21   David G. Holm               Added OS/2 DosSleep()
- * V 1.15   David G. Holm               Tested Borland 3.1 hb_releaseCPU()
- * V 1.5    Paul Tucker                 ReleaseCPU comments
- * V 1.4    Victor Szakats
- * V 1.3    Victor Szakats              #include <x> changed to #include "x".
- * V 1.2    Gonzalo Diethelm            ?
- * V 1.1    David G. Holm               Committed to CVS.
- * V 1.0    David G. Holm               Initial version.
- *
- */
-
-/*
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *

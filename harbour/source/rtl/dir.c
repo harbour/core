@@ -38,27 +38,6 @@
           in the current partially buggy way. [vszakats] */
 
 /*
- * ChangeLog:
- *
- * 1.66   20000312   ptucker   Borland use _chmod for attribs
- * 1.53   19990917   dholm     Moved normal hb_itemReturn() and ...Release()
- *                             calls out of the MSC, IBM & MingW32 #if block.
- * 1.49   19990915   dholm     Added __MINGW32__ support
- * 1.46   19990915   ptucker   Return results are now fully compatible
- *                             particularly using MSVC - other os's need
- *                             testing.
- *                             Converted attribute handling and Added
- *                             conversion functions.
- * 1.44   19990911   dholm     Changed file size to numeric, like Clipper.
- * 1.28   19990722   ptucker   Corrected? NT Extended modes.
- * 1.21   19990722   ptucker   Implimented directory for MSVC.
- *                             Includes new attributes.
- * 1.20   19990722   ptucker   Corrected hang when attribute types have
- *                             been requested.
- *
- */
-
-/*
  * Notes from the fringe... <ptucker@sympatico.ca>
  *
  * Clipper is a bit schizoid with the treatment of file attributes, but we've

@@ -69,6 +69,7 @@
    OS/2 GCC hasn't got ToolKit headers available */
    #include <stdlib.h>
 #else
+   #include <os2.h>
    #include <bsedos.h>
 #endif
 #include <conio.h>
@@ -108,8 +109,14 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
       s_ulLVBptr = (ULONG) NULL;
    }
 
-   /* TODO: Is anything required to initialize the video subsystem?
+   /* TODO: Is anything else required to initialize the video subsystem?
             I (Maurilio Longo) think that we should set correct codepage
+            
+      COMMENT: The correct behaviour is to inherit the codepage that is
+               active when the program is started, which automatically
+               happens by not setting the codepage. If somebody wants to
+               change the codepage, there should be a separate function
+               to do that. (David G. Holm <dholm@jsd-llc.com>)
    */
 }
 
@@ -363,90 +370,92 @@ void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight,
 {
 /* Chen Kedem <niki@actcom.co.il> */
 
-	HB_TRACE(HB_TR_DEBUG, ("hb_gt_Scroll(%hu, %hu, %hu, %hu, %d, %hd, %hd)", usTop, usLeft, usBottom, usRigth, (int) attr, sVert, sHoriz));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Scroll(%hu, %hu, %hu, %hu, %d, %hd, %hd)", usTop, usLeft, usBottom, usRigth, (int) attr, sVert, sHoriz));
 
-   if(s_uiDispCount > 0) {
-   	int iRows = sVert, iCols = sHoriz;
+   if(s_uiDispCount > 0)
+   {
+      int iRows = sVert, iCols = sHoriz;
 
-   	/* NOTE: 'SHORT' is used intentionally to correctly compile
-   	*  with C++ compilers
-   	*/
-   	SHORT usRow, usCol;
-   	USHORT uiSize;   /* gtRectSize returns int */
-   	int iLength = ( usRight - usLeft ) + 1;
-   	int iCount, iColOld, iColNew, iColSize;
+      /* NOTE: 'SHORT' is used intentionally to correctly compile
+       *  with C++ compilers
+       */
+      SHORT usRow, usCol;
+      USHORT uiSize;   /* gtRectSize returns int */
+      int iLength = ( usRight - usLeft ) + 1;
+      int iCount, iColOld, iColNew, iColSize;
 
-   	hb_gtGetPos( &usRow, &usCol );
+      hb_gtGetPos( &usRow, &usCol );
 
-   	if( hb_gtRectSize( usTop, usLeft, usBottom, usRight, &uiSize ) == 0 )
-   	{
-      	/* NOTE: 'unsigned' is used intentionally to correctly compile
-       	* with C++ compilers
-       	*/
-      	unsigned char * fpBlank = ( unsigned char * ) hb_xgrab( iLength );
-      	unsigned char * fpBuff = ( unsigned char * ) hb_xgrab( iLength * 2 );
+      if( hb_gtRectSize( usTop, usLeft, usBottom, usRight, &uiSize ) == 0 )
+      {
+         /* NOTE: 'unsigned' is used intentionally to correctly compile
+          * with C++ compilers
+          */
+         BYTE * fpBlank = ( BYTE * ) hb_xgrab( iLength );
+         BYTE * fpBuff = ( BYTE * ) hb_xgrab( iLength * 2 );
 
-      	memset( fpBlank, ' ', iLength );
+         memset( fpBlank, ' ', iLength );
 
-      	iColOld = iColNew = usLeft;
-      	if( iCols >= 0 )
-      	{
-         	iColOld += iCols;
-         	iColSize = ( int ) ( usRight - usLeft );
-         	iColSize -= iCols;
-      	}
-      	else
-      	{
-         	iColNew -= iCols;
-         	iColSize = ( int ) ( usRight - usLeft );
-         	iColSize += iCols;
-      	}
+         iColOld = iColNew = usLeft;
+         if( iCols >= 0 )
+         {
+            iColOld += iCols;
+            iColSize = ( int ) ( usRight - usLeft );
+            iColSize -= iCols;
+         }
+         else
+         {
+            iColNew -= iCols;
+            iColSize = ( int ) ( usRight - usLeft );
+            iColSize += iCols;
+         }
 
-      	for( iCount = ( iRows >= 0 ? usTop : usBottom );
-         	  ( iRows >= 0 ? iCount <= usBottom : iCount >= usTop );
-           	  ( iRows >= 0 ? iCount++ : iCount-- ) )
-      	{
-         	int iRowPos = iCount + iRows;
+         for( iCount = ( iRows >= 0 ? usTop : usBottom );
+         ( iRows >= 0 ? iCount <= usBottom : iCount >= usTop );
+         ( iRows >= 0 ? iCount++ : iCount-- ) )
+         {
+            int iRowPos = iCount + iRows;
 
-         	/* Blank the scroll region in the current row */
-         	hb_gt_Puts( iCount, usLeft, attr, fpBlank, iLength );
+            /* Blank the scroll region in the current row */
+            hb_gt_Puts( iCount, usLeft, attr, fpBlank, iLength );
 
-         	if( ( iRows || iCols ) && iRowPos <= usBottom && iRowPos >= usTop )
-         	{
-	            /* Read the text to be scrolled into the current row */
-   	         hb_gt_GetText( iRowPos, iColOld, iRowPos, iColOld + iColSize, fpBuff );
+            if( ( iRows || iCols ) && iRowPos <= usBottom && iRowPos >= usTop )
+            {
+               /* Read the text to be scrolled into the current row */
+               hb_gt_GetText( iRowPos, iColOld, iRowPos, iColOld + iColSize, fpBuff );
 
-      	      /* Write the scrolled text to the current row */
-         	   hb_gt_PutText( iCount, iColNew, iCount, iColNew + iColSize, fpBuff );
-         	}
-      	}
+               /* Write the scrolled text to the current row */
+               hb_gt_PutText( iCount, iColNew, iCount, iColNew + iColSize, fpBuff );
+            }
+         }
 
-      	hb_xfree( fpBlank );
-      	hb_xfree( fpBuff );
-	   }
+         hb_xfree( fpBlank );
+         hb_xfree( fpBuff );
+      }
 
-   	hb_gtSetPos( usRow, usCol );
+      hb_gtSetPos( usRow, usCol );
 
-   } else {
+   }
+   else
+   {
+      BYTE bCell[ 2 ];                          /* character/attribute pair */
 
-   	BYTE bCell[ 2 ];                            /* character/attribute pair */
+      bCell [ 0 ] = ' ';
+      bCell [ 1 ] = attr;
+      if( ( sVert | sHoriz ) == 0 )             /* both zero, clear region */
+      VioScrollUp ( usTop, usLeft, usBottom, usRight, 0xFFFF, bCell, 0 );
+      else
+      {
+         if( sVert > 0 )                        /* scroll up */
+            VioScrollUp ( usTop, usLeft, usBottom, usRight, sVert, bCell, 0 );
+         else if( sVert < 0 )                   /* scroll down */
+            VioScrollDn ( usTop, usLeft, usBottom, usRight, -sVert, bCell, 0 );
 
-   	bCell [ 0 ] = ' ';
-   	bCell [ 1 ] = attr;
-   	if( ( sVert | sHoriz ) == 0 )               /* both zero, clear region */
-      	VioScrollUp ( usTop, usLeft, usBottom, usRight, 0xFFFF, bCell, 0 );
-   	else
-   	{
-      	if( sVert > 0 )                        /* scroll up */
-         	VioScrollUp ( usTop, usLeft, usBottom, usRight, sVert, bCell, 0 );
-      	else if( sVert < 0 )                   /* scroll down */
-         	VioScrollDn ( usTop, usLeft, usBottom, usRight, -sVert, bCell, 0 );
-
-      	if( sHoriz > 0 )                       /* scroll left */
-         	VioScrollLf ( usTop, usLeft, usBottom, usRight, sHoriz, bCell, 0 );
-      	else if( sHoriz < 0 )                  /* scroll right */
-         	VioScrollRt ( usTop, usLeft, usBottom, usRight, -sHoriz, bCell, 0 );
-   	}
+         if( sHoriz > 0 )                       /* scroll left */
+            VioScrollLf ( usTop, usLeft, usBottom, usRight, sHoriz, bCell, 0 );
+         else if( sHoriz < 0 )                  /* scroll right */
+            VioScrollRt ( usTop, usLeft, usBottom, usRight, -sHoriz, bCell, 0 );
+      }
    }
 }
 
