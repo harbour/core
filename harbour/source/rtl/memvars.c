@@ -56,7 +56,7 @@
 #include "dates.h" /* for __MVSAVE()/__MVRESTORE() */
 #include "filesys.h" /* for __MVSAVE()/__MVRESTORE() */
 #include "error.ch"
-#include "memvars.ch"
+#include "hbmemvar.ch"
 
 #define VS_PRIVATE     64
 #define VS_PUBLIC     128
@@ -1136,7 +1136,7 @@ HARBOUR HB___MVRELEASE( void )
  *  $ARGUMENTS$
  *    <cVarName> = a string with a variable name to check
  *  $RETURNS$
- *    The symbolic values are defined in include/memvars.ch
+ *    The symbolic values are defined in include/hbmemvar.ch
  *    MV_NOT_FOUND      =variable is not declared (not found in symbol table)
  *    MV_UNKNOWN        =if variable doesn't exist (but found in symbol table)
  *    MV_ERROR          =if information cannot be obtained (memory error or argument error)
@@ -1179,7 +1179,7 @@ HARBOUR HB___MVRELEASE( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *    include/memvars.ch
+ *    include/hbmemvar.ch
  *  $END$
  */
 HARBOUR HB___MVSCOPE( void )
@@ -1245,7 +1245,7 @@ HARBOUR HB___MVCLEAR( void )
  *    __MVDBGINFO( <nScope> [, <nPosition> [, @<cVarName>] ] )
  *  $ARGUMENTS$
  *     <nScope> = the scope of variables for which an information is asked
- *           Supported values (defined in memvars.ch)
+ *           Supported values (defined in hbmemvar.ch)
  *           MV_PUBLIC
  *           MV_PRIVATE (or any other value)
  *     <nPosition> = the position of asked variable on the list of variables
@@ -1276,7 +1276,7 @@ HARBOUR HB___MVCLEAR( void )
  *    return the value of the same variable.
  *  $EXAMPLES$
  *
- *  #include <memvars.ch>
+ *  #include <hbmemvar.ch>
  *
  *  LOCAL nCount, i, xValue, cName
  *
@@ -1288,7 +1288,7 @@ HARBOUR HB___MVCLEAR( void )
  *
  *  $TESTS$
  *
- *  #include <memvars.ch>
+ *  #include <hbmemvar.ch>
  *  PROCEDURE MAIN()
  *
  *    ? 'PUBLIC=', __mvDBGINFO( MV_PUBLIC )

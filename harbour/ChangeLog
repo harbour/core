@@ -1,3 +1,10 @@
+19991004-19:54 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/memvars.c
+    ! memvars.ch changed to hbmemvar.ch
+  * tests/working/*.* moved to tests/*.*
+  * tests/working/db_brows.*
+    ! Fixed the CVS header, they missed to closing "$"
+
 19991004-19:23 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/broken/*.* moved to tests/working
     tests/working/Makefile

@@ -1,5 +1,5 @@
 /*
- * $Id: db_brows.ch
+ * $Id$
  */
 // Header file for db_brows.prg
 #define KLRECF    200
