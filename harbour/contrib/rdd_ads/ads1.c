@@ -1390,17 +1390,20 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo)
         case HB_IT_DATE:
         case HB_IT_LOGICAL:
         case HB_IT_MEMO:
-            if(strlen((( PHB_DYNS ) pField->sym )->pSymbol->szName) > HARBOUR_MAX_RDD_FIELDNAME_LENGTH )
+            if( pField->uiTypeExtended != ADS_VARCHAR )
             {
-                ucField[0]='\0';
-                strncat((char*)ucField, (( PHB_DYNS ) pField->sym )->pSymbol->szName,
-                                    HARBOUR_MAX_RDD_FIELDNAME_LENGTH);
-                sprintf((char*)ucBuffer,"%s,%s;", ucField, cType );
+               if(strlen((( PHB_DYNS ) pField->sym )->pSymbol->szName) > HARBOUR_MAX_RDD_FIELDNAME_LENGTH )
+               {
+                   ucField[0]='\0';
+                   strncat((char*)ucField, (( PHB_DYNS ) pField->sym )->pSymbol->szName,
+                                       HARBOUR_MAX_RDD_FIELDNAME_LENGTH);
+                   sprintf((char*)ucBuffer,"%s,%s;", ucField, cType );
+               }
+               else
+                   sprintf((char*)ucBuffer,"%s,%s;", ( ( PHB_DYNS ) pField->sym )->pSymbol->szName,
+                              cType );
+               break;
             }
-            else
-                sprintf((char*)ucBuffer,"%s,%s;", ( ( PHB_DYNS ) pField->sym )->pSymbol->szName,
-                           cType );
-            break;
         default :
             if(strlen((( PHB_DYNS ) pField->sym )->pSymbol->szName) > HARBOUR_MAX_RDD_FIELDNAME_LENGTH )
             {
@@ -1417,6 +1420,7 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo)
      strcat((char*)ucfieldDefs, (char*)ucBuffer);
      pField++;
    }
+   printf("\n%s\n",ucfieldDefs );
    uRetVal = AdsCreateTable( 0, pCreateInfo->abName, NULL, adsFileType, adsCharType,
                     adsLockType, adsRights,
                     hb_set.HB_SET_MBLOCKSIZE,
@@ -2877,5 +2881,3 @@ HB_FUNC( ADSCUSTOMIZEAOF )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSCUSTOMIZEAOF" );
 }
-
-

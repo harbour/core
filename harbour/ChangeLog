@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * source/rtl/dummy.prg
+   * source/rdd/dbcmd.c
+     + added functions ordKeyAdd and ordKeyDel (need support from each RDD)
+     ! fixed compatibility issue: ordListAdd(nil) is valid in Clipper
 
 2002-04-27 17:40 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
   * source/rtl/dbedit.prg
