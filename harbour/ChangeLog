@@ -1,3 +1,9 @@
+2000-11-05 18:39 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
+   * config/os2/gcc.cf
+      + added support to -DSIMPLEX define required for SimpLex only code added by Ron.
+        The same change should be applied to /linux/gcc as well, but I can't test it now,
+        so I leave to unix users.
+
 2000-11-05 10:00 UTC+0100 JFL (mafact) <jfl@mafact.com>
    * source/vm/classes.c
      * strcpy( &cString , ... in place of strcpy( cString, ... :-(((
