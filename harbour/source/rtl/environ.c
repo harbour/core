@@ -165,7 +165,7 @@ HARBOUR HB_OS( void )
 /* TODO: add MSVC support but MSVC cannot detect any OS except Windows! */
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__MINGW32__)
 
-#if defined(_Windows) || defined(WINNT)
+#if defined(_WINDOWS_)
 
 /* NOTE:
     Support for determining the window version by Luiz Rafael Culik
@@ -175,7 +175,6 @@ HARBOUR HB_OS( void )
     dezac@corevia.com
 */
 
-#define HB_OS_VERSION_WINDOWS
    OSVERSIONINFO osVer; /* for GetVersionEx() */
    char szBuild[ 128 ] = "";
    LONG lVersion;
@@ -364,7 +363,7 @@ HARBOUR HB_OS( void )
    if( ! hb_os ) strcpy( version, "Unknown" );
    else if( hb_osmajor == -1 ) strcpy( version, hb_os );
    else if( hb_osmajor == -2 ) { /* NOP */ }
-#ifdef HB_OS_VERSION_WINDOWS
+#ifdef _WINDOWS_
    else sprintf( version, cformat, hb_os, szBuild, hb_osmajor, hb_osminor, hb_osletter );
 #else
    else sprintf( version, cformat, hb_os, hb_osmajor, hb_osminor, hb_osletter );
