@@ -99,7 +99,7 @@
    static DWORD s_cNumRead = 0;   /* Ok to use DWORD here, because this is specific... */
    static DWORD s_cNumIndex = 0;  /* ...to the Windows API, which defines DWORD, etc.  */
    static INPUT_RECORD s_irInBuf[ INPUT_BUFFER_LEN ];
-   static SHORT xRowPos = 0, yRowPos = 0;
+   static SHORT s_xRowPos = 0, s_yRowPos = 0;
 #endif
 #endif
 
@@ -650,8 +650,8 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
          }
          else if( s_irInBuf[ s_cNumIndex ].EventType == MOUSE_EVENT )
          {
-            xRowPos = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.X;
-            yRowPos = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.Y;
+            s_xRowPos = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.X;
+            s_yRowPos = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.Y;
 
             if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == MOUSE_MOVED )
                ch = K_MOUSEMOVE;
@@ -1152,7 +1152,7 @@ HARBOUR HB___KEYPUT( void )
 
 HARBOUR HB_MCOL( void )
 {
-   hb_retnl( yRowPos );
+   hb_retnl( s_yRowPos );
 }
 
 /*  $DOC$
@@ -1185,7 +1185,7 @@ HARBOUR HB_MCOL( void )
 
 HARBOUR HB_MROW( void )
 {
-   hb_retnl( xRowPos );
+   hb_retnl( s_xRowPos );
 }
 
 /*  $DOC$

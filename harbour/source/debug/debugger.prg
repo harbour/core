@@ -356,6 +356,12 @@ METHOD HandleEvent() CLASS TDebugger
       nKey = InKey( 0 )
 
       do case
+         case nKey == K_LBUTTONDOWN
+              Alert( Str( MCol() ) + ", " + Str( MRow() ) )
+
+         case nKey == K_RBUTTONDOWN
+              Alert( "K_RBUTTONDOWN" )
+
          case ::oPullDown:IsOpen()
               ::oPullDown:ProcessKey( nKey )
               if ::oPullDown:nOpenPopup == 0 // Closed
