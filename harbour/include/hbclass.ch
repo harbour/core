@@ -44,6 +44,8 @@
  *    Delegating, DATA Shared
  *    Support of 10 Chars limits
  *
+ * 2000/06/07 One minor bug in one command
+ *
  * Copyright 2000 Brian Hays <bhays@abacuslaw.com>
  *    Documentation for the commands
  *
@@ -276,7 +278,7 @@
 
 #xcommand METHOD <MethodName>( [<params,...>] ) SETGET => ;
    oClass:AddMethod( <(MethodName)>, CLSMETH _CLASS_NAME_ <MethodName>(), HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_READONLY ) ;;
-   oClass:AddMethod( "_" + <(MethodName)>, CLSMETH _CLASS_NAME_ <MethodName>() )
+   oClass:AddMethod( "_" + <(MethodName)>, CLSMETH _CLASS_NAME_ _<MethodName>() )
 
 #xcommand ACCESS <AccessName> => ;
    oClass:AddMethod( <(AccessName)>, CLSMETH _CLASS_NAME_ <AccessName>(), HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_READONLY )
@@ -301,7 +303,8 @@
 
 #xtranslate END CLASS => ENDCLASS
 
-#xcommand ENDCLASS => oClass:Create() ;;
+#xcommand ENDCLASS => ;; //Here we will add a inline message to ::Class. RaC&JfL
+                      oClass:Create() ;;
                       endif ;;
                       return oClass:Instance()
 

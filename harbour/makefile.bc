@@ -50,7 +50,7 @@ LIB_DIR = lib\b16
 CC = bcc32
 # NOTE: Using TASM for some reason, this should be normally TASM32.
 #       I'll leave it to TASM until a better solution is found
-AS = tasm
+AS = tasm32
 
 BIN_DIR = bin\b32
 OBJ_DIR = obj\b32
@@ -294,6 +294,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\tbcolumn.obj \
    $(OBJ_DIR)\tbrowse.obj \
    $(OBJ_DIR)\tclass.obj \
+   $(OBJ_DIR)\tobject.obj \
    $(OBJ_DIR)\teditor.obj \
    $(OBJ_DIR)\terror.obj \
    $(OBJ_DIR)\text.obj \
@@ -1477,6 +1478,13 @@ $(OBJ_DIR)\tclass.c : $(RTL_DIR)\tclass.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\tclass.obj : $(OBJ_DIR)\tclass.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\tobject.c : $(RTL_DIR)\tobject.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\tobject.obj : $(OBJ_DIR)\tobject.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 

@@ -1,8 +1,16 @@
+2000-06-07 22:42 UTC+0200 JFl&RaC <jfl@mafact.com>,<rac@mafact.com>
+ *harbour/source/vm/classes.c
+  -Major modification regarding superobject access
+   Now the call to a super object return really one super object instance
+  -Major modification regarding access to inherited data (see Maurilio case)
+  -Auto inheritance of tObject
+  -Minors modification regarding scoping and one block not released (see Antonio's test)
+
 2000-06-07 21:51 UTC+0100 Lubos Janica <janica@fornax.sk>
     * source/rdd/dbfntx1.c
      Begin of implementation ntx driver. It's not working !
        + static ERRCODE ntxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo );
-       + static ERRCODE ntxOrderInfo( AREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo );      
+       + static ERRCODE ntxOrderInfo( AREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo );
        + static ERRCODE ntxOrderListAdd( AREAP pArea, LPDBORDERINFO pOrderInfo );
        + static ERRCODE ntxOrderListClear( AREAP pArea );
        + static ERRCODE ntxClose( AREAP pArea );
@@ -11,10 +19,10 @@
 2000-06-07 16:50 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbcomp.c
-	*fixed garbage data at the end of line reported by GCC
-	Ron - please check if it is correct
-	(YYLSP_NEEDED versus YYLSP_)
-	
+        *fixed garbage data at the end of line reported by GCC
+        Ron - please check if it is correct
+        (YYLSP_NEEDED versus YYLSP_)
+
 2000-06-06 20:10 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
 
     * source/compiler/cmdcheck.c
@@ -27,32 +35,32 @@
     * source/compiler/harbour.c
       + Moved the parsing/compiling logic into new hb_compCompile()
       + Added:
-		static void hb_compAutoOpenAdd( char * szName );
-		static BOOL hb_compAutoOpenFind( char * szName );
-		static void hb_compSaveVars( PHARBVARS, int );
-		static void hb_compRestoreVars( PHARBVARS, int );
+                static void hb_compAutoOpenAdd( char * szName );
+                static BOOL hb_compAutoOpenFind( char * szName );
+                static void hb_compSaveVars( PHARBVARS, int );
+                static void hb_compRestoreVars( PHARBVARS, int );
 
     * source/compiler/harbour.l
       + Added:
-		void * hb_compGet_YY_CURRENT_BUFFER()
-		void hb_compSet_YY_CURRENT_BUFFER( void * pBuffer )
-		int hb_compGet_yy_init( void )
-		void hb_compSet_yy_init( int i )
-		int hb_compGet_yy_start( void )
-		void hb_compSet_yy_start( int i )
-		int hb_compGet_yy_did_buffer_switch_on_eof( void )
-		void hb_compSet_yy_did_buffer_switch_on_eof( int i )
+                void * hb_compGet_YY_CURRENT_BUFFER()
+                void hb_compSet_YY_CURRENT_BUFFER( void * pBuffer )
+                int hb_compGet_yy_init( void )
+                void hb_compSet_yy_init( int i )
+                int hb_compGet_yy_start( void )
+                void hb_compSet_yy_start( int i )
+                int hb_compGet_yy_did_buffer_switch_on_eof( void )
+                void hb_compSet_yy_did_buffer_switch_on_eof( int i )
 
      * source/compiler/harbour.y
        + Added logic to call hb_compCompile() when DO ... or DO ... WITH
        + Added:
-		void * hb_compGet_pLoops( void )
-		void hb_compSet_pLoops( void * pLoops )
-		void * hb_compGet_rtvars( void )
-		void hb_compSet_rtvars( void * rtvars )
+                void * hb_compGet_pLoops( void )
+                void hb_compSet_pLoops( void * pLoops )
+                void * hb_compGet_rtvars( void )
+                void hb_compSet_rtvars( void * rtvars )
 
-      *	source/compiler/hbusage.c
-	+ Added display of -m compiler switch
+      * source/compiler/hbusage.c
+        + Added display of -m compiler switch
 
 Please note:
 
@@ -274,11 +282,11 @@ for .chm support
 20000601-20:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/dates.c
-	* OS_UNIX_COMPATIBLE is defined in file included from hbapi.h
-	then it cannot be checked before inclusion of hbapi.h
+        * OS_UNIX_COMPATIBLE is defined in file included from hbapi.h
+        then it cannot be checked before inclusion of hbapi.h
 
     *source/rtl/filesys.c
-	* fixed hb_fsEof() for U*ix platforms
+        * fixed hb_fsEof() for U*ix platforms
 
 2000-06-01 12:15 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 

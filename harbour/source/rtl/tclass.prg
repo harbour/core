@@ -157,36 +157,36 @@ STATIC PROCEDURE Create()
    LOCAL nClassBegin := 0
    LOCAL hClass
    LOCAL ahSuper := Array( nLen )
-   LOCAL aoSuper := Array( nLen )
 
    IF nLen == 0
       hClass := __clsNew( ::cName, nLenDatas )
    ELSE                                         // Multi inheritance
       FOR n := 1 TO nLen
           ahSuper[ n ] := __clsInstSuper( Upper( ::acSuper[ n ] ) ) // Super handle available
-          aoSuper[ n ] := __clsInst( ahSuper[ n ] )
       NEXT
 
-      hClass := __clsNew( ::cName, nLenDatas, ahSuper )
+      hClass := __clsNew( ::cName, nLenDatas + nlen, ahSuper )
 
-      __clsAddMsg( hClass, Upper( ::acSuper[ 1 ] ), ahSuper[ 1 ], HB_OO_MSG_SUPER, aoSuper[ 1 ], HB_OO_CLSTP_CLASS + 1 )
-      __clsAddMsg( hClass, "SUPER"                , ahSuper[ 1 ], HB_OO_MSG_SUPER, aoSuper[ 1 ], HB_OO_CLSTP_CLASS + 1 )
-      __clsAddMsg( hClass, "__SUPER"              , ahSuper[ 1 ], HB_OO_MSG_SUPER, aoSuper[ 1 ], HB_OO_CLSTP_CLASS + 1 )
+      __clsAddMsg( hClass, Upper( ::acSuper[ 1 ] ), ++nDataBegin, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_CLASS + 1 )
+      // nData begin stay here the same so as, SUPER and __SUPER will share the same pointer to super object with the first one.
+      __clsAddMsg( hClass, "SUPER"                , nDataBegin, HB_OO_MSG_SUPER, ahSuper[ 1 ], 1 )
+      __clsAddMsg( hClass, "__SUPER"              , nDataBegin, HB_OO_MSG_SUPER, ahSuper[ 1 ], 1 )
 
       nDataBegin   += __cls_CntData( ahSuper[ 1 ] )        // Get offset for new Datas
       nClassBegin  += __cls_CntClsData( ahSuper[ 1 ] )     // Get offset for new ClassData
 
       FOR n := 2 TO nLen
-          __clsAddMsg( hClass, Upper( ::acSuper[ n ] ), ahSuper[ n ], HB_OO_MSG_SUPER, aoSuper[ n ], HB_OO_CLSTP_CLASS + 1 )
+          __clsAddMsg( hClass, Upper( ::acSuper[ n ] ), ++nDataBegin, HB_OO_MSG_SUPER, ahSuper[ n ], HB_OO_CLSTP_CLASS + 1 )
 
           nDataBegin   += __cls_CntData( ahSuper[ n ] )        // Get offset for new DATAs
           nClassBegin  += __cls_CntClsData( ahSuper[ n ] )     // Get offset for new ClassData
-
       NEXT
 
    ENDIF
 
    ::hClass := hClass
+
+   //Local message...
 
    FOR n := 1 TO nLenDatas
       __clsAddMsg( hClass, ::aDatas[ n ][ HB_OO_DATA_SYMBOL ]       , n + nDataBegin, ;
@@ -342,4 +342,72 @@ STATIC PROCEDURE SetOnError( nFuncPtr )
    RETURN
 
 //----------------------------------------------------------------------------//
+/* Debuging purpose
+FUNCTION ASSTRING(oObj, lNotFull )
 
+   Local cStr := VALTYPE(oObj)
+   Local i
+
+   if lNotFull==NIL
+    lNotFull := .T.
+   endif
+
+   IF cStr == "C"
+
+      Return oObj
+
+   ELSEIF cStr == "N"
+
+      if oObj - Int(oObj) == 0
+       RETURN Alltrim(STR(oObj))
+      else
+       RETURN Alltrim(STR(oObj,20,8))
+      endif
+
+   ELSEIF cStr == "L"
+
+      RETURN IF(oObj, ".T.", ".F.")
+
+   ELSEIF cStr == "D"
+
+      RETURN DTOC(oObj)
+
+   ELSEIF cStr == "U"
+
+      RETURN "NIL"
+
+   ELSEIF cStr == "A"
+
+      cStr := "{"
+
+      for i := 1 to len(oObj)
+
+      if lNotFull
+        cStr := cStr + iif(i==1,"",",") + iif(ValType(oObj[i])=="A","{"+AsString(oObj[i][1])+","+Alltrim(str(len(oObj)))+","+AsString(oObj[i][len(oObj[i])])+"}",AsString(oObj[i]))
+      else
+        cStr := cStr + iif(i==1,"",",") + AsString(oObj[i],.T.)
+      endif
+
+      next
+
+      cStr := cStr + "}"
+
+      RETURN cStr
+
+   ELSEIF cStr == "O"
+
+      RETURN "<OO:" + If(ValType(oObj:CLASSNAME())=="C",oObj:CLASSNAME(),Asstring(ValType(oObj:CLASSNAME()))) + ">"
+
+   ELSEIF cStr == "B"
+
+      RETURN "{||}"
+
+   ELSE
+
+      RETURN "<type " + cStr + ">"
+
+   ENDIF
+
+
+RETURN oObj
+*/
