@@ -700,7 +700,7 @@ FUNCTION ProcNgiInput()
             nPos  := AT( "()", cName )
             IF nPos > 0
                AADD( aFuncs, cName )
-               IF LEFT( cname, 1 ) < "N"
+               IF LEFT( cname, 1 ) < "N" .and. LEFT( cname, 1 ) < "n"
                   AADD( afuncsam, aFiles[ x, 1 ] )
                ELSE
                   AADD( afuncsn_, aFiles[ x, 1 ] )
@@ -817,8 +817,10 @@ FUNCTION ProcNgiInput()
                 .AND. UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) <> "OVERVIEW" ;
                 .AND. UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) <> "COMPILEROPTIONS" ;
                 .AND. UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) <> "GNULICENSE" ;
-                .AND. UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) <> "GNULICENSEPART2"
-
+                .AND. UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) <> "GNULICENSEPART2";
+                .AND. UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) <> "STRONGTYPING";
+                .AND. UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) <> "THEGARBAGECOLLECTOR" ;
+                .AND. UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) <> "THEIDLESTATES"
          @ INFILELINE, 33 SAY PAD( cfile, 47 )         
 
          FT_FUSE( "ngi\" + acfiles[ x ] )
@@ -886,7 +888,7 @@ FUNCTION procngialso2( cSeealso )
 
       cTemp := SUBSTR( xAlso[ hPos ], 2, 1 )
 
-      IF cTemp >= "A" .AND. cTemp < "_"
+      IF cTemp >= "A" .AND. cTemp < "_" .or. cTemp >= "a"  .and. cTemp <= "z"
          nPos := AT( "()", xAlso[ hPos ] )
          IF nPos > 0
             AADD( aAlso, "funcam.ngo:" + ALLTRIM( xAlso[ hPos ] ) + ' ' )

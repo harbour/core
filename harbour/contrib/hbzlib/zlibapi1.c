@@ -161,7 +161,7 @@ int hb___CompressOneFile(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_
     if (iZipOk==1)
     {
 
-        szZipFile = zipOpen(szNewFile,0);
+        szZipFile = zipOpen(szNewFile,1);
         if (szZipFile == NULL)   {
            err= ZIP_ERRNO;
         }
@@ -197,7 +197,7 @@ int hb___CompressOneFile(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_
                         err=ZIP_ERRNO;
 
                     }
-
+                    hb_fsSetDevRaw(nFileHandle);
                 }
 
                 if (err == ZIP_OK)

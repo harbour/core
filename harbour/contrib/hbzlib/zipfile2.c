@@ -425,8 +425,8 @@ int hb___GetNumbersofFilestoUnzip(char *szFile)
 PHB_ITEM hb___GetFilesNamesFromZip(char *szFile,BOOL iMode)
 {
         const char *szZipFileName=NULL;
-        char szFilename_Try[512];
-        char szFileNameinZip[256];
+        char szFilename_Try[_POSIX_PATH_MAX];
+        char szFileNameinZip[_POSIX_PATH_MAX];
         int iNumbersOfFiles;
 
         PHB_ITEM pItem=NULL;
@@ -473,6 +473,7 @@ PHB_ITEM hb___GetFilesNamesFromZip(char *szFile,BOOL iMode)
                     char szTime[8];
                     char  *szMethod;
                     char szCRC[8];
+                    int iRatio=0;
                   int iLen;
                   int iCount=0;
                   int iiCount=0;
@@ -480,6 +481,7 @@ PHB_ITEM hb___GetFilesNamesFromZip(char *szFile,BOOL iMode)
                     pItem=hb_itemPutC(NULL,szFileNameinZip);
                     hb_itemArrayPut(pTempArray,filePos,pItem);
                     hb_itemRelease(pItem);
+
                       if (file_info.uncompressed_size>0) {
 
                         pItem=hb_itemPutNL(NULL,file_info.uncompressed_size);
@@ -488,15 +490,30 @@ PHB_ITEM hb___GetFilesNamesFromZip(char *szFile,BOOL iMode)
                         pItem=hb_itemPutNL(NULL,file_info.compressed_size);
                         hb_itemArrayPut(pTempArray,Size,pItem);
                         hb_itemRelease(pItem);
-
-                        pItem=hb_itemPutNL(NULL,100-((file_info.compressed_size*100)/file_info.uncompressed_size));
+                        iRatio=100-((file_info.compressed_size*100)/file_info.uncompressed_size);
+                        if (iRatio <0){
+                            iRatio=0;
+                            }
+                        pItem=hb_itemPutNL(NULL,iRatio);
                         hb_itemArrayPut(pTempArray,Ratio,pItem);
                         hb_itemRelease(pItem);
-                                              }
+                        }
+                        else {
+                        pItem=hb_itemPutNL(NULL,file_info.uncompressed_size);
+                        hb_itemArrayPut(pTempArray,Lenght,pItem);
+                        hb_itemRelease(pItem);
+                        pItem=hb_itemPutNL(NULL,file_info.compressed_size);
+                        hb_itemArrayPut(pTempArray,Size,pItem);
+                        hb_itemRelease(pItem);
+                        iRatio=0;
+                        pItem=hb_itemPutNL(NULL,iRatio);
+                        hb_itemArrayPut(pTempArray,Ratio,pItem);
+                        hb_itemRelease(pItem);
+                        }
+
         if (file_info.compression_method==0) {
                   szMethod="Stored";
        }
-
 		if (file_info.compression_method==Z_DEFLATED)		{
 			uInt iLevel=(uInt)((file_info.flag & 0x6)/2);
             if (iLevel==0)                           {

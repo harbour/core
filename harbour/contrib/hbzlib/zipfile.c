@@ -39,11 +39,12 @@ HB_FUNC(HB_ZIPFILE)
     if( ISCHAR(1) && ISCHAR(2))        {
         int iCompLevel;
         BOOL iOverWrite;
+        BOOL lExist;
         char szFile[_POSIX_PATH_MAX];
         strcpy(szFile,hb_parc(1));
+        lExist =hb_fsFile(hb___CheckFile(szFile));
         if( ISNUM(3)) {
             iCompLevel=hb_parni(3);
-
         }
         else {
             iCompLevel= (-1);
@@ -54,8 +55,18 @@ HB_FUNC(HB_ZIPFILE)
         }
         else {
             iOverWrite= 1;
+        }
+        if (lExist){
+            PHB_ITEM pArray=hb___GetFilesNamesFromZip(hb___CheckFile(szFile),0);
+            PHB_ITEM pItem = hb_itemPutC(NULL,hb_parc(2));
+            hb_arrayAdd(pArray,pItem);
+            hb_itemRelease(pItem);
+            hb_retl(hb___CompressMultipleFile(hb___CheckFile(szFile),pArray,iCompLevel,hb_param( 4,HB_IT_BLOCK),iOverWrite));
+            hb_itemRelease(pArray);
             }
+        else {
             hb_retl(hb___CompressOneFile(hb___CheckFile(szFile),hb_parc(2),iCompLevel,hb_param( 4, HB_IT_BLOCK) ,iOverWrite));
+        }
 
 }
 
