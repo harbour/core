@@ -1,3 +1,11 @@
+2001-08-03 13:23 GMT Dave Pearson <davep@davep.org>
+   * source/rtl/profiler.prg
+     + Added HB_Profile::ignoreSymbol().
+     * Changed HB_Profile::gather() to use HB_Profile::ignoreSymbol() to
+       decide if a symbol should be ignored. This will let developers
+       modify what is and isn't ignored by subclassing HB_Profile and
+       implementing their own version of HB_Profile::ignoreSymbol().
+	
 2001-08-02 10:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.txt
      * Corrected typos.

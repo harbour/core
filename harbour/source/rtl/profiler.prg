@@ -314,6 +314,7 @@ Create Class HB_Profile
    Protected:
 
       Method reset
+      Method ignoreSymbol
 
 End Class
 
@@ -338,11 +339,15 @@ Return( self )
 
 /////
 
-Method gather Class HB_Profile
-Local lProfile    := __setProfiler( .F. )
-Local nSymCount   := __DynSCount()
+Method ignoreSymbol( cSymbol ) Class HB_Profile
 Local cProfPrefix := "HB_PROFILE"
-Local nPrefixLen  := len( cProfPrefix )
+Return( ( left( cSymbol, len( cProfPrefix ) ) == cProfPrefix ) .Or. ( cSymbol == "__SETPROFILER" ) )
+
+/////
+
+Method gather Class HB_Profile
+Local lProfile  := __setProfiler( .F. )
+Local nSymCount := __DynSCount()
 Local cName
 Local aPInfo
 Local cClass
@@ -364,8 +369,8 @@ Local n
       // Is the symbol a function?
       If __DynSIsFun( n )
 
-         // Ignoring profiler functions...
-         If !( left( cName := __DynSGetName( n ), nPrefixLen ) == cProfPrefix )
+         // If we're not ignoring the symbol...
+         If !::ignoreSymbol( cName := __DynSGetName( n ) )
             // Yes, it is, add it to the profile.
             aadd( ::aProfile, HB_ProfileFunction():new( cName, __DynSGetPrf( n ) ) )
          EndIf
@@ -381,8 +386,8 @@ Local n
    // For each class in the environment...
    Do While !empty( cClass := __className( n ) )
 
-      // Ignoring profiler classes...
-      If !( left( cClass, nPrefixLen ) == cProfPrefix )
+      // If we're not ignoring the class' methods...
+      If !::ignoreSymbol( cClass )
 
          // Collect class members.
          nMembers := len( aMembers := __classSel( n ) )
