@@ -189,6 +189,7 @@ void Function( BYTE bParams ); /* generates the pcode to execute a Clipper funct
 PFUNCTION FunctionNew( char *, char );  /* creates and initialises the _FUNC structure */
 void FunDef( char * szFunName, SYMBOLSCOPE cScope, int iType ); /* starts a new Clipper language function definition */
 void GenArray( WORD wElements ); /* instructs the virtual machine to build an array and load elemnst from the stack */
+void GenBreak( void );  /* generate code for BREAK statement */
 void * GenElseIf( void * pFirstElseIf, WORD wOffset ); /* generates a support structure for elseifs pcode fixups */
 void GenExterns( void ); /* generates the symbols for the EXTERN names */
 PFUNCTION GetFuncall( char * szFunName ); /* locates a previously defined called function */
@@ -207,6 +208,7 @@ WORD JumpTrue( int iOffset );           /* generates the pcode to jump if true *
 PFUNCTION KillFunction( PFUNCTION );    /* releases all memory allocated by function and returns the next one */
 PCOMSYMBOL KillSymbol( PCOMSYMBOL );    /* releases all memory allocated by symbol and returns the next one */
 void Line( void );                      /* generates the pcode with the currently compiled source code line */
+void LineDebug( void );                 /* generates the pcode with the currently compiled source code line */
 void LineBody( void );                  /* generates the pcode with the currently compiled source code line */
 void VariablePCode( BYTE , char * );    /* generates the pcode for memvar variable */
 void Message( char * szMsgName );       /* sends a message to an object */
@@ -227,6 +229,9 @@ void GenPCode1( BYTE );             /* generates 1 byte of pcode */
 void GenPCode3( BYTE, BYTE, BYTE ); /* generates 3 bytes of pcode */
 void GenPCodeN( BYTE * pBuffer, WORD wSize );  /* copy bytes to a pcode buffer */
 char * SetData( char * szMsg );     /* generates an underscore-symbol name for a data assignment */
+int SequenceBegin( void );
+int SequenceEnd( void );
+void SequenceFinish( int, int );
 
 /* support for FIELD declaration */
 void FieldsSetAlias( char *, int );
@@ -303,7 +308,8 @@ char * _szCErrors[] =
    "Incorrect number of arguments: %s %s",
    "Invalid lvalue",
    "Invalid use of \'@\' (pass by reference): \'%s\'",
-   "Formal parameters already declared"
+   "Formal parameters already declared",
+   "Invalid %s from within of SEQUENCE code"
 };
 
 /* Table with parse warnings */
@@ -462,6 +468,7 @@ PTR_LOOPEXIT pLoops = 0;
 PATHNAMES *_pIncludePath = NULL;
 PHB_FNAME _pFileName = NULL;
 ALIASID_PTR pAliasId = NULL;
+WORD _wLastLinePos = 0;    /* position of last opcode with line number */
 
 PSTACK_VAL_TYPE pStackValType = 0; /* compile time stack values linked list */
 char cVarType = ' ';               /* current declared variable type */
@@ -610,10 +617,10 @@ Statement  : ExecFlow Crlf        {}
            | ObjectData ArrayIndex '=' Expression Crlf    { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
            | ObjectMethod ArrayIndex '=' Expression Crlf  { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
 
-           | BREAK Crlf
-           | BREAK Expression Crlf
-           | RETURN Crlf              { GenPCode1( HB_P_ENDPROC ); }
-           | RETURN Expression Crlf   { GenPCode1( HB_P_RETVALUE ); GenPCode1( HB_P_ENDPROC ); }
+           | BREAK { GenBreak(); } Crlf               { Do( 0 ); }
+           | BREAK { GenBreak(); } Expression Crlf    { Do( 1 ); }
+           | RETURN Crlf              { if( _wSeqCounter ) GenError( _szCErrors, 'E', ERR_EXIT_IN_SEQUENCE, "RETURN", NULL ); GenPCode1( HB_P_ENDPROC ); }
+           | RETURN Expression Crlf   { if( _wSeqCounter ) GenError( _szCErrors, 'E', ERR_EXIT_IN_SEQUENCE, "RETURN", NULL ); GenPCode1( HB_P_RETVALUE ); GenPCode1( HB_P_ENDPROC ); }
            | PUBLIC { iVarScope = VS_PUBLIC; } VarList Crlf
            | PRIVATE { iVarScope = VS_PRIVATE; } VarList Crlf
 
@@ -1106,7 +1113,7 @@ WhileBegin : WHILE    { $$ = functions.pLast->lPCodePos; ++_wWhileCounter; LoopS
            ;
 
 WhileStatements : Statement
-           | WhileStatements Statement        { Line(); }
+           | WhileStatements { Line(); } Statement
            ;
 
 EndWhile   : END
@@ -1136,27 +1143,66 @@ ForStatements : ForStat NEXT                     { --_wForCounter; }
 ForStat    : Statements                          { Line(); }
            ;
 
-BeginSeq   : BEGINSEQ { ++_wSeqCounter; } Crlf
+BeginSeq   : BEGINSEQ { ++_wSeqCounter; $<lNumber>$=SequenceBegin(); } Crlf { Line(); }
                 SeqStatms
+                {
+                  /* Set jump address for HB_P_SEQBEGIN opcode - this address
+                   * will be used in BREAK code if there is no RECOVER clause
+                   */
+                  JumpHere( $<lNumber>2 );
+                  $<lNumber>$ = SequenceEnd();
+                  Line();
+                }
                 RecoverSeq
-             END           { --_wSeqCounter; }
+                {
+                   /* Replace END address with RECOVER address in
+                    * HB_P_SEQBEGIN opcode if there is RECOVER clause
+                    */
+                   if( $<lNumber>7 )
+                      JumpThere( $<lNumber>2, $<lNumber>7-(_bLineNumbers?3:0) );
+                }
+             END
+             {
+                /* Fix END address
+                 * There is no line number after HB_P_SEQEND in case no
+                 * RECOVER clause is used
+                 */
+                JumpThere( $<lNumber>6, functions.pLast->lPCodePos-((_bLineNumbers && !$<lNumber>7)?3:0) );
+                if( $<lNumber>7 )   /* only if there is RECOVER clause */
+                   LineDebug();
+                else
+                   --_wSeqCounter;  /* RECOVER is also considered as end of sequence */
+                SequenceFinish( $<lNumber>2, $<lNumber>5 );
+             }
            ;
 
-SeqStatms  : /* empty */
-           | Statements
+SeqStatms  : /* empty */      { $<lNumber>$ = 0; }
+           | Statements       { $<lNumber>$ = 1; }
            ;
 
-RecoverSeq : /* no recover */
-           | RecoverEmpty Crlf
-           | RecoverEmpty Crlf Statements
-           | RecoverUsing Crlf
-           | RecoverUsing Crlf Statements
+RecoverSeq : /* no recover */  { $<lNumber>$ = 0; }
+           | RecoverEmpty Crlf { $<lNumber>$ = $<lNumber>1; }
+           | RecoverEmpty Crlf { $<lNumber>$ = $<lNumber>1; Line(); } Statements
+           | RecoverUsing Crlf { $<lNumber>$ = $<lNumber>1; }
+           | RecoverUsing Crlf { $<lNumber>$ = $<lNumber>1; Line(); } Statements
            ;
 
 RecoverEmpty : RECOVER
+               {
+                  $<lNumber>$ = functions.pLast->lPCodePos;
+                  --_wSeqCounter;
+                  GenPCode1( HB_P_SEQRECOVER );
+                  GenPCode1( HB_P_POP );
+               }
            ;
 
 RecoverUsing : RECOVER USING IDENTIFIER
+               {
+                  $<lNumber>$ = functions.pLast->lPCodePos;
+                  --_wSeqCounter;
+                  GenPCode1( HB_P_SEQRECOVER );
+                  PopId( $3 );
+               }
            ;
 
 /* NOTE: In Clipper all variables used in DO .. WITH are passed by reference
@@ -1981,7 +2027,6 @@ void AliasSwap( void )
    GenPCode1( HB_P_SWAPALIAS );
 }
 
-
 int Include( char * szFileName, PATHNAMES *pSearch )
 {
   PFILE pFile;
@@ -2194,6 +2239,8 @@ void FunDef( char * szFunName, SYMBOLSCOPE cScope, int iType )
       functions.pLast = pFunc;
    }
    functions.iCount++;
+
+   _wLastLinePos =0;    /* optimization of line numbers opcode generation */
 
    GenPCode3( HB_P_FRAME, 0, 0 );   /* frame for locals and parameters */
    GenPCode3( HB_P_SFRAME, 0, 0 );     /* frame for statics variables */
@@ -3028,6 +3075,28 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  lPCodePos++;
                  break;
 
+            case HB_P_SEQBEGIN:
+                 w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
+                 fprintf( yyc, "                HB_P_SEQBEGIN, %i, %i,\t/* %i (abs: %05li) */\n",
+                          pFunc->pCode[ lPCodePos + 1 ],
+                          pFunc->pCode[ lPCodePos + 2 ], w, lPCodePos + ( w ? w: 3 ) );
+                 lPCodePos += 3;
+                 break;
+
+            case HB_P_SEQEND:
+                 fprintf( yyc, "/* %05li */", lPCodePos );
+                 w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
+                 fprintf( yyc, "     HB_P_SEQEND, %i, %i,\t/* %i (abs: %05li) */\n",
+                          pFunc->pCode[ lPCodePos + 1 ],
+                          pFunc->pCode[ lPCodePos + 2 ], w, lPCodePos + ( w ? w: 3 ) );
+                 lPCodePos += 3;
+                 break;
+
+            case HB_P_SEQRECOVER:
+                 fprintf( yyc, "                HB_P_SEQRECOVER,\n" );
+                 lPCodePos++;
+                 break;
+
             case HB_P_SFRAME:
                  /* we only generate it if there are statics used in this function */
                  if( pFunc->bFlags & FUN_USES_STATICS )
@@ -3170,6 +3239,11 @@ PCOMSYMBOL KillSymbol( PCOMSYMBOL pSym )
   return pNext;
 }
 
+void GenBreak( void )
+{
+   PushSymbol( yy_strdup("BREAK"), 1 );
+   PushNil();
+}
 
 void GenExterns( void ) /* generates the symbols for the EXTERN names */
 {
@@ -3662,8 +3736,28 @@ WORD JumpTrue( int iOffset )
 
 void Line( void ) /* generates the pcode with the currently compiled source code line */
 {
-  if( _bLineNumbers )
-   GenPCode3( HB_P_LINE, LOBYTE( iLine ), HIBYTE( iLine ) );
+   if( _bLineNumbers )
+   {
+      if( ((functions.pLast->lPCodePos - _wLastLinePos) > 3) || _bDebugInfo )
+      {
+         _wLastLinePos =functions.pLast->lPCodePos;
+         GenPCode3( HB_P_LINE, LOBYTE( iLine ), HIBYTE( iLine ) );
+      }
+      else
+      {
+         functions.pLast->pCode[ _wLastLinePos +1 ] =LOBYTE( iLine );
+         functions.pLast->pCode[ _wLastLinePos +2 ] =HIBYTE( iLine );
+      }
+   }
+}
+
+/* Generates the pcode with the currently compiled source code line
+ * if debug code was requested only
+ */
+void LineDebug( void )
+{
+   if( _bDebugInfo )
+      Line();
 }
 
 void LineBody( void ) /* generates the pcode with the currently compiled source code line */
@@ -3679,8 +3773,7 @@ void LineBody( void ) /* generates the pcode with the currently compiled source 
    }
 
    functions.pLast->bFlags |= FUN_STATEMENTS;
-   if( _bLineNumbers )
-      GenPCode3( HB_P_LINE, LOBYTE( iLine ), HIBYTE( iLine ) );
+   Line();
 }
 
 /**
@@ -4365,7 +4458,7 @@ void FixReturns( void ) /* fixes all last defined function returns jumps offsets
       pVar = functions.pLast->pLocals;
       while ( pVar )
       {
-         if( pVar->szName && functions.pLast->szName && ! pVar->iUsed )
+         if( pVar->szName && functions.pLast->szName && functions.pLast->szName[0] && ! pVar->iUsed )
             GenWarning( _szCWarnings, 'W', WARN_VAR_NOT_USED, pVar->szName, functions.pLast->szName );
 
          pVar = pVar->pNext;
@@ -4374,7 +4467,7 @@ void FixReturns( void ) /* fixes all last defined function returns jumps offsets
       pVar = functions.pLast->pStatics;
       while ( pVar )
       {
-         if( pVar->szName && functions.pLast->szName && ! pVar->iUsed )
+         if( pVar->szName && functions.pLast->szName && functions.pLast->szName[0] && ! pVar->iUsed )
             GenWarning( _szCWarnings, 'W', WARN_VAR_NOT_USED, pVar->szName, functions.pLast->szName );
 
          pVar = pVar->pNext;
@@ -4788,6 +4881,46 @@ char * SetData( char * szMsg ) /* generates an underscore-symbol name for a data
    return szResult;
 }
 
+/* Generate the opcode to open BEGIN/END sequence
+ * This code is simmilar to JUMP opcode - the offset will be filled with
+ * - either the address of HB_P_SEQEND opcode if there is no RECOVER clause
+ * - or the address of RECOVER code
+ */
+int SequenceBegin( void )
+{
+   GenPCode3( HB_P_SEQBEGIN, 0, 0 );
+
+   return functions.pLast->lPCodePos -2;
+}
+
+/* Generate the opcode to close BEGIN/END sequence
+ * This code is simmilar to JUMP opcode - the offset will be filled with
+ * the address of first line after END SEQUENCE
+ * This opcode will be executed if recover code was not requested (as the
+ * last statement in code beetwen BEGIN ... RECOVER) or if BREAK was requested
+ * and there was no matching RECOVER clause.
+ */
+int SequenceEnd( void )
+{
+   GenPCode3( HB_P_SEQEND, 0, 0 );
+
+   return functions.pLast->lPCodePos -2;
+}
+
+/* Remove unnecessary opcodes in case there were no executable statements
+ * beetwen BEGIN and RECOVER sequence
+ */
+void SequenceFinish( int iStartPos, int bUsualStmts )
+{
+   if( ! _bDebugInfo ) /* only if no debugger info is required */
+      if( ! bUsualStmts )
+      {
+         functions.pLast->lPCodePos =iStartPos -1; /* remove also HB_P_SEQBEGIN */
+         _wLastLinePos =iStartPos -4;
+      }
+}
+
+
 /*
  * Start a new fake-function that will hold pcodes for a codeblock
 */
@@ -5032,7 +5165,17 @@ static void LoopStart( void )
  */
 static void LoopLoop( void )
 {
-  PTR_LOOPEXIT pLast, pLoop = (PTR_LOOPEXIT) hb_xalloc( sizeof( LOOPEXIT ) );
+  PTR_LOOPEXIT pLast, pLoop;
+
+  if( _wSeqCounter && _wSeqCounter >= _wWhileCounter )
+  {
+      /* Attempt to LOOP from BEGIN/END sequence
+       * Notice that LOOP is allowed in RECOVER code.
+       */
+      GenError( _szCErrors, 'E', ERR_EXIT_IN_SEQUENCE, "LOOP", NULL );
+  }
+
+  pLoop = (PTR_LOOPEXIT) hb_xalloc( sizeof( LOOPEXIT ) );
 
   pLoop->pLoopList =NULL;
   pLoop->wOffset =functions.pLast->lPCodePos;  /* store the position to fix */
@@ -5054,7 +5197,17 @@ static void LoopLoop( void )
  */
 static void LoopExit( void )
 {
-  PTR_LOOPEXIT pLast, pLoop = (PTR_LOOPEXIT) hb_xalloc( sizeof( LOOPEXIT ) );
+  PTR_LOOPEXIT pLast, pLoop;
+
+  if( _wSeqCounter && _wSeqCounter >= _wWhileCounter )
+  {
+      /* Attempt to EXIT from BEGIN/END sequence
+       * Notice that EXIT is allowed in RECOVER code.
+       */
+      GenError( _szCErrors, 'E', ERR_EXIT_IN_SEQUENCE, "EXIT", NULL );
+  }
+
+  pLoop = (PTR_LOOPEXIT) hb_xalloc( sizeof( LOOPEXIT ) );
 
   pLoop->pExitList =NULL;
   pLoop->wOffset =functions.pLast->lPCodePos;  /* store the position to fix */
@@ -5455,6 +5608,7 @@ void GenPortObj( char *szFileName, char *szName )
             case HB_P_PUSHSELF:
             case HB_P_RETVALUE:
             case HB_P_SWAPALIAS:
+            case HB_P_SEQRECOVER:
             case HB_P_TRUE:
             case HB_P_ZERO:
                  fputc( pFunc->pCode[ lPCodePos++ ], yyc );
@@ -5475,6 +5629,8 @@ void GenPortObj( char *szFileName, char *szName )
             case HB_P_PUSHLOCALREF:
             case HB_P_PUSHSTATIC:
             case HB_P_PUSHSTATICREF:
+            case HB_P_SEQBEGIN:
+            case HB_P_SEQEND:
                  fputc( pFunc->pCode[ lPCodePos++ ], yyc );
                  fputc( pFunc->pCode[ lPCodePos++ ], yyc );
                  fputc( pFunc->pCode[ lPCodePos++ ], yyc );

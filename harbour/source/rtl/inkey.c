@@ -77,6 +77,7 @@
 #include "extend.h"
 #include "errorapi.h"
 #include "inkey.h"
+#include "init.h"
 
 #if defined( OS_UNIX_COMPATIBLE )
 #include <unistd.h>

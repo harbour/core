@@ -97,6 +97,9 @@ typedef enum
    HB_P_PUSHSTR,        /* places a string on the virtual machine stack */
    HB_P_PUSHSYM,        /* places a symbol on the virtual machine stack */
    HB_P_RETVALUE,       /* instructs the virtual machine to return the latest stack value */
+   HB_P_SEQBEGIN,       /* BEGIN SEQUENCE */
+   HB_P_SEQEND,         /* END SEQUENCE */
+   HB_P_SEQRECOVER,     /* RECOVER statement */
    HB_P_SFRAME,         /* sets the statics frame for a function */
    HB_P_STATICS,        /* defines the number of statics variables for a PRG */
    HB_P_SWAPALIAS,      /* restores the current workarea number from the eval stack */

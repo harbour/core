@@ -1,3 +1,46 @@
+19990823-12:40 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+   *source/compiler/harbour.y
+        + added full support for BEGIN/RECOVER/END sequence
+        + added full support for BREAK statement and BREAK function
+         (BREAK statement is implemented using BREAK function)
+        + fixed incorrect warning about unused static variables
+        * added some optimalization of generated opcodes - repeated
+         HB_P_LINE opcodes are replaced with only one HB_P_LINE opcode
+         if compiled with no debugger support
+
+   *source/vm/hvm.c
+        + added full support for BEGIN/RECOVER/END sequence and BREAK
+        + new functions hb_vmRequestBreak() and hb_vmRequestQuit()
+         that can be used from C code to request BREAK or QUIT action
+        + changed HB_DEBUG to empty macro instead of function when
+         debug code is not requested
+        * some internal variables declared 'static'
+        * EXIT functions are called on exit when QUIT is requested
+	
+QUESTION: How to handle the call to QUIT function inside of
+	EXIT procedure? Should we continue execution of the rest of 
+	procedures or immediatelly quit to OS?
+
+    *include/pcode.h
+        + added new opcodes
+         HB_P_SEQBEGIN
+         HB_P_SEQEND
+         HB_P_SEQRECOVER
+
+NOTE: You have to recompile all PRG code!
+
+    *include/hberrors.h
+        + added new error code ERR_EXIT_IN_SEQUENCE called when
+         EXIT, LOOP or RETURN is used inside BEGIN/END sequence
+         (however these statement are valid in RECOVER code)
+
+    *tests/working/begin.prg
+        + new file to test BEGIN/RECOVER/END sequence and BREAK statement
+
+    *tests/working/Makefile
+	* added begin.prg
+
 19990823-10:45 GMT+1 Bruno Cantero <bruno@issnet.net>
    * include/rddapi.h
      source/rdd/dbcmd.c

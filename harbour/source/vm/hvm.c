@@ -90,20 +90,42 @@ extern POBJSYMBOLS HB_FIRSTSYMBOL, HB_LASTSYMBOL;
 
 /* virtual machine state */
 
-BOOL     bHB_DEBUG = FALSE;  /* if TRUE traces the virtual machine activity */
-BOOL     bDebugging = FALSE;
-BOOL     bDebugShowLines = FALSE; /* update source code line on the debugger display */
 STACK    stack;
 HB_SYMB  symEval = { "__EVAL", FS_PUBLIC, hb_vmDoBlock, 0 }; /* symbol to evaluate codeblocks */
-PHB_SYMB pSymStart;        /* start symbol of the application. MAIN() is not required */
-HB_ITEM  aStatics;         /* Harbour array to hold all application statics variables */
 HB_ITEM  errorBlock;       /* errorblock */
-PSYMBOLS pSymbols = 0;     /* to hold a linked list of all different modules symbol tables */
-BOOL     bQuit = FALSE;    /* inmediately exit the application */
-BYTE     byErrorLevel = 0; /* application exit errorlevel */
+HB_ITEM  aStatics;         /* Harbour array to hold all application statics variables */
 
-#define HB_DEBUG( x )     if( bHB_DEBUG ) printf( x )
-#define HB_DEBUG2( x, y ) if( bHB_DEBUG ) printf( x, y )
+static BOOL     bDebugging = FALSE;
+static BOOL     bDebugShowLines = FALSE; /* update source code line on the debugger display */
+static PHB_SYMB pSymStart;        /* start symbol of the application. MAIN() is not required */
+static PSYMBOLS pSymbols = 0;     /* to hold a linked list of all different modules symbol tables */
+static BYTE     byErrorLevel = 0; /* application exit errorlevel */
+
+/* Stores the position on the stack of current SEQUENCE envelope or 0 if no 
+ * SEQUENCE is active
+ */
+static LONG     RecoverBase = 0;
+#define  HB_RECOVER_STATE     -1
+#define  HB_RECOVER_BASE      -2
+#define  HB_RECOVER_ADDRESS   -3
+#define  HB_RECOVER_VALUE     -4
+
+/* Request for some action - stop processing of opcodes
+ */
+static WORD wActionRequest  = 0;
+#define  HB_QUIT_REQUESTED    1     /* immediately quit the application */
+#define  HB_BREAK_REQUESTED   2     /* break to nearest RECOVER/END sequence */
+
+/* uncomment it to trace the virtual machine activity */
+/* #define  bHB_DEBUG */
+
+#if defined( bHB_DEBUG )
+#define HB_DEBUG( x )         printf( x )
+#define HB_DEBUG2( x, y )     printf( x, y )
+#else
+#define HB_DEBUG( x )
+#define HB_DEBUG2( x, y )
+#endif
 
 /* application entry point */
 
@@ -158,6 +180,9 @@ int main( int argc, char * argv[] )
 
    hb_vmDo( argc - 1 );          /* invoke it with number of supplied parameters */
 
+   /* QUESTION: How to handle QUIT or BREAK in EXIT procedures?
+    */
+   wActionRequest = 0;           /* EXIT procedures should be processed */
    hb_vmDoExitFunctions();       /* process defined EXIT functions */
 
    hb_itemClear( &stack.Return );
@@ -188,11 +213,12 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 {
    BYTE bCode;
    WORD w = 0, wParams, wSize;
+   BOOL bCanRecover = FALSE;
    ULONG ulPrivateBase = hb_memvarGetPrivatesBase();
 
    HB_DEBUG( "hb_vmExecute\n" );
 
-   while( ( bCode = pCode[ w ] ) != HB_P_ENDPROC && ! bQuit )
+   while( ( bCode = pCode[ w ] ) != HB_P_ENDPROC )
    {
       hb_inkeyPoll();                   /* Poll the console keyboard */
       switch( bCode )
@@ -560,6 +586,111 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
               w++;
               break;
 
+         case HB_P_SEQBEGIN:
+               /*
+                * Create the SEQUENCE envelope
+                * [ break return value      ]  -4
+                * [ address of recover code ]  -3
+                * [ previous recover base   ]  -2
+                * [ current recovery state  ]  -1
+                * [                         ] <- new recover base
+                */
+               /*
+                * 1) clear the storage for value returned by BREAK statement
+                */
+               stack.pPos->type =IT_NIL;
+               hb_stackPush();
+               /*
+                * 2) store the address of RECOVER or END opcode
+                */
+               stack.pPos->type =IT_LONG;
+               stack.pPos->item.asLong.value =w + pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+               hb_stackPush();
+               /*
+                * 3) store current RECOVER base
+                */
+               stack.pPos->type =IT_LONG;
+               stack.pPos->item.asLong.value =RecoverBase;
+               hb_stackPush();
+               /*
+                * 4) store current bCanRecover flag - in a case of nested sequences
+                * in the same procedure/function
+                */
+               stack.pPos->type =IT_LOGICAL;
+               stack.pPos->item.asLogical.value =bCanRecover;
+               hb_stackPush();
+               /*
+                * set new recover base
+                */
+               RecoverBase =stack.pPos - stack.pItems;;
+               /*
+                * we are now inside a valid SEQUENCE envelope
+                */
+               bCanRecover = TRUE;
+               w += 3;
+              break;
+
+         case HB_P_SEQEND:
+              /*
+               * Remove the SEQUENCE envelope
+               * This is executed either at the end of sequence or as the
+               * response to the break statement if there is no RECOVER clause
+               */
+              /*
+               * 4) Restore previous recovery state
+               */
+              hb_stackDec();
+              bCanRecover =stack.pPos->item.asLogical.value;
+              stack.pPos->type =IT_NIL;
+              /*
+               * 3) Restore previous RECOVER base
+               */
+              hb_stackDec();
+              RecoverBase =stack.pPos->item.asLong.value;
+              stack.pPos->type =IT_NIL;
+              /*
+               * 2) Remove RECOVER address
+               */
+              hb_stackDec();
+              stack.pPos->type =IT_NIL;
+              /* 1) Discard the value returned by BREAK statement - there
+               * was no RECOVER clause or there was no BREAK statement
+               */
+              hb_stackPop();
+              /*
+               * skip outside of SEQUENCE structure
+               */
+              w += pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+              break;
+
+         case HB_P_SEQRECOVER:
+              /*
+               * Execute the RECOVER code
+               */
+              /*
+               * 4) Restore previous recovery state
+               */
+              hb_stackDec();
+              bCanRecover =stack.pPos->item.asLogical.value;
+              stack.pPos->type =IT_NIL;
+              /*
+               * 3) Restore previous RECOVER base
+               */
+              hb_stackDec();
+              RecoverBase =stack.pPos->item.asLong.value;
+              stack.pPos->type =IT_NIL;
+              /*
+               * 2) Remove RECOVER address
+               */
+              hb_stackDec();
+              stack.pPos->type =IT_NIL;
+              /*
+               * 1) Leave the value returned from BREAK  - it will be popped
+               * in next executed opcode
+               */
+              w++;
+              break;
+
          case HB_P_SFRAME:
               wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
               hb_vmSFrame( pSymbols + wParams );
@@ -591,9 +722,40 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
               hb_errInternal( 9999, "Unsupported VM opcode", NULL, NULL );
               break;
       }
+
+      if( wActionRequest )
+      {
+         if( wActionRequest & HB_BREAK_REQUESTED )
+         {
+            if( bCanRecover )
+            {
+               /*
+                * There is the BEGIN/END sequence deifined in current
+                * procedure/function - use it to continue opcodes execution
+                */
+               /*
+                * remove all items placed on the stack after BEGIN code
+                */
+               while( stack.pPos > stack.pItems + RecoverBase )
+                  hb_stackPop();
+               /*
+                * reload the address of recovery code
+                */
+               w = stack.pItems[ RecoverBase + HB_RECOVER_ADDRESS ].item.asLong.value;
+               /*
+                * leave the SEQUENCE envelope on the stack - it will
+                * be popped either in RECOVER or END opcode
+                */
+               wActionRequest = 0;
+            }
+            else
+               break;
+         }
+         else if( wActionRequest & HB_QUIT_REQUESTED )
+            break;
+      }
    }
    hb_memvarSetPrivatesBase( ulPrivateBase );
-   HB_DEBUG( "EndProc\n" );
 }
 
 /* Pops the item from the eval stack and uses it to select the current
@@ -1289,6 +1451,8 @@ void hb_vmLessEqual( void )
 
 void hb_vmLocalName( WORD wLocal, char * szLocalName ) /* locals and parameters index and name information for the debugger */
 {
+   HB_SYMBOL_UNUSED( wLocal );
+   HB_SYMBOL_UNUSED( szLocalName );
 }
 
 void hb_vmMessage( PHB_SYMB pSymMsg ) /* sends a message to an object */
@@ -2479,9 +2643,14 @@ HARBOUR HB_PROCLINE(void)
       hb_retni( 0 );
 }
 
+void hb_vmRequestQuit( void )
+{
+   wActionRequest = HB_QUIT_REQUESTED;
+}
+
 HARBOUR HB___QUIT(void)
 {
-   bQuit = TRUE;
+   hb_vmRequestQuit();
 }
 
 HARBOUR HB_ERRORLEVEL(void)
@@ -2515,4 +2684,21 @@ HARBOUR HB_PVALUE(void)                                /* PValue( <nArg> )      
    {
       hb_errRT_BASE(EG_ARG, 3011, NULL, "PVALUE");
    }
+}
+
+void hb_vmRequestBreak( PHB_ITEM pItem )
+{
+   if( RecoverBase )
+   {
+      if( pItem )
+         hb_itemCopy( stack.pItems + RecoverBase + HB_RECOVER_VALUE, pItem );
+      wActionRequest = HB_BREAK_REQUESTED;
+   }
+   else
+      wActionRequest = HB_QUIT_REQUESTED;
+}
+
+HARBOUR HB_BREAK( void )
+{
+   hb_vmRequestBreak( hb_param( 1, IT_ANY ) );
 }

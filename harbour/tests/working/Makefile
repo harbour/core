@@ -30,6 +30,7 @@ PRG_SOURCES=\
         arreval.prg \
         arrindex.prg \
         atest.prg \
+	begin.prg \
         box.prg \
         byref.prg \
         calling.prg \
