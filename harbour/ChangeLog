@@ -1,3 +1,12 @@
+20000313-13:20 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * contrib/rdd_ads/adsfunc.c
+     ! Two casts added for MSVC.
+   * contrib/rdd_ads/make_vc.bat
+     + CVS ID added.
+   * contrib/rdd_ads/makefile.vc
+     % Streamlines and standardized. (use standard dir specs, create .c and
+       .obj files in central obj dir.)
+
 20000313-12:40 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/rtl/inkey.c
      ! Fixed to work with STD_GTAPI on Win32.

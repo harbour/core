@@ -7,13 +7,16 @@
 #
 
 INCLUDE_DIR=..\..\include
+OBJ_DIR=..\..\obj\vc
+LIB_DIR=..\..\lib\vc
+BIN_DIR=..\..\bin\vc
 
 #
 # C compiler definition and C flags. These should never have to change.
 #
 
 CC=cl
-CFLAGS=-W1 -nologo -I$(INCLUDE_DIR) -D_Windows -DHARBOUR_USE_WIN_GTAPI
+CFLAGS=-W1 -nologo -I$(INCLUDE_DIR) -D_Windows
 CLIBFLAGS=$(CFLAGS) -c /TP
 CLIBFLAGSDEBUG=$(CFLAGS) -c -Zi /TP
 
@@ -21,8 +24,8 @@ CLIBFLAGSDEBUG=$(CFLAGS) -c -Zi /TP
 # Macros to access our library names
 #
 
-ADS_LIB=..\..\lib\vc\rddads.lib
-HARBOUR_EXE=..\..\bin\harbour.exe
+ADS_LIB=$(LIB_DIR)\rddads.lib
+HARBOUR_EXE=$(BIN_DIR)\harbour.exe
 HARBOURFLAGS=-iinclude -n -q0 -w -es2 -gc0
 
 
@@ -31,9 +34,9 @@ HARBOURFLAGS=-iinclude -n -q0 -w -es2 -gc0
 #
 
 ADS_LIB_OBJS = \
-    ads0.obj \
-    ads1.obj \
-    adsfunc.obj
+    $(OBJ_DIR)\ads0.obj \
+    $(OBJ_DIR)\ads1.obj \
+    $(OBJ_DIR)\adsfunc.obj
 
 #
 # Our default target
@@ -48,20 +51,17 @@ all: $(ADS_LIB)
 $(ADS_LIB) : $(ADS_LIB_OBJS)
     lib /OUT:$(ADS_LIB) $(ADS_LIB_OBJS)
 
-
 #
 # ADS dependencies
 #
 
-ads0.c : ads0.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+$(OBJ_DIR)\ads0.obj : ads0.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$*.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $*.c
 
-ads0.obj : ads0.c
+$(OBJ_DIR)\adsfunc.obj : adsfunc.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-adsfunc.obj : adsfunc.c
-    $(CC) $(CLIBFLAGS) -Fo$@ $**
-
-ads1.obj : ads1.c
+$(OBJ_DIR)\ads1.obj : ads1.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 

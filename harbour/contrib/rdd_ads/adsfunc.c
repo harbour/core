@@ -314,7 +314,7 @@ HARBOUR HB_ADSGETAOF( void )
    {
       ulRetVal = AdsGetAOF( pArea->hTable, pucFilter, &pusLen );
       if ( ulRetVal == AE_SUCCESS )
-         hb_retc( pucFilter );
+         hb_retc( ( char * ) pucFilter );
       else
          hb_ret();
    }
@@ -350,7 +350,7 @@ HARBOUR HB_ADSGETAOFNOOPT( void )
    if( pArea )
    {
       AdsGetAOFOptLevel( pArea->hTable, &pusOptLevel, pucNonOpt, &pusLen );
-      hb_retc( pucNonOpt );
+      hb_retc( ( char * ) pucNonOpt );
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSGETAOFNOOPT" );
@@ -413,3 +413,4 @@ HARBOUR HB_ADSSETAOF( void )
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSSETAOF" );
    
 }
+

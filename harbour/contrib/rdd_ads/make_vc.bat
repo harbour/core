@@ -1,4 +1,9 @@
 @echo off
+rem 
+rem $Id$
+rem 
+
+:BUILD
 
    nmake /f makefile.vc %1 %2 %3 > make_vc.log
    if errorlevel 1 goto BUILD_ERR
