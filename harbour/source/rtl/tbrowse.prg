@@ -37,9 +37,10 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 2000 Maurilio Longo <maurilio.longo@libero.it>
+ * Copyright 2000, 2001 Maurilio Longo <maurilio.longo@libero.it>
  * Cursor movement handling and stabilization loop
  * ::PageUp(), ::PageDown(), ::Down(), ::Up(), ::GoBottom(), ::GoTop(), ::Stabilize()
+ * ::GotoXY()
  *
  */
 
@@ -150,7 +151,12 @@ CLASS TBrowse
    METHOD TApplyKey(nKey, o)
 #endif
 
-   /*HIDDEN:     /* H I D D E N */
+   /* PROTECTED:     /* P R O T E C T E D */
+   METHOD MGotoYX(nRow, nCol)             // Given screen coordinates nRow, nCol sets TBrowse cursor on underlaying cell
+                                          // _M_GotoXY because this method will mostly be called to handle mouse requests
+
+
+   /*HIDDEN:         /* H I D D E N */
 
    METHOD LeftDetermine()                 // Determine leftmost unfrozen column in display
    METHOD DispCell(nColumn, nColor)       // Displays a single cell
@@ -1099,6 +1105,59 @@ METHOD TApplyKey( nKey, oBrowse ) CLASS tBrowse
 
 return nReturn
 #endif
+
+
+// NOTE: Not tested, could be broken
+METHOD MGotoYX(nRow, nCol) CLASS TBrowse
+
+   local nColsLen, nI, nNewRow
+
+   // Am I inside TBrowse display area ?
+   if nRow > ::nTop .AND. nRow < ::nBottom .AND. ;
+      nCol > ::nLeft .AND. nCol < ::nRight
+
+      // if not stable force repositioning of data source; maybe this is not first Stabilize() call after
+      // TBrowse became unstable, but we need to call Stabilize() al least one time before moving again to be sure
+      // data source is under cursor position
+      if ! ::stable
+         ::Stabilize()
+
+      else
+         ::Moved()
+
+      endif
+
+      // Set new row position
+      nNewRow := nRow - ::nTop + iif(::lHeaders, 0, -1) + iif(Empty(::HeadSep), 0, 1)
+      ::nRecsToSkip := nNewRow - ::nNewRowPos
+
+      // move data source accordingly
+      ::Stabilize()
+
+      // Now move to column under nCol
+      nColsLen := 0
+      // NOTE: I don't think it is correct, have to look up docs
+      nI := iif(::Freeze > 0, ::Freeze, ::leftVisible)
+
+      while nColsLen < nCol .AND. nI < ::rightVisible
+
+         nColsLen += ::aColumns[nI]:Width
+         if nI >= 1 .AND. nI < Len( ::aColumns )
+            nColsLen += iif(::aColumns[nI]:ColSep != NIL, Len(::aColumns[nI]:ColSep), Len(::ColSep))
+         endif
+
+         nI++
+
+      enddo
+
+      ::ColPos := nI
+
+      // Force redraw of current row with new cell position
+      ::RefreshCurrent()
+
+   endif
+
+return Self
 
 
 function TBrowseNew(nTop, nLeft, nBottom, nRight)

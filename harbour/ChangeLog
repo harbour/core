@@ -1,3 +1,10 @@
+2001-02-06 23:57 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/tbrowse.prg
+     + added ::MGotoYX(nRow, nCol) method which hilights cell under screen coordinates nRow, nCol
+     should help following a mouse. NOTE: hacked up and not tested. I'm very busy at the moment.
+     * NOTE latest change to TBrowse (my previous entry in changelog) fixed a problem but created
+     a new one :-) I'll have to rethink a little bit ::Stabilize() logic.
+
 2001-02-06 20:30 GMT+1 Ignacio Ortiz <ignacioortiz@fivetech.com>
    * harbour/source/debug/dbgmenu.prg
      + Debugger full locate menu support.
