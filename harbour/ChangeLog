@@ -1,3 +1,9 @@
+2000-07-26 16:25 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+   * source/vm/hvm.c
+     ! Made changes to solve problem where double values become
+       integers in hb_vmPushNumber when SET DECIMALS is set to 0.
+
 2000-07-25 22:35 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.slx
      * Converted CUSTOM_ACTION() macro to a function (hb_lex_CustomAction()).
