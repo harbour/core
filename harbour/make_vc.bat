@@ -13,10 +13,13 @@ rem ---------------------------------------------------------------
 
 if "%1" == "clean" goto CLEAN
 if "%1" == "CLEAN" goto CLEAN
+set MK_FILE=makefile.vc
+if "%OS%" == "Windows_NT" set MK_FILE=makefile.nt
+
 
 :BUILD
 
-   nmake /f makefile.vc %1 %2 %3 > make_vc.log
+   nmake /f %MK_FILE% %1 %2 %3 > make_vc.log
    if errorlevel 1 goto BUILD_ERR
 
 :BUILD_OK
@@ -42,7 +45,5 @@ if "%1" == "CLEAN" goto CLEAN
    if exist obj\vc\*.h   del obj\vc\*.h
    if exist obj\vc\*.pch del obj\vc\*.pch
    if exist make_vc.log  del make_vc.log
-   goto EXIT
 
 :EXIT
-

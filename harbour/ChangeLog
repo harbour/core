@@ -8,7 +8,17 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
-2002-10-28 11:10 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
+2002-10-29 16:20 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
+  * makefile.vc
+    * slight re-ordering and added missed codepage.lib directive.
+  + makefile.nt
+  * make_vc.bat
+    * if building Harbour under NT, use the alternate makefile.nt
+    * for faster builds.
+  * Changelog
+    Changed date of following entry from 28 to 29.
+
+2002-10-29 11:10 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/gtwin/gtwin.c
     * modified by Robert Haley <rhaley@cheshire.net> to allow Tone()
     * to work correctly under Win9x.
