@@ -7,7 +7,12 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
-2002-10-01 22:10 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+    * Added missed Attribute check (thanks Victor)
+
+2002-01-14 14:30 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
+  * source\rtl\direct.c
+    * updated notes and TODO's
+
 2002-01-14 10:40 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
   * source\common\hbffind.c
   * source\rtl\direct.c

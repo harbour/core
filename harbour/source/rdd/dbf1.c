@@ -1234,8 +1234,13 @@ ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
                                     ( LONG ) hb_numRound( hb_itemGetND( pItem ), 0 ) );
                }
                else
+                  /*
                   uiSize = sprintf( szBuffer, "%*.*f", pField->uiLen - pField->uiDec - 1,
                                     pField->uiDec, hb_numRound( hb_itemGetND( pItem ),
+                                    pField->uiDec ) );
+                  */
+                  uiSize = sprintf( szBuffer, "%*.*f", pField->uiLen, pField->uiDec,
+                                    hb_numRound( hb_itemGetND( pItem ),
                                     pField->uiDec ) );
             }
             else
