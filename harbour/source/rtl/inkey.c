@@ -36,6 +36,8 @@
 /*
  * ChangeLog:
  *
+ * V 1.63   David G. Holm               Enable Unix-compatible keyboard input
+ *                                      even when not using ncurses or slang.
  * V 1.55   David G. Holm               Added _SET_CANCEL support for
  *                                      Ctrl+Break, returning no key code
  *                                      when _SET_CANCEL is off.
@@ -319,13 +321,10 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
    {
       int ch = 0;
 #if defined(HARBOUR_USE_CRS_GTAPI) || defined(HARBOUR_USE_SLN_GTAPI)
-#if 1
       ch = hb_gtReadKey();
-#else
-      /* TODO: */
+#elif defined(OS_UNIX_COMPATIBLE)
       if( ! read( STDIN_FILENO, &ch, 1 ) )
          ch = 0;
-#endif
 #elif defined(_Windows) || defined(WINNT)
       /* First check for Ctrl+Break, which is handled by gt/gtwin.c */
       if( hb_gtBreak )

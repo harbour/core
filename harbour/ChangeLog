@@ -1,3 +1,9 @@
+2000-01-03 18:25 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * source/rtl/inkey.c
+     !  Enable Unix-compatible keyboard input even when not using
+        ncurses or slang.
+
 20000103-19:48 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *include/expropt.h
@@ -12,7 +18,7 @@
     *source/compiler/harbour.l
         * added support for macro variables in PUBLIC and PRIVATE declarations
 	PRIVATE &var, &var.end
-	* optimization of PUBLIC/PRIVATE variables creation (there was a 
+	* optimization of PUBLIC/PRIVATE variables creation (there was a
 	single call __MVPUBLIC/__MVPRIVATE function for every variable,
 	there is a single call for a single statement now), for example:
 	PRIVATE var1, var2, var3
@@ -68,21 +74,21 @@
 
 20000101-22:50 GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
 * doc/funclist.txt
-   +Update some function status  
+   +Update some function status
 * source/rdd/dbcmd.c
    +Added  to missing documentation of __dbzap() and OrdCondSet()
 * source/rtl/FileSys.c
-    + doc for  FOPEN()    
-    + doc for  FCLOSE()   
-    + doc for  FWRITE()   
-    + doc for  FSEEK()    
-    + doc for  FREAD()    
-    + doc for  FILE()     
-    + doc for  FREADSTR() 
-    + doc for  FRENAME()  
-    + doc for  FERROR()   
-    + doc for  RENAME     
-    + doc for  ERASE     
+    + doc for  FOPEN()
+    + doc for  FCLOSE()
+    + doc for  FWRITE()
+    + doc for  FSEEK()
+    + doc for  FREAD()
+    + doc for  FILE()
+    + doc for  FREADSTR()
+    + doc for  FRENAME()
+    + doc for  FERROR()
+    + doc for  RENAME
+    + doc for  ERASE
 
 20000101-07:18 GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
 * source/rdd/dbcmd.c
@@ -160,13 +166,13 @@ Fixed the documentation to make the ng linker happy and added docs for the array
     *include/extend.h
 	* added declaration for hb_memvarGetStrValuePtr()
 	* added declaration of hb_macroTextValue()
-	
+
     *source/vm/hvm.c
 	* added code to handle macro text substitution "text &macro"
 
     *source/macro/macro.c
-	* added code to handle macro text substitution		
-	
+	* added code to handle macro text substitution
+
 19991231-06:15 GMT+1 Antonio Linares <alinares@fivetech.com>
   * source/rtl/gt/gtwin.c
     * fix for a Win API wrong parameter call detected using NuMega BoundsChecker
