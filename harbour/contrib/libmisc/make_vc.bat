@@ -13,7 +13,7 @@ if "%1" == "CLEAN" goto CLEAN
 
 :BUILD_OK
 
-   copy ..\..\lib\vc\libmisc.lib ..\..\lib\*.* >nul
+   copy ..\..\lib\vc\misc.lib ..\..\lib\*.* >nul
    goto EXIT
 
 :BUILD_ERR
