@@ -112,8 +112,6 @@
  * ntxOrderListFocus()
  * ntxOrderListRebuild()
  * ntxSetScope()
- * ntxLock()
- * static ERRCODE ntxUnLock()
  */
 
 #include <math.h>
@@ -377,7 +375,7 @@ static ULONG hb_ntxTagKeyNo( LPTAGINFO pTag )
 
    if( pTag->Owner->Owner->fShared )
    {
-      while( !hb_fsLock( pTag->Owner->DiskFile, 0, 512, FL_LOCK ) );
+      while( !hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_LOCK ) );
       pTag->Owner->Locked = TRUE;
    }
 
@@ -442,7 +440,7 @@ static ULONG hb_ntxTagKeyNo( LPTAGINFO pTag )
    if( pTag->Owner->Owner->fShared )
    {
       hb_ntxPageFree( pTag->RootPage,FALSE );
-      hb_fsLock( pTag->Owner->DiskFile, 0, 512, FL_UNLOCK );
+      hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_UNLOCK );
       pTag->Owner->Locked = FALSE;
    }
    return ulKeyNo;
@@ -457,7 +455,7 @@ static ULONG hb_ntxTagKeyCount( LPTAGINFO pTag )
 
    if( pTag->Owner->Owner->fShared )
    {
-      while( !hb_fsLock( pTag->Owner->DiskFile, 0, 512, FL_LOCK ) );
+      while( !hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_LOCK ) );
       pTag->Owner->Locked = TRUE;
    }
    else if( pTag->keyCount )
@@ -514,7 +512,7 @@ static ULONG hb_ntxTagKeyCount( LPTAGINFO pTag )
    if( pTag->Owner->Owner->fShared )
    {
       hb_ntxPageFree( pTag->RootPage,FALSE );
-      hb_fsLock( pTag->Owner->DiskFile, 0, 512, FL_UNLOCK );
+      hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_UNLOCK );
       pTag->Owner->Locked = FALSE;
    }
    else
@@ -1080,7 +1078,7 @@ static void hb_ntxTagKeyGoTo( LPTAGINFO pTag, BYTE bTypRead, BOOL * lContinue )
    {
       if( pTag->Owner->Owner->fShared && !pTag->Owner->Locked )
       {
-         while( !hb_fsLock( pTag->Owner->DiskFile, 0, 512, FL_LOCK ) );
+         while( !hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_LOCK ) );
          wasLocked = pTag->Owner->Locked;
          pTag->Owner->Locked = TRUE;
       }
@@ -1111,7 +1109,7 @@ static void hb_ntxTagKeyGoTo( LPTAGINFO pTag, BYTE bTypRead, BOOL * lContinue )
          // pTag->RootPage = NULL;
          if( !wasLocked )
          {
-            hb_fsLock( pTag->Owner->DiskFile, 0, 512, FL_UNLOCK );
+            hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_UNLOCK );
             pTag->Owner->Locked = FALSE;
          }
       }
@@ -2918,7 +2916,7 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
 
      if( pArea->fShared )
      {
-        while( !hb_fsLock( pArea->lpCurIndex->DiskFile, 0, 512, FL_LOCK ) );
+        while( !hb_fsLock( pArea->lpCurIndex->DiskFile, NTX_LOCK_OFFSET, 1, FL_LOCK ) );
         pArea->lpCurIndex->Locked = TRUE;
      }
      lRecno = hb_ntxTagKeyFind( pTag, pKey2, &result );
@@ -2953,7 +2951,7 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
      if( pArea->fShared )
      {
         hb_ntxPageFree( pTag->RootPage,FALSE );
-        hb_fsLock( pArea->lpCurIndex->DiskFile, 0, 512, FL_UNLOCK );
+        hb_fsLock( pArea->lpCurIndex->DiskFile, NTX_LOCK_OFFSET, 1, FL_UNLOCK );
         pArea->lpCurIndex->Locked = FALSE;
      }
      pArea->fEof = pTag->TagEOF;
@@ -3090,7 +3088,7 @@ static ERRCODE ntxGoCold( NTXAREAP pArea )
             {
                pArea->lpCurIndex = lpIndex;
                if( pArea->fShared )
-                  while( !hb_fsLock( lpIndex->DiskFile, 0, 512, FL_LOCK ) );
+                  while( !hb_fsLock( lpIndex->DiskFile, NTX_LOCK_OFFSET, 1, FL_LOCK ) );
                if( !fAppend && pTag->InIndex )
                {
                   LPKEYINFO pKeyOld = hb_ntxKeyNew( pTag->CurKeyInfo,pTag->KeyLength );
@@ -3125,8 +3123,7 @@ static ERRCODE ntxGoCold( NTXAREAP pArea )
                if( pArea->fShared )
                {
                   hb_ntxPageFree( pTag->RootPage,FALSE );
-                  // pTag->RootPage = NULL;
-                  hb_fsLock( lpIndex->DiskFile, 0, 512, FL_UNLOCK );
+                  hb_fsLock( lpIndex->DiskFile, NTX_LOCK_OFFSET, 1, FL_UNLOCK );
                }
             }
             lpIndex = lpIndex->pNext;
@@ -3842,65 +3839,6 @@ static ERRCODE ntxSetScope( NTXAREAP pArea, LPDBORDSCOPEINFO sInfo )
    return SUCCESS;
 }
 
-static ERRCODE ntxLock( NTXAREAP pArea, LPDBLOCKINFO pLockInfo )
-{
-   HB_TRACE(HB_TR_DEBUG, ("ntxLock(%p, %p)", pArea, pLockInfo));
-
-   if( SUPER_LOCK( ( AREAP ) pArea, pLockInfo ) )
-   {
-      LPNTXINDEX lpIndex;
-
-      if( pLockInfo->uiMethod == DBLM_FILE )
-      {
-         lpIndex = pArea->lpNtxIndex;
-         while( lpIndex )
-         {
-            pArea->lpCurIndex = lpIndex;
-            /* First 512 bytes of index file are blocked.
-               I don't sure, is it right - should be checked.
-                         = Alexander Kresin =
-            */
-            if( !hb_fsLock( lpIndex->DiskFile, 0, 512, FL_LOCK ) )
-            {
-               ntxUnLock( pArea,0 );
-               return FAILURE;
-            }
-            lpIndex = lpIndex->pNext;
-         }
-      }
-      return SUCCESS;
-   }
-   else
-      return FAILURE;
-}
-
-static ERRCODE ntxUnLock( NTXAREAP pArea, ULONG ulRecNo )
-{
-   BOOL fFLocked;
-
-   HB_TRACE(HB_TR_DEBUG, ("ntxUnLock(%p, %lu)", pArea, ulRecNo));
-
-   fFLocked = pArea->fFLocked;
-   if( SUPER_UNLOCK( ( AREAP ) pArea, ulRecNo ) )
-   {
-      LPNTXINDEX lpIndex;
-
-      if( fFLocked )
-      {
-         lpIndex = pArea->lpNtxIndex;
-         while( lpIndex )
-         {
-            pArea->lpCurIndex = lpIndex;
-            hb_fsLock( lpIndex->DiskFile, 0, 512, FL_UNLOCK );
-            lpIndex = lpIndex->pNext;
-         }
-      }
-      return SUCCESS;
-   }
-   else
-      return FAILURE;
-}
-
 static RDDFUNCS ntxTable = { ntxBof,
                              ntxEof,
                              ntxFound,
@@ -3983,8 +3921,8 @@ static RDDFUNCS ntxTable = { ntxBof,
                              ntxError,
                              ntxEvalBlock,
                              ntxRawLock,
-                             ( DBENTRYP_VL ) ntxLock,
-                             ( DBENTRYP_UL ) ntxUnLock,
+                             ntxLock,
+                             ntxUnLock,
                              ntxCloseMemFile,
                              ntxCreateMemFile,
                              ntxGetValueFile,

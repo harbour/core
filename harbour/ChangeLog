@@ -7,6 +7,12 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * source/rdd/workarea.c
+     ! fixed bug with set relation to, found by Walter Negro.
+
+2002-04-23 20:40 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/rtl/devoutp.prg
+      ! More compliant with Cli**er for certain types of data.
         Now only accept character, memo, numeric, date and logical
         types of data.
         Any other types of data is ignored.

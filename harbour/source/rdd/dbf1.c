@@ -2499,13 +2499,18 @@ ERRCODE hb_dbfWriteDBHeader( DBFAREAP pArea )
 
    /* Update record count */
    if( pArea->fShared )
+   {
+      hb_fsLock( pArea->hDataFile, DBF_LOCKPOS, 1, FL_LOCK );
       pArea->ulRecCount = hb_dbfCalcRecCount( pArea );
+   }
 
    dbfHeader.ulRecCount = pArea->ulRecCount;
    dbfHeader.uiHeaderLen = pArea->uiHeaderLen;
    dbfHeader.uiRecordLen = pArea->uiRecordLen;
    hb_fsSeek( pArea->hDataFile, 0, FS_SET );
    hb_fsWrite( pArea->hDataFile, ( BYTE * ) &dbfHeader, sizeof( DBFHEADER ) );
+   if( pArea->fShared )
+      hb_fsLock( pArea->hDataFile, DBF_LOCKPOS, 1, FL_UNLOCK );
    pArea->fUpdateHeader = FALSE;
    return SUCCESS;
 }

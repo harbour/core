@@ -88,8 +88,9 @@ extern "C" {
 #define PREV_RECORD                                                     3
 #define NEXT_RECORD                                                     4
 
-#define NTX_MAX_KEY  256      /* Max len of key */
-#define NTXBLOCKSIZE 1024     /* Size of block in NTX file */
+#define NTX_MAX_KEY          256      /* Max len of key */
+#define NTXBLOCKSIZE         1024     /* Size of block in NTX file */
+#define NTX_LOCK_OFFSET      1000000000
 
 /* forward declarations
  */
@@ -410,8 +411,8 @@ static ERRCODE ntxSetScope( NTXAREAP pArea, LPDBORDSCOPEINFO sInfo );
 #define ntxError                 NULL
 #define ntxEvalBlock             NULL
 #define ntxRawLock               NULL
-static ERRCODE ntxLock( NTXAREAP pArea, LPDBLOCKINFO pLockInfo );
-static ERRCODE ntxUnLock( NTXAREAP pArea, ULONG ulRecNo );
+#define ntxLock                  NULL
+#define ntxUnLock                NULL
 #define ntxCloseMemFile          NULL
 #define ntxCreateMemFile         NULL
 #define ntxGetValueFile          NULL
