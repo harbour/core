@@ -1,3 +1,17 @@
+2001-05-02 11:05 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbapi.h
+     * Changed HB_NESTED_CLONED to record BaseArray instead of first item.
+     * Reverted declaration of hb_arrayClone to use 2nd paramater ( pClonedList ) for futute Thread Safety.
+
+   * source/vm/arrays.c
+     * Corrected handling of nested (shared) empty array in hb_arrayClone().
+     * Reverted definition of hb_arrayClone() to use 2nd parameter ( pClonedList ) for future Thread Safety.
+
+   * source/vm/arrayshb.c
+   * source/vm/classes.c
+   * source/vm/hvm.c
+     * Added required 2nd parameter ( NULL ) to calls to hb_arrayClone()
+
 2001-05-01 02:35 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/rp_run.ch
    * contrib/dot/pp.prg
