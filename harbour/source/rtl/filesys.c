@@ -493,7 +493,7 @@ FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsOpen(%p, %hu)", pFilename, uiFlags));
 
-   pFilename=hb_filecase(hb_strdup(pFilename));
+   pFilename = hb_filecase( hb_strdup( ( char * ) pFilename ) );
 
 #if defined(X__WIN32__)
 
@@ -599,7 +599,7 @@ FHANDLE hb_fsCreate( BYTE * pFilename, USHORT uiAttr )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsCreate(%p, %hu)", pFilename, uiAttr));
 
-   pFilename=hb_filecase(hb_strdup(pFilename));
+   pFilename = hb_filecase( hb_strdup( ( char * ) pFilename ) );
    s_uiErrorLast = 0;
 
 #if defined(X__WIN32__)
@@ -666,7 +666,7 @@ FHANDLE hb_fsCreateEx( BYTE * pFilename, USHORT uiAttr, USHORT uiFlags )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsCreateEx(%p, %hu, %hu)", pFilename, uiAttr, uiFlags));
 
-   pFilename=hb_filecase(hb_strdup(pFilename));
+   pFilename = hb_filecase( hb_strdup( ( char * ) pFilename ) );
 
    s_uiErrorLast = 0;
 
