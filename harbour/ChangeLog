@@ -1,12 +1,16 @@
+2001-01-08 14:35 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * harbour/source/vm/estack.c
+     * Corrected typo _HB_ITEM => HB_ITEM in type casting.
+
 2001-01-08 22:18 GMT+0100 JFL (mafact) <jfl@mafact.com>
      * harbour/makefile.vc
        Added estack.obj
      * harbour/source/compiler/harbour.l
-       Added Type Casting needed by VC++ 
+       Added Type Casting needed by VC++
      * harbour/source/vm/estack.c
-       Added Type Casting needed by VC++ 
+       Added Type Casting needed by VC++
      * harbour/source/vm/hvm.c
-       Added Type Casting needed by VC++ 
+       Added Type Casting needed by VC++
      * harbour/source/vm/classes.c
        Temporary released the HIDDEN Check on scooping
 
