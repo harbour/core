@@ -87,7 +87,7 @@ HB_FUNC( __XSAVESCREEN )
    hb_gtGetPos( &s_iRow, &s_iCol );
 
    {
-      USHORT uiSize;
+      UINT   uiSize;
       hb_gtRectSize( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), &uiSize );
       s_pBuffer = hb_xgrab( uiSize );
    }

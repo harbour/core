@@ -838,7 +838,7 @@ void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight,
    *  with C++ compilers
    */
    SHORT usRow, usCol;
-   USHORT uiSize;   /* gtRectSize returns int */
+   UINT uiSize;
    int iLength = ( usRight - usLeft ) + 1;
    int iCount, iColOld, iColNew, iColSize;
 

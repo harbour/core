@@ -8,6 +8,25 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-19 16:50 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
+   * include/hbdefs.h
+     * Added definition for UINT
+   * include/hbapigt.h
+   * source/rtl/gtapi.c
+   * source/rtl/saverest.c
+   * source/rtl/xsavescr.c
+   * source/rtl/gtdos/gtdos.c
+   * source/rtl/gtsln/gtsln.c
+   * source/rtl/gtos2/gtos2.c
+   * source/rtl/gtwin/gtwin.c
+     ! Properly account for the fact that hb_gt_rectsize returns an int
+       (ok, so we treat it as UINT, but this is better than USHORT)
+   * source/rtl/gtwin/gtwin.c
+     * New, highly optimized Windows console gt driver
+      written by Przemyslaw Czerpak <druzus@polbox.com>
+      with some (?) fixes suggested by Peter Rees <peter@rees.co.nz>
+      and Marek Paliwoda <paliwoda@inetia.pl>
+
 2002-10-19 16:26 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/box.c
    * source/rtl/disksphb.c

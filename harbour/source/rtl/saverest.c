@@ -60,7 +60,7 @@ HB_FUNC( SAVESCREEN )
    USHORT uiBottom = ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow();
    USHORT uiRight  = ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol();
 
-   USHORT uiSize;
+   UINT   uiSize;
    void * pBuffer;
 
    hb_gtRectSize( uiTop, uiLeft, uiBottom, uiRight, &uiSize );

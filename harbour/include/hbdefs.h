@@ -123,6 +123,9 @@
    #undef BOOL                            /* boolean */
    typedef int BOOL;
 
+   #undef UINT
+   typedef unsigned int UINT;             /* compiler/target dependant */
+
    #undef BYTE
    typedef unsigned char BYTE;            /* 1 byte unsigned */
 

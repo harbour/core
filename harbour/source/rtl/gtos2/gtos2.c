@@ -453,13 +453,13 @@ void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight,
        *  with C++ compilers
        */
       SHORT usRow, usCol;
-      USHORT usSize;
+      UINT uiSize;
       int iLength = ( usRight - usLeft ) + 1;
       int iCount, iColOld, iColNew, iColSize;
 
       hb_gtGetPos( &usRow, &usCol );
 
-      if( hb_gtRectSize( usTop, usLeft, usBottom, usRight, &usSize ) == 0 )
+      if( hb_gtRectSize( usTop, usLeft, usBottom, usRight, &uiSize ) == 0 )
       {
          /* NOTE: 'unsigned' is used intentionally to correctly compile
           * with C++ compilers
