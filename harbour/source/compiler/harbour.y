@@ -255,7 +255,7 @@ Source     : Crlf
            ;
 
 Line       : LINE NUM_INTEGER LITERAL Crlf
-           | LINE NUM_INTEGER LITERAL '@' LITERAL Crlf   /* XBase++ style */
+           | LINE NUM_INTEGER LITERAL '@' LITERAL Crlf   /* Xbase++ style */
            ;
 
 Function   : FunScope FUNCTION  IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, 0 ); } Params Crlf {}

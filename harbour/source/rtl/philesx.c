@@ -41,7 +41,7 @@
 
 #ifdef HB_COMPAT_XPP
 
-/* NOTE: XBase++ compatible */
+/* NOTE: Xbase++ compatible */
 
 HB_FUNC( CURDRIVE )
 {

@@ -12,7 +12,16 @@
 
 function Main()
 
-#pragma ShortCutting=On
+#pragma Shortcut=On
+#pragma Shortcut= On
+#pragma Shortcut = On
+#pragma Shortcut(On)
+#pragma Shortcut( On)
+#pragma Shortcut( OFF )
+#pragma Shortcut( On )
+#pragma Shortcut( ON )
+#pragma Shortcut( ON
+
 /* or #pragma /Z+ */
 
   if .t. .and. .f.
@@ -24,7 +33,13 @@ function Main()
   endif
 
 #pragma /Z-
-/* or #pragma ShortCutting=Off */
+/* or #pragma Shortcut=Off */
+
+#pragma Exitseverity=0
+#pragma Exitseverity=1
+#pragma Exitseverity(0)
+#pragma Exitseverity( 0 )
+#pragma Exitseverity( 1 )
 
 /* Pragmas with bad values will cause an error  */
 #pragma WarningLevel=8

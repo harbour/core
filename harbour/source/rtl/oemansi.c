@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * OEM <-> ANSI string conversion functions (Win32 specific, XBase++ ext.)
+ * OEM <-> ANSI string conversion functions (Win32 specific, Xbase++ ext.)
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
@@ -87,14 +87,14 @@ HB_FUNC( HB_OEMTOANSI )
 
 #ifdef HB_COMPAT_XPP
 
-/* NOTE: XBase++ compatible function */
+/* NOTE: Xbase++ compatible function */
 
 HB_FUNC( CONVTOOEMCP )
 {
    HB_FUNCNAME( HB_ANSITOOEM )();
 }
 
-/* NOTE: XBase++ compatible function */
+/* NOTE: Xbase++ compatible function */
 
 HB_FUNC( CONVTOANSICP )
 {

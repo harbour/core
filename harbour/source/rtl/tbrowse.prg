@@ -36,6 +36,14 @@
 /* NOTE: Don't use SAY in this module, use DispOut(), DispOutAt() instead,
          otherwise it will not be CA-Cl*pper compatible. [vszakats] */
 
+/* TODO: :firstScrCol() --> nScreenCol
+         Determines screen column where the first table column is displayed. 
+         Xbase++ compatible method */
+
+/* TODO: :viewArea() --> aViewArea
+         Determines the coordinates for the data area of a TBrowse object.
+         Xbase++ compatible method */
+
 /* TOFIX: Clipper will determine the column width when the TBROWSE is displayed 
           at the first time. (while Harbour does that when adding the column)
           Clipper will leave NIL in the :width variable until determined. Also 

@@ -129,7 +129,7 @@ METHOD Reader() CLASS TGetList
       oGet:killFocus()
    endif
 
-return nil
+return Self
 
 METHOD GetApplyKey( nKey ) CLASS TGetList
 
@@ -137,7 +137,7 @@ METHOD GetApplyKey( nKey ) CLASS TGetList
 
    if ! ( ( bKeyBlock := Setkey( nKey ) ) == nil )
       ::GetDoSetKey( bKeyBlock )
-      return nil
+      return Self
    endif
 
    do case
@@ -245,7 +245,7 @@ METHOD GetApplyKey( nKey ) CLASS TGetList
          endif
       endcase
 
-return nil
+return Self
 
 METHOD GetPreValidate() CLASS TGetList
 
@@ -334,7 +334,7 @@ METHOD GetDoSetKey( bKeyBlock ) CLASS TGetList
       oGet:ExitState := GE_ESCAPE
    endif
 
-return nil
+return Self
 
 METHOD Settle( nPos ) CLASS TGetList
 
@@ -414,7 +414,7 @@ METHOD PostActiveGet() CLASS TGetList
    ::ReadVar( ::GetReadVar() )
    ::ShowScoreBoard()
 
-return nil
+return Self
 
 METHOD GetReadVar() CLASS TGetList
 
@@ -471,7 +471,7 @@ METHOD ShowScoreboard() CLASS TGetList
       SetCursor( nOldCursor )
    endif
 
-return nil
+return Self
 
 METHOD DateMsg() CLASS TGetList
 
@@ -494,7 +494,7 @@ METHOD DateMsg() CLASS TGetList
 
    endif
 
-return nil
+return Self
 
 METHOD ReadVar( cNewVarName ) CLASS TGetList
 

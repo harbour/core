@@ -64,7 +64,7 @@
 #endif
 
 /* NOTE: The parameter is an extension over CA-Cl*pper, it's also supported
-         by XBase++. [vszakats] */
+         by Xbase++. [vszakats] */
 
 HB_FUNC( ISPRINTER )
 {

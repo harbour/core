@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * DBSKIPPER() function for XBase++
+ * DBSKIPPER() function for Xbase++
  *
  * Copyright 1999 Paul Tucker <ptucker@sympatico.ca>
  * www - http://www.harbour-project.org
@@ -35,7 +35,7 @@
 
 #include "hbsetup.ch"
 
-/* NOTE: XBase++ has a standard function named dbSkipper(), it's not a
+/* NOTE: Xbase++ has a standard function named dbSkipper(), it's not a
          standard CA-Cl*pper 5.x function, though. */
 
 /* NOTE: This function is exactly the same as Skipped() in BROWDB.PRG */

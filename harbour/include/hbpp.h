@@ -72,8 +72,8 @@ typedef struct _COMMANDS
    struct _COMMANDS * last;
 } COMMANDS;
 
-#define HB_PP_STR_SIZE  8192
-#define HB_PP_BUFF_SIZE 2048
+#define HB_PP_STR_SIZE  12288
+#define HB_PP_BUFF_SIZE 4096
 
 #define HB_SKIPTABSPACES( sptr ) while( *sptr == ' ' || *sptr == '\t' ) ( sptr )++
 

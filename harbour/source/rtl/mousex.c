@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * NUMBUTTONS(), SETMOUSE() XBase++ compatible functions.
+ * NUMBUTTONS(), SETMOUSE() Xbase++ compatible functions.
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
@@ -37,7 +37,7 @@
 #include "hbapiitm.h"
 #include "hbapigt.h"
 
-/* NOTE: XBase++ compatible functions */
+/* NOTE: Xbase++ compatible functions */
 
 #ifdef HB_COMPAT_XPP
 

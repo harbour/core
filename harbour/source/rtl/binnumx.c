@@ -33,7 +33,7 @@
  *
  */
 
-/* NOTE: XBase++ compatible functions */
+/* NOTE: Xbase++ compatible functions */
 
 #include "hbapi.h"
 #include "hbapiitm.h"

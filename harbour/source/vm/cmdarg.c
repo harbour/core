@@ -331,7 +331,7 @@ void hb_cmdargProcessVM( void )
 #endif
       hb_conOutErr( hb_conNewLine(), 0 );
 
-      hb_conOutErr( "Alaska XBase++ extensions: ", 0 );
+      hb_conOutErr( "Alaska Xbase++ extensions: ", 0 );
 #if defined( HB_COMPAT_XPP )
       hb_conOutErr( "Yes", 0 );
 #else

@@ -43,7 +43,7 @@
 #define ME_INIT         3       /* Initialization mode             */
 #define ME_REQUEST      4       /* Memoedit requests an input from */
                                 /* the user function, e.g. after   */
-                                /* ME_PASTE                        */ /* XBase++ extension */
+                                /* ME_PASTE                        */ /* Xbase++ extension */
 
 /* User callback return codes */
 #define ME_DEFAULT      0       /* Perform default action          */
@@ -53,7 +53,7 @@
 #define ME_TOGGLESCROLL 35      /* Toggle scrolling mode           */
 #define ME_WORDRIGHT    100     /* Perform word-right operation    */
 #define ME_BOTTOMRIGHT  101     /* Perform bottom-right operation  */
-#define ME_PASTE        110     /* Paste string into buffer        */ /* XBase++ extension */
+#define ME_PASTE        110     /* Paste string into buffer        */ /* Xbase++ extension */
 
 /* NOTE: Return codes 1-31 cause MEMOEDIT() to perform the */
 /*       edit action corresponding to the key whose value is returned. */

@@ -222,6 +222,9 @@ HB_FUNC( ASCAN )
       hb_retnl( 0 );
 }
 
+/* TODO: In Xbase++ fifth parameter determines whether array elements        
+         are passed by reference to the code block. [vszakats] */
+
 HB_FUNC( AEVAL )
 {
    PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );

@@ -54,7 +54,7 @@
 
 /* Include new CA-Cl*pper 5.3[a,b] functions */
 #define HB_COMPAT_C53
-/* Include new Alaska XBase++ functions */
+/* Include new Alaska Xbase++ functions */
 #define HB_COMPAT_XPP
 /* Include new CA-VO functions */
 #define HB_COMPAT_VO

@@ -1,3 +1,56 @@
+20000404-03:24 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbpp.h
+     + Upped the buffer sizes.
+
+   * source/pp/ppcore.c
+   * tests/tstprag.prg
+     * Some #pragma names modified to be Xbase++ compatible.
+       AUTOMEMVARS  -> AUTOMEMVAR
+       LINEINFO     -> LINENUMBER
+       SHORTCUTTING -> SHORTCUT
+       FORCEMEMVARS -> DYNAMICMEMVAR
+     + Added the Xbase++ compatible pragma symtax: #pragma NAME( ON/OFF )
+     + #pragma now allows space between long pragma name and parameter:
+       #pragma Shortcut= ON or #pragma Shortcut( ON )
+     ! Fixed some DebugPragma() calls.
+     ! Fixed DebugPragma() to display zero as a value.
+     % Code simplified, variables elminitated.
+     ! AUTOMEMVAR check fixed.
+
+   * source/rtl/tget.prg
+     + Added XPP compatible _Assign and _End() methods.
+     ! Home(), End(), Access(), ColorDisp(), UpdateBuffer() 
+       fixed to return Self.
+     + TODO added about Xbase++ compatible method.
+
+   * source/rtl/tgetlist.prg
+     + The methods returning NIL are now returning Self to be more consistent
+       with the other classes.
+
+   * source/rtl/tbrowse.prg
+     + TODO added about Xbase++ compatible methods.
+
+   * source/rtl/philes.c
+   * source/vm/arrayshb.c
+     + Some TODOs added about Xbase++ extension (CURDIR(), FILE(), AEVAL()).
+
+   * include/hbsetup.ch
+   * include/memoedit.ch
+   * compiler/harbour.y
+   * rtl/binnumx.c
+   * rtl/browdbx.prg
+   * rtl/datesx.c
+   * rtl/isprint.c
+   * rtl/mousex.c
+   * rtl/oemansi.c
+   * rtl/philesx.c
+   * rtl/tbrowse.prg
+   * rtl/tget.prg
+   * vm/cmdarg.c
+   * utils/hbtest/hbtest.prg
+     ! XBase++ -> Xbase++
+
 20000403-23:40 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * source/rtl/gtos2/gtos2.c
@@ -57,7 +110,7 @@
    * utils/hbtest/*
    + utils/hbtest/make_xpp.bat
    + utils/hbtest/make_xpp.cmd
-     + HBTEST made compatible with XBase++ 1.10. Check the results.
+     + HBTEST made compatible with Xbase++ 1.10. Check the results.
 
        Comparison:
 
@@ -65,10 +118,10 @@
        --------------- ------------- --------- ------ -------- ----- ----
        CA-Clipper 5.2e hbtest5x.exe    504.832   2976       25  3001 ~1 s
        Harbour (BCC55) hbtest.exe      566.272   3186       82  3268 ~4 s
-       XBase++ 1.10    hbtestxp.exe  1.375.232   1977      771  2748 ~2 s
+       Xbase++ 1.10    hbtestxp.exe  1.375.232   1977      771  2748 ~2 s
 
    * source/rtl/philesx.c
-     ! CURDRIVE() error handling made more like XBase++. Retry is allowed,
+     ! CURDRIVE() error handling made more like Xbase++. Retry is allowed,
        and the error text is the same. (not tested)
 
 20000403-13:07 GMT+1 Victor Szakats <info@szelvesz.hu>

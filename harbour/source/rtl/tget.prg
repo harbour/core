@@ -34,11 +34,17 @@
  */
 
 #include "hbclass.ch"
+#include "hbsetup.ch"
 #include "color.ch"
 #include "common.ch"
 #include "setcurs.ch"
 #include "getexit.ch"
 #include "inkey.ch"
+
+/* TODO: :posInBuffer( <nRow>, <nCol> ) --> nPos
+         Determines a position within the edit buffer based on screen 
+         coordinates. 
+         Xbase++ compatible method */
 
 #define GET_CLR_UNSELECTED      0
 #define GET_CLR_ENHANCED        1
@@ -76,19 +82,25 @@ CLASS TGet
 
    METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec )
 
-   METHOD Assign() INLINE ::VarPut( ::unTransform() )
+   METHOD Assign()
+#ifdef HB_COMPAT_XPP
+   MESSAGE _Assign METHOD Assign()
+#endif
    METHOD Display()
-   METHOD ColorDisp( cColorSpec ) INLINE ::ColorSpec := cColorSpec, ::Display()
+   METHOD ColorDisp( cColorSpec ) INLINE ::ColorSpec := cColorSpec, ::Display(), Self
    METHOD KillFocus()
    METHOD Reset()
    METHOD SetFocus()
    METHOD Undo()
    METHOD UnTransform()
-   METHOD UpdateBuffer() INLINE ::Assign()
+   METHOD UpdateBuffer() INLINE ::Assign(), Self
    METHOD VarGet()
    METHOD VarPut()
 
    METHOD End()
+#ifdef HB_COMPAT_XPP
+   MESSAGE _End METHOD End()
+#endif
    METHOD Home()
    MESSAGE Left() METHOD _Left()
    MESSAGE Right() METHOD _Right()
@@ -117,7 +129,7 @@ CLASS TGet
    METHOD Input( cChar )
    METHOD PutMask( cBuffer, lEdit )
 
-   METHOD HasScroll() INLINE ( ::nDispLen != ::nMaxLen )
+   METHOD HasScroll() INLINE ::nDispLen != ::nMaxLen
 
 ENDCLASS
 
@@ -251,7 +263,15 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD Display(lForced) CLASS TGet
+METHOD Assign() CLASS TGet
+
+   ::VarPut( ::unTransform() )
+
+return Self
+
+//---------------------------------------------------------------------------//
+
+METHOD Display( lForced ) CLASS TGet
 
    local nOldCursor := SetCursor( SC_NONE )
 
@@ -294,7 +314,7 @@ METHOD End() CLASS TGet
       ::Display(.f.)
    endif
 
-return nil
+return Self
 
 //---------------------------------------------------------------------------//
 
@@ -306,7 +326,7 @@ METHOD Home() CLASS TGet
       ::Display(.f.)
    endif
 
-return nil
+return Self
 
 //---------------------------------------------------------------------------//
 

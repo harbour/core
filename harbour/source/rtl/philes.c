@@ -154,6 +154,9 @@ HB_FUNC( FSEEK )
       hb_retnl( 0 );
 }
 
+/* TODO: Xbase++ has an extension where the second parameter can specify
+         the required attribute. */
+
 HB_FUNC( FILE )
 {
    hb_retl( ISCHAR( 1 ) ? hb_fsFile( ( BYTE * ) hb_parc( 1 ) ) : FALSE );
@@ -189,6 +192,8 @@ HB_FUNC( FREADSTR )
 
 /* NOTE: This function should not return the leading and trailing */
 /*       (back)slashes. [vszakats] */
+
+/* TODO: Xbase++ is able to change to the specified directory. */
 
 HB_FUNC( CURDIR )
 {

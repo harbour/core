@@ -44,7 +44,7 @@
 /* NOTE: It's worth to make tests with and without the /z switch */
 /* NOTE: Guard all Harbour extensions with __HARBOUR__ #ifdefs */
 /* NOTE: Use ":className()" instead of ":className" to make your code work
-         with XBase++. XBase++ seem to take differenciate between the 
+         with Xbase++. Xbase++ seem to take differenciate between the 
          object method and object variable form. In CA-Clipper and Harbour
          both syntax is accepted. Same goes for ":Eval()" */
 

@@ -37,8 +37,8 @@
 
 #ifdef HB_COMPAT_XPP
 
-/* NOTE: XBase++ compatible function */
-/* NOTE: XBase++ checks for the parameter count at compile time */
+/* NOTE: Xbase++ compatible function */
+/* NOTE: Xbase++ checks for the parameter count at compile time */
 
 HB_FUNC( STOD )
 {
