@@ -3,6 +3,8 @@
      * hb_gtScroll() - call gtScroll if WIN_GTAPI
    * source\rtl\gt\gtapi.c
      + gtScroll() Much improved scroll speed -not up to Clipper yet though.
+   * include\gtapi.h
+     + declaration for gtScroll()
 
 19990731-23:20 GMT+1 Bruno Cantero <bruno@issnet.net>
    * source/rdd/dbcmd.c

@@ -114,6 +114,7 @@ char gtGetScreenHeight(void);
 void gtSetPos(char cRow, char cCol);
 char gtCol(void);
 char gtRow(void);
+void gtScroll(char cTop, char cLeft, char cBottom, char cRight, char attribute, char vert, char horiz);
 void gtSetCursorStyle(int style);
 int  gtGetCursorStyle(void);
 void gtPuts(char cRow, char cCol, char attr, char *str, int len);
