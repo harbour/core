@@ -1,3 +1,19 @@
+2000-11-02 20:35 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.sly
+     + Added rule to accept Get and GetA as FunCall
+
+   * source/compiler/harbour.y
+     + Added support for pseudo function _GET_()
+   * source/compiler/harbour.l
+     + Added _GET_(...) => __GET(...)/__GETA(...) logic from harbour.sly
+
+   * source/macro/macro.slx
+     * Corrected YY_DECL #define (Thanks John)
+
+   * source/rtl/tget.prg
+   * include/hbextern.ch
+     - Removed no longer needed _GET_()
+
 2000-11-03 22:30 UTC+0100 (for) Charles,Kwon <jfl@mafact.com>
    * source/lang/msgko.c
       Charles,Kwon update as requested ...

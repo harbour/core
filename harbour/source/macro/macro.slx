@@ -50,7 +50,7 @@
  * NOTE: yylval_ptr is passed automaticaly by bison if %pure_parser is used
 */
 #undef YY_DECL
-   #define YY_DECL int yylex( YYSTYPE *yylval_ptr )
+   #define YY_DECL int yylex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
 
 #define YYLEX_PARAM pMacro
 

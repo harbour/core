@@ -611,6 +611,8 @@ VariableAtAlias : VariableAt ALIASOP      { $$ = $1; }
  */
 FunCall    : IdentName '(' ArgList ')' { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( $1 ), $3 ); }
            | MacroVar '(' ArgList ')'  { $$ = hb_compExprNewFunCall( $1, $3 ); }
+	   | Get                       { $$ = $1 }
+	   | GetA                      { $$ = $1 }
            ;
 
 ArgList    : Argument                     { $$ = hb_compExprNewArgList( $1 ); }
@@ -645,8 +647,6 @@ ObjectData  : NumValue ':' SendId        { $$ = hb_compExprNewSend( $1, $3 ); }
             | MacroVar ':' SendId        { $$ = hb_compExprNewSend( $1, $3 ); }
             | MacroExpr ':' SendId       { $$ = hb_compExprNewSend( $1, $3 ); }
             | FunCall ':' SendId         { $$ = hb_compExprNewSend( $1, $3 ); }
-            | Get ':' SendId             { $$ = hb_compExprNewSend( $1, $3 ); }
-            | GetA ':' SendId            { $$ = hb_compExprNewSend( $1, $3 ); }
             | IfInline ':' SendId        { $$ = hb_compExprNewSend( $1, $3 ); }
             | PareExpList ':' SendId     { $$ = hb_compExprNewSend( $1, $3 ); }
             | VariableAt ':' SendId      { $$ = hb_compExprNewSend( $1, $3 ); }
