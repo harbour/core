@@ -186,11 +186,6 @@
  *      /z               suppress logical shortcutting (.and. & .or.)   </par>
  *      =================   </par>
  *
- *      /10              restrict symbol length to 10 characters   </par>
- *      =================   </par>
- *
- *          All variable and function names are cut to maximum 10 characters.   
- *
  *      Compilation in batch mode.   </par>
  *      ==========================   </par>
  *
