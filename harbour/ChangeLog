@@ -1,3 +1,8 @@
+2001-11-08 22:40 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
+   * utils/hbmake/hbmake.prg
+     utils/hbmake/hbmake.prg
+      * Fix some small problem with hbmake under linux
+
 2001-11-09 05:20 GMT +7 Andi Jahja <harbour@cbn.net.id>
    * utils/hbmake/hbmutils.prg
      ! add Copyright header

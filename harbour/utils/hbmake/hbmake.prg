@@ -48,7 +48,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-#include 'fileio.ch'
+#include "fileio.ch"
 #include "common.ch"
 #include "radios.ch"
 #include "checks.ch"
@@ -59,7 +59,7 @@
 #define EOL chr(13)+chr(10)
 #define hb_osnewline() chr(13)+chr(10)
 #define CRLF hb_osnewline()
-#include 'hbclip.ch'
+#include "hbclip.ch"
 #endif
 #xtranslate timetosec(<x>) => ((val(substr(<x>,1,2))*3600)+(val(substr(<x>,4,2))*60)+(val(substr(<x>,7,2))))
 DECLARE TestforPrg(cFile as String)
@@ -110,7 +110,7 @@ Local nPos
 Local aDef := {}
 Local cOs:=OS()
 Local allParam
-
+//__traceprgcalls(.t.)
 Default p1 To ""
 Default p2 To ""
 Default p3 To ""
@@ -1901,9 +1901,9 @@ Elseif lGcc
 
    Aadd( aCommands, { ".c.o:", "gcc -I$(HB_INC_INSTALL) $(CFLAG1) $(CFLAG2) -I. -o$* $**" } )
 if lextended
-   Aadd( aCommands, { ".prg.o:", "harbour -n -I$(HB_INC_INSTALL) -I. -go  -o$* $**" } )
+   Aadd( aCommands, { ".prg.o:", "harbour -n $(HARBOURFLAGS) -I$(HB_INC_INSTALL) -I. -go  -o$* $**" } )
 else
-   Aadd( aCommands, { ".prg.c:", "harbour -n -I$(HB_INC_INSTALL) -I.  -o$* $**" } )
+   Aadd( aCommands, { ".prg.c:", "harbour -n $(HARBOURFLAGS) -I$(HB_INC_INSTALL) -I.  -o$* $**" } )
 endif
 else
    Aadd( aCommands, { ".cpp.o:", "$(BCB)\bin\gcc $(CFLAG1) $(CFLAG2) -o$* $*" } )
@@ -2162,7 +2162,7 @@ Local aTemp as Array
 Local nCount as Numeric
 Local aCurobjs as Array
 Local nObjPos as Numeric
-
+Local cLib
 // ? "setting link file"
 cRead  := Alltrim( readln( @leof ) )
 
@@ -2182,7 +2182,7 @@ amacro := listasarray2( cRead, '\' )
 if lbcc .or. lVcc
 cLinkcomm   := cRead + "  @" + cLinker
 else
-cLinkcomm   :=  cRead + " " + cLinker + " < "
+cLinkcomm   :=  cRead + " < " + cLinker 
 
 endif
 
@@ -2195,7 +2195,7 @@ For nPos := 1 To 7
              if (amacro[ nCount ] = "$(PROJECT)") .and. lGcc 
              Findmacro(amacro[ nCount ], @cRead )
              fwrite(nLinkHandle,"CREATE " + "lib"+cRead+CRLF)
-
+	     cLib:="lib"+cRead	
          elseif (amacro[ nCount ] =="$(ALLOBJ)")
              findmacro( amacro[ nCount ], @cRead )
              aCurObjs:=ListasArray2(cRead," ")
@@ -2221,7 +2221,9 @@ fwrite(nLinkHandle, "END " +CRLF)
 endif
 
 Fclose( nLinkhandle )
-
+if lLinux 
+cLinkComm += " || rm -f " +cLib
+endif
 outstd(cLinkComm)
 
 Return nil
