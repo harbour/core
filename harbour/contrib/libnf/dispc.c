@@ -543,7 +543,7 @@ static void filebot()
 HB_FUNC( _FT_DFINIT )
 {
     int rval, i, j;
-    USHORT uiSize;
+    UINT uiSize;
 
     rval = 0;
 
