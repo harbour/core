@@ -2,11 +2,7 @@ function main
 Local i:=0, block
 Field Last, First
 
-   request _DBFNTX
-   rddRegister( "DBFNTX", 1 )
-   rddsetdefault( "DBFNTX" )
-
-   Use Test
+   Use test
    Index On Left( Last,8 )+Left( First,8 ) To test1
    Index On Left( Last,8 ) To test2
    Index On Last To test3
