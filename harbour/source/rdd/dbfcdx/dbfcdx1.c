@@ -4873,3 +4873,21 @@ ERRCODE hb_cdxGoCold( CDXAREAP pArea )
       return FAILURE;
    return SUCCESS;
 }
+
+extern ERRCODE hb_cdxPack ( CDXAREAP pArea )
+{
+   HB_TRACE(HB_TR_DEBUG, ("nb_cdxPack(%p)", pArea ));
+
+   /* Commit changes first */
+   if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
+      return FAILURE;
+
+   if( SUPER_PACK( ( AREAP ) pArea ) == SUCCESS )
+   {
+      hb_cdxOrderListClear( pArea );
+     /* return hb_cdxOrderListRebuild( pArea ); */
+     return TRUE;
+   }
+   else
+     return FAILURE;
+}

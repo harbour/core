@@ -407,7 +407,8 @@ extern ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo );
 extern ERRCODE hb_cdxStructSize( CDXAREAP pArea, USHORT * uiSize );
 extern ERRCODE hb_cdxSysName( CDXAREAP pArea, BYTE * pBuffer );
 #define hb_cdxEval                                 NULL
-#define hb_cdxPack                                 NULL
+/* #define hb_cdxPack                                 NULL */
+extern ERRCODE hb_cdxPack ( CDXAREAP pArea );
 #define hb_cdxPackRec                              NULL
 #define hb_cdxSort                                 NULL
 #define hb_cdxTrans                                NULL
