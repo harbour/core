@@ -323,22 +323,16 @@ $(PP_EXE) : \
     -del hbstr.obj
 
 $(RUNNER_EXE) : \
-    $(RUNNER_DIR)\stdalone\external.prg \
     $(RUNNER_DIR)\stdalone\hbrun.prg
-    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(RUNNER_DIR)\stdalone\external.prg
     $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ -i$(RUNNER_DIR)\stdalone\ $(RUNNER_DIR)\stdalone\hbrun.prg
-    $(CC) -TP $(CFLAGS) $(OBJ_DIR)\hbrun.c $(OBJ_DIR)\external.c -o $(BIN_DIR)\hbrun /link  $(LIBS)
-    -del external.obj
+    $(CC) -TP $(CFLAGS) $(OBJ_DIR)\hbrun.c -o $(BIN_DIR)\hbrun /link  $(LIBS)
     -del hbrun.obj
 
 #
 # To compile this you must have a JDK installed
 #
 #$(RUNNER_DLL) : \
-#    $(RUNNER_DIR)\stdalone\external.prg
-#    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(RUNNER_DIR)\stdalone\external.prg
-#    $(CC) -TP $(CFLAGS) $(RUNNER_DIR)\runjava.c $(OBJ_DIR)\external.c -o $(BIN_DIR)\runjava.dll /link-dll $(LIBS)
-#    -del external.obj
+#    $(CC) -TP $(CFLAGS) $(RUNNER_DIR)\runjava.c -o $(BIN_DIR)\runjava.dll /link-dll $(LIBS)
 #    -del runjava.obj
 #    -del $(BIN_DIR)\runjava.exp
 #    -del $(BIN_DIR)\runjava.lib
@@ -383,7 +377,7 @@ $(HBDOC_EXE) : \
     $(HBDOC_DIR)\genhpc.prg \
     $(HBDOC_DIR)\genasc.prg
     $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBDOC_DIR)\hbdoc.prg
-    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBDOC_DIR)\genos2.prg 
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBDOC_DIR)\genos2.prg
     $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBDOC_DIR)\gentrf.prg
     $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBDOC_DIR)\genng.prg
     $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBDOC_DIR)\genhtm.prg

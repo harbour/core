@@ -1,5 +1,5 @@
 /*
- * $Id:
+ * $Id$
  */
 
 /*
@@ -32,6 +32,10 @@
  * their web site at http://www.gnu.org/).
  *
  */
+
+/* TOFIX: The usage of non-standard Harbour functionality (TFileRead()) should 
+          be replaced with plain RTL function calls. Now it requires TOOLS to 
+          link at all. [vszakats] */
 
 #include 'common.ch'
 #include 'error.ch'

@@ -1247,11 +1247,8 @@ $(OBJ_DIR)\runlib.obj : $(RUNNER_DIR)\runlib.c
 #
 # hbrun.exe
 #
-$(RUNNER_EXE) : $(RUNNER_DIR)\stdalone\external.prg \
-                $(RUNNER_DIR)\stdalone\hbrun.prg
+$(RUNNER_EXE) : $(RUNNER_DIR)\stdalone\hbrun.prg
 
-   $(HARBOUR_EXE) -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$(OBJ_DIR)\ $(RUNNER_DIR)\stdalone\external.prg
-   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$(OBJ_DIR)\external.obj $(OBJ_DIR)\external.c
    $(HARBOUR_EXE) -i$(INCLUDE_DIR) -i$(RUNNER_DIR)\stdalone -n $(HARBOUR_OPT) -o$(OBJ_DIR)\ $(RUNNER_DIR)\stdalone\hbrun.prg
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$(OBJ_DIR)\hbrun.obj $(OBJ_DIR)\hbrun.c
 
@@ -1259,7 +1256,6 @@ $(RUNNER_EXE) : $(RUNNER_DIR)\stdalone\external.prg \
    echo -e$(RUNNER_EXE) >> make.tmp
    echo -I$(INCLUDE_DIR) >> make.tmp
    echo $(OBJ_DIR)\hbrun.obj >> make.tmp
-   echo $(OBJ_DIR)\external.obj >> make.tmp
    echo $(HARBOUR_LIB) >> make.tmp
    echo $(PP_LIB) >> make.tmp
    echo $(COMMON_LIB) >> make.tmp
