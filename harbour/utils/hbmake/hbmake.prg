@@ -2007,7 +2007,7 @@ elseif lGcc
  if at("linux",Getenv("HB_ARCHITECTURE"))>0 .or.  cOs=="Linux" .or. at("linux",lower(os()))>0
     Fwrite( nLinkHandle, "LINKER = ar -M "+CRLF)
  else
-    Fwrite( nLinkHandle, "LINKER = $(BCB)\ar -M <"+CRLF)
+    Fwrite( nLinkHandle, "LINKER = $(BCB)\ar -M "+CRLF)
  endif
  Fwrite( nLinkHandle, " "+CRLF)
  Fwrite( nLinkHandle, "ALLOBJ = $(OBJFILES) $(OBJCFILES) "+CRLF)
