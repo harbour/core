@@ -8,6 +8,17 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-06-21 15:50 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source\rtl\getsys.prg
+    ! Fix call to SET() without setting values.
+      ReadExit() and ReadInsert()
+  * source\rtl\tgetlist.prg
+    ! Fix call to SET() without setting values.
+      METHOD ReadExit()
+  * source/rtl/teditor.prg
+    ! Fix call to SET() without setting values.
+      METHOD InsertState()
+
 2002-06-20 14:28 UTC+0100 Ignacio Ortiz <ignacio@fivetech.com>
   * source/pp/ppcore.c
     - Removed warning for #Define redefinition when the new define
