@@ -456,6 +456,8 @@ static int ParseUndef( char * sLine )
        if( stdef->value ) hb_xfree( stdef->value );
        hb_xfree( stdef->name );
     }
+    stdef->pars = NULL;
+    stdef->value = NULL;
     stdef->name = NULL;
   }
 
