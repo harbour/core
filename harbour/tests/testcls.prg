@@ -6,8 +6,8 @@ function Main()
 
    local o := Test()
 
-   o:Another( "Hello" ) // Any message is not defined for Class Test, but
-                        // it will invoke ON ERROR Any() method
+   o:Another( "Hello" ) // "Another" message is not defined for Class Test, but
+                        // it will invoke ON ERROR MyErrorManager() method
 
    o:Another = 5  // Notice how __GetMessage() shows a underscored message
                   // as we are setting a DATA value.
