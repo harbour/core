@@ -1,3 +1,10 @@
+2001-09-02 19:30 GMT+1 Antonio Linares <alinares@fivetech.com>
+  + harbour/source/rtl/persist.prg
+    Class TPersistent to implement objects persistence
+
+  + harbour/tests/testpers.prg
+    objects persistance sample using Class TPersistent objects
+
 2001-09-02 18:32 GMT+1 Antonio Linares <alinares@fivetech.com>
   * harbour/source/vm/classes.c
     New function __ClsGetProperties() added. Syntax:
