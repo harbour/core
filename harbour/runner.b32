@@ -38,6 +38,7 @@ hbrun.exe : hbrun.c external.c runlib.c
    echo lib\b32\hbgt.lib >> bld.32
    echo lib\b32\hbpp.lib >> bld.32
    echo lib\b32\rdd.lib >> bld.32
+   echo lib\b32\common.lib >> bld.32
    echo lib\b32\runner.lib >> bld.32
    bcc32 @bld.32
    del bld.32

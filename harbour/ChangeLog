@@ -1,3 +1,13 @@
+19991212-16:28 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/runner/stdalone/Makefile
+    ! Fixed lib order.
+  * tests/regress/rt_hvm.prg
+    + Added some tests, commented out for Harbour.
+  * *.b32
+    make_b*.bat
+    tests/bld_b*.bat
+    ! New versions by Jose Lalin.
+
 19991212-13:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.c

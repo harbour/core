@@ -696,6 +696,16 @@ FUNCTION Main_HVM()
    TEST_LINE( --nA                            , 1 )
    TEST_LINE( nA                              , 1 )
 
+/* These will generate warnings and errors with Harbour */
+#ifndef __HARBOUR__
+   TEST_LINE( { 1, 2 }[ ( 2, 1 ) ]++          , 1 )
+   TEST_LINE( ++{ 1, 2 }[ ( 2, 1 ) ]          , 2 )
+   TEST_LINE( { 1, 2 }[ 1 ]++                 , 1 )
+   TEST_LINE( ++{ 1, 2 }[ 1 ]                 , 2 )
+   TEST_LINE( ({ 1, 2 }[ 1 ])++               , 1 )
+   TEST_LINE( ++({ 1, 2 }[ 1 ])               , 2 )
+#endif
+
    /* Operator precedence */
 
    TEST_LINE( 1 + 2 * 3 / 4 - 2 ** 2 ^ 3      , -61.50 )

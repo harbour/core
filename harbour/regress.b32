@@ -52,5 +52,6 @@ rt_main.exe : rt_main.obj rt_array.obj rt_date.obj rt_file.obj \
    echo lib\b32\terminal.lib >> temp.32
    echo lib\b32\hbpp.lib >> temp.32
    echo lib\b32\rdd.lib >> temp.32
+   echo lib\b32\common.lib >> temp.32
    bcc32 @temp.32
    del temp.32

@@ -23,7 +23,7 @@ LIBS=\
 	rdd \
 	rtl \
 	pp \
-	common \
 	macro \
+	common \
 
 include $(TOP)$(ROOT)config/bin.cf
