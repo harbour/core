@@ -1,3 +1,7 @@
+19990527-00:14 Les Griffith
+    * moved gtos2.c gtwin.c gtdos.c gtxxx.c to source\rtl\gt
+      at Matthew Hamilton suggestion
+
 19990526-22:53 Les Griffith
     * added Bil Simser's gtapi.h to include
       and the c files to source\rtl
