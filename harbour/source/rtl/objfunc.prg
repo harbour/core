@@ -86,15 +86,14 @@
  *  $END$
  */
 
-function __objHasData( oObject, cSymbol )
+FUNCTION __objHasData( oObject, cSymbol )
 
-   if !ISOBJECT( oObject ) .or. ;
-      !ISCHARACTER( cSymbol )
-      __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
-   endif
+   IF !ISOBJECT( oObject ) .OR. !ISCHARACTER( cSymbol )
+      __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
+   ENDIF
 
-return __objHasMsg( oObject, cSymbol ) .and. ;
-       __objHasMsg( oObject, "_" + cSymbol )
+   RETURN __objHasMsg( oObject, cSymbol ) .AND. ;
+          __objHasMsg( oObject, "_" + cSymbol )
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -131,15 +130,14 @@ return __objHasMsg( oObject, cSymbol ) .and. ;
  *  $END$
  */
 
-function __objHasMethod( oObject, cSymbol )
+FUNCTION __objHasMethod( oObject, cSymbol )
 
-   if !ISOBJECT( oObject ) .or. ;
-      !ISCHARACTER( cSymbol )
-      __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
-   endif
+   IF !ISOBJECT( oObject ) .OR. !ISCHARACTER( cSymbol )
+      __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
+   ENDIF
 
-return __objHasMsg( oObject, cSymbol ) .and. ;
-       !__objHasMsg( oObject, "_" + cSymbol )
+   RETURN __objHasMsg( oObject, cSymbol ) .AND. ;
+          !__objHasMsg( oObject, "_" + cSymbol )
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -188,17 +186,16 @@ return __objHasMsg( oObject, cSymbol ) .and. ;
  *  $END$
  */
 
-function __objGetMsgList( oObject, lDataMethod )
+FUNCTION __objGetMsgList( oObject, lDataMethod )
+   LOCAL aInfo
+   LOCAL aData
+   LOCAL n
+   LOCAL nLen
+   LOCAL lFoundDM                               // Found DATA ?
 
-   local aInfo
-   local aData
-   local n
-   local nLen
-   local lFoundDM                               // Found DATA ?
-
-   if !ISOBJECT( oObject )
-      __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
-   endif
+   IF !ISOBJECT( oObject )
+      __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
+   ENDIF
 
    IF !ISLOGICAL( lDataMethod )
         lDataMethod := .T.
@@ -209,23 +206,23 @@ function __objGetMsgList( oObject, lDataMethod )
    n      := 1
    nLen   := Len( aInfo )
 
-   do while n <= nLen .and. Substr( aInfo[ n ], 1, 1 ) != "_"
+   DO WHILE n <= nLen .AND. Substr( aInfo[ n ], 1, 1 ) != "_"
 
       /* If in range and no set function found yet ( set functions */
       /* begin with a leading underscore ).                        */
 
-      lFoundDM := !Empty( aScan( aInfo, "_" + aInfo[ n ], n + 1 ) )
+      lFoundDM := !Empty( AScan( aInfo, "_" + aInfo[ n ], n + 1 ) )
 
       /* Find position of matching set function in array with all symbols */
 
-      if lFoundDM == lDataMethod                // If found -> DATA
+      IF lFoundDM == lDataMethod                // If found -> DATA
                                                 //     else    METHOD
-         aAdd( aData, aInfo[ n ] )
-      endif
+         AAdd( aData, aInfo[ n ] )
+      ENDIF
       n++
-   enddo
+   ENDDO
 
-return aData
+   RETURN aData
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -264,13 +261,13 @@ return aData
  *  $END$
  */
 
-function __objGetMethodList( oObject )
+FUNCTION __objGetMethodList( oObject )
 
-   if !ISOBJECT( oObject )
-      __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
-   endif
+   IF !ISOBJECT( oObject )
+      __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
+   ENDIF
 
-return __objGetMsgList( oObject, .F. )
+   RETURN __objGetMsgList( oObject, .F. )
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -312,21 +309,20 @@ return __objGetMsgList( oObject, .F. )
  *  $FILES$
  *      Header file is hboo.ch
  *  $SEEALSO$
- *      __ObjGetMethodList(),__objGetMsgList(),__objHasData(),__objHasMethod(),__ObjSetValueList()
+ *      __objGetMethodList(),__objGetMsgList(),__objHasData(),__objHasMethod(),__ObjSetValueList()
  *  $END$
  */
 
-function __objGetValueList( oObject, aExcept )
+FUNCTION __objGetValueList( oObject, aExcept )
+   LOCAL aDataSymbol
+   LOCAL nLen
+   LOCAL aData
+   LOCAL cSymbol
+   LOCAL n
 
-   local aDataSymbol
-   local nLen
-   local aData
-   local cSymbol
-   local n
-
-   if !ISOBJECT( oObject )
-      __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
-   endif
+   IF !ISOBJECT( oObject )
+      __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
+   ENDIF
 
    IF !ISARRAY( aExcept )
         aExcept := {}
@@ -336,14 +332,14 @@ function __objGetValueList( oObject, aExcept )
    nLen        := Len( aDataSymbol )
    aData       := {}
 
-   for n := 1 to nLen
+   FOR n := 1 to nLen
       cSymbol := aDataSymbol[ n ]
-      if Empty( aScan( aExcept, cSymbol ) )
-         aAdd( aData, { cSymbol, __objSendMsg( oObject, cSymbol ) } )
-      endif
-   next n
+      IF Empty( AScan( aExcept, cSymbol ) )
+         AAdd( aData, { cSymbol, __objSendMsg( oObject, cSymbol ) } )
+      ENDIF
+   NEXT
 
-return aData
+   RETURN aData
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -396,16 +392,15 @@ return aData
  *  $END$
  */
 
-function __ObjSetValueList( oObject, aData )
+FUNCTION __ObjSetValueList( oObject, aData )
 
-   if !ISOBJECT( oObject )
-      __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
-   endif
+   IF !ISOBJECT( oObject )
+      __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
+   ELSE
+      AEval( aData, {| aItem | __objSendMsg( oObject, "_" + aItem[ HB_OO_DATA_SYMBOL ], aItem[ HB_OO_DATA_VALUE ] ) } )
+   ENDIF
 
-   aEval( aData,;
-        {| aItem | __objSendMsg( oObject, "_" + aItem[ HB_OO_DATA_SYMBOL ], aItem[ HB_OO_DATA_VALUE ] ) } )
-
-return oObject
+   RETURN oObject
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -461,21 +456,15 @@ return oObject
  *  $END$
  */
 
-function __objAddMethod( oObject, cSymbol, nFuncPtr )
+FUNCTION __objAddMethod( oObject, cSymbol, nFuncPtr )
 
-   if !ISOBJECT( oObject ) .or. ;
-      !ISCHARACTER( cSymbol ) .or. ;
-      !ISNUMBER( nFuncPtr )
-      __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
-   endif
-
-   if !__objHasMsg( oObject, cSymbol )
+   IF !ISOBJECT( oObject ) .OR. !ISCHARACTER( cSymbol ) .OR. !ISNUMBER( nFuncPtr )
+      __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
+   ELSEIF !__objHasMsg( oObject, cSymbol )
       __clsAddMsg( oObject:ClassH, cSymbol, nFuncPtr, HB_OO_MSG_METHOD )
-   else
-      __errRT_BASE(EG_ARG, 3103, "Already existing symbol in class", ProcName( 0 ) )
-   endif
+   ENDIF
 
-return oObject
+   RETURN oObject
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -518,20 +507,15 @@ return oObject
  *  $END$
  */
 
-function __objAddInline( oObject, cSymbol, bInline )
+FUNCTION __objAddInline( oObject, cSymbol, bInline )
 
-   if !ISOBJECT( oObject ) .or. ;
-      !ISCHARACTER( cSymbol )
-      __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
-   endif
-
-   if !__objHasMsg( oObject, cSymbol )
+   IF !ISOBJECT( oObject ) .OR. !ISCHARACTER( cSymbol )
+      __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
+   ELSEIF !__objHasMsg( oObject, cSymbol )
       __clsAddMsg( oObject:ClassH, cSymbol, bInline, HB_OO_MSG_INLINE )
-   else
-      __errRT_BASE(EG_ARG, 3103, "Already existing symbol in class", ProcName( 0 ) )
-   endif
+   ENDIF
 
-return oObject
+   RETURN oObject
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -573,26 +557,20 @@ return oObject
  *  $END$
  */
 
-function __objAddData( oObject, cSymbol )
+FUNCTION __objAddData( oObject, cSymbol )
+   LOCAL nSeq
 
-   local nSeq
-
-   if !ISOBJECT( oObject ) .or. ;
-      !ISCHARACTER( cSymbol )
-      __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
-   endif
-
-   if !__objHasMsg( oObject, cSymbol ) .and. ;
+   IF !ISOBJECT( oObject ) .OR. !ISCHARACTER( cSymbol )
+      __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
+   ELSEIF !__objHasMsg( oObject, cSymbol ) .AND. ;
       !__objHasMsg( oObject, "_" + cSymbol )
 
       nSeq := __cls_IncData( oObject:ClassH )         // Allocate new Seq#
       __clsAddMsg( oObject:ClassH, cSymbol,       nSeq, HB_OO_MSG_DATA )
       __clsAddMsg( oObject:ClassH, "_" + cSymbol, nSeq, HB_OO_MSG_DATA )
-   else
-      __errRT_BASE(EG_ARG, 3103, "Already existing symbol in class", ProcName( 0 ) )
-   endif
+   ENDIF
 
-return oObject
+   RETURN oObject
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -662,21 +640,15 @@ return oObject
  *  $END$
  */
 
-function __objModMethod( oObject, cSymbol, nFuncPtr )
+FUNCTION __objModMethod( oObject, cSymbol, nFuncPtr )
 
-   if !ISOBJECT( oObject ) .or. ;
-      !ISCHARACTER( cSymbol ) .or. ;
-      !ISNUMBER( nFuncPtr )
-      __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
-   endif
-
-   if __objHasMethod( oObject, cSymbol )
+   IF !ISOBJECT( oObject ) .OR. !ISCHARACTER( cSymbol ) .OR. !ISNUMBER( nFuncPtr )
+      __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
+   ELSEIF __objHasMethod( oObject, cSymbol )
       __clsModMsg( oObject:ClassH, cSymbol, nFuncPtr )
-   else
-      __errRT_BASE(EG_ARG, 3102, "Not existing symbol in class", ProcName( 0 ) )
-   endif
+   ENDIF
 
-return oObject
+   RETURN oObject
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -724,21 +696,15 @@ return oObject
  *  $END$
  */
 
-function __objModInline( oObject, cSymbol, bInline )
+FUNCTION __objModInline( oObject, cSymbol, bInline )
 
-   if !ISOBJECT( oObject ) .or. ;
-      !ISCHARACTER( cSymbol ) .or. ;
-      !ISBLOCK( bInline )
-      __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
-   endif
-
-   if __objHasMethod( oObject, cSymbol )
+   IF !ISOBJECT( oObject ) .OR. !ISCHARACTER( cSymbol ) .OR. !ISBLOCK( bInline )
+      __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
+   ELSEIF __objHasMethod( oObject, cSymbol )
       __clsModMsg( oObject:ClassH, cSymbol, bInline )
-   else
-      __errRT_BASE(EG_ARG, 3102, "Not existing symbol in class", ProcName( 0 ) )
-   endif
+   ENDIF
 
-return oObject
+   RETURN oObject
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -793,20 +759,15 @@ return oObject
  *  $END$
  */
 
-function __objDelMethod( oObject, cSymbol )
+FUNCTION __objDelMethod( oObject, cSymbol )
 
-   if !ISOBJECT( oObject ) .or. ;
-      !ISCHARACTER( cSymbol )
-      __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
-   endif
-
-   if __objHasMethod( oObject, cSymbol )
+   IF !ISOBJECT( oObject ) .OR. !ISCHARACTER( cSymbol )
+      __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
+   ELSEIF __objHasMethod( oObject, cSymbol )
       __clsDelMsg( oObject:ClassH, cSymbol )
-   else
-      __errRT_BASE(EG_ARG, 3102, "Not existing symbol in class", ProcName( 0 ) )
-   endif
+   ENDIF
 
-return oObject
+   RETURN oObject
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -859,8 +820,8 @@ return oObject
  *  $END$
  */
 
-function __objDelInline( oObject, cSymbol )
-return __objDelMethod( oObject, cSymbol )              // Same story
+FUNCTION __objDelInline( oObject, cSymbol )
+   RETURN __objDelMethod( oObject, cSymbol )              // Same story
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -901,20 +862,15 @@ return __objDelMethod( oObject, cSymbol )              // Same story
  *  $END$
  */
 
-function __objDelData( oObject, cSymbol )
+FUNCTION __objDelData( oObject, cSymbol )
 
-   if !ISOBJECT( oObject ) .or. ;
-      !ISCHARACTER( cSymbol )
-      __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
-   endif
-
-   if __objHasData( oObject, cSymbol )
+   IF !ISOBJECT( oObject ) .OR. !ISCHARACTER( cSymbol )
+      __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
+   ELSEIF __objHasData( oObject, cSymbol )
       __clsDelMsg( oObject:ClassH, cSymbol )
       __clsDelMsg( oObject:ClassH, "_" + cSymbol )
       __cls_DecData( oObject:ClassH )         // Decrease wData
-   else
-      __errRT_BASE(EG_ARG, 3102, "Not existing symbol in class", ProcName( 0 ) )
-   endif
+   ENDIF
 
-return oObject
+   RETURN oObject
 

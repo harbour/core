@@ -23,7 +23,7 @@ BCC_OPT = $(BCC_OPT) -O2
 
 # Borland C/C++ (Windows 32 bits)
 BCC_EXE = bcc32
-BCC_OPT = $(BCC_OPT) -DHARBOUR_USE_WIN_GTAPI -5
+BCC_OPT = $(BCC_OPT) -DHARBOUR_USE_WIN_GTAPI
 TASM_EXE = tasm32
 OBJ_DIR = obj\b32
 LIB_DIR = lib\b32

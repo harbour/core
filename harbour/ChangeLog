@@ -1,3 +1,19 @@
+20000220-14:30 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * ../FT_HELPC.PRG
+     ../HA.LNK
+     ../bldfthe.bat
+     ! Trying to remove trash from the root of the repository.
+   * source/rtl/objfunc.prg
+     - Removed the runtime errors if the method/data to be deleted doesn't
+       exist, or the method/data to be added already exist. Reasons: These 
+       error cases are better handled manually by the developer if needed.
+       ! PLEASE UPDATE THE DOCS !
+   * makefile.bc
+     bin/bld_b32.bat
+     bin/bld_b32w.bat
+     ! Removed -5 option since this breaks Harbour on 386/486. Add
+       this to your local BCC_OPT setting if needed.
+
 20000220-12:22 GMT+2 Chen Kedem <niki@actcom.co.il>
    * doc/cvs_ssh.txt
      + Add CVS ID
@@ -63,6 +79,7 @@
         Small formating by Brian Hays
     *source/rtl/typefile.prg
         *Fixed to use the Habour RTL
+
 20000218-00:04 GMT+1 Victor Szakats <info@szelvesz.hu>
    - source/runner/stdalone/external.prg
    * makefile.bc
