@@ -507,13 +507,13 @@ static ULONG hb_hrbFindSymbol( char * szName, PHB_DYNF pDynFunc, ULONG ulLoaded 
 
 static int hb_hrbFileReadHead( FILE * file, char * szFileName )
 {
-   char szHead[] = { '\192','H','R','B' }, szBuf[4];
+   unsigned char szHead[] = { (unsigned char)192,'H','R','B' }, szBuf[4];
    char cInt[ 2 ];
 
    HB_TRACE(HB_TR_DEBUG, ("hb_hrbFileReadHead(%p)", file ));
 
    hb_hrbFileRead( file, szFileName, szBuf, 1, 4 );
-   if( !strncmp( szHead,szBuf,4 ) )
+   if( strncmp( szHead,szBuf,4 ) )
    {
       hb_errRT_BASE_Ext1( EG_CORRUPTION, 9999, NULL, szFileName, 0, EF_CANDEFAULT, 1, hb_paramError( 1 ) );
       return 0;

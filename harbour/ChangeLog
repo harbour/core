@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+    * Fix for hb_dbfGoTo(), posted by Horacio Rold¡n
+
+2002-02-04 16:45 UTC+0100 Ignacio Ortiz <ignacio@fivetech.com>
+  * source/rtl/Tget.prg
   * source/rtl/Tgetlist.prg
     * Minor modifications proposed by Walter Negro
 
