@@ -1,3 +1,12 @@
+2001-11-19 xx:xx GMT+0700 Andi Jahja <harbour@cbn.net.id>
+   * source/compiler/harbour.y
+     ! add type casts for MsVC
+
+   * makefile.vc / makefile.bc
+     ! add flag "--no-line" to bison to kill MsVC warnings,
+       so now macroy.c and harboury.c will be cleanly compiled
+     ! change compiler flag: -w => -W3 ( no longer cause eye irritation )
+
 2001-11-18 22:15 GMT+1 JFL (mafact) <jfl@mafact.com>
    * harbour/source/vm/classes.c
      * change CLSADDMSG() to intercept Operator overloading and

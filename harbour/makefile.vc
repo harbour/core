@@ -919,7 +919,7 @@ $(HARBOUR_EXE) : \
    $(COMPILER_DIR)\exproptb.c \
    $(COMPILER_DIR)\exproptc.c
    -$(ECHO) > $(OBJ_DIR)\unistd.h
-   $(CC) $(CFLAGS) -I$(OBJ_DIR) -Fo$(OBJ_DIR)\ -w $** -o $(HARBOUR_EXE) /link $(LDFLAGS) $(PP_LIB) $(COMMON_LIB)
+   $(CC) $(CFLAGS) -I$(OBJ_DIR) -Fo$(OBJ_DIR)\ -W3 $** -o $(HARBOUR_EXE) /link $(LDFLAGS) $(PP_LIB) $(COMMON_LIB)
    -$(DEL) $(OBJ_DIR)\unistd.h
 
 !else
@@ -944,7 +944,7 @@ $(HARBOUR_EXE) : \
    $(COMPILER_DIR)\exproptb.c \
    $(COMPILER_DIR)\exproptc.c
    -$(ECHO) > $(OBJ_DIR)\unistd.h
-   $(CC) $(CFLAGS) -I$(OBJ_DIR) -Fo$(OBJ_DIR)\ -w $** -o $(HARBOUR_EXE) /link $(LDFLAGS) $(PP_LIB) $(COMMON_LIB)
+   $(CC) $(CFLAGS) -I$(OBJ_DIR) -Fo$(OBJ_DIR)\ -W3 $** -o $(HARBOUR_EXE) /link $(LDFLAGS) $(PP_LIB) $(COMMON_LIB)
    -$(DEL) $(OBJ_DIR)\unistd.h
 
 !endif
@@ -1008,15 +1008,15 @@ $(GTDOS_LIB) : $(GTDOS_LIB_OBJS)
 !if ( "$(HB_LEX)"=="SIMPLEX" )
 
 $(OBJ_DIR)\harboury.c : $(COMPILER_DIR)\harbour.sly
-   bison -d -o$@ $**
+   bison -d --no-line -o$@ $**
 
 $(OBJ_DIR)\hbslex.obj : $(COMPILER_DIR)\hbslex.c
-   $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -w -Fo$@ $**
+   $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -W3 -Fo$@ $**
 
 !else
 
 $(OBJ_DIR)\harboury.c : $(COMPILER_DIR)\harbour.y
-   bison -d -o$(OBJ_DIR)\harboury.c $(COMPILER_DIR)\harbour.y
+   bison -d --no-line -o$(OBJ_DIR)\harboury.c $(COMPILER_DIR)\harbour.y
 
 $(OBJ_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
    flex -i -8 -o$(OBJ_DIR)\harbourl.c $(COMPILER_DIR)\harbour.l
@@ -1030,15 +1030,15 @@ $(OBJ_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
 !if ( "$(HB_LEX)"=="SIMPLEX" )
 
 $(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
-   bison -p hb_comp -d $** -o$@
+   bison -p --no-line hb_comp -d $** -o$@
 
 $(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
-   $(CC) $(CLIBFLAGS) -w -Fo$@  $**
+   $(CC) $(CLIBFLAGS) -W3 -Fo$@  $**
 
 !else
 
 $(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
-   bison -d -p hb_comp -o$(OBJ_DIR)\macroy.c $(MACRO_DIR)\macro.y
+   bison -d --no-line -p hb_comp -o$(OBJ_DIR)\macroy.c $(MACRO_DIR)\macro.y
 
 $(OBJ_DIR)\macrol.c : $(OBJ_DIR)\macroy.c $(MACRO_DIR)\macro.l
    flex -i -8 -Phb_comp -o$(OBJ_DIR)\macrol.c $(MACRO_DIR)\macro.l
@@ -1046,20 +1046,20 @@ $(OBJ_DIR)\macrol.c : $(OBJ_DIR)\macroy.c $(MACRO_DIR)\macro.l
 !endif
 
 $(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
-   $(CC) $(CLIBFLAGS) -w -Fo$@  $**
+   $(CC) $(CLIBFLAGS) -W3 -Fo$@  $**
 
 !if ( "$(HB_LEX)"=="SIMPLEX" )
 
 $(OBJ_DIR)\macroslx.obj : $(MACRO_DIR)\macroslx.c
    -$(ECHO) > $(OBJ_DIR)\unistd.h
-   $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -w -Fo$@ $**
+   $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -W3 -Fo$@ $**
    -$(DEL) $(OBJ_DIR)\unistd.h
 
 !else
 
 $(OBJ_DIR)\macrol.obj : $(OBJ_DIR)\macrol.c
    -$(ECHO) > $(OBJ_DIR)\unistd.h
-   $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -w -Fo$@ $**
+   $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -W3 -Fo$@ $**
    -$(DEL) $(OBJ_DIR)\unistd.h
 
 !endif
