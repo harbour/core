@@ -1,3 +1,11 @@
+19990816-12:26 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/browdb.prg
+    + copyright info.
+    + todo info
+  * makefile.vc
+    + browdb
+    + tone
+
 19990816-15:30 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/errorapi.c
     ! Fixed hb_errLaunch() so that it will handle error handler return

@@ -58,6 +58,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\alert.obj \
     $(OBJ_DIR)\arrays.obj \
     $(OBJ_DIR)\asort.obj \
+    $(OBJ_DIR)\browdb.obj \
     $(OBJ_DIR)\classes.obj \
     $(OBJ_DIR)\codebloc.obj \
     $(OBJ_DIR)\console.obj \
@@ -98,6 +99,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\terror.obj \
     $(OBJ_DIR)\tget.obj \
     $(OBJ_DIR)\tgetlist.obj \
+    $(OBJ_DIR)\tone.obj \
     $(OBJ_DIR)\transfrm.obj \
     $(OBJ_DIR)\xsavescr.obj \
     $(RDD_OBJS)
@@ -307,6 +309,12 @@ $(RTL_DIR)\asort.c : $(RTL_DIR)\asort.prg
 $(OBJ_DIR)\asort.obj : $(RTL_DIR)\asort.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(RTL_DIR)\browdb.c : $(RTL_DIR)\browdb.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+
+$(OBJ_DIR)\browdb.obj : $(RTL_DIR)\browdb.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(OBJ_DIR)\classes.obj : $(RTL_DIR)\classes.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
@@ -455,6 +463,9 @@ $(RTL_DIR)\tgetlist.c : $(RTL_DIR)\tgetlist.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
 
 $(OBJ_DIR)\tgetlist.obj : $(RTL_DIR)\tgetlist.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\tone.obj : $(RTL_DIR)\tone.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\transfrm.obj : $(RTL_DIR)\transfrm.c
