@@ -315,10 +315,10 @@ static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LONG lBlock, LPKEYINFO pKe
             }
          }
          if( k <= 0 ||
-             ( k == 0 && p->Xtra != pPage->TagParent->Owner->Owner->ulRecNo ) )
+             ( k == 0 && (ULONG)p->Xtra != pPage->TagParent->Owner->Owner->ulRecNo ) )
          /* pKey <= p */
          {
-            if( k == 0 && p->Xtra != pPage->TagParent->Owner->Owner->ulRecNo )
+            if( k == 0 && (ULONG)p->Xtra != pPage->TagParent->Owner->Owner->ulRecNo )
                k = 1;
             if( k == 0 )
             {
@@ -326,7 +326,7 @@ static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LONG lBlock, LPKEYINFO pKe
                pPage->TagParent->CurKeyInfo->Xtra = pKey->Xtra;
                pPage->TagParent->CurKeyInfo->Tag = pPage->Page;
             }
-            if( p->Tag && p->Xtra != pPage->TagParent->Owner->Owner->ulRecNo )
+            if( p->Tag && (ULONG)p->Xtra != pPage->TagParent->Owner->Owner->ulRecNo )
             {
                   if( blockPrev && pPage->CurKey > 0 )
                   {
@@ -370,7 +370,7 @@ static USHORT hb_ntxPageFindCurrentKey( LPPAGEINFO pPage, ULONG ulRecno )
 {
    int i;
    for( i=0; i < pPage->uiKeys; i++ )
-      if( ( pPage->pKeys+i )->Xtra == ulRecno )
+      if( (ULONG)( pPage->pKeys+i )->Xtra == ulRecno )
           return ( i+1 );
    return 0;
 }
@@ -1041,38 +1041,38 @@ static LPPAGEINFO hb_ntxPageNew(LPTAGINFO pParentTag )
 {
    LPPAGEINFO pPage, pLastPage;
 
-   pPage = ( LPPAGEINFO ) hb_xgrab( sizeof( HB_PAGEINFO ) );
-   memset( pPage, 0, sizeof( HB_PAGEINFO ) );
-   pPage->TagParent = pParentTag;
-   pLastPage = hb_ntxPageLast( pParentTag->Owner );
-   if( pLastPage )
-   {
-      /* printf( "\nntxPageNew - 1 ( %5lx %5lx )",pLastPage,pPage ); */
-      pPage->pPrev = pLastPage;
-      pLastPage->pNext = pPage;
-   }
-   else
-   {
-      /* printf( "\nntxPageNew - 2 ( %5lx )",pPage ); */
-      pPage->pPrev = NULL;
-      pParentTag->RootPage = pPage;
-   }
-   pPage->CurKey = -1;
    if( pParentTag->Owner->NextAvail > 0 )
    {
+      pPage = hb_ntxPageLoad( pParentTag->Owner->NextAvail );
       pPage->Page = pParentTag->Owner->NextAvail;
-      pParentTag->Owner->NextAvail = 0;
+      pParentTag->Owner->NextAvail = pPage->pKeys->Tag;
       hb_ntxHeaderSave( pParentTag->Owner );
    }
    else
    {
+      pPage = ( LPPAGEINFO ) hb_xgrab( sizeof( HB_PAGEINFO ) );
+      memset( pPage, 0, sizeof( HB_PAGEINFO ) );
+      pPage->TagParent = pParentTag;
+      pPage->CurKey = -1;
+      pLastPage = hb_ntxPageLast( pParentTag->Owner );
+      if( pLastPage )
+      {
+         pPage->pPrev = pLastPage;
+         pLastPage->pNext = pPage;
+      }
+      else
+      {
+         pPage->pPrev = NULL;
+         pParentTag->RootPage = pPage;
+      }
+      pPage->lBusy = TRUE;
+      pParentTag->uiPages ++;
+      pPage->pKeys = ( LPKEYINFO ) hb_xgrab( sizeof( KEYINFO ) * ( pParentTag->MaxKeys + 1 ) );
+      memset( pPage->pKeys, 0, sizeof( KEYINFO ) * ( pParentTag->MaxKeys + 1 ) );
       pParentTag->TagBlock = pParentTag->TagBlock + 1024;
       pPage->Page = pParentTag->TagBlock;
    }
-   pPage->lBusy = TRUE;
-   pParentTag->uiPages ++;
-   pPage->pKeys = ( LPKEYINFO ) hb_xgrab( sizeof( KEYINFO ) * ( pParentTag->MaxKeys + 1 ) );
-   memset( pPage->pKeys, 0, sizeof( KEYINFO ) * ( pParentTag->MaxKeys + 1 ) );
+
    return pPage;
 }
 
@@ -1162,6 +1162,7 @@ static ERRCODE hb_ntxPageKeyDel( LPPAGEINFO pPage, SHORT pos )
    pPage->Changed = TRUE;
    if( !pPage->uiKeys )
    {
+      pPage->pKeys->Tag = pPage->TagParent->Owner->NextAvail;
       pPage->TagParent->Owner->NextAvail = pPage->Page;
       hb_ntxHeaderSave( pPage->TagParent->Owner );
    }
@@ -2257,7 +2258,6 @@ static RDDFUNCS ntxTable = { ntxBof,
                              ntxDeleted,
                              ntxFieldCount,
                              ntxFieldDisplay,
-
                              ntxFieldInfo,
                              ntxFieldName,
                              ntxFlush,
@@ -2284,11 +2284,10 @@ static RDDFUNCS ntxTable = { ntxBof,
                              ntxSysName,
                              ntxEval,
                              ntxPack,
-                            ntPackRec,
-                            ntxSort,
-                            ntxTrans,
-
-                            ntxTransRec,
+                             ntPackRec,
+                             ntxSort,
+                             ntxTrans,
+                             ntxTransRec,
                              ntxZap,
                              ntxchildEnd,
                              ntxchildStart,
@@ -2302,7 +2301,7 @@ static RDDFUNCS ntxTable = { ntxBof,
                              ntxsetRel,
                              ( DBENTRYP_OI ) ntxOrderListAdd,
                              ( DBENTRYP_V ) ntxOrderListClear,
-                            ntxOrderListDelete,
+                             ntxOrderListDelete,
                              ( DBENTRYP_OI ) ntxOrderListFocus,
                              ntxOrderListRebuild,
                              ntxOrderCondition,
@@ -2319,7 +2318,7 @@ static RDDFUNCS ntxTable = { ntxBof,
                              ntxSetLocate,
                              ntxSetScope,
                              ntxSkipScope,
-                             ( DBENTRYP_P ) ntxCompile,
+                             ntxCompile,
                              ntxError,
                              ntxEvalBlock,
                              ntxRawLock,
@@ -2350,6 +2349,5 @@ HB_FUNC( DBFNTX_GETFUNCTABLE )
    if( pTable )
       hb_retni( hb_rddInherit( pTable, &ntxTable, &ntxSuper, ( BYTE * ) "DBF" ) );
    else
-      hb_retni( FAILURE );    
-      
+      hb_retni( FAILURE );
 }

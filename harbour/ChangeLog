@@ -1,3 +1,8 @@
+2001-02-13 15:50 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * harbour/source/rdd/dbfntx/dbfntx1.c
+     * Warnings fixed;
+     * handling of free pages pool implemented ( not tested yet )
+
 2001-02-13 12:21 GMT+1 Antonio Linares <alinares@fivetech.com>
    * harbour/source/debug/debugger.prg
      ! Trace support fixed
