@@ -51,7 +51,7 @@ CLASS TDbWindow  // Debugger windows and dialogs
    DATA   cBackImage, cColor
    DATA   lFocused, bGotFocus, bLostFocus
    DATA   bKeyPressed, bPainted, bLButtonDown, bLDblClick
-   DATA   lShadow
+   DATA   lShadow, lVisible
    DATA   Cargo
 
    METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor )
@@ -83,6 +83,7 @@ METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor ) CLASS TDbWindow
    ::cCaption := cCaption
    ::cColor   := cColor
    ::lShadow  := .f.
+   ::lVisible := .f.
 
 return Self
 
@@ -91,6 +92,7 @@ METHOD Hide() CLASS TDbWindow
    RestScreen( ::nTop, ::nLeft, ::nBottom + iif( ::lShadow, 1, 0 ),;
                ::nRight + iif( ::lShadow, 2, 0 ), ::cBackImage )
    ::cBackImage := nil
+   ::lVisible = .f.
 
 return nil
 
@@ -187,6 +189,8 @@ METHOD Show( lFocused ) CLASS TDbWindow
    If ::lShadow
       hb_Shadow( ::nTop, ::nLeft, ::nBottom, ::nRight )
    endif
+
+   ::lVisible = .t.
 
 return nil
 
