@@ -423,7 +423,7 @@ ERRCODE hb_waClose( AREAP pArea )
    SELF_CLEARLOCATE( pArea );
 
    if( pArea->uiParents > 0 )
-      printf( "\nTODO: hb_waClose()\n" );
+      printf( "\nTODO: hb_waClose() %d\n",pArea->uiParents );
 
    ( ( PHB_DYNS ) pArea->atomAlias )->hArea = 0;
    return SUCCESS;
@@ -454,6 +454,9 @@ ERRCODE hb_waNewArea( AREAP pArea )
    HB_TRACE(HB_TR_DEBUG, ("hb_waNewArea(%p)", pArea));
 
    pArea->valResult = hb_itemNew( NULL );
+   pArea->lpdbRelations = NULL;
+   pArea->uiParents = 0;
+
    return SUCCESS;
 }
 
@@ -659,7 +662,7 @@ ERRCODE hb_waSyncChildren( AREAP pArea )
  */
 ERRCODE hb_waClearRel( AREAP pArea )
 {
-   LPDBRELINFO lpdbRelation;
+   LPDBRELINFO lpdbRelation, lpdbRelPrev;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_waClearRel(%p)", pArea ));
 
@@ -667,19 +670,18 @@ ERRCODE hb_waClearRel( AREAP pArea )
    lpdbRelation = pArea->lpdbRelations;
    while( lpdbRelation )
    {
-      SELF_CHILDEND( pArea, lpdbRelation );
-
+      SELF_CHILDEND( lpdbRelation->lpaChild, lpdbRelation );
+/*
       if( lpdbRelation->itmCobExpr )
          hb_itemRelease( lpdbRelation->itmCobExpr );
-
       if( lpdbRelation->abKey )
          hb_itemRelease( lpdbRelation->abKey );
-
-      hb_xfree( lpdbRelation );
-
-      pArea->lpdbRelations = pArea->lpdbRelations->lpdbriNext;
-      lpdbRelation = pArea->lpdbRelations;
+*/
+      lpdbRelPrev = lpdbRelation;
+      lpdbRelation = lpdbRelation->lpdbriNext;
+      hb_xfree( lpdbRelPrev );
    }
+   pArea->lpdbRelations = NULL;
 
    return SUCCESS;
 }
@@ -728,13 +730,32 @@ ERRCODE hb_waRelText( AREAP pArea, USHORT uiRelNo, void * pExpr )
 /*
  * Set a relation in the parent file.
  */
-extern ERRCODE hb_waSetRel( AREAP pArea, LPDBRELINFO pRelInfo )
+ERRCODE hb_waSetRel( AREAP pArea, LPDBRELINFO lpdbRelInf )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_waSetRel(%p, %p)", pArea, pRelInfo));
-   HB_SYMBOL_UNUSED( pArea );
-   HB_SYMBOL_UNUSED( pRelInfo );
+   LPDBRELINFO lpdbRelations;
 
-   printf( "\nTODO: hb_waSetRel()\n" );
+   HB_TRACE(HB_TR_DEBUG, ("hb_waSetRel(%p, %p)", pArea, pRelInfo));
+
+   lpdbRelations = pArea->lpdbRelations;
+   if( ! lpdbRelations )
+   {
+      pArea->lpdbRelations = ( LPDBRELINFO ) hb_xgrab( sizeof( DBRELINFO ) );
+      lpdbRelations = pArea->lpdbRelations;
+   }
+   else
+   {
+      while( lpdbRelations->lpdbriNext )
+         lpdbRelations = lpdbRelations->lpdbriNext;
+      lpdbRelations->lpdbriNext = ( LPDBRELINFO ) hb_xgrab( sizeof( DBRELINFO ) );
+      lpdbRelations = lpdbRelations->lpdbriNext;
+   }
+   lpdbRelations->lpaChild = lpdbRelInf->lpaChild;
+   lpdbRelations->itmCobExpr = lpdbRelInf->itmCobExpr;
+   lpdbRelations->abKey = lpdbRelInf->abKey;
+   lpdbRelations->lpdbriNext = lpdbRelInf->lpdbriNext;
+
+   hb_waChildStart( lpdbRelInf->lpaChild,lpdbRelInf );
+
    return SUCCESS;
 }
 

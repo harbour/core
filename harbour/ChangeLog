@@ -1,3 +1,8 @@
+2000-09-21 15:23 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/rdd/workarea.c
+   * source/rdd/dbcmd.c
+     * Relations now working for RDD ADS again
+
 2000-09-21 12:59 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * source/rdd/workarea.c
    * source/rdd/dbcmd.c

@@ -242,18 +242,29 @@ static void hb_rddCheck( void )
  */
 static void hb_rddCloseAll( void )
 {
+   int nCycl = 0;
    LPAREANODE pAreaNode;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_rddCloseAll()"));
 
-   pAreaNode = s_pWorkAreas;
-   while( pAreaNode )
+   while( nCycl < 2 )
    {
-      s_pCurrArea = pAreaNode;
-      pAreaNode = pAreaNode->pNext;
-      SELF_CLOSE( ( AREAP ) s_pCurrArea->pArea );
-      SELF_RELEASE( ( AREAP ) s_pCurrArea->pArea );
-      hb_xfree( s_pCurrArea );
+      pAreaNode = s_pWorkAreas;
+      while( pAreaNode )
+      {
+         s_pCurrArea = pAreaNode;
+         pAreaNode = pAreaNode->pNext;
+         if( ( !nCycl && ( ( AREAP ) s_pCurrArea->pArea )->lpdbRelations ) ||
+             ( nCycl && s_pCurrArea->pArea ) )
+         {
+            SELF_CLOSE( ( AREAP ) s_pCurrArea->pArea );
+            SELF_RELEASE( ( AREAP ) s_pCurrArea->pArea );
+            // hb_xfree( s_pCurrArea->pArea );
+            s_pCurrArea->pArea = NULL;
+         }
+         if( nCycl == 1 )
+            hb_xfree( s_pCurrArea );
+      }
+      nCycl ++;
    }
 
    s_uiCurrArea = 1;
@@ -2727,7 +2738,7 @@ HB_FUNC( DBSETRELATION )
       s_pArea = NULL;
 
       if( hb_pcount() < 2 || ( !( hb_parinfo( 1 ) & HB_IT_NUMERIC ) &&
-          ( hb_parinfo( 1 ) != HB_IT_STRING ) ) || 
+          ( hb_parinfo( 1 ) != HB_IT_STRING ) ) ||
           ( hb_pcount() > 3 && !( hb_parinfo( 4 ) & HB_IT_LOGICAL ) ) )
       {
          hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, "DBSETRELATION" );
@@ -2888,7 +2899,7 @@ HB_FUNC( __DBARRANGE )
                ulSize --;
                szFieldName[ ulSize ] = 0;
             }
-            dbSortInfo.lpdbsItem[ uiCount ].uiField = 
+            dbSortInfo.lpdbsItem[ uiCount ].uiField =
                         hb_rddFieldIndex( ( AREAP ) s_pCurrArea->pArea, szFieldName );
 
             /* Field not found */
