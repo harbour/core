@@ -45,9 +45,9 @@
  *  $END$
  */
 
-#include <hbapi.H>
+#include <hbapi.h>
 #include <hbapiitm.h>
-//#include <FM.API>
+//#include <fm.api>
 
 HB_FUNC( FT_DESCEND)
 {

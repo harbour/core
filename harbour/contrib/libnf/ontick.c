@@ -60,9 +60,9 @@
  *  $END$
  */
 
-#include <EXTEND.API>
-#include <ITEM.API>
-#include <CPMI.H>
+#include <extend.api>
+#include <item.api>
+#include <cpmi.h>
 
 typedef union
 {

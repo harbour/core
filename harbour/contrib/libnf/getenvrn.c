@@ -95,8 +95,8 @@
  *  $END$
  */
 
-#include <EXTEND.API>
-#include <FM.API>
+#include <extend.api>
+#include <fm.api>
 
 #define NORETURN   0
 #define CHARTYPE   1

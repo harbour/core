@@ -55,8 +55,8 @@
  *  $END$
  */
 
-#include <EXTEND.API>
-#include <CPMI.H>
+#include <extend.api>
+#include <cpmi.h>
 
 #define FP_SEG( fp ) ( *( ( unsigned int * ) &( fp ) + 1 ) )
 #define FP_OFF( fp ) ( *( ( unsigned int * ) &( fp ) ) )

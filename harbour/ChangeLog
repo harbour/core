@@ -7,6 +7,14 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+      now respects scopes.
+  * contrib/libnf/dosver.prg
+  * contrib/libnf/floptst.prg
+  * contrib/libnf/isshare.prg
+  * contrib/libnf/menuto.prg
+  * contrib/libnf/mouse2.prg
+  * contrib/libnf/nwlstat.prg
+  * contrib/libnf/nwuid.prg
   * contrib/libnf/page.prg
   * contrib/libnf/popadder.prg
   * contrib/libnf/pvid.prg
