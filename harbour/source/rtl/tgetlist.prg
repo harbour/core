@@ -50,6 +50,18 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2001 Luiz Rafael Culik
+ *    Support for Ca-Clipper 5.3 Getsystem
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
+
 #include "hbclass.ch"
 #include "common.ch"
 #include "getexit.ch"
@@ -99,7 +111,12 @@ CLASS TGetList
    METHOD ReadExit( lNew ) INLINE Set( _SET_EXIT, lNew )
    METHOD SetFocus()
    METHOD Updated() INLINE ::lUpdated
-
+   #ifdef  HB_COMPAT_C53
+   METHOD GUIReader(oget,getsys,a,b)
+   METHOD GUIApplyKey(  oGUI, nKey )
+   METHOD GuiPreValidate(oGui)
+   METHOD GuiPostValidate(oGui)
+   #endif
 ENDCLASS
 
 METHOD New( GetList ) CLASS TGetList
@@ -124,7 +141,6 @@ METHOD SetFocus() CLASS TGetList
    ::aGetList[ ::nPos ]:SetFocus()
 
    return Self
-
 METHOD Reader() CLASS TGetList
 
    local oGet := ::oGet
@@ -541,3 +557,255 @@ METHOD ReadUpdated( lUpdated ) CLASS TGetList
    endif
 
 return lSavUpdated
+
+#ifdef HB_COMPAT_C53
+METHOD GuiReader(oget,getsys,a,b) CLASS TGetList
+//Local oGet := ::oGet
+   Local oGui
+   IF ( ! ::GUIPreValidate( oGet , oGet:Control ) )
+   elseif ( ValType( oGet:Control ) == "O" )
+
+      // Activate the GET for reading
+      oGUI := oGet:Control
+      oGUI:Select( oGet:VarGet() )
+      oGUI:setFocus()
+
+
+      WHILE ( oGet:exitState == GE_NOEXIT .AND. !::lKillRead )
+
+         // Check for initial typeout (no editable positions)
+         IF ( oGui:typeOut )
+            oGet:exitState := GE_ENTER
+         ENDIF
+
+         // Apply keystrokes until exit
+         WHILE ( oGet:exitState == GE_NOEXIT .AND. !::lKillRead )
+            ::GUIApplyKey( oGUI,inkey(0))
+         ENDDO
+
+         // Disallow exit if the VALID condition is not satisfied
+
+         IF ( !::GUIPostValidate( oGet, oGUI ) )
+            oGet:exitState := GE_NOEXIT
+         ENDIF
+      ENDDO
+
+      // De-activate the GET
+      oGet:VarPut( oGUI:Buffer )
+      oGUI:killFocus()
+
+      if ( ! oGUI:ClassName() == "LISTBOX" )
+      elseif ( ! oGUI:DropDown )
+      elseif ( oGUI:IsOpen )
+         oGUI:Close()
+      endif
+
+   ENDIF
+
+   RETURN Self
+
+METHOD GUIApplyKey(  oGUI, nKey ) CLASS TGetList
+   Local oGet:= ::oGet
+   LOCAL cKey
+   LOCAL bKeyBlock
+   local TheClass
+   local nHotItem
+   local lClose
+
+   // Check for SET KEY first
+   IF !( ( bKeyBlock := setkey( nKey ) ) == NIL )
+      ::GetDoSetKey( bKeyBlock, oGet )
+
+   ENDIF
+
+
+   if ( nKey == 0 )
+   elseif ( ( TheClass := oGUI:ClassName() ) == "RADIOGROUP" )
+      if  ( nKey == K_UP )
+         oGUI:PrevItem()
+         nKey := 0
+
+      elseif ( nKey == K_DOWN )
+         oGUI:NextItem()
+         nKey := 0
+
+      elseif ( ( nHotItem := oGUI:GetAccel( nKey ) ) != 0 )
+         oGUI:Select( nHotItem )
+
+      endif
+
+   elseif ( TheClass == "CHECKBOX" )
+      if ( nKey == K_SPACE )
+         oGUI:Select()
+
+      endif
+
+   elseif ( TheClass == "PUSHBUTTON" )
+      if ( nKey == K_SPACE )
+         oGUI:Select( K_SPACE )
+
+      elseif ( nKey == K_ENTER )
+         oGUI:Select()
+         nKey := 0
+
+      endif
+
+   elseif ( TheClass == "LISTBOX" )
+      if  ( nKey == K_UP )
+         oGUI:PrevItem()
+         nKey := 0
+
+      elseif ( nKey == K_DOWN )
+         oGUI:NextItem()
+         nKey := 0
+
+      elseif ( nKey == K_SPACE )
+         if ( ! oGUI:DropDown )
+         elseif ( ! oGUI:IsOpen )
+            oGUI:Open()
+            nKey := 0
+         endif
+
+
+      endif
+
+   endif
+
+   DO CASE
+   CASE ( nKey == K_UP )
+      oGet:exitState := GE_UP
+
+   CASE ( nKey == K_SH_TAB )
+      oGet:exitState := GE_UP
+
+   CASE ( nKey == K_DOWN )
+      oGet:exitState := GE_DOWN
+
+   CASE ( nKey == K_TAB )
+      oGet:exitState := GE_DOWN
+
+   CASE ( nKey == K_ENTER )
+      oGet:exitState := GE_ENTER
+
+   CASE ( nKey == K_ESC )
+      IF ( SET( _SET_ESCAPE ) )
+         oGet:exitState := GE_ESCAPE
+      ENDIF
+
+   CASE ( nKey == K_PGUP )
+      oGet:exitState := GE_WRITE
+
+   CASE ( nKey == K_PGDN )
+      oGet:exitState := GE_WRITE
+
+   CASE ( nKey == K_CTRL_HOME )
+      oGet:exitState := GE_TOP
+
+
+#ifdef CTRL_END_SPECIAL
+
+   // Both ^W and ^End go to the last GET
+   CASE ( nKey == K_CTRL_END )
+      oGet:exitState := GE_BOTTOM
+
+#else
+
+   // Both ^W and ^End terminate the READ (the default)
+   CASE ( nKey == K_CTRL_W )
+      oGet:exitState := GE_WRITE
+
+#endif
+
+
+      if ( ! lClose )
+      elseif ( ! TheClass == "LISTBOX" )
+      elseif ( ! oGUI:DropDown )
+      elseif ( oGUI:IsOpen )
+         oGUI:Close()
+         oGUI:Display()
+      endif
+
+   ENDCASE
+
+   RETURN Self
+
+
+
+METHOD GUIPostValidate( oGUI ) CLASS TGetList
+   Local oGet := ::oGet
+   LOCAL lSavUpdated
+   LOCAL lValid := .T.
+   LOCAL uOldData, uNewData
+
+
+   IF ( oGet:exitState == GE_ESCAPE )
+      RETURN ( .T. )                   // NOTE
+   ENDIF
+
+
+   // If editing occurred, assign the new value to the variable
+   IF ( ! ( uOldData == uNewData ) )
+      oGet:VarPut( uNewData )
+      ::lUpdated := .T.
+   ENDIF
+
+   // Check VALID condition if specified
+   IF !( oGet:postBlock == NIL )
+
+      lSavUpdated := ::lUpdated
+
+      lValid := EVAL( oGet:postBlock, oGet )
+
+      // Reset S'87 compatibility cursor position
+      SETPOS( oGet:row, oGet:col )
+
+      ::ShowScoreBoard()
+      IF ( ! ( oGUI:ClassName == "TBROWSE" ) )
+         oGUI:Select( oGet:VarGet() )
+      ENDIF
+
+      ::lUpdated := lSavUpdated
+
+      IF ( ::lKillRead )
+         oGet:exitState := GE_ESCAPE      // Provokes ReadModal() exit
+         lValid := .T.
+
+      ENDIF
+   ENDIF
+
+   RETURN ( lValid )
+
+METHOD GUIPreValidate(  oGUI ) CLASS TGetList
+   Local oGet := ::oGet
+   LOCAL lSavUpdated
+   LOCAL lWhen := .T.
+
+   IF !( oGet:preBlock == NIL )
+      lSavUpdated := ::lUpdated
+
+      lWhen := EVAL( oGet:preBlock, oGet )
+
+
+      ::ShowScoreBoard()
+
+      ::lUpdated := lSavUpdated
+   ENDIF
+
+   IF (::lKillRead)
+
+      lWhen := .F.
+      oGet:exitState := GE_ESCAPE
+
+   ELSEIF ( !lWhen )
+
+      oGet:exitState := GE_WHEN
+
+   ELSE
+
+      oGet:exitState := GE_NOEXIT
+
+   ENDIF
+
+   RETURN (lWhen)
+
+#endif

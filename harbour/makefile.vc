@@ -219,6 +219,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\binnum.obj \
    $(OBJ_DIR)\binnumx.obj \
    $(OBJ_DIR)\box.obj \
+   $(OBJ_DIR)\checkbox.obj \
    $(OBJ_DIR)\chrasc.obj \
    $(OBJ_DIR)\colorind.obj \
    $(OBJ_DIR)\console.obj \

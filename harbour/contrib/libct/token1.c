@@ -535,8 +535,7 @@ static void do_token1 (int iSwitch)
  *  $FILES$
  *      Source is token1.c, library is ct3.
  *  $SEEALSO$
- *      TOKEN()   NUMTOKEN()   TOKENLOWER()
- *      TOKENUPPER()   TOKENSEP()
+ *      TOKEN(),NUMTOKEN(),TOKENLOWER(),TOKENUPPER(),TOKENSEP()
  *  $END$
  */
 
@@ -613,8 +612,7 @@ HB_FUNC (ATTOKEN)
  *  $FILES$
  *      Source is token1.c, library is ct3.
  *  $SEEALSO$
- *      NUMTOKEN()   ATTOKEN()   TOKENLOWER()
- *      TOKENUPPER()   TOKENSEP()
+ *      NUMTOKEN(),ATTOKEN(),TOKENLOWER(),TOKENUPPER(),TOKENSEP()
  *  $END$
  */
 
@@ -653,8 +651,7 @@ HB_FUNC (TOKEN)
  *  $FILES$
  *      Source is token1.c, library is ct3.
  *  $SEEALSO$
- *      TOKEN()   ATTOKEN()   TOKENLOWER()
- *      TOKENUPPER()   TOKENSEP()
+ *      TOKEN(),ATTOKEN(),TOKENLOWER(),TOKENUPPER(),TOKENSEP()
  *  $END$
  */
 
@@ -723,8 +720,7 @@ HB_FUNC (NUMTOKEN)
  *  $FILES$
  *      Source is token1.c, library is ct3.
  *  $SEEALSO$
- *      TOKEN()   NUMTOKEN()   ATTOKEN()
- *      TOKENUPPER()   TOKENSEP()  CSETREF()
+ *      TOKEN(),NUMTOKEN(),ATTOKEN(),TOKENUPPER(),TOKENSEP(),CSETREF()
  *  $END$
  */
 
@@ -794,8 +790,7 @@ HB_FUNC (TOKENLOWER)
  *  $FILES$
  *      Source is token1.c, library is ct3.
  *  $SEEALSO$
- *      TOKEN()   NUMTOKEN()   ATTOKEN()
- *      TOKENLOWER()   TOKENSEP()   CSETREF()
+ *      TOKEN(),NUMTOKEN(),ATTOKEN(),TOKENLOWER(),TOKENSEP(),CSETREF()
  *  $END$
  */
 
@@ -844,8 +839,7 @@ HB_FUNC (TOKENUPPER)
  *  $FILES$
  *      Source is token1.c, library is ct3.
  *  $SEEALSO$
- *      TOKEN()   NUMTOKEN()   ATTOKEN()
- *      TOKENLOWER()   TOKENUPPER()
+ *      TOKEN(),NUMTOKEN(),ATTOKEN(),TOKENLOWER(),TOKENUPPER()
  *  $END$
  */
 

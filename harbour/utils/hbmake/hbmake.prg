@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * hbmake.Prg Harbour make utility main file
  *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+ * Copyright 2000,2001 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -128,14 +128,15 @@ allparam:=strtran(allparam,"-v","-V")
 allparam:=strtran(allparam,"-f","-F")
 If Pcount() == 0
    ?? "Harbour Make Utility"
-   ? "Copyright 1999-2000, http://www.harbour-project.org"
+   ? "Copyright 2000,2001 Luiz Rafael Culik <culik@sl.conex.net>"
    ? ""
    ? "Syntax:  hbmake cFile [options]"
    ? ""
-   ? "Options:  /e[l]  Create an New Makefile,If /el is"
-   ? "          used it, creates an new make file to build an library"
-   ? "          /D  Define an macro"
-   ? "          /p  Print all command and depencies"
+   ? "Options:  /e[l]  Create a new Makefile. If /el is"
+   ? "          used it creates a new make file to build a library"
+   ? "          /D  Define a macro"
+   ? "          /p  Print all commands and depencies"
+
 if at("OS/2",cOs)>0
    ? "          /b  Use BCC as C compiler"
    ? "          /g+ Use GCC as C compiler"
@@ -144,11 +145,12 @@ else
    ? "          /g  Use GCC as C compiler"
 endif
    ? "          /v  Use MSVC as C compiler"
-   ? "          /f  Force Recompiltion of all files"
-   ? "          /i  Ignore errors returned by Commamnd"
+   ? "          /f  Force recompiltion of all files"
+   ? "          /i  Ignore errors returned by commamnd"
+
    ? "          Note: /p and /D can be used together"
-   ? "          Options with + are the default Value"
-   ? "          -D switch can accept multiple macros in the same line"
+   ? "          Options with + are the default values"
+   ? "          -D switch can accept multiple macros on the same line"
    ? "          or use one macro per -D switch"
    Return NIL
 Endif

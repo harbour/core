@@ -118,6 +118,7 @@ PRG_SOURCES=\
 	browdb.prg   \
 	browdbx.prg  \
 	browse.prg   \
+   checkbox.prg \
 	dbdelim.prg  \
 	dbedit.prg   \
 	dbsdf.prg    \

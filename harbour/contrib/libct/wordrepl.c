@@ -116,8 +116,7 @@
  *  $FILES$
  *      Source is wordrepl.c, library is ct3.
  *  $SEEALSO$
- *      CHARREPL()    RANGEREPL()   POSREPL()
- *      CSETREF()   CSETATMUPA()
+ *      CHARREPL(),RANGEREPL(),POSREPL(),CSETREF(),CSETATMUPA()
  *  $END$
  */
 

@@ -98,6 +98,10 @@ CLASS Get
    DATA SubScript
    DATA Type
    DATA TypeOut
+   #ifdef HB_COMPAT_C53
+   DATA Control
+   DATA Message
+   #endif
 
    METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec )
 

@@ -1,3 +1,24 @@
+2001-07-20 20:00 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   +source/rtl/checkbox.prg
+      *CheckBox Class Compatible with Ca-Clipper 5.3
+   *source/rtl/getsys.prg
+      +Added the follow function For compatibility with Ca-Clipper 5.3: GUIReader(),GuiApplyKey(),GuiGetPreValidate(),GuiGetPostValidate()
+   *source/rtl/tget.prg
+      +Control and Message Data
+   *Source/rtl/tgetlist.prg
+      +Added the follow methods GUIReader(),GUIApplyKey(),GuiPreValidate(oGui),GuiPostValidate(oGui)
+   *utils/hbmake/hbmake.prg
+      *Applied patch provided By Dave Person
+   +tests/tstchbx.prg
+      *Small Test app for checkbox Class
+   *hb_slex.bc
+    makefile.bc
+    hb_slex.vc
+    makefile.vc
+    source/rtl/makefile
+      +added checkbox to dependency list
+
+
 2001-07-20 22:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
   * include/hbexpra.c
     % Wrapped hb_compExprSetGetBlock() unneeded with simplex build, with #ifndef SIMPLEX

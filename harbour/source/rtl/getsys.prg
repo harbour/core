@@ -50,11 +50,32 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2001 Luiz Rafael Culik
+ *    Support for Ca-Clipper 5.3 Getsystem
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
 #include "common.ch"
-
+#include "hbsetup.ch"
+#ifndef HB_COMPAT_C53
 FUNCTION ReadModal( GetList, nPos )
+#else
+FUNCTION ReadModal( GetList, nPos, nMsgRow, nMsgLeft, nMsgRight, cMsgColor )
+#endif
    LOCAL oGetList
-
+#ifdef HB_COMPAT_C53
+   Local lMsgFlag
+   Local cSaveColor
+   Local cOldMsg
+   Local lColorFlag
+   Local oGet
+#endif
    IF Empty( GetList )
       SetPos( MaxRow() - 1, 0 )
       RETURN .F.
@@ -69,14 +90,52 @@ FUNCTION ReadModal( GetList, nPos )
    IF ! ( ISNUMBER( nPos ) .AND. nPos > 0 )
       oGetList:nPos := oGetList:Settle( 0 )
    ENDIF
+#ifdef HB_COMPAT_C53
+   if     ( ! ValType( nMsgRow ) == "N" )
+      lMsgFlag := .f.
 
+   elseif ( ! ValType( nMsgLeft ) == "N" )
+      lMsgFlag := .f.
+
+   elseif ( ! ValType( nMsgRight ) == "N" )
+      lMsgFlag := .f.
+
+   else
+      lMsgFlag := .t.
+      cOldMsg := SaveScreen( nMsgRow, nMsgLeft, nMsgRow, nMsgRight )
+      lColorFlag := ( ValType( cMsgColor ) == "C" )
+
+   endif
+
+      if ( lMsgFlag )
+         oGet := oGetList:aGetList[ oGetList:nPos ]
+            if ( lColorFlag )
+               cSaveColor := SetColor( cMsgColor )
+            endif
+
+            if ( ValType( oGet:Control ) == "O" )
+               @ nMsgRow, nMsgLeft ;
+               say PadC( oGet:Control:Message, nMsgRight - nMsgLeft + 1 )
+            else
+               @ nMsgRow, nMsgLeft ;
+               say PadC( oGet:Message, nMsgRight - nMsgLeft + 1 )
+            endif
+
+            if ( lColorFlag )
+               SetColor( cSaveColor )
+            endif
+        Endif
+#endif
    DO WHILE oGetList:nPos != 0
 
       oGetList:oGet := oGetList:aGetList[ oGetList:nPos ]
       oGetList:PostActiveGet()
-
       IF ISBLOCK( oGetList:oGet:Reader )
+      #ifndef HB_COMPAT_C53
          Eval( oGetList:oGet:Reader, oGetList:oGet )
+      #Else
+         Eval( oGetList:oGet:Reader, oGetList:oGet ,Ogetlist)
+      #endif
       ELSE
          oGetList:Reader()
       ENDIF
@@ -84,16 +143,20 @@ FUNCTION ReadModal( GetList, nPos )
       oGetList:nPos := oGetList:Settle()
 
    ENDDO
-
+   #ifdef HB_COMPAT_C53
+   if ( lMsgFlag )
+      RestScreen( nMsgRow, nMsgLeft, nMsgRow, nMsgRight, cOldMsg )
+   endif
+#endif
    SetPos( MaxRow() - 1, 0 )
 
    RETURN oGetList:lUpdated
 
 PROCEDURE GetReader( oGet )
-
    oGet:Reader()
 
    RETURN
+
 
 FUNCTION GetActive( oGet )
    LOCAL oGetList := __GetListActive()
@@ -273,4 +336,47 @@ FUNCTION RangeCheck( oGet, xDummy, xLow, xHigh )
    ENDIF
 
    RETURN .F.
+#ifdef HB_COMPAT_C53
+PROCEDURE GUIReader( oGet ,oGetlist,a,b)
+ 
+   oGetlist:GuiReader(oGet,oGetList,a,b)
+return
 
+PROCEDURE GuiApplyKey(oGet,nKey)
+   LOCAL oGetList := __GetListActive()
+
+   IF oGetList != NIL
+      oGetList:oGet := oGet
+      oGetList:GUIApplyKey(oGet, nKey )
+   ENDIF
+
+   RETURN
+
+FUNCTION GuiGetPreValidate( oGet ,oGui)
+   LOCAL oGetList := __GetListActive()
+
+   IF oGetList != NIL
+      IF oGet != NIL
+         oGetList:oGet := oGet
+      ENDIF
+
+      RETURN oGetList:GetPreValidate()
+   ENDIF
+
+   RETURN .F.
+
+FUNCTION GuiGetPostValidate( oGet,oGui )
+   LOCAL oGetList := __GetListActive()
+
+   IF oGetList != NIL
+      IF oGet != NIL
+         oGetList:oGet := oGet
+      ENDIF
+      
+      RETURN oGetList:GuiGetPostValidate(oGui)
+   ENDIF
+
+   RETURN .F.
+
+
+#endif
