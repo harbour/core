@@ -1124,7 +1124,7 @@ BOOL hb_gt_PostExt()
 static void hb_gt_build_conv_tabs()
 {
    int i, fg, bg, len;
-   unsigned char * p, ch;
+   unsigned char * p, * env, ch;
    SLsmg_Char_Type SLch;
 
    /* COMPATIBILITY: Slang uses bit 0x8000 as an alternate
@@ -1246,7 +1246,8 @@ static void hb_gt_build_conv_tabs()
 
    /* init national chars */
 
-   p = hb_getenv( hb_NationCharsEnvName );
+   env = hb_getenv( hb_NationCharsEnvName );
+   p = env;
 
    if( p && p[ 0 ] != '\0' )
    {
@@ -1283,8 +1284,8 @@ static void hb_gt_build_conv_tabs()
 */
    }
 
-   if( p )
-      hb_xfree( ( void * ) p );
+   if( env )
+      hb_xfree( ( void * ) env );
 }
 
 /* *********************************************************************** */

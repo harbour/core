@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-06-27 15:25 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/gtsln/gtsln.c
+    ! HRBNATIONCHARS fix provided by Niko Mikkila <nm@phnet.fi>
+
 2002-06-27 22:30 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/workarea.c
     ! Bug fixed in hb_waSetRel(), reported by Richard  Chidiak
