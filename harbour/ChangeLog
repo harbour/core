@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-04-23 23:11 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * source/rtl/tget.prg
+    ! PICTURE "#" allows "." keystroke
+
+  * source/rdd/dbfntx/dbfntx1.c
+    ! some castings for MSVC
+
 2003-04-19 12:00 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/rtl/tget.prg
     ! Class TGet Data Pos behavior modified to make it Clipper compatible
