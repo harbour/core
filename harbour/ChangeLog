@@ -7,6 +7,19 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-01-21 12:39 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/vm/hvm.c
+     + New hb_vmIncDouble() and hb_DecDouble() used from
+       hb_vmInc() and hb_vmDec(), as proposed by Matteo Baccan,
+       to improve execution speed.
+
+2002-01-21 11:48 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/vm/classes.c
+     * hb_arraySet() used instead of hb_itemArrayPut() to improve
+       execution speed.
+
+2002-01-21 10:10 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/vm/hvm.c
   * source/vm/memvars.c
 2002-01-20 08:50 UTC+0800 Ron Pinkas <ron@ronpinkas.com>
        hb_vmArrayPop(), hb_vmPopLocal(), hb_vmPopStatic(), hb_memvarSetValue()
