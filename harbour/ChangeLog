@@ -1,3 +1,17 @@
+20000425-03:38 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbpcode.h
+   * source/compiler/hbpcode.c
+   * source/compiler/harbour.c
+   * source/compiler/genc.c
+   * source/vm/hvm.c
+     * Some pcode names changed
+       JUMPSHORT->JUMPNEAR
+       JUMPNEAR* -> JUMP*NEAR
+       JUMPFAR* -> JUMP*FAR
+       (so that the size specifier is a postfix)
+     % Some minor formatting and optimization in HVM.C
+
 20000425-03:20 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/compiler/hbusage.c

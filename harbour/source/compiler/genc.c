@@ -32,6 +32,7 @@
  * their web site at http://www.gnu.org/).
  *
  */
+
 #include <assert.h>
 
 #include "hbcomp.h"
@@ -42,16 +43,14 @@ static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc );
 /* helper structure to pass information */
 typedef struct HB_stru_genc_info
 {
-   FILE *yyc;
+   FILE * yyc;
    BOOL bVerbose;
    USHORT iNestedCodeblock;
-}
-HB_GENC_INFO, *HB_GENC_INFO_PTR;
+} HB_GENC_INFO, * HB_GENC_INFO_PTR;
 
 #define HB_GENC_FUNC( func ) HB_PCODE_FUNC( func, HB_GENC_INFO_PTR )
-typedef  HB_GENC_FUNC( HB_GENC_FUNC_ );
-typedef  HB_GENC_FUNC_ *HB_GENC_FUNC_PTR;
-
+typedef HB_GENC_FUNC( HB_GENC_FUNC_ );
+typedef HB_GENC_FUNC_ * HB_GENC_FUNC_PTR;
 
 void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language output */
 {
@@ -467,9 +466,9 @@ static HB_GENC_FUNC( hb_p_instring )
    return 1;
 }
 
-static HB_GENC_FUNC( hb_p_jumpshort )
+static HB_GENC_FUNC( hb_p_jumpnear )
 {
-   fprintf( cargo->yyc, "\tHB_P_JUMPSHORT, %i,",
+   fprintf( cargo->yyc, "\tHB_P_JUMPNEAR, %i,",
             pFunc->pCode[ lPCodePos + 1 ] );
    if( cargo->bVerbose )
    {
@@ -520,9 +519,9 @@ static HB_GENC_FUNC( hb_p_jumpfar )
    return 4;
 }
 
-static HB_GENC_FUNC( hb_p_jumpshortfalse )
+static HB_GENC_FUNC( hb_p_jumpfalsenear )
 {
-   fprintf( cargo->yyc, "\tHB_P_JUMPSHORTFALSE, %i,",
+   fprintf( cargo->yyc, "\tHB_P_JUMPFALSENEAR, %i,",
             pFunc->pCode[ lPCodePos + 1 ] );
    if( cargo->bVerbose )
    {
@@ -555,9 +554,9 @@ static HB_GENC_FUNC( hb_p_jumpfalse )
    return 3;
 }
 
-static HB_GENC_FUNC( hb_p_jumpfarfalse )
+static HB_GENC_FUNC( hb_p_jumpfalsefar )
 {
-   fprintf( cargo->yyc, "\tHB_P_JUMPFARFALSE, %i, %i, %i,",
+   fprintf( cargo->yyc, "\tHB_P_JUMPFALSEFAR, %i, %i, %i,",
             pFunc->pCode[ lPCodePos + 1 ],
             pFunc->pCode[ lPCodePos + 2 ],
             pFunc->pCode[ lPCodePos + 3 ] );
@@ -573,9 +572,9 @@ static HB_GENC_FUNC( hb_p_jumpfarfalse )
    return 4;
 }
 
-static HB_GENC_FUNC( hb_p_jumpshorttrue )
+static HB_GENC_FUNC( hb_p_jumptruenear )
 {
-   fprintf( cargo->yyc, "\tHB_P_JUMPSHORTTRUE, %i,",
+   fprintf( cargo->yyc, "\tHB_P_JUMPTRUENEAR, %i,",
             pFunc->pCode[ lPCodePos + 1 ] );
    if( cargo->bVerbose )
    {
@@ -606,9 +605,9 @@ static HB_GENC_FUNC( hb_p_jumptrue )
    return 3;
 }
 
-static HB_GENC_FUNC( hb_p_jumpfartrue )
+static HB_GENC_FUNC( hb_p_jumptruefar )
 {
-   fprintf( cargo->yyc, "\tHB_P_JUMPFARTRUE, %i, %i, %i,",
+   fprintf( cargo->yyc, "\tHB_P_JUMPTRUEFAR, %i, %i, %i,",
             pFunc->pCode[ lPCodePos + 1 ],
             pFunc->pCode[ lPCodePos + 2 ],
             pFunc->pCode[ lPCodePos + 3 ] );
@@ -906,8 +905,8 @@ static HB_GENC_FUNC( hb_p_poplocal )
    {
       SHORT wVar = * ( ( SHORT * ) &( pFunc->pCode )[ lPCodePos + 1 ] );
       /* Variable with negative order are local variables
-         * referenced in a codeblock -handle it with care
-         */
+       * referenced in a codeblock -handle it with care
+       */
 
       if( cargo->iNestedCodeblock )
       {
@@ -1140,8 +1139,8 @@ static HB_GENC_FUNC( hb_p_pushlocal )
    {
       SHORT wVar = * ( ( SHORT * ) &( pFunc->pCode )[ lPCodePos + 1 ] );
       /* Variable with negative order are local variables
-         * referenced in a codeblock -handle it with care
-         */
+       * referenced in a codeblock -handle it with care
+       */
 
       if( cargo->iNestedCodeblock )
       {
@@ -1195,8 +1194,8 @@ static HB_GENC_FUNC( hb_p_pushlocalref )
    {
       SHORT wVar = * ( ( SHORT * ) &( pFunc->pCode )[ lPCodePos + 1 ] );
       /* Variable with negative order are local variables
-         * referenced in a codeblock -handle it with care
-         */
+       * referenced in a codeblock -handle it with care
+       */
 
       if( cargo->iNestedCodeblock )
       {
@@ -1461,7 +1460,7 @@ static HB_GENC_FUNC( hb_p_seqrecover )
    return 1;
 }
 
- static HB_GENC_FUNC( hb_p_sframe )
+static HB_GENC_FUNC( hb_p_sframe )
 {
    fprintf( cargo->yyc, "\tHB_P_SFRAME, %i, %i,",
             pFunc->pCode[ lPCodePos + 1 ],
@@ -1565,15 +1564,15 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_dupltwo,
    hb_p_inc,
    hb_p_instring,
-   hb_p_jumpshort,
+   hb_p_jumpnear,
    hb_p_jump,
    hb_p_jumpfar,
-   hb_p_jumpshortfalse,
+   hb_p_jumpfalsenear,
    hb_p_jumpfalse,
-   hb_p_jumpfarfalse,
-   hb_p_jumpshorttrue,
+   hb_p_jumpfalsefar,
+   hb_p_jumptruenear,
    hb_p_jumptrue,
-   hb_p_jumpfartrue,
+   hb_p_jumptruefar,
    hb_p_lessequal,
    hb_p_less,
    hb_p_line,
@@ -1662,13 +1661,13 @@ static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc )
    HB_GENC_INFO genc_info;
 
    /* Make sure that table is correct */
-   assert( HB_P_LAST_PCODE == sizeof(s_verbose_table)/sizeof(HB_GENC_FUNC_PTR) );
+   assert( HB_P_LAST_PCODE == sizeof( s_verbose_table ) / sizeof( HB_GENC_FUNC_PTR ) );
 
    genc_info.iNestedCodeblock = 0;
    genc_info.bVerbose = ( hb_comp_iGenCOutput == HB_COMPGENC_VERBOSE );
    genc_info.yyc = yyc;
 
-   hb_compPCodeEval( pFunc, (HB_PCODE_FUNC_PTR *)s_verbose_table, (void *)&genc_info );
+   hb_compPCodeEval( pFunc, ( HB_PCODE_FUNC_PTR * ) s_verbose_table, ( void * ) &genc_info );
 
    if( genc_info.bVerbose )
       fprintf( yyc, "/* %05li */\n", pFunc->lPCodePos );

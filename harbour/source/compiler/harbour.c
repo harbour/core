@@ -1335,7 +1335,7 @@ ULONG hb_compGenJump( LONG lOffset )
    }
    else if( lOffset >= -128 && lOffset <= 127 )
    {
-      hb_compGenPCode3( HB_P_JUMPSHORT, HB_LOBYTE( lOffset ), HB_P_NOOP );
+      hb_compGenPCode3( HB_P_JUMPNEAR, HB_LOBYTE( lOffset ), HB_P_NOOP );
       hb_compGenPCode1( HB_P_NOOP );
    }
    else if( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
@@ -1363,12 +1363,12 @@ ULONG hb_compGenJumpFalse( LONG lOffset )
    /* Just a place holder, it might be a far jump...*/
    if( lOffset == 0 )
    {
-      hb_compGenPCode3( HB_P_JUMPFARFALSE, 0, 0 );
+      hb_compGenPCode3( HB_P_JUMPFALSEFAR, 0, 0 );
       hb_compGenPCode1( 0 );
    }
    else if( lOffset >= -128 && lOffset <= 127 )
    {
-      hb_compGenPCode3( HB_P_JUMPSHORTFALSE, HB_LOBYTE( lOffset ), HB_P_NOOP );
+      hb_compGenPCode3( HB_P_JUMPFALSENEAR, HB_LOBYTE( lOffset ), HB_P_NOOP );
       hb_compGenPCode1( HB_P_NOOP );
    }
    else if( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
@@ -1378,7 +1378,7 @@ ULONG hb_compGenJumpFalse( LONG lOffset )
    }
    else if( lOffset >= (-8388608L) && lOffset <= 8388607L )
    {
-      hb_compGenPCode3( HB_P_JUMPFARFALSE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
+      hb_compGenPCode3( HB_P_JUMPFALSEFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
       hb_compGenPCode1( ( BYTE ) ( ( ( USHORT ) ( lOffset ) >> 16 ) & 0xFF ) );
    }
    else
@@ -1396,12 +1396,12 @@ ULONG hb_compGenJumpTrue( LONG lOffset )
    /* Just a place holder, it might be a far jump...*/
    if( lOffset == 0 )
    {
-      hb_compGenPCode3( HB_P_JUMPFARTRUE, 0, 0 );
+      hb_compGenPCode3( HB_P_JUMPTRUEFAR, 0, 0 );
       hb_compGenPCode1( 0 );
    }
    else if( lOffset >= -128 && lOffset <= 127 )
    {
-      hb_compGenPCode3( HB_P_JUMPSHORTTRUE, HB_LOBYTE( lOffset ), HB_P_NOOP );
+      hb_compGenPCode3( HB_P_JUMPTRUENEAR, HB_LOBYTE( lOffset ), HB_P_NOOP );
       hb_compGenPCode1( HB_P_NOOP );
    }
    else if( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
@@ -1411,7 +1411,7 @@ ULONG hb_compGenJumpTrue( LONG lOffset )
    }
    else if( lOffset >= (-8388608L) && lOffset <= 8388607L )
    {
-      hb_compGenPCode3( HB_P_JUMPFARTRUE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
+      hb_compGenPCode3( HB_P_JUMPTRUEFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
       hb_compGenPCode1( ( BYTE ) ( ( ( USHORT ) ( lOffset ) >> 16 ) & 0xFF ) );
    }
    else
@@ -1435,48 +1435,48 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
       switch( pCode[ ( ULONG ) ( ulFrom - 1 ) ] )
       {
          /*
-         case HB_P_JUMPSHORT :
+         case HB_P_JUMPNEAR :
             break;
 
-         case HB_P_JUMPSHORTTRUE :
+         case HB_P_JUMPTRUENEAR :
             break;
 
-         case HB_P_JUMPSHORTFALSE :
+         case HB_P_JUMPFALSENEAR :
             break;
 
          case HB_P_JUMP :
-            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPSHORT;
+            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPNEAR;
             pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_P_NOOP;
             pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
             break;
 
          case HB_P_JUMPTRUE :
-            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPSHORTTRUE;
+            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPTRUENEAR;
             pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_P_NOOP;
             pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
             break;
 
          case HB_P_JUMPFALSE :
-            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPSHORTFALSE;
+            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPFALSENEAR;
             pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_P_NOOP;
             pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
             break;
          */
 
          case HB_P_JUMPFAR :
-            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPSHORT;
+            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPNEAR;
             pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_P_NOOP;
             pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
             break;
 
-         case HB_P_JUMPFARTRUE :
-            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPSHORTTRUE;
+         case HB_P_JUMPTRUEFAR :
+            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPTRUENEAR;
             pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_P_NOOP;
             pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
             break;
 
-         case HB_P_JUMPFARFALSE :
-            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPSHORTFALSE;
+         case HB_P_JUMPFALSEFAR :
+            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPFALSENEAR;
             pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_P_NOOP;
             pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
             break;
@@ -1539,17 +1539,17 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
       switch( pCode[ ( ULONG ) ( ulFrom - 1 ) ] )
       {
          /*
-         case HB_P_JUMPSHORT :
+         case HB_P_JUMPNEAR :
             pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMP;
             pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
             break;
 
-         case HB_P_JUMPSHORTTRUE :
+         case HB_P_JUMPTRUENEAR :
             pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPTRUE;
             pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
             break;
 
-         case HB_P_JUMPSHORTFALSE :
+         case HB_P_JUMPFALSENEAR :
             pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPFALSE;
             pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
             break;
@@ -1569,12 +1569,12 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
             pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
             break;
 
-         case HB_P_JUMPFARTRUE :
+         case HB_P_JUMPTRUEFAR :
             pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPTRUE;
             pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
             break;
 
-         case HB_P_JUMPFARFALSE :
+         case HB_P_JUMPFALSEFAR :
             pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPFALSE;
             pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
             break;
@@ -2514,9 +2514,9 @@ static void hb_compOptimizeJumps( void )
       {
          switch( pCode[ pJumps[ iJump ] ] )
          {
-            case HB_P_JUMPSHORT :
-            case HB_P_JUMPSHORTFALSE :
-            case HB_P_JUMPSHORTTRUE :
+            case HB_P_JUMPNEAR :
+            case HB_P_JUMPFALSENEAR :
+            case HB_P_JUMPTRUENEAR :
             {
                ulOffset = pCode[ pJumps[ iJump ] + 1 ];
 

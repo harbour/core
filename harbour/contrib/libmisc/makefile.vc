@@ -76,7 +76,7 @@ LDFLAGS        = $(LDFLAGS)
 # Macros to access our library names
 #
 
-TOOLS_LIB    = $(LIB_DIR)\misc.lib
+TOOLS_LIB    = $(LIB_DIR)\libmisc.lib
 
 HARBOUR_EXE  = $(BIN_DIR)\harbour.exe
 

@@ -42,6 +42,7 @@
 
 #if defined( OS_UNIX_COMPATIBLE )
    #include <unistd.h>  /* read() function requires it */
+   #include <termios.h>
 #endif
 
 static SHORT  s_iRow;
@@ -53,12 +54,32 @@ static BOOL   s_bBlink;
 static int    s_iFilenoStdout;
 static USHORT s_uiDispCount;
 
+#if defined( OS_UNIX_COMPATIBLE )
+static struct termios startup_attributes;
+#endif
+
 void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
 
    HB_SYMBOL_UNUSED( iFilenoStdin );
    HB_SYMBOL_UNUSED( iFilenoStderr );
+
+#if defined( OS_UNIX_COMPATIBLE )
+   {
+      struct termios ta;
+      
+      tcgetattr( STDIN_FILENO, &startup_attributes );
+      atexit( restore_input_mode );
+      
+      tcgetattr( STDIN_FILENO, &ta );
+      ta.c_lflag &= ~( ICANON | ECHO );
+      ta.c_iflag &= ~ICRNL;
+      ta.c_cc[ VMIN ] = 0;
+      ta.c_cc[ VTIME ] = 0;
+      tcsetattr( STDIN_FILENO, TCSAFLUSH, &ta );
+   }
+#endif
 
    s_uiDispCount = 0;
 
@@ -79,6 +100,10 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 void hb_gt_Exit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Exit()"));
+
+#if defined( OS_UNIX_COMPATIBLE )
+   tcsetattr( STDIN_FILENO, TCSANOW, &startup_attributes );
+#endif
 }
 
 int hb_gt_ReadKey( HB_inkey_enum eventmask )

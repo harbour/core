@@ -69,15 +69,15 @@ typedef enum
    HB_P_DUPLTWO,           /* places a copy of the latest two virtual machine stack value on to the stack */
    HB_P_INC,               /* increments the latest value on the virtual machine stack */
    HB_P_INSTRING,          /* checks if the second latest value on the stack is a substring of the latest one */
-   HB_P_JUMPSHORT,         /* jumps to a relative offset 1 Byte */
+   HB_P_JUMPNEAR,          /* jumps to a relative offset 1 Byte */
    HB_P_JUMP,              /* jumps to a relative offset 2 Bytes */
    HB_P_JUMPFAR,           /* jumps to a relative offset 3 Bytes */
-   HB_P_JUMPSHORTFALSE,    /* checks a logic expression of the stack and jumps to a relative offset */
+   HB_P_JUMPFALSENEAR,     /* checks a logic expression of the stack and jumps to a relative offset */
    HB_P_JUMPFALSE,         /* checks a logic expression of the stack and jumps to a relative offset */
-   HB_P_JUMPFARFALSE,      /* checks a logic expression of the stack and jumps to a relative offset */
-   HB_P_JUMPSHORTTRUE,     /* checks a logic expression of the stack and jumps to a relative offset */
+   HB_P_JUMPFALSEFAR,      /* checks a logic expression of the stack and jumps to a relative offset */
+   HB_P_JUMPTRUENEAR,      /* checks a logic expression of the stack and jumps to a relative offset */
    HB_P_JUMPTRUE,          /* checks a logic expression of the stack and jumps to a relative offset */
-   HB_P_JUMPFARTRUE,       /* checks a logic expression of the stack and jumps to a relative offset */
+   HB_P_JUMPTRUEFAR,       /* checks a logic expression of the stack and jumps to a relative offset */
    HB_P_LESSEQUAL,         /* checks if the second latest value on the stack is less equal that the latest one, leaves the result only */
    HB_P_LESS,              /* checks if the second latest value on the stack is less that the lastest one */
    HB_P_LINE,              /* currently compiled source code line number */
@@ -159,8 +159,8 @@ typedef enum
    HB_P_TRUE,              /* pushes true on the virtual machine stack */
    HB_P_ZERO,              /* places a ZERO on the virtual machine stack */
    HB_P_ONE,               /* places a ONE on the virtual machine stack */
-/*NOTE: * This have to be the last definition */
-   HB_P_LAST_PCODE    /* this defines the number of defined pcodes */
+/* NOTE: This have to be the last definition */
+   HB_P_LAST_PCODE         /* this defines the number of defined pcodes */
 } HB_PCODE;
 
 #endif /* HB_PCODE_H_ */

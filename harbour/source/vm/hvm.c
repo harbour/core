@@ -636,7 +636,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             hb_stack.pPos->type = HB_IT_LONG;
 
             lOffset = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 );
-            if ( lOffset > 8388607L )
+            if( lOffset > 8388607L )
                lOffset = ( lOffset - 16777216 );
 
             hb_stack.pPos->item.asLong.value = w + lOffset;
@@ -696,7 +696,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
              * skip outside of SEQUENCE structure
              */
             lOffset = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 );
-            if ( lOffset > 8388607L )
+            if( lOffset > 8388607L )
                lOffset = ( lOffset - 16777216 );
 
             w += lOffset;
@@ -732,54 +732,34 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          /* Jumps */
 
-         case HB_P_JUMPSHORT:
+         case HB_P_JUMPNEAR:
 
             lOffset = pCode[ w + 1 ];
-            if ( lOffset > 127 )
+            if( lOffset > 127 )
                lOffset -= 256 ;
-            /*
-            if( lOffset )
-               w += lOffset;
-            else
-               w += 2;
-            */
             w += lOffset;
             break;
 
          case HB_P_JUMP:
 
             lOffset = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-            if ( lOffset > SHRT_MAX )
+            if( lOffset > SHRT_MAX )
                lOffset -= 65536;
-            /*
-            if( lOffset )
-               w += lOffset;
-            else
-               w += 3;
-            */
             w += lOffset;
             break;
 
          case HB_P_JUMPFAR:
             lOffset = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 );
-            if ( lOffset > 8388607L )
+            if( lOffset > 8388607L )
                lOffset -= 16777216L;
-
-            /*
-            if( lOffset )
-               w += lOffset;
-            else
-               w += 4;
-            */
-
             w += lOffset;
             break;
 
-         case HB_P_JUMPSHORTFALSE:
+         case HB_P_JUMPFALSENEAR:
             if( ! hb_vmPopLogical() )
             {
                lOffset = pCode[ w + 1 ];
-               if ( lOffset > 127 )
+               if( lOffset > 127 )
                   lOffset -= 256;
 
                w += lOffset;
@@ -792,7 +772,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             if( ! hb_vmPopLogical() )
             {
                lOffset = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-               if ( lOffset > SHRT_MAX )
+               if( lOffset > SHRT_MAX )
                   lOffset -= 65536;
 
                w += lOffset;
@@ -801,11 +781,11 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                w += 3;
             break;
 
-         case HB_P_JUMPFARFALSE:
+         case HB_P_JUMPFALSEFAR:
             if( ! hb_vmPopLogical() )
             {
                lOffset = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 );
-               if ( lOffset > 8388607L )
+               if( lOffset > 8388607L )
                   lOffset -= 16777216L;
 
                w += lOffset;
@@ -814,11 +794,11 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                w += 4;
             break;
 
-         case HB_P_JUMPSHORTTRUE:
+         case HB_P_JUMPTRUENEAR:
             if( hb_vmPopLogical() )
             {
                lOffset = pCode[ w + 1 ];
-               if ( lOffset > 127 )
+               if( lOffset > 127 )
                   lOffset -= 256;
 
                w += lOffset;
@@ -831,7 +811,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             if( hb_vmPopLogical() )
             {
                lOffset = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-               if ( lOffset > SHRT_MAX )
+               if( lOffset > SHRT_MAX )
                   lOffset -= 65536;
 
                w += lOffset;
@@ -840,11 +820,11 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                w += 3;
             break;
 
-         case HB_P_JUMPFARTRUE:
+         case HB_P_JUMPTRUEFAR:
             if( hb_vmPopLogical() )
             {
                lOffset = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 );
-               if ( lOffset > 8388607L )
+               if( lOffset > 8388607L )
                   lOffset -= 16777216L;
 
                w += lOffset;
@@ -856,12 +836,16 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          /* Push */
 
          case HB_P_TRUE:
-            hb_vmPushLogical( TRUE );
+            hb_stack.pPos->type = HB_IT_LOGICAL;
+            hb_stack.pPos->item.asLogical.value = TRUE;
+            hb_stackPush();
             w++;
             break;
 
          case HB_P_FALSE:
-            hb_vmPushLogical( FALSE );
+            hb_stack.pPos->type = HB_IT_LOGICAL;
+            hb_stack.pPos->item.asLogical.value = FALSE;
+            hb_stackPush();
             w++;
             break;
 
@@ -919,12 +903,12 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_PUSHSTR:
-            {
-               USHORT uiSize = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-               hb_vmPushString( ( char * ) pCode + w + 3, ( ULONG ) uiSize );
-               w += ( 3 + uiSize );
-            }
+         {
+            USHORT uiSize = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+            hb_vmPushString( ( char * ) pCode + w + 3, ( ULONG ) uiSize );
+            w += ( 3 + uiSize );
             break;
+         }
 
          case HB_P_PUSHSTRSHORT:
             hb_vmPushString( ( char * ) pCode + w + 2, ( ULONG ) pCode[ w + 1 ] );
@@ -1161,133 +1145,133 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          /* macro compiled opcodes - we are using symbol address here */
 
          case HB_P_MMESSAGE:
-            {
-               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
-               hb_vmMessage( ( *pDynSym )->pSymbol );
-               w += sizeof( HB_DYNS_PTR ) + 1;
-            }
+         {
+            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
+            hb_vmMessage( ( *pDynSym )->pSymbol );
+            w += sizeof( HB_DYNS_PTR ) + 1;
             break;
+         }
 
          case HB_P_MPOPALIASEDFIELD:
-            {
-               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
-               hb_vmPopAliasedField( ( *pDynSym )->pSymbol );
-               w += sizeof( HB_DYNS_PTR ) + 1;
-            }
+         {
+            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
+            hb_vmPopAliasedField( ( *pDynSym )->pSymbol );
+            w += sizeof( HB_DYNS_PTR ) + 1;
             break;
+         }
 
          case HB_P_MPOPALIASEDVAR:
-            {
-               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
-               hb_vmPopAliasedVar( ( *pDynSym )->pSymbol );
-               w += sizeof( HB_DYNS_PTR ) + 1;
-            }
+         {
+            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
+            hb_vmPopAliasedVar( ( *pDynSym )->pSymbol );
+            w += sizeof( HB_DYNS_PTR ) + 1;
             break;
+         }
 
          case HB_P_MPOPFIELD:
-            {
-               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
-               /* Pops a value from the eval stack and uses it to set
-               * a new value of the given field
-               */
-               hb_stackDec();
-               hb_rddPutFieldValue( hb_stack.pPos, ( *pDynSym )->pSymbol );
-               hb_itemClear( hb_stack.pPos );
-               HB_TRACE(HB_TR_INFO, ("(hb_vmMPopField)"));
-               w += sizeof( HB_DYNS_PTR ) + 1;
-            }
+         {
+            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
+            /* Pops a value from the eval stack and uses it to set
+            * a new value of the given field
+            */
+            hb_stackDec();
+            hb_rddPutFieldValue( hb_stack.pPos, ( *pDynSym )->pSymbol );
+            hb_itemClear( hb_stack.pPos );
+            HB_TRACE(HB_TR_INFO, ("(hb_vmMPopField)"));
+            w += sizeof( HB_DYNS_PTR ) + 1;
             break;
+         }
 
          case HB_P_MPOPMEMVAR:
-            {
-               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
-               hb_stackDec();
-               hb_memvarSetValue( ( *pDynSym )->pSymbol, hb_stack.pPos );
-               hb_itemClear( hb_stack.pPos );
-               HB_TRACE(HB_TR_INFO, ("(hb_vmMPopMemvar)"));
-               w += sizeof( HB_DYNS_PTR ) + 1;
-            }
+         {
+            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
+            hb_stackDec();
+            hb_memvarSetValue( ( *pDynSym )->pSymbol, hb_stack.pPos );
+            hb_itemClear( hb_stack.pPos );
+            HB_TRACE(HB_TR_INFO, ("(hb_vmMPopMemvar)"));
+            w += sizeof( HB_DYNS_PTR ) + 1;
             break;
+         }
 
          case HB_P_MPUSHALIASEDFIELD:
-            {
-               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
-               hb_vmPushAliasedField( ( *pDynSym )->pSymbol );
-               w += sizeof( HB_DYNS_PTR ) + 1;
-            }
+         {
+            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
+            hb_vmPushAliasedField( ( *pDynSym )->pSymbol );
+            w += sizeof( HB_DYNS_PTR ) + 1;
             break;
+         }
 
          case HB_P_MPUSHALIASEDVAR:
-            {
-               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
-               hb_vmPushAliasedVar( ( *pDynSym )->pSymbol );
-               w += sizeof( HB_DYNS_PTR ) + 1;
-            }
+         {
+            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
+            hb_vmPushAliasedVar( ( *pDynSym )->pSymbol );
+            w += sizeof( HB_DYNS_PTR ) + 1;
             break;
+         }
 
          case HB_P_MPUSHBLOCK:
-            {
-               /*NOTE: the pcode is stored in dynamically allocated memory
-               * We need to handle it with more care than compile-time
-               * codeblocks
-               */
-                  /* +0    -> _pushblock
-                  * +1 +2 -> size of codeblock
-                  * +3 +4 -> number of expected parameters
-                  * +5    -> pcode bytes
-                  */
-               hb_vmPushMacroBlock( ( BYTE * ) ( pCode + w ), pSymbols );
-               w += ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
-            }
+         {
+            /*NOTE: the pcode is stored in dynamically allocated memory
+            * We need to handle it with more care than compile-time
+            * codeblocks
+            */
+            /* +0    -> _pushblock
+             * +1 +2 -> size of codeblock
+             * +3 +4 -> number of expected parameters
+             * +5    -> pcode bytes
+             */
+            hb_vmPushMacroBlock( ( BYTE * ) ( pCode + w ), pSymbols );
+            w += ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
             break;
+         }
 
          case HB_P_MPUSHFIELD:
-            {
-               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
-               /* It pushes the current value of the given field onto the eval stack
-               */
-               hb_rddGetFieldValue( hb_stack.pPos, ( *pDynSym )->pSymbol );
-               hb_stackPush();
-               HB_TRACE(HB_TR_INFO, ("(hb_vmMPushField)"));
-               w += sizeof( HB_DYNS_PTR ) + 1;
-            }
+         {
+            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
+            /* It pushes the current value of the given field onto the eval stack
+            */
+            hb_rddGetFieldValue( hb_stack.pPos, ( *pDynSym )->pSymbol );
+            hb_stackPush();
+            HB_TRACE(HB_TR_INFO, ("(hb_vmMPushField)"));
+            w += sizeof( HB_DYNS_PTR ) + 1;
             break;
+         }
 
          case HB_P_MPUSHMEMVAR:
-            {
-               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
-               hb_memvarGetValue( hb_stack.pPos, ( *pDynSym )->pSymbol );
-               hb_stackPush();
-               HB_TRACE(HB_TR_INFO, ("(hb_vmMPushMemvar)"));
-               w += sizeof( HB_DYNS_PTR ) + 1;
-            }
+         {
+            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
+            hb_memvarGetValue( hb_stack.pPos, ( *pDynSym )->pSymbol );
+            hb_stackPush();
+            HB_TRACE(HB_TR_INFO, ("(hb_vmMPushMemvar)"));
+            w += sizeof( HB_DYNS_PTR ) + 1;
             break;
+         }
 
          case HB_P_MPUSHMEMVARREF:
-            {
-               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
-               hb_memvarGetRefer( hb_stack.pPos, ( *pDynSym )->pSymbol );
-               hb_stackPush();
-               HB_TRACE(HB_TR_INFO, ("(hb_vmMPushMemvarRef)"));
-               w += sizeof( HB_DYNS_PTR ) + 1;
-            }
+         {
+            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
+            hb_memvarGetRefer( hb_stack.pPos, ( *pDynSym )->pSymbol );
+            hb_stackPush();
+            HB_TRACE(HB_TR_INFO, ("(hb_vmMPushMemvarRef)"));
+            w += sizeof( HB_DYNS_PTR ) + 1;
             break;
+         }
 
          case HB_P_MPUSHSYM:
-            {
-               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
-               hb_vmPushSymbol( ( *pDynSym )->pSymbol );
-            }
+         {
+            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
+            hb_vmPushSymbol( ( *pDynSym )->pSymbol );
             w += sizeof( HB_DYNS_PTR ) + 1;
             break;
+         }
 
          case HB_P_MPUSHVARIABLE:
-            {
-               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
-               hb_vmPushVariable( ( *pDynSym )->pSymbol );
-            }
+         {
+            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
+            hb_vmPushVariable( ( *pDynSym )->pSymbol );
             w += sizeof( HB_DYNS_PTR ) + 1;
             break;
+         }
 
          /* misc */
 

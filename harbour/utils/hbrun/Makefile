@@ -10,7 +10,7 @@ ROOT = ../../
 
 PRG_SOURCES=\
 	hbrun.prg \
-	exttools.prg \
+	external.prg \
 
 PRG_MAIN=hbrun.prg
 

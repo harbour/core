@@ -32,6 +32,7 @@
  * their web site at http://www.gnu.org/).
  *
  */
+
 #include <assert.h>
 
 #include "hbcomp.h"
@@ -62,15 +63,15 @@ static BYTE s_pcode_len[] = {
    1,        /* HB_P_DUPLTWO,              */
    1,        /* HB_P_INC,                  */
    1,        /* HB_P_INSTRING,             */
-   2,        /* HB_P_JUMPSHORT,            */
+   2,        /* HB_P_JUMPNEAR,             */
    3,        /* HB_P_JUMP,                 */
    4,        /* HB_P_JUMPFAR,              */
-   2,        /* HB_P_JUMPSHORTFALSE,       */
+   2,        /* HB_P_JUMPFALSENEAR,        */
    3,        /* HB_P_JUMPFALSE,            */
-   4,        /* HB_P_JUMPFARFALSE,         */
-   2,        /* HB_P_JUMPSHORTTRUE,        */
+   4,        /* HB_P_JUMPFALSEFAR,         */
+   2,        /* HB_P_JUMPTRUENEAR,         */
    3,        /* HB_P_JUMPTRUE,             */
-   4,        /* HB_P_JUMPFARTRUE,          */
+   4,        /* HB_P_JUMPTRUEFAR,          */
    1,        /* HB_P_LESSEQUAL,            */
    1,        /* HB_P_LESS,                 */
    3,        /* HB_P_LINE,                 */
@@ -154,7 +155,7 @@ static BYTE s_pcode_len[] = {
    1         /* HB_P_ONE,                  */
 };
 
-void hb_compPCodeEval( PFUNCTION pFunc, HB_PCODE_FUNC_PTR *pFunctions, void *cargo )
+void hb_compPCodeEval( PFUNCTION pFunc, HB_PCODE_FUNC_PTR * pFunctions, void * cargo )
 {
    ULONG ulPos = 0;
    USHORT usSkip;
@@ -162,7 +163,7 @@ void hb_compPCodeEval( PFUNCTION pFunc, HB_PCODE_FUNC_PTR *pFunctions, void *car
    HB_PCODE_FUNC_PTR pCall;
 
    /* Make sure that table is correct */
-   assert( sizeof(s_pcode_len) == HB_P_LAST_PCODE );
+   assert( sizeof( s_pcode_len ) == HB_P_LAST_PCODE );
 
    while( ulPos < pFunc->lPCodePos )
    {
