@@ -1,3 +1,15 @@
+19990731-22:17 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * include/rddapi.h
+   * source/rdd/rddsys.prg
+   * source/rdd/dbcmd.c
+   * source/rdd/dbf1.c
+   * source/rdd/delim1.c
+   * source/rdd/dbfntx/dbfntx1.c
+   * tests/working/testrdd.prg
+     dbCreate() is finished!
+   + tests/working/testdfb.prg
+     This file create a DBF file
+
 19990731-15:10 EDT Paul Tucker <ptucker@sympatico.ca>
   * makefile.vc
     * oodles of changes.

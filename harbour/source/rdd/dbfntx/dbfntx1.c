@@ -86,21 +86,9 @@ static ERRCODE Close( AREAP pArea )
    return SUCCESS;
 }
 
-static ERRCODE Create( AREAP pArea, DBOPENINFOP pCreateInfo )
-{
-   printf( "Calling DBFNTX: Create()\n" );
-   return SUCCESS;
-}
-
-static ERRCODE Open( AREAP pArea, DBOPENINFOP pOpenInfo )
+static ERRCODE Open( AREAP pArea, LPDBOPENINFO pOpenInfo )
 {
    printf( "Calling DBFNTX: Open()\n" );
-   return SUCCESS;
-}
-
-static ERRCODE StructSize( AREAP pArea, USHORT * uiSize )
-{
-   printf( "Calling DBFNTX: StructSize()\n" );
    return SUCCESS;
 }
 
@@ -114,9 +102,11 @@ static RDDFUNCS ntxTable = { Bof,
 			     GoTop,
 			     Skip,
 			     Close,
-			     Create,
+			     0,           /* Super Create */
 			     Open,
-			     StructSize
+			     0,           /* Super Release */
+			     0,           /* Super StructSize */
+			     0            /* Super WriteDBHeader */
 			   };
 
 HARBOUR HB__DBFNTX( void )
@@ -132,7 +122,7 @@ HARBOUR HB_DBFNTX_GETFUNCTABLE( void )
    * uiCount = RDDFUNCSCOUNT;
    pTable = ( RDDFUNCS * ) hb_parnl( 2 );
    if( pTable )
-      hb_retni( hb_rddInherit( pTable, &ntxTable, &ntxSuper, (PBYTE)"DBF" ) );
+      hb_retni( hb_rddInherit( pTable, &ntxTable, &ntxSuper, ( PBYTE ) "DBF" ) );
    else
       hb_retni( FAILURE );
 }

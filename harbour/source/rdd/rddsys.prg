@@ -28,7 +28,6 @@ ANNOUNCE RDDSYS
 
 init procedure RddInit
 
-   REQUEST DBF
    REQUEST DBFNTX
 
    rddSetDefault( "DBFNTX" )

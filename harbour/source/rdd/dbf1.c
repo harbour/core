@@ -22,10 +22,42 @@
    You can contact me at: bruno@issnet.net
  */
 
+#include <time.h>
 #include "extend.h"
 #include "init.h"
 #include "rddapi.h"
 #include "rddsys.ch"
+
+typedef struct
+{
+   BYTE   bVersion;
+   BYTE   bYear;
+   BYTE   bMonth;
+   BYTE   bDay;
+   ULONG  ulRecords;
+   USHORT uiHeaderLen;
+   USHORT uiRecordLen;
+   BYTE   bReserved1[ 16 ];
+   BYTE   bHasTag;
+   BYTE   bReserved2[ 3 ];
+} DBFHEADER;
+
+typedef DBFHEADER * LPDBFHEADER;
+
+
+typedef struct
+{
+   BYTE bName[ 11 ];
+   BYTE bType;
+   BYTE bReserved1[ 4 ];
+   BYTE bLen;
+   BYTE bDec;
+   BYTE bReserved2[ 13 ];
+   BYTE bHasTag;
+} DBFFIELD;
+
+typedef DBFFIELD * LPDBFFIELD;
+
 
 HARBOUR HB__DBF( void );
 HARBOUR HB_DBF_GETFUNCTABLE( void );
@@ -86,21 +118,121 @@ static ERRCODE Close( AREAP pArea )
    return SUCCESS;
 }
 
-static ERRCODE Create( AREAP pArea, DBOPENINFOP pCreateInfo )
+static ERRCODE Create( AREAP pArea, LPDBOPENINFO pCreateInfo )
 {
-   printf( "Calling DBF: Create()\n" );
-   return SUCCESS;
+   ERRCODE uiError = SUCCESS;
+
+   pArea->lpFileInfo = ( LPFILEINFO ) hb_xgrab( sizeof( FILEINFO ) );
+   pArea->lpFileInfo->pNext = 0;
+   pArea->lpFileInfo->hFile = hb_fsCreate( pCreateInfo->abName, FC_NORMAL );
+   if( pArea->lpFileInfo->hFile == FS_ERROR )
+      uiError = FAILURE;
+   if( uiError == SUCCESS )
+   {
+      uiError = SELF_WRITEDBHEADER( pArea );
+      hb_fsClose( pArea->lpFileInfo->hFile );
+   }
+   hb_xfree( pArea->lpFileInfo );
+   return uiError;
 }
 
-static ERRCODE Open( AREAP pArea, DBOPENINFOP pOpenInfo )
+static ERRCODE Open( AREAP pArea, LPDBOPENINFO pOpenInfo )
 {
    printf( "Calling DBF: Open()\n" );
    return SUCCESS;
 }
 
-static ERRCODE StructSize( AREAP pArea, USHORT * uiSize )
+static ERRCODE WriteDBHeader( AREAP pArea )
 {
-   printf( "Calling DBF: StructSize()\n" );
+   DBFHEADER pHeader;
+   DBFFIELD pDBField;
+   USHORT uiCount;
+   LPFIELD pField;
+   time_t t;
+   struct tm * pTime;
+
+   memset( &pHeader, 0, sizeof( DBFHEADER ) );
+   pHeader.uiRecordLen = 1;
+   pHeader.bVersion = 0x03;
+   pField = pArea->lpFields;
+   for( uiCount = 0; uiCount < pArea->uiFieldCount; uiCount++ )
+   {
+      switch( pField->uiType )
+      {
+	 case 'C':
+	 case 'N':
+	    pHeader.uiRecordLen += pField->uiLen;
+	    break;
+
+	 case 'M':
+	    pHeader.uiRecordLen += 10;
+	    pHeader.bVersion = 0x83;
+	    break;
+
+	 case 'D':
+	    pHeader.uiRecordLen += 8;
+	    break;
+
+	 case 'L':
+	    pHeader.uiRecordLen += 1;
+	    break;
+      }
+      pField++;
+   }
+
+   time( &t );
+   pTime =  localtime( &t );
+   pHeader.bYear = ( BYTE ) pTime->tm_year;
+   pHeader.bMonth = ( BYTE ) pTime->tm_mon + 1;
+   pHeader.bDay = ( BYTE ) pTime->tm_mday;
+   pHeader.uiHeaderLen = ( USHORT ) ( 32 * ( pArea->uiFieldCount + 1 ) + 1 );
+   pHeader.bHasTag = 0;
+   pHeader.ulRecords = 0;
+   if( hb_fsWrite( pArea->lpFileInfo->hFile, ( BYTEP ) &pHeader,
+		   sizeof( DBFHEADER ) ) != sizeof( DBFHEADER ) )
+      return FAILURE;
+
+   pField = pArea->lpFields;
+   for( uiCount = 0; uiCount < pArea->uiFieldCount; uiCount++ )
+   {
+      memset( &pDBField, 0, sizeof( DBFFIELD ) );
+      strncpy( ( char * ) pDBField.bName, ( const char * ) pField->sym, sizeof( pDBField.bName ) );
+      hb_strUpper( ( char * ) pDBField.bName, strlen( ( char * ) pDBField.bName ) );
+      pDBField.bType = pField->uiType;
+      switch( pDBField.bType )
+      {
+	 case 'C':
+	    pDBField.bLen = pField->uiLen & 0xFF;
+	    pDBField.bDec = pField->uiLen >> 8;
+	    break;
+
+	 case 'M':
+	    pDBField.bLen = 10;
+	    pDBField.bDec = 0;
+	    break;
+
+	 case 'D':
+	    pDBField.bLen = 8;
+	    pDBField.bDec = 0;
+	    break;
+
+	 case 'L':
+	    pDBField.bLen = 1;
+	    pDBField.bDec = 0;
+	    break;
+
+	 case 'N':
+	    pDBField.bLen = pField->uiLen;
+	    pDBField.bDec = pField->uiDec;
+	    break;
+      }
+      if( hb_fsWrite( pArea->lpFileInfo->hFile, ( BYTEP ) &pDBField,
+		      sizeof( DBFFIELD ) ) != sizeof( DBFFIELD ) )
+	 return FAILURE;
+      pField++;
+   }
+   if( hb_fsWrite( pArea->lpFileInfo->hFile, ( BYTEP ) "\15\32", 2 ) != 2 )
+      return FAILURE;
    return SUCCESS;
 }
 
@@ -116,7 +248,9 @@ static RDDFUNCS dbfTable = { Bof,
 			     Close,
 			     Create,
 			     Open,
-			     StructSize
+			     0,	          /* Super Release */
+			     0,           /* Super StructSize */
+			     WriteDBHeader
 			   };
 
 HARBOUR HB__DBF( void )

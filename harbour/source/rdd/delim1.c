@@ -86,21 +86,33 @@ static ERRCODE Close( AREAP pArea )
    return SUCCESS;
 }
 
-static ERRCODE Create( AREAP pArea, DBOPENINFOP pCreateInfo )
+static ERRCODE Create( AREAP pArea, LPDBOPENINFO pCreateInfo )
 {
    printf( "Calling DELIM: Create()\n" );
    return SUCCESS;
 }
 
-static ERRCODE Open( AREAP pArea, DBOPENINFOP pOpenInfo )
+static ERRCODE Open( AREAP pArea, LPDBOPENINFO pOpenInfo )
 {
    printf( "Calling DELIM: Open()\n" );
+   return SUCCESS;
+}
+
+static ERRCODE Release( AREAP pArea )
+{
+   printf( "Calling DELIM: Release()\n" );
    return SUCCESS;
 }
 
 static ERRCODE StructSize( AREAP pArea, USHORT * uiSize )
 {
    printf( "Calling DELIM: StructSize()\n" );
+   return SUCCESS;
+}
+
+static ERRCODE WriteDBHeader( AREAP pArea )
+{
+   printf( "Calling DELIM: WriteDBHeader()\n" );
    return SUCCESS;
 }
 
@@ -116,7 +128,9 @@ static RDDFUNCS delimTable = { Bof,
 			       Close,
 			       Create,
 			       Open,
-			       StructSize
+			       Release,
+			       StructSize,
+			       WriteDBHeader
 			   };
 
 HARBOUR HB__DELIM( void )

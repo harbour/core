@@ -5,8 +5,10 @@
 #ifndef HB_RDDAPI_H_
 #define HB_RDDAPI_H_
 
-typedef PBYTE  BYTEP;
+#include "filesys.h"
+
 typedef USHORT ERRCODE;
+typedef void * FARP;
 
 // RDD method return codes
 
@@ -108,42 +110,51 @@ typedef USHORT ERRCODE;
 #define APPEND_UNLOCK	  8
 
 
+typedef struct _FILEINFO
+{
+   FHANDLE hFile;
+   struct _FILEINFO * pNext;   // The next file in the list
+} FILEINFO;
+
+typedef FILEINFO * LPFILEINFO;
+
+
 /*
 *  DBFIELDINFO
 *  -----------
 *  The field structure
 */
 
-//typedef struct
-//{
-//   BYTEP  atomName;        // Nombre de campo (s¡mbolo)
-//   USHORT uiType;          // Tipo de campo
-//   USHORT typeExtended;    // Tipo extendido de campo
-//   USHORT uiLen;           // Logitud total del campo
-//   USHORT uiDec;           // Lugares decimales para campos num‚ricos
-//} DBFIELDINFO;
+typedef struct
+{
+   BYTEP  atomName;        // FIELD (symbol) name
+   USHORT uiType;          // FIELD type
+   USHORT typeExtended;    // FIELD type extended
+   USHORT uiLen;           // Overall FIELD length
+   USHORT uiDec;           // Decimal places of numeric FIELD
+} DBFIELDINFO;
 
-//typedef DBFIELDINFO far * LPDBFIELDINFO;
-
+typedef DBFIELDINFO * LPDBFIELDINFO;
 
 
 /*
 *  DBOPENINFO
 *  ----------
-*  La estructura de los campos abiertos
+*  The Open Info structure
 */
 
 typedef struct
 {
-   USHORT uiArea;    // N£mero de  rea de trabajo del almacenamiento de datos
-   PBYTE  abName;    // El nombre cualificado del almacenamiento de campos
-   PBYTE  atomAlias; // El nombre l¢gico del almacenamiento de campos
-   BOOL   fShared;   // Modo compartido del almacenamiento de campos
-   BOOL   fReadonly; // Modo de s¢lo lectura del almacenamiento de campos
+   USHORT uiArea;          // Work Area number of the data store
+   BYTEP  abName;          // The qualified name of the data store
+   BYTEP  atomAlias;       // The logical name of the data store
+   BOOL   fShared;         // Share mode of the data store
+   BOOL   fReadonly;       // Readonly mode of the data store
 
-//   FARP   lpdbHeader;  // Puntero a la cabecera del almacenamiento de campos
-} DBOPENINFO, * DBOPENINFOP;
+   FARP   lpdbHeader;      // Pointer to a header of the data store
+} DBOPENINFO;
 
+typedef DBOPENINFO * LPDBOPENINFO;
 
 
 /*
@@ -406,7 +417,7 @@ typedef struct
 /*
 *  DBLOCKINFO
 *  ----------
-*  La estructura de bloqueozz
+*  La estructura de bloqueo
 *
 *  Contiene informaci¢n de bloqueos de registro o fichero
 */
@@ -425,71 +436,73 @@ typedef struct
 /*
 *  FIELD
 *  -----
-*  La estructura de campos
+*  The Field structure
 *
-*  Esta es la unidad b sica de acceso a un  rea de trabajo
+*  This is the basic unit of access for a workarea
 */
 
-//typedef struct _FIELD
-//{
-//   USHORT  uiType;           // Tipo de campo
-//   USHORT  uiTypeExtended;   // Tipo de campo - extendido
-//   USHORT  uiLen;            // Longitud de campo
-//   USHORT  uiDec;            // Longitud de caracteres decimales
-//   USHORT  uiArea;           // Area en la que reside este campo
-//   FARP    sym;              // S¡mbolo que representa el campo
+typedef struct _FIELD
+{
+   USHORT  uiType;           // Field type
+   USHORT  uiTypeExtended;   // Field type - extended
+   USHORT  uiLen;            // Field length
+   USHORT  uiDec;            // Decimal length
+   USHORT  uiArea;           // Area this field resides in
+   FARP    sym;              // Symbol that represents the field
 
-//   struct _FIELD *lpfNext;   // Siguiente campo de la lista
+   struct _FIELD *lpfNext;   // The next field in the list
 
-//} FIELD;
+} FIELD;
 
-//typedef FIELD far * LPFIELD;
+typedef FIELD * LPFIELD;
 
 
 
-/*-----------------* Estructuras de  reas de trabajo *-------------------*/
+/*--------------------* WORKAREA structure *----------------------*/
 
 /*
 *  WORKAREA
 *  --------
-*  La estructura del  rea de trabajo
+*  The Workarea Structure
 *
-*  Informaci¢n para administrar el  rea de trabajo
+*  Information to administrate the workarea
 */
 
 typedef struct _AREA
 {
-   struct _RDDFUNCS * lprfsHost;
+   struct _RDDFUNCS * lprfsHost; // Virtual method table for this workarea
 
-   USHORT  uiArea;             // El n£mero asignado al  rea de trabajo
-//   FARP    atomAlias;          // Puntero al s¡mbolo alias de este  rea
-                               // de trabajo
-//   USHORT  uiFieldExtent;      // N£mero total de campos asignados
-//   USHORT  uiFieldCount;       // N£mero total de campos utilizados
-//   LPFIELD lpFields;           // Puntero a una matriz de campos
+   USHORT  uiArea;               // The number assigned to this workarea
+//   FARP    atomAlias;            // Pointer to the alias symbol for this workarea
 
-//   FARP lpFieldExtents;        // Puntero nulo para propiedades adicionales
+//   USHORT  uiFieldExtent;        // Total number of fields allocated
+   USHORT  uiFieldCount;         // Total number of fields used
+   LPFIELD lpFields;             // Pointer to an array of fields
 
-//   ITEM valResult;             // Contenedor de resultados de m£ltiples usos
+//   FARP lpFieldExtents;          // Void ptr for additional field properties
 
-//   BOOL fTop;                  // TRUE si "top"
-//   BOOL fBottom;               // TRUE si "bottom"
-//   BOOL fBof;                  // TRUE si "bof"
-//   BOOL fEof;                  // TRUE si "eof"
-//   BOOL fFound;                // TRUE si "found"
+//   ITEM valResult;               // All purpose result holder
 
-//   DBSCOPEINFO  dbsi;          // Informaci¢n concerniente al £ltimo LOCATE
-//   DBFILTERINFO dbfi;          // Filtro activo
+//   BOOL fTop;                    // TRUE if "top"
+//   BOOL fBottom;                 // TRUE if "bottom"
+//   BOOL fBof;                    // TRUE if "bof"
+//   BOOL fEof;                    // TRUE if "eof"
+//   BOOL fFound;                  // TRUE if "found"
+
+//   DBSCOPEINFO  dbsi;            // Info regarding last LOCATE
+//   DBFILTERINFO dbfi;            // Filter in effect
 
 //   LPDBORDERCONDINFO lpdbOrdCondInfo;
 
-//   LPDBRELINFO  lpdbRelations; // Relaciones padre/hijo utilizadas
-//   USHORT       uiParents;     // N£mero de padres en este  rea
+//   LPDBRELINFO  lpdbRelations;   // Parent/Child relationships used
+//   USHORT       uiParents;       // Number of parents for this area
 
 //   HANDLE   heap;
 //   USHORT   heapSize;
 
 //   USHORT   rddID;
+
+   LPFILEINFO lpFileInfo;        // Files used by this workarea
 
 } AREA;
 
@@ -499,14 +512,14 @@ typedef AREA * LPAREA;
 #define AREAP LPAREA
 #endif
 
-/*-----------------* Prototipos punto de entrada *---------------------*/
+/*--------------------* Virtual Method Table *----------------------*/
 
 typedef USHORT ( * DBENTRYP_V  )( AREAP area );
 typedef USHORT ( * DBENTRYP_BP )( AREAP area, BOOL * param );
 typedef USHORT ( * DBENTRYP_L  )( AREAP area, LONG param );
 typedef USHORT ( * DBENTRYP_I  )( AREAP area, PHB_ITEM param );
 typedef USHORT ( * DBENTRYP_SI )( AREAP area, USHORT index, PHB_ITEM param );
-typedef USHORT ( * DBENTRYP_VP )( AREAP area, DBOPENINFOP param );
+typedef USHORT ( * DBENTRYP_VP )( AREAP area, LPDBOPENINFO param );
 typedef USHORT ( * DBENTRYP_SP )( AREAP area, USHORT * param );
 
 //typedef USHORT (far * DBENTRYP_S)(AREAP area, USHORT param);
@@ -523,12 +536,12 @@ typedef USHORT ( * DBENTRYP_SP )( AREAP area, USHORT * param );
 
 
 
-/*-----------------* Tabla de m‚dotos virtuales *-------------------*/
+/*--------------------* Virtual Method Table *----------------------*/
 
 typedef struct _RDDFUNCS
 {
 
-   /* M‚todos de posicionamiento y desplazamiento */
+   /* Movement and positioning methods */
 
    DBENTRYP_BP  bof;
    DBENTRYP_BP  eof;
@@ -543,7 +556,7 @@ typedef struct _RDDFUNCS
 //   DBENTRYP_L   skipRaw;         /* L   */
 
 
-   /* Manejo de datos */
+   /* Data management */
 
 //   DBENTRYP_VP  addField;        /* VP  */
 //   DBENTRYP_S   append;          /* S   */
@@ -568,7 +581,7 @@ typedef struct _RDDFUNCS
 //   DBENTRYP_I   recno;           /* I   */
 //   DBENTRYP_S   setFieldExtent;  /* S   */
 
-   /* Manejo de  reas de trabajo/bases de datos */
+   /* WorkArea/Database management */
 
 //   DBENTRYP_VP  alias;           /* VP  */
    DBENTRYP_V   close;
@@ -576,7 +589,7 @@ typedef struct _RDDFUNCS
 //   DBENTRYP_SI  info;            /* SI  */
 //   DBENTRYP_V   newarea;         /* V   */
    DBENTRYP_VP  open;
-//   DBENTRYP_V   release;         /* V   */
+   DBENTRYP_V   release;         /* V   */
    DBENTRYP_SP  structSize;
 //   DBENTRYP_VP  sysName;         /* VP  */
 //   DBENTRYP_VP  dbEval;          /* VP  */
@@ -588,7 +601,7 @@ typedef struct _RDDFUNCS
 //   DBENTRYP_V   zap;             /* V   */
 
 
-   /* M‚todos relacionales */
+   /* Relational Methods */
 
 //   DBENTRYP_VP  childEnd;        /* VP  */
 //   DBENTRYP_VP  childStart;      /* VP  */
@@ -602,7 +615,7 @@ typedef struct _RDDFUNCS
 //   DBENTRYP_VP  setRel;          /* VP  */
 
 
-   /* Manejo de ¢rdenes */
+   /* Order Management */
 
 //   DBENTRYP_VP  orderListAdd;     /* VP  */
 //   DBENTRYP_V   orderListClear;   /* V   */
@@ -615,7 +628,7 @@ typedef struct _RDDFUNCS
 //   DBENTRYP_VP  orderDestroy;     /* VP  */
 //   DBENTRYP_SVP orderInfo;        /* SVP */
 
-   /* Establecimiento de filtros y  mbitos */
+   /* Filters and Scope Settings */
 
 //   DBENTRYP_V   clearFilter;     /* V   */
 //   DBENTRYP_V   clearLocate;     /* V   */
@@ -628,21 +641,21 @@ typedef struct _RDDFUNCS
 //   DBENTRYP_VP  setScope;        /* VP  */
 //   DBENTRYP_VPL skipScope;       /* VPL */
 
-   /* Diversos */
+   /* Miscellaneous */
 
 //   DBENTRYP_VP  compile;         /* VP */
 //   DBENTRYP_VP  error;           /* VP */
 //   DBENTRYP_I   evalBlock;       /* I  */
 
 
-   /* Operaciones de red */
+   /* Network operations */
 
 //   DBENTRYP_VSP rawlock;         /* VSP */
 //   DBENTRYP_VP  lock;            /* VP  */
 //   DBENTRYP_L   unlock;          /* L   */
 
 
-    /* Funciones de ficheros memo */
+   /* Memofile functions */
 
 //   DBENTRYP_V   closeMemFile;    /* V   */
 //   DBENTRYP_VP  createMemFile;   /* VP  */
@@ -651,13 +664,13 @@ typedef struct _RDDFUNCS
 //   DBENTRYP_SVP putValueFile;    /* SVP */
 
 
-    /* Manejo de cabeceras de ficheros de base de datos */
+   /* Database file header handling */
 
 //   DBENTRYP_V   readDBHeader;    /* V   */
-//   DBENTRYP_V   writeDBHeader;   /* V   */
+   DBENTRYP_V   writeDBHeader;   /* V   */
 
 
-    /* M‚todos especiales y reservados */
+   /* Special and reserved methods */
 
 //   DBENTRYP_SVP whoCares;        /* SVP */
 
@@ -971,6 +984,7 @@ typedef RDDFUNCS * PRDDFUNCS;
 //#define SUPER_SETDELIM(w, fp)     ((*(SUPERTABLE)->info)(w, DBI_SETDELIMITER, fp))
 //#define SUPER_GETDELIM(w, fp)     ((*(SUPERTABLE)->info)(w, DBI_GETDELIMITER, fp))
 //#define SUPER_TABLEEXT(w, fp)     ((*(SUPERTABLE)->info)(w, DBI_TABLEEXT, fp))
+
 
 
 /*
