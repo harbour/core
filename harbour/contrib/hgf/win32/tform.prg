@@ -54,10 +54,11 @@
 #include "common.ch"
 #include "hbclass.ch"
 
-#define WM_CLOSE    0x0010
-#define WM_COMMAND  0x0111
-#define WM_DESTROY  0x0002
-#define WS_VISIBLE  0x10000000
+#define WM_CLOSE        0x0010
+#define WM_COMMAND      0x0111
+#define WM_DESTROY      0x0002
+#define WM_LBUTTONDOWN  0x0201
+#define WS_VISIBLE      0x10000000
 
 static aForms := {}
 
@@ -67,12 +68,15 @@ CLASS TForm FROM TPersistent
    DATA      oMainMenu
    DATA      cName
 
+   DATA      OnClick  PROPERTY
+
    CLASSDATA lRegistered
 
    METHOD    New()
    METHOD    Close() INLINE SendMessage( ::hWnd, WM_CLOSE )
    METHOD    Command( nNotifyCode, nId, hWndCtl )
    METHOD    HandleEvent( nMsg, nParam1, nParam2 )
+   METHOD    LButtonDown( nKeyFlags, nXPos, nYPos )
    METHOD    ShowModal()
 
    ACCESS    Caption() INLINE WinGetText( ::hWnd ) PROPERTY
@@ -130,11 +134,22 @@ METHOD Command( nNotifyCode, nId, hWndCtl ) CLASS TForm
 
 return nil
 
+METHOD LButtonDown( nKeyFlags, nXPos, nYPos ) CLASS TForm
+
+   if ::OnClick != nil
+      return __ObjSendMsg( Self, ::OnClick, Self, nXPos, nYPos )
+   endif
+
+return nil
+
 METHOD HandleEvent( nMsg, nParam1, nParam2 ) CLASS TForm
 
    do case
       case nMsg == WM_COMMAND
            return ::Command( nHiWord( nParam1 ), nLoWord( nParam1 ), nParam2 )
+
+      case nMsg == WM_LBUTTONDOWN
+           return ::LButtonDown( nParam1, nLoWord( nParam2 ), nHiWord( nParam2 ) )
 
       case nMsg == WM_DESTROY
            PostQuitMessage( 0 )
