@@ -9,6 +9,9 @@
  * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
  *
+ * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net>
+ *  Support for DJGPP/GCC/OS2 for netname
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
@@ -53,8 +56,7 @@
 #define HB_OS_WIN_32_USED
 
 #include "hbapi.h"
-
-/* TODO: Implement NETNAME() for other platforms */
+#include "hb_io.h"
 
 /* NOTE: Clipper will only return a maximum of 15 bytes from this function.
          And it will be padded with spaces. Harbour does the same in the
@@ -70,12 +72,6 @@ HB_FUNC( NETNAME )
 
       regs.HB_XREGS.ax = 0x5E00;
 
-      #if defined(__DJGPP__) || defined(__RSX32__)
-      {
-         /* TODO: Add support for protected mode */
-         szValue[ 0 ] = '\0';
-      }
-      #else
       {
          struct SREGS sregs;
 
@@ -84,7 +80,6 @@ HB_FUNC( NETNAME )
 
          HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
       }
-      #endif
 
       hb_retc( regs.h.ch == 0 ? "" : szValue );
    }
@@ -100,6 +95,17 @@ HB_FUNC( NETNAME )
       hb_retc( pszValue );
       hb_xfree( pszValue );
    }
+#elif defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__)
+      {
+     char * pszValue = (char *) hb_xgrab(MAXGETHOSTNAME+1)
+     pszValue[ 0 ] = '\0';
+          
+     gethostname (pszValue, MAXGETHOSTNAME)
+
+     hb_retc( pszValue );
+     hb_xfree( pszValue );
+}
+
 #else
    hb_retc( "" );
 #endif
