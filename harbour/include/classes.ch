@@ -21,11 +21,11 @@
    You can contact me at: alinares@fivetech.com
 */
 
-#xcommand CLASS <ClassName> => ;
+#xcommand CLASS <ClassName> [ <frm: FROM, INHERIT> <SuperClass> ] => ;
    function <ClassName>() ;;
       static oClass ;;
       if oClass == nil ;;
-         oClass = TClass():New( <(ClassName)> )
+         oClass = TClass():New( <(ClassName)> [,<(SuperClass)>] )
 
 #xcommand DATA <DataName1> [,<DataNameN>] => ;
    oClass:AddData( <(DataName1)> ) [; oClass:AddData( <(DataNameN)> ) ]

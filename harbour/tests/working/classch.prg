@@ -18,7 +18,7 @@ return nil
 
 //--------------------------------------------------------------------//
 
-CLASS TTest
+CLASS TTest INHERIT TParent
 
    DATA One, Two, Three
 
@@ -38,3 +38,9 @@ METHOD New( One, Two ) CLASS TTest
 return Self
 
 //--------------------------------------------------------------------//
+
+CLASS TParent
+
+   DATA One
+
+ENDCLASS

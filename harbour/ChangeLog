@@ -1,3 +1,8 @@
+19990712-16:52 Antonio Linares <alinares@fivetech.com>
+  * include\classes.ch
+    * Inheritance class creation command support
+  * Enhanced tests\working\classch.prg classes.ch sample
+
 19990712-15:54 Antonio Linares <alinares@fivetech.com>
   * include\classes.ch
     * Missing oClass:Create call
