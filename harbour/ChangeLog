@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * source/rdd/dbfntx/dbfntx1.c
+    ! Some fix for shared mode ( hb_ntxHeaderRead() function added )
+
+2002-04-08 19:10 UTC+0100 Martin Vogel <vogel@inttec.de>
   + contrib/libct/exponent.c
     + EXPONENT() and MANTISSA() functions by Walter Negro
   + contrib/libct/tests/expomant.prg

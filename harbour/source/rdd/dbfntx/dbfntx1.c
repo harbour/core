@@ -147,7 +147,6 @@ static USHORT maxPagesPerTag = 50;
 
 /* Internal functions */
 static LPKEYINFO hb_ntxKeyNew( LPKEYINFO pKeyFrom, int keylen );
-static void hb_ntxKeyFree( LPKEYINFO pKey );
 static LONG hb_ntxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey, BOOL* result );
 static BOOL ntxIsRecBad( NTXAREAP pArea, LONG ulRecNo );
 static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LPKEYINFO pKey, BOOL bExact, BOOL lSeek );
@@ -196,6 +195,7 @@ static int hb_ntxItemCompare( char* s1, char* s2, int ilen1, int ilen2, BOOL Exa
 static ERRCODE hb_ntxPageAddPageKeyAdd( LPPAGEINFO pPage, char* key, int pos );
 
 #define KEYITEM(P,N) ( (NTXITEM*)( (P)->buffer+ *((USHORT*)((P)->buffer+(N)*2+2)) ) )
+#define hb_ntxKeyFree(K) hb_xfree(K)
 
 static void commonError( NTXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode, char* filename, USHORT uiFlags )
 {
@@ -562,11 +562,6 @@ static LPKEYINFO hb_ntxKeyNew( LPKEYINFO pKeyFrom, int keylen )
    return pKey;
 }
 
-static void hb_ntxKeyFree( LPKEYINFO pKey )
-{
-   hb_xfree( pKey );
-}
-
 static LONG hb_ntxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey, BOOL * result )
 {
    int K;
@@ -587,6 +582,48 @@ static LONG hb_ntxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey, BOOL * result )
       pTag->TagEOF = TRUE;
    return 0;
 }
+
+/*
+static int hb_ntxPageKeySearch( LPPAGEINFO pPage, LPKEYINFO pKey, BOOL bExact )
+{
+   SHORT i, iLast = -1, k, keylen = strlen( pKey->key );
+   SHORT iBegin = 0, iEnd = pPage->uiKeys - 1;
+   LPTAGINFO pTag = pPage->TagParent;
+
+   while( iBegin <= iEnd )
+   {
+      i = ( iBegin + iEnd ) / 2;
+      k = hb_ntxItemCompare( pKey->key, KEYITEM( pPage, i )->key, keylen, pTag->KeyLength,bExact );
+      if( !pTag->AscendKey )
+         k = -k;
+      if( k > 0 )
+         iBegin = i + 1;
+      else if( k < 0 )
+      {
+         iEnd = i - 1;
+         iLast = i;
+      }
+      else
+      {
+         while( !k && --i )
+            k = hb_ntxItemCompare( pKey->key, KEYITEM( pPage, i )->key,
+                         keylen, pTag->KeyLength, bExact );
+         pPage->CurKey = i;
+         return 0;
+      }
+   }
+   if( iLast >= 0 )
+   {
+      pPage->CurKey = iLast;
+      return -1;
+   }
+   else
+   {
+      pPage->CurKey = pPage->uiKeys;
+      return 1;
+   }
+}
+*/
 
 static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LPKEYINFO pKey, BOOL bExact, BOOL lSeek )
 {
@@ -626,38 +663,11 @@ static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LPKEYINFO pKey, BOOL bExac
          }
          if( p->page && ( k < 0 || lSeek || ( (ULONG)p->rec_no != pTag->Owner->Owner->ulRecNo ) ) )
          {
-            /*
-            LONG       blockPrev, blockNext;
-            SHORT      keyPrev, keyNext;
-            blockPrev = pPage->TagParent->blockPrev;
-            blockNext = pPage->TagParent->blockNext;
-            keyPrev = pPage->TagParent->keyPrev;
-            keyNext = pPage->TagParent->keyNext;
-
-            if( pPage->CurKey > 0 )
-            {
-               pPage->TagParent->blockPrev = pPage->Page;
-               pPage->TagParent->keyPrev = pPage->CurKey - 1;
-            }
-            if( pPage->CurKey < pPage->uiKeys )
-            {
-               pPage->TagParent->blockNext = pPage->Page;
-               pPage->TagParent->keyNext = pPage->CurKey;
-            }
-            */
             kChild = hb_ntxTagFindCurrentKey( hb_ntxPageLoad(
                      pTag->Owner,p->page ), pKey, bExact, lSeek );
             if( k != 0 || kChild == 0 )
                k = kChild;
-            /*
-            if( k > 0 )
-            {
-               pPage->TagParent->blockPrev = blockPrev;
-               pPage->TagParent->blockNext = blockNext;
-               pPage->TagParent->keyPrev = keyPrev;
-               pPage->TagParent->keyNext = keyNext;
-            }
-            */
+
             if( k <= 0 )
             {
                if( ++(pTag->stackLevel) >= pTag->stackDepth )
@@ -2704,6 +2714,7 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
            strcpy( pKey2->key, szBuffer );
            break;
      }
+     pKey2->key[ pTag->KeyLength ] = '\0';
      if( !hb_ntxInTopScope( pTag, pKey2->key ) ||
            !hb_ntxInBottomScope( pTag, pKey2->key ) )
      {
