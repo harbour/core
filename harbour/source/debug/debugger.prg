@@ -79,7 +79,7 @@ procedure AltD( nAction )
       case nAction == nil
            if SET( _SET_DEBUG )
               s_lExit := .f.
-              __dbgEntry( ProcLine( 2 ) )
+              __dbgEntry( ProcLine( 1 ) )
            endif
 
       case nAction == ALTD_DISABLE
@@ -164,6 +164,7 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
                  endif
                  return
               endif
+
               if s_oDebugger:lTrace
                  if s_oDebugger:nTraceLevel < Len( s_oDebugger:aCallStack )
                     return
@@ -171,20 +172,13 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
                     s_oDebugger:lTrace := .f.
                  endif
               endif
+
               if s_oDebugger:lGo
                  s_oDebugger:lGo := ! s_oDebugger:IsBreakPoint( uParam1 )
               endif
-/*  Alexander Kresin removed 21.06.2001
-              if s_oDebugger:lGo
-                 DispBegin()
-                 DispBegin()
-                 s_oDebugger:SaveAppStatus()
-                 s_oDebugger:RestoreAppStatus()
-                 DispEnd()
-                 DispEnd()
-              else
-*/
-              if !s_oDebugger:lGo .or. InvokeDebug()
+
+              if ! s_oDebugger:lGo .or. InvokeDebug() .or. ;
+                 ProcName( 1 ) == "ALTD"  // debugger invoked from AltD( 1 )
                  s_oDebugger:lGo := .F.
                  s_oDebugger:SaveAppStatus()
                  s_oDebugger:GoToLine( uParam1 )
