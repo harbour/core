@@ -336,10 +336,11 @@ static void hb_devout( char * fpStr, WORD uiLen )
 
 void hb_setpos( USHORT row, USHORT col )
 {
-   USHORT count;
    #ifdef USE_GTAPI
       hb_gtSetPos( row, col );
    #else
+      USHORT count;
+
       for( count = dev_row; count < row; count++ ) printf("\n");
       if( row > dev_row ) dev_col = 0;
       for( count = dev_col; count < col; count++ ) printf(" ");

@@ -15,22 +15,22 @@ void ReleaseSets (void);
 
 typedef enum
 {
-   SC_NONE = 0,            /* None */
-   SC_NORMAL = 1,          /* Underline */
-   SC_INSERT = 2,          /* Lower half block */
+   SC_NONE     = 0,        /* None */
+   SC_NORMAL   = 1,        /* Underline */
+   SC_INSERT   = 2,        /* Lower half block */
    SC_SPECIAL1 = 3,        /* Full block */
    SC_SPECIAL2 = 4         /* Upper half block */
 } HB_cursor_enum;
 
 typedef enum
 {
-   INKEY_MOVE = 1,         /* Mouse Events */
-   INKEY_LDOWN = 2,        /* Mouse Left Click Down */
-   INKEY_LUP = 4,          /* Mouse Left Click Up */
-   INKEY_RDOWN = 8,        /* Mouse Right Click Down */
-   INKEY_RUP = 16,         /* Mouse Right Click Up */
+   INKEY_MOVE     = 1,     /* Mouse Events */
+   INKEY_LDOWN    = 2,     /* Mouse Left Click Down */
+   INKEY_LUP      = 4,     /* Mouse Left Click Up */
+   INKEY_RDOWN    = 8,     /* Mouse Right Click Down */
+   INKEY_RUP      = 16,    /* Mouse Right Click Up */
    INKEY_KEYBOARD = 128,   /* Keyboard Events */
-   INKEY_ALL = 159         /* All Mouse and Keyboard Events */
+   INKEY_ALL      = 159    /* All Mouse and Keyboard Events */
 } HB_inkey_enum;
 
 typedef enum

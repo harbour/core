@@ -8,9 +8,9 @@
 #include <gtapi.h>
 
 #define _gtInit         hb_gtInit
-#define _gtBox	         hb_gtBox
-#define _gtBoxD	      hb_gtBoxD
-#define _gtBox          hb_gtBoxS
+#define _gtBox          hb_gtBox
+#define _gtBoxD         hb_gtBoxD
+#define _gtBoxS         hb_gtBoxS
 #define _gtColorSelect  hb_gtColorSelect
 #define _gtDispBegin    hb_gtDispBegin
 #define _gtDispCount    hb_gtDispCount

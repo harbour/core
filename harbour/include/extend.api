@@ -3,7 +3,6 @@
 
 #include <extend.h>
 
-#define _param    hb_param
 #define _parc     hb_parc
 #define _parclen  hb_parclen
 #define _pards    hb_pards

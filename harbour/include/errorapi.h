@@ -29,7 +29,7 @@
  *  error codes (returned from _errLaunch())
  */
 
-#define E_BREAK         0xffff
+#define E_BREAK         0xFFFF
 #define E_RETRY         1
 #define E_DEFAULT       0
 

@@ -41,37 +41,37 @@
 
 /* Public interface. These should never change, only be added to. */
 
-void hb_gtInit(void);
-int hb_gtBox(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * fpBoxString);
-int hb_gtBoxD(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight);
-int hb_gtBoxS(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight);
-int hb_gtColorSelect(USHORT uiColorIndex);
-int hb_gtDispBegin(void);
+void   hb_gtInit(void);
+int    hb_gtBox(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * fpBoxString);
+int    hb_gtBoxD(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight);
+int    hb_gtBoxS(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight);
+int    hb_gtColorSelect(USHORT uiColorIndex);
+int    hb_gtDispBegin(void);
 USHORT hb_gtDispCount(void);
-int hb_gtDispEnd(void);
-int hb_gtGetColorStr(char * fpColorString);
-int hb_gtGetCursor(USHORT * uipCursorShape);
-int hb_gtGetPos(USHORT * uipRow, USHORT * uipCol);
-BOOL hb_gtIsColor(void);
+int    hb_gtDispEnd(void);
+int    hb_gtGetColorStr(char * fpColorString);
+int    hb_gtGetCursor(USHORT * uipCursorShape);
+int    hb_gtGetPos(USHORT * uipRow, USHORT * uipCol);
+BOOL   hb_gtIsColor(void);
 USHORT hb_gtMaxCol(void);
 USHORT hb_gtMaxRow(void);
-int hb_gtPostExt(void);
-int hb_gtPreExt(void);
-int hb_gtRectSize(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, USHORT * uipBuffSize);
-int hb_gtRepChar(USHORT uiRow, USHORT uiCol, USHORT uiChar, USHORT uiCount);
-int hb_gtRest(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * vlpScrBuff);
-int hb_gtSave(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * vlpScrBuff);
-int hb_gtScrDim(USHORT * uipHeight, USHORT * uipWidth);
-int hb_gtScroll(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SHORT iRows, SHORT iCols);
-int hb_gtSetBlink(BOOL bBlink);
-int hb_gtSetColorStr(char * fpColorString);
-int hb_gtSetCursor(USHORT uiCursorShape);
-int hb_gtSetMode(USHORT uiRows, USHORT uiCols);
-int hb_gtSetPos(USHORT uiRow, USHORT uiCol);
-int hb_gtSetSnowFlag(BOOL bNoSnow);
-int hb_gtWrite(char * fpStr, USHORT uiLen);
-int hb_gtWriteAt(USHORT uiRow, USHORT uiCol, char * fpStr, USHORT uiLen);
-int hb_gtWriteCon(char * fpStr, USHORT uiLen);
+int    hb_gtPostExt(void);
+int    hb_gtPreExt(void);
+int    hb_gtRectSize(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, USHORT * uipBuffSize);
+int    hb_gtRepChar(USHORT uiRow, USHORT uiCol, USHORT uiChar, USHORT uiCount);
+int    hb_gtRest(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * vlpScrBuff);
+int    hb_gtSave(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * vlpScrBuff);
+int    hb_gtScrDim(USHORT * uipHeight, USHORT * uipWidth);
+int    hb_gtScroll(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SHORT iRows, SHORT iCols);
+int    hb_gtSetBlink(BOOL bBlink);
+int    hb_gtSetColorStr(char * fpColorString);
+int    hb_gtSetCursor(USHORT uiCursorShape);
+int    hb_gtSetMode(USHORT uiRows, USHORT uiCols);
+int    hb_gtSetPos(USHORT uiRow, USHORT uiCol);
+int    hb_gtSetSnowFlag(BOOL bNoSnow);
+int    hb_gtWrite(char * fpStr, USHORT uiLen);
+int    hb_gtWriteAt(USHORT uiRow, USHORT uiCol, char * fpStr, USHORT uiLen);
+int    hb_gtWriteCon(char * fpStr, USHORT uiLen);
 
 /* maximum length of color string */
 #define CLR_STRLEN      64

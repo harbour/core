@@ -37,7 +37,6 @@
 #define WARN_ASSIGN_SUSPECTED    5
 
 void GenError( int, char*, char * );      /* generic parsing error management function */
-
 void GenWarning( int, char*, char * );      /* generic parsing warning management function */
 
 #endif  /* HBERRORS_H_ */

@@ -3,18 +3,18 @@
 
 #include <extend.h>
 
-#define _arrayNew    ArrayNew
-#define _arrayLen    ArrayLen
-#define _arrayGet    ArrayGet
-#define _arrayPut    ArraySet
-#define _arrayResize ArraySize
-#define _arrayGetC   ArrayGetString
-#define _arrayGetCL  ArrayGetStringLen
+#define _arrayNew       hb_arrayNew
+#define _arrayLen       hb_arrayLen
+#define _arrayGet       hb_arrayGet
+#define _arrayPut       hb_arraySet
+#define _arrayResize    hb_arraySize
+#define _arrayGetC      hb_arrayGetString
+#define _arrayGetCL     hb_arrayGetStringLen
 
-#define _evalLaunch   hb_evalLaunch
-#define _evalNew      hb_evalNew
-#define _evalPutParam hb_evalPutParam
-#define _evalRelease  hb_evalRelease
+#define _evalLaunch     hb_evalLaunch
+#define _evalNew        hb_evalNew
+#define _evalPutParam   hb_evalPutParam
+#define _evalRelease    hb_evalRelease
 
 #define _itemArrayGet   hb_itemArrayGet
 #define _itemArrayNew   hb_itemArrayNew

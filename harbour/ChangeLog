@@ -1,3 +1,17 @@
+19990621-00:57 CET Victor Szel <info@szelvesz.hu>
+  * include/*.h
+    Some code beatifying.
+  * include/types.h/_PCOUNT renamed back to PCOUNT
+  + IT_MEMOFLAG and IT_MEMO types added to 
+    include/extend.h and include/types.h
+  * TEST.CH moved from /include to tests/working
+  ! include/gt.api - _gtBox double define fixed.
+  ! include/extend.api - _param removed since it's
+    not standard Clipper.
+  ! include/item.api - Fixed obsolete references
+    to Array*() functions since changed to hb_array*()
+  ! source/rtl/console/hb_setpos() - Fixed one warning.
+
 19990621-00:37 Ryszard Glab <rglab@imid.med.pl>
 * config/dos/watcom.cf
  * changed invocation of 'echo' command to overcome problems with

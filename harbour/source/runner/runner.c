@@ -178,7 +178,7 @@ HARBOUR HB_HB_RUN( void )
             {
                 PushSymbol( pSymRead + ul );
                 PushNil();
-                for( i = 0; i < (_pcount() - 1); i++ )
+                for( i = 0; i < (hb_pcount() - 1); i++ )
                    Push( hb_param( i + 2, IT_ANY ) );
                                                 /* Push other cmdline params*/
                 Do( hb_pcount() - 1 );            /* Run init function        */
@@ -187,7 +187,7 @@ HARBOUR HB_HB_RUN( void )
 
          PushSymbol( pSymRead );
          PushNil();
-         for( i = 0; i < (_pcount() - 1); i++ )
+         for( i = 0; i < (hb_pcount() - 1); i++ )
             Push( hb_param( i + 2, IT_ANY ) );    /* Push other cmdline params*/
          Do( hb_pcount() - 1 );                   /* Run the thing !!!        */
 
