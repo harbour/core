@@ -1246,3 +1246,13 @@ static HARBOUR hb___msgVirtual( void )
    /* hb_ret(); */ /* NOTE: It's safe to comment this out */
    ;
 }
+
+/* to be used from Classes ERROR HANDLER method */
+HARBOUR HB___GETMESSAGE()
+{
+   PHB_ITEM pBase = hb_stack.pBase;
+
+   pBase = hb_stack.pItems + pBase->item.asSymbol.stackbase;
+
+   hb_retc( pBase->item.asSymbol.value->szName );
+}

@@ -1,3 +1,10 @@
+19991215-12:32 GMT+1 Antonio Linares <alinares@fivetech.com>
+  * source/rtl/classes.c
+    + Added a new function __GetMessage() to retrieve the message
+      name from a Class error handler.
+  * tests/testcls.prg
+    * enhanced showing the use of __GetMessge()
+
 19991215-12:09 GMT+1 Antonio Linares <alinares@fivetech.com>
   + added common.b32 provided by Jose Lalin
   * tests/bld_b32.bat
