@@ -201,14 +201,14 @@ int main( int argc, char * argv[] )
    {
       PHB_DYNS pDynSym = hb_dynsymFind( "_APPMAIN" );
 
-      if( pDynSym )
+      if( pDynSym && pDynSym->pSymbol->pFunPtr )
          s_pSymStart = pDynSym->pSymbol;
 #ifdef HARBOUR_START_PROCEDURE
       else
       {
          pDynSym = hb_dynsymFind( HARBOUR_START_PROCEDURE );
 
-         if( pDynSym )
+         if( pDynSym && pDynSym->pSymbol->pFunPtr )
             s_pSymStart = pDynSym->pSymbol;
          else
             hb_errInternal( 9999, "Can\'t locate the starting procedure: \'%s\'", HARBOUR_START_PROCEDURE, NULL );
