@@ -1,3 +1,7 @@
+2001-11-21 16:40 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * source/rdd/dbfcdx/dbfcdx1.c
+     ! fixed eof() bug
+
 2001-11-21 12:31 GMT Dave Pearson <davep@davep.org>
    * source/rdd/dbcmd.c
      - Removed (using "#if 0...") hb_waNull().
