@@ -7,6 +7,8 @@
          hb_fsWrite() call will fail. In CA-Clipper hb_fsSeek() will fail,
          the pointer will not be moved, and thus the hb_fsWrite() call will
          successfully write the buffer the current file position. [vszel]
+
+   This has been corrected by ptucker
  */
 
 #include <ctype.h>

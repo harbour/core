@@ -3,9 +3,14 @@
      * hb_fsDelete and hb_fsRename now return int
    * source/rtl/filesys.c
      hb_fsDelete(), hb_fsRename
-     now Clipper compatible (so far, only tested with msvc)
+     now Clipper compatible (only tested so far with msvc)
      combined _some_ #if posix and msc_ver statements since posix version
      works with msvc
+    * hb_fsClose - Invalid memory block error mapped to Invalid Handle
+    * hb_fsSeek Now Clipper compatible with -1 and FS_SET
+      Unknown Command error now mapped to Seek Error
+    * HB_FSERASE error is now 'invalid path' on bad parameter
+    * HB_FSRENAME error is now 'file not found' on bad parameter
 
 19990829-13:30 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/include/set.h
