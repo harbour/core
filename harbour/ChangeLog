@@ -1,3 +1,11 @@
+19990726-14:30 CET Victor Szel <info@szelvesz.hu>
+   + source/rdd/makefile - Added new files.
+   * tests/working/rtl_test.prg - make use of the preproc
+     and thus it's more easy to expand it, and fewer human
+     errors can be made. We could use this idea in several
+     other test programs, too.
+   ! tests/working/transfrm.prg - Buggy test line fixed.
+
 19990726-20:32 GMT+1 Bruno Cantero <bruno@issnet.net>
    * source/rdd/dbfntx1.c
      Fixed bug under msvc
