@@ -7,6 +7,14 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2002-05-15 23:43 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * contrib/rdd_ads/ads1.c
+      *  Fixed adsSeek for non-ADS filter conditions.
+         If a filter is set that is not valid for ADS, we need to skip
+         off of any invalid records (IOW, filter at the Harbour level if ADS
+         can't because the filter has UDFs or PUBLICVAR references).
+
 2002-05-15 22:25 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
   * contrib/mysql/mysql.c
     ! Fixed an bug on SQLFETCHR() when the select command is used with an empty table
@@ -30,7 +38,7 @@
       ANSI standard function.
 
 2002-05-14 16:10 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
-  * contrib/mysql/makefile renamed to Makefile. Needed to build 
+  * contrib/mysql/makefile renamed to Makefile. Needed to build
     library on Linux.
 
 2002-05-13 13:10 UTC-0300 Walter Negro <anegro@overnet.com.ar>
@@ -86,8 +94,8 @@
   +contrib/hgf/gtk/mainlgtk.c
   *contrib/hgf/gtk/Makefile
     Moved mainlgtk.c from source/vm to contrib/hgf/gtk and
-    updated Makefile to include it in library. 
-        
+    updated Makefile to include it in library.
+
 2002-05-06 13:50 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   ! source/compiler/harbour.c
     ! Commented out the parameter checking entries for QOUT and QQOUT,
@@ -116,7 +124,7 @@
    * contrib/libct/tests/Makefile
      * fix of a bug in RANGEREPL() and RANGEREM(): return string too long,
        reported by Guenther Steiner <byte-one@aon.at>
-	
+
 
 2002-05-04 17:47 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * source\rdd\dbcmd.c
@@ -137,31 +145,15 @@
    + contrib/libct/color.prg
      + COLORTON()
      + NTOCOLOR() by Walter Negro <anegro@overnet.com.ar>
-     STANDARD(),ENHANCED(),UNSELECTED() by Viktor Szakats <viktor.szakats@syenar.hu> 
-       pasted from CTMISC.PRG and removed there 
-                                           
+     STANDARD(),ENHANCED(),UNSELECTED() by Viktor Szakats <viktor.szakats@syenar.hu>
+       pasted from CTMISC.PRG and removed there
+
    + contrib/libct/screen1.c
      + SCREENATTR() by Walter Negro <anegro@overnet.com.ar>
 
    + contrib/libct/screen2.prg
-     SCREENMIX() by Viktor Szakats <viktor.szakats@searchpath()
-    *makefile.bc
-    hb_slex.vc
-    makefile.vc
-    source/compiler/makefile
-    ! Updated
-
-2001-07-23 22:35 UTC+0100 Lubos Janica <janicalubos@yahoo.com>
-   * classes.c
-       Fixed function __CLSNEW.
-       Changed variable USHORT uiSize to ULONG ulSize
-       This fix random GPFs in function hb_clsDictRealloc by creating
-       classes.
-
-2001-07-23 21:29 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
-
-   * source/rtl/tbrowse.prg
-     + TOFIX added, about missing AutoLite support (neede9:26 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+     SCREENMIX() by Viktor Szakats <viktor.szakats@syenar.hu>
+       pasted from CTMISC.PRG and removed there
 
    + contrib/libct/alt/ctcolton.c
      original implementation of COLORTON() in C by Viktor Szakats <viktor.szakats@syenar.hu>

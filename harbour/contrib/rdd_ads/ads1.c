@@ -575,6 +575,18 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
    }
    AdsIsFound( pArea->hTable, (UNSIGNED16 *)&(pArea->fFound) );
    hb_adsCheckBofEof( pArea );
+   /* -----------------5/1/2002 3:04AM BH ------------------
+      If a filter is set that is not valid for ADS, we need to skip
+      off of any invalid records (IOW, filter at the Harbour level if ADS can't
+      because the filter has UDFs or PUBLICVAR references).
+      We could avoid calling this if we had a static set to know if the current
+      filter is not valid for ADS.
+    --------------------------------------------------*/
+   if( pArea->dbfi.itmCobExpr )
+   {
+      return SUPER_SKIPFILTER( (AREAP)pArea, 1 );
+   }
+
    return SUCCESS;
 }
 
@@ -726,7 +738,7 @@ static ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
       switch( iData )
       {
          case 'C':
-            if( strlen(szFieldType) == 1 || 
+            if( strlen(szFieldType) == 1 ||
                    !hb_stricmp( szFieldType,"char" ) )
             {
                pFieldInfo.uiType = HB_IT_STRING;
@@ -755,7 +767,7 @@ static ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
             break;
 
          case 'D':
-            if( strlen(szFieldType) == 1 || 
+            if( strlen(szFieldType) == 1 ||
                    !hb_stricmp( szFieldType,"date" ) )
             {
                pFieldInfo.uiType = HB_IT_DATE;
