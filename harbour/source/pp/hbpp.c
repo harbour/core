@@ -59,15 +59,16 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
+
+#include "hbpp.h"
+#include "hberrors.h"
+#include "compiler.h"
+
 #if defined( OS_UNIX_COMPATIBLE )
    #include <sys/timeb.h>
 #else
    #include <sys\timeb.h>
 #endif
-
-#include "hbpp.h"
-#include "hberrors.h"
-#include "compiler.h"
 
 static COMMANDS * AddCommand( char * );                  /* Add new #command to an array  */
 static COMMANDS * AddTranslate( char * );                /* Add new #translate to an array  */

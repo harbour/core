@@ -93,7 +93,7 @@ PROCEDURE __TYPEFILE( cFile, lPrint )
       oErr:tries       := ++nRetries
       xRecover := Eval( ErrorBlock(), oErr )
       IF ISLOGICAL( xRecover ) .and. !xRecover      // user select "Default"
-         RETURN NIL
+         RETURN
       ENDIF
    ENDDO
 
