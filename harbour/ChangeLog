@@ -8,16 +8,25 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-08-29 07:03 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+   * source/vm/hvm.c
+     ! Fix implemented fix for -0.0 on hb_vmPushDouble() as proposed by
+       Alejandro de Garate <alex_degarate@hotmail.com>, and on hb_PushDoubleConst()
+       (I guess this place may be a source for such bug too).
+
+   This fix should solve the bug described by Don Lowenstein regarding -0.0 result
+   <Don.Lowenstein@laapc.com>.
+
 2003-08-24 14:30 UTC+0200 Tomaz Zupan <tomaz.zupan@orpo.si>
    * utils/hbdoc/genhtm.prg
-     * removed trailing EOL from category name, because category is also used 
+     * removed trailing EOL from category name, because category is also used
        as file name.
 
 2003-08-23 13:20 UTC+0200 Tomaz Zupan <tomaz.zupan@orpo.si>
    * utils/hbdoc/ffile1.prg
-     ! fixed end of line handling now it works on platforma other than windows 
+     ! fixed end of line handling now it works on platforma other than windows
    * utils/hbdoc/genhtm.prg
-     ! fixed getitem function (in certain situation it returned NIL instead 
+     ! fixed getitem function (in certain situation it returned NIL instead
        of logical value and prevented it to try access array beyond its bounds)
      * Changed backslashes into slashes (\ -> /)
    * utils/hbdoc/hbdoc.prg
