@@ -33,35 +33,44 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Jon Berg <jmberg@pnh10.med.navy.mil>
+ *    DateTime()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
 #include <ctype.h>
 #include <time.h>
+
 #include "hbapi.h"
-#include "hbapierr.h"
 #include "hbapiitm.h"
 #include "hbapilng.h"
 #include "hbdate.h"
 
-static int hb__daysinmonth[ 12 ] =
+static int s_daysinmonth[ 12 ] =
 { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
-int hb_isleapyear( long lYear )
+BOOL hb_isleapyear( long lYear )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_isleapyear(%ld)", lYear));
 
-   return (( lYear % 4 == 0 && lYear % 100 != 0 ) || lYear % 400 == 0 )?1:0;
+   return ( lYear % 4 == 0 && lYear % 100 != 0 ) || ( lYear % 400 == 0 );
 }
 
 long hb_daysinmonth( long lYear, long lMonth )
 {
-   int i;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_daysinmonth(%ld, %ld)", lYear, lMonth));
 
-   i = hb_isleapyear( lYear );
    if( lMonth > 0 && lMonth < 13 )
-     return hb__daysinmonth[ lMonth-1 ] + ((i&&lMonth == 2)?1:0);
-
-   return 0;
+      return s_daysinmonth[ lMonth - 1 ] + 
+             ( ( lMonth == 2 && hb_isleapyear( lYear ) ) ? 1 : 0 );
+   else
+      return 0;
 }
 
 long hb_doy( long lYear, long lMonth, long lDay )
@@ -73,9 +82,8 @@ long hb_doy( long lYear, long lMonth, long lDay )
 
    for( i = 1; i < lMonth; i++ )
       iDoy += hb_daysinmonth( lYear, i );
-   iDoy += lDay;
 
-   return iDoy;
+   return iDoy + lDay;
 }
 
 long hb_wom( long lYear, long lMonth, long lDay )
@@ -86,7 +94,7 @@ long hb_wom( long lYear, long lMonth, long lDay )
 
    iWom = lDay + hb_dateDOW( lYear, lMonth, 1 ) - 1;
    if( iWom > 0 )
-      return ( iWom - hb_dateDOW( lYear, lMonth, lDay ) ) / 7 + 1 ;
+      return ( iWom - hb_dateDOW( lYear, lMonth, lDay ) ) / 7 + 1;
    else
       return 0;
 }
@@ -98,11 +106,11 @@ long hb_woy( long lYear, long lMonth, long lDay, BOOL bISO )
    HB_TRACE(HB_TR_DEBUG, ("hb_woy(%ld, %ld, %ld, %d)", lYear, lMonth, lDay, (int) bISO));
 
    lDay = hb_doy( lYear, lMonth, lDay );
-   n = ( ( ( 1 - (bISO ? 1 : 0) ) % 7 ) ) - 1;
-   lDay += (n>0)?1:0;
+   n = ( ( ( 1 - ( bISO ? 1 : 0 ) ) % 7 ) ) - 1;
+   lDay += ( n > 0 ) ? 1 : 0;
    iWeek = lDay / 7;
    if( bISO )
-      iWeek += (n<4)?1:0;
+      iWeek += ( n < 4 ) ? 1 : 0;
    else
       ++iWeek;
 
@@ -112,58 +120,54 @@ long hb_woy( long lYear, long lMonth, long lDay, BOOL bISO )
 HB_FUNC( AMONTHS )
 {
    PHB_ITEM pReturn = hb_itemArrayNew( 12 );    /* Create array */
-   PHB_ITEM pString;
    int i;
 
    for( i = 0; i < 12; i++ )
    {
-      pString = hb_itemNew( NULL );
-      hb_itemPutC( pString, ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + i ) );
+      PHB_ITEM pString = hb_itemPutC( NULL, ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + i ) );
       hb_itemArrayPut( pReturn, i+1, pString );
-      hb_itemRelease ( pString );
+      hb_itemRelease( pString );
    }
-   hb_itemReturn ( pReturn );
+   hb_itemReturn( pReturn );
    hb_itemRelease( pReturn );
 }
 
 HB_FUNC( ADAYS )
 {
    PHB_ITEM pReturn = hb_itemArrayNew( 7 );    /* Create array */
-   PHB_ITEM pString;
    int i;
 
    for( i = 0; i < 7; i++ )
    {
-      pString = hb_itemNew( NULL );
-      hb_itemPutC( pString, ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_DAY +  i ) );
-      hb_itemArrayPut( pReturn, i+1, pString );
-      hb_itemRelease ( pString );
+      PHB_ITEM pString = hb_itemPutC( NULL, ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_DAY + i ) );
+      hb_itemArrayPut( pReturn, i + 1, pString );
+      hb_itemRelease( pString );
    }
-   hb_itemReturn ( pReturn );
+   hb_itemReturn( pReturn );
    hb_itemRelease( pReturn );
 }
 
 HB_FUNC( ISLEAPYEAR )
 {
-   if( ISDATE( 1 ) )
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
+
+   if( pDate )
    {
-      PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
       long lYear, lMonth, lDay;
 
       hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
       hb_retl( hb_isleapyear( lYear ) );
    }
    else
-   {
-      hb_errRT_TOOLS(EG_ARG, 4001, NULL, "ISLEAPYEAR");
-   }
+      hb_retl( FALSE );
 }
 
 HB_FUNC( DAYSINMONTH )
 {
-   if( ISDATE( 1 ) )
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
+
+   if( pDate )
    {
-      PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
       long lYear, lMonth, lDay;
 
       hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
@@ -175,42 +179,40 @@ HB_FUNC( DAYSINMONTH )
 
 HB_FUNC( EOM )
 {
-   if( ISDATE( 1 ) )
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
+
+   if( pDate )
    {
-      PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
       long lYear, lMonth, lDay;
-      char szDateFormat[ 9 ];
 
       hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
-      lDay = hb_daysinmonth( lYear, lMonth );
-      sprintf( szDateFormat, "%04i%02i%02i", (int) lYear, (int) lMonth, (int) lDay );
-      hb_retds( szDateFormat );
+      hb_retd( lYear, lMonth, hb_daysinmonth( lYear, lMonth ) );
    }
    else
-      hb_retds( "" );
+      hb_retdl( 0 );
 }
 
 HB_FUNC( BOM )
 {
-   if( ISDATE( 1 ) )
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
+
+   if( pDate )
    {
-      PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
       long lYear, lMonth, lDay;
-      char szDateFormat[ 9 ];
 
       hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
-      sprintf( szDateFormat, "%04i%02i%02i", (int) lYear, (int) lMonth, 1 );
-      hb_retds( szDateFormat );
+      hb_retd( lYear, lMonth, 1 );
    }
    else
-      hb_retds( "" );
+      hb_retdl( 0 );
 }
 
 HB_FUNC( WOM )
 {
-   if( ISDATE( 1 ) )
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
+
+   if( pDate )
    {
-      PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
       long lYear, lMonth, lDay;
 
       hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
@@ -222,9 +224,10 @@ HB_FUNC( WOM )
 
 HB_FUNC( DOY )
 {
-   if( ISDATE( 1 ) )
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
+
+   if( pDate )
    {
-      PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
       long lYear, lMonth, lDay;
 
       hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
@@ -238,9 +241,10 @@ HB_FUNC( DOY )
 
 HB_FUNC( WOY )
 {
-   if( ISDATE( 1 ) )
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
+
+   if( pDate )
    {
-      PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
       long lYear, lMonth, lDay;
 
       hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
@@ -252,46 +256,39 @@ HB_FUNC( WOY )
 
 HB_FUNC( EOY )
 {
-   if( ISDATE( 1 ) )
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
+
+   if( pDate )
    {
-      PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
       long lYear, lMonth, lDay;
-      char szDateFormat[ 9 ];
 
       hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
-      sprintf( szDateFormat, "%04i%02i%02i", (int) lYear, 12, 31 );
-      hb_retds( szDateFormat );
+      hb_retd( lYear, 12, 31 );
    }
    else
-      hb_retds( "" );
+      hb_retdl( 0 );
 }
 
 HB_FUNC( BOY )
 {
-   if( ISDATE( 1 ) )
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
+
+   if( pDate )
    {
-      PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
       long lYear, lMonth, lDay;
-      char szDateFormat[ 9 ];
 
       hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
-      sprintf( szDateFormat, "%04i%02i%02i", (int) lYear, 1, 1 );
-      hb_retds( szDateFormat );
+      hb_retd( lYear, 1, 1 );
    }
    else
-      hb_retds( "" );
+      hb_retdl( 0 );
 }
 
 HB_FUNC( DATETIME )
 {
    time_t current_time;
-   char * szResult = ( char * ) hb_xgrab( 26 );
 
    time( &current_time );
 
-   szResult = strcpy( szResult, ctime( &current_time ) );
-
-   hb_retc( szResult );
-   hb_xfree( szResult );
+   hb_retc( ctime( &current_time ) );
 }
-

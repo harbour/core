@@ -54,21 +54,13 @@
  *
  */
 
-#define HB_OS_WIN_32_USED
+#include <ctype.h>
 
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
 #include "hbset.h"
 #include "hbdate.h"
-
-#include <ctype.h>
-#include <time.h>
-#if defined( OS_UNIX_COMPATIBLE )
-   #include <sys/timeb.h>
-#else
-   #include <sys\timeb.h>
-#endif
 
 HB_FUNC( CTOD )
 {
@@ -300,45 +292,15 @@ HB_FUNC( DAY )
 HB_FUNC( TIME )
 {
    char szResult[ 9 ];
-
-#if defined(HB_OS_WIN_32)
-   {
-      SYSTEMTIME st;
-      GetLocalTime( &st );
-      sprintf( szResult, "%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond );
-   }
-#else
-   {
-      time_t t;
-      struct tm * oTime;
-
-      time( &t );
-      oTime = localtime( &t );
-      sprintf( szResult, "%02d:%02d:%02d", oTime->tm_hour, oTime->tm_min, oTime->tm_sec );
-   }
-#endif
-
+   hb_dateTimeStr( szResult );
    hb_retclen( szResult, 8 );
 }
 
 HB_FUNC( DATE )
 {
-#if defined(HB_OS_WIN_32)
-   {
-      SYSTEMTIME st;
-      GetLocalTime( &st );
-      hb_retd( st.wYear, st.wMonth, st.wDay );
-   }
-#else
-   {
-      time_t t;
-      struct tm * oTime;
-
-      time( &t );
-      oTime = localtime( &t );
-      hb_retd( oTime->tm_year + 1900, oTime->tm_mon + 1, oTime->tm_mday );
-   }
-#endif
+   long lYear, lMonth, lDay;
+   hb_dateToday( &lYear, &lMonth, &lDay );
+   hb_retd( lYear, lMonth, lDay );
 }
 
 HB_FUNC( DOW )

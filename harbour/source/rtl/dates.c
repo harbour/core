@@ -53,7 +53,15 @@
  *
  */
 
+#define HB_OS_WIN_32_USED
+
 #include <ctype.h>
+#include <time.h>
+#if defined( OS_UNIX_COMPATIBLE )
+   #include <sys/timeb.h>
+#else
+   #include <sys\timeb.h>
+#endif
 
 #include "hbapi.h"
 #include "hbdate.h"
@@ -373,3 +381,50 @@ long hb_dateDOW( long lYear, long lMonth, long lDay )
             lYear + lYear / 4 - lYear / 100 + lYear / 400 + 6 ) % 7 + 1;
 }
 
+void hb_dateToday( long * plYear, long * plMonth, long * plDay )
+{
+#if defined(HB_OS_WIN_32)
+   {
+      SYSTEMTIME st;
+      GetLocalTime( &st );
+
+      *plYear  = st.wYear;
+      *plMonth = st.wMonth;
+      *plDay   = st.wDay;
+   }
+#else
+   {
+      time_t t;
+      struct tm * oTime;
+
+      time( &t );
+      oTime = localtime( &t );
+
+      *plYear  = oTime->tm_year + 1900;
+      *plMonth = oTime->tm_mon + 1;
+      *plDay   = oTime->tm_mday;
+   }
+#endif
+}
+
+/* NOTE: The passed buffer must be at least 9 chars long */
+
+void hb_dateTimeStr( char * pszTime )
+{
+#if defined(HB_OS_WIN_32)
+   {
+      SYSTEMTIME st;
+      GetLocalTime( &st );
+      sprintf( pszTime, "%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond );
+   }
+#else
+   {
+      time_t t;
+      struct tm * oTime;
+
+      time( &t );
+      oTime = localtime( &t );
+      sprintf( pszTime, "%02d:%02d:%02d", oTime->tm_hour, oTime->tm_min, oTime->tm_sec );
+   }
+#endif
+}

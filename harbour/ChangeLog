@@ -1,3 +1,35 @@
+2000-05-31 13:53 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbapi.h
+   * source/vm/extend.c
+     + Added hb_retl() Extend API function.
+     * HB_EXTEND_API_MACROS renamed to HB_API_MACROS
+
+   * include/hbdate.h 
+   * source/rtl/dates.c
+   * source/rtl/dateshb.c 
+     + Added hb_dateToday() and hb_dateTimeStr() functions.
+
+   * source/rtl/trim.c
+     % Some minor optimizations.
+
+   * source/vm/classes.c 
+     ! Fixed varning, adjusted variable scopes.
+
+   * contrib/libmisc/dates2.c
+     % Some fixes, optimizations and copyright added.
+
+   From Jose Lalin:
+
+   * contrib/libmisc/dates2.c
+     - removed all occurences of:
+       char * szDateFormat[]
+       sprintf( szDateFormat, "%04i%02i%02i", (int) lYear, (int) lMonth, (int) lDay );
+       hb_retds( szDateFormat );
+     + replaced with:
+       hb_retd( lYear, lMonth, lDay );
+     * This will speed up things a bit.
+
 2000-05-30 10:30 UTC+0300 Chen Kedem <niki@actcom.co.il>
 
    * doc/en/objfunc.txt

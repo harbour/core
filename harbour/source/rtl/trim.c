@@ -96,9 +96,9 @@ HB_FUNC( LTRIM )
    }
 }
 
-/* NOTE: The second parameter is a Harbour extension [vszakats] */
-
 /* trims trailing spaces from a string */
+
+/* NOTE: The second parameter is a Harbour extension. */
 
 HB_FUNC( RTRIM )
 {
@@ -107,9 +107,9 @@ HB_FUNC( RTRIM )
    if( pText )
    {
       char * pszText = hb_itemGetCPtr( pText );
-      BOOL bAnySpace = ( ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
 
-      hb_retclen( pszText, hb_strRTrimLen( pszText, hb_itemGetCLen( pText ), bAnySpace ) );
+      hb_retclen( pszText, hb_strRTrimLen( pszText, hb_itemGetCLen( pText ),
+         ISLOG( 2 ) ? hb_parl( 2 ) : FALSE ) );
    }
    else
    {
@@ -124,29 +124,28 @@ HB_FUNC( RTRIM )
    }
 }
 
-/* NOTE: The second parameter is a Harbour extension [vszakats] */
-
 /* synonymn for RTRIM */
 HB_FUNC( TRIM )
 {
    HB_FUNCNAME( RTRIM )();
 }
 
-/* NOTE: The second parameter is a Harbour extension [vszakats] */
-
 /* trims leading and trailing spaces from a string */
+
+/* NOTE: The second parameter is a Harbour extension. */
 
 HB_FUNC( ALLTRIM )
 {
-   if( ISCHAR( 1 ) )
+   PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
+
+   if( pText )
    {
-      char * szText = hb_parc( 1 );
-      BOOL bAnySpace = ( ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
-      ULONG ulLen = hb_strRTrimLen( szText, hb_parclen( 1 ), bAnySpace );
+      char * pszText = hb_itemGetCPtr( pText );
+      ULONG ulLen = hb_strRTrimLen( pszText, hb_itemGetCLen( pText ),
+         ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
 
-      szText = hb_strLTrim( szText, &ulLen );
-
-      hb_retclen( szText, ulLen );
+      hb_strLTrim( pszText, &ulLen );
+      hb_retclen( pszText, ulLen );
    }
    else
 #ifdef HB_COMPAT_C53

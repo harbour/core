@@ -880,6 +880,7 @@ HB_FUNC( __CLSNEW )
 
             /* SharedDatas */
             if( pSprCls->uiDatasShared )
+            {
                if( pNewCls->pSharedDatas )
                {
                   pNewCls->pSharedDatas = ( PHB_ITEM * ) hb_xrealloc( pNewCls->pSharedDatas, pSprCls->uiDatasShared * sizeof( PHB_ITEM ) );
@@ -894,6 +895,7 @@ HB_FUNC( __CLSNEW )
                   pNewCls->uiDatasShared = pSprCls->uiDatasShared;
                   hb_xmemcpy( pNewCls->pSharedDatas, pSprCls->pSharedDatas, sizeof( PHB_ITEM ) * pSprCls->uiDatasShared );
                }
+            }
 
             /* Inlines */
             pClsAnyTmp = hb_arrayClone( pSprCls->pInlines );
@@ -1501,22 +1503,20 @@ HB_FUNC( __CLSPARENT )
 HB_FUNC( __SENDER )
 {
    PHB_ITEM pBase = hb_stack.pBase;
-   PHB_ITEM oReturn ;
-   PHB_ITEM oSender;
+   PHB_ITEM oSender = NULL;
    USHORT iLevel = 3;
-   char * szNameSender;
 
    while( iLevel > 0 && pBase != hb_stack.pItems )
    {
       pBase = hb_stack.pItems + pBase->item.asSymbol.stackbase;
       oSender = pBase + 1;
 
-      if( ( iLevel-- == 2 && ( oSender )->type != HB_IT_BLOCK ) || ( oSender )->type == HB_IT_NIL )
+      if( ( iLevel-- == 2 && oSender->type != HB_IT_BLOCK ) || oSender->type == HB_IT_NIL )
          break;
    }
 
-   if( iLevel == 0 && ( oSender )->type == HB_IT_OBJECT )
-      hb_itemCopy(&hb_stack.Return, oSender);
+   if( iLevel == 0 && oSender && oSender->type == HB_IT_OBJECT )
+      hb_itemReturn( oSender );
 }
 
 /* ================================================ */
@@ -1758,10 +1758,10 @@ static HARBOUR hb___msgSuper( void )
 static HARBOUR hb___msgSetClsData( void )
 {
    USHORT uiClass = ( hb_stack.pBase + 1 )->item.asArray.value->uiClass;
-   PHB_ITEM pReturn = hb_stack.pBase + 2;
 
    if( uiClass && uiClass <= s_uiClasses )
    {
+      PHB_ITEM pReturn = hb_stack.pBase + 2;
       hb_arraySet( s_pClasses[ uiClass - 1 ].pClassDatas,
                    s_pMethod->uiData, pReturn );
       hb_itemReturn( pReturn );
@@ -1776,10 +1776,10 @@ static HARBOUR hb___msgSetClsData( void )
 static HARBOUR hb___msgSetShrData( void )
 {
    USHORT uiClass = ( hb_stack.pBase + 1 )->item.asArray.value->uiClass;
-   PHB_ITEM pReturn = hb_stack.pBase + 2;
 
    if( uiClass && uiClass <= s_uiClasses )
    {
+      PHB_ITEM pReturn = hb_stack.pBase + 2;
       hb_itemCopy( *( s_pClasses[ uiClass - 1 ].pSharedDatas + s_pMethod->uiDataShared ), pReturn );
       hb_itemReturn( pReturn );
    }

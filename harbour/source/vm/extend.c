@@ -42,6 +42,7 @@
  *    hb_retnilen()
  *    hb_retnllen()
  *    hb_retndlen()
+ *    hb_retdl()
  *
  * Copyright 2000 Jose Lalin <dezac@corevia.com>
  *    hb_retd()
@@ -474,6 +475,13 @@ void hb_retd( long lYear, long lMonth, long lDay )
    HB_TRACE(HB_TR_DEBUG, ("hb_retd(%04i, %02i, %02i)", lYear, lMonth, lDay));
 
    hb_itemPutD( &hb_stack.Return, lYear, lMonth, lDay );
+}
+
+void hb_retdl( long lJulian )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_retdl(%ld)", lJulian));
+
+   hb_itemPutDL( &hb_stack.Return, lJulian );
 }
 
 void hb_retl( int iLogical )

@@ -269,7 +269,7 @@ extern int      hb_parni( int iParam, ... ); /* retrieve a numeric parameter as 
 extern long     hb_parnl( int iParam, ... ); /* retrieve a numeric parameter as a long */
 extern PHB_ITEM hb_param( int iParam, int iMask ); /* retrieve a generic parameter */
 
-#ifdef HB_EXTEND_API_MACROS
+#ifdef HB_API_MACROS
 
 #include "hbapiitm.h"
 
@@ -281,6 +281,7 @@ extern PHB_ITEM hb_param( int iParam, int iMask ); /* retrieve a generic paramet
 #define hb_retclen( szText, ulLen )          hb_itemPutCL( &hb_stack.Return, szText, ulLen )
 #define hb_retds( szDate )                   hb_itemPutDS( &hb_stack.Return, szDate )
 #define hb_retd( lYear, lMonth, lDay )       hb_itemPutD( &hb_stack.Return, lYear, lMonth, lDay )
+#define hb_retdl( lJulian )                  hb_itemPutDL( &hb_stack.Return, lJulian )
 #define hb_retl( iLogical )                  hb_itemPutL( &hb_stack.Return, iLogical ? TRUE : FALSE )
 #define hb_retnd( dNumber )                  hb_itemPutND( &hb_stack.Return, dNumber )
 #define hb_retni( iNumber )                  hb_itemPutNI( &hb_stack.Return, iNumber )
@@ -299,6 +300,7 @@ extern void     hb_retc( char * szText );   /* returns a string */
 extern void     hb_retclen( char * szText, ULONG ulLen ); /* returns a string with a specific length */
 extern void     hb_retds( char * szDate );  /* returns a date, must use yyyymmdd format */
 extern void     hb_retd( long lYear, long lMonth, long lDay ); /* returns a date */
+extern void     hb_retdl( long lJulian );   /* returns a long value as a julian date */
 extern void     hb_retl( int iTrueFalse );  /* returns a logical integer */
 extern void     hb_retnd( double dNumber ); /* returns a double */
 extern void     hb_retni( int iNumber );    /* returns a integer number */

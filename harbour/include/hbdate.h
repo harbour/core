@@ -43,6 +43,8 @@ extern "C" {
 #endif
 
 extern double   hb_dateSeconds( void );
+extern void     hb_dateToday( long * plYear, long * plMonth, long * plDay );
+extern void     hb_dateTimeStr( char * pszTime );
 extern char *   hb_dateCMonth( int iMonth );
 extern char *   hb_dateCDOW( int iDay );
 extern long     hb_dateDOW( long lYear, long lMonth, long lDay );
