@@ -1,3 +1,11 @@
+20000207-22:13 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * makefile.b32
+     ngdoc/* -> utils/hbdoc/*
+     * NGDOC directory renamed a moved to the right place.
+   * utils/hbdoc/hbdoc.prg
+     * Help screen formatted and corrected to be in sync with other Harbour
+       command-line utilities.
+
 20000207-20:40 GMT+1 Victor Szakats <info@szelvesz.hu>
    - common.b32
      ft_helpc.b32

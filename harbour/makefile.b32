@@ -26,7 +26,7 @@ OBJ_DIR           = obj
 LIB_DIR           = lib\b32
 BIN_DIR           = bin
 REGRESS_DIR       = tests\regress
-HBDOC_DIR         = ngdoc
+HBDOC_DIR         = utils\hbdoc
 
 COMMON_LIB        = $(LIB_DIR)\common.lib
 COMMON_LIB_OBJS   = $(OBJ_DIR)\hbfsapi.obj \
