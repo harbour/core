@@ -53,10 +53,12 @@
 
 #define HB_OS_WIN_32_USED
 #include <hbapi.h>
+#include <hbapifs.h>
 
-#if defined(HB_OS_DOS)
-static struct ffblk fsOldFiles;
+#if defined( HB_OS_DOS ) && !defined( __WATCOMC__ )
+   static struct ffblk fsOldFiles;
 #endif
+
 #if defined(HB_OS_OS2) && defined(__GNUC__)
 
    #include "hb_io.h"
@@ -71,11 +73,17 @@ static struct ffblk fsOldFiles;
 #elif defined(HB_OS_DOS) && !defined(__RSX32__)
 
    #if defined(__DJGPP__)
+      #include <dpmi.h>
+      #include <go32.h>
+      #include <sys/farptr.h>
       #include <sys/param.h>
    #endif
       #include "hb_io.h"
       #include "dos.h"
+    #if defined( __WATCOMC__ )
+    #else
       #include <dir.h>
+    #endif
 #endif
 #if defined(__GNUC__) && !defined(__MINGW32__)
    #include <sys/types.h>
@@ -84,17 +92,20 @@ static struct ffblk fsOldFiles;
    #include <errno.h>
    #include <dirent.h>
    #include <time.h>
+   #include <utime.h>
    #if !defined(HAVE_POSIX_IO)
       #define HAVE_POSIX_IO
    #endif
 
 #endif
+
 #if (defined(HB_OS_WIN_32) || defined(__MINGW32__)) && !defined(__CYGWIN__)
 static       HANDLE hLastFind;
 static       WIN32_FIND_DATA  Lastff32;
 LPTSTR GetDate(FILETIME *rTime);
 LPTSTR GetTime(FILETIME *rTime);
-#if !defined(_MSC_VER) && !defined(__RSXNT__)
+
+#if !defined( _MSC_VER ) && !defined( __RSXNT__ ) && !defined( __WATCOMC__ )
    #include <dir.h>
 #endif
 #endif
@@ -121,6 +132,7 @@ LPTSTR GetTime(FILETIME *rTime);
    #define FA_VOLCOMP      32768   /* M */
 #endif
 
+#if defined( OS_UNIX_COMPATIBLE ) || defined(HB_OS_OS2)
 static USHORT osToHarbourMask( USHORT usMask )
 {
    USHORT usRetMask;
@@ -167,12 +179,11 @@ static USHORT osToHarbourMask( USHORT usMask )
 
    return usRetMask;
 }
-
+#endif
 
 
 HB_FUNC(FILEATTR)
 {
-
 #if defined(HB_OS_DOS)
    #if defined(__DJGPP__) || defined(__BORLANDC__)
    {
@@ -190,8 +201,8 @@ HB_FUNC(FILEATTR)
                iAttri =  _chmod( szFile, 0 );
             #endif
       hb_retni(iAttri);
-   #endif
    }
+   #endif
 
 #elif defined(HB_OS_WIN_32)
    {
@@ -368,7 +379,7 @@ HB_FUNC(FILESEEK)
          }
       }
    } 
-#elif defined(HB_OS_DOS)
+#elif defined(HB_OS_DOS) && !defined( __WATCOMC__ )
    {
       int iFind;
       char *szFiles;
@@ -470,7 +481,7 @@ HB_FUNC(FILESIZE)
          hb_retnl(dwFileSize);
       }
    }
-#elif defined(HB_OS_DOS)
+#elif defined(HB_OS_DOS) && !defined( __WATCOMC__ )
    {
    int iFind;
    if (hb_pcount() >0)
@@ -581,7 +592,7 @@ HB_FUNC(FILEDATE)
       hb_xfree(szDateString);
    }
 }
-#elif defined(HB_OS_DOS)
+#elif defined(HB_OS_DOS) && !defined( __WATCOMC__ )
 {
    int iFind;
    if (hb_pcount() >0)
@@ -697,7 +708,7 @@ HB_FUNC(FILETIME)
       hb_xfree(szDateString);
    }
 }
-#elif defined(HB_OS_DOS)
+#elif defined(HB_OS_DOS) && !defined( __WATCOMC__ )
 {
    char szTime[7];
    int iFind;
@@ -736,7 +747,7 @@ HB_FUNC(FILETIME)
    struct tm *ft;
    stat(szFile,&sStat   );
    tm_t = sStat.st_mtime;
-
+   ft = localtime( &tm_t );
    sprintf( szTime, "%02d:%02d:%02d",ft->tm_hour, ft->tm_min, ft->tm_sec );
    hb_retc(szTime);
 }

@@ -298,39 +298,28 @@ static void hb_IncString( NTXAREAP pArea, char* s, int slen )
 
 static char * numToStr( PHB_ITEM pItem, char* szBuffer, USHORT length, USHORT dec )
 {
-   if( HB_IS_DOUBLE( pItem ) )
+   char *ptr = szBuffer;
+
+   hb_itemStrBuf( szBuffer, pItem, length, dec );
+
+   while( *ptr == ' ' )
    {
-      if( dec == 0 )
+      *ptr++ = '0';
+   }
+
+   if( *ptr == '-' )
+   {
+      *ptr = '0';
+      szBuffer[0] = ',';
+      for( ptr = &szBuffer[1]; *ptr; ptr++ )
       {
-         if( length > 9 )
-            sprintf( szBuffer, "%0*.0f", length,
-                hb_numRound( hb_itemGetND( pItem ), 0 ) );
-         else
-            sprintf( szBuffer, "%0*li", length,
-                ( LONG ) hb_numRound( hb_itemGetND( pItem ), 0 ) );
-      }
-      else
-         sprintf( szBuffer, "%0*.*f", length,
-                dec, hb_numRound( hb_itemGetND( pItem ),
-                dec ) );
-   }
-   else
-   {
-      if( dec == 0 )
-         sprintf( szBuffer, "%0*li", length, hb_itemGetNL( pItem ) );
-      else
-         sprintf( szBuffer, "%0*.*f", length,
-                dec, hb_itemGetND( pItem ) );
-   }
-   szBuffer[ length ] = 0;
-   if( hb_itemGetND( pItem ) < 0 )
-   {
-      char *ptr = szBuffer;
-      *ptr++ = ',';
-      for( ;*ptr;ptr++ )
          if( *ptr >= '0' && *ptr <= '9' )
+         {
             *ptr = (char) ( 92 - (int)*ptr );
+         }
+      }
    }
+
    return szBuffer;
 }
 
@@ -856,7 +845,7 @@ static void hb_ntxGetCurrentKey( LPTAGINFO pTag, LPKEYINFO pKey )
 static BOOL hb_ntxTagGoToNextKey( LPTAGINFO pTag, BOOL lContinue )
 {
    BOOL lCurrrentKey = FALSE;
-   LPPAGEINFO pPage, pChildPage;
+   LPPAGEINFO pPage = NULL, pChildPage;
    LPNTXITEM p;
 
    /* pTag->blockNext = 0; pTag->keyNext = 0; */
@@ -958,7 +947,7 @@ static BOOL hb_ntxTagGoToNextKey( LPTAGINFO pTag, BOOL lContinue )
 static BOOL hb_ntxTagGoToPrevKey( LPTAGINFO pTag, BOOL lContinue )
 {
    BOOL lCurrrentKey = FALSE;
-   LPPAGEINFO pPage, pChildPage;
+   LPPAGEINFO pPage = NULL, pChildPage;
 
    /* pTag->blockPrev = 0; pTag->keyPrev = 0; */
    if( pTag->CurKeyInfo->Tag && ((ULONG)pTag->CurKeyInfo->Xtra) == pTag->Owner->Owner->ulRecNo )
@@ -1356,7 +1345,7 @@ static void hb_ntxPageFree( LPTAGINFO pTag, BOOL lFull )
 
 static LPPAGEINFO hb_ntxPageNew( LPTAGINFO pTag )
 {
-   LPPAGEINFO pPage;
+   LPPAGEINFO pPage = NULL;
 
    if( pTag->Owner->NextAvail > 0 )
    {
@@ -2148,7 +2137,7 @@ static BOOL hb_ntxGetSortedKey( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, LPSORTI
 {
    char *key1, *key2;
    short int nPage, iPage;
-   int result;
+   int result = 0;
    BOOL fDescend = !pTag->AscendKey;
    USHORT itemLength = sizeof( ULONG ) + pTag->KeyLength;
    LPSORTITEM pKey = *ppKey;
@@ -2278,7 +2267,7 @@ static void hb_ntxBufferSave( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo )
    /* printf( "\nhb_ntxBufferSave - 1 ( maxKeys=%d )",maxKeys ); */
    if( pSortInfo->nSwappages > 1 )
    {
-      BOOL  lKeys;
+      BOOL lKeys = FALSE;
       LPSORTITEM pKeyRoot = (LPSORTITEM) hb_xgrab( pSortInfo->itemLength );
       USHORT pageItemLength = sizeof( ULONG ) + pTag->KeyLength;
       USHORT maxKeysSwapPage = 512/pageItemLength, nRead;
@@ -2338,7 +2327,7 @@ static void hb_ntxBufferSave( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo )
    {
       while( pKey )
       {
-         for( i = 0; ( i < maxKeys  || numKey == pSortInfo->ulKeyCount-1 ) && pKey > 0; i++, numKey++, pKey = pKey->pNext )
+         for( i = 0; ( i < maxKeys  || numKey == pSortInfo->ulKeyCount-1 ) && pKey != 0; i++, numKey++, pKey = pKey->pNext )
          {
             /* printf( "\nhb_ntxBufferSave - 2 ( i=%d maxKeys=%d )",i,maxKeys ); */
             item = (NTXITEM *)( buffer + itemlist->item_offset[i] );
@@ -2438,7 +2427,7 @@ static BOOL hb_ntxReadBuf( NTXAREAP pArea, BYTE* readBuffer, USHORT* numRecinBuf
 static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
 {
 
-   ULONG ulRecNo, ulRecCount, ulKeyNo = 0, lStep = 0, ulRecMax;
+   ULONG ulRecNo = 0, ulRecCount, ulKeyNo = 0, lStep = 0, ulRecMax = 0;
    USHORT uiCurLen;
    char szBuffer[ HB_MAX_DOUBLE_LENGTH + 1 ];
    char * pszTempName = NULL;
@@ -2450,8 +2439,8 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
    NTXSORTINFO sortInfo;
    BYTE* readBuffer;
    USHORT numRecinBuf = 0, nParts = 0;
-   BYTE * pRecordTmp;
-   BOOL fValidBuffer;
+   BYTE * pRecordTmp = NULL;
+   BOOL fValidBuffer = FALSE;
    PHB_CODEPAGE cdpTmp = hb_cdp_page;
 
    ulRecCount = pArea->ulRecCount;

@@ -62,9 +62,7 @@
 #include <math.h>
 #endif
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 #if defined(__WATCOMC__)
    #define HB_MATH_HANDLER
@@ -90,6 +88,11 @@ extern "C" {
    #define exception _exception
 #elif defined(__DJGPP__)
    #define HB_MATH_HANDLER
+#endif
+
+#if !defined(HB_MATH_HANDLER) && defined(__GNUC__) && \
+    ( defined(HB_OS_LINUX) || defined(HB_OS_UNIX) )
+   #define HB_MATH_ERRNO
 #endif
 
 typedef struct _HB_MATH_EXCEPTION
@@ -123,8 +126,6 @@ extern double hb_random_num( void );
 /* include defines from math.ch */
 #include <math.ch>
 
-#if defined(HB_EXTERN_C)
-}
-#endif
+HB_EXTERN_END
 
 #endif /* HB_MATH_H_ */

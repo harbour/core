@@ -380,11 +380,11 @@ static void hb_gt_SortKeyTranslationTable( void )
 {
    int i, j, min, KeyTmp[ 2 ];
 
-   for ( i = 0; i < ( KeyTranslationTableSize - 1 ); i++ )
+   for ( i = 0; i < (int) ( KeyTranslationTableSize - 1 ); i++ )
    {
       min = i;
 
-      for ( j = i + 1; j < KeyTranslationTableSize; j++ )
+      for ( j = i + 1; j < (int) KeyTranslationTableSize; j++ )
       {
          if ( KeyTranslationTable[ j ][ 0 ] < KeyTranslationTable[ min ][ 0 ] )
             min = j;
@@ -445,22 +445,20 @@ static int hb_gt_FindKeyTranslation( int SlangKey )
 
 /* ************************************************************************* */
 
-int hb_gt_SetKeyInKeyTranslationTable( int SlangKey, int ClipKey )
+void hb_gt_SetKeyInKeyTranslationTable( int SlangKey, int ClipKey )
 {
-   int i;
 
    if ( ( SlangKey >= KeyTranslationTable[ 0 ][ 0 ] ) &&
         ( SlangKey <= KeyTranslationTable[ KeyTranslationTableSize - 1 ][ 0 ] ) )
    {
-      for ( i = 0; i < KeyTranslationTableSize; i++ )
+      int i;
+      for ( i = 0; i < (int) KeyTranslationTableSize; i++ )
       {
          if ( SlangKey == KeyTranslationTable[ i ][ 0 ] )
             KeyTranslationTable[ i ][ 1 ] = ClipKey;
             /* we don't break here because SlangKey can be defined more than once */
       }
    }
-
-   return( i < KeyTranslationTableSize );
 }
 
 /* ************************************************************************* */

@@ -158,7 +158,7 @@ HB_FUNC( CTOF )
   {
     pcString = hb_parc( 1 );
 
-    for (i=0; i<sizeof(double); i++)
+    for (i=0; i < (int) sizeof(double); i++)
       xConvert.string[i] = pcString[i];
 
     hb_retnd( xConvert.value );

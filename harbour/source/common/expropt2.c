@@ -82,22 +82,11 @@ HB_EXPR_PTR hb_compExprReduceMod( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
       {
          if( pRight->value.asNum.lVal )
          {
-            double dVal = pLeft->value.asNum.lVal % pRight->value.asNum.lVal;
+            HB_LONG lVal = pLeft->value.asNum.lVal % pRight->value.asNum.lVal;
 
-            if( ( double ) LONG_MIN <= dVal && dVal <= ( double ) LONG_MAX )
-            {
-               pSelf->value.asNum.lVal = ( long ) dVal;
-               pSelf->value.asNum.bDec = 0;
-               pSelf->value.asNum.NumType = HB_ET_LONG;
-            }
-            else
-            {
-               pSelf->value.asNum.dVal = dVal;
-               pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
-               pSelf->value.asNum.bDec = 0;
-               pSelf->value.asNum.NumType = HB_ET_DOUBLE;
-            }
-
+            pSelf->value.asNum.lVal = lVal;
+            pSelf->value.asNum.bDec = 0;
+            pSelf->value.asNum.NumType = HB_ET_LONG;
             pSelf->ExprType = HB_ET_NUMERIC;
             pSelf->ValType  = HB_EV_NUMERIC;
             hb_compExprFree( pLeft, HB_MACRO_PARAM );
@@ -130,19 +119,17 @@ HB_EXPR_PTR hb_compExprReduceDiv( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
 
             if( pRight->value.asNum.lVal )
             {
-               double dVal = ( double ) pLeft->value.asNum.lVal / ( double ) pRight->value.asNum.lVal;
-
-               if( fmod( dVal, 1.0 ) == 0.0 )
+               if( pLeft->value.asNum.lVal % pRight->value.asNum.lVal == 0 )
                {
                   /* Return integer results as long */
-                  pSelf->value.asNum.lVal = ( long ) dVal;
+                  pSelf->value.asNum.lVal = pLeft->value.asNum.lVal / pRight->value.asNum.lVal;
                   pSelf->value.asNum.bDec = 0;
                   pSelf->value.asNum.NumType = HB_ET_LONG;
                }
                else
                {
                   /* Return non-integer results as double */
-                  pSelf->value.asNum.dVal = dVal;
+                  pSelf->value.asNum.dVal = ( double ) pLeft->value.asNum.lVal / ( double ) pRight->value.asNum.lVal;
                   pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
                   pSelf->value.asNum.bDec = HB_DEFAULT_DECIMALS;
                   pSelf->value.asNum.NumType = HB_ET_DOUBLE;
@@ -220,17 +207,17 @@ HB_EXPR_PTR hb_compExprReduceMult( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
       {
          case HB_ET_LONG:
          {
-            double dVal = ( double ) pLeft->value.asNum.lVal * ( double ) pRight->value.asNum.lVal;
+            HB_MAXDBL dVal = ( HB_MAXDBL ) pLeft->value.asNum.lVal * ( HB_MAXDBL ) pRight->value.asNum.lVal;
 
-            if( ( double ) LONG_MIN <= dVal && dVal <= ( double ) LONG_MAX )
+            if ( HB_DBL_LIM_LONG( dVal ) )
             {
-               pSelf->value.asNum.lVal = ( long ) dVal;
+               pSelf->value.asNum.lVal = ( HB_LONG ) dVal;
                pSelf->value.asNum.bDec = 0;
                pSelf->value.asNum.NumType = HB_ET_LONG;
             }
             else
             {
-               pSelf->value.asNum.dVal = dVal;
+               pSelf->value.asNum.dVal = ( double ) dVal;
                pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
                pSelf->value.asNum.bDec = 0;
                pSelf->value.asNum.NumType = HB_ET_DOUBLE;
@@ -294,17 +281,17 @@ HB_EXPR_PTR hb_compExprReduceMinus( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
       {
          case HB_ET_LONG:
          {
-            double dVal = ( double ) pLeft->value.asNum.lVal - ( double ) pRight->value.asNum.lVal;
+            HB_MAXDBL dVal = ( HB_MAXDBL ) pLeft->value.asNum.lVal - ( HB_MAXDBL ) pRight->value.asNum.lVal;
 
-            if( ( double ) LONG_MIN <= dVal && dVal <= ( double ) LONG_MAX )
+            if ( HB_DBL_LIM_LONG( dVal ) )
             {
-               pSelf->value.asNum.lVal = ( long ) dVal;
+               pSelf->value.asNum.lVal = ( HB_LONG ) dVal;
                pSelf->value.asNum.bDec = 0;
                pSelf->value.asNum.NumType = HB_ET_LONG;
             }
             else
             {
-               pSelf->value.asNum.dVal = dVal;
+               pSelf->value.asNum.dVal = ( double ) dVal;
                pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
                pSelf->value.asNum.bDec = 0;
                pSelf->value.asNum.NumType = HB_ET_DOUBLE;
@@ -376,17 +363,17 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
       {
          case HB_ET_LONG:
          {
-            double dVal = ( double ) pLeft->value.asNum.lVal + ( double ) pRight->value.asNum.lVal;
+            HB_MAXDBL dVal = ( HB_MAXDBL ) pLeft->value.asNum.lVal + ( HB_MAXDBL ) pRight->value.asNum.lVal;
 
-            if( ( double ) LONG_MIN <= dVal && dVal <= ( double ) LONG_MAX )
+            if ( HB_DBL_LIM_LONG( dVal ) )
             {
-               pSelf->value.asNum.lVal = ( long ) dVal;
+               pSelf->value.asNum.lVal = ( HB_LONG ) dVal;
                pSelf->value.asNum.bDec = 0;
                pSelf->value.asNum.NumType = HB_ET_LONG;
             }
             else
             {
-               pSelf->value.asNum.dVal = dVal;
+               pSelf->value.asNum.dVal = ( double ) dVal;
                pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
                pSelf->value.asNum.bDec = 0;
                pSelf->value.asNum.NumType = HB_ET_DOUBLE;
@@ -434,28 +421,28 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
    {
       if( pRight->ulLength == 0 )
       {
-      	pSelf->ExprType = HB_ET_NONE; /* suppress deletion of operator components */
-      	hb_compExprFree( pSelf, HB_MACRO_PARAM );
+         pSelf->ExprType = HB_ET_NONE; /* suppress deletion of operator components */
+         hb_compExprFree( pSelf, HB_MACRO_PARAM );
          pSelf = pLeft;
          hb_compExprFree( pRight, HB_MACRO_PARAM );
       }
       else if( pLeft->ulLength == 0 )
       {
-      	pSelf->ExprType = HB_ET_NONE; /* suppress deletion of operator components */
-      	hb_compExprFree( pSelf, HB_MACRO_PARAM );
+         pSelf->ExprType = HB_ET_NONE; /* suppress deletion of operator components */
+         hb_compExprFree( pSelf, HB_MACRO_PARAM );
          pSelf = pRight;
          hb_compExprFree( pLeft, HB_MACRO_PARAM );
       }
       else
       {
-			/* Do not reduce strings with the macro operator '&'
-			*/
-			if( strchr(pLeft->value.asString.string, '&') == NULL )
-			{
-      		pSelf->ExprType = HB_ET_NONE; /* suppress deletion of operator components */
-      		hb_compExprFree( pSelf, HB_MACRO_PARAM );
+         /* Do not reduce strings with the macro operator '&'
+         */
+         if( strchr(pLeft->value.asString.string, '&') == NULL )
+         {
+            pSelf->ExprType = HB_ET_NONE; /* suppress deletion of operator components */
+            hb_compExprFree( pSelf, HB_MACRO_PARAM );
          	pSelf = hb_compExprReducePlusStrings( pLeft, pRight, HB_MACRO_PARAM );
-			}
+         }
       }
    }
    else
@@ -1203,7 +1190,7 @@ BOOL hb_compExprReduceCHR( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
       else
       {
         	pExpr->value.asString.string = ( char * ) hb_xgrab( 2 );
-        	pExpr->value.asString.string[ 0 ] = ( ( long ) pArg->value.asNum.dVal % 256 );
+        	pExpr->value.asString.string[ 0 ] = ( ( unsigned int ) pArg->value.asNum.dVal % 256 );
         	pExpr->value.asString.string[ 1 ] = '\0';
         	pExpr->value.asString.dealloc = TRUE;
         	pExpr->ulLength = 1;

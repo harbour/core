@@ -83,6 +83,16 @@ DIRS=\
 	samples \
  
 else
+ifeq ($(HB_ARCHITECTURE),dos)
+
+DIRS=\
+	htmllib \
+	libct \
+	libgt \
+	libmisc \
+	samples \
+ 
+else
 
 DIRS=\
 	htmllib \
@@ -92,6 +102,7 @@ DIRS=\
 	rdd_ads \
 	samples \
  
+endif
 endif
 endif
 endif

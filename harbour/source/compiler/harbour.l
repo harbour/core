@@ -99,9 +99,8 @@ char *hb_lex_codeblock = NULL;
 %}
 
 SpaceTab      [ \t]+
-Number        ([0-9]+)|([0-9]*\.[0-9]+)
+Number        ([0-9]+)|([0-9]*\.[0-9]+)|(0x[0-9A-Fa-f]+)
 InvalidNumber [0-9]+\.
-HexNumber     0x[0-9A-F]+
 Identifier    (([a-zA-Z])|([_a-zA-Z][_a-zA-Z0-9]+))
 
 MacroVar      \&{Identifier}[\.]?
@@ -1660,36 +1659,6 @@ Separator     {SpaceTab}
 
 {Number}       { return yy_ConvertNumber( yytext ); }
 
-{HexNumber}   {
-                 long lNumber = 0;
-
-                 sscanf( yytext, "%lxI", &lNumber );
-
-                 if( ( double ) SHRT_MIN <= lNumber &&
-                        lNumber <= ( double ) SHRT_MAX )
-                 {
-                    yylval.valInteger.iNumber = lNumber;
-                    yylval.valInteger.szValue = yytext;
-                    return NUM_INTEGER;
-                 }
-                 else if( ( double ) LONG_MIN <= lNumber &&
-                          lNumber <= ( double ) LONG_MAX )
-                 {
-                    yylval.valLong.lNumber = lNumber;
-                    yylval.valLong.szValue = yytext;
-                    return NUM_LONG;
-                 }
-                 else
-                 {
-                    /* NOTE: This will never happen */
-                    yylval.valDouble.dNumber = lNumber;
-                    yylval.valDouble.bWidth = HB_DEFAULT_WIDTH;
-                    yylval.valDouble.bDec = 0;
-                    yylval.valDouble.szValue = yytext;
-                    return NUM_DOUBLE;
-                 }
-              }
-
 {TrueValue}   { hb_comp_iState =RSEPARATOR; return TRUEVALUE;  }
 {FalseValue}  { hb_comp_iState =RSEPARATOR; return FALSEVALUE; }
 
@@ -1749,42 +1718,28 @@ int yy_lex_input( char *buffer, int iBufferSize )
 
 static int yy_ConvertNumber( char * szBuffer )
 {
-   char * ptr;
+   HB_LONG lNumber;
+   double dNumber;
+   int iDec, iWidth;
 
-   yylval.valDouble.dNumber = hb_strVal( szBuffer, strlen( szBuffer ) ); /* atof( szBuffer ); */
-   ptr = strchr( szBuffer, '.' );
-   if( ptr )
+   if( hb_compStrToNum( szBuffer, &lNumber, &dNumber, &iDec, &iWidth ) )
    {
-      yylval.valDouble.bDec = strlen( ptr + 1 );
-      yylval.valDouble.bWidth = strlen( szBuffer ) - yylval.valDouble.bDec;
-      if( yylval.valDouble.bDec )
-         yylval.valDouble.bWidth--;
+      yylval.valDouble.dNumber = dNumber;
+      yylval.valDouble.bDec = iDec;
+      yylval.valDouble.bWidth = iWidth;
       yylval.valDouble.szValue = szBuffer;
       return NUM_DOUBLE;
    }
+   else if( SHRT_MIN <= lNumber && lNumber <= SHRT_MAX )
+   {
+      yylval.valInteger.iNumber = ( int ) lNumber;
+      yylval.valInteger.szValue = szBuffer;
+      return NUM_INTEGER;
+   }
    else
    {
-      if( ( double )SHRT_MIN <= yylval.valDouble.dNumber &&
-            yylval.valDouble.dNumber <= ( double )SHRT_MAX )
-      {
-         yylval.valInteger.iNumber = ( int ) yylval.valDouble.dNumber;
-         yylval.valInteger.szValue = szBuffer;
-         return NUM_INTEGER;
-      }
-      else if( ( double )LONG_MIN <= yylval.valDouble.dNumber &&
-                 yylval.valDouble.dNumber <= ( double )LONG_MAX )
-      {
-         yylval.valLong.lNumber = ( long ) yylval.valDouble.dNumber;
-         yylval.valLong.szValue = szBuffer;
-         return NUM_LONG;
-      }
-      else
-      {
-         yylval.valDouble.bWidth = strlen( szBuffer ) + 1;
-         yylval.valDouble.bDec = 0;
-         yylval.valDouble.szValue = szBuffer;
-         return NUM_DOUBLE;
-      }
+      yylval.valLong.lNumber = lNumber;
+      yylval.valLong.szValue = szBuffer;
+      return NUM_LONG;
    }
 }
-

@@ -7,16 +7,20 @@ ifndef MK
 all : first
 
 HB_GT_LIBS=\
-        gtcgi \
-        gtdos \
-        gtpca \
-        gtstd \
-#       gtcrs \
-#       gtsln \
+	gtcgi \
+	gtpca \
+	gtstd \
+	gtdos \
+#	gtnul \
+#	gtcrs \
+#	gtsln \
+
 
 ifeq ($(HB_GT_LIB),)
    HB_GT_LIB = gtdos
 endif
+
+ifeq ($(SHLVL),) # COMMAND.COM
 
 # There is a conflict with the use of '\' and '/' characters
 # The MAKE requires '/' in filenames (ARCH_DIR) however some compilers
@@ -34,7 +38,7 @@ else
     ifeq ($(HB_COMPILER),rsx32)
       #Use standard dos path, which is already set up.
     else
-      ifeq ($(HB_COMPILER),watcom)
+      ifneq ($(findstring watcom,$(HB_COMPILER)),)
         #Use standard dos path, which is already set up.
       else
         ifeq ($(HB_COMPILER),djgpp)
@@ -57,17 +61,37 @@ CP = copy
 MV = move
 MD = md
 
+#this will be used only under DJGPP
+RANLIB = ranlib
+
 dirbase::
-	-if not exist $(HB_ARCHITECTURE) $(MD) $(HB_ARCHITECTURE)
-	-if not exist $(ARCH_DOS)        $(MD) $(ARCH_DOS)
+	-@for %d in ($(HB_ARCHITECTURE) $(ARCH_DOS)) do if not exist %d\nul $(MD) %d
 
 clean::
-	-for %f in ($(ARCH_DOS)\*.*) do $(RM) %f
-	-if exist *.bak $(RM) *.bak
-	-if exist *.obj $(RM) *.obj
-	-if exist core $(RM) core
-	-if exist *.o $(RM) *.o
-	-$(RD) $(ARCH_DOS)
-	-$(RD) $(HB_ARCHITECTURE)
-endif
+	-@for %f in ($(ARCH_DOS)\*.* *.bak *.obj *.o *.tds) do $(RM) %f
+	-@for %d in ($(ARCH_DOS) $(HB_ARCHITECTURE)) do if exist %d\nul $(RD) %d
 
+else  # bash
+
+ARCH_DIR = $(ARCH)
+MK = $(MAKE)
+
+RM = rm -f
+RD = rm -f -r
+CP = cp -f
+MV = mv -f
+MD = mkdir
+
+#this will be used only under MINGW
+RANLIB = ranlib
+
+
+dirbase::
+	@[ -d $(HB_ARCHITECTURE) ] || $(MD) $(HB_ARCHITECTURE); \
+	 [ -d $(ARCH_DIR) ] || $(MD) $(ARCH_DIR)
+
+clean::
+	-$(RD) $(ARCH)
+
+endif
+endif

@@ -59,7 +59,7 @@
 #endif
 
 /* Globally available data, no need to MT it */
-volatile static int s_bInit = 0;
+static volatile int s_bInit = 0;
  
 /*
 * HB_RANDOM

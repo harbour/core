@@ -1645,7 +1645,7 @@
       static BOOL s_bArrayPrefix = FALSE;
 
       //----------------------------------------------------------------------------//
-      static HB_FUNC( SETARRAYPREFIX )
+      HB_FUNC_STATIC( SETARRAYPREFIX )
       {
          PHB_ITEM pbArrayPrefix = hb_param( 1, HB_IT_LOGICAL );
 
@@ -1656,13 +1656,13 @@
       }
 
       //----------------------------------------------------------------------------//
-      static HB_FUNC( GETARRAYPREFIX )
+      HB_FUNC_STATIC( GETARRAYPREFIX )
       {
          hb_retl( s_bArrayPrefix );
       }
 
       //----------------------------------------------------------------------------//
-      static HB_FUNC( NEXTTOKEN )
+      HB_FUNC_STATIC( NEXTTOKEN )
       {
          PHB_ITEM pLine       = hb_param( 1, HB_IT_STRING );
          PHB_ITEM pDontRecord = hb_param( 2, HB_IT_LOGICAL );
@@ -2027,7 +2027,7 @@
       }
 
       //----------------------------------------------------------------------------//
-      static HB_FUNC( NEXTIDENTIFIER )
+      HB_FUNC_STATIC( NEXTIDENTIFIER )
       {
          PHB_ITEM pLine    = hb_param( 1, HB_IT_STRING );
          PHB_ITEM pSkipped = hb_param( 2, HB_IT_ANY );

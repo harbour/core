@@ -56,8 +56,8 @@
 #include "ct.h"
 
 
-long int static __hex2long( char *cNum1, int iLenHex );
-long int static __getparam( int iParam );
+static long __hex2long( char *cNum1, int iLenHex );
+static long __getparam( int iParam );
 
 
 /*  $DOC$
@@ -245,7 +245,7 @@ HB_FUNC ( ISBIT )
 }
 
 
-long int static __hex2long( char *cNum1, int iLenHex )
+static long __hex2long( char *cNum1, int iLenHex )
 {
   register int i;
   register int iNum;
@@ -270,7 +270,7 @@ long int static __hex2long( char *cNum1, int iLenHex )
 }
 
 
-long int static __getparam( int iParam )
+static long __getparam( int iParam )
 {
 
   if ( ISCHAR( iParam ) )

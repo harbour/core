@@ -508,14 +508,11 @@ FUNCTION Main_MISC()
 
    /* NOTE: Cannot yet test the return value of the function on a DEFAULT-ed
             failure. */
-   /* NOTE: The dot in the "*INVALID*." filename is intentional and serves
-            to hide different path handling, since Harbour is platform
-            independent. */
 
    TEST_LINE( __CopyFile("$$COPYFR.TMP")                 , "E BASE 2010 Argument error __COPYFILE A:1:C:$$COPYFR.TMP " )
    TEST_LINE( __CopyFile("$$COPYFR.TMP", "$$COPYTO.TMP") , NIL                                        )
    TEST_LINE( __CopyFile("NOT_HERE.$$$", "$$COPYTO.TMP") , "E BASE 2012 Open error NOT_HERE.$$$ F:DR" )
-   TEST_LINE( __CopyFile("$$COPYFR.TMP", "*INVALID*.")   , "E BASE 2012 Create error *INVALID*. F:DR" )
+   TEST_LINE( __CopyFile("$$COPYFR.TMP", BADFNAME())     , "E BASE 2012 Create error " + BADFNAME() + " F:DR" )
 
    FErase("$$COPYFR.TMP")
    FErase("$$COPYTO.TMP")
@@ -593,11 +590,11 @@ FUNCTION Main_MISC()
    TEST_LINE( MemoRead("$$MEMOFI.TMP")           , ""+Chr(26)+""    )
    TEST_LINE( MemoWrit("$$MEMOFI.TMP",scStringW) , .T.              )
    TEST_LINE( MemoRead("$$MEMOFI.TMP")           , ""+Chr(13)+""+Chr(10)+"ç"+Chr(10)+""+Chr(9)+"" )
-   TEST_LINE( MemoWrit("*INVALI*.TMP",scStringZ) , .F.              )
+   TEST_LINE( MemoWrit(BADFNAME2()   ,scStringZ) , .F.              )
 #ifndef __XPP__
    TEST_LINE( MemoRead()                         , ""               )
 #endif
-   TEST_LINE( MemoRead("*INVALI*.TMP")           , ""               )
+   TEST_LINE( MemoRead( BADFNAME2() )            , ""               )
 
    FErase("$$MEMOFI.TMP")
 
@@ -844,6 +841,23 @@ STATIC FUNCTION TESTFNAME( cFull )
           cExt + ";" +;
           ""
 
+#endif
+
+STATIC FUNCTION BADFNAME()
+   /* NOTE: The dot in the "*INVALID*." filename is intentional and serves
+            to hide different path handling, since Harbour is platform
+            independent. */
+#ifdef __PLATFORM__Linux
+   return "*INVALID/*."
+#else
+   return "*INVALID*."
+#endif
+
+STATIC FUNCTION BADFNAME2()
+#ifdef __PLATFORM__Linux
+   return "*INVALI/*.TMP"
+#else
+   return "*INVALI*.TMP"
 #endif
 
 /* Don't change the position of this #include. */

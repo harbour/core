@@ -51,6 +51,7 @@ $hb_collect config/os2/*.cf
 $hb_collect config/w32/*.cf
 
 # DOC
+$hb_collect doc/Makefile
 $hb_collect doc/*.txt
 $hb_collect doc/en/*.txt
 $hb_collect doc/es/*.txt
@@ -70,9 +71,9 @@ $hb_collect source/Makefile
 
 # SOURCE\COMPILER
 $hb_collect source/compiler/Makefile
-$hb_collect source/compiler/*.[cyl]
-$hb_collect source/compiler/*.simple
+$hb_collect source/compiler/*.[cylh]
 $hb_collect source/compiler/*.sl[xy]
+$hb_collect source/compiler/*.simple
 
 # SOURCE\DEBUG
 $hb_collect source/debug/Makefile
@@ -88,7 +89,7 @@ $hb_collect source/codepage/*.[ch]
 
 # SOURCE\MACRO
 $hb_collect source/macro/Makefile
-$hb_collect source/macro/*.[cyl]
+$hb_collect source/macro/*.[cylh]
 $hb_collect source/macro/*.slx
 
 # SOURCE\PP
@@ -123,6 +124,13 @@ $hb_collect source/rdd/dbfntx/*.prg
 # SOURCE\RDD\NULSYS
 $hb_collect source/rdd/nulsys/Makefile
 $hb_collect source/rdd/nulsys/*.prg
+
+for d in ${HB_DB_DRVEXT}
+do
+  $hb_collect source/rdd/$d/Makefile
+  $hb_collect source/rdd/$d/*.[ch]
+  $hb_collect source/rdd/$d/*.prg
+done
 
 # SOURCE\RTL
 $hb_collect source/rtl/Makefile
@@ -173,6 +181,23 @@ $hb_collect source/rtl/gtstd/*.[ch]
 $hb_collect source/rtl/gtwin/Makefile
 $hb_collect source/rtl/gtwin/*.[ch]
 
+# SOURCE\RTL\GTWVT
+$hb_collect source/rtl/gtwvt/Makefile*
+$hb_collect source/rtl/gtwvt/*.[ch]
+
+# SOURCE\RTL\GTXVT
+$hb_collect source/rtl/gtxvt/Makefile*
+$hb_collect source/rtl/gtxvt/*.[ch]
+
+# SOURCE\RTL\GTXWC
+$hb_collect source/rtl/gtxwc/Makefile*
+$hb_collect source/rtl/gtxwc/*.[ch]
+
+# SOURCE\RTL\GTALLEG
+$hb_collect source/rtl/gtalleg/Makefile*
+$hb_collect source/rtl/gtalleg/*.[ch]
+$hb_collect source/rtl/gtalleg/*.sfc
+
 # SOURCE\VM
 $hb_collect source/vm/Makefile
 $hb_collect source/vm/*.[ch]
@@ -184,10 +209,15 @@ $hb_collect tests/*.ch
 $hb_collect tests/*.dbf
 $hb_collect tests/*.fpt
 $hb_collect tests/*.prg
+$hb_collect tests/*.src
 $hb_collect tests/*.txt
 
+# TESTS\BLDTEST
+$hb_collect tests/bldtest/Makefile
+$hb_collect tests/bldtest/*.[ch]
+
 # UTILS
-$hb_collect utils/Makefile*
+$hb_collect utils/Makefile
 
 # UTILS\HBDOC
 $hb_collect utils/hbdoc/Makefile
@@ -221,6 +251,12 @@ $hb_collect utils/hbtest/*.prg
 
 # CONTRIB
 $hb_collect contrib/Makefile
+
+# CONTRIB\RDD_ADS
+$hb_collect contrib/rdd_ads/Makefile
+$hb_collect contrib/rdd_ads/*.[ch]
+$hb_collect contrib/rdd_ads/*.prg
+$hb_collect contrib/rdd_ads/*.ch
 
 # CONTRIB\LIBCT
 $hb_collect contrib/libct/Makefile

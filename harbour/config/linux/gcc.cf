@@ -13,11 +13,18 @@ CC = $(HB_CCACHE) gcc
 CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
+
+# We are under linux
+CFLAGS = -DHB_OS_LINUX -Wall -W -fsigned-char
+
+# uncomment this if you want to farce relocateable code for .so libs
+# it's necessary on some platforms but can reduce performance
+#CFLAGS += -fPIC
+
 ifeq ($(HB_LEX),SIMPLEX)
-CFLAGS = -Wall -g -DSIMPLEX
-else
-CFLAGS = -Wall -g
+CFLAGS += -DSIMPLEX
 endif
+
 
 LD = $(HB_CCACHE) gcc
 LD_OUT = -o
@@ -64,6 +71,6 @@ LDFLAGS = $(LINKPATHS)
 
 AR = ar
 ARFLAGS = $(A_USR)
-AR_RULE = $(AR) $(ARFLAGS) r $@ $^ || $(RM) $@
+AR_RULE = $(AR) $(ARFLAGS) cr $@ $^ || $(RM) $@
 
 include $(TOP)$(ROOT)config/rules.cf

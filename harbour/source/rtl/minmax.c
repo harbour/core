@@ -60,41 +60,28 @@ HB_FUNC( MAX )
    PHB_ITEM p1 = hb_param( 1, HB_IT_ANY );
    PHB_ITEM p2 = hb_param( 2, HB_IT_ANY );
 
-   if( HB_IS_NUMERIC( p1 ) && HB_IS_NUMERIC( p2 ) )
+   if( HB_IS_NUMINT( p1 ) && HB_IS_NUMINT( p2 ) )
    {
-      /* NOTE: The order of these if() branches is significant,
-               please, don't change it. [vszakats] */
+      HB_LONG l1 = hb_itemGetNInt( p1 );
+      HB_LONG l2 = hb_itemGetNInt( p2 );
 
-      if( HB_IS_DOUBLE( p1 ) || HB_IS_DOUBLE( p2 ) )
-      {
-         double d1 = hb_itemGetND( p1 );
-         double d2 = hb_itemGetND( p2 );
+      hb_retnint( l1 >= l2 ? l1 : l2 );
+   }
+   else if( HB_IS_NUMERIC( p1 ) && HB_IS_NUMERIC( p2 ) )
+   {
+      double d1 = hb_itemGetND( p1 );
+      double d2 = hb_itemGetND( p2 );
 
-         int iDec1;
-         int iDec2;
+      int iDec1;
+      int iDec2;
 
-         hb_itemGetNLen( p1, NULL, &iDec1 );
-         hb_itemGetNLen( p2, NULL, &iDec2 );
+      hb_itemGetNLen( p1, NULL, &iDec1 );
+      hb_itemGetNLen( p2, NULL, &iDec2 );
 
-         if( d1 >= d2 )
-            hb_retndlen( d1, 0, iDec1 );
-         else
-            hb_retndlen( d2, 0, iDec2 );
-      }
-      else if( HB_IS_LONG( p1 ) || HB_IS_LONG( p2 ) )
-      {
-         long l1 = hb_itemGetNL( p1 );
-         long l2 = hb_itemGetNL( p2 );
-
-         hb_retnl( l1 >= l2 ? l1 : l2 );
-      }
+      if( d1 >= d2 )
+         hb_retndlen( d1, 0, iDec1 );
       else
-      {
-         int i1 = hb_itemGetNI( p1 );
-         int i2 = hb_itemGetNI( p2 );
-
-         hb_retni( i1 >= i2 ? i1 : i2 );
-      }
+         hb_retndlen( d2, 0, iDec2 );
    }
    else if( HB_IS_LOGICAL( p1 ) && HB_IS_LOGICAL( p2 ) )
    {
@@ -119,41 +106,28 @@ HB_FUNC( MIN )
    PHB_ITEM p1 = hb_param( 1, HB_IT_ANY );
    PHB_ITEM p2 = hb_param( 2, HB_IT_ANY );
 
-   if( HB_IS_NUMERIC( p1 ) && HB_IS_NUMERIC( p2 ) )
+   if( HB_IS_NUMINT( p1 ) && HB_IS_NUMINT( p2 ) )
    {
-      /* NOTE: The order of these if() branches is significant,
-               please, don't change it. [vszakats] */
+      HB_LONG l1 = hb_itemGetNInt( p1 );
+      HB_LONG l2 = hb_itemGetNInt( p2 );
 
-      if( HB_IS_DOUBLE( p1 ) || HB_IS_DOUBLE( p2 ) )
-      {
-         double d1 = hb_itemGetND( p1 );
-         double d2 = hb_itemGetND( p2 );
+      hb_retnint( l1 <= l2 ? l1 : l2 );
+   }
+   else if( HB_IS_NUMERIC( p1 ) && HB_IS_NUMERIC( p2 ) )
+   {
+      double d1 = hb_itemGetND( p1 );
+      double d2 = hb_itemGetND( p2 );
 
-         int iDec1;
-         int iDec2;
+      int iDec1;
+      int iDec2;
 
-         hb_itemGetNLen( p1, NULL, &iDec1 );
-         hb_itemGetNLen( p2, NULL, &iDec2 );
+      hb_itemGetNLen( p1, NULL, &iDec1 );
+      hb_itemGetNLen( p2, NULL, &iDec2 );
 
-         if( d1 <= d2 )
-            hb_retndlen( d1, 0, iDec1 );
-         else
-            hb_retndlen( d2, 0, iDec2 );
-      }
-      else if( HB_IS_LONG( p1 ) || HB_IS_LONG( p2 ) )
-      {
-         long l1 = hb_itemGetNL( p1 );
-         long l2 = hb_itemGetNL( p2 );
-
-         hb_retnl( l1 <= l2 ? l1 : l2 );
-      }
+      if( d1 <= d2 )
+         hb_retndlen( d1, 0, iDec1 );
       else
-      {
-         int i1 = hb_itemGetNI( p1 );
-         int i2 = hb_itemGetNI( p2 );
-
-         hb_retni( i1 <= i2 ? i1 : i2 );
-      }
+         hb_retndlen( d2, 0, iDec2 );
    }
    else if( HB_IS_LOGICAL( p1 ) && HB_IS_LOGICAL( p2 ) )
    {

@@ -1514,7 +1514,7 @@ BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
    BOOL bIsVesa    = FALSE;
    USHORT bSuccess = FALSE;
 
-   HB_TRACE( HB_TR_DEBUG, ("hb_gt_SetMode(%hu, %hu)", usRows, usCols) );
+   HB_TRACE( HB_TR_DEBUG, ("hb_gt_SetMode(%hu, %hu)", uiRows, uiCols) );
 
    /* Available modes in B&N and color screens */
    if( uiCols == 40 )

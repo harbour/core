@@ -76,10 +76,10 @@ HB_FUNC( CMONTH )
 
    if( pDate )
    {
-      long lYear, lMonth, lDay;
+      int iYear, iMonth, iDay;
 
-      hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
-      hb_retc( hb_dateCMonth( lMonth ) );
+      hb_dateDecode( hb_itemGetDL( pDate ), &iYear, &iMonth, &iDay );
+      hb_retc( hb_dateCMonth( iMonth ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1116, NULL, "CMONTH", 1, hb_paramError( 1 ) );
@@ -95,10 +95,10 @@ HB_FUNC( CDOW )
 
       if( lDate )
       {
-         long lYear, lMonth, lDay;
+         int iYear, iMonth, iDay;
 
-         hb_dateDecode( lDate, &lYear, &lMonth, &lDay );
-         hb_retc( hb_dateCDOW( hb_dateDOW( lYear, lMonth, lDay ) ) );
+         hb_dateDecode( lDate, &iYear, &iMonth, &iDay );
+         hb_retc( hb_dateCDOW( hb_dateDOW( iYear, iMonth, iDay ) ) );
       }
       else
          hb_retc( NULL );

@@ -186,7 +186,7 @@ HB_FUNC( __HRBRUN )
 HB_FUNC( __HRBLOAD )
 {
    if( hb_pcount() >= 1 )
-      hb_retnl( (LONG) hb_hrbLoad( hb_parc( 1 ) ) );
+      hb_retptr( (void *) hb_hrbLoad( hb_parc( 1 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 9999, NULL, "__HRBLOAD", 0 );
 }
@@ -199,7 +199,7 @@ HB_FUNC( __HRBDO )
    {
       int i;
       char **argv = NULL;
-      PHRB_BODY pHrbBody = (PHRB_BODY) hb_parnl( 1 );
+      PHRB_BODY pHrbBody = (PHRB_BODY) hb_parptr( 1 );
 
       if( pHrbBody )
       {
@@ -223,16 +223,16 @@ HB_FUNC( __HRBDO )
 HB_FUNC( __HRBUNLOAD )
 {
    if( hb_pcount() >= 1 )
-      hb_hrbUnLoad( (PHRB_BODY) hb_parnl( 1 ) );
+      hb_hrbUnLoad( (PHRB_BODY) hb_parptr( 1 ) );
    else
       hb_errRT_BASE( EG_ARG, 9999, NULL, "__HRBUNLOAD", 0 );
 }
 
 HB_FUNC( __HRBGETFU )
 {
-   if( hb_pcount() > 1 && ISNUM( 1 ) && ISCHAR( 2 ) )
+   if( hb_pcount() > 1 && ISPOINTER( 1 ) && ISCHAR( 2 ) )
    {
-      PHRB_BODY pHrbBody = (PHRB_BODY) hb_parnl( 1 );
+      PHRB_BODY pHrbBody = (PHRB_BODY) hb_parptr( 1 );
       ULONG ulPos = 0;
 
       if( pHrbBody )
@@ -246,9 +246,9 @@ HB_FUNC( __HRBGETFU )
             ulPos++;
          }
          if( ulPos < pHrbBody->ulSymbols )
-            hb_retnl( (LONG) ( pHrbBody->pSymRead + ulPos ) );
+            hb_retptr( ( void *) ( pHrbBody->pSymRead + ulPos ) );
          else
-            hb_retnl( 0 );
+            hb_retptr( NULL );
          hb_xfree( szName );
       }
       else
@@ -264,7 +264,7 @@ HB_FUNC( __HRBDOFU )
    if( argc >=1 )
    {
       int i;
-      PHB_SYMB pSym = (PHB_SYMB) hb_parnl( 1 );
+      PHB_SYMB pSym = (PHB_SYMB) hb_parptr( 1 );
 
       if( pSym )
       {
@@ -537,9 +537,7 @@ static int hb_hrbFileReadHead( FILE * file, char * szFileName )
    }
    hb_hrbFileRead( file, szFileName, cInt, 2, 1 );
 
-   return ( ( BYTE ) cInt[ 0 ] ) +
-          ( ( BYTE ) cInt[ 1 ] ) * 0x100 ;
-
+   return HB_PCODE_MKSHORT( cInt );
 }
 
 /* ReadId
@@ -598,10 +596,7 @@ static long hb_hrbFileReadLong( FILE * file, char * szFileName )
       return 0;
    }
    else
-      return ( ( BYTE ) cLong[ 0 ] )             +
-             ( ( BYTE ) cLong[ 1 ] ) * 0x100     +
-             ( ( BYTE ) cLong[ 2 ] ) * 0x10000   +
-             ( ( BYTE ) cLong[ 3 ] ) * 0x1000000 ;
+      return HB_PCODE_MKLONG( cLong );
 }
 
 

@@ -278,7 +278,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
 {
    static unsigned char key_codes[ HB_MAX_KEYMAP_CHARS + 1 ]; /* buffer for multi-characters keycodes */
    static int key_waiting = -1; /* position of next character from buffer if > 0 */
-   unsigned int ch;
+   int ch;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) eventmask));
 

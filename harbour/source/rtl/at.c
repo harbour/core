@@ -83,7 +83,7 @@ HB_FUNC( AT )
    {
       ULONG ulTextLength = hb_itemGetCLen( pText );
       ULONG ulStart = ISNUM( 3 ) ? hb_parnl( 3 ) : 1;
-      ULONG ulEnd = ISNUM( 4 ) ? hb_parnl( 4 ) : ulTextLength;
+      ULONG ulEnd = ISNUM( 4 ) ? ( ULONG ) hb_parnl( 4 ) : ulTextLength;
       ULONG ulPos;
 
       if ( ulStart > ulTextLength || ulEnd < ulStart ) hb_retnl( 0 );

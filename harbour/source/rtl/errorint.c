@@ -73,6 +73,15 @@ void hb_errInternal( ULONG ulIntCode, char * szText, char * szPar1, char * szPar
 
    hb_stackDispCall();
 
+   /* release console settings */
+   hb_conRelease();
+
+   if( hb_cmdargCheck( "ERRGPF" ) )
+   {
+       int *pGPF = NULL;
+       *pGPF = 0;
+       *(--pGPF) = 0;
+   }
+
    exit( EXIT_FAILURE );
 }
-

@@ -269,6 +269,8 @@ typedef struct _NTXAREA
    BYTE bMemoType;               /* MEMO type used in DBF memo fields */
    BOOL fHasMemo;                /* WorkArea with Memo fields */
    BOOL fHasTags;                /* WorkArea with MDX or CDX index */
+   BOOL fDataFlush;              /* data was written to DBF and not commited */
+   BOOL fMemoFlush;              /* data was written to MEMO and not commited */
    BYTE bVersion;                /* DBF version ID byte */
    BYTE bCodePage;               /* DBF codepage ID */
    BOOL fShared;                 /* Shared file */

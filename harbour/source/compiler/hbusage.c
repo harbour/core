@@ -104,7 +104,7 @@ void hb_compPrintUsage( char * szSelf )
    printf( "\nSyntax:  %s <file[s][.prg]> [options]"
            "\n", szSelf );
 
-   for( iLine = 0; iLine < ( sizeof( szOptions ) / sizeof( char * ) ); iLine++ )
+   for( iLine = 0; iLine < ( int ) ( sizeof( szOptions ) / sizeof( char * ) ); iLine++ )
       printf( szOptions[ iLine ], OS_OPT_DELIMITER_LIST[ 0 ] );
 }
 
@@ -130,7 +130,7 @@ void hb_compPrintModes( void )
 
    printf( "\nCompatibility flags (lowercase/uppercase significant): -k[options]\n" );
 
-   for( iLine = 0; iLine < ( sizeof( szOptions ) / sizeof( char * ) ); iLine++ )
+   for( iLine = 0; iLine < ( int ) ( sizeof( szOptions ) / sizeof( char * ) ); iLine++ )
       printf( szOptions[ iLine ] );
 }
 

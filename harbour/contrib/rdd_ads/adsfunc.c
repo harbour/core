@@ -226,7 +226,7 @@ HB_FUNC( ADSGETSERVERTIME )
 
    SIGNED32 plTime = 0;
 
-   ADSHANDLE hConnect = ISNUM( 1 ) ? hb_parnl( 1 ) : adsConnectHandle;
+   ADSHANDLE hConnect = ISNUM( 1 ) ? ( ADSHANDLE ) hb_parnl( 1 ) : adsConnectHandle;
 
    ulRetVal = AdsGetServerTime( hConnect, pucDateBuf, &pusDateBufLen, &plTime, pucTimeBuf, &pusTimeBufLen );
 
@@ -1375,14 +1375,14 @@ HB_FUNC( ADSISINDEXED )
 HB_FUNC( ADSISEXPRVALID )               /* cExpr */
 {
    ADSAREAP pArea;
-   BOOL bValidExpr = FALSE;
+   UNSIGNED16 bValidExpr = FALSE;
 
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
-   if(pArea && ISCHAR( 1 ) )
+   if( pArea && ISCHAR( 1 ) )
       AdsIsExprValid( pArea->hTable, (UNSIGNED8*) hb_parc( 1 ),
                       (UNSIGNED16*) &bValidExpr );
 
-   hb_retl(bValidExpr);
+   hb_retl( bValidExpr != FALSE );
 }
 
 HB_FUNC( ADSGETNUMINDEXES )              /* cExpr */
@@ -1428,11 +1428,7 @@ HB_FUNC( ADSGETNUMOPENTABLES )
 
 HB_FUNC( ADSSHOWERROR )
 {
-   UNSIGNED8* pucTitle;
-   if( ISCHAR( 1 ) )
-   {
-      pucTitle = (UNSIGNED8*) hb_parc( 1 );
-   }
+   UNSIGNED8* pucTitle = ISCHAR( 1 ) ? (UNSIGNED8*) hb_parc( 1 ) : NULL;
    AdsShowError( pucTitle );
 }
 

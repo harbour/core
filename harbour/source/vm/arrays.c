@@ -350,6 +350,28 @@ long hb_arrayGetNL( PHB_ITEM pArray, ULONG ulIndex )
       return 0;
 }
 
+#ifndef HB_LONG_LONG_OFF
+LONGLONG hb_arrayGetNLL( PHB_ITEM pArray, ULONG ulIndex )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetNLL(%p, %lu)", pArray, ulIndex));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      return hb_itemGetNLL( pArray->item.asArray.value->pItems + ulIndex - 1 );
+   else
+      return 0;
+}
+#endif
+
+HB_LONG hb_arrayGetNInt( PHB_ITEM pArray, ULONG ulIndex )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetNLL(%p, %lu)", pArray, ulIndex));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      return hb_itemGetNInt( pArray->item.asArray.value->pItems + ulIndex - 1 );
+   else
+      return 0;
+}
+
 double hb_arrayGetND( PHB_ITEM pArray, ULONG ulIndex )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetND(%p, %lu)", pArray, ulIndex));
@@ -513,7 +535,7 @@ ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * 
                hb_vmPushSymbol( &hb_symEval );
                hb_vmPush( pValue );
                hb_vmPush( pBaseArray->pItems + ulStart );
-               hb_vmPushNumber( ( double ) ( ulStart + 1 ), 0 );
+               hb_vmPushLong( ulStart + 1 );
                hb_vmDo( 2 );
 
                if( HB_IS_LOGICAL( &hb_stack.Return ) && hb_stack.Return.item.asLogical.value )
@@ -546,7 +568,7 @@ ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * 
          }
          else if( HB_IS_DATE( pValue ) )
          {
-            long lValue = hb_itemGetDL( pValue );
+            long lValue = hb_itemGetDL( pValue ); /* NOTE: This is correct: Get the date as a long value. [vszakats] */
 
             for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
             {
@@ -558,7 +580,7 @@ ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * 
          }
          else if( HB_IS_LOGICAL( pValue ) )
          {
-            BOOL bValue = hb_itemGetL( pValue ); /* NOTE: This is correct: Get the date as a long value. [vszakats] */
+            BOOL bValue = hb_itemGetL( pValue );
 
             for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
             {
@@ -615,7 +637,7 @@ BOOL hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG * pulStart, ULONG * p
             hb_vmPushSymbol( &hb_symEval );
             hb_vmPush( bBlock );
             hb_vmPush( pItem );
-            hb_vmPushNumber( ( double ) ( ulStart + 1 ), 0 );
+            hb_vmPushLong( ulStart + 1 );
             hb_vmDo( 2 );
          }
       }

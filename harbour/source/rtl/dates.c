@@ -78,43 +78,49 @@
 #include "hbapi.h"
 #include "hbdate.h"
 
-long HB_EXPORT hb_dateEncode( long lYear, long lMonth, long lDay )
+#ifdef HB_C52_STRICT
+   #define HB_DATE_YEAR_LIMIT    2999
+#else
+   #define HB_DATE_YEAR_LIMIT    9999
+#endif
+
+LONG HB_EXPORT hb_dateEncode( int iYear, int iMonth, int iDay )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_dateEncode(%ld, %ld, %ld)", lYear, lMonth, lDay));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateEncode(%d, %d, %d)", iYear, iMonth, iDay));
 
    /* Perform date validation */
-   if( lYear >= 1 && lYear <= 2999 &&
-       lMonth >= 1 && lMonth <= 12 &&
-       lDay >= 1 )
+   if( iYear >= 1 && iYear <= HB_DATE_YEAR_LIMIT &&
+       iMonth >= 1 && iMonth <= 12 &&
+       iDay >= 1 )
    {
       /* Month, year, and lower day limits are simple,
          but upper day limit is dependent upon month and leap year */
-      USHORT auiDayLimit[ 12 ] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+      int auiDayLimit[ 12 ] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
-      if( ( ( lYear % 4 == 0 && lYear % 100 != 0 ) || lYear % 400 == 0 ) )
+      if( ( ( iYear % 4 == 0 && iYear % 100 != 0 ) || iYear % 400 == 0 ) )
          auiDayLimit[ 1 ] = 29;
 
-      if( lDay <= ( long ) auiDayLimit[ ( int ) lMonth - 1 ] )
+      if( iDay <= auiDayLimit[ iMonth - 1 ] )
       {
-         long lFactor = ( lMonth < 3 ) ? -1 : 0;
+         int iFactor = ( iMonth < 3 ) ? -1 : 0;
 
-         return ( 1461 * ( lFactor + 4800 + lYear ) / 4 ) +
-                ( ( lMonth - 2 - ( lFactor * 12 ) ) * 367 ) / 12 -
-                ( 3 * ( ( lFactor + 4900 + lYear ) / 100 ) / 4 ) +
-                lDay - 32075;
+         return ( ( LONG )( iFactor + 4800 + iYear ) * 1461 / 4 ) +
+                ( ( LONG )( iMonth - 2 - ( iFactor * 12 ) ) * 367 ) / 12 -
+                ( ( LONG )( ( iFactor + 4900 + iYear ) / 100 ) * 3 / 4 ) +
+                ( LONG ) iDay - 32075;
       }
    }
 
    return 0;
 }
 
-void HB_EXPORT hb_dateDecode( long lJulian, long * plYear, long * plMonth, long * plDay )
+void HB_EXPORT hb_dateDecode( LONG lJulian, int *piYear, int *piMonth, int *piDay )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_dateDecode(%ld, %p, %p, %p)", lJulian, plYear, plMonth, plDay));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateDecode(%ld, %p, %p, %p)", lJulian, piYear, piMonth, piDay));
 
    if( lJulian > 0 )
    {
-      long U, V, W, X;
+      LONG U, V, W, X;
 
       lJulian += 68569;
       W = ( lJulian * 4 ) / 146097;
@@ -124,94 +130,92 @@ void HB_EXPORT hb_dateDecode( long lJulian, long * plYear, long * plMonth, long 
       V = 80 * lJulian / 2447;
       U = V / 11;
 
-      *plYear  = X + U + ( W - 49 ) * 100;
-      *plMonth = V + 2 - ( U * 12 );
-      *plDay   = lJulian - ( 2447 * V / 80 );
+      *piYear  = (int) ( X + U + ( W - 49 ) * 100 );
+      *piMonth = (int) ( V + 2 - ( U * 12 ) );
+      *piDay   = (int) ( lJulian - ( 2447 * V / 80 ) );
    }
    else
    {
-      *plYear  =
-      *plMonth =
-      *plDay   = 0;
+      *piYear  =
+      *piMonth =
+      *piDay   = 0;
    }
 }
 
-void HB_EXPORT hb_dateStrPut( char * szDate, long lYear, long lMonth, long lDay )
+void HB_EXPORT hb_dateStrPut( char * szDate, int iYear, int iMonth, int iDay )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_dateStrPut(%p, %ld, %ld, %ld)", szDate, lYear, lMonth, lDay));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateStrPut(%p, %d, %d, %d)", szDate, iYear, iMonth, iDay));
 
-   if( lYear >= 0 && lMonth && lDay )
+   if( iYear >= 0 && iMonth && iDay )
    {
-      szDate[ 0 ] = ( ( lYear % 10000 ) / 1000 ) + '0';
-      szDate[ 1 ] = ( ( lYear % 1000 ) / 100 ) + '0';
-      szDate[ 2 ] = ( ( lYear % 100 ) / 10 ) + '0';
-      szDate[ 3 ] = ( lYear % 10 ) + '0';
+      szDate[ 0 ] = ( ( iYear % 10000 ) / 1000 ) + '0';
+      szDate[ 1 ] = ( ( iYear % 1000 ) / 100 ) + '0';
+      szDate[ 2 ] = ( ( iYear % 100 ) / 10 ) + '0';
+      szDate[ 3 ] = ( iYear % 10 ) + '0';
 
-      szDate[ 4 ] = ( lMonth / 10 ) + '0';
-      szDate[ 5 ] = ( lMonth % 10 ) + '0';
+      szDate[ 4 ] = ( iMonth / 10 ) + '0';
+      szDate[ 5 ] = ( iMonth % 10 ) + '0';
 
-      szDate[ 6 ] = ( lDay / 10 ) + '0';
-      szDate[ 7 ] = ( lDay % 10 ) + '0';
+      szDate[ 6 ] = ( iDay / 10 ) + '0';
+      szDate[ 7 ] = ( iDay % 10 ) + '0';
    }
-   else if ( lYear || lMonth || lDay )
+   else if ( iYear || iMonth || iDay )
       memset( szDate, '0', 8 );
    else
       memset( szDate, ' ', 8 );
 }
 
-void hb_dateStrGet( const char * szDate, long * plYear, long * plMonth, long * plDay )
+void HB_EXPORT hb_dateStrGet( const char * szDate, int * piYear, int * piMonth, int * piDay )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_dateStrGet(%s, %p, %p, %p)", szDate, plYear, plMonth, plDay));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateStrGet(%s, %p, %p, %p)", szDate, piYear, piMonth, piDay));
 
    if( szDate && szDate[ 8 ] == '\0' )
    {
       /* Date string has correct length, so attempt to convert */
-      *plYear  = ( ( USHORT ) ( szDate[ 0 ] - '0' ) * 1000 ) +
+      *piYear  = ( ( USHORT ) ( szDate[ 0 ] - '0' ) * 1000 ) +
                  ( ( USHORT ) ( szDate[ 1 ] - '0' ) * 100 ) +
                  ( ( USHORT ) ( szDate[ 2 ] - '0' ) * 10 ) +
                    ( USHORT ) ( szDate[ 3 ] - '0' );
-      *plMonth = ( ( szDate[ 4 ] - '0' ) * 10 ) + ( szDate[ 5 ] - '0' );
-      *plDay   = ( ( szDate[ 6 ] - '0' ) * 10 ) + ( szDate[ 7 ] - '0' );
+      *piMonth = ( ( szDate[ 4 ] - '0' ) * 10 ) + ( szDate[ 5 ] - '0' );
+      *piDay   = ( ( szDate[ 6 ] - '0' ) * 10 ) + ( szDate[ 7 ] - '0' );
    }
    else
    {
       /* Date string missing or bad length, so force an empty date */
-      *plYear  =
-      *plMonth =
-      *plDay   = 0;
+      *piYear  =
+      *piMonth =
+      *piDay   = 0;
    }
 }
 
 /* This function always closes the date with a zero byte, so it needs a
    9 character long buffer. */
 
-char * hb_dateDecStr( char * szDate, long lJulian )
+char HB_EXPORT * hb_dateDecStr( char * szDate, LONG lJulian )
 {
-   long lYear, lMonth, lDay;
+   int iYear, iMonth, iDay;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dateDecStr(%p, %ld)", szDate, lJulian));
 
-   hb_dateDecode( lJulian, &lYear, &lMonth, &lDay );
-   hb_dateStrPut( szDate, lYear, lMonth, lDay );
+   hb_dateDecode( lJulian, &iYear, &iMonth, &iDay );
+   hb_dateStrPut( szDate, iYear, iMonth, iDay );
    szDate[ 8 ] = '\0';
 
    return szDate;
 }
 
-long hb_dateEncStr( char * szDate )
+LONG HB_EXPORT hb_dateEncStr( char * szDate )
 {
-   long lYear, lMonth, lDay;
+   int  iYear, iMonth, iDay;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dateEncStr(%s)", szDate));
 
-   hb_dateStrGet( szDate, &lYear, &lMonth, &lDay );
+   hb_dateStrGet( szDate, &iYear, &iMonth, &iDay );
 
-   return hb_dateEncode( lYear, lMonth, lDay );
+   return hb_dateEncode( iYear, iMonth, iDay );
 }
 
-/* NOTE: szFormattedDate must be an at least 11 chars wide buffer */
-
-char * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * szDateFormat )
+char HB_EXPORT * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * szDateFormat )
 {
    /*
     * NOTE: szFormattedDate must point to a buffer of at least 11 bytes.
@@ -383,32 +387,32 @@ char * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * 
    return szFormattedDate;
 }
 
-long hb_dateDOW( long lYear, long lMonth, long lDay )
+int HB_EXPORT hb_dateDOW( int iYear, int iMonth, int iDay )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_dateDOW(%ld, %ld, %ld)", lYear, lMonth, lDay));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateDOW(%d, %d, %d)", iYear, iMonth, iDay));
 
-   if( lMonth < 3 )
+   if( iMonth < 3 )
    {
-      lMonth += 13;
-      lYear--;
+      iMonth += 13;
+      iYear--;
    }
    else
-      lMonth++;
+      iMonth++;
 
-   return ( lDay + 26 * lMonth / 10 +
-            lYear + lYear / 4 - lYear / 100 + lYear / 400 + 6 ) % 7 + 1;
+   return ( iDay + 26 * iMonth / 10 +
+            iYear + iYear / 4 - iYear / 100 + iYear / 400 + 6 ) % 7 + 1;
 }
 
-void hb_dateToday( long * plYear, long * plMonth, long * plDay )
+void HB_EXPORT hb_dateToday( int * piYear, int * piMonth, int * piDay )
 {
 #if defined(HB_OS_WIN_32)
    {
       SYSTEMTIME st;
       GetLocalTime( &st );
 
-      *plYear  = st.wYear;
-      *plMonth = st.wMonth;
-      *plDay   = st.wDay;
+      *piYear  = st.wYear;
+      *piMonth = st.wMonth;
+      *piDay   = st.wDay;
    }
 #else
    {
@@ -418,16 +422,16 @@ void hb_dateToday( long * plYear, long * plMonth, long * plDay )
       time( &t );
       oTime = localtime( &t );
 
-      *plYear  = oTime->tm_year + 1900;
-      *plMonth = oTime->tm_mon + 1;
-      *plDay   = oTime->tm_mday;
+      *piYear  = oTime->tm_year + 1900;
+      *piMonth = oTime->tm_mon + 1;
+      *piDay   = oTime->tm_mday;
    }
 #endif
 }
 
 /* NOTE: The passed buffer must be at least 9 chars long */
 
-void hb_dateTimeStr( char * pszTime )
+void HB_EXPORT hb_dateTimeStr( char * pszTime )
 {
 #if defined(HB_OS_WIN_32)
    {

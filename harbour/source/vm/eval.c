@@ -351,9 +351,6 @@ HB_FUNC( HB_FORNEXT ) /* nStart, nEnd | bEnd, bCode, nStep */
    PHB_ITEM pCodeBlock = hb_param( 3, HB_IT_BLOCK );
    LONG lStep = ( hb_pcount() > 3 ) ? hb_parnl( 4 ) : 1;
 
-   if( ! pEndBlock )
-      lEnd = hb_parnl( 2 );
-
    if( pCodeBlock )
    {
       if( pEndBlock )
@@ -376,6 +373,7 @@ HB_FUNC( HB_FORNEXT ) /* nStart, nEnd | bEnd, bCode, nStep */
       }
       else
       {
+         lEnd = hb_parnl( 2 );
          while( lStart <= lEnd )
          {
             hb_vmPushSymbol( &hb_symEval );

@@ -204,6 +204,7 @@ PHB_FNAME hb_fsFNameSplit( char * pszFileName )
 /* This function joins path, name and extension into a string with a filename */
 char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
 {
+   static char szPathSep[] = {OS_PATH_DELIMITER,0}; /* see NOTE below */
    char * pszName;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsFNameMerge(%p, %p)", pszFileName, pFileName));
@@ -213,12 +214,18 @@ char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
 
    /* Strip preceding path separators from the filename */
    pszName = pFileName->szName;
-   if( pszName && pszName[ 0 ] != '\0' && strchr( OS_PATH_DELIMITER_LIST, pszName[ 0 ] ) )
+   if( pszName && pszName[ 0 ] != '\0' && strchr( OS_PATH_DELIMITER_LIST, pszName[ 0 ] ) != NULL )
       pszName++;
 
    /* Add path if specified */
    if( pFileName->szPath )
-      strcat( pszFileName, pFileName->szPath );
+      hb_strncat( pszFileName, pFileName->szPath, _POSIX_PATH_MAX - 1 );
+
+   /*
+      NOTE: be _very_ careful about 'optimising' this next section code!
+      (specifically, initialising szPathSep) as MSVC with /Ni
+      (or anything that infers it like /Ox) will cause you trouble.
+    */
 
    /* If we have a path, append a path separator to the path if there
       was none. */
@@ -228,18 +235,20 @@ char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
 
       if( strchr( OS_PATH_DELIMITER_LIST, pszFileName[ iLen ] ) == NULL )
       {
-         char szPathSep[ 2 ];
+         /*
+             char szPathSep[2];
 
-         szPathSep[ 0 ] = OS_PATH_DELIMITER;
-         szPathSep[ 1 ] = '\0';
+             szPathSep[ 0 ] = OS_PATH_DELIMITER;
+             szPathSep[ 1 ] = '\0';
 
-         strcat( pszFileName, szPathSep );
+          */
+         hb_strncat( pszFileName, szPathSep, _POSIX_PATH_MAX - 1 );
       }
    }
 
    /* Add filename (without extension) if specified */
    if( pszName )
-      strcat( pszFileName, pszName );
+      hb_strncat( pszFileName, pszName, _POSIX_PATH_MAX - 1 );
 
    /* Add extension if specified */
    if( pFileName->szExtension )
@@ -247,9 +256,9 @@ char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
       /* Add a dot if the extension doesn't have it */
       if( pFileName->szExtension[ 0 ] != '\0' &&
           pFileName->szExtension[ 0 ] != '.' )
-         strcat( pszFileName, "." );
+         hb_strncat( pszFileName, ".", _POSIX_PATH_MAX - 1 );
 
-      strcat( pszFileName, pFileName->szExtension );
+      hb_strncat( pszFileName, pFileName->szExtension, _POSIX_PATH_MAX - 1 );
    }
 
    HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:   szPath: |%s|\n", pFileName->szPath));
@@ -260,4 +269,3 @@ char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
 
    return pszFileName;
 }
-

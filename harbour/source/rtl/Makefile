@@ -44,6 +44,7 @@ C_SOURCES=\
     gtapiu.c     \
     gx.c         \
     hardcr.c     \
+    hbffind.c    \
     hbrandom.c   \
     idle.c       \
     inkey.c      \
@@ -184,4 +185,3 @@ DIRS=$(HB_GT_LIBS)
 
 include $(TOP)$(ROOT)config/lib.cf
 include $(TOP)$(ROOT)config/dir.cf
-

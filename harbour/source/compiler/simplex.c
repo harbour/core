@@ -60,9 +60,9 @@
 #endif
 
 /* Language Definitions Readability. */
-#define SELF_CONTAINED_WORDS_ARE LEX_WORD static aSelfs[] =
-#define LANGUAGE_KEY_WORDS_ARE LEX_WORD static aKeys[] =
-#define LANGUAGE_WORDS_ARE LEX_WORD static aWords[] =
+#define SELF_CONTAINED_WORDS_ARE static LEX_WORD aSelfs[] =
+#define LANGUAGE_KEY_WORDS_ARE static LEX_WORD aKeys[] =
+#define LANGUAGE_WORDS_ARE static LEX_WORD aWords[] =
 #define LANGUAGE_RULES_ARE static int aiRules[][ MAX_MATCH + 2 ] =
 #define ACCEPT_TOKEN_AND_DROP_DELIMITER_IF_ONE_OF_THESE(x) static char *szOmmit = x
 #define ACCEPT_TOKEN_AND_RETURN_DELIMITERS static LEX_DELIMITER aDelimiters[] =

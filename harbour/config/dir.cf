@@ -13,5 +13,10 @@ all : first
 first clean install::
 	$(DIR_RULE)
 
+ifneq ($(HB_POSTINST),)
+install::
+	$(HB_POSTINST)
+endif
+
 endif
 endif

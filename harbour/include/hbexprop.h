@@ -187,7 +187,7 @@ typedef struct HB_EXPR_
       } asRTVar;      /* PUBLIC or PRIVATE variable declaration */
       struct
       {
-         long lVal;           /* long value */
+         HB_LONG lVal;        /* long value */
          double dVal;         /* double value */
          unsigned char bWidth; /* unsigned char used intentionally */
          unsigned char bDec;  /* unsigned char used intentionally */
@@ -309,7 +309,7 @@ HB_EXPR_PTR hb_compExprNew( int );
 HB_EXPR_PTR hb_compExprNewEmpty( void );
 HB_EXPR_PTR hb_compExprNewNil( void );
 HB_EXPR_PTR hb_compExprNewDouble( double, BYTE, BYTE );
-HB_EXPR_PTR hb_compExprNewLong( LONG );
+HB_EXPR_PTR hb_compExprNewLong( HB_LONG );
 HB_EXPR_PTR hb_compExprNewString( char * );
 HB_EXPR_PTR hb_compExprNewLogical( int );
 HB_EXPR_PTR hb_compExprNewSelf( void );

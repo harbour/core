@@ -53,13 +53,12 @@
 #ifndef HB_DBFERR_H_
 #define HB_DBFERR_H_
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 /* DBF errors */
 #define EDBF_OPEN_DBF                              1001
 #define EDBF_CREATE_DBF                            1004
+#define EDBF_CREATE                                1006
 #define EDBF_READ                                  1010
 #define EDBF_WRITE                                 1011
 #define EDBF_CORRUPT                               1012
@@ -73,9 +72,6 @@ extern "C" {
 /* ORDER errors */
 #define EDBF_INVALIDKEY                            1026
 
-
-#if defined(HB_EXTERN_C)
-}
-#endif
+HB_EXTERN_END
 
 #endif /* HB_DBFERR_H_ */

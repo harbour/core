@@ -423,7 +423,7 @@ static HB_GENC_FUNC( hb_p_arraydim )
    fprintf( cargo->yyc, "\tHB_P_ARRAYDIM, %i, %i,",
             pFunc->pCode[ lPCodePos + 1 ],
             pFunc->pCode[ lPCodePos + 2 ] );
-   if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %i */", pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 );
+   if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %i */", HB_PCODE_MKUSHORT( &( pFunc->pCode[ lPCodePos + 1 ] ) ) );
    fprintf( cargo->yyc, "\n" );
    return 3;
 }
@@ -449,6 +449,8 @@ static HB_GENC_FUNC( hb_p_doshort )
 {
    HB_FUNCALLS_PTR pTemp = pFunCalls, pPrev = NULL;
    char * szFunName;
+
+   HB_SYMBOL_UNUSED( pFunc );
 
    while( pTemp->pNext != NULL )
    {
@@ -525,6 +527,10 @@ static HB_GENC_FUNC( hb_p_endblock )
 
 static HB_GENC_FUNC( hb_p_endproc )
 {
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( cargo );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
    // if( (lPCodePos+1) == pFunc->lPCodePos )
    //    fprintf( cargo->yyc, "\tHB_P_ENDPROC\n" );
    // else
@@ -605,6 +611,8 @@ static HB_GENC_FUNC( hb_p_functionshort )
    HB_FUNCALLS_PTR pTemp = pFunCalls, pPrev = NULL;
    char * szFunName;
 
+   HB_SYMBOL_UNUSED( pFunc );
+
    while( pTemp->pNext != NULL )
    {
       pPrev = pTemp;
@@ -630,13 +638,12 @@ static HB_GENC_FUNC( hb_p_functionshort )
 
 static HB_GENC_FUNC( hb_p_arraygen )
 {
-   int i;
+   int i, n = HB_PCODE_MKUSHORT( &( pFunc->pCode[ lPCodePos + 1 ] ) );
 
    fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
    fprintf( cargo->yyc, "call vararg object ObjArrayGen( ..." );
 
-   for( i = 0; i < pFunc->pCode[ lPCodePos + 1 ] +
-                 ( pFunc->pCode[ lPCodePos + 2 ] * 256 ); i++ )
+   for( i = 0; i < n; i++ )
       fprintf( cargo->yyc, ",object" );
 
    fprintf( cargo->yyc, ")\n" );
@@ -896,6 +903,8 @@ static HB_GENC_FUNC( hb_p_lessequal )
 
 static HB_GENC_FUNC( hb_p_line )
 {
+   HB_SYMBOL_UNUSED( pFunc );
+
    fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
    fprintf( cargo->yyc, "nop  // HB_P_LINE\n" );
 
@@ -1423,7 +1432,7 @@ static HB_GENC_FUNC( hb_p_pushdouble )
 
    fprintf( cargo->yyc, "\tHB_P_PUSHDOUBLE," );
    ++lPCodePos;
-   for( i = 0; i < sizeof( double ) + sizeof( BYTE ) + sizeof( BYTE ); ++i )
+   for( i = 0; i < (int) ( sizeof( double ) + sizeof( BYTE ) + sizeof( BYTE ) ); ++i )
       fprintf( cargo->yyc, " %i,", ( ( BYTE * ) pFunc->pCode )[ lPCodePos + i ] );
    if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %.*f, %d, %d */",
       *( ( BYTE * ) &( pFunc->pCode[ lPCodePos + sizeof( double ) ] ) ),
@@ -1578,7 +1587,7 @@ static HB_GENC_FUNC( hb_p_pushlong )
    // if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %li */", *( ( long * ) &( pFunc->pCode[ lPCodePos + 1 ] ) ) );
    // fprintf( cargo->yyc, "\n" );
 
-   return 1 + sizeof( long );
+   return 5;
 }
 
 static HB_GENC_FUNC( hb_p_pushmemvar )
@@ -1606,6 +1615,7 @@ static HB_GENC_FUNC( hb_p_pushnil )
    HB_FUNCALLS_PTR pTemp = pFunCalls;
 
    HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( cargo );
    HB_SYMBOL_UNUSED( lPCodePos );
 
    if( pTemp )
@@ -2013,7 +2023,6 @@ static HB_GENC_FUNC( hb_p_macrolistend )
    return 1;
 }
 
-#define HB_PCODE_MKSHORT( p )	( *( SHORT * )( p ) )
 static HB_GENC_FUNC( hb_p_localnearaddint )
 {
    fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );

@@ -52,11 +52,10 @@
 
 #include "hbapi.h"
 
-extern HB_FUNC( PADR );
+HB_FUNC_EXTERN( PADR );
 
 /* synonymn for PADR */
 HB_FUNC( PAD )
 {
    HB_FUNCNAME( PADR )();
 }
-

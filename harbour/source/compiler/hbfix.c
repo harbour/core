@@ -68,8 +68,7 @@ typedef HB_FIX_FUNC_ * HB_FIX_FUNC_PTR;
 static HB_FIX_FUNC( hb_p_pushstr )
 {
    HB_SYMBOL_UNUSED( cargo );
-   return 3 + pFunc->pCode[ lPCodePos + 1 ] +
-              pFunc->pCode[ lPCodePos + 2 ] * 256;
+   return 3 + HB_PCODE_MKUSHORT( &( pFunc->pCode[ lPCodePos + 1 ] ) );
 }
 
 static HB_FIX_FUNC( hb_p_pushstrshort )
@@ -90,21 +89,23 @@ static HB_FIX_FUNC( hb_p_endblock )
 static HB_FIX_FUNC( hb_p_pushblock )
 {
    USHORT wVar;
-   USHORT * pLocal;
    ULONG ulStart = lPCodePos;
 
    ++cargo->iNestedCodeblock;
 
-   wVar = * ( ( USHORT * ) &( pFunc->pCode [ lPCodePos + 5 ] ) );
+   wVar = HB_PCODE_MKUSHORT( &( pFunc->pCode[ lPCodePos + 5 ] ) );
 
    /* opcode + codeblock size + number of parameters + number of local variables */
    lPCodePos += 7;
    /* fix local variable's reference */
    while( wVar-- )
    {
+      BYTE * pLocal = &( pFunc->pCode[ lPCodePos ] );
+      USHORT wLocal = HB_PCODE_MKUSHORT( pLocal );
 
-      pLocal = ( USHORT * ) &( pFunc->pCode [ lPCodePos ] );
-      *pLocal += pFunc->wParamCount;
+      wLocal += pFunc->wParamCount;
+      pLocal[ 0 ] = HB_LOBYTE( wLocal );
+      pLocal[ 1 ] = HB_HIBYTE( wLocal );
       lPCodePos +=2;
    }
    return (USHORT) (lPCodePos - ulStart);
@@ -150,9 +151,12 @@ static HB_FIX_FUNC( hb_p_poplocal )
    {
       /* only local variables used outside of a codeblock need fixing
        */
-      SHORT * pVar = ( SHORT * ) &( pFunc->pCode )[ lPCodePos + 1 ];
+      BYTE * pVar = &( pFunc->pCode[ lPCodePos + 1 ] );
+      SHORT iVar = HB_PCODE_MKSHORT( pVar );
 
-      *pVar += pFunc->wParamCount;
+      iVar += pFunc->wParamCount;
+      pVar[ 0 ] = HB_LOBYTE( iVar );
+      pVar[ 1 ] = HB_HIBYTE( iVar );
    }
 
    return (USHORT) 3;
@@ -164,9 +168,12 @@ static HB_FIX_FUNC( hb_p_pushlocal )
    {
       /* only local variables used outside of a codeblock need fixing
        */
-      SHORT * pVar = ( SHORT * ) &( pFunc->pCode )[ lPCodePos + 1 ];
+      BYTE * pVar = &( pFunc->pCode[ lPCodePos + 1 ] );
+      SHORT iVar = HB_PCODE_MKSHORT( pVar );
 
-      *pVar += pFunc->wParamCount;
+      iVar += pFunc->wParamCount;
+      pVar[ 0 ] = HB_LOBYTE( iVar );
+      pVar[ 1 ] = HB_HIBYTE( iVar );
    }
 
    return (USHORT) 3;
@@ -178,9 +185,12 @@ static HB_FIX_FUNC( hb_p_pushlocalref )
    {
       /* only local variables used outside of a codeblock need fixing
        */
-      SHORT * pVar = ( SHORT * ) &( pFunc->pCode )[ lPCodePos + 1 ];
+      BYTE * pVar = &( pFunc->pCode[ lPCodePos + 1 ] );
+      SHORT iVar = HB_PCODE_MKSHORT( pVar );
 
-      *pVar += pFunc->wParamCount;
+      iVar += pFunc->wParamCount;
+      pVar[ 0 ] = HB_LOBYTE( iVar );
+      pVar[ 1 ] = HB_HIBYTE( iVar );
    }
 
    return (USHORT) 3;
@@ -192,10 +202,13 @@ static HB_FIX_FUNC( hb_p_poplocalnear )
    {
       /* only local variables used outside of a codeblock need fixing
        */
-      SHORT * pVar = ( SHORT * ) &( pFunc->pCode )[ lPCodePos + 1 ];
+      BYTE * pVar = &( pFunc->pCode[ lPCodePos + 1 ] );
+      SHORT iVar = HB_PCODE_MKSHORT( pVar );
 
-      *pVar += pFunc->wParamCount;
-      if( *pVar >= -128 && *pVar <= 127 )
+      iVar += pFunc->wParamCount;
+      pVar[ 0 ] = HB_LOBYTE( iVar );
+      pVar[ 1 ] = HB_HIBYTE( iVar );
+      if( iVar >= -128 && iVar <= 127 )
       {
          pFunc->pCode[ lPCodePos + 2 ] = HB_P_NOOP;
          hb_compNOOPadd( pFunc, lPCodePos + 2 );
@@ -217,10 +230,13 @@ static HB_FIX_FUNC( hb_p_pushlocalnear )
    {
       /* only local variables used outside of a codeblock need fixing
        */
-      SHORT * pVar = ( SHORT * ) &( pFunc->pCode )[ lPCodePos + 1 ];
+      BYTE * pVar = &( pFunc->pCode[ lPCodePos + 1 ] );
+      SHORT iVar = HB_PCODE_MKSHORT( pVar );
 
-      *pVar += pFunc->wParamCount;
-      if( *pVar >= -128 && *pVar <= 127 )
+      iVar += pFunc->wParamCount;
+      pVar[ 0 ] = HB_LOBYTE( iVar );
+      pVar[ 1 ] = HB_HIBYTE( iVar );
+      if( iVar >= -128 && iVar <= 127 )
       {
          pFunc->pCode[ lPCodePos + 2 ] = HB_P_NOOP;
          hb_compNOOPadd( pFunc, lPCodePos + 2 );
@@ -407,9 +423,10 @@ static HB_FIX_FUNC_PTR s_fixlocals_table[] =
    NULL,                       /* HB_P_ONE,                  */
    NULL,                       /* HB_P_MACROLIST,            */
    NULL,                       /* HB_P_MACROLISTEND,         */
-   NULL,                       /* HB_P_MPUSHSTR              */
+   NULL,                       /* HB_P_MPUSHSTR,             */
    hb_p_localnearaddint,       /* HB_P_LOCALNEARADDINT,      */
-   NULL                        /* HB_P_MACROPUSHREF          */
+   NULL,                       /* HB_P_MACROPUSHREF,         */
+   NULL                        /* HB_P_PUSHLONGLONG          */
 };
 
 void hb_compFixFuncPCode( PFUNCTION pFunc )

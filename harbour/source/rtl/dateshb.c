@@ -220,11 +220,11 @@ HB_FUNC( YEAR )
 
    if( pDate )
    {
-      long lYear, lMonth, lDay;
+      int iYear, iMonth, iDay;
 
-      hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
+      hb_dateDecode( hb_itemGetDL( pDate ), &iYear, &iMonth, &iDay );
 
-      hb_retnllen( lYear, 5 );
+      hb_retnllen( iYear, 5 );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1112, NULL, "YEAR", 1, hb_paramError( 1 ) );
@@ -236,11 +236,11 @@ HB_FUNC( MONTH )
 
    if( pDate )
    {
-      long lYear, lMonth, lDay;
+      int iYear, iMonth, iDay;
 
-      hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
+      hb_dateDecode( hb_itemGetDL( pDate ), &iYear, &iMonth, &iDay );
 
-      hb_retnllen( lMonth, 3 );
+      hb_retnilen( iMonth, 3 );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1113, NULL, "MONTH", 1, hb_paramError( 1 ) );
@@ -252,11 +252,11 @@ HB_FUNC( DAY )
 
    if( pDate )
    {
-      long lYear, lMonth, lDay;
+      int iYear, iMonth, iDay;
 
-      hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
+      hb_dateDecode( hb_itemGetDL( pDate ), &iYear, &iMonth, &iDay );
 
-      hb_retnllen( lDay, 3 );
+      hb_retnilen( iDay, 3 );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1114, NULL, "DAY", 1, hb_paramError( 1 ) );
@@ -271,9 +271,9 @@ HB_FUNC( TIME )
 
 HB_FUNC( DATE )
 {
-   long lYear, lMonth, lDay;
-   hb_dateToday( &lYear, &lMonth, &lDay );
-   hb_retd( lYear, lMonth, lDay );
+   int iYear, iMonth, iDay;
+   hb_dateToday( &iYear, &iMonth, &iDay );
+   hb_retd( iYear, iMonth, iDay );
 }
 
 HB_FUNC( DOW )
@@ -286,14 +286,14 @@ HB_FUNC( DOW )
 
       if( lDate )
       {
-         long lYear, lMonth, lDay;
+         int iYear, iMonth, iDay;
 
-         hb_dateDecode( lDate, &lYear, &lMonth, &lDay );
+         hb_dateDecode( lDate, &iYear, &iMonth, &iDay );
 
-         hb_retnllen( hb_dateDOW( lYear, lMonth, lDay ), 3 );
+         hb_retnilen( hb_dateDOW( iYear, iMonth, iDay ), 3 );
       }
       else
-         hb_retnllen( 0, 3 );
+         hb_retnilen( 0, 3 );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1115, NULL, "DOW", 1, hb_paramError( 1 ) );

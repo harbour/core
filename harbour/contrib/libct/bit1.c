@@ -59,13 +59,13 @@
 #include "ct.h"
 #include "clipdefs.h"
 
-long static __hex2int( char *cNum1, int iLenHex );
-long static __getparam( int iParam );
-long static __numand( long wNum1, long wNum2 );
-long static __numor ( long wNum1, long wNum2 );
-long static __numxor( long wNum1, long wNum2 );
-long static __numnot( long wNum1, long wNum2 );
-long static __numfun( int iPCount, long (*operation)(long wNum1, long wNum2));
+static long __hex2int( char *cNum1, int iLenHex );
+static long __getparam( int iParam );
+static long __numand( long wNum1, long wNum2 );
+static long __numor ( long wNum1, long wNum2 );
+static long __numxor( long wNum1, long wNum2 );
+static long __numnot( long wNum1, long wNum2 );
+static long __numfun( int iPCount, long (*operation)(long wNum1, long wNum2));
 
 
 /*  $DOC$
@@ -381,7 +381,7 @@ HB_FUNC ( HEX2NUM )
 }
 */
 
-long static __hex2int( char *cNum1, int iLenHex )
+static long __hex2int( char *cNum1, int iLenHex )
 {
   int  i;
   int  iNum;
@@ -406,7 +406,7 @@ long static __hex2int( char *cNum1, int iLenHex )
 }
 
 
-long static __getparam( int iParam )
+static long __getparam( int iParam )
 {
 
   if ( ISCHAR( iParam ) )
@@ -417,32 +417,32 @@ long static __getparam( int iParam )
 }
 
 
-long static __numand( long uiNum1, long uiNum2 )
+static long __numand( long uiNum1, long uiNum2 )
 {
     return uiNum1 & uiNum2;
 }
 
 
-long static __numor( long uiNum1, long uiNum2 )
+static long __numor( long uiNum1, long uiNum2 )
 {
     return uiNum1 | uiNum2;
 }
 
 
-long static __numxor( long uiNum1, long uiNum2 )
+static long __numxor( long uiNum1, long uiNum2 )
 {
     return uiNum1 ^ uiNum2;
 }
 
 
-long static __numnot( long uiNum1, long uiNum2 )
+static long __numnot( long uiNum1, long uiNum2 )
 {
     HB_SYMBOL_UNUSED (uiNum2);
     return ~uiNum1;
 }
 
 
-long static __numfun( int iPCount, long (*operation)(long wNum1, long wNum2))
+static long __numfun( int iPCount, long (*operation)(long wNum1, long wNum2))
 {
   long uiNumOp = 0;
   long uiNum1, uiNum2;

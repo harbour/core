@@ -164,6 +164,10 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
 
+   HB_SYMBOL_UNUSED( iFilenoStdin );
+   HB_SYMBOL_UNUSED( iFilenoStdout );
+   HB_SYMBOL_UNUSED( iFilenoStderr );
+
    s_uiDispCount = 0;
 
    hb_gt_terminal_Init();
@@ -581,7 +585,7 @@ void hb_gt_DispEnd()
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispEnd()"));
 
-   if( --s_uiDispCount == 0 );
+   if( --s_uiDispCount == 0 )
       refresh();
 }
 

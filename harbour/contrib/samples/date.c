@@ -59,23 +59,23 @@
 */
 HB_FUNC( MDY )
 {
-   long lYear, lMonth, lDay;
+   int iYear, iMonth, iDay;
    char szDate[ 9 ];
    char szFormatted[ 11 ];
    char * szReturn;
    int iBufferLen;
    int iLen;
 
-   hb_dateDecode( hb_parnl( 1 ), &lYear, &lMonth, &lDay );
+   hb_dateDecode( hb_parnl( 1 ), &iYear, &iMonth, &iDay );
    hb_dateFormat( hb_pardsbuff( szDate, 1 ), szFormatted, "MM/DD/YYYY" );
 
-   iLen = strlen( hb_dateCMonth( lMonth ) );
+   iLen = strlen( hb_dateCMonth( iMonth ) );
 
    iBufferLen = iLen + ( hb_set.hb_set_century ? 9 : 7 );
    szReturn = ( char * ) hb_xgrab( iBufferLen );
 
    memset( szReturn, ' ', iBufferLen + 1 );
-   memcpy( szReturn, hb_dateCMonth( lMonth ), iLen );
+   memcpy( szReturn, hb_dateCMonth( iMonth ), iLen );
    memcpy( szReturn + iLen + 1, szFormatted + 3, 2 );
    szReturn[ iLen + 3 ] = ',';
    memcpy( szReturn + iLen + 5, szFormatted + 6 + ( hb_set.hb_set_century ? 0 : 2 ), 2 + ( hb_set.hb_set_century ? 2 : 0 ) );
@@ -88,24 +88,24 @@ HB_FUNC( MDY )
 */
 HB_FUNC( DMY )
 {
-   long lYear, lMonth, lDay;
+   int iYear, iMonth, iDay;
    char szDate[ 9 ];
    char szFormatted[ 11 ];
    char * szReturn;
    int iBufferLen;
    int iLen;
 
-   hb_dateDecode( hb_parnl( 1 ), &lYear, &lMonth, &lDay );
+   hb_dateDecode( hb_parnl( 1 ), &iYear, &iMonth, &iDay );
    hb_dateFormat( hb_pardsbuff( szDate, 1 ), szFormatted, "MM/DD/YYYY" );
 
-   iLen = strlen( hb_dateCMonth( lMonth ) );
+   iLen = strlen( hb_dateCMonth( iMonth ) );
 
    iBufferLen = iLen + ( hb_set.hb_set_century ? 9 : 7 );
    szReturn = ( char * ) hb_xgrab( iBufferLen );
 
    memset( szReturn, ' ', iBufferLen );
    memcpy( szReturn, szFormatted + 3, 2 );
-   memcpy( szReturn + 3, hb_dateCMonth( lMonth ), iLen );
+   memcpy( szReturn + 3, hb_dateCMonth( iMonth ), iLen );
    memcpy( szReturn + iLen + 4, szFormatted + 6 + ( hb_set.hb_set_century ? 0 : 2 ), 2 + ( hb_set.hb_set_century ? 2 : 0 ) );
 
    hb_retclen( szReturn, iBufferLen );
@@ -116,27 +116,27 @@ HB_FUNC( DMY )
 */
 HB_FUNC( DATEASAGE )
 {
-   long lAge = 0;
+   int iAge = 0;
    PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
 
    if( pDate )
    {
-      long lYear, lMonth, lDay;
-      long lThisYear, lThisMonth, lThisDay;
+      int iYear, iMonth, iDay;
+      int iThisYear, iThisMonth, iThisDay;
 
-      hb_dateToday( &lThisYear, &lThisMonth, &lThisDay );
-      hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
+      hb_dateToday( &iThisYear, &iThisMonth, &iThisDay );
+      hb_dateDecode( hb_itemGetDL( pDate ), &iYear, &iMonth, &iDay );
       
-      if( lThisYear > lYear )
+      if( iThisYear > iYear )
       {
-         lAge = lThisYear - lYear;
+         iAge = iThisYear - iYear;
       
-         if( lThisMonth < lMonth || ( lThisMonth == lMonth && lThisDay < lDay ) )
-            --lAge;
+         if( iThisMonth < iMonth || ( iThisMonth == iMonth && iThisDay < iDay ) )
+            --iAge;
       }
    }
 
-   hb_retnl( lAge );
+   hb_retni( iAge );
 }
 
 /* ADDMONTH( <dDate>, <nMonths> ) --> <dNewDate>
@@ -144,39 +144,39 @@ HB_FUNC( DATEASAGE )
 */
 HB_FUNC( ADDMONTH )
 {
-   long lMonths = hb_parnl( 2 );
-   long lYear, lMonth, lDay;
+   int iMonths = hb_parnl( 2 );
+   int iYear, iMonth, iDay;
 
    int iLimit, iMonthAdd, iYearAdd;
    long lNew;
 
-   hb_dateDecode( hb_parnl( 1 ), &lYear, &lMonth, &lDay );
+   hb_dateDecode( hb_parnl( 1 ), &iYear, &iMonth, &iDay );
 
-   iLimit = 12 - lMonth + 1;
-   iYearAdd = lMonths / 12;
-   lMonths %= 12;
+   iLimit = 12 - iMonth + 1;
+   iYearAdd = iMonths / 12;
+   iMonths %= 12;
 
-   if( lMonths >= iLimit )
+   if( iMonths >= iLimit )
       iYearAdd++;
 
-   lYear += iYearAdd;
+   iYear += iYearAdd;
 
-   iMonthAdd = lMonths % 12;
-   lMonth    = ( lMonth + iMonthAdd ) % 12;
+   iMonthAdd = iMonths % 12;
+   iMonth    = ( iMonth + iMonthAdd ) % 12;
 
-   if( lMonth == 0 )
-      lMonth = 12;
+   if( iMonth == 0 )
+      iMonth = 12;
 
-   lNew = hb_dateEncode( lYear, lMonth, lDay );
+   lNew = hb_dateEncode( iYear, iMonth, iDay );
 
    if( !lNew )
    {
-      lMonth = ( lMonth + 1 ) % 12;
-      lDay = 1;
-      lYear = lYear + ( ( lMonth + 1 ) / 12 );
+      iMonth = ( iMonth + 1 ) % 12;
+      iDay = 1;
+      iYear = iYear + ( ( iMonth + 1 ) / 12 );
    }
 
-   hb_retd( lYear, lMonth, lDay );
+   hb_retd( iYear, iMonth, iDay );
 }
 
 /* DATEASARRAY( <dDate> ) --> { Year, Month, Day }
@@ -190,19 +190,19 @@ HB_FUNC( DATEASARRAY )
    if( pDate )
    {
       PHB_ITEM pItem;
-      long lYear, lMonth, lDay;
+      int iYear, iMonth, iDay;
 
-      hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
+      hb_dateDecode( hb_itemGetDL( pDate ), &iYear, &iMonth, &iDay );
 
-      pItem = hb_itemPutNL( NULL, lYear );
+      pItem = hb_itemPutNI( NULL, iYear );
       hb_itemArrayPut( pReturn, 1, pItem );
       hb_itemRelease( pItem );
 
-      pItem = hb_itemPutNL( NULL, lMonth );
+      pItem = hb_itemPutNI( NULL, iMonth );
       hb_itemArrayPut( pReturn, 2, pItem );
       hb_itemRelease( pItem );
 
-      pItem = hb_itemPutNL( NULL, lDay );
+      pItem = hb_itemPutNI( NULL, iDay );
       hb_itemArrayPut( pReturn, 3, pItem );
       hb_itemRelease( pItem );
    }
@@ -218,7 +218,7 @@ HB_FUNC( ARRAYASDATE )
    PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
 
    if( pArray )
-      hb_retd( hb_arrayGetNL( pArray, 1 ), hb_arrayGetNL( pArray, 2 ), hb_arrayGetNL( pArray, 3 ) );
+      hb_retd( hb_arrayGetNI( pArray, 1 ), hb_arrayGetNI( pArray, 2 ), hb_arrayGetNI( pArray, 3 ) );
    else
       hb_retdl( 0 );
 }
@@ -231,11 +231,11 @@ HB_FUNC( DATEISLEAP )
 
    if( pDate )
    {
-      long lYear, lMonth, lDay;
+      int iYear, iMonth, iDay;
 
-      hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
+      hb_dateDecode( hb_itemGetDL( pDate ), &iYear, &iMonth, &iDay );
 
-      hb_retl( ( lYear % 4 == 0 && lYear % 100 != 0 ) || ( lYear % 400 == 0 ) );
+      hb_retl( ( iYear % 4 == 0 && iYear % 100 != 0 ) || ( iYear % 400 == 0 ) );
    }
    else
       hb_retl( FALSE );
@@ -245,5 +245,5 @@ HB_FUNC( DATEISLEAP )
 */
 HB_FUNC( NTOD )
 {
-   hb_retd( hb_parnl( 3 ), hb_parnl( 1 ), hb_parnl( 2 ) );
+   hb_retd( hb_parni( 3 ), hb_parni( 1 ), hb_parni( 2 ) );
 }

@@ -83,7 +83,9 @@
 
 #include <unistd.h>
 #include <signal.h>
+#ifndef HB_OS_DARWIN
 #include <time.h>
+#endif
 
 #include "hbapi.h"
 #include "hbapigt.h"
@@ -159,6 +161,8 @@ volatile BOOL hb_gt_sln_bScreen_Size_Changed = FALSE;
 /* window's resize handler */
 static void sigwinch_handler( int sig )
 {
+   HB_SYMBOL_UNUSED( sig );
+
    hb_gt_sln_bScreen_Size_Changed = TRUE;
    SLsignal( SIGWINCH, sigwinch_handler );
 }
@@ -169,6 +173,8 @@ static void sigwinch_handler( int sig )
 void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 {
    BOOL gt_Inited = FALSE;
+
+   HB_SYMBOL_UNUSED( iFilenoStdin );
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
 
@@ -1256,6 +1262,38 @@ static void hb_gt_build_conv_tabs()
 
          switch( ch )
          {
+#ifdef SLSMG_HLINE_CHAR_TERM
+            case SLSMG_HLINE_CHAR_TERM   :   s_convHighChars[ 196 ] = SLch; break;
+            case SLSMG_VLINE_CHAR_TERM   :   s_convHighChars[ 179 ] = SLch; break;
+            case SLSMG_ULCORN_CHAR_TERM  :   s_convHighChars[ 218 ] = SLch; break;
+            case SLSMG_URCORN_CHAR_TERM  :   s_convHighChars[ 191 ] = SLch; break;
+            case SLSMG_LLCORN_CHAR_TERM  :   s_convHighChars[ 192 ] = SLch; break;
+            case SLSMG_LRCORN_CHAR_TERM  :   s_convHighChars[ 217 ] = SLch; break;
+            case SLSMG_CKBRD_CHAR_TERM   :   s_convHighChars[ 176 ] = SLch; break;
+            case SLSMG_RTEE_CHAR_TERM    :   s_convHighChars[ 180 ] = SLch; break;
+            case SLSMG_LTEE_CHAR_TERM    :   s_convHighChars[ 195 ] = SLch; break;
+            case SLSMG_UTEE_CHAR_TERM    :   s_convHighChars[ 194 ] = SLch; break;
+            case SLSMG_DTEE_CHAR_TERM    :   s_convHighChars[ 193 ] = SLch; break;
+            case SLSMG_PLUS_CHAR_TERM    :   s_convHighChars[ 197 ] = SLch; break;
+            case SLSMG_DIAMOND_CHAR_TERM :   s_convHighChars[ 04 ] = SLch;
+                                             break;
+            case SLSMG_LARROW_CHAR_TERM  :   s_convHighChars[ 17 ] = SLch;
+                                             s_convHighChars[ 27 ] = SLch;
+                                             break;
+            case SLSMG_RARROW_CHAR_TERM  :   s_convHighChars[ 16 ] = SLch;
+                                             s_convHighChars[ 26 ] = SLch;
+                                             break;
+            case SLSMG_DARROW_CHAR_TERM  :   s_convHighChars[ 25 ] = SLch;
+                                             s_convHighChars[ 31 ] = SLch;
+                                             break;
+            case SLSMG_UARROW_CHAR_TERM  :   s_convHighChars[ 24 ] = SLch;
+                                             s_convHighChars[ 30 ] = SLch;
+                                             break;
+            case SLSMG_BOARD_CHAR_TERM   :   s_convHighChars[ 178 ] = SLch;
+                                             break;
+            case SLSMG_BLOCK_CHAR_TERM   :   s_convHighChars[ 219 ] = SLch;
+                                             break;
+#else
             case SLSMG_HLINE_CHAR   :  s_convHighChars[ 196 ] = SLch; break;
             case SLSMG_VLINE_CHAR   :  s_convHighChars[ 179 ] = SLch; break;
             case SLSMG_ULCORN_CHAR  :  s_convHighChars[ 218 ] = SLch; break;
@@ -1292,6 +1330,7 @@ static void hb_gt_build_conv_tabs()
                                        break;
             case SLSMG_BLOCK_CHAR   :  s_convHighChars[ 219 ] = SLch;
                                        break;
+#endif
          }
 
          ++p;

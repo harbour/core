@@ -76,44 +76,32 @@ HB_FUNC( INT )
 
    if( pNumber )
    {
-      double dNumber = hb_itemGetND( pNumber );
-      int iWidth;
+      if( HB_IS_NUMINT( pNumber ) )
+         hb_itemReturn( pNumber );
+      else
+      {
+         int iWidth;
 
-      hb_itemGetNLen( pNumber, &iWidth, NULL );
-
-      hb_retndlen( dNumber >= 0 ? floor( dNumber ) : ceil( dNumber ), iWidth, 0 );
+         hb_itemGetNLen( pNumber, &iWidth, NULL );
+         hb_retnlen( hb_numInt( hb_itemGetND( pNumber ) ), iWidth, 0 );
+      }
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1090, NULL, "INT", 1, hb_paramError( 1 ) );
 }
 
-double hb_numRound( double doValue, int nPrecision )
-{
-   static const double doBase = 10.0f;
-   double doComplete5, doComplete5i;
-   
-   HB_TRACE(HB_TR_DEBUG, ("hb_numRound(%lf, %d)", doValue, nPrecision));
-   
-   doComplete5 = doValue * pow( doBase, ( double ) ( nPrecision + 1 ) );
-   
-   if( doValue < 0.0f )
-      doComplete5 -= 5.0f;
-   else
-      doComplete5 += 5.0f;
-   
-   doComplete5 /= doBase;
-   modf( doComplete5, &doComplete5i );
-   
-   return doComplete5i / pow( doBase, ( double ) nPrecision );
-}
-
 HB_FUNC( ROUND )
 {
-   if( ISNUM( 1 ) && ISNUM( 2 ) )
+   PHB_ITEM pNumber = hb_param( 1, HB_IT_NUMERIC );
+
+   if( pNumber && ISNUM( 2 ) )
    {
       int iDec = hb_parni( 2 );
 
-      hb_retndlen( hb_numRound( hb_parnd( 1 ), iDec ), 0, HB_MAX( iDec, 0 ) );
+      if( iDec == 0 && HB_IS_NUMINT( pNumber ) )
+         hb_itemReturn( pNumber );
+      else
+         hb_retnlen( hb_numRound( hb_itemGetND( pNumber ), iDec ), 0, HB_MAX( iDec, 0 ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1094, NULL, "ROUND", 2, hb_paramError( 1 ), hb_paramError( 2 ) );

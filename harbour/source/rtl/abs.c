@@ -71,19 +71,31 @@ HB_FUNC( ABS )
 
          if( iNumber >= 0 )
             hb_retnilen( iNumber, iWidth );
+#if -HB_INT_MAX > HB_INT_MIN
+         else if ( iNumber < -HB_INT_MAX )
+#if HB_LONG_MAX > HB_INT_MAX
+            hb_retnint( - ( HB_LONG ) iNumber );
+#else
+            hb_retndlen( - ( double ) iNumber, 0, iDec );
+#endif
+#endif
          else
             hb_retni( -iNumber );
       }
       else if( HB_IS_LONG( pNumber ) )
       {
-         long lNumber = hb_itemGetNL( pNumber );
+         HB_LONG lNumber = hb_itemGetNInt( pNumber );
 
          if( lNumber >= 0 )
-            hb_retnllen( lNumber, iWidth );
+            hb_retnintlen( lNumber, iWidth );
+#if -HB_LONG_MAX > HB_LONG_MIN
+         else if ( lNumber < -HB_LONG_MAX )
+            hb_retndlen( - ( double ) lNumber, 0, iDec );
+#endif
          else
-            hb_retnl( -lNumber );
+            hb_retnint( -lNumber );
       }
-      else if( HB_IS_DOUBLE( pNumber ) )
+      else
       {
          double dNumber = hb_itemGetND( pNumber );
 

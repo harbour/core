@@ -63,9 +63,7 @@
 #define HB_EXTERNAL_RDDDBF_USE
 #include "hbrdddbf.h"
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 /* MEMO constants and defaults */
 #define FPT_MEMOEXT                          ".fpt"
@@ -102,33 +100,43 @@ extern "C" {
 //#define FPTIT_SIX_VREF     0x2000
 //#define FPTIT_SIX_MREF     0x4000
 
-#define FPTIT_FLEX_GC      0x03E8
-#define FPTIT_FLEX_UNUSED  0x03E9
+#define FPTIT_FLEX_GC      0x03E8   // 1000
+#define FPTIT_FLEX_UNUSED  0x03E9   // 1001
+#define FPTIT_FLEX_ARRAY   0x03EA   // 1002
+#define FPTIT_FLEX_OBJECT  0x03EB   // 1003 *
+#define FPTIT_FLEX_VOARR   0x03EC   // 1004 *
+#define FPTIT_FLEX_VOOBJ   0x03ED   // 1005 *
+#define FPTIT_FLEX_NIL     0x03EE   // 1006
+#define FPTIT_FLEX_TRUE    0x03EF   // 1007
+#define FPTIT_FLEX_FALSE   0x03F0   // 1008
+#define FPTIT_FLEX_LDATE   0x03F1   // 1009
+#define FPTIT_FLEX_CHAR    0x03F2   // 1010
+#define FPTIT_FLEX_UCHAR   0x03F3   // 1011 *
+#define FPTIT_FLEX_SHORT   0x03F4   // 1012
+#define FPTIT_FLEX_USHORT  0x03F5   // 1013 *
+#define FPTIT_FLEX_LONG    0x03F6   // 1014
+#define FPTIT_FLEX_ULONG   0x03F7   // 1015 *
+#define FPTIT_FLEX_DOUBLE  0x03F8   // 1016
+#define FPTIT_FLEX_LDOUBLE 0x03F9   // 1017 *
+#define FPTIT_FLEX_COMPCH  0x03FA   // 1018 *
 
-#define FPTIT_FLEX_ARRAY   0x03EA
-#define FPTIT_FLEX_NIL     0x03EE
-#define FPTIT_FLEX_TRUE    0x03EF
-#define FPTIT_FLEX_FALSE   0x03F0
-#define FPTIT_FLEX_LDATE   0x03F1
-#define FPTIT_FLEX_BYTE    0x03F2
-#define FPTIT_FLEX_SHORT   0x03F4
-#define FPTIT_FLEX_LONG    0x03F6
-#define FPTIT_FLEX_DOUBLE  0x03F8
-
-#define FPTIT_FLEXAR_ARAY   0x0C
 #define FPTIT_FLEXAR_NIL    0x00
+#define FPTIT_FLEXAR_STR    0x07
+#define FPTIT_FLEXAR_ARAY   0x0C
+#define FPTIT_FLEXAR_DATE   0x0E
+#define FPTIT_FLEXAR_DBL    0x0F
+#define FPTIT_FLEXAR_BYTE   0x11
+#define FPTIT_FLEXAR_CHAR   0x12
+#define FPTIT_FLEXAR_SHORT  0x13
+#define FPTIT_FLEXAR_USHORT 0x14
+#define FPTIT_FLEXAR_LONG   0x15
+#define FPTIT_FLEXAR_NUL    0x18
 #define FPTIT_FLEXAR_TRUE   0x19
 #define FPTIT_FLEXAR_FALSE  0x1A
-#define FPTIT_FLEXAR_DATE   0x0E
-#define FPTIT_FLEXAR_BYTE1  0x11
-#define FPTIT_FLEXAR_BYTE   0x12
 #define FPTIT_FLEXAR_BYTE2  0x1D
-#define FPTIT_FLEXAR_SHORT  0x13
 #define FPTIT_FLEXAR_SHORT2 0x1E
-#define FPTIT_FLEXAR_LONG   0x20
-#define FPTIT_FLEXAR_DBL    0x0F
-#define FPTIT_FLEXAR_STR    0x07
-#define FPTIT_FLEXAR_NUL    0x18
+#define FPTIT_FLEXAR_LONG2  0x20
+#define FPTIT_FLEXAR_ULONG  0x21
 
 /*
 #define HB_IT_NIL       ( ( USHORT ) 0x0000 )
@@ -155,7 +163,7 @@ typedef struct _FPTHEADER
    BYTE  flexRev[ 4 ];              /* Offset of reversed GC page */
    BYTE  flexDir[ 4 ];              /* Offset of GC page */
    BYTE  counter[ 4 ];              /* cyclic counter to sign changes in network env. */
-   BYTE  reserved3[ 4 ];            /* */
+   BYTE  rootBlock[ 4 ];            /* Clipper 5.3 ROOT data block */
    BYTE  flexSize[ 2 ];             /* FlexFile3 alternative block size */
    BYTE  reserved4[ 482 ];          /* */
 } FPTHEADER;
@@ -233,7 +241,7 @@ typedef FPTAREA * LPFPTAREA;
 #define hb_fptDeleted                              NULL
 #define hb_fptFieldCount                           NULL
 #define hb_fptFieldDisplay                         NULL
-#define hb_fptFieldInfo                            NULL
+static ERRCODE hb_fptFieldInfo( FPTAREAP pArea, USHORT uiIndex, USHORT uiType, PHB_ITEM pItem );
 #define hb_fptFieldName                            NULL
 #define hb_fptFlush                                NULL
 #define hb_fptGetRec                               NULL
@@ -311,8 +319,6 @@ static ERRCODE hb_fptWriteDBHeader( FPTAREAP pArea );
 #define hb_fptExists                               NULL
 #define hb_fptWhoCares                             NULL
 
-#if defined(HB_EXTERN_C)
-}
-#endif
+HB_EXTERN_END
 
 #endif /* HB_RDDFPT */

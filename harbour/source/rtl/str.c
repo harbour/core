@@ -67,25 +67,15 @@ HB_FUNC( STR )
 
       if( hb_pcount() >= 2 )
       {
-         if( ISNUM( 2 ) )
-         {
-            pWidth = hb_param( 2, HB_IT_NUMERIC );
-            if( !pWidth )
-               bValid = FALSE;
-         }
-         else if( !ISNIL( 2 ) )
+         pWidth = hb_param( 2, HB_IT_NUMERIC );
+         if( !pWidth )
             bValid = FALSE;
       }
 
       if( hb_pcount() >= 3 )
       {
-         if( ISNUM( 3 ) )
-         {
-            pDec = hb_param( 3, HB_IT_NUMERIC );
-            if( !pDec )
-               bValid = FALSE;
-         }
-         else if( !ISNIL( 3 ) )
+         pDec = hb_param( 3, HB_IT_NUMERIC );
+         if( !pDec )
             bValid = FALSE;
       }
    }
@@ -102,6 +92,6 @@ HB_FUNC( STR )
          hb_retc( NULL );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "STR", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "STR", HB_MIN( hb_pcount(), 3 ), hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
 }
 

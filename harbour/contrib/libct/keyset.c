@@ -235,7 +235,7 @@ static void SetGet( char cKey )
       
    #if defined(__WATCOMC__) && defined(__386__)
 
-      *( ( char * ) 0x0417 ) = ( *( ( char * ) 0x0417 ) & ( !cKey ) ) | cKey );
+      *( ( char * ) 0x0417 ) = ( *( ( char * ) 0x0417 ) & ( !cKey ) ) | cKey;
 
    #elif defined(__DJGPP__)
 

@@ -8,6 +8,214 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-10-11 21:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/Makefile
+  + harbour/make_bsd.sh
+  + harbour/make_drw.sh
+  * harbour/make_tgz.sh
+  + harbour/bin/hb-func.sh
+  * harbour/bin/pack_src.sh
+  + harbour/bin/postinst.bat
+  + harbour/bin/postinst.sh
+  * harbour/config/dir.cf
+  * harbour/config/bsd/gcc.cf
+  * harbour/config/bsd/global.cf
+  + harbour/config/darwin/dir.cf
+  + harbour/config/darwin/gcc.cf
+  + harbour/config/darwin/global.cf
+  + harbour/config/darwin/install.cf
+  * harbour/config/dos/dir.cf
+  * harbour/config/dos/global.cf
+  * harbour/config/dos/install.cf
+  * harbour/config/dos/owatcom.cf
+  * harbour/config/dos/watcom.cf
+  * harbour/config/linux/gcc.cf
+  * harbour/config/linux/global.cf
+  * harbour/contrib/Makefile
+  * harbour/contrib/dot/pp_harb.ch
+  * harbour/contrib/libct/Makefile
+  * harbour/contrib/libct/bit1.c
+  * harbour/contrib/libct/bit2.c
+  * harbour/contrib/libct/bit3.c
+  * harbour/contrib/libct/files.c
+  * harbour/contrib/libct/ftoc.c
+  - harbour/contrib/libct/invertwin.prg
+  + harbour/contrib/libct/invrtwin.prg
+  * harbour/contrib/libct/keyset.c
+  * harbour/contrib/libct/makefile.bc
+  * harbour/contrib/libmisc/dates2.c
+  * harbour/contrib/rdd_ads/ads1.c
+  * harbour/contrib/rdd_ads/adsfunc.c
+  * harbour/contrib/samples/date.c
+  * harbour/include/dbinfo.ch
+  * harbour/include/hbapi.h
+  * harbour/include/hbapicdp.h
+  * harbour/include/hbapifs.h
+  * harbour/include/hbapigt.h
+  * harbour/include/hbapiitm.h
+  * harbour/include/hbcomp.h
+  * harbour/include/hbdate.h
+  * harbour/include/hbdbf.h
+  * harbour/include/hbdbferr.h
+  * harbour/include/hbdefs.h
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprc.c
+  * harbour/include/hbexprop.h
+  * harbour/include/hbmacro.h
+  * harbour/include/hbmath.h
+  * harbour/include/hbpcode.h
+  * harbour/include/hbrddcdx.h
+  * harbour/include/hbrdddbf.h
+  * harbour/include/hbrdddbt.h
+  * harbour/include/hbrddfpt.h
+  * harbour/include/hbrddntx.h
+  * harbour/include/hbset.h
+  * harbour/include/hbsetup.h
+  * harbour/include/set.ch
+  * harbour/source/common/Makefile
+  * harbour/source/common/expropt1.c
+  * harbour/source/common/expropt2.c
+  - harbour/source/common/hbffind.c
+  * harbour/source/common/hbfsapi.c
+  * harbour/source/common/hbstr.c
+  * harbour/source/common/hbver.c
+  + harbour/source/common/hbverdsp.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencli.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.l
+  * harbour/source/compiler/harbour.slx
+  * harbour/source/compiler/harbour.sly
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/hbfix.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/compiler/hbusage.c
+  * harbour/source/compiler/simplex.c
+  * harbour/source/macro/macro.l
+  * harbour/source/macro/macro.slx
+  * harbour/source/macro/macro.y
+  * harbour/source/pp/ppcore.c
+  * harbour/source/rdd/dbcmd.c
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  - harbour/source/rdd/dbfcdx/dbfcdx1.h
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+  * harbour/source/rtl/Makefile
+  * harbour/source/rtl/abs.c
+  * harbour/source/rtl/at.c
+  * harbour/source/rtl/datec.c
+  * harbour/source/rtl/dates.c
+  * harbour/source/rtl/dateshb.c
+  * harbour/source/rtl/datesx.c
+  * harbour/source/rtl/empty.c
+  * harbour/source/rtl/errorapi.c
+  * harbour/source/rtl/errorint.c
+  * harbour/source/rtl/filesys.c
+  * harbour/source/rtl/fstemp.c
+  + harbour/source/rtl/hbffind.c
+  * harbour/source/rtl/hbrandom.c
+  * harbour/source/rtl/idle.c
+  * harbour/source/rtl/inkey.c
+  * harbour/source/rtl/math.c
+  * harbour/source/rtl/minmax.c
+  * harbour/source/rtl/pad.c
+  * harbour/source/rtl/padc.c
+  * harbour/source/rtl/padl.c
+  * harbour/source/rtl/padr.c
+  * harbour/source/rtl/philes.c
+  * harbour/source/rtl/round.c
+  * harbour/source/rtl/soundex.c
+  * harbour/source/rtl/str.c
+  * harbour/source/rtl/strcase.c
+  * harbour/source/rtl/strmatch.c
+  * harbour/source/rtl/strtran.c
+  * harbour/source/rtl/strzero.c
+  * harbour/source/rtl/substr.c
+  * harbour/source/rtl/val.c
+  * harbour/source/rtl/gtcrs/gtcrs.c
+  * harbour/source/rtl/gtcrs/kbdcrs.c
+  * harbour/source/rtl/gtdos/gtdos.c
+  * harbour/source/rtl/gtsln/gtsln.c
+  * harbour/source/rtl/gtsln/kbsln.c
+  * harbour/source/rtl/gtsln/keytrans.c
+  * harbour/source/vm/arrays.c
+  * harbour/source/vm/codebloc.c
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/eval.c
+  * harbour/source/vm/extend.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/itemapi.c
+  * harbour/source/vm/macro.c
+  * harbour/source/vm/memvars.c
+  * harbour/source/vm/runner.c
+  * harbour/tests/bldtest/bldtest.c
+  * harbour/utils/hbtest/hbtest.prg
+  * harbour/utils/hbtest/rt_misc.prg
+  * harbour/utils/hbtest/rt_str.prg
+   * Sorry but it's too much modification for full description
+     cvs diff gives file 785982 bytes length. So I only count the
+     main things:
+   ! cleand the code (no more warning messages under Linux and GCC and
+     DOS OpenWatcom) - some of them were real bugs
+   ! cleaned all endian dependend code I've found - now Harbour can be
+     compiled on LITLE and BIG endian machines - for some other like
+     PDP ENDIAN it's enough to define proper macros in hbdefs.h
+   + added macros for to get/put values in chosen byte order:
+         HB_GET_LE_[U]INT{16,24,32,64}( pPtr )
+         HB_GET_BE_[U]INT{16,24,32,64}( pPtr )
+         HB_PUT_LE_[U]INT{16,24,32,64}( pPtr, nVal )
+         HB_PUT_BE_[U]INT{16,24,32,64}( pPtr, nVal )
+   + added macro HB_CAST_BYTE_NUMBERS_OFF which disables casting in
+     HB_{GET|PUT}_{LE|BE}_* macros - it's necessary for some platforms
+     like ALPHA DEC.
+   ! cleaned the code for 64bit machines
+   * changed all parameters in hb_date* functions (day, month, year, week)
+     from LONG to int - it doesn't change binary compatibility for 32bit
+     machines but can cause troubles with compiling the old source
+   + changed HB_IT_LONG type to HB_LONG which is mapped to long long
+     by default for 32 bit machines.
+   + change HB_IT_INTEGER to be real 'int' C type not 'short int'
+   + added HB_IS_NUMINT() macro
+   + added hb_parnll, hb_stornll, hb_retnll, hbretnlllen, hb_itemPutNLL,
+     hb_itemPutNLLLen, hb_itemGetNLL which operates on LONGLONG
+   + added hb_parnint, hb_stornint, hb_retnint, hb_retnintlen,
+     hb_itemPutNInt, hb_itemPutNIntLen, hb_itemGetNInt which operates on
+     HB_LONG
+   + added HB_PUSHLONGLONG pcode
+   + changed compiler and optimizer to use HB_LONG numbers and reduce
+     conversion from to double which may damage the 64bit number.
+   + common functions for string to number conversions for compiler, RTL
+     and RDD to reduce problems with differ FL values for the same number:
+     hb_compStrToNum(), hb_valStrnToNum(), hb_strToNum(), hb_strnToNum()
+   + common function hb_numRoun() which uses exactly the same algorithms
+     as string to number conversion for the same reason - please keep
+     this functions together.
+   + hack inside hb_numRound() similar to the one used by CL5.3
+   + hb_numInt() which uses uses the same hack as hb_numRound()
+   + rewritten number to string conversion
+   + some new string manipulation functions hb_strncpy(), hb_strncat(), ...
+     They works differ the the C one - always set 0 at the end, the buffer
+     has to be n+1 bytes length, the n is total size of buffer not the
+     left free space.
+   ! cleaned some code which operates on ASCIIZ string to avoid potential
+     buffer overflow
+   + updated RDD code - it's the first part - in few days I plan to change
+     workarea structure in both projects - it will break any 3rd party RDDs
+     so they have to be updated. I want to add SUPERTABLE into workarea
+     to allow creating new RDD on-line.
+   ! cleaned the bugs with negating integers - on most machines (like x86)
+     the integers are not 0 symmetric - it means that x = -x does not work
+     for {INT,LONG,LONGLONG}_MIN (hb_vmNegate, ABS())
+   + cleaned error messages to be Clipper compatible.
+   + updated build process for .DEB packages - now hb* scripts and shared
+     libs are created by standard make install
+   * added new .prg #defines: __PLATFORM__<cPlatfrom>,
+     __ARCH{16|32|64}BIT__, __LITTLE_ENDIAN__|__BIG_ENDIAN__|__PDP_ENDIAN__
+     !!! cPlatfrom can have lower letters (for xHarbour compatibility)
+     If you do not like it please change it.
+   * others ...
+
 2004-10-10 21:35 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c
     ! Fixed a bug, introduced in a last change.

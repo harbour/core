@@ -191,9 +191,9 @@ typedef enum
    HB_P_MPUSHSTR,              /* 124 Macro compiled pushed string */
    HB_P_LOCALNEARADDINT,       /* 125 Add/Subtract specified int into specified local without using the stack. */
    HB_P_MACROPUSHREF,          /* 126 Reference to macro variable @&mvar */
+   HB_P_PUSHLONGLONG,          /* 127 places an integer number on the virtual machine stack */
 /* NOTE: This have to be the last definition */
-   HB_P_LAST_PCODE             /* 127 this defines the number of defined pcodes */
+   HB_P_LAST_PCODE             /* 128 this defines the number of defined pcodes */
 } HB_PCODE;
 
 #endif /* HB_PCODE_H_ */
-

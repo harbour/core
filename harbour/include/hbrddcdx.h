@@ -62,18 +62,19 @@
 #define HB_EXTERNAL_RDDDBF_USE
 #include "hbrdddbf.h"
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 /* CDX constants and defaults */
 #define CDX_INDEXEXT                              ".cdx"
 #define CDX_MAXKEY                                  240
 #define CDX_MAXTAGNAMELEN                            10
 #define CDX_PAGELEN                                 512
-#define CDX_INT_FREESPACE                           500
-#define CDX_EXT_FREESPACE                           488
+#define CDX_HEADERLEN                              1024
+#define CDX_HEADERPAGES   ((CDX_HEADERLEN+CDX_PAGELEN-1)/CDX_PAGELEN)
+#define CDX_INT_FREESPACE              (CDX_PAGELEN-12) /* 500 */
+#define CDX_EXT_FREESPACE              (CDX_PAGELEN-24) /* 488 */
 #define CDX_DUMMYNODE                       0xFFFFFFFFL
+
 //#define CDX_LOCKOFFSET                      0x7FFFFFFEL
 //#define CDX_LOCKSIZE                                 1L
 #define CDX_STACKSIZE                                64
@@ -87,14 +88,16 @@ extern "C" {
 #define CDX_BALANCE_LEAFPAGES                         3
 #define CDX_BALANCE_INTPAGES                          3
 
-/*
-#define CDX_CURKEY_UNDEF                              1
-#define CDX_CURKEY_REC                                2
-#define CDX_CURKEY_VAL                                4
-#define CDX_CURKEY_INPAGE                             8
-#define CDX_CURKEY_INSTACK                           16
-#define CDX_CURKEY_NOTEXIST                          32
-*/
+#define CDX_CURKEY_UNDEF                        (1<< 0)
+#define CDX_CURKEY_REC                          (1<< 1)
+#define CDX_CURKEY_VAL                          (1<< 2)
+#define CDX_CURKEY_INPAGE                       (1<< 3)
+#define CDX_CURKEY_INSTACK                      (1<< 4)
+#define CDX_CURKEY_NOTEXIST                     (1<< 5)
+#define CDX_CURKEY_RAWCNT                       (1<< 6)
+#define CDX_CURKEY_RAWPOS                       (1<< 7)
+#define CDX_CURKEY_LOGCNT                       (1<< 8)
+#define CDX_CURKEY_LOGPOS                       (1<< 9)
 
 #define TOP_RECORD                                    1
 #define BTTM_RECORD                                   2
@@ -108,6 +111,19 @@ extern "C" {
 #define NODE_JOIN                                     4
 #define NODE_BALANCE                                  8
 #define NODE_EAT                                     16
+
+#define CURKEY_RAWCNT(pTag)   (((pTag)->curKeyState & CDX_CURKEY_RAWCNT) != 0)
+#define CURKEY_LOGCNT(pTag)   (((pTag)->curKeyState & CDX_CURKEY_LOGCNT) != 0)
+
+#define CURKEY_RAWPOS(pTag)   ( ((pTag)->curKeyState & CDX_CURKEY_RAWPOS) != 0 && \
+                                 (pTag)->rawKeyRec == (pTag)->CurKey->rec )
+#define CURKEY_SETRAWPOS(pTag) { (pTag)->curKeyState |= CDX_CURKEY_RAWPOS; \
+                                 (pTag)->rawKeyRec = (pTag)->CurKey->rec; }
+
+#define CURKEY_LOGPOS(pTag)   ( ((pTag)->curKeyState & CDX_CURKEY_LOGPOS) != 0 && \
+                                 (pTag)->logKeyRec == (pTag)->pIndex->pArea->ulRecNo )
+#define CURKEY_SETLOGPOS(pTag) { (pTag)->curKeyState |= CDX_CURKEY_LOGPOS; \
+                                 (pTag)->logKeyRec = (pTag)->pIndex->pArea->ulRecNo; }
 
 /*
 #define CURKEY_UNDEF(pTag)    (((pTag)->curKeyState & CDX_CURKEY_UNDEF) != 0)
@@ -134,6 +150,8 @@ extern "C" {
 #define CDX_TYPE_COMPOUND      0x40    /* FoxPro */
 #define CDX_TYPE_STRUCTURE     0x80    /* FoxPro */
 
+typedef void ( * HB_EVALSCOPE_FUNC )( ULONG, BYTE *, ULONG, void * );
+
 /* CDX index node strucutres */
 /* Compact Index Header Record */
 typedef struct _CDXTAGHEADER
@@ -150,7 +168,7 @@ typedef struct _CDXTAGHEADER
    BYTE     forExpLen[ 2 ];   /* length of filter expression */
    BYTE     keyExpPos[ 2 ];   /* offset of key expression */
    BYTE     keyExpLen[ 2 ];   /* length of key expression */
-   BYTE     keyExpPool[ CDX_PAGELEN ];
+   BYTE     keyExpPool[ CDX_HEADERLEN - 512 ];
 } CDXTAGHEADER;
 typedef CDXTAGHEADER * LPCDXTAGHEADER;
 
@@ -283,7 +301,13 @@ typedef struct _CDXTAG
    BOOL     TagEOF;
 
    BOOL     fRePos;
-   BYTE     curKeyState;      /* see: CDX_CURKEY_* */
+   int      curKeyState;      /* see: CDX_CURKEY_* */
+   ULONG    rawKeyCount;
+   ULONG    rawKeyPos;
+   ULONG    rawKeyRec;
+   ULONG    logKeyCount;
+   ULONG    logKeyPos;
+   ULONG    logKeyRec;
 
    ULONG    TagBlock;         /* a page offset where a tag header is stored */
    ULONG    RootBlock;        /* a page offset with the root of keys tree */
@@ -329,8 +353,48 @@ typedef struct _CDXINDEX
 #endif
    BOOL     fChanged;         /* changes written to index, need upadte ulVersion */
    ULONG    ulVersion;        /* network version/update flag */
+   BOOL     fFlush;           /* changes written to index, need upadte ulVersion */
 } CDXINDEX;
 typedef CDXINDEX * LPCDXINDEX;
+
+/* for index creation */
+typedef struct
+{
+   ULONG    nOffset;    /* offset in temporary file */
+   ULONG    ulKeys;     /* number of keys in page */
+   ULONG    ulKeyBuf;   /* number of keys in memory buffer */
+   ULONG    ulCurKey;   /* current key in memory buffer */
+   BYTE *   pKeyPool;   /* memory buffer */
+} CDXSWAPPAGE;
+typedef CDXSWAPPAGE * LPCDXSWAPPAGE;
+
+typedef struct
+{
+   LPCDXTAG pTag;             /* current Tag */
+   FHANDLE  hTempFile;        /* handle to temporary file */
+   char *   szTempFileName;   /* temporary file name */
+   int      keyLen;           /* key length */
+   BYTE     bTrl;             /* filler char for shorter keys */
+   BOOL     fUnique;          /* TRUE if index is unique */
+   ULONG    ulMaxRec;         /* the highest record number */
+   ULONG    ulTotKeys;        /* total number of keys indexed */
+   ULONG    ulKeys;           /* keys in curently created page */
+   ULONG    ulPages;          /* number of pages */
+   ULONG    ulCurPage;        /* current page */
+   ULONG    ulPgKeys;         /* maximum number of key in page memory buffer */
+   ULONG    ulMaxKey;         /* maximum number of keys in single page */
+   BYTE *   pKeyPool;         /* memory buffer for current page then for pages */
+   LPCDXSWAPPAGE pSwapPage;   /* list of pages */
+   LPCDXPAGE NodeList[ CDX_STACKSIZE ];   /* Stack of pages */
+   BYTE     pLastKey[ CDX_MAXKEY ]; /* last key val */
+   ULONG    ulLastRec;
+   BYTE *   pRecBuff;
+#ifndef HB_CDX_PACKTRAIL
+   int      iLastTrl;         /* last key trailing spaces */
+#endif
+} CDXSORTINFO;
+typedef CDXSORTINFO * LPCDXSORTINFO;
+
 
 
 /*
@@ -384,6 +448,8 @@ typedef struct _CDXAREA
    BYTE bMemoType;               /* MEMO type used in DBF memo fields */
    BOOL fHasMemo;                /* WorkArea with Memo fields */
    BOOL fHasTags;                /* WorkArea with MDX or CDX index */
+   BOOL fDataFlush;              /* data was written to DBF and not commited */
+   BOOL fMemoFlush;              /* data was written to MEMO and not commited */
    BYTE bVersion;                /* DBF version ID byte */
    BYTE bCodePage;               /* DBF codepage ID */
    BOOL fShared;                 /* Shared file */
@@ -418,10 +484,11 @@ typedef struct _CDXAREA
    *  example.
    */
 
-   BOOL       fCdxAppend;        /* Appended record changed */
-   LPCDXINDEX lpIndexes;         /* Pointer to indexes array  */
-   USHORT     uiTag;             /* current tag focus */
-   BYTE *     bCdxSortTab;       /* Table with storted characters */
+   BOOL           fCdxAppend;    /* Appended record changed */
+   LPCDXINDEX     lpIndexes;     /* Pointer to indexes array  */
+   USHORT         uiTag;         /* current tag focus */
+   BYTE *         bCdxSortTab;   /* Table with storted characters */
+   LPCDXSORTINFO  pSort;         /* Index build structur */
 
 } CDXAREA;
 
@@ -446,7 +513,7 @@ static ERRCODE hb_cdxGoBottom( CDXAREAP pArea );
 #define hb_cdxGoToId                               NULL
 static ERRCODE hb_cdxGoTop( CDXAREAP pArea );
 static ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLast );
-#define hb_cdxSkip                                 NULL
+static ERRCODE hb_cdxSkip( CDXAREAP pArea, LONG lToSkip );
 #define hb_cdxSkipFilter                           NULL
 static ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, LONG lToSkip );
 #define hb_cdxAddField                             NULL
@@ -506,13 +573,13 @@ static ERRCODE hb_cdxOrderListRebuild( CDXAREAP pArea );
 static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo );
 static ERRCODE hb_cdxOrderDestroy( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
 static ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInfo );
-#define hb_cdxClearFilter                          NULL
+static ERRCODE hb_cdxClearFilter( CDXAREAP pArea );
 #define hb_cdxClearLocate                          NULL
 static ERRCODE hb_cdxClearScope( CDXAREAP pArea );
-#define hb_cdxCountScope                           NULL
+static ERRCODE hb_cdxCountScope( CDXAREAP pArea, void * pPtr, LONG * plRec );
 #define hb_cdxFilterText                           NULL
 static ERRCODE hb_cdxScopeInfo( CDXAREAP pArea, USHORT nScope, PHB_ITEM pItem );
-#define hb_cdxSetFilter                            NULL
+static ERRCODE hb_cdxSetFilter( CDXAREAP pArea, LPDBFILTERINFO pFilterInfo );
 #define hb_cdxSetLocate                            NULL
 static ERRCODE hb_cdxSetScope( CDXAREAP pArea, LPDBORDSCOPEINFO sInfo );
 #define hb_cdxSkipScope                            NULL
@@ -534,10 +601,6 @@ static ERRCODE hb_cdxSetScope( CDXAREAP pArea, LPDBORDSCOPEINFO sInfo );
 #define hb_cdxExists                               NULL
 #define hb_cdxWhoCares                             NULL
 
-//#define hb_cdxSwapBytes( n )  HB_SWAP_ULONG( n );
-
-#if defined(HB_EXTERN_C)
-}
-#endif
+HB_EXTERN_END
 
 #endif /* HB_RDDCDX_H_ */

@@ -71,9 +71,7 @@
 
 #include "hbapi.h"
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 /* NOTE: The declaration of hb_gtSetPos(), hb_gtGetPos(), hb_gtWrite(),
          hb_gtWriteAt(), hb_gtRepChar(), hb_gtBox(), hb_gtBoxS(), hb_gtBoxD() 

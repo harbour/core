@@ -1441,7 +1441,7 @@ HB_FUNC( __MVSAVE )
    }
    else
       /* NOTE: Undocumented error message in CA-Cl*pper 5.2e and 5.3x. [ckedem] */
-      hb_errRT_BASE( EG_ARG, 2008, NULL, "__MSAVE", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
+      hb_errRT_BASE( EG_ARG, 2008, NULL, "__MSAVE", HB_MIN( hb_pcount(), 3 ), hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
 }
 
 /* NOTE: There's an extension in Harbour, which makes it possible to only
@@ -1583,7 +1583,7 @@ HB_FUNC( __MVRESTORE )
    }
    else
       /* NOTE: Undocumented error message in CA-Cl*pper 5.2e and 5.3x. [ckedem] */
-      hb_errRT_BASE( EG_ARG, 2007, NULL, "__MRESTORE", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+      hb_errRT_BASE( EG_ARG, 2007, NULL, "__MRESTORE", HB_MIN( hb_pcount(), 2 ), hb_paramError( 1 ), hb_paramError( 2 ) );
 }
 
 /* ----------------------------------------------------------------------- */

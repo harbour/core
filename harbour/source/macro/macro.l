@@ -114,9 +114,8 @@ NOTE: -C  controls the speed/size ratio of generated scanner
 %}
 
 SpaceTab      [ \t]+
-Number        ([0-9]+)|([0-9]*\.[0-9]+)
+Number        ([0-9]+)|([0-9]*\.[0-9]+)|(0x[0-9A-Fa-f]+)
 InvalidNumber [0-9]+\.
-HexNumber     0x[0-9A-F]+
 Identifier    (([a-zA-Z])|([_a-zA-Z][_a-zA-Z0-9]+))
 
 MacroVar      \&{Identifier}[\.]?
@@ -247,60 +246,26 @@ MacroTxt      ({MacroVar}|{MacroEnd}|{MacroId})+
 %}
 
 {Number}       {
-   char * ptr;
+   HB_LONG lNumber;
+   double dNumber;
+   int iDec, iWidth;
 
    pMacro->FlexState = LOOKUP;
-   yylval_ptr->valDouble.dNumber = atof( yytext );
-   ptr = strchr( yytext, '.' );
-   if( ptr )
+
+   if( hb_compStrToNum( yytext, &lNumber, &dNumber, &iDec, &iWidth ) )
    {
-      yylval_ptr->valDouble.bDec = strlen( ptr + 1 );
-      yylval_ptr->valDouble.bWidth = strlen( yytext ) - yylval_ptr->valDouble.bDec;
-      if( yylval_ptr->valDouble.bDec )
-         yylval_ptr->valDouble.bWidth--;
-      yylval_ptr->valDouble.szValue = yytext ;
+      yylval_ptr->valDouble.dNumber = dNumber;
+      yylval_ptr->valDouble.bDec = iDec;
+      yylval_ptr->valDouble.bWidth = iWidth;
+      yylval_ptr->valDouble.szValue = yytext;
       return NUM_DOUBLE;
    }
    else
    {
-      if( ( double )LONG_MIN <= yylval_ptr->valDouble.dNumber &&
-                 yylval_ptr->valDouble.dNumber <= ( double )LONG_MAX )
-      {
-         yylval_ptr->valLong.lNumber = ( long ) yylval_ptr->valDouble.dNumber;
-         yylval_ptr->valLong.szValue = yytext;
-         return NUM_LONG;
-      }
-      else
-      {
-         yylval_ptr->valDouble.bWidth = strlen( yytext ) + 1;
-         yylval_ptr->valDouble.bDec = 0;
-         yylval_ptr->valDouble.szValue = yytext;
-         return NUM_DOUBLE;
-      }
+      yylval_ptr->valLong.lNumber = lNumber;
+      yylval_ptr->valLong.szValue = yytext;
+      return NUM_LONG;
    }
-}
-
-
-{HexNumber}   {
-    long lNumber = 0;
-    pMacro->FlexState = LOOKUP;
-
-    sscanf( yytext, "%lxI", &lNumber );
-
-    if( ( double )LONG_MIN <= lNumber && lNumber <= ( double )LONG_MAX )
-    {
-        yylval_ptr->valLong.lNumber = lNumber;
-        yylval_ptr->valLong.szValue = yytext;
-        return NUM_LONG;
-    }
-    else
-    {
-        yylval_ptr->valDouble.dNumber = lNumber;
-        yylval_ptr->valDouble.bWidth = HB_DEFAULT_WIDTH;
-        yylval_ptr->valDouble.bDec = 0;
-        yylval_ptr->valDouble.szValue = yytext;
-        return NUM_DOUBLE;
-    }
 }
 
 {MacroVar}     {

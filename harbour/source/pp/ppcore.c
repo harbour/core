@@ -393,6 +393,46 @@ void hb_pp_Init( void )
    hb_pp_nCondCompile = 0;
 
    {
+      char sOS[64];
+      char sVer[64];
+      char *pSrc, *pDst;
+      char * szPlatform = hb_verPlatform();
+      int n;
+
+      strcpy( sOS, "__PLATFORM__" );
+
+      pSrc = szPlatform;
+      n = strlen( sOS );
+      pDst = sOS;
+
+      while ( *pSrc && *pSrc != ' ' && n < ( int ) sizeof( sOS ) - 1 )
+      {
+         if ( *pSrc == '_' || ( *pSrc >= 'A' && *pSrc <= 'Z' )
+                           || ( *pSrc >= 'a' && *pSrc <= 'z' )
+                           || ( *pSrc >= '0' && *pSrc <= '9' ) )
+         {
+            pDst[n++] = *pSrc;
+         }
+         pSrc++;
+      }
+      pDst[ n ] = 0;
+
+      n = 0;
+      pDst = sVer;
+      pDst[n++] = '"';
+      if ( *pSrc == ' ' )
+      {
+         while ( *(++pSrc) && n < ( int ) sizeof( sVer ) - 2 )
+            pDst[n++] = *pSrc;
+      }
+      pDst[n++] = '"';
+      pDst[ n ] = 0;
+
+      hb_xfree( szPlatform );
+      hb_pp_AddDefine( sOS, sVer );
+   }
+
+   {
       char szResult[ 6 ];
       USHORT usHarbour = ( 256 * HB_VER_MAJOR ) + HB_VER_MINOR;
 
@@ -421,6 +461,22 @@ void hb_pp_Init( void )
       sprintf( szResult, "\"%02d:%02d:%02d\"", oTime->tm_hour, oTime->tm_min, oTime->tm_sec );
       hb_pp_AddDefine( "__TIME__", szResult );
    }
+
+#if defined( HB_ARCH_16BIT )
+   hb_pp_AddDefine( "__ARCH16BIT__", NULL );
+#elif defined( HB_ARCH_32BIT )
+   hb_pp_AddDefine( "__ARCH32BIT__", NULL );
+#elif defined( HB_ARCH_64BIT )
+   hb_pp_AddDefine( "__ARCH64BIT__", NULL );
+#endif
+
+#if defined( HB_LITTLE_ENDIAN )
+   hb_pp_AddDefine( "__LITTLE_ENDIAN__", NULL );
+#elif defined( HB_BIG_ENDIAN )
+   hb_pp_AddDefine( "__BIG_ENDIAN__", NULL );
+#elif defined( HB_PDP_ENDIAN )
+   hb_pp_AddDefine( "__PDP_ENDIAN__", NULL );
+#endif
 
 #ifdef HARBOUR_START_PROCEDURE
    hb_pp_AddDefine( "__HB_MAIN__", HARBOUR_START_PROCEDURE );
@@ -493,10 +549,10 @@ int hb_pp_ParseDirective( char * sLine )
               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_TOO_MANY_INCLUDES, sLine, NULL );
             else
             {
-            #if defined(__CYGWIN__) || defined(__IBMCPP__)
-              hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_CANNOT_OPEN, sLine, "" );
+            #if defined(__CYGWIN__) || defined(__IBMCPP__) || defined(__LCC__)
+               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_CANNOT_OPEN, sLine, "" );
             #else
-              hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_CANNOT_OPEN, sLine, sys_errlist[ errno ] );
+               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_CANNOT_OPEN, sLine, strerror( errno ) );
             #endif
             }
           }
@@ -2917,7 +2973,7 @@ static BOOL ScanMacro( char * expreal, int lenitem, int * pNewLen )
 
 static int ReplacePattern( char patttype, char * expreal, int lenreal, char * ptro, int lenres )
 {
-  int rmlen = lenreal, ifou, lenitem, i;
+  int rmlen = lenreal, ifou, lenitem, i = 0;
   char sQuotes[ 4 ] = "\"\",";
 
   HB_TRACE(HB_TR_DEBUG, ("ReplacePattern(%c, %s, %d, %s, %p)", patttype, expreal, lenreal, ptro, lenres));
@@ -4197,7 +4253,7 @@ static BOOL OpenInclude( char * szFileName, HB_PATHNAMES * pSearch, PHB_FNAME pM
   PHB_FNAME pFileName;
   PFILE pFile;
 
-  HB_TRACE(HB_TR_DEBUG, ("OpenInclude(%s, %p, %p, %p, %d)", szFileName, pSearch, pMainFileName, fptr, (int) bStandardOnly));
+  HB_TRACE(HB_TR_DEBUG, ("OpenInclude(%s, %p, %p, %d, %s)", szFileName, pSearch, pMainFileName, (int) bStandardOnly, szInclude));
 
   errno = 0;
   if( bStandardOnly )

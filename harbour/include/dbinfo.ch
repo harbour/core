@@ -113,6 +113,11 @@
 /* Harbour extensions */
 #define DBOI_SKIPEVAL            100  /* skip while code block doesn't return TRUE */
 #define DBOI_SKIPEVALBACK        101  /* skip backward while code block doesn't return TRUE */
+#define DBOI_SKIPREGEX           102  /* skip while regular expression on index key doesn't return TRUE */
+#define DBOI_SKIPREGEXBACK       103  /* skip backward while regular expression on index key doesn't return TRUE */
+#define DBOI_SKIPWILD            104  /* skip while while comparison with given pattern with wildcards doesn't return TRUE */
+#define DBOI_SKIPWILDBACK        105  /* skip backward while comparison with given pattern with wildcards doesn't return TRUE */
+#define DBOI_SCOPEEVAL           106  /* skip through index evaluating given C function */
 
 /* Return values for DBOI_OPTLEVEL */
 #define DBOI_OPTIMIZED_NONE       0
@@ -126,6 +131,13 @@
 #define DBRI_RECNO                4
 #define DBRI_UPDATED              5
 
+/* constants for some SCOPED DBOI_* parameter */
+#define DBRMI_FUNCTION  1
+#define DBRMI_PARAM     2
+#define DBRMI_LOVAL     3
+#define DBRMI_HIVAL     4
+#define DBRMI_RESULT    5
+#define DBRMI_SIZE      5
 
 /* constants for dbInfo()  */
 #define DBI_ISDBF                 1  /* Does this RDD support DBFs? */
@@ -160,6 +172,37 @@
 #define DBI_DB_VERSION          101  /* Version of the Host driver          */
 #define DBI_RDD_VERSION         102  /* current RDD's version               */
 
+/* HARBOUR extension */
+#define DBI_LOCKSCHEME          128  /* Locking scheme used by RDD */
+#define DBI_ISREADONLY          129  /* Was the file opened readonly? */
+#define DBI_ROLLBACK            130  /* Rollback changes made to current record */
+
 #define DBI_USER               1000  /* User-defined DBI_ constants */
+
+/* BLOB support - definitions for internal use by BLOB.CH */
+#define DBI_BLOB_DIRECT_EXPORT  201
+#define DBI_BLOB_DIRECT_GET     202
+#define DBI_BLOB_DIRECT_IMPORT  203
+#define DBI_BLOB_DIRECT_PUT     204
+#define DBI_BLOB_ROOT_GET       205
+#define DBI_BLOB_ROOT_PUT       206
+#define DBI_BLOB_ROOT_LOCK      207
+#define DBI_BLOB_ROOT_UNLOCK    208
+
+/* CA-CLIPPER documented for public use */
+#define DBI_BLOB_DIRECT_LEN     209
+#define DBI_BLOB_DIRECT_TYPE    210
+#define DBI_BLOB_INTEGRITY      211
+#define DBI_BLOB_OFFSET         212
+#define DBI_BLOB_RECOVER        213
+
+#define DBS_BLOB_GET            201  /* This is internal definition */
+#define DBS_BLOB_LEN            202
+#define DBS_BLOB_OFFSET         203
+#define DBS_BLOB_POINTER        204
+#define DBS_BLOB_TYPE           205
+
+#define BLOB_EXPORT_APPEND      1
+#define BLOB_EXPORT_OVERWRITE   0
 
 #endif /* HB_DBINFO_CH_ */

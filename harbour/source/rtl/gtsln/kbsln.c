@@ -295,7 +295,7 @@ int hb_gt_ExtendedKeySupport()
 int hb_gt_ReadKey( HB_inkey_enum eventmask )
 {
    static int InDeadState = FALSE;
-   unsigned int ch, tmp, kbdflags;
+   int ch, tmp, kbdflags;
 #ifdef DO_LOCAL_DEBUG
    USHORT savy, savx;
 #endif

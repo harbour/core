@@ -131,7 +131,7 @@ HB_FUNC( FWRITE )
    if( ISNUM( 1 ) && ISCHAR( 2 ) )
       hb_retnl( hb_fsWriteLarge( hb_parni( 1 ),
                                  ( BYTE * ) hb_parc( 2 ),
-                                 ISNUM( 3 ) ? hb_parnl( 3 ) : hb_parclen( 2 ) ) );
+                                 ISNUM( 3 ) ? ( ULONG ) hb_parnl( 3 ) : hb_parclen( 2 ) ) );
    else
       hb_retnl( 0 );
 }

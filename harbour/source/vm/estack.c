@@ -309,7 +309,7 @@ void hb_stackDispLocal( void )
             break;
 
          case HB_IT_LONG:
-            printf( HB_I_("LONG = %lu "), hb_itemGetNL( *pBase ) );
+            printf( HB_I_("LONG = %" PFHL "i ") , hb_itemGetNInt( *pBase ) );
             break;
 
          case HB_IT_INTEGER:

@@ -150,7 +150,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctmisc.obj \
    $(OBJ_DIR)\datetime.obj \
    $(OBJ_DIR)\dattime2.obj \
-   $(OBJ_DIR)\invertwin.obj \
+   $(OBJ_DIR)\invrtwin.obj \
    $(OBJ_DIR)\numconv.obj \
    $(OBJ_DIR)\screen2.obj \
    $(OBJ_DIR)\setlast.obj \
@@ -423,10 +423,10 @@ $(OBJ_DIR)\dattime2.obj : $(OBJ_DIR)\dattime2.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\invertwin.c : $(TOOLS_DIR)\invertwin.prg
+$(OBJ_DIR)\invrtwin.c : $(TOOLS_DIR)\invrtwin.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
-$(OBJ_DIR)\invertwin.obj : $(OBJ_DIR)\invertwin.c
+$(OBJ_DIR)\invrtwin.obj : $(OBJ_DIR)\invrtwin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 

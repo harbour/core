@@ -124,9 +124,9 @@ extern void yyerror( char * ); /* parsing error management function */
 
 %union                  /* special structure used by lex and yacc to share info */
 {
-   char * string;       /* to hold a string returned by lex */
-   int    iNumber;      /* to hold a temporary integer number */
-   long   lNumber;      /* to hold a temporary long number */
+   char *  string;      /* to hold a string returned by lex */
+   int     iNumber;     /* to hold a temporary integer number */
+   HB_LONG lNumber;     /* to hold a temporary long number */
    struct
    {
       int    iNumber;      /* to hold a number returned by lex */
@@ -134,15 +134,15 @@ extern void yyerror( char * ); /* parsing error management function */
    } valInteger;
    struct
    {
-      long   lNumber;      /* to hold a long number returned by lex */
-      char * szValue;
+      HB_LONG lNumber;     /* to hold a long number returned by lex */
+      char *  szValue;
    } valLong;
    struct
    {
-      double dNumber;   /* to hold a double number returned by lex */
+      double dNumber;      /* to hold a double number returned by lex */
       /* NOTE: Intentionally using "unsigned char" instead of "BYTE" */
       unsigned char bWidth; /* to hold the width of the value */
-      unsigned char bDec; /* to hold the number of decimal points in the value */
+      unsigned char bDec;  /* to hold the number of decimal points in the value */
       char * szValue;
    } valDouble;
    HB_EXPR_PTR asExpr;
@@ -156,6 +156,12 @@ extern void yyerror( char * ); /* parsing error management function */
 int yylex( YYSTYPE *, HB_MACRO_PTR );
 %}
 
+%{
+#ifdef __WATCOMC__
+/* disable warnings for unreachable code */
+#pragma warning 13 9
+#endif
+%}
 
 %token IDENTIFIER NIL NUM_DOUBLE INASSIGN NUM_LONG
 %token IIF IF LITERAL TRUEVALUE FALSEVALUE
@@ -790,6 +796,12 @@ IfInline   : IIF '(' Expression ',' EmptyExpression ','
            ;
 
 %%
+
+#ifdef __WATCOMC__
+/* enable warnings for unreachable code */
+#pragma warning 13 1
+#endif
+
 
 /*
  ** ------------------------------------------------------------------------ **

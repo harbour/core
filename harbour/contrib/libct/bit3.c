@@ -59,14 +59,14 @@
 #include "ct.h"
 #include "clipdefs.h"
 
-long static __hex2long( char *cNum1, int iLenHex );
-long static __getparam( int iParam );
-long static __numand( long wNum1, long wNum2 );
-long static __numor ( long wNum1, long wNum2 );
-long static __numxor( long wNum1, long wNum2 );
-long static __numnot( long wNum1, long wNum2 );
-long static __numfun( int iPCount, long (*operation)(long wNum1, long wNum2), BOOL * pbOk );
-void static sizeofbits( USHORT * pusBytes, LONG * plPattern, LONG * plTestMSB );
+static long __hex2long( char *cNum1, int iLenHex );
+static long __getparam( int iParam );
+static long __numand( long wNum1, long wNum2 );
+static long __numor ( long wNum1, long wNum2 );
+static long __numxor( long wNum1, long wNum2 );
+static long __numnot( long wNum1, long wNum2 );
+static long __numfun( int iPCount, long (*operation)(long wNum1, long wNum2), BOOL * pbOk );
+static void sizeofbits( USHORT * pusBytes, LONG * plPattern, LONG * plTestMSB );
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -482,7 +482,7 @@ HB_FUNC ( NUMMIRRX )
 }
 
 
-long static __hex2long( char *cNum1, int iLenHex )
+static long __hex2long( char *cNum1, int iLenHex )
 {
   int  i;
   int  iNum;
@@ -507,7 +507,7 @@ long static __hex2long( char *cNum1, int iLenHex )
 }
 
 
-long static __getparam( int iParam )
+static long __getparam( int iParam )
 {
 
   if ( ISCHAR( iParam ) )
@@ -518,32 +518,32 @@ long static __getparam( int iParam )
 }
 
 
-long static __numand( long lNum1, long lNum2 )
+static long __numand( long lNum1, long lNum2 )
 {
     return lNum1 & lNum2;
 }
 
 
-long static __numor( long lNum1, long lNum2 )
+static long __numor( long lNum1, long lNum2 )
 {
     return lNum1 | lNum2;
 }
 
 
-long static __numxor( long lNum1, long lNum2 )
+static long __numxor( long lNum1, long lNum2 )
 {
     return lNum1 ^ lNum2;
 }
 
 
-long static __numnot( long lNum1, long lNum2 )
+static long __numnot( long lNum1, long lNum2 )
 {
     HB_SYMBOL_UNUSED (lNum2);
     return ~lNum1;
 }
 
 
-long static __numfun( int iPCount, long (*operation)(long wNum1, long wNum2), BOOL * pbOk )
+static long __numfun( int iPCount, long (*operation)(long wNum1, long wNum2), BOOL * pbOk )
 {
   long   lNumOp = 0;
   long   lNum1, lNum2;
@@ -615,7 +615,7 @@ long static __numfun( int iPCount, long (*operation)(long wNum1, long wNum2), BO
 
 }
 
-void static sizeofbits( USHORT * pusBytes, long *plPattern, long *plTestMSB )
+static void sizeofbits( USHORT * pusBytes, long *plPattern, long *plTestMSB )
 {
 
   *pusBytes = ((ISNIL(1) || hb_parni(1) == 0) ? sizeof( int ) * 8

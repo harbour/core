@@ -298,8 +298,14 @@
    #endif
 #endif
 
+#ifdef HB_OS_DARWIN
+   #if ! defined(HB_OS_BSD)
+      #define HB_OS_BSD
+   #endif
+#endif
+
 #ifndef HB_OS_UNIX
-   #ifdef OS_UNIX_COMPATIBLE
+   #if defined(OS_UNIX_COMPATIBLE) || defined(HB_OS_LINUX) || defined(HB_OS_BSD)
       #define HB_OS_UNIX
    #endif
 #endif
@@ -334,7 +340,13 @@
 
 #if defined(__cplusplus) && !defined(__IBMCPP__)
    #define HB_EXTERN_C
+   #define HB_EXTERN_BEGIN    extern "C" {
+   #define HB_EXTERN_END      }
+#else
+   #define HB_EXTERN_BEGIN
+   #define HB_EXTERN_END
 #endif
+
 
 #endif /* HB_SETUP_H_ */
 

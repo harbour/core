@@ -2,8 +2,46 @@
 # $Id$
 #
 
-include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
+ifeq ($(INSTALL_OBJS),) # Empty install list
+
+INSTALL_RULE = @echo Done
+
+else
+
+ifeq ($(SHLVL),) # COMMAND.COM
+
+# We have to use script to overcome the DOS limit of max 128 characters
+# NOTE: The empty line directly before 'endef' HAVE TO exist!
+# It causes that every commands will be separated by LF
+define inst_file
+$(CP) $(file) $(subst /,\,$(INSTALL_DIR))
+
+endef
 
 INSTALL_LIST = $(subst /,\,$(INSTALL_OBJS))
+INSTALL_RULE = $(foreach file, $(INSTALL_LIST), $(inst_file))
+
+else  # bash
+
+INSTALL_DIRSH = $(subst \,/,$(INSTALL_DIR))
+INSTALL_OBJSH = $(subst \,/,$(INSTALL_OBJS))
 INSTALL_RULE =\
-	$(COMSPEC) /c FOR %f IN ($(INSTALL_LIST)) DO COPY %f $(subst /,\,$(INSTALL_DIR))
+	@if [ ! -d $(INSTALL_DIRSH) ]; \
+	then \
+	  echo "! Can't install, path not found:" $(INSTALL_DIRSH); \
+	else \
+	  for i in $(INSTALL_OBJSH); \
+	  do \
+	    if [ -r $$i ]; \
+	    then \
+	      echo "! Installing $$i on $(INSTALL_DIRSH)"; \
+	      $(CP) $$i $(INSTALL_DIRSH); \
+	    else \
+	      echo "! Can't install $$i, not found"; \
+	    fi \
+	  done \
+	fi
+
+endif
+
+endif

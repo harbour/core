@@ -137,9 +137,9 @@ static void hb_compDebugStart( void ) { };
 
 %union                  /* special structure used by lex and yacc to share info */
 {
-   char * string;       /* to hold a string returned by lex */
-   int    iNumber;      /* to hold a temporary integer number */
-   long   lNumber;      /* to hold a temporary long number */
+   char *  string;      /* to hold a string returned by lex */
+   int     iNumber;     /* to hold a temporary integer number */
+   HB_LONG lNumber;     /* to hold a temporary long number */
    struct
    {
       int    iNumber;      /* to hold a number returned by lex */
@@ -147,8 +147,8 @@ static void hb_compDebugStart( void ) { };
    } valInteger;
    struct
    {
-      long   lNumber;      /* to hold a long number returned by lex */
-      char * szValue;
+      HB_LONG lNumber;     /* to hold a long number returned by lex */
+      char *  szValue;
    } valLong;
    struct
    {

@@ -129,7 +129,9 @@ typedef enum
    HB_SET_DIRCASE       = 103,
    HB_SET_DIRSEPARATOR  = 104,
    HB_SET_EOF           = 105,
-   HB_SET_DBFLOCKSCHEME = 106
+   HB_SET_HARDCOMMIT    = 106,
+   HB_SET_FORCEOPT      = 107,
+   HB_SET_DBFLOCKSCHEME = 108
 
 } HB_set_enum;
 
@@ -194,6 +196,8 @@ typedef struct
    int     HB_SET_VIDEOMODE;
    BOOL    HB_SET_WRAP;
    int     HB_SET_DBFLOCKSCHEME;
+   BOOL    HB_SET_HARDCOMMIT;
+   BOOL    HB_SET_FORCEOPT;
 } HB_SET_STRUCT;
 
 #define HB_SET_CASE_MIXED  0

@@ -53,6 +53,7 @@
 #ifndef HB_RDDDBT_H_
 #define HB_RDDDBT_H_
 
+#include "hbsetup.h"
 #include "hbdbf.h"
 #include "hbdbferr.h"
 #include "hbapirdd.h"
@@ -62,9 +63,7 @@
 #define HB_EXTERNAL_RDDDBF_USE
 #include "hbrdddbf.h"
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 /* MEMO constants and defaults */
 #define DBT_MEMOEXT                             ".dbt"
@@ -189,12 +188,6 @@ static ERRCODE hb_dbtWriteDBHeader( DBTAREAP pArea );
 #define hb_dbtExists                               NULL
 #define hb_dbtWhoCares                             NULL
 
-
-#if defined(HB_EXTERN_C)
-}
-#endif
-
-extern ULONG hb_dbfGetMemoBlock( DBFAREAP pArea, USHORT uiIndex );
-extern void  hb_dbfPutMemoBlock( DBFAREAP pArea, USHORT uiIndex, ULONG ulBlock );
+HB_EXTERN_END
 
 #endif /* HB_RDDDBT */

@@ -97,6 +97,60 @@ static BOOL hb_strMatchDOS( const char * pszString, const char * pszMask )
               ( *pszMask == '\0' && *pszString != '\0' ) );
 }
 
+#define HB_MAX_WILDPATTERN     256
+
+BOOL HB_EXPORT hb_strMatchWild( const char *szString, const char *szPattern )
+{
+   BOOL fMatch = TRUE, fAny = FALSE;
+   ULONG ulAnyPosP[HB_MAX_WILDPATTERN], ulAnyPosV[HB_MAX_WILDPATTERN],
+         ulSize, ulLen, ulAny, i, j;
+
+   i = j = ulAny = 0;
+   ulLen = strlen( szString );
+   ulSize = strlen( szPattern );
+   while ( i < ulSize )
+   {
+      if ( szPattern[i] == '*' )
+      {
+         fAny = TRUE;
+         i++;
+      }
+      else if ( j < ulLen && ( szPattern[i] == '?' || szPattern[i] == szString[j] ) )
+      {
+         if ( fAny )
+         {
+            if ( ulAny < HB_MAX_WILDPATTERN )
+            {
+               ulAnyPosP[ulAny] = i;
+               ulAnyPosV[ulAny] = j;
+               ulAny++;
+            }
+            fAny = FALSE;
+         }
+         j++;
+         i++;
+      }
+      else if ( fAny && j < ulLen )
+      {
+         j++;
+      }
+      else if ( ulAny > 0 )
+      {
+         ulAny--;
+         i = ulAnyPosP[ulAny];
+         j = ulAnyPosV[ulAny] + 1;
+         fAny = TRUE;
+      }
+      else
+      {
+         fMatch = FALSE;
+         break;
+      }
+   }
+   return fMatch;
+}
+
+
 /* TODO: Replace it with a code that supports real regular expressions
  *
  */
@@ -107,3 +161,13 @@ BOOL hb_strMatchRegExp( const char * szString, const char * szMask )
    return hb_strMatchDOS( szString, szMask );
 }
 
+
+/*
+ * WildMatch( cPattern, cValue ) compares cValue ith cPattern, cPattern
+ * may contain wildcard characters (?*)
+ */
+HB_FUNC( WILDMATCH )
+{
+   hb_retl( ( ! ISCHAR( 1 ) || ! ISCHAR( 2 ) ) ? FALSE :
+            hb_strMatchWild( hb_parc( 2 ), hb_parc( 1 ) ) );
+}

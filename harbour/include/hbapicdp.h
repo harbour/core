@@ -109,5 +109,6 @@ extern void hb_cdpnTranslate( char*, PHB_CODEPAGE, PHB_CODEPAGE, unsigned int );
 extern int hb_cdpcmp( char*, char*, ULONG, PHB_CODEPAGE, ULONG* );
 extern int hb_cdpchrcmp( char cFirst, char cSecond, PHB_CODEPAGE cdpage );
 
+extern PHB_CODEPAGE hb_cdp_page;
 #endif /* HB_APICDP_H_ */
 

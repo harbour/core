@@ -130,7 +130,7 @@ static HB_RTVAR_PTR hb_comp_rtvars = NULL;
 static BOOL bTrancuateBaseArray = FALSE;
 static HB_EXPR_PTR pGetArgList = NULL, pBaseArrayName = NULL, pGetVarArray;
 
-static s_bBlock = FALSE, s_bBlockMacro = FALSE, s_bBlockDeclared = FALSE, s_bSetGet;
+static BOOL s_bBlock = FALSE, s_bBlockMacro = FALSE, s_bBlockDeclared = FALSE, s_bSetGet;
 static HB_EXPR_PTR pBlockSimple;
 
 extern int hb_compLocalGetPos( char * szVarName );   /* returns the order + 1 of a local variable */

@@ -70,7 +70,8 @@ static unsigned char iIdentifier = 0;
 static char *sIdOnHold, *s_sLastBlock = NULL;
 
 char *     hb_comp_SLX_LastBlock( BOOL bReset );
-long       hb_comp_SLX_Hex2L( char* sHex );
+
+static int hb_comp_SLX_Str2Num( char* szNum, HB_LONG * lVal, double * dVal, int * iDec, int * iWidth );
 static int hb_comp_SLX_ElementToken( char* szToken, unsigned int iTokenLen );
 static int hb_comp_SLX_InterceptAction( int iRet, char *sToken );
 static int hb_comp_SLX_CustomAction( int x, int aiHold[], int *ptr_iHold, BOOL *ptr_bIgnoreWords, int iLastToken, char *sToken, char *s_szBuffer );
@@ -668,77 +669,38 @@ static int hb_comp_SLX_ElementToken( char* szToken, unsigned int iTokenLen )
    {
       /* ConverNumber */
 
+      HB_LONG lNumber;
+      double dNumber;
+      int iDec, iWidth;
+
       yylval.string = (char*) hb_xgrab( TOKEN_SIZE );
       yylval.string[0] = 0;
 
+      iRet = hb_comp_SLX_Str2Num( yytext, &lNumber, &dNumber, &iDec, &iWidth );
 
-      /* Hex Number */
-      if( yytext[0] == '0' && yytext[1] == 'X' )
+      if( !isdigit( yytext[0] ) && !( yytext[0] == '.' && isdigit( yytext[1] ) ) )
       {
-         long lNumber = hb_comp_SLX_Hex2L( yytext + 2 );
-
-         if( ( double ) SHRT_MIN <= lNumber && lNumber <= ( double ) SHRT_MAX )
-         {
-       	    yylval.valInteger.iNumber = lNumber;
-       	    yylval.valInteger.szValue = yytext;
-       	    iRet = NUM_INTEGER;
-         }
-         else if( ( double ) LONG_MIN <= lNumber && lNumber <= ( double ) LONG_MAX )
-         {
-       	    yylval.valLong.lNumber = lNumber;
-       	    yylval.valLong.szValue = yytext;
-       	    iRet = NUM_LONG;
-         }
-         else
-         {
-       	    /* NOTE: This will never happen */
-       	    yylval.valDouble.dNumber = lNumber;
-       	    yylval.valDouble.bWidth = HB_DEFAULT_WIDTH;
-       	    yylval.valDouble.bDec = 0;
-       	    yylval.valDouble.szValue = yytext;
-       	    iRet = NUM_DOUBLE;
-         }
+         hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX, yytext, NULL );
+         return yytext[0];
+      }
+      else if ( iRet == NUM_DOUBLE )
+      {
+         yylval.valDouble.dNumber = dNumber;
+         yylval.valDouble.bDec = iDec;
+         yylval.valDouble.bWidth = iWidth;
+         yylval.valDouble.szValue = yytext;
+      }
+      else if( HB_LIM_INT16( lNumber ) )
+      {
+         yylval.valInteger.iNumber = ( int ) lNumber;
+         yylval.valInteger.szValue = yytext;
+         iRet = NUM_INTEGER;
       }
       else
       {
-         yylval.valDouble.dNumber = atof( yytext );
-         tmpPtr = strchr( yytext, '.' );
-
-         if( tmpPtr )
-         {
-       	    yylval.valDouble.bDec = strlen( tmpPtr + 1 );
-       	    yylval.valDouble.bWidth = yyleng - yylval.valDouble.bDec;
-       	    if( yylval.valDouble.bDec )
-	    {
-               yylval.valDouble.bWidth--;
-	    }
-       	    yylval.valDouble.szValue = yytext;
-       	    iRet = NUM_DOUBLE;
-         }
-         else
-         {
-       	    if( ( double )SHRT_MIN <= yylval.valDouble.dNumber && yylval.valDouble.dNumber <= ( double )SHRT_MAX )
-       	    {
-               yylval.valInteger.iNumber = ( int ) yylval.valDouble.dNumber;
-               yylval.valInteger.szValue = yytext;
-               iRet = NUM_INTEGER;
-       	    }
-       	    else if( ( double )LONG_MIN <= yylval.valDouble.dNumber && yylval.valDouble.dNumber <= ( double )LONG_MAX )
-       	    {
-               yylval.valLong.lNumber = ( long ) yylval.valDouble.dNumber;
-               yylval.valLong.szValue = yytext;
-               iRet = NUM_LONG;
-       	    }
-       	    else
-       	    {
-               yylval.valDouble.bWidth = yyleng + 1;
-               yylval.valDouble.bDec = 0;
-               yylval.valDouble.szValue = yytext;
-               iRet = NUM_DOUBLE;
-       	    }
-         }
+         yylval.valLong.lNumber = lNumber;
+         yylval.valLong.szValue = yytext;
       }
-
       iRet += DONT_REDUCE;
    }
 
@@ -746,40 +708,12 @@ static int hb_comp_SLX_ElementToken( char* szToken, unsigned int iTokenLen )
    return iRet;
 }
 
-long hb_comp_SLX_Hex2L( char* sHex )
+static int hb_comp_SLX_Str2Num( char* szNum, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth )
 {
-   int i, iExp = 0, iLen = strlen( sHex ) - 1;
-   long lVal, lSum = 0;
-   char cChar;
-
-   while( iLen >= 0 )
-   {
-      cChar = sHex[ iLen-- ];
-
-      if( cChar > 64 && cChar < 91 )
-      {
-         lVal = cChar - 55;
-      }
-      else
-      {
-         lVal = cChar - 48;
-      }
-
-      if( lVal )
-      {
-	 i = 0;
-	 while( i++ < iExp )
-	 {
-	    lVal *= 16;
-	 }
-
-         lSum += lVal;
-      }
-
-      iExp++;
-   }
-
-   return lSum;
+   BOOL fDbl;
+   
+   fDbl = hb_compStrToNum( szNum, plVal, pdVal, piDec, piWidth );
+   return fDbl ? NUM_DOUBLE : NUM_LONG;
 }
 
 static int hb_comp_SLX_CustomAction( int x, int aiHold[], int *ptr_iHold, BOOL *ptr_bIgnoreWords, int iLastToken, char *sToken, char *s_szBuffer )

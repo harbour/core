@@ -50,8 +50,6 @@
  *
  */
 
-#include <math.h>
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
@@ -64,30 +62,18 @@ HB_FUNC( VAL )
    if( pText )
    {
       char * szText = hb_itemGetCPtr( pText );
-      int iWidth = ( int ) hb_itemGetCLen( pText );
-      int iDec;
-      double dValue = hb_strVal( szText, hb_itemGetCLen( pText ) );
+      int iWidth, iDec, iLen = ( int ) hb_itemGetCLen( pText );
+      BOOL fDbl;
+      HB_LONG lValue;
+      double dValue;
 
-      for( iDec = 0; iDec < iWidth && szText[ iDec ] != '.'; iDec++ );
+      fDbl = hb_valStrnToNum( szText, iLen, &lValue, &dValue , &iDec, &iWidth );
 
-      if( iDec >= iWidth - 1 )
-         hb_retnlen( dValue, iWidth, 0 );
+      if ( !fDbl )
+         hb_retnintlen( lValue, iWidth );
       else
-      {
-         /* NOTE: Kludge Warning! This condition:
-                  "|| ( iDec == 1 && szText[ 0 ] == '-' && dValue != 0.0 )"
-                  may not be the generic way to handle the width of this "-.1"
-                  string. I could not find a matching case which
-                  fails for the same reason, nor a better way to handle it.
-                  The problem is that in this case only, the width is
-                  calculated upon conditions which can only be discovered by
-                  parsing the string, but the parsing is made by a lower level
-                  generic function. [vszakats] */
-
-         hb_retnlen( dValue, iDec + ( iDec == 0 || ( iDec == 1 && szText[ 0 ] == '-' && dValue != 0.0 ) ? 1 : 0 ), iWidth - iDec - 1 );
-      }
+         hb_retnlen( dValue, iWidth, iDec );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1098, NULL, "VAL", 1, hb_paramError( 1 ) );
 }
-

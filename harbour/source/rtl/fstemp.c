@@ -113,6 +113,8 @@ FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiA
       }
    }
 #else
+   HB_SYMBOL_UNUSED( uiAttr );
+
    if( ( ( pszDir ? strlen( pszDir ) : 0 ) + ( pszPrefix ? strlen( pszPrefix ) : 0 ) + 6 ) < _POSIX_PATH_MAX )
    {
       FHANDLE fhnd;

@@ -361,25 +361,29 @@ static HB_EXPR_FUNC( hb_compExprUseString )
 	
 	         bValidMacro = hb_compExprIsValidMacro( szDupl, &bUseTextSubst, HB_MACRO_PARAM );
             if( bUseTextSubst )
-	         {
+            {
                if( HB_SUPPORT_HARBOUR ) 
                {
         	         if( bValidMacro )
-            	      HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
-		            else
-	    	            hb_compErrorMacro( pSelf->value.asString.string );
+                        HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
+                     else
+                     {
+                        hb_compErrorMacro( pSelf->value.asString.string );
+                     }
                }
                else
                {
                   /* Clipper always generates macro substitution pcode
                   * even if it is not a valid expression
                   */
-           	      HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
-        	         if( !bValidMacro )
-	    	            hb_compErrorMacro( pSelf->value.asString.string );
+                  HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
+                  if( !bValidMacro )
+                  {
+                     hb_compErrorMacro( pSelf->value.asString.string );
+                  }
                }
-	         }
-	         hb_xfree( szDupl );
+            }
+            hb_xfree( szDupl );
          }
          break;
       case HB_EA_POP_PCODE:
@@ -566,9 +570,9 @@ static void hb_compExprCodeblockEarly( HB_EXPR_PTR pSelf )
 		szDupl = hb_strupr( hb_strdup( pSelf->value.asCodeblock.string ) );
 		if( !hb_compExprIsValidMacro( szDupl, &bUseTextSubst, HB_MACRO_PARAM ) )
 		{
-	    	hb_compErrorCodeblock( pSelf->value.asCodeblock.string );
-	    	hb_compErrorMacro( pSelf->value.asCodeblock.string );
-		}    
+               hb_compErrorCodeblock( pSelf->value.asCodeblock.string );
+               hb_compErrorMacro( pSelf->value.asCodeblock.string );
+		}
 		hb_xfree( szDupl );
 		pNew = hb_compExprNewMacro( hb_compExprNewString(pSelf->value.asCodeblock.string), 0, NULL );
 		HB_EXPR_USE( pNew, HB_EA_PUSH_PCODE );
@@ -1140,7 +1144,7 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
 
                   pExpr = pExpr->value.asList.pExprList; /* the first element in the array */
                   if( pIdx->value.asNum.NumType == HB_ET_LONG )
-                     lIndex = pIdx->value.asNum.lVal;
+                     lIndex = ( LONG ) pIdx->value.asNum.lVal;
                   else
                      lIndex = ( LONG ) pIdx->value.asNum.dVal;
 
@@ -1178,7 +1182,7 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
                   LONG lIndex;
 
                   if( pIdx->value.asNum.NumType == HB_ET_LONG )
-                     lIndex = pIdx->value.asNum.lVal;
+                     lIndex = ( LONG ) pIdx->value.asNum.lVal;
                   else
                      lIndex = ( LONG ) pIdx->value.asNum.dVal;
 
@@ -1478,7 +1482,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
             {
                HB_EXPR_PTR pName = pSelf->value.asFunCall.pFunName;
                HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
-               USHORT usCount;
+               USHORT usCount = 0;
 
                if( pParms )
                {

@@ -165,7 +165,7 @@ HB_EXPR_PTR hb_compExprNewDouble( double dValue, BYTE ucWidth, BYTE ucDec )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewDouble(%f, %i)", dValue, ucDec));
 
-   pExpr =hb_compExprNew( HB_ET_NUMERIC );
+   pExpr = hb_compExprNew( HB_ET_NUMERIC );
 
    pExpr->value.asNum.dVal    = dValue;
    pExpr->value.asNum.bWidth  = ucWidth;
@@ -176,13 +176,13 @@ HB_EXPR_PTR hb_compExprNewDouble( double dValue, BYTE ucWidth, BYTE ucDec )
    return pExpr;
 }
 
-HB_EXPR_PTR hb_compExprNewLong( long lValue )
+HB_EXPR_PTR hb_compExprNewLong( HB_LONG lValue )
 {
    HB_EXPR_PTR pExpr;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewLong(%li)", lValue));
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewLong(%" PFHL "d)", lValue));
 
-   pExpr =hb_compExprNew( HB_ET_NUMERIC );
+   pExpr = hb_compExprNew( HB_ET_NUMERIC );
 
    pExpr->value.asNum.lVal    = lValue;
    pExpr->value.asNum.bDec    = 0;
@@ -195,7 +195,7 @@ HB_EXPR_PTR hb_compExprNewLong( long lValue )
 int hb_compExprIsInteger( HB_EXPR_PTR pExpr )
 {
    return ( pExpr->ExprType == HB_ET_NUMERIC && pExpr->value.asNum.NumType == HB_ET_LONG &&
-       pExpr->value.asNum.lVal >= -32768 && pExpr->value.asNum.lVal <= 32767 );
+            HB_LIM_INT16( pExpr->value.asNum.lVal ) );
 }
 
 int hb_compExprAsInteger( HB_EXPR_PTR pExpr )
@@ -223,14 +223,14 @@ HB_EXPR_PTR hb_compExprNewCodeBlock( char *string, BOOL isMacro, BOOL lateEval )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewCodeBlock(%s,%u,%u)",string,isMacro,lateEval));
 
-   pExpr =hb_compExprNew( HB_ET_CODEBLOCK );
+   pExpr = hb_compExprNew( HB_ET_CODEBLOCK );
 
    pExpr->value.asCodeblock.pExprList = NULL;
    pExpr->value.asCodeblock.pLocals   = NULL;  /* this will hold local variables declarations */
    pExpr->ValType = HB_EV_CODEBLOCK;
-    pExpr->value.asCodeblock.string = string;
-    pExpr->value.asCodeblock.isMacro = isMacro;
-    pExpr->value.asCodeblock.lateEval = lateEval;
+   pExpr->value.asCodeblock.string = string;
+   pExpr->value.asCodeblock.isMacro = isMacro;
+   pExpr->value.asCodeblock.lateEval = lateEval;
    return pExpr;
 }
 
@@ -258,7 +258,7 @@ HB_EXPR_PTR hb_compExprNewLogical( int iValue )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewLogical(%i)", iValue));
 
-   pExpr =hb_compExprNew( HB_ET_LOGICAL );
+   pExpr = hb_compExprNew( HB_ET_LOGICAL );
 
    pExpr->value.asLogical = iValue;
    pExpr->ValType = HB_EV_LOGICAL;
@@ -285,7 +285,7 @@ HB_EXPR_PTR hb_compExprNewSelf( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewSelf()"));
 
-   pExpr =hb_compExprNew( HB_ET_SELF );
+   pExpr = hb_compExprNew( HB_ET_SELF );
 
    pExpr->ValType = HB_EV_OBJECT;
    return pExpr;
@@ -297,7 +297,7 @@ HB_EXPR_PTR hb_compExprNewVarRef( char * szVarName )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewVarRef(%s)", szVarName));
 
-   pExpr =hb_compExprNew( HB_ET_VARREF );
+   pExpr = hb_compExprNew( HB_ET_VARREF );
 
    pExpr->value.asSymbol = szVarName;
    pExpr->ValType = HB_EV_VARREF;
@@ -856,9 +856,15 @@ HB_EXPR_PTR hb_compExprNewNegate( HB_EXPR_PTR pNegExpr )
    if( pNegExpr->ExprType == HB_ET_NUMERIC )
    {
       if( pNegExpr->value.asNum.NumType == HB_ET_DOUBLE )
+      {
          pNegExpr->value.asNum.dVal = - pNegExpr->value.asNum.dVal;
+         pNegExpr->value.asNum.bWidth = HB_DBL_LENGTH( pNegExpr->value.asNum.dVal );
+      }
       else
+      {
          pNegExpr->value.asNum.lVal = - pNegExpr->value.asNum.lVal;
+         pNegExpr->value.asNum.bWidth = HB_LONG_LENGTH( pNegExpr->value.asNum.lVal );
+      }
       pExpr = pNegExpr;
    }
    else
@@ -901,4 +907,3 @@ ULONG hb_compExprListLen( HB_EXPR_PTR pExpr )
 
    return ulLen;
 }
-

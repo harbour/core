@@ -120,8 +120,11 @@
 #define _SET_DIRCASE      103 /* Harbour extension */
 #define _SET_DIRSEPARATOR 104 /* Harbour extension */
 #define _SET_EOF          105 /* Harbour extension */
+#define _SET_HARDCOMMIT   106 /* Harbour extension */
+#define _SET_FORCEOPT     107 /* Harbour extension */
+#define _SET_DBFLOCKSCHEME 108 /* Harbour extension */
 
 #define HB_SET_BASE       100
-#define HB_SET_COUNT      6
+#define HB_SET_COUNT      9
 
 #endif /* _SET_CH */

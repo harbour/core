@@ -2279,7 +2279,7 @@ ULONG hb_compGenJump( LONG lOffset )
    }
    else if( lOffset >= (-8388608L) && lOffset <= 8388607L )
    {
-      hb_compGenPCode4( HB_P_JUMPFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( (USHORT)( lOffset >> 16 ) & 0xFF ), ( BOOL ) 1 );
+      hb_compGenPCode4( HB_P_JUMPFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( lOffset >> 16 ) & 0xFF ), ( BOOL ) 1 );
    }
    else
    {
@@ -2311,7 +2311,7 @@ ULONG hb_compGenJumpFalse( LONG lOffset )
    }
    else if( lOffset >= (-8388608L) && lOffset <= 8388607L )
    {
-      hb_compGenPCode4( HB_P_JUMPFALSEFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( (USHORT)( lOffset >> 16 ) & 0xFF ), ( BOOL ) 1 );
+      hb_compGenPCode4( HB_P_JUMPFALSEFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( lOffset >> 16 ) & 0xFF ), ( BOOL ) 1 );
    }
    else
    {
@@ -2343,7 +2343,7 @@ ULONG hb_compGenJumpTrue( LONG lOffset )
    }
    else if( lOffset >= (-8388608L) && lOffset <= 8388607L )
    {
-      hb_compGenPCode4( HB_P_JUMPTRUEFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( (USHORT)( lOffset >> 16 ) & 0xFF ), ( BOOL ) 1 );
+      hb_compGenPCode4( HB_P_JUMPTRUEFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( lOffset >> 16 ) & 0xFF ), ( BOOL ) 1 );
    }
    else
    {
@@ -3131,8 +3131,7 @@ void hb_compGenPushDouble( double dNumber, BYTE bWidth, BYTE bDec )
    BYTE pBuffer[ sizeof( double ) + sizeof( BYTE ) + sizeof( BYTE ) + 1 ];
 
    pBuffer[ 0 ] = HB_P_PUSHDOUBLE;
-
-   memcpy( ( BYTE * ) &( pBuffer[ 1 ] ), ( BYTE * ) &dNumber, sizeof( double ) );
+   HB_PUT_LE_DOUBLE( &( pBuffer[ 1 ] ), dNumber );
 
    pBuffer[ 1 + sizeof( double ) ] = bWidth;
    pBuffer[ 1 + sizeof( double ) + sizeof( BYTE ) ] = bDec;
@@ -3156,30 +3155,29 @@ void hb_compGenPushFunCall( char * szFunName )
 }
 
 /* generates the pcode to push a long number on the virtual machine stack */
-void hb_compGenPushLong( long lNumber )
+void hb_compGenPushLong( HB_LONG lNumber )
 {
    if( lNumber == 0 )
       hb_compGenPCode1( HB_P_ZERO );
    else if( lNumber == 1 )
       hb_compGenPCode1( HB_P_ONE );
-   else if( ( ( char * ) &lNumber )[ 2 ] == 0 && ( ( char * ) &lNumber )[ 3 ] == 0 )
+   else if( HB_LIM_INT8( lNumber ) )
+      hb_compGenPCode2( HB_P_PUSHBYTE, (BYTE) lNumber, TRUE );
+   else if( HB_LIM_INT16( lNumber ) )
+      hb_compGenPCode3( HB_P_PUSHINT, HB_LOBYTE( lNumber ), HB_HIBYTE( lNumber ), TRUE );
+   else if( HB_LIM_INT32( lNumber ) )
    {
-      if( ( ( char * ) &lNumber )[ 1 ] == 0 )
-         hb_compGenPCode2( HB_P_PUSHBYTE, ( ( char * ) &lNumber )[ 0 ], ( BOOL ) 1 );
-      else
-         hb_compGenPCode3( HB_P_PUSHINT, ( ( char * ) &lNumber )[ 0 ], ( ( char * ) &lNumber )[ 1 ], ( BOOL ) 1 );
+      BYTE pBuffer[ 5 ];
+      pBuffer[ 0 ] = HB_P_PUSHLONG;
+      HB_PUT_LE_UINT32( pBuffer + 1, lNumber );
+      hb_compGenPCodeN( pBuffer, sizeof( pBuffer ), TRUE );
    }
    else
    {
-      BYTE pBuffer[5];
-
-      pBuffer[0] = HB_P_PUSHLONG;
-      pBuffer[1] = ( ( BYTE * ) &lNumber )[0];
-      pBuffer[2] = ( ( BYTE * ) &lNumber )[1];
-      pBuffer[3] = ( ( BYTE * ) &lNumber )[2];
-      pBuffer[4] = ( ( BYTE * ) &lNumber )[3];
-
-      hb_compGenPCodeN( pBuffer, 5, 1 );
+      BYTE pBuffer[ 9 ];
+      pBuffer[ 0 ] = HB_P_PUSHLONGLONG;
+      HB_PUT_LE_UINT64( pBuffer + 1, lNumber );
+      hb_compGenPCodeN( pBuffer, sizeof( pBuffer ), TRUE );
    }
 }
 

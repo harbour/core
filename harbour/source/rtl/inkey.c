@@ -358,7 +358,8 @@ void hb_inkeyPut( int ch )
          s_inkeyBuffer[ head++ ] = ch;
          if( head >= hb_set.HB_SET_TYPEAHEAD ) head = 0;
          if( head != s_inkeyTail ) s_inkeyHead = head;
-         else /* TODO: Add error sound */ ;
+         /* else */
+            /* TODO: Add error sound */
       }
       else
          s_inkeyForce = ch; /* Typeahead support is disabled */

@@ -69,7 +69,7 @@
  */
 HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
             USHORT uiLocals,
-            USHORT * pLocalPosTable,
+            BYTE * pLocalPosTable,
             PHB_SYMB pSymbols )
 {
    HB_CODEBLOCK_PTR pCBlock;
@@ -107,7 +107,8 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
           * TODO: If Harbour will support threads in the future then we need
           * to implement some kind of semaphores here.
           */
-         pLocal = hb_stackItemFromBase( *pLocalPosTable++ );
+         pLocal = hb_stackItemFromBase( HB_PCODE_MKUSHORT( pLocalPosTable ) );
+         pLocalPosTable += 2;
 
          if( ! HB_IS_MEMVAR( pLocal ) )
          {

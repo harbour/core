@@ -88,8 +88,8 @@ extern ADSHANDLE adsConnectHandle;
 #endif
 
 HB_INIT_SYMBOLS_BEGIN( ads1__InitSymbols )
-{ "_ADS",             HB_FS_PUBLIC, HB_FUNCNAME( _ADS ), NULL },
-{ "ADS_GETFUNCTABLE", HB_FS_PUBLIC, HB_FUNCNAME( ADS_GETFUNCTABLE ), NULL }
+{ "_ADS",             HB_FS_PUBLIC, {HB_FUNCNAME( _ADS )}, NULL },
+{ "ADS_GETFUNCTABLE", HB_FS_PUBLIC, {HB_FUNCNAME( ADS_GETFUNCTABLE )}, NULL }
 HB_INIT_SYMBOLS_END( ads1__InitSymbols )
 
 #if defined(_MSC_VER)
@@ -105,7 +105,7 @@ HB_INIT_SYMBOLS_END( ads1__InitSymbols )
    #pragma startup ads1__InitSymbols
 #endif
 
-static RDDFUNCS adsSuper = { NULL };
+static RDDFUNCS adsSuper;
 
 void adsSetListener_callback( HB_set_enum setting, HB_set_listener_enum when )
 {
@@ -167,6 +167,7 @@ static void commonError( ADSAREAP pArea, USHORT uiGenCode, USHORT uiSubCode, cha
    return;
 }
 
+#if 0
 static void DumpArea( ADSAREAP pArea )  /* For debugging: call this to dump ads server settings to HB_TRACE. Currently in a quick-and-dirty state... */
 {
    UNSIGNED8  pucTemp[1025];
@@ -215,7 +216,7 @@ static void DumpArea( ADSAREAP pArea )  /* For debugging: call this to dump ads 
       }
    }
 }
-
+#endif
 /*
 static BOOL hb_nltoa( LONG lValue, char * szBuffer, USHORT uiLen )
 {
@@ -1245,7 +1246,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    USHORT uiCount;
    BYTE * szText;
    BOOL bTypeError = TRUE;
-   long lDay, lMonth, lYear;
+   int iDay, iMonth, iYear;
 
    UNSIGNED8 pucFormat[ 11 ];
    UNSIGNED16 pusLen = 11;
@@ -1339,8 +1340,8 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             bTypeError = FALSE;
             AdsGetDateFormat  ( pucFormat, &pusLen );
             AdsSetDateFormat  ( (UNSIGNED8*)"YYYYMMDD" );
-            hb_dateDecode( hb_itemGetDL( pItem ), &lYear, &lMonth, &lDay );
-            hb_dateStrPut( ( char * ) szText, lYear, lMonth, lDay );
+            hb_dateDecode( hb_itemGetDL( pItem ), &iYear, &iMonth, &iDay );
+            hb_dateStrPut( ( char * ) szText, iYear, iMonth, iDay );
             ulRetVal = AdsSetDate( pArea->hTable, ADSFIELD( uiIndex ), szText, 8 );
             AdsSetDateFormat  ( pucFormat );
          }
@@ -1745,7 +1746,7 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
    USHORT uiFields, uiCount;
    UNSIGNED8 szName[ ADS_MAX_FIELD_NAME + 1 ];
       /* See adsGettValue() for why we don't use pArea->uiMaxFieldNameLength here */
-   UNSIGNED16 pusBufLen, pusType;
+   UNSIGNED16 pusBufLen, pusType, pusDecimals;
    DBFIELDINFO dbFieldInfo;
 
    HB_TRACE(HB_TR_DEBUG, ("adsOpen(%p)", pArea));
@@ -1829,8 +1830,8 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
          case ADS_TIMESTAMP:
          case ADS_AUTOINC:
             dbFieldInfo.uiType = HB_IT_LONG;
-            AdsGetFieldDecimals( pArea->hTable, szName, ( UNSIGNED16 * ) &pulLength );
-            dbFieldInfo.uiDec = ( USHORT ) pulLength;
+            AdsGetFieldDecimals( pArea->hTable, szName, ( UNSIGNED16 * ) &pusDecimals );
+            dbFieldInfo.uiDec = ( USHORT ) pusDecimals;
             break;
 
          case ADS_LOGICAL:
@@ -2711,7 +2712,7 @@ static ERRCODE adsScopeInfo( ADSAREAP pArea, USHORT nScope, PHB_ITEM pItem )
 
 static ERRCODE adsSetFilter( ADSAREAP pArea, LPDBFILTERINFO pFilterInfo )
 {
-   BOOL bValidExpr = FALSE;
+   UNSIGNED16 bValidExpr = FALSE;
    UNSIGNED16 usResolve = ADS_RESOLVE_DYNAMIC ;  /*ADS_RESOLVE_IMMEDIATE ;get this from a SETting*/
    UNSIGNED32 ulRetVal = AE_INVALID_EXPRESSION;
 
@@ -2730,7 +2731,6 @@ static ERRCODE adsSetFilter( ADSAREAP pArea, LPDBFILTERINFO pFilterInfo )
 
       if ( bValidExpr )
       {
-
          if ( hb_set.HB_SET_OPTIMIZE )
          {
             ulRetVal = AdsSetAOF( pArea->hTable, (UNSIGNED8*) hb_itemGetCPtr( pFilterInfo->abFilterText), usResolve );
@@ -2742,7 +2742,7 @@ static ERRCODE adsSetFilter( ADSAREAP pArea, LPDBFILTERINFO pFilterInfo )
       }     /* else let SUPER handle filtering */
 
    }
-   return ulRetVal == AE_SUCCESS ? SUCCESS : FAILURE ;
+   return ulRetVal == AE_SUCCESS ? SUCCESS : FAILURE;
 }
 
 #define  adsSetLocate             NULL
@@ -3108,10 +3108,10 @@ HB_FUNC( ADS_GETFUNCTABLE )
 
    uiCount = ( USHORT * ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
    * uiCount = RDDFUNCSCOUNT;
+   pTable = ( RDDFUNCS * ) hb_itemGetPtr( hb_param( 2, HB_IT_POINTER ) );
 
    HB_TRACE(HB_TR_DEBUG, ("ADS_GETFUNCTABLE(%i, %p)", *uiCount, pTable));
 
-   pTable = ( RDDFUNCS * ) hb_itemGetPtr( hb_param( 2, HB_IT_POINTER ) );
    if( pTable )
    {
       iSetListenerHandle = hb_setListenerAdd( adsSetListener_callback );
@@ -3197,7 +3197,7 @@ HB_FUNC( ADSCUSTOMIZEAOF )
 {
    ADSAREAP pArea;
    UNSIGNED32 ulNumRecs = 0;
-   UNSIGNED32 ulRecord;
+   UNSIGNED32 ulRecord = 0;
    UNSIGNED32 *pulRecords;
    UNSIGNED16 usOption = ADS_AOF_ADD_RECORD;
    UNSIGNED32 ulRetVal = AE_SUCCESS + 1;   /* initialize to something other than success */

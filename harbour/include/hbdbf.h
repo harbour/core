@@ -55,15 +55,7 @@
 
 #include "hbapirdd.h"
 
-/* 23/10/00 - maurilio.longo@libero.it
-   When using GCC under OS/2 pack(1) byte aligns every structure */
-#if defined(__EMX__) && ! defined(__RSXNT__)
-   #pragma pack(1)
-#endif
-
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 /* DBF header */
 
@@ -73,9 +65,9 @@ typedef struct _DBFHEADER
    BYTE   bYear;
    BYTE   bMonth;
    BYTE   bDay;
-   ULONG  ulRecCount;
-   USHORT uiHeaderLen;
-   USHORT uiRecordLen;
+   BYTE   ulRecCount[ 4 ];
+   BYTE   uiHeaderLen[ 2 ];
+   BYTE   uiRecordLen[ 2 ];
    BYTE   bReserved1[ 16 ];
    BYTE   bHasTags;
    BYTE   bCodePage;
@@ -101,13 +93,6 @@ typedef struct _DBFFIELD
 
 typedef DBFFIELD * LPDBFFIELD;
 
-#if defined(HB_EXTERN_C)
-}
-#endif
-
-#if defined(__EMX__) && ! defined(__RSXNT__)
-   #pragma pack()
-#endif
-
+HB_EXTERN_END
 
 #endif /* HB_DBF_H_ */
