@@ -3603,7 +3603,7 @@ static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName, BOOL creat
        USHORT i;
        int iLen;
        char *ptr;
-       char *szFieldName = hb_xgrab( ((AREAP) s_pCurrArea->pArea)->uiMaxFieldNameLength );
+       char *szFieldName = hb_xgrab( ((AREAP) s_pCurrArea->pArea)->uiMaxFieldNameLength+1 );
 
        uiFields = ( USHORT ) hb_arrayLen( pFields );
        for ( i=0; i<uiFields; i++ )
