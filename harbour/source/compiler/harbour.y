@@ -509,11 +509,11 @@ Statement  : ExecFlow Crlf                             {}
 
            | IDENTIFIER '=' Expression Crlf            { PopId( $1 ); }
            | VarId ArrayIndex '=' Expression Crlf      { GenPCode1( _ARRAYPUT ); GenPCode1( _POP ); }
-           | FunArrayCall '=' Expression Crlf          { GenPCode1( _ARRAYPUT ); }
+           | FunArrayCall '=' Expression Crlf          { GenPCode1( _ARRAYPUT ); GenPCode1( _POP ); }
            | IdSend IDENTIFIER '=' { Message( SetData( $2 ) ); } Expression Crlf  { Function( 1 ); }
            | IdSend IDENTIFIER INASSIGN { Message( SetData( $2 ) ); } Expression Crlf  { Function( 1 ); }
-           | ObjectData ArrayIndex '=' Expression Crlf    {}
-           | ObjectMethod ArrayIndex '=' Expression Crlf  {}
+           | ObjectData ArrayIndex '=' Expression Crlf    { GenPCode1( _ARRAYPUT ); GenPCode1( _POP ); }
+           | ObjectMethod ArrayIndex '=' Expression Crlf  { GenPCode1( _ARRAYPUT ); GenPCode1( _POP ); }
 
            | BREAK Crlf
            | BREAK Expression Crlf
@@ -684,13 +684,13 @@ VarAssign  : IDENTIFIER INASSIGN Expression { PopId( $1 ); PushId( $1 ); }
            | VarId ArrayIndex DIVEQ    { DupPCode( $1 ); GenPCode1( _ARRAYAT ); } Expression { GenPCode1( _DIVIDE  ); GenPCode1( _ARRAYPUT ); }
            | VarId ArrayIndex EXPEQ    { DupPCode( $1 ); GenPCode1( _ARRAYAT ); } Expression { GenPCode1( _POWER   ); GenPCode1( _ARRAYPUT ); }
            | VarId ArrayIndex MODEQ    { DupPCode( $1 ); GenPCode1( _ARRAYAT ); } Expression { GenPCode1( _MODULUS ); GenPCode1( _ARRAYPUT ); }
-           | FunArrayCall  INASSIGN Expression      {}
-           | FunArrayCall  PLUSEQ   Expression      {}
-           | FunArrayCall  MINUSEQ  Expression      {}
-           | FunArrayCall  MULTEQ   Expression      {}
-           | FunArrayCall  DIVEQ    Expression      {}
-           | FunArrayCall  EXPEQ    Expression      {}
-           | FunArrayCall  MODEQ    Expression      {}
+           | FunArrayCall INASSIGN Expression { GenPCode1( _ARRAYPUT ); }
+           | FunArrayCall PLUSEQ   { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); }  Expression { GenPCode1( _PLUS    ); GenPCode1( _ARRAYPUT ); }
+           | FunArrayCall MINUSEQ  { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); }  Expression { GenPCode1( _MINUS   ); GenPCode1( _ARRAYPUT ); }
+           | FunArrayCall MULTEQ   { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); }  Expression { GenPCode1( _MULT    ); GenPCode1( _ARRAYPUT ); }
+           | FunArrayCall DIVEQ    { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); }  Expression { GenPCode1( _DIVIDE  ); GenPCode1( _ARRAYPUT ); }
+           | FunArrayCall EXPEQ    { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); }  Expression { GenPCode1( _POWER   ); GenPCode1( _ARRAYPUT ); }
+           | FunArrayCall MODEQ    { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); }  Expression { GenPCode1( _MODULUS ); GenPCode1( _ARRAYPUT ); }
            | ObjectData PLUSEQ   Expression                 {}
            | ObjectData MINUSEQ  Expression                 {}
            | ObjectData MULTEQ   Expression                 {}
@@ -1971,6 +1971,11 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
 
             case _DUPLICATE:
                  fprintf( yyc, "                _DUPLICATE,\n" );
+                 lPCodePos++;
+                 break;
+
+            case _DUPLTWO:
+                 fprintf( yyc, "                _DUPLTWO,\n" );
                  lPCodePos++;
                  break;
 
@@ -3636,6 +3641,7 @@ void GenPortObj( char *szFileName, char *szName )
             case _DEC:
             case _DIVIDE:
             case _DUPLICATE:
+            case _DUPLTWO:
             case _EQUAL:
             case _EXACTLYEQUAL:
             case _FALSE:

@@ -43,6 +43,7 @@ void Div( void );             /* divides the latest two values on the stack, rem
 void Do( WORD WParams );      /* invoke the virtual machine */
 HARBOUR DoBlock( void );      /* executes a codeblock */
 void Duplicate( void );       /* duplicates the latest value on the stack */
+void DuplTwo( void );         /* duplicates the latest two value on the stack */
 void EndBlock( void );        /* copies the last codeblock pushed value into the return value */
 void Equal( BOOL bExact );    /* checks if the two latest values on the stack are equal, removes both and leaves result */
 void ForTest( void );         /* test for end condition of for */
@@ -292,6 +293,11 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
 
          case _DUPLICATE:
               Duplicate();
+              w++;
+              break;
+
+         case _DUPLTWO:
+              DuplTwo();
               w++;
               break;
 
@@ -756,6 +762,14 @@ HARBOUR DoBlock( void )
 void Duplicate( void )
 {
    ItemCopy( stack.pPos, stack.pPos - 1 );
+   StackPush();
+}
+
+void DuplTwo( void )
+{
+   ItemCopy( stack.pPos, stack.pPos - 2 );
+   StackPush();
+   ItemCopy( stack.pPos, stack.pPos - 2 );
    StackPush();
 }
 

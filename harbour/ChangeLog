@@ -1,3 +1,9 @@
+19990604-17:15 CET Eddie Runia
+  * source/compiler/harbour.y; source/vm/hvm.c; include/pcode.h;
+    tests/working/funcarr.prg
+    Syntax for :
+    <function>[<arrayindex>] <assignment> <value> added
+
 19990604-11:45 CET Eddie Runia
   * source/rtl/classes.c
     _GetClassName() called by ClassName()

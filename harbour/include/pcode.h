@@ -29,6 +29,7 @@ typedef enum
    _DIVIDE,      /* divides the latest two values on the stack, removing them and leaving there the result */
    _DO,          /* instructs the virtual machine to execute a function discarding its result */
    _DUPLICATE,   /* places a copy of the latest virtual machine stack value on to the stack */
+   _DUPLTWO,     /* places a copy of the latest two virtual machine stack value on to the stack */
    _INC,         /* increments the latest value on the virtual machine stack */
    _INSTRING,    /* checks if the second latest value on the stack is a substring of the latest one */
    _JUMP,        /* jumps to a relative offset */
