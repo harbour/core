@@ -3477,7 +3477,11 @@ static BOOL IsFieldIn( char * fieldName, PHB_ITEM pFields )
   for ( i=0; i<uiFields; i++ )
   {
     PHB_ITEM pField = pFields->item.asArray.value->pItems + i;
-    ptr = (char *)pField->item.asString.value;
+    ptr = strrchr( (char *)pField->item.asString.value,'>' );
+    if( ptr && ptr > (char *)pField->item.asString.value && *(ptr-1)=='-' )
+       ptr ++;
+    else
+       ptr = (char *)pField->item.asString.value;
     lresult = TRUE;
     for( j=0;*ptr;j++,ptr++ )
         if( *(fieldName+j) != toupper(*ptr) )
