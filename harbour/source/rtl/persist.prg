@@ -55,21 +55,11 @@
 
 CLASS TPersistent
 
-   DATA   cName
-
-   METHOD New()
-
    METHOD SaveToText( cObjectName )
 
    METHOD SaveToFile( cFileName ) INLINE MemoWrit( cFileName, ::SaveToText() )
 
 ENDCLASS
-
-METHOD New() CLASS TPersistent
-
-   ::cName = "o" + ::ClassName()
-
-return Self
 
 METHOD SaveToText( cObjectName ) CLASS TPersistent
 
@@ -78,7 +68,7 @@ METHOD SaveToText( cObjectName ) CLASS TPersistent
 
    static nIndent := -3
 
-   DEFAULT cObjectName TO ::cName
+   DEFAULT cObjectName TO "o" + ::ClassName()
 
    nIndent += 3
    cObject := If( nIndent > 0, HB_OsNewLine(), "" ) + Space( nIndent ) + ;
