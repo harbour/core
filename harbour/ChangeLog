@@ -1,3 +1,15 @@
+2000-05-23 12:30 GMT-4 David G. Holm <dholm@jsd-llc.com>
+
+  * include/hbver.h
+    % Bumped version from "a" to "b" and updated date to 2000-02-22,
+      due to release of new os2/gcc build at my iterim build web site.
+
+  + include/button.ch
+  + source/rtl/menuitem.prg
+  + source/rtl/popup.prg
+  + source/rtl/topbar.prg
+    + Added for Jose Lalin <dezac@corevia.com>.
+
 20000522-10:40 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/hbpcode.c
