@@ -4,7 +4,7 @@
 
 library file   : harbour.lib
 modules        : 38
-public symbols : 398
+public symbols : 400
 
 module      source                           public
 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
@@ -83,7 +83,8 @@ codebloc    source\rtl\codebloc.c            _hb_CodeblockNew
 copyfile    source\rtl\copyfile.c            HB___COPYFILE
                                              _CopyFile__InitSymbols
 
-dates       source\rtl\dates.c               _hb_dtoc
+dates       source\rtl\dates.c               _hb_dow
+                                             _hb_dtoc
                                              _hb_dateEncode
                                              _hb_dateDecode
                                              HB_CDOW
@@ -103,7 +104,6 @@ dates       source\rtl\dates.c               _hb_dtoc
                                              _hb__seconds
                                              _hb_cmonth
                                              _hb_cdow
-                                             _hb_dow
 
 dates2      source\tools\dates2.c            HB_ADAYS
                                              HB_AMONTHS
@@ -223,6 +223,7 @@ extend      source\rtl\extend.c              _hb_param
                                              _hb_xgrab
                                              _hb_xrealloc
                                              _hb_xfree
+                                             _hb_xsize
                                              _hb_parinfa
                                              _ulMemoryBlocks
                                              _ulMemoryMaxBlocks
@@ -332,6 +333,7 @@ mathx       source\tools\mathx.c             HB_ACOS
                                              HB_SINH
                                              HB_TAN
                                              HB_TANH
+
 memvars     source\rtl\memvars.c             _hb_GlobalValueNew
                                              _hb_GlobalValueIncRef
                                              _hb_GlobalValueDecRef
@@ -373,7 +375,8 @@ set         source\rtl\set.c                 HB_SET
                                              HB___SETCENTURY
                                              _Set__InitSymbols
 
-setcolor    source\rtl\setcolor.c            HB_SETCOLOR
+setcolor    source\rtl\setcolor.c            _hb_setColor
+                                             HB_SETCOLOR
                                              _SETCOLOR__InitSymbols
 
 strcmp      source\rtl\strcmp.c              _hb_itemStrCmp
@@ -442,3 +445,4 @@ transfrm    source\rtl\transfrm.c            HB_TRANSFORM
                                              _NumPicture
                                              _NumDefault
                                              _DatePicture
+
