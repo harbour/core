@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-19 15:18 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+   * tests/db_brows.prg
+     Few warnings fixed
+
 2001-12-18 21:47 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * include/hbapi.h

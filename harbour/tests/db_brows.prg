@@ -732,7 +732,7 @@ RETURN mslist
 *+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
-FUNCTION Defpict( i, maxlen )
+FUNCTION Defpict( mslist, i, maxlen )
 
 // LOCAL spict, fldd, fldtype := FIELDTYPE( i ), fldlen := FIELDSIZE( i )
 LOCAL spict, fldd, fldtype := LI_MSTYP[ i ], fldlen := LI_MSLEN[ i ]
