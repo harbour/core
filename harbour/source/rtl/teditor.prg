@@ -41,6 +41,18 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
+
+
+CLASS TTextLine
+
+   DATA  cText       // A line of text
+   DATA  lSoftCR     // true if line doesn't end with a HB_OSNewLine() char (word wrapping)
+
+   METHOD New(cLine, lSoftCR)
+
+ENDCLASS
+
+
 CLASS TEditor
 
    DATA  cFile       INIT ""     // name of file being edited
@@ -68,6 +80,13 @@ CLASS TEditor
    DATA  nWordWrapCol   INIT  0     // At which column word wrapping occurs
 
    METHOD New(cString, nTop, nLeft, nBottom, nRight, lEditMode, cUdF, nLineLength, nTabSize)
+
+   METHOD AddLine(cLine, lSoftCR)
+   METHOD InsertLine(cLine, lSoftCR, nRow)
+   METHOD RemoveLine(nRow)
+   METHOD GetLine(nRow)
+   //METHOD SetLine(cLine, lSoftCR, nRow)
+
    METHOD GetText()                 // Returns aText as a string (for MemoEdit())
    METHOD RefreshWindow()
    METHOD RefreshLine()
@@ -78,49 +97,49 @@ CLASS TEditor
 
 ENDCLASS
 
-/*
-METHOD New(cFile, nTop, nLeft, nBottom, nRight) CLASS TEditor
 
-   LOCAL oFile := TFileRead():New(cFile)
 
-   oFile:Open()
-   if oFile:Error()
-      Alert(oFile:ErrorMsg("FileRead: "))
-   else
-      while oFile:MoreToRead()
-         AAdd(::aText, oFile:ReadLine())
-      end while
-      oFile:Close()
+METHOD New(cLine, lSoftCR) CLASS TTextLine
+
+   ::cText := iif(Empty(cLine), "", cLine)
+   ::lSoftCR := iif(Empty(lSoftCR), .F., lSoftCR)
 
 return Self
-*/
 
 
+// Converts a string to an array of strings splitting input string at EOL boundaries
 STATIC function Text2Array(cString)
 
-   LOCAL cLine, i, nLastEOL, aArray
+   LOCAL cLine, i, nLastEOL, aArray, cEOL, nEOLLen
 
    nLastEOL := 1
    aArray := {}
 
+   cEOL := HB_OSNewLine()
+   nEOLLen := Len(cEOL)
+
    while nLastEOL > 0
-      cLine := Left(cString, (nLastEOL := at(HB_OSNewLine(), cString)) - 1)
-      cLine := StrTran(cLine, HB_OSNewLine(), "")
+      cLine := Left(cString, (nLastEOL := At(cEOL, cString)) - 1)
       if nLastEOL > 0
-         AAdd(aArray, cLine)
-         nLastEOL += Len(HB_OSNewLine())
-         cString := SubStr(cString, nLastEOL)
+         AAdd(aArray, StrTran(cLine, Chr(9), " "))
+         cString := SubStr(cString, nLastEOL + nEOLLen)
+      else
+         if !Empty(cString)
+            AAdd(aArray, cString)
+         endif
       endif
    enddo
 
 return aArray
 
 
+// Converts an array of text lines to a String
 METHOD GetText() CLASS TEditor
 
    LOCAL cString := ""
+   LOCAL cEOL := HB_OSNewLine()
 
-   AEval(::aText, {|cItem| cString += cItem + HB_OSNewLine() })
+   AEval(::aText, {|cItem| cString += cItem + cEOL })
 
 return cString
 
@@ -165,6 +184,46 @@ METHOD New(cString, nTop, nLeft, nBottom, nRight, lEditMode, cUdF, nLineLength, 
 
    // Set cursor upper left corner
    SetPos(::nTop, ::nLeft)
+
+return Self
+
+
+// Add a new Line of text at end of current text
+METHOD AddLine(cLine, lSoftCR) CLASS TEditor
+
+   AAdd(::aText, TTextLine():New(cLine, lSoftCR))
+   ::naTextLen++
+
+return Self
+
+
+// Insert a line of text at a defined row
+METHOD InsertLine(cLine, lSoftCR, nRow) CLASS TEditor
+
+   ::AddLine("", .F.)
+   ::AIns(::aText, nRow)
+   ::aText[nRow] := TTextLine():New(cLine, lSoftCR)
+
+return Self
+
+
+// Remove a line of text
+METHOD RemoveLine(nRow) CLASS TEditor
+
+   ADel(::aText, nRow)
+   ASize(::aText, --::naTextLen)
+
+return Self
+
+
+// Return line n of text
+METHOD GetLine(nRow) CLASS TEditor
+
+   if nRow <= ::naTextLen .AND. nRow > 0
+      return ::aText[nRow]:cText
+   else
+      return ""
+   endif
 
 return Self
 

@@ -1,3 +1,10 @@
+20000509-22:27 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * source/rtl/teditor.prg
+     + added a few methods and a new class to support (someday) soft CR
+   * source/rtl/memoedit.prg
+     * changed to simulate a K_CTRL_W as LastKey() after a MemoEdit() call
+
 20000509-00:15 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/hbpcode.c
@@ -20,9 +27,9 @@
 
    * include/hbcomp.h
      + Added :
-	#define VT_OFFSET_BYREF             60
-	#define VT_OFFSET_VARIANT           90
-	#define VT_OFFSET_OPTIONAL          90
+   #define VT_OFFSET_BYREF             60
+   #define VT_OFFSET_VARIANT           90
+   #define VT_OFFSET_OPTIONAL          90
 
    * source/compiler/harbour.c
      * Minor cleanup in hb_compVariableAdd()
@@ -198,23 +205,23 @@ The follow is mission from previus session
     *source/common/expropt1.c
     *source/macro/macro.y
     *source/vm/macro.c
-	* added int exprType for HB_MACRO structure
-	* TYPE( "{|| NotLinked()}" ) returns now 'B' instead of 'UI'
+   * added int exprType for HB_MACRO structure
+   * TYPE( "{|| NotLinked()}" ) returns now 'B' instead of 'UI'
 
 
 20000505-17:53 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbcomp.h
     *source/compiler/harbour.c
-	*moved declaration of hb_compVariableGetPos into the header file
+   *moved declaration of hb_compVariableGetPos into the header file
 
     *source/compiler/harbour.c
-	* fixed generation of line number pcode at the beginning of
-	a function
+   * fixed generation of line number pcode at the beginning of
+   a function
 
     *source/compiler/hbpcode.c
-	* fixed non-standard escape sequence "\]" (gcc warnings)
-	* fixed incorrect number of parameters passed to sprintf
+   * fixed non-standard escape sequence "\]" (gcc warnings)
+   * fixed incorrect number of parameters passed to sprintf
 
 20000505-10:47 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 

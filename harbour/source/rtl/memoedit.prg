@@ -37,6 +37,7 @@
          Needs a lot more work to become */
 
 #include "common.ch"
+#include "inkey.ch"
 
 FUNCTION MemoEdit(cString,;
                   nTop, nLeft,;
@@ -71,6 +72,9 @@ FUNCTION MemoEdit(cString,;
       oEd:Edit()
       if oEd:lSaved
          cString := oEd:GetText()
+         // dbu tests for LastKey() == K_CTRL_END, so I try to make it happy
+         KEYBOARD K_CTRL_END
+         Inkey()
       endif
    endif
 
