@@ -1,3 +1,7 @@
+2001-10-19 07:50 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
+*source/compiler/harbour.c
+   *Fixed some warings reported by Dave Person
+ 
 2001-10-18 22:10 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
 *source/rtl/profiler.prg
    * fixed an small bug: Is was looking for an internel class
