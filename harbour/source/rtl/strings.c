@@ -69,15 +69,16 @@ static SYMBOL symbols[] = {
 
 HB_INIT_SYMBOLS_BEGIN( Strings__InitSymbols );
 HB_INIT_SYMBOLS_END( Strings__InitSymbols )
+#pragma startup Strings__InitSymbols
 
 #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
 HB_CALL_ON_STARTUP_BEGIN( Strings_InitInfinity )
 {
    infinity = -log( 0 );
-   HB_CALL_ON_STARTUP_END( Strings_InitInfinity )
 }
+HB_CALL_ON_STARTUP_END( Strings_InitInfinity )
+#pragma startup Strings_InitInfinity
 #endif
-
 
 BOOL hb_strempty( char * szText, ULONG ulLen )
 {

@@ -45,13 +45,12 @@ void ProcessSymbols( SYMBOL * pSymbols, WORD wSymbols );
     ProcessSymbols( symbols, sizeof( symbols ) / sizeof( SYMBOL ) ); \
   }
 
-#define HB_INIT_SYMBOLS_END( func ) #pragma startup func
+#define HB_INIT_SYMBOLS_END( func )
 
 #define HB_CALL_ON_STARTUP_BEGIN( func ) \
  static void func( void )
 
-#define HB_CALL_ON_STARTUP_END( func ) \
- #pragma startup func
+#define HB_CALL_ON_STARTUP_END( func )
 #endif
 
 #if (defined(_MSC_VER) || defined(__IBMCPP__))

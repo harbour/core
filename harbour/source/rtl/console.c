@@ -82,11 +82,12 @@ static SYMBOL symbols[] = {
 
 HB_INIT_SYMBOLS_BEGIN( Console__InitSymbols );
 HB_INIT_SYMBOLS_END( Console__InitSymbols )
+#pragma startup Console__InitSymbols
 
 static unsigned short dev_row, dev_col, p_row, p_col;
 static char CrLf [ CRLF_BUFFER_LEN ];
 
-void InitializeConsole( void )
+HB_CALL_ON_STARTUP_BEGIN( InitializeConsole )
 {
 #if defined(OS_DOS_COMPATIBLE)
    CrLf [0] = 13;
@@ -107,6 +108,8 @@ void InitializeConsole( void )
 #endif
    p_row = p_col = 0;
 }
+HB_CALL_ON_STARTUP_END( InitializeConsole )
+#pragma startup InitializeConsole
 
 USHORT hb_max_row( void )
 {
@@ -114,7 +117,7 @@ USHORT hb_max_row( void )
    return hb_gtMaxRow ();
 #else
    return 23; /* QUESTION: Shouldn't this be 24 ? info@szelvesz.hu */
-#endif
+#endif        /* ANSWER  : No. ANSI terminals commonly only have 24 lines */
 }
 
 USHORT hb_max_col( void )

@@ -35,7 +35,7 @@ HARBOUR HB_EVAL( void );         /* Evaluates a codeblock from Harbour */
 HARBOUR HB_MAIN( void );         /* fixed entry point by now */
 HARBOUR HB_VALTYPE( void );      /* returns a string description of a value */
 
-extern void InitializeConsole(void); /* This prototype is needed by C++ compilers */
+/* extern void InitializeConsole(void); This prototype is needed by C++ compilers */
 extern void InitSymbolTable(void);   /* This prototype is needed by C++ compilers */
 
 /* currently supported virtual machine actions */
@@ -197,7 +197,7 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
    StackInit();
    NewDynSym( &symEval );  /* initialize dynamic symbol for evaluating codeblocks */
    hb_setInitialize();     /* initialize Sets */
-   InitializeConsole();    /* initialize Console */
+/*   InitializeConsole();    initialize Console */
 #ifdef HARBOUR_OBJ_GENERATION
    ProcessObjSymbols(); /* initialize Harbour generated OBJs symbols */
 #endif

@@ -46,6 +46,7 @@ static SYMBOL symbols[] = {
 
 HB_INIT_SYMBOLS_BEGIN( Dates__InitSymbols );
 HB_INIT_SYMBOLS_END( Dates__InitSymbols )
+#pragma startup Dates__InitSymbols
 
 double hb__seconds( void )
 {

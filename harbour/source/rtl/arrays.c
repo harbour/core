@@ -48,6 +48,7 @@ static char *szArgumentError = "Argument error: incorrect type";
 
 HB_INIT_SYMBOLS_BEGIN( Arrays__InitSymbols );
 HB_INIT_SYMBOLS_END( Arrays__InitSymbols )
+#pragma startup Arrays__InitSymbols
 
 /*
  * Internal

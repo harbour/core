@@ -41,6 +41,7 @@ static SYMBOL symbols[] = {
 
 HB_INIT_SYMBOLS_BEGIN( Set__InitSymbols );
 HB_INIT_SYMBOLS_END( Set__InitSymbols )
+#pragma startup Set__InitSymbols
 
 static BOOL set_logical (PHB_ITEM pItem)
 {

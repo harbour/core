@@ -50,6 +50,7 @@ static SYMBOL symbols[] = {
 
 HB_INIT_SYMBOLS_BEGIN( Environ__InitSymbols );
 HB_INIT_SYMBOLS_END( Environ__InitSymbols )
+#pragma startup Environ__InitSymbols
 
 HARBOUR HB_OS(void)
 {

@@ -18,6 +18,7 @@ static SYMBOL symbols[] = {
 
 HB_INIT_SYMBOLS_BEGIN( HardCR__InitSymbols );
 HB_INIT_SYMBOLS_END( HardCR__InitSymbols )
+#pragma startup HardCR__InitSymbols
 
 char *hb_hardcr( char *string )
 {

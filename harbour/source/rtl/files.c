@@ -152,6 +152,7 @@ static SYMBOL symbols[] = {
 
 HB_INIT_SYMBOLS_BEGIN( Files__InitSymbols );
 HB_INIT_SYMBOLS_END( Files__InitSymbols )
+#pragma startup Files__InitSymbols
 
 /* Convert HARBOUR flags to IO subsystem flags */
 

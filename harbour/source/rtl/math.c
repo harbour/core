@@ -26,6 +26,7 @@ static SYMBOL symbols[] = {
 
 HB_INIT_SYMBOLS_BEGIN( Math__InitSymbols );
 HB_INIT_SYMBOLS_END( Math__InitSymbols )
+#pragma startup Math__InitSymbols
 
 HARBOUR HB_ABS( void )
 {

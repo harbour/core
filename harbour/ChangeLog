@@ -1,3 +1,44 @@
+19990630-02:10 EDT David G. Holm <dholm@jsd-llc.com>
+  * harbour.b31
+    - Removed -DHARBOUR_STRICT_ANSI_C
+  * makefile.b31
+    - Removed -DHARBOUR_STRICT_ANSI_C
+  * include/init.h
+    - Removed #pragma startup
+  * source/compiler/harbour.y
+    + Added output for #pragma startup in C generation
+  * source/rtl/arrays.c
+    + Added #pragma startup
+  * source/rtl/classes.c
+    + Added #pragma startup
+  * source/rtl/console.c
+    + Added #pragma startup
+    * Made InitializeConsole() a startup function
+  * source/rtl/dates.c
+    + Added #pragma startup
+  * source/rtl/descend.c
+    + Added #pragma startup
+  * source/rtl/dir.c
+    + Added #pragma startup
+  * source/rtl/environ.c
+    + Added #pragma startup
+  * source/rtl/files.c
+    + Added #pragma startup
+  * source/rtl/hardcr.c
+    + Added #pragma startup
+  * source/rtl/math.c
+    + Added #pragma startup
+  * source/rtl/mtran.c
+    + Added #pragma startup
+  * source/rtl/set.c
+    + Added #pragma startup
+  * source/rtl/strings.c
+    + Added #pragma startup
+  * source/rtl/transfrm.
+    + Added #pragma startup
+  * source/vm/hvm.c
+    - Removed InitializeConsole()
+
 19990629-23:00 EDT David G. Holm <dholm@jsd-llc.com>
   * build31.bat
     + Added option to build 16-bit harbour.exe instead of just the

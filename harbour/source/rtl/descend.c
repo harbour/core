@@ -17,8 +17,8 @@ static SYMBOL symbols[] = {
 
 HB_INIT_SYMBOLS_BEGIN( Descend__InitSymbols );
 HB_INIT_SYMBOLS_END( Descend__InitSymbols )
-
-
+#pragma Descend__InitSymbols
+                            
 char *hb_strdescend( char *string )
 {
    char *s;

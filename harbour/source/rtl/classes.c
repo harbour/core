@@ -125,6 +125,7 @@ static SYMBOL symbols[] = {
 
 HB_INIT_SYMBOLS_BEGIN( Classes__InitSymbols );
 HB_INIT_SYMBOLS_END( Classes__InitSymbols )
+#pragma startup Classes__InitSymbols
 
 /*
  * ClassAdd( <hClass>, <cMessage>, <pFunction>, <nType>, [xInit] )
