@@ -1,3 +1,9 @@
+2001-11-05 19:25 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * config/w32/gcc.cf
+  * source/rtl/isprint.c
+  	! Cygwin fixes.
+
 2001-11-05 20:35 GMT+0700 Andi Jahja <andijahja@cbn.net.id>
   * source/rdd/workarea.c
     ! function hb_waRelEval(), remove unused local variable int iChildArea

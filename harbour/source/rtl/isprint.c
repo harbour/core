@@ -66,7 +66,7 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
-#if defined(HB_OS_WIN_32) && !defined(__RSXNT__) && !defined(__CYGWIN__)
+#if defined(HB_OS_WIN_32) && !defined(__RSXNT__)
    #include <stdio.h>
    #include <malloc.h>
    #include <winspool.h>
