@@ -35,8 +35,7 @@ BOOL hb_evalNew( PEVALINFO pEvalInfo, PHB_ITEM pItem )
    if( pEvalInfo )
    {
       memset( pEvalInfo, 0, sizeof( EVALINFO ) );
-      pEvalInfo->pItems[ 0 ] = hb_itemNew( 0 );
-      hb_itemCopy( pEvalInfo->pItems[ 0 ], pItem );
+      pEvalInfo->pItems[ 0 ] = pItem;
       bResult = TRUE;
    }
    return bResult;
@@ -45,10 +44,11 @@ BOOL hb_evalNew( PEVALINFO pEvalInfo, PHB_ITEM pItem )
 BOOL hb_evalPutParam( PEVALINFO pEvalInfo, PHB_ITEM pItem )
 {
    BOOL bResult = FALSE;
-   WORD w;
 
    if( pEvalInfo )
    {
+      WORD w;
+
       for( w = 1; w < HB_EVAL_PARAM_MAX_ + 1; w++ ) /* note that 0 position is used by the codeblock or function name item */
       {
          if( ! pEvalInfo->pItems[ w ] )
@@ -66,10 +66,11 @@ BOOL hb_evalPutParam( PEVALINFO pEvalInfo, PHB_ITEM pItem )
 BOOL hb_evalRelease( PEVALINFO pEvalInfo )
 {
    BOOL bResult = FALSE;
-   WORD w;
 
    if( pEvalInfo )
    {
+      WORD w;
+
       for( w = 0; w < HB_EVAL_PARAM_MAX_ + 1; w++ )
          hb_itemRelease( pEvalInfo->pItems[ w ] );
       bResult = TRUE;
@@ -79,11 +80,12 @@ BOOL hb_evalRelease( PEVALINFO pEvalInfo )
 
 PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo )
 {
-   WORD w = 1;
    PHB_ITEM pResult = 0;
 
    if( pEvalInfo )
    {
+      WORD w = 1;
+
       if( IS_STRING( pEvalInfo->pItems[ 0 ] ) )
       {
          hb_vmPushSymbol( hb_dynsymGet( hb_itemGetC( pEvalInfo->pItems[ 0 ] ) )->pSymbol );

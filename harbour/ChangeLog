@@ -1,3 +1,16 @@
+19990816-13:20 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/Makefile
+    + browdb.prg added
+  * source/rtl/errorsys.prg
+    ! Removed ErrorLevel() call.
+  * source/rtl/itemapi.c
+    ! hb_evalNew() is no longer making a copy of the passed block/name
+      parameters, so hb_evalRelease() will properly release that item.
+      Although not exactly defined in CA-Clipper NG, the example program
+      suggest that it works like this. CA-Clipper example generated unreleased
+      blocks in Harbour.
+    % Some variable scope optimized.
+
 19990816-12:39 GMT+1 Antonio Linares <alinares@fivetech.com>
    + source/rtl/browdb.prg
      * source code for TBrowseDb()

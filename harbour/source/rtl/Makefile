@@ -41,6 +41,7 @@ PRG_SOURCES=\
         adir.prg \
         alert.prg \
         asort.prg \
+        browdb.prg \
         devoutp.prg \
         errorsys.prg \
 	menuto.prg \

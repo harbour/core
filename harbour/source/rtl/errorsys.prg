@@ -95,16 +95,13 @@ static function DefError( oError )
       cMessage += " (DOS Error " + LTrim(Str(oError:osCode)) + ")"
    ENDIF
 
-   QOut( cMessage)
+   QOut( cMessage )
 
    DO WHILE ! Empty( ProcName( n ) )
       QOut("Called from " + ProcName( n ) + ;
                "(" + AllTrim( Str( ProcLine( n++ ) ) ) + ")")
    ENDDO
 
-   // TOFIX: Removing ErrorLevel() call will cause a VM error
-   //        don't know why [vszel]
-   ErrorLevel(1)
    QUIT
 
    RETURN .F.
