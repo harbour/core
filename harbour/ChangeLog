@@ -1,3 +1,25 @@
+2001-04-18 22:30 CET Martin Vogel <vogel@inttec.de>
+   + contrib/libct/ctflist.txt
+     ! function status list, only functions in the CVS are marked 'R' or 'S' !
+
+   + contrib/libct/atadjust.c
+     ! ATADJUST() function
+
+   * contrib/libct/Makefile
+     + added atadjust.c
+
+   * contrib/libct/makefile.bc
+     + added atadjust.c
+
+   * contrib/libct/makefile.vc
+     + added atadjust.c
+
+   + contrib/libct/tests/atadjust.prg
+     ! added tests for ATADJUST() function
+
+   * contrib/libct/tests/Makefile
+     + added atadjust.prg
+
 2001-04-18 15:50 CET Martin Vogel <vogel@inttec.de>
    * contrib/libct/makefile.bc
      ! Corrected a typo
