@@ -27,8 +27,10 @@
 
 #define NUMERALS_PER_LINE 3000
 
-//#define SHOW_LEX_TOKENS
-//#define DEBUG_LEX
+/*
+#define SHOW_LEX_TOKENS
+#define DEBUG_LEX
+*/
 
 #ifdef DEBUG_LEX
    #undef DEBUG_INFO
@@ -535,7 +537,9 @@ int hb_comp_SLX_InterceptAction( int iRet, char *sToken )
      {
    	if( iRet == '\n' || iRet == ';' )
       	   printf( "***NEW LINE %i\n", hb_comp_iLine - 1  );
-   	else
+   	else if( iRet == -1 )
+      	   printf( "!!!<EOF>\n" );
+	else
       	   printf( "   DELIMITER = \"%c\"\n", iRet  );
      }
      else

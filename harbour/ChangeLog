@@ -1,3 +1,15 @@
+2001-03-24 02:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/simplex.c
+     * Minor fix for VC++
+     - Removed 2 unused defines
+     + Added #define MAX_RULES 1024
+
+   * source/compiler/harbour.slx
+     * Changed // to /* */
+
+   * tests/keywords.prg
+     * Corrected 3 warnings.
+
 2001-03-23 00:55 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * contrib/rdd_ads/testmg.prg
       * fixed header

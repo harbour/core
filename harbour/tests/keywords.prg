@@ -797,7 +797,7 @@ PRIVATE &using
   ENDDO
 
   BEGIN SEQUENCE
-    ? USIN
+    ? USING
   RECOVER USIN using
     ? using
   END
@@ -850,6 +850,7 @@ RETURN static
 */
 FUNCTION RETURN
 STAT return
+LOCAL Self
 PRIVATE &return
 
   EVAL( return )

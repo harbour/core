@@ -128,6 +128,7 @@ typedef struct _LEX_PAIR
 #define LEX_CUSTOM_ACTION -65
 #define DONT_REDUCE 1024
 #define YY_BUF_SIZE 16384
+#define MAX_RULES   1024
 
 #define YY_INPUT( a, b, c )
 
@@ -142,8 +143,6 @@ typedef struct _LEX_PAIR
 #define LEX_CASE(x)
 #define STREAM_OPEN(x)
 #define STREAM_APPEND(x) sPair[ iPairLen++ ] = x
-#define KEYWORD_ACTION()
-#define WORD_ACTION()
 
 #include SLX_RULES
 
@@ -221,7 +220,7 @@ typedef struct _TREE_NODE
 } TREE_NODE;                    /* support structure for Streams (Pairs). */
 
 /* Indexing System. */
-static TREE_NODE aPairNodes[256], aSelfNodes[256], aKeyNodes[256], aWordNodes[256], aRuleNodes[1024];
+static TREE_NODE aPairNodes[256], aSelfNodes[256], aKeyNodes[256], aWordNodes[256], aRuleNodes[MAX_RULES];
 static char acOmmit[256], acNewLine[256];
 static int acReturn[256];
 
@@ -497,18 +496,6 @@ YY_DECL
 
     if( iSize == 0 )
     {
-       /*
-       if( szLexBuffer == NULL )
-       {
-          szLexBuffer = malloc( YY_BUF_SIZE );
-       }
-
-       if( yytext == NULL )
-       {
-          yytext = malloc( YY_BUF_SIZE );
-       }
-       */
-
        if( bStart )
        {
           bStart = FALSE;
@@ -894,10 +881,10 @@ int Reduce( int iToken )
       DEBUG_INFO( printf(  "Returning Dont Reduce %i\n", iLastToken ) );
       return iLastToken;
    }
-   else if( iToken == 0 )
+   else if( iToken <= 0 || iToken >= MAX_RULES )
    {
-      DEBUG_INFO( printf(  "Returning 0\n" ) );
-      return 0;
+      DEBUG_INFO( printf( "Passing through (out of range): %i\n", iToken ) );
+      return iToken;
    }
 
    iLastToken = iToken;
@@ -1357,8 +1344,6 @@ void SimpLex_CheckWords( void )
 
       bIgnoreWords = TRUE;
 
-      KEYWORD_ACTION()
-
       iRet = aCheck[ iTentative ].iToken;
       if( iRet < LEX_CUSTOM_ACTION )
       {
@@ -1377,8 +1362,10 @@ void SimpLex_CheckWords( void )
    void * yy_create_buffer( FILE * pFile, int iBufSize )
 #endif
 {
-   HB_SYMBOL_UNUSED( pFile );
-   HB_SYMBOL_UNUSED( iBufSize );
+   /* Avoid warning of unused symbols. */
+   (void) pFile;
+   (void) iBufSize;
+
    iSize = 0;
 
    #ifdef __cplusplus
@@ -1449,7 +1436,7 @@ static void GenTrees( void )
       i++;
    }
 
-   while( i < 1024 )
+   while( i < MAX_RULES )
    {
       aRuleNodes[i].iMin = -1;
       aRuleNodes[i].iMax = -1;
