@@ -62,9 +62,9 @@ HB_FUNC(_FT_GETVPG)
 #if defined(HB_OS_DOS)
    {
       union REGS registers;
-      regs.h.ah=0x0F;
+      registers.h.ah=0x0F;
       HB_DOS_INT86(0x10,&registers,&registers);
-      iPage=regs.h.bh;
+      iPage=registers.h.bh;
    }
 #else
    {
@@ -83,9 +83,10 @@ HB_FUNC(_V_SETVPG)
       int iPage;
       union REGS registers;
       iPage=hb_parni(1);
-      regs.h.ah=0x05;
-      regs.h.al=iPage;
+      registers.h.ah=0x05;
+      registers.h.al=iPage;
       HB_DOS_INT86(0x10,&registers,&registers);
    }
 #endif
 }
+
