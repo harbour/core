@@ -29,6 +29,7 @@ C_SOURCES=\
 	do.c         \
 	empty.c      \
 	errorapi.c   \
+	file.c       \
 	filesys.c    \
 	fkmax.c      \
 	fnsplit.c    \

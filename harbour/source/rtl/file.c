@@ -59,7 +59,7 @@ BOOL hb_fsFile( BYTE * pFilename )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsFile(%s)", (char*) pFilename));
 
-   if( ( ffind = hb_fsFindFirst( pFilename, HB_FA_ANY ) ) != NULL )
+   if( ( ffind = hb_fsFindFirst( pFilename, HB_FA_ALL ) ) != NULL )
    {
       hb_fsFindClose( ffind );
       return TRUE;

@@ -236,6 +236,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\do.obj \
    $(OBJ_DIR)\empty.obj \
    $(OBJ_DIR)\errorapi.obj \
+   $(OBJ_DIR)\file.obj \
    $(OBJ_DIR)\filesys.obj \
    $(OBJ_DIR)\fkmax.obj \
    $(OBJ_DIR)\fnsplit.obj \
@@ -1380,6 +1381,10 @@ $(OBJ_DIR)\getsys.c : $(RTL_DIR)\getsys.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\getsys.obj : $(OBJ_DIR)\getsys.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\file.obj : $(RTL_DIR)\file.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
