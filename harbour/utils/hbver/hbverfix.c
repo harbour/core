@@ -210,7 +210,7 @@ int main( int argc, char * argv[] )
       {
          switch( errno )
          {
-         case ENOFILE:
+         case ENOENT:
             fprintf( stderr, "\nThis program needs to be run from the directory with the %s file.\n", cszChangeLogName );
             return 3;
          default:
@@ -227,7 +227,7 @@ int main( int argc, char * argv[] )
             perror( szErrBuf );
             return 5;
          }
-         if( iDebugLevel > 0 ) fprintf( stderr, "\n==> %u <==> %s <==", strlen( szInputBuffer ), szInputBuffer );
+         if( iDebugLevel > 0 ) fprintf( stderr, "\n==> %u <==> %s <==", ( unsigned ) strlen( szInputBuffer ), szInputBuffer );
          if( ! bFoundID )
          {
             char * szID = strstr( szInputBuffer, "$Id: " );
@@ -292,13 +292,13 @@ int main( int argc, char * argv[] )
          {
             sprintf( szErrBuf, "Reading from %s", cszVersionName );
             fgets( szInputBuffer, MAX_BUF_LEN, fhVersion );
-            if( iDebugLevel > 0 ) fprintf( stderr, "\n==> %u <==> %s <==", strlen( szInputBuffer ), szInputBuffer );
+            if( iDebugLevel > 0 ) fprintf( stderr, "\n==> %u <==> %s <==", ( unsigned ) strlen( szInputBuffer ), szInputBuffer );
             if( ferror( fhVersion ) )
             {
                perror( szErrBuf );
                return 9;
             }
-            if( iDebugLevel > 0 ) fprintf( stderr, "\n==> %u <==> %s <==", strlen( szInputBuffer ), szInputBuffer );
+            if( iDebugLevel > 0 ) fprintf( stderr, "\n==> %u <==> %s <==", ( unsigned ) strlen( szInputBuffer ), szInputBuffer );
             if( cIncrement == 'v' && strncmp( szInputBuffer, cszMajorVersion, strlen( cszMajorVersion ) ) == 0 )
             {
                szIncrementNumber( szInputBuffer, strlen( cszMajorVersion ) );

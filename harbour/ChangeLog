@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-10-12 17:15 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+
+  * utils/hbver/hbverfix.c
+    ! Use the standard ENOENT instead of the DOS-centric ENOFILE.
+    ! Resolved three print format warnings.
+
 2003-11-12 13:35 UTC+0200 Chen Kedem <niki@actcom.co.il>
   * doc/dirstruc.txt
     + Add a lines for source/rdd/dbfdbt, source/rdd/dbffpt, utils/hbver
