@@ -1,3 +1,15 @@
+19990915-15:50 GMT+1 Victor Szel <info@szelvesz.hu>
+  * doc/hdr_tpl.txt
+    * Some small changes.
+  * include/*.api
+    include/*.ch
+    include/*.h
+    + Added copyright header to all files, where the original author is not
+      known, it's not filled.
+    * Standardized the copyright header for all users.
+    * ChangeLog sections separated from the copyright headers.
+    * The one-liner file descriptions standardized.
+
 19990915-14:14 GMT+1 Victor Szel <info@szelvesz.hu>
   * doc/license.txt
     + Added a text file containing the license text.

@@ -3,75 +3,80 @@
  */
 
 /*
-   Harbour Project source code
+ * Harbour Project source code:
+ * Header file for the Set API
+ *
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version, with one exception:
+ *
+ * The exception is that if you link the Harbour Runtime Library (HRL)
+ * and/or the Harbour Virtual Machine (HVM) with other files to produce
+ * an executable, this does not by itself cause the resulting executable
+ * to be covered by the GNU General Public License. Your use of that
+ * executable is in no way restricted on account of linking the HRL
+ * and/or HVM code into it.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
+ * their web site at http://www.gnu.org/).
+ *
+ */
 
-   This module contains the Harbour declarations for SET management.
-
-   Copyright 1999 David G. Holm <dholm@jsd-llc.com>
-   www - http://www.harbour-project.org
-
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version, with one exception:
-
-   The exception is that if you link the Harbour Runtime Library (HRL)
-   and/or the Harbour Virtual Machine (HVM) with other files to produce
-   an executable, this does not by itself cause the resulting executable
-   to be covered by the GNU General Public License. Your use of that
-   executable is in no way restricted on account of linking the HRL
-   and/or HVM code into it.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
-   their web site at http://www.gnu.org/).
-
-   V 1.25   Paul Tucker                 Converted HB_SET_DEBUG back to Logical.
-                                        Clipper 5.3 docs are incorrect on this.
-   V 1.19   Victor Szel                 #include <x> changed to #include "x".
-   V 1.18   David G. Holm               Added INKEY_EXTENDED to allow some
-                                        platforms to select between normal
-                                        and extended key codes.
-   V 1.17   Bruno Cantero               Added prototypes for hb_rddInitialize
-                                        and hb_rddRelease.
-   V 1.16   David G. Holm               Added prototypes for hb_consoleRelease
-                                        and hb_consoleInitialize, because set
-                                        must be initialized before console and
-                                        released after console.
-   V 1.15   David G. Holm               Changed hb_set.HB_SET_COLOR to be a
-                                        fixed 64 byte buffer. Added prototype
-                                        for hb_setColor()
-   V 1.14   David G. Holm               Removed the obsolete hb_set_fixed
-                                        and HB_SETFIXED(), which I should
-                                        have done when I took HB_SETFIXED()
-                                        out of source/rtl/set.c in V 1.27.
-   V 1.13   David G. Holm               Added my email address.
-   V 1.12   David G. Holm               Added copyright and license header,
-                                        along with a complete version history.
-   V 1.11   David G. Holm               Added hb_set_extrahan.
-   V 1.10   Victor Szel                 Renamed InitializeSets() to
-                                        hb_setInitialize() and renamed
-   V 1.9    Victor Szel                 ReleaseSets() to hb_setRelease().
-   V 1.8    David G. Holm               Changed HB_SET_DEBUG to numeric.
-   V 1.7    Gonzalo A. Diethelm         Made the #include guard ANSI compliant.
-   V 1.6    Gonzalo A. Diethelm         Ensured that all Harbour functions
-                                        are declared as HB_FUNCTION( void );
-   V 1.5    David G. Holm               Added hb_set_althan & hb_set_printhan.
-   V 1.4    David G. Holm               Added hb_set_fixed & HB_SET_FIXED().
-   V 1.3    David G. Holm               Changed __SETCENTURY to HB_SETCENTURY.
-                                        Changed all _SET_name to HB_SET_name
-                                        Changed the name of the function that
-                                        initializes sets to InitializeSets().
-   V 1.2    Gonzalo A. Diethelm         Added comment with CVS Id keyword.
-   V 1.1    Antonio Linares             Committed to CVS.
-   V 1.0    David G. Holm               Initial version.
-*/
+/*
+ * ChangeLog:
+ *
+ * V 1.25   Paul Tucker                 Converted HB_SET_DEBUG back to Logical.
+ *                                      Clipper 5.3 docs are incorrect on this.
+ * V 1.19   Victor Szel                 #include <x> changed to #include "x".
+ * V 1.18   David G. Holm               Added INKEY_EXTENDED to allow some
+ *                                      platforms to select between normal
+ *                                      and extended key codes.
+ * V 1.17   Bruno Cantero               Added prototypes for hb_rddInitialize
+ *                                      and hb_rddRelease.
+ * V 1.16   David G. Holm               Added prototypes for hb_consoleRelease
+ *                                      and hb_consoleInitialize, because set
+ *                                      must be initialized before console and
+ *                                      released after console.
+ * V 1.15   David G. Holm               Changed hb_set.HB_SET_COLOR to be a
+ *                                      fixed 64 byte buffer. Added prototype
+ *                                      for hb_setColor()
+ * V 1.14   David G. Holm               Removed the obsolete hb_set_fixed
+ *                                      and HB_SETFIXED(), which I should
+ *                                      have done when I took HB_SETFIXED()
+ *                                      out of source/rtl/set.c in V 1.27.
+ * V 1.13   David G. Holm               Added my email address.
+ * V 1.12   David G. Holm               Added copyright and license header,
+ *                                      along with a complete version history.
+ * V 1.11   David G. Holm               Added hb_set_extrahan.
+ * V 1.10   Victor Szel                 Renamed InitializeSets() to
+ *                                      hb_setInitialize() and renamed
+ * V 1.9    Victor Szel                 ReleaseSets() to hb_setRelease().
+ * V 1.8    David G. Holm               Changed HB_SET_DEBUG to numeric.
+ * V 1.7    Gonzalo A. Diethelm         Made the #include guard ANSI compliant.
+ * V 1.6    Gonzalo A. Diethelm         Ensured that all Harbour functions
+ *                                      are declared as HB_FUNCTION( void );
+ * V 1.5    David G. Holm               Added hb_set_althan & hb_set_printhan.
+ * V 1.4    David G. Holm               Added hb_set_fixed & HB_SET_FIXED().
+ * V 1.3    David G. Holm               Changed __SETCENTURY to HB_SETCENTURY.
+ *                                      Changed all _SET_name to HB_SET_name
+ *                                      Changed the name of the function that
+ *                                      initializes sets to InitializeSets().
+ * V 1.2    Gonzalo A. Diethelm         Added comment with CVS Id keyword.
+ * V 1.1    Antonio Linares             Committed to CVS.
+ * V 1.0    David G. Holm               Initial version.
+ *
+ */
 
 #ifndef HB_SET_H_
 #define HB_SET_H_

@@ -3,17 +3,18 @@
  */
 
 /* NOTE: - Please use these template for your new files, replace parts
-           between curly braces {} with the appropriate text. 
+           between curly braces {} with the appropriate text.
          - You can find a history at the end of the file. */
 
 FILE HEADER TEMPLATE
 ====================
 
 /*
+ * Harbour Project source code:
  * {one-liner description about the purpose of this source file}
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
- * Part of the Harbour Project: http://www.harbour-project.org
+ * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,7 +45,7 @@ FILE HEADER TEMPLATE (OPTIONAL ADDITION FOR PARTIAL COPYRIGHTS)
 
 /*
  * The following parts are Copyright of the individual authors.
- * Part of the Harbour Project: http://www.harbour-project.org
+ * www - http://www.harbour-project.org
  *
  * Copyright 1999 {name} <{e-mail address}>
  *    {function or subsystem name}
@@ -132,10 +133,10 @@ FUNCTION HEADER EXAMPLE
 
 /* ------------------------------------------------------------------------- */
 
-/* 
- * History of this file
- * ====================
+/*
+ * ChangeLog:
  *
+ * V 1.9    Victor Szel                 Small format changes.
  * V 1.8    Victor Szel                 licence -> license
  * V 1.7    Victor Szel                 History separated from the file header
  *                                      template. Slight changes in the format

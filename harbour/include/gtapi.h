@@ -3,36 +3,35 @@
  */
 
 /*
-   GTAPI.H; Screen drawing, cursor and keyboard routines for text mode
-            16-bit and 32-bit MS-DOS, 16-bit and 32-bit OS/2, and 32-bit
-            Windows 95/NT applications.
-
-   This module is based on VIDMGR by Andrew Clarke and modified for
-   the Harbour project
-
-   GTAPI has been compiled and tested with the following C compilers:
-
-     - Turbo C++ (16-bit) for DOS 3.0
-     - Borland C++ (16-bit) for DOS 3.1
-     - Borland C++ (16-bit) for DOS 4.5
-     - Borland C++ (32-bit) for OS/2 1.0
-     - Cygnus GNU C (32-bit) for Windows 95/NT b14.0
-     - DJGPP GNU C (32-bit) for DOS 2.0
-     - EMX GNU C (32-bit) for OS/2 & DOS 0.9b
-     - IBM VisualAge C/C++ 3.0 (32-bit) for OS/2
-     - Microsoft C/C++ (16-bit) for OS/2 6.00a
-     - Microsoft C/C++ (16-bit) for DOS 8.00c
-     - Microsoft Quick C (16-bit) for DOS 2.50
-     - Microsoft Visual C/C++ (16-bit) for DOS 1.52
-     - Microsoft Visual C/C++ (32-bit) for Windows 95/NT 5.0 and 6.0
-     - WATCOM C/C++ (16-bit & 32-bit) for DOS 9.5
-     - WATCOM C/C++ (16-bit & 32-bit) for DOS 10.0
-     - WATCOM C/C++ (32-bit) for OS/2 10.0
-     - WATCOM C/C++ (32-bit) for Windows 95/NT 10.0
-     - HI-TECH Pacific C (16-bit) for DOS 7.51
-     - Symantec C/C++ (16-bit) for DOS 7.0
-     - Zortech C/C++ (16-bit) for DOS 3.0r4
-*/
+ * Harbour Project source code:
+ * Header file for the Terminal API
+ *
+ * Copyright 1999 {list of individual authors and e-mail addresses}
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version, with one exception:
+ *
+ * The exception is that if you link the Harbour Runtime Library (HRL)
+ * and/or the Harbour Virtual Machine (HVM) with other files to produce
+ * an executable, this does not by itself cause the resulting executable
+ * to be covered by the GNU General Public License. Your use of that
+ * executable is in no way restricted on account of linking the HRL
+ * and/or HVM code into it.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
+ * their web site at http://www.gnu.org/).
+ *
+ */
 
 #ifndef HB_GTAPI_H_
 #define HB_GTAPI_H_
