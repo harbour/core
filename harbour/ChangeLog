@@ -1,3 +1,11 @@
+19991222-18:20 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbexpr.c
+    *source/compiler/expropt.c
+	* fixed generation of pcodes for aliased expressions used in
+	a statement context (the previously selected workarea is popped
+	from the eval stack instead of swapping)
+
 19991220-18:42 GMT+1 Chen Kedem <niki@actcom.co.il>
   * source/rtl/menuto.prg
     + doc for __AtPrompt()

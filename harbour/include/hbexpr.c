@@ -2686,7 +2686,7 @@ static HB_EXPR_FUNC( hb_compExprUseAliasExpr )
             HB_EXPR_USE( pSelf->value.asAlias.pExpList, HB_EA_PUSH_POP );
             /* Pop and select again the restored workarea.
              */
-            hb_compGenPCode1( HB_P_SWAPALIAS );
+            hb_compGenPCode1( HB_P_POPALIAS );
          }
          break;
       case HB_EA_DELETE:
