@@ -53,6 +53,7 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
+extern void hb_fhnd_ForceLink( void );
 /*
  * Function that adds at most one path to a list of pathnames to search
  */
