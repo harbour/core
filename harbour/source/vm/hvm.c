@@ -4165,12 +4165,12 @@ static BOOL hb_vmPopLogical( void )
 
 static long hb_vmPopDate( void )
 {
-   PHB_ITEM pStackTopItem = hb_stackTopItem();
+   PHB_ITEM pStackTopItem;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPopDate()"));
 
    hb_stackDec();
-
+   pStackTopItem = hb_stackTopItem();
    pStackTopItem->type = HB_IT_NIL;
    return pStackTopItem->item.asDate.value;
 }
