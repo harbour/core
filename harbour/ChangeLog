@@ -13,9 +13,10 @@
    * tests/langapi.prg
      + HB_LANGNAME(), hb_langID(), hb_langName() calls added.
 
-   * source/lang/Makefile
+   + source/lang/Makefile
    * makefile.vc
      + PT language added for other makefiles.
+     + Missing Makefile added.
 
 20000415-22:10 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
    *makefile.bc
