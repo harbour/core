@@ -1,3 +1,19 @@
+20000724-22:45 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   + contrib/mysql
+   + contrib/mysql/mysql.c
+   + contrib/mysql/mysql.h
+   + contrib/mysql/mysql_com.h
+   + contrib/mysql/mysql_version.h
+   + contrib/mysql/mysql.ch
+   + contrib/mysql/tmysql.prg
+   + contrib/mysql/dbf2mysql.prg
+   + contrib/mysql/test.prg
+   + contrib/mysql/readme.txt
+     I've ported mSQL access classes to MySQL. There is a lot of work to do to finish them, but, nonetheless,
+     in their present state I've been able to use them to port to MySQL a couple of programs written for
+     mSQL.
+
 2000-07-24 22:28 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * rdd/dbcmd.c
@@ -18,7 +34,7 @@
    * source/rtl/errorapi.c
    * source/rtl/tobject.prg
    * source/vm/classes.c
-     * TOBJECT_ERROR() implemented in Clipper/Harbour instead of C to keep it 
+     * TOBJECT_ERROR() implemented in Clipper/Harbour instead of C to keep it
        clean.
      + __errRT_SBASE() internal function added to throw a substitutable (?)
        runtime error.
