@@ -73,7 +73,7 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
   HB_TRACE(HB_TR_DEBUG, ("PreProcess(%p, %p, %s)", handl_i, handl_o, sOut));
 
      handl_i = hb_comp_files.pLast->handle;
-     sBuffer = hb_comp_files.pLast->pBuffer;
+     sBuffer = (char *)hb_comp_files.pLast->pBuffer;
      lContinue = lens = 0;
      ptrOut = sOut;
      while( ( rdlen = hb_pp_RdStr( handl_i, s_szLine + lens, HB_PP_STR_SIZE - 
