@@ -1035,7 +1035,7 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo)
 
    HB_TRACE(HB_TR_DEBUG, ("adsCreate(%p, %p)", pArea, pCreateInfo));
 
-   pArea->szDataFileName = (char *) hb_xgrab( strlen( (char *) ( pCreateInfo->abName+1 ) ) );
+   pArea->szDataFileName = (char *) hb_xgrab( strlen( (char *) ( pCreateInfo->abName ) ) + 1 );
    strcpy( pArea->szDataFileName, ( char * ) pCreateInfo->abName );
    uiLen = (pArea->uiFieldCount * 22) + 1;
    ucfieldDefs = (UNSIGNED8 *) hb_xgrab( uiLen );
@@ -1203,7 +1203,7 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    if( pOpenInfo->atomAlias )
    {
-      pArea->szDataFileName = (char *) hb_xgrab( strlen( (char *) ( pOpenInfo->abName+1 ) ) );
+      pArea->szDataFileName = (char *) hb_xgrab( strlen( (char *) ( pOpenInfo->abName ) ) + 1 );
       strcpy( pArea->szDataFileName, ( char * ) pOpenInfo->abName );
       pArea->atomAlias = hb_dynsymGet( ( char * ) pOpenInfo->atomAlias );
       if( ( ( PHB_DYNS ) pArea->atomAlias )->hArea )

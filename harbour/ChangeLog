@@ -1,6 +1,6 @@
 2001-06-23 20:35 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/rdd_ads/ads1.c
-     ! Corrected 2 misplaced parentesis in type casts.
+     ! Corrected 2 misplaced parentheses in type casts.
 
 2001-06-22 11:10 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
