@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-02-17 20:20 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
+   *include/hbpcode.h
+     *Added newline at the end to clear gcc warning
+
 2002-02-16 20:25 UTC-0500 Jorge A. Giraldo <jgiraldo@col2.telecom.com.co>
    Harbour to Delphi integration
    + Added contrib\delphi dir
