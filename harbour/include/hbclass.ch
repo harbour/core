@@ -54,9 +54,11 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 2000 JF Lefebvre <jfl@mafact.com> and RA Cuylen <rac@mafact.com>
+ * Copyright 2000 ( ->07/2000 ) JF. Lefebvre <jfl@mafact.com> & RA. Cuylen <rac@mafact.com>
  *    Support for Class(y), TopClass and Visual Object compatibility
  *    Support for MI (multiple inheritance),
+
+ * Copyright 2000-2001 ( 08/2000-> ) JF. Lefebvre <jfl@mafact.com>
  *    Scoping (Protect, Hidden and Readonly),
  *    Delegating, DATA Shared
  *    Support of 10 Chars limits
@@ -96,6 +98,8 @@
 /* #define HB_CLS_NOTOBJECT  */ /* Should be included in some compatibility include files as needed */
 /* #define HB_CLS_NOAUTOINIT */ /* Idem */
 /* #define HB_CLS_ALLOWCLASS */ /* Work in progress, don't define it now */
+/* #define HB_CLS_ENFORCERO FLAG to disable Write access to RO VAR outside */
+/*         of Constructors /!\ Could be related to some incompatibility */
 
 DECLARE TClass ;
         New( cName AS String, OPTIONAL SuperParams ) AS CLASS TClass ;

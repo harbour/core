@@ -50,8 +50,6 @@
  *
  */
 
-
-
 #include 'fileio.ch'
 #include "common.ch"
 #include "radios.ch"
@@ -143,7 +141,7 @@ If Pcount() == 0
    ? "          or use one macro per -D switch"
    Return NIL
 Endif
-If cFile == NIL 
+If cFile == NIL
    ? "File not Found"
    Return Nil
 Endif
@@ -160,7 +158,7 @@ If Pcount() == 2
       allparam:=strtran(allparam,"-B","")
 
    Endif
-if at("-G",allparam)>0 
+if at("-G",allparam)>0
       lBcc := .F.
       lGcc := .T.
       lVcc := .F.
@@ -175,7 +173,7 @@ if at("-G",allparam)>0
       allparam:=strtran(allparam,"-V","")
 
    Endif
-if at("-EL",allparam)>0 
+if at("-EL",allparam)>0
 
       allparam:=strtran(allparam,"-EL","")
       lLibrary:=.T.
@@ -183,7 +181,7 @@ if at("-EL",allparam)>0
       Return nil
    Endif
 
-if at("-E",allparam)>0 
+if at("-E",allparam)>0
 
       allparam:=strtran(allparam,"-E","")
 
@@ -191,7 +189,7 @@ if at("-E",allparam)>0
       Return nil
    Endif
 
-if at("-I",allparam)>0 
+if at("-I",allparam)>0
 
       lIgnoreErrors := .T.
       allparam:=strtran(allparam,"-I","")
@@ -231,7 +229,7 @@ If Pcount() > 2
       allparam:=strtran(allparam,"-B","")
 
    Endif
-if at("-G",allparam)>0 
+if at("-G",allparam)>0
       lBcc := .F.
       lGcc := .T.
       lVcc := .F.
@@ -239,7 +237,7 @@ if at("-G",allparam)>0
 
 
    Endif
-   if at("-V",allparam)>0 
+   if at("-V",allparam)>0
 
       lBcc := .F.
       lGcc := .F.
@@ -264,14 +262,14 @@ if at("-E",allparam)>0
       Return nil
    Endif
 
-    if at("-I",allparam)>0 
+    if at("-I",allparam)>0
 
       lIgnoreErrors := .T.
       allparam:=strtran(allparam,"-I","")
 
    Endif
 
-    if at("-P",allparam)>0 
+    if at("-P",allparam)>0
       lPrint := .t.
       allparam:=strtran(allparam,"-P","")
 
@@ -322,7 +320,7 @@ Local cDep      := "#DEPENDS"
 Local cOpt      := "#OPTS"
 Local cCom      := "#COMMANDS"
 Local cBuild    := "#BUILD"
-Local cTemp     := "" 
+Local cTemp     := ""
 Local cTemp1    := ''
 Local aTemp     := {}
 Local lMacrosec := .f.
@@ -581,8 +579,8 @@ Return cPath
 Function GetGccDir()
 
 Local cPath := ''
-Local cEnv  
-Local aEnv  
+Local cEnv
+Local aEnv
 Local nPos
 if at("linux",GetEnv("HB_ARCHITECTURE"))>0
     cpath:="/usr/bin"
@@ -840,7 +838,7 @@ For nCount := 1 To Len( aOrder )
 
       Endif
       For nFiles := 1 To Len( aPrgs )
-         
+
          nPos := Ascan( aCs, { | x | Left( x, At( ".", x ) ) == Left( aPrgs[ nFiles ], At( ".", aPrgs[ nFiles ] ) ) } )
          If nPos > 0
             cComm := Strtran( cComm, "o$*", "o" + aCs[ nPos ] )
@@ -853,14 +851,14 @@ For nCount := 1 To Len( aOrder )
             if !lIgnoreErrors .and. lEnd
                 quit
             endif
-                
+
             cComm := cold
          Endif
       Next
    Endif
    If aOrder[ nCount ] == "$(OBJFILES)"
       If lGcc
-         nPos := Ascan( aCommands, { | x, y | x[ 1 ] == ".c.o:" } )       
+         nPos := Ascan( aCommands, { | x, y | x[ 1 ] == ".c.o:" } )
       Else
          nPos := Ascan( aCommands, { | x, y | x[ 1 ] == ".c.obj:" } )
       Endif
@@ -892,7 +890,7 @@ For nCount := 1 To Len( aOrder )
          endif
  */
         nPos := Ascan( aObjs, { | x | Left( x, At( ".", x ) ) == Left( acs[ nFiles ], At( ".", acs[ nFiles ] ) ) } )
-         
+
          If nPos > 0
             cComm := Strtran( cComm, "o$*", "o" + aObjs[ nPos ] )
             cComm := Strtran( cComm, "$**", acs[ nFiles ] )
@@ -1051,29 +1049,29 @@ Cls
 Setcolor( 'w/b+,w/b,w+/b,w/b+,w/b,w+/b' )
 @  0,  0, Maxrow(), Maxcol() Box( Chr( 201 ) + Chr( 205 ) + Chr( 187 ) + Chr( 186 ) + Chr( 188 ) + Chr( 205 ) + Chr( 200 ) + Chr( 186 ) + Space( 1 ) )
 ATTENTION( "Enviroment options", 0 )
-@  1,  1 Say "Select Os"                                      
+@  1,  1 Say "Select Os"
 @  1, 12 Get cos radio { "Win32", "OS/2", "Linux" }
-@  1, 23 Say "Select C Compiler"                              
-@  1, 40 Get cCompiler radio { "BCC", "MSVC", "GCC" }  
-@  1, 48 Say "Graphic Library"                                
-@  1, 64 Get lFwh checkbox "Use FWH" when Cos=="Win32"                          
-@  2, 64 Get lcw checkbox "Use C4W"          when Cos=="Win32" 
-@  3, 64 Get lRddads checkbox "Use RddAds"   when Cos=="Win32"  
+@  1, 23 Say "Select C Compiler"
+@  1, 40 Get cCompiler radio { "BCC", "MSVC", "GCC" }
+@  1, 48 Say "Graphic Library"
+@  1, 64 Get lFwh checkbox "Use FWH" when Cos=="Win32"
+@  2, 64 Get lcw checkbox "Use C4W"          when Cos=="Win32"
+@  3, 64 Get lRddads checkbox "Use RddAds"   when Cos=="Win32"
 Read
 
 If lFwh
-   @  4,  1 Say "FWH path" Get cfwhpath        
+   @  4,  1 Say "FWH path" Get cfwhpath
 Elseif lCw
-   @  4,  1 Say "C4H path" Get ccwpath        
+   @  4,  1 Say "C4H path" Get ccwpath
 Endif
 ATTENTION( "Harbour Options", 5 )
 
-@  6,  1 Get lautomemvar checkbox "Automatic memvar declaration"                  
-@  6, 43 Get lvarismemvar checkbox "Variables are assumed M->"                    
-@  7,  1 Get lDebug checkbox "Debug info"                                         
-@  7, 43 Get lSupressline checkbox "Suppress line number information"             
-@  8,  1 Get lGenppo checkbox "Generate pre-processed output"         
-@  8, 43 Get lCompMod checkbox "compile module only"                              
+@  6,  1 Get lautomemvar checkbox "Automatic memvar declaration"
+@  6, 43 Get lvarismemvar checkbox "Variables are assumed M->"
+@  7,  1 Get lDebug checkbox "Debug info"
+@  7, 43 Get lSupressline checkbox "Suppress line number information"
+@  8,  1 Get lGenppo checkbox "Generate pre-processed output"
+@  8, 43 Get lCompMod checkbox "compile module only"
 Read
 lBcc := If( At( "BCC", cCompiler ) > 0, .t., .f. )
 lVcc := If( At( "MSVC", cCompiler ) > 0, .t., .f. )
@@ -1208,7 +1206,7 @@ if lGcc
         hb_FNAMESPLIT(cTopfile,@cPath ,@cTest, @cExt , @cDrive)
         cExt:=substr(cExt,2)
         Fwrite( nLinkHandle, "PROJECT = " + if(isupper(cExt),cTest+"."+Strtran( cExt, "PRG", "EXE" ),cTest+"."+Strtran( cExt, "prg", "exe" )) +" $(PR) "+ CRLF )
-   endif     
+   endif
 else
         hb_FNAMESPLIT(cTopfile,@cPath ,@cTest, @cExt , @cDrive)
         cExt:=substr(cExt,2)
@@ -1260,7 +1258,7 @@ if lRddads
     cDefBccLibs+=" rddads.lib ace32.lib"
 endif
 if lBcc .or. lVcc
-    If lFwh 
+    If lFwh
         Fwrite( nLinkHandle, "LIBFILES = $(FWH)\lib\fiveh.lib $(FWH)\lib\fivehc.lib " + cDefBccLibs + CRLF )
    elseif lCw
         Fwrite( nLinkHandle, "LIBFILES = $(C4W)\c4wclass.lib $(C4W)\wbrowset.lib $(C4W)\otabt.lib $(C4W)\clip4win.lib" + cDefBccLibs + CRLF )
@@ -1369,7 +1367,7 @@ elseif lGcc
         Fwrite( nLinkHandle, "!"+CRLF)
 
 endif
- 
+
 
 Return nil
 
@@ -1455,7 +1453,7 @@ For nCount := 1 To Len( aOrder )
             if !lIgnoreErrors .and. lEnd
                 quit
             endif
-                
+
 
                cComm := cold
             Endif
@@ -1509,7 +1507,7 @@ Next
 Return nil
 
 function fileisnewer(cFile,as)
-local nCount := 0 
+local nCount := 0
 For nCount:=1 to len(aPrgs)
          adir := { cFile,, filedate( cFile ), filetime( cFile ), ;
                    as[nCount], filedate( as[nCount] ), filetime( as[nCount] )}
@@ -1580,22 +1578,22 @@ Cls
 Setcolor( 'w/b+,w/b,w+/b,w/b+,w/b,w+/b' )
 @  0,  0, Maxrow(), Maxcol() Box( Chr( 201 ) + Chr( 205 ) + Chr( 187 ) + Chr( 186 ) + Chr( 188 ) + Chr( 205 ) + Chr( 200 ) + Chr( 186 ) + Space( 1 ) )
 ATTENTION( "Enviroment options", 0 )
-@  1,  1 Say "Select Os"                                      
+@  1,  1 Say "Select Os"
 @  1, 12 Get cos radio { "Win32", "OS/2", "Linux" }
-@  1, 23 Say "Select C Compiler"                              
-@  1, 40 Get cCompiler radio { "BCC", "MSVC", "GCC" }  
+@  1, 23 Say "Select C Compiler"
+@  1, 40 Get cCompiler radio { "BCC", "MSVC", "GCC" }
 Read
 
 
-   @  4,  1 Say "Library name with our extention" Get cfwhpath        
+   @  4,  1 Say "Library name with our extention" Get cfwhpath
 ATTENTION( "Harbour Options", 5 )
 
-@  6,  1 Get lautomemvar checkbox "Automatic memvar declaration"                  
-@  6, 43 Get lvarismemvar checkbox "Variables are assumed M->"                    
-@  7,  1 Get lDebug checkbox "Debug info"                                         
-@  7, 43 Get lSupressline checkbox "Suppress line number information"             
-@  8,  1 Get lGenppo checkbox "Generate pre-processed output"         
-@  8, 43 Get lCompMod checkbox "compile module only"                              
+@  6,  1 Get lautomemvar checkbox "Automatic memvar declaration"
+@  6, 43 Get lvarismemvar checkbox "Variables are assumed M->"
+@  7,  1 Get lDebug checkbox "Debug info"
+@  7, 43 Get lSupressline checkbox "Suppress line number information"
+@  8,  1 Get lGenppo checkbox "Generate pre-processed output"
+@  8, 43 Get lCompMod checkbox "compile module only"
 Read
 lBcc := If( At( "BCC", cCompiler ) > 0, .t., .f. )
 lVcc := If( At( "MSVC", cCompiler ) > 0, .t., .f. )
@@ -1784,7 +1782,7 @@ if lGcc
             Fwrite( nLinkHandle, "PROJECT = " + alltrim(lower(cfwhpath))+".a "+CRLF )
    else
         Fwrite( nLinkHandle, "PROJECT = " + alltrim(lower(cfwhpath))+".a "+CRLF )
-   endif     
+   endif
 else
     Fwrite( nLinkHandle, "PROJECT = " + alltrim(lower(cfwhpath))+".lib "+CRLF )
 
@@ -1799,7 +1797,7 @@ else
 //Fwrite( nLinkHandle, "OBJFILES =" + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".OBJ" ),Strtran( cTopfile, ".prg", ".obj" )))
 
 For x := 1 To Len( aobjs )
-   If x <> Len( aobjs ) 
+   If x <> Len( aobjs )
       Fwrite( nLinkHandle,  alltrim(aobjs[ x ]) )
    Else
       Fwrite( nLinkHandle," " +  alltrim(aobjs[ x ]) +" $(OB) "+ CRLF )
@@ -1814,7 +1812,7 @@ else
 
 //Fwrite( nLinkHandle, "CFILES = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".C" ),Strtran( cTopfile, ".prg", ".c" )))
 For x := 1 To Len( acs )
-   If x <> Len( acs ) 
+   If x <> Len( acs )
       Fwrite( nLinkHandle, " " + alltrim(aCs[ x ]) )
    Else
       Fwrite( nLinkHandle, " " + alltrim(aCs[ x ]) +" $(CF) "+ CRLF )
@@ -1825,7 +1823,7 @@ endif
 Fwrite( nLinkHandle, "RESFILES = " + CRLF )
 Fwrite( nLinkHandle, "RESDEPEN = $(RESFILES)" + CRLF )
 if lBcc .or. lVcc
-    If lFwh 
+    If lFwh
         Fwrite( nLinkHandle, "LIBFILES = " + CRLF )
    elseif lCw
         Fwrite( nLinkHandle, "LIBFILES = " + CRLF )
@@ -1922,7 +1920,7 @@ elseif lGcc
         Fwrite( nLinkHandle, "!"+CRLF)
 
 endif
- 
+
 
 Return nil
 
@@ -1950,7 +1948,7 @@ If Len( amacro ) > 1
    Next
 //if lgcc
 // fwrite(nLinkHandle,"CREATE " + cProject+CRLF)
-//endif    
+//endif
 
 Endif
 Aadd( aBuildOrder, amacro[ 1 ] )
@@ -2083,8 +2081,12 @@ if NEGATIVE
 endif
 
 return val( SOMESTRING )
+
+#ifndef __HARBOUR__
 function HB_OSNEWLINE()
 RETURn CHR(13)+CHR(10)
+#endif
+
 function checkiffile(cFile)
 Local cNextLine:=''
 Local cCommand:=''

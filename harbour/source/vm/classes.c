@@ -1,5 +1,4 @@
-/*
- * $Id$
+/* $Id$
  */
 
 /*
@@ -78,92 +77,29 @@
  * Copyright 1999 Janica Lubos <janica@fornax.elf.stuba.sk>
  *    hb_clsDictRealloc()
  *
- * Copyright 2000  JF. Lefebvre <jfl@mafact.com> & RA. Cuylen <rac@mafact.com>
- *    hb_clsDictRealloc()   New version
- *
- * Copyright 2000 JF. Lefebvre <jfl@mafact.com> & RA. Cuylen <rac@mafact.com>
- *    Now support of shared and not shared class data
+ * Copyright 2000 ( ->07/2000 ) JF. Lefebvre <jfl@mafact.com> & RA. Cuylen <rac@mafact.com>
  *    Multiple inheritence fully implemented
+ *    Forwarding, delegating
+ *    Data initialisation & Autoinit for Bool and Numeric
+ *    Scoping : Protected / exported
+ *
+ *    hb_clsDictRealloc()   New version
+ *    Now support of shared and not shared class data
  *    Multiple datas declaration fully supported
- *    Super msg correctly respond by a super object
- *    Scoping : working for protected, hidden and readonly
- *    This implie a message not found error in place of protection error hidden
  *
- *    06/07/2000
- *    Now, Each object instance will hold one object instance of all its parents
- *    The first one has the same pointer as SUPER and __SUPER msgs.
- *    See hb___msgSuper()
- *    Each inherited data will now has a pointer linked to it's original object's position
- *
- *    hb___msgGetShrData()
- *    hb___msgSetShrData()
- *    hb___msgClsParent()
- *    __CLS_PARAM() (Now, all class inherit automaticly from TObject Class)
- *    __CLSPARENT()
- *    __SENDER()
- *    __CLSINST() (Call to hb_clsInst())
- *    hb_cls_MsgToNum() (New Hashing method to allow a better use of buckets)
- *    hb_clsIsParent()
- *    hb_clsScope()
- *    hb_clsInst() (Mostly new one, called recursively)
- *    hb___msgSuper() (New one)
- *    hb___msgSetData() (Enhanced regarding herited datas)
- *    hb___msgGetData() (Enhanced regarding herited datas)
- *
- *    ...and many minors (and not so minors ;-) modifications ( for TObject by ex.)
- *
- *    1.16 06/13/2000 JFL&RAC
- *    Initialisation is now working correctly
- *    as with autoinit for Logical (.F.) and Numerical (0) from tClass.prg
- *
- *    1.17 06/14/2000 JFL&RAC
- *    temporary workAround for Self bad referenced when calling super object
- *    hb___msgSuper() temporary modified
- *    hb___msgClass() implemented to allow a better compatibility with classy
- *    Now, calling Self:xClassDataVar is the same as Self:Class:xClassDataVar
- *
- *    1.18 06/??/2000 ?
- *    1.19 06/??/2000 ?
- *
- *    1.20 06/23/2000 JFL&RAC
- *    Correction made relative to CLASSDATA SHARED !
- *    Completly new method
- *
- *    1.21 06/23/2000 JFL&RAC
- *    Correction made relative to CLASSDATA SHARED !
- *    Fixed init when redefining on subclass
- *
- *    1.26 07/??/2000 RGlab
+ *    2000 RGlab
  *    Garbage collector fixe
  *
- *    1.27 07/15/2000 JFL&RAC
- *    Fixe for the potential case where we coudl not find
- *    one free bucket when inheriting the super method
- *    Reduced the number of base message to 100
- *
- *    1.28 07/18/2000 JFL&RAC
- *    Suppress. static var within hb_clsinst()
- *    Suppress. indirect call to item pointer by it's Long value
- *    improved hb_clsinst() hb_getdata() hb_setdata()
- *    solve lost item pointer (causing unreleased block) at hb_clsaddmsg()
- *    adding one function called by tObject.prg to implement :Error() message
- *    so improving class(y) compatibility (HB_FUNC( TOBJECT_ER ))
- *
- *    1.34 07/25/2000 JFL&RAC
+ * Copyright 2001 JF. Lefebvre <jfl@mafact.com>
+ *    Super msg corrected
+ *    Scoping : working for protected, hidden and readonly
+ *    To Many enhancement and correction to give a full list :-)
+ *    Improved class(y) compatibility
+ *    Improved TopClass compatibility
  *    __CLS_PAR00() (Allow the creation of class wich not autoinherit of the default TObject)
- *    Suppression of the default :Class message ==> transfered to tObject
- *
- *    1.35 ?
- *    1.36 Adding HB_CLS_ENFORCERO FLAG to disable Write access to RO VAR
- *         This is work in progress (JFL) Should be related to some compatibility flag
- *    1.37 minor syntax correction
- *    1.38 __ObjHasMsg() could return true when false
- *
- *    1.61 added hb_objGetpMethod and rewrite hb_clsScope()
- *
- *
- *    1.67 temporary removed hb_objGetpMethod and hb_clsScope
- *
+ *    Adding HB_CLS_ENFORCERO FLAG to disable Write access to RO VAR
+ *    outside of Constructors /!\ Could be related to some incompatibility
+ *    Added hb_objGetRealClsName to keep a full class tree
  *
  * See doc/license.txt for licensing terms.
  *
@@ -193,6 +129,7 @@ typedef struct
    BYTE     bClsDataInitiated; /* There is one value assigned at init time */
    ULONG    ulCalls;           /* profiler support */
    ULONG    ulTime;            /* profiler support */
+   PHB_ITEM pObject   ;        /* Related super object pointer or NIL */
 } METHOD, * PMETHOD;
 
 typedef struct
@@ -226,8 +163,8 @@ static PHB_DYNS s_msgClsParent = NULL;
 
 /* All functions contained in classes.c */
 
-static PHB_ITEM hb_clsInst( USHORT uiClass, PHB_ITEM * * ppObjects, USHORT * puiSize );
-/*static void     hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod );*/
+static PHB_ITEM hb_clsInst( USHORT uiClass );
+static void     hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod );
 static ULONG    hb_cls_MsgToNum( PHB_DYNS pMsg );
 static BOOL     hb_clsIsParent( PCLASS pClass, char * szParentName );
 static void     hb_clsDictRealloc( PCLASS pClass );
@@ -238,7 +175,7 @@ static void     hb_clsRelease( PCLASS );
        char *   hb_objGetRealClsName( PHB_ITEM pObject, char * szName );
        PHB_FUNC hb_objGetMethod( PHB_ITEM, PHB_SYMB );
        PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc );
-       /*PMETHOD  hb_objGetpMethod( PHB_ITEM, PHB_SYMB );*/
+       PMETHOD  hb_objGetpMethod( PHB_ITEM, PHB_SYMB );
        ULONG    hb_objHasMsg( PHB_ITEM pObject, char * szString );
 
        void *   hb_mthRequested( void );
@@ -416,6 +353,144 @@ void hb_clsIsClassRef( void )
    }
 }
 
+void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
+{
+   PHB_ITEM * pBase = hb_stack.pBase;
+   PHB_ITEM pCaller;
+   LONG iLevel = 1;
+   BOOL bRetVal = FALSE ;
+   USHORT uiScope = pMethod->uiScope;
+   PHB_DYNS pMessage = pMethod->pMessage;
+   char szName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ];
+   char * szCallerNameMsg;
+   char * szCallerNameObject;
+   char * szSelfNameMsg;
+   char * szSelfNameObject;
+   char * szSelfNameRealClass;
+
+   szSelfNameObject    = hb_objGetClsName( pObject );
+   szSelfNameMsg       = pMessage->pSymbol->szName  ;
+   szSelfNameRealClass = hb_objGetRealClsName( pObject, pMessage->pSymbol->szName );
+
+   if ( (( uiScope & HB_OO_CLSTP_PROTECTED ) ) ||
+        (( uiScope & HB_OO_CLSTP_HIDDEN )    ) ||
+        (( uiScope & HB_OO_CLSTP_READONLY )  )
+      )
+    {
+      while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
+        pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
+
+      szCallerNameMsg = ( *pBase )->item.asSymbol.value->szName ;
+
+      /* Is it an inline ? if so back one more ... */
+      if ( ( strcmp( szCallerNameMsg, "__EVAL" ) == 0 ) &&  pBase != hb_stack.pItems)
+       {
+        pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
+       }
+
+      if( iLevel == -1 )
+       {
+
+        /* Now get the callers ...  */
+        pCaller = * (pBase+1 ) ;
+        szCallerNameMsg       = ( *pBase )->item.asSymbol.value->szName ;
+        szCallerNameObject    = hb_objGetRealClsName( pCaller, szCallerNameMsg ) ;
+
+        strcpy( szName, szCallerNameObject );
+        strcat( szName, ":" );
+        strcat( szName, szCallerNameMsg );
+        strcat( szName, ">" );
+        strcat( szName, szSelfNameRealClass );
+        strcat( szName, ">" );
+        strcat( szName, szSelfNameObject );
+        strcat( szName, ":" );
+        strcat( szName, szSelfNameMsg );
+
+        if ( uiScope & HB_OO_CLSTP_PROTECTED )
+         {
+         if( ( *( pBase+1 ) )->type == HB_IT_ARRAY )  /* is the sender an object  */
+           {
+             /* Trying to access a protected Msg from outside the object ... */
+             if ( strcmp( szCallerNameObject, szSelfNameRealClass ) != 0 )
+               hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (protected 1)", szName, 0 );
+           }
+          else
+           {
+            /* If called from a function ... protected violation !  */
+            hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (protected 0)", szName, 0 );
+           }
+         }
+
+        if ( uiScope & HB_OO_CLSTP_HIDDEN )
+         {
+          if( ( *( pBase+1 ) )->type == HB_IT_ARRAY )  /* is the sender an object  */
+           {
+             /* Trying to access a protected Msg from outside the object ... */
+             if ( strcmp( szCallerNameObject, szSelfNameRealClass ) != 0 )
+               hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (Hidden 1)", szName, 0 );
+             else
+              {
+               /* Now as it is an hidden Msg, it can only be called from */
+               /* a method of its original class */
+               if (! (hb_objGetRealClsName( pCaller, szCallerNameMsg) == szSelfNameRealClass)  )
+                 hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (Hidden 2)", szName, 0 );
+              }
+           }
+          else
+           {
+            /* If called from a function ... Hidden violation ! */
+            hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (Hidden 0)", szName, 0 );
+           }
+         }
+
+         if ( uiScope & HB_OO_CLSTP_READONLY )
+          {
+           if(
+              ( pMethod->pFunction == hb___msgSetData    ) ||
+              ( pMethod->pFunction == hb___msgSetClsData ) ||
+              ( pMethod->pFunction == hb___msgSetShrData )
+             )
+             bRetVal = TRUE;
+
+           if (bRetVal)
+            {
+             if( ( *( pBase+1 ) )->type == HB_IT_ARRAY )  /* is the sender an object  */
+              {
+               /* Trying to assign a RO Msg from outside the object ... */
+               if ( strcmp( szCallerNameObject, szSelfNameRealClass ) != 0 )
+                hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (ReadOnly)", szName, 0 );
+               else
+                {
+#ifdef HB_CLS_ENFORCERO  /* Not enabled by default */
+                         /* can only be called from a Constructor */
+                         /* ok Now is it a CTOR ? */
+
+                 PMETHOD pCallerMethod ;
+
+                 PHB_DYNS pCallerMsg = hb_dynsymGet( szCallerNameMsg );
+
+                 pCallerMethod = hb_objGetpMethod( pCaller, pCallerMsg->pSymbol );
+
+                 if ( pCallerMethod )
+                   {
+                     if ( ! (pCallerMethod->uiScope & HB_OO_CLSTP_CTOR) )
+                       hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (ReadOnly)", szName, 0 );
+                   }
+#endif
+                }
+              }
+             else
+              {
+               /* If called from a function ... ReadOnly violation ! */
+               hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (ReadOnly 0)", szName, 0 );
+              }
+            }
+          }
+        }
+    }
+}
+
+
 ULONG hb_cls_MsgToNum( PHB_DYNS pMsg )
 {
    USHORT i;
@@ -534,7 +609,10 @@ char * hb_objGetRealClsName( PHB_ITEM pObject, char * szName )
          USHORT uiClass;
 
          /* default value to current class object */
-         uiClass = pObject->item.asArray.value->uiClass;
+         if (pObject->item.asArray.value->uiPrevCls)
+          uiClass = pObject->item.asArray.value->uiPrevCls;
+         else
+          uiClass = pObject->item.asArray.value->uiClass;
 
          if( uiClass && uiClass <= s_uiClasses )
          {
@@ -642,7 +720,7 @@ PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc 
          {
             pMethod = pClass->pMethods + uiAt;
             pFunction = pMethod->pFunction;
-            /*hb_clsScope( pObject, pMethod );*/
+            hb_clsScope( pObject, pMethod );
             s_pMethod = pMethod ;
             pMethod->ulCalls++; /* Profiler */
             return pFunction;
@@ -695,6 +773,45 @@ PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc 
 
    return NULL;
 }
+
+PMETHOD hb_objGetpMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
+{
+   USHORT uiClass;
+   PHB_DYNS pMsg = pMessage->pDynSym;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_objGetpMethod(%p, %p)", pObject, pMessage));
+
+   if( pObject->type == HB_IT_ARRAY )
+      uiClass = pObject->item.asArray.value->uiClass;
+   else
+      uiClass = 0;
+
+   if( uiClass && uiClass <= s_uiClasses )
+   {
+      PCLASS pClass  = s_pClasses + ( uiClass - 1 );
+      USHORT uiAt    = ( USHORT ) ( ( ( hb_cls_MsgToNum( pMsg ) ) % pClass->uiHashKey ) * BUCKET );
+      USHORT uiMask  = ( USHORT ) ( pClass->uiHashKey * BUCKET );
+      USHORT uiLimit = ( USHORT ) ( uiAt ? ( uiAt - 1 ) : ( uiMask - 1 ) );
+
+      while( uiAt != uiLimit )
+      {
+         if( pClass->pMethods[ uiAt ].pMessage == pMsg )
+           return (pClass->pMethods + uiAt) ;
+
+
+
+
+
+
+         uiAt++;
+         if( uiAt == uiMask )
+            uiAt = 0;
+      }
+   }
+
+   return NULL;
+}
+
 
 /*
  * <uPtr> = hb_objHasMsg( <pObject>, <szString> )
@@ -1056,7 +1173,6 @@ HB_FUNC( __CLSNEW )
             pNewCls->pFunError = pSprCls->pFunError;
          }
 
-
          bResize = ( ( pNewCls->uiMethods + pSprCls->uiMethods ) > ( pNewCls->uiHashKey * BUCKET * 2 / 3 ) ) ;
          uiCurrent = 0 ;
 
@@ -1065,7 +1181,6 @@ HB_FUNC( __CLSNEW )
 
           if( bResize )
           {
-            /* Not easy to debug ... I don't find any samples where this case appear */
             hb_clsDictRealloc( pNewCls );
             bResize=FALSE;
           }
@@ -1100,9 +1215,7 @@ HB_FUNC( __CLSNEW )
                          ||
                          pNewCls->pMethods[ uiAt+uiBucket ].pFunction ==  hb___msgGetClsData
                        )
-                       {
                         pNewCls->pMethods[ uiAt+uiBucket ].uiData += nLenClsDatas;
-                       }
 
                      if(
                          pNewCls->pMethods[ uiAt+uiBucket ].pFunction ==  hb___msgSetData
@@ -1111,9 +1224,9 @@ HB_FUNC( __CLSNEW )
                          ||
                          pNewCls->pMethods[ uiAt+uiBucket ].pFunction ==  hb___msgSuper
                        )
-                       {
+                     {
                        pNewCls->pMethods[ uiAt+uiBucket ].uiData     += nLenDatas;
-                       }
+                     }
 
                      if( pNewCls->pMethods[ uiAt+uiBucket ].pFunction ==  hb___msgEvalInline )
                         pNewCls->pMethods[ uiAt+uiBucket ].uiData += nLenInlines;
@@ -1248,25 +1361,19 @@ HB_FUNC( __CLSINST )
 {
    PHB_ITEM pSelf ;
 
-   PHB_ITEM * ppObjects=NULL;
-   USHORT uiSize=0;
-
-   pSelf = hb_clsInst( ( USHORT ) hb_parni( 1 ), &ppObjects, &uiSize );
+   pSelf = hb_clsInst( ( USHORT ) hb_parni( 1 ));
 
    if( pSelf )
       hb_itemRelease( hb_itemReturn( pSelf ) );
 
-   if( ppObjects )
-      hb_xfree( ppObjects );
 }
 
-
 /*
- * [<o(Super)Object>] := hb_clsInst( <hClass>, <pObjects>, <puiSize> )
+ * [<o(Super)Object>] := hb_clsInst( <hClass> )
  *
  * Create a (super)object from class definition <hClass>
  */
-static PHB_ITEM hb_clsInst( USHORT uiClass, PHB_ITEM * * ppObjects, USHORT * puiSize )
+static PHB_ITEM hb_clsInst( USHORT uiClass )
 {
    PHB_ITEM pSelf = NULL;
 
@@ -1284,72 +1391,17 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, PHB_ITEM * * ppObjects, USHORT * pui
       pSelf->item.asArray.value->uiClass   = uiClass;
       pSelf->item.asArray.value->uiPrevCls = 0;
 
-      /* Phase I Instanciate all Herited object recursively               */
-      /* A:B ==> oB                                                       */
-      /*   Then    B:C ==> oC   ...                                       */
-      /* Do not try to work on A:C (inherited class super object from B)  */
-      pMeth = pClass->pMethods;
-      for( uiAt = 0; uiAt < uiLimit; uiAt++, pMeth++ )
-      {
-         if( ( pMeth->uiScope & HB_OO_CLSTP_CLASS ) == HB_OO_CLSTP_CLASS
-              &&
-             ( pMeth->uiScope & HB_OO_CLSTP_SUPER ) != HB_OO_CLSTP_SUPER
-           )
-         {
-
-            pSprObj = hb_clsInst( pMeth->uiSprClass, ppObjects, puiSize );  /*instance super object*/
-
-            hb_arraySet( pSelf, pMeth->uiData, pSprObj );
-            hb_itemRelease( pSprObj );
-
-            ++(*puiSize);
-            if( *ppObjects == NULL )
-               *ppObjects = ( PHB_ITEM * ) hb_xgrab( sizeof( PHB_ITEM ) );
-            else
-               *ppObjects = ( PHB_ITEM * ) hb_xrealloc( *ppObjects, (*puiSize) * sizeof( PHB_ITEM ) );
-
-            pTmp = hb_arrayGetItemPtr( pSelf, pMeth->uiData );
-
-            (*ppObjects)[ (*puiSize) - 1 ] = pTmp;
-
-         }
-      }
-
-      /* Phase II Create link between A:C and A:B:C !! */
-      /* They must point to the same object            */
-      pMeth = pClass->pMethods;
-      for( uiAt = 0; uiAt < uiLimit; uiAt++, pMeth++ )
-      {
-         if( ( pMeth->uiScope & HB_OO_CLSTP_CLASS ) == HB_OO_CLSTP_CLASS
-              &&
-             ( pMeth->uiScope & HB_OO_CLSTP_SUPER ) == HB_OO_CLSTP_SUPER
-           )
-         {
-            USHORT uiCnt;
-
-            for( uiCnt = 1; uiCnt <= (*puiSize); uiCnt++ )
-            {
-               pTmp = (*ppObjects)[ uiCnt - 1 ];
-
-               if( pTmp->item.asArray.value->uiClass == pMeth->uiSprClass )
-               {
-                  hb_arraySet( pSelf, pMeth->uiData, pTmp );
-                  break;
-               }
-            }
-
-         }
-      }
-
-      /* Phase III Create link between instancied object and SuperDataMessages */
       /* Initialise value if initialisation was requested                      */
       pMeth = pClass->pMethods;
       for( uiAt = 0; uiAt < uiLimit; uiAt++, pMeth++ )
       {
 
          /* Init Classdata (inherited and not) if needed */
-         if( pMeth->pInitValue && pMeth->pFunction == hb___msgGetClsData && !( pMeth->bClsDataInitiated ) )
+         if( pMeth->pInitValue )
          {
+
+          if( pMeth->pFunction == hb___msgGetClsData && !( pMeth->bClsDataInitiated ) )
+           {
             HB_ITEM init;
             PHB_ITEM pInit;
 
@@ -1372,50 +1424,9 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, PHB_ITEM * * ppObjects, USHORT * pui
 
             }
             hb_itemClear( &init );
-         }
-
-         if( ( pMeth->uiScope & HB_OO_CLSTP_SUPER ) == HB_OO_CLSTP_SUPER )
-         {
-            if( pMeth->pFunction == hb___msgGetData )
-            {
-               USHORT uiCnt;
-
-               for( uiCnt = 1; uiCnt <= (*puiSize); uiCnt++ )
-               {
-                  pTmp = (*ppObjects)[ uiCnt - 1 ];
-
-                  if( pTmp->item.asArray.value->uiClass == pMeth->uiSprClass )
-                  {
-                     USHORT ui, uiBucket;
-                     PHB_DYNS pMsg;
-                     PCLASS pSprCls;
-                     PHB_ITEM pDataHrtd;
-
-                     pMsg = ( PHB_DYNS ) pMeth->pMessage;
-
-                     pSprCls = s_pClasses + ( pMeth->uiSprClass - 1 );
-
-                     ui = ( USHORT ) ( ( ( hb_cls_MsgToNum( pMsg ) ) % pSprCls->uiHashKey ) * BUCKET );
-
-                     for( uiBucket = 0; uiBucket < BUCKET; uiBucket++ )
-                     {
-                        if( pMsg == pSprCls->pMethods[ ui+uiBucket ].pMessage /*strcmp( pMsg->pSymbol->szName, pSprCls->pMethods[ ui+uiBucket ].pMessage->pSymbol->szName ) == 0*/ )
-                           break;
-                     }
-
-                     pDataHrtd = ( PHB_ITEM ) hb_arrayGetItemPtr( pTmp, pSprCls->pMethods[ ui+uiBucket ].uiData );
-
-                     hb_arraySet( pSelf, pMeth->uiData, pDataHrtd );
-                     break;
-
-                  }
-               }
-            }
-         }
-         else if( pMeth->pInitValue )
-         {
-            if( pMeth->pFunction == hb___msgGetData ) /* is a DATA but not herited */
-            {
+           }
+           else if( pMeth->pFunction == hb___msgGetData ) /* is a DATA but not herited */
+           {
                PHB_ITEM pInitValue ;
 
                if( HB_IS_ARRAY( pMeth->pInitValue ) )
@@ -1431,9 +1442,9 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, PHB_ITEM * * ppObjects, USHORT * pui
                hb_arraySet( pSelf, pMeth->uiData, pInitValue );
                hb_itemRelease( pInitValue );
 
-            }
-            else if( pMeth->pFunction == hb___msgGetShrData && !( pMeth->bClsDataInitiated ) )
-            {
+           }
+           else if( pMeth->pFunction == hb___msgGetShrData && !( pMeth->bClsDataInitiated ) )
+           {
                /* Init Shared Classdata as needed, we only need to init the first */
                /* not inherited classdata array where all shared will point to    */
                HB_ITEM init;
@@ -1458,14 +1469,13 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, PHB_ITEM * * ppObjects, USHORT * pui
                   pMeth->bClsDataInitiated = 1;
                }
                hb_itemClear( &init );
-            }
+           }
          }
       }
    }
 
    return pSelf;
 }
-
 
 /*
  * __clsModMsg( <oObj>, <cMessage>, <pFunc> )
@@ -2075,21 +2085,12 @@ static HARBOUR hb___msgEval( void )
 static HARBOUR hb___msgSuper( void )
 {
    PHB_ITEM pObject = hb_stackSelfItem();
-/* USHORT uiIndex = s_pMethod->uiData; */
 
    pObject->item.asArray.value->uiPrevCls = pObject->item.asArray.value->uiClass; /* backup of actual handel */
-   pObject->item.asArray.value->uiClass   = s_pMethod->uiSprClass; /* superclass handel casting */
+   pObject->item.asArray.value->uiClass   = s_pMethod->uiSprClass;                /* superclass handel casting */
 
    hb_itemReturn( pObject );
 
-/* This one would return a real superObject but with the side effect to  */
-/* also set a bad Self pointer for the supermessages                     */
-/* Please don't erase those lines until I do it myself (JF)              */
-/* I have yet to think about a better solution where I could return a    */
-/* real Object as keeping the good Self value within all the class tree  */
-/*                                                                       */
-/*    hb_itemReturn( hb_arrayGetItemPtr( pObject, s_pMethod->uiData ) ); */
-/*                                                                       */
 }
 
 /*
@@ -2261,7 +2262,6 @@ HB_FUNC( __CLS_PAR00 )
     }
 
    hb_itemRelease( hb_itemReturn( array ) );
-
 }
 
 static ULONG MsgToNum( char * szName )
