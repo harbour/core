@@ -258,7 +258,7 @@ Source     : Crlf
            | Statement
            | Line
            | ProcReq
-           | error  Crlf  { yyclearin; }
+           | error  Crlf  { yyclearin; yyerrok; }
            | Source Crlf
            | Source VarDefs
            | Source FieldsDef
@@ -268,7 +268,7 @@ Source     : Crlf
            | Source Statement
            | Source Line
            | Source ProcReq
-           | Source error Crlf  { yyclearin; }
+           | Source error Crlf  { yyclearin; yyerrok; }
            ;
 
 Line       : LINE NUM_INTEGER LITERAL Crlf

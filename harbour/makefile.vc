@@ -83,7 +83,7 @@ HBPDF_DIR   = contrib\pdflib
 # C compiler definition and C flags. These should never have to change.
 #
 
-AS             = masm
+AS             = ML
 CFLAGS         = -I$(INCLUDE_DIR) -TP -W3 -nologo $(C_USR) $(CFLAGS)
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSDEBUG = -Zi $(CLIBFLAGS)
@@ -548,7 +548,8 @@ COMMON_LIB_OBJS = \
 
 {$(VM_DIR)}.asm{$(OBJ_DIR)}.obj:
    rem lib /extract:$(OBJ_DIR)\symbols.obj /out:$(OBJ_DIR)\symbols.obj \harb35\lib\vm.lib
-   $(AS) $< $@ nul nul
+   rem $(AS) $< $@ nul nul
+   $(AS) /c /Fo$@ $<
 
 {$(VM_DIR)}.c{$(OBJ_DIR)}.obj:
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\  $<

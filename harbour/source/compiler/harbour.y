@@ -246,7 +246,7 @@ Source     : Crlf
            | Line
            | ProcReq
            | GET {/* Dummy - We need to use the GET token which is used by harbour.sly so both will generate same harboury.h */}
-           | error  Crlf  { yyclearin; }
+           | error  Crlf  { yyclearin; yyerrok; }
            | Source Crlf
            | Source VarDefs
            | Source FieldsDef
@@ -256,7 +256,7 @@ Source     : Crlf
            | Source Statement
            | Source Line
            | Source ProcReq
-           | Source error Crlf  { yyclearin; }
+           | Source error Crlf  { yyclearin; yyerrok; }
            ;
 
 Line       : LINE NUM_INTEGER LITERAL Crlf

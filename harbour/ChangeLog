@@ -1,3 +1,20 @@
+2001-06-20 22:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * hb_slex.vc
+   * makefile.vc
+     * Synched make files.
+
+   * contrib/libmisc/makefile.vc
+     ! Corrected BIN_DIR to ../../bin/vc
+
+   * source/compiler/simplex.c
+     * Revised 1 debug message.
+   * source/compiler/harbour.slx
+     * Improved yytext handling.
+
+   * source/compiler/harbour.sly
+   * source/compiler/harbour.y
+     + Added <yyerrok> after <yyclearin> to enable reporting of errors on consecutive lines. (only first line was reported!)
+
 2001-06-20 14:50 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * include/hbvm.h

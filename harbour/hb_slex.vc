@@ -548,6 +548,7 @@ COMMON_LIB_OBJS = \
 
 {$(VM_DIR)}.asm{$(OBJ_DIR)}.obj:
    rem lib /extract:$(OBJ_DIR)\symbols.obj /out:$(OBJ_DIR)\symbols.obj \harb35\lib\vm.lib
+   rem $(AS) $< $@ nul nul
    $(AS) /c /Fo$@ $<
 
 {$(VM_DIR)}.c{$(OBJ_DIR)}.obj:

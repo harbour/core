@@ -217,7 +217,7 @@ static int  iRet;
 static BOOL bTmp, bIgnoreWords = FALSE, bRecursive = FALSE;
 
 /* Lex emulation */
-char * yytext;
+char * yytext = (char *) sToken;
 int yyleng;
 
 /* NewLine Support. */
@@ -479,8 +479,10 @@ static int rulecmp( const void * pLeft, const void * pRight );
         \
         if( iRet ) \
         { \
-           INTERCEPT_ACTION(iRet); \
            DEBUG_INFO( printf(  "Returning: %i\n", iRet ) ); \
+           \
+           INTERCEPT_ACTION(iRet); \
+           \
            return iRet; \
         } \
         else \
@@ -789,7 +791,7 @@ int SimpLex_GetNextToken( void )
                        NEW_LINE_ACTION();
                     }
 
-                    DEBUG_INFO( printf(  "Reducing Delimiter: '%c' As: %i\n", chr, iRet ) );
+                    DEBUG_INFO( printf(  "Reducing Delimiter: '%c' As: %i\n", chr, acReturn[(int)chr] ) );
                     return acReturn[(int)chr];
                 }
             }
