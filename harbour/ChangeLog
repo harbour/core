@@ -1,3 +1,13 @@
+2000-01-23 16:30 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/debug/debugger.prg
+     * Improved debugger.
+
+   * source/rtl/tgetlist.prg
+     * Improved METHOD ShowScoreBoard.
+
+   * source/vm/hvm.c
+     + New public BOOL variable hb_DebuggerIsWorking
+
 20000124-14:05 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/memoline.c
@@ -5,7 +15,7 @@
 
     *source/rtl/mlpos.c
 	* added RCS ID
-	
+
     *source/rtl/Makefile
 	* added mlpos.c file
 
@@ -14,7 +24,7 @@
     *source/compiler/harbour.y
     *source/macro/macro.c
 	* fixed support for the syntax:
-	    DO &var 
+	    DO &var
 	    DO &( expression_list )
 
 2000-01-23 22:03 GMT+1 Antonio Linares <alinares@fivetech.com>
