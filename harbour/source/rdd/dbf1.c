@@ -1321,7 +1321,7 @@ ERRCODE hb_dbfRecall( DBFAREAP pArea )
       return FAILURE;
 
    pArea->pRecord[ 0 ] = ' ';
-   pArea->fDeleted = TRUE;
+   pArea->fDeleted = FALSE;
    return SUCCESS;
 }
 

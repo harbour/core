@@ -1,3 +1,7 @@
+2001-10-05 23:12 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+  ! source/rdd/dbf1.c
+    ! hb_dbfRecall() fixed
+
 2001-10-04 17:10 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * doc/gmake.txt
