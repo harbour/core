@@ -7763,10 +7763,60 @@ FUNCTION PP_RunText( sLines, bPP, aParams )
 RETURN xRet
 
 //--------------------------------------------------------------//
+PROCEDURE PP_ResetRules()
+
+   aDefRules     := {}; aDefResults   := {}
+   aTransRules   := {}; aTransResults := {}
+   aCommRules    := {}; aCommResults  := {}
+
+   s_lRunLoaded := .F.
+   s_lClsLoaded := .F.
+   s_lFWLoaded  := .F.
+
+RETURN
+
+//--------------------------------------------------------------//
 PROCEDURE PP_InitStd()
 
    InitRules()
    InitResults()
+
+   s_lRunLoaded := .F.
+   s_lClsLoaded := .F.
+   s_lFWLoaded  := .F.
+
+RETURN
+
+//--------------------------------------------------------------//
+PROCEDURE PP_LoadRun()
+
+   IF ! s_lRunLoaded
+      s_lRunLoaded := .T.
+      InitRunRules()
+      InitRunResults()
+   ENDIF
+
+RETURN
+
+//--------------------------------------------------------------//
+PROCEDURE PP_LoadClass()
+
+   IF ! s_lClsLoaded
+      s_lClsLoaded := .T.
+      InitClsRules()
+      InitClsResults()
+   ENDIF
+
+RETURN
+
+//--------------------------------------------------------------//
+PROCEDURE PP_LoadFW()
+
+   IF ! s_lFWLoaded
+      s_lFWLoaded := .T.
+      InitFWRules()
+      InitFWResults()
+   ENDIF
 
 RETURN
 
