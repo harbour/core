@@ -37,7 +37,7 @@
 #define HB_DATE_H_
 
 #if defined(__cplusplus)
-extern "C" {
+//extern "C" {
 #endif
 
 /* In msgxxx.c modules */
@@ -57,7 +57,7 @@ extern char *   hb_dateDecStr( char * szDate, long lJulian );
 extern long     hb_dateEncStr( char * szDate );
 
 #if defined(__cplusplus)
-}
+//}
 #endif
 
 #endif /* HB_DATE_H_ */

@@ -50,7 +50,7 @@
 #include "hbpcode.h"
 
 #if defined(__cplusplus)
-extern "C" {
+//extern "C" {
 #endif
 
 /* compiler related declarations */
@@ -372,7 +372,7 @@ extern char *      hb_comp_szWarnings[];
 #define HB_EXITLEVEL_DELTARGET  2
 
 #if defined(__cplusplus)
-}
+//}
 #endif
 
 #endif /* HB_COMP_H_ */

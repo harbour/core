@@ -87,7 +87,7 @@
 #include "hbapigt.h"
 
 #if defined(__cplusplus)
-extern "C" {
+//extern "C" {
 #endif
 
 typedef enum
@@ -212,7 +212,7 @@ extern void hb_setInitialize( void );
 extern void hb_setRelease( void );
 
 #if defined(__cplusplus)
-}
+//}
 #endif
 
 #endif /* HB_SET_H_ */

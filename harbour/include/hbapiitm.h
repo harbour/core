@@ -39,7 +39,7 @@
 #include "hbapi.h"
 
 #if defined(__cplusplus)
-extern "C" {
+//extern "C" {
 #endif
 
 #define HB_EVAL_PARAM_MAX_ 9
@@ -109,7 +109,7 @@ extern char *   hb_itemString   ( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq
 extern PHB_ITEM hb_itemValToStr ( PHB_ITEM pItem ); /* Convert any scalar to a string */
 
 #if defined(__cplusplus)
-}
+//}
 #endif
 
 #endif /* HB_APIITM_H_ */

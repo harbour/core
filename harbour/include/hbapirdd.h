@@ -40,7 +40,7 @@
 #include "hbapifs.h"
 
 #if defined(__cplusplus)
-extern "C" {
+//extern "C" {
 #endif
 
 /* RDD virtual machine integration functions */
@@ -1103,7 +1103,7 @@ extern USHORT  hb_rddExtendType( USHORT fieldType );
 extern USHORT  hb_rddFieldType( USHORT extendType );
 
 #if defined(__cplusplus)
-}
+//}
 #endif
 
 #endif /* HB_APIRDD_H_ */

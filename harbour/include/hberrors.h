@@ -37,7 +37,7 @@
 #define HB_ERRORS_H_
 
 #if defined(__cplusplus)
-extern "C" {
+//extern "C" {
 #endif
 
 /*
@@ -131,7 +131,7 @@ extern void hb_compGenError( char * _szErrors[], char cPrefix, int iError, char 
 extern void hb_compGenWarning( char * _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2); /* generic parsing warning management function */
 
 #if defined(__cplusplus)
-}
+//}
 #endif
 
 #endif /* HB_ERRORS_H_ */

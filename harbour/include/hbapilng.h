@@ -37,7 +37,7 @@
 #define HB_APILNG_H_
 
 #if defined(__cplusplus)
-extern "C" {
+//extern "C" {
 #endif
 
 #define HB_LANG_TEXT_DATEFMT    0
@@ -108,7 +108,7 @@ extern PHB_LANG hb_langNew              ( void );
 extern void     hb_langDelete           ( PHB_LANG lang );
 
 #if defined(__cplusplus)
-}
+//}
 #endif
 
 #endif /* HB_APILNG_H_ */

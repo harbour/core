@@ -1,3 +1,32 @@
+2000-03-27 19:15 GMT-5 David G. Holm <dholm@jsd-llc.com>
+
+   * include\hbset.h
+   * include\hbapiitm.h
+   * include\hbapi.h
+   * include\hbmacro.h
+   * include\hbapirdd.h
+   * include\hbexprop.h
+   * include\hbdate.h
+   * include\hbapilng.h
+   * include\hbapigt.h
+   * include\hbcomp.h
+   * include\hbapifs.h
+   * include\hbtrace.h
+   * include\hberrors.h
+   * include\hbvmpub.h
+   * include\hbinit.h
+   * include\hbvm.h
+   * include\hbapierr.h
+   * include\hbpp.h
+     - Commented out all 'extern "C" {' and '}', because the ill-advised
+       addition of extern "C" statements is only half done (present in .h
+       files, but not in .c files), which prevents the os2/icc version of
+       Harbour from being built.
+
+   * source/macro/macro.c
+     - Removed 'static' from definition of variable that is declared as
+       'extern' in hbmacro.h.
+
 20000327-21:35 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    ! Trash in harbour CVS root directory removed by SourceForge staff.

@@ -39,7 +39,7 @@
 #include "hbapi.h"
 
 #if defined(__cplusplus)
-extern "C" {
+//extern "C" {
 #endif
 
 /* Harbour virtual machine init/exit functions */
@@ -90,7 +90,7 @@ extern void    hb_stackDispCall( void );
 extern void    hb_stackPop( void );        /* pops an item from the stack */
 
 #if defined(__cplusplus)
-}
+//}
 #endif
 
 #endif /* HB_VM_H_ */

@@ -56,7 +56,7 @@
 #include "hbpcode.h"
 
 #if defined(__cplusplus)
-extern "C" {
+//extern "C" {
 #endif
 
 /* flags for compilation process
@@ -136,7 +136,7 @@ extern void hb_compCodeBlockStart( HB_MACRO_DECL );
 extern void hb_compCodeBlockEnd( HB_MACRO_DECL );
 
 #if defined(__cplusplus)
-}
+//}
 #endif
 
 #endif /* HB_MACRO_H_ */

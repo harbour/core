@@ -43,7 +43,7 @@
 /* TODO:
  * include this variable in SET subsystem ?
  */
-static BOOL hb_comp_bShortCuts = TRUE;  /* .and. & .or. expressions shortcuts */
+BOOL hb_comp_bShortCuts = TRUE;  /* .and. & .or. expressions shortcuts */
 
 static void hb_macroUseAliased( HB_ITEM_PTR, HB_ITEM_PTR, int );
 

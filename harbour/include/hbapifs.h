@@ -58,7 +58,7 @@
 #include "fileio.ch"
 
 #if defined(__cplusplus)
-extern "C" {
+//extern "C" {
 #endif
 
 #define FS_ERROR F_ERROR
@@ -132,7 +132,7 @@ extern PHB_FNAME hb_fsFNameSplit( char * pszFileName ); /* Split given filename 
 extern char *    hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName ); /* This function joins path, name and extension into a string with a filename */
 
 #if defined(__cplusplus)
-}
+//}
 #endif
 
 #endif /* HB_APIFS_H_ */
