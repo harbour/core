@@ -1,9 +1,17 @@
+2000-08-01 20:15 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * include/hberrors.h
+     + Added: #define HB_PP_ERR_INCLUDE_SELF                  17
+
+   * source/pp/ppcore.c
+     + Added Error: "Can\'t #include self \'%s\'"
+     + Added logic to detect self referncing #include directive.
+
 2000-08-02 03:31 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/dateshb.c
    * source/rtl/datesx.c
-     ! Fixed HB_SToD() and SToD() to not cause CodeGuard faults on bad 
-       parameters. Define HB_FAST_STOD macro to get the previous faster 
+     ! Fixed HB_SToD() and SToD() to not cause CodeGuard faults on bad
+       parameters. Define HB_FAST_STOD macro to get the previous faster
        versions.
 
    * makefile.bc
@@ -19,7 +27,7 @@
     %some enhacements and fixed a bug inside hb___GetFilesNamesFromZip
 *contrib/hbzlib/zipfile.c
  contrib/hbzlib/zlibapi1.c
-    *Fixed a Bug reported by Patrick Mast    
+    *Fixed a Bug reported by Patrick Mast
 -doc/idle.txt
 +doc/en/idle.txt
     *Moved to the en/ directory
@@ -28,7 +36,7 @@
    +en/idle.txt
    -en/hb*.txt Removed all api entries file names
 *doc/en/garbage.txt
-   *small formating 
+   *small formating
 *utils/hbdoc/genng.prg
    *Fixed an small bug
 *makefile.bc

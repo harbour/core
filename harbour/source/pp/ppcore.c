@@ -171,7 +171,8 @@ char * hb_pp_szErrors[] =
    "Freeing a NULL memory pointer",
    "Value out of range in #pragma directive",
    "Can\'t open command definitions file: \'%s\'",
-   "Invalid command definitions file name: \'%s\'"
+   "Invalid command definitions file name: \'%s\'",
+   "Can\'t #include self \'%s\'"
 };
 
 /* Table with warnings */
@@ -2914,6 +2915,10 @@ static BOOL OpenInclude( char * szFileName, PATHNAMES * pSearch, PHB_FNAME pMain
   else
     {
       pFileName = hb_fsFNameSplit( szFileName );
+
+      if( strcmp( pFileName->szName, pMainFileName->szName ) == 0 &&  strcmp( pFileName->szExtension, pMainFileName->szExtension ) )
+         hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_INCLUDE_SELF, szFileName, NULL );
+
       if( pFileName->szPath == NULL || *(pFileName->szPath) == '\0' )
          pFileName->szPath = pMainFileName->szPath;
       hb_fsFNameMerge( szInclude, pFileName );
