@@ -1,3 +1,7 @@
+2001-01-11 16:45 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+   * test/inline_c.prg
+     % Now uses a string token parser written by Ron Pinkas
+
 2001-01-10 18:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hbcomp.h
    * source/compiler/harbour.c
