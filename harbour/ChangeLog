@@ -1,3 +1,7 @@
+19990519-21:22 CET Eddie Runia
+  * makefile.b16
+    Patrick patch (command-line too long entered)
+
 19990519-20:00 CET Eddie Runia
   * tests/working/run_exp.h
     shortened because InitSymbols

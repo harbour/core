@@ -70,9 +70,14 @@ tclass.c     : tclass.prg    harbour.exe
   tlib .\libs\b16\harbour.lib -+$@,,
 
 harbour.exe : y_tab.c lexyy.c harbour.obj
-   bcc -mh -O2 -ebin\harbour.exe -Iinclude;source\compiler \
-      source\compiler\y_tab.c source\compiler\lexyy.c \
-      source\compiler\harbour.obj
+   echo -ml -O2 > bld.31
+   echo -ebin\harbour.exe >> bld.31
+   echo -Iinclude;source\compiler >> bld.31
+   echo source\compiler\y_tab.c >> bld.31
+   echo source\compiler\lexyy.c >> bld.31
+   echo source\compiler\harbour.obj >> bld.31
+   bcc @bld.31
+   del bld.31
    del y_tab.obj
    del lexyy.obj
 
