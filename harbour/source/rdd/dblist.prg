@@ -76,33 +76,31 @@ FUNCTION __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lToP
 
    LOCAL nLen := Len( abEval ), nIndex, asMacros, nMacros, nMacroIndex
 
-   IF( HB_SETMACRO( HB_SM_XBASE ) )
-      // Scan for strings instead of blocks - These are macros that need to be compiled into blocks.
-      FOR nIndex := 1 TO nLen
-        IF ValType( abEval[ nIndex ] ) == 'C'
-           //? abEval[ nIndex ]
-           // Macro may be a comma seperated list.
-           asMacros := HB_aExpressions( abEval[ nIndex ] )
-           nMacros  := Len( asMacros )
+   // Scan for strings instead of blocks - These are macros that need to be compiled into blocks.
+   FOR nIndex := 1 TO nLen
+     IF ValType( abEval[ nIndex ] ) == 'C'
+        //? abEval[ nIndex ]
+        // Macro may be a comma seperated list.
+        asMacros := HB_aExpressions( abEval[ nIndex ] )
+        nMacros  := Len( asMacros )
 
-           // Array has to be sized to allow dor the extra blocks
-           nLen += ( nMacros - 1 )
-           aSize( abEval, nLen )
+        // Array has to be sized to allow dor the extra blocks
+        nLen += ( nMacros - 1 )
+        aSize( abEval, nLen )
 
-           // We will use the place holder of the string for the first new block.
-           abEval[ nIndex ] := &( "{||" + asMacros[ 1 ] + "}" )
+        // We will use the place holder of the string for the first new block.
+        abEval[ nIndex ] := &( "{||" + asMacros[ 1 ] + "}" )
 
-           // We will now push all subsequent blocks 1 at a time and insert the new block inplace.
-           FOR nMacroIndex := 2 TO nMacros
-              aIns( abEval, nIndex + nMacroIndex - 1 )
-              abEval[ nIndex + nMacroIndex - 1 ] := &( "{||" + asMacros[ nMacroIndex ] + "}" )
-           NEXT
+        // We will now push all subsequent blocks 1 at a time and insert the new block inplace.
+        FOR nMacroIndex := 2 TO nMacros
+           aIns( abEval, nIndex + nMacroIndex - 1 )
+           abEval[ nIndex + nMacroIndex - 1 ] := &( "{||" + asMacros[ nMacroIndex ] + "}" )
+        NEXT
 
-           // The loop counter should skip the new elements.
-           nIndex += ( nMacros - 1 )
-        ENDIF
-      NEXT
-   ENDIF
+        // The loop counter should skip the new elements.
+        nIndex += ( nMacros - 1 )
+     ENDIF
+   NEXT
 
    /* Choose the output style */
    IF lOff

@@ -347,6 +347,7 @@ extern void hb_compGenPushAliasedVar( char *, BOOL, char *, long );
 extern void hb_compGenPopAliasedVar( char *, BOOL, char *, long );
 extern void hb_compGenPushFunRef( char * );
 extern void hb_compGenPCode1( BYTE );             /* generates 1 byte of pcode */
+extern void hb_compGenPData1( BYTE );             /* generates 1 byte of pcode argument */
 extern void hb_compGenPCode2( BYTE, BYTE, BOOL );       /* generates 2 bytes of pcode + flag for optional StrongType(). */
 extern void hb_compGenPCode3( BYTE, BYTE, BYTE, BOOL ); /* generates 3 bytes of pcode + flag for optional StrongType() */
 extern void hb_compGenPCode4( BYTE, BYTE, BYTE, BYTE, BOOL ); /* generates 4 bytes of pcode + flag for optional StrongType() */
@@ -503,17 +504,17 @@ extern ULONG         hb_comp_Supported;
 #define HB_EXITLEVEL_SETEXIT    1
 #define HB_EXITLEVEL_DELTARGET  2
 
-/* /kx command line setting types - compatibility modes 
+/* /kx command line setting types - compatibility modes
  * (turn on a bit in ULONG word)
 */
 #define HB_COMPFLAG_HARBOUR        1    /* -kh */
 #define HB_COMPFLAG_XBASE          2    /* -kx */
 #define HB_COMPFLAG_HB_INLINE      4    /* -ki */
-#define HB_COMPFLAG_SYNCHRONIZE    8    /* -ks */
+#define HB_COMPFLAG_RT_MACRO      64    /* -kr */
 
 #ifdef HB_MACRO_SUPPORT
   #define HB_COMP_ISSUPPORTED(flag)    ( HB_MACRO_DATA->supported & (flag) )
-#else  
+#else
   #define HB_COMP_ISSUPPORTED(flag)    ( hb_comp_Supported & (flag) )
 #endif
 

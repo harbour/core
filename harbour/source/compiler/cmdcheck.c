@@ -289,7 +289,7 @@ void hb_compChkCompilerSwitch( int iArg, char * Args[] )
 
                      case 'k' :
                      case 'K' :
-                       Args[i] += ( j - 1 ); 
+                       Args[i] += ( j - 1 );
                        hb_compChkEnvironVar( Args[i] );
 
                        /* Accept rest as part of #define and continue with next Args[]. */
@@ -578,12 +578,12 @@ void hb_compChkEnvironVar( char * szSwitch )
                    case 'O':
                      hb_comp_iLanguage = LANG_OBJ_MODULE;
                      break;
-  
+
                   case 'w':
                   case 'W':
                      hb_comp_iLanguage = LANG_OBJ32;
                      break;
-  
+
                    default:
                       printf( "\nUnsupported output language option\n" );
                       exit( EXIT_FAILURE );
@@ -632,12 +632,12 @@ void hb_compChkEnvironVar( char * szSwitch )
                             hb_comp_bLogo = FALSE;
                             hb_comp_bQuiet = TRUE;
                             break;
-                       
+
                          case 'h':
                             /* default Harbour mode */
                             hb_comp_Supported |= HB_COMPFLAG_HARBOUR;
                             break;
-                            
+
                          case 'c':
 			    /* clear all flags - minimal set of features */
                             hb_comp_Supported = 0;
@@ -651,8 +651,8 @@ void hb_compChkEnvironVar( char * szSwitch )
                             hb_comp_Supported |= HB_COMPFLAG_HB_INLINE;
                             break;
 
-                         case 's':
-                            hb_comp_Supported |= HB_COMPFLAG_SYNCHRONIZE;
+                         case 'r':
+                            hb_comp_Supported |= HB_COMPFLAG_RT_MACRO;
                             break;
 
                          default:
@@ -662,7 +662,7 @@ void hb_compChkEnvironVar( char * szSwitch )
                    }
                 }
                 break;
-                
+
              case 'l':
              case 'L':
                 if( *( s + 1 ) == '-' )

@@ -80,16 +80,16 @@ static BYTE s_pcode_len[] = {
    1,        /* HB_P_LESS,                 */
    3,        /* HB_P_LINE,                 */
    0,        /* HB_P_LOCALNAME,            */
-   1,        /* HB_P_MACROPOP,             */
-   1,        /* HB_P_MACROPOPALIASED,      */
-   1,        /* HB_P_MACROPUSH,            */
-   1,        /* HB_P_MACROPUSHARG,         */
-   1,        /* HB_P_MACROPUSHLIST,        */
-   1,        /* HB_P_MACROPUSHINDEX,       */
-   1,        /* HB_P_MACROPUSHPARE,        */
-   1,        /* HB_P_MACROPUSHALIASED,     */
-   1,        /* HB_P_MACROSYMBOL,          */
-   1,        /* HB_P_MACROTEXT,            */
+   2,        /* HB_P_MACROPOP,             */
+   2,        /* HB_P_MACROPOPALIASED,      */
+   2,        /* HB_P_MACROPUSH,            */
+   2,        /* HB_P_MACROPUSHARG,         */
+   2,        /* HB_P_MACROPUSHLIST,        */
+   2,        /* HB_P_MACROPUSHINDEX,       */
+   2,        /* HB_P_MACROPUSHPARE,        */
+   2,        /* HB_P_MACROPUSHALIASED,     */
+   2,        /* HB_P_MACROSYMBOL,          */
+   2,        /* HB_P_MACROTEXT,            */
    3,        /* HB_P_MESSAGE,              */
    1,        /* HB_P_MINUS,                */
    1,        /* HB_P_MODULUS,              */
@@ -3076,6 +3076,22 @@ void hb_compGenPCode1( BYTE byte )
 
    if( hb_comp_iWarnings >= 3 )
       hb_compStrongType( 1 );
+}
+
+void hb_compGenPData1( BYTE byte )
+{
+   PFUNCTION pFunc = hb_comp_functions.pLast;   /* get the currently defined Clipper function */
+
+   if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
+   {
+      pFunc->pCode      = ( BYTE * ) hb_xgrab( HB_PCODE_CHUNK );
+      pFunc->lPCodeSize = HB_PCODE_CHUNK;
+      pFunc->lPCodePos  = 0;
+   }
+   else if( ( pFunc->lPCodeSize - pFunc->lPCodePos ) < 1 )
+      pFunc->pCode = ( BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += HB_PCODE_CHUNK );
+
+   pFunc->pCode[ pFunc->lPCodePos++ ] = byte;
 }
 
 void hb_compGenPCode2( BYTE byte1, BYTE byte2, BOOL bStackAffected )

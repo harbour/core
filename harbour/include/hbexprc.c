@@ -62,6 +62,7 @@
 
 #include <math.h>
 #include "hbcomp.h"
+#include "hbmsetup.h"
 
 /* ************************************************************************* */
 
@@ -381,6 +382,20 @@ void hb_compExprUseAliasMacro( HB_EXPR_PTR pAliasedVar, BYTE bAction )
       else
          HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPOPALIASED );
    }
+
+   /* Always add add byte to pcode indicating requested macro compiler flag. */
+   #if defined( HB_MACRO_SUPPORT )
+      HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_COMPFLAG_RT_MACRO );
+   #else
+      HB_EXPR_GENPCODE1( hb_compGenPData1,
+                         (
+                           ( hb_comp_Supported & HB_COMPFLAG_HARBOUR  ? HB_SM_HARBOUR   : 0 ) |
+                           ( hb_comp_Supported & HB_COMPFLAG_XBASE    ? HB_SM_XBASE     : 0 ) |
+                           ( hb_comp_bShortCuts                       ? HB_SM_SHORTCUTS : 0 ) |
+                           ( hb_comp_Supported & HB_COMPFLAG_RT_MACRO ? HB_SM_RT_MACRO  : 0 )
+                         )
+                       );
+   #endif
 
 }
 

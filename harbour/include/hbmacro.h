@@ -106,8 +106,10 @@ extern "C" {
 extern void hb_macroError( int iError, HB_BISON_PTR pMacro );
 extern int hb_macroYYParse( HB_MACRO_PTR pMacro );
 extern ULONG hb_macroSetMacro( BOOL bSet, ULONG ulFlag );
+extern ULONG hb_macroAutoSetMacro( ULONG ulFlag );
 
 extern void hb_compGenPCode1( BYTE byte, HB_BISON_PTR pMacro );
+extern void hb_compGenPData1( BYTE byte, HB_BISON_PTR pMacro );
 extern void hb_compGenPCode2( BYTE byte1, BYTE byte2, HB_BISON_PTR pMacro );
 extern void hb_compGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3, HB_BISON_PTR pMacro );
 extern void hb_compGenPCode4( BYTE byte1, BYTE byte2, BYTE byte3, BYTE byte4, HB_BISON_PTR pMacro );

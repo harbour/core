@@ -55,7 +55,6 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    PCOMCLASS    pClass;
    FILE * yyc; /* file handle for C output */
    PINLINE pInline = hb_comp_inlines.pFirst;
-   BOOL bSyncMacro;
 
    if( ! pFileName->szExtension )
       pFileName->szExtension = ".c";
@@ -204,17 +203,6 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                     hb_comp_szPrefix, pFileName->szName,
                     hb_comp_szPrefix, pFileName->szName );
 
-
-      bSyncMacro = (hb_comp_Supported & HB_COMPFLAG_SYNCHRONIZE);
-      if( bSyncMacro )
-         fprintf( yyc, "#ifdef __cplusplus\n"
-                       "  extern \"C\" ULONG hb_macroSetMacro( BOOL bSet, ULONG flag );\n"
-                       "#else\n"
-                       "  extern ULONG hb_macroSetMacro( BOOL bSet, ULONG flag );\n"
-                       "#endif\n"
-                       "extern BOOL hb_vm_bSetMacroLevel;\n\n"
-                );
-
       /* Generate functions data
        */
       pFunc = hb_comp_functions.pFirst;
@@ -239,19 +227,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
          else
             hb_compGenCReadable( pFunc, yyc );
 
-        fprintf( yyc, "   };\n\n" );
-
-         if( bSyncMacro && ( pFunc->cScope == 0 || pFunc->cScope == HB_FS_INIT ) )
-         {
-            fprintf( yyc, "   if( hb_vm_bSetMacroLevel )\n"
-                          "   {\n" );
-            fprintf( yyc, "      hb_macroSetMacro( %lu, %i );\n", ( hb_comp_Supported & HB_COMPFLAG_HARBOUR ), HB_SM_HARBOUR );
-            fprintf( yyc, "      hb_macroSetMacro( %lu, %i );\n", ( hb_comp_Supported & HB_COMPFLAG_XBASE ), HB_SM_XBASE );
-            fprintf( yyc, "      hb_vm_bSetMacroLevel = FALSE;\n" );
-            fprintf( yyc, "   };\n\n" );
-
-            bSyncMacro = FALSE;
-         }
+         fprintf( yyc, "   };\n\n" );
 
          fprintf( yyc, "   hb_vmExecute( pcode, symbols );\n}\n\n" );
          pFunc = pFunc->pNext;
@@ -792,8 +768,8 @@ static HB_GENC_FUNC( hb_p_macropop )
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( lPCodePos );
 
-   fprintf( cargo->yyc, "\tHB_P_MACROPOP,\n" );
-   return 1;
+   fprintf( cargo->yyc, "\tHB_P_MACROPOP, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
+   return 2;
 }
 
 static HB_GENC_FUNC( hb_p_macropopaliased )
@@ -801,8 +777,8 @@ static HB_GENC_FUNC( hb_p_macropopaliased )
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( lPCodePos );
 
-   fprintf( cargo->yyc, "\tHB_P_MACROPOPALIASED,\n" );
-   return 1;
+   fprintf( cargo->yyc, "\tHB_P_MACROPOPALIASED, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
+   return 2;
 }
 
 static HB_GENC_FUNC( hb_p_macropush )
@@ -810,8 +786,8 @@ static HB_GENC_FUNC( hb_p_macropush )
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( lPCodePos );
 
-   fprintf( cargo->yyc, "\tHB_P_MACROPUSH,\n" );
-   return 1;
+   fprintf( cargo->yyc, "\tHB_P_MACROPUSH, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
+   return 2;
 }
 
 static HB_GENC_FUNC( hb_p_macropusharg )
@@ -819,8 +795,8 @@ static HB_GENC_FUNC( hb_p_macropusharg )
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( lPCodePos );
 
-   fprintf( cargo->yyc, "\tHB_P_MACROPUSHARG,\n" );
-   return 1;
+   fprintf( cargo->yyc, "\tHB_P_MACROPUSHARG, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
+   return 2;
 }
 
 static HB_GENC_FUNC( hb_p_macropushlist )
@@ -828,8 +804,8 @@ static HB_GENC_FUNC( hb_p_macropushlist )
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( lPCodePos );
 
-   fprintf( cargo->yyc, "\tHB_P_MACROPUSHLIST,\n" );
-   return 1;
+   fprintf( cargo->yyc, "\tHB_P_MACROPUSHLIST, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
+   return 2;
 }
 
 static HB_GENC_FUNC( hb_p_macropushindex )
@@ -837,8 +813,8 @@ static HB_GENC_FUNC( hb_p_macropushindex )
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( lPCodePos );
 
-   fprintf( cargo->yyc, "\tHB_P_MACROPUSHINDEX,\n" );
-   return 1;
+   fprintf( cargo->yyc, "\tHB_P_MACROPUSHINDEX, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
+   return 2;
 }
 
 static HB_GENC_FUNC( hb_p_macropushpare )
@@ -846,8 +822,8 @@ static HB_GENC_FUNC( hb_p_macropushpare )
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( lPCodePos );
 
-   fprintf( cargo->yyc, "\tHB_P_MACROPUSHPARE,\n" );
-   return 1;
+   fprintf( cargo->yyc, "\tHB_P_MACROPUSHPARE, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
+   return 2;
 }
 
 static HB_GENC_FUNC( hb_p_macropushaliased )
@@ -855,8 +831,8 @@ static HB_GENC_FUNC( hb_p_macropushaliased )
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( lPCodePos );
 
-   fprintf( cargo->yyc, "\tHB_P_MACROPUSHALIASED,\n" );
-   return 1;
+   fprintf( cargo->yyc, "\tHB_P_MACROPUSHALIASED, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
+   return 2;
 }
 
 static HB_GENC_FUNC( hb_p_macrosymbol )
@@ -864,8 +840,8 @@ static HB_GENC_FUNC( hb_p_macrosymbol )
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( lPCodePos );
 
-   fprintf( cargo->yyc, "\tHB_P_MACROSYMBOL,\n" );
-   return 1;
+   fprintf( cargo->yyc, "\tHB_P_MACROSYMBOL, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
+   return 2;
 }
 
 static HB_GENC_FUNC( hb_p_macrotext )
@@ -873,8 +849,8 @@ static HB_GENC_FUNC( hb_p_macrotext )
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( lPCodePos );
 
-   fprintf( cargo->yyc, "\tHB_P_MACROTEXT,\n" );
-   return 1;
+   fprintf( cargo->yyc, "\tHB_P_MACROTEXT, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
+   return 2;
 }
 
 static HB_GENC_FUNC( hb_p_message )

@@ -87,6 +87,7 @@
 #include "hbvm.h"
 #include "hbpcode.h"
 #include "hbset.h"
+#include "hbmsetup.h"
 
 #ifdef HB_MACRO_STATEMENTS
   #include "hbpp.h"
@@ -263,7 +264,7 @@ int hb_vm_aiExtraElements[HB_MAX_MACRO_ARGS], hb_vm_iExtraElementsIndex = 0, hb_
 
 int hb_vm_iExtraIndex;
 
-BOOL hb_vm_bSetMacroLevel = TRUE;
+extern ULONG hb_macroAutoSetMacro( ULONG ulFlag );
 
 /* Request for some action - stop processing of opcodes
  */
@@ -441,6 +442,8 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
    BOOL bCanRecover = FALSE;
    ULONG ulPrivateBase;
    LONG lOffset;
+   BOOL bSetMacro;
+   ULONG ulMacroFlags;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmExecute(%p, %p)", pCode, pSymbols));
 
@@ -1221,32 +1224,96 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          /* macro creation */
 
          case HB_P_MACROPOP:
+            if( ! ( pCode[ ++w ] & HB_SM_RT_MACRO ) )
+            {
+               bSetMacro = TRUE;
+               ulMacroFlags = hb_macroAutoSetMacro( (ULONG) pCode[ w ] );
+            }
+            else
+            {
+               bSetMacro = FALSE;
+            }
+
             /* compile and run - pop a value from the stack */
             hb_macroSetValue( hb_stackItemFromTop( -1 ) );
+
+            if( bSetMacro )
+            {
+               hb_macroAutoSetMacro( ulMacroFlags );
+            }
+
             w++;
             break;
 
          case HB_P_MACROPOPALIASED:
+            if( ! ( pCode[ ++w ] & HB_SM_RT_MACRO ) )
+            {
+               bSetMacro = TRUE;
+               ulMacroFlags = hb_macroAutoSetMacro( (ULONG) pCode[ w ] );
+            }
+            else
+            {
+               bSetMacro = FALSE;
+            }
+
             /* compile and run - pop an aliased variable from the stack */
             hb_macroPopAliasedValue( hb_stackItemFromTop( - 2  ), hb_stackItemFromTop( -1 ) );
+
+            if( bSetMacro )
+            {
+               hb_macroAutoSetMacro( ulMacroFlags );
+            }
+
             w++;
             break;
 
          case HB_P_MACROPUSH:
+            if( ! ( pCode[ ++w ] & HB_SM_RT_MACRO ) )
+            {
+               bSetMacro = TRUE;
+               ulMacroFlags = hb_macroAutoSetMacro( (ULONG) pCode[ w ] );
+            }
+            else
+            {
+               bSetMacro = FALSE;
+            }
+
             /* compile and run - leave the result on the stack */
             /* the topmost element on the stack contains a macro
              * string for compilation
              */
             hb_macroGetValue( hb_stackItemFromTop( -1 ), 0 );
+
+            if( bSetMacro )
+            {
+               hb_macroAutoSetMacro( ulMacroFlags );
+            }
+
             w++;
             break;
 
          case HB_P_MACROPUSHARG:
+            if( ! ( pCode[ ++w ] & HB_SM_RT_MACRO ) )
+            {
+               bSetMacro = TRUE;
+               ulMacroFlags = hb_macroAutoSetMacro( (ULONG) pCode[ w ] );
+            }
+            else
+            {
+               bSetMacro = FALSE;
+            }
+
             /* compile and run - leave the result on the stack */
             /* the topmost element on the stack contains a macro
              * string for compilation
              */
             hb_macroGetValue( hb_stackItemFromTop( -1 ), HB_P_MACROPUSHARG );
+
+            if( bSetMacro )
+            {
+               hb_macroAutoSetMacro( ulMacroFlags );
+            }
+
             w++;
 
             if( hb_vm_iExtraParamsIndex && hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] == NULL )
@@ -1292,11 +1359,27 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_MACROPUSHLIST:
+            if( ! ( pCode[ ++w ] & HB_SM_RT_MACRO ) )
+            {
+               bSetMacro = TRUE;
+               ulMacroFlags = hb_macroAutoSetMacro( (ULONG) pCode[ w ] );
+            }
+            else
+            {
+               bSetMacro = FALSE;
+            }
+
             /* compile and run - leave the result on the stack */
             /* the topmost element on the stack contains a macro
              * string for compilation
              */
             hb_macroGetValue( hb_stackItemFromTop( -1 ), HB_P_MACROPUSHLIST );
+
+            if( bSetMacro )
+            {
+               hb_macroAutoSetMacro( ulMacroFlags );
+            }
+
             w++;
             break;
 
@@ -1306,11 +1389,26 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_MACROPUSHINDEX:
+            if( ! ( pCode[ ++w ] & HB_SM_RT_MACRO ) )
+            {
+               bSetMacro = TRUE;
+               ulMacroFlags = hb_macroAutoSetMacro( (ULONG) pCode[ w ] );
+            }
+            else
+            {
+               bSetMacro = FALSE;
+            }
+
             /* compile and run - leave the result on the stack */
             /* the topmost element on the stack contains a macro
              * string for compilation
              */
             hb_macroGetValue( hb_stackItemFromTop( -1 ), HB_P_MACROPUSHINDEX );
+
+            if( bSetMacro )
+            {
+               hb_macroAutoSetMacro( ulMacroFlags );
+            }
 
             if( hb_vm_iExtraIndex )
             {
@@ -1343,31 +1441,95 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_MACROPUSHPARE:
+            if( ! ( pCode[ ++w ] & HB_SM_RT_MACRO ) )
+            {
+               bSetMacro = TRUE;
+               ulMacroFlags = hb_macroAutoSetMacro( (ULONG) pCode[ w ] );
+            }
+            else
+            {
+               bSetMacro = FALSE;
+            }
+
             /* compile and run - leave the result on the stack */
             /* the topmost element on the stack contains a macro
              * string for compilation
              */
             hb_macroGetValue( hb_stackItemFromTop( -1 ), HB_P_MACROPUSHPARE );
+
+            if( bSetMacro )
+            {
+               hb_macroAutoSetMacro( ulMacroFlags );
+            }
+
             w++;
             break;
 
          case HB_P_MACROPUSHALIASED:
+            if( ! ( pCode[ ++w ] & HB_SM_RT_MACRO ) )
+            {
+               bSetMacro = TRUE;
+               ulMacroFlags = hb_macroAutoSetMacro( (ULONG) pCode[ w ] );
+            }
+            else
+            {
+               bSetMacro = FALSE;
+            }
+
             /* compile and run - leave an aliased variable on the stack */
             hb_macroPushAliasedValue( hb_stackItemFromTop( -2 ), hb_stackItemFromTop( -1 ) );
+
+            if( bSetMacro )
+            {
+               hb_macroAutoSetMacro( ulMacroFlags );
+            }
+
             w++;
             break;
 
          case HB_P_MACROSYMBOL:
+            if( ! ( pCode[ ++w ] & HB_SM_RT_MACRO ) )
+            {
+               bSetMacro = TRUE;
+               ulMacroFlags = hb_macroAutoSetMacro( (ULONG) pCode[ w ] );
+            }
+            else
+            {
+               bSetMacro = FALSE;
+            }
+
             /* compile into a symbol name (used in function calls) */
             hb_macroPushSymbol( hb_stackItemFromTop( -1 ) );
+
+            if( bSetMacro )
+            {
+               hb_macroAutoSetMacro( ulMacroFlags );
+            }
+
             w++;
             break;
 
          case HB_P_MACROTEXT:
+            if( ! ( pCode[ ++w ] & HB_SM_RT_MACRO ) )
+            {
+               bSetMacro = TRUE;
+               ulMacroFlags = hb_macroAutoSetMacro( (ULONG) pCode[ w ] );
+            }
+            else
+            {
+               bSetMacro = FALSE;
+            }
+
             /* macro text substitution
              * "text &macro.other text"
              */
             hb_macroTextValue( hb_stackItemFromTop( -1 ) );
+
+            if( bSetMacro )
+            {
+               hb_macroAutoSetMacro( ulMacroFlags );
+            }
+
             w++;
             break;
 

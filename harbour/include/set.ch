@@ -124,9 +124,4 @@
 
 /* runtime settings for macro compiler (HB_SETMACRO() function)
 */
-#define HB_SM_HARBOUR    1    /* extended Harbour compatibility */
-#define HB_SM_XBASE      2    /* extended xbase compatibility */
-#define HB_SM_PREPORC    4    /* enable/disable commands preprocessing */
-#define HB_SM_SHORTCUTS  8    /* enable/disable sortcuts for logical operators */
-#define HB_SM_PARSER     128  /* address of macro parser (TODO) */
-
+#include "hbmsetup.h"

@@ -906,6 +906,15 @@ ULONG hb_macroSetMacro( BOOL bSet, ULONG flag )
    return ulCurrentFlags;
 }
 
+ULONG hb_macroAutoSetMacro( ULONG flags )
+{
+   ULONG ulCurrentFlags = s_macroFlags;
+
+   s_macroFlags = flags;
+
+   return ulCurrentFlags;
+}
+
 HB_FUNC( HB_SETMACRO )
 {
    int iPrmCnt = hb_pcount();

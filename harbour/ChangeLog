@@ -1,3 +1,22 @@
+2001-08-09 02:30 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/vm/macro.c
+   * include/hbcomp.h
+   * include/hbexprb.c
+   * include/hbexprc.c
+   * include/hbmacro.h
+   * include/hbmsetup.h
+   * include/set.ch
+   * source/compiler/cmdcheck.c
+   * source/compiler/genc.c
+   * source/compiler/harbour.c
+   * source/compiler/hbpcode.c
+   * source/rdd/dblist.prg
+   * source/vm/hvm.c
+     - Removed support for syncing of macro setting with main module.
+     - Removed support for -ks which is replaced with -kr.
+     + Added default logic to auto symchronize all macro activations with the compile time switches of each respective module.
+     + Added -kr to disable auto synching, thus allowing Run-Time setting by means of HB_SETMACRO().
+
 2001-08-09 00:07 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/seconds.c
      * changed HB_CLOKS2SECS to make it return a double (like Seconds()) this way
@@ -15,6 +34,10 @@
      ! Fixed a few warnings inside hb_vmDo() and hb_vmSend()
    * source/vm/arrayshb.c
      ! Fixed isalnum() call on line 359, isalnum() requires an int
+
+2001-08-07 17:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * doc/en/clipper.txt
+     * Minor typo correction.
 
 2001-08-07 23:11 GMT Dave Pearson <davep@davep.org>
 

@@ -62,6 +62,7 @@
 
 #include <math.h>
 #include "hbcomp.h"
+#include "hbmsetup.h"
 
 /* memory allocation
  */
@@ -80,7 +81,7 @@
    void hb_compExprUseAliasMacro( HB_EXPR_PTR, BYTE, HB_MACRO_DECL );
    void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_MACRO_DECL );
    ULONG hb_compExprReduceList( HB_EXPR_PTR, HB_MACRO_DECL );
-   
+
    #define HB_SUPPORT_XBASE     ( HB_COMP_ISSUPPORTED(HB_SM_XBASE) )
    #define HB_SUPPORT_HARBOUR   ( HB_COMP_ISSUPPORTED(HB_SM_HARBOUR) )
 #else
@@ -92,7 +93,7 @@
    void hb_compExprUseAliasMacro( HB_EXPR_PTR, BYTE );
    void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq );
    ULONG hb_compExprReduceList( HB_EXPR_PTR );
-   
+
    #define HB_SUPPORT_XBASE     ( HB_COMP_ISSUPPORTED(HB_COMPFLAG_XBASE) )
    #define HB_SUPPORT_HARBOUR   ( HB_COMP_ISSUPPORTED(HB_COMPFLAG_HARBOUR) )
 #endif
@@ -342,7 +343,24 @@ static HB_EXPR_FUNC( hb_compExprUseString )
                  * need to check for locals or static variables
                  */
          if( hb_compExprCheckMacroVar( pSelf->value.asString.string ) )
+         {
             HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
+
+            /* Always add add byte to pcode indicating requested macro compiler flag. */
+            #if defined( HB_MACRO_SUPPORT )
+               HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_COMPFLAG_RT_MACRO );
+            #else
+               HB_EXPR_GENPCODE1( hb_compGenPData1,
+                                  (
+                                    ( hb_comp_Supported & HB_COMPFLAG_HARBOUR  ? HB_SM_HARBOUR   : 0 ) |
+                                    ( hb_comp_Supported & HB_COMPFLAG_XBASE    ? HB_SM_XBASE     : 0 ) |
+                                    ( hb_comp_bShortCuts                       ? HB_SM_SHORTCUTS : 0 ) |
+                                    ( hb_comp_Supported & HB_COMPFLAG_RT_MACRO ? HB_SM_RT_MACRO  : 0 )
+                                  )
+                                );
+            #endif
+         }
+
 #endif
          }
          break;
@@ -405,7 +423,7 @@ static HB_EXPR_FUNC( hb_compExprUseCodeblock )
             {
                if( pExpr->ExprType == HB_ET_MACRO )
                {
-                  /* Clipper allows for list expressions in a codeblock 
+                  /* Clipper allows for list expressions in a codeblock
                    * macro := "1,2"
                    * EVAL( {|| &macro} )
                   */
@@ -546,7 +564,7 @@ static HB_EXPR_FUNC( hb_compExprUseArray )
          {
             BOOL bMacroList = FALSE;
 
-            /* Find out if macro is used as on of the elements- if so generate a prefix HB_P_MACROLIST. */
+            /* Find out if macro is used as one of the elements- if so generate a prefix HB_P_MACROLIST. */
             if( HB_SUPPORT_XBASE )
             {
                while( pElem )
@@ -1082,9 +1100,25 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
             {
                if( pSelf->value.asMacro.SubType & HB_ET_MACRO_ARGLIST )
                {
-                  /* funCall( &macro ) 
+                  /* funCall( &macro )
                   */
                   HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHARG );
+
+                  /* Always add add byte to pcode indicating requested macro compiler flag. */
+                  #if defined( HB_MACRO_SUPPORT )
+                     HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_COMPFLAG_RT_MACRO );
+                  #else
+                     HB_EXPR_GENPCODE1( hb_compGenPData1,
+                                        (
+                                          ( hb_comp_Supported & HB_COMPFLAG_HARBOUR  ? HB_SM_HARBOUR   : 0 ) |
+                                          ( hb_comp_Supported & HB_COMPFLAG_XBASE    ? HB_SM_XBASE     : 0 ) |
+                                          ( hb_comp_bShortCuts                       ? HB_SM_SHORTCUTS : 0 ) |
+                                          ( hb_comp_Supported & HB_COMPFLAG_RT_MACRO ? HB_SM_RT_MACRO  : 0 )
+                                        )
+                                      );
+                  #endif
+
+                  /* Generate push symbol for the symbol the possible extra macro arguments will be for. */
                   HB_EXPR_USE( pSelf->value.asMacro.pFunCall->value.asFunCall.pFunName, HB_EA_PUSH_PCODE );
                }
                else if( pSelf->value.asMacro.SubType & HB_ET_MACRO_LIST )
@@ -1111,6 +1145,25 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                   HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSH );
                }
             }
+
+            if( pSelf->value.asMacro.SubType == HB_ET_MACRO_SYMBOL ||
+                ( pSelf->value.asMacro.SubType != HB_ET_MACRO_ALIASED && ! ( pSelf->value.asMacro.SubType & HB_ET_MACRO_ARGLIST ) ) )
+            {
+               /* Always add add byte to pcode indicating requested macro compiler flag. */
+               #if defined( HB_MACRO_SUPPORT )
+                  HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_COMPFLAG_RT_MACRO );
+               #else
+                  HB_EXPR_GENPCODE1( hb_compGenPData1,
+                                     (
+                                       ( hb_comp_Supported & HB_COMPFLAG_HARBOUR  ? HB_SM_HARBOUR   : 0 ) |
+                                       ( hb_comp_Supported & HB_COMPFLAG_XBASE    ? HB_SM_XBASE     : 0 ) |
+                                       ( hb_comp_bShortCuts                       ? HB_SM_SHORTCUTS : 0 ) |
+                                       ( hb_comp_Supported & HB_COMPFLAG_RT_MACRO ? HB_SM_RT_MACRO  : 0 )
+                                     )
+                                   );
+               #endif
+            }
+
             /* NOTE: pcode for alias context is generated in
              * hb_compExprUseAliasVar()
              */
@@ -1148,7 +1201,23 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
              * from the eval stack
              */
             if( pSelf->value.asMacro.SubType != HB_ET_MACRO_ALIASED )
+            {
                HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPOP );
+
+               /* Always add add byte to pcode indicating requested macro compiler flag. */
+               #if defined( HB_MACRO_SUPPORT )
+                  HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_COMPFLAG_RT_MACRO );
+               #else
+                  HB_EXPR_GENPCODE1( hb_compGenPData1,
+                                     (
+                                       ( hb_comp_Supported & HB_COMPFLAG_HARBOUR  ? HB_SM_HARBOUR   : 0 ) |
+                                       ( hb_comp_Supported & HB_COMPFLAG_XBASE    ? HB_SM_XBASE     : 0 ) |
+                                       ( hb_comp_bShortCuts                       ? HB_SM_SHORTCUTS : 0 ) |
+                                       ( hb_comp_Supported & HB_COMPFLAG_RT_MACRO ? HB_SM_RT_MACRO  : 0 )
+                                     )
+                                   );
+               #endif
+            }
          }
          break;
 
