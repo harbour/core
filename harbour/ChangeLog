@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  + doc\es\codebloc.txt
+  + doc\es\dbstrux.txt
+  + doc\es\hbpplib.txt
+  + doc\es\clipper.txt
   + doc\es\pcode.txt
   + doc\es\pragma.txt
   + doc\es\statics.txt
