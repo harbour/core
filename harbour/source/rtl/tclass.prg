@@ -119,7 +119,7 @@ static function Create()
       hClass := ClassCreate( ::cName, nLenDatas, hSuper )
                                                 // Add class casts
       ClassAdd( hClass, Upper( ::cSuper ), hSuper, MET_SUPER )
-      ClassAdd( hClass, "SUPER", hSuper, MET_SUPER )
+      ClassAdd( hClass, "__SUPER", hSuper, MET_SUPER )
 
       nDataBegin := __WDatas( hSuper )          // Get offset for new DATAs
       nClassBegin := __WClsDatas( hSuper )      // Get offset for new ClassData
@@ -149,6 +149,7 @@ static function Create()
       ClassAdd( hClass, ::aInlines[ n ][ 1 ], ::aInlines[ n ][ 2 ],;
                 MET_INLINE )
    next
+//   ClassAdd( hClass, Upper( ::cName ), {|self|self}, MET_INLINE ) // Useful?
 
    nLen = Len( ::aVirtuals )
    for n = 1 to nLen

@@ -80,7 +80,7 @@ static function New()
 
    local self := QSelf()
 
-   ::Super:NewBase()
+   ::TBaseObject:NewBase()
    ::Data1 := 1
    ::ClassData1 := "A"
    ::Data2 := 2
@@ -93,7 +93,7 @@ static function Method1()
    local self := QSelf()
 
    QOut( "I am Method1 from TObject" )
-   ::Super:Method1()
+   ::TBaseObject:Method1()
 return self
 
 static function Method2()

@@ -1,3 +1,10 @@
+19990713-20:35 CET Eddie Runia <eddie@runia.com>
+   * source/rtl/tclass.prg
+     Changed standard message Super to __Super
+   * tests/working/clsdata.prg
+     Named class name used instead of Super
+
+
 Tue Jul 13 14:06:03 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* include/classes.ch: 
