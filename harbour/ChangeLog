@@ -1,9 +1,17 @@
+20000415-17:38 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * source/rdd/dbfcdx/dbfcdx1.c
+     % added Bruno Contero's file (from message on Harblour list), quick and dirty hack to make it
+       compile (at least) lots of warnings and no tests made
+   * include/hbapirdd.h
+     % added Bruno Contero's changes to make dbfcdx1.c happy.
+
 20000415-15:07 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/net.c
-     + NETNAME() now works with BCC16 (and any other real mode DOS compiler for 
+     + NETNAME() now works with BCC16 (and any other real mode DOS compiler for
        that matter).
-     - Commented out for DJGPP. I leave this for someone who has the nerve 
+     - Commented out for DJGPP. I leave this for someone who has the nerve
        to tweak it for PM.
 
    * bin/bld.bat
@@ -26,7 +34,7 @@
    - bin/bld_b32o.bat
    - bin/bld_b32w.bat
      - Removed. Use SET CFLAGS=-tW and call bld_b32.bat for the bld_b32w.bat
-       functionality, if you need it. 
+       functionality, if you need it.
        bld_b32o.bat was specific and not working anyway.
 
 20000415-12:38 GMT+1 Victor Szakats <info@szelvesz.hu>
@@ -68,7 +76,7 @@
 
    * source/vm/classes.c
      ! __CLSINSTSUPER() fix for error recovery code path.
-     ! The return value of some Harbour functions made consistent on error 
+     ! The return value of some Harbour functions made consistent on error
        cases (return 0 instead of NIL).
 
 20000415-05:12 GMT+1 Victor Szakats <info@szelvesz.hu>
@@ -233,10 +241,10 @@
 
    * source/include/hbexprb.c
      + Added following defines:
-	#define HB_COMP_ERR_INVALID_JUMP                45
-	#define HB_COMP_ERR_INVALID_JUMPTRUE            46
-	#define HB_COMP_ERR_INVALID_JUMPFALSE           47
-	#define HB_COMP_ERR_JUMP_NOT_FOUND              48
+   #define HB_COMP_ERR_INVALID_JUMP                45
+   #define HB_COMP_ERR_INVALID_JUMPTRUE            46
+   #define HB_COMP_ERR_INVALID_JUMPFALSE           47
+   #define HB_COMP_ERR_JUMP_NOT_FOUND              48
 
 20000414-03:08 GMT+1 Victor Szakats <info@szelvesz.hu>
 
@@ -524,14 +532,14 @@
 
     *source/rtl/gtapi.c
         *hb_gtWwriteCon() fixed to correctly support LF characters in
-	U*nix environment (LF should move carriage return to the leftmost
-	column)
+   U*nix environment (LF should move carriage return to the leftmost
+   column)
 
     *source/rtl/gtcrs/gtcrs.c
         *updated to return multi-character keycodes that are not mapped
         to Clipper INKEY() keycodes
-	*full color support
-	*scrolling up-down
+   *full color support
+   *scrolling up-down
 
 20000411-13:12 GMT+1 Victor Szakats <info@szelvesz.hu>
 
@@ -775,7 +783,7 @@
      % hb_verCompiler() some optimizations and streamlining mainly around
        GCC flavours.
      + MS "Visual" detection.
-   
+
    * source/vm/fm.c
    * include/hbsetup.h
      * HB_FM_STATISTICS moved to the setup header.
@@ -807,7 +815,7 @@
 20000408-20:45 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/gtcrs/gtcrs.c
-	* added key mapping using terminfo database
+   * added key mapping using terminfo database
 
 20000408-14:11 DST Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/dir.c

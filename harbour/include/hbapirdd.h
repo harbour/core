@@ -161,6 +161,8 @@ extern void    hb_rddShutDown( void );
  */
 struct _RDDFUNCS;
 struct _AREA;
+struct _TAGINFO;
+struct _INDEXINFO;
 
 
 typedef struct _FILEINFO
@@ -177,14 +179,91 @@ typedef struct _FILEINFO
 typedef FILEINFO * LPFILEINFO;
 
 
+typedef struct _KEYINFO
+{
+   PHB_ITEM pItem;
+   LONG     Tag;
+   LONG     Xtra;
+   struct  _KEYINFO * pNext;
+} KEYINFO;
+
+typedef KEYINFO * LPKEYINFO;
+
+
+typedef struct _PAGEINFO
+{
+   LONG      Page;
+   LONG      Left;
+   LONG      Right;
+   BOOL      Changed;
+   BOOL      NewRoot;
+   BOOL      LastEntry;
+   BOOL      Reload;
+   BOOL      ChkBOF;
+   BOOL      ChkEOF;
+   BYTE      PageType;
+   LONG      RNMask;
+   BYTE      ReqByte;
+   BYTE      RNBits;
+   BYTE      DCBits;
+   BYTE      TCBits;
+   BYTE      DCMask;
+   BYTE      TCMask;
+   USHORT    Space;
+   LPKEYINFO pKeys;
+   USHORT    uiKeys;
+   SHORT     CurKey;
+   struct   _PAGEINFO * Owner;
+   struct   _PAGEINFO * Child;
+   struct   _TAGINFO * TagParent;
+} PAGEINFO;
+
+typedef PAGEINFO * LPPAGEINFO;
+
+
+typedef struct _TAGINFO
+{
+   char *     TagName;
+   char *     KeyExpr;
+   char *     ForExpr;
+   PHB_ITEM   pKeyItem;
+   PHB_ITEM   pForItem;
+   BOOL       AscendKey;
+   BOOL       UniqueKey;
+   BOOL       TagChanged;
+   BOOL       TagBOF;
+   BOOL       TagEOF;
+   BYTE       KeyType;
+   BYTE       OptFlags;
+   LONG       TagBlock;
+   LONG       RootBlock;
+   USHORT     KeyLength;
+   USHORT     MaxKeys;
+   LPKEYINFO  CurKeyInfo;
+   LPPAGEINFO RootPage;
+   struct    _INDEXINFO * Owner;
+   struct    _TAGINFO * pNext;
+} TAGINFO;
+
+typedef TAGINFO * LPTAGINFO;
+
+
 
 typedef struct _INDEXINFO
 {
-   struct _INDEXINFO * pNext;   /* The next index in the list */
+   char *    IndexName;
+   BOOL      Exact;
+   BOOL      Corrupted;
+   LONG      TagRoot;
+   LONG      NextAvail;
+   struct   _AREA * Owner;
+   FHANDLE   DiskFile;
+   LPTAGINFO CompoundTag;
+   LPTAGINFO TagList;
+   struct   _INDEXINFO * pNext;   /* The next index in the list */
 } INDEXINFO;
 
 typedef INDEXINFO * LPINDEXINFO;
-
 
 
 /*
@@ -239,6 +318,7 @@ typedef struct
    BYTE *   bRecord;         /* Buffer of the data */
    BOOL     fValidBuffer;    /* State of buffer */
    BOOL     fHasMemo;        /* Work Area with Memo fields */
+   BOOL     fHasMDX;         /* MDX or CDX indexes */
    ULONG    ulRecNo;         /* Current record */
    ULONG    ulNextBlock;     /* Next block for memos */
    BOOL     fExclusive;      /* Share the file */
