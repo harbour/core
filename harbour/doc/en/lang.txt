@@ -7,10 +7,61 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Documentation for: HB_LANGSELECT(),HB_LANGNAME()
+ *    Documentation for: HB_LANGNAME(), HB_LANGSELECT()
+ *
+ * Copyright 2004 Chen Kedem <niki@actcom.co.il>
+ *    Documentation for: HB_SETCODEPAGE()
  *
  * See doc/license.txt for licensing terms.
  *
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      HB_LANGNAME()
+ *  $CATEGORY$
+ *      Nation
+ *  $ONELINER$
+ *      Return the name of the current language module in use
+ *  $SYNTAX$
+ *      HB_LANGNAME() --> cLangName
+ *  $ARGUMENTS$
+ *      None.
+ *  $RETURNS$
+ *      <cLangName>  Name of the current language in use
+ *  $DESCRIPTION$
+ *      This function return the current name of the language module in use.
+ *  $EXAMPLES$
+ *      REQUEST HB_LANG_PT
+ *      REQUEST HB_LANG_RO
+ *      REQUEST HB_LANG_ES
+ *      FUNCTION Main()
+ *      HB_LANGSELECT( 'PT' )       // Default language is now Portuguese
+ *      ? CDOW( DATE() )            //Segunda-feira
+ *      ? 'Current language is ", HB_LANGNAME()             // Portuguese
+ *      ? 'Old language id selected is ", HB_LANGSELECT()   // PT
+ *      HB_LANGSELECT( 'RO' )       // Default language is now Romanian
+ *      ? CMONTH( DATE() )          // Mai
+ *      ? 'Old language id selected is ",HB_LANGSELECT()    // RO
+ *      HB_LANGSELECT( 'ES' )       // Default language is now Spanish
+ *      ? 'Current language is ",HB_LANGNAME()              // Spanish
+ *      ? CMONTH( DATE() )          // Mayo
+ *      ? CDOW( DATE() )            // Lunes
+ *      RETURN NIL
+ *  $TESTS$
+ *      See tests/langapi.prg, tests/langmsg.prg
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is a Harbour Extension
+ *  $PLATFORMS$
+ *      Dos,Win32,OS/2
+ *  $FILES$
+ *      Library is rtl, lang
+ *  $SEEALSO$
+ *      HB_LANGSELECT(),NATIONMSG()
+ *  $END$
  */
 
 /*  $DOC$
@@ -21,11 +72,11 @@
  *  $ONELINER$
  *      Select a specific nation message module
  *  $SYNTAX$
- *      HB_LANGSELECT( <cNewLang> ) --> cOldLang
+ *      HB_LANGSELECT( [<cNewLang>] ) --> cOldLang
  *  $ARGUMENTS$
- *      <cNewLang>  The ID of the country language module
- *      The possible values for <cNewLang> is below as is defined in the
- *      Lang library,sorted by language.
+ *      <cNewLang>  The optional ID of the country language module.
+ *      Possible values for <cNewLang> are below as defined in the
+ *      Lang library, sorted by language.
  *
  *      <table>
  *      Language              Codepage       <cNewLang>
@@ -56,7 +107,7 @@
  *      Italian               437            IT
  *      Korean                949            KO
  *      Polish                852            PL852
- *      Polish                ISO-8859-1     PLISO
+ *      Polish                ISO-8859-2     PLISO
  *      Polish                Mozowia        PLMAZ
  *      Polish                Windows-1250   PLWIN
  *      Portuguese            850            PT
@@ -78,14 +129,15 @@
  *      <cOldLang>   The old language indentifier
  *  $DESCRIPTION$
  *      This function set a default language module for date/month names,
- *      internal warnigs,NatMsg messages and internal errors. When a
- *      Lang ID is selected all messages will be output as the current lang
- *      selected until another one is selected or the program ends.
+ *      internal warnigs, NatMsg messages and internal errors. When a
+ *      Lang ID is selected all messages will be output with the current
+ *      language selected until another one is selected or the program ends.
+ *      The default language is English (cLang == "EN").
  *  $EXAMPLES$
  *      REQUEST HB_LANG_PT
  *      REQUEST HB_LANG_RO
  *      REQUEST HB_LANG_ES
- *      FUNCTION MAIN()
+ *      FUNCTION Main()
  *      HB_LANGSELECT( 'PT' )       // Default language is now Portuguese
  *      ? CDOW( DATE() )            // Segunda-feira
  *      ? 'Old language id selected is ", HB_LANGSELECT()   // PT
@@ -97,7 +149,7 @@
  *      ? CDOW( DATE() )            // Lunes
  *      RETURN NIL
  *  $TESTS$
- *      See tests/langapi.prg
+ *      See tests/langapi.prg, tests/langmsg.prg
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -105,55 +157,78 @@
  *  $PLATFORMS$
  *      Dos,Win32,OS/2
  *  $FILES$
- *      Libraty is rtl
+ *      Libraty is rtl, lang
  *  $SEEALSO$
- *      HB_LANGNAME(),NATIONMSG()
+ *      HB_LANGNAME(),NATIONMSG(),HB_SETCODEPAGE()
  *  $END$
  */
 
 /*  $DOC$
  *  $FUNCNAME$
- *      HB_LANGNAME()
+ *      HB_SETCODEPAGE()
  *  $CATEGORY$
  *      Nation
  *  $ONELINER$
- *      Return the Name of the Current Language module in USE
+ *      Select the active code page by language ID
  *  $SYNTAX$
- *      HB_LANGNAME() --> cLangName
+ *      HB_SETCODEPAGE( [<cNewLang>] ) --> cOldLang
  *  $ARGUMENTS$
- *      None.
+ *      <cNewLang>  The optional ID of the country language module.
+ *      Possible values for <cNewLang> are below as defined in the
+ *      Codepage library, sorted by language.
+ *
+ *      <table>
+ *      Language              Codepage       <cNewLang>
+ *
+ *      English               437            EN
+ *      German                850            DE
+ *      German ANSI           ANSI           DEWIN
+ *      Hungarian             852            HU852
+ *      Hungarian             Windows-1      HUWIN
+ *      Polish                852            PL852
+ *      Polish                ISO-8859-2     PLISO
+ *      Polish                Mozowia        PLMAZ
+ *      Polish                Windows-1250   PLWIN
+ *      Portuguese            850            PT
+ *      Portuguese            ISO-8859-1     PTISO
+ *      Russian               866            RU866
+ *      Russian               KOI-8          RUKOI8
+ *      Russian               Windows-1251   RUWIN
+ *      Serbian               Windows-1251   SRWIN
+ *      Slovenian             437            SL437
+ *      Slovenian             852            SL852
+ *      Slovenian             ISO-8859-2     SLISO
+ *      Slovenian             Windows-1250   SLWIN
+ *      Spanish               850            ES
+ *      Spanish ANSI          ANSI           ESWIN
+ *      </table>
  *  $RETURNS$
- *      <cLangName>  Name of the Current language in use
+ *      <cOldLang>   The old language indentifier
  *  $DESCRIPTION$
- *      This function return the current name of the language module in use.
+ *      HB_SETCODEPAGE() set the active code page use by Harbour for
+ *      sorting and comparing strings. The default code page use ASCII
+ *      order (cLang == "EN").
  *  $EXAMPLES$
- *      REQUEST HB_LANG_PT
- *      REQUEST HB_LANG_RO
- *      REQUEST HB_LANG_ES
- *      FUNCTION MAIN()
- *      HB_LANGSELECT( 'PT' )       // Default language is now Portuguese
- *      ? CDOW( DATE() )            //Segunda-feira
- *      ? 'Current language is ", HB_LANGNAME()             // Portuguese
- *      ? 'Old language id selected is ", HB_LANGSELECT()   // PT
- *      HB_LANGSELECT( 'RO' )       // Default language is now Romanian
- *      ? CMONTH( DATE() )          // Mai
- *      ? 'Old language id selected is ",HB_LANGSELECT()    // RO
- *      HB_LANGSELECT( 'ES' )       // Default language is now Spanish
- *      ? 'Current language is ",HB_LANGNAME()              // Spanish
- *      ? CMONTH( DATE() )          // Mayo
- *      ? CDOW( DATE() )            // Lunes
+ *      REQUEST HB_CODEPAGE_HU852
+ *      FUNCTION Main()
+ *      LOCAL cTxt := CHR( 71 ) + " > " + CHR( 144 ) + " is"
+ *      ? HB_SETCODEPAGE()               // EN
+ *      ? cTxt, CHR( 71 ) > CHR( 144 )   // G > ê is .F.
+ *      ? HB_SETCODEPAGE( "HU852" )      // EN
+ *      ? cTxt, CHR( 71 ) > CHR( 144 )   // G > ê is .T.
+ *      ? HB_SETCODEPAGE( "EN" )         // HU852
+ *      ? cTxt, CHR( 71 ) > CHR( 144 )   // G > ê is .F.
  *      RETURN NIL
- *  $TESTS$
- *      See tests/langapi.prg
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is a Harbour Extension
+ *      This function is a Harbour Extension.
  *  $PLATFORMS$
  *      Dos,Win32,OS/2
  *  $FILES$
- *      Library is lang
+ *      Libraty is rtl, codepage
  *  $SEEALSO$
- *      HB_LANGSELECT(),NATIONMSG()
+ *      HB_LANGNAME(),HB_LANGSELECT(),NATIONMSG()
  *  $END$
  */
+

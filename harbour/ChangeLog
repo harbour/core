@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-05-18 16:12 UTC+0300 Chen Kedem <niki@actcom.co.il>
+
+   * doc/en/lang.txt
+     + Documentation for HB_SETCODEPAGE()
+     * Some formating
+
 2004-05-14 16:05 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
    * include/hbexpra.c
