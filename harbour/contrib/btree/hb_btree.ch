@@ -33,6 +33,20 @@
  *
  */
 
+/* Changelog
+
+  * Changed, bla-bla
+  ! Fixed
+  % Optimized
+  + Added
+  - Removed
+  ; Comment
+
+  * contrib/btree/hb_btree.ch
+    - comments from around 'inmemory' definition
+
+*/
+
 #ifndef HB_BTREE_CH
 #define HB_BTREE_CH
 
@@ -45,10 +59,7 @@
 
 #define HB_BTREE_UNIQUE    128
 #define HB_BTREE_CASELESS  256
-
-/*
-#define HB_BTREE_INMEMORY  512  *  do not use!  *
-*/
+#define HB_BTREE_INMEMORY  512
 
 #define HB_BTREEINFO_ALL       0
 #define HB_BTREEINFO_FILENAME  1

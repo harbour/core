@@ -31,7 +31,7 @@ Procedure TTest()
     n:gotop()
     while .t.
       ? n:key(), n:data()
-      if 2 <> n:skip( 2 )
+      if 1 <> n:skip( 1 )
         exit
       endif
     end

@@ -8,6 +8,77 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-14 14:14 UTC+0500 April White <awhite@mail.rosecom.ca>
+  * contrib/btree/hb_btree.api
+    + extern "C"
+    * rename nFlags to ulFlags
+    + declaration for hb_BTreeDataItem()
+    * declaration for hb_BTreeInsert() to use a PHB_ITEM vs LONG
+
+  * contrib/btree/hb_btree.ch
+    - comments from around 'inmemory' definition
+
+  * contrib/btree/test/test.prg
+    + code to test in-memory tree, including passing floats vs longs
+
+  * contrib/btree/test/ctest.c
+    ! a SEEK call that was incorrectly failing because the
+      DATA param passed as 0
+    * hb_BTreeInsert() calls to use new form (PHB_ITEM vs long)
+
+  * contrib/btree/hb_btree.c
+    ; the following warnings are reported by BCC (thanks Alexander):
+        Suspicious pointer conversion in function hb_BTreeNew & hb_BTreeOpen
+          pBTree->pStrCompare = strncmp;
+        Parameter 'ulFlags' is never used in function hb_BTreeOpen
+    - defintion and use of DBG() macro
+    + extern "C" ifdef'd
+    - comments from around 'inmemory' definition
+    * renamed nFlags to ulFlags, lFlags to ulFlags, position to iPosition
+    * hb_btreenew [hi level] - when flag contains HB_BTREE_INMEMORY, first
+      parameter is ignored
+    * hb_btreenew [lo level] - when flag contains HB_BTREE_INMEMORY, dont
+      try to open the file, etc, and clear necessary fields
+    * hb_btreeclose [lo level] - close file and release file name only when
+      necessary
+    * only call HeaderWrite() when not in-memory tree
+    + ioOneBufferAlloc() - allocate one ioBuffer_T block, called by
+      ioBufferAlloc(), and Grow() when in-memory
+    * Grow() in-memory - add a page to the link list
+    + Prune() in-memory - added code to remove a page from the link list
+    * (assorted) IsDirty flag is assigned the tree property IsDirtyFlagAssignment,
+      so that in-memory trees never fire the write methods (ie. always false)
+    * hb_BTreeGoTop(), hb_BTreeGoBottom() [lo-level]
+      + bug fix: preserve last node found
+      + if tree is empty, clear key/data, else retrieve selected key/data
+    * ioBufferRead() - moved IsDirty reset within "if ( IsDirty )" block
+    * ioBufferScan() - call ioBufferRead() when not in-memory tree
+    - SearchNode() redundant BufferRelease() and return statement
+    - enum ExceptionTypes (not used)
+    - Buffer_T typedef struct, incorporating into the ioBuffer_T typedef struct
+    * hb_KeyData_T: replaced lData with a union lData/pData
+    + definition for hb_BTreeDataItem()
+    * definition for hb_BTreeInsert() to use a PHB_ITEM vs LONG
+    * hb_btreeinsert() [hi-level] accepts only number for file i/o and
+      any data type for in-memory
+    - macro SETKEYDATA(), placing equivalent code into hb_BTreeInsert()
+    + Prune() - release individial items and then the page itself
+    ! CountAdj() last param should have been SHORT not USHORT
+    ; RecDelete() moved the inline assignment & comparision around to remove
+      the b32 warning
+    TODO: find a solution to the 'Suspicious pointer conversion in function
+          hb_BTreeNew & hb_BTreeOpen' [strncmp() & hb_strncmp()]
+    TODO: impliment ulFlags within hb_btreeopen() - see warning above
+          - clear im-memory flag
+          - get unique flag from file header
+
+  * contrib/btree/doc/hb_btree.txt
+    * spelling corrections
+    * clarified use of HB_BTREE_INMEMORY flag with hb_BTreeNew() API
+    ! corrected type of pBTree params, from 'hb_BTree *' to 'struct hb_BTree *'
+    + definition for hb_BTreeDataItem()
+    * clarified use of data param and data return value
+
 2002-07-14 12:35 UTC+0100 Antonio Linares <alinares@fivetech.com>
   * source/debug/debugger.prg
     * Changes from Davor Siklic

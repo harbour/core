@@ -120,7 +120,7 @@
  *      hb_BTreeOpen() - when set, the file I/O mode FO_READONLY is used,
  *      preventing insertions or deletions to the BTree; if the BTree file
  *      has the read-only file attribute set, the flag HB_BTREE_EXCLUSIVE is
- *      assumed and activated internal API optimizations
+ *      assumed and activates internal API optimizations
  *
  *      HB_BTREE_EXCLUSIVE - when set, the file I/O mode FO_EXCLUSIVE is used,
  *      preventing shared access, and activates internal API optimizations
@@ -133,7 +133,8 @@
  *      BTree control flags:
  *
  *      HB_BTREE_UNIQUE - when set, the key and data together determine uniqueness;
- *      when not set, the key alone determines uniqueness.
+ *      when not set, the key alone determines uniqueness.  This flag cannot
+ *      be used with the HB_BTREE_INMEMORY flag!
  *
  *      HB_BTREE_CASELESS - when set, comparison of keys is done in a case-insensitive
  *      manner; when not set, comparisons are case sensitive
@@ -142,7 +143,8 @@
  *      in memory; when not set, the BTree is built and maintained as a file.
  *      The use of this flag precludes the use of the creation/access flags listed
  *      above - an in-memory BTree cannot be shared, made read-only, and is also
- *      exclusive by definition
+ *      exclusive by definition.  This flag cannot be used with hb_BTreeOpen().
+ *      This flag is mutually exclusive of the HB_BTREE_UNIQUE.
  *  $SEEALSO$
  *      hb_BTreeNew(), hb_BTreeOpen()
  *  $END$
@@ -159,7 +161,7 @@
  *      C Prototype
  *
  *      #include "hb_btree.api"
- *      hb_BTreeNew( CHAR <cFileName>, int <nPageSize>, int <nKeySize>, [ ULONG <nFlags> ], [ USHORT <nBuffers>=1 ] ) -> ( hb_BTree * )pHBTree
+ *      hb_BTreeNew( CHAR <cFileName>, int <nPageSize>, int <nKeySize>, [ ULONG <nFlags> ], [ USHORT <nBuffers>=1 ] ) -> ( struct hb_BTree * )pHBTree
  *
  *      Harbour Prototype
  *
@@ -169,7 +171,8 @@
  *
  *      TBTreeNew( CHAR <cFileName>, <nPageSize>, <nKeySize>, [ <nFlags> ], [ <nBuffers>=1 ] ) -> <tBTreeInstance>
  *  $ARGUMENTS$
- *      <cFileName> Name of BTree file to create
+ *      <cFileName> Name of BTree file to create.  This parameter is optional
+ *      if the flag HB_BTREE_INMEMORY is used
  *
  *      <nPageSize> Number of bytes one file 'page' is to be; must be a multiple of 2048.
  *      If the hb_btree library is compiled with the value HB_BTREE_HEADERSIZE
@@ -197,8 +200,9 @@
  *  $EXAMPLES$
  *
  *  $FILES$
- *      Library is hb_btree
- *      Header is hb_btree.api
+ *      Library is hb_btree</par>
+ *      Header is hb_btree.ch</par>
+ *      C Header is hb_btree.api</par>
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
@@ -217,7 +221,7 @@
  *      C Prototype
  *
  *      #include "hb_btree.api"
- *      hb_BTreeOpen( CHAR <cFileName>, [ ULONG <nFlags> ], [ USHORT <nBuffers>=1 ] ] ) -> ( hb_BTree * )pHBTree
+ *      hb_BTreeOpen( CHAR <cFileName>, [ ULONG <nFlags> ], [ USHORT <nBuffers>=1 ] ] ) -> ( struct hb_BTree * )pHBTree
  *
  *      Harbour Prototype
  *
@@ -249,8 +253,9 @@
  *  $EXAMPLES$
  *
  *  $FILES$
- *      Library is hb_btree
- *      Header is hb_btree.api
+ *      Library is hb_btree</par>
+ *      Header is hb_btree.ch</par>
+ *      C Header is hb_btree.api</par>
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
@@ -269,7 +274,7 @@
  *      C Prototype
  *
  *      #include "hb_btree.api"
- *      hb_BTreeClose( hb_BTree * <pBTree> ) -> NIL
+ *      hb_BTreeClose( struct hb_BTree * <pBTree> ) -> NIL
  *
  *      Harbour Prototype
  *
@@ -297,8 +302,9 @@
  *  $EXAMPLES$
  *
  *  $FILES$
- *      Library is hb_btree
- *      Header is hb_btree.api
+ *      Library is hb_btree</par>
+ *      Header is hb_btree.ch</par>
+ *      C Header is hb_btree.api</par>
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
@@ -317,15 +323,15 @@
  *      C Prototype
  *
  *      #include "hb_btree.api"
- *      hb_BTreeInsert( hb_BTree * <pBTree>, CHAR <cKey>, LONG <lData> ) -> <lSuccess>
+ *      hb_BTreeInsert( struct hb_BTree * <pBTree>, CHAR <cKey>, LONG <lData> ) -> <lSuccess>
  *
  *      Harbour Prototype
  *
- *      hb_BTreeInsert( <hb_BTree_Handle>, <cKey>, <lData> ) -> <lSuccess>
+ *      hb_BTreeInsert( <hb_BTree_Handle>, <cKey>, <lData> | <xData> ) -> <lSuccess>
  *
  *      Harbour Class Prototype
  *
- *      <tBTreeInstance>:Insert( <cKey>, <lData> ) -> <lSuccess>
+ *      <tBTreeInstance>:Insert( <cKey>, <lData> | <xData> ) -> <lSuccess>
  *  $ARGUMENTS$
  *      C Prototype
  *
@@ -341,7 +347,8 @@
  *
  *      <cKey> A string, representing a key value to be inserted
  *
- *      <lData> A numeric data value to associate with the <cKey> value
+ *      <lData> A numeric data value to associate with the <cKey> value, or </par>
+ *      <xData> Any value to associate with the <cKey> value
  *
  *      Harbour Class Prototype
  *
@@ -349,7 +356,8 @@
  *
  *      <cKey> A string, representing a key value to be inserted
  *
- *      <lData> A numeric data value to associate with the <cKey> value
+ *      <lData> A numeric data value to associate with the <cKey> value, or </par>
+ *      <xData> Any value to associate with the <cKey> value
  *  $RETURNS$
  *      <lSuccess> Logical value indicating whether the operation succeeded
  *  $DESCRIPTION$
@@ -357,8 +365,9 @@
  *  $EXAMPLES$
  *
  *  $FILES$
- *      Library is hb_btree
- *      Header is hb_btree.api
+ *      Library is hb_btree</par>
+ *      Header is hb_btree.ch</par>
+ *      C Header is hb_btree.api</par>
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
@@ -377,7 +386,7 @@
  *      C Prototype
  *
  *      #include "hb_btree.api"
- *      hb_BTreeDelete( hb_BTree * <pBTree>, CHAR <cKey>, LONG <lData> ) -> <lSuccess>
+ *      hb_BTreeDelete( struct hb_BTree * <pBTree>, CHAR <cKey>, LONG <lData> ) -> <lSuccess>
  *
  *      Harbour Prototype
  *
@@ -417,8 +426,9 @@
  *  $EXAMPLES$
  *
  *  $FILES$
- *      Library is hb_btree
- *      Header is hb_btree.api
+ *      Library is hb_btree</par>
+ *      Header is hb_btree.ch</par>
+ *      C Header is hb_btree.api</par>
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
@@ -437,7 +447,7 @@
  *      C Prototype
  *
  *      #include "hb_btree.api"
- *      hb_BtreeKey( hb_BTree * <pBTree> ) -> CHAR <cKey>
+ *      hb_BtreeKey( struct hb_BTree * <pBTree> ) -> CHAR <cKey>
  *
  *      Harbour Prototype
  *
@@ -475,8 +485,9 @@
  *  $EXAMPLES$
  *
  *  $FILES$
- *      Library is hb_btree
- *      Header is hb_btree.api
+ *      Library is hb_btree</par>
+ *      Header is hb_btree.ch</par>
+ *      C Header is hb_btree.api</par>
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
@@ -495,15 +506,15 @@
  *      C Prototype
  *
  *      #include "hb_btree.api"
- *      hb_BtreeData( hb_BTree * <pBTree> ) -> LONG <lData>
+ *      hb_BtreeData( struct hb_BTree * <pBTree> ) -> LONG <lData>
  *
  *      Harbour Prototype
  *
- *      hb_BtreeData( <hb_BTree_Handle> ) -> <lData>
+ *      hb_BtreeData( <hb_BTree_Handle> ) -> <lData> | <xData>
  *
  *      Harbour Class Prototype
  *
- *      <tBTreeInstance>:Data() -> <lData>
+ *      <tBTreeInstance>:Data() -> <lData> | <xData>
  *  $ARGUMENTS$
  *      C Prototype
  *
@@ -523,22 +534,53 @@
  *
  *      Harbour Prototype
  *
- *      <lData> The numeric value associated with the active key
+ *      <lData> The numeric value associated with the active key, or</par>
+ *      <xData> The value associated with an active key of an in-memory btree
  *
  *      Harbour Class Prototype
  *
- *      <lData> The numeric value associated with the active key
+ *      <lData> The numeric value associated with the active key, or</par>
+ *      <xData> The value associated with an active key of an in-memory btree
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
  *
  *  $FILES$
- *      Library is hb_btree
- *      Header is hb_btree.api
+ *      Library is hb_btree</par>
+ *      Header is hb_btree.ch</par>
+ *      C Header is hb_btree.api</par>
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
+ *      hb_BtreeDataItem()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_BtreeDataItem()
+ *  $CATEGORY$
+ *      BTree C API
+ *  $ONELINER$
+ *      Returns the active data value for an active BTree file
+ *  $SYNTAX$
+ *      #include "hb_btree.api"
+ *      hb_BtreeDataItem( struct hb_BTree * <pBTree> ) -> PHB_ITEM <xData>
+ *  $ARGUMENTS$
+ *      <pBTree> A pointer to an hb_BTree structure, returned from hb_BTreeOpen() or hb_BTreeNew()
+ *  $RETURNS$
+ *      <xData> A pointer to a constant PHB_ITEM value, or NIL if none was assigned
+ *  $DESCRIPTION$
  *
+ *  $EXAMPLES$
+ *
+ *  $FILES$
+ *      Library is hb_btree</par>
+ *      C Header is hb_btree.api</par>
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_BtreeData()
  *  $END$
  */
 
@@ -553,7 +595,7 @@
  *      C Prototype
  *
  *      #include "hb_btree.api"
- *      hb_BTreeGoTop( hb_BTree * <pBTree> ) -> void
+ *      hb_BTreeGoTop( struct hb_BTree * <pBTree> ) -> void
  *
  *      Harbour Prototype
  *
@@ -581,8 +623,9 @@
  *  $EXAMPLES$
  *
  *  $FILES$
- *      Library is hb_btree
- *      Header is hb_btree.api
+ *      Library is hb_btree</par>
+ *      Header is hb_btree.ch</par>
+ *      C Header is hb_btree.api</par>
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
@@ -601,7 +644,7 @@
  *      C Prototype
  *
  *      #include "hb_btree.api"
- *      hb_BTreeGoBottom( hb_BTree * <pBTree> ) -> void
+ *      hb_BTreeGoBottom( struct hb_BTree * <pBTree> ) -> void
  *
  *      Harbour Prototype
  *
@@ -629,8 +672,9 @@
  *  $EXAMPLES$
  *
  *  $FILES$
- *      Library is hb_btree
- *      Header is hb_btree.api
+ *      Library is hb_btree</par>
+ *      Header is hb_btree.ch</par>
+ *      C Header is hb_btree.api</par>
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
@@ -649,7 +693,7 @@
  *      C Prototype
  *
  *      #include "hb_btree.api"
- *      hb_BTreeSkip( hb_BTree * <pBTree>, LONG <nRecords> ) -> LONG <nRecordsSkipped>
+ *      hb_BTreeSkip( struct hb_BTree * <pBTree>, LONG <nRecords> ) -> LONG <nRecordsSkipped>
  *
  *      Harbour Prototype
  *
@@ -683,8 +727,9 @@
  *  $EXAMPLES$
  *
  *  $FILES$
- *      Library is hb_btree
- *      Header is hb_btree.api
+ *      Library is hb_btree</par>
+ *      Header is hb_btree.ch</par>
+ *      C Header is hb_btree.api</par>
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
@@ -703,7 +748,7 @@
  *      C Prototype
  *
  *      #include "hb_btree.api"
- *      hb_BTreeSeek( hb_BTree * <pBTree>, CHAR <cKey>, LONG <lData>, BOOL <lSoftSeek> ) -> BOOL <lSuccess>
+ *      hb_BTreeSeek( struct hb_BTree * <pBTree>, CHAR <cKey>, LONG <lData>, BOOL <lSoftSeek> ) -> BOOL <lSuccess>
  *
  *      Harbour Prototype
  *
@@ -719,7 +764,9 @@
  *
  *      <cKey> A pointer to a CHAR buffer containing the key to locate
  *
- *      <lData> The long value associated with the key
+ *      <lData> The long value associated with the key.  This may be passed as 0
+ *      if the flag HB_BTREE_UNIQUE is not used (which is also implied when the
+ *      flag HB_BTREE_INMEMORY is used)
  *
  *      <lSoftSeek> Optional.  Is a 'soft seek' method to be used?
  *
@@ -729,7 +776,9 @@
  *
  *      <cKey> A string containing the key to locate
  *
- *      <lData> The long value associated with the key
+ *      <lData> The long value associated with the key.  This may be passed as 0
+ *      if the flag HB_BTREE_UNIQUE is not used (which is also implied when the
+ *      flag HB_BTREE_INMEMORY is used)
  *
  *      <lSoftSeek> Optional.  Is a 'soft seek' method to be used?
  *
@@ -739,7 +788,9 @@
  *
  *      <cKey> A string containing the key to locate
  *
- *      <lData> The long value associated with the key
+ *      <lData> The long value associated with the key.  This may be passed as 0
+ *      if the flag HB_BTREE_UNIQUE is not used (which is also implied when the
+ *      flag HB_BTREE_INMEMORY is used)
  *
  *      <lSoftSeek> Optional.  Is a 'soft seek' method to be used?
  *  $RETURNS$
@@ -751,8 +802,9 @@
  *  $EXAMPLES$
  *
  *  $FILES$
- *      Library is hb_btree
- *      Header is hb_btree.api
+ *      Library is hb_btree</par>
+ *      Header is hb_btree.ch</par>
+ *      C Header is hb_btree.api</par>
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
@@ -780,15 +832,15 @@
  *
  *      <hb_BTree_Handle> A handle, returned from hb_BTreeOpen() or hb_BTreeNew()
  *
- *      <nIndex> Optional.  One of:
- *        HB_BTREEINFO_ALL (0) - default value
- *        HB_BTREEINFO_FILENAME (1)
- *        HB_BTREEINFO_PAGESIZE (2)
- *        HB_BTREEINFO_KEYSIZE (3)
- *        HB_BTREEINFO_MAXKEYS (4)
- *        HB_BTREEINFO_MINKEYS (5)
- *        HB_BTREEINFO_FLAGS (6)
- *        HB_BTREEINFO_KEYCOUNT (7)
+ *      <nIndex> Optional.  One of:</par>
+ *        HB_BTREEINFO_ALL (0) - default value</par>
+ *        HB_BTREEINFO_FILENAME (1)</par>
+ *        HB_BTREEINFO_PAGESIZE (2)</par>
+ *        HB_BTREEINFO_KEYSIZE (3)</par>
+ *        HB_BTREEINFO_MAXKEYS (4)</par>
+ *        HB_BTREEINFO_MINKEYS (5)</par>
+ *        HB_BTREEINFO_FLAGS (6)</par>
+ *        HB_BTREEINFO_KEYCOUNT (7)</par>
  *
  *      Harbour Class Prototype
  *
@@ -806,8 +858,9 @@
  *  $EXAMPLES$
  *
  *  $FILES$
- *      Library is hb_btree
- *      Header is hb_btree.api
+ *      Library is hb_btree</par>
+ *      Header is hb_btree.ch</par>
+ *      C Header is hb_btree.api</par>
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$

@@ -1,4 +1,4 @@
-*
+/*
  * $Id$
  */
 
@@ -8,11 +8,85 @@
 
 Procedure Main()
   local n, a
+  local c
 
   if fileattr( "test_1.out") = 1 + 32
     setfattr( "test_1.out", 32 )
     ferase( "test_1.out" )
   endif
+
+  ? "Harbour API test: in-memory"
+  n := hb_btreenew( , 2048, 90, HB_BTREE_READONLY + HB_BTREE_INMEMORY )
+  if n > 0
+    ? "successfully opened"
+    insertdata( n, 100 )
+    ? "# keys", hb_btreeinfo( n, HB_BTREEINFO_KEYCOUNT )
+
+    ? "skip to EOF test"
+    hb_btreegobottom( n )
+    ? hb_btreekey( n ), hb_btreedata( n )
+    ? hb_btreeskip( n, 1 )
+    ? "skip to EOF test end"
+
+    ? "Forward traversal"
+    hb_btreegotop( n )
+    c := 0
+    while .t.
+      ? hb_btreekey( n ), hb_btreedata( n ), ++c
+      if 1 <> hb_btreeskip( n, 1 )// .or. c == hb_btreeinfo( n, HB_BTREEINFO_KEYCOUNT )-1
+        exit
+      endif
+    end
+    ? "Forward traversal end"
+    ?
+
+    ? "Reverse traversal"
+    hb_btreegobottom( n )
+    c := 0
+    while .t.
+      ? hb_btreekey( n ), hb_btreedata( n ), ++c
+      if -1 <> hb_btreeskip( n, -1 )// .or. c == hb_btreeinfo( n, HB_BTREEINFO_KEYCOUNT )-1
+        exit
+      endif
+    end
+    ? "Reverse traversal end"
+    ?
+
+    ? "Test SEEK of 'cdntyzrf'"
+    ? hb_btreeseek( n, "cdntyzrf" )
+    ? hb_btreekey( n ), hb_btreedata( n )
+    hb_btreeskip( n, 1 )
+    ? hb_btreekey( n ), hb_btreedata( n ), "dmfmivqb  ?"
+
+    ?
+    ? "Test soft SEEK of short key 'cd'"
+    ? hb_btreeseek( n, "cd", , .t. )
+    ? hb_btreekey( n ), hb_btreedata( n )
+    hb_btreeskip( n, 1 )
+    ? hb_btreekey( n ), hb_btreedata( n ), "dmfmivqb  ?"
+
+    ?
+    ? "Test soft SEEK of an existing key 'cdntyzrf'"
+    ? hb_btreeseek( n, "cdntyzrf", , .t. )
+    ? hb_btreekey( n ), hb_btreedata( n )
+    hb_btreeskip( n, 1 )
+    ? hb_btreekey( n ), hb_btreedata( n ), "dmfmivqb  ?"
+
+    ?
+    ? "Test soft SEEK of a missing key, that should force EOF ('zzzzzz')"
+    ? hb_btreeseek( n, "zzzzzz" )
+    ? hb_btreekey( n ), hb_btreedata( n )
+    hb_btreeskip( n, 1 )
+    ? hb_btreekey( n ), hb_btreedata( n ), "dmfmivqb  ?"
+
+    ?
+    hb_btreeclose( n )
+  else
+    ? "error / failure"
+    wait
+  endif
+
+  ? "Harbour API test: in-memory end"
 
   ? "Harbour API test"
   n := hb_btreenew( "test_1.out", 2048, 90, HB_BTREE_READONLY )
@@ -35,9 +109,10 @@ Procedure Main()
     ?
     ? "Forward traversal"
     hb_btreegotop( n )
+    c := 0
     while .t.
-      ? hb_btreekey( n ), hb_btreedata( n )
-      if 2 <> hb_btreeskip( n, 2 )
+      ? hb_btreekey( n ), hb_btreedata( n ), ++c
+      if 1 <> hb_btreeskip( n, 1 )
         exit
       endif
     end
@@ -45,8 +120,9 @@ Procedure Main()
     ?
     ? "Reverse traversal"
     hb_btreegobottom( n )
+    c := 0
     while .t.
-      ? hb_btreekey( n ), hb_btreedata( n )
+      ? hb_btreekey( n ), hb_btreedata( n ), ++c
       if -1 <> hb_btreeskip( n, -1 )
         exit
       endif
@@ -61,7 +137,7 @@ Procedure Main()
 
     ?
     ? "Test soft SEEK of a short key"
-    ? hb_btreeseek( n, "cd", ,.t. )
+    ? hb_btreeseek( n, "cd", , .t. )
     ? hb_btreekey( n ), hb_btreedata( n )
     hb_btreeskip( n, 1 )
     ? hb_btreekey( n ), hb_btreedata( n ), "dmfmivqb  ?"
@@ -121,87 +197,88 @@ Procedure Main()
 
 return
 
-static procedure insertdata( n )
-  hb_btreeinsert( n, "fuweqgsz",  1 )
-  hb_btreeinsert( n, "sjruexrd",  2 )
-  hb_btreeinsert( n, "fvveitnz",  3 )
-  hb_btreeinsert( n, "aqgksjxe",  4 )
-  hb_btreeinsert( n, "oonrehvj",  5 )
-  hb_btreeinsert( n, "gvowjwtr",  6 )
-  hb_btreeinsert( n, "xxidwtvn",  7 )
-  hb_btreeinsert( n, "rwjbxesd",  8 )
-  hb_btreeinsert( n, "yaznsaek",  9 )
-  hb_btreeinsert( n, "wbdhfkfy", 10 )
-  hb_btreeinsert( n, "lryaezia", 11 )
-  hb_btreeinsert( n, "tspmnrvk", 12 )
-  hb_btreeinsert( n, "hpxryhdj", 13 )
-  hb_btreeinsert( n, "sztcqaby", 14 )
-  hb_btreeinsert( n, "fcyzsqja", 15 )
-  hb_btreeinsert( n, "uccxumvg", 16 )
-  hb_btreeinsert( n, "amwuoout", 17 )
-  hb_btreeinsert( n, "yaytseln", 18 )
-  hb_btreeinsert( n, "sfiiozej", 19 )
-  hb_btreeinsert( n, "xuvsoljy", 20 )
-  hb_btreeinsert( n, "qmqjbedm", 21 )
-  hb_btreeinsert( n, "cctzzrkz", 22 )
-  hb_btreeinsert( n, "ikytgdon", 23 )
-  hb_btreeinsert( n, "pksobcwu", 24 )
-  hb_btreeinsert( n, "vmurindj", 25 )
-  hb_btreeinsert( n, "elvybqwg", 26 )
-  hb_btreeinsert( n, "ixchaztx", 27 )
-  hb_btreeinsert( n, "nzpztlhd", 28 )
-  hb_btreeinsert( n, "aucrchiw", 29 )
-  hb_btreeinsert( n, "munrytse", 30 )
-  hb_btreeinsert( n, "kqkhcmls", 31 )
-  hb_btreeinsert( n, "abqhurbi", 32 )
-  hb_btreeinsert( n, "ymrldckr", 33 )
-  hb_btreeinsert( n, "rhsmfflc", 34 )
-  hb_btreeinsert( n, "apyfkvee", 35 )
-  hb_btreeinsert( n, "cdntyzrf", 36 )
-  hb_btreeinsert( n, "iacblqrh", 37 )
-  hb_btreeinsert( n, "xvewqana", 38 )
-  hb_btreeinsert( n, "xmybqytj", 39 )
-  hb_btreeinsert( n, "dnowympf", 40 )
-  hb_btreeinsert( n, "smloihft", 41 )
-  hb_btreeinsert( n, "zumppmis", 42 )
-  hb_btreeinsert( n, "jirucnxu", 43 )
-  hb_btreeinsert( n, "ecdzikcv", 44 )
-  hb_btreeinsert( n, "slbwvnpg", 45 )
-  hb_btreeinsert( n, "yaftlkmz", 46 )
-  hb_btreeinsert( n, "blcepksd", 47 )
-  hb_btreeinsert( n, "xufowlpl", 48 )
-  hb_btreeinsert( n, "xegtjtqc", 49 )
-  hb_btreeinsert( n, "yplcqumq", 50 )
-  hb_btreeinsert( n, "vdoycauz", 51 )
-  hb_btreeinsert( n, "uhqkjuph", 52 )
-  hb_btreeinsert( n, "prllaeyi", 53 )
-  hb_btreeinsert( n, "ybzgmwzm", 54 )
-  hb_btreeinsert( n, "kkvyllnp", 55 )
-  hb_btreeinsert( n, "nberwsrb", 56 )
-  hb_btreeinsert( n, "wgetahua", 57 )
-  hb_btreeinsert( n, "yxcyehcv", 58 )
-  hb_btreeinsert( n, "oacormks", 59 )
-  hb_btreeinsert( n, "mcadkdxo", 60 )
-  hb_btreeinsert( n, "ycsalwqw", 61 )
-  hb_btreeinsert( n, "qmpysvjl", 62 )
-  hb_btreeinsert( n, "iqikamew", 63 )
-  hb_btreeinsert( n, "iaparrva", 64 )
-  hb_btreeinsert( n, "casbvtay", 65 )
-  hb_btreeinsert( n, "blaksexr", 66 )
-  hb_btreeinsert( n, "tbosrbql", 67 )
-  hb_btreeinsert( n, "ifkywsyt", 68 )
-  hb_btreeinsert( n, "gvklwevy", 69 )
-  hb_btreeinsert( n, "krpmpbud", 70 )
-  hb_btreeinsert( n, "rdvlwbwm", 71 )
-  hb_btreeinsert( n, "apnvdkww", 72 )
-  hb_btreeinsert( n, "euqdocvm", 73 )
-  hb_btreeinsert( n, "ksmkjcwp", 74 )
-  hb_btreeinsert( n, "bztgclzc", 75 )
-  hb_btreeinsert( n, "awkdnuxa", 76 )
-  hb_btreeinsert( n, "abavnpod", 77 )
-  hb_btreeinsert( n, "dvwvhjmh", 78 )
-  hb_btreeinsert( n, "dmfmivqb", 79 )
-  hb_btreeinsert( n, "ewsxanon", 80 )
+static procedure insertdata( n, s )
+  if s == NIL ; s := 1; endif
+  hb_btreeinsert( n, "fuweqgsz",  1 / s )
+  hb_btreeinsert( n, "sjruexrd",  2 / s )
+  hb_btreeinsert( n, "fvveitnz",  3 / s )
+  hb_btreeinsert( n, "aqgksjxe",  4 / s )
+  hb_btreeinsert( n, "oonrehvj",  5 / s )
+  hb_btreeinsert( n, "gvowjwtr",  6 / s )
+  hb_btreeinsert( n, "xxidwtvn",  7 / s )
+  hb_btreeinsert( n, "rwjbxesd",  8 / s )
+  hb_btreeinsert( n, "yaznsaek",  9 / s )
+  hb_btreeinsert( n, "wbdhfkfy", 10 / s )
+  hb_btreeinsert( n, "lryaezia", 11 / s )
+  hb_btreeinsert( n, "tspmnrvk", 12 / s )
+  hb_btreeinsert( n, "hpxryhdj", 13 / s )
+  hb_btreeinsert( n, "sztcqaby", 14 / s )
+  hb_btreeinsert( n, "fcyzsqja", 15 / s )
+  hb_btreeinsert( n, "uccxumvg", 16 / s )
+  hb_btreeinsert( n, "amwuoout", 17 / s )
+  hb_btreeinsert( n, "yaytseln", 18 / s )
+  hb_btreeinsert( n, "sfiiozej", 19 / s )
+  hb_btreeinsert( n, "xuvsoljy", 20 / s )
+  hb_btreeinsert( n, "qmqjbedm", 21 / s )
+  hb_btreeinsert( n, "cctzzrkz", 22 / s )
+  hb_btreeinsert( n, "ikytgdon", 23 / s )
+  hb_btreeinsert( n, "pksobcwu", 24 / s )
+  hb_btreeinsert( n, "vmurindj", 25 / s )
+  hb_btreeinsert( n, "elvybqwg", 26 / s )
+  hb_btreeinsert( n, "ixchaztx", 27 / s )
+  hb_btreeinsert( n, "nzpztlhd", 28 / s )
+  hb_btreeinsert( n, "aucrchiw", 29 / s )
+  hb_btreeinsert( n, "munrytse", 30 / s )
+  hb_btreeinsert( n, "kqkhcmls", 31 / s )
+  hb_btreeinsert( n, "abqhurbi", 32 / s )
+  hb_btreeinsert( n, "ymrldckr", 33 / s )
+  hb_btreeinsert( n, "rhsmfflc", 34 / s )
+  hb_btreeinsert( n, "apyfkvee", 35 / s )
+  hb_btreeinsert( n, "cdntyzrf", 36 / s )
+  hb_btreeinsert( n, "iacblqrh", 37 / s )
+  hb_btreeinsert( n, "xvewqana", 38 / s )
+  hb_btreeinsert( n, "xmybqytj", 39 / s )
+  hb_btreeinsert( n, "dnowympf", 40 / s )
+  hb_btreeinsert( n, "smloihft", 41 / s )
+  hb_btreeinsert( n, "zumppmis", 42 / s )
+  hb_btreeinsert( n, "jirucnxu", 43 / s )
+  hb_btreeinsert( n, "ecdzikcv", 44 / s )
+  hb_btreeinsert( n, "slbwvnpg", 45 / s )
+  hb_btreeinsert( n, "yaftlkmz", 46 / s )
+  hb_btreeinsert( n, "blcepksd", 47 / s )
+  hb_btreeinsert( n, "xufowlpl", 48 / s )
+  hb_btreeinsert( n, "xegtjtqc", 49 / s )
+  hb_btreeinsert( n, "yplcqumq", 50 / s )
+  hb_btreeinsert( n, "vdoycauz", 51 / s )
+  hb_btreeinsert( n, "uhqkjuph", 52 / s )
+  hb_btreeinsert( n, "prllaeyi", 53 / s )
+  hb_btreeinsert( n, "ybzgmwzm", 54 / s )
+  hb_btreeinsert( n, "kkvyllnp", 55 / s )
+  hb_btreeinsert( n, "nberwsrb", 56 / s )
+  hb_btreeinsert( n, "wgetahua", 57 / s )
+  hb_btreeinsert( n, "yxcyehcv", 58 / s )
+  hb_btreeinsert( n, "oacormks", 59 / s )
+  hb_btreeinsert( n, "mcadkdxo", 60 / s )
+  hb_btreeinsert( n, "ycsalwqw", 61 / s )
+  hb_btreeinsert( n, "qmpysvjl", 62 / s )
+  hb_btreeinsert( n, "iqikamew", 63 / s )
+  hb_btreeinsert( n, "iaparrva", 64 / s )
+  hb_btreeinsert( n, "casbvtay", 65 / s )
+  hb_btreeinsert( n, "blaksexr", 66 / s )
+  hb_btreeinsert( n, "tbosrbql", 67 / s )
+  hb_btreeinsert( n, "ifkywsyt", 68 / s )
+  hb_btreeinsert( n, "gvklwevy", 69 / s )
+  hb_btreeinsert( n, "krpmpbud", 70 / s )
+  hb_btreeinsert( n, "rdvlwbwm", 71 / s )
+  hb_btreeinsert( n, "apnvdkww", 72 / s )
+  hb_btreeinsert( n, "euqdocvm", 73 / s )
+  hb_btreeinsert( n, "ksmkjcwp", 74 / s )
+  hb_btreeinsert( n, "bztgclzc", 75 / s )
+  hb_btreeinsert( n, "awkdnuxa", 76 / s )
+  hb_btreeinsert( n, "abavnpod", 77 / s )
+  hb_btreeinsert( n, "dvwvhjmh", 78 / s )
+  hb_btreeinsert( n, "dmfmivqb", 79 / s )
+  hb_btreeinsert( n, "ewsxanon", 80 / s )
 return
 
 /*
