@@ -91,7 +91,7 @@
          be ahead of any other #include statements! */
 #include "hbwinapi.h"
 
-#if defined(_Windows) || defined(WINNT)
+#if defined(_WINDOWS_) || defined(WINNT)
 #if ! defined(HARBOUR_USE_CRS_GTAPI) && ! defined(HARBOUR_USE_SLN_GTAPI)
    #define INPUT_BUFFER_LEN 128
    extern BOOL   hb_gtBreak;  /* This variable is located in source/rtl/gt/gtwin.c */
@@ -99,6 +99,7 @@
    static DWORD s_cNumRead = 0;   /* Ok to use DWORD here, because this is specific... */
    static DWORD s_cNumIndex = 0;  /* ...to the Windows API, which defines DWORD, etc.  */
    static INPUT_RECORD s_irInBuf[ INPUT_BUFFER_LEN ];
+   static SHORT xRowPos = 0, yRowPos = 0;
 #endif
 #endif
 
@@ -132,7 +133,7 @@
 #ifdef __WATCOMC__
    #include <conio.h>
    #include <i86.h>
-   #if defined(__386__) && !defined(__WINDOWS_386__)
+   #if defined(__386__) && !defined(__WINDOWS__386__)
       #define INT_86 int386
       #define DOS_REGS REGS
    #else
@@ -196,7 +197,7 @@ static HB_inkey_enum s_eventmask;
 void hb_releaseCPU( void )
 {
 /* TODO: Add code to release time slices on all platforms */
-#if defined(_Windows) || defined(__MINGW32__)
+#if defined(_WINDOWS_) || defined(__MINGW32__)
    /* according to ms docs, you should not do this in a Win app. dos only */
 #elif defined(OS2)
    DosSleep( 25 ); /* Duration is in milliseconds */
@@ -325,7 +326,7 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
 #elif defined(OS_UNIX_COMPATIBLE)
       if( ! read( STDIN_FILENO, &ch, 1 ) )
          ch = 0;
-#elif defined(_Windows) || defined(WINNT)
+#elif defined(_WINDOWS_) || defined(WINNT)
       /* First check for Ctrl+Break, which is handled by gt/gtwin.c */
       if( hb_gtBreak )
       {
@@ -354,7 +355,6 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
       /* Only process one keyboard event at a time. */
       if( s_cNumRead > s_cNumIndex )
       {
-         /* Only process keyboard events for now... */
          if( s_irInBuf[ s_cNumIndex ].EventType == KEY_EVENT )
          {
             /* Only process key down events */
@@ -494,7 +494,7 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
                                  break;
                               case 79: /* End */
                                  ch = K_CTRL_END;
-                                 break; 
+                                 break;
                               case 80: /* Down */
                                  ch = K_CTRL_DOWN;
                                  break;
@@ -648,11 +648,27 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
 #endif
             }
          }
+         else if( s_irInBuf[ s_cNumIndex ].EventType == MOUSE_EVENT )
+         {
+            xRowPos = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.X;
+            yRowPos = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.Y;
+
+            if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == MOUSE_MOVED )
+               ch = K_MOUSEMOVE;
+
+            else if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState &
+                     FROM_LEFT_1ST_BUTTON_PRESSED )
+               ch = K_LBUTTONDOWN;
+
+            else if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState &
+                     RIGHTMOST_BUTTON_PRESSED )
+               ch = K_RBUTTONDOWN;
+         }
          /* Set up to process the next input event (if any) */
          s_cNumIndex++;
       }
 #elif defined(OS_DOS_COMPATIBLE) || defined(HARBOUR_GCC_OS2) || defined(__IBMCPP__)
-   /* The reason for including _Windows here is that kbhit() and getch() appear
+   /* The reason for including _WINDOWS_ here is that kbhit() and getch() appear
      to work properly in console mode. For true Windows mode, changes are needed. */
    #if defined(HARBOUR_GCC_OS2)
       /* Read from the keyboard with no echo, no wait, and no SIGSEV on Ctrl-C */
@@ -1104,6 +1120,72 @@ HARBOUR HB___KEYPUT( void )
 {
    if( ISNUM( 1 ) )
       hb_inkeyPut( hb_parni( 1 ) );
+}
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      MCOL()
+ *  $CATEGORY$
+ *      Console input
+ *  $ONELINER$
+ *       Returns the mouse cursor column position
+ *  $SYNTAX$
+ *      MCol() --> nMouseColumn
+ *  $ARGUMENTS$
+ *      None
+ *  $RETURNS$
+ *      The mouse cursor column position
+ *  $DESCRIPTION$
+ *  $EXAMPLES$
+ *     local nKey
+ *     nKey = InKey( 0 )
+ *     do case
+ *        case nKey ==
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *  $SEEALSO$
+ *      MROW()
+ *  $END$
+ */
+
+HARBOUR HB_MCOL( void )
+{
+   hb_retnl( yRowPos );
+}
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      MROW()
+ *  $CATEGORY$
+ *      Console input
+ *  $ONELINER$
+ *       Returns the mouse cursor row position
+ *  $SYNTAX$
+ *      MRow() --> nMouseColumn
+ *  $ARGUMENTS$
+ *      None
+ *  $RETURNS$
+ *      The mouse cursor column position
+ *  $DESCRIPTION$
+ *  $EXAMPLES$
+ *     local nKey
+ *     nKey = InKey( 0 )
+ *     do case
+ *        case nKey ==
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *  $SEEALSO$
+ *      MCOL()
+ *  $END$
+ */
+
+HARBOUR HB_MROW( void )
+{
+   hb_retnl( xRowPos );
 }
 
 /*  $DOC$

@@ -141,7 +141,7 @@ void hb_gt_Init( void )
    }
 
    if( hb_gtHInput != INVALID_HANDLE_VALUE )
-      SetConsoleMode( hb_gtHInput, 0 );
+      SetConsoleMode( hb_gtHInput, ENABLE_MOUSE_INPUT );
 
    /* ptucker */
    s_HOriginal = CreateFile( "CONOUT$",     /* filename    */
@@ -708,4 +708,3 @@ void hb_gt_DebugScreen( BOOL bActivate )
    }
    SetConsoleActiveScreenBuffer( s_HOutput );
 }
-
