@@ -7,6 +7,21 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * include/hbtypes.h
+     ! Fixed CVS header and self guard.
+
+2001-12-31 18:00 UTC+0700 Andi Jahja <harbour@cbn.net.id>
+   * source/vm/maindllp.c
+     ! commented unused iReturn variables
+     ! BOOL WINAPI HB_EXPORT => BOOL HB_EXPORT WINAPI
+   * include/hbapi.h
+     ! extern * HB_EXPORT => extern HB_EXPORT *
+
+2001-12-30 14:35 UTC-0300 Luiz Rafael Culik <culik@sl.conex.net>
+   * source/vm/maindllp.c
+     * Added FM api functions hb_xyy()
+     % added somes cast to quite Borland
+   * include/hbtypes.h
      * Added declaration for FM api functons
    * source/vm/fm.c
      include/hbapi.h

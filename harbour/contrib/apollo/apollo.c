@@ -134,11 +134,46 @@ HB_FUNC( SX_EOF )
 
 
 /* -----------------29/12/2001 20:13-----------------
+ * sx_GetDateJulian() => The date expressed as a long integer. Useful for date arithmetic.
+ * Extracts the contents of a date field as a Julian number.
+ * This number is equal to the number of days since January 1, 4713 BC.
+ * However, only JULIAN dates equal or greater than January 1, 1000 are supported.
+ * --------------------------------------------------*/
+HB_FUNC( SX_GETDATEJULIAN )
+{
+   hb_retni(
+    sx_GetDateJulian( hb_parc( 1 ) ) );    /* Field name  */
+}
+
+
+/* -----------------30/12/2001 13:04-----------------
+ * sx_GetLogical() => True if the field evaluates as True, and False if not.
+ * Determines whether a logical field contains a True or False value.
+ * --------------------------------------------------*/
+HB_FUNC( SX_GETLOGICAL )
+{
+   hb_retl(
+    sx_GetLogical( hb_parc( 1 ) ) );       /* Field name  */
+}
+
+
+/* -----------------29/12/2001 20:13-----------------
  * sx_GetString()
  * --------------------------------------------------*/
 HB_FUNC( SX_GETSTRING )
 {
-   hb_retc( ( char * )sx_GetString( hb_parc( 1 ) ) );  /* Field name  */
+   hb_retc(
+    ( char * )sx_GetString( hb_parc( 1 ) ) );  /* Field name  */
+}
+
+
+/* -----------------30/12/2001 12:21-----------------
+ * sx_GetVariant() => Character fields are returned as untrimmed strings.
+ * --------------------------------------------------*/
+HB_FUNC( SX_GETVARIANT )
+{
+   hb_retc(
+    ( char * )sx_GetVariant( hb_parc( 1 ) ) );  /* Field name  */
 }
 
 
@@ -218,9 +253,32 @@ HB_FUNC( SX_REINDEX )
  * --------------------------------------------------*/
 HB_FUNC( SX_REPLACE )
 {
-    sx_Replace( hb_parc( 1 ),              /* Field name */
-                hb_parni( 2 ),             /* Data type */
-                hb_parc( 3) );             /* Data */
+
+switch ( hb_parni( 2 ) )
+{
+ case R_INTEGER :
+ case R_JULIAN  : sx_Replace( hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parni( 3) ) ;  break;
+ case R_LOGICAL : sx_Replace( hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parni( 3) ) ;  break;  /* TODO: somthing is wrong here... */
+ case R_LONG    : sx_Replace( hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parnl( 3) ) ;  break;
+ case R_DOUBLE  :
+      {
+        double d = hb_parnd( 3 );
+        sx_Replace( hb_parc( 1 ), hb_parni( 2 ), ( void * ) &d );
+        break;
+      }
+ case R_CHAR    :
+ case R_DATESTR :
+ case R_MEMO    :
+ case R_BITMAP  :
+ case R_BLOBFILE:
+ case R_BLOBPTR : sx_Replace( hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parc( 3)  ) ;  break;
+ default:         sx_Replace( hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parc( 3)  );
+}
+
+//    sx_Replace( hb_parc( 1 ),              /* Field name */
+//                hb_parni( 2 ),             /* Data type */
+//                hb_parc( 3) );             /* Data */
+
 }
 
 
@@ -243,13 +301,37 @@ HB_FUNC( SX_SEEK )
 }
 
 
+/* -----------------30/12/2001 12:30-----------------
+ * sx_SetCentury() => NILL
+ * Indicates whether or not the two digits of the year designating
+ * century are to be returned by sx_GetDateString as part of a date
+ * string formatted according to the sx_SetDateFormat setting.
+ * --------------------------------------------------*/
+HB_FUNC( SX_SETCENTURY )
+{
+    sx_SetCentury( hb_parl( 1 ) );         /* If True, the century digits will be returned.
+                                            * If False, they will not. */
+}
+
+
+/* -----------------30/12/2001 12:32-----------------
+ * sx_SetDateFormat() => NILL
+ * Defines the format of date strings returned by sx_GetDateString.
+ * --------------------------------------------------*/
+HB_FUNC( SX_SETDATEFORMAT )
+{
+    sx_SetDateFormat( hb_parni( 1 ) );     /* If True, the century digits will be returned.
+                                            * If False, they will not. */
+}
+
+
 /* -----------------29/12/2001 19:59-----------------
  * sx_SetMemoBlockSize()
  * --------------------------------------------------*/
 HB_FUNC( SX_SETMEMOBLOCKSIZE )
 {
-    sx_SetMemoBlockSize( hb_parni( 1 ) );  /* The new default block size. */
-                                           /* The size must be a value from 1 through 1024. */
+    sx_SetMemoBlockSize( hb_parni( 1 ) );  /* The new default block size.
+                                            * The size must be a value from 1 through 1024. */
 }
 
 
@@ -289,7 +371,8 @@ HB_FUNC( SX_USE )
  * --------------------------------------------------*/
 HB_FUNC( SX_VERSION )
 {
-   hb_retc( ( char * ) sx_Version() );
+   hb_retc(
+    ( char * ) sx_Version() );
 }
 
 
@@ -304,30 +387,51 @@ HB_FUNC( SX_ZAP )
 
 
 /*
-2001-12-28 20:39 UTC+0100 Patrick Mast <email@patrickmast.com>
-   * contrib/apollo
-     + Added function sx_GoBottom()
-     + Added function sx_Go()
-     + Added function sx_Seek()
-     + Added function sx_SetSoftSeek()
-     + Added function sx_RLock()
-     + Added function sx_Reindex()
-     + Added function sx_RecCount()
-     + Added function sx_SetMemoBlockSize()
-     + Added function sx_CreateNew()
-     + Added function sx_CreateField()
-     + Added function sx_CreateExec()
-
-
-
- *
- *
-     + Added function sx_IndexTag()
-     + Added function sx_RecNo()
-     + Added function sx_Replace()
-     + Added function sx_Skip()
-     + Added function sx_Use()
-     + Added function sx_Zap()
-   * contrib/apollo/test
+2001-12-30 13:47 UTC+0100 Patrick Mast <email@patrickmast.com>
+   * contrib/apollo/apollo.c
+     + Added function sx_GetDateJulian()
+     + Added function sx_GetVariant()
+     + Added function sx_SetCentury()
+     + Added function sx_SetDateFormat()
+     + Added function sx_GetLogical()
+     * modified function sx_Replace()
+   Note: Replace a logical value with sx_Replace() does not work yet.
+   * contrib/apollo/test/apollo.prg
      * Added added functions in the test application.
+     * enhanced code
+     * Added and changed defines
+
+*/
+
+
+/*
+sx_AppendBlank()
+sx_Close()
+sx_Commit()
+sx_CreateExec()
+sx_CreateField()
+sx_CreateNew()
+sx_Eof()
+sx_GetDateJulian()
+sx_GetLogical()
+sx_GetString()
+sx_GetVariant()
+sx_Go()
+sx_GoBottom()
+sx_GoTop()
+sx_IndexTag()
+sx_RecCOunt()
+sx_RecNo()
+sx_Reindex()
+sx_Replace()
+sx_RLock()
+sx_Seek()
+sx_SetDateFormat()
+sx_SetCentury()
+sx_SetMemoBlockSize()
+sx_SetSoftSeek()
+sx_Skip()
+sx_Use()
+sx_Version()
+sx_Zap()
 */

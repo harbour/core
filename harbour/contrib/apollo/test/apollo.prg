@@ -50,34 +50,50 @@
  *
  */
 
+/* ************* */
+/*   date types  */
+/* ************* */
+#define SX_AMERICAN      0
+#define SX_ANSI          1
+#define SX_BRITISH       2
+#define SX_FRENCH        3
+#define SX_GERMAN        4
+#define SX_ITALIAN       5
+#define SX_SPANISH       6
+
 /* ************************************ */
 /* Data type identifiers for sx_Replace */
 /* ************************************ */
-#define R_INTEGER       1
-#define R_LONG          2
-#define R_DOUBLE        8
-#define R_JULIAN       32
-#define R_LOGICAL     128
-#define R_CHAR       1024
-#define R_DATESTR    1056
-#define R_MEMO       3072
-#define R_BITMAP     4096
-#define R_BLOBFILE   8192
-#define R_BLOBPTR    8193
-#define R_GENERAL    8195
+#define SX_R_INTEGER     1
+#define SX_R_LONG        2
+#define SX_R_DOUBLE      8
+#define SX_R_JULIAN     32
+#define SX_R_LOGICAL   128
+#define SX_R_CHAR     1024
+#define SX_R_DATESTR  1056
+#define SX_R_MEMO     3072
+#define SX_R_BITMAP   4096
+#define SX_R_BLOBFILE 8192
+#define SX_R_BLOBPTR  8193
+#define SX_R_GENERAL  8195
 
-#define SDENTX          1   // CA-Clipper compatible DBF-NTX driver
-#define SDEFOX          2   // FoxPro compatible DBF-IDX/CDX driver
-#define SDENSX          3   // Vista DBF-NSX driver
+#define SX_SDENTX        1   // CA-Clipper compatible DBF-NTX driver
+#define SX_SDEFOX        2   // FoxPro compatible DBF-IDX/CDX driver
+#define SX_SDENSX        3   // Vista DBF-NSX driver
 
-#define READWRITE       0
-#define READONLY        1
-#define EXCLUSIVE       2
+#define SX_READWRITE     0
+#define SX_READONLY      1
+#define SX_EXCLUSIVE     2
 
 Function Main()
 LOCAL nAlias,f
 
-   sx_SetMemoBlockSize(32)
+   SET DATE FRENCH
+   SET CENTURY ON
+
+   sx_SetMemoBlockSize( 32 )
+   sx_SetDateFormat( SX_FRENCH )
+   sx_SetCentury( .t. )
 
    ? "Apollo version " + sx_Version()
 
@@ -92,7 +108,7 @@ LOCAL nAlias,f
    ? "Creating a new database file.."
    nAlias:=sx_CreateNew("TEST.DBF",;  // full path filename
                         "test1",;     // Alias
-                        SDENSX,;      // rdeType
+                        SX_SDENSX,;   // rdeType
                         6)            // Maximum fields added by sx_CreateField
    IF nAlias=0
       ? "Error creating database"
@@ -102,7 +118,7 @@ LOCAL nAlias,f
    sx_CreateField("FIRST"   ,"C",40,0)
    sx_CreateField("LAST"    ,"C",40,0)
    sx_CreateField("NOTES"   ,"M",10,0)
-   sx_CreateField("AGE"     ,"N", 3,0)
+   sx_CreateField("AGE"     ,"N", 4,0)
    sx_CreateField("MARRIED" ,"L", 1,0)
    sx_CreateField("BIRTDATE","D", 8,0)
 
@@ -110,7 +126,7 @@ LOCAL nAlias,f
    sx_Close()
    ?? "OK!"
 
-   nAlias:=sx_Use("TEST.DBF","test2",EXCLUSIVE,SDENSX)
+   nAlias:=sx_Use("TEST.DBF","test2",SX_EXCLUSIVE,SX_SDENSX)
    sx_Zap()
    IF Valtype(nAlias)="N" .AND. nAlias # 0
       ? "OK opening 'TEST.DBF'"
@@ -119,9 +135,12 @@ LOCAL nAlias,f
       ? "Adding 1000 records..."
       FOR f=1 to 1000
          sx_AppendBlank()
-         sx_Replace("FIRST", R_CHAR, "Patrick " + Str( f ) )
-         sx_Replace("LAST" , R_CHAR, LTrim( Str( f ) ) + " Mast" )
-         sx_Replace("NOTES", R_MEMO, "This is record " + LTrim( Str( f ) ) )
+         sx_Replace("FIRST"    , SX_R_CHAR   , "Patrick " + Str( f ) )
+         sx_Replace("LAST"     , SX_R_CHAR   , LTrim( Str( f ) ) + " Mast" )
+         sx_Replace("NOTES"    , SX_R_MEMO   , "This is record " + LTrim( Str( f ) ) )
+         sx_Replace("AGE"      , SX_R_DOUBLE , f )
+         sx_Replace("BIRTDATE" , SX_R_DATESTR, DtoC( Date() ) )
+        *sx_Replace("MARRIED"  , SX_R_LOGICAL, If(f%5=2,1,0) ) /* Logical does not work yet.. */
          sx_Commit()
       NEXT
 
@@ -133,8 +152,11 @@ LOCAL nAlias,f
 
       sx_GoTop()
       WHILE !sx_Eof()
-         @ 17,2 SAY "RecNo: "+ LTrim( Str( sx_RecNo() ) )
-         @ 18,2 SAY sx_GetString( "LAST" )
+         ? ""
+         ? "RecNo...... : " + LTrim( Str( sx_RecNo() ) )
+         ? "Last name.. : " + sx_GetVariant( "LAST" )
+         ? "Birth date. : " + sx_GetVariant( "BIRTDATE" )
+         ? "Married.... : " + If( sx_GetLogical( "MARRIED" ) , "Yes", "No, SINGLE!!")
          sx_Skip(1)
       ENDDO
 
@@ -156,8 +178,6 @@ LOCAL nAlias,f
       ? "Reindexing now..."
       sx_ReIndex()
       ?? "OK!"
-
-
 
 
       sx_Close()
