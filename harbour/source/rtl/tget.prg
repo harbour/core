@@ -59,6 +59,7 @@
 #include "getexit.ch"
 #include "inkey.ch"
 #include "button.ch"
+
 /* TODO: :posInBuffer( <nRow>, <nCol> ) --> nPos
          Determines a position within the edit buffer based on screen
          coordinates.
@@ -424,7 +425,7 @@ METHOD SetFocus() CLASS Get
    endif
 
    IF lWasNil .and. ::buffer != NIL
-      IF ::nDispLen == 0
+      IF ::nDispLen == NIL
          ::nDispLen := ::nMaxLen
       ENDIF
 
@@ -1201,13 +1202,18 @@ METHOD Picture( cPicture ) CLASS Get
 
    if cPicture != NIL
 
+      ::nDispLen := NIL
+
       ::cPicture := cPicture
       ::ParsePict( cPicture )
 
       ::buffer  := ::PutMask( )
       ::nMaxLen := IIF( ::buffer == NIL, 0, Len( ::buffer ) )
 
-      ::nDispLen := ::nMaxLen
+      if ::nDispLen == NIL
+         ::nDispLen := ::nMaxLen
+      endif
+
    endif
 
 return ::cPicture
@@ -1239,10 +1245,10 @@ return ::bBlock
 
 METHOD HitTest(mrow,mcol) CLASS GET
         if ::row != mrow
-		return HTNOWHERE
+           return HTNOWHERE
         endif
         if mcol >= ::col .and. mrow <= ::col+::ndispLen
-		return HTCLIENT
+           return HTCLIENT
         endif
 return HTNOWHERE
 
