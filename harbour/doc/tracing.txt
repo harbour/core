@@ -33,6 +33,13 @@ constant HB_TR_LEVEL is set to any of the following values:
   #define HB_TR_INFO       4
   #define HB_TR_DEBUG      5
 
+  #define HB_TR_LEVEL_ALWAYS     0
+  #define HB_TR_LEVEL_FATAL      1
+  #define HB_TR_LEVEL_ERROR      2
+  #define HB_TR_LEVEL_WARNING    3
+  #define HB_TR_LEVEL_INFO       4
+  #define HB_TR_LEVEL_DEBUG      5
+
 If it is not set to any of these, the macro is set to the value of
 HB_TR_DEFAULT, which is currently set (in hbtrace.h) to HB_TR_WARNING.
 
@@ -64,35 +71,43 @@ print its arguments on stderr.
 EXAMPLES
 ========
 
-HB_TR_LEVEL    HB_TR_LEVEL    Description
-compilation    run-time
------------    -----------    ----------------------------------------
-HB_TR_INFO     HB_TR_ERROR    All calls with levels HB_DEBUG are
-                              erased from the code, so they have no
-                              performance effect; only calls with
-                              levels HB_TR_ERROR, HB_TR_FATAL and
-                              HB_TR_ALWAYS are printed.
+HB_TR_LEVEL      HB_TR_LEVEL    Description
+compilation      run-time
+-----------      -----------    ----------------------------------------
+HB_TR_INFO       HB_TR_ERROR    All calls with levels HB_DEBUG are
+    or                          erased from the code, so they have no
+HB_TR_LEVEL_INFO                performance effect; only calls with
+                                levels HB_TR_ERROR, HB_TR_FATAL and
+                                HB_TR_ALWAYS are printed.
 
-HB_TR_WARNING  HB_TR_INFO     All calls with levels HB_INFO and
-                              HB_DEBUG are erased from the code, so
-                              they have no performance effect; only
-                              calls with levels HB_TR_WARNING,
-                              HB_TR_ERROR, HB_TR_FATAL and
-                              HB_TR_ALWAYS are printed. Notice how
-                              setting HB_TR_INFO at run-time has no
-                              effect, since the code was compiled with
-                              a lower tracing level.
+HB_TR_WARNING    HB_TR_INFO     All calls with levels HB_INFO and
+    or                          HB_DEBUG are erased from the code, so
+HB_TR_LEVEL_WARNING             they have no performance effect; only
+                                calls with levels HB_TR_WARNING,
+                                HB_TR_ERROR, HB_TR_FATAL and
+                                HB_TR_ALWAYS are printed. Notice how
+                                setting HB_TR_INFO at run-time has no
+                                effect, since the code was compiled with
+                                a lower tracing level.
 
 For example, I compile Harbour on WinNT with gcc (MINGW32), so I
 usually set the C_USR environment variable like this:
 
   export C_USR='-DHARBOUR_USE_WIN_GTAPI -DHB_TR_LEVEL=HB_TR_INFO'
 
+or for other OS (eg: DOS, WIN9x)
+
+  SET C_USR=-DHARBOUR_USR_WIN_GTAPI -DHB_TR_LEVEL_INFO
+
 and make sure I have all the tracing for the INFO, WARNING, ERROR,
 FATAL and ALWAYS levels. If I get too much information, at run-time I
 can set an environment variable like this:
 
   export HB_TR_LEVEL=HB_TR_WARNING
+
+or for other OS (eg: DOS, WIN9x)
+
+  SET HB_TR_LEVEL=HB_TR_WARNING
 
 and get rid of all the tracing for the INFO level. In this case, all
 the calls to the tracing function for the INFO level will be done
@@ -119,6 +134,13 @@ HB_TR_OUTPUT to the name of a file where you would like the tracing
 output to be directed. If there is any problem opening the file for
 writing, the output reverts to stderr.
 
+When it happens an error and the controller of errors of harbour cannot
+intercept it (eg: GPF), it can happen that part of information of tracing
+it is not written. This problem is avoided setting the environment
+variable HB_TR_FLUSH to 1 (one). This makes that every time that one
+record is sent to write, don't remain in the buffer, but rather it is
+writen in the file before continuing with the execution.
+This set can produce an important reduction of speed of execution.
 
 TRACING THE PREPROCESSOR AND COMPILER
 =====================================
@@ -127,7 +149,7 @@ Usually, you will not want tracing enabled in the preprocessor and
 compiler; otherwise, you will see the trace output while compiling
 Harbour itself.  If you REALLY want to enable tracing in the
 preprocessor and/or compiler, you must define, in addition to
-HB_TRACE_LEVEL as described above, the following variable, and then
+HB_TR_LEVEL as described above, the following variable, and then
 recompile the preprocessor/compiler:
 
   HB_TRACE_UTILS
