@@ -1785,7 +1785,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
          switch( hb_itemType( pItem ) )
          {
             case HB_IT_STRING:
-               uiCurLen = hb_itemGetCLen( pItem );
+               uiCurLen = (USHORT) hb_itemGetCLen( pItem );
                if(uiCurLen > NTX_MAX_KEY )
                   uiCurLen = NTX_MAX_KEY ;
                if( pTag->KeyLength != uiCurLen )

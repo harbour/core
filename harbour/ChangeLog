@@ -1,3 +1,10 @@
+2001-11-10 04:20 GMT +0700 Andi Jahja <harbour@cbn.net.id>
+   * source/rdd/dbf1.c
+      ! comment unused var ULONG ulRecNo
+
+   * source/rdd/dbfntx/dbfntx1.c
+      ! add type cast for MsVC
+
 2001-11-09 10:30 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * harbour/source/rtl/persist.prg
       * fixed error handling for LoadFromText()

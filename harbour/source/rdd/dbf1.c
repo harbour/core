@@ -2220,7 +2220,9 @@ ERRCODE hb_dbfForceRel( DBFAREAP pArea )
 {
    LPDBRELINFO lpdbPendingRel;
    ERRCODE uiError;
+/*
    ULONG ulRecNo;
+*/
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfForceRel(%p)", pArea));
 
