@@ -316,6 +316,8 @@ void hb_clsReleaseAll( void )
 
    if( s_pClasses )
       hb_xfree( s_pClasses );
+   s_uiClasses = 0;
+   s_pClasses  = NULL;
 }
 
 /* Check if passed memory block pointer is referenced by some class
