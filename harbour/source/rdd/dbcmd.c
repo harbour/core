@@ -123,6 +123,11 @@ HARBOUR HB_LASTREC( void );
 HARBOUR HB_LOCK( void );
 HARBOUR HB_LUPDATE( void );
 HARBOUR HB_NETERR( void );
+HARBOUR HB_ORDCONDSET( void );
+HARBOUR HB_ORDCREATE( void );
+HARBOUR HB_ORDDESTROY( void );
+HARBOUR HB_ORDLISTCLEAR( void );
+HARBOUR HB_ORDLISTREBUILD( void );
 HARBOUR HB_RDDLIST( void );
 HARBOUR HB_RDDNAME( void );
 HARBOUR HB_RDDREGISTER( void );
@@ -519,12 +524,32 @@ static ERRCODE defOpen( AREAP pArea, LPDBOPENINFO pOpenInfo )
    return SUCCESS;
 }
 
+static ERRCODE defOrderCondition( AREAP pArea, LPDBORDERCONDINFO pOrderInfo )
+{
+   if( pArea->lpdbOrdCondInfo )
+   {
+      if( pArea->lpdbOrdCondInfo->abFor )
+         hb_xfree( pArea->lpdbOrdCondInfo->abFor );
+      if( pArea->lpdbOrdCondInfo->itmCobFor )
+         hb_itemRelease( pArea->lpdbOrdCondInfo->itmCobFor );
+      if( pArea->lpdbOrdCondInfo->itmCobWhile )
+         hb_itemRelease( pArea->lpdbOrdCondInfo->itmCobWhile );
+      if( pArea->lpdbOrdCondInfo->itmCobEval )
+         hb_itemRelease( pArea->lpdbOrdCondInfo->itmCobEval );
+      hb_xfree( pArea->lpdbOrdCondInfo );
+   }
+   pArea->lpdbOrdCondInfo = pOrderInfo;
+
+   return SUCCESS;
+}
+
 static ERRCODE defRelease( AREAP pArea )
 {
    LPFILEINFO pFileInfo;
 
    HB_TRACE(HB_TR_DEBUG, ("defRelease(%p)", pArea));
 
+   SELF_ORDSETCOND( pArea, NULL );
    if( pArea->lpFields )
    {
       hb_xfree( pArea->lpFields );
@@ -822,6 +847,11 @@ static RDDFUNCS defTable = { defBof,
                              defEval,
                              defUnSupported,
                              defUnSupported,
+                             defUnSupported,
+                             defUnSupported,
+                             defOrderCondition,
+                             ( DBENTRYP_VOC ) defUnSupported,
+                             ( DBENTRYP_OI ) defUnSupported,
                              defClearFilter,
                              defClearLocate,
                              defFilterText,
@@ -2873,6 +2903,131 @@ HARBOUR HB_NETERR( void )
       bNetError = hb_parl( 1 );
 
    hb_retl( bNetError );
+}
+
+HARBOUR HB_ORDCONDSET( void )
+{
+   LPDBORDERCONDINFO pOrderCondInfo;
+   char * szFor;
+   ULONG ulLen;
+   PHB_ITEM pItem;
+
+   if( pCurrArea )
+   {
+      pOrderCondInfo = ( LPDBORDERCONDINFO ) hb_xgrab( sizeof( DBORDERCONDINFO ) );
+      szFor = hb_parc( 1 );
+      ulLen = strlen( szFor );
+      if( ulLen )
+      {
+         pOrderCondInfo->abFor = ( BYTE * ) hb_xgrab( ulLen + 1 );
+         strcpy( ( char * ) pOrderCondInfo->abFor, szFor );
+      }
+      else
+         pOrderCondInfo->abFor = NULL;
+      pItem = hb_param( 2, IT_BLOCK );
+      if( pItem )
+      {
+         pOrderCondInfo->itmCobFor = hb_itemNew( NULL );
+         hb_itemCopy( pOrderCondInfo->itmCobFor, pItem );
+      }
+      else
+         pOrderCondInfo->itmCobFor = NULL;
+      if( ISLOG( 3 ) ) 
+         pOrderCondInfo->fAll = hb_parl( 3 );
+      else
+         pOrderCondInfo->fAll = TRUE;
+      pItem = hb_param( 4, IT_BLOCK );
+      if( pItem )
+      {
+         pOrderCondInfo->itmCobWhile = hb_itemNew( NULL );
+         hb_itemCopy( pOrderCondInfo->itmCobWhile, pItem );
+      }
+      else
+         pOrderCondInfo->itmCobWhile = NULL;
+      pItem = hb_param( 5, IT_BLOCK );
+      if( pItem )
+      {
+         pOrderCondInfo->itmCobEval = hb_itemNew( NULL );
+         hb_itemCopy( pOrderCondInfo->itmCobEval, pItem );
+      }
+      else
+         pOrderCondInfo->itmCobEval = NULL;
+      pOrderCondInfo->lStep = hb_parnl( 6 );
+      pOrderCondInfo->lStartRecno = hb_parnl( 7 );
+      pOrderCondInfo->lNextCount = hb_parnl( 8 );
+      pOrderCondInfo->lRecno = hb_parnl( 9 );
+      pOrderCondInfo->fRest = hb_parl( 10 );
+      pOrderCondInfo->fDescending = hb_parl( 11 );
+      pOrderCondInfo->fAdditive = hb_parl( 12 );
+      pOrderCondInfo->fScoped = hb_parl( 13 );
+      pOrderCondInfo->fCustom = hb_parl( 14 );
+      pOrderCondInfo->fNoOptimize = hb_parl( 15 );
+      if( !pOrderCondInfo->itmCobWhile )
+         pOrderCondInfo->fRest = TRUE;
+      if( pOrderCondInfo->lNextCount || pOrderCondInfo->lRecno || pOrderCondInfo->fRest )
+         pOrderCondInfo->fAll = FALSE;
+      hb_retl( SELF_ORDSETCOND( ( AREAP ) pCurrArea->pArea, pOrderCondInfo ) == SUCCESS );
+   }
+   else
+      hb_retl( FALSE );
+}
+
+HARBOUR HB_ORDCREATE( void )
+{
+   DBORDERCREATEINFO pOrderInfo;
+   char * szKeyExpr;
+
+   if( pCurrArea )
+   {
+      pOrderInfo.abBagName = ( BYTE * ) hb_parc( 1 );
+      pOrderInfo.atomBagName = ( BYTE * ) hb_parc( 2 );
+      pOrderInfo.abExpr = hb_param( 3, IT_STRING );
+      if( ( ( strlen( ( char * ) pOrderInfo.abBagName ) == 0 ) &&
+            ( strlen( ( char * ) pOrderInfo.atomBagName ) == 0 ) ) ||
+          !pOrderInfo.abExpr )
+      {
+         hb_errRT_DBCMD( EG_ARG, 1006, NULL, "ORDCREATE" );
+         return;
+      }
+      pOrderInfo.itmCobExpr = hb_param( 4, IT_BLOCK );
+      if( ISLOG( 5 ) )
+         pOrderInfo.fUnique = hb_parl( 5 );
+      else
+         pOrderInfo.fUnique = hb_set.HB_SET_UNIQUE;
+      SELF_ORDCREATE( ( AREAP ) pCurrArea->pArea, &pOrderInfo );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ORDCREATE" );
+}
+
+HARBOUR HB_ORDDESTROY( void )
+{
+   DBORDERINFO pOrderInfo;
+
+   if( pCurrArea )
+   {
+      pOrderInfo.itmOrder = hb_param( 1, IT_STRING );
+      if( !pOrderInfo.itmOrder )
+         pOrderInfo.itmOrder = hb_param( 1, IT_NUMERIC );
+      pOrderInfo.atomBagName = hb_param( 2, IT_STRING );
+      SELF_ORDDESTROY( ( AREAP ) pCurrArea->pArea, &pOrderInfo );
+   }
+}
+
+HARBOUR HB_ORDLISTCLEAR( void )
+{
+   if( pCurrArea )
+      SELF_ORDLSTCLEAR( ( AREAP ) pCurrArea->pArea );
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ORDLISTCLEAR" );
+}
+
+HARBOUR HB_ORDLISTREBUILD( void )
+{
+   if( pCurrArea )
+      SELF_ORDLSTREBUILD( ( AREAP ) pCurrArea->pArea );
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ORDLISTCLEAR" );
 }
 
 HARBOUR HB_RDDLIST( void )

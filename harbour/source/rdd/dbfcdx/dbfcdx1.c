@@ -306,6 +306,7 @@ static BOOL hb_cdxWriteMemo( AREAP pArea, LPDBFMEMO pMemo, ULONG * lNewRecNo )
 #define cdxEval                                 NULL
 #define cdxPack                                 NULL
 #define cdxZap                                  NULL
+#define cdxOrderCondition                       NULL
 #define cdxClearFilter                          NULL
 #define cdxClearLocate                          NULL
 #define cdxFilterText                           NULL
@@ -459,6 +460,37 @@ static ERRCODE cdxOpenMemFile( AREAP pArea, LPDBOPENINFO pOpenInfo )
    }
    hb_xfree( pMemoHeader );
    return SUCCESS;
+}
+
+static ERRCODE cdxOrderDestroy( AREAP pArea, LPDBORDERINFO pOrderInfo )
+{
+   HB_TRACE(HB_TR_DEBUG, ("cdxOrderDestroy(%p, %p)", pArea, pOrderInfo));
+
+   return SUCCESS;
+}
+
+static ERRCODE cdxOrderListClear( AREAP pArea )
+{
+   HB_TRACE(HB_TR_DEBUG, ("cdxOrderListClear(%p)", pArea));
+
+   return SUCCESS;
+}
+
+static ERRCODE cdxOrderListRebuild( AREAP pArea )
+{
+   HB_TRACE(HB_TR_DEBUG, ("cdxOrderListRebuild(%p)", pArea));
+
+   return SUCCESS;
+}
+
+static ERRCODE cdxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
+{
+   HB_TRACE(HB_TR_DEBUG, ("cdxOrderCreate(%p, %p)", pArea, pOrderInfo));
+
+   if( SELF_GOCOLD( pArea ) == FAILURE )
+      return FAILURE;
+
+   return SELF_GOTOP( pArea );
 }
 
 static ERRCODE cdxPutValueFile( AREAP pArea, USHORT uiIndex, void * pFile )
@@ -631,6 +663,11 @@ static RDDFUNCS cdxTable = { cdxBof,
                              cdxEval,
                              cdxPack,
                              cdxZap,
+                             cdxOrderListClear,
+                             cdxOrderListRebuild,
+                             cdxOrderCondition,
+                             cdxOrderCreate,
+                             cdxOrderDestroy,
                              cdxClearFilter,
                              cdxClearLocate,
                              cdxFilterText,

@@ -1,3 +1,14 @@
+19991204-13:15 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * include/rddapi.h
+    source/rdd/dbcmd.c
+    source/rdd/dbf1.c
+    source/rdd/dbfcdx/dbfcdx1.c
+    + Begining with ordCondSet(), ordCreate(), ordDestroy(), ordListClear() and
+      ordListRebuild().
+  * source/rtl/dummy.prg
+    - Removed ordCondSet(), ordCreate(), ordDestroy(), ordListClear() and
+      ordListRebuild() functions.
+
 19991203-15:18 GMT+1 Jose Lalin <dezac@corevia.com>
   * source/pp/hbpp.c
     ! Bug fixed in #error directive.
