@@ -1,3 +1,10 @@
+19991011-14:20 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * source/rtl/set.c
+     ! Corrected handling of NIL second parameter for SET() when the
+       first parameter is _SET_ALTFILE, _SET_DEVICE, _SET_EXTRAFILE,
+       or _SET_PRINTFILE.
+
 19991011-19:30 GMT+1 Bruno Cantero <bruno@issnet.net>
 
    * source/rtl/dummy.prg

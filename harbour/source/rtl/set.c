@@ -47,6 +47,9 @@
 /*
  * ChangeLog:
  *
+ * V 1.84   David G. Holm               Corrected how NIL second parameter
+ *                                      is handled for ALTFILE, DEVICE,
+ *                                      EXTRAFILE, and PRINTFILE.
  * V 1.83   David G. Holm               Added DEFPATH() and __DEFPATH()
  *                                      provided by Jose Lalin.
  * V 1.81   David G. Holm               Corrected _SET_CURSOR to use the GT API
@@ -717,10 +720,10 @@ HARBOUR HB_SET( void )
       case HB_SET_ALTFILE    :
          if( hb_set.HB_SET_ALTFILE ) hb_retc( hb_set.HB_SET_ALTFILE );
          else hb_retc( "" );
-         if( args > 1 ) hb_set.HB_SET_ALTFILE = set_string( pArg2, hb_set.HB_SET_ALTFILE );
+         if( args > 1 && ! IS_NIL( pArg2 ) ) hb_set.HB_SET_ALTFILE = set_string( pArg2, hb_set.HB_SET_ALTFILE );
          if( args > 2 ) bFlag = set_logical( pArg3 );
          else bFlag = FALSE;
-         if( args > 1 )
+         if( args > 1 && ! IS_NIL( pArg2 ) )
          {
             close_text( hb_set.hb_set_althan );
             if( hb_set.HB_SET_ALTFILE && strlen( hb_set.HB_SET_ALTFILE ) > 0 )
@@ -792,7 +795,7 @@ HARBOUR HB_SET( void )
       case HB_SET_DEVICE     :
          if( hb_set.HB_SET_DEVICE ) hb_retc( hb_set.HB_SET_DEVICE );
          else hb_retc( "" );
-         if( args > 1 )
+         if( args > 1 && ! IS_NIL( pArg2 ) )
          {
             /* If the print file is not already open, open it in overwrite mode. */
             hb_set.HB_SET_DEVICE = set_string( pArg2, hb_set.HB_SET_DEVICE );
@@ -838,10 +841,10 @@ HARBOUR HB_SET( void )
       case HB_SET_EXTRAFILE  :
          if( hb_set.HB_SET_EXTRAFILE ) hb_retc( hb_set.HB_SET_EXTRAFILE );
          else hb_retc( "" );
-         if( args > 1 ) hb_set.HB_SET_EXTRAFILE = set_string( pArg2, hb_set.HB_SET_EXTRAFILE );
+         if( args > 1 && ! IS_NIL( pArg2 ) ) hb_set.HB_SET_EXTRAFILE = set_string( pArg2, hb_set.HB_SET_EXTRAFILE );
          if( args > 2 ) bFlag = set_logical( pArg3 );
          else bFlag = FALSE;
-         if( args > 1 )
+         if( args > 1 && ! IS_NIL( pArg2 ) )
          {
             close_text( hb_set.hb_set_extrahan );
             if( hb_set.HB_SET_EXTRAFILE && strlen( hb_set.HB_SET_EXTRAFILE ) > 0 )
@@ -896,10 +899,10 @@ HARBOUR HB_SET( void )
       case HB_SET_PRINTFILE  :
          if( hb_set.HB_SET_PRINTFILE ) hb_retc( hb_set.HB_SET_PRINTFILE );
          else hb_retc( "" );
-         if( args > 1 ) hb_set.HB_SET_PRINTFILE = set_string( pArg2, hb_set.HB_SET_PRINTFILE );
+         if( args > 1 && ! IS_NIL( pArg2 ) ) hb_set.HB_SET_PRINTFILE = set_string( pArg2, hb_set.HB_SET_PRINTFILE );
          if( args > 2 ) bFlag = set_logical( pArg3 );
          else bFlag = FALSE;
-         if( args > 1 )
+         if( args > 1 && ! IS_NIL( pArg2 ) )
          {
             close_binary( hb_set.hb_set_printhan );
             if( hb_set.HB_SET_PRINTFILE && strlen( hb_set.HB_SET_PRINTFILE ) > 0 )
