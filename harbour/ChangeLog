@@ -8,6 +8,20 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-11-13 15:50 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * include/hbrddcdx.h
+   * source/rdd/dbfcdx/dbfcdx1.c
+   * source/rdd/dbfcdx/dbfcdx1.h
+   * source/rdd/dbfcdx/dbfcdx2.h
+        ! fixed some declarations to avoid warnings,
+          removed unnecessary introduced casts
+        ! fixed skip bug reported by Andrzej
+        ! fixed bug when empty scope used
+        ! fixed posible index corruption when shared.
+        + added functions cdxError, hb_cdxOrderListRebuild,
+          hb_cdxIndexReindex
+          Now reindex works, as well as pack and zap.
+
 2002-11-13 12:25 UTC+0100 Antonio Linares <alinares@fivetech.com>
   * include/hbexprb.c
     ! strings as bytes arrays management (assignment)
