@@ -1,3 +1,12 @@
+2001-06-03 23:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     + Added #ifdef WIN to support using Windows MessageBox() instead of Alert(), use BLD pp -dWIN to activate.
+   * contrib/dot/pp_harb.ch
+     + Minor revision in TInnterpreter() class.
+     + Added wrapper for MessageBox()
+   * contrib/dot/rp_run.ch
+     + Added #ifdef #command to translate
+
 2001-06-03 09:35 UTC+1 JFL (mafact) <jfl@mafact.com>
    * harbour/source/vm/Classe.c
      * Temporary disabled scoping for rel. 0.37 !

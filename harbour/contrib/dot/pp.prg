@@ -29,6 +29,11 @@
    #DEFINE  CRLF HB_OsNewLine()
    #ifdef FW
       #INCLUDE "fwextern.ch"
+   #else
+      #ifdef WIN
+         #COMMAND Alert( <x> ) => MessageBox( 0, xToStr( <x> ), "PP for Windows", 0 )
+         EXTERN MessageBox
+      #endif
    #endif
 #else
    #DEFINE __CLIPPER__
@@ -571,6 +576,9 @@ PROCEDURE RP_Dot()
    bCount := .F.
 
    PP_PreProFile( "rp_dot.ch" )
+   #ifdef WIN
+      PP_PreProLine( '#COMMAND Alert( <x> ) => MessageBox( 0, xToStr( <x> ), "TInterpreter for Windows", 0 )' )
+   #endif
 
    ErrorBlock( {|oErr| RP_Dot_Err( oErr ) } )
 
@@ -2513,7 +2521,7 @@ FUNCTION PP_PreProFile( sSource, sPPOExt, bBlanks )
       ENDIF
    ENDIF
 
-   IF ProcName(1) == 'MAIN'
+   IF ProcName(2) == ""
       FClose( hPP )
 
       IF bCCH
@@ -7575,6 +7583,9 @@ STATIC FUNCTION InitRunRules()
    aAdd( aTransRules, { 'PROCLINE' , { {    0,   0, '(', NIL, NIL }, {    1,   1, NIL, '<', { ')' } }, {    0,   0, ')', NIL, NIL } } , .F. } )
 
    /* Commands */
+ #ifdef WIN
+   aAdd( aCommRules, { 'ALERT' , { {    1,   0, '(', '<', NIL }, {    0,   0, ')', NIL, NIL } } , .F. } )
+ #endif
    aAdd( aCommRules, { '_HB_CLASS' , { {    1,   0, NIL, '*', NIL } } , .F. } )
    aAdd( aCommRules, { '_HB_MEMBER' , { {    1,   0, NIL, '*', NIL } } , .F. } )
    aAdd( aCommRules, { 'MEMVAR' , { {    1,   0, NIL, '*', NIL } } , .F. } )
@@ -7635,6 +7646,9 @@ STATIC FUNCTION InitRunResults()
    aAdd( aTransResults, { { {   0, 'PP_ProcLine( ' }, {   0,   1 }, {   0, ' )' } }, { -1,  1, -1} , { NIL }  } )
 
    /* Commands Results*/
+ #ifdef WIN
+   aAdd( aCommResults, { { {   0, 'MessageBox( 0, xToStr( ' }, {   0,   1 }, {   0, ' ), "TInterpreter for Windows", 0 )' } }, { -1,  1, -1} , { NIL }  } )
+ #endif
    aAdd( aCommResults, { , , { NIL }  } )
    aAdd( aCommResults, { , , { NIL }  } )
    aAdd( aCommResults, { , , { NIL }  } )

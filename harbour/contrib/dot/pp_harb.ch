@@ -8,6 +8,7 @@ CLASS  TInterpreter
 
    DATA cText
    DATA acPPed
+   DATA cPPed
    DATA aCompiledProcs
    DATA aInitExit
    DATA nProcs
@@ -16,6 +17,7 @@ CLASS  TInterpreter
 
    METHOD AddLine( cLine )   INLINE ( ::nProcs := 0, ::acPPed := {}, ::cText += ( cLine + Chr(10) ) )
    METHOD SetScript( cText ) INLINE ( ::nProcs := 0, ::acPPed := {}, ::cText := cText )
+   METHOD GetPPO()           INLINE ( ::cPPed )
 
    METHOD Compile()
    METHOD Run()
@@ -48,7 +50,7 @@ METHOD Compile()
    IF Len( ::acPPed ) == 0
       PP_InitStd()
       PP_LoadRun()
-      PP_PreProText( ::cText, ::acPPed )
+      ::cPPed          := PP_PreProText( ::cText, ::acPPed )
       ::aCompiledProcs := {}
       ::aInitExit      := { {}, {} }
    ENDIF
@@ -136,7 +138,7 @@ static HB_FUNC( NEXTTOKEN )
       s2[0] = sLine[0];
       s2[1] = sLine[1];
 
-      if( strstr( "++\--\->\:=\==\!=\<>\>=\<=\+=\-=\*=\^=\**\/=\%=\??", (char*) s2 ) )
+      if( strstr( "++\\--\\->\\:=\\==\\!=\\<>\\>=\\<=\\+=\\-=\\*=\\^=\\**\\/=\\%=\\??", (char*) s2 ) )
       {
          sReturn[0] = s2[0];
          sReturn[1] = s2[1];
@@ -363,7 +365,7 @@ static HB_FUNC( NEXTTOKEN )
 
       goto Done;
    }
-   else if ( strchr( "+-*/:=^!&()[]{}@,|<>#%?$", sLine[0] ) )
+   else if ( strchr( "+-*/:=^!&()[]{}@,|<>#%?$~", sLine[0] ) )
    {
       sReturn[0] = sLine[0];
       sReturn[1] = '\0';
@@ -526,7 +528,7 @@ static HB_FUNC( NEXTIDENTIFIER )
        }
        else
        {
-          char *sSkipped = hb_xgrab( nStart + 1 );
+          char *sSkipped = (char *) hb_xgrab( nStart + 1 );
 
           strncpy( sSkipped, sLine, nStart );
           sSkipped[nStart]= '\0';
@@ -538,7 +540,7 @@ static HB_FUNC( NEXTIDENTIFIER )
 
     if( nStart >= 0 )
     {
-       char *sIdentifier = hb_xgrab( ( nAt - nStart ) + 1 );
+       char *sIdentifier = (char *) hb_xgrab( ( nAt - nStart ) + 1 );
 
        strncpy( sIdentifier, sLine + nStart, ( nAt - nStart ) );
        sIdentifier[nAt - nStart] = '\0';
@@ -563,6 +565,14 @@ static HB_FUNC( NEXTIDENTIFIER )
     {
        hb_ret();
     }
+}
+
+//----------------------------------------------------------------------------//
+#include <Windows.h>
+
+HB_FUNC( MESSAGEBOX )
+{
+    hb_retni( MessageBox( ( HWND ) hb_parnl( 1 ), hb_parc( 2 ), hb_parc( 3 ), hb_parni( 4 ) ) );
 }
 
 #pragma STOPDUMP

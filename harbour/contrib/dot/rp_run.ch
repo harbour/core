@@ -1,4 +1,7 @@
 #ifdef __HARBOUR__
+   #ifdef WIN
+      #COMMAND Alert( <x> ) => MessageBox( 0, xToStr( <x> ), "TInterpreter for Windows", 0 )
+   #endif
 #else
    //#define __CLIPPER__
 #endif
