@@ -39,7 +39,7 @@
       #INCLUDE "fwextern.ch"
    #else
       #ifdef WIN
-         #COMMAND Alert( <x> ) => MessageBox( 0, xToStr( <x> ), "PP for Windows", 0 )
+         #COMMAND Alert( <x> ) => MessageBox( 0, CStr( <x> ), "PP for Windows", 0 )
          EXTERN MessageBox
       #endif
    #endif
@@ -658,8 +658,13 @@ FUNCTION PP_ExecProcedure( aProc, sProcName )
       nVars := Len( s_aProcStack[s_nProcStack][3] )
       FOR nVar := 1 TO nVars
          aAdd( s_asPrivates, s_aProcStack[s_nProcStack][3][nVar][1] )
-         __QQPub( s_aProcStack[s_nProcStack][3][nVar][1] )
-         &( s_aProcStack[s_nProcStack][3][nVar][1] ) := s_aProcStack[s_nProcStack][3][nVar][2]
+         #ifdef __HARBOUR__
+            //__QQPub( s_aProcStack[s_nProcStack][3][nVar][1] ) // *** Harbour Var was never released because of bug in __MXRelease() !!!
+            __MVPUT( s_aProcStack[s_nProcStack][3][nVar][1], s_aProcStack[s_nProcStack][3][nVar][2] )
+         #else
+            __QQPub( s_aProcStack[s_nProcStack][3][nVar][1] )
+            &( s_aProcStack[s_nProcStack][3][nVar][1] ) := s_aProcStack[s_nProcStack][3][nVar][2]
+         #endif
       NEXT
 
       /* Restoring Locals of parrent. */
@@ -685,6 +690,11 @@ RETURN s_xRet
 PROCEDURE RP_Dot()
 
    LOCAL GetList := {}, sLine := Space(256)
+   LOCAL nDefines, nCommands, nTranslates
+
+   LOCAL aCopyDefRules, aCopyDefResults
+   LOCAL aCopyCommRules, aCopyCommResults
+   LOCAL aCopyTransRules, aCopyTransResults
 
    #ifdef FW
        Alert( [DOT mode (no filename parameter) is Not ready for GUI yet.] + CRLF + CRLF + [Please try Interpreter mode, using the -R switch...] )
@@ -695,8 +705,17 @@ PROCEDURE RP_Dot()
 
    PP_PreProFile( "rp_dot.ch" )
    #ifdef WIN
-      PP_PreProLine( '#COMMAND Alert( <x> ) => MessageBox( 0, xToStr( <x> ), "TInterpreter for Windows", 0 )' )
+      PP_PreProLine( '#COMMAND Alert( <x> ) => MessageBox( 0, CStr( <x> ), "TInterpreter for Windows", 0 )' )
    #endif
+
+   aCopyDefRules     := aClone( aDefRules )
+   aCopyDefResults   := aClone( aDefResults )
+
+   aCopyCommRules    := aClone( aCommRules )
+   aCopyCommResults  := aClone( aCommResults )
+
+   aCopyTransRules   := aClone( aTransRules )
+   aCopyTransResults := aClone( aTransResults )
 
    ErrorBlock( {|oErr| RP_Dot_Err( oErr ) } )
 
@@ -715,6 +734,24 @@ PROCEDURE RP_Dot()
       sLine := StrTran( sLine,  Chr(9), "  " )
 
       ExecuteLine( PP_PreProLine( RTrim( sLine ), 1, '' ) )
+
+      //TraceLog( Len( aDefRules ), Len( aCommRules ), Len( aTransRules ) )
+
+      IF s_lRunLoaded
+         aDefRules     := aClone( aCopyDefRules )
+         aDefResults   := aClone( aCopyDefResults )
+
+         aCommRules    := aClone( aCopyCommRules )
+         aCommResults  := aClone( aCopyCommResults )
+
+         aTransRules   := aClone( aCopyTransRules )
+         aTransResults := aClone( aCopyTransResults )
+
+         s_lRunLoaded := .F.
+         s_lClsLoaded := .F.
+         s_lFWLoaded  := .F.
+      ENDIF
+
    ENDDO
 
 RETURN
@@ -1728,7 +1765,9 @@ PROCEDURE PP_Statics( aVars )
          &( aVars[nVar] ) := &( cInit )
          aAdd( s_asStatics, aVars[nVar] )
       ELSE
-         Alert( [Type: ] + Type( aVars[nVar] ) + [Static redeclaration: '] + aVars[nVar] )
+         IF aScan( aVars, aVars[nVar], 1, nVar - 1 ) > 0
+            Alert( [Type: ] + Type( aVars[nVar] ) + [ Static redeclaration: '] + aVars[nVar] )
+         ENDIF
       ENDIF
    NEXT
 
@@ -1760,17 +1799,26 @@ PROCEDURE PP_Run( cFile, aParams, sPPOExt, bBlanks )
       ENDIF
    ENDIF
 
-   s_sModule := cFile
-   bCompile  := .T.
-   PP_PreProFile( cFile, sPPOExt, bBlanks )
-   bCompile  := .F.
+   //TraceLog( cFile, s_sModule, s_aProcedures, s_aInitExit, s_nProcId, aParams )
+
+   IF s_sModule == cFile
+      TraceLog( s_aProcedures, s_aInitExit, s_nProcId, aParams )
+   ELSE
+      //s_nProcId := 0; s_aProcedures := {}; s_aInitExit := { {}, {} }
+      //s_asPrivates := {}; s_asPublics := {}; s_asLocals := {}; s_asStatics := {}; s_aParams := {}
+
+      s_sModule := cFile
+      bCompile  := .T.
+      PP_PreProFile( cFile, sPPOExt, bBlanks )
+      bCompile  := .F.
+   ENDIF
 
    PP_Exec( s_aProcedures, s_aInitExit, s_nProcId, aParams )
 
    #ifdef __CLIPPER__
       Memory(-1)
    #else
-
+      HB_GCALL()
    #endif
 
    s_sModule := sPresetModule
@@ -1838,7 +1886,7 @@ PROCEDURE RP_Dot_Err( oErr )
 
 //--------------------------------------------------------------//
 
-PROCEDURE RP_Comp_Err( oErr, sLine, nLine )
+PROCEDURE RP_PPText_Err( oErr, sLine, nLine )
 
    LOCAL Counter, xArg, sArgs := ""
 
@@ -1881,8 +1929,8 @@ PROCEDURE RP_Comp_Err( oErr, sLine, nLine )
       sArgs := Left( sArgs, Len( sArgs ) -2 )
    ENDIF
 
-   TraceLog( "Line: " + Str( nLine, 4 ) + " could not compile: '" + sLine + "';" + oErr:Description + sArgs + " " + ProcName(2) + '[' + Str( ProcLine(2) ) + ']')
-   Alert( [Line: ] + Str( nLine, 4 ) + [ could not compile: ]+"'" + sLine + "';" + oErr:Description + sArgs + " " + ProcName(2) + '[' + Str( ProcLine(2) ) + ']')
+   TraceLog( "Line: " + Str( nLine, 4 ) + " could not pre-process text: '" + sLine + "'; " + oErr:Description + sArgs + " " + ProcName(2) + '[' + Str( ProcLine(2) ) + ']')
+   Alert( [Line: ] + Str( nLine, 4 ) + [ could not compile: ]+"'" + sLine + "'; " + oErr:Description + sArgs + " " + ProcName(2) + '[' + Str( ProcLine(2) ) + ']')
 
    BREAK
 
@@ -1890,12 +1938,12 @@ PROCEDURE RP_Comp_Err( oErr, sLine, nLine )
 
 //--------------------------------------------------------------//
 
-FUNCTION RP_Run_Err( oErr, aProcedures )
+PROCEDURE RP_Comp_Err( oErr, sLine, nLine )
 
-   LOCAL Counter, xArg, sArgs := "", nProc, sProc
+   LOCAL Counter, xArg, sArgs := ""
 
    IF ValType( oErr:Args ) == 'A'
-      sArgs := " - Arguments: "
+      sArgs := "Arguments: "
 
       FOR Counter := 1 TO Len( oErr:Args )
          xArg := oErr:Args[Counter]
@@ -1933,6 +1981,58 @@ FUNCTION RP_Run_Err( oErr, aProcedures )
       sArgs := Left( sArgs, Len( sArgs ) -2 )
    ENDIF
 
+   TraceLog( "Line: " + Str( nLine, 4 ) + " could not compile: '" + sLine + "'; '" + oErr:Description + "'; " + sArgs + "; " + ProcName(2) + '[' + Str( ProcLine(2) ) + ']')
+   Alert( [Line: ] + Str( nLine, 4 ) + [ could not compile: ] + CRLF + "'" + sLine + "'" + CRLF + oErr:Description + CRLF + sArgs + CRLF + ProcName(2) + '[' + Str( ProcLine(2) ) + ']')
+
+   BREAK
+
+//RETURN // Unreacable code
+
+//--------------------------------------------------------------//
+
+FUNCTION RP_Run_Err( oErr, aProcedures )
+
+   LOCAL Counter, xArg, sArgs := "", nProc, sProc
+
+   IF ValType( oErr:Args ) == 'A'
+      sArgs := "Arguments: "
+
+      FOR Counter := 1 TO Len( oErr:Args )
+         xArg := oErr:Args[Counter]
+
+         DO CASE
+            CASE xArg == NIL
+               sArgs += "NIL; "
+
+            CASE ValType( xArg ) == 'A'
+               sArgs += "{}; "
+
+            CASE ValType( xArg ) == 'B'
+               sArgs += "{|| }; "
+
+            CASE ValType( xArg ) == 'C'
+               sArgs += '"' + xArg + '"; '
+
+            CASE ValType( xArg ) == 'D'
+               sArgs +=  dtoc( xArg ) + "; "
+
+            CASE ValType( xArg ) == 'L'
+               sArgs += IIF( xArg, ".T.; ", ".F.; " )
+
+            CASE ValType( xArg ) == 'N'
+               sArgs +=  Str( xArg ) + "; "
+
+            CASE ValType( xArg ) == 'O'
+               sArgs +=  "{o}; "
+
+            OTHERWISE
+               sArgs +=  '[' + ValType( xArg ) + "]; "
+         ENDCASE
+      NEXT
+
+      sArgs := Left( sArgs, Len( sArgs ) -2 )
+   ENDIF
+
    IF oErr:SubCode == 1001
       IF s_sModule != NIL
          sProc := s_sModule + oErr:Operation //ProcName( 2 + 2 )
@@ -1957,17 +2057,27 @@ FUNCTION RP_Run_Err( oErr, aProcedures )
          IF oErr:CanSubstitute
             RETURN ( s_xRet )
          ELSEIF oErr:CanDefault
-            Alert( [Must Default: ] + "'" + oErr:Operation + "' " + oErr:Description + sArgs + " " + PP_ProcName() + '(' + LTrim( Str( PP_ProcLine() ) ) + ") " + ProcName(2)  + "(" + LTrim( Str( ProcLine(2) ) ) + ")" )
+            Alert( [Must Default: ] + "'" + oErr:Operation + "' '" + oErr:Description + CRLF + ;
+						       sArgs + CRLF + ;
+									 PP_ProcName() + '(' + LTrim( Str( PP_ProcLine() ) ) + ") " + CRLF + ;
+									 ProcName(2)  + "(" + LTrim( Str( ProcLine(2) ) ) + ")" )
             RETURN  ( .F. )
          ELSE
-            Alert( [No Recovery for: ] + "'" + oErr:Operation + "' " + oErr:Description + sArgs + " " + PP_ProcName() + '(' + LTrim( Str( PP_ProcLine() ) ) + ") " + ProcName(2)  + "(" + LTrim( Str( ProcLine(2) ) ) + ")" )
+            Alert( [No Recovery for: ] + "'" + oErr:Operation + "' " + oErr:Description + CRLF + ;
+						       sArgs + " " + CRLF + ;
+									 PP_ProcName() + '(' + LTrim( Str( PP_ProcLine() ) ) + ") " + CRLF + ;
+									 ProcName(2)  + "(" + LTrim( Str( ProcLine(2) ) ) + ")" )
             BREAK nProc
          ENDIF
       ENDIF
    ENDIF
 
-   TraceLog( s_sModule, "Sorry, R/T Error: [" + oErr:SubSystem + "/" + LTrim( Str( oErr:SubCode ) ) +  "] '" + oErr:Operation + "' " + oErr:Description + sArgs + " " + PP_ProcName() + '(' + LTrim( Str( PP_ProcLine() ) ) + ") " + ProcName(2)  + "(" + LTrim( Str( ProcLine(2) ) ) + ")" )
-   Alert( [Sorry, R/T Error: ] + "[" + oErr:SubSystem + "/" + LTrim( Str( oErr:SubCode ) ) + "] '" + oErr:Operation + "' " + oErr:Description + sArgs + " " + PP_ProcName() + '(' + LTrim( Str( PP_ProcLine() ) ) + ") " + ProcName(2)  + "(" + LTrim( Str( ProcLine(2) ) ) + ")" )
+   TraceLog( s_sModule, "Sorry, R/T Error: [" + oErr:SubSystem + "/" + LTrim( Str( oErr:SubCode ) ) +  "] '" + oErr:Operation + "' '" + oErr:Description + "' " + sArgs + " " + PP_ProcName() + '(' + LTrim( Str( PP_ProcLine() ) ) + ") " + ProcName(2)  + "(" + LTrim( Str( ProcLine(2) ) ) + ")" )
+   Alert( [R/T Error: ] + "[" + oErr:SubSystem + "/" + LTrim( Str( oErr:SubCode ) ) + "] '" + oErr:Operation + "' " + CRLF + ;
+	        oErr:Description + CRLF + ;
+					sArgs + CRLF + ;
+					PP_ProcName() + '(' + LTrim( Str( PP_ProcLine() ) ) + ") " + CRLF + ;
+					ProcName(2)  + "(" + LTrim( Str( ProcLine(2) ) ) + ")" )
 
    BREAK oErr
 
@@ -5774,7 +5884,7 @@ STATIC FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
    aLIST
    */
 
-   // *** Processing STOP Words below, because processing RP may discover repeatable rooted by non optional marker and correct the root to optional!
+   // *** Processing STOP Words below!
 
    /*
    ? ''
@@ -6183,39 +6293,17 @@ STATIC FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
       BREAK
    ENDIF
 
-#ifdef POSSIBLE_WORK_IN_PROGRESS
+
+   /* Processing Repeatable Flag of Match Markers. */
+   /* Note additional correction done in subsequent processing of STOP Words, below... */
    nResults := Len( aResult )
    FOR Counter := nResults TO 1 STEP -1
+      aRP := aResult[Counter]
 
       /* Correcting the ID of the Marker this result depends upon. */
-      IF aResult[Counter][1] > 0
-         nOptional := aResult[Counter][1]
-         nMarker   := aResult[Counter][2]
-      ELSEIF aResult[Counter][1] < 0
-         aResult[Counter][1] := nOptional
-      ENDIF
-
-      IF ValType( aResult[Counter][2] ) == 'C'
-         aResult[Counter][2] := StrTran( aResult[Counter][2], '\', '' )
-         //? "RP #", Counter, aResult[Counter][1], '"' + aResult[Counter][2] + '"'
-      ELSE
-         /* Marking the respective Match Marker as Repeatable, if it is OPTIONAL. */
-         IF nOptional > 0
-            aEval( aRule[2], { |aMP| IIF( aMP[1] == nMarker .AND. aMP[2] <> 0, aMP[1] += 1000, ) } )
-         ENDIF
-
-         //? "RP #", Counter, aResult[Counter][1], aResult[Counter][2]
-      ENDIF
-   NEXT
-#endif
-
-   nResults := Len( aResult )
-   FOR Counter := nResults TO 1 STEP -1
-
-      /* Correcting the ID of the Marker this result depends upon. */
-      IF aResult[Counter][1] > 0
-         nOptional := aResult[Counter][1]
-         nMarker   := aResult[Counter][2]
+      IF aRP[1] > 0
+         nOptional := aRP[1]
+         nMarker   := aRP[2]
 
          //? "Repeatable: ", nMarker, "Root: ", nOptional
 
@@ -6246,15 +6334,15 @@ STATIC FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
             ENDIF
             //WAIT
          ENDIF
-      ELSEIF aResult[Counter][1] < 0
-         aResult[Counter][1] := nOptional
+      ELSEIF aRP[1] < 0
+         aRP[1] := nOptional
       ENDIF
 
-      IF ValType( aResult[Counter][2] ) == 'C'
-         aResult[Counter][2] := StrTran( aResult[Counter][2], '\', '' )
-         //? "RP #", Counter, aResult[Counter][1], '"' + aResult[Counter][2] + '"'
+      IF ValType( aRP[2] ) == 'C'
+         aRP[2] := StrTran( aRP[2], '\', '' )
+         //? "RP #", Counter, aRP[1], '"' + aRP[2] + '"'
       ELSE
-         //? "RP #", Counter, aResult[Counter][1], aResult[Counter][2]
+         //? "RP #", Counter, aRP[1], aRP[2]
       ENDIF
    NEXT
 
@@ -6267,6 +6355,14 @@ STATIC FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
 
    FOR Counter := 1 TO nMatches
       aMatch := aRule[2][Counter]
+
+      /* If optional, which is *not* used as a result, Clipper makes it repeatable. */
+      IF aMatch[1] < 1000 .AND. aMatch[1] > 0 .AND. aMatch[2] > 0
+         IF aScan( aResult, { |aRP| ValType( aRP[2] ) == 'N' .AND. aRP[2] == aMatch[1] } ) == 0
+            TraceLog( "Warning - Marker #" + Str( aMatch[1] ) + " not utilized in Result Rule", sRuleCopy )
+            aMatch[1] += 1000
+         ENDIF
+      ENDIF
 
       /* Optional group start (marker), no anchor, and not a restricted pattern - have to build stop words list! */
       IF aMatch[1] > 0 .AND. aMatch[2] > 0 .AND. aMatch[3] == NIL .AND. aMatch[4] != ':'
@@ -7747,6 +7843,8 @@ STATIC FUNCTION InitClsResults()
  #endif
 
 RETURN .T.
+
+#ifndef __XHARBOUR__
 //--------------------------------------------------------------//
 INIT PROCEDURE PPInit
 
@@ -7756,6 +7854,7 @@ INIT PROCEDURE PPInit
    FClose(FileHandle)
 
 RETURN
+#endif
 
 //--------------------------------------------------------------//
 FUNCTION TraceLog(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15 )
@@ -7783,7 +7882,7 @@ FUNCTION TraceLog(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p
    ENDIF
 
    FOR Counter := 1 to PCount()
-      FWrite( FileHandle, '>>>' + xToStr( aEntries[Counter] ) + '<<<' + CRLF )
+      FWrite( FileHandle, '>>>' + CStr( aEntries[Counter] ) + '<<<' + CRLF )
    NEXT
 
    FWrite( FileHandle, CRLF )
@@ -7792,8 +7891,9 @@ FUNCTION TraceLog(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p
 
 RETURN .T.
 
+#ifndef __XHARBOUR__
 //--------------------------------------------------------------//
-FUNCTION xToStr( xExp )
+FUNCTION CStr( xExp )
 
    LOCAL cType
 
@@ -7826,13 +7926,15 @@ FUNCTION xToStr( xExp )
          RETURN '{|| Block }'
 
       CASE cType = 'O'
-         RETURN "{ Object }"
+         RETURN "{ " + xExp:ClassName() + " Object }"
 
       OTHERWISE
          RETURN "Type: " + cType
    ENDCASE
 
 RETURN ""
+
+#endif
 
 //--------------------------------------------------------------//
 FUNCTION PP_QSelf( o )
@@ -7956,6 +8058,18 @@ RETURN 0
 
 //--------------------------------------------------------------//
 
+FUNCTION PP_ModuleName( sNewModule )
+
+   LOCAL sModule := s_sModule
+
+   IF PCount() > 0
+      s_sModule := sNewModule
+   ENDIF
+
+RETURN sModule
+
+//--------------------------------------------------------------//
+
 STATIC FUNCTION InitRunRules()
 
    /* Defines */
@@ -8043,7 +8157,7 @@ STATIC FUNCTION InitRunResults()
 
    /* Commands Results*/
  #ifdef WIN
-   aAdd( aCommResults, { { {   0, 'MessageBox( 0, xToStr( ' }, {   0,   1 }, {   0, ' ), "xBaseScript for Windows", 0 )' } }, { -1,  1, -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'MessageBox( 0, CStr( ' }, {   0,   1 }, {   0, ' ), "xBaseScript for Windows", 0 )' } }, { -1,  1, -1} , { NIL }  } )
  #endif
    aAdd( aCommResults, { , , { NIL }  } )
    aAdd( aCommResults, { , , { NIL }  } )
@@ -8116,6 +8230,8 @@ FUNCTION PP_PreProText( sLines, asLines )
 
    LOCAL nOpen, nClose, sTemp := "", nLine, nLines
 
+   //ErrorBlock( {|oErr| RP_PPText_Err( oErr, sLines, 0 ) } )
+
    IF asLines == NIL
       asLines := {}
    ENDIF
@@ -8135,23 +8251,43 @@ FUNCTION PP_PreProText( sLines, asLines )
 
    nOpen  := 0
    nClose := 0
+
+   //ErrorBlock( {|oErr| RP_PPText_Err( oErr, SubStr( sLines, nClose + 1, nOpen - ( nClose + 1 ) ), 0 ) } )
+
    WHILE ( nOpen := nAtSkipStr( Chr(10), sLines, nOpen + 1 ) ) > 0
-      aAdd( asLines, SubStr( sLines, nClose + 1, nOpen - ( nClose + 1 ) ) )
+      aAdd( asLines, RTrim( LTrim( SubStr( sLines, nClose + 1, nOpen - ( nClose + 1 ) ) ) ) )
       nClose := nOpen
    ENDDO
    IF Len( sLines ) > nClose
-      aAdd( asLines, SubStr( sLines, nClose + 1 ) )
+      aAdd( asLines, RTrim( LTrim( SubStr( sLines, nClose + 1 ) ) ) )
    ENDIF
 
-   sLines := ""
+   //ErrorBlock( {|oErr| RP_PPText_Err( oErr, asLines[nLine], nLine ) } )
+
    nLines := Len( asLines )
    FOR nLine := 1 TO nLines
-      IF Left( asLines[nLine], 1 ) == '*'
-         LOOP
-      ENDIF
+      DO WHILE Empty( asLines[nLine] ) .OR. Left( asLines[nLine], 1 ) == '*'
+         aDel( asLines, nLine )
+         nLines--
+         aSize( asLines, nLines )
+				 IF nLine > nLines
+						EXIT
+				 ENDIF
+      ENDDO
+
+			IF nLine > nLines
+			 	EXIT
+			ENDIF
 
       nOpen := nAtSkipStr( "&&", asLines[nLine] )
       IF nOpen > 0
+         IF nOpen == 1
+            aDel( asLines, nLine )
+            nLine--
+            nLines--
+            aSize( asLines, nLines )
+            LOOP
+         ENDIF
          sTemp := Left( asLines[nLine], nOpen - 1 )
       ELSE
          sTemp := asLines[nLine]
@@ -8159,10 +8295,33 @@ FUNCTION PP_PreProText( sLines, asLines )
 
       nOpen := nAtSkipStr( "//", sTemp )
       IF nOpen > 0
+         IF nOpen == 1
+            aDel( asLines, nLine )
+            nLine--
+            nLines--
+            aSize( asLines, nLines )
+            LOOP
+         ENDIF
          sTemp := Left( sTemp, nOpen - 1 )
       ENDIF
 
+      asLines[nLine] := sTemp
+   NEXT
+
+   sLines := ""
+   FOR nLine := 1 TO nLines
+      sTemp := asLines[nLine]
+
+      DO WHILE Right( sTemp, 1 ) == ';'
+         aDel( asLines, nLine )
+         nLines--
+         aSize( asLines, nLines )
+         // nLine now points to the next line.
+         sTemp := Left( sTemp, Len( sTemp ) - 1 ) + asLines[nLine]
+      ENDDO
+
       sTemp := PP_PreProLine( sTemp )
+
       sLines += sTemp
       IF nLine < nLines
          sLines += ";"

@@ -34,6 +34,7 @@ CLASS  TInterpreter
    DATA aCompiledProcs
    DATA aInitExit
    DATA nProcs
+   DATA aScriptHostGlobals   INIT {}
 
    METHOD New()              INLINE ( ::nProcs := 0, ::cText := "", ::acPPed := {}, ::aCompiledProcs := {}, ::aInitExit := { {}, {} }, Self )
 
@@ -49,10 +50,16 @@ CLASS  TInterpreter
    METHOD InitStdRules()     INLINE PP_InitStd()
    METHOD LoadClass()        INLINE PP_LoadClass()
    METHOD LoadFiveWin()      INLINE PP_LoadFw()
+
+#ifdef WIN
+   METHOD ScriptSiteAddGlobal( cName, pDisp )
+   METHOD ScriptSiteAutomateGlobals()
+#endif
+
 ENDCLASS
 
 //----------------------------------------------------------------------------//
-METHOD Run( p1, p2, p3, p4, p5, p6, p7, p8, p9 )
+METHOD Run( p1, p2, p3, p4, p5, p6, p7, p8, p9 ) CLASS  TInterpreter
 
    LOCAL aParams := HB_aParams(), xRet
 
@@ -67,7 +74,7 @@ METHOD Run( p1, p2, p3, p4, p5, p6, p7, p8, p9 )
 RETURN xRet
 
 //----------------------------------------------------------------------------//
-METHOD Compile()
+METHOD Compile() CLASS  TInterpreter
 
    LOCAL nLine, nLines, nProcId := 0
 
@@ -82,6 +89,8 @@ METHOD Compile()
    IF Len( ::aCompiledProcs ) == 0
       ErrorBlock( {|oErr| RP_Comp_Err( oErr, ::acPPed[nLine], nLine ) } )
 
+      PP_ModuleName( "_TINTERPRETER_" )
+
       nLines := Len( ::acPPed )
       FOR nLine := 1 TO nLines
          PP_CompileLine( ::acPPed[nLine], nLine, ::aCompiledProcs, ::aInitExit, @nProcId )
@@ -91,6 +100,37 @@ METHOD Compile()
    ::nProcs := nProcId
 
 RETURN nProcId > 0
+
+//----------------------------------------------------------------------------//
+#ifdef WIN
+METHOD ScriptSiteAddGlobal( cName, pDisp ) CLASS  TInterpreter
+
+   LOCAL oGlobal := TOleAuto():New( pDisp, cName )
+
+   aAdd( ::aScriptHostGlobals, { cName, pDisp } )
+
+   __QQPub( cName )
+   __MVPUT( cName, oGlobal )
+
+RETURN Self
+
+//----------------------------------------------------------------------------//
+METHOD ScriptSiteAutomateGlobals() CLASS  TInterpreter
+
+   LOCAL aGlobals := ::aScriptHostGlobals
+   LOCAL nGlobals := Len( aGlobals ), nGlobal
+   LOCAL cName, pDisp
+
+   FOR nGlobal := 1 TO nGlobals
+      cName := aGlobals[ nGlobal ][1]
+      pDisp := aGlobals[ nGlobal ][2]
+      __QQPub( cName )
+      __MVPUT( cName, TOleAuto():New( pDisp ) )
+   NEXT
+
+RETURN .T.
+
+#endif
 
 //----------------------------------------------------------------------------//
 
@@ -619,7 +659,7 @@ HB_FUNC( EXTRACTLEADINGWS )
 
    if( i > 0 )
    {
-      if( HB_IS_BYREF( hb_stackItemFromBase( 1 ) ) )
+      if( HB_IS_BYREF( * ( hb_stack.pBase + 1 + 1 ) ) )
       {
          hb_itemPutCPtr( pLine, hb_strdup( pLine->item.asString.value + i ), iLen - i );
       }
@@ -628,17 +668,16 @@ HB_FUNC( EXTRACTLEADINGWS )
    pTmp = ( char * ) hb_xgrab( i + 1 );
    memset( pTmp, ' ', i );
 
-   if( HB_IS_BYREF( hb_stackItemFromBase( 2 ) ) )
+   if( HB_IS_BYREF( * ( hb_stack.pBase + 2 + 1 ) ) )
    {
-      PHB_ITEM pWS = hb_itemUnRef( hb_stackItemFromBase( 2 ) );
+      PHB_ITEM pWS = hb_itemUnRef( * ( hb_stack.pBase + 2 + 1 ) );
       hb_itemPutCL( pWS, pTmp, i );
    }
 
    #ifdef __XHARBOUR__
       hb_retclenAdopt( pTmp, i );
    #else
-      hb_retclen( pTmp, i );
-      hb_xfree( pTmp );
+      hb_retclen_buffer( pTmp, i );
    #endif
 }
 
@@ -670,14 +709,14 @@ HB_FUNC( DROPTRAILINGWS )
       pString[i] = '\0';
    }
 
-   if( HB_IS_BYREF( hb_stackItemFromBase( 1 ) ) )
+   if( HB_IS_BYREF( * ( hb_stack.pBase + 1 + 1 ) ) )
    {
       hb_itemPutCL( pLine, pString, i );
    }
 
-   if( HB_IS_BYREF( hb_stackItemFromBase( 2 ) ) )
+   if( HB_IS_BYREF( * ( hb_stack.pBase + 2 + 1 ) ) )
    {
-      PHB_ITEM pWS = hb_itemUnRef( hb_stackItemFromBase( 2 ) );
+      PHB_ITEM pWS = hb_itemUnRef( * ( hb_stack.pBase + 2 + 1 ) );
       char *pTmp = ( char * ) hb_xgrab( iLen - i + 1 );
 
       memset( pTmp, ' ', iLen - i );
@@ -687,8 +726,7 @@ HB_FUNC( DROPTRAILINGWS )
    #ifdef __XHARBOUR__
       hb_retclenAdopt( pString, i );
    #else
-      hb_retclen( pString, i );
-      hb_xfree( pString );
+      hb_retclen_buffer( pString, i );
    #endif
 }
 
@@ -720,7 +758,7 @@ HB_FUNC( DROPEXTRATRAILINGWS )
       pString[i] = '\0';
    }
 
-   if( HB_IS_BYREF( hb_stackItemFromBase( 1 ) ) )
+   if( HB_IS_BYREF( * ( hb_stack.pBase + 1 + 1 ) ) )
    {
       hb_itemPutCL( pLine, pString, i );
    }
@@ -728,28 +766,986 @@ HB_FUNC( DROPEXTRATRAILINGWS )
    #ifdef __XHARBOUR__
       hb_retclenAdopt( pString, i );
    #else
-      hb_retclen( pString, i );
-      hb_xfree( pString );
+      hb_retclen_buffer( pString, i );
    #endif
 }
 
 #pragma ENDDUMP
 
-#endif
-
 //----------------------------------------------------------------------------//
+
 #ifdef WIN
 
-   #pragma BEGINDUMP
+FUNCTION Alert( cMsg, aOptions )
 
-   #include <Windows.h>
+RETURN MessageBox( 0, cMsg, "XBScript", 0 );
 
-   HB_FUNC( MESSAGEBOX )
-   {
-       hb_retni( MessageBox( ( HWND ) hb_parnl( 1 ), hb_parc( 2 ), hb_parc( 3 ), hb_parni( 4 ) ) );
-   }
+//----------------------------------------------------------------------------//
 
-   #pragma ENDDUMP
+CLASS TOleAuto
+
+   DATA hObj
+   DATA cClassName
+   DATA bShowException INIT .T.
+
+   METHOD New( uObj, cClass ) CONSTRUCTOR
+   METHOD End()
+
+   METHOD Invoke( cMember, uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 )
+   METHOD Set( cProperty, uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 )
+   METHOD Get( cProperty, uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 )
+
+   ERROR HANDLER OnError( cMsg, nError )
+
+ENDCLASS
+
+//--------------------------------------------------------------------
+
+METHOD New( uObj, cClass ) CLASS TOleAuto
+
+   IF ValType( uObj ) = 'C'
+      ::hObj := CreateOleObject( uObj )
+      ::cClassName := uObj
+   ELSEIF ValType( uObj ) = 'N'
+      ::hObj := uObj
+      IF ValType( cClass ) == 'C'
+         ::cClassName := cClass
+      ELSE
+         ::cClassName := LTrim( Str( uObj ) )
+      ENDIF
+   ELSE
+      Alert( "Invalid parameter type to constructor TOleAuto():New()!" )
+      ::hObj := 0
+   ENDIF
+
+RETURN Self
+
+//--------------------------------------------------------------------
+
+METHOD End() CLASS TOleAuto
+
+   ::hObj := NIL
+
+   OLEUninitialize()
+
+RETURN NIL
+
+//--------------------------------------------------------------------
+
+METHOD Invoke( cMethod, uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 ) CLASS TOleAuto
+
+   LOCAL uObj
+
+   IF uParam6 != NIL
+      uObj := OLEInvoke( ::hObj, cMethod, uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 )
+   ELSEIF uParam5 != NIL
+      uObj := OLEInvoke( ::hObj, cMethod, uParam1, uParam2, uParam3, uParam4, uParam5 )
+   ELSEIF uParam4 != NIL
+      uObj := OLEInvoke( ::hObj, cMethod, uParam1, uParam2, uParam3, uParam4 )
+   ELSEIF uParam3 != NIL
+      uObj := OLEInvoke( ::hObj, cMethod, uParam1, uParam2, uParam3 )
+   ELSEIF uParam2 != NIL
+      uObj := OLEInvoke( ::hObj, cMethod, uParam1, uParam2 )
+   ELSEIF uParam1 != NIL
+      uObj := OLEInvoke( ::hObj, cMethod, uParam1 )
+   ELSE
+      uObj := OLEInvoke( ::hObj, cMethod )
+   ENDIF
+
+   IF OleIsObject()
+      RETURN TOleAuto():New( uObj )
+   ELSEIF ::bShowException .AND. Ole2TxtError() == "DISP_E_EXCEPTION"
+      OLEShowException()
+      RETURN Self
+   ELSEIF ::bShowException .AND. OleError() != 0
+      Alert( "Error! " + ::cClassName + ":" + cMethod + " " + Ole2TxtError() )
+   ENDIF
+
+RETURN uObj
+
+//--------------------------------------------------------------------
+
+METHOD Set( cProperty, uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 ) CLASS TOleAuto
+
+   LOCAL uObj
+
+   IF uParam6 != NIL
+      OLESetProperty( ::hObj, cProperty, uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 )
+   ELSEIF uParam5 != NIL
+      OLESetProperty( ::hObj, cProperty, uParam1, uParam2, uParam3, uParam4, uParam5 )
+   ELSEIF uParam4 != NIL
+      OLESetProperty( ::hObj, cProperty, uParam1, uParam2, uParam3, uParam4 )
+   ELSEIF uParam3 != NIL
+      OLESetProperty( ::hObj, cProperty, uParam1, uParam2, uParam3 )
+   ELSEIF uParam2 != NIL
+      OLESetProperty( ::hObj, cProperty, uParam1, uParam2 )
+   ELSEIF uParam1 != NIL
+      OLESetProperty( ::hObj, cProperty, uParam1 )
+   ENDIF
+
+   IF ::bShowException .AND. Ole2TxtError() == "DISP_E_EXCEPTION"
+      OLEShowException()
+   ELSEIF ::bShowException .AND. OleError() != 0
+      Alert( "Error! " + ::cClassName + ":" + cProperty + " " + Ole2TxtError() )
+   ENDIF
+
+RETURN nil
+
+//--------------------------------------------------------------------
+
+METHOD Get( cProperty, uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 ) CLASS TOleAuto
+
+   LOCAL uObj
+
+   IF uParam6 != NIL
+      uObj := OLEGetProperty( ::hObj, cProperty, uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 )
+   ELSEIF uParam5 != NIL
+      uObj := OLEGetProperty( ::hObj, cProperty, uParam1, uParam2, uParam3, uParam4, uParam5 )
+   ELSEIF uParam4 != NIL
+      uObj := OLEGetProperty( ::hObj, cProperty, uParam1, uParam2, uParam3, uParam4 )
+   ELSEIF uParam3 != NIL
+      uObj := OLEGetProperty( ::hObj, cProperty, uParam1, uParam2, uParam3 )
+   ELSEIF uParam2 != NIL
+      uObj := OLEGetProperty( ::hObj, cProperty, uParam1, uParam2 )
+   ELSEIF uParam1 != NIL
+      uObj := OLEGetProperty( ::hObj, cProperty, uParam1 )
+   ELSE
+      uObj := OLEGetProperty( ::hObj, cProperty )
+   ENDIF
+
+   IF OleIsObject()
+      RETURN TOleAuto():New( uObj )
+   ELSEIF ::bShowException .AND. OleError() != 0
+      Alert( "Error! " + ::cClassName + ":" + cProperty + " " + Ole2TxtError() )
+   ENDIF
+
+RETURN uObj
+
+//--------------------------------------------------------------------
+
+METHOD OnError( uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 ) CLASS TOleAuto
+
+   LOCAL cMsg := __GetMessage()
+   LOCAL bPresetShowException := ::bShowException
+   LOCAL uObj
+   LOCAL cError
+
+   //TraceLog( cMsg, PCount() )
+
+   IF LEFT( cMsg, 1 ) == '_'
+      ::Set( SUBS( cMsg, 2 ), uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 )
+   ELSE
+      ::bShowException := .F.
+      uObj := ::Invoke( cMsg, uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 )
+      IF Ole2TxtError() != "S_OK"
+         uObj := ::Get( cMsg, uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 )
+      ENDIF
+      ::bShowException := bPresetShowException
+   ENDIF
+
+   IF ::bShowException .AND. ( cError := Ole2TxtError() ) != "S_OK"
+      Alert( "Error! " + ::cClassName + ":" + cMsg + " " + cError )
+   ENDIF
+
+RETURN uObj
+
+//--------------------------------------------------------------------
+#ifdef WIN
+
+#pragma BEGINDUMP
+
+        #define __STDC__ 1
+        #define CINTERFACE 1
+
+        #ifndef __FLAT__
+          #define __FLAT__ 1
+        #endif
+
+	#include <Windows.h>
+	#include <Ole2.h>
+
+	#include <OleAuto.h>
+	#include <OleDB.h>
+	#include <ShlObj.h>
+
+	//#include <extend.h>
+	//#include <HBdate.h>
+	//#include <HBvm.h>
+
+	#include <ctype.h>
+	#include "hbapi.h"
+	#include "hbstack.h"
+	#include "hbapierr.h"
+	#include "hbapiitm.h"
+	#include "hbvm.h"
+	#include "hboo.ch"
+	#include "HBdate.h"
+
+	#undef  WORD
+	#define WORD        unsigned short
+
+	// -----------------------------------------------------------------------
+
+	//extern void pascal _pushstring( char * cParam );
+	//extern void pascal _pushint( int lParam );
+	//extern void pascal _pushdouble( double ndParam );
+
+	static far VARIANTARG RetVal;
+
+	static EXCEPINFO excep;
+
+	static HRESULT nOleError = 0;
+
+	static int nInitialized = 0;
+
+	//---------------------------------------------------------------------------//
+
+	static double DateToDbl( LPSTR cDate )
+	{
+	   double nDate;
+
+	   nDate = hb_dateEncStr( cDate ) - 0x0024d9abL;
+
+	   return ( nDate );
+	}
+
+	//---------------------------------------------------------------------------//
+
+	static LPSTR DblToDate( double nDate )
+	{
+	   static char *cDate = "00000000";
+
+	   hb_dateDecStr( cDate, (long) nDate + 0x0024d9abL );
+
+	   return ( cDate );
+	}
+
+	//---------------------------------------------------------------------------//
+
+	static LPSTR AnsiToWide( LPSTR cAnsi )
+	{
+	   WORD wLen;
+	   LPSTR cString;
+
+	   wLen  = MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, cAnsi, -1, 0, 0 );
+	   cString = ( char * ) hb_xgrab( wLen * 2 );
+	   MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, cAnsi, -1, ( LPWSTR ) cString, wLen );
+
+	   return ( cString );
+	}
+
+	//---------------------------------------------------------------------------//
+
+	static LPSTR WideToAnsi( LPSTR cWide )
+	{
+	   WORD wLen;
+	   LPSTR cString = NULL;
+
+	   wLen = WideCharToMultiByte( CP_ACP, 0, ( LPWSTR ) cWide, -1, cString, 0, NULL, NULL );
+	   cString = (char *) hb_xgrab( wLen );
+	   WideCharToMultiByte( CP_ACP, 0, ( LPWSTR ) cWide, -1, cString, wLen, NULL, NULL );
+
+	   return ( cString );
+	}
+
+	//---------------------------------------------------------------------------//
+
+	static void GetParams(DISPPARAMS * dParams)
+	{
+	   VARIANTARG * pArgs = NULL;
+	   PHB_ITEM uParam;
+	   int n, nArgs, nArg;
+	   LPSTR cString;
+
+	   nArgs = hb_pcount() - 2;
+
+	   if( nArgs > 0 )
+	   {
+	      pArgs = ( VARIANTARG * ) hb_xgrab( sizeof( VARIANTARG ) * nArgs );
+
+	      for( n = 0; n < nArgs; n++ )
+	      {
+	         // Los parametros en VARIANTARG[] hay que ponerlos en orden inverso
+	         nArg = nArgs + 2 - n;
+
+	         VariantInit( &( pArgs[ n ] ) );
+
+	         uParam = hb_param( nArg, 0xFFFF );
+
+	         switch( uParam->type )
+	         {
+	            case HB_IT_NIL:
+	                 pArgs[ n ].n1.n2.vt   = VT_EMPTY;
+	                 break;
+
+	            case HB_IT_STRING:
+	            case HB_IT_MEMO:
+	                 pArgs[ n ].n1.n2.vt   = VT_BSTR;
+	                 cString = AnsiToWide( hb_parc( nArg ) );
+	                 pArgs[ n ].n1.n2.n3.bstrVal = SysAllocString( (const unsigned short *) cString );
+	                 hb_xfree( cString );
+	                 break;
+
+	            case HB_IT_LOGICAL:
+	                 pArgs[ n ].n1.n2.vt   = VT_BOOL;
+	                 pArgs[ n ].n1.n2.n3.boolVal = hb_parl( nArg );
+	                 break;
+
+	            case HB_IT_INTEGER:
+	            case HB_IT_LONG:
+	            case HB_IT_NUMERIC:
+	                 pArgs[ n ].n1.n2.vt   = VT_I4;
+	                 pArgs[ n ].n1.n2.n3.lVal = hb_parnl( nArg );
+	                 break;
+
+	            case HB_IT_DOUBLE:
+	                 pArgs[ n ].n1.n2.vt   = VT_R8;
+	                 pArgs[ n ].n1.n2.n3.dblVal = hb_parnd( nArg );
+	                 break;
+
+	            case HB_IT_DATE:
+	                 pArgs[ n ].n1.n2.vt   = VT_DATE;
+	                 pArgs[ n ].n1.n2.n3.dblVal = DateToDbl( hb_pards( nArg ) );
+	                 break;
+
+	            case HB_IT_OBJECT:
+	                 {
+	                 PHB_DYNS pData;
+	                 pArgs[ n ].n1.n2.vt = VT_EMPTY;
+	                 if ( hb_stricmp( hb_objGetClsName( uParam ), "TOleAuto" ) == 0 )
+	                    {
+	                    pData = hb_dynsymFindName( "hObj" );
+	                    if( pData )
+	                       {
+	                       hb_vmPush( uParam );
+	                       hb_vmPushSymbol( pData->pSymbol );
+	                       hb_vmDo( 0 );
+	                       pArgs[ n ].n1.n2.vt = VT_DISPATCH;
+	                       pArgs[ n ].n1.n2.n3.pdispVal = ( IDispatch * ) hb_parnl( -1 );
+	                       }
+	                    }
+	                 }
+	                 break;
+	         }
+	      }
+	   }
+
+	   dParams->rgvarg = pArgs;
+	   dParams->cArgs  = nArgs;
+	   dParams->rgdispidNamedArgs = 0;
+	   dParams->cNamedArgs = 0;
+
+	}
+
+	//---------------------------------------------------------------------------//
+
+	static void FreeParams(DISPPARAMS * dParams)
+	{
+	   int n;
+
+	   if( dParams->cArgs > 0 )
+	   {
+	      for( n = 0; n < ( int ) dParams->cArgs; n++ )
+	         VariantClear( &(dParams->rgvarg[ n ]) );
+
+	      hb_xfree( ( LPVOID ) dParams->rgvarg );
+	   }
+	}
+
+	//---------------------------------------------------------------------------//
+
+	static void RetValue( void )
+	{
+	   LPSTR cString;
+
+	   switch( RetVal.n1.n2.vt )
+	   {
+	      case VT_BSTR:
+	           cString = WideToAnsi( ( LPSTR ) RetVal.n1.n2.n3.bstrVal );
+	           hb_retc( cString );
+	           #ifdef __FLAT__
+	              hb_xfree( cString );
+	           #endif
+	           break;
+
+	      case VT_BOOL:
+	           hb_retl( RetVal.n1.n2.n3.boolVal );
+	           break;
+
+	      case VT_DISPATCH:
+	           hb_retnl( ( LONG ) RetVal.n1.n2.n3.pdispVal );
+	           break;
+
+	      case VT_I4:
+	           hb_retnl( ( LONG ) RetVal.n1.n2.n3.iVal );
+	           break;
+
+	      case VT_R8:
+	           hb_retnd( RetVal.n1.n2.n3.dblVal );
+	           break;
+
+	      case VT_DATE:
+	           hb_retds( DblToDate( RetVal.n1.n2.n3.dblVal ) );
+	           break;
+
+	      case VT_EMPTY:
+	           hb_ret();
+	           break;
+
+	      default:
+	           if ( nOleError == S_OK )
+	              (LONG) nOleError = -1;
+	           hb_ret();
+	           break;
+	   }
+
+	   if( RetVal.n1.n2.vt != VT_DISPATCH )
+	      VariantClear( &RetVal );
+
+	}
+
+	//---------------------------------------------------------------------------//
+
+	HB_FUNC( CREATEOLEOBJECT ) // ( cOleName | cCLSID  [, cIID ] )
+	{
+	   LPSTR cCLSID;
+	   GUID ClassID, iid;
+	   /*REFIID*/ struct _GUID *riid = (struct _GUID *) &IID_IDispatch;
+	   IDispatch * pDisp = NULL;
+
+	   nOleError = S_OK;
+
+	   if ( nInitialized == 0 )
+	      nOleError = OleInitialize( NULL );
+
+	   if ( (nOleError == S_OK) || (nOleError == (HRESULT) S_FALSE) )
+	      {
+	      nInitialized++;
+
+	      cCLSID = AnsiToWide( hb_parc( 1 ) );
+	      if ( hb_parc( 1 )[ 0 ] == '{' )
+	         nOleError = CLSIDFromString( ( LPOLESTR ) cCLSID, &ClassID );
+	      else
+	         nOleError = CLSIDFromProgID( ( LPCOLESTR ) cCLSID, &ClassID );
+
+	      hb_xfree( cCLSID );
+
+	      if ( hb_pcount() == 2 )
+	         {
+	         if ( hb_parc( 2 )[ 0 ] == '{' )
+	           {
+	            cCLSID = AnsiToWide( hb_parc( 2 ) );
+	            nOleError = CLSIDFromString( ( LPOLESTR ) cCLSID, &iid );
+	            hb_xfree( cCLSID );
+	            }
+	         else
+	            memcpy( ( LPVOID ) &iid, hb_parc( 2 ), sizeof( iid ) );
+
+	         riid = &iid;
+	         }
+
+	      if ( nOleError == S_OK )
+	         nOleError = CoCreateInstance( &ClassID, NULL, CLSCTX_SERVER, riid, (void **) &pDisp );
+	      }
+
+	   hb_retnl( ( LONG ) pDisp );
+
+	}
+
+	//---------------------------------------------------------------------------//
+
+	HARBOUR HB_FUN_OLESHOWEXCEPTION()
+	{
+	   if ( (LONG) nOleError == DISP_E_EXCEPTION )
+	      {
+	         LPSTR source, description;
+
+	         source = WideToAnsi( (char *) excep.bstrSource );
+	         description = WideToAnsi( (char *) excep.bstrDescription );
+	         MessageBox( NULL, description, source, MB_ICONHAND );
+	         hb_xfree( source );
+	         hb_xfree( description );
+	      }
+	}
+
+	//---------------------------------------------------------------------------//
+
+	HARBOUR HB_FUN_OLEINVOKE() // (hOleObject, szMethodName, uParams...)
+	{
+	   IDispatch * pDisp = ( IDispatch * ) hb_parnl( 1 );
+	   LPSTR cMember;
+	   DISPID lDispID;
+	   DISPPARAMS dParams;
+	   UINT uArgErr;
+
+	   VariantInit( &RetVal );
+	   memset( (LPBYTE) &excep, 0, sizeof( excep ) );
+
+	   cMember = AnsiToWide( hb_parc( 2 ) );
+	   nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, &IID_NULL, (unsigned short **) &cMember, 1, LOCALE_USER_DEFAULT, &lDispID );
+	   hb_xfree( cMember );
+
+	   if ( nOleError == S_OK )
+	      {
+	      GetParams( &dParams );
+	      nOleError = pDisp->lpVtbl->Invoke( pDisp,
+	                                         lDispID,
+	                                         &IID_NULL,
+	                                         LOCALE_USER_DEFAULT,
+	                                         DISPATCH_METHOD,
+	                                         &dParams,
+	                                         &RetVal,
+	                                         &excep,
+	                                         &uArgErr ) ;
+	      FreeParams( &dParams );
+	      }
+
+	   RetValue();
+	}
+
+	//---------------------------------------------------------------------------//
+
+	HARBOUR HB_FUN_OLESETPROPERTY() // (hOleObject, cPropName, uValue, uParams...)
+	{
+	   IDispatch * pDisp = ( IDispatch * ) hb_parnl( 1 );
+	   LPSTR cMember;
+	   DISPID lDispID, lPropPut = DISPID_PROPERTYPUT;
+	   DISPPARAMS dParams;
+	   UINT uArgErr;
+
+	   VariantInit( &RetVal );
+	   memset( (LPBYTE) &excep, 0, sizeof( excep ) );
+
+	   cMember = AnsiToWide( hb_parc( 2 ) );
+	   nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, &IID_NULL, (unsigned short **) &cMember, 1, LOCALE_USER_DEFAULT, &lDispID );
+	   hb_xfree( cMember );
+
+	   if ( nOleError == S_OK )
+	      {
+	      GetParams( &dParams );
+	      dParams.rgdispidNamedArgs = &lPropPut;
+	      dParams.cNamedArgs = 1;
+
+	      nOleError = pDisp->lpVtbl->Invoke( pDisp,
+	                                         lDispID,
+	                                         &IID_NULL,
+	                                         LOCALE_USER_DEFAULT,
+	                                         DISPATCH_PROPERTYPUT,
+	                                         &dParams,
+	                                         NULL,    // No return value
+	                                         &excep,
+	                                         &uArgErr );
+
+	      FreeParams( &dParams );
+	      }
+
+	   hb_ret();
+	}
+
+	//---------------------------------------------------------------------------//
+
+	HB_FUNC( OLEGETPROPERTY )  // (hOleObject, cPropName, uParams...)
+	{
+	   IDispatch * pDisp = ( IDispatch * ) hb_parnl( 1 );
+	   LPSTR cMember;
+	   DISPID lDispID;
+	   DISPPARAMS dParams;
+	   UINT uArgErr;
+
+	   VariantInit( &RetVal );
+	   memset( (LPBYTE) &excep, 0, sizeof( excep ) );
+
+	   cMember = AnsiToWide( hb_parc( 2 ) );
+	   nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, &IID_NULL, (unsigned short **) &cMember, 1, LOCALE_USER_DEFAULT, &lDispID );
+	   hb_xfree( cMember );
+
+	   if ( nOleError == S_OK )
+	      {
+	      GetParams( &dParams );
+
+	      nOleError = pDisp->lpVtbl->Invoke( pDisp,
+	                                         lDispID,
+	                                         &IID_NULL,
+	                                         LOCALE_USER_DEFAULT,
+	                                         DISPATCH_PROPERTYGET,
+	                                         &dParams,
+	                                         &RetVal,
+	                                         &excep,
+	                                         &uArgErr );
+
+	      FreeParams( &dParams );
+	      }
+
+	   RetValue();
+	}
+
+	//---------------------------------------------------------------------------//
+
+	HB_FUNC( OLEQUERYINTERFACE )  // (hOleObject, cIID ) -> ppvObject
+	{
+	   IUnknown * pUnk = ( IUnknown * ) hb_parnl( 1 );
+	   IUnknown * ppvObject = NULL;
+	   GUID iid;
+	   LPSTR ciid;
+
+	   nOleError = S_OK;
+
+	   if ( hb_parc( 2 )[ 0 ] == '{' )
+	      {
+	      ciid = AnsiToWide( hb_parc( 2 ) );
+	      nOleError = CLSIDFromString( ( LPOLESTR ) ciid, &iid );
+	      hb_xfree( ciid );
+	      }
+	   else
+	      memcpy( ( LPVOID ) &iid, hb_parc( 2 ), sizeof( iid ) );
+
+	   if ( nOleError == S_OK )
+	      nOleError = pUnk -> lpVtbl -> QueryInterface( pUnk, (const struct _GUID *const) &iid, (void **) &ppvObject );
+
+	   hb_retnl( ( LONG ) ppvObject );
+	}
+
+	//---------------------------------------------------------------------------//
+
+	HB_FUNC( OLEADDREF )  // ( hOleObject )
+	{
+	   IUnknown * pUnk = ( IUnknown * ) hb_parnl( 1 );
+
+	   hb_retnl( pUnk -> lpVtbl -> AddRef( pUnk ) );
+	}
+
+	//---------------------------------------------------------------------------//
+
+	HB_FUNC( OLERELEASE )  // ( hOleObject )
+	{
+	   IUnknown * pUnk = ( IUnknown * ) hb_parnl( 1 );
+
+	   hb_retnl( pUnk -> lpVtbl -> Release( pUnk ) );
+	}
+
+	//---------------------------------------------------------------------------//
+
+	HB_FUNC( COMFUNCTION )  // ( hOleObject, nFunc, uParams... )
+	{
+	   typedef HRESULT ( STDMETHODCALLTYPE * COMFunc ) ( IUnknown * pUnk );
+
+	   IUnknown * pUnk = ( IUnknown * ) hb_parnl( 1 );
+	   COMFunc pFunc;
+	   COMFunc *vTbl;
+	   int i, iParams = hb_pcount();
+	   double doubles[16];
+	   LPVOID ptros[16];
+
+
+	   vTbl = ( COMFunc * ) &( pUnk -> lpVtbl -> QueryInterface );
+	   vTbl += hb_parni( 2 ) + 2;
+	   pFunc = *vTbl;
+
+	   for ( i = iParams; i > 2; i-- )
+	   {
+              char *sString;
+              int iInt;
+              double dDouble;
+
+	      switch ( ( hb_parinfo( i ) & ~HB_IT_BYREF) )
+	      {
+	         case HB_IT_STRING:
+	         case HB_IT_MEMO:
+                      //_pusstring( hb_parc( i ) );
+		      sString = hb_parc( i );
+		      __asm push sString
+                      break;
+
+	         case HB_IT_LOGICAL:
+	              if ( ISBYREF( i ) )
+	              {
+	                 ptros[ i ] = (LPVOID) hb_parl( i );
+	                 //_pushstring( (char *) &ptros[ i ] );
+			 sString = ( char * ) &ptros[ i ];
+			 __asm push sString
+	              }
+	              else
+                      {
+	                 //_pushint( hb_parl( i ) );
+			 iInt = hb_parl( i );
+			 __asm push iInt
+                      }
+	              break;
+
+	         case HB_IT_INTEGER:
+	         case HB_IT_LONG:
+	              if ( ISBYREF( i ) )
+	              {
+	                 ptros[ i ] = (LPVOID) hb_parnl( i );
+	                 //_pushstring( (char *) &ptros[ i ] );
+			 sString = ( char * ) &ptros[ i ];
+			 __asm push sString
+	              }
+	              else
+                      {
+	                 //_pushint( hb_parnl( i ) );
+			 iInt = hb_parnl( i );
+			 __asm push iInt
+                      }
+	              break;
+
+	         case HB_IT_DOUBLE:
+	              if ( ISBYREF( i ) )
+	              {
+	                 doubles[ i ] = hb_parnd( i );
+	                 //_pushstring( (char *) &doubles[ i ] );
+			 sString = ( char * ) &doubles[ i ];
+			 __asm push sString
+	              }
+	              else
+		      {
+	                 //_pushdouble( hb_parnd( i ) );
+			 dDouble = hb_parl( i );
+			 __asm push dDouble
+		      }
+	              break;
+
+	         case HB_IT_DATE:
+	              if ( ISBYREF( i ) )
+	              {
+	                 doubles[ i ] = DateToDbl( hb_pards( i ) );
+	                 //_pushstring( (char *) &doubles[ i ] );
+			 sString = ( char * ) &doubles[ i ];
+			 __asm push sString
+	              }
+	              else
+                      {
+	                 //_pushdouble( DateToDbl( hb_pards( i ) ) );
+			 dDouble = DateToDbl( hb_pards( i ) );
+			 __asm push dDouble
+                      }
+	              break;
+
+	         default:
+	              //_pushstring( NULL );
+		      sString = ( char * ) NULL;
+		      __asm push sString
+	              break;
+	      }
+	   }
+
+	   nOleError = pFunc( pUnk );
+
+	   for ( i = 3; i <= iParams; i++ )
+	   {
+	      if ( ISBYREF( i ) )
+	      {
+	         switch ( (hb_parinfo( i ) & ~HB_IT_BYREF) )
+	         {
+	            case HB_IT_STRING:
+	            case HB_IT_MEMO:
+	                 hb_storc( (char *) hb_parc( i ), i );
+	                 break;
+
+	            case HB_IT_LOGICAL:
+	                 hb_storl( (long) ptros[ i ], i );
+	                 break;
+
+	            case HB_IT_INTEGER:
+	            case HB_IT_LONG:
+	                 hb_stornl( (long) ptros[ i ], i );
+	                 break;
+
+	            case HB_IT_DOUBLE:
+	                 hb_stornd( doubles[ i ], i );
+	                 break;
+
+	            case HB_IT_DATE:
+	                 hb_stords( DblToDate( doubles[ i ] ), i );
+	                 break;
+	         }
+              }
+           }
+
+	   hb_ret();
+	}
+
+	//---------------------------------------------------------------------------//
+
+	HB_FUNC( OLEERROR )
+	{
+	   hb_retnl( (LONG) nOleError );
+	}
+
+	//---------------------------------------------------------------------------//
+
+	HB_FUNC( OLEISOBJECT )
+	{
+	   hb_retl( RetVal.n1.n2.vt == VT_DISPATCH );
+	}
+
+	//---------------------------------------------------------------------------//
+
+	HB_FUNC( OLEUNINITIALIZE )
+	{
+	   if ( nInitialized > 0 )
+	      {
+	      nInitialized--;
+	      if ( nInitialized == 0 )
+	         OleUninitialize();
+	      }
+	}
+
+	//---------------------------------------------------------------------------//
+
+	HB_FUNC( OLE2TXTERROR )
+	{
+	   switch ( (LONG) nOleError)
+	      {
+	      case S_OK:
+	         hb_retc( "S_OK" );
+	         break;
+
+	      case CO_E_CLASSSTRING:
+	         hb_retc( "CO_E_CLASSSTRING" );
+	         break;
+
+	      case OLE_E_WRONGCOMPOBJ:
+	         hb_retc( "OLE_E_WRONGCOMPOBJ" );
+	         break;
+
+	      case REGDB_E_CLASSNOTREG:
+	         hb_retc( "REGDB_E_CLASSNOTREG" );
+	         break;
+
+	      case REGDB_E_WRITEREGDB:
+	         hb_retc( "REGDB_E_WRITEREGDB" );
+	         break;
+
+	      case E_OUTOFMEMORY:
+	         hb_retc( "E_OUTOFMEMORY" );
+	         break;
+
+	      case E_INVALIDARG:
+	         hb_retc( "E_INVALIDARG" );
+	         break;
+
+	      case E_UNEXPECTED:
+	         hb_retc( "E_UNEXPECTED" );
+	         break;
+
+	      case DISP_E_UNKNOWNNAME:
+	         hb_retc( "DISP_E_UNKNOWNNAME" );
+	         break;
+
+	      case DISP_E_UNKNOWNLCID:
+	         hb_retc( "DISP_E_UNKNOWNLCID" );
+	         break;
+
+	      case DISP_E_BADPARAMCOUNT:
+	         hb_retc( "DISP_E_BADPARAMCOUNT" );
+	         break;
+
+	      case DISP_E_BADVARTYPE:
+	         hb_retc( "DISP_E_BADVARTYPE" );
+	         break;
+
+	      case DISP_E_EXCEPTION:
+	         hb_retc( "DISP_E_EXCEPTION" );
+	         break;
+
+	      case DISP_E_MEMBERNOTFOUND:
+	         hb_retc( "DISP_E_MEMBERNOTFOUND" );
+	         break;
+
+	      case DISP_E_NONAMEDARGS:
+	         hb_retc( "DISP_E_NONAMEDARGS" );
+	         break;
+
+	      case DISP_E_OVERFLOW:
+	         hb_retc( "DISP_E_OVERFLOW" );
+	         break;
+
+	      case DISP_E_PARAMNOTFOUND:
+	         hb_retc( "DISP_E_PARAMNOTFOUND" );
+	         break;
+
+	      case DISP_E_TYPEMISMATCH:
+	         hb_retc( "DISP_E_TYPEMISMATCH" );
+	         break;
+
+	      case DISP_E_UNKNOWNINTERFACE:
+	         hb_retc( "DISP_E_UNKNOWNINTERFACE" );
+	         break;
+
+	      case DISP_E_PARAMNOTOPTIONAL:
+	         hb_retc( "DISP_E_PARAMNOTOPTIONAL" );
+	         break;
+
+	      default:
+	         hb_retc( "Unknown error" );
+	         break;
+	      };
+	}
+
+	//---------------------------------------------------------------------------//
+
+	HB_FUNC( ANSITOWIDE )  // ( cAnsiStr ) -> cWideStr
+	{
+	   WORD wLen;
+	   LPSTR cOut;
+
+	   wLen = MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, hb_parc( 1 ), -1, 0, 0 );
+	   cOut = ( char * ) hb_xgrab( wLen * 2 );
+	   MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, hb_parc( 1 ), -1,
+	                        ( LPWSTR ) cOut, wLen );
+
+	   hb_retclen( cOut, wLen * 2 - 1 );
+	   hb_xfree( cOut );
+	}
+
+	//---------------------------------------------------------------------------//
+
+	HB_FUNC( WIDETOANSI )  // ( cWideStr, nLen ) -> cAnsiStr
+	{
+	   WORD wLen;
+	   LPWSTR cWideStr;
+	   LPSTR cOut = NULL;
+
+	   cWideStr = ( LPWSTR ) hb_parc( 1 );
+	   wLen = WideCharToMultiByte( CP_ACP, WC_COMPOSITECHECK, cWideStr, -1, cOut, 0, NULL, NULL );
+	   cOut = ( char * ) hb_xgrab( wLen );
+	   WideCharToMultiByte( CP_ACP, WC_COMPOSITECHECK, cWideStr, -1,
+	                        cOut, wLen, NULL, NULL );
+
+	   hb_retc( cOut );
+	   hb_xfree( cOut );
+	}
+
+	/*
+	extern "C"
+        {
+		void pushstring( char * cParam )
+		{
+		}
+
+		void pushint( int lParam )
+		{
+		}
+
+		void pushdouble( double ndParam )
+		{
+		}
+        }
+	*/
+
+	//---------------------------------------------------------------------------//
+
+	HB_FUNC( MESSAGEBOX )
+	{
+	    hb_retni( MessageBox( ( HWND ) hb_parnl( 1 ), hb_parc( 2 ), hb_parc( 3 ), hb_parni( 4 ) ) );
+	}
+
+	//---------------------------------------------------------------------------//
+
+#pragma ENDDUMP
+
+#endif
 
 #endif
 
