@@ -1,3 +1,16 @@
+2001-10-08 21:30 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
+  *source/rtl/isprint.c
+   contrib/libct/files.c
+   ! Cygwin fixes.
+   *contrib/hbzlib/zipnew.cpp
+   contrib/hbzlib/zipcomp.cpp
+   contrib/hbzlib/zip.c
+   contrib/hbzlib/hbzip2.h
+     * Added new functions
+     * Now is possible to create zipfiles in memory
+   *contrib/libct/makefile.bc
+     * added files.c to makefile
+
 2001-10-08 23:12 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
   ! source/rdd/dbf1.c
   ! source/rdd/workarea.c
