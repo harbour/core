@@ -360,6 +360,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\scrollbr.obj \
    $(OBJ_DIR)\setfunc.obj \
    $(OBJ_DIR)\setta.obj \
+   $(OBJ_DIR)\symbol.obj \
    $(OBJ_DIR)\tbcolumn.obj \
    $(OBJ_DIR)\tbrowse.obj \
    $(OBJ_DIR)\tclass.obj \
@@ -1835,6 +1836,13 @@ $(OBJ_DIR)\stuff.obj : $(RTL_DIR)\stuff.c
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\substr.obj : $(RTL_DIR)\substr.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\symbol.c : $(RTL_DIR)\symbol.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\symbol.obj : $(OBJ_DIR)\symbol.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
