@@ -1,3 +1,10 @@
+19990706-23:35 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/set.c
+    + Added header template and filled in
+      complete version history by cross-
+      referencing ChangeLog and the output
+      from "cvs log source/rtl/set.c".
+
 19990706-22:40 EDT David G. Holm <dholm@jsd-llc.com>
   * doc/hdr_tpl.txt
     - Removed "(C)" from Copyright notice
