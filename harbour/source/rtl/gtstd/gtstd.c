@@ -61,10 +61,10 @@
    #include <unistd.h>  /* read() function requires it */
    #include <termios.h>
 #else
-#if defined(_MSC_VER)
-	#include <io.h>
-	#include <conio.h>
-#endif
+   #if defined(_MSC_VER)
+      #include <io.h>
+      #include <conio.h>
+   #endif
 #endif
 
 /* Add time function for BEL flood throttling.. */
@@ -192,16 +192,16 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
       ch = 0;
 #else
 
-#if defined(_MSC_VER)
-	if( s_bStdinConsole )
-	{
-		if( _kbhit() ) ch = _getch();
-	}
-	else
-	{
-		if(! _eof(0) ) _read(0, &ch, 1);
-	}
-#endif
+   #if defined(_MSC_VER)
+   if( s_bStdinConsole )
+   {
+      if( _kbhit() ) ch = _getch();
+   }
+   else
+   {
+      if(! _eof(0) ) _read(0, &ch, 1);
+   }
+   #endif
 
 #endif
 
@@ -330,16 +330,14 @@ void hb_gt_SetPos( SHORT iRow, SHORT iCol, SHORT iMethod )
       }
       else if( s_iCol > iCol )
       {
-        szBuffer[0] = HB_CHAR_BS;
-      	while( s_iCol-- > iCol )
-      	   out_stdout( szBuffer, 1 );
+         szBuffer[0] = HB_CHAR_BS;
+         while( s_iCol-- > iCol )
+            out_stdout( szBuffer, 1 );
       }
 
       s_iRow = iRow;
       s_iCol = iCol;
-
-   }   
-
+   }
 }
 
 SHORT hb_gt_Col( void )
@@ -476,7 +474,7 @@ void hb_gt_Scroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
             out_newline();
          
          s_iCol = 0;
-      }		      
+      }
    }
 }
  

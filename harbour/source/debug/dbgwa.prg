@@ -62,7 +62,7 @@ function __dbgShowWorkAreas( oDebugger )
    n2      := 1
    n3      := 1
 
-   cColor := If( __Dbg():lMonoDisplay, "N/W, W/N, W+/W, W+/N",;
+   cColor := iif( __Dbg():lMonoDisplay, "N/W, W/N, W+/W, W+/N",;
                  "N/W, N/BG, R/W, R/BG" )
 
    do while !Empty( Alias( n1 ) )

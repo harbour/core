@@ -133,12 +133,12 @@ Local owndsets
                           ::arrayindex := iif( nSkip > 0, Min( ::arrayindex+nSkip, Len(::arrayreference)),;
                           Max( 1, ::arrayindex + nSkip ) ), ::arrayindex - nPos }
    oBrwSets:AddColumn( ocol:=     TBColumnNew("", { || ::ArrayReference[::arrayindex,1]} ))
-   nMaxElem = maxelem(::AllNames)
+   nMaxElem := maxelem(::AllNames)
    ocol:width := nMaxElem
    ocol:ColorBlock :=    { || { iif( ::Arrayindex == oBrwSets:Cargo, 2, 1 ), 2 } }
    oBrwSets:Freeze:=1
 
-   oBrwSets:AddColumn( ocol:=TBColumnNew( "", { || If( ValType( ;
+   oBrwSets:AddColumn( ocol:=TBColumnNew( "", { || iif( ValType( ;
    ::ArrayReference[ ::ArrayIndex, 2 ] ) == "C" .and. ;
    ::ArrayReference[ ::ArrayIndex, 2 ] == "Method",;
    "Method", PadR( ValToStr( __ObjSendMsg( ::TheObj, ::ArrayReference[ ::arrayindex ,1] ) ),;
@@ -198,13 +198,13 @@ method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd ,cName,LenArr,aArray) class t
 
       case nKey == K_PGUP
            oBrwSets:PageUp()
-           oBrwSets:Cargo = ::ArrayIndex
+           oBrwSets:Cargo := ::ArrayIndex
            oBrwSets:RefreshCurrent()
            oBrwSets:ForceStable()
 
       case nKey == K_PGDN
            oBrwSets:PageDown()
-           oBrwSets:Cargo = ::ArrayIndex
+           oBrwSets:Cargo := ::ArrayIndex
            oBrwSets:RefreshCurrent()
            oBrwSets:ForceStable()
 
@@ -293,7 +293,7 @@ METHOD doGet(oBro,pItem,nSet) class tdbgObject
     column := oBro:getColumn( oBro:colPos )
 
     // create a corresponding GET
-    cValue = PadR( ValToStr( pitem[nSet,2] ), column:Width )
+    cValue := PadR( ValToStr( pitem[nSet,2] ), column:Width )
     @  row(),col() GET cValue
 //    get := Getnew( Row(),col(), column:block,,, oBro:colorSpec )
 

@@ -109,7 +109,7 @@ METHOD Hide() CLASS TDbWindow
    RestScreen( ::nTop, ::nLeft, ::nBottom + iif( ::lShadow, 1, 0 ),;
                ::nRight + iif( ::lShadow, 2, 0 ), ::cBackImage )
    ::cBackImage := nil
-   ::lVisible = .f.
+   ::lVisible := .f.
 
 return nil
 
@@ -176,7 +176,7 @@ METHOD Refresh() CLASS TDbWindow
 
    DispBegin()
 
-   @ ::nTop, ::nLeft, ::nBottom, ::nRight BOX If( ::lFocused, B_DOUBLE, B_SINGLE ) ;
+   @ ::nTop, ::nLeft, ::nBottom, ::nRight BOX iif( ::lFocused, B_DOUBLE, B_SINGLE ) ;
       COLOR ::cColor
 
    DispOutAt( ::nTop, ::nLeft + 1, "[" + Chr( 254 ) + "]", ::cColor )
@@ -207,7 +207,7 @@ METHOD Show( lFocused ) CLASS TDbWindow
       hb_Shadow( ::nTop, ::nLeft, ::nBottom, ::nRight )
    endif
 
-   ::lVisible = .t.
+   ::lVisible := .t.
 
 return nil
 
@@ -233,7 +233,7 @@ METHOD ShowModal() CLASS TDbWindow
          case nKey == K_LBUTTONDOWN
               if MRow() == ::nTop .and. MCol() >= ::nLeft + 1 .and. ;
                  MCol() <= ::nLeft + 3
-                 lExit = .t.
+                 lExit := .t.
               endif
       endcase
    end

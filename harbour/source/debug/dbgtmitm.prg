@@ -91,6 +91,6 @@ METHOD Display( cClrText, cClrHotKey ) CLASS TDbMenuItem
      ( nAt := At( "~", ::cPrompt ) ) - 1,;
      SubStr( ::cPrompt, nAt + 1, 1 ), cClrHotKey )
 
-   DispOutAt( ::nRow, ::nCol, If( ::lChecked, Chr( 251 ), "" ), cClrText )
+   DispOutAt( ::nRow, ::nCol, iif( ::lChecked, Chr( 251 ), "" ), cClrText )
 
 return Self

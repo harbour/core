@@ -8,6 +8,26 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-15 12:11 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * include/hbinkey.ch
+   * source/compiler/cmdcheck.c 
+   * source/compiler/harbour.c 
+   * source/compiler/hbpcode.c
+     (I couldn't complete this one, since it's far too messy)
+   * source/debug/dbgtmenu.prg 
+   * source/debug/dbgtmitm.prg 
+   * source/debug/dbgtobj.prg 
+   * source/debug/dbgtwin.prg 
+   * source/debug/dbgwa.prg 
+   * source/debug/debugger.prg 
+   * source/rtl/perfuncs.prg
+   * source/rtl/persist.prg 
+   * source/rtl/profiler.prg
+   * source/rtl/gtsln/gtsln.c 
+   * source/rtl/gtstd/gtstd.c 
+     ! Basic cleanups "s_" prefix, tabs, = -> :=
+
 2001-12-15 11:37 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/isprint.c

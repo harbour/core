@@ -64,16 +64,16 @@
    #define SLSMG_BUILD_CHAR( ch, color ) ( ( ( SLsmg_Char_Type ) ( unsigned char )( ch ) ) | ( ( color ) << 8 ) )
 
 #if SLANG_VERSION < 10308
-   #define SLSMG_DIAMOND_CHAR	0x04
-   #define SLSMG_DEGREE_CHAR	0xF8
-   #define SLSMG_PLMINUS_CHAR	0xF1
-   #define SLSMG_BULLET_CHAR	0xF9
-   #define SLSMG_LARROW_CHAR	0x1B
-   #define SLSMG_RARROW_CHAR	0x1A
-   #define SLSMG_DARROW_CHAR	0x19
-   #define SLSMG_UARROW_CHAR	0x18
-   #define SLSMG_BOARD_CHAR	0xB2
-   #define SLSMG_BLOCK_CHAR	0xDB
+   #define SLSMG_DIAMOND_CHAR   0x04
+   #define SLSMG_DEGREE_CHAR    0xF8
+   #define SLSMG_PLMINUS_CHAR   0xF1
+   #define SLSMG_BULLET_CHAR    0xF9
+   #define SLSMG_LARROW_CHAR    0x1B
+   #define SLSMG_RARROW_CHAR    0x1A
+   #define SLSMG_DARROW_CHAR    0x19
+   #define SLSMG_UARROW_CHAR    0x18
+   #define SLSMG_BOARD_CHAR     0xB2
+   #define SLSMG_BLOCK_CHAR     0xDB
    /*
    #define SLSMG_BOARD_CHAR     'h'
    #define SLSMG_BLOCK_CHAR     '0'

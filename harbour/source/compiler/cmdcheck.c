@@ -610,7 +610,7 @@ void hb_compChkEnvironVar( char * szSwitch )
                             break;
 
                          case 'c':
-			    /* clear all flags - minimal set of features */
+                            /* clear all flags - minimal set of features */
                             hb_comp_Supported = 0;
                             break;
 

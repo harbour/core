@@ -346,7 +346,7 @@ METHOD LoadColors() CLASS TDbMenu
    ::cClrHilite   := aColors[ 10 ]
    ::cClrHotFocus := aColors[ 11 ]
 
-   for n = 1 to Len( ::aItems )
+   for n := 1 to Len( ::aItems )
       if ValType( ::aItems[ n ]:bAction ) == "O"
          ::aItems[ n ]:bAction:LoadColors()
       endif
@@ -365,7 +365,7 @@ METHOD Refresh() CLASS TDbMenu
       SetPos( 0, 0 )
    endif
 
-   for n = 1 to Len( ::aItems )
+   for n := 1 to Len( ::aItems )
       ::aItems[ n ]:Display( ::cClrPopup, ::cClrHotKey )
    next
 
@@ -399,12 +399,12 @@ METHOD ProcessKey( nKey ) CLASS TDbMenu
                  endif
               endif
            else
-              oPopup = ::aItems[ ::nOpenPopup ]:bAction
+              oPopup := ::aItems[ ::nOpenPopup ]:bAction
               if ( nPopup := oPopup:GetItemOrdByCoors( MRow(), MCol() ) ) == 0
                  ::Close()
               else
                  oPopup:DeHilite()
-                 oPopup:nOpenPopup = nPopup
+                 oPopup:nOpenPopup := nPopup
                  oPopup:aItems[ nPopup ]:Display( ::cClrHilite, ::cClrHotFocus )
                  ::EvalAction()
               endif

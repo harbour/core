@@ -50,15 +50,15 @@
  *
  */
 
-static aObjects
+static s_aObjects
 
 function HB_SetObject( oSelf, bConstructor )
 
-   if aObjects == nil
-      aObjects = {}
-      AAdd( aObjects, oSelf )
+   if s_aObjects == nil
+      s_aObjects := {}
+      AAdd( s_aObjects, oSelf )
    else
-      AAdd( aObjects, oSelf := Eval( bConstructor ) )
+      AAdd( s_aObjects, oSelf := Eval( bConstructor ) )
    endif
 
 return oSelf
@@ -67,12 +67,12 @@ function HB_EndObject()
 
    local oSelf
 
-   if Len( aObjects ) > 1
-      ASize( aObjects, Len( aObjects ) - 1 )
-      oSelf = ATail( aObjects )
+   if Len( s_aObjects ) > 1
+      ASize( s_aObjects, Len( s_aObjects ) - 1 )
+      oSelf := ATail( s_aObjects )
    else
-      oSelf = aObjects[ 1 ]
-      aObjects = nil
+      oSelf := s_aObjects[ 1 ]
+      s_aObjects := nil
    endif
 
 return oSelf

@@ -224,10 +224,8 @@ int main( int argc, char * argv[] )
    hb_compIdentifierOpen();
 
    /* Load standard Declarations. */
-   if ( hb_comp_iWarnings >= 3 )
-   {
-	  hb_compDeclaredInit();
-   }
+   if( hb_comp_iWarnings >= 3 )
+      hb_compDeclaredInit();
 
    /* Process all files passed via the command line. */
 

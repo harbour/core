@@ -85,12 +85,12 @@ METHOD LoadFromText( cObjectText ) CLASS HBPersistent
    end
 
    while nLine <= nLines
-      cLine  = MemoLine( cObjectText,, nLine )
+      cLine  := MemoLine( cObjectText,, nLine )
 
       do case
          case Upper( LTrim( __StrToken( cLine, 1 ) ) ) == "OBJECT"
               if lStart
-                 lStart = .f.
+                 lStart := .f.
               else
               endif
 
@@ -100,9 +100,9 @@ METHOD LoadFromText( cObjectText ) CLASS HBPersistent
               endif
 
          case Left( cToken := LTrim( __StrToken( cLine, 1, "=" ) ), 2 ) == "::"
-              M->oSelf = Self
-              cLine = StrTran( cLine, "::", "oSelf:" )
-              cLine = StrTran( cLine, "=", ":=" )
+              M->oSelf := Self
+              cLine := StrTran( cLine, "::", "oSelf:" )
+              cLine := StrTran( cLine, "=", ":=" )
               &( cLine )
 
       endcase
@@ -122,18 +122,18 @@ METHOD SaveToText( cObjectName ) CLASS HBPersistent
    DEFAULT cObjectName TO "o" + ::ClassName()
 
    nIndent += 3
-   cObject := If( nIndent > 0, HB_OsNewLine(), "" ) + Space( nIndent ) + ;
-              "OBJECT " + If( nIndent != 0, "::", "" ) + cObjectName + " AS " + ;
+   cObject := iif( nIndent > 0, HB_OsNewLine(), "" ) + Space( nIndent ) + ;
+              "OBJECT " + iif( nIndent != 0, "::", "" ) + cObjectName + " AS " + ;
               ::ClassName() + HB_OsNewLine()
 
-   aProperties = __ClsGetProperties( ::ClassH )
+   aProperties := __ClsGetProperties( ::ClassH )
 
-   for n = 1 to Len( aProperties )
-      uValue = __objSendMsg( Self, aProperties[ n ] )
+   for n := 1 to Len( aProperties )
+      uValue := __objSendMsg( Self, aProperties[ n ] )
 
       if ! uValue == __objSendMsg( oNew, aProperties[ n ] )
 
-         cType  = ValType( uValue )
+         cType  := ValType( uValue )
 
          do case
             case cType == "A"
@@ -176,9 +176,9 @@ static function ArrayToText( aArray, cName, nIndent )
                    " LEN " + AllTrim( Str( Len( aArray ) ) ) + HB_OsNewLine()
    local n, uValue, cType
 
-   for n = 1 to Len( aArray )
-      uValue = aArray[ n ]
-      cType  = ValType( uValue )
+   for n := 1 to Len( aArray )
+      uValue := aArray[ n ]
+      cType  := ValType( uValue )
 
       do case
          case cType == "A"
@@ -214,16 +214,16 @@ static function ValToText( uValue )
 
    do case
       case cType == "C"
-           cText = '"' + uValue + '"'
+           cText := '"' + uValue + '"'
 
       case cType == "N"
-           cText = AllTrim( Str( uValue ) )
+           cText := AllTrim( Str( uValue ) )
 
       case cType == "D"
-           cText = 'HB_STOD( "' + DToS( uValue ) + '" )'
+           cText := 'HB_STOD( "' + DToS( uValue ) + '" )'
 
       otherwise
-           cText = HB_ValToStr( uValue )
+           cText := HB_ValToStr( uValue )
    endcase
 
 return cText
