@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-04-16 19:15 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+  * source/vm/itemapi.c
+    * Simplified non-finite tests for BORLANDC > 1040 and DJGPP (there is no
+      need to also test s_dInfinity and -s_dInfinity when using a function
+      that tests whether or not the parameter value is finite).
+    ! Added non-finite tests for os2.gcc, os2.icc, w32.mingw32, and w32.rsxnt,
+      which fixes the problems that they had with evaluating str(log(-1)).
+
 2003-04-16 22:10 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * include/hbrddntx.h
   * source/rdd/dbfntx/dbfntx1.c

@@ -86,7 +86,7 @@
 #if !defined(__DJGPP__)
 #include <math.h> /* For log() */
 #endif
-#if (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
+#if defined(__IBMCPP__) || (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
 #include <float.h>  /* for _finite() and _isnan() */
 #endif
 
@@ -1127,16 +1127,11 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
       if( iWidth > 90 )
          iWidth = 90;
 
-      /* Limit the number of decimal places. */
       if( hb_set.HB_SET_FIXED )
-         /* If fixed mode is enabled, always use the default. */
+      {
+         /* If fixed mode is enabled, always use the default number of decimal places. */
          iDec = hb_set.HB_SET_DECIMALS;
-
-         /* Otherwise, the maximum is 9. Why? */
-/*
-      else if( iDec > 9 )
-         iDec = 9;
-*/
+      }
 
       if( pWidth )
       {
@@ -1145,9 +1140,13 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
          int iWidthPar = hb_itemGetNI( pWidth );
 
          if( iWidthPar < 1 )
+         {
             iWidth = 10;                  /* If 0 or negative, use default */
+         }
          else
+         {
             iWidth = iWidthPar;
+         }
 
          iDec = 0;
       }
@@ -1160,7 +1159,9 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
          int iDecPar = hb_itemGetNI( pDec );
 
          if( iDecPar < 0 )
+         {
             iDec = 0;
+         }
          else if( iDecPar > 0 )
          {
             iDec = iDecPar;
@@ -1181,11 +1182,38 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
          {
             double dNumber = hb_itemGetND( pNumber );
 
-            /* #if (__BORLANDC__ > 1040) || defined(__WATCOMC__) */
-            /* added infinity check for Borland C [martin vogel] */
             #if defined(__WATCOMC__)
+            #elif defined(__IBMCPP__)
+            /* The IBM VAC++ compiler is unable to compare non-finite numbers
+               and does not have a function to test if a number if finite. */
+            static char s_dInfinity[16];
+            static char s_dmInfinity[16];
+            static char s_dNan[8];
+            static char s_dmNan[8];
+            static double s_bInfinityInit = FALSE;
+
+            if( ! s_bInfinityInit )
+            {
+               /* temporarily remove the math error handler */
+               HB_MATH_HANDLERPROC fOldMathHandler = hb_mathSetHandler (NULL); 
+               sprintf( s_dInfinity, "%e", -log( ( double ) 0 ) );
+               strcpy( s_dmInfinity, "-" );
+               strcat( s_dmInfinity, s_dInfinity );
+               sprintf( s_dNan, "%e", -log( ( double ) - 1 ) );
+               strcpy( s_dmNan, "-" );
+               strcat( s_dmNan, s_dNan );
+               /* restore the math error handler */
+               hb_mathSetHandler (fOldMathHandler); 
+               s_bInfinityInit = TRUE;
+            }
+            #elif defined(__DJGPP__) || defined(__MINGW32__) || defined(__RSXNT__) || defined(__EMX__) || (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
+            /* Nothing to do here, because these platforms have a function
+               that returns 0 if the value is not a finite number */
             #else
+            /* This is for platforms that don't have a function that can test
+               if a number is finite, but can compare non-finite numbers. */
             static double s_dInfinity = 0;
+            static double s_dNan = 0;
             static double s_bInfinityInit = FALSE;
 
             if( ! s_bInfinityInit )
@@ -1194,71 +1222,80 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
                    to avoid error messages [martin vogel]*/
                HB_MATH_HANDLERPROC fOldMathHandler = hb_mathSetHandler (NULL); 
                s_dInfinity = -log( ( double ) 0 );
+               s_dNan = -log( ( double ) - 1 );
                hb_mathSetHandler (fOldMathHandler); 
                s_bInfinityInit = TRUE;
-
-
             }
             #endif
 
-            /* TODO: look if isinf()/_isinf or finite()/_finite() does exist for your compiler and add this to the check
-               below [martin vogel] */
+            #ifdef __IBMCPP__
+            sprintf(szResult, "%e", dNumber);
+            #endif
             if( pNumber->item.asDouble.length == 99
-            /* #if (__BORLANDC__ > 1040) || defined(__WATCOMC__) */
             #if defined(__WATCOMC__)
             #elif (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
-               /* No more checks for Borland C, which returns 0 for log( 0 ),
-                  and is therefore unable to test for infinity */
-               /* log(0) returning 0 seems to be a side effect of using a custom math error handler that
-                  always sets the return value to 0.0, switching this off, see above, yields -INF for log(0); 
-                  additionally one can use _finite() to check for infinity [martin vogel] */ 
-               || dNumber == s_dInfinity || dNumber == -s_dInfinity || _finite(dNumber)==0
-            #elif defined(__DJGPP__)
-               || !finite( dNumber ) || dNumber == s_dInfinity || dNumber == -s_dInfinity
+               || !_finite(dNumber)
+            #elif defined(__DJGPP__) || defined(__MINGW32__)
+               || !finite( dNumber )
+            #elif defined(__RSXNT__) || defined(__EMX__)
+               || !isfinite( dNumber )
+            #elif defined(__IBMCPP__)
+               || strcmp(szResult, s_dInfinity) || strcmp(szResult, s_dmInfinity) || strcmp(szResult, s_dNan) || strcmp(szResult, s_dmNan)
             #else
-               || dNumber == s_dInfinity || dNumber == -s_dInfinity
+               || dNumber == s_dInfinity || dNumber == -s_dInfinity || dNumber == s_dNan || dNumber == -s_dNan
             #endif
             )
+            {
                /* Numeric overflow */
                iBytes = iSize + 1;
+            }
             else
             {
                int iDecR;
 
                if( HB_IS_DOUBLE( pNumber ) && iDec < pNumber->item.asDouble.decimal )
+               {
                   dNumber = hb_numRound( dNumber, iDec );
-
+               }
                if( dNumber != 0.0 )
                {
                   iDecR = 15 - ( int ) log10( fabs( dNumber ) );
                   if(( dNumber < 1 ) && ( dNumber > -1 )) iDecR++;
                }
                else
+               {
                   iDecR = iDec;
-
+               }
                if( iDecR >= 0 )
                {
-
                   if( iDec == 0 )
+                  {
                      iBytes = sprintf( szResult, "%*.0f", iSize, dNumber );
+                  }
                   else
                   {
                      if( iDec <=  iDecR )
+                     {
                         iBytes = sprintf( szResult, "%*.*f", iSize, iDec, dNumber );
+                     }
                      else
                      {
                         if( iDecR == 0 ) iDecR++;
                         iBytes = sprintf( szResult, "%*.*f%0*u", iSize-iDec+iDecR, iDecR, dNumber, iDec-iDecR, 0 );
                      }
                   }
-
                }
                else
-
+               {
                   if( iDec == 0 )
+                  {
                      iBytes = sprintf( szResult, "%*.0f%0*u", iSize + iDecR , dNumber / pow( 10.0, ( double ) ( -iDecR ) ), -iDecR, 0 );
+                  }
                   else
+                  {
                      iBytes = sprintf( szResult, "%*.0f%0*u.%0*u", (iSize + iDecR - iDec - 1) > 0 ? iSize + iDecR - iDec - 1 : iSize - iDec - 1  , dNumber / pow( 10.0, ( double ) ( -iDecR ) ), -iDecR, 0, iDec, 0 );
+                  }
+               }
             }
          }
          else
