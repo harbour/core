@@ -107,8 +107,8 @@ HB_CALL_ON_STARTUP_BEGIN( InitializeConsole )
    dev_col = 0;
 #endif
    p_row = p_col = 0;
+   HB_CALL_ON_STARTUP_END( InitializeConsole )
 }
-HB_CALL_ON_STARTUP_END( InitializeConsole )
 #pragma startup InitializeConsole
 
 USHORT hb_max_row( void )

@@ -11,7 +11,7 @@ path_lib = libs\icc
 path_obj = obj
 path_prg = source\rtl;source\tools
 
-c_opt = /DUSE_GTAPI /W2 /Se /Sd+ /I.\include /Ti+
+c_opt = /DHARBOUR_USE_GTAPI /W2 /Se /Sd+ /I.\include /Ti+
 
 all: $(path_exe)\harbour.exe $(path_lib)\harbour.lib $(path_lib)\hbtools.lib $(path_lib)\terminal.lib
 
@@ -112,7 +112,7 @@ $(path_obj)\set.obj      : {$(path_c)}set.c      $(path_h)\extend.h $(path_h)\hb
 $(path_obj)\strcmp.obj   : {$(path_c)}strcmp.c   $(path_h)\extend.h $(path_h)\hbdefs.h $(path_h)\set.h
 $(path_obj)\strings.obj  : {$(path_c)}strings.c  $(path_h)\extend.h $(path_h)\hbdefs.h $(path_h)\set.h $(path_h)\errorapi.h $(path_h)\error.ch
 $(path_obj)\stringsx.obj : {$(path_c)}stringsx.c $(path_h)\extend.h $(path_h)\hbdefs.h
-$(path_obj)\transfrm.obj : {$(path_c)}transfrm.c $(path_h)\extend.h $(path_h)\hbdefs.h $(path_h)\set.h $(path_h)\errorapi.h $(path_h)\ctoharb.h $(path_h)\error.ch$(path_h)\dates.h
+$(path_obj)\transfrm.obj : {$(path_c)}transfrm.c $(path_h)\extend.h $(path_h)\hbdefs.h $(path_h)\set.h $(path_h)\errorapi.h $(path_h)\ctoharb.h $(path_h)\error.ch $(path_h)\dates.h
 
 $(path_obj)\asciisum.obj : {$(path_c)}asciisum.c  $(path_h)\extend.h $(path_h)\hbdefs.h
 $(path_obj)\ascpos.obj   : {$(path_c)}ascpos.c    $(path_h)\extend.h $(path_h)\hbdefs.h

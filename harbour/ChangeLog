@@ -1,3 +1,12 @@
+19990701-22:30 EDT David G. Holm <dholm@jsd-llc.com>
+  * makefile.icc
+    * Changed -DUSE_GTAPI to -DHARBOUR_USE_GTAPI
+  * source/rtl/console.c
+    ! HB_CALL_ON_STARTUP_END() must be called from inside the
+      function that was defined using HB_CALL_ON_STARTUP_START()
+  * source/rtl/environ.c
+    ! No #includes are allowed ahead of #ifdef __IBMCPP__
+
 19990630-19:35 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/errorapi.c
     - Removed assignment of default severity value.
@@ -83,9 +92,9 @@
 19990630-00:25 Ryszard Glab <rglab@imid.med.pl>
 
 * include/init.h
- * the HB_INIT_SYMBOLS in now divided into HB_INIT_SYMBOLS_BEGIN and 
+ * the HB_INIT_SYMBOLS in now divided into HB_INIT_SYMBOLS_BEGIN and
    HB_INIT_SYMBOLS_END to support Borland C compilers.
-   
+
 * include/hbdefs.h
  * added missing changes related to  new  HB_ITEM
 
@@ -94,12 +103,12 @@
    incorrectly)
  * the compiler generates code to use HB_INIT_SYMBOLS_* macros for
    symbol table initialization
- 
+
 * source/rtl/*.c
  * corrected some missing code related to new HB_ITEM
  * changed code that registers local symbol table (it uses
    HB_INIT_SYMBOLS_* macros now)
- 
+
 * source/tools/debug.c
  * changed code to support new HB_ITEM structure
 
@@ -114,7 +123,7 @@
 
 * include/extend.h
  * changed definition of HB_ITEM structure
- 
+
 * include/init.h
  * added HB_INIT_SYMBOLS and HB_CALL_ON_STARTUP macros
 
@@ -122,17 +131,17 @@
  * renamed HB_STRICT_CLIPPER_COMPATIBILITY to
    HARBOUR_STRICT_CLIPPER_COMPATIBILITY
  + added HARBOUR_STRICT_ANSI_C definition
-    
+
 * source/vm/hvm.c
- * changed to use the new HB_ITEM   
- 
+ * changed to use the new HB_ITEM
+
 * source/initsymb.c
  * changed to use HARBOUR_STRICT_ANSI_C
 
 * source/rtl/*.c
  * changed to use the new HB_ITEM
  * changed to automatically register symbol table
- 
+
 *source/tools/stringsx.c
  * removed direct access to Harbour internals HB_ITEM structure
 
@@ -196,26 +205,26 @@
 
 19990627-09:00 "Paul Tucker" <ptucker@sympatico.ca>
  * source/hbpp/hbpp.c
-   - change lines from 1246 to 1257 
+   - change lines from 1246 to 1257
 
 19990626-13:35 Ryszard Glab <rglab@imid.med.pl>
 
 * source/rtl/copyfile.c
  * added code to copy also the file permissions on *nix
- 
+
 * source/rtl/files.c
  * 'access' function should use F_OK constant instead of 0 on *nix
- 
+
 19990626-13:12 Ryszard Glab <rglab@imid.med.pl>
 
 * tests/working/Makefile
  * removed MAKECMDGOALS logic
- 
+
 19990626-06:20 Ryszard Glab <rglab@imid.med.pl>
 
 * source/compiler/harbour.l
  * corrected line continuation bugs
- - removed yy_lex_count_lf function since this is handled by 
+ - removed yy_lex_count_lf function since this is handled by
    preprocessor now
  * restored the END rule
 
@@ -239,13 +248,13 @@
 
 Fri Jun 25 18:27:43 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* include/Makefile: 
-	* tests/working/Makefile: 
-	Updated the file list.
+        * include/Makefile:
+        * tests/working/Makefile:
+        Updated the file list.
 
-	* tests/working/dirtest.prg: 
-	Made the output easier to be read.
-	
+        * tests/working/dirtest.prg:
+        Made the output easier to be read.
+
 19990624-21:10 EDT David G. Holm <dholm@jsd-llc.com>
   * source/compiler/harbour.l
     - Corrected logic in if block that prints spurious error message when

@@ -2,13 +2,15 @@
  * $Id$
  */
 
-#include <extend.h>
-#include <init.h>
-
+/* Note: The following #ifdef block for __IBMCPP__ must
+         be ahead of any and all #include statements!
+*/
 #ifdef __IBMCPP__
   #define INCL_DOSMISC
 #endif
 
+#include <extend.h>
+#include <init.h>
 #include <errorapi.h>
 #include <version.h>
 
