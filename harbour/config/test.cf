@@ -15,3 +15,5 @@ first:: dirbase ^^^d^e^s^c^e^n^d^^^
 
 endif
 endif
+
+install:
