@@ -416,9 +416,8 @@ static void hb_ntxGetCurrentKey( LPTAGINFO pTag, LPKEYINFO pKey )
    }
 
    /* printf( "\n\rhb_ntxGetCurrentKey - 3:  |%s|",(pKey->pItem)->item.asString.value ); */
-   // pKey->Tag = 0;
-   // pKey->Xtra = 0;
-
+   /* // pKey->Tag = 0; */
+   /* // pKey->Xtra = 0; */
 }
 
 static BOOL hb_ntxFindNextKey( LPTAGINFO pTag, BOOL lContinue )
@@ -1793,7 +1792,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
                   hb_itemRelease( pItem );
                   return FAILURE;
                }
-               // hb_ntxTagKeyAdd( pTag, pItem );
+               /* hb_ntxTagKeyAdd( pTag, pItem ); */
                hb_ntxSortKeyAdd( pTag, &sortInfo, pItem->item.asString.value );
                break;
             case HB_IT_INTEGER:
@@ -1822,7 +1821,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
    hb_xfree( sortInfo.sortBuffer );
    hb_xfree( readBuffer );
    hb_itemRelease( pItem );
-   // hb_ntxPageFree( pTag->RootPage,TRUE );
+   /* hb_ntxPageFree( pTag->RootPage,TRUE ); */
    pTag->RootPage = NULL;
    /* printf( "\nntxIndexCreate - 10" ); */
    return SUCCESS;
@@ -2461,7 +2460,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
       if( SELF_COMPILE( ( AREAP ) pArea, ( BYTE * ) pOrderInfo->abExpr->item.asString.value ) == FAILURE )
          return FAILURE;
       pExpr = pArea->valResult;
-      // pArea->valResult = NULL;
+      /* pArea->valResult = NULL; */
    }
    /* Save for later use */
    pKeyExp = hb_itemNew( NULL );
@@ -2479,7 +2478,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
          return FAILURE;
       }
       pResult = pArea->valResult;
-      // pArea->valResult = NULL;
+      /* pArea->valResult = NULL; */
    }
    else
    {
@@ -2550,7 +2549,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
          if( SELF_COMPILE( ( AREAP ) pArea, pArea->lpdbOrdCondInfo->abFor ) == FAILURE )
             return FAILURE;
          pExpr = pArea->valResult;
-         // pArea->valResult = NULL;
+         /* pArea->valResult = NULL; */
       }
       /* Save for later use */
       pForExp = hb_itemNew( NULL );
