@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-19 12:20 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/philes.c
+     ! FRead() fix for dynamic strings use with more than one holder
+
+   Notice: This change fixes the FRead() bug described by Randy Portnoff
+           <randy@palmasdev.com>
+
 2002-10-19 11:16 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * include/hbtypes.h
      ! minor change to avoid compiling errors if using -DHB_API_MACROS
@@ -15,6 +22,7 @@
 2002-10-17 14:40 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
    * source/rtl/tbrowse.prg
      ! Fixed SetColumnMethod() that was not using all Display Area(The nWidthMax variable was substraced by 2)
+
 2002-10-17 15:00 UTC+0700 Andi Jahja <andijahja@cbn.net.id>
    * source/compiler/harbour.sly
    * source/compiler/harbour.y
