@@ -7,6 +7,12 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+        now it drags the other characters.
+        dragging is limited by the non editable characters.
+    * METHOD Insert()
+     * modification to be more Clip*r compliant and behaviour.
+      * changes in the logic of the function.
+        now insert a character and displaces to the right the rest of
         the characters until the first non editable character.
   * source\rtl\tgetlist.prg
     * METHOD GetPostValidate()
