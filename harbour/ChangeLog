@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * contrib/libct/ctflist.txt
+    * state of CSETCENT() and UNSELECTED(): started.
+
+2002-04-14 04:50 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * include/hbapiitm.h
     + Add definition for hb_itemUnRefOnce().
   * source/vm/itemapi.c

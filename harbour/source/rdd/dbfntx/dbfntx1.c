@@ -158,6 +158,7 @@ static void hb_ntxGetCurrentKey( LPTAGINFO pTag, LPKEYINFO pKey );
 static void hb_ntxTagKeyGoTo( LPTAGINFO pTag, BYTE bTypRead, BOOL * lContinue );
 static LPPAGEINFO hb_ntxPageFind( LPNTXINDEX pIndex ,LONG ulOffset );
 static LPPAGEINFO hb_ntxPageLast( LPNTXINDEX pIndex );
+static ERRCODE hb_ntxHeaderRead( LPNTXINDEX pIndex );
 static ERRCODE hb_ntxHeaderLoad( LPNTXINDEX pIndex , char * ITN );
          /* Load NTX header an fill structures pIndex */
 static void hb_ntxHeaderSave( LPNTXINDEX pIndex, BOOL bFull );
@@ -1167,7 +1168,13 @@ static LPPAGEINFO hb_ntxPageLoad( LPNTXINDEX pIndex, ULONG ulOffset )
    LPPAGEINFO pPage;
    BOOL bReplace = FALSE;
 
-   pPage = hb_ntxPageFind( pIndex, (ulOffset)? ulOffset:pIndex->CompoundTag->RootBlock );
+   if( !ulOffset )
+   {
+      if( pIndex->Owner->fShared )
+         hb_ntxHeaderRead( pIndex );
+      ulOffset = pIndex->CompoundTag->RootBlock;
+   }
+   pPage = hb_ntxPageFind( pIndex, ulOffset );
    if( pPage )
    {
       pPage->lBusy = TRUE;
@@ -1198,7 +1205,7 @@ static LPPAGEINFO hb_ntxPageLoad( LPNTXINDEX pIndex, ULONG ulOffset )
       memset( pPage , 0 ,sizeof( HB_PAGEINFO ) );
       pPage->buffer = ( char* ) hb_xgrab( NTXBLOCKSIZE );
       pPage->TagParent = pIndex->CompoundTag;
-      pPage->Page = ( ulOffset )? ulOffset:pIndex->CompoundTag->RootBlock;
+      pPage->Page = ulOffset;
 
       pLastPage = hb_ntxPageLast( pIndex );
       pPage->pPrev = pLastPage;
@@ -1211,9 +1218,9 @@ static LPPAGEINFO hb_ntxPageLoad( LPNTXINDEX pIndex, ULONG ulOffset )
       pPage->TagParent->uiPages ++;
    }
    else
-      pPage->Page = ( !ulOffset )? pIndex->CompoundTag->RootBlock:ulOffset;
+      pPage->Page = ulOffset;
 
-   hb_fsSeek( pIndex->DiskFile, ( ulOffset )? ulOffset:pIndex->CompoundTag->RootBlock, FS_SET );
+   hb_fsSeek( pIndex->DiskFile, ulOffset, FS_SET );
    if( hb_fsRead( pIndex->DiskFile, (unsigned char *) pPage->buffer, NTXBLOCKSIZE )
             != NTXBLOCKSIZE )
       return NULL;
@@ -2459,6 +2466,22 @@ static void hb_ntxIndexFree( LPNTXINDEX pIndex )
    hb_xfree( pTag );
    hb_xfree( pIndex->IndexName );
    hb_xfree( pIndex );
+}
+
+static ERRCODE hb_ntxHeaderRead( LPNTXINDEX pIndex )
+{
+   NTXHEADER Header;
+   ULONG ulPos;
+
+   ulPos = hb_fsSeek( pIndex->DiskFile, 0, SEEK_END );
+   hb_fsSeek( pIndex->DiskFile , 0 , 0 );
+   if( hb_fsRead( pIndex->DiskFile,(BYTE*)&Header,16 ) != 16 )
+      return FAILURE;
+
+   pIndex->NextAvail = Header.next_page;
+   pIndex->CompoundTag->TagBlock = ulPos - 1024;
+   pIndex->CompoundTag->RootBlock = Header.root;
+   return SUCCESS;
 }
 
 static ERRCODE hb_ntxHeaderLoad( LPNTXINDEX pIndex , char *ITN)
