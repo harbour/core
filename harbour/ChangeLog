@@ -1,3 +1,12 @@
+19990922-17:05 EDT David G. Holm <dholm@jsd-llc.com>
+
+  * source/tools/Makefile
+    - Removed osnewlin.prg
+
+  - source/tools/osnewlin.prg
+    - This source module is no longer pertinent (OS_NewLine is now
+      an RTL function named HB_OS_NewLine)
+
 19990922-22:00 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/tests/working/rtl_test.prg
