@@ -398,6 +398,14 @@ HARBOUR HB_MEMORY( void )
       ulResult = s_ulMemoryMaxConsumed;
       break;
 
+   case 1003:           /* Harbour extension (Total items on the stack)      */
+      ulResult = hb_stack.wItems;
+      break;
+
+   case 1004:           /* Harbour extension (Total memory size used by the stack [bytes]) */
+      ulResult = hb_stack.wItems * sizeof( HB_ITEM );
+      break;
+
    default:
       ulResult = 0;
    }

@@ -18,5 +18,7 @@ FUNCTION Main()
    ?  105, MEMORY(  105 )
    ? 1001, MEMORY( 1001 )
    ? 1002, MEMORY( 1002 )
+   ? 1003, MEMORY( 1003 )
+   ? 1004, MEMORY( 1004 )
 
    RETURN NIL
