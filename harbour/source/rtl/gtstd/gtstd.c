@@ -62,6 +62,16 @@
    #include <termios.h>
 #endif
 
+/* Add time function for BEL flood throttling.. */
+
+#include <time.h>
+#if defined( OS_UNIX_COMPATIBLE )
+   #include <sys/timeb.h>
+#else
+   #include <sys\timeb.h>
+#endif
+
+
 static SHORT  s_iRow;
 static SHORT  s_iCol;
 static USHORT s_uiMaxRow;
@@ -70,9 +80,11 @@ static USHORT s_uiCursorStyle;
 static BOOL   s_bBlink;
 static int    s_iFilenoStdout;
 static USHORT s_uiDispCount;
+static BYTE * s_szCrLf;
+static ULONG  s_ulCrLf;
 
 #if defined( OS_UNIX_COMPATIBLE )
-static struct termios startup_attributes;
+   static struct termios startup_attributes;
 #endif
 
 void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
@@ -102,16 +114,22 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 
    s_iRow = 0;
    s_iCol = 0;
+
 #if defined(OS_UNIX_COMPATIBLE)
    s_uiMaxRow = 24;
-#else
-   s_uiMaxRow = 25;
-#endif
    s_uiMaxCol = 80;
+#else
+   s_uiMaxRow = 32767;
+   s_uiMaxCol = 32767;
+#endif
+
    s_uiCursorStyle = SC_NORMAL;
    s_bBlink = FALSE;
    s_iFilenoStdout = iFilenoStdout;
    hb_fsSetDevMode( s_iFilenoStdout, FD_BINARY );
+
+   s_szCrLf = (BYTE *) hb_conNewLine();
+   s_ulCrLf = strlen( (char *) s_szCrLf );
    
    hb_mouse_Init();
 }
@@ -121,6 +139,7 @@ void hb_gt_Exit( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Exit()"));
 
    hb_mouse_Exit();
+
 #if defined( OS_UNIX_COMPATIBLE )
    tcsetattr( STDIN_FILENO, TCSANOW, &startup_attributes );
 #endif
@@ -131,10 +150,22 @@ int hb_gt_ExtendedKeySupport()
    return 0;
 }
 
+static void out_stdout( BYTE * pStr, ULONG ulLen )
+{
+   unsigned uiErrorOld = hb_fsError(); /* Save current user file error code */
+   hb_fsWriteLarge( s_iFilenoStdout, pStr, ulLen );
+   hb_fsSetError( uiErrorOld );        /* Restore last user file error code */
+}
+
+static void out_newline( void )
+{
+   out_stdout( s_szCrLf, s_ulCrLf );
+}
+
 int hb_gt_ReadKey( HB_inkey_enum eventmask )
 {
-   int ch;
-
+   int ch = 0;
+   
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) eventmask));
 
    HB_SYMBOL_UNUSED( eventmask );
@@ -150,6 +181,8 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
 
    return ch;
 }
+
+/* Parse out a string to determine the new cursor position */
 
 BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
 {
@@ -197,7 +230,10 @@ BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
             }
       }
    }
-   hb_gt_SetPos( row, col, HB_GT_SET_POS_AFTER );
+   
+   s_iRow = row;
+   s_iCol = col;
+
    return TRUE;
 }
 
@@ -224,34 +260,58 @@ USHORT hb_gt_GetScreenHeight( void )
 
 void hb_gt_SetPos( SHORT iRow, SHORT iCol, SHORT iMethod )
 {
-   SHORT iCount;
-   SHORT iDevRow = s_iRow;
-   SHORT iDevCol = s_iCol;
-
-   char * szCrLf = hb_conNewLine();
-
+   BYTE szBuffer[2] = { 0, 0 };
+   
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hd, %hd, %hd)", iRow, iCol, iMethod));
 
-   HB_SYMBOL_UNUSED( iMethod );
-
-   if( iRow < iDevRow || iCol < iDevCol )
+   if( iMethod == HB_GT_SET_POS_BEFORE )
    {
-      fputs( szCrLf, stdout );
-      iDevCol = 0;
-      iDevRow++;
-   }
-   else if( iRow > iDevRow )
-      iDevCol = 0;
+      /* Only set the screen position when the cursor
+         position is changed BEFORE text is displayed.
 
-   for( iCount = iDevRow; iCount < iRow; iCount++ )
-      fputs( szCrLf, stdout );
-   for( iCount = iDevCol; iCount < iCol; iCount++ )
-      fputc( ' ', stdout );
+         Updates to cursor position AFTER test output is handled
+         within this driver itself
+      */
+      
+      if( iRow != s_iRow )
+      {
+         /* always go to a newline, even if request to go to row above.
+            Although can't actually do unward movement, at least start
+            a new line to avoid possibly overwriting text already on
+            the current row */
+            
+         out_newline();
+         s_iCol = 0;
+         if (s_iRow < iRow)
+         {
+            /* if requested to move down more than one row, do extra
+              newlines to render the correct vertical distance */
+              
+            while( ++s_iRow < iRow )
+               out_newline();
+         }
+      }
 
-   fflush( stdout );
+      /* Use space and backspace to adjust horizontal position.. */
+   
+      if( s_iCol < iCol )
+      {
+         szBuffer[0] = ' ';
+         while( s_iCol++ < iCol )
+            out_stdout( szBuffer, 1 );
+      }
+      else if( s_iCol > iCol )
+      {
+        szBuffer[0] = HB_CHAR_BS;
+      	while( s_iCol-- > iCol )
+      	   out_stdout( szBuffer, 1 );
+      }
 
-   s_iRow = iRow;
-   s_iCol = iCol;
+      s_iRow = iRow;
+      s_iCol = iCol;
+
+   }   
+
 }
 
 SHORT hb_gt_Col( void )
@@ -284,27 +344,35 @@ void hb_gt_SetCursorStyle( USHORT uiCursorStyle )
 
 static void hb_gt_xPutch( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar )
 {
+   BYTE szBuffer[ 2 ];
+
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_xPutch(%hu, %hu, %d, %i)", uiRow, uiCol, (int) byAttr, byAttr));
 
-   /* TODO: */
-
-   HB_SYMBOL_UNUSED( uiRow );
-   HB_SYMBOL_UNUSED( uiCol );
    HB_SYMBOL_UNUSED( byAttr );
-   HB_SYMBOL_UNUSED( byChar );
+
+   hb_gt_SetPos( uiRow, uiCol, HB_GT_SET_POS_BEFORE );
+
+   /* make the char into a string so it can be passed to AdjustPos
+      as well as being output */
+      
+   szBuffer[ 0 ] = byChar;
+   szBuffer[ 1 ] = 0;
+   out_stdout( szBuffer, 1 );
+
+   hb_gt_AdjustPos( szBuffer, 1 );
 }
 
 void hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE * pbyStr, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Puts(%hu, %hu, %d, %p, %lu)", uiRow, uiCol, (int) byAttr, pbyStr, ulLen));
 
-   /* TODO: */
-
-   HB_SYMBOL_UNUSED( uiRow );
-   HB_SYMBOL_UNUSED( uiCol );
    HB_SYMBOL_UNUSED( byAttr );
-   HB_SYMBOL_UNUSED( pbyStr );
-   HB_SYMBOL_UNUSED( ulLen );
+
+   hb_gt_SetPos( uiRow, uiCol, HB_GT_SET_POS_BEFORE );
+
+   out_stdout( pbyStr, ulLen );
+
+   hb_gt_AdjustPos( pbyStr, ulLen );
 }
 
 int hb_gt_RectSize( USHORT rows, USHORT cols )
@@ -326,8 +394,6 @@ void hb_gt_GetText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight
 void hb_gt_PutText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbySrc )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, pbySrc));
-
-   /* TODO: */
 
    HB_SYMBOL_UNUSED( uiTop );
    HB_SYMBOL_UNUSED( uiLeft );
@@ -353,25 +419,39 @@ void hb_gt_Scroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
 
    HB_SYMBOL_UNUSED( byAttr );
 
-   /* TODO: */
-
+   /* Provide some basic scroll support for full screen */
+   
    if( uiTop == 0 &&
-       uiBottom == s_uiMaxRow &&
-       uiLeft == 0 &&
-       uiRight == s_uiMaxCol &&
-       iRows == 0 &&
-       iCols == 0 )
+      uiBottom >= (s_uiMaxRow - 1 ) &&
+      uiLeft == 0 &&
+      uiRight >= (s_uiMaxCol - 1 ) )
    {
-      for( ; uiBottom; uiBottom-- )
-        fputs( hb_conNewLine(), stdout );
+   
+      if ( iRows == 0 && iCols == 0 )
+      {
+         /* clear screen request.. */
 
-      fflush( stdout );
+         for( ; uiBottom; uiBottom-- )
+            out_newline();
 
-      s_iRow = 0;
-      s_iCol = 0;
+         s_iRow = 0;
+         s_iCol = 0;
+      }
+      else
+      {
+         /* no true scroll capability */
+         /* but newline for each upward scroll */
+         /* as gtapi.c will call scroll when on last row */
+         /* and not change the row value itself */
+
+         while( iRows-- > 0 )
+            out_newline();
+         
+         s_iCol = 0;
+      }		      
    }
 }
-
+ 
 void hb_gt_DispBegin( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispBegin()"));
@@ -412,14 +492,43 @@ void hb_gt_SetBlink( BOOL bBlink )
    s_bBlink = bBlink;
 }
 
+static int gtstd_get_seconds( void )
+{
+#if defined(_MSC_VER)
+   #define timeb _timeb
+   #define ftime _ftime
+#endif
+   struct timeb tb;
+   struct tm * oTime;
+
+   ftime( &tb );
+   oTime = localtime( &tb.time );
+
+   return ( (int) oTime->tm_sec );
+}
+
 void hb_gt_Tone( double dFrequency, double dDuration )
 {
+   BYTE szBell[] = { HB_CHAR_BEL, 0 };
+   static int iSinceBell = -1;
+   int iNow;
+   
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Tone(%lf, %lf)", dFrequency, dDuration));
-
-   /* TODO: Implement this */
 
    HB_SYMBOL_UNUSED( dFrequency );
    HB_SYMBOL_UNUSED( dDuration );
+
+   /* Output an ASCII BEL character to cause a sound */
+   /* but throttle to max once per second, in case of sound */
+   /* effects prgs calling lots of short tone sequences in */
+   /* succession leading to BEL hell on the terminal */
+
+   iNow = gtstd_get_seconds();
+   if ( (iNow = gtstd_get_seconds()) != iSinceBell )
+      out_stdout( szBell, 1 );
+   
+   iSinceBell = iNow;
+   
 }
 
 char * hb_gt_Version( void )
@@ -443,10 +552,10 @@ void hb_gt_Replicate( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar, ULON
 USHORT hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
                   BYTE *szBox, BYTE byAttr )
 {
-   USHORT uiRow;
-   USHORT uiCol;
-   USHORT uiHeight;
-   USHORT uiWidth;
+   USHORT  uiRow;
+   USHORT  uiCol;
+   USHORT  uiHeight;
+   USHORT  uiWidth;
 
    /* Ensure that box is drawn from top left to bottom right. */
    if( uiTop > uiBottom )
@@ -481,7 +590,9 @@ USHORT hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
       hb_gt_Replicate( uiRow, uiCol, byAttr, szBox[ 1 ], uiRight - uiLeft + ( uiHeight > 1 ? -1 : 1 ) ); /* Top line */
 
    if( uiHeight > 1 && uiWidth > 1 )
+   {
       hb_gt_xPutch( uiRow, uiRight, byAttr, szBox[ 2 ] ); /* Upper right corner */
+   }
 
    if( szBox[ 8 ] && uiHeight > 2 && uiWidth > 2 )
    {
@@ -499,7 +610,10 @@ USHORT hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
       {
          hb_gt_xPutch( uiRow, uiLeft, byAttr, szBox[ 7 ] ); /* Left side */
          if( uiWidth > 1 )
+         {
+            hb_gt_Replicate( uiRow, uiCol, byAttr, ' ', uiWidth - 2 );
             hb_gt_xPutch( uiRow, uiRight, byAttr, szBox[ 3 ] ); /* Right side */
+         }
       }
    }
 
