@@ -485,7 +485,7 @@ LANGUAGE_RULES_ARE {
 
 #undef STREAM_APPEND
    #define STREAM_APPEND(x) \
-      if( iPairLen == 0 && sStart[1] == '[' ) { sPair[ iPairLen++ ] = sStart[1]; } \
+      if( iPairLen == 0 && sStart[0] == '[' && sStart[1] ) { sPair[ iPairLen++ ] = sStart[1]; } \
       if( x == ']' && iCloseSquare == 0 ) { iCloseSquare = iPairLen + 1; } sPair[ iPairLen++ ] = x;
 
 #undef STREAM_OPEN
