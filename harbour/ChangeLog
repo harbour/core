@@ -8,6 +8,25 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-17 13:02 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * makefile.vc
+   * makefile.bc
+   * source/common/Makefile
+   * include/hbapifs.h
+   + source/common/hbffind.c
+     + Harbour File Find API added.
+       hb_fsFindFirst()
+       hb_fsFindNext()
+       hb_fsFindClose()
+       Note that currently only Win32 and DOS/DJGPP has been 
+       tested, all the other platform will require some more 
+       work. Also note that the attribute mask filtering may 
+       need more work and tweaking.
+     + New generic file attributes added, they are named 
+       HB_FA_*, they are almost the same as the FA_ ones in 
+       dir.c, just a bit more Clipper like.
+
 2001-12-17 12:33 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * Makefile

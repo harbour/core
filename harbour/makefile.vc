@@ -605,6 +605,7 @@ DEBUG_LIB_OBJS = \
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\  $<
 
 COMMON_LIB_OBJS = \
+   $(OBJ_DIR)\hbffind.obj \
    $(OBJ_DIR)\hbfhnd.obj \
    $(OBJ_DIR)\hbfsapi.obj \
    $(OBJ_DIR)\hbgete.obj \

@@ -5,6 +5,7 @@
 ROOT = ../../
 
 C_SOURCES=\
+	hbffind.c \
 	hbfhnd.c \
 	hbfsapi.c \
 	hbgete.c \

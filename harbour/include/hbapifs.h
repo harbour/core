@@ -79,6 +79,24 @@ typedef int    FHANDLE;
 #define FXO_DEFAULTS  0x1000   /* Use SET command defaults    */
 #define FXO_DEVICERAW 0x2000   /* Open devices in raw mode    */
 
+/* File attributes flags */
+#define HB_FA_ALL               0
+#define HB_FA_READONLY          1
+#define HB_FA_HIDDEN            2
+#define HB_FA_SYSTEM            4
+#define HB_FA_LABEL             8
+#define HB_FA_DIRECTORY         16
+#define HB_FA_ARCHIVE           32
+#define HB_FA_DEVICE            64
+#define HB_FA_TEMPORARY         128
+#define HB_FA_SPARSE            256
+#define HB_FA_REPARSE           512
+#define HB_FA_COMPRESSED        1024
+#define HB_FA_OFFLINE           2048
+#define HB_FA_NOTINDEXED        4096
+#define HB_FA_ENCRYPTED         8192
+#define HB_FA_VOLCOMP           16384   /* volume supports compression. */
+
 extern BOOL     hb_fsChDir      ( BYTE * pszDirName ); /* change working directory */
 extern USHORT   hb_fsChDrv      ( BYTE nDrive ); /* change working drive */
 extern void     hb_fsClose      ( FHANDLE hFileHandle ); /* close a file */
@@ -144,6 +162,25 @@ extern BOOL    hb_spFile( BYTE * pFilename );
 extern FHANDLE hb_spOpen( BYTE * pFilename, USHORT uiFlags );
 extern FHANDLE hb_spCreate( BYTE * pFilename, USHORT uiAttr );
 extern FHANDLE hb_spCreateEx( BYTE * pFilename, USHORT uiAttr, USHORT uiFlags );
+
+/* File Find API structure */
+typedef struct
+{
+   char      szName[ _POSIX_PATH_MAX + 1 ];
+   LONG      lDate;
+   char      szDate[ 9 ]; /* in YYYYMMDD format */
+   char      szTime[ 9 ]; /* in HH:MM:SS format */
+   USHORT    attr;
+   ULONG     size; /* TOFIX: Use LONGLONG or double instead */
+
+   void *    info; /* Pointer to the platform specific find info */
+
+} HB_FFIND, * PHB_FFIND;
+
+/* File Find API functions */
+extern PHB_FFIND hb_fsFindFirst( char * pszFileName, USHORT uiAttr );
+extern BOOL      hb_fsFindNext( PHB_FFIND ffind );
+extern void      hb_fsFindClose( PHB_FFIND ffind );
 
 #if defined(HB_EXTERN_C)
 }

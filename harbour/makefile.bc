@@ -503,6 +503,7 @@ DEBUG_LIB_OBJS = \
 #
 
 COMMON_LIB_OBJS = \
+   $(OBJ_DIR)\hbffind.obj \
    $(OBJ_DIR)\hbfhnd.obj \
    $(OBJ_DIR)\hbfsapi.obj \
    $(OBJ_DIR)\hbgete.obj \
@@ -744,6 +745,10 @@ $(GTWIN_LIB)  : $(GTWIN_LIB_OBJS)
 #
 # COMMON.LIB dependencies
 #
+
+$(OBJ_DIR)\hbffind.obj : $(COMMON_DIR)\hbffind.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(COMMON_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\hbfhnd.obj : $(COMMON_DIR)\hbfhnd.c
    $(CC) $(CLIBFLAGS) -o$@ $**
