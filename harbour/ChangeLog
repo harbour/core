@@ -1,3 +1,12 @@
+20000130-22:41 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/mlcount.c
+    source/rtl/memoline.c
+    source/rtl/mlpos.c
+    ! Fixed GPF when the first passed parameter was not a string.
+  * source/rtl/environ.c
+    ! Fixed VERSION() reporing service pack level on NT/2000.
+    ! Fixed minor doc formatting problem.
+
 20000130-17:05 GMT+3 Alexander Kresin
   * source/pp/hbpp.c
     * Bug fixed, noted by Ryszard Glab

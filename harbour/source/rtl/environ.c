@@ -95,6 +95,7 @@
       #define INT_86 int86
    #endif
 #endif
+
 /*  $DOC$
  *  $FUNCNAME$
  *      OS()
@@ -219,15 +220,15 @@ HARBOUR HB_OS( void )
             hb_osletter = LOWORD(osVer.dwBuildNumber);
 
             if( hb_osmajor == 3 && hb_osminor == 10 )
-              hb_os = "Windows NT 3.1";
+               hb_os = "Windows NT 3.1";
             else if( hb_osmajor == 3 && hb_osminor == 50 )
-              hb_os = "Windows NT 3.5";
+               hb_os = "Windows NT 3.5";
             else if( hb_osmajor == 3 && hb_osminor == 51 )
-              hb_os = "Windows NT 3.51";
+               hb_os = "Windows NT 3.51";
             else if( hb_osmajor == 4 )
-              hb_os = "Windows NT 4";
+               hb_os = "Windows NT 4";
             else if( hb_osmajor == 5 )
-              hb_os = "Windows 2000";
+               hb_os = "Windows 2000";
             else
                hb_os = "Windows NT";
 
@@ -240,7 +241,8 @@ HARBOUR HB_OS( void )
                   i++;
                wServicePack = (WORD)( atoi( &osVer.szCSDVersion[ i ] ) );
 
-               sprintf( szBuild, "%i", wServicePack );
+               if( wServicePack )
+                  sprintf( szBuild, " SP%i", wServicePack );
             }
             /* TODO: Add support for:
                       * NT Stand Alone Server
@@ -591,8 +593,8 @@ HARBOUR HB_VERSION( void )
  *      can be found, the value of the function will be a empty string.
  *  $EXAMPLES$
  *      ? QOUT(GETENV('PATH'))
-        ? QOUT(GETENV('CONFIG'))
-        ? QOUT(GETENV('HARBOURCMD', '-n -l -es2'))
+ *      ? QOUT(GETENV('CONFIG'))
+ *      ? QOUT(GETENV('HARBOURCMD', '-n -l -es2'))
  *  $TESTS$
  *
  *  $STATUS$

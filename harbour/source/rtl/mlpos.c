@@ -37,7 +37,7 @@
 
 HARBOUR HB_MLPOS( void )
 {
-   char * pszString    = hb_parc( 1 );
+   char * pszString    = ISCHAR( 1 ) ? hb_parc( 1 ) : "";
    ULONG  ulLineLength = hb_parni( 2 );
    ULONG  ulLine       = hb_parni( 3 );
    ULONG  ulTabLength  = ISNUM( 4 ) ? hb_parni( 4 ) : 4;

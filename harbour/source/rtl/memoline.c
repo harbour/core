@@ -37,7 +37,7 @@
 
 HARBOUR HB_MEMOLINE( void )
 {
-   char * pszString    = hb_parc( 1 );
+   char * pszString    = ISCHAR( 1 ) ? hb_parc( 1 ) : "";
    ULONG  ulLineLength = ISNUM( 2 ) ? hb_parni( 2 ) : 79;
    ULONG  ulLineNumber = ISNUM( 3 ) ? hb_parni( 3 ) : 1;
    ULONG  ulTabLength  = ISNUM( 4 ) ? hb_parni( 4 ) : 4;
