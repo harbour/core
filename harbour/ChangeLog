@@ -1,3 +1,9 @@
+19991126-12:00 WIB Andi Jahja <andij@aonlippo.co.id>
+  * tests
+    + hversion.prg - List version of Harbour source codes
+    + entries.ini -  File list for hversion.prg to work
+
+
 19991126-01:11 GMT+1 Jose Lalin <dezac@corevia.com>
   * source/rtl/input.prg
     + documented
