@@ -1,8 +1,10 @@
 /*
- * $Id:
+ * $Id$
  */
 
 /*
+   Harbour Project source code
+
    Harbour mouse subsystem for OS/2 compilers.
 
    Copyright 1999  by Chen Kedem <niki@actcom.co.il>
@@ -32,6 +34,8 @@
 
    V 1.0    Chen Kedem                  Initial version.
 */
+
+#include "mouseapi.h"
 
 /*---------------------------------------------------------------------------*/
 /* TODO: those exist in os2.h which I don't have                             */
@@ -77,26 +81,7 @@ typedef struct _MOUEVENTINFO {
 } MOUEVENTINFO;
 /*---------------------------------------------------------------------------*/
 
-/*---------------------------------------------------------------------------*/
-/* TODO: those should probably be in mouse.h                                 */
-extern void   hb_mouse_Init( void );
-extern void   hb_mouse_Exit( void );
-extern BOOL   hb_mouse_IsPresent( void );
-extern void   hb_mouse_Show( void );
-extern void   hb_mouse_Hide( void );
-extern int    hb_mouse_Col( void );
-extern int    hb_mouse_Row( void );
-extern void   hb_mouse_SetPos( int, int );
-/* extern BOOL   hb_mouse_GetCursor( void ); */  /* top level should do it */
-/* extern void   hb_mouse_SetCursor( BOOL ); */  /* top level should do it */
-extern BOOL   hb_mouse_IsButtonPressed( int );
-extern int    hb_mouse_CountButton( void );
-extern void   hb_mouse_SetBounds( int iTop, int iLeft, int iBottom, int iRight );
-extern void   hb_mouse_GetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight );
-/*---------------------------------------------------------------------------*/
-
 static unsigned suMouHandle;            /* mouse logical handle */
-/* static BOOL     sbMouVisible = FALSE; */  /* is mouse cursor visible ? */
 
 void hb_mouse_Init()
 {
@@ -121,10 +106,7 @@ BOOL hb_mouse_IsPresent(void)
 void hb_mouse_Show(void)
 {
     if ( suMouHandle )
-    {
         MouDrawPtr ( suMouHandle );
-/*      sbMouVisible = TRUE; */
-    }
 }
 
 void hb_mouse_Hide(void)
@@ -147,7 +129,6 @@ void hb_mouse_Hide(void)
         rect.cRow = 20/*hb_gt_GetScreenHeight()*/;  /* x-coordinate lower right */
         rect.cCol = 60/*hb_gt_GetScreenWidth()*/;   /* y-coordinate lower right */
         MouRemovePtr ( &rect, suMouHandle );
-/*      sbMouVisible = FALSE; */
     }
 }
 
@@ -187,30 +168,6 @@ void hb_mouse_SetPos( int row, int col )
         MouSetPtrPos ( &pos, suMouHandle );
     }
 }
-
-/*
-   NOTE: I think top level should handle that
-*/
-/*
-BOOL hb_mouse_GetCursor(void)
-{
-    return ( sbMouVisible );
-}
-*/
-
-/*
-   NOTE: I think top level should handle that
-*/
-/*
-void hb_mouse_SetCursor( BOOL bVisible )
-{
-    if ( bVisible )
-        hb_mouse_Show();
-    else
-        hb_mouse_Hide();
-    return ( sbMouVisible );
-}
-*/
 
 BOOL hb_mouse_IsButtonPressed( int iButton )
 {
@@ -256,3 +213,4 @@ void hb_mouse_GetBounds( int * piTop, int * piLeft, int * piBottom, int * piRigh
        the old book I'm using does not have such.
     */
 }
+

@@ -81,7 +81,7 @@ extern int    hb_gtWrite( char * fpStr, ULONG length );
 extern int    hb_gtWriteAt( USHORT uiRow, USHORT uiCol, char * fpStr, ULONG length );
 extern int    hb_gtWriteCon( char * fpStr, ULONG length );
 
-/* private interface listed below. these are common to all platforms */
+/* Private interface listed below. these are common to all platforms */
 
 extern void   hb_gt_Init( void );
 extern int    hb_gt_IsColor( void );

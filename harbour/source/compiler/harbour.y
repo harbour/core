@@ -1265,15 +1265,13 @@ void * GenElseIf( void * pFirst, WORD wOffset )
 
 void GenError( char* _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
 {
-  char szLine[ 160 ]; /* 2 lines of text */
-
-  if( files.pLast->szFileName )
+  if( files.pLast->szFileName != NULL )
      printf( "\r%s(%i) ", files.pLast->szFileName, iLine );
   else
      printf( "\rLine %i ", iLine );
   printf( "Error %c%i  ", cPrefix, iError );
-  sprintf( szLine, _szCErrors[ iError - 1 ], szError1, szError2 );
-  printf( "%s\n\n", szLine );
+  printf( _szCErrors[ iError - 1 ], szError1, szError2 );
+  printf( "\n\n" );
 
   exit( EXIT_FAILURE );
 }
@@ -1282,13 +1280,10 @@ void GenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarni
 {
     if( _bWarnings && iWarning < WARN_ASSIGN_SUSPECT ) /* TODO: add switch to set level */
     {
-        char szLine[ 160 ]; /* 2 lines of text */
-
         printf( "\r%s(%i) ", files.pLast->szFileName, iLine );
         printf( "Warning %c%i  ", cPrefix, iWarning );
-        sprintf( szLine, _szWarnings[ iWarning - 1 ], szWarning1, szWarning2 );
-
-        printf( "%s\n", szLine );
+        printf( _szWarnings[ iWarning - 1 ], szWarning1, szWarning2 );
+        printf( "\n" );
     }
 }
 
@@ -2308,6 +2303,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
    if( ! _bQuiet )
       printf( "\nGenerating C language output...\n" );
 
+   fprintf( yyc, "/* Harbour compiler generated code */\n\n" );
    fprintf( yyc, "#include \"hb_vmpub.h\"\n" );
    fprintf( yyc, "#include \"init.h\"\n\n\n" );
 
@@ -2408,9 +2404,9 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
          fprintf( yyc, "static " );
 
       if( pFunc == _pInitFunc )        /* Is it (_INITSTATICS) */
-         fprintf( yyc, "HARBOUR hb_INITSTATICS( void )\n{\n  static BYTE pcode[] = { \n" ); /* NOTE: hb_ intentionally in lower case */
+         fprintf( yyc, "HARBOUR hb_INITSTATICS( void )\n{\n   static BYTE pcode[] = { \n" ); /* NOTE: hb_ intentionally in lower case */
       else
-         fprintf( yyc, "HARBOUR HB_%s( void )\n{\n  static BYTE pcode[] = { \n", pFunc->szName );
+         fprintf( yyc, "HARBOUR HB_%s( void )\n{\n   static BYTE pcode[] = { \n", pFunc->szName );
 
       bEndProcRequired =TRUE;
       lPCodePos = 0;

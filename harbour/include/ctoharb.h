@@ -34,6 +34,7 @@ extern void    hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the 
 extern void    hb_vmProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics symbols initialization */
 extern void    hb_vmRequestQuit( void );
 extern void    hb_vmRequestBreak( PHB_ITEM pItem );
+extern void    hb_vmRTSymbolsInit( void );   /* initialization of runtime support symbols */
 
 /* PCode functions */
 extern void    hb_vmAnd( void );             /* performs the logical AND on the latest two values, removes them and leaves result on the stack */
@@ -108,8 +109,8 @@ extern void    hb_stackPop( void );        /* pops an item from the stack */
 extern void    hb_stackFree( void );       /* releases all memory used by the stack */
 extern void    hb_stackPush( void );       /* pushes an item on to the stack */
 extern void    hb_stackInit( void );       /* initializes the stack */
-extern void    hb_stackShow( void );       /* show the types of the items on the stack for debugging purposes */
-extern void    hb_callStackShow( void );   /* show the procedure names of the call stack for internal errors use */
+extern void    hb_stackDispLocal( void );  /* show the types of the items on the stack for debugging purposes */
+extern void    hb_stackDispCall( void );   /* show the procedure names of the call stack for internal errors use */
 
 #define STACK_INITHB_ITEMS   100
 #define STACK_EXPANDHB_ITEMS  20

@@ -10,7 +10,7 @@
 
 libs\b32\hbgt.lib : \
    ascpos.obj atdiff.obj chareven.obj charodd.obj chrcount.obj \
-   chrtotal.obj charmix.obj asciisum.obj chrfirst.obj io.obj numtxthu.obj numtxten.obj\
+   chrtotal.obj charmix.obj asciisum.obj chrfirst.obj io.obj numtxthu.obj numtxten.obj nconvert.obj \
    strasint.obj strcount.obj strcspn.obj strdiff.obj strexpan.obj \
    strleft.obj strpbrk.obj strright.obj
 
@@ -33,6 +33,7 @@ strpbrk.obj  : strpbrk.c   extend.h hbdefs.h
 strright.obj : strright.c  extend.h hbdefs.h
 numtxthu.obj : numtxthu.c  extend.h hbdefs.h
 numtxten.obj : numtxten.c  extend.h hbdefs.h
+nconvert.obj : nconvert.c  extend.h hbdefs.h
 io.obj       : io.c        extend.h hbdefs.h
 
 numtxthu.c   : numtxthu.prg harbour.exe

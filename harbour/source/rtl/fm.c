@@ -22,6 +22,12 @@
    You can contact me at: alinares@fivetech.com
  */
 
+/* NOTE: If you turn this on, the memory subsystem will collect information
+         about several statistical data about memory management, it will show
+         these on exit if memory seem to have leaked.
+         This should be normally turned off in a final release */
+#define HB_FM_STATISTICS
+
 #ifndef __MPW__
  #include <malloc.h>
 #endif
@@ -29,10 +35,12 @@
 #include "extend.h"
 #include "errorapi.h"
 
-ULONG ulMemoryBlocks = 0;
-ULONG ulMemoryMaxBlocks = 0;
-ULONG ulMemoryMaxConsumed = 0;
-ULONG ulMemoryConsumed = 0;
+#ifdef HB_FM_STATISTICS
+static ULONG s_ulMemoryBlocks = 0;	/* memory blocks used */
+static ULONG s_ulMemoryMaxBlocks = 0;	/* maximum number of used memory blocks */
+static ULONG s_ulMemoryMaxConsumed = 0;	/* memory size consumed */
+static ULONG s_ulMemoryConsumed = 0;	/* memory max size consumed */
+#endif
 
 void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL on failure */
 {
@@ -45,10 +53,12 @@ void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL
 
    * ( ( ULONG * ) pMem ) = ulSize;  /* we store the block size into it */
 
-   ulMemoryConsumed    += ulSize;
-   ulMemoryMaxConsumed += ulSize;
-   ulMemoryBlocks++;
-   ulMemoryMaxBlocks++;
+#ifdef HB_FM_STATISTICS
+   s_ulMemoryConsumed    += ulSize;
+   s_ulMemoryMaxConsumed += ulSize;
+   s_ulMemoryBlocks++;
+   s_ulMemoryMaxBlocks++;
+#endif
 
    return ( char * ) pMem + sizeof( ULONG );
 }
@@ -64,10 +74,12 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
 
    * ( ( ULONG * ) pMem ) = ulSize;  /* we store the block size into it */
 
-   ulMemoryConsumed    += ulSize;
-   ulMemoryMaxConsumed += ulSize;
-   ulMemoryBlocks++;
-   ulMemoryMaxBlocks++;
+#ifdef HB_FM_STATISTICS
+   s_ulMemoryConsumed    += ulSize;
+   s_ulMemoryMaxConsumed += ulSize;
+   s_ulMemoryBlocks++;
+   s_ulMemoryMaxBlocks++;
+#endif
 
    return ( char * ) pMem + sizeof( ULONG );
 }
@@ -84,12 +96,14 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
 
    * ( ( ULONG * ) pResult ) = ulSize;  /* we store the block size into it */
 
+#ifdef HB_FM_STATISTICS
    if( ! ulSize )
-      ulMemoryBlocks--;
+      s_ulMemoryBlocks--;
 
-   ulMemoryConsumed += ( ulSize - ulMemSize );
+   s_ulMemoryConsumed += ( ulSize - ulMemSize );
    if( ulSize > ulMemSize )
-      ulMemoryMaxConsumed += ulSize - ulMemSize;
+      s_ulMemoryMaxConsumed += ulSize - ulMemSize;
+#endif
 
    return ( char * ) pResult + sizeof( ULONG );
 }
@@ -103,8 +117,10 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
    else
       hb_errInternal( 9999, "hb_xfree called with a null pointer", NULL, NULL );
 
-   ulMemoryConsumed -= ulMemSize;
-   ulMemoryBlocks--;
+#ifdef HB_FM_STATISTICS
+   s_ulMemoryConsumed -= ulMemSize;
+   s_ulMemoryBlocks--;
+#endif
 }
 
 ULONG hb_xsize( void * pMem ) /* returns the size of an allocated memory block */
@@ -112,3 +128,20 @@ ULONG hb_xsize( void * pMem ) /* returns the size of an allocated memory block *
    return * ( ULONG * ) ( ( char * ) pMem - sizeof( ULONG ) );
 }
 
+void hb_xinit( void ) /* Initialize fixed memory subsystem */
+{
+   ;
+}
+
+void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
+{
+#ifdef HB_FM_STATISTICS
+   if( s_ulMemoryBlocks )
+   {
+      printf( "\n\ntotal memory blocks allocated: %lu\n", s_ulMemoryMaxBlocks );
+      printf( "memory maximum size consumed: %ld\n", s_ulMemoryMaxConsumed );
+      printf( "memory blocks not released: %ld\n", s_ulMemoryBlocks );
+      printf( "memory size not released: %ld\n", s_ulMemoryConsumed );
+   }
+#endif
+}

@@ -510,9 +510,14 @@ void hb_inkeyReset( BOOL allocate)      /* Reset the keyboard buffer */
 
 HARBOUR HB_INKEY( void )
 {
-   int args = hb_pcount(), key = 0, wait = FALSE, forever = FALSE;
+   int args = hb_pcount();
+   int key = 0;
+   BOOL wait = FALSE, forever = FALSE;
    double seconds;
    HB_inkey_enum event_mask = hb_set.HB_SET_EVENTMASK; /* Default to the SET input event mask */
+
+   if( args < 1 || args > 2 )
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "INKEY" ); /* NOTE: Clipper catches this at compile time! */
 
    if( args == 1 || ( args > 1 && hb_param( 1, IT_NUMERIC ) ) )
    {

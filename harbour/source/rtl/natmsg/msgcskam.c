@@ -70,7 +70,7 @@ char *hb_errorsGeneric[] =
    "",
    "",
    "Unsupported operation",
-   "Limit exeeded",
+   "Limit exceeded",
    "Index corruption detected",
    "Incorrect type of data",
    "Data width too long",

@@ -122,9 +122,8 @@ HARBOUR HB_MD(void)
 
 HARBOUR HB_RD( void )
 {
-   /* TOFIX: chdir() is wrong here */
 #ifdef __DOS__
-   hb_retni( ISCHAR( 1 ) ? chdir( hb_parc( 1 ) ) : 0 );
+   hb_retni( ISCHAR( 1 ) ? rmdir( hb_parc( 1 ) ) : 0 );
 #else
    hb_retni( 0 );
 #endif

@@ -53,10 +53,9 @@ BOOL hb_evalPutParam( PEVALINFO pEvalInfo, PHB_ITEM pItem )
 
       for( w = 1; w < HB_EVAL_PARAM_MAX_ + 1; w++ ) /* note that 0 position is used by the codeblock or function name item */
       {
-         if( ! pEvalInfo->pItems[ w ] )
+         if( pEvalInfo->pItems[ w ] == NULL )
          {
-            pEvalInfo->pItems[ w ] = hb_itemNew( NULL );
-            hb_itemCopy( pEvalInfo->pItems[ w ], pItem );
+            pEvalInfo->pItems[ w ] = pItem;
             bResult = TRUE;
             break;
          }
@@ -75,6 +74,7 @@ BOOL hb_evalRelease( PEVALINFO pEvalInfo )
       WORD w;
 
       for( w = 0; w < HB_EVAL_PARAM_MAX_ + 1; w++ )
+         /* NOTE: NULL pointer is checked by hb_itemRelease() */
          hb_itemRelease( pEvalInfo->pItems[ w ] );
 
       bResult = TRUE;
@@ -133,9 +133,10 @@ PHB_ITEM hb_itemNew( PHB_ITEM pNull )
 PHB_ITEM hb_itemParam( WORD wParam )
 {
    PHB_ITEM pNew = hb_itemNew( NULL );
+   PHB_ITEM pItem = hb_param( wParam, IT_ANY );
 
-   if( hb_param( wParam, IT_ANY ) )
-      hb_itemCopy( pNew, hb_param( wParam, IT_ANY ));
+   if( pItem )
+      hb_itemCopy( pNew, pItem );
 
    return pNew;
 }
@@ -521,7 +522,7 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
    long  lCounter;
    int   iRet = 0;                      /* Current status               */
 
-   if ( hb_set.HB_SET_EXACT && ! bForceExact )
+   if( hb_set.HB_SET_EXACT && ! bForceExact )
    {                                    /* SET EXACT ON and not using == */
                                         /* Don't include trailing spaces */
       while( lLenFirst > 0 && szFirst[ lLenFirst - 1 ] == ' ') lLenFirst--;

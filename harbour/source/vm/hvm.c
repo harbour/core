@@ -36,17 +36,10 @@
 #include "errorapi.h"
 #include "itemapi.h"
 #include "langapi.h"
+#include "rddapi.h"
 #include "pcode.h"
 #include "set.h"
 #include "inkey.h"
-
-extern void hb_consoleInitialize( void );
-extern void hb_consoleRelease( void );
-extern void InitSymbolTable( void );   /* initialization of runtime support symbols */
-extern int  hb_rddGetCurrentWorkAreaNumber( void );
-extern void hb_rddSelectWorkAreaNumber( int iArea );
-extern void hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
-extern void hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
 
 typedef struct _SYMBOLS
 {
@@ -100,7 +93,7 @@ HB_ITEM  aStatics;         /* Harbour array to hold all application statics vari
 static BOOL     bDebugging = FALSE;
 static BOOL     bDebugShowLines = FALSE; /* update source code line on the debugger display */
 static PHB_SYMB pSymStart;        /* start symbol of the application. MAIN() is not required */
-static PSYMBOLS pSymbols = 0;     /* to hold a linked list of all different modules symbol tables */
+static PSYMBOLS pSymbols = NULL;  /* to hold a linked list of all different modules symbol tables */
 static BYTE     byErrorLevel = 0; /* application exit errorlevel */
 
 /* Stores the position on the stack of current SEQUENCE envelope or 0 if no
@@ -142,17 +135,16 @@ int main( int argc, char * argv[] )
    errorBlock.type   = IT_NIL;
    stack.Return.type = IT_NIL;
 
+   hb_xinit();
    hb_stackInit();
    hb_dynsymNew( &symEval );  /* initialize dynamic symbol for evaluating codeblocks */
    hb_setInitialize();        /* initialize Sets */
    hb_consoleInitialize();    /* initialize Console */
    hb_memvarsInit();
 #ifdef HARBOUR_OBJ_GENERATION
-   hb_vmProcessObjSymbols(); /* initialize Harbour generated OBJs symbols */
+   hb_vmProcessObjSymbols();  /* initialize Harbour generated OBJs symbols */
 #endif
-
-   /* Initialize symbol table with runtime support functions */
-   InitSymbolTable();
+   hb_vmRTSymbolsInit();      /* initialize symbol table with runtime support functions */
 
    /* Call functions that initializes static variables
     * Static variables have to be initialized before any INIT functions
@@ -163,27 +155,21 @@ int main( int argc, char * argv[] )
 
 #ifdef HARBOUR_START_PROCEDURE
    {
-     PHB_DYNS pDynSym =hb_dynsymFind( HARBOUR_START_PROCEDURE );
-     if( pDynSym )
-       pSymStart =pDynSym->pSymbol;
-     else
-     {
-       hb_errInternal( 9999, "Can\'t locate the starting procedure: \'%s\'", HARBOUR_START_PROCEDURE, NULL );
-     }
+      PHB_DYNS pDynSym = hb_dynsymFind( HARBOUR_START_PROCEDURE );
+
+      if( pDynSym )
+         pSymStart = pDynSym->pSymbol;
+      else
+         hb_errInternal( 9999, "Can\'t locate the starting procedure: \'%s\'", HARBOUR_START_PROCEDURE, NULL );
    }
 #endif
 
    hb_vmPushSymbol( pSymStart ); /* pushes first FS_PUBLIC defined symbol to the stack */
-
    hb_vmPushNil();               /* places NIL at self */
-
-   for( i = 1; i < argc; i++ ) /* places application parameters on the stack */
+   for( i = 1; i < argc; i++ )   /* places application parameters on the stack */
       hb_vmPushString( argv[ i ], strlen( argv[ i ] ) );
-
    hb_vmDo( argc - 1 );          /* invoke it with number of supplied parameters */
 
-   /* QUESTION: How to handle QUIT or BREAK in EXIT procedures?
-    */
    wActionRequest = 0;           /* EXIT procedures should be processed */
    hb_vmDoExitFunctions();       /* process defined EXIT functions */
 
@@ -197,16 +183,10 @@ int main( int argc, char * argv[] )
    hb_setRelease();             /* releases Sets */
    hb_memvarsRelease();
    hb_stackFree();
-   /* hb_dynsymLog(); */
-   HB_DEBUG( "Done!\n" );
+/* hb_dynsymLog(); */
+   hb_xexit();
 
-   if( ulMemoryBlocks )
-   {
-      printf( "\n\ntotal memory blocks allocated: %lu\n", ulMemoryMaxBlocks );
-      printf( "memory maximum size consumed: %ld\n", ulMemoryMaxConsumed );
-      printf( "memory blocks not released: %ld\n", ulMemoryBlocks );
-      printf( "memory size not released: %ld\n", ulMemoryConsumed );
-   }
+   HB_DEBUG( "Done!\n" );
 
    return byErrorLevel;
 }
@@ -223,6 +203,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
    while( ( bCode = pCode[ w ] ) != HB_P_ENDPROC )
    {
       hb_inkeyPoll();                   /* Poll the console keyboard */
+
       switch( bCode )
       {
          case HB_P_AND:
@@ -877,9 +858,7 @@ void hb_vmAnd( void )
       hb_vmPushLogical( bResult );
    }
    else
-   {
-      hb_errRT_BASE(EG_ARG, 1078, NULL, ".AND.");
-   }
+      hb_errRT_BASE( EG_ARG, 1078, NULL, ".AND." );
 }
 
 void hb_vmArrayAt( void )
@@ -959,9 +938,7 @@ void hb_vmDimArray( WORD wDimensions ) /* generates a wDimensions Array and init
    hb_arrayNew( &itArray, ( stack.pPos - wDimensions )->item.asLong.value );
 
    if( wDimensions > 1 )
-   {
       hb_errInternal( 9999, "HVM.C hb_vmDimArray() does not supports multiple dimensions yet", NULL, NULL );
-   }
 
 /*
    for( w = 0; w < wElements; w++ )
@@ -1007,14 +984,14 @@ void hb_vmDo( WORD wParams )
    if( ! IS_SYMBOL( pItem ) )
    {
       /* QUESTION: Is this call needed ? [vszel] */
-      hb_stackShow();
+      hb_stackDispLocal();
       hb_errInternal( 9999, "Symbol item expected as a base from hb_vmDo()", NULL, NULL );
    }
 
 /*
    if( ! IS_NIL( pSelf ) )
    {
-      hb_stackShow();
+      hb_stackDispLocal();
       hb_errInternal( 9999, "Invalid symbol type for self from hb_vmDo()", NULL, NULL );
    }
 */
@@ -1034,18 +1011,17 @@ void hb_vmDo( WORD wParams )
          pFunc = hb_objGetMethod( pSelf, pSym );
 
       if( ! pFunc )
-      {
          hb_errInternal( 9999, "Message %s not implemented for class %s", pSym->szName, hb_objGetClsName( pSelf ) );
-      }
+
       pFunc();
    }
    else                     /* it is a function */
    {
       pFunc = pSym->pFunPtr;
+
       if( ! pFunc )
-      {
          hb_errInternal( 9999, "Invalid function pointer (%s) from hb_vmDo()", pSym->szName, NULL );
-      }
+
       pFunc();
    }
 
@@ -1065,9 +1041,7 @@ HARBOUR hb_vmDoBlock( void )
    int iParam;
 
    if( ! IS_BLOCK( pBlock ) )
-   {
       hb_errInternal( 9999, "Codeblock expected from hb_vmDoBlock()", NULL, NULL );
-   }
 
    /* Check for valid count of parameters */
    iParam =pBlock->item.asBlock.paramcnt -hb_pcount();
@@ -1119,9 +1093,7 @@ HARBOUR HB_EVAL( void )
       hb_vmDo( hb_pcount() - 1 );
    }
    else
-   {
       hb_errInternal( 9999, "Not a valid codeblock on EVAL", NULL, NULL );
-   }
 }
 
 void hb_vmEndBlock( void )
@@ -1146,7 +1118,7 @@ void hb_vmEqual( BOOL bExact )
       hb_vmPushLogical( TRUE );
    }
 
-   else if ( IS_NIL( pItem1 ) || IS_NIL( pItem2 ) )
+   else if( IS_NIL( pItem1 ) || IS_NIL( pItem2 ) )
    {
       hb_stackPop();
       hb_stackPop();
@@ -1171,9 +1143,7 @@ void hb_vmEqual( BOOL bExact )
       hb_vmOperatorCall( pItem1, pItem2, "==" );
 
    else if( pItem1->type != pItem2->type )
-   {
-      hb_errRT_BASE(EG_ARG, 1070, NULL, "==");
-   }
+      hb_errRT_BASE( EG_ARG, 1070, NULL, "==" );
 
    else
       hb_vmPushLogical( FALSE );
@@ -1202,9 +1172,7 @@ void hb_vmForTest( void )        /* Test to check the end point of the FOR */
        hb_vmPushLogical( bEqual );
    }
    else
-   {
-      hb_errRT_BASE(EG_ARG, 1073, NULL, "<");
-   }
+      hb_errRT_BASE( EG_ARG, 1073, NULL, "<" );
 }
 
 void hb_vmFrame( BYTE bLocals, BYTE bParams )
@@ -1227,9 +1195,7 @@ void hb_vmFuncPtr( void )  /* pushes a function address pointer. Removes the sym
       hb_vmPushLong( ( ULONG ) pItem->item.asSymbol.value->pFunPtr );
    }
    else
-   {
       hb_errInternal( 9999, "Symbol item expected from hb_vmFuncPtr()", NULL, NULL );
-   }
 }
 
 void hb_vmFunction( WORD wParams )
@@ -1298,9 +1264,7 @@ void hb_vmGreater( void )
       hb_vmOperatorCall( stack.pPos - 2, stack.pPos - 1, ">" );
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
-   {
-      hb_errRT_BASE(EG_ARG, 1075, NULL, ">");
-   }
+      hb_errRT_BASE( EG_ARG, 1075, NULL, ">" );
 }
 
 void hb_vmGreaterEqual( void )
@@ -1343,9 +1307,7 @@ void hb_vmGreaterEqual( void )
       hb_vmOperatorCall( stack.pPos - 2, stack.pPos - 1, ">=" );
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
-   {
-      hb_errRT_BASE(EG_ARG, 1076, NULL, ">=");
-   }
+      hb_errRT_BASE( EG_ARG, 1076, NULL, ">=" );
 }
 
 void hb_vmInc( void )
@@ -1365,9 +1327,7 @@ void hb_vmInc( void )
       hb_vmPushDate( ++lDate );
    }
    else
-   {
-      hb_errRT_BASE(EG_ARG, 1086, NULL, "++");
-   }
+      hb_errRT_BASE( EG_ARG, 1086, NULL, "++" );
 }
 
 void hb_vmInstring( void )
@@ -1385,9 +1345,7 @@ void hb_vmInstring( void )
       hb_vmPushLogical( iResult == 0 ? FALSE : TRUE );
    }
    else
-   {
-      hb_errRT_BASE(EG_ARG, 1109, NULL, "$");
-   }
+      hb_errRT_BASE( EG_ARG, 1109, NULL, "$" );
 }
 
 void hb_vmLess( void )
@@ -1430,9 +1388,7 @@ void hb_vmLess( void )
       hb_vmOperatorCall( stack.pPos - 2, stack.pPos - 1, "<" );
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
-   {
-      hb_errRT_BASE(EG_ARG, 1073, NULL, "<");
-   }
+      hb_errRT_BASE( EG_ARG, 1073, NULL, "<" );
 }
 
 void hb_vmLessEqual( void )
@@ -1475,9 +1431,7 @@ void hb_vmLessEqual( void )
       hb_vmOperatorCall( stack.pPos - 2, stack.pPos - 1, "<=" );
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
-   {
-      hb_errRT_BASE(EG_ARG, 1074, NULL, "<=");
-   }
+      hb_errRT_BASE( EG_ARG, 1074, NULL, "<=" );
 }
 
 void hb_vmLocalName( WORD wLocal, char * szLocalName ) /* locals and parameters index and name information for the debugger */
@@ -1516,7 +1470,7 @@ void hb_vmNot( void )
    if( IS_LOGICAL( pItem ) )
       pItem->item.asLogical.value = ! pItem->item.asLogical.value;
    else
-      hb_errRT_BASE(EG_ARG, 1077, NULL, ".NOT.");
+      hb_errRT_BASE( EG_ARG, 1077, NULL, ".NOT." );
 }
 
 void hb_vmNotEqual( void )
@@ -1533,7 +1487,7 @@ void hb_vmNotEqual( void )
       hb_vmPushLogical( FALSE );
    }
 
-   else if ( IS_NIL( pItem1 ) || IS_NIL( pItem2 ) )
+   else if( IS_NIL( pItem1 ) || IS_NIL( pItem2 ) )
    {
       hb_stackPop();
       hb_stackPop();
@@ -1558,9 +1512,7 @@ void hb_vmNotEqual( void )
       hb_vmOperatorCall( pItem1, pItem2, "!=" );
 
    else if( pItem1->type != pItem2->type )
-   {
-      hb_errRT_BASE(EG_ARG, 1072, NULL, "<>");
-   }
+      hb_errRT_BASE( EG_ARG, 1072, NULL, "<>" );
 
    else
       hb_vmPushLogical( TRUE );
@@ -1608,7 +1560,7 @@ void hb_vmMinus( void )
       memcpy( pItem1->item.asString.value + ulLen, pItem2->item.asString.value, pItem2->item.asString.length );
       ulLen += pItem2->item.asString.length;
       memset( pItem1->item.asString.value + ulLen, ' ', pItem1->item.asString.length - ulLen);
-      pItem1->item.asString.value[ pItem1->item.asString.length ] = 0;
+      pItem1->item.asString.value[ pItem1->item.asString.length ] = '\0';
 
       if( pItem2->item.asString.value )
       {
@@ -1621,8 +1573,7 @@ void hb_vmMinus( void )
    else if( IS_OBJECT( stack.pPos - 2 ) && hb_objHasMsg( stack.pPos - 2, "-" ) )
       hb_vmOperatorCall( stack.pPos - 2, stack.pPos - 1, "-" );
    else
-      hb_errRT_BASE(EG_ARG, 1082, NULL, "-");
-
+      hb_errRT_BASE( EG_ARG, 1082, NULL, "-" );
 }
 
 void hb_vmModuleName( char * szModuleName ) /* PRG and function name information for the debugger */
@@ -1677,9 +1628,7 @@ void hb_vmOr( void )
       hb_vmPushLogical( bResult );
    }
    else
-   {
-      hb_errRT_BASE(EG_ARG, 1079, NULL, ".OR.");
-   }
+      hb_errRT_BASE( EG_ARG, 1079, NULL, ".OR." );
 }
 
 void hb_vmPlus( void )
@@ -1693,7 +1642,7 @@ void hb_vmPlus( void )
       memcpy( pItem1->item.asString.value+ pItem1->item.asString.length,
               pItem2->item.asString.value, pItem2->item.asString.length );
       pItem1->item.asString.length += pItem2->item.asString.length;
-      pItem1->item.asString.value[ pItem1->item.asString.length ] = 0;
+      pItem1->item.asString.value[ pItem1->item.asString.length ] = '\0';
       if( pItem2->item.asString.value )
       {
          hb_xfree( pItem2->item.asString.value );
@@ -1791,7 +1740,7 @@ static void hb_vmPopAliasedField( PHB_SYMB pSym )
          hb_errRT_BASE( EG_BADALIAS, 1000, NULL, NULL );
          break;
    }
-                    
+
    hb_rddPutFieldValue( stack.pPos - 2, pSym );
    hb_rddSelectWorkAreaNumber( iCurrArea );
    hb_stackPop();    /* field */
@@ -1809,17 +1758,17 @@ double hb_vmPopDouble( WORD *pwDec )
    {
       case IT_INTEGER:
            dNumber = ( double ) stack.pPos->item.asInteger.value;
-           *pwDec =0;
+           *pwDec = 0;
            break;
 
       case IT_LONG:
            dNumber = ( double ) stack.pPos->item.asLong.value;
-           *pwDec =0;
+           *pwDec = 0;
            break;
 
       case IT_DOUBLE:
            dNumber = stack.pPos->item.asDouble.value;
-           *pwDec =stack.pPos->item.asDouble.decimal;
+           *pwDec = stack.pPos->item.asDouble.decimal;
            break;
 
       default:
@@ -1877,7 +1826,7 @@ BOOL hb_vmPopLogical( void )
    }
    else
    {
-      hb_errRT_BASE(EG_ARG, 1066, NULL, hb_langDGetErrorDesc(EG_CONDITION));
+      hb_errRT_BASE( EG_ARG, 1066, NULL, hb_langDGetErrorDesc( EG_CONDITION ) );
       return 0;
    }
 }
@@ -2115,7 +2064,7 @@ void hb_vmPushString( char * szText, ULONG length )
    char * szTemp = ( char * ) hb_xgrab( length + 1 );
 
    memcpy (szTemp, szText, length);
-   szTemp[ length ] = 0;
+   szTemp[ length ] = '\0';
 
    stack.pPos->type                 = IT_STRING;
    stack.pPos->item.asString.length = length;
@@ -2152,11 +2101,11 @@ void hb_vmPushBlock( BYTE * pCode, PHB_SYMB pSymbols )
 
    stack.pPos->type   = IT_BLOCK;
 
-   wLocals =pCode[ 5 ] + ( pCode[ 6 ] * 256 );
+   wLocals = pCode[ 5 ] + ( pCode[ 6 ] * 256 );
    stack.pPos->item.asBlock.value =
          hb_codeblockNew( pCode + 7 + wLocals*2, /* pcode buffer         */
-         wLocals,                             /* number of referenced local variables */
-         (WORD *)(pCode +7),                  /* table with referenced local variables */
+         wLocals,                                /* number of referenced local variables */
+         (WORD *)( pCode + 7 ),                  /* table with referenced local variables */
          pSymbols );
 
    /* store the statics base of function where the codeblock was defined
@@ -2186,7 +2135,7 @@ void hb_vmPushDouble( double dNumber, WORD wDec )
    stack.pPos->item.asDouble.value = dNumber;
    if( dNumber >= 10000000000.0 ) stack.pPos->item.asDouble.length = 20;
    else stack.pPos->item.asDouble.length = 10;
-   stack.pPos->item.asDouble.decimal = (wDec > 9) ? 9 : wDec;
+   stack.pPos->item.asDouble.decimal = ( wDec > 9 ) ? 9 : wDec;
    hb_stackPush();
    HB_DEBUG( "hb_vmPushDouble\n" );
 }
@@ -2220,9 +2169,8 @@ void hb_vmRetValue( void )
 void hb_stackPop( void )
 {
    if( --stack.pPos < stack.pItems )
-   {
       hb_errInternal( 9999, "Stack underflow", NULL, NULL );
-   }
+
    if( stack.pPos->type != IT_NIL )
       hb_itemClear( stack.pPos );
 }
@@ -2230,9 +2178,7 @@ void hb_stackPop( void )
 void hb_stackDec( void )
 {
    if( --stack.pPos < stack.pItems )
-   {
       hb_errInternal( 9999, "Stack underflow", NULL, NULL );
-   }
 }
 
 void hb_stackFree( void )
@@ -2257,7 +2203,7 @@ void hb_stackPush( void )
       BaseIndex = stack.pBase - stack.pItems;
 
       /* no, make more headroom: */
-      /* hb_stackShow(); */
+      /* hb_stackDispLocal(); */
       stack.pItems = (PHB_ITEM)hb_xrealloc( stack.pItems, sizeof( HB_ITEM ) *
                                 ( stack.wItems + STACK_EXPANDHB_ITEMS ) );
 
@@ -2265,7 +2211,7 @@ void hb_stackPush( void )
       stack.pPos = stack.pItems + CurrIndex;
       stack.pBase = stack.pItems + BaseIndex;
       stack.wItems += STACK_EXPANDHB_ITEMS;
-      /* hb_stackShow(); */
+      /* hb_stackDispLocal(); */
    }
 
    /* now, push it: */
@@ -2283,20 +2229,20 @@ void hb_stackInit( void )
    HB_DEBUG( "hb_stackInit\n" );
 }
 
-void hb_stackShow( void )
+void hb_stackDispLocal( void )
 {
-   PHB_ITEM p;
+   PHB_ITEM pBase;
 
-   for( p = stack.pBase; p <= stack.pPos; p++ )
+   for( pBase = stack.pBase; pBase <= stack.pPos; pBase++ )
    {
-      switch( p->type )
+      switch( pBase->type )
       {
          case IT_NIL:
               printf( "NIL " );
               break;
 
          case IT_ARRAY:
-              if( p->item.asArray.value->wClass )
+              if( pBase->item.asArray.value->wClass )
                  printf( "OBJECT " );
               else
                  printf( "ARRAY " );
@@ -2315,7 +2261,7 @@ void hb_stackShow( void )
               break;
 
          case IT_LOGICAL:
-              printf( "LOGICAL[%i] ", (int) p->item.asLogical.value );
+              printf( "LOGICAL[%c] ", pBase->item.asLogical.value ? 'T' : 'F' );
               break;
 
          case IT_LONG:
@@ -2323,7 +2269,7 @@ void hb_stackShow( void )
               break;
 
          case IT_INTEGER:
-              printf( "INTEGER[%i] ", p->item.asInteger.value );
+              printf( "INTEGER[%i] ", pBase->item.asInteger.value );
               break;
 
          case IT_STRING:
@@ -2331,15 +2277,37 @@ void hb_stackShow( void )
               break;
 
          case IT_SYMBOL:
-              printf( "SYMBOL(%s) ", p->item.asSymbol.value->szName );
+              printf( "SYMBOL(%s) ", pBase->item.asSymbol.value->szName );
               break;
 
          default:
-              printf( "UNKNOWN[%i] ", p->type );
+              printf( "UNKNOWN[%i] ", pBase->type );
               break;
       }
    }
-   printf( "\n" );
+
+   printf( hb_consoleGetNewLine() );
+}
+
+void hb_stackDispCall( void )
+{
+   PHB_ITEM pBase = stack.pBase;
+
+   while( pBase != stack.pItems )
+   {
+      pBase = stack.pItems + pBase->item.asSymbol.stackbase;
+
+      if( ( pBase + 1 )->type == IT_ARRAY )
+         printf( "Called from %s:%s(%i)", hb_objGetClsName( pBase + 1 ),
+                 pBase->item.asSymbol.value->szName,
+                 pBase->item.asSymbol.lineno );
+      else
+         printf( "Called from %s(%i)", 
+                 pBase->item.asSymbol.value->szName,
+                 pBase->item.asSymbol.lineno );
+
+      printf( hb_consoleGetNewLine() );
+   }
 }
 
 void hb_vmSFrame( PHB_SYMB pSym )      /* sets the statics frame for a function */
@@ -2355,7 +2323,7 @@ void hb_vmStatics( PHB_SYMB pSym ) /* initializes the global aStatics array or r
 
    if( IS_NIL( &aStatics ) )
    {
-      pSym->pFunPtr = 0;         /* statics frame for this PRG */
+      pSym->pFunPtr = NULL;         /* statics frame for this PRG */
       hb_arrayNew( &aStatics, wStatics );
    }
    else
@@ -2374,11 +2342,11 @@ void hb_vmProcessSymbols( PHB_SYMB pModuleSymbols, WORD wModuleSymbols ) /* modu
    SYMBOLSCOPE hSymScope;
 
 #ifdef HARBOUR_OBJ_GENERATION
-   static int iObjChecked = 0;
+   static BOOL bObjChecked = FALSE;
 
-   if( ! iObjChecked )
+   if( ! bObjChecked )
    {
-      iObjChecked = 1;
+      bObjChecked = TRUE;
       hb_vmProcessObjSymbols();   /* to asure Harbour OBJ symbols are processed first */
    }
 #endif
@@ -2386,8 +2354,8 @@ void hb_vmProcessSymbols( PHB_SYMB pModuleSymbols, WORD wModuleSymbols ) /* modu
    pNewSymbols = ( PSYMBOLS ) hb_xgrab( sizeof( SYMBOLS ) );
    pNewSymbols->pModuleSymbols = pModuleSymbols;
    pNewSymbols->wModuleSymbols = wModuleSymbols;
-   pNewSymbols->pNext = 0;
-   pNewSymbols->hScope =0;
+   pNewSymbols->pNext = NULL;
+   pNewSymbols->hScope = 0;
 
    if( ! pSymbols )
       pSymbols = pNewSymbols;
@@ -2416,11 +2384,11 @@ static void hb_vmProcessObjSymbols( void )
 {
    POBJSYMBOLS pObjSymbols = ( POBJSYMBOLS ) &HB_FIRSTSYMBOL;
 
-   static int iDone = 0;
+   static BOOL bDone = FALSE;
 
-   if( ! iDone )
+   if( ! bDone )
    {
-      iDone = 1;
+      bDone = TRUE;
       while( pObjSymbols < ( POBJSYMBOLS ) ( &HB_LASTSYMBOL - 1 ) )
       {
          hb_vmProcessSymbols( pObjSymbols->pSymbols, pObjSymbols->wSymbols );
@@ -2494,10 +2462,10 @@ static void hb_vmDoExitFunctions( void )
                hb_vmPushSymbol( pLastSymbols->pModuleSymbols + w );
                hb_vmPushNil();
                hb_vmDo( 0 );
-	       if( wActionRequest )
-	          /* QUIT or BREAK was issued - stop processing
-		  */
-	          return;
+               if( wActionRequest )
+                  /* QUIT or BREAK was issued - stop processing
+                  */
+                  return;
             }
          }
       }
@@ -2548,11 +2516,11 @@ void hb_vmForceLink( void )
 
 HARBOUR HB_LEN( void )
 {
-   PHB_ITEM pItem;
-
-   if( hb_pcount() )
+   if( hb_pcount() == 1 )
    {
-      pItem = hb_param( 1, IT_ANY );
+      PHB_ITEM pItem = hb_param( 1, IT_ANY );
+
+      /* NOTE: pItem cannot be NULL here */
 
       switch( pItem->type )
       {
@@ -2565,20 +2533,22 @@ HARBOUR HB_LEN( void )
               break;
 
          default:
-              hb_errRT_BASE(EG_ARG, 1111, NULL, "LEN");
+              hb_errRT_BASE( EG_ARG, 1111, NULL, "LEN" );
               break;
       }
    }
    else
-      hb_retni( 0 );  /* QUESTION: Should we raise an error here ? */
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "LEN" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 HARBOUR HB_EMPTY(void)
 {
-   PHB_ITEM pItem = hb_param( 1, IT_ANY );
-
-   if( pItem )
+   if( hb_pcount() == 1 )
    {
+      PHB_ITEM pItem = hb_param( 1, IT_ANY );
+
+      /* NOTE: pItem cannot be NULL here */
+
       switch( pItem->type & ~IT_BYREF )
       {
          case IT_ARRAY:
@@ -2619,16 +2589,16 @@ HARBOUR HB_EMPTY(void)
       }
    }
    else
-      hb_retl( TRUE );
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "EMPTY" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 HARBOUR HB_VALTYPE( void )
 {
-   PHB_ITEM pItem;
-
    if( hb_pcount() == 1 )
    {
-      pItem = hb_param( 1, IT_ANY );
+      PHB_ITEM pItem = hb_param( 1, IT_ANY );
+
+      /* NOTE: pItem cannot be NULL here */
 
       switch( pItem->type & ~IT_BYREF )
       {
@@ -2668,10 +2638,7 @@ HARBOUR HB_VALTYPE( void )
       }
    }
    else
-   {
-      /* QUESTION: Clipper catches this at compile time! */
-      hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "VALTYPE");
-   }
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "VALTYPE" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 HARBOUR HB_ERRORBLOCK(void)
@@ -2687,23 +2654,6 @@ HARBOUR HB_ERRORBLOCK(void)
 
    hb_itemCopy( &stack.Return, &oldError );
    hb_itemClear( &oldError );
-}
-
-void hb_callStackShow( void )
-{
-   PHB_ITEM pBase = stack.pBase;
-
-   while( pBase != stack.pItems )
-   {
-      pBase = stack.pItems + pBase->item.asSymbol.stackbase;
-      if( ( pBase + 1 )->type == IT_ARRAY )
-         printf( "Called from %s:%s(%i)\n", hb_objGetClsName( pBase + 1 ),
-                 pBase->item.asSymbol.value->szName,
-                 pBase->item.asSymbol.lineno  );
-      else
-         printf( "Called from %s(%i)\n", pBase->item.asSymbol.value->szName,
-                 pBase->item.asSymbol.lineno  );
-   }
 }
 
 HARBOUR HB_PROCNAME(void)
@@ -2771,10 +2721,15 @@ HARBOUR HB_ERRORLEVEL(void)
 
 HARBOUR HB_PCOUNT(void)
 {
-   PHB_ITEM pBase = stack.pItems + stack.pBase->item.asSymbol.stackbase;
-   WORD  wRet  = pBase->item.asSymbol.paramcnt;                /* Skip current function     */
+   if( hb_pcount() == 0 )
+   {
+      PHB_ITEM pBase = stack.pItems + stack.pBase->item.asSymbol.stackbase;
+      WORD  wRet  = pBase->item.asSymbol.paramcnt;                /* Skip current function     */
 
-   hb_retni( wRet );
+      hb_retni( wRet );
+   }
+   else
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "PCOUNT" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 HARBOUR HB_PVALUE(void)                                /* PValue( <nArg> )         */
@@ -2786,9 +2741,7 @@ HARBOUR HB_PVALUE(void)                                /* PValue( <nArg> )      
    if( wParam && wParam <= pBase->item.asSymbol.paramcnt )     /* Valid number             */
       hb_itemReturn( pBase + 1 + wParam );
    else
-   {
-      hb_errRT_BASE(EG_ARG, 3011, NULL, "PVALUE");
-   }
+      hb_errRT_BASE( EG_ARG, 3011, NULL, "PVALUE" );
 }
 
 void hb_vmRequestBreak( PHB_ITEM pItem )
@@ -2802,6 +2755,11 @@ void hb_vmRequestBreak( PHB_ITEM pItem )
    else
       wActionRequest = HB_QUIT_REQUESTED;
 }
+
+/* NOTE: This function should normally have a parameter count check. But
+         since in Harbour we cannot distinguish between BREAK() function and 
+         the BREAK statement, because both generate a BREAK() function
+         call on the pcode level, we should drop the checking. */
 
 HARBOUR HB_BREAK( void )
 {

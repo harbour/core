@@ -5,9 +5,9 @@
 /*
    Harbour Project source code
 
-   Harbour Mouse Subsystem for DOS
+   Harbour Mouse Subsystem for Windows
 
-   Copyright 1999  ????????????????
+   Copyright 1999  ????????????
    www - http://www.harbour-project.org
 
    This program is free software; you can redistribute it and/or modify

@@ -31,8 +31,7 @@
 extern HARBOUR HB_ERRORNEW( void );
 
 /* NOTE: This is called via its symbol name, so we should make sure */
-/*       that it gets linked. */
-/*       Don't make this function static, because it's not called from this file. */
+/*       that it gets linked. WARNING ! DON'T make this function static. */
 void hb_errForceLink()
 {
    HB_ERRORNEW();
@@ -55,39 +54,44 @@ WORD hb_errLaunch( PHB_ITEM pError )
 {
    WORD wRetVal;
 
-   if ( pError )
+   if( pError )
    {
-      /* TODO: Determine if there was a BREAK in the error handler. */
-      BOOL bBreak;
-      WORD nSequenceLevel;
-      USHORT uiFlags;
+      EVALINFO eval;
+      PHB_ITEM pBlock;
+      PHB_ITEM pObject;
+      PHB_ITEM pResult;
 
-      if ( ! IS_BLOCK( &errorBlock ) )
-      {
+      /* Check if we have a valid error handler */
+
+      if( ! IS_BLOCK( &errorBlock ) )
          hb_errInternal( 9999, "No ERRORBLOCK() for error", NULL, NULL );
-      }
 
-      /* NOTE: This must be called before the hb_vm*() calls */
-      uiFlags = hb_errGetFlags( pError );
+      /* Launch the error handler: "lResult := EVAL( bErrorBlock, oError )" */
 
-      hb_vmPushSymbol( &symEval );
-      hb_vmPush( &errorBlock );
-      hb_vmPush( pError );
-      hb_vmDo( 1 );
+      pBlock = hb_itemNew( NULL );
+      pObject = hb_itemNew( NULL );
 
-      /* NOTE: Don't make any hb_vm*() calls here, since they may screw up */
-      /*       the stack.return value */
+      hb_itemCopy( pBlock, &errorBlock );
+      hb_itemCopy( pObject, pError );
 
-      /* TODO: Detect these properly */
-      bBreak = FALSE;
-      nSequenceLevel = 0;
+      hb_evalNew( &eval, pBlock );
+      hb_evalPutParam( &eval, pObject );
 
-      if ( bBreak )
+      pResult = hb_evalLaunch( &eval );
+      hb_evalRelease( &eval );
+
+      /* Check results */
+
+      /* TODO: Determine if there was a BREAK in the error handler. */
+      if( FALSE )
       {
-         if ( nSequenceLevel )
+         hb_itemRelease( pResult );
+
+         /* TODO: Detect sequence level properly */
+         if( FALSE )
          {
-            wRetVal = E_BREAK;
             /* TODO: Initiate a jump to the closest RECOVER statement */
+            wRetVal = E_BREAK;
          }
          else
          {
@@ -98,54 +102,119 @@ WORD hb_errLaunch( PHB_ITEM pError )
       else
       {
          BOOL bFailure = FALSE;
+         USHORT uiFlags = hb_errGetFlags( pError );
 
          /* If the error block didn't return a logical value, */
          /* or the canSubstitute flag has been set, consider it as a failure */
 
-         if ( ! IS_LOGICAL( &stack.Return ) ||
-              ( uiFlags & EF_CANSUBSTITUTE ) )
+         if( ! IS_LOGICAL( pResult ) ||
+            ( uiFlags & EF_CANSUBSTITUTE ) )
          {
             bFailure = TRUE;
          }
          else
          {
-            wRetVal = stack.Return.item.asLogical.value ? E_RETRY : E_DEFAULT;
+            wRetVal = hb_itemGetL( pResult ) ? E_RETRY : E_DEFAULT;
 
-            if ( ( wRetVal == E_DEFAULT && !( uiFlags & EF_CANDEFAULT ) ) ||
-                 ( wRetVal == E_RETRY   && !( uiFlags & EF_CANRETRY   ) ) )
+            if( ( wRetVal == E_DEFAULT && !( uiFlags & EF_CANDEFAULT ) ) ||
+                ( wRetVal == E_RETRY   && !( uiFlags & EF_CANRETRY   ) ) )
             {
                bFailure = TRUE;
             }
          }
 
-         if ( bFailure )
+         hb_itemRelease( pResult );
+
+         if( bFailure )
+            hb_errInternal( 9999, "Error recovery failure", NULL, NULL );
+      }
+   }
+   else
+      wRetVal = E_RETRY; /* Clipper does this, undocumented */
+
+   return wRetVal;
+}
+
+/* This error launcher should be used in those situations, where the error
+   handler is expected to return a value to be substituted as the result of
+   a failed operation. */
+
+/* NOTE: This should only be called when the EF_CANSUBSTITUE flag was set
+         Since it this case the error handler will return the value
+         to be substituted */
+/* NOTE: The item pointer returned should be hb_itemRelease()-d by the
+         caller. */
+
+PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
+{
+   PHB_ITEM pResult;
+
+   if( pError )
+   {
+      EVALINFO eval;
+      PHB_ITEM pBlock;
+      PHB_ITEM pObject;
+
+      /* Check if we have a valid error handler */
+
+      if( ! IS_BLOCK( &errorBlock ) )
+         hb_errInternal( 9999, "No ERRORBLOCK() for error", NULL, NULL );
+
+      /* Launch the error handler: "xResult := EVAL( bErrorBlock, oError )" */
+
+      pBlock = hb_itemNew( NULL );
+      pObject = hb_itemNew( NULL );
+
+      hb_itemCopy( pBlock, &errorBlock );
+      hb_itemCopy( pObject, pError );
+
+      hb_evalNew( &eval, pBlock );
+      hb_evalPutParam( &eval, pObject );
+
+      pResult = hb_evalLaunch( &eval );
+      hb_evalRelease( &eval );
+
+      /* Check results */
+
+      /* TODO: Determine if there was a BREAK in the error handler. */
+      if( FALSE )
+      {
+         /* TODO: Detect sequence level properly */
+         if( FALSE )
+         {
+            /* TODO: Initiate a jump to the closest RECOVER statement */
+            /* QUESTION: Will Clipper return to the caller in this case ? */
+         }
+         else
+         {
+            hb_itemRelease( pResult );
+            pResult = NULL;
+
+            /* TODO: QUIT correctly, without any message */
+            exit( 1 );
+         }
+      }
+      else
+      {
+         /* If the canSubstitute flag has not been set,
+            consider it as a failure. */
+
+         if( ! ( hb_errGetFlags( pError ) & EF_CANSUBSTITUTE ) )
          {
             hb_errInternal( 9999, "Error recovery failure", NULL, NULL );
          }
       }
    }
    else
-   {
-      wRetVal = E_RETRY; /* Clipper does this, undocumented */
-   }
+      pResult = hb_itemNew( NULL );
 
-   return wRetVal;
+   return pResult;
 }
-
-/* NOTE: This should be called when the EF_CANSUBSTITUE flag was set */
-/*       Since it this case the error handler will return the value */
-/*       to be substituted */
-
-/* TODO:
-PHB_ITEM hb_errLaunchExt( PHB_ITEM pError )
-{
-}
-*/
 
 void hb_errRelease( PHB_ITEM pError )
 {
-   if ( pError )
-      hb_itemRelease( pError );
+   /* NOTE: NULL pointer is checked by hb_itemRelease() */
+   hb_itemRelease( pError );
 }
 
 char * hb_errGetDescription( PHB_ITEM pError )
@@ -312,7 +381,8 @@ USHORT hb_errGetFlags( PHB_ITEM pError )
    hb_vmPush( pError );
    hb_vmDo( 0 );
 
-   if (stack.Return.item.asLogical.value) uiFlags |= EF_CANRETRY;
+   if( stack.Return.item.asLogical.value )
+      uiFlags |= EF_CANRETRY;
 
    /* ; */
 
@@ -320,7 +390,8 @@ USHORT hb_errGetFlags( PHB_ITEM pError )
    hb_vmPush( pError );
    hb_vmDo( 0 );
 
-   if (stack.Return.item.asLogical.value) uiFlags |= EF_CANSUBSTITUTE;
+   if( stack.Return.item.asLogical.value )
+      uiFlags |= EF_CANSUBSTITUTE;
 
    /* ; */
 
@@ -328,7 +399,8 @@ USHORT hb_errGetFlags( PHB_ITEM pError )
    hb_vmPush( pError );
    hb_vmDo( 0 );
 
-   if (stack.Return.item.asLogical.value) uiFlags |= EF_CANDEFAULT;
+   if( stack.Return.item.asLogical.value )
+      uiFlags |= EF_CANDEFAULT;
 
    /* ; */
 
@@ -382,7 +454,7 @@ static WORD hb_errRT_New
    hb_errPutSubSystem( pError, szSubSystem );
    hb_errPutGenCode( pError, ulGenCode );
    hb_errPutSubCode( pError, ulSubCode );
-   hb_errPutDescription( pError, szDescription ? szDescription : hb_langDGetErrorDesc(ulGenCode) );
+   hb_errPutDescription( pError, szDescription ? szDescription : hb_langDGetErrorDesc( ulGenCode ) );
    hb_errPutOperation( pError, szOperation );
    hb_errPutOsCode( pError, uiOsCode );
    hb_errPutFlags( pError, uiFlags );
@@ -396,8 +468,8 @@ static WORD hb_errRT_New
 
 HARBOUR HB___ERRRT_BASE( void )
 {
-   hb_errRT_BASE( (ULONG) hb_parnl( 1 ),
-                  (ULONG) hb_parnl( 2 ),
+   hb_errRT_BASE( ( ULONG ) hb_parnl( 1 ),
+                  ( ULONG ) hb_parnl( 2 ),
                   ISCHAR( 3 ) ? hb_parc( 3 ) : NULL,
                   hb_parc( 4 ) );
 }
@@ -430,14 +502,15 @@ void hb_errRT_TOOLS( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, cha
 /* NOTE: Use as minimal calls from here, as possible. */
 /*       Don't allocate memory from this function. */
 
-void hb_errInternal ( ULONG ulIntCode, char * szText, char * szPar1, char * szPar2 )
+void hb_errInternal( ULONG ulIntCode, char * szText, char * szPar1, char * szPar2 )
 {
-   char szError [ 256 ];
+   printf( hb_consoleGetNewLine() );
+   printf( "Internal error %lu: ", ulIntCode );
+   printf( szText != NULL ? szText : hb_langDGetErrorIntr( ulIntCode ), szPar1, szPar2 );
+   printf( hb_consoleGetNewLine() );
 
-   sprintf( szError, szText ? szText : hb_langDGetErrorIntr( ulIntCode ), szPar1, szPar2 );
-   printf( "\nInternal error %lu: %s\n", ulIntCode, szError );
-
-   hb_callStackShow();
+   hb_stackDispCall();
 
    exit( EXIT_FAILURE );
 }
+

@@ -26,6 +26,7 @@ C_HEADERS=\
         inkey.h      \
         itemapi.h    \
         langapi.h    \
+        mouseapi.h   \
         pcode.h      \
         rddapi.h     \
         run_exp.h    \

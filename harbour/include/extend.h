@@ -237,16 +237,13 @@ extern void     hb_storni( int iValue, int iParam, ... ); /* stores an integer o
 extern void     hb_stornl( long lValue, int iParam, ... ); /* stores a long on a variable by reference */
 extern void     hb_stornd( double dValue, int iParam, ... ); /* stores a double on a variable by reference */
 
-extern void *   hb_xalloc( ULONG lSize );   /* allocates memory, returns NULL on failure */
-extern void *   hb_xgrab( ULONG lSize );   /* allocates memory, exists on failure */
-extern void     hb_xfree( void * pMem );    /* frees memory */
-extern void *   hb_xrealloc( void * pMem, ULONG lSize );   /* reallocates memory */
-extern ULONG    hb_xsize( void * pMem ); /* returns the size of an allocated memory block */
-
-extern ULONG    ulMemoryBlocks;      /* memory blocks used */
-extern ULONG    ulMemoryMaxBlocks;   /* maximum number of used memory blocks */
-extern ULONG    ulMemoryConsumed;    /* memory size consumed */
-extern ULONG    ulMemoryMaxConsumed; /* memory max size consumed */
+extern void     hb_xinit( void );                        /* Initialize fixed memory subsystem */
+extern void     hb_xexit( void );                        /* Deinitialize fixed memory subsystem */
+extern void *   hb_xalloc( ULONG lSize );                /* allocates memory, returns NULL on failure */
+extern void *   hb_xgrab( ULONG lSize );                 /* allocates memory, exists on failure */
+extern void     hb_xfree( void * pMem );                 /* frees memory */
+extern void *   hb_xrealloc( void * pMem, ULONG lSize ); /* reallocates memory */
+extern ULONG    hb_xsize( void * pMem );                 /* returns the size of an allocated memory block */
 
 /* array management */
 extern void     hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ); /* creates a new array */
@@ -323,6 +320,11 @@ extern void     hb_memvarGetValue( HB_ITEM_PTR, PHB_SYMB );
 extern void     hb_memvarGetRefer( HB_ITEM_PTR, PHB_SYMB );
 extern ULONG    hb_memvarGetPrivatesBase( void );
 extern void     hb_memvarSetPrivatesBase( ULONG );
+
+/* console I/O subsystem */
+extern void     hb_consoleInitialize( void );
+extern void     hb_consoleRelease( void );
+extern char *   hb_consoleGetNewLine( void );
 
 extern char *   hb_setColor( char * );
 

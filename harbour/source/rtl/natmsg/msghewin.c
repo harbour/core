@@ -70,7 +70,7 @@ char *hb_errorsGeneric[] =
    "",
    "",
    "פעולה זאת אינה נתמכת",
-   "Limit exeeded",
+   "Limit exceeded",
    "אינקס משובש או לא תקין",
    "Incorrect type of data",
    "Data width too long",

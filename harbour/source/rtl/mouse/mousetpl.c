@@ -1,12 +1,19 @@
 /*
+ * $Id$
+ */
+
+/*
    Harbour Project source code
 
-   Harbour mouse support
+   Harbour Mouse Subsystem Template
+
+   Copyright 1999  Victor Szel <info@szelvesz.hu>
+   www - http://www.harbour-project.org
 
    This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published
-   by the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version, with one exception:
 
    The exception is that if you link the Harbour Runtime Library (HRL)
    and/or the Harbour Virtual Machine (HVM) with other files to produce
@@ -15,115 +22,104 @@
    executable is in no way restricted on account of linking the HRL
    and/or HVM code into it.
 
-   This program is distributed in the hope that it will be useful, but
-   WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR
-   PURPOSE.  See the GNU General Public License for more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
-
-   V 1.0 Luiz Rafael  Initial Release 
-
-   TODO:Everything!
 */
 
-/* Is there a mouse ? */
-int iMouse = 0;
+#include "mouseapi.h"
 
-/* Mouse buttons */
-int iButtons = 0;
+/* C callable low-level interface */
 
-/* Is mouse cursor visible ? */
-int iCursorVisible = 0;
-
-/* Init mouse pos */
-int iInitCol = 0;
-int iInitRow = 0;
-
-
-void hb_MouseSetLanguage(int nLang)
+void hb_mouse_Init( void )
 {
+   /* TODO: */
 }
 
-int hb_MouseGetLanguage(void)
+void hb_mouse_Exit( void )
 {
-     return 0;
+   /* TODO: */
 }
 
-void hb_MouseSetCoord(int nX, int nY)
+BOOL hb_mouse_IsPresent( void )
 {
-   nX*=8;
-   nY*=8;
+   /* TODO: */
 
-}
-
-void hb_MouseDefCursor(int nCurType,int nScrMask,int nCurMask)
-{
-}
-
-int hb_MouseGetPage()
-{
    return 0;
 }
 
-void hb_MouseSetPage(int iPage)
+void hb_mouse_Show( void )
 {
+   /* TODO: */
 }
 
-void hb_MouseInit( void )
+void hb_mouse_Hide( void )
 {
+   /* TODO: */
 }
 
-int hb_MouseButton()
+int hb_mouse_Col( void )
 {
+   /* TODO: */
+
    return 0;
 }
 
-void hb_MouseDone( void )
+int hb_mouse_Row( void )
 {
-  hb_MouseSetPos( iInitRow, iInitCol );
-  hb_MouseSetBounds( 0, 0, hb_gtMaxCol(), hb_gtMaxRow() );
+   /* TODO: */
+
+   return 0;
 }
 
-int hb_MousePresent( void )
+void hb_mouse_SetPos( int iRow, int iCol )
 {
-   return( iMouse );
+   /* TODO: */
+
+   HB_SYMBOL_UNUSED( iRow );
+   HB_SYMBOL_UNUSED( iCol );
 }
 
-void hb_MouseShow( void )
+BOOL hb_mouse_IsButtonPressed( int iButton )
 {
+   /* TODO: */
+
+   HB_SYMBOL_UNUSED( iButton );
+
+   return FALSE;
 }
 
-void hb_MouseHide( void )
+int hb_mouse_CountButton( void )
 {
+   /* TODO: */
+
+   return 0;
 }
 
-int hb_MouseCol( void )
+void hb_mouse_SetBounds( int iTop, int iLeft, int iBottom, int iRight )
 {
-   return( -1 );
+   /* TODO: */
+
+   HB_SYMBOL_UNUSED( iTop );
+   HB_SYMBOL_UNUSED( iLeft );
+   HB_SYMBOL_UNUSED( iBottom );
+   HB_SYMBOL_UNUSED( iRight );
 }
 
-int hb_MouseRow( void )
+void hb_mouse_GetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight )
 {
-   return( -1 );
+   /* TODO: */
+
+   HB_SYMBOL_UNUSED( piTop );
+   HB_SYMBOL_UNUSED( piLeft );
+   HB_SYMBOL_UNUSED( piBottom );
+   HB_SYMBOL_UNUSED( piRight );
 }
 
-void hb_MouseSetPos( int iRow, int iCol )
-{
-}
-
-int hb_MouseSetCursor( int iVisible )
-{
-}
-
-void hb_MouseSetBounds( int iTop, int iLeft, int iBottom, int iRight )
-{
-}
-
-char *hb_MouseVersion(void)
-{
-}

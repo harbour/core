@@ -26,6 +26,7 @@ C_SOURCES=\
         langapi.c \
         math.c \
         memvars.c \
+        mouseapi.c \
         mtran.c \
         set.c \
         setcolor.c \
@@ -34,6 +35,7 @@ C_SOURCES=\
         transfrm.c \
         \
         gtxxx.c \
+        mousexxx.c \
         msgxxx.c \
 
 PRG_SOURCES=\

@@ -1,3 +1,100 @@
+19990826-05:00 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * include/Makefile
+    include/mouseapi.h
+    source/rtl/mouseapi.c 
+    source/rtl/mousexxx.c (renamed)
+    source/rtl/Makefile
+    source/rtl/mouse/mousetpl.c
+    source/rtl/mouse/mousedos.c
+    source/rtl/mouse/mouseos2.c
+    source/rtl/mouse/mousewin.c (added)
+    include/mouse.h (changed to mouseapi.h)
+    source/rtl/mouse.c (changed to mouseapi.c)
+    source/rtl/msxxx.c (changed to mousexxx.c)
+    + Changed the previouse Mouse API implementation to a somehow more
+      Clipper compatible and complete one.
+  * source/rtl/inkey.c
+    + INKEY() add runtime parameter count checking and error message.
+    * Two ints changed to BOOLs.
+  * source/vm/hvm.c
+    include/rddapi.h
+    * Some int -> BOOL, Some 0 -> NULL, '\0', Some cleanup.
+    ! LEN(), EMPTY(), PCOUNT() returns a runtime error if bad number of 
+      parameter was passed. 
+    + BREAK() doesn't have a parameter count check, an explanation of this 
+      added as a NOTE:.
+    * hb_rdd*() function declarations moved to rddapi.h
+  * include/ctoharb.h
+    source/vm/hvm.c
+    source/vm/initsymb.c
+    * InitSymbolTable() -> hb_vmRTSymbolsInit()
+  * include/extend.h
+    source/rtl/fm.c
+    source/vm/hvm.c
+    + Moved memory statistics printing to fm.c, fixed memory subsystem now
+      has a hb_xinit() and hb_xexit() functions, which should contain all
+      init and exit code related to memory.
+    % Memory statistic variables made static, prefixed with "s_"
+    + #define added to suppress the collection of statistics.
+  * include/ctoharb.h
+    source/vm/hvm.c
+    source/rtl/errorapi.c
+    * hb_stackShow() -> hb_stackDispLocal()
+    * hb_callStackShow() -> hb_stackDispCall()
+  * include/errorapi.h
+    source/rtl/errorapi.c
+    * hb_errLaunch() using eval API to launch the handler.
+    + hb_errLaunchSubst() added to be able to add error handling using value
+      substitution. Not finished yet.
+  * include/hbdefs.h
+    % PCOUNT uses hb_pcount() since it's more efficient than hb_parinfo(0)
+  * source/rtl/extend.c
+    ! hb_evalPutParam() is no longer making a copy of the items, like Clipper.
+  * source/rtl/itemapi.c
+    % hb_itemParam(): one hb_param() call optimed out.
+  * source/hbpp/stdalone/hbpp.c
+    include/hbpp.h
+    + Standalone PP is now showing the line numbers in errors and warnings.
+  * source/compiler/harbour.y
+    source/hbpp/hbplib.c
+    source/hbpp/stdalone/hbpp.c
+    source/rtl/errorapi.c
+    % GenError(), GenWarning(), hb_errInternel() no longer need sprintf() 
+      neither the local stack buffers, so there's no more an undocumented limit 
+      on the message length.
+  * source/rtl/console.c
+    ! In some places printf( "\n" ) was changed to print CrLf.
+      (Non-GT version is affected only)
+  * source/rtl/errorapi.c
+    source/hbpp/hbplib.c
+    source/vm/hvm.c
+    ! Uses hb_consoleGetNewLine() instead of \n character, so that it will
+      work on all platforms. This was needed because we have turned off cooked
+      mode of stdout, so the compiler/OS will not do it for us. The bug could 
+      be observed in the stack dump on an internal error in DOS/DJGPP.
+  * source/rtl/console.c
+    include/extend.h
+    + New function hb_consoleGetNewLine() which returns the CrLf value.
+  * source/vm/hvm.c
+    include/extend.h
+    * hb_console*() declarations moved to the header file.
+  * source/compiler/harbour.y
+    + Small cosmetic enhancments in generated C code.
+  * source/tools/debug.c
+    - Removed external declaration of non-existing function.
+  * source/rtl/langapi.c
+    source/rtl/natmsg/*.c
+    ! Typo fixed "Limit exeeded" -> "Limit exceeded".
+      Thanks to Jose Lalin <dezac@corevia.com>.
+  * source/tools/io.c
+    source/tools/nconvert.prg
+    source/tools/Makefile
+    gt.b32
+    ! HB_RD() - Fixed: chdir() changed to rmdir()
+    + nconvert.prg added, Borland makefile modified
+      by Luiz Rafael Culik <Culik@sl.conex.net>.
+
 19990826-22:00 EDT Paul Tucker <ptucker@sympatico.ca>
   * include/hbsetup.h
      + add mouse driver selector defines

@@ -40,8 +40,6 @@
 #include "extend.h"
 #include "itemapi.h"
 
-PHB_ITEM ArrayClone( PHB_ITEM );
-
 /* $Doc$
  * $FuncName$     <aStat> __aStatic()
  * $Description$  Return the statics array

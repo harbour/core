@@ -12,25 +12,25 @@
 #include <limits.h>
 
 #if defined(__IBMCPP__)
-  /* With the exception of WORD, the IBM Visual Age C++ compiler has
-     its own definitions of the Harbour types defined in the #else
-     section of this #ifdef block, most of which conflict with the
-     Harbour #undefs, due to typedef being the prevalent method of
-     defining the types in IBMCPP, whereas Harbour assumes that the
-     definitions that it is replacing have been defined using
-     #define. Therefore, it is necessary to skip the Harbour
-     definition section when using the IBMCPP compiiler, include
-     the IBMCPP type definitions, and then add the definition for WORD
+   /* With the exception of WORD, the IBM Visual Age C++ compiler has
+      its own definitions of the Harbour types defined in the #else
+      section of this #ifdef block, most of which conflict with the
+      Harbour #undefs, due to typedef being the prevalent method of
+      defining the types in IBMCPP, whereas Harbour assumes that the
+      definitions that it is replacing have been defined using
+      #define. Therefore, it is necessary to skip the Harbour
+      definition section when using the IBMCPP compiiler, include
+      the IBMCPP type definitions, and then add the definition for WORD
 
-     NOTE: This only applies to the common types that most C compilers
-           define. Any new types, particulary those that start with
-           HB_, must be placed AFTER the #endif __IBMCPP__ line!
-  */
-  #define INCL_TYPES
-  #include <os2.h>
-  typedef unsigned short int WORD;
-  #undef INT
-  #undef UINT
+      NOTE: This only applies to the common types that most C compilers
+            define. Any new types, particulary those that start with
+            HB_, must be placed AFTER the #endif __IBMCPP__ line!
+   */
+   #define INCL_TYPES
+   #include <os2.h>
+   typedef unsigned short int WORD;
+   #undef INT
+   #undef UINT
 
 #else
 
@@ -65,18 +65,18 @@ typedef unsigned long DWORD;
 #define FALSE  0
 #define TRUE   1
 
-#define LOBYTE(w)		((BYTE)(w))
-#define HIBYTE(w)		((BYTE)(((WORD)(w) >> 8) & 0xFF))
-#define LOWORD(l)		((WORD)(l))
+#define LOBYTE( w )             ( ( BYTE )( w ) )
+#define HIBYTE( w )             ( ( BYTE )( ( ( WORD )( w ) >> 8 ) & 0xFF ) )
+#define LOWORD( l )             ( ( WORD )( l ) )
 
 #endif /* HB_DONT_DEFINE_BASIC_TYPES */
 #endif /* __IBMCPP__ */
 
 #ifndef MAX
-#define MAX(a,b)                (((a) > (b)) ? (a) : (b))
+#define MAX( a, b )             (( ( a ) > ( b ) ) ? ( a ) : ( b ) )
 #endif
 #ifndef MIN
-#define MIN(a,b)                (((a) < (b)) ? (a) : (b))
+#define MIN( a, b )             (( ( a ) < ( b ) ) ? ( a ) : ( b ) )
 #endif
 
 #ifdef __GNUC__
@@ -106,7 +106,7 @@ typedef PHB_FUNC HB_FUNC_PTR;
 typedef LONG HB_HANDLE;     /* handle to memvar value */
 typedef char SYMBOLSCOPE;   /* stores symbol's scope */
 
-#define HB_SYMBOL_UNUSED(symbol) (void)symbol
+#define HB_SYMBOL_UNUSED( symbol ) ( void ) symbol
 
 #define IS_BYREF( p )      ( ( p )->type & IT_BYREF )
 #define IS_OF_TYPE( p, t ) ( ( ( p )->type & ~IT_BYREF ) == t )
@@ -133,7 +133,7 @@ typedef char SYMBOLSCOPE;   /* stores symbol's scope */
 #define ISBYREF( n )       ( hb_parinfo( n ) & IT_BYREF ) /* Intentionally using a different method */
 #define ISARRAY( n )       ( hb_param( n, IT_ARRAY ) != NULL )
 
-#define PCOUNT             hb_parinfo( 0 )
+#define PCOUNT             hb_pcount()
 #define ALENGTH( n )       hb_parinfa( n, 0 )
 
 #endif /* HB_DEFS_H_ */

@@ -79,25 +79,20 @@ HARBOUR HB___PREPROCESS(void)
 
 void GenError( char* _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
 {
-  char szLine[ 160 ]; /* 2 lines of text */
+   printf( "Error %c%i  ", cPrefix, iError );
+   printf( _szErrors[ iError - 1 ], szError1, szError2 );
+   printf( hb_consoleGetNewLine() );
+   printf( hb_consoleGetNewLine() );
 
-  /* printf( "\r%s(%i) ", files.pLast->szFileName, iLine ); */
-  printf( "Error %c%i  ", cPrefix, iError );
-  sprintf( szLine, _szErrors[ iError - 1 ], szError1, szError2 );
-  printf( "%s\n\n", szLine );
-
-  exit( EXIT_FAILURE );
+   exit( EXIT_FAILURE );
 }
 
 void GenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2)
 {
-    if( _bWarnings && iWarning < WARN_ASSIGN_SUSPECT ) /* TODO: add switch to set level */
-    {
-        char szLine[ 160 ]; /* 2 lines of text */
-
-        /* printf( "\r%s(%i) ", files.pLast->szFileName, iLine ); */
-        printf( "Warning %c%i  ", cPrefix, iWarning );
-        sprintf( szLine, _szWarnings[ iWarning - 1 ], szWarning1, szWarning2 );
-        printf( "%s\n", szLine );
-    }
+   if( _bWarnings && iWarning < WARN_ASSIGN_SUSPECT ) /* TODO: add switch to set level */
+   {
+      printf( "Warning %c%i  ", cPrefix, iWarning );
+      printf( _szWarnings[ iWarning - 1 ], szWarning1, szWarning2 );
+      printf( hb_consoleGetNewLine() );
+   }
 }

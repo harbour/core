@@ -408,12 +408,10 @@ void AddSearchPath( char *szPath, PATHNAMES * *pSearchList )
 
 void GenError( char* _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
 {
-  char szLine[ 160 ]; /* 2 lines of text */
-
-  /* printf( "\r%s(%i) ", files.pLast->szFileName, iLine ); */
-  printf( "\tError %c%i  ", cPrefix, iError );
-  sprintf( szLine, _szErrors[ iError - 1 ], szError1, szError2 );
-  printf( "%s\n\n", szLine );
+  printf( "\r(%i) ", nline );
+  printf( "Error %c%i  ", cPrefix, iError );
+  printf( _szErrors[ iError - 1 ], szError1, szError2 );
+  printf( "\n\n" );
 
   exit( EXIT_FAILURE );
 }
@@ -422,12 +420,10 @@ void GenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarni
 {
     if( _bWarnings && iWarning < WARN_ASSIGN_SUSPECT ) /* TODO: add switch to set level */
     {
-        char szLine[ 160 ]; /* 2 lines of text */
-
-        /* printf( "\r%s(%i) ", files.pLast->szFileName, iLine ); */
+        printf( "\r(%i) ", nline );
         printf( "Warning %c%i  ", cPrefix, iWarning );
-        sprintf( szLine, _szWarnings[ iWarning - 1 ], szWarning1, szWarning2 );
-        printf( "%s\n", szLine );
+        printf( _szWarnings[ iWarning - 1 ], szWarning1, szWarning2 );
+        printf( "\n" );
     }
 }
 

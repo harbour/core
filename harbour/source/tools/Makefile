@@ -33,6 +33,7 @@ C_SOURCES=\
 
 PRG_SOURCES=\
 	fileread.prg \
+        nconvert.prg \
         numtxthu.prg \
         numtxten.prg \
 	stringp.prg \

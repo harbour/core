@@ -97,12 +97,14 @@ extern void     hb_errRelease           ( PHB_ITEM pError );
 
 /* Error launchers */
 
-extern void     hb_errInternal          ( ULONG ulIntCode, char * szText, char * szPar1, char * szPar2 );
+extern PHB_ITEM hb_errLaunchSubst       ( PHB_ITEM pError );
 
 extern void     hb_errRT_BASE           ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
 extern WORD     hb_errRT_BASE_Ext1      ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags );
 extern void     hb_errRT_TERMINAL       ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
 extern void     hb_errRT_DBCMD          ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
 extern void     hb_errRT_TOOLS          ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
+
+extern void     hb_errInternal          ( ULONG ulIntCode, char * szText, char * szPar1, char * szPar2 );
 
 #endif /* HB_ERRORAPI_H_ */

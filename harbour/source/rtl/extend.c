@@ -27,7 +27,7 @@
 #include "set.h"
 #include "dates.h"
 
-/* NOTE: iParam == 0 can be used to access the SELF object. */
+/* NOTE: iParam = 0 can be used to access the SELF object. */
 
 PHB_ITEM hb_param( int iParam, WORD wMask )
 {
@@ -85,7 +85,7 @@ char * hb_parc( int iParam, ... )
          ulArrayIndex = va_arg( va, long );
          va_end( va );
 
-         if ( ulArrayIndex != 0 )
+         if( ulArrayIndex != 0 )
             return hb_arrayGetString( pItem, ulArrayIndex );
       }
    }
@@ -119,7 +119,7 @@ ULONG hb_parclen( int iParam, ... )
          ulArrayIndex = va_arg( va, long );
          va_end( va );
 
-         if ( ulArrayIndex != 0 )
+         if( ulArrayIndex != 0 )
             return hb_arrayGetStringLen( pItem, ulArrayIndex );
       }
    }
@@ -156,7 +156,7 @@ ULONG hb_parcsiz( int iParam, ... )
          ulArrayIndex = va_arg( va, long );
          va_end( va );
 
-         if ( ulArrayIndex != 0 )
+         if( ulArrayIndex != 0 )
             return hb_arrayGetStringLen( pItem, ulArrayIndex ) + 1;
       }
    }
@@ -180,7 +180,7 @@ char * hb_pards( int iParam, ... )
 
       if( IS_DATE( pItem ) )
       {
-         if ( pItem->item.asDate.value > 0 )
+         if( pItem->item.asDate.value > 0 )
          {
             long lDay, lMonth, lYear;
 
@@ -200,7 +200,7 @@ char * hb_pards( int iParam, ... )
          ulArrayIndex = va_arg( va, long );
          va_end( va );
 
-         if ( ulArrayIndex != 0 )
+         if( ulArrayIndex != 0 )
          {
             hb_arrayGetDate( pItem, ulArrayIndex, stack.szDate );
             stack.szDate[ 8 ] = '\0';
@@ -209,8 +209,8 @@ char * hb_pards( int iParam, ... )
          }
       }
    }
-
-   return "        ";
+           
+   return "        "; /* 8 spaces */
 }
 
 int hb_parl( int iParam, ... )
@@ -248,7 +248,7 @@ int hb_parl( int iParam, ... )
          ulArrayIndex = va_arg( va, long );
          va_end( va );
 
-         if ( ulArrayIndex != 0 )
+         if( ulArrayIndex != 0 )
             return hb_arrayGetBool( pItem, ulArrayIndex ) ? 1 : 0;
       }
    }
@@ -288,7 +288,7 @@ double hb_parnd( int iParam, ... )
          ulArrayIndex = va_arg( va, long );
          va_end( va );
 
-         if ( ulArrayIndex != 0 )
+         if( ulArrayIndex != 0 )
             return hb_arrayGetDouble( pItem, ulArrayIndex );
       }
    }
@@ -328,7 +328,7 @@ int hb_parni( int iParam, ... )
          ulArrayIndex = va_arg( va, long );
          va_end( va );
 
-         if ( ulArrayIndex != 0 )
+         if( ulArrayIndex != 0 )
             return ( int ) hb_arrayGetDouble( pItem, ulArrayIndex );
       }
    }
@@ -371,7 +371,7 @@ long hb_parnl( int iParam, ... )
          ulArrayIndex = va_arg( va, long );
          va_end( va );
 
-         if ( ulArrayIndex != 0 )
+         if( ulArrayIndex != 0 )
             return ( long ) hb_arrayGetDouble( pItem, ulArrayIndex );
       }
    }
@@ -554,7 +554,7 @@ void hb_storc( char * szText, int iParam, ... )
          ulArrayIndex = va_arg( va, long );
          va_end( va );
 
-         if ( ulArrayIndex != 0 )
+         if( ulArrayIndex != 0 )
          {
             ulLen = strlen( szText );
             pItemRef = hb_itemNew( NULL );
@@ -607,7 +607,7 @@ void hb_storclen( char * fixText, ULONG ulLen, int iParam, ... )
          ulArrayIndex = va_arg( va, long );
          va_end( va );
 
-         if ( ulArrayIndex != 0 )
+         if( ulArrayIndex != 0 )
          {
             pItemRef = hb_itemNew( NULL );
             pItemRef->type = IT_STRING;
@@ -657,7 +657,7 @@ void hb_stords( char * szDate, int iParam, ... ) /* szDate must have yyyymmdd fo
          ulArrayIndex = va_arg( va, long );
          va_end( va );
 
-         if ( ulArrayIndex != 0 )
+         if( ulArrayIndex != 0 )
          {
             pItemRef = hb_itemNew( NULL );
             pItemRef->type = IT_DATE;
@@ -701,7 +701,7 @@ void hb_storl( int iLogical, int iParam, ... )
          ulArrayIndex = va_arg( va, long );
          va_end( va );
 
-         if ( ulArrayIndex != 0 )
+         if( ulArrayIndex != 0 )
          {
             pItemRef = hb_itemNew( NULL );
             pItemRef->type                  = IT_LOGICAL;
@@ -747,7 +747,7 @@ void hb_storni( int iValue, int iParam, ... )
          ulArrayIndex = va_arg( va, long );
          va_end( va );
 
-         if ( ulArrayIndex != 0 )
+         if( ulArrayIndex != 0 )
          {
             pItemRef = hb_itemNew( NULL );
             pItemRef->type                   = IT_INTEGER;
@@ -794,7 +794,7 @@ void hb_stornl( long lValue, int iParam, ... )
          ulArrayIndex = va_arg( va, long );
          va_end( va );
 
-         if ( ulArrayIndex != 0 )
+         if( ulArrayIndex != 0 )
          {
             pItemRef = hb_itemNew( NULL );
             pItemRef->type                = IT_LONG;
@@ -849,7 +849,7 @@ void hb_stornd( double dValue, int iParam, ... )
          ulArrayIndex = va_arg( va, long );
          va_end( va );
 
-         if ( ulArrayIndex != 0 )
+         if( ulArrayIndex != 0 )
          {
             pItemRef = hb_itemNew( NULL );
             pItemRef->type   = IT_DOUBLE;

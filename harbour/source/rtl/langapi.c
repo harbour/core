@@ -113,7 +113,7 @@ static HB_LANG langEN =
       "",
       "",
       "Unsupported operation",
-      "Limit exeeded",
+      "Limit exceeded",
       "Index corruption detected",
       "Incorrect type of data",
       "Data width too long",
@@ -151,7 +151,7 @@ static PHB_LANG langDef = &langEN;
  
 void     hb_langDSet             ( PHB_LANG lang )
 {
-   if (lang)
+   if( lang )
       langDef = lang;
 }
 

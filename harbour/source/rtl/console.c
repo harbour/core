@@ -91,11 +91,11 @@ void hb_consoleRelease( void )
 void hb_consoleInitialize( void )
 {
 #if defined(OS_DOS_COMPATIBLE)
-   CrLf[ 0 ] = 13;
-   CrLf[ 1 ] = 10;
+   CrLf[ 0 ] = '\r';
+   CrLf[ 1 ] = '\n';
    CrLf[ 2 ] = '\0';
 #else
-   CrLf[ 0 ] = 10;
+   CrLf[ 0 ] = '\n';
    CrLf[ 1 ] = '\0';
 #endif
 
@@ -118,6 +118,11 @@ void hb_consoleInitialize( void )
    dev_row = 0;
    dev_col = 0;
 #endif
+}
+
+char * hb_consoleGetNewLine( void )
+{
+   return CrLf;
 }
 
 WORD hb_max_row( void )
@@ -447,13 +452,13 @@ void hb_setpos( WORD row, WORD col )
 
       if( row < dev_row || col < dev_col )
       {
-         printf("\n");
+         printf( CrLf );
          dev_col = 0;
          dev_row++;
       }
       else if( row > dev_row ) dev_col = 0;
-      for( count = dev_row; count < row; count++ ) printf("\n");
-      for( count = dev_col; count < col; count++ ) printf(" ");
+      for( count = dev_row; count < row; count++ ) printf( CrLf );
+      for( count = dev_col; count < col; count++ ) printf( " " );
 #endif
 
    dev_row = row;
@@ -720,7 +725,7 @@ HARBOUR HB_SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
    {
       WORD count;
       dev_row = iMR;
-      for( count = 0; count < dev_row ; count++ ) printf( "\n" );
+      for( count = 0; count < dev_row ; count++ ) printf( CrLf );
       dev_row = dev_col = 0;
    }
 #endif

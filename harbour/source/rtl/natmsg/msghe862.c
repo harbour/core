@@ -70,7 +70,7 @@ char *hb_errorsGeneric[] =
    "",
    "",
    "š‹š „‰€ š€† „Œ…’”",
-   "Limit exeeded",
+   "Limit exceeded",
    "‰—š €Œ …€ ™…™ ‘—‰€",
    "Incorrect type of data",
    "Data width too long",
