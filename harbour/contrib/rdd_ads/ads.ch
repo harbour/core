@@ -52,9 +52,12 @@
 #define ADS_AOF_REMOVE_RECORD    2
 #define ADS_AOF_TOGGLE_RECORD    3
 
-/* For retrieving scope settings */
-#define ADS_TOP                  1
-#define ADS_BOTTOM               2
+/* For retrieving scope settings
+   In the Harbour RDD, use TOPSCOPE and BOTTOMSCOPE as the values are
+   different (Top = 0, Bottom = 1)
+   #define ADS_TOP                  1
+   #define ADS_BOTTOM               2
+*/
 
 /* for calls that can optionally use filters */
 #define ADS_RESPECTFILTERS       1

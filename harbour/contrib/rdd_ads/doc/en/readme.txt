@@ -94,6 +94,11 @@
  *      These situations lose the benefits of having a data server and should
  *      be avoided, but they will function as they would in a Clipper program.
 
+ *      One problem with this scenario is that index key counting
+ *      functions that are supposed to give an accurate count respecting
+ *      the filter (e.g. dbOrderInfo(DBOI_KEYCOUNT) will return the values the
+ *      Server knows about, so the counts will be inaccurate.
+
  *      3) When setting a relation, the expression must be one that can be
  *      evaluated by the Advantage Expression Engine.  UDFs will fail.
 

@@ -1,3 +1,20 @@
+
+2001-02-15 11:10 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * contrib/rdd_ads/ads1.c
+      * implemented the DESCENDING flag in index creation
+      * fixed dbOrderInfo(DBOI_KEYVAL) to return "" instead of garbage at EOF
+            DBOI_NAME and many others to return correct empty values
+               instead of garbage if in natural order
+      * fixed SEEK on numeric indexes
+      + added support for dbOrderInfo(DBOI_FULLPATH) AND dbInfo(DBI_FULLPATH)
+
+   * contrib/rdd_ads/ads.ch
+      * Commented out ADS_TOP and ADS_BOTTOM with a note to use TOPSCOPE
+         and BOTTOMSCOPE instead.
+
+   * contrib\rdd_ads\doc\en\readme.txt
+      * minor clarifications
+
 2001-02-15 13:15 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * harbour/include/hbrddntx.h
    * harbour/source/rdd/dbfntx/dbfntx1.c

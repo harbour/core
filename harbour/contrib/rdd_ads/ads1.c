@@ -313,6 +313,7 @@ static ERRCODE adsGoTo( ADSAREAP pArea, ULONG ulRecNo )
 //// TODO: bh: Note  Explicitly moving to a deleted record when using the Advantage proprietary
 ////   table format (ADT) is an illegal operation and will return the
 ////   error 5022 (AE_INVALID_RECORD_NUMBER), invalid record number.
+   UNSIGNED32 ulRetVal;
 
    ULONG ulRecCount;
 
@@ -333,7 +334,7 @@ static ERRCODE adsGoTo( ADSAREAP pArea, ULONG ulRecNo )
    {
       pArea->ulRecNo = ulRecNo;
       pArea->fBof = pArea->fEof = FALSE;
-      AdsGotoRecord( pArea->hTable, ulRecNo );
+      ulRetVal = AdsGotoRecord( pArea->hTable, ulRecNo );
       //hb_adsCheckBofEof( pArea );        // bh: GoTo should never do the skipfilter that may happen in hb_adsCheckBofEof
    }
    else /* GoTo Phantom record */
@@ -394,13 +395,19 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
          AdsSeekLast( pArea->hOrdCurrent, (UNSIGNED8*) hb_itemGetCPtr( pKey ),
                     (UNSIGNED16) hb_itemGetCLen( pKey ), ADS_STRINGKEY,
                     (UNSIGNED16*) &(pArea->fFound) );
-      else
+      else if(hb_itemType( pKey ) == HB_IT_NUMERIC )
+      {
+         double dTemp;
+         dTemp = hb_itemGetND( pKey );
+         AdsSeekLast( pArea->hOrdCurrent, (char *) &dTemp,
+                  8, ADS_DOUBLEKEY, (UNSIGNED16*) &(pArea->fFound) );
+      }else
       {
          hb_itemGetNLen( pKey, &uiLen, &uiDec  );
          hb_ndtoa( hb_itemGetND( pKey ), ( char * ) szText, uiLen, uiDec );
          szText[ uiLen ] = '\0';
          AdsSeekLast( pArea->hOrdCurrent, szText,
-                 8, ADS_STRINGKEY, (UNSIGNED16*) &(pArea->fFound) );
+                 uiLen, ADS_STRINGKEY, (UNSIGNED16*) &(pArea->fFound) );
       }
    }
    else
@@ -408,8 +415,13 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
       if( hb_itemType( pKey ) == HB_IT_STRING )
          AdsSeek( pArea->hOrdCurrent, (UNSIGNED8*) hb_itemGetCPtr( pKey ),
                    (UNSIGNED16) hb_itemGetCLen( pKey ), ADS_STRINGKEY, usSeekType, (UNSIGNED16*) &(pArea->fFound) );
-      else
+      else if(hb_itemType( pKey ) == HB_IT_NUMERIC )
       {
+         double dTemp;
+         dTemp = hb_itemGetND( pKey );
+         AdsSeek( pArea->hOrdCurrent, (char *) &dTemp,
+                  8, ADS_DOUBLEKEY, usSeekType, (UNSIGNED16*) &(pArea->fFound) );
+      }
 /*
         UNSIGNED8   aucKey[ADS_MAX_KEY_LENGTH];
         UNSIGNED16  usLength;
@@ -425,6 +437,10 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
         AdsSeek( pArea->hOrdCurrent, aucKey,
                    usLength, ADS_RAWKEY, usSeekType, (UNSIGNED16*) &(pArea->fFound) );
 */
+
+      else
+      {
+
          hb_itemGetNLen( pKey, &uiLen, &uiDec  );
          hb_ndtoa( hb_itemGetND( pKey ), ( char * ) szText, uiLen, uiDec );
          szText[ uiLen ] = '\0';
@@ -1017,6 +1033,15 @@ static ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          hb_itemPutL( pItem, pArea->fShared );
          break;
 
+      case DBI_FULLPATH :
+         {
+            UNSIGNED8  aucBuffer[MAX_STR_LEN + 1];
+            UNSIGNED16 pusLen   = MAX_STR_LEN;
+            AdsGetTableFilename  (pArea->hTable,
+                        ADS_FULLPATHNAME, aucBuffer, &pusLen);
+            hb_itemPutCL( pItem, (char*)aucBuffer, pusLen );
+            break;
+         }
       case DBI_TABLEEXT:
          hb_itemPutC( pItem, ((adsFileType==ADS_ADT) ? ".adt" : ".dbf") );
          break;
@@ -1407,6 +1432,8 @@ static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    {
       hTableOrIndex = pArea->hTable;
    }
+   if ( pArea->lpdbOrdCondInfo && pArea->lpdbOrdCondInfo->fDescending)
+      ulOptions |= ADS_DESCENDING;
 
    ulRetVal = AdsCreateIndex( hTableOrIndex, pOrderInfo->abBagName,
            pOrderInfo->atomBagName, (UCHAR*)hb_itemGetCPtr( pExprItem ),
@@ -1456,6 +1483,8 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
 
    HB_TRACE(HB_TR_DEBUG, ("adsOrderInfo(%p, %hu, %p)", pArea, uiIndex, pOrderInfo));
 
+   aucBuffer[0] = 0;
+
    if( pOrderInfo->itmOrder && !HB_IS_NIL(pOrderInfo->itmOrder) )
    {
       if( HB_IS_NUMERIC( pOrderInfo->itmOrder ) )
@@ -1478,55 +1507,100 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
          break;
 
       case DBOI_EXPRESSION:
-         AdsGetIndexExpr( phIndex, aucBuffer, &pusLen);
+         if ( pArea->hOrdCurrent )
+            AdsGetIndexExpr( phIndex, aucBuffer, &pusLen);
          hb_itemPutCL( pOrderInfo->itmResult, (char*)aucBuffer, pusLen );
          break;
 
       case DBOI_ISCOND:
-         AdsGetIndexCondition( phIndex, aucBuffer, &pusLen);
+         if ( pArea->hOrdCurrent )
+            AdsGetIndexCondition( phIndex, aucBuffer, &pusLen);
+         else
+            pusLen = 0;
          hb_itemPutL( pOrderInfo->itmResult, pusLen );
          break;
 
       case DBOI_ISDESC:
-         AdsIsIndexDescending (phIndex, &pus16);
+         if ( pArea->hOrdCurrent )
+            AdsIsIndexDescending (phIndex, &pus16);
+         else
+            pus16 = 0;
          hb_itemPutL( pOrderInfo->itmResult, pus16 );
          break;
 
       case DBOI_UNIQUE:
-         AdsIsIndexUnique (phIndex, &pus16);
+         if ( pArea->hOrdCurrent )
+            AdsIsIndexUnique (phIndex, &pus16);
+         else
+            pus16 = 0;
          hb_itemPutL( pOrderInfo->itmResult, pus16 );
          break;
 
       case DBOI_KEYTYPE:
-         AdsGetKeyType(phIndex, &pus16);
-         switch( pus16 )
+         if ( pArea->hOrdCurrent )
          {
-            case ADS_STRING:
-               hb_itemPutC( pOrderInfo->itmResult, "C" );
-               break;
-            case ADS_NUMERIC:
-               hb_itemPutC( pOrderInfo->itmResult, "N" );
-               break;
-            case ADS_DATE:
-               hb_itemPutC( pOrderInfo->itmResult, "D" );
-               break;
-            case ADS_LOGICAL:
-               hb_itemPutC( pOrderInfo->itmResult, "L" );
-               break;
-            case ADS_RAW:
-            default:
-               hb_itemPutC( pOrderInfo->itmResult, "" );
-         }
+            AdsGetKeyType(phIndex, &pus16);
+            switch( pus16 )
+            {
+               case ADS_STRING:
+                  hb_itemPutC( pOrderInfo->itmResult, "C" );
+                  break;
+               case ADS_NUMERIC:
+                  hb_itemPutC( pOrderInfo->itmResult, "N" );
+                  break;
+               case ADS_DATE:
+                  hb_itemPutC( pOrderInfo->itmResult, "D" );
+                  break;
+               case ADS_LOGICAL:
+                  hb_itemPutC( pOrderInfo->itmResult, "L" );
+                  break;
+               case ADS_RAW:
+               default:
+                  hb_itemPutC( pOrderInfo->itmResult, "" );
+            }
+         }else
+            hb_itemPutC( pOrderInfo->itmResult, "" );
+
          break;
 
       case DBOI_KEYSIZE:
-         AdsGetKeyLength(phIndex, &pus16);
+         if ( pArea->hOrdCurrent )
+            AdsGetKeyLength(phIndex, &pus16);
+         else
+            pus16 = 0;
          hb_itemPutNL(pOrderInfo->itmResult, pus16);
          break;
 
       case DBOI_KEYVAL:
-         AdsExtractKey( phIndex, aucBuffer, &pusLen);
-         hb_itemPutCL( pOrderInfo->itmResult, (char*)aucBuffer, pusLen);
+         if ( !pArea->fEof && pArea->hOrdCurrent )
+         {
+            AdsExtractKey( phIndex, aucBuffer, &pusLen);
+//   UNSIGNED8 szText[ADS_MAX_KEY_LENGTH];
+// bh HB_TRACE(HB_TR_ALWAYS, ("keyval(%s, %d, %d, %d, %d, %d, %d, %d, %d)", szText,
+      //                        aucBuffer[0], aucBuffer[1], aucBuffer[2], aucBuffer[3], aucBuffer[4], aucBuffer[5], aucBuffer[6], aucBuffer[7], aucBuffer[8] ));
+            AdsGetKeyType( phIndex, &pus16);
+            switch( pus16 )
+            {
+               case ADS_STRING:
+                  hb_itemPutCL( pOrderInfo->itmResult, (char*)aucBuffer, pusLen);
+                  break;
+                  /* TODO: convert correctly from raw data in the buffer for other types (what's below is wrong or untested at best) */
+               case ADS_NUMERIC:
+                  hb_itemPutND( pOrderInfo->itmResult, (double) *aucBuffer );
+                  break;
+               case ADS_DATE:
+                  hb_itemPutDS( pOrderInfo->itmResult, (char*)aucBuffer );
+                  break;
+               case ADS_LOGICAL:
+                  hb_itemPutL( pOrderInfo->itmResult, (int) *aucBuffer );
+                  break;
+               case ADS_RAW:
+               default:
+                  hb_itemPutC( pOrderInfo->itmResult, "" );
+            }
+         }else
+            hb_itemPutC( pOrderInfo->itmResult, "" );
+
          break;
 
       case DBOI_POSITION :
@@ -1550,7 +1624,8 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
          break;
 
       case DBOI_NAME:
-         AdsGetIndexName( phIndex, aucBuffer, &pusLen);
+         if ( pArea->hOrdCurrent )
+            AdsGetIndexName( phIndex, aucBuffer, &pusLen);
          hb_itemPutCL( pOrderInfo->itmResult, (char*)aucBuffer, pusLen);
          break;
 
@@ -1566,7 +1641,14 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
       }
 
       case DBOI_BAGNAME:
-         AdsGetIndexFilename  ( phIndex,ADS_BASENAME , aucBuffer, &pusLen);
+         if ( pArea->hOrdCurrent )
+            AdsGetIndexFilename  ( phIndex, ADS_BASENAME, aucBuffer, &pusLen);
+         hb_itemPutCL( pOrderInfo->itmResult, (char*)aucBuffer, pusLen );
+         break;
+
+      case DBOI_FULLPATH :
+         if ( pArea->hOrdCurrent )
+            AdsGetIndexFilename (phIndex, ADS_FULLPATHNAME, aucBuffer, &pusLen);
          hb_itemPutCL( pOrderInfo->itmResult, (char*)aucBuffer, pusLen );
          break;
 
@@ -1606,28 +1688,37 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
 
       case DBOI_SCOPETOP :
          hb_itemPutC( pOrderInfo->itmResult, "" );
-         adsScopeInfo(  pArea, 0, pOrderInfo->itmResult );
+         if ( pArea->hOrdCurrent )
+            adsScopeInfo(  pArea, 0, pOrderInfo->itmResult );
          break;
 
       case DBOI_SCOPEBOTTOM :
          hb_itemPutC( pOrderInfo->itmResult, "" );
-         adsScopeInfo(  pArea, 1, pOrderInfo->itmResult ) ;
+         if ( pArea->hOrdCurrent )
+            adsScopeInfo(  pArea, 1, pOrderInfo->itmResult ) ;
          break;
 
       case DBOI_SCOPETOPCLEAR :
          hb_itemPutC( pOrderInfo->itmResult, "" );
-         adsScopeInfo(  pArea, 0, pOrderInfo->itmResult ) ;
-         AdsClearScope( phIndex, (UNSIGNED16) 1);  /* ADS scopes are 1/2 instead of 0/1 */
+         if ( pArea->hOrdCurrent )
+         {
+            adsScopeInfo(  pArea, 0, pOrderInfo->itmResult ) ;
+            AdsClearScope( phIndex, (UNSIGNED16) 1);  /* ADS scopes are 1/2 instead of 0/1 */
+         }
          break;
 
       case DBOI_SCOPEBOTTOMCLEAR :
          hb_itemPutC( pOrderInfo->itmResult, "" );
-         adsScopeInfo(  pArea, 1, pOrderInfo->itmResult ) ;
-         AdsClearScope( phIndex, (UNSIGNED16) 2);
+         if ( pArea->hOrdCurrent )
+         {
+            adsScopeInfo(  pArea, 1, pOrderInfo->itmResult ) ;
+            AdsClearScope( phIndex, (UNSIGNED16) 2);
+         }
          break;
 
       case DBOI_CUSTOM :
-         AdsIsIndexCustom  (phIndex, &pus16);
+         if ( pArea->hOrdCurrent )
+            AdsIsIndexCustom  (phIndex, &pus16);
          hb_itemPutL(pOrderInfo->itmResult, pus16);
          break;
 
@@ -1646,10 +1737,10 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
          }
          break;
 
+
 /* Unsupported TODO:
 
 DBOI_FILEHANDLE
-DBOI_FULLPATH
 DBOI_SETCODEBLOCK
 DBOI_KEYDEC
 DBOI_HPLOCKING
