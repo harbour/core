@@ -1,3 +1,7 @@
+19990614 11:50 CET Eddie Runia
+  * source/compiler/harbour.y
+    help text changed
+
 19990613 23:23 CET Eddie Runia
   * source/rtl/natmsg/msggal.c
     forgot this one

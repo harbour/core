@@ -1357,6 +1357,7 @@ void PrintUsage( char * szSelf )
 #endif
           "\t/g\t\tgenerated output language\n"
           "\t\t\t /gc (C default) --> <file.c>\n"
+          "\t\t\t /gh (HRB file)  --> <file.hrb>\n"
           "\t\t\t /gj (Java)      --> <file.java>\n"
           "\t\t\t /gp (Pascal)    --> <file.pas>\n"
           "\t\t\t /gr (Resources) --> <file.rc>\n"
