@@ -1,3 +1,12 @@
+2001-06-06 16:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * contrib/libct/charmix.c
+    * Replaced the old Harbour License and Exception with the
+      new Harbour License and Exception, which Viktor Szakats
+      had previously done on 2001-05-15 15:02 UTC+0100 and is
+      present in all of the other libct files contributed by
+      Martin Vogel.
+
 2001-06-06 15:35 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * utils/hbmake/fclass1.prg
