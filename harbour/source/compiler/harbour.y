@@ -4040,14 +4040,12 @@ static void SetLastPushPos( void )
 
 static void RemoveExtraPush( void )
 {
-/*
    if( functions.pLast->lLastPushPos > -1 && functions.pLast->lPCodePos > functions.pLast->lLastPushPos )
    {
       functions.pLast->lPCodePos = functions.pLast->lLastPushPos;
       functions.pLast->lLastPushPos = -1;
    }
    else
-*/
       GenPCode1( HB_P_POP );
 
    ValTypePop( 1 );
