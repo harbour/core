@@ -823,7 +823,7 @@ HB_FUNC( __CLSADDMSG )
                if( pInit && ! HB_IS_NIL( pInit ) ) /* Initializer found */
                {
                   if( HB_IS_ARRAY( pInit ) )
-                     pNewMeth->pInitValue = hb_arrayClone( pInit );
+                     pNewMeth->pInitValue = hb_arrayClone( pInit, NULL, NULL );
                   else
                   {
                      pNewMeth->pInitValue = hb_itemNew( NULL );
@@ -850,7 +850,7 @@ HB_FUNC( __CLSADDMSG )
                if( pInit && ! HB_IS_NIL( pInit ) ) /* Initializer found */
                {
                   if( HB_IS_ARRAY( pInit ) )
-                     pNewMeth->pInitValue = hb_arrayClone( pInit );
+                     pNewMeth->pInitValue = hb_arrayClone( pInit, NULL, NULL );
                   else
                   {
                      pNewMeth->pInitValue = hb_itemNew( NULL );
@@ -994,9 +994,9 @@ HB_FUNC( __CLSNEW )
             pNewCls->uiHashKey = pSprCls->uiHashKey;
 
             /* CLASS DATA Not Shared ( new array, new value ) */
-            pNewCls->pClassDatas  = hb_arrayClone( pSprCls->pClassDatas );
+            pNewCls->pClassDatas  = hb_arrayClone( pSprCls->pClassDatas, NULL, NULL );
 
-            pNewCls->pInlines = hb_arrayClone( pSprCls->pInlines );
+            pNewCls->pInlines = hb_arrayClone( pSprCls->pInlines, NULL, NULL );
 
             pNewCls->uiDatasShared = pSprCls->uiDatasShared;
 
@@ -1009,7 +1009,7 @@ HB_FUNC( __CLSNEW )
             nLenDatas     = ( USHORT ) pNewCls->uiDatas;
 
             /* ClassDatas */
-            pClsAnyTmp = hb_arrayClone( pSprCls->pClassDatas );
+            pClsAnyTmp = hb_arrayClone( pSprCls->pClassDatas, NULL, NULL );
             nLen = ( USHORT ) hb_itemSize( pClsAnyTmp );
             for( ui = 1; ui <= nLen; ui++ )
             {
@@ -1024,7 +1024,7 @@ HB_FUNC( __CLSNEW )
             pNewCls->uiDatasShared += pSprCls->uiDatasShared;
 
             /* Inlines */
-            pClsAnyTmp = hb_arrayClone( pSprCls->pInlines );
+            pClsAnyTmp = hb_arrayClone( pSprCls->pInlines, NULL, NULL );
             nLen = ( USHORT ) hb_itemSize( pClsAnyTmp );
             for( ui = 1; ui <= nLen; ui++ )
             {
@@ -1122,7 +1122,7 @@ HB_FUNC( __CLSNEW )
                         PHB_ITEM pInitValue;
 
                         if( HB_IS_ARRAY( pSprCls->pMethods[ ui ].pInitValue ) )
-                           pNewCls->pMethods[ uiAt + uiBucket ].pInitValue = hb_arrayClone( pSprCls->pMethods[ ui ].pInitValue );
+                           pNewCls->pMethods[ uiAt + uiBucket ].pInitValue = hb_arrayClone( pSprCls->pMethods[ ui ].pInitValue, NULL, NULL );
                         else
                         {
                            pInitValue = hb_itemNew( NULL );
@@ -1353,7 +1353,7 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, PHB_ITEM * * ppObjects, USHORT * pui
             {
 
                if( HB_IS_ARRAY( pMeth->pInitValue ) )
-                pInit = hb_arrayClone( pMeth->pInitValue );
+                pInit = hb_arrayClone( pMeth->pInitValue, NULL, NULL );
                else
                {
                    pInit = hb_itemNew( NULL );
@@ -1414,7 +1414,7 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, PHB_ITEM * * ppObjects, USHORT * pui
 
                if( HB_IS_ARRAY( pMeth->pInitValue ) )
                {
-                  pInitValue = hb_arrayClone( pMeth->pInitValue );
+                  pInitValue = hb_arrayClone( pMeth->pInitValue, NULL, NULL );
                }
                else
                {
@@ -1439,7 +1439,7 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, PHB_ITEM * * ppObjects, USHORT * pui
                {
 
                   if( HB_IS_ARRAY( pMeth->pInitValue ) )
-                   pInit = hb_arrayClone( pMeth->pInitValue );
+                   pInit = hb_arrayClone( pMeth->pInitValue, NULL, NULL );
                   else
                   {
                    pInit = hb_itemNew( NULL );
@@ -1571,7 +1571,7 @@ HB_FUNC( __OBJCLONE )
    PHB_ITEM pSrcObject = hb_param( 1, HB_IT_OBJECT );
 
    if( pSrcObject )
-      hb_itemRelease( hb_itemReturn( hb_arrayClone( pSrcObject ) ) );
+      hb_itemRelease( hb_itemReturn( hb_arrayClone( pSrcObject, NULL, NULL ) ) );
    else
       hb_errRT_BASE( EG_ARG, 3001, NULL, "__OBJCLONE", 0 );
 }

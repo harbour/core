@@ -700,11 +700,9 @@ BOOL hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart,
       return FALSE;
 }
 
-PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
+PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray, PHB_NESTED_CLONED pClonedList, BOOL *bCyclic )
 {
-   PHB_ITEM pDstArray = hb_itemNew( NULL );
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayClone(%p)", pSrcArray));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayClone(%p, %p)", pSrcArray, pClonedList));
 
    if( HB_IS_ARRAY( pSrcArray ) )
    {
@@ -712,7 +710,52 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
       PHB_BASEARRAY pDstBaseArray;
       ULONG ulSrcLen = pSrcBaseArray->ulLen;
       ULONG ulCount;
+      PHB_ITEM pDstArray;
+      PHB_NESTED_CLONED pCloned;
+      BOOL bTop;
 
+      if( pClonedList )
+      {
+         bTop = FALSE;
+
+         /* Broken down like this to avoid redandant comparisons. */
+         pCloned = pClonedList;
+         if( pCloned->pSrc == pSrcArray )
+         {
+            if( bCyclic )
+            {
+               *bCyclic = TRUE;
+            }
+            return pCloned->pDest;
+         }
+         while( pCloned->pNext )
+         {
+            pCloned = pCloned->pNext;
+
+            if( pCloned->pSrc == pSrcArray )
+            {
+               if( bCyclic )
+               {
+                  *bCyclic = TRUE;
+               }
+               return pCloned->pDest;
+            }
+         }
+         if( pCloned->pSrc == pSrcArray )
+         {
+            if( bCyclic )
+            {
+               *bCyclic = TRUE;
+            }
+            return pCloned->pDest;
+         }
+      }
+      else
+      {
+         bTop = TRUE;
+      }
+
+      pDstArray = hb_itemNew( NULL );
       hb_arrayNew( pDstArray, ulSrcLen );
 
       pDstBaseArray = pDstArray->item.asArray.value;
@@ -721,28 +764,61 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
       for( ulCount = 0; ulCount < ulSrcLen; ulCount++ )
       {
          PHB_ITEM pSrcItem = pSrcBaseArray->pItems + ulCount;
+         BOOL bDontRelease = FALSE;
 
          if( pSrcItem->type == HB_IT_ARRAY )
          {
-            /* Circular. */
-            if( pSrcItem == pSrcArray )
+            PHB_ITEM pClone;
+
+            if( bTop )
             {
-               hb_itemArrayPut( pDstArray, ulCount + 1, pDstArray );
+               /* Top Level - create an empty list. */
+               pClonedList = ( PHB_NESTED_CLONED ) hb_xgrab( sizeof( HB_NESTED_CLONED ) );
+               pCloned = pClonedList;
             }
             else
             {
-               PHB_ITEM pClone = hb_arrayClone( pSrcItem );
+               /* pCloned must alreay point to last item in the list (see above). */
+               pCloned->pNext = ( PHB_NESTED_CLONED ) hb_xgrab( sizeof( HB_NESTED_CLONED ) );
+               pCloned = pCloned->pNext;
+            }
 
-               hb_itemArrayPut( pDstArray, ulCount + 1, pClone );
+            pCloned->pSrc  = pSrcArray;
+            pCloned->pDest = pDstArray;
+            pCloned->pNext = NULL;
+
+            pClone = hb_arrayClone( pSrcItem, pClonedList, &bDontRelease );
+            hb_itemArrayPut( pDstArray, ulCount + 1, pClone );
+
+            if( ! bDontRelease )
+            {
                hb_itemRelease( pClone );
+            }
+
+            /* Top Level - Release the created list. */
+            if( bTop )
+            {
+               while( pClonedList->pNext )
+               {
+                  pCloned = pClonedList;
+                  pClonedList = pClonedList->pNext;
+                  hb_xfree( pCloned );
+               }
+               hb_xfree( pClonedList );
             }
          }
          else
+         {
             hb_itemArrayPut( pDstArray, ulCount + 1, pSrcItem );
+         }
       }
-   }
 
-   return pDstArray;
+      return pDstArray;
+   }
+   else
+   {
+      return hb_itemNew( NULL );
+   }
 }
 
 PHB_ITEM hb_arrayFromStack( USHORT uiLen )
