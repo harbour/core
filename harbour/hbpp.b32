@@ -11,11 +11,12 @@
 
 PROJECT: lib\b32\hbpp.lib hbpp.exe
 
-lib\b32\hbpp.lib : hbfsapi.obj hbppint.obj hbpp.obj table.obj hbpplib.obj
+lib\b32\hbpp.lib : hbfsapi.obj hbppint.obj hbpp.obj hbstr.obj table.obj hbpplib.obj
 
 hbfsapi.obj : hbfsapi.c
 hbppint.obj : hbppint.c
 hbpp.obj    : hbpp.c
+hbstr.obj   : hbstr.c
 table.obj   : table.c
 hbpplib.obj : hbpplib.c
 

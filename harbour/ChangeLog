@@ -1,3 +1,7 @@
+19991122-10:37 GMT+1 Antonio Linares
+   * makefile.b32 updated
+   * hbpp.b32 updated
+
 19991122-19:50 EDT Paul Tucker <ptucker@sympatico.ca>
   * makefile.vc
     + hbstr and hbfsapi
@@ -21,7 +25,7 @@
     source/compiler/harbour.l
     source/compiler/harbour.c
     * Variable renaming, prefixing, scope optimizing.
-    * Global functions prefixed with 
+    * Global functions prefixed with
     * Some ints changed to BOOL.
     ! Non-ANSI comment removed.
     % stroupper() changed to hb_strupr(), stroupper() removed.
@@ -132,19 +136,19 @@
     *source/compiler/genhrb.c
     *source/compiler/genjava.c
     *source/compiler/genobj32.c
-        * finished uniform naming scheme hb_comp* 
+        * finished uniform naming scheme hb_comp*
         * cleared up declarations and visibility of functions and variables
 
     *include/hberrors.h
 	* added new warning "Unreachable code'
-	
+
     *source/debug/debugger.prg
 	* removed one unreachable RETURN statement
 
     *source/pp/hbpp.c
 	* all errors reported by the preprocesor are promoted to fatal
 	errors ('F' prefix)
-		
+
 19991119-16:59 GMT+1 Antonio Linares
   * updated makefile.b32
   * updated hbpp.b32
