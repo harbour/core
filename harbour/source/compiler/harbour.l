@@ -38,19 +38,6 @@ extern int PreProcess( FILE*, FILE*, char *);
 int yy_lex_input( char *, int );
 #define YY_INPUT( buf, result, max_size ) result = yy_lex_input( buf, max_size );
 
-typedef struct
-{
-   char * szDefine;
-   char * szValue;
-   void * pKeys;
-   void * pNext;
-} _DEFINE, * PDEFINE;
-
-PDEFINE LastDef( PDEFINE pDef );    /* searches for the latest #define */
-void Define( char * szDefine );     /* add a new #define symbol */
-void DefineKey( char * szKey );     /* add a new key to a #define expression */
-PDEFINE FindDef( char * szText );   /* finds a #define */
-
 /* variables defined in harbour.y */
 extern int _iQuiet;
 extern int _iRestrictSymbolLength;
@@ -60,7 +47,6 @@ extern WORD _wIfCounter;
 extern WORD _wWhileCounter;
 extern WORD _wCaseCounter;
 
-PDEFINE pDefs = 0;                  /* support for #defines */
 int iLine = 0;
 long lNumber = 0;
 
@@ -109,24 +95,16 @@ Array         {Identifier}[ \t]*"["
 ExpArray      ")"[ \t]*"["
 SubArray      "]"[ \t]*"["
 
-Comment1      "/*"([^\*]|[\*][^\/])*"*/"
-Comment2      [\/][\/].*
-Comment       ({Comment1}|{Comment2})
-Separator     {SpaceTab}|{Comment}
+Separator     {SpaceTab}
 
-%x            COMMENT3 DEFINE DEFINE_PARAMS DEFINE_EXPR
-%x            IFDEF IFNDEF STRING1 STRING2 STRING3
+%x            DEFINE STRING1 STRING2 STRING3
 %x            NEXT_ BREAK_ CASE_ DO_ WHILE_ WITH_ END_ EXIT_ EXTERNAL_ FIELD_
-%x            FOR_ FUNCTION_ IIF_ IF_ IN_ INCLUDE_ INIT_ LOCAL_ LOOP_
+%x            FOR_ FUNCTION_ IIF_ IF_ IN_ INIT_ LOCAL_ LOOP_
 %x            LINECONT_
 %s            INDEX
 
 %%
 
-("//".*)|("&&".*)   ;
-
-^{SpaceTab}*(\*|"NOTE").*  ;
-\n{SpaceTab}*(\*|"NOTE").*  ++iLine; if( ! _iQuiet ) printf( "\rline: %i", iLine );
 
 "&"("'"|\"|\[) { printf( "\nSyntax error : '%s'\n", yytext ); exit(1); }
 
@@ -217,56 +195,7 @@ Separator     {SpaceTab}|{Comment}
                 return yytext[ 0 ];
              }
 
-"/*"           BEGIN COMMENT3;
-<COMMENT3>"*"["*"]*"/" { if( i_INDEX_STATE )
-                         {
-                            BEGIN INDEX;
-                            /*printf( "\nRESUMING INDEX STATE\n" );*/
-                         }
-                         else
-                            BEGIN 0;
-                       }
-
-<COMMENT3>[^"*/"\n]* ;
-<COMMENT3>"*"     ;
-<COMMENT3>[\/\"]+ ;
-<COMMENT3>\n   ++iLine; if( ! _iQuiet ) printf( "\rline: %i", iLine );
-
-"#"{SpaceTab}*"define"      BEGIN DEFINE;
-<DEFINE>{Identifier}/{SpaceTab}+   Define( yytext );
-<DEFINE>{Identifier}/{SpaceTab}*\n Define( yytext ); BEGIN 0;
-<DEFINE>{SpaceTab}          ;
-<DEFINE>{Identifier}        LastDef( pDefs )->szValue = yy_strdup( yytext ); BEGIN 0;
-<DEFINE>{PseudoFunc}        LastDef( pDefs )->szValue = yy_strdup( yytext ); BEGIN 0;
-<DEFINE>-?{Number}          LastDef( pDefs )->szValue = yy_strdup( yytext ); BEGIN 0;
-<DEFINE>{HexNumber}         LastDef( pDefs )->szValue = yy_strdup( yytext ); BEGIN 0;
-<DEFINE>"/*".*"*/"          ;
-<DEFINE>{Number}{SpaceTab}*[\(]    yyerror( "Syntax error in #define" );
-
-<DEFINE>{Identifier}{SpaceTab}*[\(] Define( yytext ); BEGIN DEFINE_PARAMS;
-<DEFINE_PARAMS>{SpaceTab}   ;
-<DEFINE_PARAMS>{Identifier} DefineKey( yytext );
-<DEFINE_PARAMS>[\,]         ;
-<DEFINE_PARAMS>[\)]         BEGIN DEFINE_EXPR;
-<DEFINE_EXPR>.*/\n          LastDef( pDefs )->szValue = yy_strdup( yytext ); BEGIN 0;
-
-"#"{SpaceTab}*"ifdef"          BEGIN IFDEF;
-<IFDEF>{Identifier}            if( FindDef( yytext ) ) BEGIN 0;
-<IFDEF>"#"{SpaceTab}*"else"\n  ++iLine; BEGIN 0;
-<IFDEF>"#"{SpaceTab}*"endif"\n ++iLine; BEGIN 0;
-<IFDEF>\n                      ++iLine;
-<IFDEF>[\(\),\"\/\.]*          ;
-<IFDEF>"#"{SpaceTab}*"ifdef"   ;
-<IFDEF>"#"{SpaceTab}*"else"    BEGIN 0;
-"#"{SpaceTab}*"else"           BEGIN IFDEF;
-"#"{SpaceTab}*"endif"          BEGIN 0;
-
-"#"{SpaceTab}*"ifndef"      BEGIN IFNDEF;
-<IFNDEF>{Identifier}        if( ! FindDef( yytext ) ) BEGIN 0;
-<IFNDEF>"#endif"\n          ++iLine; BEGIN 0;
-<IFNDEF>\n                  ++iLine;
-
-"#"{SpaceTab}*"line".* ;
+<DEFINE>{Identifier}/{SpaceTab}*\n  BEGIN 0;
 
 {SpaceTab}     ;
 
@@ -766,28 +695,6 @@ Separator     {SpaceTab}|{Comment}
 %{
 /* ************************************************************************ */
 %}
-"include"      BEGIN INCLUDE_;
-<INCLUDE_>{Separator}+\" { /* only "" are allowed for filename */
-               yy_lex_count_lf();
-               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               unput( yytext[ yyleng-1 ] );
-               _iState =INCLUDE;
-               return INCLUDE;
-             }
-<INCLUDE_>{Separator}*;.*\n      yy_lex_count_lf(); /* ignore any text after ';' */
-<INCLUDE_>{Separator}*[^\"] {
-               yy_lex_count_lf();
-               if( yytext[ yyleng-1 ] == '\n' )
-                 --iLine;
-               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               unput( yytext[ yyleng-1 ] );
-               yylval.string =yy_strdup( "INCLUDE" );
-               _iState =IDENTIFIER;
-               return IDENTIFIER;
-             }
-%{
-/* ************************************************************************ */
-%}
 "init"         BEGIN INIT_;
 <INIT_>{Separator}+[fFpP] { /* FUNCTION or PROCEDURE after INIT */
                  yy_lex_count_lf();
@@ -1193,28 +1100,15 @@ Separator     {SpaceTab}|{Comment}
                yytext[yyleng] = 0;
 
                {
-                  PDEFINE pDef = FindDef( yytext );
-                  char * szText; int c;
-
-                  if( pDef )
+                  if( _iRestrictSymbolLength && strlen( yytext ) > 10 )
                   {
-                     c = strlen( pDef->szValue ) - 1;
-                     szText = pDef->szValue;
-                     while( c >= 0 )
-                       unput( szText[ c-- ] );
+                     yytext[ 10 ] = 0;
+                     yyleng = 10;
                   }
-                  else
-                  {
-                     if( _iRestrictSymbolLength && strlen( yytext ) > 10 )
-                     {
-                        yytext[ 10 ] = 0;
-                        yyleng = 10;
-                     }
-                     yylval.string = yy_strupr( yy_strdup( yytext ) );
-                     /*printf( "\nIdentifier = '%s'\n", yy_strupr( yy_strdup( yytext ) ) );*/
-                     _iState = IDENTIFIER;
-                     return IDENTIFIER;
-                  }
+                  yylval.string = yy_strupr( yy_strdup( yytext ) );
+                  /*printf( "\nIdentifier = '%s'\n", yy_strupr( yy_strdup( yytext ) ) );*/
+                  _iState = IDENTIFIER;
+                  return IDENTIFIER;
                }
             }
 
@@ -1258,26 +1152,13 @@ Separator     {SpaceTab}|{Comment}
             }
 
 {Identifier}               {
-                              PDEFINE pDef = FindDef( yytext );
-                              char * szText; int c;
-                              _iState = IDENTIFIER;
-                              if( pDef )
+                              if( _iRestrictSymbolLength && strlen( yytext ) > 10 )
                               {
-                                 c = strlen( pDef->szValue ) - 1;
-                                 szText = pDef->szValue;
-                                 while( c >= 0 )
-                                    unput( szText[ c-- ] );
+                                 yytext[ 10 ] = 0;
+                                 yyleng = 10;
                               }
-                              else
-                              {
-                                 if( _iRestrictSymbolLength && strlen( yytext ) > 10 )
-                                 {
-                                    yytext[ 10 ] = 0;
-                                    yyleng = 10;
-                                 }
-                                 yylval.string = yy_strupr( yy_strdup( yytext ) );
-                                 return IDENTIFIER;
-                              }
+                              yylval.string = yy_strupr( yy_strdup( yytext ) );
+                              return IDENTIFIER;
                            }
 
 %{
@@ -1288,110 +1169,6 @@ Separator     {SpaceTab}|{Comment}
 %}
 
 %%
-
-PDEFINE LastDef( PDEFINE pDef )
-{
-   while( pDef->pNext )
-      pDef = (PDEFINE) pDef->pNext;
-
-   return pDef;
-}
-
-void Define( char * szDefine )
-{
-   PDEFINE pDef = ( PDEFINE ) malloc( sizeof( _DEFINE ) );
-
-   if( ! pDefs )
-      pDefs = pDef;
-   else
-      LastDef( pDefs )->pNext = pDef;
-
-   pDef->szDefine = yy_strdup( szDefine );
-   pDef->szValue  = 0;
-   pDef->pKeys    = 0;
-   pDef->pNext    = 0;
-}
-
-void DefineKey( char * szKey )
-{
-   PDEFINE pDef = ( PDEFINE ) malloc( sizeof( _DEFINE ) );
-   PDEFINE pLast = LastDef( pDefs );
-
-   if( pLast->pKeys )
-     LastDef( (PDEFINE) pLast->pKeys )->pNext = pDef;
-   else
-     pLast->pKeys = pDef;
-
-   pDef->szDefine = yy_strdup( szKey );
-   pDef->szValue  = 0;
-   pDef->pKeys    = 0;
-   pDef->pNext    = 0;
-}
-
-PDEFINE FindDef( char * szText )
-{
-   PDEFINE pDef = pDefs;
-
-   while( pDef )
-   {
-      if( ! strcmp( pDef->szDefine, szText ) )
-         return pDef;
-      else
-      {
-         if( pDef->pNext )
-            pDef = (PDEFINE) pDef->pNext;
-         else
-            return 0;
-      }
-   }
-   return 0;
-}
-
-/*  Removed for preprocessor needs
-void AddDefine( char * szId, char * szValue )
-{
-   PDEFINE pDefine = FindDef( szId );
-
-   if( pDefine )
-   {
-      if( pDefine->szValue )
-      {
-         free( pDefine->szValue );
-         pDefine->szValue = 0;
-      }
-      if( szValue )
-         pDefine->szValue = yy_strdup( szValue );
-   }
-   else
-   {
-      Define( szId );
-      if( szValue )
-         LastDef( pDefs )->szValue = yy_strdup( szValue );
-   }
-}
-
-int yy_lex_input( char *buffer, int iBufferSize )
-{
-   int i;
-   static int _ineedLF = 1;
-
-   if( ((i = fread(buffer, 1, iBufferSize, yyin)) == 0) && ferror(yyin) )
-       YY_FATAL_ERROR( "input in flex scanner failed" );
-
-   if( i == iBufferSize )
-     _ineedLF =( buffer[i-1] != '\n' );
-
-   else if( i < iBufferSize && _ineedLF )
-   {
-     if( i == 0 )
-       buffer[ i++ ] ='\n';
-     else if( buffer[ i-1 ] != '\n' )
-       buffer[ i++ ] ='\n';
-     _ineedLF =0;
-   }
-   return i;
-}
-*/
 
 int yy_lex_input( char *buffer, int iBufferSize )
 {

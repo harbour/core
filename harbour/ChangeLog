@@ -1,3 +1,15 @@
+19990621-13:27 Alexander Kresin
+ updated:
+ * source\hbpp\hbpp.c
+ * source\hbpp\buildgcc.bat
+ * source\hbpp\makefile.b16
+ * source\hbpp\makefile.b32
+ * source\compiler\harbour.l
+  Now keywords.prg compiles Ok.
+  Updated makefiles for standalone version of preprocessor.
+  From harbour.l removed all stuff related to early implementation of
+   preprocessor functionality.
+
 19990621-11:50 CET Victor Szel <info@szelvesz.hu>
   * source/compiler/harbour.y
     Some old PCODE name changed to new in

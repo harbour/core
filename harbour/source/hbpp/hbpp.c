@@ -528,7 +528,8 @@ int ParseExpression( char* sLine, char* sOutLine )
         { *sToken = *ptri++; *(sToken+1) = '\0'; lenToken = 1; }
      SKIPTABSPACES( ptri );
 
-     if ( *ptri != ':' && *ptri != '=' && (ndef=ComSearch(sToken,0)) >= 0 )
+     if ( *ptri != ':' && *ptri != '=' && (isname(*ptri) || *(ptri+1) != '=')
+       && (ndef=ComSearch(sToken,0)) >= 0 )
      {
        ptro = sOutLine;
        i = WorkCommand( sToken, ptri, ptro, ndef );
