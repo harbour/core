@@ -275,7 +275,7 @@ int ParseDefine( char* sLine)
       lastdef = AddDefine ( defname, ( *sLine == '\0' )? NULL : sLine );
 
       lastdef->npars = npars;
-      lastdef->pars = ( npars == 0 )? NULL : strodup ( pars );
+      lastdef->pars = ( npars <= 0 )? NULL : strodup ( pars );
    }
    else
       GenError( _szPErrors, 'P', ERR_DEFINE_ABSENT, NULL, NULL );

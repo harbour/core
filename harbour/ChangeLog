@@ -1,3 +1,9 @@
+19991019-01:50 EDT Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+     + source/rtl/natmsg.c
+   * source/pp/hbpp.c
+     * in ParseDefine() line 278: ==0 s/b <= 0
+
 19991018-23:04 GMT+1 Victor Szel <info@szelvesz.hu>
    + source/rtl/natmsg.c (added)
      source/rtl/Makefile
