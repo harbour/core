@@ -8,6 +8,17 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-09-26 12:30 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * include/hbapi.h
+        - removed filecase() definition from Extend API
+   * include/hbapifs.h
+        - added filecase() definition to FS API
+   * include/hbset.h
+   * source/rtl/set.c
+   * source/rtl/filesys.c
+        ! fixed GPF, fixed MSVC typecast,
+          changed settings from strings to numeric constants.
+
 2002-09-25 18:47 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * source/rdd/rtl/file.c
    * source/rdd/rtl/filesys.c
