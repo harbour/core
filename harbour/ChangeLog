@@ -1,3 +1,9 @@
+20000502-16:22 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.l
+	* fixed syntax:
+	RETURN ++variable
+
 20000502-16:07 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/hbpcode.c

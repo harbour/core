@@ -1107,12 +1107,28 @@ Separator     {SpaceTab}
                    return IDENTIFIER;
                  }
                }
-<RETURN_>{Separator}*("+="|"-="|"->"|"++"|"--") { /* operators */
+<RETURN_>{Separator}*("+="|"-="|"->") { /* operators */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                hb_comp_iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
                return IDENTIFIER;
+             }
+<RETURN_>{Separator}*("++"|"--") { /* operators */
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+               unput( yytext[ yyleng-1 ] );
+               unput( yytext[ yyleng-2 ] );
+                 if( hb_comp_iState == LOOKUP )
+                 { /* it is the first item in the line */
+                   hb_xfree( (void *) yylval.string );
+                   hb_comp_iState = RETURN;
+                   return RETURN;
+                 }
+                 else
+                 { /* there is another item in line already */
+                   hb_comp_iState =IDENTIFIER;
+                   return IDENTIFIER;
+                 }
              }
 <RETURN_>{Separator}*("::") { /* SELF operator */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
