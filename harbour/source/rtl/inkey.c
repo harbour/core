@@ -36,6 +36,9 @@
 /*
  * ChangeLog:
  *
+ * V 1.55   David G. Holm               Added _SET_CANCEL support for
+ *                                      Ctrl+Break, returning no key code
+ *                                      when _SET_CANCEL is off.
  * V 1.45   David G. Holm               Removed Borland Windows support.
  *                                      Removed DOS-like Windows support.
  *                                      Removed Cygwin from Unix-like support.
@@ -88,12 +91,16 @@
 
 #if defined(_Windows) || defined(WINNT)
    #define INPUT_BUFFER_LEN 128
+   extern BOOL   hb_gtBreak;  /* This variable is located in source/rtl/gt/gtwin.c */
    extern HANDLE hb_gtHInput; /* This variable is located in source/rtl/gt/gtwin.c */
    static DWORD s_cNumRead = 0;   /* Ok to use DWORD here, because this is specific... */
    static DWORD s_cNumIndex = 0;  /* ...to the Windows API, which defines DWORD, etc.  */
    static INPUT_RECORD s_irInBuf[ INPUT_BUFFER_LEN ];
 #endif
 
+#define HB_BREAK_FLAG 256 /* 256, because that's what DJGPP returns Ctrl+Break as.
+                             Clipper has no key code 256, so it may as well be
+                             used for all the Harbour builds that need it */
 #include "extend.h"
 #include "ctoharb.h"
 #include "errorapi.h"
@@ -109,6 +116,7 @@
 #elif  defined(__DJGPP__)
    #include <pc.h>
    #include <dos.h>
+   #include <sys\exceptn.h>
 #elif defined(HARBOUR_GCC_OS2)
    #include <stdlib.h>
 #elif defined(__IBMCPP__)
@@ -168,6 +176,9 @@ HB_CALL_ON_STARTUP_BEGIN( init_input_mode )
   ta.c_cc[ VTIME ] = 0;
   tcsetattr( STDIN_FILENO, TCSAFLUSH, &ta );
 HB_CALL_ON_STARTUP_END( init_input_mode )
+
+#elif defined(HARBOUR_USE_DOS_GTAPI) && ! defined(__DJGPP__)
+   extern BOOL hb_gtBreak;  /* This variable is located in source/rtl/gt/gtdos.c */
 #endif
 
 static int * s_inkeyBuffer = 0; /* Harbour keyboard buffer (empty if head == tail)     */
@@ -306,8 +317,15 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
    {
       int ch = 0;
 #if defined(_Windows) || defined(WINNT)
+      /* First check for Ctrl+Break, which is handled by gt/gtwin.c */
+      if( hb_gtBreak )
+      {
+         /* Reset the global Ctrl+Break flag */
+         hb_gtBreak = FALSE;
+         ch = HB_BREAK_FLAG; /* Indicate that Ctrl+Break was pressed */
+      }
       /* Check for events only when the event buffer is exhausted. */
-      if( s_cNumRead <= s_cNumIndex )
+      else if( s_cNumRead <= s_cNumIndex )
       {
          /* Check for keyboard input */
          s_cNumRead = 0;
@@ -639,12 +657,36 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
       /* _read_kbd() returns -1 for no key, the switch statement will handle
          this. */
    #else
+     #if defined(HARBOUR_USE_DOS_GTAPI)
+      #if defined(__DJGPP__)
+         /* Check to see if Ctrl+Break has been detected */
+         if( __djgpp_cbrk_count )
+         {
+            __djgpp_cbrk_count = 0; /* Indicate that Ctrl+Break has been handled */
+            ch = HB_BREAK_FLAG; /* Note that Ctrl+Break was pressed */
+         }
+      #else
+         /* First check for Ctrl+Break, which is handled by gt/gtdos.c,
+            with the exception of the DJGPP compiler */
+         if( hb_gtBreak )
+         {
+            hb_gtBreak = FALSE; /* Indicate that Ctrl+Break has been handled */
+            ch = HB_BREAK_FLAG; /* Note that Ctrl+Break was pressed */
+         }
+      #endif
+      else
+     #endif
       if( kbhit() )
       {
          /* A key code is available in the BIOS keyboard buffer, so read it */
       #if defined(__DJGPP__)
          if( s_eventmask & INKEY_EXTENDED ) ch = getxkey();
          else ch = getkey();
+         if( ch == 256 )
+            /* Ignore Ctrl+Break, because it is being handled as soon as it
+               happens (see above) rather than waiting for it to show up in
+               the keyboard input queue */
+            ch = -1;
       #else
          /* A key code is available in the BIOS keyboard buffer */
          ch = getch();                  /* Get the key code */
@@ -786,9 +828,15 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
 #else
       /* TODO: Support for other platforms, such as Mac */
 #endif
-      if( ch == K_ALT_C )
-         hb_vmRequestCancel( );  /* Alt-C was pressed */
-
+      switch( ch )
+      {
+         case HB_BREAK_FLAG:        /* Check for Ctrl+Break */
+            if( ! hb_set.HB_SET_CANCEL ) /* If cancel is disabled, */
+               ch = 0;                   /* then ignore the keystroke */
+                                    /* In either case, handle like Alt+C */
+         case K_ALT_C:              /* Alt+C was pressed */
+            hb_vmRequestCancel();
+      }
       hb_inkeyPut( ch );
    }
 }

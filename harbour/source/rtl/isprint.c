@@ -83,7 +83,11 @@ HARBOUR HB_ISPRINTER( void )
       union REGS regs;
 
       regs.h.ah = 2;
+   #ifdef __BORLANDC__
+      regs.x.dx = uiPort - 1;
+   #else
       regs.w.dx = uiPort - 1;
+   #endif
 
       INT_86( 0x17, &regs, &regs );
 
@@ -97,10 +101,10 @@ HARBOUR HB_ISPRINTER( void )
 
 #else
 
-   /* NOTE: Platform independent method, at least it will compiler 
-            and run on any platform, the result may not the expected one, 
+   /* NOTE: Platform independent method, at least it will compile and run
+            on any platform, but the result may not be the expected one,
             since Unix/Linux doesn't support LPT/COM by nature, other OSs
-            may not reflect the actual physical presence of the printer when 
+            may not reflect the actual physical presence of the printer when
             trying to open it, since we are talking to the spooler. */
 
    if( ( hb_strnicmp( pszDOSPort, "LPT", 3 ) == 0 ||

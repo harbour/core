@@ -1,3 +1,33 @@
+19991028-22:30 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * source/rtl/inkey.c
+   * source/rtl/gt/gtdos.c
+   * source/rtl/gt/gtwin.c
+     + Added Ctrl+Break support for DJGPP.
+     % Unified Ctrl+Break handling by modifying DOS (non-DJGPP) and
+       Windows GT API Ctrl+Break handlers to set a global flag that
+       hb_inkeyPoll() checks before checking for keyboard input.
+       Otherwise, if the program is in a keyboard input loop, a second
+       key may have to be pressed after the "Cancelled at:" message is
+       displayed before the program will actually quit. NOTE: The DOS
+       Ctrl+Break handling needs to be refined to handle Ctrl+Break and
+       Ctrl+C separately and to pass the Ctrl+C keyboard code on to the
+       Harbour application. This requires handling BIOS INT 1B for the
+       Ctrl+Break key and requires a lower level DOS INT 23 handler for
+       the Ctrl+C handling than is provided by the C setbrk() function.
+
+   * source/rtl/isprint.c
+     + Added support for Borland C REGS structure.
+
+   * source/rtl/samples.c
+     ! Changed 'if( ulLen >= 0)' to read 'if( ulLen >= 1)' so that the
+       string conversion for the hours value will only be done when
+       there is at least one character in the source string.
+
+   * tests/inkeytst.prg
+     + If the "skip" command line parameter is set to "BREAK", then
+       SETCANCEL() will be enabled, otherwise it will be disabled.
+
 19991028-14:12 GMT+1 Bruno Cantero <bruno@issnet.net>
   * source/rdd/dbcmd.c
     source/rdd/dbf1.c

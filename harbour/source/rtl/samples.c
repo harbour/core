@@ -68,7 +68,7 @@ static ULONG hb_TimeStrToSec( char * pszTime )
    HB_TRACE(("hb_TimeStrToSec(%s)", pszTime));
 
    ulLen = strlen( pszTime );
-   if( ulLen >= 0 )
+   if( ulLen >= 1 )
       ulTime += ( ULONG ) hb_strVal( pszTime ) * 3600;
 
    if( ulLen >= 4 )

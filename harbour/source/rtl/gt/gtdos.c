@@ -70,6 +70,7 @@
 #ifdef __DJGPP__
    #include <conio.h>
    #include <sys/farptr.h>
+   #include <sys/exceptn.h>
 #else
    #ifndef MK_FP
       #define MK_FP( seg, off ) \
@@ -93,29 +94,34 @@ static void hb_gt_GetCursorSize( char * start, char * end );
    static char FAR * hb_gt_ScreenAddress( void );
 #endif
 
+#ifndef __DJGPP__
+BOOL hb_gtBreak = FALSE; /* Used to signal Ctrl+Break to hb_inkeyPoll() */
 static int s_iOldCtrlBreak = 0;
 
 static int hb_gt_CtrlBrkHandler( void )
 {
    HB_TRACE(("hb_gt_CtrlBrkHandler()"));
-
-   if( hb_set.HB_SET_CANCEL )
-      hb_vmRequestCancel();
-
+   hb_gtBreak = TRUE;
    return 1;
 }
 
 static void hb_gt_CtrlBrkRestore( void )
 {
    HB_TRACE(("hb_gt_CtrlBrkRestore()"));
-
    setcbrk( s_iOldCtrlBreak );
 }
+#endif
 
 void hb_gt_Init( void )
 {
    HB_TRACE(("hb_gt_Init()"));
 
+#ifdef __DJGPP__
+   gppconio_init();
+   __djgpp_hwint_flags |= 2;     /* Count Ctrl+Break instead of killing program */
+   __djgpp_set_ctrl_c( 0 );      /* Disable Ctrl+C */
+   __djgpp_set_sigquit_key( 0 ); /* Disable Ctrl+\ */
+#else
    /* Set the Ctrl+Break handler [vszel] */
 
    ctrlbrk( hb_gt_CtrlBrkHandler );
@@ -125,9 +131,6 @@ void hb_gt_Init( void )
 
    /* */
 
-#ifdef __DJGPP__
-   gppconio_init();
-#else
    scrnStealth = ( char * ) -1;
    scrnPtr = hb_gt_ScreenAddress();
 #endif
@@ -521,9 +524,9 @@ void hb_gt_PutText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
 
 void hb_gt_SetAttribute( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE attr )
 {
-   HB_TRACE(("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d", usTop, usLeft, usBottom, usRight, (int) attr));
-
    USHORT x, y;
+
+   HB_TRACE(("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d", usTop, usLeft, usBottom, usRight, (int) attr));
 
    for( y = usTop; y <= usBottom; y++ )
    {

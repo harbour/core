@@ -146,6 +146,11 @@ LOCAL nKey, nMask, cText
       nMask += INKEY_EXTENDED
    END IF
    SET(_SET_EVENTMASK, nMask)
+   IF UPPER( cSkip ) == "BREAK"
+      SETCANCEL( .T. )
+   ELSE
+      SETCANCEL( .F. )
+   END IF
    WHILE (nKey := INKEY( 0, nMask )) != K_TAB
       DO CASE
          CASE nKey == K_MOUSEMOVE

@@ -91,7 +91,8 @@ static HANDLE HOsave;
 /* static HANDLE HSsave; */
 static HANDLE HDOutput  = INVALID_HANDLE_VALUE;
 /* static HANDLE HDStealth = INVALID_HANDLE_VALUE; */
-       HANDLE hb_gtHInput = INVALID_HANDLE_VALUE;
+       HANDLE hb_gtHInput = INVALID_HANDLE_VALUE; /* hb_inkeyPoll() needs this */
+       BOOL hb_gtBreak = FALSE; /* Used to signal Ctrl+Break to hb_inkeyPoll() */
 static HANDLE HOutput   = INVALID_HANDLE_VALUE;
 static HANDLE HStealth  = INVALID_HANDLE_VALUE; /* DispBegin buffer */
 static HANDLE HOriginal;                      /* used to restore before quit */
@@ -116,10 +117,7 @@ static BOOL WINAPI hb_gt_CtrlHandler( DWORD dwCtrlType )
       break;
 
    case CTRL_BREAK_EVENT:
-
-      if( hb_set.HB_SET_CANCEL )
-         hb_vmRequestCancel();
-
+      hb_gtBreak = TRUE;
       bHandled = TRUE;
       break;
 
