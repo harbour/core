@@ -77,7 +77,6 @@ FUNCTION __dbTotal()       ; RETURN NIL
 FUNCTION __dbUpdate()      ; RETURN NIL
 FUNCTION __dbZap()         ; RETURN NIL
 
-FUNCTION Browse()          ; RETURN .T.
 FUNCTION dbEdit()          ; RETURN NIL
 FUNCTION IsPrinter()       ; RETURN .T.
 FUNCTION NetName()         ; RETURN ""
@@ -97,4 +96,3 @@ FUNCTION ReadKill()        ; RETURN .F.
 FUNCTION ReadUpdated()     ; RETURN .T.
 FUNCTION Updated()         ; RETURN .T.
 FUNCTION __SetFormat()     ; RETURN NIL
-

@@ -24,7 +24,7 @@
 PROJECT: harbour.exe harbour.lib lib\b32\terminal.lib lib\b32\termwin.lib
 
 harbour.lib : achoice.obj adir.obj alert.obj arrays.obj asort.obj \
-              browdb.obj classes.obj codebloc.obj copyfile.obj \
+              browdb.obj browse.obj classes.obj codebloc.obj copyfile.obj \
               dates.obj dates2.obj datesx.obj debug.obj debugger.obj \
               descend.obj devoutp.obj dir.obj do.obj dynsym.obj dummy.obj \
               environ.obj fieldbl.obj cmdarg.obj errorapi.obj errorsys.obj \
@@ -48,6 +48,7 @@ alert.obj    : alert.c    extend.h hbdefs.h
 arrays.obj   : arrays.c   extend.h hbdefs.h
 asort.obj    : asort.c    extend.h hbdefs.h
 browdb.obj   : browdb.c   extend.h hbdefs.h
+browse.obj   : browse.c   extend.h hbdefs.h
 classes.obj  : classes.c  extend.h hbdefs.h
 cmdarg.obj   : cmdarg.c   extend.h hbdefs.h
 codebloc.obj : codebloc.c extend.h hbdefs.h
@@ -122,10 +123,10 @@ adir.c       : adir.prg      harbour.exe
 alert.c      : alert.prg     harbour.exe
 asort.c      : asort.prg     harbour.exe
 browdb.c     : browdb.prg    harbour.exe
+browse.c     : browse.prg    harbour.exe
 debugger.c   : debugger.prg  harbour.exe
 devoutp.c    : devoutp.prg   harbour.exe
 dummy.c      : dummy.prg     harbour.exe
-terror.c     : terror.prg    harbour.exe
 errorsys.c   : errorsys.prg  harbour.exe
 fieldbl.c    : fieldbl.prg   harbour.exe
 fileread.c   : fileread.prg  harbour.exe
@@ -140,6 +141,7 @@ stringp.c    : stringp.prg   harbour.exe
 tbcolumn.c   : tbcolumn.prg  harbour.exe
 tbrowse.c    : tbrowse.prg   harbour.exe
 tclass.c     : tclass.prg    harbour.exe
+terror.c     : terror.prg    harbour.exe
 tget.c       : tget.prg      harbour.exe
 tgetlist.c   : tgetlist.prg  harbour.exe
 readvar.c    : readvar.prg   harbour.exe

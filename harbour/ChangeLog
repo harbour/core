@@ -1,3 +1,15 @@
+19991016-08:52 GMT+1 Antonio Linares <alinares@fivetech.com>
+   + source/rtl/browse.prg
+     + New function Browse() added
+       (early prototype. Still some missing functionality).
+   * source/rtl/dummy.prg
+     - function Browse() removed.
+   * makefile.b32
+     + added browse.prg
+       (warning I have not updated other makefiles!)
+   + tests/testbrdb.prg
+     + New sample added.
+
 19991016-00:10 EDT David G. Holm <dholm@jsd-llc.com>
 
    * doc/gmake.txt
@@ -53,7 +65,7 @@
        Right Ctrl adds 4096, Left Alt adds 8192, and Right Alt adds
        16,384. Normal keys are in the range 0 to 255. A value that
        is larger than 255 represents an extended key. All state keys
-       generate key codes. Use the test program INKEYTST with two 
+       generate key codes. Use the test program INKEYTST with two
        parameters (such as S and X) to display the codes. NOTE 2: This
        is just an experiment to see if allowing Harbour to get all
        key codes when run under Windows is a good idea. NOTE 3: If
@@ -67,17 +79,17 @@
 
 Fri Oct 15 16:42:30 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* config/lib.cf: 
-	* source/debug/Makefile: 
-	* source/pp/Makefile: 
-	* source/rdd/Makefile: 
-	* source/rdd/dbfcdx/Makefile: 
-	* source/rdd/dbfntx/Makefile: 
-	* source/rdd/nulsys/Makefile: 
-	* source/rtl/Makefile: 
-	* source/runner/Makefile: 
-	* source/tools/Makefile: 
-	* source/vm/Makefile: 
+	* config/lib.cf:
+	* source/debug/Makefile:
+	* source/pp/Makefile:
+	* source/rdd/Makefile:
+	* source/rdd/dbfcdx/Makefile:
+	* source/rdd/dbfntx/Makefile:
+	* source/rdd/nulsys/Makefile:
+	* source/rtl/Makefile:
+	* source/runner/Makefile:
+	* source/tools/Makefile:
+	* source/vm/Makefile:
 	Now Makefiles that will create a library use LIBNAME for the
 	library's name; the LIB variable is not used anymore, so it will
 	not conflict with the widely used environment variable with that
@@ -105,7 +117,7 @@ Fri Oct 15 16:42:30 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Thu Oct 14 17:29:32 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/rtl/dates.c: 
+	* source/rtl/dates.c:
 	Fixed an include guard so that HB_DONT_DEFINE_BASIC_TYPES is
 	defined for both gcc and mingw32.
 
