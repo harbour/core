@@ -1,3 +1,7 @@
+19990721-09:30 CET Eddie Runia <eddie@runia>
+  * source/vm/hvm.c
+    Copy & Paste error
+
 19990721-09:00 CET Jose Lalin
   * source/vm/hvm.c
     + added support for concatenation operator "-"

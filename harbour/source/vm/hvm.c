@@ -1378,21 +1378,23 @@ void Minus( void )
 {
    double dNumber1, dNumber2;
    long lDate1, lDate2;
+   PHB_ITEM pItem2 = stack.pPos - 1;
+   PHB_ITEM pItem1 = stack.pPos - 2;
 
-   if( IS_NUMERIC( stack.pPos - 1 ) && IS_NUMERIC( stack.pPos - 2 ) )
+   if( IS_NUMERIC( pItem2 ) && IS_NUMERIC( pItem1 ) )
    {
       WORD wDec2, wDec1;
       dNumber2 = PopDouble( &wDec2 );
       dNumber1 = PopDouble( &wDec1 );
       PushNumber( dNumber1 - dNumber2, (wDec1 > wDec2) ? wDec1 : wDec2 );
    }
-   else if( IS_DATE( stack.pPos - 1 ) && IS_DATE( stack.pPos - 2 ) )
+   else if( IS_DATE( pItem2 ) && IS_DATE( pItem1 ) )
    {
       lDate2 = PopDate();
       lDate1 = PopDate();
       PushNumber( lDate1 - lDate2, hb_set.HB_SET_DECIMALS );
    }
-   else if( IS_NUMERIC( stack.pPos - 1 ) && IS_DATE( stack.pPos - 2 ) )
+   else if( IS_NUMERIC( pItem2 ) && IS_DATE( pItem1 ) )
    {
       dNumber2 = PopNumber();
       lDate1 = PopDate();
