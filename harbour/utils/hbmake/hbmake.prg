@@ -932,7 +932,7 @@ Local cTopFile     := ""
 Local cDefBccLibs  := "lang.lib vm.lib rtl.lib rdd.lib macro.lib pp.lib dbfntx.lib dbfcdx.lib common.lib gtwin.lib"
 Local cDefGccLibs  := "-lvm -lrtl -lgtdos -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon"
 Local cgcclibsos2  := "-lvm -lrtl -lgtos2 -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon"
-Local cDeflibGccLibs := "-lvm -lrtl -lgtstd -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon -lm"
+Local cDeflibGccLibs := "-lvm -lrtl -lgtsln -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon -lslang -lm"
 local cLibs := ""
 local citem:=""
 Local cExt:=""
@@ -1336,7 +1336,7 @@ if lBcc .or. lVcc
    endif
 elseif lGcc
       if  cOs=="Linux"
-          Fwrite( nLinkHandle, "LIBFILES = " +cDeflibGccLibs + CRLF )
+          Fwrite( nLinkHandle, "LIBFILES = -Wl,--start-group " +cDeflibGccLibs + " -Wl,--end-group "+ CRLF )
       elseif cOs=="OS/2"
           Fwrite( nLinkHandle, "LIBFILES = " + cgcclibsos2 + CRLF )
       else
