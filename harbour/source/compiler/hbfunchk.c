@@ -83,6 +83,7 @@ static HB_FUNCINFO hb_StdFunc[] =
    { "PCOL"      , 0,  0 },
    { "PCOUNT"    , 0,  0 },
    { "PROW"      , 0,  0 },
+   { "QSELF"     , 0,  0 },
    { "RECCOUNT"  , 0,  0 },
    { "RECNO"     , 0,  0 },
    { "REPLICATE" , 2,  2 },

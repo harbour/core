@@ -1,3 +1,9 @@
+2001-09-17 02:21 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/compiler/hbfunchk.c
+     ! QSELF() compile time checking for the number of arguments.
+       Thanks to Jose Lalin.
+
 2001-09-16 20:40 GMT -3   Luiz Rafael Culik<culik@sl.conex.net>
    *contrib/libct/files.c
      * fixed compiler problem for MINGW
