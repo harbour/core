@@ -194,7 +194,7 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
    ::Minus      := .f.
    ::Name       := cVarName
    ::Original   := ::VarGet()
-   ::Pos        := NIL
+   ::Pos        := 0
    ::PostBlock  := NIL
    ::PreBlock   := NIL
    ::Reader     := NIL
@@ -514,7 +514,7 @@ METHOD KillFocus() CLASS Get
 
    ::hasfocus := .f.
    ::buffer   := ::PutMask( )
-   ::pos      := NIL
+   ::pos      := 0
 
    ::Display()
 
@@ -1510,6 +1510,10 @@ METHOD FirstEditable( ) CLASS GET
 
    If ::nMaxLen != NIL
 
+      If ::IsEditable( 0 )
+         return 0
+      Endif
+
       If ::IsEditable( 1 )
          return 1
       Endif
@@ -1569,5 +1573,4 @@ STATIC FUNCTION IsBadDate( cBuffer, cPicFunc )
    Next
 
  return .f.
-
 
