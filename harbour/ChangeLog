@@ -1,3 +1,11 @@
+19991011-10:04 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/classes.c
+     + little change to fix Super accesses
+   * source/vm/hvm.c
+     + little change to fix Super accesses
+   * include/extend.h
+     + struct BASEARRAY new uiPrevHolders member added
+
 19991010-23:30 GMT+1 Bruno Cantero <bruno@issnet.net>
 
    + source/rdd/dbcmd.c
@@ -79,14 +87,14 @@
     *source/compiler/harbour.l
     *source/compiler/harbour.y
 	* { 1, 2, 3 }[ 2 ] syntax is supported now
-	
+
 19991010-12:22 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/compiler/genc.c
      source/compiler/genhrb.c
      source/compiler/harbour.y
      source/vm/hvm.c
      % HB_P_STATICS now stores the number of statics in the pcode command
-       itself and doesn't POP it from the stack. This causes a small speedup 
+       itself and doesn't POP it from the stack. This causes a small speedup
        in the STATIC init code.
    * source/compiler/harbour.y
      source/compiler/genc.c
