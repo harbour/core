@@ -209,7 +209,7 @@ Method SetTop( xData ) Class HBListBox
 
      Local nTop
 
-     If ( !( ISNIL( xData ) .and. Isnumber( xData ) ) .and. Isnumber( ( ::xTop := xData ) ) .and. ISOBJECT( ::vScroll ) )
+     If ( !( ISNIL( xData ) .and. ISNUMBER( xData ) ) .and. ISNUMBER( ( ::xTop := xData ) ) .and. ISOBJECT( ::vScroll ) )
         ::vScroll:start := xData + 1
      Endif
 Return ::xTop
@@ -233,7 +233,7 @@ Return ::xDropDown
 
 Method SetCaption( xData ) Class HBListBox
 
-     If ( Ischaracter( xData ) .and. ISNIL( ::Capcol ) )
+     If ( ISCHARACTER( xData ) .and. ISNIL( ::Capcol ) )
         ::cCaption := xData
         ::Caprow   := ::top
         ::Capcol   := ::left - Len( xData )
@@ -243,7 +243,7 @@ Return ::cCaption
 Method SetBottom( xData ) Class HBListBox
 
      Local nBottom
-     If ( !( ISNIL( xData ) .and. Isnumber( xData ) ) .and. Isnumber( ( ::xBottom := xData ) ) .and. ISOBJECT( ( ::vScroll ) ) )
+     If ( !( ISNIL( xData ) .and. ISNUMBER( xData ) ) .and. ISNUMBER( ( ::xBottom := xData ) ) .and. ISOBJECT( ( ::vScroll ) ) )
         nBottom       := ::xBottom
         ::vScroll:end := xData - 1
      Endif
@@ -252,7 +252,7 @@ Return ::xBottom
 
 Method ADDITEM( cText, xValue ) Class HBListBox
 
-     If ( !( Ischaracter( cText ) ) )
+     If ( !( ISCHARACTER( cText ) ) )
      Elseif ( Valtype( xValue ) $ "CUN" )
         Aadd( ::aItems, { cText, xValue } )
         ::iTemCount ++
@@ -295,7 +295,7 @@ Method DELITEM( xitem )
               ::TextValue := _Getdata( ::aItems[ ::iTemCount ] )
            Endif
            If ( ISNIL( ::Buffer ) )
-           Elseif ( Isnumber( ::Buffer ) )
+           Elseif ( ISNUMBER( ::Buffer ) )
               ::Buffer := ::iTemCount
            Elseif ( ::Value > 0 )
               ::Buffer := ::TextValue
@@ -332,7 +332,7 @@ Method FindData( cText, nPos, lCaseSensitive, lExact ) Class HBListBox
         lOldExact := Set( _SET_EXACT, lExact )
      Endif
      nEnd := 1
-     If ( Isnumber( nPos ) )
+     If ( ISNUMBER( nPos ) )
         nEnd ++
      Else
         nPos := 1
@@ -379,7 +379,7 @@ Method FindText( cText, nPos, lCaseSensitive, lExact ) Class HBListBox
         lOldExact := Set( _SET_EXACT, lExact )
      Endif
      nEnd := 1
-     If ( Isnumber( nPos ) )
+     If ( ISNUMBER( nPos ) )
         nEnd ++
      Else
         nPos := 1
@@ -742,8 +742,8 @@ Method GETTEXT( xItem ) Class HBListBox
 Return xRet
 Method INSITEM( nPosition, cText, xExp )
 
-     If ( !( Ischaracter( cText ) ) )
-     Elseif ( !( Isnumber( nPosition ) ) )
+     If ( !( ISCHARACTER( cText ) ) )
+     Elseif ( !( ISNUMBER( nPosition ) ) )
      Elseif ( nPosition < ::itemCount )
         Asize( ::aitems, ++ ::itemCount )
         Ains( ::aitems, nPosition )
@@ -881,7 +881,7 @@ Method SetItem( nPos, cText ) Class HBListBox
          Case nPos < 1
          Case nPos > ::itemCount
          Case Len( cText ) != 2
-         Case Ischaracter( cText[ 1 ] )
+         Case ISCHARACTER( cText[ 1 ] )
              ::aitems[ nPos ] := cText
      Endcase
 Return self
@@ -912,31 +912,37 @@ Static Function CHANGEITEM( oList, nPos, nItem )
 
      Local Local1
      Local Local2
-     If ( nPos != nItem )
+
+     If nPos != nItem
         oList:value := nItem
         If ( oList:value == 0 )
            oList:Textvalue := ""
         Else
            oList:Textvalue := _Getdata( oList:aItems[ oList:value ] )
         Endif
-        If ( ISNIL( oList:Buffer ) )
-        Elseif ( Isnumber( oList:Buffer ) )
+
+        If ISNIL( oList:Buffer )
+        Elseif ISNUMBER( oList:Buffer )
            oList:Buffer := oList:value
-        Elseif ( oList:value > 0 )
+        Elseif oList:value > 0
            oList:Buffer := oList:Textvalue
         Endif
-        If ( Empty( oList:hotbox + oList:coldbox ) )
+
+        If Empty( oList:hotbox + oList:coldbox )
            Local2 := 0
         Else
            Local2 := 2
         Endif
-        If ( oList:Dropdown )
+
+        If oList:Dropdown
            Local2 ++
         Endif
+
         Local1 := oList:value - ( oList:Bottom - oList:top - Local2 )
-        If ( oList:Topitem > oList:value )
+
+        If oList:Topitem > oList:value
            oList:topitem := oList:value
-           If ( ISOBJECT( oList:vScroll ) )
+           If ISOBJECT( oList:vScroll )
               oList:vScroll:current := lbadjustcu( oList )
            Endif
 
@@ -944,12 +950,16 @@ Static Function CHANGEITEM( oList, nPos, nItem )
                     oList:vScroll ) ) )
            oList:vScroll:current := lbadjustcu( oList )
         Endif
+
         oList:display()
-        If ( ISBLOCK( oList:sBlock ) )
+
+        If ISBLOCK( oList:sBlock )
            Eval( oList:sBlock )
         Endif
      Endif
+
 Return oList
+
 Static Function LBADJUSTCU( oList )
 
      Local nSize
@@ -957,6 +967,7 @@ Static Function LBADJUSTCU( oList )
      Local nLength
      Local nTopItem
      Local nNewSize
+
      nSize    := oList:Bottom - oList:top - Iif( oList:dropdown, 2, 1 )
      nCount   := oList:itemCount
      nLength  := oList:vScroll:barlength
@@ -967,9 +978,10 @@ Return nNewSize
 
 Function Listbox( nTop, nLeft, nBottom, nRigth, lDrop )
 
-     If !( Isnumber( nTop ) ) .or. !( Isnumber( nleft ) ) .or. !( Isnumber( nBottom ) ) .or. !( Isnumber( nRigth ) )
+     If !( ISNUMBER( nTop ) ) .or. !( ISNUMBER( nleft ) ) .or. !( ISNUMBER( nBottom ) ) .or. !( ISNUMBER( nRigth ) )
         Return nil
      Endif
+
 Return HBListBox():New( nTop, nLeft, nBottom, nRigth, lDrop )
 
 Static Function _Getdata( xItem )
@@ -978,61 +990,71 @@ Static Function _Getdata( xItem )
         Return xItem[ 1 ]
      Endif
 Return xItem[ 2 ]
-Function _LISTBOX_( Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8, ;
-                         Arg9, Arg10, Arg11, Arg12, Arg13 )
+
+Function _LISTBOX_( nTop, nLeft, nBottom, nRight, nSelect, aList, cCaption, cMessage, ;
+                         cColor, FBlock, SBlock, lDrop, lOpen )
 
      Local oScroll
      Local nPos
      Local nLen
-     Local nCurPos
-     Default arg5 To 1
-     Default arg12 To .f.
-     Default arg13 To .f.
-     default arg7 to ''
-     oScroll := Listbox( Arg1, Arg2, Arg3, Arg4, Arg12 )
+     Local xCurPos
+
+     Default nSelect To 1
+     Default lDrop To .f.
+     Default lOpen To .f.
+     Default cCaption To ''
+
+     oScroll := Listbox( nTop, nLeft, nBottom, nRight, lDrop )
+
      If ( !( ISNIL( oScroll ) ) )
-        If ( Ischaracter( Arg7 ) )
-           oScroll:caption := Arg7
-           oScroll:capcol  := Arg2 - __caplengt( Arg7 )
+        If ( ISCHARACTER( cCaption ) )
+           oScroll:caption := cCaption
+           oScroll:capcol  := nLeft - __caplengt( cCaption )
         Endif
-        If arg9 != nil
-           oScroll:colorspec := Arg9
+        If cColor != nil
+           oScroll:colorspec := cColor
         Endif
-        oScroll:message := Arg8
-        oScroll:fblock  := Arg10
-        oScroll:sblock  := Arg11
-        oScroll:isopen  := arg13
-        nLen            := Len( Arg6 )
+        oScroll:message := cMessage
+        oScroll:fblock  := FBlock
+        oScroll:sblock  := SBlock
+        oScroll:isopen  := lOpen
+        nLen            := Len( aList )
+
         For nPos := 1 To nLen
-           nCurPos := Arg6[ nPos ]
-           If ( !( Isarray( nCurPos ) ) )
-              oScroll:additem( nCurPos )
-           Elseif ( Len( nCurPos ) == 1 )
-              oScroll:additem( nCurPos[ 1 ] )
+           xCurPos := aList[ nPos ]
+           If ! ISARRAY( xCurPos )
+              oScroll:additem( xCurPos )
+           Elseif Len( xCurPos ) == 1
+              oScroll:additem( xCurPos[ 1 ] )
            Else
-              oScroll:additem( nCurPos[ 1 ], nCurPos[ 2 ] )
+              oScroll:additem( xCurPos[ 1 ], xCurPos[ 2 ] )
            Endif
         Next
-        If ( !( ISNIL( Arg13 ) ) .and. Arg13 )
-           If ( !( ISLOGICAL( Arg12 ) ) )
-           Elseif ( Arg12 )
-              Arg1 ++
+
+        If ! ISNIL( lOpen ) .and. lOpen
+           If ! ISLOGICAL( lDrop )
+           Elseif lDrop
+              nTop ++
            Endif
-           oScroll:vscroll := Scrollbar( Arg1 + 1, Arg3 - 1, Arg4,, 1 )
+           oScroll:vscroll := Scrollbar( nTop + 1, nBottom - 1, nRight,, 1 )
         Endif
 
-        oScroll:select( Arg5 )
+        oScroll:select( nSelect )
      Endif
 Return oScroll
-Function __CAPLENGT( Arg1 )
 
-     Local Local1 := Len( Arg1 )
-     Local Local2
-     If ( ( Local2 := At( "&", Arg1 ) ) == 0 )
-     Elseif ( Local2 < Local1 )
-        Local1 --
+Function __CAPLENGT( cCaption )
+
+     Local nLen := Len( cCaption )
+     Local nPosAccel
+
+     If ( nPosAccel := At( "&", cCaption ) ) == 0
+     Elseif nPosAccel < nLen
+        nLen --
      Endif
-Return Local1
+
+Return nLen
+
 #endif
 
 *+ EOF: LISTBOX.PRG
