@@ -1,3 +1,9 @@
+19990808-17:25 EDT Paul Tucker <ptucker@sympatico.ca>
+   * tests/working/Makefile
+     -debugger
+     +cursrtst
+   + tests/working\cursrtst.prg
+
 19990808-15:00 EDT Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      + source/rtl/tbrowse.prg

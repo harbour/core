@@ -42,11 +42,11 @@ PRG_SOURCES=\
 	comments.prg \
 	copyfile.prg \
         curdirt.prg \
+        cursrtst.prg \
 	dates.prg \
 	dates2.prg \
 	dates3.prg \
 	dates4.prg \
-        debugger.prg \
 	debugtst.prg \
 	descend.prg \
 	dirtest.prg \
