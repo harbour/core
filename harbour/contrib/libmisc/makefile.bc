@@ -1,0 +1,181 @@
+#
+# $Id$
+#
+
+#
+# Makefile for Harbour Project for Borland C/C++ 3.x, 4.x, 5.x compilers
+#
+
+#
+# NOTE: You can use these envvars to configure the make process:
+#       (note that these are all optional)
+#
+#       CFLAGS       - Extra C compiler options for libraries and for 
+#                      executables
+#       C_USR        - Extra C compiler options for libraries and for 
+#                      executables (GNU make compatible envvar)
+#       CLIBFLAGS    - Extra C compiler options for the libraries
+#       HARBOURFLAGS - Extra Harbour compiler options
+#       PRG_USR      - Extra Harbour compiler options
+#                      (GNU make compatible envvar)
+#
+
+#
+# NOTE: "echo." intentionally used instead of "echo", to avoid conflicts
+#       with external commands named echo.
+#
+
+!if $d(B16)
+
+CC = bcc
+AS = tasm
+
+# Borland C/C++ (DOS 16 bits)
+CFLAGS = -mh $(CFLAGS)
+
+BIN_DIR = bin\b16
+OBJ_DIR = obj\b16
+LIB_DIR = lib\b16
+
+!else
+
+CC = bcc32
+AS = tasm32
+
+BIN_DIR = ..\..\bin\b32
+OBJ_DIR = ..\..\obj\b32
+LIB_DIR = ..\..\lib\b32
+
+# This is needed, otherwise the libs may overflow when 
+# debug info is requested with -v -y
+ARFLAGS = /P32
+
+!endif
+
+!if !$d(BCC_NOOPTIM)
+CFLAGS = -O2 $(CFLAGS)
+!endif
+
+#
+# Directory macros. These should never have to change.
+#
+
+INCLUDE_DIR  = ..\..\include
+TOOLS_DIR    = .
+
+#
+# C compiler definition and C flags. These should never have to change.
+#
+
+CFLAGS         = -I$(INCLUDE_DIR) -d $(C_USR) $(CFLAGS)
+CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
+CLIBFLAGSDEBUG = -v $(CLIBFLAGS)
+HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
+LDFLAGS        = $(LDFLAGS)
+
+#
+# Macros to access our library names
+#
+
+TOOLS_LIB    = $(LIB_DIR)\tools.lib
+
+HARBOUR_EXE  = $(BIN_DIR)\harbour.exe
+
+#
+# Rules
+#
+
+#
+# TOOLS.LIB rules
+#
+
+TOOLS_LIB_OBJS = \
+   $(OBJ_DIR)\dates2.obj \
+   $(OBJ_DIR)\dbftools.obj \
+   $(OBJ_DIR)\hb_f.obj \
+   $(OBJ_DIR)\mathx.obj \
+   $(OBJ_DIR)\strfmt.obj \
+   $(OBJ_DIR)\stringsx.obj \
+   \
+   $(OBJ_DIR)\fileread.obj \
+   $(OBJ_DIR)\nconvert.obj \
+   $(OBJ_DIR)\numtxten.obj \
+   $(OBJ_DIR)\numtxthu.obj \
+   $(OBJ_DIR)\stringp.obj
+
+#
+# Our default target
+#
+
+all: \
+   $(TOOLS_LIB) \
+
+#
+# Library dependencies and build rules
+#
+
+$(TOOLS_LIB)  : $(TOOLS_LIB_OBJS)
+
+#
+# TOOLS.LIB dependencies
+#
+
+$(OBJ_DIR)\dates2.obj : $(TOOLS_DIR)\dates2.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\dbftools.obj : $(TOOLS_DIR)\dbftools.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\fileread.c : $(TOOLS_DIR)\fileread.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\fileread.obj : $(OBJ_DIR)\fileread.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\hb_f.obj : $(TOOLS_DIR)\hb_f.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\mathx.obj : $(TOOLS_DIR)\mathx.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\nconvert.c : $(TOOLS_DIR)\nconvert.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\nconvert.obj : $(OBJ_DIR)\nconvert.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\numtxten.c : $(TOOLS_DIR)\numtxten.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\numtxten.obj : $(OBJ_DIR)\numtxten.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\numtxthu.c : $(TOOLS_DIR)\numtxthu.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\numtxthu.obj : $(OBJ_DIR)\numtxthu.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\strfmt.obj : $(TOOLS_DIR)\strfmt.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\stringp.c : $(TOOLS_DIR)\stringp.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\stringp.obj : $(OBJ_DIR)\stringp.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\stringsx.obj : $(TOOLS_DIR)\stringsx.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+

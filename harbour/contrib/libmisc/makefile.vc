@@ -1,0 +1,178 @@
+#
+# $Id$
+#
+
+#
+# Makefile for Harbour Project for Microsoft Visual C (32 bits)
+#
+
+#
+# NOTE: You can use these envvars to configure the make process:
+#       (note that these are all optional)
+#
+#       CFLAGS       - Extra C compiler options for libraries and for 
+#                      executables
+#       C_USR        - Extra C compiler options for libraries and for 
+#                      executables (GNU make compatible envvar)
+#       CLIBFLAGS    - Extra C compiler options for the libraries
+#       HARBOURFLAGS - Extra Harbour compiler options
+#       PRG_USR      - Extra Harbour compiler options
+#                      (GNU make compatible envvar)
+#
+
+#
+# Notes about this makefile:
+#
+# 1. To add new files to a dependancy list, add an obj name to one of the
+#    OBJ lists for the appropriate library.
+#    NOTE: put .prg related obj's last in the lib list.
+#
+# 2. This is a recursive script.  If you change the name of this file,
+#    be sure to change MK_FILE (a few lines down) to the new name as well.
+#
+# 3. Recurrsion rules are quite simple:
+#     If you specifiy /a on the command line, files in the obj\vc dir
+#     will be deleted, and when nmake recurses, it's without the /a flag
+#
+#     If a .prg.obj rule is fired, nmake will execute this script with
+#     a specific target as a parameter immediatley after compiling a given
+#     set of prg files.
+#      ie: Harbour $<
+#          nmake /fmakefile.vc obj\vc\rtl.lib2
+#     which will simply get make to re-evaluate the dependancy list for the
+#     lib, and as a result, it will execute the C compiler using the .c.obj
+#     rule below to create the obj's for the prg's that were created just
+#     prior to the recurrsive call. Once the obj's are created, the
+#     recurrsion is complete.
+#     See additional notes under RTL.LIB below.
+#
+
+MK_FILE      = makefile.vc
+MK_FLAGS     = $(MAKEFLAGS: =)
+
+OBJ_DIR     = ..\..\obj\vc
+LIB_DIR     = ..\..\lib\vc
+BIN_DIR     = ..\..\bin\vc
+
+#
+# Directory macros. These should never have to change.
+#
+
+INCLUDE_DIR  = ..\..\include
+TOOLS_DIR    = .
+
+#
+# C compiler definition and C flags. These should never have to change.
+#
+
+AS             = masm
+CFLAGS         = -I$(INCLUDE_DIR) -TP -W3 -nologo $(C_USR) $(CFLAGS)
+CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
+CLIBFLAGSDEBUG = -Zi $(CLIBFLAGS)
+HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
+LDFLAGS        = $(LDFLAGS)
+
+#
+# Macros to access our library names
+#
+
+TOOLS_LIB    = $(LIB_DIR)\tools.lib
+
+HARBOUR_EXE  = $(BIN_DIR)\harbour.exe
+
+#
+# Rules
+#
+
+.SUFFIXES: .prg .lib .c .obj .asm
+
+# override builtin
+
+.c.obj::
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+
+#
+#
+#
+
+LIBLIST = \
+   $(TOOLS_LIB) \
+
+#
+# TOOLS.LIB rules
+#
+
+{$(TOOLS_DIR)}.c{$(OBJ_DIR)}.obj::
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+
+{$(TOOLS_DIR)}.prg{$(OBJ_DIR)}.obj::
+   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(TOOLS_LIB)2
+
+TOOLS_LIB_OBJS = \
+   $(OBJ_DIR)\asciisum.obj \
+   $(OBJ_DIR)\ascpos.obj \
+   $(OBJ_DIR)\atdiff.obj \
+   $(OBJ_DIR)\chareven.obj \
+   $(OBJ_DIR)\charmix.obj \
+   $(OBJ_DIR)\charodd.obj \
+   $(OBJ_DIR)\chrcount.obj \
+   $(OBJ_DIR)\chrfirst.obj \
+   $(OBJ_DIR)\chrtotal.obj \
+   $(OBJ_DIR)\ctchksum.obj \
+   $(OBJ_DIR)\ctchrmix.obj \
+   $(OBJ_DIR)\ctcolton.obj \
+   $(OBJ_DIR)\ctcrypt.obj \
+   $(OBJ_DIR)\ctposupp.obj \
+   $(OBJ_DIR)\dates2.obj \
+   $(OBJ_DIR)\dbftools.obj \
+   $(OBJ_DIR)\hb_f.obj \
+   $(OBJ_DIR)\mathx.obj \
+   $(OBJ_DIR)\strasint.obj \
+   $(OBJ_DIR)\strcount.obj \
+   $(OBJ_DIR)\strcspn.obj \
+   $(OBJ_DIR)\strdiff.obj \
+   $(OBJ_DIR)\strexpan.obj \
+   $(OBJ_DIR)\strfmt.obj \
+   $(OBJ_DIR)\stringsx.obj \
+   $(OBJ_DIR)\strleft.obj \
+   $(OBJ_DIR)\strpbrk.obj \
+   $(OBJ_DIR)\strright.obj \
+   \
+   $(OBJ_DIR)\ctmisc.obj \
+   $(OBJ_DIR)\cttoken.obj \
+   $(OBJ_DIR)\fileread.obj \
+   $(OBJ_DIR)\nconvert.obj \
+   $(OBJ_DIR)\numtxten.obj \
+   $(OBJ_DIR)\numtxthu.obj \
+   $(OBJ_DIR)\stringp.obj
+
+#
+# Our default target
+#
+
+
+!if ( "$(MK_FLAGS)"=="A" )
+
+all: zot \
+   $(TOOLS_LIB) \
+
+MK_FLAGS = $(MK_FLAGS:A=)
+
+zot:
+   -@if exist $(OBJ_DIR)\*.obj del $(OBJ_DIR)\*.obj > nul
+   -@if exist $(OBJ_DIR)\*.c del $(OBJ_DIR)\*.c > nul
+   -@if exist $(OBJ_DIR)\*.h del $(OBJ_DIR)\*.h > nul
+   -@if exist $(BIN_DIR)\*.exe del $(BIN_DIR)\*.exe > nul
+   -@if exist $(BIN_DIR)\*.map del $(BIN_DIR)\*.map > nul
+
+!else
+
+all: \
+   $(TOOLS_LIB) \
+
+!endif
+
+# dummy targets used for prg to c creation
+
+$(TOOLS_LIB)2  : $(TOOLS_LIB_OBJS)

@@ -1,3 +1,26 @@
+20000423-12:23 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   + contrib/libct/makefile.bc
+   + contrib/libct/makefile.vc
+   + contrib/libgt/makefile.bc
+   + contrib/libgt/makefile.vc
+   + contrib/libmisc/makefile.bc
+   + contrib/libmisc/makefile.vc
+   + contrib/libct/make_b32.bat
+   + contrib/libct/make_vc.bat
+   + contrib/libgt/make_b32.bat
+   + contrib/libgt/make_vc.bat 
+   + contrib/libmisc/make_b32.bat
+   + contrib/libmisc/make_vc.bat 
+     + Added makefiles
+
+   * contrib/libct/ctchrodd.c
+   * contrib/libct/readme.txt
+     ! Fixed bug.
+
+   * bin/bld.*
+     - Removed tools.
+
 20000423-11:38 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    + contrib/libct/*

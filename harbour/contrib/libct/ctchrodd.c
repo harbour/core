@@ -44,7 +44,7 @@ HB_FUNC( CHARODD )
       ULONG i;
       char * pszResult = ( char * ) hb_xgrab( ulLen / 2 );
    
-      for( i = 0; i <= len; i += 2 )
+      for( i = 0; i <= ulLen; i += 2 )
          pszResult[ i / 2 ] = pszSource[ i ];
    
       hb_retclen( pszResult, ulLen );
