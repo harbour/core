@@ -54,7 +54,7 @@
 
 HB_FUNC( MLCOUNT )
 {
-   char * pszString    = ISCHAR( 1 ) ? hb_parc( 1 ) : "";
+   char * pszString    = hb_parc( 1 );
    ULONG  ulLineLength = ISNUM( 2 ) ? hb_parni( 2 ) : 79;
    ULONG  ulTabLength  = ISNUM( 3 ) ? hb_parni( 3 ) : 4;
    ULONG  ulLastSpace  = 0;

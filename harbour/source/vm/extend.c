@@ -502,11 +502,11 @@ void HB_EXPORT hb_retc( char * szText )
    hb_itemPutC( &hb_stack.Return, szText );
 }
 
-void HB_EXPORT hb_retc_buffer( char * szText, ULONG ulLen )
+void HB_EXPORT hb_retc_buffer( char * szText )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retcbuffer(%s, %lu)", szText, ulLen));
 
-   hb_itemPutCPtr( &hb_stack.Return, szText, ulLen );
+   hb_itemPutCPtr( &hb_stack.Return, szText, strlen( szText ) );
 }
 
 void HB_EXPORT hb_retc_const( char * szText )
@@ -521,6 +521,13 @@ void  HB_EXPORT hb_retclen( char * szText, ULONG ulLen )
    HB_TRACE(HB_TR_DEBUG, ("hb_retclen(%s, %lu)", szText, ulLen));
 
    hb_itemPutCL( &hb_stack.Return, szText, ulLen );
+}
+
+void  HB_EXPORT hb_retclen_buffer( char * szText, ULONG ulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_retclen_buffer(%s, %lu)", szText, ulLen));
+
+   hb_itemPutCPtr( &hb_stack.Return, szText, ulLen );
 }
 
 /* szDate must have YYYYMMDD format */

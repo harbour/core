@@ -99,11 +99,9 @@ HB_FUNC( MEMOTRAN )
       ULONG ulResultLen;
 
       hb_strMemotran( pszResult, &ulResultLen, hb_itemGetCPtr( pString ), hb_itemGetCLen( pString ), cHardcr, cSoftcr );
-      hb_retclen( pszResult, ulResultLen );
-
-      hb_xfree( pszResult );
+      hb_retclen_buffer( pszResult, ulResultLen );
    }
    else
-      hb_retc( "" );
+      hb_retc( NULL );
 }
 

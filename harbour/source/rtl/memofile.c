@@ -95,16 +95,16 @@ HB_FUNC( MEMOREAD )
 
             hb_fsClose( fhnd );
 
-            hb_itemPutCPtr( hb_itemReturnPtr(), ( char * ) pbyBuffer, ulSize );
+            hb_retclen_buffer( ( char * ) pbyBuffer, ulSize );
          }
          else
-            hb_retc( "" );
+            hb_retc( NULL );
       }
       else
-         hb_retc( "" );
+         hb_retc( NULL );
    }
    else
-      hb_retc( "" );
+      hb_retc( NULL );
 }
 
 HB_FUNC( MEMOWRIT )

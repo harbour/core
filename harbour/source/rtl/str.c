@@ -87,12 +87,9 @@ HB_FUNC( STR )
       char * szResult = hb_itemStr( pNumber, pWidth, pDec );
 
       if( szResult )
-      {
-         hb_retc( szResult );
-         hb_xfree( szResult );
-      }
+         hb_retc_buffer( szResult );
       else
-         hb_retc( "" );
+         hb_retc( NULL );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "STR", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );

@@ -146,7 +146,7 @@ HB_FUNC( FERASE )
 {
    hb_fsSetError( 3 );
 
-   hb_retni( ( ISCHAR( 1 ) && 
+   hb_retni( ( ISCHAR( 1 ) &&
                hb_fsDelete( ( BYTE * ) hb_parc( 1 ) ) ) ? 0 : -1 );
 }
 
@@ -154,7 +154,7 @@ HB_FUNC( FRENAME )
 {
    hb_fsSetError( 2 );
 
-   hb_retni( ( ISCHAR( 1 ) && ISCHAR( 2 ) && 
+   hb_retni( ( ISCHAR( 1 ) && ISCHAR( 2 ) &&
                hb_fsRename( ( BYTE * ) hb_parc( 1 ), ( BYTE * ) hb_parc( 2 ) ) ) ? 0 : -1 );
 }
 
@@ -185,15 +185,13 @@ HB_FUNC( FREADSTR )
 
          /* NOTE: Clipper will not return zero chars from this functions. */
 
-         hb_retc( ( char * ) buffer );
-
-         hb_xfree( buffer );
+         hb_retc_buffer( ( char * ) buffer );
       }
       else
-         hb_retc( "" );
+         hb_retc( NULL );
    }
    else
-      hb_retc( "" );
+      hb_retc( NULL );
 }
 
 /* NOTE: This function should not return the leading and trailing */
@@ -203,14 +201,13 @@ HB_FUNC( FREADSTR )
 
 HB_FUNC( CURDIR )
 {
+   BYTE byBuffer[ _POSIX_PATH_MAX + 1 ];
    USHORT uiErrorOld = hb_fsError();
-   BYTE * pbyBuffer = ( BYTE * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
 
    hb_fsCurDirBuff( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
-      ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0, pbyBuffer, _POSIX_PATH_MAX + 1 );
+      ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0, byBuffer, _POSIX_PATH_MAX + 1 );
 
-   hb_retc( ( char * ) pbyBuffer );
-   hb_xfree( pbyBuffer );
+   hb_retc( ( char * ) byBuffer );
 
    hb_fsSetError( uiErrorOld );
 }

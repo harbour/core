@@ -68,7 +68,7 @@ HB_FUNC( __BOX )
                 hb_itemGetNI( pLeft), 
                 hb_itemGetNI( pBottom ), 
                 hb_itemGetNI( pRight ),
-                ( BYTE * ) ( ISCHAR( 5 ) ? hb_parc( 5 ) : " " ) );
+                ( BYTE * ) hb_parc( 5 ) );
 }
 
 HB_FUNC( __BOXD )

@@ -78,8 +78,7 @@ HB_FUNC( PADL )
          for(; lPos > 0; lPos-- )
             szResult[ lPos - 1 ] = cPad;
 
-         hb_retclen( szResult, lLen );
-         hb_xfree( szResult );
+         hb_retclen_buffer( szResult, lLen );
       }
       else
       {
@@ -90,6 +89,6 @@ HB_FUNC( PADL )
       }
    }
    else
-      hb_retc( "" );
+      hb_retc( NULL );
 }
 

@@ -254,9 +254,7 @@ HB_FUNC( MSAVESTATE )
    uiPos += sizeof( int );
    *( pBuffer + uiPos ) = iRight;
 
-   hb_retclen( ( char * ) pBuffer, uiLen );
-
-   hb_xfree( pBuffer );
+   hb_retclen_buffer( ( char * ) pBuffer, uiLen );
 }
 
 HB_FUNC( MRESTSTATE )

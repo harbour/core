@@ -83,8 +83,7 @@ HB_FUNC( PADC )
 
          szResult[ lLen ] = '\0';
 
-         hb_retclen( szResult, lLen );
-         hb_xfree( szResult );
+         hb_retclen_buffer( szResult, lLen );
       }
       else
       {
@@ -95,6 +94,6 @@ HB_FUNC( PADC )
       }
    }
    else
-      hb_retc( "" );
+      hb_retc( NULL );
 }
 

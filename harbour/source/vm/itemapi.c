@@ -65,6 +65,7 @@
  *    hb_itemGetCPtr()
  *    hb_itemGetCLen()
  *    hb_itemGetNLen()
+ *    hb_itemPutCConst()
  *    hb_itemPutNLen()
  *    hb_itemPutNDLen()
  *    hb_itemPutNILen()
@@ -192,16 +193,23 @@ PHB_ITEM hb_itemPutC( PHB_ITEM pItem, char * szText )
    else
       pItem = hb_itemNew( NULL );
 
-   if( szText == NULL )
-      szText = "";
-
    pItem->type = HB_IT_STRING;
-   pItem->item.asString.length = strlen( szText );
-   pItem->item.asString.value = ( char * ) hb_xgrab( pItem->item.asString.length + 1 );
-   pItem->item.asString.bPcode = FALSE;
-   pItem->item.asString.puiHolders = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
-   * ( pItem->item.asString.puiHolders ) = 1;
-   strcpy( pItem->item.asString.value, szText );
+
+   if( szText == NULL )
+   {
+      pItem->item.asString.length = 0;
+      pItem->item.asString.value  = "";
+      pItem->item.asString.bPcode = TRUE;
+   }
+   else
+   {
+      pItem->item.asString.length = strlen( szText );
+      pItem->item.asString.value = ( char * ) hb_xgrab( pItem->item.asString.length + 1 );
+      pItem->item.asString.bPcode = FALSE;
+      pItem->item.asString.puiHolders = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
+      * ( pItem->item.asString.puiHolders ) = 1;
+      strcpy( pItem->item.asString.value, szText );
+   }
 
    return pItem;
 }
@@ -215,14 +223,20 @@ PHB_ITEM hb_itemPutCConst( PHB_ITEM pItem, char * szText )
    else
       pItem = hb_itemNew( NULL );
 
-   if( szText == NULL )
-      szText = "";
-
    pItem->type = HB_IT_STRING;
-   pItem->item.asString.length = strlen( szText );
-   pItem->item.asString.value  = szText;
    pItem->item.asString.bPcode = TRUE;
 
+   if( szText == NULL )
+   {
+      pItem->item.asString.length = 0;
+      pItem->item.asString.value  = "";
+   }
+   else
+   {
+      pItem->item.asString.length = strlen( szText );
+      pItem->item.asString.value  = szText;
+   }
+   
    return pItem;
 }
 
@@ -239,20 +253,24 @@ PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, char * szText, ULONG ulLen )
             trash if the szText buffer is NULL, at least with hb_retclen().
             [vszakats] */
 
+   pItem->type = HB_IT_STRING;
+
    if( szText == NULL )
    {
-      szText = "";
-      ulLen = 0;
+      pItem->item.asString.length = 0;
+      pItem->item.asString.value  = "";
+      pItem->item.asString.bPcode = TRUE;
    }
-
-   pItem->type = HB_IT_STRING;
-   pItem->item.asString.length = ulLen;
-   pItem->item.asString.value = ( char * ) hb_xgrab( ulLen + 1 );
-   hb_xmemcpy( pItem->item.asString.value, szText, ulLen );
-   pItem->item.asString.value[ ulLen ] = '\0';
-   pItem->item.asString.bPcode = FALSE;
-   pItem->item.asString.puiHolders = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
-   * ( pItem->item.asString.puiHolders ) = 1;
+   else
+   {
+      pItem->item.asString.length = ulLen;
+      pItem->item.asString.value = ( char * ) hb_xgrab( ulLen + 1 );
+      hb_xmemcpy( pItem->item.asString.value, szText, ulLen );
+      pItem->item.asString.value[ ulLen ] = '\0';
+      pItem->item.asString.bPcode = FALSE;
+      pItem->item.asString.puiHolders = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
+      * ( pItem->item.asString.puiHolders ) = 1;
+   }
 
    return pItem;
 }

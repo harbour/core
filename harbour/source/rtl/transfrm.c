@@ -590,8 +590,7 @@ HB_FUNC( TRANSFORM )
          if( uiPicFlags & PF_EMPTY )
             memset( szResult, ' ', ulResultPos );
 
-         hb_retclen( szResult, ( uiPicFlags & PF_WIDTH && ulResultPos > ulParamS ) ? ulParamS : ulResultPos );
-         hb_xfree( szResult );
+         hb_retclen_buffer( szResult, ( uiPicFlags & PF_WIDTH && ulResultPos > ulParamS ) ? ulParamS : ulResultPos );
       }
    }
    else if( pPic || ISNIL( 2 ) ) /* Picture is an empty string or NIL */
@@ -605,12 +604,9 @@ HB_FUNC( TRANSFORM )
          char * szStr = hb_itemStr( pValue, NULL, NULL );
 
          if( szStr )
-         {
-            hb_retc( szStr );
-            hb_xfree( szStr );
-         }
+            hb_retc_buffer( szStr );
          else
-            hb_retc( "" );
+            hb_retc( NULL );
       }
       else if( HB_IS_DATE( pValue ) )
       {

@@ -85,7 +85,7 @@ HB_FUNC( STRTRAN )
             if( !ulStart )
             {
                /* Clipper seems to work this way */
-               hb_retc( "" );
+               hb_retc( NULL );
             }
             else if( ulStart > 0 )
             {
@@ -174,8 +174,7 @@ HB_FUNC( STRTRAN )
                            i++;
                         }
                      }
-                     hb_retclen( szResult, ulLength );
-                     hb_xfree( szResult );
+                     hb_retclen_buffer( szResult, ulLength );
                   }
                   else
                      hb_retclen( szText, ulText );

@@ -83,13 +83,12 @@ HB_FUNC( STUFF )
          hb_xmemcpy( szResult + ulPos + ulInsert, szText + ulPos + ulDel, ulText - ( ulPos + ulDel ) );
 
          szResult[ ulTotalLen ] = '\0';
-         hb_retclen( szResult, ulTotalLen );
-         hb_xfree( szResult );
+         hb_retclen_buffer( szResult, ulTotalLen );
       }
       else
-         hb_retc( "" );
+         hb_retc( NULL );
    }
    else
-      hb_retc( "" );
+      hb_retc( NULL );
 }
 

@@ -72,14 +72,13 @@ HB_FUNC( HB_ANSITOOEM )
 
       CharToOemBuff( ( LPCSTR ) hb_itemGetCPtr( pString ), ( LPSTR ) pszDst, ulLen );
 
-      hb_retclen( pszDst, ulLen );
-      hb_xfree( pszDst );
+      hb_retclen_buffer( pszDst, ulLen );
    }
 #else
       hb_itemReturn( pString );
 #endif
    else
-      hb_retc( "" );
+      hb_retc( NULL );
 }
 
 HB_FUNC( HB_OEMTOANSI )
@@ -94,14 +93,13 @@ HB_FUNC( HB_OEMTOANSI )
 
       OemToCharBuff( ( LPCSTR ) hb_itemGetCPtr( pString ), ( LPSTR ) pszDst, ulLen );
 
-      hb_retclen( pszDst, ulLen );
-      hb_xfree( pszDst );
+      hb_retclen_buffer( pszDst, ulLen );
    }
 #else
       hb_itemReturn( pString );
 #endif
    else
-      hb_retc( "" );
+      hb_retc( NULL );
 }
 
 #endif

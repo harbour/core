@@ -72,11 +72,10 @@ HB_FUNC( SPACE )
          /* hb_errRT_BASE( EG_STROVERFLOW, 1233, NULL, "SPACE" ); */
 
          hb_xmemset( szResult, ' ', lLen );
-         hb_retclen( szResult, lLen );
-         hb_xfree( szResult );
+         hb_retclen_buffer( szResult, lLen );
       }
       else
-         hb_retc( "" );
+         hb_retc( NULL );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1105, NULL, "SPACE", 1, hb_paramError( 1 ) );

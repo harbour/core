@@ -116,11 +116,10 @@ HB_FUNC( STRZERO )
                   szResult[ ulPos++ ] = '0';
             }
 
-            hb_retc( szResult );
-            hb_xfree( szResult );
+            hb_retc_buffer( szResult );
          }
          else
-            hb_retc( "" );
+            hb_retc( NULL );
       }
       else
 #ifdef HB_C52_STRICT

@@ -61,10 +61,10 @@ HB_FUNC( HB_VALTOSTR )
    BOOL bFreeReq;
    char * buffer = hb_itemString( hb_param( 1, HB_IT_ANY ), &ulLen, &bFreeReq );
 
-   hb_retclen( buffer, ulLen );
-
    if( bFreeReq )
-      hb_xfree( buffer );
+      hb_retclen_buffer( buffer, ulLen );
+   else
+      hb_retclen( buffer, ulLen );
 }
 
 #endif

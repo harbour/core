@@ -79,14 +79,13 @@ HB_FUNC( REPLICATE )
                szPtr += ulLen;
             }
 
-            hb_retclen( szResult, ulLen * lTimes );
-            hb_xfree( szResult );
+            hb_retclen_buffer( szResult, ulLen * lTimes );
          }
          else
             hb_errRT_BASE_SubstR( EG_STROVERFLOW, 1234, NULL, "REPLICATE", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
       }
       else
-         hb_retc( "" );
+         hb_retc( NULL );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1106, NULL, "REPLICATE", 2, hb_paramError( 1 ), hb_paramError( 2 ) );

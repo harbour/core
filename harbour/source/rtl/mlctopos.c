@@ -54,7 +54,7 @@
 
 HB_FUNC( MLCTOPOS )
 {
-   char * pszString    = ISCHAR( 1 ) ? hb_parc( 1 ) : "";
+   char * pszString    = hb_parc( 1 );
    ULONG  ulLineLength = ISNUM( 2 ) ? hb_parni( 2 ) : 79;
    ULONG  ulLine       = ISNUM( 3 ) ? hb_parnl( 3 ) : 1;
    ULONG  ulCol        = ISNUM( 4 ) ? hb_parnl( 4 ) : 0;

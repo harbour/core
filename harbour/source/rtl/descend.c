@@ -80,11 +80,10 @@ HB_FUNC( DESCEND )
          {
             char * szBuffer = ( char * ) hb_xgrab( ulLen );
             hb_strDescend( szBuffer, hb_itemGetCPtr( pItem ), ulLen );
-            hb_retclen( szBuffer, ulLen );
-            hb_xfree( szBuffer );
+            hb_retclen_buffer( szBuffer, ulLen );
          }
          else
-            hb_retc( "" );
+            hb_retc( NULL );
       }
       else if( HB_IS_DATE( pItem ) )
          hb_retnl( 5231808 - hb_itemGetDL( pItem ) );

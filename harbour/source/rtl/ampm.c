@@ -91,7 +91,6 @@ HB_FUNC( AMPM )
 
    strcpy( pszResult + ulTimeLen, bAM ? " am" : " pm" );
 
-   hb_retclen( pszResult, ulTimeLen + 3 );
-   hb_xfree( pszResult );
+   hb_retclen_buffer( pszResult, ulTimeLen + 3 );
 }
 

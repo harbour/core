@@ -102,18 +102,20 @@ HB_FUNC( GETENV )
 
          szValue = hb_getenv( pszName );
 
-         hb_retc( szValue && szValue[ 0 ] != '\0' ? szValue : ( ( ISCHAR( 2 ) ? hb_parc( 2 ) : "" ) ) );
-         
-         if( szValue )
-            hb_xfree( ( void * ) szValue );
+         if( szValue && szValue[ 0 ] != '\0' )
+            hb_retc_buffer( szValue );
+         else if( ISCHAR( 2 ) )
+            hb_retc( hb_parc( 2 ) );
+         else
+            hb_retc( NULL );
       }
       else
-         hb_retc( "" );
+         hb_retc( NULL );
 
       hb_itemFreeC( pszName );
    }
    else
-      hb_retc( "" );
+      hb_retc( NULL );
 }
 
 /* NOTE: Undocumented Clipper function. [vszakats] */

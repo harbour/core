@@ -65,22 +65,16 @@
 
 HB_FUNC( OS )
 {
-   char * pszPlatform = hb_verPlatform();
-   hb_retc( pszPlatform );
-   hb_xfree( pszPlatform );
+   hb_retc_buffer( hb_verPlatform() );
 }
 
 HB_FUNC( HB_COMPILER )
 {
-   char * pszCompiler = hb_verCompiler();
-   hb_retc( pszCompiler );
-   hb_xfree( pszCompiler );
+   hb_retc_buffer( hb_verCompiler() );
 }
 
 HB_FUNC( VERSION )
 {
-   char * pszVersion = hb_verHarbour();
-   hb_retc( pszVersion );
-   hb_xfree( pszVersion );
+   hb_retc_buffer( hb_verHarbour() );
 }
 

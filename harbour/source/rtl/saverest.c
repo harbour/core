@@ -67,9 +67,7 @@ HB_FUNC( SAVESCREEN )
    pBuffer = hb_xgrab( uiSize );
 
    hb_gtSave( uiTop, uiLeft, uiBottom, uiRight, pBuffer );
-   hb_retclen( ( char * ) pBuffer, uiSize );
-
-   hb_xfree( ( char * ) pBuffer );
+   hb_retclen_buffer( ( char * ) pBuffer, uiSize );
 }
 
 HB_FUNC( RESTSCREEN )
