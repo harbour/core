@@ -1,3 +1,7 @@
+19990806-01:40 EDT Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+     + readvar.prg
+
 19990806-05:31 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/menuto.prg
      ! MENU TO made highly Clipper compatible (100%), with the addition of

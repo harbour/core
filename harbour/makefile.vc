@@ -85,6 +85,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\msgxxx.obj \
     $(OBJ_DIR)\mtran.obj \
     $(OBJ_DIR)\objfunc.obj \
+    $(OBJ_DIR)\readvar.obj \
     $(OBJ_DIR)\set.obj \
     $(OBJ_DIR)\setcolor.obj \
     $(OBJ_DIR)\setkey.obj \
@@ -377,6 +378,12 @@ $(RTL_DIR)\objfunc.c : $(RTL_DIR)\objfunc.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
 
 $(OBJ_DIR)\objfunc.obj : $(RTL_DIR)\objfunc.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(RTL_DIR)\readvar.c : $(RTL_DIR)\readvar.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+
+$(OBJ_DIR)\readvar.obj : $(RTL_DIR)\readvar.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\set.obj : $(RTL_DIR)\set.c
