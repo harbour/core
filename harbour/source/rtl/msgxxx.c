@@ -50,7 +50,11 @@
 #elif defined(HARBOUR_LANGUAGE_PLMAZ)
 #include "natmsg/msgplmaz.c"
 #else
-#include "natmsg/msgen.c"
+#ifdef __TURBOC__
+   #include "source\rtl\natmsg\msgen.c"
+#else
+   #include "natmsg/msgen.c"
+#endif
 #endif
 
 char *hb_errorNatDescription( ULONG ulGenError )
