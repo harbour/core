@@ -1,3 +1,8 @@
+19991012-16:00 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/vm/hvm.c
+     ! hb_vmAnd(), hb_vmOr() - Value substitution on error added to .AND. 
+       and .OR. operators. (mentioned by Jose)
+   
 19991012-14:00 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/rtl/dates.c
      + Added support for Windows requirements.

@@ -1817,7 +1817,17 @@ static void hb_vmAnd( void )
       hb_vmPushLogical( bResult );
    }
    else
-      hb_errRT_BASE( EG_ARG, 1078, NULL, ".AND." );
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1078, NULL, ".AND." );
+
+      if( pResult )
+      {
+         hb_stackPop();
+         hb_stackPop();
+         hb_vmPush( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 }
 
 static void hb_vmOr( void )
@@ -1833,7 +1843,17 @@ static void hb_vmOr( void )
       hb_vmPushLogical( bResult );
    }
    else
-      hb_errRT_BASE( EG_ARG, 1079, NULL, ".OR." );
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1079, NULL, ".OR." );
+
+      if( pResult )
+      {
+         hb_stackPop();
+         hb_stackPop();
+         hb_vmPush( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 }
 
 /* ------------------------------- */
