@@ -5027,7 +5027,7 @@ void CheckArgs( char *cFuncCall, int iArgs )
    while( *s ) { s++; len++; }
 
    while( f[i].cFuncName )
-      if( strncmp( f[i].cFuncName, cFuncCall, len ) == 0 )
+      if( strncmp( f[i].cFuncName, cFuncCall, len+1 ) == 0 )
       {
          iPos = i;
          break;
