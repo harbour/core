@@ -7,6 +7,29 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * source/rtl/transform.c
+     ! Transform("","@" ) -> memory allocation error, fixed by adding 1 byte
+       to hb_xgrab()
+   * source/rtl/descend.c
+     ! Descend("" ) -> memory allocation error, fixed by adding 1 byte to
+     - Removed two wrapper functions to hb_fsSetDevMode 
+       which were there to maintain supposed compatibility 
+2002-01-03 23:26 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/rtl/filesys.c
+     ! Fix to previous change.
+
+   * source/compiler/harbour.y
+   * source/macro/macro.y
+     ! hb_fsCommit() fixed Win32 branch, and put it 
+       it made BCC551 fail with Bison 1.30, even even with the
+       supplied harbour.simple file, which makes Bison 1.30 blow.
+       Now we again have the usual warning, but at least it
+       compiles under every Bison/.simple combinations again.
+
+2002-01-03 23:11 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * include/hbapifs.h
    * source/rtl/filesys.c
      - Removed two wrapper functions to hb_fsSetDevMode
        which were there to maintain supposed compatibility

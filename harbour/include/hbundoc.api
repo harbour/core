@@ -82,7 +82,7 @@
 #define _tcreat         hb_fsCreate
 #define _tcurdir        hb_fsCurDir
 #define _tcurdrv        hb_fsCurDrv
-#define _tdevraw        hb_fsSetDevRaw
+#define _tdevraw        hb_fsSetDevMode
 #define _terror         hb_fsError
 #define _tisdevice      hb_fsIsDevice
 #define _tisdrv         hb_fsIsDrv

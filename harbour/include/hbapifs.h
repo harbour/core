@@ -61,11 +61,9 @@ extern "C" {
 #endif
 
 #define FS_ERROR F_ERROR
-#ifdef __WIN32__
-typedef long    FHANDLE;
-#else
+
 typedef int    FHANDLE;
-#endif
+
 /* File locking flags */
 #define FL_LOCK       0x0000   /* Lock a region   */
 #define FL_UNLOCK     0x0001   /* Unlock a region */
@@ -129,8 +127,6 @@ extern BOOL     hb_fsRename     ( BYTE * pszOldName, BYTE * pszNewName ); /* ren
 extern ULONG    hb_fsSeek       ( FHANDLE hFileHandle, LONG lOffset, USHORT uiMode ); /* reposition an open file */
 extern ULONG    hb_fsTell       ( FHANDLE hFileHandle ); /* retrieve the current position of a file */
 extern void     hb_fsSetDevMode ( FHANDLE hFileHandle, USHORT uiDevMode ); /* change the device mode of a file (text/binary) */
-extern void     hb_fsSetDevRaw  ( FHANDLE hFileHandle ); /* change the device mode of a file to raw (binary) */
-extern void     hb_fsSetDevText ( FHANDLE hFileHandle ); /* change the device mode of a file to text */
 extern void     hb_fsSetError   ( USHORT uiError ); /* set the file system error number */
 extern USHORT   hb_fsWrite      ( FHANDLE hFileHandle, BYTE * pBuff, USHORT ulCount ); /* write to an open file from a buffer (<=64K) */
 extern ULONG    hb_fsWriteLarge ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount ); /* write to an open file from a buffer (>64K) */
