@@ -8,6 +8,22 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+2004-05-27 14:35 UTC-0400 Alejandro de Garate <alex_degarate@hotmail.com>
+
+  + doc/es/codestyl.txt
+    + Added code style document file, missing in the last commit 
+
+  + doc/es/hb_apiln.txt
+    + Added Lang API Document
+
+  * doc/es/lang.txt
+    * Updated Lang Document
+
+  + doc/es/hb_vm.txt
+    + Added VM API Document
+
+
 2004-05-24 22:37 UTC-0400 Alejandro de Garate <alex_degarate@hotmail.com>
   * doc/codestyl.txt
     * Added Documentation item
