@@ -77,6 +77,11 @@ extern int adsLockType;
 extern int adsRights;
 extern int adsCharType;
 
+#ifdef HB_PCODE_VER
+   #undef HB_PRG_PCODE_VER
+   #define HB_PRG_PCODE_VER HB_PCODE_VER
+#endif
+
 HB_INIT_SYMBOLS_BEGIN( ads1__InitSymbols )
 { "_ADS",             HB_FS_PUBLIC, HB_FUNCNAME( _ADS ), NULL },
 { "ADS_GETFUNCTABLE", HB_FS_PUBLIC, HB_FUNCNAME( ADS_GETFUNCTABLE ), NULL }
