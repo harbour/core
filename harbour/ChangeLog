@@ -1,3 +1,7 @@
+2000-11-14 16:10 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+   * source/rtl/gtwin/gtwin.c
+     ! Fix for handling of function keys with no state key modifiers.
+
 2000-11-14 02:35 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      ! Corrected few pre-processor bugs.
