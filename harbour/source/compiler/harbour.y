@@ -252,7 +252,7 @@ int iVarScope = VS_LOCAL;   /* holds the scope for next variables to be defined 
                             /* different values for iVarScope */
 
 /* Table with parse errors */
-char * _szErrors[] = { "Statement not allowed outside of procedure or function",
+char * _szCErrors[] = { "Statement not allowed outside of procedure or function",
                        "Redefinition of procedure or function: \'%s\'",
                        "Duplicate variable declaration: \'%s\'",
                        "%s declaration follows executable statement",
@@ -261,7 +261,6 @@ char * _szErrors[] = { "Statement not allowed outside of procedure or function",
                        "Unterminated string: \'%s\'",
                        "Redefinition of predefined function %s: \'%s\'",
                        "Illegal initializer: \'%s\'",
-                       "Can\'t open #include file: \'%s\'",
                        "ENDIF does not match IF",
                        "ENDDO does not match WHILE",
                        "ENDCASE does not match DO CASE",
@@ -435,7 +434,7 @@ extern int _iState;     /* current parser state (defined in harbour.l */
 
 %token FUNCTION PROCEDURE IDENTIFIER RETURN NIL DOUBLE INASSIGN INTEGER INTLONG
 %token LOCAL STATIC IIF IF ELSE ELSEIF END ENDIF LITERAL TRUEVALUE FALSEVALUE
-%token INCLUDE EXTERN INIT EXIT AND OR NOT PUBLIC EQ NE1 NE2
+%token EXTERN INIT EXIT AND OR NOT PUBLIC EQ NE1 NE2
 %token INC DEC ALIAS DOCASE CASE OTHERWISE ENDCASE ENDDO MEMVAR
 %token WHILE EXIT LOOP END FOR NEXT TO STEP LE GE FIELD IN PARAMETERS
 %token PLUSEQ MINUSEQ MULTEQ DIVEQ POWER EXPEQ MODEQ EXITLOOP
@@ -485,7 +484,6 @@ Main       : { Line(); } Source       {
 
 Source     : Crlf
            | Extern
-           | Include
            | VarDefs
            | FieldsDef
            | MemvarDef
@@ -493,7 +491,6 @@ Source     : Crlf
            | Statement
            | Source Crlf
            | Source Extern
-           | Source Include
            | Source Function
            | Source { LineBody(); } Statement
            | Source VarDefs
@@ -501,11 +498,6 @@ Source     : Crlf
            | Source MemvarDef
            ;
 
-Include    : NE1 INCLUDE LITERAL { if( ! Include( $3, _pIncludePath ) )
-                                      GenError( ERR_CANT_OPEN_INCLUDE, $3, NULL );
-                                   _iState =LOOKUP;
-                                 } Crlf
-           ;
 
 Extern     : EXTERN ExtList { _iState =LOOKUP; } Crlf
            ;
@@ -1112,11 +1104,11 @@ void * GenElseIf( void * pFirst, WORD wOffset )
    return pFirst;
 }
 
-void GenError( int iError, char * szError1, char * szError2 )
+void GenError( char* _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
 {
   char * szLine = ( char * ) OurMalloc( 160 );      /*2 lines of text */
   printf( "\r%s(%i) ", files.pLast->szFileName, iLine );
-  printf( "Error E%i  ", iError );
+  printf( "Error %c%i  ", cPrefix, iError );
   sprintf( szLine, _szErrors[ iError - 1 ], szError1, szError2 );
   printf( "%s\n\n", szLine );
   exit( 1 );
@@ -1673,7 +1665,7 @@ void AddVar( char * szVarName )
      /* Variable declaration is outside of function/procedure body.
         In this case only STATIC and PARAMETERS variables are allowed. */
       --iLine;
-      GenError( ERR_OUTSIDE, NULL, NULL );
+      GenError( _szCErrors, 'E', ERR_OUTSIDE, NULL, NULL );
    }
 
    /* check if we are declaring local/static variable after some
@@ -1683,7 +1675,7 @@ void AddVar( char * szVarName )
    if( (functions.pLast->bFlags & FUN_STATEMENTS) && !(iVarScope == VS_FIELD || iVarScope == VS_MEMVAR) )
    {
       --iLine;
-      GenError( ERR_FOLLOWS_EXEC, (iVarScope==VS_LOCAL?"LOCAL":"STATIC"), NULL );
+      GenError( _szCErrors, 'E', ERR_FOLLOWS_EXEC, (iVarScope==VS_LOCAL?"LOCAL":"STATIC"), NULL );
    }
 
    /* When static variable is added then functions.pLast points to function
@@ -1697,7 +1689,7 @@ void AddVar( char * szVarName )
        * value initialization
        */
       if( _pInitFunc->bFlags & FUN_ILLEGAL_INIT )
-        GenError( ERR_ILLEGAL_INIT, szVarName, pFunc->szName );
+        GenError( _szCErrors, 'E', ERR_ILLEGAL_INIT, szVarName, pFunc->szName );
    }
 
    /* Check if a declaration of duplicated variable name is requested */
@@ -1957,7 +1949,7 @@ void FunDef( char * szFunName, char cScope, int iType )
       /* The name of a function/procedure is already defined */
       if( ( pFunc != functions.pFirst ) || _iStartProc )
         /* it is not a starting procedure that was automatically created */
-        GenError( ERR_FUNC_DUPL, szFunName, NULL );
+        GenError( _szCErrors, 'E', ERR_FUNC_DUPL, szFunName, NULL );
    }
 
    pFunction = (char * *)RESERVED_FUNC( szFunName );
@@ -1966,7 +1958,7 @@ void FunDef( char * szFunName, char cScope, int iType )
       /* We are ignoring it when it is the name of PRG file and we are
        * not creating implicit starting procedure
        */
-        GenError( ERR_FUNC_RESERVED, *pFunction, szFunName );
+        GenError( _szCErrors, 'E', ERR_FUNC_RESERVED, *pFunction, szFunName );
    }
 
    FixReturns();    /* fix all previous function returns offsets */
@@ -2933,7 +2925,7 @@ int GetLocalVarPos( char * szVarName ) /* returns the order + 1 of a variable if
             * It is not possible to access a parameter of a codeblock in which
             * the current codeblock is defined
             */
-            GenError( ERR_OUTER_VAR, szVarName, NULL );
+            GenError( _szCErrors, 'E', ERR_OUTER_VAR, szVarName, NULL );
           else
           {
             /* We want to access a local variable defined in a function that
@@ -3232,7 +3224,7 @@ void LineBody( void ) /* generates the pcode with the currently compiled source 
    /* This line can be placed inside a procedure or function only */
    if( ! _iStartProc && functions.iCount <= 1 )
    {
-     GenError( ERR_OUTSIDE, NULL, NULL );
+     GenError( _szCErrors, 'E', ERR_OUTSIDE, NULL, NULL );
    }
   functions.pLast->bFlags |= FUN_STATEMENTS;
   if( _iLineNumbers )
@@ -3664,7 +3656,7 @@ void CheckDuplVars( PVAR pVar, char * szVarName, int iVarScope )
       {
          if( iVarScope != VS_PARAMETER )
             --iLine;
-         GenError( ERR_VAR_DUPL, szVarName, NULL );
+         GenError( _szCErrors, 'E', ERR_VAR_DUPL, szVarName, NULL );
       }
       else
          pVar = pVar->pNext;
@@ -3831,7 +3823,7 @@ void FixReturns( void ) /* fixes all last defined function returns jumps offsets
         pLoop =pLoop->pNext;
 
      itoa( pLoop->wLine, cLine, 10 );
-     GenError( ERR_UNCLOSED_STRU, cLine, NULL );
+     GenError( _szCErrors, 'E', ERR_UNCLOSED_STRU, cLine, NULL );
    }
 */
 }

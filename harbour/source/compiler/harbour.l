@@ -51,6 +51,7 @@ extern WORD _wForCounter;
 extern WORD _wIfCounter;
 extern WORD _wWhileCounter;
 extern WORD _wCaseCounter;
+extern char * _szCErrors[];
 
 int iLine = 1;
 long lNumber = 0;
@@ -131,9 +132,9 @@ Separator     {SpaceTab}
 
 <INITIAL>\[    BEGIN STRING3;
 
-<STRING1>[^'^\n]*   { GenError( ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0; }
-<STRING2>[^\"^\n]*  { GenError( ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0; }
-<STRING3>[^\]]*\n   { GenError( ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0; }
+<STRING1>[^'^\n]*   { GenError( _szCErrors, 'E', ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0; }
+<STRING2>[^\"^\n]*  { GenError( _szCErrors, 'E', ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0; }
+<STRING3>[^\]]*\n   { GenError( _szCErrors, 'E', ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0; }
 
 <STRING1>[^']*'   { if( i_INDEX_STATE )
                        BEGIN INDEX;
@@ -203,7 +204,7 @@ Separator     {SpaceTab}
                return ';';
              }
 <LINECONT_>{Separator}*("("|")") {
-               GenError( ERR_INCOMPLETE_STMT, yytext, NULL );
+               GenError( _szCErrors, 'E', ERR_INCOMPLETE_STMT, yytext, NULL );
              }
 <LINECONT_>";"        ; /*Ignore any repeated ';' */
 <LINECONT_>{Separator}*. {
@@ -240,7 +241,7 @@ Separator     {SpaceTab}
 <BREAK_>{Separator}*[\[] { /* array */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                /* Clipper does not like break[] at all */
-               GenError( ERR_SYNTAX, yytext, NULL );
+               GenError( _szCErrors, 'E', ERR_SYNTAX, yytext, NULL );
              }
 <BREAK_>{Separator}*[^_a-zA-Z\[] { /* there is no identifier after "break" */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
@@ -278,7 +279,7 @@ Separator     {SpaceTab}
 <CASE_>{Separator}*[\[] { /* array */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                /* Clipper does not like case[] at all */
-               GenError( ERR_SYNTAX, yytext, NULL );
+               GenError( _szCErrors, 'E', ERR_SYNTAX, yytext, NULL );
              }
 <CASE_>{Separator}*("+="|"-="|"->") { /* operators */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
@@ -347,19 +348,19 @@ Separator     {SpaceTab}
 %}
 "else"         { /* ELSE can be used in one context only */
                  if( _wIfCounter == 0 )
-                   GenError( ERR_UNMATCHED_ELSE, NULL, NULL );
+                   GenError( _szCErrors, 'E', ERR_UNMATCHED_ELSE, NULL, NULL );
                  _iState =ELSE;
                  return ELSE;
                }
 "elseif"       { /* ELSEIF can be used in one context only */
                  if( _wIfCounter == 0 )
-                   GenError( ERR_UNMATCHED_ELSEIF, NULL, NULL );
+                   GenError( _szCErrors, 'E', ERR_UNMATCHED_ELSEIF, NULL, NULL );
                  _iState =ELSEIF;
                  return ELSEIF;
                }
 "end"{Separator}+"sequ"("ence"|"enc"|"en"|"e")?  {
                  if( _wSeqCounter == 0 )
-                   GenError( ERR_ENDIF, NULL, NULL );
+                   GenError( _szCErrors, 'E', ERR_ENDIF, NULL, NULL );
                  return END;
                }
 %{
@@ -368,17 +369,17 @@ Separator     {SpaceTab}
 
 "endif"|"endi" { /* ENDIF can be used in one context only */
                  if( _wIfCounter == 0 )
-                   GenError( ERR_ENDIF, NULL, NULL );
+                   GenError( _szCErrors, 'E', ERR_ENDIF, NULL, NULL );
                  return ENDIF;
                }
 "endc"("ase"|"as"|"a")? { /* ENDCASE can be used in one context only */
                  if( _wCaseCounter == 0 )
-                   GenError( ERR_ENDCASE, NULL, NULL );
+                   GenError( _szCErrors, 'E', ERR_ENDCASE, NULL, NULL );
                  return ENDCASE;
                }
 "enddo"|"endd" { /* ENDDO can be used in one context only */
                  if( _wWhileCounter == 0 )
-                   GenError( ERR_ENDDO, NULL, NULL );
+                   GenError( _szCErrors, 'E', ERR_ENDDO, NULL, NULL );
                  return ENDDO;
                }
 %{
@@ -389,7 +390,7 @@ Separator     {SpaceTab}
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                if( _iState == LOOKUP )
                { /* Clipper does not like end[] & end() at the begining of line */
-                 GenError( ERR_ENDIF, NULL, NULL );
+                 GenError( _szCErrors, 'E', ERR_ENDIF, NULL, NULL );
                }
                yylval.string = yy_strdup( "END" );
                _iState =IDENTIFIER;
@@ -400,7 +401,7 @@ Separator     {SpaceTab}
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                if( _iState == LOOKUP )
                { /* Clipper does not like end-> & end++ at the begining of line */
-                 GenError( ERR_ENDIF, NULL, NULL );
+                 GenError( _szCErrors, 'E', ERR_ENDIF, NULL, NULL );
                }
                yylval.string = yy_strdup( "END" );
                _iState =IDENTIFIER;
@@ -443,7 +444,7 @@ Separator     {SpaceTab}
                  if( _iState == LOOKUP )
                  { /* it is first item in the line */
                    if( _wForCounter == 0 && _wWhileCounter == 0 )
-                     GenError( ERR_UNMATCHED_EXIT, "EXIT", NULL );
+                     GenError( _szCErrors, 'E', ERR_UNMATCHED_EXIT, "EXIT", NULL );
                    _iState =EXITLOOP;
                    return EXITLOOP;
                  }
@@ -555,7 +556,7 @@ Separator     {SpaceTab}
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                if( _iState == LOOKUP )
                { /* Clipper does not like FOR() at the begining of line */
-                 GenError( ERR_SYNTAX, yytext, NULL );
+                 GenError( _szCErrors, 'E', ERR_SYNTAX, yytext, NULL );
                }
                yylval.string = yy_strdup( "FOR" );
                _iState =IDENTIFIER;
@@ -580,14 +581,14 @@ Separator     {SpaceTab}
                return FUNCTION;
              }
 <FUNCTION_>{Separator}*[^_a-zA-Z] { /* Clipper needs FUNCTION in one context only */
-               GenError( ERR_SYNTAX, ((yytext[ yyleng-1 ]=='\n')?"FUNCTION":yytext), NULL );
+               GenError( _szCErrors, 'E', ERR_SYNTAX, ((yytext[ yyleng-1 ]=='\n')?"FUNCTION":yytext), NULL );
              }
 %{
 /* ************************************************************************ */
 %}
 "iif"          {
                  if( _iState == FUNCTION || _iState == PROCEDURE )
-                   GenError( ERR_SYNTAX, "IIF", NULL );
+                   GenError( _szCErrors, 'E', ERR_SYNTAX, "IIF", NULL );
                  else
                    BEGIN IIF_;
                /* Note: In Clipper:
@@ -604,14 +605,14 @@ Separator     {SpaceTab}
                return IIF;
              }
 <IIF_>{Separator}*[^\(] {
-               GenError( ERR_SYNTAX, ((yytext[ yyleng-1 ]=='\n')?"IIF":yytext), NULL );
+               GenError( _szCErrors, 'E', ERR_SYNTAX, ((yytext[ yyleng-1 ]=='\n')?"IIF":yytext), NULL );
              }
 %{
 /* ************************************************************************ */
 %}
 "if"           {
                  if( _iState == FUNCTION || _iState == PROCEDURE )
-                   GenError( ERR_SYNTAX, "IF", NULL );
+                   GenError( _szCErrors, 'E', ERR_SYNTAX, "IF", NULL );
                  else
                    BEGIN IF_;
               }
@@ -625,16 +626,16 @@ Separator     {SpaceTab}
                return _iState;
              }
 <IF_>{Separator}*[\)\[\]\/\^\*\%\=\$\@] {
-               GenError( ERR_SYNTAX2, yytext, "IF" );
+               GenError( _szCErrors, 'E', ERR_SYNTAX2, yytext, "IF" );
              }
 <IF_>{Separator}*"->" {
-               GenError( ERR_SYNTAX2, yytext, "IF" );
+               GenError( _szCErrors, 'E', ERR_SYNTAX2, yytext, "IF" );
              }
 <IF_>{Separator}*[\n] {
-               GenError( ERR_SYNTAX, "IF", NULL );
+               GenError( _szCErrors, 'E', ERR_SYNTAX, "IF", NULL );
              }
 <IF_>{Separator}*("++"|"--")/[\n] {
-               GenError( ERR_SYNTAX2, yytext, "IF" );
+               GenError( _szCErrors, 'E', ERR_SYNTAX2, yytext, "IF" );
              }
 <IF_>{Separator}*. {
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
@@ -666,7 +667,7 @@ Separator     {SpaceTab}
                return IDENTIFIER;
              }
 <IN_>{Separator}*[0-9]      {
-                GenError( ERR_SYNTAX, yytext, NULL );
+                GenError( _szCErrors, 'E', ERR_SYNTAX, yytext, NULL );
              }
 <IN_>{Separator}*.      {
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
@@ -737,7 +738,7 @@ Separator     {SpaceTab}
                  if( _iState == LOOKUP )
                  { /* it is first item in the line */
                    if( _wWhileCounter == 0 && _wForCounter == 0 )
-                     GenError( ERR_UNMATCHED_EXIT, "LOOP", NULL );
+                     GenError( _szCErrors, 'E', ERR_UNMATCHED_EXIT, "LOOP", NULL );
                    _iState =LOOP;
                    return LOOP;
                  }
@@ -769,7 +770,7 @@ Separator     {SpaceTab}
                if( _iState == LOOKUP )
                { /* it is first item in the line */
                  if( _wForCounter == 0 )
-                   GenError( ERR_NEXTFOR, NULL, NULL );
+                   GenError( _szCErrors, 'E', ERR_NEXTFOR, NULL, NULL );
                  _iState =NEXT;
                  return NEXT;
                }
@@ -785,7 +786,7 @@ Separator     {SpaceTab}
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                if( _iState == LOOKUP )
                { /* Clipper does not like NEXT[] & NEXT() at the begining of line */
-                 GenError( ERR_NEXTFOR, NULL, NULL );
+                 GenError( _szCErrors, 'E', ERR_NEXTFOR, NULL, NULL );
                }
                yylval.string = yy_strdup( "NEXT" );
                _iState =IDENTIFIER;
@@ -796,7 +797,7 @@ Separator     {SpaceTab}
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                if( _iState == LOOKUP )
                { /* Clipper does not like next-> & next++ at the begining of line */
-                 GenError( ERR_NEXTFOR, NULL, NULL );
+                 GenError( _szCErrors, 'E', ERR_NEXTFOR, NULL, NULL );
                }
                yylval.string = yy_strdup( "NEXT" );
                _iState =IDENTIFIER;
@@ -816,7 +817,7 @@ Separator     {SpaceTab}
                if( _iState == LOOKUP )
                {
                  if( _wForCounter == 0 )
-                   GenError( ERR_NEXTFOR, NULL, NULL );
+                   GenError( _szCErrors, 'E', ERR_NEXTFOR, NULL, NULL );
                  _iState =NEXT;
                  return NEXT;
                }
@@ -860,7 +861,7 @@ Separator     {SpaceTab}
 <WHILE_>{Separator}*[\[] { /* array */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                /* Clipper does not like while[] at all */
-               GenError( ERR_SYNTAX, yytext, NULL );
+               GenError( _szCErrors, 'E', ERR_SYNTAX, yytext, NULL );
              }
 <WHILE_>{Separator}*[\:\=\|\$\%\*\,\/\]\)\}\^] { /* there is an operator after "case" */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
@@ -917,7 +918,7 @@ Separator     {SpaceTab}
               }
 <WITH_>{Separator}*[\[] { /* array */
                /* Clipper does not like with[] at all */
-               GenError( ERR_SYNTAX, yytext, NULL );
+               GenError( _szCErrors, 'E', ERR_SYNTAX, yytext, NULL );
              }
 <WITH_>{Separator}*.            {
                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
@@ -980,7 +981,7 @@ Separator     {SpaceTab}
 [\(]           ++_iOpenBracket; _iState =SEPARATOR; return yytext[ 0 ];
 [\)]           --_iOpenBracket; _iState =SEPARATOR; return yytext[ 0 ];
 
-{InvalidNumber} GenError( ERR_NUMERIC_FORMAT, NULL, NULL );
+{InvalidNumber} GenError( _szCErrors, 'E', ERR_NUMERIC_FORMAT, NULL, NULL );
 
 {Number}       { char * ptr;
                  yylval.dNum.dNumber = atof( yytext );

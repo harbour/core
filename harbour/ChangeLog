@@ -1,3 +1,10 @@
+19990707-11:10 Alexander Kresin
+  * source\compiler\harbour.l
+  * source\compiler\harbour.y
+  * include\hberrors.h
+    * changed calls of genError() function for implementing it to preprocessor
+    * from harbour.y removed some lines related to #include implementation
+
 19990706-23:35 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/set.c
     + Added header template and filled in

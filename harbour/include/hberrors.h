@@ -17,18 +17,17 @@
 #define ERR_STRING_TERMINATOR    7
 #define ERR_FUNC_RESERVED        8
 #define ERR_ILLEGAL_INIT         9
-#define ERR_CANT_OPEN_INCLUDE   10
-#define ERR_ENDIF               11
-#define ERR_ENDDO               12
-#define ERR_ENDCASE             13
-#define ERR_NEXTFOR             14
-#define ERR_UNMATCHED_ELSE      15
-#define ERR_UNMATCHED_ELSEIF    16
-#define ERR_SYNTAX              17
-#define ERR_UNCLOSED_STRU       18
-#define ERR_UNMATCHED_EXIT      19
-#define ERR_SYNTAX2             20
-#define ERR_INCOMPLETE_STMT     21
+#define ERR_ENDIF               10
+#define ERR_ENDDO               11
+#define ERR_ENDCASE             12
+#define ERR_NEXTFOR             13
+#define ERR_UNMATCHED_ELSE      14
+#define ERR_UNMATCHED_ELSEIF    15
+#define ERR_SYNTAX              16
+#define ERR_UNCLOSED_STRU       17
+#define ERR_UNMATCHED_EXIT      18
+#define ERR_SYNTAX2             19
+#define ERR_INCOMPLETE_STMT     20
 
 #define WARN_AMBIGUOUS_VAR         1
 #define WARN_VAR_NOT_USED          2
@@ -42,7 +41,7 @@
 #define WARN_LOGICAL_SUSPECT      10
 #define WARN_NUMERIC_SUSPECT      11
 
-void GenError( int, char*, char * );      /* generic parsing error management function */
+void GenError( char* _szErrors[], char, int, char*, char * );      /* generic parsing error management function */
 void GenWarning( int, char*, char * );      /* generic parsing warning management function */
 
 #endif /* HB_ERROR_H_ */
