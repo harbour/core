@@ -1,13 +1,23 @@
+2000-06-23 01:31 UTC+0200 JFL & RAC <jflb@mafact.com>
+    *source/vm/classes.c
+     ! Fixed CLASSDATA SHARED !
+    *include/hbclass.ch
+     ! Recommented  #xtranslate that was not pre-processing correctly,
+       before recent fixes to ppcore.c and should now works correctly but !!!
+    *source/rtl/tobject.prg
+     ! Minor reformating
+
+
 2000-06-22 19:30 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm/memvars.c
-	*removed #if 0
+        *removed #if 0
 
 2000-06-22 18:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/gtcrs/kbdcrs.c
     *source/rtl/gtsln/kbsln.c
-	*fixed after latest changes
+        *fixed after latest changes
 
 
 2000-06-22 03:30 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>

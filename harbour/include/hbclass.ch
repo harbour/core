@@ -95,11 +95,11 @@
 #endif /* HB_SHORTNAMES */
 
 /* VO compatibility */
-#xtranslate  ( <name>{ [<p,...>] }        =>  ( <name>():New( <p> )
-#xtranslate := <name>{ [<p,...>] }        => := <name>():New( <p> )
-#xtranslate  = <name>{ [<p,...>] }        =>  = <name>():New( <p> )
+/*#xtranslate  ( <name>{ [<p,...>] }        =>  ( <name>():New( <p> ) */
+/*#xtranslate := <name>{ [<p,...>] }        => := <name>():New( <p> ) */
+/*#xtranslate  = <name>{ [<p,...>] }        =>  = <name>():New( <p> ) */
 
-#xtranslate  , <name>{ [<p,...>] }        =>  , <name>():New( <p> )
+/*#xtranslate  , <name>{ [<p,...>] }        =>  , <name>():New( <p> ) */
 
 #xtranslate    EXPORTED:       =>      nScope := HB_OO_CLSTP_EXPORTED
 #xtranslate    VISIBLE:        =>      nScope := HB_OO_CLSTP_EXPORTED

@@ -41,22 +41,22 @@
 FUNCTION TObject()
    STATIC s_oClass
    LOCAL nScope := 1
-  
+
    IF s_oClass == NIL
       s_oClass := TClass():New( "TObject", {} )
-  
+
       s_oClass:AddInline( "CLASSNAME"      , {| Self | __OBJGETCLSNAME( Self )     }, nScope )
       s_oClass:AddInline( "CLASSH"         , {| Self | __CLASSH( Self )            }, nScope )
       s_oClass:AddInline( "CLASSSEL"       , {| Self | __CLASSSEL( Self:CLASSH() ) }, nScope )
-  
+
       /*s_oClass:AddInline( "EVAL"           , {| Self | __EVAL( Self )             }, nScope ) */
       /*s_oClass:AddInline( "ISDERIVEDFROM"  , {| Self, xPar1 | __ObjDerivedFrom( Self, xPar1 ) }, nScope ) */
-  
+
       /* Those one exist within Class(y), so we will probably try to implement it               */
-  
+
       /*s_oClass:AddInline( "INIT"           , {| Self | Self                       }, nScope ) */
       /*s_oClass:AddInline( "MSGNOTFOUND"    , {| Self |                            }, nScope ) */
-                                                  
+
       /*s_oClass:AddInline( "ISKINDOF"       , {| Self |                            }, nScope ) */
       /*s_oClass:AddInline( "asString"       , {| Self | ::class:name + " object"   }, nScope ) */
       /*s_oClass:AddInline( "asExpStr"       , {| Self |                            }, nScope ) */
@@ -79,13 +79,13 @@ FUNCTION TObject()
       /*s_oClass:AddInline( "wrongClass"     , {| Self |                            }, nScope ) */
       /*s_oClass:AddInline( "badMethod"      , {| Self |                            }, nScope ) */
 
-      /* this one exit within VO and is Auto Called when object ran out of scope */
-  
+      /* this one exist within VO and is Auto Called when object ran out of scope */
+
       /*s_oClass:AddInline( "Axit"           , {| Self |  }, nScope ) */
-  
+
       s_oClass:Create()
 
    ENDIF
-  
+
    RETURN s_oClass:Instance()
 

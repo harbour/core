@@ -106,6 +106,13 @@
  *    hb___msgClass() implemented to allow a better compatibility with classy
  *    Now, calling Self:xClassDataVar is the same as Self:Class:xClassDataVar
  *
+ *    1.18 06/??/2000 ?
+ *    1.19 06/??/2000 ?
+ *
+ *    1.20 06/23/2000 JFL&RAC
+ *    Correction made relative to CLASSDATA SHARED !
+ *    Completly new method
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -118,13 +125,16 @@
 
 #include <ctype.h>
 
+/* DEBUG only*/
+/*#include <windows.h>*/
+
 typedef struct
 {
    PHB_DYNS pMessage;          /* Method Symbolic name */
    PHB_FUNC pFunction;         /* Function 'pointer' */
    USHORT   uiData;            /* Item position for data (Harbour like, begin from 1) */
-   USHORT   uiDataShared;      /* Item position for datashared (C like, begin from 0) */
-   USHORT   uiSprClass;        /* Originalclass'handel (super or current class'handel if not herited). */ //Added by RAC&JF
+   USHORT   uiDataShared;      /* Item position for datashared (original pos within Shared Class) */
+   USHORT   uiSprClass;        /* Originalclass'handel (super or current class'handel if not herited). */ /*Added by RAC&JF*/
    USHORT   uiScope;           /* Scoping value */
    PHB_ITEM pInitValue;        /* Item Value and value for data (could be initiated by INIT KeyWord) */
    BYTE     bClsDataInitiated; /* There is one value assigned at init time */
@@ -140,8 +150,6 @@ typedef struct
    USHORT   uiHashKey;
    USHORT   uiDatasShared;  /* Total shared Class data within Class data */
    PHB_ITEM pClassDatas;    /* Harbour Array for ClassDatas and shared */
-   PHB_ITEM * pSharedDatas; /* C Array for ClassDatas Shared Item pointer (hb_Alloc of pointer) */ //Added by RAC&JF
-                            /* This is _NOT_ a Harbour array*/
    PHB_ITEM pInlines;       /* Array for inline codeblocks */
    PHB_FUNC pFunError;      /* error handler for not defined messages */
 } CLASS, * PCLASS;
@@ -207,7 +215,6 @@ static void hb_clsDictRealloc( PCLASS pClass )
       USHORT  uiNewHashKey = pClass->uiHashKey;
       USHORT  ui;
       USHORT  uiLimit = ( USHORT ) ( pClass->uiHashKey * BUCKET );
-      //USHORT  nOccurs = 0;
 
       do
       {
@@ -236,7 +243,7 @@ static void hb_clsDictRealloc( PCLASS pClass )
                 }
 
                 /* Not enough go back to the beginning */
-                if( uiBucket >= BUCKET ) //&& nOccurs++ < 5)
+                if( uiBucket >= BUCKET ) /*&& nOccurs++ < 5)*/
                 {
                    hb_xfree( pNewMethods );
                    break;
@@ -283,9 +290,6 @@ static void hb_clsRelease( PCLASS pClass )
 
    hb_xfree( pClass->szName );
    hb_xfree( pClass->pMethods );
-
-   if( pClass->pSharedDatas )
-      hb_xfree( pClass->pSharedDatas ); /* At least one shared data exist */
 
    hb_itemRelease( pClass->pClassDatas );
    hb_itemRelease( pClass->pInlines );
@@ -662,7 +666,6 @@ HB_FUNC( __CLSADDMSG )
             if( !pClass->pMethods[ uiAt+uiBucket ].pMessage
                 ||
                 ( pClass->pMethods[ uiAt+uiBucket ].pMessage == pMessage )
-                /*( strcmp( pClass->pMethods[ uiAt+uiBucket ].pMessage->pSymbol->szName, pMessage->pSymbol->szName ) == 0 )*/
               )
                break;
          }
@@ -697,7 +700,7 @@ HB_FUNC( __CLSADDMSG )
             pNewMeth->uiScope = uiScope;
 
             if( pMessage->pSymbol->szName[ 0 ] == '_' )
-               pNewMeth->pFunction = hb___msgSetData;
+               pNewMeth->pFunction  = hb___msgSetData;
             else
             {
                PHB_ITEM pInit = hb_param( 5, HB_IT_ANY );
@@ -719,82 +722,62 @@ HB_FUNC( __CLSADDMSG )
 
          case HB_OO_MSG_CLASSDATA:
 
-            pNewMeth->uiData = ( USHORT ) hb_parnl( 3 );
+            pNewMeth->uiData  = ( USHORT ) hb_parnl( 3 );
+            pNewMeth->uiDataShared = pNewMeth->uiData ;
+
             pNewMeth->uiScope = uiScope;
+
+            if( ( USHORT ) hb_arrayLen( pClass->pClassDatas ) < pNewMeth->uiData )
+              hb_arraySize( pClass->pClassDatas, pNewMeth->uiData );
+
+            if( pMessage->pSymbol->szName[ 0 ] != '_' )
+            {
+               PHB_ITEM pInit = hb_param( 5, HB_IT_ANY );
+
+               if( pInit && ! HB_IS_NIL( pInit ) ) /* Initializer found */
+               {
+                  if( HB_IS_ARRAY( pInit ) )
+                     pNewMeth->pInitValue = hb_arrayClone( pInit );
+                  else
+                  {
+                     pNewMeth->pInitValue = hb_itemNew( NULL );
+                     hb_itemCopy( pNewMeth->pInitValue, pInit );
+                  }
+               }
+            }
 
             if( ( pNewMeth->uiScope & HB_OO_CLSTP_SHARED ) != HB_OO_CLSTP_SHARED )
             {
-               if( ( USHORT ) hb_arrayLen( pClass->pClassDatas ) < pNewMeth->uiData )
-               {
-                  hb_arraySize( pClass->pClassDatas, pNewMeth->uiData );
-               }
-
                if( pMessage->pSymbol->szName[ 0 ] == '_' )
                   pNewMeth->pFunction = hb___msgSetClsData;
                else
-               {
-                  PHB_ITEM pInit = hb_param( 5, HB_IT_ANY );
-
                   pNewMeth->pFunction = hb___msgGetClsData;
 
-                  if( pInit && ! HB_IS_NIL( pInit ) ) /* Initializer found */
-                  {
-                     if( HB_IS_ARRAY( pInit ) )
-                        pNewMeth->pInitValue = hb_arrayClone( pInit );
-                     else
-                     {
-                        pNewMeth->pInitValue = hb_itemNew( NULL );
-                        hb_itemCopy( pNewMeth->pInitValue, pInit );
-                     }
-                  }
-               }
             }
             else
             {
-               if( ( USHORT ) hb_arrayLen( pClass->pClassDatas ) < pNewMeth->uiData )
-               {
-                  PHB_ITEM pTmpItemPtr;
-
-                  hb_arraySize( pClass->pClassDatas, pNewMeth->uiData );
-
-                  /* Get a copy of the item pointer (not the value!) */
-                  pTmpItemPtr = hb_arrayGetItemPtr( pClass->pClassDatas, pNewMeth->uiData );
-
-                  pClass->uiDatasShared++;
-
-                  /* Alloc or realloc PtrArray */
-                  if( pClass->pSharedDatas )
-                     pClass->pSharedDatas = ( PHB_ITEM * ) hb_xrealloc( pClass->pSharedDatas, pClass->uiDatasShared * sizeof( PHB_ITEM ) );
-                  else
-                     pClass->pSharedDatas = ( PHB_ITEM * ) hb_xgrab( sizeof( PHB_ITEM ) );
-
-                  /* Store the C array offset */
-                  pNewMeth->uiDataShared = ( USHORT ) ( pClass->uiDatasShared - 1 );
-
-                  /* Now store the Ptr itself */
-                  pClass->pSharedDatas[ pNewMeth->uiDataShared ] = ( PHB_ITEM ) pTmpItemPtr;
-               }
+               PHB_ITEM pTmpItemPtr;
 
                if( pMessage->pSymbol->szName[ 0 ] == '_' )
+                {
                   pNewMeth->pFunction = hb___msgSetShrData;
+                  pClass->uiDatasShared++;
+                }
                else
-               {
-                  PHB_ITEM pInit = hb_param( 5, HB_IT_ANY );
-
                   pNewMeth->pFunction = hb___msgGetShrData;
 
-                  if( pInit && ! HB_IS_NIL( pInit ) ) /* Initializer found */
-                  {
-                     if( HB_IS_ARRAY( pInit ) )
-                        pNewMeth->pInitValue = hb_arrayClone( pInit );
-                     else
-                     {
-                        pNewMeth->pInitValue = hb_itemNew( NULL );
-                        hb_itemCopy( pNewMeth->pInitValue, pInit );
-                     }
-                  }
-               }
+
+
+             /*if (TRUE)
+                {
+                 char cTmp[255];
+                 wsprintf(cTmp, "Message %s, uidata %d\n", pMessage->pSymbol->szName, pNewMeth->uiData);
+                 MessageBox(0,cTmp,"ClassData Shared",0);
+                }
+             */
+
             }
+
             break;
 
          case HB_OO_MSG_INLINE:
@@ -850,7 +833,7 @@ HB_FUNC( __CLSNEW )
 
    PHB_ITEM pahSuper;
    USHORT i, uiSuper;
-   USHORT nLenShrDatas = 0;
+   /*USHORT nLenShrDatas = 0;*/
    USHORT nLenClsDatas = 0;
    USHORT nLenInlines = 0;
    USHORT nLenDatas = 0;
@@ -904,26 +887,23 @@ HB_FUNC( __CLSNEW )
             /* CLASS DATA Not Shared ( new array, new value ) */
             pNewCls->pClassDatas  = hb_arrayClone( pSprCls->pClassDatas );
 
-            pNewCls->pSharedDatas = 0;
-
-            if( pSprCls->pSharedDatas )
-            {
-               pNewCls->pSharedDatas = ( PHB_ITEM * ) hb_xgrab( sizeof( PHB_ITEM ) * pSprCls->uiDatasShared );
-               pNewCls->uiDatasShared = pSprCls->uiDatasShared;
-
-               hb_xmemcpy( pNewCls->pSharedDatas, pSprCls->pSharedDatas, sizeof( PHB_ITEM ) * pSprCls->uiDatasShared );
-            }
-
             pNewCls->pInlines = hb_arrayClone( pSprCls->pInlines );
+
+            pNewCls->uiDatasShared = pSprCls->uiDatasShared;
 
          }
          else
          {
             /* Ok add now the previous len to the offset */
-            nLenShrDatas += pNewCls->uiDatasShared;
+/*          nLenShrDatas += pNewCls->uiDatasShared;
             nLenClsDatas += ( USHORT ) hb_itemSize( pNewCls->pClassDatas );
             nLenInlines  += ( USHORT ) hb_itemSize( pNewCls->pInlines );
-            nLenDatas    += ( USHORT ) pNewCls->uiDatas;
+            nLenDatas    += ( USHORT ) pNewCls->uiDatas; */
+
+            /*nLenShrDatas  = pNewCls->uiDatasShared;*/
+            nLenClsDatas  = ( USHORT ) hb_itemSize( pNewCls->pClassDatas );
+            nLenInlines   = ( USHORT ) hb_itemSize( pNewCls->pInlines );
+            nLenDatas     = ( USHORT ) pNewCls->uiDatas;
 
             /* ClassDatas */
             pClsAnyTmp = hb_arrayClone( pSprCls->pClassDatas );
@@ -938,23 +918,7 @@ HB_FUNC( __CLSNEW )
             hb_itemRelease( pClsAnyTmp );
 
             /* SharedDatas */
-            if( pSprCls->uiDatasShared )
-            {
-               if( pNewCls->pSharedDatas )
-               {
-                  pNewCls->pSharedDatas = ( PHB_ITEM * ) hb_xrealloc( pNewCls->pSharedDatas, pSprCls->uiDatasShared * sizeof( PHB_ITEM ) );
-
-                  hb_xmemcpy(pNewCls->pSharedDatas + pNewCls->uiDatasShared , pSprCls->pSharedDatas ,  pSprCls->uiDatasShared * sizeof( PHB_ITEM ) );
-
-                  pNewCls->uiDatasShared += pSprCls->uiDatasShared;
-               }
-               else
-               {
-                  pNewCls->pSharedDatas = ( PHB_ITEM * ) hb_xgrab( sizeof( PHB_ITEM ) * pSprCls->uiDatasShared );
-                  pNewCls->uiDatasShared = pSprCls->uiDatasShared;
-                  hb_xmemcpy( pNewCls->pSharedDatas, pSprCls->pSharedDatas, sizeof( PHB_ITEM ) * pSprCls->uiDatasShared );
-               }
-            }
+            pNewCls->uiDatasShared += pSprCls->uiDatasShared;
 
             /* Inlines */
             pClsAnyTmp = hb_arrayClone( pSprCls->pInlines );
@@ -1004,7 +968,7 @@ HB_FUNC( __CLSNEW )
                       /* Now, we can increment the msg count */
                       pNewCls->uiMethods++;
 
-                      memcpy(pNewCls->pMethods + ( uiAt+uiBucket ), pSprCls->pMethods + ui, sizeof( METHOD ) );
+                      hb_xmemcpy(pNewCls->pMethods + ( uiAt+uiBucket ), pSprCls->pMethods + ui, sizeof( METHOD ) );
 
                       if(
                           pNewCls->pMethods[ uiAt+uiBucket ].pFunction ==  hb___msgSetClsData
@@ -1018,10 +982,7 @@ HB_FUNC( __CLSNEW )
                           ||
                           pNewCls->pMethods[ uiAt+uiBucket ].pFunction ==  hb___msgGetShrData
                         )
-                      {
                          pNewCls->pMethods[ uiAt+uiBucket ].uiData       += nLenClsDatas; /* in all case will never be used */
-                         pNewCls->pMethods[ uiAt+uiBucket ].uiDataShared += nLenShrDatas;
-                      }
 
                       if(
                           pNewCls->pMethods[ uiAt+uiBucket ].pFunction ==  hb___msgSetData
@@ -1069,6 +1030,7 @@ HB_FUNC( __CLSNEW )
    {
       pNewCls->uiDatas      = ( USHORT ) hb_parni( 2 );
       pNewCls->uiDataFirst  = 0;
+      pNewCls->uiDatasShared= 0;
 
       pNewCls->pMethods     = ( PMETHOD ) hb_xgrab( BASE_METHODS * sizeof( METHOD ) );
       memset( pNewCls->pMethods, 0, BASE_METHODS * sizeof( METHOD ) );
@@ -1077,7 +1039,6 @@ HB_FUNC( __CLSNEW )
       pNewCls->uiHashKey    = HASH_KEY;
 
       pNewCls->pClassDatas  = hb_itemArrayNew( 0 );
-      pNewCls->pSharedDatas = 0;
       pNewCls->pInlines     = hb_itemArrayNew( 0 );
       pNewCls->pFunError    = NULL;
    }
@@ -1131,7 +1092,7 @@ HB_FUNC( __CLSDELMSG )
                                                 /* Move messages            */
             while( pClass->pMethods[ uiAt ].pMessage && uiAt != uiLimit )
             {
-               memcpy( pClass->pMethods + uiAt,
+               hb_xmemcpy( pClass->pMethods + uiAt,
                        pClass->pMethods + ( ( uiAt == uiMask ) ? 0 : uiAt + 1 ),
                        sizeof( METHOD ) );
                uiAt++;
@@ -1194,7 +1155,7 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, BOOL bInit )
       PHB_ITEM pSprObj, pTmp;
       USHORT   uiAt;
       USHORT   uiLimit = ( USHORT ) ( pClass->uiHashKey * BUCKET );
-      PMETHOD  pMeth = pClass->pMethods;
+      PMETHOD  pMeth ;
 
       pSelf = hb_itemNew( NULL );
       hb_arrayNew( pSelf, pClass->uiDatas );
@@ -1202,10 +1163,11 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, BOOL bInit )
       pSelf->item.asArray.value->uiClass   = uiClass;
       pSelf->item.asArray.value->uiPrevCls = 0;
 
-      // Phase I Instanciate all Herited object recursively
-      // A:B ==> oB
-      //   Then    B:C ==> oC   ...
-      // Do not try to work on A:C (inherited class super object from B)
+      /* Phase I Instanciate all Herited object recursively               */
+      /* A:B ==> oB                                                       */
+      /*   Then    B:C ==> oC   ...                                       */
+      /* Do not try to work on A:C (inherited class super object from B)  */
+      pMeth = pClass->pMethods;
       for( uiAt = 0; uiAt < uiLimit; uiAt++, pMeth++ )
       {
           if( ( pMeth->uiScope & HB_OO_CLSTP_CLASS ) == HB_OO_CLSTP_CLASS
@@ -1228,8 +1190,8 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, BOOL bInit )
           }
       }
 
-      // Phase II Create link between A:C and A:B:C !!
-      // They must point to the same object
+      /* Phase II Create link between A:C and A:B:C !! */
+      /* They must point to the same object            */
       pMeth = pClass->pMethods;
       for( uiAt = 0; uiAt < uiLimit; uiAt++, pMeth++ )
       {
@@ -1255,12 +1217,26 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, BOOL bInit )
          }
       }
 
-      // Phase III Create link between instancied object and SuperDataMessages
-      // Initialise value if initialisation was requested
+      /* Phase III Create link between instancied object and SuperDataMessages */
+      /* Initialise value if initialisation was requested                      */
       pMeth = pClass->pMethods;
-
       for( uiAt = 0; uiAt < uiLimit; uiAt++, pMeth++ )
       {
+
+         /* Init Classdata (inherited and not) if needed */
+         if( pMeth->pInitValue  && pMeth->pFunction == hb___msgGetClsData && !( pMeth->bClsDataInitiated ) )
+           {
+               HB_ITEM init;
+               hb_arrayGet( pClass->pClassDatas, pMeth->uiData, &init );
+               if( init.type == HB_IT_NIL )
+               {
+                  hb_arraySet( pClass->pClassDatas, pMeth->uiData, pMeth->pInitValue );
+                  pMeth->bClsDataInitiated = 1;
+               }
+               hb_itemClear( &init );
+           }
+
+
          if( ( pMeth->uiScope & HB_OO_CLSTP_SUPER ) == HB_OO_CLSTP_SUPER )
          {
             if( pMeth->pFunction == hb___msgGetData )
@@ -1315,8 +1291,10 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, BOOL bInit )
                   hb_arraySet( pSelf, pMeth->uiData,
                                    pMeth->pInitValue );
             }
-            else if( pMeth->pFunction == hb___msgGetClsData && !( pMeth->bClsDataInitiated )) /* it is a ClassData */
+            else if( pMeth->pFunction == hb___msgGetShrData && !( pMeth->bClsDataInitiated ) )
             {
+               /* Init Shared Classdata as needed, we only need to init the first */
+               /* not inherited classdata array where all shared will point to    */
                HB_ITEM init;
                hb_arrayGet( pClass->pClassDatas, pMeth->uiData, &init );
                if( init.type == HB_IT_NIL )
@@ -1325,20 +1303,9 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, BOOL bInit )
                   pMeth->bClsDataInitiated = 1;
                }
                hb_itemClear( &init );
-            }
-            else if( pMeth->pFunction == hb___msgGetShrData && !( pMeth->bClsDataInitiated ) ) /* it is a ClassData SHARED */
-            {
-               HB_ITEM init;
 
-               hb_itemCopy( &init, *( pClass->pSharedDatas + pMeth->uiDataShared ) );
 
-               if( init.type == HB_IT_NIL )
-               {
-                  hb_itemCopy( *( pClass->pSharedDatas + pMeth->uiDataShared ), pMeth->pInitValue );
-                  pMeth->bClsDataInitiated = 1;
-               }
-               hb_itemClear( &init );
-            }
+             }
          }
       }
    }
@@ -1970,18 +1937,6 @@ static HARBOUR hb___msgGetClsData( void )
 }
 
 
-/*
- * __msgGetShrData()
- *
- * Internal function to return a SHAREDDATA
- */
-static HARBOUR hb___msgGetShrData( void )
-{
-   USHORT uiClass = ( hb_stack.pBase + 1 )->item.asArray.value->uiClass;
-
-   if( uiClass && uiClass <= s_uiClasses )
-      hb_itemReturn( *( s_pClasses[ uiClass - 1 ].pSharedDatas + s_pMethod->uiDataShared ) );
-}
 
 /*
  * __msgSuper()
@@ -1991,21 +1946,26 @@ static HARBOUR hb___msgGetShrData( void )
 static HARBOUR hb___msgSuper( void )
 {
    PHB_ITEM pObject = hb_stack.pBase + 1;
-// USHORT uiIndex = s_pMethod->uiData;
+/* USHORT uiIndex = s_pMethod->uiData; */
 
-   pObject->item.asArray.value->uiPrevCls = pObject->item.asArray.value->uiClass; // backup of actual handel
-   pObject->item.asArray.value->uiClass   = s_pMethod->uiSprClass; // == superclass handel
+   pObject->item.asArray.value->uiPrevCls = pObject->item.asArray.value->uiClass; /* backup of actual handel */
+   pObject->item.asArray.value->uiClass   = s_pMethod->uiSprClass; /* superclass handel casting */
 
    hb_itemReturn( pObject );
 
-// if( ( s_pMethod->uiScope & HB_OO_CLSTP_SUPER ) == HB_OO_CLSTP_SUPER )
-// {
-//    PHB_ITEM pPtrNum = ( PHB_ITEM ) hb_arrayGetNL( pObject, uiIndex ); // ici j'ai l'adresse
-//
-//    hb_itemReturn( pPtrNum );
-// }
-// else
-//    hb_itemReturn( hb_arrayGetItemPtr( pObject, s_pMethod->uiData ) );
+/* This one would return a real superObject but with the side effect to  */
+/* also set a bad Self pointer for the supermessages                     */
+/* Please don't erase those lines until I do it myself (JF)              */
+/* I have yet to think about a better solution where I could return a    */
+/* real Object as keeping the good Self value within all the class tree  */
+/* if( ( s_pMethod->uiScope & HB_OO_CLSTP_SUPER ) == HB_OO_CLSTP_SUPER ) */
+/* {                                                                     */
+/*    PHB_ITEM pPtrNum = ( PHB_ITEM ) hb_arrayGetNL( pObject, uiIndex ); */
+/*                                                                       */
+/*    hb_itemReturn( pPtrNum );                                          */
+/* }                                                                     */
+/* else                                                                  */
+/*    hb_itemReturn( hb_arrayGetItemPtr( pObject, s_pMethod->uiData ) ); */
 }
 
 /*
@@ -2037,18 +1997,32 @@ static HARBOUR hb___msgSetClsData( void )
 }
 
 /*
+ * __msgGetShrData()
+ *
+ * Internal function to return a SHAREDDATA
+ */
+static HARBOUR hb___msgGetShrData( void )
+{
+   USHORT uiSprCls = s_pMethod->uiSprClass;
+
+   if( uiSprCls && uiSprCls <= s_uiClasses )
+      hb_arrayGet( s_pClasses[ uiSprCls - 1 ].pClassDatas, s_pMethod->uiDataShared, &hb_stack.Return );
+}
+
+/*
  * __msgSetShrData()
  *
  * Internal function to set a SHAREDDATA
  */
 static HARBOUR hb___msgSetShrData( void )
 {
-   USHORT uiClass = ( hb_stack.pBase + 1 )->item.asArray.value->uiClass;
+   USHORT uiSprCls = s_pMethod->uiSprClass;
 
-   if( uiClass && uiClass <= s_uiClasses )
+   if( uiSprCls && uiSprCls <= s_uiClasses )
    {
       PHB_ITEM pReturn = hb_stack.pBase + 2;
-      hb_itemCopy( *( s_pClasses[ uiClass - 1 ].pSharedDatas + s_pMethod->uiDataShared ), pReturn );
+      hb_arraySet( s_pClasses[ uiSprCls - 1 ].pClassDatas,
+                   s_pMethod->uiDataShared, pReturn );
       hb_itemReturn( pReturn );
    }
 }
@@ -2063,12 +2037,12 @@ static HARBOUR hb___msgGetData( void )
    PHB_ITEM pObject = hb_stack.pBase + 1;
    USHORT uiIndex = s_pMethod->uiData;
 
-   // If it's an herited data, the data reside within it's original Super object
-   // So we use the know pointer
+   /* If it's an herited data, the data reside within it's original Super object */
+   /* So we use the know pointer */
    if( ( s_pMethod->uiScope & HB_OO_CLSTP_SUPER ) == HB_OO_CLSTP_SUPER )
    {
       PHB_ITEM pPtrNum;
-      pPtrNum = ( PHB_ITEM ) hb_arrayGetNL( pObject, uiIndex ); // ici j'ai l'adresse
+      pPtrNum = ( PHB_ITEM ) hb_arrayGetNL( pObject, uiIndex );
 
       hb_itemReturn( pPtrNum );
    }
@@ -2093,8 +2067,8 @@ static HARBOUR hb___msgSetData( void )
    PHB_ITEM pReturn = hb_stack.pBase + 2;
    USHORT uiIndex = s_pMethod->uiData;
 
-   // If it's an herited data, the data reside within it's original Super object
-   // So we use the know pointer
+   /* If it's an herited data, the data reside within it's original Super object */
+   /* So we use the know pointer */
    if( ( s_pMethod->uiScope & HB_OO_CLSTP_SUPER ) == HB_OO_CLSTP_SUPER )
    {
       PHB_ITEM pPtrNum;
