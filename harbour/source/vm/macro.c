@@ -1175,6 +1175,7 @@ void hb_compGenMessageData( char * szMsg, HB_MACRO_DECL )
    strcat( szResult, szMsg );
 
    hb_compGenMessage( szResult, HB_MACRO_PARAM );
+   hb_xfree( szResult );
 }
 
 /* generates the pcode to pop a value from the virtual machine stack onto a variable */

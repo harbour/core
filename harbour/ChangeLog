@@ -1,3 +1,8 @@
+2001-09-08 17:00 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+    *source/vm/macro.c
+        * fixed "memory not released" bug during object's variable
+          assignment
+
 2001-09-08 11:32 GMT+1 Antonio Linares <alinares@fivetech.com>
    * harbour/source/rtl/persist.prg
      extern HB_STOD added
