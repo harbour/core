@@ -43,15 +43,15 @@
 #define NO                      .F.
 
 /* Type checking macros */
-#translate ISNIL( <xValue> )    => ( <xValue> == NIL )
-#translate ISARRAY( <xValue> )  => ( ValType( <xValue> ) == "A" )
-#translate ISBLOCK( <xValue> )  => ( ValType( <xValue> ) == "B" )
-#translate ISCHAR( <xValue> )   => ( ValType( <xValue> ) == "C" )
-#translate ISDATE( <xValue> )   => ( ValType( <xValue> ) == "D" )
-#translate ISLOG( <xValue> )    => ( ValType( <xValue> ) == "L" )
-#translate ISMEMO( <xValue> )   => ( ValType( <xValue> ) == "M" )
-#translate ISNUM( <xValue> )    => ( ValType( <xValue> ) == "N" )
-#translate ISOBJECT( <xValue> ) => ( ValType( <xValue> ) == "O" )
+#translate ISNIL( <xValue> )       => ( <xValue> == NIL )
+#translate ISARRAY( <xValue> )     => ( ValType( <xValue> ) == "A" )
+#translate ISBLOCK( <xValue> )     => ( ValType( <xValue> ) == "B" )
+#translate ISCHARACTER( <xValue> ) => ( ValType( <xValue> ) == "C" )
+#translate ISDATE( <xValue> )      => ( ValType( <xValue> ) == "D" )
+#translate ISLOGICAL( <xValue> )   => ( ValType( <xValue> ) == "L" )
+#translate ISMEMO( <xValue> )      => ( ValType( <xValue> ) == "M" )
+#translate ISNUMBER( <xValue> )    => ( ValType( <xValue> ) == "N" )
+#translate ISOBJECT( <xValue> )    => ( ValType( <xValue> ) == "O" ) 
 
 /* DEFAULT and UPDATE commands */
 #xcommand DEFAULT <v1> TO <x1> [, <vn> TO <xn> ] => ;

@@ -1124,8 +1124,10 @@ HARBOUR HB_SETBLINK( void )
 HARBOUR HB_SETMODE( void )
 {
 #ifdef HARBOUR_USE_GTAPI
-   if( ISNUM( 1 ) && ISNUM( 2 ) )
-      hb_gtSetMode( hb_parni( 1 ), hb_parni( 2 ) );
+   hb_retl( hb_gtSetMode( ISNUM( 1 ) ? hb_parni( 1 ) : ( hb_gtMaxRow() + 1 ), 
+                          ISNUM( 2 ) ? hb_parni( 2 ) : ( hb_gtMaxCol() + 1 ) ) == 0 );
+#else
+   hb_retl( FALSE );
 #endif
 }
 

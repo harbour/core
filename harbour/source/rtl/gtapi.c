@@ -138,7 +138,7 @@ void hb_gtExit( void )
    hb_xfree( s_Color );
 }
 
-int hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame )
+USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame )
 {
    BYTE pszBox[ 10 ];
    BYTE cPadChar;
@@ -239,17 +239,17 @@ int hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE
    return 0;
 }
 
-int hb_gtBoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight )
+USHORT hb_gtBoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight )
 {
    return hb_gtBox( uiTop, uiLeft, uiBottom, uiRight, ( BYTE * ) B_DOUBLE );
 }
 
-int hb_gtBoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight )
+USHORT hb_gtBoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight )
 {
    return hb_gtBox( uiTop, uiLeft, uiBottom, uiRight, ( BYTE * ) B_SINGLE );
 }
 
-int hb_gtColorSelect( USHORT uiColorIndex )
+USHORT hb_gtColorSelect( USHORT uiColorIndex )
 {
    if( uiColorIndex > s_ColorCount )
       return 1;
@@ -259,7 +259,7 @@ int hb_gtColorSelect( USHORT uiColorIndex )
    return 0;
 }
 
-int hb_gtDispBegin( void )
+USHORT hb_gtDispBegin( void )
 {
 /* ptucker */
 
@@ -279,7 +279,7 @@ USHORT hb_gtDispCount( void )
    return s_uiDispCount;
 }
 
-int hb_gtDispEnd( void )
+USHORT hb_gtDispEnd( void )
 {
 /* ptucker */
 
@@ -294,7 +294,7 @@ int hb_gtDispEnd( void )
    return 0;
 }
 
-int hb_gtPreExt( void )
+USHORT hb_gtPreExt( void )
 {
 /* ptucker */
 
@@ -323,7 +323,7 @@ int hb_gtPreExt( void )
 
 }
 
-int hb_gtPostExt( void )
+USHORT hb_gtPostExt( void )
 {
 /* ptucker */
 
@@ -345,7 +345,7 @@ int hb_gtPostExt( void )
    return 0;
 }
 
-int hb_gtGetColorStr( char * fpColorString )
+USHORT hb_gtGetColorStr( char * fpColorString )
 {
 /* ptucker */
    char * sColors;
@@ -408,7 +408,7 @@ int hb_gtGetColorStr( char * fpColorString )
    return 0;
 }
 
-int hb_gtSetColorStr( char * fpColorString )
+USHORT hb_gtSetColorStr( char * fpColorString )
 {
 /* ptucker */
    char c, buff[ 6 ];
@@ -566,7 +566,7 @@ int hb_gtSetColorStr( char * fpColorString )
    return 0;
 }
 
-int hb_gtGetCursor( USHORT * uipCursorShape )
+USHORT hb_gtGetCursor( USHORT * uipCursorShape )
 {
    int i = hb_gt_GetCursorStyle();
    int rc = 0;
@@ -583,14 +583,14 @@ int hb_gtGetCursor( USHORT * uipCursorShape )
    return rc;
 }
 
-int hb_gtSetCursor( USHORT uiCursorShape )
+USHORT hb_gtSetCursor( USHORT uiCursorShape )
 {
    hb_gt_SetCursorStyle( uiCursorShape );
 
    return 0;
 }
 
-int hb_gtGetPos( USHORT * uipRow, USHORT * uipCol )
+USHORT hb_gtGetPos( USHORT * uipRow, USHORT * uipCol )
 {
    *uipRow = s_uiCurrentRow = hb_gt_Row();
    *uipCol = s_uiCurrentCol = hb_gt_Col();
@@ -598,7 +598,7 @@ int hb_gtGetPos( USHORT * uipRow, USHORT * uipCol )
    return 0;
 }
 
-int hb_gtSetPos( USHORT uiRow, USHORT uiCol )
+USHORT hb_gtSetPos( USHORT uiRow, USHORT uiCol )
 {
    /* TODO: in this situation Clipper just turns off the cursor */
    /* any further writes would be accounted for by clipping */
@@ -628,14 +628,14 @@ USHORT hb_gtMaxRow( void )
    return hb_gt_GetScreenHeight() - 1;
 }
 
-int hb_gtRectSize( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, USHORT * uipBuffSize )
+USHORT hb_gtRectSize( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, USHORT * uipBuffSize )
 {
    *uipBuffSize = ( uiBottom - uiTop + 1 ) * ( uiRight - uiLeft + 1 ) * 2;
 
    return 0;
 }
 
-int hb_gtRepChar( USHORT uiRow, USHORT uiCol, BYTE byChar, USHORT uiCount )
+USHORT hb_gtRepChar( USHORT uiRow, USHORT uiCol, BYTE byChar, USHORT uiCount )
 {
    int rc;
    BYTE buff[ 255 ];
@@ -653,21 +653,21 @@ int hb_gtRepChar( USHORT uiRow, USHORT uiCol, BYTE byChar, USHORT uiCount )
    return rc;
 }
 
-int hb_gtRest( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, void * vlpScrBuff )
+USHORT hb_gtRest( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, void * vlpScrBuff )
 {
    hb_gt_PutText( uiTop, uiLeft, uiBottom, uiRight, ( BYTE * ) vlpScrBuff );
 
    return 0;
 }
 
-int hb_gtSave( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, void * vlpScrBuff )
+USHORT hb_gtSave( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, void * vlpScrBuff )
 {
    hb_gt_GetText( uiTop, uiLeft, uiBottom, uiRight, ( BYTE * ) vlpScrBuff );
 
    return 0;
 }
 
-int hb_gtScrDim( USHORT * uipHeight, USHORT * uipWidth )
+USHORT hb_gtScrDim( USHORT * uipHeight, USHORT * uipWidth )
 {
    *uipHeight = hb_gtMaxRow();
    *uipWidth = hb_gtMaxCol();
@@ -675,29 +675,27 @@ int hb_gtScrDim( USHORT * uipHeight, USHORT * uipWidth )
    return 0;
 }
 
-int hb_gtGetBlink( BOOL * bBlink )
+USHORT hb_gtGetBlink( BOOL * bBlink )
 {
    *bBlink = hb_gt_GetBlink();
 
    return 0;
 }
 
-int hb_gtSetBlink( BOOL bBlink )
+USHORT hb_gtSetBlink( BOOL bBlink )
 {
    hb_gt_SetBlink( bBlink );
 
    return 0;
 }
 
-int hb_gtSetMode( USHORT uiRows, USHORT uiCols )
+USHORT hb_gtSetMode( USHORT uiRows, USHORT uiCols )
 {
 /* ptucker */
-   hb_gt_SetMode( uiRows, uiCols );
-
-   return 0;
+   return hb_gt_SetMode( uiRows, uiCols ) ? 0 : 1;
 }
 
-int hb_gtSetSnowFlag( BOOL bNoSnow )
+USHORT hb_gtSetSnowFlag( BOOL bNoSnow )
 {
    /* COMMENT: This is a compatibility function.
       If you're running on a CGA and snow is a problem
@@ -708,7 +706,7 @@ int hb_gtSetSnowFlag( BOOL bNoSnow )
    return 0;
 }
 
-int hb_gtWrite( BYTE * fpStr, ULONG length )
+USHORT hb_gtWrite( BYTE * fpStr, ULONG length )
 {
    int iRow, iCol, iMaxCol, iMaxRow;
    ULONG size = length;
@@ -777,7 +775,7 @@ int hb_gtWrite( BYTE * fpStr, ULONG length )
    return 0;
 }
 
-int hb_gtWriteAt( USHORT uiRow, USHORT uiCol, BYTE * fpStr, ULONG length )
+USHORT hb_gtWriteAt( USHORT uiRow, USHORT uiCol, BYTE * fpStr, ULONG length )
 {
    int rc;
 
@@ -787,7 +785,7 @@ int hb_gtWriteAt( USHORT uiRow, USHORT uiCol, BYTE * fpStr, ULONG length )
    return hb_gtWrite( fpStr, length );
 }
 
-int hb_gtWriteCon( BYTE * fpStr, ULONG length )
+USHORT hb_gtWriteCon( BYTE * fpStr, ULONG length )
 {
    int rc = 0, nLen = 0;
    BOOL ldisp = FALSE;
@@ -887,7 +885,7 @@ int hb_gtWriteCon( BYTE * fpStr, ULONG length )
    return rc;
 }
 
-int hb_gtScroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SHORT iRows, SHORT iCols )
+USHORT hb_gtScroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SHORT iRows, SHORT iCols )
 {
    hb_gt_Scroll( uiTop, uiLeft, uiBottom, uiRight, s_Color[ s_uiColorIndex ], iRows, iCols );
    return 0;

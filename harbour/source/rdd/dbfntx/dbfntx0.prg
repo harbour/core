@@ -46,3 +46,16 @@ init procedure DBFNTXInit
 
 return
 
+init procedure InitHandler
+
+   local bOldError := ErrorBlock( { | oError | LockErrHandler( oError, bOldError ) } )
+
+return
+
+static function LockErrHandler( oError, bOldError )
+
+   if oError:gencode() == EG_LOCK
+      return .T.
+   endif
+
+return Eval( bOldError, oError )

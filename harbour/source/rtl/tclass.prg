@@ -100,7 +100,7 @@ static function New( cClassName, cSuper )
    ::aClsDatas = {}
    ::aInlines  = {}
    ::aVirtuals = {}
-   if ISCHAR( cSuper )
+   if ISCHARACTER( cSuper )
       ::cSuper = cSuper
    endif
 

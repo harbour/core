@@ -1,3 +1,52 @@
+19990930-21:00 GMT+1 Victor Szel <info@szelvesz.hu>
+  * include/common.ch
+    rtl/asort.prg
+    rtl/errorsys.prg
+    rtl/memvarbl.prg
+    rtl/menuto.prg
+    rtl/achoice.prg
+    rtl/adir.prg
+    rtl/alert.prg
+    rtl/objfunc.prg
+    rtl/readvar.prg
+    rtl/tclass.prg
+    rtl/tgetlist.prg
+    rtl/setkey.prg
+    ! ISCHAR() -> ISCHARACTER()
+    ! ISNUM() -> ISNUMERIC()
+    ! ISLOG() -> ISLOGICAL()
+      Made them Clipper compatible.
+  * source/rdd/dbfntx/dbfntx0.prg
+    + Added Clipper compatible error handler extension for lock errors.
+  * source/rtl/errorsys.c
+    + __ERRINHANDLER() undocumented internal CA-Cl*pper function added, will
+      be needed later. In CA-Cl*pper its name is ErrorInHandler().
+  * source/rtl/gtapi.c
+    source/rtl/console.c
+    source/rtl/gt/gtwin.c
+    source/rtl/gt/gtdos.c
+    ; Fixes by Chen Kedem implemented.
+    ! SETMODE() now returns a logical value.
+    ! hb_gtSetMode() now returns an error code if the low-level API call fails.
+    ! hb_gt_SetMode() now signals error in Windows, TODO added for DOS.
+  * source/rtl/memvarbl.prg
+    + MEMVARBLOCK() - Added a STRICT_COMPATBILITY code branch, where the 
+      returned codeblock will behave exactly like Clipper, so that it will
+      not assign the passed value to the memvar if it's a NIL. 
+      The NG doesn't suggest this behaviour but that's how it works anyway. 
+      Same goes for the FIELD*BLOCK() functions.
+  * harbour.b31
+    ! Some fixes reported by Jose Lalin.
+  * include/gtapi.h
+    source/rtl/gtapi.c
+    ! int return value (as an error code) changed to USHORT to be even more
+      compatible with Clipper.
+  * source/rtl/fm.c
+    - Removed CRLF before the ending //INFO message.
+    + Dummy MEMORY() function added.
+  * include/extend.h
+    + ISBLOCK() added.
+
 19990930-19:40 GMT+3 Alexander Kresin
   * source/rdd/dbf1.c
     * some changes in GoTo() and SkipRaw() functions for correct processing

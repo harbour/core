@@ -48,7 +48,7 @@ FUNCTION aSort( aArray, nStart, nCount, bBlock )
 
    IF Len( aArray ) >= 1
 
-      IF !ISNUM( nStart ) .OR. nStart == 0
+      IF !ISNUMBER( nStart ) .OR. nStart == 0
          nStart := 1
       ENDIF
 
@@ -58,19 +58,19 @@ FUNCTION aSort( aArray, nStart, nCount, bBlock )
             nStart := Len( aArray )
          ENDIF
 
-         IF !ISNUM( nCount ) .OR. nCount < 1 .OR. nCount > ( Len( aArray ) - nStart + 1 )
+         IF !ISNUMBER( nCount ) .OR. nCount < 1 .OR. nCount > ( Len( aArray ) - nStart + 1 )
             nCount := Len( aArray ) - nStart + 1
          ENDIF
 
          /* NOTE: For speed we are checking the return type of the passed
                   codeblock here. This will result in a small incompatibility
                   since the codeblock will be called one more time for the
-                  first logical element than in Clipper. 
+                  first logical element than in Clipper.
                   But this is block calling frequency and order differs from
                   Clipper anyway, since they use different sorting sorting
                   algorhythms. */
 
-         IF !ISBLOCK( bBlock ) .OR. !( ISLOG( Eval( bBlock, aArray[ nStart ], aArray[ nStart ] ) ) )
+         IF !ISBLOCK( bBlock ) .OR. !( ISLOGICAL( Eval( bBlock, aArray[ nStart ], aArray[ nStart ] ) ) )
             bBlock := {| x, y | x < y }
          ENDIF
 

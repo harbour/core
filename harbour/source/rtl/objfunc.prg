@@ -56,7 +56,7 @@
 function __objHasData( oObject, cSymbol )
 
    if !ISOBJECT( oObject ) .or. ;
-      !ISCHAR( cSymbol )
+      !ISCHARACTER( cSymbol )
       __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
    endif
 
@@ -72,7 +72,7 @@ return __objHasMsg( oObject, cSymbol ) .and. ;
 function __objHasMethod( oObject, cSymbol )
 
    if !ISOBJECT( oObject ) .or. ;
-      !ISCHAR( cSymbol )
+      !ISCHARACTER( cSymbol )
       __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
    endif
 
@@ -99,7 +99,7 @@ function __objGetMsgList( oObject, lDataMethod )
       __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
    endif
 
-   IF !ISLOG( lDataMethod )
+   IF !ISLOGICAL( lDataMethod )
         lDataMethod := .T.
    ENDIF
 
@@ -208,8 +208,8 @@ return oObject
 function __objAddMethod( oObject, cSymbol, nFuncPtr )
 
    if !ISOBJECT( oObject ) .or. ;
-      !ISCHAR( cSymbol ) .or. ;
-      !ISNUM( nFuncPtr )
+      !ISCHARACTER( cSymbol ) .or. ;
+      !ISNUMBER( nFuncPtr )
       __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
    endif
 
@@ -230,7 +230,7 @@ return oObject
 function __objAddInline( oObject, cSymbol, bInline )
 
    if !ISOBJECT( oObject ) .or. ;
-      !ISCHAR( cSymbol )
+      !ISCHARACTER( cSymbol )
       __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
    endif
 
@@ -253,7 +253,7 @@ function __objAddData( oObject, cSymbol )
    local nSeq
 
    if !ISOBJECT( oObject ) .or. ;
-      !ISCHAR( cSymbol )
+      !ISCHARACTER( cSymbol )
       __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
    endif
 
@@ -278,8 +278,8 @@ return oObject
 function __objModMethod( oObject, cSymbol, nFuncPtr )
 
    if !ISOBJECT( oObject ) .or. ;
-      !ISCHAR( cSymbol ) .or. ;
-      !ISNUM( nFuncPtr )
+      !ISCHARACTER( cSymbol ) .or. ;
+      !ISNUMBER( nFuncPtr )
       __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
    endif
 
@@ -300,7 +300,7 @@ return oObject
 function __objModInline( oObject, cSymbol, bInline )
 
    if !ISOBJECT( oObject ) .or. ;
-      !ISCHAR( cSymbol ) .or. ;
+      !ISCHARACTER( cSymbol ) .or. ;
       !ISBLOCK( bInline )
       __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
    endif
@@ -322,7 +322,7 @@ return oObject
 function __objDelMethod( oObject, cSymbol )
 
    if !ISOBJECT( oObject ) .or. ;
-      !ISCHAR( cSymbol )
+      !ISCHARACTER( cSymbol )
       __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
    endif
 
@@ -345,7 +345,7 @@ return __objDelMethod( oObject, cSymbol )              // Same story
 function __objDelData( oObject, cSymbol )
 
    if !ISOBJECT( oObject ) .or. ;
-      !ISCHAR( cSymbol )
+      !ISCHARACTER( cSymbol )
       __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
    endif
 

@@ -80,8 +80,12 @@
 
 FUNCTION MEMVARBLOCK( cMemvar )
 
-   IF ISCHAR( cMemvar ) .AND. __mvSCOPE( cMemvar ) > MV_ERROR
+   IF ISCHARACTER( cMemvar ) .AND. __mvSCOPE( cMemvar ) > MV_ERROR
+#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+      RETURN {| x | iif( x == NIL, __mvGET( cMemvar ), __mvPUT( cMemvar, x ) ) }
+#else
       RETURN {| x | iif( PCount() == 0, __mvGET( cMemvar ), __mvPUT( cMemvar, x ) ) }
+#endif
    ENDIF
 
    RETURN NIL

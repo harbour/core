@@ -48,7 +48,7 @@ FUNCTION aDir( cFileMask, aName, aSize, aDate, aTime, aAttr )
 
    // ; CA-Clipper would fail on this case.
 
-   IF !ISCHAR( cFileMask )
+   IF !ISCHARACTER( cFileMask )
       RETURN 0
    ENDIF
 

@@ -95,7 +95,7 @@ function __MenuTo( bBlock, cVariable )
 
       // put choice in a valid range
 
-      if !ISNUM( n ) .OR. n < 1
+      if !ISNUMBER( n ) .OR. n < 1
          n := 1
       endif
 
@@ -131,7 +131,7 @@ function __MenuTo( bBlock, cVariable )
                xMsg := eval( xMsg )
             endif
 
-            if !ISCHAR( xMsg )
+            if !ISCHARACTER( xMsg )
                xMsg := ""
             endif
 

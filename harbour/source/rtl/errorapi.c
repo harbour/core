@@ -38,6 +38,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ *    HB___ERRINHANDLER()
  *    HB_DOSERROR()
  *    hb_errLaunch()
  *    hb_errLaunchSubst()
@@ -78,6 +79,14 @@ extern HARBOUR HB_ERRORNEW( void );
 void hb_errForceLink()
 {
    HB_ERRORNEW();
+}
+
+/* There's a similar undocumented, internal functions in CA-Cl*pper named
+   ErrorInHandler(). */ 
+
+HARBOUR HB___ERRINHANDLER( void )
+{
+   hb_errInternal( 9999, "Error recovery failure", NULL, NULL );
 }
 
 HARBOUR HB_ERRORBLOCK( void )

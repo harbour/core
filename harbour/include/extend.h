@@ -83,6 +83,7 @@
 #define ISMEMO( n )        ( hb_param( n, IT_MEMO ) != NULL )
 #define ISBYREF( n )       ( hb_parinfo( n ) & IT_BYREF ) /* NOTE: Intentionally using a different method */
 #define ISARRAY( n )       ( hb_param( n, IT_ARRAY ) != NULL )
+#define ISBLOCK( n )       ( hb_param( n, IT_BLOCK ) != NULL ) /* Not available in CA-Cl*pper. */
 
 #define PCOUNT             hb_pcount()
 #define ALENGTH( n )       hb_parinfa( n, 0 )

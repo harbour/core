@@ -586,6 +586,8 @@ void hb_gt_DispEnd( void )
 
 BOOL hb_gt_SetMode( USHORT usRows, USHORT usCols )
 {
+   /* TODO: Implement this function. */
+
    HB_SYMBOL_UNUSED( usRows );
    HB_SYMBOL_UNUSED( usCols );
 

@@ -67,7 +67,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
 
 #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
 
-   IF !ISCHAR( xMessage )
+   IF !ISCHARACTER( xMessage )
       RETURN NIL
    ENDIF
 
@@ -86,7 +86,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
    IF ISARRAY( xMessage )
 
       FOR iEval := 1 TO Len( xMessage )
-         IF ISCHAR( xMessage[ iEval ] )
+         IF ISCHARACTER( xMessage[ iEval ] )
             AAdd( aSay, xMessage[ iEval ] )
          ENDIF
       NEXT
@@ -117,7 +117,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       aOptions := {}
    ENDIF
 
-   IF !ISCHAR( cColorNorm )
+   IF !ISCHARACTER( cColorNorm )
       cColorNorm := "W+/R"
       cColorHigh := "W+/B"
    ELSE
@@ -136,7 +136,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
    /* Cleanup the button array */
    aOptionsOK := {}
    FOR iEval := 1 TO Len( aOptions )
-      IF ISCHAR( aOptions[ iEval ] ) .AND. !Empty( aOptions[ iEval ] )
+      IF ISCHARACTER( aOptions[ iEval ] ) .AND. !Empty( aOptions[ iEval ] )
          AAdd( aOptionsOK, aOptions[ iEval ] )
       ENDIF
    NEXT

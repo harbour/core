@@ -57,7 +57,7 @@ function ReadModal( GetList, nPos )
    oGetList:cReadProcName = ProcName( 1 )
    oGetList:nReadProcLine = ProcLine( 1 )
 
-   if ! ( ISNUM( nPos ) .and. nPos > 0 )
+   if ! ( ISNUMBER( nPos ) .and. nPos > 0 )
       oGetList:nPos = oGetList:Settle( 0 )
    endif
 
@@ -490,7 +490,7 @@ METHOD ReadVar( cNewVarName ) CLASS TGetList
 
    local cOldName := ::cVarName
 
-   if ISCHAR( cNewVarName )
+   if ISCHARACTER( cNewVarName )
       ::cVarName := cNewVarName
    endif
 

@@ -63,12 +63,12 @@ genpas.obj   : source\compiler\genpas.c
 harbour.obj  : source\compiler\harbour.c
 harbourl.obj : source\compiler\harbourl.c harbour.l
 harboury.obj : source\compiler\harboury.c harbour.y
-hbpp.obj     : source\hbpp\hbpp.c         source\hbpp\harb.h
-hbppint.obj  : source\hbpp\hbppint.c      source\hbpp\harb.h
+hbpp.obj     : source\hbpp\hbpp.c
+hbppint.obj  : source\hbpp\hbppint.c
+table.obj    : source\hbpp\table.c
 lex_t1.obj   : source\compiler\lex_t1.c   harbour.l
 lex_t2.obj   : source\compiler\lex_t2.c   harbour.l
 lex_t3.obj   : source\compiler\lex_t3.c   harbour.l
-table.obj    : source\hbpp\table.c
 
 source\compiler\harboury.c : harbour.y
    bison -d -v -y -osource\compiler\harboury.c source\compiler\harbour.y

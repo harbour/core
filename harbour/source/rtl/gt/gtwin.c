@@ -507,12 +507,13 @@ static BOOL hb_gt_SetScreenBuffer( HANDLE HNew, HANDLE HOld )
    SetConsoleWindowInfo( HNew, TRUE,  &csbi.srWindow );
    SetConsoleWindowInfo( HNew, FALSE, &srWin );
 
-   return 0;
+   return TRUE;
 }
 
 BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
 {
 /* ptucker */
+   BOOL bRetVal = TRUE;
    CONSOLE_SCREEN_BUFFER_INFO csbi;
    SMALL_RECT srWin;
    COORD coBuf;
@@ -533,15 +534,18 @@ BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
    /* console window first, then the buffer */
    if( ( DWORD ) csbi.dwSize.X * csbi.dwSize.Y > ( DWORD ) uiCols * uiRows )
    {
-      SetConsoleWindowInfo( HOutput, TRUE, &srWin );
-      SetConsoleScreenBufferSize( HOutput, coBuf );
+      if( !SetConsoleWindowInfo( HOutput, TRUE, &srWin ) || 
+          !SetConsoleScreenBufferSize( HOutput, coBuf ) )
+         bRetVal = FALSE;
    }
    else if( ( DWORD ) csbi.dwSize.X * csbi.dwSize.Y < ( DWORD ) uiCols * uiRows )
    {
-      SetConsoleScreenBufferSize( HOutput, coBuf );
-      SetConsoleWindowInfo( HOutput, TRUE, &srWin );
+      if( !SetConsoleScreenBufferSize( HOutput, coBuf ) ||
+          !SetConsoleWindowInfo( HOutput, TRUE, &srWin ) )
+         bRetVal = FALSE;
    }
-   return 0;
+
+   return bRetVal;
 }
 
 void hb_gt_Replicate( BYTE c, ULONG ulLength )

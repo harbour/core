@@ -104,7 +104,7 @@ Function SetKey( anKey, bBlock, bCondition )
   if ISARRAY( anKey )
     aEval( anKey, {|x| setKey( x, bBlock, bCondition ) } )
 
-  elseif ISNUM( anKey ) .and. anKey <> 0
+  elseif ISNUMBER( anKey ) .and. anKey <> 0
     if ( nFound := aScan( aSetKeys, {|x| x[ KEY ] == anKey } ) ) == 0
       if ISBLOCK( bBlock )
         aAdd( aSetKeys, { anKey, bBlock, bCondition } )
@@ -171,7 +171,7 @@ return bReturn
 Function HB_SetKeyGet( nKey, bCondition )
   local nFound
 
-  if ISNUM( nKey ) .and. nKey <> 0
+  if ISNUMBER( nKey ) .and. nKey <> 0
     if ( nFound := aScan( aSetKeys, {|x| x[ KEY ] == nKey } ) ) == 0
       bCondition := NIL
 

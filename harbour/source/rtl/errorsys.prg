@@ -38,17 +38,13 @@
 #include "common.ch"
 #include "error.ch"
 
-//----------------------------------------------------------------------------//
-
-procedure ErrorSys
+PROCEDURE ErrorSys
 
    ErrorBlock( { | oError | DefError( oError ) } )
 
-return
+   RETURN
 
-//----------------------------------------------------------------------------//
-
-static function DefError( oError )
+STATIC FUNCTION DefError( oError )
    LOCAL cMessage
 
    LOCAL aOptions
@@ -127,21 +123,21 @@ STATIC FUNCTION ErrorMessage(oError)
    cMessage := iif( oError:severity > ES_WARNING, "Error", "Warning" ) + " "
 
    // add subsystem name if available
-   IF ISCHAR( oError:subsystem )
+   IF ISCHARACTER( oError:subsystem )
       cMessage += oError:subsystem()
    ELSE
       cMessage += "???"
    ENDIF
 
    // add subsystem's error code if available
-   IF ISNUM( oError:subCode )
+   IF ISNUMBER( oError:subCode )
       cMessage += "/" + LTrim( Str( oError:subCode ) )
    ELSE
       cMessage += "/???"
    ENDIF
 
    // add error description if available
-   IF ISCHAR( oError:description )
+   IF ISCHARACTER( oError:description )
       cMessage += "  " + oError:description
    ENDIF
 
@@ -154,6 +150,3 @@ STATIC FUNCTION ErrorMessage(oError)
    ENDCASE
 
    RETURN cMessage
-
-//----------------------------------------------------------------------------//
-

@@ -40,7 +40,7 @@ FUNCTION ReadVar( cVarName )
 
    LOCAL cOldVarName := s_cVarName
 
-   IF ISCHAR( cVarName )
+   IF ISCHARACTER( cVarName )
       s_cVarName := cVarName
    ENDIF
 
