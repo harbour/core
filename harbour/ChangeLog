@@ -1,3 +1,9 @@
+19990801-20:20 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * source/rtl/files.c
+     Changed for MSVC
+   * tests/working/buildvc.bat
+     Added a include path to harbour
+
 19990801-18:14 CET Victor Szel <info@szelvesz.hu>
    ! source/compiler/harbour.y - 
      hb_INITSTATICS() -> HB_INITSTATICS() (case adjusted)

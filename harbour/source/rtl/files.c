@@ -161,7 +161,7 @@ HB_INIT_SYMBOLS_END( Files__InitSymbols );
 
 /* Convert HARBOUR flags to IO subsystem flags */
 
-#if defined(HAVE_POSIX_IO)
+#if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
 
 static int convert_open_flags( int flags )
 {
@@ -247,8 +247,14 @@ FHANDLE hb_fsOpen   ( BYTEP name, USHORT flags )
         handle = open((char *)name,convert_open_flags(flags));
         last_error = errno;
 #else
+  #if defined( _MSC_VER )
+        errno = 0;
+        handle = _open( ( char * ) name, convert_open_flags( flags ) );
+        last_error = errno;
+  #else
         handle = FS_ERROR;
         last_error = FS_ERROR;
+  #endif
 #endif
         return handle;
 }
@@ -271,31 +277,56 @@ FHANDLE hb_fsCreate ( BYTEP name, USHORT flags )
            last_error = errno;
         }
 #else
+  #if defined( _MSC_VER )
+        errno = 0;
+        convert_create_flags( flags, &oflag, &pmode );
+        handle = _open( ( char * ) name, oflag, pmode );
+        if( handle == FS_ERROR )
+        {
+           /* This if block is required, because errno will be set
+              if the file did not exist and had to be created, even
+              when the create is successful! */
+           last_error = errno;
+        }
+  #else
         handle = FS_ERROR;
         last_error = FS_ERROR;
+  #endif
 #endif
         return handle;
 }
 
 void    hb_fsClose  ( FHANDLE handle )
 {
-#if defined(HAVE_POSIX_IO)
-    close(handle);
+#if defined( HAVE_POSIX_IO )
+    close( handle );
     return;
+#else
+  #if defined( _MSC_VER )
+    _close( handle );
+    return;
+  #endif
 #endif
 }
 
 USHORT  hb_fsRead   ( FHANDLE handle, BYTEP buff, USHORT count )
 {
         USHORT bytes;
-#if defined(HAVE_POSIX_IO)
+#if defined( HAVE_POSIX_IO )
         errno = 0;
-        bytes = read(handle,buff,count);
+        bytes = read( handle, buff, count );
         last_error = errno;
         if( bytes == 65535U ) bytes = 0;
 #else
+  #if defined( _MSC_VER )
+        errno = 0;
+        bytes = _read( handle, buff, count );
+        last_error = errno;
+        if( bytes == 65535U ) bytes = 0;
+  #else
         bytes = 0;
         last_error = FS_ERROR;
+  #endif
 #endif
         return bytes;
 }
@@ -303,13 +334,19 @@ USHORT  hb_fsRead   ( FHANDLE handle, BYTEP buff, USHORT count )
 USHORT  hb_fsWrite  ( FHANDLE handle, BYTEP buff, USHORT count )
 {
         USHORT bytes;
-#if defined(HAVE_POSIX_IO)
+#if defined( HAVE_POSIX_IO )
         errno = 0;
-        bytes = write(handle,buff,count);
+        bytes = write( handle, buff, count );
         last_error = errno;
 #else
+  #if defined( _MSC_VER )
+        errno = 0;
+        bytes = _write( handle, buff, count );
+        last_error = errno;
+  #else
         bytes = 0;
         last_error = FS_ERROR;
+  #endif
 #endif
         return bytes;
 }
@@ -319,11 +356,17 @@ ULONG   hb_fsSeek   ( FHANDLE handle, LONG offset, USHORT flags )
         ULONG position;
 #if defined(HAVE_POSIX_IO)
         errno = 0;
-        position = lseek(handle,offset,convert_seek_flags(flags));
+        position = lseek( handle, offset, convert_seek_flags( flags ) );
         last_error = errno;
 #else
+  #if defined( _MSC_VER )
+        errno = 0;
+        position = _lseek( handle, offset, convert_seek_flags( flags ) );
+        last_error = errno;
+  #else
         position = 0;
         last_error = FS_ERROR;
+  #endif
 #endif
         return position;
 }
@@ -337,17 +380,24 @@ void    hb_fsDelete ( BYTEP name )
 {
 #if defined(HAVE_POSIX_IO)
         errno = 0;
-        unlink(( char *)name );
+        unlink( ( char * ) name );
         last_error = errno;
         return;
+#else
+  #if defined( _MSC_VER )
+        errno = 0;
+        remove( ( char *) name );
+        last_error = errno;
+        return;
+  #endif
 #endif
 }
 
 void    hb_fsRename ( BYTEP older, BYTEP newer )
 {
-#if defined(HAVE_POSIX_IO)
+#if defined(HAVE_POSIX_IO) || defined( _MSC_VER )
         errno = 0;
-        rename( (char *)older, (char *)newer );
+        rename( ( char * ) older, ( char * ) newer );
         last_error = errno;
         return;
 #endif
