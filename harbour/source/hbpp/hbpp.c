@@ -544,11 +544,11 @@ int ParseExpression( char* sLine, char* sOutLine )
    if ( (stdef=DefSearch(sToken)) != NULL )
    {
      for(i=0;i<kolused;i++) if ( aUsed[i] == stdef ) break;
-     if ( i < kolused )
+     /*if ( i < kolused )
      {
        if ( i < lastused ) GenError( _szPErrors, 'P', ERR_RECURSE, NULL, NULL );
      }
-     else if ( WorkDefine ( &ptri, &ptro, stdef, lenToken ) )
+     else */if ( WorkDefine ( &ptri, &ptro, stdef, lenToken ) )
      {
        aUsed[kolused++] = stdef;
        rezDef++;

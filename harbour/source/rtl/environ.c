@@ -263,7 +263,7 @@ HARBOUR HB_GETENV(void)
  */
 HARBOUR HB___RUN( void )
 {
-#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__)
+#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__) || defined(__MSC__) || defined(_MSC_VER) || defined(__IBMCPP__) || defined(HARBOUR_GCC_OS2)
    if( hb_pcount() == 1 )                         /* Parameter passed         */
    {
       system( hb_parc( 1 ) );

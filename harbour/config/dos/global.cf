@@ -34,6 +34,6 @@ clean::
 	-if exist *.obj $(RM) *.obj
 	-if exist core $(RM) core
 	-if exist *.o $(RM) *.o
-	-if exist $(ARCH_DOS) $(RD) $(ARCH_DOS)
-	-if exist $(HB_ARCHITECTURE) $(RD) $(HB_ARCHITECTURE)
+	-$(RD) $(ARCH_DOS)
+	-$(RD) $(HB_ARCHITECTURE)
 endif

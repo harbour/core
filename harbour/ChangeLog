@@ -1,3 +1,30 @@
+19990716-20:00 EDT David G. Holm <dholm@jsd-llc.com>
+  * config/rules.cf
+    + Added ifeq section for BCC, which requires that the output
+      file be listed ahead of the input file on the command line
+      (at least for version 3.1)
+  + config/dos/bcc31.cf
+    + New GNU Make System module for Borland C++ 3.1
+      (adapted from original config/win32/bcc32.cf)
+  * config/dos/global.cf
+    + Added 'if not exist' to both 'dirbase::' commands
+    + Added 'if exist' to all deletes of a single file type
+  * config/win32/bcc32.cf
+    * Applied several changes from config/dos/bcc31.cf,
+      but remains untested
+  * doc/gmake.txt
+    + Added dos/bcc31
+  * source/hbpp/hbpp.c
+    ! Temporary fix to avoid an incorrect "Cycled #define" error
+  * source/hbpp/hbppint.c
+    ! Use of exit() warrants inclusion of stdlib.h for all compilers
+  * source/rtl/environ.c
+    + Added RUN() support for MSC, IBMCPP, and GCC for OS/2
+  * tests/working/dosshell.prg
+    + Added support for OS/2
+  * tests/working/procline.prg
+    - Removed unneeded 'local a' that I accidentally left in earlier
+
 Fri Jul 16 17:53:35 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* source/rtl/gt/gtwin.c: 

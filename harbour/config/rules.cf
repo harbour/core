@@ -42,6 +42,16 @@ ifeq ($(SOURCE_DIR),)
 SOURCE_DIR = $(GRANDP)
 endif
 
+# BCC (at least version 3.1) requires that the output file be listed ahead of the input file
+ifeq ($(CC),bcc)
+# Rule to generate an object file from a C source file in the parent.
+%$(OBJ_EXT) : $(SOURCE_DIR)%.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(C_USR) $(CC_OUT)$(subst .c,$(OBJ_EXT),$(subst $(SOURCE_DIR),,$?)) $(CC_IN) $?
+
+# Rule to generate an object file from a C source file.
+%$(OBJ_EXT) : %.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(C_USR) $(CC_OUT)$(?:.c=$(OBJ_EXT)) $(CC_IN) $?
+else
 # Rule to generate an object file from a C source file in the parent.
 %$(OBJ_EXT) : $(SOURCE_DIR)%.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(C_USR) $(CC_IN) $? $(CC_OUT)$(subst .c,$(OBJ_EXT),$(subst $(SOURCE_DIR),,$?))
@@ -49,6 +59,7 @@ endif
 # Rule to generate an object file from a C source file.
 %$(OBJ_EXT) : %.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(C_USR) $(CC_IN) $? $(CC_OUT)$(?:.c=$(OBJ_EXT))
+endif
 
 # Rule to generate an executable file from an object file.
 %$(EXE_EXT) : %$(OBJ_EXT)

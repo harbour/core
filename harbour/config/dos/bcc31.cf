@@ -2,7 +2,7 @@
 # $Id$
 #
 # The Harbour Project
-# GNU MAKE file for Borland C/C++ Builder
+# GNU MAKE file for Borland C/C++ 3.1
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 
@@ -21,28 +21,28 @@ else
 _HB_LIB_COMPILE = $(subst /,\\,$(HB_LIB_COMPILE)/)
 endif
 
-CC = bcc32
+CC = bcc
 CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -I$($(HB_ARCHITECTURE)_$(HB_COMPILER)_GRANDP) -I$(_HB_INC_COMPILE)
-CFLAGS = -O2
+CFLAGS = -O2 -mh
 
 #Note: The empty line below HAVE TO exist!
 define link_file
-$(COMSPEC) /E:2048 /Cecho $(file) >> __link__.tmp
+echo $(file) >> __link__.tmp
 
 endef
 
 
 define link_exe_file
-$(COMSPEC) /E:2048 /Cecho $(LDFLAGS) -e$@ > __link__.tmp
+echo $(LDFLAGS) -e$@ > __link__.tmp
 $(foreach file, $^, $(link_file))
-$(COMSPEC) /E:2048 /Cecho $(LINKLIBS) >> __link__.tmp
+$(foreach file, $(LINKLIBS), $(link_file))
 -$(LD) @__link__.tmp
 endef
 
 LD = bcc
-LDFLAGS = -O2
+LDFLAGS = -O2 -mh
 ifeq ($(HB_LIB_COMPILE),)
 LINKLIBS = $(foreach lib, $(LIBS), $(TOP)$(ROOT)source/$(lib)/$(ARCH)/$(lib)$(LIB_EXT))
 else

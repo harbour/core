@@ -25,13 +25,12 @@
    their web site at http://www.gnu.org/).
  */
 
+#include <stdlib.h>
 #if defined(__GNUC__)
  #include <string.h>
- #include <stdlib.h>
 #else
  #if (defined(_MSC_VER) || defined(__IBMCPP__) || defined(__WATCOMC__))
   #include <memory.h>
-  #include <stdlib.h>
  #else
   #include <alloc.h>
   #include <mem.h>

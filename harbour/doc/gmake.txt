@@ -157,6 +157,10 @@ For IBM Visual Age C++ on OS/2:
   HB_ARCHITECTURE   os2
   HB_COMPILER       icc
 
+For Borland C++ 3.1
+  HB_ARCHITECTURE   dos
+  HB_COMPILER       bcc31
+
 For DJGPP (GCC port for DOS)
   HB_ARCHITECTURE   dos
   HB_COMPILER       djgpp
