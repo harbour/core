@@ -3,7 +3,7 @@
  */
 
 #include <extend.h>
-#include <CToHarb.h>
+#include <ctoharb.h>
 
 extern ITEM errorBlock;
 extern STACK stack;
