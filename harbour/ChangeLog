@@ -13,6 +13,9 @@
    + source/codepage/cdphu852.c
    + source/codepage/cdphuwin.c
    * source/codepage/Makefile
+   * makefile.bc
+   * makefile.nt
+   * makefile.vc
      + Added Hungarian 852 and Windows sorting codepages.
 
    * source/rtl/errorapi.c
