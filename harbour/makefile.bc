@@ -81,7 +81,7 @@ HBPP_DIR     = utils\hbpp
 # C compiler definition and C flags. These should never have to change.
 #
 
-CFLAGS         = -I$(INCLUDE_DIR) -d $(C_USR) $(CFLAGS)
+CFLAGS         = -I$(INCLUDE_DIR) -d $(C_USR) $(CFLAGS) -DHB_LANG_DEFAULT=$(HB_LANG_DEFAULT)
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSDEBUG = -v $(CLIBFLAGS)
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
