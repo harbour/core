@@ -10,7 +10,7 @@
 #include <itemapi.h>
 
 extern STACK stack;                             /* External data used       */
-extern HB_ITEM  aStatics;
+extern HB_ITEM aStatics;
 
 PHB_ITEM ArrayClone( PHB_ITEM );
 
@@ -20,7 +20,7 @@ PHB_ITEM ArrayClone( PHB_ITEM );
  *
  *                Please aClone before assignments
  * $End$ */
-HARBOUR __ASTATIC()
+HARBOUR HB___ASTATIC(void)
 {
    PHB_ITEM pStatics = hb_arrayClone( &aStatics );
 
@@ -33,7 +33,7 @@ HARBOUR __ASTATIC()
  * $FuncName$     <xStat> __Static(<nStatic>)
  * $Description$  Return a specified statics
  * $End$ */
-HARBOUR __STATIC()
+HARBOUR HB___STATIC(void)
 {
    PHB_ITEM pStatic;
    WORD  wStatic;
@@ -83,7 +83,7 @@ WORD GlobalStackLen( void )
    for( pItem = stack.pItems; pItem++ <= stack.pPos; nCount++ );
    return( nCount );
 }
-HARBOUR __GLOBALSTACKLEN()
+HARBOUR HB___GLOBALSTACKLEN(void)
 {
    _retni( GlobalStackLen() );
 }
@@ -93,7 +93,7 @@ HARBOUR __GLOBALSTACKLEN()
  * $FuncName$     <aStack> __aGlobalStack()
  * $Description$  Returns the global stack
  * $End$ */
-HARBOUR __AGLOBALSTACK()
+HARBOUR HB___AGLOBALSTACK(void)
 {
    PHB_ITEM pReturn;
    PHB_ITEM pItem;
@@ -124,7 +124,7 @@ WORD StackLen( void )
    for( pItem = pBase; pItem < stack.pBase; pItem++, nCount++ );
    return( nCount );
 }
-HARBOUR __STACKLEN()
+HARBOUR HB___STACKLEN(void)
 {
    _retni( StackLen() );
 }
@@ -141,7 +141,7 @@ HARBOUR __STACKLEN()
  *                [x+1 .. y] Locals
  *                [y+1 ..]   Pushed data
  * $End$ */
-HARBOUR __ASTACK()
+HARBOUR HB___ASTACK(void)
 {
    PHB_ITEM pReturn;
    PHB_ITEM pItem;
@@ -166,7 +166,7 @@ HARBOUR __ASTACK()
                /* TODO : put bLocals / bParams      */
                /* somewhere for declared parameters */
                /* and locals                        */
-HARBOUR __APARAM()
+HARBOUR HB___APARAM(void)
 {
    PHB_ITEM pReturn;
    PHB_ITEM pItem;

@@ -109,12 +109,12 @@ function ToChar( xTxt, cSeparator, lDebug )
 return cOut
 
 //
-// <xItem> HBDebug ( <xItem> )
+// <xItem> Debug ( <xItem> )
 //
 // Non-volatile debugging function showing contents of xItem and returing
 // passed argument.
 //
-function HBDebug( xItem )
+function Debug( xItem )
 
    QOut( ToChar( xItem, ", ", .T. ) )
 
