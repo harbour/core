@@ -80,6 +80,7 @@ local cont_r:=""
 local Lfinefile:=.f.
 local nFileLen
 local cCharEol:=HB_OSNewLine()
+local nLenEol:=LEN(cCharEol)
 local nPosLasteol
 local lcisonoeol
 //------------------
@@ -251,9 +252,9 @@ local lcisonoeol
                    // cut the row
                    Pos:=1
                    cont_r:=substr(cByte,Pos,nposfl-Pos)
-                   appendtodb(cont_r,cSeparator)
+                   appendtodb(cont_r,cSeparator,cDelim)
                    // skipping the line feed and now we are on a good char
-                   pos:=nposfl+2
+                   pos:=nposfl+nLenEol
                    cont_r:=""
                    //cut the row  
                    cByte:=substr(cByte,Pos)
@@ -282,27 +283,38 @@ STATIC FUNCTION ExportVar( handle, xField, cDelim )
 RETURN .T.
 
 
-STATIC FUNCTION appendtodb(row,cDelim)
+STATIC FUNCTION appendtodb(row,cSeparator,cDelim)
 local lenrow:=len(row)
 local aStruct:=DBSTRUCT()
 local aMyVal:={}
 local ii:=1
-local npos:=0, nPosNext:=0
+local nPosSep:=0, nPosNextSep:=0
 local nDBFFields
 local cBuffer, cUPbuffer
 local vRes
-//if there is one field only there is no Delim and i put...
-row:=row+cDelim
-nPos:=at(cDelim,row)
-aadd( aMyval,substr(row,1,nPos-1) )
+local nPos1Deli, nPos2Deli
+//if there is one field only there is no Separator and i put...
+row:=row+cSeparator
+nPosSep:=at(cSeparator,row) // seek the first Separator eg. ,
+nPos1Deli:=at(cDelim,row)                // seek the first delimiter "
+nPos2Deli:=at(cDelim,row,nPos1deli+1)    // seek the second delimiter "
+if nPosSep>nPos1Deli .and. nPosSep<nPos2Deli
+   nPosSep=nPos2deli+1
+endif
+aadd( aMyval,substr(row,1,nPosSep-1) )
 do while .t.
-    nPosNext:=at(cDelim,row,npos+2)
-    if nPosNext=0
+    nPosNextSep:=at(cSeparator,row,nPosSep+2)
+    if nPosNextSep=0
        exit
     endif
-    aadd( aMyVal,substr(row,npos+1,nPosnext-npos-1) )
-    nPos:=nPosnext    
-    if nPos>lenrow
+    nPos1Deli:=at(cDelim,row,nPosSep)     // seek the first delimiter "
+    nPos2Deli:=at(cDelim,row,nPos1deli+1)    // seek the second delimiter "
+    if nPosNextSep>nPos1Deli .and. nPosNextSep<nPos2Deli
+       nPosNextSep=nPos2deli+1
+    endif
+    aadd( aMyVal,substr(row,nPosSep+1,nPosnextSep-nPosSep-1) )
+    nPosSep:=nPosnextSep    
+    if nPosSep>lenrow
        exit
     endif 
 enddo
@@ -310,7 +322,7 @@ nDBFfields:=min(len(aMyVal),len(aStruct))
 append blank
 
 for ii:=1 to nDBFfields
-   cBuffer:=strtran(aMyval[ii],'"','')
+   cBuffer:=strtran(aMyval[ii],cDelim,'')
    DO CASE
       CASE aStruct[ ii,2 ] == "D"
          vRes := HB_STOD( cBuffer )
