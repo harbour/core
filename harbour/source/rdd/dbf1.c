@@ -298,7 +298,7 @@ static BOOL hb_dbfUpdateRecord( AREAP pArea, ULONG ulRecNo )
    LPFIELD pField;
    BYTE pBuffer[ 1 ];
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_dbfUpdateRecord(%p, %lu)", pArea, lRecNo));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dbfUpdateRecord(%p, %lu)", pArea, ulRecNo));
 
    if( ulRecNo > pArea->lpExtendInfo->ulRecCount )
    {

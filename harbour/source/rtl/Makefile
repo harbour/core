@@ -44,6 +44,7 @@ C_SOURCES=\
         soundex.c \
         strings.c \
         tone.c \
+        trace.c \
         transfrm.c \
         \
         gtxxx.c \

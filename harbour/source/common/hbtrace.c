@@ -43,6 +43,7 @@ char * hb_tr_file_ = "";
 int    hb_tr_line_ = 0;
 int    hb_tr_level_ = 0;
 
+static int hb_tr_state_ = 1;
 static FILE* hb_tr_fp_ = 0;
 static char* slevel[HB_TR_LAST] =
 {
@@ -54,10 +55,74 @@ static char* slevel[HB_TR_LAST] =
   "HB_TR_DEBUG"
 };
 
+
+void hb_traceon( void )
+{
+  hb_tr_state_ = 1;
+}
+
+void hb_traceoff( void )
+{
+  hb_tr_state_ = 0;
+}
+
+int hb_tracelevel( int new_level )
+{
+  int old_level = hb_tr_level_;
+
+  if (new_level >= HB_TR_ALWAYS &&
+      new_level <  HB_TR_LAST) {
+    hb_tr_level_ = new_level;
+  }
+
+  return old_level;
+}
+
+int hb_tr_level(void)
+{
+  static int level = -1;
+  int i;
+  char* env;
+  char* out;
+
+  if (level != -1) {
+    return level;
+  }
+
+  hb_tr_fp_ = stderr;
+  out = getenv("HB_TR_OUTPUT");
+  if (out != 0 && out[0] != '\0') {
+    hb_tr_fp_ = fopen(out, "w");
+    if (hb_tr_fp_ == NULL) {
+      hb_tr_fp_ = stderr;
+    }
+  }
+
+  level = HB_TR_DEFAULT;
+  env = getenv("HB_TR_LEVEL");
+  if (env != 0 && env[0] != '\0') {
+    for (i = 0; i < HB_TR_LAST; ++i) {
+      if (strcmp(env, slevel[i]) == 0) {
+        level = i;
+        break;
+      }
+    }
+  }
+
+  return level;
+}
+
 void hb_tr_trace( char * fmt, ... )
 {
   int i;
   va_list ap;
+
+  /*
+   * If tracing is disabled, do nothing.
+   */
+  if( ! hb_tr_state_ ) {
+    return;
+  }
 
   /*
    * Clean up the file, so that instead of showing
@@ -99,40 +164,4 @@ void hb_tr_trace( char * fmt, ... )
   hb_tr_file_ = "";
   hb_tr_line_ = -1;
   hb_tr_level_ = -1;
-}
-
-int hb_tr_level(void)
-{
-  static int level = -1;
-  int i;
-  char* env;
-  char* out;
-
-  if (level != -1) {
-    return level;
-  }
-
-  hb_tr_fp_ = stderr;
-  out = getenv("HB_TR_OUTPUT");
-  if (out != 0 && out[0] != '\0') {
-    hb_tr_fp_ = fopen(out, "w");
-    if (hb_tr_fp_ == NULL) {
-      hb_tr_fp_ = stderr;
-    }
-  }
-
-  env = getenv("HB_TR_LEVEL");
-  if (env == 0 || env[0] == '\0') {
-    level = HB_TR_DEFAULT;
-  }
-  else {
-    for (i = 0; i < HB_TR_LAST; ++i) {
-      if (strcmp(env, slevel[i]) == 0) {
-        level = i;
-        break;
-      }
-    }
-  }
-
-  return level;
 }

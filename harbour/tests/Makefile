@@ -26,11 +26,6 @@ endif
 
 ifeq ($(PM),) # PM not defined = build all files
 
-DIRS=\
-        regress \
-
-include $(TOP)$(ROOT)config/dir.cf
-
 PRG_SOURCES=\
         ac_test.prg \
         adirtest.prg \
@@ -197,3 +192,9 @@ endif
 include $(TOP)$(ROOT)config/bin.cf
 
 endif
+
+
+DIRS=\
+        regress \
+
+include $(TOP)$(ROOT)config/dir.cf

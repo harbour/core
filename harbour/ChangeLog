@@ -1,3 +1,24 @@
+Wed Nov 24 12:45:36 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* include/hbtrace.h: 
+	* source/common/hbtrace.c: 
+	* source/rtl/trace.c: 
+	* source/rtl/Makefile: 
+	* doc/tracing.txt: 
+	Implememted run-time tracing control; thanks to Jose Lalin
+	<dezac@corevia.com> for suggesting this. The interface is
+	described in doc/tracing.txt.
+
+	* source/rdd/dbf1.c: 
+	Fixed a compilation error that only appeared with HB_TR_DEBUG.
+	
+	* source/rtl/inkey.c: 
+	Added a guard to avoid a compilation warning.
+
+	* tests/Makefile: 
+	Changed the order of inclusion to make sure you can still do a
+	make 'PRG_SOURCES=foo.prg'.
+
 19991123-13:35 EDT David G. Holm <dholm@jsd-llc.com>
 
    * rt_misc.prg
