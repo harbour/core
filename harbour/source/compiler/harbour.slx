@@ -934,23 +934,23 @@ int hb_comp_SLX_CustomAction( int x, int aiHold[], int *ptr_iHold, BOOL *ptr_bIg
             iIdentifier++;
             DEBUG_INFO( printf( "HB_IN, Primary Identifier %s Increased to: %i\n", "IN", iIdentifier ) );
             return IDENTIFIER;
-	  }
+         }
 
       case HB_STEP :
          *ptr_bIgnoreWords = FALSE;
-	 if( iLastToken == NUM_INTEGER || iLastToken == IDENTIFIER || iLastToken == MACROVAR || iLastToken == MACROTEXT || iLastToken == ')' || iLastToken == ']' )
+         if( iLastToken == NUM_INTEGER || iLastToken == NUM_LONG || iLastToken == NUM_DOUBLE || iLastToken == IDENTIFIER || iLastToken == MACROVAR || iLastToken == MACROTEXT || iLastToken == ')' || iLastToken == ']' )
 	    { return STEP + DONT_REDUCE; }
 	 else
-            {
-              yylval.string = hb_compIdentifierNew( "STEP", TRUE );
-              iIdentifier++;
-              DEBUG_INFO( printf( "HB_STEP, Primary Identifier %s Increased to: %i\n", "STEP", iIdentifier ) );
-              return IDENTIFIER;
-            }
+         {
+            yylval.string = hb_compIdentifierNew( "STEP", TRUE );
+            iIdentifier++;
+            DEBUG_INFO( printf( "HB_STEP, Primary Identifier %s Increased to: %i\n", "STEP", iIdentifier ) );
+            return IDENTIFIER;
+         }
 
       case HB_TO :
          *ptr_bIgnoreWords = FALSE;
-	 if( iLastToken == NUM_INTEGER || iLastToken == IDENTIFIER || iLastToken == MACROVAR || iLastToken == MACROTEXT || iLastToken == ')' || iLastToken == ']' )
+         if( iLastToken == NUM_INTEGER || iLastToken == NUM_LONG || iLastToken == NUM_DOUBLE || iLastToken == IDENTIFIER || iLastToken == MACROVAR || iLastToken == MACROTEXT || iLastToken == ')' || iLastToken == ']' )
 	    { return TO + DONT_REDUCE; }
 	 else
             {

@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * source/vm/memvars.c
+2002-01-19 06:11 UTC+0100 Ron Pinkas <ron@ronpinkas.com>
+   + Added ChangeLog to the /contrib/apollo dir
+   + contrib/apollo/test/apollo.ch
      + defines for function sx_SysProp
    * contrib/apollo/test/apollo.prg
      Added define "Apollo.ch"
