@@ -1,3 +1,17 @@
+Mon May 10 19:32:34 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* makefile.b32: 
+	Added source/compiler/harbour.c to this makefile.
+	
+	* source/compiler/Makefile: 
+	Added genobj32.c.
+	
+	* source/compiler/genobj32.c: 
+	Got rid of warnings.
+	
+	* source/compiler/harbour.y: 
+	Added '/' as path separator.
+
 19990510-11:30 Eddie Runia
     * source/rtl/classes.c
       Function IsMessage() added

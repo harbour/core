@@ -68,18 +68,23 @@ tclass.c     : tclass.prg    harbour.exe
   bcc32 -c -O2 -I.\include -o$@ $<
   tlib .\libs\b32\harbour.lib -+$@,,
 
-harbour.exe : y_tab.c lexyy.c genobj32.c compiler.h
+harbour.exe : y_tab.c lexyy.c genobj32.obj harbour.obj compiler.h
    bcc32  -O2 -ebin\harbour.exe -Iinclude;source\compiler \
-      source\compiler\y_tab.c source\compiler\lexyy.c source\compiler\genobj32.c
+      source\compiler\y_tab.c source\compiler\lexyy.c \
+      source\compiler\genobj32.obj \
+      source\compiler\harbour.obj \
    del y_tab.obj
    del lexyy.obj
-   del compiler.obj
 
 y_tab.c : harbour.y
    bison -d -v -y -osource\compiler\y_tab.c source\compiler\harbour.y
 
 lexyy.c : harbour.l
    flex -i -8 -osource\compiler\lexyy.c source\compiler\harbour.l
+
+genobj32.obj : genobj32.c
+   bcc32 -c -O2 -I.\include -osource\compiler\genobj32.obj \
+	source\compiler\genobj32.c
 
 harbour.obj : harbour.c
    bcc32 -c -O2 -I.\include -osource\compiler\harbour.obj \

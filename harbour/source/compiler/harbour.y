@@ -28,8 +28,11 @@
 #endif
 
 /* TODO: #define this for various platforms */
-#define PATH_DELIMITER  "\\"
+#define PATH_DELIMITER  "/\\"
 #define IS_PATH_SEP( c ) (strchr(PATH_DELIMITER, (c))!=NULL)
+
+#define OPT_DELIMITER  "/-"
+#define IS_OPT_SEP( c ) (strchr(OPT_DELIMITER, (c))!=NULL)
 
 extern FILE * yyin;     /* currently yacc parsed file */
 extern int iLine;       /* currently parsed file line number */
@@ -113,7 +116,10 @@ void yy_delete_buffer( YY_BUFFER_STATE ); /* yacc functions to manage multiple f
 void yy_switch_to_buffer( void * ); /* yacc functions to manage multiple files */
 void yy_delete_buffer( void * ); /* yacc functions to manage multiple files */
 #endif
+
+#if 0
 static void __yy_memcpy( char * from, char * to, int count ); /* Bison prototype */
+#endif
 
 /* production related functions */
 PFUNCTION AddFunCall( char * szFuntionName );
@@ -942,22 +948,19 @@ void EXTERNAL_LINKAGE close_on_exit( void )
   }
 }
 
-int main( int argc, char * argv[] )
+int harbour_main( int argc, char * argv[] )
 {
    int iStatus = 0, iArg = 1;
    char szFileName[ _POSIX_PATH_MAX ];    /* filename to parse */
    char *szPath ="";
    FILENAME *pFileName =NULL;
 
-   if( !_iQuiet )
-     printf( "Harbour compiler\nbuild %i Spring 1999\n", BUILD );
-
    if( argc > 1 )
    {
       /* Command line options */
       while( iArg < argc )
       {
-         if( argv[ iArg ][ 0 ] == '/' || argv[ iArg ][ 0 ] == '-' )
+         if( IS_OPT_SEP(argv[ iArg ][ 0 ]))
          {
             switch( argv[ iArg ][ 1 ] )
             {
@@ -1069,6 +1072,9 @@ int main( int argc, char * argv[] )
             pFileName =SplitFilename( argv[ iArg ] );
          iArg++;
       }
+
+      if( !_iQuiet )
+        printf( "Harbour compiler\nbuild %i Spring 1999\n", BUILD );
 
       if( pFileName )
       {
@@ -1270,6 +1276,13 @@ FILENAME *SplitFilename( char *szFilename )
 */
 char *MakeFilename( char *szFileName, FILENAME *pFileName )
 {
+#if 0
+  fprintf(stderr, "path: |%s|\n"
+                  "name: |%s|\n"
+                  " ext: |%s|\n",
+          pFileName->path, pFileName->name, pFileName->extension);
+#endif
+
   if( pFileName->path && pFileName->path[ 0 ] )
   {
     /* we have not empty path specified */

@@ -8,6 +8,9 @@ YACC_SOURCE=harbour.y
 
 LEX_SOURCE=harbour.l
 
+C_SOURCES=\
+	genobj32.c \
+
 C_MAIN=harbour.c
 
 include $(TOP)$(ROOT)config/bin.cf
