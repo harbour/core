@@ -7,6 +7,16 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2004-04-06 15:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * include/hbapi.h
+   * include/hbvm.h
+   * source/vm/hvm.c
+   * source/vm/macro.c
+      * fixed bug introduced earlier by me in the macro compiler:
+        PUBLIC &macro
+        works correctly now
+
 2004-04-03 01:46 UTC-0300 Luiz Rafael Culik(culikr@brturbo.com>
    * contrib/hbzlib/*
      ! updated to use the same core as xharbour do

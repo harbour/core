@@ -211,6 +211,7 @@ struct hb_struString
 
 struct hb_struSymbol
 {
+   BOOL macro;    /* if symbol was pushed by the macro compiler */
    LONG stackbase;
    USHORT lineno;
    USHORT paramcnt;

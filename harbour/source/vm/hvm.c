@@ -3404,27 +3404,40 @@ void hb_vmDo( USHORT uiParams )
 
       if( pFunc )
       {
-         if( bProfiler && pSym->pDynSym ) {
-            pSym->pDynSym->ulRecurse++;
-         }
-
-         if ( hb_bTracePrgCalls )
-            HB_TRACE(HB_TR_ALWAYS, ("Calling: %s", pSym->szName));
-
-         pFunc();
-
-         if( bProfiler && pSym->pDynSym )
+         if( pItem->item.asSymbol.macro && (pSym->cScope & HB_FS_STATIC) )
          {
-            pSym->pDynSym->ulCalls++;                   /* profiler support */
-
-            /* Time spent has to be added only inside topmost call of a recursive function */
-            if( pSym->pDynSym->ulRecurse == 1 ) {
-               pSym->pDynSym->ulTime += clock() - ulClock; /* profiler support */
-            }
+            /* static functions are not allowed in macro 
+            */
+            HB_ITEM_PTR pError = hb_errRT_New( ES_ERROR, NULL, EG_NOFUNC, 1001,
+                                    NULL, pSym->szName,
+                                    0, EF_NONE );
+            hb_errLaunch( pError );
+            hb_errRelease( pError );
          }
+         else
+         {
+            if( bProfiler && pSym->pDynSym ) {
+               pSym->pDynSym->ulRecurse++;
+            }
 
-         if( bProfiler && pSym->pDynSym ) {
-            pSym->pDynSym->ulRecurse--;
+            if ( hb_bTracePrgCalls )
+               HB_TRACE(HB_TR_ALWAYS, ("Calling: %s", pSym->szName));
+
+            pFunc();
+
+            if( bProfiler && pSym->pDynSym )
+            {
+               pSym->pDynSym->ulCalls++;                   /* profiler support */
+
+               /* Time spent has to be added only inside topmost call of a recursive function */
+               if( pSym->pDynSym->ulRecurse == 1 ) {
+                  pSym->pDynSym->ulTime += clock() - ulClock; /* profiler support */
+               }
+            }
+
+            if( bProfiler && pSym->pDynSym ) {
+               pSym->pDynSym->ulRecurse--;
+            }
          }
       }
       else
@@ -4154,6 +4167,20 @@ void hb_vmPushSymbol( PHB_SYMB pSym )
    pStackTopItem->type = HB_IT_SYMBOL;
    pStackTopItem->item.asSymbol.value = pSym;
    pStackTopItem->item.asSymbol.stackbase = hb_stackTopOffset();
+   pStackTopItem->item.asSymbol.macro = FALSE;
+   hb_stackPush();
+}
+
+void hb_vmPushMacroSymbol( PHB_SYMB pSym )
+{
+   PHB_ITEM pStackTopItem = hb_stackTopItem();
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushSymbol(%p)", pSym));
+
+   pStackTopItem->type = HB_IT_SYMBOL;
+   pStackTopItem->item.asSymbol.value = pSym;
+   pStackTopItem->item.asSymbol.stackbase = hb_stackTopOffset();
+   pStackTopItem->item.asSymbol.macro = TRUE;
    hb_stackPush();
 }
 

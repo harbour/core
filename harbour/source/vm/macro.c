@@ -63,6 +63,8 @@
   #include "hbpp.h"
 #endif
 
+extern HB_FUNC( __MVPUBLIC );
+
 /* .and. & .or. expressions shortcuts - the expression optimiser needs
  * a global variable
  */
@@ -797,6 +799,8 @@ HB_MACRO_PTR hb_macroCompile( char * szString )
 }
 
 /* This function handles a macro function calls, e.g. var :=&macro()
+ * and creating memvar variables using PUBLIC/PRIVATE command
+ * PUBLIC &macro
  *
  * 'pItem' points to a ITEM that contains a string value which after
  *    text substitution will return a function name
@@ -822,17 +826,7 @@ void hb_macroPushSymbol( HB_ITEM_PTR pItem )
          /* NOTE: checking for valid function name (valid pointer) is done
           * in hb_vmDo()
           */
-         if( pDynSym && ((pDynSym->pSymbol->pFunPtr == NULL) || (pDynSym->pSymbol->cScope & HB_FS_STATIC)) )
-         {
-            /* static functions are not allowed in macro */
-            HB_ITEM_PTR pError = hb_errRT_New( ES_ERROR, NULL, EG_NOFUNC, 1001,
-                                    NULL, szString,
-                                    0, EF_NONE );
-            hb_errLaunch( pError );
-            hb_errRelease( pError );
-         }
-
-         hb_vmPushSymbol( pDynSym->pSymbol );  /* push compiled symbol instead of a string */
+         hb_vmPushMacroSymbol( pDynSym->pSymbol );  /* push compiled symbol instead of a string */
 
          if( bNewBuffer )
             hb_xfree( szString );   /* free space allocated in hb_macroTextSubst */
