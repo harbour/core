@@ -218,11 +218,11 @@ return Self
 //--------------------------------------------------------------------------//
 METHOD GetFirst() CLASS TopBarMenu
 
-   LOCAL aItems
+   LOCAL n
 
-   FOR EACH aItems IN ::aItems
-      if aItems:enabled
-         return HB_EnumIndex()
+   FOR n = 1 to Len( ::aItems )
+      if ::aItems[ n ]:enabled
+         return n
       endif
    next
 
@@ -292,13 +292,13 @@ METHOD GetAccel( nKey ) CLASS TopBarMenu
 
    LOCAL nAt   := 0
    LOCAL cKey  := Upper( ::__AltToKey( nKey ) ) /* By now */
-   LOCAL aItems
+   LOCAL n
 
-   FOR EACH aItems IN ::aItems
-      nAt := At( "&", aItems:caption )
-      if nAt > 0 .and. aItems:enabled .and. ;
-            Upper( SubStr( aItems:caption, nAt + 1, 1 ) ) == cKey
-         return HB_EnumIndex()
+   FOR n = 1 to Len( ::aItems )
+      nAt := At( "&", ::aItems[ n ]:caption )
+      if nAt > 0 .and. ::aItems[ n ]:enabled .and. ;
+            Upper( SubStr( ::aItems[ n ]:caption, nAt + 1, 1 ) ) == cKey
+         return n
       endif
    next
 
@@ -314,14 +314,14 @@ return 0
 */
 METHOD HitTest( nRow, nCol ) CLASS TopBarMenu
 
-   LOCAL aItems
+   LOCAL n
 
    if ::row == nRow
-      FOR EACH aItems IN ::aItems
-         if nCol >= aItems:column .and. ;
-               nCol <= aItems:column + Len( aItems:caption ) .and. ;
-                       aItems:enabled
-            return HB_EnumIndex()
+      FOR n = 1 to Len( ::aItems )
+         if nCol >= ::aItems[ n ]:column .and. ;
+               nCol <= ::aItems[ n ]:column + Len( ::aItems[ n ]:caption ) .and. ;
+                       ::aItems[ n ]:enabled
+            return n
          endif
       next
    endif
@@ -369,11 +369,11 @@ return Self
 //--------------------------------------------------------------------------//
 METHOD GetShortct( nKey ) CLASS TopBarMenu
 
-   LOCAL aItems
+   LOCAL n
 
-   FOR EACH aItems IN ::aItems
-      if aItems:shortcut == nKey
-         return HB_EnumIndex()
+   FOR n = 1 to Len( ::aItems )
+      if ::aItems[ n ]:shortcut == nKey
+         return n
       endif
    next
 
@@ -384,7 +384,7 @@ METHOD Display() CLASS TopBarMenu
 
    LOCAL oPopup
    LOCAL nAt
-   LOCAL aItems
+   LOCAL n
    LOCAL cPrompt
 
    LOCAL nOldRow  := Row()
@@ -396,28 +396,28 @@ METHOD Display() CLASS TopBarMenu
    DispOutAt( ::row, ::left, ;
               Space( ::right - ::left + 1 ), hb_ColorIndex( ::colorSpec, CLR_STANDARD ) )
 
-   FOR EACH aItems IN ::aItems
+   FOR n = 1 to Len( ::aItems )
 
-      nAt := At( "&", aItems:caption )
-      cPrompt := " " + StrTran( aItems:caption, "&", "" ) + " "
+      nAt := At( "&", ::aItems[ n ]:caption )
+      cPrompt := " " + StrTran( ::aItems[ n ]:caption, "&", "" ) + " "
 
       DispOutAt( ;
-         ::row, aItems:column, ;
+         ::row, ::aItems[ n ]:column, ;
          cPrompt, ;
          hb_ColorIndex( ::colorSpec, ;
-            iif( aItems:enabled, ;
-               iif( HB_EnumIndex() == ::current, CLR_ENHANCED, CLR_STANDARD ), ;
+            iif( ::aItems[ n ]:enabled, ;
+               iif( n == ::current, CLR_ENHANCED, CLR_STANDARD ), ;
                CLR_UNSELECTED ) ) )
 
       if nAt > 0
-         DispOutAt( ::row, aItems:column + nAt, ;
-            SubStr( aItems:caption, nAt + 1, 1 ), ;
+         DispOutAt( ::row, ::aItems[ n ]:column + nAt, ;
+            SubStr( ::aItems[ n ]:caption, nAt + 1, 1 ), ;
             hb_ColorIndex( ::colorSpec, ;
-               iif( HB_EnumIndex() == ::current, CLR_BACKGROUND, CLR_BORDER ) ) )
+               iif( n == ::current, CLR_BACKGROUND, CLR_BORDER ) ) )
       endif
 
-      if aItems:isPopup()
-         aItems:data:SetCoors( ::row + 1, aItems:column, .t. )
+      if ::aItems[ n ]:isPopup()
+         ::aItems[ n ]:data:SetCoors( ::row + 1, ::aItems[ n ]:column, .t. )
       endif
 
    next
@@ -602,8 +602,8 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, ;
          LOOP
       ENDIF
 
-      Switch nKey
-      case K_MOUSEMOVE
+      do case
+      case nKey == K_MOUSEMOVE
          //====== mouse movement.
 
          IF ( lLeftDown )
@@ -641,7 +641,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, ;
          ENDIF
          EXIT
 
-      case K_DOWN
+      case nKey == K_DOWN
          //====== down arrow key.
 
          IF ::oMenu:ClassName() == "TOPBARMENU"
@@ -660,7 +660,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, ;
          ENDIF
          EXIT
 
-      case K_UP
+      case nKey == K_UP
          //====== up arrow key.
 
          IF ::oMenu:ClassName() != "TOPBARMENU"
@@ -675,7 +675,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, ;
          ENDIF
          EXIT
 
-      case K_LEFT
+      case nKey == K_LEFT
          //====== left arrow key.
          /** Reset PopUp MenuItem to 1:
          ::aPopUp[::nMenuLevel] := 1 **/
@@ -696,7 +696,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, ;
          oMenuMsg:Show( Self, .T. )
          EXIT
 
-      case K_RIGHT
+      case nKey == K_RIGHT
          //====== right arrow key.
          /* Reset PopUp MenuItem to 1:
          ::aPopUp[ ::nMenuLevel ] := 1 */
@@ -722,7 +722,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, ;
          oMenuMsg:Show( Self, .T. )
          EXIT
 
-      case K_ENTER
+      case nKey == K_ENTER
          //====== enter key .
 
          IF ( ::PushMenu( .T. ) )
@@ -739,7 +739,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, ;
          ENDIF
          EXIT
 
-      case K_ESC
+      case nKey == K_ESC
          //====== escape key - go to previous menu
 
          IF ::PopMenu()
@@ -758,7 +758,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, ;
          ENDIF
          EXIT
 
-      case K_LBUTTONDOWN
+      case nKey == K_LBUTTONDOWN
          //====== mouse left button press.
 
          // Changed '!HitTest' to '!MHitTest':
@@ -814,7 +814,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, ;
          lLeftDown := .T.
          EXIT
 
-      case K_LBUTTONUP 
+      case nKey == K_LBUTTONUP
          //====== mouse left button release.
 
          lLeftDown := .F.
@@ -845,7 +845,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, ;
          ENDIF
          EXIT
 
-      Default
+      otherwise
 
          if ( ( nNewItem := ::oMenu:GetAccel( nKey ) ) != 0 )
             //=== check for menu item accelerator key.
@@ -858,7 +858,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, ;
                @ 20, 70 SAY STR( nNewItem, 3 )
                INKEY(0)
                @ 20, 70 SAY SPACE( 3 ) */
-         
+
                IF ( ! ::PushMenu( .T. ) )
                   oMenuMsg:Show( Self, .F. )
                   nReturn := ::Execute()
@@ -916,7 +916,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, ;
             ENDIF
          ENDIF
 
-      END
+      ENDCASE
 
    ENDDO
 
@@ -1085,7 +1085,7 @@ METHOD Execute() CLASS TopBarMenu
          SETCURSOR( ::nOldCursor )
          EVAL( oNewMenu:Data, oNewMenu )
          SETCURSOR( SC_NONE )
-         
+
       ENDIF
 
       RETURN ( oNewMenu:Id )
