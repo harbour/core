@@ -1,3 +1,9 @@
+19990624-23:20 CET Kwon, Oh-Chul
+  * source/rtl/natmsg.xxx
+    Korean added
+  * source/rtl/natmsg/msgkor.c
+    Korean language file
+
 19990624-15:40 EDT David G. Holm <dholm@jsd-llc.com>
   * doc/hdr_tpl.txt
     - Added proposed HRL/HVM license exception for executables.

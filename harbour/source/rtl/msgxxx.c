@@ -16,6 +16,8 @@
 #include "natmsg/msgger.c"
 #elif (HB_LANGUAGE == HU)
 #include "natmsg/msghu.c"
+#elif (HB_LANGUAGE == KOR)
+#include "natmsg/msgkor.c"
 #elif (HB_LANGUAGE == POR)
 #include "natmsg/msgpor.c"
 #elif (HB_LANGUAGE == R1251)
