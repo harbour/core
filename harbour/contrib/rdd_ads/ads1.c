@@ -1664,7 +1664,10 @@ static ERRCODE adsSysName( ADSAREAP pArea, BYTE * pBuffer )
 
    HB_TRACE(HB_TR_DEBUG, ("adsSysName(%p, %p)", pArea, pBuffer));
 
-   AdsGetTableType( pArea->hTable, &usTableType );
+   if( pArea->hTable )
+      AdsGetTableType( pArea->hTable, &usTableType );
+   else
+      usTableType = (UNSIGNED16)adsFileType;
    switch( usTableType )
    {
       case ADS_NTX:
