@@ -1,3 +1,10 @@
+20000504-22:40 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/hbpcode.c
+     + Added logic to allow PLUS an MINUS to accept any type as long as same.
+     ! Fixed compiler warning about pVar
+     * Minor optimizations
+
 20000506-17:46 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/compiler/harbour.c
