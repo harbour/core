@@ -8,6 +8,10 @@
    * source/rtl/setkey.c
      * Minor formatting.
 
+   * source/rtl/gtapi.c
+     % hb_gtSetPos() now duplicates the code of hb_gtSetPosContext(), instead 
+       of calling it, to execute faster.
+
    * source/rtl/console.c
      - Removed TOFIX from EJECT.
 
