@@ -1,6 +1,6 @@
 19990912-07:43 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/vm/hvm.c
-    ! hb_vmSwapAlias() removed the RT error 9993, not it works like Clipper.
+    ! hb_vmSwapAlias() removed the RT error 9993, now it works like Clipper.
     + Added an empty TYPE() function prototype with a TODO:
   * source/vm/initsymb.c
     - QSELF removed from the list, since it's a native opcode in Harbour, 
