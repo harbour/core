@@ -2692,6 +2692,7 @@ static void hb_vmOperatorCall( PHB_ITEM pObjItem, PHB_ITEM pMsgItem, char * szSy
    hb_vmPush( &ItemMsg );
    hb_vmPush( pObjItem );                             /* Push object              */
    hb_vmPush( pMsgItem );                             /* Push argument            */
+
    hb_vmDo( 1 );
 
    /* pop passed arguments - only one here */
@@ -2721,6 +2722,7 @@ static void hb_vmOperatorCallUnary( PHB_ITEM pObjItem, char * szSymbol )
    hb_itemClear( &hb_stack.Return );       /* clear return value */
    hb_vmPush( &ItemMsg );
    hb_vmPush( pObjItem );                             /* Push object */
+
    hb_vmDo( 0 );
 
    /* Pop passed argument.
@@ -2843,6 +2845,10 @@ void hb_vmDo( USHORT uiParams )
 
    if( ! HB_IS_NIL( pSelf ) ) /* are we sending a message ? */
    {
+
+      BOOL lPopSuper = FALSE ;
+      PHB_BASEARRAY pSelfBase;
+
       if( pSym == &( hb_symEval ) && HB_IS_BLOCK( pSelf ) )
          pFunc = pSym->pFunPtr;                 /* __EVAL method = function */
       else
@@ -2850,12 +2856,20 @@ void hb_vmDo( USHORT uiParams )
          pFunc = hb_objGetMethod( pSelf, pSym );
          if( HB_IS_OBJECT( pSelf ) )               /* Object passed            */
          {
-            PHB_BASEARRAY pSelfBase;
             pSelfBase = pSelf->item.asArray.value;
             if( pSelfBase->uiPrevCls ) /* Is is a Super cast ? */
             {
-              pSelfBase->uiClass   = pSelfBase->uiPrevCls;
-              pSelfBase->uiPrevCls = 0;
+              /* Push current SuperClass handle */
+              lPopSuper = TRUE ;
+              if( pSelfBase->puiClsTree )
+               pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * ( pSelfBase->uiClsTree + 1 ) );
+              else
+               pSelfBase->puiClsTree = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
+              pSelfBase->uiClsTree  ++ ;
+              pSelfBase->puiClsTree[pSelfBase->uiClsTree -1 ] = pSelfBase->uiClass;
+
+              pSelfBase->uiClass    = pSelfBase->uiPrevCls;
+              pSelfBase->uiPrevCls  = 0;
             }
          }
       }
@@ -2864,6 +2878,17 @@ void hb_vmDo( USHORT uiParams )
       {
          pMethod = hb_mthRequested();
          pFunc();
+         if (lPopSuper)
+         {
+           /* POP SuperClass handle */
+           if ( -- pSelfBase->uiClsTree )
+            pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * ( pSelfBase->uiClsTree ) );
+           else
+            {
+             hb_xfree(pSelfBase->puiClsTree);
+             pSelfBase->puiClsTree = 0;
+            }
+         }
          hb_mthAddTime( pMethod, clock() - ulClock );
       }
       else if( pSym->szName[ 0 ] == '_' )
@@ -2932,16 +2957,28 @@ void hb_vmSend( USHORT uiParams )
 
    if( ! HB_IS_NIL( pSelf ) ) /* are we sending a message ? */
    {
+
+      BOOL lPopSuper = FALSE ;
+      PHB_BASEARRAY pSelfBase;
+
       if( ! ( pSym == &( hb_symEval ) && HB_IS_BLOCK( pSelf ) ) )
       {
          if( HB_IS_OBJECT( pSelf ) )               /* Object passed            */
          {
-            PHB_BASEARRAY pSelfBase;
 
             pFunc = hb_objGetMethod( pSelf, pSym );
             pSelfBase = pSelf->item.asArray.value;
             if( pSelfBase->uiPrevCls ) /* Is is a Super cast ? */
             {
+              /* Push current SuperClass handle */
+              lPopSuper = TRUE ;
+              if( pSelfBase->puiClsTree )
+               pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * ( pSelfBase->uiClsTree + 1 ) );
+              else
+               pSelfBase->puiClsTree = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
+              pSelfBase->uiClsTree  ++ ;
+              pSelfBase->puiClsTree[pSelfBase->uiClsTree -1 ] = pSelfBase->uiClass;
+
               pSelfBase->uiClass   = pSelfBase->uiPrevCls;
               pSelfBase->uiPrevCls = 0;
             }
@@ -2950,6 +2987,18 @@ void hb_vmSend( USHORT uiParams )
             {
                pMethod = hb_mthRequested();
                pFunc();
+
+               if (lPopSuper)
+               {
+                 /* POP SuperClass handle */
+                 if ( -- pSelfBase->uiClsTree )
+                  pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * ( pSelfBase->uiClsTree ) );
+                 else
+                  {
+                   hb_xfree(pSelfBase->puiClsTree);
+                   pSelfBase->puiClsTree = 0;
+                  }
+               }
                hb_mthAddTime( pMethod, clock() - ulClock );
             }
             else if( pSym->szName[ 0 ] == '_' )

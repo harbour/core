@@ -130,7 +130,6 @@ typedef struct
    BYTE     bClsDataInitiated; /* There is one value assigned at init time */
    ULONG    ulCalls;           /* profiler support */
    ULONG    ulTime;            /* profiler support */
-   PHB_ITEM pObject   ;        /* Related super object pointer or NIL */
 } METHOD, * PMETHOD;
 
 typedef struct
@@ -149,7 +148,7 @@ typedef struct
 
 #define BASE_METHODS   100  /* starting maximum number of message */
 #define BUCKET          5
-#define HASH_KEY        ( BASE_METHODS / BUCKET ) /* Idealy, here we want a "nombre premier" */
+#define HASH_KEY        ( BASE_METHODS / BUCKET )
 
 static PCLASS   s_pClasses     = NULL;
 static USHORT   s_uiClasses    = 0;
@@ -165,7 +164,7 @@ static PHB_DYNS s_msgClsParent = NULL;
 /* All functions contained in classes.c */
 
 static PHB_ITEM hb_clsInst( USHORT uiClass );
-/*static void     hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod );*/
+static void     hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod );
 static ULONG    hb_cls_MsgToNum( PHB_DYNS pMsg );
 static BOOL     hb_clsIsParent( PCLASS pClass, char * szParentName );
 static void     hb_clsDictRealloc( PCLASS pClass );
@@ -354,7 +353,6 @@ void hb_clsIsClassRef( void )
    }
 }
 
-#ifdef _NotDef
 void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
 {
    PHB_ITEM * pBase = hb_stack.pBase;
@@ -370,15 +368,16 @@ void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
    char * szSelfNameObject;
    char * szSelfNameRealClass;
 
-   szSelfNameObject    = hb_objGetClsName( pObject );
-   szSelfNameMsg       = pMessage->pSymbol->szName  ;
-   szSelfNameRealClass = hb_objGetRealClsName( pObject, pMessage->pSymbol->szName );
-
    if ( (( uiScope & HB_OO_CLSTP_PROTECTED ) ) ||
         (( uiScope & HB_OO_CLSTP_HIDDEN )    ) ||
         (( uiScope & HB_OO_CLSTP_READONLY )  )
       )
     {
+
+      szSelfNameObject    = hb_objGetClsName( pObject );
+      szSelfNameMsg       = pMessage->pSymbol->szName  ;
+      szSelfNameRealClass = hb_objGetRealClsName( pObject, pMessage->pSymbol->szName );
+
       while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
         pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
 
@@ -397,15 +396,19 @@ void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
         szCallerNameMsg       = ( *pBase )->item.asSymbol.value->szName ;
         szCallerNameObject    = hb_objGetRealClsName( pCaller, szCallerNameMsg ) ;
 
-        strcpy( szName, szCallerNameObject );
-        strcat( szName, ":" );
-        strcat( szName, szCallerNameMsg );
-        strcat( szName, ">" );
-        strcat( szName, szSelfNameRealClass );
-        strcat( szName, ">" );
-        strcat( szName, szSelfNameObject );
+        /*strcpy( szName, szCallerNameObject ); */
+        /*strcat( szName, ":" ); */
+        /*strcat( szName, szCallerNameMsg ); */
+        /*strcat( szName, ">" ); */
+        /*strcat( szName, szSelfNameRealClass ); */
+        /*strcat( szName, ">" ); */
+        /*strcat( szName, szSelfNameObject );*/
+
+        strcpy( szName, szSelfNameRealClass );
         strcat( szName, ":" );
         strcat( szName, szSelfNameMsg );
+
+      /*MessageBox(0,szName,hb_objGetClsName( * (pBase+1 )),0);*/
 
         if ( uiScope & HB_OO_CLSTP_PROTECTED )
          {
@@ -490,7 +493,6 @@ void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
         }
     }
 }
-#endif
 
 ULONG hb_cls_MsgToNum( PHB_DYNS pMsg )
 {
@@ -610,10 +612,12 @@ char * hb_objGetRealClsName( PHB_ITEM pObject, char * szName )
          USHORT uiClass;
 
          /* default value to current class object */
-         if (pObject->item.asArray.value->uiPrevCls)
-          uiClass = pObject->item.asArray.value->uiPrevCls;
+         if (pObject->item.asArray.value->uiClsTree)
+          {
+           uiClass = * (pObject->item.asArray.value->puiClsTree + pObject->item.asArray.value->uiClsTree - 1 ) ;
+          }
          else
-          uiClass = pObject->item.asArray.value->uiClass;
+           uiClass = pObject->item.asArray.value->uiClass;
 
          if( uiClass && uiClass <= s_uiClasses )
          {
@@ -721,7 +725,7 @@ PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc 
          {
             pMethod = pClass->pMethods + uiAt;
             pFunction = pMethod->pFunction;
-            /*hb_clsScope( pObject, pMethod );*/
+            hb_clsScope( pObject, pMethod );
             s_pMethod = pMethod ;
             pMethod->ulCalls++; /* Profiler */
             return pFunction;
@@ -1003,14 +1007,6 @@ HB_FUNC( __CLSADDMSG )
                 }
                else
                   pNewMeth->pFunction = hb___msgGetShrData;
-
-/*             if (TRUE)
-*               {
-*                char cTmp[255];
-*                wsprintf(cTmp, "Class %s, Message %s, uidata %d\n", pClass->szName, pMessage->pSymbol->szName, pNewMeth->uiData);
-*                MessageBox(0,cTmp,"AddMsg ClassData Shared",0);
-*               }
-*/
             }
 
             break;
@@ -1381,7 +1377,7 @@ static PHB_ITEM hb_clsInst( USHORT uiClass )
    if( uiClass <= s_uiClasses )
    {
       PCLASS   pClass = s_pClasses + ( uiClass - 1 );
-      PHB_ITEM pSprObj, pTmp;
+
       USHORT   uiAt;
       USHORT   uiLimit = ( USHORT ) ( pClass->uiHashKey * BUCKET );
       PMETHOD  pMeth ;
@@ -1389,8 +1385,11 @@ static PHB_ITEM hb_clsInst( USHORT uiClass )
       pSelf = hb_itemNew( NULL );
       hb_arrayNew( pSelf, pClass->uiDatas );
 
-      pSelf->item.asArray.value->uiClass   = uiClass;
-      pSelf->item.asArray.value->uiPrevCls = 0;
+      pSelf->item.asArray.value->uiClass    = uiClass;
+      pSelf->item.asArray.value->uiPrevCls  = 0;
+
+      pSelf->item.asArray.value->uiClsTree  = 0;
+      pSelf->item.asArray.value->puiClsTree = 0;
 
       /* Initialise value if initialisation was requested                      */
       pMeth = pClass->pMethods;

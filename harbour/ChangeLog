@@ -1,3 +1,13 @@
+2001-07-12 00:40 UTC+1 JFL (mafact) <jfl@mafact.com>
+   * harbour/source/vm/Classe.c
+     - Hb_ClsScope() Corrected 
+     - hb_getRrealclsName() enhanced to keep a better trace of Class tree
+   * harbour/source/vm/hvm.c
+     - hb_Vmdo() & hb_VmSend() enhanced to keep trace of Class tree
+   * harbour/include/hbapi.h
+     - Array structure modified to keep a c array of Class handle
+       ( _HB_BASEARRAY )
+
 2001-07-11 13:30 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * contrib/rdd_ads/adsfunc.c
      * adsExecuteSqlDirect() and adsExecuteSql() are fixed for the occasions,
