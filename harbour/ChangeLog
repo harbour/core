@@ -1,3 +1,10 @@
+2001-09-05 07:00 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * harbour/contrib/hgf/win32/tform.prg
+     Property OnClick added and WM_LBUTTONDOWN msgs properly routed
+
+   * harbour/contrib/hgf/tests/formtext.prg
+     form OnClick property tested ok
+
 2001-09-05 06:42 GMT+1 Antonio Linares <alinares@fivetech.com>
    * harbour/contrib/hgf/win32/tform.prg
      Added new properties Top, Left, Height and Width.
