@@ -10,11 +10,13 @@
 
 extern STACK stack;                             /* External data used       */
 extern ITEM  aStatics;
+
 PITEM _itemReturn( PITEM );                     /* External functions used  */
 PITEM _itemArrayNew( ULONG );
 PITEM _itemArrayPut( PITEM, ULONG, PITEM );
 PITEM _itemNew( PITEM );
 PITEM ArrayClone( PITEM );
+
 
 /* $Doc$
  * $FuncName$     <aStat> __aStatic()
@@ -36,22 +38,89 @@ HARBOUR __STATIC()
    WORD  wStatic;
 
    wStatic = _parni(1);
-   pStatic = ( ( PBASEARRAY ) aStatics.value.pBaseArray )->pItems + stack.iStatics +
-             wStatic - 1;
+   pStatic = ( ( PBASEARRAY ) aStatics.value.pBaseArray )->pItems +
+             stack.iStatics + wStatic - 1;
    _itemReturn( pStatic );
 }
 
 
 /* $Doc$
+ * $FuncName$     AddToArray( <pItem>, <pReturn>, <wPos> )
+ * $Description$  Add <pItem> to array <pReturn> at pos <wPos>
+ * $End$ */
+void AddToArray( PITEM pItem, PITEM pReturn, WORD wPos )
+{
+   PITEM pTemp;
+
+   if( pItem->wType == IT_SYMBOL)
+   {                                            /* Symbol is pushed as text */
+      pTemp = _itemNew(NULL);                   /* Create temporary string  */
+      pTemp->wType   = IT_STRING;
+      pTemp->wLength = strlen( pItem->value.pSymbol->szName )+2;
+      pTemp->value.szText = (char *) _xgrab( pTemp->wLength+1 );
+
+      sprintf( pTemp->value.szText, "[%s]", pItem->value.pSymbol->szName );
+
+      _itemArrayPut( pReturn, wPos, pTemp );
+      ItemRelease( pTemp );                     /* Get rid of temporary str.*/
+      _xfree( pTemp );
+   }
+   else                                         /* Normal types             */
+      _itemArrayPut( pReturn, wPos, pItem );
+}
+
+
+/* $Doc$
+ * $FuncName$     <nVars> __GlobalStackLen()
+ * $Description$  Returns the length of the global stack
+ * $End$ */
+WORD GlobalStackLen()
+{
+   PITEM pItem;
+   WORD  nCount = 0;
+
+   for( pItem = stack.pItems; pItem++ <= stack.pPos; nCount++ );
+   return( nCount );
+}
+HARBOUR __GLOBALSTACKLEN()
+{
+   _retni( GlobalStackLen() );
+}
+
+
+/* $Doc$
+ * $FuncName$     <aStack> __aGlobalStack()
+ * $Description$  Returns the global stack
+ * $End$ */
+HARBOUR __AGLOBALSTACK()
+{
+   PITEM pReturn;
+   PITEM pItem;
+
+   WORD  wLen = GlobalStackLen();
+   WORD  wPos = 1;
+
+   pReturn = _itemArrayNew( wLen );             /* Create a transfer array  */
+   for( pItem = stack.pItems; pItem <= stack.pPos; pItem++ )
+      AddToArray( pItem, pReturn, wPos++ );
+   _itemReturn( pReturn );
+   ItemRelease( pReturn );
+   _xfree( pReturn );
+}
+
+
+/* $Doc$
  * $FuncName$     <nVars> __StackLen()
- * $Description$  Returns the length of the stack
+ * $Description$  Returns the length of the stack of the calling function
  * $End$ */
 WORD StackLen()
 {
-   WORD  nCount = 0;
-   PITEM p;
+   PITEM pItem;
+   PITEM pBase = stack.pItems + stack.pBase->wBase;
 
-   for( p = stack.pItems; p <= stack.pPos; p++, nCount++ );
+   WORD  nCount = 0;
+
+   for( pItem = pBase; pItem < stack.pBase; pItem++, nCount++ );
    return( nCount );
 }
 HARBOUR __STACKLEN()
@@ -62,67 +131,45 @@ HARBOUR __STACKLEN()
 
 /* $Doc$
  * $FuncName$     <aStack> __aStack()
- * $Description$  Returns the stack
+ * $Description$  Returns the stack of the calling function
  * $End$ */
-HARBOUR __STACK()
+HARBOUR __ASTACK()
 {
    PITEM pReturn;
-   PITEM p;
-   PITEM pTemp;
+   PITEM pItem;
+   PITEM pBase = stack.pItems + stack.pBase->wBase;
 
-   WORD  wLen;
-   WORD  wPos = 1;
+   WORD  wLen  = StackLen();
+   WORD  wPos  = 1;
 
-   pReturn = _itemArrayNew( wLen=StackLen() );  /* Create a transfer array  */
-   for( p = stack.pItems; p <= stack.pPos ; wPos++, p++ )
-   {
-      switch( p->wType )
-      {
-         case IT_SYMBOL:                        /* Symbol is pushed as text */
-         {
-            pTemp = _itemNew(NULL);             /* Create temporary string  */
-            pTemp->wType   = IT_STRING;
-            pTemp->wLength = strlen( p->value.pSymbol->szName )+2;
-            pTemp->value.szText = (char *) _xgrab( pTemp->wLength+1 );
-
-            sprintf( pTemp->value.szText,
-                     "[%s]", p->value.pSymbol->szName );
-
-            _itemArrayPut( pReturn, wPos, pTemp );
-            ItemRelease( pTemp );               /* Get rid of temporary str.*/
-            _xfree( pTemp );
-            break;
-         }
-
-         case IT_NIL:                           /* Normal types             */
-         case IT_ARRAY:
-         case IT_BLOCK:
-         case IT_DATE:
-         case IT_DOUBLE:
-         case IT_LOGICAL:
-         case IT_LONG:
-         case IT_INTEGER:
-         case IT_STRING:
-         {
-            _itemArrayPut( pReturn, wPos, p );
-            break;
-         }
-         default:
-         {
-            pTemp = _itemNew(NULL);             /* Create temporary string  */
-            pTemp->wType   = IT_STRING;
-            pTemp->wLength = strlen( p->value.pSymbol->szName )+2;
-            pTemp->value.szText = (char *) _xgrab( pTemp->wLength+1 );
-
-            sprintf( pTemp->value.szText, "?type=%i?", p->wType );
-
-            _itemArrayPut( pReturn, wPos, pTemp );
-            ItemRelease( pTemp );               /* Get rid of temporary str.*/
-            _xfree( pTemp );
-         }
-      }
-   }
+   pReturn = _itemArrayNew( wLen );             /* Create a transfer array  */
+   for( pItem = pBase; pItem < stack.pBase; pItem++ )
+      AddToArray( pItem, pReturn, wPos++ );
    _itemReturn( pReturn );
    ItemRelease( pReturn );
    _xfree( pReturn );
 }
+
+
+/* $Doc$
+ * $FuncName$     <aParam> __aParam()
+ * $Description$  Returns the passed parameters of the calling function
+ * $End$ */
+HARBOUR __APARAM()
+{
+   PITEM pReturn;
+   PITEM pItem;
+   PITEM pBase = stack.pItems + stack.pBase->wBase;
+                                                /* Skip function + self     */
+   WORD  wLen  = pBase->wParams;
+   WORD  wPos  = 1;
+
+   pReturn = _itemArrayNew( wLen );             /* Create a transfer array  */
+   for( pItem = pBase+2; wLen--; pItem++ )
+      AddToArray( pItem, pReturn, wPos++ );
+   _itemReturn( pReturn );
+   ItemRelease( pReturn );
+   _xfree( pReturn );
+}
+
+

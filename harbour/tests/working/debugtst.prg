@@ -17,7 +17,7 @@ function Main()
    QOut( "-DEBUG Functions-")
    QOut()
 
-   QOut( "-Statics- Type[1]=", ValType( __Static(1) ) )
+   QOut( "-Statics-" )
    QOut( ToChar ( __aStatic(), ", ", .T. ) )
    QOut()
 
@@ -27,6 +27,48 @@ function Main()
 
    QOut( "-Local Stack- Len=", __StackLen() )
    QOut( ToChar ( __aStack(), ", ", .T. ) )
+   QOut()
+
+   QOut( "-Parameters-" )
+   QOut( ToChar ( __aParam(), ", ", .T. ) )
+
+   Pause()
+
+   Second( 241, "Hello" )
+
+return nil
+
+
+function Pause()
+return __Accept("")
+
+
+function Second( nParam, cParam, uParam )
+
+   local cWhat   := "Something"
+   local nNumber := 2
+   local uEmpty
+
+   QOut()
+   QOut( "-Second procedure-")
+   QOut()
+
+   QOut( "-Statics-" )
+   QOut( ToChar ( __aStatic(), ", ", .T. ) )
+   QOut()
+
+   QOut( "-Global Stack- Len=", __GlobalStackLen() )
+   QOut( ToChar ( __aGlobalStack(), ", ", .T. ) )
+   QOut()
+
+   QOut( "-Local Stack- Len=", __StackLen() )
+   QOut( ToChar ( __aStack(), ", ", .T. ) )
+   QOut()
+
+   QOut( "-Parameters-" )
+   QOut( ToChar ( __aParam(), ", ", .T. ) )
+
+   Pause()
 
 return nil
 
