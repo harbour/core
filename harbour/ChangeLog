@@ -1,3 +1,7 @@
+19990603-16:00 CET Eddie Runia
+  * source/rtl/classes.c
+    wLimit bug resolved
+
 19990603-15:25 CET Eddie Runia
   * source/compiler/harbour.y
     <func>()[<index>] syntax added

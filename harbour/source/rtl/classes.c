@@ -367,7 +367,7 @@ HARBOUR CLASSADD() /* hClass, cMessage, pFunction, nType, xInit */
       pMessage = GetDynSym( _parc( 2 ) );
       wAt      = ( ( ( unsigned ) pMessage ) % pClass->wHashKey ) * BUCKET;
       wMask    = pClass->wHashKey * BUCKET;
-      wLimit   = ( wAt - 1 ) % wMask;
+      wLimit   = wAt ? ( wAt - 1 ) : ( wMask - 1 );
 
       if( pClass->wMethods > ( pClass->wHashKey * BUCKET * 2/3 ) )
          DictRealloc( pClass );
@@ -375,7 +375,7 @@ HARBOUR CLASSADD() /* hClass, cMessage, pFunction, nType, xInit */
       while( ( wAt != wLimit ) &&
                pClass->pMethods[ wAt ].pMessage &&
              ( pClass->pMethods[ wAt ].pMessage != pMessage ) )
-         wAt = ( wAt + 1 ) % wMask;
+         wAt = ( wAt == wMask ) ? 0 : wAt + 1;
 
       if( wAt != wLimit )
       {
@@ -508,7 +508,7 @@ HARBOURFUNC GetMethod( PITEM pObject, PSYMBOL pMessage )
       pClass = &pClasses[ wClass - 1 ];
       wAt    = ( ( ( unsigned ) pMsg ) % pClass->wHashKey ) * BUCKET;
       wMask  = pClass->wHashKey * BUCKET;
-      wLimit = ( wAt - 1 ) % wMask;
+      wLimit   = wAt ? ( wAt - 1 ) : ( wMask - 1 );
 
       pMethod = 0;
 
@@ -519,7 +519,7 @@ HARBOURFUNC GetMethod( PITEM pObject, PSYMBOL pMessage )
             pMethod = &pClass->pMethods[ wAt ];
             return pClass->pMethods[ wAt ].pFunction;
          }
-         wAt = ( wAt + 1 ) % wMask;
+         wAt = ( wAt == wMask ) ? 0 : wAt + 1;
       }
    }
 
@@ -669,12 +669,12 @@ HARBOUR CLASSMOD()      /* Modify message (only for INLINE and METHOD)      */
       pClass = pClasses + wClass - 1;
       wAt    = ( ( ( unsigned ) pMsg ) % pClass->wHashKey ) * BUCKET;
       wMask  = pClass->wHashKey * BUCKET;
-      wLimit = ( wAt - 1 ) % wMask;
+      wLimit   = wAt ? ( wAt - 1 ) : ( wMask - 1 );
 
       while( ( wAt != wLimit ) &&
              ( pClass->pMethods[ wAt ].pMessage &&
              ( pClass->pMethods[ wAt ].pMessage != pMsg ) ) )
-         wAt = ( wAt + 1 ) % wMask;
+         wAt = ( wAt == wMask ) ? 0 : wAt + 1;
 
       if( wAt != wLimit )
       {                                         /* Requested method found   */
@@ -722,7 +722,7 @@ HARBOUR CLASSDEL()      /* Delete message (only for INLINE and METHOD)      */
       while( ( wAt != wLimit ) &&
              ( pClass->pMethods[ wAt ].pMessage &&
              ( pClass->pMethods[ wAt ].pMessage != pMsg ) ) )
-         wAt = ( wAt + 1 ) % wMask;
+         wAt = ( wAt == wMask ) ? 0 : wAt + 1;
 
       if( wAt != wLimit )
       {                                         /* Requested method found   */
