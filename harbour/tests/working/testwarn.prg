@@ -1,25 +1,39 @@
-FUNCTION Hex2Dec( nVar1 AS LOGICAL )
+DECLARE FUNCTION nMyFunc( ) AS NUMERIC
 
-	LOCAL nVar AS NUMERIC, nVar2 AS CHARACTER, nVar3 AS LOGICAL, nNoType := 3
+FUNCTION Hex2Dec( lVar AS LOGICAL )
 
-	nVar1 := .T.
+   LOCAL nVar AS NUMERIC, cVar AS CHARACTER, lVar2 AS LOGICAL, nNoType := 3
 
-	nVar1 := 1
+   nVar := .T.
+
+   nVar := 1
 
 	nVar := 'A'
 
-	nVar := 2
+   cVar := 2
 
-	nVar2 := 'B'
+   cVar := 'B'
 
-	nVar2 := 2
+   cVar := 2
 
-	nVar3 := .T.
+   lVar := .T.
 
-	nVar3 := nNoType
+   lVar := nNoType
 
-	nVar3 := nVar
+   cVar := nVar
 
 	NondDeclared := 2
 
+   cVar := {|x,y,z| nMyFunc( 3 ) }
+
+	nVar := 8 + cVar
+
+	IF 1
+
+   ENDIF
+
 RETURN NIL
+
+Function nMyFunc( nParam )
+
+return nParam * 2
