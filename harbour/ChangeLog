@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  + doc\es\dbdelim.txt
+  + doc\es\dbsdf.txt
+     ! was not working for bcc32 since last change. fixed 
+
 2002-01-22 10:37 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/vm/hvm.c
      * Fixed a minor error on hb_vmPopDate() caused by yesterday changes
