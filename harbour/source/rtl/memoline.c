@@ -131,7 +131,7 @@ HB_FUNC( MEMOLINE )
       ulLineEnd = ulPos - 1;
    }
 
-   if( ulLineNumber == ulLines )
+   if( ulLineNumber == ulLines && ulLineEnd >= ulLineBegin )
    {
       ULONG ulSpAdded = 0;
       char * pszLine = ( char * ) hb_xgrab( ulLineLength );
@@ -152,4 +152,3 @@ HB_FUNC( MEMOLINE )
    else
       hb_retc( "" );
 }
-
