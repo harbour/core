@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-05-31 21:04 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * source/rtl/teditor.prg
+    ! several improvements for the debugger:
+
+    The source code viewer does not leave a different block color when
+    scrolling.
+
+    The source code is displayed from the first line (Clipper compatibility).
+
 2003-05-31 17:55 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/rtl/tget.prg
     ! fixed behavior when pressing "." or "," on a non decimals number
