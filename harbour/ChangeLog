@@ -1,3 +1,14 @@
+20000423-15:57 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/compiler/hbusage.c
+     + Added list of developers and documentors. This can be displayed with
+       the /CREDIT switch.
+
+   * doc/en/ht_gt.txt -> contrib/libgt/doc/en/hb_gt.txt
+   * doc/en/ht_*.txt -> contrib/libmisc/doc/en/hb_*.txt
+     * Moved some CONTRIB docs to the CONTRIB dirs.
+       ! PLEASE UPDATE THE DOC SCRIPTS !
+   
 20000423-14:35 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/pp/Makefile
