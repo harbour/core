@@ -1,3 +1,8 @@
+2001-06-09 23:15 GMT-3 Horacio Roldan <horacioroldan@usa.net>
+  * source/rdd/dbfcdx/dbfcdx1.h
+    * Added parenthesis in macro parameters to eliminate some warnings and possible
+      bad evaluation.
+
 2001-06-14 17:15 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * contrib/libmisc/dates2.c

@@ -177,10 +177,12 @@ typedef struct
    LONG ChrFill;
 } SORT_C;
 
-#define SORT_GET_NUSE(w)          (w & 0x07)
-#define SORT_SET_NUSE(w,n)        (w = (w & 0xF8) | n )
-#define SORT_GET_STACK_LEN(w)     (w >> 6)
-#define SORT_SET_STACK_LEN(w,n)   (w = (w & 0x3f) | n << 6)
+#define SORT_GET_NUSE(w)          ((w) & 0x07)
+#define SORT_SET_NUSE(w,n)        ((w) = ((w) & 0xF8) | (n) )
+#define SORT_GET_STACK_LEN(w)     ((w) >> 6)
+#define SORT_SET_STACK_LEN(w,n)   ((w) = ((w) & 0x3f) | ((n) << 6))
+
+
 
 typedef struct
 {
