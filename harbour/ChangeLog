@@ -1,3 +1,7 @@
+2001-11-08 14:53 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * source/rdd/dbfcdx/dbfcdx1.c
+     + added support for ordFor()
+
 2001-11-07 23:00 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
    * utils/hbmake/hbmake.prg
      utils/hbmake/hbmake.prg

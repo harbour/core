@@ -891,6 +891,24 @@ ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInf
       case DBOI_BAGEXT:
          pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult, CDX_INDEXEXT );
          break;
+
+      case DBOI_CONDITION:
+         if ( ! pOrderInfo->itmOrder )
+            pTag = hb_cdxGetActiveTag( pArea->lpIndexes );
+
+         else
+         {
+               uiTag = hb_cdxFindTag( pArea, pOrderInfo );
+               if ( uiTag )
+               {
+                  pTag = hb_cdxGetTagByNumber(pArea,  uiTag );
+               }
+         }
+         if ( pTag )
+            pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult, pTag->ForExpr );
+
+         break;
+
       case DBOI_EXPRESSION:
 
          if ( ! pOrderInfo->itmOrder )
