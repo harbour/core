@@ -258,7 +258,7 @@ typedef struct _HB_VALUE
 
 typedef struct _HB_NESTED_CLONED
 {
-   PHB_ITEM                 pSrc;
+   PHB_ITEM                 pSrcItems;
    PHB_ITEM                 pDest;
    struct _HB_NESTED_CLONED * pNext;
 } HB_NESTED_CLONED, * PHB_NESTED_CLONED;
@@ -385,7 +385,7 @@ extern BOOL     hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart
 extern ULONG    hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount ); /* scan an array for a given item, or until code-block item returns TRUE */
 extern BOOL     hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG * pulStart, ULONG * pulCount ); /* execute a code-block for every element of an array item */
 extern BOOL     hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart, ULONG * pulCount, ULONG * pulTarget ); /* copy items from one array to another */
-extern PHB_ITEM hb_arrayClone( PHB_ITEM pArray, PHB_NESTED_CLONED pClonedList, BOOL *bCyclic ); /* returns a duplicate of an existing array, including all nested items */
+extern PHB_ITEM hb_arrayClone( PHB_ITEM pArray, PHB_NESTED_CLONED pClonedList ); /* returns a duplicate of an existing array, including all nested items */
 extern BOOL     hb_arraySort( PHB_ITEM pArray, ULONG * pulStart, ULONG * pulCount, PHB_ITEM pBlock ); /* sorts an array item */
 extern PHB_ITEM hb_arrayFromStack( USHORT uiLen ); /* Creates and returns an Array of n Elements from the Eval Stack - Does NOT pop the items. */
 extern PHB_ITEM hb_arrayFromParams( void ); /* Creates and returns an Array of current Generic Parameters. */

@@ -1,5 +1,17 @@
 2001-04-17 19:30 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hbapi.h
+     * Removed 3rd paramater from declaration of hb_arrayClone().
+
+   * source/vm/arrays.c
+     ! Optimized and improved hb_arrayClone().
+
+   * source/vm/arrayshb.c
+   * source/vm/classes.c
+   * source/vm/hvm.c
+     * Changed calls to hb_arrayClone() to remove no longer needed, 3rd parameter.
+
+2001-04-17 19:30 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbapi.h
      + Added typedef struct HB_NESTED_CLONED
      * Changed declaration of hb_arrayClone to hb_arrayClone( PHB_ITEM pArray, PHB_NESTED_CLONED pClonedList, BOOL *bCyclic )
 
