@@ -59,7 +59,6 @@
    */
    #define INCL_TYPES
    #include <os2.h>
-   typedef unsigned short int WORD;
    #undef INT
    #undef UINT
 
@@ -85,14 +84,6 @@ typedef long LONG;
 #undef ULONG                           /* 4 bytes unsigned */
 typedef unsigned long ULONG;
 
-/* TODO: Remove this */
-#undef WORD                            /* 2 bytes unsigned */
-typedef unsigned short int WORD;
-
-/* TODO: Remove this */
-#undef DWORD                           /* 4 bytes unsigned */
-typedef unsigned long DWORD;
-
 #undef FALSE
 #undef TRUE
 #define FALSE  0
@@ -112,10 +103,7 @@ typedef unsigned long DWORD;
 #define LOBYTE( w )             ( ( BYTE )( w ) )
 #endif
 #ifndef HIBYTE
-#define HIBYTE( w )             ( ( BYTE )( ( ( WORD )( w ) >> 8 ) & 0xFF ) )
-#endif
-#ifndef LOWORD
-#define LOWORD( l )             ( ( WORD )( l ) )
+#define HIBYTE( w )             ( ( BYTE )( ( ( USHORT )( w ) >> 8 ) & 0xFF ) )
 #endif
 #ifndef MKINT
 #define MKINT( b1, b2 )         ( ( ( long ) b2 ) <<  8 ) | b1

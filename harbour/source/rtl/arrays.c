@@ -72,8 +72,8 @@ BOOL hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array */
       pBaseArray->pItems = NULL;
 
    pBaseArray->ulLen      = ulLen;
-   pBaseArray->wHolders   = 1;
-   pBaseArray->wClass     = 0;
+   pBaseArray->uiHolders  = 1;
+   pBaseArray->uiClass    = 0;
    pBaseArray->bSuperCast = FALSE;
 
    for( ulPos = 0; ulPos < ulLen; ulPos++ )
@@ -114,7 +114,7 @@ ULONG hb_arrayLen( PHB_ITEM pArray )
 BOOL hb_arrayIsObject( PHB_ITEM pArray )
 {
    if( IS_ARRAY( pArray ) )
-      return pArray->item.asArray.value->wClass != 0;
+      return pArray->item.asArray.value->uiClass != 0;
    else
       return FALSE;
 }
@@ -679,7 +679,7 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
       hb_arrayNew( pDstArray, ulSrcLen );
 
       pDstBaseArray = pDstArray->item.asArray.value;
-      pDstBaseArray->wClass = pSrcBaseArray->wClass;
+      pDstBaseArray->uiClass = pSrcBaseArray->uiClass;
 
       for( ulCount = 0; ulCount < ulSrcLen; ulCount++ )
       {

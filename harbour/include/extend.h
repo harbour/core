@@ -40,24 +40,24 @@
 #include "hb_vmpub.h"
 
 /* items types and type checking macros */
-#define IT_NIL          ( ( WORD ) 0x0000 )
-#define IT_INTEGER      ( ( WORD ) 0x0002 )
-#define IT_LONG         ( ( WORD ) 0x0008 )
-#define IT_DOUBLE       ( ( WORD ) 0x0010 )
-#define IT_DATE         ( ( WORD ) 0x0020 )
-#define IT_LOGICAL      ( ( WORD ) 0x0080 )
-#define IT_SYMBOL       ( ( WORD ) 0x0100 )
-#define IT_ALIAS        ( ( WORD ) 0x0200 )
-#define IT_STRING       ( ( WORD ) 0x0400 )
-#define IT_MEMOFLAG     ( ( WORD ) 0x0800 )
+#define IT_NIL          ( ( USHORT ) 0x0000 )
+#define IT_INTEGER      ( ( USHORT ) 0x0002 )
+#define IT_LONG         ( ( USHORT ) 0x0008 )
+#define IT_DOUBLE       ( ( USHORT ) 0x0010 )
+#define IT_DATE         ( ( USHORT ) 0x0020 )
+#define IT_LOGICAL      ( ( USHORT ) 0x0080 )
+#define IT_SYMBOL       ( ( USHORT ) 0x0100 )
+#define IT_ALIAS        ( ( USHORT ) 0x0200 )
+#define IT_STRING       ( ( USHORT ) 0x0400 )
+#define IT_MEMOFLAG     ( ( USHORT ) 0x0800 )
 #define IT_MEMO         ( IT_MEMOFLAG & IT_STRING )
-#define IT_BLOCK        ( ( WORD ) 0x1000 )
-#define IT_BYREF        ( ( WORD ) 0x2000 )
-#define IT_MEMVAR       ( ( WORD ) 0x4000 )
-#define IT_ARRAY        ( ( WORD ) 0x8000 )
+#define IT_BLOCK        ( ( USHORT ) 0x1000 )
+#define IT_BYREF        ( ( USHORT ) 0x2000 )
+#define IT_MEMVAR       ( ( USHORT ) 0x4000 )
+#define IT_ARRAY        ( ( USHORT ) 0x8000 )
 #define IT_OBJECT       IT_ARRAY
-#define IT_NUMERIC      ( ( WORD ) ( IT_INTEGER | IT_LONG | IT_DOUBLE ) )
-#define IT_ANY          ( ( WORD ) 0xFFFF )
+#define IT_NUMERIC      ( ( USHORT ) ( IT_INTEGER | IT_LONG | IT_DOUBLE ) )
+#define IT_ANY          ( ( USHORT ) 0xFFFF )
 
 #define IS_BYREF( p )      ( ( p )->type & IT_BYREF )
 #define IS_OF_TYPE( p, t ) ( ( ( p )->type & ~IT_BYREF ) == t )
@@ -102,8 +102,8 @@ struct hb_struArray
 struct hb_struBlock
 {
    LONG statics;
-   WORD lineno;
-   WORD paramcnt;
+   USHORT lineno;
+   USHORT paramcnt;
    struct _HB_CODEBLOCK * value;
 };
 
@@ -114,14 +114,14 @@ struct hb_struDate
 
 struct hb_struDouble
 {
-   WORD length;
-   WORD decimal;
+   USHORT length;
+   USHORT decimal;
    double value;
 };
 
 struct hb_struInteger
 {
-   WORD length;
+   USHORT length;
    int value;
 };
 
@@ -132,7 +132,7 @@ struct hb_struLogical
 
 struct hb_struLong
 {
-   WORD length;
+   USHORT length;
    long value;
 };
 
@@ -164,15 +164,15 @@ struct hb_struString
 struct hb_struSymbol
 {
    LONG stackbase;
-   WORD lineno;
-   WORD paramcnt;
+   USHORT lineno;
+   USHORT paramcnt;
    PHB_SYMB value;
 };
 
 /* items hold at the virtual machine stack */
 typedef struct _HB_ITEM
 {
-   WORD type;
+   USHORT type;
    union
    {
       struct hb_struArray   asArray;
@@ -195,8 +195,8 @@ typedef struct _HB_BASEARRAY
 {
    PHB_ITEM pItems;       /* pointer to the array items */
    ULONG    ulLen;        /* number of items in the array */
-   WORD     wHolders;     /* number of holders of this array */
-   WORD     wClass;       /* offset to the classes base if it is an object */
+   USHORT   uiHolders;    /* number of holders of this array */
+   USHORT   uiClass;      /* offset to the classes base if it is an object */
    BOOL     bSuperCast;   /* is it a super cast ? */
 } BASEARRAY, * PBASEARRAY, * BASEARRAY_PTR;
 

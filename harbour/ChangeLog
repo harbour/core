@@ -1,3 +1,26 @@
+19990917-15:10 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * include/compiler.h
+    include/hbdefs.h
+    source/rtl/gt/gtwin.c
+    ! WORD/DWORD type declaration moved from hbdefs.h to compiler.h and 
+      gtwin.c
+    - LOWORD() removed from hbdefs.h
+    * HIBYTE() now uses USHORT instead of WORD. (Is this OK ?)
+  * source/rtl/extend.c
+    * WORD -> USHORT
+    ; Now only the compiler should be cleaned up from WORD types. (TODO !)
+      GTWIN.C should define these types locally.
+  * source/rtl/classes.c
+    * WORD -> USHORT
+    ! Some hb_parnl() changed to hb_parni() for class handles.
+  * include/extend.h
+    * WORD -> USHORT for all variables within HB_ITEM.
+  * source/itemapi.c
+    source/arrays.c
+    include/extend.h
+    * WORD -> USHORT for array/object struct.
+
 19990917-13:30 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/codebloc.c

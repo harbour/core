@@ -171,7 +171,7 @@ BOOL hb_evalRelease( PEVALINFO pEvalInfo )
          enough to initiate a call, the number of parameters is not limited.
 
    NOTE: When calling hb_itemDo() with no arguments for the Harbour item being
-         evaluated, you must use '(PHB_ITEM *) 0' as the third parameter. 
+         evaluated, you must use '(PHB_ITEM *) 0' as the third parameter.
 
    NOTE: pItemArg1 is needed to workaround a bug in OS2/GCC. */
 
@@ -796,7 +796,7 @@ void hb_itemClear( PHB_ITEM pItem )
    }
    else if( IS_ARRAY( pItem ) && pItem->item.asArray.value )
    {
-      if( --( pItem->item.asArray.value )->wHolders == 0 )
+      if( --( pItem->item.asArray.value )->uiHolders == 0 )
          hb_arrayRelease( pItem );
    }
    else if( IS_BLOCK( pItem ) )
@@ -828,7 +828,7 @@ void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
    }
 
    else if( IS_ARRAY( pSource ) )
-      ( pSource->item.asArray.value )->wHolders++;
+      ( pSource->item.asArray.value )->uiHolders++;
 
    else if( IS_BLOCK( pSource ) )
       hb_codeblockCopy( pDest, pSource );

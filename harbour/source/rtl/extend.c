@@ -60,7 +60,7 @@ PHB_ITEM hb_param( int iParam, int iMask )
    if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
       PHB_ITEM pItem;
-      WORD wType;
+      USHORT uiType;
 
       if( iParam == -1 )
          pItem = &stack.Return;
@@ -70,9 +70,9 @@ PHB_ITEM hb_param( int iParam, int iMask )
       if( pItem->type & IT_BYREF )
          pItem = hb_itemUnRef( pItem );
 
-      wType = pItem->type;
+      uiType = pItem->type;
 
-      if( ( wType & ( WORD ) iMask ) || ( wType == IT_NIL && ( WORD ) iMask == IT_ANY ) )
+      if( ( uiType & ( USHORT ) iMask ) || ( uiType == IT_NIL && ( USHORT ) iMask == IT_ANY ) )
          return pItem;
    }
 
@@ -410,14 +410,14 @@ int hb_parinfo( int iParam )
    {
       if( ( iParam > 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
       {
-         WORD wType;
+         USHORT uiType;
 
          if( iParam == -1 )
-            wType = stack.Return.type;
+            uiType = stack.Return.type;
          else
-            wType = ( stack.pBase + 1 + iParam )->type;
+            uiType = ( stack.pBase + 1 + iParam )->type;
 
-         if( wType & IT_BYREF )
+         if( uiType & IT_BYREF )
          {
             PHB_ITEM pItem;
 
@@ -427,10 +427,10 @@ int hb_parinfo( int iParam )
                pItem = hb_itemUnRef( stack.pBase + 1 + iParam );
 
             if( pItem )
-               wType |= pItem->type;
+               uiType |= pItem->type;
          }
 
-         return ( int ) wType;
+         return ( int ) uiType;
       }
       else
          return 0;

@@ -52,6 +52,19 @@
 #include <windows.h>
 #include "gtapi.h"
 
+#if defined(__IBMCPP__)
+   #undef WORD                            /* 2 bytes unsigned */
+   typedef unsigned short int WORD;
+#else
+   #if ! defined(HB_DONT_DEFINE_BASIC_TYPES)
+      #undef WORD                            /* 2 bytes unsigned */
+      typedef unsigned short int WORD;
+
+      #undef DWORD                           /* 4 bytes unsigned */
+      typedef unsigned long DWORD;
+   #endif
+#endif
+
 #if ! defined(__GNUC__)
 #ifdef __CYGWIN__
 typedef WORD far * LPWORD;

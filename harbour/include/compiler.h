@@ -38,6 +38,20 @@
 
 #include "hbpp.h"
 
+/* TODO: Remove these (WORD/DWORD) when the compiler is cleaned up from them. */
+#if defined(__IBMCPP__)
+   #undef WORD                            /* 2 bytes unsigned */
+   typedef unsigned short int WORD;
+#else
+   #if ! defined(HB_DONT_DEFINE_BASIC_TYPES)
+      #undef WORD                            /* 2 bytes unsigned */
+      typedef unsigned short int WORD;
+
+      #undef DWORD                           /* 4 bytes unsigned */
+      typedef unsigned long DWORD;
+   #endif
+#endif
+
 /* compiler related declarations */
 
 /* locals, static, public variables support */
