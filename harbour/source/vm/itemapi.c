@@ -86,7 +86,7 @@
 #if !defined(__DJGPP__)
 #include <math.h> /* For log() */
 #endif
-#if defined(__BORLANDC__)
+#if (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
 #include <float.h>  /* for _finite() and _isnan() */
 #endif
 
@@ -671,7 +671,7 @@ PHB_ITEM hb_itemPutNDLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
 
    if( iWidth <= 0 || iWidth > 99 )
    {
-#if defined (__BORLANDC__)
+#if (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
      /* Borland C compiled app crashes if a "NaN" double is compared with another double [martin vogel] */
      if (_isnan (dNumber))
      {
@@ -1146,7 +1146,7 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
          {
             double dNumber = hb_itemGetND( pNumber );
 
-            /* #if defined(__BORLANDC__) || defined(__WATCOMC__) */
+            /* #if (__BORLANDC__ > 1040) || defined(__WATCOMC__) */
             /* added infinity check for Borland C [martin vogel] */
             #if defined(__WATCOMC__)
             #else
@@ -1169,9 +1169,9 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
             /* TODO: look if isinf()/_isinf or finite()/_finite() does exist for your compiler and add this to the check
                below [martin vogel] */
             if( pNumber->item.asDouble.length == 99
-            /* #if defined(__BORLANDC__) || defined(__WATCOMC__) */
+            /* #if (__BORLANDC__ > 1040) || defined(__WATCOMC__) */
             #if defined(__WATCOMC__)
-            #elif defined(__BORLANDC__)
+            #elif (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
                /* No more checks for Borland C, which returns 0 for log( 0 ),
                   and is therefore unable to test for infinity */
                /* log(0) returning 0 seems to be a side effect of using a custom math error handler that

@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-01-10 17:00 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  * source/rdd/dbfcdx/dbfcdx1.c
+    ! hb_fsDelete takes a BYTE * parameter, not an unsigned char * one.
+  * source/rtl/filesys.c
+    ! MingW32 uses _LK_UNLOCK, not _LK_UNLK.
+  * source/vm/itemapi.c
+    ! Borland C 3.1 and earlier do not support _isnan or _finite.
+
 2003-01-04 19:40 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
   * include/filesys.c
     * When X__WIN32__ is defined FHANDLE is defined as Long

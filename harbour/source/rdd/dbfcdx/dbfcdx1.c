@@ -3208,7 +3208,7 @@ static void hb_cdxSortFree( LPSORTINFO pSort )
    }
    if ( pSort->szTempFileName )
    {
-      hb_fsDelete( (unsigned char *) ( pSort->szTempFileName ) );
+      hb_fsDelete( ( BYTE * ) ( pSort->szTempFileName ) );
       hb_xfree( pSort->szTempFileName );
       pSort->szTempFileName = NULL;
    }

@@ -1378,7 +1378,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
             break;
 
          case FL_UNLOCK:
-            bResult = ( _locking( hFileHandle, _LK_UNLCK, ulLength ) == 0 );
+            bResult = ( _locking( hFileHandle, _LK_UNLOCK, ulLength ) == 0 );
             break;
 
          default:
@@ -1961,8 +1961,8 @@ BOOL hb_fsEof( FHANDLE hFileHandle )
 #ifdef __WIN32__
 HANDLE DostoWinHandle( FHANDLE fHandle)
 {
-HANDLE hHandle=LongToHandle(fHandle);
-switch (fHandle)
+   HANDLE hHandle=LongToHandle(fHandle);
+   switch (fHandle)
    {
    case 0:
       return GetStdHandle(STD_INPUT_HANDLE);
@@ -1972,6 +1972,6 @@ switch (fHandle)
       return GetStdHandle(STD_ERROR_HANDLE);
    default :
       return hHandle;
-}
+   }
 }
 #endif
