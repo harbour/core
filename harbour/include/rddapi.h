@@ -232,6 +232,8 @@ typedef struct
    BYTE     bDay;
    BOOL     fRecordChanged;  /* Record changed */
    ULONG    ulRecCount;      /* Total records */
+   PHB_ITEM itmEval;         /* EVAL expression for __dbPack() */
+   ULONG    ulEvery;         /* Every records for eval itmEval */
 } DBEXTENDINFO;
 
 typedef DBEXTENDINFO * LPDBEXTENDINFO;

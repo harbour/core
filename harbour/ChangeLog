@@ -1,3 +1,10 @@
+19991121-17:50 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * include/rddapi.h
+    source/rdd/dbcmd.c
+    source/rdd/dbf1.c
+    + Additional feature: __dbPack( [<bBlock>], [<nEvery>] )
+      executes <bBlock> every <nEvery> records.
+
 19991121-17:33 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/compiler/expropt.c
     ! $ optimization fixed for strings containing Chr(0), now 4 more RTL_TESTs

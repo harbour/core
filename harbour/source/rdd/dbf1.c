@@ -45,6 +45,7 @@
 #include "errorapi.h"
 #include "dates.h"
 #include "langapi.h"
+#include "ctoharb.h"
 
 typedef struct _DBFHEADER
 {
@@ -996,6 +997,7 @@ static ERRCODE dbfGetValueFile( AREAP pArea, USHORT uiIndex, void * pFile )
    LPFIELD pField;
 
    HB_TRACE(HB_TR_DEBUG, ("dbfGetValueFile(%p, %hu, %p)", pArea, uiIndex, pFile));
+   HB_SYMBOL_UNUSED( pFile );
 
    if( uiIndex > pArea->uiFieldCount )
       return FAILURE;
@@ -1018,6 +1020,7 @@ static ERRCODE dbfGetValueFile( AREAP pArea, USHORT uiIndex, void * pFile )
       * ( szText + pField->uiLen ) = szEndChar;
    }
    ( ( LPDBFMEMO ) pField->memo )->fChanged = FALSE;
+
    return SUCCESS;
 }
 
@@ -1375,7 +1378,7 @@ static ERRCODE dbfOpenMemFile( AREAP pArea, LPDBOPENINFO pOpenInfo )
 
 static ERRCODE dbfPack( AREAP pArea )
 {
-   ULONG ulRecCount, ulRecIn, ulRecOut;
+   ULONG ulRecCount, ulRecIn, ulRecOut, ulEvery;
    BOOL bDeleted;
    PHB_ITEM pError;
    BYTE * pBuffer, pEOF[ 1 ];
@@ -1400,10 +1403,24 @@ static ERRCODE dbfPack( AREAP pArea )
 
    ulRecOut = 0;
    ulRecIn = 1;
+   ulEvery = 0;
    while ( ulRecIn <= ulRecCount )
    {
       SELF_GOTO( pArea, ulRecIn );
       SELF_DELETED( pArea, &bDeleted );
+
+      /* Execute the Code Block */
+      if( pArea->lpExtendInfo->itmEval )
+      {
+         ulEvery++;
+         if( ulEvery >= pArea->lpExtendInfo->ulEvery )
+         {
+            ulEvery = 0;
+            hb_vmPushSymbol( &hb_symEval );
+            hb_vmPush( pArea->lpExtendInfo->itmEval );
+            hb_vmDo( 0 );
+         }
+      }
 
       if( !bDeleted )
       {
@@ -1418,6 +1435,15 @@ static ERRCODE dbfPack( AREAP pArea )
       }
       ulRecIn++;
    }
+
+   /* Execute the Code Block for pending record */
+   if( pArea->lpExtendInfo->itmEval && ulEvery > 0 )
+   {
+      hb_vmPushSymbol( &hb_symEval );
+      hb_vmPush( pArea->lpExtendInfo->itmEval );
+      hb_vmDo( 0 );
+   }
+
    hb_dbfUpdateHeader( pArea, ulRecOut );
 
    /* Write EOF */

@@ -1996,7 +1996,16 @@ HARBOUR HB___DBSETLOCATE( void )
 HARBOUR HB___DBPACK( void )
 {
    if( pCurrArea )
+   {
+      /* Additional feature: __dbPack( [<bBlock>, [<nEvery>] )
+         Code Block to execute for every record. */
+      ( ( AREAP ) pCurrArea->pArea )->lpExtendInfo->itmEval = hb_param( 1, IT_BLOCK );
+      ( ( AREAP ) pCurrArea->pArea )->lpExtendInfo->ulEvery = hb_parnl( 2 );
+      if( !( ( AREAP ) pCurrArea->pArea )->lpExtendInfo->ulEvery )
+         ( ( AREAP ) pCurrArea->pArea )->lpExtendInfo->ulEvery = 1;
       SELF_PACK( ( AREAP ) pCurrArea->pArea );
+      ( ( AREAP ) pCurrArea->pArea )->lpExtendInfo->itmEval = NULL;
+   }
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "__DBPACK" );
 }
