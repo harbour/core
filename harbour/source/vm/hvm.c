@@ -1643,7 +1643,7 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_MPUSHSYM:
          {
             HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
-            hb_vmPushSymbol( ( *pDynSym )->pSymbol );
+            hb_vmPushMacroSymbol( ( *pDynSym )->pSymbol );
             w += sizeof( HB_DYNS_PTR ) + 1;
             break;
          }
@@ -3408,11 +3408,9 @@ void HB_EXPORT hb_vmDo( USHORT uiParams )
          {
             /* static functions are not allowed in macro 
             */
-            HB_ITEM_PTR pError = hb_errRT_New( ES_ERROR, NULL, EG_NOFUNC, 1001,
-                                    NULL, pSym->szName,
-                                    0, EF_NONE );
-            hb_errLaunch( pError );
-            hb_errRelease( pError );
+            PHB_ITEM pArgsArray = hb_arrayFromStack( uiParams );
+            hb_errRT_BASE_SubstR( EG_NOFUNC, 1001, NULL, pSym->szName, 1, pArgsArray );
+            hb_itemRelease( pArgsArray );
          }
          else
          {

@@ -2515,6 +2515,11 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
             {
                State = STATE_ID_END;
             }
+            else if( **ptri == '&' )
+            {
+               State = STATE_ID;
+               continue;
+            }
             else
             {
                State = STATE_EXPRES;

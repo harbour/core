@@ -1219,25 +1219,19 @@ void hb_compGenPushSymbol( char * szSymbolName, BOOL bFunction, BOOL bAlias, HB_
           * NULL value for pSym
           */
       }
+      else if( bFunction )
+      {
+         if( pSym && hb_dynsymScope(pSym, HB_FS_STATIC) )
+         {
+            /* static functions are not allowed in macro */
+            HB_MACRO_DATA->status |= HB_MACRO_UNKN_SYM;
+            HB_MACRO_DATA->status &= ~HB_MACRO_CONT;  /* don't run this pcode */
+         }
+      }
    }
    else
       pSym = hb_dynsymGet( szSymbolName );     
 
-   if( bFunction )
-   {
-      if( pSym && ((pSym->pSymbol->value.pFunPtr == NULL) || (pSym->pSymbol->cScope & HB_FS_STATIC)) )
-      {
-         /* static functions are not allowed in macro */
-         HB_MACRO_DATA->status |= HB_MACRO_UNKN_SYM;
-         HB_MACRO_DATA->status &= ~HB_MACRO_CONT;  /* don't run this pcode */
-         if( !(HB_MACRO_DATA->Flags & HB_MACRO_GEN_TYPE) )
-         {
-            HB_MACRO_DATA->pError = hb_errRT_New( ES_ERROR, NULL, EG_NOFUNC, 1001,
-                                    NULL, szSymbolName,
-                                    0, EF_NONE );
-         }
-      }
-   }
 
    hb_compGenPCode1( HB_P_MPUSHSYM, HB_MACRO_PARAM );
    hb_compGenPCodeN( ( BYTE * ) &pSym, sizeof( pSym ), HB_MACRO_PARAM );

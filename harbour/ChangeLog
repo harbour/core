@@ -8,6 +8,22 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-09-08 16:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * include/hbapi.h
+   * source/vm/dynsym.c
+      * a new function 'hb_dynsymScope' was added to check if the
+      passed symbol has requested scope
+
+   * source/vm/macro.c
+   * source/vm/hvm.c
+      * fixed support for static functions used in macro compiled
+      expressions (the runtime error is generated during evaluation
+      instead of macro compilation - like in Clipper)
+      
+   * source/pp/ppcore.c
+      * fixed support for '&macro.' in complex expressions
+      
+
 2004-09-07 10:30 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/pp/ppcore.c
       * fixed support for Clipper undocumented <x:&> match marker,
