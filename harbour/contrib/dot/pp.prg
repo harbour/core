@@ -340,7 +340,7 @@ RETURN NIL
 FUNCTION ProcessFile( sSource, sSwitch )
 
    LOCAL hSource, sBuffer, sLine, nPosition, nNewLineAt, sExt
-   LOCAL nLen, nMaxPos, cChar, nClose, nBase, nNext, nLine := 0
+   LOCAL nLen, nMaxPos, cChar := '', nClose, nBase, nNext, nLine := 0
    LOCAL sRight, nPath, nPaths := Len( asPaths ), nNewLine, bBlanks := .T.
 
    IF At( '.', sSource ) == 0
@@ -400,6 +400,7 @@ FUNCTION ProcessFile( sSource, sSwitch )
 
       WHILE nPosition < nMaxPos
 
+          cPrev := cChar
           cChar := SubStr( sBuffer, nPosition, 1 )
 
           DO CASE
@@ -427,7 +428,7 @@ FUNCTION ProcessFile( sSource, sSwitch )
                       FSeek( hSource, -1, 1 )
                       nLen := FRead( hSource, @sBuffer, 16384 )
                       IF nLen < 2
-                         Alert( "ERROR! Unterminated '/**/'")
+                         Alert( "ERROR! Unterminated '/**/'" )
                       ENDIF
                       nMaxPos   := nLen - 1
                       nPosition := 0
@@ -652,6 +653,45 @@ FUNCTION ProcessFile( sSource, sSwitch )
                       EXIT
                    ENDIF
                 ENDDO
+
+             CASE ( cChar == '[' )
+                IF cPrev $ "])}" .OR. ( cPrev == '_' .OR. ( cPrev >= 'A' .AND. cPrev <= 'Z' ) .OR. ( cPrev >= 'a' .AND. cPrev <= 'z' ) .OR. ( cPrev >= '0' .AND. cPrev <= '9' ) )
+                   sLine += cChar
+                   nPosition++
+                   LOOP
+                ENDIF
+
+                WHILE .T.
+                   nClose   := At( ']', SubStr( sBuffer, nPosition + 1 ) )
+                   nNewLine := At( Chr(10), SubStr( sBuffer, nPosition + 1 ) )
+
+                   IF nNewLine > 0 .AND. ( nClose > nNewLine )
+                      //? nNewLine, nClose, SubStr( sBuffer, nPosition + 1, 78 )
+                      Alert( "ERROR! Unterminated '['" )
+                      sLine     += SubStr( sBuffer, nPosition, nNewLine - 1 )
+                      nPosition += ( nNewLine - 1 )
+                      cChar     := ''
+                      EXIT
+                   ENDIF
+
+                   IF nClose == 0
+                      sLine += SubStr( sBuffer, nPosition )
+                      FSeek( hSource, -1, 1 )
+                      nLen := FRead( hSource, @sBuffer, 16384 )
+                      IF nLen < 2
+                         Alert( [ERROR! Unterminated "["] )
+                         RETURN .F.
+                      ENDIF
+                      nMaxPos   := nLen - 1
+                      nPosition := 1
+                      LOOP
+                   ELSE
+                      sLine     += SubStr( sBuffer, nPosition, nClose )
+                      nPosition += ( nClose )
+                      EXIT
+                   ENDIF
+                ENDDO
+                cChar := ']'
 
              CASE cChar == Chr(9)
                 sLine += "    "
@@ -1863,7 +1903,7 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
 
    ENDDO
 
-   Alert( "ERROR! Llogic failure" )
+   Alert( "ERROR! Logic failure" )
 
 RETURN 0
 
@@ -1986,7 +2026,7 @@ FUNCTION NextToken( sLine, bCheckRules )
 
         nClose := AT( ']', sLine )
         IF nClose == 0
-           Alert( "ERROR! [NextExp()] Unterminated ']'" )
+           Alert( "ERROR! [NextExp()] Unterminated ']' at: " + sLine )
            RETURN NIL
         ELSE
            sReturn := SubStr( sLine, 2, nClose - 2 )
@@ -1996,7 +2036,7 @@ FUNCTION NextToken( sLine, bCheckRules )
            ELSEIF ! ( "'" $ sReturn )
               sReturn := "'" + sReturn + "'"
            ELSE
-              sReturn := "[" + sReturn + "]"
+              sReturn := '[' + sReturn + ']'
            ENDIF
         ENDIF
 
