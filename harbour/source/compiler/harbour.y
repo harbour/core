@@ -224,7 +224,6 @@ int iVarScope = 0;          /* holds the scope for next variables to be defined 
 #define ERR_STRING_TERMINATOR   7
 #define ERR_FUNC_RESERVED       8
 #define ERR_ILLEGAL_INIT        9
-#define ERR_CANT_OPEN_INCLUDE  10
 
 /* Table with parse errors */
 char * _szErrors[] = { "Statement not allowed outside of procedure or function",
@@ -235,8 +234,7 @@ char * _szErrors[] = { "Statement not allowed outside of procedure or function",
                        "Invalid numeric format '.'",
                        "Unterminated string: \'%s\'",
                        "Redefinition of predefined function %s: \'%s\'",
-                       "Illegal initializer: \'%s\'",
-                       "Can't open #include file: \'%s\'"
+                       "Illegal initializer: \'%s\'"
                      };
 
 /* Table with reserved functions names
@@ -425,9 +423,7 @@ Source     : Crlf
            | Source MEMVAR IdentList
            ;
 
-Include    : NE1 INCLUDE LITERAL { if( ! Include( $3 ) )
-                                      GenError( ERR_CANT_OPEN_INCLUDE, $3, NULL );
-                                 } Crlf
+Include    : NE1 INCLUDE LITERAL { Include( $3 ); } Crlf
            ;
 
 Extern     : EXTERN ExtList Crlf
@@ -628,13 +624,13 @@ VarAssign  : IDENTIFIER INASSIGN Expression { PopId( $1 ); PushId( $1 ); }
            | IDENTIFIER DIVEQ    { PushId( $1 ); } Expression { GenPCode1( _DIVIDE ); PopId( $1 ); PushId( $1 ); }
            | IDENTIFIER EXPEQ    { PushId( $1 ); } Expression { GenPCode1( _POWER ); PopId( $1 ); PushId( $1 ); }
            | IDENTIFIER MODEQ    { PushId( $1 ); } Expression { GenPCode1( _MODULUS ); PopId( $1 ); PushId( $1 ); }
-           | VarId ArrayIndex INASSIGN Expression  { GenPCode1( _ARRAYPUT ); }
-           | VarId ArrayIndex PLUSEQ Expression { GenPCode1( _PLUS ); GenPCode1( _ARRAYPUT ); }
-           | VarId ArrayIndex MINUSEQ  Expression {}
-           | VarId ArrayIndex MULTEQ   Expression {}
-           | VarId ArrayIndex DIVEQ    Expression {}
-           | VarId ArrayIndex EXPEQ    Expression {}
-           | VarId ArrayIndex MODEQ    Expression {}
+           | VarId ArrayIndex INASSIGN Expression { GenPCode1( _ARRAYPUT ); }
+           | VarId ArrayIndex PLUSEQ   { DupPCode( $1 ); GenPCode1( _ARRAYAT ); } Expression { GenPCode1( _PLUS    ); GenPCode1( _ARRAYPUT ); }
+           | VarId ArrayIndex MINUSEQ  { DupPCode( $1 ); GenPCode1( _ARRAYAT ); } Expression { GenPCode1( _MINUS   ); GenPCode1( _ARRAYPUT ); }
+           | VarId ArrayIndex MULTEQ   { DupPCode( $1 ); GenPCode1( _ARRAYAT ); } Expression { GenPCode1( _MULT    ); GenPCode1( _ARRAYPUT ); }
+           | VarId ArrayIndex DIVEQ    { DupPCode( $1 ); GenPCode1( _ARRAYAT ); } Expression { GenPCode1( _DIVIDE  ); GenPCode1( _ARRAYPUT ); }
+           | VarId ArrayIndex EXPEQ    { DupPCode( $1 ); GenPCode1( _ARRAYAT ); } Expression { GenPCode1( _POWER   ); GenPCode1( _ARRAYPUT ); }
+           | VarId ArrayIndex MODEQ    { DupPCode( $1 ); GenPCode1( _ARRAYAT ); } Expression { GenPCode1( _MODULUS ); GenPCode1( _ARRAYPUT ); }
            | FunCall    ArrayIndex INASSIGN Expression      {}
            | FunCall    ArrayIndex PLUSEQ   Expression      {}
            | FunCall    ArrayIndex MINUSEQ  Expression      {}
@@ -680,7 +676,7 @@ Operators  : Expression '='    Expression   { GenPCode1( _EQUAL ); } /* compare 
                        Expression { GenPCode1( AND_ ); if( _iShortCuts ) JumpHere( $<iNumber>3 ); }
            | Expression OR { if( _iShortCuts ){ Duplicate(); $<iNumber>$ = JumpTrue( 0 ); } }
                        Expression { GenPCode1( OR_ ); if( _iShortCuts ) JumpHere( $<iNumber>3 ); }
-           | Expression EQ     Expression   { GenPCode1( _EXACTLYEQUAL ); }
+           | Expression EQ     Expression   { GenPCode1( _EQUAL ); }
            | Expression NE1    Expression   { GenPCode1( _NOTEQUAL ); }
            | Expression NE2    Expression   { GenPCode1( _NOTEQUAL ); }
            | Expression POWER  Expression   { GenPCode1( _POWER ); }
@@ -952,7 +948,7 @@ void EXTERNAL_LINKAGE close_on_exit( void )
   }
 }
 
-int main( int argc, char * argv[] )
+int harbour_main( int argc, char * argv[] )
 {
    int iStatus = 0, iArg = 1;
    char szFileName[ _POSIX_PATH_MAX ];    /* filename to parse */
@@ -1828,11 +1824,6 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
             case _ENDBLOCK:
                  --iNestedCodeblock;
                  fprintf( yyc, "                _ENDBLOCK,\n" );
-                 lPCodePos++;
-                 break;
-
-            case _EXACTLYEQUAL:
-                 fprintf( yyc, "                _EXACTLYEQUAL,\n" );
                  lPCodePos++;
                  break;
 

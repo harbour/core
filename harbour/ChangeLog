@@ -1,3 +1,7 @@
+19990514-17:05 CET Eddie Runia
+  * harbour.y
+    xVar[ xEl ] += -= *= /= %= ^= added
+
 19990514-16:00 CET Eddie Runia
   * makefile.b32
     - added objfunc.obj
