@@ -1,3 +1,9 @@
+20000510-03:45 DST Paul Tucker <ptucker@sympatico.ca>
+  * source/compiler/harbour.c
+    change param 2 of hb_compFunctionNew() definition to BYTE
+  * source/compiler/hbpcode.c
+    Added a whole whack of (char *)'s to sprintf calls to satisfy msvc.
+
 2000-05-09 19:20 GMT-4 David G. Holm <dholm@jsd-llc.com>
 
   * contrib/rdd_ads/ads1.c

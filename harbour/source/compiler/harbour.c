@@ -68,7 +68,7 @@ static void hb_compGenFieldPCode( BYTE , int, char *, PFUNCTION );      /* gener
 static void hb_compGenVariablePCode( BYTE , char * );    /* generates the pcode for undeclared variable */
 static void hb_compGenVarPCode( BYTE , char * );    /* generates the pcode for undeclared variable */
 
-static PFUNCTION hb_compFunctionNew( char *, char );  /* creates and initialises the _FUNC structure */
+static PFUNCTION hb_compFunctionNew( char *, BYTE );  /* creates and initialises the _FUNC structure */
 static void hb_compCheckDuplVars( PVAR pVars, char * szVarName ); /*checks for duplicate variables definitions */
 
 //int hb_compSort_ULONG( ULONG * ulLeft, ULONG * ulRight );
