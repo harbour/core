@@ -357,7 +357,9 @@ static int hb_rddRegister( char * szDriver, USHORT uiType )
    memset( pRddNewNode, 0, sizeof( RDDNODE ) );
 
    /* Fill the new RDD node */
-   strncpy( pRddNewNode->szName, szDriver, HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
+
+
+   strncat( pRddNewNode->szName, szDriver, HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
    pRddNewNode->uiType = uiType;
 
    /* Call <szDriver>_GETFUNCTABLE() */
@@ -1285,12 +1287,14 @@ HB_FUNC( DBCREATE )
       szDriver = s_szDefDriver;
 
    pFileName = hb_fsFNameSplit( szFileName );
-   if( ISCHAR(5) )
-      strncpy( szAlias, hb_parc( 5 ), HARBOUR_MAX_RDD_ALIAS_LENGTH );
 
-   uiLen = ( USHORT ) hb_parclen( 5 );
+   szAlias[0] = '\0';
+   if( ISCHAR(5) )
+      strncat( szAlias, hb_parc( 5 ), HARBOUR_MAX_RDD_ALIAS_LENGTH );
+
+   uiLen = strlen( szAlias );
    if( uiLen == 0 )
-      strncpy( szAlias, pFileName->szName, HARBOUR_MAX_RDD_ALIAS_LENGTH );
+      strncat( szAlias, pFileName->szName, HARBOUR_MAX_RDD_ALIAS_LENGTH );
    else if( uiLen == 1 )
    {
       /* Alias with a single letter. Only are valid 'L' and > 'M' */
@@ -1305,6 +1309,7 @@ HB_FUNC( DBCREATE )
    /* Create a new WorkArea node */
    if( !hb_rddInsertAreaNode( szDriver ) )
    {
+      hb_xfree( pFileName );
       hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, "DBCREATE" );
       return;
    }
@@ -1313,7 +1318,7 @@ HB_FUNC( DBCREATE )
    szFileName[0] = '\0';
 
    if( ISCHAR(1) )
-      strncpy( szFileName, hb_parc( 1 ), _POSIX_PATH_MAX );
+      strncat( szFileName, hb_parc( 1 ), _POSIX_PATH_MAX );
 
    if( !pFileName->szExtension )
    {
@@ -1936,6 +1941,8 @@ HB_FUNC( DBUSEAREA )
    char szDriverBuffer[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 ];
    char szAlias[ HARBOUR_MAX_RDD_ALIAS_LENGTH + 1 ];
 
+   szDriverBuffer[0] = '\0';
+
    s_bNetError = FALSE;
 
    /* New area? */
@@ -1965,9 +1972,9 @@ HB_FUNC( DBUSEAREA )
 
    szAlias[0] = '\0';
    if( ISCHAR(4) )
-      strncpy( szAlias, hb_parc( 4 ), HARBOUR_MAX_RDD_ALIAS_LENGTH );
+      strncat( szAlias, hb_parc( 4 ), HARBOUR_MAX_RDD_ALIAS_LENGTH );
    else
-      strncpy( szAlias, pFileName->szName, HARBOUR_MAX_RDD_ALIAS_LENGTH );
+      strncat( szAlias, pFileName->szName, HARBOUR_MAX_RDD_ALIAS_LENGTH );
 
    uiLen = strlen( szAlias );
    if( szAlias[ 0 ] >= '0' && szAlias[ 0 ] <= '9' )
@@ -1976,6 +1983,7 @@ HB_FUNC( DBUSEAREA )
       hb_errRT_DBCMD( EG_DUPALIAS, EDBCMD_DUPALIAS, NULL, "DBUSEAREA" );
       return;
    }
+
    if( uiLen == 1 )
    {
       /* Alias with a single letter. Only are valid 'L' and > 'M' */
@@ -1990,12 +1998,15 @@ HB_FUNC( DBUSEAREA )
    /* Create a new WorkArea node */
    if( !hb_rddInsertAreaNode( szDriver ) )
    {
+      hb_xfree( pFileName );
       hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, "DBUSEAREA" );
       return;
    }
 
    szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
-   strncpy( szFileName, hb_parc( 3 ), _POSIX_PATH_MAX );
+   szFileName[0] = '\0';
+   strncat( szFileName, hb_parc( 3 ), _POSIX_PATH_MAX );
+
    if( !pFileName->szExtension )
    {
       pFileExt = hb_itemPutC( NULL, "" );
@@ -2886,18 +2897,15 @@ HB_FUNC( __RDDSETDEFAULT )
    uiLen = ( USHORT ) hb_parclen( 1 );
    if( uiLen > 0 )
    {
-      if( uiLen > HARBOUR_MAX_RDD_DRIVERNAME_LENGTH )
-         uiLen = HARBOUR_MAX_RDD_DRIVERNAME_LENGTH;
-
       s_szDefDriver = ( char * ) hb_xrealloc( s_szDefDriver, uiLen + 1 );
-      hb_strncpyUpper( s_szDefDriver, hb_parc( 1 ), uiLen );
+      hb_strncpyUpper( s_szDefDriver, hb_parc( 1 ), uiLen+1 );
    }
 }
 
 HB_FUNC( RDDSETDEFAULT )
 {
    USHORT uiLen;
-   char szNewDriver[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ];
+   char szNewDriver[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH +1 ];
 
    hb_rddCheck();
    hb_retc( s_szDefDriver );
@@ -2921,7 +2929,7 @@ HB_FUNC( RDDSETDEFAULT )
 HB_FUNC( DBSETDRIVER )
 {
    USHORT uiLen;
-   char szNewDriver[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ];
+   char szNewDriver[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH +1 ];
 
    hb_rddCheck();
    hb_retc( s_szDefDriver );
@@ -3363,6 +3371,8 @@ HB_FUNC( DBFILEGET )
    char szFileName[ _POSIX_PATH_MAX + 1 ];
    USHORT uiFields, uiIndex;
 
+   szFileName[0] = '\0';
+
    if( s_pCurrArea )
    {
       uiIndex = hb_parni( 1 );
@@ -3372,7 +3382,7 @@ HB_FUNC( DBFILEGET )
           SELF_FIELDCOUNT( ( AREAP ) s_pCurrArea->pArea, &uiFields ) == SUCCESS &&
           uiIndex > 0 && uiIndex <= uiFields )
       {
-         strncpy( szFileName, hb_itemGetCPtr( pFileName ), _POSIX_PATH_MAX );
+         strncat( szFileName, hb_itemGetCPtr( pFileName ), _POSIX_PATH_MAX );
          hb_retl( SELF_GETVALUEFILE( ( AREAP ) s_pCurrArea->pArea, uiIndex, szFileName,
                                      hb_itemGetNI( pMode ) ) );
          return;
@@ -3391,6 +3401,8 @@ HB_FUNC( DBFILEPUT )
    char szFileName[ _POSIX_PATH_MAX + 1 ];
    USHORT uiFields, uiIndex;
 
+   szFileName[0] = '\0';
+
    if( s_pCurrArea )
    {
       uiIndex = hb_parni( 1 );
@@ -3399,7 +3411,7 @@ HB_FUNC( DBFILEPUT )
           SELF_FIELDCOUNT( ( AREAP ) s_pCurrArea->pArea, &uiFields ) == SUCCESS &&
           uiIndex > 0 && uiIndex <= uiFields )
       {
-         strncpy( szFileName, hb_itemGetCPtr( pFileName ), _POSIX_PATH_MAX );
+         strncat( szFileName, hb_itemGetCPtr( pFileName ), _POSIX_PATH_MAX );
          hb_retl( SELF_PUTVALUEFILE( ( AREAP ) s_pCurrArea->pArea, uiIndex, szFileName ) );
          return;
       }

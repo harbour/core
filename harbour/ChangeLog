@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-21 12:00 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
+  + tests/vidtest.prg by Brian Dukes <bdukes@yellowthingy.co.uk>
+  * source/rdd/dbcmd.c
+  * source/rdd/workarea.c 
+  * source/rdd/dbf1.c
+    ! modified string copy operations for efficiency where appropriate.
+
 2002-10-21 10:20 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * contrib/rdd_ads/adsfunc.c
     ! Few fixes - checking for hb_parc() return value

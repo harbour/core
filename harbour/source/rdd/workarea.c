@@ -446,7 +446,9 @@ ERRCODE hb_waAlias( AREAP pArea, BYTE * szAlias )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_waAlias(%p, %p)", pArea, szAlias));
 
-   strncpy( ( char * ) szAlias, ( ( PHB_DYNS ) pArea->atomAlias )->pSymbol->szName,
+   szAlias[0] = '\0';
+
+   strncat( ( char * ) szAlias, ( ( PHB_DYNS ) pArea->atomAlias )->pSymbol->szName,
             HARBOUR_MAX_RDD_ALIAS_LENGTH );
    return SUCCESS;
 }
