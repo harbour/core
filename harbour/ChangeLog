@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-02-10 12:08 UTC+0100 Antonio Linares <alinares@fivetech.com>
+  * source/rtl/dbedit.prg
+    * Bug fixed reported by Bill Smith
+
 2002-02-09 14:12 UTC-0800 Ron Pinkas <ron@ronpinkas.com>
   * source/compiler/hbgenerr.c
     ! Fixed incorrect position of "4Suspicious operand type: \'unknown\' expected: \'%s\'".
