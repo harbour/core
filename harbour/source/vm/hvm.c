@@ -2760,13 +2760,15 @@ static void hb_vmArrayNew( HB_ITEM_PTR pArray, USHORT uiDimension )
 
 void hb_vmMessage( PHB_SYMB pSymMsg ) /* sends a message to an object */
 {
+   PHB_ITEM pItemMsg = hb_stackItemFromTop( -1 );
+
    HB_TRACE(HB_TR_DEBUG, ("hb_vmMessage(%p, %s)", pSymMsg, pSymMsg->szName));
 
-   hb_itemCopy( hb_stackTopItem(), hb_stackItemFromTop( -1 ) ); /* moves the object forward */
-   hb_itemClear( hb_stackItemFromTop( -1 ) );
-   ( hb_stackItemFromTop( -1 ) )->type = HB_IT_SYMBOL;
-   ( hb_stackItemFromTop( -1 ) )->item.asSymbol.value = pSymMsg;
-   ( hb_stackItemFromTop( -1 ) )->item.asSymbol.stackbase = hb_stackTopOffset() - 1;
+   hb_itemCopy( hb_stackTopItem(), pItemMsg ); /* moves the object forward */
+   hb_itemClear( pItemMsg );
+   pItemMsg->type = HB_IT_SYMBOL;
+   pItemMsg->item.asSymbol.value = pSymMsg;
+   pItemMsg->item.asSymbol.stackbase = hb_stackTopOffset() - 1;
    hb_stackPush();
 }
 
