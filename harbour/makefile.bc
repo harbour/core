@@ -366,6 +366,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\radiogrp.obj \
    $(OBJ_DIR)\readkey.obj \
    $(OBJ_DIR)\readvar.obj \
+   $(OBJ_DIR)\scalar.obj \
    $(OBJ_DIR)\scrollbr.obj \
    $(OBJ_DIR)\setfunc.obj \
    $(OBJ_DIR)\setta.obj \
@@ -401,8 +402,6 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgcswin.obj \
    $(OBJ_DIR)\msgde.obj \
    $(OBJ_DIR)\msgdewin.obj \
-   $(OBJ_DIR)\msgel.obj \
-   $(OBJ_DIR)\msgelwin.obj \
    $(OBJ_DIR)\msgen.obj \
    $(OBJ_DIR)\msgeo.obj \
    $(OBJ_DIR)\msges.obj \
@@ -441,8 +440,6 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgzhb5.obj
 
 CODEPAGE_LIB_OBJS = \
-   $(OBJ_DIR)\cdpeldos.obj \
-   $(OBJ_DIR)\cdpelwin.obj \
    $(OBJ_DIR)\cdpesdos.obj \
    $(OBJ_DIR)\cdpeswin.obj \
    $(OBJ_DIR)\cdpgedos.obj \
@@ -1820,6 +1817,13 @@ $(OBJ_DIR)\saverest.obj : $(RTL_DIR)\saverest.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\scalar.c : $(RTL_DIR)\scalar.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\scalar.obj : $(OBJ_DIR)\scalar.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\scroll.obj : $(RTL_DIR)\scroll.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
@@ -2138,14 +2142,6 @@ $(OBJ_DIR)\msgdewin.obj : $(LANG_DIR)\msgdewin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\msgel.obj : $(LANG_DIR)\msgel.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\msgelwin.obj : $(LANG_DIR)\msgelwin.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
-
 $(OBJ_DIR)\msgen.obj : $(LANG_DIR)\msgen.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
@@ -2293,14 +2289,6 @@ $(OBJ_DIR)\msgzhgb.obj : $(LANG_DIR)\msgzhgb.c
 #
 # CODEPAGE.LIB dependencies
 #
-$(OBJ_DIR)\cdpeldos.obj : $(CODEPAGE_DIR)\cdpeldos.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\cdpelwin.obj : $(CODEPAGE_DIR)\cdpelwin.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
-
 $(OBJ_DIR)\cdpesdos.obj : $(CODEPAGE_DIR)\cdpesdos.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
