@@ -7,6 +7,7 @@
 
 #include "extend.h"
 
+#define _xalloc   hb_xalloc
 #define _xgrab    hb_xgrab
 #define _xrealloc hb_xrealloc
 #define _xfree    hb_xfree

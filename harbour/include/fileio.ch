@@ -75,7 +75,7 @@
 #define FS_END        0x0002   /* Seek from end of file          */
 
 /* File system error codes */
-#define FS_ERROR      -1       /* Unspecified error */
+#define FS_ERROR      (-1)     /* Unspecified error */
 
 /* Extended file open mode flags */
 #define FXO_TRUNCATE  0x0100   /* Create (truncate if exists) */

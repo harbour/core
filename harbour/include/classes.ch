@@ -1,11 +1,6 @@
-/*
- * $Id$
- */
+/* $Id$
 
-#ifndef _CLASSES_CH
-#define _CLASSES_CH
-
-/* Harbour classes commands
+   Harbour classes commands
 
    Copyright(C) 1999 by Antonio Linares.
 
@@ -27,6 +22,9 @@
 
    You can contact me at: alinares@fivetech.com
 */
+
+#ifndef _CLASSES_CH
+#define _CLASSES_CH
 
 #xcommand CLASS <ClassName> [ <frm: FROM, INHERIT> <SuperClass> ] => ;
    function <ClassName>() ;;

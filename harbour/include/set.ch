@@ -38,6 +38,9 @@
    V 1.0    David G. Holm               Initial version.
 */
 
+#ifndef _SET_CH
+#define _SET_CH
+
 #define _SET_ALTERNATE    1
 #define _SET_ALTFILE      2
 #define _SET_BELL         3
@@ -77,3 +80,5 @@
 #define _SET_TYPEAHEAD    37
 #define _SET_UNIQUE       38
 #define _SET_WRAP         39
+
+#endif /* _SET_CH */

@@ -22,19 +22,11 @@
    You can contact me at: alinares@fivetech.com
  */
 
-#ifndef __MPW__
- #include <malloc.h>
-#endif
-#include "set.h"
 #include <stdlib.h>
+#include "set.h"
 #include "extend.h"
 #include "dates.h"
 #include "item.api"
-
-ULONG ulMemoryBlocks = 0;
-ULONG ulMemoryMaxBlocks = 0;
-ULONG ulMemoryMaxConsumed = 0;
-ULONG ulMemoryConsumed = 0;
 
 PHB_ITEM hb_param( int iParam, WORD wMask )
 {
@@ -869,63 +861,3 @@ void hb_stornd( double dValue, int iParam, ... )
    }
 }
 
-void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory */
-{
-   void * pMem = malloc( ulSize + sizeof( ULONG ) );
-
-   if( ! pMem )
-   {
-      printf( "\n_xgrab error: can't allocate memory!\n" );
-      exit( 1 );
-   }
-
-   * ( ( ULONG * ) pMem ) = ulSize;  /* we store the block size into it */
-
-   ulMemoryConsumed    += ulSize;
-   ulMemoryMaxConsumed += ulSize;
-   ulMemoryBlocks++;
-   ulMemoryMaxBlocks++;
-
-   return ( char * ) pMem + sizeof( ULONG );
-}
-
-void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
-{
-   ULONG ulMemSize = * ( ULONG * ) ( ( char * ) pMem - sizeof( ULONG ) );
-   void * pResult = realloc( ( char * ) pMem - sizeof( ULONG ), ulSize + sizeof( ULONG ) );
-
-   if( ! pResult )
-   {
-      printf( "\n_xrealloc error: can't reallocate memory!\n" );
-      exit( 1 );
-   }
-
-   * ( ( ULONG * ) pResult ) = ulSize;  /* we store the block size into it */
-
-   if( ! ulSize )
-      ulMemoryBlocks--;
-
-   ulMemoryConsumed += ( ulSize - ulMemSize );
-   if( ulSize > ulMemSize )
-      ulMemoryMaxConsumed += ulSize - ulMemSize;
-
-   return ( char * ) pResult + sizeof( ULONG );
-}
-
-void hb_xfree( void * pMem )            /* frees fixed memory */
-{
-   ULONG ulMemSize = * ( ULONG * ) ( ( char * ) pMem - sizeof( ULONG ) );
-
-   if( pMem )
-      free( ( char * ) pMem - sizeof( ULONG ) );
-   else
-      printf( "\nCalling hb_xfree() with a null pointer!\n" );
-
-   ulMemoryConsumed -= ulMemSize;
-   ulMemoryBlocks--;
-}
-
-ULONG hb_xsize( void * pMem ) /* returns the size of an allocated memory block */
-{
-   return * ( ULONG * ) ( ( char * ) pMem - sizeof( ULONG ) );
-}

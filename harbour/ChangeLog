@@ -1,3 +1,38 @@
+19990731-06:00 CET Victor Szel <info@szelvesz.hu>
+   + include/achoice.ch
+     include/common.ch
+     include/dbstruct.ch
+     include/directry.ch
+     include/memoedit.ch
+     include/dbedit.ch
+     include/assert.ch
+     include/getexit.ch
+     include/simpleio.ch
+     Missing Clipper compatible Harbour header files added.
+   * source/rtl/extend.c -> Fixed memory management stuff
+     moved to the new file source/rtl/fm.c
+     source/rtl/Makefile
+     makefile.*
+   + source/rtl/fm.c
+     include/fm.api
+     include/extend.h
+     _xalloc(), hb_xalloc() added for Clipper compatibility.
+   + include/vm.api
+     VM API added to provide some Clipper compatibility.
+     VM functions are mapped to FM calls, Heap calls
+     are accepted but functionality is not supported.
+   * include/rdd.api
+     include/error.ch
+     include/inkey.ch
+     include/color.ch
+     include/fileio.ch
+     include/rddsys.ch
+     include/box.ch
+     include/classes.ch
+     include/set.ch
+     Small cleanups. Missing #ifdef guards added.
+   + make_tpl.sh - GNU Make laucher for bash/linux/gcc.
+
 19990731-03:33 CET Victor Szel <info@szelvesz.hu>
    ! source/vm/hvm.c - Fixed some error codes.
      (.OR., .AND., PVALUE)

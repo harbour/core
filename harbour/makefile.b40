@@ -42,6 +42,7 @@ errorapi.obj : errorapi.c extend.h hbdefs.h
 errorsys.obj : errorsys.c extend.h hbdefs.h
 extend.obj   : extend.c   extend.h hbdefs.h
 files.obj    : files.c    extend.h hbdefs.h
+fm.obj       : fm.c       extend.h hbdefs.h
 hardcr.obj   : hardcr.c   extend.h hbdefs.h
 hb_f.obj     : hb_f.c     extend.h hbdefs.h
 initsymb.obj : initsymb.c extend.h hbdefs.h

@@ -56,6 +56,7 @@ errorapi.obj : errorapi.c   extend.h hbdefs.h ctoharb.h
 errorsys.obj : errorsys.prg extend.h hbdefs.h init.h pcode.h
 extend.obj   : extend.c     extend.h hbdefs.h set.h dates.h
 files.obj    : extend.c     extend.h hbdefs.h
+fm.obj       : fm.c         extend.h hbdefs.h
 gtapi.obj    : gtapi.c      extend.h hbdefs.h gtapi.h
 hardcr.obj   : hardcr.c     extend.h hbdefs.h
 itemapi.obj  : itemapi.c    extend.h hbdefs.h ctoharb.h itemapi.h set.h dates.h

@@ -5,14 +5,13 @@
 #ifndef _ERROR_CH
 #define _ERROR_CH
 
-// Severity levels     (oError:severity)
+/* Severity levels (oError:severity) */
 #define ES_WHOCARES       0
 #define ES_WARNING        1
 #define ES_ERROR          2
 #define ES_CATASTROPHIC   3
 
-
-// Generic error codes (oError:genCode)
+/* Generic error codes (oError:genCode) */
 #define EG_ARG            1
 #define EG_BOUND          2
 #define EG_STROVERFLOW    3

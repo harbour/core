@@ -262,7 +262,8 @@ void     hb_retnl( long lNumber );   /* returns a long number */
 void     hb_retnd( double dNumber ); /* returns a double */
 void     hb_reta( ULONG ulLen );  /* returns an array with a specific length */
 
-void *   hb_xgrab( ULONG lSize );   /* allocates memory */
+void *   hb_xalloc( ULONG lSize );   /* allocates memory, returns NULL on failure */
+void *   hb_xgrab( ULONG lSize );   /* allocates memory, exists on failure */
 void *   hb_xrealloc( void * pMem, ULONG lSize );   /* reallocates memory */
 void     hb_xfree( void * pMem );    /* frees memory */
 ULONG    hb_xsize( void * pMem ); /* returns the size of an allocated memory block */

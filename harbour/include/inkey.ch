@@ -2,6 +2,9 @@
  * $Id$
  */
 
+#ifndef _INKEY_CH
+#define _INKEY_CH
+
 // Input event masks
 
 #define INKEY_MOVE      1
@@ -93,8 +96,6 @@
 #define K_ALT_PGUP        409   // * Alt-PgUp
 #define K_ALT_PGDN        417   // * Alt-PgDn
 
-
-
 // Misc. keys
 
 #define K_ENTER            13   //   Enter, Ctrl-M
@@ -114,7 +115,6 @@
 #define K_ALT_EQUALS      387   // * Alt-Equals
 #define K_ALT_ESC         257   // * Alt-Esc
 
-
 // Keypad keys
 
 #define KP_ALT_ENTER      422   // * Keypad Alt-Enter
@@ -130,7 +130,6 @@
 #define KP_ALT_ASTERISK   311   // * Keypad Alt-*
 #define KP_ALT_MINUS      330   // * Keypad Alt--
 #define KP_ALT_PLUS       334   // * Keypad Alt-+
-
 
 // Editing keys
 
@@ -149,7 +148,6 @@
 #define K_ALT_DEL         419   // * Alt-Del
 #define K_ALT_BS          270   // * Alt-Backspace
 #define K_ALT_TAB         421   // * Alt-Tab
-
 
 // Control keys
 
@@ -180,4 +178,4 @@
 #define K_CTRL_Y       25   //   Ctrl-Y
 #define K_CTRL_Z       26   //   Ctrl-Z, Ctrl-Left arrow
 
-
+#endif /* _INKEY_CH */

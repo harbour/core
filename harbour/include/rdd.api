@@ -2,8 +2,8 @@
  * $Id$
  */
 
-#ifndef HB_RDD_API
-#define HB_RDD_API
+#ifndef HB_RDD_API_
+#define HB_RDD_API_
 
 typedef PBYTE  BYTEP;
 
@@ -985,4 +985,4 @@ extern USHORT  hb_rddExtendType( USHORT fieldType );
 extern USHORT  hb_rddFieldType( USHORT extendType );
 
 
-#endif
+#endif /* HB_RDD_API_ */

@@ -17,6 +17,7 @@ C_SOURCES=\
         errorapi.c \
         extend.c \
         files.c \
+        fm.c \
         gtapi.c \
         hardcr.c \
         inkey.c \

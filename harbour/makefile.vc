@@ -273,6 +273,9 @@ $(OBJ_DIR)\extend.obj : $(RTL_DIR)\extend.c
 $(OBJ_DIR)\files.obj : $(RTL_DIR)\files.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(OBJ_DIR)\fm.obj    : $(RTL_DIR)\fm.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(OBJ_DIR)\gtapi.obj : $(RTL_DIR)\gtapi.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
