@@ -191,6 +191,23 @@
 typedef HARBOUR ( * PHB_FUNC )( void );
 typedef PHB_FUNC HB_FUNC_PTR;
 
+#if defined( __RSXNT__ )
+   #define HB_EXPORT _export
+
+#elif defined( __GNUC__ )
+   #define HB_EXPORT __attribute__ (( dllexport ))
+
+#elif defined( WIN32 ) && !defined( ASANT )
+   #define HB_EXPORT _declspec( dllexport )    /* as BCC admits it */
+
+#elif defined( ASANLM ) || defined( ASANT )
+   #define HB_EXPORT
+
+#else
+   #define HB_EXPORT
+
+#endif
+
 /* Function declaration macros */
 
 /* NOTE: The prefix is "HB_FUN_" currently, this is needed to
@@ -199,11 +216,7 @@ typedef PHB_FUNC HB_FUNC_PTR;
          are also prefixed with HB_. [vszakats] */
 
 #define HB_FUNCNAME( funcname ) HB_FUN_##funcname
-#define HB_FUNC( funcname )        HARBOUR HB_FUN_##funcname ( void )
-/*
-To export public functions :
-#define HB_FUNC( funcname )        HARBOUR __declspec(dllexport) HB_FUN_##funcname ( void )
-*/
+#define HB_FUNC( funcname )        HARBOUR HB_EXPORT HB_FUN_##funcname ( void )
 #define HB_FUNC_STATIC( funcname ) static HARBOUR HB_FUN_##funcname ( void )
 #define HB_FUNC_INIT( funcname )   static HARBOUR HB_FUN_##funcname ( void )
 #define HB_FUNC_EXIT( funcname )   static HARBOUR HB_FUN_##funcname ( void )
