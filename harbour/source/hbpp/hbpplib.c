@@ -53,7 +53,7 @@ HARBOUR HB___PREPROCESS( void )
       char * pOut = ( char * ) hb_xgrab( STR_SIZE );
       char * ptr = pText;
 
-      int slen, resParse;
+      int slen;
 
       slen = MIN( hb_parclen( 1 ), STR_SIZE - 1 );
       memcpy( pText, hb_parc( 1 ), slen );
@@ -62,7 +62,7 @@ HARBOUR HB___PREPROCESS( void )
 
       SKIPTABSPACES( ptr );
 
-      if( ( resParse = ParseExpression( ptr, pOut ) ) > 0 )
+      if( ParseExpression( ptr, pOut ) > 0 )
       {
          /* Some error here? */
       }

@@ -70,6 +70,9 @@ int PreProcess( FILE * handl_i, FILE * handl_o, char * sOut )
    int lContinue = 0;
    int lens = 0, rdlen;
    int rezParse;
+
+   HB_SYMBOL_UNUSED( handl_o );
+
    while( ( rdlen = pp_RdStr( handl_i, sLine + lens, STR_SIZE - lens, lContinue,
                                        sBuffer, &lenBuffer, &iBuffer ) ) >= 0 )
    {

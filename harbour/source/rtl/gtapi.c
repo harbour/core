@@ -790,7 +790,6 @@ USHORT hb_gtWriteCon( BYTE * fpStr, ULONG length )
    int rc = 0, nLen = 0;
    BOOL ldisp = FALSE;
    USHORT uiRow = s_uiCurrentRow, uiCol = s_uiCurrentCol;
-   USHORT tmpRow = s_uiCurrentRow, tmpCol = s_uiCurrentCol;
    USHORT uiMaxRow = hb_gtMaxRow();
    USHORT uiMaxCol = hb_gtMaxCol();
    BYTE ch;
@@ -874,7 +873,6 @@ USHORT hb_gtWriteCon( BYTE * fpStr, ULONG length )
             uiRow = uiMaxRow;
             uiCol = 0;
          }
-         tmpRow = uiRow; tmpCol = uiCol;
          hb_gtSetPos( uiRow, uiCol );
          ldisp = FALSE;
       }

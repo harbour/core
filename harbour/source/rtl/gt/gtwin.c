@@ -573,7 +573,7 @@ BOOL hb_gt_GetBlink()
 
 void hb_gt_SetBlink( BOOL bBlink )
 {
-   bBlink = FALSE;
+   HB_SYMBOL_UNUSED( bBlink );
 }
 
 void hb_gt_DebugScreen( BOOL activate )

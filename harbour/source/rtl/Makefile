@@ -47,16 +47,19 @@ PRG_SOURCES=\
         browdb.prg \
         devoutp.prg \
         errorsys.prg \
+        fieldbl.prg \
         harbinit.prg \
 	memvarbl.prg \
 	menuto.prg \
         objfunc.prg \
         readvar.prg \
+        setfunc.prg \
         setkey.prg \
         tclass.prg \
         tbcolumn.prg \
         tbrowse.prg \
         terror.prg \
+        text.prg \
         tget.prg \
         tgetlist.prg \
         xsavescr.prg

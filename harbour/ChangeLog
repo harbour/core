@@ -1,8 +1,34 @@
+19990930-23:00 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rtl/hbpp/hbppint.c
+    source/rtl/hbpp/hbpplib.c (resParse removed)
+    source/rtl/gtapi.c (tmpRow,tmpCol removed from a function)
+    source/rtl/gt/gtwin.c
+    ! Warnings fixed (reported by Patrick Mast with Borland C 4.0).
+
+  * funclist.txt
+    source/rtl/Makefile
+    + Updated.
+      ( Please add these files to the non-GNU make files )
+
+  + source/rtl/fieldbl.prg
+    + FIELDBLOCK() and FIELDWBLOCK() functions added. They are not 100% 
+      compatible in error situations, since the method used is different than 
+      in Clipper. They are also slower.
+
+  + source/rtl/setfunc.prg
+    + __SetFunction() added
+
+  + source/rtl/text.prg
+    + __TextSave(), __TextRestore() added. Note that the TEXT feature is not 
+      yet working, since the PP should make some special processing not yet
+      implemented.
+
 19990930-22:15 GMT+1 Victor Szel <info@szelvesz.hu>
   * include/external.ch
     + Added HB_OSNEWLINE
   * source/compiler/genc.c
-    + It's now possible to request to code generator not to put 
+    + It's now possible to request the code generator not to put 
       comments in the C code. This and some other small format changes
       can result in about 30% smaller generated source code size.
       This feature is currently permanently turned off, I will add switch for 
