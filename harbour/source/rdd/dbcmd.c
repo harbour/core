@@ -1329,8 +1329,8 @@ HB_FUNC( DBCREATE )
       ( ( AREAP ) s_pCurrArea->pArea )->rddID = uiRddID;
       SELF_NEW( ( AREAP ) s_pCurrArea->pArea );
       //pInfo.abName = ( BYTE * )  hb_xgrab( _POSIX_PATH_MAX + 1 );
-      szFileName = ( BYTE * )  hb_xgrab( _POSIX_PATH_MAX + 1 );
-      pInfo.abName = szFileName;
+      szFileName = ( char * )  hb_xgrab( _POSIX_PATH_MAX + 1 );
+      pInfo.abName = ( BYTE * ) szFileName;
       strcpy( ( char * ) pInfo.abName, szSavedFileName );
       pInfo.fShared = !hb_set.HB_SET_EXCLUSIVE;
       ( ( AREAP ) s_pCurrArea->pArea )->uiArea = s_uiCurrArea;
