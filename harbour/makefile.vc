@@ -61,7 +61,7 @@ HBDOC_DIR    = utils\hbdoc
 #
 
 AS             = masm
-CFLAGS         = -I$(INCLUDE_DIR) -TP -W3 -nologo -DHB_GT_WIN $(CFLAGS)
+CFLAGS         = -I$(INCLUDE_DIR) -TP -W3 -nologo $(CFLAGS)
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSDEBUG = -Zi $(CLIBFLAGS)
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(HARBOURFLAGS)
@@ -83,12 +83,21 @@ RUNNER_LIB   = $(LIB_DIR)\runner.lib
 TOOLS_LIB    = $(LIB_DIR)\tools.lib
 VM_LIB       = $(LIB_DIR)\vm.lib
 
+GTDOS_LIB    = $(LIB_DIR)\gtdos.lib
+GTPCA_LIB    = $(LIB_DIR)\gtpca.lib
+GTSTD_LIB    = $(LIB_DIR)\gtstd.lib
+GTWIN_LIB    = $(LIB_DIR)\gtwin.lib
+
 HARBOUR_EXE  = $(BIN_DIR)\harbour.exe
 HBPP_EXE     = $(BIN_DIR)\hbpp.exe
 HBRUN_EXE    = $(BIN_DIR)\hbrun.exe
 HBTEST_EXE   = $(BIN_DIR)\hbtest.exe
 HBDOC_EXE    = $(BIN_DIR)\hbdoc.exe
 HBRUNJAV_DLL = $(BIN_DIR)\hbrunjav.dll
+
+!ifndef HB_GT_LIB
+HB_GT_LIB = $(GTWIN_LIB)
+!endif
 
 #
 # Rules
@@ -105,6 +114,8 @@ HBRUNJAV_DLL = $(BIN_DIR)\hbrunjav.dll
 #
 #
 
+# TODO: Add GTSLN and GTCRS
+
 LIBLIST = \
    $(RTL_LIB) \
    $(COMMON_LIB) \
@@ -117,7 +128,8 @@ LIBLIST = \
    $(NULSYS_LIB) \
    $(RUNNER_LIB) \
    $(TOOLS_LIB) \
-   $(VM_LIB)
+   $(VM_LIB) \
+   $(HB_GT_LIB)
 
 #
 # macro.lib needs to be listed twice
@@ -165,6 +177,8 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\ampm.obj \
    $(OBJ_DIR)\at.obj \
    $(OBJ_DIR)\binnum.obj \
+   $(OBJ_DIR)\binnumx.obj \
+   $(OBJ_DIR)\box.obj \
    $(OBJ_DIR)\chrasc.obj \
    $(OBJ_DIR)\colorind.obj \
    $(OBJ_DIR)\console.obj \
@@ -172,9 +186,11 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\datec.obj \
    $(OBJ_DIR)\dates.obj \
    $(OBJ_DIR)\dateshb.obj \
+   $(OBJ_DIR)\datesx.obj \
    $(OBJ_DIR)\defpath.obj \
    $(OBJ_DIR)\descend.obj \
    $(OBJ_DIR)\dir.obj \
+   $(OBJ_DIR)\dirdrive.obj \
    $(OBJ_DIR)\diskspac.obj \
    $(OBJ_DIR)\do.obj \
    $(OBJ_DIR)\empty.obj \
@@ -187,6 +203,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\fssize.obj \
    $(OBJ_DIR)\fstemp.obj \
    $(OBJ_DIR)\getenv.obj \
+   $(OBJ_DIR)\gt.obj \
    $(OBJ_DIR)\gtapi.obj \
    $(OBJ_DIR)\gx.obj \
    $(OBJ_DIR)\hardcr.obj \
@@ -212,6 +229,8 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\oldbox.obj \
    $(OBJ_DIR)\oldclear.obj \
    $(OBJ_DIR)\pad.obj \
+   $(OBJ_DIR)\philes53.obj \
+   $(OBJ_DIR)\philesx.obj \
    $(OBJ_DIR)\rat.obj \
    $(OBJ_DIR)\replic.obj \
    $(OBJ_DIR)\right.obj \
@@ -248,8 +267,6 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\word.obj \
    $(OBJ_DIR)\xhelp.obj \
    \
-   $(OBJ_DIR)\gtxxx.obj \
-   $(OBJ_DIR)\mousexxx.obj \
    $(OBJ_DIR)\msgxxx.obj \
    \
    $(OBJ_DIR)\achoice.obj \
@@ -257,6 +274,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\alert.obj \
    $(OBJ_DIR)\asort.obj \
    $(OBJ_DIR)\browdb.obj \
+   $(OBJ_DIR)\browdbx.obj \
    $(OBJ_DIR)\browse.obj \
    $(OBJ_DIR)\dbedit.obj \
    $(OBJ_DIR)\devoutp.obj \
@@ -310,7 +328,6 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctchrmix.obj \
    $(OBJ_DIR)\ctcrypt.obj \
    $(OBJ_DIR)\dates2.obj \
-   $(OBJ_DIR)\datesx.obj \
    $(OBJ_DIR)\dbftools.obj \
    $(OBJ_DIR)\hb_f.obj \
    $(OBJ_DIR)\io.obj \
@@ -408,7 +425,6 @@ DBFNTX_LIB_OBJS = \
    $(OBJ_DIR)\dbfntx1.obj \
    \
    $(OBJ_DIR)\dbfntx0.obj
-
 
 #
 # DBFCDX.LIB rules
@@ -522,6 +538,39 @@ VM_LIB_OBJS = \
    $(OBJ_DIR)\harbinit.obj
 
 #
+# GTPCA.LIB rules
+#
+
+{$(RTL_DIR)\gtpca}.c{$(OBJ_DIR)}.obj::
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+
+GTPCA_LIB_OBJS = \
+   $(OBJ_DIR)\gtpca.obj \
+   $(OBJ_DIR)\mousepca.obj 
+
+#
+# GTSTD.LIB rules
+#
+
+{$(RTL_DIR)\gtstd}.c{$(OBJ_DIR)}.obj::
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+
+GTSTD_LIB_OBJS = \
+   $(OBJ_DIR)\gtstd.obj \
+   $(OBJ_DIR)\mousestd.obj 
+
+#
+# GTWIN.LIB rules
+#
+
+{$(RTL_DIR)\gtwin}.c{$(OBJ_DIR)}.obj::
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+
+GTWIN_LIB_OBJS = \
+   $(OBJ_DIR)\gtwin.obj \
+   $(OBJ_DIR)\mousewin.obj 
+
+#
 # Our default target
 #
 
@@ -542,6 +591,9 @@ all: zot \
    $(DBFNTX_LIB) \
    $(DBFCDX_LIB) \
    $(RUNNER_LIB) \
+   $(GTPCA_LIB) \
+   $(GTSTD_LIB) \
+   $(GTWIN_LIB) \
    $(HBRUN_EXE) \
    $(HBPP_EXE) \
    $(HBTEST_EXE) \
@@ -576,6 +628,9 @@ all: \
    $(DBFNTX_LIB) \
    $(DBFCDX_LIB) \
    $(RUNNER_LIB) \
+   $(GTPCA_LIB) \
+   $(GTSTD_LIB) \
+   $(GTWIN_LIB) \
    $(HBRUN_EXE) \
    $(HBPP_EXE) \
    $(HBTEST_EXE) \
@@ -711,6 +766,15 @@ $(TOOLS_LIB) : $(TOOLS_LIB_OBJS)
 $(VM_LIB) : $(VM_LIB_OBJS)
    lib /out:$@ $**
 
+$(GTPCA_LIB) : $(GTPCA_LIB_OBJS)
+   lib /out:$@ $**
+
+$(GTSTD_LIB) : $(GTSTD_LIB_OBJS)
+   lib /out:$@ $**
+
+$(GTWIN_LIB) : $(GTWIN_LIB_OBJS)
+   lib /out:$@ $**
+
 #
 # HARBOUR.EXE dependencies
 #
@@ -754,3 +818,7 @@ $(NULSYS_LIB)2 : $(NULSYS_LIB_OBJS)
 $(RUNNER_LIB)2 : $(RUNNER_LIB_OBJS)
 $(TOOLS_LIB)2  : $(TOOLS_LIB_OBJS)
 $(VM_LIB)2     : $(VM_LIB_OBJS)
+$(GTPCA_LIB)2  : $(GTPCA_LIB_OBJS)
+$(GTSTD_LIB)2  : $(GTSTD_LIB_OBJS)
+$(GTWIN_LIB)2  : $(GTWIN_LIB_OBJS)
+

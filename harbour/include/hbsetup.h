@@ -135,43 +135,6 @@
 /*#define HARBOUR_MAIN_WIN*/
 
 /* ***********************************************************************
- * These symbols defines if we want to use the GT API (and which platform
- * to build the GT API for, if using the GNU Make System).
- *
- * By default they are disabled (symbols are not defined)
-*/
-/*#define HARBOUR_USE_STD_GTAPI*/
-/*#define HARBOUR_USE_DOS_GTAPI*/
-/*#define HARBOUR_USE_OS2_GTAPI*/
-/*#define HARBOUR_USE_WIN_GTAPI*/
-/*#define HARBOUR_USE_CRS_GTAPI*/
-/*#define HARBOUR_USE_SLN_GTAPI*/
-
-/* Short versions are also good */
-
-#ifdef HB_GT_PCA
-   #define HARBOUR_USE_PCA_GTAPI
-#endif
-#ifdef HB_GT_STD
-   #define HARBOUR_USE_STD_GTAPI
-#endif
-#ifdef HB_GT_DOS
-   #define HARBOUR_USE_DOS_GTAPI
-#endif
-#ifdef HB_GT_OS2
-   #define HARBOUR_USE_OS2_GTAPI
-#endif
-#ifdef HB_GT_WIN
-   #define HARBOUR_USE_WIN_GTAPI
-#endif
-#ifdef HB_GT_CRS
-   #define HARBOUR_USE_CRS_GTAPI
-#endif
-#ifdef HB_GT_SLN
-   #define HARBOUR_USE_SLN_GTAPI
-#endif
-
-/* ***********************************************************************
  * You can set here the maximum symbol name length handled by Harbour
  * compiler and runtime. You can override this setting in the make process.
  *
@@ -245,7 +208,7 @@
 #ifndef HB_OS_OS2
    #if defined(OS2) || defined(__OS2__) || defined(OS_2) || defined(HARBOUR_GCC_OS2)
       #define HB_OS_OS2
-      #ifdef (__EMX__)
+      #if defined(__EMX__)
          #define HB_OS_OS2_EMX
       #endif
    #endif

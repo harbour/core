@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * TBROWSEDB() function
+ * FSETDEVMOD() function
  *
- * Copyright 1999 Paul Tucker <ptucker@sympatico.ca>
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,44 +33,18 @@
  *
  */
 
-#include "hbsetup.ch"
+#include "hbapi.h"
+#include "hbapifs.h"
 
-FUNCTION TBrowseDB( nTop, nLeft, nBottom, nRight )
+#ifdef HB_COMPAT_C53
 
-   LOCAL oBrowse := TBrowseNew( nTop, nLeft, nBottom, nRight )
+/* NOTE: Clipper 5.3 undocumented */
 
-   oBrowse:SkipBlock     := { | nRecs | Skipped( nRecs ) }
-   oBrowse:GoTopBlock    := { || dbGoTop() }
-   oBrowse:GoBottomBlock := { || dbGoBottom() }
+HARBOUR HB_FSETDEVMOD( void )
+{
+   if( ISNUM( 1 ) && ISNUM( 2 ) )
+      hb_fsSetDevMode( hb_parni( 1 ), hb_parni( 2 ) );
+}
 
-   RETURN oBrowse
-
-STATIC FUNCTION Skipped( nRecs )
-
-   LOCAL nSkipped := 0
-
-   IF LastRec() != 0
-      IF nRecs == 0
-         dbSkip( 0 )
-      ELSEIF nRecs > 0 .AND. RecNo() != LastRec() + 1
-         DO WHILE nSkipped < nRecs
-            dbSkip( 1 )
-            IF Eof()
-               dbSkip( -1 )
-               EXIT
-            ENDIF
-            nSkipped++
-         ENDDO
-      ELSEIF nRecs < 0
-         DO WHILE nSkipped > nRecs
-            dbSkip( -1 )
-            IF Bof()
-               EXIT
-            ENDIF
-            nSkipped--
-         ENDDO
-      ENDIF
-   ENDIF
-
-   RETURN nSkipped
+#endif
 

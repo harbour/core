@@ -3,7 +3,17 @@
 #
 
 ifndef MK
+
 all : first
+
+HB_GT_LIBS=\
+        gtdos \
+        gtpca \
+        gtstd \
+
+ifeq ($(HB_GT_LIB),)
+   HB_GT_LIB = gtdos
+endif
 
 # There is a conflict with the use of '\' and '/' characters
 # The MAKE requires '/' in filenames (ARCH_DIR) however some compilers
@@ -41,3 +51,4 @@ clean::
 	-$(RD) $(ARCH_DOS)
 	-$(RD) $(HB_ARCHITECTURE)
 endif
+

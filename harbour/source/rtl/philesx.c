@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * TBROWSEDB() function
+ * CURDRIVE() function
  *
- * Copyright 1999 Paul Tucker <ptucker@sympatico.ca>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,44 +33,33 @@
  *
  */
 
-#include "hbsetup.ch"
+#include <ctype.h>
 
-FUNCTION TBrowseDB( nTop, nLeft, nBottom, nRight )
+#include "hbapi.h"
+#include "hbapifs.h"
 
-   LOCAL oBrowse := TBrowseNew( nTop, nLeft, nBottom, nRight )
+#ifdef HB_COMPAT_XPP
 
-   oBrowse:SkipBlock     := { | nRecs | Skipped( nRecs ) }
-   oBrowse:GoTopBlock    := { || dbGoTop() }
-   oBrowse:GoBottomBlock := { || dbGoBottom() }
+/* NOTE: XBase++ compatible */
 
-   RETURN oBrowse
+HARBOUR HB_CURDRIVE( void )
+{
+   USHORT uiErrorOld = hb_fsError();
+   char szDrive[ 1 ];
 
-STATIC FUNCTION Skipped( nRecs )
+   szDrive[ 0 ] = ( ( char ) hb_fsCurDrv() ) + 'A';
+   hb_retclen( szDrive, 1 );
 
-   LOCAL nSkipped := 0
+   if( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 )
+   {
+      if( hb_fsChDrv( ( BYTE )( toupper( *hb_parc( 1 ) ) - 'A' ) ) != 0 )
+      {
+         /* TODO: Throw some XBase++ like runtime error. [vszakats] */
+      }
+   }
 
-   IF LastRec() != 0
-      IF nRecs == 0
-         dbSkip( 0 )
-      ELSEIF nRecs > 0 .AND. RecNo() != LastRec() + 1
-         DO WHILE nSkipped < nRecs
-            dbSkip( 1 )
-            IF Eof()
-               dbSkip( -1 )
-               EXIT
-            ENDIF
-            nSkipped++
-         ENDDO
-      ELSEIF nRecs < 0
-         DO WHILE nSkipped > nRecs
-            dbSkip( -1 )
-            IF Bof()
-               EXIT
-            ENDIF
-            nSkipped--
-         ENDDO
-      ENDIF
-   ENDIF
+   hb_fsSetError( uiErrorOld );
+}
 
-   RETURN nSkipped
+#endif
 

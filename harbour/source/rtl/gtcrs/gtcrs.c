@@ -37,7 +37,6 @@
 
 #include "hbapigt.h"
 #include "hbinit.h"
-#include "inkey.ch"	/* TOFIX: define K_xxx constants somewhere in H file */
 
 static void gt_GetMaxRC(int* r, int* c);
 static void gt_GetRC(int* r, int* c);
@@ -83,8 +82,8 @@ static int iKeyTable[] =
 };
 
 #if defined(OS_UNIX_COMPATIBLE)
-#include <unistd.h>
-#include <termios.h>
+   #include <unistd.h>
+   #include <termios.h>
 #endif
 
 static void restore_input_mode( void )
@@ -449,4 +448,9 @@ static void gt_SetRC(int r, int c)
 {
    move(r, c);
    refresh();
+}
+
+char * hb_gt_Version( void )
+{
+   return "Harbour Terminal: Curses";
 }

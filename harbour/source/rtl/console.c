@@ -47,10 +47,6 @@
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    hb_consoleGetNewLine()
  *    HB_DISPOUTAT()
- *    HB_DISPBOX()
- *    HB_DISPBEGIN()
- *    HB_DISPEND()
- *    HB_DISPCOUNT()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -58,10 +54,8 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
-#include "hbapierr.h"
 #include "hbapifs.h"
 #include "hbapigt.h"
-#include "hbdate.h"
 #include "hbset.h"
 
 #if defined(__GNUC__) && ! defined(__MINGW32__)
@@ -121,11 +115,10 @@ void hb_consoleInitialize( void )
 
    hb_fsSetDevMode( s_iFilenoStderr, FD_BINARY );
 
+   s_bInit = TRUE;
+
    hb_mouseInit();
    hb_gtInit( s_iFilenoStdin, s_iFilenoStdout, s_iFilenoStderr );
-   hb_gtSetCursor( SC_NORMAL );
-
-   s_bInit = TRUE;
 }
 
 void hb_consoleRelease( void )
@@ -438,45 +431,6 @@ HARBOUR HB_SETPRC( void ) /* Sets the current printer row and column positions *
       s_uiPRow = ( USHORT ) hb_parni( 1 );
       s_uiPCol = ( USHORT ) hb_parni( 2 );
    }
-}
-
-HARBOUR HB_DISPBOX( void )
-{
-   if( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) && ISNUM( 4 ) )
-   {
-      char szOldColor[ CLR_STRLEN ];
-
-      if( ISCHAR( 6 ) )
-      {
-         hb_gtGetColorStr( szOldColor );
-         hb_gtSetColorStr( hb_parc( 6 ) );
-      }
-
-      if( ISCHAR( 5 ) )
-         hb_gtBox( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( BYTE * ) hb_parc( 5 ));
-      else if( ISNUM( 5 ) && hb_parni( 5 ) == 2 )
-         hb_gtBoxD( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
-      else
-         hb_gtBoxS( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
-
-      if( ISCHAR( 6 ) )
-         hb_gtSetColorStr( szOldColor );
-   }
-}
-
-HARBOUR HB_DISPBEGIN( void )
-{
-   hb_gtDispBegin();
-}
-
-HARBOUR HB_DISPEND( void )
-{
-   hb_gtDispEnd();
-}
-
-HARBOUR HB_DISPCOUNT( void )
-{
-   hb_retni( hb_gtDispCount() );
 }
 
 HARBOUR HB_DISPOUT( void ) /* writes a single value to the screen, but is not affected by SET ALTERNATE */

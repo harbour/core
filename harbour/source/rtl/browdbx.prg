@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Terminal low-level module includer for GNU compilers
+ * DBSKIPPER() function for XBase++
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999 Paul Tucker <ptucker@sympatico.ca>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,23 +33,42 @@
  *
  */
 
-/* NOTE: This is only a container source file, don't put real program
-         code here. */
+#include "hbsetup.ch"
 
-#include "hbsetup.h"
+/* NOTE: XBase++ has a standard function named dbSkipper(), it's not a
+         standard CA-Cl*pper 5.x function, though. */
 
-#if   defined(HARBOUR_USE_PCA_GTAPI)
-   #include "gt/gtpca.c"
-#elif defined(HARBOUR_USE_DOS_GTAPI)
-   #include "gt/gtdos.c"
-#elif defined(HARBOUR_USE_OS2_GTAPI)
-   #include "gt/gtos2.c"
-#elif defined(HARBOUR_USE_WIN_GTAPI)
-   #include "gt/gtwin.c"
-#elif defined(HARBOUR_USE_CRS_GTAPI)
-   #include "gt/gtcrs.c"
-#elif defined(HARBOUR_USE_SLN_GTAPI)
-   #include "gt/gtsln.c"
-#else
-   #include "gt/gtstd.c"
+/* NOTE: This function is exactly the same as Skipped() in BROWDB.PRG */
+
+#ifdef HB_COMPAT_XPP
+
+FUNCTION dbSkipper( nRecs )
+
+   LOCAL nSkipped := 0
+
+   IF LastRec() != 0
+      IF nRecs == 0
+         dbSkip( 0 )
+      ELSEIF nRecs > 0 .AND. RecNo() != LastRec() + 1
+         DO WHILE nSkipped < nRecs
+            dbSkip( 1 )
+            IF Eof()
+               dbSkip( -1 )
+               EXIT
+            ENDIF
+            nSkipped++
+         ENDDO
+      ELSEIF nRecs < 0
+         DO WHILE nSkipped > nRecs
+            dbSkip( -1 )
+            IF Bof()
+               EXIT
+            ENDIF
+            nSkipped--
+         ENDDO
+      ENDIF
+   ENDIF
+
+   RETURN nSkipped
+
 #endif

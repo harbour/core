@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Mouse low-level module includer for GNU compilers
+ * STOD() function
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,25 +33,17 @@
  *
  */
 
-/* NOTE: This is only a container source file, don't put real program
-         code here. */
+#include "hbapi.h"
 
-#include "hbsetup.h"
+#ifdef HB_COMPAT_XPP
 
-#if   defined(HARBOUR_USE_STD_GTAPI)
-   #include "mouse/mousestd.c"
-#elif defined(HARBOUR_USE_DOS_GTAPI)
-   #include "mouse/mousedos.c"
-#elif defined(HARBOUR_USE_OS2_GTAPI)
-   #include "mouse/mouseos2.c"
-#elif defined(HARBOUR_USE_WIN_GTAPI)
-   #include "mouse/mousewin.c"
-/*
-#elif defined(HARBOUR_USE_CRS_GTAPI)
-   #include "mouse/mousecrs.c"
-#elif defined(HARBOUR_USE_SLN_GTAPI)
-   #include "mouse/mousesln.c"
-*/
-#else
-   #include "mouse/mousestd.c"
+/* NOTE: XBase++ compatible function */
+/* NOTE: XBase++ checks for the parameter count at compile time */
+
+HARBOUR HB_STOD( void )
+{
+   hb_retds( hb_parc( 1 ) );
+}
+
 #endif
+

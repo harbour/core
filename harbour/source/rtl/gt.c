@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * TBROWSEDB() function
+ * DISPBEGIN(), DISPEND(), DISPCOUNT() functions
  *
- * Copyright 1999 Paul Tucker <ptucker@sympatico.ca>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,44 +33,21 @@
  *
  */
 
-#include "hbsetup.ch"
+#include "hbapi.h"
+#include "hbapigt.h"
 
-FUNCTION TBrowseDB( nTop, nLeft, nBottom, nRight )
+HARBOUR HB_DISPBEGIN( void )
+{
+   hb_gtDispBegin();
+}
 
-   LOCAL oBrowse := TBrowseNew( nTop, nLeft, nBottom, nRight )
+HARBOUR HB_DISPEND( void )
+{
+   hb_gtDispEnd();
+}
 
-   oBrowse:SkipBlock     := { | nRecs | Skipped( nRecs ) }
-   oBrowse:GoTopBlock    := { || dbGoTop() }
-   oBrowse:GoBottomBlock := { || dbGoBottom() }
-
-   RETURN oBrowse
-
-STATIC FUNCTION Skipped( nRecs )
-
-   LOCAL nSkipped := 0
-
-   IF LastRec() != 0
-      IF nRecs == 0
-         dbSkip( 0 )
-      ELSEIF nRecs > 0 .AND. RecNo() != LastRec() + 1
-         DO WHILE nSkipped < nRecs
-            dbSkip( 1 )
-            IF Eof()
-               dbSkip( -1 )
-               EXIT
-            ENDIF
-            nSkipped++
-         ENDDO
-      ELSEIF nRecs < 0
-         DO WHILE nSkipped > nRecs
-            dbSkip( -1 )
-            IF Bof()
-               EXIT
-            ENDIF
-            nSkipped--
-         ENDDO
-      ENDIF
-   ENDIF
-
-   RETURN nSkipped
+HARBOUR HB_DISPCOUNT( void )
+{
+   hb_retni( hb_gtDispCount() );
+}
 

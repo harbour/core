@@ -13,7 +13,7 @@ CC = bcc
 AS = tasm
 
 # Borland C/C++ (DOS 16 bits)
-CFLAGS = -DHB_GT_DOS -mh $(CFLAGS)
+CFLAGS = -mh $(CFLAGS)
 
 BIN_DIR = bin\b16
 OBJ_DIR = obj\b16
@@ -25,7 +25,7 @@ CC = bcc32
 AS = tasm32
 
 # Borland C/C++ (Windows 32 bits)
-CFLAGS = -DHB_GT_WIN $(CFLAGS)
+CFLAGS = $(CFLAGS)
 
 BIN_DIR = bin\b32
 OBJ_DIR = obj\b32
@@ -81,11 +81,46 @@ RUNNER_LIB   = $(LIB_DIR)\runner.lib
 TOOLS_LIB    = $(LIB_DIR)\tools.lib
 VM_LIB       = $(LIB_DIR)\vm.lib
 
+GTDOS_LIB    = $(LIB_DIR)\gtdos.lib
+GTPCA_LIB    = $(LIB_DIR)\gtpca.lib
+GTSTD_LIB    = $(LIB_DIR)\gtstd.lib
+GTWIN_LIB    = $(LIB_DIR)\gtwin.lib
+
 HARBOUR_EXE  = $(BIN_DIR)\harbour.exe
 HBPP_EXE     = $(BIN_DIR)\hbpp.exe
 HBRUN_EXE    = $(BIN_DIR)\hbrun.exe
 HBTEST_EXE   = $(BIN_DIR)\hbtest.exe
 HBDOC_EXE    = $(BIN_DIR)\hbdoc.exe
+
+#
+# GT driver list
+#
+
+!if $d(B16)
+
+HB_GT_LIBS = \
+   $(GTDOS_LIB) \
+   $(GTPCA_LIB) \
+   $(GTSTD_LIB)
+
+!if !$d(HB_GT_LIB)
+HB_GT_LIB = $(GTDOS_LIB)
+!endif
+
+!else
+
+# TODO: Add GTSLN and GTCRS
+
+HB_GT_LIBS = \
+   $(GTPCA_LIB) \
+   $(GTSTD_LIB) \
+   $(GTWIN_LIB)
+
+!if !$d(HB_GT_LIB)
+HB_GT_LIB = $(GTWIN_LIB)
+!endif
+
+!endif
 
 #
 # Rules
@@ -101,6 +136,8 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\ampm.obj \
    $(OBJ_DIR)\at.obj \
    $(OBJ_DIR)\binnum.obj \
+   $(OBJ_DIR)\binnumx.obj \
+   $(OBJ_DIR)\box.obj \
    $(OBJ_DIR)\chrasc.obj \
    $(OBJ_DIR)\colorind.obj \
    $(OBJ_DIR)\console.obj \
@@ -108,9 +145,11 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\datec.obj \
    $(OBJ_DIR)\dates.obj \
    $(OBJ_DIR)\dateshb.obj \
+   $(OBJ_DIR)\datesx.obj \
    $(OBJ_DIR)\defpath.obj \
    $(OBJ_DIR)\descend.obj \
    $(OBJ_DIR)\dir.obj \
+   $(OBJ_DIR)\dirdrive.obj \
    $(OBJ_DIR)\diskspac.obj \
    $(OBJ_DIR)\do.obj \
    $(OBJ_DIR)\empty.obj \
@@ -123,6 +162,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\fssize.obj \
    $(OBJ_DIR)\fstemp.obj \
    $(OBJ_DIR)\getenv.obj \
+   $(OBJ_DIR)\gt.obj \
    $(OBJ_DIR)\gtapi.obj \
    $(OBJ_DIR)\gx.obj \
    $(OBJ_DIR)\hardcr.obj \
@@ -148,6 +188,8 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\oldbox.obj \
    $(OBJ_DIR)\oldclear.obj \
    $(OBJ_DIR)\pad.obj \
+   $(OBJ_DIR)\philes53.obj \
+   $(OBJ_DIR)\philesx.obj \
    $(OBJ_DIR)\rat.obj \
    $(OBJ_DIR)\replic.obj \
    $(OBJ_DIR)\right.obj \
@@ -184,8 +226,6 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\word.obj \
    $(OBJ_DIR)\xhelp.obj \
    \
-   $(OBJ_DIR)\gtxxx.obj \
-   $(OBJ_DIR)\mousexxx.obj \
    $(OBJ_DIR)\msgxxx.obj \
    \
    $(OBJ_DIR)\achoice.obj \
@@ -193,6 +233,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\alert.obj \
    $(OBJ_DIR)\asort.obj \
    $(OBJ_DIR)\browdb.obj \
+   $(OBJ_DIR)\browdbx.obj \
    $(OBJ_DIR)\browse.obj \
    $(OBJ_DIR)\dbedit.obj \
    $(OBJ_DIR)\devoutp.obj \
@@ -239,7 +280,6 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctchrmix.obj \
    $(OBJ_DIR)\ctcrypt.obj \
    $(OBJ_DIR)\dates2.obj \
-   $(OBJ_DIR)\datesx.obj \
    $(OBJ_DIR)\dbftools.obj \
    $(OBJ_DIR)\hb_f.obj \
    $(OBJ_DIR)\io.obj \
@@ -379,6 +419,38 @@ VM_LIB_OBJS = \
    $(OBJ_DIR)\harbinit.obj
 
 #
+# GTDOS.LIB rules
+#
+
+GTDOS_LIB_OBJS = \
+   $(OBJ_DIR)\gtdos.obj \
+   $(OBJ_DIR)\mousedos.obj
+
+#
+# GTPCA.LIB rules
+#
+
+GTPCA_LIB_OBJS = \
+   $(OBJ_DIR)\gtpca.obj \
+   $(OBJ_DIR)\mousepca.obj
+
+#
+# GTSTD.LIB rules
+#
+
+GTSTD_LIB_OBJS = \
+   $(OBJ_DIR)\gtstd.obj \
+   $(OBJ_DIR)\mousestd.obj
+
+#
+# GTWIN.LIB rules
+#
+
+GTWIN_LIB_OBJS = \
+   $(OBJ_DIR)\gtwin.obj \
+   $(OBJ_DIR)\mousewin.obj
+
+#
 # HARBOUR.EXE rules
 #
 
@@ -448,6 +520,7 @@ all: \
    $(DBFNTX_LIB) \
    $(DBFCDX_LIB) \
    $(RUNNER_LIB) \
+   $(HB_GT_LIBS) \
    $(HBRUN_EXE) \
    $(HBPP_EXE) \
    $(HBTEST_EXE) \
@@ -469,6 +542,10 @@ $(RTL_LIB)    : $(RTL_LIB_OBJS)
 $(RUNNER_LIB) : $(RUNNER_LIB_OBJS)
 $(TOOLS_LIB)  : $(TOOLS_LIB_OBJS)
 $(VM_LIB)     : $(VM_LIB_OBJS)
+$(GTDOS_LIB)  : $(GTDOS_LIB_OBJS)
+$(GTPCA_LIB)  : $(GTPCA_LIB_OBJS)
+$(GTSTD_LIB)  : $(GTSTD_LIB_OBJS)
+$(GTWIN_LIB)  : $(GTWIN_LIB_OBJS)
 
 #
 # COMMON.LIB dependencies
@@ -821,10 +898,25 @@ $(OBJ_DIR)\binnum.obj : $(RTL_DIR)\binnum.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
 
+$(OBJ_DIR)\binnumx.obj : $(RTL_DIR)\binnumx.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) -+$@,,
+
+$(OBJ_DIR)\box.obj : $(RTL_DIR)\box.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) -+$@,,
+
 $(OBJ_DIR)\browdb.c : $(RTL_DIR)\browdb.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\browdb.obj : $(OBJ_DIR)\browdb.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) -+$@,,
+
+$(OBJ_DIR)\browdbx.c : $(RTL_DIR)\browdbx.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\browdbx.obj : $(OBJ_DIR)\browdbx.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
 
@@ -867,6 +959,10 @@ $(OBJ_DIR)\dateshb.obj : $(RTL_DIR)\dateshb.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
 
+$(OBJ_DIR)\datesx.obj : $(RTL_DIR)\datesx.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) -+$@,,
+
 $(OBJ_DIR)\dbedit.c : $(RTL_DIR)\dbedit.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
@@ -890,6 +986,10 @@ $(OBJ_DIR)\devoutp.obj : $(OBJ_DIR)\devoutp.c
    tlib $(RTL_LIB) -+$@,,
 
 $(OBJ_DIR)\dir.obj : $(RTL_DIR)\dir.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) -+$@,,
+
+$(OBJ_DIR)\dirdrive.obj : $(RTL_DIR)\dirdrive.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
 
@@ -969,12 +1069,12 @@ $(OBJ_DIR)\getenv.obj : $(RTL_DIR)\getenv.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
 
-$(OBJ_DIR)\gtapi.obj : $(RTL_DIR)\gtapi.c
+$(OBJ_DIR)\gt.obj : $(RTL_DIR)\gt.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
 
-$(OBJ_DIR)\gtxxx.obj : $(RTL_DIR)\gtxxx.c
-   $(CC) $(CLIBFLAGS) -I$(RTL_DIR) -o$@ $**
+$(OBJ_DIR)\gtapi.obj : $(RTL_DIR)\gtapi.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
 
 $(OBJ_DIR)\gx.obj : $(RTL_DIR)\gx.c
@@ -1066,10 +1166,6 @@ $(OBJ_DIR)\mouseapi.obj : $(RTL_DIR)\mouseapi.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
 
-$(OBJ_DIR)\mousexxx.obj : $(RTL_DIR)\mousexxx.c
-   $(CC) $(CLIBFLAGS) -I$(RTL_DIR) -o$@ $**
-   tlib $(RTL_LIB) -+$@,,
-
 $(OBJ_DIR)\msgxxx.obj : $(RTL_DIR)\msgxxx.c
    $(CC) $(CLIBFLAGS) -I$(RTL_DIR) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
@@ -1106,6 +1202,14 @@ $(OBJ_DIR)\oldclear.obj : $(RTL_DIR)\oldclear.c
    tlib $(RTL_LIB) -+$@,,
 
 $(OBJ_DIR)\pad.obj : $(RTL_DIR)\pad.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) -+$@,,
+
+$(OBJ_DIR)\philes53.obj : $(RTL_DIR)\philes53.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) -+$@,,
+
+$(OBJ_DIR)\philesx.obj : $(RTL_DIR)\philesx.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
 
@@ -1417,10 +1521,6 @@ $(OBJ_DIR)\dates2.obj : $(TOOLS_DIR)\dates2.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
-$(OBJ_DIR)\datesx.obj : $(TOOLS_DIR)\datesx.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) -+$@,,
-
 $(OBJ_DIR)\dbftools.obj : $(TOOLS_DIR)\dbftools.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
@@ -1656,6 +1756,54 @@ $(OBJ_DIR)\tbrwtext.obj : $(OBJ_DIR)\tbrwtext.c
    tlib $(DEBUG_LIB) -+$@,,
 
 #
+# GTDOS.LIB dependencies
+#
+
+$(OBJ_DIR)\gtdos.obj : $(RTL_DIR)\gtdos\gtdos.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(GTDOS_LIB) -+$@,,
+
+$(OBJ_DIR)\mousedos.obj : $(RTL_DIR)\gtdos\mousedos.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(GTDOS_LIB) -+$@,,
+
+#
+# GTPCA.LIB dependencies
+#
+
+$(OBJ_DIR)\gtpca.obj : $(RTL_DIR)\gtpca\gtpca.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(GTPCA_LIB) -+$@,,
+
+$(OBJ_DIR)\mousepca.obj : $(RTL_DIR)\gtpca\mousepca.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(GTPCA_LIB) -+$@,,
+
+#
+# GTSTD.LIB dependencies
+#
+
+$(OBJ_DIR)\gtstd.obj : $(RTL_DIR)\gtstd\gtstd.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(GTSTD_LIB) -+$@,,
+
+$(OBJ_DIR)\mousestd.obj : $(RTL_DIR)\gtstd\mousestd.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(GTSTD_LIB) -+$@,,
+
+#
+# GTWIN.LIB dependencies
+#
+
+$(OBJ_DIR)\gtwin.obj : $(RTL_DIR)\gtwin\gtwin.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(GTWIN_LIB) -+$@,,
+
+$(OBJ_DIR)\mousewin.obj : $(RTL_DIR)\gtwin\mousewin.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(GTWIN_LIB) -+$@,,
+
+#
 # HBPP.EXE dependencies
 #
 $(HBPP_EXE) : \
@@ -1690,6 +1838,7 @@ $(HBRUN_EXE) : \
    echo. $(COMMON_LIB) >> make.tmp
    echo. $(VM_LIB) >> make.tmp
    echo. $(RTL_LIB) >> make.tmp
+   echo. $(HB_GT_LIB) >> make.tmp
    echo. $(RDD_LIB) >> make.tmp
    echo. $(MACRO_LIB) >> make.tmp
    echo. $(TOOLS_LIB) >> make.tmp
@@ -1720,6 +1869,7 @@ $(HBTEST_EXE) : $(HBTEST_EXE_OBJS)
    echo. $(COMMON_LIB) >> make.tmp
    echo. $(VM_LIB) >> make.tmp
    echo. $(RTL_LIB) >> make.tmp
+   echo. $(HB_GT_LIB) >> make.tmp
    echo. $(RDD_LIB) >> make.tmp
    echo. $(MACRO_LIB) >> make.tmp
    echo. $(RUNNER_LIB) >> make.tmp
@@ -1802,6 +1952,7 @@ $(HBDOC_EXE) : $(HBDOC_EXE_OBJS)
    echo. $(COMMON_LIB) >> make.tmp
    echo. $(VM_LIB) >> make.tmp
    echo. $(RTL_LIB) >> make.tmp
+   echo. $(HB_GT_LIB) >> make.tmp
    echo. $(RDD_LIB) >> make.tmp
    echo. $(MACRO_LIB) >> make.tmp
    echo. $(TOOLS_LIB) >> make.tmp

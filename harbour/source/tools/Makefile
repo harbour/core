@@ -18,7 +18,6 @@ C_SOURCES=\
         ctchrmix.c \
         ctcrypt.c \
         dates2.c \
-        datesx.c \
         dbftools.c \
         hb_f.c \
         io.c \

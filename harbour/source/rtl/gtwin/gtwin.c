@@ -82,24 +82,21 @@
 #endif
 
 static HANDLE s_HOsave;
-/* static HANDLE s_HSsave; */
-static HANDLE s_HDOutput   = INVALID_HANDLE_VALUE;
-/* static HANDLE s_HDStealth = INVALID_HANDLE_VALUE; */
-
-static HANDLE s_HOriginal  = INVALID_HANDLE_VALUE;
-static HANDLE s_HOutput    = INVALID_HANDLE_VALUE;
-static HANDLE s_HActive    = INVALID_HANDLE_VALUE;
-static HANDLE s_HInactive  = INVALID_HANDLE_VALUE;
-static BOOL   s_bOldCursor = TRUE;
-static HANDLE s_HInput     = INVALID_HANDLE_VALUE;
-static BOOL   s_bBreak     = FALSE;
+static HANDLE s_HDOutput;
+static HANDLE s_HOriginal;
+static HANDLE s_HOutput;
+static HANDLE s_HActive;
+static HANDLE s_HInactive;
+static HANDLE s_HInput;
+static BOOL   s_bOldCursor;
+static BOOL   s_bBreak;
 
 #define INPUT_BUFFER_LEN 128
 
-static DWORD        s_cNumRead = 0;   /* Ok to use DWORD here, because this is specific... */
-static DWORD        s_cNumIndex = 0;  /* ...to the Windows API, which defines DWORD, etc.  */
+static DWORD        s_cNumRead;   /* Ok to use DWORD here, because this is specific... */
+static DWORD        s_cNumIndex;  /* ...to the Windows API, which defines DWORD, etc.  */
 static INPUT_RECORD s_irInBuf[ INPUT_BUFFER_LEN ];
-static int          s_mouseLast;      /* Last mouse button to be pressed                     */
+static int          s_mouseLast;  /* Last mouse button to be pressed                     */
 
 extern int hb_mouse_iCol;
 extern int hb_mouse_iRow;
@@ -138,6 +135,19 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
    HB_SYMBOL_UNUSED( iFilenoStdin );
    HB_SYMBOL_UNUSED( iFilenoStdout );
    HB_SYMBOL_UNUSED( iFilenoStderr );
+
+   s_HDOutput   = INVALID_HANDLE_VALUE;
+   s_HOriginal  = INVALID_HANDLE_VALUE;
+   s_HOutput    = INVALID_HANDLE_VALUE;
+   s_HActive    = INVALID_HANDLE_VALUE;
+   s_HInactive  = INVALID_HANDLE_VALUE;
+   s_HInput     = INVALID_HANDLE_VALUE;
+
+   s_cNumRead = 0;
+   s_cNumIndex = 0;
+
+   s_bOldCursor = TRUE;
+   s_bBreak = FALSE;
 
    /* Add Ctrl+Break handler [vszakats] */
    SetConsoleCtrlHandler( hb_gt_CtrlHandler, TRUE );
@@ -1135,3 +1145,7 @@ void hb_gt_Tone( double dFrequency, double dDuration )
             ( ULONG ) dDuration );
 }
 
+char * hb_gt_Version( void )
+{
+   return "Harbour Terminal: Win32 console";
+}

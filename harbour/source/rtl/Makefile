@@ -10,6 +10,8 @@ C_SOURCES=\
         ampm.c       \
         at.c         \
         binnum.c     \
+        binnumx.c    \
+        box.c        \
         chrasc.c     \
         colorind.c   \
         console.c    \
@@ -17,9 +19,11 @@ C_SOURCES=\
         datec.c      \
         dates.c      \
         dateshb.c    \
+        datesx.c     \
         defpath.c    \
         descend.c    \
         dir.c        \
+        dirdrive.c   \
         diskspac.c   \
         do.c         \
         empty.c      \
@@ -32,8 +36,8 @@ C_SOURCES=\
         fssize.c     \
         fstemp.c     \
         getenv.c     \
+        gt.c         \
         gtapi.c      \
-        gtxxx.c      \
         gx.c         \
         hardcr.c     \
         inkey.c      \
@@ -51,8 +55,6 @@ C_SOURCES=\
         mlpos.c      \
         mod.c        \
         mouseapi.c   \
-        mousexxx.c   \
-        msgxxx.c     \
         mtran.c      \
         natmsg.c     \
         net.c        \
@@ -60,6 +62,8 @@ C_SOURCES=\
         oldbox.c     \
         oldclear.c   \
         pad.c        \
+        philes53.c   \
+        philesx.c    \
         rat.c        \
         replic.c     \
         right.c      \
@@ -96,8 +100,6 @@ C_SOURCES=\
         word.c       \
         xhelp.c      \
         \
-        gtxxx.c      \
-        mousexxx.c   \
         msgxxx.c     \
 
 PRG_SOURCES=\
@@ -106,6 +108,7 @@ PRG_SOURCES=\
         alert.prg    \
         asort.prg    \
         browdb.prg   \
+        browdbx.prg  \
         browse.prg   \
         dbedit.prg   \
         devoutp.prg  \
@@ -136,5 +139,9 @@ PRG_SOURCES=\
 
 LIBNAME=rtl
 
+# The list of all valid GT drivers is defined in config/<arch>/global.cf.
+DIRS=$(HB_GT_LIBS)
+
 include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/dir.cf
 

@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * TBROWSEDB() function
+ * DISPBOX() function
  *
- * Copyright 1999 Paul Tucker <ptucker@sympatico.ca>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,44 +33,30 @@
  *
  */
 
-#include "hbsetup.ch"
+#include "hbapi.h"
+#include "hbapigt.h"
 
-FUNCTION TBrowseDB( nTop, nLeft, nBottom, nRight )
+HARBOUR HB_DISPBOX( void )
+{
+   if( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) && ISNUM( 4 ) )
+   {
+      char szOldColor[ CLR_STRLEN ];
 
-   LOCAL oBrowse := TBrowseNew( nTop, nLeft, nBottom, nRight )
+      if( ISCHAR( 6 ) )
+      {
+         hb_gtGetColorStr( szOldColor );
+         hb_gtSetColorStr( hb_parc( 6 ) );
+      }
 
-   oBrowse:SkipBlock     := { | nRecs | Skipped( nRecs ) }
-   oBrowse:GoTopBlock    := { || dbGoTop() }
-   oBrowse:GoBottomBlock := { || dbGoBottom() }
+      if( ISCHAR( 5 ) )
+         hb_gtBox( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( BYTE * ) hb_parc( 5 ));
+      else if( ISNUM( 5 ) && hb_parni( 5 ) == 2 )
+         hb_gtBoxD( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
+      else
+         hb_gtBoxS( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
 
-   RETURN oBrowse
-
-STATIC FUNCTION Skipped( nRecs )
-
-   LOCAL nSkipped := 0
-
-   IF LastRec() != 0
-      IF nRecs == 0
-         dbSkip( 0 )
-      ELSEIF nRecs > 0 .AND. RecNo() != LastRec() + 1
-         DO WHILE nSkipped < nRecs
-            dbSkip( 1 )
-            IF Eof()
-               dbSkip( -1 )
-               EXIT
-            ENDIF
-            nSkipped++
-         ENDDO
-      ELSEIF nRecs < 0
-         DO WHILE nSkipped > nRecs
-            dbSkip( -1 )
-            IF Bof()
-               EXIT
-            ENDIF
-            nSkipped--
-         ENDDO
-      ENDIF
-   ENDIF
-
-   RETURN nSkipped
+      if( ISCHAR( 6 ) )
+         hb_gtSetColorStr( szOldColor );
+   }
+}
 

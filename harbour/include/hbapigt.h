@@ -128,10 +128,11 @@ extern USHORT hb_gtSetCursor( USHORT uiCursorShape );
 extern USHORT hb_gtSetMode( USHORT uiRows, USHORT uiCols );
 extern USHORT hb_gtSetPos( SHORT iRow, SHORT iCol );
 extern USHORT hb_gtSetSnowFlag( BOOL bNoSnow );
+extern void   hb_gtTone( double dFrequency, double dDuration );
 extern USHORT hb_gtWrite( BYTE * pbyStr, ULONG ulLen );
 extern USHORT hb_gtWriteAt( USHORT uiRow, USHORT uiCol, BYTE * pbyStr, ULONG ulLen );
 extern USHORT hb_gtWriteCon( BYTE * pbyStr, ULONG ulLen );
-extern void   hb_gtTone( double dFrequency, double dDuration );
+extern char * hb_gtVersion( void );
 
 /* Private interface listed below. these are common to all platforms */
 
@@ -159,6 +160,7 @@ extern BOOL   hb_gt_GetBlink( void );
 extern void   hb_gt_SetBlink( BOOL bBlink );
 extern void   hb_gt_Replicate( BYTE byChar, ULONG ulLen );
 extern void   hb_gt_Tone( double dFrequency, double dDuration );
+extern char * hb_gt_Version( void );
 
 /* Keyboard related declarations */
 

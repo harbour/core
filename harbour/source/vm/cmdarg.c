@@ -325,24 +325,6 @@ void hb_cmdargProcessVM( void )
 #endif
       hb_outerr( hb_consoleGetNewLine(), 0 );
 
-      hb_outerr( "GT API support: ", 0 );
-#if defined( HARBOUR_USE_STD_GTAPI )
-      hb_outerr( "Standard", 0 );
-#elif defined( HARBOUR_USE_PCA_GTAPI )
-      hb_outerr( "PC ANSI", 0 );
-#elif defined( HARBOUR_USE_DOS_GTAPI )
-      hb_outerr( "DOS", 0 );
-#elif defined( HARBOUR_USE_OS2_GTAPI )
-      hb_outerr( "OS/2", 0 );
-#elif defined( HARBOUR_USE_WIN_GTAPI )
-      hb_outerr( "Windows", 0 );
-#elif defined( HARBOUR_USE_CRS_GTAPI )
-      hb_outerr( "Unix Curses", 0 );
-#elif defined( HARBOUR_USE_SLN_GTAPI )
-      hb_outerr( "Unix Slang", 0 );
-#endif
-      hb_outerr( hb_consoleGetNewLine(), 0 );
-
       hb_outerr( "Object file generation support: ", 0 );
 #if defined( HARBOUR_OBJ_GENERATION )
       hb_outerr( "Yes", 0 );

@@ -44,20 +44,12 @@
  *    hb_fsWriteLarge()
  *    hb_fsCurDirBuff()
  *    HB_CURDIR()
- *    HB_CURDRIVE()
- *    HB_DIRCHANGE()
- *    HB_MAKEDIR()
- *    HB_DIRREMOVE()
- *    HB_ISDISK()
- *    HB_DISKCHANGE()
- *    HB_DISKNAME()
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  *    hb_fsChDrv()
  *    hb_fsCurDrv()
  *    hb_fsIsDrv()
  *    hb_fsIsDevice()
- *    HB_FSETDEVMOD()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -1480,133 +1472,4 @@ HARBOUR HB_CURDIR( void )
 
    s_uiErrorLast = uiErrorOld;
 }
-
-#ifdef HB_COMPAT_C53
-
-/* NOTE: Clipper 5.3 only */
-
-HARBOUR HB_DIRCHANGE( void )
-{
-   USHORT uiErrorOld = s_uiErrorLast;
-
-   if( ISCHAR( 1 ) )
-      hb_retni( hb_fsChDir( ( BYTE * ) hb_parc( 1 ) ) ? 0 : s_uiErrorLast );
-   else
-      hb_retni( -1 );
-
-   s_uiErrorLast = uiErrorOld;
-}
-
-/* NOTE: Clipper 5.3 only */
-/* NOTE: Clipper 5.3 NG incorrectly states that the name if this function is
-         DIRMAKE(), in reality it's not. */
-
-HARBOUR HB_MAKEDIR( void )
-{
-   USHORT uiErrorOld = s_uiErrorLast;
-
-   if( ISCHAR( 1 ) )
-      hb_retni( hb_fsMkDir( ( BYTE * ) hb_parc( 1 ) ) ? 0 : s_uiErrorLast );
-   else
-      hb_retni( -1 );
-
-   s_uiErrorLast = uiErrorOld;
-}
-
-/* NOTE: Clipper 5.3 only */
-
-HARBOUR HB_DIRREMOVE( void )
-{
-   USHORT uiErrorOld = s_uiErrorLast;
-
-   if( ISCHAR( 1 ) )
-      hb_retni( hb_fsRmDir( ( BYTE * ) hb_parc( 1 ) ) ? 0 : s_uiErrorLast );
-   else
-      hb_retni( -1 );
-
-   s_uiErrorLast = uiErrorOld;
-}
-
-#endif
-
-#ifdef HB_COMPAT_C53
-
-/* NOTE: Clipper 5.3 undocumented */
-
-HARBOUR HB_ISDISK()
-{
-   USHORT uiErrorOld = s_uiErrorLast;
-
-   hb_retl( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
-            hb_fsIsDrv( ( BYTE )( toupper( *hb_parc( 1 ) ) - 'A' ) ) == 0 :
-            FALSE );
-
-   s_uiErrorLast = uiErrorOld;
-}
-
-/* NOTE: Clipper 5.3 only */
-
-HARBOUR HB_DISKCHANGE( void )
-{
-   USHORT uiErrorOld = s_uiErrorLast;
-
-   hb_retl( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
-            hb_fsChDrv( ( BYTE )( toupper( *hb_parc( 1 ) ) - 'A' ) ) == 0 :
-            FALSE );
-
-   s_uiErrorLast = uiErrorOld;
-}
-
-/* NOTE: Clipper 5.3 only */
-
-HARBOUR HB_DISKNAME( void )
-{
-   USHORT uiErrorOld = s_uiErrorLast;
-   char szDrive[ 1 ];
-
-   szDrive[ 0 ] = ( ( char ) hb_fsCurDrv() ) + 'A';
-
-   hb_retclen( szDrive, 1 );
-
-   s_uiErrorLast = uiErrorOld;
-}
-
-#endif
-
-#ifdef HB_COMPAT_XPP
-
-/* NOTE: XBase++ compatible */
-
-HARBOUR HB_CURDRIVE( void )
-{
-   USHORT uiErrorOld = s_uiErrorLast;
-   char szDrive[ 1 ];
-
-   szDrive[ 0 ] = ( ( char ) hb_fsCurDrv() ) + 'A';
-   hb_retclen( szDrive, 1 );
-
-   if( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 )
-   {
-      if( hb_fsChDrv( ( BYTE )( toupper( *hb_parc( 1 ) ) - 'A' ) ) != 0 )
-      {
-         /* TODO: Throw some XBase++ like runtime error. [vszakats] */
-      }
-   }
-
-   s_uiErrorLast = uiErrorOld;
-}
-
-#endif
-
-#ifdef HB_COMPAT_C53
-
-/* NOTE: Clipper 5.3 undocumented */
-
-HARBOUR HB_FSETDEVMOD( void )
-{
-   if( ISNUM( 1 ) && ISNUM( 2 ) )
-      hb_fsSetDevMode( hb_parni( 1 ), hb_parni( 2 ) );
-}
-
-#endif
 

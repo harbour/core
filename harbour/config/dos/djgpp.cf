@@ -33,6 +33,12 @@ LINKPATHS += $(foreach drv, $(HB_DB_DRIVERS), -L$(TOP)$(ROOT)source/rdd/$(drv)/$
 LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), -l$(drv))
 endif
 
+# Add the specified GT driver library
+ifeq ($(findstring rtl,$(LIBS)),rtl)
+LINKPATHS += -L$(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(ARCH)
+LINKLIBS += -l$(HB_GT_LIB)
+endif
+
 # LINKLIBS += -Wl,-)
 LDFLAGS = $(LINKPATHS)
 

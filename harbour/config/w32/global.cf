@@ -4,6 +4,16 @@
 
 all : first
 
+HB_GT_LIBS=\
+        gtcrs \
+        gtpca \
+        gtsln \
+        gtstd \
+        gtwin \
+
+ifeq ($(HB_GT_LIB),)
+   HB_GT_LIB = gtwin
+endif
 
 ifeq ($(SHLVL),) # COMMAND.COM
 

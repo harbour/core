@@ -381,3 +381,7 @@ void hb_gt_Tone( double dFrequency, double dDuration )
    HB_SYMBOL_UNUSED( dDuration );
 }
 
+char * hb_gt_Version( void )
+{
+   return "Harbour Terminal: PC ANSI";
+}

@@ -122,8 +122,9 @@ static void hb_gt_GetCursorSize( char * start, char * end );
    static char FAR * hb_gt_ScreenAddress( void );
 #endif
 
+static BOOL s_bBreak; /* Used to signal Ctrl+Break to hb_inkeyPoll() */
+
 #ifndef __DJGPP__
-static BOOL s_bBreak = FALSE; /* Used to signal Ctrl+Break to hb_inkeyPoll() */
 #if defined(__WATCOMC__)
 static void hb_gt_Watcom_CtrlBreak_Handler( int iSignal )
 {
@@ -162,6 +163,8 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
    HB_SYMBOL_UNUSED( iFilenoStdin );
    HB_SYMBOL_UNUSED( iFilenoStdout );
    HB_SYMBOL_UNUSED( iFilenoStderr );
+
+   s_bBreak = FALSE;
 
 #if defined(__DJGPP__)
    gppconio_init();
@@ -1064,3 +1067,7 @@ void hb_gt_Tone( double dFrequency, double dDuration )
 #endif
 }
 
+char * hb_gt_Version( void )
+{
+   return "Harbour Terminal: DOS console";
+}

@@ -627,3 +627,7 @@ void hb_gt_Tone( double dFrequency, double dDuration )
    }
 }
 
+char * hb_gt_Version( void )
+{
+   return "Harbour Terminal: OS/2 console";
+}

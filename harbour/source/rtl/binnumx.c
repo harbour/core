@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * BIN2W(), BIN2I(), BIN2L(), I2BIN(), L2BIN() functions
+ * BIN2U(), W2BIN(), U2BIN() functions
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,50 +33,14 @@
  *
  */
 
+/* NOTE: XBase++ compatible functions */
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-HARBOUR HB_BIN2W( void )
-{
-   PHB_ITEM pItem = hb_param( 1, IT_STRING );
+#ifdef HB_COMPAT_XPP
 
-   if( pItem )
-   {
-      char * pszString = hb_itemGetCPtr( pItem );
-      ULONG ulLen = hb_itemGetCLen( pItem );
-      BYTE byBuffer[ 2 ];
-
-      byBuffer[ 0 ] = ( ulLen >= 1 ) ? ( BYTE ) pszString[ 0 ] : 0;
-      byBuffer[ 1 ] = ( ulLen >= 2 ) ? ( BYTE ) pszString[ 1 ] : 0;
-
-      hb_retni( HB_MKUSHORT( byBuffer[ 0 ],
-                             byBuffer[ 1 ] ) );
-   }
-   else
-      hb_retni( 0 );
-}
-
-HARBOUR HB_BIN2I( void )
-{
-   PHB_ITEM pItem = hb_param( 1, IT_STRING );
-
-   if( pItem )
-   {
-      char * pszString = hb_itemGetCPtr( pItem );
-      ULONG ulLen = hb_itemGetCLen( pItem );
-      BYTE byBuffer[ 2 ];
-
-      byBuffer[ 0 ] = ( ulLen >= 1 ) ? ( BYTE ) pszString[ 0 ] : 0;
-      byBuffer[ 1 ] = ( ulLen >= 2 ) ? ( BYTE ) pszString[ 1 ] : 0;
-
-      hb_retni( HB_MKSHORT( byBuffer[ 0 ],
-                            byBuffer[ 1 ] ) );
-   }
-   else
-      hb_retni( 0 );
-}
-
-HARBOUR HB_BIN2L( void )
+HARBOUR HB_BIN2U( void )
 {
    PHB_ITEM pItem = hb_param( 1, IT_STRING );
 
@@ -91,25 +55,25 @@ HARBOUR HB_BIN2L( void )
       byBuffer[ 2 ] = ( ulLen >= 3 ) ? ( BYTE ) pszString[ 2 ] : 0;
       byBuffer[ 3 ] = ( ulLen >= 4 ) ? ( BYTE ) pszString[ 3 ] : 0;
 
-      hb_retnl( HB_MKLONG( byBuffer[ 0 ],
-                           byBuffer[ 1 ],
-                           byBuffer[ 2 ],
-                           byBuffer[ 3 ] ) );
+      hb_retnl( HB_MKULONG( byBuffer[ 0 ],
+                            byBuffer[ 1 ],
+                            byBuffer[ 2 ],
+                            byBuffer[ 3 ] ) );
    }
    else
       hb_retnl( 0 );
 }
 
-HARBOUR HB_I2BIN( void )
+HARBOUR HB_W2BIN( void )
 {
    char szString[ 2 ];
 
    if( ISNUM( 1 ) )
    {
-      SHORT iValue = hb_parni( 1 );
+      USHORT uiValue = ( USHORT ) hb_parni( 1 );
 
-      szString[ 0 ] = ( iValue & 0x00FF );
-      szString[ 1 ] = ( iValue & 0xFF00 ) >> 8;
+      szString[ 0 ] = ( uiValue & 0x00FF );
+      szString[ 1 ] = ( uiValue & 0xFF00 ) >> 8;
    }
    else
    {
@@ -120,18 +84,18 @@ HARBOUR HB_I2BIN( void )
    hb_retclen( szString, 2 );
 }
 
-HARBOUR HB_L2BIN( void )
+HARBOUR HB_U2BIN( void )
 {
    char szString[ 4 ];
 
    if( ISNUM( 1 ) )
    {
-      long lValue = hb_parnl( 1 );
+      ULONG ulValue = ( ULONG ) hb_parnl( 1 );
 
-      szString[ 0 ] = ( lValue & 0x000000FF );
-      szString[ 1 ] = ( lValue & 0x0000FF00 ) >> 8;
-      szString[ 2 ] = ( lValue & 0x00FF0000 ) >> 16;
-      szString[ 3 ] = ( lValue & 0xFF000000 ) >> 24;
+      szString[ 0 ] = ( char ) ( ulValue & 0x000000FF );
+      szString[ 1 ] = ( char ) ( ulValue & 0x0000FF00 ) >> 8;
+      szString[ 2 ] = ( char ) ( ulValue & 0x00FF0000 ) >> 16;
+      szString[ 3 ] = ( char ) ( ulValue & 0xFF000000 ) >> 24;
    }
    else
    {
@@ -143,4 +107,6 @@ HARBOUR HB_L2BIN( void )
 
    hb_retclen( szString, 4 );
 }
+
+#endif
 

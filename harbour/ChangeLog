@@ -1,3 +1,90 @@
+20000320-17:00 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/vm/cmdarg.c
+     - Removed the GTAPI info from //BUILD info.
+
+   * include/hbsetup.h
+     - Removed the HARBOUR_USE_* macros.
+     - Removed the HB_GT_* macros.
+     ! Fixed #ifdef (__EMX__)
+
+   * source/rtl/console.c
+     source/rtl/gtapi.c
+     source/rtl/gt/*
+     include/hbapigt.h
+     + Added new GT API call: hb_gtVersion()
+     + The GT type is now displayed when //INFO is specified.
+     % Some static variable initialization moved to the init routine.
+     ! Setting the default cursor is done in hb_gtInit() instead of 
+       consoleInitialize()
+
+   * config/*/global.cf
+     config/*/<compiler>.cf
+     + Added the list of possible GT drivers and the default for the
+       actual architecture.
+       The default GT driver can be selected by setting the 
+       HB_GT_LIB envvar to the proper value.
+     + Added logic to add the selected GT driver to libs.
+       This is not complete, and could be refined for some platform, for 
+       example to automatically link in the related slang.lib or curses.lib.
+       ! WARNING ! Check it with your platform. (BCC16, WATCOM, ICC not added)
+
+   - source/rtl/gtxxx.c
+   - source/rtl/mousexxx.c
+   - source/rtl/gt/*
+   - source/rtl/mouse/*
+   + source/rtl/gtdos/*
+   + source/rtl/gtwin/*
+   + source/rtl/gtos2/*
+   + source/rtl/gtpca/*
+   + source/rtl/gtstd/*
+   + source/rtl/gtcrs/*
+   + source/rtl/gtsln/*
+   + source/rtl/gt_tpl/*
+   + source/rtl/box.c
+   + source/rtl/gt.c
+   * source/rtl/console.c
+     source/rtl/Makefile
+     bin/bld*.bat
+     makefile.bc
+     makefile.vc
+     * Some new file separated from console.c
+     - Old compile time GT driver selector files removed.
+     + Makefile modified to make all the drivers suitable for the platform.
+       The GT driver may be selected by the HB_GT_LIB envvar, but there's a
+       default for all platforms. This also goes for the non-GNU makefiles.
+     + Build batch files modified to include a default GT driver lib.
+       The default can be overriden with the BLD_TPL batch files by setting
+       the HB_GT_LIB envvar, see the help for more.
+     + GT + MOUSE driver code unified and moved to new self-containing 
+       directories. Makefiles added.
+     % Some static variable initialization moved to the init routine.
+       (GTDOS, GTWIN)
+     ! Fixed some unused variables (GTDOS)
+
+   + source/rtl/binnumx.c
+   + source/rtl/dirdrive.c
+   + source/rtl/datesx.c
+   + source/rtl/philes53.c
+   + source/rtl/philesx.c
+   + source/rtl/browdbx.prg
+   * source/rtl/binnum.c
+     source/rtl/filesys.c
+     source/rtl/dateshb.c
+     source/rtl/browdb.prg
+     source/rtl/Makefile
+     makefile.bc
+     makefile.vc
+     + Separated functions for XBase++ and CA-Cl*pper 5.3
+
+   - source/tools/datesx.c
+   * source/tools/dates2.c
+     source/tools/Makefile
+     makefile.bc
+     makefile.vc
+     * datesx.c merged into dates2.c to avoid conflict with the new file in
+       RTL with the same name.
+
 20000320-13:45 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/macro/macro.y

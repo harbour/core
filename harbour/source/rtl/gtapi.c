@@ -69,21 +69,23 @@
 #include "hbapigt.h"
 #include "hbset.h"
 
-static SHORT  s_iCurrentRow = 0;
-static SHORT  s_iCurrentCol = 0;
-static USHORT s_uiDispCount = 0;
-static USHORT s_uiPreCount = 0;
-static USHORT s_uiPreCNest = 0;
-static USHORT s_uiColorIndex = 0;
-static USHORT s_uiCursorShape = 0;
+static SHORT  s_iCurrentRow;
+static SHORT  s_iCurrentCol;
+static USHORT s_uiDispCount;
+static USHORT s_uiPreCount;
+static USHORT s_uiPreCNest;
+static USHORT s_uiColorIndex;
+static USHORT s_uiCursorShape;
 
-static int *  s_Color;  /* masks: 0x0007     Foreground
-                                  0x0070     Background
-                                  0x0008     Bright
-                                  0x0080     Blink
-                                  0x0800     Underline foreground
-                                  0x8000     Underline background
-                         */
+/* masks: 0x0007     Foreground              
+          0x0070     Background              
+          0x0008     Bright                  
+          0x0080     Blink                   
+          0x0800     Underline foreground    
+          0x8000     Underline background    
+ */                                          
+
+static int *  s_Color; 
 static int    s_ColorCount;
 
 /* gt API functions */
@@ -97,9 +99,21 @@ void hb_gtInit( int s_iFilenoStdin, int s_iFilenoStdout, int s_iFilenoStderr )
 
    hb_gt_Init( s_iFilenoStdin, s_iFilenoStdout, s_iFilenoStderr );
    hb_gtSetColorStr( hb_set.HB_SET_COLOR );
+   hb_gtSetCursor( SC_NORMAL );
 
    s_iCurrentRow = hb_gt_Row();
    s_iCurrentCol = hb_gt_Col();
+   s_uiDispCount = 0;
+   s_uiPreCount = 0;
+   s_uiPreCNest = 0;
+   s_uiColorIndex = 0;
+   s_uiCursorShape = 0;
+
+   if( hb_cmdargCheck( "INFO" ) )
+   {
+      hb_outerr( hb_gtVersion(), 0 );
+      hb_outerr( hb_consoleGetNewLine(), 0 );
+   }
 }
 
 void hb_gtExit( void )
@@ -968,6 +982,13 @@ void hb_gtTone( double dFrequency, double dDuration )
    HB_TRACE(HB_TR_DEBUG, ("hb_gtTone(%lf, %lf)", dFrequency, dDuration));
 
    hb_gt_Tone( dFrequency, dDuration );
+}
+
+char * hb_gtVersion( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtVersion()"));
+
+   return hb_gt_Version();
 }
  
 #ifdef TEST

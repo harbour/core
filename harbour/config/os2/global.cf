@@ -4,6 +4,14 @@
 
 all : first
 
+HB_GT_LIBS=\
+        gtos2 \
+        gtpca \
+        gtstd \
+
+ifeq ($(HB_GT_LIB),)
+   HB_GT_LIB = gtos2
+endif
 
 ifeq ($(SHLVL),) # An OS/2 command shell
 

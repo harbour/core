@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * TBROWSEDB() function
+ * Mouse subsystem for plain ANSI C stream IO (stub)
  *
- * Copyright 1999 Paul Tucker <ptucker@sympatico.ca>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,44 +33,79 @@
  *
  */
 
-#include "hbsetup.ch"
+#include "hbapigt.h"
 
-FUNCTION TBrowseDB( nTop, nLeft, nBottom, nRight )
+/* NOTE: This file is a simple stub for those platforms which don't have
+         any kind of mouse support. [vszakats] */
 
-   LOCAL oBrowse := TBrowseNew( nTop, nLeft, nBottom, nRight )
+/* C callable low-level interface */
 
-   oBrowse:SkipBlock     := { | nRecs | Skipped( nRecs ) }
-   oBrowse:GoTopBlock    := { || dbGoTop() }
-   oBrowse:GoBottomBlock := { || dbGoBottom() }
+void hb_mouse_Init( void )
+{
+   ;
+}
 
-   RETURN oBrowse
+void hb_mouse_Exit( void )
+{
+   ;
+}
 
-STATIC FUNCTION Skipped( nRecs )
+BOOL hb_mouse_IsPresent( void )
+{
+   return FALSE;
+}
 
-   LOCAL nSkipped := 0
+void hb_mouse_Show( void )
+{
+   ;
+}
 
-   IF LastRec() != 0
-      IF nRecs == 0
-         dbSkip( 0 )
-      ELSEIF nRecs > 0 .AND. RecNo() != LastRec() + 1
-         DO WHILE nSkipped < nRecs
-            dbSkip( 1 )
-            IF Eof()
-               dbSkip( -1 )
-               EXIT
-            ENDIF
-            nSkipped++
-         ENDDO
-      ELSEIF nRecs < 0
-         DO WHILE nSkipped > nRecs
-            dbSkip( -1 )
-            IF Bof()
-               EXIT
-            ENDIF
-            nSkipped--
-         ENDDO
-      ENDIF
-   ENDIF
+void hb_mouse_Hide( void )
+{
+   ;
+}
 
-   RETURN nSkipped
+int hb_mouse_Col( void )
+{
+   return 0;
+}
+
+int hb_mouse_Row( void )
+{
+   return 0;
+}
+
+void hb_mouse_SetPos( int iRow, int iCol )
+{
+   HB_SYMBOL_UNUSED( iRow );
+   HB_SYMBOL_UNUSED( iCol );
+}
+
+BOOL hb_mouse_IsButtonPressed( int iButton )
+{
+   HB_SYMBOL_UNUSED( iButton );
+
+   return FALSE;
+}
+
+int hb_mouse_CountButton( void )
+{
+   return 0;
+}
+
+void hb_mouse_SetBounds( int iTop, int iLeft, int iBottom, int iRight )
+{
+   HB_SYMBOL_UNUSED( iTop );
+   HB_SYMBOL_UNUSED( iLeft );
+   HB_SYMBOL_UNUSED( iBottom );
+   HB_SYMBOL_UNUSED( iRight );
+}
+
+void hb_mouse_GetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight )
+{
+   HB_SYMBOL_UNUSED( piTop );
+   HB_SYMBOL_UNUSED( piLeft );
+   HB_SYMBOL_UNUSED( piBottom );
+   HB_SYMBOL_UNUSED( piRight );
+}
 
