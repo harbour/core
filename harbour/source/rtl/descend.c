@@ -78,8 +78,9 @@ HB_FUNC( DESCEND )
 
          if( ulLen > 0 )
          {
-            char * szBuffer = ( char * ) hb_xgrab( ulLen );
+            char * szBuffer = ( char * ) hb_xgrab( ulLen + 1 );
             hb_strDescend( szBuffer, hb_itemGetCPtr( pItem ), ulLen );
+            szBuffer[ ulLen ] = '\0';
             hb_retclen_buffer( szBuffer, ulLen );
          }
          else
