@@ -245,7 +245,7 @@ HB_FUNC( OS )
       {
          hb_os = "Windows";
          hb_osmajor = _osmajor;
-         hb_osminor = _osminor
+         hb_osminor = _osminor;
          hb_osletter = 0;
       }
 #else

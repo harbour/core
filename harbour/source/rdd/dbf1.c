@@ -293,7 +293,7 @@ static BOOL hb_dbfWriteMemo( AREAP pArea, LPDBFMEMO pMemo, ULONG * lNewRecNo )
 
 static BOOL hb_dbfUpdateRecord( AREAP pArea, ULONG ulRecNo )
 {
-   ULONG ulRecCount;
+   ULONG ulRecCount = 0;
    USHORT uiCount;
    LPFIELD pField;
    BYTE pBuffer[ 1 ];
@@ -1719,6 +1719,7 @@ static ERRCODE dbfReadDBHeader( AREAP pArea )
    pArea->lpExtendInfo->uiRecordLen = 1;
    SELF_SETFIELDEXTENT( pArea, uiFields );
    pFieldInfo.typeExtended = 0;
+   pFieldInfo.uiLen = 0;
    pDBField = ( LPDBFFIELD ) szBuffer;
    for( uiCount = 0; uiCount < uiFields; uiCount++ )
    {

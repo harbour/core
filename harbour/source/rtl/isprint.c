@@ -81,7 +81,7 @@ HB_FUNC( ISPRINTER )
       union REGS regs;
 
       regs.h.ah = 2;
-   #if defined(__BORLANDC__)
+   #if defined(__BORLANDC__) || defined(_MSC_VER)
       regs.x.dx = uiPort - 1;
    #else
       regs.w.dx = uiPort - 1;

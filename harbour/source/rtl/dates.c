@@ -146,8 +146,10 @@ void hb_dateStrGet( const char * szDate, long * plDay, long * plMonth, long * pl
       /* Date string has correct length, so attempt to convert */
       *plDay   = ( ( szDate[ 6 ] - '0' ) * 10 ) + ( szDate[ 7 ] - '0' );
       *plMonth = ( ( szDate[ 4 ] - '0' ) * 10 ) + ( szDate[ 5 ] - '0' );
-      *plYear  = ( ( szDate[ 0 ] - '0' ) * 1000 ) + ( ( szDate[ 1 ] - '0' ) * 100 ) +
-                 ( ( szDate[ 2 ] - '0' ) * 10 ) + ( szDate[ 3 ] - '0' );
+      *plYear  = ( ( USHORT ) ( szDate[ 0 ] - '0' ) * 1000 ) +
+                 ( ( USHORT ) ( szDate[ 1 ] - '0' ) * 100 ) +
+                 ( ( USHORT ) ( szDate[ 2 ] - '0' ) * 10 ) + 
+                   ( USHORT ) ( szDate[ 3 ] - '0' );
    }
    else
    {

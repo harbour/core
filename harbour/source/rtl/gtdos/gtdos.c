@@ -71,6 +71,8 @@
    #include <sys\farptr.h>
 #elif defined(__WATCOMC__)
    #include <i86.h>
+#elif defined(_MSC_VER)
+   #include <signal.h>
 #endif
 
 #if defined(__WATCOMC__)
@@ -129,11 +131,11 @@ static BOOL s_bBreak; /* Used to signal Ctrl+Break to hb_inkeyPoll() */
 static USHORT s_uiDispCount;
 
 #ifndef __DJGPP__
-#if defined(__WATCOMC__)
-static void hb_gt_Watcom_CtrlBreak_Handler( int iSignal )
+#if defined(__WATCOMC__) || defined(_MSC_VER)
+static void hb_gt_CtrlBreak_Handler( int iSignal )
 {
    /* Ctrl-Break was pressed */
-   /* NOTE: the layout of this function is forced by the Watcom compiler
+   /* NOTE: the layout of this function is forced by the compiler
     */
    HB_SYMBOL_UNUSED( iSignal );
    s_bBreak = TRUE;
@@ -154,6 +156,8 @@ static void hb_gt_CtrlBrkRestore( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_CtrlBrkRestore()"));
    #if defined(__WATCOMC__)
       signal( SIGBREAK, SIG_DFL);
+   #elif defined(_MSC_VER)
+      signal( SIGINT, SIG_DFL);
    #else
       setcbrk( s_iOldCtrlBreak );
    #endif
@@ -181,7 +185,9 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
    /* Set the Ctrl+Break handler [vszakats] */
 
    #if defined(__WATCOMC__)
-      signal( SIGBREAK, hb_gt_Watcom_CtrlBreak_Handler );
+      signal( SIGBREAK, hb_gt_CtrlBreak_Handler );
+   #elif defined(_MSC_VER)
+      signal( SIGINT, hb_gt_CtrlBreak_Handler );
    #else
       ctrlbrk( hb_gt_CtrlBrkHandler );
       s_iOldCtrlBreak = getcbrk();

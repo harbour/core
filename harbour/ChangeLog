@@ -1,3 +1,29 @@
+20000330-12:15 EST Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/dates.c
+     * account for possible overflow in calculation
+   * source/rtl/defpath.c
+     * initialise size to 0
+   * source/rtl/environ.c
+     * added missing ; for msc branch
+   * source/rtl/isprint.c
+     * added msc8 support (== _BORLANDC_)
+   * source/rtl/dir.c
+   * source/rtl/gtdos/gtdos.c
+   * source/rtl/gtdos/mousedos.c
+     * modified to work with msc8 (upcoming addition!)
+   * include/hbvmpub.h
+     * change alignment of HB_SYMB for msc8
+   * source/rdd/dbcmd.c
+     * changed if(!(...)) to if((...)==0) in rddInherit for /W4 compiler warning.
+     * initialise uiArraylen in AFIELDS()
+     * initialise ulNext in defEval()
+   * source/rdd/dbf1.c
+     * dbfUpdateRecord() Initialise local ulRecCount!
+       NOTE: Something doesn't look right with the logic here.
+     * dbfReadDBHeader() Init pFieldInfo.uiLen to 0
+   * source/vm/memvars.c
+     * hb_memvarCreateFromItem() Initialize pDynVar to NULL
+
 20000329-16:33 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbapi.h

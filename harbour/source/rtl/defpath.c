@@ -40,7 +40,7 @@ HB_FUNC( DEFPATH )
 {
    char buffer[ _POSIX_PATH_MAX ];
    char delimiter[ 2 ] = ":";
-   int size;
+   int size = 0;
 
    if( hb_set.HB_SET_DEFAULT )
    {

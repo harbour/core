@@ -284,7 +284,7 @@ static ERRCODE defError( AREAP pArea, PHB_ITEM pError )
 static ERRCODE defEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
 {
    BOOL bEof, bFor, bWhile;
-   ULONG ulNext;
+   ULONG ulNext = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("defEval(%p, %p)", pArea, pEvalInfo));
 
@@ -1026,7 +1026,7 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
       return FAILURE;
 
    /* Copy the pSuperTable into pTable */
-   if( !szDrvName || !( uiCount = strlen( ( const char * ) szDrvName ) ) )
+   if( !szDrvName || ( uiCount = strlen( ( const char * ) szDrvName ) )==0 )
    {
       memcpy( pTable, &defTable, sizeof( RDDFUNCS ) );
       memcpy( pSuperTable, &defTable, sizeof( RDDFUNCS ) );
@@ -1338,7 +1338,7 @@ void hb_rddShutDown( void )
 HB_FUNC( AFIELDS )
 {
    PHB_ITEM pName, pType, pLen, pDec, pItem;
-   USHORT uiFields, uiArrayLen, uiCount;
+   USHORT uiFields, uiArrayLen = 0, uiCount;
 
    if( !s_pCurrArea )
    {

@@ -574,7 +574,7 @@ char * hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen )
  */
 static void hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pValue )
 {
-   PHB_DYNS pDynVar;
+   PHB_DYNS pDynVar = NULL;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarCreateFromItem(%p, %d, %p)", pMemvar, bScope, pValue));
 

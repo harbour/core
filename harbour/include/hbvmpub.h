@@ -45,6 +45,8 @@ extern "C" {
 struct _HB_DYNS;
 
 /* symbol support structure */
+#pragma pack(8)
+
 typedef struct
 {
    char *            szName;  /* the name of the symbol */

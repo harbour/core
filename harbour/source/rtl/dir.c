@@ -131,7 +131,7 @@
    #endif
 #endif
 
-#if defined(__WATCOMC__) || defined(_MSC_VER) || defined(__MINGW32__)
+#if defined(__WATCOMC__) || defined(__MINGW32__) || ( defined(_MSC_VER) && _MSC_VER >= 1000 )
    #include <sys/stat.h>
    #include <share.h>
    #include <fcntl.h>
@@ -139,6 +139,19 @@
    #include <errno.h>
    #include <direct.h>
    #include <time.h>
+
+   #if !defined(HAVE_POSIX_IO)
+      #define HAVE_POSIX_IO
+   #endif
+#elif defined(_MSC_VER)
+   #include <sys/stat.h>
+   #include <share.h>
+   #include <fcntl.h>
+   #include <io.h>
+   #include <errno.h>
+   #include <direct.h>
+   #include <time.h>
+   #include <dos.h>
 
    #if !defined(HAVE_POSIX_IO)
       #define HAVE_POSIX_IO
@@ -351,7 +364,7 @@ HB_FUNC( DIRECTORY )
    PHB_ITEM pDirSpec = hb_param( 1, IT_STRING );
    PHB_ITEM pAttributes = hb_param( 2, IT_STRING );
 
-#if defined(_MSC_VER) || defined(__MINGW32__)
+#if defined(__MINGW32__) || ( defined(_MSC_VER) && _MSC_VER >= 1000 )
    PHB_ITEM pEightDotThree = hb_param( 3, IT_LOGICAL );
    BOOL     bEightDotThree;
 #elif defined(__WATCOMC__)
@@ -371,7 +384,7 @@ HB_FUNC( DIRECTORY )
    char     ttime[ 9 ];
    char     aatrib[ 17 ];
    int      attrib;
-   long     fsize;
+   long     fsize = 0;
    time_t   ftime;
    char *   pos;
    USHORT   ushbMask = FA_ARCH;
@@ -380,8 +393,11 @@ HB_FUNC( DIRECTORY )
    struct stat statbuf;
    struct tm * ft;
 
-#if defined(_MSC_VER) || defined(__MINGW32__)
+#if defined(__MINGW32__) || ( defined(_MSC_VER) && _MSC_VER >= 1000 )
    struct _finddata_t entry;
+   long hFile;
+#elif defined(_MSC_VER)
+   struct _find_t entry;
    long hFile;
 #elif defined(__IBMCPP__)
    FILEFINDBUF3 entry;
@@ -401,7 +417,7 @@ HB_FUNC( DIRECTORY )
    if( pAttributes && hb_itemGetCLen( pAttributes ) >= 1 )
       ushbMask |= HarbourAttributesToMask( ( BYTE * ) hb_itemGetCPtr( pAttributes ) );
 
-#if defined(_MSC_VER) || defined(__MINGW32__)
+#if defined(__MINGW32__) || ( defined(_MSC_VER) && _MSC_VER >= 1000 )
    /* Do we want 8.3 support? */
    bEightDotThree = ( pEightDotThree ? hb_itemGetL( pEightDotThree ) : FALSE );
 #endif
@@ -488,7 +504,7 @@ HB_FUNC( DIRECTORY )
    tzset();
    pDir = hb_itemArrayNew( 0 );
 
-#if defined(_MSC_VER) || defined(__MINGW32__)
+#if defined(__MINGW32__) || ( defined(_MSC_VER) && _MSC_VER >=1000 )
 
    strcpy( string, dirname );
    strcat( string, pattern );
@@ -504,6 +520,16 @@ HB_FUNC( DIRECTORY )
          if( bEightDotThree )
             GetShortPathName( string, string, _POSIX_PATH_MAX );
 
+#elif defined(_MSC_VER)
+
+   strcpy( string, dirname );
+   strcat( string, pattern );
+
+   if( _dos_findfirst( string, ushbMask, &entry ) == 0 )
+   {
+      do
+      {
+         strcpy( string, entry.name );
 #elif defined(__IBMCPP__)
 
    strcpy( string, dirname );
@@ -567,7 +593,7 @@ HB_FUNC( DIRECTORY )
       {
          attrib = 0;
 
-#if defined(_MSC_VER) || defined(__MINGW32__)
+#if defined(__MINGW32__) || ( defined(_MSC_VER) && _MSC_VER >= 1000 )
 
          /* due to short-name support: reconstruct the filename */
          if( bEightDotThree )
@@ -593,6 +619,9 @@ HB_FUNC( DIRECTORY )
             strcpy( fullfile, dirname );
             strcpy( filename, entry.name );
          }
+#elif defined(_MSC_VER)
+         strcpy( filename, entry.name );
+         strcpy( fullfile, dirname );
 #elif defined(__IBMCPP__)
          strcpy( filename, entry.achName );
          strcpy( fullfile, dirname );
@@ -613,8 +642,9 @@ HB_FUNC( DIRECTORY )
                attrib = statbuf.st_mode;
             #elif defined(__IBMCPP__)
                attrib = entry.attrFile;
-            #elif defined(_MSC_VER) || defined(__MINGW32__)
+            #elif defined(__MINGW32__) || defined(_MSC_VER)
                attrib = entry.attrib;
+               #if defined(_MSC_VER ) && _MSC_VER >= 1000
                if( bEightDotThree )
                {
                    /* need to strip off the path */
@@ -622,7 +652,7 @@ HB_FUNC( DIRECTORY )
                    if( pos )
                       strcpy( filename, ++pos );
                }
-
+               #endif
             #elif defined(__BORLANDC__) && (__BORLANDC__ >= 1280)
                /* NOTE: _chmod( f, 0 ) => Get attribs
                         _chmod( f, 1, n ) => Set attribs
@@ -690,9 +720,11 @@ HB_FUNC( DIRECTORY )
       }
    }
 
-#if defined(_MSC_VER) || defined(__MINGW32__)
+#if defined(__MINGW32__) || (defined(_MSC_VER) && _MSC_VER >= 1000 )
    while( _findnext( hFile, &entry ) == 0 );
    _findclose( hFile );
+#elif defined(_MSC_VER )
+   while( _dos_findnext( &entry ) == 0 );
 #elif defined(__IBMCPP__)
    while( DosFindNext( hFind, &entry, findSize, &findCount ) == NO_ERROR && findCount > 0 );
    DosFindClose( hFind );

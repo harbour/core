@@ -42,6 +42,11 @@
    #include <dos.h>
 #endif
 
+#if defined(_MSC_VER)
+   #define MOUSE_INTERRUPT 0x33
+   #include <bios.h>
+#endif
+
 #include "hbapigt.h"
 
 /* C callable low-level interface */
