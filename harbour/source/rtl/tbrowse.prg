@@ -26,7 +26,6 @@ CLASS TBrowse
    DATA aColumns      // Array to hold all browse columns
    DATA autoLite      // Logical value to control highlighting
    DATA cargo         // User-definable variable
-   DATA colCount      // Number of browse columns
    DATA colorSpec     // Color table for the TBrowse display
    DATA colPos        // Current cursor column position
    DATA colSep        // Column separator character
@@ -67,6 +66,7 @@ CLASS TBrowse
    METHOD AddColumn( oCol ) INLINE ;
       AAdd( ::aColumns, oCol ), ::Configure( 2 ), Self // Adds a TBColumn object to the TBrowse object
 
+   METHOD ColCount()       INLINE Len( ::aColumns )
    METHOD ColorRect()      VIRTUAL // Alters the color of a rectangular group of cells
    METHOD ColWidth()       VIRTUAL // Returns the display width of a particular column
    METHOD Configure()      VIRTUAL // Reconfigures the internal settings of the TBrowse object
