@@ -233,10 +233,14 @@ int hb_parni( WORD wParam, ... )
       pItem = stack.pBase + 1 + wParam;
       if( pItem->type & IT_BYREF )
          pItem = stack.pItems + pItem->item.asRefer.value;
-
-      if( IS_ARRAY( pItem ) && wArrayIndex )
-         /* TODO: implement wArrayIndex use when retrieving an array element */
-         return 0;
+         
+      if( IS_ARRAY( pItem ) )
+      {
+	 if( wArrayIndex )
+	    return (long) hb_arrayGetDouble( pItem, wArrayIndex );
+	 else
+	    return 0;
+      }
 
       else if( IS_INTEGER( pItem ) )
          return pItem->item.asInteger.value;
@@ -269,9 +273,13 @@ long hb_parnl( WORD wParam, ... )
       if( pItem->type & IT_BYREF )
          pItem = stack.pItems + pItem->item.asRefer.value;
 
-      if( IS_ARRAY( pItem ) && wArrayIndex )
-         /* TODO: implement wArrayIndex use when retrieving an array element */
-         return 0;
+      if( IS_ARRAY( pItem ) )
+      {
+         if( wArrayIndex )
+	    return (long) hb_arrayGetDouble( pItem, wArrayIndex );
+         else
+            return 0;
+      }
 
       else if( IS_INTEGER( pItem ) )
          return (long) pItem->item.asInteger.value;

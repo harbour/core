@@ -1,3 +1,12 @@
+19990707-22:25:59 Bruno Cantero <bruno@issnet.net>
+CVSed by Andi Jahja <andij@aonlippo.co.id>
+
+source/rtl/extend.c
+   * hb_parni
+      - wArrayIndex use when retrieving an array element implemented
+   * hb_parnl
+      - wArrayIndex use when retrieving an array element implemented
+
 19990706-16:30 Eddie Runia
   * source/rtl/asort.prg; source/rtl/objfunc.prg; source/runner/runner.c;
     source/tools/debug.c; source/tools/stringp.prg; source/rtl/transfrm.c
