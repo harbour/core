@@ -1,3 +1,7 @@
+2000-08-16 12:35 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * contrib/rdd_ads/ads1.c
+     * SEEK works now for numeric indexes in RDD_ADS
+
 2000-08-15 23:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
   * source/compiler/harbour.slx
     ! Corrected support for stringified strings to include nested string delimiters in the LITERAL.

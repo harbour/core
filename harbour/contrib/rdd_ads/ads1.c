@@ -309,19 +309,54 @@ static ERRCODE adsGoTop( ADSAREAP pArea )
 static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLast )
 {
    UNSIGNED16 usSeekType = ( bSoftSeek ) ? ADS_SOFTSEEK : ADS_HARDSEEK;
+   int  uiLen = 0, uiDec = 0;
+   UNSIGNED8   szText[ADS_MAX_KEY_LENGTH];
+
    HB_TRACE(HB_TR_DEBUG, ("adsSeek(%p, %d, %p, %d)", pArea, bSoftSeek, pKey, bFindLast));
 
    if( bFindLast )
    {
-      AdsSeekLast( pArea->hOrdCurrent, (UNSIGNED8*) hb_itemGetCPtr( pKey ),
+      if( hb_itemType( pKey ) == HB_IT_STRING )
+         AdsSeekLast( pArea->hOrdCurrent, (UNSIGNED8*) hb_itemGetCPtr( pKey ),
                     (UNSIGNED16) hb_itemGetCLen( pKey ), ADS_STRINGKEY,
                     (UNSIGNED16*) &(pArea->fFound) );
+      else
+      {
+         hb_itemGetNLen( pKey, &uiLen, &uiDec  );
+         hb_ndtoa( hb_itemGetND( pKey ), ( char * ) szText, uiLen, uiDec );
+         szText[ uiLen ] = '\0';
+         AdsSeekLast( pArea->hOrdCurrent, szText,
+                 8, ADS_DOUBLEKEY, (UNSIGNED16*) &(pArea->fFound) );
+      }
    }
    else
    {
-      AdsSeek( pArea->hOrdCurrent, (UNSIGNED8*) hb_itemGetCPtr( pKey ),
-                   (UNSIGNED16) hb_itemGetCLen( pKey ), ADS_STRINGKEY,
-                   usSeekType, (UNSIGNED16*) &(pArea->fFound) );
+      if( hb_itemType( pKey ) == HB_IT_STRING )
+         AdsSeek( pArea->hOrdCurrent, (UNSIGNED8*) hb_itemGetCPtr( pKey ),
+                   (UNSIGNED16) hb_itemGetCLen( pKey ), ADS_STRINGKEY, usSeekType, (UNSIGNED16*) &(pArea->fFound) );
+      else
+      {
+/*
+        UNSIGNED8   aucKey[ADS_MAX_KEY_LENGTH];
+        UNSIGNED16  usLength;
+        UNSIGNED16  usBufferLen;
+        UNSIGNED8   aucBuffer[16];
+        usBufferLen = 16;
+        AdsGetIndexExpr( pArea->hOrdCurrent,aucBuffer, &usBufferLen );
+        AdsInitRawKey( pArea->hOrdCurrent );
+	AdsSetLong( pArea->hOrdCurrent, aucBuffer, hb_itemGetND( pKey ) );
+        usLength = sizeof( aucKey );
+        ulRetVal = AdsBuildRawKey( pArea->hOrdCurrent, aucKey, &usLength );
+        printf( "\n// %d %s %s\n",ulRetVal,aucBuffer,aucKey );
+        AdsSeek( pArea->hOrdCurrent, aucKey,
+                   usLength, ADS_RAWKEY, usSeekType, (UNSIGNED16*) &(pArea->fFound) );
+*/
+         hb_itemGetNLen( pKey, &uiLen, &uiDec  );
+         hb_ndtoa( hb_itemGetND( pKey ), ( char * ) szText, uiLen, uiDec );
+         szText[ uiLen ] = '\0';
+         AdsSeek( pArea->hOrdCurrent, szText,
+                  uiLen, ADS_STRINGKEY, usSeekType, (UNSIGNED16*) &(pArea->fFound) );
+      }
    }
    AdsIsFound( pArea->hTable, (UNSIGNED16 *)&(pArea->fFound) );
    hb_adsCheckBofEof( pArea );
