@@ -8,6 +8,18 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-05-30 12:39 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * contrib/rdd_ads/ads1.c
+    ! managed 7008 open error
+
+    This fixes the not issued error when doing:
+
+    USE "any" NEW SHARED ALIAS "Test" VIA "ADS"
+    USE "any" NEW EXCLUSIVE ALIAS "Test2" VIA "ADS"  // An error must raise here
+
+    We still need to know if there is a way to know the OS code when
+    ADS returns 7008 error code when opening a DBF.
+
 2003-05-30 09:37 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
 
   * contrib/htmllib/Makefile.bc
