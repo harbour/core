@@ -1,3 +1,7 @@
+19990906-01:27 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/set.c
+    * added a cast in open_handle to fsRead()
+
 19990905-17:55 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/console.c
     + Added code to preserve the current user file error code when

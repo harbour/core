@@ -29,6 +29,7 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.69   Paul Tucker                 Added a cast in open_handle to fsRead.
    V 1.68   David G. Holm               Added user file error code safeguards.
                                         When opening a "text" file is append
                                         mode in open_handle(), remove the EOF
@@ -307,7 +308,7 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
                      ('\x1A') character at the end (non-UNIX only). */
                   char cEOF = '\0';
                   hb_fsSeek( handle, -1, FS_END ); /* Position to last char. */
-                  hb_fsRead( handle, &cEOF, 1 );   /* Read the last char. */
+                  hb_fsRead( handle, (BYTE *)&cEOF, 1 );   /* Read the last char. */
                   if( cEOF == '\x1A' )             /* If it's an EOF, */
                      hb_fsSeek( handle, -1, FS_END ); /* Then write over it. */
                }
