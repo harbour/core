@@ -1,3 +1,7 @@
+19991107-19:24 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * source/rdd/dbcmd.c
+    * dbCreate(), fixed two bugs (mentioned by Victor).
+
 19991106-01:30 EDT David G. Holm <dholm@jsd-llc.com>
 
    * include/filesys.h

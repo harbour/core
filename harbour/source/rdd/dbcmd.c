@@ -1464,6 +1464,7 @@ HARBOUR HB_DBCREATE( void )
    szFileName = hb_parc( 1 );
    pStruct = hb_param( 2 , IT_ARRAY );
    uiLen = hb_arrayLen( pStruct );
+   
    if( ( strlen( szFileName ) == 0 ) || !pStruct || uiLen == 0 )
    {
       hb_errRT_DBCMD( EG_ARG, 1014, NULL, "DBCREATE" );
@@ -1473,17 +1474,17 @@ HARBOUR HB_DBCREATE( void )
    for( uiSize = 0; uiSize < uiLen; uiSize++ )
    {
       pFieldDesc = hb_arrayGetItemPtr( pStruct, uiSize + 1 );
-      if( hb_arrayLen( pFieldDesc ) != 4 )
+      if( hb_arrayLen( pFieldDesc ) < 4 )
       {
          hb_errRT_DBCMD( EG_ARG, 1014, NULL, "DBCREATE" );
          return;
       }
 
       /* Validate items type, name, size and decimals of field */
-      if( hb_arrayGetType( pFieldDesc, 1 ) != IT_STRING ||
-          hb_arrayGetType( pFieldDesc, 2 ) != IT_STRING ||
-          hb_arrayGetType( pFieldDesc, 3 ) != IT_INTEGER ||
-          hb_arrayGetType( pFieldDesc, 4 ) != IT_INTEGER )
+      if( !( hb_arrayGetType( pFieldDesc, 1 ) & IT_STRING ) ||
+          !( hb_arrayGetType( pFieldDesc, 2 ) & IT_STRING ) ||
+          !( hb_arrayGetType( pFieldDesc, 3 ) & IT_NUMERIC ) ||
+          !( hb_arrayGetType( pFieldDesc, 4 ) & IT_NUMERIC ) )
       {
          hb_errRT_DBCMD( EG_ARG, 1014, NULL, "DBCREATE" );
          return;
