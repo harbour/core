@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-06-23 15:10 UTC+0200 Tomaz Zupan <tomaz.zupan@orpo.si>
+  * source/compiler/Makefile
+    + Added gencli.c
+  * source/rtl/Makefile
+    + Added symbil.prg
+
 2003-06-23 13:15 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/compiler/gencli.c
     ! The IL fun begins :-)
