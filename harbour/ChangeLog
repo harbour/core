@@ -1,3 +1,34 @@
+20000216-06:00 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+    *makefile.bc
+        *added  the typefile makefile
+    *doc/funclist.txt
+        *update status of __typefile functions
+    +doc/gnulice.txt
+        *Gnu license
+    *doc/subcodes.txt
+        *added one more subcode
+    *source/rdd/dbcmd.c
+        *Some docs changed
+    *source/rtl/dummy.prg
+        *removed __typefile reference
+    *source/rtl/environ.c
+     source/rtl/memvars.c
+        *small formating to the docs
+    *source/rtl/treport.prg
+    *source/rtl/tlabel.prg
+        *Added the function docs
+    *source/rtl/typefile.prg
+        *__TYPEFILE function
+    *source/rtl/set.c
+        *small formating to the docs
+    *source/rtl/strings.c
+        *small formating to the docs
+    *utils/hbdoc/genng.prg
+        *small changes
+    *utils/hbdoc/alpha.lnk
+    *utils/hbdoc/hrb.lnk
+        *Small changes
+
 20000216-00:07 EST Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      + source/rtl/tlabel.prg

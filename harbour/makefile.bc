@@ -188,6 +188,7 @@ HARBOUR_LIB_OBJS  = $(OBJ_DIR)\achoice.obj \
                     $(OBJ_DIR)\transfrm.obj \
                     $(OBJ_DIR)\treport.obj \
                     $(OBJ_DIR)\type.obj \
+                    $(OBJ_DIR)\typefile.obj \
                     $(OBJ_DIR)\valtype.obj \
                     $(OBJ_DIR)\wait.obj \
                     $(OBJ_DIR)\word.obj \
@@ -877,6 +878,13 @@ $(OBJ_DIR)\treport.obj : $(OBJ_DIR)\treport.c
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\type.obj : $(RTL_DIR)\type.c
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   tlib $(HARBOUR_LIB) -+$@,,
+
+$(OBJ_DIR)\typefile.c : $(RTL_DIR)\typefile.prg
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
+
+$(OBJ_DIR)\typefile.obj : $(OBJ_DIR)\typefile.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
