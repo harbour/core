@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-09-29 12:00 UTC+0700 Andi Jahja <andijahja@harbour-id.net>
+  * source/rtl/tget.prg
+    ! fixed get (value and display) involving negative (with decimal)
+      number whose value is less than 1.
 
 2002-09-28 21:50 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * source/compiler/hbusage.c
