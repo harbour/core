@@ -47,10 +47,10 @@ WORD hb_errLaunch( PHB_ITEM pError )
 
    if ( pError )
    {
-      /* TODO: Determine if there was a BREAK in error handler. */
-      BOOL bBreak = FALSE;
-      WORD nSequenceLevel = 0;
-      USHORT uiFlags = hb_errGetFlags( pError );
+      /* TODO: Determine if there was a BREAK in the error handler. */
+      BOOL bBreak;
+      WORD nSequenceLevel;
+      USHORT uiFlags;
 
       if ( ! IS_BLOCK( &errorBlock ) )
       {
@@ -64,33 +64,67 @@ WORD hb_errLaunch( PHB_ITEM pError )
       hb_vmPush( pError );
       hb_vmDo( 1 );
 
+      /* TODO: Detect these properly */
+      bBreak = FALSE;
+      nSequenceLevel = 0;
+
+      uiFlags = hb_errGetFlags( pError );
+
       if ( bBreak )
       {
-         wRetVal = E_BREAK;
-      }
-      else if ( IS_LOGICAL( &stack.Return ) )
-      {
-         wRetVal = stack.Return.item.asLogical.value ? E_RETRY : E_DEFAULT;
+         if ( nSequenceLevel )
+         {
+            wRetVal = E_BREAK;
+            /* TODO: Initiate a jump to the closest RECOVER statement */
+         }
+         else
+         {
+            /* TODO: QUIT correctly, without any message */
+            exit( 1 );
+         }
       }
       else
       {
-         wRetVal = E_DEFAULT;
-      }
+         BOOL bFailure = FALSE;
 
-      if ( ( wRetVal == E_BREAK   && nSequenceLevel == 0          ) ||
-           ( wRetVal == E_DEFAULT && !( uiFlags & EF_CANDEFAULT ) ) ||
-           ( wRetVal == E_RETRY   && !( uiFlags & EF_CANRETRY   ) ) )
-      {
-         /* TODO: Change to internal error: */
-         printf("Error recovery failure, ???? (0)");
-         exit( 1 ); /* TODO: quit correctly */
+         /* If the error block didn't return a logical value, */
+         /* or the canSubstitute flag has been set, consider it as a failure */
+
+         if ( ! IS_LOGICAL( &stack.Return ) ||
+              ( uiFlags & EF_CANSUBSTITUTE ) )
+         {
+            bFailure = TRUE;
+         }
+         else
+         {
+            wRetVal = stack.Return.item.asLogical.value ? E_RETRY : E_DEFAULT;
+
+            if ( ( wRetVal == E_DEFAULT && !( uiFlags & EF_CANDEFAULT ) ) ||
+                 ( wRetVal == E_RETRY   && !( uiFlags & EF_CANRETRY   ) ) )
+            {
+               bFailure = TRUE;
+            }
+         }
+
+         if ( bFailure )
+         {
+            /* TODO: Change to internal error: */
+            printf("Error recovery failure, ???? (0)");
+            exit( 1 ); /* TODO: quit correctly */
+         }
       }
    }
    else
-      wRetVal = E_RETRY;
+   {
+      wRetVal = E_RETRY; /* Clipper does this, undocumented */
+   }
 
    return wRetVal;
 }
+
+/* NOTE: This should be called when the EF_CANSUBSTITUE flag was set */
+/*       Since it this case the error handler will return the value */
+/*       to be substituted */
 
 /* TODO:
 PHB_ITEM hb_errLaunchExt( PHB_ITEM pError )

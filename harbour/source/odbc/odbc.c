@@ -73,7 +73,7 @@ HB_INIT_SYMBOLS_BEGIN( odbc__InitSymbols )
 HB_INIT_SYMBOLS_END( odbc__InitSymbols );
 #pragma odbc__InitSymbols
 
-HARBOUR HB_SQLALLOCEN( void ) /* HB_SQLALLOCENNNECT( @hEnv ) --> nRetCode */
+HARBOUR HB_SQLALLOCEN( void ) /* HB_SQLALLOCENV( @hEnv ) --> nRetCode */
 {
    HENV hEnv;
    RETCODE ret = SQLAllocEnv( &hEnv );

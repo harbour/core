@@ -1,3 +1,23 @@
+19990809-06:23 GMT+1 Victor Szel <info@szelvesz.hu>
+   * include/memvars.ch
+     ! #ifdef _MEMVARS_CH guard added.
+     ! Changed all comments to ANSI C style, since it's included in C code, too.
+   * source/rtl/errorapi.c
+     + Fixed logic for _errLaunch(), it seem ready now, plus highly
+       Clipper compatible.
+   * source/Makefile
+     + runner added.
+   * source/odbc/odbc.c
+     ! Small typo fixed.
+   * source/rtl/menuto.prg
+     + Handles non-declared variables correctly. Uses __MVSCOPE().
+   * include/hbdefs.h
+     * Small cleanup, typo fix.
+   * tests/working/copyfile.prg
+     tests/working/copyfile.txt (removed)
+     % copyfile.txt is no longer needed.
+     * Open error test uses a much more rare file name.
+
 19990808-20:55 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y

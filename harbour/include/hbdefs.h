@@ -32,14 +32,17 @@
 
 #if ! defined(HB_DONT_DEFINE_BASIC_TYPES)
 
+#undef BOOL                            /* boolean */
+typedef int BOOL;
+
 #undef BYTE
 typedef unsigned char BYTE;            /* 1 byte unsigned */
 
-#undef WORD                            /* 2 bytes unsigned */
-typedef unsigned short int WORD;
-
 #undef SHORT                           /* 2 bytes signed */
 typedef short int SHORT;
+
+#undef WORD                            /* 2 bytes unsigned */
+typedef unsigned short int WORD;
 
 #undef USHORT                          /* 2 bytes unsigned */
 typedef unsigned short int USHORT;
@@ -47,14 +50,11 @@ typedef unsigned short int USHORT;
 #undef LONG                            /* 4 bytes signed */
 typedef long LONG;
 
-#undef ULONG                           /* 4 bytes signed */
+#undef ULONG                           /* 4 bytes unsigned */
 typedef unsigned long ULONG;
 
 #undef DWORD                           /* 4 bytes unsigned */
 typedef unsigned long DWORD;
-
-#undef BOOL                            /* boolean */
-typedef int BOOL;
 
 #undef FALSE
 #undef TRUE

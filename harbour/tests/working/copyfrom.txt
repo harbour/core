@@ -1,7 +1,0 @@
-; Test file for COPYFILE.PRG
-; Don't delete
-
-dslkfjgs;ldfg
-dsfg;lkdsflgksd
-gsdfl;gkjdsfg
-df;lkgjsdfg

@@ -5,9 +5,9 @@
 
 FUNCTION Main()
 
-// ? "1", __copyfile("COPYFROM.TXT")
-? "2", __copyfile("COPYFROM.TXT", "COPYTO.TXT")
-? "3", __copyfile("C.PRG", "B.PRG")
-? "4", __copyfile("COPYFROM.TXT", "..")
+// ? "1", __copyfile("COPYFROM.PRG")
+? "2", __copyfile("COPYFROM.PRG", "COPYTO.TMP")
+? "3", __copyfile("_NOTHERE.$$$", "COPYTO.TMP")
+? "4", __copyfile("COPYFROM.PRG", "..")
 
 RETURN NIL

@@ -20,7 +20,7 @@
 #include "setcurs.ch"
 #include "inkey.ch"
 #include "color.ch"
-
+#include "memvars.ch"
 
 static aLevel   := {}
 static nPointer := 1
@@ -60,20 +60,17 @@ function __MenuTo( bBlock, cVariable )
    local nSaveCursor
    local cSaveReadVar
 
-   local bOldError
-   local lBlockError
+   local lDeclared
 
    // Detect if a memvar was passed
 
-   bOldError := errorblock( {|| __Break( NIL ) } )
-   begin sequence
-     n := eval( bBlock )
-     lBlockError := .F.
-   recover
-     lBlockError := .T.
-     __mvPUBLIC( cVariable )
-   end sequence
-   errorblock( bOldError )
+   if __mvSCOPE( cVariable ) <= MV_ERROR
+      __mvPUBLIC( cVariable )
+      lDeclared := .T.
+   else
+      lDeclared := .F.
+      n := eval( bBlock )
+   endif
 
    // if no prompts were defined, exit with 0
 
@@ -226,7 +223,7 @@ function __MenuTo( bBlock, cVariable )
 
    eval( bBlock, n )
 
-   if lBlockError
+   if lDeclared
       release ( cVariable )
    endif
 
@@ -234,11 +231,3 @@ function __MenuTo( bBlock, cVariable )
 
    return n
 
-// Temp emulation of the BREAK() function.
-// NOTE: xExpr is not handled
-
-static function __Break( xExpr )
-
-   break
-
-   return nil

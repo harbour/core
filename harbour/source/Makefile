@@ -12,5 +12,6 @@ DIRS=\
 	vm \
 	rdd \
 	tools \
+        runner \
 
 include $(ROOT)config/dir.cf
