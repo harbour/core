@@ -1,3 +1,8 @@
+19990518-19:30 David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/environ.c
+    - Enhanced Harbour OS function to return both OS and Version
+      for OS/2, DOS, and Windows 95/98.
+
 19990518-18:00 David G. Holm <dholm@jsd-llc.com>
   + buildicc.cmd
     - New file for IBM C++ 3.0 for OS/2

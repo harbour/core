@@ -8,131 +8,177 @@
 
 #include <extend.h>
 
+#if defined(__TURBOC__) || defined(__BORLANDC__)
+  #include <dos.h>
+#endif
+
 #ifdef __WATCOMC__
   #include <i86.h>
 #endif
 
 HARBOUR OS()
 {
+   int hb_osmajor, hb_osminor, hb_osletter;
+   char * hb_os = 0;
+   char version [128];
 #ifdef __IBMCPP__
 
-   char buffer [256];
    unsigned long aulQSV [QSV_MAX] = {0};
    APIRET rc= DosQuerySysInfo (1L, QSV_MAX, (PVOID) aulQSV, sizeof (ULONG) * QSV_MAX);
-   if (rc)
-      _retc("OS/2");
-   else
+   if (!rc)
    {
-      sprintf(buffer, "OS/2 %lu.%lu%c", aulQSV [QSV_VERSION_MAJOR] / 10,
-      aulQSV [QSV_VERSION_MINOR],
-         (aulQSV [QSV_VERSION_REVISION] > 0 && aulQSV [QSV_VERSION_REVISION] < 26)
-         ? '@' + aulQSV [QSV_VERSION_REVISION] : 0);
-      _retc(buffer);
+      hb_osmajor  = aulQSV [QSV_VERSION_MAJOR] / 10;
+      hb_osminor  = aulQSV [QSV_VERSION_MINOR];
+      hb_osletter = (aulQSV [QSV_VERSION_REVISION] > 0 && aulQSV [QSV_VERSION_REVISION] < 26) ? '@' + aulQSV [QSV_VERSION_REVISION] : 0;
    }
+   hb_os = "OS/2";
 
 #else
 
 #ifdef __GNUC__
 
-  _retc("UNKNOWN");
-
 #else
 
 /* TODO: add MSVC support but MSVC cannot detect any OS except Windows! */
-#if defined(__TURBOC__) || defined(__BORLANDC__)
+#if defined(__TURBOC__) || defined(__BORLANDC__) || defined(__MSC__)
 
 #if defined(_Windows)
-  _retc( "Windows" );
+   hb_os = "Windows";
 #else
-  /* detect OS/2 */
-  _AX = 0x2B01;
-  _CX = 0x4445;
-  _DX = 0x5351;
-  _AH = 0x30;
-  geninterrupt(0x21);
-  if(_AL >= 10)
-  {
-     _retc("OS/2");
-  }
+   /* detect OS/2 */
+   if(_osmajor >= 10)
+   {
+      hb_os = "OS/2";
+      if (_osmajor == 20 && _osminor > 20)
+      {
+         hb_osmajor = _osminor / 10;
+         hb_osminor = _osminor % 10;
+      }
+      else
+      {
+         hb_osmajor  = _osmajor / 10;
+         hb_osminor  = _osminor;
+      }
+      hb_osletter = 0;
+   }
+   else
+   {
+#if defined(__MSC__)
+      if (_osmode == _WIN_MODE)
+      {
+         hb_os = "Windows";
+         hb_osmajor  = _osmajor;
+         hb_osminor  = _osminor
+         hb_osletter = 0;
+      }
+#else
+      /* detect Windows */
+      _AX = 0x160A;
+      geninterrupt(0x2F);
+      if(_AX == 0)
+      {
+         hb_osmajor  = _BX / 256;
+         hb_osminor  = _BX % 256;
+         hb_osletter = 0;
+         hb_os = "Windows 95/98";
+      }
+#endif /* __MSC__ */
+      else
+      {
+         hb_os = "DOS";
+         hb_osmajor  = _osmajor;
+         hb_osminor  = _osminor;
+         hb_osletter = 0;
+      }
+   }
 
-  /* detect Windows */
-  /* TODO: get Windows version (major, minor) */
-  _AX = 0x160A;
-  geninterrupt(0x2F);
-  if(_AX == 0)
-  {
-     _retc("Windows");
-  }
-#endif
+#endif /* defined(_Windows) */
 
 #else
 
-  union REGS regs;
+   union REGS regs;
 
-  /* detect OS/2 */
-  regs.h.ah = 0x30;
+   /* detect OS/2 */
+   regs.h.ah = 0x30;
 
 #if defined(__WATCOMC__) && defined(__386__)
 
-  int386(0x21, &regs, &regs);
+   int386(0x21, &regs, &regs);
 
 #else
 
 #if defined(__EMX__)
 
-  _int86(0x21, &regs, &regs);
+   _int86(0x21, &regs, &regs);
 
 #else
 
-  int86(0x21, &regs, &regs);
+   int86(0x21, &regs, &regs);
 
 #endif /* __EMX__ */
-
-  if(regs.h.al >= 10)
-  {
-     _retc("OS/2");
-     return();
-  }
-
 #endif /* WATCOMC */
 
-  /* TODO: get Windows version (major, minor) */
-  /* detect Windows */
-  regs.w.ax = 0x160A;
+   if(regs.h.al >= 10)
+   {
+      hb_os = "OS/2";
+      if (regs.h.al == 20 && regs.h.ah > 20)
+      {
+         hb_osmajor = regs.h.ah / 10;
+         hb_osminor = regs.h.ah % 10;
+      }
+      else
+      {
+         hb_osmajor  = regs.h.al / 10;
+         hb_osminor  = regs.h.ah;
+      }
+      hb_osletter = 0;
+   }
+   else
+   {
+      hb_osmajor  = _osmajor;
+      hb_osminor  = _osminor;
+      regs.w.ax = 0x160A;
 
 #if defined(__WATCOMC__) && defined(__386__)
 
-  int386(0x2F, &regs, &regs);
+      int386(0x2F, &regs, &regs);
 
 #else
 
 #if defined(__EMX__)
 
-  _int86(0x2F, &regs, &regs);
+      _int86(0x2F, &regs, &regs);
 
 #else
 
-  int86(0x2F, &regs, &regs);
+      int86(0x2F, &regs, &regs);
 
 #endif /* EMX */
-
-  if(regs.x.ax == 0)
-  {
-     _retc("Windows");
-     return();
-  }
-
 #endif /* WATCOMC */
 
-#endif /* __TURBOC__ or __BORLANDC__ */
+      if(regs.x.ax == 0)
+      {
+         hb_os = "Windows";
+         hb_osmajor  = regs.x.bx / 256;
+         hb_osminor  = regs.x.bx % 256;
+         hb_osletter = 0;
+      }
+      else
+      {
+         hb_os = "DOS";
+         hb_osletter = 0;
+      }
+   }
+#endif /* __TURBOC__ or __BORLANDC__ or __MSC__ */
 
-  /* fall through to MS-DOS */
-  /* TODO: detect other OSes */
-  /* TODO: detect MS-DOS version */
-  _retc("MS-DOS");
+   /* TODO: detect other OSes */
 
 #endif /* __GNUC__ */
 #endif /* __IBMCPP__ */
+
+   if (!hb_os) strcpy (version, "Unknown");
+   else sprintf (version, "%s %d.%02d%c", hb_os, hb_osmajor, hb_osminor, hb_osletter);
+   _retc (version);
 }
 
 HARBOUR VERSION()
