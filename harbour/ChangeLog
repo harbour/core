@@ -1,8 +1,18 @@
+19991010-07:28 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/classes.c
+     - Undone latest changes from Eddie
+   * source/vm/hvm.c
+     - Undone latest changes from Eddie
+   * include/extend.h
+     - Undone latest changes from Eddie
+   (Eddie, I find your proposal very good -as all your ideas and code-
+    but this one is uncompleted and breaks actual Harbour OO architecture)
+
 19991010-02:05 GMT+1 Victor Szel <info@szelvesz.hu>
    * bin/*.bat
      ! Some minor fix in the help screens
    * doc/funclist.txt
-     + Changed the format, now the third column (which was not in use) is 
+     + Changed the format, now the third column (which was not in use) is
        meant to store the platform and multithreading support information.
    * source/compiler/harbour.y
      + One TODO added.

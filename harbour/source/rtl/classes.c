@@ -1074,7 +1074,6 @@ static HARBOUR hb___msgSuper( void )
 
    pSuper->item.asArray.value = pNewBase;
 
-   pNewBase->uiPrevCls  = pNewBase->uiClass;
    pNewBase->uiClass    = uiSuperCls;
    pNewBase->uiHolders  = 1;                    /* New item is returned     */
    pNewBase->bSuperCast = TRUE;                 /* Do not dispose pItems !! */

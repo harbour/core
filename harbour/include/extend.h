@@ -198,7 +198,6 @@ typedef struct _HB_BASEARRAY
    ULONG    ulLen;        /* number of items in the array */
    USHORT   uiHolders;    /* number of holders of this array */
    USHORT   uiClass;      /* offset to the classes base if it is an object */
-   USHORT   uiPrevCls;    /* previous class handle */
    BOOL     bSuperCast;   /* is it a super cast ? */
 } BASEARRAY, * PBASEARRAY, * BASEARRAY_PTR;
 
