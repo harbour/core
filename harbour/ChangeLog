@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-22 17:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+  * source/rdd/dbfcmd.c
+    * Made FIELDNAME Clipper compatible for the case where there is
+      no current workarea and when the field number does not exist.
+
 2002-10-22 02:00 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
   * source/rdd/dbcmd.c
     ! corrected copy length in rddsetdefault

@@ -2110,9 +2110,12 @@ HB_FUNC( FIELDNAME )
          hb_xfree( szName );
          return;
       }
+      /* This is not Clipper compatible! - David G. Holm <dholm@jsd-llc.com>
+       *
       hb_errRT_DBCMD( EG_ARG, EDBCMD_FIELDNAME_BADPARAMETER, NULL, "FIELDNAME" );
+      */
    }
-   hb_retc( NULL );
+   hb_retc( "" ); /* Was NULL, which is not Clipper compatible! - David G. Holm <dholm@jsd-llc.com> */
 }
 
 HB_FUNC( FIELDPOS )
