@@ -66,10 +66,7 @@ int yywrap( void );
 #undef YY_INPUT      /* to implement our own YY_INPUT function to manage PRGs without \n at the end */
 extern FILE * yyin;  /* currently yacc parsed file */
 
-/* Following three lines added for preprocessor */
-extern FILE *yyppo;  /* output .ppo file */
-extern BOOL _bPPO;   /* flag indicating, is ppo output needed */
-extern int PreProcess( FILE*, FILE*, char *);
+/* Following two lines added for preprocessor */
 int yy_lex_input( char *, int );
 #define YY_INPUT( buf, result, max_size ) result = yy_lex_input( buf, max_size );
 
@@ -1297,7 +1294,7 @@ int yy_lex_input( char *buffer, int iBufferSize )
 {
    HB_SYMBOL_UNUSED( iBufferSize );
 
-   return PreProcess( yyin, _bPPO ? yyppo : NULL, buffer );
+   return PreProcess( yyin, hb_comp_bPPO ? hb_comp_yyppo : NULL, buffer );
 }
 
 static int yy_ConvertNumber( char * szBuffer )

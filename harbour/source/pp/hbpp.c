@@ -42,17 +42,9 @@
    #endif
 #endif
 
-#include <stdlib.h>
-#if ( defined(_MSC_VER) || defined(__IBMCPP__) || defined(__MINGW32_) )
-   #include <memory.h>
-#elif defined(__GNUC__)
-   #include <string.h>
-   #include <unistd.h>
-#else
-   #include <mem.h>
-#endif
-
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <ctype.h>
 #include "hbpp.h"
 #include "hberrors.h"
@@ -127,13 +119,12 @@ static int lReplacePat = 1;
 static int numBrackets;
 static char groupchar;
 
-int lInclude = 0;
-int * aCondCompile;
-int nCondCompile = 0;
-int nline = 0;
+int   hb_pp_lInclude = 0;
+int * hb_pp_aCondCompile;
+int   hb_pp_nCondCompile = 0;
 
 /* Table with parse errors */
-char * _szPErrors[] =
+char * hb_pp_szErrors[] =
 {
   "Can\'t open #include file: \'%s\'",
   "#else does not match #ifdef",
@@ -154,7 +145,7 @@ char * _szPErrors[] =
 /* NOTE: The first character stores the warning's level that triggers this
  * warning. The warning's level is set by -w<n> command line option.
  */
-char * _szPWarnings[] =
+char * hb_pp_szWarnings[] =
 {
   "3Non directive in include file %s(%s)"
 };
@@ -175,17 +166,17 @@ int ParseDirective( char* sLine )
 
   if( i == 4 && memcmp( sDirective, "ELSE", 4 ) == 0 )
     {     /* ---  #else  --- */
-      if( nCondCompile == 0 )
-        hb_compGenError( _szPErrors, 'F', ERR_DIRECTIVE_ELSE, NULL, NULL );
-      else if( nCondCompile == 1 || aCondCompile[nCondCompile-2] )
-        aCondCompile[nCondCompile-1] = 1 - aCondCompile[nCondCompile-1];
+      if( hb_pp_nCondCompile == 0 )
+        hb_compGenError( hb_pp_szErrors, 'F', ERR_DIRECTIVE_ELSE, NULL, NULL );
+      else if( hb_pp_nCondCompile == 1 || hb_pp_aCondCompile[hb_pp_nCondCompile-2] )
+        hb_pp_aCondCompile[hb_pp_nCondCompile-1] = 1 - hb_pp_aCondCompile[hb_pp_nCondCompile-1];
     }
 
   else if( i == 5 && memcmp( sDirective, "ENDIF", 5 ) == 0 )
     {     /* --- #endif  --- */
-      if( nCondCompile == 0 )
-        hb_compGenError( _szPErrors, 'F', ERR_DIRECTIVE_ENDIF, NULL, NULL );
-      else nCondCompile--;
+      if( hb_pp_nCondCompile == 0 )
+        hb_compGenError( hb_pp_szErrors, 'F', ERR_DIRECTIVE_ENDIF, NULL, NULL );
+      else hb_pp_nCondCompile--;
     }
 
   else if( i == 5 && memcmp( sDirective, "IFDEF", 5 ) == 0 )
@@ -194,14 +185,14 @@ int ParseDirective( char* sLine )
   else if( i == 6 && memcmp( sDirective, "IFNDEF", 6 ) == 0 )
     ParseIfdef( sLine, FALSE ); /* --- #ifndef  --- */
 
-  else if( nCondCompile==0 || aCondCompile[nCondCompile-1])
+  else if( hb_pp_nCondCompile==0 || hb_pp_aCondCompile[hb_pp_nCondCompile-1])
     {
       if( i == 7 && memcmp( sDirective, "INCLUDE", 7 ) == 0 )
         {    /* --- #include --- */
           char cDelimChar;
 
           if( *sLine != '\"' && *sLine != '\'' && *sLine != '<' )
-            hb_compGenError( _szPErrors, 'F', ERR_WRONG_NAME, NULL, NULL );
+            hb_compGenError( hb_pp_szErrors, 'F', ERR_WRONG_NAME, NULL, NULL );
 
           cDelimChar = *sLine;
           if( cDelimChar == '<' )
@@ -212,19 +203,19 @@ int ParseDirective( char* sLine )
           sLine++; i = 0;
           while( *(sLine+i) != '\0' && *(sLine+i) != cDelimChar ) i++;
           if( *(sLine+i) != cDelimChar )
-            hb_compGenError( _szPErrors, 'F', ERR_WRONG_NAME, NULL, NULL );
+            hb_compGenError( hb_pp_szErrors, 'F', ERR_WRONG_NAME, NULL, NULL );
           *(sLine+i) = '\0';
 
           /*   if((handl_i = fopen(sLine, "r")) == NULL) */
           if( OpenInclude( sLine, hb_comp_pIncludePath, &handl_i, ( cDelimChar == '>' ), szInclude ) )
           {
-            lInclude++;
+            hb_pp_lInclude++;
             Hp_Parse(handl_i, 0, szInclude );
-            lInclude--;
+            hb_pp_lInclude--;
             fclose(handl_i);
           }
           else
-            hb_compGenError( _szPErrors, 'F', ERR_CANNOT_OPEN, sLine, NULL );
+            hb_compGenError( hb_pp_szErrors, 'F', ERR_CANNOT_OPEN, sLine, NULL );
         }
 
       else if( i == 6 && memcmp( sDirective, "DEFINE", 6 ) == 0 )
@@ -248,12 +239,12 @@ int ParseDirective( char* sLine )
 
       else if( i == 5 && memcmp( sDirective, "ERROR", 5 ) == 0 )
         /* --- #error  --- */
-        hb_compGenError( _szPErrors, 'F', ERR_EXPLICIT, sLine, NULL );
+        hb_compGenError( hb_pp_szErrors, 'F', ERR_EXPLICIT, sLine, NULL );
 
       else if( i == 4 && memcmp( sDirective, "LINE", 4 ) == 0 )
         return -1;
       else
-        hb_compGenError( _szPErrors, 'F', ERR_WRONG_DIRECTIVE, sDirective, NULL );
+        hb_compGenError( hb_pp_szErrors, 'F', ERR_WRONG_DIRECTIVE, sDirective, NULL );
     }
   return 0;
 }
@@ -292,7 +283,7 @@ static int ParseDefine( char* sLine)
       lastdef->pars = ( npars <= 0 )? NULL : strodup ( pars );
     }
   else
-    hb_compGenError( _szPErrors, 'F', ERR_DEFINE_ABSENT, NULL, NULL );
+    hb_compGenError( hb_pp_szErrors, 'F', ERR_DEFINE_ABSENT, NULL, NULL );
   return 0;
 }
 
@@ -314,8 +305,8 @@ DEFINES * AddDefine( char * defname, char * value )
   else
     {
       stdef = ( DEFINES * ) hb_xgrab( sizeof( DEFINES ) );
-      stdef->last = topDefine;
-      topDefine = stdef;
+      stdef->last = hb_pp_topDefine;
+      hb_pp_topDefine = stdef;
       stdef->name = strodup( defname );
       kolAddDefs++;
     }
@@ -353,27 +344,27 @@ static int ParseIfdef( char * sLine, int usl )
 
   HB_TRACE(HB_TR_DEBUG, ("ParseIfdef(%s, %d)", sLine, usl));
 
-  if( nCondCompile==0 || aCondCompile[nCondCompile-1])
+  if( hb_pp_nCondCompile==0 || hb_pp_aCondCompile[hb_pp_nCondCompile-1])
     {
       NextWord( &sLine, defname, FALSE );
       if( *defname == '\0' )
-        hb_compGenError( _szPErrors, 'F', ERR_DEFINE_ABSENT, NULL, NULL );
+        hb_compGenError( hb_pp_szErrors, 'F', ERR_DEFINE_ABSENT, NULL, NULL );
     }
-  if( nCondCompile == maxCondCompile )
+  if( hb_pp_nCondCompile == maxCondCompile )
     {
       maxCondCompile += 5;
-      aCondCompile = (int*)hb_xrealloc( aCondCompile, sizeof( int ) * maxCondCompile );
+      hb_pp_aCondCompile = (int*)hb_xrealloc( hb_pp_aCondCompile, sizeof( int ) * maxCondCompile );
     }
-  if( nCondCompile==0 || aCondCompile[nCondCompile-1])
+  if( hb_pp_nCondCompile==0 || hb_pp_aCondCompile[hb_pp_nCondCompile-1])
     {
       if( ( (stdef = DefSearch(defname,NULL)) != NULL && usl )
-           || ( stdef == NULL && !usl ) ) aCondCompile[nCondCompile] = 1;
-      else aCondCompile[nCondCompile] = 0;
+           || ( stdef == NULL && !usl ) ) hb_pp_aCondCompile[hb_pp_nCondCompile] = 1;
+      else hb_pp_aCondCompile[hb_pp_nCondCompile] = 0;
     }
   else
-    aCondCompile[ nCondCompile ] = 0;
+    hb_pp_aCondCompile[ hb_pp_nCondCompile ] = 0;
 
-  nCondCompile++;
+  hb_pp_nCondCompile++;
 
   return 0;
 }
@@ -381,7 +372,7 @@ static int ParseIfdef( char * sLine, int usl )
 static DEFINES* DefSearch(char *defname, int *isNew)
 {
   int kol = 0,j;
-  DEFINES * stdef = topDefine;
+  DEFINES * stdef = hb_pp_topDefine;
 
   HB_TRACE(HB_TR_DEBUG, ("DefSearch(%s)", defname));
 
@@ -406,7 +397,7 @@ static DEFINES* DefSearch(char *defname, int *isNew)
 static COMMANDS* ComSearch(char *cmdname, COMMANDS *stcmdStart)
 {
   int j;
-  COMMANDS *stcmd = ( stcmdStart )? stcmdStart:topCommand;
+  COMMANDS *stcmd = ( stcmdStart ) ? stcmdStart : hb_pp_topCommand;
 
   HB_TRACE(HB_TR_DEBUG, ("ComSearch(%s, %p)", cmdname, stcmdStart));
 
@@ -428,7 +419,7 @@ static COMMANDS* ComSearch(char *cmdname, COMMANDS *stcmdStart)
 static COMMANDS* TraSearch(char *cmdname, COMMANDS *sttraStart)
 {
   int j;
-  COMMANDS *sttra = ( sttraStart )? sttraStart:topTranslate;
+  COMMANDS *sttra = ( sttraStart ) ? sttraStart : hb_pp_topTranslate;
 
   HB_TRACE(HB_TR_DEBUG, ("TraSearch(%s, %p)", cmdname, sttraStart));
 
@@ -460,7 +451,7 @@ static void ParseCommand( char* sLine, int com_or_xcom, int com_or_tra )
   stroupper( cmdname );
   SKIPTABSPACES(sLine);
 
-  if( (ipos = pp_strAt( "=>", 2, sLine, strolen(sLine) )) > 0 )
+  if( (ipos = hb_strAt( "=>", 2, sLine, strolen(sLine) )) > 0 )
   {
     stroncpy( mpatt, sLine, ipos-1 );
 
@@ -484,7 +475,7 @@ static void ParseCommand( char* sLine, int com_or_xcom, int com_or_tra )
     stcmd->value = ( rlen > 0 )? strodup( rpatt ) : NULL;
   }
   else
-    hb_compGenError( _szPErrors, 'F', ERR_COMMAND_DEFINITION, NULL, NULL );
+    hb_compGenError( hb_pp_szErrors, 'F', ERR_COMMAND_DEFINITION, NULL, NULL );
 }
 
 /* ConvertPatterns()
@@ -533,13 +524,13 @@ static void ConvertPatterns( char *mpatt, int mlen, char *rpatt, int rlen )
             {
               if( *(exppatt+explen-1) == '*' ) explen--;
               else
-                hb_compGenError( _szPErrors, 'F', ERR_PATTERN_DEFINITION, NULL, NULL );
+                hb_compGenError( hb_pp_szErrors, 'F', ERR_PATTERN_DEFINITION, NULL, NULL );
             }
           else if( exptype == '4' )
             {
               if( *(exppatt+explen-1) == ')' ) explen--;
               else
-                hb_compGenError( _szPErrors, 'F', ERR_PATTERN_DEFINITION, NULL, NULL );
+                hb_compGenError( hb_pp_szErrors, 'F', ERR_PATTERN_DEFINITION, NULL, NULL );
             }
 
           rmlen = i - ipos + 1;
@@ -554,7 +545,7 @@ static void ConvertPatterns( char *mpatt, int mlen, char *rpatt, int rlen )
 
           /* Look for appropriate result markers */
           ptr = rpatt;
-          while( (ifou = pp_strAt( exppatt, explen, ptr, rlen-(ptr-rpatt) )) > 0 )
+          while( (ifou = hb_strAt( exppatt, explen, ptr, rlen-(ptr-rpatt) )) > 0 )
             {
               /* Convert result marker into inner format */
               ptr += ifou;
@@ -594,8 +585,8 @@ static COMMANDS* AddCommand( char *cmdname )
   HB_TRACE(HB_TR_DEBUG, ("AddCommand(%s)", cmdname));
 
   stcmd = ( COMMANDS * ) hb_xgrab( sizeof( COMMANDS ) );
-  stcmd->last = topCommand;
-  topCommand = stcmd;
+  stcmd->last = hb_pp_topCommand;
+  hb_pp_topCommand = stcmd;
   stcmd->name = strodup( cmdname );
   return stcmd;
 }
@@ -607,8 +598,8 @@ static COMMANDS* AddTranslate( char *traname )
   HB_TRACE(HB_TR_DEBUG, ("AddTranslate(%s)", traname));
 
   sttra = ( COMMANDS * ) hb_xgrab( sizeof( COMMANDS ) );
-  sttra->last = topTranslate;
-  topTranslate = sttra;
+  sttra->last = hb_pp_topTranslate;
+  hb_pp_topTranslate = sttra;
   sttra->name = strodup( traname );
   return sttra;
 }
@@ -671,7 +662,7 @@ int ParseExpression( char* sLine, char* sOutLine )
                   }
 
               /* Look for definitions from #translate    */
-              stcmd = topTranslate;
+              stcmd = hb_pp_topTranslate;
               while( stcmd != NULL )
                 {
                   ptri = sLine + isdvig;
@@ -756,7 +747,7 @@ int ParseExpression( char* sLine, char* sOutLine )
       kolpass++;
       if( kolpass > 20 && rezDef )
       {
-        hb_compGenError( _szPErrors, 'F', ERR_RECURSE, NULL, NULL );
+        hb_compGenError( hb_pp_szErrors, 'F', ERR_RECURSE, NULL, NULL );
         break;
       }
     }
@@ -824,7 +815,7 @@ static int WorkPseudoF( char** ptri, char* ptro, DEFINES *stdef )
                   lenreal = NextParm( ptri, NULL);
 
                   ptrb = ptro;
-                  while( (ifou = pp_strAt( parfict, lenfict, ptrb, lenres-(ptrb-ptro) )) > 0 )
+                  while( (ifou = hb_strAt( parfict, lenfict, ptrb, lenres-(ptrb-ptro) )) > 0 )
                     {
                       ptrb = ptrb+ifou-1;
                       if( !ISNAME(*(ptrb-1)) && !ISNAME(*(ptrb+lenfict)) )
@@ -1592,7 +1583,7 @@ static void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *l
                   memcpy( expnew, ptr+1, lennew );
                   *(expnew + lennew++) = ' ';
                   *(expnew + lennew) = '\0';
-                  while( (i = pp_strAt( exppatt, 2, expnew, lennew )) > 0 )
+                  while( (i = hb_strAt( exppatt, 2, expnew, lennew )) > 0 )
                     lennew += ReplacePattern( exppatt[2], expreal, lenreal, expnew+i-1, lennew );
                   if( kolmarkers )
                     {
@@ -1893,38 +1884,6 @@ int pp_WrStr(FILE* handl_o,char *buffer)
   if( *(buffer+lens-1) != '\n' )
     fwrite("\n",1,1,handl_o);
   return 0;
-}
-
-/* locates a substring in a string */
-int pp_strAt(char *szSub, int lSubLen, char *szText, int lLen)
-{
-  HB_TRACE(HB_TR_DEBUG, ("pp_strAt(%s, %d, %s, %d)", szSub, lSubLen, szText, lLen));
-
-  if( lSubLen )
-    {
-      if( lLen >= lSubLen )
-        {
-          long lPos = 0, lSubPos = 0;
-
-          while( lPos < lLen && lSubPos < lSubLen )
-            {
-              if( *(szText + lPos) == *(szSub + lSubPos) )
-                {
-                  lSubPos++;
-                  lPos++;
-                }
-              else if( lSubPos )
-                lSubPos = 0;
-              else
-                lPos++;
-            }
-          return (lSubPos < lSubLen? 0: lPos - lSubLen + 1);
-        }
-      else
-        return 0;
-    }
-  else
-    return 1;
 }
 
 static int md_strAt(char *szSub, int lSubLen, char *szText, int checkword, int checkPrth)

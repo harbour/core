@@ -42,32 +42,24 @@
    #endif
 #endif
 
-#if ( defined(_MSC_VER) || defined(__IBMCPP__) || defined(__MINW32__) )
-   #include <memory.h>
-   #include <stdlib.h>
-#elif ( defined(__GNUC__) || defined(__WATCOMC__) )
-   #include <string.h>
-   #include <stdlib.h>
-#else
-   #include <alloc.h>
-   #include <mem.h>
-#endif
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "hbpp.h"
 #include "hberrors.h"
 
-int iBuffer, lenBuffer;
-BOOL _bPPO = 0;
-char sLine[ STR_SIZE ], sOutLine[ STR_SIZE ];
-FILE * yyppo;
+static int  s_iBuffer;
+static int  s_lenBuffer;
+static char s_szLine[ STR_SIZE ];
+static char s_szOutLine[ STR_SIZE ];
 
 void Hbpp_init( void )
 {
   HB_TRACE(HB_TR_DEBUG, ("Hbpp_init()"));
 
-  lenBuffer = 10;
-  iBuffer = 10;
-  aCondCompile = ( int * ) hb_xgrab( sizeof( int ) * 5 );
+  s_lenBuffer = 10;
+  s_iBuffer = 10;
+  hb_pp_aCondCompile = ( int * ) hb_xgrab( sizeof( int ) * 5 );
 }
 
 int PreProcess( FILE * handl_i, FILE * handl_o, char * sOut )
@@ -77,26 +69,27 @@ int PreProcess( FILE * handl_i, FILE * handl_o, char * sOut )
   int lContinue = 0;
   int lens = 0, rdlen;
   int rezParse;
+  int nline = 0;
 
   HB_TRACE(HB_TR_DEBUG, ("PreProcess(%p, %p, %s)", handl_i, handl_o, sOut));
 
   HB_SYMBOL_UNUSED( handl_o );
 
-  while( ( rdlen = pp_RdStr( handl_i, sLine + lens, STR_SIZE - lens, lContinue,
-                             sBuffer, &lenBuffer, &iBuffer ) ) >= 0 )
+  while( ( rdlen = pp_RdStr( handl_i, s_szLine + lens, STR_SIZE - lens, lContinue,
+                             sBuffer, &s_lenBuffer, &s_iBuffer ) ) >= 0 )
     {
-      if( ! lInclude )
+      if( ! hb_pp_lInclude )
         nline++;
       lens += rdlen;
 
-      if( sLine[ lens - 1 ] == ';' )
+      if( s_szLine[ lens - 1 ] == ';' )
         {
           lContinue = 1;
           lens--;
           lens--;
-          while( sLine[ lens ] == ' ' || sLine[ lens ] == '\t' ) lens--;
-          sLine[ ++lens ] = ' ';
-          sLine[ ++lens ] = '\0';
+          while( s_szLine[ lens ] == ' ' || s_szLine[ lens ] == '\t' ) lens--;
+          s_szLine[ ++lens ] = ' ';
+          s_szLine[ ++lens ] = '\0';
 
           *ptrOut++ = '\n';
         }
@@ -108,26 +101,26 @@ int PreProcess( FILE * handl_i, FILE * handl_o, char * sOut )
 
       if( !lContinue )
         {
-          if( *sLine != '\0' )
+          if( *s_szLine != '\0' )
             {
-              ptr = sLine;
+              ptr = s_szLine;
               SKIPTABSPACES( ptr );
               if( *ptr == '#' )
                 {
                   if( ( rezParse = ParseDirective( ptr + 1 ) ) == 0 )
-                    *sLine = '\0';
+                    *s_szLine = '\0';
                 }
               else
                 {
-                  if( nCondCompile == 0 || aCondCompile[ nCondCompile - 1 ] )
+                  if( hb_pp_nCondCompile == 0 || hb_pp_aCondCompile[ hb_pp_nCondCompile - 1 ] )
                     {
-                      if( ( rezParse = ParseExpression( ptr, sOutLine ) ) > 0 )
+                      if( ( rezParse = ParseExpression( ptr, s_szOutLine ) ) > 0 )
                         {
                           printf( "\nError number %u in line %u\n", rezParse, nline );
                         }
                     }
                   else
-                    *sLine = '\0';
+                    *s_szLine = '\0';
                 }
             }
           break;
@@ -135,12 +128,9 @@ int PreProcess( FILE * handl_i, FILE * handl_o, char * sOut )
     }
   if( rdlen < 0 ) return 0;
 
-  lens = strocpy( ptrOut, sLine ) + ( ptrOut - sOut );
+  lens = strocpy( ptrOut, s_szLine ) + ( ptrOut - sOut );
   *( sOut + lens++ ) = '\n';
   *( sOut + lens ) = '\0';
-
-  if( _bPPO )
-    pp_WrStr( handl_o, sOut );
 
   return lens;
 }
@@ -156,20 +146,20 @@ int Hp_Parse( FILE * handl_i, FILE * handl_o, char * szSource )
 
   HB_TRACE(HB_TR_DEBUG, ("Hp_Parse(%p, %p)", handl_i, handl_o));
 
-  while( ( rdlen = pp_RdStr( handl_i, sLine + lens, STR_SIZE - lens, lContinue,
+  while( ( rdlen = pp_RdStr( handl_i, s_szLine + lens, STR_SIZE - lens, lContinue,
                              sBuffer, &lenBuffer, &iBuffer ) ) >= 0 )
     {
       lens += rdlen;
       iLine++;
 
-      if( sLine[ lens - 1 ] == ';' )
+      if( s_szLine[ lens - 1 ] == ';' )
         {
           lContinue = 1;
           lens--;
           lens--;
-          while( sLine[ lens ] == ' ' || sLine[ lens ] == '\t' ) lens--;
-          sLine[ ++lens ] = ' ';
-          sLine[ ++lens ] = '\0';
+          while( s_szLine[ lens ] == ' ' || s_szLine[ lens ] == '\t' ) lens--;
+          s_szLine[ ++lens ] = ' ';
+          s_szLine[ ++lens ] = '\0';
         }
       else
         {
@@ -179,19 +169,19 @@ int Hp_Parse( FILE * handl_i, FILE * handl_o, char * szSource )
 
       if( !lContinue )
         {
-          if( *sLine != '\0' )
+          if( *s_szLine != '\0' )
             {
-              ptr = sLine;
+              ptr = s_szLine;
               SKIPTABSPACES( ptr );
               if( *ptr == '#' )
                 {
                   ParseDirective( ptr + 1 );
-                  *sLine = '\0';
+                  *s_szLine = '\0';
                 }
               else
               {
                 sprintf( szLine, "%d", iLine );
-                hb_compGenWarning( _szPWarnings, 'I', WARN_NONDIRECTIVE, szSource, szLine );
+                hb_compGenWarning( hb_pp_szWarnings, 'I', WARN_NONDIRECTIVE, szSource, szLine );
               }
             }
         }

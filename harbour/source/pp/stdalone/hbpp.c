@@ -42,18 +42,9 @@
    #endif
 #endif
 
-#include <stdlib.h>
-#if ( defined(_MSC_VER) || defined(__IBMCPP__) || defined(__MINGW32__) )
-   #include <memory.h>
-#elif defined(__GNUC__)
-   #include <unistd.h>
-#elif ! defined(__MPW__)
-   #include <malloc.h>
-#else
-   #include <mem.h>
-#endif
-#include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <ctype.h>
 #include "hbpp.h"
 #include "hberrors.h"
@@ -62,11 +53,13 @@
 static void AddSearchPath( char * szPath, PATHNAMES * * pSearchList );
 static void OutTable( DEFINES * endDefine, COMMANDS * endCommand );
 
-char sLine[ STR_SIZE ], sOutLine[ STR_SIZE ];
+static int  s_nline = 0;
+static char s_szLine[ STR_SIZE ];
+static char s_szOutLine[ STR_SIZE ];
+static int  s_iWarnings = 0;
 
-PATHNAMES *hb_comp_pIncludePath = NULL;
+PATHNAMES * hb_comp_pIncludePath = NULL;
 PHB_FNAME hb_comp_pFileName = NULL;
-int _iWarnings = 0;
 
 int main( int argc, char * argv[] )
 {
@@ -77,8 +70,8 @@ int main( int argc, char * argv[] )
   int iArg = 1, i;
   BOOL bOutTable = FALSE;
   BOOL bOutNew = FALSE;
-  DEFINES * stdef = topDefine;
-  COMMANDS * stcmd = topCommand;
+  DEFINES * stdef = hb_pp_topDefine;
+  COMMANDS * stcmd = hb_pp_topCommand;
 
   HB_TRACE(HB_TR_DEBUG, ("main(%d, %p)", argc, argv));
 
@@ -123,11 +116,11 @@ int main( int argc, char * argv[] )
               break;
             case 'w':
             case 'W':
-              _iWarnings = 1;
+              s_iWarnings = 1;
               if( argv[ iArg ][ 2 ] )
                 {  /*there is -w<0,1,2,3> probably */
-                  _iWarnings = argv[ iArg ][ 2 ] - '0';
-                  if( _iWarnings < 0 || _iWarnings > 3 )
+                  s_iWarnings = argv[ iArg ][ 2 ] - '0';
+                  if( s_iWarnings < 0 || s_iWarnings > 3 )
                     printf( "\nInvalid command line option: %s\n", argv[ iArg ] );
                 }
               break;
@@ -200,7 +193,7 @@ int main( int argc, char * argv[] )
       }
   }
 
-  aCondCompile = ( int * ) hb_xgrab( sizeof( int ) * 5 );
+  hb_pp_aCondCompile = ( int * ) hb_xgrab( sizeof( int ) * 5 );
 
   Hp_Parse( handl_i, handl_o, NULL );
   fclose( handl_i );
@@ -226,20 +219,20 @@ int Hp_Parse( FILE * handl_i, FILE * handl_o, char * szSource )
 
   HB_TRACE(HB_TR_DEBUG, ("Hp_parse(%p, %p)", handl_i, handl_o));
 
-  while( ( rdlen = pp_RdStr( handl_i, sLine + lens, STR_SIZE - lens, lContinue,
+  while( ( rdlen = pp_RdStr( handl_i, s_szLine + lens, STR_SIZE - lens, lContinue,
                              sBuffer, &lenBuffer, &iBuffer ) ) >= 0 )
     {
-      if( ! lInclude ) nline++;
+      if( ! hb_pp_lInclude ) s_nline++;
       lens += rdlen;
 
-      if( sLine[ lens - 1 ] == ';' )
+      if( s_szLine[ lens - 1 ] == ';' )
         {
           lContinue = 1;
           lens--;
           lens--;
-          while( sLine[ lens ] == ' ' || sLine[ lens ] == '\t' ) lens--;
-          sLine[ ++lens ] = ' ';
-          sLine[ ++lens ] = '\0';
+          while( s_szLine[ lens ] == ' ' || s_szLine[ lens ] == '\t' ) lens--;
+          s_szLine[ ++lens ] = ' ';
+          s_szLine[ ++lens ] = '\0';
         }
       else
         {
@@ -247,29 +240,29 @@ int Hp_Parse( FILE * handl_i, FILE * handl_o, char * szSource )
           lens = 0;
         }
 
-      if( *sLine != '\0' && !lContinue )
+      if( *s_szLine != '\0' && !lContinue )
         {
-          printf( "\r  line %i", nline );
-          ptr = sLine;
+          printf( "\r  line %i", s_nline );
+          ptr = s_szLine;
           SKIPTABSPACES( ptr );
           if( *ptr == '#' )
             {
               if( ParseDirective( ptr + 1 ) == 0 )
-                *sLine = '\0';
+                *s_szLine = '\0';
             }
           else
             {
-              if( nCondCompile == 0 || aCondCompile[ nCondCompile - 1 ] )
-                ParseExpression( ptr, sOutLine );
+              if( hb_pp_nCondCompile == 0 || hb_pp_aCondCompile[ hb_pp_nCondCompile - 1 ] )
+                ParseExpression( ptr, s_szOutLine );
               else
-                *sLine = '\0';
+                *s_szLine = '\0';
             }
         }
 
-      if( ! lInclude )
+      if( ! hb_pp_lInclude )
         {
           if( lContinue ) pp_WrStr( handl_o, "\n" );
-          else pp_WrStr( handl_o, sLine );
+          else pp_WrStr( handl_o, s_szLine );
         }
     }
 
@@ -281,8 +274,8 @@ static void OutTable( DEFINES * endDefine, COMMANDS * endCommand )
   FILE *handl_o;
   int ipos, len_mpatt, len_value;
   int num;
-  DEFINES * stdef1 = topDefine, * stdef2 = NULL, * stdef3;
-  COMMANDS * stcmd1 = topCommand, * stcmd2 = NULL, * stcmd3;
+  DEFINES * stdef1 = hb_pp_topDefine, * stdef2 = NULL, * stdef3;
+  COMMANDS * stcmd1 = hb_pp_topCommand, * stcmd2 = NULL, * stcmd3;
 
   HB_TRACE(HB_TR_DEBUG, ("OutTable(%p, %p)", endDefine, endCommand));
 
@@ -328,7 +321,7 @@ static void OutTable( DEFINES * endDefine, COMMANDS * endCommand )
       stdef2 = stdef2->last;
       num++;
     }
-  fprintf( handl_o, "\n   DEFINES * topDefine = " );
+  fprintf( handl_o, "\n   DEFINES * hb_pp_topDefine = " );
   if( num == 1 )
     fprintf( handl_o, "NULL;" );
   else
@@ -341,27 +334,27 @@ static void OutTable( DEFINES * endDefine, COMMANDS * endCommand )
       fprintf( handl_o, "{%d,\"%s\",", stcmd2->com_or_xcom, stcmd2->name );
       if( stcmd2->mpatt != NULL )
         {
-          len_mpatt = strocpy( sLine, stcmd2->mpatt );
-          while( ( ipos = pp_strAt( "\1", 1, sLine, len_mpatt ) ) > 0 )
+          len_mpatt = strocpy( s_szLine, stcmd2->mpatt );
+          while( ( ipos = hb_strAt( "\1", 1, s_szLine, len_mpatt ) ) > 0 )
             {
-              pp_Stuff( "\\1", sLine + ipos - 1, 2, 1, len_mpatt );
+              pp_Stuff( "\\1", s_szLine + ipos - 1, 2, 1, len_mpatt );
               len_mpatt++;
             }
-          fprintf( handl_o, "\"%s\",", sLine );
+          fprintf( handl_o, "\"%s\",", s_szLine );
         }
       else
         fprintf( handl_o, "NULL," );
       if( stcmd2->value != NULL )
         {
-          len_value = strocpy( sLine, stcmd2->value );
-          while( ( ipos = pp_strAt( "\1", 1, sLine, len_value ) ) > 0 )
+          len_value = strocpy( s_szLine, stcmd2->value );
+          while( ( ipos = hb_strAt( "\1", 1, s_szLine, len_value ) ) > 0 )
             {
-              pp_Stuff( "\\1", sLine + ipos - 1, 2, 1, len_value );
+              pp_Stuff( "\\1", s_szLine + ipos - 1, 2, 1, len_value );
               len_value++;
             }
           if( len_mpatt + len_value > 80 )
             fprintf( handl_o, "\n       " );
-          fprintf( handl_o, "\"%s\"", sLine );
+          fprintf( handl_o, "\"%s\"", s_szLine );
         }
       else fprintf( handl_o, "NULL" );
       if( num == 1 )
@@ -371,13 +364,13 @@ static void OutTable( DEFINES * endDefine, COMMANDS * endCommand )
       stcmd2 = stcmd2->last;
       num++;
     }
-  fprintf( handl_o, "\n   COMMANDS * topCommand = " );
+  fprintf( handl_o, "\n   COMMANDS * hb_pp_topCommand = " );
   if( num == 1 )
     fprintf( handl_o, "NULL;" );
   else
     fprintf( handl_o, " = &sC___%i;\n", num - 1 );
 
-  stcmd1 = topTranslate;
+  stcmd1 = hb_pp_topTranslate;
   stcmd2 = NULL;
   while( stcmd1 != NULL )
     {
@@ -393,27 +386,27 @@ static void OutTable( DEFINES * endDefine, COMMANDS * endCommand )
       fprintf( handl_o, "{%d,\"%s\",", stcmd2->com_or_xcom, stcmd2->name );
       if( stcmd2->mpatt != NULL )
         {
-          len_mpatt = strocpy( sLine, stcmd2->mpatt );
-          while( ( ipos = pp_strAt( "\1", 1, sLine, len_mpatt ) ) > 0 )
+          len_mpatt = strocpy( s_szLine, stcmd2->mpatt );
+          while( ( ipos = hb_strAt( "\1", 1, s_szLine, len_mpatt ) ) > 0 )
             {
-              pp_Stuff( "\\1", sLine + ipos - 1, 2, 1, len_mpatt );
+              pp_Stuff( "\\1", s_szLine + ipos - 1, 2, 1, len_mpatt );
               len_mpatt++;
             }
-          fprintf( handl_o, "\"%s\",", sLine );
+          fprintf( handl_o, "\"%s\",", s_szLine );
         }
       else
         fprintf( handl_o, "NULL," );
       if( stcmd2->value != NULL )
         {
-          len_value = strocpy( sLine, stcmd2->value );
-          while( ( ipos = pp_strAt( "\1", 1, sLine, len_value ) ) > 0 )
+          len_value = strocpy( s_szLine, stcmd2->value );
+          while( ( ipos = hb_strAt( "\1", 1, s_szLine, len_value ) ) > 0 )
             {
-              pp_Stuff( "\\1", sLine + ipos - 1, 2, 1, len_value );
+              pp_Stuff( "\\1", s_szLine + ipos - 1, 2, 1, len_value );
               len_value++;
             }
           if( len_mpatt + len_value > 80 )
             fprintf( handl_o, "\n       " );
-          fprintf( handl_o, "\"%s\"", sLine );
+          fprintf( handl_o, "\"%s\"", s_szLine );
         }
       else fprintf( handl_o, "NULL" );
       if( num == 1 )
@@ -423,7 +416,7 @@ static void OutTable( DEFINES * endDefine, COMMANDS * endCommand )
       stcmd2 = stcmd2->last;
       num++;
     }
-  fprintf( handl_o, "\n   COMMANDS * topTranslate = " );
+  fprintf( handl_o, "\n   COMMANDS * hb_pp_topTranslate = " );
   if( num == 1 )
     fprintf( handl_o, "NULL;" );
   else
@@ -460,7 +453,7 @@ void hb_compGenError( char * _szErrors[], char cPrefix, int iError, char * szErr
 {
   HB_TRACE(HB_TR_DEBUG, ("hb_compGenError(%p, %c, %d, %s, %s)", _szErrors, cPrefix, iError, szError1, szError2));
 
-  printf( "\r(%i) ", nline );
+  printf( "\r(%i) ", s_nline );
   printf( "Error %c%04i  ", cPrefix, iError );
   printf( _szErrors[ iError - 1 ], szError1, szError2 );
   printf( "\n\n" );
@@ -472,13 +465,13 @@ void hb_compGenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * 
 {
   HB_TRACE(HB_TR_DEBUG, ("hb_compGenWarning(%p, %c, %d, %s, %s)", _szWarnings, cPrefix, iWarning, szWarning1, szWarning2));
 
-  if( _iWarnings )
+  if( s_iWarnings )
     {
       char *szText = _szWarnings[ iWarning - 1 ];
 
-      if( (szText[ 0 ] - '0') <= _iWarnings )
+      if( (szText[ 0 ] - '0') <= s_iWarnings )
         {
-          printf( "\r(%i) ", nline );
+          printf( "\r(%i) ", s_nline );
           printf( "Warning %c%04i  ", cPrefix, iWarning );
           printf( szText + 1, szWarning1, szWarning2 );
           printf( "\n" );
@@ -493,7 +486,7 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
   HB_TRACE(HB_TR_DEBUG, ("hb_xgrab(%lu)", ulSize));
 
   if( ! pMem )
-    hb_compGenError( _szPErrors, 'P', ERR_PPMEMALLOC, NULL, NULL );
+    hb_compGenError( hb_pp_szErrors, 'P', ERR_PPMEMALLOC, NULL, NULL );
 
   return pMem;
 }
@@ -505,7 +498,7 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
   HB_TRACE(HB_TR_DEBUG, ("hb_xrealloc(%p, %lu)", pMem, ulSize));
 
   if( ! pResult )
-    hb_compGenError( _szPErrors, 'P', ERR_PPMEMREALLOC, NULL, NULL );
+    hb_compGenError( hb_pp_szErrors, 'P', ERR_PPMEMREALLOC, NULL, NULL );
 
   return pResult;
 }
@@ -517,5 +510,5 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
   if( pMem )
     free( pMem );
   else
-    hb_compGenError( _szPErrors, 'P', ERR_PPMEMFREE, NULL, NULL );
+    hb_compGenError( hb_pp_szErrors, 'P', ERR_PPMEMFREE, NULL, NULL );
 }

@@ -53,7 +53,7 @@
 PATHNAMES * hb_comp_pIncludePath = NULL;
 PHB_FNAME hb_comp_pFileName = NULL;
 
-jmp_buf s_env;
+static jmp_buf s_env;
 
 /* TODO: Extend the function to allow directives
          and external include files              */

@@ -1,3 +1,18 @@
+19991121-23:23 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/pp/*
+    include/hbpp.h
+    ! static variables and functions marked static (continued).
+    ! public pp variables prefixed with "hb_pp_".
+    % pp_strAt() removed and calls replaced with common hb_strAt() function.
+    * Cleaned up standard header file usage. (Please report any errors caused
+      by this.)
+    * static variables prefixed with "s_".
+  * source/compiler/harbour.c
+    source/compiler/harbour.y
+    include/compiler.h
+    source/pp/hbppint.c
+    * Two PPO related variable declarations moved to the compiler.
+
 19991121-22:38 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/pp/*
     source/compiler/harbour.c

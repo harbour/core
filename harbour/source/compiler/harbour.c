@@ -70,11 +70,6 @@ extern void GenPortObj( PHB_FNAME );    /* generates the portable objects */
 extern void GenObj32( PHB_FNAME );      /* generates OBJ 32 bits */
 #endif
 
-  /* Following two lines added for preprocessor */
-extern BOOL _bPPO;       /* flag indicating, is ppo output needed */
-extern FILE *yyppo;     /* output .ppo file */
-
-
 static void PrintUsage( char * );
 static void PrintCredits( void );
 static BOOL SwitchCmp( char * szString, char * szSwitch );
@@ -103,10 +98,11 @@ FILES hb_comp_files;
 FUNCTIONS hb_comp_functions, hb_comp_funcalls;
 SYMBOLS hb_comp_symbols;
 
-
 int hb_comp_iLine = 1;     /* currently processed line number */
 PFUNCTION hb_comp_pInitFunc;
 PHB_FNAME hb_comp_pFileName = NULL;
+BOOL hb_comp_bPPO = FALSE;                      /* flag indicating, is ppo output needed */
+FILE * hb_comp_yyppo = NULL;                    /* output .ppo file */
 BOOL hb_comp_bStartProc = TRUE;                 /* holds if we need to create the starting procedure */
 BOOL hb_comp_bLineNumbers = TRUE;               /* holds if we need pcodes with line numbers */
 BOOL hb_comp_bQuiet = FALSE;                    /* quiet mode */
@@ -508,7 +504,7 @@ int main( int argc, char * argv[] )
                /* Added for preprocessor needs */
                case 'p':
                case 'P':
-                  _bPPO = TRUE;
+                  hb_comp_bPPO = TRUE;
                   break;
 
                case 'q':
@@ -610,12 +606,12 @@ int main( int argc, char * argv[] )
          if( !hb_comp_pFileName->szExtension )
             hb_comp_pFileName->szExtension = ".prg";
          hb_fsFNameMerge( szFileName, hb_comp_pFileName );
-         if( _bPPO )
+         if( hb_comp_bPPO )
          {
             hb_comp_pFileName->szExtension = ".ppo";
             hb_fsFNameMerge( szPpoName, hb_comp_pFileName );
-            yyppo = fopen( szPpoName, "w" );
-            if( ! yyppo )
+            hb_comp_yyppo = fopen( szPpoName, "w" );
+            if( ! hb_comp_yyppo )
             {
                hb_compGenError( hb_comp_szCErrors, 'F', ERR_CREATE_PPO, szPpoName, NULL );
                return iStatus;
@@ -740,8 +736,8 @@ int main( int argc, char * argv[] )
             }
          }
 
-         if( _bPPO )
-            fclose( yyppo );
+         if( hb_comp_bPPO )
+            fclose( hb_comp_yyppo );
       }
       else
       {
