@@ -109,12 +109,8 @@ int PreProcess( FILE* handl_i, FILE* handl_o, char *sOut )
      SKIPTABSPACES( ptr );
      if ( *ptr == '#' )
      {
-      if ( (rezParse=ParseDirective( ptr+1 )) > 0 )
-      {
-       if ( !lInclude )
-         printf ( "\nError number %u in line %u\n", rezParse, nline );
-      }
-      else if ( rezParse == 0 ) *sLine = '\0';
+      if ( (rezParse=ParseDirective( ptr+1 )) == 0 )
+        *sLine = '\0';
      }
      else
      {

@@ -82,6 +82,7 @@
 #define ERR_COMMAND_DEFINITION     6
 #define ERR_PATTERN_DEFINITION     7
 #define ERR_RECURSE                8
+#define ERR_WRONG_DIRECTIVE        9
 
 void GenError( char* _szErrors[], char, int, char*, char * );      /* generic parsing error management function */
 void GenWarning( int, char*, char * );      /* generic parsing warning management function */

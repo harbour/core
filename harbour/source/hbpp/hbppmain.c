@@ -41,6 +41,8 @@ extern int ParseDirective( char* );
 extern int ParseExpression( char*, char* );
 extern int RdStr(FILE*,char *,int,int,char*,int*,int*);
 extern int WrStr(FILE*,char *);
+extern DEFINES* AddDefine ( char*, char* );
+extern int strolen ( char* );
 extern char* strodup ( char * );
 
 #define SKIPTABSPACES(sptr) while ( *sptr == ' ' || *sptr == '\t' ) (sptr)++
@@ -190,13 +192,8 @@ int Hp_Parse( FILE* handl_i, FILE* handl_o )
    SKIPTABSPACES( ptr );
    if ( *ptr == '#' )
    {
-    if ( (rezParse=ParseDirective( ptr+1 )) > 0 )
-    {
-     if ( !lInclude )
-       printf ( "\nError number %u in line %u\n", rezParse, nline );
-     return rezParse;
-    }
-    else if ( rezParse == 0 ) *sLine = '\0';
+    if ( (rezParse=ParseDirective( ptr+1 )) == 0 )
+      *sLine = '\0';
    }
    else
    {

@@ -79,6 +79,7 @@ int stroncpy (char*, char*, int);
 int strincpy (char*, char*);
 int strincmp (char*, char**);
 int strolen ( char* );
+void stroupper ( char* );
 int strotrim ( char* );
 char* strodup ( char * );
 int NextWord ( char**, char*, int);
@@ -140,7 +141,8 @@ char * _szPErrors[] = { "Can\'t open include file \"%s\"",
                        "#define without parameters",
                        "Absent \"=>\" in command definition",
                        "Error in pattern definition",
-                       "Cycled #define"
+                       "Cycled #define",
+                       "Wrong directive \"%s\""
                      };
 
 int ParseDirective( char* sLine )
@@ -215,11 +217,11 @@ int ParseDirective( char* sLine )
   else if ( i == 5 && memcmp ( sDirective, "error", 5 ) == 0 )
   {                        /* --- #error  --- */
    printf ( "\n#error: %s\n", sLine );
-   return 2000;
+   exit(1);
   }
   else if ( i == 4 && memcmp ( sDirective, "line", 4 ) == 0 )
     return -1;
-  else return 1;
+  else GenError( _szPErrors, 'P', ERR_WRONG_DIRECTIVE, sDirective, NULL );
  }
  return 0;
 }
@@ -374,9 +376,10 @@ int TraSearch(char *cmdname, int ncmd)
  {
   for ( j=0; *(aTranslates[i].name+j)==toupper(*(cmdname+j)) &&
              *(aTranslates[i].name+j)!='\0' &&
-             ((aTranslates[i].com_or_xcom)? 1:(j<4)); j++ );
+             ((aTranslates[i].com_or_xcom)? 1:(j<4 || isname(*(cmdname+j+1)))); j++ );
   if ( *(aTranslates[i].name+j)==toupper(*(cmdname+j)) ||
-       ( !aTranslates[i].com_or_xcom && j == 4 && *(aTranslates[i].name+j)!='\0') )
+       ( !aTranslates[i].com_or_xcom && j >= 4 &&
+          *(aTranslates[i].name+j)!='\0' && *(cmdname+j) == '\0' ) )
   break;
  }
  return i;
@@ -389,8 +392,10 @@ int ParseCommand( char* sLine, int com_or_xcom, int com_or_tra )
  int mlen,rlen;
  int ipos, rez;
 
- NextWord( &sLine, cmdname, FALSE );
+// NextWord( &sLine, cmdname, FALSE );
+ NextName( &sLine, cmdname, NULL );
  SKIPTABSPACES(sLine);
+ stroupper( cmdname );
 
  if ( (ipos = hb_strAt( "=>", 2, sLine, strolen(sLine) )) > 0 )
    stroncpy( mpatt, sLine, ipos-1 );
@@ -570,32 +575,41 @@ int ParseExpression( char* sLine, char* sOutLine )
      ipos = md_strAt( ";", 1, ptri );
      if ( ipos > 0 ) *(ptri+ipos-1) = '\0';
      SKIPTABSPACES( ptri );
-     if ( isname(*ptri) )
-        NextName( &ptri, sToken, NULL);
-     else
-        { *sToken = *ptri++; *(sToken+1) = '\0'; }
-     SKIPTABSPACES( ptri );
-
-     if ( *ptri != ':' && *ptri != '=' && (isname(*ptri) || *(ptri+1) != '=')
-       && (ndef=ComSearch(sToken,0)) >= 0 )
+     if ( *ptri == '#' )
      {
-       ptro = sOutLine;
-       i = WorkCommand( sToken, ptri, ptro, ndef );
-       if ( ipos > 0 ) *(sLine+isdvig+ipos-1) = ';';
-       if ( i >= 0 )
-       {
-        if ( isdvig + ipos > 0 )
-        {
-          lens = strolen( sLine+isdvig );
-          Stuff ( ptro, sLine+isdvig, i, (ipos)? ipos-1:lens, lens );
-          ipos = i + 1;
-        }
-        else
-          memcpy ( sLine, sOutLine, i+1);
-       }
-       rezCom = 1;
+       ParseDirective( ptri+1 );
+       lens = strolen( sLine+isdvig );
+       Stuff ( "", sLine+isdvig, 0, (ipos)? ipos-1:lens, lens );
      }
-     else if ( ipos > 0 ) *(sLine+isdvig+ipos-1) = ';';
+     else
+     {
+       if ( isname(*ptri) )
+          NextName( &ptri, sToken, NULL);
+       else
+          { *sToken = *ptri++; *(sToken+1) = '\0'; }
+       SKIPTABSPACES( ptri );
+
+       if ( *ptri != ':' && *ptri != '=' && (isname(*ptri) || *(ptri+1) != '=')
+         && (ndef=ComSearch(sToken,0)) >= 0 )
+       {
+         ptro = sOutLine;
+         i = WorkCommand( sToken, ptri, ptro, ndef );
+         if ( ipos > 0 ) *(sLine+isdvig+ipos-1) = ';';
+         if ( i >= 0 )
+         {
+          if ( isdvig + ipos > 0 )
+          {
+            lens = strolen( sLine+isdvig );
+            Stuff ( ptro, sLine+isdvig, i, (ipos)? ipos-1:lens, lens );
+            ipos = i + 1;
+          }
+          else
+            memcpy ( sLine, sOutLine, i+1);
+         }
+         rezCom = 1;
+       }
+       else if ( ipos > 0 ) *(sLine+isdvig+ipos-1) = ';';
+     }
      isdvig += ipos;
    }
    while ( ipos != 0 );
@@ -744,6 +758,7 @@ int WorkTranslate ( char* sToken, char** ptri, char* ptro, int ndef )
  *(ptro+lenres) = '\0';
  if ( rez >= 0 )
  {
+  while ( rez > 0 && (*(*ptri+rez-1)==' ' || *(*ptri+rez-1)=='\t') ) rez--;
   Stuff( ptro, ptr, lenres, rez + lenToken, strolen(ptr) );
   return lenres;
  }
@@ -931,7 +946,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, int nbr )
        if ( **ptri == '&' )
        {
          rezrestr = 1;
-         (*ptri)++;
+         /*  (*ptri)++; */
          lenreal = getExpReal ( expreal, ptri, FALSE, maxlenreal );
          SearnRep( exppatt,expreal,lenreal,ptro,lenres);
          break;
@@ -1161,8 +1176,7 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
            lennew = ptr2-ptr-1;
 
            memcpy ( expnew, ptr+1, lennew );
-           if ( *expnew != ' ' && *(expnew + lennew-1) != ' ' )
-             *(expnew + lennew++) = ' ';
+           *(expnew + lennew++) = ' ';
            *(expnew + lennew) = '\0';
            while ( (i = hb_strAt( exppatt, 2, expnew, lennew )) > 0 )
              lennew += ReplacePattern ( exppatt[2], expreal, lenreal, expnew+i-1, lennew );
@@ -1230,8 +1244,10 @@ int ReplacePattern ( char patttype, char *expreal, int lenreal, char *ptro, int 
          if ( patttype == '1' )          /* list match marker */
          {
          }
-         else if ( !lenreal || *expreal == '(' )
-           Stuff ( expreal, ptro, lenreal, 4, lenres );
+         else if ( !lenreal || *expreal == '(' || *expreal == '&' ||
+                                  *expreal == '\"' || *expreal == '\'' )
+           Stuff ( (*expreal=='&')? expreal+1:expreal, ptro,
+                   (*expreal=='&')? lenreal-1:lenreal, 4, lenres );
          else
          {
           Stuff ( "\"\"", ptro, 2, 4, lenres );
@@ -1487,6 +1503,15 @@ int strolen ( char *stroka )
  int lens = 0;
   while ( *(stroka+lens) != '\0' ) lens++;
   return lens;
+}
+
+void stroupper ( char *stroka )
+{
+  while ( *stroka != '\0' )
+  {
+    *stroka = toupper(*stroka);
+    stroka++;
+  }
 }
 
 int strotrim ( char *stroka )
