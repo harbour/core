@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-06 17:18 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * harbour/source/debug/debugger.prg
+     * Chr( 13 ) + Chr( 10 ) changed into HB_OsNewLine()
+
 2002-07-05 16:09 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/rtl/philes.c
      * fixed bug on previous change on FRead()
