@@ -1,3 +1,14 @@
+19991104-14:30 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * source/pp/stdalone/hbpp.c
+     ! Added third parameter (char *) to Hp_Parse() so that the
+       Microsoft VC++ and IBM Visual Age C++ versions won't try
+       to link in the hbppint module from the pp library.
+
+   * source/rtl/mouse/mouseos2.c
+     ! Changed the type of the static mouse handle variable from
+       int to HMOU (for IBM Visual Age C++, but also works with GCC).
+
 Thu Nov 04 14:32:06 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* source/common/hbtrace.c: 

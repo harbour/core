@@ -62,7 +62,7 @@
 extern int pp_strAt( char *, int, char *, int );
 extern void pp_Stuff( char *, char *, int, int, int );
 
-int Hp_Parse( FILE *, FILE * );
+int Hp_Parse( FILE *, FILE *, char * );
 void OutTable( DEFINES *, COMMANDS * );
 void AddSearchPath( char *, PATHNAMES * * ); /* add pathname to a search list */
 
@@ -206,7 +206,7 @@ int main( int argc, char * argv[] )
 
   aCondCompile = ( int * ) hb_xgrab( sizeof( int ) * 5 );
 
-  Hp_Parse( handl_i, handl_o );
+  Hp_Parse( handl_i, handl_o, NULL );
   fclose( handl_i );
   fclose( handl_o );
 
@@ -220,7 +220,7 @@ int main( int argc, char * argv[] )
   return 0;
 }
 
-int Hp_Parse( FILE * handl_i, FILE * handl_o )
+int Hp_Parse( FILE * handl_i, FILE * handl_o, char * szSource )
 {
   char sBuffer[ BUFF_SIZE ];           /* File read buffer */
   char * ptr;

@@ -51,7 +51,7 @@
 #include <os2.h>
 #include "mouseapi.h"
 
-static unsigned s_uMouHandle;                   /* mouse logical handle */
+static HMOU s_uMouHandle;                   /* mouse logical handle */
 
 void hb_mouse_Init()
 {
