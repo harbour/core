@@ -16,7 +16,8 @@
      + Korean language module updated. Thanks to Kwon Oh-Chul.
 
    - tests/test.frm
-     - Removed since it was corrupted.
+   + tests/test.frm
+     - Readded in binary mode since it was corrupted.
 
 2000-07-22 23:30 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.slx
