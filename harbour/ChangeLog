@@ -1,4 +1,4 @@
-2001-07-65 11:40 GMT +1 Ignacio Ortiz <ignacio@ozs.com>
+2001-07-06 11:40 GMT +1 Ignacio Ortiz <ignacio@ozs.com>
    * source/rtl/mlcount.c
       * fix for tab character expansion buglet
 
