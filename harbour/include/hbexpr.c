@@ -2348,7 +2348,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
              */
             if( pSelf->value.asMacro.SubType == HB_ET_MACRO_FUNCALL )
                hb_compGenPCode1( HB_P_MACROSYMBOL );
-            else
+            else if( pSelf->value.asMacro.SubType != HB_ET_MACRO_ALIASED )
                hb_compGenPCode1( HB_P_MACROPUSH );
             /* NOTE: pcode for alias context is generated in
              * hb_compExprUseAliasVar()
@@ -2386,7 +2386,8 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
             /* compile & run - macro compiler will generate pcode to pop a value
              * from the eval stack
              */
-            hb_compGenPCode1( HB_P_MACROPOP );
+	    if( pSelf->value.asMacro.SubType != HB_ET_MACRO_ALIASED )
+              hb_compGenPCode1( HB_P_MACROPOP );
          }
          break;
 

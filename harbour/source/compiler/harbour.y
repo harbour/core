@@ -467,6 +467,7 @@ FieldVarAlias  : FieldAlias VarAlias            { hb_compExprDelete( $1 ); $$ = 
 
 AliasId     : IDENTIFIER      { $$ = hb_compExprNewVar( $1 ); }
             | MacroVar        { $$ = $1; }
+	    | MacroExpr       { $$ = $1; }
             ;
 
 AliasVar   : NumAlias AliasId          { $$ = hb_compExprNewAliasVar( $1, $2 ); }

@@ -1,3 +1,11 @@
+19991223-16:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbexpr.c
+    *source/compiler/expropt.c
+    *source/compiler/harbour.y
+	* fixed compiler parse error on aliased macro expressions
+	M->&( expression )
+
 19991222-18:20 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbexpr.c
