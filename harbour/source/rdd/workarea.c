@@ -852,6 +852,7 @@ ERRCODE hb_waClearLocate( AREAP pArea )
    /* Free all items */
    if( pArea->dbsi.itmCobFor )
    {
+      hb_gcUnlockItem( pArea->dbsi.itmCobFor );
       hb_itemRelease( pArea->dbsi.itmCobFor );
       pArea->dbsi.itmCobFor = NULL;
    }
@@ -862,6 +863,7 @@ ERRCODE hb_waClearLocate( AREAP pArea )
    }
    if( pArea->dbsi.itmCobWhile )
    {
+      hb_gcUnlockItem( pArea->dbsi.itmCobWhile );
       hb_itemRelease( pArea->dbsi.itmCobWhile );
       pArea->dbsi.itmCobWhile = NULL;
    }
@@ -935,13 +937,19 @@ ERRCODE hb_waSetLocate( AREAP pArea, LPDBSCOPEINFO pScopeInfo )
    SELF_CLEARLOCATE( pArea );
 
    if( pScopeInfo->itmCobFor )
+   {
       pArea->dbsi.itmCobFor = hb_itemNew( pScopeInfo->itmCobFor );
+      hb_gcLockItem( pArea->dbsi.itmCobFor );
+   }
 
    if( pScopeInfo->lpstrFor )
       pArea->dbsi.lpstrFor = hb_itemNew( pScopeInfo->lpstrFor );
 
    if( pScopeInfo->itmCobWhile )
+   {
       pArea->dbsi.itmCobWhile = hb_itemNew( pScopeInfo->itmCobWhile );
+      hb_gcLockItem( pArea->dbsi.itmCobWhile );
+   }
 
    if( pScopeInfo->lpstrWhile )
       pArea->dbsi.lpstrWhile = hb_itemNew( pScopeInfo->lpstrWhile );
@@ -970,7 +978,7 @@ ERRCODE hb_waCompile( AREAP pArea, BYTE * pExpr )
    pMacro = hb_macroCompile( ( char * ) pExpr );
    if( pMacro )
    {
-      hb_itemPutPtr( pArea->valResult, ( void * ) pMacro );
+      pArea->valResult = hb_itemPutPtr( pArea->valResult, ( void * ) pMacro );
       return SUCCESS;
    }
    else

@@ -353,8 +353,12 @@ char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
                   ulResStrLen += ( ulValLen - ulNameLen );
                   if( ulResStrLen > ulResBufLen )
                   {
+                     ULONG ulHead = pHead - szResult;
+                     ULONG ulTail = pTail - szResult;
                      ulResBufLen = ulResStrLen;
                      szResult = ( char * ) hb_xrealloc( szResult, ulResBufLen + 1 );
+                     pHead = szResult + ulHead;
+                     pTail = szResult + ulTail;
                   }
                }
                else

@@ -107,14 +107,13 @@ void hb_memvarsRelease( void )
 
    if( s_globalTable )
    {
-      while( ulCnt )
+      while( --ulCnt )
       {
          if( s_globalTable[ ulCnt ].counter && s_globalTable[ ulCnt ].hPrevMemvar != ( HB_HANDLE )-1 )
          {
             hb_itemClear( &s_globalTable[ ulCnt ].item );
             s_globalTable[ ulCnt ].counter = 0;
          }
-         --ulCnt;
       }
    }
 }
@@ -271,12 +270,15 @@ void hb_memvarSetPrivatesBase( ULONG ulBase )
    {
       --s_privateStackCnt;
       hVar = s_privateStack[ s_privateStackCnt ]->hMemvar;
-      hOldValue = s_globalTable[ hVar ].hPrevMemvar;
-      hb_memvarValueDecRef( hVar );
-      /*
-      * Restore previous value for variables that were overridden
-      */
-      s_privateStack[ s_privateStackCnt ]->hMemvar = hOldValue;
+      if( hVar )
+      {
+          hOldValue = s_globalTable[ hVar ].hPrevMemvar;
+          hb_memvarValueDecRef( hVar );
+          /*
+          * Restore previous value for variables that were overridden
+          */
+          s_privateStack[ s_privateStackCnt ]->hMemvar = hOldValue;
+      }
    }
    s_privateStackBase = ulBase;
 }
@@ -1506,7 +1508,7 @@ void hb_memvarsIsMemvarRef( void )
    {
       ULONG ulCnt = s_globalLastFree;
 
-      while( ulCnt )
+      while( --ulCnt )
       {
          /* do not check detached variables - for these variables only
           * references from the eval stack are meaningfull for the GC
@@ -1515,7 +1517,6 @@ void hb_memvarsIsMemvarRef( void )
          {
             hb_gcItemRef( &s_globalTable[ ulCnt ].item );
          }
-         --ulCnt;
       }
    }
 }
