@@ -33,8 +33,8 @@ static char * set_string (PITEM pItem, char * old_str)
    if (IS_STRING (pItem))
    {
       int size = pItem->wLength;
-      if (old_str) string = _xrealloc (old_str, size + 1);
-      else string = _xgrab (size + 1);
+      if (old_str) string = (char*)_xrealloc (old_str, size + 1);
+      else string = (char*)_xgrab (size + 1);
       memcpy (string, pItem->value.szText, size);
       string [size] = 0;
    }
@@ -98,7 +98,7 @@ HARBOUR HB_SETCENTURY (void)
       if (hb_set_century) size += 4;
       else size += 2;
       /* Create the new date format */
-      szNewFormat = _xgrab (size + 1);
+      szNewFormat = (char*)_xgrab (size + 1);
       if (y_start > 0) memcpy (szNewFormat, szDateFormat, y_start);
       szNewFormat [y_start] = 0;
       strcat (szNewFormat, "YY");
@@ -113,8 +113,8 @@ HARBOUR SET (void)
 {
    int args = _pcount();
    PITEM pArg2;
-   
-   HB_set_enum set_specifier = _parni(1);
+
+   HB_set_enum set_specifier = (HB_set_enum)_parni(1);
    if (args > 1) pArg2 = _param (2, IT_ANY);
 
    switch (set_specifier)
@@ -151,7 +151,7 @@ HARBOUR SET (void)
          break;
       case HB_SET_CURSOR     :
          _retni (hb_set.HB_SET_CURSOR);
-         if (args > 1) hb_set.HB_SET_CURSOR = set_number (pArg2, hb_set.HB_SET_CURSOR);
+         if (args > 1) hb_set.HB_SET_CURSOR = (HB_cursor_enum)set_number (pArg2, hb_set.HB_SET_CURSOR);
          break;
       case HB_SET_DATEFORMAT :
          if (hb_set.HB_SET_DATEFORMAT) _retc (hb_set.HB_SET_DATEFORMAT);
@@ -199,7 +199,7 @@ HARBOUR SET (void)
          break;
       case HB_SET_EVENTMASK  :
          _retni (hb_set.HB_SET_EVENTMASK);
-         if (args > 1) hb_set.HB_SET_EVENTMASK = set_number (pArg2, hb_set.HB_SET_EVENTMASK);
+         if (args > 1) hb_set.HB_SET_EVENTMASK = (HB_inkey_enum)set_number (pArg2, hb_set.HB_SET_EVENTMASK);
          break;
       case HB_SET_EXACT      :
          _retl (hb_set.HB_SET_EXACT);
@@ -294,22 +294,22 @@ void InitializeSets (void)
    hb_set.HB_SET_ALTFILE = 0;      /* NULL pointer */
    hb_set.HB_SET_BELL = FALSE;
    hb_set.HB_SET_CANCEL = TRUE;
-   hb_set.HB_SET_COLOR = _xgrab (20);
+   hb_set.HB_SET_COLOR = (char*)_xgrab (20);
    memcpy (hb_set.HB_SET_COLOR, "W/N,N/W,N/N,N/N,N/W", 20);
    hb_set.HB_SET_CONFIRM = FALSE;
    hb_set.HB_SET_CONSOLE = TRUE;
    hb_set.HB_SET_CURSOR = SC_NORMAL;
-   hb_set.HB_SET_DATEFORMAT = _xgrab (9);
+   hb_set.HB_SET_DATEFORMAT = (char*)_xgrab (9);
    memcpy (hb_set.HB_SET_DATEFORMAT, "mm/dd/yy", 9);
    hb_set.HB_SET_DEBUG = FALSE;
    hb_set.HB_SET_DECIMALS = 2;
-   hb_set.HB_SET_DEFAULT = _xgrab (1);
+   hb_set.HB_SET_DEFAULT = (char*)_xgrab (1);
    *hb_set.HB_SET_DEFAULT = 0;
    hb_set.HB_SET_DELETED = FALSE;
-   hb_set.HB_SET_DELIMCHARS = _xgrab (3);
+   hb_set.HB_SET_DELIMCHARS = (char*)_xgrab (3);
    memcpy (hb_set.HB_SET_DELIMCHARS, "::", 3);
    hb_set.HB_SET_DELIMITERS = FALSE;
-   hb_set.HB_SET_DEVICE = _xgrab (7);
+   hb_set.HB_SET_DEVICE = (char*)_xgrab (7);
    memcpy (hb_set.HB_SET_DEVICE, "SCREEN", 7);
    hb_set.HB_SET_EPOCH = 1900;
    hb_set.HB_SET_ESCAPE = 1;
@@ -325,7 +325,7 @@ void InitializeSets (void)
    hb_set.HB_SET_MARGIN = 0;
    hb_set.HB_SET_MCENTER = FALSE;
    hb_set.HB_SET_MESSAGE = 0;
-   hb_set.HB_SET_PATH = _xgrab (1);
+   hb_set.HB_SET_PATH = (char*)_xgrab (1);
    *hb_set.HB_SET_PATH = 0;
    hb_set.HB_SET_PRINTER = FALSE;
    hb_set.HB_SET_PRINTFILE = 0;    /* NULL pointer */

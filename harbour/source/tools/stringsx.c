@@ -84,7 +84,7 @@ HARBOUR ROT13( void )
    {
       char *szText = pText->value.szText;
       long i, lLen = pText->wLength;
-      char *szResult = _xgrab(lLen + 1);
+      char *szResult = (char*)_xgrab(lLen + 1);
 
       for( i = 0; i < lLen; i++ )
       {
