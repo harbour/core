@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-09-02 16:58 UTC+0200 Maurilio Longo <maurilio.longo@libero.it>
+   * harbour/source/rtl/tbrowse.prg
+     ! fixed columns' width calulation on ::SetColumnWidth( oCol ) method
+
 2002-08-30 11:20 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
   * source/rtl/tget.prg
     ! fix for DeleteAll() method when Variable is Date type Reported by Charles Kwon
@@ -68,7 +72,7 @@
   * contrib/odbc/odbc.c
     + Added SQLConnect function
   * contrib/odbc/todbc.prg
-    + Method new() now accepts additional parameters username and password. 
+    + Method new() now accepts additional parameters username and password.
       If TODBC:new() is called with username and password, it uses
       SQLConnect insted of SQLDriverConnect to establish ODBC conenction.
 
@@ -110,24 +114,24 @@
 2002-08-05 09:33 UTC+0100 Dave Pearson <davep@davep.org>
   * source/compiler/genc.c
     * Corrected misspelling of "Alpha".
-	
+
 2002-08-03 22:50 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
   * contrib/odbc/odbc.c
-    contrib/odbc/todbc.prg   
+    contrib/odbc/todbc.prg
      *  Added bof(), reccount(), lastrec() and recno() functionality to
         ODBC library.
   * contrib/odbc/browodbc.prg
-     *  enabled statusline    
+     *  enabled statusline
 
 2002-08-02 12:35 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * doc/howtobsd.txt
-  	* Changed BSD reference in heading to FreeBSD.
-  	* Removed reference to specific FreeBSD version number.
+   * Changed BSD reference in heading to FreeBSD.
+   * Removed reference to specific FreeBSD version number.
 
 2002-08-02 12:05 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/set.c
-  	! When encountering SET ALTERNATE TO, close the file.
-  	! When encountering SET(_SET_EXTRAFILE,NIL), close the file.
+   ! When encountering SET ALTERNATE TO, close the file.
+   ! When encountering SET(_SET_EXTRAFILE,NIL), close the file.
 
 2002-07-25 13:42 UTC+0100 Ignacio Ortiz <ignacio@fivetech.com>
   * source/pp/ppcore.c
@@ -151,8 +155,8 @@
 
 2002-07-19 15:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/gtwin/gtwin.c
-  	! Don't test for dead keys when dealing with international characters
-  	  that have a negative character value.
+   ! Don't test for dead keys when dealing with international characters
+     that have a negative character value.
 
 2002-07-17 12:34 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * include/hbmath.h
@@ -316,9 +320,9 @@
 
 2002-07-11 14:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * config/dos/djgpp.cf
-  	+ Added the -lm option to LDFLAGS to enable math error handling.
+   + Added the -lm option to LDFLAGS to enable math error handling.
   * source/rtl/gtwin/gtwin.c
-  	! Shift Tab is now properly reported as 271.
+   ! Shift Tab is now properly reported as 271.
 
 2002-07-11 02:30 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * source/vm/itemapi.c
@@ -1914,8 +1918,8 @@
       the use of third-party (Apollo) include files.
 
 2002-02-27 01:27 UTC+0100 Maurilio Longo <maurilio.longo@libero.it>
-	* harbour/source/rtl/tbrowse.prg
-	  ! fixed columns' width calc (quick and not very much tested)
+   * harbour/source/rtl/tbrowse.prg
+     ! fixed columns' width calc (quick and not very much tested)
 
 2002-02-26 21:50 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
   * include/hbapi.h
