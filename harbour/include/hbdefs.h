@@ -465,7 +465,7 @@ typedef long HB_PTRDIFF;
 
 #  else /* We cannot detect byte order, we will have to guess */
 
-#     if defined( HB_OS_DARWIN ) || defined( HB_OS_SUNOS )
+#     if defined( HB_OS_DARWIN ) || defined( HB_OS_SUNOS ) || defined( HB_OS_HPUX )
 #        define HB_BIG_ENDIAN
 #     else
 #        define HB_LITTLE_ENDIAN

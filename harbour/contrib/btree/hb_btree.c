@@ -174,15 +174,6 @@ see ChangeLog 2002-07-14 14:14 UTC+0500 April White <awhite@mail.rosecom.ca>
     - implement code to handle big & little endian systems
 */
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
-
-#if !defined( DEBUG ) && !defined( NDEBUG )
-  #define NDEBUG
-#else
-#endif
-
 /* NOTE: we need this to prevent base types redefinition */
 #define _CLIPDEFS_H
 
@@ -194,6 +185,15 @@ extern "C" {
 #include "hbapierr.h"
 
 #include "hb_btree.api"
+
+#if defined(HB_EXTERN_C)
+extern "C" {
+#endif
+
+#if !defined( DEBUG ) && !defined( NDEBUG )
+  #define NDEBUG
+#else
+#endif
 
 #define PrintCRLF() hb_conOutStd( hb_conNewLine(), strlen( hb_conNewLine() ) )
 
@@ -348,15 +348,15 @@ static ULONG BranchGet( struct hb_BTree * pBTree, ULONG ulNode, int iPosition );
 
 /* end of forward declarations */
 
-static void hb_RaiseError( enum hb_BTree_Error_Codes ulSubCode, const BYTE * szDescription, const BYTE * szOperation, int uiArguments )
+static void hb_RaiseError( enum hb_BTree_Error_Codes ulSubCode, const char * szDescription, const char * szOperation, int uiArguments )
 {
-  PHB_ITEM pErr = hb_errRT_New(
+    PHB_ITEM pErr = hb_errRT_New(
     ES_ERROR        /* USHORT uiSeverity */,
     HB_ERR_SS_TOOLS /* char * szSubSystem */,
     EG_ARG          /* ULONG  ulGenCode */,
     ulSubCode       /* ULONG  ulSubCode */,
-    ( BYTE * )szDescription   /* char * szDescription */,
-    ( BYTE * )szOperation     /* char * szOperation */,
+    ( char * )szDescription   /* char * szDescription */,
+    ( char * )szOperation     /* char * szOperation */,
     0               /* USHORT uiOsCode */,
     EF_NONE         /* USHORT uiFlags */ );
 
@@ -390,37 +390,37 @@ static void *BufferRealloc( void *buffer, USHORT size )
 
 static ioBuffer_T * ioOneBufferAlloc( struct hb_BTree * pBTree, ioBuffer_T * prev, ioBuffer_T * next )
 {
-  ioBuffer_T *this;
+  ioBuffer_T * thisptr;
 
-  this = BufferAlloc( sizeof( ioBuffer_T ) + pBTree->usPageSize );
-  hb_xmemset( this, '\0', sizeof( ioBuffer_T ) + pBTree->usPageSize );
+  thisptr = ( ioBuffer_T * ) BufferAlloc( sizeof( ioBuffer_T ) + pBTree->usPageSize );
+  hb_xmemset( thisptr, '\0', sizeof( ioBuffer_T ) + pBTree->usPageSize );
 
-  this->pulPageCount = ( ULONG * )( this->Buffer );
-  this->pulBranch    = ( ULONG * )&this->pulPageCount[ 1 ];
+  thisptr->pulPageCount = ( ULONG * )( thisptr->Buffer );
+  thisptr->pulBranch    = ( ULONG * )&thisptr->pulPageCount[ 1 ];
   if ( GETFLAG( pBTree, IsInMemory ) )
   {
-    this->xData.ppData = ( PHB_ITEM * )&this->pulBranch[ pBTree->usMaxKeys + 1 ];
-    this->szKey        = ( BYTE * )&this->xData.ppData[ pBTree->usMaxKeys ];
+    thisptr->xData.ppData = ( PHB_ITEM * )&thisptr->pulBranch[ pBTree->usMaxKeys + 1 ];
+    thisptr->szKey        = ( BYTE * )&thisptr->xData.ppData[ pBTree->usMaxKeys ];
   }
   else
   {
-    this->xData.plData = ( LONG * )&this->pulBranch[ pBTree->usMaxKeys + 1 ];
-    this->szKey        = ( BYTE * )&this->xData.plData[ pBTree->usMaxKeys ];
+    thisptr->xData.plData = ( LONG * )&thisptr->pulBranch[ pBTree->usMaxKeys + 1 ];
+    thisptr->szKey        = ( BYTE * )&thisptr->xData.plData[ pBTree->usMaxKeys ];
   }
 
-  this->ulPage  = NULLPAGE;
-  this->IsDirty = FALSE;
+  thisptr->ulPage  = NULLPAGE;
+  thisptr->IsDirty = FALSE;
 
-  this->prev = prev;
-  this->next = next;
+  thisptr->prev = prev;
+  thisptr->next = next;
 
-  return this;
+  return thisptr;
 }
 
 /* a link list 'most recently access' page buffering system */
 static void ioBufferAlloc( struct hb_BTree * pBTree, short int usBuffers )
 {
-  ioBuffer_T *this = NULL, *last = NULL;
+  ioBuffer_T *thisptr = NULL, *last = NULL;
 
   if ( usBuffers <= 0 )
     usBuffers = 1;
@@ -432,57 +432,57 @@ static void ioBufferAlloc( struct hb_BTree * pBTree, short int usBuffers )
 
   while ( usBuffers-- > 0 )
   {
-    this = ioOneBufferAlloc( pBTree, NULL, last );
-    if ( last )  last->prev = this;
-    last = this;
+    thisptr = ioOneBufferAlloc( pBTree, NULL, last );
+    if ( last )  last->prev = thisptr;
+    last = thisptr;
   }
 
-  pBTree->ioBuffer = this;
+  pBTree->ioBuffer = thisptr;
 }
 
-static void ioBufferWrite( struct hb_BTree * pBTree, ioBuffer_T *this )
+static void ioBufferWrite( struct hb_BTree * pBTree, ioBuffer_T *thisptr )
 {
-  hb_fsSeek( pBTree->hFile, this->ulPage, SEEK_SET );
-  if ( hb_fsWrite( pBTree->hFile, this->Buffer, pBTree->usPageSize ) != pBTree->usPageSize )
+  hb_fsSeek( pBTree->hFile, thisptr->ulPage, SEEK_SET );
+  if ( hb_fsWrite( pBTree->hFile, thisptr->Buffer, pBTree->usPageSize ) != pBTree->usPageSize )
   {
     hb_RaiseError( HB_BTree_WriteError_EC, "write error", "ioBufferWrite*", 0 );
   }
-  this->IsDirty = FALSE;
+  thisptr->IsDirty = FALSE;
 }
 
 static void ioBufferRead( struct hb_BTree * pBTree, ULONG ulNode )
 {
-  ioBuffer_T *this = pBTree->ioBuffer;
+  ioBuffer_T *thisptr = pBTree->ioBuffer;
 
-  if ( this->IsDirty )
+  if ( thisptr->IsDirty )
   {
-    ioBufferWrite( pBTree, this );
-    this->IsDirty = FALSE;
+    ioBufferWrite( pBTree, thisptr );
+    thisptr->IsDirty = FALSE;
   }
-  this->ulPage = ulNode;
-  hb_fsSeek( pBTree->hFile, this->ulPage, SEEK_SET );
-  hb_fsRead( pBTree->hFile, this->Buffer, pBTree->usPageSize );
+  thisptr->ulPage = ulNode;
+  hb_fsSeek( pBTree->hFile, thisptr->ulPage, SEEK_SET );
+  hb_fsRead( pBTree->hFile, thisptr->Buffer, pBTree->usPageSize );
 }
 
 static void ioBufferRelease( struct hb_BTree * pBTree )
 {
-  ioBuffer_T *next, *this;
-  int n;
+  ioBuffer_T *next, *thisptr;
+  ULONG n;
 
-  for ( this = pBTree->ioBuffer; this; this = next )
+  for ( thisptr = pBTree->ioBuffer; thisptr; thisptr = next )
   {
-    next = this->next;
-    if ( this->IsDirty ) /* cannot be in-memory in this case */
+    next = thisptr->next;
+    if ( thisptr->IsDirty ) /* cannot be in-memory in this case */
     {
-      ioBufferWrite( pBTree, this );
+      ioBufferWrite( pBTree, thisptr );
     }
     else if ( GETFLAG( pBTree, IsInMemory ) )
     {
-      for ( n = 0; n < *this->pulPageCount; n++ )
-/*        { printf( "%p", this->xData.ppData[ n ] ); PrintCRLF(); }*/
-        hb_itemRelease( this->xData.ppData[ n ] );
+      for ( n = 0; n < *thisptr->pulPageCount; n++ )
+/*        { printf( "%p", thisptr->xData.ppData[ n ] ); PrintCRLF(); }*/
+        hb_itemRelease( thisptr->xData.ppData[ n ] );
     }
-    BufferRelease( this );
+    BufferRelease( thisptr );
   }
   pBTree->ioBuffer = NULL;
 }
@@ -490,50 +490,50 @@ static void ioBufferRelease( struct hb_BTree * pBTree )
 #if 0 /* keep just in case, but its functionality is built into ioBufferRelease */
   static void ioBufferFlush( struct hb_BTree * pBTree )
   {
-    ioBuffer_T *this;
+    ioBuffer_T *thisptr;
 
-    for ( this = pBTree->ioBuffer; this; this = this->next )
+    for ( thisptr = pBTree->ioBuffer; thisptr; thisptr = thisptr->next )
     {
-      if ( this->IsDirty )  ioBufferWrite( pBTree, this );
+      if ( thisptr->IsDirty )  ioBufferWrite( pBTree, thisptr );
     }
   }
 #endif
 
 static void ioBufferScan( struct hb_BTree * pBTree, ULONG page )
 {
-  ioBuffer_T *this;
+  ioBuffer_T *thisptr;
   ioBuffer_T *thisnext, *thisprev;
 
   /* locate either the buffer the page is in, the first empty buffer,
      or the last buffer in the list */
-  for ( this = pBTree->ioBuffer;
-        this && !BTREENODEISNULL( pBTree, this->ulPage ) && this->ulPage != page && this->next;
-        this = this->next )
+  for ( thisptr = pBTree->ioBuffer;
+        thisptr && !BTREENODEISNULL( pBTree, thisptr->ulPage ) && thisptr->ulPage != page && thisptr->next;
+        thisptr = thisptr->next )
     ;
 
   /* only shuffle the buffers if the target buffer is not the root buffer */
-  if ( this != pBTree->ioBuffer )
+  if ( thisptr != pBTree->ioBuffer )
   {
     /* minimize writes */
-    if ( this->ulPage != page && this->IsDirty )
-      ioBufferWrite( pBTree, this );
+    if ( thisptr->ulPage != page && thisptr->IsDirty )
+      ioBufferWrite( pBTree, thisptr );
 
-    thisprev = this->prev;
-    thisnext = this->next;
+    thisprev = thisptr->prev;
+    thisnext = thisptr->next;
 
     if ( thisnext )    thisnext->prev = thisprev;
     if ( thisprev )    thisprev->next = thisnext;
 
-    this->prev = NULL;
-    this->next = pBTree->ioBuffer;
-    pBTree->ioBuffer->prev = this;
-    pBTree->ioBuffer = this;
+    thisptr->prev = NULL;
+    thisptr->next = pBTree->ioBuffer;
+    pBTree->ioBuffer->prev = thisptr;
+    pBTree->ioBuffer = thisptr;
   }
-  else if ( this->IsDirty )
-    ioBufferWrite( pBTree, this );
+  else if ( thisptr->IsDirty )
+    ioBufferWrite( pBTree, thisptr );
 
   /* Grow() will call this with a null page, to flush & shuffle buffers */
-  if ( !BTREENODEISNULL( pBTree, page ) && this->ulPage != page && !GETFLAG( pBTree, IsInMemory ) )
+  if ( !BTREENODEISNULL( pBTree, page ) && thisptr->ulPage != page && !GETFLAG( pBTree, IsInMemory ) )
     ioBufferRead( pBTree, page );
 }
 
@@ -734,12 +734,12 @@ static ULONG Grow( struct hb_BTree * pBTree )
 
   if ( GETFLAG( pBTree, IsInMemory ) )
   {
-    ioBuffer_T * this;
+    ioBuffer_T * thisptr;
 
-    this = ioOneBufferAlloc( pBTree, NULL, pBTree->ioBuffer );
-    this->ulPage = ( ULONG )this;
-    if ( pBTree->ioBuffer )  pBTree->ioBuffer->prev = this;
-    pBTree->ioBuffer = this;
+    thisptr = ioOneBufferAlloc( pBTree, NULL, pBTree->ioBuffer );
+    thisptr->ulPage = ( ULONG )thisptr;
+    if ( pBTree->ioBuffer )  pBTree->ioBuffer->prev = thisptr;
+    pBTree->ioBuffer = thisptr;
   }
   else
   {
@@ -772,21 +772,21 @@ static void Prune( struct hb_BTree * pBTree, ULONG ulNode )
 {
   if ( GETFLAG( pBTree, IsInMemory ) )
   {
-    ioBuffer_T * this;
-    int n;
+    ioBuffer_T * thisptr;
+    ULONG n;
 
-    for ( this = pBTree->ioBuffer; this && this->ulPage != ulNode; this = this->next )
+    for ( thisptr = pBTree->ioBuffer; thisptr && thisptr->ulPage != ulNode; thisptr = thisptr->next )
       ;
 
-    if ( this->prev )   this->prev->next = this->next;
-    if ( this->next )   this->next->prev = this->prev;
+    if ( thisptr->prev )   thisptr->prev->next = thisptr->next;
+    if ( thisptr->next )   thisptr->next->prev = thisptr->prev;
 
-    if ( this == pBTree->ioBuffer ) /* root page */
-      pBTree->ioBuffer = this->next;
+    if ( thisptr == pBTree->ioBuffer ) /* root page */
+      pBTree->ioBuffer = thisptr->next;
 
-    for ( n = 0; n < *this->pulPageCount; n++ )
-      hb_itemRelease( this->xData.ppData[ n ] );
-    hb_xfree( this );
+    for ( n = 0; n < *thisptr->pulPageCount; n++ )
+      hb_itemRelease( thisptr->xData.ppData[ n ] );
+    hb_xfree( thisptr );
   }
   else
   {
@@ -825,8 +825,8 @@ static USHORT CountAdj( struct hb_BTree * pBTree, ULONG ulNode, SHORT adjPageCou
 static void NodeCopy( struct hb_BTree * pBTree, ULONG toNode, int toPosition, ULONG fromNode, int fromPosition, hb_KeyData_T *buffer )
 {
   ULONG ulBranch;
-  LONG lData;
-  PHB_ITEM pData;
+  LONG lData = 0;
+  PHB_ITEM pData = NULL;
 
   READPAGE_IF_NEEDED( pBTree, fromNode );
   ulBranch = pBTree->ioBuffer->pulBranch[ fromPosition ];
@@ -904,7 +904,7 @@ static hb_KeyData_T *KeyGet( struct hb_BTree * pBTree, ULONG ulNode, int iPositi
   READPAGE_IF_NEEDED( pBTree, ulNode );
 
   if ( buffer == NULL )
-    buffer = BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
+    buffer = ( hb_KeyData_T * ) BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
 
   hb_xmemcpy( buffer->szKey, pBTree->ioBuffer->szKey + ( iPosition - 1 ) * pBTree->usKeySize, pBTree->usKeySize );
   buffer->szKey[ pBTree->usKeySize ] = '\0';
@@ -945,7 +945,7 @@ static LONG KeyCompare( struct hb_BTree * pBTree, hb_KeyData_T *left, hb_KeyData
 static BOOL SearchNode( struct hb_BTree * pBTree, hb_KeyData_T *target, ULONG ulNode, int *iPosition )
 {
   BOOL results;
-  hb_KeyData_T *buffer = BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
+  hb_KeyData_T *buffer = ( hb_KeyData_T * ) BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
 
   READPAGE_IF_NEEDED( pBTree, ulNode );
 
@@ -1015,7 +1015,7 @@ static ULONG hb_BTreeSearch( struct hb_BTree * pBTree, hb_KeyData_T *target, int
 
 static void PushIn( struct hb_BTree * pBTree, hb_KeyData_T *xkey, ULONG xbranch, ULONG ulNode, int iPosition )
 {
-  hb_KeyData_T *buffer = BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
+  hb_KeyData_T *buffer = ( hb_KeyData_T * ) BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
   int i;
 
   for ( i = CountGet( pBTree, ulNode ); i > iPosition; i-- )
@@ -1033,7 +1033,7 @@ static void Split( struct hb_BTree * pBTree, hb_KeyData_T *xkey, ULONG xbranch, 
 {
   int i;
   int median;
-  hb_KeyData_T *buffer = BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
+  hb_KeyData_T *buffer = ( hb_KeyData_T * ) BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
 
   if ( iPosition <= pBTree->usMinKeys )
     median = pBTree->usMinKeys;
@@ -1114,7 +1114,7 @@ static BOOL PushDown( struct hb_BTree * pBTree, hb_KeyData_T *newkey, ULONG ulNo
 
 BOOL hb_BTreeInsert( struct hb_BTree * pBTree, BYTE * szKey, PHB_ITEM pData )
 {
-  hb_KeyData_T *xkey = BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
+  hb_KeyData_T *xkey = ( hb_KeyData_T * ) BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
   ULONG xbranch;
   ULONG newnode;
 
@@ -1159,7 +1159,7 @@ static void MoveRight( struct hb_BTree * pBTree, ULONG ulNode, int iPosition )
 {
   int c;
   ULONG tmpnode;
-  hb_KeyData_T *buffer = BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
+  hb_KeyData_T *buffer = ( hb_KeyData_T * ) BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
 
   tmpnode = BranchGet( pBTree, ulNode, iPosition );
   for ( c = CountGet( pBTree, tmpnode ); c > 0; c-- )
@@ -1182,7 +1182,7 @@ static void MoveLeft( struct hb_BTree * pBTree, ULONG ulNode, int iPosition )
 {
   int c, c_count;
   ULONG tmpnode;
-  hb_KeyData_T *buffer = BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
+  hb_KeyData_T *buffer = ( hb_KeyData_T * ) BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
 
   tmpnode = BranchGet( pBTree, ulNode, iPosition - 1 );
   c_count = CountAdj( pBTree, tmpnode, +1 );
@@ -1208,7 +1208,7 @@ static void Combine( struct hb_BTree * pBTree, ULONG ulNode, int iPosition )
   ULONG tmpnode;
   ULONG leftnode;
   ULONG leftpagecount;
-  hb_KeyData_T *buffer = BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
+  hb_KeyData_T *buffer = ( hb_KeyData_T * ) BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
 
   tmpnode  = BranchGet( pBTree, ulNode, iPosition );
   leftnode = BranchGet( pBTree, ulNode, iPosition - 1 );
@@ -1275,7 +1275,7 @@ static void Restore( struct hb_BTree * pBTree, ULONG ulNode, int iPosition )
 static void Remove( struct hb_BTree * pBTree, ULONG ulNode, int iPosition )
 {
   int c, c_count;
-  hb_KeyData_T *buffer = BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
+  hb_KeyData_T *buffer = ( hb_KeyData_T * ) BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
 
   c_count = CountGet( pBTree, ulNode );
   for ( c = iPosition + 1; c <= c_count; c++ )
@@ -1333,8 +1333,11 @@ static BOOL RecDelete( struct hb_BTree * pBTree, hb_KeyData_T *target, ULONG ulN
       {
         Successor( pBTree, ulNode, iPosition ); /* move successor to this iPosition */
         KeyGet( pBTree, ulNode, iPosition, target );
-        if ( !( found = RecDelete( pBTree, target, BranchGet( pBTree, ulNode, iPosition ) ) ) )
-          ;/*error( "key not found" );*/ /* key exists, so this shouldn't occur*/
+        found = RecDelete( pBTree, target, BranchGet( pBTree, ulNode, iPosition ) );
+#if 0
+        if ( !found )
+          error( "key not found" ); /* key exists, so this shouldn't occur*/
+#endif
       }
       else
         Remove( pBTree, ulNode, iPosition );
@@ -1428,7 +1431,7 @@ BOOL hb_BTreeDelete( struct hb_BTree * pBTree, BYTE *target, LONG lData )
   SETFLAG( pBTree, IsRecordFound );
   CLEARKEYDATA( pBTree );
 
-  tmpTarget = BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
+  tmpTarget = ( hb_KeyData_T * ) BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
   hb_xmemcpy( tmpTarget->szKey, target, pBTree->usKeySize );
   tmpTarget->xData.lData = lData;
 
@@ -1444,8 +1447,10 @@ BOOL hb_BTreeDelete( struct hb_BTree * pBTree, BYTE *target, LONG lData )
         Prune( pBTree, ulNode );
       }
     }
+#if 0
     else
       ;  /* error - key does not exist */
+#endif
   }
   else
     RESETFLAG( pBTree, IsRecordFound );
@@ -1498,7 +1503,7 @@ LONG hb_BTreeSkip( struct hb_BTree * pBTree, LONG records )
     return 0;
   }
 
-  keydata = BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
+  keydata = ( hb_KeyData_T * ) BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
   hb_xmemcpy( keydata->szKey, pBTree->pThisKeyData->szKey, pBTree->usKeySize );
   keydata->xData.lData = pBTree->pThisKeyData->xData.lData;
 
@@ -1525,7 +1530,7 @@ BOOL hb_BTreeSeek( struct hb_BTree * pBTree, BYTE *szKey, LONG lData, BOOL bSoft
   hb_KeyData_T *tmpTarget;
   BTreeStack *pStack = NULL;
 
-  tmpTarget = BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
+  tmpTarget = ( hb_KeyData_T * ) BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
   hb_xmemcpy( tmpTarget->szKey, szKey, pBTree->usKeySize );
   tmpTarget->xData.lData = lData;
 
@@ -1612,7 +1617,7 @@ struct hb_BTree * hb_BTreeNew( BYTE * FileName, USHORT usPageSize, USHORT usKeyS
       }
     }
 
-    pBTree->szFileName = hb_strdup( FileName );
+    pBTree->szFileName = hb_strdup( ( char * ) FileName );
   }
 
   pBTree->ulFreePage = NULLPAGE;
@@ -1625,7 +1630,7 @@ struct hb_BTree * hb_BTreeNew( BYTE * FileName, USHORT usPageSize, USHORT usKeyS
   pBTree->ulKeyCount = 0;
   pBTree->pStack     = NULL;
 /* TODO: use stack optimization if flags warrant: if ( flag... ) StackNew( &pBTree->pStack ); */
-  pBTree->pThisKeyData = BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
+  pBTree->pThisKeyData = ( hb_KeyData_T * )BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
   CLEARKEYDATA( pBTree );
   ioBufferAlloc( pBTree, usBuffers );
 
@@ -1644,7 +1649,7 @@ struct hb_BTree * hb_BTreeNew( BYTE * FileName, USHORT usPageSize, USHORT usKeyS
      so the padding amount is the header size minus current position */
     HeaderWrite( pBTree );
     size = HB_BTREE_HEADERSIZE - hb_fsTell( pBTree->hFile );
-    buffer = BufferAlloc( size );
+    buffer = ( BYTE * ) BufferAlloc( size );
     hb_xmemset( buffer, '\0', size );
 
     if ( size != hb_fsWrite( pBTree->hFile, buffer, size ) )
@@ -1673,7 +1678,7 @@ struct hb_BTree *hb_BTreeOpen( BYTE *FileName, ULONG ulFlags, USHORT usBuffers )
 
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
 
-  pBTree->szFileName = hb_strdup( FileName );
+  pBTree->szFileName = hb_strdup( ( char * ) FileName );
   pBTree->hFile      = hb_fsOpen( pBTree->szFileName, FO_READWRITE );
   if ( pBTree->hFile == -1 )
   {
@@ -1705,10 +1710,11 @@ struct hb_BTree *hb_BTreeOpen( BYTE *FileName, ULONG ulFlags, USHORT usBuffers )
 
   pBTree->usMaxKeys  = iMaximumKeys;
   pBTree->usMinKeys  = ( iMaximumKeys + 1 ) / 2 - iMaximumKeys % 2;
-  pBTree->pThisKeyData = BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
+  pBTree->pThisKeyData = ( hb_KeyData_T * ) BufferAlloc( sizeof( hb_KeyData_T ) + pBTree->usKeySize + 1 );
   CLEARKEYDATA( pBTree );
   pBTree->pStack     = NULL;
 /* TODO: use stack optimization if flags warrant: if ( flag... ) StackNew( &pBTree->pStack ); */
+  HB_SYMBOL_UNUSED( ulFlags );
   ioBufferAlloc( pBTree, usBuffers );
 
   pBTree->ulFlags &= ~HB_BTREE_INMEMORY; /* clear this flag */
@@ -1750,9 +1756,9 @@ LONG hb_BTreeData( struct hb_BTree * pBTree )
   return pBTree->pThisKeyData->xData.lData;
 }
 
-const PHB_ITEM hb_BTreeDataItem( struct hb_BTree * pBTree )
+PHB_ITEM hb_BTreeDataItem( struct hb_BTree * pBTree )
 {
-  return ( const PHB_ITEM )pBTree->pThisKeyData->xData.pData;
+  return ( PHB_ITEM ) pBTree->pThisKeyData->xData.pData;
 }
 
 static int BTree_SetTreeIndex( struct hb_BTree * pBTree )
@@ -1769,7 +1775,7 @@ static int BTree_SetTreeIndex( struct hb_BTree * pBTree )
 
   if ( n == s_BTree_List_Count )
   {
-    s_BTree_List = BufferRealloc( s_BTree_List, ++s_BTree_List_Count * sizeof( s_BTree_List[ 0 ] ) );
+    s_BTree_List = (struct hb_BTree **) BufferRealloc( s_BTree_List, ++s_BTree_List_Count * sizeof( s_BTree_List[ 0 ] ) );
   }
 
   s_BTree_List[ n ] = pBTree;
@@ -1777,7 +1783,7 @@ static int BTree_SetTreeIndex( struct hb_BTree * pBTree )
   return n + 1;
 }
 
-static struct hb_BTree *BTree_GetTreeIndex( const BYTE * GetSource )
+static struct hb_BTree *BTree_GetTreeIndex( const char * GetSource )
 {
   int index;
 
@@ -1797,7 +1803,7 @@ HB_FUNC( HB_BTREEOPEN  )  /* hb_BTreeOpen( CHAR cFileName, ULONG ulFlags [ , int
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   if ( ISCHAR( 1 ) )
-    _retni( BTree_SetTreeIndex( hb_BTreeOpen( _parc( 1 ), _parnl( 2 ), _parni( 3 ) ) ) );
+    _retni( BTree_SetTreeIndex( hb_BTreeOpen( ( BYTE * ) _parc( 1 ), _parnl( 2 ), _parni( 3 ) ) ) );
   else
   {
     hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", "hb_btreeopen", hb_pcount() );
@@ -1811,7 +1817,7 @@ HB_FUNC( HB_BTREENEW )  /* hb_BTreeNew( CHAR cFileName, int nPageSize, int nKeyS
   if ( ( ( _parnl( 4 ) & HB_BTREE_INMEMORY ) == HB_BTREE_INMEMORY || ISCHAR( 1 ) ) &&
        ISNUM( 2 ) && ISNUM( 3 ) )
   {
-    _retni( BTree_SetTreeIndex( hb_BTreeNew( _parc( 1 ), _parni( 2 ), _parni( 3 ), _parnl( 4 ), _parni( 5 ) ) ) );
+    _retni( BTree_SetTreeIndex( hb_BTreeNew( ( BYTE * ) _parc( 1 ), _parni( 2 ), _parni( 3 ), _parnl( 4 ), _parni( 5 ) ) ) );
   }
   else
   {
@@ -1834,7 +1840,7 @@ HB_FUNC( HB_BTREEINSERT )  /* hb_BTreeInsert( hb_BTree_Handle, CHAR cKey, LONG l
 
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   if ( ISNUM( 1 ) && ISCHAR( 2 ) && ( hb_pcount() == 2 || GETFLAG( pBTree, IsInMemory ) || ISNUM( 3 ) ) )
-    _retl( hb_BTreeInsert( BTree_GetTreeIndex( "hb_btreeinsert" ), _parc( 2 ), hb_paramError( 3 ) ) );
+    _retl( hb_BTreeInsert( BTree_GetTreeIndex( "hb_btreeinsert" ), ( BYTE * ) _parc( 2 ), hb_paramError( 3 ) ) );
   else
   {
     hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", "hb_btreeinsert", hb_pcount() );
@@ -1846,7 +1852,7 @@ HB_FUNC( HB_BTREEDELETE )  /* hb_BTreeDelete( hb_BTree_Handle, CHAR cKey, LONG l
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   if ( ISNUM( 1 ) && ISCHAR( 2 ) && ( hb_pcount() == 2 || ISNUM( 3 ) ) )
-    _retl( hb_BTreeDelete( BTree_GetTreeIndex( "hb_btreedelete" ), _parc( 2 ), _parnl( 3 ) ) );
+    _retl( hb_BTreeDelete( BTree_GetTreeIndex( "hb_btreedelete" ), ( BYTE * ) _parc( 2 ), _parnl( 3 ) ) );
   else
   {
     hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", "hb_btreedelete", hb_pcount() );
@@ -1857,7 +1863,7 @@ HB_FUNC( HB_BTREEDELETE )  /* hb_BTreeDelete( hb_BTree_Handle, CHAR cKey, LONG l
 HB_FUNC( HB_BTREEKEY )  /* hb_BTreeKey( hb_BTree_Handle ) -> CHAR cKey */
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
-  _retc( BTree_GetTreeIndex( "hb_btreekey" )->pThisKeyData->szKey );
+  _retc( ( char * ) BTree_GetTreeIndex( "hb_btreekey" )->pThisKeyData->szKey );
 }
 
 HB_FUNC( HB_BTREEDATA )  /* hb_BtreeData( hb_BTree_Handle ) -> LONG lOldData | xOldData */
@@ -1908,7 +1914,7 @@ HB_FUNC( HB_BTREESEEK )  /* hb_BTreeSeek( hb_BTree_Handle, CHAR cKey, LONG lData
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   if ( ISNUM( 1 ) && ISCHAR( 2 ) )
-    _retl( hb_BTreeSeek( BTree_GetTreeIndex( "hb_btreeseek" ), _parc( 2 ), _parnl( 3 ), _parl( 4 ) ) );
+    _retl( hb_BTreeSeek( BTree_GetTreeIndex( "hb_btreeseek" ), ( BYTE * ) _parc( 2 ), _parnl( 3 ), _parl( 4 ) ) );
   else
   {
     hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", "hb_btreeseek", hb_pcount() );
@@ -1924,7 +1930,7 @@ HB_FUNC( HB_BTREEINFO )  /* hb_BTreeInfo( hb_BTree_Handle, [index] ) -> aResults
 
   if ( pBTree )
     switch ( _parni( 2 ) ) {
-    case HB_BTREEINFO_FILENAME:  _retc( pBTree->szFileName ); break;
+    case HB_BTREEINFO_FILENAME:  _retc( ( char * ) pBTree->szFileName ); break;
     case HB_BTREEINFO_PAGESIZE:  _retni( pBTree->usPageSize ); break;
     case HB_BTREEINFO_KEYSIZE:   _retni( pBTree->usKeySize ); break;
     case HB_BTREEINFO_MAXKEYS:   _retni( pBTree->usMaxKeys ); break;
@@ -1936,7 +1942,7 @@ HB_FUNC( HB_BTREEINFO )  /* hb_BTreeInfo( hb_BTree_Handle, [index] ) -> aResults
     {
       PHB_ITEM temp, info = hb_itemArrayNew( HB_BTREEINFO__SIZE );
 
-      temp = hb_itemPutC( NULL, pBTree->szFileName );
+      temp = hb_itemPutC( NULL, ( char * ) pBTree->szFileName );
       hb_itemArrayPut( info, HB_BTREEINFO_FILENAME, temp );
       hb_itemRelease( temp );
 
@@ -2007,8 +2013,8 @@ static void hb_BTree_Terminate( void )
 }
 
 HB_INIT_SYMBOLS_BEGIN( hb_BTree_Initialize_Terminate )
-  { "hb_BTree_Initialize", HB_FS_INIT, hb_BTree_Initialize, NULL },
-  { "hb_BTree_Terminate" , HB_FS_EXIT, hb_BTree_Terminate , NULL },
+  { "hb_BTree_Initialize", HB_FS_INIT, {hb_BTree_Initialize}, NULL },
+  { "hb_BTree_Terminate" , HB_FS_EXIT, {hb_BTree_Terminate} , NULL },
 HB_INIT_SYMBOLS_END( hb_BTree_Initialize_Terminate )
 
 #if defined(HB_EXTERN_C)

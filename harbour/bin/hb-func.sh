@@ -281,7 +281,7 @@ if [ "\${HB_STATIC}" = "full" ]; then
     HB_STATIC="yes"
 fi
 if [ "\${HB_XBGTK}" = "yes" ]; then
-    SYSTEM_LIBS="\${SYSTEM_LIBS} `pkg-config --libs gtk+-2.0`"
+    SYSTEM_LIBS="\${SYSTEM_LIBS} \`pkg-config --libs gtk+-2.0\`"
 fi
 
 HB_LNK_REQ=""

@@ -8,6 +8,34 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-12-16 13:32 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_gnu.sh
+  * harbour/make_tgz.sh
+    * fixed HPUX detection
+
+  * harbour/bin/hb-func.sh
+    * late GTK lib checking for -xbgtk switch in hb* scripts
+
+  * harbour/contrib/btree/hb_btree.api
+  * harbour/contrib/btree/hb_btree.c
+  * harbour/contrib/libnf/chdir.c
+  * harbour/contrib/libnf/dispc.c
+  * harbour/contrib/libnf/ftint86.ch
+  * harbour/contrib/libnf/getver.c
+  * harbour/contrib/libnf/mkdir.c
+  * harbour/contrib/libnf/proper.c
+  * harbour/contrib/libnf/rmdir.c
+    * casting and small fixes for OpenWatcom compilation
+
+  * harbour/include/hbdefs.h
+    * force big endian if not detected automatically for HPUX
+
+  * harbour/source/vm/itemapi.c
+    * HPUX uses isfinite() not finite()
+
+  * harbour/source/vm/memvars.c
+    ! fixed endian dependent code
+
 2004-12-14 01:15 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/dbfcdx/dbfcdx1.c
     * minor modifications of some static function names

@@ -72,20 +72,35 @@
 
 #include "hbapi.h"
 
-static int _ftIsAlpha( char );
-static char _ftToLower( char );
-static char _ftToUpper( char );
-static int _ftIsUpper( char );
-static int _ftIsLower( char );
+static char _ftToLower( char c )
+{
+  return(c >= 'A' && c <= 'Z' ? c - 'A' + 'a' : c);
+}
+
+static char _ftToUpper( char c )
+{
+  return(c >= 'a' && c <= 'z' ? c - 'a' + 'A' : c);
+}
+
+static int _ftIsUpper( char c )
+{
+  return(c >= 'A' && c <= 'Z');
+}
+
+static int _ftIsLower( char c )
+{
+  return(c >= 'a' && c <= 'z');
+}
+
+static int _ftIsAlpha( char c )
+{
+  return( _ftIsUpper(c) || _ftIsLower(c));
+}
 
 HB_FUNC(FT_PROPER )
 {
-#if defined(HB_OS_DOS) || defined(HB_OS_WIN_32)
-   {
-
   int  iLen   =  hb_parclen(1);
   char *cStr;
-
   int i, fCap = TRUE; /*, iPos = 0; */
 
   hb_storc( NULL, 1 );
@@ -100,7 +115,7 @@ HB_FUNC(FT_PROPER )
      fCap = ( cStr[i] == ' ' || cStr[i] == '-' || cStr[i] == 0x27 );
   }
 
-  // Find "Mc"
+  /* Find "Mc" */
   for( i = 0; i <= iLen; i++ )
      if( cStr[i] == 'M' && cStr[i+1] == 'c' ) {
         cStr[i+2] = _ftToUpper( cStr[i+2] );
@@ -113,36 +128,4 @@ HB_FUNC(FT_PROPER )
            cStr[iPos] = _ftToUpper( cStr[iPos] );
   */
   hb_retc( cStr );
-  return;
-   }
-#endif
-}
-
-
-
-static int _ftIsAlpha( char c )
-{
-  return( _ftIsUpper(c) || _ftIsLower(c));
-}
-
-static char _ftToLower( char c )
-{
-  return(c >= 'A' && c <= 'Z' ? c - 'A' + 'a' : c);
-}
-
-
-static char _ftToUpper( char c )
-{
-  return(c >= 'a' && c <= 'z' ? c - 'a' + 'A' : c);
-}
-
-static int _ftIsUpper( char c )
-{
-  return(c >= 'A' && c <= 'Z');
-}
-
-
-static int _ftIsLower( char c )
-{
-  return(c >= 'a' && c <= 'z');
 }

@@ -169,7 +169,7 @@ HB_FUNC(_FT_TEMPFIL)
       regs.HB_XREGS.cx=iMode;
       sregs.ds=FP_SEG(cPath);
       regs.HB_XREGS.dx=FP_OFF(cPath);
-      int86x(0x21,&regs,&regs,&sregs);
+      HB_DOS_INT86X(0x21,&regs,&regs,&sregs);
       nax=regs.HB_XREGS.ax;
       iflags=regs.HB_XREGS.flags;
    }

@@ -97,7 +97,7 @@ HB_FUNC(FT_MKDIR)
     regs.h.ah=0x39;
     sregs.ds=FP_SEG(path);
     regs.HB_XREGS.dx=FP_OFF(path);
-    int86x(0x21,&regs,&regs,&sregs);
+    HB_DOS_INT86X(0x21,&regs,&regs,&sregs);
     Status=regs.HB_XREGS.ax;
     hb_retni(Status);
    }

@@ -15,7 +15,7 @@
 # ---------------------------------------------------------------
 
 if [ -z "$HB_ARCHITECTURE" ]; then
-    hb_arch=`uname -s | tr "[A-Z]" "[a-z]" 2>/dev/null`
+    hb_arch=`uname -s | tr -d "[-]" | tr "[A-Z]" "[a-z]" 2>/dev/null`
     case "$hb_arch" in
         *windows*) hb_arch="w32" ;;
         *dos)      hb_arch="dos" ;;

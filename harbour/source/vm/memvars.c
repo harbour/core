@@ -1339,7 +1339,7 @@ static HB_DYNS_FUNC( hb_memvarSave )
          }
          else if( HB_IS_NUMERIC( pItem ) )
          {
-            double dNumber = hb_itemGetND( pItem );
+            BYTE byNum[ sizeof( double ) ];
             int iWidth;
             int iDec;
 
@@ -1355,19 +1355,24 @@ static HB_DYNS_FUNC( hb_memvarSave )
 #endif
             buffer[ 17 ] = ( BYTE ) iDec;
 
+            HB_PUT_LE_DOUBLE( byNum, hb_itemGetND( pItem ) );
+
             hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN );
-            hb_fsWrite( fhnd, ( BYTE * ) &dNumber, sizeof( dNumber ) );
+            hb_fsWrite( fhnd, byNum, sizeof( byNum ) );
          }
          else if( HB_IS_DATE( pItem ) )
          {
+            BYTE byNum[ sizeof( double ) ];
             double dNumber = ( double ) hb_itemGetDL( pItem );
 
             buffer[ 11 ] = 'D' + 128;
             buffer[ 16 ] = 1;
             buffer[ 17 ] = 0;
 
+            HB_PUT_LE_DOUBLE( byNum, dNumber );
+
             hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN );
-            hb_fsWrite( fhnd, ( BYTE * ) &dNumber, sizeof( dNumber ) );
+            hb_fsWrite( fhnd, byNum, sizeof( byNum ) );
          }
          else if( HB_IS_LOGICAL( pItem ) )
          {
@@ -1524,7 +1529,7 @@ HB_FUNC( __MVRESTORE )
                   BYTE pbyNumber[ HB_MEM_NUM_LEN ];
 
                   if( hb_fsRead( fhnd, pbyNumber, HB_MEM_NUM_LEN ) == HB_MEM_NUM_LEN )
-                     pItem = hb_itemPutNLen( NULL, * ( double * ) &pbyNumber, uiWidth - ( uiDec ? ( uiDec + 1 ) : 0 ), uiDec );
+                     pItem = hb_itemPutNLen( NULL, HB_GET_LE_DOUBLE( pbyNumber ), uiWidth - ( uiDec ? ( uiDec + 1 ) : 0 ), uiDec );
 
                   break;
                }
@@ -1534,7 +1539,7 @@ HB_FUNC( __MVRESTORE )
                   BYTE pbyNumber[ HB_MEM_NUM_LEN ];
 
                   if( hb_fsRead( fhnd, pbyNumber, HB_MEM_NUM_LEN ) == HB_MEM_NUM_LEN )
-                     pItem = hb_itemPutDL( NULL, ( long ) ( * ( double * ) &pbyNumber ) );
+                     pItem = hb_itemPutDL( NULL, ( long ) HB_GET_LE_DOUBLE( pbyNumber ) );
 
                   break;
                }
