@@ -149,9 +149,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
                   lFinished := .T.
                   nPos      := 0
                ELSE
-/* TODO: When macro evaluation will work, this should be commented out:
-               alSelect[ nCntr ] := &( xSelect[ nCntr ] )
-*/
+                   alSelect[ nCntr ] := &( xSelect[ nCntr ] )
                ENDIF
             ELSE
                alSelect[ nCntr ] := xSelect[ nCntr ]

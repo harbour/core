@@ -1446,6 +1446,7 @@ int hb_compYACCMain( char * szName )
       pSym = hb_compSymbolAdd( hb_comp_pInitFunc->szName, NULL );
       pSym->cScope |= hb_comp_pInitFunc->cScope;
       hb_comp_functions.pLast->pNext = hb_comp_pInitFunc;
+      hb_comp_functions.pLast = hb_comp_pInitFunc;
       ++hb_comp_functions.iCount;
    }
 

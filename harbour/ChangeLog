@@ -1,3 +1,14 @@
+20000117-12:25 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/rtl/achoice.prg
+    *source/rtl/input.prg
+	* macro related code are active now
+	
+    *source/compiler/harbour.y
+	* function that initializes static variables is generated
+	properly when ANNOUNCE statement is used
+
+
 20000116-20:30 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/harbinit.prg

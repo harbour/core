@@ -67,6 +67,4 @@
 FUNCTION __Input( cMessage )
    LOCAL cString := __Accept( cMessage )
 
-// TOFIX: Uncomment this when macros are implemented
-// RETURN iif( Empty( cString ), NIL, &cString )
-   RETURN ""
+   RETURN iif( Empty( cString ), NIL, &cString )
