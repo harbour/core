@@ -1033,6 +1033,7 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    UNSIGNED8  szName[ HARBOUR_MAX_RDD_FIELDNAME_LENGTH + 1 ];
    UNSIGNED16 pusBufLen = HARBOUR_MAX_RDD_FIELDNAME_LENGTH;
    UNSIGNED32 pulLength;
+   DOUBLE     dVal;
 
    HB_TRACE(HB_TR_DEBUG, ("adsGetValue(%p, %hu, %p)", pArea, uiIndex, pItem));
 
@@ -1063,12 +1064,13 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
                memset( pBuffer, ' ', pField->uiLen );
                pArea->fEof = TRUE;
             }
+         AdsGetDouble(pArea->hTable, szName,&dVal);
          if( pField->uiDec )
-            hb_itemPutNDLen( pItem, atof( (char *) pBuffer ),
+            hb_itemPutNDLen( pItem, dVal,
                              ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ),
                              ( int ) pField->uiDec );
          else
-            hb_itemPutNDLen( pItem, atol( (char *) pBuffer ), ( int ) pField->uiLen ,0);
+            hb_itemPutNDLen( pItem, dVal, ( int ) pField->uiLen ,0);
          break;
 
       case HB_IT_DATE:
