@@ -1,3 +1,7 @@
+19990520-11:00 CET Eddie Runia
+  * tests/working/runner.c
+    simple file correctness checks added
+
 19990520-03:40 EST David G. Holm <dholm@jsd-llc.com>
   * include/set.h
     - Added hb_set_fixed and HB_SETFIXED().
