@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-09-29 22:10 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+   *source/rtl/strcase.c
+     ! hb_strncpyUpperTrim() is fixed ( borrowed from xHarbour ).
+   * include/hbver.h
+     * Release info has been corrected again ...
+
 2003-09-29 15:20 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
    *source/rtl/strcase.c
      ! hb_strncpyUpper() is fixed ( borrowed from xHarbour ).

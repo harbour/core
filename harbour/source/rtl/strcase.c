@@ -126,22 +126,36 @@ char * hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen )
  */
 char * hb_strncpyUpperTrim( char * pDest, const char * pSource, ULONG ulLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyUpper(%p, %s, %lu)", pDest, pSource, ulLen));
+   char *pBuf = pDest;
+   LONG ulSLen = strlen( pSource );
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyUpperTrim(%p, %s, %lu)", pDest, pSource, ulLen));
 
    pDest[ ulLen ] ='\0';
 
-   while( ulLen-- && pSource[ ulLen ] == ' ')
-      pDest[ ulLen ] = '\0';
-
-   ulLen++;
-   while( ulLen-- )
+   while( ulSLen && pSource[ ulSLen - 1 ] == ' ')
    {
-      /* some compilers impliment toupper as a macro, and this has side effects! */
-      /* *pDest++ = toupper( *pSource++ ); */
-      pDest[ ulLen ] = toupper( (unsigned char) pSource[ ulLen ] );
+      ulSLen--;
    }
 
-   return pDest;
+   /* some compilers impliment toupper as a macro, and this has side effects! */
+   /* *pDest++ = toupper( *pSource++ ); */
+   while( ulLen && ulSLen && (*pDest++ = toupper( *pSource )))
+   {
+      ulSLen--;
+      ulLen--;
+      pSource++;
+   }
+
+   if( ulLen )
+   {
+      while (--ulLen)
+      {
+         *pDest++ = '\0';
+      }
+   }
+
+   return pBuf;
 }
 
 
