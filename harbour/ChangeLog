@@ -8,6 +8,16 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-18 07:21 UTC+0100 JFL (Mafact) <jfl@mafact.com>
+  * source/vm/garbage.c
+    ! RON Further Fix for forever loop when GC try to free first item in the
+      arrayclone cloned list.
+    + RON Added hb_gcReleaseAll()
+      it will increase cleanup speed (on app termination), and will
+      result in a more complete cleanup in certain situations
+   * include/hbapi.h
+     + RON Added hb_gcReleaseAll()
+
 2001-12-18 06:44 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/vm/maindll.c
    * source/vm/maindllh.c

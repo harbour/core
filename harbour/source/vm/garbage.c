@@ -372,31 +372,52 @@ void hb_gcCollectAll( void )
               ( s_pCurrBlock->pFunc )( ( void *)( s_pCurrBlock + 1 ) );
            }
          }
+
          s_pCurrBlock = s_pCurrBlock->pNext;
+
       } while ( s_pCurrBlock && (pAlloc != s_pCurrBlock) );
 
       pAlloc = s_pCurrBlock;
       do
       {
+         NewTopBlock:
+
          if( s_pCurrBlock->used & HB_GC_DELETE )
          {
             pDelete = s_pCurrBlock;
             hb_gcUnlink( &s_pCurrBlock, s_pCurrBlock );
 
+            /*
+               Releasing the top block in the list, so we must mark the new top into pAlloc
+               but we still need to process this new top. Without this goto, the while
+               condition will immediatly fail. Using extra flags, and new conditions
+               will adversly effect performance.
+            */
             if( pDelete == pAlloc )
             {
-                pAlloc = s_pCurrBlock;
-            }
+               pAlloc = s_pCurrBlock;
+               HB_GARBAGE_FREE( pDelete );
 
-            HB_GARBAGE_FREE( pDelete );
+               if( s_pCurrBlock )
+               {
+                  goto NewTopBlock;
+               }
+            }
+            else
+            {
+               HB_GARBAGE_FREE( pDelete );
+            }
          }
          else
          {
             s_pCurrBlock = s_pCurrBlock->pNext;
          }
-      } while ( s_pCurrBlock && (pAlloc != s_pCurrBlock) );
+
+      } while ( s_pCurrBlock && ( pAlloc != s_pCurrBlock ) );
 
       s_bCollecting = FALSE;
+
+      s_pCurrBlock = pAlloc;
 
       /* Step 4 - flip flag */
       /* Reverse used/unused flag so we don't have to mark all blocks
@@ -404,6 +425,41 @@ void hb_gcCollectAll( void )
        */
       s_uUsedFlag ^= HB_GC_USED_FLAG;
    }
+}
+
+void hb_gcReleaseAll( void )
+{
+   if( s_pCurrBlock )
+   {
+      HB_GARBAGE_PTR pAlloc, pDelete;
+
+      s_bCollecting = TRUE;
+
+      pAlloc = s_pCurrBlock;
+      do
+      {
+         /* call a cleanup function */
+         if( s_pCurrBlock->pFunc )
+         {
+            HB_TRACE( HB_TR_INFO, ( "Cleanup, %p", s_pCurrBlock ) );
+            ( s_pCurrBlock->pFunc )( ( void *)( s_pCurrBlock + 1 ) );
+         }
+
+         s_pCurrBlock = s_pCurrBlock->pNext;
+
+      } while ( s_pCurrBlock && pAlloc != s_pCurrBlock );
+
+      do
+      {
+         HB_TRACE( HB_TR_INFO, ( "Release %p", s_pCurrBlock ) );
+         pDelete = s_pCurrBlock;
+         hb_gcUnlink( &s_pCurrBlock, s_pCurrBlock );
+         HB_GARBAGE_FREE( pDelete );
+
+      } while ( s_pCurrBlock );
+   }
+
+   s_bCollecting = FALSE;
 }
 
 /* service a single garbage collector step

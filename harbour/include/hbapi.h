@@ -558,6 +558,7 @@ extern void * hb_gcLock( void *pAlloc ); /* do not release passed memory block *
 extern void * hb_gcUnlock( void *pAlloc ); /* passed block is allowed to be released */
 extern void   hb_gcCollect( void ); /* checks if a single memory block can be released */
 extern void   hb_gcCollectAll( void ); /* checks if all memory blocks can be released */
+extern void   hb_gcReleaseAll( void ); /* release all memory blocks unconditionally */
 extern void   hb_gcItemRef( HB_ITEM_PTR pItem ); /* checks if passed item refers passed memory block pointer */
 extern void   hb_vmIsLocalRef( void ); /* hvm.c - mark all local variables as used */
 extern void   hb_vmIsStaticRef( void ); /* hvm.c - mark all static variables as used */
