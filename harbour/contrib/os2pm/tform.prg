@@ -26,7 +26,7 @@ METHOD New() CLASS TForm
       // so we hide again the OS API details
 
       WinRegisterClass( "HB_TFORM",;
-                        nOr( CS_SIZEREDRAW, 0x2000001 ), 0 )
+                        (CS_SIZEREDRAW + 0x2000001), 0 )
       ::lRegistered = .t.
    endif
 
@@ -35,11 +35,11 @@ METHOD New() CLASS TForm
 
    ::hWnd = WinCreateStdWindow( HWND_DESKTOP,;
                                 WS_VISIBLE,;
-                                nOr( FCF_TITLEBAR, FCF_SYSMENU,;
-                                FCF_SIZEBORDER, FCF_TASKLIST,;
-                                FCF_MINMAX, FCF_SHELLPOSITION ),;
+                                (FCF_TITLEBAR + FCF_SYSMENU +;
+                                FCF_SIZEBORDER + FCF_TASKLIST +;
+                                FCF_MINMAX + FCF_SHELLPOSITION ),;
                                 "HB_TFORM", "Harbour TForm",;
-                                nOr( WS_SYNCPAINT, WS_VISIBLE ),,,;
+                                (WS_SYNCPAINT + WS_VISIBLE ),,,;
                                 @hWndClient ) // Not used yet
 
 return Self

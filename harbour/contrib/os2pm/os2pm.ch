@@ -1,3 +1,6 @@
+/*
+ * $Id$
+ */
 
 
 #define _OS2EMX_H
