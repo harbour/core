@@ -153,6 +153,8 @@ void hb_gtInit( void )
 
    hb_gt_Init();
    hb_gtSetColorStr( hb_set.HB_SET_COLOR );
+   s_iCurrentRow = hb_gt_Row();
+   s_iCurrentCol = hb_gt_Col();
 }
 
 void hb_gtExit( void )

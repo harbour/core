@@ -1,3 +1,7 @@
+20000309-13:24 EST Paul Tucker <ptucker@sympatico.ca>
+   * source\rtl\gtapi.c
+     * Initialize s_iCurrentRow and s_iCurrentCol
+
 20000308-18:05 GMT+1 Victor Szakats <info@szelvesz.hu>
    * makefile.vc
      ! Small correction.
