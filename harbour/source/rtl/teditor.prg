@@ -824,9 +824,11 @@ STATIC procedure BrowseText(oSelf, nPassedKey)
 
       // If I haven't been called with a key already preset, evaluate this key and then exit
       if nPassedKey == NIL
+
          if NextKey() == 0
             oSelf:IdleHook()
          endif
+
          nKey := InKey(0)
       else
          nKey = nPassedKey
@@ -834,7 +836,7 @@ STATIC procedure BrowseText(oSelf, nPassedKey)
 
       IF !( ( bKeyBlock := setkey( nKey ) ) == NIL )
          eval( bKeyBlock )
-         return 
+         loop
       endif
 
       if nKey == K_ESC
@@ -872,17 +874,20 @@ METHOD Edit(nPassedKey) CLASS HBEditor
 
          // If I haven't been called with a key already preset, evaluate this key and then exit
          if nPassedKey == NIL
+
             if NextKey() == 0
                ::IdleHook()
             endif
+
             nKey := InKey(0)
          else
             lSingleKeyProcess := .T.
             nKey := nPassedKey
          endif
+
          IF !( ( bKeyBlock := setkey( nKey ) ) == NIL )
             eval( bKeyBlock )
-            return Self
+            loop
          endif
 
          do case
