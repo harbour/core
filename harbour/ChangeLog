@@ -1,3 +1,17 @@
+19991004-12:52 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/working/*.bat
+    *.b??
+    makefile.vc
+    libs/*
+    lib/*
+    * libs directory name changed to lib, the win16 and win32
+      subdirs have been removed.
+    * win32 dir is no longer needed, since now the windows terminal.lib
+      is named termwin.lib. 
+    ! HARBOUR_USE_GTAPI defines changed to HARBOUR_USE_WIN_GTAPI
+    ; !!! PLEASE TEST THESE WITH BORLAND AND MSVC !!! (or wait a bit more
+      since more changes are coming)
+
 19991004-01:20 GMT+1 Victor Szel <info@szelvesz.hu>
   - make_b31.bat
     makefile.b31

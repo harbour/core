@@ -9,10 +9,10 @@
 .path.exe = bin
 .path.prg = source\tools
 .path.h   = include
-.path.lib = libs\b32
+.path.lib = lib\b32
 .path.obj = obj
 
-libs\b32\hbgt.lib : \
+lib\b32\hbgt.lib : \
    ascpos.obj atdiff.obj chareven.obj charodd.obj chrcount.obj \
    chrtotal.obj charmix.obj asciisum.obj chrfirst.obj io.obj numtxthu.obj numtxten.obj nconvert.obj \
    strasint.obj strcount.obj strcspn.obj strdiff.obj strexpan.obj \
@@ -49,4 +49,4 @@ numtxten.c   : numtxten.prg harbour.exe
 
 .c.obj:
   bcc32  -c  -O2  -I.\include -o$@ $<
-  tlib .\libs\b32\hbgt.lib -+$@,,
+  tlib .\lib\b32\hbgt.lib -+$@,,

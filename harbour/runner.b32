@@ -7,7 +7,7 @@
 .path.c   = source\runner
 .path.h   = include
 .path.exe = bin
-.path.lib = libs\b32
+.path.lib = lib\b32
 .path.obj = obj;source\runner;source\runner\stdalone
 .path.prg = source\runner\stdalone
 
@@ -24,8 +24,8 @@ external.c   : external.prg
   bin\harbour $< /n /osource\runner\stdalone\ /iinclude /p
 
 .c.obj:
-  bcc32 -c -O2 -I.\include -v -o$@ -DHARBOUR_USE_GTAPI $<
-  tlib .\libs\b32\runner.lib -+$@,,
+  bcc32 -c -O2 -I.\include -v -o$@ -DHARBOUR_USE_WIN_GTAPI $<
+  tlib .\lib\b32\runner.lib -+$@,,
 
 runner.exe : runner.c external.c runlib.c
    echo -v -O2 > bld.32
@@ -33,11 +33,11 @@ runner.exe : runner.c external.c runlib.c
    echo -Iinclude >> bld.32
    echo source\runner\stdalone\runner.c >> bld.32
    echo source\runner\stdalone\external.c >> bld.32
-   echo libs\b32\harbour.lib >> bld.32
-   echo libs\b32\terminal.lib >> bld.32
-   echo libs\b32\hbgt.lib >> bld.32
-   echo libs\b32\hbpp.lib >> bld.32
-   echo libs\b32\rdd.lib >> bld.32
-   echo libs\b32\runner.lib >> bld.32
+   echo lib\b32\harbour.lib >> bld.32
+   echo lib\b32\terminal.lib >> bld.32
+   echo lib\b32\hbgt.lib >> bld.32
+   echo lib\b32\hbpp.lib >> bld.32
+   echo lib\b32\rdd.lib >> bld.32
+   echo lib\b32\runner.lib >> bld.32
    bcc32 @bld.32
    del bld.32

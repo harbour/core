@@ -7,10 +7,10 @@
 
 .path.c   = source\hbpp
 .path.h   = include
-.path.lib = libs\b32
+.path.lib = lib\b32
 .path.obj = obj
 
-libs\b32\hbpp.lib : hbppint.obj hbpp.obj table.obj hbpplib.obj
+lib\b32\hbpp.lib : hbppint.obj hbpp.obj table.obj hbpplib.obj
 
 hbppint.obj : hbppint.c
 hbpp.obj    : hbpp.c
@@ -19,4 +19,4 @@ hbpplib.obj : hbpplib.c
 
 .c.obj :
   bcc32 -c -O2 -I.\include;.\source\hbpp -o$@ $<
-  tlib .\libs\b32\hbpp.lib -+$@,,
+  tlib .\lib\b32\hbpp.lib -+$@,,

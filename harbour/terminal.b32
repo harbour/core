@@ -7,20 +7,18 @@
 
 .path.c   = source\rtl;source\rtl\gt
 .path.h   = include
-.path.lib = libs\win32
+.path.lib = lib\b32
 .path.obj = obj
 
-libs\b32\terminal.lib : console.obj gtapi.obj gtwin.obj
-
-libs\win32\terminal.lib : console.obj gtapi.obj gtwin.obj
+lib\b32\terminal.lib : console.obj gtapi.obj gtwin.obj
+lib\b32\termwin.lib  : console.obj gtapi.obj gtwin.obj
 
 console.obj  : console.c  extend.h hbdefs.h
 gtapi.obj    : gtapi.c    extend.h hbdefs.h
 gtwin.obj    : gtwin.c    extend.h hbdefs.h
 
 .c.obj:
-  bcc32 -wmsg -c -O2 -DHARBOUR_USE_GTAPI -I.\include -v -o$@ $<
-  tlib .\libs\b32\terminal.lib -+$@,,
-  del obj\console.obj
+  bcc32 -wmsg -c -O2 -DHARBOUR_USE_WIN_GTAPI -I.\include -v -o$@ $<
+  tlib .\lib\b32\terminal.lib -+$@,,
   bcc32 -wmsg -c -O2 -I.\include -v -o$@ $<
-  tlib .\libs\win32\terminal.lib -+$@,,
+  tlib .\lib\b32\termwin.lib -+$@,,

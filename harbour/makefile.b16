@@ -9,11 +9,11 @@
 .path.l   = source\compiler
 .path.y   = source\compiler
 .path.exe = bin
-.path.lib = libs\b16
+.path.lib = lib\b16
 .path.obj = obj
 .path.prg = source\rtl;source\tools
 
-PROJECT: harbour.lib libs\b16\terminal.lib libs\win16\terminal.lib harbour.exe
+PROJECT: harbour.lib lib\b16\terminal.lib harbour.exe
 
 harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj dates.obj \
               dates2.obj datesx.obj cmdarg.obj \
@@ -23,15 +23,11 @@ harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj dates.obj \
               mathx.obj mtran.obj objfunc.obj set.obj setcolor.obj stringp.obj \
               strings.obj stringsx.obj tclass.obj transfrm.obj
 
-libs\b16\terminal.lib : console.obj
-
-libs\win16\terminal.lib : console.obj
+lib\b16\terminal.lib : console.obj
 
 console.obj  : console.c  extend.h hbdefs.h
   bcc -c -O2 -I.\include -o$@ source\rtl\console.c
-  tlib .\libs\b16\terminal.lib -+$@,,
-  bcc -c -O2 -D_DHARBOUR_USE_GTAPI -I.\include -o$@ source\rtl\console.c
-  tlib .\libs\win16\terminal.lib -+$@,,
+  tlib .\lib\b16\terminal.lib -+$@,,
 
 arrays.obj   : arrays.c   extend.h hbdefs.h
 asort.obj    : asort.c    extend.h hbdefs.h
@@ -83,9 +79,9 @@ tclass.c     : tclass.prg    harbour.exe
   bin\harbour $< /n /osource\rtl
 
 .c.obj:
-  bcc -c -ml -O2 -I.\include -o$@ -DHARBOUR_USE_GTAPI $<
+  bcc -c -ml -O2 -I.\include -o$@ -DHARBOUR_USE_DOS_GTAPI $<
 
-  tlib .\libs\b16\harbour.lib -+$@,,
+  tlib .\lib\b16\harbour.lib -+$@,,
 
 harbour.exe : harboury.c harbourl.c harbour.obj
    echo -ml -O2 > bld.31

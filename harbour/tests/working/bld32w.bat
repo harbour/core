@@ -1,24 +1,24 @@
 @echo off
-rem 
+rem
 rem $Id$
-rem 
+rem
 
 IF A%1 == A GOTO :SINTAX
 IF A%2 == A GOTO :NOOUTPUT
 
 echo -O2 -e%2.exe -DWINDOWS -tW -I..\..\include > b32.bc
-echo ..\..\source\vm\hvm.c %1.c ..\..\libs\b32\harbour.lib  ..\..\libs\win32\terminal.lib >> b32.bc
-echo ..\..\libs\b32\hbgt.lib ..\..\libs\b32\hbpp.lib >> b32.bc
-echo ..\..\libs\b32\rdd.lib >> b32.bc
+echo ..\..\source\vm\hvm.c %1.c ..\..\lib\b32\harbour.lib  ..\..\lib\b32\termwin.lib >> b32.bc
+echo ..\..\lib\b32\hbgt.lib ..\..\lib\b32\hbpp.lib >> b32.bc
+echo ..\..\lib\b32\rdd.lib >> b32.bc
 bcc32 @b32.bc
 del b32.bc
 GOTO :END
 
 :NOOUTPUT
 echo -O2 -e%1.exe -DWINDOWS -tW -I..\..\include > b32.bc
-echo ..\..\source\vm\hvm.c %1.c ..\..\libs\b32\harbour.lib  ..\..\libs\win32\terminal.lib >> b32.bc
-echo ..\..\libs\b32\hbgt.lib ..\..\libs\b32\hbpp.lib >> b32.bc
-echo ..\..\libs\b32\rdd.lib >> b32.bc
+echo ..\..\source\vm\hvm.c %1.c ..\..\lib\b32\harbour.lib  ..\..\lib\b32\termwin.lib >> b32.bc
+echo ..\..\lib\b32\hbgt.lib ..\..\lib\b32\hbpp.lib >> b32.bc
+echo ..\..\lib\b32\rdd.lib >> b32.bc
 bcc32 @b32.bc
 del b32.bc
 GOTO :END
