@@ -1,3 +1,25 @@
+2001-05-28 14:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     * Renamed PP_ProcessLine() to PP_PreProLine() and PP_ProcessFile() to PP_PreProFile() to allow 10 chars uniqueness.
+     * Changed STATIC ExecuteMethod() to PP_ExecMethod() and STATIC ExecuteProcedure() to PP_ExecProcedure()
+       to allow call from external modules, while preserving name space, and 10 chars uniqeness.
+     * Removed STATIC from RP_*_Err() to allow calls from external modules.
+     * Changed PP_CompileLine() to accept array of compiled procedures, instead of using a static.
+       This allows thread safety, and support calls from external modules.
+     * Changed RP_Run_Err() to accept 2nd parameter the Compiled Procedures Array, and 3rd parameter Module Name.
+       This allows thread safety, and support calls from external modules.
+     + Added PP_RunInit() to support initialization for Interpreter mode from external modules.
+     + Added #ifdef __HARBOUR_ #include "pp_harb.ch" to allow Clipper to compile pp.prg.
+
+   * contrib/dot/rp_run.ch
+     * Changed ExecuteMethod() calls to PP_ExecMethod()
+
+   + contrib/dot/pp_harb.ch
+     + Added external file holding Harbour specific code that Clipper could not compile.
+
+   + contrib/dot/prgscrpt.prg
+     + Added sample to demonstrate PP interpreter embeded in a small prg to run prg driven scripts.
+
 2001-05-28 03:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      * Renamed Main() to PP_Main(), ProcessFile() to PP_ProcessFile() and ProcessLine() to PP_ProcessLine()
