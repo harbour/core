@@ -1,3 +1,9 @@
+2000-08-02 14:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+   * config/c.cf
+     ! Restored to version 1.9, because 1.10 has the same
+       content, but has bad line endings and an EOF char.
+
 2000-08-02 11:30 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * hb_slex.bc
    * makefile.bc
