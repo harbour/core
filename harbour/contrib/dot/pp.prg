@@ -22,10 +22,14 @@
  */
 
 #DEFINE MAX_TOKENS 1024
+#DEFINE PP_BUFFER_SIZE 16384
 
 #ifdef __HARBOUR__
-   #include "hbextern.ch"
+   #INCLUDE "hbextern.ch"
+   #DEFINE  CRLF HB_OsNewLine()
 #else
+   #DEFINE  CRLF Chr(13) + Chr(10)
+
    EXTERNAL ARRAY,ASIZE,ATAIL,AINS,ADEL,AFILL,ASCAN,AEVAL,ACOPY,ACLONE,ADIR, ASORT
 
    EXTERNAL MEMORY
@@ -344,7 +348,7 @@ FUNCTION ProcessFile( sSource, sSwitch )
    LOCAL sPath := "", cError
 
    IF At( '.', sSource ) == 0
-     sSource += ".PRG"
+     sSource += ".prg"
    ENDIF
 
    hSource := FOpen( sSource, 0 )
@@ -368,12 +372,12 @@ FUNCTION ProcessFile( sSource, sSwitch )
    IF hPP == NIL .AND. ProcName(1) == "MAIN"
       sExt := SubStr( sSource, RAt( '.', sSource ) )
       IF ! ( sExt == '' )
-         hPP := FCreate( StrTran( sSource, sExt, ".PP$" ) )
+         hPP := FCreate( StrTran( sSource, sExt, ".pp$" ) )
       ELSE
-         hPP := FCreate( sSource + ".PP$" )
+         hPP := FCreate( sSource + ".pp$" )
       ENDIF
       IF hPP == -1
-         Alert( "ERROR! creating '.PP$' file, O/S Error: " + Str( FError(), 2 ) )
+         Alert( "ERROR! creating '.pp$' file, O/S Error: " + Str( FError(), 2 ) )
          RETURN .F.
       ENDIF
 
@@ -390,16 +394,16 @@ FUNCTION ProcessFile( sSource, sSwitch )
          bDbgPPO := .T.
       ENDIF
    ELSE
-      FWrite( hPP, '#line 1 "' + sPath + Upper( sSource ) + '"' + Chr(13) + Chr(10) )
+      FWrite( hPP, '#line 1 "' + sPath + Upper( sSource ) + '"' + CRLF )
       bBlanks := .F.
    ENDIF
 
-   sBuffer   := Space( 16384 )
+   sBuffer   := Space( PP_BUFFER_SIZE )
    sLine     := ''
 
    BEGIN SEQUENCE
 
-   WHILE ( nLen := FRead( hSource, @sBuffer, 16384 ) ) > 2
+   WHILE ( nLen := FRead( hSource, @sBuffer, PP_BUFFER_SIZE ) ) > 2
 
       nPosition := 1
       nMaxPos   := nLen - 1
@@ -425,13 +429,13 @@ FUNCTION ProcessFile( sSource, sSwitch )
                          ENDIF
 
                          IF bBlanks
-                            FWrite( hPP, Chr(13) + Chr(10) )
+                            FWrite( hPP, CRLF )
                          ENDIF
                          nBase += ( nNext + 1 )
                       ENDDO
 
                       FSeek( hSource, -1, 1 )
-                      nLen := FRead( hSource, @sBuffer, 16384 )
+                      nLen := FRead( hSource, @sBuffer, PP_BUFFER_SIZE )
                       IF nLen < 2
                          Alert( "ERROR! Unterminated '/**/'" )
                       ENDIF
@@ -446,7 +450,7 @@ FUNCTION ProcessFile( sSource, sSwitch )
                             @ Row(), 0 SAY nLine
                          ENDIF
                          IF bBlanks
-                            FWrite( hPP, Chr(13) + Chr(10) )
+                            FWrite( hPP, CRLF )
                          ENDIF
                          nBase += ( nNext + 1 )
                       ENDDO
@@ -464,7 +468,7 @@ FUNCTION ProcessFile( sSource, sSwitch )
 
                    IF nClose == 0
                       FSeek( hSource, -1, 1 )
-                      nLen := FRead( hSource, @sBuffer, 16384 )
+                      nLen := FRead( hSource, @sBuffer, PP_BUFFER_SIZE )
                       IF nLen < 2
                          BREAK
                       ENDIF
@@ -483,7 +487,7 @@ FUNCTION ProcessFile( sSource, sSwitch )
                          nLen  := Len( sLine )
                          sLine := DropTrailingWS( Left( sLine, nLen - 1 ), @sRight )
                          IF bBlanks
-                            FWrite( hPP, Chr(13) + Chr(10) )
+                            FWrite( hPP, CRLF )
                          ENDIF
 
                          /* Right after the NL */
@@ -500,12 +504,12 @@ FUNCTION ProcessFile( sSource, sSwitch )
                       ELSE
                          IF LTrim( sLine ) == ''
                             IF bBlanks
-                               FWrite( hPP, Chr(13) + Chr(10) )
+                               FWrite( hPP, CRLF )
                             ENDIF
                          ELSE
                             sLine := ProcessLine( sLine, nLine, sPath + sSource )
                             IF bBlanks .OR. ! ( sLine == '' )
-                               FWrite( hPP, sLine + Chr(13) + Chr(10) )
+                               FWrite( hPP, sLine + CRLF )
                             ENDIF
                          ENDIF
 
@@ -524,7 +528,7 @@ FUNCTION ProcessFile( sSource, sSwitch )
 
                    IF nClose == 0
                       FSeek( hSource, -1, 1 )
-                      nLen := FRead( hSource, @sBuffer, 16384 )
+                      nLen := FRead( hSource, @sBuffer, PP_BUFFER_SIZE )
                       IF nLen < 2
                          BREAK
                       ENDIF
@@ -538,12 +542,12 @@ FUNCTION ProcessFile( sSource, sSwitch )
                       ENDIF
                       IF LTrim( sLine ) == ''
                          IF bBlanks
-                            FWrite( hPP, Chr(13) + Chr(10) )
+                            FWrite( hPP, CRLF )
                          ENDIF
                       ELSE
                          sLine := ProcessLine( sLine, nLine, sPath + sSource )
                          IF bBlanks .OR. ! ( sLine == '' )
-                            FWrite( hPP, sLine + Chr(13) + Chr(10) )
+                            FWrite( hPP, sLine + CRLF )
                          ENDIF
                       ENDIF
                       nPosition += ( nClose )
@@ -560,7 +564,7 @@ FUNCTION ProcessFile( sSource, sSwitch )
 
                       IF nClose == 0
                          FSeek( hSource, -1, 1 )
-                         nLen := FRead( hSource, @sBuffer, 16384 )
+                         nLen := FRead( hSource, @sBuffer, PP_BUFFER_SIZE )
                          IF nLen < 2
                             BREAK
                          ENDIF
@@ -573,7 +577,7 @@ FUNCTION ProcessFile( sSource, sSwitch )
                             @ Row(), 0 SAY nLine
                          ENDIF
                          IF bBlanks
-                            FWrite( hPP, Chr(13) + Chr(10) )
+                            FWrite( hPP, CRLF )
                          ENDIF
                          nPosition += ( nClose )
                          sLine := ''
@@ -600,7 +604,7 @@ FUNCTION ProcessFile( sSource, sSwitch )
                    IF nClose == 0
                       sLine += SubStr( sBuffer, nPosition )
                       FSeek( hSource, -1, 1 )
-                      nLen := FRead( hSource, @sBuffer, 16384 )
+                      nLen := FRead( hSource, @sBuffer, PP_BUFFER_SIZE )
                       IF nLen < 2
                          Alert( 'ERROR! Unterminated ["]' )
                          cChar := ''
@@ -633,7 +637,7 @@ FUNCTION ProcessFile( sSource, sSwitch )
                    IF nClose == 0
                       sLine += SubStr( sBuffer, nPosition )
                       FSeek( hSource, -1, 1 )
-                      nLen := FRead( hSource, @sBuffer, 16384 )
+                      nLen := FRead( hSource, @sBuffer, PP_BUFFER_SIZE )
                       IF nLen < 2
                          BREAK "ERROR! Unterminated '''"
                       ENDIF
@@ -670,7 +674,7 @@ FUNCTION ProcessFile( sSource, sSwitch )
                    IF nClose == 0
                       sLine += SubStr( sBuffer, nPosition )
                       FSeek( hSource, -1, 1 )
-                      nLen := FRead( hSource, @sBuffer, 16384 )
+                      nLen := FRead( hSource, @sBuffer, PP_BUFFER_SIZE )
                       IF nLen < 2
                          BREAK [ERROR! Unterminated "["]
                       ENDIF
@@ -701,7 +705,7 @@ FUNCTION ProcessFile( sSource, sSwitch )
                    nLen  := Len( sLine )
                    sLine := DropTrailingWS( Left( sLine, nLen - 1 ), @sRight )
                    IF bBlanks
-                      FWrite( hPP, Chr(13) + Chr(10) )
+                      FWrite( hPP, CRLF )
                    ENDIF
 
                    /* Skip leading spaces in continued next line. */
@@ -715,13 +719,13 @@ FUNCTION ProcessFile( sSource, sSwitch )
                 ELSE
                    IF LTrim( sLine ) == ''
                       IF bBlanks
-                         FWrite( hPP, Chr(13) + Chr(10) )
+                         FWrite( hPP, CRLF )
                       ENDIF
                    ELSE
                       //sLine += sRight
                       sLine := ProcessLine( sLine, nLine, sPath + sSource )
                       IF bBlanks .OR. ! ( sLine == '' )
-                         FWrite( hPP, sLine + Chr(13) + Chr(10) )
+                         FWrite( hPP, sLine + CRLF )
                       ENDIF
                    ENDIF
                    sLine := ''
@@ -739,12 +743,12 @@ FUNCTION ProcessFile( sSource, sSwitch )
                 ENDIF
                 IF LTrim( sLine ) == ''
                    IF bBlanks
-                      FWrite( hPP, Chr(13) + Chr(10) )
+                      FWrite( hPP, CRLF )
                    ENDIF
                 ELSE
                    sLine := ProcessLine( sLine, nLine, sPath + sSource )
                    IF bBlanks .OR. ! ( sLine == '' )
-                      FWrite( hPP, sLine + Chr(13) + Chr(10) )
+                      FWrite( hPP, sLine + CRLF )
                    ENDIF
                 ENDIF
                 sLine := ''
@@ -1968,7 +1972,7 @@ FUNCTION NextToken( sLine, bCheckRules )
         Alert( "ERROR! [NextToken()] Unterminated '[[' at: " + sLine )
         sReturn := "[["
      ELSE
-        sReturn := Left( sLine, nClose + 1 )
+        sReturn := Left( sLine, nClose + 2 )
      ENDIF
 
   ELSEIF Left( sLine, 1 ) == '"'
@@ -2090,7 +2094,13 @@ FUNCTION NextToken( sLine, bCheckRules )
   ELSE
      //? "TOKEN = '" + sReturn + "' Len: ", Len( sReturn ), "AT: ", sLine
      sLine       := SubStr( sLine, Len( sReturn ) + 1 )
-     s_cLastChar := Right( sReturn, 1 )
+
+     IF Left( sReturn, 1 ) == '.' .AND. Len( sReturn ) > 1 .AND. Right( sReturn, 1 ) == '.'
+        s_cLastChar := ' '
+     ELSE
+        s_cLastChar := Right( sReturn, 1 )
+     ENDIF
+
      sReturn     += ExtractLeadingWS( @sLine )
   ENDIF
 
@@ -2785,7 +2795,7 @@ FUNCTION PPOut( aResults, aMarkers )
                     sDumb += ", "
                  ENDIF
               NEXT
-              IF '"' $ sDumb .AND. ['] $ sDumb .AND. ']' $ sDumb .AND. Left( sDumb, 1 ) != '['
+              IF '"' $ sDumb .AND. "'" $ sDumb .AND. ']' $ sDumb .AND. Left( sDumb, 1 ) != '['
                  sResult += '[[' + sDumb + ']]'
               ELSEIF '"' $ sDumb .AND. ['] $ sDumb
                  sResult += '[' + sDumb + ']'
@@ -2798,7 +2808,7 @@ FUNCTION PPOut( aResults, aMarkers )
               IF xValue == NIL
                  sResult += '""'
               ELSE
-                 IF '"' $ xValue .AND. ['] $ xValue .AND. ']' $ xValue .AND. Left( xValue, 1 ) != '['
+                 IF '"' $ xValue .AND. "'" $ xValue .AND. ']' $ xValue .AND. Left( xValue, 1 ) != '['
                     sResult += "[[" + xValue + "]]"
                  ELSEIF '"' $ xValue .AND. ['] $ xValue
                     sResult += '[' + xValue + ']'
@@ -2817,7 +2827,7 @@ FUNCTION PPOut( aResults, aMarkers )
               FOR nMatch := 1 TO nMatches
                  IF Left( xValue[nMatch], 1 ) == '&'
                     sResult += RTrim( SubStr( xValue[nMatch], 2 ) )
-                 ELSEIF '"' $ xValue[nMatch] .AND. ['] $ xValue[nMatch] .AND. ']' $ xValue[nMatch] .AND. Left( xValue[nMatch], 1 ) != '['
+                 ELSEIF '"' $ xValue[nMatch] .AND. "'" $ xValue[nMatch] .AND. ']' $ xValue[nMatch] .AND. Left( xValue[nMatch], 1 ) != '['
                     sResult += "[[" + RTrim( xValue[nMatch] ) + "]]"
                  ELSEIF '"' $ xValue[nMatch] .AND. ['] $ xValue[nMatch]
                     sResult += '[' + RTrim( xValue[nMatch] ) + ']'
@@ -2835,7 +2845,7 @@ FUNCTION PPOut( aResults, aMarkers )
               IF ! ( xValue == NIL )
                  IF Left( xValue, 1 ) == '&'
                     sResult += RTrim( SubStr( xValue, 2 ) )
-                 ELSEIF '"' $ xValue .AND. ['] $ xValue .AND. ']' $ xValue .AND. Left( xValue, 1 ) != '['
+                 ELSEIF '"' $ xValue .AND. "'" $ xValue .AND. ']' $ xValue .AND. Left( xValue, 1 ) != '['
                     sResult += "[[" + xValue + "]]"
                  ELSEIF '"' $ xValue .AND. ['] $ xValue
                     sResult += '[' + xValue + ']'
@@ -4300,26 +4310,26 @@ FUNCTION CompileToCCH( sSource )
 
    sExt := SubStr( sSource, RAt( '.', sSource ) )
    IF ! ( sExt == '' )
-      hCCH   := FCreate( StrTran( sSource, sExt, ".CCH" ) )
+      hCCH   := FCreate( StrTran( sSource, sExt, ".cch" ) )
    ELSE
-      hCCH   := FCreate( sSource + ".CCH" )
+      hCCH   := FCreate( sSource + ".cch" )
    ENDIF
 
-   FWrite( hCCH, "FUNCTION InitRules()" + Chr(13) + Chr(10) )
+   FWrite( hCCH, "FUNCTION InitRules()" + CRLF )
 
    FOR Counter := 1 TO 3
       IF Counter == 1
          aRules      := aDefRules
          sRulesArray := "aDefRules"
-         FWrite( hCCH, Chr(13) + Chr(10) + "/* Defines */" + Chr(13) + Chr(10) + "aDefRules := {}" + Chr(13) + Chr(10) )
+         FWrite( hCCH, CRLF + "/* Defines */" + CRLF + "aDefRules := {}" + CRLF )
       ELSEIF Counter == 2
          aRules      := aTransRules
          sRulesArray := "aTransRules"
-         FWrite( hCCH, Chr(13) + Chr(10) + "/* Translates */" + Chr(13) + Chr(10) + "aTransRules := {}" + Chr(13) + Chr(10) )
+         FWrite( hCCH, CRLF + "/* Translates */" + CRLF + "aTransRules := {}" + CRLF )
       ELSE
          aRules      := aCommRules
          sRulesArray := "aCommRules"
-         FWrite( hCCH, Chr(13) + Chr(10) + "/* Commands */" + Chr(13) + Chr(10) + "aCommRules := {}" + Chr(13) + Chr(10) )
+         FWrite( hCCH, CRLF + "/* Commands */" + CRLF + "aCommRules := {}" + CRLF )
       ENDIF
 
       nRules := Len( aRules )
@@ -4372,28 +4382,28 @@ FUNCTION CompileToCCH( sSource )
             FWrite( hCCH, " , .F." )
          ENDIF
 
-         FWrite( hCCH, " } )" + Chr(13) + Chr(10) )
+         FWrite( hCCH, " } )" + CRLF )
       NEXT
    NEXT
 
-   FWrite( hCCH, Chr(13) + Chr(10) + "RETURN .T." + Chr(13) + Chr(10) )
+   FWrite( hCCH, CRLF + "RETURN .T." + CRLF )
 
-   FWrite( hCCH, Chr(13) + Chr(10) + "FUNCTION InitResults()" + Chr(13) + Chr(10) )
+   FWrite( hCCH, CRLF + "FUNCTION InitResults()" + CRLF )
 
    FOR Counter := 1 TO 3
 
       IF Counter == 1
          aResults      := aDefResults
          sResultsArray := "aDefResults"
-         FWrite( hCCH, Chr(13) + Chr(10) + "/* Defines Results*/" + Chr(13) + Chr(10) + "aDefResults := {}" + Chr(13) + Chr(10) )
+         FWrite( hCCH, CRLF + "/* Defines Results*/" + CRLF + "aDefResults := {}" + CRLF )
       ELSEIF Counter == 2
          aResults      := aTransResults
          sResultsArray := "aTransResults"
-         FWrite( hCCH, Chr(13) + Chr(10) + "/* Translates Results*/" + Chr(13) + Chr(10) + "aTransResults := {}" + Chr(13) + Chr(10) )
+         FWrite( hCCH, CRLF + "/* Translates Results*/" + CRLF + "aTransResults := {}" + CRLF )
       ELSE
          aResults      := aCommResults
          sResultsArray := "aCommResults"
-         FWrite( hCCH, Chr(13) + Chr(10) + "/* Commands Results*/" + Chr(13) + Chr(10) + "aCommResults := {}" + Chr(13) + Chr(10) )
+         FWrite( hCCH, CRLF + "/* Commands Results*/" + CRLF + "aCommResults := {}" + CRLF )
       ENDIF
 
       nResults := Len( aResults )
@@ -4457,12 +4467,12 @@ FUNCTION CompileToCCH( sSource )
             NEXT
             FWrite( hCCH, "} " )
          ENDIF
-         FWrite( hCCH, " } )" + Chr(13) + Chr(10) )
+         FWrite( hCCH, " } )" + CRLF )
       NEXT
 
    NEXT
 
-   FWrite( hCCH, Chr(13) + Chr(10) + "RETURN .T. " + Chr(13) + Chr(10) )
+   FWrite( hCCH, CRLF + "RETURN .T. " + CRLF )
 
    FClose( hCCH )
 

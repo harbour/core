@@ -1,5 +1,13 @@
+2001-02-21 01:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     * Changed all extensions to lower case (.prg, .pp$, .cch ).
+     * Changed Chr(13) + Chr(10) to CRLF which is #defined as HB_OsNewLine() if __HARBOUR__ is defined.
+     * Changed literal size of buffer 16384 to PP_BUFFER_SIZE which is #defined as 16384
+
+     /* Could Linux users please report results... */
+
 2001-02-20 22:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
-    * utils/hbpp//hbpp.c
+    * utils/hbpp/hbpp.c
       - Removed unused variables and function warnned by djgpp
 
 2001-02-20 22:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
