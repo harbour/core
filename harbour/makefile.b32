@@ -8,7 +8,7 @@
 .path.exe = bin
 .path.lib = libs\b32
 .path.obj = obj;source\compiler
-.path.prg = source\rtl;source\tools
+.path.prg = source\rtl;source\tools;source\debug
 
 PROJECT: harbour.exe harbour.lib libs\b32\terminal.lib libs\win32\terminal.lib
 
