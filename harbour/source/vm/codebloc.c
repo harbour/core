@@ -241,8 +241,11 @@ void  hb_codeblockDelete( HB_ITEM_PTR pItem )
 
       /* free space allocated for pcodes - if it was a macro-compiled codeblock
        */
-      if( pCBlock->dynBuffer )
+      if( pCBlock->pCode && pCBlock->dynBuffer )
+      {
          hb_xfree( pCBlock->pCode );
+         pCBlock->pCode = NULL;
+      }
 
       /* free space allocated for a CODEBLOCK structure
       */
@@ -324,4 +327,3 @@ PHB_ITEM  hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, PHB_ITEM pRefer )
 
    return pCBlock->pLocals - pRefer->item.asRefer.value;
 }
-
