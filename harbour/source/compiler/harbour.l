@@ -730,7 +730,7 @@ Separator     {SpaceTab}
 %{
 /* ************************************************************************ */
 %}
-"line"         return LINE;
+"#"{Separator}*"line"  return LINE;
 "local"        BEGIN LOCAL_;
 <LOCAL_>{Separator}+[_a-zA-Z]   { /* an identifier after LOCAL */
                  unput( yytext[ yyleng-1 ] );

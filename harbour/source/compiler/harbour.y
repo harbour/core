@@ -515,6 +515,7 @@ Source     : Crlf
            | MemvarDef
            | Function
            | Statement
+           | Line
            | Source Crlf
            | Source Extern
            | Source Function
@@ -522,6 +523,11 @@ Source     : Crlf
            | Source VarDefs
            | Source FieldsDef
            | Source MemvarDef
+           | Source Line
+           ;
+
+Line       : LINE INTEGER LITERAL Crlf
+           | LINE INTEGER LITERAL '@' LITERAL Crlf   /* XBase++ style */
            ;
 
 Extern     : EXTERN ExtList { _iState =LOOKUP; } Crlf
