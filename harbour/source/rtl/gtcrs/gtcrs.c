@@ -660,7 +660,7 @@ USHORT hb_gt_Box( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right,
       }
       if( Right >= hb_gt_GetScreenWidth() )
       {
-         Width -= Right - hb_gt_GetScreenWidth() + 1;
+         Width -= Right - hb_gt_GetScreenWidth();
       }
 
       if( Col <= Right && Col < hb_gt_GetScreenWidth() && Top >= 0 && Top < hb_gt_GetScreenHeight() )

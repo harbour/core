@@ -1,4 +1,18 @@
-2001-08-21 23:35 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+2001-08-21 16:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * source/rtl/gtcgi/gtcgi.c
+  * source/rtl/gtcrs/gtcrs.c
+  * source/rtl/gtdos/gtdos.c
+  * source/rtl/gtos2/gtos2.c
+  * source/rtl/gtpca/gtpca.c
+  * source/rtl/gtsln/gtsln.c
+  * source/rtl/gtstd/gtstd.c
+  * source/rtl/gtwin/gtwin.c
+    ! Bug fix for clipping at right screen edge.
+    + Minor optimizations for detecting clipping at right and bottom
+      screen edges.
+
+2001-08-21 14:35 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/gtcrs/gtcrs.c
     * Renamed uRow variable to Row in hb_gt_VertLine(), to match the
       name in the other GT libraries and because it is not unsigned.
