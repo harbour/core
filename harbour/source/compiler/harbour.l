@@ -117,7 +117,7 @@ FalseValue    "."[f|n]"."
 
 Separator     {SpaceTab}
 
-%x            STRING1 STRING2 STRING3
+%x            STRING1 STRING2 STRING3 STRING4START STRING4
 %x            NEXT_ BREAK_ CASE_ DO_ WHILE_ WITH_ END_ FIELD_
 %x            FOR_ FUNCTION_ IIF_ IF_ IN_ INIT_
 %x            RETURN_ RECOVER_
@@ -150,6 +150,25 @@ Separator     {SpaceTab}
                         return '[';
                     }
                   }
+
+"QOUT(["    { 
+    /* preprocessed TEXT/ENDTEXT line 
+    NOTE: Clipper preprocesses TEXT/ENDTEXT block into a series of QOUT calls
+    QOUT("...")<EndOfLine>
+    or
+    QOUT([...])<EndOfLine>
+    [] is used if text contains any string delimiters "'[]
+    NOTE: Clipper allows for [[nested]] only if it is preprocessed from
+    TEXT/ENDTEXT block - in normal code the preprocesor uses the first
+    closing ] as a string terminator.
+    */
+    BEGIN STRING4START;
+    unput( '(' );
+    yylval.string = hb_compIdentifierNew( "QOUT", TRUE );
+    hb_comp_iState = IDENTIFIER;
+
+    return IDENTIFIER;
+}
 
 <STRING1>[^'\n]*\n  { BEGIN 0;
                       unput( '\n' );
@@ -201,6 +220,21 @@ Separator     {SpaceTab}
 
                       return LITERAL;
                     }
+
+<STRING4START>\(   { BEGIN STRING4; return( '(' ); }
+<STRING4START>.    { BEGIN 0; unput( yytext[ yyleng-1 ] ); }
+
+<STRING4>.*\]\)\n  { BEGIN 0;
+                      unput( '\n' );
+                      unput( ')' );
+                      yyleng -= 3;
+                      yytext[ yyleng ] = '\0';
+                      yylval.string = hb_compIdentifierNew( yytext, TRUE );
+                      hb_comp_iState = LITERAL;
+
+                      return LITERAL;
+                    }
+<STRING4>.        { BEGIN STRING3; unput( yytext[ yyleng-1 ] ); }
 
 {SpaceTab}     ;
 
