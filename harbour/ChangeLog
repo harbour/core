@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-01-10 17:30 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/filesys.c
+    ! The MingW32 use of _LK_UNLOCK instead of _LK_UNLCK turned out to
+      be a bug in a MingW32 that has since been corrected, so the fix
+      has been reverted. Thanks go to Phil Krylov <phil@mail.ru> for
+      pointing this out. In order to allow this to work with the buggy
+      version of MingW32, I've added a #define _LK_UNLCK _LK_UNLOCK if
+      compiling for __MINGW32__ and _LK_UNLCK is not defined.
+
 2003-01-10 17:00 UTC-0500 David G. Holm <dholm@jsd-llc.com>
   * source/rdd/dbfcdx/dbfcdx1.c
     ! hb_fsDelete takes a BYTE * parameter, not an unsigned char * one.

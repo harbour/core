@@ -158,6 +158,9 @@
    #if defined(_MSC_VER) || defined(__MINGW32__)
       #include <sys\locking.h>
       #define ftruncate _chsize
+      #if defined(__MINGW32__) && !defined(_LK_UNLCK)
+         #define _LK_UNLCK _LK_UNLOCK
+      #endif
    #else
       #define ftruncate chsize
       #if !defined(HAVE_POSIX_IO)
@@ -1378,7 +1381,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
             break;
 
          case FL_UNLOCK:
-            bResult = ( _locking( hFileHandle, _LK_UNLOCK, ulLength ) == 0 );
+            bResult = ( _locking( hFileHandle, _LK_UNLCK, ulLength ) == 0 );
             break;
 
          default:
