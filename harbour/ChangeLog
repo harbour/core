@@ -1,3 +1,8 @@
+19990909-20:55 EDT David G. Holm <dholm@jsd-llc.com>
+  * include/filesys.api
+    ! Added FS_ERROR (defined using '#define FS_ERROR F_ERROR'
+      following the already present '#include "fileio.ch"').
+
 19990909-20:00 EDT David G. Holm <dholm@jsd-llc.com>
   * include/fileio.ch
   * source/rdd/dbcmd.c

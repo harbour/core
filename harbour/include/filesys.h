@@ -32,6 +32,7 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.22   David G. Holm               Added FS_ERROR.
    V 1.21   David G. Holm               Added hb_fsFile().
    V 1.7    Victor Szel                 #include <x> changed to #include "x".
    V 1.6    David G. Holm               Added my email address.
@@ -50,6 +51,8 @@
 
 #include "extend.h"
 #include "fileio.ch"
+
+#define FS_ERROR F_ERROR
 
 typedef int    FHANDLE;
 
