@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-07-19 12:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * doc/whatsnew.txt
+      *added some items and divided into few sections
+
 2004-07-18 19:50 UTC+0200 Tomaz Zupan <tomaz.zupan@orpo.si>
   * harbour.spec
     * Changed Optimisation level for rpm package to -O2,

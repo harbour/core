@@ -4,81 +4,130 @@
 
 ----------------------------------------------------------------------
 Version 0.44 Alpha Build 44 (2004-07-??)
-
+The compiler
+------------
 - Fixed support for late/early evaluation of macro exressions in a codeblock
   (Flex version). Harbour(flex) is now full Clipper compatible here.
 - Fixed support for stringify match markers <""> and <()> in Flex version.
-- Fixed codeblock scanning - this should cure random GPFs.
-- Minor fix for calculating the maximum keys number in index page.
-- HB_GT_KEYMAP() - Support for runtime definition of keycodes mapping.
-- Improved recognition of xterm compatible terminals
-- New compatibility flag -ks was added to enable support for
-  strings as array of bytes.
+- New compiler flag -ks was added to enable support for
+  strings as array of bytes. (Notice that support for strings
+  as array of bytes is disabled by default both in the Harbour compiler
+  and in harbour's runtime modules) 
+- Added a new compiler switch -kJ to disable jump optimalization and
+  NOOP pcode removal (optimalization is enabled by default).
 - When xbase mode is not used (-kc or -kch) then compiler doesn't
   generate the pcode for these xbase extended features.
 - Added support for DO <proc> WITH @variable
-- Latest RDD changes synced with xHarbour.
 - Fixed optimalization of literal strings that contain macro operator.
 - Enabled support for break[].
-- Fixed to correctly generate an address for far jumps
-- Fixed optimalization of far jumps
-- Added a new switch -kJ to disable jump optimalization and
-  NOOP pcode removal (optimalization is enabled by default).
-- HBVer - A utility to automatically update include/hbver.h.
-- Fixed to release PUBLIC variables correctly
+- Fixed optimalization of far jumps (this fixes generation of pcode
+  for abnormally large (DO CASE/IF/ELSEIF statements)
 - Added support to OpenWatcom DOS/Win32.
-- Fixed dbCreate() bug that closed an open dbf with same name as newly
-  created dbf in a different folder.
-- Fixed bug in Directory( "c:\*.*" ) that returned 0 when hidden files
-  were present.
-- When debug information is requested then the compiler generates
-  correct pcode with static variable name.
-- The pcode of a codeblock contains the module name (in debug mode).
-- Enhanced Debugger.
 - Fixed compilation of &(exp) in normal stringify
   markers (this fixes INDEX ON bug).
-- Alert() Fixed bug with messages longer then 60 bytes.
-- FIELDPUT() Fixed to accept and ignore field NIL values
-  without runtime error. C52 compatible.
-- TGet:display() fixed to always evaluate the get block before
-  displaying like in C52.
-- Added missing support for @&macro and @M->memvar
-- Added new pcode HB_MACROPUSHREF
+- Added missing support for @&macro and @M->memvar (aAdded a new 
+  pcode HB_MACROPUSHREF)
 - Fixed generation of pcode for &(macro)->() syntax.
 - Fixed #define parsing of pseudofunctions in cases where
   passed argument has the same name as declared parameter.
-- BLDTEST : simple C program to check if Harbour can be compiled on
-  used machine / system / C compiler.
-- TBColumn - Added PreBlock and PostBlock instance variables for
-  Clipper 5.3x compatibility.
-- Added scopped relations. Now OrdSetRelation() works with DBFCDX like it
-  does with Clipper 5.3b.
+- Fixed parsing of nested #defines in command/translate
 - Macro - Added HB_SM_ARRSTR support.
-- Fixed TYPE() function to return correct value when an  assigment to
-  undeclared variable is checked (Clipper creates the memvar variable).
 - Clipper preproceses '**' into '^' - harbour too
-- Fixed to correctly check for infinity on Unix STR(LOG(-1)) no longer
-  core dumps.
-- Fixed infinite support for WatcomC.
-- Fixed to release memory in cases where invalid syntax was macro compiled.
-- Macro - Fixed bug cousing that some memory was deallocated more then once.
 - Added HB_COUNTER and HB_PTRDIFF types - first for reference counters and
   second for any pointer differences and pointer to integer conversions.
 - HB_EXPORT is added to ITEM API, FILE API and some other function
   definitions to make it possible to call them when they are in the dll.
-- Added missing code to use HB_IT_POINTER just like other value's type.
 - Removed all pointer/long castings (except runner.c).
-- Changes to ADSCOPYTABLE.
-- Changes to ADSCOPYTABLECONTENTS.
-- Fixed optimalization of AT,ASC,LEN,CHR functions in the macro compiler.
-- Added posibility to specify the output PPO file with -p
+- Fixed optimalization of AT,ASC,LEN,CHR functions
+- Added posibility to specify the output PPO filename with -p flag
+  e.g.  -pppo/myfile.ppo
+- harbour.l modified to compile correctly with flex version 2.5.31.
+- Fixed to compile FOR var[index]
+
+The runtime modules
+-------------------
+- Enhanced Debugger.
+- Added missing code to use HB_IT_POINTER just like other value's type.
+  For example:
+      p = GET_SOME_POINTER()
+      ? VALTYPE(p)   //prints: 'P'
+      ? p   //prints: 0x12345678
+- The support for runtime definition of keycodes mapping was added
+  (translation from terminal key sequences into INKEY() codes)
+  eterm.map and linux.map are example files with keycode mapping
+  HB_GT_KEYMAP() function was added (ncurses GT only)
+- Added possibility to load a character mapping using HB_GT_CHARMAP()
+  (ncurses GT only)
+- Improved recognition of xterm compatible terminals (ncurses GT only)
+- New internal command line arguments were added to control
+  application at runtime:
+        //FLAGS:switches
+            this flag controls compatibility issues of the virtual
+            machine
+            Available switches:
+            c - Clipper compatibility
+            h - Harbour extensions (enabled by default)
+            s - enable support for strings as array of bytes (disabled
+                by default)
+            For example:
+            myapp //FLAGS:ch
+            will disable support for strings as array of bytes
+
+        //CANCEL:key
+        //CANCELEX:keyex
+            this flag allows change the keycode of application cancel
+            request (usually Alt-C) - using normal INKEY() keycodes
+            or extended keycodes (CANCELEX)
+            For example:
+            myapp //CANCEL:304
+            will change Alt-c into Alt-b for cancelling (Alt-c is used
+            to insert polish diactric letter)
+- Fixed to release PUBLIC variables correctly
+- Fixed bug in Directory( "c:\*.*" ) that returned 0 when hidden files
+  were present.
+- Alert() Fixed bug with messages longer then 60 bytes.
+- TGet:display() fixed to always evaluate the get block before
+  displaying like in C52.
+- TBColumn - Added PreBlock and PostBlock instance variables for
+  Clipper 5.3x compatibility.
+- Fixed TYPE() function to return correct value when an  assigment to
+  undeclared variable is checked (Clipper creates the memvar variable).
 - TGet - Fixed to correctly display buffer when negative value
   and '0' was pressed in the position next to decimal point.
 - TGet - Fixed support for '9999.' picture.
 - TRANSFORM(1.23,"999.") correctly returns "  1." now instead of empty string.
-- harbour.l modified to compile correctly with flex version 2.5.31.
+- Fixed to correctly check for infinity on Unix STR(LOG(-1)) no longer
+  core dumps.
+- Fixed infinite support for WatcomC.
+- Fixed to release memory in cases where invalid syntax was macro compiled.
+- Added DATA CapRow and DATA CapCol values to TGET class
+  (for Clipper 5.3x compatibility).
+- Fixed to correctly return the procedure name where the codeblock was created.
+- Greek and Serbian language codepage files added.
+- fixed to use 'mkstemp' on Unix (no more GCC linker warnings)
+- Fixed file find API to be compatible with CA-Cl*pper on the lower level.
+- Fixes in TBColumn class
+
+RDD
+---
+- Latest RDD changes synced with xHarbour.
+- Fixed dbCreate() bug that closed an open dbf with same name as newly
+  created dbf in a different folder.
+- FIELDPUT() Fixed to accept and ignore field NIL values
+  without runtime error. C52 compatible.
+- Added scopped relations. Now OrdSetRelation() works with DBFCDX like it
+  does with Clipper 5.3b.
+- Changes to ADSCOPYTABLE.
+- Changes to ADSCOPYTABLECONTENTS.
+- Fixed rddMoveRecords() so that copied records, which are
+  deleted, maintain their deleted status.
+
+Utilities
+---------
+- HBVer - A utility to automatically update include/hbver.h.
+- BLDTEST : simple C program to check if Harbour can be compiled on
+  used machine / system / C compiler.
 - Some updates for the Spanish documents.
-- Fixed to compile FOR var[index]
 
 ----------------------------------------------------------------------
 Version 0.43 Alpha Build 43 (2003-10-01)
