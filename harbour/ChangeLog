@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-06-21 14:07 UTC-0500 Randy Portnoff <randy@palmasdev.com>
+
+  * source/rdd/dbcmd.c
+  * Fixed rddMoveRecords() so that copied records, which are
+    deleted, maintain their deleted status.
+    Reported by Marcos Gambeta
+
 2004-06-08 22:50 UTC+0300 Phil Krylov <phil@newstar.rinet.ru>
   * source/rtl/inkey.c
     ! Renamed SETLASTKEY() to HB_SETLASTKEY().
@@ -19,7 +26,7 @@
   * contrib/libct/makefile.bc
   * contrib/libct/makefile.vc
     + Reimplemented SETLASTKEY() through HB_SETLASTKEY()
-    
+
 2004-06-08 22:10 UTC+0300 Phil Krylov <phil@newstar.rinet.ru>
   - contrib/libct/setlast.prg
   * contrib/libct/Makefile
@@ -46,8 +53,8 @@
   * source/debug/debugger.prg
     ! Fixed Left and Right keys behaviour in the code window (fix by Lorenzo
       Fiorini, borrowed from xHarbour).
-    ! Also from xHarbour, but written by myself: 
-    ! Restore LastKey() value on program execution. 
+    ! Also from xHarbour, but written by myself:
+    ! Restore LastKey() value on program execution.
     ! Fixed Step() behaviour.
     ! Removed the last dependencies of the debugger on SET_EXACT setting.
     ! Fixed some issues with the Monitor window.
@@ -67,7 +74,7 @@
       over PATH to search for source files.
 
 2004-06-03 11:00 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
-   
+
    * source/compiler/harbour.c
       * fixed to compile FOR var[index]
 
@@ -76,9 +83,9 @@
 
   * doc\en\file.txt
     * function FOPEN()
-    ! Fixed the meaning of FO_DENYNONE 
+    ! Fixed the meaning of FO_DENYNONE
     + Added FO_SHARED definition to the table
-   
+
     * function FCREATE()
     ! Fixed table title name, changed Atribute for Meaning
 
@@ -97,13 +104,13 @@
     ! Fixed typo at $RETURNS$ section
 
   + doc\es\file.txt
-    + Added file's operations document 
+    + Added file's operations document
 
 
 2004-05-27 14:35 UTC-0400 Alejandro de Garate <alex_degarate@hotmail.com>
 
   + doc/es/codestyl.txt
-    + Added code style document file, missing in the last commit 
+    + Added code style document file, missing in the last commit
 
   + doc/es/hb_apiln.txt
     + Added Lang API Document
@@ -189,7 +196,7 @@
 
    * source/codepage/cdpsrwin.c
       *replaced CR+LF with LF only
-      
+
 
 2004-05-18 15:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/cdpapi.c
