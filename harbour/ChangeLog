@@ -1,3 +1,10 @@
+2000-01-20 14:15 GMT-5 David G. Holm <dholm@ sd-llc.com>
+
+   * source/rtl/dates.c
+     ! Corrected CTOD() to include 0 as a year subject to SET EPOCH
+       (the range had been accidentally set to 1 through 99 instead
+       of 0 through 99).
+
 20000119-21:21 GMT+3 Alexander Kresin
   * source/pp/hbpp.c
     * Few bugs fixed, reported by Matteo Baccan and Dave Pearson

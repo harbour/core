@@ -317,7 +317,7 @@ HARBOUR HB_CTOD( void )
             }
          }
 
-         if( y_value > 0 && y_value < 100 )
+         if( y_value >= 0 && y_value < 100 )
          {
             count = hb_set.HB_SET_EPOCH % 100;
             digit = hb_set.HB_SET_EPOCH / 100;
