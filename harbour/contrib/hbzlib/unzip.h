@@ -266,7 +266,6 @@ extern int ZEXPORT unzGetLocalExtrafield OF((unzFile file,
   the return value is the number of bytes copied in buf, or (if <0) 
 	the error code
 */
-
 #ifdef __cplusplus
 }
 #endif

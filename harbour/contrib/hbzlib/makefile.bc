@@ -102,7 +102,7 @@ $(OBJ_DIR)\zlibapi.obj : $(ZLIB_DIR)\zlibapi.c
    tlib $(ZLIB_LIB) $(ARFLAGS) -+$@,,
 
 $(ZLIB_BOR_DEF) : $(ZLIB_DEF_OBJ)
-    $(ID) -a  $(LIB_DIR)\zlib.def  $(ZLIB_DIR)\zlib.dll
+    $(ID)  $(LIB_DIR)\zlib.def  $(ZLIB_DIR)\zlib.dll
 
 $(ZLIB_BOR_LIB) : $(ZLIB_BOR_LIB_OBJ)
     $(IL)  $(LIB_DIR)\zlib_bor.lib   $(LIB_DIR)\zlib.def

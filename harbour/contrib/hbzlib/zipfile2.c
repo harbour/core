@@ -49,10 +49,12 @@
 # include <direct.h>
 # include <io.h>
 #endif
-
+#include "unzip.h"
 #define CASESENSITIVITY (0)
 #define WRITEBUFFERSIZE (8192)
 extern int err;
+        uLong uiCounter;
+        unzFile szUnzipFile=NULL;
 
 void hb____ChangeFileDate(char *filename,uLong dosdate,tm_unz tmu_date)
 {
@@ -90,17 +92,17 @@ void hb____ChangeFileDate(char *filename,uLong dosdate,tm_unz tmu_date)
 
 /* mymkdir and change_file_date are not 100 % portable
    As I don't know well Unix, I wait feedback for the unix portion */
-int hb___MakeDir(char *NewDirectory)
+int hb___MakeDir(char *szNewDirectory)
 {
   char *szBuffer ;
-  char *p;
-  int  uiLen = strlen(NewDirectory);  
+  char *szTemp;
+  int  uiLen = strlen(szNewDirectory);  
 
   if (uiLen <= 0) 
     return 0;
 
   szBuffer = (void*)hb_xalloc(uiLen+1);
-  strcpy(szBuffer,NewDirectory);
+  strcpy(szBuffer,szNewDirectory);
   
   if (szBuffer[uiLen-1] == '/') {
     szBuffer[uiLen-1] = '\0';
@@ -111,63 +113,64 @@ int hb___MakeDir(char *NewDirectory)
       return 1;
     }
 
-  p = szBuffer+1;
+  szTemp = szBuffer+1;
   while (1)
     {
-      char hold;
+      char szHold;
       int iResult;
-      while(*p && *p != '\\' && *p != '/')
-        p++;
-      hold = *p;
-      *p = 0;
+      while(*szTemp && *szTemp != '\\' && *szTemp != '/')
+        szTemp++;
+      szHold = *szTemp;
+      *szTemp = 0;
       iResult=hb_fsMkDir(szBuffer);
       if (( iResult== -1) && (errno == ENOENT))
         {
           hb_xfree((void*) szBuffer);
           return 0;
         }
-      if (hold == 0)
+      if (szHold == 0)
         break;
-      *p++ = hold;
+      *szTemp++ = szHold;
     }
   hb_xfree((void*) szBuffer);
   return 1;
 }
 
-int hb___ExtractOneFile(unzFile uf,const char* filename,int opt_extract_without_path,int opt_overwrite,PHB_ITEM pBlock)
+int hb___ExtractOneFile(unzFile szUnzipFile,const char* filename,BOOL opt_extract_without_path,BOOL opt_overwrite,PHB_ITEM pBlock)
 {
     err = UNZ_OK;
-    if (unzLocateFile(uf,filename,CASESENSITIVITY)!=UNZ_OK)
+    if (unzLocateFile(szUnzipFile,filename,CASESENSITIVITY)!=UNZ_OK)
     {
         return 2;
     }
 
-    if (hb___ExtractCurrentFile(uf,&opt_extract_without_path,
-                                      &opt_overwrite,pBlock) == UNZ_OK)
-        return 0;
-    else
+    if (hb___ExtractCurrentFile(szUnzipFile,opt_extract_without_path,
+                                      opt_overwrite,pBlock) == UNZ_OK)
         return 1;
+    else
+        return 0;
 }
 
-int hb___Extract(unzFile uf,int opt_extract_without_path,int opt_overwrite,PHB_ITEM pBlock)
+int hb___Extract(unzFile szUnzipFile,BOOL bExtractPath,BOOL opt_overwrite,PHB_ITEM pBlock)
 {
-        uLong uiCount;
         unz_global_info szGlobalUnzipInfo;
 
+        err = unzGetGlobalInfo (szUnzipFile,&szGlobalUnzipInfo);
 
-        err = unzGetGlobalInfo (uf,&szGlobalUnzipInfo);
         if (err!=UNZ_OK) {
 /*                printf("error %d with zipfile in unzGetGlobalInfo \n",err);*/
 }
-        for (uiCount=1;uiCount<=szGlobalUnzipInfo.number_entry;uiCount++)
+        for (uiCounter=1;uiCounter<=szGlobalUnzipInfo.number_entry;uiCounter++)
 	{
-        if (hb___ExtractCurrentFile(uf,&opt_extract_without_path,
-                                      &opt_overwrite, pBlock) != UNZ_OK)
-            break;
 
-                if ((uiCount+1)<=szGlobalUnzipInfo.number_entry)
+        if (hb___ExtractCurrentFile(szUnzipFile,bExtractPath,
+                                      opt_overwrite, pBlock) != UNZ_OK)
+                                      {
+            break;
+                 }
+                if (uiCounter+1<=szGlobalUnzipInfo.number_entry)
 		{
-			err = unzGoToNextFile(uf);
+                        err = unzGoToNextFile(szUnzipFile);
 			if (err!=UNZ_OK)
 			{
 				break;
@@ -175,24 +178,22 @@ int hb___Extract(unzFile uf,int opt_extract_without_path,int opt_overwrite,PHB_I
 		}
 	}
 
-	return 0;
+        return 1;
 }
 
 
 
 
-int hb___unZipFiles(char *szFile,PHB_ITEM pBlock,BOOL iExtractPath)
+BOOL hb___unZipFiles(char *szFile,PHB_ITEM pBlock,BOOL bExtractPath)
 {
         const char *szZipFileName=NULL;
-        const char *filename_to_extract=NULL;
+        const char *szFilename_to_Extract=NULL;
 	int i;
-	int opt_do_list=0;
-	int opt_do_extract=1;
-        int opt_do_extract_withoutpath=iExtractPath;
+        BOOL opt_do_extract=1;
 
 	int opt_overwrite=0;
-	char filename_try[512];
-	unzFile uf=NULL;
+        char szFilename_Try[512];
+/*        unzFile szUnzipFile=NULL;*/
 
                 if (szZipFileName == NULL)
                 {
@@ -201,35 +202,35 @@ int hb___unZipFiles(char *szFile,PHB_ITEM pBlock,BOOL iExtractPath)
 
         if (szZipFileName!=NULL)
 	{
-                strcpy(filename_try,szZipFileName);
-                uf = unzOpen(szZipFileName);
-		if (uf==NULL)
+                strcpy(szFilename_Try,szZipFileName);
+                szUnzipFile = unzOpen(szZipFileName);
+                if (szUnzipFile==NULL)
 		{
-			strcat(filename_try,".zip");
-			uf = unzOpen(filename_try);
+                        strcat(szFilename_Try,".zip");
+                        szUnzipFile = unzOpen(szFilename_Try);
 		}
 	}
 
-	if (uf==NULL)
+        if (szUnzipFile==NULL)
 	{
 /*                printf("Cannot open %s or %s.zip\n",szZipFileName,szZipFileName);*/
 		exit (1);
 	}
 
-        if (opt_do_extract==1)
+        if (opt_do_extract)
     {
-        if (filename_to_extract == NULL)
-                    return hb___Extract(uf,opt_do_extract_withoutpath,opt_overwrite,pBlock);
+        if (szFilename_to_Extract == NULL)
+                    return hb___Extract(szUnzipFile,bExtractPath,opt_overwrite,pBlock);
         else
-            return hb___ExtractOneFile(uf,filename_to_extract,
-                                      opt_do_extract_withoutpath,opt_overwrite,pBlock);
+            return hb___ExtractOneFile(szUnzipFile,szFilename_to_Extract,
+                                      bExtractPath,opt_overwrite,pBlock);
     }
-	unzCloseCurrentFile(uf);
+        unzCloseCurrentFile(szUnzipFile);
 
-	return 0;  /* to avoid warning */
+        return 1;  /* to avoid warning */
 }
 
-int hb___ExtractCurrentFile(unzFile uf,const int* popt_extract_without_path,int* popt_overwrite,PHB_ITEM pBlock)
+int hb___ExtractCurrentFile(unzFile szUnzipFile,BOOL popt_extract_without_path,BOOL popt_overwrite,PHB_ITEM pBlock)
 {
 	char filename_inzip[256];
 	char* filename_withoutpath;
@@ -240,9 +241,9 @@ int hb___ExtractCurrentFile(unzFile uf,const int* popt_extract_without_path,int*
     uInt size_buf;
 	
 	unz_file_info file_info;
-	uLong ratio=0;
+
       err=UNZ_OK;
-	err = unzGetCurrentFileInfo(uf,&file_info,filename_inzip,sizeof(filename_inzip),NULL,0,NULL,0);
+        err = unzGetCurrentFileInfo(szUnzipFile,&file_info,filename_inzip,sizeof(filename_inzip),NULL,0,NULL,0);
 
 	if (err!=UNZ_OK)
 	{
@@ -266,7 +267,7 @@ int hb___ExtractCurrentFile(unzFile uf,const int* popt_extract_without_path,int*
 
 	if ((*filename_withoutpath)=='\0')
 	{
-		if ((*popt_extract_without_path)==0)
+                if (popt_extract_without_path)
 		{
                         hb_fsMkDir(filename_inzip);
 		}
@@ -277,7 +278,7 @@ int hb___ExtractCurrentFile(unzFile uf,const int* popt_extract_without_path,int*
                 char* write_filename;
 		int skip=0;
 
-                if ((*popt_extract_without_path)==0) {
+                if ((popt_extract_without_path)) {
 
 			write_filename = filename_inzip;
                         
@@ -294,7 +295,7 @@ int hb___ExtractCurrentFile(unzFile uf,const int* popt_extract_without_path,int*
                 }
 
 
-		err = unzOpenCurrentFile(uf);
+                err = unzOpenCurrentFile(szUnzipFile);
 		if (err!=UNZ_OK)
 		{
 		}
@@ -306,7 +307,7 @@ int hb___ExtractCurrentFile(unzFile uf,const int* popt_extract_without_path,int*
 
 
             /* some zipfile don't contain directory alone before file */
-            if ((fout==-1) && ((*popt_extract_without_path)==0) && 
+            if ((fout==-1) && ((popt_extract_without_path)) && 
                                 (filename_withoutpath!=(char*)filename_inzip))
             {
                 char c=*(filename_withoutpath-1);
@@ -324,7 +325,7 @@ int hb___ExtractCurrentFile(unzFile uf,const int* popt_extract_without_path,int*
 
 			do
 			{
-				err = unzReadCurrentFile(uf,buf,size_buf);
+                                err = unzReadCurrentFile(szUnzipFile,buf,size_buf);
 				if (err<0)	
 				{
 
@@ -347,14 +348,14 @@ int hb___ExtractCurrentFile(unzFile uf,const int* popt_extract_without_path,int*
 
         if (err==UNZ_OK)
         {
-		    err = unzCloseCurrentFile (uf);
+                    err = unzCloseCurrentFile (szUnzipFile);
 		    if (err!=UNZ_OK)
 		    {
 
 		    }
         }
         else
-            unzCloseCurrentFile(uf); /* don't lose the error */       
+            unzCloseCurrentFile(szUnzipFile); /* don't lose the error */       
 	}
 
     hb_xfree((void*)buf);    
