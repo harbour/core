@@ -5,7 +5,9 @@
 ROOT = ../../
 
 C_SOURCES=\
-	cdpgedos.c    \
+        cdpesdos.c    \
+        cdpeswin.c    \
+        cdpgedos.c    \
 	cdpgewin.c    \
 	cdpla850.c    \
 	cdppl852.c    \
@@ -14,7 +16,7 @@ C_SOURCES=\
 	cdpru866.c    \
 	cdprukoi.c    \
 	cdpruwin.c
-	
+
 LIBNAME=codepage
 
 include $(TOP)$(ROOT)config/lib.cf

@@ -394,6 +394,7 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgen.obj \
    $(OBJ_DIR)\msgeo.obj \
    $(OBJ_DIR)\msges.obj \
+   $(OBJ_DIR)\msgeswin.obj \
    $(OBJ_DIR)\msgeu.obj \
    $(OBJ_DIR)\msgfr.obj \
    $(OBJ_DIR)\msggl.obj \
@@ -422,6 +423,8 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgzhb5.obj
 
 CODEPAGE_LIB_OBJS = \
+   $(OBJ_DIR)\cdpesdos.obj \
+   $(OBJ_DIR)\cdpeswin.obj \
    $(OBJ_DIR)\cdpgedos.obj \
    $(OBJ_DIR)\cdpgewin.obj \
    $(OBJ_DIR)\cdpla850.obj \
@@ -2057,6 +2060,10 @@ $(OBJ_DIR)\msges.obj : $(LANG_DIR)\msges.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\msgeswin.obj : $(LANG_DIR)\msgeswin.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\msgeu.obj : $(LANG_DIR)\msgeu.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
@@ -2164,6 +2171,14 @@ $(OBJ_DIR)\msgzhgb.obj : $(LANG_DIR)\msgzhgb.c
 #
 # CODEPAGE.LIB dependencies
 #
+$(OBJ_DIR)\cdpesdos.obj : $(CODEPAGE_DIR)\cdpesdos.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\cdpeswin.obj : $(CODEPAGE_DIR)\cdpeswin.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\cdpgedos.obj : $(CODEPAGE_DIR)\cdpgedos.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
