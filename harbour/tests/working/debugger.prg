@@ -1,4 +1,22 @@
-// Harbour debugger first outline
+/* Harbour debugger first outline
+ * Copyright(C) 1999 by Antonio Linares <alinares@fivetech.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to:
+ *
+ * The Free Software Foundation, Inc.,
+ * 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
 
 #include "box.ch"
 #include "classes.ch"
@@ -267,6 +285,7 @@ METHOD ClosePopup( nPopup ) CLASS TDbMenu
 
    local oPopup
 
+   // dispbegin()
    if nPopup != 0
       oPopup = ::aItems[ nPopup ]:bAction
       RestScreen( oPopup:nTop, oPopup:nLeft, oPopup:nBottom + 1, oPopup:nRight + 1,;
@@ -278,6 +297,7 @@ METHOD ClosePopup( nPopup ) CLASS TDbMenu
       @ 0, ::aItems[ nPopup ]:nCol + nAt := At( "&", ::aItems[ nPopup ]:cPrompt ) - 1 SAY ;
         SubStr( ::aItems[ nPopup ]:cPrompt, nAt + 2, 1 ) COLOR ::cClrHotKey
    endif
+   // dispend()
 
 return nil
 
@@ -295,6 +315,7 @@ METHOD Display() CLASS TDbMenu
 
    SetColor( ::cClrPopup )
 
+   // DispBegin()
    if ! ::lPopup
       @ 0, 0 SAY Space( MaxCol() + 1 ) COLOR ::cClrPopup
       DevPos( 0, 0 )
@@ -317,6 +338,7 @@ METHOD Display() CLASS TDbMenu
             SubStr( ::aItems[ n ]:cPrompt, nAt + 2, 1 ) COLOR ::cClrHotKey
       endif
    next
+   // DispEnd()
 
 return nil
 
@@ -365,6 +387,7 @@ METHOD GoLeft() CLASS TDbMenu
 
    local oMenuItem := ::aItems[ ::nOpenPopup ]
 
+   // DispBegin()
    if ::nOpenPopup != 0
       if ! ::lPopup
          ::ClosePopup( ::nOpenPopup )
@@ -388,6 +411,7 @@ METHOD GoLeft() CLASS TDbMenu
          ::ShowPopup( ::nOpenPopup := Len( ::aItems ) )
       endif
    endif
+   // DispEnd()
 
 return nil
 
@@ -395,7 +419,7 @@ METHOD GoRight() CLASS TDbMenu
 
    local oMenuItem := ::aItems[ ::nOpenPopup ]
 
-
+   // DispBegin()
    if ::nOpenPopup != 0
       if ! ::lPopup
          ::ClosePopup( ::nOpenPopup )
@@ -419,6 +443,7 @@ METHOD GoRight() CLASS TDbMenu
          ::ShowPopup( ::nOpenPopup := 1 )
       endif
    endif
+   // DispEnd()
 
 return nil
 
