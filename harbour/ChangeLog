@@ -1,3 +1,7 @@
+2001-02-13 12:21 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * harbour/source/debug/debugger.prg
+     ! Trace support fixed
+
 2001-02-13 11:30 GMT+1 Ignacio Ortiz <ignacio@fivetech.com>
    * harbour/source/rtl/tget.prg
      + Minus support fixed
