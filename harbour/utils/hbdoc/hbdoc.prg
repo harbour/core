@@ -453,9 +453,9 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       FWRITE( nHpj, '[WINDOWS]' + CRLF + 'Commands="Harbour Commands",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF +'API="Harbour Commands",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF +       'Error="Harbour Run Time Errors",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Tools="Harbour Tools",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Class="Harbour OOP Commands",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Funca="Harbour Run Time Functions A-M",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Funcn="Harbour Run Time Functions N-_",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Main="HARBOUR",(117,100,894,873),60672,(r14876671),(r12632256),f2' + CRLF )
       FCLOSE( nHpj )
       nHpj := FCREATE( lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".cnt"  )
-      FWRITE( nHpj, ':Base'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hlp"+ CRLF )
-      FWRITE( nHpj, ':Title'+cTitle+CRLF)
-      FWRITE( nHpj, ':Index harbour='+lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hlp"+ CRLF )
+      FWRITE( nHpj, ':Base '+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hlp"+ CRLF )
+      FWRITE( nHpj, ':Title '+cTitle+CRLF)
+      FWRITE( nHpj, ':Index '+lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +'='+lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hlp"+ CRLF )
       FWRITE( nHpj, '1 Harbour'+CRLF)
       asort(aWww,,,{|x,y| x[3]+x[1]<y[3]+y[1]})
       for ppp:=1 to len(aWww)
@@ -484,7 +484,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       nItem := len(aResult)
       asort(aResult,,,{|x,y| x<y})
       for ppp:=1 to nItem
-      ? ppp
+
         cLast:=GetNextContent(ppp)
         if cLast<>'Run Time Errors' .and. cLast <>"Document"  .and. cLast <>"The garbage collector"  .and. cLast <>"OOP Command" .and. cLast <>"Command"  .and. cLast <>"The idle states"
             WriteContentFile(aWww,cLast,nHpj)
