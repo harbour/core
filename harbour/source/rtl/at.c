@@ -56,6 +56,24 @@
 
 /* locates a substring in a string */
 
+#if defined( HB_C52_STRICT )
+
+HB_FUNC( AT )
+{
+   PHB_ITEM pSub = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pText = hb_param( 2, HB_IT_STRING );
+
+   if( pText && pSub )
+   {
+      hb_retnl( hb_strAt( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
+                          hb_itemGetCPtr( pText ), hb_itemGetCLen( pText ) ) );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, "AT", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+}
+
+#else
+
 HB_FUNC( AT )
 {
    PHB_ITEM pSub = hb_param( 1, HB_IT_STRING );
@@ -84,3 +102,5 @@ HB_FUNC( AT )
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, "AT", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
 }
+
+#endif
