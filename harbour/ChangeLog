@@ -1,3 +1,7 @@
+19990604-00:25 CET Eddie Runia
+  * source/rtl/classes.c
+    With _GetClassName(); optimized; more comments; more clean-up
+
 19990603-21:50 CET Eddie Runia
   * source/rtl/classes.c; tests/working/run_exp.h
     OBJFUNC.PRG added to init symbols scheme.
