@@ -4,6 +4,7 @@
 
 #include <extend.h>
 #include <ctoharb.h>
+#include <itemapi.h>
 
 #define EF_CANRETRY     1
 #define EF_CANDEFAULT	4
@@ -20,11 +21,15 @@ extern SYMBOL symEval;
 
 PHB_ITEM _errNew( void )
 {
+   PHB_ITEM pReturn = hb_itemNew( NULL );
+
    PushSymbol( GetDynSym( "ERRORNEW" )->pSymbol );
    PushNil();
    Do( 0 );
 
-   return &stack.Return;
+   ItemCopy( pReturn, &stack.Return );
+
+   return pReturn;
 }
 
 char * _errGetDescription( PHB_ITEM pError )
@@ -41,6 +46,7 @@ PHB_ITEM _errPutDescription( PHB_ITEM pError, char * szDescription )
    Push( pError );
    PushString( szDescription, strlen( szDescription ) );
    Do( 1 );
+
    return pError;
 }
 
@@ -160,6 +166,6 @@ WORD _errLaunch( PHB_ITEM pError )
 
 void _errRelease( PHB_ITEM pError )
 {
-   ItemRelease( pError );
+   hb_itemRelease( pError );
 }
 

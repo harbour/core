@@ -179,6 +179,7 @@ WORD JumpTrue( int iOffset );           /* generates the pcode to jump if true *
 void Line( void );                      /* generates the pcode with the currently compiled source code line */
 void LineBody( void );                  /* generates the pcode with the currently compiled source code line */
 void Message( char * szMsgName );       /* sends a message to an object */
+void MessageFix( char * szMsgName );    /* fix a generated message to an object */
 void PopId( char * szVarName );         /* generates the pcode to pop a value from the virtual machine stack onto a variable */
 void PushDouble( double fNumber, BYTE bDec ); /* Pushes a number on the virtual machine stack */
 void PushId( char * szVarName );        /* generates the pcode to push a variable value to the virtual machine stack */
@@ -375,6 +376,7 @@ WORD _wForCounter   = 0;
 WORD _wIfCounter    = 0;
 WORD _wWhileCounter = 0;
 WORD _wCaseCounter  = 0;
+LONG _lMessageFix   = 0;  /* Position of the message which needs to be changed */
 #ifdef HARBOUR_OBJ_GENERATION
 int _iObj32 = 0;           /* generate OBJ 32 bits */
 #endif
@@ -433,8 +435,8 @@ PATHNAMES *_pIncludePath = NULL;
 %right '\n' ';' ',' '='
 /*the highest precedence*/
 
-%type <string>  IDENTIFIER LITERAL FunStart MethStart IdSend
-%type <dNum>    DOUBLE ObjectData
+%type <string>  IDENTIFIER LITERAL FunStart MethStart IdSend ObjectData
+%type <dNum>    DOUBLE
 %type <iNumber> ArgList ElemList ExpList FunCall FunScope IncDec Logical Params ParamList
 %type <iNumber> INTEGER BlockExpList Argument IfBegin VarId VarList MethParams ObjFunCall
 %type <iNumber> MethCall BlockList FieldList
@@ -511,7 +513,6 @@ Statement  : ExecFlow Crlf                             {}
            | VarId ArrayIndex '=' Expression Crlf      { GenPCode1( _ARRAYPUT ); GenPCode1( _POP ); }
            | FunArrayCall '=' Expression Crlf          { GenPCode1( _ARRAYPUT ); GenPCode1( _POP ); }
            | IdSend IDENTIFIER '=' { Message( SetData( $2 ) ); } Expression Crlf  { Function( 1 ); }
-           | IdSend IDENTIFIER INASSIGN { Message( SetData( $2 ) ); } Expression Crlf  { Function( 1 ); }
            | ObjectData ArrayIndex '=' Expression Crlf    { GenPCode1( _ARRAYPUT ); GenPCode1( _POP ); }
            | ObjectMethod ArrayIndex '=' Expression Crlf  { GenPCode1( _ARRAYPUT ); GenPCode1( _POP ); }
 
@@ -556,13 +557,13 @@ MethParams : /* empty */                       { $$ = 0; }
            | ArgList                           { $$ = $1; }
            ;
 
-ObjectData : IdSend IDENTIFIER                     { Message( $2 ); Function( 0 ); }
-           | VarId ArrayIndex ':' IDENTIFIER       { Message( $4 ); Function( 0 ); }
-           | ObjFunCall IDENTIFIER                 { Message( $2 ); Function( 0 ); }
-           | ObjFunArray  ':' IDENTIFIER           { Message( $3 ); Function( 0 ); }
-           | ObjectMethod ':' IDENTIFIER           { Message( $3 ); Function( 0 ); }
-           | ObjectData   ':' IDENTIFIER           { Message( $3 ); Function( 0 ); }
-           | ObjectData ArrayIndex ':' IDENTIFIER  { Message( $4 ); Function( 0 ); }
+ObjectData : IdSend IDENTIFIER                     { $$ = $2; _lMessageFix = functions.pLast->lPCodePos; Message( $2 ); Function( 0 ); }
+           | VarId ArrayIndex ':' IDENTIFIER       { $$ = $4; _lMessageFix = functions.pLast->lPCodePos; Message( $4 ); Function( 0 ); }
+           | ObjFunCall IDENTIFIER                 { $$ = $2; _lMessageFix = functions.pLast->lPCodePos; Message( $2 ); Function( 0 ); }
+           | ObjFunArray  ':' IDENTIFIER           { $$ = $3; _lMessageFix = functions.pLast->lPCodePos; Message( $3 ); Function( 0 ); }
+           | ObjectMethod ':' IDENTIFIER           { $$ = $3; _lMessageFix = functions.pLast->lPCodePos; Message( $3 ); Function( 0 ); }
+           | ObjectData   ':' IDENTIFIER           { $$ = $3; _lMessageFix = functions.pLast->lPCodePos; Message( $3 ); Function( 0 ); }
+           | ObjectData ArrayIndex ':' IDENTIFIER  { $$ = $4; _lMessageFix = functions.pLast->lPCodePos; Message( $4 ); Function( 0 ); }
            ;
 
 ObjectMethod : IdSend IDENTIFIER { Message( $2 ); } '(' MethParams ')' { Function( $5 ); }
@@ -691,6 +692,7 @@ VarAssign  : IDENTIFIER INASSIGN Expression { PopId( $1 ); PushId( $1 ); }
            | FunArrayCall DIVEQ    { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); }  Expression { GenPCode1( _DIVIDE  ); GenPCode1( _ARRAYPUT ); }
            | FunArrayCall EXPEQ    { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); }  Expression { GenPCode1( _POWER   ); GenPCode1( _ARRAYPUT ); }
            | FunArrayCall MODEQ    { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); }  Expression { GenPCode1( _MODULUS ); GenPCode1( _ARRAYPUT ); }
+           | ObjectData INASSIGN { MessageFix( SetData( $1 ) ); } Expression { Function( 1 ); }
            | ObjectData PLUSEQ   Expression                 {}
            | ObjectData MINUSEQ  Expression                 {}
            | ObjectData MULTEQ   Expression                 {}
@@ -2851,6 +2853,23 @@ void Message( char * szMsgName )       /* sends a message to an object */
    GetSymbolOrd( wSym - 1 )->cScope |= FS_MESSAGE;
    wSym -= _iStartProc ? 1: 2;
    GenPCode3( _MESSAGE, LOBYTE( wSym ), HIBYTE( wSym ) );
+}
+
+void MessageFix( char * szMsgName )  /* fix a generated message to an object */
+{
+   WORD wSym = GetSymbolPos( szMsgName );
+   PFUNCTION pFunc = functions.pLast;   /* get the currently defined Clipper function */
+
+   if( ! wSym )  /* the symbol was not found on the symbol table */
+   {
+      AddSymbol( szMsgName );
+      wSym = symbols.iCount;
+   }
+   GetSymbolOrd( wSym - 1 )->cScope |= FS_MESSAGE;
+   wSym -= _iStartProc ? 1: 2;
+   pFunc->pCode[ _lMessageFix + 1 ] = LOBYTE( wSym );
+   pFunc->pCode[ _lMessageFix + 2 ] = HIBYTE( wSym );
+   pFunc->lPCodePos -= 3;        /* Remove unnecessary function call */
 }
 
 void PopId( char * szVarName ) /* generates the pcode to pop a value from the virtual machine stack onto a variable */

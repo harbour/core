@@ -893,10 +893,14 @@ static HARBOUR SelectSuper( void )
 static HARBOUR SetClassData( void )
 {
    WORD wClass = ( (PBASEARRAY) ( stack.pBase + 1 )->value.pBaseArray )->wClass;
+   PHB_ITEM pReturn = stack.pBase + 2;
 
    if( wClass && wClass <= wClasses )
+   {
       hb_arraySet( pClasses[ wClass - 1 ].pClassDatas,
-                   pMethod->wData, stack.pBase + 2 );
+                   pMethod->wData, pReturn );
+      ItemCopy( &stack.Return, pReturn );
+   }
 }
 
 
@@ -908,12 +912,14 @@ static HARBOUR SetClassData( void )
 static HARBOUR SetData( void )
 {
    PHB_ITEM pObject = stack.pBase + 1;
-   WORD  wIndex  = pMethod->wData;
+   PHB_ITEM pReturn = stack.pBase + 2;
+   WORD     wIndex  = pMethod->wData;
 
    if( wIndex > ( WORD ) hb_arrayLen( pObject ) )
                                                 /* Resize needed            */
       hb_arraySize( pObject, wIndex );          /* Make large enough        */
-   hb_arraySet( pObject, wIndex, stack.pBase + 2 );
+   hb_arraySet( pObject, wIndex, pReturn );
+   ItemCopy( &stack.Return, pReturn );
 }
 
 

@@ -45,6 +45,8 @@ function Main()
    oFrom:Dispose()
    oTo:Dispose()
 
+//   HBDebug( __aGlobalStack() )  // Stack is OK!
+
 return nil
 
 //
@@ -60,8 +62,7 @@ function TEmpty()
       oEmpty:AddInline( "New", {|self|self} )
 
       oEmpty:AddInline( "Run", {||QOut( "Run !" )})  // Test command
-//      oEmpty:AddInline( "Set", {|self,xParam|::Out := xParam } )
-      oEmpty:AddInline( "Set", {|self,xParam| oSend(self,"_Out",xParam) } )
+      oEmpty:AddInline( "Set", {|self,xParam|::Out := xParam } )
       oEmpty:AddData( "Out", "Hi there" )            // Test command
       oEmpty:AddVirtual( "Dispose" )                 // Clean up code
 

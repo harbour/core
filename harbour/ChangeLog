@@ -1,3 +1,19 @@
+19990606-13:50 CET Eddie Runia
+  * source/rtl/errorapi.c
+    _ErrNew()     stack.Return itself was returned instead of a copy.
+    _ErrRelease() error object is released
+  * source/rtl/classes.c
+    SetData() & SetClassData() return the value set
+  * source/compiler/harbour.y
+    - <object>:<data> := <value> can now be used inside expressions (codeblocks)
+    - MessageFix() has been added to fix the generated message in case of
+                 assignments
+    - type of ObjectData is now a string containing the (last) message.
+      global _lMessageFix will contain a pointer to the location which should
+      be fixed.
+  * tests/working/inherit.prg
+    test program for 'enhanced' syntax.
+
 19990606-11:00 CET Eddie Runia
   * source/rtl/arrays.c; source/vm/initsymb.c; tests/working/run_exp.h
     Arrays converted to init symbols
