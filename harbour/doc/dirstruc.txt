@@ -119,6 +119,8 @@ in order to remove empty directories)
 |   |
 |   +---odbc           - ODBS Access Class Demonstration.
 |   |
+|   +---ole            - Win32 OLE Automation library.
+|   |
 |   +---pdflib         - PDF low level Api for HBDOC to inteface with PDFlib.
 |   |
 |   +---rdd_ads        - RDD for Advantage Database Server.
