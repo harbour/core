@@ -1,3 +1,8 @@
+2000-07-10 19:55 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/vm/garbage.c
+        * removed some '//' coments
+
 2000-07-10 13:05 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
     * source/rdd/dbcmd.c
       * modified: hb_rddCloseAll()

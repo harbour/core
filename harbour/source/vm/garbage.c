@@ -33,8 +33,6 @@
  *
  */
 
-/* The Harbour implementation of codeblocks */
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
@@ -52,7 +50,6 @@ typedef struct HB_GARBAGE_
   HB_GARBAGE_FUNC_PTR pFunc;  /* cleanup function called before memory releasing */
   USHORT locked;              /* locking counter */
   USHORT used;                /* used/unused block */
-//  ULONG counter;
 } HB_GARBAGE, *HB_GARBAGE_PTR;
 
 /* status of memory block */
@@ -74,7 +71,7 @@ static BOOL s_bCollecting = FALSE;
  * is reversed on every collecting attempt
  */
 static USHORT s_uUsedFlag = HB_GC_USED_FLAG;
-//static ULONG s_ulCounter = 0;
+
 /* we may use a cache later */
 #define HB_GARBAGE_NEW( ulSize )   ( HB_GARBAGE_PTR )hb_xgrab( ulSize )
 #define HB_GARBAGE_FREE( pAlloc )    hb_xfree( (void *)(pAlloc) )
@@ -117,7 +114,6 @@ void * hb_gcAlloc( ULONG ulSize, HB_GARBAGE_FUNC_PTR pCleanupFunc )
       pAlloc->pFunc  = pCleanupFunc;
       pAlloc->locked = 0;
       pAlloc->used   = s_uUsedFlag;
-//pAlloc->counter = ++s_ulCounter;
       return (void *)( pAlloc + 1 );   /* hide the internal data */
    }
    else
