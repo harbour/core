@@ -3413,7 +3413,7 @@ HARBOUR HB_ERRORLEVEL( void )
    hb_retni( s_byErrorLevel );
 
    /* NOTE: This should be ISNUM( 1 ), but it's sort of a Clipper bug that it
-            accepts other types also and consider them zero. */
+            accepts other types also and consider them zero. [vszel] */
 
    if( hb_pcount() >= 1 )
       /* Only replace the error level if a parameter was passed */
