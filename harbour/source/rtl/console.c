@@ -317,3 +317,25 @@ HARBOUR SETPRC( void ) /* Sets the current printer row and column positions */
       }
    }
 }
+
+HARBOUR SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
+{
+#ifdef USE_GTAPI
+    int top = 0, left = 0, bottom = _gtMaxRow(), right = _gtMaxCol(), 
+        v_scroll = 0, h_scroll = 0;
+    
+    if( _pcount() > 0 && _param( 1, IT_NUMERIC ) )
+       top = _parni( 1 );
+    if( _pcount() > 1 && _param( 2, IT_NUMERIC ) )
+       left = _parni( 2 );
+    if( _pcount() > 2 && _param( 3, IT_NUMERIC ) )
+       bottom = _parni( 3 );
+    if( _pcount() > 3 && _param( 4, IT_NUMERIC ) )
+       right = _parni( 4 );
+    if( _pcount() > 4 && _param( 5, IT_NUMERIC ) )
+       v_scroll = _parni( 5 );
+    if( _pcount() > 5 && _param( 6, IT_NUMERIC ) )
+       h_scroll = _parni( 6 );
+    _gtScroll( top, left, bottom, right, v_scroll, h_scroll );
+#endif
+}

@@ -492,6 +492,16 @@ int _gtScroll(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SHOR
    return(0);
 }
 
+HARBOUR MaxRow( void ) /* Return the maximum screen row number (zero origin) */
+{
+   _retni( _gtMaxRow () );
+}
+
+HARBOUR MaxCol( void ) /* Return the maximum screen column number (zero origin) */
+{
+   _retni( _gtMaxCol () );
+}
+
 #ifdef TEST
 void main(void)
 {
