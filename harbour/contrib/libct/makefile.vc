@@ -119,12 +119,16 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\charevod.obj \
    $(OBJ_DIR)\charlist.obj \
    $(OBJ_DIR)\charmirr.obj \
+   $(OBJ_DIR)\charmix.obj \
+   $(OBJ_DIR)\charone.obj \
+   $(OBJ_DIR)\charonly.obj \
    $(OBJ_DIR)\charop.obj \
    $(OBJ_DIR)\charrepl.obj \
+   $(OBJ_DIR)\charsort.obj \
+   $(OBJ_DIR)\charswap.obj \
    $(OBJ_DIR)\ctset.obj \
    $(OBJ_DIR)\ctstr.obj \
    $(OBJ_DIR)\ctchksum.obj \
-   $(OBJ_DIR)\ctchrmix.obj \
    $(OBJ_DIR)\ctcolton.obj \
    $(OBJ_DIR)\ctcrypt.obj \
    $(OBJ_DIR)\ctposupp.obj \
@@ -151,12 +155,16 @@ CLEAN:
    -@if exist $(OBJ_DIR)\charevod.* del $(OBJ_DIR)\charevod.*
    -@if exist $(OBJ_DIR)\charlist.* del $(OBJ_DIR)\charlist.*
    -@if exist $(OBJ_DIR)\charmirr.* del $(OBJ_DIR)\charmirr.*
+   -@if exist $(OBJ_DIR)\charmix.* del $(OBJ_DIR)\charmix.*
+   -@if exist $(OBJ_DIR)\charone.* del $(OBJ_DIR)\charone.*
+   -@if exist $(OBJ_DIR)\charonly.* del $(OBJ_DIR)\charonly.*
    -@if exist $(OBJ_DIR)\charop.* del $(OBJ_DIR)\charop.*
    -@if exist $(OBJ_DIR)\charrepl.* del $(OBJ_DIR)\charrepl.*
+   -@if exist $(OBJ_DIR)\charsort.* del $(OBJ_DIR)\charsort.*
+   -@if exist $(OBJ_DIR)\charswap.* del $(OBJ_DIR)\charswap.*
    -@if exist $(OBJ_DIR)\ctset.* del $(OBJ_DIR)\ctset.*
    -@if exist $(OBJ_DIR)\ctstr.* del $(OBJ_DIR)\ctstr.*
    -@if exist $(OBJ_DIR)\ctchksum.* del $(OBJ_DIR)\ctchksum.*
-   -@if exist $(OBJ_DIR)\ctchrmix.* del $(OBJ_DIR)\ctchrmix.*
    -@if exist $(OBJ_DIR)\ctcolton.* del $(OBJ_DIR)\ctcolton.*
    -@if exist $(OBJ_DIR)\ctcrypt.* del $(OBJ_DIR)\ctcrypt.*
    -@if exist $(OBJ_DIR)\ctposupp.* del $(OBJ_DIR)\ctposupp.*

@@ -1,3 +1,76 @@
+2001-05-12 18:30 GMT+0200 Martin Vogel <vogel@inttec.de>
+
+   + contrib/libct/charmix.c
+   - contrib/libct/ctchrmix.c
+     ! ctchrmix.c replaced by charmix.c
+
+   + contrib/libct/charone.c
+     ! CHARONE() function
+     ! WORDONE() function
+
+   + contrib/libct/charonly.c
+     ! CHARONLY() function
+     ! WORDONLY() function
+     ! CHARREM() function
+     ! WORDREM() function  !New function!
+
+   + contrib/libct/charsort.c
+     ! CHARSORT() function
+
+   + contrib/libct/charswap.c
+     ! CHARSWAP() function
+     ! WORDSWAP() function
+
+   * contrib/libct/Makefile
+     * added charmix.c, removed ctchrmix.c
+     + added charone.c
+     + added charonly.c
+     + added charsort.c
+     + added charswap.c
+
+   * contrib/libct/makefile.bc
+     * added charmix.c, removed ctchrmix.c
+     + added charone.c
+     + added charonly.c
+     + added charsort.c
+     + added charswap.c
+
+   * contrib/libct/makefile.vc
+     * added charmix.c, removed ctchrmix.c
+     + added charone.c
+     + added charonly.c
+     + added charsort.c
+     + added charswap.c
+
+   * contrib/libct/readme.txt
+     ! enhancement list updated !
+
+   * contrib/libct/ctflist.txt
+     ! function status list updated !
+
+   + contrib/libct/tests/charmix.prg
+   + contrib/libct/tests/charone.prg
+   + contrib/libct/tests/charonly.prg
+   + contrib/libct/tests/charrem.prg
+   + contrib/libct/tests/charsort.prg
+   + contrib/libct/tests/charswap.prg
+   + contrib/libct/tests/wordone.prg
+   + contrib/libct/tests/wordonly.prg
+   + contrib/libct/tests/wordrem.prg
+   + contrib/libct/tests/wordswap.prg
+
+   * contrib/libct/tests/Makefile
+     + added charmix.prg
+     + added charone.prg
+     + added charonly.prg
+     + added charrem.prg
+     + added charsort.prg
+     + added charswap.prg
+     + added wordone.prg
+     + added wordonly.prg
+     + added wordrem.prg
+     + added wordswap.prg
+
 2001-05-11 14:15 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hbclass.ch
      + Added syntax declaration support for METHOD ... OPERATOR ...

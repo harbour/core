@@ -99,12 +99,16 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\charevod.obj \
    $(OBJ_DIR)\charlist.obj \
    $(OBJ_DIR)\charmirr.obj \
+   $(OBJ_DIR)\charmix.obj \
+   $(OBJ_DIR)\charone.obj \
+   $(OBJ_DIR)\charonly.obj \
    $(OBJ_DIR)\charop.obj \
    $(OBJ_DIR)\charrepl.obj \
+   $(OBJ_DIR)\charsort.obj \
+   $(OBJ_DIR)\charswap.obj \
    $(OBJ_DIR)\ctset.obj \
    $(OBJ_DIR)\ctstr.obj \
    $(OBJ_DIR)\ctchksum.obj \
-   $(OBJ_DIR)\ctchrmix.obj \
    $(OBJ_DIR)\ctcolton.obj \
    $(OBJ_DIR)\ctcrypt.obj \
    $(OBJ_DIR)\ctposupp.obj \
@@ -166,11 +170,31 @@ $(OBJ_DIR)\charmirr.obj : $(TOOLS_DIR)\charmirr.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\charmix.obj : $(TOOLS_DIR)\charmix.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\charone.obj : $(TOOLS_DIR)\charone.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\charonly.obj : $(TOOLS_DIR)\charonly.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\charop.obj : $(TOOLS_DIR)\charop.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\charrepl.obj : $(TOOLS_DIR)\charrepl.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\charsort.obj : $(TOOLS_DIR)\charsort.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\charswap.obj : $(TOOLS_DIR)\charswap.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
@@ -183,10 +207,6 @@ $(OBJ_DIR)\ctstr.obj : $(TOOLS_DIR)\ctstr.c
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\ctchksum.obj : $(TOOLS_DIR)\ctchksum.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\ctchrmix.obj : $(TOOLS_DIR)\ctchrmix.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 

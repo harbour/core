@@ -12,6 +12,7 @@ Victor Szakats <info@szelvesz.hu>
 
 
 Changes and Enhancements over the original CA-T**ls 3 Library
+Martin Vogel <vogel@inttec.de>
 =============================================================
 
 * ADDASCII()   New 4th parameter to enable a carry over in the addition
@@ -22,19 +23,19 @@ Changes and Enhancements over the original CA-T**ls 3 Library
 * ATTOKEN()    New 4th parameter to specify a skip width equal to the
                TOKEN() function
 
-+ CHARHIST     generates a character histogram of a string
++ CHARHIST()   generates a character histogram of a string
 
-+ CHARRLL      bitwise roll to the left operation on characters
++ CHARRLL()    bitwise roll to the left operation on characters
 
-+ CHARRLR      bitwise roll to the right operation on characters
++ CHARRLR()    bitwise roll to the right operation on characters
 
-+ CHARSHL      bitwise shift left operation on characters
++ CHARSHL()    bitwise shift left operation on characters
 
-+ CHARSHR      bitwise shift right operation on characters
++ CHARSHR()    bitwise shift right operation on characters
 
-+ CHARSLIST    generates a sorted character list of a string
++ CHARSLIST()  generates a sorted character list of a string
 
-+ CHARSUB      subtracts corresponding ASCII values
++ CHARSUB()    subtracts corresponding ASCII values
 
 * SETATLIKE()  2nd parameter can be passed by reference so that SETATLIKE
                can store the acutal wildcard character in it
@@ -45,3 +46,8 @@ Changes and Enhancements over the original CA-T**ls 3 Library
 * TOKENLOWER() New 4th parameter <nSkipWidth>
 
 * TOKENUPPER() New 4th parameter <nSkipWidth>
+
++ WORDREM()    remove double characters from a string
+
+
+

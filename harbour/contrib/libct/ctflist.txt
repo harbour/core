@@ -179,23 +179,23 @@ CHARMIX       ;R;
 CHARNOLIST    ;R; 
 CHARNOT       ;R; 
 CHARODD       ;R;
-CHARONE       ;N; 
-CHARONLY      ;N; 
+CHARONE       ;R; 
+CHARONLY      ;R; 
 CHAROR        ;R; 
 CHARPACK      ;N; 
 CHARRELA      ;N; 
 CHARRELREP    ;N; 
-CHARREM       ;N; 
+CHARREM       ;R; 
 CHARREPL      ;R;
 CHARRLL       ;R;   !NEW!
 CHARRLR       ;R;   !NEW!
 CHARSHL       ;R;   !NEW!
 CHARSHR       ;R;   !NEW!
 CHARSLIST     ;R;   !NEW!
-CHARSORT      ;N; 
+CHARSORT      ;R; 
 CHARSPREAD    ;N; 
 CHARSUB       ;R;   !NEW!
-CHARSWAP      ;N; 
+CHARSWAP      ;R; 
 CHARUNPACK    ;N; 
 CHARXOR       ;R; 
 CHECKSUM      ;R;
@@ -249,10 +249,11 @@ TOKENNEXT     ;N;
 TOKENSEP      ;R; 
 TOKENUPPER    ;R; 
 VALPOS        ;R; 
-WORDONE       ;N; 
-WORDONLY      ;N; 
+WORDONE       ;R; 
+WORDONLY      ;R;
+WORDREM       ;R;   !NEW!
 WORDREPL      ;R; 
-WORDSWAP      ;N; 
+WORDSWAP      ;R; 
 WORDTOCHAR    ;N; 
 ;
 ;
