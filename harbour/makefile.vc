@@ -344,6 +344,9 @@ TOOLS_LIB_OBJS = \
 MACRO_LIB_OBJS = \
    $(OBJ_DIR)\macrol.obj \
    $(OBJ_DIR)\macroy.obj \
+   $(OBJ_DIR)\macroa.obj \
+   $(OBJ_DIR)\macrob.obj \
+   $(OBJ_DIR)\macroc.obj \
    $(OBJ_DIR)\macro.obj
 
 #
@@ -472,6 +475,8 @@ DEBUG_LIB_OBJS = \
 COMMON_LIB_OBJS = \
    $(OBJ_DIR)\hbfsapi.obj \
    $(OBJ_DIR)\hbstr.obj \
+   $(OBJ_DIR)\expropt1.obj \
+   $(OBJ_DIR)\expropt2.obj \
    $(OBJ_DIR)\hbtrace.obj \
    $(OBJ_DIR)\reserved.obj
 
@@ -655,7 +660,9 @@ $(HARBOUR_EXE) : \
    $(COMPILER_DIR)\genrc.c \
    $(COMPILER_DIR)\genjava.c \
    $(COMPILER_DIR)\genpas.c \
-   $(COMPILER_DIR)\expropt.c
+   $(COMPILER_DIR)\expropta.c \
+   $(COMPILER_DIR)\exproptb.c \
+   $(COMPILER_DIR)\exproptc.c \
    -echo. > $(INCLUDE_DIR)\unistd.h
    $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ -w $** -o $(HARBOUR_EXE) /link $(PP_LIB) $(COMMON_LIB)
    -del $(INCLUDE_DIR)\unistd.h

@@ -1,3 +1,62 @@
+20000318-21:30 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbexpr.c
+	-removed
+    *include/hbexpra.c
+    *include/hbexprb.c
+    *include/hbexprc.c
+	+new files with expression optimizer shared by the standalone
+	and the macro compilers - these files produces different code
+	for the compilers
+    
+    *source/compiler/expropt.c
+	-removed
+    *source/compiler/expropta.c
+    *source/compiler/exproptb.c
+    *source/compiler/exproptc.c
+	+new files with expression optimizer used by the standalone compiler
+    
+    *source/macro/macroa.c
+    *source/macro/macrob.c
+    *source/macro/macroc.c
+	+new files with expression optimizer shared by the macro compiler
+
+    *source/common/expropt1.c
+    *source/common/expropt2.c
+	+new files with expression optimizer shared by the standalone
+	and the macro compilers - the common part of expression optimizer
+	
+    *source/macro/macro.l
+	+added HB_MACRO_SUPPORT definition
+
+    *source/macro/macro.c
+	*removed including of hbexprop.h
+	
+    *include/hbexprop.h
+    *include/hbcomp.h
+	*corrected to support new design of expression optimizer
+
+    *source/common/Makefile
+    *source/compiler/Makefile
+    *source/macro/Makefile
+    *makefile.bc
+    *makefile.vc
+	+added the depenencies for the new files (BC & VC not tested !)
+	
+    *source/rtl/console.c
+    *source/rtl/filesys.c
+    *source/rtl/fssize.c
+    *source/rtl/gtapi.c
+	*"io.h" is not included if OS_UNIX_COMPATIBLE is defined
+	(in some places #include hbsetup.h" was added to get a chance to
+	define OS_xxx_COMPATIBLE before it is checked)
+	
+    *source/rtl/gt/gtcrs.c
+	*a very basic support for colors was added
+	*a very basic support for inkey was added
+	(these two changes are for testing and checking rather than a real
+	solution)
+    
 20000318-12:45 EST Paul Tucker <ptucker@sympatico.ca>
    * contrib/rdd_ads/ads1.c
      * added cast in strlen()

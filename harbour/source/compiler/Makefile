@@ -33,7 +33,9 @@ C_SOURCES=\
         hbgenerr.c \
         hbpcode.c \
         hbusage.c \
-	expropt.c \
+	expropta.c \
+	exproptb.c \
+	exproptc.c \
 
 C_MAIN=harbour.c
 

@@ -337,6 +337,8 @@ COMMON_LIB_OBJS = \
    $(OBJ_DIR)\hbfsapi.obj \
    $(OBJ_DIR)\hbstr.obj \
    $(OBJ_DIR)\hbtrace.obj \
+   $(OBJ_DIR)\expropt1.obj \
+   $(OBJ_DIR)\expropt2.obj \
    $(OBJ_DIR)\reserved.obj
 
 #
@@ -389,6 +391,9 @@ HARBOUR_EXE_OBJS = \
    $(OBJ_DIR)\genrc.obj \
    $(OBJ_DIR)\genhrb.obj \
    $(OBJ_DIR)\expropt.obj \
+   $(OBJ_DIR)\expropta.obj \
+   $(OBJ_DIR)\exproptb.obj \
+   $(OBJ_DIR)\exproptc.obj \
    $(OBJ_DIR)\hbfunchk.obj
 
 #
@@ -480,6 +485,14 @@ $(OBJ_DIR)\hbtrace.obj : $(COMMON_DIR)\hbtrace.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(COMMON_LIB) -+$@,,
 
+$(OBJ_DIR)\expropt1.obj : $(COMMON_DIR)\expropt1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(COMMON_LIB) -+$@,,
+
+$(OBJ_DIR)\expropt2.obj : $(COMMON_DIR)\expropt2.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(COMMON_LIB) -+$@,,
+
 #
 # PP.LIB dependencies
 #
@@ -521,7 +534,9 @@ $(HARBOUR_EXE) : $(HARBOUR_EXE_OBJS)
    echo. $(OBJ_DIR)\genpas.obj >> make.tmp
    echo. $(OBJ_DIR)\genrc.obj >> make.tmp
    echo. $(OBJ_DIR)\genhrb.obj >> make.tmp
-   echo. $(OBJ_DIR)\expropt.obj >> make.tmp
+   echo. $(OBJ_DIR)\expropta.obj >> make.tmp
+   echo. $(OBJ_DIR)\exproptb.obj >> make.tmp
+   echo. $(OBJ_DIR)\exproptc.obj >> make.tmp
    echo. $(OBJ_DIR)\hbfunchk.obj >> make.tmp
    echo. $(COMMON_LIB) $(PP_LIB) >> make.tmp
    $(CC) @make.tmp
@@ -572,7 +587,13 @@ $(OBJ_DIR)\genrc.obj : $(COMPILER_DIR)\genrc.c
 $(OBJ_DIR)\genhrb.obj : $(COMPILER_DIR)\genhrb.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\expropt.obj : $(COMPILER_DIR)\expropt.c
+$(OBJ_DIR)\expropta.obj : $(COMPILER_DIR)\expropta.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\exproptb.obj : $(COMPILER_DIR)\exproptb.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\exproptc.obj : $(COMPILER_DIR)\exproptc.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\hbfunchk.obj : $(COMPILER_DIR)\hbfunchk.c
@@ -1528,6 +1549,18 @@ $(OBJ_DIR)\macrol.obj : $(OBJ_DIR)\macrol.c
    tlib $(MACRO_LIB) -+$@,,
 
 $(OBJ_DIR)\macro.obj : $(MACRO_DIR)\macro.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(MACRO_LIB) -+$@,,
+
+$(OBJ_DIR)\macroa.obj : $(MACRO_DIR)\macroa.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(MACRO_LIB) -+$@,,
+
+$(OBJ_DIR)\macrob.obj : $(MACRO_DIR)\macrob.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(MACRO_LIB) -+$@,,
+
+$(OBJ_DIR)\macroc.obj : $(MACRO_DIR)\macroc.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(MACRO_LIB) -+$@,,
 
