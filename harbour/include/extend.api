@@ -16,6 +16,7 @@
 #define _parnl    hb_parnl
 #define _parinfo  hb_parinfo
 #define _pcount   hb_pcount
+#define _parinfa  hb_parinfa
 
 #define _ret      hb_ret
 #define _retc     hb_retc
