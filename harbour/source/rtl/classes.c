@@ -91,6 +91,7 @@ typedef struct
    USHORT   uiHashKey;
    PHB_ITEM pClassDatas;  /* Array for ClassDatas */
    PHB_ITEM pInlines;     /* Array for inline codeblocks */
+   PHB_FUNC pFunError;    /* error handler for not defined messages */
 } CLASS, * PCLASS;
 
 #define BASE_METHODS    200
@@ -170,7 +171,6 @@ static void hb_clsDictRealloc( PCLASS pClass )
       pClass->pMethods = pNewMethods;
    }
 }
-
 
 /*
  * hb_clsRelease( <pClass> )
@@ -284,7 +284,6 @@ char * hb_objGetClsName( PHB_ITEM pObject )
    return szClassName;
 }
 
-
 /*
  * <pFunc> = hb_objGetMethod( <pObject>, <pMessage> )
  *
@@ -294,6 +293,7 @@ PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
 {
    USHORT uiClass;
    PHB_DYNS pMsg = pMessage->pDynSym;
+   PCLASS pClass;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_objGetMethod(%p, %p)", pObject, pMessage));
 
@@ -344,9 +344,16 @@ PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
    else if( pMsg == s_msgEval )
       return hb___msgEval;
 
+   if( uiClass && uiClass <= s_uiClasses )
+   {
+      PCLASS pClass  = &s_pClasses[ uiClass - 1 ];
+
+      if( pClass->pFunError )
+         return pClass->pFunError;
+   }
+
    return NULL;
 }
-
 
 /*
  * <uPtr> = hb_objHasMsg( <pObject>, <szString> )
@@ -492,6 +499,10 @@ HARBOUR HB___CLSADDMSG( void )
               pNewMeth->pFunction = hb___msgSuper;
               break;
 
+         case HB_OO_ONERROR:
+              pClass->pFunError = ( PHB_FUNC ) hb_parnl( 2 );
+              break;
+
          default:
               hb_errInternal( 9999, "Invalid method type from __clsAddMsg", NULL, NULL );
               break;
@@ -556,6 +567,7 @@ HARBOUR HB___CLSNEW( void )
             pNewCls->pMethods[ ui ].pInitValue = pInitValue;
          }
       }
+      pNewCls->pFunError = NULL;
    }
    else
    {

@@ -1,3 +1,18 @@
+19991215-09:34 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * include/hbclass.ch
+     * ERROR HANDLER and ON ERROR METHODs defined (they are equivalent)
+   * include/hboo.ch
+     * new define HB_OO_ONERROR
+   * source/rtl/tclass.prg
+     * added new DATA nOnError
+     * added new METHOD SetOnError()
+   * source/rtl/classes.c
+     * added new struct CLASS member pFunError
+     * modified hb_objGetMethod() to return pFunError if defined and not msg found
+     * modified HB___CLSADDMSG() to support defined Class error handler if defined
+   + tests/testcls.prg
+     * new sample testing first ON ERROR working prototype
+
 19991214-14:55 EDT David G. Holm <dholm@jsd-llc.com>
 
    * config/dos/dir.cf
@@ -70,7 +85,7 @@
     *source/macro.y
 	* added #undef __GNUC__ as a workaround of bison.simple bug in
 	yyparse() declaration
-	
+
 19991211-15:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbexpr.c
@@ -92,7 +107,7 @@
     *source/rtl/codebloc.c
         * added support for macro-compiled codeblocks
 	* restored %pure_parser option :)
-	
+
     *source/macro/macro.l
         * added tracing headers
 

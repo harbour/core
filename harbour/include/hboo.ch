@@ -45,6 +45,7 @@
 #define HB_OO_MSG_INLINE        3
 #define HB_OO_MSG_VIRTUAL       4
 #define HB_OO_MSG_SUPER         5
+#define HB_OO_ONERROR           6
 
 /* Data */
 #define HB_OO_DATA_SYMBOL       1

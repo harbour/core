@@ -57,7 +57,7 @@ FUNCTION TClass()
    STATIC s_hClass := NIL
 
    IF s_hClass == NIL
-      s_hClass := __clsNew( "TCLASS", 10 )
+      s_hClass := __clsNew( "TCLASS", 11 )
 
       __clsAddMsg( s_hClass, "New"         , @New()         , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "Create"      , @Create()      , HB_OO_MSG_METHOD )
@@ -68,6 +68,7 @@ FUNCTION TClass()
       __clsAddMsg( s_hClass, "AddVirtual"  , @AddVirtual()  , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "Instance"    , @Instance()    , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "SetInit"     , @SetInit()     , HB_OO_MSG_METHOD )
+      __clsAddMsg( s_hClass, "SetOnError"  , @SetOnError()  , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "SetType"     , @SetType()     , HB_OO_MSG_METHOD )
 
       __clsAddMsg( s_hClass, "hClass"      ,  1, HB_OO_MSG_DATA )
@@ -90,6 +91,8 @@ FUNCTION TClass()
       __clsAddMsg( s_hClass, "_uInit"      ,  9, HB_OO_MSG_DATA )
       __clsAddMsg( s_hClass, "cType"       , 10, HB_OO_MSG_DATA )
       __clsAddMsg( s_hClass, "_cType"      , 10, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "nOnError"    , 11, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "_nOnError"   , 11, HB_OO_MSG_DATA )
    ENDIF
 
    RETURN __clsInst( s_hClass )
@@ -174,6 +177,10 @@ STATIC FUNCTION Create()
       __clsAddMsg( hClass, ::aVirtuals[ n ], n, HB_OO_MSG_VIRTUAL )
    NEXT
 
+   if ::nOnError != nil
+      __clsAddMsg( hClass, ::nOnError,, HB_OO_ONERROR )
+   endif
+
    RETURN NIL
 
 //----------------------------------------------------------------------------//
@@ -249,6 +256,16 @@ STATIC FUNCTION SetInit( uValue )
    LOCAL Self := QSelf()
 
    ::uInit := uValue
+
+   RETURN NIL
+
+//----------------------------------------------------------------------------//
+
+STATIC FUNCTION SetOnError( nFuncPtr )
+
+   LOCAL Self := QSelf()
+
+   ::nOnError = nFuncPtr
 
    RETURN NIL
 
