@@ -84,8 +84,11 @@ procedure AltD( nAction )
       case nAction == nil
            if SET( _SET_DEBUG )
               s_lExit := .f.
-              s_oDebugger:lGo := .F.
-              __dbgEntry( ProcLine( 1 ) )
+              if !s_oDebugger==nil		// protects if altd() in code and debugger
+                                                // linked but not active
+                s_oDebugger:lGo := .F.
+                __dbgEntry( ProcLine( 1 ) )
+              endif
            endif
 
       case nAction == ALTD_DISABLE
@@ -1446,7 +1449,6 @@ METHOD ShowVars() CLASS TDebugger
             ::oWndVars:Refresh()
          endif
       endif
-
       if Len( ::aVars ) > 0
          ::oBrwVars:RefreshAll()
          ::oBrwVars:ForceStable()
@@ -1484,13 +1486,13 @@ static function CompareLine( Self )
 
 return { | a | a[ 1 ] == Self:oBrwText:nRow }  // it was nLine
 METHOD StackProc(cModuleName) CLASS TDebugger
-   // always treat filename as lower case - we need it consistent for comparisons
+   // always treat filename as lower case - we need it consistent for comparisons   
    local cFunction := SubStr( cModuleName, RAt( ":", cModuleName ) + 1 )
    local cPrgName  := lower(SubStr( cModuleName, 1, RAt( ":", cModuleName ) - 1 ))
 
    ASize( ::aCallStack, Len( ::aCallStack ) + 1 )
    AIns( ::aCallStack, 1 )
-
+   
    // nil means that no line number is stored yet
    ::aCallStack[1]:= { cFunction, {} , nil, cPrgName }   // function name and locals array
                                                          // and the function and program name
@@ -1503,7 +1505,7 @@ METHOD ShowCodeLine( nLine, cPrgName ) CLASS TDebugger
       if ::oWndStack != nil
          ::oBrwStack:RefreshAll()
       endif
-
+        
       if cPrgName != ::cPrgName
          ::cPrgName := cPrgName
          if ! File( cPrgName ) .and. ! Empty( ::cPathForFiles )
@@ -1516,7 +1518,7 @@ METHOD ShowCodeLine( nLine, cPrgName ) CLASS TDebugger
                       ::oWndCode:nBottom - 1, ::oWndCode:nRight - 1, cPrgName,;
                       __DbgColors()[ 2 ] + "," + __DbgColors()[ 5 ] + "," + ;
                       __DbgColors()[ 3 ] + "," + __DbgColors()[ 6 ] )
-
+         
          ::RedisplayBreakpoints()               // check for breakpoints in this file and display them
          ::oWndCode:SetCaption( ::cPrgName )
          ::oWndCode:Refresh()			// to force the window caption to update
@@ -1552,6 +1554,7 @@ METHOD RedisplayBreakPoints() CLASS TDebugger
       Endif
    next
 return nil
+
 METHOD OSShell() CLASS TDebugger
 
    local cImage := SaveScreen()
@@ -1564,7 +1567,6 @@ METHOD OSShell() CLASS TDebugger
    SET COLOR TO "W/N"
    CLS
    ? "Type 'exit' to return to the Debugger"
-
    SetCursor( SC_NORMAL )
 
    begin sequence
@@ -1720,7 +1722,6 @@ METHOD Inspect( uValue, cValueName ) CLASS TDebugger
 return nil
 
 METHOD IsBreakPoint( nLine, cPrgName ) CLASS TDebugger
-
 return AScan( ::aBreakPoints, { | aBreak | (aBreak[ 1 ] == nLine) .AND. (aBreak [ 2 ] == cPrgName) } ) != 0
 
 
@@ -1798,7 +1799,7 @@ METHOD RestoreAppStatus() CLASS TDebugger
    SetColor( ::cAppColors )
    SetCursor( ::nAppCursor )
    DispEnd()
-
+   
 return nil
 
 METHOD RestoreSettings() CLASS TDebugger
@@ -2236,7 +2237,7 @@ static function ArrayBrowseSkip( nPos, oBrwSets, n )
 return iif( oBrwSets:cargo[ 1 ] + nPos < 1, 0 - oBrwSets:cargo[ 1 ] + 1 , ;
        iif( oBrwSets:cargo[ 1 ] + nPos > Len(oBrwSets:cargo[ 2 ][ 1 ]), ;
        Len(oBrwSets:cargo[ 2 ][ 1 ]) - oBrwSets:cargo[ 1 ], nPos ) )
-
+      
 static function DoCommand( o,cCommand )
    local bLastHandler, cResult, nLocals := len( o:aCallStack[1][2] )
    local nProcLevel := 1, oE, i, vtmp
@@ -2253,21 +2254,23 @@ static function DoCommand( o,cCommand )
    endif
 
    bLastHandler := ErrorBlock({ |objErr| BREAK (objErr) })
-
-   if SubStr( LTrim( cCommand ), 1, 3 ) == "?? "
+   
+   
+   // clipper does not require a space in the command, though it allows it
+   if SubStr( LTrim( cCommand ), 1, 2 ) == "??"
 
       begin sequence
-         o:Inspect( AllTrim( SubStr( LTrim( cCommand ), 4 ) ),;
-                    &( AllTrim( SubStr( LTrim( cCommand ), 4 ) ) ) )
+         o:Inspect( AllTrim( SubStr( LTrim( cCommand ), 3 ) ),;
+                    &( AllTrim( SubStr( LTrim( cCommand ), 3 ) ) ) )
          cResult := ""
       recover using oE
          cResult = "Command error: " + oE:description
       end sequence
 
-   elseif SubStr( LTrim( cCommand ), 1, 2 ) == "? "
+   elseif SubStr( LTrim( cCommand ), 1, 1 ) == "?"
 
       begin sequence
-          cResult := ValToStr( &( AllTrim( SubStr( LTrim( cCommand ), 3 ) ) ) )
+          cResult := ValToStr( &( AllTrim( SubStr( LTrim( cCommand ), 2 ) ) ) )
 
       recover using oE
           cResult := "Command error: " + oE:description

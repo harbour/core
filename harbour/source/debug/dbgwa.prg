@@ -364,7 +364,7 @@ static function UpdateInfo( oDlg, cAlias )
    DispOutAt( oDlg:nTop + 3 , oDlg:nLeft + 21 , iif( Bof(),"Yes" , "No "), oDlg:cColor )
    DispOutAt( oDlg:nTop + 3 , oDlg:nLeft + 38 , iif( Found(),"Yes" , "No "), oDlg:cColor )
    DispOutAt( oDlg:nTop + 4 , oDlg:nLeft + 21 , Padr( DbFilter(), 29 ), oDlg:cColor )
-   DispOutAt( oDlg:nTop + 4 , oDlg:nLeft + 21 , Padr( OrdKey(), 29 ), oDlg:cColor )
+   DispOutAt( oDlg:nTop + 5, oDlg:nLeft + 21 , Padr( OrdKey(), 29 ), oDlg:cColor )
 
    SELECT (cOldAlias)
 
