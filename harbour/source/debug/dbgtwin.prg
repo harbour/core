@@ -70,6 +70,7 @@ CLASS TDbWindow  // Debugger windows and dialogs
    DATA   bKeyPressed, bPainted, bLButtonDown, bLDblClick
    DATA   lShadow, lVisible
    DATA   Cargo
+   DATA   Browser
 
    METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor )
    METHOD Hide()
@@ -164,6 +165,10 @@ METHOD SetFocus( lOnOff ) CLASS TDbWindow
    if ::bPainted != nil
       Eval( ::bPainted, Self )
    endif
+   
+   IF( ::Browser != NIL )
+      ::Browser:RefreshAll()
+   ENDIF
 
    DispEnd()
 
@@ -189,6 +194,10 @@ METHOD Refresh() CLASS TDbWindow
    if ::bPainted != nil
       Eval( ::bPainted, Self )
    endif
+
+   IF( ::Browser != NIL )
+      ::Browser:RefreshAll()
+   ENDIF
 
    DispEnd()
 

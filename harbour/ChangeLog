@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-01-22 18:30 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * source/debug/dbgmenu.prg
+   * source/debug/dbgtwin.prg
+   * source/debug/debugger.prg
+      *added Watchpoints support
+   
+   * source/vm/debug.c
+      *added item de-referencing to __vmVarLGet
+      
 2004-01-21 18:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    +include/hbdebug.ch
       *added a missing file 

@@ -212,7 +212,7 @@ HB_FUNC( __VMVARLGET )
    while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
       pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
 
-   hb_itemReturn( *(pBase + 1 + hb_parni( 2 )) );
+   hb_itemReturn( hb_itemUnRef( *(pBase + 1 + hb_parni( 2 )) ) );
 }
 
 HB_FUNC( __VMVARLSET )
@@ -223,5 +223,5 @@ HB_FUNC( __VMVARLSET )
    while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
       pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
 
-   hb_itemCopy( *(pBase + 1 + hb_parni( 2 )), *(hb_stack.pBase + 4) );
+   hb_itemCopy( hb_itemUnRef(*(pBase + 1 + hb_parni( 2 ))), *(hb_stack.pBase + 4) );
 }

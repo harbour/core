@@ -70,6 +70,8 @@
 #include "setcurs.ch"
 #include "hbdebug.ch"   //for "nMode" of __dbgEntry
 
+#define  NTRIM(x)    (ALLTRIM(STR(x)))
+
 #define ALTD_DISABLE   0
 #define ALTD_ENABLE    1
 
@@ -89,6 +91,12 @@
 #define VAR_POS         2
 #define VAR_TYPE        3
 #define VAR_FUNCNAME    4
+
+/* Information structure hold by ::aWatch (watchpoints)
+*/
+#define WP_TYPE      1  //wp = watchpoint, tr = tracepoint
+#define WP_EXPR      2  //source of an expression
+#define WP_BLOCK     3  //codeblock to retrieve a value
 
 static s_oDebugger
 static s_lExit := .F.
@@ -137,7 +145,7 @@ procedure __dbgEntry( nMode, uParam1, uParam2, uParam3 )  // debugger entry poin
       // set the current line number on the CallStack
       if s_oDebugger:lTrace
          //In TRACE mode (step over procedure)
-         IF( s_oDebugger:nTraceLevel < Len( s_oDebugger:aCallStack ) )
+         IF( s_oDebugger:nProcLevel < Len( s_oDebugger:aCallStack ) )
             s_oDebugger:lTrace := (! s_oDebugger:IsBreakPoint( uParam1, s_oDebugger:aCallStack[1][ CSTACK_MODULE ] )) .AND.;
                                   (! InvokeDebug())
             if s_oDebugger:lTrace
@@ -150,12 +158,23 @@ procedure __dbgEntry( nMode, uParam1, uParam2, uParam3 )  // debugger entry poin
       endif
 
       IF( s_oDebugger:lToCursor )
-         IF( (s_oDebugger:aToCursor[1] == uParam1 .AND. ;
-             s_oDebugger:aToCursor[2] == s_oDebugger:aCallStack[1][ CSTACK_MODULE ]) ;
-             .OR. InvokeDebug() )
+         IF( s_oDebugger:aToCursor[1] == uParam1 .AND. ;
+             s_oDebugger:aToCursor[2] == s_oDebugger:aCallStack[1][ CSTACK_MODULE ] )
             s_oDebugger:lToCursor := .F.
          ELSE
-             RETURN
+            s_oDebugger:lToCursor := (! s_oDebugger:IsBreakPoint( uParam1, s_oDebugger:aCallStack[1][ CSTACK_MODULE ] )) .AND.;
+                                  (! InvokeDebug())
+            if s_oDebugger:lToCursor
+               RETURN
+            ENDIF
+         ENDIF
+      ENDIF
+      
+      IF( s_oDebugger:lNextRoutine .AND. !InvokeDebug() )
+         s_oDebugger:lNextRoutine := (! s_oDebugger:IsBreakPoint( uParam1, s_oDebugger:aCallStack[1][ CSTACK_MODULE ] )) .AND.;
+                                  (! InvokeDebug())
+         if s_oDebugger:lNextRoutine
+            RETURN
          ENDIF
       ENDIF
       
@@ -181,6 +200,10 @@ procedure __dbgEntry( nMode, uParam1, uParam2, uParam3 )  // debugger entry poin
       cProcName := ProcName( 1 )
       if cProcName == "__EVAL" .OR. cProcName == "EVAL"
          s_oDebugger:lCodeblock := .T.
+      ELSE
+         IF( s_oDebugger:lNextRoutine )
+            s_oDebugger:lNextRoutine :=.F.
+         ENDIF
       endif
       s_oDebugger:StackProc( uParam1 )
       s_oDebugger:LoadVars()
@@ -190,15 +213,13 @@ procedure __dbgEntry( nMode, uParam1, uParam2, uParam3 )  // debugger entry poin
       nVarIndex := uParam1
       cVarName  := IIF(valtype(uParam2)=='C',uParam2,'NIL')
 
-      IF Len( s_oDebugger:aCallStack )>0 .AND. valtype( s_oDebugger:aCallStack[ 1, CSTACK_LOCALS ])=='A'
-         AAdd( s_oDebugger:aCallStack[ 1 ][ CSTACK_LOCALS ], { cVarName, nVarIndex, "Local", cProcName } )
-      endif
+      AAdd( s_oDebugger:aCallStack[ 1 ][ CSTACK_LOCALS ], { cVarName, nVarIndex, "Local", cProcName } )
       if s_oDebugger:lShowLocals
          if ( nAt := AScan( s_oDebugger:aVars,; // Is there another var with this name ?
                             { | aVar | aVar[ 1 ] == cVarName } ) ) != 0
-            s_oDebugger:aVars[ nAt ] := { cVarName, nVarIndex, "Local", cProcName }
+            s_oDebugger:aVars[ nAt ] := ATAIL( s_oDebugger:aCallStack[ 1 ][ CSTACK_LOCALS ] )
          else
-            AAdd( s_oDebugger:aVars, { cVarName, nVarIndex, "Local", cProcName } )
+            AAdd( s_oDebugger:aVars, ATAIL( s_oDebugger:aCallStack[ 1 ][ CSTACK_LOCALS ] ) )
          endif
          if s_oDebugger:oBrwVars != nil
             s_oDebugger:oBrwVars:RefreshAll()
@@ -257,7 +278,7 @@ CLASS TDebugger
    DATA   cImage
    DATA   cAppImage, nAppRow, nAppCol, cAppColors, nAppCursor
    DATA   aBreakPoints, aCallStack, aColors
-   DATA   aWatchPoints, aTracePoints
+   DATA   aWatch, aTracePoints
    DATA   aLastCommands, nCommand, oGetListCommand
    DATA   lAnimate, lEnd, lCaseSensitive, lMonoDisplay, lSortVars
    DATA   cSearchString, cPathForFiles, cSettingsFileName, aPathDirs
@@ -266,12 +287,14 @@ CLASS TDebugger
    DATA   lShowCallStack
    DATA   lGo           //stores if GO was requested
    DATA   lTrace        //stores if TRACE over procedure was requested
-   DATA   nTraceLevel      //procedure level where TRACE was requested
+   DATA   nProcLevel      //procedure level where TRACE was requested
    DATA   lCodeblock INIT .F.
    DATA   lActive INIT .F.
    DATA   lCBTrace INIT .T.   //stores if codeblock tracing is allowed
    DATA   lToCursor INIT .F.
    DATA   aToCursor
+   DATA   lNextRoutine INIT .F.
+   DATA   oBrwPnt, oWndPnt
 
    METHOD New()
    METHOD Activate()
@@ -351,10 +374,11 @@ CLASS TDebugger
 
    METHOD ToggleBreakPoint()
 
-   METHOD Trace() INLINE ::lTrace := .t., ::nTraceLevel := Len( ::aCallStack ),;
+   METHOD Trace() INLINE ::lTrace := .t., ::nProcLevel := Len( ::aCallStack ),;
                          __Keyboard( Chr( 255 ) ) //forces a Step()
 
    METHOD ToCursor()
+   METHOD NextRoutine()
    METHOD CodeblockTrace() INLINE ::lCBTrace := ! ::lCBTrace
    METHOD ViewSets()
    METHOD WndVarsLButtonDown( nMRow, nMCol )
@@ -367,8 +391,15 @@ CLASS TDebugger
    METHOD ToggleAnimate() INLINE ::lAnimate := ! ::lAnimate
    METHOD ToggleCaseSensitive() INLINE ::lCaseSensitive := ! ::lCaseSensitive
    METHOD ShowWorkAreas() INLINE __dbgShowWorkAreas( Self )
-   
 
+   METHOD AddWatchpoint()
+   METHOD DelWatchpoint()
+   METHOD ShowWatchpoints()   
+   METHOD HideWatchpoints()   
+   METHOD EditWatch( nVar )
+
+   METHOD NotSupported() INLINE Alert( "Not implemented yet!" )
+   
 ENDCLASS
 
 
@@ -384,7 +415,7 @@ METHOD New() CLASS TDebugger
    ::lEnd              := .f.
    ::lTrace            := .f.
    ::aBreakPoints      := {}
-   ::aWatchPoints      := {}
+   ::aWatch            := {}
    ::aTracePoints      := {}
    ::aCallStack        := {}
    ::lGo               := .T. //Clipper compatible
@@ -448,6 +479,9 @@ METHOD Activate() CLASS TDebugger
       ::loadVars()
       ::ShowVars()
 //   ::RestoreAppStatus()
+   ENDIF
+   IF( ::oWndPnt != NIL )
+      ::ShowWatchpoints()
    ENDIF
    // new function ShowCodeLine( nline, cFilename)
    ::ShowCodeLine( ::aCallStack[1][ CSTACK_LINE ], ::aCallStack[1][ CSTACK_MODULE ] )
@@ -972,10 +1006,11 @@ METHOD HandleEvent() CLASS TDebugger
       if ::nSpeed != 0
          Inkey( ::nSpeed / 10 )
       endif
-      if NextKey() == K_ALT_D
+      if InvokeDebug()  //NextKey() == K_ALT_D
          ::lAnimate := .f.
+      else
+         KEYBOARD Chr( 255 ) // Forces a Step(). Only 0-255 range is supported
       endif
-      KEYBOARD Chr( 255 ) // Forces a Step(). Only 0-255 range is supported
    endif
 
    ::lEnd := .f.
@@ -1075,6 +1110,9 @@ METHOD HandleEvent() CLASS TDebugger
               endif
               ::Go()
 
+         case nKey == K_CTRL_F5
+              ::NextRoutine()
+              
          case nKey == K_F6
               ::ShowWorkAreas()
 
@@ -1251,6 +1289,14 @@ METHOD ShowCallStack() CLASS TDebugger
          ::oBrwVars:configure()
          ::oWndVars:Show( .f. )
       endif
+      // Resize watchpoints window
+      if ::oWndPnt != nil
+         ::oWndPnt:Hide()
+         ::oWndPnt:nRight -= 16
+         ::oBrwPnt:nRight -= 16
+         ::oBrwPnt:configure()
+         ::oWndPnt:Show( .f. )
+      endif
       DispEnd()
 
       if ::aWindows[ ::nCurrentWindow ]:lFocused
@@ -1404,6 +1450,7 @@ METHOD ShowVars() CLASS TDebugger
    local nWidth, n := 1
    Local oCol
    local lRepaint := .f.
+   local nTop
 
    if ::lGo
       return nil
@@ -1417,14 +1464,16 @@ METHOD ShowVars() CLASS TDebugger
    if ::oWndVars == nil
 
       ::LoadVars()
-      ::oWndVars := TDbWindow():New( 1, 0, Min( 7, Len( ::aVars ) + 2 ),;
+      nTop := IIF(::oWndPnt!=NIL .AND. ::oWndPnt:lVisible,::oWndPnt:nBottom+1,1) 
+
+      ::oWndVars := TDbWindow():New( nTop, 0, nTop+Min( 5, Len( ::aVars )+1 ),;
          MaxCol() - iif( ::oWndStack != nil, ::oWndStack:nWidth(), 0 ),;
          "Monitor:" + iif( ::lShowLocals, " Local", "" ) + ;
          iif( ::lShowStatics, " Static", "" ) + iif( ::lShowPrivates, " Private", "" ) + ;
          iif( ::lShowPublics, " Public", "" ) )
 
-      ::oWndCode:nTop += ::oWndVars:nBottom
-      ::oBrwText:Resize( ::oBrwText:nTop + ::oWndVars:nBottom )
+      ::oWndCode:nTop := ::oWndVars:nBottom + 1
+      ::oBrwText:Resize( ::oWndCode:nTop + 1 )
       ::oBrwText:RefreshAll()
       ::oWndCode:SetFocus( .t. )
 
@@ -1433,9 +1482,11 @@ METHOD ShowVars() CLASS TDebugger
       ::oWndVars:bLButtonDown := { | nMRow, nMCol | ::WndVarsLButtonDown( nMRow, nMCol ) }
       ::oWndVars:bLDblClick   := { | nMRow, nMCol | ::EditVar( ::oBrwVars:Cargo[ 1 ] ) }
 
-      ::oBrwVars := TBrowseNew( 2, 1, ::oWndVars:nBottom - 1, MaxCol() - iif( ::oWndStack != nil,;
+      ::oBrwVars := TBrowseNew( nTop+1, 1, ::oWndVars:nBottom - 1, MaxCol() - iif( ::oWndStack != nil,;
                                ::oWndStack:nWidth(), 0 ) - 1 )
 
+      ::oWndVars:Browser := ::oBrwVars
+      
       ::oBrwVars:Cargo :={ 1,{}} // Actual highligthed row
       ::oBrwVars:ColorSpec := ::aColors[ 2 ] + "," + ::aColors[ 5 ] + "," + ::aColors[ 3 ]
       ::oBrwVars:GOTOPBLOCK := { || ::oBrwVars:cargo[ 1 ] := Min( 1, Len( ::aVars ) ) }
@@ -1582,6 +1633,7 @@ METHOD ShowCodeLine( nLine, cPrgName ) CLASS TDebugger
                       __DbgColors()[ 2 ] + "," + __DbgColors()[ 5 ] + "," + ;
                       __DbgColors()[ 3 ] + "," + __DbgColors()[ 6 ] )
          
+         ::oWndCode:Browser := ::oBrwText
          ::RedisplayBreakpoints()               // check for breakpoints in this file and display them
          ::oWndCode:SetCaption( ::cPrgName )
          ::oWndCode:Refresh()			// to force the window caption to update
@@ -1601,6 +1653,7 @@ METHOD Open() CLASS TDebugger
                    __DbgColors()[ 2 ] + "," + __DbgColors()[ 5 ] + "," + ;
                    __DbgColors()[ 3 ] + "," + __DbgColors()[ 6 ] )
 
+      ::oWndCode:Browser := ::oBrwText
       ::RedisplayBreakpoints()               // check for breakpoints in this file and display them
       ::oWndCode:SetCaption( ::cPrgName )
       ::oWndCode:Refresh()			// to force the window caption to update
@@ -1671,12 +1724,35 @@ METHOD HideCallStack() CLASS TDebugger
       ::oBrwText:Resize( ,,, ::oBrwText:nRight + 16 )
       ::oBrwText:GotoLine( ::oBrwText:nActiveLine )
       if ::oWndVars != nil
-         ::oWndVars:Hide()
-         ::oWndVars:nRight += 16
-         ::oWndVars:Show( .f. )
+         IF( ::oWndVars:lVisible )
+            ::oWndVars:Hide()
+            ::oWndVars:nRight += 16
+            ::oBrwVars:nRight += 16
+            ::oBrwVars:configure()
+            ::oWndVars:Show( .f. )
+         ELSE
+            ::oWndVars:nRight += 16
+            ::oBrwVars:nRight += 16
+            ::oBrwVars:configure()
+         ENDIF
       endif
+      if ::oWndPnt != nil
+         IF( ::oWndPnt:lVisible )
+            ::oWndPnt:Hide()
+            ::oWndPnt:nRight += 16
+            ::oBrwPnt:nRight += 16
+            ::oBrwPnt:configure()
+            ::oWndPnt:Show( .f. )
+         ELSE
+            ::oWndPnt:nRight += 16
+            ::oBrwPnt:nRight += 16
+            ::oBrwPnt:configure()
+         ENDIF
+      endif
+      if ::aWindows[ ::nCurrentWindow ] == ::oWndStack
+         ::NextWindow()
+      ENDIF
       DispEnd()
-      ::nCurrentWindow = 1
    endif
 
 return nil
@@ -1685,8 +1761,10 @@ METHOD HideVars() CLASS TDebugger
 
    ::oWndVars:Hide()
    ::oWndCode:nTop := 1
-   ::oWndCode:SetFocus( .t. )
-   ::oBrwText:Resize( 2 )
+   ::oBrwText:Resize( ::oWndCode:nTop+1 )
+   if ::aWindows[ ::nCurrentWindow ] == ::oWndVars
+      ::NextWindow()
+   ENDIF
 
 return nil
 
@@ -2311,6 +2389,354 @@ LOCAL cLine
    ENDIF
 
 RETURN self
+
+METHOD NextRoutine() CLASS TDebugger
+
+   ::RestoreAppStatus()
+   ::lNextRoutine := .t.
+   ::Exit()
+
+RETURN self
+
+
+METHOD AddWatchpoint() CLASS TDebugger
+LOCAL cExpr:=SPACE(255)
+LOCAL bExpr
+LOCAL aWatch
+
+   cExpr := ALLTRIM( ::InputBox( "Enter Watchpoint", cExpr ) )
+   IF( EMPTY(cExpr) )
+      RETURN self
+   ENDIF
+   aWatch := {"wp", cExpr, NIL}
+   aWatch[WP_BLOCK] := CreateExpression( cExpr, aWatch )
+   IF( aWatch[WP_BLOCK] == NIL )
+      ALERT( "Expression error" )
+      RETURN self
+   ENDIF
+   AADD( ::aWatch, aWatch )
+   ::ShowWatchpoints()
+      
+RETURN self
+
+
+METHOD ShowWatchPoints() CLASS TDebugger
+
+   local nWidth, n := 1
+   Local oCol
+   local lRepaint := .f.
+   local nTop
+
+   if ::lGo
+      return nil
+   endif
+
+   if LEN(::aWatch) == 0
+      return nil
+   endif
+
+   if ::oWndPnt == nil
+      nTop := IIF(::oWndVars!=NIL .AND. ::oWndVars:lVisible,::oWndVars:nBottom,0) + 1
+      ::oWndPnt := TDbWindow():New( nTop,;
+         0, ;
+         nTop +Min( 4, Len( ::aWatch ) ) + 1,;
+         MaxCol() - iif( ::oWndStack != nil, ::oWndStack:nWidth(), 0 ),;
+         "Watch" )
+
+      ::oWndCode:nTop := ::oWndPnt:nBottom + 1
+      ::oBrwText:Resize( ::oWndCode:nTop + 1 )
+      ::oBrwText:RefreshAll()
+      ::oWndCode:SetFocus( .t. )
+
+      ::oWndPnt:Show( .f. )
+      AAdd( ::aWindows, ::oWndPnt )
+//      ::oWndPnt:bLButtonDown := { | nMRow, nMCol | ::WndVarsLButtonDown( nMRow, nMCol ) }
+//      ::oWndPnt:bLDblClick   := { | nMRow, nMCol | ::EditVar( ::oBrwPnt:Cargo[ 1 ] ) }
+
+      ::oBrwPnt := TBrowseNew( nTop+1, 1, ::oWndPnt:nBottom - 1, MaxCol() - iif( ::oWndStack != nil,;
+                               ::oWndStack:nWidth(), 0 ) - 1 )
+
+      ::oWndPnt:Browser := ::oBrwPnt
+
+      ::oBrwPnt:Cargo :={ 1,{}} // Actual highligthed row
+      ::oBrwPnt:ColorSpec := ::aColors[ 2 ] + "," + ::aColors[ 5 ] + "," + ::aColors[ 3 ]
+      ::oBrwPnt:GOTOPBLOCK := { || ::oBrwPnt:cargo[ 1 ] := Min( 1, Len(::aWatch) ) }
+      ::oBrwPnt:GoBottomBlock := { || ::oBrwPnt:cargo[ 1 ] := Len( ::aWatch ) }
+      ::oBrwPnt:SkipBlock = { | nSkip, nOld | nOld := ::oBrwPnt:Cargo[ 1 ],;
+                               ::oBrwPnt:Cargo[ 1 ] += nSkip,;
+                               ::oBrwPnt:Cargo[ 1 ] := Min( Max( ::oBrwPnt:Cargo[ 1 ], 1 ),;
+                                                             Len( ::aWatch ) ),;
+                               IIF( LEN(::aWatch) > 0, ::oBrwPnt:Cargo[ 1 ] - nOld, 0 ) }
+
+      nWidth := ::oWndPnt:nWidth() - 1
+      oCol:=TBColumnNew( "", ;
+         { || PadR( IIF( LEN( ::aWatch ) > 0, ;
+                       AllTrim( Str( ::oBrwPnt:Cargo[1] -1 ) ) + ") " + ;
+                       GetWatchInfo( ::aWatch[ Max( ::oBrwPnt:Cargo[1], 1 ) ] ), ;
+                       " " ), ;
+                   ::oWndPnt:nWidth() - 2 ) } )
+      ::oBrwPnt:AddColumn( oCol )
+      AAdd(::oBrwPnt:Cargo[2], ::aWatch)
+      oCol:DefColor:={1,2}
+      if Len( ::aWatch ) > 0
+         ::oBrwPnt:ForceStable()
+      endif
+
+      ::oWndPnt:bPainted := { || if(Len(::aWatch) > 0, ( ::oBrwPnt:ForceStable(),RefreshVarsS(::oBrwPnt) ),) }
+
+      ::oWndPnt:bKeyPressed := { | nKey | ( iif( nKey == K_DOWN ;
+      , ::oBrwPnt:Down(), nil ), iif( nKey == K_UP, ::oBrwPnt:Up(), nil ) ;
+      , iif( nKey == K_PGDN, ::oBrwPnt:PageDown(), nil ) ;
+      , iif( nKey == K_PGUP, ::oBrwPnt:PageUp(), nil ) ;
+      , iif( nKey == K_HOME, ::oBrwPnt:GoTop(), nil ) ;
+      , iif( nKey == K_END, ::oBrwPnt:GoBottom(), nil ) ;
+      , iif( nKey == K_ENTER, ::EditWatch( ::oBrwPnt:Cargo[1] ), nil ), ::oBrwPnt:ForceStable() ) }
+
+   else
+      if( ::oBrwPnt:cargo[1] <= 0 )
+         ::oBrwPnt:cargo[1] := 1
+      endif
+      if Len( ::aWatch ) == 0
+         if ::oWndPnt:nBottom - ::oWndPnt:nTop > 1
+            ::oWndPnt:nBottom := ::oWndPnt:nTop + 1
+            lRepaint := .t.
+         endif
+      endif
+      if Len( ::aWatch ) > ::oWndPnt:nBottom - ::oWndPnt:nTop - 1
+         ::oWndPnt:nBottom := ::oWndPnt:nTop + Min( Len( ::aWatch ) + 1, 4 )
+         ::oBrwPnt:nBottom := ::oWndPnt:nBottom - 1
+         ::oBrwPnt:Configure()
+         lRepaint := .t.
+      endif
+      if Len( ::aWatch ) < ::oWndPnt:nBottom - ::oWndPnt:nTop - 1
+         ::oWndPnt:nBottom := ::oWndPnt:nTop + Len( ::aWatch ) + 1
+         ::oBrwPnt:nBottom := ::oWndPnt:nBottom - 1
+         ::oBrwPnt:Configure()
+         lRepaint := .t.
+      endif
+      if ! ::oWndPnt:lVisible
+         ::oWndCode:nTop := ::oWndPnt:nBottom + 1
+         ::oBrwText:Resize( ::oWndPnt:nBottom + 2 )
+         ::oWndPnt:Show()
+      else
+         if lRepaint
+            ::oWndCode:nTop := ::oWndPnt:nBottom + 1
+            ::oBrwText:Resize( ::oWndCode:nTop + 1 )
+            ::oWndCode:Refresh()
+            ::oWndPnt:Refresh()
+         endif
+      endif
+      if Len( ::aWatch ) > 0
+         ::oBrwPnt:RefreshAll()
+         ::oBrwPnt:ForceStable()
+      endif
+   endif
+
+return nil
+
+METHOD EditWatch( nPos ) CLASS TDebugger
+
+   ::NotSupported()
+   
+RETURN self
+
+
+METHOD DelWatchpoint() CLASS TDebugger
+LOCAL nPos
+
+   IF( ::oWndPnt != NIL .AND. ::oWndPnt:lVisible )
+      nPos := ::InputBox( "Enter item number to delete", ::oBrwPnt:cargo[1]-1 ) 
+      IF( LastKey() != K_ESC )
+         IF( nPos >=0 .AND. nPos < LEN(::aWatch) )
+            ADEL( ::aWatch, nPos+1 )
+            ASIZE( ::aWatch, LEN(::aWatch)-1 )
+            ::oBrwPnt:gotop()
+            IF( LEN(::aWatch) == 0 )
+               ::HideWatchpoints()
+            ELSE
+               ::ShowWatchpoints()
+            ENDIF
+         ENDIF 
+      ENDIF
+   ENDIF
+   
+RETURN self
+
+
+METHOD HideWatchpoints() CLASS TDebugger
+
+   ::oWndPnt:Hide()
+   ::oWndCode:nTop := IIF(::oWndVars!=NIL .AND. ::oWndVars:lVisible, ::oWndVars:nBottom+1,1)
+   ::oBrwText:Resize( ::oWndCode:nTop+1 )
+   if ::aWindows[ ::nCurrentWindow ] == ::oWndPnt
+      ::NextWindow()
+   ENDIF
+
+return nil
+
+
+STATIC FUNCTION GetWatchInfo( aWatch )
+LOCAL aVars, i, j
+LOCAL nLen
+LOCAL cVar, nPos, cProc
+LOCAL xVal, cType
+LOCAL bEBlock
+
+   xVal := "Undefined"
+   cType := 'U'
+   bEblock := ErrorBlock( {|| BREAK()} )
+   BEGIN SEQUENCE
+      IF( aWatch[WP_BLOCK] != NIL )
+         nLen :=LEN(aWatch)-WP_BLOCK
+         IF( nLen > 0 )
+            aVars := ARRAY( nLen )
+            FOR i:=1 TO nLen
+               cVar := aWatch[ i + WP_BLOCK ]
+               //search local variables in current procedure
+               nPos := ASCAN( s_oDebugger:aCallStack[1][CSTACK_LOCALS], {|a| a[VAR_NAME]==cVar} )
+               IF( nPos > 0 )
+                  j :=1
+                  cProc := s_oDebugger:aCallStack[1][CSTACK_LOCALS][nPos][VAR_FUNCNAME]
+                  while ProcName( j ) != cProc
+                     j++
+                  end
+                  aVars[i] := __vmVarLGet( j, s_oDebugger:aCallStack[1][CSTACK_LOCALS][ nPos ][ VAR_POS ] )
+               ELSE
+                  //search local statics
+                  nPos := ASCAN( s_oDebugger:aCallStack[1][CSTACK_STATICS], {|a| a[VAR_NAME]==cVar} )
+                  IF( nPos > 0 )
+                     aVars[i] := __vmVarSGet( s_oDebugger:aCallStack[1][CSTACK_STATICS][ nPos ][ 2 ] )
+                  ELSE
+                     //search global statics
+                     FOR j:=1 TO LEN(__dbgStatics)
+                        nPos := ASCAN( __dbgStatics[j][ 2 ], {|c| c==cVar} )
+                        IF( nPos > 0 )
+                           aVars[i] :=__vmVarSGet(__dbgStatics[j][1]+nPos )
+                           EXIT
+                        ENDIF
+                     NEXT
+                     IF( nPos == 0 )
+                        aVars[i] := &cVar
+                     ENDIF
+                  ENDIF
+               ENDIF
+            NEXT
+         ENDIF
+         
+         xVal  := EVAL( aWatch[WP_BLOCK], aVars )
+         cType := VALTYPE(xVal)
+         xVal  := ValToStr( xVal )
+      ENDIF
+   END SEQUENCE
+   ErrorBlock( bEBlock )
+   
+RETURN aWatch[WP_EXPR]+" <"+aWatch[WP_TYPE]+", " +cType+">: " +xVal
+
+
+STATIC FUNCTION CreateExpression( cExpr, aWatch )
+LOCAL nLen
+LOCAL i,j
+LOCAL c, lSpace
+LOCAL cID, cBV, nPos
+LOCAL oErr, oEBlock
+LOCAL bExpr
+
+   nLen := LEN(cExpr)
+   i := j := 1
+   lSpace :=.T.
+   DO WHILE( i <= nLen )
+      c := SUBSTR( cExpr, i, 1 )
+      IF( c == '_' .OR. ISALPHA(c) )
+         i++
+         DO WHILE( i<=nLen .AND. IsIdentChar(c:=SUBSTR(cExpr,i,1)) )
+            i++
+         ENDDO
+         cID := UPPER( SUBSTR( cExpr, j, i-j ) )
+         IF( i < nLen )
+            DO WHILE( SUBSTR(cExpr,i,1)==" ")
+               i++
+            ENDDO
+            IF( SUBSTR(cExpr,i,1) = '(' )
+               //function call
+               j := i+1
+               LOOP
+            ENDIF
+            IF( SUBSTR(cExpr,i,2) = "->" )
+               //alias expressions are not expanded
+               i += 2
+               DO WHILE( i<=nLen .AND. IsIdentChar(SUBSTR(cExpr,i,1)," ()") )
+                  i++
+               ENDDO
+               j := i+1
+               LOOP
+            ENDIF
+         ENDIF
+         nPos := ASCAN( aWatch, {|c| c==cID}, WP_BLOCK+1 )
+         IF( nPos == 0 )
+            AADD( aWatch, cID )
+            nPos := LEN( aWatch )
+         ENDIF
+         
+         cBV := "__dbg[" +NTRIM(nPos - WP_BLOCK) +"]"
+         cExpr := LEFT( cExpr, j-1 ) + cBV + SUBSTR( cExpr, i )
+         nLen := LEN(cExpr)
+         i := j + LEN(cBV)
+         lSpace := .F.
+
+      ELSEIF( c $ " +-*/^!=<>(" )
+         lSpace := .T.
+         i++
+                  
+      ELSEIF( c = '&' )    //skip macro expression
+         i++
+         DO WHILE( i<=nLen .AND. IsIdentChar(SUBSTR(cExpr,i,1)," ()") )
+            i++
+         ENDDO
+      
+      ELSEIF( c = "'" .OR. c = '"' )   //STRING
+         i++
+         DO WHILE( i<=nLen .AND. SUBSTR(cExpr,i,1)!=c )
+            i++
+         ENDDO
+         i++
+
+      ELSEIF( c = "[" )
+         IF( lSpace )   
+            //STRING
+            i++
+            DO WHILE( i<=nLen .AND. SUBSTR(cExpr,i,1)!="]" )
+               i++
+            ENDDO
+         ELSE
+            //array index
+            lSpace := .T.
+            i++
+         ENDIF
+      ELSE
+         i++
+      ENDIF
+      j := i
+   ENDDO
+   
+//      s_oDebugger:InputBox("AFTER", cExpr )
+   oEBlock := ErrorBlock( {|o| BREAK(o)} )
+   BEGIN SEQUENCE
+      bExpr := &( "{|__dbg|"+ cExpr +"}" ) 
+   RECOVER USING oErr
+      ALERT( "Expression error: " +oErr:description )
+      bExpr := NIL
+   END SEQUENCE
+   ErrorBlock( oEBlock )
+
+RETURN bExpr  
+
+STATIC FUNCTION IsIdentChar( cChar, cSeeAlso )
+
+   IF( ISALPHA(cChar) .OR. ISDIGIT(cChar) .OR. cChar = '_' )
+      RETURN .T.
+   ENDIF
+   
+RETURN IIF(cSeeAlso!=NIL, cChar $ cSeeAlso, .F. )
 
 STATIC PROCEDURE StripUntil( pcLine, i, cChar )
 LOCAL j, n
