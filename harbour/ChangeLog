@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-05-09 17:20 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/idle.c
+    + Added a PRG-callable function wrapper for hb_releaseCPU() and
+      named it HB_RELEASECPU.
+
 2003-05-09 14:40 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * source/rdd/dbcmd.c
     ! Fixed the FIELDPOS function to truncate long field names,

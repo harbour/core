@@ -292,3 +292,9 @@ HB_FUNC( HB_IDLEDEL )
    if( !bFound )
       hb_ret();    /* return NIL */
 }
+
+/* Release a CPU time slice */
+HB_FUNC( HB_RELEASECPU )
+{
+   hb_releaseCPU();
+}
