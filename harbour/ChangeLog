@@ -1,3 +1,7 @@
+2001-01-21 15:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.slx
+     * Minor correction.
+
 2001-01-20 17:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * hb_slex.vc
      + Added -DSIMPLEX to CLIBFLAGS

@@ -293,6 +293,7 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( WANTS_VAR      , IDENTIFIER  , 0      , 0          ) PASS_THROUGH(),
                     IF_SEQUENCE_IS( WANTS_VAR      , MACROVAR    , 0      , 0          ) PASS_THROUGH(),
                     IF_SEQUENCE_IS( WANTS_VAR      , MACROTEXT   , 0      , 0          ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( WANTS_VAR      , '&'         , 0      , 0          ) PASS_THROUGH(),
                     IF_SEQUENCE_IS( WANTS_VAR      , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
 		    /* Wants Identifier. */
@@ -920,7 +921,7 @@ int hb_comp_SLX_CustomAction( int x, int aiHold[], int *ptr_iHold, BOOL *ptr_bIg
 
       case HB_WITH :
          *ptr_bIgnoreWords = FALSE;
-	 if( iLastToken == IDENTIFIER || iLastToken == MACROVAR || iLastToken == MACROTEXT )
+	 if( iLastToken == IDENTIFIER || iLastToken == MACROVAR || iLastToken == MACROTEXT || iLastToken == ')' )
 	    { return WITH + DONT_REDUCE; }
 	 else
 	 {
