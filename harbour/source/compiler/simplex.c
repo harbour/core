@@ -1227,7 +1227,7 @@ YY_DECL
                bIgnoreWords = FALSE;
 
                #ifdef LEX_ABBREVIATE_KEYS
-                  iWordLen = strlen( (char*) sToken );
+                  iWordLen = iLen;
 
                   if( iWordLen < LEX_ABBREVIATE_KEYS )
                   {
@@ -1287,7 +1287,7 @@ YY_DECL
             else
             {
                #ifdef LEX_ABBREVIATE_WORDS
-                  iWordLen = strlen( (char*) sToken );
+                  iWordLen = iLen;
 
                   if( iWordLen < LEX_ABBREVIATE_WORDS )
                   {

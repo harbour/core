@@ -1,3 +1,9 @@
+2000-08-22 10:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/simplex.c
+   * source/compiler/harbour.slx
+   * source/macro/macro.slx
+     ! Removed un-needed calls to strlen().
+
 2000-08-21 15:45 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/simplex.c
      ! Optimized Keywords and Words search, Lexer is ~5% faster.

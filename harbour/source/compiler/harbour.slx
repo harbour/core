@@ -852,7 +852,7 @@ LANGUAGE_RULES_ARE {
    else\
    {\
       yytext = x;\
-      yyleng = strlen( yytext );\
+      yyleng = iLen;\
 \
       if( *yytext == '_' || *yytext == '&' || isalpha( (int) *yytext ) )\
       {\
@@ -909,7 +909,7 @@ LANGUAGE_RULES_ARE {
          {\
       	    DEBUG_INFO( printf(  "Element \"%s\" is IDENTIFIER\n", yytext ) );\
 \
-            if( strlen( yytext ) > HB_SYMBOL_NAME_LEN )\
+            if( iLen > HB_SYMBOL_NAME_LEN )\
             {\
                yytext[ HB_SYMBOL_NAME_LEN ] = '\0';\
                yyleng = HB_SYMBOL_NAME_LEN;\
@@ -986,7 +986,7 @@ LANGUAGE_RULES_ARE {
       if( tmpPtr )\
       {\
          yylval.valDouble.bDec = strlen( tmpPtr + 1 );\
-         yylval.valDouble.bWidth = strlen( yytext ) - yylval.valDouble.bDec;\
+         yylval.valDouble.bWidth = iLen - yylval.valDouble.bDec;\
          if( yylval.valDouble.bDec )\
 	 {\
             yylval.valDouble.bWidth--;\
@@ -1010,7 +1010,7 @@ LANGUAGE_RULES_ARE {
          }\
          else\
          {\
-            yylval.valDouble.bWidth = strlen( yytext ) + 1;\
+            yylval.valDouble.bWidth = iLen + 1;\
             yylval.valDouble.bDec = 0;\
             yylval.valDouble.szValue = yytext;\
             iRet = NUM_DOUBLE;\

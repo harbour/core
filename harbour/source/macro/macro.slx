@@ -242,7 +242,7 @@ LANGUAGE_RULES_ARE {
 #undef ELEMENT_TOKEN
   #define ELEMENT_TOKEN(x)\
    {  yytext = x;\
-      yyleng = strlen( yytext );\
+      yyleng = iLen;\
 \
       if( *yytext == '_' || *yytext == '&' || isalpha( (int) *yytext ) )\
       {\
@@ -297,7 +297,7 @@ LANGUAGE_RULES_ARE {
          }\
          else\
          {\
-            if( ( USHORT ) strlen( yytext ) > YYLEX_PARAM->uiNameLen )\
+            if( iLen > YYLEX_PARAM->uiNameLen )\
             {\
                yytext[ YYLEX_PARAM->uiNameLen ] = '\0';\
                yyleng = YYLEX_PARAM->uiNameLen;\
@@ -341,7 +341,7 @@ LANGUAGE_RULES_ARE {
       if( tmpPtr )\
       {\
          yylval_ptr->valDouble.bDec = strlen( tmpPtr + 1 );\
-         yylval_ptr->valDouble.bWidth = strlen( yytext ) - yylval_ptr->valDouble.bDec;\
+         yylval_ptr->valDouble.bWidth = iLen - yylval_ptr->valDouble.bDec;\
          if( yylval_ptr->valDouble.bDec )\
 	 {\
             yylval_ptr->valDouble.bWidth--;\
@@ -359,7 +359,7 @@ LANGUAGE_RULES_ARE {
          }\
          else\
          {\
-            yylval_ptr->valDouble.bWidth = strlen( yytext ) + 1;\
+            yylval_ptr->valDouble.bWidth = iLen + 1;\
             yylval_ptr->valDouble.bDec = 0;\
             yylval_ptr->valDouble.szValue = yytext;\
             iRet = NUM_DOUBLE;\
