@@ -110,21 +110,16 @@
 
 19991006-10:44 GMT+1 Victor Szel <info@szelvesz.hu>
    * ChangeLog
-     ! Fixed deleted entries, missing entries, conflict markers,
+     ! Fixed deleted entries, missing entries, conflict markers, 
        double entries.
    * include/Makefile
      + harbour.ch added
    * include/harbour.ch
      ! Some minor fixes.
->>>>>>> 1.1143
 
-<<<<<<< ChangeLog
-19991006-07:41 GMT+1 Antonio Linares <alinares@fivetech.com>
-=======
 19991006-07:41 GMT+1 Antonio Linares <alinares@fivetech.com>
    * makefile.b32
      + mising include source\compiler path compiling harboury.c
->>>>>>> 1.1143
    * source/rtl/classes.c
      + Added support for CLASSDATAs INIT clause.
    * source/rtl/tclass.prg
@@ -132,12 +127,6 @@
    * include/hboo.ch
      + new defines added for CLASSDATAS.
 
-<<<<<<< ChangeLog
-19991006-01:06 GMT+1 Antonio Linares <alinares@fivetech.com>
-   * makefile.b32
-     + mising include source\compiler path compiling harboury.c
-
-=======
 19991006-00:30 GMT+1 Jose Lalin <dezac@corevia.com>
   * source/rtl/natmsg/msgeu.c
     ! full translated.
@@ -321,7 +310,6 @@ Tue Oct 05 14:44:16 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
   * source/compiler/main*.c
     + Some small cleanups.
 
->>>>>>> 1.1143
 19991005-14:41 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/run_tsta.bat
     tests/test_all.prg
@@ -469,188 +457,6 @@ Mon Oct 04 12:52:42 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 	* tests/working/Makefile:
 	Added missing '\' after db_brows.ch.
 	Changed spaces to tabs.
-
-19991004-18:42 GMT+1 Victor Szel <info@szelvesz.hu>
-  * include/classes.ch -> include/hbclass.ch
-    include/external.ch -> include/hbextern.ch
-    include/memvars.ch -> include/hbmemvar.ch
-    source/debug/debugger.prg
-    source/debug/tbrwtext.prg
-    source/rtl/tbcolumn.prg
-    source/rtl/tbrowse.prg
-    source/rtl/tget.prg
-    source/rtl/tgetlist.prg
-    tests/working/classch.prg
-    source/runner/stdalone/hbrun.prg
-    source/rtl/memvarbl.prg
-    source/rtl/menuto.prg
-    * Non-Clipper compatible Harbour .CH filenames prefixed with "HB" to avoid
-      possible name collisions with existing header files.
-
-19991004-18:06 GMT+1 Victor Szel <info@szelvesz.hu>
-  + source/rtl/mlcount.c
-    source/rtl/Makefile
-    doc/funclist.txt
-    + MLCOUNT() added
-      (thanks to Ignacio Ortiz de Zúniga <ignacio@fivetech.com>)
-  - source/runner/stdalone/runner.prg
-    - Removed (now for sure)
-
-19991004-16:25 GMT+1 Victor Szel <info@szelvesz.hu>
-  * source/runner/stdalone/runner.prg -> hbrun.prg
-    source/runner/stdalone/Makefile
-    runner.b32
-    makefile.vc
-    tests/working/hbrun.bat -> hbrunprg.bat
-    tests/working/run_all.bat
-    tests/working/test_all.prg
-    * runner.exe renamed to hbrun.exe to better fit into the final
-      executable naming style (harbour/hbpp/hbrun)
-
-19991004-15:15 GMT+1 Victor Szel <info@szelvesz.hu>
-  * source/hbpp -> source/pp
-    source/Makefile
-    source/pp/Makefile
-    source/pp/stdalone/Makefile
-    source/compiler/Makefile
-    source/runner/stdalone/Makefile
-    tests/working/Makefile
-    makefile.*
-    *.b??
-    * source/hbpp changed to source/pp.
-
-19991004-14:48 GMT+1 Victor Szel <info@szelvesz.hu>
-  * tests/working/*.bat
-    *.b??
-    makefile.vc
-    libs/*
-    lib/*
-    * libs directory name changed to lib, the win16 and win32
-      subdirs have been removed.
-    * win32 dir is no longer needed, since now the windows terminal.lib
-      is named termwin.lib.
-source/rtl/tgetlist.prg
-    doc/funclist.txt
-    + READINSERT() function added. (Thanks to Matteo Baccan)
-  * source/rtl/filesys.c
-    include/filesys.h
-    + hb_fsTell() added to the header file
-    % hb_fsSetDev*() now calls hb_fsSetDevMode(), so some platform specific
-      code could be eliminated.
-    % Some simplification in FSETDEVMOD()
-    + Added missing HB_ prefix to FSETDEVMOD()
-
-19991005-12:30 GMT+2 Ryszard Glab <rglab@imid.med.pl>
-
-    *source/compiler/harbour.y
-<<<<<<< ChangeLog
-	* changed some rules to correctly handle the following syntax:
-	LOCAL cbVar:={|| cbVar}
-	(the cbVar inside a codeblock is correctly considered a local
-	variable instead of memvar variable)
-	* corrected usage info to print LF at the end of message
-=======
-        * changed some rules to correctly handle the following syntax:
-        LOCAL cbVar:={|| cbVar}
-        (the cbVar inside a codeblock is correctly considered a local
-        variable instead of memvar variable)
-        * corrected usage info to print LF at the end of message
->>>>>>> 1.1131
-
-19991005-08:36 GMT+1 Victor Szel <info@szelvesz.hu>
-  * source/vm/main*.c
-    source/vm/Makefile
-    include/ctoharb.h
-    ! Some cleanup on the new main() functions.
-      (using header file, fixed CVS headers, added copyright header, removed a TODO,
-      TO DO -> TODO, Hungarian notation, global var name, 0 -> NULL,
-      added to GNU makefile, std main return value missing.)
-  * makefile.b40 (removed)
-    makefile.b32
-    make_b40.bat
-    + makefile.b40 removed, since from now on makefile.b32 provides
-      the same functionality when B40 macro is defined. See make_b40.bat.
-  * *.bat
-    *.b??
-    hbpplib.b32 (removed)
-    + Further uniformized.
-    + hbpp.exe make process uncommented from make_b16.bat.
-      We will see how it works.
-    + hbpplib.b32 incorporated into hbpp.b32
-  - hbpp.b16 (removed)
-    makefile.b16
-    make_b16.bat
-    - hbpp.b16 removed, since it was not used, and is now incorporated to
-      makefile.b16.
-  * source/runner/stdalone/hbrun.prg
-    + Using OutStd() instead of QOUT() to enable output redirecting like in
-      other command line utilites.
-
-19991005-07:55 GMT+1 Antonio Linares <alinares@fivetech.com>
-  + New file source/vm/mainstd.c   (entry point for std applications)
-  + New file source/vm/mainwin.c   (entry point for win appplications)
-  * source/vm/hvm.c
-    -+ main() renamed to hb_vmInit()
-    * hb_quit() removed from there and moved to mainstd.c and
-      mainwin.c respectively.
-  * makefile.b32
-    * added support for mainstd.c and mainwin.c modules.
-    (make_b32.bat tested and works ok).
-  * tests/bld_b32.bat
-    * %1 moved to the end of line
-    * del %1.c removed
-    (tested and works ok).
-
-19991005-00:13 GMT+1 Victor Szel <info@szelvesz.hu>
-  * source/compiler/genc.c
-    ! Cosmetic: Some double tabs changed to single ones.
-
-19991004-22:34 GMT+1 Victor Szel <info@szelvesz.hu>
-  * tests/db_brows.prg
-    - READEXIT() removed since it's now part of the RTL.
-
-19991004-21:34 GMT+1 Victor Szel <info@szelvesz.hu>
-  * tests/*.bat
-    ! Reworked, standardized, simplified. Please test them.
-      Now they resemble to the bin/*.bat batch files.
-  * tests/buildexe.bat
-    - Removed since it was obsolete, use bld_b16.bat instead.
-
-19991004-19:54 GMT+1 Victor Szel <info@szelvesz.hu>
-  * source/rtl/memvars.c
-    ! memvars.ch changed to hbmemvar.ch
-  * tests/working/*.* moved to tests/*.*
-  * tests/working/db_brows.*
-    ! Fixed the CVS header, they missed to closing "$"
-
-19991004-19:23 GMT+1 Victor Szel <info@szelvesz.hu>
-  * tests/broken/*.* moved to tests/working
-    tests/working/Makefile
-    * moved to the BAD_PRG_SOURCES
-  - tests/broken/
-    - Removed
-  * tests/working/hscript/*.* moved to samples/hscript
-    * Moved
-  * source/rtl/mlcount.c
-    * BYTE type changed to USHORT.
-    * Hungarian notation slighly corrected.
-
-19991004-18:58 GMT+1 Victor Szel <info@szelvesz.hu>
-  + source/runner/stdalone/hbrun.prg
-    + Added (now for sure)
-
-19991004-18:53 GMT+1 Victor Szel <info@szelvesz.hu>
-  + include/reserved.ch
-    + Added for complete Clipper compatibility, the file is a dummy, so it's
-      a TODO to replicate to originial functionality.
-  * include/Makefile
-    * Updated.
-
-Mon Oct 04 12:52:42 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
-
-        * tests/working/Makefile:
-        Added missing '\' after db_brows.ch.
-        Changed spaces to tabs.
 
 19991004-18:42 GMT+1 Victor Szel <info@szelvesz.hu>
   * include/classes.ch -> include/hbclass.ch
