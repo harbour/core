@@ -1,3 +1,38 @@
+2000-08-08 18:05 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hberrors.h
+    *source/compiler/hbgenerr.c
+        * added error: CASE or OTHERWISE does not match DO CASE"
+        if CASE or OTHERWISE is used outside of DO CASE/ENDCASE
+        
+    *source/compiler/harbour.l
+        * cleaned or fixed many rules
+        * fixed support for [] string delimiters
+        * fixed support for DO fun WITH (expr)
+        * see changes in harbour.y
+        
+    *source/compiler/harbour.y
+        *moved here rules for:
+           | OPTIONAL
+           | LOOP
+           | EXIT
+           | IN
+           | EXTERN
+           | ANNOUNCE
+           | LOCAL
+           | MEMVAR
+           | STATIC
+           | PRIVATE
+           | PUBLIC
+           | PARAMETERS
+           | PROCREQ
+       These keywords are treated simmilar to IDENTIFIER (they should
+       fill yyval.string member)
+       The generated code is much smaller and faster.
+
+NOTE: 
+    Ron, this breaks harbour.slx rules !!!
+
 2000-08-08 12:11 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * source/common/hbver.c
      ! fixed Operating System/2 version report (broken since it wasn't taking into account that from OS/2 3.x version

@@ -158,8 +158,8 @@ char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
 %token LOCAL STATIC IIF IF ELSE ELSEIF END ENDIF LITERAL TRUEVALUE FALSEVALUE
 %token ANNOUNCE EXTERN INIT EXIT AND OR NOT PUBLIC EQ NE1 NE2
 %token INC DEC ALIASOP DOCASE CASE OTHERWISE ENDCASE ENDDO MEMVAR
-%token WHILE EXIT LOOP END FOR NEXT TO STEP LE GE FIELD IN PARAMETERS
-%token PLUSEQ MINUSEQ MULTEQ DIVEQ POWER EXPEQ MODEQ EXITLOOP
+%token WHILE LOOP END FOR NEXT TO STEP LE GE FIELD IN PARAMETERS
+%token PLUSEQ MINUSEQ MULTEQ DIVEQ POWER EXPEQ MODEQ
 %token PRIVATE BEGINSEQ BREAK RECOVER RECOVERUSING DO WITH SELF LINE
 %token MACROVAR MACROTEXT
 %token AS_ARRAY AS_BLOCK AS_CHARACTER AS_CLASS AS_DATE AS_LOGICAL AS_NUMERIC AS_OBJECT AS_VARIANT DECLARE OPTIONAL
@@ -382,7 +382,7 @@ Statement  : ExecFlow   CrlfStmnt   { }
                      ExtVarList
                     { hb_compRTVariableGen( "__MVPRIVATE" ); hb_comp_cVarType = ' '; hb_comp_iVarScope = VS_NONE; } CrlfStmnt
 
-           | EXITLOOP  { hb_comp_bDontGenLineNum = TRUE; hb_compLoopExit(); } CrlfStmnt { hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
+           | EXIT      { hb_comp_bDontGenLineNum = TRUE; hb_compLoopExit(); } CrlfStmnt { hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
            | LOOP      { hb_comp_bDontGenLineNum = TRUE; hb_compLoopLoop(); } CrlfStmnt { hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
            | EXTERN ExtList Crlf
            | ANNOUNCE IdentName {
@@ -420,6 +420,19 @@ ExtList    : IdentName                      { hb_compExternAdd( $1 ); }
 IdentName  : IDENTIFIER       { $$ = $1; }
            | STEP             { $$ = hb_compIdentifierNew( "STEP", TRUE ); }
            | TO               { $$ = hb_compIdentifierNew( "TO", TRUE ); }
+           | OPTIONAL         { $$ = $<string>1; }
+           | LOOP             { $$ = hb_compIdentifierNew( "LOOP", TRUE ); }
+           | EXIT             { $$ = hb_compIdentifierNew( "EXIT", TRUE ); }
+           | IN               { $$ = hb_compIdentifierNew( "IN", TRUE ); }
+           | EXTERN           { $$ = $<string>1; }
+           | ANNOUNCE         { $$ = $<string>1; }
+           | LOCAL            { $$ = $<string>1; }
+           | MEMVAR           { $$ = $<string>1; }
+           | STATIC           { $$ = $<string>1; }
+           | PRIVATE          { $$ = $<string>1; }
+           | PUBLIC           { $$ = $<string>1; }
+           | PARAMETERS       { $$ = $<string>1; }
+           | PROCREQ          { $$ = $<string>1; }          
            ;
 
 /* Numeric values
@@ -1750,7 +1763,7 @@ static void hb_compLoopLoop( void )
 {
    if( ! hb_comp_pLoops )
    {
-      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "LOOP", NULL );
+      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_UNMATCHED_EXIT, "LOOP", NULL );
    }
    else
    {
@@ -1792,7 +1805,7 @@ static void hb_compLoopExit( void )
 {
    if( ! hb_comp_pLoops )
    {
-      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "EXIT", NULL );
+      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_UNMATCHED_EXIT, "EXIT", NULL );
    }
    else
    {

@@ -85,6 +85,7 @@ char * hb_comp_szErrors[] =
    "Invalid selector in send: \'%s\'",
    "ANNOUNCEd procedure \'%s\' must be a public symbol",
    "Jump PCode not found",
+   "CASE or OTHERWISE does not match DO CASE",
 };
 
 /* Table with parse warnings */
