@@ -67,12 +67,17 @@ CLASS TForm
    METHOD   New()
    METHOD   ShowModal()
 
-   METHOD   cCaption() INLINE WinGetText( ::hWnd )
-   METHOD   _cCaption( cNewCaption ) INLINE ;
+   ACCESS   cCaption() INLINE WinGetText( ::hWnd )
+   ASSIGN   cCaption( cNewCaption ) INLINE ;
                WinSetWindowText( ::hWnd, cNewCaption )
 
-   METHOD   oMenu() INLINE ::oMainMenu
-   METHOD   _oMenu( oNewMenu )
+   ACCESS   oMenu() INLINE ::oMainMenu
+   ASSIGN   oMenu( oNewMenu )
+
+   ACCESS   nWidth() INLINE WinGetWidth( ::hWnd )
+   ASSIGN   nWidth( nNewWidth ) INLINE ;
+               WinSetWidth( ::hWnd, nNewWidth )
+
 
 ENDCLASS
 
@@ -115,7 +120,7 @@ METHOD ShowModal() CLASS TForm
 return nil
 
 
-METHOD _oMenu( oNewMenu ) CLASS TForm
+ASSIGN oMenu( oNewMenu ) CLASS TForm
 
    ::oMainMenu = oNewMenu
 

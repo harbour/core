@@ -64,12 +64,33 @@
 HAB hb_pm_GetHab( void );
 
 
+MRESULT EXPENTRY WindowProc( HWND hwnd, USHORT msg, MPARAM mp1, MPARAM mp2 )
+{
+   HPS hps;
+
+   switch( msg )
+   {
+      case WM_ERASEBACKGROUND:
+           return FALSE;
+
+      case WM_PAINT:
+           hps = WinBeginPaint( hwnd, 0L, NULL );
+           GpiErase( hps );
+           WinEndPaint( hps );
+           return 0;
+
+    }
+
+    return WinDefWindowProc( hwnd, msg, mp1, mp2 );
+}
+
+
 HB_FUNC( WINREGISTERCLASS )
 {
 
    hb_retl( WinRegisterClass( hb_pm_GetHab(),               /* anchor block handle */
                               hb_parc( 1 ),                 /* Class Name */
-                              ( PFNWP ) WinDefWindowProc,   /* default Class procedure */
+                              ( PFNWP ) WindowProc,         /* default Class procedure */
                               hb_parnl( 2 ),                /* style */
                               hb_parnl( 3 ) ) );            /* extra bytes */
 }
@@ -227,3 +248,23 @@ HB_FUNC( WINSENDMSG )
 }
 
 
+HB_FUNC( WINGETWIDTH )
+{
+   HWND hWnd = ( HWND ) hb_parnl( 1 );
+   RECTL rcWnd;
+
+   WinQueryWindowRect( hWnd, &rcWnd );
+   hb_retnl( rcWnd.xRight - rcWnd.xLeft );
+}
+
+
+HB_FUNC( WINSETWIDTH )
+{
+   HWND hWnd = ( HWND ) hb_parnl( 1 );
+   SWP swp;
+
+   WinQueryWindowPos( hWnd, &swp );
+   WinSetWindowPos( hWnd, HWND_TOP, swp.x,
+                    swp.y, (LONG) hb_parnl( 2 ), swp.cy,
+                    SWP_MOVE | SWP_SIZE | SWP_SHOW | SWP_ZORDER );
+}
