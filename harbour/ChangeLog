@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
    * contrib/libmisc/Makefile
+     add a derivative copy of bison.simple v 1.28 which will be used as
+     the standard bison skeleton output parser for the purpose of Harbour
+     project in order to have a uniform parser code. Developers are expected
+     to use this code and make revision to harbour.y if so required.
+
+2001-12-24 21:35 UTC-0300 Luiz Rafael Culik <culik@sl.conex.net>
+   * utils/hbmake/hbmake.prg
      * Some minor fixes to both edit mode
 
 2001-12-23 10:18 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
@@ -26,12 +33,12 @@
      + New function hb_StartApp() added
 
    * source/vm/hvm.c
-     ! Fixed hb_fsRename() and hb_fsDelete() to return BOOL 
+     * Function hb_StartApp() used from hb_vmProcessSymbols()
 
-     ! All low-level functions returning BOOL now check 
-       for valid API call return value inside the platform 
+2001-12-22 07:50 UTC-0300 Luiz Rafael Culik <culik@sl.conex.net>
+   * utils/hbmake/hbmake.prg
      * Some alingment of the text on edit mode.
-     ! hb_fsLock() fixed to not return TRUE when the mode 
+   * utils/hbmake/hbmutils.prg
      * Getsourcefiles() function speed optimized(thanks Victor)
 
 2001-12-22 03:30 UTC+0700 Andi Jahja <harbour@cbn.net.id>
@@ -50,11 +57,11 @@
      ! All low-level functions returning BOOL now check
        for valid API call return value inside the platform
        spcific branches.
-     + New implementation of the DIRECTORY() function, faster 
+     ! hb_fsLock() fixed to not return TRUE when the mode
        parameter was invalid.
-       Please test this as extensively as possible, with special 
+
 2001-12-21 16:31 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
-     + New implementation of FILE() function, now it 
+
    + source/rtl/filehb.c
    * source/rtl/direct.c
    * source/rtl/Makefile
@@ -64,7 +71,7 @@
 
 2001-12-21 16:08 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
-     ! Fixed date handling. The null terminating char was 
+   + source/rtl/file.c
    + source/rtl/direct.c
    * source/rtl/Makefile
    * makefile.bc
@@ -73,11 +80,11 @@
        smaller, much more clean version.
        Please test this as extensively as possible, with special
        regards to attribute filtering.
-     ! Fixed write and read operations returning -1 
-       on bad file handle and access erros from either 
+     + New implementation of FILE() function, now it
+       supports wildcards just like CA-Cl*pper.
      ; They are noth using the new multiplatform File Find API.
        Note that it may require some work/testing on some platforms.
-     
+
    * source/rtl/filesys.c
    * source/rtl/philes.c
      - Removed old FILE() and hb_fsFile().
@@ -97,8 +104,7 @@
        low and Harbour level functions.
      * Cleaned up the new Win32 API branches.
 
-     * Renamed to ChangeLog.012 and started an new one
-   * source/pp/pragma.c
+     * Renamed to ChangeLog.012 and started an new one   * source/pp/pragma.c
    * contrib/dot/pp_harb.ch
    * tests/inline_c.prg
      * STOPDUMP renamed as ENDDUMP (with Ron permission)
