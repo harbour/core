@@ -291,7 +291,8 @@ extern HB_EXPR_PTR hb_compWarnMeaningless( HB_EXPR_PTR );
 
 extern void hb_compChkCompilerSwitch( int, char * Args[] );
 extern void hb_compChkEnvironVar( char * );
-extern void hb_compCheckPaths( void );
+extern void hb_compChkPaths( void );
+extern void hb_compChkDefines( int iArg, char * Args[] );
 
 extern void hb_compPrintUsage( char * );
 extern void hb_compPrintCredits( void );

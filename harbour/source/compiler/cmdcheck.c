@@ -39,7 +39,7 @@
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  *    hb_compChkEnvironVar()
- *    hb_compCheckPaths()
+ *    hb_compChkPaths()
  *    AddSearchPath()
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
@@ -220,25 +220,9 @@ void hb_compChkEnvironVar( char * szSwitch )
                 }
                 break;
 
-             /* QUESTION:
-                Why not add support for multiple defines ?
-                -DONE;TWO=2;THREE
-             */
              case 'd':
-             case 'D':   /* defines a Lex #define from the environment */
-                {
-                   unsigned int i = 0;
-                   char * szDefText = hb_strdup( s + 1 );
-                   while( i < strlen( szDefText ) && !HB_ISOPTSEP( szDefText[ i ] ) )
-                   i++;
-
-                   szDefText[ i ] = '\0';
-                   if( szDefText )
-                   {
-                      hb_pp_AddDefine( szDefText, 0 );
-                   }
-                   free( szDefText );
-                }
+             case 'D':
+                /* NOTE: Ignore these -d switches will be processed separately */
                 break;
 
              case 'e':
@@ -469,7 +453,7 @@ void hb_compChkEnvironVar( char * szSwitch )
    }
 }
 
-void hb_compCheckPaths( void )
+void hb_compChkPaths( void )
 {
    char * szInclude = getenv( "INCLUDE" );
 
@@ -489,3 +473,56 @@ void hb_compCheckPaths( void )
    }
 }
 
+static void hb_compChkDefineSwitch( char * pszSwitch )
+{
+   if( pszSwitch && HB_ISOPTSEP( pszSwitch[ 0 ] ) && 
+      ( pszSwitch[ 1 ] == 'd' || pszSwitch[ 1 ] == 'D' ) )
+   {
+      char * szDefText = hb_strdup( pszSwitch + 2 );
+      unsigned int i = 0;
+
+      while( i < strlen( szDefText ) && ! HB_ISOPTSEP( szDefText[ i ] ) )
+         i++;
+
+      szDefText[ i ] = '\0';
+      if( szDefText )
+         hb_pp_AddDefine( szDefText, 0 );
+
+      free( szDefText );
+   }
+}
+
+void hb_compChkDefines( int iArg, char * Args[] )
+{
+   /* Chech the environment variables */
+   {
+      /* NOTE: CLIPPERCMD enviroment variable is overriden 
+               if HARBOURCMD exists */
+      char * szStrEnv = getenv( "HARBOURCMD" );
+
+      if( ! szStrEnv )
+         szStrEnv = getenv( "CLIPPERCMD" );
+
+      if( szStrEnv )
+      {
+         char * szSwitch = strtok( szStrEnv, " " );
+
+         /* Check the environment var while it isn't empty. */
+         while( szSwitch != NULL )
+         {
+            hb_compChkDefineSwitch( szSwitch );
+            szSwitch = strtok( NULL, " " );
+         }
+      }
+   }
+
+   /* Check the command line options */
+   {
+      int i;
+
+      /* Check all switches in command line They start with an OS_OPT_DELIMITER 
+         char */
+      for( i = 0; i < iArg; i++ )
+         hb_compChkDefineSwitch( Args[ i ] );
+   } 
+}

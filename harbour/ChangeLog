@@ -1,3 +1,12 @@
+20000403-22:20 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/pp/stdalone/hbpp.c
+   * source/compiler/cmdcheck.c
+   * source/compiler/harbour.c
+   * include/hbcomp.h
+     ! Fixed handling of the /D switch, it broke when introducing the 
+       multiple filenames at the command line feature.
+
 20000403-21:08 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/readvar.prg

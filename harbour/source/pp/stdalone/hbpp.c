@@ -95,6 +95,8 @@ int main( int argc, char * argv[] )
     HB_VER_MAJOR, HB_VER_MINOR, HB_VER_REVISION, HB_VER_BUILD, HB_VER_YEAR, HB_VER_MONTH, HB_VER_DAY );
   printf( "Copyright 1999-2000, http://www.harbour-project.org\n" );
 
+  hb_pp_Init();
+
   while( iArg < argc )
     {
       if( HB_ISOPTSEP(argv[ iArg ][ 0 ]))
@@ -209,8 +211,6 @@ int main( int argc, char * argv[] )
         AddSearchPath( pPath, &hb_comp_pIncludePath );
       }
   }
-
-  hb_pp_Init();
 
   while( hb_pp_Parse( handl_o ) > 0 );
   fclose( hb_comp_files.pLast->handle );

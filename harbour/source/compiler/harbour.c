@@ -151,7 +151,7 @@ int main( int argc, char * argv[] )
       {
          if( !bAnyFiles )
          {
-            hb_compCheckPaths();
+            hb_compChkPaths();
             bAnyFiles = TRUE;
          }
 
@@ -183,6 +183,9 @@ int main( int argc, char * argv[] )
             {
                /* Initialization of preprocessor arrays */
                hb_pp_Init();
+
+               /* Add /D command line or envvar defines */
+               hb_compChkDefines( argc, argv );
 
                /* Initialize support variables */
                hb_compInitVars();
