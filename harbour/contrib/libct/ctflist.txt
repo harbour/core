@@ -30,6 +30,14 @@
 ; Please review the following function status
 ;
 ;
+; 0. general functions 
+; =======================
+;
+CTINIT        ;R;   !NEW!
+CTEXIT        ;R;   !NEW!
+CSETARGERR    ;R;   !NEW!  
+;
+;
 ; 1.1 windowing functions 
 ; =======================
 ;
@@ -589,19 +597,23 @@ ATN2          ;N;
 CEILING       ;N; 
 COS           ;N; 
 COT           ;N; 
-DTOR          ;N; 
+DTOR          ;N;
+EXPA          ;N;   !NEW!
 FACT          ;N; 
 FLOOR         ;N; 
 FV            ;N; 
-GETPREC       ;N; 
+GETPREC       ;N;
+LOGA          ;N;   !NEW!
 LOG10         ;N; 
 PAYMENT       ;N; 
 PERIODS       ;N; 
 PI            ;N; 
 PV            ;N; 
-RATE          ;N; 
+RATE          ;N;
+ROOT          ;N;   !NEW!
 RTOD          ;N; 
-SETPREC       ;N; 
+SETMATHERR    ;R;   !NEW!
+SETPREC       ;N;
 SIGN          ;N; 
 SIN           ;N; 
 TAN           ;N; 

@@ -112,7 +112,23 @@ HB_FUNC (ASCIISUM)
   }
   else
   {
-    hb_retnl (0);
+    PHB_ITEM pSubst = NULL;
+    int iArgErrorMode = ct_getargerrormode();
+    if (iArgErrorMode != CT_ARGERR_IGNORE)
+    {
+      pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_ASCIISUM,
+                               NULL, "ASCIISUM", 0, EF_CANSUBSTITUTE, 1, hb_paramError (1));
+    }
+    
+    if (pSubst != NULL)
+    {
+      hb_itemReturn (pSubst);
+      hb_itemRelease (pSubst);
+    }
+    else
+    {
+      hb_retnl (0);
+    }
   }
 
   return;

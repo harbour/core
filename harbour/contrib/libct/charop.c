@@ -94,12 +94,6 @@ static void do_charop (int iSwitch)
     unsigned char *pucString = ( unsigned char * ) hb_parc (1);
     unsigned char *pucResult = ( unsigned char * ) hb_xgrab (sStrLen);
     
-    if (pucResult == NULL)
-    {
-      hb_ret();
-      return;
-    }
-
     switch (iSwitch)
     {
       /* NOT */
@@ -206,8 +200,16 @@ static void do_charop (int iSwitch)
 
         }
         else
+        {
+          int iArgErrorMode = ct_getargerrormode();
+          if (iArgErrorMode != CT_ARGERR_IGNORE)
+          {
+            ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARADD,
+                      NULL, "CHARADD", 0, EF_CANDEFAULT, 2,
+                      hb_paramError (1), hb_paramError (2));
+          }
           hb_xmemcpy (pucResult, pucString, sStrLen);
-
+        }
       }; break;
 
       /* SUB */
@@ -223,8 +225,16 @@ static void do_charop (int iSwitch)
 
         }
         else
+        {
+          int iArgErrorMode = ct_getargerrormode();
+          if (iArgErrorMode != CT_ARGERR_IGNORE)
+          {
+            ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARSUB,
+                      NULL, "CHARSUB", 0, EF_CANDEFAULT, 2,
+                      hb_paramError (1), hb_paramError (2));
+          }
           hb_xmemcpy (pucResult, pucString, sStrLen);
-
+        }
       }; break;
 
       /* AND */
@@ -240,8 +250,16 @@ static void do_charop (int iSwitch)
 
         }
         else
+        {
+          int iArgErrorMode = ct_getargerrormode();
+          if (iArgErrorMode != CT_ARGERR_IGNORE)
+          {
+            ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARAND,
+                      NULL, "CHARAND", 0, EF_CANDEFAULT, 2,
+                      hb_paramError (1), hb_paramError (2));
+          }
           hb_xmemcpy (pucResult, pucString, sStrLen);
-
+        }
       }; break;
 
       /* OR */
@@ -257,8 +275,16 @@ static void do_charop (int iSwitch)
 
         }
         else
+        {
+          int iArgErrorMode = ct_getargerrormode();
+          if (iArgErrorMode != CT_ARGERR_IGNORE)
+          {
+            ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHAROR,
+                      NULL, "CHAROR", 0, EF_CANDEFAULT, 2,
+                      hb_paramError (1), hb_paramError (2));
+          }
           hb_xmemcpy (pucResult, pucString, sStrLen);
-
+        }
       }; break;
 
       /* XOR */
@@ -274,8 +300,16 @@ static void do_charop (int iSwitch)
 
         }
         else
+        {
+          int iArgErrorMode = ct_getargerrormode();
+          if (iArgErrorMode != CT_ARGERR_IGNORE)
+          {
+            ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARXOR,
+                      NULL, "CHARXOR", 0, EF_CANDEFAULT, 2,
+                      hb_paramError (1), hb_paramError (2));
+          }
           hb_xmemcpy (pucResult, pucString, sStrLen);
-
+        }
       }; break;
 
     }; /* endswitch (iSwitch) */
@@ -291,7 +325,94 @@ static void do_charop (int iSwitch)
   }
   else   /* if (ISCHAR (1)) */
   {
-    hb_ret();
+    PHB_ITEM pSubst = NULL;
+    int iArgErrorMode = ct_getargerrormode();
+    if (iArgErrorMode != CT_ARGERR_IGNORE)
+    {
+      switch (iSwitch)
+      {
+        case DO_CHAROP_CHARADD:
+        {
+          pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARADD,
+                                   NULL, "CHARADD", 0, EF_CANSUBSTITUTE, 2,
+                                   hb_paramError (1), hb_paramError (2));
+        }; break;
+
+        case DO_CHAROP_CHARSUB:
+        {
+          pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARSUB,
+                                   NULL, "CHARSUB", 0, EF_CANSUBSTITUTE, 2,
+                                   hb_paramError (1), hb_paramError (2));
+        }; break;
+
+        case DO_CHAROP_CHARAND:
+        {
+          pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARAND,
+                                   NULL, "CHARAND", 0, EF_CANSUBSTITUTE, 2,
+                                   hb_paramError (1), hb_paramError (2));
+        }; break;
+
+        case DO_CHAROP_CHARNOT:
+        {
+          pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARNOT,
+                                   NULL, "CHARNOT", 0, EF_CANSUBSTITUTE, 1,
+                                   hb_paramError (1));
+        }; break;
+
+        case DO_CHAROP_CHAROR:
+        {
+          pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHAROR,
+                                   NULL, "CHAROR", 0, EF_CANSUBSTITUTE, 2,
+                                   hb_paramError (1), hb_paramError (2));
+        }; break;
+
+        case DO_CHAROP_CHARXOR:
+        {
+          pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARXOR,
+                                   NULL, "CHARXOR", 0, EF_CANSUBSTITUTE, 2,
+                                   hb_paramError (1), hb_paramError (2));
+        }; break;
+
+        case DO_CHAROP_CHARSHL:
+        {
+          pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARSHL,
+                                   NULL, "CHARSHL", 0, EF_CANSUBSTITUTE, 1,
+                                   hb_paramError (1));
+        }; break;
+
+        case DO_CHAROP_CHARSHR:
+        {
+          pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARSHR,
+                                   NULL, "CHARSHR", 0, EF_CANSUBSTITUTE, 1,
+                                   hb_paramError (1));
+        }; break;
+
+        case DO_CHAROP_CHARRLL:
+        {
+          pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARRLL,
+                                   NULL, "CHARRLL", 0, EF_CANSUBSTITUTE, 1,
+                                   hb_paramError (1));
+        }; break;
+
+        case DO_CHAROP_CHARRLR:
+        {
+          pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARRLR,
+                                   NULL, "CHARRLR", 0, EF_CANSUBSTITUTE, 1,
+                                   hb_paramError (1));
+        }; break;
+
+      }
+    }
+
+    if (pSubst != NULL)
+    {
+      hb_itemReturn (pSubst);
+      hb_itemRelease (pSubst);
+    }
+    else
+    {
+      hb_ret();
+    }
   }
 
   return;

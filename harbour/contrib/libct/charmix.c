@@ -120,6 +120,13 @@ HB_FUNC (CHARMIX)
 
     if (sLen1 == 0)
     {
+      int iArgErrorMode = ct_getargerrormode();
+      if (iArgErrorMode != CT_ARGERR_IGNORE)
+      {
+        ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARMIX,
+                  NULL, "CHARMIX", 0, EF_CANDEFAULT, 2,
+                  hb_paramError (1), hb_paramError (2));
+      }
       hb_retc ("");
       return;
     }
@@ -130,6 +137,13 @@ HB_FUNC (CHARMIX)
       sLen2 = hb_parclen (2);
       if (sLen2 == 0)
       {
+        int iArgErrorMode = ct_getargerrormode();
+        if (iArgErrorMode != CT_ARGERR_IGNORE)
+        {
+          ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARMIX,
+                    NULL, "CHARMIX", 0, EF_CANDEFAULT, 2,
+                    hb_paramError (1), hb_paramError (2));
+        }
         hb_retclen (pcString1, sLen1);
         return;
       }
@@ -156,7 +170,24 @@ HB_FUNC (CHARMIX)
   }
   else
   {
-    hb_retc ("");
+    PHB_ITEM pSubst = NULL;
+    int iArgErrorMode = ct_getargerrormode();
+    if (iArgErrorMode != CT_ARGERR_IGNORE)
+    {
+      pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARMIX,
+                               NULL, "CHARMIX", 0, EF_CANSUBSTITUTE, 2,
+                               hb_paramError (1), hb_paramError (2));
+    }
+  
+    if (pSubst != NULL)
+    {
+      hb_itemReturn (pSubst);
+      hb_itemRelease (pSubst);
+    }
+    else
+    {
+      hb_retc ("");
+    }
   }
 
 }

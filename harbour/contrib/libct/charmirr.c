@@ -125,6 +125,13 @@ HB_FUNC (CHARMIRR)
 
     if (sStrLen == 0)
     {
+      int iArgErrorMode = ct_getargerrormode();
+      if (iArgErrorMode != CT_ARGERR_IGNORE)
+      {
+        ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARMIRR,
+                  NULL, "CHARMIRR", 0, EF_CANDEFAULT, 2,
+                  hb_paramError (1), hb_paramError (2));
+      }
       if (iNoRet)
         hb_retl (0);
       else
@@ -167,10 +174,27 @@ HB_FUNC (CHARMIRR)
   }
   else /* if (ISCHAR (1)) */
   {
-    if (iNoRet)
-      hb_retl (0);
+    PHB_ITEM pSubst = NULL;
+    int iArgErrorMode = ct_getargerrormode();
+    if (iArgErrorMode != CT_ARGERR_IGNORE)
+    {
+      pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARMIRR,
+                               NULL, "CHARMIRR", 0, EF_CANSUBSTITUTE, 2,
+                               hb_paramError (1), hb_paramError (2));
+    }  
+    
+    if (pSubst != NULL)
+    {
+      hb_itemReturn (pSubst);
+      hb_itemRelease (pSubst);
+    }
     else
-      hb_retc ("");
+    {
+      if (iNoRet)
+        hb_retl (0);
+      else
+        hb_retc ("");
+    }
   }
 
   return;

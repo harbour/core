@@ -215,6 +215,16 @@ HB_FUNC (CHARSORT)
         ((ssElementPos+ssCompareLen) > sElementLen) || 
         (sSortLen+sIgnore > sStrLen))
     {
+      int iArgErrorMode = ct_getargerrormode();
+      if (iArgErrorMode != CT_ARGERR_IGNORE)
+      {
+        ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARSORT,
+                  NULL, "CHARSORT", 0, EF_CANDEFAULT, 7,
+                  hb_paramError (1), hb_paramError (2),
+                  hb_paramError (3), hb_paramError (4),
+                  hb_paramError (5), hb_paramError (6),
+                  hb_paramError (7));
+      }
       if (iNoRet)
         hb_retl (0);
       else
@@ -241,10 +251,30 @@ HB_FUNC (CHARSORT)
   }
   else /* if (ISCHAR (1)) */
   {
-    if (iNoRet)
-      hb_retl (0);
+    PHB_ITEM pSubst = NULL;
+    int iArgErrorMode = ct_getargerrormode();
+    if (iArgErrorMode != CT_ARGERR_IGNORE)
+    {
+      pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARSORT,
+                               NULL, "CHARSORT", 0, EF_CANSUBSTITUTE, 7,
+                               hb_paramError (1), hb_paramError (2),
+                               hb_paramError (3), hb_paramError (4),
+                               hb_paramError (5), hb_paramError (6),
+                               hb_paramError (7));
+    }
+
+    if (pSubst != NULL)
+    {
+      hb_itemReturn (pSubst);
+      hb_itemRelease (pSubst);
+    }
     else
-      hb_retc ("");
+    {
+      if (iNoRet)
+        hb_retl (0);
+      else
+        hb_retc ("");
+    }
   }
 
 }

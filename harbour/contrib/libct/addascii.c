@@ -124,6 +124,11 @@
 HB_FUNC (ADDASCII)
 {
 
+  int iNoRet;
+
+  /* suppressing return value ? */
+  iNoRet = ct_getref();
+  
   if (ISCHAR (1))
   {
     
@@ -133,23 +138,29 @@ HB_FUNC (ADDASCII)
     size_t sPos;
     long lValue;
     int iCarryOver;
-    int iNoRet;
 
     if (ISNUM (3))
       sPos = hb_parnl (3);
     else
       sPos = sLen;
 
-    /* suppressing return value ? */
-    iNoRet = ct_getref();
-
     if ((sPos > sLen) || !(ISNUM (2)))
     {
+      int iArgErrorMode = ct_getargerrormode();
+      if (iArgErrorMode != CT_ARGERR_IGNORE)
+      {
+        ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_ADDASCII,
+                  NULL, "ADDASCII", 0, EF_CANDEFAULT, 4,
+                  hb_paramError (1), hb_paramError (2),
+                  hb_paramError (3), hb_paramError (4));
+      }
+
       /* return string unchanged */
       if (iNoRet) 
         hb_retl (0);
       else
         hb_retclen (pcSource, sLen);
+    
       return;
     }
 
@@ -199,7 +210,28 @@ HB_FUNC (ADDASCII)
   }
   else
   {
-    hb_retc ("");
+    PHB_ITEM pSubst = NULL;
+    int iArgErrorMode = ct_getargerrormode();
+    if (iArgErrorMode != CT_ARGERR_IGNORE)
+    {
+      pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_ADDASCII,
+                               NULL, "ADDASCII", 0, EF_CANSUBSTITUTE, 4,
+                               hb_paramError (1), hb_paramError (2),
+                               hb_paramError (3), hb_paramError (4));
+    }
+    
+    if (pSubst != NULL)
+    {
+      hb_itemReturn (pSubst);
+      hb_itemRelease (pSubst);
+    }
+    else
+    {
+      if (iNoRet)
+        hb_retl (0);
+      else
+        hb_retc ("");
+    }
     return;
   }
 

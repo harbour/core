@@ -233,7 +233,27 @@ static void do_charone (int iSwitch)
   }
   else /* if (ISCHAR (1)) */
   {
-    hb_retc ("");
+    PHB_ITEM pSubst = NULL;
+    int iArgErrorMode = ct_getargerrormode();
+    if (iArgErrorMode != CT_ARGERR_IGNORE)
+    {
+      pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG,
+                               (iSwitch == DO_CHARONE_CHARONE ? CT_ERROR_CHARONE : CT_ERROR_WORDONE),
+                               NULL,
+                               (iSwitch == DO_CHARONE_CHARONE ? "CHARONE" : "WORDONE"),
+                               0, EF_CANSUBSTITUTE, 2,
+                               hb_paramError (1), hb_paramError (2));
+    }
+     
+    if (pSubst != NULL)
+    {
+      hb_itemReturn (pSubst);
+      hb_itemRelease (pSubst);
+    }
+    else
+    {
+      hb_retc ("");
+    }
   }
 
   return;

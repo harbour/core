@@ -56,24 +56,39 @@
 #ifndef _CTSTR_H
 #define _CTSTR_H 1
 
-char *ct_at_exact_forward (char *pcString, size_t sStrLen,
-                           char *pcMatch, size_t sMatchLen,
-                           size_t *psMatchStrLen);
-char *ct_at_exact_backward (char *pcString, size_t sStrLen,
-                            char *pcMatch, size_t sMatchLen,
-                            size_t *psMatchStrLen);
-char *ct_at_wildcard_forward (char *pcString, size_t sStrLen,
-                              char *pcMatch, size_t sMatchLen,
-                              char cWildCard, size_t *psMatchStrLen);
-char *ct_at_wildcard_backward (char *pcString, size_t sStrLen,
-                               char *pcMatch, size_t sMatchLen,
-                               char cWildCard, size_t *psMatchStrLen);
-char *ct_at_charset_forward (char *pcString, size_t sStrLen,
-                             char *pcCharSet, size_t sCharSetLen,
-                             size_t *psMatchedCharPos);
-char *ct_at_charset_backward (char *pcString, size_t sStrLen,
-                              char *pcCharSet, size_t sCharSetLen,
-                              size_t *psMatchedCharPos);
+extern int ct_str_init (void);
+extern int ct_str_exit (void);
+
+extern char *ct_at_exact_forward (char *pcString, size_t sStrLen,
+                                  char *pcMatch, size_t sMatchLen,
+                                  size_t *psMatchStrLen);
+extern char *ct_at_exact_backward (char *pcString, size_t sStrLen,
+                                   char *pcMatch, size_t sMatchLen,
+                                   size_t *psMatchStrLen);
+extern char *ct_at_wildcard_forward (char *pcString, size_t sStrLen,
+                                     char *pcMatch, size_t sMatchLen,
+                                     char cWildCard, size_t *psMatchStrLen);
+extern char *ct_at_wildcard_backward (char *pcString, size_t sStrLen,
+                                      char *pcMatch, size_t sMatchLen,
+                                      char cWildCard, size_t *psMatchStrLen);
+extern char *ct_at_charset_forward (char *pcString, size_t sStrLen,
+                                    char *pcCharSet, size_t sCharSetLen,
+                                    size_t *psMatchedCharPos);
+extern char *ct_at_charset_backward (char *pcString, size_t sStrLen,
+                                     char *pcCharSet, size_t sCharSetLen,
+                                     size_t *psMatchedCharPos);
+
+extern void ct_setref (int iNewSwitch);
+extern int  ct_getref (void);
+extern void ct_setatmupa (int iNewSwitch);
+extern int  ct_getatmupa (void);
+extern void ct_setatlike (int iNewSwitch);
+extern int  ct_getatlike (void);
+extern void ct_setatlikechar (char cNewChar);
+extern char ct_getatlikechar (void);
+
+#define CT_SETATLIKE_EXACT     0
+#define CT_SETATLIKE_WILDCARD  1
 
 #endif
 

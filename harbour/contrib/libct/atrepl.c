@@ -152,6 +152,15 @@ HB_FUNC (ATREPL)
 
     if (sIgnore >= sStrLen)
     {
+      int iArgErrorMode = ct_getargerrormode();
+      if (iArgErrorMode != CT_ARGERR_IGNORE)
+      {
+        ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_ATREPL,
+                  NULL, "ATREPL", 0, EF_CANDEFAULT, 6,
+                  hb_paramError (1), hb_paramError (2),
+                  hb_paramError (3), hb_paramError (4),
+                  hb_paramError (5), hb_paramError (6));
+      }
       hb_retclen (pcString, sStrLen);
       return;
     }
@@ -346,7 +355,26 @@ HB_FUNC (ATREPL)
   }
   else /* ((ISCHAR (1)) && (ISCHAR (2))) */
   {
-    hb_retclen (hb_parc (2), hb_parclen (2));
+    PHB_ITEM pSubst = NULL;
+    int iArgErrorMode = ct_getargerrormode();
+    if (iArgErrorMode != CT_ARGERR_IGNORE)
+    {
+      pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_ATREPL,
+                               NULL, "ATREPL", 0, EF_CANSUBSTITUTE, 6,
+                               hb_paramError (1), hb_paramError (2),
+                               hb_paramError (3), hb_paramError (4),
+                               hb_paramError (5), hb_paramError (6));
+    }
+
+    if (pSubst != NULL)
+    {
+      hb_itemReturn (pSubst);
+      hb_itemRelease (pSubst);
+    }
+    else
+    {
+      hb_retclen (hb_parc (2), hb_parclen (2));
+    }
   }
 
   return;

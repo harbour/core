@@ -21,6 +21,8 @@ C_SOURCES = \
         charrepl.c \
         charsort.c \
         charswap.c \
+	ct.c \
+	ctmath.c \
         ctset.c \
         ctstr.c \
         ctchksum.c \
@@ -33,7 +35,7 @@ C_SOURCES = \
 PRG_SOURCES= \
         ctmisc.prg \
 
-LIBNAME=ct3
+LIBNAME=libct
 
 include $(TOP)$(ROOT)config/lib.cf
 

@@ -78,6 +78,15 @@ static void do_charevod (int iSwitch)
 
     if (sLen == 0)
     {
+      int iArgErrorMode = ct_getargerrormode();
+      if (iArgErrorMode != CT_ARGERR_IGNORE)
+      {
+        ct_error ((USHORT)iArgErrorMode, EG_ARG,
+                  (iSwitch == DO_CHAREVOD_CHAREVEN ? CT_ERROR_CHAREVEN : CT_ERROR_CHARODD),
+                  NULL,
+                  (iSwitch == DO_CHAREVOD_CHAREVEN ? "CHAREVEN" : "CHARODD"),
+                  0, EF_CANDEFAULT, 1, hb_paramError (1));
+      }
       hb_retc ("");
       return;
     }
@@ -103,7 +112,26 @@ static void do_charevod (int iSwitch)
   }
   else
   {
-    hb_retc ("");
+    PHB_ITEM pSubst = NULL;
+    int iArgErrorMode = ct_getargerrormode();
+    if (iArgErrorMode != CT_ARGERR_IGNORE)
+    {
+      pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, 
+                               (iSwitch == DO_CHAREVOD_CHAREVEN ? CT_ERROR_CHAREVEN : CT_ERROR_CHARODD),
+                               NULL,
+                               (iSwitch == DO_CHAREVOD_CHAREVEN ? "CHAREVEN" : "CHARODD"),
+                               0, EF_CANSUBSTITUTE, 1, hb_paramError (1));
+    }
+     
+    if (pSubst != NULL)
+    {
+      hb_itemReturn (pSubst);
+      hb_itemRelease (pSubst);
+    }
+    else
+    {
+      hb_retc ("");
+    }
   }
 
 }

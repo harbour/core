@@ -4,10 +4,10 @@
 
 /*
  * Harbour Project source code:
- * Harbour math functions and API
+ *   CTOOLS for Harbour, Math header file
  *
- * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
- *        Author: Martin Vogel <vogel@inttec.de>
+ * Copyright 2001  Alejandro de garate  <alex_degarate@hotmail.com>
+ *
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -51,63 +51,42 @@
  *
  */
 
-#ifndef HB_MATH_H_
-#define HB_MATH_H_
+#ifndef _CTMATH_H
+#define _CTMATH_H
 
-#include "hbapi.h"
 #include <math.h>
+#include <float.h>
+#include <limits.h>
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+/* initialization */
+extern int ct_math_init (void);
+extern int ct_math_exit (void);
 
-#if defined(__WATCOMC__)
-   #define HB_MATH_HANDLER
-   #define exception _exception
-#elif defined(__BORLANDC__)
-   #if (__BORLANDC__ == 1328) && defined(__cplusplus)
-      /* NOTE: There seem to be a bug in Borland C++ 5.3 C++ mode which prevents
-               the redefinition of matherr, because nor "_exception" neither
-               "exception" will work. [vszakats] */
-   #else
-      #define HB_MATH_HANDLER
-      #define matherr _matherr
-      /* NOTE: This is needed for Borland C++ 5.5 in C++/STDC mode. [vszakats] */
-      #if (__BORLANDC__ >= 1360)
-         #define exception _exception
-      #endif
-   #endif
-#elif defined(__MINGW32__)
-   #define HB_MATH_HANDLER
-   #define matherr _matherr
-   #define exception _exception
-#endif
+/* set & get math error correction status */
+extern void ct_setmatherrstatus (int iStatus);
+extern int ct_getmatherrstatus (void);
 
-extern int hb_getMathError (void);
-extern void hb_resetMathError (void);
-extern int hb_isMathHandler (void);
+/* set & get math error correction mode */
+extern void ct_setmatherrmode (int iMode);
+extern int ct_getmatherrmode (void);
 
-typedef int (* HB_MATH_HANDLERPROC)(struct exception *err);
-typedef struct HB_MATH_HANDLERCHAINELEMENT_
-{
-  HB_MATH_HANDLERPROC                   handlerproc;
-  int                                   status;
-  struct HB_MATH_HANDLERCHAINELEMENT_ * pnext;
-} HB_MATH_HANDLERCHAINELEMENT, * PHB_MATH_HANDLERCHAINELEMENT;
-typedef PHB_MATH_HANDLERCHAINELEMENT HB_MATH_HANDLERHANDLE;
+/* stati and modes for math error correction */
+#define CT_MATHERR_STATUS_NOTFOUND   HB_MATH_HANDLER_STATUS_NOTFOUND  /* math handler is not installed */
+#define CT_MATHERR_STATUS_INACTIVE   HB_MATH_HANDLER_STATUS_INACTIVE  /* math handler is installed but inactive */
+#define CT_MATHERR_STATUS_ACTIVE     HB_MATH_HANDLER_STATUS_ACTIVE    /* math handler is installed and active */
 
-extern HB_MATH_HANDLERHANDLE hb_installMathHandler (HB_MATH_HANDLERPROC handlerproc);
-extern int hb_deinstallMathHandler (HB_MATH_HANDLERHANDLE handle);
-extern int hb_setMathHandlerStatus (HB_MATH_HANDLERHANDLE handle, int status);
-extern int hb_getMathHandlerStatus (HB_MATH_HANDLERHANDLE handle);
+#define CT_MATHERR_MODE_NONE        0   /* no correction at all, program will exit */
+#define CT_MATHERR_MODE_DEFAULT     1   /* default return value will be used, no error msgs ! */
+#define CT_MATHERR_MODE_USER        2   /* error will be thrown to user who is responsible for error correction */
+#define CT_MATHERR_MODE_USERDEFAULT 3   /* error will be thrown, but if user fails, default correction will be used */
 
-#define HB_MATH_HANDLER_STATUS_NOTFOUND   ((int)-1)
-#define HB_MATH_HANDLER_STATUS_INACTIVE   ((int)0)
-#define HB_MATH_HANDLER_STATUS_ACTIVE     ((int)1)
+/* CT3 math error handler */
+extern int ct_matherr (struct exception * err);
+
+/* set & get precision */
+extern void ct_setprecision (int iPrecision);
+extern int ct_getprecision();
+
+#endif /* CTMATH_H */
 
 
-#if defined(HB_EXTERN_C)
-}
-#endif
-
-#endif /* HB_MATH_H_ */

@@ -169,13 +169,40 @@ static void do_charswap (int iSwitch)
   }
   else /* if (ISCHAR (1)) */
   {
-    if (iNoRet)
+    PHB_ITEM pSubst = NULL;
+    int iArgErrorMode = ct_getargerrormode();
+    if (iArgErrorMode != CT_ARGERR_IGNORE)
     {
-      hb_retl (0);
+      
+      if (iSwitch == DO_CHARSWAP_CHARSWAP)
+      {
+        pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARSWAP,
+                                 NULL, "CHARSWAP", 0, EF_CANSUBSTITUTE, 1,
+                                 hb_paramError (1));
+      }
+      else
+      {
+        pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_WORDSWAP,
+                                 NULL, "WORDSWAP", 0, EF_CANSUBSTITUTE, 2,
+                                 hb_paramError (1), hb_paramError (2));
+      }
+    }
+
+    if (pSubst != NULL)
+    {
+      hb_itemReturn (pSubst);
+      hb_itemRelease (pSubst);
     }
     else
     {
-      hb_retc ("");
+      if (iNoRet)
+      {
+        hb_retl (0);
+      }
+      else
+      {
+        hb_retc ("");
+      }
     }
   }
 

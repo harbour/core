@@ -56,18 +56,6 @@
 #ifndef _CTSET_H
 #define _CTSET_H 1
 
-void ct_setref (int);
-int  ct_getref (void);
-void ct_setatmupa (int);
-int  ct_getatmupa (void);
-void ct_setatlike (int);
-int  ct_getatlike (void);
-void ct_setatlikechar (char);
-char ct_getatlikechar (void);
-
-#define CT_SETATLIKE_EXACT     0
-#define CT_SETATLIKE_WILDCARD  1
-
 #endif
 
 

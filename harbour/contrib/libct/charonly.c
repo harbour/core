@@ -121,7 +121,51 @@ static void do_charonly (int iSwitch)
   }
   else /* if (ISCHAR (1) && ISCHAR (2)) */
   {
-    hb_retc ("");
+    PHB_ITEM pSubst = NULL;
+    int iArgErrorMode = ct_getargerrormode();
+    if (iArgErrorMode != CT_ARGERR_IGNORE)
+    {
+      switch (iSwitch)
+      {
+        case DO_CHARONLY_CHARONLY:
+        {
+          pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARONLY,
+                                   NULL, "CHARONLY", 0, EF_CANSUBSTITUTE, 2,
+                                   hb_paramError (1), hb_paramError (2));
+        }; break;
+
+        case DO_CHARONLY_WORDONLY:
+        {
+          pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_WORDONLY,
+                                   NULL, "WORDONLY", 0, EF_CANSUBSTITUTE, 2,
+                                   hb_paramError (1), hb_paramError (2));
+        }; break;
+
+        case DO_CHARONLY_CHARREM:
+        {
+          pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARREM,
+                                   NULL, "CHARREM", 0, EF_CANSUBSTITUTE, 2,
+                                   hb_paramError (1), hb_paramError (2));
+        }; break;
+
+        case DO_CHARONLY_WORDREM:
+        {
+          pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_WORDREM,
+                                   NULL, "WORDREM", 0, EF_CANSUBSTITUTE, 2,
+                                   hb_paramError (1), hb_paramError (2));
+        }; break;
+      }
+    }
+
+    if (pSubst != NULL)
+    {
+      hb_itemReturn (pSubst);
+      hb_itemRelease (pSubst);
+    }
+    else
+    {
+      hb_retc ("");
+    }
   }
 
   return;

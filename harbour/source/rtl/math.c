@@ -69,17 +69,20 @@ static int s_internal_math_error = 0; /* TOFIX: This is not thread safe. */
 
 int hb_getMathError( void )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_getMathError()"));
    return( s_internal_math_error );
 }
 
 void hb_resetMathError( void )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_resetMathError()"));
    s_internal_math_error = 0;
 }
 
 /* math handler present ? */
 int hb_isMathHandler( void )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_isMathHandler()"));
    return (1);
 }
 
@@ -92,6 +95,7 @@ HB_MATH_HANDLERHANDLE hb_installMathHandler (HB_MATH_HANDLERPROC handlerproc)
   
   PHB_MATH_HANDLERCHAINELEMENT pChain, pNewChainelement;
 
+  HB_TRACE(HB_TR_DEBUG, ("hb_installMathHandler (%p)", handlerproc));
   pNewChainelement = hb_xgrab (sizeof (HB_MATH_HANDLERCHAINELEMENT));
   pNewChainelement->handlerproc = handlerproc;
   pNewChainelement->status      = HB_MATH_HANDLER_STATUS_ACTIVE;
@@ -120,11 +124,13 @@ int hb_deinstallMathHandler (HB_MATH_HANDLERHANDLE handle)
   
   PHB_MATH_HANDLERCHAINELEMENT pChain;
 
+  HB_TRACE(HB_TR_DEBUG, ("hb_deinstallMathHandler (%p)", handle));
   if (handle != NULL)
   {
     if (s_pChain == (PHB_MATH_HANDLERCHAINELEMENT)handle)
     {
       s_pChain = ((PHB_MATH_HANDLERCHAINELEMENT)handle)->pnext;
+      hb_xfree ((void *)handle);
       return (0);
     }
     else
@@ -152,16 +158,29 @@ int hb_deinstallMathHandler (HB_MATH_HANDLERHANDLE handle)
 /* set custom math handler status */
 int hb_setMathHandlerStatus (HB_MATH_HANDLERHANDLE handle, int status)
 {
-  int oldstatus = ((PHB_MATH_HANDLERCHAINELEMENT)handle)->status;
-  ((PHB_MATH_HANDLERCHAINELEMENT)handle)->status = status;
-
+  int oldstatus = HB_MATH_HANDLER_STATUS_NOTFOUND;
+  
+  HB_TRACE(HB_TR_DEBUG, ("hb_setMathHandlerStatus (%p, %i)", handle, status));
+  if (handle != NULL)
+  {
+    oldstatus = ((PHB_MATH_HANDLERCHAINELEMENT)handle)->status;
+    ((PHB_MATH_HANDLERCHAINELEMENT)handle)->status = status;
+  }
   return (oldstatus);
 }
 
 /* get custom math handler status */
 int hb_getMathHandlerStatus (HB_MATH_HANDLERHANDLE handle)
 {
-  return (((PHB_MATH_HANDLERCHAINELEMENT)handle)->status);
+  HB_TRACE(HB_TR_DEBUG, ("hb_getMathHandlerStatus (%p)", handle));
+  if (handle != NULL)
+  {
+    return (((PHB_MATH_HANDLERCHAINELEMENT)handle)->status);
+  }
+  else
+  {
+    return (HB_MATH_HANDLER_STATUS_NOTFOUND);
+  }
 }
 
 
@@ -236,37 +255,44 @@ int matherr( struct exception * err )
 
 int hb_getMathError (void)
 {
+  HB_TRACE(HB_TR_DEBUG, ("hb_getMathError()"));
   return (0);
 }
 
 void hb_resetMathError (void)
 {
+  HB_TRACE(HB_TR_DEBUG, ("hb_resetMathError()"));
   return;
 }
 
 int hb_isMathHandler (void)
 {
+  HB_TRACE(HB_TR_DEBUG, ("hb_isMathHandler()"));
   return (0);
 }
 
 HB_MATH_HANDLERHANDLE hb_installMathHandler (HB_MATH_HANDLERPROC handlerproc)
 {
+  HB_TRACE(HB_TR_DEBUG, ("hb_installMathHandler (%p)", handlerproc));
   return ((HB_MATH_HANDLERHANDLE)NULL);
 }
 
 int hb_deinstallMathHandler (HB_MATH_HANDLERHANDLE handle)
 {
+  HB_TRACE(HB_TR_DEBUG, ("hb_deinstallMathHandler (%p)", handle));
   return (-1);
 }
 
 int hb_setMathHandlerStatus (HB_MATH_HANDLERHANDLE handle, int status)
 {
-  return (0);
+  HB_TRACE(HB_TR_DEBUG, ("hb_setMathHandlerStatus (%p, %i)", handle, status));
+  return (HB_MATH_HANDLER_STATUS_NOTFOUND);
 }
 
 int hb_getMathHandlerStatus (HB_MATH_HANDLERHANDLE handle)
 {
-  return (0);
+  HB_TRACE(HB_TR_DEBUG, ("hb_getMathHandlerStatus (%p)", handle));
+  return (HB_MATH_HANDLER_STATUS_NOTFOUND);
 }
 
 #endif

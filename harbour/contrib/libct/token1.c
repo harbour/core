@@ -364,7 +364,10 @@ static void do_token1 (int iSwitch)
     {
       case DO_TOKEN1_TOKEN:
       {
+        PHB_ITEM pSubst  = NULL;
+        int iArgErrorMode = ct_getargerrormode();
         char cRet;
+        
         if (ISBYREF (5))
         {
           cRet = (char)siPreSeparator;
@@ -378,25 +381,93 @@ static void do_token1 (int iSwitch)
                        6);
         }
 
-      };  /* no "break" here !! */
+        if (iArgErrorMode != CT_ARGERR_IGNORE)
+        {
+          pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_TOKEN,
+                                   NULL, "TOKEN", 0, EF_CANSUBSTITUTE, 6,
+                                   hb_paramError (1), hb_paramError (2),
+                                   hb_paramError (3), hb_paramError (4),
+                                   hb_paramError (5), hb_paramError (6));
+        }
+
+        if (pSubst != NULL)
+        {
+          hb_itemReturn (pSubst);
+          hb_itemRelease (pSubst);
+        }
+        else
+        {
+          if (!iNoRef)
+          {
+            hb_retc ("");
+          }
+          else
+          {
+            hb_retl (0);
+          }
+        }
+      }; break;  
 
       case DO_TOKEN1_TOKENLOWER:
       case DO_TOKEN1_TOKENUPPER:
       {
-        if (!iNoRef)
+        PHB_ITEM pSubst = NULL;
+        int iArgErrorMode = ct_getargerrormode();
+        if (iArgErrorMode != CT_ARGERR_IGNORE)
         {
-          hb_retc ("");
+          pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG,
+                                   (iSwitch == DO_TOKEN1_TOKENLOWER ? CT_ERROR_TOKENLOWER : CT_ERROR_TOKENUPPER),
+                                   NULL,
+                                   (iSwitch == DO_TOKEN1_TOKENLOWER ? "TOKENLOWER" : "TOKENUPPER"),
+                                   0, EF_CANSUBSTITUTE, 4,
+                                   hb_paramError (1), hb_paramError (2),
+                                   hb_paramError (3), hb_paramError (4));
+        }
+
+        if (pSubst != NULL)
+        {
+          hb_itemReturn (pSubst);
+          hb_itemRelease (pSubst);
         }
         else
         {
-          hb_retl (0);
+          if (!iNoRef)
+          {
+            hb_retc ("");
+          }
+          else
+          {
+            hb_retl (0);
+          }
         }
       }; break;
 
       case DO_TOKEN1_NUMTOKEN:
       case DO_TOKEN1_ATTOKEN:
       {
-        hb_retnl (0);
+        PHB_ITEM pSubst = NULL;
+        int iArgErrorMode = ct_getargerrormode();
+        if (iArgErrorMode != CT_ARGERR_IGNORE)
+        {
+          pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG,
+                                   (iSwitch == DO_TOKEN1_NUMTOKEN ? CT_ERROR_NUMTOKEN : CT_ERROR_ATTOKEN),
+                                   NULL,
+                                   (iSwitch == DO_TOKEN1_NUMTOKEN ? "NUMTOKEN" : "ATTOKEN"),
+                                   0, EF_CANSUBSTITUTE,
+                                   (iSwitch == DO_TOKEN1_NUMTOKEN ? 3 : 4),
+                                   hb_paramError (1), hb_paramError (2),
+                                   hb_paramError (3), hb_paramError (4));
+        }
+
+        if (pSubst != NULL)
+        {
+          hb_itemReturn (pSubst);
+          hb_itemRelease (pSubst);
+        }
+        else
+        {
+          hb_retnl (0);
+        }
       }; break;
     }
   }

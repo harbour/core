@@ -101,7 +101,26 @@ static void do_ascpos (int iSwitch)
   }
   else
   {
-    hb_retnl (0);
+    PHB_ITEM pSubst = NULL;
+    int iArgErrorMode = ct_getargerrormode();
+    if (iArgErrorMode != CT_ARGERR_IGNORE)
+    {
+      pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG,
+                               (iSwitch == DO_ASCPOS_VALPOS ? CT_ERROR_VALPOS : CT_ERROR_ASCPOS),
+                               NULL,
+                               (iSwitch == DO_ASCPOS_VALPOS ? "VALPOS" : "ASCPOS"),
+                               0, EF_CANSUBSTITUTE, 1, hb_paramError (1));
+    }
+
+    if (pSubst != NULL)
+    {
+      hb_itemReturn (pSubst);
+      hb_itemRelease (pSubst);
+    }
+    else
+    {
+      hb_retnl (0);
+    }
   }
 
   return;

@@ -94,16 +94,44 @@ static void do_atnum (int iSwitch)
       switch (iSwitch)
       {
         case DO_ATNUM_AFTERATNUM:
-        case DO_ATNUM_BEFORATNUM:
         {
           /* AFTERATNUM */
+          int iArgErrorMode = ct_getargerrormode();
+          if (iArgErrorMode != CT_ARGERR_IGNORE)
+          {
+            ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_AFTERATNUM,
+                      NULL, "AFTERATNUM", 0, EF_CANDEFAULT, 4,
+                      hb_paramError (1), hb_paramError (2),
+                      hb_paramError (3), hb_paramError (4));
+          };
+          hb_retc ("");
+        }; break;
+
+        case DO_ATNUM_BEFORATNUM:
+        {
           /* BEFORATNUM */
+          int iArgErrorMode = ct_getargerrormode();
+          if (iArgErrorMode != CT_ARGERR_IGNORE)
+          {
+            ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_BEFORATNUM,
+                      NULL, "BEFORATNUM", 0, EF_CANDEFAULT, 4,
+                      hb_paramError (1), hb_paramError (2),
+                      hb_paramError (3), hb_paramError (4));
+          };
           hb_retc ("");
         }; break;
         
         case DO_ATNUM_ATNUM:
         {
           /* ATNUM */
+          int iArgErrorMode = ct_getargerrormode();
+          if (iArgErrorMode != CT_ARGERR_IGNORE)
+          {
+            ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_ATNUM,
+                      NULL, "ATNUM", 0, EF_CANDEFAULT, 4,
+                      hb_paramError (1), hb_paramError (2),
+                      hb_paramError (3), hb_paramError (4));
+          };
           hb_retnl (0);
         }; break;
       }
@@ -272,14 +300,52 @@ static void do_atnum (int iSwitch)
       case DO_ATNUM_BEFORATNUM:
       {
         /* AFTERATNUM */
-        /* BEFORATNUM */
-        hb_retc ("");
+        PHB_ITEM pSubst = NULL;
+        int iArgErrorMode = ct_getargerrormode();
+        if (iArgErrorMode != CT_ARGERR_IGNORE)
+        {
+          pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG,
+                                   (iSwitch == DO_ATNUM_AFTERATNUM ? CT_ERROR_AFTERATNUM : CT_ERROR_BEFORATNUM),
+                                   NULL,
+                                   (iSwitch == DO_ATNUM_AFTERATNUM ? "AFTERATNUM" : "BEFORATNUM"),
+                                   0, EF_CANSUBSTITUTE, 4,
+                                   hb_paramError (1), hb_paramError (2),
+                                   hb_paramError (3), hb_paramError (4));
+        }
+        
+        if (pSubst != NULL)
+        {
+          hb_itemReturn (pSubst);
+          hb_itemRelease (pSubst);
+        }
+        else
+        {
+          hb_retc ("");
+        }
       }; break;
-
+        
       case DO_ATNUM_ATNUM:
       {
         /* ATNUM */
-        hb_retnl (0);
+        PHB_ITEM pSubst = NULL;
+        int iArgErrorMode = ct_getargerrormode();
+        if (iArgErrorMode != CT_ARGERR_IGNORE)
+        {
+          pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_ATNUM,
+                                   NULL, "ATNUM", 0, EF_CANSUBSTITUTE, 4,
+                                   hb_paramError (1), hb_paramError (2),
+                                   hb_paramError (3), hb_paramError (4));
+        }
+        
+        if (pSubst != NULL)
+        {
+          hb_itemReturn (pSubst);
+          hb_itemRelease (pSubst);
+        }
+        else
+        {
+          hb_retnl (0);
+        }
       }; break;
     }
     

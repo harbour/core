@@ -1,3 +1,60 @@
+2001-07-17 20:00 MEST Martin Vogel <vogel@inttec.de>
+
+   * source/rtl/math.c
+   * include/hbmath.h
+     * memory leak fixed in hb_deinstallMathHandler()
+     * various HB_TRACEs added
+     * new status flag added
+
+   + contrib/libct/ct.c
+     + lib main module with functions CTINIT(), CTEXIT(), CSETARGERR() and
+       error handling added
+
+   + contrib/libct/ctmath.c
+   + contrib/libct/ctmath.h
+     + math main module added
+     + functions SETMATHERR(), SETPREC(), GETPREC() added
+
+   + contrib/libct/cterror.ch
+     + error codes added
+
+   * contrib/libct/ctset.c
+   * contrib/libct/ctset.h
+   * contrib/libct/ctstr.c
+   * contrib/libct/ctstr.h
+     * string switch functions moved to ctstr.c, ctset.c will be main module
+       for switch functions
+     * new switchable argument error handling added, see CSETARGERR()
+
+   * contrib/libct/addascii.c
+   * contrib/libct/asciisum.c
+   * contrib/libct/ascpos.c
+   * contrib/libct/atadjust.c
+   * contrib/libct/atnum.c
+   * contrib/libct/atrepl.c
+   * contrib/libct/charevod.c
+   * contrib/libct/charmirr.c
+   * contrib/libct/charmix.c
+   * contrib/libct/charone.c
+   * contrib/libct/charonly.c
+   * contrib/libct/charop.c
+   * contrib/libct/charrepl.c
+   * contrib/libct/charsort.c
+   * contrib/libct/charswap.c
+   * contrib/libct/token1.c
+   * contrib/libct/wordrepl.c
+     * new switchable argument error handling added, see CSETARGERR()
+
+   * contrib/libct/Makefile
+   * contrib/libct/makefile.bc
+   * contrib/libct/makefile.vc
+     + ct.c 
+     + ctmath.c
+
+   * contrib/libct/ctflist.c
+   * contrib/libct/readme.txt
+     + new functions and their (short) description added
+
 2001-07-17 18:35 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx1.c
     * Fixed few bugs, reported by John M. S. Chiang,

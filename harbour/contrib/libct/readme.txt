@@ -37,8 +37,16 @@ Martin Vogel <vogel@inttec.de>
 
 + CHARSUB()    subtracts corresponding ASCII values
 
++ CSETARGERR() set behaviour on argument errors
+
++ CTINIT()     library init function
+
++ CTEXIT()     library exit function
+
 * SETATLIKE()  2nd parameter can be passed by reference so that SETATLIKE
                can store the acutal wildcard character in it
+
++ SETMATHERR() math error handling
 
 * TOKEN()      New 5th and 6th parameter where the function can store
                the tokenizer before and after the extracted token.

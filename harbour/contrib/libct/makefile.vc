@@ -76,7 +76,7 @@ LDFLAGS        = $(LDFLAGS)
 # Macros to access our library names
 #
 
-TOOLS_LIB    = $(LIB_DIR)\ct3.lib
+TOOLS_LIB    = $(LIB_DIR)\libct.lib
 
 HARBOUR_EXE  = $(BIN_DIR)\harbour.exe
 
@@ -126,6 +126,8 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\charrepl.obj \
    $(OBJ_DIR)\charsort.obj \
    $(OBJ_DIR)\charswap.obj \
+   $(OBJ_DIR)\ct.obj \
+   $(OBJ_DIR)\ctmath.obj \
    $(OBJ_DIR)\ctset.obj \
    $(OBJ_DIR)\ctstr.obj \
    $(OBJ_DIR)\ctchksum.obj \
@@ -162,6 +164,8 @@ CLEAN:
    -@if exist $(OBJ_DIR)\charrepl.* del $(OBJ_DIR)\charrepl.*
    -@if exist $(OBJ_DIR)\charsort.* del $(OBJ_DIR)\charsort.*
    -@if exist $(OBJ_DIR)\charswap.* del $(OBJ_DIR)\charswap.*
+   -@if exist $(OBJ_DIR)\ct.* del $(OBJ_DIR)\ct.*
+   -@if exist $(OBJ_DIR)\ctmath.* del $(OBJ_DIR)\ctmath.*
    -@if exist $(OBJ_DIR)\ctset.* del $(OBJ_DIR)\ctset.*
    -@if exist $(OBJ_DIR)\ctstr.* del $(OBJ_DIR)\ctstr.*
    -@if exist $(OBJ_DIR)\ctchksum.* del $(OBJ_DIR)\ctchksum.*

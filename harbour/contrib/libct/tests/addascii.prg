@@ -111,6 +111,8 @@ local cStr := "This is a test!"
  qout ("End test of ADDASCII()")
  qout ("")
 
+ ctexit()
+
 return
 
 

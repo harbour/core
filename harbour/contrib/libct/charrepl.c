@@ -220,19 +220,37 @@ HB_FUNC (CHARREPL)
           (ISCHAR (2)) &&
           ((sReplaceLen = (size_t)hb_parclen (3)) > 0))   */
   {
-    if (iNoRet)
+    PHB_ITEM pSubst = NULL;
+    int iArgErrorMode = ct_getargerrormode();
+    if (iArgErrorMode != CT_ARGERR_IGNORE)
     {
-      hb_retl (0);
+      pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARREPL,
+                               NULL, "CHARREPL", 0, EF_CANSUBSTITUTE, 4,
+                               hb_paramError (1), hb_paramError (2),
+                               hb_paramError (3), hb_paramError (4));
+    }
+
+    if (pSubst != NULL)
+    {
+      hb_itemReturn (pSubst);
+      hb_itemRelease (pSubst);
     }
     else
     {
-      if (ISCHAR (2))
+      if (iNoRet)
       {
-        hb_retclen (hb_parc (2), hb_parclen (2));
+        hb_retl (0);
       }
       else
       {
-        hb_retc ("");
+        if (ISCHAR (2))
+        {
+          hb_retclen (hb_parc (2), hb_parclen (2));
+        }
+        else
+        {
+          hb_retc ("");
+        }
       }
     }
   }
