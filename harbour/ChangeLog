@@ -1,3 +1,9 @@
+19991013-14:06 GMT+1 Bruno Cantero <bruno@issnet.net>
+
+  * source/rdd/dbf1.c
+    source/rdd/dbfcdx/dbfcdx1.c
+    * Errors on open or create operations now report the correct number.
+
 19991013-03:13 GMT+8 Ron Pinkas <Ron@Profit-Master.com>
    * harbour.y
           + added TOKEN MACROALIAS and rules to support MemVar aliased macro and non aliased macro variables assignments.

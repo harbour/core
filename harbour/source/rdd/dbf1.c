@@ -729,6 +729,7 @@ static ERRCODE dbfCreate( AREAP pArea, LPDBOPENINFO pCreateInfo )
          {
             pError = hb_errNew();
             hb_errPutGenCode( pError, EG_CREATE );
+            hb_errPutSubCode( pError, 1004 );
             hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_CREATE ) );
             hb_errPutFileName( pError, ( char * ) pCreateInfo->abName );
             hb_errPutFlags( pError, EF_CANRETRY );
@@ -774,6 +775,7 @@ static ERRCODE dbfCreateMemFile( AREAP pArea, LPDBOPENINFO pCreateInfo )
          {
             pError = hb_errNew();
             hb_errPutGenCode( pError, EG_CREATE );
+            hb_errPutSubCode( pError, 1005 );
             hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_CREATE ) );
             hb_errPutFileName( pError, ( char * ) pCreateInfo->abName );
             hb_errPutFlags( pError, EF_CANRETRY );
@@ -1137,6 +1139,7 @@ static ERRCODE dbfOpen( AREAP pArea, LPDBOPENINFO pOpenInfo )
          {
             pError = hb_errNew();
             hb_errPutGenCode( pError, EG_OPEN );
+            hb_errPutSubCode( pError, 1001 );
             hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_OPEN ) );
             hb_errPutFileName( pError, ( char * ) pOpenInfo->abName );
             hb_errPutFlags( pError, EF_CANRETRY );
@@ -1210,6 +1213,7 @@ static ERRCODE dbfOpenMemFile( AREAP pArea, LPDBOPENINFO pOpenInfo )
          {
             pError = hb_errNew();
             hb_errPutGenCode( pError, EG_OPEN );
+            hb_errPutSubCode( pError, 1002 );
             hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_OPEN ) );
             hb_errPutFileName( pError, ( char * ) pOpenInfo->abName );
             hb_errPutFlags( pError, EF_CANRETRY );
