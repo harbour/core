@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * source/vm/maindllh.c
+     * BOOL WINAPI HB_EXPORT => BOOL HB_EXPORT WINAPI
+   * source/vm/maindllp.c
+     * BOOL WINAPI HB_EXPORT => BOOL HB_EXPORT WINAPI
+
 2001-12-28 18:36 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/vm/extend.c
      + New function hb_extIsArray() added
