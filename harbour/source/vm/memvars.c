@@ -692,28 +692,36 @@ static void hb_memvarRelease( HB_ITEM_PTR pMemvar )
    if( HB_IS_STRING( pMemvar ) )
    {
       ULONG ulBase = s_privateStackCnt;
+      PHB_DYNS pDynVar;
 
       /* Find the variable with a requested name that is currently visible
        * Start from the top of the stack.
        */
-      while( ulBase > 0 )
+      if( ulBase )
       {
-         PHB_DYNS pDynVar;
-
-         --ulBase;
-         pDynVar = s_privateStack[ ulBase ];
-
-         /* reset current value to NIL - the overriden variables will be
-         * visible after exit from current procedure
-         */
-         if( pDynVar->hMemvar )
+         while( ulBase > 0 )
          {
-            if( hb_stricmp( pDynVar->pSymbol->szName, pMemvar->item.asString.value ) == 0 )
+            --ulBase;
+            pDynVar = s_privateStack[ ulBase ];
+
+            /* reset current value to NIL - the overriden variables will be
+            * visible after exit from current procedure
+            */
+            if( pDynVar->hMemvar )
             {
-               hb_itemClear( &s_globalTable[ pDynVar->hMemvar ].item );
-               ulBase = 0;
+               if( hb_stricmp( pDynVar->pSymbol->szName, pMemvar->item.asString.value ) == 0 )
+               {
+                  hb_itemClear( &s_globalTable[ pDynVar->hMemvar ].item );
+                  ulBase = 0;
+               }
             }
          }
+      }
+      else
+      {
+         pDynVar = hb_dynsymGet( pMemvar->item.asString.value );
+         if( pDynVar && pDynVar->hMemvar )
+            hb_itemClear( &s_globalTable[ pDynVar->hMemvar ].item );
       }
    }
    else
