@@ -11,8 +11,8 @@
     The rest of the ERROR API functions
     implemented.
 .   hb_errorRT_BASE() implemented.
-  + doc/header.txt - added as a function header
-    template.
+  + doc/hdr_tpl.txt - added templates for
+    file and function headers.
 
 19990621-01:30 CET Victor Szel <info@szelvesz.hu>
   * whatsnew.txt moved to doc/ directory.
