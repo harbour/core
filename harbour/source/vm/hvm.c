@@ -4010,9 +4010,9 @@ static void hb_vmPushAliasedVar( PHB_SYMB pSym )
 
    if( HB_IS_STRING( pAlias ) )
    {
-      char * szAlias = pAlias->item.asString.value;
+      char * szAlias = hb_strUpper( pAlias->item.asString.value, pAlias->item.asString.length );
 
-      if( ( szAlias[ 0 ] == 'M' || szAlias[ 0 ] == 'm' ) && szAlias[ 1 ] == '\0' )
+      if( szAlias[ 0 ] == 'M' && szAlias[ 1 ] == '\0' )
       {  /* M->variable */
          hb_memvarGetValue( pAlias, pSym );
       }
