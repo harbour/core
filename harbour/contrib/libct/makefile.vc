@@ -96,7 +96,7 @@ HARBOUR_EXE  = $(BIN_DIR)\harbour.exe
 #
 
 LIBLIST = \
-   $(TOOLS_LIB) \
+   $(TOOLS_LIB)
 
 #
 # TOOLS.LIB rules
@@ -119,7 +119,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctposupp.obj \
    \
    $(OBJ_DIR)\ctmisc.obj \
-   $(OBJ_DIR)\cttoken.obj \
+   $(OBJ_DIR)\cttoken.obj
 
 #
 # Our default target
@@ -129,24 +129,36 @@ TOOLS_LIB_OBJS = \
 !if ( "$(MK_FLAGS)"=="A" )
 
 all: zot \
-   $(TOOLS_LIB) \
+   $(TOOLS_LIB)
 
 MK_FLAGS = $(MK_FLAGS:A=)
 
 zot:
-   -@if exist $(OBJ_DIR)\*.obj del $(OBJ_DIR)\*.obj > nul
-   -@if exist $(OBJ_DIR)\*.c del $(OBJ_DIR)\*.c > nul
-   -@if exist $(OBJ_DIR)\*.h del $(OBJ_DIR)\*.h > nul
-   -@if exist $(BIN_DIR)\*.exe del $(BIN_DIR)\*.exe > nul
-   -@if exist $(BIN_DIR)\*.map del $(BIN_DIR)\*.map > nul
+   -@if exist $(OBJ_DIR)\ctchksum.* del $(OBJ_DIR)\ctchksum.*
+   -@if exist $(OBJ_DIR)\ctchrevn.* del $(OBJ_DIR)\ctchrevn.*
+   -@if exist $(OBJ_DIR)\ctchrmix.* del $(OBJ_DIR)\ctchrmix.*
+   -@if exist $(OBJ_DIR)\ctchrodd.* del $(OBJ_DIR)\ctchrodd.*
+   -@if exist $(OBJ_DIR)\ctcolton.* del $(OBJ_DIR)\ctcolton.*
+   -@if exist $(OBJ_DIR)\ctcrypt.* del $(OBJ_DIR)\ctcrypt.*
+   -@if exist $(OBJ_DIR)\ctposupp.* del $(OBJ_DIR)\ctposupp.*
+   -@if exist $(OBJ_DIR)\ctmisc.* del $(OBJ_DIR)\ctmisc.*
+   -@if exist $(OBJ_DIR)\cttoken.* del $(OBJ_DIR)\cttoken.*
 
 !else
 
 all: \
-   $(TOOLS_LIB) \
+   $(TOOLS_LIB)
 
 !endif
+
+#
+# Library dependencies and build rules
+#
+
+$(TOOLS_LIB) : $(TOOLS_LIB_OBJS)
+   lib /out:$@ $**
 
 # dummy targets used for prg to c creation
 
 $(TOOLS_LIB)2  : $(TOOLS_LIB_OBJS)
+

@@ -23,7 +23,7 @@ if "%1" == "CLEAN" goto CLEAN
 
 :CLEAN
 
-   goto EXIT
+   call %0 /A %2 %3 %4
 
 :EXIT
 

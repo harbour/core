@@ -1,0 +1,382 @@
+#
+# $Id$
+#
+
+#
+# Makefile for Harbour Project for Microsoft Visual C (32 bits)
+#
+
+#
+# NOTE: You can use these envvars to configure the make process:
+#       (note that these are all optional)
+#
+#       CFLAGS       - Extra C compiler options for libraries and for 
+#                      executables
+#       C_USR        - Extra C compiler options for libraries and for 
+#                      executables (GNU make compatible envvar)
+#       CLIBFLAGS    - Extra C compiler options for the libraries
+#       HARBOURFLAGS - Extra Harbour compiler options
+#       PRG_USR      - Extra Harbour compiler options
+#                      (GNU make compatible envvar)
+#
+
+#
+# Notes about this makefile:
+#
+# 1. To add new files to a dependancy list, add an obj name to one of the
+#    OBJ lists for the appropriate library.
+#    NOTE: put .prg related obj's last in the lib list.
+#
+# 2. This is a recursive script.  If you change the name of this file,
+#    be sure to change MK_FILE (a few lines down) to the new name as well.
+#
+# 3. Recurrsion rules are quite simple:
+#     If you specifiy /a on the command line, files in the obj\vc dir
+#     will be deleted, and when nmake recurses, it's without the /a flag
+#
+#     If a .prg.obj rule is fired, nmake will execute this script with
+#     a specific target as a parameter immediatley after compiling a given
+#     set of prg files.
+#      ie: Harbour $<
+#          nmake /fmakefile.vc obj\vc\rtl.lib2
+#     which will simply get make to re-evaluate the dependancy list for the
+#     lib, and as a result, it will execute the C compiler using the .c.obj
+#     rule below to create the obj's for the prg's that were created just
+#     prior to the recurrsive call. Once the obj's are created, the
+#     recurrsion is complete.
+#     See additional notes under RTL.LIB below.
+#
+
+MK_FILE      = makefile.vc
+MK_FLAGS     = $(MAKEFLAGS: =)
+
+OBJ_DIR     = ..\..\obj\vc
+LIB_DIR     = ..\..\lib\vc
+BIN_DIR     = ..\..\bin\vc
+
+#
+# Directory macros. These should never have to change.
+#
+
+INCLUDE_DIR  = ..\..\include
+TOOLS_DIR    = .
+
+#
+# C compiler definition and C flags. These should never have to change.
+#
+
+AS             = masm
+CFLAGS         = -I$(INCLUDE_DIR) -TP -W3 -nologo $(C_USR) $(CFLAGS)
+CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
+CLIBFLAGSDEBUG = -Zi $(CLIBFLAGS)
+HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
+LDFLAGS        = $(LDFLAGS)
+
+#
+# Macros to access our library names
+#
+
+TOOLS_LIB    = $(LIB_DIR)\nf.lib
+
+HARBOUR_EXE  = $(BIN_DIR)\harbour.exe
+
+#
+# Rules
+#
+
+.SUFFIXES: .prg .lib .c .obj .asm
+
+# override builtin
+
+.c.obj::
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+
+#
+#
+#
+
+LIBLIST = \
+   $(TOOLS_LIB)
+
+#
+# TOOLS.LIB rules
+#
+
+{$(TOOLS_DIR)}.c{$(OBJ_DIR)}.obj::
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+
+{$(TOOLS_DIR)}.prg{$(OBJ_DIR)}.obj::
+   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(TOOLS_LIB)2
+
+TOOLS_LIB_OBJS = \
+   $(OBJ_DIR)\caplock.obj \
+   $(OBJ_DIR)\color2n.obj \
+   $(OBJ_DIR)\descend.obj \
+   $(OBJ_DIR)\numlock.obj \
+   $(OBJ_DIR)\proper.obj \
+   $(OBJ_DIR)\shift.obj \
+   $(OBJ_DIR)\mouse.obj \
+   $(OBJ_DIR)\getvid.obj \
+   $(OBJ_DIR)\chdir.obj \
+   $(OBJ_DIR)\rmdir.obj \
+   $(OBJ_DIR)\alt.obj \
+   $(OBJ_DIR)\ctrl.obj \
+   $(OBJ_DIR)\getenvrn.obj \
+   $(OBJ_DIR)\n2color.obj \
+   $(OBJ_DIR)\origin.obj \
+   $(OBJ_DIR)\prtscr.obj \
+   $(OBJ_DIR)\stod.obj \
+   $(OBJ_DIR)\kspeed.obj \
+   $(OBJ_DIR)\mkdir.obj \
+   $(OBJ_DIR)\getver.obj \
+   \
+   $(OBJ_DIR)\aading.obj \
+   $(OBJ_DIR)\aavg.obj \
+   $(OBJ_DIR)\acctadj.obj \
+   $(OBJ_DIR)\acctmnth.obj \
+   $(OBJ_DIR)\acctqtr.obj \
+   $(OBJ_DIR)\acctweek.obj \
+   $(OBJ_DIR)\acctyear.obj \
+   $(OBJ_DIR)\adessort.obj \
+   $(OBJ_DIR)\aemaxlen.obj \
+   $(OBJ_DIR)\aeminlen.obj \
+   $(OBJ_DIR)\amedian.obj \
+   $(OBJ_DIR)\anomatch.obj \
+   $(OBJ_DIR)\any2any.obj \
+   $(OBJ_DIR)\aredit.obj \
+   $(OBJ_DIR)\asum.obj \
+   $(OBJ_DIR)\at2.obj \
+   $(OBJ_DIR)\bitclr.obj \
+   $(OBJ_DIR)\bitset.obj \
+   $(OBJ_DIR)\blink.obj \
+   $(OBJ_DIR)\byt2bit.obj \
+   $(OBJ_DIR)\byt2hex.obj \
+   $(OBJ_DIR)\byteand.obj \
+   $(OBJ_DIR)\byteneg.obj \
+   $(OBJ_DIR)\bytenot.obj \
+   $(OBJ_DIR)\byteor.obj \
+   $(OBJ_DIR)\bytexor.obj \
+   $(OBJ_DIR)\calendar.obj \
+   $(OBJ_DIR)\clrsel.obj \
+   $(OBJ_DIR)\cntryset.obj \
+   $(OBJ_DIR)\d2e.obj \
+   $(OBJ_DIR)\datecnfg.obj \
+   $(OBJ_DIR)\dayofyr.obj \
+   $(OBJ_DIR)\daytobow.obj \
+   $(OBJ_DIR)\dectobin.obj \
+   $(OBJ_DIR)\diskfunc.obj \
+   $(OBJ_DIR)\dispmsg.obj \
+   $(OBJ_DIR)\dosver.obj \
+   $(OBJ_DIR)\e2d.obj \
+   $(OBJ_DIR)\easter.obj \
+   $(OBJ_DIR)\elapmil.obj \
+   $(OBJ_DIR)\elapsed.obj \
+   $(OBJ_DIR)\eltime.obj \
+   $(OBJ_DIR)\findith.obj \
+   $(OBJ_DIR)\firstday.obj \
+   $(OBJ_DIR)\gcd.obj \
+   $(OBJ_DIR)\hex2dec.obj \
+   $(OBJ_DIR)\invclr.obj \
+   $(OBJ_DIR)\isbit.obj \
+   $(OBJ_DIR)\isbiton.obj \
+   $(OBJ_DIR)\isshare.obj \
+   $(OBJ_DIR)\lastday.obj \
+   $(OBJ_DIR)\linked.obj \
+   $(OBJ_DIR)\madd.obj \
+   $(OBJ_DIR)\menu1.obj \
+   $(OBJ_DIR)\menuto.obj \
+   $(OBJ_DIR)\metaph.obj \
+   $(OBJ_DIR)\miltime.obj \
+   $(OBJ_DIR)\min2dhm.obj \
+   $(OBJ_DIR)\month.obj \
+   $(OBJ_DIR)\mouse1.obj \
+   $(OBJ_DIR)\netpv.obj \
+   $(OBJ_DIR)\nooccur.obj \
+   $(OBJ_DIR)\ntow.obj \
+   $(OBJ_DIR)\nwlstat.obj \
+   $(OBJ_DIR)\page.obj \
+   $(OBJ_DIR)\pchr.obj \
+   $(OBJ_DIR)\pegs.obj \
+   $(OBJ_DIR)\pending.obj \
+   $(OBJ_DIR)\pickday.obj \
+   $(OBJ_DIR)\popadder.obj \
+   $(OBJ_DIR)\prtesc.obj \
+   $(OBJ_DIR)\pvid.obj \
+   $(OBJ_DIR)\qtr.obj \
+   $(OBJ_DIR)\rand1.obj \
+   $(OBJ_DIR)\restsets.obj \
+   $(OBJ_DIR)\round.obj \
+   $(OBJ_DIR)\savearr.obj \
+   $(OBJ_DIR)\savesets.obj \
+   $(OBJ_DIR)\scregion.obj \
+   $(OBJ_DIR)\sinkey.obj \
+   $(OBJ_DIR)\sleep.obj \
+   $(OBJ_DIR)\sqzn.obj \
+   $(OBJ_DIR)\tbwhile.obj \
+   $(OBJ_DIR)\tempfile.obj \
+   $(OBJ_DIR)\vertmenu.obj \
+   $(OBJ_DIR)\vidmode.obj \
+   $(OBJ_DIR)\wda.obj \
+   $(OBJ_DIR)\week.obj \
+   $(OBJ_DIR)\workdays.obj \
+   $(OBJ_DIR)\woy.obj \
+   $(OBJ_DIR)\xbox.obj \
+   $(OBJ_DIR)\year.obj
+
+
+#   $(OBJ_DIR)\sysmem.obj \
+#   $(OBJ_DIR)\dfile.obj \
+#   $(OBJ_DIR)\vidcur.obj \
+#   $(OBJ_DIR)\scancode.obj \
+#   $(OBJ_DIR)\setdate.obj \
+#   $(OBJ_DIR)\settime.obj \
+#   $(OBJ_DIR)\nwsem.obj \
+#   $(OBJ_DIR)\nwuid.obj \
+
+#   $(OBJ_DIR)\floptst.obj
+
+#
+# Our default target
+#
+
+
+!if ( "$(MK_FLAGS)"=="A" )
+
+all: zot \
+   $(TOOLS_LIB)
+
+MK_FLAGS = $(MK_FLAGS:A=)
+
+zot:
+   -@if exist $(OBJ_DIR)\caplock.obj del $(OBJ_DIR)\caplock.obj
+   -@if exist $(OBJ_DIR)\color2n.obj del $(OBJ_DIR)\color2n.obj
+   -@if exist $(OBJ_DIR)\descend.obj del $(OBJ_DIR)\descend.obj
+   -@if exist $(OBJ_DIR)\numlock.obj del $(OBJ_DIR)\numlock.obj
+   -@if exist $(OBJ_DIR)\proper.obj del $(OBJ_DIR)\proper.obj
+   -@if exist $(OBJ_DIR)\shift.obj del $(OBJ_DIR)\shift.obj
+   -@if exist $(OBJ_DIR)\mouse.obj del $(OBJ_DIR)\mouse.obj
+   -@if exist $(OBJ_DIR)\getvid.obj del $(OBJ_DIR)\getvid.obj
+   -@if exist $(OBJ_DIR)\chdir.obj del $(OBJ_DIR)\chdir.obj
+   -@if exist $(OBJ_DIR)\rmdir.obj del $(OBJ_DIR)\rmdir.obj
+   -@if exist $(OBJ_DIR)\alt.obj del $(OBJ_DIR)\alt.obj
+   -@if exist $(OBJ_DIR)\ctrl.obj del $(OBJ_DIR)\ctrl.obj
+   -@if exist $(OBJ_DIR)\getenvrn.obj del $(OBJ_DIR)\getenvrn.obj
+   -@if exist $(OBJ_DIR)\n2color.obj del $(OBJ_DIR)\n2color.obj
+   -@if exist $(OBJ_DIR)\origin.obj del $(OBJ_DIR)\origin.obj
+   -@if exist $(OBJ_DIR)\prtscr.obj del $(OBJ_DIR)\prtscr.obj
+   -@if exist $(OBJ_DIR)\stod.obj del $(OBJ_DIR)\stod.obj
+   -@if exist $(OBJ_DIR)\kspeed.obj del $(OBJ_DIR)\kspeed.obj
+   -@if exist $(OBJ_DIR)\mkdir.obj del $(OBJ_DIR)\mkdir.obj
+   -@if exist $(OBJ_DIR)\getver.obj del $(OBJ_DIR)\getver.obj
+   -@if exist $(OBJ_DIR)\aading.* del $(OBJ_DIR)\aading.*
+   -@if exist $(OBJ_DIR)\aavg.* del $(OBJ_DIR)\aavg.*
+   -@if exist $(OBJ_DIR)\acctadj.* del $(OBJ_DIR)\acctadj.*
+   -@if exist $(OBJ_DIR)\acctmnth.* del $(OBJ_DIR)\acctmnth.*
+   -@if exist $(OBJ_DIR)\acctqtr.* del $(OBJ_DIR)\acctqtr.*
+   -@if exist $(OBJ_DIR)\acctweek.* del $(OBJ_DIR)\acctweek.*
+   -@if exist $(OBJ_DIR)\acctyear.* del $(OBJ_DIR)\acctyear.*
+   -@if exist $(OBJ_DIR)\adessort.* del $(OBJ_DIR)\adessort.*
+   -@if exist $(OBJ_DIR)\aemaxlen.* del $(OBJ_DIR)\aemaxlen.*
+   -@if exist $(OBJ_DIR)\aeminlen.* del $(OBJ_DIR)\aeminlen.*
+   -@if exist $(OBJ_DIR)\amedian.* del $(OBJ_DIR)\amedian.*
+   -@if exist $(OBJ_DIR)\anomatch.* del $(OBJ_DIR)\anomatch.*
+   -@if exist $(OBJ_DIR)\any2any.* del $(OBJ_DIR)\any2any.*
+   -@if exist $(OBJ_DIR)\aredit.* del $(OBJ_DIR)\aredit.*
+   -@if exist $(OBJ_DIR)\asum.* del $(OBJ_DIR)\asum.*
+   -@if exist $(OBJ_DIR)\at2.* del $(OBJ_DIR)\at2.*
+   -@if exist $(OBJ_DIR)\bitclr.* del $(OBJ_DIR)\bitclr.*
+   -@if exist $(OBJ_DIR)\bitset.* del $(OBJ_DIR)\bitset.*
+   -@if exist $(OBJ_DIR)\blink.* del $(OBJ_DIR)\blink.*
+   -@if exist $(OBJ_DIR)\byt2bit.* del $(OBJ_DIR)\byt2bit.*
+   -@if exist $(OBJ_DIR)\byt2hex.* del $(OBJ_DIR)\byt2hex.*
+   -@if exist $(OBJ_DIR)\byteand.* del $(OBJ_DIR)\byteand.*
+   -@if exist $(OBJ_DIR)\byteneg.* del $(OBJ_DIR)\byteneg.*
+   -@if exist $(OBJ_DIR)\bytenot.* del $(OBJ_DIR)\bytenot.*
+   -@if exist $(OBJ_DIR)\byteor.* del $(OBJ_DIR)\byteor.*
+   -@if exist $(OBJ_DIR)\bytexor.* del $(OBJ_DIR)\bytexor.*
+   -@if exist $(OBJ_DIR)\calendar.* del $(OBJ_DIR)\calendar.*
+   -@if exist $(OBJ_DIR)\clrsel.* del $(OBJ_DIR)\clrsel.*
+   -@if exist $(OBJ_DIR)\cntryset.* del $(OBJ_DIR)\cntryset.*
+   -@if exist $(OBJ_DIR)\d2e.* del $(OBJ_DIR)\d2e.*
+   -@if exist $(OBJ_DIR)\datecnfg.* del $(OBJ_DIR)\datecnfg.*
+   -@if exist $(OBJ_DIR)\dayofyr.* del $(OBJ_DIR)\dayofyr.*
+   -@if exist $(OBJ_DIR)\daytobow.* del $(OBJ_DIR)\daytobow.*
+   -@if exist $(OBJ_DIR)\dectobin.* del $(OBJ_DIR)\dectobin.*
+   -@if exist $(OBJ_DIR)\diskfunc.* del $(OBJ_DIR)\diskfunc.*
+   -@if exist $(OBJ_DIR)\dispmsg.* del $(OBJ_DIR)\dispmsg.*
+   -@if exist $(OBJ_DIR)\dosver.* del $(OBJ_DIR)\dosver.*
+   -@if exist $(OBJ_DIR)\e2d.* del $(OBJ_DIR)\e2d.*
+   -@if exist $(OBJ_DIR)\easter.* del $(OBJ_DIR)\easter.*
+   -@if exist $(OBJ_DIR)\elapmil.* del $(OBJ_DIR)\elapmil.*
+   -@if exist $(OBJ_DIR)\elapsed.* del $(OBJ_DIR)\elapsed.*
+   -@if exist $(OBJ_DIR)\eltime.* del $(OBJ_DIR)\eltime.*
+   -@if exist $(OBJ_DIR)\findith.* del $(OBJ_DIR)\findith.*
+   -@if exist $(OBJ_DIR)\firstday.* del $(OBJ_DIR)\firstday.*
+   -@if exist $(OBJ_DIR)\gcd.* del $(OBJ_DIR)\gcd.*
+   -@if exist $(OBJ_DIR)\hex2dec.* del $(OBJ_DIR)\hex2dec.*
+   -@if exist $(OBJ_DIR)\invclr.* del $(OBJ_DIR)\invclr.*
+   -@if exist $(OBJ_DIR)\isbit.* del $(OBJ_DIR)\isbit.*
+   -@if exist $(OBJ_DIR)\isbiton.* del $(OBJ_DIR)\isbiton.*
+   -@if exist $(OBJ_DIR)\isshare.* del $(OBJ_DIR)\isshare.*
+   -@if exist $(OBJ_DIR)\lastday.* del $(OBJ_DIR)\lastday.*
+   -@if exist $(OBJ_DIR)\linked.* del $(OBJ_DIR)\linked.*
+   -@if exist $(OBJ_DIR)\madd.* del $(OBJ_DIR)\madd.*
+   -@if exist $(OBJ_DIR)\menu1.* del $(OBJ_DIR)\menu1.*
+   -@if exist $(OBJ_DIR)\menuto.* del $(OBJ_DIR)\menuto.*
+   -@if exist $(OBJ_DIR)\metaph.* del $(OBJ_DIR)\metaph.*
+   -@if exist $(OBJ_DIR)\miltime.* del $(OBJ_DIR)\miltime.*
+   -@if exist $(OBJ_DIR)\min2dhm.* del $(OBJ_DIR)\min2dhm.*
+   -@if exist $(OBJ_DIR)\month.* del $(OBJ_DIR)\month.*
+   -@if exist $(OBJ_DIR)\mouse1.* del $(OBJ_DIR)\mouse1.*
+   -@if exist $(OBJ_DIR)\netpv.* del $(OBJ_DIR)\netpv.*
+   -@if exist $(OBJ_DIR)\nooccur.* del $(OBJ_DIR)\nooccur.*
+   -@if exist $(OBJ_DIR)\ntow.* del $(OBJ_DIR)\ntow.*
+   -@if exist $(OBJ_DIR)\nwlstat.* del $(OBJ_DIR)\nwlstat.*
+   -@if exist $(OBJ_DIR)\page.* del $(OBJ_DIR)\page.*
+   -@if exist $(OBJ_DIR)\pchr.* del $(OBJ_DIR)\pchr.*
+   -@if exist $(OBJ_DIR)\pegs.* del $(OBJ_DIR)\pegs.*
+   -@if exist $(OBJ_DIR)\pending.* del $(OBJ_DIR)\pending.*
+   -@if exist $(OBJ_DIR)\pickday.* del $(OBJ_DIR)\pickday.*
+   -@if exist $(OBJ_DIR)\popadder.* del $(OBJ_DIR)\popadder.*
+   -@if exist $(OBJ_DIR)\prtesc.* del $(OBJ_DIR)\prtesc.*
+   -@if exist $(OBJ_DIR)\pvid.* del $(OBJ_DIR)\pvid.*
+   -@if exist $(OBJ_DIR)\qtr.* del $(OBJ_DIR)\qtr.*
+   -@if exist $(OBJ_DIR)\rand1.* del $(OBJ_DIR)\rand1.*
+   -@if exist $(OBJ_DIR)\restsets.* del $(OBJ_DIR)\restsets.*
+   -@if exist $(OBJ_DIR)\round.* del $(OBJ_DIR)\round.*
+   -@if exist $(OBJ_DIR)\savearr.* del $(OBJ_DIR)\savearr.*
+   -@if exist $(OBJ_DIR)\savesets.* del $(OBJ_DIR)\savesets.*
+   -@if exist $(OBJ_DIR)\scregion.* del $(OBJ_DIR)\scregion.*
+   -@if exist $(OBJ_DIR)\sinkey.* del $(OBJ_DIR)\sinkey.*
+   -@if exist $(OBJ_DIR)\sleep.* del $(OBJ_DIR)\sleep.*
+   -@if exist $(OBJ_DIR)\sqzn.* del $(OBJ_DIR)\sqzn.*
+   -@if exist $(OBJ_DIR)\tbwhile.* del $(OBJ_DIR)\tbwhile.*
+   -@if exist $(OBJ_DIR)\tempfile.* del $(OBJ_DIR)\tempfile.*
+   -@if exist $(OBJ_DIR)\vertmenu.* del $(OBJ_DIR)\vertmenu.*
+   -@if exist $(OBJ_DIR)\vidmode.* del $(OBJ_DIR)\vidmode.*
+   -@if exist $(OBJ_DIR)\wda.* del $(OBJ_DIR)\wda.*
+   -@if exist $(OBJ_DIR)\week.* del $(OBJ_DIR)\week.*
+   -@if exist $(OBJ_DIR)\workdays.* del $(OBJ_DIR)\workdays.*
+   -@if exist $(OBJ_DIR)\woy.* del $(OBJ_DIR)\woy.*
+   -@if exist $(OBJ_DIR)\xbox.* del $(OBJ_DIR)\xbox.*
+   -@if exist $(OBJ_DIR)\year.* del $(OBJ_DIR)\year.*
+
+!else
+
+all: \
+   $(TOOLS_LIB)
+
+!endif
+
+#
+# Library dependencies and build rules
+#
+
+$(TOOLS_LIB) : $(TOOLS_LIB_OBJS)
+   lib /out:$@ $**
+
+# dummy targets used for prg to c creation
+
+$(TOOLS_LIB)2  : $(TOOLS_LIB_OBJS)
+

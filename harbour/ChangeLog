@@ -1,3 +1,17 @@
+20000424-02:35 DST Paul Tucker <ptucker@sympatico.ca>
+   + contrib/libnf/makefile.vc
+   + contrib/libnf/make_vc.bat
+   * contrib/libct/makefile.vc
+   * contrib/libct/make_vc.bat
+   * contrib/libgt/makefile.vc
+   * contrib/libgt/make_vc.bat
+   * contrib/libmisc/makefile.vc
+   * contrib/libmisc/make_vc.bat
+     * corrections.
+   * contrib/libnf/getenvrn.c
+   * contrib/libnf/descend.c
+     * casts on xgrab call
+
 20000424-03:44 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/compiler/harbour.c
