@@ -171,8 +171,8 @@ static void    hb_stackPush( void );       /* pushes an item on to the stack */
 static void    hb_stackInit( void );       /* initializes the stack */
 static void    hb_stackDispLocal( void );  /* show the types of the items on the stack for debugging purposes */
 
-#define STACK_INITHB_ITEMS      100
-#define STACK_EXPANDHB_ITEMS    20
+#define STACK_INITHB_ITEMS      2000
+#define STACK_EXPANDHB_ITEMS    200
 
 /* misc */
 static void    hb_vmDoInitStatics( void );        /* executes all _INITSTATICS functions */

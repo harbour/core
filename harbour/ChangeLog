@@ -1,3 +1,14 @@
+2000-11-05 19:52 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
+   * source/vm/hvm.c
+      * I keep getting exceptions during class use due to harbour stack management,
+        so, until all code is checked and made compatible with harbour stack I have
+        increased
+        STACK_INITHB_ITEMS      to 2000 (from 100)
+        STACK_EXPANDHB_ITEMS    to 200  (20)
+        This is only a temporary workaround. But, at least, I can use harbour for my
+        day to day work :-|
+        This change should not make any difference but to DOS users.
+
 2000-11-05 18:39 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
    * config/os2/gcc.cf
       + added support to -DSIMPLEX define required for SimpLex only code added by Ron.
