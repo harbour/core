@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  + contrib/libct/exponent.c
+    + EXPONENT() and MANTISSA() functions by Walter Negro
+  + contrib/libct/tests/expomant.prg
+    + test program for EXPONENT() and MANTISSA()
 
 2002-04-08 21:00 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * include/hbrddntx.h

@@ -2199,7 +2199,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
    sortInfo.pKey1 = sortInfo.pKey2 = sortInfo.pKeyFirst = sortInfo.pKeyTemp = NULL;
    if( ulRecCount )
    {
-      sortInfo.ulSqrt = floor( sqrt( ( double) ulRecCount ) );
+      ulRecMax = ulRecCount;
       sortInfo.sortBuffer = (BYTE*) hb_xalloc( ulRecCount * sortInfo.itemLength );
       if( !sortInfo.sortBuffer )
       {
@@ -2226,6 +2226,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
          /* printf( "\nnParts=%d ulRecMax=%d",nParts,ulRecMax ); */
          nParts = 1;
       }
+      sortInfo.ulSqrt = floor( sqrt( ( double) ulRecMax ) );
    }
    else
       sortInfo.sortBuffer = NULL;
@@ -2686,13 +2687,12 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
              pArea->fFound = TRUE;
              return retvalue;
            }
-           // hb_itemCopy( pKey2->pItem, pKey );
-           strcpy( pKey2->key,pKey->item.asString.value );
+           strncpy( pKey2->key,pKey->item.asString.value,pTag->KeyLength );
            break;
         case HB_IT_INTEGER:
         case HB_IT_LONG:
         case HB_IT_DOUBLE:
-           strcpy( pKey2->key, numToStr( pKey, szBuffer, pTag->KeyLength, pTag->KeyDec ) );
+           strncpy( pKey2->key, numToStr( pKey, szBuffer, pTag->KeyLength, pTag->KeyDec ),pTag->KeyLength );
            break;
         case HB_IT_DATE:
            hb_itemGetDS( pKey, szBuffer );
@@ -2749,7 +2749,6 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
      if( pArea->fShared )
      {
         hb_ntxPageFree( pTag->RootPage,FALSE );
-        // pTag->RootPage = NULL;
         hb_fsLock( pArea->lpCurIndex->DiskFile, 0, 512, FL_UNLOCK );
         pArea->lpCurIndex->Locked = FALSE;
      }
