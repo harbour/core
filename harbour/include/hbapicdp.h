@@ -85,7 +85,7 @@ extern PHB_CODEPAGE hb_cdpSelect( PHB_CODEPAGE );
 extern PHB_CODEPAGE hb_cdpFind( char * );
 extern void hb_cdpTranslate( char*, PHB_CODEPAGE, PHB_CODEPAGE );
 extern void hb_cdpnTranslate( char*, PHB_CODEPAGE, PHB_CODEPAGE, unsigned int );
-extern int hb_cdpcmp( char*, char*, int );
+extern int hb_cdpcmp( char*, char*, int, PHB_CODEPAGE );
 
 #endif /* HB_APICDP_H_ */
 
