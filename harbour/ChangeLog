@@ -1,3 +1,6 @@
+19990728-03:50 CET Victor Szel <info@szelvesz.hu>
+   ! config\win32\msvc.cf - Missing include added.
+
 19990727-16:30 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/dir.c
     + Added support for IBM Visual Age C++ compiler
