@@ -1486,16 +1486,15 @@ void    hb_fsCommit( FHANDLE hFileHandle )
    /* NOTE: close() functions releases all lock regardles if it is an
     * original or duplicated file handle
    */
-   #if defined(_POSIX_SYNCHRONIZED_IO)
+   #if defined(_POSIX_SYNCHRONIZED_IO) && (_POSIX_SYNCHRONIZED_IO > 0)
       /* faster - flushes data buffers only, without updating directory info
       */
       s_uiErrorLast = ( fdatasync( hFileHandle ) < -1 ) ? FS_ERROR : 0;
-      if( s_uiErrorLast == EINVAL || s_uiErrorLast == ENOSYS )
+      if( s_uiErrorLast == EINVAL )
       {
-         /* Either fdatasync is not supported in this POSIX implementation or
-            this implementation does not support synchronised I/O for this file,
-            so use the slower method that flushes all file data buffers and i-node
-            info for this file.
+         /* This implementation does not support synchronised I/O for
+            this file, so use the slower method that flushes all file
+            data buffers and i-node info for this file.
          */
          s_uiErrorLast = ( fsync( hFileHandle ) < -1 ) ? FS_ERROR : 0;
       }
