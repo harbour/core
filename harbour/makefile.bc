@@ -6,7 +6,7 @@
 
 !if $d(B16)
    # Borland C/C++ (DOS 16 bits)
-   BCC_OPT = -O2 -DHARBOUR_USE_DOS_GTAPI
+   BCC_OPT = -mh -DHARBOUR_USE_DOS_GTAPI
    BCC_EXE = bcc
    TASM_EXE = tasm
    OBJ_DIR = obj\b16

@@ -5,9 +5,9 @@
      make_b*.bat
      + Merged to functionality of makefile.b16 into makefile.b32 resulting in
        a generic makefile.bc for all Borland compilers.
-       Note that MAINDLL.C, MAINWIN.C should be fixed to be multiplatform,
-       and currently the 16bits Borland choks on DEBUGGER.PRG. But it mostly
-       works. The old makefile.b16 was completely outdated.
+       Note that MAINDLL.C, MAINWIN.C, SYMBOLS.ASM should be fixed to be 
+       multiplatform, and currently the 16bits Borland choks on DEBUGGER.PRG. 
+       But it mostly works. The old makefile.b16 was completely outdated.
      + Added HARBOUR_OPT support.
    * doc/*
      ! Fixed and standardized CVS ID for the rest of files.
