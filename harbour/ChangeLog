@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-10-22 9:49 UTC-0800 Luis Krause Mantilla <lkrausem@shaw.ca>
+  * makefile.bc
+    * $(OBJ_DIR)\msgsrwin.obj added to LANG.LIB dependencies section.
+
 2003-10-22 13:55 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * makefile.bc
   * makefile.nt
@@ -20,7 +24,7 @@
   * source/vm/codebloc.c
     ! Fixed detached local bug (borrowed from xharbour)
   * source/rdd/dbcmd.c
-    ! Fixed bug in __dbLocate with When clause (borrowed from xharbour)
+    ! Fixed bug in __dbLocate() with When clause (borrowed from xharbour)
 
 2003-10-20 13:45 UTC+0100 Ryszard Glab <rglab@przesiew.imid.med.pl>
     * .cvsignore
