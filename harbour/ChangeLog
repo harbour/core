@@ -1,3 +1,19 @@
+2000-11-02 00:10 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   *doc/en/trowse.txt
+     *Small changes
+   *doc/en/terminal.txt
+     +Row(),COL(),PROW(),PCOL() documentes
+   *doc/en/rddord.txt
+      *small changes
+   *doc/en/rddmisc.txt
+      *Fixed an typo on AFields Doc
+   *doc/en/rddsdb.txt
+      *Small fix on dbCreate() doc
+   *utils/hbdoc/rtf.prg
+    utils/hbdoc/genrtf.prg
+    utils/hbdoc/hbdoc.prg
+     *Small Changes   
+
 2000-11-01 17:25 UTC+0800 Ron Pinkas <ron@profit-master.com>
 
    * source/compiler/harbour.sly
