@@ -1236,7 +1236,7 @@ int getExpReal ( char *expreal, char **ptri, int prlist, int maxrez )
         else if( lens > 2 && ( ( *(*ptri-2)=='+' && *(*ptri-1)=='+' ) ||
                                ( *(*ptri-2)=='-' && *(*ptri-1)=='-' ) ) )
            State = STATE_ID_END;
-     }     
+     }
      else if ( **ptri == '(' ) { StBr1++; State = STATE_BRACKET; }
      else if ( **ptri == '[' ) { StBr2++; State = STATE_BRACKET; }
      else if ( **ptri == '{' ) { StBr3++; State = STATE_BRACKET; }
@@ -1537,7 +1537,7 @@ int ReplacePattern ( char patttype, char *expreal, int lenreal, char *ptro, int 
             rmlen = 0;
             do
             {
-               ifou = pp_strAt( ",", 1, expreal, lenreal );
+               ifou = md_strAt( ",", 1, expreal, FALSE, TRUE );
                lenitem = (ifou)? ifou-1:lenreal;
                if( *expreal != '\0' )
                {
@@ -1569,7 +1569,7 @@ int ReplacePattern ( char patttype, char *expreal, int lenreal, char *ptro, int 
             rmlen = 0;
             do
             {
-               ifou = pp_strAt( ",", 1, expreal, lenreal );
+               ifou = md_strAt( ",", 1, expreal, FALSE, TRUE );
                lenitem = (ifou)? ifou-1:lenreal;
                if( *expreal != '\0' )
                {
@@ -1621,7 +1621,7 @@ int ReplacePattern ( char patttype, char *expreal, int lenreal, char *ptro, int 
             rmlen = 0;
             do
             {
-               ifou = pp_strAt( ",", 1, expreal, lenreal );
+               ifou = md_strAt( ",", 1, expreal, FALSE, TRUE );
                lenitem = (ifou)? ifou-1:lenreal;
                if( *expreal != '\0' )
                {
