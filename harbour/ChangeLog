@@ -1,3 +1,9 @@
+20000319-01:35 EST Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+     * enable 'batch' mode for rdd.lib
+     * removed extra \
+     + delete items from bin\vc\exe on /A
+
 20000319-01:30 EST Paul Tucker <ptucker@sympatico.ca>
    * source/pp/ppcore.c
      * Assign NULL to stdef->pars and value when item undef'ed

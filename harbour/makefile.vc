@@ -356,12 +356,9 @@ MACRO_LIB_OBJS = \
 {$(RDD_DIR)}.c{$(OBJ_DIR)}.obj::
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 
-{$(RDD_DIR)}.prg{$(OBJ_DIR)}.obj:
+{$(RDD_DIR)}.prg{$(OBJ_DIR)}.obj::
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $*.c
-
-# temporarily out
-#   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(RDD_LIB)2
+   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(RDD_LIB)2
 
 RDD_LIB_OBJS = \
    $(OBJ_DIR)\dbcmd.obj \
@@ -556,6 +553,9 @@ zot:
    -@if exist $(OBJ_DIR)\*.obj del $(OBJ_DIR)\*.obj > nul
    -@if exist $(OBJ_DIR)\*.c del $(OBJ_DIR)\*.c > nul
    -@if exist $(OBJ_DIR)\*.h del $(OBJ_DIR)\*.h > nul
+   -@if exist $(BIN_DIR)\*.exe del $(OBJ_DIR)\*.exe > nul
+   -@if exist $(BIN_DIR)\*.map del $(OBJ_DIR)\*.map > nul
+   -@if exist $(BIN_DIR)\*.dll del $(OBJ_DIR)\*.dll > nul
 
 !else
 
@@ -662,7 +662,7 @@ $(HARBOUR_EXE) : \
    $(COMPILER_DIR)\genpas.c \
    $(COMPILER_DIR)\expropta.c \
    $(COMPILER_DIR)\exproptb.c \
-   $(COMPILER_DIR)\exproptc.c \
+   $(COMPILER_DIR)\exproptc.c
    -echo. > $(INCLUDE_DIR)\unistd.h
    $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ -w $** -o $(HARBOUR_EXE) /link $(PP_LIB) $(COMMON_LIB)
    -del $(INCLUDE_DIR)\unistd.h
