@@ -1,3 +1,7 @@
+19990525-19:15 CET Eddie Runia
+  * source/runner/runner.c; source/runner/run_exp.h; source/runner
+    created. currently in transition.
+
 19990525-15:40 CET Eddie Runia
   * bin, libs/b16, libs/b32, libs/vc, libs/icc, libs/win16 & libs/win32
     added as per request
