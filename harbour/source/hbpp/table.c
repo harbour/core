@@ -66,7 +66,7 @@ DEFINES aDefines[] =
  {"_DFSET","x,y",2,"Set( _SET_DATEFORMAT, if(__SetCentury(), x, y) )"}
 };
 
-int kolcomm = 240;
+int kolcomm = 239;
 COMMANDS aCommands[] =
 {
  {0,"NOTE","\1A30",NULL},
@@ -98,9 +98,9 @@ COMMANDS aCommands[] =
  {0,"SET","DECIMALS TO \1A00","Set( _SET_DECIMALS, \1A00 )"},
  {0,"SET","DECIMALS TO","Set( _SET_DECIMALS, 0 )"},
  {0,"SET","PATH TO \1A30","Set( _SET_PATH, \1A30 )"},
- {0,"SET","PATH TO","Set( _SET_PATH, "" )"},
+ {0,"SET","PATH TO","Set( _SET_PATH, \"\" )"},
  {0,"SET","DEFAULT TO \1A40","Set( _SET_DEFAULT, \1A30 )"},
- {0,"SET","DEFAULT TO","Set( _SET_DEFAULT, "" )"},
+ {0,"SET","DEFAULT TO","Set( _SET_DEFAULT, \"\" )"},
  {0,"SET","CENTURY \1A20ON,OFF,&>","__SetCentury( \1A30 )"},
  {0,"SET","CENTURY (\1A00)","__SetCentury( \1A00 )"},
  {0,"SET","EPOCH TO \1A00","Set( _SET_EPOCH, \1A00 )"},
@@ -115,7 +115,7 @@ COMMANDS aCommands[] =
  {0,"SET","DATE [TO] USA","_DFSET( 'mm-dd-yyyy', 'mm-dd-yy' )"},
  {0,"SET","ALTERNATE \1A20ON,OFF,&>","Set( _SET_ALTERNATE, \1A30 )"},
  {0,"SET","ALTERNATE (\1A00)","Set( _SET_ALTERNATE, \1A00 )"},
- {0,"SET","ALTERNATE TO","Set( _SET_ALTFILE, "" )"},
+ {0,"SET","ALTERNATE TO","Set( _SET_ALTFILE, \"\" )"},
  {0,"SET","ALTERNATE TO \1A40 [\1B20 ADDITIVE>]","Set( _SET_ALTFILE, \1A30, \1B50 )"},
  {0,"SET","CONSOLE \1A20ON,OFF,&>","Set( _SET_CONSOLE, \1A30 )"},
  {0,"SET","CONSOLE (\1A00)","Set( _SET_CONSOLE, \1A00 )"},
@@ -123,7 +123,7 @@ COMMANDS aCommands[] =
  {0,"SET","MARGIN TO","Set( _SET_MARGIN, 0 )"},
  {0,"SET","PRINTER \1A20ON,OFF,&>","Set( _SET_PRINTER, \1A30 )"},
  {0,"SET","PRINTER (\1A00)","Set( _SET_PRINTER, \1A00 )"},
- {0,"SET","PRINTER TO","Set( _SET_PRINTFILE, "" )"},
+ {0,"SET","PRINTER TO","Set( _SET_PRINTFILE, \"\" )"},
  {0,"SET","PRINTER TO \1A40 [\1B20 ADDITIVE>]","Set( _SET_PRINTFILE, \1A30, \1B50 )"},
  {0,"SET","DEVICE TO SCREEN","Set( _SET_DEVICE, 'SCREEN' )"},
  {0,"SET","DEVICE TO PRINTER","Set( _SET_DEVICE, 'PRINTER' )"},
@@ -270,10 +270,10 @@ COMMANDS aCommands[] =
  {0,"REPLACE","[ \1A00 WITH \1B00 [, \1C00 WITH \1D00] ] [FOR \1E00] [WHILE \1F00] [NEXT \1G00] [RECORD \1H00] [\1I20REST>] [ALL]",
    "DBEval( {|| _FIELD->\1A00 := \1B00 [,_FIELD->\1C00 := \1D00]},\1E40,\1F40,\1G00,\1H00,\1I50)"},
  {0,"REPLACE","\1A00 WITH \1B00 [, \1C00 WITH \1D00 ]","_FIELD->\1A00 := \1B00 [; _FIELD->\1C00 := \1D00]"},
- {0,"DELETE","[FOR \1A00] [WHILE \1B00] [NEXT \1C00] [RECORD \1D00] [\1E20REST>] [ALL]"},
- {0,"DBEval( {|| dbDelete()}, \1A40, \1B40, \1C00, \1D00, \1E50 )"},
- {0,"RECALL","[FOR \1A00] [WHILE \1B00] [NEXT \1C00] [RECORD \1D00] [\1E20REST>] [ALL]"},
- {0,"DBEval( {|| dbRecall()}, \1A40, \1B40, \1C00, \1D00, \1E50 )"},
+ {0,"DELETE","[FOR \1A00] [WHILE \1B00] [NEXT \1C00] [RECORD \1D00] [\1E20REST>] [ALL]",
+   "DBEval( {|| dbDelete()}, \1A40, \1B40, \1C00, \1D00, \1E50 )"},
+ {0,"RECALL","[FOR \1A00] [WHILE \1B00] [NEXT \1C00] [RECORD \1D00] [\1E20REST>] [ALL]",
+   "DBEval( {|| dbRecall()}, \1A40, \1B40, \1C00, \1D00, \1E50 )"},
  {0,"DELETE","","dbDelete()"},
  {0,"RECALL","","dbRecall()"},
  {0,"CREATE","\1A40 [FROM \1B40] [VIA \1C00] [ALIAS \1D00] [\1E20 NEW>]","__dbCreate( \1A30, \1B30, \1C00, \1E50, \1D30 )"},
@@ -315,7 +315,7 @@ COMMANDS aCommands[] =
  {0,"CLOSE","\1A00","\1A00->( dbCloseArea() )"},
  {0,"CLOSE","","dbCloseArea()"},
  {0,"CLOSE","DATABASES","dbCloseAll()"},
- {0,"CLOSE","ALTERNATE","Set(_SET_ALTFILE, "")"},
+ {0,"CLOSE","ALTERNATE","Set(_SET_ALTFILE, \"\")"},
  {0,"CLOSE","FORMAT","__SetFormat(NIL)"},
  {0,"CLOSE","INDEXES","dbClearIndex()"},
  {0,"CLOSE","PROCEDURE",NULL},

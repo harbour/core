@@ -356,13 +356,13 @@ int ParseCommand( char* sLine, int com_or_xcom, int com_or_tra )
  SKIPTABSPACES(sLine);
 
  if ( (ipos = hb_strAt( "=>", 2, sLine, strolen(sLine) )) > 0 )
-   mlen = stroncpy( mpatt, sLine, ipos-1 );
+   stroncpy( mpatt, sLine, ipos-1 );
  else return 4000;  /* Quit, if '=>' absent */
  mlen = strotrim( mpatt );
 
  sLine += ipos + 1;
  SKIPTABSPACES(sLine);
- rlen = strocpy( rpatt, sLine );
+ strocpy( rpatt, sLine );
  rlen = strotrim( rpatt );
 
  if ( (rez = ConvertPatterns ( mpatt, mlen, rpatt, rlen )) > 0 ) return rez;
@@ -525,9 +525,9 @@ int ParseExpression( char* sLine, char* sOutLine )
      if ( ipos > 0 ) *(ptri+ipos-1) = '\0';
      SKIPTABSPACES( ptri );
      if ( isname(*ptri) )
-        lenToken = NextName( &ptri, sToken, NULL);
+        NextName( &ptri, sToken, NULL);
      else
-        { *sToken = *ptri++; *(sToken+1) = '\0'; lenToken = 1; }
+        { *sToken = *ptri++; *(sToken+1) = '\0'; }
      SKIPTABSPACES( ptri );
 
      if ( *ptri != ':' && *ptri != '=' && (isname(*ptri) || *(ptri+1) != '=')

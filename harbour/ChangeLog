@@ -1,3 +1,9 @@
+19990705-14:10 Alexander Kresin
+  * source\hbpp\hbpp.c
+    * fixed some warnings
+  * source\hbpp\table.c
+    * fixed bugs in table, reported by David G. Holm
+
 19990704-23:45 EDT David G. Holm <dholm@jsd-llc.com>
   * makefile.b16
     + Added devoutp
