@@ -1,3 +1,6 @@
+19990529-10:11 EST Les Griffith
+  * added both builddos.bat and makefile.dos for djgpp dos enviroment
+
 19990528-21:00 WIB Andi Jahja <andij@aonlippo.co.id>
   * makefile.b32
     modified to include hb_f.c in harbour.lib
