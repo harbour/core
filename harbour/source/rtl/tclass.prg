@@ -59,6 +59,7 @@
 #include "common.ch"
 #include "hboo.ch"
 
+REQUEST TOBJECT
 //----------------------------------------------------------------------------//
 
 FUNCTION TClass()
@@ -185,9 +186,9 @@ STATIC PROCEDURE Create()
    ENDIF
 
    ::hClass := hClass
-
+   
    //Local message...
-
+   
    FOR n := 1 TO nLenDatas
       __clsAddMsg( hClass, ::aDatas[ n ][ HB_OO_DATA_SYMBOL ]       , n + nDataBegin, ;
                    HB_OO_MSG_DATA, ::aDatas[ n ][ HB_OO_DATA_VALUE ], ::aDatas[ n ][ HB_OO_DATA_SCOPE ] )
