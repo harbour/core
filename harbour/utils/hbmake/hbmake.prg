@@ -808,11 +808,8 @@ For nCount := 1 To Len( aOrder )
          If nPos > 0
             cComm := Strtran( cComm, "o$*", "o" + aCs[ nPos ] )
             cComm := Strtran( cComm, "$**", aPrgs[ nFiles ] )
-	    if !lLinux
+
           cComm += " > test.out"
-	    else
-	    cComm += " 2>test.out"
-	    endif
             outstd(cComm)
             ! ( cComm )
                   cErrText := memoread( 'test.out' )
@@ -820,6 +817,8 @@ For nCount := 1 To Len( aOrder )
 
             if !lIgnoreErrors .and. lEnd
                 quit
+            else
+                ferase('test.out')
             endif
 
             cComm := cold
@@ -904,6 +903,9 @@ else /****** Extended mode *****/
                   endif*/
             if !lIgnoreErrors .and. lEnd
                 quit
+            else
+                ferase('test.out')
+
             endif
                cComm := cold
             Endif
@@ -942,11 +944,11 @@ endif
                ! ( cComm )
                 cErrText := memoread( 'test.out' )
                lEnd := 'C2006' $ cErrText .or. 'No code generated' $ cErrText
-/*               if file('test.out'  )
-                  ferase('test.out'  )
-               endif*/
                if !lIgnoreErrors .and. lEnd
                   quit
+            else
+                ferase('test.out')
+
                endif
 
                ccomm := cold
@@ -1602,11 +1604,11 @@ if !lextended
                ! ( cComm )
                   cErrText := memoread( 'test.out' )
                   lEnd := 'C2006' $ cErrText .or. 'No code generated' $ cErrText
-                  if file('test.out'  )
-                    ferase('test.out'  )
-                  endif
             if !lIgnoreErrors .and. lEnd
                 quit
+            else
+                ferase('test.out')
+
             endif
 
 
@@ -1674,11 +1676,11 @@ else /**************Extended mode ******/////
                ! ( cComm )
                   cErrText := memoread( 'test.out' )
                   lEnd := 'Error' $ cErrText 
-                  if file('test.out'  )
-                    ferase('test.out'  )
-                  endif
             if !lIgnoreErrors .and. lEnd
                 quit
+            else
+                ferase('test.out')
+
             endif
                cComm := cold
             Endif
@@ -1717,11 +1719,11 @@ else /**************Extended mode ******/////
                ! ( cComm )
                 cErrText := memoread( 'test.out' )
                lEnd := 'C2006' $ cErrText .or. 'No code generated' $ cErrText
-               if file('test.out'  )
-                  ferase('test.out'  )
-               endif
                if !lIgnoreErrors .and. lEnd
                   quit
+            else
+                ferase('test.out')
+
                endif
 
                ccomm := cold
@@ -2100,7 +2102,7 @@ if lBcc
  Fwrite( nLinkHandle, "CFLAG2 =  -I$(BHC)\include;$(BCB)\include" +CRLF)
 
  Fwrite( nLinkHandle, "RFLAGS = "+CRLF)
- Fwrite( nLinkHandle, "LFLAGS = /P32"+CRLF)
+ Fwrite( nLinkHandle, "LFLAGS = /P32 /0"+CRLF)
  Fwrite( nLinkHandle, "IFLAGS = " +CRLF)
  Fwrite( nLinkHandle, "LINKER = tlib $(LFLAGS) $(PROJECT)"+CRLF)
  Fwrite( nLinkHandle, " "+CRLF)
