@@ -1,3 +1,13 @@
+2001-02-10 08:43 GMT+1 Antonio Linares <alinares@fivetech.com>
+
+   * harbour/source/debug/dbgmenu.prg
+     + More options implemented
+
+   * harbour/source/debug/debugger.prg
+     + methods Speed(), SaveSettings() and Restore settings implemented.
+
+     Not 100% implemented yet, but you can save and restore colors!
+
 2001-02-09 23:46 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/tbrowse.prg
      ! fixed ::Moved() method which was calling ::Dehilite() even if TBrowse was already
