@@ -10,7 +10,7 @@ C_SOURCES=\
 	dynsym.c \
 	hvm.c \
 	initsymb.c \
-        mainstd.c \
+        main.c \
 
 LIB=vm
 

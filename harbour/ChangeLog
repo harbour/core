@@ -1,3 +1,13 @@
+19991007-01:16 GMT+1 Victor Szel <info@szelvesz.hu>
+   + source/vm/main.c (added)
+     source/vm/Makefile
+     include/hbsetup.h
+     + main.c added as an includer for mainwin.c or mainstd.c, selectable
+       via #defines in hbsetup.h, or via command line, just like the GTAPI
+       and MOUSEAPI selection. Can be used from all build systems.
+   * source/rtl/memoline.c
+     ! Small formatting fix.
+
 19991006-18:55 EDT Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      * corrected creation of hbrun.exe

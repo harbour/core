@@ -121,6 +121,15 @@
 /*#define HARBOUR_STRICT_CLIPPER_COMPATIBILITY*/
 
 /* ***********************************************************************
+ * You can select here, what type of main entry will be used in the 
+ * application (main() or WinMain()).
+ *
+ * By default the standard C main() function will be used.
+*/
+/*#define HARBOUR_MAIN_STD*/
+/*#define HARBOUR_MAIN_WIN*/
+
+/* ***********************************************************************
  * These symbols defines if we want to use the GT API (and which platform
  * to build the GT API for, if using the GNU Make System).
  *
