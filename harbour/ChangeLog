@@ -1,3 +1,9 @@
+20000406-10:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.y
+	* the parser resumes parsing after 'parse errors' (parsing errors
+	are non-fatal now)
+
 20000406-08:52 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * config/dos/dir.cf

@@ -252,6 +252,7 @@ Source     : Crlf
            | Source FieldsDef
            | Source MemvarDef
            | Source Line
+	   | Source error Crlf { yyclearin; }
            ;
 
 Line       : LINE NUM_INTEGER LITERAL Crlf
@@ -1478,9 +1479,9 @@ int hb_compYACCMain( char * szName )
 void yyerror( char * s )
 {
    if( yytext[ 0 ] == '\n' )
-      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_YACC, s, "<eol>" );
+      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_YACC, s, "<eol>" );
    else
-      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_YACC, s, yytext );
+      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_YACC, s, yytext );
 }
 
 
