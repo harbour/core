@@ -1,3 +1,7 @@
+20000305-08:38 GMT-8 Brian Hays <bhays@abacuslaw.com>
+   * tests/testop.prg
+   * doc/en/command.txt
+     + added Operator Overloading test and reference to it in METHOD Command
 20000306-04:43 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/rtl/cmdcheck.c
      ! -gc0 switch got removed. Added again.
@@ -5,7 +9,7 @@
      makefile.bc
      makefile.vc
      % -gc0 switch added to speed up make process.
-       The size of the obj/b32 dir after a make was 8.9MB before, 
+       The size of the obj/b32 dir after a make was 8.9MB before,
        and 7.7MB after.
    * source/vm/debug.c
      doc/en/hvm.txt
@@ -103,7 +107,7 @@
      makefile.vc
      ! Fixed OBJ32 support.
        (Note that for some unknown reason the linker GPF on Harbour executables
-        when the OBJ generation is turned on, and the .OBJ format is also 
+        when the OBJ generation is turned on, and the .OBJ format is also
         rejected by the linker. Tested with BCC53 and BCC55)
    * source/compiler/genobj32.c
      + Stub added for non OBJ32 support mode.
@@ -171,26 +175,26 @@
        most common header file EXTEND.H is only a CA-Cl*pper compatibility
        file, in for new Harbour code you should use HBAPI.H instead.
 
-       errorapi.h -> hbapierr.h        
-       filesys.h  -> hbapifs.h         
-       gtapi.h    -> hbapigt.h         
-       itemapi.h  -> hbapiitm.h        
-       langapi.h  -> hbapilng.h        
-       mouseapi.h -> hbapimou.h        
-       rddapi.h   -> hbapirdd.h        
-       box.h      -> hbbox.h           
-       compiler.h -> hbcomp.h          
-       setcurs.h  -> hbcursor.h        
-       dates.h    -> hbdate.h          
-       expropt.h  -> hbexprop.h        
-       init.h     -> hbinit.h          
-       inkey.h    -> hbinkey.h         
-       macro.h    -> hbmacro.h         
-       pcode.h    -> hbpcode.h         
-       set.h      -> hbset.h           
-       ctoharb.h  -> hbvm.h            
-       hb_vmpub.h -> hbvmpub.h        
-       extend.h   -> hbapi.h           
+       errorapi.h -> hbapierr.h
+       filesys.h  -> hbapifs.h
+       gtapi.h    -> hbapigt.h
+       itemapi.h  -> hbapiitm.h
+       langapi.h  -> hbapilng.h
+       mouseapi.h -> hbapimou.h
+       rddapi.h   -> hbapirdd.h
+       box.h      -> hbbox.h
+       compiler.h -> hbcomp.h
+       setcurs.h  -> hbcursor.h
+       dates.h    -> hbdate.h
+       expropt.h  -> hbexprop.h
+       init.h     -> hbinit.h
+       inkey.h    -> hbinkey.h
+       macro.h    -> hbmacro.h
+       pcode.h    -> hbpcode.h
+       set.h      -> hbset.h
+       ctoharb.h  -> hbvm.h
+       hb_vmpub.h -> hbvmpub.h
+       extend.h   -> hbapi.h
        hbfsapi.h  -> hbapifs.h (merged into)
 
 20000302-12:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
@@ -202,7 +206,7 @@
 
     *source/rtl/typefile.prg
 	*removed RETURN NIL in a PROCEDURE
-	
+
 20000301-15:20 EST Paul Tucker <ptucker@sympatico.ca>
    * source/tools/strasint.c
      * remove extraneous characters at end.

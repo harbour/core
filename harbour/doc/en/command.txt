@@ -235,7 +235,7 @@
  *                   when you are first creating and testing a Class.
  *
  *      OPERATOR     Operator Overloading for classes.
- *                   See example TestOp.prg for details.
+ *                   See example Tests/TestOp.prg for details.
  *
  *      CLASS <ClassName>
  *                   Use this syntax only for defining a full method after
@@ -257,6 +257,8 @@
  *         ... <code> ...
  *         ... <code> ...
  *      RETURN Self
+ *  $TESTS$
+ *      TestOp.prg
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -264,7 +266,7 @@
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      TClass(),Object Oriented Programming,DATA,CLASS,TestOp.prg
+ *      TClass(),Object Oriented Programming,DATA,CLASS
  *  $END$
  */
 
