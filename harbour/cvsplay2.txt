@@ -1,4 +1,0 @@
-changed line is this
-old is this
-
-new text
