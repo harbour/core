@@ -262,7 +262,7 @@ STATIC PROCEDURE Create(MetaClass)
    NEXT
 
    IF ::nOnError != NIL
-      __clsAddMsg( hClass, ::nOnError, NIL, HB_OO_MSG_ONERROR )
+      __clsAddMsg( hClass, "__OnError", ::nOnError, HB_OO_MSG_ONERROR )
    ENDIF
 
    RETURN
