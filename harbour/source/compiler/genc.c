@@ -760,7 +760,7 @@ static HB_GENC_FUNC( hb_p_localname )
    }
    fprintf( cargo->yyc, " 0,\n" );
 
-   return lPCodePos - ulStart + 1;
+   return (USHORT) ( lPCodePos - ulStart + 1 );
 }
 
 static HB_GENC_FUNC( hb_p_macropop )
@@ -891,7 +891,7 @@ static HB_GENC_FUNC( hb_p_modulename )
    }
    fprintf( cargo->yyc, " 0,\n" );
 
-   return lPCodePos - ulStart + 1;
+   return (USHORT) ( lPCodePos - ulStart + 1 );
 }
 
 static HB_GENC_FUNC( hb_p_modulus )
@@ -1216,7 +1216,7 @@ static HB_GENC_FUNC( hb_p_pushblock )
       fprintf( cargo->yyc, "\n" );
       lPCodePos +=2;
    }
-   return lPCodePos - ulStart;
+   return (USHORT) (lPCodePos - ulStart);
 }
 
 static HB_GENC_FUNC( hb_p_pushblockshort )
@@ -1493,7 +1493,7 @@ static HB_GENC_FUNC( hb_p_pushstr )
    }
    fprintf( cargo->yyc, "\n" );
 
-   return lPCodePos - ulStart;
+   return (USHORT) (lPCodePos - ulStart);
 }
 
 static HB_GENC_FUNC( hb_p_pushstrshort )
@@ -1529,7 +1529,7 @@ static HB_GENC_FUNC( hb_p_pushstrshort )
    }
    fprintf( cargo->yyc, "\n" );
 
-   return lPCodePos - ulStart;
+   return (USHORT) ( lPCodePos - ulStart );
 }
 
 static HB_GENC_FUNC( hb_p_pushsym )
@@ -1688,7 +1688,7 @@ static HB_GENC_FUNC( hb_p_statics )
       }
    }
 
-   return lByteCount;
+   return (USHORT) lByteCount;
 }
 
 static HB_GENC_FUNC( hb_p_staticname )
@@ -1711,7 +1711,7 @@ static HB_GENC_FUNC( hb_p_staticname )
    }
    fprintf( cargo->yyc, " 0,\n" );
 
-   return lPCodePos - ulStart + 1;
+   return (USHORT) ( lPCodePos - ulStart + 1 );
 }
 
 static HB_GENC_FUNC( hb_p_swapalias )

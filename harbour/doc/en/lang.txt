@@ -19,7 +19,7 @@
  *  $CATEGORY$
  *      Nation
  *  $ONELINER$
- *      Select a specific nation message module 
+ *      Select a specific nation message module
  *  $SYNTAX$
  *      HB_LANGSELECT(<cNewLang>)   --> cOldLang
  *  $ARGUMENTS$
@@ -28,32 +28,37 @@
  *      Lang library,sorted by language.
  *
  *      <table>
- *      <cNewLang>   Language     Codepage
- *      EU           Basque       850
- *      CS852        Czech        852
- *      CSISO        Czech        ISO-8859-2
- *      CSKAM        Czech        KAM
- *      CA           Catalan      850
- *      EN           English      437
- *      FR           French       850
- *      GL           Galician     850
- *      DE           German       850   
- *      HE862        Hebrew       862
- *      HEWIN        Hebrew       1255
- *      HU852        Hungarian    852
- *      HUCWI        Hungarian    CWI-2
- *      HUWIN        Hungarian    Windows-1
- *      IS85         Icelandic    850
- *      IT           Italian      437
- *      KR           Korean       949
- *      PL852        Polish       852
- *      PLISO        Polish       ISO-8859-1
- *      PLMAZ        Polish       Mozowia
- *      PT           Portuguese   850
- *      RO           Romanian     852
- *      SRISO        Serbian      ISO-8859-2
- *      SR852        Serbian      852
- *      ES           Spanish      850
+ *      <cNewLang>   Language            Codepage
+ *      EU           Basque              850
+ *      CS852        Czech               852
+ *      CSISO        Czech               ISO-8859-2
+ *      CSKAM        Czech               KAM
+ *      CA           Catalan             850
+ *      EN           English             437
+ *      FR           French              850
+ *      GL           Galician            850
+ *      ID           Indonesian          437
+ *      DE           German              850
+ *      HE862        Hebrew              862
+ *      HEWIN        Hebrew              1255
+ *      HU852        Hungarian           852
+ *      HUCWI        Hungarian           CWI-2
+ *      HUWIN        Hungarian           Windows-1
+ *      IS85         Icelandic           850
+ *      IT           Italian             437
+ *      KR           Korean              949
+ *      PL852        Polish              852
+ *      PLISO        Polish              ISO-8859-1
+ *      PLMAZ        Polish              Mozowia
+ *      PT           Portuguese          850
+ *      RO           Romanian            852
+ *      SRISO        Serbian             ISO-8859-2
+ *      SR852        Serbian             852
+ *      ES           Spanish             850
+ *      RU866        Russian             866
+ *      RUWIN        Russian             Windows-1251
+ *      ZH_GB        Chinese Simplified  936
+ *      ZH_BIG5      Chinese Traditional 950
  *      </table>
  *  $RETURNS$
  *      <cOldLang>   The old language indentifier

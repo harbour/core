@@ -67,7 +67,7 @@ static HB_LANG s_lang =
       "RU",                        /* RFC ID */
       "866",                       /* Codepage */
       "$Revision$ $Date$",         /* Version */
-   
+
       /* Month names */
    
       "Январь",
@@ -182,27 +182,27 @@ static HB_LANG s_lang =
       "VM: Неизвестный код", 
       "%s: ожидался символ",
       "%s: неверный тип символа для self", 
-      "%s: ожидался кодоблок", 
+      "%s: ожидался кодоблок",
       "%s: неверный тип элемента на вершине стека",
-      "Выход за пределы стека", 
-      "%s: попытка копировать элемент на себя", 
+      "Выход за пределы стека",
+      "%s: попытка копировать элемент на себя",
       "%s: неверное имя переменной",
       "Переполнение буфера памяти",
-   
+
       /* Texts */
-   
+
       "ГГГГ/ММ/ДД",
       "Д",
       "Н"
    }
 };
 
-HB_LANG_ANNOUNCE( TPL );
+HB_LANG_ANNOUNCE( RU866 );
 
-HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_TPL )
+HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_RU866 )
    hb_langRegister( &s_lang );
-HB_CALL_ON_STARTUP_END( hb_lang_Init_TPL )
+HB_CALL_ON_STARTUP_END( hb_lang_Init_RU866 )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup hb_lang_Init_TPL
+   #pragma startup hb_lang_Init_RU866
 #endif
 

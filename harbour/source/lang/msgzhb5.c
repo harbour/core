@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (ZH_GB)
+ * Language Support Module (ZH_BIG5)
  *
  * Copyright 1999-2001 dongming <dongming@km169.net>
  *                           or <freexbase@yahoo.com.cn>
@@ -58,43 +58,42 @@
 
 #include "hbapilng.h"
 
-/* Chinese Simplified: Codepage: 936 for ZH,ZH-CN,ZH-SG ,this is for chinese-gb code */
 static HB_LANG s_lang =
 {
    {
       /* Identification */
    
       "ZH",                        /* ID */
-      "Chinese Simplified",        /* Name (in English) */
-      "中文简体GB",                /* Name (in native language) */
-      "ZH",                        /* RFC ID */
-      "936",                       /* Codepage */
+      "Chinese Traditional",       /* Name (in English) */
+      "いゅ羉砰BIG5",              /* Name (in native language) */
+      "ZH",                     /* RFC ID */
+      "950",                       /* Codepage */
       "$Revision$ $Date$",         /* Version */
    
       /* Month names */
    
-      "一月",
-      "二月",
-      "三月",
-      "四月",
-      "五月",
-      "六月",
-      "七月",
-      "八月",
-      "九月",
-      "十月",
-      "十一月",
-      "十二月"
+      "る",
+      "る",
+      "る",
+      "る",
+      "きる",
+      "せる",
+      "る",
+      "る",
+      "る",
+      "る",
+      "る",
+      "る"
    
       /* Day names */
    
-      "星期日",
-      "星期一",
-      "星期二",
-      "星期三",
-      "星期四",
-      "星期五",
-      "星期六"
+      "琍戳ら",
+      "琍戳",
+      "琍戳",
+      "琍戳",
+      "琍戳",
+      "琍戳き",
+      "琍戳せ"
    
       /* CA-Cl*pper compatible natmsg items */
    
@@ -200,12 +199,12 @@ static HB_LANG s_lang =
    }
 };
 
-HB_LANG_ANNOUNCE( ZH_GB );
+HB_LANG_ANNOUNCE( ZH_BIG5 );
 
-HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_ZH_GB )
+HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_ZH_BIG5 )
    hb_langRegister( &s_lang );
-HB_CALL_ON_STARTUP_END( hb_lang_Init_ZH_GB )
+HB_CALL_ON_STARTUP_END( hb_lang_Init_ZH_BIG5 )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup hb_lang_Init_ZH_GB
+   #pragma startup hb_lang_Init_ZH_BIG5
 #endif
 

@@ -367,8 +367,7 @@ static void CompiledFileName( FILE * hObjFile, char * szFileName )
   putbyte( 0x80, hObjFile, &bChk );  /* this tells the linker the kind of OBJ record this is */
   putbyte( 1 + 1 + wLen, hObjFile, &bChk ); /* now it comes the total length of this OBJ record */
   putbyte( 0, hObjFile, &bChk );
-
-  putbyte( wLen, hObjFile, &bChk );     /* szFileName length */
+  putbyte( (BYTE) wLen, hObjFile, &bChk );     /* szFileName length */
 
   while( ( bChar = * szFileName++ ) != 0 )
       putbyte( bChar, hObjFile, &bChk );   /* each of the szFileName characters */
@@ -585,7 +584,7 @@ static void PubDef( FILE * hObjFile, char * szName, USHORT wSegment, USHORT wOff
   putbyte( 0x90, hObjFile, &bChk );
   putword( wLen, hObjFile, &bChk );
   putbyte( 0x00, hObjFile, &bChk );
-  putbyte( wSegment, hObjFile, &bChk );
+  putbyte( (BYTE) wSegment, hObjFile, &bChk );
   putbyte( strlen( szPrefix ) + strlen( szName ), hObjFile, &bChk );
 
   szTemp = szPrefix;

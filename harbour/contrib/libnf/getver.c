@@ -156,7 +156,7 @@ HB_FUNC(_FT_TEMPFIL)
    char *cPath;
 #if defined(HB_OS_DOS)
    {
-      
+
       int iMode=hb_parni(2);
       union REGS regs;
       struct SREGS sregs;
@@ -175,6 +175,7 @@ HB_FUNC(_FT_TEMPFIL)
 
       nax=0;
       iflags=0;
+      cPath=hb_parc(1);
    }
 #endif
    {
