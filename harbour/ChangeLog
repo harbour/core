@@ -1,3 +1,11 @@
+19991006-18:34 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/filesys.c
+     include/hbdefs.h
+     ! BIN2I() sign bug fixed
+       Thanks to gjd@casema.net <Gerrit Jan Doornink>
+   * source/rtl/dummy.prg
+     ! Fixed some return values.
+
 19991006-11:20 EDT David G. Holm <dholm@jsd-llc.com>
 
   * config/os2/icc.cf

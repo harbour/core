@@ -1351,6 +1351,26 @@ HARBOUR HB_DISKNAME( void )
    s_uiErrorLast = uiErrorOld;
 }
 
+HARBOUR HB_BIN2W( void )
+{
+   PHB_ITEM pItem = hb_param( 1, IT_STRING );
+
+   if( pItem )
+   {
+      char * pszString = hb_itemGetCPtr( pItem );
+      ULONG ulLen = hb_itemGetCLen( pItem );
+      BYTE byBuffer[ 2 ];
+
+      byBuffer[ 0 ] = ( ulLen >= 1 ) ? ( BYTE ) pszString[ 0 ] : 0;
+      byBuffer[ 1 ] = ( ulLen >= 2 ) ? ( BYTE ) pszString[ 1 ] : 0;
+
+      hb_retni( MKUSHORT( byBuffer[ 0 ],
+                          byBuffer[ 1 ] ) );
+   }
+   else
+      hb_retni( 0 );
+}
+
 HARBOUR HB_BIN2I( void )
 {
    PHB_ITEM pItem = hb_param( 1, IT_STRING );
@@ -1364,8 +1384,8 @@ HARBOUR HB_BIN2I( void )
       byBuffer[ 0 ] = ( ulLen >= 1 ) ? ( BYTE ) pszString[ 0 ] : 0;
       byBuffer[ 1 ] = ( ulLen >= 2 ) ? ( BYTE ) pszString[ 1 ] : 0;
 
-      hb_retni( MKINT( byBuffer[ 0 ],
-                       byBuffer[ 1 ] ) );
+      hb_retni( MKSHORT( byBuffer[ 0 ],
+                         byBuffer[ 1 ] ) );
    }
    else
       hb_retni( 0 );
@@ -1393,11 +1413,6 @@ HARBOUR HB_BIN2L( void )
    }
    else
       hb_retnl( 0 );
-}
-
-HARBOUR HB_BIN2W( void )
-{
-   HB_BIN2I();
 }
 
 HARBOUR HB_I2BIN( void )

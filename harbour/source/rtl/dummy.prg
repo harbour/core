@@ -35,7 +35,7 @@
 
 /* TODO: Dummy functions, should be removed when implemented. */
 
-FUNCTION ordBagExt()       ; RETURN ""
+FUNCTION ordBagExt()       ; RETURN ".ntx"
 FUNCTION ordBagName()      ; RETURN ""
 FUNCTION ordCondSet()      ; RETURN NIL
 FUNCTION ordCreate()       ; RETURN NIL
@@ -95,11 +95,11 @@ FUNCTION ReadKey()         ; RETURN 0
 FUNCTION GetActive()       ; RETURN NIL
 FUNCTION GetApplyKey()     ; RETURN NIL
 FUNCTION GetDoSetKey()     ; RETURN NIL
-FUNCTION GetPostValidate() ; RETURN NIL
-FUNCTION GetPreValidate()  ; RETURN NIL
+FUNCTION GetPostValidate() ; RETURN .T.
+FUNCTION GetPreValidate()  ; RETURN .T.
 FUNCTION GetReader()       ; RETURN NIL
-FUNCTION ReadFormat()      ; RETURN NIL
-FUNCTION ReadKill()        ; RETURN NIL
+FUNCTION ReadFormat()      ; RETURN .F.
+FUNCTION ReadKill()        ; RETURN .F.
 FUNCTION ReadUpdated()     ; RETURN .T.
 FUNCTION Updated()         ; RETURN .T.
 

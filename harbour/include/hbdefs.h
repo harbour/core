@@ -93,25 +93,28 @@ typedef unsigned long ULONG;
 #endif /* __IBMCPP__ */
 
 #ifndef MAX
-#define MAX( a, b )             ( ( ( a ) > ( b ) ) ? ( a ) : ( b ) )
+   #define MAX( a, b )          ( ( ( a ) > ( b ) ) ? ( a ) : ( b ) )
 #endif
 #ifndef MIN
-#define MIN( a, b )             ( ( ( a ) < ( b ) ) ? ( a ) : ( b ) )
+   #define MIN( a, b )          ( ( ( a ) < ( b ) ) ? ( a ) : ( b ) )
 #endif
 
 #ifndef LOBYTE
-#define LOBYTE( w )             ( ( BYTE ) ( w ) )
+   #define LOBYTE( w )          ( ( BYTE ) ( w ) )
 #endif
 #ifndef HIBYTE
-#define HIBYTE( w )             ( ( BYTE ) ( ( ( USHORT ) ( w ) >> 8 ) & 0xFF ) )
+   #define HIBYTE( w )          ( ( BYTE ) ( ( ( USHORT ) ( w ) >> 8 ) & 0xFF ) )
 #endif
-#ifndef MKINT
-#define MKINT( b1, b2 )         ( ( int ) ( ( ( int ) b2 ) <<  8 ) | b1 )
+#ifndef MKSHORT
+   #define MKSHORT( b1, b2 )    ( ( SHORT ) ( ( ( SHORT ) b2 ) << 8 ) | b1 )
+#endif
+#ifndef MKUSHORT
+   #define MKUSHORT( b1, b2 )   ( ( USHORT ) ( ( ( USHORT ) b2 ) << 8 ) | b1 )
 #endif
 #ifndef MKLONG
-#define MKLONG( b1, b2, b3, b4 ) ( ( ( long ) b4 ) << 24 ) | \
-                                 ( ( ( long ) b3 ) << 16 ) | \
-                                 ( ( ( long ) b2 ) <<  8 ) | b1
+   #define MKLONG( b1, b2, b3, b4 ) ( ( ( long ) b4 ) << 24 ) | \
+                                    ( ( ( long ) b3 ) << 16 ) | \
+                                    ( ( ( long ) b2 ) <<  8 ) | b1
 #endif
 
 #define HB_SYMBOL_UNUSED( symbol ) ( void ) symbol
