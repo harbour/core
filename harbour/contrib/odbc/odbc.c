@@ -283,3 +283,16 @@ HB_FUNC( SQLROWCOUN )
 
 }
 
+HB_FUNC( SQLSETSTMTOPTION ) // hStmt, nOption, uOption )  --> nRetCode
+{
+   hb_retnl( ( LONG ) SQLSetStmtOption( ( SQLHSTMT ) hb_parnl( 1 ), 
+             ( UWORD ) hb_parnl( 2 ),
+             ( UDWORD ) hb_parnl( 3 ) ) );
+}
+
+HB_FUNC( SQLCOLUMNS )  /* HB_SQLCOLUMNS( hStmt, cTable ) --> nRetCode */
+{
+   hb_retni( SQLColumns( ( HSTMT ) hb_parnl( 1 ), NULL, 0, NULL, 0, 
+             ( BYTE * ) hb_parc( 2 ), SQL_NTS, NULL, 0) );
+
+}

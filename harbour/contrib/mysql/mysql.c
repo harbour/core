@@ -139,6 +139,10 @@ HB_FUNC( SQLSTORER ) // MYSQL_RES *mysql_store_result(MYSQL *)
    hb_retnl((long) mysql_store_result((MYSQL *)_parnl(1)));
 }
 
+HB_FUNC( SQLUSERES ) // MYSQL_RES *mysql_use_result(MYSQL *)
+{
+   hb_retnl((long) mysql_use_result((MYSQL *)_parnl(1)));
+}
 
 HB_FUNC( SQLFREER ) // void mysql_free_result(MYSQL_RES *)
 {
@@ -293,12 +297,13 @@ HB_FUNC( SQLLISTDB ) // MYSQL_RES * mysql_list_dbs(MYSQL *, char * wild);
 HB_FUNC( SQLLISTTBL ) // MYSQL_RES * mysql_list_tables(MYSQL *, char * wild);
 {
    MYSQL * mysql = (MYSQL *)hb_parnl(1);
+   char  * cWild = ( hb_pcount()>1 && ISCHAR(2) )? hb_parc(2) : NULL;
    MYSQL_RES * mresult;
    MYSQL_ROW mrow;
    long nr, i;
    PHB_ITEM aTables, temp;
 
-   mresult = mysql_list_tables(mysql, NULL);
+   mresult = mysql_list_tables( mysql, cWild );
    nr = (LONG) mysql_num_rows(mresult);
    aTables = hb_itemArrayNew( nr );
 
