@@ -178,8 +178,9 @@ USHORT hb_fsAttrFromRaw( ULONG raw_attr )
    if( raw_attr & FILE_ATTRIBUTE_REPARSE_POINT ) uiAttr |= HB_FA_REPARSE;
    if( raw_attr & FILE_ATTRIBUTE_COMPRESSED )    uiAttr |= HB_FA_COMPRESSED;
    if( raw_attr & FILE_ATTRIBUTE_OFFLINE )       uiAttr |= HB_FA_OFFLINE;
-   if( raw_attr & FILE_ATTRIBUTE_NOT_CONTENT_INDEXED )
-                                                 uiAttr |= HB_FA_NOTINDEXED;
+   /* FILE_ATTRIBUTE_NOT_CONTENT_INDEXED */
+   /* not defined in some older winnt.h  */
+   if( raw_attr & 0x00002000 )                   uiAttr |= HB_FA_NOTINDEXED;
    if( raw_attr & 0x00008000 )                   uiAttr |= HB_FA_VOLCOMP;
 #endif
 
@@ -251,6 +252,7 @@ ULONG hb_fsAttrToRaw( USHORT uiAttr )
    if( uiAttr & HB_FA_COMPRESSED ) raw_attr |= FILE_ATTRIBUTE_COMPRESSED;
    if( uiAttr & HB_FA_OFFLINE )    raw_attr |= FILE_ATTRIBUTE_OFFLINE;
    if( uiAttr & HB_FA_NOTINDEXED ) raw_attr |= FILE_ATTRIBUTE_NOT_CONTENT_INDEXED;
+   if( uiAttr & HB_FA_NOTINDEXED ) raw_attr |= 0x00002000; /* FILE_ATTRIBUTE_NOT_CONTENT_INDEXED */
    if( uiAttr & HB_FA_VOLCOMP )    raw_attr |= 0x00008000;
 #endif
 

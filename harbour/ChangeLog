@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-05-21 01:20 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
+ * source/common/hbffind.c
+   * substitute constant for FILE_ATTRIBUTE_NOT_CONTENT_INDEXED
+   * since it is named differently or non-existant in earlier
+   * windows include files. (Borland specifically, but even from MS)
+
 2002-05-20 22:33 UTC+0100 J.lefebvre (Mafact) <jfl@mafact.com>
  * contrib/htmllib
    * makefile.vc (Forget -p as Harbour param, creating ppo files when not needed)
