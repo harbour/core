@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-11-05 21:41 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
+  * source/rtl/alert.prg
+    ! Fixed problem when Text to display has more then 60 chars and the Line Breaker character (;) dont exist
+     (You notice this behaviour on some erros produced by xharbour rdd)
+
 2002-11-05 19:01 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * source/rtl/strcase.c
     ! Fix call to toupper(), tolower(), forcing unsigned char.

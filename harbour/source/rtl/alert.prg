@@ -33,8 +33,8 @@
 /* TOFIX: Clipper defines a clipped window for Alert() [vszakats] */
 
 /* NOTE: Clipper will return NIL if the first parameter is not a string, but
-         this is not documented. This implementation converts the first 
-         parameter to a string if another type was passed. You can switch back 
+         this is not documented. This implementation converts the first
+         parameter to a string if another type was passed. You can switch back
          to Clipper compatible mode by defining constant
          HB_C52_STRICT. [vszakats] */
 
@@ -60,6 +60,8 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
 
    LOCAL nOldDispCount
    LOCAL nCount
+   LOCAL nIndex, nLen
+   Local cNew,cOld,cTemp
 
 #ifdef HB_COMPAT_C53
    LOCAL nMRow, nMCol
@@ -68,7 +70,8 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
    /* TOFIX: Clipper decides at runtime, whether the GT is linked in,
              if it is not, the console mode is choosen here. [vszakats] */
    LOCAL lConsole := .F.
-
+    cOld:=xMessage
+    cNew:=""
 #ifdef HB_C52_UNDOC
 
    DEFAULT s_lNoAlert TO hb_argCheck( "NOALERT" )
@@ -119,11 +122,64 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       OTHERWISE                       ; xMessage := "NIL"
       ENDCASE
 
+      WHILE LEN(cOld) > 0
+
+        IF AT( ';' , cOld ) > 0 //Dont do this  if ; exist
+            EXIT
+        ENDIF
+
+        IF LEN( cOld ) < 60
+
+            xMessage += cOld
+            EXIT
+
+        ENDIF
+
+      cTemp := SubStr( cOld , 1 , 60 )
+      nPos  := Rat(' ',cTemp)
+
+      IF nPos > 0
+          cNew += SubStr( cTemp , 1 , nPos ) + ';'
+
+          cOld := SubStr( cOld , nPos + 1 )
+      ENDIF
+
+    xMessage := cNew
+
+    ENDDO
+
+        
+
       DO WHILE ( nPos := At( ';', xMessage ) ) != 0
          AAdd( aSay, Left( xMessage, nPos - 1 ) )
          xMessage := SubStr( xMessage, nPos + 1 )
       ENDDO
       AAdd( aSay, xMessage )
+
+      nIndex := 0
+      FOR EACH xMessage IN aSay
+         nIndex++
+
+         IF ( nLen := Len( xMessage ) ) > 58
+            FOR nPos := 58 TO 1 STEP -1
+               IF xMessage[nPos] $ " " + Chr( 9 )
+                  EXIT
+               ENDIF
+            NEXT
+
+            IF nPos == 0
+               nPos := 58
+            ENDIF
+
+            aSay[ nIndex ] := RTrim( Left( xMessage, nPos ) )
+
+            IF Len( aSay ) == nIndex
+               aAdd( aSay, SubStr( xMessage, nPos + 1 ) )
+            ELSE
+               aIns( aSay, nIndex + 1, SubStr( xMessage, nPos + 1 ), .T. )
+            ENDIF
+        ENDIF
+      NEXT
 
    ENDIF
 
