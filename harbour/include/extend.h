@@ -334,17 +334,18 @@ extern PHB_ITEM hb_arrayClone( PHB_ITEM pArray );
 
 extern int      hb_stricmp( const char * s1, const char * s2 );
 extern int      hb_strnicmp( const char * s1, const char * s2, ULONG ulLen );
-extern int      hb_strgreater( char * szText1, char * szText2 );
+extern int      hb_strgreater( const char * szText1, const char * szText2 );
 extern void     hb_strupr( char * szText );
-extern BOOL     hb_strMatchRegExp( char * szString, char * szMask );
-extern BOOL     hb_strEmpty( char * szText, ULONG ulLen );
-extern void     hb_strDescend( char * szStringTo, char * szStringFrom, ULONG ulLen );
-extern ULONG    hb_strAt( char * szSub, ULONG ulSubLen, char * szText, ULONG ulLen );
+extern BOOL     hb_strMatchRegExp( const char * szString, const char * szMask );
+extern BOOL     hb_strEmpty( const char * szText, ULONG ulLen );
+extern void     hb_strDescend( char * szStringTo, const char * szStringFrom, ULONG ulLen );
+extern ULONG    hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen );
 extern char *   hb_strUpper( char * szText, ULONG ulLen );
 extern char *   hb_strLower( char * szText, ULONG ulLen );
-extern char *   hb_strncpyUpper( char * pDest, char * pSource, ULONG ulLen );
-extern double   hb_strVal( char * szText );
-extern char *   hb_strLTrim( char * szText, ULONG * ulLen );
+extern char *   hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen );
+extern double   hb_strVal( const char * szText );
+extern char *   hb_strLTrim( const char * szText, ULONG * ulLen );
+extern ULONG    hb_strRTrimLen( const char * szText, ULONG ulLen, BOOL bAnySpace );
 
 extern double   hb_numRound( double dResult, int iDec );
 
@@ -354,7 +355,7 @@ extern void     hb_clsReleaseAll( void );    /* releases all defined classes */
 /* object management */
 extern char *   hb_objGetClsName( PHB_ITEM pObject ); /* retrieves an object class name */
 extern PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pSymMsg ); /* returns the method pointer of a object class */
-extern ULONG    hb_objHasMsg( PHB_ITEM pObject, char *szString );
+extern ULONG    hb_objHasMsg( PHB_ITEM pObject, char * szString );
 
 /* dynamic symbol table management */
 extern PHB_DYNS hb_dynsymGet( char * szName );    /* finds and creates a dynamic symbol if not found */

@@ -79,10 +79,8 @@ HB_CALL_ON_STARTUP_END( Strings_InitInfinity )
 
 #endif
 
-BOOL hb_strEmpty( char * szText, ULONG ulLen )
+BOOL hb_strEmpty( const char * szText, ULONG ulLen )
 {
-   BOOL bRetVal = TRUE;
-
    HB_TRACE(("hb_strEmpty(%s, %lu)", szText, ulLen));
 
    while( ulLen-- )
@@ -90,13 +88,10 @@ BOOL hb_strEmpty( char * szText, ULONG ulLen )
       char c = szText[ ulLen ];
 
       if( !HB_ISSPACE( c ) )
-      {
-         bRetVal = FALSE;
-         break;
-      }
+         return FALSE;
    }
 
-   return bRetVal;
+   return TRUE;
 }
 
 int hb_stricmp( const char * s1, const char * s2 )
@@ -110,10 +105,7 @@ int hb_stricmp( const char * s1, const char * s2 )
 
    l1 = strlen( s1 );
    l2 = strlen( s2 );
-   if( l1 < l2 )
-      count = l1;
-   else
-      count = l2;
+   count = ( l1 < l2 ? l1 : l2 );
 
    while( rc == 0 && count > 0 )
    {
@@ -127,12 +119,7 @@ int hb_stricmp( const char * s1, const char * s2 )
    }
 
    if( rc == 0 && l1 != l2 )
-   {
-      if( l1 < l2 )
-         rc = -1;
-      else
-         rc = 1;
-   }
+      rc = ( l1 < l2 ? -1 : 1 );
 
    return rc;
 }
@@ -149,11 +136,7 @@ int hb_strnicmp( const char * s1, const char * s2, ULONG count )
    l2 = strlen( s2 );
    if( l1 > count )
       l1 = count;
-
-   if( l1 < l2 )
-      count = l1;
-   else
-      count = l2;
+   count = ( l1 < l2 ? l1 : l2 );
 
    while( rc == 0 && count > 0 )
    {
@@ -167,17 +150,12 @@ int hb_strnicmp( const char * s1, const char * s2, ULONG count )
    }
 
    if( rc == 0 && l1 != l2 )
-   {
-      if( l1 < l2 )
-         rc = -1;
-      else
-         rc = 1;
-   }
+      rc = ( l1 < l2 ? -1 : 1 );
 
    return rc;
 }
 
-static BOOL  hb_strMatchDOS( char * pszString, char * pszMask )
+static BOOL  hb_strMatchDOS( const char * pszString, const char * pszMask )
 {
    HB_TRACE(("hb_strMatchDOS(%s, %s)", pszString, pszMask));
 
@@ -225,7 +203,7 @@ static BOOL  hb_strMatchDOS( char * pszString, char * pszMask )
 /* TODO: Replace it with a code that supports real regular expressions
  *
  */
-BOOL hb_strMatchRegExp( char * szString, char * szMask )
+BOOL hb_strMatchRegExp( const char * szString, const char * szMask )
 {
    HB_TRACE(("hb_strMatchRegExp(%s, %s)", szString, szMask));
 
@@ -267,17 +245,17 @@ HARBOUR HB_ISLOWER( void )
 
 /* trims from the left, and returns a new pointer to szText */
 /* also returns the new length in lLen */
-char * hb_strLTrim( char * szText, ULONG * lLen )
+char * hb_strLTrim( const char * szText, ULONG * ulLen )
 {
-   HB_TRACE(("hb_strLTrim(%s, %p)", szText, lLen));
+   HB_TRACE(("hb_strLTrim(%s, %p)", szText, ulLen));
 
-   while( *lLen && HB_ISSPACE( *szText ) )
+   while( *ulLen && HB_ISSPACE( *szText ) )
    {
       szText++;
-      ( *lLen )--;
+      ( *ulLen )--;
    }
 
-   return szText;
+   return ( char * ) szText;
 }
 
 /* trims leading spaces from a string */
@@ -290,10 +268,10 @@ HARBOUR HB_LTRIM( void )
 
       if( pText )
       {
-         ULONG lLen = pText->item.asString.length;
-         char * szText = hb_strLTrim( pText->item.asString.value, &lLen );
+         ULONG ulLen = pText->item.asString.length;
+         char * szText = hb_strLTrim( pText->item.asString.value, &ulLen );
 
-         hb_retclen( szText, lLen );
+         hb_retclen( szText, ulLen );
       }
       else
       {
@@ -311,22 +289,22 @@ HARBOUR HB_LTRIM( void )
 }
 
 /* returns szText and the new length in lLen */
-ULONG hb_strRTrimLen( char * szText, ULONG lLen, BOOL bAnySpace )
+ULONG hb_strRTrimLen( const char * szText, ULONG ulLen, BOOL bAnySpace )
 {
-   HB_TRACE(("hb_strRTrimLen(%s, %lu. %d)", szText, lLen, (int) bAnySpace));
+   HB_TRACE(("hb_strRTrimLen(%s, %lu. %d)", szText, ulLen, (int) bAnySpace));
 
    if( bAnySpace )
    {
-      while( lLen && HB_ISSPACE( szText[ lLen - 1 ] ) )
-         lLen--;
+      while( ulLen && HB_ISSPACE( szText[ ulLen - 1 ] ) )
+         ulLen--;
    }
    else
    {
-      while( lLen && szText[ lLen - 1 ] == ' ' )
-         lLen--;
+      while( ulLen && szText[ ulLen - 1 ] == ' ' )
+         ulLen--;
    }
 
-   return lLen;
+   return ulLen;
 }
 
 /* NOTE: The second parameter is a Harbour extension */
@@ -379,13 +357,11 @@ HARBOUR HB_ALLTRIM( void )
    {
       char * szText = hb_parc( 1 );
       BOOL bAnySpace = ( ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
-      ULONG lLen;
+      ULONG ulLen = hb_strRTrimLen( szText, hb_parclen( 1 ), bAnySpace );
 
-      lLen = hb_strRTrimLen( szText, hb_parclen( 1 ), bAnySpace );
+      szText = hb_strLTrim( szText, &ulLen );
 
-      szText = hb_strLTrim( szText, &lLen );
-
-      hb_retclen( szText, lLen );
+      hb_retclen( szText, ulLen );
    }
    else
 #ifdef HB_COMPAT_C53
@@ -584,7 +560,7 @@ HARBOUR HB_PADC( void )
       hb_retc( "" );
 }
 
-ULONG hb_strAt( char * szSub, ULONG ulSubLen, char * szText, ULONG ulLen )
+ULONG hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen )
 {
    HB_TRACE(("hb_strAt(%s, %lu, %s, %lu)", szSub, ulSubLen, szText, ulLen));
 
@@ -682,22 +658,16 @@ HARBOUR HB_CHR( void )
       {
          char szChar[ 2 ];
 
-         /* Believe it or not, clipper does this! */
+         /* NOTE: CA-Cl*pper's compiler optimizer will be wrong for those
+                  CHR() cases where the passed parameter is a constant which
+                  can be divided by 256 but it's not zero, in this case it
+                  will return an empty string instead of a Chr(0). [vszel] */
 
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
-         long lValue = hb_parnl( 1 );
-
-         szChar[ 0 ] = lValue % 256;
-         szChar[ 1 ] = '\0';
-
-         hb_retclen( szChar, lValue != 0 && szChar[ 0 ] == '\0' ? 0 : 1 );
-#else
          /* Believe it or not, clipper does this! */
          szChar[ 0 ] = hb_parnl( 1 ) % 256;
          szChar[ 1 ] = '\0';
 
          hb_retclen( szChar, 1 );
-#endif
       }
       else
       {
@@ -944,7 +914,7 @@ char * hb_strUpper( char * szText, ULONG ulLen )
 
 /* This function copies and converts szText to upper case.
  */
-char * hb_strncpyUpper( char * pDest, char * pSource, ULONG ulLen )
+char * hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen )
 {
    char * pStart = pDest;
 
@@ -1287,7 +1257,7 @@ HARBOUR HB_STRTRAN( void )
 }
 
 /* returns the numeric value of a character string representation of a number  */
-double hb_strVal( char * szText )
+double hb_strVal( const char * szText )
 {
    HB_TRACE(("hb_strVal(%s)", szText));
 
@@ -1615,21 +1585,22 @@ HARBOUR HB_STRZERO( void )
 
 /* Values returned : HB_STRGREATER_EQUAL, HB_STRGREATER_LEFT, HB_STRGREATER_RIGHT */
 
-int hb_strgreater( char * szText1, char * szText2 )
+int hb_strgreater( const char * szText1, const char * szText2 )
 {
    HB_TRACE(("hb_strgreater(%s, %s)", szText1, szText2));
 
-   while( *( szText1 ) && *( szText2 ) && *( szText1 ) == *( szText2 ) )
+   while( *szText1 && *szText2 && *szText1 == *szText2 )
    {
-     szText1++;
-     szText2++;
+      szText1++;
+      szText2++;
    }
-   if( ( *( szText1 ) == '\0' && *( szText2 ) != '\0' ) ||
-       ( *( szText2 ) > *( szText1 ) )                  )
+
+   if( ( *szText1 == '\0' && *szText2 != '\0' ) ||
+       ( *szText1 < *szText2 )                )
       return HB_STRGREATER_RIGHT;
 
-   if( ( *( szText1 ) != '\0' && *( szText2 ) == '\0' ) ||
-       ( *( szText1 ) > *( szText2 ) )                  )
+   if( ( *szText1 != '\0' && *szText2 == '\0' ) ||
+       ( *szText1 > *szText2 )                )
       return HB_STRGREATER_LEFT;
 
    return HB_STRGREATER_EQUAL;

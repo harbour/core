@@ -1223,7 +1223,6 @@ STATIC FUNCTION Main_MATH()
    RETURN NIL
 
 STATIC FUNCTION Main_STRINGS()
-   LOCAL xLocal
 
    /* VAL() */
 
@@ -1249,11 +1248,12 @@ STATIC FUNCTION Main_STRINGS()
    TEST_LINE( Chr( 66.5 )                     , "B"                                    )
    TEST_LINE( Chr( 66.6 )                     , "B"                                    )
    TEST_LINE( Chr( 255 )                      , "ˇ"                                    )
-   TEST_LINE( Chr( xLocal := 256 )            , ""+Chr(0)+""                           ) /* xLocal should be used here to avoid the optimizer of the CA-Cl*pper compiler */
+   TEST_LINE( Chr( 256 )                      , ""+Chr(0)+""                           ) /* Due to a bug in CA-Cl*pper compiler optimizer, a wrong result will be calculated ar compile time: "" */
+   TEST_LINE( Chr( ( 256 ) )                  , ""+Chr(0)+""                           ) /* Double paranthesis should be used here to avoid the optimizer of the CA-Cl*pper compiler */
    TEST_LINE( Chr( 257 )                      , ""                                    )
-   TEST_LINE( Chr( xLocal := 512 )            , ""+Chr(0)+""                           ) /* xLocal should be used here to avoid the optimizer of the CA-Cl*pper compiler */
+   TEST_LINE( Chr( ( 512 ) )                  , ""+Chr(0)+""                           ) /* Double paranthesis should be used here to avoid the optimizer of the CA-Cl*pper compiler */
    TEST_LINE( Chr( 1023 )                     , "ˇ"                                    )
-   TEST_LINE( Chr( xLocal := 1024 )           , ""+Chr(0)+""                           ) /* xLocal should be used here to avoid the optimizer of the CA-Cl*pper compiler */
+   TEST_LINE( Chr( ( 1024 ) )                 , ""+Chr(0)+""                           ) /* Double paranthesis should be used here to avoid the optimizer of the CA-Cl*pper compiler */
    TEST_LINE( Chr( 1025 )                     , ""                                    )
    TEST_LINE( Chr( 1000 )                     , "Ë"                                    )
    TEST_LINE( Chr( 100000 )                   , "†"                                    )
@@ -2933,6 +2933,39 @@ STATIC FUNCTION Main_MISC()
    TEST_LINE( MEMVARBLOCK( 100 )              , NIL             )
    TEST_LINE( MEMVARBLOCK( "mxNotHere" )      , NIL             )
    TEST_LINE( MEMVARBLOCK( "mcString" )       , "{||...}"       )
+
+   /* Defines for HARDCR() and MEMOTRAN() */
+
+   #define SO Chr( 141 )
+   #define NU Chr( 0 )
+   #define LF Chr( 10 )
+   #define CR Chr( 13 )
+
+   /* HARDCR() */
+
+   TEST_LINE( HardCR()                                                      , ""                                                                                 )
+   TEST_LINE( HardCR(NIL)                                                   , ""                                                                                 )
+   TEST_LINE( HardCR(100)                                                   , ""                                                                                 )
+#ifdef __HARBOUR__
+   TEST_LINE( HardCR(@scString)                                             , "HELLO"                                                                            ) /* Bug in CA-Cl*pper, it will return "" */
+#endif
+   TEST_LINE( HardCR("H"+SO+LF+"P"+SO+LF+"W"+SO+"M")                        , "H"+Chr(13)+""+Chr(10)+"P"+Chr(13)+""+Chr(10)+"WçM"                                )
+   TEST_LINE( HardCR("H"+NU+"B"+SO+LF+NU+"P"+SO+LF+"W"+SO+"M"+NU)           , "H"+Chr(0)+"B"+Chr(13)+""+Chr(10)+""+Chr(0)+"P"+Chr(13)+""+Chr(10)+"WçM"+Chr(0)+"" )
+
+   /* MEMOTRAN() */
+
+   TEST_LINE( MemoTran()                                                    , ""                                                 )
+   TEST_LINE( MemoTran(NIL)                                                 , ""                                                 )
+   TEST_LINE( MemoTran(100)                                                 , ""                                                 )
+   TEST_LINE( MemoTran(100,"1","2")                                         , ""                                                 )
+#ifdef __HARBOUR__
+   TEST_LINE( MemoTran(@scString)                                           , "HELLO"                                            ) /* Bug in CA-Cl*pper, it will return "" */
+#endif
+   TEST_LINE( MemoTran("H"+SO+LF+"P"+CR+LF+"M")                             , "H P;M"                                            )
+   TEST_LINE( MemoTran("H"+NU+"O"+SO+LF+"P"+CR+LF+"M"+NU+"I")               , "H"+Chr(0)+"O P;M"+Chr(0)+"I"                      )
+   TEST_LINE( MemoTran("M"+CR+"s"+CR+LF+"w"+SO+"w"+SO+LF+"h"+CR)            , "M"+Chr(13)+"s;wçw h"+Chr(13)+""                   )
+   TEST_LINE( MemoTran("M"+CR+"s"+CR+LF+"w"+SO+"w"+SO+LF+"h"+CR,"111","222"), "M"+Chr(13)+"s1wçw2h"+Chr(13)+""                   )
+   TEST_LINE( MemoTran("M"+CR+"s"+CR+LF+"w"+SO+"w"+SO+LF+"h"+CR,"","")      , "M"+Chr(13)+"s"+Chr(0)+"wçw"+Chr(0)+"h"+Chr(13)+"" )
 
    /* MEMOWRITE()/MEMOREAD() */
 

@@ -67,7 +67,7 @@
 #include "extend.h"
 #include "itemapi.h"
 
-void hb_strDescend( char * szStringTo, char * szStringFrom, ULONG ulLen )
+void hb_strDescend( char * szStringTo, const char * szStringFrom, ULONG ulLen )
 {
    HB_TRACE(("hb_strDescend(%s, %s, %lu)", szStringTo, szStringFrom, ulLen));
 

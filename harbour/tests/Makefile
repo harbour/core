@@ -69,7 +69,6 @@ PRG_SOURCES=\
         fornext.prg \
         fortest.prg \
         funcarr.prg \
-        hardcr.prg \
         hello.prg \
         ifelse.prg \
         ifinline.prg \
@@ -88,7 +87,6 @@ PRG_SOURCES=\
         memory.prg \
         memvar.prg \
         menutest.prg \
-        mtran.prg \
         multiarg.prg \
         nums.prg \
         objarr.prg \
