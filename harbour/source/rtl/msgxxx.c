@@ -14,6 +14,8 @@
 #include "natmsg/msggal.c"
 #elif (HB_LANGUAGE == GER)
 #include "natmsg/msgger.c"
+#elif (HB_LANGUAGE == INA)
+#include "natmsg/msgia.c"
 #elif (HB_LANGUAGE == HU)
 #include "natmsg/msghu.c"
 #elif (HB_LANGUAGE == KOR)
