@@ -153,9 +153,6 @@ if lEditMode
    else
       crtmakfile( cFile )
    endif
-         oProfile:gather()
-         
-         HBProfileReportToFile():new( oProfile:callSort() ):generate( {|o| o:nCalls > 0 } )
 
 Return nil
 endif
@@ -171,9 +168,6 @@ CompUpdatedfiles()
 endif
 outstd(cLinkComm)
 ! ( cLinkcomm )
-         oProfile:gather()
-         
-         HBProfileReportToFile():new( oProfile:callSort() ):generate( {|o| o:nCalls > 0 } )
 
 Return nil
 
