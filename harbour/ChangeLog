@@ -1,8 +1,21 @@
+2000-07-25 09:30 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * hb_slex.bc
+     * Sinchronized with recent changes to makefile.bc
+     + Added ;source\compiler to $(INCLUDE)
+
+   * source/compiler/harbour.slx
+     + Added logic to support 2 imediately following identifiers as needed by: DECLARE ClassName ClassVar ...
+
+   + contrib/hb_struc
+   + contrib/hb_struc/hbstruc.ch
+   + contrib/hb_struc/hbstruc.prg
+   + contrib/hb_struc/teststru.prg
+
 2000-07-25 13:47 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/errorapi.c
    * include/hbapierr.h
-     + hb_errRT_BASE_SubstR() added, which will automatically return the 
+     + hb_errRT_BASE_SubstR() added, which will automatically return the
        substituted value.
 
    * source/rtl/abs.c
@@ -35,7 +48,7 @@
    * source/vm/memvars.c
    * source/vm/runner.c
      % hb_errRT_BASE_Subst() -> hb_itemReturn() -> hb_itemRelease() constructs
-       replaced with a simple call to hb_errRT_BASE_SubstR(), this way many 
+       replaced with a simple call to hb_errRT_BASE_SubstR(), this way many
        local variables were removed, the code got smaller and a bit faster.
        The error handling code in the RTL functions is very simple now.
 
@@ -119,8 +132,8 @@
        converted to this smaller and faster one:
        hb_itemRelease/Clear( hb_itemReturn( x ) );
 
-       Actually the speed increase and binary size decrease is almost zero, 
-       but the source code is more compact. This snippet is mostly found in 
+       Actually the speed increase and binary size decrease is almost zero,
+       but the source code is more compact. This snippet is mostly found in
        runtime error branches.
        Some local variables could be eliminated this way.
 

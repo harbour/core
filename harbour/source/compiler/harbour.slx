@@ -52,6 +52,8 @@
 
 static int iTexts = 0;
 static char * aTexts[1024];
+static int iIdentifier = 0;
+static char* sIdOnHold;
 
 long hb_lex_Hex2L( char* sHex );
 
@@ -64,7 +66,7 @@ DELIMITER_BELONGS_TO_TOKEN_IF_ONE_OF_THESE( "" );
 
 /* Custom Action can be requested by setting reduction to LEX_CUSTOM_ACTION or lower. */
 
-/* Intermediate Token neede to be expanded. */
+/* Intermediate Token needed to be expanded. */
 #define HB_LIT_ACT    -1000
 
 /* Stream Pairs. */
@@ -207,7 +209,7 @@ LANGUAGE_WORDS_ARE {
                      LEX_WORD( "STRING"    ) AS_TOKEN( _STRING_    ),
                      LEX_WORD( "CLASS"     ) AS_TOKEN( _CLASS_     ),
                      LEX_WORD( "STRUCTURE" ) AS_TOKEN( _STRUCTURE_ ),
-              /*     LEX_WORD( "STRU"      ) AS_TOKEN( _CLASS_     ),  */
+              /*     LEX_WORD( "STRU"      ) AS_TOKEN( _STRUCTURE_ ),  */
                      LEX_WORD( "DATE"      ) AS_TOKEN( _DATE_      ),
                      LEX_WORD( "LOGICAL"   ) AS_TOKEN( _LOGICAL_   ),
                      LEX_WORD( "BOOLEAN"   ) AS_TOKEN( _LOGICAL_   ),
@@ -277,6 +279,9 @@ LANGUAGE_WORDS_ARE {
 #define HB_QSELF_ID       -1053
 #define HB_RETURN_ID      -1054
 #define HB_END_ID         -1055
+
+/* When 2 identifiers are correct syntax like in class declaration, we have to temporarily store the 2nd identifier. */
+#define HB_ID_ON_HOLD     -1056
 
 /* Intermediate Reductions when still ambigious or need further reductions. */
 #define _WHILE_WITH       3001
@@ -889,6 +894,11 @@ LANGUAGE_RULES_ARE {
    	#define INTERCEPT_ACTION(x) \
 	\
       	if( x == IDENTIFIER ) \
+	{ \
+	   iIdentifier--; \
+	} \
+        \
+      	if( x == IDENTIFIER ) \
          	printf( "   IDENTIFIER = \"%s\"\n", yylval.string  ); \
       	else if( x == LITERAL ) \
          	printf( "   LITERAL = \"%s\"\n", yylval.string  ); \
@@ -909,6 +919,14 @@ LANGUAGE_RULES_ARE {
             	printf( "   DELIMITER = \"%c\"\n", x  ); \
       	else \
           	printf( "   TOKEN = %i\n", x  );
+#else
+   #undef INTERCEPT_ACTION
+   	#define INTERCEPT_ACTION(x) \
+	\
+      	if( x == IDENTIFIER ) \
+	{ \
+	   iIdentifier--; \
+	}
 #endif
 
 /* Support Functions implemented as macros for speed. */
@@ -981,8 +999,17 @@ LANGUAGE_RULES_ARE {
          {\
       	    DEBUG_INFO( printf(  "Element \"%s\" is IDENTIFIER\n", yytext ) );\
 \
-            yylval.string = hb_compIdentifierNew( yytext, TRUE );\
-      	    iRet = IDENTIFIER; \
+	    if( iIdentifier )\
+	    {\
+	       sIdOnHold = hb_compIdentifierNew( yytext, TRUE );\
+	       iRet = HB_ID_ON_HOLD;\
+	    }\
+	    else\
+	    {\
+	       iIdentifier++;\
+               yylval.string = hb_compIdentifierNew( yytext, TRUE );\
+      	       iRet = IDENTIFIER;\
+	    }\
          }\
       }\
       else\
@@ -1079,6 +1106,8 @@ LANGUAGE_RULES_ARE {
 
 #undef CUSTOM_ACTION
    #define CUSTOM_ACTION(x) \
+{\
+   BOOL bRestored = FALSE;\
 \
    DEBUG_INFO( printf( "Custom Action for %i\n", x ) );\
 \
@@ -1090,6 +1119,13 @@ LANGUAGE_RULES_ARE {
 \
    switch ( x )\
    {\
+      case HB_ID_ON_HOLD :\
+	 bRestored = TRUE;\
+         yylval.string = sIdOnHold;\
+	 iIdentifier++;\
+         x = IDENTIFIER;\
+         break;\
+\
       case HB_LIT_ACT :\
          yylval.string = hb_compIdentifierNew( sPair, TRUE );\
          x = LITERAL;\
@@ -1417,16 +1453,19 @@ LANGUAGE_RULES_ARE {
          printf( "No Handler for Custom Action %i\n", x );\
    }\
 \
-   if( x == IDENTIFIER )\
+   if( x == IDENTIFIER && ! bRestored )\
    {\
       yylval.string = hb_compIdentifierNew( yytext, TRUE );\
 \
       /* No longer needed. */\
       hb_xfree( yytext );\
 \
+      iIdentifier++;\
+\
       PUSH_TOKEN( IDENTIFIER );\
       x = 0;\
-   }
+   }\
+}
 
 #undef INIT_ACTION
    #define INIT_ACTION() hb_comp_bSimpLex = TRUE;

@@ -70,7 +70,7 @@ CFLAGS = -O2 $(CFLAGS)
 # Directory macros. These should never have to change.
 #
 
-INCLUDE_DIR  = include
+INCLUDE_DIR  = include;source\compiler
 COMMON_DIR   = source\common
 COMPILER_DIR = source\compiler
 DEBUG_DIR    = source\debug
@@ -337,6 +337,7 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msghuwin.obj \
    $(OBJ_DIR)\msgis850.obj \
    $(OBJ_DIR)\msgit.obj \
+   $(OBJ_DIR)\msgko.obj \
    $(OBJ_DIR)\msgpt.obj \
    $(OBJ_DIR)\msgro.obj \
    $(OBJ_DIR)\msgsr852.obj \
@@ -520,8 +521,7 @@ HARBOUR_EXE_OBJS = \
    $(OBJ_DIR)\exproptb.obj \
    $(OBJ_DIR)\exproptc.obj \
    $(OBJ_DIR)\hbfunchk.obj \
-   $(OBJ_DIR)\ppcore.obj \
-   $(OBJ_DIR)\ppcomp.obj
+   $(PP_LIB)
 
 #
 # HBRUN.EXE rules
@@ -1764,6 +1764,10 @@ $(OBJ_DIR)\msgis850.obj : $(LANG_DIR)\msgis850.c
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msgit.obj : $(LANG_DIR)\msgit.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\msgko.obj : $(LANG_DIR)\msgko.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
