@@ -479,7 +479,6 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
 void hb_rddReleaseCurrentArea( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_rddReleaseCurrentArea()"));
-   // SELF_FORCEREL( ( AREAP ) s_pCurrArea->pArea );
    SELF_CLOSE( ( AREAP ) s_pCurrArea->pArea );
    SELF_RELEASE( ( AREAP ) s_pCurrArea->pArea );
 
@@ -1634,7 +1633,12 @@ HB_FUNC( __DBPACK )
             hb_arraySet( ( ( AREAP ) s_pCurrArea->pArea )->valResult, 2, pEvery );
       }
       else
-         hb_itemClear( ( ( AREAP ) s_pCurrArea->pArea )->valResult );
+      {
+         if ( ( ( AREAP ) s_pCurrArea->pArea )->valResult )
+            hb_itemClear( ( ( AREAP ) s_pCurrArea->pArea )->valResult );
+         else
+            ( ( AREAP ) s_pCurrArea->pArea )->valResult = hb_itemNew( NULL );
+      }
       SELF_PACK( ( AREAP ) s_pCurrArea->pArea );
       if( pBlock )
          hb_itemClear( ( ( AREAP ) s_pCurrArea->pArea )->valResult );
