@@ -67,14 +67,14 @@ static void hb_cdxTagTagStore( LPCDXTAG pTag );
 static void hb_cdxTagTagOpen( LPCDXTAG pTag, BYTE bCode );
 static void hb_cdxTagTagClose( LPCDXTAG pTag );
 static LONG hb_cdxTagNewRoot( LPCDXTAG pTag );
-static void hb_cdxTagPageLoad( LPCDXTAG pTag, LPPAGEINFO pPage );
+static void hb_cdxTagPageLoad( LPCDXTAG pTag, LPPAGEINFO pPage, short noKeys );
 static void hb_cdxTagKeyRead( LPCDXTAG pTag, BYTE bTypRead );
 static void hb_cdxTagKeyAdd( LPCDXTAG pTag, LPKEYINFO pKey );
 static void hb_cdxTagPageStore( LPCDXTAG pTag, LPPAGEINFO PIK );
 static void hb_cdxTagExtNodeWrite( LPCDXTAG pTag, LONG PN, LPCDXDATA pData, LPPAGEINFO PIK );
 static USHORT hb_cdxTagFillExternalNode( LPCDXTAG pTag, LPCDXDATA pData, LPPAGEINFO PIK,
                                          USHORT kcnt, USHORT ck, LPKEYINFO * p );
-static void hb_cdxTagExtNodeBuild( LPCDXTAG pTag, LPCDXDATA pData, LPPAGEINFO pPage );
+static void hb_cdxTagExtNodeBuild( LPCDXTAG pTag, LPCDXDATA pData, LPPAGEINFO pPage, short noKeys );
 static void hb_cdxTagTagLoad( LPCDXTAG pTag );
 static void hb_cdxTagSetRoot( LPCDXTAG pTag, LPPAGEINFO PIK );
 static void hb_cdxTagIntNodeWrite( LPCDXTAG pTag, LONG PN, LPCDXDATA pData, LPPAGEINFO PIK );

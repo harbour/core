@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   + contrib/libct/bit1.c
+     + number and bit manipulation functions NUMAND(), NUMOR(), NUMXOR()
+                                             NUMNOT(), NUMROL(), NUMMIRR()
+       equivalents to original CT3
 
    + contrib/libct/bit3.c
      + number and bit manipulation functions NUMANDX(), NUMORX(), NUMXORX()
