@@ -72,8 +72,8 @@ extern BOOL     hb_evalNew      ( PEVALINFO pEvalInfo, PHB_ITEM pItem );
 extern BOOL     hb_evalPutParam ( PEVALINFO pEvalInfo, PHB_ITEM pItem );
 extern BOOL     hb_evalRelease  ( PEVALINFO pEvalInfo );
 
-extern PHB_ITEM hb_itemDo       ( PHB_ITEM pItem, USHORT uiPCount, PHB_ITEM pItemArg1, ... );
-extern PHB_ITEM hb_itemDoC      ( char * szFunc, USHORT uiPCount, PHB_ITEM pItemArg1, ... );
+extern PHB_ITEM hb_itemDo       ( PHB_ITEM pItem, ULONG ulPCount, ... );
+extern PHB_ITEM hb_itemDoC      ( char * szFunc, ULONG ulPCount, ... );
 
 extern PHB_ITEM hb_itemArrayGet ( PHB_ITEM pArray, ULONG ulIndex );
 extern PHB_ITEM hb_itemArrayNew ( ULONG ulLen );

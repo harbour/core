@@ -109,7 +109,7 @@ extern char *   hb_errGetSubSystem      ( PHB_ITEM pError );
 extern USHORT   hb_errGetTries          ( PHB_ITEM pError );
 extern USHORT   hb_errLaunch            ( PHB_ITEM pError );
 extern PHB_ITEM hb_errNew               ( void );
-extern PHB_ITEM hb_errPutArgs           ( PHB_ITEM pError, USHORT uiArgCount, ... );
+extern PHB_ITEM hb_errPutArgs           ( PHB_ITEM pError, ULONG ulArgCount, ... );
 extern PHB_ITEM hb_errPutDescription    ( PHB_ITEM pError, char * szDescription );
 extern PHB_ITEM hb_errPutFileName       ( PHB_ITEM pError, char * szFileName );
 extern PHB_ITEM hb_errPutFlags          ( PHB_ITEM pError, USHORT uiFlags );
@@ -145,10 +145,10 @@ extern PHB_ITEM hb_errRT_New_Subst( USHORT uiSeverity, char * szSubSystem,
    USHORT uiOsCode,
    USHORT uiFlags );
 
-extern USHORT   hb_errRT_BASE           ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiArgCount, ... );
-extern USHORT   hb_errRT_BASE_Ext1      ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags, USHORT uiArgCount, ... );
-extern PHB_ITEM hb_errRT_BASE_Subst     ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiArgCount, ... );
-extern void     hb_errRT_BASE_SubstR    ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiArgCount, ... );
+extern USHORT   hb_errRT_BASE           ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, ULONG ulArgCount, ... );
+extern USHORT   hb_errRT_BASE_Ext1      ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags, ULONG ulArgCount, ... );
+extern PHB_ITEM hb_errRT_BASE_Subst     ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, ULONG ulArgCount, ... );
+extern void     hb_errRT_BASE_SubstR    ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, ULONG ulArgCount, ... );
 extern USHORT   hb_errRT_TERM           ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOSCode, USHORT uiFlags );
 extern USHORT   hb_errRT_DBCMD          ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
 extern USHORT   hb_errRT_TOOLS          ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );

@@ -168,12 +168,12 @@ CLASS TBrowse
    METHOD TApplyKey(nKey, o)
 #endif
 
-   /* PROTECTED:     /* P R O T E C T E D */
+   PROTECTED:     /* P R O T E C T E D */
+
    METHOD MGotoYX(nRow, nCol)             // Given screen coordinates nRow, nCol sets TBrowse cursor on underlaying cell
                                           // _M_GotoXY because this method will mostly be called to handle mouse requests
 
-
-   /*HIDDEN:         /* H I D D E N */
+   HIDDEN:         /* H I D D E N */
 
    METHOD LeftDetermine()                 // Determine leftmost unfrozen column in display
    METHOD DispCell(nColumn, nColor)       // Displays a single cell

@@ -1,3 +1,23 @@
+2001-07-18 09:06 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * source/rtl/tbrowse.prg
+     + activated scoping
+   * include/hbapierr.h
+     include/hbapiitm.h
+     include/hbvm.h
+     source/rtl/errorapi.c
+     source/vm/hvm.c
+     source/vm/itemapi.c
+     ! fixed va_start() use or, better, changed it to be compatible with OS/2 EMX GCC
+       compiler which REQUIRES that va_start() calls use a type which cannot be promoted
+       to something bigger. That is, this call is correct:
+       va_start(valist, ulUnsignedLongType)
+       while this one is not:
+       va_start(valist, usUnsignedShortType)
+       Using a type which can be promoted to a bigger one leads to memory corruption.
+       I think this requirement could exist even on other ANSI C compilers.
+     ! Removed workaround inside hb_itemDo() and hb_itemDoC() to prevent this corruption.
+
 2001-07-17 18:25 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * utils/hbpp/hbpp.c
      * Commented an exit() call in hb_compGenError() to continue processing after an error just like Harbour does.

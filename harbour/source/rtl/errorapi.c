@@ -647,21 +647,21 @@ PHB_ITEM hb_errPutFlags( PHB_ITEM pError, USHORT uiFlags )
    return pError;
 }
 
-PHB_ITEM hb_errPutArgs( PHB_ITEM pError, USHORT uiArgCount, ... )
+PHB_ITEM hb_errPutArgs( PHB_ITEM pError, ULONG ulArgCount, ... )
 {
    PHB_ITEM pArray;
-   USHORT uiArgPos;
+   ULONG ulArgPos;
    va_list va;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_errPutArgs(%p, %hu, ...)", pError, uiArgCount));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errPutArgs(%p, %hu, ...)", pError, ulArgCount));
 
-   pArray = hb_itemArrayNew( uiArgCount );
+   pArray = hb_itemArrayNew( ulArgCount );
 
    /* Build the array from the passed arguments. */
 
-   va_start( va, uiArgCount );
-   for( uiArgPos = 1; uiArgPos <= uiArgCount; uiArgPos++ )
-      hb_itemArrayPut( pArray, uiArgPos, va_arg( va, PHB_ITEM ) );
+   va_start( va, ulArgCount );
+   for( ulArgPos = 1; ulArgPos <= ulArgCount; ulArgPos++ )
+      hb_itemArrayPut( pArray, ulArgPos, va_arg( va, PHB_ITEM ) );
    va_end( va );
 
    /* Assign the new array to the object data item. */
@@ -746,19 +746,19 @@ HB_FUNC( __ERRRT_SBASE )
                          hb_param( 6, HB_IT_ANY ) );
 }
 
-USHORT hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiArgCount, ... )
+USHORT hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, ULONG ulArgCount, ... )
 {
    USHORT uiAction;
    PHB_ITEM pError;
 
    PHB_ITEM pArray, pArg;
    va_list va;
-   USHORT uiArgPos;
+   ULONG ulArgPos;
    BOOL bRelease = TRUE;
 
    /* Build the array from the passed arguments. */
-   va_start( va, uiArgCount );
-   if( ( ulSubCode == 1001 || ulSubCode == 1004 || ulSubCode == 1005 ) && uiArgCount == 1 )
+   va_start( va, ulArgCount );
+   if( ( ulSubCode == 1001 || ulSubCode == 1004 || ulSubCode == 1005 ) && ulArgCount == 1 )
    {
       pArray = va_arg( va, PHB_ITEM );
 
@@ -775,11 +775,11 @@ USHORT hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, ch
    }
    else
    {
-      pArray = hb_itemArrayNew( uiArgCount );
+      pArray = hb_itemArrayNew( ulArgCount );
 
-      for( uiArgPos = 1; uiArgPos <= uiArgCount; uiArgPos++ )
+      for( ulArgPos = 1; ulArgPos <= ulArgCount; ulArgPos++ )
       {
-         hb_itemArrayPut( pArray, uiArgPos, va_arg( va, PHB_ITEM ) );
+         hb_itemArrayPut( pArray, ulArgPos, va_arg( va, PHB_ITEM ) );
       }
    }
    va_end( va );
@@ -807,21 +807,21 @@ USHORT hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, ch
    return uiAction;
 }
 
-USHORT hb_errRT_BASE_Ext1( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags, USHORT uiArgCount, ... )
+USHORT hb_errRT_BASE_Ext1( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags, ULONG ulArgCount, ... )
 {
    USHORT uiAction;
    PHB_ITEM pError;
 
    PHB_ITEM pArray;
    va_list va;
-   USHORT uiArgPos;
+   ULONG ulArgPos;
 
-   pArray = hb_itemArrayNew( uiArgCount );
+   pArray = hb_itemArrayNew( ulArgCount );
 
    /* Build the array from the passed arguments. */
-   va_start( va, uiArgCount );
-   for( uiArgPos = 1; uiArgPos <= uiArgCount; uiArgPos++ )
-      hb_itemArrayPut( pArray, uiArgPos, va_arg( va, PHB_ITEM ) );
+   va_start( va, ulArgCount );
+   for( ulArgPos = 1; ulArgPos <= ulArgCount; ulArgPos++ )
+      hb_itemArrayPut( pArray, ulArgPos, va_arg( va, PHB_ITEM ) );
    va_end( va );
 
    pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, uiOsCode, uiFlags );
@@ -843,21 +843,21 @@ USHORT hb_errRT_BASE_Ext1( ULONG ulGenCode, ULONG ulSubCode, char * szDescriptio
    return uiAction;
 }
 
-PHB_ITEM hb_errRT_BASE_Subst( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiArgCount, ... )
+PHB_ITEM hb_errRT_BASE_Subst( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, ULONG ulArgCount, ... )
 {
    PHB_ITEM pRetVal;
    PHB_ITEM pError;
 
    PHB_ITEM pArray;
    va_list va;
-   USHORT uiArgPos;
+   ULONG ulArgPos;
 
-   pArray = hb_itemArrayNew( uiArgCount );
+   pArray = hb_itemArrayNew( ulArgCount );
 
    /* Build the array from the passed arguments. */
-   va_start( va, uiArgCount );
-   for( uiArgPos = 1; uiArgPos <= uiArgCount; uiArgPos++ )
-      hb_itemArrayPut( pArray, uiArgPos, va_arg( va, PHB_ITEM ) );
+   va_start( va, ulArgCount );
+   for( ulArgPos = 1; ulArgPos <= ulArgCount; ulArgPos++ )
+      hb_itemArrayPut( pArray, ulArgPos, va_arg( va, PHB_ITEM ) );
    va_end( va );
 
    pError = hb_errRT_New_Subst( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
@@ -879,18 +879,18 @@ PHB_ITEM hb_errRT_BASE_Subst( ULONG ulGenCode, ULONG ulSubCode, char * szDescrip
    return pRetVal;
 }
 
-void hb_errRT_BASE_SubstR( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiArgCount, ... )
+void hb_errRT_BASE_SubstR( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, ULONG ulArgCount, ... )
 {
    PHB_ITEM pError;
 
    PHB_ITEM pArray, pArg;
    va_list va;
-   USHORT uiArgPos;
+   ULONG ulArgPos;
    BOOL bRelease = TRUE;
 
    /* Build the array from the passed arguments. */
-   va_start( va, uiArgCount );
-   if( ( ulSubCode == 1001 || ulSubCode == 1004 || ulSubCode == 1005 ) && uiArgCount == 1 )
+   va_start( va, ulArgCount );
+   if( ( ulSubCode == 1001 || ulSubCode == 1004 || ulSubCode == 1005 ) && ulArgCount == 1 )
    {
       pArray = va_arg( va, PHB_ITEM );
 
@@ -907,11 +907,11 @@ void hb_errRT_BASE_SubstR( ULONG ulGenCode, ULONG ulSubCode, char * szDescriptio
    }
    else
    {
-      pArray = hb_itemArrayNew( uiArgCount );
+      pArray = hb_itemArrayNew( ulArgCount );
 
-      for( uiArgPos = 1; uiArgPos <= uiArgCount; uiArgPos++ )
+      for( ulArgPos = 1; ulArgPos <= ulArgCount; ulArgPos++ )
       {
-         hb_itemArrayPut( pArray, uiArgPos, va_arg( va, PHB_ITEM ) );
+         hb_itemArrayPut( pArray, ulArgPos, va_arg( va, PHB_ITEM ) );
       }
    }
    va_end( va );

@@ -215,14 +215,13 @@ BOOL hb_evalRelease( PEVALINFO pEvalInfo )
 
    NOTE: When calling hb_itemDo() with no arguments for the Harbour item being
          evaluated, you must use '(PHB_ITEM *) 0' as the third parameter.
+*/
 
-   NOTE: pItemArg1 is needed to workaround a bug in OS2/GCC. */
-
-PHB_ITEM hb_itemDo( PHB_ITEM pItem, USHORT uiPCount, PHB_ITEM pItemArg1, ... )
+PHB_ITEM hb_itemDo( PHB_ITEM pItem, ULONG ulPCount, ... )
 {
    PHB_ITEM pResult;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemDo(%p, %hu, %p, ...)", pItem, uiPCount, pItemArg1));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemDo(%p, %hu, ...)", pItem, ulPCount));
 
    if( pItem )
    {
@@ -232,16 +231,15 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, USHORT uiPCount, PHB_ITEM pItemArg1, ... )
 
          if( pDynSym )
          {
-            USHORT uiParam;
+            ULONG ulParam;
             va_list va;
 
-            va_start( va, pItemArg1 );
+            va_start( va, ulPCount );
             hb_vmPushSymbol( pDynSym->pSymbol );
             hb_vmPushNil();
-            if( uiPCount >= 1 ) hb_vmPush( pItemArg1 );
-            for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
+            for( ulParam = 1; ulParam <= ulPCount; ulParam++ )
                hb_vmPush( va_arg( va, PHB_ITEM ) );
-            hb_vmDo( uiPCount );
+            hb_vmDo( ulPCount );
             va_end( va );
 
             pResult = hb_itemNew( NULL );
@@ -252,16 +250,15 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, USHORT uiPCount, PHB_ITEM pItemArg1, ... )
       }
       else if( HB_IS_BLOCK( pItem ) )
       {
-         USHORT uiParam;
+         ULONG ulParam;
          va_list va;
 
-         va_start( va, pItemArg1 );
+         va_start( va, ulPCount );
          hb_vmPushSymbol( &hb_symEval );
          hb_vmPush( pItem );
-         if( uiPCount >= 1 ) hb_vmPush( pItemArg1 );
-         for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
+         for( ulParam = 1; ulParam <= ulPCount; ulParam++ )
             hb_vmPush( va_arg( va, PHB_ITEM ) );
-         hb_vmDo( uiPCount );
+         hb_vmDo( ulPCount );
          va_end( va );
 
          pResult = hb_itemNew( NULL );
@@ -269,16 +266,15 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, USHORT uiPCount, PHB_ITEM pItemArg1, ... )
       }
       else if( HB_IS_SYMBOL( pItem ) )
       {
-         USHORT uiParam;
+         ULONG ulParam;
          va_list va;
 
-         va_start( va, pItemArg1 );
+         va_start( va, ulPCount );
          hb_vmPushSymbol( pItem->item.asSymbol.value );
          hb_vmPushNil();
-         if( uiPCount >= 1 ) hb_vmPush( pItemArg1 );
-         for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
+         for( ulParam = 1; ulParam <= ulPCount; ulParam++ )
             hb_vmPush( va_arg( va, PHB_ITEM ) );
-         hb_vmDo( uiPCount );
+         hb_vmDo( ulPCount );
          va_end( va );
 
          pResult = hb_itemNew( NULL );
@@ -298,14 +294,13 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, USHORT uiPCount, PHB_ITEM pItemArg1, ... )
 
    NOTE: When calling hb_itemDoC() with no arguments for the Harbour function
          being called, you must use '(PHB_ITEM *) 0' as the third parameter.
+*/
 
-   NOTE: pItemArg1 is needed to workaround a bug in OS2/GCC. */
-
-PHB_ITEM hb_itemDoC( char * szFunc, USHORT uiPCount, PHB_ITEM pItemArg1, ... )
+PHB_ITEM hb_itemDoC( char * szFunc, ULONG ulPCount, ... )
 {
    PHB_ITEM pResult;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemDoC(%s, %hu, %p, ...)", szFunc, uiPCount, pItemArg1));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemDoC(%s, %hu, ...)", szFunc, ulPCount));
 
    if( szFunc )
    {
@@ -313,16 +308,15 @@ PHB_ITEM hb_itemDoC( char * szFunc, USHORT uiPCount, PHB_ITEM pItemArg1, ... )
 
       if( pDynSym )
       {
-         USHORT uiParam;
+         ULONG ulParam;
          va_list va;
 
-         va_start( va, pItemArg1 );
+         va_start( va, ulPCount );
          hb_vmPushSymbol( pDynSym->pSymbol );
          hb_vmPushNil();
-         if( uiPCount >= 1 ) hb_vmPush( pItemArg1 );
-         for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
+         for( ulParam = 1; ulParam <= ulPCount; ulParam++ )
             hb_vmPush( va_arg( va, PHB_ITEM ) );
-         hb_vmDo( uiPCount );
+         hb_vmDo( ulPCount );
          va_end( va );
 
          pResult = hb_itemNew( NULL );

@@ -3277,28 +3277,28 @@ HB_ITEM_PTR hb_vmEvalBlock( HB_ITEM_PTR pBlock )
 
 /* Evaluates a codeblock item using passed additional arguments
  * pBlock = an item of codeblock type to evaluate
- * uiArgCount = number of arguments passed to a codeblock
+ * ulArgCount = number of arguments passed to a codeblock
  * ... = the list of arguments of type PHB_ITEM
  *
  *for example:
  * retVal = hb_vmEvalBlockV( pBlock, 2, pParam1, pParam2 );
 */
-HB_ITEM_PTR hb_vmEvalBlockV( HB_ITEM_PTR pBlock, USHORT uiArgCount, ... )
+HB_ITEM_PTR hb_vmEvalBlockV( HB_ITEM_PTR pBlock, ULONG ulArgCount, ... )
 {
    va_list va;
-   USHORT i;
+   ULONG i;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmEvalBlockV(%p, %hu, ...)", pBlock, uiArgCount));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmEvalBlockV(%p, %hu, ...)", pBlock, ulArgCount));
 
    hb_vmPushSymbol( &hb_symEval );
    hb_vmPush( pBlock );
 
-   va_start( va, uiArgCount );
-   for( i = 1; i <= uiArgCount; i++ )
+   va_start( va, ulArgCount );
+   for( i = 1; i <= ulArgCount; i++ )
       hb_vmPush( va_arg( va, PHB_ITEM ) );
    va_end( va );
 
-   hb_vmDo( uiArgCount );
+   hb_vmDo( ulArgCount );
 
    return &hb_stack.Return;
 }

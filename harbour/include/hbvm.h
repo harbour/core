@@ -92,7 +92,7 @@ extern void    hb_vmFunction( USHORT uiParams ); /* executes a function saving i
 extern void    hb_vmSend( USHORT uiParams ); /* sends a message to an object */
 extern PHB_ITEM hb_vmEvalBlock( PHB_ITEM pBlockItem ); /* executes passed codeblock with no arguments */
 /* executes passed codeblock with variable number of arguments */
-extern PHB_ITEM hb_vmEvalBlockV( PHB_ITEM pBlockItem, USHORT uiArgCount, ... ); 
+extern PHB_ITEM hb_vmEvalBlockV( PHB_ITEM pBlockItem, ULONG ulArgCount, ... );
 
 /* Push */
 extern void    hb_vmPush( PHB_ITEM pItem );     /* pushes a generic item onto the stack */
