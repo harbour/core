@@ -12,12 +12,6 @@
 // Default files : From = strip.prg To = strip.out
 //
 
-#define MET_METHOD    0
-#define MET_DATA      1
-#define MET_CLASSDATA 2
-#define MET_INLINE    3
-#define MET_VIRTUAL   4
-
 function Main( cFrom, cTo )
 
    local oFrom
@@ -29,9 +23,8 @@ function Main( cFrom, cTo )
    cFrom := Default( cFrom, "strip.prg" )
    cTo   := Default( cTo,   "strip.out" )
 
-   oFrom := TDosFile(oTrick1):New( cFrom, "R" )
-   QOut("Next")
-   oTo   := TDosFile(oTrick2):New( cTo  , "W" )
+   oFrom := TDosFile(oTrick1):Stew( cFrom, "R" )
+   oTo   := TDosFile(oTrick2):Stew( cTo  , "W" )
 
    do while !oFrom:lEoF
       cOut := oFrom:Run()
@@ -48,59 +41,49 @@ return nil
 //
 // Generic DOS file handler
 //
-function TDosFile( oShitFile )                      // Parameter = dirty
+function TDosFile( oGoneFile )                      // Parameter = dirty
 
-   static hFile
+   static oFile
+   local oRet
 
-   QOut("In")
-   QOut(ValType(hFile))
+   if oFile == NIL                              // Second instance not correct
+      QOut("Here")
+      oFile := TClass():New( "TDosFile" )       // Create a new class def
 
-   if hFile == NIL                              // Second instance not correct
-      hFile := ClassCreate( "TDOSFILE", 9 )     // Create a new class def
+      oFile:AddData( "cFileName"  )             // Filename spec. by user
+      oFile:AddData( "hFile"      )             // File handle
+      oFile:AddData( "nLine"      )             // Current linenumber
+      oFile:AddData( "nError"     )             // Last error
+      oFile:AddData( "lEoF"       )             // End of file
+      oFile:AddData( "cBlock"     )             // Storage block
+      oFile:AddData( "nBlockSize" )             // Size of read-ahead buffer
+      oFile:AddData( "cMode"      )             // Mode of file use
+                                                // R = read, W = write
 
-      ClassAdd( hFile, "New"    , @New()     ,MET_METHOD)  // Constructor
-      ClassAdd( hFile, "Run"    , @Run()     ,MET_METHOD)  // Get/set data
-      ClassAdd( hFile, "Dispose", @Dispose() ,MET_METHOD)  // Clean up code
-      ClassAdd( hFile, "Read"   , @Read()    ,MET_METHOD)  // Read line
-      ClassAdd( hFile, "WriteLn", @WriteLn() ,MET_METHOD)  // Write line
-      ClassAdd( hFile, "Write"  , @Write()   ,MET_METHOD)  // Write without CR
-//    ClassAdd( hFile, "EoF"    , @EoF()     ,MET_METHOD)  // End of file as function
-      ClassAdd( hFile, "Goto"   , @Goto()    ,MET_METHOD)  // Go to line
-      ClassAdd( hFile, "hClass"    ,1 ,MET_DATA )
-      ClassAdd( hFile, "_hClass"   ,1 ,MET_DATA )
-      ClassAdd( hFile, "cFileName" ,2 ,MET_DATA )             // Filename spec. by user
-      ClassAdd( hFile, "_cFileName",2 ,MET_DATA )             // Filename spec. by user
-      ClassAdd( hFile, "hFile"     ,3 ,MET_DATA )             // File handle
-      ClassAdd( hFile, "_hFile"    ,3 ,MET_DATA )             // File handle
-      ClassAdd( hFile, "nLine"     ,4 ,MET_DATA )             // Current linenumber
-      ClassAdd( hFile, "_nLine"    ,4 ,MET_DATA )             // Current linenumber
-      ClassAdd( hFile, "nError"    ,5 ,MET_DATA )             // Last error
-      ClassAdd( hFile, "_nError"   ,5 ,MET_DATA )             // Last error
-      ClassAdd( hFile, "lEoF"      ,6 ,MET_DATA )             // End of file
-      ClassAdd( hFile, "_lEoF"     ,6 ,MET_DATA )             // End of file
-      ClassAdd( hFile, "cBlock"    ,7 ,MET_DATA )             // Storage block
-      ClassAdd( hFile, "_cBlock"   ,7 ,MET_DATA )             // Storage block
-      ClassAdd( hFile, "nBlockSize",8 ,MET_DATA )             // Size of read-ahead buffer
-      ClassAdd( hFile, "_nBlockSize",8 ,MET_DATA )             // Size of read-ahead buffer
-      ClassAdd( hFile, "cMode"     ,9 ,MET_DATA )             // Mode of file use
-      ClassAdd( hFile, "_cMode"    ,9 ,MET_DATA )             // Mode of file use
-                                              // R = read, W = write
+      oFile:AddMethod( "Stew"    , @Stew()     )  // Constructor
+      oFile:AddMethod( "Run"    , @Run()     )  // Get/set data
+      oFile:AddMethod( "Dispose", @Dispose() )  // Clean up code
+      oFile:AddMethod( "Read"   , @Read()    )  // Read line
+      oFile:AddMethod( "WriteLn", @WriteLn() )  // Write line
+      oFile:AddMethod( "Write"  , @Write()   )  // Write without CR
+//    oFile:AddMethod( "EoF"    , @EoF()     )  // End of file as function
+      oFile:AddMethod( "Goto"   , @Goto()    )  // Go to line
 
+      oFile:Create()
    endif
-   QOut("Out")
-   QOut( ValType(hFile), hFile )
+   oRet := oFile:Instance()
 
-return ClassInstance( hFile )
+return oRet
 
 
 //
-// Method DosFile:New -> Create a new dosfile
+// Method DosFile:Stew -> Create a new dosfile
 //
 // <cFile>      file name. No wild characters
 // <cMode>      mode for opening. Default "R"
 // <nBlockSize> Optional maximum blocksize
 //
-function New( cFileName, cMode, nBlock )
+function Stew( cFileName, cMode, nBlock )
 
    local self := QSelf()                        // Get self
 
@@ -178,6 +161,7 @@ function Read()
    elseif ::cMode != "R"
       QOut( "File ", cFileName, " not open for reading" )
    elseif !::lEoF
+
       if Len(::cBlock) == 0                     // Read new block
          cBlock := fReadStr( ::hFile, ::nBlockSize )
          if len(cBlock) == 0
