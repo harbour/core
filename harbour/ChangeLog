@@ -1,4 +1,9 @@
 19990816-12:03 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/vm/hvm.c
+     * Enhanced ProcName() returned information.
+     (it generates the name of the Class and the method).
+
+19990816-12:03 GMT+1 Antonio Linares <alinares@fivetech.com>
    * include/ctoharb.h
      + Added new hb_callStackShow() prototype
    * source/vm/hvm.c
