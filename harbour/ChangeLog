@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+    Moved mainlgtk.c from source/vm to contrib/hgf/gtk and
+    updated Makefile to include it in library. 
+        
+2002-05-06 13:50 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   ! source/compiler/harbour.c
     ! Commented out the parameter checking entries for QOUT and QQOUT,
       because they have no limit on the number or type of parameters.
