@@ -1,3 +1,7 @@
+20000712-18:18 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+
+
 2000-07-12 16:08 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
     * source/rdd/dbf1.c
       * fixed a bug in dbfUpdateRecord() which caused problems with
@@ -22,10 +26,10 @@
 
     *source/common/hash.c
         * items can be removed from the hash table
-        
+
     *source/compiler/harbour.l
         * fixed handling of 'with()' and '( with )' syntax
-        
+
     *tests/keywords.prg
         * updated with few additional tests
 
@@ -45,23 +49,23 @@
      ! Fixed PP dependency for HARBOUR.EXE
 
    * source/pp/ppcore.c
-   * source/rdd/dbfntx/dbfntx1.c 
+   * source/rdd/dbfntx/dbfntx1.c
      - Removed // comments
 
-   * source/rdd/dbfntx/dbfntx1.c 
+   * source/rdd/dbfntx/dbfntx1.c
      ! Fixed some BCC warnings.
 
    * source/rdd/dbcmd.c
    * source/rtl/disksphb.c
-   * source/rtl/errorapi.c 
+   * source/rtl/errorapi.c
    * source/rtl/tget.prg
      * Formatting
 
    * utils/hbdoc/Makefile
      ! Fixed TAB
 
-   * utils/hbextern/hbextern.prg 
-   * utils/hbtest/rt_misc.prg 
+   * utils/hbextern/hbextern.prg
+   * utils/hbtest/rt_misc.prg
      * = assigments -> :=
 
    * include/hbcomp.h
@@ -71,7 +75,7 @@
      - Removed HB_NESTED_COMPILE.
 
    - include/hbstruc.ch
-   - source/rtl/hbstruc.prg 
+   - source/rtl/hbstruc.prg
      - Removed.
 
 2000-07-11 09:30 UTC+0800 Ron Pinkas <ron@profit-master.com>
