@@ -183,61 +183,62 @@ int ParseDirective( char* sLine )
      ParseIfdef ( sLine, FALSE ); /* --- #ifndef  --- */
 
    else if ( nCondCompile==0 || aCondCompile[nCondCompile-1])
- {
-  if ( i == 7 && memcmp ( sDirective, "INCLUDE", 7 ) == 0 )
-  {    /* --- #include --- */
-   char cDelimChar;
+   {
+      if ( i == 7 && memcmp ( sDirective, "INCLUDE", 7 ) == 0 )
+      {    /* --- #include --- */
+         char cDelimChar;
 
-   if ( *sLine != '\"' && *sLine != '\'' && *sLine != '<' )
-     GenError( _szPErrors, 'P', ERR_WRONG_NAME, NULL, NULL );
+         if ( *sLine != '\"' && *sLine != '\'' && *sLine != '<' )
+            GenError( _szPErrors, 'P', ERR_WRONG_NAME, NULL, NULL );
 
-   cDelimChar = *sLine;
-   if (cDelimChar == '<')
-     cDelimChar = '>';
+         cDelimChar = *sLine;
+         if (cDelimChar == '<')
+            cDelimChar = '>';
 
-   sLine++; i = 0;
-   while ( *(sLine+i) != '\0' && *(sLine+i) != cDelimChar ) i++;
-   if ( *(sLine+i) != cDelimChar )
-     GenError( _szPErrors, 'P', ERR_WRONG_NAME, NULL, NULL );
-   *(sLine+i) = '\0';
+         sLine++; i = 0;
+         while ( *(sLine+i) != '\0' && *(sLine+i) != cDelimChar ) i++;
+         if ( *(sLine+i) != cDelimChar )
+            GenError( _szPErrors, 'P', ERR_WRONG_NAME, NULL, NULL );
+         *(sLine+i) = '\0';
 
-   /*   if ((handl_i = fopen(sLine, "r")) == NULL) */
-   if ( !OpenInclude( sLine, _pIncludePath, &handl_i, (cDelimChar == '>') ) )
-     GenError( _szPErrors, 'P', ERR_CANNOT_OPEN, sLine, NULL );
-   lInclude++;
-   Hp_Parse(handl_i, 0 );
-   lInclude--;
-   fclose(handl_i);
-  }
+         /*   if ((handl_i = fopen(sLine, "r")) == NULL) */
+         if ( !OpenInclude( sLine, _pIncludePath, &handl_i, (cDelimChar == '>') ) )
+            GenError( _szPErrors, 'P', ERR_CANNOT_OPEN, sLine, NULL );
+         lInclude++;
+         Hp_Parse(handl_i, 0 );
+         lInclude--;
+         fclose(handl_i);
+      }
 
-  else if ( i == 6 && memcmp ( sDirective, "DEFINE", 6 ) == 0 )
-   ParseDefine ( sLine );   /* --- #define  --- */
+      else if ( i == 6 && memcmp ( sDirective, "DEFINE", 6 ) == 0 )
+         ParseDefine ( sLine );   /* --- #define  --- */
 
-  else if ( i == 5 && memcmp ( sDirective, "UNDEF", 5 ) == 0 )
-   ParseUndef ( sLine );    /* --- #undef  --- */
+      else if ( i == 5 && memcmp ( sDirective, "UNDEF", 5 ) == 0 )
+         ParseUndef ( sLine );    /* --- #undef  --- */
 
-  else if ( (i == 7 && memcmp ( sDirective, "COMMAND", 7 ) == 0) ||
+      else if ( (i == 7 && memcmp ( sDirective, "COMMAND", 7 ) == 0) ||
             (i == 8 && memcmp ( sDirective, "XCOMMAND", 8 ) == 0) )
                                 /* --- #command  --- */
-   ParseCommand ( sLine, (i==7)? FALSE:TRUE, TRUE );
+         ParseCommand ( sLine, (i==7)? FALSE:TRUE, TRUE );
 
-  else if ( (i == 9 && memcmp ( sDirective, "TRANSLATE", 9 ) == 0) ||
+      else if ( (i == 9 && memcmp ( sDirective, "TRANSLATE", 9 ) == 0) ||
             (i == 10 && memcmp ( sDirective, "XTRANSLATE", 10 ) == 0) )
                                 /* --- #translate  --- */
-   ParseCommand ( sLine, (i==9)? FALSE:TRUE, FALSE );
+         ParseCommand ( sLine, (i==9)? FALSE:TRUE, FALSE );
 
-  else if ( i == 6 && memcmp ( sDirective, "STDOUT", 6 ) == 0 )
-   printf ( "%s\n", sLine ); /* --- #stdout  --- */
+      else if ( i == 6 && memcmp ( sDirective, "STDOUT", 6 ) == 0 )
+         printf ( "%s\n", sLine ); /* --- #stdout  --- */
 
-  else if ( i == 5 && memcmp ( sDirective, "ERROR", 5 ) == 0 )
-  {                        /* --- #error  --- */
-   GenError( _szPErrors, 'P', ERR_EXPLICIT, sLine, NULL );
-  }
-  else if ( i == 4 && memcmp ( sDirective, "LINE", 4 ) == 0 )
-    return -1;
-  else GenError( _szPErrors, 'P', ERR_WRONG_DIRECTIVE, sDirective, NULL );
- }
- return 0;
+      else if ( i == 5 && memcmp ( sDirective, "ERROR", 5 ) == 0 )
+                              /* --- #error  --- */
+         GenError( _szPErrors, 'P', ERR_EXPLICIT, sLine, NULL );
+      
+      else if ( i == 4 && memcmp ( sDirective, "LINE", 4 ) == 0 )
+         return -1;
+      else
+         GenError( _szPErrors, 'P', ERR_WRONG_DIRECTIVE, sDirective, NULL );
+   }
+   return 0;
 }
 
 int ParseDefine( char* sLine)
@@ -273,7 +274,6 @@ int ParseDefine( char* sLine)
    }
    else
       GenError( _szPErrors, 'P', ERR_DEFINE_ABSENT, NULL, NULL );
-
    return 0;
 }
 
@@ -296,16 +296,14 @@ DEFINES* AddDefine ( char* defname, char* value )
 
 int ParseUndef( char* sLine)
 {
- char defname[MAX_NAME];
- DEFINES* stdef;
+   char defname[MAX_NAME];
+   DEFINES* stdef;
 
- NextWord( &sLine, defname, FALSE );
+   NextWord( &sLine, defname, FALSE );
 
- if ( ( stdef = DefSearch(defname) ) != NULL )
- {
-  stdef->name = NULL;
- }
- return 0;
+   if ( ( stdef = DefSearch(defname) ) != NULL )
+      stdef->name = NULL;
+   return 0;
 }
 
 int ParseIfdef( char* sLine, int usl)
@@ -315,20 +313,20 @@ int ParseIfdef( char* sLine, int usl)
 
    if ( nCondCompile==0 || aCondCompile[nCondCompile-1])
    {
-     NextWord( &sLine, defname, FALSE );
-     if ( *defname == '\0' )
-       GenError( _szPErrors, 'P', ERR_DEFINE_ABSENT, NULL, NULL );
+      NextWord( &sLine, defname, FALSE );
+      if ( *defname == '\0' )
+         GenError( _szPErrors, 'P', ERR_DEFINE_ABSENT, NULL, NULL );
    }
    if ( nCondCompile == maxCondCompile )
    {
-     maxCondCompile += 5;
-     aCondCompile = (int*)hb_xrealloc( aCondCompile, sizeof( int ) * maxCondCompile );
+      maxCondCompile += 5;
+      aCondCompile = (int*)hb_xrealloc( aCondCompile, sizeof( int ) * maxCondCompile );
    }
    if ( nCondCompile==0 || aCondCompile[nCondCompile-1])
    {
-     if ( ( (stdef = DefSearch(defname)) != NULL && usl )
-       || ( stdef == NULL && !usl ) ) aCondCompile[nCondCompile] = 1;
-     else aCondCompile[nCondCompile] = 0;
+      if ( ( (stdef = DefSearch(defname)) != NULL && usl )
+            || ( stdef == NULL && !usl ) ) aCondCompile[nCondCompile] = 1;
+      else aCondCompile[nCondCompile] = 0;
    }
    else aCondCompile[nCondCompile] = 0;
    nCondCompile++;
@@ -1222,6 +1220,10 @@ int getExpReal ( char *expreal, char **ptri, int prlist, int maxrez )
      else if ( **ptri == '[' ) { StBr2++; State = STATE_BRACKET; }
      else if ( **ptri == '{' ) { StBr3++; State = STATE_BRACKET; }
      else if ( **ptri == ',' ) { if ( !prlist ) rez = 1; State = STATE_EXPRES; }
+     else if( **ptri == '.' && *(*ptri-2) == '.' &&
+                         ( *(*ptri-1) == 'T' || *(*ptri-1) == 'F' ||
+                           *(*ptri-1) == 't' || *(*ptri-1) == 'f' ) )
+        State = STATE_ID_END;
      else State = STATE_EXPRES;
      break;
   }

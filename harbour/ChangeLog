@@ -1,3 +1,7 @@
+19990924-10:05 GMT+3 Alexander Kresin
+  * source/hbpp/hbpp.c
+    * Fixed bug, noted by Matteo Baccan
+
 19990924-07:18 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/hbpp/hbpp.c
