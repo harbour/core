@@ -1,3 +1,11 @@
+19990828-08:40 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/vm/hvm.c
+     * Fixed hb_vmDebuggerEndProc()
+       (now it properly saves the previous PRG returned value)
+   * source/debug/debugger.prg
+     * CallStack now shows Classes and methods names
+     * It properly works debugging object oriented code
+
 19990827-18:46 GMT+1 Bruno Cantero <bruno@issnet.net>
    * source/rtl/filesys.c
      * Now hb_fsCommit() work with MSVC
