@@ -222,7 +222,7 @@ typedef struct _HARBVARS
    int          yy_start         ;
    int          yychar           ;
    void *       yylval           ;
-#ifdef YYLSP_   NEEDED
+#ifdef YYLSP_NEEDED
    void *       yylloc           ;
 #endif
    int          yynerrs          ;
