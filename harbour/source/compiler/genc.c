@@ -463,7 +463,8 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
             case HB_P_MODULENAME:
                fprintf( yyc, "\tHB_P_MODULENAME," );
-               if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %s */", ( char * ) pFunc->pCode + lPCodePos++ + 1 );
+               if( hb_comp_bGenCVerbose )
+                  fprintf( yyc, "\t/* %s */", ( char * ) pFunc->pCode + lPCodePos + 1 );
                fprintf( yyc, "\n" );
                lPCodePos++;
                while( pFunc->pCode[ lPCodePos ] )
