@@ -1,3 +1,13 @@
+Changelog: 2000-08-12 20:00 UTC+0500 April White <awhite@user.rose.com>
+   disregard my: 2000-07-29 03:00 UTC+0500
+   TODO: remove the old hb*.txt files from doc/en
+   * doc/en/
+     + hb_api.txt hb_apier.txt hb_apifs.txt hb_apigt.txt hb_apiit.txt
+     + hb_apiln.txt hb_apird.txt hb_compa.txt hb_date.txt hb_macro.txt
+     + hb_set.txt hb_vm.txt
+   * doc/genhtm.rsp
+     + added references to the above
+
 2000-08-12 15:20 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/pp/ppcode.c
