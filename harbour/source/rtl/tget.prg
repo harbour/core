@@ -453,7 +453,9 @@ METHOD VarPut( xValue, lReFormat ) CLASS Get
          endif
          ::Type     := ValType( xValue )
          ::nDispLen := NIL
-         ::Picture( ::cPicture )
+         if !Empty( ::cPicture )
+            ::Picture( ::cPicture )
+         endif
       endif
    endif
 
@@ -1229,4 +1231,3 @@ METHOD Block( bBlock ) CLASS Get
    endif
 
 return ::bBlock
-
