@@ -17,7 +17,7 @@ Function GetSourceFiles( lSubdir )
 
      Local adirs AS ARRAY
      Local aRet AS ARRAY := {}
-     Local lLinux    := At( 'linux', Os() ) > 0
+     Local lLinux    := At( 'linux', lower(Os()) ) > 0
      Local cdir as String := If( !llinux, '\' + Curdir() + '\', '/' + Curdir() + '/' )
      Local aStru     := { cDir }
      Local aData AS ARRAY
@@ -200,7 +200,7 @@ Return cPath
 Function GetSourceDirMacros()
 
      Local adirs AS ARRAY
-     Local lLinux := At( 'linux', Os() ) > 0
+     Local lLinux := At( 'linux', lower(Os()) ) > 0
      Local cdir as String := If( llinux, '/' + Curdir() + '/', '\' + Curdir() + '\' )
      Local aStru  := { cDir }
 

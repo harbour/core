@@ -71,13 +71,16 @@
 HB_FUNC(SQLCONNECT) // MYSQL *mysql_real_connect(MYSQL*, char * host, char * user, char * password, char * db, uint port, char *, uint flags)
 {
    MYSQL * mysql;
-
+   const char *szHost=hb_parc(1);
+   const char *szUser=hb_parc(2);
+   const char *szPass=hb_parc(3);
 #if MYSQL_VERSION_ID > 32200
       /* from 3.22.x of MySQL there is a new parameter in mysql_real_connect() call, that is char * db
          which is not used here */
-   if ( (mysql = mysql_init((MYSQL*) 0)) )
+      if ( (mysql = mysql_init((MYSQL*) 0)) )
+
    {
-      if( mysql_real_connect( mysql, _parc(1), _parc(2), _parc(3), NULL, 0, NULL, 0) )
+        if( mysql_real_connect( mysql, szHost, szUser, szPass, 0, MYSQL_PORT, NULL, 0) )
         _retnl((long) mysql);
       else
       {
@@ -103,7 +106,8 @@ HB_FUNC(SQLCLOSE) // void mysql_close(MYSQL *mysql)
 
 HB_FUNC(SQLSELECTD) // int mysql_select_db(MYSQL *, char *)
 {
-   _retnl((long) mysql_select_db((MYSQL *)_parnl(1), _parc(2)));
+   const   char *db=hb_parc(2);
+   _retnl((long) mysql_select_db((MYSQL *)_parnl(1), db));
 }
 
 

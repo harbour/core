@@ -1,3 +1,10 @@
+2001-10-27 22:40 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
+  * contrib/mysql/mysql.c
+    * Fixed an small bug on SQLCONNECT
+  *utils/hbmake/hbmutils.prg
+    * Fixed an small bug, on GetSourceFiles() and GetMacrosDir() with was not returning
+      the valid files names/directory names under linux
+
 2001-10-27 20:15 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx1.c
     * logical index support added ( code posted by Matteo Baccan )
