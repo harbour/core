@@ -222,7 +222,8 @@ HB_FUNC( HB_LANGSELECT )
 
 HB_FUNC( HB_LANGNAME )
 {
-   hb_retc_buffer( hb_langName() );
+   char * pszName = hb_langName();
+   hb_retc_buffer( pszName );
 }
 
 HB_FUNC( HB_LANGERRMSG )
