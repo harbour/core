@@ -26,10 +26,13 @@
  *    1/11/2000  Remove the code to add the Author name and Source file
  *                Name to the output file.
  *
- *     V1.02    Added suport for WWW output Format
+ *     V1.02
+ *    1/12/2000  Added suport for WWW output Format
  *              Striped out the "<" and ">" delimeter for WWW outPut,
  *              since the "<>" are HTML Command delimeters
  *              Output files names are in lower case to Linux Compatibility
+ *
+ *    1/13/2000  Added the link for the  HARBOUR GPL LICENSE
  */
 
 /*
@@ -390,6 +393,7 @@ ELSEIF lWWW
      oHtm:WritePar("HARBOUR")
      oHtm:WriteLink("OverView")
      oHtm:WriteLink("License")
+     oHtm:WriteLink("http://www.gnu.org/copyleft/gpl")
      oHtm:WritePar("")
      oHtm:WritePar("Functions A-M")
      asort(awww)
@@ -2311,7 +2315,7 @@ WHILE .t.
                     xPos:=AT(" ",xTemp)
                     IF xPos>0
                          nLen-=LEN(xTemp)+3
-                         xTemp:=SUBSTR(xTemp,1,xPos-1)+'_'+SUBSTR(xTemp,xPos+1)
+         
                          cTemp:=xTemp
                     ELSE
                          nLen-=LEN(xTemp)+2
@@ -2334,7 +2338,7 @@ WHILE .t.
                          xPos:=AT(" ",xTemp)
                          IF xPos>0
                               nLen-=LEN(xTemp)+3
-                              xTemp:=SUBSTR(xTemp,1,xPos-1)+'_'+SUBSTR(xTemp,xPos+1)
+
                               cTemp:=xTemp
                          ELSE
                               nLen-=LEN(xTemp)+2
@@ -2365,11 +2369,11 @@ endif
 return nil
 function                         ProcStatusRTF(nWriteHandle,cBuffer)
 IF substr(alltrim(cBuffer),1)=="R"
-     nWriteHandle:WritePar("   Ready"+CRLF):EndPar()
+     nWriteHandle:WritePar("   Ready"):EndPar()
 ELSEIF substr(alltrim(cBuffer),1)=="S"
-     nWriteHandle:WritePar("   Started"+CRLF):EndPar()
+     nWriteHandle:WritePar("   Started"):EndPar()
 ELse
-     nWriteHandle:WritePar("   Not Started"+CRLF):EndPar()
+     nWriteHandle:WritePar("   Not Started"):EndPar()
 endif
 return nil
 
@@ -2745,7 +2749,7 @@ FOR i=1 TO nFiles
                               If !empty(cBuffer)
                                    oHtm:WriteParBold("Status")
                               Endif
-                              ProcStatusRtf(oHtm,cBuffer)
+                              ProcStatusWww(oHtm,cBuffer)
 
 					ELSE
 
@@ -2844,3 +2848,12 @@ WHILE .t.
                END
 ENDDO
 RETURN nil
+function                         ProcStatusWww(nWriteHandle,cBuffer)
+IF substr(alltrim(cBuffer),1)=="R"
+     nWriteHandle:WritePar("   Ready")
+ELSEIF substr(alltrim(cBuffer),1)=="S"
+     nWriteHandle:WritePar("   Started")
+ELse
+     nWriteHandle:WritePar("   Not Started")
+endif
+return nil
