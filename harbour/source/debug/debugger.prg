@@ -135,6 +135,8 @@ CLASS TDebugger
    DATA   lGo
    DATA   cClrDialog
    DATA   aColors
+   DATA   lCaseSensitive
+   DATA   cSearchString
 
    METHOD New()
    METHOD Activate( cModuleName )
@@ -166,6 +168,11 @@ CLASS TDebugger
    METHOD ViewSets()
    METHOD WndVarsLButtonDown( nMRow, nMCol )
    METHOD LineNumbers()          // Toggles numbering of source code lines
+   METHOD Locate()
+   METHOD FindNext()
+   METHOD FindPrevious()
+   METHOD SearchLine()
+   METHOD ToggleCaseSensitive() INLINE ::lCaseSensitive := !::lCaseSensitive
 
 ENDCLASS
 
@@ -194,6 +201,8 @@ METHOD New() CLASS TDebugger
    ::aCallStack     := {}
    ::lGo            := .f.
    ::aVars          := {}
+   ::lCaseSensitive := .f.
+   ::cSearchString  := ""
 
 return Self
 
@@ -1031,6 +1040,65 @@ METHOD LineNumbers() CLASS TDebugger
    ::oBrwText:RefreshAll()
 
 return Self
+
+METHOD Locate( nMode ) CLASS TDebugger
+
+   local cValue
+
+   DEFAULT nMode TO 0
+
+   cValue := ::InputBox( "Search string", ::cSearchString )
+
+   if empty( cValue )
+      return nil
+   endif
+
+   ::cSearchString := cValue
+
+return ::oBrwText:Search( ::cSearchString, ::lCaseSensitive, 0 )
+
+METHOD FindNext() CLASS TDebugger
+
+   local lFound
+
+   if Empty( ::cSearchString )
+      lFound := ::Locate( 1 )
+   else
+      lFound := ::oBrwText:Search( ::cSearchString, ::lCaseSensitive, 1 )
+   endif
+
+return lFound
+
+METHOD FindPrevious() CLASS TDebugger
+
+   local lFound
+
+   if Empty( ::cSearchString )
+      lFound := ::Locate( 2 )
+   else
+      lFound := ::oBrwText:Search( ::cSearchString, ::lCaseSensitive, 2 )
+   endif
+
+return lFound
+
+METHOD SearchLine() CLASS TDebugger
+
+   local cLine
+
+   cLine := ::InputBox( "Line number", "1" )
+
+   if Val( cLine ) > 0
+      ::oBrwText:GotoLine ( Val( cLine ) )
+   endif
+
+return nil
+
+METHOD CaseSensitive() CLASS TDebugger
+
+   ::lCaseSensitive := !::lCaseSensitive
+
+return nil
+
 
 function __DbgColors()
 

@@ -47,6 +47,7 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
 
    local oMenu
    local oLineNumbers
+   local oCaseSensitive
 
    MENU oMenu
       MENUITEM " ~File "
@@ -60,12 +61,13 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
 
       MENUITEM " ~Locate "
       MENU
-         MENUITEM " ~Find"            ACTION Alert( "Not implemented yet!" )
-         MENUITEM " ~Next"            ACTION Alert( "Not implemented yet!" )
-         MENUITEM " ~Previous"        ACTION Alert( "Not implemented yet!" )
-         MENUITEM " ~Goto line..."    ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Find"            ACTION oDebugger:Locate()
+         MENUITEM " ~Next"            ACTION oDebugger:FindNext()
+         MENUITEM " ~Previous"        ACTION oDebugger:FindPrevious()
+         MENUITEM " ~Goto line..."    ACTION oDebugger:SearchLine()
          SEPARATOR
-         MENUITEM " ~Case sensitive " ACTION Alert( "Not implemented yet!" )
+         MENUITEM oCaseSensitive PROMPT " ~Case sensitive " ;
+            ACTION ( oDebugger:ToggleCaseSensitive(), oCaseSensitive:Toggle() )
       ENDMENU
 
       MENUITEM " ~View "

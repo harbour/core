@@ -74,6 +74,8 @@ CLASS TBrwText FROM TEditor
 
    METHOD   ToggleBreakPoint(nRow, lSet)     // if lSet is .T. there is a BreakPoint active at nRow,
                                              // if lSet is .F. BreakPoint at nRow has to be removed
+   METHOD   Search( cString, lCaseSensitive, nMode ) // 0 from Begining to end, 1 Forward, 2 Backwards
+
 ENDCLASS
 
 
@@ -218,4 +220,43 @@ METHOD ToggleBreakPoint(nRow, lSet) CLASS TBrwText
    endif
 
 return Self
+
+METHOD Search( cString, lCaseSensitive, nMode ) CLASS TBrwText
+
+   local nFrom, nTo, nStep, nFor
+   local lFound
+
+   DEFAULT lCaseSensitive TO .f., ;
+           nMode          TO 0
+
+   lFound := .f.
+
+   if !lCaseSensitive
+      cString := Upper( cString )
+   endif
+
+   do case
+   case nMode == 0 // From Top
+      nFrom := 1
+      nTo   := ::naTextLen
+      nStep := 1
+   case nMode == 1 // Forward
+      nFrom := Min( ::nRow + 1, ::naTextLen )
+      nTo   := ::naTextLen
+      nStep := 1
+   case nMode == 2 // Forward
+      nFrom := Max( ::nRow - 1, 1 )
+      nTo   := 1
+      nStep := -1
+   end case
+
+   for nFor := nFrom to nTo Step nStep
+      if cString $ iif( lCaseSensitive, ::GetLine( nFor ), Upper( ::GetLine( nFor ) ) )
+         lFound := .t.
+         ::GotoLine( nFor )
+         exit
+      endif
+   next
+
+return lFound
 
