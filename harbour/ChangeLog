@@ -1,7 +1,7 @@
 20000415-12:38 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/net.c
-     ! Experimental NETNAME() support for DOS. I currently GPFs with DJGPP.
+     ! Experimental NETNAME() support for DOS. It currently GPFs with DJGPP.
 
    * include/hbdefs.h
      - Removed #include <i86.h> for __WATCOMC__, since it seems that dos.h
