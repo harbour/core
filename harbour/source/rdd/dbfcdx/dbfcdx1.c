@@ -272,83 +272,83 @@ HB_INIT_SYMBOLS_END( dbfcdx1__InitSymbols )
 
 static RDDFUNCS cdxSuper = { 0 };
 
-ERRCODE cdxOrderListClear( AREAP pArea );
+static ERRCODE cdxOrderListClear( AREAP pArea );
 
-LPKEYINFO hb_cdxKeyNew( void );
-void hb_cdxKeyFree( LPKEYINFO pKey );
-int hb_cdxKeyCompare( LPKEYINFO pKey1, LPKEYINFO pKey2, USHORT * EndPos, BOOL Exact );
+static LPKEYINFO hb_cdxKeyNew( void );
+static void hb_cdxKeyFree( LPKEYINFO pKey );
+static int hb_cdxKeyCompare( LPKEYINFO pKey1, LPKEYINFO pKey2, USHORT * EndPos, BOOL Exact );
 
-LPTAGINFO hb_cdxTagNew( LPINDEXINFO PIF, char * ITN, LONG TagHdr );
-void hb_cdxTagFree( LPTAGINFO pTag );
-void hb_cdxTagIndexTagNew( LPTAGINFO pTag, char * KeyExp, PHB_ITEM pKeyItem,
-                           BYTE bType, USHORT uiLen, char * ForExp,
-                           PHB_ITEM pForItem, BOOL Ascnd, BOOL Uniq );
-void hb_cdxTagDoIndex( LPTAGINFO pTag );
-void hb_cdxTagEmptyIndex( LPTAGINFO pTag );
-void hb_cdxTagTagStore( LPTAGINFO pTag );
-void hb_cdxTagTagOpen( LPTAGINFO pTag, BYTE bCode );
-void hb_cdxTagTagClose( LPTAGINFO pTag );
-LONG hb_cdxTagNewRoot( LPTAGINFO pTag );
-void hb_cdxTagPageLoad( LPTAGINFO pTag, LPPAGEINFO pPage );
-void hb_cdxTagKeyRead( LPTAGINFO pTag, BYTE bTypRead );
-void hb_cdxTagKeyAdd( LPTAGINFO pTag, LPKEYINFO pKey );
-void hb_cdxTagPageStore( LPTAGINFO pTag, LPPAGEINFO PIK );
-void hb_cdxTagExtNodeWrite( LPTAGINFO pTag, LONG PN, LPCDXDATA pData, LPPAGEINFO PIK );
-USHORT hb_cdxTagFillExternalNode( LPTAGINFO pTag, LPCDXDATA pData, LPPAGEINFO PIK,
-                                  USHORT kcnt, USHORT ck, LPKEYINFO * p );
-void hb_cdxTagExtNodeBuild( LPTAGINFO pTag, LPCDXDATA pData, LPPAGEINFO pPage );
-void hb_cdxTagTagLoad( LPTAGINFO pTag );
-void hb_cdxTagSetRoot( LPTAGINFO pTag, LPPAGEINFO PIK );
-void hb_cdxTagIntNodeWrite( LPTAGINFO pTag, LONG PN, LPCDXDATA pData, LPPAGEINFO PIK );
-USHORT hb_cdxTagFillInternalNode( LPTAGINFO pTag, LPCDXDATA pData, LPPAGEINFO PIK,
-                                  USHORT kcnt, USHORT ck, LPKEYINFO * p );
-void hb_cdxTagIntNodeBuild( LPTAGINFO pTag, LPCDXDATA pData, LPPAGEINFO pPage );
-LONG hb_cdxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey );
+static LPTAGINFO hb_cdxTagNew( LPINDEXINFO PIF, char * ITN, LONG TagHdr );
+static void hb_cdxTagFree( LPTAGINFO pTag );
+static void hb_cdxTagIndexTagNew( LPTAGINFO pTag, char * KeyExp, PHB_ITEM pKeyItem,
+                                  BYTE bType, USHORT uiLen, char * ForExp,
+                                  PHB_ITEM pForItem, BOOL Ascnd, BOOL Uniq );
+static void hb_cdxTagDoIndex( LPTAGINFO pTag );
+static void hb_cdxTagEmptyIndex( LPTAGINFO pTag );
+static void hb_cdxTagTagStore( LPTAGINFO pTag );
+static void hb_cdxTagTagOpen( LPTAGINFO pTag, BYTE bCode );
+static void hb_cdxTagTagClose( LPTAGINFO pTag );
+static LONG hb_cdxTagNewRoot( LPTAGINFO pTag );
+static void hb_cdxTagPageLoad( LPTAGINFO pTag, LPPAGEINFO pPage );
+static void hb_cdxTagKeyRead( LPTAGINFO pTag, BYTE bTypRead );
+static void hb_cdxTagKeyAdd( LPTAGINFO pTag, LPKEYINFO pKey );
+static void hb_cdxTagPageStore( LPTAGINFO pTag, LPPAGEINFO PIK );
+static void hb_cdxTagExtNodeWrite( LPTAGINFO pTag, LONG PN, LPCDXDATA pData, LPPAGEINFO PIK );
+static USHORT hb_cdxTagFillExternalNode( LPTAGINFO pTag, LPCDXDATA pData, LPPAGEINFO PIK,
+                                         USHORT kcnt, USHORT ck, LPKEYINFO * p );
+static void hb_cdxTagExtNodeBuild( LPTAGINFO pTag, LPCDXDATA pData, LPPAGEINFO pPage );
+static void hb_cdxTagTagLoad( LPTAGINFO pTag );
+static void hb_cdxTagSetRoot( LPTAGINFO pTag, LPPAGEINFO PIK );
+static void hb_cdxTagIntNodeWrite( LPTAGINFO pTag, LONG PN, LPCDXDATA pData, LPPAGEINFO PIK );
+static USHORT hb_cdxTagFillInternalNode( LPTAGINFO pTag, LPCDXDATA pData, LPPAGEINFO PIK,
+                                         USHORT kcnt, USHORT ck, LPKEYINFO * p );
+static void hb_cdxTagIntNodeBuild( LPTAGINFO pTag, LPCDXDATA pData, LPPAGEINFO pPage );
+static LONG hb_cdxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey );
 
-LPPAGEINFO hb_cdxPageNew( LPTAGINFO PIT, LPPAGEINFO PIK, LONG FilePosn );
-void hb_cdxPageFree( LPPAGEINFO pPage );
-BOOL hb_cdxPageReadTopKey( LPPAGEINFO pPage );
-BOOL hb_cdxPageReadBottomKey( LPPAGEINFO pPage );
-int hb_cdxPageSeekKey( LPPAGEINFO pPage, LONG lBlock, LPKEYINFO pKey, BOOL bExact );
-void hb_cdxPageInsertKey( LPPAGEINFO pPage, LPKEYINFO pKey, BOOL bAddAfter );
-void hb_cdxPagePageStore( LPPAGEINFO pPage );
-BOOL hb_cdxPageReadNextKey( LPPAGEINFO pPage );
-LPKEYINFO hb_cdxPageGetKey( LPPAGEINFO pPage, USHORT uiKey );
-void hb_cdxPagePageLoad( LPPAGEINFO pPage );
-int hb_cdxPageRetrieveKey( LPPAGEINFO pPage, LPKEYINFO pKey );
-void hb_cdxPageAddNodeKey( LPPAGEINFO pPage, LPKEYINFO pKey );
-int hb_cdxPageSeekNodeTag( LPPAGEINFO pPage, LONG Tag );
-BOOL hb_cdxPageGetChild( LPPAGEINFO pPage, LONG Tag );
-void hb_cdxPageDeleteKey( LPPAGEINFO pPage );
+static LPPAGEINFO hb_cdxPageNew( LPTAGINFO PIT, LPPAGEINFO PIK, LONG FilePosn );
+static void hb_cdxPageFree( LPPAGEINFO pPage );
+static BOOL hb_cdxPageReadTopKey( LPPAGEINFO pPage );
+static BOOL hb_cdxPageReadBottomKey( LPPAGEINFO pPage );
+static int hb_cdxPageSeekKey( LPPAGEINFO pPage, LONG lBlock, LPKEYINFO pKey, BOOL bExact );
+static void hb_cdxPageInsertKey( LPPAGEINFO pPage, LPKEYINFO pKey, BOOL bAddAfter );
+static void hb_cdxPagePageStore( LPPAGEINFO pPage );
+static BOOL hb_cdxPageReadNextKey( LPPAGEINFO pPage );
+static LPKEYINFO hb_cdxPageGetKey( LPPAGEINFO pPage, USHORT uiKey );
+static void hb_cdxPagePageLoad( LPPAGEINFO pPage );
+static int hb_cdxPageRetrieveKey( LPPAGEINFO pPage, LPKEYINFO pKey );
+static void hb_cdxPageAddNodeKey( LPPAGEINFO pPage, LPKEYINFO pKey );
+static int hb_cdxPageSeekNodeTag( LPPAGEINFO pPage, LONG Tag );
+static BOOL hb_cdxPageGetChild( LPPAGEINFO pPage, LONG Tag );
+static void hb_cdxPageDeleteKey( LPPAGEINFO pPage );
 
-LPINDEXINFO hb_cdxIndexNew( AREAP pArea );
-void hb_cdxIndexFree( LPINDEXINFO pIndex );
-LONG hb_cdxIndexGetAvailPage( LPINDEXINFO pIndex );
-void hb_cdxIndexResetAvailPage( LPINDEXINFO pIndex );
-void hb_cdxIndexPageRead( LPINDEXINFO pIndex, LONG lPos, void * pBuffer, USHORT uiSize );
-void hb_cdxIndexPageWrite( LPINDEXINFO pIndex, LONG lPos, void * pBuffer, USHORT uiSize );
-void hb_cdxIndexAddTag( LPINDEXINFO pIndex, char * szTagName, char * szKeyExp,
-                        PHB_ITEM pKeyItem, BYTE bType, USHORT uiLen, char * szForExp,
-                        PHB_ITEM pForItem, BOOL bAscending, BOOL bUnique );
+static LPINDEXINFO hb_cdxIndexNew( AREAP pArea );
+static void hb_cdxIndexFree( LPINDEXINFO pIndex );
+static LONG hb_cdxIndexGetAvailPage( LPINDEXINFO pIndex );
+static void hb_cdxIndexResetAvailPage( LPINDEXINFO pIndex );
+static void hb_cdxIndexPageRead( LPINDEXINFO pIndex, LONG lPos, void * pBuffer, USHORT uiSize );
+static void hb_cdxIndexPageWrite( LPINDEXINFO pIndex, LONG lPos, void * pBuffer, USHORT uiSize );
+static void hb_cdxIndexAddTag( LPINDEXINFO pIndex, char * szTagName, char * szKeyExp,
+                               PHB_ITEM pKeyItem, BYTE bType, USHORT uiLen, char * szForExp,
+                               PHB_ITEM pForItem, BOOL bAscending, BOOL bUnique );
 
-LPSORTINFO hb_cdxSortNew( LPTAGINFO pTag, BOOL bUnique );
-void hb_cdxSortFree( LPSORTINFO pSort );
-void hb_cdxSortLinkNew( LPSORTINFO pSort, LONG * NewLink );
-void hb_cdxSortGetNewChunk( LPSORTINFO pSort );
-void hb_cdxSortInsertWord( LPSORTINFO pSort, LONG Tag, char * Value );
-void hb_cdxSortStuffKey( LPSORTINFO pSort, LPSORTDATA * wx );
-void hb_cdxSortGetNode( LPSORTINFO pSort, char Character, LONG * NewLink );
-LPSORTDATA hb_cdxSortLinkGet( LPSORTINFO pSort, LONG Value );
-void hb_cdxSortDisplayWord( LPSORTINFO pSort );
-void hb_cdxSortRecurseDict( LPSORTINFO pSort, LONG WPtr, LONG WBgn );
-void hb_cdxSortSendWord( LPSORTINFO pSort, char * Value );
-void hb_cdxSortOutputWord( LPSORTINFO pSort, LONG Tag, char * Value );
-void hb_cdxSortAddToNode( LPSORTINFO pSort, USHORT Lvl, LONG Tag, LONG Link,
-                          LPKEYINFO Value );
-void hb_cdxSortAddExternal( LPSORTINFO pSort, USHORT Lvl, LONG Tag, LONG Link,
-                            LPKEYINFO Value );
-void hb_cdxSortAddInternal( LPSORTINFO pSort, USHORT Lvl, LONG Tag, LONG Link,
-                            LPKEYINFO Value );
+static LPSORTINFO hb_cdxSortNew( LPTAGINFO pTag, BOOL bUnique );
+static void hb_cdxSortFree( LPSORTINFO pSort );
+static void hb_cdxSortLinkNew( LPSORTINFO pSort, LONG * NewLink );
+static void hb_cdxSortGetNewChunk( LPSORTINFO pSort );
+static void hb_cdxSortInsertWord( LPSORTINFO pSort, LONG Tag, char * Value );
+static void hb_cdxSortStuffKey( LPSORTINFO pSort, LPSORTDATA * wx );
+static void hb_cdxSortGetNode( LPSORTINFO pSort, char Character, LONG * NewLink );
+static LPSORTDATA hb_cdxSortLinkGet( LPSORTINFO pSort, LONG Value );
+static void hb_cdxSortDisplayWord( LPSORTINFO pSort );
+static void hb_cdxSortRecurseDict( LPSORTINFO pSort, LONG WPtr, LONG WBgn );
+static void hb_cdxSortSendWord( LPSORTINFO pSort, char * Value );
+static void hb_cdxSortOutputWord( LPSORTINFO pSort, LONG Tag, char * Value );
+static void hb_cdxSortAddToNode( LPSORTINFO pSort, USHORT Lvl, LONG Tag, LONG Link,
+                                 LPKEYINFO Value );
+static void hb_cdxSortAddExternal( LPSORTINFO pSort, USHORT Lvl, LONG Tag, LONG Link,
+                                   LPKEYINFO Value );
+static void hb_cdxSortAddInternal( LPSORTINFO pSort, USHORT Lvl, LONG Tag, LONG Link,
+                                   LPKEYINFO Value );
 
 static BOOL hb_cdxltoa( LONG lValue, char * szBuffer, USHORT uiLen )
 {
@@ -806,7 +806,7 @@ static LONG hb_cdxTagNewRoot( LPTAGINFO pTag )
 static void hb_cdxTagPageLoad( LPTAGINFO pTag, LPPAGEINFO pPage )
 {
    CDXDATA pData;
-   LPKEYINFO pKey;
+   /* LPKEYINFO pKey; */
 
    hb_cdxIndexPageRead( pTag->Owner, pPage->Page, &pData, sizeof( CDXDATA ) );
    if( pData.Node_Atr > 1 )

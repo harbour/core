@@ -1,3 +1,8 @@
+20000416-12:11 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * source/rdd/dbfcdx/dbfcdx1.c
+     ! removed a few warnings (static / non static declare).
+
 20000416-08:47 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/compiler/genobj32.c
      + prefix "_HB_FUN_" added to function and external generated names.
