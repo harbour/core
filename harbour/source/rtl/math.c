@@ -49,12 +49,13 @@
 #include "itemapi.h"
 #include "errorapi.h"
 
-static int internal_math_error = 0;
-
 #if defined( __WATCOMC__ )
+
+static int s_internal_math_error = 0;
+
 /* define harbour specific error handler for math errors
  */
-int matherr( struct exception *err )
+int matherr( struct exception * err )
 {
    HB_TRACE(HB_TR_DEBUG, ("matherr(%p)", err));
 
@@ -62,34 +63,36 @@ int matherr( struct exception *err )
    {
       case DOMAIN:
          /* a domain error has occured, such as sqrt( -1 ) */
-         internal_math_error = EG_ARG;
+         s_internal_math_error = EG_ARG;
          break;
       case SING:
          /* a singularity will result, such as pow( 0, -2 ) */
-         internal_math_error = EG_ARG;
+         s_internal_math_error = EG_ARG;
          break;
       case OVERFLOW:
          /* an overflow will result, such as pow( 10, 100 ) */
-         internal_math_error = EG_NUMOVERFLOW;
+         s_internal_math_error = EG_NUMOVERFLOW;
          break;
       case UNDERFLOW:
          /* an underflow will result, such as pow( 10, -100 ) */
-         internal_math_error = EG_NUMOVERFLOW;
+         s_internal_math_error = EG_NUMOVERFLOW;
          break;
       case TLOSS:
          /* total loss of significance will result, such as exp( 1000 ) */
-         internal_math_error = EG_NUMERR;
+         s_internal_math_error = EG_NUMERR;
          break;
       case PLOSS:
          /* partial loss of significance will result, such as sin( 10e70 ) */
-         internal_math_error = EG_NUMERR;
+         s_internal_math_error = EG_NUMERR;
          break;
       default:
-         internal_math_error = EG_NUMERR;
+         s_internal_math_error = EG_NUMERR;
          break;
    }
+
    err->retval = 0.0;
-   return 1;   /* don't print any message and don't ser errno */
+
+   return 1;   /* don't print any message and don't set errno */
 }
 #endif
 
@@ -145,13 +148,15 @@ HARBOUR HB_EXP( void )
 {
    if( ISNUM( 1 ) )
    {
+#if defined( __WATCOMC__ )
       double dResult = exp( hb_parnd( 1 ) );
 
-      if( internal_math_error )
+      if( s_internal_math_error )
       {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( internal_math_error, 1096, NULL, "EXP" );
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( s_internal_math_error, 1096, NULL, "EXP" );
 
-         internal_math_error = 0;
+         s_internal_math_error = 0;
+
          if( pResult )
          {
             hb_itemReturn( pResult );
@@ -160,6 +165,9 @@ HARBOUR HB_EXP( void )
       }
       else
          hb_retnd( dResult );
+#else
+      hb_retnd( exp( hb_parnd( 1 ) ) );
+#endif
    }
    else
    {
@@ -204,11 +212,13 @@ HARBOUR HB_LOG( void )
    {
 #if defined( __WATCOMC__ )
       double dResult = log( hb_parnd( 1 ) );
-      if( internal_math_error )
-      {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( internal_math_error, 1095, NULL, "LOG" );
 
-         internal_math_error = 0;
+      if( s_internal_math_error )
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( s_internal_math_error, 1095, NULL, "LOG" );
+
+         s_internal_math_error = 0;
+
          if( pResult )
          {
             hb_itemReturn( pResult );
@@ -219,6 +229,7 @@ HARBOUR HB_LOG( void )
          hb_retnd( dResult );
 #else
       double dNumber = hb_parnd( 1 );
+
       if( dNumber <= 0.0 )
          /* Indicate overflow if called with an invalid argument */
          hb_retndlen( log( dNumber ), 99, -1 );
@@ -260,7 +271,10 @@ HARBOUR HB_MAX( void )
          hb_itemGetNLen( p1, NULL, &iDec1 );
          hb_itemGetNLen( p2, NULL, &iDec2 );
 
-         hb_retndlen( d1 >= d2 ? d1 : d2, 0, ( d1 >= d2 ? iDec1 : iDec2 ) );
+         if( d1 >= d2 )
+            hb_retndlen( d1, 0, iDec1 );
+         else
+            hb_retndlen( d2, 0, iDec2 );
       }
       else if( IS_LONG( p1 ) || IS_LONG( p2 ) )
       {
@@ -317,7 +331,10 @@ HARBOUR HB_MIN( void )
          hb_itemGetNLen( p1, NULL, &iDec1 );
          hb_itemGetNLen( p2, NULL, &iDec2 );
 
-         hb_retndlen( d1 <= d2 ? d1 : d2, 0, ( d1 <= d2 ? iDec1 : iDec2 ) );
+         if( d1 <= d2 )
+            hb_retndlen( d1, 0, iDec1 );
+         else
+            hb_retndlen( d2, 0, iDec2 );
       }
       else if( IS_LONG( p1 ) || IS_LONG( p2 ) )
       {
@@ -377,7 +394,7 @@ FUNCTION MOD(cl_num, cl_base)
 
       if( dBase )
       {
-         double dResult = dNumber - ( ( long )( dNumber / dBase ) * dBase );
+         double dResult = dNumber - ( ( long ) ( dNumber / dBase ) * dBase );
 
          if( dResult * dBase < 0 )
             hb_retnd( dResult + dBase );
@@ -403,8 +420,6 @@ double hb_numRound( double dResult, int iDec )
 
    if( dResult != 0.0 )
    {
-      double dAdjust;
-
       if( iDec == 0 )
       {
          if( dResult < 0.0 )
@@ -414,21 +429,25 @@ double hb_numRound( double dResult, int iDec )
       }
       else if( iDec < 0 )
       {
-         dAdjust = pow( 10, -iDec );
+         double dAdjust = pow( 10, -iDec );
+
          if( dResult < 0.0 )
             dResult = ceil( ( dResult / dAdjust ) - 0.5 );
          else
             dResult = floor( ( dResult / dAdjust ) + 0.5 );
-         dResult = dResult * dAdjust;
+
+         dResult *= dAdjust;
       }
       else
       {
-         dAdjust = pow( 10, iDec );
+         double dAdjust = pow( 10, iDec );
+
          if( dResult < 0.0 )
             dResult = ceil( ( dResult * dAdjust ) - 0.5 );
          else
             dResult = floor( ( dResult * dAdjust ) + 0.5 );
-         dResult = dResult / dAdjust;
+
+         dResult /= dAdjust;
       }
    }
 
@@ -461,11 +480,13 @@ HARBOUR HB_SQRT( void )
    {
 #if defined( __WATCOMC__ )
       double dResult = sqrt( hb_parnd( 1 ) );
-      if( internal_math_error )
-      {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( internal_math_error, 1097, NULL, "SQRT" );
 
-         internal_math_error = 0;
+      if( s_internal_math_error )
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( s_internal_math_error, 1097, NULL, "SQRT" );
+
+         s_internal_math_error = 0;
+
          if( pResult )
          {
             hb_itemReturn( pResult );
@@ -477,10 +498,7 @@ HARBOUR HB_SQRT( void )
 #else
       double dNumber = hb_parnd( 1 );
 
-      if( dNumber > 0 )
-         hb_retnd( sqrt( dNumber ) );
-      else
-         hb_retnd( 0 ); /* Clipper doesn't error! */
+      hb_retnd( dNumber > 0 ? sqrt( dNumber ) : 0 ); /* Clipper doesn't error! */
 #endif
    }
    else

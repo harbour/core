@@ -37,17 +37,29 @@
 
 FUNCTION ordBagExt()       ; RETURN ".ntx"
 FUNCTION ordBagName()      ; RETURN ""
+FUNCTION ordCond()         ; RETURN NIL /* 5.3 */
 FUNCTION ordCondSet()      ; RETURN NIL
 FUNCTION ordCreate()       ; RETURN NIL
+FUNCTION ordDescend()      ; RETURN .F. /* 5.3 */
 FUNCTION ordDestroy()      ; RETURN NIL
 FUNCTION ordFor()          ; RETURN NIL
+FUNCTION ordIsUnique()     ; RETURN .F. /* 5.3 */
 FUNCTION ordKey()          ; RETURN ""
+FUNCTION ordKeyAdd()       ; RETURN .F. /* 5.3 */
+FUNCTION ordKeyCount()     ; RETURN 0   /* 5.3 */
+FUNCTION ordKeyDel()       ; RETURN .F. /* 5.3 */
+FUNCTION ordKeyGoto()      ; RETURN .F. /* 5.3 */
+FUNCTION ordKeyNo()        ; RETURN 0   /* 5.3 */
+FUNCTION ordKeyVal()       ; RETURN NIL /* 5.3 */
 FUNCTION ordListAdd()      ; RETURN NIL
 FUNCTION ordListClear()    ; RETURN NIL
 FUNCTION ordListRebuild()  ; RETURN NIL
 FUNCTION ordName()         ; RETURN ""
 FUNCTION ordNumber()       ; RETURN 0
+FUNCTION ordScope()        ; RETURN NIL /* 5.3 */
 FUNCTION ordSetFocus()     ; RETURN 0
+FUNCTION ordSetRelation()  ; RETURN NIL /* 5.3 */
+FUNCTION ordSkipUnique()   ; RETURN .F. /* 5.3 */
 FUNCTION IndexOrd()        ; RETURN 0
 
 FUNCTION dbSeek()          ; RETURN .F.

@@ -1,3 +1,12 @@
+19991116-13:26 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/math.c
+    % MIN()/MAX()/SQRT()/hb_numRound() minor optimalizations, cleanups.
+    * static variable prefixed with "s_" (Watcom only)
+    % EXP() - Watcom specific error handling put between guards, Watcom
+      specific static variable moved inside guards.
+  * source/rtl/dummy.prg
+    + Clipper 5.3 specific dummy ord*() functions added.
+
 19991115-12:02 EDT Paul Tucker <ptucker@sympatico.ca>
   * makefile.vc
    + define COMMON_DIR
