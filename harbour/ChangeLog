@@ -1,8 +1,26 @@
+20000507-21:20 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/harbour.l
+     + Added token "optional"
+
+   * source/compiler/harbour.y
+     + Added token "optional", DecParam, DecParamList, OptParams.
+     + Added support for optional parameters syntax in declared functions.
+
+   * source/compiler/harbour.c
+     + Added logic in hb_compVariableAdd() to deal with optional parameters of declared functions.
+
+   * source/compiler/hbpcode.c
+     + Added logic in hb_compStrongType() to deal with optional parameters of declared functions.
+
+   * tests/testwarn.prg
+     + Added code to demonstrate usage and warnings of optional parameters in declared functions.
+
 20000507-23:30 CET Patrick Mast <harbour@PatrickMast.com>
 
    * source/compiler/cmdcheck.c
      + Added -? and -h option for the compiler.
-       these options shouw the Harbour usage page.
+       these options show the Harbour usage page.
 
 20000507-13:35 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 

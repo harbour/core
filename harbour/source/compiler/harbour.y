@@ -161,7 +161,7 @@ char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
 %token PLUSEQ MINUSEQ MULTEQ DIVEQ POWER EXPEQ MODEQ EXITLOOP
 %token PRIVATE BEGINSEQ BREAK RECOVER RECOVERUSING DO WITH SELF LINE
 %token MACROVAR MACROTEXT
-%token AS_NUMERIC AS_CHARACTER AS_LOGICAL AS_DATE AS_ARRAY AS_BLOCK AS_OBJECT AS_VARIANT DECLARE_FUN
+%token AS_NUMERIC AS_CHARACTER AS_LOGICAL AS_DATE AS_ARRAY AS_BLOCK AS_OBJECT AS_VARIANT DECLARE_FUN OPTIONAL
 %token AS_NUMERIC_ARRAY AS_CHARACTER_ARRAY AS_LOGICAL_ARRAY AS_DATE_ARRAY AS_ARRAY_ARRAY AS_BLOCK_ARRAY AS_OBJECT_ARRAY AS_VARIANT_ARRAY
 
 /*the lowest precedence*/
@@ -195,7 +195,7 @@ char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
 %type <valInteger> NUM_INTEGER
 %type <valLong>    NUM_LONG
 %type <iNumber> FunScope AsType AsArray
-%type <iNumber> Params ParamList
+%type <iNumber> Params ParamList DecParams DecParamList OptParams
 %type <iNumber> IfBegin VarList ExtVarList
 %type <iNumber> FieldList
 %type <lNumber> WhileBegin
@@ -261,10 +261,10 @@ Line       : LINE NUM_INTEGER LITERAL Crlf
 
 Function   : FunScope FUNCTION  IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, 0 ); } Params Crlf {}
            | FunScope PROCEDURE IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, FUN_PROCEDURE ); } Params Crlf {}
-           | FunScope DECLARE_FUN IdentName { hb_compDeclaredAdd( $3 ); hb_comp_szDeclaredFun = $3 ; } Params AsType Crlf { if( hb_comp_pLastDeclared )
+           | FunScope DECLARE_FUN IdentName { hb_compDeclaredAdd( $3 ); hb_comp_szDeclaredFun = $3 ; } DecParams AsType Crlf { if( hb_comp_pLastDeclared )
                                                                                                                               hb_comp_pLastDeclared->cType = hb_comp_cVarType;
-                                                                                                                            hb_comp_szDeclaredFun = NULL;
-                                                                                                                            hb_comp_cVarType = ' '; }
+                                                                                                                              hb_comp_szDeclaredFun = NULL;
+                                                                                                                              hb_comp_cVarType = ' '; }
            ;
 
 FunScope   :                  { $$ = HB_FS_PUBLIC; }
@@ -272,6 +272,20 @@ FunScope   :                  { $$ = HB_FS_PUBLIC; }
            | INIT             { $$ = HB_FS_INIT; }
            | EXIT             { $$ = HB_FS_EXIT; }
            ;
+
+DecParams  :                                               { $$ = 0; }
+           | '(' ')'                                       { $$ = 0; }
+           | '(' { hb_comp_iVarScope = VS_PARAMETER; } DecParamList ')'   { $$ = $3; }
+           ;
+
+DecParamList  : IdentName AsType                { hb_compVariableAdd( $1, ' ' ); $$ = 1; }
+              | DecParamList ',' IdentName AsType  { hb_compVariableAdd( $3, $4 ); $$++; }
+              | DecParamList OptParams
+              ;
+
+OptParams  : ',' OPTIONAL IdentName AsType { hb_compVariableAdd( $3, '-' ); $$ = 3; }
+	   | OptParams ',' OPTIONAL IdentName AsType { hb_compVariableAdd( $4, '-' ); $$++; }
+	   ;
 
 Params     :                                               { $$ = 0; }
            | '(' ')'                                       { $$ = 0; }

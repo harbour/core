@@ -474,7 +474,11 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
                pDeclared->cParamTypes = ( BYTE * ) hb_xgrab( 1 );
 
             /* Store declared type of this parameter into the parameters type list. */
-            pDeclared->cParamTypes[ pDeclared->iParamCount - 1 ] = hb_comp_cVarType;
+            if ( cValueType == '-' )
+               /* Optional parameter */
+               pDeclared->cParamTypes[ pDeclared->iParamCount - 1 ] = hb_comp_cVarType + 100;
+            else
+               pDeclared->cParamTypes[ pDeclared->iParamCount - 1 ] = hb_comp_cVarType;
 
             return;
          }

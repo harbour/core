@@ -1327,7 +1327,8 @@ Separator     {SpaceTab}
 "as var array"       { return AS_VARIANT; }
 "as variant array"   { return AS_VARIANT; }
 
-"declare function" { return DECLARE_FUN; }
+"declare function"   { return DECLARE_FUN; }
+"optional"           { return OPTIONAL;}
 
 %{
 /* ************************************************************************ */

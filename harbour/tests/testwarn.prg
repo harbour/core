@@ -51,7 +51,7 @@
 
 DECLARE FUNCTION nMyFunc( cVar AS STRING, nVar AS NUMERIC ) AS NUMERIC
 
-DECLARE FUNCTION cOtherFunc( ) AS CHAR
+DECLARE FUNCTION cOtherFunc( cVar as char, optional nVar as num, optional other as variant ) AS CHAR
 
 DECLARE FUNCTION cOtherFunc( ) AS CHAR
 
@@ -71,6 +71,7 @@ STATIC lGlobal AS LOGICAL
 PROCEDURE THEMAIN()
 
   STATIC lStatic := 0
+  LOCAL cVar AS CHAR := 'Hello'
 
   FIELD b AS NUM
   USE TEMP
@@ -79,6 +80,10 @@ PROCEDURE THEMAIN()
   MEMVAR Var1 AS NUM
 
   PRIVATE TEST AS CHAR
+
+  x := cOtherFunc( 'A' )
+  x := cOtherFunc( 1 )
+  x := cOtherFunc( 'A', 'A', 'A' )
 
   M->TEST := "TEST"   //OK - no warnings here
 
@@ -123,6 +128,7 @@ PROC MAIN1()
   PRIVATE OTHER, TEST AS CHAR
 
   Var1 := M->TEST
+
   Var2 := Test()
 
   ? Var1 + 2

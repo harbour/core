@@ -298,35 +298,49 @@ void hb_compStrongType( int iSize )
        if ( wVar == 0 )
           wVar = pFunc->pCode[ ulPos + 1 ];
 
-       if ( pFunc->iStackIndex < wVar + 2 )
+       if ( pFunc->iStackIndex < ( wVar + 2 ) )
           break;
 
        if ( hb_comp_iParamCount > -1 )
        {
-         if( hb_comp_iParamCount == wVar )
+         int iParamCount = hb_comp_iParamCount, iOptionals = 0;
+
+         while ( --iParamCount >= 0 )
          {
-            BYTE iOffset = 0;
+            if ( hb_comp_cParamTypes[ iParamCount ] > 122 )
+               iOptionals++;
+            else
+               break;
+         }
 
-            while ( hb_comp_iParamCount-- > 0 )
-            {
-               iOffset++;
+         //printf( "\nOptionals: %i\n", iOptionals );
 
-               if ( pFunc->pStack[ pFunc->iStackIndex - iOffset ] > 122 )
-                 /* cSubType1 = */( pFunc->pStack[ pFunc->iStackIndex - iOffset ] -= 100 );
+         if( wVar >= ( hb_comp_iParamCount - iOptionals ) && wVar <= hb_comp_iParamCount )
+         {
+           BYTE iOffset = 0, iParamBase = pFunc->iStackIndex - wVar;
 
-               if ( pFunc->iStackIndex - iOffset && hb_comp_cParamTypes[ hb_comp_iParamCount ] != pFunc->pStack[ pFunc->iStackIndex - iOffset ] )
-               {
-                  sprintf( szType1, "%i", hb_comp_iParamCount + 1 );
-                  sprintf( szType2, "%c", hb_comp_cParamTypes[ hb_comp_iParamCount ] );
-                  hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_TYPE, szType1, szType2 );
-               }
-            }
+           while ( iOffset < wVar )
+           {
+             if ( pFunc->pStack[ iParamBase + iOffset ] > 122 )
+               /* cSubType1 = */( pFunc->pStack[ iParamBase + iOffset ] -= 100 );
+
+             if ( hb_comp_cParamTypes[ iOffset ] > 122 )
+               hb_comp_cParamTypes[ iOffset ] -= 100;
+
+             if ( hb_comp_cParamTypes[ iOffset ] != ' ' && hb_comp_cParamTypes[ iOffset ] != pFunc->pStack[ iParamBase + iOffset ] )
+             {
+               sprintf( szType1, "%i", iOffset + 1 );
+               sprintf( szType2, "%c", hb_comp_cParamTypes[ iOffset ] );
+               hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_TYPE, szType1, szType2 );
+             }
+             iOffset++;
+           }
          }
          else
          {
-            sprintf( szType1, "%i", wVar );
-            sprintf( szType2, "%i", hb_comp_iParamCount );
-            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_COUNT, szType1, szType2 );
+           sprintf( szType1, "%i", wVar );
+           sprintf( szType2, "%i", hb_comp_iParamCount );
+           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_COUNT, szType1, szType2 );
          }
        }
 
