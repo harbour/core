@@ -1,4 +1,4 @@
-2000-06-26 20:11 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+2000-06-26 20:11 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
    * source/pp/ppcomp.c
      ! Fixed line number to ignore empty lines in #include files,when resuming parent file.
 
