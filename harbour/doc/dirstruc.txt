@@ -190,6 +190,10 @@ in order to remove empty directories)
 |   |   |
 |   |   +---dbfcdx     - DBFCDX RDD.
 |   |   |
+|   |   +---dbfdbt     - DBFDBT RDD.
+|   |   |
+|   |   +---dbffpt     - DBFFPT RDD.
+|   |   |
 |   |   +---dbfntx     - DBFNTX RDD.
 |   |   |
 |   |   +---nulsys     - NULL RDD.
@@ -233,6 +237,8 @@ in order to remove empty directories)
     +---hbrun          - Standalone Harbour Portable Object file runner.
     |
     +---hbtest         - Regression tests for the Run-Time library.
+    |
+    +---hbver          - Harbour Version Updater.
 
 
 Legend:

@@ -8,32 +8,38 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-11-12 13:35 UTC+0200 Chen Kedem <niki@actcom.co.il>
+  * doc/dirstruc.txt
+    + Add a lines for source/rdd/dbfdbt, source/rdd/dbffpt, utils/hbver
+
+  * doc/es/dbstrux.txt
+    - Remove embedded TABs
 
 2003-11-10 15:54 UTC+0100 Maurilio Longo <maurilio.longo@libero.it>
    borrowed from xHarbour trying to hunt down a memory leak on an utility of mine
 
    2003-11-10 12:19 UTC+0100 Przemyslaw Czerpak <druzus@polbox.com>
-   * xharbour/include/hbrddcdx.h
-   * xharbour/source/rdd/dbfcdx/dbfcdx1.c
+   * include/hbrddcdx.h
+   * source/rdd/dbfcdx/dbfcdx1.c
        ! possible memory leak fixed
        * small improvment in balancing
 
 
 2003-11-10 13:20 UTC+0100 Maurilio Longo <maurilio.longo@libero.it>
-   * harbour/contrib/btree/hb_btree.c
+   * contrib/btree/hb_btree.c
      + added _CLIPDEFS_H define to let it compile on OS/2 GCC
-   * harbour/contrib/libct/bit1.c
-   * harbour/contrib/libct/bit3.c
-   * harbour/contrib/libct/ct.h
+   * contrib/libct/bit1.c
+   * contrib/libct/bit3.c
+   * contrib/libct/ct.h
      + added _CLIPDEFS_H define to let it compile on OS/2 GCC
      * changed redefined base tipes to C ones, like WORD -> long, bit3.c was already
        partly fixed before this one
-   * harbour/contrib/libnf/chdir.c
-   * harbour/contrib/libnf/dispc.c
-   * harbour/contrib/libnf/getenvrn.c
-   * harbour/contrib/libnf/kspeed.c
-   * harbour/contrib/libnf/mouse.c
-   * harbour/contrib/libnf/rmdir.c
+   * contrib/libnf/chdir.c
+   * contrib/libnf/dispc.c
+   * contrib/libnf/getenvrn.c
+   * contrib/libnf/kspeed.c
+   * contrib/libnf/mouse.c
+   * contrib/libnf/rmdir.c
      + added _CLIPDEFS_H define to let it compile on OS/2 GCC, now it compiles, but a lot
        of functions are DOS only
 
@@ -70,9 +76,9 @@
     ! Bug fixed, which appeared while conditional indexing of a parent file in relation.
 
 2003-10-22 13:26 UTC-0800 Luis Krause Mantilla <lkrausem@shaw.ca>
-  * xharbour/source/rdd/rddord.prg
+  * source/rdd/rddord.prg
     + ORDSETRELATION()
-  * xharbour/source/rtl/dummy.prg
+  * source/rtl/dummy.prg
     + removed implemented functions
      * Latest RDD changes, has been made by Przemyslaw Czerpak - synced with xHarbour.
 

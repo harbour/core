@@ -12,7 +12,7 @@
  *                       CREATE FROM, __FLEDIT(), __dbStructFilter()
  *
  * Copyright 2000 Alejandro de G rate <alex_degarate@hotmail.com>
- * Documentaci¢n en Espa¤ol de: 
+ * Documentaci¢n en Espa¤ol de:
  *                       __dbCopyStruct(), COPY STRUCTURE, __dbCopyXStruct(),
  *                       COPY STRUCTURE EXTENDED, __dbCreate(), CREATE,
  *                       CREATE FROM, __FLEDIT(), __dbStructFilter()
@@ -35,32 +35,32 @@
  *      <cNombreArch> es el nombre de una nueva base de datos a crear.
  *      (.dbf) es la extensi¢n por defecto si ninguna es especificada.
  *
- *      <aListaCampos> es un array donde cada elemento es un nombre de 
+ *      <aListaCampos> es un array donde cada elemento es un nombre de
  *      campo.
  *      Los nombres pueden ser especificados en may£sculas ¢ min£sculas.
  *  $RETURNS$
  *      __dbCopyStruct() siempre retorna NIL.
  *  $DESCRIPTION$
- *      La funci¢n __dbCopyStruct() crea una nueva base de datos vac¡a, 
- *      con una estructura que esta basada en la base de datos actualmente 
- *      abierta en este  rea de trabajo. Si <aListaCampos> esta vac¡a, 
- *      el archivo recientemente creado podr¡a tener la misma estructura 
- *      que la base de datos actualmente abierta. De otro modo el nuevo 
- *      archivo podr¡a contener s¢lo campos que coincidan exactamente 
+ *      La funci¢n __dbCopyStruct() crea una nueva base de datos vac¡a,
+ *      con una estructura que esta basada en la base de datos actualmente
+ *      abierta en este  rea de trabajo. Si <aListaCampos> esta vac¡a,
+ *      el archivo recientemente creado podr¡a tener la misma estructura
+ *      que la base de datos actualmente abierta. De otro modo el nuevo
+ *      archivo podr¡a contener s¢lo campos que coincidan exactamente
  *      con <aListaCampos>.
  *
- *      __dbCopyStruct() puede ser usada para crear un subconjunto de 
- *      la base de datos actualmente abierta, basada en una lista dada 
+ *      __dbCopyStruct() puede ser usada para crear un subconjunto de
+ *      la base de datos actualmente abierta, basada en una lista dada
  *      de campos.
  *
- *      El comando COPY STRUCTURE es pre-procesado en la funci¢n 
+ *      El comando COPY STRUCTURE es pre-procesado en la funci¢n
  *      __dbCopyStruct() durante el tiempo de compilaci¢n.
  *  $EXAMPLES$
  *      // Crea un nuevo archivo que contiene la misma estructura.
  *      USE TEST
  *      __dbCopyStruct( "MyCopy.DBF" )
  *
- *      // Crea un nuevo archivo que contiene parte de la estructura 
+ *      // Crea un nuevo archivo que contiene parte de la estructura
  *      // original
  *      LOCAL aLista
  *      USE TEST
@@ -69,10 +69,10 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __dbCopyStruct() trabaja exactamente como la funci¢n de CA-Clipper, 
+ *      __dbCopyStruct() trabaja exactamente como la funci¢n de CA-Clipper,
  *      __dbCopyStruct().
  *  $PLATFORMS$
- *      Todas 
+ *      Todas
  *  $FILES$
  *      La librer¡a es rdd
  *  $SEEALSO$
@@ -91,26 +91,26 @@
  *  $SYNTAX$
  *      COPY STRUCTURE TO <xcNombreArchivo> [FIELDS <campo,...>]
  *  $ARGUMENTS$
- *      <b>TO <xcNombreArchivo></b> es el nombre del nuevo archivo de 
- *      base de datos a crear. (.dbf) es la extensi¢n por defecto si 
+ *      <b>TO <xcNombreArchivo></b> es el nombre del nuevo archivo de
+ *      base de datos a crear. (.dbf) es la extensi¢n por defecto si
  *      ninguna es dada.
  *
- *      Esta puede ser especificada como un literal de nombre de archivo 
+ *      Esta puede ser especificada como un literal de nombre de archivo
  *      ¢ como una expresi¢n de caracteres encerrada entre par‚ntesis.
  *
- *      <b>FIELDS <campo,...></b> es una lista opcional de nombres de 
- *      campos a copiar desde la base de datos actualmente abierta en 
- *      el orden especificado, por defecto son todos los campos. 
+ *      <b>FIELDS <campo,...></b> es una lista opcional de nombres de
+ *      campos a copiar desde la base de datos actualmente abierta en
+ *      el orden especificado, por defecto son todos los campos.
  *      Los nombres pueden ser especificados en may£sculas ¢ min£sculas.
  *  $DESCRIPTION$
- *      COPY STRUCTURE crea una nueva base de datos vac¡a con una estructura 
- *      que esta basada en la base de datos actualmente abierta en este 
+ *      COPY STRUCTURE crea una nueva base de datos vac¡a con una estructura
+ *      que esta basada en la base de datos actualmente abierta en este
  *       rea de trabajo.
  *
  *      COPY STRUCTURE puede ser usada para crear un subconjunto de la base
  *      de datos actualmente abierta, basada en una lista dada de campos.
  *
- *      El comando COPY STRUCTURE es pre-procesado en la funci¢n 
+ *      El comando COPY STRUCTURE es pre-procesado en la funci¢n
  *      __dbCopyStruct() durante el tiempo de compilaci¢n.
  *  $EXAMPLES$
  *      // Crea un nuevo archivo que contiene la misma estructura.
@@ -123,9 +123,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      COPY STRUCTURE trabaja exactamente como en CA-Clipper 
+ *      COPY STRUCTURE trabaja exactamente como en CA-Clipper
  *  $PLATFORMS$
- *      Todas 
+ *      Todas
  *  $SEEALSO$
  *      COPY STRUCTURE EXTENDED,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate(),__dbStructFilter()
  *  $END$
@@ -145,12 +145,12 @@
  *      <cNombreArchivo> es el nombre del archivo de definici¢n de destino
  *      a crear, (*.dbf) es la extensi¢n por defecto si ninguna es dada.
  *  $RETURNS$
- *      __dbCopyXStruct() retorna (.F.) si ninguna base de datos est  en 
- *      uso en el  rea actual de trabajo, (.T.) si el proceso fu‚ exitoso, 
- *      ¢ un error en tiempo de ejecuci¢n si la operaci¢n de creaci¢n del 
+ *      __dbCopyXStruct() retorna (.F.) si ninguna base de datos est  en
+ *      uso en el  rea actual de trabajo, (.T.) si el proceso fu‚ exitoso,
+ *      ¢ un error en tiempo de ejecuci¢n si la operaci¢n de creaci¢n del
  *      archivo ha fallado.
  *  $DESCRIPTION$
- *      La funci¢n __dbCopyXStruct() crea una nueva base de datos llamada 
+ *      La funci¢n __dbCopyXStruct() crea una nueva base de datos llamada
  *      <cNombreArchivo> con una estructura predefinida (tambi‚n llamado
  *      "archivo de estructura extendida"):
  *
@@ -163,13 +163,13 @@
  *       FIELD_DEC      N      3        0
  *       </table>
  *
- *      Cada registro en el nuevo archivo contiene informaci¢n acerca de 
- *      un campo en el archivo original. CREATE FROM podr¡a ser usado para 
+ *      Cada registro en el nuevo archivo contiene informaci¢n acerca de
+ *      un campo en el archivo original. CREATE FROM podr¡a ser usado para
  *      crear la base de datos desde el archivo de estructura extendida.
  *
- *      Por razones prehist¢ricas de compatibilidad, los campos de 
+ *      Por razones prehist¢ricas de compatibilidad, los campos de
  *      caracteres mayores de 255 caracteres son tratados en una forma
- *      especial al escribir parte de la longitud en el campo FIELD_DEC 
+ *      especial al escribir parte de la longitud en el campo FIELD_DEC
  *      de acuerdo a la siguiente f¢rmula (Esto es hecho internamente):
  *
  *      <fixed>
@@ -186,25 +186,25 @@
  *                      FIELD->FIELD_LEN )
  *      </fixed>
  *
- *      El comando COPY STRUCTURE EXTENDED es pre-procesado en la funci¢n 
+ *      El comando COPY STRUCTURE EXTENDED es pre-procesado en la funci¢n
  *      __dbCopyXStruct() durante el tiempo de compilaci¢n.
  *  $EXAMPLES$
- *      // Abre la base de datos, y copia su estructura a un nuevo archivo.      
+ *      // Abre la base de datos, y copia su estructura a un nuevo archivo.
  *      USE Test
  *      __dbCopyXStruct( "TestEstr" )
  *
  *      // Abre el nuevo archivo y lista todos sus registros
- *      USE TestEstr 
+ *      USE TestEstr
  *      LIST
  *
  *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __dbCopyXStruct() trabaja exactamente como la funci¢n de CA-Clipper, 
+ *      __dbCopyXStruct() trabaja exactamente como la funci¢n de CA-Clipper,
  *      __dbCopyXStruct().
  *  $PLATFORMS$
- *      Todas 
+ *      Todas
  *  $FILES$
  *      La librer¡a es rdd
  *  $SEEALSO$
@@ -224,13 +224,13 @@
  *      COPY STRUCTURE EXTENDED TO <xcNombreArchivo>
  *  $ARGUMENTS$
  *      <b>TO <xcNombreArchivo></b> es el nombre del nuevo archivo de base
- *      de datos a crear, (.dbf) es la extensi¢n por defecto si ninguna 
- *      es dada. 
- *      Esta puede ser especificada como un literal de nombre de archivo 
+ *      de datos a crear, (.dbf) es la extensi¢n por defecto si ninguna
+ *      es dada.
+ *      Esta puede ser especificada como un literal de nombre de archivo
  *      ¢ como una expresi¢n de caracteres encerrada entre par‚ntesis.
  *  $DESCRIPTION$
- *      COPY STRUCTURE EXTENDED crea una nueva base de datos llamada  
- *      <cNombreArchivo> con una estructura predefinida (tambi‚n llamada 
+ *      COPY STRUCTURE EXTENDED crea una nueva base de datos llamada
+ *      <cNombreArchivo> con una estructura predefinida (tambi‚n llamada
  *      "archivo de estructura extendida"):
  *
  *       <table>
@@ -245,12 +245,12 @@
  *      <fixed>
  *
  *      Cada registro en el nuevo archivo contiene informaci¢n acerca de
- *      un campo en el archivo original. CREATE FROM podr¡a ser usado para 
+ *      un campo en el archivo original. CREATE FROM podr¡a ser usado para
  *      crear la base de datos desde el "archivo de estructura extendida".
  *
- *      Por razones prehist¢ricas de compatibilidad, los campos de 
- *      caracteres mayores de 255 caracteres son tratados en una forma 
- *      especial al escribir parte de la longitud en el campo FIELD_DEC 
+ *      Por razones prehist¢ricas de compatibilidad, los campos de
+ *      caracteres mayores de 255 caracteres son tratados en una forma
+ *      especial al escribir parte de la longitud en el campo FIELD_DEC
  *      de acuerdo a la siguiente f¢rmula (Esto es hecho internamente):
  *
  *      <fixed>
@@ -267,16 +267,16 @@
  *                      FIELD->FIELD_LEN )
  *      </fixed>
  *
- *      El comando COPY STRUCTURE EXTENDED es pre-procesado en la funci¢n 
+ *      El comando COPY STRUCTURE EXTENDED es pre-procesado en la funci¢n
  *      __dbCopyXStruct() durante el tiempo de compilaci¢n.
 
  *  $EXAMPLES$
- *      // Abre la base de datos, y copia su estructura a un nuevo archivo.      
+ *      // Abre la base de datos, y copia su estructura a un nuevo archivo.
  *      USE Test
  *      __dbCopyXStruct( "TestEstr" )
  *
  *      // Abre el nuevo archivo y lista todos sus registros
- *      USE TestEstr 
+ *      USE TestEstr
  *      LIST
  *
  *  $STATUS$
@@ -284,7 +284,7 @@
  *  $COMPLIANCE$
  *      COPY STRUCTURE EXTENDED trabaja exactamente como en CA-Clipper.
  *  $PLATFORMS$
- *      Todas 
+ *      Todas
  *  $SEEALSO$
  *      COPY STRUCTURE,CREATE,CREATE FROM,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate()
  *  $END$
@@ -299,47 +299,47 @@
  *  $ONELINER$
  *      Crea una estructura extendida ¢ usa una para crear otro archivo
  *  $SYNTAX$
- *      __dbCreate( <cNombreArchivo>, [<cDesdeArchivo>], [<cNombreRDD>], 
+ *      __dbCreate( <cNombreArchivo>, [<cDesdeArchivo>], [<cNombreRDD>],
  *                  [<lNuevo>], [<cAlias>] ) --> lUsado
  *  $ARGUMENTS$
- *      <cNombreArchivo> es el nombre del archivo destino a crear y luego 
- *      abrir, (.dbf) es la extensi¢n por defecto si ninguna es 
+ *      <cNombreArchivo> es el nombre del archivo destino a crear y luego
+ *      abrir, (.dbf) es la extensi¢n por defecto si ninguna es
  *      especificada.
  *
- *      <cDesdeArchivo> es el nombre de una estructura extendida opcional 
- *      desde la cual el archivo destino <cNombreArchivo> va a ser 
+ *      <cDesdeArchivo> es el nombre de una estructura extendida opcional
+ *      desde la cual el archivo destino <cNombreArchivo> va a ser
  *      construido.
- *      Si es omitida, un nuevo archivo de estructura extendida vac¡a con 
- *      el nombre <cNombreArchivo> es creado y abierto, en el  rea de 
+ *      Si es omitida, un nuevo archivo de estructura extendida vac¡a con
+ *      el nombre <cNombreArchivo> es creado y abierto, en el  rea de
  *      trabajo actual.
  *
- *      <cNombreRDD> es el nombre del RDD para crear el archivo destino, 
+ *      <cNombreRDD> es el nombre del RDD para crear el archivo destino,
  *      Si es omitido, es usado el RDD por defecto.
  *
- *      <lNuevo> es una expresi¢n l¢gica opcional, (.T.) abre el nombre 
- *      del archivo de destino <cNombreArchivo> en la pr¢xima  rea 
- *      disponible sin uso y hace de esta el  rea actual. (.F.) abre el 
- *      archivo de destino en el  rea de trabajo actual. 
- *      El valor por defecto es (.F.). El valor de <lNuevo> es ignorado si 
+ *      <lNuevo> es una expresi¢n l¢gica opcional, (.T.) abre el nombre
+ *      del archivo de destino <cNombreArchivo> en la pr¢xima  rea
+ *      disponible sin uso y hace de esta el  rea actual. (.F.) abre el
+ *      archivo de destino en el  rea de trabajo actual.
+ *      El valor por defecto es (.F.). El valor de <lNuevo> es ignorado si
  *      <cDesdeArchivo> no es especificado.
  *
- *      <cAlias> es un alias opcional para usar el archivo de destino con 
- *      el comando USE. Si no es especificado, alias esta basado en el 
+ *      <cAlias> es un alias opcional para usar el archivo de destino con
+ *      el comando USE. Si no es especificado, alias esta basado en el
  *      nombre <cNombreArchivo>.
  *  $RETURNS$
- *      __dbCreate() retorna (.T.) si hay una base de datos usada en el 
- *       rea actual de trabajo (esta podr¡a ser la nueva area de trabajo 
+ *      __dbCreate() retorna (.T.) si hay una base de datos usada en el
+ *       rea actual de trabajo (esta podr¡a ser la nueva area de trabajo
  *      elegida), ¢ (.F.) si no hay ninguna base de datos usada.
- *      Note que si hubo ‚xito deber¡a ser devuelto (.F.), pero si hay 
- *      alguna falla probablemente se termine con un error en tiempo de 
- *      ejecuci¢n y no con un valor de (.F.) 
+ *      Note que si hubo ‚xito deber¡a ser devuelto (.F.), pero si hay
+ *      alguna falla probablemente se termine con un error en tiempo de
+ *      ejecuci¢n y no con un valor de (.F.)
  *  $DESCRIPTION$
- *      La funci¢n __dbCreate() funciona en dos modos dependiendo del valor 
+ *      La funci¢n __dbCreate() funciona en dos modos dependiendo del valor
  *      de <cDesdeArchivo>:
  *
  *      <b>1)</b> Si <cDesdeArchivo> est  vac¡o o no est  especificado, un
- *      nuevo archivo de estructura extendida vac¡a, con el nombre 
- *      <cNombreArchivo> es creado y luego abierto, en el  rea actual de 
+ *      nuevo archivo de estructura extendida vac¡a, con el nombre
+ *      <cNombreArchivo> es creado y luego abierto, en el  rea actual de
  *      trabajo (<lNuevo> es ignorado).
  *      El nuevo archivo tiene la siguiente estructura:
  *
@@ -359,14 +359,14 @@
  *      asume como un archivo de estructura extendida donde cada registro
  *      contiene al menos los siguientes campos (en cualquier orden):
  *      FIELD_NAME, FIELD_TYPE, FIELD_LEN y FIELD_DEC. Cualquier otro campo
- *      es ignorado. Con esta informaci¢n el archivo <cNombreArchivo> es 
+ *      es ignorado. Con esta informaci¢n el archivo <cNombreArchivo> es
  *      creado y abierto en el nuevo area de trabajo (de acuerdo a <lNuevo>)
  *      si esta es una nueva  rea de trabajo, esta se vuelve la actual.
  *
- *      Por razones prehist¢ricas de compatibilidad, los campos de 
- *      caracteres del archivo de estructura extendida los cuales sean 
- *      mayores de 255 caracteres deber¡an ser tratados en una forma 
- *      especial al escribir parte de la longitud en el campo FIELD_DEC 
+ *      Por razones prehist¢ricas de compatibilidad, los campos de
+ *      caracteres del archivo de estructura extendida los cuales sean
+ *      mayores de 255 caracteres deber¡an ser tratados en una forma
+ *      especial al escribir parte de la longitud en el campo FIELD_DEC
  *      de acuerdo a la siguiente f¢rmula:
  *
  *      <fixed>
@@ -374,12 +374,12 @@
  *      FIELD->FIELD_LEN := ( nLength % 256 )
  *      </fixed>
  *
- *      El comando CREATE FROM es pre-procesado en la funci¢n 
+ *      El comando CREATE FROM es pre-procesado en la funci¢n
  *      __dbCopyStruct() durante el tiempo de compilaci¢n.
  *
  *  $EXAMPLES$
- *      // Crea un nuevo archivo de estructura extendida, agrega algunos 
- *      // registros y luego crea un nueva base de datos desde este 
+ *      // Crea un nuevo archivo de estructura extendida, agrega algunos
+ *      // registros y luego crea un nueva base de datos desde este
  *      // archivo (CREATE FROM)
  *
  *      __dbCreate( "molde" )
@@ -405,7 +405,7 @@
  *  $COMPLIANCE$
  *      __dbCreate() trabaja exactamente como en CA-Clipper.
  *  $PLATFORMS$
- *      Todas 
+ *      Todas
  *  $FILES$
  *      La librer¡a es rdd
  *  $SEEALSO$
@@ -424,19 +424,19 @@
  *  $SYNTAX$
  *      CREATE <xcNombreArchivo> [VIA <xcNombreRDD>] [ALIAS <xcAlias>]
  *  $ARGUMENTS$
- *      <xcNombreArchivo> es el nombre del archivo de de destino a crear 
+ *      <xcNombreArchivo> es el nombre del archivo de de destino a crear
  *      y abrir, (*.dbf) es la extensi¢n por defecto si ninguna es dada.
- *      Este puede ser especificada un literal de nombre de archivo ¢   
+ *      Este puede ser especificada un literal de nombre de archivo ¢
  *      como una expresion de caracteres encerrada entre par‚ntesis.
  *
  *      <b>VIA <xcNombreRDD></b> es el nombre del RDD con el cual se va
- *      a crear el archivo de destino. Si es omitido, el RDD por defecto 
- *      es usado. 
- *      Este puede ser especificado como un literal de nombre de archivo  
+ *      a crear el archivo de destino. Si es omitido, el RDD por defecto
+ *      es usado.
+ *      Este puede ser especificado como un literal de nombre de archivo
  *      ¢ como una expresi¢n de caracteres encerrada entre par‚ntesis.
  *
- *      <cAlias> es un alias opcional para usar el archivo de destino con 
- *      el comando USE. Si no es especificado, alias esta basado en el 
+ *      <cAlias> es un alias opcional para usar el archivo de destino con
+ *      el comando USE. Si no es especificado, alias esta basado en el
  *      nombre <cNombreArchivo>.
  *  $DESCRIPTION$
  *      El comando CREATE, crea un nuevo archivo de estructura extendida
@@ -455,7 +455,7 @@
  *      El comando CREATE es pre-procesado en la funci¢n __dbCopyStruct()
  *      durante el tiempo de compilaci¢n y usa este modo.
  *  $EXAMPLES$
- *      // Crea un nuevo archivo de estructura extendida, agrega algunos 
+ *      // Crea un nuevo archivo de estructura extendida, agrega algunos
  *      // registros y luego crea un nueva base de datos desde este archivo
  *      // (CREATE FROM)
  *
@@ -480,9 +480,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      CREATE trabaja exactamente como en CA-Clipper. 
+ *      CREATE trabaja exactamente como en CA-Clipper.
  *  $PLATFORMS$
- *      Todas 
+ *      Todas
  *  $SEEALSO$
  *      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE FROM,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate()
  *  $END$
@@ -497,47 +497,47 @@
  *  $ONELINER$
  *      Crea una base de datos desde un archivo de estructura extendida
  *  $SYNTAX$
- *      CREATE <xcNombreArchivo> FROM <xcDesdeArchivo> [VIA <xcNombreRDD>] 
+ *      CREATE <xcNombreArchivo> FROM <xcDesdeArchivo> [VIA <xcNombreRDD>]
  *             [NEW] [ALIAS <xcAlias>]
  *  $ARGUMENTS$
- *      <xcNombreArchivo> es el nombre del archivo de de destino a crear  
+ *      <xcNombreArchivo> es el nombre del archivo de de destino a crear
  *      y abrir, (*.dbf) es la extensi¢n por defecto si ninguna es dada.
- *      Este puede ser especificada un literal de nombre de archivo ¢   
+ *      Este puede ser especificada un literal de nombre de archivo ¢
  *      como una expresi¢n de caracteres encerrada entre par‚ntesis.
  *
  *      <b>FROM <xcDesdeArchivo></b> es el nombre del archivo de estructura
  *      extendida desde la cual el archivo de destino va a ser construido.
- *      Este puede ser especificado como un literal de nombre de archivo  
+ *      Este puede ser especificado como un literal de nombre de archivo
  *      ¢ como una expresi¢n de caracteres encerrada entre par‚ntesis.
  *
  *      <b>VIA <xcNombreRDD></b> es el nombre del RDD con el cual se va
- *      a crear el archivo de destino. Si es omitido, el RDD por defecto 
- *      es usado. 
- *      Este puede ser especificado como un literal de nombre de archivo 
+ *      a crear el archivo de destino. Si es omitido, el RDD por defecto
+ *      es usado.
+ *      Este puede ser especificado como un literal de nombre de archivo
  *      ¢ como una expresi¢n de caracteres encerrada entre par‚ntesis.
  *
  *      <b>NEW</b> abre el nombre del archivo de destino <cNombreArch> en
  *      la pr¢xima  rea disponible sin uso y hace de ‚sta el  rea actual.
- *      Si es omitido, abre el archivo de destino en el  rea de trabajo 
- *      actual. 
+ *      Si es omitido, abre el archivo de destino en el  rea de trabajo
+ *      actual.
  *
  *      <b>ALIAS <xcAlias></b> es el alias opcional del archivo de destino
  *      para usar con el comando USE. Si ninguno es especificado el alias
  *      esta basado en el nombre <cNombreArchivo>.
  *  $DESCRIPTION$
  *      El comando CREATE FROM abre un archivo de estructura extendida
- *	<xcDesdeArchivo> donde cada registro contiene al menos los 
- *	siguientes campos (en cualquier orden):
+ *      <xcDesdeArchivo> donde cada registro contiene al menos los
+ *      siguientes campos (en cualquier orden):
  *      FIELD_NAME, FIELD_TYPE, FIELD_LEN y FIELD_DEC. Cualquier otro campo
- *      es ignorado. Con esta informaci¢n el archivo <cNombreArchivo> es 
- *      creado y abierto en el nuevo area de trabajo (de acuerdo a la 
+ *      es ignorado. Con esta informaci¢n el archivo <cNombreArchivo> es
+ *      creado y abierto en el nuevo area de trabajo (de acuerdo a la
  *      cl usula NEW) si ‚sta es una nueva  rea de trabajo, esta se vuelve
  *      la actual.
  *
- *      Por razones prehist¢ricas de compatibilidad, los campos de 
- *      caracteres del archivo de estructura extendida los cuales sean 
- *      mayores de 255 caracteres deber¡an ser tratados en una forma 
- *      especial al escribir parte de la longitud en el campo FIELD_DEC 
+ *      Por razones prehist¢ricas de compatibilidad, los campos de
+ *      caracteres del archivo de estructura extendida los cuales sean
+ *      mayores de 255 caracteres deber¡an ser tratados en una forma
+ *      especial al escribir parte de la longitud en el campo FIELD_DEC
  *      de acuerdo a la siguiente f¢rmula:
  *
  *      <fixed>
@@ -554,7 +554,7 @@
  *  $COMPLIANCE$
  *      CREATE FROM trabaja exactamente como en CA-Clipper.
  *  $PLATFORMS$
- *      Todas 
+ *      Todas
  *  $SEEALSO$
  *      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate()
  *  $END$
@@ -571,9 +571,9 @@
  *  $SYNTAX$
  *      __FLEDIT( <aEstructura>, [<aListaCampos>] ) --> aEstructuraFiltrada
  *  $ARGUMENTS$
- *      <aEstructura> es un array multidimensional con la estructura de los 
- *      campos de la base de datos, la cual es usualmente la salida de 
- *      DBSTRUCT(), donde cada elemento del array tiene la siguiente 
+ *      <aEstructura> es un array multidimensional con la estructura de los
+ *      campos de la base de datos, la cual es usualmente la salida de
+ *      DBSTRUCT(), donde cada elemento del array tiene la siguiente
  *      estructura:
  *
  *       <table>
@@ -585,22 +585,22 @@
  *       4          nDecimales      DBS_DEC
  *       </table>
  *
- *      <aListaCampos> es un array donde cada elemento es un nombre de 
- *      campo. Los nombres pueden ser especificados en may£sculas o en 
+ *      <aListaCampos> es un array donde cada elemento es un nombre de
+ *      campo. Los nombres pueden ser especificados en may£sculas o en
  *      min£sculas.
  *  $RETURNS$
- *      __FLEDIT() retorna un nuevo array multidimensional donde cada 
- *      elemento esta en la misma estructura que el original <aEstructura>, 
- *      pero el array es construido de acuerdo a la lista de campos en 
+ *      __FLEDIT() retorna un nuevo array multidimensional donde cada
+ *      elemento esta en la misma estructura que el original <aEstructura>,
+ *      pero el array es construido de acuerdo a la lista de campos en
  *      <aListaCampos>.
  *      Si <aListaCampos> esta vac¡o, __FLEDIT() retorna una referencia al
  *      array original <aEstructura>.
  *  $DESCRIPTION$
- *      __FLEDIT() puede ser usado para crear un subconjunto de la 
+ *      __FLEDIT() puede ser usado para crear un subconjunto de la
  *      estructura de la base de datos, basada en una lista de campos dadas.
  *
- *      Note que los nombres de campos en <aEstructura> DEBEN ser 
- *      especificados en may£sculas de lo contrario podr¡a no encontrarse 
+ *      Note que los nombres de campos en <aEstructura> DEBEN ser
+ *      especificados en may£sculas de lo contrario podr¡a no encontrarse
  *      coincidencia.
  *
  *      SET EXACT no tiene efecto en el valor retornado.
@@ -638,16 +638,16 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      CA-Clipper tiene una funci¢n interna no documentada llamada 
- *      __FLEDIT(), en Harbour nosotros la llamamos  __dbStructFilter(). 
- *      El nuevo nombre da una mejor descripci¢n de qu‚ es lo que la funci¢n 
- *      hace. En Harbour __FLEDIT(), simplemente llama a __dbStructFilter() 
+ *      CA-Clipper tiene una funci¢n interna no documentada llamada
+ *      __FLEDIT(), en Harbour nosotros la llamamos  __dbStructFilter().
+ *      El nuevo nombre da una mejor descripci¢n de qu‚ es lo que la funci¢n
+ *      hace. En Harbour __FLEDIT(), simplemente llama a __dbStructFilter()
  *      y por tanto la segunda es la funci¢n recomendada.
  *
- *      Esta funci¢n es s¢lo visible si ../source/rdd/dbstrux.prg fu‚ 
+ *      Esta funci¢n es s¢lo visible si ../source/rdd/dbstrux.prg fu‚
  *      compilado con la bandera HB_C52_UNDOC.
  *  $PLATFORMS$
- *      Todas 
+ *      Todas
  *  $FILES$
  *      El archivo de cabecera es dbstruct.ch
  *      La librer¡a es rdd
@@ -665,12 +665,12 @@
  *  $ONELINER$
  *      Filtra un array con estructura de base de datos.
  *  $SYNTAX$
- *      __dbStructFilter( <aEstructura>, [<aListaCampos>] ) 
+ *      __dbStructFilter( <aEstructura>, [<aListaCampos>] )
  *                                              --> aEstructuraFiltrada
  *  $ARGUMENTS$
- *      <aEstructura> es un array multidimensional con la estructura de 
- *      los campos de la base de datos, la cual es usualmente la salida 
- *      de DBSTRUCT(), donde cada elemento del array tiene la siguiente 
+ *      <aEstructura> es un array multidimensional con la estructura de
+ *      los campos de la base de datos, la cual es usualmente la salida
+ *      de DBSTRUCT(), donde cada elemento del array tiene la siguiente
  *      estructura:
  *
  *       <table>
@@ -682,22 +682,22 @@
  *       4          nDecimales      DBS_DEC
  *       </table>
  *
- *      <aListaCampos> es un array donde cada elemento es un nombre de 
+ *      <aListaCampos> es un array donde cada elemento es un nombre de
  *      campo.
  *      Los nombres pueden ser especificados en may£sculas o en min£sculas.
  *  $RETURNS$
- *      __dbStructFilter() retorna un nuevo array multidimensional donde 
- *      cada elemento esta en la misma estructura que el original 
+ *      __dbStructFilter() retorna un nuevo array multidimensional donde
+ *      cada elemento esta en la misma estructura que el original
  *      <aEstructura>, pero el array es construido de acuerdo a la lista de
- *      campos en el array <aListaCampos>. Si <aListaCampos> esta vac¡o, 
- *      __dbStructFilter() retorna una referencia al array original 
+ *      campos en el array <aListaCampos>. Si <aListaCampos> esta vac¡o,
+ *      __dbStructFilter() retorna una referencia al array original
  *      <aEstructura>.
  *  $DESCRIPTION$
- *      __dbStructFilter() puede ser usado para crear un subconjunto de la 
+ *      __dbStructFilter() puede ser usado para crear un subconjunto de la
  *      estructura de la base de datos, basada en una lista de campos dadas.
  *
- *      Note que los nombres de campos en <aEstructura> DEBEN ser 
- *      especificados en may£sculas de lo contrario podr¡a no encontrarse 
+ *      Note que los nombres de campos en <aEstructura> DEBEN ser
+ *      especificados en may£sculas de lo contrario podr¡a no encontrarse
  *      coincidencia.
  *
  *      SET EXACT no tiene efecto en el valor retornado.
@@ -732,18 +732,17 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __dbStructFilter() es una extensi¢n de Harbour. CA-Clipper tiene 
- *	una funci¢n interna no documentada llamada __FLEDIT(), que hace lo 
- *      mismo. El nuevo nombre da una mejor descripci¢n de que es lo que 
- *      la funci¢n hace. 
+ *      __dbStructFilter() es una extensi¢n de Harbour. CA-Clipper tiene
+ *      una funci¢n interna no documentada llamada __FLEDIT(), que hace lo
+ *      mismo. El nuevo nombre da una mejor descripci¢n de que es lo que
+ *      la funci¢n hace.
  *  $PLATFORMS$
- *      Todas 
+ *      Todas
  *  $FILES$
  *      El archivo de cabecera es dbstruct.ch
  *      La librer¡a es rdd
  *  $SEEALSO$
  *      DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__FLEDIT()*
  *  $END$
- */  
-
+ */
 
