@@ -165,6 +165,7 @@ static BYTE s_pcode_len[] = {
    1,        /* HB_P_SEQRECOVER,           */
    3,        /* HB_P_SFRAME,               */
    5,        /* HB_P_STATICS,              */
+   0,        /* HB_P_STATICNAME,           */
    1,        /* HB_P_SWAPALIAS,            */
    1,        /* HB_P_TRUE,                 */
    1,        /* HB_P_ZERO,                 */
