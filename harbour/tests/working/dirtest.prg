@@ -18,12 +18,14 @@ local cOs := OS(), cNewLine
 // adir := asort( directory(filespec,attribs),,, {|x,y|upper(x[1]) < upper(y[1])} )
 adir := directory(filespec,attribs)
 
+SET CENTURY ON
+
 for x := 1 to len(adir)
    outstd(cNewLine)
    outstd(padr(adir[x,1], 20), "|", ;
-          padl(adir[x,2], 10), "|", ;
-          padr(adir[x,3],  8), "|", ;
-          padr(adir[x,4],  8), "|", ;
+          transform(adir[x,2], "9,999,999,999"), "|", ;
+          adir[x,3], "|", ;
+          adir[x,4], "|", ;
           adir[x,5])
 next x
 

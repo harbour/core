@@ -7,9 +7,10 @@
  *         by the optional file and attribute mask.
  *
  * Latest mods:
- * 1.28   19990722   ptucker   Corrected? NT Extended modes
- * 1.21   19990722   ptucker   Implimented directory for MSVC
- *                             Includes new attributes
+ * 1.44   19990911   dholm     Changed file size to numeric, like Clipper.
+ * 1.28   19990722   ptucker   Corrected? NT Extended modes.
+ * 1.21   19990722   ptucker   Implimented directory for MSVC.
+ *                             Includes new attributes.
  * 1.20   19990722   ptucker   Corrected hang when attribute types have
  *                             been requested.
  *
@@ -160,7 +161,6 @@ HARBOUR HB_DIRECTORY( void )
    char   pfext[ _POSIX_PATH_MAX + 1 ];
    char   fname[ _POSIX_PATH_MAX + 1 ];
    char   fext[ _POSIX_PATH_MAX + 1 ];
-   char   filesize[ 10 ];
    char   ddate[ 9 ];
    char   ttime[ 9 ];
    char   aatrib[ 8 ];
@@ -313,7 +313,6 @@ HARBOUR HB_DIRECTORY( void )
       {
          attrib = 0;
          aatrib[ 0 ] = '\0';
-         filesize[ 0 ] = '\0';
 
 #if defined(_MSC_VER)
          strcpy( filename, entry.name );
@@ -336,8 +335,6 @@ HARBOUR HB_DIRECTORY( void )
 /* This might be a problem under Novell when the file is a directory */
 /* needs test */
             fsize = statbuf.st_size;
-            sprintf( filesize, "%ld", fsize );
-
             ftime = statbuf.st_mtime;
             ft = localtime( &ftime );
             sprintf( ddate, "%04d%02d%02d",
@@ -447,7 +444,7 @@ HARBOUR HB_DIRECTORY( void )
          {
             /* array  cname, csize, ddate, ctime, cattributes */
             pfilename = hb_itemPutC( NULL, filename );
-            psize     = hb_itemPutC( NULL, filesize );
+            psize     = hb_itemPutNL( NULL, fsize );
             pdate     = hb_itemPutDS( NULL, ddate );
             ptime     = hb_itemPutC( NULL, ttime );
             pattr     = hb_itemPutC( NULL, aatrib );

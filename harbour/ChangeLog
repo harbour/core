@@ -1,3 +1,12 @@
+19990912-00:45 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/dir.c
+    ! Changed file size array element to numeric to match CA-Clipper.
+  * tests/working/dirtest.prg
+    + Added 'SET CENTURY ON'.
+    - Removed padding from size array element.
+    - Added a TRANSFORM call to size array element.
+    - Removed padding from date and time array elements.
+
 19990911-20:25 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/tone.c
     ! Added '|| defined(__CYGWIN__)' to the #if block for HARBOUR_GCC_OS2
