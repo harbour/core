@@ -1,3 +1,31 @@
+2001-04-17 21:30 CET Martin Vogel <vogel@inttec.de>
+   + contrib/libct/atnum.c
+     + AFTERATNUM() function
+     + BEFORATNUM() function
+     + ATNUM()      function
+
+   * contrib/libct/Makefile
+     * changed library name to libct
+     + added atnum.c
+   * contrib/libct/makefile.bc
+     * changed library name to libct
+     + added atnum.c
+   * contrib/libct/makefile.vc
+     * changed library name to libct
+     + added atnum.c
+
+   + contrib/libct/tests/afteratn.prg
+   + contrib/libct/tests/atnum.prg
+   + contrib/libct/tests/beforatn.prg
+
+   * contrib/libct/tests/Makefile
+     + added afteratn.prg
+     + added atnum.prg
+     + added beforatn.prg
+
+   * contrib/libct/ct.ch
+     * error correction
+
 2001-04-17 10:35 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/vm/arrays.c
      ! Fixed GPF when aCloning an Array with circular refrences to itself.

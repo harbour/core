@@ -6,6 +6,7 @@ ROOT = ../../
 
 C_SOURCES=\
 	addascii.c \
+	atnum.c \
 	ctset.c \
 	ctstr.c \
 	ctchksum.c \

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   CT3 Harbour header file
+ *   Test CT3 functions AFTERATNUM() 
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -53,10 +53,58 @@
  */
 
 
-#ifndef _CT_CH
-#define _CT_CH 1
+#include "../ct.ch"
 
-#define CT_SETATLIKE_EXACT     0
-#define CT_SETATLIKE_WILDCARD  1
 
-#endif
+procedure main
+
+local cStr := "...This...is...a...test!"
+
+ qout ("Begin test of AFTERATNUM()")
+ qout ("")
+ qout ("  Value of cStr is:"+chr(34)+cStr+chr(34))
+ qout ("")
+
+ // Some simple tests
+ qout ("  Simple tests:")
+ qout ([  afteratnum ("..",cStr)     should be "test!",])
+ qout ([                                and is "]+afteratnum ("..", cStr)+["])
+ qout ([  afteratnum ("..",cStr,2)   should be ".is...a...test!",])
+ qout ([                                and is "]+afteratnum ("..", cStr, 2)+["])
+ qout ([  afteratnum ("..",cStr,2,2) should be ".a...test!",])
+ qout ([                                and is "]+afteratnum ("..", cStr, 2, 2)+["])
+ qout ()
+
+ // Tests with CSetAtMuPa(.T.)
+ qout ("  Multi-Pass tests")
+ qout ("  Setting csetatmupa() to .T.")
+ csetatmupa (.T.)
+ qout ([  afteratnum ("..",cStr)     should be "test!",])
+ qout ([                                and is "]+afteratnum ("..", cStr)+["])
+ qout ([  afteratnum ("..",cStr,2)   should be "This...is...a...test!",])
+ qout ([                                and is "]+afteratnum ("..", cStr, 2)+["])
+ qout ([  afteratnum ("..",cStr,2,2) should be "is...a...test!",])
+ qout ([                                and is "]+afteratnum ("..", cStr, 2, 2)+["])
+ qout ("  Setting csetatmupa() to .F.")
+ csetatmupa (.F.)
+ qout ()
+
+ // Tests mit SetAtlike (1)
+ qout ("  SetAtLike tests")
+ qout ([  Setting setatlike (CT_SETATLIKE_WILDCARD, ".")])
+ setatlike (CT_SETATLIKE_WILDCARD, ".")
+ qout ([  afteratnum ("..",cStr) should be "",])
+ qout ([                            and is "]+afteratnum ("..", cStr)+["])
+ qout ([  afteratnum ("..",cStr,2,2) should be "s...is...a...test!",])
+ qout ([                                and is "]+afteratnum ("..", cStr, 2, 2)+["])
+ qout ([  afteratnum ("..",cStr,2,10) should be ".a...test!",])
+ qout ([                                 and is "]+afteratnum ("..", cStr, 2, 10)+["])
+ qout ()
+
+ qout ("End test of AFTERATNUM()")
+ qout ()
+
+return 
+
+
+
