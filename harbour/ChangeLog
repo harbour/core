@@ -1,3 +1,7 @@
+2001-07-24 20:45  GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   +doc/es/math.txt
+      *Math docs translated to spanish. Thanks for Ricardo Ramírez R.
+
 2001-07-24  08:45 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>/Jose Lalin <dezac@corevia.com>
    * source/compiler/gencobj.c
      * Bugs fixed provide by Jose

@@ -1,0 +1,577 @@
+/*
+ * $Id$
+ */
+
+
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2001 Ricardo Ramírez R. <rramirez@crownlitometal.com>
+ * Documentación en Español de: ABS(), EXP(), LOG(), INT(), MAX()
+ *                              MIN(), SQRT(), ROUND()
+ *
+ *      Basado en ../en/math.txt
+ *
+ * Vea doc/license.txt por los términos de la licencia.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ABS()
+ *  $CATEGORY$
+ *      Matemáticas
+ *  $ONELINER$
+ *      Devuelve el valor absoluto de un número.
+ *  $SYNTAX$
+ *      ABS(<nNumbero>) --> <nAbsNumbero>
+ *  $ARGUMENTS$
+ *      <nNumbero> Cualquier número.
+ *  $RETURNS$
+ *      <nAbsNumbero> El valor absoluto de un número.
+ *  $DESCRIPTION$
+ *      Esta función entrega el valor absoluto de un valor o una expresión
+ *      <nNumbero>.
+ *  $EXAMPLES$
+ *      Function Main()
+ *
+ *         Local nNumbero  := 50
+ *         Local nNumbero1 := 27
+ *
+ *         qout( nNumero - nNumero1 )
+ *         qout( nNumero1 - nNumero )
+ *         qout( ABS(nNumero - nNumero1 ) )
+ *         qout( ABSnNumero1 - nNumero ) )
+ *         qout( ABS( -1 * 345 ) )
+ *      Return Nil
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta es una función compatible con CA-Clipper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      Se encuentra en la librería rtl
+ *  $SEEALSO$
+ *      EXP()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      EXP()
+ *  $CATEGORY$
+ *      Matemáticas
+ *  $ONELINER$
+ *      Calcula el valor de e elevado a la potencia indicada.
+ *  $SYNTAX$
+ *      EXP( <nNumero> ) --> <nValor>
+ *  $ARGUMENTS$
+ *      <nNumero> Cualquier número real.
+ *  $RETURNS$
+ *      <nValor>  El anti-logaritmo de <nNumero>.
+ *  $DESCRIPTION$
+ *      Esta function devuelve el valor de e elevado a la potencia indicada en
+ *      <nNumero>.  Es la contraria de LOG().
+ *  $EXAMPLES$
+ *      ? EXP(45)
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta es una función compatible con CA-Clipper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      Se encuentra en la librería rtl
+ *  $SEEALSO$
+ *      LOG()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      INT()
+ *  $CATEGORY$
+ *      Matemáticas
+ *  $ONELINER$
+ *      Devuelve la parte entera de un valor númerico.
+ *  $SYNTAX$
+ *      INT( <nNumero> ) --> <nIntNumbero>
+ *  $ARGUMENTS$
+ *      <nNumero> Cualquier valor númerico.
+ *  $RETURNS$
+ *      <nIntNumbero> La parte entera de un valor númerico.
+ *  $DESCRIPTION$
+ *      Esta función convierte una expresión numérica en entero.  Todos
+ *      lo dígitos decimales son truncados.  Esta función no redondea el
+ *      valor ni por encima ni por debajo; simplemente trunca el valor
+ *      desde el punto decimal.
+ *  $EXAMPLES$
+ *      SET Decimal to 5
+ *      ? INT(632512.62541)
+ *      ? INT(845414111.91440)
+ *      </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta es una función compatible con CA-Clipper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      Se encuentra en la librería rtl
+ *  $SEEALSO$
+ *      ROUND(),STRZERO()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      LOG()
+ *  $CATEGORY$
+ *      Matemáticas
+ *  $ONELINER$
+ *      Devuelve el logaritmo natural de un número.
+ *  $SYNTAX$
+ *      LOG( <nNumero> ) --> <nLog>
+ *  $ARGUMENTS$
+ *      <nNumero> Cualquier expresión numérica.
+ *  $RETURNS$
+ *      <nExponente> El logaritmo natural de <nNumero>.
+ *  $DESCRIPTION$
+ *      Esta función devuelve el logaritmo natural del número <nNumero>.
+ *      Si <nNumero> es 0 o menor que 0, se produce un desvordamiento numérico,
+ *      el cual es mostrado en la pantalla como una serie de asteriscos.
+ *      Esta función es la contraria de EXP().
+ *  $EXAMPLES$
+ *      ? LOG(632512)
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta es una función compatible con CA-Clipper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      Se encuentra en la librería rtl
+ *  $SEEALSO$
+ *      EXP()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      MAX()
+ *  $CATEGORY$
+ *      Matemáticas
+ *  $ONELINER$
+ *      Devuelve el mayor de dos números o fechas.
+ *  $SYNTAX$
+ *      MAX(<xValor>,<xValor1>)  --> <xMax>
+ *  $ARGUMENTS$
+ *      <xValor> Cualquier fecha o valor númerico.
+ *
+ *      <xValor1> Cualquier fecha o valor númerico (con el mismo tipo de <xValor>).
+ *  $RETURNS$
+ *      <xMax> El número mayor (o la fecha mayor).
+ *  $DESCRIPTION$
+ *      Esta función devuelve el mayor de las dos expresiones pasadas. Si
+ *      <xValor> y <xValor1> son del tipo númerico, el valor devuelto
+ *      por esta función será tambien numérico y será el mayor de los numeros
+ *      pasados a dicha función. Si <xValor> y <xValor1> son del tipo fecha
+ *      el valor devuelto será tambien de tipo fecha.  Este será la mayor de
+ *      ellas.
+ *  $EXAMPLES$
+ *      ? MAX(214514214,6251242142)
+ *      ? MAX(CTOD('11/11/2000'),CTOD('21/06/2014')
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta es una función compatible con CA-Clipper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      Se encuentra en la librería rtl
+ *  $SEEALSO$
+ *      Min()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      MIN()
+ *  $CATEGORY$
+ *      Matemáticas
+ *  $ONELINER$
+ *      Determina el menor de dos números o fechas.
+ *  $SYNTAX$
+ *      MIN(<xValor>,<xValor1>)  --> <xMin>
+ *  $ARGUMENTS$
+ *      <xValor>  Cualquier fecha o valor numérico.
+ *
+ *      <xValor1> Cualquier fecha o valor numérico (con el mismo tipo de <xValor>).
+ *  $RETURNS$
+ *      <xMin>  El valor o fecha menor.
+ *  $DESCRIPTION$
+ *      Esta función devuelve el menor valor del par de expresiones recibidas.
+ *      <xValor> y <xValor1> deben ser del mismo tipo. Si es numérico, el menor valor
+ *      es devuelto.  Si es fecha, la fecha menor es devuelta.
+ *  $EXAMPLES$
+ *      ? MIN(214514214,6251242142)
+ *      ? MIN(CTOD('11/11/2000'),CTOD('21/06/2014')
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta es una función compatible con CA-Clipper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      Se encuentra en la librería rtl
+ *  $SEEALSO$
+ *      MAX()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      MOD()
+ *  $CATEGORY$
+ *      Matemáticas
+ *  $ONELINER$
+ *      Devuelve el residuo de dos números.
+ *  $SYNTAX$
+ *      MOD( <nNumero>,<nNumero1>) -->  <nResiduo>
+ *  $ARGUMENTS$
+ *      <nNumero>  Numerador en una expresión de división.
+ *
+ *      <nNumero1> Denominador en una expresión de división.
+ *  $RETURNS$
+ *      <nResiduo>  El residuo despues de la operación de división.
+ *  $DESCRIPTION$
+ *      Esta función devuleve el residuo de un número dividido entre otro.
+ *  $EXAMPLES$
+ *      ? MOD(12,8.521)
+ *      ? Mod(12,0)
+ *      ? Mod(62412.5142,4522114.12014)
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta es una función compatible con CA-Clipper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      Se encuentra en la librería rtl
+ *  $SEEALSO$
+ *      %
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SQRT()
+ *  $CATEGORY$
+ *      Matemáticas
+ *  $ONELINER$
+ *      Calcula la raíz cuadrada de un número.
+ *  $SYNTAX$
+ *      SQRT( <nNumero> ) --> <nSqrt>
+ *  $ARGUMENTS$
+ *      <nNumero> Cualquier valor numérico.
+ *  $RETURNS$
+ *      <nSqrt>   La raíz cuadrada de <nNumero>.
+ *  $DESCRIPTION$
+ *      Esta función devuelve la raíz cuadrada de <nNumero>.  La presición de esta
+ *      evaluación esta basada únicamente en la asignación del comando SET DECIMAL TO
+ *      Cualquier número negativo pasado como <nNumero> siempre retornará 0.
+ *  $EXAMPLES$
+ *      SET Decimal to 5
+ *      ? SQRT(632512.62541)
+ *      ? SQRT(845414111.91440)
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta es una función compatible con CA-Clipper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      Se encuentra en la librería rtl
+ *  $SEEALSO$
+ *      ROUND()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ROUND()
+ *  $CATEGORY$
+ *      Matemáticas
+ *  $ONELINER$
+ *      Redondea una expresión numérica.
+ *  $SYNTAX$
+ *      ROUND( <nNumero>, <nLugares> ) --> <nResultado>
+ *  $ARGUMENTS$
+ *      <nNumero>    Cualquier valor numérico.
+ *
+ *      <nLugares>   El númbero de lugares decimales a redondear.
+ *  $RETURNS$
+ *      <nResultado> El número redondeado.
+ *  $DESCRIPTION$
+ *      Esta función redondea el valor de <nNumero> a la cantidad de lugares
+ *      decimales especificados en <nLugares>. Si el valor de <nLugares> es un número
+ *      negativo, la función intentará redondear <nNumero> en el número completo.
+ *      Números de 5 a 9 serán redondeados hacia arriba, el resto redondeados abajo.
+ *  $EXAMPLES$
+ *      ? ROUND(632512.62541,5)
+ *      ? ROUND(845414111.91440,3)
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta es una función compatible con CA-Clipper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      Se encuentra en la librería rtl
+ *  $SEEALSO$
+ *      INT(),STR(),VAL(),SET FIXED
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_getMathError()
+ *  $CATEGORY$
+ *      Matemáticas API
+ *  $ONELINER$
+ *      Obtener el último error de la librería matemática.
+ *  $SYNTAX$
+ *      C Prototype
+ *
+ *      #include <hbmath.h>
+ *      hb_getMathError (void) --> int iMathError
+ *  $ARGUMENTS$
+ *
+ *  $RETURNS$
+ *
+ *  $DESCRIPTION$
+ *
+ *  $EXAMPLES$
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compatibilidad no es aplicable a las llamadas a las APIs.
+ *  $FILES$
+ *      Se encuentra en la librería rtl
+ *  $PLATFORMS$
+ *      Todas
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_resetMathError()
+ *  $CATEGORY$
+ *      Matemáticas API
+ *  $ONELINER$
+ *      Inicializa el error matemático.
+ *  $SYNTAX$
+ *      C Prototype
+ *
+ *      #include <hbmath.h>
+ *      hb_resetMathError (void) --> void
+ *  $ARGUMENTS$
+ *
+ *  $RETURNS$
+ *
+ *  $DESCRIPTION$
+ *
+ *  $EXAMPLES$
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compatibilidad no es aplicable a las llamadas a las APIs.
+ *  $FILES$
+ *      Se encuentra en la librería rtl
+ *  $PLATFORMS$
+ *      Todas
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_isMathHandler()
+ *  $CATEGORY$
+ *      Matemáticas API
+ *  $ONELINER$
+ *      Verifica si el manejador de errores de Harbour esta disponible.
+ *  $SYNTAX$
+ *      C Prototype
+ *
+ *      #include <hbmath.h>
+ *      hb_isMathHandler (void) --> int iIsMathHandler
+ *  $ARGUMENTS$
+ *
+ *  $RETURNS$
+ *
+ *  $DESCRIPTION$
+ *
+ *  $EXAMPLES$
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compatibilidad no es aplicable a las llamadas a las APIs.
+ *  $FILES$
+ *      Se encuentra en la librería rtl
+ *  $PLATFORMS$
+ *      Todas
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_installMathHandler()
+ *  $CATEGORY$
+ *      Matemáticas API
+ *  $ONELINER$
+ *      Agrega un manejador de errores definido por el usuario la
+ *      cadena de manejadores de error.
+ *  $SYNTAX$
+ *      C Prototype
+ *
+ *      #include <hbmath.h>
+ *      hb_installMathHandler (HB_MATH_HANDLERPROC handlerproc) --> HB_MATH_HANDLERHANDLE handle
+ *  $ARGUMENTS$
+ *      handlerproc   manejador para el manejador de errores
+ *  $RETURNS$
+ *      handle        indentificador del manejador en la cadena de identificadores.
+ *  $DESCRIPTION$
+ *
+ *  $EXAMPLES$
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compatibilidad no es aplicable a las llamadas a las APIs.
+ *  $FILES$
+ *      Se encuentra en la librería rtl
+ *  $PLATFORMS$
+ *      Todas
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_deinstallMathHandler()
+ *  $CATEGORY$
+ *      Matemáticas API
+ *  $ONELINER$
+ *      Quita un manejador de errores definido por el usuario de la
+ *      cadena de manejadores de error.
+ *  $SYNTAX$
+ *      C Prototype
+ *
+ *      #include <hbmath.h>
+ *      hb_deinstallMathHandler (HB_MATH_HANDLERHANDLE handle) --> int iSuccess
+ *  $ARGUMENTS$
+ *      handle        indetificador devuelto por hb_installMathHandler()
+ *  $RETURNS$
+ *      iSuccess      Como termino el proceso.
+ *  $DESCRIPTION$
+ *
+ *  $EXAMPLES$
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compatibilidad no es aplicable a las llamadas a las APIs.
+ *  $FILES$
+ *      Se encuentra en la librería rtl
+ *  $PLATFORMS$
+ *      Todas
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_setMathHandlerStatus()
+ *  $CATEGORY$
+ *      Matemáticas API
+ *  $ONELINER$
+ *      Pone el estado del manejador de errores definido por el usuario en la
+ *      cadena de manejadores de error.
+ *  $SYNTAX$
+ *      C Prototype
+ *
+ *      #include <hbmath.h>
+ *      hb_setMathHandlerStatus (HB_MATH_HANDLERHANDLE handle, int status) --> int iSuccess
+ *  $ARGUMENTS$
+ *      handle        indetificador devuelto por hb_installMathHandler()
+ *      status        nuevo valor del estado, puede ser uno de los siguientes:
+ *                       HB_MATH_HANDLER_STATUS_INACTIVE
+ *                         --> indetificador presente pero no activo
+ *                       HB_MATH_HANDLER_STATUS_ACTIVE
+ *                         --> indetificador presente y activo
+ *  $RETURNS$
+ *      iSuccess      Como termino el proceso.
+ *  $DESCRIPTION$
+ *
+ *  $EXAMPLES$
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compatibilidad no es aplicable a las llamadas a las APIs.
+ *  $FILES$
+ *      Se encuentra en la librería rtl
+ *  $PLATFORMS$
+ *      Todas
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_getMathHandlerStatus()
+ *  $CATEGORY$
+ *      Matemáticas API
+ *  $ONELINER$
+ *      Lee el estado del manejador de errores definido por el usuario en la
+ *      cadena de manejadores de error.
+ *  $SYNTAX$
+ *      C Prototype
+ *
+ *      #include <hbmath.h>
+ *      hb_getMathHandlerStatus (HB_MATH_HANDLERHANDLE handle) --> int iStatus
+ *  $ARGUMENTS$
+ *      handle        indetificador devuelto por hb_installMathHandler()
+ *  $RETURNS$
+ *      iStatus       Estado del manejador de errores.
+ *  $DESCRIPTION$
+ *
+ *  $EXAMPLES$
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compatibilidad no es aplicable a las llamadas a las APIs.
+ *  $FILES$
+ *      Se encuentra en la librería rtl
+ *  $PLATFORMS$
+ *      Todas
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
