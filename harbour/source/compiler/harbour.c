@@ -2582,10 +2582,10 @@ static void hb_compOptimizeJumps( void )
    ULONG ulOptimized = 0;
    ULONG ulNextByte  = 0;
    int * piShifts;
-   int iNOOP;
+   ULONG iNOOP;
    ULONG ulOffset;
    ULONG ulBytes2Copy;
-   int iJump;
+   ULONG iJump;
    BOOL bForward = FALSE;
 
    /* Needed so the pasting of PCODE pieces below will work correctly  */

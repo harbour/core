@@ -1026,8 +1026,19 @@ void    hb_fsCommit( FHANDLE hFileHandle )
    /* NOTE: close() functions releases all lock regardles if it is an
     * original or duplicated file handle
    */
-   s_uiErrorLast = FS_ERROR;
-   
+   #if defined(_POSIX_SYNCHRONIZED_IO)
+     /* faster - flushes data buffers only, without updating directory info 
+     */
+     if( fdatasync( hFileHandle ) < -1 )
+   #else
+     /* slower - flushes all file data buffers and i-node info 
+     */
+     if( fsync( hFileHandle ) < -1 )
+   #endif
+       s_uiErrorLast = FS_ERROR;	/* failure */
+   else
+       s_uiErrorLast = 0;
+       
 #else
 
    s_uiErrorLast = FS_ERROR;

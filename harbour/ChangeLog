@@ -1,3 +1,11 @@
+20000501-18:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+   *source/rtl/filesys.c
+       * added support for hb_fsCommit() in Unix-like OS
+       
+   *source/compiler/harbour.c
+       * fixed signed/unsigned warnings
+
 20000501-18:48 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbpcode.h
