@@ -582,7 +582,7 @@ FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
             __NTerror();
          #endif
 
-   //      errno = GetLastError();
+      /* errno = GetLastError(); */
       hFileHandle=HandleToLong(hFile);
       s_uiErrorLast = errno;
    }
@@ -696,6 +696,8 @@ FHANDLE hb_fsCreate( BYTE * pFilename, USHORT uiAttr )
          when the create is successful! */
       s_uiErrorLast = errno;
    }
+
+#else
 
 #else
 
