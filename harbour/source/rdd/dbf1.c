@@ -1248,6 +1248,17 @@ ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          else
             uiError = EDBF_DATATYPE;
       }
+      // Must precede HB_IS_NUMERIC() because a DATE is also a NUMERIC. (xHarbour)
+      else if( HB_IS_DATE( pItem ) )
+      {
+         if( pField->uiType == HB_IT_DATE )
+         {
+            hb_itemGetDS( pItem, szBuffer );
+            memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ], szBuffer, 8 );
+         }
+         else
+            uiError = EDBF_DATATYPE;
+      }
       else if( HB_IS_NUMERIC( pItem ) )
       {
          if( pField->uiType == HB_IT_LONG )
@@ -1293,16 +1304,6 @@ ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             else
                memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
                        szBuffer, pField->uiLen );
-         }
-         else
-            uiError = EDBF_DATATYPE;
-      }
-      else if( HB_IS_DATE( pItem ) )
-      {
-         if( pField->uiType == HB_IT_DATE )
-         {
-            hb_itemGetDS( pItem, szBuffer );
-            memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ], szBuffer, 8 );
          }
          else
             uiError = EDBF_DATATYPE;
@@ -1679,6 +1680,14 @@ ERRCODE hb_dbfInfo( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 
       case DBI_MEMOEXT:
          hb_itemPutC( pItem, DBF_MEMOEXT );
+         break;
+
+      case DBI_FULLPATH:
+         hb_itemPutC( pItem, pArea->szDataFileName);
+         break;
+
+      case DBI_SHARED:
+         hb_itemPutL( pItem, pArea->fShared );
          break;
    }
 
