@@ -77,9 +77,12 @@ Function main( cFile, p1, p2, p3 )
 
 Local nPos
 Local aDef := {}
+Local allParam
 Default p1 To ""
 Default p2 To ""
 Default p3 To ""
+allParam:=Upper(p1) + Upper(p2) +p3
+allparam:=strtran(allparam,"/","-")
 If Pcount() == 0
    ?? "Harbour Make Utility"
    ? "Copyright 1999-2000, http://www.harbour-project.org"
@@ -101,35 +104,44 @@ If cFile == NIL
    Return Nil
 Endif
 If Pcount() == 2
-   If Upper( Left( p1, 2 ) ) == "-B" .or. Upper( Left( p1, 2 ) ) == "/B"
+   if at("-B",allparam)>0
       lBcc := .T.
       lGcc := .F.
       lVcc := .F.
+      allparam:=strtran(allparam,"-B","")
 
    Endif
-   If Upper( Left( p1, 2 ) ) == "-G" .or. Upper( Left( p1, 2 ) ) == "/G"
+if at("-G",allparam)>0 
       lBcc := .F.
       lGcc := .T.
       lVcc := .F.
+      allparam:=strtran(allparam,"-G","")
 
    Endif
-   If Upper( Left( p1, 2 ) ) == "-V" .or. Upper( Left( p1, 2 ) ) == "/V"
+   if at("-V",allparam)>0
+
       lBcc := .F.
       lGcc := .F.
       lVcc := .T.
+      allparam:=strtran(allparam,"-V","")
 
    Endif
-   If Upper( Left( p1, 2 ) ) == "-E" .or. Upper( Left( p1, 2 ) ) == "/E"
+if at("-E",allparam)>0 
+
+      allparam:=strtran(allparam,"-E","")
+
       crtmakfile( cFile )
       Return nil
    Endif
 
-   If Upper( Left( p1, 2 ) ) == "-P" .or. Upper( Left( p1, 2 ) ) == "/P"
+    if at("-P",allparam)>0
       lPrint := .t.
-   Endif
+      allparam:=strtran(allparam,"-P","")
 
-   If Upper( Left( p1, 2 ) ) == "-D" .or. Upper( Left( p1, 2 ) ) == "/D"
-      adef := listasarray2( Substr( p1, 3 ), ";" )
+
+   Endif
+    if at("-D",allparam)>0
+      adef := listasarray2( alltrim(Substr( allparam, 3 )), ";" )
       For nPos := 1 To Len( aDef )
          If At( "=", adef[ nPos ] ) > 0
             GetParaDefines( aDef[ nPos ] )
@@ -138,46 +150,52 @@ If Pcount() == 2
    Endif
 Endif
 If Pcount() > 2
-   If Upper( Left( p1, 2 ) ) == "-E" .or. Upper( Left( p1, 2 ) ) == "/E" .or. ;
-             Upper( Left( p2, 2 ) ) == "-E" .or. Upper( Left( p2, 2 ) ) == "/E" .or. ;
-             Upper( Left( p3, 2 ) ) == "-E" .or. Upper( Left( p3, 2 ) ) == "/E"
+   if at("-B",allparam)>0
+      lBcc := .T.
+      lGcc := .F.
+      lVcc := .F.
+      allparam:=strtran(allparam,"-B","")
+
+   Endif
+if at("-G",allparam)>0 
+      lBcc := .F.
+      lGcc := .T.
+      lVcc := .F.
+      allparam:=strtran(allparam,"-G","")
+
+
+   Endif
+   if at("-V",allparam)>0 
+
+      lBcc := .F.
+      lGcc := .F.
+      lVcc := .T.
+      allparam:=strtran(allparam,"-V","")
+
+
+   Endif
+if at("-E",allparam)>0
+      allparam:=strtran(allparam,"-E","")
+
+
       crtmakfile( cFile )
       Return nil
    Endif
 
-   If Upper( Left( p1, 2 ) ) == "-P" .or. Upper( Left( p1, 2 ) ) == "/P" .or. Upper( Left( p2, 2 ) ) == "-P" .or. Upper( Left( p2, 2 ) ) == "/P" .or. Upper( Left( p3, 2 ) ) == "-P" .or. Upper( Left( p3, 2 ) ) == "/P"
+    if at("-P",allparam)>0 
       lPrint := .t.
-   Endif
+      allparam:=strtran(allparam,"-P","")
 
-   If Upper( Left( p1, 2 ) ) == "-D" .or. Upper( Left( p1, 2 ) ) == "/D" .or. Upper( Left( p2, 2 ) ) == "-D" .or. Upper( Left( p2, 2 ) ) == "/D" .or. Upper( Left( p3, 2 ) ) == "-D" .or. Upper( Left( p3, 2 ) ) == "/D"
-      adef := listasarray2( Substr( p1, 3 ), ";" )
+
+   Endif
+    if at("-D",allparam)>0 
+      adef := listasarray2( alltrim(Substr( allparam, 3 )), ";" )
       For nPos := 1 To Len( aDef )
          If At( "=", adef[ nPos ] ) > 0
             GetParaDefines( aDef[ nPos ] )
          Endif
       Next
    Endif
-   If Upper( Left( p1, 2 ) ) == "-B" .or. Upper( Left( p1, 2 ) ) == "/B" .or. Upper( Left( p2, 2 ) ) == "-B" .or. Upper( Left( p2, 2 ) ) == "/B" .or. Upper( Left( p3, 2 ) ) == "-B" .or. Upper( Left( p3, 2 ) ) == "/B"
-      lBcc := .T.
-      lGcc := .F.
-      lVcc := .F.
-
-   Endif
-   If Upper( Left( p1, 2 ) ) == "-G" .or. Upper( Left( p1, 2 ) ) == "/G" .or. Upper( Left( p2, 2 ) ) == "-G" .or. Upper( Left( p2, 2 ) ) == "/G" .or. Upper( Left( p3, 2 ) ) == "-G" .or. Upper( Left( p3, 2 ) ) == "/G"
-
-      lBcc := .F.
-      lGcc := .T.
-      lVcc := .F.
-
-   Endif
-   If Upper( Left( p1, 2 ) ) == "-V" .or. Upper( Left( p1, 2 ) ) == "/V" .or. Upper( Left( p2, 2 ) ) == "-V" .or. Upper( Left( p2, 2 ) ) == "/V" .or. Upper( Left( p3, 2 ) ) == "-V" .or. Upper( Left( p3, 2 ) ) == "/V"
-
-      lBcc := .F.
-      lGcc := .F.
-      lVcc := .T.
-
-   Endif
-
 Endif
 
 parsemakfi( cFile )
@@ -211,16 +229,12 @@ Local aTemp     := {}
 Local lMacrosec := .f.
 Local lBuildSec := .f.
 Local lComSec   := .f.
-// ? "i'm in  parsemakfi()"
-// ?"cfile= ",cfile
 nHandle := FT_FUSE( cFile )
-//nHandle:=fopen(cFile)
-// ? "nhandle",nhandle
 If nHandle < 0
    Return nil
 Endif
 cBuffer := Trim( Substr( ReadLN( @lEof ), 1 ) )
-// ? "setting Defines"
+
 Aadd( aDefines, { "HMAKEDIR", If( lgcc, GetMakeDir(), GetMakeDir() + "\.." ) } )
 If lBcc
    Aadd( aDefines, { "MAKEDIR", GetBccDir() + "\.." } )
@@ -363,7 +377,7 @@ Function GetMakeDir()
 
 Local cPath := ""
 Local cExe  := HB_ARGV( 0 )
-// ? "get hbmake path"
+
 cPath := Left( cexe, Rat( "\", cexe ) - 1 )
 Return cPath
 
@@ -381,14 +395,12 @@ Local cPath := ''
 Local cEnv  := Gete( "PATH" )
 Local aEnv  := listasarray2( cEnv, ";" )
 Local nPos
-// ? "get bcc32 path"
+
 
 For nPos := 1 To Len( aEnv )
-   // ? aenv[nPos]
-   // ? nPos
    If File( aenv[ nPos ] + '\bcc32.exe' ) .or. File( Upper( aenv[ nPos ] ) + '\BCC32.EXE' )
       cPath := aenv[ nPos ]
-      // ? cPath
+
       Exit
    Endif
 Next
@@ -409,14 +421,12 @@ Local cPath := ''
 Local cEnv  := Gete( "PATH" )
 Local aEnv  := listasarray2( cEnv, ";" )
 Local nPos
-// ? "get bcc32 path"
+
 
 For nPos := 1 To Len( aEnv )
-   // ? aenv[nPos]
-   // ? nPos
    If File( aenv[ nPos ] + '\cl.exe' ) .or. File( Upper( aenv[ nPos ] ) + '\cl.EXE' )
       cPath := aenv[ nPos ]
-      // ? cPath
+
       Exit
    Endif
 Next
@@ -488,7 +498,7 @@ Local nPos
 Local cRead
 Local aSet     := {}
 Local nMakePos
-// ?"checking defines"
+
 If cTemp == "!endif"
    Return nil
 Endif
@@ -521,7 +531,7 @@ Local cRead       := Alltrim( readln( @leof ) )
 Local nPos
 Local nCount      := 0
 Local aTempMacros := {}
-// ? 'setting commands'
+
 aTempMacros := listasarray2( cREad, " " )
 For nCount := 1 To Len( atempmacros )
    If At( "$", atempmacros[ ncount ] ) > 0
@@ -659,7 +669,7 @@ Local nPos
 Local nCount
 Local nFiles
 Local aOrder := listasarray2( aBuildOrder[ 2 ], " " )
-// ? "compiling files"
+
 For nCount := 1 To Len( aOrder )
    If aOrder[ nCount ] == "$(CFILES)"
       nPos := Ascan( aCommands, { | x, y | x[ 1 ] == ".prg.c:" } )
@@ -672,7 +682,7 @@ For nCount := 1 To Len( aOrder )
          If nPos > 0
             cComm := Strtran( cComm, "o$*", "o" + aCs[ nPos ] )
             cComm := Strtran( cComm, "$**", aPrgs[ nFiles ] )
-            ? " "
+            outstd( " ")
             ! ( cComm )
             cComm := cold
          Endif
@@ -693,11 +703,8 @@ For nCount := 1 To Len( aOrder )
          If nPos > 0
             cComm := Strtran( cComm, "o$*", "o" + aObjs[ nPos ] )
             cComm := Strtran( cComm, "$**", acs[ nFiles ] )
-            ? " "
+            outstd( " ")
             // ? cComm
-            If lGcc
-               ? ccomm
-            Endif
             ! ( cComm )
             ccomm := cold
          Endif
@@ -712,7 +719,7 @@ For nCount := 1 To Len( aOrder )
          //            nPos:=ascan(aObjs,{|x| left(x,at(".",x)) == left(acs[nFiles],at(".",acs[nFiles]))})
          If !Empty( ares[ nFiles ] )
             cComm := Strtran( cComm, "$<", aRes[ nFiles ] )
-            ? " "
+            outstd(" ")
             ! ( cComm )
          Endif
       Next
@@ -736,7 +743,7 @@ Local nPos
 Local cRead
 Local aSet     := {}
 Local nMakePos
-// ?"checking defines"
+
 aSet := listasarray2( ctemp, "=" )
 nPos := Ascan( adefines, { | x, y | x[ 1 ] == aset[ 1 ] } )
 If nPos = 0
@@ -818,7 +825,7 @@ Local lvarismemvar := .f.
 Local ldebug       := .f.
 Local lSupressline := .f.
 Local cGrap        := "NONE"
-Local cDefHarOpts  := "-I$(BHC)\include -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)"
+Local cDefHarOpts  := ""
 Local cDefcOpts    := ""
 Local cDefLinkOpts := ""
 Local lCompMod     := .f.
@@ -871,28 +878,48 @@ Read
 lBcc := If( At( "BCC", cCompiler ) > 0, .t., .f. )
 lVcc := If( At( "MSVC", cCompiler ) > 0, .t., .f. )
 lGcc := If( At( "GCC", cCompiler ) > 0, .t., .f. )
+if lAutomemvar
+cDefHarOpts+="-a"
+endif
+if lvarismemvar
+cDefHarOpts+="-v"
+endif
+if ldebug
+cDefHarOpts+="-b"
+endif
+if lSupressline
+cDefHarOpts+="-l"
+endif
+if lGenppo
+cDefHarOpts+="-p"
+endif
+if lCompmod
+cDefHarOpts+="-m"
+endif
+
+
 If lBcc
    Aadd( aCommands, { ".cpp.obj:", "$(BCB)\BIN\bcc32 $(CFLAG1) $(CFLAG2) -o$* $*" } )
 
    Aadd( aCommands, { ".c.obj:", "$(BCB)\BIN\bcc32 -I$(BHC)\include $(CFLAG1) $(CFLAG2) -o$* $**" } )
 
-   Aadd( aCommands, { ".prg.c:", "$(BHC)\bin\harbour -n -I$(BHC)\include  -o$* $**" } )
+   Aadd( aCommands, { ".prg.c:", "$(BHC)\bin\harbour -n -I$(BHC)\include $(HARBOURFLAGS) -o$* $**" } )
 
    Aadd( aCommands, { ".rc.res:", "$(BCB)\BIN\brcc32 $(RFLAGS) $<" } )
 
 Elseif lGcc
-    if at("linux",Getenv("HB_ARCHITECTURE"))>0
+   if at("linux",Getenv("HB_ARCHITECTURE"))>0
    Aadd( aCommands, { ".cpp.o:", "$(BCB)/gcc $(CFLAG1) $(CFLAG2) -o$* $*" } )
 
-   Aadd( aCommands, { ".c.o:", "$(BCB)/gcc -I$(HB_INC_INSTALL) $(CFLAG1) $(CFLAG2) -o$* $**" } )
+   Aadd( aCommands, { ".c.o:", "$(BCB)/gcc -I$(HB_INC_INSTALL) $(CFLAG1) $(CFLAG2) -I. -o$* $**" } )
 
-   Aadd( aCommands, { ".prg.c:", "$(BHC)/harbour -n -I$(HB_INC_INSTALL)  -o$* $**" } )
+   Aadd( aCommands, { ".prg.c:", "$(BHC)/harbour -n -I$(HB_INC_INSTALL) -I.  -o$* $**" } )
 else
    Aadd( aCommands, { ".cpp.o:", "$(BCB)\gcc $(CFLAG1) $(CFLAG2) -o$* $*" } )
 
-   Aadd( aCommands, { ".c.o:", "$(BCB)\gcc -I$(BHC)/include $(CFLAG1) $(CFLAG2) -o$* $**" } )
+   Aadd( aCommands, { ".c.o:", "$(BCB)\gcc -I$(BHC)/../include $(CFLAG1) $(CFLAG2) -I. -o$* $**" } )
 
-   Aadd( aCommands, { ".prg.c:", "$(BHC)\harbour -n -I$(BHC)/include  -o$* $**" } )
+   Aadd( aCommands, { ".prg.c:", "$(BHC)\harbour -n -I$(BHC)/../include $(HARBOURFLAGS)  -o$* $**" } )
 
 endif
 
@@ -901,7 +928,7 @@ Elseif lVcc
 
    Aadd( aCommands, { ".c.obj:", "$(BCB)\bin\cl -I$(BHC)\include $(CFLAG1) $(CFLAG2) -Fo$* $**" } )
 
-   Aadd( aCommands, { ".prg.c:", "$(BHC)\bin\harbour -n -I$(BHC)\include  -o$* $**" } )
+   Aadd( aCommands, { ".prg.c:", "$(BHC)\bin\harbour -n -I$(BHC)\include $(HARBOURFLAGS) -o$* $**" } )
 
    Aadd( aCommands, { ".rc.res:", "$(BCB)\BIN\rc $(RFLAGS) $<" } )
 Endif
@@ -957,7 +984,7 @@ For x := 1 To Len( aObjs )
 Next
 
 
-? '¡m rewritting'
+
 If lFwh
    Fwrite( nLinkHandle, "!ifndef FWH" + CRLF )
    Fwrite( nLinkHandle, "FWH = " + cfwhpath + CRLF )
@@ -967,10 +994,13 @@ Elseif lCw
    Fwrite( nLinkHandle, "C4W =" + ccwpath + CRLF )
    Fwrite( nLinkHandle, "!endif" + CRLF )
 Endif
-? 'Setting project name'
+
 Fwrite( nLinkHandle, "PROJECT = " + Strtran( cTopfile, ".prg", ".exe" ) + CRLF )
-? 'Setting object files'
+if len(aObjs)<2
 Fwrite( nLinkHandle, "OBJFILES = " +Strtran( cTopfile, ".prg", ".obj" ) + CRLF )
+else
+Fwrite( nLinkHandle, "OBJFILES = " +Strtran( cTopfile, ".prg", ".obj" )  )
+
 For x := 1 To Len( aobjs )
    If x <> Len( aobjs ) .and. aObjs[x]<>cTopfile
 
@@ -979,8 +1009,11 @@ For x := 1 To Len( aobjs )
       Fwrite( nLinkHandle, " " + aobjs[ x ] + CRLF )
    Endif
 Next
-              ? 'Setting C Files'
-Fwrite( nLinkHandle, "CFILES = " +Strtran( cTopfile, ".prg", ".c" ) + CRLF )
+endif
+if len(aCs)<2
+Fwrite( nLinkHandle, "CFILES = " +Strtran( cTopfile, ".prg", ".c" ) +CRLF )
+else
+Fwrite( nLinkHandle, "CFILES = " +Strtran( cTopfile, ".prg", ".c" )  )
 For x := 1 To Len( acs )
    If x <> Len( acs ) .and. aCs[x]<>cTopfile
       Fwrite( nLinkHandle, " " + aCs[ x ] )
@@ -988,7 +1021,8 @@ For x := 1 To Len( acs )
       Fwrite( nLinkHandle, " " + aCs[ x ] + CRLF )
    Endif
 Next
-? 'Setting ResFiles files'
+endif
+
 Fwrite( nLinkHandle, "RESFILES = " + CRLF )
 Fwrite( nLinkHandle, "RESDEPEN = $(RESFILES)" + CRLF )
 if lRddads
@@ -1006,9 +1040,11 @@ elseif lGcc
         Fwrite( nLinkHandle, "LIBFILES = " +cDefgccLibs + CRLF )
 endif
  Fwrite( nLinkHandle, "DEFFILE = "+CRLF)
+ fWrite( nLinkHandle, "HARBOURFLAGS =" +cDefHarOpts+CRLF)
 if lBcc
  Fwrite( nLinkHandle, "CFLAG1 =  -OS $(CFLAGS) -d -L$(BHC)\lib\b32 -c"+CRLF)
  Fwrite( nLinkHandle, "CFLAG2 =  -I$(BHC)\include;$(BCB)\include" +CRLF)
+
  Fwrite( nLinkHandle, "RFLAGS = "+CRLF)
  Fwrite( nLinkHandle, "LFLAGS = -L$(BCB)\lib\obj;$(BCB)\lib;$(BHC)\lib;$(FWH)\lib -Gn -M -m -s" + if(lFwh,"-Tpe","")+CRLF)
  Fwrite( nLinkHandle, "IFLAGS = " +CRLF)
