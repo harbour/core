@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-04-12 23:00 UTC+0200 Tomaz Zupan <tomaz.zupan@orpo.si>
+  * contrib/odbc/todbc.prg
+    ! If recordset is cached, move to first record after fetching
+      recordset to cache
+
 2003-04-09 21:40 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * include/hbdbf.h
   * include/hbrddcdx.h

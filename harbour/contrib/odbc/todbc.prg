@@ -316,6 +316,7 @@ METHOD Open() CLASS TODBC
         END
         
         ::nRecCount := len(::aRecordSet)
+        ::First()
       ENDIF
       
       // Newly opened recordset - we are on first row
