@@ -235,6 +235,8 @@ case )
   CASE case++
 //    case--	//sorry -Clipper also doesn't compile this line
 //    case++	//sorry -Clipper also doesn't compile this line
+    ( case++ )
+    ( case-- )
   CASE ++case
     ++case
   CASE ;
@@ -322,6 +324,8 @@ LOCAL with
   while while
 //   while++	//incomplete statement or unbalanced delimiter
 //   while--	//incomplete statement or unbalanced delimiter
+   ( while++ )
+   ( while-- )
    --while
    while +=while
    while->while :=while() +while->while
@@ -402,6 +406,8 @@ LOCAL end, while
 
   ++end
 //  end++		//in Clipper ENDIF does not match IF
+  ( end++ )
+  ( end-- )
   end :=end++
 
 //  end->end +=1		//in Clipper; ENDIF does not match IF
@@ -813,6 +819,10 @@ PRIVATE &STATIC
     break stat
   ENDDO
 
+  static++
+  static--
+  ( static++ )
+  ( static-- )
   BEGIN SEQUENCE
     ? static
   RECOVER USIN static
@@ -853,8 +863,10 @@ PRIVATE &return
   return -1
   return+2
   return +2
-  return++
-  return--
+  return++    //Clipper fails on this
+  return--    //Clipper fails on this
+  ( return++ )
+  ( return-- )
   ++return
   --return
   return!return
@@ -902,6 +914,11 @@ PRIVATE &RECOVER
     break RECOVER
   ENDDO
 
+  RECOVER++
+  RECOVER--
+  ( RECOVER++ )
+  ( RECOVER-- )
+  
   BEGIN SEQUENCE
     ? RECOVER
   RECOVER
