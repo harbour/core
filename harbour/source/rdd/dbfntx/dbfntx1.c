@@ -680,62 +680,76 @@ static void hb_ntxTagKeyRead( LPTAGINFO pTag, BYTE bTypRead )
       }
    }
    pTag->TagBOF = pTag->TagEOF = FALSE;
-   if( pTag->Owner->Owner->fShared )
-      while( !hb_fsLock( pTag->Owner->DiskFile, 0, 512, FL_LOCK ) );
-   switch( bTypRead )
+   if( pTag->Owner->Owner->ulRecCount )
    {
-      case TOP_RECORD:
-         if( pTag->pForItem != NULL )
-            printf( "hb_ntxTagKeyRead()" );
-         else
-            pTag->TagBOF = !hb_ntxPageReadTopKey( NULL,0 );
-         if( pTag->pForItem != NULL )
-            printf( "hb_ntxTagTestRange()" );
-         if( pTag->TagEOF )
-            pTag->TagBOF = TRUE;
-         pTag->TagEOF = pTag->TagBOF;
-         break;
-
-      case BTTM_RECORD:
-         if( pTag->pForItem != NULL )
-            printf( "hb_ntxTagKeyRead()" );
-         else
-            pTag->TagEOF = !hb_ntxPageReadBottomKey( NULL,0 );
-         if( pTag->pForItem != NULL )
-            printf( "hb_ntxTagTestRange()" );
-         if( pTag->TagBOF )
-            pTag->TagEOF = TRUE;
-         pTag->TagBOF = pTag->TagEOF;
-         break;
-
-      case NEXT_RECORD:
-         while( TRUE )
-         {
-            pTag->TagEOF = !hb_ntxPageReadNextKey( pTag );
+      if( pTag->Owner->Owner->fShared )
+         while( !hb_fsLock( pTag->Owner->DiskFile, 0, 512, FL_LOCK ) );
+      switch( bTypRead )
+      {
+         case TOP_RECORD:
             if( pTag->pForItem != NULL )
                printf( "hb_ntxTagKeyRead()" );
             else
-               break;
-         }
-         break;
+               pTag->TagBOF = !hb_ntxPageReadTopKey( NULL,0 );
+            if( pTag->pForItem != NULL )
+               printf( "hb_ntxTagTestRange()" );
+            if( pTag->TagEOF )
+               pTag->TagBOF = TRUE;
+            pTag->TagEOF = pTag->TagBOF;
+            break;
 
-      case PREV_RECORD:
-         while( TRUE )
-         {
-            pTag->TagBOF = !hb_ntxPageReadPrevKey( pTag );
+         case BTTM_RECORD:
             if( pTag->pForItem != NULL )
                printf( "hb_ntxTagKeyRead()" );
             else
-               break;
-         }
-         break;
+               pTag->TagEOF = !hb_ntxPageReadBottomKey( NULL,0 );
+            if( pTag->pForItem != NULL )
+               printf( "hb_ntxTagTestRange()" );
+            if( pTag->TagBOF )
+               pTag->TagEOF = TRUE;
+            pTag->TagBOF = pTag->TagEOF;
+            break;
 
+         case NEXT_RECORD:
+            while( TRUE )
+            {
+               pTag->TagEOF = !hb_ntxPageReadNextKey( pTag );
+               if( pTag->pForItem != NULL )
+                  printf( "hb_ntxTagKeyRead()" );
+               else
+                  break;
+            }
+            break;
+
+         case PREV_RECORD:
+            while( TRUE )
+            {
+               pTag->TagBOF = !hb_ntxPageReadPrevKey( pTag );
+               if( pTag->pForItem != NULL )
+                  printf( "hb_ntxTagKeyRead()" );
+               else
+                  break;
+            }
+            break;
+
+      }
+      if( pTag->Owner->Owner->fShared )
+      {
+         hb_ntxPageFree( pTag->RootPage,TRUE );
+         pTag->RootPage = NULL;
+         hb_fsLock( pTag->Owner->DiskFile, 0, 512, FL_UNLOCK );
+      }
    }
-   if( pTag->Owner->Owner->fShared )
+   else
    {
-      hb_ntxPageFree( pTag->RootPage,TRUE );
-      pTag->RootPage = NULL;
-      hb_fsLock( pTag->Owner->DiskFile, 0, 512, FL_UNLOCK );
+      if( bTypRead == PREV_RECORD)
+      {
+         pTag->TagBOF = TRUE; pTag->TagEOF = FALSE; 
+      }
+      else
+      {
+         pTag->TagBOF = TRUE; pTag->TagEOF = TRUE; 
+      }
    }
    if( pTag->TagBOF || pTag->TagEOF )
    {
@@ -1570,6 +1584,13 @@ static void hb_ntxBufferSave( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo )
             i * ( pTag->KeyLength + 8 );
    buffer = pSortInfo->pageBuffers[0];
 
+   if( !pKey )
+   {
+      itemlist->item_count = 0;
+      pSortInfo->Tag += NTXBLOCKSIZE;
+      hb_fsWrite( pTag->Owner->DiskFile, (BYTE *) buffer, NTXBLOCKSIZE );
+   }
+
    /* printf( "\nhb_ntxBufferSave - 1 ( maxKeys=%d )",maxKeys ); */
    while( pKey )
    {
@@ -1654,7 +1675,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
    /* itemLength = sizeof( LPSORTITEM ) + sizeof( ULONG ) + pTag->KeyLength; */
    sortInfo.itemLength = sizeof( LPSORTITEM ) + sizeof( ULONG ) + pTag->KeyLength;
    sortInfo.nItems = 0;
-   sortInfo.pKey1 = sortInfo.pKey2 = NULL;
+   sortInfo.pKey1 = sortInfo.pKey2 = sortInfo.pKeyFirst = NULL;
    sortInfo.sortBuffer = (BYTE*) hb_xalloc( ulRecCount * sortInfo.itemLength );
    if( !sortInfo.sortBuffer )
    {
@@ -2717,6 +2738,8 @@ static ERRCODE ntxOrderListRebuild( NTXAREAP pArea )
    pArea->fValidBuffer = TRUE;
    while( lpIndex )
    {
+      if( lpIndex->CompoundTag->RootPage )
+         hb_ntxPageFree( lpIndex->CompoundTag->RootPage,TRUE );
       hb_fsSeek( lpIndex->DiskFile, NTXBLOCKSIZE, FS_SET );
       hb_fsWrite( lpIndex->DiskFile, NULL, 0 );
       hb_ntxIndexCreate( lpIndex );
