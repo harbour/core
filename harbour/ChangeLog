@@ -1,3 +1,7 @@
+19990530-12:12 EST Les. Griffith
+   * added logic for hb_file in files.c
+   * added test filexist.prg to test hb_file() in tests working
+
 19990530-17:30 CET Eddie Runia
    * source/rtl/files.c
      fixed 0x00 byte handling of fReadStr
