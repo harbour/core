@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-09-25 17:15 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * source/rdd/rtl/file.c
+   * source/rdd/rtl/filesys.c
+        ! fixed GPF, hb_xfree must be used for hb_xgrab memory.
+
 2002-09-25 20:00 GMT+0100 Martin Vogel <vogel@inttec.de>
   * contrib/libct/color.prg
     ! fixed initialization bug reported by Marek Horodyski<homar@altkom.com.pl>
