@@ -1462,7 +1462,7 @@ BOOL hb_fsFile( BYTE * pFilename )
 
 BOOL hb_fsEof( FHANDLE hFileHandle )
 {
-#if defined(__CYGWIN__) || defined(OS_UNIX_COMPATIBLE)
+#if defined(__DJGPP__) || defined(__CYGWIN__) || defined(OS_UNIX_COMPATIBLE)
    long curPos = lseek( hFileHandle, 0L, SEEK_CUR );
    long endPos = lseek( hFileHandle, 0L, SEEK_END );
    long newPos = lseek( hFileHandle, curPos, SEEK_SET );

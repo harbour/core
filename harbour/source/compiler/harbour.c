@@ -272,12 +272,14 @@ int main( int argc, char * argv[] )
 
                      {
                         PCOMSYMBOL pSym = hb_comp_symbols.pFirst;
-                        char * szFirstFunction ;
+                        char * szFirstFunction;
 
                         if( hb_comp_bStartProc )
-                          szFirstFunction = hb_comp_functions.pFirst->szName ;
+                           szFirstFunction = hb_comp_functions.pFirst->szName;
                         else if( hb_comp_functions.pFirst->pNext )
-                          szFirstFunction = hb_comp_functions.pFirst->pNext->szName ;
+                           szFirstFunction = hb_comp_functions.pFirst->pNext->szName;
+                        else
+                           szFirstFunction = NULL;
 
                         while( pSym )
                         {
