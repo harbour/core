@@ -73,6 +73,8 @@
 #define ERR_CREATE_OUTPUT          32
 #define ERR_CREATE_PPO             33
 #define ERR_BADOPTION              34
+#define ERR_BADPARAM               35
+#define ERR_BADFILENAME            36
 
 #define WARN_AMBIGUOUS_VAR         1
 #define WARN_MEMVAR_ASSUMED        2

@@ -62,8 +62,8 @@
     #endif
 
     setKey( K_F10, {|| Alert( transform( getactive():varGet(), NIL ) ) }, {|| !empty( getactive():buffer ) } )
-    setKey( K_F9 , {|| k := SetKeySave( NIL ), ;
-                       SetKey( K_F9, {|| SetKeySave( k ) } ) } )
+    setKey( K_F9 , {|| k := hb_SetKeySave( NIL ), ;
+                       SetKey( K_F9, {|| hb_SetKeySave( k ) } ) } )
     SetKey( K_F8 , {|| SubMain() } )
 
     read
@@ -74,7 +74,7 @@
     local n
     SetKey( { 49, 50, 52, 53 }, {|x| qout( chr( x ) ) } )
     do while ( n := inkey( 0 ) ) != K_ESC
-      if SetKeyCheck( n )
+      if hb_SetKeyCheck( n )
         qqout( " hit hot" )
       else
         qout( chr( n ) )

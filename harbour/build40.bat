@@ -1,8 +1,7 @@
+@echo off
 rem 
 rem $Id$
 rem 
-
-@echo off
 
 make -fhbpplib.b32  > build40.err
 make -fmakefile.b40 >> build40.err

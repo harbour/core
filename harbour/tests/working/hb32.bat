@@ -1,8 +1,7 @@
+@echo off
 rem 
 rem $Id$
 rem 
-
-@echo off
 
 REM From .PRG to .C = Harbour
 ..\..\bin\harbour %1.prg %2 /n /i..\..\include

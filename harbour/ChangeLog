@@ -1,3 +1,29 @@
+19990916-05:30 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/compiler/harbour.y
+    include/hberrors.h
+    ! Proper error shown when more than one input (.prg) filenames are 
+      specified, it caused a leak previously and was not compatible with 
+      Clipper.
+    ! Invalid filename message when the passed filename only contains dir/drive.
+      GPF fixed.
+  * *.bat
+    tests/working/*.bat
+    ! @echo off commands moved to the top of files.
+  * tests/working/setkeys.prg
+    ! Some functions names fixed, it still doesn't work because GetActive()
+      function is not yet implemented.
+  * tests/working/rtl_test.prg
+    tests/working/transdef.prg (removed)
+    tests/working/Makefile
+    * Tests from transdef.prg moved to rtl_test.prg (2 failures more now)
+  * tests/broken/parexpr.prg
+    - Removed, since it's in working now.
+  ; The bugs above were reported by Jose Lalin.
+  * source/rtl/*.* (partial)
+    + All copyright header changed to the new one.
+    + Missing copyright headers added.
+
 19990916-03:57 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rdd/*

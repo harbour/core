@@ -1,8 +1,7 @@
+@echo off
 rem 
 rem $Id$
 rem 
-
-@echo off
 
 ..\..\bin\harbour test_all.prg /n /gHBR /i..\..\include
 runner test_all.hrb hrb

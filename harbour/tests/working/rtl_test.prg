@@ -3,35 +3,35 @@
  */
 
 /*
-   Harbour Project source code
-
-   Runtime library regression tests.
-
-   Copyright (C) 1999  Victor Szel <info@szelvesz.hu>
-   www - http://www.harbour-project.org
-
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version, with one exception:
-
-   The exception is that if you link the Harbour Runtime Library (HRL)
-   and/or the Harbour Virtual Machine (HVM) with other files to produce
-   an executable, this does not by itself cause the resulting executable
-   to be covered by the GNU General Public License. Your use of that
-   executable is in no way restricted on account of linking the HRL
-   and/or HVM code into it.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
-   their web site at http://www.gnu.org/).
-*/
+ * Harbour Project source code:
+ * Runtime library regression tests
+ *
+ * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version, with one exception:
+ *
+ * The exception is that if you link the Harbour Runtime Library (HRL)
+ * and/or the Harbour Virtual Machine (HVM) with other files to produce
+ * an executable, this does not by itself cause the resulting executable
+ * to be covered by the GNU General Public License. Your use of that
+ * executable is in no way restricted on account of linking the HRL
+ * and/or HVM code into it.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
+ * their web site at http://www.gnu.org/).
+ *
+ */
 
 /* TRANSFORM() tests written by Eddie Runia <eddie@runia.com> */
 /* EMPTY() tests written by Eddie Runia <eddie@runia.com> */
@@ -1409,6 +1409,7 @@ STATIC FUNCTION Main_STRINGS()
    TEST_LINE( Transform( .F.       , "@R Y"     )          , "N"                           )
    TEST_LINE( Transform( .T.       , "@R X!"    )          , "X!T"                         )
 
+   TEST_LINE( Transform( SToD("20000101") , "@B"         ) , "2000.01.01"                  )
    TEST_LINE( Transform( SToD("19901214") , "99/99/9999" ) , "1990.12.14"                  )
    TEST_LINE( Transform( SToD("19901202") , "99.99.9999" ) , "1990.12.02"                  )
    TEST_LINE( Transform( SToD("")         , "99/99/9999" ) , "    .  .  "                  )
@@ -1427,6 +1428,7 @@ STATIC FUNCTION Main_STRINGS()
 
    SET CENTURY OFF
 
+   TEST_LINE( Transform( SToD("20000101") , "@B"         ) , "00.01.01"                    )
    TEST_LINE( Transform( SToD("19901214") , "99/99/9999" ) , "90.12.14"                    )
    TEST_LINE( Transform( SToD("19901202") , "99.99.9999" ) , "90.12.02"                    )
    TEST_LINE( Transform( SToD("")         , "99/99/9999" ) , "  .  .  "                    )
@@ -1445,6 +1447,8 @@ STATIC FUNCTION Main_STRINGS()
 
    SET CENTURY ON
 
+   TEST_LINE( Transform( 1         , "@B"          )       , "1         "                  )
+   TEST_LINE( Transform( 1.0       , "@B"          )       , "1.0         "                )
    TEST_LINE( Transform( 15        , "9999"        )       , "  15"                        )
    TEST_LINE( Transform( 1.5       , "99.99"       )       , " 1.50"                       )
    TEST_LINE( Transform( 1.5       , "9999"        )       , "   2"                        )

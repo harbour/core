@@ -1,8 +1,7 @@
+@echo off
 rem 
 rem $Id$
 rem 
-
-@echo off
 
 IF A%1 == A GOTO :SINTAX
 IF A%2 == A GOTO :NOOUTPUT

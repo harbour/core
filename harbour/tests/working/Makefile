@@ -144,7 +144,6 @@ PRG_SOURCES=\
         testvars.prg \
         testwarn.prg \
         tstcolor.prg \
-        transdef.prg \
         val.prg \
         version.prg \
         while.prg \

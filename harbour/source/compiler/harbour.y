@@ -311,7 +311,9 @@ char * _szCErrors[] =
    "Jump offset too long",
    "Can't create output file: \'%s\'",
    "Can't create preprocessed output file: \'%s\'",
-   "Bad command line option: \'%s\'"
+   "Bad command line option: \'%s\'",
+   "Bad command line parameter: \'%s\'",
+   "Invalid filename: \'%s\'"
 };
 
 /* Table with parse warnings */
@@ -1371,6 +1373,8 @@ int harbour_main( int argc, char * argv[] )
       char szPpoName[ _POSIX_PATH_MAX ];
       PHB_FNAME pOutPath = NULL;
 
+      _pFileName = NULL;
+
       Hbpp_init();  /* Initialization of preprocessor arrays */
       /* Command line options */
       for( iArg = 1; iArg < argc; iArg++ )
@@ -1435,11 +1439,11 @@ int harbour_main( int argc, char * argv[] )
                            break;
 
                         default:
-                           GenError( _szCErrors, 'E', ERR_BADOPTION, &argv[ iArg ][ 0 ], NULL );
+                           GenError( _szCErrors, 'E', ERR_BADOPTION, argv[ iArg ], NULL );
                      }
                   }
                   else
-                     GenError( _szCErrors, 'E', ERR_BADOPTION, &argv[ iArg ][ 0 ], NULL );
+                     GenError( _szCErrors, 'E', ERR_BADOPTION, argv[ iArg ], NULL );
 
                   break;
                case 'g':
@@ -1495,7 +1499,7 @@ int harbour_main( int argc, char * argv[] )
                case 'm':
                case 'M':
                   /* TODO: Implement this switch */
-                  printf( "Not yet supported command line option: %s\n", &argv[ iArg ][ 0 ] );
+                  printf( "Not yet supported command line option: %s\n", argv[ iArg ] );
                   break;
 
                case 'n':
@@ -1522,7 +1526,7 @@ int harbour_main( int argc, char * argv[] )
                case 'r':
                case 'R':
                   /* TODO: Implement this switch */
-                  printf( "Not yet supported command line option: %s\n", &argv[ iArg ][ 0 ] );
+                  printf( "Not yet supported command line option: %s\n", argv[ iArg ] );
                   break;
 
                case 's':
@@ -1533,13 +1537,13 @@ int harbour_main( int argc, char * argv[] )
                case 't':
                case 'T':
                   /* TODO: Implement this switch */
-                  printf( "Not yet supported command line option: %s\n", &argv[ iArg ][ 0 ] );
+                  printf( "Not yet supported command line option: %s\n", argv[ iArg ] );
                   break;
 
                case 'u':
                case 'U':
                   /* TODO: Implement this switch */
-                  printf( "Not yet supported command line option: %s\n", &argv[ iArg ][ 0 ] );
+                  printf( "Not yet supported command line option: %s\n", argv[ iArg ] );
                   break;
 
                case 'v':
@@ -1579,15 +1583,25 @@ int harbour_main( int argc, char * argv[] )
                   break;
 
                default:
-                  GenError( _szCErrors, 'E', ERR_BADOPTION, &argv[ iArg ][ 0 ], NULL );
+                  GenError( _szCErrors, 'E', ERR_BADOPTION, argv[ iArg ], NULL );
                   break;
             }
          }
          else if( argv[ iArg ][ 0 ] == '@' )
             /* TODO: Implement this switch */
-            printf( "Not yet supported command line option: %s\n", &argv[ iArg ][ 0 ] );
+            printf( "Not yet supported command line option: %s\n", argv[ iArg ] );
          else
-            _pFileName = hb_fsFNameSplit( argv[ iArg ] );
+         {
+            if( _pFileName )
+               GenError( _szCErrors, 'E', ERR_BADPARAM, argv[ iArg ], NULL );
+            else
+            {
+               _pFileName = hb_fsFNameSplit( argv[ iArg ] );
+
+               if( ! _pFileName->szName )
+                  GenError( _szCErrors, 'E', ERR_BADFILENAME, argv[ iArg ], NULL );
+            }
+         }
       }
 
       if( _pFileName )
@@ -1748,7 +1762,7 @@ int harbour_main( int argc, char * argv[] )
       }
       else
       {
-         printf( "Can't open input file: %s\n", szFileName );
+         printf( "Cannot open input file: %s\n", szFileName );
          iStatus = 1;
       }
       hb_xfree( ( void * ) _pFileName );
