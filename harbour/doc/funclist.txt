@@ -135,7 +135,7 @@ FIELDNAME               ;R;
 FIELDPOS                ;R;
 FIELDPUT                ;R;
 FIELDWBLOCK             ;R;
-FILE                    ;R;
+FILE                    ;S;
 FKLABEL                 ;R;
 FKMAX                   ;R;
 FLOCK                   ;R;

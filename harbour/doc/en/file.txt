@@ -539,23 +539,23 @@
  *      <cFileSpec> exist.
 
  *      Dos skeletons symbols may be used in the filename in <cFileSpec>,
- *      as may the drive and/or path name. If a drive are not explicity
- *      specified,FILE() will first search the current drive and directory,
- *      and will look for the file in the directories specified by SET PATH
- *      TO and SET DEFAULT TO commands.However, this command does not look
- *      at the values in the DOS PATH command.
+ *      as may the drive and/or path name. If a path is not explicity
+ *      specified, FILE() will look for the file in the SET DEFAULT path,
+ *      then in each SET PATH path, until the file is found or there are
+ *      no more paths to search. The DOS PATH is never searched and the
+ *      current drive/directory is only searched if SET DEFAULT is blank.
  *  $EXAMPLES$
  *      ? file('c:\harbour\doc\compiler.txt")
  *      ? file('c:/harbour/doc/subcodes.txt")
  *  </fixed>
  *  $STATUS$
- *      R
+ *      S (wild card support is missing)
  *  $COMPLIANCE$
  *      This function is CA-Clipper compatible.
  *  $FILES$
  *      Library is Rtl
  *  $SEEALSO$
- *      SET PATH,SET DEFAULT,SET()
+ *      SET DEFAULT,SET PATH,SET()
  *  $END$
  */
 
