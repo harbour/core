@@ -1,3 +1,7 @@
+2001-10-20 07:30 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
+*source/compiler/harbour.c
+   *Fixed some warings reported by Dave Person
+
 2001-10-19 01:35 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
    * source/contrib/libct
        * justify.c
