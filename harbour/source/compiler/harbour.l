@@ -157,65 +157,88 @@ Separator     {SpaceTab}
 ^[ \t]*"do"[ \t]*"while"[ \t]*"["    { BEGIN STRING3;                    return WHILE;    }
 <INITIAL>\[                          { BEGIN STRING3; }
 
-<STRING1>[^'\n]*$    { hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, yytext, NULL );
-                       iIndexSets = 0;
-                       i_INDEX_STATE = 0;
-		       hb_comp_iState = LOOKUP;
-                       BEGIN 0;
-                       return '\n';
-                     }
-<STRING2>[^\"\n]*$   { hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, yytext, NULL );
-                       iIndexSets = 0;
-                       i_INDEX_STATE = 0;
-		       hb_comp_iState = LOOKUP;
-                       BEGIN 0;
-                       return '\n';
-                     }
-<STRING3>[^\]\n]*$   { hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, yytext, NULL );
-                       iIndexSets = 0;
-                       i_INDEX_STATE = 0;
-		       hb_comp_iState = LOOKUP;
-                       BEGIN 0;
-                       return '\n';
+<STRING1>[^'\n]*\n  {
+		      unput( '\n' );
+
+		      yytext[--yyleng] = '\0';
+
+		      #ifdef DEBUG_STRINGS
+			 printf("\nEOL in STRING1\n");
+		      #endif
+
+                      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, yytext, NULL );
+                      iIndexSets = 0;
+                      i_INDEX_STATE = 0;
+		      hb_comp_iState = LOOKUP;
+                      BEGIN 0;
+                      return LITERAL;
+                    }
+
+<STRING2>[^"\n]*\n  {
+		      unput( '\n' );
+
+		      yytext[--yyleng] = '\0';
+
+		      #ifdef DEBUG_STRINGS
+		        printf("\nEOL in STRING2\n");
+		      #endif
+
+                      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, yytext, NULL );
+                      iIndexSets = 0;
+                      i_INDEX_STATE = 0;
+		      hb_comp_iState = LOOKUP;
+                      BEGIN 0;
+                      return LITERAL;
+                    }
+
+<STRING3>[^]\n]*\n  {
+		      unput( '\n' );
+
+		      yytext[--yyleng] = '\0';
+
+		      #ifdef DEBUG_STRINGS
+		        printf("\nEOL in STRING3\n");
+		      #endif
+
+                      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, yytext, NULL );
+                      iIndexSets = 0;
+                      i_INDEX_STATE = 0;
+		      hb_comp_iState = LOOKUP;
+                      BEGIN 0;
+                      return LITERAL;
                      }
 
-<STRING1>[^"'"\n]*'  {  if( i_INDEX_STATE )
+<STRING1>[^'\n]*'  {  if( i_INDEX_STATE )
                           BEGIN INDEX;
                         else
                           BEGIN 0;
 
-                        yyleng--;
-                        yytext[yyleng] = 0;
+                        yytext[yyleng--] = '\0';
                         yylval.string = hb_strdup( yytext );
                         return LITERAL;
                      }
 
-<STRING2>[^\"\n]*\"  {  if( i_INDEX_STATE )
+<STRING2>[^"\n]*\"  {  if( i_INDEX_STATE )
                           BEGIN INDEX;
                         else
                           BEGIN 0;
 
-                        yyleng--;
-                        yytext[yyleng] = 0;
+                        yytext[yyleng--] = '\0';
                         yylval.string = hb_strdup( yytext );
                         return LITERAL;
                      }
 
-<STRING3>[^\]\n]*\]  {  if( i_INDEX_STATE )
+<STRING3>[^\]\n]*]  {  if( i_INDEX_STATE )
                           BEGIN INDEX;
                         else
                           BEGIN 0;
 
-                        yyleng--;
-                        yytext[yyleng] = 0;
+                        yytext[yyleng--] = '\0';
                         yylval.string = hb_strdup( yytext );
                         return LITERAL;
                      }
 
-<INDEX>\[[^\n]*$  { iIndexSets++;
-		     /*
-                     printf( "%i >%s<\n", iIndexSets, yytext );
-		     */
+<INDEX>\[[^;\n]*[;\n]  {
 		     {
 			char * tmpStr = yytext;
 
@@ -223,6 +246,12 @@ Separator     {SpaceTab}
 			{
                            if( *tmpStr++ == ']' )
 			   {
+			      iIndexSets++;
+
+			      #ifdef DEBUG_INDEX
+                                 printf( "Open %i At >%s< Ends At: >%s<\n", iIndexSets, yytext, tmpStr );
+			      #endif
+
 		              yyless(1);
                               return '[';
 			   }
@@ -234,30 +263,37 @@ Separator     {SpaceTab}
 			iIndexSets = 0;
 		        hb_comp_iState = LOOKUP;
                         BEGIN 0;
-			return '\n';
+			return yytext[yyleng -1];
 		     }
                   }
 
-<INDEX>\][^\n]*\n  { if( iIndexSets )
+<INDEX>\][^;\n]*[;\n] { if( iIndexSets )
                         iIndexSets-- ;
 
-                     /*
-                     printf( ">%s<\n", yytext );
-		     */
+		        #ifdef DEBUG_INDEX
+                          printf( "Closed: %i At: >%s<\n", iIndexSets, yytext );
+		        #endif
 
                      if( iIndexSets == 0 )
                      {
-			char * tmpStr = yytext;
+			char * tmpStr = yytext + 1;
 
-			/* Default to no Opening Bracket. */
+			/* Default to no immediate Opening Bracket. */
                         i_INDEX_STATE = 0;
                         BEGIN 0;
 
-                        /* No longer in this state. */
-                        while( *tmpStr != '\0' )
+			#ifdef DEBUG_INDEX
+			   printf( "Assumed Normal but Searching...\n" );
+			#endif
+
+                        /* We have to BEGIN INDEX because lex ate the ']' so it will misss the "]"[ \t]"[" SubArray rule. */
+                        while( ( *tmpStr == ' ' || *tmpStr == '\t' || *tmpStr == '['  ) && *tmpStr != '\0' )
 			{
                            if( *tmpStr++ == '[' )
 			   {
+		              #ifdef DEBUG_INDEX
+                                 printf( "Retained! Found: >%s<\n", tmpStr );
+			      #endif
 
                               i_INDEX_STATE = 1;
                               BEGIN INDEX;
@@ -265,6 +301,12 @@ Separator     {SpaceTab}
 			   }
 			}
                      }
+		     else
+		     {
+			#ifdef DEBUG_INDEX
+                           printf( "Still Open: %i\n", iIndexSets );
+			#endif
+		     }
 
 		     yyless(1);
                      hb_comp_iState = OPERATOR;
@@ -275,6 +317,7 @@ Separator     {SpaceTab}
 
 \n.           { /* "." after "\n" is important so we skip empty lines, until begining of non empty next line - don't remove!!! */
                 hb_comp_iState = LOOKUP;
+		iIndexSets = 0;
 
                 yyless( 1 );
 
@@ -288,7 +331,17 @@ Separator     {SpaceTab}
 %{
 /* ************************************************************************ */
 %}
-;            { yy_set_bol(1); hb_comp_iState = LOOKUP; if( ! i_INDEX_STATE ) return ';'; }
+;            { if( ! i_INDEX_STATE )
+	       {
+		 #ifdef DEBUG_NEWLINE
+		    printf( "New Line\n" );
+		 #endif
+
+                 yy_set_bol(1);
+                 hb_comp_iState = LOOKUP;
+                 return ';';
+               }
+	     }
 %{
 /* ************************************************************************ */
 %}
