@@ -1088,7 +1088,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
              */
             if( pSelf->value.asMacro.SubType == HB_ET_MACRO_SYMBOL )
                HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROSYMBOL );
-               
+
             else if( pSelf->value.asMacro.SubType != HB_ET_MACRO_ALIASED )
             {
                if( pSelf->value.asMacro.SubType & HB_ET_MACRO_ARGLIST )
@@ -1738,8 +1738,8 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
             if( pSelf->value.asMessage.pParms )  /* Is it a method call ? */
             {
                int iParms = hb_compExprListLen( pSelf->value.asMessage.pParms );
-               HB_EXPR_USE( pSelf->value.asMessage.pObject, HB_EA_PUSH_PCODE );
                HB_EXPR_PCODE1( hb_compGenMessage, pSelf->value.asMessage.szMessage );
+               HB_EXPR_USE( pSelf->value.asMessage.pObject, HB_EA_PUSH_PCODE );
                /* NOTE: if method with no parameters is called then the list
                 * of parameters contain only one expression of type HB_ET_NONE
                 * There is no need to push this parameter
@@ -1757,8 +1757,8 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
             else
             {
                /* acces to instance variable */
-               HB_EXPR_USE( pSelf->value.asMessage.pObject, HB_EA_PUSH_PCODE );
                HB_EXPR_PCODE1( hb_compGenMessage, pSelf->value.asMessage.szMessage );
+               HB_EXPR_USE( pSelf->value.asMessage.pObject, HB_EA_PUSH_PCODE );
                HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 0, ( BOOL ) 1 );
             }
          }
@@ -1769,8 +1769,8 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
             /* NOTE: This is an exception from the rule - this leaves
              *    the return value on the stack
              */
-            HB_EXPR_USE( pSelf->value.asMessage.pObject, HB_EA_PUSH_PCODE );
             HB_EXPR_PCODE1( hb_compGenMessageData, pSelf->value.asMessage.szMessage );
+            HB_EXPR_USE( pSelf->value.asMessage.pObject, HB_EA_PUSH_PCODE );
             HB_EXPR_USE( pSelf->value.asMessage.pParms, HB_EA_PUSH_PCODE );
             HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 1, ( BOOL ) 1 );
          }
@@ -3466,4 +3466,3 @@ static HB_EXPR_FUNC( hb_compExprUsePreDec )
    }
    return pSelf;
 }
-
