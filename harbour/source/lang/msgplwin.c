@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (PL ISO-8859-2)
+ * Language Support Module (PL Windows CP1250)
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://www.harbour-project.org
@@ -52,7 +52,7 @@
 
 /* Language name: Polish */
 /* ISO language code (2 chars): PL */
-/* Codepage: ISO-8859-2 */
+/* Codepage: 1250 */
 
 #include "hbapilng.h"
 
@@ -61,11 +61,11 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "PLISO",                     /* ID */
+      "PLWIN",                     /* ID */
       "Polish",                    /* Name (in English) */
       "Polski",                    /* Name (in native language) */
       "PL",                        /* RFC ID */
-      "ISO-8859-2",                /* Codepage */
+      "1250",                      /* Codepage */
       "$Revision$ $Date$",         /* Version */
 
       /* Month names */
@@ -79,7 +79,7 @@ static HB_LANG s_lang =
        "Lipiec",
        "Sierpieñ",
        "Wrzesieñ",
-       "Pa¼dziernik",
+       "PaŸdziernik",
        "Listopad",
        "Grudzieñ",
 
@@ -88,9 +88,9 @@ static HB_LANG s_lang =
        "Niedziela",
        "Poniedzia³ek",
        "Wtorek",
-       "¦roda",
+       "Œroda",
        "Czwartek",
-       "Pi±tek",
+       "Pi¹tek",
        "Sobota",
 
       /* CA-Cl*pper compatible natmsg items */
@@ -111,13 +111,13 @@ static HB_LANG s_lang =
 
       /* Error description names */
 
-       "B³±d bez opisu",
+       "B³¹d bez opisu",
        "Nieprawid³owy argument",
-       "B³±d zakresu tablicy",
+       "B³¹d zakresu tablicy",
        "Za du¿y string",
        "Przepe³nienie numeryczne",
        "Dzielenie przez zero",
-       "B³±d numeryczny",
+       "B³¹d numeryczny",
        "Nieprawid³owa sk³adnia",
        "Operacja zbyt z³o¿ona",
       "",
@@ -131,12 +131,12 @@ static HB_LANG s_lang =
        "Nieprawid³owy alias bazy",
        "Podany alias ju¿ istnieje",
       "",
-       "B³±d podczas tworzenia zbioru",
-       "B³±d podczas otwarcia zbioru",
-       "B³±d podczas zamkniêcia zbioru",
-       "B³±d podczas odczytu ze zbioru",
-       "B³±d podczas zapisu do zbioru",
-       "B³±d wydruku",
+       "B³¹d podczas tworzenia zbioru",
+       "B³¹d podczas otwarcia zbioru",
+       "B³¹d podczas zamkniêcia zbioru",
+       "B³¹d podczas odczytu ze zbioru",
+       "B³¹d podczas zapisu do zbioru",
+       "B³¹d wydruku",
       "",
       "",
       "",
@@ -145,10 +145,10 @@ static HB_LANG s_lang =
        "Przekroczony limit",
        "Uszkodzony indeks bazy",
        "Niezgodny typ danych",
-       "Warto¶æ poza zakresem",
+       "Wartoœæ poza zakresem",
        "Baza jest nie otwarta",
        "Baza nie ma indeksu",
-       "Wymagany jest wy³±czny dostêp do bazy",
+       "Wymagany jest wy³¹czny dostêp do bazy",
        "Wymagana blokada dostêpu",
        "Zapis niedozwolony",
        "Brak blokady dostêpu podczas dodawania rekordu",
@@ -158,27 +158,27 @@ static HB_LANG s_lang =
       "",
        "Nieprawid³owa liczba argumentów",
        "pobranie elementu tablicy",
-       "zmiana warto¶ci elementu tablicy",
+       "zmiana wartoœci elementu tablicy",
        "wymagana jest tablica",
        "wymagany typ: logiczny",
 
       /* Internal error names */
 
-      "Nienaprawialny b³±d nr %lu: ",
+      "Nienaprawialny b³¹d nr %lu: ",
       "Nieudana próba naprawy b³êdu",
       "Brak kodu obs³ugi ERRORBLOCK()",
       "Zbyt wiele zagnie¿d¿onych b³êdów",
       "Nieza³adowany lub z³y RDD",
       "Z³y typ metody wo³anej z %s",
       "hb_xgrab nie mo¿e zarezerwowaæ pamiêci",
-      "hb_xrealloc wywo³any ze wska¼nikiem NULL",
-      "hb_xrealloc wywo³any ze z³ym wska¼nikiem",
-      "hb_xrealloc nie mo¿e powiekszyæ bloku pamiêci",
-      "hb_xfree wywo³any ze z³ym wska¼nikiem",
-      "hb_xfree wywo³any ze wska¼nikiem NULL",
-      "Brak definicja procedury startowej: \'%s\'",
+      "hb_xrealloc wywo³any ze wskaŸnikiem NULL",
+      "hb_xrealloc wywo³any ze z³ym wskaŸnikiem",
+      "hb_xrealloc nie mo¿e powiêkszyæ bloku pamiêci",
+      "hb_xfree wywo³any ze z³ym wskaŸnikiem",
+      "hb_xfree wywo³any ze wskaŸnikiem NULL",
+      "Brak definicji procedury startowej: \'%s\'",
       "Brak procedury startowej",
-      "Nieprawid³owa warto¶æ VM opcode",
+      "Nieprawid³owa wartoœæ VM opcode",
       "W %s wymagany jest item typu \'Symbol\'",
       "W %s podano z³y item dla SELF",
       "W %s oczekiwany jest item typu \'Codeblock\'",
@@ -199,12 +199,12 @@ static HB_LANG s_lang =
    }
 };
 
-HB_LANG_ANNOUNCE( PLISO );
+HB_LANG_ANNOUNCE( PLWIN );
 
-HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_PLISO )
+HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_PLWIN )
    hb_langRegister( &s_lang );
-HB_CALL_ON_STARTUP_END( hb_lang_Init_PLISO )
+HB_CALL_ON_STARTUP_END( hb_lang_Init_PLWIN )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup hb_lang_Init_PLISO
+   #pragma startup hb_lang_Init_PLWIN
 #endif
 

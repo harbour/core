@@ -202,12 +202,12 @@ int hb_inkeyNext( HB_inkey_enum event_mask )      /* Return the next key without
 
 void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour buffer */
 {
-   static double dbLast;
+//   static double dbLast;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_inkeyPoll()"));
 
-   if( dbLast != hb_dateSeconds() )
-   {
+//   if( dbLast != hb_dateSeconds() )
+//   {
       if( hb_set.HB_SET_TYPEAHEAD || s_inkeyPoll )
       {
          int ch = hb_gt_ReadKey( s_eventmask );
@@ -235,8 +235,8 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
 
          hb_inkeyPut( ch );
       }
-      dbLast = hb_dateSeconds();
-   }
+//      dbLast = hb_dateSeconds();
+//   }
 }
 
 void hb_inkeyReset( BOOL allocate )     /* Reset the keyboard buffer */

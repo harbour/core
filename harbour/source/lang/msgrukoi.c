@@ -162,7 +162,6 @@ static HB_LANG s_lang =
       "не массив",
       "сравнение",
 
-
       /* Internal error names */
 
       "Неисправимая ошибка %lu: ",

@@ -8,6 +8,19 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-06-15 14:20 UTC+0200 Przemyslaw Czerpak <druzus@polbox.com>
+  * harbour/source/lang/msgen.c
+  * harbour/source/lang/msgpl852.c
+  * harbour/source/lang/msgpliso.c
+  * harbour/source/lang/msgplmaz.c
+    ! the bug reported by Alexander in msgru* fixed.
+  + harbour/source/lang/msgplwin.c
+    + added msgplwin (cp1250)
+
+  * harbour/source/rtl/inkey.c
+    * removed dirty hack which degrease performance of inkey() on *nix
+      platforms.
+
 2003-06-14 21:25 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c
     ! Bug fixed, related to seek with lLast and go bottom with scope set.

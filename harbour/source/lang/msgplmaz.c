@@ -156,7 +156,6 @@ static HB_LANG s_lang =
       "",
       "",
       "",
-      "",
        "Nieprawid’owa liczba argument¢w",
        "pobranie elementu tablicy",
        "zmiana wartožci elementu tablicy",
@@ -190,7 +189,7 @@ static HB_LANG s_lang =
       "Zapis poza przydzielonym obszarem",
       "hb_xgrab requested to allocate zero bytes",
       "hb_xrealloc requested to resize to zero bytes",
-      "hb_xalloc requested to allocate zero bytes"
+      "hb_xalloc requested to allocate zero bytes",
 
       /* Texts */
 
