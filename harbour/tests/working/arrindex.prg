@@ -8,7 +8,7 @@ Function Main
 
    c := { 1 }
 
-   b := a [ c [ 1 ] ] [ 2 ]
+   b := a [ c [1] ] [ val( [2] ) ]
 
    QOut( b )
 

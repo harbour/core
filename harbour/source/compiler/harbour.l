@@ -111,8 +111,35 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 ^{SpaceTab}*(\*|"NOTE").*  ;
 \n{SpaceTab}*(\*|"NOTE").*  ++iLine; if( ! _iQuiet ) printf( "\rline: %i", iLine );
 
+"&"("'"|\"|\[) { printf( "\nSyntax error : '%s'\n", yytext ); exit(1); }
+
 '              BEGIN STRING1;
 \"             BEGIN STRING2;
+
+"="[ \t]*"["                         { BEGIN STRING3; _iState =OPERATOR; return '=';      }
+"+"[ \t]*"["                         { BEGIN STRING3; _iState =OPERATOR; return '+';      }
+"-"[ \t]*"["                         { BEGIN STRING3; _iState =OPERATOR; return '-';      }
+"*"[ \t]*"["                         { BEGIN STRING3; _iState =OPERATOR; return '*';      }
+"/"[ \t]*"["                         { BEGIN STRING3; _iState =OPERATOR; return '/';      }
+"%"[ \t]*"["                         { BEGIN STRING3; _iState =OPERATOR; return '%';      }
+"$"[ \t]*"["                         { BEGIN STRING3; _iState =OPERATOR; return '$';      }
+("<>"|"!=")[ \t]*"["                 { BEGIN STRING3; _iState =NE2;      return NE2;      }
+":="[ \t]*"["                        { BEGIN STRING3; _iState =INASSIGN; return INASSIGN; }
+"=="[ \t]*"["                        { BEGIN STRING3; _iState =EQ;       return EQ;       }
+"<="[ \t]*"["                        { BEGIN STRING3; _iState =LE;       return LE;       }
+">="[ \t]*"["                        { BEGIN STRING3; _iState =GE;       return GE;       }
+"+="[ \t]*"["                        { BEGIN STRING3; _iState =PLUSEQ;   return PLUSEQ;   }
+"-="[ \t]*"["                        { BEGIN STRING3; _iState =MINUSEQ;  return MINUSEQ;  }
+"*="[ \t]*"["                        { BEGIN STRING3; _iState =MULTEQ;   return MULTEQ;   }
+"/="[ \t]*"["                        { BEGIN STRING3; _iState =DIVEQ;    return DIVEQ;    }
+"^="[ \t]*"["                        { BEGIN STRING3; _iState =EXPEQ;    return EXPEQ;    }
+"%="[ \t]*"["                        { BEGIN STRING3; _iState =MODEQ;    return MODEQ;    }
+("**"|"^")[ \t]*"["                  { BEGIN STRING3; _iState =POWER;    return POWER;    }
+".and."[ \t]*"["                     { BEGIN STRING3;                    return AND;      }
+".or."[ \t]*"["                      { BEGIN STRING3;                    return OR;       }
+("!"|".not.")[ \t]*"["               { BEGIN STRING3;                    return NOT;      }
+(","|"{"|"<"|">"|"(")[ \t]*"["   { BEGIN STRING3; _iState = OPERATOR; yyleng = 1; yytext[1] = 0; return yytext[ 0 ]; }
+
 <INITIAL>\[    BEGIN STRING3;
 
 <STRING1>[^'^\n]*   { GenError( ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0; }
@@ -124,8 +151,11 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                     else
                        BEGIN 0;
 
+                    yyleng--;
+                    yytext[yyleng] = 0;
                     yylval.string = strdup( yytext );
-                    yylval.string[ yyleng - 1 ] = 0; return LITERAL;
+                    /*printf( "\nLITERAL = %s\n", yylval.string );*/
+                    return LITERAL;
                   }
 
 <STRING2>[^\"]*\" { if( i_INDEX_STATE )
@@ -133,8 +163,10 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                     else
                        BEGIN 0;
 
+                    yyleng--;
+                    yytext[yyleng] = 0;
                     yylval.string = strdup( yytext );
-                    yylval.string[ yyleng - 1 ] = 0;
+                    /*printf( "\nLITERAL = %s\n", yylval.string );*/
                     return LITERAL;
                   }
 
@@ -143,8 +175,11 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                     else
                        BEGIN 0;
 
+                    yyleng--;
+                    yytext[yyleng] = 0;
                     yylval.string = strdup( yytext );
-                    yylval.string[ yyleng - 1 ] = 0; return LITERAL;
+                    /*printf( "\nLITERAL = %s\n", yylval.string );*/
+                    return LITERAL;
                   }
 
 <INDEX>\n    { yyerror( "Unterminated Array Index" ); exit(1); }
@@ -924,7 +959,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                         yyleng = 10;
                      }
                      yylval.string = strupr( strdup( yytext ) );
-                     printf( "\nIdentifier = '%s'\n", strupr( strdup( yytext ) ) );
+                     /*printf( "\nIdentifier = '%s'\n", strupr( strdup( yytext ) ) );*/
                      _iState = IDENTIFIER;
                      return IDENTIFIER;
                   }

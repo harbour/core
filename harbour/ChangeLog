@@ -1541,6 +1541,11 @@ May 31, 1999 Ron Pinkas
        a := aFunc()
        QOut( a[1] )
 
+May 31, 1999 Ron Pinkas
+        Harbour.l added support for "[String]" inside ARRAY INDEX expressions.
+        Added "Sysntax error :" message for the macro operator (&)
+        when followed by a string delimiter.
+
 
 
 
