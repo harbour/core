@@ -786,63 +786,6 @@ static void hb_arrayNewRagged( PHB_ITEM pArray, int iDimension )
          hb_arrayNewRagged( hb_arrayGetItemPtr( pArray, ulElements-- ), iDimension );
    }
 }
-/*  $DOC$
- *  $FUNCNAME$
- *     ARRAY()
- *  $CATEGORY$
- *     ARRAY
- *  $ONELINER$
- *      Create an uninitialized array of specified length
- *  $SYNTAX$
- *     ARRAY(<nElements> [, <nElements>...]) --> aArray
- *  $ARGUMENTS$
-     <nElements> is the number of elements in the specified dimension.
-     The maximum number of elements in a dimension is 4096.  Arrays in
-     HARBOUR can have an unlimited number of dimensions.
- *     
- *  $RETURNS$
- *   ARRAY() returns an array of specified dimensions.
- *  $DESCRIPTION$
-     ARRAY() is an array function that returns an uninitialized array with
-     the specified number of elements and dimensions.  If more than one
-     <nElements> argument is specified, a multidimensional array is created
-     with the number of dimensions equal to the number of <nElements>
-     arguments specified.  Any <nElements> that is itself an array creates a
-     nested array.
-
-     In HARBOUR, there are several ways to create an array.  You can
-     declare an array using a declaration statement such as LOCAL or STATIC;
-     you can create an array using a PRIVATE or PUBLIC statement; you can
-     assign a literal array to an existing variable; or you can use the
-     ARRAY() function.  ARRAY() has the advantage that it can create arrays
-     within expressions or code blocks.
- *     
- *  $EXAMPLES$
- *
-       This example creates a one-dimensional array of five elements
-        using the ARRAY() function, and then shows the equivalent action by
-        assigning a literal array of NIL values:
-
-        aArray := ARRAY(5)
-        aArray := { NIL, NIL, NIL, NIL, NIL }
-
-      This example shows three different statements which create the
-        same multidimensional array:
-
-        aArray := ARRAY(3, 2)
-        aArray := { {NIL, NIL}, {NIL, NIL}, {NIL, NIL} }
-        aArray := { ARRAY(2), ARRAY(2), ARRAY(2) }
-
-      This example creates a nested, multidimensional array:
-
-        aArray := ARRAY(3, {NIL,NIL})
-
- *  $SEEALSO$
- *     AADD(),ADEL(),AFILL(),AINS()
- *  $INCLUDE$
- *     
- *  $END$
- */
 
 HARBOUR HB_ARRAY( void )
 {
@@ -873,64 +816,6 @@ HARBOUR HB_ARRAY( void )
          hb_arrayNewRagged( &hb_stack.Return, 1 );
    }
 }
-/*  $DOC$
- *  $FUNCNAME$
- *  AADD()   
- *  $CATEGORY$
- *     ARRAY
- *  $ONELINER$
- *     Add a new element to the end of an array  
- *  $SYNTAX$
- *     AADD(<aTarget>, <expValue>) --> Value
- *  $ARGUMENTS$
- *
- *    <aTarget> is the array to add a new element to.
- *
- *    <expValue> is the value assigned to the new element.
- *
- *  $RETURNS$
- *
- *    AADD() evaluates <expValue> and returns its value.  If <expValue> is not
- *    specified, AADD() returns NIL.
- *     
- *  $DESCRIPTION$
-     AADD() is an array function that increases the actual length of the
-     target array by one.  The newly created array element is assigned the
-     value specified by <expValue>.
-
-     AADD() is used to dynamically grow an array.  It is useful for building
-     dynamic lists or queues.  A good example of this is the GetList array
-     used by the GET system to hold Get objects.  After a READ or CLEAR GETS,
-     GetList becomes an empty array.  Each time you execute an @...GET
-     command, the GET system uses AADD() to add a new element to the end of
-     the GetList array, and then assigns a new Get object to the new element.
-
-     AADD() is similar to ASIZE() but only adds one element at a time;
-     ASIZE() can grow or shrink an array to a specified size.  AADD(),
-     however, has the advantage that it can assign a value to the new
-     element, while ASIZE() cannot.  AADD() may also seem similar to AINS(),
-     but they are different:  AINS() moves elements within an array, but it
-     does not change the array's length.
-
-     Note:  If <expValue> is another array, the new element in the target
-     array will contain a reference to the array specified by <expValue>.
- *     
- *  $EXAMPLES$
-        These examples demonstrate the effects of multiple invocations
-        of AADD() to an array:
-
-        aArray := {}               // Result: aArray is an empty array
-        AADD(aArray, 5)            // Result: aArray is { 5 }
-        AADD(aArray, 10)           // Result: aArray is { 5, 10 }
-        AADD(aArray, { 12, 10 })   // Result: aArray is
-                                   // { 5, 10, { 12, 10 } }
- *     
- *  $SEEALSO$
- *     AINS(),ASIZE()
- *  $INCLUDE$
- *     
- *  $END$
- */
 
 HARBOUR HB_AADD( void )
 {
@@ -959,54 +844,6 @@ HARBOUR HB_AADD( void )
 
 /* NOTE: CA-Cl*pper 5.3 and older will return NIL on bad parameter, 5.3a,b
          will throw a runtime error. [vszel] */
-/*  $DOC$
- *  $FUNCNAME$
- *     ASIZE()
- *  $CATEGORY$
- *     ARRAY
- *  $ONELINER$
- *     Grow or shrink an array
- *  $SYNTAX$
- *     ASIZE(<aTarget>, <nLength>) --> aTarget
- *  $ARGUMENTS$
-       <aTarget> is the array to grow or shrink.
-
-       <nLength> is the new size of the array.
- *     
- *  $RETURNS$
- *     ASIZE() returns a reference to the target array, <aTarget>.
- *  $DESCRIPTION$
-       ASIZE() is an array function that changes the actual length of the
-       <aTarget> array.  The array is shortened or lengthened to match the
-       specified length.  If the array is shortened, elements at the end of the
-       array are lost.  If the array is lengthened, new elements are added to
-       the end of the array and assigned NIL.
-
-       ASIZE() is similar to AADD() which adds a single new element to the end
-       of an array and optionally assigns a new value at the same time.  Note
-       that ASIZE() is different from AINS() and ADEL(), which do not actually
-       change the array's length.
- *     
- *  $EXAMPLES$
-     ^CFE  These examples demonstrate adding new elements and deleting
-        existing elements:
-
-        aArray := { 1 }          // Result: aArray is { 1 }
-        ASIZE(aArray, 3)         // Result: aArray is { 1, NIL, NIL }
-        ASIZE(aArray, 1)         // Result: aArray is { 1 }
- *
- *  $TESTS$
- *
- *  $STATUS$
- *     R
- *  $COMPLIANCE$
- *
- *  $SEEALSO$
- *     AADD(),ADEL(),AFILL(),AINS()
- *  $INCLUDE$
- *     
- *  $END$
- */
 
 HARBOUR HB_ASIZE( void )
 {
@@ -1025,46 +862,6 @@ HARBOUR HB_ASIZE( void )
       hb_errRT_BASE( EG_ARG, 2023, NULL, "ASIZE" );
 #endif
 }
-/*  $DOC$
- *  $FUNCNAME$
- *     ATAIL()
- *  $CATEGORY$
- *     ARRAY
- *  $ONELINER$
- *     Return the highest numbered element of an array
- *  $SYNTAX$
- *     ATAIL(<aArray>) --> Element
- *  $ARGUMENTS$
- *     <aArray> is the array.
- *  $RETURNS$
-       ATAIL() returns either a value or a reference to an array or object.
-       The array is not changed.
- *     
- *  $DESCRIPTION$
-     ATAIL() is an array function that returns the highest numbered element
-     of an array.  It can be used in applications as shorthand for
-     <aArray>[LEN(<aArray>)] when you need to obtain the last element of an
-     array.
- *     
- *  $EXAMPLES$
-     ^CFE  The following example creates a literal array and returns that
-        last element of the array:
-
-        aArray := {"a", "b", "c", "d"}
-        ? ATAIL(aArray)                     // Result: d
- *
- *  $TESTS$
- *
- *  $STATUS$
- *     R
- *  $COMPLIANCE$
- *
- *  $SEEALSO$
- *     
- *  $INCLUDE$
- *     
- *  $END$
- */
 
 HARBOUR HB_ATAIL( void )
 {
@@ -1073,60 +870,6 @@ HARBOUR HB_ATAIL( void )
    if( pArray )
       hb_arrayLast( pArray, &hb_stack.Return );
 }
-/*  $DOC$
- *  $FUNCNAME$
- *     AINS()
- *  $CATEGORY$
- *     ARRAY
- *  $ONELINER$
- *     Insert a NIL element into an array
- *  $SYNTAX$
- *     AINS(<aTarget>, <nPosition>) --> aTarget 
- *  $ARGUMENTS$
-       <aTarget> is the array into which a new element will be inserted.
-
-       <nPosition> is the position at which the new element will be
-       inserted.
- *     
- *  $RETURNS$
- *     AINS() returns a reference to the target array, <aTarget>.
- *  $DESCRIPTION$
-       AINS() is an array function that inserts a new element into a specified
-     array.  The newly inserted element is NIL data type until a new value is
-     assigned to it.  After the insertion, the last element in the array is
-     discarded, and all elements after the new element are shifted down one
-     position.
-
-       Warning!  AINS() must be used carefully with multidimensional
-     arrays.  Multidimensional arrays in HARBOUR are implemented by
-     nesting arrays within other arrays.  Using AINS() in a multidimensional
-     array discards the last element in the specified target array which, if
-     it is an array element, will cause one or more dimensions to be lost.
-     To insert a new dimension into an array, first add a new element to the
-     end of the array using AADD() or ASIZE() before using AINS().
- *     
- *  $EXAMPLES$
-     ^CFE  This example demonstrates the effect of using AINS() on an
-        array:
-
-        LOCAL aArray
-        aArray := { 1, 2, 3 }      // Result: aArray is
-                                   // now { 1, 2, 3 }
-        AINS(aArray, 2)            // Result: aArray is
-                                   // now { 1, NIL, 2 }
- *
- *  $TESTS$
- *
- *  $STATUS$
- *     R
- *  $COMPLIANCE$
- *
- *  $SEEALSO$
- *     AADD(),ACOPY(),ADEL(),AEVAL(),AFILL(),ASIZE()
- *  $INCLUDE$
- *     
- *  $END$
- */
 
 HARBOUR HB_AINS( void )
 {
@@ -1140,57 +883,6 @@ HARBOUR HB_AINS( void )
       hb_itemReturn( pArray ); /* AIns() returns the array itself */
    }
 }
-/*  $DOC$
- *  $FUNCNAME$
- *     ADEL()
- *  $CATEGORY$
- *     ARRAY
- *  $ONELINER$
- *     Delete an array element
- *  $SYNTAX$
- *     ADEL(<aTarget>, <nPosition>) --> aTarget
- *  $ARGUMENTS$
-       <aTarget> is the array to delete an element from.
-
-       <nPosition> is the position of the target array element to delete.
- *     
- *  $RETURNS$
- *     ADEL() returns a reference to the target array, <aTarget>.
- *  $DESCRIPTION$
-       ADEL() is an array function that deletes an element from an array.  The
-     contents of the specified array element is lost, and all elements from
-     that position to the end of the array are shifted up one element.  The
-     last element in the array becomes NIL.
-
-       Warning!  HARBOUR implements multidimensional arrays by nesting
-     arrays within other arrays.  If the <aTarget> array is a
-     multidimensional array, ADEL() can delete an entire subarray specified
-     by <nPosition>, causing <aTarget> to describe an array with a different
-     structure than the original.
- *     
- *  $EXAMPLES$
-     ^CFE  This example creates a constant array of three elements, and
-        then deletes the second element.  The third element is moved up one
-        position, and the new third element is assigned a NIL:
-
-        LOCAL aArray
-        aArray := { 1, 2, 3 }      // Result: aArray is
-                                   // now { 1, 2, 3 }
-        ADEL(aArray, 2)            // Result: aArray is
-                                   // now { 1, 3, NIL }
- *
- *  $TESTS$
- *
- *  $STATUS$
- *     R
- *  $COMPLIANCE$
- *
- *  $SEEALSO$
- *     ACOPY(),AINS(),AFILL() 
- *  $INCLUDE$
- *     
- *  $END$
- */
 
 HARBOUR HB_ADEL( void )
 {
@@ -1204,68 +896,6 @@ HARBOUR HB_ADEL( void )
       hb_itemReturn( pArray ); /* ADel() returns the array itself */
    }
 }
-/*  $DOC$
- *  $FUNCNAME$
- *     AFILL()
- *  $CATEGORY$
- *     ARRAY
- *  $ONELINER$
- *     Fill an array with a specified value
- *  $SYNTAX$
-       AFILL(<aTarget>, <expValue>,
-        [<nStart>], [<nCount>]) --> aTarget
- *     
- *  $ARGUMENTS$
-       <aTarget> is the array to fill.
-
-       <expValue> is the value to place in each array element.  It can be
-     an expression of any valid data type.
-
-       <nStart> is the position of the first element to fill.  If this
-     argument is omitted, the default value is one.
-
-       <nCount> is the number of elements to fill starting with element
-     <nStart>.  If this argument is omitted, elements are filled from the
-     starting element position to the end of the array.
- *     
- *  $RETURNS$
- *     AFILL() returns a reference to <aTarget>. 
- *  $DESCRIPTION$
-       AFILL() is an array function that fills the specified array with a
-     single value of any data type (including an array, code block, or NIL)
-     by assigning <expValue> to each array element in the specified range.
-
-       Warning!  AFILL() cannot be used to fill multidimensional arrays.
-     HARBOUR implements multidimensional arrays by nesting arrays within
-     other arrays.  Using AFILL() with a multidimensional array will
-     overwrite subarrays used for the other dimensions of the array.
- *     
- *  $EXAMPLES$
-     ^CFE  This example, creates a three-element array.  The array is
-        then filled with the logical value, (.F.).  Finally, elements in
-        positions two and three are assigned the new value of true (.T.):
-
-        LOCAL aLogic[3]
-        // Result: aLogic is { NIL, NIL, NIL }
-
-        AFILL(aLogic, .F.)
-        // Result: aLogic is { .F., .F., .F. }
-
-        AFILL(aLogic, .T., 2, 2)
-        // Result: aLogic is { .F., .T., .T. }
- *
- *  $TESTS$
- *
- *  $STATUS$
- *     R
- *  $COMPLIANCE$
- *
- *  $SEEALSO$
- *     AADD(),AEVAL(),DBSTRUCT(),DIRECTORY()
- *  $INCLUDE$
- *     
- *  $END$
- */
 
 HARBOUR HB_AFILL( void )
 {
@@ -1289,105 +919,6 @@ HARBOUR HB_AFILL( void )
       hb_itemReturn( pArray ); /* AFill() returns the array itself */
    }
 }
-/*  $DOC$
- *  $FUNCNAME$
- *     ASCAN()
- *  $CATEGORY$
- *     ARRAY
- *  $ONELINER$
- *     Scan an array for a value or until a block returns true (.T.)
- *  $SYNTAX$
- *     ASCAN(<aTarget>, <expSearch>,
- *      [<nStart>], [<nCount>]) --> nStoppedAt
- *     
- *  $ARGUMENTS$
- *     <aTarget>   Name of array to be scaned.
- *
- *     <expSearch> Expression to search for withing <aTarget>
- *
- *     <nStart>    Beggining subscript position at witch to start the
- *     search.
- *
- *     <nCount> Number of elements to scan with <aTarget>.
- *   position.  If this argument is not specified, all elements from the
- *    
- *  $RETURNS$
- *     <nStoppedAt> A numeric value of subscript position where <expSearch>
- *     was found.
- *     
- *  $DESCRIPTION$
- *     ASCAN() is an array function that scans an array for a specified value
- *   and operates like SEEK when searching for a simple value.  The
- *   <expSearch> value is compared to the target array element beginning with
- *   the leftmost character in the target element and proceeding until there
- *   are no more characters left in <expSearch>.  If there is no match,
- *   ASCAN() proceeds to the next element in the array.
- *
- *      Since ASCAN() uses the equal operator (=) for comparisons, it is
- *   sensitive to the status of EXACT.  If EXACT is ON, the target array
- *   element must be exactly equal to the result of <expSearch> to match.
- *
- *     If the <expSearch> argument is a code block, ASCAN() scans the <aTarget>
- *   array executing the block for each element accessed.  As each element is
- *   encountered, ASCAN() passes the element's value as an argument to the
- *   code block, and then performs an EVAL() on the block.  The scanning
- *   operation stops when the code block returns true (.T.), or ASCAN()
- *   reaches the last element in the array.
- *     
- *  $EXAMPLES$
- *   ^CFE  This example demonstrates scanning a three-element array using
- *      simple values and a code block as search criteria.  The code block
- *      criteria shows how to perform a case-insensitive search:
- *
- *      aArray := { "Tom", "Mary", "Sue" }
- *      ? ASCAN(aArray, "Mary")             // Result: 2
- *      ? ASCAN(aArray, "mary")             // Result: 0
- *      //
- *      ? ASCAN(aArray, { |x| UPPER(x) ;
- *            == "MARY" })                  // Result: 2
- *
- *   ^CFE  This example demonstrates scanning for multiple instances of a
- *      search argument after a match is found:
- *
- *      LOCAL aArray := { "Tom", "Mary", "Sue",;
- *                         "Mary" }, nStart := 1
- *      //
- *      // Get last array element position
- *      nAtEnd := LEN(aArray)
- *      DO WHILE (nPos := ASCAN(aArray, "Mary", ;
- *                   nStart)) > 0
- *         ? nPos, aArray[nPos]
- *         //
- *         // Get new starting position and test
- *         // boundary condition
- *         IF (nStart := ++nPos) > nAtEnd
- *            EXIT
- *         ENDIF
- *      ENDDO
- *
- *   ^CFE  This example scans a two dimensional array using a code block.
- *      Note that the parameter aVal in the code block is an array:
- *
- *      LOCAL aArr:={}
- *      CLS
- *      AADD(aArr,{"one","two"})
- *      AADD(aArr,{"three","four"})
- *      AADD(aArr,{"five","six"})
- *      ? ASCAN(aArr, {|aVal| aVal[2] == "four"})         // Returns 2
- *
- *  $TESTS$
- *
- *  $STATUS$
- *     R
- *  $COMPLIANCE$
- *     This functions is not CA-Clipper compatible. Clipper ASCAN() is
- *     affected by the SET EXACT ON/OFF Condition
- *  $SEEALSO$
- *     ACOMP(),AEVAL()
- *  $INCLUDE$
- *     
- *  $END$
- */
 
 HARBOUR HB_ASCAN( void )
 {
@@ -1407,6 +938,7 @@ HARBOUR HB_ASCAN( void )
    else
       hb_retnl( 0 );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *     AEVAL()
@@ -1417,7 +949,7 @@ HARBOUR HB_ASCAN( void )
  *  $SYNTAX$
  *     AEVAL(<aArray>, <bBlock>,
  *      [<nStart>], [<nCount>]) --> aArray
- *     
+ *
  *  $ARGUMENTS$
  *     <aArray> Is the array to be evaluated.
  *
@@ -1425,14 +957,14 @@ HARBOUR HB_ASCAN( void )
  *
  *     <nStart> The beggining array element to evaluate.
  *
- *     <nCount> The number of elements to process. 
- *     
+ *     <nCount> The number of elements to process.
+ *
  *  $RETURNS$
  *     AEVAL() returns an array pointer reference.
- *     
+ *
  *  $DESCRIPTION$
  *     This function will evaluate and process the subscript elements
- *     in <aArray>. A code block passed as <bBlock> defines the 
+ *     in <aArray>. A code block passed as <bBlock> defines the
  *     operation to be executed on each element of the array. All
  *     elements in <aArray> will be evaluated unless specified by a
  *     beggining subscript position in <nStart> for <nCount> elements.
@@ -1456,7 +988,7 @@ HARBOUR HB_ASCAN( void )
  *  $SEEALSO$
  *     EVAL(),DBEVAL()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -1480,6 +1012,7 @@ HARBOUR HB_AEVAL( void )
    else
       hb_errRT_BASE( EG_ARG, 2017, NULL, "AEVAL" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *     ACOPY()
@@ -1490,7 +1023,7 @@ HARBOUR HB_AEVAL( void )
  *  $SYNTAX$
  *     ACOPY(<aSource>, <aTarget>,
  *      [<nStart>], [<nCount>], [<nTargetPos>]) --> aTarget
- *     
+ *
  *  $ARGUMENTS$
  *     <aSource> is the array to copy elements from.
  *
@@ -1502,9 +1035,9 @@ HARBOUR HB_AEVAL( void )
  *
  *     <nTargetPos> the starting subscript position in <aTarget> to copy
  *  elements to
- *     
+ *
  *  $RETURNS$
- *     ACOPY() returns an array pointer reference 
+ *     ACOPY() returns an array pointer reference
  *  $DESCRIPTION$
  *     This function copies array elements from <aSource> to <aTarget>.
  *     <nStart> is the beggining element to be copied from <aSource>;the
@@ -1526,16 +1059,6 @@ HARBOUR HB_AEVAL( void )
  *   subscript positions to the target array, the size of the target
  *   array <aTarget> remains constant.
  *  $EXAMPLES$
- *   ^CFE  This example creates two arrays, each filled with a value.
- *      The first two elements from the source array are then copied into the
- *      target array:
- *
- *      LOCAL nCount := 2, nStart := 1, aOne, aTwo
- *      aOne := { 1, 1, 1 }
- *      aTwo := { 2, 2, 2 }
- *      ACOPY(aOne, aTwo, nStart, nCount)
- *      // Result: aTwo is now { 1, 1, 2 }
- *
  *  $TESTS$
  *
  *  $STATUS$
@@ -1545,7 +1068,7 @@ HARBOUR HB_AEVAL( void )
  *  $SEEALSO$
  *     ACLONE(),ADEL(),AEVAL(),AFILL(),AINS(),ASORT()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -1593,28 +1116,18 @@ HARBOUR HB_ACOPY( void )
  *  $DESCRIPTION$
  *     This function makes a complete copy of the array expressed as
  *  <aSource> and return a cloned set of array values.This provides
- *  a complete 
+ *  a complete
  *  $EXAMPLES$
- *   ^CFE  This example creates an array then duplicates it using
- *      ACLONE().  The first array is then altered, but the duplicate copy is
- *      unaffected:
- *
- *      LOCAL aOne, aTwo
- *      aOne := { 1, 2, 3 }        // Result: aOne is {1, 2, 3}
- *      aTwo := ACLONE(aOne)       // Result: aTwo is {1, 2, 3}
- *      aOne[1] := 99              // Result: aOne is {99, 2, 3}
- *                                 // aTwo is still {1, 2, 3}
- *
  *  $TESTS$
  *
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *
+ *      NOTE: Clipper will return NIL if the parameter is not an array.
  *  $SEEALSO$
  *     ACOPY(),ADEL(),AINS(),ASIZE()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -1629,4 +1142,3 @@ HARBOUR HB_ACLONE( void )
       hb_itemRelease( pDstArray );
    }
 }
-

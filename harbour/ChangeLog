@@ -1,3 +1,12 @@
+20000125-10:05 GMT+2 Chen Kedem <niki@actcom.co.il>
+  * source/rtl/arrays.c
+    - remove documentation stolen from CA-Clipper 5.2 NG from the following
+      functions: ARRAY(), AADD(), ASIZE(), ATAIL(), AINS(), ADEL(), AFILL(),
+                 ASCAN()
+    - remove $EXAMPLES$ stolen from CA-Clipper 5.2 NG from the following
+      function: ACOPY(), ACLONE()
+    + ACLONE() : add $COMPLIANCE$ note
+     
 2000-01-25 02:45 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/debug/debugger.prg
      * Support for up and down arrows on command window
