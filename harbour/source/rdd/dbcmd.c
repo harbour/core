@@ -2751,8 +2751,9 @@ HB_FUNC( DBSETRELATION )
       }
 
       dbRelations.lpaChild = ( AREAP ) s_pArea->pArea;
-      dbRelations.itmCobExpr = hb_param( 2, HB_IT_BLOCK );
-      dbRelations.abKey = hb_param( 3, HB_IT_STRING );
+      dbRelations.itmCobExpr = hb_itemNew( hb_param( 2, HB_IT_BLOCK ) );
+      hb_gcLockItem( dbRelations.itmCobExpr );
+      dbRelations.abKey = hb_itemNew( hb_param( 3, HB_IT_STRING ) );
       dbRelations.isScoped = ( hb_pcount() > 3 )? hb_parl( 4 ):0;
       dbRelations.lpdbriNext = NULL;
 

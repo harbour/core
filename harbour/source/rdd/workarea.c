@@ -671,12 +671,15 @@ ERRCODE hb_waClearRel( AREAP pArea )
    while( lpdbRelation )
    {
       SELF_CHILDEND( lpdbRelation->lpaChild, lpdbRelation );
-/*
+
       if( lpdbRelation->itmCobExpr )
+      {
+         hb_gcUnlockItem( lpdbRelation->itmCobExpr );
          hb_itemRelease( lpdbRelation->itmCobExpr );
+      }
       if( lpdbRelation->abKey )
          hb_itemRelease( lpdbRelation->abKey );
-*/
+
       lpdbRelPrev = lpdbRelation;
       lpdbRelation = lpdbRelation->lpdbriNext;
       hb_xfree( lpdbRelPrev );
