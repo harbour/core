@@ -564,7 +564,7 @@ return xValue
 
 METHOD overstrike( cChar ) CLASS Get
 
-   if ::type == "N" .and. ! ::lEdit
+   if ::type == "N" .and. ! ::lEdit .and. ::Clear
       ::pos := 1
    endif
 
@@ -618,7 +618,7 @@ METHOD Insert( cChar ) CLASS Get
    local n
    local nMaxLen := ::nMaxLen
 
-   if ::type == "N" .and. ! ::lEdit
+   if ::type == "N" .and. ! ::lEdit .and. ::Clear
       ::pos := 1
    endif
 
@@ -1035,6 +1035,7 @@ METHOD _Delete( lDisplay ) CLASS Get
 
    DEFAULT lDisplay TO .t.
 
+   ::Clear := .f.
    ::lEdit := .t.
 
    if ::lPicComplex
