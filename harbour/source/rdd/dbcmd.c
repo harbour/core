@@ -621,8 +621,7 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
    else
    {
       szSuperName = ( char * ) hb_xgrab( uiCount + 1 );
-      strcpy( szSuperName, ( char * ) szDrvName );
-      hb_strUpper( szSuperName, uiCount );
+      hb_strncpyUpper( szSuperName, (char *)szDrvName, uiCount );
       pRddNode = hb_rddFindNode( szSuperName, 0 );
       hb_xfree( szSuperName );
       if( !pRddNode )
@@ -1066,10 +1065,11 @@ HARBOUR HB_DBCREATE( void )
    DBOPENINFO pInfo;
    USHORT uiLen;
    PHB_FNAME pFileName;
+   char cDriverBuffer[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ];
 
    szFileName = hb_parc( 1 );
    pStruct = hb_param( 2 , IT_ARRAY );
-   if( ( strlen( szFileName) == 0 ) || !pStruct || !pStruct->item.asArray.value->ulLen )
+   if( ( strlen( szFileName ) == 0 ) || !pStruct || !pStruct->item.asArray.value->ulLen )
    {
       hb_errRT_DBCMD( EG_ARG, 1014, NULL, "DBCREATE" );
       return;
@@ -1092,9 +1092,12 @@ HARBOUR HB_DBCREATE( void )
    }
 
    hb_rddCheck();
-   szDriver = hb_parc( 3 );
-   if( ( uiLen = strlen( szDriver ) ) > 0 )
-      hb_strUpper( szDriver, uiLen ); /* TOFIX: Direct access to hb_parc() buffer ! */
+   uiLen = hb_parclen( 3 );
+   if( uiLen > 0 )
+   {
+      hb_strncpyUpper( cDriverBuffer, hb_parc( 3 ), uiLen ); 
+      szDriver = cDriverBuffer;
+   }
    else
       szDriver = szDefDriver;
 
@@ -1429,6 +1432,7 @@ HARBOUR HB_DBUSEAREA( void )
    DBOPENINFO pInfo;
    PHB_FNAME pFileName;
    PHB_ITEM pFileExt;
+   char cDriverBuffer[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ];
 
    bNetError = FALSE;
 
@@ -1455,9 +1459,12 @@ HARBOUR HB_DBUSEAREA( void )
    }
 
    hb_rddCheck();
-   szDriver = hb_parc( 2 );
-   if( ( uiLen = strlen( szDriver ) ) > 0 )
-      hb_strUpper( szDriver, uiLen ); /* TOFIX: Direct access to hb_parc() buffer ! */
+   uiLen = hb_parclen( 2 );
+   if( uiLen > 0 )
+   {
+      hb_strncpyUpper( cDriverBuffer, hb_parc( 2 ), uiLen ); 
+      szDriver = cDriverBuffer;
+   }
    else
       szDriver = szDefDriver;
 
@@ -1662,24 +1669,24 @@ HARBOUR HB_FIELDNAME( void )
 HARBOUR HB_FIELDPOS( void )
 {
    USHORT uiCount;
-   char * szName;
    LPFIELD pField;
 
    if( pCurrArea )
    {
-      szName = hb_parc( 1 );
-      hb_strUpper( szName, strlen( szName ) ); /* TOFIX: Direct access to hb_parc() buffer ! */
+      char szName[ HARBOUR_MAX_RDD_FIELDNAME_LENGTH ];
+      
+      hb_strncpyUpper( szName, hb_parc( 1 ), hb_parclen( 1 ) );
       uiCount = 0;
       pField = ( ( AREAP ) pCurrArea->pArea )->lpFields;
       while( pField )
       {
+         ++uiCount;      
          if( strcmp( szName, ( ( PHB_DYNS ) pField->sym )->pSymbol->szName ) == 0 )
          {
-            hb_retni( uiCount + 1 );
+            hb_retni( uiCount );
             return;
          }
          pField = pField->lpfNext;
-         uiCount++;
       }
    }
    hb_retni( 0 );
@@ -1823,14 +1830,14 @@ HARBOUR HB_RDDNAME( void )
 
 HARBOUR HB_RDDREGISTER( void )
 {
-   char * szDriver;
+   char szDriver[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ];
    USHORT uiLen;
 
    hb_rddCheck();
-   szDriver = hb_parc( 1 );
-   if( ( uiLen = strlen( szDriver ) ) > 0 )
+   uiLen = hb_parclen( 1 );
+   if( uiLen > 0 )
    {
-      hb_strUpper( szDriver, uiLen ); /* TOFIX: Direct access to hb_parc() buffer ! */
+      hb_strncpyUpper( szDriver, hb_parc( 1 ), uiLen ); 
       /*
        * hb_rddRegister returns:
        *
@@ -1846,15 +1853,16 @@ HARBOUR HB_RDDREGISTER( void )
 
 HARBOUR HB_RDDSETDEFAULT( void )
 {
-   char * szNewDriver;
+   char szNewDriver[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ];
    USHORT uiLen;
 
    hb_rddCheck();
    hb_retc( szDefDriver );
-   szNewDriver = hb_parc( 1 );
-   if( ( uiLen = strlen( szNewDriver ) ) > 0 )
+   
+   uiLen = hb_parclen( 1 );
+   if( uiLen > 0 )
    {
-      hb_strUpper( szNewDriver, uiLen ); /* TOFIX: Direct access to hb_parc() buffer ! */
+      hb_strncpyUpper( szNewDriver, hb_parc( 1 ), uiLen );
 
       if( !hb_rddFindNode( szNewDriver, NULL ) )
       {
