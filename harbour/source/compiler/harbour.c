@@ -53,10 +53,10 @@ static void hb_compInitVars( void );
 static void hb_compGenOutput( int );
 static void hb_compOutputFile( void );
 
+int hb_compLocalGetPos( char * szVarName ); /* returns the order + 1 of a local variable */
+int hb_compStaticGetPos( char *, PFUNCTION );   /* return if passed name is a static variable */
 static int hb_compFieldGetPos( char *, PFUNCTION );   /* return if passed name is a field variable */
-static int hb_compLocalGetPos( char * szVarName ); /* returns the order + 1 of a local variable */
 static int hb_compMemvarGetPos( char *, PFUNCTION );   /* return if passed name is a memvar variable */
-static int hb_compStaticGetPos( char *, PFUNCTION );   /* return if passed name is a static variable */
 
 static void hb_compGenFieldPCode( BYTE , int, char *, PFUNCTION );      /* generates the pcode for database field */
 static void hb_compGenVariablePCode( BYTE , char * );    /* generates the pcode for undeclared variable */
@@ -1288,7 +1288,7 @@ USHORT hb_compVariableGetPos( PVAR pVars, char * szVarName ) /* returns the orde
    return 0;
 }
 
-static int hb_compLocalGetPos( char * szVarName ) /* returns the order + 1 of a variable if defined or zero */
+int hb_compLocalGetPos( char * szVarName ) /* returns the order + 1 of a variable if defined or zero */
 {
    int iVar;
    PFUNCTION pFunc = hb_comp_functions.pLast;
@@ -1423,7 +1423,7 @@ static int hb_compLocalGetPos( char * szVarName ) /* returns the order + 1 of a 
  * All static variables are hold in a single array at runtime then positions
  * are numbered for whole PRG module.
  */
-static int hb_compStaticGetPos( char * szVarName, PFUNCTION pFunc )
+int hb_compStaticGetPos( char * szVarName, PFUNCTION pFunc )
 {
    int iVar;
 

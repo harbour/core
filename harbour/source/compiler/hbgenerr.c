@@ -86,6 +86,7 @@ char * hb_comp_szErrors[] =
    "ANNOUNCEd procedure \'%s\' must be a public symbol",
    "Jump PCode not found",
    "CASE or OTHERWISE does not match DO CASE",
+   "Code block contains both macro and declared symbol references"
 };
 
 /* Table with parse warnings */

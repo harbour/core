@@ -1,10 +1,28 @@
+2000-11-07 22:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * include/hberrors.h
+     + Added: #define HB_COMP_ERR_BLOCK                       47
+   * source/compiler/hbgenerr.c
+     + Added Error: "Code block contains both macro and declared symbol references"
+
+   * source/compiler/harbour.c
+     * Made public: hb_compLocalGetPos() and hb_compStaticGetPos()
+
+   * source/compiler/harbour.slx
+     + Added: char * hb_comp_SLX_LastBlock( BOOL bReset )
+
+   * source/compiler/harbour.sly
+     + Added logic to support Early Expansions of Macro within CodeBlock unless parenthesized.
+
+   + tests/tstblock.prg
+     + New test of Early/Late expansion of Macros within CodeBlocks.
+
 2000-11-07 16:25 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbexpra.c
     *source/compiler/expropta.c
     *source/macro/macroa.c
         *fixed internal _GET_ optimization for macro variables
-        
+
     *source/rtl/tgetint.prg
         *__GET uses macro operator if no initial value is passed and
          there is no set/get block

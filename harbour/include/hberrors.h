@@ -91,6 +91,7 @@ extern "C" {
 #define HB_COMP_ERR_FUNC_ANNOUNCE               44
 #define HB_COMP_ERR_JUMP_NOT_FOUND              45
 #define HB_COMP_ERR_CASE                        46
+#define HB_COMP_ERR_BLOCK                       47
 
 #define HB_COMP_WARN_AMBIGUOUS_VAR              1
 #define HB_COMP_WARN_MEMVAR_ASSUMED             2
