@@ -2795,13 +2795,11 @@ static int md_strAt( char * szSub, int lSubLen, char * szText, BOOL checkword, B
            lPos++;
         }
      }
-
-     cLastChar = *(szText+lPos);
   }
 
   #if 0
-     printf( "In: >%s<\n", szText );
-     printf( "Pos: %i Len: %i Str: >%s< At: >%s<\n", lSubPos, lSubLen, szSub, (szText+lPos-lSubLen+1) );
+     printf( "Rule: %i Find: >%s< In: >%s<\n", bRule, szSub, szText );
+     printf( "Pos: %i Len: %i At: >%s<\n", lSubPos, lSubLen, (szText+lPos-lSubLen+1) );
   #endif
 
   return (lSubPos < lSubLen? 0: lPos - lSubLen + 1);

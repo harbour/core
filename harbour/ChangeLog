@@ -1,3 +1,13 @@
+2000-11-14 02:35 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     ! Corrected few pre-processor bugs.
+     ! Corrected DOT multi-line support.
+   * contrib/dot/rp_dot.ch
+     + Added Clipper and Harbour support for GET
+
+   * source/pp/ppcore.c
+     ! Removed redundant line in md_strAt() whiched caused bug with tanslating within [] bracket expressions.
+
 2000-11-13 16:18 UTC+0800 Brian Hays <bhays@abacuslaw.com>
    * contrib/rdd_ads/ads1.c
       + adsOrderInfo: added support for most options

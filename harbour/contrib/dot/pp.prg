@@ -30,6 +30,124 @@
 
 #ifdef __HARBOUR__
    #include "hbextern.ch"
+#else
+   EXTERNAL ARRAY,ASIZE,ATAIL,AINS,ADEL,AFILL,ASCAN,AEVAL,ACOPY,ACLONE,ADIR, ASORT
+
+   EXTERNAL MEMORY
+
+   EXTERNAL ERRORLEVEL
+
+   EXTERNAL __QQPUB,__MCLEAR,__MRELEASE,__MXRELEASE,__MSAVE,__MRESTORE ;
+
+   EXTERNAL PROCNAME,PROCLINE,PROCFILE
+
+   EXTERNAL BIN2W,BIN2I,BIN2L,I2BIN,L2BIN
+
+   EXTERNAL OUTSTD,OUTERR,QQOUT,QOUT,DISPOUT,DISPOUTAT,__EJECT, ;
+            SETPRC,MAXROW,MAXCOL,DISPBOX,DISPBEGIN,DISPEND,DISPCOUNT,ISCOLOR, ;
+            NOSNOW,DBGSHADOW,SAVESCREEN,RESTSCREEN,SETCURSOR,SETBLINK,SETMODE,__ACCEPT, ;
+            __ACCEPTSTR
+
+   EXTERNAL __COPYFILE
+
+   EXTERNAL DESCEND,DIRECTORY
+
+   EXTERNAL VERSION,GETENV,__RUN
+
+   EXTERNAL ERRORNEW,DOSERROR
+
+   EXTERNAL FERASE,FRENAME,FILE,FREADSTR,CURDIR,DISKSPACE
+
+   EXTERNAL __KEYBOARD,NEXTKEY,LASTKEY,FKLABEL,FKMAX
+
+   EXTERNAL ISPRINTER
+
+   EXTERNAL MOD
+
+   EXTERNAL MEMOREAD,MEMOWRIT,MEMOLINE,MLCOUNT,MLPOS,MEMOTRAN
+
+   EXTERNAL NETNAME
+
+   EXTERNAL __BOX,__BOXD,__BOXS
+
+   EXTERNAL AMPM,DAYS,ELAPTIME,LENNUM,SECS,TSTRING
+
+   EXTERNAL SETCANCEL,__SETCENTURY,DEFPATH,__DEFPATH
+
+   EXTERNAL SETCOLOR,COLORSELECT
+
+   EXTERNAL SOUNDEX
+
+   EXTERNAL ISALPHA,ISDIGIT,ISUPPER,ISLOWER,ALLTRIM,PADR,PAD,PADL,PADC, ;
+            STUFF,STRZERO
+
+   EXTERNAL TONE
+
+   EXTERNAL TRANSFORM
+
+   EXTERNAL __XHELP
+
+   EXTERNAL ACHOICE
+
+   EXTERNAL __NONOALERT
+
+   EXTERNAL TBROWSEDB,DBEDIT
+
+   EXTERNAL DEVOUTPICT
+
+   EXTERNAL __DIR
+
+   EXTERNAL DBSETRELATION,DBCLEARREL,MEMOEDIT,MLCTOPOS,MPOSTOLC,__DBAPP,__DBCOPY, ;
+            __DBDELIM,__DBJOIN,__DBLIST,__DBSDF,__DBSORT,__DBTOTAL,__DBUPDATE,__DBARRANGE,__DBFLIST, ;
+            __DBOPENSDF,__DBTRANS,__DBTRANSREC
+
+   EXTERNAL FIELDBLOCK,FIELDWBLOCK
+
+   EXTERNAL __INPUT
+
+   EXTERNAL MEMVARBLOCK
+
+   EXTERNAL __ATPROMPT,__MENUTO
+
+   EXTERNAL READKEY
+
+   EXTERNAL SETKEY
+
+   EXTERNAL SETTYPEAHEAD
+
+   EXTERNAL TBCOLUMNNEW,TBROWSENEW
+
+   EXTERNAL __TEXTSAVE,__TEXTRESTORE
+
+   EXTERNAL __GET,__GETA
+
+   EXTERNAL __LABELFORM, __REPORTFORM
+
+   EXTERNAL __TYPEFILE
+
+   EXTERNAL __WAIT
+
+   EXTERNAL __XSAVESCREEN,__XRESTSCREEN
+
+   /*
+   EXTERNAL RDDSYS,AFIELDS,DBEVAL,DBCLEARFILTER,DBCLOSEALL, ;
+            DBCOMMIT,__DBCONTINUE,DBCREATE,DBDELETE,DBFILTER,DBGOBOTTOM,DBGOTO, ;
+            DBGOTOP,__DBLOCATE,__DBSETLOCATE,__DBPACK,DBRECALL,DBRLOCK,DBRLOCKLIST,DBRUNLOCK,DBSEEK, ;
+            DBSELECTAREA,__DBSETFOUND,DBSKIP,DBSETFILTER,DBSTRUCT,DBTABLEEXT,DBUNLOCK,DBUNLOCKALL,DBUSEAREA, ;
+            __DBZAP,DELETED,EOF,FCOUNT,FIELDGET,FIELDNAME,FIELDPOS,FIELDPUT,FLOCK,FOUND,HEADER,INDEXORD, ;
+            LASTREC,LOCK,LUPDATE,NETERR,ORDBAGEXT,ORDBAGNAME,ORDCONDSET,ORDCREATE,ORDDESTROY,ORDFOR,ORDKEY, ;
+            ORDLISTADD,ORDLISTCLEAR,ORDLISTREBUILD,ORDNAME,ORDNUMBER,ORDSETFOCUS,RDDLIST,RDDNAME,RDDREGISTER, ;
+            RECCOUNT,RECNO,RECSIZE,RLOCK,SELECT,USED,RDDSETDEFAULT,RDDSETDEFAULT,DBSETDRIVER
+   */
+
+   EXTERNAL __DBPACK,__DBZAP,DBCLOSEALL,DBGOBOTTOM,DBGOTO,DBGOTOP
+
+   EXTERNAL DBREINDEX,DBCREATEINDEX,DBCLEARINDEX,DBSETINDEX,DBSETORDER
+
+   EXTERNAL __DBCOPYSTRUCT,__DBCOPYXSTRUCT,__DBCREATE,__FLEDIT
+
+   EXTERNAL INDEXEXT,INDEXKEY
+
 #endif
 
 STATIC aDefRules     := {}, aDefResults   := {}
@@ -81,7 +199,9 @@ PROCEDURE Main( sSource, sSwitch )
       ENDIF
    ENDIF
 
-   //ProcessLine( "#DEFINE __HARBOUR__  1", {}, {}, {}, 0, '' )
+   #ifdef __HARBOUR__
+      ProcessLine( "#DEFINE __HARBOUR__  1", {}, {}, {}, 0, '' )
+   #endif
 
    IF bLoadRules
       InitRules()
@@ -101,7 +221,7 @@ RETURN
 PROCEDURE RP_Dot()
 
    LOCAL sLine := Space(256), bBlock, GetList := {}, sPPed, nNext, sBlock, sTemp
-   LOCAL sTemp2, nLen, sLeft, sSymbol
+   LOCAL sTemp2, nLen, sLeft, sSymbol, nNextAssign
 
    bCount := .F.
 
@@ -139,9 +259,9 @@ PROCEDURE RP_Dot()
             DropTrailingWS( @sBlock )
 
             sTemp2 := sBlock
-            WHILE ( nNext := At( ":=", sTemp2 ) ) > 0
-               sLeft  := Left( sTemp2, nNext - 1 )
-               sTemp2 := SubStr( sTemp2, nNext + 2 )
+            WHILE ( nNextAssign := At( ":=", sTemp2 ) ) > 0
+               sLeft  := Left( sTemp2, nNextAssign - 1 )
+               sTemp2 := SubStr( sTemp2, nNextAssign + 2 )
 
                DropTrailingWS( @sLeft )
                nLen := Len( sLeft )
@@ -172,9 +292,9 @@ PROCEDURE RP_Dot()
 
          IF ! ( sTemp == '' )
             sTemp2 := sTemp
-            WHILE ( nNext := At( ":=", sTemp2 ) ) > 0
-               sLeft  := Left( sTemp2, nNext - 1 )
-               sTemp2 := SubStr( sTemp2, nNext + 2 )
+            WHILE ( nNextAssign := At( ":=", sTemp2 ) ) > 0
+               sLeft  := Left( sTemp2, nNextAssign - 1 )
+               sTemp2 := SubStr( sTemp2, nNextAssign + 2 )
 
                DropTrailingWS( @sLeft )
                nLen := Len( sLeft )
@@ -195,9 +315,11 @@ PROCEDURE RP_Dot()
             ENDDO
 
             sTemp := "{|| " + sTemp + " }"
+
             bBlock := &sTemp
             Eval( bBlock )
          ENDIF
+
          @ 0,0 SAY "PP: "
          @ 0,4 SAY Pad( sPPed, 76 ) COLOR "N/R"
 
@@ -1047,7 +1169,7 @@ RETURN sOut
 
 FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
 
-   LOCAL Counter, nRules, sCommand, nRule, aMarkers, xMarker, bPartialOk
+   LOCAL Counter, nRules, sCommand, nRule, aMarkers, xMarker
    LOCAL aMP, nOptional := 0, sAnchor, cType, aList, nMarkerId, nKeyLen
    LOCAL sToken, sWorkLine, sNextExp, sNextAnchor, nMatch, nMatches
    LOCAL sPad, asRevert := {}, bNext, sPreMatch, sTemp, nLen, nBookMark
@@ -1590,7 +1712,6 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
 
                   /* Skip all same level optionals to next group. */
                   nOptional := aMP[2]
-                  bPartialOk := .T. /* */
                   WHILE nMatch < nMatches
                      nMatch++
                      aMP := aRules[nRule][2][nMatch]
@@ -1598,7 +1719,6 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                         IF bDbgMatch
                            ? "Partial not allowed"
                         ENDIF
-                        bPartialOk := .F.
                         EXIT
                      ENDIF
                      IF ( aMP[2] >= 0 ) .AND. ( aMP[2] <= Abs( nOptional ) )
@@ -1606,36 +1726,16 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                      ENDIF
                   ENDDO
 
-                  /* Partial match was acceptable, rewind to top of same level optionals. */
-                  /*
-                  IF bPartialOk .AND. ( nOptional := Abs( nOptional ) ) > 1
-                     nOptional--
+                  IF nMatch == nMatches
 
-                     WHILE nMatch > 1
-                        nMatch--
-                        IF aRules[nRule][2][nMatch][2] >= 0 .AND. aRules[nRule][2][nMatch][2] < nOPtional
-                           EXIT
+                     IF ( aMP[2] >= 0 ) .AND. ( aMP[2] <= Abs( nOptional ) )
+                        /* Ok. */
+                     ELSE
+                        IF bDbgMatch
+                           ? "Reached End of Rule"
                         ENDIF
-                     ENDDO
-                     //IF nMatch == 0 .OR. ( aRules[nRule][2][nMatch][2] >= 0 .AND. aRules[nRule][2][nMatch][2] <= nOptional )
-                        nMatch++
-                     //ENDIF
-
-                     nOptional := 0
-
-                     IF bDbgMatch
-                        ? "Partial Accepted - Rewinded to:", nMatch
+                        EXIT
                      ENDIF
-
-                     LOOP
-                  ENDIF
-                  */
-
-                  IF nMatch == nMatches .AND. Abs( aMP[2] ) == nOptional /* reached EOR and still same group */
-                     IF bDbgMatch
-                        ? "Reached End of Rule"
-                     ENDIF
-                     EXIT
                   ENDIF
 
                   IF bDbgMatch
@@ -2053,29 +2153,13 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
 
   IF Left( sToken, 2 ) == '->'
 
-     sExp  := sToken
-
-     IF sNextAnchor != '->'
-        sTemp := NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
-        IF sTemp == NIL
-           Alert( "ERROR! orphan '->'" )
-        ELSE
-           sExp +=  sTemp
-        ENDIF
-     ENDIF
+     sLine := sToken + sLine
+     sExp := NIL
 
   ELSEIF Left( sToken, 2 ) == ':='
 
-     sExp  := sToken
-
-     IF sNextAnchor != ':='
-        sTemp := NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
-        IF sTemp == NIL
-           Alert( "ERROR! orphan ':='" )
-        ELSE
-           sExp +=  sTemp
-        ENDIF
-     ENDIF
+     sLine := sToken + sLine
+     sExp := NIL
 
   ELSEIF Left( sToken, 1 ) == '!'
 
@@ -2092,11 +2176,8 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
 
   ELSEIF Left( sToken, 1 ) == ')'
 
-     IF sNextAnchor == ')'
-        sExp := sToken
-     ELSE
-        sExp := NIL
-     ENDIF
+     sLine := sToken + sLine
+     sExp := ''
 
   ELSEIF Left( sToken, 1 ) == '('
 
@@ -2120,11 +2201,8 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
 
   ELSEIF Left( sToken, 1 ) == '}'
 
-     IF sNextAnchor == '}'
-        sExp := sToken
-     ELSE
-        sExp := NIL
-     ENDIF
+     sLine := sToken + sLine
+     sExp := ''
 
   ELSEIF Left( sToken, 1 ) == '{'
 
@@ -2195,6 +2273,11 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
         ENDIF
 
      ENDIF
+
+  ELSEIF Left( sToken, 1 ) == ',' .AND. ! cType $ ",A"
+
+     sLine := sToken + sLine
+     sExp := ''
 
   ELSE
 
@@ -2762,7 +2845,7 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
    LOCAL nNext, sKey, sAnchor := NIL, nOptional := 0, cType := NIL, nId := 0, aRule := NIL, aMatch, aWords := NIL
    LOCAL aTemp, nOptionalAt, nMarkerAt, aMarkers := {}, Counter, nType, aResult := {}, sTemp, aModifiers, aValues
    LOCAL aRP, nAt, sResult, nCloseAt, sMarker, nCloseOptionalAt, sPad, nResults, nMarker, nMP, nMatches, nOffset
-   LOCAL nWord, nWords
+   LOCAL nWord, nWords, cChar
 
    /*
    nMarkerID
@@ -2798,7 +2881,7 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
       sRule   := Left( sRule, nNext - 1 )
    ENDIF
 
-   DO WHILE ! ( Left( sRule, 2 ) == '' )
+   DO WHILE ! ( Left( sRule, 1 ) == '' )
 
       //? "Scaning: " + sRule
 
@@ -3012,7 +3095,67 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
          ExtractLeadingWS( @sRule )
          LOOP
 
+      ELSEIF Left( sRule, 2 ) == ":=" .OR. Left( sRule, 2 ) == "=="
+
+         IF ! ( sAnchor == NIL )
+            //? "ORPHAN ANCHOR: " + sAnchor
+
+            aMatch := { 0, nOptional, sAnchor, NIL, NIL }
+            //? aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5]
+
+            aAdd( aRule[2], aMatch )
+
+            //sAnchor := NIL
+            aWords  := NIL
+            cType   := NIL
+         ENDIF
+
+         sAnchor := Left( sRule, 2 )
+         sRule   := SubStr( sRule, 3 )
+         ExtractLeadingWS( @sRule )
+         LOOP
+
+      ELSEIF Left( sRule, 1 ) $ "():="
+
+         IF ! ( sAnchor == NIL )
+            //? "ORPHAN ANCHOR: " + sAnchor
+
+            aMatch := { 0, nOptional, sAnchor, NIL, NIL }
+            //? aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5]
+
+            aAdd( aRule[2], aMatch )
+
+            //sAnchor := NIL
+            aWords  := NIL
+            cType   := NIL
+         ENDIF
+
+         sAnchor := Left( sRule, 1 )
+         sRule   := SubStr( sRule, 2 )
+         ExtractLeadingWS( @sRule )
+         LOOP
+
+      ELSEIF ( ( cChar := Left( sRule, 1 ) ) >= 'A' .AND. cChar <= 'Z' ) .OR. ;
+             ( cChar >= 'a' .AND. cChar <= 'z' ) .OR. cChar == '_'
+
+         IF ! ( sAnchor == NIL )
+            //? "ORPHAN ANCHOR: " + sAnchor
+
+            aMatch := { 0, nOptional, sAnchor, NIL, NIL }
+            //? aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5]
+
+            aAdd( aRule[2], aMatch )
+
+            //sAnchor := NIL
+            aWords  := NIL
+            cType   := NIL
+         ENDIF
+
+         sAnchor := Upper( DropTrailingWS( NextToken( @sRule, .F. ) ) )
+         LOOP
+
       ELSE
+
          IF ! ( sAnchor == NIL )
             //? "ORPHAN ANCHOR: " + sAnchor
 
@@ -4185,9 +4328,6 @@ FUNCTION InitRules()
 
 /* Defines */
 aDefRules := {}
-#ifdef __HARBOUR__
-   aAdd( aDefRules, { '__HARBOUR__' ,  , .T. } )
-#endif
 aAdd( aDefRules, { '_SET_EXACT' ,  , .T. } )
 aAdd( aDefRules, { '_SET_FIXED' ,  , .T. } )
 aAdd( aDefRules, { '_SET_DECIMALS' ,  , .T. } )
@@ -4245,7 +4385,7 @@ aAdd( aCommRules, { 'ENDCASE' , { {    1,   0, NIL, '*', NIL } } , .F. } )
 aAdd( aCommRules, { 'ENDFOR' , { {    1,   1, NIL, '*', NIL } } , .F. } )
 aAdd( aCommRules, { 'NEXT' , { {    1,   0, NIL, '<', NIL }, {    2,   1, 'TO', '<', NIL }, {    3,   1, 'STEP', '<', NIL } } , .F. } )
 aAdd( aCommRules, { 'DO' , { {    1,   0, NIL, '<', NIL }, {    0,   0, '.PRG', NIL, NIL }, { 1002,   1, 'WITH', 'A', NIL } } , .F. } )
-aAdd( aCommRules, { 'CALL' , { {    1,   0, NIL, '<', NIL }, {    0,   0, '()', NIL, NIL }, { 1002,   1, 'WITH', 'A', NIL } } , .F. } )
+aAdd( aCommRules, { 'CALL' , { {    1,   0, NIL, '<', NIL }, {    0,   0, '(', NIL, NIL }, {    0,   0, ')', NIL, NIL }, { 1002,   1, 'WITH', 'A', NIL } } , .F. } )
 aAdd( aCommRules, { 'STORE' , { {    1,   0, NIL, '<', NIL }, {    2,   0, 'TO', '<', NIL }, { 1003,   1, ',', '<', NIL } } , .F. } )
 aAdd( aCommRules, { 'SET' , { {    1,   0, 'ECHO', '*', NIL } } , .F. } )
 aAdd( aCommRules, { 'SET' , { {    1,   0, 'HEADING', '*', NIL } } , .F. } )
@@ -4378,7 +4518,7 @@ aAdd( aCommRules, { 'DELETE' , { {    1,   0, 'FILE', '(', NIL } } , .F. } )
 aAdd( aCommRules, { 'RENAME' , { {    1,   0, NIL, '(', NIL }, {    2,   0, 'TO', '(', NIL } } , .F. } )
 aAdd( aCommRules, { 'COPY' , { {    1,   0, 'FILE', '(', NIL }, {    2,   0, 'TO', '(', NIL } } , .F. } )
 aAdd( aCommRules, { 'DIR' , { {    1,   1, NIL, '(', NIL } } , .F. } )
-aAdd( aCommRules, { 'TYPE' , { { 1001,   0, NIL, '(', NIL }, {    2,   1, NIL, ':', { 'TO PRINTER' } }, { 1000,   1, 'TO', NIL, NIL }, { 1003,  -1, 'FILE', '(', NIL } } , .F. } )
+aAdd( aCommRules, { 'TYPE' , { { 1001,   0, NIL, '(', NIL }, {    2,   1, NIL, ':', { 'TO PRINTER' } }, {    0,   1, 'TO', NIL, NIL }, { 1003,   1, 'FILE', '(', NIL } } , .F. } )
 aAdd( aCommRules, { 'TYPE' , { {    1,   0, NIL, '(', NIL }, {    2,   1, NIL, ':', { 'TO PRINTER' } } } , .F. } )
 aAdd( aCommRules, { 'REQUEST' , { {    1,   0, NIL, 'A', NIL } } , .F. } )
 aAdd( aCommRules, { 'CANCEL' ,  , .F. } )
@@ -4397,7 +4537,7 @@ aAdd( aCommRules, { 'SET' , { {    0,   0, 'UNIQUE', NIL, NIL }, {    1,   0, '(
 aAdd( aCommRules, { 'SET' , { {    1,   0, 'DELETED', ':', { 'ON', 'OFF', '&' } } } , .F. } )
 aAdd( aCommRules, { 'SET' , { {    0,   0, 'DELETED', NIL, NIL }, {    1,   0, '(', '<', NIL }, {    0,   0, ')', NIL, NIL } } , .F. } )
 aAdd( aCommRules, { 'SELECT' , { {    1,   0, NIL, '<', NIL } } , .F. } )
-aAdd( aCommRules, { 'SELECT' , { {    1,   0, NIL, '<', NIL }, {    2,   1, '(', 'A', NIL }, {    0,   0, ')', NIL, NIL } } , .F. } )
+aAdd( aCommRules, { 'SELECT' , { {    1,   0, NIL, '<', NIL }, {    0,   0, '(', NIL, NIL }, {    2,   1, NIL, 'A', { ')' } }, {    0,   0, ')', NIL, NIL } } , .F. } )
 aAdd( aCommRules, { 'USE' ,  , .F. } )
 aAdd( aCommRules, { 'USE' , { {    1,   0, NIL, '(', NIL }, {    2,   1, 'VIA', '<', NIL }, {    3,   1, 'ALIAS', '<', NIL }, {    4,   1, NIL, ':', { 'NEW' } }, {    5,   1, NIL, ':', { 'EXCLUSIVE' } }, {    6,   1, NIL, ':', { 'SHARED' } }, {    7,   1, NIL, ':', { 'READONLY' } }, { 1008,   1, 'INDEX', '(', NIL }, { 1009,   2, ',', '(', NIL } } , .F. } )
 aAdd( aCommRules, { 'APPEND' , { {    0,   0, 'BLANK', NIL, NIL } } , .F. } )
@@ -4423,7 +4563,7 @@ aAdd( aCommRules, { 'FIND' , { {    1,   0, '=', '<', NIL } } , .F. } )
 aAdd( aCommRules, { 'CONTINUE' ,  , .F. } )
 aAdd( aCommRules, { 'LOCATE' , { {    1,   1, 'FOR', '<', NIL }, {    2,   1, 'WHILE', '<', NIL }, {    3,   1, 'NEXT', '<', NIL }, {    4,   1, 'RECORD', '<', NIL }, {    5,   1, NIL, ':', { 'REST' } }, {    0,   1, 'ALL', NIL, NIL } } , .F. } )
 aAdd( aCommRules, { 'SET' , { {    0,   0, 'RELATION', NIL, NIL }, {    0,   0, 'TO', NIL, NIL } } , .F. } )
-aAdd( aCommRules, { 'SET' , { {    0,   0, 'RELATION', NIL, NIL }, {    1,   1, NIL, ':', { 'ADDITIVE' } }, {    2,   1, 'TO', '<', NIL }, {    3,  -1, 'INTO', '(', NIL }, {    0,   2, ',', NIL, NIL }, {    0,   3, 'TO', NIL, NIL }, { 1004,   2, NIL, '<', { ',' } }, { 1005,  -2, 'INTO', '(', NIL } } , .F. } )
+aAdd( aCommRules, { 'SET' , { {    0,   0, 'RELATION', NIL, NIL }, {    1,   1, NIL, ':', { 'ADDITIVE' } }, {    2,   1, 'TO', '<', NIL }, {    3,  -1, 'INTO', '(', NIL }, {    0,   2, ',', NIL, NIL }, { 1000,   3, 'TO', NIL, NIL }, { 1004,  -2, NIL, '<', NIL }, { 1005,  -2, 'INTO', '(', NIL } } , .F. } )
 aAdd( aCommRules, { 'SET' , { {    0,   0, 'FILTER', NIL, NIL }, {    0,   0, 'TO', NIL, NIL } } , .F. } )
 aAdd( aCommRules, { 'SET' , { {    0,   0, 'FILTER', NIL, NIL }, {    1,   0, 'TO', '<', NIL } } , .F. } )
 aAdd( aCommRules, { 'SET' , { {    0,   0, 'FILTER', NIL, NIL }, {    1,   0, 'TO', ':', { '&' } } } , .F. } )
@@ -4449,10 +4589,10 @@ aAdd( aCommRules, { 'JOIN' , { {    1,   1, 'WITH', '(', NIL }, {    2,   1, 'TO
 aAdd( aCommRules, { 'COUNT' , { {    1,   1, 'TO', '<', NIL }, {    2,   1, 'FOR', '<', NIL }, {    3,   1, 'WHILE', '<', NIL }, {    4,   1, 'NEXT', '<', NIL }, {    5,   1, 'RECORD', '<', NIL }, {    6,   1, NIL, ':', { 'REST' } }, {    0,   1, 'ALL', NIL, NIL } } , .F. } )
 aAdd( aCommRules, { 'SUM' , { {    1,   1, NIL, '<', { 'FOR', 'WHILE', 'NEXT', 'RECORD', 'REST', 'ALL' } }, { 1002,   2, ',', '<', NIL }, {    3,  -1, 'TO', '<', NIL }, { 1004,   2, ',', '<', NIL }, {    5,   1, 'FOR', '<', NIL }, {    6,   1, 'WHILE', '<', NIL }, {    7,   1, 'NEXT', '<', NIL }, {    8,   1, 'RECORD', '<', NIL }, {    9,   1, NIL, ':', { 'REST' } }, {    0,   1, 'ALL', NIL, NIL } } , .F. } )
 aAdd( aCommRules, { 'AVERAGE' , { {    1,   1, NIL, '<', { 'FOR', 'WHILE', 'NEXT', 'RECORD', 'REST', 'ALL' } }, { 1002,   2, ',', '<', NIL }, {    3,  -1, 'TO', '<', NIL }, { 1004,   2, ',', '<', NIL }, {    5,   1, 'FOR', '<', NIL }, {    6,   1, 'WHILE', '<', NIL }, {    7,   1, 'NEXT', '<', NIL }, {    8,   1, 'RECORD', '<', NIL }, {    9,   1, NIL, ':', { 'REST' } }, {    0,   1, 'ALL', NIL, NIL } } , .F. } )
-aAdd( aCommRules, { 'LIST' , { {    1,   1, NIL, 'A', { 'OFF', 'TO PRINTER', 'TO', 'FOR', 'WHILE', 'NEXT', 'RECORD', 'REST', 'ALL' } }, {    2,   1, NIL, ':', { 'OFF' } }, {    3,   1, NIL, ':', { 'TO PRINTER' } }, {    0,   1, 'TO', NIL, NIL }, {    4,  -1, 'FILE', '(', NIL }, {    5,   1, 'FOR', '<', NIL }, {    6,   1, 'WHILE', '<', NIL }, {    7,   1, 'NEXT', '<', NIL }, {    8,   1, 'RECORD', '<', NIL }, {    9,   1, NIL, ':', { 'REST' } }, {    0,   1, 'ALL', NIL, NIL } } , .F. } )
-aAdd( aCommRules, { 'DISPLAY' , { {    1,   1, NIL, 'A', { 'OFF', 'TO PRINTER', 'TO', 'FOR', 'WHILE', 'NEXT', 'RECORD', 'REST', 'ALL' } }, {    2,   1, NIL, ':', { 'OFF' } }, {    3,   1, NIL, ':', { 'TO PRINTER' } }, {    0,   1, 'TO', NIL, NIL }, {    4,  -1, 'FILE', '(', NIL }, {    5,   1, 'FOR', '<', NIL }, {    6,   1, 'WHILE', '<', NIL }, {    7,   1, 'NEXT', '<', NIL }, {    8,   1, 'RECORD', '<', NIL }, {    9,   1, NIL, ':', { 'REST' } }, {   10,   1, NIL, ':', { 'ALL' } } } , .F. } )
-aAdd( aCommRules, { 'REPORT' , { {    1,   0, 'FORM', '<', NIL }, {    2,   1, 'HEADING', '<', NIL }, {    3,   1, NIL, ':', { 'PLAIN' } }, {    4,   1, NIL, ':', { 'NOEJECT' } }, {    5,   1, NIL, ':', { 'SUMMARY' } }, {    6,   1, NIL, ':', { 'NOCONSOLE' } }, {    7,   1, NIL, ':', { 'TO PRINTER' } }, {    0,   1, 'TO', NIL, NIL }, {    8,  -1, 'FILE', '(', NIL }, {    9,   1, 'FOR', '<', NIL }, {   10,   1, 'WHILE', '<', NIL }, {   11,   1, 'NEXT', '<', NIL }, {   12,   1, 'RECORD', '<', NIL }, {   13,   1, NIL, ':', { 'REST' } }, {    0,   1, 'ALL', NIL, NIL } } , .F. } )
-aAdd( aCommRules, { 'LABEL' , { {    1,   0, 'FORM', '<', NIL }, {    2,   1, NIL, ':', { 'SAMPLE' } }, {    3,   1, NIL, ':', { 'NOCONSOLE' } }, {    4,   1, NIL, ':', { 'TO PRINTER' } }, {    0,   1, 'TO', NIL, NIL }, {    5,  -1, 'FILE', '(', NIL }, {    6,   1, 'FOR', '<', NIL }, {    7,   1, 'WHILE', '<', NIL }, {    8,   1, 'NEXT', '<', NIL }, {    9,   1, 'RECORD', '<', NIL }, {   10,   1, NIL, ':', { 'REST' } }, {    0,   1, 'ALL', NIL, NIL } } , .F. } )
+aAdd( aCommRules, { 'LIST' , { {    1,   1, NIL, 'A', { 'OFF', 'TO PRINTER', 'TO', 'FILE', 'FOR', 'WHILE', 'NEXT', 'RECORD', 'REST', 'ALL' } }, {    2,   1, NIL, ':', { 'OFF' } }, {    3,   1, NIL, ':', { 'TO PRINTER' } }, {    0,   1, 'TO', NIL, NIL }, {    4,   1, 'FILE', '(', NIL }, {    5,   1, 'FOR', '<', NIL }, {    6,   1, 'WHILE', '<', NIL }, {    7,   1, 'NEXT', '<', NIL }, {    8,   1, 'RECORD', '<', NIL }, {    9,   1, NIL, ':', { 'REST' } }, {    0,   1, 'ALL', NIL, NIL } } , .F. } )
+aAdd( aCommRules, { 'DISPLAY' , { {    1,   1, NIL, 'A', { 'OFF', 'TO PRINTER', 'TO', 'FILE', 'FOR', 'WHILE', 'NEXT', 'RECORD', 'REST', 'ALL' } }, {    2,   1, NIL, ':', { 'OFF' } }, {    3,   1, NIL, ':', { 'TO PRINTER' } }, {    0,   1, 'TO', NIL, NIL }, {    4,   1, 'FILE', '(', NIL }, {    5,   1, 'FOR', '<', NIL }, {    6,   1, 'WHILE', '<', NIL }, {    7,   1, 'NEXT', '<', NIL }, {    8,   1, 'RECORD', '<', NIL }, {    9,   1, NIL, ':', { 'REST' } }, {   10,   1, NIL, ':', { 'ALL' } } } , .F. } )
+aAdd( aCommRules, { 'REPORT' , { {    1,   0, 'FORM', '<', NIL }, {    2,   1, 'HEADING', '<', NIL }, {    3,   1, NIL, ':', { 'PLAIN' } }, {    4,   1, NIL, ':', { 'NOEJECT' } }, {    5,   1, NIL, ':', { 'SUMMARY' } }, {    6,   1, NIL, ':', { 'NOCONSOLE' } }, {    7,   1, NIL, ':', { 'TO PRINTER' } }, {    0,   1, 'TO', NIL, NIL }, {    8,   1, 'FILE', '(', NIL }, {    9,   1, 'FOR', '<', NIL }, {   10,   1, 'WHILE', '<', NIL }, {   11,   1, 'NEXT', '<', NIL }, {   12,   1, 'RECORD', '<', NIL }, {   13,   1, NIL, ':', { 'REST' } }, {    0,   1, 'ALL', NIL, NIL } } , .F. } )
+aAdd( aCommRules, { 'LABEL' , { {    1,   0, 'FORM', '<', NIL }, {    2,   1, NIL, ':', { 'SAMPLE' } }, {    3,   1, NIL, ':', { 'NOCONSOLE' } }, {    4,   1, NIL, ':', { 'TO PRINTER' } }, {    0,   1, 'TO', NIL, NIL }, {    5,   1, 'FILE', '(', NIL }, {    6,   1, 'FOR', '<', NIL }, {    7,   1, 'WHILE', '<', NIL }, {    8,   1, 'NEXT', '<', NIL }, {    9,   1, 'RECORD', '<', NIL }, {   10,   1, NIL, ':', { 'REST' } }, {    0,   1, 'ALL', NIL, NIL } } , .F. } )
 aAdd( aCommRules, { 'CLOSE' , { {    1,   0, NIL, '<', NIL } } , .F. } )
 aAdd( aCommRules, { 'CLOSE' ,  , .F. } )
 aAdd( aCommRules, { 'CLOSE' , { {    0,   0, 'DATABASES', NIL, NIL } } , .F. } )
@@ -4480,9 +4620,6 @@ FUNCTION InitResults()
 
 /* Defines Results*/
 aDefResults := {}
-#ifdef __HARBOUR__
-aAdd( aDefResults, { { {   0, '1' } }, { -1} , { }  } )
-#endif
 aAdd( aDefResults, { { {   0, '1' } }, { -1} , { }  } )
 aAdd( aDefResults, { { {   0, '2' } }, { -1} , { }  } )
 aAdd( aDefResults, { { {   0, '3' } }, { -1} , { }  } )
