@@ -1,3 +1,21 @@
+20000504-22:40 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/harbour.c
+     - Removed static qualifier from hb_compVariableGetPos() so it can be called from hb_compStrongType()
+
+   * source/compiler/hbpcode.c
+     + Added logic to hb_compStrongType() to allow assigment of NIL to any type variable.
+     + Added "Adaptive Type Checking" to control type mismatch in undeclared variables.
+
+   * include/hberrors.h
+     ! Added #define HB_COMP_ARRAY_ASSIGN_TYPE to HB_COMP_WARN_ARRAY_ASSIGN_TYPE
+
+   * source/compiler/hbgenerr.c
+     * Added : Moved "Suspecious ..." to level w4
+
+   * tests/testwarn.prg
+     + Added code to demonstrate "Adaptive Type Checking".
+
 20000505-02:03 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * make_gnu.*

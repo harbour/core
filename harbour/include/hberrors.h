@@ -110,7 +110,7 @@ extern "C" {
 #define HB_COMP_WARN_DUP_DECLARATION            17
 #define HB_COMP_WARN_DECLARATION_CONFLICT       18
 #define HB_COMP_WARN_NOT_INITIALIZED            19
-#define HB_COMP_ARRAY_ASSIGN_TYPE               20
+#define HB_COMP_WARN_ARRAY_ASSIGN_TYPE          20
 #define HB_COMP_WARN_MEANINGLESS                21
 #define HB_COMP_WARN_UNREACHABLE                22
 #define HB_COMP_WARN_DUPL_ANNOUNCE              23

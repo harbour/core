@@ -218,7 +218,7 @@ void hb_compStrongType( int iSize )
    ULONG ulPos = pFunc->lPCodePos - iSize;
    SHORT wVar;
    int iVar;
-   char szType1[32], szType2[32], cType;
+   char szType1[32], szType2[32], cType, cSubType1 = 0, cSubType2 = 0;
    BYTE bLast1, bLast2;
 
    /* Make sure we have enough stack space. */
@@ -238,6 +238,9 @@ void hb_compStrongType( int iSize )
       * --------------------------------------------------*/
 
      case HB_P_SWAPALIAS :
+        /* TODO check affect on stack. */
+        break;
+
      case HB_P_RETVALUE :
        pFunc->iStackIndex--;
 
@@ -246,11 +249,21 @@ void hb_compStrongType( int iSize )
        if ( pSym && pSym->szName )
           pDeclared = hb_compDeclaredFind( pSym->szName );
 
+       /* Variant as SubType. */
+       if ( pFunc->pStack[ pFunc->iStackIndex ] > 122 )
+          cSubType1 = ( pFunc->pStack[ pFunc->iStackIndex ] -= 100 );
+
        /* The function was declared, but return value doesn't match the declaration */
        if ( pDeclared && pDeclared->cType != ' ' && pDeclared->cType != pFunc->pStack[ pFunc->iStackIndex ] )
        {
           sprintf( szType1, "%c", pDeclared->cType );
-          sprintf( szType2, "%c", pFunc->pStack[ pFunc->iStackIndex ] );
+
+          if ( cSubType1 && cSubType1 == '-' )
+             strcpy( szType2, "Variant.SubType\[NIL\]" );
+          else if ( cSubType1 )
+             sprintf( szType2, "Variant.SubType\[%c\]", pFunc->pStack[ pFunc->iStackIndex ] );
+          else
+             sprintf( szType2, "%c", pFunc->pStack[ pFunc->iStackIndex ] );
 
           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_RETURN_TYPE, szType2, szType1 );
        }
@@ -269,6 +282,10 @@ void hb_compStrongType( int iSize )
             while ( hb_comp_iParamCount-- > 0 )
             {
                iOffset++;
+
+               if ( pFunc->pStack[ pFunc->iStackIndex - iOffset ] > 122 )
+                  cSubType1 = ( pFunc->pStack[ pFunc->iStackIndex - iOffset ] -= 100 );
+
                if ( pFunc->iStackIndex - iOffset && hb_comp_cParamTypes[ hb_comp_iParamCount ] != pFunc->pStack[ pFunc->iStackIndex - iOffset ] )
                {
                   sprintf( szType1, "%i", hb_comp_iParamCount + 1 );
@@ -310,6 +327,10 @@ void hb_compStrongType( int iSize )
             while ( hb_comp_iParamCount-- > 0 )
             {
                iOffset++;
+
+               if ( pFunc->pStack[ pFunc->iStackIndex - iOffset ] > 122 )
+                  cSubType1 = ( pFunc->pStack[ pFunc->iStackIndex - iOffset ] -= 100 );
+
                if ( pFunc->iStackIndex - iOffset && hb_comp_cParamTypes[ hb_comp_iParamCount ] != pFunc->pStack[ pFunc->iStackIndex - iOffset ] )
                {
                   sprintf( szType1, "%i", hb_comp_iParamCount + 1 );
@@ -339,11 +360,21 @@ void hb_compStrongType( int iSize )
 
      case HB_P_DEC :
      case HB_P_INC :
-       sprintf( szType1, "%c", pFunc->pStack[ pFunc->iStackIndex ] );
+       if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] > 122 )
+          cSubType1 = ( pFunc->pStack[ pFunc->iStackIndex - 1 ] -= 100 );
 
-       if ( pFunc->pStack[ pFunc->iStackIndex ] == 'N' )
+       if ( cSubType1 && cSubType1 == '-' )
+          strcpy( szType1, "Variant.SubType\[NIL\]" );
+       else if ( cSubType1 )
+          sprintf( szType1, "Variant.SubType\[%c\]", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+       else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == '-' )
+          strcpy( szType1, "NIL" );
+       else
+          sprintf( szType1, "%c", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+
+       if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == 'N' )
           ;
-       else if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+       else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' )
           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, "N", NULL );
        else
           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_TYPE, szType1, "N" );
@@ -362,7 +393,17 @@ void hb_compStrongType( int iSize )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
 
-       sprintf( szType1, "%c", pFunc->pStack[ pFunc->iStackIndex ] );
+       if ( pFunc->pStack[ pFunc->iStackIndex ] > 122 )
+          cSubType1 = ( pFunc->pStack[ pFunc->iStackIndex ] -= 100 );
+
+       if ( cSubType1 && cSubType1 == '-' )
+          strcpy( szType1, "Variant.SubType\[NIL\]" );
+       else if ( cSubType1 )
+          sprintf( szType1, "Variant.SubType\[%c\]", pFunc->pStack[ pFunc->iStackIndex ] );
+       else if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
+          strcpy( szType1, "NIL" );
+       else
+          sprintf( szType1, "%c", pFunc->pStack[ pFunc->iStackIndex ] );
 
        if ( pFunc->pStack[ pFunc->iStackIndex ] == 'L' )
           ;
@@ -381,28 +422,69 @@ void hb_compStrongType( int iSize )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
 
-       sprintf( szType1, "%c", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
-       sprintf( szType2, "%c", pFunc->pStack[ pFunc->iStackIndex ] );
+       if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] > 122 )
+          cSubType1 = ( pFunc->pStack[ pFunc->iStackIndex - 1 ] -= 100 );
 
-       if ( ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' &&  pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' ) ||
-            ( pFunc->pStack[ pFunc->iStackIndex ] == 'C' &&  pFunc->pStack[ pFunc->iStackIndex - 1 ] == 'C' ) )
+       if ( pFunc->pStack[ pFunc->iStackIndex ] > 122 )
+          cSubType2 = ( pFunc->pStack[ pFunc->iStackIndex ] -= 100 );
+
+       if ( cSubType1 && cSubType1 == '-' )
+          strcpy( szType1, "Variant.SubType\[NIL\]" );
+       else if ( cSubType1 )
+          sprintf( szType1, "Variant.SubType\[%c\]", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+       else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == '-' )
+          strcpy( szType1, "NIL");
+       else
+          sprintf( szType1, "%c", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+
+       if ( cSubType2 && cSubType2 == '-' )
+          strcpy( szType2, "Variant.SubType\[NIL\]" );
+       else if ( cSubType2 )
+          sprintf( szType2, "Variant.SubType\[%c\]", pFunc->pStack[ pFunc->iStackIndex ] );
+       else if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
+          strcpy( szType2, "NIL" );
+       else
+         sprintf( szType2, "%c", pFunc->pStack[ pFunc->iStackIndex ] );
+
+       if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' &&  pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' )
           ;
+       else if ( pFunc->pStack[ pFunc->iStackIndex ] == 'C' &&  pFunc->pStack[ pFunc->iStackIndex - 1 ] == 'C' )
+       {
+          /* Override the last item with the new result type */
+          pFunc->pStack[ pFunc->iStackIndex - 1 ] = 'L';
+       }
        else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' )
+       {
           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, "C", NULL  );
+       }
        else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] != 'C' )
+       {
           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_TYPE, szType1, "C" );
+
+          /* Override the last item with the new result type */
+          pFunc->pStack[ pFunc->iStackIndex - 1 ] = 'U';
+       }
        else if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+       {
           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, "C", NULL );
+
+          /* Override the last item with the new result type */
+          pFunc->pStack[ pFunc->iStackIndex - 1 ] = ' ';
+       }
        else if ( pFunc->pStack[ pFunc->iStackIndex ] != 'C' )
+       {
           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_TYPE, szType2, "C" );
 
-       /* Override the last item with the new result type */
-       pFunc->pStack[ pFunc->iStackIndex - 1 ] = 'L';
+          /* Override the last item with the new result type */
+          pFunc->pStack[ pFunc->iStackIndex - 1 ] = 'U';
+       }
+
        break;
 
      /* May be subject to Operator Overloading - don't restrict to Numeric! */
      case HB_P_DIVIDE :
      case HB_P_PLUS :
+     case HB_P_MINUS :
      case HB_P_NEGATE :
      case HB_P_MULT :
      case HB_P_POWER :
@@ -412,27 +494,141 @@ void hb_compStrongType( int iSize )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
 
-       sprintf( szType1, "%c", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
-       sprintf( szType2, "%c", pFunc->pStack[ pFunc->iStackIndex ] );
+       if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] > 122 )
+          cSubType1 = ( pFunc->pStack[ pFunc->iStackIndex - 1 ] -= 100 );
+
+       if ( pFunc->pStack[ pFunc->iStackIndex ] > 122 )
+          cSubType2 = ( pFunc->pStack[ pFunc->iStackIndex ] -= 100 );
+
+       if ( cSubType1 && cSubType1 == '-' )
+          strcpy( szType1, "Variant.SubType\[NIL\]" );
+       else if ( cSubType1 )
+          sprintf( szType1, "Variant.SubType\[%c\]", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+       else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == '-' )
+          strcpy( szType1, "NIL");
+       else
+          sprintf( szType1, "%c", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+
+       if ( cSubType2 && cSubType2 == '-' )
+          strcpy( szType2, "Variant.SubType\[NIL\]" );
+       else if ( cSubType2 )
+          sprintf( szType2, "Variant.SubType\[%c\]", pFunc->pStack[ pFunc->iStackIndex ] );
+       else if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
+          strcpy( szType2, "NIL" );
+       else
+         sprintf( szType2, "%c", pFunc->pStack[ pFunc->iStackIndex ] );
 
        if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' &&  pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' )
+       {
           /* Override the last item with the new result type which is already there */
           ;
+       }
        else if ( pFunc->pStack[ pFunc->iStackIndex ] == 'N' && pFunc->pStack[ pFunc->iStackIndex - 1 ] == 'N' )
+       {
           /* Override the last item with the new result type wich is already there */
           ;
+       }
        else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' )
        {
           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, szType2, NULL );
 
-          /* Override the last item with the new result type */
-          pFunc->pStack[ pFunc->iStackIndex - 1 ] = ' ';
+          /* Override the last item with the new result type wich is already there */
        }
        else if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
        {
           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, szType1, NULL );
 
+          /* Override the last item with the new result type. */
+          pFunc->pStack[ pFunc->iStackIndex - 1 ] = ' ';
+       }
+       else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == '-' )
+       {
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_TYPE, "NIL", NULL );
+
+          /* Override the last item with the new result type. */
+          pFunc->pStack[ pFunc->iStackIndex - 1 ] = 'U';
+       }
+       else if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
+       {
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_TYPE, "NIL", NULL );
+
+          /* Override the last item with the new result type. */
+          pFunc->pStack[ pFunc->iStackIndex - 1 ] = 'U';
+       }
+       else
+       {
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERANDS_INCOMPATBLE, szType1, szType2 );
+
+          /* Override the last item with the new result type */
+          pFunc->pStack[ pFunc->iStackIndex - 1 ] = 'U';
+       }
+
+       break;
+
+     case HB_P_GREATER :
+     case HB_P_GREATEREQUAL :
+     case HB_P_LESSEQUAL :
+     case HB_P_LESS :
+
+       pFunc->iStackIndex--;
+
+       if ( pFunc->iStackIndex < 1 )
+          /* TODO Error Message after finalizing all possible pcodes. */
+          break;
+
+       if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] > 122 )
+          cSubType1 = ( pFunc->pStack[ pFunc->iStackIndex - 1 ] -= 100 );
+
+       if ( pFunc->pStack[ pFunc->iStackIndex ] > 122 )
+          cSubType2 = ( pFunc->pStack[ pFunc->iStackIndex ] -= 100 );
+
+       if ( cSubType1 && cSubType1 == '-' )
+          sprintf( szType1, "Variant.SubType\[NIL]" );
+       else if ( cSubType1 )
+          sprintf( szType1, "Variant.SubType\[%c\]", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+       else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == '-' )
+          strcpy( szType1, "NIL" );
+       else
+          sprintf( szType1, "%c", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+
+       if ( cSubType2 && cSubType2 == '-' )
+          strcpy( szType2, "Variant.SubType\[NIL]" );
+       else if ( cSubType2 )
+          sprintf( szType2, "Variant.SubType\[%c\]", pFunc->pStack[ pFunc->iStackIndex ] );
+       else if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
+          strcpy( szType2, "NIL" );
+       else
+          sprintf( szType2, "%c", pFunc->pStack[ pFunc->iStackIndex ] );
+
+       if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' || pFunc->pStack[ pFunc->iStackIndex - 1 ] == '-'  )
+       {
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERANDS_INCOMPATBLE, szType1, szType2 );
+
           /* Override the last item with the new result type wich is already there */
+          pFunc->pStack[ pFunc->iStackIndex - 1 ] = 'U';
+       }
+       else if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' &&  pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' )
+       {
+          /* Override the last item with the new result type which is already there */
+          ;
+       }
+       else if ( pFunc->pStack[ pFunc->iStackIndex ] == pFunc->pStack[ pFunc->iStackIndex - 1 ] )
+       {
+          /* Override the last item with the new result type */
+          pFunc->pStack[ pFunc->iStackIndex - 1 ] = 'L';
+       }
+       else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' )
+       {
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, szType1, NULL );
+
+          /* Override the last item with the new result type wich is already there */
+       }
+       else if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+       {
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, szType2, NULL );
+
+          /* Override the last item with the new result type */
+          pFunc->pStack[ pFunc->iStackIndex - 1 ] = ' ';
        }
        else
        {
@@ -447,37 +643,64 @@ void hb_compStrongType( int iSize )
      case HB_P_EQUAL :
      case HB_P_EXACTLYEQUAL :
      case HB_P_NOTEQUAL :
-     case HB_P_GREATER :
-     case HB_P_GREATEREQUAL :
-     case HB_P_LESSEQUAL :
-     case HB_P_LESS :
+
        pFunc->iStackIndex--;
 
        if ( pFunc->iStackIndex < 1 )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
 
-       sprintf( szType1, "%c", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
-       sprintf( szType2, "%c", pFunc->pStack[ pFunc->iStackIndex ] );
+       if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] > 122 )
+          cSubType1 = ( pFunc->pStack[ pFunc->iStackIndex - 1 ] -= 100 );
 
-       if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' &&  pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' )
+       if ( pFunc->pStack[ pFunc->iStackIndex ] > 122 )
+          cSubType2 = ( pFunc->pStack[ pFunc->iStackIndex ] -= 100 );
+
+       if ( cSubType1 && cSubType1 == '-' )
+          sprintf( szType1, "Variant.SubType\[NIL\]", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+       else if ( cSubType1 )
+          sprintf( szType1, "Variant.SubType\[%c\]", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+       else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == '-' )
+          strcpy( szType1, "NIL");
+       else
+          sprintf( szType1, "%c", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+
+       if ( cSubType2 && cSubType2 == '-' )
+          strcpy( szType2, "Variant.SubType\[NIL\]" );
+       else if ( cSubType2 )
+          sprintf( szType2, "Variant.SubType\[%c\]", pFunc->pStack[ pFunc->iStackIndex ] );
+       else if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
+          strcpy( szType2, "NIL" );
+       else
+         sprintf( szType2, "%c", pFunc->pStack[ pFunc->iStackIndex ] );
+
+       if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' ||  pFunc->pStack[ pFunc->iStackIndex - 1 ] == '-' )
+       {
+          /* Override the last item with the new result type */
+          pFunc->pStack[ pFunc->iStackIndex - 1 ] = 'L';
+       }
+       else if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' &&  pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' )
+       {
           /* Override the last item with the new result type which is already there */
           ;
+       }
        else if ( pFunc->pStack[ pFunc->iStackIndex ] == pFunc->pStack[ pFunc->iStackIndex - 1 ] )
-          /* Override the last item with the new result type wich is already there */
-          ;
+       {
+          /* Override the last item with the new result type */
+          pFunc->pStack[ pFunc->iStackIndex - 1 ] = 'L';
+       }
        else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' )
        {
           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, szType2, NULL );
 
-          /* Override the last item with the new result type */
-          pFunc->pStack[ pFunc->iStackIndex - 1 ] = ' ';
+          /* Override the last item with the new result type wich is already there */
        }
        else if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
        {
           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, szType1, NULL );
 
-          /* Override the last item with the new result type wich is already there */
+          /* Override the last item with the new result type */
+          pFunc->pStack[ pFunc->iStackIndex - 1 ] = ' ';
        }
        else
        {
@@ -489,7 +712,6 @@ void hb_compStrongType( int iSize )
 
        break;
 
-     /* Should we allow Operator Overloading here too? */
      case HB_P_AND :
      case HB_P_NOT :
      case HB_P_OR :
@@ -499,23 +721,63 @@ void hb_compStrongType( int iSize )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
 
-       sprintf( szType1, "%c", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
-       sprintf( szType2, "%c", pFunc->pStack[ pFunc->iStackIndex ] );
+       if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] > 122 )
+          cSubType1 = ( pFunc->pStack[ pFunc->iStackIndex - 1 ] -= 100 );
+
+       if ( pFunc->pStack[ pFunc->iStackIndex ] > 122 )
+          cSubType2 = ( pFunc->pStack[ pFunc->iStackIndex ] -= 100 );
+
+       if ( cSubType1 && cSubType1 == '-' )
+          sprintf( szType1, "Variant.SubType\[NIL\]" );
+       else if ( cSubType1 )
+          sprintf( szType1, "Variant.SubType\[%c\]", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+       else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == '-' )
+          strcpy( szType1, "NIL");
+       else
+          sprintf( szType1, "%c", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+
+       if ( cSubType2 && cSubType2 == '-' )
+          strcpy( szType2, "Variant.SubType\[NIL\]" );
+       else if ( cSubType2 )
+          sprintf( szType2, "Variant.SubType\[%c\]", pFunc->pStack[ pFunc->iStackIndex ] );
+       else if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
+          strcpy( szType2, "NIL" );
+       else
+         sprintf( szType2, "%c", pFunc->pStack[ pFunc->iStackIndex ] );
 
        if ( ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' &&  pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' ) ||
             ( pFunc->pStack[ pFunc->iStackIndex ] == 'L' &&  pFunc->pStack[ pFunc->iStackIndex - 1 ] == 'L' ) )
-          ;
+       {
+          /* Override the last item with the new result type which is already there */
+       }
        else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' )
+       {
           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, "L", NULL  );
+
+          /* Override the last item with the new result type which is already there */
+       }
        else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] != 'L' )
+       {
           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_TYPE, szType1, "L" );
+
+          /* Override the last item with the new result type */
+          pFunc->pStack[ pFunc->iStackIndex - 1 ] = 'U';
+       }
        else if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+       {
           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, "L", NULL );
+
+          /* Override the last item with the new result type which is already there */
+       }
+
        else if ( pFunc->pStack[ pFunc->iStackIndex ] != 'L' )
+       {
           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_TYPE, szType2, "L" );
 
-       /* Override the last item with the new result type */
-       pFunc->pStack[ pFunc->iStackIndex - 1 ] = 'L';
+          /* Override the last item with the new result type */
+          pFunc->pStack[ pFunc->iStackIndex - 1 ] = 'U';
+       }
+
        break;
 
      case HB_P_DUPLICATE :
@@ -537,6 +799,7 @@ void hb_compStrongType( int iSize )
        pFunc->pStack[ pFunc->iStackIndex++ ] = bLast1;
        pFunc->pStack[ pFunc->iStackIndex++ ] = bLast2;
        break;
+
      /* Explicit Types. */
 
      /* Objects */
@@ -545,6 +808,7 @@ void hb_compStrongType( int iSize )
        break;
 
      /* Blcoks */
+
      /* Nothing to do, handled by HB_P_ENDBLOCK.
      case HB_P_PUSHBLOCK :
      case HB_P_PUSHBLOCKSHORT :
@@ -557,7 +821,7 @@ void hb_compStrongType( int iSize )
 
      /* Undefined */
      case HB_P_PUSHNIL :
-       pFunc->pStack[ pFunc->iStackIndex++ ] = 'U';
+       pFunc->pStack[ pFunc->iStackIndex++ ] = '-';
        break;
 
      /* Logicals */
@@ -584,8 +848,8 @@ void hb_compStrongType( int iSize )
 
      case HB_P_PUSHSYM :
      case HB_P_MPUSHSYM :
-      /* In Private or Public statement can't be a declared function */
-      if( ( hb_comp_iVarScope == VS_PRIVATE || hb_comp_iVarScope == VS_PUBLIC ) )
+       /* In Private or Public statement can't be a declared function */
+       if( ( hb_comp_iVarScope == VS_PRIVATE || hb_comp_iVarScope == VS_PUBLIC ) )
          pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
        else
        {
@@ -752,7 +1016,25 @@ void hb_compStrongType( int iSize )
        pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256 );
 
        if ( pSym )
+       {
          pFunc->pStack[ pFunc->iStackIndex++ ] = pSym->cType;
+
+         if ( pFunc->pCode[ ulPos ] == HB_P_PUSHMEMVAR && pSym->szName && pFunc->pMemvars )
+         {
+            wVar = hb_compVariableGetPos( pFunc->pMemvars, pSym->szName );
+            if ( wVar )
+              pVar = hb_compVariableFind( pFunc->pMemvars, wVar - 1 );
+
+            if ( pVar )
+            {
+              if ( ! ( pVar->iUsed & VU_INITIALIZED ) )
+                 hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_NOT_INITIALIZED, pVar->szName, NULL );
+
+              /* Mark as used */
+              pVar->iUsed |= VU_USED;
+           }
+         }
+       }
        else
          pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
 
@@ -799,6 +1081,12 @@ void hb_compStrongType( int iSize )
      case HB_P_ARRAYGEN :
        wVar = pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256;
 
+       if ( pFunc->iStackIndex == 0 )
+       {
+          pFunc->pStack[ pFunc->iStackIndex++ ] = 'A';
+          break;
+       }
+
        if ( pFunc->iStackIndex < wVar )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
@@ -819,7 +1107,7 @@ void hb_compStrongType( int iSize )
           }
        }
 
-       /* Lowe Case Indicates array of ...*/
+       /* Lower Case Indicates array of ...*/
        if ( cType != 'A' )
           cType = tolower( cType );
 
@@ -840,8 +1128,6 @@ void hb_compStrongType( int iSize )
        else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] != 'A' && isupper( pFunc->pStack[ pFunc->iStackIndex - 1 ] ) )
           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_NOT_ARRAY, NULL, NULL );
 
-       /* TODO: allow declaration of the Array Elements Type. */
-
        /* Now we have the array elent on the stack.*/
        pFunc->pStack[ pFunc->iStackIndex - 1 ] = toupper( pFunc->pStack[ pFunc->iStackIndex - 1 ] );
        break;
@@ -850,7 +1136,7 @@ void hb_compStrongType( int iSize )
        /* Poping the Array Index. */
        pFunc->iStackIndex--;
 
-       if ( pFunc->iStackIndex < 1 )
+       if ( pFunc->iStackIndex < 2 )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
 
@@ -858,11 +1144,11 @@ void hb_compStrongType( int iSize )
           ;
        else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] != 'A' && isupper( pFunc->pStack[ pFunc->iStackIndex - 1 ] ) )
           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_NOT_ARRAY, NULL, NULL );
-       else if ( toupper( pFunc->pStack[ pFunc->iStackIndex - 1 ] ) != pFunc->pStack[ pFunc->iStackIndex - 1 ] )
+       else if ( toupper( pFunc->pStack[ pFunc->iStackIndex - 1 ] ) != pFunc->pStack[ pFunc->iStackIndex - 2 ] && pFunc->pStack[ pFunc->iStackIndex - 2 ] != '-' )
        {
          char szType[2];
          sprintf( szType, "%c", toupper( pFunc->pStack[ pFunc->iStackIndex - 1 ] ) );
-         hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_ARRAY_ASSIGN_TYPE, szType, NULL );
+         hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ARRAY_ASSIGN_TYPE, szType, NULL );
        }
 
        /* Poping the Assigned Value. */
@@ -919,17 +1205,35 @@ void hb_compStrongType( int iSize )
 
        pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] );
 
-       if ( pSym && pSym->cType != ' ' )
+       if ( pSym )
        {
-         char szType[2];
-         sprintf( szType, "%c", pSym->cType );
+         /* Allow any type into a Variant, and record the subtype */
+         if ( pSym->cType == ' ' || pSym->cType > 122 )
+         {
+            if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+               pSym->cType = ' ';
+            else if ( pFunc->pStack[ pFunc->iStackIndex ] > 122 )
+               pSym->cType = pFunc->pStack[ pFunc->iStackIndex ];
+            else
+               pSym->cType = pFunc->pStack[ pFunc->iStackIndex ] + 100;
+         }
+         else
+         {
+            char szType[2];
+            sprintf( szType, "%c", pSym->cType );
 
-         if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
-            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_SUSPECT, pSym->szName, szType );
-         else if ( isupper( pSym->cType ) && pSym->cType != pFunc->pStack[ pFunc->iStackIndex ] )
-            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pSym->szName, szType );
-         else if ( toupper( pSym->cType ) != pFunc->pStack[ pFunc->iStackIndex ] )
-            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_ARRAY_ASSIGN_TYPE, szType, NULL );
+            if ( pFunc->pStack[ pFunc->iStackIndex ] > 122 )
+               pFunc->pStack[ pFunc->iStackIndex ] -= 100;
+
+            if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
+                ; /* NIL allowed into all types */
+            else if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+                hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_SUSPECT, pSym->szName, szType );
+            else if ( isupper( pSym->cType ) && pSym->cType != pFunc->pStack[ pFunc->iStackIndex ] )
+                hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pSym->szName, szType );
+            else if ( toupper( pSym->cType ) != pFunc->pStack[ pFunc->iStackIndex ] )
+                hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ARRAY_ASSIGN_TYPE, szType, NULL );
+         }
        }
 
        break;
@@ -948,17 +1252,45 @@ void hb_compStrongType( int iSize )
 
        pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256 );
 
-       if ( pSym && pSym->cType != ' ' )
+       if ( pSym )
        {
-         char szType[2];
-         sprintf( szType, "%c", pSym->cType );
+          if ( pFunc->pCode[ ulPos ] == HB_P_POPMEMVAR && pSym->szName && pFunc->pMemvars )
+          {
+            wVar = hb_compVariableGetPos( pFunc->pMemvars, pSym->szName );
+            if ( wVar )
+               pVar = hb_compVariableFind( pFunc->pMemvars, wVar - 1 );
 
-         if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
-            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_SUSPECT, pSym->szName, szType );
-         else if ( isupper( pSym->cType ) && pSym->cType != pFunc->pStack[ pFunc->iStackIndex ] )
-            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pSym->szName, szType );
-         else if ( toupper( pSym->cType ) != pFunc->pStack[ pFunc->iStackIndex ] )
-            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_ARRAY_ASSIGN_TYPE, szType, NULL );
+            if ( pVar )
+               pVar->iUsed |= VU_INITIALIZED;
+         }
+
+         /* Allow any type into a Variant, and record the subtype */
+         if ( pSym->cType == ' ' || pSym->cType > 122 )
+         {
+            if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+               pSym->cType = ' ';
+            else if ( pFunc->pStack[ pFunc->iStackIndex ] > 122 )
+               pSym->cType = pFunc->pStack[ pFunc->iStackIndex ];
+            else
+               pSym->cType = pFunc->pStack[ pFunc->iStackIndex ] + 100;
+         }
+         else
+         {
+            char szType[2];
+            sprintf( szType, "%c", pSym->cType );
+
+            if ( pFunc->pStack[ pFunc->iStackIndex ] > 122 )
+               pFunc->pStack[ pFunc->iStackIndex ] -= 100;
+
+            if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
+                ; /* NIL allowed into all types */
+            else if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+                hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_SUSPECT, pSym->szName, szType );
+            else if ( isupper( pSym->cType ) && pSym->cType != pFunc->pStack[ pFunc->iStackIndex ] )
+                hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pSym->szName, szType );
+            else if ( toupper( pSym->cType ) != pFunc->pStack[ pFunc->iStackIndex ] )
+                hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ARRAY_ASSIGN_TYPE, szType, NULL );
+         }
        }
 
        break;
@@ -988,19 +1320,36 @@ void hb_compStrongType( int iSize )
          pVar = hb_compVariableFind( pFunc->pLocals, wVar );
 
        if ( pVar )
-          pVar->iUsed |= VU_INITIALIZED;
-
-       if ( pVar && pVar->cType != ' ' )
        {
-         char szType[2];
-         sprintf( szType, "%c", pVar->cType );
+         pVar->iUsed |= VU_INITIALIZED;
 
-         if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
-            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_SUSPECT, pVar->szName, szType );
-         else if ( isupper( pVar->cType ) && pVar->cType != pFunc->pStack[ pFunc->iStackIndex ] )
-            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pVar->szName, szType );
-         else if ( toupper( pVar->cType ) != pFunc->pStack[ pFunc->iStackIndex ] )
-            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_ARRAY_ASSIGN_TYPE, szType, NULL );
+         /* Allow any type into a Variant, and record the subtype */
+         if ( pVar->cType == ' ' || pVar->cType > 122 )
+         {
+            if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+               pVar->cType = ' ';
+            else if ( pFunc->pStack[ pFunc->iStackIndex ] > 122 )
+               pVar->cType = pFunc->pStack[ pFunc->iStackIndex ];
+            else
+               pVar->cType = pFunc->pStack[ pFunc->iStackIndex ] + 100;
+         }
+         else
+         {
+            char szType[2];
+            sprintf( szType, "%c", pVar->cType );
+
+            if ( pFunc->pStack[ pFunc->iStackIndex ] > 122 )
+               pFunc->pStack[ pFunc->iStackIndex ] -= 100;
+
+            if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
+                ; /* NIL allowed into all types */
+            else if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+                hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_SUSPECT, pVar->szName, szType );
+            else if ( isupper( pVar->cType ) && pVar->cType != pFunc->pStack[ pFunc->iStackIndex ] )
+                hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pVar->szName, szType );
+            else if ( toupper( pVar->cType ) != pFunc->pStack[ pFunc->iStackIndex ] )
+                hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ARRAY_ASSIGN_TYPE, szType, NULL );
+         }
        }
 
        break;
@@ -1030,19 +1379,36 @@ void hb_compStrongType( int iSize )
          pVar = hb_compVariableFind( pFunc->pLocals, iVar );
 
        if ( pVar )
-          pVar->iUsed |= VU_INITIALIZED;
-
-       if ( pVar && pVar->cType != ' ' )
        {
-         char szType[2];
-         sprintf( szType, "%c", toupper( pVar->cType ) );
+         pVar->iUsed |= VU_INITIALIZED;
 
-         if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
-            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_SUSPECT, pVar->szName, szType );
-         else if ( isupper( pVar->cType ) && pVar->cType != pFunc->pStack[ pFunc->iStackIndex ] )
-            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pVar->szName, szType );
-         else if ( toupper( pVar->cType ) != pFunc->pStack[ pFunc->iStackIndex ] )
-            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_ARRAY_ASSIGN_TYPE, szType, NULL );
+         /* Allow any type into a Variant, and record the subtype */
+         if ( pVar->cType == ' ' || pVar->cType > 122 )
+         {
+            if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+               pVar->cType = ' ';
+            else if ( pFunc->pStack[ pFunc->iStackIndex ] > 122 )
+               pVar->cType = pFunc->pStack[ pFunc->iStackIndex ];
+            else
+               pVar->cType = pFunc->pStack[ pFunc->iStackIndex ] + 100;
+         }
+         else
+         {
+            char szType[2];
+            sprintf( szType, "%c", toupper( pVar->cType ) );
+
+            if ( pFunc->pStack[ pFunc->iStackIndex ] > 122 )
+               pFunc->pStack[ pFunc->iStackIndex ] -= 100;
+
+            if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
+                ; /* NIL allowed into all types */
+            else if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+                hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_SUSPECT, pVar->szName, szType );
+            else if ( isupper( pVar->cType ) && pVar->cType != pFunc->pStack[ pFunc->iStackIndex ] )
+                hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pVar->szName, szType );
+            else if ( toupper( pVar->cType ) != pFunc->pStack[ pFunc->iStackIndex ] )
+                hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ARRAY_ASSIGN_TYPE, szType, NULL );
+         }
        }
 
        break;
@@ -1063,19 +1429,36 @@ void hb_compStrongType( int iSize )
        pVar = hb_compVariableFind( pTmp->pStatics, wVar - pTmp->iStaticsBase );
 
        if ( pVar )
-          pVar->iUsed |= VU_INITIALIZED;
-
-       if ( pVar && pVar->cType != ' '  )
        {
-         char szType[2];
-         sprintf( szType, "%c", pVar->cType );
+         pVar->iUsed |= VU_INITIALIZED;
 
-         if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
-            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_SUSPECT, pVar->szName, szType );
-         else if ( pVar->cType != pFunc->pStack[ pFunc->iStackIndex ] )
-            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pVar->szName, szType );
-         else if ( toupper( pVar->cType ) != pFunc->pStack[ pFunc->iStackIndex ] )
-            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_ARRAY_ASSIGN_TYPE, szType, NULL );
+         /* Allow any type into a Variant, and record the subtype */
+         if ( pVar->cType == ' ' || pVar->cType > 122 )
+         {
+            if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+               pVar->cType = ' ';
+            else if ( pFunc->pStack[ pFunc->iStackIndex ] > 122 )
+               pVar->cType = pFunc->pStack[ pFunc->iStackIndex ];
+            else
+               pVar->cType = pFunc->pStack[ pFunc->iStackIndex ] + 100;
+         }
+         else
+         {
+            char szType[2];
+            sprintf( szType, "%c", pVar->cType );
+
+            if ( pFunc->pStack[ pFunc->iStackIndex ] > 122 )
+               pFunc->pStack[ pFunc->iStackIndex ] -= 100;
+
+            if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
+                ; /* NIL allowed into all types */
+            else if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+                hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_SUSPECT, pVar->szName, szType );
+            else if ( pVar->cType != pFunc->pStack[ pFunc->iStackIndex ] )
+                hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pVar->szName, szType );
+            else if ( toupper( pVar->cType ) != pFunc->pStack[ pFunc->iStackIndex ] )
+                hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ARRAY_ASSIGN_TYPE, szType, NULL );
+         }
        }
 
        break;
@@ -1095,8 +1478,6 @@ void hb_compStrongType( int iSize )
    /* TODO Error or trace messages when completed. */
    if ( pFunc->iStackIndex < 0 )
       pFunc->iStackIndex = 0;
-   else if ( pFunc->iStackIndex > 255 )
-      pFunc->iStackIndex = 255;
 }
 
 void hb_compGenPCode1( BYTE byte )

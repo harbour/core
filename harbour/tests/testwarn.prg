@@ -61,55 +61,19 @@ DECLARE FUNCTION int( n AS NUMERIC ) AS NUMERIC
 
 DECLARE FUNCTION TEST AS NUMERIC
 
-
-PROCEDURE MAINA( )
-   LOCAL GetList := {}
-
-   Getlist[ 1 ]:postBlock := LI_VALID[ fipos ]
-
-RETURN
-
-PROCEDURE MAIN( )
-
-   LOCAL cVar as char, a[2,3,4] AS BOOL ARRAY
-
-   LOCAL RPT, APARAMS
-
-   LOCAL rezproc, xkey, rez, fipos, wndbuf, oldcolors, ym, xm, i
-   LOCAL prview, prsohr, predit, predxx
-   LOCAL fbar1, fbar2, vartmp, varbuf
-   //LOCAL GetList := {}
-
-#ifdef VER_MOUSE
-   PARAMETERS x1,y1,x2,y2,title,maskey,ctrl_ar
-#else
-   //PARAMETERS x1,y1,x2,y2,title,maskey
-#endif
-
-    IF ( ym <= y1 )//.OR. ym >= y2 .OR. xm <= x1 .OR. xm >= x2 )
-      IF xm <= x2 .AND. xm >= x1 .AND. ( ym = y1 .OR. ym = y2 )
-       ENDIF
-    ENDIF
-
-   a[1] = 2
-
-   cVAr := a[1]
-
-   Rpt := IIF( Param1, 1 , 0 )
-
-   Rpt := Array( Len( AParams ) - 2 )
-
-RETURN
-
 PROC MAIN1()
+
   PRIVATE OTHER, TEST AS CHAR
 
   Var1 := M->TEST
   Var2 := Test()
 
+  ? Var1 + 2
+
   M->TEST := 1
   M->TEST  := "incorrect warning"
-  test[ 1 ][ 2 ] := "incorrect warning"
+
+  Test[ 1 ][ 2 ] := "incorrect warning"
 
 RETURN
 
@@ -205,3 +169,5 @@ RETURN NIL
 Function nMyFunc( nParam )
 
 return nParam * 2
+
+*/

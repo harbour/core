@@ -63,7 +63,7 @@ static int hb_compFieldGetPos( char *, PFUNCTION );   /* return if passed name i
 static int hb_compLocalGetPos( char * szVarName ); /* returns the order + 1 of a local variable */
 static int hb_compMemvarGetPos( char *, PFUNCTION );   /* return if passed name is a memvar variable */
 static int hb_compStaticGetPos( char *, PFUNCTION );   /* return if passed name is a static variable */
-static USHORT hb_compVariableGetPos( PVAR pVars, char * szVarName ); /* returns the order + 1 of a variable if defined or zero */
+USHORT hb_compVariableGetPos( PVAR pVars, char * szVarName ); /* returns the order + 1 of a variable if defined or zero */
 
 static void hb_compGenFieldPCode( BYTE , int, char *, PFUNCTION );      /* generates the pcode for database field */
 static void hb_compGenVariablePCode( BYTE , char * );    /* generates the pcode for undeclared variable */
@@ -449,7 +449,7 @@ void hb_compExternAdd( char * szExternName ) /* defines a new extern name */
    hb_comp_bExternal = TRUE;
 }
 
-void hb_compVariableAdd( char * szVarName, char cValueType )
+void hb_compVariableAdd( char * szVarName, BYTE cValueType )
 {
    PVAR pVar, pLastVar;
    PFUNCTION pFunc = hb_comp_functions.pLast;

@@ -90,7 +90,7 @@ typedef struct _VAR
    char * szName;               /* variable name */
    char * szAlias;              /* variable alias namespace */
    int    iUsed;                /* number of times used */
-   char   cType;                /* optional strong typing */
+   BYTE   cType;                /* optional strong typing */
    struct _VAR * pNext;         /* pointer to next defined variable */
 } VAR, * PVAR;
 
@@ -137,7 +137,7 @@ typedef struct _COMSYMBOL
 {
    char * szName;               /* the name of the symbol */
    char   cScope;               /* the scope of the symbol */
-   char   cType;
+   BYTE   cType;
    struct _COMSYMBOL * pNext;   /* pointer to the next defined symbol */
 } COMSYMBOL, * PCOMSYMBOL;
 
@@ -145,7 +145,7 @@ typedef struct _COMSYMBOL
 typedef struct _COMDECLARED
 {
    char * szName;               /* the name of the symbol */
-   char   cType;
+   BYTE   cType;
    BYTE * cParamTypes;
    USHORT iParamCount;
    struct _COMDECLARED * pNext;   /* pointer to the next declared function */
@@ -199,7 +199,7 @@ extern PFUNCTION hb_compFunCallAdd( char * szFuntionName );
 extern PFUNCTION hb_compFunCallFind( char * szFunName ); /* locates a previously defined called function */
 extern void      hb_compFunCallCheck( char *, int );
 
-extern void hb_compVariableAdd( char * szVarName, char cType ); /* add a new param, local, static variable to a function definition or a public or private */
+extern void hb_compVariableAdd( char * szVarName, BYTE cType ); /* add a new param, local, static variable to a function definition or a public or private */
 extern PVAR hb_compVariableFind( PVAR pVars, USHORT wOrder ); /* returns a variable if defined or zero */
 extern PVAR hb_compLocalVariableFind( PFUNCTION pFunc, USHORT wVar );
 
