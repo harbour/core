@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+       enhanced functions, working on any bit range from 1 to 32
+
+     all provided by Walter Negro - FOEESITRA <waltern@foeesitra.org.ar>
+
    * contrib/libct/Makefile
    * contrib/libct/makefile.bc
    * contrib/libct/makefile.vc

@@ -57,7 +57,7 @@
 #define BUFFER_LENGTH 2048
 
 FUNCTION __TYPEFILE( cFile, lPrint )
-   LOCAL nHandle, cBuffer
+   LOCAL nHandle, cBuffer, nRead := 0, nHasRead := 0, nSize := 0, nBuffer
    LOCAL oErr, xRecover, nRetries
    LOCAL aSaveSet[ 2 ]
    LOCAL cDir, cName, cExt, cTmp, aPath, i
@@ -122,14 +122,20 @@ FUNCTION __TYPEFILE( cFile, lPrint )
       aSaveSet[ 2 ] := Set( _SET_PRINTER, .T. )
    ENDIF
 
+   nSize   := FSeek( nHandle, 0, FS_END )
+   nBuffer := MIN( nSize, BUFFER_LENGTH )
+
+   FSeek( nHandle, 0 )  // go top
    // here we try to read a line at a time but I think we could just
    // display the whole buffer since it said: "without any headings or formating"
 
-   cbuffer := SPACE( BUFFER_LENGTH )
+   cbuffer := SPACE( nBuffer )
    ?                                                      // start in a new line
-   DO WHILE fread( nHandle, @cbuffer, BUFFER_LENGTH ) > 0
+   DO WHILE ( nRead := fread( nHandle, @cbuffer, nBuffer ))  > 0
+      nHasRead += nRead
       ?? cBuffer
-      cbuffer := SPACE( BUFFER_LENGTH )
+      nBuffer := MIN( nSize - nHasRead, nBuffer )
+      cbuffer := SPACE( nBuffer )
    ENDDO
 
    FCLOSE( nHandle )
