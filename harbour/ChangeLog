@@ -9,6 +9,15 @@
 */
 
 
+2003-11-10 15:54 UTC+0100 Maurilio Longo <maurilio.longo@libero.it>
+   borrowed from xHarbour trying to hunt down a memory leak on an utility of mine
+
+   2003-11-10 12:19 UTC+0100 Przemyslaw Czerpak <druzus@polbox.com>
+   * xharbour/include/hbrddcdx.h
+   * xharbour/source/rdd/dbfcdx/dbfcdx1.c
+       ! possible memory leak fixed
+       * small improvment in balancing
+
 
 2003-11-10 13:20 UTC+0100 Maurilio Longo <maurilio.longo@libero.it>
    * harbour/contrib/btree/hb_btree.c

@@ -390,6 +390,45 @@ static ERRCODE hb_cdxErrorRT( CDXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode
 }
 
 /*
+ * create index sort table
+ */
+static void hb_cdxMakeSortTab( CDXAREAP pArea )
+{
+#ifndef HB_CDP_SUPPORT_OFF
+   if ( pArea->cdPage && pArea->cdPage->lSort && !pArea->bCdxSortTab )
+   {
+      int i, j, l;
+      BYTE * pbSort, b;
+
+      pArea->bCdxSortTab = ( BYTE * ) hb_xgrab( 256 );
+      pbSort = ( BYTE * ) hb_xgrab( 256 );
+      /* this table should be allready quite good sorted so this simple
+         algorithms will be one of the most efficient one. */
+      for ( i = 0; i <= 255; i++ )
+         pbSort[i] = ( BYTE ) i;
+      l = 255;
+      do
+      {
+         j = l;
+         for( i = 0; i < j; i++ )
+         {
+            if ( hb_cdpchrcmp( pbSort[i], pbSort[i+1], pArea->cdPage ) > 0 )
+            {
+               b = pbSort[i+1];
+               pbSort[i+1] = pbSort[i];
+               pbSort[i] = b;
+               l = i;
+            }
+         }
+      } while ( j != l );
+      for ( i = 0; i <= 255; i++ )
+         pArea->bCdxSortTab[pbSort[i]] = i;
+      hb_xfree( pbSort );
+   }
+#endif
+}
+
+/*
  * create new index key
  */
 static LPCDXKEY hb_cdxKeyNew( void )
@@ -516,19 +555,21 @@ static int hb_cdxValCompare( LPCDXTAG pTag, BYTE * val1, BYTE len1,
    if ( pTag->uiType == 'C' )
    {
 #ifndef HB_CDP_SUPPORT_OFF
-      PHB_CODEPAGE cdpage = pTag->pIndex->pArea->cdPage;
-      int iPos = 0;
-
-      while ( iResult == 0 && iPos < iLimit )
+      if ( pTag->pIndex->pArea->bCdxSortTab )
       {
-         /* for nation sorting support */
-         iResult = hb_cdpcharcmp( val1[ iPos ], val2[ iPos ], cdpage );
-         iPos++;   /* EndPos += 1; */
+         BYTE * pSort = pTag->pIndex->pArea->bCdxSortTab;
+         int iPos = 0;
+         while ( iResult == 0 && iPos < iLimit )
+         {
+            iResult = pSort[ val1[ iPos ] ] - pSort[ val2[ iPos ] ];
+            iPos++;
+         }
       }
-#else
+      else
+#endif
       if ( iLimit > 0 )
          iResult = memcmp( val1, val2, iLimit );
-#endif
+
       if ( iResult == 0 )
       {
          if ( len1 > len2 )
@@ -2206,7 +2247,10 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, SHORT iChildRet )
    if ( pPage->iCurKey > 0 )
       iFirstKey = pPage->iCurKey - 1;
    else
+   {
       iFirstKey = 0;
+      --iBlncKeys;
+   }
    if ( iBlncKeys > pPage->iKeys - iFirstKey )
    {
       iBlncKeys = pPage->iKeys - iFirstKey;
@@ -2251,11 +2295,13 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, SHORT iChildRet )
       {
          if ( i == iSkip )
             ++iSkip;
+#if 0
          else if ( i + 1 == iBlncKeys )
          {
             iBlncKeys--;
             hb_cdxPageFree( childs[i], FALSE );
          }
+#endif
       }
       if ( i >= iSkip && i < iBlncKeys )
          iKeys += childs[i]->iKeys;
@@ -2266,7 +2312,15 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, SHORT iChildRet )
       fflush(stdout);
 #endif
    }
-
+   if ( ( iChildRet & NODE_SPLIT ) == 0 )
+   {
+      for ( i = iBlncKeys - 1; i > iSkip && childs[i]->iFree >= 0 && childs[i]->iFree < childs[i]->ReqByte; i-- )
+      {
+         iKeys -= childs[i]->iKeys;
+         hb_cdxPageFree( childs[i], FALSE );
+         iBlncKeys--;
+      }
+   }
    if ( ( iChildRet & ( NODE_SPLIT | NODE_JOIN ) ) == 0 &&
         ( iBlncKeys < 2 || iFree < CDX_EXT_FREESPACE ) )
    {
@@ -2274,7 +2328,6 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, SHORT iChildRet )
          hb_cdxPageFree( childs[i], FALSE );
       return iRet;
    }
-
 #ifdef HB_CDX_DSPDBG_INFO
    printf("\r\nleaf balance: Page=%lx iKeys=%d", pPage->Page, iKeys);
    fflush(stdout);
@@ -2339,11 +2392,43 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, SHORT iChildRet )
 
          if ( !fIns && lpTmpPage != NULL )
          {
+#if 1
+            SHORT j, iSize = 0;
+            ULONG ulMaxRec = 0, ul;
+            BYTE * pbKey, bMax;
+
+            for ( j = 0; j < iKeys; j++ )
+            {
+               if ( ulMaxRec < ( ul = HB_GET_LE_ULONG( &pPtr[ ( j + 1 ) * iLen - 6 ] ) ) )
+                  ulMaxRec = ul;
+               iSize += iLen - 6 - ( j == 0 ? 0 : pPtr[ ( j + 1 ) * iLen - 2 ] ) - pPtr[ ( j + 1 ) * iLen - 1 ];
+            }
+            pbKey = hb_cdxPageGetKeyVal( lpTmpPage, 0 );
+            bMax = ( lpTmpPage->node.extNode.keyPool[ lpTmpPage->ReqByte - 2 ]
+                         >> ( 16 - lpTmpPage->TCBits ) ) & lpTmpPage->TCMask;
+            bMax = iLen - 6 - HB_MAX( pPtr[ iKeys * iLen - 1 ], bMax );
+            for ( j = 0; j < bMax && 
+                         pPtr[ ( iKeys - 1 ) * iLen + j ] == pbKey[ j ]; j++ );
+            iSize -= j;
+            iMaxReq = lpTmpPage->ReqByte;
+            ul = lpTmpPage->RNMask;
+            while ( ulMaxRec > ul )
+            {
+               ++iMaxReq;
+               ul = ( ul << 8 ) | 0xFF;
+            }
+            iSize += iKeys * iMaxReq;
+            iSize = lpTmpPage->iFree - iSize - 
+                     ( iMaxReq - lpTmpPage->ReqByte ) * lpTmpPage->iKeys;
+            if ( iSize < 0 )
+               fIns = TRUE;
+#else
             if ( lpTmpPage->ReqByte > iMaxReq )
                iMaxReq = lpTmpPage->ReqByte;
             if ( lpTmpPage->iFree < iKeys * ( iLen - 6 + iMaxReq ) +
                         ( iMaxReq - lpTmpPage->ReqByte ) * lpTmpPage->iKeys )
                fIns = TRUE;
+#endif
             else
             {
                BYTE * pTmp = (BYTE *) hb_xgrab( ( iKeys + lpTmpPage->iKeys ) * iLen );
@@ -2373,6 +2458,26 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, SHORT iChildRet )
                childs[i] = lpTmpPage;
                if ( iFirstKey + i >= pPage->iKeys )
                   iRet |= NODE_NEWLASTKEY;
+#if 1
+#ifndef HB_CDX_DBGCODE_OFF
+               childs[i]->iKeys = 0;
+               if ( childs[i]->pKeyBuf )
+               {
+                  hb_xfree( childs[i]->pKeyBuf );
+                  childs[i]->pKeyBuf = NULL;
+                  childs[i]->fBufChanged = FALSE;
+               }
+               hb_cdxPageCalcLeafSpace( childs[i], pPtr, iKeys );
+               hb_cdxPageLeafEncode( childs[i], pPtr, childs[i]->iKeys );
+               if ( iSize != childs[i]->iFree )
+               {
+                  printf("\r\nninserting, iSize=%d, childs[i]->iFree=%d", iSize, childs[i]->iFree); fflush(stdout);
+                  printf("\r\niKeys=%d, iMaxReq=%d", iKeys, iMaxReq); fflush(stdout);
+                  hb_cdxErrInternal( "hb_cdxPageGetChild: index corrupted." );
+               }
+#endif
+#endif
+
             }
          }
          else
@@ -2504,10 +2609,14 @@ static int hb_cdxPageKeyIntBalance( LPCDXPAGE pPage, SHORT iChildRet )
    LPCDXPAGE childs[ CDX_BALANCE_INTPAGES + 2 ], lpTmpPage;
    SHORT iFirstKey, iBlncKeys = CDX_BALANCE_INTPAGES;
    SHORT iLen = pPage->TagParent->uiLen + 8, iKeys = 0, iNeedKeys, iNodeKeys,
-         iMin = pPage->TagParent->MaxKeys, iMax = 0;
+         iMin = pPage->TagParent->MaxKeys, iMax = 0, iDiv;
    ULONG ulPage;
    BYTE * pKeyPool = NULL, *pPtr;
+   BOOL fForce = ( iChildRet & ( NODE_SPLIT | NODE_JOIN ) ) != 0;
    int iRet = 0, i;
+
+   if ( !fForce && ( iChildRet & NODE_BALANCE ) == 0 )
+      return iRet;
 
    if ( pPage->Child && pPage->Child->Child )
       hb_cdxPageFree( pPage->Child->Child, FALSE );
@@ -2518,10 +2627,10 @@ static int hb_cdxPageKeyIntBalance( LPCDXPAGE pPage, SHORT iChildRet )
 
    if ( pPage->iKeys <= iBlncKeys || pPage->iCurKey <= iBlncKeys / 2 )
       iFirstKey = 0;
-   else if ( pPage->iCurKey + iBlncKeys / 2 >= pPage->iKeys )
+   else if ( pPage->iCurKey + ( iBlncKeys >> 1 ) >= pPage->iKeys )
       iFirstKey = pPage->iKeys - iBlncKeys;
    else
-      iFirstKey = pPage->iCurKey - iBlncKeys / 2;
+      iFirstKey = pPage->iCurKey - ( iBlncKeys >> 1 );
    if ( iBlncKeys > pPage->iKeys - iFirstKey )
    {
       iBlncKeys = pPage->iKeys - iFirstKey;
@@ -2533,8 +2642,7 @@ static int hb_cdxPageKeyIntBalance( LPCDXPAGE pPage, SHORT iChildRet )
    fflush(stdout);
 #endif
 
-   if ( ( iChildRet & ( NODE_SPLIT | NODE_JOIN ) ) == 0 &&
-        ( iBlncKeys < 2 || ( iChildRet & NODE_BALANCE ) == 0 ) )
+   if ( !fForce && iBlncKeys < 2 )
       return iRet;
 
    for ( i = 0; i < iBlncKeys; i++ )
@@ -2571,15 +2679,45 @@ static int hb_cdxPageKeyIntBalance( LPCDXPAGE pPage, SHORT iChildRet )
       fflush(stdout);
 #endif
    }
-
-   if ( ( iChildRet & ( NODE_SPLIT | NODE_JOIN ) ) == 0 &&
-        ( iBlncKeys < 2 || iMax - iMin < 2 ) )
+   iDiv = iMax - iMin;
+   if ( iDiv >= 2 || fForce )
+   {
+      iNeedKeys = ( iKeys + pPage->TagParent->MaxKeys - 1 )
+                          / pPage->TagParent->MaxKeys;
+      iMin = iKeys / iNeedKeys;
+      iMax = ( iKeys + iNeedKeys - 1 ) / iNeedKeys;
+      if ( iMin < 1 )
+         iMin = 1;
+      if ( iMax > pPage->TagParent->MaxKeys )
+         iMax = pPage->TagParent->MaxKeys;
+      for ( i = iBlncKeys - 1; i >= 0 && 
+                  childs[i]->iKeys >= iMin && childs[i]->iKeys <= iMax; i-- )
+      {
+         iKeys -= childs[i]->iKeys;
+         hb_cdxPageFree( childs[i], FALSE );
+         iBlncKeys--;
+      }
+      while ( iBlncKeys > 0 && childs[0]->iKeys >= iMin && childs[0]->iKeys <= iMax )
+      {
+         iKeys -= childs[0]->iKeys;
+         hb_cdxPageFree( childs[0], FALSE );
+         iBlncKeys--;
+         iFirstKey++;
+         for ( i = 0; i < iBlncKeys; i++ )
+         {
+            childs[i] = childs[i+1];
+         }
+      }
+   }
+   if ( !fForce && ( iBlncKeys < 2 || iDiv < 2 ) )
    {
       for ( i = 0; i < iBlncKeys; i++ )
          hb_cdxPageFree( childs[i], FALSE );
       return iRet;
    }
 
+   iNeedKeys = ( iKeys + pPage->TagParent->MaxKeys - 1 )
+                       / pPage->TagParent->MaxKeys;
    if ( iKeys > 0 )
    {
       pPtr = pKeyPool = (BYTE*) hb_xgrab( iKeys * iLen );
@@ -2592,9 +2730,6 @@ static int hb_cdxPageKeyIntBalance( LPCDXPAGE pPage, SHORT iChildRet )
          }
       }
    }
-
-   iNeedKeys = ( iKeys + pPage->TagParent->MaxKeys - 1 )
-                       / pPage->TagParent->MaxKeys;
 
    if ( iNeedKeys > iBlncKeys )
    {
@@ -3637,6 +3772,8 @@ static void hb_cdxTagIndexTagNew( LPCDXTAG pTag,
                                   char * ForExp, PHB_ITEM pForItem,
                                   BOOL fAscnd, BOOL fUniq, BOOL fCustom )
 {
+   if ( bType == 'C' )
+      hb_cdxMakeSortTab( pTag->pIndex->pArea );
    if ( KeyExp != NULL )
    {
       pTag->KeyExpr = ( char * ) hb_xgrab( CDX_MAXKEY + 1 );
@@ -3784,6 +3921,9 @@ static LPCDXINDEX hb_cdxIndexNew( CDXAREAP pArea )
 static void hb_cdxIndexFree( LPCDXINDEX pIndex )
 {
    LPCDXTAG pTag;
+
+   /* Free List of Free Pages */
+   hb_cdxIndexDropAvailPage( pIndex );
 
    /* Free Compound tag */
    if ( pIndex->pCompound != NULL )
@@ -4758,7 +4898,6 @@ static ERRCODE hb_cdxGoCold( CDXAREAP pArea )
          if ( !pTag->Custom )
          {
             pKey = hb_cdxKeyEval( pKey, pTag, TRUE );
-            /* test for expresion, working but not tested */
             if ( pTag->pForItem != NULL )
                fAdd = hb_cdxEvalCond ( pArea, pTag->pForItem, TRUE );
             else
@@ -4805,13 +4944,13 @@ static ERRCODE hb_cdxGoCold( CDXAREAP pArea )
                   hb_cdxTagClose( pTag );
 #endif
             }
-/*
+#if 0
             if ( pTag->HotKey )
             {
                hb_cdxKeyFree( pTag->HotKey );
                pTag->HotKey = NULL;
             }
-*/
+#endif
          }
          if ( pTag->pNext )
             pTag = pTag->pNext;
@@ -4899,7 +5038,11 @@ static ERRCODE hb_cdxClose( CDXAREAP pArea )
       return FAILURE;
 
    hb_cdxOrdListClear( pArea, TRUE, NULL );
-
+   if ( pArea->bCdxSortTab )
+   {
+      hb_xfree( pArea->bCdxSortTab );
+      pArea->bCdxSortTab = NULL;
+   }
 #ifdef HB_CDX_DBGTIME
    printf( "\r\ncdxTimeIntBld=%f, cdxTimeExtBld=%f, cdxTimeBld=%f\r\n"
            "cdxTimeGetKey=%f, cdxTimeFreeKey=%f\r\n"
@@ -7182,7 +7325,11 @@ static void hb_cdxSortAddExternal( LPSORTINFO pSort, USHORT Lvl, LONG Tag, LONG 
    cd = hb_cdxSortKeyFindDup( Value, pSort->LastKey );
 
 #ifndef HB_CDX_DBGCODE_OFF
+#ifndef HB_CDP_SUPPORT_OFF
    if( hb_cdxSortKeyCompare( Value, pSort->LastKey, pSort->CurTag->pIndex->pArea->cdPage ) < 0 )
+#else
+   if( hb_cdxSortKeyCompare( Value, pSort->LastKey ) < 0 )
+#endif
    {
 /*
       printf("\r\nValue->length=%2d, Value->Value=%s", Value->length, Value->Value);
@@ -7427,7 +7574,7 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag )
                   break;
 
                default:
-                  printf( "hb_cdxTagDoIndex( LPCDXTAG pTag ): hb_itemType( pItem ) = %i", hb_itemType( pItem ) );
+                  printf( "hb_cdxTagDoIndex: hb_itemType( pItem ) = %i", hb_itemType( pItem ) );
             }
          }
          if ( pEvalItem )
