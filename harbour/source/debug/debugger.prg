@@ -173,12 +173,17 @@ CLASS TDebugger
    DATA   cAppImage, nAppRow, nAppCol, cAppColors, nAppCursor
    DATA   aBreakPoints, aCallStack, aColors
    DATA   aLastCommands, nCommand, oGetListCommand
-   DATA   lEnd, lGo, lCaseSensitive, lMonoDisplay
+   DATA   lEnd, lGo, lCaseSensitive, lMonoDisplay, lSortVars
    DATA   cSearchString, cPathForFiles, cSettingsFileName
    DATA   nTabWidth, nSpeed
+   DATA   lShowPublics, lShowPrivates, lShowStatics, lShowLocals, lAll
 
    METHOD New()
    METHOD Activate( cModuleName )
+
+   METHOD All() INLINE ::lShowPublics := ::lShowPrivates := ::lShowStatics := ;
+                ::lShowLocals := ::lAll := ! ::lAll, If( ::lAll, ::ShowVars(), ::HideVars() )
+
    METHOD BarDisplay()
    METHOD BuildCommandWindow()
 
@@ -196,10 +201,14 @@ CLASS TDebugger
    METHOD GoToLine( nLine )
    METHOD HandleEvent()
    METHOD Hide()
+   METHOD HideVars()
    METHOD InputBox( cMsg, uValue, bValid )
    METHOD IsBreakPoint( nLine )
    METHOD LoadSettings()
    METHOD LoadVars()
+
+   METHOD Local()
+
    METHOD MonoDisplay()
    METHOD NextWindow()
    METHOD Open()
@@ -210,6 +219,8 @@ CLASS TDebugger
                                          ::cPathForFiles )
 
    METHOD PrevWindow()
+   METHOD Private()
+   METHOD Public()
    METHOD RestoreAppStatus()
    METHOD RestoreSettings()
    METHOD SaveAppStatus()
@@ -220,9 +231,15 @@ CLASS TDebugger
    METHOD ShowCode( cModuleName )
    METHOD ShowVars()
 
+   METHOD Sort() INLINE ASort( ::aVars, {|x,y| x[1] < y[1] } ),;
+                        If( ::oBrwVars != nil, ::oBrwVars:RefreshAll(), nil ),;
+          If( ::oWndVars != nil .and. ::oWndVars:lVisible, ::oBrwVars:ForceStable(),)
+
    METHOD Speed() INLINE ;
           ::nSpeed := ::InputBox( "Step delay (in tenths of a second)",;
                                   ::nSpeed )
+
+   METHOD Static()
 
    METHOD Step() INLINE ::RestoreAppStatus(), ::Exit()
 
@@ -245,13 +262,13 @@ ENDCLASS
 
 METHOD New() CLASS TDebugger
 
-   ::aColors := { "BG+/B", "BG+/B", "N/BG", "N/BG", "N/W", "N/BG", "GR+/B",;
-                  "N/BG", "GR+/BG", "W+/N", "GR+/N" }
+   ::aColors := {"W+/BG","N/BG","R/BG","N+/BG","W+/B","GR+/B","W/B","N/W","R/W","N/BG","R/BG"}
+
    ::lMonoDisplay   := .f.
    s_oDebugger := Self
 
-   ::cSettingsFileName := "hbd.cfg"  // Is easier to have a default settings filename
-   if File( "hbd.cfg" )
+   ::cSettingsFileName := "init.cld"
+   if File( "init.cld" )
       ::LoadSettings()
    endif
 
@@ -276,11 +293,18 @@ METHOD New() CLASS TDebugger
    ::aCallStack        := {}
    ::lGo               := .f.
    ::aVars             := {}
+   ::lSortVars         := .f.
    ::lCaseSensitive    := .f.
    ::cSearchString     := ""
    ::cPathForFiles     := ""
    ::nTabWidth         := 4
    ::nSpeed            := 0
+
+   ::lShowPublics      := .f.
+   ::lShowPrivates     := .f.
+   ::lShowStatics      := .f.
+   ::lShowLocals       := .f.
+   ::lAll              := .f.
 
 return Self
 
@@ -289,7 +313,6 @@ METHOD Activate( cModuleName ) CLASS TDebugger
    ::Show()
    ::ShowCode( cModuleName )
    ::ShowCallStack()
-   ::ShowVars()
    ::RestoreAppStatus()
 
 return nil
@@ -773,6 +796,12 @@ METHOD NextWindow() CLASS TDebugger
       if ::nCurrentWindow > Len( ::aWindows )
          ::nCurrentWindow := 1
       endif
+      while ! ::aWindows[ ::nCurrentWindow ]:lVisible
+         ::nCurrentWindow++
+         if ::nCurrentWindow > Len( ::aWindows )
+            ::nCurrentWindow := 1
+         endif
+      end
       oWnd := ::aWindows[ ::nCurrentWindow ]
       oWnd:SetFocus( .t. )
    endif
@@ -789,6 +818,12 @@ METHOD PrevWindow() CLASS TDebugger
       if ::nCurrentWindow < 1
          ::nCurrentWindow := Len( ::aWindows )
       endif
+      while ! ::aWindows[ ::nCurrentWindow ]:lVisible
+         ::nCurrentWindow--
+         if ::nCurrentWindow < 1
+            ::nCurrentWindow := Len( ::aWindows )
+         endif
+      end
       oWnd := ::aWindows[ ::nCurrentWindow ]
       oWnd:SetFocus( .t. )
    endif
@@ -884,48 +919,64 @@ METHOD LoadVars() CLASS TDebugger // updates monitored variables
 
    ::aVars := {}
 
-   nCount := __mvDbgInfo( HB_MV_PUBLIC )
-   for n := nCount to 1 step -1
-      xValue := __mvDbgInfo( HB_MV_PUBLIC, n, @cName )
-      if cName != "__DBGSTATICS"  // reserved public used by the debugger
-         AAdd( ::aVars, { cName, xValue, "Public" } )
-      endif
-   next
-
-   nCount := __mvDbgInfo( HB_MV_PRIVATE )
-   for n := nCount to 1 step -1
-      xValue := __mvDbgInfo( HB_MV_PRIVATE, n, @cName )
-      AAdd( ::aVars, { cName, xValue, "Private" } )
-   next
-
-   if Type( "__DbgStatics" ) == "A"
-      for n = 1 to Len( __DbgStatics )
-         for m = 1 to Len( __DbgStatics[ n ][ 2 ] )
-            cStaticName  = __DbgStatics[ n ][ 2 ][ m ]
-            nStaticIndex = __DbgStatics[ n ][ 1 ] + m
-            AAdd( ::aVars, { cStaticName, nStaticIndex, "Static" } )
-         next
+   if ::lShowPublics
+      nCount := __mvDbgInfo( HB_MV_PUBLIC )
+      for n := nCount to 1 step -1
+         xValue := __mvDbgInfo( HB_MV_PUBLIC, n, @cName )
+         if cName != "__DBGSTATICS"  // reserved public used by the debugger
+            AAdd( ::aVars, { cName, xValue, "Public" } )
+         endif
       next
+   endif
+
+   if ::lShowPrivates
+      nCount := __mvDbgInfo( HB_MV_PRIVATE )
+      for n := nCount to 1 step -1
+         xValue := __mvDbgInfo( HB_MV_PRIVATE, n, @cName )
+         AAdd( ::aVars, { cName, xValue, "Private" } )
+      next
+   endif
+
+   if ::lShowStatics
+      if Type( "__DbgStatics" ) == "A"
+         for n = 1 to Len( __DbgStatics )
+            for m = 1 to Len( __DbgStatics[ n ][ 2 ] )
+               cStaticName  = __DbgStatics[ n ][ 2 ][ m ]
+               nStaticIndex = __DbgStatics[ n ][ 1 ] + m
+               AAdd( ::aVars, { cStaticName, nStaticIndex, "Static" } )
+            next
+         next
+      endif
+   endif
+
+   if ::lSortVars
+      ::SortVars()
    endif
 
 return nil
 
-METHOD ShowVars( bSort, nType ) CLASS TDebugger
+METHOD ShowVars() CLASS TDebugger
 
    local n
    local nWidth
+   local lRepaint := .f.
 
    if ::oWndVars == nil
 
       n := 1
 
-      ::oWndCode:nTop += 7
-      ::oBrwText:Resize( ::oBrwText:nTop + 7 )
+      ::LoadVars()
+      ::oWndVars := TDbWindow():New( 1, 0, Min( 7, Len( ::aVars ) + 2 ),;
+         MaxCol() - If( ::oWndStack != nil, ::oWndStack:nWidth(), 0 ),;
+         "Monitor:" + If( ::lShowLocals, " Local", "" ) + ;
+         If( ::lShowStatics, " Static", "" ) + If( ::lShowPrivates, " Private", "" ) + ;
+         If( ::lShowPublics, " Public", "" ) )
+
+      ::oWndCode:nTop += ::oWndVars:nBottom
+      ::oBrwText:Resize( ::oBrwText:nTop + ::oWndVars:nBottom )
       ::oBrwText:RefreshAll()
       ::oWndCode:SetFocus( .t. )
-      ::oWndVars := TDbWindow():New( 1, 0, 7,;
-         MaxCol() - iif( ::oWndStack != nil, ::oWndStack:nWidth(), 0 ),;
-         "Monitor" )
+
       ::oWndVars:Show( .f. )
       AAdd( ::aWindows, ::oWndVars )
       ::oWndVars:bKeyPressed := { | nKey | iif( nKey == K_DOWN .and. ;
@@ -937,12 +988,11 @@ METHOD ShowVars( bSort, nType ) CLASS TDebugger
       ::oWndVars:bLDblClick = { | nMRow, nMCol | ::EditVar( n ) }
       ::oWndVars:bPainted = { || ::oBrwVars:ColorSpec := __DbgColors()[ 2 ] + "," + ;
                                  __DbgColors()[ 5 ] + "," + __DbgColors()[ 4 ],;
-                                 ::oBrwVars:RefreshAll(), ::oBrwVars:ForceStable() }
+      If( Len( ::aVars ) > 0, ( ::oBrwVars:RefreshAll(), ::oBrwVars:ForceStable() ),) }
 
-      ::oBrwVars := TBrowseNew( 2, 1, 6, MaxCol() - iif( ::oWndStack != nil,;
+      ::oBrwVars := TBrowseNew( 2, 1, ::oWndVars:nBottom - 1, MaxCol() - iif( ::oWndStack != nil,;
                                ::oWndStack:nWidth(), 0 ) - 1 )
       ::oBrwVars:ColorSpec := ::aColors[ 2 ] + "," + ::aColors[ 5 ] + "," + ::aColors[ 4 ]
-      ::LoadVars()
       ::oBrwVars:GoTopBlock := { || n := 1 }
       ::oBrwVars:GoBottomBlock := { || n := Len( ::aVars ) }
       ::oBrwVars:SkipBlock := { | nSkip, nPos | nPos := n,;
@@ -951,8 +1001,46 @@ METHOD ShowVars( bSort, nType ) CLASS TDebugger
 
       nWidth := ::oWndVars:nWidth() - 1
       ::oBrwVars:AddColumn( TBColumnNew( "",  { || AllTrim( Str( n - 1 ) ) + ") " + ;
-         PadR( GetVarInfo( ::aVars[ n ] ), ::oWndVars:nWidth() - 5 ) } ) )
-      ::oBrwVars:ForceStable()
+         If( Len( ::aVars ) > 0, PadR( GetVarInfo( ::aVars[ n ] ),;
+         ::oWndVars:nWidth() - 5 ), "" ) } ) )
+      if Len( ::aVars ) > 0
+         ::oBrwVars:ForceStable()
+      endif
+   else
+      ::LoadVars()
+
+      ::oWndVars:cCaption = "Monitor:" + ;
+      If( ::lShowLocals, " Local", "" ) + ;
+      If( ::lShowStatics, " Static", "" ) + If( ::lShowPrivates, " Private", "" ) + ;
+      If( ::lShowPublics, " Public", "" )
+
+      if Len( ::aVars ) == 0
+         if ::oWndVars:nBottom - ::oWndVars:nTop > 1
+            ::oWndVars:nBottom = ::oWndVars:nTop + 1
+            lRepaint = .t.
+         endif
+      endif
+      if Len( ::aVars ) > ::oWndVars:nBottom - ::oWndVars:nTop - 1
+         ::oWndVars:nBottom = ::oWndVars:nTop + Min( Len( ::aVars ) + 1, 7 )
+         ::oBrwVars:nBottom = ::oWndVars:nBottom - 1
+         lRepaint = .t.
+      endif
+      if ! ::oWndVars:lVisible
+         ::oWndCode:nTop = ::oWndVars:nBottom + 1
+         ::oBrwText:Resize( ::oWndVars:nBottom + 2 )
+         ::oWndVars:Show()
+      else
+         if lRepaint
+            ::oWndCode:nTop = ::oWndVars:nBottom + 1
+            ::oWndCode:Refresh()
+            ::oBrwText:Resize( ::oWndVars:nBottom + 2 )
+         endif
+         ::oWndVars:Refresh()
+      endif
+      if Len( ::aVars ) > 0
+         ::oBrwVars:RefreshAll()
+         ::oBrwVars:ForceStable()
+      endif
    endif
 
 return nil
@@ -1056,6 +1144,15 @@ METHOD OSShell() CLASS TDebugger
 
 return nil
 
+METHOD HideVars() CLASS TDebugger
+
+   ::oWndVars:Hide()
+   ::oWndCode:nTop = 1
+   ::oWndCode:SetFocus( .t. )
+   ::oBrwText:Resize( 2 )
+
+return nil
+
 METHOD InputBox( cMsg, uValue, bValid ) CLASS TDebugger
 
    local nTop    := ( MaxRow() / 2 ) - 5
@@ -1097,13 +1194,48 @@ METHOD GotoLine( nLine ) CLASS TDebugger
    ::oBrwText:GotoLine( nLine )
 
    if ::oBrwVars != nil
-      // ::LoadVars()
       ::oBrwVars:RefreshAll()
       ::oBrwVars:ForceStable()
    endif
 
    if ::oBrwStack != nil .and. ! ::oBrwStack:Stable
       ::oBrwStack:ForceStable()
+   endif
+
+return nil
+
+METHOD Local() CLASS TDebugger
+
+   ::lShowLocals = ! ::lShowLocals
+
+   if ::lShowPublics .or. ::lShowPrivates .or. ::lShowStatics .or. ::lShowLocals
+      ::ShowVars()
+   else
+      ::HideVars()
+   endif
+
+return nil
+
+METHOD Private() CLASS TDebugger
+
+   ::lShowPrivates = ! ::lShowPrivates
+
+   if ::lShowPublics .or. ::lShowPrivates .or. ::lShowStatics .or. ::lShowLocals
+      ::ShowVars()
+   else
+      ::HideVars()
+   endif
+
+return nil
+
+METHOD Public() CLASS TDebugger
+
+   ::lShowPublics = ! ::lShowPublics
+
+   if ::lShowPublics .or. ::lShowPrivates .or. ::lShowStatics .or. ::lShowLocals
+      ::ShowVars()
+   else
+      ::HideVars()
    endif
 
 return nil
@@ -1120,6 +1252,8 @@ METHOD RestoreAppStatus() CLASS TDebugger
 return nil
 
 METHOD RestoreSettings() CLASS TDebugger
+
+   local n
 
    ::cSettingsFileName = ::InputBox( "File name", ::cSettingsFileName )
 
@@ -1194,6 +1328,18 @@ METHOD SaveSettings() CLASS TDebugger
       endif
 
       MemoWrit( ::cSettingsFileName, cInfo )
+   endif
+
+return nil
+
+METHOD Static() CLASS TDebugger
+
+   ::lShowStatics = ! ::lShowStatics
+
+   if ::lShowPublics .or. ::lShowPrivates .or. ::lShowStatics .or. ::lShowLocals
+      ::ShowVars()
+   else
+      ::HideVars()
    endif
 
 return nil
