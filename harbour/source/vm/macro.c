@@ -39,6 +39,7 @@
 
 #include "hbmacro.h"
 #include "hbcomp.h"
+#include "hbmemvar.ch"   /* for values returned by hb_memvarScope() */
 
 /* TODO:
  * include this variable in SET subsystem ?
@@ -46,6 +47,7 @@
 BOOL hb_comp_bShortCuts = TRUE;  /* .and. & .or. expressions shortcuts */
 
 static void hb_macroUseAliased( HB_ITEM_PTR, HB_ITEM_PTR, int );
+static void hb_compMemvarCheck( char * szVarName, HB_MACRO_DECL );
 
 /* ************************************************************************* */
 
@@ -666,16 +668,17 @@ char * hb_macroGetType( HB_ITEM_PTR pItem )
       {
          /* passed string was successfully compiled
           */
-	 if( struMacro.exprType == HB_ET_CODEBLOCK )
-	 {
-	     /* Clipper ignores any undeclared symbols or UDFs if the
-	      * compiled expression is a valid codeblock
-	     */
-	     szType ="B";
-	 }
-         else if( struMacro.status & HB_MACRO_UNKN_SYM )
+	      if( struMacro.exprType == HB_ET_CODEBLOCK )
+	      {
+	        /* Clipper ignores any undeclared symbols or UDFs if the
+	         * compiled expression is a valid codeblock
+	         */
+	        szType ="B";
+	      }
+         else if( struMacro.status & ( HB_MACRO_UNKN_SYM | HB_MACRO_UNKN_VAR) )
          {
-            /* request for a symbol that is not in a symbol table
+            /* request for a symbol that is not in a symbol table or
+             * for a variable that is not visible
              */
             szType = "U";
          }
@@ -815,6 +818,25 @@ ULONG hb_compGenJumpTrue( LONG lOffset, HB_MACRO_DECL )
    return HB_PCODE_DATA->lPCodePos - 2;
 }
 
+/* Checks if there is a visible memvar variable 
+ * szVarName = variable name
+*/
+static void hb_compMemvarCheck( char * szVarName, HB_MACRO_DECL )
+{
+      if( !( HB_MACRO_DATA->status & (HB_MACRO_UNKN_VAR | HB_MACRO_UNKN_SYM) ) )
+      {
+         /* checking for variable is quite expensive than don't check it
+          * if there are already some undefined symbols or variables
+         */
+         if( hb_memvarScope( szVarName, strlen( szVarName ) ) <= HB_MV_ERROR )
+         {
+            /* there is no memvar variable visible at this moment */
+            HB_MACRO_DATA->status |= HB_MACRO_UNKN_VAR;
+            HB_MACRO_DATA->status &= ~HB_MACRO_CONT;  /* don't run this pcode */
+         }
+      } 
+}
+
 /*
  * Function generates pcode for passed memvar name
  */
@@ -931,11 +953,8 @@ void hb_compGenPopVar( char * szVarName, HB_MACRO_DECL )
    }
    else
    {
-      /* NOTE: In clipper all undeclared variables are assumed MEMVAR if
-       * they are popped however there is nno such assumption if avariable
-       * is pushed on the eval stack
-       */
       hb_compMemvarGenPCode( HB_P_MPOPMEMVAR, szVarName, HB_MACRO_PARAM );
+      hb_compMemvarCheck( szVarName, HB_MACRO_PARAM );
    }
 }
 
@@ -956,6 +975,7 @@ void hb_compGenPopAliasedVar( char * szVarName,
          if( szAlias[ 0 ] == 'M' && szAlias[ 1 ] == '\0' )
          {  /* M->variable */
             hb_compMemvarGenPCode( HB_P_MPOPMEMVAR, szVarName, HB_MACRO_PARAM );
+            hb_compMemvarCheck( szVarName, HB_MACRO_PARAM );
          }
          else
          {
@@ -965,6 +985,7 @@ void hb_compGenPopAliasedVar( char * szVarName,
             if( iCmp == 0 )
             {  /* MEMVAR-> or MEMVA-> or MEMV-> */
                hb_compMemvarGenPCode( HB_P_MPOPMEMVAR, szVarName, HB_MACRO_PARAM );
+               hb_compMemvarCheck( szVarName, HB_MACRO_PARAM );
             }
             else
             {  /* field variable */
@@ -990,11 +1011,14 @@ void hb_compGenPopAliasedVar( char * szVarName,
       }
    }
    else
+   {
       /* Alias is already placed on stack
        * NOTE: An alias will be determined at runtime then we cannot decide
        * here if passed name is either a field or a memvar
        */
       hb_compMemvarGenPCode( HB_P_MPOPALIASEDVAR, szVarName, HB_MACRO_PARAM );
+      hb_compMemvarCheck( szVarName, HB_MACRO_PARAM );     
+   }
 }
 
 /* generates the pcode to push a nonaliased variable value to the virtual
@@ -1012,11 +1036,8 @@ void hb_compGenPushVar( char * szVarName, HB_MACRO_DECL )
    }
    else
    {
-      /* NOTE: In clipper all undeclared variables are assumed MEMVAR if
-       * they are popped however there is no such assumption if a variable
-       * is pushed on the eval stack
-       */
       hb_compMemvarGenPCode( HB_P_MPUSHVARIABLE, szVarName, HB_MACRO_PARAM );
+      hb_compMemvarCheck( szVarName, HB_MACRO_PARAM );
    }
 }
 
@@ -1031,6 +1052,7 @@ void hb_compGenPushVarRef( char * szVarName, HB_MACRO_DECL )
    else
    {
       hb_compMemvarGenPCode( HB_P_MPUSHMEMVARREF, szVarName, HB_MACRO_PARAM );
+      hb_compMemvarCheck( szVarName, HB_MACRO_PARAM );
    }
 }
 
@@ -1055,6 +1077,7 @@ void hb_compGenPushAliasedVar( char * szVarName,
          if( szAlias[ 0 ] == 'M' && szAlias[ 1 ] == '\0' )
          {  /* M->variable */
             hb_compMemvarGenPCode( HB_P_MPUSHMEMVAR, szVarName, HB_MACRO_PARAM );
+            hb_compMemvarCheck( szVarName, HB_MACRO_PARAM );
          }
          else
          {
@@ -1064,6 +1087,7 @@ void hb_compGenPushAliasedVar( char * szVarName,
             if( iCmp == 0 )
             {  /* MEMVAR-> or MEMVA-> or MEMV-> */
                hb_compMemvarGenPCode( HB_P_MPUSHMEMVAR, szVarName, HB_MACRO_PARAM );
+               hb_compMemvarCheck( szVarName, HB_MACRO_PARAM );
             }
             else
             {  /* field variable */
@@ -1089,11 +1113,14 @@ void hb_compGenPushAliasedVar( char * szVarName,
       }
    }
    else
+   {
       /* Alias is already placed on stack
        * NOTE: An alias will be determined at runtime then we cannot decide
        * here if passed name is either a field or a memvar
        */
       hb_compMemvarGenPCode( HB_P_MPUSHALIASEDVAR, szVarName, HB_MACRO_PARAM );
+      hb_compMemvarCheck( szVarName, HB_MACRO_PARAM );
+   }
 }
 
 /* pushes a logical value on the virtual machine stack , */
