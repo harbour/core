@@ -415,15 +415,15 @@ DECLARE TClass ;
    s_oClass:AddMethod( "_" + <(MethodName)>, CLSMETH _CLASS_NAME_ <MethodName>() )
 
 #xcommand ACCESS <AccessName> [ AS <type> ] => ;
-   _HB_MEMBER <AccesName>() [ AS <type> ];;
+   _HB_MEMBER <AccessName>() [ AS <type> ];;
    s_oClass:AddMethod( <(AccessName)>, CLSMETH _CLASS_NAME_ <AccessName>(), HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_READONLY )
 
 #xcommand ACCESS <AccessName> [ AS <type> ] INLINE [Local <v>,] <code,...> => ;
-   _HB_MEMBER <AccesName>() [ AS <type> ];;
+   _HB_MEMBER <AccessName>() [ AS <type> ];;
    s_oClass:AddInline( <(AccessName)>, {|Self [,<v>] | <code> }, HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_READONLY )
 
 #xcommand ACCESS <AccessName> [ AS <type> ] DEFERRED => ;
-   _HB_MEMBER <AccesName>() [ AS <type> ];;
+   _HB_MEMBER <AccessName>() [ AS <type> ];;
    s_oClass:AddVirtual( <(AccessName)> )
 
 #xcommand ASSIGN <AssignName>( [<params,...>] ) [ AS <type> ] => ;

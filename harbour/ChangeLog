@@ -1,3 +1,7 @@
+2000-10-09 22:15 UTC+0200 JFL (mafact) <jfl@mafact.com>
+   * HBCLASS.CH corrected some tipo where accessName became accesName
+
+
 2000-10-09 2:01 UTC+0800 Brian Hays <bhays@abacuslaw.com>
    * contrib/rdd_ads/adsfunc.c
       * fixed ADSGETRELKEYPOS to work without an index
