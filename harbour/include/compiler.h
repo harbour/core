@@ -193,10 +193,6 @@ extern void     hb_xfree( void * pMem );    /* frees memory */
 char * yy_strdup( char * p );  /* this will exit if there is not enough memory */
 char * yy_strupr( char * p );
 
-#if 0
-static void __yy_memcpy( char * from, char * to, int count ); /* Bison prototype */
-#endif
-
 extern USHORT FixSymbolPos( USHORT );    /* converts symbol's compile-time position into generation-time position */
 extern PFUNCTION GetFuncall( char * szFunName ); /* locates a previously defined called function */
 extern PVAR GetVar( PVAR pVars, USHORT wOrder ); /* returns a variable if defined or zero */
@@ -228,7 +224,8 @@ extern PCOMSYMBOL KillSymbol( PCOMSYMBOL );    /* releases all memory allocated 
 typedef struct _ALIASID
 {
    char type;
-   union {
+   union
+   {
       int iAlias;
       char * szAlias;
    } alias;
