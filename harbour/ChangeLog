@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-06-02 09:30 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * source/rdd/dbfcdx/dbfcdx1.c
+     ! fix in locking logic.
+     ! fixed bug updating conditionals indexes, reported by Walter Negro
+     ! fixed bug in dbgoto, reported by Pritpal Bedi
+
 2002-06-02 12:02 UTC+0100 Antonio Linares <alinares@fivetech.com>
   * source/debug/debugger.prg
     ! Fixed AltD() behavior
