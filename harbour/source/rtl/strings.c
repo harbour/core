@@ -106,22 +106,34 @@ HARBOUR HB_LTRIM( void )
 }
 
 /* returns szText and the new length in lLen */
-ULONG hb_strRTrimLen( char *szText, ULONG lLen )
+ULONG hb_strRTrimLen( char *szText, ULONG lLen, BOOL bAnySpace )
 {
-   while( lLen && szText[lLen - 1] == ' ' )
-      lLen--;
+   if( bAnySpace )
+   {
+      while( lLen && HB_ISSPACE(szText[lLen - 1]) )
+         lLen--;
+   }
+   else
+   {
+      while( lLen && szText[lLen - 1] == ' ' )
+         lLen--;
+   }
    return lLen;
 }
+
 
 /* trims trailing spaces from a string */
 /* TEST: QOUT( "rtrim( '  hello world  ' ) = '" + rtrim( '  hello world  ' ) + "'" ) */
 HARBOUR HB_RTRIM( void )
 {
-   if( _pcount() == 1 )
+   if( _pcount() > 0 )
    {
       PHB_ITEM pText = _param(1, IT_STRING);
       if( pText )
-         _retclen(pText->value.szText, hb_strRTrimLen(pText->value.szText, pText->wLength));
+      {
+         BOOL bAnySpace = (_pcount() > 1? _parl(2): 0);
+         _retclen(pText->value.szText, hb_strRTrimLen(pText->value.szText, pText->wLength, bAnySpace));
+      }
       else
          /* Clipper doesn't error */
          _retc("");
@@ -149,7 +161,10 @@ HARBOUR HB_ALLTRIM( void )
    if( _pcount() > 0 )
    {
       char *szText = _parc(1);
-      ULONG lLen = hb_strRTrimLen(szText, _parclen(1));
+      BOOL bAnySpace = (_pcount() > 1? _parl(2): 0);
+      ULONG lLen;
+
+      lLen = hb_strRTrimLen(szText, _parclen(1), bAnySpace);
 
       szText = hb_strLTrim(szText, &lLen);
 
@@ -1165,4 +1180,3 @@ HARBOUR HB_STR( void )
       _errRelease(pError);
    }
 }
-
