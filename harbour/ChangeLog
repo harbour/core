@@ -1,3 +1,7 @@
+19990729-18:51 GMT+1 Bruno Cantero <bruno@issnet.net>
+   + source/rtl/natmsg/msgspa.c
+     Changed any messages.
+
 19990729-19:38 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/rtl/console.c
       * several fixes at SAVESCREEN, RESTSCREEN and SETCURSOR
