@@ -1,3 +1,11 @@
+19990512-18:40 Eddie Runia
+  * source/tools/stringp.prg
+    #defines added
+  * makefile.b32
+    \ error and .prg path corrected
+  * makefile.b16
+    .prg path corrected
+
 19990512-01:15:00 EDT David G. Holm <dholm@jsd-llc.com>
   * makefile.b31
     - Added genobj32.c and sybmols.asm

@@ -7,7 +7,7 @@
 .path.exe = bin
 .path.lib = libs\b16
 .path.obj = obj
-.path.prg = source\rtl
+.path.prg = source\rtl;source\tools
 
 PROJECT: harbour.lib libs\b16\terminal.lib libs\win16\terminal.lib harbour.exe
 

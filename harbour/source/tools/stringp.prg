@@ -1,3 +1,6 @@
+#define DATA_SYMBOL 1
+#define DATA_VAL    2
+
 /* $Doc$
  * $FuncName$     <xRet> Default( <xArg>, <xDefault> )
  * $Description$  If argument is not set, return default
