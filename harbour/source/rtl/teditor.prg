@@ -816,12 +816,32 @@ return Self
 
 // if editing isn't allowed we enter this loop which
 // handles only movement keys and discards all the others
-STATIC procedure BrowseText(oSelf)
+STATIC procedure BrowseText(oSelf, nPassedKey)
 
    LOCAL nKey
 
-   while (nKey := InKey(0)) <> K_ESC
-      oSelf:MoveCursor(nKey)
+   while ! oSelf:lExitEdit
+
+      // If I haven't been called with a key already preset, evaluate this key and then exit
+      if nPassedKey == NIL
+         if NextKey() == 0
+            oSelf:IdleHook()
+         endif
+         nKey := InKey(0)
+      else
+         nKey = nPassedKey
+      endif
+
+      if nKey == K_ESC
+         oSelf:lExitEdit := .T.
+
+      else
+         if !oSelf:MoveCursor(nKey)
+            oSelf:KeyboardHook(nKey)
+         endif
+
+      endif
+
    enddo
 
 return
@@ -837,7 +857,7 @@ METHOD Edit(nPassedKey) CLASS HBEditor
    LOCAL lSingleKeyProcess := .F.         // .T. if I have to process passed key and then exit
 
    if ! ::lEditAllow
-      BrowseText(Self)
+      BrowseText(Self,nPassedKey)
 
    else
 
