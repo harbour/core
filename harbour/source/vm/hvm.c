@@ -197,6 +197,7 @@ static void    hb_vmReleaseLocalSymbols( void );  /* releases the memory of the 
 static void    hb_vmProcessObjSymbols ( void ); /* process Harbour generated OBJ symbols */
 void hb_vmProcessBorlandInitSegment( void ); /* process Borland _INIT_ segment functions
                                                 when not using Borland startup */
+void hb_startup( void );  /* Harbour startup when not using a C compiler startup */
 
 typedef struct
 {
@@ -205,9 +206,9 @@ typedef struct
 } OBJSYMBOLS, * POBJSYMBOLS;      /* structure used from Harbour generated OBJs */
 
 #ifdef __cplusplus
-extern "C" POBJSYMBOLS HB_FIRSTSYMBOL, HB_LASTSYMBOL;
+extern "C" POBJSYMBOLS hb_firstsymbol, hb_lastsymbol;
 #else
-extern POBJSYMBOLS HB_FIRSTSYMBOL, HB_LASTSYMBOL;
+extern POBJSYMBOLS hb_firstsymbol, hb_lastsymbol;
 #endif
 #endif
 
@@ -3839,9 +3840,9 @@ static void hb_vmProcessObjSymbols( void )
 
    if( ! s_bDone )
    {
-      POBJSYMBOLS pObjSymbols = ( POBJSYMBOLS ) &HB_FIRSTSYMBOL;
+      POBJSYMBOLS pObjSymbols = ( POBJSYMBOLS ) &hb_firstsymbol;
 
-      while( pObjSymbols < ( POBJSYMBOLS ) ( &HB_LASTSYMBOL - 1 ) )
+      while( pObjSymbols < ( POBJSYMBOLS ) ( &hb_lastsymbol - 1 ) )
       {
          hb_vmProcessSymbols( pObjSymbols->pSymbols, pObjSymbols->wSymbols );
          pObjSymbols++;
@@ -3990,6 +3991,10 @@ void hb_vmForceLink( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_vmForceLink()"));
 
    HB_FUNCNAME( SYSINIT )();
+
+   #ifdef HARBOUR_OBJ_GENERATION
+      hb_startup();
+   #endif
 }
 
 /* ----------------------------- */
