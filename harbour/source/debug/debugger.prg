@@ -57,9 +57,9 @@ function __dbgEntry( uParam1, uParam2 )  // debugger entry point
       case ValType( uParam1 ) == "N"   // called from hvm.c hb_vmDebuggerShowLines()
            if oDebugger != nil
               if PCount() == 2 // called from hvm.c hb_vmDebuggerLocalName()
-                 AAdd( oDebugger:aVars, uParam2 )
+                 AAdd( oDebugger:aVars, { uParam2, "Local", uParam1 } )
                  if oDebugger:oBrwVars != nil
-                    oDebugger:oBrwVars:Stable = .f.
+                    oDebugger:oBrwVars:RefreshAll()
                  endif
                  return nil
               endif
@@ -141,6 +141,10 @@ METHOD New() CLASS TDebugger
    AAdd( ::aWindows, ::oWndCode )
    AAdd( ::aWindows, ::oWndCommand )
 
+   ::oWndCode:bKeyPressed = { | nKey | If( nKey == K_DOWN, ( ::oBrwText:Down(),;
+      ::oBrwText:ForceStable() ), nil ), If( nKey == K_UP, ( ::oBrwText:Up(),;
+      ::oBrwText:ForceStable() ), nil ) }
+
 return Self
 
 METHOD Activate( cModuleName ) CLASS TDebugger
@@ -167,7 +171,7 @@ return nil
 
 METHOD HandleEvent() CLASS TDebugger
 
-   local nPopup
+   local nPopup, oWnd
 
    ::lEnd = .f.
 
@@ -187,12 +191,12 @@ METHOD HandleEvent() CLASS TDebugger
               ::Exit()
 
          case nKey == K_UP
-              ::oBrwText:Up()
-              ::oBrwText:ForceStable()
+              oWnd = ::aWindows[ ::nCurrentWindow ]
+              oWnd:KeyPressed( K_UP )
 
          case nKey == K_DOWN
-              ::oBrwText:Down()
-              ::oBrwText:ForceStable()
+              oWnd = ::aWindows[ ::nCurrentWindow ]
+              oWnd:KeyPressed( K_DOWN )
 
          case nKey == K_HOME
               ::oBrwText:GoTop()
@@ -344,23 +348,31 @@ METHOD ShowVars() CLASS TDebugger
    local nCount, i, xValue, cName
 
    if ::oWndVars == nil
-      ::oWndCode:nTop += 4
-      ::oBrwText:nTop += 4
+      ::oWndCode:nTop += 5
+      ::oBrwText:nTop += 5
       ::oBrwText:RefreshAll()
       ::oWndCode:SetFocus( .t. )
-      ::oWndVars = TDbWindow():New( 1, 0, 4,;
+      ::oWndVars = TDbWindow():New( 1, 0, 5,;
          MaxCol() - If( ::oWndStack != nil, ::oWndStack:nWidth(), 0 ),;
          "Monitor", "BG+/B" )
       ::oWndVars:Show( .f. )
       AAdd( ::aWindows, ::oWndVars )
+      ::oWndVars:bKeyPressed = { | nKey | If( nKey == K_DOWN, ( ::oBrwVars:Down(),;
+      ::oBrwVars:ForceStable() ), nil ), If( nKey == K_UP, ( ::oBrwVars:Up(),;
+      ::oBrwVars:ForceStable() ), nil ) }
 
       nCount = __mvDBGINFO( MV_PUBLIC )
       for i = 1 to nCount
          xValue = __mvDBGINFO( MV_PUBLIC, i, @cName )
          AAdd( ::aVars, { cName, "Public" } )
       next
+      nCount = __mvDBGINFO( MV_PRIVATE )
+      for i = 1 to nCount
+         xValue = __mvDBGINFO( MV_PRIVATE, i, @cName )
+         AAdd( ::aVars, { cName, "Private" } )
+      next
 
-      ::oBrwVars = TBrowseNew( 2, 1, 3, MaxCol() - If( ::oWndStack != nil,;
+      ::oBrwVars = TBrowseNew( 2, 1, 4, MaxCol() - If( ::oWndStack != nil,;
                                ::oWndStack:nWidth(), 0 ) - 1 )
       ::oBrwVars:ColorSpec = "BG+/B, N/BG"
       ::oBrwVars:GoTopBlock = { || n := 1 }
@@ -371,7 +383,10 @@ METHOD ShowVars() CLASS TDebugger
 
       nWidth = ::oWndVars:nWidth() - 1
       ::oBrwVars:AddColumn( TBColumnNew( "",  { || AllTrim( Str( n ) ) + ") " + ;
-         PadR( ::aVars[ n ][ 1 ] + " <" + ::aVars[ n ][ 2 ] + ", >:",;
+         PadR( ::aVars[ n ][ 1 ] + " <" + ::aVars[ n ][ 2 ] + ", " + ;
+         If( ::aVars[ n ][ 2 ] == "Local", ValType( __GetLocal( 6, ::aVars[ n ][ 3 ] ) ),;
+         "" ) + ">:" + If( ::aVars[ n ][ 2 ] == "Local",;
+         " Class " + __GetLocal( 6, ::aVars[ n ][ 3 ] ):ClassName(), "" ),;
          ::oWndVars:nWidth() - 5 ) } ) )
       ::oBrwVars:ForceStable()
    endif
@@ -510,6 +525,7 @@ CLASS TDbWindow  // Debugger windows
    DATA   cCaption
    DATA   cBackImage, cColor
    DATA   lFocused, bGotFocus
+   DATA   bKeyPressed
 
    METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor )
    METHOD nWidth() INLINE ::nRight - ::nLeft + 1
@@ -517,6 +533,7 @@ CLASS TDbWindow  // Debugger windows
    METHOD SetFocus( lOnOff )
    METHOD Show( lFocused )
    METHOD Move()
+   METHOD KeyPressed( nKey )
 
 ENDCLASS
 
@@ -619,6 +636,14 @@ METHOD Move() Class TDbWindow
    end
 
    // __keyboard(chr(0)),inkey())
+
+return nil
+
+METHOD KeyPressed( nKey ) CLASS TDbWindow
+
+   if ::bKeyPressed != nil
+      Eval( ::bKeyPressed, nKey, Self )
+   endif
 
 return nil
 

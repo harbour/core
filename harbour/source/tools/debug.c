@@ -209,4 +209,41 @@ HARBOUR HB___APARAM(void)
    hb_xfree( pReturn );
 }
 
+/* -------------------------------------------------------------------------- */
+/*  $DOC$
+ *  $FUNCNAME$
+ *    __GETLOCAL()
+ *  $CATEGORY$
+ *    Variable management
+ *  $ONELINER$
+ *    This function releases all PRIVATE and PUBLIC variables
+ *  $SYNTAX$
+ *    __GETLOCAL( <nProcLevel>, <nLocal> )
+ *  $ARGUMENTS$
+ *    <nProcLevel> Is the procedure level, same as used in ProcName()
+ *    and ProcLine(), from which a local variable containts is going to
+ *    be retrieved.
+ *    <nLocal> Is the index of the local variable to retrieve.
+ *  $RETURNS$
+ *    The containts of a specific local variable
+ *  $DESCRIPTION$
+ *    This function is used from the debugger
+ *  $STATUS$
+ *
+ *  $COMPLIANCE$
+ *
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
 
+HARBOUR HB___GETLOCAL( void )
+{
+   int iLevel = hb_parni( 1 ) + 1;
+   PHB_ITEM pBase = stack.pBase;
+
+   while( ( iLevel-- > 0 ) && pBase != stack.pItems )
+      pBase = stack.pItems + pBase->item.asSymbol.stackbase;
+
+   hb_itemReturn( pBase + 1 + hb_parni( 2 ) );
+}
