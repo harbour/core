@@ -1,6 +1,11 @@
+20000419-12:13 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/compiler/genobj32.c
+     * Progressive fixes to support genc.c latest changes.
+     (just missing latest Ron genc.c fixes!)
+
 20000419-11:36 GMT+1 Victor Szakats <info@szelvesz.hu>
    * tests/test.prg
-     ! Restored the file changed without any ChangeLog info, and also 
+     ! Restored the file changed without any ChangeLog info, and also
        breaking the build process for GNU-make.
 
 20000419-10:37 GMT+1 Victor Szakats <info@szelvesz.hu>
@@ -23,8 +28,8 @@
      ! Removed "Linux" from the version string.
 
    * source/rtl/dateshb.c
-     % DATE() local variables removed, non-standard string conversion, slow 
-       sprintf() call removed. Now using hb_retd() to return the value. It's 
+     % DATE() local variables removed, non-standard string conversion, slow
+       sprintf() call removed. Now using hb_retd() to return the value. It's
        faster and smaller now.
 
    * source/lang/Makefile
