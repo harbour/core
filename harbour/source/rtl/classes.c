@@ -73,7 +73,7 @@ typedef struct
    USHORT   uiData;
    USHORT   uiScope;
    PHB_ITEM pInitValue;
-   /* BYTE     bClsDataInitiated; */
+   BYTE     bClsDataInitiated;
 } METHOD, * PMETHOD;
 
 typedef struct
@@ -611,7 +611,8 @@ HARBOUR HB___CLSINST( void )
       hb_stack.Return.item.asArray.value->uiClass = uiClass;
 
       for( uiAt = 0; uiAt < uiLimit; uiAt++, pMeth++ )
-         if( pMeth->pInitValue )
+      {
+         if( pMeth->pInitValue && ! pMeth->bClsDataInitiated )
          {
             if( pMeth->pFunction != hb___msgGetClsData ) /* is a DATA */
                hb_itemArrayPut( &hb_stack.Return, pMeth->uiData, pMeth->pInitValue );
@@ -619,17 +620,16 @@ HARBOUR HB___CLSINST( void )
             {
                HB_ITEM init;
                hb_arrayGet( pClass->pClassDatas, pMeth->uiData, &init );
-               if( ( init.type == IT_NIL ) && ( pMeth->pInitValue ) ) /* && ! pMeth->bClsDataInitiated ) */
+               if( init.type == IT_NIL )
                {
                   hb_arraySet( pClass->pClassDatas, pMeth->uiData, pMeth->pInitValue );
-                  hb_itemRelease( pMeth->pInitValue );
-                  /* pMeth->bClsDataInitiated = TRUE; */
-                  pMeth->pInitValue = 0;
+                  pMeth->bClsDataInitiated = 1;
                }
                else
                   hb_itemRelease( &init );
             }
          }
+      }
    }
 }
 
