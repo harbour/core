@@ -15,6 +15,23 @@
   * doc/es/dbstrux.txt
     - Remove embedded TABs
 
+2003-10-11 18:35 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+
+  * makefile.bc
+  * makefile.nt
+  * makefile.vc
+  * include/hbver.h
+  * utils/Makefile
+  + utils/hbver/Makefile
+  + utils/hbver/hbverfix.c
+    This is a first pass at a utility to automatically update include/hbver.h.
+    The ChangeLog-related fields are updated automatically. One of the version-
+    related fields can be updated using one of three command line options (/iv
+    for major version, /im for minor version, or /ir for program revision). The
+    minimal debug output can be suppressed by using the /d-1 option or verbose
+    debug output can be seen by using the /d1 option. Help is obtained using
+    either of the /h or /? options.
+
 2003-11-10 15:54 UTC+0100 Maurilio Longo <maurilio.longo@libero.it>
    borrowed from xHarbour trying to hunt down a memory leak on an utility of mine
 
