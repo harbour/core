@@ -87,6 +87,7 @@
 #include "hbvm.h"
 #include "hbpcode.h"
 #include "hbset.h"
+#include "hbpp.h"
 
 typedef struct _SYMBOLS
 {

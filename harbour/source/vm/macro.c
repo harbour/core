@@ -58,6 +58,7 @@
 #include "hbcomp.h"
 #include "hbstack.h"
 #include "hbmemvar.ch"   /* for values returned by hb_memvarScope() */
+#include "hbpp.h"
 
 /* TODO:
  * include this variable in SET subsystem ?
@@ -444,7 +445,7 @@ void hb_macroGetValue( HB_ITEM_PTR pItem )
       struMacro.status        = HB_MACRO_CONT;
       struMacro.iListElements = 0;
 
-      slen = HB_MIN( szString, HB_PP_STR_SIZE - 1 );
+      slen = HB_MIN( strlen( szString ), HB_PP_STR_SIZE - 1 );
       memcpy( pText, szString, slen );
       pText[ slen ] = 0;
       memset( pOut, 0, HB_PP_STR_SIZE );

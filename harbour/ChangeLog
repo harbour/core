@@ -1,3 +1,8 @@
+2001-07-16 03:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/vm/hvm.c
+   * source/vm/macro.c
+     + Added missing #include "hbpp.h" to resolve strict compiler warnings.
+
 2001-07-16 03:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/vm/hvm.c
      + Added call to hb_pp_Free() in hb_vmQuit() to release pp tables if loaded by macro evaluation.
