@@ -1,5 +1,5 @@
 19991111-06:02 GMT+1 Victor Szel <info@szelvesz.hu>
-  * source/rtl/dbedit.prg
+  + source/rtl/dbedit.prg
     source/rtl/dummy.prg
     source/rtl/Makefile
     doc/funclist.txt
