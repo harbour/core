@@ -1,3 +1,9 @@
+Mon Oct 04 12:52:42 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* tests/working/Makefile: 
+	Added missing '\' after db_brows.ch.
+	Changed spaces to tabs.
+
 19991004-18:42 GMT+1 Victor Szel <info@szelvesz.hu>
   * include/classes.ch -> include/hbclass.ch
     include/external.ch -> include/hbextern.ch
