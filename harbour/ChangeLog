@@ -1,3 +1,26 @@
+19990824-17:20 EDT David G. Holm <dholm@jsd-llc.com>
+   * config/dos/bcc31.cf
+     - Removed '-DHARBOUR_USE_GTAPI' from 'CPPFLAGS'.
+     + Include RDD libraries when RDD is in library list.
+   * config/os2/icc.cf
+     - Removed '-DHARBOUR_USE_GTAPI' from 'CPPFLAGS'.
+     ! Corrected 'LINKELIBS' to read 'LINKLIBS'.
+   * source/compiler/harbour.c
+     + Added 'extern unsigned _stklen = UINTMAX;' for Borland DOS mode,
+       because compiling source/rtl/tget.c resulted in stack overflow
+       with the default 4096 byte stack.
+   * source/rtl/inkey.c
+     + Added 'DosSleep( 25 );' to hb_releaseCPU() for OS/2.
+   * source/rtl/tone.c
+     + Added 'Beep()' support for Win32, thanks to Chen Kedem
+       <niki@actcom.co.il>. Notes: Only tested with Cygwin() on
+       Windows NT and 95; On other Windows it only produces the
+       default sound or standard beep.
+     ! Removed call to hb_releaseCPU() at end of outer loop for long
+       durations in order to provide as seamless a sound continuation
+       as possible and to avoid increasing the duration when using DOS
+       platform code on some platforms (DOS DPMS, Windows NT, and OS/2).
+
 19990824-15:30 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/filesys.c
     * added a couple of casts.

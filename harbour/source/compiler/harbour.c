@@ -2,6 +2,13 @@
  * $Id$
  */
 
+#include "hbsetup.h"
+
+#if defined(DOS) && defined(__BORLANDC__)
+  #include <limits.h>
+  extern unsigned _stklen = UINT_MAX;
+#endif
+
 extern int harbour_main( int argc, char * argv[] );
 
 int main( int argc, char * argv[] )

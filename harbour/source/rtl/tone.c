@@ -30,6 +30,8 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.6    David G. Holm               Added Win32 Beep(), thanks to
+                                        Chen Kedem.
    V 1.4    David G. Holm               Upper limit for frequency for OS/2
                                         DosBeep() is 32767. The CA-Clipper
                                         Tone() function does not have an
@@ -48,9 +50,18 @@
 #if defined(__DJGPP__)
   #include <pc.h>
   #include <time.h>
-#endif
-#if defined(OS2) || defined(__BORLANDC__)
+#elif defined(_Windows)
+#elif defined(__BORLANDC__)
   #include <dos.h>
+  #include <time.h>
+#elif defined(OS2)
+  #include <dos.h>
+#elif defined(__CYGWIN__)
+  #include <Windows32/Base.h>
+  #include <Windows32/Defines.h>
+  #include <Windows32/Structures.h>
+  #include <Windows32/CommonFunctions.h>
+  #define HB_DONT_DEFINE_BASIC_TYPES
 #endif
 
 #include "extend.h"
@@ -118,9 +129,11 @@ void hb_tone( double frequency, double duration )
    /* TODO: add more platform support */
 #if defined(HARBOUR_GCC_OS2)
    ULONG temp;
-#elif defined(OS2) || defined(__BORLANDC__)
+#elif defined(WINNT) || defined(_Windows)
+   ULONG temp;
+#elif defined(OS2)
    USHORT temp;
-#elif defined(__DJGPP__)
+#elif defined(__DJGPP__) || defined(__BORLANDC__)
    USHORT temp; /* Use USHORT, because this variable gets added to clock()
                    to form end_clock and we want to minimize overflow risk */
    clock_t end_clock;
@@ -129,21 +142,21 @@ void hb_tone( double frequency, double duration )
    ULONG temp;    /* Avoid unreferenced temp */
    duration = -1; /* Exit without delay */
 #endif
-#if defined(HARBOUR_GCC_OS2) || defined(OS2) || defined(__BORLANDC__)
+#if defined(HARBOUR_GCC_OS2) || defined(OS2) || defined(WINNT) || defined(_Windows)
    frequency = MIN( MAX( 0.0, frequency ), 32767.0 );
    duration = duration * 1000.0 / 18.2; /* milliseconds */
-#endif
-#if defined(__BORLANDC__)
-   sound( ( unsigned ) frequency );
-#elif defined(__DJGPP__)
-   /* Note: delay() in <dos.h> does not work! */
+#elif defined(__DJGPP) || defined(__BORLANDC__)
    frequency = MIN( MAX( 0.0, frequency ), 32767.0 );
    duration = duration * CLOCKS_PER_SEC / 18.2 ; /* clocks */
+#endif
+#if defined(__BORLANDC__) && ! defined(_Windows) && ! defined(WINNT)
+   sound( ( unsigned ) frequency );
+#elif defined(__DJGPP__)
    sound( ( int ) frequency );
 #endif
    while( duration > 0.0 )
    {
-#if defined(HARBOUR_GCC_OS2)
+#if defined(HARBOUR_GCC_OS2) || defined(_Windows) || defined(WINNT)
       temp = MIN( MAX ( 0, duration ), ULONG_MAX );
 #elif defined(OS2) || defined(__BORLANDC__) || defined(__DJGPP__)
       temp = MIN( MAX ( 0, duration ), USHRT_MAX );
@@ -151,26 +164,32 @@ void hb_tone( double frequency, double duration )
       duration -= temp;
       if( temp <= 0 )
       {
-         // Ensure that the loop gets terminated when
-         // only a fraction of the delay time remains.
+         /* Ensure that the loop gets terminated when
+            only a fraction of the delay time remains. */
          duration = -1.0;
       }
       else
       {
 #if defined(HARBOUR_GCC_OS2)
-         DosBeep( ( ULONG ) frequency, ( ULONG ) temp );
+         DosBeep( ( ULONG ) frequency, temp );
 #elif defined(OS2)
-         DosBeep( ( USHORT ) frequency, ( USHORT ) temp );
-#elif defined(__BORLANDC__)
-         delay( temp ); /* Probably not multi-tasking OS friendly!
-                           TODO: Change from delay() to clock() method? */
-#elif defined(__DJGPP__)
-         end_clock = clock() + ( clock_t ) temp;
+         DosBeep( ( USHORT ) frequency, temp );
+#elif defined(WINNT)
+         Beep( ( ULONG ) frequency, temp );
+#elif defined(_Windows)
+         /* Bad news for non-NT Windows platforms: Beep() ignores
+            both parameters and either generates the default sound
+            event or the standard system beep. */
+         Beep( ( ULONG ) frequency, temp );
+#elif defined(__DJGPP__) || defined(__BORLANDC__)
+         /* Note: delay() in <dos.h> for DJGPP does not work and
+                  delay() in <dos.h> for BORLANDC is not multi-
+                  tasking friendly. */
+         end_clock = clock() + temp;
          while( clock() < end_clock )
             hb_releaseCPU();
 #endif
        }
-       hb_releaseCPU(); /* Try to be somewhat multi-tasking OS friendly */
    }
 #if defined(__BORLANDC__)
    nosound();

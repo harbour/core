@@ -12,7 +12,7 @@ LIB_EXT = .lib
 CC = icc
 CC_IN = /C+ /Tp
 CC_OUT = /Fo
-CPPFLAGS = /I$(GRANDP) /I$(HB_INC_COMPILE) /DHARBOUR_USE_GTAPI /DHARBOUR_USE_OS2_GTAPI
+CPPFLAGS = /I$(GRANDP) /I$(HB_INC_COMPILE) /DHARBOUR_USE_OS2_GTAPI
 CFLAGS = /Gs+ /W2 /Se /Sd+ /Ti+
 
 LD = icc
@@ -28,7 +28,7 @@ else
 LINKLIBS = $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
 # If LIBS specifies the rdd library, add all DB drivers.
 ifeq ($(findstring rdd,$(LIBS)),rdd)
-LINKELIBS += $(foreach lib, $(HB_DB_DRIVERS), $(lib)$(LIB_EXT))
+LINKLIBS += $(foreach lib, $(HB_DB_DRIVERS), $(lib)$(LIB_EXT))
 endif
 endif
 

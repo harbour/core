@@ -29,6 +29,7 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.21   David G. Holm               Added OS/2 DosSleep()
    V 1.15   David G. Holm               Tested Borland 3.1 hb_releaseCPU()
    V 1.5    Paul Tucker                 ReleaseCPU comments
    V 1.4    Victor Szel
@@ -37,8 +38,19 @@
    V 1.1    David G. Holm               Committed to CVS.
    V 1.0    David G. Holm               Initial version.
 */
+/* Note: The following #ifdef block for __IBMCPP__ must be ahead
+         of any and all #include statements and requires that
+         Harbour includes are ahead of platform includes.
+*/
+#ifdef __IBMCPP__
+  #define INCL_DOSPROCESS
+#endif
 
-#include <time.h>
+#include "extend.h"
+#include "errorapi.h"
+#include "inkey.h"
+#include "init.h"
+
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(__MSC__) || defined(_MSC_VER)
   #include <conio.h>
   #include <dos.h>
@@ -48,10 +60,13 @@
 #elif defined(HARBOUR_GCC_OS2)
   #include <stdlib.h>
 #elif defined(__IBMCPP__)
+  #define INCL_DOSPROCESS
+  #include <bsedos.h>
   #include <conio.h>
 #elif defined(__CYGWIN__)
   #include <mingw32/conio.h>
 #endif
+#include <time.h>
 
 #ifdef __WATCOMC__
   #include <conio.h>
@@ -74,10 +89,9 @@
   #define DOS_REGS REGS
 #endif
 
-#include "extend.h"
-#include "errorapi.h"
-#include "inkey.h"
-#include "init.h"
+#if defined(HARBOUR_GCC_OS2)
+  ULONG DosSleep (ULONG ulMilliseconds);
+#endif
 
 #if defined(OS_UNIX_COMPATIBLE)
 #include <unistd.h>
@@ -116,15 +130,10 @@ void hb_releaseCPU( void )
 {
 /* TODO: Add code to release time slices on all platforms */
 #if defined(_Windows)
-  /* according to ms docs, you should not do this in a Win app. dos only */
-#elif defined(HARBOUR_GCC_OS2) || defined(__IBMCPP__)
-#elif defined(OS_DOS_COMPATIBLE)
-#elif defined(OS_UNIX_COMPATIBLE)
-#else
-#endif
-/* with the above said, here's how to do it when running in a winDos box */
-/* example - untested */
-
+   /* according to ms docs, you should not do this in a Win app. dos only */
+#elif defined(OS2)
+   DosSleep( 25 ); /* Duration is in milliseconds */
+#elif defined(DOS)
 /* NOTE: there is a bug under NT 4 (2000 unknown) -  if the app is running
    in protected mode, time slices will _not_ be released - you must switch
    to real mode first, execute the following, and switch back.
@@ -135,7 +144,6 @@ void hb_releaseCPU( void )
 
    returns zero on failure. (means not supported)
  */
-#if defined(DOS)
   #if defined(__TURBOC__)
    _AX = 0x1680;
     geninterrupt(0x2f);
@@ -153,6 +161,8 @@ void hb_releaseCPU( void )
     regs.h.ah  = 0;
     regs.h.al ^= 0x80;
   #endif
+#elif defined(OS_UNIX_COMPATIBLE)
+#else
 #endif
 }
 
