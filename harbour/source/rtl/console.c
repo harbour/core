@@ -1078,7 +1078,7 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
 #ifdef OS_UNIX_COMPATIBLE
    /* Read the data using fgets(), because hb_inkeyPoll() doesn't support
        Unix compatible operating systems yet. */
-   szResult[0] = `\0`;             /* start with something defined */
+   szResult[0] = '\x0';             /* start with something defined */
    if (fgets( szResult, ACCEPT_BUFFER_LEN, stdin ))
    {
       strtok(szResult, "\n");     /* strip off the trailing newline

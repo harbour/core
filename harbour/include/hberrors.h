@@ -62,6 +62,7 @@
 #define ERR_CHECKING_ARGS          21
 #define ERR_INVALID_LVALUE         22
 #define ERR_INVALID_REFER          23
+#define ERR_PARAMETERS_NOT_ALLOWED 24
 
 #define WARN_AMBIGUOUS_VAR         1
 #define WARN_MEMVAR_ASSUMED        2

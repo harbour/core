@@ -46,6 +46,7 @@ typedef struct __FUNC      /* functions definition support */
    char   cScope;          /* scope of a defined Clipper function */
    BYTE   bFlags;          /* some flags we may need */
    WORD   wParamCount;     /* number of declared parameters */
+   WORD   wParamNum;       /* current parameter number */
    PVAR   pLocals;         /* pointer to local variables list */
    PVAR   pStatics;        /* pointer to static variables list */
    PVAR   pFields;         /* pointer to fields variables list */

@@ -91,6 +91,7 @@ int Include( char * szFileName, PATHNAMES *pSearchPath );  /* end #include suppo
 #define FUN_USES_STATICS  2 /* Function uses static variables */
 #define FUN_PROCEDURE     4 /* This is a procedure that shouldn't return value */
 #define FUN_ILLEGAL_INIT  8 /* Attempt to initialize static variable with a function call */
+#define FUN_USES_LOCAL_PARAMS 16 /* parameters are declared using () */
 
 /* pcode chunks bytes size */
 #define PCODE_CHUNK   100
@@ -238,7 +239,6 @@ void GenPCode1( BYTE );             /* generates 1 byte of pcode */
 void GenPCode3( BYTE, BYTE, BYTE ); /* generates 3 bytes of pcode */
 void GenPCodeN( BYTE * pBuffer, WORD wSize );  /* copy bytes to a pcode buffer */
 char * SetData( char * szMsg );     /* generates an underscore-symbol name for a data assignment */
-void SetFrame( void );              /* generates the proper _FRAME values */
 
 /* support for FIELD declaration */
 void FieldsSetAlias( char *, int );
@@ -312,7 +312,8 @@ char * _szCErrors[] = { "Statement not allowed outside of procedure or function"
                        "Incomplete statement: %s",
                        "Incorrect number of arguments: %s %s",
                        "Invalid lvalue",
-                       "Invalid use of \'@\' (pass by reference): \'%s\'"
+                       "Invalid use of \'@\' (pass by reference): \'%s\'",
+		       "PARAMETERS cannot be used with local parameters"
                      };
 
 /* Table with parse warnings */
@@ -563,8 +564,8 @@ Line       : LINE INTEGER LITERAL Crlf
            | LINE INTEGER LITERAL '@' LITERAL Crlf   /* XBase++ style */
            ;
 
-Function   : FunScope FUNCTION  IDENTIFIER { cVarType = ' '; FunDef( $3, $1, 0 ); } Params Crlf { SetFrame(); }
-           | FunScope PROCEDURE IDENTIFIER { cVarType = ' '; FunDef( $3, $1, FUN_PROCEDURE ); } Params Crlf { SetFrame(); }
+Function   : FunScope FUNCTION  IDENTIFIER { cVarType = ' '; FunDef( $3, $1, 0 ); } Params Crlf {}
+           | FunScope PROCEDURE IDENTIFIER { cVarType = ' '; FunDef( $3, $1, FUN_PROCEDURE ); } Params Crlf {}
            | FunScope DECLARE_FUN IDENTIFIER Params              Crlf { cVarType = ' '; AddSymbol( $3, NULL ); }
            | FunScope DECLARE_FUN IDENTIFIER Params AS_NUMERIC   Crlf { cVarType = 'N'; AddSymbol( $3, NULL ); }
            | FunScope DECLARE_FUN IDENTIFIER Params AS_CHARACTER Crlf { cVarType = 'C'; AddSymbol( $3, NULL ); }
@@ -624,7 +625,7 @@ Statement  : ExecFlow Crlf        {}
            | RETURN Expression Crlf   { GenPCode1( HB_P_RETVALUE ); GenPCode1( HB_P_ENDPROC ); }
            | PUBLIC { iVarScope = VS_PUBLIC; } VarList Crlf
            | PRIVATE { iVarScope = VS_PRIVATE; } VarList Crlf
-           | PARAMETERS { functions.pLast->wParamCount=0; iVarScope = (VS_PRIVATE | VS_PARAMETER); } MemvarList Crlf
+
            | EXITLOOP Crlf            { LoopExit(); }
            | LOOP Crlf                { LoopLoop(); }
            | DoProc Crlf
@@ -975,8 +976,13 @@ ExpList    : Expression %prec POST                    { $$ = 1; }
            | ExpList { GenPCode1( HB_P_POP ); } ',' Expression %prec POST  { $$++; }
            ;
 
-VarDefs    : LOCAL { iVarScope = VS_LOCAL; Line(); } VarList Crlf { cVarType = ' '; SetFrame(); }
+VarDefs    : LOCAL { iVarScope = VS_LOCAL; Line(); } VarList Crlf { cVarType = ' '; }
            | STATIC { StaticDefStart() } VarList Crlf { StaticDefEnd( $<iNumber>3 ); }
+           | PARAMETERS { if( functions.pLast->bFlags & FUN_USES_LOCAL_PARAMS )
+                             GenError( _szCErrors, 'E', ERR_PARAMETERS_NOT_ALLOWED, NULL, NULL );
+			  else
+			     functions.pLast->wParamNum=0; iVarScope = (VS_PRIVATE | VS_PARAMETER); } 
+			     MemvarList Crlf   
            ;
 
 VarList    : VarDef                                  { $$ = 1; }
@@ -1870,13 +1876,14 @@ void AddVar( char * szVarName )
             break;
           case (VS_PARAMETER | VS_PRIVATE):
             {
-                ++functions.pLast->wParamCount;
+                if( ++functions.pLast->wParamNum > functions.pLast->wParamCount )
+		   functions.pLast->wParamCount =functions.pLast->wParamNum;
                 pSym =GetSymbol( szVarName, &wPos ); /* check if symbol exists already */
                 if( ! pSym )
                    pSym =AddSymbol( yy_strdup(szVarName), &wPos );
                 pSym->cScope |=VS_MEMVAR;
                 GenPCode3( HB_P_PARAMETER, LOBYTE(wPos), HIBYTE(wPos) );
-                GenPCode1( LOBYTE(functions.pLast->wParamCount) );
+                GenPCode1( LOBYTE(functions.pLast->wParamNum) );
             }
             break;
           case VS_PRIVATE:
@@ -1922,7 +1929,10 @@ void AddVar( char * szVarName )
                     pLastVar->pNext = pVar;
                  }
                  if( iVarScope == VS_PARAMETER )
+		 {
                     ++functions.pLast->wParamCount;
+		    functions.pLast->bFlags |= FUN_USES_LOCAL_PARAMS;
+		 }
                  if( _bDebugInfo )
                  {
                     GenPCode3( HB_P_LOCALNAME, LOBYTE( wLocal ), HIBYTE( wLocal ) );
@@ -2214,6 +2224,7 @@ PFUNCTION FunctionNew( char *szName, SYMBOLSCOPE cScope )
    pFunc->lPCodePos    = 0;
    pFunc->pNext        = 0;
    pFunc->wParamCount  = 0;
+   pFunc->wParamNum    = 0;
    pFunc->wStaticsBase = _wStatics;
    pFunc->pOwner       = NULL;
    pFunc->bFlags       = 0;
@@ -2536,11 +2547,24 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  break;
 
             case HB_P_FRAME:
-                 if( pFunc->pCode[ lPCodePos + 1 ] || pFunc->pCode[ lPCodePos + 2 ] )
-                    fprintf( yyc, "                HB_P_FRAME, %i, %i,\t\t/* locals, params */\n",
-                             pFunc->pCode[ lPCodePos + 1 ],
-                             pFunc->pCode[ lPCodePos + 2 ] );
-                 lPCodePos += 3;
+                 {
+                    PVAR pLocal  = pFunc->pLocals;
+                    BYTE bLocals = 0;
+
+                    while( pLocal )
+                    {
+                       pLocal = pLocal->pNext;
+                       bLocals++;
+                    }
+
+                    /* pFunc->wParamNum != 0 if PARAMETERS statement was used 
+		    */
+                    if( bLocals || pFunc->wParamCount )
+                       fprintf( yyc, "                HB_P_FRAME, %i, %i,\t\t/* locals, params */\n",
+                                (pFunc->wParamNum ? bLocals : (bLocals - pFunc->wParamCount)),
+                                pFunc->wParamCount );
+                    lPCodePos += 3;
+		 }
                  break;
 
             case HB_P_FUNCPTR:
@@ -4863,22 +4887,6 @@ char * SetData( char * szMsg ) /* generates an underscore-symbol name for a data
    strcat( szResult, szMsg );
 
    return szResult;
-}
-
-void SetFrame( void ) /* generates the proper HB_P_FRAME values */
-{
-   BYTE * pCode = functions.pLast->pCode;
-   PVAR pLocal  = functions.pLast->pLocals;
-   BYTE bLocals = 0;
-
-   while( pLocal )
-   {
-      pLocal = pLocal->pNext;
-      bLocals++;
-   }
-
-   pCode[ 1 ] = bLocals - functions.pLast->wParamCount;
-   pCode[ 2 ] = functions.pLast->wParamCount;
 }
 
 /*
