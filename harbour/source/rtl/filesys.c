@@ -74,6 +74,10 @@
    This has been corrected by ptucker
  */
 
+/* NOTE: The following #include "hbwinapi.h" must
+         be ahead of any other #include statements! */
+#include "hbwinapi.h"
+
 #include <ctype.h>
 #include "extend.h"
 #include "itemapi.h"
@@ -1508,9 +1512,36 @@ HARBOUR HB_DISKSPACE( void )
    }
 
    if( uiResult != 0 )
-      ulSpaceFree = ( ( ULONG ) disk.avail_clusters *
-                      ( ULONG ) disk.sectors_per_cluster *
-                      ( ULONG ) disk.bytes_per_sector );
+      ulSpaceFree = ( ULONG ) disk.avail_clusters *
+                    ( ULONG ) disk.sectors_per_cluster *
+                    ( ULONG ) disk.bytes_per_sector;
+
+#elif defined(_Windows) || defined(WINNT)
+
+   {
+      char szPath[ 4 ];
+
+      DWORD dwSectorsPerCluster;
+      DWORD dwBytesPerSector;
+      DWORD dwNumberOfFreeClusters;
+      DWORD dwTotalNumberOfClusters;
+
+      szPath[ 0 ] = uiDrive + 'A' - 1;
+      szPath[ 1 ] = ':';
+      szPath[ 2 ] = '\\';
+      szPath[ 3 ] = '\0';
+
+      if( GetDiskFreeSpace( szPath,
+                            &dwSectorsPerCluster,     
+                            &dwBytesPerSector,        
+                            &dwNumberOfFreeClusters,  
+                            &dwTotalNumberOfClusters ) )
+      {
+         ulSpaceFree = dwNumberOfFreeClusters *
+                       dwSectorsPerCluster *
+                       dwBytesPerSector;
+      }
+   }
 
 #else
 
