@@ -368,10 +368,14 @@ return Self
 
 METHOD DeHilite() CLASS TBrowse
 
+   local nColor := If( ::aColumns[ ::ColPos ]:ColorBlock != nil,;
+                       Eval( ::aColumns[ ::ColPos ]:ColorBlock )[ 1 ], 1 )
+   local cColor := __ColorIndex( ::ColorSpec, nColor - 1 )
+
    @ ::nTop + ::RowPos - If( ::lHeaders, 0, 1 ) + If( Empty(::HeadSep), 0, 1 ),;
      ::aColumns[ ::ColPos ]:ColPos ;
      SAY PadR( Eval( ::aColumns[ ::ColPos ]:block ), ::aColumns[ ::ColPos ]:Width ) ;
-     COLOR ::ColorSpec
+     COLOR cColor
 
 return nil
 
@@ -384,11 +388,15 @@ return nil
 
 METHOD Hilite() CLASS TBrowse
 
+   local nColor := If( ::aColumns[ ::ColPos ]:ColorBlock != nil,;
+                       Eval( ::aColumns[ ::ColPos ]:ColorBlock )[ 2 ], 2 )
+   local cColor := __ColorIndex( ::ColorSpec, nColor - 1 )
+
    if ::AutoLite
       @ ::nTop + ::RowPos - If( ::lHeaders, 0, 1 ) + If( Empty(::HeadSep), 0, 1 ),;
         ::aColumns[ ::ColPos ]:ColPos ;
         SAY PadR( Eval( ::aColumns[ ::ColPos ]:block ), ::aColumns[ ::ColPos ]:Width ) ;
-        COLOR __ColorIndex( ::ColorSpec, CLR_ENHANCED )
+        COLOR cColor
    endif
 
 return nil
@@ -400,6 +408,7 @@ METHOD Stabilize() CLASS TBrowse
    local nColsWidth := 0                   // Total width of visible columns plus ColSep
    local nColsVisible := 0                 // Number of columns that fit on the browse width
    local lFooters := .f.                   // Are there column footers to paint ?
+   local cColColor                         // Column color to use
 
    if ::aRedraw == Nil .or. ! ::aRedraw[ 1 ]
       // Are there any column header to paint ?
@@ -568,8 +577,12 @@ METHOD Stabilize() CLASS TBrowse
             ::aColumns[ n ]:ColPos = Col()
          endif
          if lDisplay
+            cColColor = If( ::aColumns[ n ]:ColorBlock != nil,;
+                            __ColorIndex( ::ColorSpec,;
+                            Eval( ::aColumns[ n ]:ColorBlock )[ 1 ] - 1 ),;
+                            ::ColorSpec )
             DevOut( PadR( Eval( ::aColumns[ n ]:block ),;
-                 ::aColumns[ n ]:Width ), ::ColorSpec )
+                 ::aColumns[ n ]:Width ), cColColor )
          else
             DevOut( Space( ::aColumns[ n ]:Width ), ::ColorSpec )
          endif
