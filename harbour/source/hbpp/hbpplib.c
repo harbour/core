@@ -65,9 +65,11 @@ HARBOUR HB_PREPROCESS(void)
     char *pOut = (char *)hb_xgrab(STR_SIZE);
     char *ptr = pText;
 
-    int resParse;
+    int slen, resParse;
 
-    memcpy(pText, hb_parc(1), MIN(hb_parclen(1), STR_SIZE));
+    slen = MIN(hb_parclen(1), STR_SIZE - 1);
+    memcpy(pText, hb_parc(1), slen);
+    pText[slen] = 0; /* Preprocessor expects null-terminated string */
     memset(pOut, 0, STR_SIZE);
 
     SKIPTABSPACES( ptr );
@@ -77,7 +79,7 @@ HARBOUR HB_PREPROCESS(void)
         // Some error here?
     }
 
-    hb_retc(pOut);
+    hb_retc(pText); /* Preprocessor returns parsed line in input buffer */
 
     hb_xfree(pText);
     hb_xfree(pOut);

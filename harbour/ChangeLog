@@ -1,3 +1,9 @@
+19990731-02:30 EDT David G. Holm <dholm@jsd-llc.com>
+   * source/hbpp/hbpplib.c
+     ! ParseExpression() expects a null-terminated string.
+     ! ParseExpression() returns the parsed input in the input
+       string, not in the output string.
+
 19990731-06:50 CET Victor Szel <info@szelvesz.hu>
    * include/extend.h
      include/hbdefs.h
