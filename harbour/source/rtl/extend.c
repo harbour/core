@@ -676,8 +676,8 @@ void hb_stornd( double dNumber, int iParam, ... )
 
 void * hb_xmemcpy( void * pDestArg, void * pSourceArg, ULONG ulLen )
 {
-   void * pDest = pDestArg;
-   void * pSource = pSourceArg;
+   BYTE * pDest = ( BYTE * ) pDestArg;
+   BYTE * pSource = ( BYTE * ) pSourceArg;
    ULONG  ulRemaining = ulLen;
    int    iCopySize;
 
@@ -703,7 +703,7 @@ void * hb_xmemcpy( void * pDestArg, void * pSourceArg, ULONG ulLen )
 
 void * hb_xmemset( void * pDestArg, int iFill, ULONG ulLen )
 {
-   void * pDest = pDestArg;
+   BYTE * pDest = ( BYTE * ) pDestArg;
    ULONG  ulRemaining = ulLen;
    int    iSetSize;
 

@@ -1,3 +1,9 @@
+19990917-21:10 EDT David G. Holm <dholm@jsd-llc.com>
+  * include/extend.h
+    % Changed local pointers in hb_xmemcpy() and hb_xmemset()
+      from void * to BYTE * to keep Borland C compiler happy.
+
+
 19990917-18:00 EDT David G. Holm <dholm@jsd-llc.com>
 
   * include/extend.h
