@@ -26,6 +26,7 @@ C_SOURCES=\
 	codebloc.c   \
 	estack.c     \
 	eval.c       \
+	evalhb.c     \
 	extend.c     \
 	fm.c         \
 	garbage.c    \

@@ -1,3 +1,17 @@
+2001-12-05 12:31 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   + source/vm/evalhb.c
+   * source/vm/eval.c
+   * source/vm/itemapi.c
+   * source/vm/Makefile
+   * makefile.bc
+   * makefile.vc
+     * EVAL() moved to evalhb.c
+     * hb_eval*() and hb_do*() functions moved to eval.c.
+
+   * source/vm/extend.c
+     * Some vars renamed, type and indentation corrected.
+
 2001-12-04 03:35 GMT+0700 Andi Jahja <harbour@cbn.net.id>
    * contrib/mysql/mysql.c
      ! type casts needed by MsVC
@@ -203,6 +217,7 @@
        but this does not work if you have a source file on a different disk (at least on those
        systems which use a letter and a colon to name volumes).
 
+>>>>>>> 1.3588
 2001-11-20 21:02 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/lang/Makefile
