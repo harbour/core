@@ -40,8 +40,6 @@
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    CURDIR()
  *
- * See doc/license.txt for licensing terms.
- *
  * Copyright 2000 David G. Holm <dholm@jsd-llc.com>
  *    HB_FEOF()
  *
@@ -214,6 +212,8 @@ HB_FUNC( CURDIR )
    hb_fsSetError( uiErrorOld );
 }
 
+#ifdef HB_EXTENSION
+
 HB_FUNC( HB_FEOF )
 {
    if( ISNUM( 1 ) )
@@ -223,6 +223,9 @@ HB_FUNC( HB_FEOF )
    else
    {
       hb_fsSetError( FS_ERROR );
-      hb_retl( 1 );
+      hb_retl( TRUE );
    }
 }
+
+#endif
+

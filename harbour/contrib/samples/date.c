@@ -43,7 +43,6 @@
 HB_FUNC( MDY )
 {
    long lYear, lMonth, lDay;
-   char * szFormat = "MM/DD/YYYY";
    char szDate[ 9 ];
    char szFormatted[ 11 ];
    char * szReturn;
@@ -51,12 +50,12 @@ HB_FUNC( MDY )
    int iLen;
 
    hb_dateDecode( hb_parnl( 1 ), &lYear, &lMonth, &lDay );
-   hb_dateFormat( hb_pardsbuff( szDate, 1 ), szFormatted, szFormat );
+   hb_dateFormat( hb_pardsbuff( szDate, 1 ), szFormatted, "MM/DD/YYYY" );
 
    iLen = strlen( hb_dateCMonth( lMonth ) );
 
    iBufferLen = iLen + ( hb_set.hb_set_century ? 9 : 7 );
-   szReturn = hb_xgrab( iBufferLen );
+   szReturn = ( char * ) hb_xgrab( iBufferLen );
 
    memset( szReturn, ' ', iBufferLen + 1 );
    memcpy( szReturn, hb_dateCMonth( lMonth ), iLen );
@@ -73,7 +72,6 @@ HB_FUNC( MDY )
 HB_FUNC( DMY )
 {
    long lYear, lMonth, lDay;
-   char * szFormat = "MM/DD/YYYY";
    char szDate[ 9 ];
    char szFormatted[ 11 ];
    char * szReturn;
@@ -81,12 +79,12 @@ HB_FUNC( DMY )
    int iLen;
 
    hb_dateDecode( hb_parnl( 1 ), &lYear, &lMonth, &lDay );
-   hb_dateFormat( hb_pardsbuff( szDate, 1 ), szFormatted, szFormat );
+   hb_dateFormat( hb_pardsbuff( szDate, 1 ), szFormatted, "MM/DD/YYYY" );
 
    iLen = strlen( hb_dateCMonth( lMonth ) );
 
    iBufferLen = iLen + ( hb_set.hb_set_century ? 9 : 7 );
-   szReturn = hb_xgrab( iBufferLen );
+   szReturn = ( char * ) hb_xgrab( iBufferLen );
 
    memset( szReturn, ' ', iBufferLen );
    memcpy( szReturn, szFormatted + 3, 2 );

@@ -101,7 +101,7 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include\
 
 :COMPILE
 
-   %HB_BIN_INSTALL%\harbour %1.prg -n -i%HB_LIB_INSTALL% %2 %3 %HARBOURFLAGS%
+   %HB_BIN_INSTALL%\harbour %1.prg -n -i%HB_INC_INSTALL% %2 %3 %HARBOURFLAGS%
 
 :A_DOS
 

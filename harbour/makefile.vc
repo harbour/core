@@ -345,6 +345,7 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgcs852.obj \
    $(OBJ_DIR)\msgcsiso.obj \
    $(OBJ_DIR)\msgcskam.obj \
+   $(OBJ_DIR)\msgcswin.obj \
    $(OBJ_DIR)\msgen.obj \
    $(OBJ_DIR)\msges.obj \
    $(OBJ_DIR)\msgeu.obj \
@@ -352,6 +353,8 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msggl.obj \
    $(OBJ_DIR)\msghe862.obj \
    $(OBJ_DIR)\msghewin.obj \
+   $(OBJ_DIR)\msghr852.obj \
+   $(OBJ_DIR)\msghriso.obj \
    $(OBJ_DIR)\msghu852.obj \
    $(OBJ_DIR)\msghucwi.obj \
    $(OBJ_DIR)\msghuwin.obj \

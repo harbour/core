@@ -40,5 +40,5 @@ extern HB_FUNC( ALIAS );
 
 HB_FUNC( DBF )
 {
-   HB_FUNCNAME( ALIAS );
+   HB_FUNCNAME( ALIAS )();
 }

@@ -311,6 +311,7 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgcs852.obj \
    $(OBJ_DIR)\msgcsiso.obj \
    $(OBJ_DIR)\msgcskam.obj \
+   $(OBJ_DIR)\msgcswin.obj \
    $(OBJ_DIR)\msgen.obj \
    $(OBJ_DIR)\msges.obj \
    $(OBJ_DIR)\msgeu.obj \
@@ -318,6 +319,8 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msggl.obj \
    $(OBJ_DIR)\msghe862.obj \
    $(OBJ_DIR)\msghewin.obj \
+   $(OBJ_DIR)\msghr852.obj \
+   $(OBJ_DIR)\msghriso.obj \
    $(OBJ_DIR)\msghu852.obj \
    $(OBJ_DIR)\msghucwi.obj \
    $(OBJ_DIR)\msghuwin.obj \
@@ -1633,6 +1636,10 @@ $(OBJ_DIR)\msgcskam.obj : $(LANG_DIR)\msgcskam.c
    $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\msgcswin.obj : $(LANG_DIR)\msgcswin.c
+   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\msgen.obj : $(LANG_DIR)\msgen.c
    $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
@@ -1658,6 +1665,14 @@ $(OBJ_DIR)\msghe862.obj : $(LANG_DIR)\msghe862.c
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msghewin.obj : $(LANG_DIR)\msghewin.c
+   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\msghr852.obj : $(LANG_DIR)\msghr852.c
+   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\msghriso.obj : $(LANG_DIR)\msghriso.c
    $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
