@@ -6,10 +6,10 @@
  * Las siguientes partes son derechos adquiridos de sus autores individuales.
  * www - http://www.harbour-project.org
  *
- * Copyright 2002 Alejandro de Gárate <alex_degarate@hotmail.com>
- *   Traducción al Español de harbext.txt
+ * Copyright 2002 Alejandro de G rate <alex_degarate@hotmail.com>
+ *   Traducci¢n al Espa¤ol de harbext.txt
  *
- * Vea doc/license.txt por los términos de la licencia.
+ * Vea doc/license.txt por los t‚rminos de la licencia.
  *
  */
 
@@ -17,97 +17,99 @@
  *  $FUNCNAME$
  *      Extensiones a Harbour
  *  $CATEGORY$
- *      Documentación
+ *      Documento
  *  $ONELINER$
  *      Extensiones a Harbour
  *  $DESCRIPTION$
- *<b>Extensiones al lenguaje:</b>   </par>
- *---------------------------
+ *      <b>Extensiones al lenguaje:</b>
+ *      ------------------------   </par>
  *
- ** Generación y manejo de Clases.
+ *      * Generaci¢n y manejo de Clases.
  *
- *        Clipper solamente permite la creación de objetos desde unas pocas
- *        clases estándar.
+ *        Clipper solamente permite la creaci¢n de objetos desde unas pocas
+ *        clases est ndar.
  *
  *        En Harbour, Ud. puede crear sus propias Clases completas con
- *        Métodos, Variables de Instancia, Variables de Clase y Herencia.
+ *        M‚todos, Variables de Instancia, Variables de Clase y Herencia.
  *        Aplicaciones enteras pueden ser designadas y codificadas en un
  *        enfoque Orientado a Objetos.
  *
  *
- ** @<FunctionName>()   </par>
+ *      * @<FunctionName>()   </par>
  *
- *        Retorna el puntero (la dirección) a la función.
+ *        Retorna el puntero (la direcci¢n) a la funci¢n.
  *
- *        El valor retornado no es útil a nivel de la programación de la
- *        aplicación pero es usado a bajo nivel para implementar el código
- *        Orientado a Objeto (Internamente, el método de una Clase es una
- *        función estática, no hay un símbolo para ella, entonces esta es
- *        accedida mediante su dirección).
+ *        El valor retornado no es £til a nivel de la programaci¢n de la
+ *        aplicaci¢n pero es usado a bajo nivel para implementar el c¢digo
+ *        Orientado a Objeto (Internamente, el m‚todo de una Clase es una
+ *        funci¢n est tica, no hay un s¡mbolo para ella, entonces esta es
+ *        accedida mediante su direcci¢n).
  *
  *
- ** Clase TGetList
+ *      * Clase TGetList
  *
  *        Soporte Orientado a Objetos para el manejo de GetList.
  *
  *
- ** ProcName() soporte para el nombre de Métodos de las Clases.
+ *      * ProcName() soporte para el nombre de M‚todos de las Clases.
  *
- *        Los Métodos de Clases pueden ser recuperados de la pila de llamada.
+ *        Los M‚todos de Clases pueden ser recuperados de la pila de llamada.
  *
  *
- ** Memory() tiene nuevos valores de retorno.
+ *      * Memory() tiene nuevos valores de retorno.
  *
  *        Vea hbmemory.ch
  *
  *
- ** TRANSFORM()  --> Agregado de nueva función para el formateo de cadenas:
+ *      * TRANSFORM()  --> Agregado de nueva funci¢n para el formateo de
+ *        cadenas:
  *
- *        @0      Hace el pad con ceros una cadena numérica.
+ *        @0      Hace el pad con ceros una cadena num‚rica.
  *
  *
- ** STOD()  --> dDate
+ *      * STOD()  --> dDate
  *
- *        Nueva función que convierte una cadena en el formato yyyymmdd a
+ *        Nueva funci¢n que convierte una cadena en el formato yyyymmdd a
  *        valor de fecha (date).
  *
  *
- ** Declaración STRONG TYPE Opcional en tiempo de compilación (y advertencias
- *  en tiempo de compilación de TYPE MISMATCH)
+ *      * Declaraci¢n STRONG TYPE Opcional en tiempo de compilaci¢n (y
+ *        advertencias en tiempo de compilaci¢n de TYPE MISMATCH)
  *
- *  Example: LOCAL/STATIC Variable AS ...
- *
- *
- ** El depurador de Harbour provee de nuevas clases interesantes:
- *
- *  - La Clase TDbWindow podría ser la fundación de una ventana de
- *    visualización multiplatforma.
- *
- *  - La Clase TForm
- *
- *  - La Clase TDbMenu implementa ambos menúes desplegables y
- *    (pulldown & popup)
+ *        Example: LOCAL/STATIC Variable AS ...
  *
  *
- *<b>Funcionalidad mejorada de la RTL:</b>   </par>
- *-------------------------------------
+ *      * El depurador de Harbour provee de nuevas clases interesantes:
  *
- *- DIRECTORY( <cMascara>, <cBandera>, <lOchoPuntoTres> )
+ *        - La Clase TDbWindow podr¡a ser la fundaci¢n de una ventana de
+ *          visualizaci¢n multiplatforma.
  *
- *  El tercer parámetro es un parámetro de Harbour (opcional) e indica que
- *  en aquellas plataformas que soportan nombres largos de archivo, Ud.
- *  solicita lo que podría considerarse el equivalente al nombre 8.3
- *  Podría afectar ADIR() y DIR si ellas fueron modificadas para tomar
- *  ventaja de esto. Esta retornará nombres largos si el sistena operativo
- *  lo soporta.
+ *        - La Clase TForm
+ *
+ *        - La Clase TDbMenu implementa ambos men£es desplegables y
+ *          (pulldown & popup)
  *
  *
- *- HB_DISKSPACE( <nDisco>, <nTipo> )
+ *      <b>Funcionalidad mejorada de la RTL:</b>   </par>
+ *      ---------------------------------
  *
- *  El segundo parámetro es un parámetro de Harbour (opcional) e indica
- *  el tipo de información del disco que esta siendo requerida.
- *  vea en ../doc/es/diskspac.txt para mayor información.
+ *      - DIRECTORY( <cMascara>, <cBandera>, <lOchoPuntoTres> )
+ *
+ *        El tercer par metro es un par metro de Harbour (opcional) e indica
+ *        que en aquellas plataformas que soportan nombres largos de archivo,
+ *        Ud. solicita lo que podr¡a considerarse el equivalente al nombre
+ *        8.3 Podr¡a afectar ADIR() y DIR si ellas fueron modificadas para
+ *        tomar ventaja de esto. Esta retornar  nombres largos si el sistema
+ *        operativo lo soporta.
+ *
+ *
+ *      - HB_DISKSPACE( <nDisco>, <nTipo> )
+ *
+ *        El segundo par metro es un par metro de Harbour (opcional) e indica
+ *        el tipo de informaci¢n del disco que esta siendo requerida.
+ *        vea en ../doc/es/diskspac.txt para mayor informaci¢n.
  *
  *  $END$
- */
+ */  
+
 

@@ -6,13 +6,13 @@
  * Las siguientes partes son derechos adquiridos de sus autores individuales.
  * www - http://www.harbour-project.org
  *
- * Copyright 2000 Alejandro de Gárate <alex_degarate@hotmail.com>
- *    Documentación en Español de: EVAL()
+ * Copyright 2000 Alejandro de G rate <alex_degarate@hotmail.com>
+ *    Documentaci¢n en Espa¤ol de: EVAL()
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Documentación en Inglés de: EVAL()
+ *    Documentaci¢n en Ingl‚s de: EVAL()
  *
- * Vea doc/license.txt por los términos de la licencia.
+ * Vea doc/license.txt por los t‚rminos de la licencia.
  *
  */
 
@@ -21,47 +21,47 @@
  *  $FUNCNAME$
  *      EVAL()
  *  $CATEGORY$
- *      Bloque de código
+ *      Bloque de c¢digo
  *  $ONELINER$
- *      Evalúa un bloque de código (codeblock)
+ *      Eval£a un bloque de c¢digo (codeblock)
  *  $SYNTAX$
  *      EVAL( <bBloque> [, <xVal> [,...]])   --> xExpresion
  *  $ARGUMENTS$
- *      <bBloque>  Bloque de código a ser evaluado.
+ *      <bBloque>  Bloque de c¢digo a ser evaluado.
  *
- *      <xVal>     Argumento para ser pasado al bloque de código.
+ *      <xVal>     Argumento para ser pasado al bloque de c¢digo.
  *
- *      <xVal...>  Lista de argumentos para ser pasados al bloque de código.
+ *      <xVal...>  Lista de argumentos para ser pasados al bloque de c¢digo.
  *  $RETURNS$
- *      EVAL() retorna <xExpresion>, el valor de la última expresión dentro
- *      del bloque. El valor devuelto puede ser de cualquier tipo válido.
+ *      EVAL() retorna <xExpresion>, el valor de la £ltima expresi¢n dentro
+ *      del bloque. El valor devuelto puede ser de cualquier tipo v lido.
  *  $DESCRIPTION$
- *      Esta función evalúa el bloque de código expresado como <bBloque> al
- *      ejecutarlo y pasarle los parámetros como argumentos ,luego retorna su
- *      valor evaluado. Si hay múltiples expresiones dentro del bloque de
- *      código, la última expresión será el valor de esta función.
+ *      Esta funci¢n eval£a el bloque de c¢digo expresado como <bBloque> al
+ *      ejecutarlo y pasarle los par metros como argumentos ,luego retorna su
+ *      valor evaluado. Si hay m£ltiples expresiones dentro del bloque de
+ *      c¢digo, la £ltima expresi¢n ser  el valor de esta funci¢n.
  *
- *      Si el bloque de código requiere parámetros para ser pasados a éste,
- *      ellos son especificados en la lista de parámetros <xVal>.
- *      Cada parámetro es separado por una coma dentro de la lista de
- *      parámetros y cada expresión es separada por comas dentro de la lista
+ *      Si el bloque de c¢digo requiere par metros para ser pasados a ‚ste,
+ *      ellos son especificados en la lista de par metros <xVal>.
+ *      Cada par metro es separado por una coma dentro de la lista de
+ *      par metros y cada expresi¢n es separada por comas dentro de la lista
  *      de expresiones.
  *
- *      Nota: Un bloque de código es un valor de datos especial que hace
- *            referencia a código de programa compilado (contiene código
+ *      Nota: Un bloque de c¢digo es un valor de datos especial que hace
+ *            referencia a c¢digo de programa compilado (contiene c¢digo
  *            ejecutable), puede incluso contener funciones y el hecho que
- *            permite exportar variables estáticas y locales dentro de él,
+ *            permite exportar variables est ticas y locales dentro de ‚l,
  *            la da una gran versatilidad.
- *            Aunque las macros y los bloques de código son similares, las
+ *            Aunque las macros y los bloques de c¢digo son similares, las
  *            Las macros son cadenas de caracteres que se compilan durante
- *            la ejecución de un programa y se ejecutan a continuación.
- *            Los bloques de código se compilan junto con los otros PRG
- *            durante la compilación del programa. Por esto son más rápidos,
- *            Es posible compilar un bloque de código en tiempo de ejecución
+ *            la ejecuci¢n de un programa y se ejecutan a continuaci¢n.
+ *            Los bloques de c¢digo se compilan junto con los otros PRG
+ *            durante la compilaci¢n del programa. Por esto son m s r pidos,
+ *            Es posible compilar un bloque de c¢digo en tiempo de ejecuci¢n
  *            desde una cadena de caracteres usando el operador de macros (&).
- *            Un bloque de código esta compuesto por:
+ *            Un bloque de c¢digo esta compuesto por:
  *            { |<lista argumentos>| <lista expresiones> }
- *            Los separadores verticales deben estar presentes aunque no el
+ *            Los separadores verticales deben estar presentes aunque el
  *            bloque no reciba argumentos.
  *  $EXAMPLES$
  *       bBloque = {|arg1, arg2| QOUT( arg1+arg2) }
@@ -71,12 +71,14 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta función es 100 % compatible con CA-Clipper.
+ *      Esta funci¢n es 100 % compatible con CA-Clipper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
- *      La librería es vm
+ *      La librer¡a es vm
  *  $SEEALSO$
  *      AEVAL(),DBEVAL()
  *  $END$
- */
+ */  
+
+

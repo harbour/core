@@ -1,21 +1,23 @@
-$Id$
+/*
+ * $Id$
+ */
 
 /*
  * Las siguientes partes son derechos adquiridos de sus autores individuales.
  * www - http://www.harbour-project.org
  *
  * Copyright 2001 Ron Pinkas 
- *   Documentación en Inglés
+ *   Documentaci¢n en Ingl‚s
  *
- * Copyright 2001 Alejandro de Gárate <alex_degarate@hotmail.com>
- *   Traducción al Español de clipper.txt
+ * Copyright 2001 Alejandro de G rate <alex_degarate@hotmail.com>
+ *   Traducci¢n al Espa¤ol de clipper.txt
  *
- * Vea doc/license.txt por los términos de la licencia.
+ * Vea doc/license.txt por los t‚rminos de la licencia.
  *
  */
 
 
-   Este documento intenta describir las características que separan
+   Este documento intenta describir las caracter¡sticas que separan
    Harbour de Clipper.
 
 /* TODO: @FuncPointer(), y todas las otras extensiones de Harbour. */
@@ -24,32 +26,32 @@ $Id$
     El Compilador de Macros de Harbour
     ----------------------------------
     El Compilador de Macros de Harbour ofrece dos capas adicionales de
-    funcionalidad por medio de la función HB_SETMACRO()*, no disponible
+    funcionalidad por medio de la funci¢n HB_SETMACRO()*, no disponible
     en Clipper.
 
-    HB_SETMACRO( HB_SM_HARBOUR, TRUE ) habilitará compilación de macros
-    y evaluación de expresiones complejas, no soportadas por Clipper como:
+    HB_SETMACRO( HB_SM_HARBOUR, TRUE ) habilitar  compilaci¢n de macros
+    y evaluaci¢n de expresiones complejas, no soportadas por Clipper como:
 
      - exp++, exp--, var += exp, (exp), etc..
-     - bloques de código (codeblocks) anidados.
-     - Expresiones más largas de 254 caracteres.
+     - bloques de c¢digo (codeblocks) anidados.
+     - Expresiones m s largas de 254 caracteres.
 
 
-    HB_SETMACRO( HB_SM_XBASE, TRUE ) habilitará compilación de macros
-    y evaluación de listas separadas por comas, en todos los contextos
+    HB_SETMACRO( HB_SM_XBASE, TRUE ) habilitar  compilaci¢n de macros
+    y evaluaci¢n de listas separadas por comas, en todos los contextos
     donde las listas son aceptadas por Clipper*, incluyendo:
 
      - { &cMacro }         // Literal de la lista de elementos de un array.
      - SomeArray[ &cMacro ]// Lista de indices de un array.
-     - SomeFun( &cMacro )  // Lista de Argumentos de una función.
+     - SomeFun( &cMacro )  // Lista de Argumentos de una funci¢n.
      - ( &cMacro )         // Lista de expresiones parentizada.
 
-    *Clipper sólo soporta lista de macros dentro del contexto de bloques
-    de código (codeblocks).
+    *Clipper s¢lo soporta lista de macros dentro del contexto de bloques
+    de c¢digo (codeblocks).
 
     Ambas capas extras estan activadas por defecto.
 
-    * Vea también el switch -k del Compilador
+    * Vea tambi‚n el switch -k del Compilador
 
 
     Comando LIST
@@ -59,29 +61,30 @@ $Id$
 
     LIST en clipper soporta [superficialmente] macros de listas de
     expresiones.
-    Ningún error será producido, y todas las expresiones en la lista serán
-    evaluadas, pero *solamente* la *última* expresion será visualizada.
-    Esto no está documentado ni en el comando LIST, ni en la descripción
+    Ning£n error ser  producido, y todas las expresiones en la lista ser n
+    evaluadas, pero *solamente* la *£ltima* expresion ser  visualizada.
+    Esto no est  documentado ni en el comando LIST, ni en la descripci¢n
     del operador Macro (&), pero es el comportamiento por defecto en 
     todas las versiones de Clipper 5.x
 
-    Harbour en su lugar, no sólo evalúa todas las expresiones en esa 
-    lista de macros, sino que también visualiza todos aquellos valores. 
+    Harbour en su lugar, no s¢lo eval£a todas las expresiones en esa 
+    lista de macros, sino que tambi‚n visualiza todos aquellos valores. 
     Este comportamiento por defecto de Harbour, puede ser deshabilitado 
     HB_SETMACRO( HB_SM_XBASE, .F. )*
 
-    * Vea también el switch -k del Compilador
+    * Vea tambi‚n el switch -k del Compilador
 
 
     INIT/EXIT y procedimientos de inicio
     ------------------------------------
 
     En Clipper el procedimiento de inicio es siempre el primer procedimiento
-    /función del modulo principal, aún si ese símbolo es el símbolo INIT 
-    ó EXIT. En tal caso el programa nunca ejecutará el símbolo "main".
-    En Harbour el primer símbolo que no sea INIT/EXIT, será ejecutado como
-    el símbolo "main" después que todos los procedimientos INIT hayan sido
-    ejecutados.
+    /funci¢n del modulo principal, a£n si ese s¡mbolo es el s¡mbolo INIT 
+    ¢ EXIT. En tal caso el programa nunca ejecutar  el s¡mbolo "main".
+    En Harbour el primer s¡mbolo que no sea INIT/EXIT, ser  ejecutado como
+    el s¡mbolo "main" despu‚s que todos los procedimientos INIT hayan sido
+    ejecutados. 
+ 
 
 
 

@@ -8,6 +8,29 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-07-13 10:52 UTC-0400 Alejandro de Garate <alex_degarate@hotmail.com>
+  * doc/es/array.txt
+  * doc/es/binnum.txt
+  * doc/es/browse.txt
+  * doc/es/clipper.txt
+  * doc/es/cmdline.txt
+  * doc/es/codebloc.txt
+  * doc/es/command.txt
+  * doc/es/compiler.txt
+  * doc/es/datetime.txt
+  * doc/es/dbdelim.txt
+  * doc/es/dbsdf.txt
+  * doc/es/dbstrux.txt
+  * doc/es/dir.txt
+  * doc/es/dirstruc.txt
+  * doc/es/diskspac.txt
+  * doc/es/error.txt
+  * doc/es/eval.txt
+  * doc/es/garbage.txt
+  * doc/es/harbext.txt
+  * doc/es/hb_set.txt
+    ! Fixed errors, misspelling, accents, etc, minor formating 
+
 2003-07-12 13:02 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/rtl/philes.c
   ! FRead() bug fixed, introduced cause 1 byte length strings optimization

@@ -6,10 +6,10 @@
  * Las siguientes partes son derechos adquiridos de sus autores individuales.
  * www - http://www.harbour-project.org
  *
- * Copyright 2000 Alejandro de Gárate <alex_degarate@hotmail.com>
- * Documentación en Español de: DISKSPACE()
+ * Copyright 2000 Alejandro de G rate <alex_degarate@hotmail.com>
+ * Documentaci¢n en Espa¤ol de: DISKSPACE()
  *
- * Vea doc/license.txt por los términos de la licencia.
+ * Vea doc/license.txt por los t‚rminos de la licencia.
  *
  */
 
@@ -23,41 +23,41 @@
  *  $SYNTAX$
  *      DISKSPACE( [<nDisco>] [, <nTipo>] ) --> nDiskbytes
  *  $ARGUMENTS$
- *      <nDrive> es el número de disco del que esta solicitando información
- *               donde 1 = A, 2 = B, etc, Si se especifica cero ó ningún
+ *      <nDrive> es el n£mero de disco del que esta solicitando informaci¢n
+ *               donde 1 = A, 2 = B, etc, Si se especifica cero ¢ ning£n
  *               parametro DISKPACE() trabaja sobre la unidad actual de disco
  *               Por defecto es cero.
  *
- *      <nTipo> es el tipo de espacio que está siendo requerido.  Por defecto
+ *      <nTipo> es el tipo de espacio que est  siendo requerido.  Por defecto
  *              es HB_DISK_AVAIL.
  *  $RETURNS$
- *      <nDiskBytes> es el número de bytes en la unidad especificada que
+ *      <nDiskBytes> es el n£mero de bytes en la unidad especificada que
  *                   coincide con el tipo requerido.
  *  $DESCRIPTION$
- *      Por defecto esta función retorna el número de bytes de espacio libre
+ *      Por defecto esta funci¢n retorna el n£mero de bytes de espacio libre
  *      en el disco actual que esta disponible para el usuario que solicita
- *      la información.
+ *      la informaci¢n.
  *
- *      Hay 4 tipos de información disponible:
+ *      Hay 4 tipos de informaci¢n disponible:
  *
  *      HB_FS_AVAIL   La cantidad de espacio disponible para el usuario que
- *                    hace la solicitud. Este valor podría ser menor que
+ *                    hace la solicitud. Este valor podr¡a ser menor que
  *                    HB_FS_FREE si las asignaciones de espacio en disco
  *                    (quotas) son soportadas por el sistema operativo al
- *                    tiempo de ejecución y estas quotas están asignadas.
- *                    De otro modo el valor será igual al retornado por
+ *                    tiempo de ejecuci¢n y estas quotas est n asignadas.
+ *                    De otro modo el valor ser  igual al retornado por
  *                    HB_FS_FREE.
  *
  *      HB_FS_FREE    La cantidad actual de espacio libre en el disco.
  *
- *      HB_FS_USED    El número de bytes en uso en el en el disco.
+ *      HB_FS_USED    El n£mero de bytes en uso en el en el disco.
  *
  *      HB_FS_TOTAL   La cantidad total de espacio asignado para el usuario
- *                    si las quotas estan asignadas. De otro modo el tamaño
+ *                    si las quotas estan asignadas. De otro modo el tama¤o
  *                    actual del disco.
  *
- *      Si la información es requerida sobre un disco que no esta disponible
- *      un error de ejecución 2018 será establecido.
+ *      Si la informaci¢n es requerida sobre un disco que no esta disponible
+ *      un error de ejecuci¢n 2018 ser  establecido.
  *  $EXAMPLES$
  *      ? "Ud. tiene diponible: " + STR( DISKSPACE() ) + " bytes " +;
  *        "sobre un total de " + STR( DISKSPACE( 0, HB_FS_TOTAL) )
@@ -67,14 +67,16 @@
  *      S
  *  $COMPLIANCE$
  *      CA-Clipper retorna un valor entero cuya utilidad esta limitada a
- *      discos menores de 2 gigabytes. La versión de Harbour retorna un valor
+ *      discos menores de 2 gigabytes. La versi¢n de Harbour retorna un valor
  *      de punto flotante con 0 decimales si el disco es > 2 gigabytes.
- *      <nTipo> es una extensión de Harbour.
+ *      <nTipo> es una extensi¢n de Harbour.
  *  $PLATFORMS$
  *      Dos, Win32, OS/2, Unix
  *  $FILES$
- *      El código fuente está en diskspac.c
- *      La librería asociada es rtl
+ *      El c¢digo fuente est  en diskspac.c
+ *      La librer¡a asociada es rtl
  *      El archivo de cabecera es fileio.ch
  *  $END$
- */
+ */  
+
+
