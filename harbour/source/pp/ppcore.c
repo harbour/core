@@ -1010,6 +1010,7 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
                        && ( stcmd = ComSearch(sToken,NULL) ) != NULL )
                     {
                       ptro = sOutLine;
+
                       i = WorkCommand( ptri, ptro, stcmd );
                       ptri = sLine + isdvig;
                       if( ipos > 0 ) *(ptri+ipos-1) = ';';
@@ -1229,59 +1230,7 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
                 ptr = PrevSquare( ptr, strtopti, NULL );
                 if( ptr )
                     ptrmp = ptr;
-                /* Ron Pinkas added 2000-06-02 14:45 UTC-0800 */
-                /*
-                else if( *ptrmp == '[' )
-                {
-                  ptr = strtopti+ipos;
-                  while ( ptr > strtopti && *(--ptr) != ']' ) ;
-
-                  {
-                    char * ptrTemp;
-
-                    ptrTemp = ++ptrmp;
-                    printf( "\n1 Skipping: %s\n", ptrmp );
-                    SkipOptional( &ptrmp );
-                    printf( "\n1 After Skipping: %s\n", ptrmp );
-
-                    while( *(ptrmp + 2) == '[' && ptrmp != ptrTemp )
-                    {
-                      ptrmp += 3;
-                      printf( "\n2 Skipping: %s\n", ptrmp );
-                      SkipOptional( &ptrmp );
-                      printf( "\n2 After Skipping: %s\n", ptrmp );
-                    }
-                  }
-                }
-                */
-                /* Ron Pinkas end 2000-06-02 14:45 UTC-0800 */
               }
-              /* Ron Pinkas added 2000-06-02 14:45 UTC-0800 */
-              /*
-              else if( ipos && *ptrmp == '[' )
-              {
-                ptr = strtopti+ipos;
-                while ( ptr > strtopti && *(--ptr) != ']' ) ;
-
-                {
-                  char * ptrTemp;
-
-                  ptrTemp = ++ptrmp;
-                  printf( "\n3 Skipping: %s\n", ptrmp );
-                  SkipOptional( &ptrmp );
-                  printf( "\n3 After Skipping: %s\n", ptrmp );
-
-                  while( *(ptrmp + 2) == '[' && ptrmp != ptrTemp )
-                  {
-                    ptrmp += 3;
-                    printf( "\n4 Skipping: %s\n", ptrmp );
-                    SkipOptional( &ptrmp );
-                    printf( "\n4 After Skipping: %s\n", ptrmp );
-                  }
-                }
-              }
-              */
-              /* Ron Pinkas end 2000-06-02 14:45 UTC-0800 */
           }
         switch( *ptrmp ) {
         case '[':
@@ -1665,6 +1614,149 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
 
    while( **ptri != '\0' && !rez && lens < maxrez )
    {
+      /* Added by Ron Pinkas 2000-11-05 */
+      if( State == STATE_EXPRES || State == STATE_BRACKET )
+      {
+         if( **ptri == '"' )
+         {
+            if( expreal != NULL )
+            {
+               *expreal++ = **ptri;
+            }
+
+            (*ptri)++;
+            lens++;
+
+            while( **ptri != '\0' && lens < maxrez )
+            {
+               if( expreal != NULL )
+               {
+                  *expreal++ = **ptri;
+               }
+
+               if( **ptri == '"' )
+               {
+                  break;
+               }
+
+               (*ptri)++;
+               lens++;
+            }
+
+            (*ptri)++;
+            lens++;
+
+            State = ( StBr1==0 && StBr2==0 && StBr3==0 )? STATE_ID_END: STATE_BRACKET;
+            continue;
+         }
+         else if( **ptri == '\'' )
+         {
+            char *pString;
+
+            if( expreal != NULL )
+            {
+               *expreal++ = **ptri;
+            }
+
+            (*ptri)++;
+            lens++;
+
+            pString = expreal;
+
+            while( **ptri != '\0' && lens < maxrez )
+            {
+               if( expreal != NULL )
+               {
+                  *expreal++ = **ptri;
+               }
+
+               if( **ptri == '\'' )
+               {
+                  break;
+               }
+
+               (*ptri)++;
+               lens++;
+            }
+
+            if( expreal != NULL )
+            {
+               *(expreal - 1) = '\0';
+               if( strchr( pString, '"' ) == NULL )
+               {
+                  *(pString - 1) = '"';
+                  *(expreal - 1) = '"';
+               }
+               else
+               {
+                  *(expreal - 1) = '\'';
+               }
+            }
+
+            (*ptri)++;
+            lens++;
+
+            State = ( StBr1==0 && StBr2==0 && StBr3==0 )? STATE_ID_END: STATE_BRACKET;
+            continue;
+         }
+         else if( **ptri == '[' && ( State != STATE_BRACKET || strchr( "($+-=<>", cLastChar ) ) )
+         {
+            char *pString;
+
+            if( expreal != NULL )
+            {
+               *expreal++ = **ptri;
+            }
+
+            (*ptri)++;
+            lens++;
+
+            pString = expreal;
+
+            while( **ptri != '\0' && lens < maxrez )
+            {
+               if( expreal != NULL )
+               {
+                  *expreal++ = **ptri;
+               }
+
+               if( **ptri == ']' )
+               {
+                  break;
+               }
+
+               (*ptri)++;
+               lens++;
+            }
+
+            if( expreal != NULL )
+            {
+               *(expreal - 1) = '\0';
+               if( strchr( pString, '"' ) == NULL )
+               {
+                  *(pString - 1) = '"';
+                  *(expreal - 1) = '"';
+               }
+               else if( strchr( pString, '\'' ) == NULL )
+               {
+                  *(pString - 1) = '\'';
+                  *(expreal - 1) = '\'';
+               }
+               else
+               {
+                  *(expreal - 1) = ']';
+               }
+            }
+
+            (*ptri)++;
+            lens++;
+
+            State = ( StBr1==0 && StBr2==0 && StBr3==0 )? STATE_ID_END: STATE_BRACKET;
+            continue;
+         }
+      }
+      /* END - Added by Ron Pinkas 2000-11-05 */
+
       switch( State )
       {
          case STATE_QUOTE1:
@@ -1963,7 +2055,7 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
    /* Ron Pinkas end 2000-06-21 */
 
    #if 0
-      if( lens )
+      if( expreal && lens )
          printf( "\nLen=%i >%s<\n", lens, expreal-lens );
    #endif
 
@@ -2517,9 +2609,10 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
               /* Ron Pinkas modified 2000-06-17
               if( ISNAME(s_prevchar) || s_prevchar == ']' )
               */
-              if( ISNAME(s_prevchar) || s_prevchar == ']' || s_prevchar == ')' )
+              if( ISNAME(s_prevchar) || s_prevchar == ']' || s_prevchar == ')' || s_prevchar == '}' )
                  s_ParseState = STATE_BRACKET;
-              else s_ParseState = STATE_QUOTE3;
+              else
+                 s_ParseState = STATE_QUOTE3;
               break;
             case ']': s_ParseState = STATE_NORMAL; break;
             case '\"':
@@ -2563,8 +2656,7 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
           }
           if( cha != ' ' && cha != '\t' ) State = 1;
           if( lDropSpaces && State ) lDropSpaces = 0;
-          if( readed<maxlen && (!lDropSpaces || readed==0) &&
-              s_ParseState != STATE_COMMENT )
+          if( readed<maxlen && (!lDropSpaces || readed==0) && s_ParseState != STATE_COMMENT )
             buffer[readed++]=cha;
         }
     }
@@ -2580,6 +2672,7 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
      s_ParseState = STATE_NORMAL;
   readed++;
   buffer[readed]='\0';
+
   return readed;
 }
 
@@ -2857,6 +2950,9 @@ static int strotrim( char * stroka )
         {
           if( curc == '\'' ) State = STATE_QUOTE1;
           else if( curc == '\"' ) State = STATE_QUOTE2;
+          /* Ron Pinkas added 2000-11-05 */
+          else if( curc == '[' && ( lastc != ']' && lastc != ')' && lastc != '}' && ! ISNAME(lastc) ) ) State = STATE_QUOTE3;
+          /* END - Ron Pinkas added 2000-11-05 */
           else if( curc == '\t' ) curc = ' ';
         }
       if( State != STATE_NORMAL || curc != ' ' ||
