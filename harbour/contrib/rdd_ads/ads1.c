@@ -489,8 +489,8 @@ static ERRCODE adsGoTo( ADSAREAP pArea, ULONG ulRecNo )
    {        /* if it was at eof, and another station or handle added a record, it needs to GoTo or AtEof stays True. */
       AdsRefreshRecord(pArea->hTable);
    }
-   else if( ulRecNo > 0  && ulRecNo <= pArea->ulRecCount )
-   {
+   else if( ulRecNo > 0  && (pArea->iFileType==ADS_ADT || ulRecNo <= pArea->ulRecCount ) )
+   {  /*   ADTs can have a recno greater than RecCount because it recycles deleted records !!! */
       pArea->ulRecNo = ulRecNo;
       pArea->fBof = pArea->fEof = FALSE;
       ulRetVal = AdsGotoRecord( pArea->hTable, ulRecNo );
