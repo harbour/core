@@ -99,9 +99,14 @@ HexNumber     0x[0-9A-F]+
 Identifier    (([a-zA-Z])|([_a-zA-Z][_a-zA-Z0-9]+))
 
 MacroVar      \&{Identifier}[\.]?
-MacroEnd      \&{Identifier}\.({Identifier})|([0-9]+)
-MacroId       ({Identifier}\&(({Identifier}[\.]?)|({Identifier}\.({Identifier})|([0-9]+))))
-MacroTxt      ({MacroVar}|{MacroEnd}|{MacroId})+
+MacroEnd      \&{Identifier}\.([_a-zA-Z0-9]*)
+%{
+/* 
+MacroId       ({Identifier}\&(({Identifier}[\.]?)|({Identifier}\.([_a-zA-Z0-9]*))))
+*/
+%}
+MacroId       ({Identifier}({MacroVar}|{MacroEnd}))
+MacroTxt      ([_]*({MacroVar}|{MacroEnd}|{MacroId}))+
 
 TrueValue     "."[t|y]"."
 FalseValue    "."[f|n]"."
