@@ -337,7 +337,7 @@ void hb_compExprUseAliasMacro( HB_EXPR_PTR pAliasedVar, BYTE bAction )
        *    ALIAS->&var is the same as &( "ALIAS->" + var )
        *
        */
-      HB_EXPR_PCODE2( hb_compGenPushString, pAlias->value.asSymbol, strlen(pAlias->value.asSymbol) );
+      HB_EXPR_PCODE2( hb_compGenPushString, pAlias->value.asSymbol, strlen(pAlias->value.asSymbol) + 1 );
       HB_EXPR_USE( pVar, HB_EA_PUSH_PCODE );
       if( bAction == HB_EA_PUSH_PCODE )
          HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHALIASED );
@@ -350,7 +350,7 @@ void hb_compExprUseAliasMacro( HB_EXPR_PTR pAliasedVar, BYTE bAction )
        *    &macro->var is the  same as: &( macro + "->var" )
        */
       HB_EXPR_USE( pAlias, HB_EA_PUSH_PCODE );
-      HB_EXPR_PCODE2( hb_compGenPushString, pVar->value.asSymbol, strlen(pVar->value.asSymbol) );
+      HB_EXPR_PCODE2( hb_compGenPushString, pVar->value.asSymbol, strlen(pVar->value.asSymbol) + 1 );
       if( bAction == HB_EA_PUSH_PCODE )
          HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHALIASED );
       else
