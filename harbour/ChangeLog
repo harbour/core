@@ -1,3 +1,15 @@
+2000-07-28 15:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+   * source/rtl/gtstd/gtstd.c
+     * Restored to version 1.15 with the extra tracing information
+       from version 1.18.
+
+   + source/rtl/gtcgi
+   + source/rtl/gtcgi/gtcgi.c
+   + source/rtl/gtcgi/Makefile
+   + source/rtl/mousecgi.c
+     + Formerly gtstd.c, version 1.17, and support files.
+
 2000-07-28 18:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * hb_slex.bc
      * Synchronized with makefile.bc
@@ -85,6 +97,7 @@
    + tests/testdecl.prg
      + Added test program to utilize the DECLARE in its different contexts.
 
+>>>>>>> 1.2467
 2000-07-28 15:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
    * include/hbapigt.h

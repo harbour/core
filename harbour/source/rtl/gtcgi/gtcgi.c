@@ -40,11 +40,6 @@
 #include "hbapifs.h"
 #include "hbapigt.h"
 
-#if defined( OS_UNIX_COMPATIBLE )
-   #include <unistd.h>  /* read() function requires it */
-   #include <termios.h>
-#endif
-
 static SHORT  s_iRow;
 static SHORT  s_iCol;
 static USHORT s_uiMaxRow;
@@ -53,10 +48,8 @@ static USHORT s_uiCursorStyle;
 static BOOL   s_bBlink;
 static int    s_iFilenoStdout;
 static USHORT s_uiDispCount;
-
-#if defined( OS_UNIX_COMPATIBLE )
-static struct termios startup_attributes;
-#endif
+static char * s_szCrLf;
+static ULONG  s_ulCrLf;
 
 void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 {
@@ -65,36 +58,19 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
    HB_SYMBOL_UNUSED( iFilenoStdin );
    HB_SYMBOL_UNUSED( iFilenoStderr );
 
-#if defined( OS_UNIX_COMPATIBLE )
-   {
-      struct termios ta;
-      
-      tcgetattr( STDIN_FILENO, &startup_attributes );
-//      atexit( restore_input_mode );
-      
-      tcgetattr( STDIN_FILENO, &ta );
-      ta.c_lflag &= ~( ICANON | ECHO );
-      ta.c_iflag &= ~ICRNL;
-      ta.c_cc[ VMIN ] = 0;
-      ta.c_cc[ VTIME ] = 0;
-      tcsetattr( STDIN_FILENO, TCSAFLUSH, &ta );
-   }
-#endif
-
    s_uiDispCount = 0;
 
    s_iRow = 0;
    s_iCol = 0;
-#if defined(OS_UNIX_COMPATIBLE)
-   s_uiMaxRow = 24;
-#else
-   s_uiMaxRow = 25;
-#endif
-   s_uiMaxCol = 80;
+   s_uiMaxRow = 32767;
+   s_uiMaxCol = 32767;
    s_uiCursorStyle = SC_NORMAL;
    s_bBlink = FALSE;
    s_iFilenoStdout = iFilenoStdout;
    hb_fsSetDevMode( s_iFilenoStdout, FD_BINARY );
+
+   s_szCrLf = hb_conNewLine();
+   s_ulCrLf = strlen( s_szCrLf );
    
    hb_mouse_Init();
 }
@@ -104,29 +80,27 @@ void hb_gt_Exit( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Exit()"));
 
    hb_mouse_Exit();
-#if defined( OS_UNIX_COMPATIBLE )
-   tcsetattr( STDIN_FILENO, TCSANOW, &startup_attributes );
-#endif
+}
+
+static void out_stdout( char * pStr, ULONG ulLen )
+{
+   unsigned uiErrorOld = hb_fsError(); /* Save current user file error code */
+   hb_fsWriteLarge( s_iFilenoStdout, ( BYTE * ) pStr, ulLen );
+   hb_fsSetError( uiErrorOld );        /* Restore last user file error code */
+}
+
+static void out_newline( void )
+{
+   out_stdout( s_szCrLf, s_ulCrLf );
 }
 
 int hb_gt_ReadKey( HB_inkey_enum eventmask )
 {
-   int ch;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) eventmask));
 
    HB_SYMBOL_UNUSED( eventmask );
 
-#if defined(OS_UNIX_COMPATIBLE)
-   if( ! read( STDIN_FILENO, &ch, 1 ) )
-      ch = 0;
-#else
-   ch = 0;
-#endif
-
-   /* TODO: */
-
-   return ch;
+   return 13;
 }
 
 BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
@@ -202,31 +176,20 @@ USHORT hb_gt_GetScreenHeight( void )
 
 void hb_gt_SetPos( SHORT iRow, SHORT iCol, SHORT iMethod )
 {
-   SHORT iCount;
-   SHORT iDevRow = s_iRow;
-   SHORT iDevCol = s_iCol;
-
-   char * szCrLf = hb_conNewLine();
-
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hd, %hd, %hd)", iRow, iCol, iMethod));
 
-   HB_SYMBOL_UNUSED( iMethod );
-
-   if( iRow < iDevRow || iCol < iDevCol )
+   if( iMethod == HB_GT_SET_POS_BEFORE )
    {
-      fputs( szCrLf, stdout );
-      iDevCol = 0;
-      iDevRow++;
+      /* Only set the screen position when the cursor
+         position is changed BEFORE text is displayed.
+      */
+      if( iRow != s_iRow )
+      {
+         out_newline();
+         s_iCol = 0;
+      }
+      if( s_iCol < iCol ) while( ++s_iCol < iCol ) out_stdout( " ", 1 );
    }
-   else if( iRow > iDevRow )
-      iDevCol = 0;
-
-   for( iCount = iDevRow; iCount < iRow; iCount++ )
-      fputs( szCrLf, stdout );
-   for( iCount = iDevCol; iCount < iCol; iCount++ )
-      fputc( ' ', stdout );
-
-   fflush( stdout );
 
    s_iRow = iRow;
    s_iCol = iCol;
@@ -262,27 +225,32 @@ void hb_gt_SetCursorStyle( USHORT uiCursorStyle )
 
 static void hb_gt_xPutch( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar )
 {
+   char szBuffer[ 2 ];
+
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_xPutch(%hu, %hu, %d, %i)", uiRow, uiCol, (int) byAttr, byAttr));
 
-   /* TODO: */
-
-   HB_SYMBOL_UNUSED( uiRow );
-   HB_SYMBOL_UNUSED( uiCol );
    HB_SYMBOL_UNUSED( byAttr );
-   HB_SYMBOL_UNUSED( byChar );
+
+   hb_gt_SetPos( uiRow, uiCol, HB_GT_SET_POS_BEFORE );
+
+   szBuffer[ 0 ] = byChar;
+   szBuffer[ 1 ] = '\0';
+   out_stdout( szBuffer, 1 );
+
+   hb_gt_AdjustPos( szBuffer, 1 );
 }
 
 void hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE * pbyStr, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Puts(%hu, %hu, %d, %p, %lu)", uiRow, uiCol, (int) byAttr, pbyStr, ulLen));
 
-   /* TODO: */
-
-   HB_SYMBOL_UNUSED( uiRow );
-   HB_SYMBOL_UNUSED( uiCol );
    HB_SYMBOL_UNUSED( byAttr );
-   HB_SYMBOL_UNUSED( pbyStr );
-   HB_SYMBOL_UNUSED( ulLen );
+
+   hb_gt_SetPos( uiRow, uiCol, HB_GT_SET_POS_BEFORE );
+
+   out_stdout( pbyStr, ulLen );
+
+   hb_gt_AdjustPos( pbyStr, ulLen );
 }
 
 int hb_gt_RectSize( USHORT rows, USHORT cols )
@@ -304,8 +272,6 @@ void hb_gt_GetText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight
 void hb_gt_PutText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbySrc )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, pbySrc));
-
-   /* TODO: */
 
    HB_SYMBOL_UNUSED( uiTop );
    HB_SYMBOL_UNUSED( uiLeft );
@@ -329,25 +295,18 @@ void hb_gt_Scroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Scroll(%hu, %hu, %hu, %hu, %d, %hu, %hu)", uiTop, uiLeft, uiBottom, uiRight, (int) byAttr, iRows, iCols));
 
+   HB_SYMBOL_UNUSED( uiTop );
+   HB_SYMBOL_UNUSED( uiLeft );
+   HB_SYMBOL_UNUSED( uiBottom );
+   HB_SYMBOL_UNUSED( uiRight );
    HB_SYMBOL_UNUSED( byAttr );
+   HB_SYMBOL_UNUSED( iRows );
+   HB_SYMBOL_UNUSED( iCols );
 
-   /* TODO: */
+   out_newline();
 
-   if( uiTop == 0 &&
-       uiBottom == s_uiMaxRow &&
-       uiLeft == 0 &&
-       uiRight == s_uiMaxCol &&
-       iRows == 0 &&
-       iCols == 0 )
-   {
-      for( ; uiBottom; uiBottom-- )
-        fputs( hb_conNewLine(), stdout );
-
-      fflush( stdout );
-
-      s_iRow = 0;
-      s_iCol = 0;
-   }
+   s_iRow = 0;
+   s_iRow = 0;
 }
 
 void hb_gt_DispBegin( void )
@@ -394,8 +353,6 @@ void hb_gt_Tone( double dFrequency, double dDuration )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Tone(%lf, %lf)", dFrequency, dDuration));
 
-   /* TODO: Implement this */
-
    HB_SYMBOL_UNUSED( dFrequency );
    HB_SYMBOL_UNUSED( dDuration );
 }
@@ -421,10 +378,10 @@ void hb_gt_Replicate( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar, ULON
 USHORT hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
                   BYTE *szBox, BYTE byAttr )
 {
-   USHORT uiRow;
-   USHORT uiCol;
-   USHORT uiHeight;
-   USHORT uiWidth;
+   USHORT  uiRow;
+   USHORT  uiCol;
+   USHORT  uiHeight;
+   USHORT  uiWidth;
 
    /* Ensure that box is drawn from top left to bottom right. */
    if( uiTop > uiBottom )
@@ -459,7 +416,9 @@ USHORT hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
       hb_gt_Replicate( uiRow, uiCol, byAttr, szBox[ 1 ], uiRight - uiLeft + ( uiHeight > 1 ? -1 : 1 ) ); /* Top line */
 
    if( uiHeight > 1 && uiWidth > 1 )
+   {
       hb_gt_xPutch( uiRow, uiRight, byAttr, szBox[ 2 ] ); /* Upper right corner */
+   }
 
    if( szBox[ 8 ] && uiHeight > 2 && uiWidth > 2 )
    {
@@ -477,7 +436,10 @@ USHORT hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
       {
          hb_gt_xPutch( uiRow, uiLeft, byAttr, szBox[ 7 ] ); /* Left side */
          if( uiWidth > 1 )
+         {
+            hb_gt_Replicate( uiRow, uiCol, byAttr, ' ', uiWidth - 2 );
             hb_gt_xPutch( uiRow, uiRight, byAttr, szBox[ 3 ] ); /* Right side */
+         }
       }
    }
 
