@@ -2,6 +2,7 @@
  * source/compiler/harbour.l
    ! Fixed line number bug. (LINE opcode, PROCLINE(), error messages)
  * tests/working/procline.prg
+   tests/working/copyfile.prg
    + Added.
 
 19990627-16:30 CET Victor Szel <info@szelvesz.hu>
