@@ -21,6 +21,7 @@
 #include "inkey.ch"
 #include "color.ch"
 
+
 static aLevel   := {}
 static nPointer := 1
 
@@ -64,21 +65,16 @@ function __MenuTo( bBlock, cVariable )
 
    // Detect if a memver was passed
 
-// TODO: Enable when implemented
-//
-// bOldError := errorblock( {|| break( NIL ), .F. } )
-// lBlockError := .T.
-// begin sequence
-      n := eval( bBlock )
-      lBlockError := .F.
-// TODO: Enable when implemented
-//
-// end sequence
-// errorblock( bOldError )
+   bOldError := errorblock( {|| hb_MenuError() } )
+   begin sequence
+     eval( bBlock )
+     lBlockError := .F.
+   recover
+     lBlockError := .T.
+     __mvPUBLIC( cVariable )
+   end sequence
+   errorblock( bOldError )
 
-   if lBlockError
-      __mvPUBLIC( cVariable )
-   endif
 
    // if no prompts were defined, exit with 0
 
@@ -111,6 +107,7 @@ function __MenuTo( bBlock, cVariable )
       nMsgRow := set( _SET_MESSAGE )
       lMsgCenter := set( _SET_MCENTER )
       lExit := .F.
+
 
       do while n <> 0
 
@@ -238,3 +235,7 @@ function __MenuTo( bBlock, cVariable )
 
    return n
 
+static function hb_MenuError()
+
+   break
+   return NIL
