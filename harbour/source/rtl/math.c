@@ -41,6 +41,7 @@
 
 #if defined(__WATCOMC__)
    #define HB_MATH_HANDLER
+   #define exception _exception
 #elif defined(__BORLANDC__)
    #if (__BORLANDC__ == 1328) && defined(__cplusplus)
       /* NOTE: There seem to be a bug in Borland C++ 5.3 C++ mode which prevents
