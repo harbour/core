@@ -479,7 +479,7 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
 void hb_rddReleaseCurrentArea( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_rddReleaseCurrentArea()"));
-   SELF_FORCEREL( ( AREAP ) s_pCurrArea->pArea );
+   // SELF_FORCEREL( ( AREAP ) s_pCurrArea->pArea );
    SELF_CLOSE( ( AREAP ) s_pCurrArea->pArea );
    SELF_RELEASE( ( AREAP ) s_pCurrArea->pArea );
 

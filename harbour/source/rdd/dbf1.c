@@ -1404,6 +1404,8 @@ ERRCODE hb_dbfSetFieldExtent( DBFAREAP pArea, USHORT uiFieldExtent )
 ERRCODE hb_dbfClose( DBFAREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfClose(%p)", pArea));
+   /* Reset parent rel struct */
+   pArea->lpdbPendingRel = NULL;
 
    SUPER_CLOSE( ( AREAP ) pArea );
 
