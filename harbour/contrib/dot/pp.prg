@@ -1740,11 +1740,7 @@ FUNCTION NextToken( sLine, bCheckRules )
 
   //? "Called from: " + ProcName(1) + " Line: " + Str( ProcLine(1) ) + " Scaning: " + sLine
 
-  IF Left( sLine, 1 ) == '|'
-
-     sReturn := Left( sLine, 1 )
-
-  ELSEIF sLeft2Chars == "=="
+  IF sLeft2Chars == "=="
 
      sReturn := sLeft2Chars
 
@@ -1832,7 +1828,7 @@ FUNCTION NextToken( sLine, bCheckRules )
 
      nClose := AT( "'", SubStr( sLine, 2 ) )
      IF nClose == 0
-        Alert( "ERROR! [NextExp()] Unterminated ['] at: " + sLine )
+        Alert( "ERROR! [NextToken()] Unterminated ['] at: " + sLine )
         RETURN NIL
      ELSE
         sReturn := SubStr( sLine, 2, nClose - 1 )
@@ -1873,7 +1869,7 @@ FUNCTION NextToken( sLine, bCheckRules )
 
      ENDIF
 
-  ELSEIF Left( sLine, 1 ) $ "?+-*/:=^!&()[]&{}@,"
+  ELSEIF Left( sLine, 1 ) $ "?+-*/:=^!&()[]&{}@,|"
 
      sReturn := Left( sLine, 1 )
 
@@ -1936,9 +1932,9 @@ FUNCTION NextToken( sLine, bCheckRules )
   ENDIF
 
   IF ( sReturn == NIL )
-//? "TOKEN = 'NIL' AT: ", sLine
+     //? "TOKEN = 'NIL' AT: ", sLine
   ELSE
-//? "TOKEN = '" + sReturn + "' Len: ", Len( sReturn ), "AT: ", sLine
+     //? "TOKEN = '" + sReturn + "' Len: ", Len( sReturn ), "AT: ", sLine
      sLine       := SubStr( sLine, Len( sReturn ) + 1 )
      s_cLastChar := Right( sReturn, 1 )
      sReturn     += ExtractLeadingWS( @sLine )
@@ -2022,10 +2018,9 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
      RETURN NIL
   ENDIF
 
-  IF sToken == '->'
+  IF Left( sToken, 2 ) == '->'
 
      sExp  := sToken
-     sExp  += ExtractLeadingWS( @sLine )
 
      IF sNextAnchor != '->'
         sTemp := NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
@@ -2036,10 +2031,9 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
         ENDIF
      ENDIF
 
-  ELSEIF sToken == ':='
+  ELSEIF Left( sToken, 2 ) == ':='
 
      sExp  := sToken
-     sExp  += ExtractLeadingWS( @sLine )
 
      IF sNextAnchor != ':='
         sTemp := NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
@@ -2053,7 +2047,6 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
   ELSEIF Left( sToken, 1 ) == '!'
 
      sExp  := sToken
-     sExp  += ExtractLeadingWS( @sLine )
 
      IF sNextAnchor != '!'
         sTemp := NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
@@ -2066,17 +2059,20 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
 
   ELSEIF Left( sToken, 1 ) == ')'
 
-     sExp := NIL
+     IF sNextAnchor == ')'
+        sExp := sToken
+     ELSE
+        sExp := NIL
+     ENDIF
 
   ELSEIF Left( sToken, 1 ) == '('
 
      sExp  := sToken
-     sExp  += ExtractLeadingWS( @sLine )
 
      IF sNextAnchor != '('
         sTemp := NextExp( @sLine, ',', NIL, NIL, sNextAnchor ) // Content
         IF sTemp == NIL
-           Alert( "ERROR! Unbalanced '('" )
+           Alert( "ERROR! Unbalanced '(...'" )
         ELSE
            sExp +=  sTemp
         ENDIF
@@ -2091,12 +2087,15 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
 
   ELSEIF Left( sToken, 1 ) == '}'
 
-     sExp := NIL
+     IF sNextAnchor == '}'
+        sExp := sToken
+     ELSE
+        sExp := NIL
+     ENDIF
 
   ELSEIF Left( sToken, 1 ) == '{'
 
      sExp  := sToken
-     sExp  += ExtractLeadingWS( @sLine )
 
      IF sNextAnchor != '{'
 
@@ -2145,15 +2144,17 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
         ELSE
 
            /* Literal array */
-           sTemp := NextExp( @sLine, ',', NIL, NIL, sNextAnchor ) // Content
-           IF sTemp == NIL
-              Alert( "ERROR! Unbalanced '{'" )
-           ELSE
-              sExp +=  sTemp
+           IF Left( sLine, 1 ) != '}'
+              sTemp := NextExp( @sLine, ',', NIL, NIL, sNextAnchor ) // Content
+              IF sTemp == NIL
+                 Alert( "ERROR! Unbalanced '{...'" )
+              ELSE
+                 sExp +=  sTemp
+              ENDIF
            ENDIF
 
            sToken := NextToken( @sLine, .T. ) /* bCheckRules */ // Close
-           IF sTemp == NIL
+           IF sToken == NIL
               Alert( "ERROR! Unbalanced '{'" )
            ELSE
               sExp += sToken
