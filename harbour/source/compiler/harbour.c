@@ -129,6 +129,7 @@ char *        hb_comp_szDeclaredFun = NULL;
 
 BOOL          hb_comp_bAutoOpen = TRUE;
 BOOL          hb_comp_bError = FALSE;
+BOOL          hb_comp_bSimpLex = FALSE;
 
 /* EXTERNAL statement can be placed into any place in a function - this flag is
  * used to suppress error report generation
@@ -1126,7 +1127,9 @@ PFUNCTION hb_compFunctionKill( PFUNCTION pFunc )
       pVar = pFunc->pLocals;
       pFunc->pLocals = pVar->pNext;
 
-      hb_xfree( ( void * ) pVar->szName );
+      if( ! hb_comp_bSimpLex )
+         hb_xfree( ( void * ) pVar->szName );
+
       hb_xfree( ( void * ) pVar );
    }
 
@@ -1135,7 +1138,9 @@ PFUNCTION hb_compFunctionKill( PFUNCTION pFunc )
       pVar = pFunc->pStatics;
       pFunc->pStatics = pVar->pNext;
 
-      hb_xfree( ( void * ) pVar->szName );
+      if( ! hb_comp_bSimpLex )
+         hb_xfree( ( void * ) pVar->szName );
+
       hb_xfree( ( void * ) pVar );
    }
 
@@ -1144,11 +1149,15 @@ PFUNCTION hb_compFunctionKill( PFUNCTION pFunc )
       pVar = pFunc->pFields;
       pFunc->pFields = pVar->pNext;
 
-      hb_xfree( ( void * ) pVar->szName );
+      if( ! hb_comp_bSimpLex )
+         hb_xfree( ( void * ) pVar->szName );
+
       if( pVar->szAlias )
       {
-         hb_xfree( ( void * ) pVar->szAlias );
+         if( ! hb_comp_bSimpLex )
+            hb_xfree( ( void * ) pVar->szAlias );
       }
+
       hb_xfree( ( void * ) pVar );
    }
 
@@ -1157,11 +1166,15 @@ PFUNCTION hb_compFunctionKill( PFUNCTION pFunc )
       pVar = pFunc->pMemvars;
       pFunc->pMemvars = pVar->pNext;
 
-      hb_xfree( ( void * ) pVar->szName );
+      if( ! hb_comp_bSimpLex )
+         hb_xfree( ( void * ) pVar->szName );
+
       if( pVar->szAlias )
       {
-         hb_xfree( ( void * ) pVar->szAlias );
+         if( ! hb_comp_bSimpLex )
+            hb_xfree( ( void * ) pVar->szAlias );
       }
+
       hb_xfree( ( void * ) pVar );
    }
 
@@ -1170,11 +1183,15 @@ PFUNCTION hb_compFunctionKill( PFUNCTION pFunc )
       pVar = pFunc->pPrivates;
       pFunc->pPrivates = pVar->pNext;
 
-      hb_xfree( ( void * ) pVar->szName );
+      if( ! hb_comp_bSimpLex )
+         hb_xfree( ( void * ) pVar->szName );
+
       if( pVar->szAlias )
       {
-         hb_xfree( ( void * ) pVar->szAlias );
+         if( ! hb_comp_bSimpLex )
+            hb_xfree( ( void * ) pVar->szAlias );
       }
+
       hb_xfree( ( void * ) pVar );
    }
 
@@ -1197,7 +1214,9 @@ PCOMSYMBOL hb_compSymbolKill( PCOMSYMBOL pSym )
 {
    PCOMSYMBOL pNext = pSym->pNext;
 
-   hb_xfree( ( void * ) pSym->szName );
+   if( ! hb_comp_bSimpLex )
+      hb_xfree( ( void * ) pSym->szName );
+
    hb_xfree( ( void * ) pSym );
 
    return pNext;
@@ -3247,7 +3266,10 @@ void hb_compCodeBlockEnd( void )
       hb_compGenPCode2( HB_LOBYTE( wPos ), HB_HIBYTE( wPos ), ( BOOL ) 0 );
 
       pFree = pVar;
-      hb_xfree( ( void * ) pFree->szName );
+
+      if( ! hb_comp_bSimpLex )
+         hb_xfree( ( void * ) pFree->szName );
+
       pVar = pVar->pNext;
       hb_xfree( ( void * ) pFree );
    }
@@ -3265,7 +3287,10 @@ void hb_compCodeBlockEnd( void )
 
       /* free used variables */
       pFree = pVar;
-      hb_xfree( ( void * ) pFree->szName );
+
+      if( ! hb_comp_bSimpLex )
+         hb_xfree( ( void * ) pFree->szName );
+
       pVar = pVar->pNext;
       hb_xfree( ( void * ) pFree );
    }
@@ -3610,6 +3635,9 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
                   printf( "\rLines %i, Functions/Procedures %i\n", hb_comp_iLine, hb_comp_iFunctionCnt );
 
                hb_compGenOutput( hb_comp_iLanguage );
+
+               if( hb_comp_bSimpLex )
+                  hb_compReleaseStrings();
             }
          }
          else

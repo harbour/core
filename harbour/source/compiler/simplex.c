@@ -23,11 +23,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
-#include "hbcomp.h"
-#include "harboury.h"
-#include "hbsetup.h"
-#include "hberrors.h"
-#include "hbdefs.h"
 
 /* These are NOT overidable (yet). */
 #define MAX_MATCH 4
@@ -90,6 +85,9 @@ typedef struct _LEX_PAIR
 #define LEX_CUSTOM_ACTION    -65
 #define ERR_TOO_COMPLEX_RULE -66
 #define YY_BUF_SIZE 16384
+
+
+#define INIT_ACTION()
 #define INTERCEPT_ACTION(x)
 #define CUSTOM_ACTION(x)
 #define NEW_LINE_ACTION()
@@ -831,6 +829,12 @@ int yylex( void /*YYSTYPE * yylval*/ )
           yytext = malloc( YY_BUF_SIZE );
        }
        */
+
+       if( bStart )
+       {
+         bStart = FALSE;
+         INIT_ACTION();
+       }
 
        YY_INPUT( (char*) szLexBuffer, iSize, YY_BUF_SIZE );
 

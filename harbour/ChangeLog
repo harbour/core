@@ -1,3 +1,24 @@
+2000-07-09 01:02 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbcomp.h
+     + Added: external BOOL hb_comp_bSimpLex
+
+   * source/compiler/harbour.c
+     + Added: BOOL hb_comp_bSimpLex
+     + Added: if( hb_comp_bSimpLex ) tests before releasing name strings of vars, and symbols.
+     + Added: call to hb_compReleaseStrings(), if hb_comp_SimpLes is TRUE, after code generation.
+
+   * source/compiler/harbour.slx
+     + Added: logic to resuse same allocated strings when string for identifier was perviously allocated.
+     + Added: INIT_ACTION macro to set hb_comp_bSimpLex to TRUE.
+     + Added: Function hb_compReleaseStrings()
+
+   * source/compiler/harbour.l
+     + Added: empty Function hb_compReleaseStrings() to avoid link error.
+
+   * source/compiler/hbslex.c
+   * source/compiler/simplex.c
+     * Moved standard #includes from simplex to hbslex.
+
 2000-07-08 19:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
   * source\compiler\simplex.c
   * source\compiler\harbour.slx
