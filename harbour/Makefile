@@ -7,7 +7,6 @@ ROOT = ./
 DIRS=\
 	include \
 	source \
-	contrib \
 	utils \
 	tests \
 #	samples \

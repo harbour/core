@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-17 12:33 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * Makefile
+   * tests/Makefile
+     - Inclusion of contrib in the core Harbour removed, 
+       because this made it impossible to build Harbour on some 
+       platforms (Linux).
+
 2001-12-17 10:31 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/gtapi.c
